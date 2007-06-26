@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project default="build.all" basedir="./">
+
+	<!--    ==================================================      -->
+	<!--    initialize paths and properties                                         -->
+	<!--    ==================================================      -->
+
+	<!-- initialization -->
+	<target name="initialize">
+
+		<!-- display ANT Environment -->
+		<echo message="==> ANT Environment" />
+		<echo message="ant.home         = ${ant.home}" />
+		<echo message="ant.java.version = ${ant.java.version}" />
+		<echo message="ant.version      = ${ant.version}" />
+
+		<property name="project.name"
+			value="Account Expiration Component" />
+		<property name="deployment.admindir"
+			value="/home/skore/tmp/AEC_JoomlaANT/administrator/components/com_acctexp" />
+		<property name="deployment.userdir"
+			value="/home/skore/tmp/AEC_JoomlaANT/components/com_acctexp" />
+		<!--      <property name="distribution.dir" value="c:\Eclipse"/> -->
+		<property name="distribution.dir" value="/home/skore/tmp" />
+		<property name="source.dir" value="./src/" />
+
+	</target>
+
+	<!-- build all -->
+	<target name="build.all" depends="initialize">
+		<antcall target="deploy.admindir" inheritall="true" />
+		<antcall target="deploy.userdir" inheritall="true" />
+		<antcall target="dist.generate" inheritall="true" />
+	</target>
+
+	<target name="deploy.admindir">
+		<copy todir="${deployment.admindir}" overwrite="yes">
+			<fileset dir="${source.dir}">
+				<include name="admin.*" />
+				<include name="toolbar.*" />
+				<exclude name="acctexp.class.php" />
+			</fileset>
+		</copy>
+		<copy todir="${deployment.admindir}/images" overwrite="yes">
+			<fileset dir="${source.dir}/images">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${deployment.admindir}/com_acctexp_language"
+			overwrite="yes">
+			<fileset dir="${source.dir}/com_acctexp_language">
+				<include name="*" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="deploy.userdir">
+		<copy todir="${deployment.userdir}" overwrite="yes">
+			<fileset dir="${source.dir}">
+				<include name="acctexp.*" />
+				<include name="style.css" />
+				<include name="hacks.txt" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="dist.generate">
+		<zip destfile="${distribution.dir}/com_acctexp_0_12_3_50b.zip"
+			update="true">
+			<fileset dir="${source.dir}" />
+			<exclude name="build.xml" />
+			<exclude name=".project" />
+		</zip>
+	</target>
+</project>
