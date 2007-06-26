@@ -344,6 +344,12 @@ define( '_AEC_MSG_OP_FAILED_NOT_WRITEABLE',		'Vorgang fehlgeschlagen, Datei nich
 define( '_AEC_MSG_OP_FAILED_NO_WRITE',			'Vorgang fehlgeschlagen, Datei kann nicht zum Schreiben ge&oumL;ffnet werden' ); // Operation failed: Failed to open file for writing.
 define( '_AEC_MSG_INVOICE_CLEARED',				'Rechnung bereinigt' ); // Invoice cleared
 
+// languages (e.g. PayPal) - must be ISO 3166 Two-Character Country Codes
+define( '_AEC_LANG_DE',							'Deutsch' ); // German
+define( '_AEC_LANG_GB',							'Englisch' ); // English
+define( '_AEC_LANG_FR',							'Franz&ouml;sisch' ); // French
+define( '_AEC_LANG_IT',							'Italienisch' ); // Italian
+define( '_AEC_LANG_ES',							'Spanisch' ); // Spanish
 
 // END MIC ####################################################
 

@@ -1570,7 +1570,7 @@ function editSettings( $option ) {
 		$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
 	}
 
-	$lists['currency_code_general'] = mosHTML::selectList( $currency_code_list, ( 'currency_code_general' ), 'size="10"', 'value', 'text', $cfg->cfg['currency_code_general'] );
+	$lists['currency_code_general'] = mosHTML::selectList( $currency_code_list, ( 'currency_code_general' ), 'size="10"', 'value', 'text', ( !empty( $cfg->cfg['currency_code_general'] ) ? $cfg->cfg['currency_code_general'] : '' ) );
 
 	// get entry Plan selection
 	$available_plans	= array();
@@ -1603,13 +1603,18 @@ function editSettings( $option ) {
 		}
 	}
 
-	$milist = explode(";", $cfg->cfg['milist']);
-	$selected_mis = array();
-	foreach( $milist as $mi_name ) {
-		$selected_mis[]->value = $mi_name;
+	if( !empty( $cfg->cfg['milist'] ) ) {
+		$milist = explode( ';', $cfg->cfg['milist'] );
+		$selected_mis = array();
+		foreach( $milist as $mi_name ) {
+			$selected_mis[]->value = $mi_name;
+		}
+	}else{
+		$cfg->cfg['milist'] = null;
+		$selected_mis		= '';
 	}
 
-	$lists['milist'] = mosHTML::selectList($mi_htmllist, 'milist[]', 'size="' . min((count($mi_list)+1), 25) . '" multiple', 'value', 'text', $selected_mis);
+	$lists['milist'] = mosHTML::selectList($mi_htmllist, 'milist[]', 'size="' . min( ( count( $mi_list ) +1 ), 25 ) . '" multiple', 'value', 'text', $selected_mis );
 
 	// Each Tab needs a name and a short description
 	// Start then by specifying how many values you want to show up and choose their type
@@ -1745,7 +1750,7 @@ function editSettings( $option ) {
 								// Transform languages into OptionArray
 								$language_code_list = array();
 								foreach( $language_array as $language ) {
-									$language_code_list[] = mosHTML::makeOption( $language, $language );
+									$language_code_list[] = mosHTML::makeOption( $language, ( defined( '_AEC_LANG_' . $language  ) ? constant( '_AEC_LANG_' . $language ) : $language ) );
 								}
 								// Create list
 								$lists[$setting_name] = mosHTML::selectList( $language_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );

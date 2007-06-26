@@ -1,4 +1,12 @@
 <?php
+/**
+ * @version $Id: eucalib.php 16 2007-06-25 09:04:04Z mic $
+ * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
+ * @subpackage Abstract Library for Joomla Components
+ * @copyright Copyright (C) 2007 David Deutsch, All Rights Reserved
+ * @author David Deutsch <skore@skore.de>
+ * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
+ */
 // Copyright (C) 2006-2007 David Deutsch
 // All rights reserved.
 // This source file an abstract Library for Joomla! Components,
@@ -62,7 +70,7 @@ class paramDBTable extends mosDBTable {
 		$params = array();
 
 		foreach( $array as $key => $value ) {
-			if ( !is_null( $key ) ) {
+			if( !is_null( $key ) ) {
 				$value = trim( $value );
 				if( !get_magic_quotes_gpc() ) {
 					$value = addslashes( $value );
@@ -100,7 +108,7 @@ class paramDBTable extends mosDBTable {
 	}
 
 	/**
-	 * Return the differences between a new set of Parameters and the existing one 
+	 * Return the differences between a new set of Parameters and the existing one
 	 */
 	function diffParams( $array, $field = 'params' ) {
 		$diff = array();
@@ -114,12 +122,11 @@ class paramDBTable extends mosDBTable {
 			}
 		}
 
-		if (count($diff)) {
+		if( count( $diff ) ) {
 			return $diff;
-		} else {
+		}else{
 			return false;
 		}
 	}
-
 }
 ?>

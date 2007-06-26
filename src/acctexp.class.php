@@ -1,12 +1,13 @@
-<?php /* $Id: acctexp.class.php,v 1.2 2005/12/15 16:20:38 helder Exp $ */
+<?php
 /**
-* AcctExp Core Class
-* @package AcctExp
-* @copyright 2004-2007 Helder Garcia, David Deutsch
-* @license http://www.gnu.org/copyleft/gpl.html. GNU Public License
-* @version $Revision: 1.2 $
-* @author Helder Garcia <helder.garcia@gmail.com>, David Deutsch <skore@skore.de>
-**/
+ * @version $Id: acctexp.class.php 16 2007-06-25 09:04:04Z mic $
+ * @package AEC - Account Expiration Control / Subscription management for Joomla
+ * @subpackage Core Class
+ * @author Helder Garcia <helder.garcia@gmail.com>, David Deutsch <skore@skore.de>
+ * @copyright 2004-2007 Helder Garcia, David Deutsch
+ * @license http://www.gnu.org/copyleft/gpl.html. GNU Public License
+ */
+
 //
 // Copyright (C) 2004-2007 Helder Garcia, David Deutsch
 // All rights reserved.
@@ -456,7 +457,7 @@ class aecHeartbeat extends mosDBTable {
 		$found_expired		= 1;
 
 		// Efficient way to check for expired users without checking on each one
-		if( $user_list[0] ) {
+		if( !empty( $user_list[0] ) ) {
 			foreach( $user_list as $exp_id ) {
 				$expiration = new AcctExp($database);
 				$expiration->load( $exp_id );
@@ -1249,7 +1250,7 @@ class aecHTML {
 		global $mosConfig_live_site;
 
 		$image 	= $mosConfig_live_site . '/administrator/components/com_acctexp/images/icons/'. $image;
-		$name	= explode( ".", $image );
+		$name	= explode( '.', $image );
 		$alt	= $name[0];
 		return '<img src="'. $image .'" border="0" alt="' . $alt . '" class="aec_icon" />';
 	}
@@ -1262,13 +1263,13 @@ class Config_General extends paramDBTable {
 	/** @var text */
 	var $settings 			= null;
 
-	function Config_General(&$db){
+	function Config_General( &$db ) {
 
-		$this->mosDBTable('#__acctexp_config', 'id', $db);
+		$this->mosDBTable( '#__acctexp_config', 'id', $db );
 
 		$this->load(1);
 
-		$this->cfg = $this->getParams('settings');
+		$this->cfg = $this->getParams( 'settings' );
 	}
 
 	function saveSettings () {
@@ -1287,7 +1288,7 @@ class Config_General extends paramDBTable {
 			}
 		}
 
-		$this->settings = implode("\n", $settings);
+		$this->settings = implode( "\n", $settings );
 		$this->check();
 		$this->store();
 	}
@@ -1296,7 +1297,11 @@ class Config_General extends paramDBTable {
 class SubscriptionPlanHandler {
 
 	function getPlanUserlist ( $planid ) {
-		$database->setQuery( "SELECT userid FROM #__acctexp_subscr WHERE plan='" . $planid . "'" );
+		$query = 'SELECT userid'
+		. ' FROM #__acctexp_subscr'
+		. ' WHERE plan = \'' . $planid . '\''
+		;
+		$database->setQuery( $query );
 		return $database->loadResultArray();
 	}
 }
@@ -1802,7 +1807,11 @@ class logHistory extends mosDBTable {
 		$plan = new SubscriptionPlan( $database );
 		$plan->load( $objInvoice->usage );
 
-		$database->setQuery( "SELECT id FROM #__acctexp_config_processors WHERE name='" . $processor . "'" );
+		$query = 'SELECT id'
+		. ' FROM #__acctexp_config_processors'
+		. ' WHERE name = \'' . $processor . '\''
+		;
+		$database->setQuery( $query );
 
 		$this->proc_id			= $database->loadResult();
 		$this->proc_name		= $processor;
@@ -1815,25 +1824,23 @@ class logHistory extends mosDBTable {
 	    $this->invoice_number	= $objInvoice->invoice_number;
 	    $this->response			= $response;
 
-		$short = "history entry";
-		$event = "Processor (" . $processor .") notification for " . $objInvoice->invoice_number;
-		$tags = "history,processor,payment";
+		$short	= 'history entry';
+		$event	= 'Processor (' . $processor . ') notification for ' . $objInvoice->invoice_number;
+		$tags	= 'history,processor,payment';
 		$params = array( 'invoice_number' => $objInvoice->invoice_number );
 
 		$eventlog = new eventLog( $database );
 		$eventlog->issue( $short, $tags, $event, $params );
 
-		if ( !$this->check() ) {
+		if( !$this->check() ) {
 			echo "<script> alert('".$this->getError()."'); window.history.go(-1); </script>\n";
 			exit();
 		}
-		if ( !$this->store() ) {
+		if( !$this->store() ) {
 			echo "<script> alert('".$this->getError()."'); window.history.go(-1); </script>\n";
 			exit();
 		}
-
 	}
-
 }
 
 class InvoiceFactory {
@@ -1854,8 +1861,8 @@ class InvoiceFactory {
 		require_once( $mainframe->getPath( 'front_html', "com_acctexp" ) );
 
 		// Init variables
-		$this->userid = $userid;
-		$this->usage = $usage;
+		$this->userid	= $userid;
+		$this->usage	= $usage;
 
 		if( !$my->id ) {
 			if( !$this->userid ) {
@@ -1913,25 +1920,25 @@ class InvoiceFactory {
 			mosNotAuth();
 		}
 
-		if( !is_null( $this->processor ) && !($this->processor == "")) {
+		if( !is_null( $this->processor ) && !( $this->processor == '' ) ) {
 			switch( $this->processor ) {
 				case 'free':
-					$this->payment->method_name = "Free";
+					$this->payment->method_name = 'Free';
 					$this->pp = false;
 					$this->recurring = 0;
-					$currency = "";
+					$currency = '';
 					break;
 				case 'none':
-					$this->payment->method_name = "None";
+					$this->payment->method_name = 'None';
 					$this->pp = false;
 					$this->recurring = 0;
-					$currency = "";
+					$currency = '';
 					break;
 				case 'transfer':
-					$this->payment->method_name = "Transfer";
+					$this->payment->method_name = 'Transfer';
 					$this->pp = false;
 					$this->recurring = 0;
-					$currency = "";
+					$currency = '';
 					break;
 				default:
 					$this->pp = new PaymentProcessor();
@@ -1941,7 +1948,7 @@ class InvoiceFactory {
 						$this->recurring = isset( $this->pp->info['recurring'] ) ? $this->pp->info['recurring'] : 0;
 						$currency = isset( $this->pp->settings['currency'] ) ? $this->pp->settings['currency'] : '';
 					}else{
-						$this->payment->method_name = "None";
+						$this->payment->method_name = 'None';
 						$this->pp = false;
 						$this->recurring = 0;
 						$currency = '';
@@ -1957,7 +1964,7 @@ class InvoiceFactory {
 			$user_subscription = new Subscription( $database );
 			$user_subscription->loadUserID( $this->userid );
 
-			if( strcmp( $user_subscription->lastpay_date, "0000-00-00 00:00:00" ) === 0 ) {
+			if( strcmp( $user_subscription->lastpay_date, '0000-00-00 00:00:00' ) === 0 ) {
 				$this->renew = 0;
 			}else{
 				$this->renew = 1;
@@ -2023,9 +2030,9 @@ class InvoiceFactory {
 			$this->objInvoice->create( $this->userid, $this->usage, $this->processor );
 
 			// Reset parameters
-			$this->processor = $this->objInvoice->method;
-			$this->usage = $this->objInvoice->usage;
-			$this->invoice = $this->objInvoice->invoice_number;
+			$this->processor	= $this->objInvoice->method;
+			$this->usage		= $this->objInvoice->usage;
+			$this->invoice		= $this->objInvoice->invoice_number;
 		}
 
 		$this->objInvoice->computeAmount();
@@ -2270,7 +2277,7 @@ class InvoiceFactory {
 
 
 	function save ( $option, $var ) {
-		global $database, $mainframe, $mosConfig_absolute_path, $task;
+		global $database, $mainframe, $task;
 
 		// ====== STEP 0 - Do the Registration Mumbo-Jumbo ======
 
@@ -2282,7 +2289,7 @@ class InvoiceFactory {
 		if( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
 			$savetask	= $task;
 			$task		= 'done';
-			include_once ($mosConfig_absolute_path . "/components/com_comprofiler/comprofiler.php");
+			include_once ( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
 			$task		= $savetask;
 		}
 
@@ -2408,10 +2415,10 @@ class InvoiceFactory {
 				mosMail( $adminEmail2, $adminName2, $email, $subject, $message );
 
 				// Send notification to all administrators
-				$subject2 = sprintf (_SEND_SUB, $name, $mainframe->getCfg( 'sitename' ) );
-				$message2 = sprintf (_ASEND_MSG, $adminName2, $mainframe->getCfg( 'sitename' ), $row->name, $email, $username);
-				$subject2 = html_entity_decode($subject2, ENT_QUOTES);
-				$message2 = html_entity_decode($message2, ENT_QUOTES);
+				$subject2 = sprintf( _SEND_SUB, $name, $mainframe->getCfg( 'sitename' ) );
+				$message2 = sprintf( _ASEND_MSG, $adminName2, $mainframe->getCfg( 'sitename' ), $row->name, $email, $username);
+				$subject2 = html_entity_decode( $subject2, ENT_QUOTES );
+				$message2 = html_entity_decode( $message2, ENT_QUOTES );
 
 				// get email addresses of all admins and superadmins set to recieve system emails
 				$query = 'SELECT email, sendEmail'
@@ -2437,7 +2444,7 @@ class InvoiceFactory {
 	}
 
 	function checkout ( $option ) {
-		global $database, $mosConfig_absolute_path;
+		global $database;
 
 		$cfg = new Config_General( $database );
 
@@ -2593,7 +2600,6 @@ class InvoiceFactory {
 			HTML_Results::thanks( $option, $msg );
 		}
 	}
-
 }
 
 class Invoice extends paramDBTable {
@@ -2625,7 +2631,7 @@ class Invoice extends paramDBTable {
 	var $params 			= null;
 
 	function Invoice (&$db) {
-		$this->mosDBTable('#__acctexp_invoices', 'id', $db);
+		$this->mosDBTable( '#__acctexp_invoices', 'id', $db );
 	}
 
 	function loadInvoiceNumber( $invoiceNum ) {
@@ -2866,7 +2872,7 @@ class Invoice extends paramDBTable {
 		$int_var['params'] = $this->getParams();
 
 		// Filter non-processor params
-		$nonproc = array("pending_reason", "deactivated");
+		$nonproc = array( 'pending_reason', 'deactivated' );
 		foreach( $nonproc as $param ) {
 			if( isset( $int_var['params'][$param] ) ) {
 				unset( $int_var['params'][$param] );
@@ -3086,7 +3092,6 @@ class Invoice extends paramDBTable {
 
 		$this->setParams( $oldparams );
 	}
-
 }
 
 class Subscription extends paramDBTable {
@@ -3351,8 +3356,6 @@ class Subscription extends paramDBTable {
 
 	function sendEmailRegistered( $renew ) {
 		global $database, $acl, $mainframe;
-		global $mosConfig_sitename, $mosConfig_live_site, $mosConfig_absolute_path;
-		global $mosConfig_mailfrom, $mosConfig_fromname;
 
 		$langPath = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/com_acctexp_language/';
 		if( file_exists( $langPath . $mainframe->getCfg( 'mosConfig_lang' ) . '.php' ) ) {
@@ -3513,7 +3516,6 @@ class Subscription extends paramDBTable {
 		$this->check();
 		$this->store();
 	}
-
 }
 
 class GeneralInfoRequester {
@@ -3720,7 +3722,6 @@ class AECfetchfromDB {
 		$database->setQuery( $query );
 		return $database->loadResult();
 	}
-
 }
 
 class AECToolbox {
@@ -3741,9 +3742,9 @@ class AECToolbox {
 			if( !strrpos( strtolower( $url ), 'Itemid' ) ) {
 				global $Itemid;
 				if( $Itemid ) {
-					$url .= "&amp;Itemid=" . $Itemid;
+					$url .= '&amp;Itemid=' . $Itemid;
 				}else{
-					$url .= "&amp;Itemid=";
+					$url .= '&amp;Itemid=';
 				}
 			}
 
@@ -4138,7 +4139,6 @@ class microIntegrationHandler {
 			}
 		}
 	}
-
 }
 
 class microIntegration extends paramDBTable {
@@ -4669,7 +4669,6 @@ class couponHandler {
 		}
 		return AECToolbox::correctAmount( $amount );
 	}
-
 }
 
 class coupon extends paramDBTable {
@@ -4832,7 +4831,6 @@ class coupon extends paramDBTable {
 		}
 		return $inum;
 	}
-
 }
 
 class tokenCheck {
@@ -4919,7 +4917,6 @@ class userToken extends paramDBTable {
 		}else{
 			// We'll leave this at zero - the best indication that there is no expiration
 		}
-
 	}
 }
 
@@ -4953,7 +4950,6 @@ class tokenBatch extends mosDBTable {
 
 		}
 	}
-
 }
 
 class accessToken extends mosDBTable {
@@ -4995,5 +4991,4 @@ class tokenGroup extends mosDBTable {
 		$this->mosDBTable( '#__acctexp_tokengroups', 'id', $db );
 	}
 }
-
 ?>

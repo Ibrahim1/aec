@@ -50,8 +50,8 @@ class processor_paypal {
 		$info['longname']			= _AEC_PROC_INFO_PP_LNAME;
 		$info['statement']			= _AEC_PROC_INFO_PP_STMNT;
 		$info['description'] 		= _DESCRIPTION_PAYPAL;
-		$info['currencies']			= 'USD,AUD,CAD,EUR,GBP,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK';
-		$info['languages']			= 'AU,DE,FR,IT,GB,ES,US';
+		$info['currencies']			= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK';
+		$info['languages']			= 'GB,DE,FR,IT,ES';
 		$info['cc_list']			= 'visa,mastercard,discover,americanexpress,echeck,giropay';
 		$info['recurring']			= 0;
 
@@ -185,7 +185,7 @@ class processor_paypal {
 		$response['amount_currency'] = $mc_currency;
 
 		$id = AECfetchfromDB::InvoiceIDfromNumber($response['invoice']);
-	
+
 		if($id) {
 			$objInvoice = new Invoice($database);
 			$objInvoice->load($id);
@@ -238,14 +238,14 @@ class processor_paypal {
 		curl_setopt ($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
 		curl_setopt ($ch, CURLOPT_PROXY,"http://proxy.shr.secureserver.net:3128");
 		curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-		curl_setopt ($ch, CURLOPT_URL, $url); 
-		curl_setopt ($ch, CURLOPT_POST, 1); 
-		curl_setopt ($ch, CURLOPT_POSTFIELDS, $req); 
+		curl_setopt ($ch, CURLOPT_URL, $url);
+		curl_setopt ($ch, CURLOPT_POST, 1);
+		curl_setopt ($ch, CURLOPT_POSTFIELDS, $req);
 		curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt ($ch, CURLOPT_TIMEOUT, 120);
 		$fp = curl_exec ($ch);
 		curl_close($ch);
-		
+
 		return $fp;
 	}
 
