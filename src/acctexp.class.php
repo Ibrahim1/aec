@@ -486,8 +486,8 @@ class aecHeartbeat extends mosDBTable {
 				}
 			}
 
+			$e = 0;
 			if( isset( $expired_users[0] ) ) {
-				$e = 0;
 				foreach( $expired_users as $n ) {
 					$subscription = new Subscription( $database );
 					$subscription->loadUserID($n);
@@ -499,7 +499,9 @@ class aecHeartbeat extends mosDBTable {
 			}
 
 			// Only go for pre expiration action if we have at least one user for it
-			$pe = 0;
+			$pe				= 0;
+			$exp_actions	= 0;
+			$exp_users		= 0;
 			if( $pre_expiration && isset( $pre_expired_users[0] ) ) {
 				// Get all the MIs which have a pre expiration check
 				$query = 'SELECT id'
@@ -542,9 +544,6 @@ class aecHeartbeat extends mosDBTable {
 				$database->setQuery( $query );
 				$user_list = $database->loadResultArray();
 
-				$exp_actions	= 0;
-				$exp_users		= 0;
-
 				foreach( $pre_expired_users as $userid ) {
 					$metaUser = new metaUser( $userid );
 
@@ -584,9 +583,6 @@ class aecHeartbeat extends mosDBTable {
 					}
 				}
 			}
-		}else{
-			$e				= 0;
-			$exp_actions	= 0;
 		}
 
 		// Travel through users to see which ones are soon to expire
@@ -603,8 +599,8 @@ class aecHeartbeat extends mosDBTable {
 			}
 		}
 		if( $exp_actions ) {
-			$event .= $exp_actions . ' Pre-expiration action'
-			. ( $exp_actions > 1 ) ? 's' : '' . ' for ' . $exp_users . ' user' . ( $exp_users > 1 ) ? 's' : '';
+			$event .= $exp_actions . ' Pre-expiration action' . ( $exp_actions > 1 ) ? 's' : ''
+						. ' for ' . $exp_users . ' user' . ( $exp_users > 1 ) ? 's' : '';
 			$tags[] = 'pre-expiration';
 		}
 
@@ -1297,11 +1293,14 @@ class Config_General extends paramDBTable {
 class SubscriptionPlanHandler {
 
 	function getPlanUserlist ( $planid ) {
+		global $database;
+
 		$query = 'SELECT userid'
 		. ' FROM #__acctexp_subscr'
 		. ' WHERE plan = \'' . $planid . '\''
 		;
 		$database->setQuery( $query );
+
 		return $database->loadResultArray();
 	}
 }
@@ -1349,7 +1348,7 @@ class SubscriptionPlan extends paramDBTable {
 		$is_free		= ( strcmp(strtolower($metaUser->objSubscription->type), 'free' ) === 0 );
 		$lifetime		= $metaUser->objSubscription->lifetime;
 
-		$params			= $this->getParams( 'params' );
+		$params			= $this->getParams();
 
 		if( $comparison['total_comparison'] === false || is_null($comparison['total_comparison']) || $is_pending ) {
 			// If user is using global trial period he still can use the trial period of a plan
@@ -1471,7 +1470,7 @@ class SubscriptionPlan extends paramDBTable {
 
 		$is_trial	= (strcmp($user_subscription->status, 'Trial') === 0);
 		$var		= null;
-		$params		= $this->getParams( 'params' );
+		$params		= $this->getParams();
 
 		if( $recurring ) {
 			$amount = array();
@@ -1544,7 +1543,7 @@ class SubscriptionPlan extends paramDBTable {
 			if( $user_subscription->used_plans ) {
 				$used_plans			= explode( ';', $user_subscription->used_plans );
 				$plans_comparison	= false;
-				$thisparams			= $this->getParams( 'params' );
+				$thisparams			= $this->getParams();
 
 				foreach( $used_plans as $used_plan_id ) {
 					if( $used_plan_id ) {
@@ -1583,8 +1582,8 @@ class SubscriptionPlan extends paramDBTable {
 	function compareToPlan( $plan ) {
 		global $mosConfig_live_site, $database;
 
-		$thisparams = $this->getParams( 'params' );
-		$planparams = $plan->getParams( 'params' );
+		$thisparams = $this->getParams();
+		$planparams = $plan->getParams();
 
 		$spg1		= explode( ';', $thisparams['similarplans'] );
 		$spg2		= explode( ';', $planparams['similarplans'] );
@@ -1757,11 +1756,11 @@ class SubscriptionPlan extends paramDBTable {
 
 		// TODO: Check for Similarity/Equality relations on other plans
 
-		$this->setParams($params);
+		$this->setParams( $params );
 	}
 
 	function saveRestrictions ( $restrictions ) {
-		$this->setParams($restrictions, 'restrictions');
+		$this->setParams( $restrictions, 'restrictions' );
 	}
 
 }
@@ -2120,7 +2119,7 @@ class InvoiceFactory {
 				}
 			}
 
-			$plan_params = $row->getParams( 'params' );
+			$plan_params = $row->getParams();
 
 			$plans[$i]['name']		= $row->name;
 			$plans[$i]['desc']		= $row->desc;
@@ -2454,7 +2453,7 @@ class InvoiceFactory {
 
 		if( (strcmp( strtolower( $this->processor ), 'none' ) === 0 )
 		|| ( strcmp( strtolower( $this->processor ), 'free' ) === 0 ) ) {
-			$params = $this->objUsage->getParams( 'params' );
+			$params = $this->objUsage->getParams();
 
 		 	if( $params['full_free'] || ($params['trial_free']
 		 	&& ( strcmp( $this->objInvoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) ) ) {
@@ -3079,19 +3078,10 @@ class Invoice extends paramDBTable {
 		unset( $array['option'] );
 		unset( $array['invoice'] );
 
-		$this->appendParams( $array );
+		$this->addParams( $array );
 		return true;
 	}
 
-	function appendParams( $params ) {
-		$oldparams = $this->getParams();
-
-		foreach( $params as $key => $value ) {
-			$oldparams[$key] = $value;
-		}
-
-		$this->setParams( $oldparams );
-	}
 }
 
 class Subscription extends paramDBTable {
@@ -3244,7 +3234,7 @@ class Subscription extends paramDBTable {
 
 		$subscription_plan = new SubscriptionPlan( $database );
 		$subscription_plan->load( $this->plan );
-		$params = $subscription_plan->getParams( 'params' );
+		$params = $subscription_plan->getParams();
 
 		if( !empty( $params['fallback'] ) ) {
 			$this->applyUsage( $params['fallback'] );
@@ -3474,7 +3464,7 @@ class Subscription extends paramDBTable {
 
 	function getMIflags( $usage, $mi ) {
 		// Get Params
-		$params = $this->getParams( 'params' );
+		$params = $this->getParams();
 
 		// Create the Params Prefix
 		$flag_name = 'MI_FLAG_USAGE_' . strtoupper( $usage ) . '_MI_' . strtoupper( $mi );
@@ -3500,7 +3490,7 @@ class Subscription extends paramDBTable {
 
 	function setMIflags( $usage, $mi, $flags ) {
 		// Get Params
-		$params = $this->getParams( 'params' );
+		$params = $this->getParams();
 
 		// Create the Params Prefix
 		$flag_name = 'MI_FLAG_USAGE_' . strtoupper( $usage ) . '_MI_' . $mi;
@@ -4057,16 +4047,20 @@ class microIntegrationHandler {
 
 		$query = 'SELECT id'
 		. ' FROM #__acctexp_plans'
-		. ' WHERE micro_integration != \'\''
+		. ' WHERE micro_integrations != \'\''
 		;
 		$database->setQuery( $query );
 		$plans = $database->loadResultArray();
 
 		$plan_list = array();
 		foreach( $plans as $planid ) {
-			$plan = new PaymentPlan( $database );
-			if( in_array( $mi_id, $plan->getMicroIntegrations() ) ) {
-				$plan_list[] = $planid;
+			$plan = new SubscriptionPlan( $database );
+			$plan->load( $planid );
+			$mis = $plan->getMicroIntegrations();
+			if( is_array( $mis ) ) {
+				if( in_array( $mi_id, $mis ) ) {
+					$plan_list[] = $planid;
+				}
 			}
 		}
 
@@ -4307,7 +4301,7 @@ class microIntegration extends paramDBTable {
 			$new_params = $params;
 		}
 
-		$params = $this->stripcommonParamInfo( $params );
+		$new_params = $this->stripcommonParamInfo( $new_params );
 
 		$this->setParams( $new_params );
 		return true;
