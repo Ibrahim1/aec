@@ -1967,9 +1967,9 @@ function saveSettings( $option ) {
 	$short	= _AEC_LOG_SH_SETT_SAVED;
 	$event	= _AEC_LOG_LO_SETT_SAVED . ' ' . $difference;
 	$tags	= 'settings,system';
-	$params = array( 'userid' => $my->id);
+	$params = array( 'userid' => $my->id );
 
-	$eventlog = new eventLog($database);
+	$eventlog = new eventLog( $database );
 	$eventlog->issue( $short, $tags, $event, $params );
 
 	mosRedirect( 'index2.php?option=' . $option . '&task=showSettings', _AEC_CONFIG_SAVED );

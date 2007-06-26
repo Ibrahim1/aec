@@ -40,7 +40,7 @@ class paramDBTable extends mosDBTable {
 	 * @return array
 	 */
 	function getParams( $field = 'params' ) {
-		if( empty( $this->field ) ) {
+		if( empty( $this->$field ) ) {
 			return false;
 		}
 
@@ -79,8 +79,8 @@ class paramDBTable extends mosDBTable {
 	 * Add an array of Parameters to an existing parameter field
 	 */
 	function addParams( $array, $field = 'params' ) {
-		$params = $this->getParams($field );
-		foreach ($array as $key => $value) {
+		$params = $this->getParams( $field );
+		foreach( $array as $key => $value ) {
 			$params[$key] = $value;
 		}
 		$this->setParams ($params, $field);

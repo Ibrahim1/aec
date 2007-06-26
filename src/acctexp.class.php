@@ -52,7 +52,7 @@ if( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
 }
 
 if( !class_exists( 'paramDBTable' ) ) {
-	include_once( $mosConfig_absolute_path . '/administrator/components/com_acctexp/eucalib.php' );
+	include_once( $mosConfig_absolute_path . '/components/com_acctexp/eucalib.php' );
 }
 
 class metaUser {
@@ -878,8 +878,8 @@ class PaymentProcessor {
 		$this->processor->active	= 1;
 
 		// Set values from defaults and store
-		$this->processor->setParams( 'info', $this->info );
-		$this->processor->setParams( 'settings', $this->settings);
+		$this->processor->setParams( $this->info, 'info' );
+		$this->processor->setParams( $this->settings, 'settings' );
 		$this->processor->check();
 		$this->processor->store();
 
@@ -918,7 +918,7 @@ class PaymentProcessor {
 	function setSettings () {
 		// Test if values really are an array and write them to db
 		if( is_array( $this->settings ) ) {
-			$this->processor->setParams( 'settings', $this->settings );
+			$this->processor->setParams( $this->settings, 'settings' );
 			$this->processor->check();
 			$this->processor->store();
 		}
@@ -927,7 +927,7 @@ class PaymentProcessor {
 	function setInfo () {
 		// Test if values really are an array and write them to db
 		if( is_array( $this->info ) ) {
-			$this->processor->setParams( 'info', $this->info );
+			$this->processor->setParams( $this->info, 'info' );
 			$this->processor->check();
 			$this->processor->store();
 		}
@@ -3509,7 +3509,7 @@ class Subscription extends paramDBTable {
 		}
 
 		// Set Params
-		$this->setParams( 'params', $params );
+		$this->setParams( $params );
 		$this->check();
 		$this->store();
 	}
