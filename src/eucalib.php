@@ -117,7 +117,7 @@ class paramDBTable extends mosDBTable {
 		foreach( $array as $key => $value ) {
 			if( isset( $params[$key] ) ) {
 				if( $value !== $params[$key] ) {
-					$diff[$key] = array( $value, $params[$key] );
+					$diff[$key] = array( $params[$key], $value );
 				}
 			}
 		}
