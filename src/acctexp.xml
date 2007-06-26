@@ -1,0 +1,281 @@
+<?xml version="1.0"?>
+<mosinstall type="component">
+   <name>acctexp</name>
+   <creationDate>07/20/2005</creationDate>
+   <author>Helder Garcia, David Deutsch</author>
+   <copyright>@Copyright (C) 2004-2007 Helder Garcia, David Deutsch</copyright>
+   <authorEmail>helder.garcia@gmail.com, skore@skore.de</authorEmail>
+   <authorUrl>http://www.globalnerd.org</authorUrl>
+   <version>0.12.3.50b</version>
+   <description>A complete subscription manager system. By Helder Garcia (hlbog) and David Deutsch (skOre).</description>
+   <files>
+      <filename>acctexp.class.php</filename>
+      <filename>eucalib.php</filename>
+      <filename>acctexp.php</filename>
+      <filename>acctexp.html.php</filename>
+      <filename>style.css</filename>
+      <filename>micro_integration/mi_mosets_tree.php</filename>
+      <filename>micro_integration/mi_remository.php</filename>
+      <filename>micro_integration/mi_htaccess.php</filename>
+      <filename>micro_integration/mi_htaccess/htaccess.class.php</filename>
+      <filename>micro_integration/mi_mysql_query.php</filename>
+      <filename>micro_integration/mi_email.php</filename>
+      <filename>micro_integration/mi_virtuemart.php</filename>
+      <filename>micro_integration/mi_idevaffiliate.php</filename>
+      <filename>processors/paypal.php</filename>
+      <filename>processors/paypal_subscription.php</filename>
+      <filename>processors/2checkout.php</filename>
+      <filename>processors/alertpay.php</filename>
+      <filename>processors/allopass.php</filename>
+      <filename>processors/authorize.php</filename>
+      <filename>processors/ccbill.php</filename>
+      <filename>processors/epsnetpay.php</filename>
+      <filename>processors/paycom.php</filename>
+      <filename>processors/paysignet.php</filename>
+      <filename>processors/viaklix.php</filename>
+      <filename>images/gateway_buttons.tar.gz</filename>
+      <filename>images/gateway_logos.tar.gz</filename>
+      <filename>images/cc_icons/cc_icons.tar.gz</filename>
+      <filename>com_acctexp_language/english.php</filename>
+      <filename>com_acctexp_language/brazilian_portuguese.php</filename>
+      <filename>com_acctexp_language/spanish.php</filename>
+      <filename>com_acctexp_language/french.php</filename>
+      <filename>com_acctexp_language/german.php</filename>
+      <filename>com_acctexp_language/germani.php</filename>
+      <filename>com_acctexp_language/germanf.php</filename>
+      <filename>com_acctexp_language/italian.php</filename>
+      <filename>com_acctexp_language/simplified_chinese.php</filename>
+      <filename>processors/com_acctexp_language_processors/english.php</filename>
+      <filename>processors/com_acctexp_language_processors/brazilian_portuguese.php</filename>
+      <filename>processors/com_acctexp_language_processors/spanish.php</filename>
+      <filename>processors/com_acctexp_language_processors/french.php</filename>
+      <filename>processors/com_acctexp_language_processors/german.php</filename>
+      <filename>processors/com_acctexp_language_processors/germani.php</filename>
+      <filename>processors/com_acctexp_language_processors/italian.php</filename>
+      <filename>processors/com_acctexp_language_processors/simplified_chinese.php</filename>
+   </files>
+	<images>
+	</images>
+	<install>
+   <queries>
+	<query>
+		CREATE TABLE IF NOT EXISTS `#__acctexp_heartbeat` (
+		`id` int(11) NOT NULL auto_increment,
+		`last_beat` datetime NOT NULL default '0000-00-00 00:00:00',
+		PRIMARY KEY  (`id`)
+		) TYPE=MyISAM AUTO_INCREMENT=1 ;
+	</query>
+	<query>
+		CREATE TABLE IF NOT EXISTS `#__acctexp_eventlog` (
+		`id` int(11) NOT NULL auto_increment,
+	    `datetime` datetime NULL default '0000-00-00 00:00:00',
+		`short` varchar(60) NOT NULL,
+		`tags` text NULL,
+		`event` text NULL,
+		`params` text NULL,
+		PRIMARY KEY  (`id`)
+		) TYPE=MyISAM AUTO_INCREMENT=1 ;
+	</query>
+	<query>
+		CREATE TABLE IF NOT EXISTS `#__acctexp` (
+		`id` int(11) NOT NULL auto_increment,
+		`userid` int(11) NOT NULL default '0',
+		`expiration` datetime NOT NULL default '0000-00-00 00:00:00',
+		PRIMARY KEY  (`id`)
+		) TYPE=MyISAM AUTO_INCREMENT=1 ;
+	</query>
+	<query>
+		CREATE TABLE IF NOT EXISTS `#__acctexp_config` (
+		`id` INT NOT NULL AUTO_INCREMENT,
+		`settings` text NULL,
+		PRIMARY KEY (`id`)
+		)
+	</query>
+	<query>
+		CREATE TABLE IF NOT EXISTS `#__acctexp_config_processors` (
+		`id` INT NOT NULL AUTO_INCREMENT,
+		`name` varchar(60) NOT NULL,
+		`active` int(4) NOT NULL default '1',
+		`info` text NULL,
+		`settings` text NULL,
+		`params` text NULL,
+		PRIMARY KEY (`id`)
+		)	TYPE=MyISAM;
+	</query>
+	<query>
+      CREATE TABLE IF NOT EXISTS `#__acctexp_invoices` (
+		`id` int(11) NOT NULL auto_increment,
+		`active` int(4) NOT NULL default '1',
+		`userid` int(11) NULL default '0',
+		`invoice_number` varchar(64) NULL,
+		`created_date` datetime NULL default '0000-00-00 00:00:00',
+		`transaction_date` datetime NULL default '0000-00-00 00:00:00',
+		`usage` varchar(255) NULL,
+		`method` varchar(40) NULL,
+		`amount` varchar(40) NULL,
+		`currency` varchar(10) NULL,
+		`fixed` int(4) NOT NULL default '0',
+		`coupons` varchar(255) NULL,
+		`params` text NULL,
+		PRIMARY KEY  (`id`)
+		) TYPE=MyISAM;
+	</query>
+	<query>
+		CREATE TABLE IF NOT EXISTS `#__acctexp_log_history` (
+		`id` int(11) NOT NULL auto_increment,
+		`proc_id` int(4) NULL,
+		`proc_name` varchar(100) NULL,
+		`user_id` int(4) NULL,
+		`user_name` varchar(100) NULL,
+		`plan_id` int(4) NULL,
+		`plan_name` varchar(100) NULL,
+		`transaction_date` datetime NULL default '0000-00-00 00:00:00',
+		`amount` varchar(40) NULL,
+		`invoice_number` varchar(60) NULL,
+		`response` text NULL,
+		PRIMARY KEY  (`id`)
+		) TYPE=MyISAM;
+	</query>
+    <query>
+    CREATE TABLE IF NOT EXISTS `#__acctexp_plans` (
+		`id` int(11) NOT NULL auto_increment,
+		`active` int(4) NOT NULL default '1',
+		`visible` int(4) NOT NULL default '1',
+		`ordering` int(11) NOT NULL default '999999',
+		`name` varchar(40) NULL,
+		`desc` text NULL,
+		`email_desc` text NULL,
+		`email_desc_exp` text NULL,
+		`send_exp_mail` int(4) NOT NULL default '0',
+		`params` text NULL,
+		`custom_params` text NULL,
+		`restrictions` text NULL,
+		`micro_integrations` text NULL,
+		PRIMARY KEY  (`id`)
+		) TYPE=MyISAM;
+	</query>
+    <query>
+    CREATE TABLE IF NOT EXISTS `#__acctexp_microintegrations` (
+		`id` int(11) NOT NULL auto_increment,
+		`active` int(4) NOT NULL default '1',
+		`system` int(4) NOT NULL default '0',
+		`ordering` int(11) NOT NULL default '999999',
+		`name` varchar(40) NULL,
+		`desc` text NULL,
+		`class_name` varchar(40) NULL,
+		`params` text NULL,
+		`auto_check` int(4) NOT NULL default '0',
+		`on_userchange` int(4) NOT NULL default '0',
+		`pre_exp_check` int(4) NULL,
+		PRIMARY KEY  (`id`)
+		) TYPE=MyISAM;
+	</query>
+	<query>
+	CREATE TABLE IF NOT EXISTS `#__acctexp_subscr` (
+      `id` int(11) NOT NULL auto_increment,
+      `userid` int(11) NULL,
+	  `type` varchar(40) NULL,
+	  `status` varchar(10) NULL,
+	  `signup_date` datetime NULL default '0000-00-00 00:00:00',
+	  `lastpay_date` datetime NULL default '0000-00-00 00:00:00',
+	  `cancel_date` datetime NULL default '0000-00-00 00:00:00',
+	  `eot_date` datetime NULL default '0000-00-00 00:00:00',
+	  `eot_cause` varchar(100) NULL,
+	  `plan` int(11) NULL,
+	  `previous_plan` int(11) NULL,
+	  `used_plans` varchar(255) NULL,
+	  `recurring` int(1) NOT NULL default '0',
+	  `lifetime` int(1) NOT NULL default '0',
+	  `email_sent` datetime NULL default '0000-00-00 00:00:00',
+          PRIMARY KEY  (`id`)
+        ) TYPE=MyISAM;
+	</query>
+    <query>
+    CREATE TABLE IF NOT EXISTS `#__acctexp_coupons` (
+		`id` int(11) NOT NULL auto_increment,
+		`active` int(4) NOT NULL default '1',
+		`ordering` int(11) NOT NULL default '999999',
+		`coupon_code` varchar(255) NULL,
+	    `created_date` datetime NULL default '0000-00-00 00:00:00',
+		`name` varchar(255) NULL,
+		`desc` text NULL,
+		`discount` text NULL,
+		`restrictions` text NULL,
+		`params` text NULL,
+		`usecount` int(64) NOT NULL default '0',
+		`micro_integrations` text NULL,
+		PRIMARY KEY  (`id`)
+		) TYPE=MyISAM;
+	</query>
+    <query>
+    CREATE TABLE IF NOT EXISTS `#__acctexp_coupons_static` (
+		`id` int(11) NOT NULL auto_increment,
+		`active` int(4) NOT NULL default '1',
+		`ordering` int(11) NOT NULL default '999999',
+		`coupon_code` varchar(255) NULL,
+	    `created_date` datetime NULL default '0000-00-00 00:00:00',
+		`name` varchar(255) NULL,
+		`desc` text NULL,
+		`discount` text NULL,
+		`restrictions` text NULL,
+		`params` text NULL,
+		`usecount` int(64) NOT NULL default '0',
+		`micro_integrations` text NULL,
+		PRIMARY KEY  (`id`)
+		) TYPE=MyISAM;
+	</query>
+   </queries>
+   </install>
+   <uninstall>
+    <queries>
+    <query>
+    DELETE from #__menu WHERE link LIKE 'index.php?option=com_acctexp%';
+    </query>
+    </queries>
+   </uninstall>
+   <installfile>install.acctexp.php</installfile>
+   <uninstallfile>uninstall.acctexp.php</uninstallfile>
+   <administration>
+      <menu>AEC Subscription Manager</menu>
+      <submenu>
+         <menu task="showCentral">AEC Central</menu>
+         <menu task="showExcluded">Excluded Subscriptions</menu>
+         <menu task="showPending">Pending Subscriptions</menu>
+         <menu task="showActive">Active Subscriptions</menu>
+         <menu task="showCancelled">Cancelled Subscriptions</menu>
+         <menu task="showClosed">Closed Subscriptions</menu>
+         <menu task="showManual">Manual Subscriptions</menu>
+	     <menu task="showSubscriptionPlans">Subscription Plans</menu>
+	     <menu task="showMicroIntegrations">Micro Integrations</menu>
+         <menu task="showSettings">Settings</menu>
+         <menu task="editCSS">Edit CSS</menu>
+         <menu task="hacks">Hacks</menu>
+         <menu task="help">Help</menu>
+      </submenu>
+      <files>
+         <filename>Tar.php</filename>
+         <filename>PEAR.php</filename>
+         <filename>admin.acctexp.php</filename>
+         <filename>admin.acctexp.html.php</filename>
+         <filename>toolbar.acctexp.php</filename>
+         <filename>toolbar.acctexp.html.php</filename>
+         <filename>backend_style.css</filename>
+         <filename>manual/AEC_Quickstart.pdf</filename>
+         <filename>com_acctexp_language_backend/english.php</filename>
+         <filename>com_acctexp_language_backend/brazilian_portuguese.php</filename>
+         <filename>com_acctexp_language_backend/spanish.php</filename>
+         <filename>com_acctexp_language_backend/french.php</filename>
+         <filename>com_acctexp_language_backend/general.php</filename>
+         <filename>com_acctexp_language_backend/german.php</filename>
+         <filename>com_acctexp_language_backend/germani.php</filename>
+         <filename>com_acctexp_language/germanf.php</filename>
+         <filename>com_acctexp_language_backend/italian.php</filename>
+         <filename>com_acctexp_language_backend/simplified_chinese.php</filename>
+         <filename>images/icons/backend_icons.tar.gz</filename>
+         <filename>images/icons/silk_icons.tar.gz</filename>
+         <filename>images/backend_gfx/backend_gfx.tar.gz</filename>
+      </files>
+	<images>
+	</images>
+   </administration>
+</mosinstall>

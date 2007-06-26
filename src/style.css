@@ -1,0 +1,482 @@
+/* == AccountExpiration Basic Style by David 'skOre' Deutsch == */
+
+/* COLORS: General */
+/* 000 - for strong text */
+/* 00bcec - for backgrounds */
+/* 003e56 - for borders */
+/* 1d78b1 - for light borders */
+/* b0efff - for light backgrounds */
+/* COLORS: Steps */
+/* 80df02 - Done Step */
+/* 80df02 - Current Step */
+/* 80df02 - Done Step */
+
+/* == "Not Allowed" Page styling == */
+
+table#cc_list {
+position: relative;
+float: left;
+clear: both;
+width: 100%;
+}
+
+cc_list.tr {
+height: 60px;
+}
+
+td.cc_icons {
+width: 60%;
+padding: 5px;
+}
+
+img.cc_icon {
+padding: 0 2px;
+}
+
+td.cc_gateway {
+padding: 5px;
+width: 40%
+}
+
+/* == Subscription Plans Page == */
+
+.subscriptions {
+width: 100%;
+height: 100%;
+clear: left;
+}
+
+.subscriptions table {
+width: 100%;
+padding-top: 4px;
+}
+
+.subscriptions th {
+padding: 2px;
+font-family: Georgia, "Times New Roman", serif;
+font-size: 20px;
+font-weight: normal;
+text-align: left;
+color: #000;
+border-bottom: 1px solid #003e56;
+width: 100%;
+}
+
+.subscriptions td {
+margin: 6px;
+font-family: Tahoma, Verdana, Helvetica, sans-serif;
+font-size: 12px;
+text-indent: 20px;
+color: #222;
+}
+
+.subscriptions td.buttons {
+padding: 0px 12px;
+border: none;
+background: #b0efff;
+text-align: right;
+text-indent: 0px;
+}
+
+.gateway_button {
+position: relative;
+float: right;
+background: #fff;
+padding: 0px 4px;
+margin: 0px 4px;
+}
+
+/* == Style for the PaymentPage OLD Style== */
+
+/* == Style for the Payment Plans Box == */
+
+.box_introduction {
+position: relative;
+width: 30em;
+float: left;
+margin: 0 4em;
+background: #b0efff;
+}
+
+.introduction_text {
+text-align: center;
+}
+
+.box_oneplan { /*Wrapping Box for one payment plan*/
+position: relative;
+float: left;
+width: 95%;
+margin: 5px;
+}
+
+.box_name { /*Box that holds the plans name*/
+position: relative;
+float: left;
+width: 600px;
+height: 24px;
+border-bottom: 2px solid #003e56;
+padding: 1px;
+}
+
+H1.plan_name { /*Style for the name of the plan*/
+padding-left: 1em;
+margin-top: 4px;
+}
+
+.box_info { /*Box that holds all the plan information*/
+position: relative;
+width: 60%;
+float: right;
+margin: 5px auto;
+background: #b0efff;
+}
+
+P.plan_desc { /*The plans description*/
+margin-top: 1px;
+padding-left: 1em;
+padding-bottom: 1em;
+}
+
+/* == Style for the Payment Gateways Box == */
+
+#allgateways { /*Wrapping Box for Payment Gateways*/
+position: relative;
+float: left;
+width: 100%;
+margin: 0 auto;
+}
+
+.box_onegateway { /*Wrapping Box for one Payment Gateway*/
+position: relative;
+float: left;
+width: 165px;
+border-bottom: 1px solid #003e56;
+border-left: 1px solid #003e56;
+border-right: 1px solid #003e56;
+margin: 4px;
+}
+
+.box_outer_button { /*Wrapping Box for one Button*/
+position: relative;
+height: 80px;
+margin: auto auto;
+width: 140px;
+}
+
+.box_button { /*Second Wrapping Box for one Button*/
+position: relative;
+top: 25px;
+height: 60px;
+margin: 0 auto;
+text-align: center; /*workaround for IE*/
+}
+
+.box_gateway_description { /*Wrapping Box for Gateway Description*/
+border: 1px solid #003e56;
+background-color: #fff;
+padding: 2px;
+margin: 5px;
+}
+
+H1.gateway_title { /*Description Text Heading*/
+display: block;
+font-size: 0.6em !important;
+border-bottom: 1px solid #003e56;
+padding-bottom: 2px;
+}
+
+P.gateway_description { /*Description Text*/
+display: block;
+font-size: 0.6em !important;
+}
+
+input.box_select { /*Radio Button Style*/
+padding-top: 50% !important;
+}
+
+/* == Styling for Thank you and Cancel Pages == */
+
+table.plan_disclaimer { /*disclaimer at the end of the PaymentPlan Site*/
+background: #eee;
+border: 1px solid #999;
+font-family: Tahoma, Verdana, Helvetica, sans-serif;
+font-size: 11px;
+text-indent: 2px;
+}
+
+table.payment_details {
+background: #eee;
+border: 1px solid #999;
+font-family: Tahoma, Verdana, Helvetica, sans-serif;
+font-size: 11px;
+text-indent: 2px;
+}
+
+td.payment_item {
+padding: 4px;
+}
+
+.payment_item {
+margin: 10px 10px 0px 10px;
+color: #000000;
+}
+
+.payment_date {
+color: #505050;
+text-align: right;
+margin: 0px;
+}
+
+/* == Styling for the Expired Page == */
+
+#box_expired {
+position:relative;
+float:left;
+width: 90%;
+margin: 5% 20px;
+text-align: center;
+padding-bottom: 40px;
+}
+
+#box_pending {
+position:relative;
+float:left;
+width: 90%;
+margin: 5% 20px;
+text-align: center;
+padding-bottom: 40px;
+}
+
+#alert_level_3 {
+width: 100%;
+height: 100%;
+background-color: #bfb;
+}
+
+#alert_level_1 {
+width: 100%;
+height: 100%;
+background-color: #fcc;
+}
+
+#alert_level_-1 {
+width: 100%;
+height: 100%;
+background-color: #fcc;
+}
+
+#alert_level_2 {
+width: 100%;
+height: 100%;
+background-color: #ffb;
+}
+
+#expired_greeting {
+padding: 3px;
+border: 2px solid #fff;
+}
+
+#box_expired p {
+padding: 3px;
+text-align: center;
+}
+
+#box_expired strong {
+font-weight: bold;
+}
+
+#days_left{
+padding: 3px;
+border: 2px solid #fff;
+border-left: 30px solid #fff;
+border-right: 30px solid #fff;
+}
+
+* html #days_left{
+}
+
+#days_left h1 {
+font-weight: bold;
+font-size: 1.2em;
+text-align: center;
+}
+
+#days_left p {
+font-weight: bold;
+font-size: 12px;
+text-align: center;
+}
+
+#days_left strong {
+font-weight: bold;
+font-size: 16px;
+text-align: center;
+}
+
+#renew_button {
+padding: 25px;
+text-align: center;
+border: 2px solid #fff;
+}
+
+#upgrade_button {
+padding: 25px;
+text-align: center;
+border: 2px solid #fff;
+position: relative;
+padding-left: 30px;
+text-align: center;
+display: block;
+}
+
+/* == Styling for the Confirmation Page == */
+
+#confirmation {
+width: 97%;
+}
+
+#confirmation table {
+position: relative;
+float: left;
+width: 100%;
+padding-top:10px;
+}
+
+#confirmation th {
+background: #EEEEEE;
+padding: 6px;
+margin: 3px;
+}
+
+#confirmation td {
+padding: 10px;
+margin: 3px;
+text-align: center;
+}
+
+td.confirmation_button {
+position: relative;
+text-align: right;
+text-indent: 10%;
+display: block;
+}
+
+td.append_button {
+position: relative;
+text-align: center;
+width: 90%;
+display: block;
+}
+
+/* == Styling for the Checkout Page == */
+
+#checkout {
+width: 97%;
+}
+
+#checkout table {
+position: relative;
+float: left;
+}
+
+table.amount {
+position: relative;
+float: left;
+width: 100%;
+padding: 2px 10%;
+}
+
+table.amount tr {
+position: relative;
+float: left;
+width: 100%;
+padding: 2px;
+border-bottom: 1px solid #555;
+}
+
+tr.total {
+border-top: 2px solid #000;
+border-bottom: none !important;
+line-height: 32px;
+}
+
+td.item {
+position: relative;
+float: left;
+text-align: left;
+width: 50%;
+}
+
+td.amount {
+position: relative;
+float: left;
+text-align: right;
+width: 40%;
+}
+
+td.item_later {
+position: relative;
+float: left;
+text-align: left;
+width: 50%;
+color: #999;
+}
+
+td.amount_later {
+position: relative;
+float: left;
+text-align: right;
+width: 40%;
+color: #999;
+}
+
+.couponerror {
+position: relative;
+float: left;
+background-color: #fcc;
+clear: both;
+width: 100%;
+}
+
+.couponwarning {
+position: relative;
+float: left;
+background-color: #ffb;
+clear: both;
+width: 100%;
+}
+
+/* == Styling for the Subscription Details Page == */
+
+#subscription_details {
+}
+
+#subscription_details h2 {
+font-weight: bold;
+font-size: 14px;
+}
+
+#subscription_details table {
+position: relative;
+float: left;
+width: 100%;
+padding-top:10px;
+}
+
+#subscription_details th {
+background: #EEEEEE;
+padding: 6px;
+margin: 3px;
+}
+
+#subscription_details td{
+padding: 10px;
+margin: 3px;
+text-align: center;
+}
+
+#thankyou_page {
+}
+
+#cancel_page {
+}
