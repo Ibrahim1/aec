@@ -1,14 +1,13 @@
 <?php
 /**
-* @version $Id: german.php,v 1.0 2007/06/21 09:22:22 mic Exp $
-* @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
-* @subpackage Processor Languages - German
-* @copyright Copyright (C) 2004-2007 Helder Garcia, David Deutsch
-* @author Team AEC - http://www.gobalnerd.org
-* @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
-*/
-// german language for processors/com_acctexp_language_processors
-//
+ * @version $Id: germanf.php 16 2007-06-25 09:04:04Z mic $
+ * @package AEC - Account Expiration Control / Subscription management for Joomla
+ * @subpackage Processor languages
+ * @author mic [ http://www.joomx.com ]
+ * @copyright 2004-2007 Helder Garcia, David Deutsch
+ * @license http://www.gnu.org/copyleft/gpl.html. GNU Public License
+ */
+
 // Copyright (C) 2004-2007 Helder Garcia, David Deutsch
 // All rights reserved.
 // This source file is part of the Account Expiration Control Component, a  Joomla
@@ -37,23 +36,21 @@
 // http://www.gnu.org/copyleft/gpl.html.
 
 // Dont allow direct linking
-defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
+defined( '_VALID_MOS' ) or die( 'Not Really ....' );
 
 define( '_AEC_LANG_PROCESSOR', 1 );
 
-// ################## new mic
+// ################## new 0.12.4 (mic)
 	// paypal
-define( '_AEC_PROC_INFO_PP_LNAME',			'PayPal' ); // PayPal
-define( '_AEC_PROC_INFO_PP_STMNT',			'Zahlungen mit PayPal - schnell, gratis und sicher!'); // Make payments with PayPal - it's fast, free and secure!
+define( '_AEC_PROC_INFO_PP_LNAME',			'PayPal' );
+define( '_AEC_PROC_INFO_PP_STMNT',			'Zahlungen mit PayPal - schnell, gratis und sicher!');
 	// paypal subscription
-define( '_AEC_PROC_INFO_PPS_LNAME',			'PayPal Abonnement' ); // Payl Subscription
-define( '_AEC_PROC_INFO_PPS_STMNT',			'Zahlungen mit PayPal - schnell, gratis und sicher!'); // Make payments with PayPal - it's fast, free and secure!
+define( '_AEC_PROC_INFO_PPS_LNAME',			'PayPal Abonnement' );
+define( '_AEC_PROC_INFO_PPS_STMNT',			'Zahlungen mit PayPal - schnell, gratis und sicher!');
 	// 2CheckOut
-define( '_AEC_PROC_INFO_2CO_LNAME',			'2CheckOut' ); // 2CheckOut
-define( '_AEC_PROC_INFO_2CO_STMNT',			'Zahlung mit 2Checkout!' ); // Make payments with 2Checkout!
-
-
-// ################### end new mic ##############################
+define( '_AEC_PROC_INFO_2CO_LNAME',			'2CheckOut' );
+define( '_AEC_PROC_INFO_2CO_STMNT',			'Zahlung mit 2Checkout!' );
+// END 0.12.4
 
 define( '_DESCRIPTION_PAYPAL',				'Mit PayPal k&ouml;nnen Sie Zahlungen an jeden senden, der eine Emailadresse besitzt. PayPal ist kostenlos und wird in das vorhandene Kreditkarten- und Bankkonto integriert.' );
 

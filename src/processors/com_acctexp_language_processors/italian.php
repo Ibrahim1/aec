@@ -1,5 +1,13 @@
 <?php
-//
+/**
+ * @version $Id: italian.php 16 2007-06-25 09:04:04Z mic $
+ * @package AEC - Account Expiration Control / Subscription management for Joomla
+ * @subpackage Processor languages - informal german
+ * @author Luca Scarpa - http://www.luscarpa.eu
+ * @copyright 2004-2007 Helder Garcia, David Deutsch
+ * @license http://www.gnu.org/copyleft/gpl.html. GNU Public License
+ */
+
 // Copyright (C) 2004-2007 Helder Garcia, David Deutsch
 // All rights reserved.
 // This source file is part of the Account Expiration Control Component, a  Joomla
@@ -26,11 +34,21 @@
 //
 // The "GNU General Public License" (GPL) is available at
 // http://www.gnu.org/copyleft/gpl.html.
-//
-// Italian translation: Luca Scarpa - http://www.luscarpa.eu
-//
+
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Accesso diretto non acconsentito a questo file.' );
+
+// ################## new 0.12.4
+	// paypal
+define( '_AEC_PROC_INFO_PP_LNAME',			'PayPal' );
+define( '_AEC_PROC_INFO_PP_STMNT',			'Make payments with PayPal - it\'s fast, free and secure!' );
+	// paypal subscription
+define( '_AEC_PROC_INFO_PPS_LNAME',			'PayPal Subscription' );
+define( '_AEC_PROC_INFO_PPS_STMNT',			'Make payments with PayPal - it\'s fast, free and secure!' );
+	// 2CheckOut
+define( '_AEC_PROC_INFO_2CO_LNAME',			'2CheckOut' );
+define( '_AEC_PROC_INFO_2CO_STMNT',			'Make payments with 2Checkout!' );
+// END 0.12.4
 
 DEFINE ('_DESCRIPTION_PAYPAL', 'Paypal ti lascia inviare soldi a qualcuno attraverso l\'utilizzo delle mail. Paypal è gratuito per i consumatori e lavora associando alla tua carta di credito al tuo account.');
 DEFINE ('_DESCRIPTION_PAYPAL_SUBSCRIPTION', 'PayPal Subscription is the Subscription Service that will <strong>automatically bill your account each subscription period</strong>. You can cancel a subscription any time you want from your PayPal account. PayPal is free for consumers and works seamlessly with your existing credit card and checking account.');

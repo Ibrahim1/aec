@@ -1,5 +1,13 @@
 <?php
-//
+/**
+ * @version $Id: germani.php 16 2007-06-25 09:04:04Z mic $
+ * @package AEC - Account Expiration Control / Subscription management for Joomla
+ * @subpackage Processor languages - informal german
+ * @author mic [ http://www.joomx.com ]
+ * @copyright 2004-2007 Helder Garcia, David Deutsch
+ * @license http://www.gnu.org/copyleft/gpl.html. GNU Public License
+ */
+
 // Copyright (C) 2004-2007 Helder Garcia, David Deutsch
 // All rights reserved.
 // This source file is part of the Account Expiration Control Component, a  Joomla
@@ -26,11 +34,21 @@
 //
 // The "GNU General Public License" (GPL) is available at
 // http://www.gnu.org/copyleft/gpl.html.
-//
-// Italian translation: Luca Scarpa - http://www.luscarpa.eu
-//
+
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
+
+// ################## new 0.12.4 (mic)
+	// paypal
+define( '_AEC_PROC_INFO_PP_LNAME',			'PayPal' );
+define( '_AEC_PROC_INFO_PP_STMNT',			'Zahlungen mit PayPal - schnell, gratis und sicher!');
+	// paypal subscription
+define( '_AEC_PROC_INFO_PPS_LNAME',			'PayPal Abonnement' );
+define( '_AEC_PROC_INFO_PPS_STMNT',			'Zahlungen mit PayPal - schnell, gratis und sicher!');
+	// 2CheckOut
+define( '_AEC_PROC_INFO_2CO_LNAME',			'2CheckOut' );
+define( '_AEC_PROC_INFO_2CO_STMNT',			'Zahlung mit 2Checkout!' );
+// END 0.12.4
 
 DEFINE ('_DESCRIPTION_PAYPAL', 'Mit PayPal k&ouml;nnen Sie Zahlungen an jeden senden, der eine E-Mail-Adresse hat. PayPal ist f&uuml;r Kunden kostenlos und wird in Ihr vorhandenes Kreditkarten- und Bankkonto integriert.');
 DEFINE ('_DESCRIPTION_PAYPAL_SUBSCRIPTION', 'PayPal Subscription ist der PayPal Service f&uuml;r wiederkehrende Zahlungen mit dem <strong>dein Konto deinem Abonnement entsprechend automatisch wiederkehrend belastet wird</strong>. Dies kannst du selbstverst&auml;ndlich jederzeit in deinem PayPal Konto abbrechen. PayPal ist f&uuml;r Kunden kostenlos und wird in dein vorhandenes Kreditkarten- und Bankkonto integriert.');
