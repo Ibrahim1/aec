@@ -2050,7 +2050,7 @@ class InvoiceFactory {
 		$hasTransfer		= $cfg->cfg['transfer'];
 		$subscriptionClosed	= 0;
 
-		if( !$my->id ) { // !$this->userid ) {
+		if( !$this->userid ) {
 			// Creating a dummy user object
 			$metaUser = new metaUser( 0 );
 			$metaUser->cmsUser->gid = 18;
