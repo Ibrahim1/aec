@@ -53,7 +53,7 @@ if( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
 }
 
 if( !class_exists( 'paramDBTable' ) ) {
-	include_once( $mosConfig_absolute_path . '/administrator/components/com_acctexp/eucalib.php' );
+	include_once( $mosConfig_absolute_path . '/components/com_acctexp/eucalib.php' );
 }
 
 class metaUser {
