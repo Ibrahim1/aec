@@ -1,4 +1,13 @@
 <?php
+/**
+ * @version $Id: paypal.php 16 2007-06-25 09:04:04Z mic $
+ * @package AEC - Account Expiration Control / Subscription management for Joomla
+ * @subpackage Payment Processors
+ * @author Helder Garcia <helder.garcia@gmail.com>, David Deutsch <skore@skore.de>
+ * @copyright 2004-2007 Helder Garcia, David Deutsch
+ * @license http://www.gnu.org/copyleft/gpl.html. GNU Public License
+ */
+
 // Copyright (C) 2006-2007 David Deutsch
 // All rights reserved.
 // This source file is part of the Account Expiration Control Component, a  Joomla
@@ -51,7 +60,7 @@ class processor_paypal {
 		$info['statement']			= _AEC_PROC_INFO_PP_STMNT;
 		$info['description'] 		= _DESCRIPTION_PAYPAL;
 		$info['currencies']			= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK';
-		$info['languages']			= 'GB,DE,FR,IT,ES';
+		$info['languages']			= 'GB,DE,FR,IT,ES,US';
 		$info['cc_list']			= 'visa,mastercard,discover,americanexpress,echeck,giropay';
 		$info['recurring']			= 0;
 
