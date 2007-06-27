@@ -1,10 +1,13 @@
 <?php
-//
-// Copyright (C) 2004-2007 Helder Garcia, David Deutsch
-// All rights reserved.
-// This source file is part of the Account Expiration Control Component, a  Joomla
-// custom Component By Helder Garcia and David Deutsch - http://www.globalnerd.org
-//
+/**
+ * @version $Id: germani.php 16 2007-06-25 09:04:04Z mic $
+ * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
+ * @subpackage Language - Frontend - German Informal
+ * @copyright Copyright (C) 2004-2007, All Rights Reserved, Helder Garcia, David Deutsch
+ * @author Helder Garcia <helder.garcia@gmail.com>, David Deutsch <skore@skore.de> & Team AEC - http://www.gobalnerd.org
+ * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
+ */
+
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License (GPL)
 // as published by the Free Software Foundation; either version 2
@@ -23,19 +26,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-//
-// The "GNU General Public License" (GPL) is available at
-// http://www.gnu.org/copyleft/gpl.html.
-//
-// Italian translation: Luca Scarpa - http://www.luscarpa.eu
-//
+
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-// ----======== FRONTEND TEXT ========----
+// new 0.12.4 (mic)
+define( '_AEC_EXPIRE_NOT_SET',				'Nicht definiert' );
+define( '_AEC_GEN_ERROR',					'<h1>FEHLER!</h1><p>Leider trat w&auml;hrend der Bearbeitung ein Fehler auf - bitte informieren Sie auch den Administrator. Danke.</p>' );
+
+// end mic ########################################################
 
 // --== PAYMENT PLANS PAGE ==--
-DEFINE ('_NOPLANS_ERROR', 'Es sind keine Bezahlpl&auml;ne vorhanden, bitte setzen Sie den Administrator hiervon in Kenntnis.');
+DEFINE ('_NOPLANS_ERROR',					'Es trat in interner Fehler auf, dadurch sind momentan keine Abonnements vorhanden, bitte den Administrator informieren - danke!');
 
 // --== ACCOUNT DETAILS PAGE ==--
 DEFINE ('_CHK_USERNAME_AVAIL', "Benutzername %s ist verf&uuml;gbar");

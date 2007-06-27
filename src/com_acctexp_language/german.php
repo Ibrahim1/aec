@@ -2,17 +2,12 @@
 /**
  * @version $Id: german.php 16 2007-06-25 09:04:04Z mic $
  * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
- * @subpackage Language - Frontend
- * @copyright Copyright (C) 2004-2007 Helder Garcia, David Deutsch
+ * @subpackage Language - Frontend - German Formal
+ * @copyright Copyright (C) 2004-2007, All Rights Reserved, Helder Garcia, David Deutsch
  * @author Helder Garcia <helder.garcia@gmail.com>, David Deutsch <skore@skore.de> & Team AEC - http://www.gobalnerd.org
  * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
  */
 
-// Copyright (C) 2004-2007 Helder Garcia, David Deutsch
-// All rights reserved.
-// This source file is part of the Account Expiration Control Component, a  Joomla
-// custom Component By Helder Garcia and David Deutsch - http://www.globalnerd.org
-//
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License (GPL)
 // as published by the Free Software Foundation; either version 2
@@ -31,23 +26,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-//
-// The "GNU General Public License" (GPL) is available at
-// http://www.gnu.org/copyleft/gpl.html.
 
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Restricted access' );
 
-// ----======== FRONTEND TEXT ========----
-
-// new mic
-define( '_AEC_EXPIRE_NOT_SET',				'Nicht definiert' ); // Not Set
+// new 0.12.4 (mic)
+define( '_AEC_EXPIRE_NOT_SET',				'Nicht definiert' );
 define( '_AEC_GEN_ERROR',					'<h1>FEHLER!</h1><p>Leider trat w&auml;hrend der Bearbeitung ein Fehler auf - bitte informieren Sie auch den Administrator. Danke.</p>' );
-// <h1>General Error</h1><p>We had problems processing your request. Please contact the web site administrator.</p>
-
-// mic: used inside the class (needed ???)
-define( '_AEC_CMN_DAY_S',					'Tag(e)' ); // day(s)
-define( '_AEC_CMN_HOUR_S',					'Stunde(n)' ); // hour(s)
 
 // end mic ########################################################
 
@@ -76,7 +61,7 @@ DEFINE ('_RENEW_DAYSLEFT_INFINITE', 		'&#8734');
 DEFINE ('_RENEW_INFO', 						'Sie verwenden automatisch wiederkehrende Zahlungen.');
 DEFINE ('_RENEW_OFFLINE', 					'Erneuern');
 DEFINE ('_RENEW_BUTTON_UPGRADE', 			'Ver&auml;ndern');
-DEFINE ('_PAYMENT_PENDING_REASON_ECHECK',	'Ececk noch ausst&auml;ndig (1-4 Arbeitstage)');
+DEFINE ('_PAYMENT_PENDING_REASON_ECHECK',	'ECheck noch ausst&auml;ndig (1-4 Arbeitstage)');
 DEFINE ('_PAYMENT_PENDING_REASON_TRANSFER', 'Zahlungsanweisung wird erwartet');
 
 // --== EXPIRATION PAGE ==--

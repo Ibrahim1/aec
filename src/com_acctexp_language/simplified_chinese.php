@@ -1,10 +1,13 @@
 <?php
-//
-// Copyright (C) 2004-2007 Helder Garcia, David Deutsch
-// All rights reserved.
-// This source file is part of the Account Expiration Control Component, a  Joomla
-// custom Component By Helder Garcia and David Deutsch - http://www.globalnerd.org
-//
+/**
+ * @version $Id: simplified_chinese.php 16 2007-06-25 09:04:04Z mic $
+ * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
+ * @subpackage Language - Frontend - Simplified Chinese
+ * @copyright Copyright (C) 2004-2007, All Rights Reserved, Helder Garcia, David Deutsch
+ * @author Helder Garcia <helder.garcia@gmail.com>, David Deutsch <skore@skore.de> & Team AEC - http://www.gobalnerd.org
+ * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
+ */
+
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License (GPL)
 // as published by the Free Software Foundation; either version 2
@@ -23,62 +26,63 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-//
-// The "GNU General Public License" (GPL) is available at
-// http://www.gnu.org/copyleft/gpl.html.
-//
-// Dont allow direct linking
-defined( '_VALID_MOS' ) or die( '不容许直接访问这儿.' );
 
-// ----======== FRONTEND TEXT ========----
+// Dont allow direct linking
+defined( '_VALID_MOS' ) or die( '�?容许直接访问这儿.' );
+
+// new mic
+define( '_AEC_EXPIRE_NOT_SET',				'Not Set' );
+define( '_AEC_GEN_ERROR',					'<h1>General Error</h1><p>We had problems processing your request. Please contact the web site administrator.</p>' );
+
+// end mic ########################################################
 
 // --== PAYMENT PLANS PAGE ==--
 DEFINE ('_NOPLANS_ERROR', 'No payment plans available. Please contact administrator.');
 
 // --== ACCOUNT DETAILS PAGE ==--
-DEFINE ('_CHK_USERNAME_AVAIL', "用户名 %s 可用");
-DEFINE ('_CHK_USERNAME_NOTAVAIL', "用户名 %s 已经存在!");
+DEFINE ('_CHK_USERNAME_AVAIL', "用户�?? %s �?�用");
+DEFINE ('_CHK_USERNAME_NOTAVAIL', "用户�?? %s 已�?存在!");
 
 // --== MY SUBSCRIPTION PAGE ==--
-DEFINE ('_HISTORY_TITLE', '支付记录-最后10笔');
-DEFINE ('_HISTORY_SUBTITLE', '会员之后');
-DEFINE ('_HISTORY_COL1_TITLE', '发票');
-DEFINE ('_HISTORY_COL2_TITLE', '数量');
+DEFINE ('_HISTORY_TITLE', '支付记录-最�?�10笔');
+DEFINE ('_HISTORY_SUBTITLE', '会员之�?�');
+DEFINE ('_HISTORY_COL1_TITLE', '�?�票');
+DEFINE ('_HISTORY_COL2_TITLE', '数�?');
 DEFINE ('_HISTORY_COL3_TITLE', '支付日期');
 DEFINE ('_HISTORY_COL4_TITLE', '方法');
 DEFINE ('_HISTORY_COL5_TITLE', 'Action');
 DEFINE ('_HISTORY_COL6_TITLE', 'Plan');
 DEFINE ('_HISTORY_ACTION_REPEAT', 'pay');
 DEFINE ('_HISTORY_ACTION_CANCEL', 'cancel');
-DEFINE ('_RENEW_LIFETIME', '你可以永久使用.');
+DEFINE ('_RENEW_LIFETIME', '你�?�以永久使用.');
 DEFINE ('_RENEW_DAYSLEFT', '剩下时间');
 DEFINE ('_RENEW_DAYSLEFT_EXCLUDED', 'You are excluded from expiration');
 DEFINE ('_RENEW_DAYSLEFT_INFINITE', '&#8734');
 DEFINE ('_RENEW_INFO', 'You are using recurring payments.');
 DEFINE ('_RENEW_OFFLINE', 'Renew');
-DEFINE ('_RENEW_BUTTON_UPGRADE', '升级');
+DEFINE ('_RENEW_BUTTON_UPGRADE', '�?�级');
 DEFINE ('_PAYMENT_PENDING_REASON_ECHECK', 'echeck uncleared (1-4 business days)');
 DEFINE ('_PAYMENT_PENDING_REASON_TRANSFER', 'awaiting transfer payment');
 
 // --== EXPIRATION PAGE ==--
-DEFINE ('_EXPIRE_INFO', '你的帐号一直是可用的');
+DEFINE ('_EXPIRE_INFO', '你的�?�?�一直是�?�用的');
 DEFINE ('_RENEW_BUTTON', '立刻更新');
 DEFINE ('_ACCT_DATE_FORMAT', '%m-%d-%Y');
-DEFINE ('_EXPIRED', '你的帐号已经过期: ');
+DEFINE ('_EXPIRED', '你的�?�?�已�?过期: ');
 DEFINE ('_EXPIRED_TRIAL', 'Your trial period has expired on: ');
-DEFINE ('_ERRTIMESTAMP', '不能转换时间戳.');
-DEFINE ('_EXPIRED_TITLE', '帐号无效!!');
+DEFINE ('_ERRTIMESTAMP', '�?能转�?�时间戳.');
+DEFINE ('_EXPIRED_TITLE', '�?�?�无效!!');
 DEFINE ('_DEAR', 'Dear ');
 
 // --== CONFIRMATION FORM ==--
-DEFINE ('_CONFIRM_TITLE', '批准表单');
-DEFINE ('_CONFIRM_COL1_TITLE', '帐号');
+DEFINE ('_CONFIRM_TITLE', '批准表�?�');
+DEFINE ('_CONFIRM_COL1_TITLE', '�?�?�');
 DEFINE ('_CONFIRM_COL2_TITLE', '详述');
-DEFINE ('_CONFIRM_COL3_TITLE', '数量');
-DEFINE ('_CONFIRM_ROW_NAME', '名字: ');
-DEFINE ('_CONFIRM_ROW_USERNAME', '用户名: ');
+DEFINE ('_CONFIRM_COL3_TITLE', '数�?');
+DEFINE ('_CONFIRM_ROW_NAME', '�??字: ');
+DEFINE ('_CONFIRM_ROW_USERNAME', '用户�??: ');
 DEFINE ('_CONFIRM_ROW_EMAIL', 'E-mail:');
-DEFINE ('_CONFIRM_INFO', '请点击继续按钮去完成注册.');
+DEFINE ('_CONFIRM_INFO', '请点击继续按钮去完�?注册.');
 DEFINE ('_BUTTON_CONFIRM', '继续');
 DEFINE ('_CONFIRM_TOS', "I have read and agree to the <a href=\"%s\" target=\"_BLANK\">Terms of Service</a>");
 DEFINE ('_CONFIRM_TOS_ERROR', 'Please read and agree to our Terms of Service');
@@ -120,11 +124,11 @@ DEFINE ('_NOT_ALLOWED_REGISTERLINK_LOGGED', 'Subscription Page');
 DEFINE ('_NOT_ALLOWED_SECONDPAR', 'Joining will take you less than a minute - we use the service of:');
 
 // --== CANCELLED PAGE ==--
-DEFINE ('_CANCEL_TITLE', '预订结果: 取消!');
-DEFINE ('_CANCEL_MSG', '系统已经接收到这个信息,你可以选择取消你的支付.如果在我们的站点遇到问题,请一定要联系我们!');
+DEFINE ('_CANCEL_TITLE', '预订结果: �?�消!');
+DEFINE ('_CANCEL_MSG', '系统已�?接收到这个信�?�,你�?�以选择�?�消你的支付.如果在我们的站点�?�到问题,请一定�?�?�系我们!');
 
 // --== PENDING PAGE ==--
-DEFINE ('_WARN_PENDING', '你的帐号仍然没有处理.如果在你支付后仍然处于这个状态,请联系这个站点的管理员.');
+DEFINE ('_WARN_PENDING', '你的�?�?��?然没有处�?�.如果在你支付�?��?然处于这个状�?,请�?�系这个站点的管�?�员.');
 DEFINE ('_WARN_PENDING', 'Your account is still pending. If you are in this state for more than some hours and your payment is confirmed, please contact the administrator of this web site.');
 DEFINE ('_PENDING_OPENINVOICE', 'It seems that you have an uncleared invoice in our database - If something went wrong along the way, you can go to the checkout page once again to try again:');
 DEFINE ('_GOTO_CHECKOUT', 'Go to the checkout page again');
@@ -188,13 +192,13 @@ Username - %s
 Please do not respond to this message as it is automatically generated and is for information purposes only.");
 DEFINE('_ACCTEXP_ASEND_MSG_RENEW',"你好 %s,
 
-一个用户已经在%s重新订阅.
+一个用户已�?在%s�?新订阅.
 
-这封邮件包含了他的详细信息:
+这�?邮件包�?�了他的详细信�?�:
 
-姓名 - %s
+姓�?? - %s
 e-mail - %s
-用户名 - %s
+用户�?? - %s
 
-这是一封自动生成的通知邮件,请不要回复.");
+这是一�?自动生�?的通知邮件,请�?�?回�?.");
 ?>
