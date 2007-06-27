@@ -58,17 +58,17 @@ if( !class_exists( 'paramDBTable' ) ) {
 
 class metaUser {
 	/** @var int */
-	var $userid=null;
+	var $userid				= null;
 	/** @var object */
-	var $cmsUser=null;
+	var $cmsUser			= null;
 	/** @var object */
-	var $objExpiration=null;
+	var $objExpiration		= null;
 	/** @var object */
-	var $objSubscription=null;
+	var $objSubscription	= null;
 	/** @var int */
-	var $hasExpiration=null;
+	var $hasExpiration		= null;
 	/** @var int */
-	var $hasSubscription=null;
+	var $hasSubscription	= null;
 
 	function metaUser( $userid ) {
 		global $database;
@@ -1857,7 +1857,7 @@ class InvoiceFactory {
 	function InvoiceFactory( $userid=null, $usage=null, $invoice=null ) {
 		global $database, $mainframe, $my;
 
-		require_once( $mainframe->getPath( 'front_html', "com_acctexp" ) );
+		require_once( $mainframe->getPath( 'front_html', 'com_acctexp' ) );
 
 		// Init variables
 		$this->userid	= $userid;
@@ -1901,7 +1901,7 @@ class InvoiceFactory {
 			$status = $metaUser->permissionResponse( $restrictions );
 
 			foreach( $status as $stname => $ststatus ) {
-				if( !($ststatus === true)) {
+				if( !( $ststatus === true ) ) {
 					mosNotAuth();
 				}
 			}
@@ -1922,35 +1922,38 @@ class InvoiceFactory {
 		if( !is_null( $this->processor ) && !( $this->processor == '' ) ) {
 			switch( $this->processor ) {
 				case 'free':
-					$this->payment->method_name = 'Free';
-					$this->pp = false;
-					$this->recurring = 0;
-					$currency = '';
+					$this->payment->method_name = _AEC_PAYM_METHOD_FREE;
+					$this->pp					= false;
+					$this->recurring			= 0;
+					$currency					= '';
 					break;
+
 				case 'none':
-					$this->payment->method_name = 'None';
-					$this->pp = false;
-					$this->recurring = 0;
-					$currency = '';
+					$this->payment->method_name = _AEC_PAYM_METHOD_NONE;
+					$this->pp					= false;
+					$this->recurring			= 0;
+					$currency					= '';
 					break;
+
 				case 'transfer':
-					$this->payment->method_name = 'Transfer';
-					$this->pp = false;
-					$this->recurring = 0;
-					$currency = '';
+					$this->payment->method_name = _AEC_PAYM_METHOD_TRANSFER;
+					$this->pp					= false;
+					$this->recurring			= 0;
+					$currency					= '';
 					break;
+
 				default:
 					$this->pp = new PaymentProcessor();
 					if( $this->pp->loadName( $this->processor ) ) {
 						$this->pp->fullInit();
-						$this->payment->method_name = $this->pp->info['longname'];
-						$this->recurring = isset( $this->pp->info['recurring'] ) ? $this->pp->info['recurring'] : 0;
-						$currency = isset( $this->pp->settings['currency'] ) ? $this->pp->settings['currency'] : '';
+						$this->payment->method_name	= $this->pp->info['longname'];
+						$this->recurring			= isset( $this->pp->info['recurring'] ) ? $this->pp->info['recurring'] : 0;
+						$currency					= isset( $this->pp->settings['currency'] ) ? $this->pp->settings['currency'] : '';
 					}else{
-						$this->payment->method_name = 'None';
-						$this->pp = false;
-						$this->recurring = 0;
-						$currency = '';
+						$this->payment->method_name = _AEC_PAYM_METHOD_NONE;
+						$this->pp					= false;
+						$this->recurring			= 0;
+						$currency					= '';
 						// TODO: Log Error
 					}
 					break;
@@ -2040,27 +2043,27 @@ class InvoiceFactory {
 	}
 
 	function create ( $option, $intro=0, $usage=0, $invoice=0, $passthrough=false ) {
-		global $database, $mainframe;
+		global $database, $mainframe, $my;
 
 		$cfg = new Config_General( $database );
 
 		$hasTransfer		= $cfg->cfg['transfer'];
 		$subscriptionClosed	= 0;
 
-		if( !$this->userid ) {
+		if( !$my->id ) { // !$this->userid ) {
 			// Creating a dummy user object
 			$metaUser = new metaUser( 0 );
 			$metaUser->cmsUser->gid = 18;
 			$register = 1;
 		}else{
 			// Loading the actual user
-			$metaUser = new metaUser( $this->userid );
+			$metaUser = new metaUser( $my->id ); // $this->userid );
 			$register = 0;
 		}
 
 		$where = array();
 
-		$id = AECfetchfromDB::SubscriptionIDfromUserID( $user->id );
+		$id = AECfetchfromDB::SubscriptionIDfromUserID( $metaUser->userid ); // $this->userid
 
 		if( $id ) {
 			$user_subscription = new Subscription( $database );
@@ -2081,7 +2084,7 @@ class InvoiceFactory {
 		if( $usage ) {
 			$where[] = 'id=' . $usage;
 		}else{
-			$where[] = 'visible > 0';
+			$where[] = 'visible != \'0\'';
 		}
 
 		$query = 'SELECT id'
@@ -2094,6 +2097,13 @@ class InvoiceFactory {
 	 		echo $database->stderr();
 	 		return false;
 	 	}
+
+	 	if( $mainframe->getCfg( 'debug' ) ) {
+	 		echo 'DEBUG - '. __FILE__ . ' - ' . __LINE__ . '<br />';
+			echo 'query: ' . $query . '<br />';
+		 	echo 'rows:<hr />';
+		 	print_r( $rows );
+		}
 
 	 	if( count( $rows ) == 0 ) {
 			mosRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_ERROR ) );
