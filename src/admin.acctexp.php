@@ -1546,7 +1546,7 @@ function editSettings( $option ) {
 
 	$currencies_main = 'EUR,USD,CHF,CAD,DKK,SEK,NOK,GBP,JPY';
 
-	$currencies_general	= 'AUD,CYP,CZK,EGP,HUF,GIP,XAU,HKD,UAH,ISK,'
+	$currencies_general	= 'AUD,CYP,CZK,EGP,HUF,GIP,HKD,UAH,ISK,'
 	. 'EEK,HRK,GEL,LVL,RON,BGN,LTL,MTL,FIM,MDL,ILS,NZD,ZAR,RUB,SKK,'
 	. 'TRY,PLN'
 	;
