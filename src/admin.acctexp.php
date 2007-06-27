@@ -1616,11 +1616,14 @@ function editSettings( $option ) {
 	$mi_list = $mi_handler->getIntegrationList();
 
 	$mi_htmllist = array();
+	$mi_htmllist[]	= mosHTML::makeOption( '', _AEC_CMN_NONE_SELECTED );
+
 	foreach( $mi_list as $name ) {
 		$mi = new microIntegration( $database );
 		$mi->class_name = $name;
 		if( $mi->callIntegration() ){
-			$fullname = str_replace( '#', '&nbsp;', str_pad( $mi->name, 16, '#', STR_PAD_BOTH)) . ' - ' . $mi->desc;
+			$len = 30 - strlen( trim( $mi->name ) );
+			$fullname = str_replace( '#', '&nbsp;', str_pad( $mi->name, $len, '#' ) ) . ' - ' . $mi->desc;
 			$mi_htmllist[] = mosHTML::makeOption( $name, $fullname );
 		}
 	}
@@ -1636,7 +1639,7 @@ function editSettings( $option ) {
 		$selected_mis		= '';
 	}
 
-	$lists['milist'] = mosHTML::selectList($mi_htmllist, 'milist[]', 'size="' . min( ( count( $mi_list ) +1 ), 25 ) . '" multiple', 'value', 'text', $selected_mis );
+	$lists['milist'] = mosHTML::selectList( $mi_htmllist, 'milist[]', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '" multiple', 'value', 'text', $selected_mis );
 
 	// Each Tab needs a name and a short description
 	// Start then by specifying how many values you want to show up and choose their type
@@ -1657,11 +1660,11 @@ function editSettings( $option ) {
 	$tab_data[0][] = array( 'list', _CFG_TAB1_OPT5NAME, _CFG_TAB1_OPT5DESC, '0', 'entry_plan');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_DISPLAYCCINFO_NAME, _CFG_GENERAL_DISPLAYCCINFO_DESC, '0', 'displayccinfo');
 	$tab_data[0][] = array( 'inputC', _CFG_TAB1_OPT15NAME, _CFG_TAB1_OPT15DESC, $cfg->cfg['bypassintegration'], 'bypassintegration');
+	$tab_data[0][] = array( 'list', _CFG_TAB1_OPT21NAME, _CFG_TAB1_OPT21DESC, '0', 'plans_first');
 	$tab_data[0][] = array( 'list', _CFG_TAB1_OPT16NAME, _CFG_TAB1_OPT16DESC, '0', 'simpleurls');
 	$tab_data[0][] = array( 'inputA', _CFG_TAB1_OPT17NAME, _CFG_TAB1_OPT17DESC, $cfg->cfg['expiration_cushion'], 'expiration_cushion');
 	$tab_data[0][] = array( 'inputA', _CFG_TAB1_OPT18NAME, _CFG_TAB1_OPT18DESC, $cfg->cfg['heartbeat_cycle'], 'heartbeat_cycle');
 	$tab_data[0][] = array( 'inputA', _CFG_GENERAL_HEARTBEAT_CYCLE_BACKEND_NAME, _CFG_GENERAL_HEARTBEAT_CYCLE_BACKEND_DESC, $cfg->cfg['heartbeat_cycle_backend'], 'heartbeat_cycle_backend');
-	$tab_data[0][] = array( 'list', _CFG_TAB1_OPT21NAME, _CFG_TAB1_OPT21DESC, '0', 'plans_first');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_ENABLE_COUPONS_NAME, _CFG_GENERAL_ENABLE_COUPONS_DESC, '0', 'enable_coupons');
 
 	$tab_data[1] = array();
@@ -1690,7 +1693,7 @@ function editSettings( $option ) {
 
 	$tab_data[2] = array();
 	$tab_data[2][] = _CFG_TAB_MICROINTEGRATION_TITLE;
-	$tab_data[2][] = array('list_big', _CFG_MI_ACTIVELIST_NAME, _CFG_MI_ACTIVELIST_DESC, $cfg->cfg['milist'], 'milist');
+	$tab_data[2][] = array( 'list_big', _CFG_MI_ACTIVELIST_NAME, _CFG_MI_ACTIVELIST_DESC, $cfg->cfg['milist'], 'milist' );
 //	$tab_data[2][] = array('list', _CFG_MI_META_NAME, _CFG_MI_META_DESC, $cfg->cfg['enable_mimeta'], 'enable_mimeta');
 
 	// TODO: reparse settings with new style aecSettings
@@ -2501,13 +2504,14 @@ function editMicroIntegration ( $id, $option ) {
 		// Set lowest ordering
 		$mi->ordering = 9999;
 		$cfg = new Config_General($database);
-		$mi_list = explode(";", $cfg->cfg['milist']);
+		$mi_list = explode( ';', $cfg->cfg['milist']);
 
 		foreach( $mi_list as $name ) {
 			$mi_item = new microIntegration( $database );
 			$mi_item->class_name = $name;
 			if( $mi_item->callIntegration() ) {
-				$fullname = str_replace( '#', '&nbsp;', str_pad( $mi_item->name, 16, '#', STR_PAD_BOTH ) )
+				$len = 30 - strlen( trim( $mi->name ) );
+				$fullname = str_replace( '#', '&nbsp;', str_pad( $mi_item->name, $len, '#' ) )
 				. ' - ' . $mi_item->desc;
 				$mi_htmllist[] = mosHTML::makeOption( $name, $fullname );
 			}
@@ -2522,7 +2526,7 @@ function editMicroIntegration ( $id, $option ) {
 			// Get lists supplied by the MI
 			if ( @is_array($mi_settings['lists']) ) {
 				$lists = array_merge( $lists, $mi_settings['lists'] );
-				unset($mi_settings['lists']);
+				unset( $mi_settings['lists'] );
 			}
 
 			$settings = new aecSettings( 'MI', $mi->class_name );

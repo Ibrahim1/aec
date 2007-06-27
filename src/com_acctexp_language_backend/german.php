@@ -108,13 +108,8 @@ define( '_AEC_HACKS_MI3',						'Einige Integrationen ben&ouml;tigen Klartextdate
 
 // log
 	// settings
-<<<<<<< .mine
 define( '_AEC_LOG_SH_SETT_SAVED',				'&Auml;nderung Einstellungen' );
 define( '_AEC_LOG_LO_SETT_SAVED',				'AEC Einstellungen wurden gesichert' );
-=======
-define( '_AEC_LOG_SH_SETT_SAVED',				'&Auml;nderung Einstellungen' ); // settings change
-define( '_AEC_LOG_LO_SETT_SAVED',				'Die Einstellungen von AEC wurden gesichert, &Auml;nderungen:' ); // The Settings for the AEC have been saved, changes:
->>>>>>> .r84
 	// heartbeat
 define( '_AEC_LOG_SH_HEARTBEAT',				'Heartbeat' );
 define( '_AEC_LOG_LO_HEARTBEAT',				'Heartbeataktion:' );
@@ -485,8 +480,9 @@ define( '_CFG_TAB1_OPT11DESC',			'Als Standardvorgabe gilt, wenn ein Benutzer ke
 define( '_CFG_ENTRYPLAN_NAME',			'Standard Probeplan' );
 define( '_CFG_ENTRYPLAN_DESC',			'Der Standard-Plan f&uuml;r die freie Probezeit.' );
 
-define( '_CFG_TAB1_OPT15NAME',			'Integration abschalten:' );
-define( '_CFG_TAB1_OPT15DESC',			'Alle zu deaktivierenden Integrationen angeben (mit Komma trennen!). Zur werden unterst&uuml;tzt: CB CBE SMF. Sollte z.B. CB (CommunityBuilder) deinstalliert werden aber dessen Datenbanktabellen noch vorhanden sein (AEC wird dann weiterhin CB als installiert ansehen).' );
+define( '_CFG_TAB1_OPT15NAME',			'Komponenten abschalten:' );
+define( '_CFG_TAB1_OPT15DESC',			'Alle zu deaktivierenden Zusatzkomponenten angeben (mit Komma trennen!). Zur werden unterst&uuml;tzt: <strong>CB,CBE,CBM,JACL,SMF,UE,UHP2,VM</strong>.<br />Sollte z.B. CB (CommunityBuilder) deinstalliert werden aber dessen Datenbanktabellen noch vorhanden sein, jedoch hier <strong>kein</strong> Eintrag vermerkt sein, wird AEC dann weiterhin CB als installiert ansehen!.' ); // mic: change ##############################################
+
 define( '_CFG_TAB1_OPT16NAME',			'Einfache URLs:' );
 define( '_CFG_TAB1_OPT16DESC',			'SEF-URLs der jeweiligen Komponenten abschalten. Falls bei der Verendung von SEF-URLs Fehler auftauchen (FEHLER 404) wurde in der SEF-Konfiguration ein Fehler gemacht - das Abschalten dieser Option hier kann diese Fehler beseitigen.' );
 define( '_CFG_TAB1_OPT17NAME',			'Ablaufschonfrist:' );
@@ -494,7 +490,7 @@ define( '_CFG_TAB1_OPT17DESC',			'Anzahl der Stunden welche AEC als Polster nimm
 define( '_CFG_TAB1_OPT18NAME',			'Cronjob Zyklus:' );
 define( '_CFG_TAB1_OPT18DESC',			'Anzahl der Stunden die AEC als Trigger nimmt um anstehende, wiederkehrende Aktionen (wie z.B. Emailversand) auszuf&uuml;hren.' );
 define( '_CFG_TAB1_OPT21NAME',			'Plan Zuerst:' );
-define( '_CFG_TAB1_OPT21DESC',			'Wenn alle 3 Integrationen mit einer Aboaktion verbunden sind, aktiviert diese Option diese M&ouml;glichkeit. Falls das nicht gew&uuml;nscht ist oder nur die erste Integrationsm&ouml;glichkeit zur Auswahl stehen soll, dann hier nicht aktivieren - Die Aboauswahl kommt dann <strong>nach</strong> der Anmeldung/Registrierung.' );
+define( '_CFG_TAB1_OPT21DESC',			'Wenn alle o.a. Zusatzkomponenten mit einer Aboaktion verbunden sind, aktiviert diese Option diese M&ouml;glichkeit. Falls das nicht gew&uuml;nscht ist oder nur die erste Integrationsm&ouml;glichkeit zur Auswahl stehen soll, dann hier nicht aktivieren - Die Aboauswahl kommt dann <strong>nach</strong> der Anmeldung/Registrierung.' );
 
 define( '_CFG_TAB_CUSTOMIZATION_TITLE',	'Anpassen' );
 define( '_CFG_TAB1_OPT12NAME',			'Individuelle Einstiegsseite:' );
@@ -544,7 +540,7 @@ define( '_CFG_GENERAL_DISPLAYCCINFO_DESC',				'Sollen die Icons f&uuml;r jedes Z
 
 // Global Micro Integration Settings
 define( '_CFG_TAB_MICROINTEGRATION_TITLE',				'Integration' );
-define( '_CFG_MI_ACTIVELIST_NAME',						'Aktive IntegrationenBezahlsysteme' );
+define( '_CFG_MI_ACTIVELIST_NAME',						'Aktive Integrationen' );
 define( '_CFG_MI_ACTIVELIST_DESC',						'W&auml;hlen welche Integrationen aktiv sein sollen' );
 define( '_CFG_MI_META_NAME',							'Integrationen Meta' );
 define( '_CFG_MI_META_DESC',							'Sollen die Integrationen untereinander Variablen austauschen d&uuml;rfen' );

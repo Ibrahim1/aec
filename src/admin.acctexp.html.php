@@ -142,19 +142,20 @@ class HTML_myCommon {
 	function sidebar( $focus ) {
 		global $mosConfig_live_site;
 
-		$sizing = array("small", "mid", "big");
+		$sizing = array( 'small', 'mid', 'big' );
 
 		$group = array();
 		// Group Name | Number of Items
-		$group[0] = array("User", 7);
-		$group[1] = array("Settings", 4);
+		$group[0] = array( 'User', 7 );
+		$group[1] = array( 'Settings', 4 );
 
 		// Detect Focusgroup
-		$cursor = 0;
-		$cursormax = 0;
-		for( $i=0, $cursormax = $group[$i][1]; $i<=count($group); $i++, $cursormax += $group[$i][1] ) {
-			for ($k=0; $k<=$cursormax; $k++, $cursor++) {
-				if ($cursor === $focus) {
+		$cursor		= 0;
+		$cursormax	= 0;
+
+		for( $i = 0, $cursormax = $group[$i][1]; $i <= count( $group ); $i++, $cursormax += $group[$i][1] ) {
+			for( $k = 0; $k <= $cursormax; $k++, $cursor++) {
+				if( $cursor === $focus ) {
 					$focusgroup = $i;
 				}
 			}
@@ -163,28 +164,29 @@ class HTML_myCommon {
 		$items = array();
 		// function name | Text under Button | png name
 
-		$items = array(	"config"		=> array("Edit Expiration", "edit"),
-						"notconfig"		=> array("Excluded", "excluded"),
-						"showPending"	=> array("Pending", "pending"),
-						"showActive"	=> array("Active", "active"),
-						"showCancelled"	=> array("Cancelled", "cancelled"),
-						"showClosed"	=> array("Closed", "closed"),
-						"showManual"	=> array("Manual", "manual"),
-						"showSubscriptionPlans" => array("Subscription Plans", "plans"),
-						"showSettings"	=> array("Settings", "settings"),
-						"editCSS"		=> array("Edit CSS", "css"),
-						"hacks"			=> array("Hacks", "hacks"),
-						"help"			=> array("Help", "help") );
+		$items = array(	'config'				=> array( 'Edit Expiration', 'edit' ),
+						'notconfig'				=> array( 'Excluded', 'excluded' ),
+						'showPending'			=> array( 'Pending', 'pending' ),
+						'showActive'			=> array( 'Active', 'active' ),
+						'showCancelled'			=> array( 'Cancelled', 'cancelled' ),
+						'showClosed'			=> array( 'Closed', 'closed' ),
+						'showManual'			=> array( 'Manual', 'manual' ),
+						'showSubscriptionPlans' => array( 'Subscription Plans', 'plans' ),
+						'showSettings'			=> array( 'Settings', 'settings' ),
+						'editCSS'				=> array( 'Edit CSS', 'css' ),
+						'hacks'					=> array( 'Hacks', 'hacks' ),
+						'help'					=> array( 'Help', 'help' )
+						);
 
-		$html = "<div id=\"sidebar\">";
-		$html .= "<table>";
+		$html = '<div id="sidebar">'
+		. '<table>' . "\n";
 
 		$cursor = 0;
-		for ($i=0; $i<=count($group); $i++) {
-			$html .= "<tr><th><p>" . $group[$i][0] . "</p></th></tr>";
-			$html .= "<tr><td>";
+		for( $i = 0; $i <= count( $group ); $i++ ) {
+			$html .= '<tr><th><p>' . $group[$i][0] . '</p></th></tr>' . "\n"
+			. '<tr><td>' . "\n";
 
-			switch ($i) {
+			switch( $i ) {
 				case $focusgroup:
 					$size = 1;
 					break;
@@ -193,20 +195,21 @@ class HTML_myCommon {
 					break;
 			}
 
-			for ($k=$cursor; $k<=$group[$i][1]; $k++, $cursor++) {
-				if ($cursor == $focus) {
+			for( $k = $cursor; $k <= $group[$i][1]; $k++, $cursor++ ) {
+				if( $cursor == $focus ) {
 					$add = 1;
 				}
-				$html .= "<div class=\"sidebar_button_" . $sizing[$size + $add] . "\">";
-				$html .= "<a href=\"index2.php?option=com_acctexp&task=" . $items[$cursor][1] . "\">";
-				$html .= "<img src=\"" . $mosConfig_live_site . "/administrator/components/com_acctexp/images/icons/aec_icon_" . $items[$cursor][2] . "_" . $sizing[$size + $add] . ".png\"\>";
-				$html .= "<p>". $items[$cursor][2] . "</p></a>";
-				unset($add);
+				$html .= '<div class="sidebar_button_' . $sizing[$size + $add] . '>'
+				. '<a href="index2.php?option=com_acctexp&amp;task=' . $items[$cursor][1] . '>'
+				. '<img src="' . $mosConfig_live_site . '/administrator/components/com_acctexp/images/icons/aec_icon_' . $items[$cursor][2] . '_' . $sizing[$size + $add] . '.png" alt="" title="" />'
+				. '<p>' . $items[$cursor][2] . '</p></a>'
+				. '</div>' . "\n";
+				unset( $add );
 			}
-			$html .= "</tr></td>";
+			$html .= '</td></tr>' . "\n";
 		}
 
-		$html .= "</table>";
+		$html .= '</table>' . "\n";
 
 		return $html;
 	}
@@ -219,12 +222,14 @@ class HTML_myCommon {
 		$thisrow_extra	= $rows[4];
 
 		switch( $thisrow_type ) {
-			case "subtitle": ?>
+			case 'subtitle': ?>
 				<tr align="center" valign="middle">
 					<th colspan="3" width="20%"><?php echo $thisrow_desc; ?></th>
 				</tr>
-			<?php break;
-			case "inputA": ?>
+				<?php
+				break;
+
+			case 'inputA': ?>
 				<tr align="left" valign="middle" >
 					<td width="10%" align="right"><?php echo $thisrow_name; ?></td>
         			<td align="left">
@@ -232,35 +237,45 @@ class HTML_myCommon {
 					</td>
 					<td><?php echo $thisrow_desc; ?></td>
 				</tr>
-			<?php break;
-			case "inputB": ?>
+				<?php
+				break;
+
+			case 'inputB': ?>
 				<tr>
 					<td width="10%"><?php echo $thisrow_name; ?></td>
 					<td width="10%"><input class="inputbox" type="text" name="<?php echo $thisrow_extra; ?>" size="2" maxlength="10" value="<?php echo $thisrow_var; ?>" /></td>
 					<td align="left"><?php echo $thisrow_desc; ?></td>
 				</tr>
-			<?php break;
-			case "inputC": ?>
+				<?php
+				break;
+
+			case 'inputC': ?>
 				<tr align="left" valign="middle" >
 					<td width="10%" align="right"><?php echo $thisrow_name; ?></td>
 					<td width="10%"><input type="text" size="20" name="<?php echo $thisrow_extra; ?>" class="inputbox" value="<?php echo $thisrow_var; ?>" /></td>
 					<td><?php echo $thisrow_desc; ?></td>
 				</tr>
-			<?php break;
-			case "inputD": ?>
+				<?php
+				break;
+
+			case 'inputD': ?>
 				<tr align="left" valign="middle" >
 					<td width="10%" align="right"><?php echo $thisrow_name; ?></td>
 					<td width="10%"><textarea align="left" cols="60" rows="5" name="<?php echo $thisrow_extra; ?>" /><?php echo $thisrow_var; ?></textarea></td>
 					<td><?php echo $thisrow_desc; ?></td>
 				</tr>
-			<?php break;
-			case "inputE": ?>
+				<?php
+				break;
+
+			case 'inputE': ?>
 				<tr align="left" valign="middle" >
 					<td><?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null, "help.png" ); ?><?php echo $thisrow_name; ?></td>
 					<td colspan="2" align="left"><input type="text" size="70" name="<?php echo $thisrow_extra; ?>" class="inputbox" value="<?php echo $thisrow_var; ?>" /></td>
 				</tr>
-			<?php break;
-			case "editor": ?>
+				<?php
+				break;
+
+			case 'editor': ?>
         		<tr align="left" valign="middle" >
 					<td colspan="3">
 						<?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null, "help.png" ); ?><?php echo $thisrow_name; ?>
@@ -268,21 +283,27 @@ class HTML_myCommon {
 						<?php editorArea( $thisrow_extra, $thisrow_var, $thisrow_extra, '100%;', '250', '10', '60' ); ?>
 					</td>
 				</tr>
-			<?php break;
-			case "list": ?>
+				<?php
+				break;
+
+			case 'list': ?>
 				<tr>
 					<td width="10%" valign="top"><?php echo $thisrow_name; ?></td>
 					<td width="10%" align="left" valign="top"><?php echo $lists[$thisrow_extra]; ?></td>
 					<td align="left" valign="top"><?php echo $thisrow_desc; ?></td>
 				</tr>
-			<?php break;
-			case "list_big": ?>
+				<?php
+				break;
+
+			case 'list_big': ?>
 				<tr>
-					<td valign="top"><?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null, "help.png" ); ?><?php echo $thisrow_name; ?></td>
+					<td valign="top"><?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null, 'help.png' ); ?><?php echo $thisrow_name; ?></td>
 					<td colspan="2" align="left" valign="top"><?php echo $lists[$thisrow_extra]; ?></td>
 				</tr>
-			<?php break;
-			case "fieldset": ?>
+				<?php
+				break;
+
+			case 'fieldset': ?>
 				<tr><td colspan="3" >
 					<fieldset><legend><?php echo $thisrow_name; ?></legend>
 						<table cellpadding="1" cellspacing="1" border="0">
@@ -293,7 +314,8 @@ class HTML_myCommon {
 					</fieldset>
 					</td>
 				</tr>
-			<?php break;
+				<?php
+				break;
 		}
 	}
 
@@ -308,7 +330,7 @@ class HTML_myCommon {
 
 class formParticles {
 	function formParticles () {
-		
+
 	}
 
 	function createSettingsParticle( $rows, $lists ) {
@@ -374,7 +396,7 @@ class formParticles {
 					<?php echo $thisrow_name; ?>
 					</td>
 					<td width="10%" colspan="2">
-					<!-- <textarea name="<?php echo $thisrow_extra; ?>" align="left" cols="60" maxlength="2048" rows="5"><?php echo $thisrow_var; ?></textarea> //--> 
+					<!-- <textarea name="<?php echo $thisrow_extra; ?>" align="left" cols="60" maxlength="2048" rows="5"><?php echo $thisrow_var; ?></textarea> //-->
 					<?php
 					// parameters : areaname, content, hidden field, width, height, rows, cols
 					editorArea( $thisrow_extra, $thisrow_var, $thisrow_extra, '100%;', '250', '10', '60' ) ; ?>
@@ -1225,7 +1247,7 @@ class HTML_AcctExp {
 						</table>
 						<?php
 		                $tabs->endTab();
-		                $tabs->startTab( _MI_E_SETTINGS, _MI_E_SETTINGS ); 
+		                $tabs->startTab( _MI_E_SETTINGS, _MI_E_SETTINGS );
 		                ?>
 		                <table width="100%" class="adminform">
 						<?php foreach ($aecHTML->rows as $name => $content) { ?>
@@ -1329,7 +1351,7 @@ class HTML_AcctExp {
 	function editSubscriptionPlan( $option, $aecHTML, $row, $hasrecusers ) {
 		global $my, $mosConfig_live_site;
 		$Returnid = intval( mosGetParam( $_REQUEST, 'Returnid', 0 ) );
-		
+
 		mosCommonHTML::loadOverlib();
 		HTML_myCommon::addBackendCSS(); ?>
 
@@ -1403,7 +1425,7 @@ class HTML_AcctExp {
 						</table>
 						<?php
 		                $tabs->endTab();
-		                $tabs->startTab( _PAYPLAN_TEXT_TITLE, _PAYPLAN_TEXT_TITLE ); 
+		                $tabs->startTab( _PAYPLAN_TEXT_TITLE, _PAYPLAN_TEXT_TITLE );
 		                ?>
 		                <table width="100%" class="adminform"><tr><td>
 							<div class="userinfobox">
@@ -1414,7 +1436,7 @@ class HTML_AcctExp {
 						</td></tr></table>
 						<?php
 		                $tabs->endTab();
-		                $tabs->startTab( _PAYPLAN_RESTRICTIONS_TITLE, _PAYPLAN_RESTRICTIONS_TITLE ); 
+		                $tabs->startTab( _PAYPLAN_RESTRICTIONS_TITLE, _PAYPLAN_RESTRICTIONS_TITLE );
 		                ?>
 		                <h2><?php echo _PAYPLAN_RESTRICTIONS_TITLE; ?></h2>
 						<table class="adminform" style="border-collapse:separate;">
@@ -1609,7 +1631,7 @@ class HTML_AcctExp {
 						<?php
 						$tabs = new mosTabs(0);
 		                $tabs->startPane( 'editSubscriptionPlan' );
-		                $tabs->startTab( _COUPON_DETAIL_TITLE, _COUPON_DETAIL_TITLE ); 
+		                $tabs->startTab( _COUPON_DETAIL_TITLE, _COUPON_DETAIL_TITLE );
 		                ?>
 		                <h2><?php echo _COUPON_DETAIL_TITLE; ?></h2>
 						<table class="adminform" style="border-collapse:separate;">
@@ -1674,7 +1696,7 @@ class HTML_AcctExp {
 						</table>
 						<?php
 		                $tabs->endTab();
-		                $tabs->startTab( _COUPON_RESTRICTIONS_TITLE, _COUPON_RESTRICTIONS_TITLE ); 
+		                $tabs->startTab( _COUPON_RESTRICTIONS_TITLE, _COUPON_RESTRICTIONS_TITLE );
 		                ?>
 		                <h2><?php echo _COUPON_RESTRICTIONS_TITLE_FULL; ?></h2>
 						<table class="adminform" style="border-collapse:separate;">
