@@ -53,7 +53,7 @@ if( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
 }
 
 if( !class_exists( 'paramDBTable' ) ) {
-	include_once( $mosConfig_absolute_path . '/components/com_acctexp/eucalib.php' );
+	include_once( $mosConfig_absolute_path . '/administrator/components/com_acctexp/eucalib.php' );
 }
 
 class metaUser {
@@ -455,6 +455,10 @@ class aecHeartbeat extends mosDBTable {
 		$expired_users		= array();
 		$pre_expired_users	= array();
 		$found_expired		= 1;
+		$e					= 0;
+		$pe					= 0;
+		$exp_actions		= 0;
+		$exp_users			= 0;
 
 		// Efficient way to check for expired users without checking on each one
 		if( !empty( $user_list[0] ) ) {
@@ -486,7 +490,6 @@ class aecHeartbeat extends mosDBTable {
 				}
 			}
 
-			$e = 0;
 			if( isset( $expired_users[0] ) ) {
 				foreach( $expired_users as $n ) {
 					$subscription = new Subscription( $database );
@@ -499,9 +502,6 @@ class aecHeartbeat extends mosDBTable {
 			}
 
 			// Only go for pre expiration action if we have at least one user for it
-			$pe				= 0;
-			$exp_actions	= 0;
-			$exp_users		= 0;
 			if( $pre_expiration && isset( $pre_expired_users[0] ) ) {
 				// Get all the MIs which have a pre expiration check
 				$query = 'SELECT id'
