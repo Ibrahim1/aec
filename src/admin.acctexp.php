@@ -1544,28 +1544,50 @@ function editSettings( $option ) {
 	$lists['customtext_expired_keeporiginal']		= mosHTML::yesnoSelectList('customtext_expired_keeporiginal', '', $cfg->cfg['customtext_expired_keeporiginal']);
 	$lists['customtext_pending_keeporiginal']		= mosHTML::yesnoSelectList('customtext_pending_keeporiginal', '', $cfg->cfg['customtext_pending_keeporiginal']);
 
-	$currencies_general	= 'EUR,USD,AFA,DZD,ADP,ARS,AMD,AWG,AUD,AZM,'
-	. 'BSD,BHD,THB,PAB,BBD,BYB,BEF,BZD,BMD,VEB,BOB,'
-	. 'BRL,BND,BGN,BIF,CAD,CVE,KYD,GHC,XOF,XAF,XPF,'
-	. 'CLP,COP,KMF,BAM,NIO,CRC,CUP,CYP,CZK,GMD,DKK,'
-	. 'MKD,AED,DJF,STD,DOP,VND,GRD,XCD,EGP,SVC,'
-	. 'ETB,FKP,FJD,HUF,CDF,FRF,GIP,XAU,HTG,PYG,GNF,'
-	. 'GWP,GYD,HKD,UAH,ISK,INR,IRR,IQD,IEP,ITL,JMD,'
-	. 'JOD,KES,PGK,LAK,EEK,HRK,KWD,MWK,ZMK,AOR,MMK,'
-	. 'GEL,LVL,LBP,ALL,HNL,SLL,ROL,BGL,LRD,LYD,SZL,'
-	. 'LTL,LSL,LUF,MGF,MYR,MTL,TMM,FIM,MUR,MZM,MXN,'
-	. 'MXV,MDL,MAD,BOV,NGN,ERN,NAD,NPR,ANG,NLG,YUM,'
-	. 'ILS,AON,TWD,ZRN,NZD,BTN,KPW,NOK,PEN,MRO,TOP,'
-	. 'PKR,XPD,MOP,UYU,PHP,XPT,PTE,GBP,BWP,QAR,GTQ,'
-	. 'ZAL,ZAR,OMR,KHR,MVR,IDR,RUB,RUR,RWF,SAR,'
-	. 'SCR,XAG,SGD,SKK,SBD,KGS,SOS,ESP,LKR,SHP,ECS,'
-	. 'SDD,SRG,SEK,CHF,SYP,TJR,BDT,WST,TZS,KZT,TPE,'
-	. 'SIT,TTD,MNT,TND,TRL,UGX,ECV,CLF,USN,USS,UZS,'
-	. 'VUV,KRW,YER,JPY,CNY,ZWD,PLN'
+	$currencies_main = 'EUR,USD,CHF,CAD,DKK,SEK,NOK,GBP,JPY';
+
+	$currencies_general	= 'AUD,CYP,CZK,EGP,HUF,GIP,XAU,HKD,UAH,ISK,'
+	. 'EEK,HRK,GEL,LVL,RON,BGN,LTL,MTL,FIM,MDL,ILS,NZD,ZAR,RUB,SKK,'
+	. 'TRY,PLN'
 	;
-	$currency_array = explode(',', $currencies_general);
+
+	$currencies_other	= 'AFA,DZD,ARS,AMD,AWG,AZM,'
+	. 'BSD,BHD,THB,PAB,BBD,BYB,BZD,BMD,VEB,BOB,'
+	. 'BRL,BND,BIF,CVE,KYD,GHC,XOF,XAF,XPF,'
+	. 'CLP,COP,KMF,BAM,NIO,CRC,CUP,GMD,'
+	. 'MKD,AED,DJF,STD,DOP,VND,XCD,SVC,'
+	. 'ETB,FKP,FJD,CDF,FRF,HTG,PYG,GNF,'
+	. 'GWP,GYD,HKD,UAH,INR,IRR,IQD,JMD,'
+	. 'JOD,KES,PGK,LAK,KWD,MWK,ZMK,AOR,MMK,'
+	. 'LBP,ALL,HNL,SLL,LRD,LYD,SZL,'
+	. 'LSL,MGF,MYR,TMM,MUR,MZM,MXN,'
+	. 'MXV,MAD,ERN,NAD,NPR,ANG,'
+	. 'AON,TWD,ZRN,BTN,KPW,PEN,MRO,TOP,'
+	. 'PKR,XPD,MOP,UYU,PHP,XPT,BWP,QAR,GTQ,'
+	. 'ZAL,OMR,KHR,MVR,IDR,RWF,SAR,'
+	. 'SCR,XAG,SGD,SBD,KGS,SOS,LKR,SHP,ECS,'
+	. 'SDD,SRG,SYP,TJR,BDT,WST,TZS,KZT,TPE,'
+	. 'TTD,MNT,TND,UGX,ECV,CLF,USN,USS,UZS,'
+	. 'VUV,KRW,YER,CNY,ZWD'
+	;
 
 	$currency_code_list = array();
+
+	$currency_array = explode( ',', $currencies_main );
+	foreach( $currency_array as $currency ) {
+		$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
+	}
+
+	$currency_code_list[] = mosHTML::makeOption( '" disabled="disabled', '- - - - - - - - - - - - - -' );
+
+	$currency_array = explode( ',', $currencies_general );
+	foreach( $currency_array as $currency ) {
+		$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
+	}
+
+	$currency_code_list[] = mosHTML::makeOption( '" disabled="disabled', '- - - - - - - - - - - - - -' );
+
+	$currency_array = explode( ',', $currencies_other );
 	foreach( $currency_array as $currency ) {
 		$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
 	}
