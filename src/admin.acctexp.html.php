@@ -574,7 +574,8 @@ class HTML_AcctExp {
 									case 'Excluded':
 										$icon = "cut_red.png";
 										break;
-									case 'Pending':
+										case 'Trial':
+										case 'Pending':
 										$icon = "star.png";
 										break;
 									case 'Active':
