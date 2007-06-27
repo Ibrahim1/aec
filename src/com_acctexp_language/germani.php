@@ -34,6 +34,11 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 define( '_AEC_EXPIRE_NOT_SET',				'Nicht definiert' );
 define( '_AEC_GEN_ERROR',					'<h1>FEHLER!</h1><p>Leider trat w&auml;hrend der Bearbeitung ein Fehler auf - bitte informieren Sie auch den Administrator. Danke.</p>' );
 
+// payments
+define( '_AEC_PAYM_METHOD_FREE',			'Gratis/Frei' );
+define( '_AEC_PAYM_METHOD_NONE',			'Kein/Frei' );
+define( '_AEC_PAYM_METHOD_TRANSFER',		'&Uuml;berweisung' );
+
 // processor errors
 define( '_AEC_MSG_PROC_INVOICE_FAILED_SH',			'FEHLER: Fehlende Rechnungsnummer' );
 define( '_AEC_MSG_PROC_INVOICE_FAILED_EV',			'Benachrichtigung f&uuml;r %s zu Rechnungsnummer %s - Re.Nummer existiert nicht:' );

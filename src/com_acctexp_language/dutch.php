@@ -34,6 +34,11 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 define( '_AEC_EXPIRE_NOT_SET',				'Not Set' );
 define( '_AEC_GEN_ERROR',					'<h1>General Error</h1><p>We had problems processing your request. Please contact the web site administrator.</p>' );
 
+// payments
+define( '_AEC_PAYM_METHOD_FREE',			'Free' );
+define( '_AEC_PAYM_METHOD_NONE',			'None' );
+define( '_AEC_PAYM_METHOD_TRANSFER',		'Transfer' );
+
 // processor errors
 define( '_AEC_MSG_PROC_INVOICE_FAILED_SH',			'Failed Invoice Payment' );
 define( '_AEC_MSG_PROC_INVOICE_FAILED_EV',			'Processor %s notification for %s has failed - invoice number does not exist:' );
