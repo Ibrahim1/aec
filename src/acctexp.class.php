@@ -1392,17 +1392,17 @@ class SubscriptionPlan extends paramDBTable {
 		if( $is_pending ) {
 			// Is new = set signup date
 			$metaUser->objSubscription->signup_date = gmstrftime( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
-			if ($params['has_trial']) {
+			if( $params['trial_period'] > 0 && !$is_trial ) {
 				$status = 'Trial';
-			} else {
+			}else{
 				if( $params['full_period'] || $params['lifetime'] ) {
 					$status = 'Active';
-				} else {
+				}else{
 					// This should not happen
 					$status = 'Pending';
 				}
 			}
-		} else {
+		}else{
 			// Renew subscription - Do NOT set signup_date
 			$status = 'Active';
 			$renew = 1;
