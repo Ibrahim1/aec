@@ -1,13 +1,13 @@
 <?php
 /**
-* @version $Id: german.php 16 2007-06-25 09:04:04Z mic $
+* @version $Id: english.php 16 2007-06-25 09:04:04Z mic $
 * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
-* @subpackage Language - Backend - German Formal
+* @subpackage Language - Backend - English
 * @copyright Copyright (C) 2004-2007 Helder Garcia, David Deutsch
 * @author Team AEC - http://www.gobalnerd.org
 * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
 */
-//
+
 // Copyright (C) 2004-2007 Helder Garcia, David Deutsch
 // All rights reserved.
 // This source file is part of the Account Expiration Control Component, a  Joomla
@@ -38,7 +38,214 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-// ----======== BACKEND TEXT ========----
+// mic: NEW 0.12.4
+
+// hacks/install >> ATTENTION: MUST BE HERE AT THIS POSITION, needed later!
+define( '_AEC_SPEC_MENU_ENTRY',					'My Subscription' );
+
+// also NOT in english file
+define( '_DESCRIPTION_PAYSIGNET',				'mic: Description Paysignnet - CHECK! -');
+define( '_AEC_CONFIG_SAVED',					'Configuration saved' );
+define( '_AEC_CONFIG_CANCELLED',				'Configuration cancelled' );
+define( '_AEC_TIP_NO_GROUP_PF_PB',				'Public Frontend" is NOT a usergroup - and neither is "Public Backend' );
+define( '_AEC_CGF_LINK_ABO_FRONTEND',			'Direct Frontend link' );
+define( '_AEC_NOT_SET',							'Not set' );
+define( '_AEC_COUPON',							'Coupon' );
+define( '_AEC_CMN_NEW',							'New' );
+define( '_AEC_CMN_CLICK_TO_EDIT',				'Click to edit' );
+define( '_AEC_CMN_LIFETIME',					'Lifetime' );
+define( '_AEC_CMN_UNKOWN',						'Unknown' );
+define( '_AEC_CMN_EDIT_CANCELLED',				'Changes cancelled' );
+define( '_AEC_CMN_PUBLISHED',					'Published' );
+define( '_AEC_CMN_NOT_PUBLISHED',				'Not Published' );
+define( '_AEC_CMN_CLICK_TO_CHANGE',				'Click on icon to toggle state' );
+define( '_AEC_CMN_NONE_SELECTED',				'None Selected' );
+define( '_AEC_CMN_MADE_VISIBLE',				'made visible' );
+define( '_AEC_CMN_MADE_INVISIBLE',				'made invisible' );
+define( '_AEC_CMN_TOPUBLISH',					'publish' ); // to ...
+define( '_AEC_CMN_TOUNPUBLISH',					'unpublish' ); // to ...
+define( '_AEC_CMN_FILE_SAVED',					'File saved' );
+
+// headers
+define( '_AEC_HEAD_SETTINGS',					'Settings' );
+define( '_AEC_HEAD_HACKS',						'Hacks' );
+
+// hacks (special)
+define( '_AEC_HACK_HACK',						'Hack' );
+define( '_AEC_HACKS_ISHACKED',					'is hacked' );
+define( '_AEC_HACKS_NOTHACKED',					'is not hacked!' );
+define( '_AEC_HACKS_UNDO',						'undo now' );
+define( '_AEC_HACKS_COMMIT',					'commit' );
+define( '_AEC_HACKS_FILE',						'File' );
+define( '_AEC_HACKS_LOOKS_FOR',					'The Hack will look for this' );
+define( '_AEC_HACKS_REPLACE_WITH',				'... and replace it with this' );
+
+define( '_AEC_HACKS_NOTICE',					'IMPORTANT NOTICE' );
+define( '_AEC_HACKS_NOTICE_DESC',				'For security reason you need apply hacks to joomla core files. To do so, please click the "hack file now" links for these files. You may also Add a link to your User Menu so that your Users can have a look at their Subscription Record.' );
+define( '_AEC_HACKS_NOTICE_DESC2',				'<strong>All functionally important hacks are marked with an arrow and an exclamation mark.</strong>' );
+define( '_AEC_HACKS_NOTICE_DESC3',				'These hacks are <strong>not necessarily in a correct numerical order</strong> - so don\'t wonder if they go #1, #3, #6 - the missing numbers are most likely legacy hacks that you would only see if you had them (incorrectly) applied.' );
+define( '_AEC_HACKS_NOTICE_JACL',				'JACL NOTICE' );
+define( '_AEC_HACKS_NOTICE_JACL_DESC',			'In case you plan to install the JACLplus component, please make sure that the hacks are <strong>not commited</strong> when installing it. JACL also commits hacks to the core files and it is important that our hacks are committed after the JACL ones.' );
+
+define( '_AEC_HACKS_MENU_ENTRY',				'Menu Entry' );
+define( '_AEC_HACKS_MENU_ENTRY_DESC',			'Adds a <strong>' . _AEC_SPEC_MENU_ENTRY . '</strong> menu entry to the Usermenu. With this, a user can manage his invoices and upgrade/renew his or her subscription.' );
+define( '_AEC_HACKS_LEGACY',					'<strong>This is a Legacy Hack, please undo!</strong>' );
+define( '_AEC_HACKS_NOTAUTH',					'This will correctly link your users to the NotAllowed page with information about your subscriptions' );
+define( '_AEC_HACKS_SUB_REQUIRED',				'This will make sure a user has a subscription in order to log in.<br /><strong>Remember to also set [ Require Subscription ] in the AEC Settings!</strong>' );
+define( '_AEC_HACKS_REG2',						'This will redirect a registering user to the payment plans after filling out the registration form. Leave this alone to have plan selection only on login (if \'Require Subscription\' is active), or completely voluntary (without requiring a subscription). <strong>Please note that there are two hacks following this, once you have committed it! If you want to have the plans before the user details, these are required as well.</strong>' );
+define( '_AEC_HACKS_REG3',						'This will redirect the user to the payment plans page when he or she has not made that selection yet.' );
+define( '_AEC_HACKS_REG4',						'This Hack will transmit the AEC variables from the user details form.' );
+define( '_AEC_HACKS_MI1',						'Some Micro Integrations rely on receiving a cleartext password for each user. This hack will make sure that the Micro Integrations will be notified when a user changes his/her account.' );
+define( '_AEC_HACKS_MI2',						'Some Micro Integrations rely on receiving a cleartext password for each user. This hack will make sure that the Micro Integrations will be notified when a user registers an account.' );
+define( '_AEC_HACKS_MI3',						'Some Micro Integrations rely on receiving a cleartext password for each user. This hack will make sure that the Micro Integrations will be notified when an admin changes a user-account.' );
+
+// log
+	// settings
+define( '_AEC_LOG_SH_SETT_SAVED',				'settings change' );
+define( '_AEC_LOG_LO_SETT_SAVED',				'The Settings for AEC have been saved' );
+	// heartbeat
+define( '_AEC_LOG_SH_HEARTBEAT',				'Heartbeat' );
+define( '_AEC_LOG_LO_HEARTBEAT',				'Heartbeat carried out:' );
+define( '_AEC_LOG_AD_HEARTBEAT_DO_NOTHING',		'does nothing' );
+	// install
+define( '_AEC_LOG_SH_INST',						'AEC install' );
+define( '_AEC_LOG_LO_INST',						'The AEC Version %s has been installed' );
+
+// install texts
+define( '_AEC_INST_NOTE_IMPORTANT',				'Important Notice' );
+define( '_AEC_INST_NOTE_SECURITY',				'For <strong>your system security</strong> you need apply hacks to joomla core files. For your convenience, we have included an autohacking feature that does just that with the click of a link' );
+define( '_AEC_INST_APPLY_HACKS',				'In order to commit these hacks right now, go to the <a href="' .  $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&task=hacks" target="_blank">hacks page</a>. (You can also access this page later on from the AEC central view or menu)' );
+define( '_AEC_INST_NOTE_UPGRADE',				'<strong>If you are upgrading, make sure to check the hacks page anyways, since there are changes from time to time!!!</strong>' );
+define( '_AEC_INST_NOTE_HELP',					'To help you along with frequently encountered problems, we have created a <a href="' . $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&task=help" target="_blank"><strong>help function</strong></a> that will help you ship around the most common setup problems (access is also avaliable from the AEC central.' );
+define( '_AEC_INST_HINTS',						'Hints' );
+define( '_AEC_INST_HINT1',						'We encourage you to visit the <a href="http://www.globalnerd.org/index.php?option=com_wrapper&amp;Itemid=53" target="_blank">globalnerd.org forums</a> and to <strong>participate in the discussion there</strong>. Chances are, that other users have found the same bugs and it is equally likely that there is at least a fix to hack in or even a new version.' );
+define( '_AEC_INST_HINT2',						'In any case (and especially if you use this on a live site): go through your settings and make a test subscription to see whether everything is working to your satisfaction! Although we try our best to make upgrading as flawless as possible, some fundamental changes to our program may not be possible to cushion for all users.' );
+define( '_AEC_INST_ATTENTION',					'No need to use the old logins!' );
+define( '_AEC_INST_ATTENTION1',					'If you still have the old AEC login modules installed, please uninstall it (no matter which one, regular or CB) and use the normal joomla or CB login module. There is no need to use these old modules anymore.' );
+
+// header
+define( '_AEC_HEAD_PLAN_INFO',					'Plan Info' );
+
+// help
+define( '_AEC_CMN_HELP',						'Help' );
+define( '_AEC_HELP_DESC',						'On this page, the AEC takes a look at its own configuration and tells you whenever it finds errors that need to be adressed.' );
+define( '_AEC_HELP_GREEN',						'Green</strong> items indicate trivial problems or notifications, or problems that have already been solved.' );
+define( '_AEC_HELP_YELLOW',						'Yellow</strong> items are mostly of cosmetical importance (like additions to the user frontend), but also issues that are most likely a deliberate choice of the administrator.' );
+define( '_AEC_HELP_RED',						'Red</strong> items are of high importance to either the way the AEC works or the security of your System.' );
+define( '_AEC_HELP_GEN',						'Please note that even though we try to cover as many errors and problems as possible, this page can only point at the most obvious ones and is by far not completed yet (beta&trade;)' );
+define( '_AEC_HELP_QS_HEADER',					'AEC Quickstart Manual' );
+define( '_AEC_HELP_QS_DESC',					'Before doing anything about the below issues, please read our <a href="' . $mosConfig_live_site . '"/administrator/components/com_acctexp/manual/AEC_Quickstart.pdf" target="_blank">Quickstart Manual</a>' );
+define( '_AEC_HELP_SER_SW_DIAG1',				'File Permissions Problems' );
+define( '_AEC_HELP_SER_SW_DIAG1_DESC',			'AEC has detected that you are using an Apache Webserver - To be able to hack files on such a server, those files have to be owned by the webserver user, which apparently is not so for at least one of the neccessary files.' );
+define( '_AEC_HELP_SER_SW_DIAG1_DESC2',			'We recommend that you temporarily change the file permissions to 777, then commit the hacks and change it back after that. <strong>Contact your server host or administrator for the possibly quickest response when experiencing problems.</strong> This is the same for the file permission related suggestion(s) below.' );
+define( '_AEC_HELP_SER_SW_DIAG2',				'joomla.php/mambo.php File Permissions' );
+define( '_AEC_HELP_SER_SW_DIAG2_DESC',			'The AEC has detected that your joomla.php is not owned by the webserver.' );
+define( '_AEC_HELP_SER_SW_DIAG2_DESC2',			'Access your webserver via ssh and go to the directory \"<yoursiteroot>/includes\". There, type in this command: \"chown wwwrun joomla.php\" (or \"chown wwwrun mambo.php\" in case you are using mambo).' );
+define( '_AEC_HELP_SER_SW_DIAG3',				'Legacy Hacks Detected!' );
+define( '_AEC_HELP_SER_SW_DIAG3_DESC',			'You appear to have old Hacks commited to your System.", "In Order for the AEC to function correctly, please review the Hacks page and follow the steps presented there.' );
+define( '_AEC_HELP_SER_SW_DIAG4',				'File Permissions Problems' );
+define( '_AEC_HELP_SER_SW_DIAG4_DESC',			'AEC can not detect the write permission status of the files it wants to hack as it appears that your installation of php has been compiled with the option \"--disable-posix\". <strong>You can still try to commit the hacks - if it does not work, its most likely a file permission problem</strong>.' );
+define( '_AEC_HELP_SER_SW_DIAG4_DESC2',			'We recommend that you either recompile your php version with the said option left out or contact your webserver administrator on this matter.' );
+define( '_AEC_HELP_DIAG_CMN1',					'joomla.php/mambo.php Hack' );
+define( '_AEC_HELP_DIAG_CMN1_DESC',				'In order for the AEC to function, this hack is required to redirect users to the AEC Verification Routines on Login.' );
+define( '_AEC_HELP_DIAG_CMN1_DESC2',			'Go to the Hacks page and commit the hack' );
+define( '_AEC_HELP_DIAG_CMN2',					'"My Subscription" Menu Entry' );
+define( '_AEC_HELP_DIAG_CMN2_DESC',				'A link to a MySubscription page for your users makes it easy for them to track their subscription.' );
+define( '_AEC_HELP_DIAG_CMN2_DESC2',			'Go to the Hacks page and create the link.' );
+define( '_AEC_HELP_DIAG_CMN3',					'JACL not installed' );
+define( '_AEC_HELP_DIAG_CMN3_DESC',				'If you plan to install JACLplus in your joomla!/mambo system, please make sure that the AEC hacks are not committed when doing so. If you have already committed them, you can easily undo them in our hacks page.' );
+
+// micro integration
+	// general
+define( '_AEC_MI_REWRITING_INFO',				'Rewriting Info' );
+	// htaccess
+define( '_AEC_MI_HTACCESS_INFO_DESC',			'Protect a folder with a .htaccess file and only allow users of this subscription to access it with their joomla account details.' );
+	// email
+define( '_AEC_MI_EMAIL_INFO_DESC',				'Send an Email to one or more adresses on application or expiration of the subscription' );
+	// idev
+define( '_AEC_MI_IDEV_DESC',					'Connect your sales to iDevAffiliate' );
+	// mosetstree
+define( '_AEC_MI_MOSETSTREE_DESC',				'Restrict the amount of listings a user can publish' );
+	// mysql-query
+define( '_AEC_MI_MYSQL_DESC',					'Specify a mySQL query that should be carried out with this subscription or on its expiration' );
+	// remository
+define( '_AEC_MI_REMOSITORY_DESC',				'Choose the amount of files a user can download and what reMOSitory group should be assigned to the user account' );
+	// VirtueMart
+define( '_AEC_MI_VIRTUEMART_DESC',				'Choose the VirtueMart usergroup this user should be applied to' );
+
+// central
+define( '_AEC_CENTR_CENTRAL',					'AEC Central' );
+define( '_AEC_CENTR_EXCLUDED',					'Excluded' );
+define( '_AEC_CENTR_PLANS',						'Plans' );
+define( '_AEC_CENTR_PENDING',					'Pending' );
+define( '_AEC_CENTR_ACTIVE',					'Active' );
+define( '_AEC_CENTR_EXPIRED',					'Expired' );
+define( '_AEC_CENTR_CANCELLED',					'Cancelled' );
+define( '_AEC_CENTR_CLOSED',					'Closed' );
+define( '_AEC_CENTR_SETTINGS',					'Settings' );
+define( '_AEC_CENTR_EDIT_CSS',					'Edit CSS' );
+define( '_AEC_CENTR_V_INVOICES',				'View Invoices' );
+define( '_AEC_CENTR_COUPONS',					'Coupons' );
+define( '_AEC_CENTR_COUPONS_STATIC',			'Coupons Static' );
+define( '_AEC_CENTR_VIEW_HISTORY',				'View History' );
+define( '_AEC_CENTR_SPECIAL',					'Hacks' );
+define( '_AEC_CENTR_M_INTEGRATION',				'Micro Integr.' );
+define( '_AEC_CENTR_HELP',						'Help' );
+define( '_AEC_CENTR_LOG',						'EventLog' );
+
+// select lists
+define( '_AEC_SEL_EXCLUDED',					'Excluded' );
+define( '_AEC_SEL_PENDING',						'Pending' );
+define( '_AEC_SEL_ACTIVE',						'Active' );
+define( '_AEC_SEL_EXPIRED',						'Expired' );
+define( '_AEC_SEL_CLOSED',						'Closed' );
+define( '_AEC_SEL_CANCELLED',					'Storno' );
+define( '_AEC_SEL_NOT_CONFIGURED',				'Not Configured' );
+
+// footer
+define( '_AEC_FOOT_TX_CHOOSING',				'Thank you for choosing the Account Expiration Control Component!' );
+define( '_AEC_FOOT_TX_GPL',						'This Joomla/Mambo component was developed and released under the <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU/GPL</a> license by Helder Garcia and David Deutsch from <a href="http://www.globalnerd.org" target="_blank">globalnerd.org</a>' );
+define( '_AEC_FOOT_TX_SUBSCRIBE',				'If you want more features, professional service, updates, manuals and online help for this component, you can subscribe to our services at the above link. It helps us a lot in our development!' );
+define( '_AEC_FOOT_CREDIT',						'Please read our <a href="' . $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&amp;amp;task=credits">full credits' );
+define( '_AEC_FOOT_VERSION_CHECK',				'Check for latest Version' );
+define( '_AEC_FOOT_MEMBERSHIP',					'Get a membership with documentation and support' );
+
+// alerts
+define( '_AEC_ALERT_SELECT_FIRST',				'Select an item to configure' );
+define( '_AEC_ALERT_SELECT_FIRST_TO',			'Please select first an item to' );
+
+// messages
+define( '_AEC_MSG_NODELETE_SUPERADMIN',			'You cannot delete a Super Administrator' );
+define( '_AEC_MSG_NODELETE_YOURSELF',			'You cannot delete Yourself!' );
+define( '_AEC_MSG_NODELETE_EXCEPT_SUPERADMIN',	'Only Superadmins can perform this action!' );
+define( '_AEC_MSG_SUBS_RENEWED',				'subscription(s) renewed' );
+define( '_AEC_MSG_SUBS_ACTIVATED',				'subscription(s) activated' );
+define( '_AEC_MSG_NO_ITEMS_TO_DELETE',			'No item found to delete' );
+define( '_AEC_MSG_NO_DEL_W_ACTIVE_SUBSCRIBER',	'You cannot delete plans with active subscribers' );
+define( '_AEC_MSG_ITEMS_DELETED',				'Item(s) deleted' );
+define( '_AEC_MSG_ITEMS_SUCESSFULLY',			'%s Item(s) successfully' );
+define( '_AEC_MSG_SUCESSFULLY_SAVED',			'Changes successfully saved' );
+define( '_AEC_MSG_ITEMS_SUCC_PUBLISHED',		'Item(s) successfully Published' );
+define( '_AEC_MSG_ITEMS_SUCC_UNPUBLISHED',		'Item(s) successfully Unpublished' );
+define( '_AEC_MSG_NO_COUPON_CODE',				'You must specify a coupon code!' );
+define( '_AEC_MSG_OP_FAILED',					'Operation Failed: Could not open %s' );
+define( '_AEC_MSG_OP_FAILED_EMPTY',				'Operation failed: Content empty' );
+define( '_AEC_MSG_OP_FAILED_NOT_WRITEABLE',		'Operation failed: The file is not writable.' );
+define( '_AEC_MSG_OP_FAILED_NO_WRITE',			'Operation failed: Failed to open file for writing' );
+define( '_AEC_MSG_INVOICE_CLEARED',				'Invoice cleared' );
+
+// languages (e.g. PayPal) - must be ISO 3166 Two-Character Country Codes
+define( '_AEC_LANG_DE',							'German' );
+define( '_AEC_LANG_GB',							'English' );
+define( '_AEC_LANG_FR',							'French' );
+define( '_AEC_LANG_IT',							'Italian' );
+define( '_AEC_LANG_ES',							'Spanish' );
+define( '_AEC_LANG_US',							'English US' );
+
+// currencies
+define( '_CURRENCY_RSD',						'Serbian Dinar' );
+
+// END 0.12.4 (mic) #################################
 
 // --== BACKEND TOOLBAR ==--
 DEFINE ('_EXPIRE_SET','Set Expiration:');

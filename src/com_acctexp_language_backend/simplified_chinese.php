@@ -1,5 +1,13 @@
 <?php
-//
+/**
+* @version $Id: simplified_chinese.php 16 2007-06-25 09:04:04Z mic $
+* @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
+* @subpackage Language - Backend - Simplified Chinese
+* @copyright Copyright (C) 2004-2007 Helder Garcia, David Deutsch
+* @author Luca Scarpa - http://www.luscarpa.eu
+* @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
+*/
+
 // Copyright (C) 2004-2007 Helder Garcia, David Deutsch
 // All rights reserved.
 // This source file is part of the Account Expiration Control Component, a  Joomla
@@ -26,11 +34,316 @@
 //
 // The "GNU General Public License" (GPL) is available at
 // http://www.gnu.org/copyleft/gpl.html.
-//
-// Dont allow direct linking
-defined( '_VALID_MOS' ) or die( '不容许直接访问这儿.' );
 
-// ----======== BACKEND TEXT ========----
+// Dont allow direct linking
+defined( '_VALID_MOS' ) or die( '�?容许直接访问这儿.' );
+
+// mic: NEW 0.12.4
+
+// hacks/install >> ATTENTION: MUST BE HERE AT THIS POSITION, needed later!
+define( '_AEC_SPEC_MENU_ENTRY',					'My Subscription' );
+
+// also NOT in english file
+define( '_DESCRIPTION_PAYSIGNET',				'mic: Description Paysignnet - CHECK! -');
+define( '_AEC_CONFIG_SAVED',					'Configuration saved' );
+define( '_AEC_CONFIG_CANCELLED',				'Configuration cancelled' );
+define( '_AEC_TIP_NO_GROUP_PF_PB',				'Public Frontend" is NOT a usergroup - and neither is "Public Backend' );
+define( '_AEC_CGF_LINK_ABO_FRONTEND',			'Direct Frontend link' );
+define( '_AEC_NOT_SET',							'Not set' );
+define( '_AEC_COUPON',							'Coupon' );
+define( '_AEC_CMN_NEW',							'New' );
+define( '_AEC_CMN_CLICK_TO_EDIT',				'Click to edit' );
+define( '_AEC_CMN_LIFETIME',					'Lifetime' );
+define( '_AEC_CMN_UNKOWN',						'Unknown' );
+define( '_AEC_CMN_EDIT_CANCELLED',				'Changes cancelled' );
+define( '_AEC_CMN_PUBLISHED',					'Published' );
+define( '_AEC_CMN_NOT_PUBLISHED',				'Not Published' );
+define( '_AEC_CMN_CLICK_TO_CHANGE',				'Click on icon to toggle state' );
+define( '_AEC_CMN_NONE_SELECTED',				'None Selected' );
+define( '_AEC_CMN_MADE_VISIBLE',				'made visible' );
+define( '_AEC_CMN_MADE_INVISIBLE',				'made invisible' );
+define( '_AEC_CMN_TOPUBLISH',					'publish' ); // to ...
+define( '_AEC_CMN_TOUNPUBLISH',					'unpublish' ); // to ...
+define( '_AEC_CMN_FILE_SAVED',					'File saved' );
+
+// headers
+define( '_AEC_HEAD_SETTINGS',					'Settings' );
+define( '_AEC_HEAD_HACKS',						'Hacks' );
+
+// hacks (special)
+define( '_AEC_HACK_HACK',						'Hack' );
+define( '_AEC_HACKS_ISHACKED',					'is hacked' );
+define( '_AEC_HACKS_NOTHACKED',					'is not hacked!' );
+define( '_AEC_HACKS_UNDO',						'undo now' );
+define( '_AEC_HACKS_COMMIT',					'commit' );
+define( '_AEC_HACKS_FILE',						'File' );
+define( '_AEC_HACKS_LOOKS_FOR',					'The Hack will look for this' );
+define( '_AEC_HACKS_REPLACE_WITH',				'... and replace it with this' );
+
+define( '_AEC_HACKS_NOTICE',					'IMPORTANT NOTICE' );
+define( '_AEC_HACKS_NOTICE_DESC',				'For security reason you need apply hacks to joomla core files. To do so, please click the "hack file now" links for these files. You may also Add a link to your User Menu so that your Users can have a look at their Subscription Record.' );
+define( '_AEC_HACKS_NOTICE_DESC2',				'<strong>All functionally important hacks are marked with an arrow and an exclamation mark.</strong>' );
+define( '_AEC_HACKS_NOTICE_DESC3',				'These hacks are <strong>not necessarily in a correct numerical order</strong> - so don\'t wonder if they go #1, #3, #6 - the missing numbers are most likely legacy hacks that you would only see if you had them (incorrectly) applied.' );
+define( '_AEC_HACKS_NOTICE_JACL',				'JACL NOTICE' );
+define( '_AEC_HACKS_NOTICE_JACL_DESC',			'In case you plan to install the JACLplus component, please make sure that the hacks are <strong>not commited</strong> when installing it. JACL also commits hacks to the core files and it is important that our hacks are committed after the JACL ones.' );
+
+define( '_AEC_HACKS_MENU_ENTRY',				'Menu Entry' );
+define( '_AEC_HACKS_MENU_ENTRY_DESC',			'Adds a <strong>' . _AEC_SPEC_MENU_ENTRY . '</strong> menu entry to the Usermenu. With this, a user can manage his invoices and upgrade/renew his or her subscription.' );
+define( '_AEC_HACKS_LEGACY',					'<strong>This is a Legacy Hack, please undo!</strong>' );
+define( '_AEC_HACKS_NOTAUTH',					'This will correctly link your users to the NotAllowed page with information about your subscriptions' );
+define( '_AEC_HACKS_SUB_REQUIRED',				'This will make sure a user has a subscription in order to log in.<br /><strong>Remember to also set [ Require Subscription ] in the AEC Settings!</strong>' );
+define( '_AEC_HACKS_REG2',						'This will redirect a registering user to the payment plans after filling out the registration form. Leave this alone to have plan selection only on login (if \'Require Subscription\' is active), or completely voluntary (without requiring a subscription). <strong>Please note that there are two hacks following this, once you have committed it! If you want to have the plans before the user details, these are required as well.</strong>' );
+define( '_AEC_HACKS_REG3',						'This will redirect the user to the payment plans page when he or she has not made that selection yet.' );
+define( '_AEC_HACKS_REG4',						'This Hack will transmit the AEC variables from the user details form.' );
+define( '_AEC_HACKS_MI1',						'Some Micro Integrations rely on receiving a cleartext password for each user. This hack will make sure that the Micro Integrations will be notified when a user changes his/her account.' );
+define( '_AEC_HACKS_MI2',						'Some Micro Integrations rely on receiving a cleartext password for each user. This hack will make sure that the Micro Integrations will be notified when a user registers an account.' );
+define( '_AEC_HACKS_MI3',						'Some Micro Integrations rely on receiving a cleartext password for each user. This hack will make sure that the Micro Integrations will be notified when an admin changes a user-account.' );
+
+// log
+	// settings
+define( '_AEC_LOG_SH_SETT_SAVED',				'settings change' );
+define( '_AEC_LOG_LO_SETT_SAVED',				'The Settings for AEC have been saved' );
+	// heartbeat
+define( '_AEC_LOG_SH_HEARTBEAT',				'Heartbeat' );
+define( '_AEC_LOG_LO_HEARTBEAT',				'Heartbeat carried out:' );
+define( '_AEC_LOG_AD_HEARTBEAT_DO_NOTHING',		'does nothing' );
+	// install
+define( '_AEC_LOG_SH_INST',						'AEC install' );
+define( '_AEC_LOG_LO_INST',						'The AEC Version %s has been installed' );
+
+// install texts
+define( '_AEC_INST_NOTE_IMPORTANT',				'Important Notice' );
+define( '_AEC_INST_NOTE_SECURITY',				'For <strong>your system security</strong> you need apply hacks to joomla core files. For your convenience, we have included an autohacking feature that does just that with the click of a link' );
+define( '_AEC_INST_APPLY_HACKS',				'In order to commit these hacks right now, go to the <a href="' .  $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&task=hacks" target="_blank">hacks page</a>. (You can also access this page later on from the AEC central view or menu)' );
+define( '_AEC_INST_NOTE_UPGRADE',				'<strong>If you are upgrading, make sure to check the hacks page anyways, since there are changes from time to time!!!</strong>' );
+define( '_AEC_INST_NOTE_HELP',					'To help you along with frequently encountered problems, we have created a <a href="' . $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&task=help" target="_blank"><strong>help function</strong></a> that will help you ship around the most common setup problems (access is also avaliable from the AEC central.' );
+define( '_AEC_INST_HINTS',						'Hints' );
+define( '_AEC_INST_HINT1',						'We encourage you to visit the <a href="http://www.globalnerd.org/index.php?option=com_wrapper&amp;Itemid=53" target="_blank">globalnerd.org forums</a> and to <strong>participate in the discussion there</strong>. Chances are, that other users have found the same bugs and it is equally likely that there is at least a fix to hack in or even a new version.' );
+define( '_AEC_INST_HINT2',						'In any case (and especially if you use this on a live site): go through your settings and make a test subscription to see whether everything is working to your satisfaction! Although we try our best to make upgrading as flawless as possible, some fundamental changes to our program may not be possible to cushion for all users.' );
+define( '_AEC_INST_ATTENTION',					'No need to use the old logins!' );
+define( '_AEC_INST_ATTENTION1',					'If you still have the old AEC login modules installed, please uninstall it (no matter which one, regular or CB) and use the normal joomla or CB login module. There is no need to use these old modules anymore.' );
+
+// header
+define( '_AEC_HEAD_PLAN_INFO',					'Plan Info' );
+
+// help
+define( '_AEC_CMN_HELP',						'Help' );
+define( '_AEC_HELP_DESC',						'On this page, the AEC takes a look at its own configuration and tells you whenever it finds errors that need to be adressed.' );
+define( '_AEC_HELP_GREEN',						'Green</strong> items indicate trivial problems or notifications, or problems that have already been solved.' );
+define( '_AEC_HELP_YELLOW',						'Yellow</strong> items are mostly of cosmetical importance (like additions to the user frontend), but also issues that are most likely a deliberate choice of the administrator.' );
+define( '_AEC_HELP_RED',						'Red</strong> items are of high importance to either the way the AEC works or the security of your System.' );
+define( '_AEC_HELP_GEN',						'Please note that even though we try to cover as many errors and problems as possible, this page can only point at the most obvious ones and is by far not completed yet (beta&trade;)' );
+define( '_AEC_HELP_QS_HEADER',					'AEC Quickstart Manual' );
+define( '_AEC_HELP_QS_DESC',					'Before doing anything about the below issues, please read our <a href="' . $mosConfig_live_site . '"/administrator/components/com_acctexp/manual/AEC_Quickstart.pdf" target="_blank">Quickstart Manual</a>' );
+define( '_AEC_HELP_SER_SW_DIAG1',				'File Permissions Problems' );
+define( '_AEC_HELP_SER_SW_DIAG1_DESC',			'AEC has detected that you are using an Apache Webserver - To be able to hack files on such a server, those files have to be owned by the webserver user, which apparently is not so for at least one of the neccessary files.' );
+define( '_AEC_HELP_SER_SW_DIAG1_DESC2',			'We recommend that you temporarily change the file permissions to 777, then commit the hacks and change it back after that. <strong>Contact your server host or administrator for the possibly quickest response when experiencing problems.</strong> This is the same for the file permission related suggestion(s) below.' );
+define( '_AEC_HELP_SER_SW_DIAG2',				'joomla.php/mambo.php File Permissions' );
+define( '_AEC_HELP_SER_SW_DIAG2_DESC',			'The AEC has detected that your joomla.php is not owned by the webserver.' );
+define( '_AEC_HELP_SER_SW_DIAG2_DESC2',			'Access your webserver via ssh and go to the directory \"<yoursiteroot>/includes\". There, type in this command: \"chown wwwrun joomla.php\" (or \"chown wwwrun mambo.php\" in case you are using mambo).' );
+define( '_AEC_HELP_SER_SW_DIAG3',				'Legacy Hacks Detected!' );
+define( '_AEC_HELP_SER_SW_DIAG3_DESC',			'You appear to have old Hacks commited to your System.", "In Order for the AEC to function correctly, please review the Hacks page and follow the steps presented there.' );
+define( '_AEC_HELP_SER_SW_DIAG4',				'File Permissions Problems' );
+define( '_AEC_HELP_SER_SW_DIAG4_DESC',			'AEC can not detect the write permission status of the files it wants to hack as it appears that your installation of php has been compiled with the option \"--disable-posix\". <strong>You can still try to commit the hacks - if it does not work, its most likely a file permission problem</strong>.' );
+define( '_AEC_HELP_SER_SW_DIAG4_DESC2',			'We recommend that you either recompile your php version with the said option left out or contact your webserver administrator on this matter.' );
+define( '_AEC_HELP_DIAG_CMN1',					'joomla.php/mambo.php Hack' );
+define( '_AEC_HELP_DIAG_CMN1_DESC',				'In order for the AEC to function, this hack is required to redirect users to the AEC Verification Routines on Login.' );
+define( '_AEC_HELP_DIAG_CMN1_DESC2',			'Go to the Hacks page and commit the hack' );
+define( '_AEC_HELP_DIAG_CMN2',					'"My Subscription" Menu Entry' );
+define( '_AEC_HELP_DIAG_CMN2_DESC',				'A link to a MySubscription page for your users makes it easy for them to track their subscription.' );
+define( '_AEC_HELP_DIAG_CMN2_DESC2',			'Go to the Hacks page and create the link.' );
+define( '_AEC_HELP_DIAG_CMN3',					'JACL not installed' );
+define( '_AEC_HELP_DIAG_CMN3_DESC',				'If you plan to install JACLplus in your joomla!/mambo system, please make sure that the AEC hacks are not committed when doing so. If you have already committed them, you can easily undo them in our hacks page.' );
+
+// micro integration
+	// general
+define( '_AEC_MI_REWRITING_INFO',				'Rewriting Info' );
+	// htaccess
+define( '_AEC_MI_HTACCESS_INFO_DESC',			'Protect a folder with a .htaccess file and only allow users of this subscription to access it with their joomla account details.' );
+	// email
+define( '_AEC_MI_EMAIL_INFO_DESC',				'Send an Email to one or more adresses on application or expiration of the subscription' );
+	// idev
+define( '_AEC_MI_IDEV_DESC',					'Connect your sales to iDevAffiliate' );
+	// mosetstree
+define( '_AEC_MI_MOSETSTREE_DESC',				'Restrict the amount of listings a user can publish' );
+	// mysql-query
+define( '_AEC_MI_MYSQL_DESC',					'Specify a mySQL query that should be carried out with this subscription or on its expiration' );
+	// remository
+define( '_AEC_MI_REMOSITORY_DESC',				'Choose the amount of files a user can download and what reMOSitory group should be assigned to the user account' );
+	// VirtueMart
+define( '_AEC_MI_VIRTUEMART_DESC',				'Choose the VirtueMart usergroup this user should be applied to' );
+
+// central
+define( '_AEC_CENTR_CENTRAL',					'AEC Central' );
+define( '_AEC_CENTR_EXCLUDED',					'Excluded' );
+define( '_AEC_CENTR_PLANS',						'Plans' );
+define( '_AEC_CENTR_PENDING',					'Pending' );
+define( '_AEC_CENTR_ACTIVE',					'Active' );
+define( '_AEC_CENTR_EXPIRED',					'Expired' );
+define( '_AEC_CENTR_CANCELLED',					'Cancelled' );
+define( '_AEC_CENTR_CLOSED',					'Closed' );
+define( '_AEC_CENTR_SETTINGS',					'Settings' );
+define( '_AEC_CENTR_EDIT_CSS',					'Edit CSS' );
+define( '_AEC_CENTR_V_INVOICES',				'View Invoices' );
+define( '_AEC_CENTR_COUPONS',					'Coupons' );
+define( '_AEC_CENTR_COUPONS_STATIC',			'Coupons Static' );
+define( '_AEC_CENTR_VIEW_HISTORY',				'View History' );
+define( '_AEC_CENTR_SPECIAL',					'Hacks' );
+define( '_AEC_CENTR_M_INTEGRATION',				'Micro Integr.' );
+define( '_AEC_CENTR_HELP',						'Help' );
+define( '_AEC_CENTR_LOG',						'EventLog' );
+
+// select lists
+define( '_AEC_SEL_EXCLUDED',					'Excluded' );
+define( '_AEC_SEL_PENDING',						'Pending' );
+define( '_AEC_SEL_ACTIVE',						'Active' );
+define( '_AEC_SEL_EXPIRED',						'Expired' );
+define( '_AEC_SEL_CLOSED',						'Closed' );
+define( '_AEC_SEL_CANCELLED',					'Storno' );
+define( '_AEC_SEL_NOT_CONFIGURED',				'Not Configured' );
+
+// footer
+define( '_AEC_FOOT_TX_CHOOSING',				'Thank you for choosing the Account Expiration Control Component!' );
+define( '_AEC_FOOT_TX_GPL',						'This Joomla/Mambo component was developed and released under the <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU/GPL</a> license by Helder Garcia and David Deutsch from <a href="http://www.globalnerd.org" target="_blank">globalnerd.org</a>' );
+define( '_AEC_FOOT_TX_SUBSCRIBE',				'If you want more features, professional service, updates, manuals and online help for this component, you can subscribe to our services at the above link. It helps us a lot in our development!' );
+define( '_AEC_FOOT_CREDIT',						'Please read our <a href="' . $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&amp;amp;task=credits">full credits' );
+define( '_AEC_FOOT_VERSION_CHECK',				'Check for latest Version' );
+define( '_AEC_FOOT_MEMBERSHIP',					'Get a membership with documentation and support' );
+
+// alerts
+define( '_AEC_ALERT_SELECT_FIRST',				'Select an item to configure' );
+define( '_AEC_ALERT_SELECT_FIRST_TO',			'Please select first an item to' );
+
+// messages
+define( '_AEC_MSG_NODELETE_SUPERADMIN',			'You cannot delete a Super Administrator' );
+define( '_AEC_MSG_NODELETE_YOURSELF',			'You cannot delete Yourself!' );
+define( '_AEC_MSG_NODELETE_EXCEPT_SUPERADMIN',	'Only Superadmins can perform this action!' );
+define( '_AEC_MSG_SUBS_RENEWED',				'subscription(s) renewed' );
+define( '_AEC_MSG_SUBS_ACTIVATED',				'subscription(s) activated' );
+define( '_AEC_MSG_NO_ITEMS_TO_DELETE',			'No item found to delete' );
+define( '_AEC_MSG_NO_DEL_W_ACTIVE_SUBSCRIBER',	'You cannot delete plans with active subscribers' );
+define( '_AEC_MSG_ITEMS_DELETED',				'Item(s) deleted' );
+define( '_AEC_MSG_ITEMS_SUCESSFULLY',			'%s Item(s) successfully' );
+define( '_AEC_MSG_SUCESSFULLY_SAVED',			'Changes successfully saved' );
+define( '_AEC_MSG_ITEMS_SUCC_PUBLISHED',		'Item(s) successfully Published' );
+define( '_AEC_MSG_ITEMS_SUCC_UNPUBLISHED',		'Item(s) successfully Unpublished' );
+define( '_AEC_MSG_NO_COUPON_CODE',				'You must specify a coupon code!' );
+define( '_AEC_MSG_OP_FAILED',					'Operation Failed: Could not open %s' );
+define( '_AEC_MSG_OP_FAILED_EMPTY',				'Operation failed: Content empty' );
+define( '_AEC_MSG_OP_FAILED_NOT_WRITEABLE',		'Operation failed: The file is not writable.' );
+define( '_AEC_MSG_OP_FAILED_NO_WRITE',			'Operation failed: Failed to open file for writing' );
+define( '_AEC_MSG_INVOICE_CLEARED',				'Invoice cleared' );
+
+// languages (e.g. PayPal) - must be ISO 3166 Two-Character Country Codes
+define( '_AEC_LANG_DE',							'German' );
+define( '_AEC_LANG_GB',							'English' );
+define( '_AEC_LANG_FR',							'French' );
+define( '_AEC_LANG_IT',							'Italian' );
+define( '_AEC_LANG_ES',							'Spanish' );
+define( '_AEC_LANG_US',							'English US' );
+
+// currencies
+define( '_CURRENCY_RSD',						'Serbian Dinar' );
+
+// --== COUPON EDIT ==--
+DEFINE ('_COUPON_DETAIL_TITLE', 'Coupon');
+DEFINE ('_COUPON_RESTRICTIONS_TITLE', 'Restrict.');
+DEFINE ('_COUPON_RESTRICTIONS_TITLE_FULL', 'Restrictions');
+DEFINE ('_COUPON_MI', 'Micro Int.');
+DEFINE ('_COUPON_MI_FULL', 'Micro Integrations');
+
+DEFINE ('_COUPON_GENERAL_NAME_NAME', 'Name');
+DEFINE ('_COUPON_GENERAL_NAME_DESC', 'Enter the (internal&amp;external) name for this coupon');
+DEFINE ('_COUPON_GENERAL_COUPON_CODE_NAME', 'Coupon Code');
+DEFINE ('_COUPON_GENERAL_COUPON_CODE_DESC', 'Enter the Coupon Code for this coupon - the randomly generated coupon code is checked to be unique within the system');
+DEFINE ('_COUPON_GENERAL_DESC_NAME', 'Description');
+DEFINE ('_COUPON_GENERAL_DESC_DESC', 'Enter the (internal) description for this coupon');
+DEFINE ('_COUPON_GENERAL_ACTIVE_NAME', 'Active');
+DEFINE ('_COUPON_GENERAL_ACTIVE_DESC', 'Set whether this coupon is active (can be used)');
+DEFINE ('_COUPON_GENERAL_TYPE_NAME', 'Static');
+DEFINE ('_COUPON_GENERAL_TYPE_DESC', 'Select whether you want this to be a static coupon. These are stored in a separate table for quicker access, the general distinction being that static coupons are coupons that are used by a lot of users while non-static coupons are for one user.');
+
+DEFINE ('_COUPON_GENERAL_MICRO_INTEGRATIONS_NAME', 'Micro Integrations');
+DEFINE ('_COUPON_GENERAL_MICRO_INTEGRATIONS_DESC', 'Select the Micro Integration(s) which you want to be called when this coupon is used');
+
+DEFINE ('_COUPON_PARAMS_AMOUNT_USE_NAME', 'Use Amount');
+DEFINE ('_COUPON_PARAMS_AMOUNT_USE_DESC', 'Select whether you want to use a direct discount amount');
+DEFINE ('_COUPON_PARAMS_AMOUNT_NAME', 'Discount Amount');
+DEFINE ('_COUPON_PARAMS_AMOUNT_DESC', 'Enter the Amount that you want to deduct from the next amount');
+DEFINE ('_COUPON_PARAMS_AMOUNT_PERCENT_USE_NAME', 'Use Percentage');
+DEFINE ('_COUPON_PARAMS_AMOUNT_PERCENT_USE_DESC', 'Select whether you want a percentage deducted from the actual amount');
+DEFINE ('_COUPON_PARAMS_AMOUNT_PERCENT_NAME', 'Discount Percentage');
+DEFINE ('_COUPON_PARAMS_AMOUNT_PERCENT_DESC', 'Enter the percentage that you want deducted from the amount');
+DEFINE ('_COUPON_PARAMS_PERCENT_FIRST_NAME', 'Percent First');
+DEFINE ('_COUPON_PARAMS_PERCENT_FIRST_DESC', 'If you combine percentage and amount, do you want the percentage to be deducted first?');
+DEFINE ('_COUPON_PARAMS_USEON_TRIAL_NAME', 'Use On Trial?');
+DEFINE ('_COUPON_PARAMS_USEON_TRIAL_DESC', 'Do you want to let the user apply this discount to a trial amount?');
+DEFINE ('_COUPON_PARAMS_USEON_FULL_NAME', 'Use On Full?');
+DEFINE ('_COUPON_PARAMS_USEON_FULL_DESC', 'Do you want to let the user apply this discount to the actual amount? (With recurring billing: to the first regular payment)');
+DEFINE ('_COUPON_PARAMS_USEON_FULL_ALL_NAME', 'Every Full?');
+DEFINE ('_COUPON_PARAMS_USEON_FULL_ALL_DESC', 'If the user is using recurring payments, do you want to grant this discount for each subsequent payment? (Or just for the first, if that applies - then select no)');
+
+DEFINE ('_COUPON_PARAMS_HAS_START_DATE_NAME', 'Use Start Date');
+DEFINE ('_COUPON_PARAMS_HAS_START_DATE_DESC', 'Do you want to allow your users to use this coupon from a certain date on?');
+DEFINE ('_COUPON_PARAMS_START_DATE_NAME', 'Start Date');
+DEFINE ('_COUPON_PARAMS_START_DATE_DESC', 'Select the date at which you want to start allowing the usage of this coupon');
+DEFINE ('_COUPON_PARAMS_HAS_EXPIRATION_NAME', 'Use Expiration Date');
+DEFINE ('_COUPON_PARAMS_HAS_EXPIRATION_DESC', 'Do you want to restrict the usage of this coupon to a certain date?');
+DEFINE ('_COUPON_PARAMS_EXPIRATION_NAME', 'Expiration Date');
+DEFINE ('_COUPON_PARAMS_EXPIRATION_DESC', 'Select the date at which you want to stop allowing the usage of this coupon');
+DEFINE ('_COUPON_PARAMS_HAS_MAX_REUSE_NAME', 'Restrict Reuse?');
+DEFINE ('_COUPON_PARAMS_HAS_MAX_REUSE_DESC', 'Do you want to restrict the number of times this coupon may be used?');
+DEFINE ('_COUPON_PARAMS_MAX_REUSE_NAME', 'Max Uses');
+DEFINE ('_COUPON_PARAMS_MAX_REUSE_DESC', 'Choose the number of times this coupon can be used');
+
+DEFINE ('_COUPON_PARAMS_USECOUNT_NAME', 'Use Count');
+DEFINE ('_COUPON_PARAMS_USECOUNT_DESC', 'Reset the number of times this Coupon has been used');
+
+DEFINE ('_COUPON_PARAMS_USAGE_PLANS_ENABLED_NAME', 'Set Plan');
+DEFINE ('_COUPON_PARAMS_USAGE_PLANS_ENABLED_DESC', 'Do you want to allow this coupon only for certain plans?');
+DEFINE ('_COUPON_PARAMS_USAGE_PLANS_NAME', 'Plans');
+DEFINE ('_COUPON_PARAMS_USAGE_PLANS_DESC', 'Choose which plans this coupon can be used for');
+
+DEFINE ('_COUPON_RESTRICTIONS_MINGID_ENABLED_NAME', 'Enable Min GID:');
+DEFINE ('_COUPON_RESTRICTIONS_MINGID_ENABLED_DESC', 'Enable this setting if you want to restrict whether a user can use this coupon by a minimum usergroup.');
+DEFINE ('_COUPON_RESTRICTIONS_MINGID_NAME', 'Visibility Group:');
+DEFINE ('_COUPON_RESTRICTIONS_MINGID_DESC', 'The minimum user level required to use this coupon.');
+DEFINE ('_COUPON_RESTRICTIONS_FIXGID_ENABLED_NAME', 'Enable Fixed GID:');
+DEFINE ('_COUPON_RESTRICTIONS_FIXGID_ENABLED_DESC', 'Enable this setting if you want to restrict this coupon to one usergroup.');
+DEFINE ('_COUPON_RESTRICTIONS_FIXGID_NAME', 'Set Group:');
+DEFINE ('_COUPON_RESTRICTIONS_FIXGID_DESC', 'Only users with this usergroup can use this coupon.');
+DEFINE ('_COUPON_RESTRICTIONS_MAXGID_ENABLED_NAME', 'Enable Max GID:');
+DEFINE ('_COUPON_RESTRICTIONS_MAXGID_ENABLED_DESC', 'Enable this setting if you want to restrict whether a user use this coupon by a maximum usergroup.');
+DEFINE ('_COUPON_RESTRICTIONS_MAXGID_NAME', 'Maximum Group:');
+DEFINE ('_COUPON_RESTRICTIONS_MAXGID_DESC', 'The maximum user level a user can have to use this coupon.');
+
+DEFINE ('_COUPON_RESTRICTIONS_PREVIOUSPLAN_REQ_ENABLED_NAME', 'Required Prev. Plan:');
+DEFINE ('_COUPON_RESTRICTIONS_PREVIOUSPLAN_REQ_ENABLED_DESC', 'Enable checking for previous payment plan');
+DEFINE ('_COUPON_RESTRICTIONS_PREVIOUSPLAN_REQ_NAME', 'Plan:');
+DEFINE ('_COUPON_RESTRICTIONS_PREVIOUSPLAN_REQ_DESC', 'A user will only be able to use this coupon if he or she used the selected plan before the one currently in use');
+DEFINE ('_COUPON_RESTRICTIONS_CURRENTPLAN_REQ_ENABLED_NAME', 'Required Curr. Plan:');
+DEFINE ('_COUPON_RESTRICTIONS_CURRENTPLAN_REQ_ENABLED_DESC', 'Enable checking for currently present payment plan');
+DEFINE ('_COUPON_RESTRICTIONS_CURRENTPLAN_REQ_NAME', 'Plan:');
+DEFINE ('_COUPON_RESTRICTIONS_CURRENTPLAN_REQ_DESC', 'A user will only be able to use this coupon if he or she is currently assigned to, or has expired from the plan selected here');
+DEFINE ('_COUPON_RESTRICTIONS_OVERALLPLAN_REQ_ENABLED_NAME', 'Required Used Plan:');
+DEFINE ('_COUPON_RESTRICTIONS_OVERALLPLAN_REQ_ENABLED_DESC', 'Enable checking for overall used payment plan');
+DEFINE ('_COUPON_RESTRICTIONS_OVERALLPLAN_REQ_NAME', 'Plan:');
+DEFINE ('_COUPON_RESTRICTIONS_OVERALLPLAN_REQ_DESC', 'A user will only be able to use this coupon if he or she has used the selected plan once, no matter when');
+
+DEFINE ('_COUPON_RESTRICTIONS_USED_PLAN_MIN_ENABLED_NAME', 'Min Used Plan:');
+DEFINE ('_COUPON_RESTRICTIONS_USED_PLAN_MIN_ENABLED_DESC', 'Enable checking for the minimum number of times your consumers have subscribed to a specified payment plan in order to be able to use this coupon');
+DEFINE ('_COUPON_RESTRICTIONS_USED_PLAN_MIN_AMOUNT_NAME', 'Used Amount:');
+DEFINE ('_COUPON_RESTRICTIONS_USED_PLAN_MIN_AMOUNT_DESC', 'The minimum amount a user has to have used the selected plan');
+DEFINE ('_COUPON_RESTRICTIONS_USED_PLAN_MIN_NAME', 'Plan:');
+DEFINE ('_COUPON_RESTRICTIONS_USED_PLAN_MIN_DESC', 'The payment plan that the user has to have used the specified number of times at least');
+DEFINE ('_COUPON_RESTRICTIONS_USED_PLAN_MAX_ENABLED_NAME', 'Max Used Plan:');
+DEFINE ('_COUPON_RESTRICTIONS_USED_PLAN_MAX_ENABLED_DESC', 'Enable checking for the maximum number of times your consumers have subscribed to a specified payment plan in order to be able to use this coupon');
+DEFINE ('_COUPON_RESTRICTIONS_USED_PLAN_MAX_AMOUNT_NAME', 'Used Amount:');
+DEFINE ('_COUPON_RESTRICTIONS_USED_PLAN_MAX_AMOUNT_DESC', 'The maximum amount a user can have used the selected plan');
+DEFINE ('_COUPON_RESTRICTIONS_USED_PLAN_MAX_NAME', 'Plan:');
+DEFINE ('_COUPON_RESTRICTIONS_USED_PLAN_MAX_DESC', 'The payment plan that the user has to have used the specified number of times at most');
+
+// end new 0.12.4 (mic)
 
 // --== BACKEND TOOLBAR ==--
 DEFINE ('_EXPIRE_SET','Set Expiration:');
@@ -44,22 +357,22 @@ DEFINE ('_EXPIRE_12MONTH','set 12 Months');
 DEFINE ('_EXPIRE_ADD01MONTH','add 1 Month');
 DEFINE ('_EXPIRE_ADD03MONTH','add 3 Months');
 DEFINE ('_EXPIRE_ADD12MONTH','add 12 Months');
-DEFINE ('_CONFIGURE','配置');
-DEFINE ('_REMOVE','不包括');
-DEFINE ('_CNAME','名字');
+DEFINE ('_CONFIGURE','�?置');
+DEFINE ('_REMOVE','�?包括');
+DEFINE ('_CNAME','�??字');
 DEFINE ('_USERLOGIN','进入');
 DEFINE ('_EXPIRATION','过期');
 DEFINE ('_USERS','用户');
 DEFINE ('_DISPLAY','显示');
-DEFINE ('_NOTSET','不包括');
-DEFINE ('_SAVE','保存');
-DEFINE ('_CANCEL','取消');
-DEFINE ('_EXP_ASC','过期顺序');
-DEFINE ('_EXP_DESC','过期倒序');
-DEFINE ('_NAME_ASC','名字顺序');
-DEFINE ('_NAME_DESC','名字倒序');
-DEFINE ('_LOGIN_ASC','登陆顺序');
-DEFINE ('_LOGIN_DESC','登陆倒叙');
+DEFINE ('_NOTSET','�?包括');
+DEFINE ('_SAVE','�?存');
+DEFINE ('_CANCEL','�?�消');
+DEFINE ('_EXP_ASC','过期顺�?');
+DEFINE ('_EXP_DESC','过期倒�?');
+DEFINE ('_NAME_ASC','�??字顺�?');
+DEFINE ('_NAME_DESC','�??字倒�?');
+DEFINE ('_LOGIN_ASC','登陆顺�?');
+DEFINE ('_LOGIN_DESC','登陆倒�?�');
 DEFINE ('_SIGNUP_ASC','Signup Date Asc');
 DEFINE ('_SIGNUP_DESC','Signup Date Desc');
 DEFINE ('_LASTPAY_ASC','Last Payment Asc');
@@ -70,52 +383,52 @@ DEFINE ('_STATUS_ASC','Status Asc');
 DEFINE ('_STATUS_DESC','Status Desc');
 DEFINE ('_TYPE_ASC','Payment Type Asc');
 DEFINE ('_TYPE_DESC','Payment Type Desc');
-DEFINE ('_ORDER_BY','排序:');
-DEFINE ('_SAVED', '已保存.');
-DEFINE ('_CANCELED', '已取消.');
-DEFINE ('_CONFIGURED', '条目配置.');
-DEFINE ('_REMOVED', '从列表中移除条目.');
+DEFINE ('_ORDER_BY','排�?:');
+DEFINE ('_SAVED', '已�?存.');
+DEFINE ('_CANCELED', '已�?�消.');
+DEFINE ('_CONFIGURED', '�?�目�?置.');
+DEFINE ('_REMOVED', '从列表中移除�?�目.');
 DEFINE ('_EOT_TITLE', '关闭订阅');
-DEFINE ('_EOT_DESC', '这个列表不包含人工订阅,仅支持网关.当你删除一条记录时,用户将从数据库中移走并且清楚所有与之相关的活动记录.');
+DEFINE ('_EOT_DESC', '这个列表�?包�?�人工订阅,仅支�?网关.当你删除一�?�记录时,用户将从数�?�库中移走并且清楚所有与之相关的活动记录.');
 DEFINE ('_EOT_DATE', '到期');
 DEFINE ('_EOT_CAUSE', '原因');
 DEFINE ('_EOT_CAUSE_FAIL', '支付失败');
-DEFINE ('_EOT_CAUSE_BUYER', '被用户取消');
-DEFINE ('_EOT_CAUSE_FORCED', '被管理员取消');
+DEFINE ('_EOT_CAUSE_BUYER', '被用户�?�消');
+DEFINE ('_EOT_CAUSE_FORCED', '被管�?�员�?�消');
 DEFINE ('_REMOVE_CLOSED', '删除');
 DEFINE ('_FORCE_CLOSE', '马上关闭');
-DEFINE ('_PUBLISH_PAYPLAN', '发布');
-DEFINE ('_UNPUBLISH_PAYPLAN', '不发布');
+DEFINE ('_PUBLISH_PAYPLAN', '�?�布');
+DEFINE ('_UNPUBLISH_PAYPLAN', '�?�?�布');
 DEFINE ('_NEW_PAYPLAN', '新建');
 DEFINE ('_EDIT_PAYPLAN', '编辑');
 DEFINE ('_REMOVE_PAYPLAN', '删除');
-DEFINE ('_SAVE_PAYPLAN', '保存');
-DEFINE ('_CANCEL_PAYPLAN', '取消');
-DEFINE ('_PAYPLANS_TITLE', '偿还计划的管理者');
-DEFINE ('_PAYPLANS_MAINDESC', '发布计划将被前面的使用者选择,这些计划仅对网关支付事有效的.');
-DEFINE ('_PAYPLAN_NAME', '名字');
-DEFINE ('_PAYPLAN_DESC', '描述(不超过50个字符)');
-DEFINE ('_PAYPLAN_ACTIVE', '发布');
+DEFINE ('_SAVE_PAYPLAN', '�?存');
+DEFINE ('_CANCEL_PAYPLAN', '�?�消');
+DEFINE ('_PAYPLANS_TITLE', '�?�还计划的管�?�者');
+DEFINE ('_PAYPLANS_MAINDESC', '�?�布计划将被�?�?�的使用者选择,这些计划仅对网关支付事有效的.');
+DEFINE ('_PAYPLAN_NAME', '�??字');
+DEFINE ('_PAYPLAN_DESC', '�??述(�?超过50个字符)');
+DEFINE ('_PAYPLAN_ACTIVE', '�?�布');
 DEFINE ('_PAYPLAN_VISIBLE', 'Visible');
 DEFINE ('_PAYPLAN_A3', '频率');
 DEFINE ('_PAYPLAN_P3', '时期');
-DEFINE ('_PAYPLAN_T3', '时间单位Period Unit');
+DEFINE ('_PAYPLAN_T3', '时间�?��?Period Unit');
 DEFINE ('_PAYPLAN_USERCOUNT', '订阅者');
 DEFINE ('_PAYPLAN_EXPIREDCOUNT', 'Expired');
 DEFINE ('_PAYPLAN_TOTALCOUNT', 'Total');
-DEFINE ('_PAYPLAN_REORDER', '重新订阅');
+DEFINE ('_PAYPLAN_REORDER', '�?新订阅');
 DEFINE ('_PAYPLANS_HEADER', '支付计划');
 DEFINE ('_PAYPLAN_DETAIL', 'Settings');
 DEFINE ('_ALTERNATIVE_PAYMENT', '银行转账');
 DEFINE ('_SUBSCR_DATE', '注册日期');
-DEFINE ('_ACTIVE_TITLE', '当前订阅');
-DEFINE ('_ACTIVE_DESC', '这个列表不包含人工订阅,仅支持网关.');
-DEFINE ('_LASTPAY_DATE', '最后支付日期');
+DEFINE ('_ACTIVE_TITLE', '当�?订阅');
+DEFINE ('_ACTIVE_DESC', '这个列表�?包�?�人工订阅,仅支�?网关.');
+DEFINE ('_LASTPAY_DATE', '最�?�支付日期');
 DEFINE ('_USERPLAN', '计划');
-DEFINE ('_CANCELLED_TITLE', '取消订阅');
-DEFINE ('_CANCELLED_DESC', '这个列表不包含人工订阅,仅支持网关.这些是被使用者取消的订阅,但是This list does not include manually set subscriptions, only Gateway processed. These are the subscriptions cancelled by users but that do not reach the end of terms.');
-DEFINE ('_CANCEL_DATE', '取消日期');
-DEFINE ('_MANUAL_DESC', '当你删除一个条目,用户将完全从数据库中移走.');
+DEFINE ('_CANCELLED_TITLE', '�?�消订阅');
+DEFINE ('_CANCELLED_DESC', '这个列表�?包�?�人工订阅,仅支�?网关.这些是被使用者�?�消的订阅,但是This list does not include manually set subscriptions, only Gateway processed. These are the subscriptions cancelled by users but that do not reach the end of terms.');
+DEFINE ('_CANCEL_DATE', '�?�消日期');
+DEFINE ('_MANUAL_DESC', '当你删除一个�?�目,用户将完全从数�?�库中移走.');
 DEFINE ('_REPEND_ACTIVE', 'Re-Pend');
 DEFINE ('_FILTER_PLAN', '- 方案选择 -');
 DEFINE ('_BIND_USER', 'Assign To:');
@@ -137,13 +450,13 @@ DEFINE ('_USERINVOICE_ACTION_CLEAR_APPLY','clear&nbsp;&amp;&nbsp;apply&nbsp;Plan
 // --== BACKEND SETTINGS ==--
 
 // TAB 1 - Global AEC Settings
-DEFINE ('_CFG_TAB1_TITLE', '全球的');
+DEFINE ('_CFG_TAB1_TITLE', '全�?�的');
 DEFINE ('_CFG_TAB1_SUBTITLE', '用户交互选择');
 
-DEFINE ('_CFG_TAB1_OPT1NAME', '过期日期初始化:');
+DEFINE ('_CFG_TAB1_OPT1NAME', '过期日期�?始化:');
 DEFINE ('_CFG_TAB1_OPT1DESC', 'Default expiration period, in days, for new registrations. This is relative to registration date, so if you want new users be expired by default use -1 (minus one) here. This have no effect when user register using automatic payment system (e.g. PayPal Integration).');
 DEFINE ('_CFG_TAB1_OPT3NAME', '警告级别2:');
-DEFINE ('_CFG_TAB1_OPT3DESC', '几天后,将第一次开始通知用户他的订阅将失效.');
+DEFINE ('_CFG_TAB1_OPT3DESC', '几天�?�,将第一次开始通知用户他的订阅将失效.');
 DEFINE ('_CFG_TAB1_OPT4NAME', '警告级别1:');
 DEFINE ('_CFG_TAB1_OPT4DESC', 'In days. This is the final threshold to alert user that his subscription is about to expire. This should be the closest interval to expiration.');
 DEFINE ('_CFG_TAB1_OPT5NAME', 'Entry Plan:');
@@ -151,14 +464,14 @@ DEFINE ('_CFG_TAB1_OPT5DESC', 'Every user will be subscribed to this plan (no pa
 DEFINE ('_CFG_TAB1_OPT9NAME', 'Require Subscription:');
 DEFINE ('_CFG_TAB1_OPT9DESC', 'When enabled, a user MUST have a subscription. If disabled, users will be able to log in without one.');
 
-DEFINE ('_CFG_TAB1_OPT10NAME', '网关描述:');
-DEFINE ('_CFG_TAB1_OPT10DESC', '你想说明的不容许网关列表页面(你的某一个客户尝试去访问一个页面时,他们的支付方案将不被容许).');
+DEFINE ('_CFG_TAB1_OPT10NAME', '网关�??述:');
+DEFINE ('_CFG_TAB1_OPT10DESC', '你想说明的�?容许网关列表页�?�(你的�?一个客户�?试去访问一个页�?�时,他们的支付方案将�?被容许).');
 DEFINE ('_CFG_TAB1_OPT20NAME', 'Activated Gateways:');
 DEFINE ('_CFG_TAB1_OPT20DESC', 'Select the gateways you want to be activated (use the CTRL key to select more than one). After saving, the settings tabs for these gateways will show up. Deactivating a gateway will not erase its settings.');
 DEFINE ('_CFG_TAB1_OPT11NAME', 'Require Subscription:');
 DEFINE ('_CFG_TAB1_OPT11DESC', 'By default, a user who has no subscription set up with the AEC will be able to log in just fine. With this setting, you can make subscription a requirement.');
 DEFINE ('_CFG_ENTRYPLAN_NAME', '默认方案');
-DEFINE ('_CFG_ENTRYPLAN_DESC', '免费试用默认的方案.');
+DEFINE ('_CFG_ENTRYPLAN_DESC', '�?费试用默认的方案.');
 
 DEFINE ('_CFG_TAB1_OPT15NAME', 'Disable Integration:');
 DEFINE ('_CFG_TAB1_OPT15DESC', 'Provide one name or a list of names (seperated by a whitespace) of integrations that you want to have disabled. Currently supporting the strings: CB CBE SMF. This can be helpful when you have uninstalled CB but not deleted its tables (in which case the AEC would still recognize it as being installed).');
@@ -343,7 +656,7 @@ DEFINE ('_PAYPLAN_MI', 'Micro Integr.');
 DEFINE ('_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_NAME', 'Micro Integrations:');
 DEFINE ('_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_DESC', 'Select the Micro Integrations that you want to apply to the user with the plan.');
 
-DEFINE ('_PAYPLAN_CURRENCY', '流通');
+DEFINE ('_PAYPLAN_CURRENCY', '�?通');
 
 DEFINE ('_CURRENCY_AFA', 'Afghani');
 DEFINE ('_CURRENCY_ALL', 'Lek');
@@ -635,7 +948,7 @@ DEFINE ('_METHOD', '方法');
 // --== PENDING PAGE ==--
 DEFINE ('_PEND_DATE', '尚未决定');
 DEFINE ('_PEND_TITLE', '尚未预订');
-DEFINE ('_PEND_DESC', '未处理完的预订.系统将等待在一段时间内等待支付.');
+DEFINE ('_PEND_DESC', '未处�?�完的预订.系统将等待在一段时间内等待支付.');
 DEFINE ('_ACTIVATE', '激活');
 DEFINE ('_ACTIVATED', '用户已激活.');
 
