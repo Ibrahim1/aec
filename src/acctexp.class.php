@@ -1,19 +1,13 @@
 <?php
 /**
- * @version $Id: acctexp.class.php 16 2007-06-25 09:04:04Z mic $
- * @package AEC - Account Expiration Control / Subscription management for Joomla
+ * @version $Id: acctexp.class.php 16 2007-06-27 09:04:04Z mic $
+ * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
  * @subpackage Core Class
- * @author Helder Garcia <helder.garcia@gmail.com>, David Deutsch <skore@skore.de>
- * @copyright 2004-2007 Helder Garcia, David Deutsch
- * @license http://www.gnu.org/copyleft/gpl.html. GNU Public License
+ * @copyright Copyright (C) 2004-2007, All Rights Reserved, Helder Garcia, David Deutsch
+ * @author Helder Garcia <helder.garcia@gmail.com>, David Deutsch <skore@skore.de> & Team AEC - http://www.gobalnerd.org
+ * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
  */
 
-//
-// Copyright (C) 2004-2007 Helder Garcia, David Deutsch
-// All rights reserved.
-// This source file is part of the Account Expiration Control Component, a  Joomla
-// custom Component By Helder Garcia and David Deutsch - http://www.globalnerd.org
-//
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License (GPL)
 // as published by the Free Software Foundation; either version 2
@@ -32,10 +26,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-//
-// The "GNU General Public License" (GPL) is available at
-// http://www.gnu.org/copyleft/gpl.html.
-//
+
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
@@ -1242,13 +1233,23 @@ class aecHTML {
 		return $tip;
 	}
 
-	function Icon( $image='error.png' ) {
+	/**
+	 * displays an icon
+	 * mic: corrected name
+	 *
+	 * @param string $image
+	 * @
+	 * @return html string
+	 */
+	function Icon( $image = 'error.png', $alt = '' ) {
 		global $mosConfig_live_site;
 
+		if( !$alt ) {
+			$name	= explode( '.', $image );
+		}
 		$image 	= $mosConfig_live_site . '/administrator/components/com_acctexp/images/icons/'. $image;
-		$name	= explode( '.', $image );
 		$alt	= $name[0];
-		return '<img src="'. $image .'" border="0" alt="' . $alt . '" class="aec_icon" />';
+		return '<img src="'. $image .'" border="0" alt="' . $alt . '" title="' . $alt . '" class="aec_icon" />';
 	}
 
 }
@@ -1717,10 +1718,13 @@ class SubscriptionPlan extends paramDBTable {
 		// The rest of the vars are restrictions
 		$restrictions = array();
 		foreach( $post as $varname => $content ) {
-			if( is_array( $content ) ) {
-				$restrictions[$varname] = implode( ';', $content );
-			}else{
-				$restrictions[$varname] = $content;
+			// mic: fix for NOT including JCE-settings into aec.database
+			if( substr( $varname, 0, 4 ) != 'mce_' ) {
+				if( is_array( $content ) ) {
+					$restrictions[$varname] = implode( ';', $content );
+				}else{
+					$restrictions[$varname] = $content;
+				}
 			}
 			unset( $post[$varname] );
 		}
@@ -1762,7 +1766,6 @@ class SubscriptionPlan extends paramDBTable {
 	function saveRestrictions ( $restrictions ) {
 		$this->setParams( $restrictions, 'restrictions' );
 	}
-
 }
 
 class logHistory extends mosDBTable {

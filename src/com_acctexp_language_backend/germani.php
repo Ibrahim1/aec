@@ -1,18 +1,13 @@
 <?php
 /**
-* @version $Id: germani.php 16 2007-06-25 09:04:04Z mic $
-* @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
-* @subpackage Language - Backend - German Informal
-* @copyright Copyright (C) 2004-2007 Helder Garcia, David Deutsch
-* @author Team AEC - http://www.gobalnerd.org
-* @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
-*/
+ * @version $Id: germani.php 16 2007-06-25 09:04:04Z mic $
+ * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
+ * @subpackage Language - Backend - German Informal
+ * @copyright Copyright (C) 2004-2007 Helder Garcia, David Deutsch
+ * @author Team AEC - http://www.gobalnerd.org
+ * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
+ */
 
-// Copyright (C) 2004-2007 Helder Garcia, David Deutsch
-// All rights reserved.
-// This source file is part of the Account Expiration Control Component, a  Joomla
-// custom Component By Helder Garcia and David Deutsch - http://www.globalnerd.org
-//
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License (GPL)
 // as published by the Free Software Foundation; either version 2
@@ -31,26 +26,22 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-//
-// The "GNU General Public License" (GPL) is available at
-// http://www.gnu.org/copyleft/gpl.html.
 
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-// already in english file
-define( '_COUPON_CODE',							'Gutscheincode' );
-
-
-// mic: adopted from the english file (missing here)
-define( '_CFG_GENERAL_CUSTOMNOTALLOWED_NAME',	'Link zur Nichterlaubtseite:' );
-
 // mic: NEW 0.12.4
+define( '_COUPON_CODE',							'Gutscheincode' );
+define( '_CFG_GENERAL_CUSTOMNOTALLOWED_NAME',	'Link zur Nichterlaubtseite:' );
 
 // hacks/install >> ATTENTION: MUST BE HERE AT THIS POSITION, needed later!
 define( '_AEC_SPEC_MENU_ENTRY',					'Mein Abonnement' );
 
-// also NOT in english file
+// cfg
+define( '_CFG_GENERAL_ACTIVATE_PAID_NAME',		'Aktiviere Bezahlabos' );
+define( '_CFG_GENERAL_ACTIVATE_PAID_DESC',		'Automatisch aktive, Bezahlabos aktivieren, anstatt der Anforderung eines Aktivierungscodes' );
+
+// common
 define( '_DESCRIPTION_PAYSIGNET',				'mic: Beschreibung zu Paysignnet - CHECKEN! -' );
 define( '_AEC_CONFIG_SAVED',					'Konfiguration erfolgreich gesichert' );
 define( '_AEC_CONFIG_CANCELLED',				'Konfiguration abgebrochen' );
@@ -72,10 +63,74 @@ define( '_AEC_CMN_MADE_INVISIBLE',				'unsichtbar gemacht' );
 define( '_AEC_CMN_TOPUBLISH',					'zu ver&ouml;ffentlichen' );
 define( '_AEC_CMN_TOUNPUBLISH',					'nicht zu ver&ouml;ffentlichen' );
 define( '_AEC_CMN_FILE_SAVED',					'Datei gesichert' );
+define( '_AEC_CMN_ID',							'ID' );
+define( '_AEC_CMN_DATE',						'Datum' );
+define( '_AEC_CMN_EVENT',						'Ereignis' );
+define( '_AEC_CMN_TAGS',						'Kennzeichen' );
+define( '_AEC_CMN_ACTION',						'Aktion' );
+define( '_AEC_CMN_PARAMETER',					'Parameter' );
+define( '_AEC_CMN_NONE',						'Keine' );
+define( '_AEC_CMN_WRITEABLE',					'Beschreibbar' );
+define( '_AEC_CMN_UNWRITEABLE',					'Nicht beschreibbar!' );
+define( '_AEC_CMN_UNWRITE_AFTER_SAVE',			'Nach dem Sichern als nicht beschreibbar kennzeichnen' );
+define( '_AEC_CMN_OVERRIDE_WRITE_PROT',			'Schreibschutz zum Sichern deaktivieren' );
+define( '_AEC_CMN_NOT_SET',						'Nicht gesetzt' );
+define( '_AEC_CMN_SEARCH',						'Suche' );
+define( '_AEC_CMN_APPLY',						'Anwenden' );
+define( '_AEC_CMN_STATUS',						'Status' );
+define( '_AEC_FEATURE_NOT_ACTIVE',				'Dieses Feature ist noch nicht aktiv' );
+
+// user(info)
+define( '_AEC_USER_USER_INFO',					'Benutzerinfos' );
+define( '_AEC_USER_USERID',						'Benutzer-ID' );
+define( '_AEC_USER_STATUS',						'Status' );
+define( '_AEC_USER_ACTIVE',						'Aktiv' );
+define( '_AEC_USER_BLOCKED',					'Geblockt' );
+define( '_AEC_USER_ACTIVE_LINK',				'Aktivierungslink' );
+define( '_AEC_USER_PROFILE',					'Profil' );
+define( '_AEC_USER_PROFILE_LINK',				'Profil ansehen' );
+define( '_AEC_USER_USERNAME',					'Benutzername' );
+define( '_AEC_USER_NAME',						'Name' );
+define( '_AEC_USER_EMAIL',						'Email' );
+define( '_AEC_USER_SEND_MAIL',					'Email senden' );
+define( '_AEC_USER_TYPE',						'Benutzertyp' );
+define( '_AEC_USER_REGISTERED',					'Registriert' );
+define( '_AEC_USER_LAST_VISIT',					'Letzter Besuch' );
+define( '_AEC_USER_EXPIRATION',					'Ablaufdatum' );
+define( '_AEC_USER_CURR_EXPIRE_DATE',			'Aktuelles Ablaufdatum' );
+define( '_AEC_USER_LIFETIME',					'Lebenslang' );
+define( '_AEC_USER_RESET_EXP_DATE',				'Ablaufdatum &auml;ndern' );
+define( '_AEC_USER_RESET_STATUS',				'Status &auml;ndern' );
+define( '_AEC_USER_SUBSCRIPTION',				'Abonnement' );
+define( '_AEC_USER_PAYMENT_PROC',				'Zahlungsabwicklung' );
+define( '_AEC_USER_CURR_SUBSCR_PLAN',			'Aktuelles Abo' );
+define( '_AEC_USER_PREV_SUBSCR_PLAN',			'Voriges Abo' );
+define( '_AEC_USER_USED_PLANS',					'Bisherige Abos' );
+define( '_AEC_USER_NO_PREV_PLANS',				'Bisher keine Abos' );
+define( '_AEC_USER_ASSIGN_TO_PLAN',				'Abo zuweisen' );
+define( '_AEC_USER_TIME',						'Mal' );
+define( '_AEC_USER_TIMES',						'Male' );
+define( '_AEC_USER_INVOICES',					'Rechnungen' );
+define( '_AEC_USER_NO_INVOICES',				'Keine Rechnungen bisher' );
+define( '_AEC_USER_INVOICE_FACTORY',			'Rechnungserstellung' );
+
+// new (additional)
+define( '_AEC_MSG_MIS_NOT_DEFINED',				'Es wurden noch keine Integrationen definiert - siehe Konfiguration' );
 
 // headers
 define( '_AEC_HEAD_SETTINGS',					'Einstellungen' );
 define( '_AEC_HEAD_HACKS',						'Spezial' );
+define( '_AEC_HEAD_PLAN_INFO',					'Abonnement' );
+define( '_AEC_HEAD_LOG',						'Logdatei' );
+define( '_AEC_HEAD_CSS_EDITOR',					'CSS Editor' );
+define( '_AEC_HEAD_MICRO_INTEGRATION',			'Integration' );
+define( '_AEC_HEAD_ACTIVE_SUBS',				'Aktive Abonnenten' );
+define( '_AEC_HEAD_EXCLUDED_SUBS',				'Ausgeschlossene Abonnenten' );
+define( '_AEC_HEAD_EXPIRED_SUBS',				'Abgelaufene Abonnenten' );
+define( '_AEC_HEAD_PENDING_SUBS',				'Wartende Abonnenten' );
+define( '_AEC_HEAD_CANCELLED_SUBS',				'Stornierte Abonnenten' );
+define( '_AEC_HEAD_CLOSED_SUBS',				'Abgeschlossene Abonnenten' );
+define( '_AEC_HEAD_MANUAL_SUBS',				'Manuelle Abonnenten' );
 
 // hacks (special)
 define( '_AEC_HACK_HACK',						'&Auml;nderung' );
@@ -481,7 +536,7 @@ DEFINE ('_CFG_ENTRYPLAN_NAME', 'Standart Probe-Plan');
 DEFINE ('_CFG_ENTRYPLAN_DESC', 'Der Standart-Plan für die freie Probezeit.');
 
 DEFINE ('_CFG_TAB1_OPT15NAME', 'Disable Integration:');
-DEFINE ('_CFG_TAB1_OPT15DESC', 'Provide one name or a list of names (seperated by a whitespace) of integrations that you want to have disabled. Currently supporting the strings: CB CBE SMF. This can be helpful when you have uninstalled CB but not deleted its tables (in which case the AEC would still recognize it as being installed).');
+DEFINE ('_CFG_TAB1_OPT15DESC', 'Provide one name or a list of names (seperated by a whitespace) of integrations that you want to have disabled. Currently supporting the strings: <strong>CB,CBE,CBM,JACL,SMF,UE,UHP2,VM</strong>. This can be helpful when you have uninstalled CB but not deleted its tables (in which case the AEC would still recognize it as being installed).');
 DEFINE ('_CFG_TAB1_OPT16NAME', 'Simple URLs:');
 DEFINE ('_CFG_TAB1_OPT16DESC', 'Disable the use of Joomla/Mambo SEF Routines for Urls. With some setups using these will result in 404 Errors due to wrong rewriting. Try this option if you encounter any problems with redirects.');
 DEFINE ('_CFG_TAB1_OPT17NAME', 'Expiration Cushion:');

@@ -1,18 +1,13 @@
-<?php /* $Id: toolbar.acctexp.php,v 1.2 2005/12/15 16:20:38 helder Exp $ */
+<?php
 /**
- * AcctExp Menubar Handler
- * @package AcctExp
-* @copyright 2004-2007 Helder Garcia, David Deutsch
-* @license http://www.gnu.org/copyleft/gpl.html. GNU Public License
-* @version $Revision: 1.2 $
-* @author Helder Garcia <helder.garcia@gmail.com>, David Deutsch <skore@skore.de>
-**/
-//
-// Copyright (C) 2004-2007 Helder Garcia, David Deutsch
-// All rights reserved.
-// This source file is part of the Account Expiration Control Component, a  Joomla
-// custom Component By Helder Garcia and David Deutsch - http://www.globalnerd.org
-//
+ * @version $Id: toolbar.acctexp.php 16 2007-06-27 09:04:04Z mic $
+ * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
+ * @subpackage Menubar Handler
+ * @copyright Copyright (C) 2004-2007, All Rights Reserved, Helder Garcia, David Deutsch
+ * @author Helder Garcia <helder.garcia@gmail.com>, David Deutsch <skore@skore.de> & Team AEC - http://www.gobalnerd.org
+ * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
+ */
+
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License (GPL)
 // as published by the Free Software Foundation; either version 2
@@ -31,93 +26,81 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-//
-// The "GNU General Public License" (GPL) is available at
-// http://www.gnu.org/copyleft/gpl.html.
-//
+
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
 require_once( $mainframe->getPath( 'toolbar_html' ) );
 
-if (!defined('_AEC_VERSION')) {
-	if (file_exists( $mosConfig_absolute_path . '/administrator/components/com_acctexp/com_acctexp_language/'.$GLOBALS['mosConfig_lang'].'.php' )) {
-			include( $mosConfig_absolute_path . '/administrator/components/com_acctexp/com_acctexp_language/'.$GLOBALS['mosConfig_lang'].'.php' );
-	} else {
-			include( $mosConfig_absolute_path . '/administrator/components/com_acctexp/com_acctexp_language/english.php' );
-	}
-}
-
 switch ( $task ) {
 
-	case "add":
+	case 'add':
 		ComponentMenu::ADD_MENU();
 		break;
 
-	case "edit":
+	case 'edit':
 		ComponentMenu::EDIT_MENU();
 		break;
 
-	case "showSettings":
+	case 'showSettings':
 		ComponentMenu::EDIT_SETTINGS();
 		break;
 
-	case "showSubscriptionPlans":
+	case 'showSubscriptionPlans':
 		ComponentMenu::LIST_SUBSCRIPTIONPLANS();
 		break;
 
-	case "newSubscriptionPlan":
+	case 'newSubscriptionPlan':
 		ComponentMenu::EDIT_SUBSCRIPTIONPLAN();
 		break;
 
-	case "editSubscriptionPlan":
+	case 'editSubscriptionPlan':
 		ComponentMenu::EDIT_SUBSCRIPTIONPLAN();
 		break;
 
-	case "showMicroIntegrations":
+	case 'showMicroIntegrations':
 		ComponentMenu::LIST_MICROINTEGRATIONS();
 		break;
 
-	case "newMicroIntegration":
+	case 'newMicroIntegration':
 		ComponentMenu::EDIT_MICROINTEGRATION();
 		break;
 
-	case "editMicroIntegration":
+	case 'editMicroIntegration':
 		ComponentMenu::EDIT_MICROINTEGRATION();
 		break;
 
-	case "showCoupons":
+	case 'showCoupons':
 		ComponentMenu::LIST_COUPONS();
 		break;
 
-	case "newCoupon":
+	case 'newCoupon':
 		ComponentMenu::EDIT_COUPON();
 		break;
 
-	case "editCoupon":
+	case 'editCoupon':
 		ComponentMenu::EDIT_COUPON();
 		break;
 
-	case "showCouponsStatic":
+	case 'showCouponsStatic':
 		ComponentMenu::LIST_COUPONS_STATIC();
 		break;
 
-	case "newCouponStatic":
+	case 'newCouponStatic':
 		ComponentMenu::EDIT_COUPON_STATIC();
 		break;
 
-	case "editCouponStatic":
+	case 'editCouponStatic':
 		ComponentMenu::EDIT_COUPON_STATIC();
 		break;
 
-	case "editCSS":
+	case 'editCSS':
 		CommonMenu::EDIT_CSS_MENU();
 		break;
-		
+
 	default:
-		ComponentMenu::NO_MENU();
+		//ComponentMenu::NO_MENU();
 		break;
 	}
-
 ?>
 

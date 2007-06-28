@@ -851,7 +851,7 @@ function editUser( $userid, $option, $task ) {
 
 	$query = 'SELECT id AS value, name AS text'
 	. ' FROM #__acctexp_plans'
-	. ' WHERE active = 1'
+	. ' WHERE active = \'1\''
 	;
 	$database->setQuery( $query	);
 
@@ -1234,6 +1234,38 @@ function listSubscriptions( $option, $set_group, $userid ) {
 		$groups[]	= $set_group;
 	}
 
+	// define displaying at html
+	$action = '';
+	switch( $set_group ){
+		case 'active':
+			$action = _AEC_HEAD_ACTIVE_SUBS;
+			break;
+
+		case 'excluded':
+			$action = _AEC_HEAD_EXCLUDED_SUBS;
+			break;
+
+		case 'expired':
+			$action = _AEC_HEAD_EXPIRED_SUBS;
+			break;
+
+		case 'pending':
+			$action = _AEC_HEAD_PENDING_SUBS;
+			break;
+
+		case 'cancelled':
+			$action = _AEC_HEAD_CANCELLED_SUBS;
+			break;
+
+		case 'closed':
+			$action = _AEC_HEAD_CLOSED_SUBS;
+		break;
+
+		case 'notconfig':
+			$action = _AEC_HEAD_MANUAL_SUBS;
+			break;
+	}
+
 	$filter		= '';
 	$where		= array();
 	$where_or	= array();
@@ -1399,7 +1431,7 @@ function listSubscriptions( $option, $set_group, $userid ) {
 	$total = $database->loadResult();
 	echo $database->getErrorMsg();
 
-	require_once( $GLOBALS['mosConfig_absolute_path'] . '/administrator/includes/pageNavigation.php' );
+	require_once( $mainframe->getCfg( 'absolute_path' ) . '/administrator/includes/pageNavigation.php' );
 	$pageNav = new mosPageNav( $total, $limitstart, $limit );
 
 	// get the subset (based on limits) of required records
@@ -1513,7 +1545,7 @@ function listSubscriptions( $option, $set_group, $userid ) {
 
 	$lists['set_expiration'] = mosHTML::selectList($group_selection, 'set_expiration', 'class="inputbox" size="1" onchange="document.adminForm.submit( );"', 'value', 'text', "");
 
-	HTML_AcctExp::listSubscriptions( $rows, $pageNav, $search, $option, $lists, $userid );
+	HTML_AcctExp::listSubscriptions( $rows, $pageNav, $search, $option, $lists, $userid, $action );
 }
 
 function editSettings( $option ) {
@@ -1889,7 +1921,7 @@ function editSettings( $option ) {
 * Cancels an configure operation
 */
 function cancelSettings( $option ) {
-	mosRedirect( "index2.php?option=$option&task=showSettings", _AEC_CONFIG_CANCELLED );
+	mosRedirect( 'index2.php?option=' . $option . '&task=showCentral', _AEC_CONFIG_CANCELLED );
 }
 
 
@@ -2497,22 +2529,32 @@ function editMicroIntegration ( $id, $option ) {
 
 	if( !$mi->id ) {
 		// Set lowest ordering
-		$mi->ordering = 9999;
-		$cfg = new Config_General($database);
-		$mi_list = explode( ';', $cfg->cfg['milist']);
+		$mi->ordering	= 9999;
+		$mi_list		= array();
+		$mi_htmllist	= array();
 
-		foreach( $mi_list as $name ) {
-			$mi_item = new microIntegration( $database );
-			$mi_item->class_name = $name;
-			if( $mi_item->callIntegration() ) {
-				$len = 30 - strlen( trim( $mi->name ) );
-				$fullname = str_replace( '#', '&nbsp;', str_pad( $mi_item->name, $len, '#' ) )
-				. ' - ' . $mi_item->desc;
-				$mi_htmllist[] = mosHTML::makeOption( $name, $fullname );
-			}
+		$cfg = new Config_General($database);
+		if( $cfg->cfg['milist'] ) {
+			$mi_list = explode( ';', $cfg->cfg['milist'] );
 		}
 
-		$lists['class_name'] = mosHTML::selectList( $mi_htmllist, 'class_name', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '"', 'value', 'text', '' );
+		if( count( $mi_list ) > 0 ) {
+			foreach( $mi_list as $name ) {
+				$mi_item = new microIntegration( $database );
+				$mi_item->class_name = $name;
+				if( $mi_item->callIntegration() ) {
+					$len = 30 - strlen( trim( $mi->name ) );
+					$fullname = str_replace( '#', '&nbsp;', str_pad( $mi_item->name, $len, '#' ) )
+					. ' - ' . $mi_item->desc;
+					$mi_htmllist[] = mosHTML::makeOption( $name, $fullname );
+				}
+			}
+
+			// mic: to avoid displaing an empty list, show instead message at html.page
+			$lists['class_name'] = mosHTML::selectList( $mi_htmllist, 'class_name', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '"', 'value', 'text', '' );
+		}else{
+			$lists['class_name'] = '';
+		}
 	}else{
 		// Call MI and Settings
 		if( $mi->callIntegration() ) {
@@ -3220,7 +3262,7 @@ function eventlog( $option ) {
 		$where[] = 'LOWER(event) LIKE \'%' . $database->getEscaped( trim( strtolower( $search ) ) ) . '%\'';
 	}
 
-	$tags = $_REQUEST['tags'];
+	$tags = ( !empty( $_REQUEST['tags'] ) ? $_REQUEST['tags'] : null );
 
 	if( is_array( $tags ) ) {
 		foreach( $tags as $tag ) {

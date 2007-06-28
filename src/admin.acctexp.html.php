@@ -1,18 +1,13 @@
-<?php /* $Id: admin.acctexp.html.php,v 1.2 2005/12/15 16:20:38 helder Exp $ */
+<?php
 /**
-* AcctExp Main HTML Writer
-* @package AcctExp
-* @copyright 2004-2007 Helder Garcia, David Deutsch
-* @license http://www.gnu.org/copyleft/gpl.html. GNU Public License
-* @version $Revision: 1.2 $
-* @author Helder Garcia <helder.garcia@gmail.com>, David Deutsch <skore@skore.de>
-**/
-//
-// Copyright (C) 2004-2007 Helder Garcia, David Deutsch
-// All rights reserved.
-// This source file is part of the Account Expiration Control Component, a  Joomla
-// custom Component By Helder Garcia and David Deutsch - http://www.globalnerd.org
-//
+ * @version $Id: admin.acctexp.html.php 16 2007-06-27 09:04:04Z mic $
+ * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
+ * @subpackage Main HTML Backend
+ * @copyright Copyright (C) 2004-2007, All Rights Reserved, Helder Garcia, David Deutsch
+ * @author Helder Garcia <helder.garcia@gmail.com>, David Deutsch <skore@skore.de> & Team AEC - http://www.gobalnerd.org
+ * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
+ */
+
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License (GPL)
 // as published by the Free Software Foundation; either version 2
@@ -31,15 +26,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-//
-// The "GNU General Public License" (GPL) is available at
-// http://www.gnu.org/copyleft/gpl.html.
-//
+
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
-global $mosConfig_absolute_path;
 
-require_once( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php" );
+global $mosConfig_absolute_path;
 
 class HTML_myCommon {
 
@@ -48,7 +39,7 @@ class HTML_myCommon {
 			<tr align="center">
 				<td><?php echo aecHTML::Icon( 'accept.png' ); ?></td>
 				<td><?php echo _AEC_CMN_PUBLISHED; ?> |</td>
-				<td><?php echo aecHTML::Icon("cancel.png"); ?></td>
+				<td><?php echo aecHTML::Icon( 'cancel.png' ); ?></td>
 				<td><?php echo _AEC_CMN_NOT_PUBLISHED; ?></td>
 				</tr>
 			<tr>
@@ -70,7 +61,7 @@ class HTML_myCommon {
 	*/
 	function radioListTable( &$arr, $tag_name, $tag_attribs, $selected=null, $key='value', $text='text' ) {
 		reset( $arr );
-		$html = "<table>";
+		$html = '<table>';
 		$flop = 1;
 		for( $i=0, $n=count( $arr ); $i < $n; $i++ ) {
 			$k = $arr[$i]->$key;
@@ -91,7 +82,7 @@ class HTML_myCommon {
 				$extra .= ( $k == $selected ? ' checked="checked"' : '');
 			}
 			if( $flop ) {
-				$html .= "\n\t" . '<tr><td height="50px" valign="center">' . "\n"
+				$html .= "\n\t" . '<tr><td height="50" valign="center">' . "\n"
 				. '<input type="radio" name="' . $tag_name . '" value="' . $k . '"'
 				. $extra . $tag_attribs . ' />' . $t . '</td>';
 				if( ( $i + 1 ) == $n ) {
@@ -100,7 +91,7 @@ class HTML_myCommon {
 				}
 				$flop = 0;
 				}else{
-					$html .= "\n\t" . '<td height="50px" valign="center">'
+					$html .= "\n\t" . '<td height="50" valign="center">'
 					. '<input type="radio" name="' . $tag_name . '" value="' . $k . '"'
 					. $extra . $tag_attribs . ' />' . $t . '</td></tr>' . "\n";
 					$flop = 1;
@@ -269,7 +260,7 @@ class HTML_myCommon {
 
 			case 'inputE': ?>
 				<tr align="left" valign="middle" >
-					<td><?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null, "help.png" ); ?><?php echo $thisrow_name; ?></td>
+					<td><?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null ); ?><?php echo $thisrow_name; ?></td>
 					<td colspan="2" align="left"><input type="text" size="70" name="<?php echo $thisrow_extra; ?>" class="inputbox" value="<?php echo $thisrow_var; ?>" /></td>
 				</tr>
 				<?php
@@ -278,7 +269,7 @@ class HTML_myCommon {
 			case 'editor': ?>
         		<tr align="left" valign="middle" >
 					<td colspan="3">
-						<?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null, "help.png" ); ?><?php echo $thisrow_name; ?>
+						<?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null ); ?><?php echo $thisrow_name; ?>
 						<!-- <textarea name="<?php echo $thisrow_extra; ?>" align="left" cols="60" maxlength="2048" rows="5"><?php echo $thisrow_var; ?></textarea> //-->
 						<?php editorArea( $thisrow_extra, $thisrow_var, $thisrow_extra, '100%;', '250', '10', '60' ); ?>
 					</td>
@@ -297,7 +288,7 @@ class HTML_myCommon {
 
 			case 'list_big': ?>
 				<tr>
-					<td valign="top"><?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null, 'help.png' ); ?><?php echo $thisrow_name; ?></td>
+					<td valign="top"><?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null ); ?><?php echo $thisrow_name; ?></td>
 					<td colspan="2" align="left" valign="top"><?php echo $lists[$thisrow_extra]; ?></td>
 				</tr>
 				<?php
@@ -384,7 +375,7 @@ class formParticles {
 			case "inputE":
 			?>
 				<tr align="left" valign="middle" >
-					<td><?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null, "help.png" ); ?><?php echo $thisrow_name; ?></td>
+					<td><?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null ); ?><?php echo $thisrow_name; ?></td>
 					<td colspan="2" align="left"><input type="text" size="70" name="<?php echo $thisrow_extra; ?>" class="inputbox" value="<?php echo $thisrow_var; ?>" /></td>
 				</tr>
 			<?php break;
@@ -392,7 +383,7 @@ class formParticles {
 			?>
         		<tr align="left" valign="middle" >
 					<td width="10%" align="right">
-					<?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null, "help.png" ); ?>
+					<?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null ); ?>
 					<?php echo $thisrow_name; ?>
 					</td>
 					<td width="10%" colspan="2">
@@ -414,7 +405,7 @@ class formParticles {
 			case "list_big":
 			?>
 				<tr>
-					<td><?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null, "help.png" ); ?><?php echo $thisrow_name; ?></td>
+					<td><?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null ); ?><?php echo $thisrow_name; ?></td>
 					<td colspan="2" align="left"><?php echo $lists[$thisrow_extra]; ?></td>
 				</tr>
 			<?php break;
@@ -440,43 +431,41 @@ class General_css {
 	function editCSSSource ( &$content, $option ) {
 		global $mosConfig_absolute_path, $mosConfig_live_site;
 
-		$css_path = $mosConfig_absolute_path . '/components/' . $option . '/style.css';
+		$cssFile	= 'style.css';
+		$css_path	= $mosConfig_absolute_path . '/components/' . $option . '/' . $cssFile;
 		HTML_myCommon::addBackendCSS(); ?>
-		<link rel="stylesheet" type="text/css" media="all" href="<?php echo $mosConfig_live_site;?>/administrator/components/com_acctexp/backend_style.css" title="AEC Backend" />
 		<form action="index2.php" method="post" name="adminForm">
 			<table cellpadding="1" cellspacing="1" border="0" width="100%">
 				<tr>
-					<td width="280">
+					<td width="180">
 						<table class="adminheading">
-							<tr><th class="templates" style="color: #586c79;">CSS Editor</th></tr>
+							<tr><th class="templates" style="color: #586c79;"><?php echo _AEC_HEAD_CSS_EDITOR; ?></th></tr>
 						</table>
 					</td>
 					<td width="260">
-						<span class="componentheading">style.css is :
-						<p><?php echo is_writable($css_path) ? '<span style="color:green;"> Writeable</span>' : '<span style="color:red;"> Unwriteable</span>' ?></p>
+						<span class="componentheading"><?php echo $cssFile; ?>:&nbsp;
+							<?php echo is_writable( $css_path ) ? '<span style="color:green;">' . _AEC_CMN_WRITEABLE . '</span>' : '<span style="color:red;">' . _AEC_CMN_UNWRITEABLE . '</span>'; ?>
 						</span>
 					</td>
 					<?php
 					if( mosIsChmodable( $css_path ) ) {
-						if ( is_writable( $css_path ) ) {
-							?>
+						if ( is_writable( $css_path ) ) { ?>
 							<td>
-								<input type="checkbox" id="disable_write" name="disable_write" value="1"/>
-								<label for="disable_write">Make unwriteable after saving</label>
+								<input type="checkbox" id="disable_write" name="disable_write" value="1" />
+								<label for="disable_write"><?php echo _AEC_CMN_UNWRITE_AFTER_SAVE; ?></label>
 							</td>
 							<?php
 						} else {
 							?>
 							<td>
-								<input type="checkbox" id="enable_write" name="enable_write" value="1"/>
-								<label for="enable_write">Override write protection while saving</label>
+								<input type="checkbox" id="enable_write" name="enable_write" value="1" />
+								<label for="enable_write"><?php echo_AEC_CMN_OVERRIDE_WRITE_PROT; ?></label>
 							</td>
 							<?php
 						}
 					} ?>
 				</tr>
 			</table>
-
 			<table class="adminform">
 				<tr>
 					<th>
@@ -493,16 +482,15 @@ class General_css {
 			<input type="hidden" name="task" value="" />
 		</form>
 
-			<!-- include footer -->
-			<?php HTML_myCommon::GlobalNerd(); ?>
-		<?php
-	} // end function
-} // end class
+		<?php HTML_myCommon::GlobalNerd();
+	}
+}
 
 class HTML_AcctExp {
 
 	function userForm ( $option, $expiration, $subscription, $user, $invoices, $lists, $nexttask ) {
 		global $mosConfig_live_site;
+
 		mosMakeHtmlSafe( $expiration );
 		HTML_myCommon::addBackendCSS();
 
@@ -525,133 +513,203 @@ class HTML_AcctExp {
 			/* ]]> */
 		</script>
 		<table class="adminheading">
-			<tr><th><?php echo aecHTML::Icon("aec_symbol_edit.png"); ?></th></tr>
+			<tr><th><?php echo aecHTML::Icon( 'aec_symbol_edit.png' ); ?></th></tr>
 		</table>
-
 		<form action="index2.php" method="post" name="adminForm">
 			<table class="adminform">
 				<tr>
 					<td width="50%" style="padding:10px;" valign="top">
 						<div class="userinfobox">
-							<h3>User Info</h3>
-							<p>UserID:&nbsp;<strong><?php echo $user->id; ?></strong> | Status:&nbsp;<strong><?php echo !$user->block ? aecHTML::Icon("accept.png") . "&nbsp;Active</strong>" : aecHTML::Icon("exclamation.png") . "&nbsp;Blocked" . "</strong>" . (($user->activation == "") ? "" : " (<a href=\"" . $mosConfig_live_site . "/index.php?option=com_registration&task=activate&activation=" . $user->activation . "\">Activation Link</a>)"); ?></p>
-							<p>Joomla Profile: <a href="index2.php?option=com_users&amp;task=editA&amp;id=<?php echo $user->id; ?>&amp;hidemainmenu=1"><?php echo aecHTML::Icon("user.png"); ?>&nbsp;link</a><?php echo $cb ? (" | CB Profile: <a href=\"index2.php?option=com_comprofiler&amp;task=edit&amp;cid=" . $user->id . "\">" . aecHTML::Icon("user_orange.png") . "&nbsp;link</a>") : "";?></p>
-							<p>Username:&nbsp;<strong><?php echo $user->username; ?></strong> | Name:&nbsp;<strong><?php echo $user->name; ?></strong></p>
-							<p>E-Mail:&nbsp;<strong><?php echo $user->email; ?></strong> (<a href="mailto:<?php echo $user->email; ?>"><?php echo aecHTML::Icon("email.png"); ?>&nbsp;send email</a>)</p>
-							<p>Usertype:&nbsp;<strong><?php echo $user->usertype; ?></strong></p>
-							<p>Registered:&nbsp;<?php echo aecHTML::Icon("date.png"); ?>&nbsp;<strong><?php echo $user->registerDate; ?></strong> | Last Visit:&nbsp;<strong><?php echo aecHTML::Icon("door_in.png"); ?>&nbsp;<?php echo $user->lastvisitDate; ?></strong></p>
+							<h3><?php echo _AEC_USER_USER_INFO; ?></h3>
+							<p>
+								<?php echo _AEC_USER_USERID; ?>:&nbsp;<strong><?php echo $user->id; ?></strong>
+								&nbsp;|&nbsp;
+								<?php echo _AEC_USER_STATUS; ?>:&nbsp;
+								<strong><?php echo !$user->block ? aecHTML::Icon( 'accept.png') . '&nbsp;' . _AEC_USER_ACTIVE . '</strong>' : aecHTML::Icon( 'exclamation.png' ) . '&nbsp;' . _AEC_USER_BLOCKED . '</strong>' . ( ( !$user->activation == '' ) ? '' : ' (<a href="' . $mosConfig_live_site . '/index.php?option=com_registration&amp;task=activate&amp;activation=' . $user->activation . '" target="_blank">' . _AEC_USER_ACTIVE_LINK . '</a>)' ); ?>
+							</p>
+							<p>
+								<?php echo _AEC_USER_PROFILE; ?>:
+								&nbsp;
+								<a href="index2.php?option=com_users&amp;task=editA&amp;id=<?php echo $user->id; ?>&amp;hidemainmenu=1"><?php echo aecHTML::Icon( 'user.png' ); ?>&nbsp;<?php echo _AEC_USER_PROFILE_LINK; ?></a><?php echo $cb ? (' | CB Profile: <a href="index2.php?option=com_comprofiler&amp;task=edit&amp;cid=' . $user->id . '">' . aecHTML::Icon( 'user_orange.png' ) . '&nbsp;' . _AEC_USER_PROFILE_LINK . '</a>') : ''; ?>
+							</p>
+							<p>
+								<?php echo _AEC_USER_USERNAME; ?>:&nbsp;
+								<strong><?php echo $user->username; ?></strong>
+								&nbsp;|&nbsp;
+								<?php echo _AEC_USER_NAME; ?>:&nbsp;<strong>
+								<?php echo $user->name; ?></strong>
+							</p>
+							<p>
+								<?php echo _AEC_USER_EMAIL; ?>:&nbsp;<strong><?php echo $user->email; ?></strong>
+							 	(<a href="mailto:<?php echo $user->email; ?>"><?php echo aecHTML::Icon( 'email.png' ); ?>&nbsp;<?php echo _AEC_USER_SEND_MAIL; ?></a>)
+							 </p>
+							<p><?php echo _AEC_USER_TYPE; ?>:&nbsp;<strong><?php echo $user->usertype; ?></strong></p>
+							<p>
+								<?php echo _AEC_USER_REGISTERED; ?>:&nbsp;<?php echo aecHTML::Icon( 'date.png'); ?>&nbsp;
+								<strong><?php echo $user->registerDate; ?></strong>
+								&nbsp;|&nbsp;
+								<?php echo _AEC_USER_LAST_VISIT; ?>:&nbsp;
+								<strong><?php echo aecHTML::Icon( 'door_in.png' ); ?>&nbsp;<?php echo $user->lastvisitDate; ?></strong>
+							</p>
 						</div>
 						<div class="userinfobox">
-							<h3>Expiration</h3>
+							<h3><?php echo _AEC_USER_EXPIRATION; ?></h3>
 							<?php
-							if( strcmp( $expiration->expiration, "9999-12-31 00:00:00" ) === 0 ) {; ?>
-								<p>Current Expiration Date:&nbsp;<?php echo aecHTML::Icon("clock_pause.png"); ?>&nbsp;<strong>Lifetime</strong></p>
-								<p>Lifetime:&nbsp;<input class="checkbox" type="checkbox" name="ck_lifetime" id="ck_lifetime" checked="checked" onclick="swap();"/>
+							if( !empty( $expiration->expiration ) && strcmp( $expiration->expiration, '9999-12-31 00:00:00' ) === 0 ) { ?>
 								<p>
-									Reset Expiration Date:&nbsp;<?php echo aecHTML::Icon("clock_edit.png"); ?>
-									<input class="text_area" type="text" name="expiration" id="expiration" size="25" maxlength="19" value="<?php echo $expiration->expiration; ?>" disabled="disabled" />
+								<?php echo _AEC_USER_CURR_EXPIRE_DATE; ?>:&nbsp;
+								<?php echo aecHTML::Icon( 'clock_pause.png' ); ?>&nbsp;
+								<strong><?php echo _AEC_USER_LIFETIME; ?></strong></p>
+								<p>
+									<?php echo _AEC_USER_LIFETIME; ?>:&nbsp;
+									<input class="checkbox" type="checkbox" name="ck_lifetime" id="ck_lifetime" checked="checked" onclick="swap();" />
+								<p>
+									<?php echo _AEC_USER_RESET_EXP_DATE; ?>:&nbsp;
+									<?php echo aecHTML::Icon( 'clock_edit.png' ); ?>
+									<input class="text_area" type="text" name="expiration" id="expiration" size="19" maxlength="19" value="<?php echo $expiration->expiration; ?>" disabled="disabled" />
 									<input type="reset" name="reset" class="button" onClick="return showCalendar('expiration', 'y-mm-dd');" value="..." disabled="disabled" />
 								</p>
 								<?php
 							}else{
 								?>
-								<p>Current Expiration Date:&nbsp;<?php echo aecHTML::Icon("clock_red.png"); ?>&nbsp;<strong><?php echo $expiration->expiration; ?></strong></p>
-								<p>Lifetime:&nbsp;<input class="checkbox" type="checkbox" name="ck_lifetime" id="ck_lifetime" onclick="swap();"/>
 								<p>
-									Reset Expiration Date:&nbsp;<?php echo aecHTML::Icon("clock_edit.png"); ?>
-									<input class="text_area" type="text" name="expiration_off" id="expiration_off" size="25" maxlength="19" value="<?php echo $expiration->expiration; ?>"/>
-									<input type="reset" name="reset" class="button" onClick="return showCalendar('expiration_off', 'y-mm-dd');" value="..." />
+									<?php echo _AEC_USER_CURR_EXPIRE_DATE; ?>:&nbsp;
+									<?php echo aecHTML::Icon( 'clock_red.png'); ?>&nbsp;
+									<strong><?php echo ( !empty( $expiration->expiration ) ? $expiration->expiration : _AEC_CMN_NOT_SET ); ?></strong>
+								</p>
+								<p>
+									<?php echo _AEC_USER_LIFETIME; ?>:&nbsp;
+									<input class="checkbox" type="checkbox" name="ck_lifetime" id="ck_lifetime" onclick="swap();" />
+								<p>
+									<?php echo _AEC_USER_RESET_EXP_DATE; ?>:&nbsp;<?php echo aecHTML::Icon("clock_edit.png"); ?>
+									<input class="text_area" type="text" name="expiration" id="expiration" size="19" maxlength="19" value="<?php echo ( !empty( $expiration->expiration ) ? $expiration->expiration : date( 'Y-m-d H:i:s' ) ); ?>"/>
+									<input type="reset" name="reset" class="button" onClick="return showCalendar('expiration', 'y-mm-dd');" value="..." title="<?php echo _AEC_USER_RESET_EXP_DATE; ?>" />
 								</p>
 								<?php
 							} ?>
-							<p>Reset Status: <?php echo $lists['set_status']; ?><p>
+							<p><?php echo _AEC_USER_RESET_STATUS; ?>:&nbsp;<?php echo $lists['set_status']; ?><p>
 							</div>
 						</div>
 						<div class="userinfobox">
-							<h3>Subscription</h3>
-								<p>Status:&nbsp;<strong>
-								<?php switch( $subscription->status ) {
-									case 'Excluded':
-										$icon = "cut_red.png";
-										break;
-										case 'Trial':
-										case 'Pending':
-										$icon = "star.png";
-										break;
-									case 'Active':
-										$icon = "tick.png";
-										break;
-									case 'Cancel':
-										$icon = "exclamation.png";
-										break;
-									case 'Expired':
-									case 'Closed':
-										$icon = "cancel.png";
-										break;
-								} ?>&nbsp;<?php echo aecHTML::Icon($icon); ?>&nbsp;<?php echo $subscription->status; ?></strong></p>
-								<p>Payment Processor:&nbsp;<strong><?php echo aecHTML::Icon("money.png"); ?>&nbsp;<?php echo $subscription->type; ?></strong></p>
+							<h3><?php echo _AEC_USER_SUBSCRIPTION; ?></h3>
+								<p>
+									<?php echo _AEC_USER_STATUS; ?>:&nbsp;<strong>
+									<?php
+									switch( $subscription->status ) {
+										case 'Excluded':
+											$icon = "cut_red.png";
+											break;
+											case 'Trial':
+											case 'Pending':
+											$icon = "star.png";
+											break;
+										case 'Active':
+											$icon = "tick.png";
+											break;
+										case 'Cancel':
+											$icon = "exclamation.png";
+											break;
+										case 'Expired':
+										case 'Closed':
+											$icon = "cancel.png";
+											break;
+									} ?>
+									&nbsp;
+									<?php echo aecHTML::Icon($icon); ?>&nbsp;<?php echo $subscription->status; ?></strong>
+								</p>
+								<p>
+									<?php echo _AEC_USER_PAYMENT_PROC; ?>:&nbsp;
+									<strong><?php echo aecHTML::Icon( 'money.png' ); ?>&nbsp;<?php echo $subscription->type; ?></strong>
+								</p>
 								<table>
 									<tr>
-										<td>Current Subscription Plan:</td>
-										<td><strong>#<?php echo $subscription->plan; ?></strong> - "<?php echo HTML_AcctExp::SubscriptionName($subscription->plan); ?>"</td>
+										<td width="120"><?php echo _AEC_USER_CURR_SUBSCR_PLAN; ?>:</td>
+										<td><strong>#<?php echo $subscription->plan; ?></strong> - "<?php echo ( $subscription->plan ? HTML_AcctExp::SubscriptionName( $subscription->plan ) : '<span style="color:#FF0000;">' . _AEC_CMN_NOT_SET . '</span>' ); ?>"</td>
 									</tr>
 									<tr>
-										<td>Previous Subscription Plan:</td>
-										<td><strong>#<?php echo $subscription->previous_plan; ?></strong> - "<?php echo HTML_AcctExp::SubscriptionName($subscription->previous_plan); ?>"</td>
+										<td><?php echo _AEC_USER_PREV_SUBSCR_PLAN; ?>:</td>
+										<td><strong>#<?php echo $subscription->previous_plan; ?></strong> - "<?php echo ( $subscription->previous_plan ? HTML_AcctExp::SubscriptionName( $subscription->previous_plan ) : '<span style="color: #FF0000;">' . _AEC_CMN_NOT_SET . '</span>' ); ?>"</td>
 									</tr>
 									<tr>
-										<td>Used Subscription Plans:</td>
+										<td><?php echo _AEC_USER_USED_PLANS; ?>:</td>
 										<td>
-											<?php if (isset($subscription->used_plans)) {
+											<?php
+											if( isset( $subscription->used_plans ) ) {
 												$used_plans = $subscription->getUsedPlans();
 												foreach ($used_plans as $used => $amount) { ?>
-													<strong>#<?php echo $used; ?></strong> - "<?php echo HTML_AcctExp::SubscriptionName($used); ?>" (<?php echo $amount . " time" . (($amount > 1) ? "s" : ""); ?>)
-												<?php }
+													<strong>#<?php echo $used; ?></strong> - "<?php echo HTML_AcctExp::SubscriptionName( $used ); ?>" (<?php echo $amount . ( ( $amount > 1 ) ? _AEC_USER_TIMES : _AEC_USER_TIME ); ?>)
+													<?php
+												}
+											}else{
+												echo '<span style="color: #FF0000;">' . _AEC_USER_NO_PREV_PLANS . '</span>';
 											} ?>
 										</td>
 									</tr>
 								</table>
-								<p>Assign to Plan: <?php echo $lists['assignto_plan']; ?><p>
+								<p>
+									<span style="vertical-align:top;"><?php echo _AEC_USER_ASSIGN_TO_PLAN; ?>:</span>&nbsp;
+									<?php echo $lists['assignto_plan']; ?>
+								<p>
 						</div>
-					<td width="50%" style="padding:10px; padding-right:20px;" valign="top">
+					</td>
+					<td width="50%" style="padding:10px; padding-right:20px; vertical-align:top;">
 						<div class="userinfobox">
-							<h3>Invoices</h3>
-							<table>
-									<tr>
-										<th><?php echo _HISTORY_COL1_TITLE;?></th>
-										<th><?php echo _HISTORY_COL2_TITLE;?></th>
-										<th><?php echo _HISTORY_COL3_TITLE;?></th>
-										<th><?php echo _HISTORY_COL4_TITLE;?></th>
-										<th><?php echo _HISTORY_COL6_TITLE;?></th>
-										<th><?php echo _HISTORY_COL5_TITLE;?></th>
-									</tr>
-								<?php foreach ($invoices as $invoice) { ?>
-										<tr<?php echo $invoice['rowstyle']; ?>>
-											<td><?php echo $invoice['invoice_number']; ?></td>
-											<td><?php echo $invoice['amount']; ?></td>
-											<td><?php echo $invoice['status']; ?></td>
-											<td><?php echo $invoice['processor']; ?></td>
-											<td><?php echo $invoice['usage']; ?></td>
-											<td style="text-align:center;"><?php echo $invoice['actions']; ?></td>
+							<div style="float: left; text-align: right;">
+								<h3><?php echo _AEC_USER_INVOICES; ?></h3>
+							</div>
+							<div style="float: left; text-align: left;">
+								<table width="100%">
+										<tr>
+											<td><?php echo _HISTORY_COL1_TITLE;?></td>
+											<td><?php echo _HISTORY_COL2_TITLE;?></td>
+											<td><?php echo _HISTORY_COL3_TITLE;?></td>
+											<td><?php echo _HISTORY_COL4_TITLE;?></td>
+											<td><?php echo _HISTORY_COL6_TITLE;?></td>
+											<td><?php echo _HISTORY_COL5_TITLE;?></td>
 										</tr>
-								<?php } ?>
-							</table>
+										<tr>
+											<td colspan="6" style="border-top: 2px solid #999999;"></td>
+										</tr>
+										<?php
+										if( $invoices ) {
+											foreach( $invoices as $invoice ) { ?>
+												<tr<?php echo $invoice['rowstyle']; ?>>
+													<td><?php echo $invoice['invoice_number']; ?></td>
+													<td><?php echo $invoice['amount']; ?></td>
+													<td><?php echo $invoice['status']; ?></td>
+													<td><?php echo $invoice['processor']; ?></td>
+													<td><?php echo $invoice['usage']; ?></td>
+													<td style="text-align:center;"><?php echo $invoice['actions']; ?></td>
+												</tr>
+												<?php
+											}
+										}else{
+											echo '<tr><td colspan="6" style="text-align:center;">&gt;&gt;&nbsp;'
+											. _AEC_USER_NO_INVOICES
+											. '&nbsp;&lt;&lt;</td></tr>' . "\n";
+										} ?>
+								</table>
+							</div>
 						</div>
 						<div class="userinfobox">
-							<h3>Invoice Factory</h3>
+							<div style="float: left; text-align: right;">
+								<h3><?php echo _AEC_USER_INVOICE_FACTORY; ?></h3>
+							</div>
+							<div style="float: left; text-align: center;">
+								<?php echo _AEC_FEATURE_NOT_ACTIVE; ?>
+							</div>
 						</div>
 					</td>
 				</tr>
 			</table>
 
-			<input type="hidden" name="option" value="<?php echo $option; ?>">
-			<input type="hidden" name="id" value="<?php echo $expiration->id; ?>">
-			<input type="hidden" name="userid" value="<?php echo $expiration->userid; ?>">
-			<input type="hidden" name="task" value="">
-			<input type="hidden" name="nexttask" value= "<?php echo $nexttask;?>"/>
+			<input type="hidden" name="option" value="<?php echo $option; ?>" />
+			<input type="hidden" name="id" value="<?php echo $expiration->id; ?>" />
+			<input type="hidden" name="userid" value="<?php echo $expiration->userid; ?>" />
+			<input type="hidden" name="task" value="" />
+			<input type="hidden" name="nexttask" value="<?php echo $nexttask;?>" />
 		</form>
 
-		<!-- include footer -->
 		<?php HTML_myCommon::GlobalNerd(); ?>
 	<?php
 	}
@@ -1001,82 +1059,97 @@ class HTML_AcctExp {
 		HTML_myCommon::GlobalNerd();
 	}
 
-	function listSubscriptions( $rows, $pageNav, $search, $option, $lists, $userid ) {
+	function listSubscriptions( $rows, $pageNav, $search, $option, $lists, $userid, $action ) {
 		global $my, $mosConfig_live_site;
-		HTML_myCommon::addBackendCSS();
-		?>
+
+		HTML_myCommon::addBackendCSS(); ?>
 		<form action="index2.php" method="post" name="adminForm">
-			<table class="adminheading">
+			<table class="adminheading" cellpadding="2" cellspacing="2">
 				<tr>
-					<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_active.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;"><?php echo _ACTIVE_TITLE; ?></th>
+					<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_active.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;"><?php echo $action; ?></th>
 					<td nowrap="nowrap"><?php echo $lists['groups'];?></td>
-					<td style="text-align:center;"><?php echo _PLAN_FILTER; ?> <?php echo $lists['filterplanid'];?><?php echo _ORDER_BY; ?> <?php echo $lists['orderNav']; ?><input type="button" class="button" onclick="document.adminForm.submit( );" value="Apply" style="margin:2px;text-align:center;"/></td>
-					<td nowrap="nowrap"><?php echo $lists['planid'];?><br /><?php echo $lists['set_expiration'];?></td>
-					<td>Search:</td>
-					<td> <input type="text" name="search" value="<?php echo $search;?>" class="inputbox" onChange="document.adminForm.submit();" /></td>
+					<td style="text-align:center;">
+						<?php echo _PLAN_FILTER; ?>
+						&nbsp;
+						<?php echo $lists['filterplanid'] . _ORDER_BY . $lists['orderNav']; ?>
+						<input type="button" class="button" onclick="document.adminForm.submit( );" value="<?php echo _AEC_CMN_APPLY; ?>" style="margin:2px;text-align:center;"/>
+					</td>
+					<td style="white-space:nowrap; float:right; text-align:left; padding:3px; margin:3px;">
+						<?php echo $lists['planid']; ?>
+						<br />
+						<?php echo $lists['set_expiration']; ?>
+						<br />
+						<?php echo _AEC_CMN_SEARCH; ?>
+						<br />
+						<input type="text" name="search" value="<?php echo $search; ?>" class="inputbox" onChange="document.adminForm.submit();" />
+					</td>
 				</tr>
 				<tr><td></td></tr>
 			</table>
-		<table class="adminlist">
+			<table class="adminlist">
 				<tr>
 					<th width="20">#</th>
 					<th width="20"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
 					<th width="15%" align="left" nowrap="nowrap"><?php echo _CNAME; ?></th>
 					<th width="10%" align="left" nowrap="nowrap"><?php echo _USERLOGIN; ?></th>
-					<th width="10%" align="left" nowrap="nowrap">Status</th>
+					<th width="10%" align="left" nowrap="nowrap"><?php echo _AEC_CMN_STATUS; ?></th>
 					<th width="15%" align="left" nowrap="nowrap"><?php echo _SUBSCR_DATE; ?></th>
 					<th width="15%" align="left" nowrap="nowrap"><?php echo _LASTPAY_DATE; ?></th>
 					<th width="10%" align="left" nowrap="nowrap"><?php echo _METHOD; ?></th>
 					<th width="10%" align="left" nowrap="nowrap"><?php echo _USERPLAN; ?></th>
 					<th width="27%" align="left" nowrap="nowrap"><?php echo _EXPIRATION; ?></th>
 				</tr>
-		<?php
-		$k = 0;
-		for( $i=0; $i < count( $rows ); $i++ ) {
-			$row = &$rows[$i];
+				<?php
+				$k = 0;
+				for( $i=0; $i < count( $rows ); $i++ ) {
+					$row = &$rows[$i];
 
-			if( !isset( $row->status ) ) {
-				$row->status = "-";$row->signup_date = "-";$row->lastpay_date = "-";$row->type = "-";$row->plan_name = "-";$row->lifetime = "-";$row->expiration = "-";
-			}
+					if( !isset( $row->status ) ) {
+						$row->status		= '-';
+						$row->signup_date	= '-';
+						$row->lastpay_date	= '-';
+						$row->type			= '-';
+						$row->plan_name		= '-';
+						$row->lifetime		= '-';
+						$row->expiration	= '-';
+					}
 
-			$rowstyle = '';
-			if( is_array( $userid ) ) {
-				if( in_array( $row->userid, $userid ) ) {
-					$rowstyle = ' style="border: 2px solid #DD0;"';
-				}
-			} ?>
-				<tr class="row<?php echo $k; ?>"<?php echo $rowstyle; ?>>
-					<td width="20" align="center"><?php echo $pageNav->rowNumber( $i ); ?></td>
-					<td width="20"><?php echo mosHTML::idBox( $i, $row->userid, false, 'userid' ); ?></td>
-					<td width="15%" align="left"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','edit')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $row->name; ?> </a></td>
-					<td width="10%" align="left"><?php echo $row->username; ?></td>
-					<td width="10%" align="left"><?php echo $row->status; ?></td>
-					<td width="15%" align="left"><?php echo HTML_AcctExp::DisplayDateInLocalTime($row->signup_date); ?></td>
-					<td width="15%" align="left"><?php echo HTML_AcctExp::DisplayDateInLocalTime($row->lastpay_date); ?></td>
-					<td width="10%" align="left"><?php echo $row->type; ?></td>
-					<td width="10%" align="left"><?php echo $row->plan_name; ?> </td>
-					<td width="27%" align="left"><?php echo $row->lifetime ? _AEC_CMN_LIFETIME : HTML_AcctExp::DisplayDateInLocalTime($row->expiration); ?></td>
-				</tr>
-			<?php
-			$k = 1 - $k;
-		}
-		?>
-		</table>
-		<?php echo $pageNav->getListFooter(); ?>
-		<input type="hidden" name="option" value="<?php echo $option;?>" />
-		<input type="hidden" name="task" value= "showActive"/>
-		<input type="hidden" name="returnTask" value= "showActive"/>
-		<input type="hidden" name="boxchecked" value="0" />
-	</form>
+					$rowstyle = '';
+					if( is_array( $userid ) ) {
+						if( in_array( $row->userid, $userid ) ) {
+							$rowstyle = ' style="border: 2px solid #DD0;"';
+						}
+					} ?>
+						<tr class="row<?php echo $k; ?>"<?php echo $rowstyle; ?>>
+							<td width="20" align="center"><?php echo $pageNav->rowNumber( $i ); ?></td>
+							<td width="20"><?php echo mosHTML::idBox( $i, $row->userid, false, 'userid' ); ?></td>
+							<td width="15%" align="left"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','edit')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $row->name; ?> </a></td>
+							<td width="10%" align="left"><?php echo $row->username; ?></td>
+							<td width="10%" align="left"><?php echo $row->status; ?></td>
+							<td width="15%" align="left"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->signup_date ); ?></td>
+							<td width="15%" align="left"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->lastpay_date ); ?></td>
+							<td width="10%" align="left"><?php echo $row->type; ?></td>
+							<td width="10%" align="left"><?php echo $row->plan_name; ?> </td>
+							<td width="27%" align="left"><?php echo $row->lifetime ? _AEC_CMN_LIFETIME : HTML_AcctExp::DisplayDateInLocalTime($row->expiration); ?></td>
+						</tr>
+					<?php
+					$k = 1 - $k;
+				} ?>
+			</table>
+			<?php echo $pageNav->getListFooter(); ?>
+			<input type="hidden" name="option" value="<?php echo $option;?>" />
+			<input type="hidden" name="task" value= "showActive"/>
+			<input type="hidden" name="returnTask" value= "showActive"/>
+			<input type="hidden" name="boxchecked" value="0" />
+		</form>
 
-		<!-- include footer -->
  		<?php HTML_myCommon::GlobalNerd();
 	}
 
 	function listMicroIntegrations( &$rows, &$pageNav, $option ) {
 		global $mosConfig_live_site;
-		HTML_myCommon::addBackendCSS();
-		?>
+
+		HTML_myCommon::addBackendCSS(); ?>
 		<form action="index2.php" method="post" name="adminForm">
 			<table class="adminheading">
 				<tr>
@@ -1115,23 +1188,20 @@ class HTML_AcctExp {
 					</td>
 					<td width="20%" align="left">
 						<?php
-						// echo substr($row->desc, 0, 50) . "...";
-
 						echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
 						</td>
 					<td width="3%" align="center">
-						<a href="javascript: void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo ($row->active) ? 'unpublishMicroIntegration' : 'publishMicroIntegration'; ?>')">
-							<img src="images/<?php echo ( $row->active ) ? 'publish_g.png' : 'publish_x.png';?>" width="12" height="12" border="0" alt="<?php echo ( $row->active ) ? 'Yes' : 'No';?>" />
+						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo ($row->active) ? 'unpublishMicroIntegration' : 'publishMicroIntegration'; ?>')">
+							<img src="images/<?php echo ( $row->active ) ? 'publish_g.png' : 'publish_x.png'; ?>" width="12" height="12" border="0" alt="<?php echo ( $row->active ) ? 'Yes' : 'No';?>" />
 						</a>
 					</td>
-					<td align="right"><?php echo $pageNav->orderUpIcon( $i, true, "ordermiup" ); ?></td>
-					<td align="right"><?php echo $pageNav->orderDownIcon( $i, $n, true, "ordermidown" ); ?></td>
+					<td align="right"><?php echo $pageNav->orderUpIcon( $i, true, 'ordermiup' ); ?></td>
+					<td align="right"><?php echo $pageNav->orderDownIcon( $i, $n, true, 'ordermidown' ); ?></td>
 					<td width="45%" align="right"><?php echo $row->class_name; ?></td>
 				</tr>
 			<?php
 			$k = 1 - $k;
-		}
-		?>
+		} ?>
 		</table>
  		<?php echo $pageNav->getListFooter(); ?>
 		<?php HTML_myCommon::ContentLegend(); ?>
@@ -1139,9 +1209,8 @@ class HTML_AcctExp {
 		<input type="hidden" name="task" value= ""/>
 		<input type="hidden" name="returnTask" value= "showMicroIntegrations"/>
 		<input type="hidden" name="boxchecked" value="0" />
-	</form>
+		</form>
 
-		<!-- include footer -->
  		<?php HTML_myCommon::GlobalNerd();
 	}
 
@@ -1171,13 +1240,14 @@ class HTML_AcctExp {
 			*/
 			/* ]]> */
 		</script>
-			<table class="adminheading">
-				<tr>
-					<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_microintegrations.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
-					Micro Integration Info: <small><?php echo $row->id ? $row->name : 'New'; ?></small>
-		        	</th>
-				</tr>
-			</table>
+		<table class="adminheading">
+			<tr>
+				<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_microintegrations.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+					<?php echo _AEC_HEAD_MICRO_INTEGRATION; ?>:&nbsp;
+					<small><?php echo $row->id ? $row->name : _AEC_CMN_NEW; ?></small>
+	        	</th>
+			</tr>
+		</table>
 		<!--<form action="index2.php" method="post" name="adminForm" enctype="multipart/form-data" onLoad="swap();" >-->
 		<form action="index2.php" method="post" name="adminForm" enctype="multipart/form-data">
 			<table cellspacing="0" cellpadding="0" width="100%">
@@ -1185,90 +1255,101 @@ class HTML_AcctExp {
 					<td valign="top">
 						<?php
 		                $tabs->startPane( 'createMicroIntegration' );
-		                $tabs->startTab( _MI_E_TITLE, _MI_E_TITLE );
-		                ?>
+		                $tabs->startTab( _MI_E_TITLE, _MI_E_TITLE ); ?>
 		                <table width="100%" class="adminform">
 							<tr>
-								<td colspan="3"><h2><?php echo _PAYPLAN_DETAIL_TITLE; ?></h2></td>
+								<td colspan="2"><h2><?php echo _PAYPLAN_DETAIL_TITLE; ?></h2></td>
 							</tr>
 							<tr>
-								<td width="10%">
-								<?php echo aecHTML::ToolTip( _MI_E_ACTIVE_DESC, _MI_E_ACTIVE_NAME, null, "help.png" ); ?>
-								<?php echo _MI_E_ACTIVE_NAME; ?>
+								<td width="120">
+									<?php echo aecHTML::ToolTip( _MI_E_ACTIVE_DESC, _MI_E_ACTIVE_NAME, null ); ?>
+									<?php echo _MI_E_ACTIVE_NAME; ?>
 								</td>
-								<td width="10%" align="left"><?php echo $lists['yesno']; ?></td>
+								<td align="left"><?php echo $lists['yesno']; ?></td>
 							</tr>
 							<tr>
-								<td width="10%">
-								<?php echo aecHTML::ToolTip( _MI_E_NAME_DESC, _MI_E_NAME_NAME, null, "help.png" ); ?>
-								<?php echo _MI_E_NAME_NAME; ?>
+								<td>
+									<?php echo aecHTML::ToolTip( _MI_E_NAME_DESC, _MI_E_NAME_NAME, null ); ?>
+									<?php echo _MI_E_NAME_NAME; ?>
 								</td>
 								<td><input class="inputbox" type="text" name="name" size="30" maxlength="40" value="<?php echo $row->name; ?>" /></td>
 							</tr>
 							<tr>
-								<td width="10%">
-								<?php echo aecHTML::ToolTip( _MI_E_DESC_DESC, _MI_E_DESC_NAME, null, "help.png" ); ?>
-								<?php echo _MI_E_DESC_NAME; ?>
+								<td valign="top">
+									<?php echo aecHTML::ToolTip( _MI_E_DESC_DESC, _MI_E_DESC_NAME, null ); ?>
+									<?php echo _MI_E_DESC_NAME; ?>
 								</td>
-								<td><textarea name="desc" align="left" cols="60" maxlength="2048" rows="5"><?php echo $row->desc; ?></textarea></td>
+								<td><textarea name="desc" cols="60" rows="5"><?php echo $row->desc; ?></textarea></td>
 							</tr>
 							<tr>
-								<td width="10%">
-								<?php echo aecHTML::ToolTip( _MI_E_ACTIVE_AUTO_DESC, _MI_E_ACTIVE_AUTO_NAME, null, "help.png" ); ?>
-								<?php echo _MI_E_ACTIVE_AUTO_NAME; ?>
+								<td>
+									<?php echo aecHTML::ToolTip( _MI_E_ACTIVE_AUTO_DESC, _MI_E_ACTIVE_AUTO_NAME, null ); ?>
+									<?php echo _MI_E_ACTIVE_AUTO_NAME; ?>
 								</td>
-								<td width="10%" align="left"><?php echo $lists['yesno_auto']; ?></td>
+								<td align="left"><?php echo $lists['yesno_auto']; ?></td>
 							</tr>
 							<tr>
-								<td width="10%">
-								<?php echo aecHTML::ToolTip( _MI_E_ACTIVE_USERUPDATE_DESC, _MI_E_ACTIVE_USERUPDATE_NAME, null, "help.png" ); ?>
-								<?php echo _MI_E_ACTIVE_USERUPDATE_NAME; ?>
+								<td>
+									<?php echo aecHTML::ToolTip( _MI_E_ACTIVE_USERUPDATE_DESC, _MI_E_ACTIVE_USERUPDATE_NAME, null ); ?>
+									<?php echo _MI_E_ACTIVE_USERUPDATE_NAME; ?>
 								</td>
-								<td width="10%" align="left"><?php echo $lists['yesno_userupdate']; ?></td>
+								<td align="left"><?php echo $lists['yesno_userupdate']; ?></td>
 							</tr>
 							<tr>
-								<td width="10%">
-								<?php echo aecHTML::ToolTip( _MI_E_PRE_EXP_DESC, _MI_E_PRE_EXP_NAME, null, "help.png" ); ?>
-								<?php echo _MI_E_PRE_EXP_NAME; ?>
+								<td>
+									<?php echo aecHTML::ToolTip( _MI_E_PRE_EXP_DESC, _MI_E_PRE_EXP_NAME, null ); ?>
+									<?php echo _MI_E_PRE_EXP_NAME; ?>
 								</td>
-								<td><input class="inputbox" type="text" name="pre_exp_check" size="30" maxlength="40" value="<?php echo $row->pre_exp_check; ?>" /></td>
+								<td>
+									<input class="inputbox" type="text" name="pre_exp_check" size="30" maxlength="40" value="<?php echo $row->pre_exp_check; ?>" />
+								</td>
 							</tr>
-						<?php if (is_null($aecHTML)) { ?>
-							<tr>
-								<td width="10%"><?php echo _MI_E_FUNCTION_NAME; ?></td>
-								<td width="10%"><?php echo $lists['class_name']; ?></td>
-								<td align="left"><?php echo _MI_E_FUNCTION_DESC; ?></td>
-							</tr>
-						</table>
-						<?php } else { ?>
-							<tr>
-								<td><?php echo _MI_E_FUNCTION_NAME; ?>:</td>
-								<td colspan="2"><strong><?php echo $row->class_name; ?></strong></td>
-							</tr>
-						</table>
-						<?php
-		                $tabs->endTab();
-		                $tabs->startTab( _MI_E_SETTINGS, _MI_E_SETTINGS );
-		                ?>
-		                <table width="100%" class="adminform">
-						<?php foreach ($aecHTML->rows as $name => $content) { ?>
-		                	<tr><td><?php echo $aecHTML->createSettingsParticle($name); ?></td></tr>
-		                <?php } ?>
-						</table>
-						<?php
-						}
-		                $tabs->endTab();
-		                $tabs ->endPane();
-						?>
-					</td>
-				</tr>
-			</table>
-		<br />
-		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
-		<input type="hidden" name="option" value="<?php echo $option; ?>" />
-		<input type="hidden" name="task" value="" />
+							<?php
+							if( is_null( $aecHTML ) ) { ?>
+								<tr>
+									<td><?php echo _MI_E_FUNCTION_NAME; ?></td>
+									<td>
+										<?php
+										if( $lists['class_name'] ) {
+											echo $lists['class_name']; ?>
+											&nbsp;
+											<?php echo _MI_E_FUNCTION_DESC;
+											echo '#########################';
+										}else{
+											echo _AEC_MSG_MIS_NOT_DEFINED;
+										} ?>
+									</td>
+								</tr>
+							</table>
+							<?php
+							} else { ?>
+								<tr>
+									<td><?php echo _MI_E_FUNCTION_NAME; ?>:</td>
+									<td><strong><?php echo $row->class_name; ?></strong></td>
+								</tr>
+							</table>
+							<?php
+			                $tabs->endTab();
+			                $tabs->startTab( _MI_E_SETTINGS, _MI_E_SETTINGS ); ?>
+				                <table width="100%" class="adminform">
+									<?php
+									foreach( $aecHTML->rows as $name => $content ) { ?>
+				                		<tr><td><?php echo $aecHTML->createSettingsParticle( $name ); ?></td></tr>
+				                		<?php
+									} ?>
+								</table>
+								<?php
+							}
+			                $tabs->endTab();
+			                $tabs ->endPane(); ?>
+						</td>
+					</tr>
+				</table>
+			<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
+			<input type="hidden" name="option" value="<?php echo $option; ?>" />
+			<input type="hidden" name="task" value="" />
 		</form>
-		<!-- include footer -->
+
 		<?php HTML_myCommon::GlobalNerd();
 	}
 
@@ -1390,22 +1471,22 @@ class HTML_AcctExp {
 									<div style="position:relative;float:left;width:48%;padding:4px;">
 										<div class="userinfobox">
 											<div style="position:relative;float:left;width:100%;">
-												<?php echo $aecHTML->createSettingsParticle( "name" ); ?><?php if ($row->id) { ?><p><a href="<?php echo $mosConfig_live_site; ?>/index.php?option=com_acctexp&amp;task=subscribe&amp;usage=<?php echo $row->id; ?>" title="<?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?></a></p><?php } ?>
+												<?php echo $aecHTML->createSettingsParticle( 'name' ); ?><?php if ($row->id) { ?><p><a href="<?php echo $mosConfig_live_site; ?>/index.php?option=com_acctexp&amp;task=subscribe&amp;usage=<?php echo $row->id; ?>" title="<?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?></a></p><?php } ?>
 											</div>
-											<?php echo $aecHTML->createSettingsParticle( "active" ); ?>
-											<?php echo $aecHTML->createSettingsParticle( "visible" ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
 										</div>
 										<div class="userinfobox">
-											<?php echo $aecHTML->createSettingsParticle( "processors" ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'processors' ); ?>
 										</div>
 									</div>
 									<div style="position:relative;float:left;width:48%;padding:4px;">
 										<div class="userinfobox">
-											<?php echo $aecHTML->createSettingsParticle( "full_free" ); ?>
-											<?php echo $aecHTML->createSettingsParticle( "full_amount" ); ?>
-											<?php echo $aecHTML->createSettingsParticle( "lifetime" ); ?>
-											<?php echo $aecHTML->createSettingsParticle( "full_period" ); ?>
-											<?php echo $aecHTML->createSettingsParticle( "full_periodunit" ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'full_free' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'full_amount' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'lifetime' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'full_period' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'full_periodunit' ); ?>
 											<div class="usernote" style="width:200px;">
 												<?php echo _PAYPLAN_AMOUNT_NOTICE_TEXT; ?>
 											</div>
@@ -1417,9 +1498,9 @@ class HTML_AcctExp {
 										</div>
 									</div>
 									<div class="userinfobox">
-										<?php echo $aecHTML->createSettingsParticle( "gid_enabled" ); ?>
-										<?php echo $aecHTML->createSettingsParticle( "gid" ); ?>
-										<?php echo $aecHTML->createSettingsParticle( "fallback" ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'gid_enabled' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'gid' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'fallback' ); ?>
 									</div>
 								</td>
 							</tr>
@@ -1431,8 +1512,8 @@ class HTML_AcctExp {
 		                <table width="100%" class="adminform"><tr><td>
 							<div class="userinfobox">
 								<h2><?php echo _PAYPLAN_TEXT_TITLE; ?></h2>
-								<?php echo $aecHTML->createSettingsParticle( "desc" ); ?>
-								<?php echo $aecHTML->createSettingsParticle( "email_desc" ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'email_desc' ); ?>
 							</div>
 						</td></tr></table>
 						<?php
@@ -1444,16 +1525,16 @@ class HTML_AcctExp {
 							<tr><td>
 								<div class="userinfobox">
 									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( "mingid_enabled" ); ?>
-										<?php echo $aecHTML->createSettingsParticle( "mingid" ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'mingid_enabled' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'mingid' ); ?>
 									</div>
 									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( "fixgid_enabled" ); ?>
-										<?php echo $aecHTML->createSettingsParticle( "fixgid" ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'fixgid_enabled' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'fixgid' ); ?>
 									</div>
 									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( "maxgid_enabled" ); ?>
-										<?php echo $aecHTML->createSettingsParticle( "maxgid" ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'maxgid_enabled' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'maxgid' ); ?>
 									</div>
 									<div class="usernote" style="width:200px;">
 										<p><strong><?php echo _AEC_TIP_NO_GROUP_PF_PB; ?></strong></p>
@@ -1463,28 +1544,28 @@ class HTML_AcctExp {
 							<tr><td>
 								<div class="userinfobox">
 									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( "previousplan_req_enabled" ); ?>
-										<?php echo $aecHTML->createSettingsParticle( "previousplan_req" ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'previousplan_req_enabled' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'previousplan_req' ); ?>
 									</div>
 									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( "currentplan_req_enabled" ); ?>
-										<?php echo $aecHTML->createSettingsParticle( "currentplan_req" ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'currentplan_req_enabled' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'currentplan_req' ); ?>
 									</div>
 									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( "overallplan_req_enabled" ); ?>
-										<?php echo $aecHTML->createSettingsParticle( "overallplan_req" ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'overallplan_req_enabled' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'overallplan_req' ); ?>
 									</div>
 								</div>
 								<div class="userinfobox">
 									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( "used_plan_min_enabled" ); ?>
-										<?php echo $aecHTML->createSettingsParticle( "used_plan_min_amount" ); ?>
-										<?php echo $aecHTML->createSettingsParticle( "used_plan_min" ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'used_plan_min_enabled' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'used_plan_min_amount' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'used_plan_min' ); ?>
 									</div>
 									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( "used_plan_max_enabled" ); ?>
-										<?php echo $aecHTML->createSettingsParticle( "used_plan_max_amount" ); ?>
-										<?php echo $aecHTML->createSettingsParticle( "used_plan_max" ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'used_plan_max_enabled' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'used_plan_max_amount' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'used_plan_max' ); ?>
 									</div>
 								</div>
 						</td></tr>
@@ -1496,10 +1577,10 @@ class HTML_AcctExp {
 						<table width="100%" class="adminform"><tr><td>
 							<div class="userinfobox">
 								<h2><?php echo _PAYPLAN_TRIAL_TITLE; ?><?php echo $aecHTML->ToolTip( _PAYPLAN_TRIAL_DESC, _PAYPLAN_TRIAL ); ?></h2>
-								<?php echo $aecHTML->createSettingsParticle( "trial_free" ); ?>
-								<?php echo $aecHTML->createSettingsParticle( "trial_amount" ); ?>
-								<?php echo $aecHTML->createSettingsParticle( "trial_period" ); ?>
-								<?php echo $aecHTML->createSettingsParticle( "trial_periodunit" ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'trial_free' ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'trial_amount' ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'trial_period' ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'trial_periodunit' ); ?>
 								<div class="usernote" style="width:200px;">
 									<?php echo _PAYPLAN_AMOUNT_NOTICE_TEXT; ?>
 								</div>
@@ -1512,8 +1593,8 @@ class HTML_AcctExp {
 						<table width="100%" class="adminform"><tr><td>
 							<div class="userinfobox">
 								<h2><?php echo _PAYPLAN_RELATIONS_TITLE; ?></h2>
-								<?php echo $aecHTML->createSettingsParticle( "similarplans" ); ?>
-								<?php echo $aecHTML->createSettingsParticle( "equalplans" ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'similarplans' ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'equalplans' ); ?>
 							</div>
 						</td></tr></table>
 						<?php
@@ -1523,7 +1604,7 @@ class HTML_AcctExp {
 		                <table width="100%" class="adminform"><tr><td>
 							<div class="userinfobox">
 								<h2><?php echo _PAYPLAN_MI; ?></h2>
-								<?php echo $aecHTML->createSettingsParticle( "micro_integrations" ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'micro_integrations' ); ?>
 							</div>
 						</td></tr></table>
 						<?php
@@ -1539,7 +1620,6 @@ class HTML_AcctExp {
 		<input type="hidden" name="task" value="" />
 		</form>
 		<!--<script>swap();</script>-->
-		<!-- include footer -->
 		<?php HTML_myCommon::GlobalNerd();
 	}
 
@@ -1550,8 +1630,8 @@ class HTML_AcctExp {
 		<form action="index2.php" method="post" name="adminForm">
 			<table class="adminheading">
 				<tr>
-					<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_coupons<?php echo $type ? "_static" : ""; ?>.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
-						<?php echo constant("_COUPON_TITLE" . ($type ? "_STATIC" : "")); ?>
+					<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_coupons<?php echo $type ? '_static' : ''; ?>.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+						<?php echo constant( '_COUPON_TITLE' . ( $type ? '_STATIC' : '' ) ); ?>
 					</th>
 				</tr>
 				<tr><td></td></tr>
@@ -1584,24 +1664,24 @@ class HTML_AcctExp {
 						echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
 					</td>
 					<td align="center">
-						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo ((($row->active) ? 'unpublishCoupon' : 'publishCoupon') . ($type ? "Static" : "")); ?>')">
-							<?php echo aecHTML::Icon(( $row->active ) ? "accept.png" : "cancel.png"); ?>
+						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo ((($row->active) ? 'unpublishCoupon' : 'publishCoupon') . ( $type ? 'Static' : '' ) ); ?>')">
+							<?php echo aecHTML::Icon( ( $row->active ) ? 'accept.png' : 'cancel.png' ); ?>
 						</a>
 					</td>
-					<td align="right"><?php echo $pageNav->orderUpIcon( $i, true, "ordercoupon" . ( $type ? "static" : "") . "up" ); ?></td>
-					<td align="right"><?php echo $pageNav->orderDownIcon( $i, $n, true, "ordercoupon" . ( $type ? "static" : "") . "down" ); ?></td>
+					<td align="right"><?php echo $pageNav->orderUpIcon( $i, true, 'ordercoupon' . ( $type ? 'static' : '' ) . 'up' ); ?></td>
+					<td align="right"><?php echo $pageNav->orderDownIcon( $i, $n, true, 'ordercoupon' . ( $type ? 'static' : '' ) . 'down' ); ?></td>
 					<td align="center"><strong><?php echo $row->usecount; ?></strong></td>
 				</tr>
 			<?php
 			$k = 1 - $k;
-		}
-		?>
+		} ?>
 		</table>
- 		<?php echo $pageNav->getListFooter(); ?>
-		<?php HTML_myCommon::ContentLegend(); ?>
+ 		<?php
+ 		echo $pageNav->getListFooter();
+		HTML_myCommon::ContentLegend(); ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
-		<input type="hidden" name="task" value= ""/>
-		<input type="hidden" name="returnTask" value= "showCoupons<?php echo $type ? "Static" : "";?>"/>
+		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="returnTask" value="showCoupons<?php echo $type ? 'Static' : ''; ?>" />
 		<input type="hidden" name="boxchecked" value="0" />
 	</form>
 
@@ -1619,7 +1699,7 @@ class HTML_AcctExp {
 		mosCommonHTML::loadCalendar(); ?>
 		<table class="adminheading">
 			<tr>
-				<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_coupons<?php echo $type ? "_static" : ""; ?>.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+				<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_coupons<?php echo $type ? '_static' : ''; ?>.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
 				<?php echo _AEC_COUPON; ?>:&nbsp;<small><?php echo $row->id ? $row->name : _AEC_CMN_NEW; ?></small>
 	        	</th>
 			</tr>
@@ -1641,14 +1721,14 @@ class HTML_AcctExp {
 									<div style="position:relative;float:left;width:48%;padding:4px;">
 										<div class="userinfobox">
 											<div style="position:relative;float:left;width:100%;">
-												<?php echo $aecHTML->createSettingsParticle( "name" ); ?>
-												<?php echo $aecHTML->createSettingsParticle( "coupon_code" ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'coupon_code' ); ?>
 												<div style="position:relative;float:left;">
-													<?php echo $aecHTML->createSettingsParticle( "active" ); ?>
-													<?php echo $aecHTML->createSettingsParticle( "type" ); ?>
+													<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
+													<?php echo $aecHTML->createSettingsParticle( 'type' ); ?>
 												</div>
 												<div style="position:relative;float:left;">
-												<?php echo $aecHTML->createSettingsParticle( "desc" ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
 												</div>
 											</div>
 										</div>
@@ -1656,39 +1736,39 @@ class HTML_AcctExp {
 									<div style="position:relative;float:left;width:48%;padding:4px;">
 										<div class="userinfobox">
 											<div style="position:relative;float:left;">
-												<?php echo $aecHTML->createSettingsParticle( "amount_use" ); ?>
-												<?php echo $aecHTML->createSettingsParticle( "amount" ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'amount_use' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'amount' ); ?>
 											</div>
 											<div style="position:relative;float:left;">
-												<?php echo $aecHTML->createSettingsParticle( "amount_percent_use" ); ?>
-												<?php echo $aecHTML->createSettingsParticle( "amount_percent" ); ?>
-												<?php echo $aecHTML->createSettingsParticle( "percent_first" ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'amount_percent_use' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'amount_percent' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'percent_first' ); ?>
 											</div>
 											<div style="position:relative;float:left;">
-												<?php echo $aecHTML->createSettingsParticle( "useon_trial" ); ?>
-												<?php echo $aecHTML->createSettingsParticle( "useon_full" ); ?>
-												<?php echo $aecHTML->createSettingsParticle( "useon_full_all" ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'useon_trial' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'useon_full' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'useon_full_all' ); ?>
 											</div>
 										</div>
 									</div>
 									<div style="position:relative;float:left;width:90%;padding:4px;">
 										<div class="userinfobox">
 											<div style="position:relative;float:left;">
-												<?php echo $aecHTML->createSettingsParticle( "has_start_date" ); ?>
-												<?php echo $aecHTML->createSettingsParticle( "start_date" ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'has_start_date' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'start_date' ); ?>
 											</div>
 											<div style="position:relative;float:left;">
-												<?php echo $aecHTML->createSettingsParticle( "has_expiration" ); ?>
-												<?php echo $aecHTML->createSettingsParticle( "expiration" ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'has_expiration' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'expiration' ); ?>
 											</div>
 											<div style="position:relative;float:left;">
-											<?php echo $aecHTML->createSettingsParticle( "has_max_reuse" ); ?>
-											<?php echo $aecHTML->createSettingsParticle( "max_reuse" ); ?>
-											<?php echo $aecHTML->createSettingsParticle( "usecount" ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'has_max_reuse' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'max_reuse' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'usecount' ); ?>
 											</div>
 											<div style="position:relative;float:left;">
-												<?php echo $aecHTML->createSettingsParticle( "usage_plans_enabled" ); ?>
-												<?php echo $aecHTML->createSettingsParticle( "usage_plans" ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'usage_plans_enabled' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'usage_plans' ); ?>
 											</div>
 										</div>
 									</div>
@@ -1704,16 +1784,16 @@ class HTML_AcctExp {
 							<tr><td>
 								<div class="userinfobox">
 									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( "mingid_enabled" ); ?>
-										<?php echo $aecHTML->createSettingsParticle( "mingid" ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'mingid_enabled' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'mingid' ); ?>
 									</div>
 									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( "fixgid_enabled" ); ?>
-										<?php echo $aecHTML->createSettingsParticle( "fixgid" ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'fixgid_enabled' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'fixgid' ); ?>
 									</div>
 									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( "maxgid_enabled" ); ?>
-										<?php echo $aecHTML->createSettingsParticle( "maxgid" ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'maxgid_enabled' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'maxgid' ); ?>
 									</div>
 									<div class="usernote" style="width:200px;">
 										<p><strong><?php echo _AEC_TIP_NO_GROUP_PF_PB; ?></strong></p>
@@ -1723,28 +1803,28 @@ class HTML_AcctExp {
 							<tr><td>
 								<div class="userinfobox">
 									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( "previousplan_req_enabled" ); ?>
-										<?php echo $aecHTML->createSettingsParticle( "previousplan_req" ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'previousplan_req_enabled' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'previousplan_req' ); ?>
 									</div>
 									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( "currentplan_req_enabled" ); ?>
-										<?php echo $aecHTML->createSettingsParticle( "currentplan_req" ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'currentplan_req_enabled' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'currentplan_req' ); ?>
 									</div>
 									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( "overallplan_req_enabled" ); ?>
-										<?php echo $aecHTML->createSettingsParticle( "overallplan_req" ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'overallplan_req_enabled' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'overallplan_req' ); ?>
 									</div>
 								</div>
 								<div class="userinfobox">
 									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( "used_plan_min_enabled" ); ?>
-										<?php echo $aecHTML->createSettingsParticle( "used_plan_min_amount" ); ?>
-										<?php echo $aecHTML->createSettingsParticle( "used_plan_min" ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'used_plan_min_enabled' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'used_plan_min_amount' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'used_plan_min' ); ?>
 									</div>
 									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( "used_plan_max_enabled" ); ?>
-										<?php echo $aecHTML->createSettingsParticle( "used_plan_max_amount" ); ?>
-										<?php echo $aecHTML->createSettingsParticle( "used_plan_max" ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'used_plan_max_enabled' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'used_plan_max_amount' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'used_plan_max' ); ?>
 									</div>
 								</div>
 						</td></tr>
@@ -1756,7 +1836,7 @@ class HTML_AcctExp {
 		                <table width="100%" class="adminform"><tr><td>
 							<div class="userinfobox">
 								<h2><?php echo _COUPON_MI_FULL; ?></h2>
-								<?php echo $aecHTML->createSettingsParticle( "micro_integrations" ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'micro_integrations' ); ?>
 							</div>
 						</td></tr></table>
 						<?php
@@ -1871,8 +1951,7 @@ class HTML_AcctExp {
 		  </tr>
 		<?php
 		$k = 0;
-		foreach( $rows as $row ) {
-		?>
+		foreach( $rows as $row ) { ?>
 			<tr class="row<?php echo $k; ?>">
 				<td><?php echo $row->user_name; ?></td>
 				<td align="center"><?php echo $row->invoice_number; ?></td>
@@ -1880,14 +1959,14 @@ class HTML_AcctExp {
 	  			<td align="center"><?php echo $row->transaction_date; ?></td>
 				<td align="center"><?php echo $row->proc_name; ?></td>
 				<td align="center"><?php echo $row->amount; ?></td>
-				<td align="left"><?php
-				$response = str_replace("\n","<br />", $row->response);
-				$keys = array("ssl_test_mode","CODE0","SITE_ID","DOC_ID","AUTH","RECALL","currency_code","ssl_merchant_id","ssl_user_id","ssl_pin","ssl_invoice_number","ssl_salestax","ssl_result_format","ssl_receipt_link_method","ssl_receipt_link_url","ssl_receipt_link_text","ssl_amount","ssl_customer_code","ssl_description");
-				foreach( $keys as $key ) {
-					$response = HTML_AcctExp::change($response, $key);
-				}
-				echo $response;
-				?>
+				<td align="left">
+					<?php
+					$response = str_replace( "\n", '<br />', $row->response );
+					$keys = array("ssl_test_mode","CODE0","SITE_ID","DOC_ID","AUTH","RECALL","currency_code","ssl_merchant_id","ssl_user_id","ssl_pin","ssl_invoice_number","ssl_salestax","ssl_result_format","ssl_receipt_link_method","ssl_receipt_link_url","ssl_receipt_link_text","ssl_amount","ssl_customer_code","ssl_description");
+					foreach( $keys as $key ) {
+						$response = HTML_AcctExp::change( $response, $key );
+					}
+					echo $response; ?>
 				</td>
 			</tr>
 			<?php
@@ -1915,7 +1994,7 @@ class HTML_AcctExp {
 		<table class="adminheading">
 		<tr>
 			<th width="100%" class="sectionname" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_eventlog.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;" rowspan="2" nowrap="nowrap">
-			<?php echo "Events Log"; ?>
+				<?php echo _AEC_HEAD_LOG; ?>
 			</th>
 			<td nowrap="nowrap" style="padding: 0 5px;">
 			<?php echo _HISTORY_SEARCH; ?>: <br />
@@ -1926,12 +2005,12 @@ class HTML_AcctExp {
 
 		<table class="adminlist">
 		<tr>
-			<th align="center" width="30px"><?php echo "ID"; ?></th>
-			<th align="center"><?php echo "Date"; ?></th>
-			<th><?php echo "Event"; ?></th>
-			<th align="center"><?php echo "Tags"; ?></th>
-			<th align="center"><?php echo "Event"; ?></th>
-			<th align="center"><?php echo "Parameter"; ?></th>
+			<th align="left" width="30"><?php echo _AEC_CMN_ID; ?></th>
+			<th align="left" width="120"><?php echo _AEC_CMN_DATE; ?></th>
+			<th align="left"><?php echo _AEC_CMN_EVENT; ?></th>
+			<th align="left"><?php echo _AEC_CMN_TAGS; ?></th>
+			<th align="left"><?php echo _AEC_CMN_ACTION; ?></th>
+			<th align="left"><?php echo _AEC_CMN_PARAMETER; ?></th>
 		  </tr>
 		<?php
 		$k = 0;
@@ -1939,38 +2018,43 @@ class HTML_AcctExp {
 		?>
 			<tr class="row<?php echo $k; ?>">
 				<td><?php echo $row->id; ?></td>
-				<td align="center"><?php echo $row->datetime; ?></td>
+				<td align="left" width="120"><?php echo $row->datetime; ?></td>
 				<td align="left"><?php echo $row->short; ?></td>
 	  			<td align="left"><?php echo $row->tags; ?></td>
 				<td align="left"><?php echo $row->event; ?></td>
-				<td align="left"><?php echo $row->params; ?></td>
-				</td>
+				<td align="left"><?php echo ( $row->params ? $row->params : _AEC_CMN_NONE ); ?></td>
 			</tr>
 			<?php
 			$k = 1 - $k;
-		}
-		?>
+		} ?>
 		</table>
 		<?php echo $pageNav->getListFooter(); ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="eventlog" />
-		<input type="hidden" name="returnTask" value= "eventlog"/>
+		<input type="hidden" name="returnTask" value= "eventlog" />
 		<input type="hidden" name="boxchecked" value="0" />
 		</form>
 
-		<!-- include footer -->
 		<?php HTML_myCommon::GlobalNerd();
 	}
 
-	function change( $x, $var ) {//$x is the string, $var is the text to be changed
-   		if( $var != "" ) {
-       		$xtemp = "";
-       		$i=0;
+	/**
+	 * Builds a html string
+	 *
+	 * @param string $x
+	 * @param text $var
+	 * @return html.string
+	 */
+	function change( $x, $var ) {
+   		if( $var != '' ) {
+       		$xtemp	= '';
+       		$i		= 0;
+
        		while( $i<strlen( $x ) ) {
-           		if( (($i + strlen( $var )) <= strlen( $x )) && (strcasecmp( $var, substr( $x, $i, strlen( $var ) ) ) == 0) ) {
-                   $xtemp .= "<font style=\"font-weight:bold;text-transform: uppercase;\">" . substr( $x, $i , strlen( $var ) ) . "</font>";
+           		if( ( ( $i + strlen( $var )) <= strlen( $x ) ) && ( strcasecmp( $var, substr( $x, $i, strlen( $var ) ) ) == 0 ) ) {
+                   $xtemp .= '<span style="font-weight:bold;text-transform:uppercase;">' . substr( $x, $i , strlen( $var ) ) . '</span>';
                    $i += strlen( $var );
-           		} else {
+           		}else{
                		$xtemp .= $x{$i};
                		$i++;
            		}
@@ -1981,15 +2065,15 @@ class HTML_AcctExp {
 	}
 
 	function DisplayDateInLocalTime( $SQLDate ){
-		if ( !($SQLDate == "") ) {
+		if( !( $SQLDate == '' ) ) {
 			global $mosConfig_offset_user, $database;
 			$cfg = new Config_General( $database );
 
-			return strftime( $cfg->cfg['display_date_backend'], (strtotime($SQLDate) + $mosConfig_offset_user*3600) );
-		} else {
+			return strftime( $cfg->cfg['display_date_backend'], ( strtotime( $SQLDate ) + $mosConfig_offset_user * 3600 ) );
+		}else{
 			return _AEC_NOT_SET;
 		}
 	}
 
-} // end Class
+}
 ?>

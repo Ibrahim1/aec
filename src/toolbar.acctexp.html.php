@@ -75,6 +75,7 @@ class ComponentMenu {
 		mosMenuBar::startTable();
 		mosMenuBar::custom( 'saveSettings', 'save.png',  'save_f2.png', _SAVE, false );
 		mosMenuBar::custom( 'cancelSettings', 'cancel.png',  'cancel_f2.png', _CANCEL, false );
+		mosMenuBar::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
 		mosMenuBar::endTable();
 	}
 

@@ -8,12 +8,6 @@
 * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
 */
 
-// Copyright (C) 2004-2007 Helder Garcia, David Deutsch
-// All rights reserved.
-// This source file is part of the Account Expiration Control Component, a Joomla
-
-// custom Component By Helder Garcia and David Deutsch http://www.globalnerd.org
-//
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License (GPL)
 // as published by the Free Software Foundation; either version 2
@@ -32,14 +26,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-//
-// The "GNU General Public License" (GPL) is available at
-// http://www.gnu.org/copyleft/gpl.html.
 
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
 // mic: NEW 0.12.4
+
+define( '_CFG_GENERAL_ACTIVATE_PAID_NAME',		'Activate Paid Subscriptions' );
+define( '_CFG_GENERAL_ACTIVATE_PAID_DESC',		'Always activate Subscriptions that are paid for automatically instead of requiring an activation code' );
 
 // hacks/install >> ATTENTION: MUST BE HERE AT THIS POSITION, needed later!
 define( '_AEC_SPEC_MENU_ENTRY',					'My Subscription' );
@@ -66,10 +60,75 @@ define( '_AEC_CMN_MADE_INVISIBLE',				'made invisible' );
 define( '_AEC_CMN_TOPUBLISH',					'publish' ); // to ...
 define( '_AEC_CMN_TOUNPUBLISH',					'unpublish' ); // to ...
 define( '_AEC_CMN_FILE_SAVED',					'File saved' );
+define( '_AEC_CMN_ID',							'ID' );
+define( '_AEC_CMN_DATE',						'Date' );
+define( '_AEC_CMN_EVENT',						'Event' );
+define( '_AEC_CMN_TAGS',						'Tags' );
+define( '_AEC_CMN_ACTION',						'Action' );
+define( '_AEC_CMN_PARAMETER',					'Parameter' );
+define( '_AEC_CMN_NONE',						'None' );
+define( '_AEC_CMN_WRITEABLE',					'Writeable' );
+define( '_AEC_CMN_UNWRITEABLE',					'Unwriteable!' );
+define( '_AEC_CMN_UNWRITE_AFTER_SAVE',			'Make unwriteable after saving' );
+define( '_AEC_CMN_OVERRIDE_WRITE_PROT',			'Override write protection while saving' );
+define( '_AEC_CMN_NOT_SET',						'Not set' );
+define( '_AEC_CMN_SEARCH',						'Search' );
+define( '_AEC_CMN_APPLY',						'Apply' );
+define( '_AEC_CMN_STATUS',						'Status' );
+
+define( '_AEC_FEATURE_NOT_ACTIVE',				'This feature is not active yet' );
+
+// user(info)
+define( '_AEC_USER_USER_INFO',					'User Info' );
+define( '_AEC_USER_USERID',						'UserID' );
+define( '_AEC_USER_STATUS',						'Status' );
+define( '_AEC_USER_ACTIVE',						'Active' );
+define( '_AEC_USER_BLOCKED',					'Blocked' );
+define( '_AEC_USER_ACTIVE_LINK',				'Activation Link' );
+define( '_AEC_USER_PROFILE',					'Profile' );
+define( '_AEC_USER_PROFILE_LINK',				'View Profile' );
+define( '_AEC_USER_USERNAME',					'Username' );
+define( '_AEC_USER_NAME',						'Name' );
+define( '_AEC_USER_EMAIL',						'E-Mail' );
+define( '_AEC_USER_SEND_MAIL',					'send email' );
+define( '_AEC_USER_TYPE',						'Usertype' );
+define( '_AEC_USER_REGISTERED',					'Registered' );
+define( '_AEC_USER_LAST_VISIT',					'Last Visit' );
+define( '_AEC_USER_EXPIRATION',					'Expiration' );
+define( '_AEC_USER_CURR_EXPIRE_DATE',			'Current Expiration Date' );
+define( '_AEC_USER_LIFETIME',					'Lifetime' );
+define( '_AEC_USER_RESET_EXP_DATE',				'Reset Expiration Date' );
+define( '_AEC_USER_RESET_STATUS',				'Reset Status' );
+define( '_AEC_USER_SUBSCRIPTION',				'Subscription' );
+define( '_AEC_USER_PAYMENT_PROC',				'Payment Processor' );
+define( '_AEC_USER_CURR_SUBSCR_PLAN',			'Current Subscription Plan' );
+define( '_AEC_USER_PREV_SUBSCR_PLAN',			'Previous Subscription Plan' );
+define( '_AEC_USER_USED_PLANS',					'Used Subscription Plans' );
+define( '_AEC_USER_NO_PREV_PLANS',				'No Subscriptions till yet' );
+define( '_AEC_USER_ASSIGN_TO_PLAN',				'Assign to Plan' );
+define( '_AEC_USER_TIME',						'time' );
+define( '_AEC_USER_TIMES',						'times' );
+define( '_AEC_USER_INVOICES',					'Invoices' );
+define( '_AEC_USER_NO_INVOICES',				'No invoices till yet' );
+define( '_AEC_USER_INVOICE_FACTORY',			'Invoice Factory' );
+
+// new (additional)
+define( '_AEC_MSG_MIS_NOT_DEFINED',				'You have not defined any integrations till now - see config' );
 
 // headers
 define( '_AEC_HEAD_SETTINGS',					'Settings' );
 define( '_AEC_HEAD_HACKS',						'Hacks' );
+define( '_AEC_HEAD_PLAN_INFO',					'Subscriptions' );
+define( '_AEC_HEAD_LOG',						'Events Log' );
+define( '_AEC_HEAD_CSS_EDITOR',					'CSS Editor' );
+define( '_AEC_HEAD_MICRO_INTEGRATION',			'Micro Integration Info' );
+define( '_AEC_HEAD_ACTIVE_SUBS',				'Active Subscriber' );
+define( '_AEC_HEAD_EXCLUDED_SUBS',				'Excluded Subscriber' );
+define( '_AEC_HEAD_EXPIRED_SUBS',				'Expired Subscriber' );
+define( '_AEC_HEAD_PENDING_SUBS',				'Pending Subscriber' );
+define( '_AEC_HEAD_CANCELLED_SUBS',				'Cancelled Subscriber' );
+define( '_AEC_HEAD_CLOSED_SUBS',				'Closed Subscriber' );
+define( '_AEC_HEAD_MANUAL_SUBS',				'Manual Subscriber' );
 
 // hacks (special)
 define( '_AEC_HACK_HACK',						'Hack' );
@@ -476,7 +535,7 @@ DEFINE ('_CFG_ENTRYPLAN_NAME', 'Plan de D&eacute;part par d&eacute;faut');
 DEFINE ('_CFG_ENTRYPLAN_DESC', 'Plan d&acute;essai gratuit par d&eacute;faut..');
 
 DEFINE ('_CFG_TAB1_OPT15NAME', 'D&eacute;sactiver Int&eacute;gration:');
-DEFINE ('_CFG_TAB1_OPT15DESC', 'Entrer un nom ou une liste de noms (s&eacute;par&eacute;e par un espace) de l&acute;int&eacute;gration que vous voulez d&eacute;sactiver. Actuellement sont support&eacute;s: CB CBE SMF. Cela peut &ecirc;tre utile quand vous avez d&eacute;sinstall&eacute; CB mais n&acute;avez pas supprim&eacute; les tables de la BD (dans le cas o&ugrave; AEC pourrait encore reconna&icirc;tre ce qui a d&eacute;j&agrave; &eacute;t&eacute; install&eacute;).');
+DEFINE ('_CFG_TAB1_OPT15DESC', 'Entrer un nom ou une liste de noms (s&eacute;par&eacute;e par un espace) de l&acute;int&eacute;gration que vous voulez d&eacute;sactiver. Actuellement sont support&eacute;s: <strong>CB,CBE,CBM,JACL,SMF,UE,UHP2,VM</strong>. Cela peut &ecirc;tre utile quand vous avez d&eacute;sinstall&eacute; CB mais n&acute;avez pas supprim&eacute; les tables de la BD (dans le cas o&ugrave; AEC pourrait encore reconna&icirc;tre ce qui a d&eacute;j&agrave; &eacute;t&eacute; install&eacute;).');
 DEFINE ('_CFG_TAB1_OPT16NAME', 'URLs simples:');
 DEFINE ('_CFG_TAB1_OPT16DESC', 'D&eacute;sactiver l&acute;utilisation des routines SEF de Joomla/Mambo pour les Urls. Avec certaines installations utiliser cette option va donner un message d&acute;erreur 404 &agrave; cause d&acute;une mauvaise r&eacute;&eacute;criture. Essayer cette option si vous rencontrez des probl&egrave;mes avec les redirections.');
 DEFINE ('_CFG_TAB1_OPT17NAME', 'Coussin d&acute;Expiration:');
