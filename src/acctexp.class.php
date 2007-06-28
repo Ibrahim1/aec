@@ -2173,6 +2173,8 @@ class InvoiceFactory {
 
 					if( $plan_gw[0] ) {
 						$plans[$i]['gw'] = $plan_gw;
+					}else{
+						unset( $plans[$i] );
 					}
 					unset( $plan_gw );
 					$i++;
