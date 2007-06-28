@@ -2051,7 +2051,6 @@ class InvoiceFactory {
 		$cfg = new Config_General( $database );
 
 		$hasTransfer		= $cfg->cfg['transfer'];
-		$subscriptionClosed	= 0;
 
 		if( !$this->userid ) {
 			// Creating a dummy user object
@@ -2060,21 +2059,16 @@ class InvoiceFactory {
 			$register = 1;
 		}else{
 			// Loading the actual user
-			$metaUser = new metaUser( $my->id ); // $this->userid );
+			$metaUser = new metaUser( $this->userid );
 			$register = 0;
 		}
 
 		$where = array();
 
-		$id = AECfetchfromDB::SubscriptionIDfromUserID( $metaUser->userid ); // $this->userid
-
-		if( $id ) {
-			$user_subscription = new Subscription( $database );
-			$user_subscription->load( $id );
-
-			$subscriptionClosed = ( strcmp( $user_subscription->status, 'Closed' ) === 0 );
+		if( $metaUser->hasSubscription ) {
+			$subscriptionClosed = ( strcmp( $metaUser->objSubscription->status, 'Closed' ) === 0 );
 		}else{
-			$user_subscription = false;
+			$subscriptionClosed = false;
 			// TODO: Check if the user has already subscribed once, if not - link to intro
 			// TODO: Make sure a registration hybrid wont get lost here
 			if( !$intro && ( $cfg->cfg['customintro'] != '' ) && !is_null( $cfg->cfg['customintro'] ) ) {
@@ -2095,7 +2089,8 @@ class InvoiceFactory {
 		. ( count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
 		. ' ORDER BY ordering'
 		;
-	 	$rows = $database->loadResultArray();
+	 	$database->setQuery( $query );
+		$rows = $database->loadResultArray();
 	 	if( $database->getErrorNum() ) {
 	 		echo $database->stderr();
 	 		return false;
@@ -2176,7 +2171,9 @@ class InvoiceFactory {
 						$plan_gw[]['name'] = 'transfer';
 					}
 
-					$plans[$i]['gw'] = $plan_gw;
+					if( $plan_gw[0] ) {
+						$plans[$i]['gw'] = $plan_gw;
+					}
 					unset( $plan_gw );
 					$i++;
 				} else {
