@@ -162,7 +162,7 @@ define( '_AEC_HACKS_MI3',						'Some Micro Integrations rely on receiving a clea
 // log
 	// settings
 define( '_AEC_LOG_SH_SETT_SAVED',				'settings change' );
-define( '_AEC_LOG_LO_SETT_SAVED',				'The Settings for AEC have been saved' );
+define( '_AEC_LOG_LO_SETT_SAVED',				'The Settings for AEC have been saved, changes:' );
 	// heartbeat
 define( '_AEC_LOG_SH_HEARTBEAT',				'Heartbeat' );
 define( '_AEC_LOG_LO_HEARTBEAT',				'Heartbeat carried out:' );

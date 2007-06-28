@@ -837,7 +837,7 @@ class HTML_AcctExp {
 				</td>
 				<td width="45%" valign="top">
 					<br />
-					<center><img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_logo_big.png" border="0" alt="AEC" width="232" height="200" /></center>
+					<center><img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_logo_big.png" border="0" alt="AEC" width="200" height="232" /></center>
 					<br />
 					<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;"><p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION ?></p>
 						<p><?php echo _AEC_FOOT_TX_CHOOSING; ?></p>

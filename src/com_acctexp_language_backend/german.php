@@ -165,7 +165,7 @@ define( '_AEC_HACKS_MI3',						'Einige Integrationen ben&ouml;tigen Klartextdate
 // log
 	// settings
 define( '_AEC_LOG_SH_SETT_SAVED',				'&Auml;nderung Einstellungen' );
-define( '_AEC_LOG_LO_SETT_SAVED',				'AEC Einstellungen wurden gesichert' );
+define( '_AEC_LOG_LO_SETT_SAVED',				'AEC Einstellungen wurden gesichert, &Auml;nderungen:' );
 	// heartbeat
 define( '_AEC_LOG_SH_HEARTBEAT',				'Heartbeat' );
 define( '_AEC_LOG_LO_HEARTBEAT',				'Heartbeataktion:' );
