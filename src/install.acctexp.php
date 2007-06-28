@@ -689,6 +689,7 @@ $settings_defaults['customtext_checkout_keeporiginal'] = 1;
 $settings_defaults['customtext_notallowed_keeporiginal'] = 1;
 $settings_defaults['customtext_pending_keeporiginal'] = 1;
 $settings_defaults['customtext_expired_keeporiginal'] = 1;
+$settings_defaults['activate_paid'] = 1;
 
 foreach ($settings_defaults as $name => $value) {
 	if (!isset($cfg->cfg[$name]) || ($cfg->cfg[$name] == "")) {
