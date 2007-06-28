@@ -498,7 +498,7 @@ class Payment_HTML {
 						<p><?php echo _CONFIRM_ROW_USERNAME; ?> <?php echo $user->username; ?></p>
 						<p><?php echo _CONFIRM_ROW_EMAIL; ?> <?php echo $user->email; ?></p>
 					</td>
-					<td><p><?php echo $InvoiceFactory->usage->name; ?></p></td>
+					<td><p><?php echo $InvoiceFactory->objUsage->name; ?></p></td>
 					<td><p>
 						<?php
 						if( $InvoiceFactory->payment->amount ) {
@@ -509,7 +509,7 @@ class Payment_HTML {
 					</p></td>
 				</tr>
 				<tr>
-					<td colspan="4" style="text-align: left;"><?php echo $InvoiceFactory->usage->desc; ?></td>
+					<td colspan="4" style="text-align: left;"><?php echo $InvoiceFactory->objUsage->desc; ?></td>
 				</tr>
 			</table>
 			<?php

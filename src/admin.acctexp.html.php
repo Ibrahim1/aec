@@ -812,7 +812,7 @@ class HTML_AcctExp {
 		</table>
 		<table class="adminform">
 			<tr><td>
-				<div style="width:100%; float:left; border: 1px solid #FF0000;">
+				<div style="width:100%; float:left;">
 					<div class="usernote" style="width:40%; margin:5px;">
 						<h2 style="color: #FF0000;"><?php echo _AEC_HACKS_NOTICE; ?>:</h2>
 						<p><?php echo _AEC_HACKS_NOTICE_DESC; ?></p>
@@ -856,7 +856,7 @@ class HTML_AcctExp {
 							<div class="important">&nbsp;</div>
 							<?php
 						} ?>
-						<p style="width:60%; border:1px solid green; padding:3px;">
+						<p style="width:60%; padding:3px;">
 							<?php
 							if( isset( $content['legacy'] ) ) { ?>
 								<img src="<?php echo $mosConfig_live_site;?>/administrator/components/com_acctexp/images/icons/aec_symbol_importance_3.png" />
