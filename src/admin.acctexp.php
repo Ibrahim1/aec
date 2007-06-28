@@ -522,7 +522,7 @@ function help ( $option ) {
 		$paypal->getSettings();
 
 		$diagnostic['paypal'] = 1;
-		$diagnostic['pp_checkbusiness'] = $paypal->settings->checkbusiness;
+		$diagnostic['pp_checkbusiness'] = $paypal->settings['checkbusiness'];
 	}
 
 	$hacks = hackcorefile($option, 0, 1, 0);
