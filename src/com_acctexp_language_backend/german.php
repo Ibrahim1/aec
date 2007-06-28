@@ -181,8 +181,8 @@ define( '_AEC_INST_APPLY_HACKS',				'Um die erforderlichen &Auml;nderungen durch
 define( '_AEC_INST_NOTE_UPGRADE',				'<strong>Falls ein bestehendes AEC upgegraded werden soll, bitte auf alle F&auml;lle das Men&uuml; "Spezial" aufrufen - es gibt immer wieder neue &Auml;nderungen' );
 define( '_AEC_INST_NOTE_HELP',					'Um die wichtigsten Antworten auf Fragen bereit zu haben kann jederzeit die interne <a href="' . $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&task=help" target="_blank">Hilfe</a>  aufgerufen werden (aufruf auch von der AEC-Verwaltung aus). Dort stehen auch weitere Tips zur nachfolgenden Einrichtung von AEC' );
 define( '_AEC_INST_HINTS',						'Hinweise' );
-define( '_AEC_INST_HINT1',						'Wir w&uuml;rden uns freuen wenn Sie das <a href="http://www.globalnerd.org/index.php?option=com_wrapper&amp;Itemid=53" target="_blank">Forum</a> besuchen. Neben Diskussionen k&ouml;nnen auch weitere Tips, Anregungen usw. dort nachgelesen werden' );
-define( '_AEC_INST_HINT2',						'Auf alle F&auml;lle (und ganz speziell wenn sie AEC auf einer Liveseite einsetzen), gehen Sie in Ruhe alle Einstellungen durch, legen einen Testzugang an und testen die Zahlvorg&auml;nge!' );
+define( '_AEC_INST_HINT1',						'Wir w&uuml;rden uns freuen wenn das <a href="http://www.globalnerd.org/index.php?option=com_wrapper&amp;Itemid=53" target="_blank">Forum</a> besucht wird. Neben Diskussionen k&ouml;nnen auch weitere Tips, Anregungen usw. dort nachgelesen werden' );
+define( '_AEC_INST_HINT2',						'Auf alle F&auml;lle (und ganz speziell wenn AEC auf einer Liveseite eingesetzt wird), in Ruhe alle Einstellungen durchgehen, einen Testzugang anlegen und die Zahlvorg&auml;nge testen!' );
 define( '_AEC_INST_ATTENTION',					'Immer die aktuellsten Programme von und f&uuml;r AEC einsetzen' );
 define( '_AEC_INST_ATTENTION1',					'Falls noch &auml;ltere AEC-Loginmodule in Verwendung sind, bitte deinstallieren und gegen die regul&auml;ren austauschen (egal ob Joomla, Mambo, CB, etc.)' );
 
@@ -200,7 +200,7 @@ define( '_AEC_HELP_SER_SW_DIAG1_DESC',			'AEC hat den Server als Apache Webserve
 define( '_AEC_HELP_SER_SW_DIAG1_DESC2',			'Es wird empfohlen f&uuml;r die Dauer der &Auml;nderungen die Dateirechte auf 0777 zu &auml;ndern. Nach Durchf&uuml;hrung der &Anderung m&uuml;ssen diese Rechte wieder auf den Originalzustand zur&uuml;ckgesetzt werden!<br />Dies gilt auch f&uuml;r die weiter unten erw&auml;hnten Dateirechte.' );
 define( '_AEC_HELP_SER_SW_DIAG2',				'CMS Dateirechte' );
 define( '_AEC_HELP_SER_SW_DIAG2_DESC',			'AEC hat erkannt, dass dieses CMS nicht die Rechte des Webservers besitzt.' );
-define( '_AEC_HELP_SER_SW_DIAG2_DESC2',			'Wenn Sie einen SSH-Zugang zum Server besitzen, gehen Sie in das Verzeichnis "<cmsinstallation/includes>" und geben dann entweder "chown wwwrun joomla.php" (oder "chown wwwrun mambo.php" - falls Mambo verwendet wird) ein.' );
+define( '_AEC_HELP_SER_SW_DIAG2_DESC2',			'Wenn ein SSH-Zugang zum Server vorhanden ist, in das Verzeichnis "<cmsinstallation/includes>" und geben dann entweder "chown wwwrun joomla.php" (oder "chown wwwrun mambo.php" - falls Mambo verwendet wird) eingeben.' );
 define( '_AEC_HELP_SER_SW_DIAG3',				'&Auml;nderungen erkannt' );
 define( '_AEC_HELP_SER_SW_DIAG3_DESC',			'Es sieht so aus als wenn die vorhandenen &Auml;nderungen nicht aktuell sein d&uuml;rften! Damit AEC ordnungsgem&auml;ss funktionieren kann, sollten diese &Auml;nderungen nochmals gepr&uuml;ft werden (sehen Sie dazu auf der AEC Webseite nach)' );
 define( '_AEC_HELP_SER_SW_DIAG4',				'Dateirechte Probleme' );
@@ -265,8 +265,8 @@ define( '_AEC_SEL_NOT_CONFIGURED',				'Ni. Konfiguriert' );
 // footer
 define( '_AEC_FOOT_TX_CHOOSING',				'Danke dass Sie sich f&uuml;r AEC - Account Expiration Control entschieden haben!' );
 define( '_AEC_FOOT_TX_GPL',						'Diese Komponente wurde entwickelt und ver&ouml;ffentlicht unter der <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank" title="GNU/GPL">GNU/GPL</a> von Helder Garcia und David Deutsch von <a href="http://www.globalnerd.org" target="_blank" title="globalnerd.org">globalnerd.org</a>' );
-define( '_AEC_FOOT_TX_SUBSCRIBE',				'Wenn Sie mehr Features m&ouml;chten, professionelles Service, Updates, Handb&uuml;cher und Online Hilfe, klicken Sie auf den Link oben. Es hilft uns auch bei der weiteren Entwicklung!' );
-define( '_AEC_FOOT_CREDIT',						'Bitte lesen Sie auch die <a href="' . $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&amp;amp;task=credits">Credits</a>' );
+define( '_AEC_FOOT_TX_SUBSCRIBE',				'Weitere Features, professionelles Service, Updates, Handb&uuml;cher und Online Hilfe, einfach auf den Link oben klicken. Es hilft uns auch bei der weiteren Entwicklung!' );
+define( '_AEC_FOOT_CREDIT',						'Bitte auch die <a href="' . $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&amp;amp;task=credits">Credits</a> lesen' );
 define( '_AEC_FOOT_VERSION_CHECK',				'Check auf neue Version' );
 define( '_AEC_FOOT_MEMBERSHIP',					'Mitglied werden und Zugang zu Dokumentationen und Support bekommen' );
 
@@ -315,7 +315,7 @@ define( '_COUPON_MI_FULL',						'Bezahlsysteme' );
 define( '_COUPON_GENERAL_NAME_NAME',			'Name' );
 define( '_COUPON_GENERAL_NAME_DESC',			'Der interne und externe Name f&uuml;r diesen Gutschein' );
 define( '_COUPON_GENERAL_COUPON_CODE_NAME',		'Gutscheincode' );
-define( '_COUPON_GENERAL_COUPON_CODE_DESC',		'Den Gutscheincode hier eintragen - der angezeigte (zuf&auml;llig generierte) Code wurde vom System erzeugt.<hr /><strong>Hinweis:</strong><br />Der COde muss einmalig sein!' );
+define( '_COUPON_GENERAL_COUPON_CODE_DESC',		'Den Gutscheincode hier eintragen - der angezeigte (zuf&auml;llig generierte) Code wurde vom System erzeugt.<hr /><strong>Hinweis:</strong><br />Der Code muss einmalig sein!' );
 define( '_COUPON_GENERAL_DESC_NAME',			'Beschreibung' );
 define( '_COUPON_GENERAL_DESC_DESC',			'Die interne Beschreibung f&uuml;r diesen Gutschein' );
 define( '_COUPON_GENERAL_ACTIVE_NAME',			'Aktiv' );
@@ -339,14 +339,14 @@ define( '_COUPON_PARAMS_PERCENT_FIRST_DESC',	'Wenn die Kombination von Prozente 
 define( '_COUPON_PARAMS_USEON_TRIAL_NAME',		'Bei Testabo?' );
 define( '_COUPON_PARAMS_USEON_TRIAL_DESC',		'Sollen die Benutzer diesen Diskont auch bei einerm testabo auswa&auml;hlen d&uuml;rfen?' );
 define( '_COUPON_PARAMS_USEON_FULL_NAME',		'Bei Vollabo?' );
-define( '_COUPON_PARAMS_USEON_FULL_DESC',		'Sollen die Benutzer diesen Diskont vom aktuellen betrag abzihen k&ouml;nnen? (bei wiederholenden Abos wird nur vom ersten Rechnungsbetrag der Diskont abgezogen!)' );
+define( '_COUPON_PARAMS_USEON_FULL_DESC',		'Sollen die Benutzer diesen Diskont vom aktuellen Betrag abziehen k&ouml;nnen? (bei wiederholenden Abos wird der Diskont nur vom ersten Rechnungsbetrag abgezogen!)' );
 define( '_COUPON_PARAMS_USEON_FULL_ALL_NAME',	'Jede Rechnung?' );
-define( '_COUPON_PARAMS_USEON_FULL_ALL_DESC',	'Falls der Benutzer wiederholende Abos besitzt, solle der Diskont jedes Mal abgezogen werden? Wenn nur beim ersten Mal dann Nein)' );
+define( '_COUPON_PARAMS_USEON_FULL_ALL_DESC',	'Falls der Benutzer wiederholende Abos besitzt, soll der Diskont jedes Mal abgezogen werden? Wenn nur beim ersten Mal, dann Nein)' );
 
 define( '_COUPON_PARAMS_HAS_START_DATE_NAME',	'Beginndatum' );
-define( '_COUPON_PARAMS_HAS_START_DATE_DESC',	'Soll der Gutschein f&uuml;r einen bestimmtern Zeitraum gelten?' );
+define( '_COUPON_PARAMS_HAS_START_DATE_DESC',	'Soll der Gutschein f&uuml;r einen bestimmten Zeitraum gelten?' );
 define( '_COUPON_PARAMS_START_DATE_NAME',		'Datum' );
-define( '_COUPON_PARAMS_START_DATE_DESC',		'Beginndatum der Periode ausw&auml;hlen f&uuml;den dieser Gutschein g&uuml;ltig sein soll' );
+define( '_COUPON_PARAMS_START_DATE_DESC',		'Beginndatum der Periode ausw&auml;hlen f&uuml;r den dieser Gutschein g&uuml;ltig sein soll' );
 define( '_COUPON_PARAMS_HAS_EXPIRATION_NAME',	'Ablaufdatum' );
 define( '_COUPON_PARAMS_HAS_EXPIRATION_DESC',	'Soll dieser Gutschein mit Datum x auslaufen?' );
 define( '_COUPON_PARAMS_EXPIRATION_NAME',		'Datum' );
@@ -467,7 +467,7 @@ define( '_CANCEL_PAYPLAN', 'Abbrechen' );
 define( '_PAYPLANS_TITLE', 'Zahlungsplan-Manager' );
 define( '_PAYPLANS_MAINDESC',		'Ver&ouml;ffentlichte Pl&auml;ne werden dem Benutzer angezeigt.' );
 define( '_PAYPLAN_NAME', 'Name' );
-define( '_PAYPLAN_DESC', 'Beschreibung (erste 50 Buchstaben)' );
+define( '_PAYPLAN_DESC', 'Beschreibung (ersten 50 Zeichen)' );
 define( '_PAYPLAN_ACTIVE', 'Aktiv' );
 define( '_PAYPLAN_VISIBLE', 'Sichtbar' );
 define( '_PAYPLAN_A3', 'Rate' );
@@ -488,7 +488,7 @@ define( '_USERPLAN', 'Plan' );
 define( '_CANCELLED_TITLE', 'Abgebrochene Abonnements' );
 define( '_CANCELLED_DESC', 'Diese Liste enth&auml;lt keine manuellen Abonnements, nur solche, die durch ein Zahlungsgateway abgeschlossen wurden. Es sind die Abonnements, die von den Benutzern abgebrochen wurden, aber noch nicht ausgelaufen sind.' );
 define( '_CANCEL_DATE', 'Datum des Abbruches' );
-define( '_MANUAL_DESC', 'Wenn sie einen Eintrag l&ouml;schen, wird der Benutzer vollst&auml;ndig aus der Datenbank gel&ouml;scht.' );
+define( '_MANUAL_DESC', 'Wird ein Eintrag gel&ouml;scht, wird der Benutzer vollst&auml;ndig aus der Datenbank gel&ouml;scht.' );
 define( '_REPEND_ACTIVE',			'Wiederaufgenommen' );
 define( '_FILTER_PLAN',				'- Plan ausw&auml;hlen -' );
 define( '_BIND_USER',				'Zuweisen zu:' );
@@ -524,7 +524,7 @@ define( '_CFG_TAB1_OPT5DESC',			'Jeder Benutzer wird - wenn keine Abonnement - o
 define( '_CFG_TAB1_OPT9NAME',			'Erfordert Einschreibung:' );
 define( '_CFG_TAB1_OPT9DESC',			'Wenn aktiviert, <strong>muss</strong> der Benutzer ein g&uuml;ltiges Abonnement besitzen. Nicht aktiviert, Benutzer k&ouml;nnen ohne Abo einloggen.' );
 
-define( '_CFG_TAB1_OPT10NAME', 'Gateway Erkl&auml;rungen:' );
+define( '_CFG_TAB1_OPT10NAME',			'Gateway Erkl&auml;rungen:' );
 define( '_CFG_TAB1_OPT10DESC',			'Hier Bezahlm&ouml;glichkeiten markieren welche auf der Nichterlaubt-Seite angezeigt werden sollen (diese Liste sehen die Benutzer, wenn sie versuchen eine Seite anzusehen f&uuml;r die sie keine Berechtigung haben).<br />Hinweis: es werden nur die oben, zur Zeit Aktiven angezeigt' );
 define( '_CFG_TAB1_OPT20NAME',			'Aktivierte Zahlungsgateways:' );
 define( '_CFG_TAB1_OPT20DESC',			'Alle Gateways markieren welche aktiv sein sollen (STRG-Taste dr&uuml;cken f&uuml;r mehrere). Nach dem Sichern wirden die Gatewayeinstellungen angezeigt - deaktivieren eines Gateways l&ouml;scht nicht die bisherigen Einstellungen.' );
@@ -547,7 +547,7 @@ define( '_CFG_TAB1_OPT21DESC',			'Wenn alle o.a. Zusatzkomponenten mit einer Abo
 
 define( '_CFG_TAB_CUSTOMIZATION_TITLE',	'Anpassen' );
 define( '_CFG_TAB1_OPT12NAME',			'Individuelle Einstiegsseite:' );
-define( '_CFG_TAB1_OPT12DESC',			'Hier den kompletten Link (inkl. http://) angeben der zur Einstiegsseite f&uuml;hren soll. Diese Seite sollte einen Link wie z.B. http://www.yourdomain.com/index.php?option=com_acctexp&amp;task=subscribe&amp;intro=1 beinhalten welcher die Einf&uuml;hrung &uuml;bergeht und den Benutzer direkt zur Aboseite oder Registreirungsseite f&uuml;hrt.<br />Wenn diese Option nicht gew&uuml;nscht wurd, dann dieses Feld leer lassen.' );
+define( '_CFG_TAB1_OPT12DESC',			'Hier den kompletten Link (inkl. http://) angeben der zur Einstiegsseite f&uuml;hren soll. Diese Seite sollte einen Link wie z.B. http://www.yourdomain.com/index.php?option=com_acctexp&amp;task=subscribe&amp;intro=1 beinhalten welcher die Einf&uuml;hrung &uuml;bergeht und den Benutzer direkt zur Aboseite oder Registrierungsseite f&uuml;hrt.<br />Wenn diese Option nicht gew&uuml;nscht wird, dann dieses Feld leer lassen.' );
 define( '_CFG_TAB1_OPT13NAME',			'Link zu individueller Dankeseite:' );
 define( '_CFG_TAB1_OPT13DESC',			'Kompletten Link (inkl. http://) angeben welchen die Besucher zur Dankeseite f&uuml;hrt. Wenn nicht gew&uuml;nscht dann leer lassen.' );
 define( '_CFG_TAB1_OPT14NAME',			'Link zu individueller Abbruchseite:' );
@@ -619,7 +619,7 @@ define( '_PAYPLAN_GENERAL_VISIBLE_NAME',				'Sichtbar:' );
 define( '_PAYPLAN_GENERAL_VISIBLE_DESC',				'Sichtbare Abos werden im Frontend angezeigt. Unsichtbare werden ncith angezeigt und sind nur verf&uuml;gbar als Ersatz bei Problemen' );
 
 define( '_PAYPLAN_PARAMS_GID_ENABLED_NAME',				'Benutzergruppe' );
-define( '_PAYPLAN_PARAMS_GID_ENABLED_DESC',				'Auf JA setzen wennd er Benutzer zu dieser Benutzergruppe geh&ouml;ren soll' );
+define( '_PAYPLAN_PARAMS_GID_ENABLED_DESC',				'Auf JA setzen wenn der Benutzer zu dieser Benutzergruppe geh&ouml;ren soll' );
 define( '_PAYPLAN_PARAMS_GID_NAME',						'Zur Gruppe dazu:' );
 define( '_PAYPLAN_PARAMS_GID_DESC',						'Benutzer werden dieser Gruppe hinzugef&uuml;gt wenn das Abo gew&auml;hlt wird' );
 
@@ -632,7 +632,7 @@ define( '_PAYPLAN_GENERAL_FALLBACK_DESC',				'Wenn ein Abo endet, aktiviere dies
 define( '_PAYPLAN_GENERAL_PROCESSORS_NAME',				'Bezahlsysteme:' );
 define( '_PAYPLAN_NOPLAN',								'Kein Abo' );
 define( '_PAYPLAN_NOGW',								'Kein Bezahlsystem' );
-define( '_PAYPLAN_GENERAL_PROCESSORS_DESC',				'Diejenigen Zahlungssystem ausw&auml;hlen welche f�r ideses Abonnement g&uuml;ltig sein sollen (STRG oder HOCHSTELLTASTE um mehrere auszuw&auml;hlen.<hr />Wird ' . _PAYPLAN_NOPLAN . ' gew&auml;hlt, werden alle anderen Optionen ignoriert.<br />ISt hier nur ' . _PAYPLAN_NOPLAN . ' sichtbar, heisst das, dass noch keine Bezahlsysteme ausgew&auml;hlt/konfiguriert wurden' );
+define( '_PAYPLAN_GENERAL_PROCESSORS_DESC',				'Diejenigen Zahlungssystem ausw&auml;hlen welche f&uuml;r dieses Abonnement g&uuml;ltig sein sollen (STRG oder HOCHSTELLTASTE um mehrere auszuw&auml;hlen.<hr />Wird ' . _PAYPLAN_NOPLAN . ' gew&auml;hlt, werden alle anderen Optionen ignoriert.<br />Ist hier nur ' . _PAYPLAN_NOPLAN . ' sichtbar, heisst das, dass noch keine Bezahlsysteme ausgew&auml;hlt/konfiguriert wurden' );
 define( '_PAYPLAN_PARAMS_LIFETIME_NAME',				'Immerw&auml;hrend:' );
 define( '_PAYPLAN_PARAMS_LIFETIME_DESC',				'Bedeuted ein Abo OHNE Ablaufzeit' );
 
@@ -644,7 +644,7 @@ define( '_PAYPLAN_REGULAR_TITLE',						'Normales Abo' );
 define( '_PAYPLAN_PARAMS_FULL_FREE_NAME',				'Frei:' );
 define( '_PAYPLAN_PARAMS_FULL_FREE_DESC',				'Ja, wenn das ein Gratisabo sein soll' );
 define( '_PAYPLAN_PARAMS_FULL_AMOUNT_NAME',				'Normalpreis:' );
-define( '_PAYPLAN_PARAMS_FULL_AMOUNT_DESC',				'Der Betrag f�r dieses Abo. Sind daf&uuml;r bereits Abonnenten eingetragen, kann dieses Feld nicht ge&auml;ndert werden. Soll dennoch eine &Auml;nderung durchgef&uuml;hrt werden, dann Ver&ouml;ffentlichung zur&uuml;ckziehen und ein neues Abo erstellen' );
+define( '_PAYPLAN_PARAMS_FULL_AMOUNT_DESC',				'Der Betrag f&uuml;r dieses Abo. Sind daf&uuml;r bereits Abonnenten eingetragen, kann dieses Feld nicht ge&auml;ndert werden. Soll dennoch eine &Auml;nderung durchgef&uuml;hrt werden, dann Ver&ouml;ffentlichung zur&uuml;ckziehen und ein neues Abo erstellen' );
 define( '_PAYPLAN_PARAMS_FULL_PERIOD_NAME',				'Periode:' );
 define( '_PAYPLAN_PARAMS_FULL_PERIOD_DESC',				'Die L&auml;nge der Rechnungsperiode (siehe unten). Die Anzahl wird mit dem Zyklus (siehe unten) modifiziert. Sind daf&uuml;r bereits Abonnenten eingetragen, kann dieses Feld nicht ge&auml;ndert werden. Soll dennoch eine &Auml;nderung durchgef&uuml;hrt werden, dann Ver&ouml;ffentlichung zur&uuml;ckziehen und ein neues Abo erstellen' );
 define( '_PAYPLAN_PARAMS_FULL_PERIODUNIT_NAME',			'Zyklus:' );
@@ -658,12 +658,11 @@ define( '_PAYPLAN_PARAMS_TRIAL_FREE_DESC',				'Ja, wenn dieses Abo Gratis sein s
 define( '_PAYPLAN_PARAMS_TRIAL_AMOUNT_NAME',			'Testpreis:' );
 define( '_PAYPLAN_PARAMS_TRIAL_AMOUNT_DESC',			'Preis f&uuml;r die Testperiode' );
 define( '_PAYPLAN_PARAMS_TRIAL_PERIOD_NAME',			'Testperiode:' );
-define( '_PAYPLAN_PARAMS_TRIAL_PERIOD_DESC',			'L&auml;nge der testperiode.  Die Anzahl wird mit dem Zyklus (siehe unten) modifiziert. Sind daf&uuml;r bereits Abonnenten eingetragen, kann dieses Feld nicht ge&auml;ndert werden. Soll dennoch eine &Auml;nderung durchgef&uuml;hrt werden, dann Ver&ouml;ffentlichung zur&uuml;ckziehen und ein neues Abo erstellen' );
+define( '_PAYPLAN_PARAMS_TRIAL_PERIOD_DESC',			'L&auml;nge der Testperiode.  Die Anzahl wird mit dem Zyklus (siehe unten) modifiziert. Sind daf&uuml;r bereits Abonnenten eingetragen, kann dieses Feld nicht ge&auml;ndert werden. Soll dennoch eine &Auml;nderung durchgef&uuml;hrt werden, dann Ver&ouml;ffentlichung zur&uuml;ckziehen und ein neues Abo erstellen' );
 define( '_PAYPLAN_PARAMS_TRIAL_PERIODUNIT_NAME',		'Testperiodenzyklus:' );
 define( '_PAYPLAN_PARAMS_TRIAL_PERIODUNIT_DESC',		'Anzahl der Zykluseinheiten. Sind daf&uuml;r bereits Abonnenten eingetragen, kann dieses Feld nicht ge&auml;ndert werden. Soll dennoch eine &Auml;nderung durchgef&uuml;hrt werden, dann Ver&ouml;ffentlichung zur&uuml;ckziehen und ein neues Abo erstellen' );
 
 // Payplan Relations
-
 define( '_PAYPLAN_RELATIONS_TITLE',						'Beziehungen' );
 define( '_PAYPLAN_PARAMS_SIMILARPLANS_NAME',			'&Auml;hnliche Abos:' );
 define( '_PAYPLAN_PARAMS_SIMILARPLANS_DESC',			'Abos welche dem heir &Auml;hlich sind ausw&auml;hlen. Einem Benutzer ist es nicht erlaubt ein Testabo auszuw&auml;hlen, wenn ein &auml;hnliches Abos schon verher bezogen wurde' );
@@ -671,7 +670,6 @@ define( '_PAYPLAN_PARAMS_EQUALPLANS_NAME',				'Gleiche Abos:' );
 define( '_PAYPLAN_PARAMS_EQUALPLANS_DESC',				'Abos welche dem hier Gleich sind ausw&auml;hlen. Ein Benutzer welcher zwischen solchen Abos wechselt, verl&auml;ngert damit sein Abo anstatt es zu erneuern. Test-/Gratisabos sind dann nicht erlaubt' );
 
 // Payplan Restrictions
-
 define( '_PAYPLAN_RESTRICTIONS_TITLE',					'Einschr&auml;nkungen' );
 define( '_PAYPLAN_RESTRICTIONS_MINGID_ENABLED_NAME',	'Mindest Gruppen ID:' );
 define( '_PAYPLAN_RESTRICTIONS_MINGID_ENABLED_DESC',	'Aktivieren wenn dieses Abo nur <strong>AB</strong> einer bestimmten Benutzergruppe angezeigt werden soll' );
@@ -686,8 +684,8 @@ define( '_PAYPLAN_RESTRICTIONS_MAXGID_ENABLED_DESC',	'Aktivieren wenn dieses Abo
 define( '_PAYPLAN_RESTRICTIONS_MAXGID_NAME',			'Maximum Gruppe:' );
 define( '_PAYPLAN_RESTRICTIONS_MAXGID_DESC',			'Die Benutzerebenen ID <strong>BIS</strong> zu welcher dieses Abo sichtbar ist' );
 
-define( '_PAYPLAN_RESTRICTIONS_PREVIOUSPLAN_REQ_ENABLED_NAME',	'Erfordert voriges Abo:' );
-define( '_PAYPLAN_RESTRICTIONS_PREVIOUSPLAN_REQ_ENABLED_DESC',	'Aktiviern wenn voriges Abo erforderlich ist' );
+define( '_PAYPLAN_RESTRICTIONS_PREVIOUSPLAN_REQ_ENABLED_NAME',	'Erfordert Abo davor:' );
+define( '_PAYPLAN_RESTRICTIONS_PREVIOUSPLAN_REQ_ENABLED_DESC',	'Aktivieren wenn ein Abo vorher erforderlich ist' );
 define( '_PAYPLAN_RESTRICTIONS_PREVIOUSPLAN_REQ_NAME',			'Abo:' );
 define( '_PAYPLAN_RESTRICTIONS_PREVIOUSPLAN_REQ_DESC',			'Die Benutzer werden dieses Abo nur dann sehen, wenn <strong>vorher</strong> das gew&auml;hlte Abo verwendet wurde/wird' );
 define( '_PAYPLAN_RESTRICTIONS_CURRENTPLAN_REQ_ENABLED_NAME',	'Erforderliches Abo:' );
@@ -702,13 +700,13 @@ define( '_PAYPLAN_RESTRICTIONS_OVERALLPLAN_REQ_DESC',			'Nur sichtbar wenn der B
 define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MIN_ENABLED_NAME',		'Mindest Abo:' );
 define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MIN_ENABLED_DESC',		'Aktivieren wenn <strong>mindestens x Mal</strong> ein spezielles Abo <strong>vorher</strong> abonniert war' );
 define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MIN_AMOUNT_NAME',		'Anzahl:' );
-define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MIN_AMOUNT_DESC',		'Die MIndestanzahl an Abozeitr&auml;men um dieses Abo abonnieren zu k&ouml;nnen' );
+define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MIN_AMOUNT_DESC',		'Die Mindestanzahl an Abozeitr&auml;men um dieses Abo abonnieren zu k&ouml;nnen' );
 define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MIN_NAME',				'Mindest Abo:' );
 define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MIN_DESC',				'Das Abo das der Benutzer <strong>vorher abonniert haben musste</strong> um dieses Abo w&auml;hlen zu k&ouml;nnen' );
 define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MAX_ENABLED_NAME',		'Maximal vewendet:' );
 define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MAX_ENABLED_DESC',		'Aktivieren wenn Benutzer eine maximale Anzahl an einem speziellen Abo vorher hatten mussten um <strong>dieses</strong> Abo zu sehen' );
 define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MAX_AMOUNT_NAME',		'Anzahl:' );
-define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MAX_AMOUNT_DESC',		'Maximale Anzhal die dieses Abo verwendet werden darf' );
+define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MAX_AMOUNT_DESC',		'Maximale Anzahl an Benutzern die dieses Abo verwendet d&uuml;rfen' );
 define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MAX_NAME',				'Abo:' );
 define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MAX_DESC',				'Das Abo welches maximal verwendet werden darf' );
 
