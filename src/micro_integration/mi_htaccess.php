@@ -123,7 +123,10 @@ class mi_htaccess {
 				$userlist = SubscriptionPlanHandler::getPlanUserlist($planid);
 				foreach ($userlist as $userid) {
 					if ($params['use_md5']) {
-						$ht->addUser($row->username, $row->password);
+						$user = new mosUser($database);
+						$user->load($userid);
+					
+						$ht->addUser($user->username, $user->password);
 					} else {
 						$apachepw = new apachepw ($database);
 						$apwid = $apachepw->getIDbyUserID($userid);
@@ -161,9 +164,6 @@ class mi_htaccess {
 	function action($params, $userid, $plan) {
 		global $database;
 
-		$user = new mosUser($database);
-		$user->load($userid);
-
 		$ht = new htaccess();
 		$ht->setFPasswd( $params['mi_folder_user_fullpath']);
 		$ht->setFHtaccess( $params['mi_folder_fullpath']);
@@ -172,7 +172,10 @@ class mi_htaccess {
 		}
 
 		if ($params['use_md5']) {
-			$ht->addUser($row->username, $row->password);
+			$user = new mosUser($database);
+			$user->load($userid);
+
+			$ht->addUser($user->username, $user->password);
 		} else {
 			$apachepw = new apachepw ($database);
 			$apwid = $apachepw->getIDbyUserID($userid);
