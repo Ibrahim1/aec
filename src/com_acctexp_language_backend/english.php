@@ -174,9 +174,9 @@ define( '_AEC_LOG_LO_INST',						'The AEC Version %s has been installed' );
 // install texts
 define( '_AEC_INST_NOTE_IMPORTANT',				'Important Notice' );
 define( '_AEC_INST_NOTE_SECURITY',				'For <strong>your system security</strong> you need apply hacks to joomla core files. For your convenience, we have included an autohacking feature that does just that with the click of a link' );
-define( '_AEC_INST_APPLY_HACKS',				'In order to commit these hacks right now, go to the <a href="' .  $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&task=hacks" target="_blank">hacks page</a>. (You can also access this page later on from the AEC central view or menu)' );
+define( '_AEC_INST_APPLY_HACKS',				'In order to commit these hacks right now, go to the <a href="' .  $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&amp;task=hacks" target="_blank">hacks page</a>. (You can also access this page later on from the AEC central view or menu)' );
 define( '_AEC_INST_NOTE_UPGRADE',				'<strong>If you are upgrading, make sure to check the hacks page anyways, since there are changes from time to time!!!</strong>' );
-define( '_AEC_INST_NOTE_HELP',					'To help you along with frequently encountered problems, we have created a <a href="' . $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&task=help" target="_blank"><strong>help function</strong></a> that will help you ship around the most common setup problems (access is also avaliable from the AEC central.' );
+define( '_AEC_INST_NOTE_HELP',					'To help you along with frequently encountered problems, we have created a <a href="' . $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&amp;task=help" target="_blank"><strong>help function</strong></a> that will help you ship around the most common setup problems (access is also avaliable from the AEC central.' );
 define( '_AEC_INST_HINTS',						'Hints' );
 define( '_AEC_INST_HINT1',						'We encourage you to visit the <a href="http://www.globalnerd.org/index.php?option=com_wrapper&amp;Itemid=53" target="_blank">globalnerd.org forums</a> and to <strong>participate in the discussion there</strong>. Chances are, that other users have found the same bugs and it is equally likely that there is at least a fix to hack in or even a new version.' );
 define( '_AEC_INST_HINT2',						'In any case (and especially if you use this on a live site): go through your settings and make a test subscription to see whether everything is working to your satisfaction! Although we try our best to make upgrading as flawless as possible, some fundamental changes to our program may not be possible to cushion for all users.' );
@@ -266,7 +266,7 @@ define( '_AEC_SEL_NOT_CONFIGURED',				'Not Configured' );
 define( '_AEC_FOOT_TX_CHOOSING',				'Thank you for choosing the Account Expiration Control Component!' );
 define( '_AEC_FOOT_TX_GPL',						'This Joomla/Mambo component was developed and released under the <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU/GPL</a> license by Helder Garcia and David Deutsch from <a href="http://www.globalnerd.org" target="_blank">globalnerd.org</a>' );
 define( '_AEC_FOOT_TX_SUBSCRIBE',				'If you want more features, professional service, updates, manuals and online help for this component, you can subscribe to our services at the above link. It helps us a lot in our development!' );
-define( '_AEC_FOOT_CREDIT',						'Please read our <a href="' . $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&amp;amp;task=credits">full credits' );
+define( '_AEC_FOOT_CREDIT',						'Please read our <a href="' . $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&amp;task=credits">full credits' );
 define( '_AEC_FOOT_VERSION_CHECK',				'Check for latest Version' );
 define( '_AEC_FOOT_MEMBERSHIP',					'Get a membership with documentation and support' );
 
