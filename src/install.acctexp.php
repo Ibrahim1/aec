@@ -237,61 +237,6 @@ function com_install() {
 		    }
 		}
 
-		// go ahead if no errros occured and add menu entries
-		if( !$errors ) {
-
-			// insert first component entry
-			$query = 'INSERT INTO #__components VALUES '
-			. '(\'\', \'' . _AEC_INST_MAIN_COMP_ENTRY . '\', \'\', 0, \'\', \'option=com_acctexp&task=showCentral\', \''
-			. _AEC_INST_MAIN_COMP_ENTRY . '\', \'com_acctexp\', 0,'
-			. ' \'../administrator/components/com_acctexp/images/icons/aec_logo_tiny.png\', 0, \'\')'
-			;
-
-			$database->setQuery( $query );
-			if( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
-			}
-
-			// get id from first entry
-			$query = 'SELECT id'
-			. ' FROM #__components'
-			. ' WHERE link = \'option=com_acctexp\''
-			;
-			$database->setQuery( $query );
-			$database->query();
-			$id = $database->insertid();
-
-			// insert components | image | task | menutext | menuid
-			$menu = array();
-			$menu[] = array( 'logo',			'showCentral',			_AEC_CENTR_CENTRAL,			0 );
-			$menu[] = array( 'symbol_plans',	'showSubscriptionPlans',_AEC_CENTR_PLANS,			1 );
-			$menu[] = array( 'symbol_active',	'showActive',			_AEC_CENTR_ACTIVE,			2 );
-			$menu[] = array( 'symbol_pending',	'showPending',			_AEC_CENTR_PENDING,			3 );
-			$menu[] = array( 'symbol_cancelled','showCancelled',		_AEC_CENTR_CANCELLED,		4 );
-			$menu[] = array( 'symbol_closed',	'showClosed',			_AEC_CENTR_CLOSED,			5 );
-			$menu[] = array( 'symbol_excluded',	'showExcluded',			_AEC_CENTR_EXCLUDED,		6 );
-			$menu[] = array( 'symbol_manual',	'showManual',			_AEC_CENTR_MANUAL,			7 );
-			$menu[] = array( 'symbol_mi',		'showMicroIntegrations',_AEC_CENTR_M_INTEGRATION,	8 );
-			$menu[] = array( 'symbol_settings',	'showSettings',			_AEC_CENTR_SETTINGS,		9 );
-			$menu[] = array( 'symbol_css',		'editCSS',				_AEC_CENTR_EDIT_CSS,		10 );
-			$menu[] = array( 'symbol_hacks',	'hacks',				_AEC_CENTR_SPECIAL,			11 );
-			$menu[] = array( 'symbol_help',		'help',					_AEC_CENTR_HELP,			12 );
-
-			for( $i = 0; $i < count( $menu ); $i++ ) {
-				$query = 'INSERT INTO #__components VALUES '
-				. '(\'\', \'' . $menu[$i][2] . '\', \'\', ' . $menu[$i][3] . ', '
-				. $id . ', \'option=com_acctexp&task=' . $menu[$i][1] . '\', \''
-				. $menu[$i][2] . '\', \'com_acctexp\', ' . $menu[$i][3] . ','
-				. ' \'../administrator/components/com_acctexp/images/icons/aec_'
-				. $menu[$i][0] . '_tiny.png\', 0, \'\')'
-				;
-
-				$database->setQuery( $query );
-				if( !$database->query() ) {
-			    	$errors[] = array( $database->getErrorMsg(), $query );
-				}
-			}
-		}
 	}else{
 		// mic: TODO: AEC is/was already installed, maybe we want to backup the files (not implemented yet)
 
@@ -896,382 +841,447 @@ function com_install() {
 		}
 	} // end update
 
-	/**
-	 * initialize new database
-	 */
-	// now set some standard values
-	$cfg = new Config_General($database);
+	// go ahead if no erros occured and add menu entries
+	if( !$errors ) {
 
-	$result = null;
+		// delete first old menu entries
+		$query = 'DELETE *'
+		. ' FROM #__components'
+		. ' WHERE option = \'option=com_acctexp\''
+		;
+		$database->setQuery( $query );
+		$database->query();
 
-	$database->setQuery( "SHOW COLUMNS FROM #__acctexp_config LIKE 'settings'" );
-	$database->loadObject($result);
+		// insert first component entry
+		$query = 'INSERT INTO #__components VALUES '
+		. '(\'\', \'' . _AEC_INST_MAIN_COMP_ENTRY . '\', \'\', 0, \'\', \'option=com_acctexp&task=showCentral\', \''
+		. _AEC_INST_MAIN_COMP_ENTRY . '\', \'com_acctexp\', 0,'
+		. ' \'../administrator/components/com_acctexp/images/icons/aec_logo_tiny.png\', 0, \'\')'
+		;
 
-	if( !( strcmp( $result->Field, 'settings' ) === 0 ) ) {
-		$columns = array("transferinfo", "initialexp", "alertlevel1", "alertlevel2", "alertlevel3", "gwlist", "customintro", "customthanks", "customcancel", "bypassintegration", "simpleurls", "expiration_cushion", "currency_code", "heartbeat_cycle", "tos", "require_subscription", "entry_plan", "plans_first", "transfer", "checkusername", "activate_paid" );
+		$database->setQuery( $query );
+		if( !$database->query() ) {
+	    	$errors[] = array( $database->getErrorMsg(), $query );
+		}
 
-		foreach ($columns as $column) {
-			$result = null;
-			$database->setQuery("SHOW COLUMNS FROM #__acctexp_config LIKE '" . $column . "'");
-			$database->loadObject($result);
-			if(strcmp($result->Field, $column) === 0) {
-				$database->setQuery( "SELECT " . $column . " FROM #__acctexp_config WHERE id='1'" );
-				$cfg->cfg[$column] = $database->loadResult();
+		// get id from first entry
+		$query = 'SELECT id'
+		. ' FROM #__components'
+		. ' WHERE link = \'option=com_acctexp\''
+		;
+		$database->setQuery( $query );
+		$database->query();
+		$id = $database->insertid();
 
-				$database->setQuery("ALTER TABLE #__acctexp_config DROP COLUMN " . $column);
+		// insert components | image | task | menutext | menuid
+		$menu = array();
+		$menu[] = array( 'logo',			'showCentral',			_AEC_CENTR_CENTRAL,			0 );
+		$menu[] = array( 'symbol_plans',	'showSubscriptionPlans',_AEC_CENTR_PLANS,			1 );
+		$menu[] = array( 'symbol_active',	'showActive',			_AEC_CENTR_ACTIVE,			2 );
+		$menu[] = array( 'symbol_pending',	'showPending',			_AEC_CENTR_PENDING,			3 );
+		$menu[] = array( 'symbol_cancelled','showCancelled',		_AEC_CENTR_CANCELLED,		4 );
+		$menu[] = array( 'symbol_closed',	'showClosed',			_AEC_CENTR_CLOSED,			5 );
+		$menu[] = array( 'symbol_excluded',	'showExcluded',			_AEC_CENTR_EXCLUDED,		6 );
+		$menu[] = array( 'symbol_manual',	'showManual',			_AEC_CENTR_MANUAL,			7 );
+		$menu[] = array( 'symbol_mi',		'showMicroIntegrations',_AEC_CENTR_M_INTEGRATION,	8 );
+		$menu[] = array( 'symbol_settings',	'showSettings',			_AEC_CENTR_SETTINGS,		9 );
+		$menu[] = array( 'symbol_css',		'editCSS',				_AEC_CENTR_EDIT_CSS,		10 );
+		$menu[] = array( 'symbol_hacks',	'hacks',				_AEC_CENTR_SPECIAL,			11 );
+		$menu[] = array( 'symbol_help',		'help',					_AEC_CENTR_HELP,			12 );
+
+		for( $i = 0; $i < count( $menu ); $i++ ) {
+			$query = 'INSERT INTO #__components VALUES '
+			. '(\'\', \'' . $menu[$i][2] . '\', \'\', ' . $menu[$i][3] . ', '
+			. $id . ', \'option=com_acctexp&task=' . $menu[$i][1] . '\', \''
+			. $menu[$i][2] . '\', \'com_acctexp\', ' . $menu[$i][3] . ','
+			. ' \'../administrator/components/com_acctexp/images/icons/aec_'
+			. $menu[$i][0] . '_tiny.png\', 0, \'\')'
+			;
+
+			$database->setQuery( $query );
+			if( !$database->query() ) {
+		    	$errors[] = array( $database->getErrorMsg(), $query );
+			}
+		}
+
+		/**
+		 * initialize new database
+		 */
+		// now set some standard values
+		$cfg = new Config_General($database);
+
+		$result = null;
+
+		$database->setQuery( "SHOW COLUMNS FROM #__acctexp_config LIKE 'settings'" );
+		$database->loadObject($result);
+
+		if( !( strcmp( $result->Field, 'settings' ) === 0 ) ) {
+			$columns = array("transferinfo", "initialexp", "alertlevel1", "alertlevel2", "alertlevel3", "gwlist", "customintro", "customthanks", "customcancel", "bypassintegration", "simpleurls", "expiration_cushion", "currency_code", "heartbeat_cycle", "tos", "require_subscription", "entry_plan", "plans_first", "transfer", "checkusername", "activate_paid" );
+
+			foreach ($columns as $column) {
+				$result = null;
+				$database->setQuery("SHOW COLUMNS FROM #__acctexp_config LIKE '" . $column . "'");
+				$database->loadObject($result);
+				if(strcmp($result->Field, $column) === 0) {
+					$database->setQuery( "SELECT " . $column . " FROM #__acctexp_config WHERE id='1'" );
+					$cfg->cfg[$column] = $database->loadResult();
+
+					$database->setQuery("ALTER TABLE #__acctexp_config DROP COLUMN " . $column);
+					if( !$database->query() ) {
+				    	$errors[] = array( $database->getErrorMsg(), $query );
+					}
+				}
+
+				$database->setQuery("ALTER TABLE #__acctexp_config ADD `settings` text");
 				if( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
 
-			$database->setQuery("ALTER TABLE #__acctexp_config ADD `settings` text");
-			if( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
+			$cfg->saveSettings();
+		}
+
+		// Init Settings default variables
+
+		$settings_defaults = array();
+		$settings_defaults['require_subscription']				= 0;
+		$settings_defaults['alertlevel2']						= 7;
+		$settings_defaults['alertlevel1']						= 3;
+		$settings_defaults['expiration_cushion']				= 12;
+		$settings_defaults['heartbeat_cycle']					= 24;
+		$settings_defaults['heartbeat_cycle_backend']			= 1;
+		$settings_defaults['plans_first']						= 0;
+		$settings_defaults['simpleurls']						= 0;
+		$settings_defaults['display_date_frontend']				= "%a, %d %b %Y %T %Z";
+		$settings_defaults['display_date_backend']				= "%a, %d %b %Y %T %Z";
+		$settings_defaults['enable_mimeta']						= 0;
+		$settings_defaults['enable_coupons']					= 0;
+		$settings_defaults['milist']							= "mi_email;mi_htaccess;mi_mysql_query;mi_email;mi_virtuemart";
+		$settings_defaults['displayccinfo']						= 1;
+		$settings_defaults['customtext_confirm_keeporiginal']	= 1;
+		$settings_defaults['customtext_checkout_keeporiginal']	= 1;
+		$settings_defaults['customtext_notallowed_keeporiginal'] = 1;
+		$settings_defaults['customtext_pending_keeporiginal']	= 1;
+		$settings_defaults['customtext_expired_keeporiginal']	= 1;
+		// new 0.12.4
+		$settings_defaults['activate_paid']						= 1;
+		$settings_defaults['transfer']							= 0;
+		$settings_defaults['bypassintegration']					= 0;
+		$settings_defaults['customintro']						= '';
+		$settings_defaults['customthanks']						= '';
+		$settings_defaults['customcancel']						= '';
+		$settings_defaults['customnotallowed']					= '';
+		$settings_defaults['tos']								= '';
+		$settings_defaults['customtext_plans']					= '';
+		$settings_defaults['customtext_confirm']				= '';
+		$settings_defaults['customtext_checkout']				= '';
+		$settings_defaults['customtext_notallowed']				= '';
+		$settings_defaults['customtext_pending']				= '';
+		$settings_defaults['customtext_expired']				= '';
+		$settings_defaults['transferinfo']						= '';
+
+		foreach( $settings_defaults as $name => $value ) {
+			if( !isset( $cfg->cfg[$name] ) || ( $cfg->cfg[$name] == '' ) ) {
+				$cfg->cfg[$name] = $value;
+			}elseif( is_null( $cfg->cfg[$name] ) ) {
+				$cfg->cfg[$name] = $value;
 			}
 		}
 
 		$cfg->saveSettings();
-	}
 
-	// Init Settings default variables
-
-	$settings_defaults = array();
-	$settings_defaults['require_subscription']				= 0;
-	$settings_defaults['alertlevel2']						= 7;
-	$settings_defaults['alertlevel1']						= 3;
-	$settings_defaults['expiration_cushion']				= 12;
-	$settings_defaults['heartbeat_cycle']					= 24;
-	$settings_defaults['heartbeat_cycle_backend']			= 1;
-	$settings_defaults['plans_first']						= 0;
-	$settings_defaults['simpleurls']						= 0;
-	$settings_defaults['display_date_frontend']				= "%a, %d %b %Y %T %Z";
-	$settings_defaults['display_date_backend']				= "%a, %d %b %Y %T %Z";
-	$settings_defaults['enable_mimeta']						= 0;
-	$settings_defaults['enable_coupons']					= 0;
-	$settings_defaults['milist']							= "mi_email;mi_htaccess;mi_mysql_query;mi_email;mi_virtuemart";
-	$settings_defaults['displayccinfo']						= 1;
-	$settings_defaults['customtext_confirm_keeporiginal']	= 1;
-	$settings_defaults['customtext_checkout_keeporiginal']	= 1;
-	$settings_defaults['customtext_notallowed_keeporiginal'] = 1;
-	$settings_defaults['customtext_pending_keeporiginal']	= 1;
-	$settings_defaults['customtext_expired_keeporiginal']	= 1;
-	// new 0.12.4
-	$settings_defaults['activate_paid']						= 1;
-	$settings_defaults['transfer']							= 0;
-	$settings_defaults['bypassintegration']					= 0;
-	$settings_defaults['customintro']						= '';
-	$settings_defaults['customthanks']						= '';
-	$settings_defaults['customcancel']						= '';
-	$settings_defaults['customnotallowed']					= '';
-	$settings_defaults['tos']								= '';
-	$settings_defaults['customtext_plans']					= '';
-	$settings_defaults['customtext_confirm']				= '';
-	$settings_defaults['customtext_checkout']				= '';
-	$settings_defaults['customtext_notallowed']				= '';
-	$settings_defaults['customtext_pending']				= '';
-	$settings_defaults['customtext_expired']				= '';
-	$settings_defaults['transferinfo']						= '';
-
-	foreach( $settings_defaults as $name => $value ) {
-		if( !isset( $cfg->cfg[$name] ) || ( $cfg->cfg[$name] == '' ) ) {
-			$cfg->cfg[$name] = $value;
-		}elseif( is_null( $cfg->cfg[$name] ) ) {
-			$cfg->cfg[$name] = $value;
-		}
-	}
-
-	$cfg->saveSettings();
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'maxgid'");
-	if( $database->loadObject( $result ) ) {
-		if( strcmp( $result->Field, 'maxgid' ) === 0 ) {
-			$database->setQuery("ALTER TABLE #__acctexp_plans DROP COLUMN `maxgid`");
-			if( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
-			}
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'email_desc_exp'");
-	if( $database->loadObject( $result ) ) {
-		if( strcmp( $result->Field, 'email_desc_exp' ) === 0 ) {
-			$database->setQuery("ALTER TABLE #__acctexp_plans DROP COLUMN `email_desc_exp`");
-			if( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
-			}
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'send_exp_mail'");
-	if( $database->loadObject($result) ) {
-		if( strcmp( $result->Field, 'send_exp_mail' ) === 0 ) {
-			$database->setQuery("ALTER TABLE #__acctexp_plans DROP COLUMN `send_exp_mail`");
-			if( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
-			}
-		}
-	}
-
-	// check for old values and update (if happen) old tables
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'params'");
-	$database->loadObject($result);
-
-	if( !( strcmp( $result->Field, 'params' ) === 0 ) ) {
 		$result = null;
-		$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'mingid'");
+		$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'maxgid'");
+		if( $database->loadObject( $result ) ) {
+			if( strcmp( $result->Field, 'maxgid' ) === 0 ) {
+				$database->setQuery("ALTER TABLE #__acctexp_plans DROP COLUMN `maxgid`");
+				if( !$database->query() ) {
+			    	$errors[] = array( $database->getErrorMsg(), $query );
+				}
+			}
+		}
+
+		$result = null;
+		$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'email_desc_exp'");
+		if( $database->loadObject( $result ) ) {
+			if( strcmp( $result->Field, 'email_desc_exp' ) === 0 ) {
+				$database->setQuery("ALTER TABLE #__acctexp_plans DROP COLUMN `email_desc_exp`");
+				if( !$database->query() ) {
+			    	$errors[] = array( $database->getErrorMsg(), $query );
+				}
+			}
+		}
+
+		$result = null;
+		$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'send_exp_mail'");
+		if( $database->loadObject($result) ) {
+			if( strcmp( $result->Field, 'send_exp_mail' ) === 0 ) {
+				$database->setQuery("ALTER TABLE #__acctexp_plans DROP COLUMN `send_exp_mail`");
+				if( !$database->query() ) {
+			    	$errors[] = array( $database->getErrorMsg(), $query );
+				}
+			}
+		}
+
+		// check for old values and update (if happen) old tables
+		$result = null;
+		$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'params'");
 		$database->loadObject($result);
 
-		if( strcmp( $result->Field, 'mingid' ) === 0 ) {
-			$database->setQuery("ALTER TABLE #__acctexp_plans ADD `restrictions` text NULL");
-			if( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
-			}
+		if( !( strcmp( $result->Field, 'params' ) === 0 ) ) {
+			$result = null;
+			$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'mingid'");
+			$database->loadObject($result);
 
-			$database->setQuery("ALTER TABLE #__acctexp_plans ADD `params` text NULL");
-			if( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
-			}
+			if( strcmp( $result->Field, 'mingid' ) === 0 ) {
+				$database->setQuery("ALTER TABLE #__acctexp_plans ADD `restrictions` text NULL");
+				if( !$database->query() ) {
+			    	$errors[] = array( $database->getErrorMsg(), $query );
+				}
 
-			$remap_params = array();
-			$remap_params["amount1"]	= "trial_amount";
-			$remap_params["period1"]	= "trial_period";
-			$remap_params["perunit1"]	= "trial_periodunit";
-			$remap_params["amount2"]	= "trial2_amount";
-			$remap_params["period2"]	= "trial2_period";
-			$remap_params["perunit2"]	= "trial2_periodunit";
-			$remap_params["amount3"]	= "full_amount";
-			$remap_params["period3"]	= "full_period";
-			$remap_params["perunit3"]	= "full_periodunit";
-			$remap_params["processors"] = "processors";
-			$remap_params["lifetime"]	= "lifetime";
-			$remap_params["fallback"]	= "fallback";
-			$remap_params["similarpg"]	= "similarpg";
-			$remap_params["equalpg"]	= "equalpg";
-			$remap_params["gid"]		= "gid";
-			$remap_params["mingid"]		= "mingid";
-			$remap_params["processors"] = "processors";
+				$database->setQuery("ALTER TABLE #__acctexp_plans ADD `params` text NULL");
+				if( !$database->query() ) {
+			    	$errors[] = array( $database->getErrorMsg(), $query );
+				}
 
-			$database->setQuery("SELECT * FROM  #__acctexp_plans");
-			$plans = $database->loadObjectList();
+				$remap_params = array();
+				$remap_params["amount1"]	= "trial_amount";
+				$remap_params["period1"]	= "trial_period";
+				$remap_params["perunit1"]	= "trial_periodunit";
+				$remap_params["amount2"]	= "trial2_amount";
+				$remap_params["period2"]	= "trial2_period";
+				$remap_params["perunit2"]	= "trial2_periodunit";
+				$remap_params["amount3"]	= "full_amount";
+				$remap_params["period3"]	= "full_period";
+				$remap_params["perunit3"]	= "full_periodunit";
+				$remap_params["processors"] = "processors";
+				$remap_params["lifetime"]	= "lifetime";
+				$remap_params["fallback"]	= "fallback";
+				$remap_params["similarpg"]	= "similarpg";
+				$remap_params["equalpg"]	= "equalpg";
+				$remap_params["gid"]		= "gid";
+				$remap_params["mingid"]		= "mingid";
+				$remap_params["processors"] = "processors";
 
-			$plans_new = array();
-			foreach( $remap_params as $field => $arrayfield ) {
-				foreach( $plans as $plan ) {
-					if( isset( $plan->$field ) ) {
-						$plans_new[$plan->id][$arrayfield] = $plan->$field;
-					}else{
-						$plans_new[$plan->id][$arrayfield] = "";
+				$database->setQuery("SELECT * FROM  #__acctexp_plans");
+				$plans = $database->loadObjectList();
+
+				$plans_new = array();
+				foreach( $remap_params as $field => $arrayfield ) {
+					foreach( $plans as $plan ) {
+						if( isset( $plan->$field ) ) {
+							$plans_new[$plan->id][$arrayfield] = $plan->$field;
+						}else{
+							$plans_new[$plan->id][$arrayfield] = "";
+						}
+					}
+
+					$database->setQuery("ALTER TABLE #__acctexp_plans DROP COLUMN `" . $field . "`");
+					if( !$database->query() ) {
+				    	$errors[] = array( $database->getErrorMsg(), $query );
 					}
 				}
 
-				$database->setQuery("ALTER TABLE #__acctexp_plans DROP COLUMN `" . $field . "`");
+				foreach( $plans_new as $id => $content ) {
+					$params			= '';
+					$restrictions	= '';
+
+					foreach( $content as $name => $var ) {
+						// For some values, we need to set an accompaning switch
+						switch ($name) {
+							case 'mingid':
+								if ($var && ($var != 29) && ($var != 18)) {
+									$restrictions .= "mingid_enabled=1\n";
+									$restrictions .= $name . "=" . $var . "\n";
+								} else {
+									$restrictions .= "mingid_enabled=0\n";
+									$restrictions .= $name . "=" . $var . "\n";
+								}
+							break;
+							case 'full_amount':
+								if (strcmp("0.00", $var) === 0) {
+									$params .= "full_free=1\n";
+									$params .= $name . "=" . $var . "\n";
+								} else {
+									$params .= "full_free=0\n";
+									$params .= $name . "=" . $var . "\n";
+								}
+								break;
+							case 'trial_amount':
+								if (strcmp("0.00", $var) === 0) {
+									$params .= "trial_free=1\n";
+									$params .= $name . "=" . $var . "\n";
+								} else {
+									$params .= "trial_free=0\n";
+									$params .= $name . "=" . $var . "\n";
+								}
+								break;
+							default:
+								$params .= $name . "=" . $var . "\n";
+								break;
+						}
+					}
+
+					// Making sure that plans act the same as they did before .49
+					$params .= "gid_enabled=1\n";
+
+					$database->setQuery("UPDATE #__acctexp_plans SET params='" . $params . "', restrictions='" . $restrictions . "' WHERE id='" . $id . "'");
+					if( !$database->query() ) {
+				    	$errors[] = array( $database->getErrorMsg(), $query );
+					}
+				}
+
+			}
+		}
+
+		$result = null;
+		$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'customparams'");
+		if( $database->loadObject( $result ) ) {
+			if(!(strcmp($result->Field, 'customparams') === 0)) {
+				$database->setQuery("ALTER TABLE #__acctexp_plans ADD `customparams` text NULL");
 				if( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
+		}
 
-			foreach( $plans_new as $id => $content ) {
-				$params			= '';
-				$restrictions	= '';
-
-				foreach( $content as $name => $var ) {
-					// For some values, we need to set an accompaning switch
-					switch ($name) {
-						case 'mingid':
-							if ($var && ($var != 29) && ($var != 18)) {
-								$restrictions .= "mingid_enabled=1\n";
-								$restrictions .= $name . "=" . $var . "\n";
-							} else {
-								$restrictions .= "mingid_enabled=0\n";
-								$restrictions .= $name . "=" . $var . "\n";
-							}
-						break;
-						case 'full_amount':
-							if (strcmp("0.00", $var) === 0) {
-								$params .= "full_free=1\n";
-								$params .= $name . "=" . $var . "\n";
-							} else {
-								$params .= "full_free=0\n";
-								$params .= $name . "=" . $var . "\n";
-							}
-							break;
-						case 'trial_amount':
-							if (strcmp("0.00", $var) === 0) {
-								$params .= "trial_free=1\n";
-								$params .= $name . "=" . $var . "\n";
-							} else {
-								$params .= "trial_free=0\n";
-								$params .= $name . "=" . $var . "\n";
-							}
-							break;
-						default:
-							$params .= $name . "=" . $var . "\n";
-							break;
-					}
-				}
-
-				// Making sure that plans act the same as they did before .49
-				$params .= "gid_enabled=1\n";
-
-				$database->setQuery("UPDATE #__acctexp_plans SET params='" . $params . "', restrictions='" . $restrictions . "' WHERE id='" . $id . "'");
+		$result = null;
+		$database->setQuery("SHOW COLUMNS FROM #__acctexp_microintegrations LIKE 'system'");
+		if( $database->loadObject( $result ) ) {
+			if(!(strcmp($result->Field, 'system') === 0)) {
+				$database->setQuery("ALTER TABLE #__acctexp_microintegrations ADD `system` NOT NULL default '0'");
 				if( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
-
 		}
-	}
 
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'customparams'");
-	if( $database->loadObject( $result ) ) {
-		if(!(strcmp($result->Field, 'customparams') === 0)) {
-			$database->setQuery("ALTER TABLE #__acctexp_plans ADD `customparams` text NULL");
-			if( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
+		$result = null;
+		$database->setQuery("SHOW COLUMNS FROM #__acctexp_subscr LIKE 'params'");
+		if( $database->loadObject( $result ) ) {
+			if(!(strcmp($result->Field, 'params') === 0)) {
+				$database->setQuery("ALTER TABLE #__acctexp_subscr ADD `params` text NULL");
+				if( !$database->query() ) {
+			    	$errors[] = array( $database->getErrorMsg(), $query );
+				}
 			}
 		}
-	}
 
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_microintegrations LIKE 'system'");
-	if( $database->loadObject( $result ) ) {
-		if(!(strcmp($result->Field, 'system') === 0)) {
-			$database->setQuery("ALTER TABLE #__acctexp_microintegrations ADD `system` NOT NULL default '0'");
-			if( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
+		$result = null;
+		$database->setQuery("SHOW COLUMNS FROM #__acctexp_subscr LIKE 'customparams'");
+		if( $database->loadObject( $result ) ) {
+			if(!(strcmp($result->Field, 'customparams') === 0)) {
+				$database->setQuery("ALTER TABLE #__acctexp_subscr ADD `customparams` text NULL");
+				if( !$database->query() ) {
+			    	$errors[] = array( $database->getErrorMsg(), $query );
+				}
 			}
 		}
-	}
 
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_subscr LIKE 'params'");
-	if( $database->loadObject( $result ) ) {
-		if(!(strcmp($result->Field, 'params') === 0)) {
-			$database->setQuery("ALTER TABLE #__acctexp_subscr ADD `params` text NULL");
-			if( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
+		$result = null;
+		$database->setQuery("SHOW COLUMNS FROM #__acctexp_microintegrations LIKE 'pre_exp_check'");
+		if( $database->loadObject( $result ) ) {
+			if(!(strcmp($result->Field, 'pre_exp_check') === 0)) {
+				$database->setQuery("ALTER TABLE #__acctexp_microintegrations ADD `pre_exp_check` int(4) NULL");
+				if( !$database->query() ) {
+			    	$errors[] = array( $database->getErrorMsg(), $query );
+				}
 			}
 		}
-	}
 
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_subscr LIKE 'customparams'");
-	if( $database->loadObject( $result ) ) {
-		if(!(strcmp($result->Field, 'customparams') === 0)) {
-			$database->setQuery("ALTER TABLE #__acctexp_subscr ADD `customparams` text NULL");
-			if( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
+		$result = null;
+		$database->setQuery("SHOW COLUMNS FROM #__acctexp LIKE 'expiration'");
+		if( $database->loadObject( $result ) ) {
+			if( (strcmp($result->Field, 'expiration') === 0) && (strcmp($result->Type, 'date') === 0) ) {
+				// Give extra space for plan description
+				$database->setQuery("ALTER TABLE #__acctexp CHANGE `expiration` `expiration` datetime NOT NULL default '0000-00-00 00:00:00'");
+				if( !$database->query() ) {
+			    	$errors[] = array( $database->getErrorMsg(), $query );
+				}
 			}
 		}
-	}
 
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_microintegrations LIKE 'pre_exp_check'");
-	if( $database->loadObject( $result ) ) {
-		if(!(strcmp($result->Field, 'pre_exp_check') === 0)) {
-			$database->setQuery("ALTER TABLE #__acctexp_microintegrations ADD `pre_exp_check` int(4) NULL");
-			if( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
+		$database->setQuery("SELECT id FROM #__users WHERE gid='25'");
+		$administrators = $database->loadResultArray();
+
+		foreach( $administrators as $adminid ) {
+			$metaUser = new metaUser( $adminid );
+
+			if( !$metaUser->hasSubscription ) {
+				$metaUser->objSubscription = new Subscription( $database ); // mic old: mosSubscription
+				$metaUser->objSubscription->createNew( $adminid, 'free', 0 );
+				$metaUser->objSubscription->setStatus( 'Excluded' );
 			}
 		}
-	}
 
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp LIKE 'expiration'");
-	if( $database->loadObject( $result ) ) {
-		if( (strcmp($result->Field, 'expiration') === 0) && (strcmp($result->Type, 'date') === 0) ) {
-			// Give extra space for plan description
-			$database->setQuery("ALTER TABLE #__acctexp CHANGE `expiration` `expiration` datetime NOT NULL default '0000-00-00 00:00:00'");
-			if( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
-			}
-		}
-	}
+		// log
+		$short		= _AEC_LOG_SH_INST;
+		$event		= sprintf( _AEC_LOG_LO_INST, _AEC_VERSION );
+		$tags		= 'install,system';
 
-	$database->setQuery("SELECT id FROM #__users WHERE gid='25'");
-	$administrators = $database->loadResultArray();
+		$eventlog	= new eventLog($database);
+		$params		= array( 'userid' => $my->id );
+		$eventlog->issue( $short, $tags, $event, $params );
 
-	foreach( $administrators as $adminid ) {
-		$metaUser = new metaUser( $adminid );
-
-		if( !$metaUser->hasSubscription ) {
-			$metaUser->objSubscription = new Subscription( $database ); // mic old: mosSubscription
-			$metaUser->objSubscription->createNew( $adminid, 'free', 0 );
-			$metaUser->objSubscription->setStatus( 'Excluded' );
-		}
-	}
-
-	// log
-	$short		= _AEC_LOG_SH_INST;
-	$event		= sprintf( _AEC_LOG_LO_INST, _AEC_VERSION );
-	$tags		= 'install,system';
-
-	$eventlog	= new eventLog($database);
-	$params		= array( 'userid' => $my->id );
-	$eventlog->issue( $short, $tags, $event, $params );
-
-	if( !class_exists( 'Archive_Tar' ) ) {
-		require_once( $mosConfig_absolute_path . '/administrator/components/com_acctexp/Tar.php' );
-	}
-
-	// Code borrowed from VirtueMart
-	// Workaround for Window$
-	if( strstr( $mosConfig_absolute_path , ':' ) ) {
-	 	$path_begin = substr( $mosConfig_absolute_path, strpos( $mosConfig_absolute_path , ':' ) + 1, strlen($mosConfig_absolute_path ) );
-	 	$mosConfig_absolute_path = str_replace( "//", "/", $path_begin );
-	}
-
-	// Now let's re-declare the paths for Window$
-	// mic: needed ???
-	$frontend_dir	= $mosConfig_absolute_path . '/components/com_acctexp/';
-	$frontend_file	= $mosConfig_absolute_path . '/components/com_acctexp/frontend_files.tar.gz';
-	$admin_dir		= $mosConfig_absolute_path . '/administrator/components/com_acctexp/';
-	$admin_file		= $mosConfig_absolute_path . '/administrator/components/com_acctexp/admin_files.tar.gz';
-
-	$files = array();
-	$files[] = array( 1, "images/icons/backend_icons.tar.gz",	"images/icons/" );
-	$files[] = array( 1, "images/icons/silk_icons.tar.gz",		"images/icons/" );
-	$files[] = array( 1, "images/backend_gfx/backend_gfx.tar.gz", "images/backend_gfx/" );
-	$files[] = array( 0, "images/cc_icons/cc_icons.tar.gz",		"images/cc_icons/" );
-	$files[] = array( 0, "images/gateway_buttons.tar.gz",		"images/" );
-	$files[] = array( 0, "images/gateway_logos.tar.gz",			"images/" );
-
-	foreach( $files as $file ) {
-		if( $file[0] ) {
-			$directory = $mosConfig_absolute_path . '/administrator/components/com_acctexp/';
-		}else{
-			$directory = $mosConfig_absolute_path . '/components/com_acctexp/';
+		if( !class_exists( 'Archive_Tar' ) ) {
+			require_once( $mosConfig_absolute_path . '/administrator/components/com_acctexp/Tar.php' );
 		}
 
-		$fullpath	= $directory . $file[1];
-		$deploypath = $directory . $file[2];
+		// Code borrowed from VirtueMart
+		// Workaround for Window$
+		if( strstr( $mosConfig_absolute_path , ':' ) ) {
+		 	$path_begin = substr( $mosConfig_absolute_path, strpos( $mosConfig_absolute_path , ':' ) + 1, strlen($mosConfig_absolute_path ) );
+		 	$mosConfig_absolute_path = str_replace( "//", "/", $path_begin );
+		}
 
-		$archive = new Archive_Tar( $fullpath, "gz" );
+		// Now let's re-declare the paths for Window$
+		// mic: needed ???
+		$frontend_dir	= $mosConfig_absolute_path . '/components/com_acctexp/';
+		$frontend_file	= $mosConfig_absolute_path . '/components/com_acctexp/frontend_files.tar.gz';
+		$admin_dir		= $mosConfig_absolute_path . '/administrator/components/com_acctexp/';
+		$admin_file		= $mosConfig_absolute_path . '/administrator/components/com_acctexp/admin_files.tar.gz';
 
-		if( !@is_dir( $deploypath ) ) {
-			// Borrowed from php.net page on mkdir. Created by V-Tec (vojtech.vitek at seznam dot cz)
-			$folder_path = array( strstr( $deploypath, '.' ) ? dirname( $deploypath ) : $deploypath );
+		$files = array();
+		$files[] = array( 1, "images/icons/backend_icons.tar.gz",	"images/icons/" );
+		$files[] = array( 1, "images/icons/silk_icons.tar.gz",		"images/icons/" );
+		$files[] = array( 1, "images/backend_gfx/backend_gfx.tar.gz", "images/backend_gfx/" );
+		$files[] = array( 0, "images/cc_icons/cc_icons.tar.gz",		"images/cc_icons/" );
+		$files[] = array( 0, "images/gateway_buttons.tar.gz",		"images/" );
+		$files[] = array( 0, "images/gateway_logos.tar.gz",			"images/" );
 
-			while( !@is_dir( dirname( end( $folder_path ) ) )
-					&& dirname(end($folder_path)) != '/'
-					&& dirname(end($folder_path)) != '.'
-					&& dirname(end($folder_path)) != '' ) {
-				array_push( $folder_path, dirname( end( $folder_path ) ) );
+		foreach( $files as $file ) {
+			if( $file[0] ) {
+				$directory = $mosConfig_absolute_path . '/administrator/components/com_acctexp/';
+			}else{
+				$directory = $mosConfig_absolute_path . '/components/com_acctexp/';
 			}
 
-			while( $parent_folder_path = array_pop( $folder_path ) ) {
-				@mkdir( $parent_folder_path, 0644 );
+			$fullpath	= $directory . $file[1];
+			$deploypath = $directory . $file[2];
+
+			$archive = new Archive_Tar( $fullpath, "gz" );
+
+			if( !@is_dir( $deploypath ) ) {
+				// Borrowed from php.net page on mkdir. Created by V-Tec (vojtech.vitek at seznam dot cz)
+				$folder_path = array( strstr( $deploypath, '.' ) ? dirname( $deploypath ) : $deploypath );
+
+				while( !@is_dir( dirname( end( $folder_path ) ) )
+						&& dirname(end($folder_path)) != '/'
+						&& dirname(end($folder_path)) != '.'
+						&& dirname(end($folder_path)) != '' ) {
+					array_push( $folder_path, dirname( end( $folder_path ) ) );
+				}
+
+				while( $parent_folder_path = array_pop( $folder_path ) ) {
+					@mkdir( $parent_folder_path, 0644 );
+				}
 			}
-		}
-		if( $archive->extract( $deploypath ) ) {
-			@unlink( $fullpath );
+			if( $archive->extract( $deploypath ) ) {
+				@unlink( $fullpath );
+			}
 		}
 	} ?>
+
 	<style type="text/css">
 		.usernote {
 			position: relative;
