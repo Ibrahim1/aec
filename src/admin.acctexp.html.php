@@ -767,6 +767,9 @@ class HTML_AcctExp {
 						$link = 'index2.php?option=com_acctexp&amp;task=showClosed';
 						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_closed.png', _AEC_CENTR_CLOSED );
 
+						$link = 'index2.php?option=com_acctexp&amp;task=showManual';
+						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_manual.png', _AEC_CENTR_MANUAL );
+
 						$link = 'index2.php?option=com_acctexp&amp;task=showSettings';
 						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_settings.png', _AEC_CENTR_SETTINGS );
 
@@ -1066,13 +1069,13 @@ class HTML_AcctExp {
 		<form action="index2.php" method="post" name="adminForm">
 			<table class="adminheading" cellpadding="2" cellspacing="2">
 				<tr>
-					<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_active.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;"><?php echo $action; ?></th>
+					<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_<?php echo $action[0]; ?>.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;"><?php echo $action[1]; ?></th>
 					<td nowrap="nowrap"><?php echo $lists['groups'];?></td>
 					<td style="text-align:center;">
 						<?php echo _PLAN_FILTER; ?>
 						&nbsp;
 						<?php echo $lists['filterplanid'] . _ORDER_BY . $lists['orderNav']; ?>
-						<input type="button" class="button" onclick="document.adminForm.submit( );" value="<?php echo _AEC_CMN_APPLY; ?>" style="margin:2px;text-align:center;"/>
+						<input type="button" class="button" onclick="document.adminForm.submit();" value="<?php echo _AEC_CMN_APPLY; ?>" style="margin:2px;text-align:center;" />
 					</td>
 					<td style="white-space:nowrap; float:right; text-align:left; padding:3px; margin:3px;">
 						<?php echo $lists['planid']; ?>
@@ -1138,8 +1141,8 @@ class HTML_AcctExp {
 			</table>
 			<?php echo $pageNav->getListFooter(); ?>
 			<input type="hidden" name="option" value="<?php echo $option;?>" />
-			<input type="hidden" name="task" value= "showActive"/>
-			<input type="hidden" name="returnTask" value= "showActive"/>
+			<input type="hidden" name="task" value="showActive" />
+			<input type="hidden" name="returnTask" value="showActive" />
 			<input type="hidden" name="boxchecked" value="0" />
 		</form>
 
@@ -2065,15 +2068,15 @@ class HTML_AcctExp {
 	}
 
 	function DisplayDateInLocalTime( $SQLDate ){
-		if( !( $SQLDate == '' ) ) {
+
+		if( $SQLDate == '' || $SQLDate == '-' ) {
+			return _AEC_CMN_NOT_SET;
+		}else{
 			global $mosConfig_offset_user, $database;
 			$cfg = new Config_General( $database );
 
 			return strftime( $cfg->cfg['display_date_backend'], ( strtotime( $SQLDate ) + $mosConfig_offset_user * 3600 ) );
-		}else{
-			return _AEC_NOT_SET;
 		}
 	}
-
 }
 ?>

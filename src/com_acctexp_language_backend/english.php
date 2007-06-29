@@ -75,7 +75,6 @@ define( '_AEC_CMN_NOT_SET',						'Not set' );
 define( '_AEC_CMN_SEARCH',						'Search' );
 define( '_AEC_CMN_APPLY',						'Apply' );
 define( '_AEC_CMN_STATUS',						'Status' );
-
 define( '_AEC_FEATURE_NOT_ACTIVE',				'This feature is not active yet' );
 
 // user(info)
@@ -182,9 +181,8 @@ define( '_AEC_INST_HINT1',						'We encourage you to visit the <a href="http://w
 define( '_AEC_INST_HINT2',						'In any case (and especially if you use this on a live site): go through your settings and make a test subscription to see whether everything is working to your satisfaction! Although we try our best to make upgrading as flawless as possible, some fundamental changes to our program may not be possible to cushion for all users.' );
 define( '_AEC_INST_ATTENTION',					'No need to use the old logins!' );
 define( '_AEC_INST_ATTENTION1',					'If you still have the old AEC login modules installed, please uninstall it (no matter which one, regular or CB) and use the normal joomla or CB login module. There is no need to use these old modules anymore.' );
-
-// header
-define( '_AEC_HEAD_PLAN_INFO',					'Plan Info' );
+define( '_AEC_INST_MAIN_COMP_ENTRY',			'AEC Subscription Mgmnt' );
+define( '_AEC_INST_ERRORS',						'<strong>Attention</strong><br />AEC could not be installed completely, following errors occured during the install process:<br />' );
 
 // help
 define( '_AEC_CMN_HELP',						'Help' );
@@ -252,6 +250,7 @@ define( '_AEC_CENTR_SPECIAL',					'Hacks' );
 define( '_AEC_CENTR_M_INTEGRATION',				'Micro Integr.' );
 define( '_AEC_CENTR_HELP',						'Help' );
 define( '_AEC_CENTR_LOG',						'EventLog' );
+define( '_AEC_CENTR_MANUAL',					'Manual' );
 
 // select lists
 define( '_AEC_SEL_EXCLUDED',					'Excluded' );

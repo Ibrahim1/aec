@@ -3096,6 +3096,10 @@ class Invoice extends paramDBTable {
 
 }
 
+/**
+ * User management
+ *
+ */
 class Subscription extends paramDBTable {
 	/** @var int Primary key */
 	var $id					= null;
@@ -3133,11 +3137,15 @@ class Subscription extends paramDBTable {
 	/**
 	* @param database A database connector object
 	*/
-
 	function Subscription ( &$db ) {
 		$this->mosDBTable( '#__acctexp_subscr', 'id', $db );
 	}
 
+	/**
+	 * loads specified user
+	 *
+	 * @param int $userid
+	 */
 	function loadUserid ($userid) {
 		global $database;
 

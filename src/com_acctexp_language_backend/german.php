@@ -177,14 +177,16 @@ define( '_AEC_LOG_LO_INST',						'AEC Version %s wurde installiert' );
 // install texts
 define( '_AEC_INST_NOTE_IMPORTANT',				'Wichtiger Hinweis' );
 define( '_AEC_INST_NOTE_SECURITY',				'Um das CMS <strong>sicher zu betreiben</strong> ist es notwendig einige &Auml;nderungen an den Stammdateien zu machen.<br />Mit dieser Version von AEC wird eine Funktion mitgeliefert die exakt diese Aufgabe &uuml;bernimmt, daf&uuml;r bitte auf den nachfolgenden Link klicken' );
-define( '_AEC_INST_APPLY_HACKS',				'Um die erforderlichen &Auml;nderungen durchzuf&uuml;hren bitte <a href="' .  $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&amp;task=hacks" target="_blank">hier klicken</a><br />Dieser Link kann auch sp&aumL;ter jederzeit aufgerufen werden - siehe AEC Verwaltung' );
-define( '_AEC_INST_NOTE_UPGRADE',				'<strong>Falls ein bestehendes AEC upgegraded werden soll, bitte auf alle F&auml;lle das Men&uuml; "Spezial" aufrufen - es gibt immer wieder neue &Auml;nderungen' );
-define( '_AEC_INST_NOTE_HELP',					'Um die wichtigsten Antworten auf Fragen bereit zu haben kann jederzeit die interne <a href="' . $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&amp;task=help" target="_blank">Hilfe</a>  aufgerufen werden (aufruf auch von der AEC-Verwaltung aus). Dort stehen auch weitere Tips zur nachfolgenden Einrichtung von AEC' );
+define( '_AEC_INST_APPLY_HACKS',				'Um die erforderlichen &Auml;nderungen durchzuf&uuml;hren bitte <a href="' .  $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&amp;task=hacks" target="_blank">hier klicken</a><br />Dieser Link kann auch sp&auml;ter jederzeit aufgerufen werden - siehe AEC Verwaltung' );
+define( '_AEC_INST_NOTE_UPGRADE',				'<strong>Falls ein bestehendes AEC upgedated werden soll, bitte auf alle F&auml;lle das Men&uuml; "Spezial" aufrufen - es gibt immer wieder neue &Auml;nderungen</strong>' );
+define( '_AEC_INST_NOTE_HELP',					'Um die wichtigsten Antworten auf Fragen bereit zu haben kann jederzeit die interne <a href="' . $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&amp;task=help" target="_blank">Hilfe</a>  aufgerufen werden (Aufruf auch von der AEC-Verwaltung aus). Dort stehen auch weitere Tips zur nachfolgenden Einrichtung von AEC' );
 define( '_AEC_INST_HINTS',						'Hinweise' );
 define( '_AEC_INST_HINT1',						'Wir w&uuml;rden uns freuen wenn das <a href="http://www.globalnerd.org/index.php?option=com_wrapper&amp;Itemid=53" target="_blank">Forum</a> besucht wird. Neben Diskussionen k&ouml;nnen auch weitere Tips, Anregungen usw. dort nachgelesen werden' );
-define( '_AEC_INST_HINT2',						'Auf alle F&auml;lle (und ganz speziell wenn AEC auf einer Liveseite eingesetzt wird), in Ruhe alle Einstellungen durchgehen, einen Testzugang anlegen und die Zahlvorg&auml;nge testen!' );
+define( '_AEC_INST_HINT2',						'Auf alle F&auml;lle (und ganz speziell wenn AEC auf einer Liveseite eingesetzt wird), in Ruhe alle Einstellungen durchgehen, einen Testzugang f&uuml;r die diversen Bezahl-Gateways anlegen und diese ausgiebig testen!' );
 define( '_AEC_INST_ATTENTION',					'Immer die aktuellsten Programme von und f&uuml;r AEC einsetzen' );
 define( '_AEC_INST_ATTENTION1',					'Falls noch &auml;ltere AEC-Loginmodule in Verwendung sind, bitte deinstallieren und gegen die regul&auml;ren austauschen (egal ob Joomla, Mambo, CB, etc.)' );
+define( '_AEC_INST_MAIN_COMP_ENTRY',			'AEC Abo Verwaltung' );
+define( '_AEC_INST_ERRORS',						'<strong>Achtung</strong><br />leider traten w&auml;hrend der Installation folgende Fehler auf - AEC konnte <strong>nicht</strong>vollst&auml;ndig installiert werden:<br />' );
 
 // help
 define( '_AEC_CMN_HELP',						'Hilfe' );
@@ -252,6 +254,7 @@ define( '_AEC_CENTR_SPECIAL',					'Spezial' );
 define( '_AEC_CENTR_M_INTEGRATION',				'Integration' );
 define( '_AEC_CENTR_HELP',						'Hilfe' );
 define( '_AEC_CENTR_LOG',						'Logdatei' );
+define( '_AEC_CENTR_MANUAL',					'Manuell' );
 
 // select lists
 define( '_AEC_SEL_EXCLUDED',					'Ausgeschlossen' );
@@ -464,8 +467,8 @@ define( '_EDIT_PAYPLAN', 'Bearbeiten' );
 define( '_REMOVE_PAYPLAN', 'L&ouml;schen' );
 define( '_SAVE_PAYPLAN', 'Speichern' );
 define( '_CANCEL_PAYPLAN', 'Abbrechen' );
-define( '_PAYPLANS_TITLE', 'Zahlungsplan-Manager' );
-define( '_PAYPLANS_MAINDESC',		'Ver&ouml;ffentlichte Pl&auml;ne werden dem Benutzer angezeigt.' );
+define( '_PAYPLANS_TITLE', 			'Abonnement Verwaltung' );
+define( '_PAYPLANS_MAINDESC',		'Ver&ouml;ffentlichte Abos werden den Benutzern angezeigt' );
 define( '_PAYPLAN_NAME', 'Name' );
 define( '_PAYPLAN_DESC', 'Beschreibung (ersten 50 Zeichen)' );
 define( '_PAYPLAN_ACTIVE', 'Aktiv' );

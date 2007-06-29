@@ -38,7 +38,7 @@ define( '_CFG_GENERAL_ACTIVATE_PAID_DESC',		'Always activate Subscriptions that 
 // hacks/install >> ATTENTION: MUST BE HERE AT THIS POSITION, needed later!
 define( '_AEC_SPEC_MENU_ENTRY',					'My Subscription' );
 
-// also NOT in english file
+// common
 define( '_DESCRIPTION_PAYSIGNET',				'mic: Description Paysignnet - CHECK! -');
 define( '_AEC_CONFIG_SAVED',					'Configuration saved' );
 define( '_AEC_CONFIG_CANCELLED',				'Configuration cancelled' );
@@ -75,7 +75,6 @@ define( '_AEC_CMN_NOT_SET',						'Not set' );
 define( '_AEC_CMN_SEARCH',						'Search' );
 define( '_AEC_CMN_APPLY',						'Apply' );
 define( '_AEC_CMN_STATUS',						'Status' );
-
 define( '_AEC_FEATURE_NOT_ACTIVE',				'This feature is not active yet' );
 
 // user(info)
@@ -129,6 +128,7 @@ define( '_AEC_HEAD_PENDING_SUBS',				'Pending Subscriber' );
 define( '_AEC_HEAD_CANCELLED_SUBS',				'Cancelled Subscriber' );
 define( '_AEC_HEAD_CLOSED_SUBS',				'Closed Subscriber' );
 define( '_AEC_HEAD_MANUAL_SUBS',				'Manual Subscriber' );
+define( '_AEC_CENTR_MANUAL',					'Manual' );
 
 // hacks (special)
 define( '_AEC_HACK_HACK',						'Hack' );
@@ -182,9 +182,8 @@ define( '_AEC_INST_HINT1',						'We encourage you to visit the <a href="http://w
 define( '_AEC_INST_HINT2',						'In any case (and especially if you use this on a live site): go through your settings and make a test subscription to see whether everything is working to your satisfaction! Although we try our best to make upgrading as flawless as possible, some fundamental changes to our program may not be possible to cushion for all users.' );
 define( '_AEC_INST_ATTENTION',					'No need to use the old logins!' );
 define( '_AEC_INST_ATTENTION1',					'If you still have the old AEC login modules installed, please uninstall it (no matter which one, regular or CB) and use the normal joomla or CB login module. There is no need to use these old modules anymore.' );
-
-// header
-define( '_AEC_HEAD_PLAN_INFO',					'Plan Info' );
+define( '_AEC_INST_MAIN_COMP_ENTRY',			'AEC Subscription Mgmnt' );
+define( '_AEC_INST_ERRORS',						'<strong>Attention</strong><br />AEC could not be installed completely, following errors occured during the install process:<br />' );
 
 // help
 define( '_AEC_CMN_HELP',						'Help' );

@@ -1227,7 +1227,8 @@ function listSubscriptions( $option, $set_group, $userid ) {
 
 	if( !empty( $_REQUEST['groups'] ) ) {
 		if( is_array($_REQUEST['groups'] ) ) {
-			$groups = $_REQUEST['groups'];
+			$groups 	= $_REQUEST['groups'];
+			$set_group	= $_REQUEST['groups'][0];
 		}
 	}else{
 		$groups		= array();
@@ -1235,34 +1236,41 @@ function listSubscriptions( $option, $set_group, $userid ) {
 	}
 
 	// define displaying at html
-	$action = '';
+	$action = array();
 	switch( $set_group ){
 		case 'active':
-			$action = _AEC_HEAD_ACTIVE_SUBS;
+			$action[0]	= 'active';
+			$action[1]	= _AEC_HEAD_ACTIVE_SUBS;
 			break;
 
 		case 'excluded':
-			$action = _AEC_HEAD_EXCLUDED_SUBS;
+			$action[0]	= 'excluded';
+			$action[1]	= _AEC_HEAD_EXCLUDED_SUBS;
 			break;
 
 		case 'expired':
-			$action = _AEC_HEAD_EXPIRED_SUBS;
+			$action[0]	= 'expired';
+			$action[1]	= _AEC_HEAD_EXPIRED_SUBS;
 			break;
 
 		case 'pending':
-			$action = _AEC_HEAD_PENDING_SUBS;
+			$action[0]	= 'pending';
+			$action[1]	= _AEC_HEAD_PENDING_SUBS;
 			break;
 
 		case 'cancelled':
-			$action = _AEC_HEAD_CANCELLED_SUBS;
+			$action[0]	= 'cancelled';
+			$action[1]	= _AEC_HEAD_CANCELLED_SUBS;
 			break;
 
 		case 'closed':
-			$action = _AEC_HEAD_CLOSED_SUBS;
+			$action[0]	= 'closed';
+			$action[1]	= _AEC_HEAD_CLOSED_SUBS;
 		break;
 
 		case 'notconfig':
-			$action = _AEC_HEAD_MANUAL_SUBS;
+			$action[0]	= 'manual';
+			$action[1]	= _AEC_HEAD_MANUAL_SUBS;
 			break;
 	}
 
