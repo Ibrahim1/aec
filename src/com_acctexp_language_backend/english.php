@@ -194,7 +194,7 @@ define( '_AEC_HELP_YELLOW',						'Yellow</strong> items are mostly of cosmetical
 define( '_AEC_HELP_RED',						'Red</strong> items are of high importance to either the way the AEC works or the security of your System.' );
 define( '_AEC_HELP_GEN',						'Please note that even though we try to cover as many errors and problems as possible, this page can only point at the most obvious ones and is by far not completed yet (beta&trade;)' );
 define( '_AEC_HELP_QS_HEADER',					'AEC Quickstart Manual' );
-define( '_AEC_HELP_QS_DESC',					'Before doing anything about the below issues, please read our <a href="' . $mosConfig_live_site . '"/administrator/components/com_acctexp/manual/AEC_Quickstart.pdf" target="_blank">Quickstart Manual</a>' );
+define( '_AEC_HELP_QS_DESC',					'Before doing anything about the below issues, please read our <a href="' . $mosConfig_live_site . '/administrator/components/com_acctexp/manual/AEC_Quickstart.pdf" target="_blank">Quickstart Manual</a>' );
 define( '_AEC_HELP_SER_SW_DIAG1',				'File Permissions Problems' );
 define( '_AEC_HELP_SER_SW_DIAG1_DESC',			'AEC has detected that you are using an Apache Webserver - To be able to hack files on such a server, those files have to be owned by the webserver user, which apparently is not so for at least one of the neccessary files.' );
 define( '_AEC_HELP_SER_SW_DIAG1_DESC2',			'We recommend that you temporarily change the file permissions to 777, then commit the hacks and change it back after that. <strong>Contact your server host or administrator for the possibly quickest response when experiencing problems.</strong> This is the same for the file permission related suggestion(s) below.' );
