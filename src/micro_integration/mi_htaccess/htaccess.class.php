@@ -1,18 +1,22 @@
-<?
+<?php
 /**
-* Class for handling htaccess of Apache
-* @author    Sven Wagener <sven.wagener@intertribe.de>
-* @copyright Intertribe - Internetservices Germany
-* @include 	 Function:_include_
-*/
+ * Class for handling htaccess of Apache
+ * @version $Id: htaccess.class.php 16 2007-06-27 09:04:04Z mic $
+ * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
+ * @subpackage Micro Integrations - htaccess
+ * @copyright Intertribe - Internetservices Germany
+ * @author Sven Wagener <sven.wagener@intertribe.de>
+ * @license Unknown
+ * @include Function:_include_
+ */
 
 class htaccess{
-    var $fHtaccess=""; // path and filename for htaccess file
-    var $fHtgroup="";  // path and filename for htgroup file
-    var $fPasswd="";   // path and filename for passwd file
-    
-    var $authType="Basic"; // Default authentification type
-    var $authName="Internal area"; // Default authentification name
+    var $fHtaccess	= ''; // path and filename for htaccess file
+    var $fHtgroup	= '';  // path and filename for htgroup file
+    var $fPasswd	= '';   // path and filename for passwd file
+
+    var $authType	= 'Basic'; // Default authentification type
+    var $authName	= 'Internal area'; // Default authentification name
 
     /**
 	* Initialising class htaccess
@@ -27,7 +31,7 @@ class htaccess{
     function setFHtaccess($filename){
         $this->fHtaccess=$filename;
     }
-    
+
 	/**
 	* Sets the filename and path of the htgroup file for the htaccess file
 	* @param string	$filename    the name of htgroup file
@@ -35,7 +39,7 @@ class htaccess{
     function setFHtgroup($filename){
         $this->fHtgroup=$filename;
     }
-    
+
  	/**
 	* Sets the filename and path of the password file for the htaccess file
 	* @param string	$filename    the name of htgroup file
@@ -110,14 +114,14 @@ class htaccess{
             fputs($file,$newUserlist[$i][0].":".$newUserlist[$i][1]);
         }
         fclose($file);
-        
+
         if($deleted==true){
             return true;
         }else{
             return false;
         }
     }
-    
+
    	/**
 	* Returns an array of all users in a password file
  	* @return array $users         All usernames of a password file in an array
@@ -126,7 +130,7 @@ class htaccess{
     function getUsers(){
         // Reading names from file
         $newUserlist = array();
-        
+
         $file=fopen($this->fPasswd,"r");
         $x=0;
         for ($i=0; $line=fgets($file,4096); $i++) {
@@ -137,7 +141,7 @@ class htaccess{
 
 		return $newUserlist;
     }
-    
+
 	/**
 	* Sets a password to the given username
 	* @param string $username     The name of the User for changing password
@@ -147,7 +151,7 @@ class htaccess{
     function setPasswd($username,$new_password){
         // Reading names from file
         $newUserlist="";
-        
+
         $file=fopen($this->fPasswd,"r");
         $x=0;
         for ($i=0; $line=fgets($file,4096); $i++) {
