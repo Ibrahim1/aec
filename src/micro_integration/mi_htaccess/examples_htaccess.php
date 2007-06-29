@@ -1,4 +1,4 @@
-<?
+<?php
 // Here are some examples for the htaccess class
 // (Groups are not implemented yet! Only Passwd and htaccess)
 
