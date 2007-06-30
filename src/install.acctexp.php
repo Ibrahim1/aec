@@ -1309,14 +1309,14 @@ function com_install() {
 			<td width="60%" valign="top">
 				<div class="usernote" style="width:350px;margin:8px;">
 					<h1 style="color: #FF0000;"><?php echo _AEC_INST_NOTE_IMPORTANT; ?>:</h1>
-					<img src="<?php echo $mosConfig_live_site; ?>/components/com_acctexp/images/backend_gfx/hacks_scribble.png" border="0" alt="" style="position:relative;float:left;padding:4px;" />
+					<img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/backend_gfx/hacks_scribble.png" border="0" alt="" style="position:relative;float:left;padding:4px;" />
 					<p><?php echo _AEC_INST_NOTE_SECURITY; ?></p>
 					<p><?php echo _AEC_INST_APPLY_HACKS; ?></p>
 					<p><?php echo _AEC_INST_NOTE_UPGRADE; ?></p>
 				</div>
 				<div class="usernote" style="width:350px;margin:8px;">
 					<h1><?php echo _AEC_INST_NOTE_IMPORTANT; ?>:</h1>
-					<img src="<?php echo $mosConfig_live_site; ?>/components/com_acctexp/images/backend_gfx/help_scribble.png" border="0" alt="" style="position:relative;float:left;padding:4px;" />
+					<img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/backend_gfx/help_scribble.png" border="0" alt="" style="position:relative;float:left;padding:4px;" />
 					<p><?php echo _AEC_INST_NOTE_HELP; ?></p>
 				</div>
 				<div class="usernote" style="width:350px;margin:8px;">
@@ -1331,7 +1331,7 @@ function com_install() {
 			</td>
 			<td width="30%" valign="top">
 				<br />
-				<center><img src="<?php echo $mosConfig_live_site; ?>/components/com_acctexp/images/icons/aec_logo_big.png" border="0" alt="" /></center>
+				<center><img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_logo_big.png" border="0" alt="" /></center>
 				<br />
 				<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;">
 					<p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION; ?></p>
