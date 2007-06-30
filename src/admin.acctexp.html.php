@@ -874,13 +874,13 @@ class HTML_AcctExp {
 		<table class="adminform">
 			<tr><td>
 				<div style="width:100%; float:left;">
-					<div class="usernote" style="width:40%; margin:5px;">
+					<div class="usernote" style="width:400px; margin:5px;">
 						<h2 style="color: #FF0000;"><?php echo _AEC_HACKS_NOTICE; ?>:</h2>
 						<p><?php echo _AEC_HACKS_NOTICE_DESC; ?></p>
 						<p><?php echo _AEC_HACKS_NOTICE_DESC2; ?></p>
 						<p><?php echo _AEC_HACKS_NOTICE_DESC3; ?></p>
 					</div>
-					<div class="usernote" style="width:40%; margin:5px;">
+					<div class="usernote" style="width:400px; margin:5px;">
 						<h2><?php echo _AEC_HACKS_NOTICE_JACL; ?>:</h2>
 						<p><?php echo _AEC_HACKS_NOTICE_JACL_DESC; ?></p>
 					</div>

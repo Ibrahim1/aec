@@ -181,7 +181,7 @@ define( '_AEC_INST_HINT1',						'We encourage you to visit the <a href="http://w
 define( '_AEC_INST_HINT2',						'In any case (and especially if you use this on a live site): go through your settings and make a test subscription to see whether everything is working to your satisfaction! Although we try our best to make upgrading as flawless as possible, some fundamental changes to our program may not be possible to cushion for all users.' );
 define( '_AEC_INST_ATTENTION',					'No need to use the old logins!' );
 define( '_AEC_INST_ATTENTION1',					'If you still have the old AEC login modules installed, please uninstall it (no matter which one, regular or CB) and use the normal joomla or CB login module. There is no need to use these old modules anymore.' );
-define( '_AEC_INST_MAIN_COMP_ENTRY',			'AEC Subscription Mgmnt' );
+define( '_AEC_INST_MAIN_COMP_ENTRY',			'AEC Subscription Manager' );
 define( '_AEC_INST_ERRORS',						'<strong>Attention</strong><br />AEC could not be installed completely, following errors occured during the install process:<br />' );
 
 // help
