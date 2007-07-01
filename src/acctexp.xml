@@ -30,6 +30,11 @@
 		<filename>images/gateway_logos.tar.gz</filename>
 		<filename>images/cc_icons/index.html</filename>
 		<filename>images/cc_icons/cc_icons.tar.gz</filename>
+		<filename>micro_integration/language/index.html</filename>
+		<filename>micro_integration/language/english.php</filename>
+		<filename>micro_integration/language/german.php</filename>
+		<filename>micro_integration/language/germanf.php</filename>
+		<filename>micro_integration/language/germani.php</filename>
 		<filename>micro_integration/index.html</filename>
 		<filename>micro_integration/mi_acajoom.php</filename>
 		<filename>micro_integration/mi_email.php</filename>
