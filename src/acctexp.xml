@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <mosinstall type="component">
 	<name>acctexp</name>
-	<creationDate>2007.06.29</creationDate>
+	<creationDate>2007.07.01</creationDate>
 	<author>Helder Garcia, David Deutsch</author>
 	<copyright>@Copyright (C) 2004-2007 Helder Garcia, David Deutsch</copyright>
 	<authorEmail>helder.garcia@gmail.com, skore@skore.de</authorEmail>
@@ -10,57 +10,58 @@
 	<description>A complete subscription management system. By Helder Garcia (hlbog), David Deutsch (skOre) and the team of AEC at globalnerd.org</description>
 	<files>
 		<filename>index.html</filename>
-		<filename>acctexp.class.php</filename>
-		<filename>eucalib.php</filename>
 		<filename>acctexp.php</filename>
+		<filename>acctexp.class.php</filename>
 		<filename>acctexp.html.php</filename>
+		<filename>eucalib.php</filename>
 		<filename>style.css</filename>
 		<filename>com_acctexp_language/index.html</filename>
-		<filename>com_acctexp_language/english.php</filename>
 		<filename>com_acctexp_language/brazilian_portuguese.php</filename>
-		<filename>com_acctexp_language/spanish.php</filename>
+		<filename>com_acctexp_language/english.php</filename>
 		<filename>com_acctexp_language/french.php</filename>
 		<filename>com_acctexp_language/german.php</filename>
-		<filename>com_acctexp_language/germani.php</filename>
 		<filename>com_acctexp_language/germanf.php</filename>
+		<filename>com_acctexp_language/germani.php</filename>
 		<filename>com_acctexp_language/italian.php</filename>
 		<filename>com_acctexp_language/simplified_chinese.php</filename>
+		<filename>com_acctexp_language/spanish.php</filename>
 		<filename>images/index.html</filename>
 		<filename>images/gateway_buttons.tar.gz</filename>
 		<filename>images/gateway_logos.tar.gz</filename>
 		<filename>images/cc_icons/index.html</filename>
 		<filename>images/cc_icons/cc_icons.tar.gz</filename>
 		<filename>micro_integration/index.html</filename>
-		<filename>micro_integration/mi_mosets_tree.php</filename>
-		<filename>micro_integration/mi_remository.php</filename>
-		<filename>micro_integration/mi_htaccess.php</filename>
-		<filename>micro_integration/mi_mysql_query.php</filename>
+		<filename>micro_integration/mi_acajoom.php</filename>
 		<filename>micro_integration/mi_email.php</filename>
-		<filename>micro_integration/mi_virtuemart.php</filename>
+		<filename>micro_integration/mi_htaccess.php</filename>
 		<filename>micro_integration/mi_idevaffiliate.php</filename>
+		<filename>micro_integration/mi_mosets_tree.php</filename>
+		<filename>micro_integration/mi_mysql_query.php</filename>
+		<filename>micro_integration/mi_remository.php</filename>
+		<filename>micro_integration/mi_virtuemart.php</filename>
 		<filename>micro_integration/mi_htaccess/index.html</filename>
 		<filename>micro_integration/mi_htaccess/htaccess.class.php</filename>
 		<filename>processors/index.html</filename>
-		<filename>processors/paypal.php</filename>
-		<filename>processors/paypal_subscription.php</filename>
 		<filename>processors/2checkout.php</filename>
 		<filename>processors/alertpay.php</filename>
 		<filename>processors/allopass.php</filename>
 		<filename>processors/authorize.php</filename>
 		<filename>processors/ccbill.php</filename>
 		<filename>processors/epsnetpay.php</filename>
+		<filename>processors/paypal_subscription.php</filename>
 		<filename>processors/paycom.php</filename>
+		<filename>processors/paypal.php</filename>
 		<filename>processors/paysignet.php</filename>
 		<filename>processors/viaklix.php</filename>
 		<filename>processors/com_acctexp_language_processors/index.html</filename>
-		<filename>processors/com_acctexp_language_processors/english.php</filename>
 		<filename>processors/com_acctexp_language_processors/brazilian_portuguese.php</filename>
-		<filename>processors/com_acctexp_language_processors/spanish.php</filename>
+		<filename>processors/com_acctexp_language_processors/english.php</filename>
 		<filename>processors/com_acctexp_language_processors/french.php</filename>
 		<filename>processors/com_acctexp_language_processors/german.php</filename>
 		<filename>processors/com_acctexp_language_processors/germani.php</filename>
 		<filename>processors/com_acctexp_language_processors/italian.php</filename>
 		<filename>processors/com_acctexp_language_processors/simplified_chinese.php</filename>
+		<filename>processors/com_acctexp_language_processors/spanish.php</filename>
 	</files>
 	<images>
 	</images>
@@ -87,9 +88,8 @@
 			<filename>manual/index.html</filename>
 			<filename>manual/AEC_Quickstart.pdf</filename>
 			<filename>com_acctexp_language_backend/index.html</filename>
-			<filename>com_acctexp_language_backend/english.php</filename>
 			<filename>com_acctexp_language_backend/brazilian_portuguese.php</filename>
-			<filename>com_acctexp_language_backend/spanish.php</filename>
+			<filename>com_acctexp_language_backend/english.php</filename>
 			<filename>com_acctexp_language_backend/french.php</filename>
 			<filename>com_acctexp_language_backend/general.php</filename>
 			<filename>com_acctexp_language_backend/german.php</filename>
@@ -97,6 +97,7 @@
 			<filename>com_acctexp_language_backend/germanf.php</filename>
 			<filename>com_acctexp_language_backend/italian.php</filename>
 			<filename>com_acctexp_language_backend/simplified_chinese.php</filename>
+			<filename>com_acctexp_language_backend/spanish.php</filename>
 			<filename>images/index.html</filename>
 			<filename>images/backend_gfx/index.html</filename>
 			<filename>images/backend_gfx/backend_gfx.tar.gz</filename>
