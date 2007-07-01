@@ -32,7 +32,7 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 
 require_once( $mainframe->getPath( 'toolbar_html' ) );
 
-switch ( $task ) {
+switch( $task ) {
 
 	case 'add':
 		ComponentMenu::ADD_MENU();
@@ -98,9 +98,23 @@ switch ( $task ) {
 		CommonMenu::EDIT_CSS_MENU();
 		break;
 
+	case 'eventlog':
+	case 'hacks':
+	case 'help':
+	case 'history':
+	case 'invoices':
+	case 'showActive':
+	case 'showCancelled':
+	case 'showClosed':
+	case 'showExpired':
+	case 'showExcluded':
+	case 'showManual':
+	case 'showPending':
+		ComponentMenu::MINI_MENU();
+		break;
+
 	default:
 		//ComponentMenu::NO_MENU();
 		break;
-	}
+}
 ?>
-
