@@ -52,7 +52,7 @@ class HTML_frontEnd {
     	. $mainframe->getCfg( 'live_site' ) . '/components/' . $option . '/style.css" />';
 
     	$mainframe->addCustomHeadTag( $html );
-    	$mainframe->setPageTitle( 'AEC- Account Evolution' );
+    	// $mainframe->setPageTitle( 'AEC - Account Evolution' ); // mic: reserved
  		$mainframe->appendMetaTag( 'description', 'AEC Account Expiration Control' );
     	$mainframe->appendMetaTag( 'keywords', 'AEC Account Expiration Control' );
 	}

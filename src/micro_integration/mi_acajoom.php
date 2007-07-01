@@ -13,6 +13,14 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 
 class mi_acajoom {
 
+	function Info () {
+		$info = array();
+		$info['name'] = _AEC_MI_NAME_ACAJOOM;
+		$info['desc'] = _AEC_MI_DESC_ACAJOOM;
+
+		return $info;
+	}
+
 	function checkInstallation () {
 		return true;
 	}

@@ -162,6 +162,14 @@ define( '_AEC_HACKS_MI1',						'Einige Integrationen ben&ouml;tigen Klartextdate
 define( '_AEC_HACKS_MI2',						'Einige Integrationen ben&ouml;tigen Klartextdaten.<br />Diese &Auml;nderung &uuml;bermittelt die Benutzerdaten nach der Registrierung' );
 define( '_AEC_HACKS_MI3',						'Einige Integrationen ben&ouml;tigen Klartextdaten.<br />Diese &Auml;nderung stellt sicher, dass bei Benutzerdaten&auml;nderung durch einen Admin diese weitergeleitet werden.' );
 
+// new 2007.07.01
+define( '_AEC_HACKS_CB2',						'Leitet den Besucher nach der Registrierung in CB (Community Builder) zur Abonnementauswahl weiter.<br />Nur diese &Auml;nderung bewirkt, da&szlig; ein Abo beim Login ausgew&auml;hlt werden muss, anderenfalls sind noch 2 weitere A&uml;nderungen notwendig.<br /><strong>Soll vor dem Abschluss der Benutzerdetails (zur Registrierung) ein Abo ausgew&auml;hlt werden, sind alle 3 &Auml;nderungen erforderlich!</strong>' ); // This will redirect a registering user to the payment plans after filling out the registration form in CB. Leave this alone to have plan selection only on login (if 'Require Subscription' is active), or completely voluntary (without requiring a subscription). <strong>Please note that there are two hacks following this, once you have committed it! If you want to have the plans before the user details, these are required as well.</strong>
+define( '_AEC_HACKS_CB6',						'Leitet den Besucher zur Aboauwahl weiter wenn keine Auswahl bisher getroffen wurde.' ); // This will redirect the user to the payment plans page when he or she has not made that selection yet.
+define( '_AEC_HACKS_CB_HTML2',					'Leitet die Benutzerdetails intern an AEC weiter.<br /><strong>Um diese &Auml;nderung wirksam werden zu lassen, muss in der AEC-Konfiguarion die Einstellung "Abo Zuerst" aktiviert werden</strong>' ); // This Hack will transmit the AEC variables from the user details form. <strong>In order to make this work, set 'Plans First' in the AEC Settings.</strong>
+define( '_AEC_HACKS_UHP2',						'UHP2 Men&uuml;eintrag' ); // UHP2 Menu Entry
+define( '_AEC_HACKS_UHP2_DESC',					'F&uuml;gt dem UHP2 Men&uuml; den Eintrag <strong>' . _AEC_SPEC_MENU_ENTRY . '</strong> hinzu. Damit k&ouml;nnen diese Benutzer ihre Abos und Rechnungen verwalten' ); // Adds a 'My Subscription' menu entry to the UHP2 Usermenu. With this, a user can manage his invoices and upgrade/renew his or her subscription.
+define( '_AEC_HACKS_CBM',						'Wenn das Comprofiler Moderator Modul verwendet wird, muss diese &auml;nderung durchgef&uuml;hrt werden um eine Endlosschleife zu vermeiden!' ); // If you are using the Comprofiler Moderator Module, you have to hack it in order to prevent an infinite loops issue.
+
 // log
 	// settings
 define( '_AEC_LOG_SH_SETT_SAVED',				'&Auml;nderung Einstellungen' );
@@ -209,13 +217,30 @@ define( '_AEC_HELP_SER_SW_DIAG4',				'Dateirechte Probleme' );
 define( '_AEC_HELP_SER_SW_DIAG4_DESC',			'AEC kann die Schreibrechte der Dateien welche ge&auml;ndert werden m&uuml;ssen nicht erkennen. Entweder ist das hier ein WINDOWS-Server oder der Apacheserver wurde mit der Option "--disable-posix" kompiliert.<br /><strong>Sollten die &Auml;nderungen durchgef&uuml;hrt werden, dann jedoch nicht funktionieren liegt das Problem bei den Dateirechten</strong>' );
 define( '_AEC_HELP_SER_SW_DIAG4_DESC2',			'Es wird empfohlen entweder den Server mit der erw&auml;hnten Option zu kompilieren (Apache) oder den Admin zu kontaktieren' );
 define( '_AEC_HELP_DIAG_CMN1',					'CMS &Auml;nderungen' );
-define( '_AEC_HELP_DIAG_CMN1_DESC',				'Notwendig damit die Benutzer nach dem Login von AEC &uuml;berpr&uuml;ft werden k&oum;nnen' );
+define( '_AEC_HELP_DIAG_CMN1_DESC',				'Notwendig damit die Benutzer nach dem Login von AEC &uuml;berpr&uuml;ft werden k&ouml;nnen' );
 define( '_AEC_HELP_DIAG_CMN1_DESC2',			'Zur Spezialseite gehen und &Auml;nderung durchf&uuml;hren' );
 define( '_AEC_HELP_DIAG_CMN2',					'Meine Abos - Men&uuml;eintrag' );
 define( '_AEC_HELP_DIAG_CMN2_DESC',				'Ein Link der die Benutzer zu ihren eigenen Abonnements f&uuml;hrt' );
 define( '_AEC_HELP_DIAG_CMN2_DESC2',			'Zur Spezialseite gehen und Link erstellen' );
 define( '_AEC_HELP_DIAG_CMN3',					'JACL nicht installiert' );
 define( '_AEC_HELP_DIAG_CMN3_DESC',				'Sollte geplant sein, JACLPlus (oder &auml;hnliches) zu installieren, muss auf die AEC-&Auml;nderungen R&uuml;cksicht genommen werden! Sollten diese &Auml;nderungen bereits durchgef&uuml;hrt worden sein, kann dies auf der Spezialseite ge&auml;ndert werden' );
+
+// added 2007.07.01
+define( '_AEC_HELP_DIAG_NO_PAY_PLAN',			'Kein aktives Abonnement vorhanden!' ); // No Active Payment Plan!
+define( '_AEC_HELP_DIAG_NO_PAY_PLAN_DESC',		'Entweder wurde noch kein Abonnement definiert oder es wurde vergessen in Vorhandes zu aktivieren - AEC ben&ouml;nigt mindestens eine aktives Abo' ); // There seems to be no Payment Plan published yet - The AEC needs at least one active plan to function
+define( '_AEC_HELP_DIAG_GLOBAL_PLAN',			'Generelles Abonnement' ); // Global Entry Plan
+define( '_AEC_HELP_DIAG_GLOBAL_PLAN_DESC',		'In der AEC-Konfiguration wurde ein Abo als globales Einstiegsabo definiert welches jeder neue Abonnent automatisch ohne Wahl zugewiesen bekommt.<br />Falls das nicht so sein soll, muss dieses Abo in der Konfiguration deaktiviert werden' ); // There is a Global Entry Plan active in your configuration. If you are not sure what this is, you should probably disable it - Its an entry plan that each new user will be assigned to without having a choice.
+define( '_AEC_HELP_DIAG_SERVER_NOT_REACHABLE',	'Server nicht erreichbar' ); // Server Apparantly Not Reachable
+define( '_AEC_HELP_DIAG_SERVER_NOT_REACHABLE_DESC',	'Es seiht so aus, al ob der Server momentan nicht erreichbar ist!<br />Entweder wurde AEC lokal installiert oder die Verbindung zum Server ist unterbrochen. Um jedoch alle AEC-Funktionen und Zahlungsbenachrichtigungen ausf&uuml;hren zu k&ouml;nnen, muss AEC auf einer erreichbarem Server installiert sein!' ); // It seems that you have installed the AEC on a local machine. In order to retrieve notifications (and thus to have the component work correctly), you need to install it on a server that is reachable by a fixed IP or Domain!
+define( '_AEC_HELP_DIAG_SITE_OFFLINE',			'' ); // Site Offline
+define( '_AEC_HELP_DIAG_SITE_OFFLINE_DESC',		'Die Webseite ist momentan <strong>OFFLINE</strong> geschaltet. Dies kann einen Einflu&szlig; auf die Zahlungen und Benachrichtigungen dazu haben!' ); // You have decided to take your site offline - please note that this can have an effect on notification processes and thus on your payment workflow.
+define( '_AEC_HELP_DIAG_REG_DISABLED',			'Benutzerregistrierung abgeschaltet' ); // User Registration Disabled
+define( '_AEC_HELP_DIAG_REG_DISABLED_DESC',		'Die Benutzerregistrierung ist abgeschaltet. Dadurch k&ouml;nnen sich keine neuen Abonnenten einschreiben bzw. Besucher registrieren' ); // Your User Registration is disabled. This way, no new customer can subscribe to your website.
+define( '_AEC_HELP_DIAG_LOGIN_DISABLED',		'Benutzerlogin abgeschaltet' ); // User Login Disabled
+define( '_AEC_HELP_DIAG_LOGIN_DISABLED_DESC',	'Der Benutzerlogin im Froentend ist abgeschaltet! Dadurch kann keiner der Abonnenten die Webseite betreten' ); // Your have disabled the Frontend Login functionality. Because of this, none of your customers can use your website.
+define( '_AEC_HELP_DIAG_PAYPAL_BUSS_ID',		'PayPal &Uuml;berpr&uuml;fung Gesch&auml;fts-ID' ); // Paypal Check Business ID
+define( '_AEC_HELP_DIAG_PAYPAL_BUSS_ID_DESC',	'Diese Funktion &uuml;berpr&uuml;ft die vorhandene PayPal-ID auf erweiterte Sicherheit bei Transaktionen' ); // This routine checks for a matching paypal business ID to enhance security with Paypal Transactions.
+define( '_AEC_HELP_DIAG_PAYPAL_BUSS_ID_DESC1',	'Falls PayPAl-Zahlungen eintreffen sollten, die Abonnenten jedoch nicht automatisch aktiviert werden, ist diese Einstellung in der AEC-Konfiguration abzuschalten.<br />Ebenso zu deaktivieren ist, wenn mehrere PayPal-Emailadressen in Verwendung sind!' ); // Please disable this setting in case you encounter problems where you receive payments correctly, but without users being enabled. Disable the Setting in general in case you are using multiple e-mail adresses with your Paypal account.
 
 // micro integration
 	// general

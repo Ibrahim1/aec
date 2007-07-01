@@ -2,7 +2,7 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_qmacd {
+class mi_qmacd_1 {
 
 	function Info () {
 		$info = array();
@@ -22,7 +22,7 @@ class mi_qmacd {
 		// field type; name; variable value, description, extra (variable name)
 		if(!isset($params['plans'])) $params['plans']="";
 		if(!isset($params['quotas'])) $params['quotas']="";
-		
+
 		$settings = array();
 		$settings['qmacd_dbhost'] = array("inputC", "QMACD DB Host", $params['qmacd_dbhost'], "Enter the DB Server name and port where the QMACD DB is located. ie. 186.43.56.23:2709");
 		$settings['qmacd_dbuser'] = array("inputC", "QMACD DB User", $params['qmacd_dbuser'], "Enter the Username needed to access the QMACD DB.");
@@ -49,7 +49,7 @@ class mi_qmacd {
 			}
 		}
 		$qmacddatabase->debug( $mosConfig_debug );
-	
+
    		$qmacddatabase->setQuery("update users set action='suspend' where uid='".$userid."'");
         $qmacddatabase->query();
    		$qmacddatabase->setQuery("insert into tags (tag) values ('scan users:now ".$userid."')");
@@ -65,7 +65,7 @@ class mi_qmacd {
 		elseif($wq[1] == "MB") $hd = $wq[0] * 1048576;
 		elseif($wq[1] == "KB") $hd = $wq[0] * 1024;
 		else $hd = $wq[0];
-		
+
 		//global $database, $qmacddatabase;
 		if(!method_exists($qmacddatabase,"setQuery")){
 			$qmacddatabase = new database( $params['qmacd_dbhost'], $params['qmacd_dbuser'], $params['qmacd_dbpass'], $params['qmacd_dbname'], "" );
@@ -76,14 +76,14 @@ class mi_qmacd {
 			}
 		}
 		$qmacddatabase->debug( $mosConfig_debug );
-	
+
  		$qmacddatabase->setQuery("UPDATE users SET type='email', hd='".$hd."',level='4', action='create' WHERE uid='".$userid."'");
         $qmacddatabase->query();
 		$qmacddatabase->setQuery("INSERT INTO tags (tag) VALUES ('scan users:now ".$userid."')");
     	$qmacddatabase->query();
 
 	}
-	
+
 	function userchange($row,$post,$params){
 		global $database, $mosConfig_debug, $qmacddatabase;
 

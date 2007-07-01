@@ -310,13 +310,11 @@ class HTML_myCommon {
 		}
 	}
 
-	function addBackendCSS () {
-		global $mosConfig_live_site;
-		?>
-		<link rel="stylesheet" type="text/css" media="all" href="<?php echo $mosConfig_live_site;?>/administrator/components/com_acctexp/backend_style.css" />
+	function addBackendCSS() {
+		global $mainframe; ?>
+		<link rel="stylesheet" type="text/css" media="all" href="<?php echo $mainframe->getCfg( 'live_site' ); ?>/administrator/components/com_acctexp/backend_style.css" />
 		<?php
 	}
-
 }
 
 class formParticles {
@@ -723,11 +721,21 @@ class HTML_AcctExp {
 		return $subscription->name;
 	}
 
-	function quickiconButton( $link, $image, $text ) {
-	?>
+	/**
+	 * Builds a link plus button
+	 *
+	 * @param string	$link
+	 * @param string	$image
+	 * @param string	$text
+	 * @param bool		$hideMenu
+	 */
+	function quickiconButton( $link, $image, $text, $hideMenu = false ) {
+		if( $hideMenu ) {
+			$hideMenu = '&amp;hidemainmenu=1';
+		} ?>
 		<div style="float:left;">
 			<div class="icon">
-				<a href="<?php echo $link; ?>">
+				<a href="<?php echo $link . $hideMenu; ?>">
 					<?php echo mosAdminMenus::imageCheckAdmin( $image, '/administrator/components/com_acctexp/images/icons/', NULL, NULL, $text ); ?>
 					<span><?php echo $text; ?></span>
 				</a>
@@ -774,7 +782,7 @@ class HTML_AcctExp {
 						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_settings.png', _AEC_CENTR_SETTINGS );
 
 						$link = 'index2.php?option=com_acctexp&amp;task=editCSS';
-						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_css.png', _AEC_CENTR_EDIT_CSS );
+						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_css.png', _AEC_CENTR_EDIT_CSS, true );
 
 						$link = 'index2.php?option=com_acctexp&amp;task=invoices';
 						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_invoices.png', _AEC_CENTR_V_INVOICES );
@@ -855,12 +863,19 @@ class HTML_AcctExp {
 		<?php
 	}
 
-	function hacks ( $hacks ) {
+	function hacks ( $option, $hacks ) {
 		global $mosConfig_live_site;
+
 		$infohandler	= new GeneralInfoRequester();
 		$cmsname		= strtolower($infohandler->getCMSName());
-		HTML_myCommon::addBackendCSS();
-		?>
+		HTML_myCommon::addBackendCSS(); ?>
+
+		<form action="index2.php" method="post" name="adminForm">
+			<input type="hidden" name="option" value="<?php echo $option;?>" />
+			<input type="hidden" name="task" value="" />
+			<input type="hidden" name="returnTask" value="" />
+			<input type="hidden" name="boxchecked" value="0" />
+		</form>
 		<table class="adminheading">
 			<tr>
 				<th width="100%" class="sectionname" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_hacks.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
@@ -957,10 +972,16 @@ class HTML_AcctExp {
 		HTML_myCommon::GlobalNerd();
 	}
 
-	function help ( $diagnose ) {
+	function help ( $option, $diagnose ) {
 		global $mosConfig_live_site;
 
 		HTML_myCommon::addBackendCSS(); ?>
+		<form action="index2.php" method="post" name="adminForm">
+			<input type="hidden" name="option" value="<?php echo $option;?>" />
+			<input type="hidden" name="task" value="" />
+			<input type="hidden" name="returnTask" value="" />
+			<input type="hidden" name="boxchecked" value="0" />
+		</form>
 		<table class="adminheading">
 			<tr>
 				<th width="100%" class="sectionname" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_help.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
@@ -972,51 +993,59 @@ class HTML_AcctExp {
 		<table class="adminform">
 			<tr><td>
 				<table border="0">
+					<tr><td>
 					<p><?php echo _AEC_HELP_DESC; ?></p>
 					<p><strong class="importance_1"><?php echo _AEC_HELP_GREEN; ?></p>
 					<p><strong class="importance_2"><?php echo _AEC_HELP_YELLOW; ?></p>
 					<p><strong class="importance_3"><?php echo _AEC_HELP_RED; ?></p>
 					<p><?php echo _AEC_HELP_GEN; ?></p>
-		<?php
-
-	// Syntax: 0Name | 1Status | 2Importance | 3Explaination | 4Advice | 5DetectOnly (0:No, 1:Yes -Don't display if Status=0)
-			foreach( $diagnose as $dia ) {
-				if (!$dia[5] || ($dia[5] && $dia[1])) {
-					if (!$dia[5]) {
-						$importance = $dia[1] ? 1 : $dia[2];
-						$advice = !$dia[1];
-						$icon_status = aecHTML::Icon($dia[1] ? "tick.png" : "stop.png");
-					} else {
-						$importance = $dia[2];
-						$advice = $dia[1];
-						$icon_status = aecHTML::Icon("stop.png");
-					}
-				?>
-					<div class="diagnose">
-						<img src="<?php echo $mosConfig_live_site;?>/administrator/components/com_acctexp/images/icons/aec_symbol_importance_<?php echo $importance; ?>.png" />
-							<h1 class="importance_<?php echo $importance; ?>"><?php echo $dia[0]; ?></h1>
-							<p class="notice_<?php echo $advice; ?>"><?php echo $icon_status; ?> <?php echo $dia[3]; ?></p>
-							<?php if ($dia[4] && $advice) {
-							?><p class="notice_1"><?php echo aecHTML::Icon("arrow_right.png"); ?> <?php echo $dia[4]; ?></p>
-							<?php }
-						?></div><?php
-				}
-			}
-
-		?>
+					<?php
+					/**
+					 * Syntax:
+					 * 0 Name
+					 * 1 Status
+					 * 2 Importance
+					 * 3 Explaination
+					 * 4 Advice
+					 * 5 DetectOnly (0:No, 1:Yes -Don't display if Status=0)
+					 */
+					foreach( $diagnose as $dia ) {
+						if (!$dia[5] || ($dia[5] && $dia[1])) {
+							if (!$dia[5]) {
+								$importance = $dia[1] ? 1 : $dia[2];
+								$advice = !$dia[1];
+								$icon_status = aecHTML::Icon( $dia[1] ? 'tick.png' : 'stop.png' );
+							} else {
+								$importance = $dia[2];
+								$advice = $dia[1];
+								$icon_status = aecHTML::Icon( 'stop.png' );
+							} ?>
+							<div class="diagnose">
+								<img src="<?php echo $mosConfig_live_site;?>/administrator/components/com_acctexp/images/icons/aec_symbol_importance_<?php echo $importance; ?>.png" width="64" height="64" alt="" />
+								<h1 class="importance_<?php echo $importance; ?>"><?php echo $dia[0]; ?></h1>
+								<p class="notice_<?php echo $advice; ?>"><?php echo $icon_status; ?> <?php echo $dia[3]; ?></p>
+								<?php
+								if ($dia[4] && $advice) { ?>
+									<p class="notice_1"><?php echo aecHTML::Icon("arrow_right.png"); ?> <?php echo $dia[4]; ?></p>
+									<?php
+								} ?>
+							</div>
+							<?php
+						}
+					} ?>
+					</td></tr>
 				</table>
-			</tr></td>
+			</tr>
 		</table>
-		<?php HTML_myCommon::GlobalNerd(); ?>
-    <?php
+		<?php
+		HTML_myCommon::GlobalNerd();
 	}
 
 	function Settings( $option, $lists, $tab_data, $editors ) {
 		global $mosConfig_live_site;
 
 		HTML_myCommon::addBackendCSS();
-		mosCommonHTML::loadOverlib();
-		?>
+		mosCommonHTML::loadOverlib(); ?>
 		<script type="text/javascript">
 		    /* <![CDATA[ */
 			function submitbutton(pressbutton) {
@@ -1039,24 +1068,24 @@ class HTML_AcctExp {
 		<?php
 
 		$tabs = new mosTabs(0);
-		$tabs->startPane("settings");
+		$tabs->startPane( 'settings' );
 
-		foreach ($tab_data as $tab) {
+		foreach( $tab_data as $tab ) {
 			$tabs->startTab( $tab[0], $tab[0]); ?>
 			<table cellpadding="1" cellspacing="0" border="0" width="100%" class="adminform">
 				<?php
-				for ($s=1; $s<count($tab); $s++) {
-					HTML_mycommon::createSettingsParticle($tab[$s], $lists);
+				for( $s = 1; $s < count( $tab ); $s++ ) {
+					HTML_mycommon::createSettingsParticle( $tab[$s], $lists );
 				} ?>
 			</table>
-		<?php
-		$tabs->endTab();
+			<?php
+			$tabs->endTab();
 		} ?>
 		<input type="hidden" name="id" value="1" />
 		<input type="hidden" name="task" value="" />
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		</form>
-	<?php
+		<?php
 		// close pane and include footer
 		$tabs->endPane();
 		HTML_myCommon::GlobalNerd();
@@ -1979,11 +2008,9 @@ class HTML_AcctExp {
 		<?php echo $pageNav->getListFooter(); ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="history" />
-		<input type="hidden" name="returnTask" value= "history"/>
+		<input type="hidden" name="returnTask" value= "history" />
 		<input type="hidden" name="boxchecked" value="0" />
 		</form>
-
-		<!-- include footer -->
 		<?php HTML_myCommon::GlobalNerd();
 	}
 

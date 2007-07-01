@@ -4045,9 +4045,19 @@ class AECToolbox {
 
 class microIntegrationHandler {
 
+
 	function microIntegrationHandler () {
-		global $mosConfig_absolute_path;
-		$this->mi_dir = $mosConfig_absolute_path . '/components/com_acctexp/micro_integration';
+		global $mainframe;
+
+		$this->mi_dir = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/micro_integration';
+
+		// get languages
+		$langPathMI = $this->mi_dir . '/language/';
+		if( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
+			include_once( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' );
+		}else{
+			include_once( $langPathMI . 'english.php' );
+		}
 	}
 
 	function getIntegrationList () {
