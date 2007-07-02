@@ -115,12 +115,7 @@ class mi_docman {
 
 	function expiration_action($params, $userid, $plan) {
 		global $database;
-		#####
-		# THIS BIT IS DIFFERENT FROM remository.  Everything else is just changes to references...
-		# reMOSitroy holds group membership in a table with one group = one user (possibly user can't be in two groups??)
-		# DocMan holds group member id's in its group definition table with userid's listed in a single field holding multivalues
-		# seperated by comas, user can be in multiple groups...
-		#####
+
 		if( $params['set_group_exp'] ) {
 			// There MUST be a better way to do this (or perhaps DocMan is the issue ;-) )
 			// Read the group membership list from the table for the 'live' group
@@ -134,10 +129,8 @@ class mi_docman {
 			// parse the mutli-entry list into an array
 			$rows = $database->loadResult();
 			$livegroup = explode( ',', $rows );
-			// search and retrun the array id which equals $userid
-			$entry = array_search( $userid, $livegroup );
 
-			if( $entry ) {
+			if( in_array( $userid, $livegroup ) ) {
 				// delete the entry which equals userid
 				unset( $livegroup[$entry] );
 				// now rebuild the array into a multivalue field
