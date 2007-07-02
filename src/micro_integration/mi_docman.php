@@ -116,70 +116,13 @@ class mi_docman {
 	function expiration_action($params, $userid, $plan) {
 		global $database;
 
+		// TODO: Make this a choice, also offer deletion of ALL groups
+		if ($params['set_group']) {
+			$this->DeleteUserFromGroup( userid, $params['group'] );
+		}
+		
 		if( $params['set_group_exp'] ) {
-			// There MUST be a better way to do this (or perhaps DocMan is the issue ;-) )
-			// Read the group membership list from the table for the 'live' group
-			# $query = "SELECT group_id #__mbt_group_member WHERE member_id='" . $userid . "'";
-			$query = 'SELECT groups_members'
-			. ' FROM #__docman_groups'
-			. ' WHERE groups_id = \'' . $params['group'] . '\''
-			;
-			$database->setQuery( $query );
-			// if in live group - remove
-			// parse the mutli-entry list into an array
-			$rows = $database->loadResult();
-			$livegroup = explode( ',', $rows );
-
-			if( in_array( $userid, $livegroup ) ) {
-				// delete the entry which equals userid
-				unset( $livegroup[$entry] );
-				// now rebuild the array into a multivalue field
-				$newvalue = implode( ',', $livegroup );
-				// now UPDATE the database...
-				$query = 'UPDATE #__docman_groups'
-				. ' SET groups_members = \'' . $newvalue . '\''
-				. ' WHERE groups_id = \'' . $params['group'] . '\''
-				;
-				$database->setQuery( $query );
-				$database->query();
-			}else{
-				// Do nothing
-			}
-
-			//check if already in expired group (DocMan allows multiple group entries.
-			// There MUST be a better way to do this (or perhaps DocMan is the issue ;-) )
-			// Read the group membership list from the table for the 'expired' group
-			$query = 'SELECT groups_members'
-			. ' FROM #__docman_groups'
-			. ' WHERE groups_id = \'' . $params['group_exp'] . '\''
-			;
-			$database->setQuery( $query );
-
-			// if in expired group - leave
-			// parse the mutli-entry list into an array
-			$rows = $database->loadResult();
-			$expgroup = explode( ',', $rows );
-			// search and retrun the array id which equals $userid
-			$entry = array_search( $userid, $expgroup );
-
-			if( $entry ) {
-				// Do nothing - user is already in expired group
-			}else{
-				// Add to expired group
-				array_push( $expgroup, $userid );
-				// now rebuild the array into a multivalue field
-				$newvalue = implode( ',', $expgroup );
-				// now UPDATE the database...
-				$query = 'UPDATE #__docman_groups'
-				. ' SET groups_members = \'' . $newvalue . '\''
-				. ' WHERE groups_id = \'' . $params['group_exp'] . '\''
-				;
-				$database->setQuery( $query );
-				$database->query();
-			}
-			####
-			#END OF DocMan changes - more further down
-			####
+			$this->AddUserToGroup( $userid, $params['group_exp'] );
 		}
 
 		$mi_docmanhandler = new docman_restriction( $database );
@@ -200,42 +143,8 @@ class mi_docman {
 		global $database;
 
 		if ($params['set_group']) {
-			########
-			# BIG CHANGES HERE FOR DocMan too...
-			########
-
-			// There MUST be a better way to do this (or perhaps DocMan is the issue ;-) )
-			// Read the group membership list from the table for the 'live' group
-			$query = 'SELECT groups_members'
-			. ' FROM #__docman_groups'
-			. ' WHERE groups_id = \'' . $params['group'] . '\''
-			;
-			$database->setQuery( $query );
-			// if NOT in live group - ADD
-			// parse the mutli-entry list into an array
-			$rows = $database->loadResult();
-			//$livegroup = array();
-
-			$livegroup = explode( ',', $rows );
+			$this->AddUserToGroup( $userid, $params['group'] );
 		}
-
-		// search and return the array id which equals $userid
-		$entry = array_search( $userid, $livegroup );
-		if( $entry ) {
-			// Do nothing - already in the group
-		}else{
-			array_push( $livegroup, $userid );
-			// now rebuild the array into a multivalue field
-			$newvalue = implode( ',', $livegroup );
-			// now UPDATE the database...
-			$query = 'UPDATE #__docman_groups'
-			. ' SET groups_members = \'' . $newvalue . '\''
-			. ' WHERE groups_id = \'' . $params['group'] . '\''
-			;
-			$database->setQuery( $query );
-			$database->query();
-		}
-		## END OF THOSE CHANGES
 
 		$mi_docmanhandler = new docman_restriction( $database );
 		$id = $mi_docmanhandler->getIDbyUserID( $userid );
@@ -257,6 +166,89 @@ class mi_docman {
 		$mi_docmanhandler->store();
 
 		return true;
+	}
+
+	function GetUserGroups ( $userid ) {
+		global $database;
+
+		$query = 'SELECT groups_id'
+		. ' FROM #__docman_groups'
+		;
+		$database->setQuery( $query );
+		$ids = $database->loadResultArray();
+
+		$groups = array();
+		foreach( $ids as $groupid ) {
+			$query = 'SELECT groups_members'
+			. ' FROM #__docman_groups'
+			. ' WHERE groups_id = \'' . $groupid . '\''
+			;
+
+			$database->setQuery( $query );
+			$users = explode( ',', $database->loadResult() );
+
+			if( in_array( $userid, $users ) ) {
+				$groups[] = $groupid;
+			}
+		}
+
+		return $groups;
+	}
+
+	function AddUserToGroup ( $userid, $groupid ) {
+		global $database;
+
+		$query = 'SELECT groups_members'
+		. ' FROM #__docman_groups'
+		. ' WHERE groups_id = \'' . $groupid . '\''
+		;
+
+		$database->setQuery( $query );
+		$users = explode( ',', $database->loadResult() );
+
+		if( !in_array( $userid, $users ) ) {
+			$users[] = $userid;
+
+			$query = 'UPDATE #__docman_groups'
+			. ' SET groups_members = \'' . implode( ',', $users ) . '\''
+			. ' WHERE groups_id = \'' . $groupid . '\''
+			;
+
+			$database->setQuery( $query );
+			$database->query();
+
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	function DeleteUserFromGroup ( $userid, $groupid ) {
+		global $database;
+
+		$query = 'SELECT groups_members'
+		. ' FROM #__docman_groups'
+		. ' WHERE groups_id = \'' . $groupid . '\''
+		;
+
+		$database->setQuery( $query );
+		$users = explode( ',', $database->loadResult() );
+
+		if( in_array( $userid, $users ) ) {
+			$users[] = $userid;
+
+			$query = 'UPDATE #__docman_groups'
+			. ' SET groups_members = \'' . implode( ',', $users ) . '\''
+			. ' WHERE groups_id = \'' . $groupid . '\''
+			;
+
+			$database->setQuery( $query );
+			$database->query();
+
+			return true;
+		}else{
+			return false;
+		}
 	}
 }
 
