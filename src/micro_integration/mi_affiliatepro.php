@@ -1,11 +1,25 @@
 <?php
+/**
+ * @version $Id: mi_affiliatepro.php 16 2007-07-01 12:07:07Z mic $
+ * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
+ * @subpackage Micro Integrations - AffiliatePRO
+ * @copyright 2007 Calum Polwart / Shiny Black Shoe Systems
+ * @author Calum Polwart
+ * @author adopted by David Deutsch <skore@skore.de> & Team AEC - http://www.gobalnerd.org
+ * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
+ */
+
+/**
+ * mic: TODO: optimize DB.Calls
+ */
+
 // Copyright (C) 2007 Calum Polwart / Shiny Black Shoe Systems
 // Adapted from code from David Deutsch used for idevAffiliate and code from
 // AffiliatePro Website
 // This code can be referred to as (c) David Deutsch if supplied as part of AEC in future
 //
 // All rights reserved.
-// This source file is to function as part of the Account Expiration Control Component, a 
+// This source file is to function as part of the Account Expiration Control Component, a
 // Joomla custom Component By Helder Garcia and David Deutsch - http://www.globalnerd.org
 //
 // This program is free software; you can redistribute it and/or
@@ -37,8 +51,8 @@ class mi_affiliatepro {
 
 	function Info () {
 		$info = array();
-		$info['name'] = "AffiliatePRO";
-		$info['desc'] = "Connect your AEC sales to AffiliatePRO";
+		$info['name'] = _AEC_MI_NAME_AFFPRO;
+		$info['desc'] = _AEC_MI_DESC_AFFPRO;
 
 		return $info;
 	}
@@ -53,54 +67,65 @@ class mi_affiliatepro {
 
 	function Settings ( $params ) {
 		$settings = array();
-		$settings['mi_additional_info'] = array("inputC", "Additional Info", $params['mi_additional_info'], "Any additional info to be passed to AffiliatePRO.");
-		$settings['mi_affPRO_url'] = array("inputB", "Affiliate PRO URL", $params['mi_affPRO_url'], "Enter the AffiliatePRO Url (without the http://) that points to your your AffiliatePRO installation.");
-		$settings['mi_affPRO_group_id'] = array("inputC", "Affiliate PRO Group ID for commission", $params['mi_affPRO_group_id'], "Enter the Affiliate PRO product group identity to be used to calculate commission.");
+		$settings['mi_additional_info']	= array( 'inputC', _AEC_MI_SET1_AFFPRO,
+										$params['mi_additional_info'], _AEC_MI_SET1_1_AFFPRO );
+		$settings['mi_affPRO_url']		= array( 'inputB', _AEC_MI_SET2_AFFPRO,
+										$params['mi_affPRO_url'], _AEC_MI_SET2_1_AFFPRO );
+		$settings['mi_affPRO_group_id'] = array( 'inputC', _AEC_MI_SET3_AFFPRO,
+										$params['mi_affPRO_group_id'], _AEC_MI_SET3_1_AFFPRO );
 
 		return $settings;
 	}
 
-	function action($params, $userid, $plan) {
+	function action( $params, $userid, $plan ) {
 		global $database;
 
 		$passvars = array();
 
-		$query = "SELECT invoice_number FROM #__acctexp_invoices WHERE userid='" . $userid . "' AND active='1' ORDER BY transaction_date DESC LIMIT 1";
+		$query = 'SELECT invoice_number'
+		. ' FROM #__acctexp_invoices'
+		. ' WHERE userid = \'' . $userid . '\''
+		. ' AND active = \'1\''
+		. ' ORDER BY transaction_date DESC'
+		. ' LIMIT 1'
+		;
 		$database->setQuery( $query );
 		$passvars['txn_id'] = $database->loadResult();
 
-		$passvars['aff_id'] = ""; //REPLACE with Affiliate Id - how will AEC know this?
-
-		$passvars['group_id'] = $params['mi_affPRO_group_id'];
+		$passvars['aff_id']		= ''; //REPLACE with Affiliate Id - how will AEC know this?
+		$passvars['group_id']	= $params['mi_affPRO_group_id'];
 
 		//Get the transaction amount from AEC
-		$query = "SELECT amount FROM #__acctexp_invoices WHERE invoice_number='" . $passvars['txn_id'] . "'";
+		$query = 'SELECT amount'
+		. ' FROM #__acctexp_invoices'
+		. ' WHERE invoice_number = \'' . $passvars['txn_id'] . '\''
+		;
 		$database->setQuery( $query );
 		$passvars['amount'] = $database->loadResult();
 
 		//Get the currency from AEC - NOTE this MAY NOT WORK - does AEC use ISO currency codes??
-		$query = "SELECT currency FROM #__acctexp_invoices WHERE invoice_number='" . $passvars['txn_id'] . "'";
+		$query = 'SELECT currency'
+		. ' FROM #__acctexp_invoices'
+		. ' WHERE invoice_number = \'' . $passvars['txn_id'] . '\''
+		;
 		$database->setQuery( $query );
 		$passvars['cur'] = $database->loadResult();
 
-		$passvars['country_code'] = "";// REPLACE with Country Code? Where could that come from?
-
-		$passvars['add_info'] = "userid_".$userid."_plan_".$plan->id."_".$params['mi_additional_info'];
-
-		$url = "http://".$params['mi_affPRO_url']."/callbacks/callback_sample.php?";
+		$passvars['country_code']	= '';// REPLACE with Country Code? Where could that come from?
+		$passvars['add_info']		= 'userid_' . $userid . '_plan_' . $plan->id . '_' . $params['mi_additional_info'];
+		$url						= 'http://' . $params['mi_affPRO_url'] . '/callbacks/callback_sample.php?';
 
 		$vars_encode = array();
-		foreach ($passvars as $key => $value) {
-			$vars_encode[] = $key . "=" . $value;
+		foreach( $passvars as $key => $value ) {
+			$vars_encode[] = $key . '=' . $value;
 		}
 
-		$url .= implode("&", $vars_encode);
+		$url .= implode( '&', $vars_encode );
 
-		$request=fopen($url, "r");
-		fclose($request);
+		$request=fopen( $url, 'r' );
+		fclose( $request );
 
 		return true;
 	}
 }
-
 ?>

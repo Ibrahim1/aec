@@ -1317,7 +1317,7 @@ class Config_General extends paramDBTable {
 
 		return true;
 	}
-	
+
 	function saveSettings () {
 		$settings = array();
 		foreach ($this->cfg as $key => $value ) {
@@ -4098,14 +4098,6 @@ class microIntegrationHandler {
 		global $mainframe;
 
 		$this->mi_dir = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/micro_integration';
-
-		// get languages
-		$langPathMI = $this->mi_dir . '/language/';
-		if( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
-			include_once( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' );
-		}else{
-			include_once( $langPathMI . 'english.php' );
-		}
 	}
 
 	function getIntegrationList () {
@@ -4239,6 +4231,19 @@ class microIntegration extends paramDBTable {
 
 	function microIntegration (&$db) {
 		$this->mosDBTable( '#__acctexp_microintegrations', 'id', $db );
+
+		$this->_callMILanguage();
+	}
+
+	function _callMILanguage() {
+		global $mainframe;
+
+		$langPathMI = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/micro_integration/language/';
+		if( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
+			include_once( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' );
+		}else{
+			include_once( $langPathMI . 'english.php' );
+		}
 	}
 
 	function mi_exists( $mi_id ) {
@@ -4257,7 +4262,7 @@ class microIntegration extends paramDBTable {
 
 		$filename = $mosConfig_absolute_path . '/components/com_acctexp/micro_integration/' . $this->class_name . '.php';
 
-		if( (!$this->active && $this->id) || !file_exists( $filename ) ) {
+		if( ( !$this->active && $this->id ) || !file_exists( $filename ) ) {
 			// MI does not exist or is deactivated
 			return false;
 		}else{

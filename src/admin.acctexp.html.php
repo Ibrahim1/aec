@@ -1337,7 +1337,7 @@ class HTML_AcctExp {
 								</td>
 							</tr>
 							<?php
-							if( is_null( $aecHTML ) ) { ?>
+							if( !is_null( $aecHTML ) ) { ?>
 								<tr>
 									<td><?php echo _MI_E_FUNCTION_NAME; ?></td>
 									<td>

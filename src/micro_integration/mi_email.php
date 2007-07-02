@@ -1,4 +1,13 @@
 <?php
+/**
+ * @version $Id: mi_acajoom.php 16 2007-07-01 12:07:07Z mic $
+ * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
+ * @subpackage Micro Integrations - Email
+ * @copyright 2006/2007 Copyright (C) David Deutsch
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.gobalnerd.org
+ * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
+ */
+
 // Copyright (C) 2006-2007 David Deutsch
 // All rights reserved.
 // This source file is part of the Account Expiration Control Component, a  Joomla
@@ -33,93 +42,93 @@ class mi_email {
 
 	function Info () {
 		$info = array();
-		$info['name'] = "Email";
-		$info['desc'] = "Send an Email to one or more adresses on application or expiration of the subscription";
+		$info['name'] = _AEC_MI_NAME_EMAIL;
+		$info['desc'] = _AEC_MI_DESC_EMAIL;
 
 		return $info;
 	}
 
 	function Settings ( $params ) {
 		$settings = array();
-		$settings['sender'] = array("inputE", "Sender E-Mail", "Sender E-Mail Address");
-		$settings['sender_name'] = array("inputE", "Sender Name", "The displayed name of the Sender");
+		$settings['sender']				= array( 'inputE', _AEC_MI_SET1_EMAIL, _AEC_MI_SET1_1_EMAIL );
+		$settings['sender_name']		= array( 'inputE', _AEC_MI_SET2_EMAIL, _AEC_MI_SET2_1_EMAIL );
 
-		$settings['recipient'] = array("inputE", "Recipient(s)", "Who is to receive this E-Mail? Separate with comma. The rewriting routines explained below will work for this field.");
+		$settings['recipient']			= array( 'inputE', _AEC_MI_SET3_EMAIL, _AEC_MI_SET3_1_EMAIL);
 
-		$settings['subject'] = array("inputE", "Subject", "Subject");
-		$settings['text_html'] = array("list_yesno", "HTML Encoding", "Do you want this email to be HTML encoded? (Make sure that there are not tags in it if you don't want this)");
-		$settings['text'] = array("editor", "Text", "Text to be sent when the plan is purchased. The rewriting routines explained below will work for this field.");
+		$settings['subject']			= array( 'inputE', _AEC_MI_SET4_EMAIL, _AEC_MI_SET4_1_EMAIL );
+		$settings['text_html']			= array( 'list_yesno', _AEC_MI_SET5_EMAIL, _AEC_MI_SET5_1_EMAIL );
+		$settings['text']				= array( 'editor', _AEC_MI_SET6_EMAIL, _AEC_MI_SET6_1_EMAIL );
 
-		$settings['subject_exp'] = array("inputE", "Expiration Subject", "Expiration Subject");
-		$settings['text_exp_html'] = array("list_yesno", "HTML Encoding", "Do you want this email to be HTML encoded? (Make sure that there are not tags in it if you don't want this)");
-		$settings['text_exp'] = array("editor", "Expiration Text", "Text to be sent when the plan expires. The rewriting routines explained below will work for this field.");
+		$settings['subject_exp']		= array( 'inputE', _AEC_MI_SET7_EMAIL, _AEC_MI_SET7_1_EMAIL );
+		$settings['text_exp_html']		= array( 'list_yesno', _AEC_MI_SET5_EMAIL, _AEC_MI_SET5_1_EMAIL);
+		$settings['text_exp']			= array( 'editor', _AEC_MI_SET8_EMAIL, _AEC_MI_SET_8_1_EMAIL);
 
-		$settings['subject_pre_exp'] = array("inputE", "Pre Exp. Subject", "Pre Expiration Subject");
-		$settings['text_pre_exp_html'] = array("list_yesno", "HTML Encoding", "Do you want this email to be HTML encoded? (Make sure that there are not tags in it if you don't want this)");
-		$settings['text_pre_exp'] = array("editor", "Pre Expiration Text", "Text to be sent when the plan is about to expire (specify when on the previous tab). The rewriting routines explained below will work for this field.");
+		$settings['subject_pre_exp']	= array( 'inputE', _AEC_MI_SET9_EMAIL, _AEC_MI_SET9_1_EMAIL );
+		$settings['text_pre_exp_html']	= array( 'list_yesno', _AEC_MI_SET5_EMAIL, _AEC_MI_SET5_1_EMAIL );
+		$settings['text_pre_exp']		= array( 'editor', _AEC_MI_SET10_EMAIL, _AEC_MI_SET10_1_EMAIL );
 
-		$rewriteswitches = array("cms", "user", "expiration", "subscription", "plan");
-		$settings['rewriteInfo'] = array("fieldset", "Rewriting Info", AECToolbox::rewriteEngineInfo($rewriteswitches));
+		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
+		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL,
+										AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
 		return $settings;
 	}
 
-	function pre_expiration_action($params, $userid, $plan, $mi_id) {
-		$metaUser = new metaUser ($userid);
+	function pre_expiration_action( $params, $userid, $plan, $mi_id ) {
+		$metaUser = new metaUser( $userid );
 
-		$userflags = $metaUser->objSubscription->getMIflags($plan->id, $mi_id);
+		$userflags = $metaUser->objSubscription->getMIflags( $plan->id, $mi_id );
 
-		if (is_array($userflags)) {
-			if (isset($userflags['EXP_MAIL_SENT'])) {
-				if (!(time() > $userflags['EXP_MAIL_ABANDONCHECK'])) {
+		if( is_array( $userflags ) ) {
+			if( isset( $userflags['EXP_MAIL_SENT'] ) ) {
+				if( !( time() > $userflags['EXP_MAIL_ABANDONCHECK'] ) ) {
 					return false;
 				}
 			}
 		}
 
-		$newflags['exp_mail_abandoncheck'] = strtotime($metaUser->objExpiration->expiration);
-		$newflags['exp_mail_sent'] = time();
-		$metaUser->objSubscription->setMIflags($plan->id, $mi_id, $newflags);
+		$newflags['exp_mail_abandoncheck']	= strtotime( $metaUser->objExpiration->expiration );
+		$newflags['exp_mail_sent']			= time();
 
-		$message = AECToolbox::rewriteEngine($params['text_pre_exp'], $metaUser, $plan);
+		$metaUser->objSubscription->setMIflags( $plan->id, $mi_id, $newflags );
 
-		$recipients = explode(",", $params['recipient']);
+		$message = AECToolbox::rewriteEngine( $params['text_pre_exp'], $metaUser, $plan );
 
-		foreach ($recipients as $current => $email) {
-			$recipients[$current] = AECToolbox::rewriteEngine(trim($email), $metaUser, $plan);
+		$recipients = explode( ',', $params['recipient'] );
+
+		foreach( $recipients as $current => $email ) {
+			$recipients[$current] = AECToolbox::rewriteEngine( trim( $email ), $metaUser, $plan );
 		}
 
-		mosMail($params['sender'], $params['sender_name'], $recipients, $params['subject_pre_exp'], $message, $params['text_pre_exp_html']);
+		mosMail( $params['sender'], $params['sender_name'], $recipients, $params['subject_pre_exp'], $message, $params['text_pre_exp_html'] );
 		return true;
 	}
 
-	function expiration_action($params, $userid, $plan) {
-		$metaUser = new metaUser ($userid);
+	function expiration_action( $params, $userid, $plan ) {
+		$metaUser = new metaUser( $userid );
 
-		$message = AECToolbox::rewriteEngine($params['text_exp'], $metaUser, $plan);
+		$message	= AECToolbox::rewriteEngine( $params['text_exp'], $metaUser, $plan );
+		$recipients = explode( ',', $params['recipient'] );
 
-		$recipients = explode(",", $params['recipient']);
-
-		foreach ($recipients as $current => $email) {
-			$recipients[$current] = AECToolbox::rewriteEngine(trim($email), $metaUser, $plan);
+		foreach( $recipients as $current => $email ) {
+			$recipients[$current] = AECToolbox::rewriteEngine( trim( $email ), $metaUser, $plan );
 		}
 
-		mosMail($params['sender'], $params['sender_name'], $recipients, $params['subject_exp'], $message, $params['text_exp_html']);
+		mosMail( $params['sender'], $params['sender_name'], $recipients, $params['subject_exp'], $message, $params['text_exp_html'] );
 		return true;
 	}
 
-	function action($params, $userid, $plan) {
-		$metaUser = new metaUser ($userid);
+	function action( $params, $userid, $plan ) {
+		$metaUser = new metaUser( $userid );
 
-		$message = AECToolbox::rewriteEngine($params['text'], $metaUser, $plan);
+		$message	= AECToolbox::rewriteEngine( $params['text'], $metaUser, $plan );
+		$recipients = explode( ',', $params['recipient'] );
 
-		$recipients = explode(",", $params['recipient']);
-
-		foreach ($recipients as $current => $email) {
-			$recipients[$current] = AECToolbox::rewriteEngine(trim($email), $metaUser, $plan);
+		foreach( $recipients as $current => $email ) {
+			$recipients[$current] = AECToolbox::rewriteEngine( trim( $email ), $metaUser, $plan );
 		}
 
-		mosMail($params['sender'], $params['sender_name'], $recipients, $params['subject'], $message, $params['text_html']);
+		mosMail( $params['sender'], $params['sender_name'], $recipients, $params['subject'], $message, $params['text_html'] );
 		return true;
 	}
 }
