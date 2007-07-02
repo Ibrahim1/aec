@@ -173,9 +173,11 @@ define( '_AEC_LOG_LO_INST',						'The AEC Version %s has been installed' );
 // install texts
 define( '_AEC_INST_NOTE_IMPORTANT',				'Important Notice' );
 define( '_AEC_INST_NOTE_SECURITY',				'For <strong>your system security</strong> you need apply hacks to joomla core files. For your convenience, we have included an autohacking feature that does just that with the click of a link' );
-define( '_AEC_INST_APPLY_HACKS',				'In order to commit these hacks right now, go to the <a href="' .  $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&amp;task=hacks" target="_blank">hacks page</a>. (You can also access this page later on from the AEC central view or menu)' );
+define( '_AEC_INST_APPLY_HACKS',				'In order to commit these hacks right now, go to the %s. (You can also access this page later on from the AEC central view or menu)' );
+define( '_AEC_INST_APPLY_HACKS_LTEXT',			'hacks page' );
 define( '_AEC_INST_NOTE_UPGRADE',				'<strong>If you are upgrading, make sure to check the hacks page anyways, since there are changes from time to time!!!</strong>' );
-define( '_AEC_INST_NOTE_HELP',					'To help you along with frequently encountered problems, we have created a <a href="' . $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&amp;task=help" target="_blank"><strong>help function</strong></a> that will help you ship around the most common setup problems (access is also avaliable from the AEC central.' );
+define( '_AEC_INST_NOTE_HELP',					'To help you along with frequently encountered problems, we have created a %s that will help you ship around the most common setup problems (access is also avaliable from the AEC central.' );
+define( '_AEC_INST_NOTE_HELP_LTEXT',			'help function' );
 define( '_AEC_INST_HINTS',						'Hints' );
 define( '_AEC_INST_HINT1',						'We encourage you to visit the <a href="http://www.globalnerd.org/index.php?option=com_wrapper&amp;Itemid=53" target="_blank">globalnerd.org forums</a> and to <strong>participate in the discussion there</strong>. Chances are, that other users have found the same bugs and it is equally likely that there is at least a fix to hack in or even a new version.' );
 define( '_AEC_INST_HINT2',						'In any case (and especially if you use this on a live site): go through your settings and make a test subscription to see whether everything is working to your satisfaction! Although we try our best to make upgrading as flawless as possible, some fundamental changes to our program may not be possible to cushion for all users.' );
@@ -192,7 +194,8 @@ define( '_AEC_HELP_YELLOW',						'Yellow</strong> items are mostly of cosmetical
 define( '_AEC_HELP_RED',						'Red</strong> items are of high importance to either the way the AEC works or the security of your System.' );
 define( '_AEC_HELP_GEN',						'Please note that even though we try to cover as many errors and problems as possible, this page can only point at the most obvious ones and is by far not completed yet (beta&trade;)' );
 define( '_AEC_HELP_QS_HEADER',					'AEC Quickstart Manual' );
-define( '_AEC_HELP_QS_DESC',					'Before doing anything about the below issues, please read our <a href="' . $mosConfig_live_site . '/administrator/components/com_acctexp/manual/AEC_Quickstart.pdf" target="_blank">Quickstart Manual</a>' );
+define( '_AEC_HELP_QS_DESC',					'Before doing anything about the below issues, please read our %s!' );
+define( '_AEC_HELP_QS_DESC_LTEXT',				'Quickstart Manual' );
 define( '_AEC_HELP_SER_SW_DIAG1',				'File Permissions Problems' );
 define( '_AEC_HELP_SER_SW_DIAG1_DESC',			'AEC has detected that you are using an Apache Webserver - To be able to hack files on such a server, those files have to be owned by the webserver user, which apparently is not so for at least one of the neccessary files.' );
 define( '_AEC_HELP_SER_SW_DIAG1_DESC2',			'We recommend that you temporarily change the file permissions to 777, then commit the hacks and change it back after that. <strong>Contact your server host or administrator for the possibly quickest response when experiencing problems.</strong> This is the same for the file permission related suggestion(s) below.' );
@@ -265,7 +268,8 @@ define( '_AEC_SEL_NOT_CONFIGURED',				'Not Configured' );
 define( '_AEC_FOOT_TX_CHOOSING',				'Thank you for choosing the Account Expiration Control Component!' );
 define( '_AEC_FOOT_TX_GPL',						'This Joomla/Mambo component was developed and released under the <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU/GPL</a> license by Helder Garcia and David Deutsch from <a href="http://www.globalnerd.org" target="_blank">globalnerd.org</a>' );
 define( '_AEC_FOOT_TX_SUBSCRIBE',				'If you want more features, professional service, updates, manuals and online help for this component, you can subscribe to our services at the above link. It helps us a lot in our development!' );
-define( '_AEC_FOOT_CREDIT',						'Please read our <a href="' . $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&amp;task=credits">full credits' );
+define( '_AEC_FOOT_CREDIT',						'Please read our %s' );
+define( '_AEC_FOOT_CREDIT_LTEXT',				'full credits' );
 define( '_AEC_FOOT_VERSION_CHECK',				'Check for latest Version' );
 define( '_AEC_FOOT_MEMBERSHIP',					'Get a membership with documentation and support' );
 

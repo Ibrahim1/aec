@@ -28,7 +28,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 // Dont allow direct linking
-defined( '_VALID_MOS' ) or die( '�?容许直接访问这儿.' );
+defined( '_VALID_MOS' ) or die( '�?容许直接访问这儿.' );
 
 // mic: NEW 0.12.4
 
@@ -174,9 +174,11 @@ define( '_AEC_LOG_LO_INST',						'The AEC Version %s has been installed' );
 // install texts
 define( '_AEC_INST_NOTE_IMPORTANT',				'Important Notice' );
 define( '_AEC_INST_NOTE_SECURITY',				'For <strong>your system security</strong> you need apply hacks to joomla core files. For your convenience, we have included an autohacking feature that does just that with the click of a link' );
-define( '_AEC_INST_APPLY_HACKS',				'In order to commit these hacks right now, go to the <a href="' .  $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&task=hacks" target="_blank">hacks page</a>. (You can also access this page later on from the AEC central view or menu)' );
+define( '_AEC_INST_APPLY_HACKS',				'In order to commit these hacks right now, go to the %s. (You can also access this page later on from the AEC central view or menu)' );
+define( '_AEC_INST_APPLY_HACKS_LTEXT',			'hacks page' );
 define( '_AEC_INST_NOTE_UPGRADE',				'<strong>If you are upgrading, make sure to check the hacks page anyways, since there are changes from time to time!!!</strong>' );
-define( '_AEC_INST_NOTE_HELP',					'To help you along with frequently encountered problems, we have created a <a href="' . $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&task=help" target="_blank"><strong>help function</strong></a> that will help you ship around the most common setup problems (access is also avaliable from the AEC central.' );
+define( '_AEC_INST_NOTE_HELP',					'To help you along with frequently encountered problems, we have created a %s that will help you ship around the most common setup problems (access is also avaliable from the AEC central.' );
+define( '_AEC_INST_NOTE_HELP_LTEXT',			'help function' );
 define( '_AEC_INST_HINTS',						'Hints' );
 define( '_AEC_INST_HINT1',						'We encourage you to visit the <a href="http://www.globalnerd.org/index.php?option=com_wrapper&amp;Itemid=53" target="_blank">globalnerd.org forums</a> and to <strong>participate in the discussion there</strong>. Chances are, that other users have found the same bugs and it is equally likely that there is at least a fix to hack in or even a new version.' );
 define( '_AEC_INST_HINT2',						'In any case (and especially if you use this on a live site): go through your settings and make a test subscription to see whether everything is working to your satisfaction! Although we try our best to make upgrading as flawless as possible, some fundamental changes to our program may not be possible to cushion for all users.' );
@@ -193,7 +195,8 @@ define( '_AEC_HELP_YELLOW',						'Yellow</strong> items are mostly of cosmetical
 define( '_AEC_HELP_RED',						'Red</strong> items are of high importance to either the way the AEC works or the security of your System.' );
 define( '_AEC_HELP_GEN',						'Please note that even though we try to cover as many errors and problems as possible, this page can only point at the most obvious ones and is by far not completed yet (beta&trade;)' );
 define( '_AEC_HELP_QS_HEADER',					'AEC Quickstart Manual' );
-define( '_AEC_HELP_QS_DESC',					'Before doing anything about the below issues, please read our <a href="' . $mosConfig_live_site . '"/administrator/components/com_acctexp/manual/AEC_Quickstart.pdf" target="_blank">Quickstart Manual</a>' );
+define( '_AEC_HELP_QS_DESC',					'Before doing anything about the below issues, please read our %s!' );
+define( '_AEC_HELP_QS_DESC_LTEXT',				'Quickstart Manual' );
 define( '_AEC_HELP_SER_SW_DIAG1',				'File Permissions Problems' );
 define( '_AEC_HELP_SER_SW_DIAG1_DESC',			'AEC has detected that you are using an Apache Webserver - To be able to hack files on such a server, those files have to be owned by the webserver user, which apparently is not so for at least one of the neccessary files.' );
 define( '_AEC_HELP_SER_SW_DIAG1_DESC2',			'We recommend that you temporarily change the file permissions to 777, then commit the hacks and change it back after that. <strong>Contact your server host or administrator for the possibly quickest response when experiencing problems.</strong> This is the same for the file permission related suggestion(s) below.' );
@@ -265,7 +268,8 @@ define( '_AEC_SEL_NOT_CONFIGURED',				'Not Configured' );
 define( '_AEC_FOOT_TX_CHOOSING',				'Thank you for choosing the Account Expiration Control Component!' );
 define( '_AEC_FOOT_TX_GPL',						'This Joomla/Mambo component was developed and released under the <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU/GPL</a> license by Helder Garcia and David Deutsch from <a href="http://www.globalnerd.org" target="_blank">globalnerd.org</a>' );
 define( '_AEC_FOOT_TX_SUBSCRIBE',				'If you want more features, professional service, updates, manuals and online help for this component, you can subscribe to our services at the above link. It helps us a lot in our development!' );
-define( '_AEC_FOOT_CREDIT',						'Please read our <a href="' . $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&amp;amp;task=credits">full credits' );
+define( '_AEC_FOOT_CREDIT',						'Please read our %s' );
+define( '_AEC_FOOT_CREDIT_LTEXT',				'full credits' );
 define( '_AEC_FOOT_VERSION_CHECK',				'Check for latest Version' );
 define( '_AEC_FOOT_MEMBERSHIP',					'Get a membership with documentation and support' );
 
@@ -416,22 +420,22 @@ DEFINE ('_EXPIRE_12MONTH','set 12 Months');
 DEFINE ('_EXPIRE_ADD01MONTH','add 1 Month');
 DEFINE ('_EXPIRE_ADD03MONTH','add 3 Months');
 DEFINE ('_EXPIRE_ADD12MONTH','add 12 Months');
-DEFINE ('_CONFIGURE','�?置');
-DEFINE ('_REMOVE','�?包括');
-DEFINE ('_CNAME','�??字');
+DEFINE ('_CONFIGURE','�?置');
+DEFINE ('_REMOVE','�?包括');
+DEFINE ('_CNAME','�??字');
 DEFINE ('_USERLOGIN','进入');
 DEFINE ('_EXPIRATION','过期');
 DEFINE ('_USERS','用户');
 DEFINE ('_DISPLAY','显示');
-DEFINE ('_NOTSET','�?包括');
-DEFINE ('_SAVE','�?存');
-DEFINE ('_CANCEL','�?�消');
-DEFINE ('_EXP_ASC','过期顺�?');
-DEFINE ('_EXP_DESC','过期倒�?');
-DEFINE ('_NAME_ASC','�??字顺�?');
-DEFINE ('_NAME_DESC','�??字倒�?');
-DEFINE ('_LOGIN_ASC','登陆顺�?');
-DEFINE ('_LOGIN_DESC','登陆倒�?�');
+DEFINE ('_NOTSET','�?包括');
+DEFINE ('_SAVE','�?存');
+DEFINE ('_CANCEL','�?�消');
+DEFINE ('_EXP_ASC','过期顺�?');
+DEFINE ('_EXP_DESC','过期倒�?');
+DEFINE ('_NAME_ASC','�??字顺�?');
+DEFINE ('_NAME_DESC','�??字倒�?');
+DEFINE ('_LOGIN_ASC','登陆顺�?');
+DEFINE ('_LOGIN_DESC','登陆倒�?�');
 DEFINE ('_SIGNUP_ASC','Signup Date Asc');
 DEFINE ('_SIGNUP_DESC','Signup Date Desc');
 DEFINE ('_LASTPAY_ASC','Last Payment Asc');
@@ -442,52 +446,52 @@ DEFINE ('_STATUS_ASC','Status Asc');
 DEFINE ('_STATUS_DESC','Status Desc');
 DEFINE ('_TYPE_ASC','Payment Type Asc');
 DEFINE ('_TYPE_DESC','Payment Type Desc');
-DEFINE ('_ORDER_BY','排�?:');
-DEFINE ('_SAVED', '已�?存.');
-DEFINE ('_CANCELED', '已�?�消.');
-DEFINE ('_CONFIGURED', '�?�目�?置.');
-DEFINE ('_REMOVED', '从列表中移除�?�目.');
+DEFINE ('_ORDER_BY','排�?:');
+DEFINE ('_SAVED', '已�?存.');
+DEFINE ('_CANCELED', '已�?�消.');
+DEFINE ('_CONFIGURED', '�?�目�?置.');
+DEFINE ('_REMOVED', '从列表中移除�?�目.');
 DEFINE ('_EOT_TITLE', '关闭订阅');
-DEFINE ('_EOT_DESC', '这个列表�?包�?�人工订阅,仅支�?网关.当你删除一�?�记录时,用户将从数�?�库中移走并且清楚所有与之相关的活动记录.');
+DEFINE ('_EOT_DESC', '这个列表�?包�?�人工订阅,仅支�?网关.当你删除一�?�记录时,用户将从数�?�库中移走并且清楚所有与之相关的活动记录.');
 DEFINE ('_EOT_DATE', '到期');
 DEFINE ('_EOT_CAUSE', '原因');
 DEFINE ('_EOT_CAUSE_FAIL', '支付失败');
-DEFINE ('_EOT_CAUSE_BUYER', '被用户�?�消');
-DEFINE ('_EOT_CAUSE_FORCED', '被管�?�员�?�消');
+DEFINE ('_EOT_CAUSE_BUYER', '被用户�?�消');
+DEFINE ('_EOT_CAUSE_FORCED', '被管�?�员�?�消');
 DEFINE ('_REMOVE_CLOSED', '删除');
 DEFINE ('_FORCE_CLOSE', '马上关闭');
-DEFINE ('_PUBLISH_PAYPLAN', '�?�布');
-DEFINE ('_UNPUBLISH_PAYPLAN', '�?�?�布');
+DEFINE ('_PUBLISH_PAYPLAN', '�?�布');
+DEFINE ('_UNPUBLISH_PAYPLAN', '�?�?�布');
 DEFINE ('_NEW_PAYPLAN', '新建');
 DEFINE ('_EDIT_PAYPLAN', '编辑');
 DEFINE ('_REMOVE_PAYPLAN', '删除');
-DEFINE ('_SAVE_PAYPLAN', '�?存');
-DEFINE ('_CANCEL_PAYPLAN', '�?�消');
-DEFINE ('_PAYPLANS_TITLE', '�?�还计划的管�?�者');
-DEFINE ('_PAYPLANS_MAINDESC', '�?�布计划将被�?�?�的使用者选择,这些计划仅对网关支付事有效的.');
-DEFINE ('_PAYPLAN_NAME', '�??字');
-DEFINE ('_PAYPLAN_DESC', '�??述(�?超过50个字符)');
-DEFINE ('_PAYPLAN_ACTIVE', '�?�布');
+DEFINE ('_SAVE_PAYPLAN', '�?存');
+DEFINE ('_CANCEL_PAYPLAN', '�?�消');
+DEFINE ('_PAYPLANS_TITLE', '�?�还计划的管�?�者');
+DEFINE ('_PAYPLANS_MAINDESC', '�?�布计划将被�?�?�的使用者选择,这些计划仅对网关支付事有效的.');
+DEFINE ('_PAYPLAN_NAME', '�??字');
+DEFINE ('_PAYPLAN_DESC', '�??述(�?超过50个字符)');
+DEFINE ('_PAYPLAN_ACTIVE', '�?�布');
 DEFINE ('_PAYPLAN_VISIBLE', 'Visible');
 DEFINE ('_PAYPLAN_A3', '频率');
 DEFINE ('_PAYPLAN_P3', '时期');
-DEFINE ('_PAYPLAN_T3', '时间�?��?Period Unit');
+DEFINE ('_PAYPLAN_T3', '时间�?��?Period Unit');
 DEFINE ('_PAYPLAN_USERCOUNT', '订阅者');
 DEFINE ('_PAYPLAN_EXPIREDCOUNT', 'Expired');
 DEFINE ('_PAYPLAN_TOTALCOUNT', 'Total');
-DEFINE ('_PAYPLAN_REORDER', '�?新订阅');
+DEFINE ('_PAYPLAN_REORDER', '�?新订阅');
 DEFINE ('_PAYPLANS_HEADER', '支付计划');
 DEFINE ('_PAYPLAN_DETAIL', 'Settings');
 DEFINE ('_ALTERNATIVE_PAYMENT', '银行转账');
 DEFINE ('_SUBSCR_DATE', '注册日期');
-DEFINE ('_ACTIVE_TITLE', '当�?订阅');
-DEFINE ('_ACTIVE_DESC', '这个列表�?包�?�人工订阅,仅支�?网关.');
-DEFINE ('_LASTPAY_DATE', '最�?�支付日期');
+DEFINE ('_ACTIVE_TITLE', '当�?订阅');
+DEFINE ('_ACTIVE_DESC', '这个列表�?包�?�人工订阅,仅支�?网关.');
+DEFINE ('_LASTPAY_DATE', '最�?�支付日期');
 DEFINE ('_USERPLAN', '计划');
-DEFINE ('_CANCELLED_TITLE', '�?�消订阅');
-DEFINE ('_CANCELLED_DESC', '这个列表�?包�?�人工订阅,仅支�?网关.这些是被使用者�?�消的订阅,但是This list does not include manually set subscriptions, only Gateway processed. These are the subscriptions cancelled by users but that do not reach the end of terms.');
-DEFINE ('_CANCEL_DATE', '�?�消日期');
-DEFINE ('_MANUAL_DESC', '当你删除一个�?�目,用户将完全从数�?�库中移走.');
+DEFINE ('_CANCELLED_TITLE', '�?�消订阅');
+DEFINE ('_CANCELLED_DESC', '这个列表�?包�?�人工订阅,仅支�?网关.这些是被使用者�?�消的订阅,但是This list does not include manually set subscriptions, only Gateway processed. These are the subscriptions cancelled by users but that do not reach the end of terms.');
+DEFINE ('_CANCEL_DATE', '�?�消日期');
+DEFINE ('_MANUAL_DESC', '当你删除一个�?�目,用户将完全从数�?�库中移走.');
 DEFINE ('_REPEND_ACTIVE', 'Re-Pend');
 DEFINE ('_FILTER_PLAN', '- 方案选择 -');
 DEFINE ('_BIND_USER', 'Assign To:');
@@ -509,13 +513,13 @@ DEFINE ('_USERINVOICE_ACTION_CLEAR_APPLY','clear&nbsp;&amp;&nbsp;apply&nbsp;Plan
 // --== BACKEND SETTINGS ==--
 
 // TAB 1 - Global AEC Settings
-DEFINE ('_CFG_TAB1_TITLE', '全�?�的');
+DEFINE ('_CFG_TAB1_TITLE', '全�?�的');
 DEFINE ('_CFG_TAB1_SUBTITLE', '用户交互选择');
 
-DEFINE ('_CFG_TAB1_OPT1NAME', '过期日期�?始化:');
+DEFINE ('_CFG_TAB1_OPT1NAME', '过期日期�?始化:');
 DEFINE ('_CFG_TAB1_OPT1DESC', 'Default expiration period, in days, for new registrations. This is relative to registration date, so if you want new users be expired by default use -1 (minus one) here. This have no effect when user register using automatic payment system (e.g. PayPal Integration).');
 DEFINE ('_CFG_TAB1_OPT3NAME', '警告级别2:');
-DEFINE ('_CFG_TAB1_OPT3DESC', '几天�?�,将第一次开始通知用户他的订阅将失效.');
+DEFINE ('_CFG_TAB1_OPT3DESC', '几天�?�,将第一次开始通知用户他的订阅将失效.');
 DEFINE ('_CFG_TAB1_OPT4NAME', '警告级别1:');
 DEFINE ('_CFG_TAB1_OPT4DESC', 'In days. This is the final threshold to alert user that his subscription is about to expire. This should be the closest interval to expiration.');
 DEFINE ('_CFG_TAB1_OPT5NAME', 'Entry Plan:');
@@ -523,14 +527,14 @@ DEFINE ('_CFG_TAB1_OPT5DESC', 'Every user will be subscribed to this plan (no pa
 DEFINE ('_CFG_TAB1_OPT9NAME', 'Require Subscription:');
 DEFINE ('_CFG_TAB1_OPT9DESC', 'When enabled, a user MUST have a subscription. If disabled, users will be able to log in without one.');
 
-DEFINE ('_CFG_TAB1_OPT10NAME', '网关�??述:');
-DEFINE ('_CFG_TAB1_OPT10DESC', '你想说明的�?容许网关列表页�?�(你的�?一个客户�?试去访问一个页�?�时,他们的支付方案将�?被容许).');
+DEFINE ('_CFG_TAB1_OPT10NAME', '网关�??述:');
+DEFINE ('_CFG_TAB1_OPT10DESC', '你想说明的�?容许网关列表页�?�(你的�?一个客户�?试去访问一个页�?�时,他们的支付方案将�?被容许).');
 DEFINE ('_CFG_TAB1_OPT20NAME', 'Activated Gateways:');
 DEFINE ('_CFG_TAB1_OPT20DESC', 'Select the gateways you want to be activated (use the CTRL key to select more than one). After saving, the settings tabs for these gateways will show up. Deactivating a gateway will not erase its settings.');
 DEFINE ('_CFG_TAB1_OPT11NAME', 'Require Subscription:');
 DEFINE ('_CFG_TAB1_OPT11DESC', 'By default, a user who has no subscription set up with the AEC will be able to log in just fine. With this setting, you can make subscription a requirement.');
 DEFINE ('_CFG_ENTRYPLAN_NAME', '默认方案');
-DEFINE ('_CFG_ENTRYPLAN_DESC', '�?费试用默认的方案.');
+DEFINE ('_CFG_ENTRYPLAN_DESC', '�?费试用默认的方案.');
 
 DEFINE ('_CFG_TAB1_OPT15NAME', 'Disable Integration:');
 DEFINE ('_CFG_TAB1_OPT15DESC', 'Provide one name or a list of names (seperated by a whitespace) of integrations that you want to have disabled. Currently supporting the strings: <strong>CB,CBE,CBM,JACL,SMF,UE,UHP2,VM</strong>. This can be helpful when you have uninstalled CB but not deleted its tables (in which case the AEC would still recognize it as being installed).');
@@ -715,7 +719,7 @@ DEFINE ('_PAYPLAN_MI', 'Micro Integr.');
 DEFINE ('_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_NAME', 'Micro Integrations:');
 DEFINE ('_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_DESC', 'Select the Micro Integrations that you want to apply to the user with the plan.');
 
-DEFINE ('_PAYPLAN_CURRENCY', '�?通');
+DEFINE ('_PAYPLAN_CURRENCY', '�?通');
 
 DEFINE ('_CURRENCY_AFA', 'Afghani');
 DEFINE ('_CURRENCY_ALL', 'Lek');
@@ -1007,7 +1011,7 @@ DEFINE ('_METHOD', '方法');
 // --== PENDING PAGE ==--
 DEFINE ('_PEND_DATE', '尚未决定');
 DEFINE ('_PEND_TITLE', '尚未预订');
-DEFINE ('_PEND_DESC', '未处�?�完的预订.系统将等待在一段时间内等待支付.');
+DEFINE ('_PEND_DESC', '未处�?�完的预订.系统将等待在一段时间内等待支付.');
 DEFINE ('_ACTIVATE', '激活');
 DEFINE ('_ACTIVATED', '用户已激活.');
 

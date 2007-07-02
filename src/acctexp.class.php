@@ -3790,6 +3790,17 @@ class AECToolbox {
 	 * @parameter url
 	 * @return string
 	 */
+	function backendTaskLink( $task, $text ) {
+		global $mosConfig_live_site
+
+		return '<a href="' .  $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&amp;task=' . $task . '" target="_blank" title="' . $text . '">' . $text . '</a>';
+	}
+
+	/**
+	 * Return a URL based on the sef and user settings
+	 * @parameter url
+	 * @return string
+	 */
 	function deadsureURL( $url ) {
 		global $mosConfig_live_site, $mosConfig_absolute_path, $database;
 

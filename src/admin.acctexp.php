@@ -637,7 +637,7 @@ function help ( $option ) {
 	 */
 	$diagnose	= array();
 
-	$diagnose[]	= array( _AEC_HELP_QS_HEADER, 1, 1, aecHTML::Icon( 'page_white_acrobat.png' ) . _AEC_HELP_QS_DESC, '', 0 );
+	$diagnose[]	= array( _AEC_HELP_QS_HEADER, 1, 1, aecHTML::Icon( 'page_white_acrobat.png' ) . sprintf( _AEC_HELP_QS_DESC, '<a href="' . $mosConfig_live_site . '/administrator/components/com_acctexp/manual/AEC_Quickstart.pdf" target="_blank" title="' . _AEC_HELP_QS_DESC_LTEXT . '">' . _AEC_HELP_QS_DESC_LTEXT . '</a>' ), '', 0 );
 
 /*
 	$diagnose[]	= array("AEC Version", $diagnostic['AEC_stable'], 1, "You are running the most recent stable Version of the AEC", 0, 1);
