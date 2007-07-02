@@ -1267,8 +1267,57 @@ class Config_General extends paramDBTable {
 		$this->load(1);
 
 		$this->cfg = $this->getParams( 'settings' );
+
+		if( $this->cfg === false ) {
+			$this->initParams();
+			$this->cfg = $this->getParams( 'settings' );
+		}
 	}
 
+	function initParams() {
+		$settings_defaults = array();
+		$settings_defaults['require_subscription']				= 0;
+		$settings_defaults['alertlevel2']						= 7;
+		$settings_defaults['alertlevel1']						= 3;
+		$settings_defaults['expiration_cushion']				= 12;
+		$settings_defaults['heartbeat_cycle']					= 24;
+		$settings_defaults['heartbeat_cycle_backend']			= 1;
+		$settings_defaults['plans_first']						= 0;
+		$settings_defaults['simpleurls']						= 0;
+		$settings_defaults['display_date_frontend']				= "%a, %d %b %Y %T %Z";
+		$settings_defaults['display_date_backend']				= "%a, %d %b %Y %T %Z";
+		$settings_defaults['enable_mimeta']						= 0;
+		$settings_defaults['enable_coupons']					= 0;
+		$settings_defaults['milist']							= "mi_email;mi_htaccess;mi_mysql_query;mi_email;mi_virtuemart";
+		$settings_defaults['displayccinfo']						= 1;
+		$settings_defaults['customtext_confirm_keeporiginal']	= 1;
+		$settings_defaults['customtext_checkout_keeporiginal']	= 1;
+		$settings_defaults['customtext_notallowed_keeporiginal'] = 1;
+		$settings_defaults['customtext_pending_keeporiginal']	= 1;
+		$settings_defaults['customtext_expired_keeporiginal']	= 1;
+		// new 0.12.4
+		$settings_defaults['activate_paid']						= 1;
+		$settings_defaults['transfer']							= 0;
+		$settings_defaults['bypassintegration']					= 0;
+		$settings_defaults['customintro']						= '';
+		$settings_defaults['customthanks']						= '';
+		$settings_defaults['customcancel']						= '';
+		$settings_defaults['customnotallowed']					= '';
+		$settings_defaults['tos']								= '';
+		$settings_defaults['customtext_plans']					= '';
+		$settings_defaults['customtext_confirm']				= '';
+		$settings_defaults['customtext_checkout']				= '';
+		$settings_defaults['customtext_notallowed']				= '';
+		$settings_defaults['customtext_pending']				= '';
+		$settings_defaults['customtext_expired']				= '';
+		$settings_defaults['transferinfo']						= '';
+
+		// Write to Params, do not overwrite existing data
+		$this->addParams( $settings_defaults, 'settings', false );
+
+		return true;
+	}
+	
 	function saveSettings () {
 		$settings = array();
 		foreach ($this->cfg as $key => $value ) {
@@ -3264,7 +3313,7 @@ class Subscription extends paramDBTable {
 			if( strcmp( $this->status, 'Trial' ) === 0 ) {
 				$params = array( 'trialflag' => 1 );
 				$this->addParams( $params );
-			}else{
+			}elseif( in_array( $params, 'trialflag' ) ) {
 				$params = array( 'trialflag' );
 				$this->delParams( $params );
 			}
@@ -4044,7 +4093,6 @@ class AECToolbox {
 }
 
 class microIntegrationHandler {
-
 
 	function microIntegrationHandler () {
 		global $mainframe;

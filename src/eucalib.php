@@ -86,10 +86,16 @@ class paramDBTable extends mosDBTable {
 	/**
 	 * Add an array of Parameters to an existing parameter field
 	 */
-	function addParams( $array, $field = 'params' ) {
+	function addParams( $array, $field = 'params', $overwrite = true ) {
 		$params = $this->getParams( $field );
 		foreach( $array as $key => $value ) {
-			$params[$key] = $value;
+			if( $overwrite ) {
+				$params[$key] = $value;
+			}else{
+				if( !isset( $params[$key] ){
+					$params[$key] = $value;
+				}
+			}
 		}
 		$this->setParams ($params, $field);
 	}
@@ -101,7 +107,7 @@ class paramDBTable extends mosDBTable {
 		$params = $this->getParams( $field );
 		foreach( $array as $key ) {
 			if( isset( $params[$key] ) ) {
-				unset( $params );
+				unset( $params[$key] );
 			}
 		}
 		$this->setParams( $params, $field );

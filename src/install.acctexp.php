@@ -908,7 +908,7 @@ function com_install() {
 		 * initialize new database
 		 */
 		// now set some standard values
-		$cfg = new Config_General($database);
+
 
 		$result = null;
 
@@ -916,6 +916,8 @@ function com_install() {
 		$database->loadObject($result);
 
 		if( !( strcmp( $result->Field, 'settings' ) === 0 ) ) {
+			$cfg = new Config_General($database);
+
 			$columns = array("transferinfo", "initialexp", "alertlevel1", "alertlevel2", "alertlevel3", "gwlist", "customintro", "customthanks", "customcancel", "bypassintegration", "simpleurls", "expiration_cushion", "currency_code", "heartbeat_cycle", "tos", "require_subscription", "entry_plan", "plans_first", "transfer", "checkusername", "activate_paid" );
 
 			foreach ($columns as $column) {
@@ -940,55 +942,6 @@ function com_install() {
 
 			$cfg->saveSettings();
 		}
-
-		// Init Settings default variables
-
-		$settings_defaults = array();
-		$settings_defaults['require_subscription']				= 0;
-		$settings_defaults['alertlevel2']						= 7;
-		$settings_defaults['alertlevel1']						= 3;
-		$settings_defaults['expiration_cushion']				= 12;
-		$settings_defaults['heartbeat_cycle']					= 24;
-		$settings_defaults['heartbeat_cycle_backend']			= 1;
-		$settings_defaults['plans_first']						= 0;
-		$settings_defaults['simpleurls']						= 0;
-		$settings_defaults['display_date_frontend']				= "%a, %d %b %Y %T %Z";
-		$settings_defaults['display_date_backend']				= "%a, %d %b %Y %T %Z";
-		$settings_defaults['enable_mimeta']						= 0;
-		$settings_defaults['enable_coupons']					= 0;
-		$settings_defaults['milist']							= "mi_email;mi_htaccess;mi_mysql_query;mi_email;mi_virtuemart";
-		$settings_defaults['displayccinfo']						= 1;
-		$settings_defaults['customtext_confirm_keeporiginal']	= 1;
-		$settings_defaults['customtext_checkout_keeporiginal']	= 1;
-		$settings_defaults['customtext_notallowed_keeporiginal'] = 1;
-		$settings_defaults['customtext_pending_keeporiginal']	= 1;
-		$settings_defaults['customtext_expired_keeporiginal']	= 1;
-		// new 0.12.4
-		$settings_defaults['activate_paid']						= 1;
-		$settings_defaults['transfer']							= 0;
-		$settings_defaults['bypassintegration']					= 0;
-		$settings_defaults['customintro']						= '';
-		$settings_defaults['customthanks']						= '';
-		$settings_defaults['customcancel']						= '';
-		$settings_defaults['customnotallowed']					= '';
-		$settings_defaults['tos']								= '';
-		$settings_defaults['customtext_plans']					= '';
-		$settings_defaults['customtext_confirm']				= '';
-		$settings_defaults['customtext_checkout']				= '';
-		$settings_defaults['customtext_notallowed']				= '';
-		$settings_defaults['customtext_pending']				= '';
-		$settings_defaults['customtext_expired']				= '';
-		$settings_defaults['transferinfo']						= '';
-
-		foreach( $settings_defaults as $name => $value ) {
-			if( !isset( $cfg->cfg[$name] ) || ( $cfg->cfg[$name] == '' ) ) {
-				$cfg->cfg[$name] = $value;
-			}elseif( is_null( $cfg->cfg[$name] ) ) {
-				$cfg->cfg[$name] = $value;
-			}
-		}
-
-		$cfg->saveSettings();
 
 		$result = null;
 		$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'maxgid'");
