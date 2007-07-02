@@ -2104,7 +2104,7 @@ class InvoiceFactory {
 		if( !$this->userid ) {
 			// Creating a dummy user object
 			$metaUser = new metaUser( 0 );
-			$metaUser->cmsUser->gid = 18;
+			$metaUser->cmsUser->gid = 29;
 			$register = 1;
 		}else{
 			// Loading the actual user
