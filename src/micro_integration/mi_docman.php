@@ -66,15 +66,16 @@ class mi_docman {
 		}
 
         $settings = array();
-		$settings['add_downloads']		= array( 'inputA', 'ADD', _AEC_MI_SET1_DOCMAN );
-		$settings['set_downloads']		= array( 'inputA', 'SET', _AEC_MI_SET2_DOCMAN );
+		$settings['add_downloads']		= array( 'inputA' );
+		$settings['set_downloads']		= array( 'inputA' );
+
 		$settings['lists']['group']		= mosHTML::selectList( $sg, 'group', 'size="4"', 'value', 'text', $params['group'] );
 		$settings['lists']['group_exp'] = mosHTML::selectList( $sg, 'group_exp', 'size="4"', 'value', 'text',
 										$params['group_exp'] );
-		$settings['set_group']			= array( 'list_yesno', _AEC_MI_SET3_DOCMAN, _AEC_MI_SET3_1_DOCMAN );
-		$settings['group']				= array( 'list', _AEC_MI_SET4_DOCMAN, _AEC_MI_SET4_1_DOCMAN );
-		$settings['set_group_exp']		= array( 'list_yesno', _AEC_MI_SET5_DOCMAN, _AEC_MI_SET5_1_DOCMAN );
-		$settings['group_exp']			= array( 'list', _AEC_MI_SET6_DOCMAN, _AEC_MI_SET6_1_DOCMAN );
+		$settings['set_group']			= array( 'list_yesno' );
+		$settings['group']				= array( 'list' );
+		$settings['set_group_exp']		= array( 'list_yesno' );
+		$settings['group_exp']			= array( 'list' );
 
 		return $settings;
 	}

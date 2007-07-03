@@ -40,10 +40,10 @@ class mi_virtuemart {
 		$settings['lists']['shopper_group_exp'] = mosHTML::selectList( $sg, 'shopper_group_exp', 'size="4"', 'value', 'text',
 												$params['shopper_group_exp'] );
 
-		$settings['set_shopper_group']			= array( 'list_yesno', _AEC_MI_SET1_VIRTM, _AEC_MI_SET1_1_VIRTM );
-		$settings['shopper_group']				= array( 'list', _AEC_MI_SET2_VIRTM, _AEC_MI_SET2_1_VIRTM);
-		$settings['set_shopper_group_exp']		= array( 'list_yesno', _AEC_MI_SET3_VIRTM, _AEC_MI_SET3_1_VIRTM);
-		$settings['shopper_group_exp']			= array( 'list', _AEC_MI_SET4_VIRTM, _AEC_MI_SET4_1_VIRTM );
+		$settings['set_shopper_group']			= array( 'list_yesno' );
+		$settings['shopper_group']				= array( 'list' );
+		$settings['set_shopper_group_exp']		= array( 'list_yesno' );
+		$settings['shopper_group_exp']			= array( 'list' );
 
 		return $settings;
 	}

@@ -22,9 +22,9 @@ class mi_mysql_query {
 
 	function Settings( $params ) {
         $settings = array();
-        $settings['query']			= array( 'inputD', _AEC_MI_SET1_MYSQL, _AEC_MI_SET1_1_MYSQL);
-        $settings['query_exp']		= array( 'inputD', _AEC_MI_SET2_MYSQL, _AEC_MI_SET2_1_MYSQL );
-        $settings['query_pre_exp']	= array( 'inputD', _AEC_MI_SET3_MYSQL, _AEC_MI_SET3_1_MYSQL );
+        $settings['query']			= array( 'inputD' );
+        $settings['query_exp']		= array( 'inputD' );
+        $settings['query_pre_exp']	= array( 'inputD' );
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
 		$settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_SET4_MYSQL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 

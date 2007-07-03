@@ -51,8 +51,8 @@ class mi_mosets_tree {
 		// field type; name; variable value, description, extra (variable name)
 
 		$settings = array();
-		$settings['add_listings'] = array( 'inputA', 'ADD', _AEC_MI_SET1_MOSETS );
-		$settings['set_listings'] = array( 'inputA', 'SET', _AEC_MI_SET1_1_MOSETS );
+		$settings['add_listings'] = array( 'inputA' );
+		$settings['set_listings'] = array( 'inputA' );
 
 		return $settings;
 	}

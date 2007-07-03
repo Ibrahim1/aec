@@ -48,8 +48,8 @@ class mi_acajoom {
 		$settings['lists']['list']		= mosHTML::selectList($li, 'list', 'size="4"', 'value', 'text', $params['list']);
 		$settings['lists']['list_exp']	= mosHTML::selectList($li, 'list_exp', 'size="4"', 'value', 'text', $params['list_exp']);
 
-		$settings[] = array( 'inputA',	'Name',		'description' );
-		$settings[] = array( 'inputD',	'SET',		'description2' );
+		$settings[] = array( 'inputA' );
+		$settings[] = array( 'inputD' );
 
 		return $settings;
 	}

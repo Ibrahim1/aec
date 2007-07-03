@@ -34,8 +34,8 @@ class mi_idevaffiliate {
 
 	function Settings( $params ) {
 		$settings = array();
-		$settings['mi_order_id']		= array( 'inputA', _AEC_MI_SET1_IDEV, _AEC_MI_SET1_1_IDEV );
-		$settings['mi_order_subtotal']	= array( 'inputB', _AEC_MI_SET2_IDEV, _AEC_MI_SET2_1_IDEV );
+		$settings['mi_order_id']		= array( 'inputA' );
+		$settings['mi_order_subtotal']	= array( 'inputB' );
 		return $settings;
 	}
 

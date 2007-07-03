@@ -55,12 +55,11 @@ class mi_htaccess {
 
 		$settings = array();
 		// field type; name; variable value, description, extra (variable name)
-		$settings['mi_folder']			= array( 'inputC', _AEC_MI_SET1_HTACCESS,
-										sprintf( _AEC_MI_SET1_1_HTACCESS, $mosConfig_absolute_path ) );
-		$settings['mi_passwordfolder']	= array( 'inputC', _AEC_MI_SET2_HTACCESS, _AEC_MI_SET2_1_HTACCESS );
-		$settings['mi_name']			= array( 'inputC', _AEC_MI_SET3_HTACCESS, _AEC_MI_SET3_1_HTACCESS );
-		$settings['use_md5']			= array( 'list_yesno', _AEC_MI_SET4_HTACCESS, _AEC_MI_SET4_1_HTACCESS );
-		$settings['rebuild']			= array( 'list_yesno', _AEC_MI_SET5_HTACCESS, _AEC_MI_SET5_1_HTACCESS);
+		$settings['mi_folder']			= array( 'inputC' );
+		$settings['mi_passwordfolder']	= array( 'inputC' );
+		$settings['mi_name']			= array( 'inputC' );
+		$settings['use_md5']			= array( 'list_yesno' );
+		$settings['rebuild']			= array( 'list_yesno' );
 
 		return $settings;
 	}

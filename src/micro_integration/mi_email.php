@@ -50,22 +50,22 @@ class mi_email {
 
 	function Settings ( $params ) {
 		$settings = array();
-		$settings['sender']				= array( 'inputE', _AEC_MI_SET1_EMAIL, _AEC_MI_SET1_1_EMAIL );
-		$settings['sender_name']		= array( 'inputE', _AEC_MI_SET2_EMAIL, _AEC_MI_SET2_1_EMAIL );
+		$settings['sender']				= array( 'inputE' );
+		$settings['sender_name']		= array( 'inputE' );
 
-		$settings['recipient']			= array( 'inputE', _AEC_MI_SET3_EMAIL, _AEC_MI_SET3_1_EMAIL);
+		$settings['recipient']			= array( 'inputE' );
 
-		$settings['subject']			= array( 'inputE', _AEC_MI_SET4_EMAIL, _AEC_MI_SET4_1_EMAIL );
-		$settings['text_html']			= array( 'list_yesno', _AEC_MI_SET5_EMAIL, _AEC_MI_SET5_1_EMAIL );
-		$settings['text']				= array( 'editor', _AEC_MI_SET6_EMAIL, _AEC_MI_SET6_1_EMAIL );
+		$settings['subject']			= array( 'inputE' );
+		$settings['text_html']			= array( 'list_yesno' );
+		$settings['text']				= array( 'editor' );
 
-		$settings['subject_exp']		= array( 'inputE', _AEC_MI_SET7_EMAIL, _AEC_MI_SET7_1_EMAIL );
-		$settings['text_exp_html']		= array( 'list_yesno', _AEC_MI_SET5_EMAIL, _AEC_MI_SET5_1_EMAIL);
-		$settings['text_exp']			= array( 'editor', _AEC_MI_SET8_EMAIL, _AEC_MI_SET_8_1_EMAIL);
+		$settings['subject_exp']		= array( 'inputE' );
+		$settings['text_exp_html']		= array( 'list_yesno' );
+		$settings['text_exp']			= array( 'editor' );
 
-		$settings['subject_pre_exp']	= array( 'inputE', _AEC_MI_SET9_EMAIL, _AEC_MI_SET9_1_EMAIL );
-		$settings['text_pre_exp_html']	= array( 'list_yesno', _AEC_MI_SET5_EMAIL, _AEC_MI_SET5_1_EMAIL );
-		$settings['text_pre_exp']		= array( 'editor', _AEC_MI_SET10_EMAIL, _AEC_MI_SET10_1_EMAIL );
+		$settings['subject_pre_exp']	= array( 'inputE' );
+		$settings['text_pre_exp_html']	= array( 'list_yesno' );
+		$settings['text_pre_exp']		= array( 'editor' );
 
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
 		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL,

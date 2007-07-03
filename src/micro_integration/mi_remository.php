@@ -63,16 +63,16 @@ class mi_remository {
 		}
 
         $settings = array();
-		$settings['add_downloads']		= array( 'inputA', 'ADD', _AEC_MI_SET1_REMOS );
-		$settings['set_downloads']		= array( 'inputA', 'SET', _AEC_MI_SET1_1_REMOS );
+		$settings['add_downloads']		= array( 'inputA' );
+		$settings['set_downloads']		= array( 'inputA' );
 
 		$settings['lists']['group']		= mosHTML::selectList($sg, 'group', 'size="4"', 'value', 'text', $params['group']);
 		$settings['lists']['group_exp'] = mosHTML::selectList($sg, 'group_exp', 'size="4"', 'value', 'text',
 										$params['group_exp']);
 
-		$settings['set_group']			= array( 'list_yesno', _AEC_MI_SET2_REMOS, _AEC_MI_SET2_1_REMOS );
-		$settings['group']				= array( 'list', _AEC_MI_SET3_REMOS, _AEC_MI_SET3_1_REMOS );
-		$settings['set_group_exp']		= array( 'list_yesno', _AEC_MI_SET4_R_AEC_MI_SET5_1_REMOS );
+		$settings['set_group']			= array( 'list_yesno' );
+		$settings['group']				= array( 'list' );
+		$settings['set_group_exp']		= array( 'list_yesno' );
 
 		return $settings;
 	}
