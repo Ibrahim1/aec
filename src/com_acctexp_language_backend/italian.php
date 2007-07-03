@@ -75,8 +75,9 @@ define( '_AEC_CMN_NOT_SET',						'Not set' );
 define( '_AEC_CMN_SEARCH',						'Search' );
 define( '_AEC_CMN_APPLY',						'Apply' );
 define( '_AEC_CMN_STATUS',						'Status' );
-
 define( '_AEC_FEATURE_NOT_ACTIVE',				'This feature is not active yet' );
+define( '_AEC_CMN_YES',							'Yes' );
+define( '_AEC_CMN_NO',							'No' );
 
 // user(info)
 define( '_AEC_USER_USER_INFO',					'User Info' );
@@ -159,6 +160,12 @@ define( '_AEC_HACKS_REG4',						'This Hack will transmit the AEC variables from 
 define( '_AEC_HACKS_MI1',						'Some Micro Integrations rely on receiving a cleartext password for each user. This hack will make sure that the Micro Integrations will be notified when a user changes his/her account.' );
 define( '_AEC_HACKS_MI2',						'Some Micro Integrations rely on receiving a cleartext password for each user. This hack will make sure that the Micro Integrations will be notified when a user registers an account.' );
 define( '_AEC_HACKS_MI3',						'Some Micro Integrations rely on receiving a cleartext password for each user. This hack will make sure that the Micro Integrations will be notified when an admin changes a user-account.' );
+define( '_AEC_HACKS_CB2',						'This will redirect a registering user to the payment plans after filling out the registration form in CB. Leave this alone to have plan selection only on login (if \'Require Subscription\' is active), or completely voluntary (without requiring a subscription). <strong>Please note that there are two hacks following this, once you have committed it! If you want to have the plans before the user details, these are required as well.</strong>' );
+define( '_AEC_HACKS_CB6',						'This will redirect the user to the payment plans page when he or she has not made that selection yet.' );
+define( '_AEC_HACKS_CB_HTML2',					'This Hack will transmit the AEC variables from the user details form. <strong>In order to make this work, set \'Plans First\' in the AEC Settings.</strong>' );
+define( '_AEC_HACKS_UHP2',						'UHP2 Menu Entry' );
+define( '_AEC_HACKS_UHP2_DESC',					'Adds a <strong>' . _AEC_SPEC_MENU_ENTRY . '</strong> menu entry to the UHP2 Usermenu. With this, a user can manage his invoices and upgrade/renew his or her subscription.' );
+define( '_AEC_HACKS_CBM',						'If you are using the Comprofiler Moderator Module, you have to hack it in order to prevent an infinite loops issue.' );
 
 // log
 	// settings
@@ -218,6 +225,21 @@ define( '_AEC_HELP_DIAG_CMN2_DESC',				'A link to a MySubscription page for your
 define( '_AEC_HELP_DIAG_CMN2_DESC2',			'Go to the Hacks page and create the link.' );
 define( '_AEC_HELP_DIAG_CMN3',					'JACL not installed' );
 define( '_AEC_HELP_DIAG_CMN3_DESC',				'If you plan to install JACLplus in your joomla!/mambo system, please make sure that the AEC hacks are not committed when doing so. If you have already committed them, you can easily undo them in our hacks page.' );
+define( '_AEC_HELP_DIAG_NO_PAY_PLAN',			'No Active Payment Plan!' );
+define( '_AEC_HELP_DIAG_NO_PAY_PLAN_DESC',		'There seems to be no Payment Plan published yet - The AEC needs at least one active plan to function' );
+define( '_AEC_HELP_DIAG_GLOBAL_PLAN',			'Global Entry Plan' );
+define( '_AEC_HELP_DIAG_GLOBAL_PLAN_DESC',		'There is a Global Entry Plan active in your configuration. If you are not sure what this is, you should probably disable it - Its an entry plan that each new user will be assigned to without having a choice.' );
+define( '_AEC_HELP_DIAG_SERVER_NOT_REACHABLE',	'Server Apparantly Not Reachable' );
+define( '_AEC_HELP_DIAG_SERVER_NOT_REACHABLE_DESC',	'It seems that you have installed the AEC on a local machine. In order to retrieve notifications (and thus to have the component work correctly), you need to install it on a server that is reachable by a fixed IP or Domain!' );
+define( '_AEC_HELP_DIAG_SITE_OFFLINE',			'Site Offline' );
+define( '_AEC_HELP_DIAG_SITE_OFFLINE_DESC',		'You have decided to take your site offline - please note that this can have an effect on notification processes and thus on your payment workflow.' );
+define( '_AEC_HELP_DIAG_REG_DISABLED',			'User Registration Disabled' );
+define( '_AEC_HELP_DIAG_REG_DISABLED_DESC',		'Your User Registration is disabled. This way, no new customer can subscribe to your website.' );
+define( '_AEC_HELP_DIAG_LOGIN_DISABLED',		'User Login Disabled' );
+define( '_AEC_HELP_DIAG_LOGIN_DISABLED_DESC',	'Your have disabled the Frontend Login functionality. Because of this, none of your customers can use your website.' );
+define( '_AEC_HELP_DIAG_PAYPAL_BUSS_ID',		'Paypal Check Business ID' );
+define( '_AEC_HELP_DIAG_PAYPAL_BUSS_ID_DESC',	'This routine checks for a matching paypal business ID to enhance security with Paypal Transactions.' );
+define( '_AEC_HELP_DIAG_PAYPAL_BUSS_ID_DESC1',	'Please disable this setting in case you encounter problems where you receive payments correctly, but without users being enabled. Disable the Setting in general in case you are using multiple e-mail adresses with your Paypal account.' );
 
 // micro integration
 	// general
