@@ -820,7 +820,7 @@ class HTML_AcctExp {
 							<a href="http://www.globalnerd.org"> <img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/globalnerd_logo_tiny.png" border="0" alt="globalnerd" width="44" height="44" /></a>
 							<p><?php echo _AEC_FOOT_TX_GPL; ?></p>
 							<p><?php echo _AEC_FOOT_TX_SUBSCRIBE; ?></p>
-							<p><?php echo _AEC_FOOT_CREDIT; ?></p>
+							<p><?php printf( _AEC_FOOT_CREDIT, AECToolbox::backendTaskLink( 'credits', _AEC_FOOT_CREDIT_LTEXT ) ); ?></p>
 						</div>
 					</div>
 				</td>
@@ -1337,16 +1337,15 @@ class HTML_AcctExp {
 								</td>
 							</tr>
 							<?php
-							if( !is_null( $aecHTML ) ) { ?>
+							if( is_null( $aecHTML ) ) { ?>
 								<tr>
 									<td><?php echo _MI_E_FUNCTION_NAME; ?></td>
 									<td>
 										<?php
 										if( $lists['class_name'] ) {
 											echo $lists['class_name']; ?>
-											&nbsp;
+											<br />
 											<?php echo _MI_E_FUNCTION_DESC;
-											echo '#########################';
 										}else{
 											echo _AEC_MSG_MIS_NOT_DEFINED;
 										} ?>
