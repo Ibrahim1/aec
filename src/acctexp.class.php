@@ -3313,7 +3313,7 @@ class Subscription extends paramDBTable {
 			if( strcmp( $this->status, 'Trial' ) === 0 ) {
 				$params = array( 'trialflag' => 1 );
 				$this->addParams( $params );
-			}elseif( in_array( $params, 'trialflag' ) ) {
+			}elseif( in_array( 'trialflag', $params ) ) {
 				$params = array( 'trialflag' );
 				$this->delParams( $params );
 			}
@@ -3998,6 +3998,31 @@ class AECToolbox {
    		}
    		$handle->close();
    		return $dirArray;
+	}
+
+	function visualstrlen( $string ) {
+
+		// Visually Short Chars
+		$srt = array( 'i', 'j', 'l' );
+		// Visually Long Chars
+		$lng = array( 'm', 'w', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Y', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' );
+
+		// Break String into individual characters
+		$char_array = preg_split( '#(?<=.)(?=.)#s', $string );
+
+		$vlen = 0;
+		// Iterate through array counting the visual length of the string
+		foreach( $char_array as $char ) {
+			if( in_array( $char, $srt ) ) {
+				$vlen += 1;
+			} elseif( in_array( $char, $srt ) ) {
+				$vlen += 3;
+			} else {
+				$vlen += 2;
+			}
+		}
+
+		return $vlen;
 	}
 
 	function rewriteEngine( $subject, $metaUser=null, $subscriptionPlan=null ) {
