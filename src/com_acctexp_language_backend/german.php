@@ -561,7 +561,7 @@ define( '_CFG_TAB1_OPT9DESC',			'Wenn aktiviert, <strong>muss</strong> der Benut
 define( '_CFG_TAB1_OPT10NAME',			'Gateway Erkl&auml;rungen:' );
 define( '_CFG_TAB1_OPT10DESC',			'Hier Bezahlm&ouml;glichkeiten markieren welche auf der Nichterlaubt-Seite angezeigt werden sollen (diese Liste sehen die Benutzer, wenn sie versuchen eine Seite anzusehen f&uuml;r die sie keine Berechtigung haben).<br />Hinweis: es werden nur die oben, zur Zeit Aktiven angezeigt' );
 define( '_CFG_TAB1_OPT20NAME',			'Aktivierte Zahlungsgateways:' );
-define( '_CFG_TAB1_OPT20DESC',			'Alle Gateways markieren welche aktiv sein sollen (STRG-Taste dr&uuml;cken f&uuml;r mehrere). Nach dem Sichern wirden die Gatewayeinstellungen angezeigt - deaktivieren eines Gateways l&ouml;scht nicht die bisherigen Einstellungen.' );
+define( '_CFG_TAB1_OPT20DESC',			'Alle Gateways markieren welche aktiv sein sollen (STRG-Taste dr&uuml;cken f&uuml;r mehrere).<br /><strong>Um die ge&auml;nderten Einstellungen anzuzeigen, den Button Speichern anklicken</strong><br />Deaktivieren eines Gateways l&ouml;scht nicht die bisherigen Einstellungen.' );
 define( '_CFG_TAB1_OPT11NAME',			'Erfordert Abschluss:' );
 define( '_CFG_TAB1_OPT11DESC',			'Als Standardvorgabe gilt, wenn ein Benutzer kein Abo besitzt kann er sich trotzdem einloggen. Mit dieser Einstellung <strong>muss</strong> er ein Abo abschliessen.' );
 define( '_CFG_ENTRYPLAN_NAME',			'Standard Probeplan' );
