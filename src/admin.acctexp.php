@@ -1997,7 +1997,7 @@ function editSettings( $option ) {
 	}
 
 	$lists['gwlist_enabled']	= mosHTML::selectList($gw_list_html, 'gwlist_enabled[]', 'size="' . max(min(count($gwlist), 12), 2) . '" multiple', 'value', 'text', $gw_list_enabled);
-	$lists['gwlist']			= mosHTML::selectList($gw_list_enabled_html, 'gwlist[]', 'size="' . max(min(count($gw_list_enabled), 12), 2) . '" multiple', 'value', 'text', $gwlist_selected);
+	$lists['gwlist']			= mosHTML::selectList($gw_list_enabled_html, 'gwlist[]', 'size="' . max(min(count($gw_list_enabled), 12), 3) . '" multiple', 'value', 'text', $gwlist_selected);
 
 	// Tab: Offline Payment
 	$tab = array();
