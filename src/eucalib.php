@@ -5,7 +5,7 @@
  * @subpackage Abstract Library for Joomla Components
  * @copyright Copyright (C) 2007 David Deutsch, All Rights Reserved
  * @author David Deutsch <skore@skore.de>
- * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
+ * @license GNU/GPL v.2 or later http://www.gnu.org/copyleft/gpl.html
  *
  * The Extremely Useful Component LIBrary will rock your socks. Seriously. Reuse it!
  */
