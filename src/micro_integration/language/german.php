@@ -19,21 +19,21 @@ if( defined( '_AEC_LANG_MI_INCLUDED' ) ) {
 
 // acajoom
 define( '_AEC_MI_NAME_ACAJOOM',		'Acajoom' );
-define( '_AEC_MI_DESC_ACAJOOM',		'Binded den Newsletter Acajoom ein (freie Version)' );
+define( '_AEC_MI_DESC_ACAJOOM',		'Bindet den Newsletter Acajoom ein (freie Version)' );
 
 // htaccess
 define( '_AEC_MI_NAME_HTACCESS',	'.htaccess' );
 define( '_AEC_MI_DESC_HTACCESS',	'Sch&uuml;tzt einen Ordner mit einer .htaccess Datei und erlaubt nur berechtigten Abonnenten Zugriff darauf' );
-define( '_AEC_MI_SET1_HTACCESS',	'Ordner' );
-define( '_AEC_MI_SET1_1_HTACCESS',	'Der zu sch&uuml;tzende Ordner. Folgende Schl&uuml;sselw&ouml;rter werden ersetzt<br />[cmsstammordner] -> %s<br />Hinweis: keine abschie&szlig;ender Slash - der Ordnername darf ebenso keinen haben!' );
-define( '_AEC_MI_SET2_HTACCESS',	'Passwortordner' );
-define( '_AEC_MI_SET2_1_HTACCESS',	'Datei f&uuml;r die Passw&oumlrter. Sollte <strong>nicht</strong> innerhalb des vom Web zug&auml;glichen CMS gespeichert werden!' );
-define( '_AEC_MI_SET3_HTACCESS',	'Bereichsname' );
-define( '_AEC_MI_SET3_1_HTACCESS',	'Name des gesch&uuml;tzten Bereiches' );
-define( '_AEC_MI_SET4_HTACCESS',	'md5 verwenden' );
-define( '_AEC_MI_SET4_1_HTACCESS',	'<strong>Wichtig!</strong> Wenn diese Integration verwendet werden soll, um Ordner auf einem Apacheserver zu sch&uuml;tzen, muss "crypt" verwendet werden. In so einem Fall hier auf "Nein" einstellen.<br />Wird jedoch eine andere Software/anderer Server (wie z.B. ein icecast Server), dann hier auf "Ja" stellen, es wird dann die Standard md5 Verschl&uuml;sselung verwendet.' );
-define( '_AEC_MI_SET5_HTACCESS',	'Wiederherstellung' );
-define( '_AEC_MI_SET5_1_HTACCESS',	'Sollte die htaccess-Datei ge&auml;ndert oder diese gel&ouml;scht werden, stellt diese Einstellung sicher, da&szlig; die gesamte .htaccess Wiederhergestellt wird' );
+define( '_MI_MI_HTACCESS_MI_FOLDER_NAME',	'Ordner' );
+define( '_MI_MI_HTACCESS_MI_FOLDER_DESC',	'Der zu sch&uuml;tzende Ordner. Folgende Schl&uuml;sselw&ouml;rter werden ersetzt<br />[cmsstammordner] -> %s<br />Hinweis: keine abschie&szlig;ender Slash - der Ordnername darf ebenso keinen haben!' );
+define( '_MI_MI_HTACCESS_MI_PASSWORDFOLDER_NAME',	'Passwortordner' );
+define( '_MI_MI_HTACCESS_MI_PASSWORDFOLDER_DESC',	'Datei f&uuml;r die Passw&oumlrter. Sollte <strong>nicht</strong> innerhalb des vom Web zug&auml;glichen CMS gespeichert werden!' );
+define( '_MI_MI_HTACCESS_MI_NAME_NAME',	'Bereichsname' );
+define( '_MI_MI_HTACCESS_MI_NAME_DESC',	'Name des gesch&uuml;tzten Bereiches' );
+define( '_MI_MI_HTACCESS_USE_MD5_NAME',	'md5 verwenden' );
+define( '_MI_MI_HTACCESS_USE_MD5_DESC',	'<strong>Wichtig!</strong> Wenn diese Integration verwendet werden soll, um Ordner auf einem Apacheserver zu sch&uuml;tzen, muss "crypt" verwendet werden. In so einem Fall hier auf "Nein" einstellen.<br />Wird jedoch eine andere Software/anderer Server (wie z.B. ein icecast Server), dann hier auf "Ja" stellen, es wird dann die Standard md5 Verschl&uuml;sselung verwendet.' );
+define( '_MI_MI_HTACCESS_REBUILD_NAME',	'Wiederherstellung' );
+define( '_MI_MI_HTACCESS_REBUILD_DESC',	'Sollte die htaccess-Datei ge&auml;ndert oder diese gel&ouml;scht werden, stellt diese Einstellung sicher, da&szlig; die gesamte .htaccess Wiederhergestellt wird' );
 
 //affiliate PRO
 define( '_AEC_MI_NAME_AFFPRO',		'AffiliatePRO' );
@@ -63,26 +63,30 @@ define( '_AEC_MI_HACK1_DOCMAN',		'Erstellt eine Downloadeinschr&auml;nkung f&uum
 // email
 define( '_AEC_MI_NAME_EMAIL',		'Email' );
 define( '_AEC_MI_DESC_EMAIL',		'Sendet ein Emial an eine oder mehrere Adressen bei Abschluss oder Beendigung eines Abonnements' );
-define( '_AEC_MI_SET1_EMAIL',		'Absenderemail' );
-define( '_AEC_MI_SET1_1_EMAIL',		'Emailadresse des Absenders' );
-define( '_AEC_MI_SET2_EMAIL',		'Absendername' );
-define( '_AEC_MI_SET2_1_EMAIL',		'Anzuzeigender Name des Absenders' );
-define( '_AEC_MI_SET3_EMAIL',		'Empf&auml;nger' );
-define( '_AEC_MI_SET3_1_EMAIL',		'Wer soll dieses Email empfangen? Mehrere Empf&auml;nger mit Komma trennen!' );
-define( '_AEC_MI_SET4_EMAIL',		'Betreff' );
-define( '_AEC_MI_SET4_1_EMAIL',		'Betreff bei Neuerwerbung/Kauf eines Abos' );
-define( '_AEC_MI_SET5_EMAIL',		'HTML Format' );
-define( '_AEC_MI_SET5_1_EMAIL',		'Soll dieses Email im HTML-Format gesendet werden? (Achtung: dann d&uuml;rfen keine TAGS enthalten sein falls das nicht gew&uuml;nscht ist)' );
-define( '_AEC_MI_SET6_EMAIL',		'Text' );
-define( '_AEC_MI_SET6_1_EMAIL',		'Text des Emails wenn ein ABO erworben wird (siehe weitere Felder unten)' );
-define( '_AEC_MI_SET7_EMAIL',		'Betreff' );
-define( '_AEC_MI_SET7_1_EMAIL',		'Text bei Ablauf eines Abos' );
-define( '_AEC_MI_SET8_EMAIL',		'Ablauftext');
-define( '_AEC_MI_SET_8_1_EMAIL',	'Text des Emails wenn das Abo abl&auml;ft (siehe weitere Felder unten)' );
-define( '_AEC_MI_SET9_EMAIL',		'Betreff' );
-define( '_AEC_MI_SET9_1_EMAIL',		'Text bevor das Abo abl&auml;ft' );
-define( '_AEC_MI_SET10_EMAIL',		'Text vor Ablauf' );
-define( '_AEC_MI_SET10_1_EMAIL',	'Text welcher gesendet wird bevor das Abo abl&auml;ft (siehe weitere Felder unten)' );
+define( '_MI_MI_EMAIL_SENDER_NAME',					'Absenderemail' );
+define( '_MI_MI_EMAIL_SENDER_DESC',					'Emailadresse des Absenders' );
+define( '_MI_MI_EMAIL_SENDER_NAME_NAME',			'Absendername' );
+define( '_MI_MI_EMAIL_SENDER_NAME_DESC',			'Anzuzeigender Name des Absenders' );
+define( '_MI_MI_EMAIL_RECIPIENT_NAME',				'Empf&auml;nger' );
+define( '_MI_MI_EMAIL_RECIPIENT_DESC',				'Wer soll dieses Email empfangen? Mehrere Empf&auml;nger mit Komma trennen!' );
+define( '_MI_MI_EMAIL_SUBJECT_NAME',				'Betreff' );
+define( '_MI_MI_EMAIL_SUBJECT_DESC',				'Betreff bei Neuerwerbung/Kauf eines Abos' );
+define( '_MI_MI_EMAIL_TEXT_HTML_NAME',				'HTML Format' );
+define( '_MI_MI_EMAIL_TEXT_HTML_DESC',				'Soll dieses Email im HTML-Format gesendet werden? (Achtung: dann d&uuml;rfen keine TAGS enthalten sein falls das nicht gew&uuml;nscht ist)' );
+define( '_MI_MI_EMAIL_TEXT_NAME',					'Text' );
+define( '_MI_MI_EMAIL_TEXT_DESC',					'Text des Emails wenn ein ABO erworben wird (siehe weitere Felder unten)' );
+define( '_MI_MI_EMAIL_SUBJECT_EXP_NAME',			'Betreff' );
+define( '_MI_MI_EMAIL_SUBJECT_EXP_DESC',			'Text bei Ablauf eines Abos' );
+define( '_MI_MI_EMAIL_TEXT_EXP_HTML_NAME',			'HTML Format' );
+define( '_MI_MI_EMAIL_TEXT_EXP_HTML_DESC',			'Soll dieses Email im HTML-Format gesendet werden? (Achtung: dann d&uuml;rfen keine TAGS enthalten sein falls das nicht gew&uuml;nscht ist)' );
+define( '_MI_MI_EMAIL_TEXT_EXP_NAME',				'Ablauftext');
+define( '_MI_MI_EMAIL_TEXT_EXP_DESC',				'Text des Emails wenn das Abo abl&auml;ft (siehe weitere Felder unten)' );
+define( '_MI_MI_EMAIL_SUBJECT_PRE_EXP_NAME',		'Betreff' );
+define( '_MI_MI_EMAIL_SUBJECT_PRE_EXP_DESC',		'Text bevor das Abo abl&auml;ft' );
+define( '_MI_MI_EMAIL_TEXT_PRE_EXP_HTML_NAME',		'HTML Format' );
+define( '_MI_MI_EMAIL_TEXT_PRE_EXP_HTML_DESC',		'Soll dieses Email im HTML-Format gesendet werden? (Achtung: dann d&uuml;rfen keine TAGS enthalten sein falls das nicht gew&uuml;nscht ist)' );
+define( '_MI_MI_EMAIL_SUBJECT_PRE_EXP_NAME',		'Text vor Ablauf' );
+define( '_MI_MI_EMAIL_SUBJECT_PRE_EXP_DESC',		'Text welcher gesendet wird bevor das Abo abl&auml;ft (siehe weitere Felder unten)' );
 define( '_AEC_MI_SET11_EMAIL',		'Weitere Infos' );
 
 // iDevAffiliate
@@ -99,50 +103,52 @@ define( '_AEC_MI_DIV3_IDEV',		'und Wert =' );
 // MosetsTree
 define( '_AEC_MI_NAME_MOSETS',		'MosetsTree' );
 define( '_AEC_MI_DESC_MOSETS',		'Anzahl der maximalen Links ein Abonnent ver&ouml;ffentlichen darf' );
-define( '_AEC_MI_SET1_MOSETS',		'Anzahl der Links' );
-define( '_AEC_MI_SET1_1_MOSETS',	'Anzahl der maximalen Links f&uuml;r diesen Aufruf' );
-define( '_AEC_MI_HACK1_MOSETS',		'Keine weiteren Links m&ouml;glich' );
+define( '_MI_MI_MOSETS_TREE_SET_LISTINGS_NAME',		'Eintr&auml;ge setzen' );
+define( '_MI_MI_MOSETS_TREE_SET_LISTINGS_DESC',		'Die Anzahl der Eintr&auml;ge, die der Benutzer einstellen darf wird auf diesen Wert (zur&uuml;ck)gesetzt' );
+define( '_MI_MI_MOSETS_TREE_ADD_LISTINGS_NAME',		'Eintr&auml;ge hinzuf&uuml;gen' );
+define( '_MI_MI_MOSETS_TREE_ADD_LISTINGS_DESC',		'Anzahl der Eintr&auml;ge, die dem Benutzerkonto hinzugef&uuml;gt werden.' );
+define( '_AEC_MI_HACK1_MOSETS',		'Keine weiteren Eintr&auml;ge m&ouml;glich' );
 define( '_AEC_MI_HACK2_MOSETS',		'Registrierung erforderlich' );
-define( '_AEC_MI_HACK3_MOSETS',		'L&auml;sst keine weiteren neuen Links als die erlaubte Maximalanzahl zu' );
+define( '_AEC_MI_HACK3_MOSETS',		'L&auml;sst keine weiteren neuen Eintr&auml;ge als die erlaubte Maximalanzahl zu' );
 define( '_AEC_MI_HACK4_MOSETS',		'L&auml;sst keine weiteren Listings als die erlaubte Maximalanzahl zu' );
 define( '_AEC_MI_DIV1_MOSETS',		'Es sind noch <strong>%s</strong> Listings m&ouml;glich' );
 
 // MySQL Query
 define( '_AEC_MI_NAME_MYSQL',		'MySQL Abfrage' );
 define( '_AEC_MI_DESC_MYSQL',		'Definiert eine MySQL-Abfrage welche mit diesem Abonnement oder bei Aboablauf ausgef&uuml;hrt wird' );
-define( '_AEC_MI_SET1_MYSQL',		'Abfrage' );
-define( '_AEC_MI_SET1_1_MYSQL',		'MySQL-Abfrage welche ausgef&uuml;hrt wird wenn diese Integration aufgerufen wird' );
-define( '_AEC_MI_SET2_MYSQL',		'Abfrage Ablauf' );
-define( '_AEC_MI_SET2_1_MYSQL',		'MySQL-Abfrage welche ausgef&uuml;hrt wird, wenn das Abo abl&auml;ft' );
-define( '_AEC_MI_SET3_MYSQL',		'Abfrage vor Ablauf' );
-define( '_AEC_MI_SET3_1_MYSQL',		'MySQL-Abfrage welche ausgef&uuml;hrt wird, bevor das Abo abl&auml;ft (Datum siehe ersten Reiter)' );
+define( '_MI_MI_MYSQL_QUERY_QUERY_NAME',			'Abfrage' );
+define( '_MI_MI_MYSQL_QUERY_QUERY_DESC',			'MySQL-Abfrage welche ausgef&uuml;hrt wird wenn diese Integration aufgerufen wird' );
+define( '_MI_MI_MYSQL_QUERY_QUERY_EXP_NAME',		'Abfrage Ablauf' );
+define( '_MI_MI_MYSQL_QUERY_QUERY_EXP_DESC',		'MySQL-Abfrage welche ausgef&uuml;hrt wird, wenn das Abo abl&auml;ft' );
+define( '_MI_MI_MYSQL_QUERY_QUERY_PRE_EXP_NAME',	'Abfrage vor Ablauf' );
+define( '_MI_MI_MYSQL_QUERY_QUERY_PRE_EXP_DESC',	'MySQL-Abfrage welche ausgef&uuml;hrt wird, bevor das Abo abl&auml;ft (Datum siehe ersten Reiter)' );
 define( '_AEC_MI_SET4_MYSQL',		'Weitere Infos' );
 
 // reMOSitory
 define( '_AEC_MI_NAME_REMOS',		'reMOSitory' );
 define( '_AEC_MI_DESC_REMOS',		'Anzahl der Dateien welche der Abonnent downloaden kann und welcher reMOSitory-Gruppe er angeh&ouml;rt' );
-define( '_AEC_MI_SET1_REMOS',		'Anzahl der Listings' );
-define( '_AEC_MI_SET1_1_REMOS',		'Anzahl der maximalen Anzeigen' );
-define( '_AEC_MI_SET2_REMOS',		'In Gruppe' );
-define( '_AEC_MI_SET2_1_REMOS',		'Hier "Ja" angeben wenn die reMOSitory-Gruppe verwendet werden soll' );
-define( '_AEC_MI_SET3_REMOS',		'Gruppe' );
-define( '_AEC_MI_SET3_1_REMOS',		'Welche reMOSitory-Gruppe soll verwendet werden' );
-define( '_AEC_MI_SET4_REMOS',		'Gruppe bei Ablauf' );
-define( '_AEC_MI_SET4_1_REMOS',		'Mit "Ja" best&auml;tigen wenn die reMOSitory-Gruppe bei Aboablauf verwendet werden soll' );
-define( '_AEC_MI_SET5_REMOS',		'Gruppe' );
-define( '_AEC_MI_SET5_1_REMOS',		'Hier die reMOSitory-Gruppe definieren welche nach Aboablauf f&uuml;r die Benutzer gelten soll' );
+define( '_MI_MI_REMOSITORY_ADD_DOWNLOADS_NAME',		'Anzahl der Listings' );
+define( '_MI_MI_REMOSITORY_ADD_DOWNLOADS_DESC',		'Anzahl der maximalen Anzeigen' );
+define( '_MI_MI_REMOSITORY_SET_DOWNLOADS_NAME',		'In Gruppe' );
+define( '_MI_MI_REMOSITORY_SET_DOWNLOADS_DESC',		'Hier "Ja" angeben wenn die reMOSitory-Gruppe verwendet werden soll' );
+define( '_MI_MI_REMOSITORY_SET_GROUP_NAME',			'Gruppe' );
+define( '_MI_MI_REMOSITORY_SET_GROUP_DESC',			'Welche reMOSitory-Gruppe soll verwendet werden' );
+define( '_MI_MI_REMOSITORY_GROUP_NAME',				'Gruppe bei Ablauf' );
+define( '_MI_MI_REMOSITORY_GROUP_DESC',				'Mit "Ja" best&auml;tigen wenn die reMOSitory-Gruppe bei Aboablauf verwendet werden soll' );
+define( '_MI_MI_REMOSITORY_SET_GROUP_EXP_NAME',		'Gruppe' );
+define( '_MI_MI_REMOSITORY_SET_GROUP_EXP_DESC',		'Hier die reMOSitory-Gruppe definieren welche nach Aboablauf f&uuml;r die Benutzer gelten soll' );
 define( '_AEC_MI_HACK1_REMOS',		'Kein Guthaben' );
 define( '_AEC_MI_HACK2_REMOS',		'Bildet eine Downloadeinschr&auml;nkung f&uuml;reMOSitory' );
 
 // VirtueMart
 define( '_AEC_MI_NAME_VIRTM',		'VirtueMart' );
 define( '_AEC_MI_DESC_VIRTM',		'Welcher VirtueMart-Gruppe soll der Benutzer angeh&ouml;hren' );
-define( '_AEC_MI_SET1_VIRTM',		'Verwende VM-Gruppe' );
-define( '_AEC_MI_SET1_1_VIRTM',		'Mit "Ja" best&auml;tigen wenn die VirtueMart-Einkaufsgruppe verwendet werden soll' );
-define( '_AEC_MI_SET2_VIRTM',		'Gruppe' );
-define( '_AEC_MI_SET2_1_VIRTM',		'Die VirtueMart-Einkaufsgruppe welche verwendet werden soll' );
-define( '_AEC_MI_SET3_VIRTM',		'Gruppe bei Ablauf' );
-define( '_AEC_MI_SET3_1_VIRTM',		'Mit "Ja" best&auml;tigen wenn nach Aboablauf eine VM-Gruppe verwendet werden soll' );
-define( '_AEC_MI_SET4_VIRTM',		'Gruppe' );
-define( '_AEC_MI_SET4_1_VIRTM',		'Die VirtueMart-Gruppe definieren welche nach Aboablauf g&uuml;ltig sein soll' );
+define( '_MI_MI_VIRTUEMART_SET_SHOPPER_GROUP_NAME',	'Verwende VM-Gruppe' );
+define( '_MI_MI_VIRTUEMART_SET_SHOPPER_GROUP_DESC',	'Mit "Ja" best&auml;tigen wenn die VirtueMart-Einkaufsgruppe verwendet werden soll' );
+define( '_MI_MI_VIRTUEMART_SHOPPER_GROUP_NAME',		'Gruppe' );
+define( '_MI_MI_VIRTUEMART_SHOPPER_GROUP_DESC',		'Die VirtueMart-Einkaufsgruppe welche verwendet werden soll' );
+define( '_MI_MI_VIRTUEMART_SET_SHOPPER_GROUP_EXP_NAME',		'Gruppe bei Ablauf' );
+define( '_MI_MI_VIRTUEMART_SET_SHOPPER_GROUP_EXP_DESC',		'Mit "Ja" best&auml;tigen wenn nach Aboablauf eine VM-Gruppe verwendet werden soll' );
+define( '_MI_MI_VIRTUEMART_SHOPPER_GROUP_EXP_NAME',	'Gruppe' );
+define( '_MI_MI_VIRTUEMART_SHOPPER_GROUP_EXP_DESC',	'Die VirtueMart-Gruppe definieren welche nach Aboablauf g&uuml;ltig sein soll' );
 ?>
