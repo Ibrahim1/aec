@@ -1930,7 +1930,7 @@ function editSettings( $option ) {
 								if( defined( $genericname ) ) {
 									$settings_array[$name][1] = constant( $genericname );
 								}else{
-									$settings_array[$name][1] = '<strong>' . $constantname . ' is missing</strong>';
+									$settings_array[$name][1] = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantname );
 								}
 							}
 
@@ -1942,7 +1942,7 @@ function editSettings( $option ) {
 								if( defined( $genericname ) ) {
 									$settings_array[$name][2] = constant( $genericdesc );
 								}else{
-									$settings_array[$name][2] = '<strong>' . $constantdesc . ' is missing</strong>';
+									$settings_array[$name][2] = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantdesc );
 								}
 							}
 						}

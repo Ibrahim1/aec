@@ -30,6 +30,11 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
+// mic - new: check users rights for access
+if (!$acl->acl_check( 'administration', 'config', 'users', $my->usertype )) {
+	mosRedirect( 'index2.php', _NOT_AUTH );
+}
+
 global $mosConfig_absolute_path;
 
 class HTML_myCommon {

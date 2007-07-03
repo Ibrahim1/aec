@@ -30,6 +30,10 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
+if( defined( '_AEC_LANG' ) ) {
+	return;
+}
+
 // new 0.12.4 - mic
 define( '_AEC_EXPIRE_NOT_SET',				'Not Set' );
 define( '_AEC_GEN_ERROR',					'<h1>General Error</h1><p>We had problems processing your request. Please contact the web site administrator.</p>' );

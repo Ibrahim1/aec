@@ -38,6 +38,8 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( '�?容许直接访问这儿.' );
 
+define( '_AEC_LANG_PROCESSOR', 1 );
+
 // ################## new 0.12.4
 	// paypal
 define( '_AEC_PROC_INFO_PP_LNAME',			'PayPal' );

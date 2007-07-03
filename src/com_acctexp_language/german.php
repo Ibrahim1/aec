@@ -30,6 +30,10 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Restricted access' );
 
+if( defined( '_AEC_LANG' ) ) {
+	return;
+}
+
 // new 0.12.4 (mic)
 define( '_AEC_EXPIRE_NOT_SET',				'Nicht definiert' );
 define( '_AEC_GEN_ERROR',					'<h1>FEHLER!</h1><p>Leider trat w&auml;hrend der Bearbeitung ein Fehler auf - bitte informieren Sie auch den Administrator. Danke.</p>' );
@@ -58,7 +62,7 @@ define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR',	'Unbekannter Fehler' );
 // end mic ########################################################
 
 // --== PAYMENT PLANS PAGE ==--
-DEFINE ('_NOPLANS_ERROR',					'Es trat in interner Fehler auf, dadurch sind momentan keine Abonnements vorhanden, bitte den Administrator informieren - danke!');
+DEFINE ('_NOPLANS_ERROR',					'Es trat ein interner Fehler auf, dadurch sind momentan keine Abonnements vorhanden, bitte den Administrator informieren - danke!');
 
 // --== ACCOUNT DETAILS PAGE ==--
 DEFINE ('_CHK_USERNAME_AVAIL',				'Benutzername %s ist verf&uuml;gbar' );

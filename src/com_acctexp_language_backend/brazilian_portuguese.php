@@ -78,6 +78,7 @@ define( '_AEC_CMN_STATUS',						'Status' );
 define( '_AEC_FEATURE_NOT_ACTIVE',				'This feature is not active yet' );
 define( '_AEC_CMN_YES',							'Yes' );
 define( '_AEC_CMN_NO',							'No' );
+define( '_AEC_CMN_LANG_CONSTANT_IS_MISSING',	'Language constant <strong>%s</strong> is missing' );
 
 // user(info)
 define( '_AEC_USER_USER_INFO',					'User Info' );

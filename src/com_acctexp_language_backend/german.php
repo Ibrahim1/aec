@@ -82,6 +82,7 @@ define( '_AEC_CMN_STATUS',						'Status' );
 define( '_AEC_FEATURE_NOT_ACTIVE',				'Dieses Feature ist noch nicht aktiv' );
 define( '_AEC_CMN_YES',							'Ja' );
 define( '_AEC_CMN_NO',							'Nein' );
+define( '_AEC_CMN_LANG_CONSTANT_IS_MISSING',	'Sprachenkonstante <strong>%s</strong> fehlt' );
 
 // user(info)
 define( '_AEC_USER_USER_INFO',					'Benutzerinfos' );
@@ -340,8 +341,8 @@ define( '_CURRENCY_RSD',						'Serbische Dinar' );
 define( '_COUPON_DETAIL_TITLE',					'Gutschein' );
 define( '_COUPON_RESTRICTIONS_TITLE',			'Einschr.' );
 define( '_COUPON_RESTRICTIONS_TITLE_FULL',		'Einschr&auml;nkungen' );
-define( '_COUPON_MI',							'Zahlsystem' );
-define( '_COUPON_MI_FULL',						'Bezahlsysteme' );
+define( '_COUPON_MI',							'Gateway' );
+define( '_COUPON_MI_FULL',						'Gateways' );
 
 define( '_COUPON_GENERAL_NAME_NAME',			'Name' );
 define( '_COUPON_GENERAL_NAME_DESC',			'Der interne und externe Name f&uuml;r diesen Gutschein' );
@@ -354,8 +355,8 @@ define( '_COUPON_GENERAL_ACTIVE_DESC',			'Ist dieser Gutschein aktiv (momentan g
 define( '_COUPON_GENERAL_TYPE_NAME',			'Gruppe' );
 define( '_COUPON_GENERAL_TYPE_DESC',			'Soll dieser Gutschein einmalig oder f&uuml;r eine Gruppe von mehreren Personen gelten (Einzel- oder Gruppengutschein)' );
 
-define( '_COUPON_GENERAL_MICRO_INTEGRATIONS_NAME',	'Bezahlsysteme' );
-define( '_COUPON_GENERAL_MICRO_INTEGRATIONS_DESC',	'Diejenigen Bezahlsysteme ausw&auml;hlen welche f&uuml;r diesen Gutschein g&uuml;ltig sein sollen' );
+define( '_COUPON_GENERAL_MICRO_INTEGRATIONS_NAME',	'Gateways' );
+define( '_COUPON_GENERAL_MICRO_INTEGRATIONS_DESC',	'Diejenigen Gateways ausw&auml;hlen welche f&uuml;r diesen Gutschein g&uuml;ltig sein sollen' );
 
 define( '_COUPON_PARAMS_AMOUNT_USE_NAME',		'Betrag verwenden' );
 define( '_COUPON_PARAMS_AMOUNT_USE_DESC', 		'Soll von der Rechnung direkt ein Betrag abgezogen werden' );
@@ -620,7 +621,7 @@ define( '_CFG_GENERAL_HEARTBEAT_CYCLE_BACKEND_DESC',			'Heartbeat - Herzklopfen:
 define( '_CFG_GENERAL_ENABLE_COUPONS_NAME',				'Gutscheine Aktiviert:' );
 define( '_CFG_GENERAL_ENABLE_COUPONS_DESC',				'Sollen Gutscheine akzeptiert werden' );
 define( '_CFG_GENERAL_DISPLAYCCINFO_NAME',				'Zeige Kreditkartenicons:' );
-define( '_CFG_GENERAL_DISPLAYCCINFO_DESC',				'Sollen die Icons f&uuml;r jedes Zahlsystem angezeigt werden' );
+define( '_CFG_GENERAL_DISPLAYCCINFO_DESC',				'Sollen die Icons f&uuml;r jedes Gateway angezeigt werden' );
 
 // Global Micro Integration Settings
 define( '_CFG_TAB_MICROINTEGRATION_TITLE',				'Integration' );
@@ -660,10 +661,10 @@ define( '_PAYPLAN_GENERAL_EMAIL_DESC_DESC',				'Text welcher im Email an den Ben
 define( '_PAYPLAN_GENERAL_FALLBACK_NAME',				'Abo Ersatz:' );
 define( '_PAYPLAN_GENERAL_FALLBACK_DESC',				'Wenn ein Abo endet, aktiviere dieses Abo f&uuml;r diesen Benutzer' );
 
-define( '_PAYPLAN_GENERAL_PROCESSORS_NAME',				'Bezahlsysteme:' );
+define( '_PAYPLAN_GENERAL_PROCESSORS_NAME',				'Gateways:' );
 define( '_PAYPLAN_NOPLAN',								'Kein Abo' );
-define( '_PAYPLAN_NOGW',								'Kein Bezahlsystem' );
-define( '_PAYPLAN_GENERAL_PROCESSORS_DESC',				'Diejenigen Zahlungssystem ausw&auml;hlen welche f&uuml;r dieses Abonnement g&uuml;ltig sein sollen (STRG oder HOCHSTELLTASTE um mehrere auszuw&auml;hlen.<hr />Wird ' . _PAYPLAN_NOPLAN . ' gew&auml;hlt, werden alle anderen Optionen ignoriert.<br />Ist hier nur ' . _PAYPLAN_NOPLAN . ' sichtbar, heisst das, dass noch keine Bezahlsysteme ausgew&auml;hlt/konfiguriert wurden' );
+define( '_PAYPLAN_NOGW',								'Kein Gateway' );
+define( '_PAYPLAN_GENERAL_PROCESSORS_DESC',				'Diejenigen Zahlungsgateways ausw&auml;hlen welche f&uuml;r dieses Abonnement g&uuml;ltig sein sollen (STRG oder HOCHSTELLTASTE um mehrere auszuw&auml;hlen.<hr />Wird ' . _PAYPLAN_NOPLAN . ' gew&auml;hlt, werden alle anderen Optionen ignoriert.<br />Ist hier nur ' . _PAYPLAN_NOPLAN . ' sichtbar, heisst das, dass noch keine Gateways ausgew&auml;hlt/konfiguriert wurden' );
 define( '_PAYPLAN_PARAMS_LIFETIME_NAME',				'Immerw&auml;hrend:' );
 define( '_PAYPLAN_PARAMS_LIFETIME_DESC',				'Bedeuted ein Abo OHNE Ablaufzeit' );
 
@@ -741,9 +742,9 @@ define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MAX_AMOUNT_DESC',		'Maximale Anzahl an 
 define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MAX_NAME',				'Abo:' );
 define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MAX_DESC',				'Das Abo welches maximal verwendet werden darf' );
 
-define( '_PAYPLAN_MI',											'Zahlsystemintegr.' );
-define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_NAME',				'Bezahlsysteme:' );
-define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_DESC',				'Die Bezahlsysteme ausw&auml;hlen welche f&uuml;r dieses Abo g&uuml;ltig sein sollen' );
+define( '_PAYPLAN_MI',											'Komponenten' );
+define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_NAME',				'Komponentenname:' );
+define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_DESC',				'Komponente(n) ausw&auml;hlen welche Benutzern mit diesem Abo zugewiesen werden sollen' );
 
 define( '_PAYPLAN_CURRENCY',					'W&auml;hrung' );
 
@@ -929,7 +930,7 @@ define( '_CURRENCY_USN', 'US Dollar (N&auml;chster Tag)' );
 define( '_CURRENCY_USS', 'US Dollar (Gleicher Tag)' );
 
 // --== MICRO INTEGRATION OVERVIEW ==--
-define( '_MI_TITLE',						'Bezahlsysteme' );
+define( '_MI_TITLE',						'Gateways' );
 define( '_MI_NAME',							'Name' );
 define( '_MI_DESC',							'Beschreibung' );
 define( '_MI_ACTIVE',						'Aktiv' );
@@ -937,23 +938,23 @@ define( '_MI_REORDER',						'Reihenfolge' );
 define( '_MI_FUNCTION',						'Funktionsname' );
 
 // --== MICRO INTEGRATION EDIT ==--
-define( '_MI_E_TITLE',						'Bezahlsystem' );
+define( '_MI_E_TITLE',						'Gateway' );
 define( '_MI_E_SETTINGS',					'Einstellungen' );
 define( '_MI_E_NAME_NAME',					'Name' );
-define( '_MI_E_NAME_DESC',					'Name f&uuml;r dieses Bezahlservice' );
+define( '_MI_E_NAME_DESC',					'Name f&uuml;r diese Integration' );
 define( '_MI_E_DESC_NAME',					'Beschreibung' );
 define( '_MI_E_DESC_DESC',					'Kurzbeschreibung' );
 define( '_MI_E_ACTIVE_NAME',				'Aktiv' );
 define( '_MI_E_ACTIVE_DESC',				'Als Aktiv markieren' );
 define( '_MI_E_ACTIVE_AUTO_NAME',			'Aktion bei Ablauf' );
-define( '_MI_E_ACTIVE_AUTO_DESC',			'Falls dieses Bezahlsystem es erlaubt k&ouml;nnen Aktionen definiert werden wenn ein Abo ausl&auml;ft' );
+define( '_MI_E_ACTIVE_AUTO_DESC',			'Falls diese Komponente es erlaubt k&ouml;nnen Aktionen definiert werden wenn ein Abo ausl&auml;ft' );
 define( '_MI_E_ACTIVE_USERUPDATE_NAME',		'Benutzeraktion' );
-define( '_MI_E_ACTIVE_USERUPDATE_DESC',		'Falls vom Bezahlsystem unterst&uuml;tzt k&ouml;nnen Aktionen definiert werden wenn ein Benutzerabo ausl&auml;ft' );
+define( '_MI_E_ACTIVE_USERUPDATE_DESC',		'Falls von der Komponente unterst&uuml;tzt k&ouml;nnen Aktionen definiert werden wenn ein Benutzerabo ausl&auml;ft' );
 define( '_MI_E_PRE_EXP_NAME',				'Tage vor Ablauf' );
 define( '_MI_E_PRE_EXP_DESC',				'Anzahl der Tage vor dem Ablauf ab wann die Aktionen gelten sollen' );
 define( '_MI_E_FUNCTION_NAME',				'Funktionsname' );
 define( '_MI_E_FUNCTION_DESC',				'Welche der Systeme sollen verwendet weren' );
-define( '_MI_E_FUNCTION_EXPLANATION',		'Bevor die Integration definiert wird, muss bestimmt werden welche der Integrationen g&uuml;ltig/aktiv sind. Wahl treffen und speichern. Dann nochmals bearbeiten, die Einstellungen sind erst dann sichtbar. HINWEIS: einmal definiert lassen sich die Einstellungen nicht R&uuml;ckg&auml;ngig machen' );
+define( '_MI_E_FUNCTION_EXPLANATION',		'Bevor die Integration definiert wird, muss bestimmt werden welche der Integrationen g&uuml;ltig/aktiv sind. Wahl treffen und speichern. Dann nochmals bearbeiten, die Einstellungen sind erst dann sichtbar. HINWEIS: einmal definiert lassen sich die Einstellungen nicht r&uuml;ckg&auml;ngig machen' );
 
 // --== REWRITE EXPLANATION ==--
 define( '_REWRITE_AREA_USER',				'Benutzeraccount Bezogen' );
@@ -966,7 +967,7 @@ define( '_REWRITE_AREA_EXPIRATION',			'Benutzer Ablaufbezogen' );
 define( '_REWRITE_KEY_EXPIRATION_DATE',		'Ablaufdatum' );
 
 define( '_REWRITE_AREA_SUBSCRIPTION',		'Benutzer Abobezogen' );
-define( '_REWRITE_KEY_SUBSCRIPTION_TYPE',	'Bezahlsystem' );
+define( '_REWRITE_KEY_SUBSCRIPTION_TYPE',	'Gateway' );
 define( '_REWRITE_KEY_SUBSCRIPTION_STATUS', 'Abonnentenstatus' );
 define( '_REWRITE_KEY_SUBSCRIPTION_SIGNUP_DATE',	'Datum ab wann Abo erfolgte' );
 define( '_REWRITE_KEY_SUBSCRIPTION_LASTPAY_DATE',	'Letztes Zahlungsdatum' );

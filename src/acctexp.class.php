@@ -1050,7 +1050,7 @@ class aecSettings {
 					if( defined( $genericname ) ) {
 						$info_name = constant( $genericname );
 					}else{
-						$info_name = '<strong>' . $constantname . ' is missing</strong>';
+						$info_name = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantname );
 					}
 				}
 
@@ -1062,7 +1062,7 @@ class aecSettings {
 					if( defined( $genericname ) ) {
 						$info_desc = constant( $genericdesc );
 					}else{
-						$info_desc = '<strong>' . $constantdesc . ' is missing</strong>';
+						$info_desc = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantdesc );
 					}
 				}
 			}else{
