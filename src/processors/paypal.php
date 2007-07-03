@@ -76,7 +76,8 @@ class processor_paypal {
 		$settings['checkbusiness']	= 0;
 		$settings['lc']				= 'US';
 		$settings['altipnurl']		= '';
-		$settings['item_name']		= 'Subscription at [[cms_live_site]] - User: [[user_name]] ([[user_username]])';
+		$settings['item_name']		= sprintf( _AEC_PROC_SET1_PP_INAME, '[[cms_live_site]]',
+									'[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']	= ''; // added mic
 
 		return $settings;

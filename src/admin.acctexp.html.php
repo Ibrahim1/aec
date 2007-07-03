@@ -330,55 +330,60 @@ class formParticles {
 		$thisrow_extra	= $rows[4];
 
 		switch( $thisrow_type ) {
-			case "subtitle":
-			?>
+			case 'subtitle': ?>
 				<tr align="center" valign="middle">
 					<th colspan="3" width="20%"><?php echo $thisrow_desc; ?></th>
 				</tr>
-			<?php break;
-			case "inputA":
-			?>
+				<?php
+				break;
+
+			case 'inputA': ?>
 				<tr align="left" valign="middle" >
 					<td width="10%" align="right"><?php echo $thisrow_name; ?></td>
         			<td align="left">
-	        			<input name="<?php echo $thisrow_extra; ?>" type="text" size="4" maxlength="5" value="<?php echo $thisrow_var; ?>"/>
+	        			<input name="<?php echo $thisrow_extra; ?>" type="text" size="4" maxlength="5" value="<?php echo $thisrow_var; ?>" />
 					</td>
 					<td><?php echo $thisrow_desc; ?></td>
 				</tr>
-			<?php break;
-			case "inputB":
-			?>
+				<?php
+				break;
+
+			case 'inputB': ?>
 				<tr>
 					<td width="10%"><?php echo $thisrow_name; ?></td>
 					<td width="10%"><input class="inputbox" type="text" name="<?php echo $thisrow_extra; ?>" size="2" maxlength="10" value="<?php echo $thisrow_var; ?>" /></td>
 					<td align="left"><?php echo $thisrow_desc; ?></td>
 				</tr>
-			<?php break;
-			case "inputC":
-			?>
+				<?php
+				break;
+
+			case 'inputC': ?>
 				<tr align="left" valign="middle" >
 					<td width="10%" align="right"><?php echo $thisrow_name; ?></td>
 					<td width="10%"><input type="text" size="20" name="<?php echo $thisrow_extra; ?>" class="inputbox" value="<?php echo $thisrow_var; ?>" /></td>
 					<td><?php echo $thisrow_desc; ?></td>
 				</tr>
-			<?php break;
-			case "inputD":
-			?>
+				<?php
+				break;
+
+			case 'inputD': ?>
 				<tr align="left" valign="middle" >
 					<td width="10%" align="right"><?php echo $thisrow_name; ?></td>
 					<td width="10%"><textarea align="left" cols="60" rows="5" name="<?php echo $thisrow_extra; ?>" /><?php echo $thisrow_var; ?></textarea></td>
 					<td><?php echo $thisrow_desc; ?></td>
 				</tr>
-			<?php break;
-			case "inputE":
-			?>
+				<?php
+				break;
+
+			case 'inputE': ?>
 				<tr align="left" valign="middle" >
 					<td><?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null ); ?><?php echo $thisrow_name; ?></td>
 					<td colspan="2" align="left"><input type="text" size="70" name="<?php echo $thisrow_extra; ?>" class="inputbox" value="<?php echo $thisrow_var; ?>" /></td>
 				</tr>
-			<?php break;
-			case "editor":
-			?>
+				<?php
+				break;
+
+			case 'editor': ?>
         		<tr align="left" valign="middle" >
 					<td width="10%" align="right">
 					<?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null ); ?>
@@ -391,35 +396,39 @@ class formParticles {
 					editorArea( $thisrow_extra, $thisrow_var, $thisrow_extra, '100%;', '250', '10', '60' ) ; ?>
 					</td>
 				</tr>
-			<?php break;
-			case "list":
-			?>
+				<?php
+				break;
+
+			case 'list': ?>
 				<tr>
 					<td width="10%"><?php echo $thisrow_name; ?></td>
 					<td width="10%" align="left"><?php echo $lists[$thisrow_extra]; ?></td>
 					<td align="left"><?php echo $thisrow_desc; ?></td>
 				</tr>
-			<?php break;
-			case "list_big":
-			?>
+				<?php
+				break;
+
+			case 'list_big': ?>
 				<tr>
 					<td><?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null ); ?><?php echo $thisrow_name; ?></td>
 					<td colspan="2" align="left"><?php echo $lists[$thisrow_extra]; ?></td>
 				</tr>
-			<?php break;
-			case "fieldset":
-			?>
+				<?php
+				break;
+
+			case 'fieldset': ?>
 				<tr><td colspan="3" >
 					<fieldset><legend><?php echo $thisrow_name; ?></legend>
 						<table cellpadding="1" cellspacing="1" border="0">
-							<tr align="left" valign="middle" >
+							<tr align="left" valign="middle">
 								<td><?php echo $thisrow_desc; ?></td>
 							</tr>
 						</table>
 					</fieldset>
 					</td>
 				</tr>
-			<?php break;
+				<?php
+				break;
 		}
 	}
 }
@@ -1206,12 +1215,12 @@ class HTML_AcctExp {
 		<?php
 		$k = 0;
 		for( $i=0, $n=count( $rows ); $i < $n; $i++ ) {
-			$row = &$rows[$i];
-			?>
+			$row = &$rows[$i]; ?>
 				<tr class="row<?php echo $k; ?>">
 					<td width="20" align="center"><?php echo $pageNav->rowNumber( $i ); ?></td>
 					<td width="20"><?php echo mosHTML::idBox( $i, $row->id, false, 'id' ); ?></td>
-					<td width="15%"> <?php
+					<td width="15%">
+						<?php
 						if(!isset($row->id)) {
 							echo $row->name;
 						} else { ?>
@@ -1224,7 +1233,7 @@ class HTML_AcctExp {
 						</td>
 					<td width="3%" align="center">
 						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo ($row->active) ? 'unpublishMicroIntegration' : 'publishMicroIntegration'; ?>')">
-							<img src="images/<?php echo ( $row->active ) ? 'publish_g.png' : 'publish_x.png'; ?>" width="12" height="12" border="0" alt="<?php echo ( $row->active ) ? 'Yes' : 'No';?>" />
+							<img src="<?php echo $mosConfig_live_site; ?>/administrator/images/<?php echo ( $row->active ) ? 'publish_g.png' : 'publish_x.png'; ?>" width="12" height="12" border="0" alt="<?php echo ( $row->active ) ? _AEC_CMN_YES : _AEC_CMN_NO; ?>" title="<?php echo ( $row->active ) ? _AEC_CMN_YES : _AEC_CMN_NO; ?>" />
 						</a>
 					</td>
 					<td align="right"><?php echo $pageNav->orderUpIcon( $i, true, 'ordermiup' ); ?></td>
@@ -1235,11 +1244,12 @@ class HTML_AcctExp {
 			$k = 1 - $k;
 		} ?>
 		</table>
- 		<?php echo $pageNav->getListFooter(); ?>
-		<?php HTML_myCommon::ContentLegend(); ?>
-		<input type="hidden" name="option" value="<?php echo $option;?>" />
-		<input type="hidden" name="task" value= ""/>
-		<input type="hidden" name="returnTask" value= "showMicroIntegrations"/>
+ 		<?php
+ 		echo $pageNav->getListFooter();
+		HTML_myCommon::ContentLegend(); ?>
+		<input type="hidden" name="option" value="<?php echo $option; ?>" />
+		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="returnTask" value="showMicroIntegrations" />
 		<input type="hidden" name="boxchecked" value="0" />
 		</form>
 
@@ -1345,7 +1355,9 @@ class HTML_AcctExp {
 										if( $lists['class_name'] ) {
 											echo $lists['class_name']; ?>
 											<br />
-											<?php echo _MI_E_FUNCTION_DESC;
+											<?php
+											echo _MI_E_FUNCTION_DESC;
+											echo _MI_E_FUNCTION_DESC;
 										}else{
 											echo _AEC_MSG_MIS_NOT_DEFINED;
 										} ?>
@@ -1380,7 +1392,6 @@ class HTML_AcctExp {
 			<input type="hidden" name="option" value="<?php echo $option; ?>" />
 			<input type="hidden" name="task" value="" />
 		</form>
-
 		<?php HTML_myCommon::GlobalNerd();
 	}
 
@@ -1400,10 +1411,10 @@ class HTML_AcctExp {
 			<table class="adminlist">
 				<tr>
 					<th width="1%">#</th>
-					<th width="1%">ID</th>
+					<th width="1%"><?php echo _AEC_CMN_ID; ?></th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
 					<th width="15%" align="left" nowrap="nowrap"><?php echo _PAYPLAN_NAME; ?></th>
-					<th width="20%" align="left" nowrap="nowrap" ><?php echo _PAYPLAN_DESC; ?></th>
+					<th width="20%" align="left" nowrap="nowrap"><?php echo _PAYPLAN_DESC; ?></th>
 					<th width="3%" nowrap="nowrap"><?php echo _PAYPLAN_ACTIVE; ?></th>
 					<th width="3%" nowrap="nowrap"><?php echo _PAYPLAN_VISIBLE; ?></th>
 					<th width="5%" colspan="2" nowrap="nowrap"><?php echo _PAYPLAN_REORDER; ?></th>
@@ -1415,8 +1426,7 @@ class HTML_AcctExp {
 		<?php
 		$k = 0;
 		for( $i=0, $n=count( $rows ); $i < $n; $i++ ) {
-			$row = &$rows[$i];
-			?>
+			$row = &$rows[$i]; ?>
 				<tr class="row<?php echo $k; ?>">
 					<td align="center"><?php echo $pageNav->rowNumber( $i ); ?></td>
 					<td align="right"><?php echo $row->id; ?></td>
@@ -1424,36 +1434,34 @@ class HTML_AcctExp {
 					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editSubscriptionPlan')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $row->name; ?></a></td>
 					<td  align="left">
 						<?php
-						// echo $row->desc ? substr(strip_tags($row->desc), 0, 50) . "..." : "";
-
 						echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
 					</td>
 					<td align="center">
-						<a href="javascript: void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo ($row->active) ? 'unpublishSubscriptionPlan' : 'publishSubscriptionPlan'; ?>')">
-							<?php echo aecHTML::Icon(( $row->active ) ? "accept.png" : "cancel.png"); ?>
+						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $row->active ? 'unpublishSubscriptionPlan' : 'publishSubscriptionPlan'; ?>')">
+							<?php echo aecHTML::Icon( $row->active ? 'accept.png' : 'cancel.png' ); ?>
 						</a>
 					</td>
 					<td align="center">
-						<a href="javascript: void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo ($row->visible) ? 'invisibleSubscriptionPlan' : 'visibleSubscriptionPlan'; ?>')">
-							<?php echo aecHTML::Icon(( $row->visible ) ? "eye.png" : "cancel.png"); ?>
+						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo ($row->visible) ? 'invisibleSubscriptionPlan' : 'visibleSubscriptionPlan'; ?>')">
+							<?php echo aecHTML::Icon( $row->visible ? 'eye.png' : 'cancel.png' ); ?>
 						</a>
 					</td>
-					<td align="right"><?php echo $pageNav->orderUpIcon( $i, true, "orderplanup" ); ?></td>
-					<td align="right"><?php echo $pageNav->orderDownIcon( $i, $n, true, "orderplandown" ); ?></td>
+					<td align="right"><?php echo $pageNav->orderUpIcon( $i, true, 'orderplanup' ); ?></td>
+					<td align="right"><?php echo $pageNav->orderDownIcon( $i, $n, true, 'orderplandown' ); ?></td>
 					<td align="center"><strong><?php echo $row->usercount; ?></strong></td>
 					<td align="center"><?php echo $row->expiredcount; ?></td>
 					<td align="center"><strong><?php echo $row->usercount + $row->expiredcount; ?></strong></td>
 				</tr>
 			<?php
 			$k = 1 - $k;
-		}
-		?>
+		} ?>
 		</table>
- 		<?php echo $pageNav->getListFooter(); ?>
-		<?php HTML_myCommon::ContentLegend(); ?>
+ 		<?php
+ 		echo $pageNav->getListFooter();
+		HTML_myCommon::ContentLegend(); ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
-		<input type="hidden" name="task" value= ""/>
-		<input type="hidden" name="returnTask" value= "showSubscriptionPlans"/>
+		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="returnTask" value="showSubscriptionPlans" />
 		<input type="hidden" name="boxchecked" value="0" />
 	</form>
 
@@ -1502,7 +1510,12 @@ class HTML_AcctExp {
 									<div style="position:relative;float:left;width:48%;padding:4px;">
 										<div class="userinfobox">
 											<div style="position:relative;float:left;width:100%;">
-												<?php echo $aecHTML->createSettingsParticle( 'name' ); ?><?php if ($row->id) { ?><p><a href="<?php echo $mosConfig_live_site; ?>/index.php?option=com_acctexp&amp;task=subscribe&amp;usage=<?php echo $row->id; ?>" title="<?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?></a></p><?php } ?>
+												<?php
+												echo $aecHTML->createSettingsParticle( 'name' );
+												if ($row->id) { ?>
+													<p><a href="<?php echo $mosConfig_live_site; ?>/index.php?option=com_acctexp&amp;task=subscribe&amp;usage=<?php echo $row->id; ?>" title="<?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?></a></p>
+													<?php
+												} ?>
 											</div>
 											<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
@@ -1683,8 +1696,7 @@ class HTML_AcctExp {
 		<?php
 		$k = 0;
 		for( $i=0, $n=count( $rows ); $i < $n; $i++ ) {
-			$row = &$rows[$i];
-			?>
+			$row = &$rows[$i]; ?>
 				<tr class="row<?php echo $k; ?>">
 					<td align="center"><?php echo $pageNav->rowNumber( $i ); ?></td>
 					<td><?php echo mosHTML::idBox( $i, $row->id, false, 'id' ); ?></td>
@@ -1695,7 +1707,7 @@ class HTML_AcctExp {
 						echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
 					</td>
 					<td align="center">
-						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo ((($row->active) ? 'unpublishCoupon' : 'publishCoupon') . ( $type ? 'Static' : '' ) ); ?>')">
+						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo ( ( $row->active ? 'unpublishCoupon' : 'publishCoupon') . ( $type ? 'Static' : '' ) ); ?>')">
 							<?php echo aecHTML::Icon( ( $row->active ) ? 'accept.png' : 'cancel.png' ); ?>
 						</a>
 					</td>
@@ -1743,8 +1755,7 @@ class HTML_AcctExp {
 						<?php
 						$tabs = new mosTabs(0);
 		                $tabs->startPane( 'editSubscriptionPlan' );
-		                $tabs->startTab( _COUPON_DETAIL_TITLE, _COUPON_DETAIL_TITLE );
-		                ?>
+		                $tabs->startTab( _COUPON_DETAIL_TITLE, _COUPON_DETAIL_TITLE ); ?>
 		                <h2><?php echo _COUPON_DETAIL_TITLE; ?></h2>
 						<table class="adminform" style="border-collapse:separate;">
 							<tr>
@@ -1922,8 +1933,7 @@ class HTML_AcctExp {
 		<?php
 		$k = 0;
 		for( $i=0, $n=count( $rows ); $i < $n; $i++ ) {
-			$row = &$rows[$i];
-		?>
+			$row = &$rows[$i]; ?>
 			<tr class="row<?php echo $k; ?>">
 				<td><?php echo $pageNav->rowNumber( $i ); ?></td>
 				<td><?php echo $row->userid; ?></td>
@@ -1937,13 +1947,12 @@ class HTML_AcctExp {
 			</tr>
 			<?php
 			$k = 1 - $k;
-		}
-		?>
+		} ?>
 		</table>
 		<?php echo $pageNav->getListFooter(); ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="invoices" />
-		<input type="hidden" name="returnTask" value= "invoices"/>
+		<input type="hidden" name="returnTask" value="invoices" />
 		<input type="hidden" name="boxchecked" value="0" />
 		</form>
 
@@ -1956,7 +1965,13 @@ class HTML_AcctExp {
 		global $mosConfig_live_site;
 
 		mosCommonHTML::loadOverlib();
-		HTML_myCommon::addBackendCSS(); ?>
+		HTML_myCommon::addBackendCSS();
+
+		$keys = array(
+		'ssl_test_mode', 'CODE0', 'SITE_ID', 'DOC_ID', 'AUTH', 'RECALL', 'currency_code', 'ssl_merchant_id',
+		'ssl_user_id', 'ssl_pin', 'ssl_invoice_number', 'ssl_salestax', 'ssl_result_format', 'ssl_receipt_link_method',
+		'ssl_receipt_link_url', 'ssl_receipt_link_text', 'ssl_amount', 'ssl_customer_code', 'ssl_description'
+		); ?>
 		<form action="index2.php" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
@@ -1993,7 +2008,6 @@ class HTML_AcctExp {
 				<td align="left">
 					<?php
 					$response = str_replace( "\n", '<br />', $row->response );
-					$keys = array("ssl_test_mode","CODE0","SITE_ID","DOC_ID","AUTH","RECALL","currency_code","ssl_merchant_id","ssl_user_id","ssl_pin","ssl_invoice_number","ssl_salestax","ssl_result_format","ssl_receipt_link_method","ssl_receipt_link_url","ssl_receipt_link_text","ssl_amount","ssl_customer_code","ssl_description");
 					foreach( $keys as $key ) {
 						$response = HTML_AcctExp::change( $response, $key );
 					}
@@ -2007,7 +2021,7 @@ class HTML_AcctExp {
 		<?php echo $pageNav->getListFooter(); ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="history" />
-		<input type="hidden" name="returnTask" value= "history" />
+		<input type="hidden" name="returnTask" value="history" />
 		<input type="hidden" name="boxchecked" value="0" />
 		</form>
 		<?php HTML_myCommon::GlobalNerd();
@@ -2043,8 +2057,7 @@ class HTML_AcctExp {
 		  </tr>
 		<?php
 		$k = 0;
-		foreach( $events as $row ) {
-		?>
+		foreach( $events as $row ) { ?>
 			<tr class="row<?php echo $k; ?>">
 				<td><?php echo $row->id; ?></td>
 				<td align="left" width="120"><?php echo $row->datetime; ?></td>
@@ -2060,10 +2073,9 @@ class HTML_AcctExp {
 		<?php echo $pageNav->getListFooter(); ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="eventlog" />
-		<input type="hidden" name="returnTask" value= "eventlog" />
+		<input type="hidden" name="returnTask" value="eventlog" />
 		<input type="hidden" name="boxchecked" value="0" />
 		</form>
-
 		<?php HTML_myCommon::GlobalNerd();
 	}
 

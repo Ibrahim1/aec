@@ -44,6 +44,7 @@ define( '_AEC_LANG_PROCESSOR', 1 );
 	// paypal
 define( '_AEC_PROC_INFO_PP_LNAME',			'PayPal' );
 define( '_AEC_PROC_INFO_PP_STMNT',			'Zahlungen mit PayPal - schnell, gratis und sicher!');
+define( '_AEC_PROC_SET1_PP_INAME',			'Abonnement auf %s - Benutzer: %s (%s)' ); // Subscription at %s - User: %s (%s)
 	// paypal subscription
 define( '_AEC_PROC_INFO_PPS_LNAME',			'PayPal Abonnement' );
 define( '_AEC_PROC_INFO_PPS_STMNT',			'Zahlungen mit PayPal - schnell, gratis und sicher!');

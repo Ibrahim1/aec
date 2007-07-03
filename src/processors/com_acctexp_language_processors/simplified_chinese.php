@@ -42,6 +42,7 @@ defined( '_VALID_MOS' ) or die( '�?容许直接访问这儿.' );
 	// paypal
 define( '_AEC_PROC_INFO_PP_LNAME',			'PayPal' );
 define( '_AEC_PROC_INFO_PP_STMNT',			'Make payments with PayPal - it\'s fast, free and secure!' );
+define( '_AEC_PROC_SET1_PP_INAME',			'Subscription at %s - User: %s (%s)' );
 	// paypal subscription
 define( '_AEC_PROC_INFO_PPS_LNAME',			'PayPal Subscription' );
 define( '_AEC_PROC_INFO_PPS_STMNT',			'Make payments with PayPal - it\'s fast, free and secure!' );

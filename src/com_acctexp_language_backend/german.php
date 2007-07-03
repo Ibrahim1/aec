@@ -80,6 +80,8 @@ define( '_AEC_CMN_SEARCH',						'Suche' );
 define( '_AEC_CMN_APPLY',						'Anwenden' );
 define( '_AEC_CMN_STATUS',						'Status' );
 define( '_AEC_FEATURE_NOT_ACTIVE',				'Dieses Feature ist noch nicht aktiv' );
+define( '_AEC_CMN_YES',							'Ja' ); // Yes
+define( '_AEC_CMN_NO',							'Nein' ); // No
 
 // user(info)
 define( '_AEC_USER_USER_INFO',					'Benutzerinfos' );
@@ -397,7 +399,7 @@ define( '_COUPON_PARAMS_USAGE_PLANS_NAME',			'Abos' );
 define( '_COUPON_PARAMS_USAGE_PLANS_DESC',			'Welche Abos werden angewendet' );
 
 define( '_COUPON_RESTRICTIONS_MINGID_ENABLED_NAME', 'Mindest Gruppen ID:' );
-define( '_COUPON_RESTRICTIONS_MINGID_ENABLED_DESC', 'Hier die Mindestgruppen ID definieren f&uuml;r welche dieser Gutschein g&uuml;ltig sein soll' );
+define( '_COUPON_RESTRICTIONS_MINGID_ENABLED_DESC', 'Hier die Mindestgruppen ID definieren f&uuml;r welche diesen Gutschein g&uuml;ltig sein soll' );
 define( '_COUPON_RESTRICTIONS_MINGID_NAME',			'Sichtbare Gruppe:' );
 define( '_COUPON_RESTRICTIONS_MINGID_DESC',			'Die Mindestbenutzerebene welche diesen Gutschein einsetzen kann' );
 define( '_COUPON_RESTRICTIONS_FIXGID_ENABLED_NAME', 'Fixe Gruppen ID:' );

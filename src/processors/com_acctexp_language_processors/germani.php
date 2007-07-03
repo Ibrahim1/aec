@@ -42,6 +42,7 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 	// paypal
 define( '_AEC_PROC_INFO_PP_LNAME',			'PayPal' );
 define( '_AEC_PROC_INFO_PP_STMNT',			'Zahlungen mit PayPal - schnell, gratis und sicher!');
+define( '_AEC_PROC_SET1_PP_INAME',			'Abonnement auf %s - Benutzer: %s (%s)' );
 	// paypal subscription
 define( '_AEC_PROC_INFO_PPS_LNAME',			'PayPal Abonnement' );
 define( '_AEC_PROC_INFO_PPS_STMNT',			'Zahlungen mit PayPal - schnell, gratis und sicher!');
