@@ -32,26 +32,28 @@ define( '_MI_MI_HTACCESS_REBUILD_DESC',				'If you changed something important o
 //affiliate PRO
 define( '_AEC_MI_NAME_AFFPRO',		'AffiliatePRO' );
 define( '_AEC_MI_DESC_AFFPRO',		'Connect your AEC sales to AffiliatePRO' );
-define( '_AEC_MI_SET1_AFFPRO',		'Additional Info' );
-define( '_AEC_MI_SET1_1_AFFPRO',	'Any additional info to be passed to AffiliatePRO' );
-define( '_AEC_MI_SET2_AFFPRO',		'Affiliate PRO URL' );
-define( '_AEC_MI_SET2_1_AFFPRO',	'Enter the AffiliatePRO Url (without the http://) that points to your AffiliatePRO installation.' );
-define( '_AEC_MI_SET3_AFFPRO',		'AffiliatePRO Group ID' );
-define( '_AEC_MI_SET3_1_AFFPRO',	'Enter the Affiliate PRO product group identity to be used to calculate commission.' );
+define( '_MI_MI_AFFILIATEPRO_ADD_INFO_NAME',		'Additional Info' );
+define( '_MI_MI_AFFILIATEPRO_ADD_INFO_DESC',		'Any additional info to be passed to AffiliatePRO' );
+define( '_MI_MI_AFFILIATEPRO_URL_NAME',			'Affiliate PRO URL' );
+define( '_MI_MI_AFFILIATEPRO_URL_DESC',				'Enter the AffiliatePRO Url (without the http://) that points to your AffiliatePRO installation.' );
+define( '_MI_MI_AFFILIATEPRO_GROUP_ID_NAME',		'AffiliatePRO Group ID' );
+define( '_MI_MI_AFFILIATEPRO_GROUP_ID_DESC',		'Enter the Affiliate PRO product group identity to be used to calculate commission.' );
 
 // docman
 define( '_AEC_MI_NAME_DOCMAN',		'DocMan' );
 define( '_AEC_MI_DESC_DOCMAN',		'Choose the amount of files a user can download and what DocMan group should be assigned to the user account' );
-define( '_AEC_MI_SET1_DOCMAN',		'Amount of listings' );
-define( '_AEC_MI_SET2_DOCMAN',		'Input the amount of listings you want as a overwriting set for this call' );
-define( '_AEC_MI_SET3_DOCMAN',		'Set DM-group' );
-define( '_AEC_MI_SET3_1_DOCMAN',	'Choose Yes if you want this MI to set the DocMan Group when it is called.' );
-define( '_AEC_MI_SET4_DOCMAN',		'DM-Group' );
-define( '_AEC_MI_SET4_1_DOCMAN',	'The DocMan group that you want the user to be in.' );
-define( '_AEC_MI_SET5_DOCMAN',		'Set DM-group expiration' );
-define( '_AEC_MI_SET5_1_DOCMAN',	'Choose Yes if you want this MI to set the DocMan Group when the calling payment plan expires.' );
-define( '_AEC_MI_SET6_DOCMAN',		'Expiration group' );
-define( '_AEC_MI_SET6_1_DOCMAN',	'The DocMan group that you want the user to be in when the subscription runs out.' );
+define( '_MI_MI_DOCMAN_SET_DOWNLOADS_NAME',			'Set Downloads' );
+define( '_MI_MI_DOCMAN_SET_DOWNLOADS_DESC',			'Input the total amount of downloads you want to grant to the user account - only the total granted downloads get reset, NOT the amount of downloads the user has already used.' );
+define( '_MI_MI_DOCMAN_ADD_DOWNLOADS_NAME',			'Add Downloads' );
+define( '_MI_MI_DOCMAN_ADD_DOWNLOADS_DESC',			'Input the amount of downloads you want to add to the users account.' );
+define( '_MI_MI_DOCMAN_SET_GROUP_NAME',				'Set DocMan Group' );
+define( '_MI_MI_DOCMAN_SET_GROUP_DESC',				'Choose Yes if you want this MI to set the DocMan Group when it is called.' );
+define( '_MI_MI_DOCMAN_GROUP_NAME',					'DocMan Group' );
+define( '_MI_MI_DOCMAN_GROUP_DES',					'The DocMan group that you want the user to be in.' );
+define( '_MI_MI_DOCMAN_GROUP_EXP_NAME',				'Set DocMan Group expiration' );
+define( '_MI_MI_DOCMAN_GROUP_EXP_DESC',				'Choose Yes if you want this MI to set the DocMan Group when the calling payment plan expires.' );
+define( '_MI_MI_DOCMAN_SET_GROUP_EXP_NAME',			'Expiration group' );
+define( '_MI_MI_DOCMAN_SET_GROUP_EXP_DESC',			'The DocMan group that you want the user to be in when the subscription runs out.' );
 define( '_AEC_MI_HACK1_DOCMAN',		'Build in a downloads restriction for DocMan, to be used with Micro Integrations.' );
 
 // email
@@ -86,10 +88,10 @@ define( '_AEC_MI_SET11_EMAIL',		'Rewriting Info' );
 // iDevAffiliate
 define( '_AEC_MI_NAME_IDEV',		'iDevAffiliate' );
 define( '_AEC_MI_DESC_IDEV',		'Connect your sales to iDevAffiliate' );
-define( '_AEC_MI_SET1_IDEV',		'Order ID' );
-define( '_AEC_MI_SET1_1_IDEV',		'The order number. <br />Automatic mappings:<br />\'[invoice]\' = invoice number<br />\'[planid]\' = plan id<br />\'[userid]\' = user id' );
-define( '_AEC_MI_SET2_IDEV',		'Order Subtotal' );
-define( '_AEC_MI_SET2_1_IDEV',		'The amount spent on this order. Type \'[auto]\' to assign the invoice amount.' );
+define( '_MI_MI_IDEVAFFILIATE_MI_ORDER_ID_NAME',		'Order ID' );
+define( '_MI_MI_IDEVAFFILIATE_MI_ORDER_ID_DESC',		'The order number. <br />Automatic mappings:<br />\'[invoice]\' = invoice number<br />\'[planid]\' = plan id<br />\'[userid]\' = user id' );
+define( '_MI_MI_IDEVAFFILIATE_MI_ORDER_SUBTOTAL_NAME',	'Order Subtotal' );
+define( '_MI_MI_IDEVAFFILIATE_MI_ORDER_SUBTOTAL_DESC',	'The amount spent on this order. Type \'[auto]\' to assign the invoice amount.' );
 define( '_AEC_MI_DIV1_IDEV',		'an access has been made' );
 define( '_AEC_MI_DIV2_IDEV',		'key is' );
 define( '_AEC_MI_DIV3_IDEV',		'and value =' );

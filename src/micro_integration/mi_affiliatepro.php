@@ -67,9 +67,9 @@ class mi_affiliatepro {
 
 	function Settings ( $params ) {
 		$settings = array();
-		$settings['mi_additional_info']	= array( 'inputC' );
-		$settings['mi_affPRO_url']		= array( 'inputB' );
-		$settings['mi_affPRO_group_id'] = array( 'inputC' );
+		$settings['add_info']	= array( 'inputC' );
+		$settings['url']		= array( 'inputB' );
+		$settings['group_id']	= array( 'inputC' );
 
 		return $settings;
 	}

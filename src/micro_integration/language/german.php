@@ -38,26 +38,28 @@ define( '_MI_MI_HTACCESS_REBUILD_DESC',	'Sollte die htaccess-Datei ge&auml;ndert
 //affiliate PRO
 define( '_AEC_MI_NAME_AFFPRO',		'AffiliatePRO' );
 define( '_AEC_MI_DESC_AFFPRO',		'Verbindet AEC-Zahlungen mit AffilitePRO' );
-define( '_AEC_MI_SET1_AFFPRO',		'Weitere Infos' );
-define( '_AEC_MI_SET1_1_AFFPRO',	'Weitere Informationen welche an AffiliatePRO gesendet werden' );
-define( '_AEC_MI_SET2_AFFPRO',		'AffiliatePRO URL' );
-define( '_AEC_MI_SET2_1_AFFPRO',	'Hier die AffiliatePRO URL (ohne http://) angeben' );
-define( '_AEC_MI_SET3_AFFPRO',		'AffiliatePRO ID' );
-define( '_AEC_MI_SET3_1_AFFPRO',	'Hier die AffiliatePRO ID angeben welche f&uuml;r die Provisionierung verwendet wird' );
+define( '_MI_MI_AFFILIATEPRO_ADD_INFO_NAME',		'Weitere Infos' );
+define( '_MI_MI_AFFILIATEPRO_ADD_INFO_DESC',		'Weitere Informationen welche an AffiliatePRO gesendet werden' );
+define( '_MI_MI_AFFILIATEPRO_URL_NAME',				'AffiliatePRO URL' );
+define( '_MI_MI_AFFILIATEPRO_URL_DESC',				'Hier die AffiliatePRO URL (ohne http://) angeben' );
+define( '_MI_MI_AFFILIATEPRO_GROUP_ID_NAME',		'AffiliatePRO ID' );
+define( '_MI_MI_AFFILIATEPRO_GROUP_ID_DESC',		'Hier die AffiliatePRO ID angeben welche f&uuml;r die Provisionierung verwendet wird' );
 
 // docman
 define( '_AEC_MI_NAME_DOCMAN',		'DocMan' );
 define( '_AEC_MI_DESC_DOCMAN',		'Anzahl der m&ouml;glichen Dateien sowie die DocMan-Gruppe w&auml;hlen zu welcher dieser Benutzer z&auml;hlen soll');
-define( '_AEC_MI_SET1_DOCMAN',		'Anzahl der Anzeigen welche zu diesem Aufruf angezeigt werden' );
-define( '_AEC_MI_SET2_DOCMAN',		'Anzahl der maximalen Anzeigen zu diesem Aufruf' );
-define( '_AEC_MI_SET3_DOCMAN',		'Verwende DM-Gruppe' );
-define( '_AEC_MI_SET3_1_DOCMAN',	'Auf "Ja" setzen wenn die DocMan-Benutzergruppe f&uuml;r diese Integration verwendet werden soll' );
-define( '_AEC_MI_SET4_DOCMAN',		'DM-Gruppe' );
-define( '_AEC_MI_SET4_1_DOCMAN',	'Die DocMan-Gruppe welcher diese Benutzer angeh&ouml;ren soll' );
-define( '_AEC_MI_SET5_DOCMAN',		'DM-Gruppe bei Ablauf' );
-define( '_AEC_MI_SET5_1_DOCMAN',	'Auf "Ja" setzen, wenn die DocMan-Gruppe nach Abonnementablauf verwendet werden soll' );
-define( '_AEC_MI_SET6_DOCMAN',		'DM-Gruppe definieren' );
-define( '_AEC_MI_SET6_1_DOCMAN',	'Diejenige DocMan-Gruppe definieren welche nach Aboablauf g&uuml;ltig sein soll' );
+define( '_MI_MI_DOCMAN_SET_DOWNLOADS_NAME',			'Downloads setzen' );
+define( '_MI_MI_DOCMAN_SET_DOWNLOADS_DESC',			'Die Anzahl der Downloads auf die ein Benutzer (zur&uuml;ck) gesetzt wird.' );
+define( '_MI_MI_DOCMAN_ADD_DOWNLOADS_NAME',			'Downloads anf&uuml;gen' );
+define( '_MI_MI_DOCMAN_ADD_DOWNLOADS_DESC',			'Anzahl der Downloads, die dem Benutzerkonto hinzugef&uuml;gt werden.' );
+define( '_MI_MI_DOCMAN_SET_GROUP_NAME',				'Verwende DocMan Gruppe' );
+define( '_MI_MI_DOCMAN_SET_GROUP_DESC',				'Auf "Ja" setzen wenn die DocMan-Benutzergruppe f&uuml;r diese Integration verwendet werden soll' );
+define( '_MI_MI_DOCMAN_GROUP_NAME',					'DocMan Gruppe' );
+define( '_MI_MI_DOCMAN_GROUP_DESC',					'Die DocMan-Gruppe welcher diese Benutzer angeh&ouml;ren soll' );
+define( '_MI_MI_DOCMAN_GROUP_EXP_NAME',				'DM-Gruppe bei Ablauf' );
+define( '_MI_MI_DOCMAN_GROUP_EXP_DESC',				'Auf "Ja" setzen, wenn die DocMan-Gruppe nach Abonnementablauf verwendet werden soll' );
+define( '_MI_MI_DOCMAN_SET_GROUP_EXP_NAME',			'DM-Gruppe definieren' );
+define( '_MI_MI_DOCMAN_SET_GROUP_EXP_DESC',			'Diejenige DocMan-Gruppe definieren welche nach Aboablauf g&uuml;ltig sein soll' );
 define( '_AEC_MI_HACK1_DOCMAN',		'Erstellt eine Downloadeinschr&auml;nkung f&uuml;r DocMan' );
 
 // email
@@ -92,10 +94,10 @@ define( '_AEC_MI_SET11_EMAIL',		'Weitere Infos' );
 // iDevAffiliate
 define( '_AEC_MI_NAME_IDEV',		'iDevAffiliate' );
 define( '_AEC_MI_DESC_IDEV',		'Zahlungen mit iDevAffiliate verbinden' );
-define( '_AEC_MI_SET1_IDEV',		'Bestell ID' );
-define( '_AEC_MI_SET1_1_IDEV',		'Die Bestellnummer.<br />Automatische Erg&auml;zungen:<br />\'[invoice]\' = Rechnungsnummer<br />\'[planid]\' = BenutzerID' );
-define( '_AEC_MI_SET2_IDEV',		'Zwischensumme' );
-define( '_AEC_MI_SET2_1_IDEV',		'Bisherige Summe dieser Bestellung. Das Feld \'[auto]\' angeben um es dem Rechnngsbetrag zu zuweisen' );
+define( '_MI_MI_IDEVAFFILIATE_MI_ORDER_ID_NAME',		'Bestell ID' );
+define( '_MI_MI_IDEVAFFILIATE_MI_ORDER_ID_DESC',		'Die Bestellnummer.<br />Automatische Erg&auml;zungen:<br />\'[invoice]\' = Rechnungsnummer<br />\'[planid]\' = BenutzerID' );
+define( '_MI_MI_IDEVAFFILIATE_MI_ORDER_SUBTOTAL_NAME',	'Zwischensumme' );
+define( '_MI_MI_IDEVAFFILIATE_MI_ORDER_SUBTOTAL_DESC',	'Bisherige Summe dieser Bestellung. Das Feld \'[auto]\' angeben um es dem Rechnngsbetrag zu zuweisen' );
 define( '_AEC_MI_DIV1_IDEV',		'Zugriff erfolgt' );
 define( '_AEC_MI_DIV2_IDEV',		'Schluessel ist' );
 define( '_AEC_MI_DIV3_IDEV',		'und Wert =' );
