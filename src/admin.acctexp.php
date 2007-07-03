@@ -2661,7 +2661,7 @@ function editMicroIntegration ( $id, $option ) {
 		}
 	}else{
 		// Call MI and Settings
-		if( $mi->callIntegration() || ($mi->active === 0)  {
+		if( $mi->callIntegration() || ($mi->active === 0) ) {
 			$mi_settings = $mi->getSettings();
 
 			// Get lists supplied by the MI
