@@ -1012,9 +1012,12 @@ class aecSettings {
 				if( isset( $content[3] ) ) {
 					$value						= $content[3];
 					$this->params_values[$name] = $content[3];
-				}else{
+				}elseif( isset( $content[1] ) ) {
 					$value						= $content[1];
 					$this->params_values[$name] = $content[1];
+				}else{
+					$value						= '';
+					$this->params_values[$name] = '';
 				}
 			}
 
@@ -1031,7 +1034,7 @@ class aecSettings {
 				continue;
 			}
 
-			if( !isset( $content[2]) || !$content[2] ) {
+			if( !isset( $content[2] ) || !$content[2] ) {
 				// Create constant names
 				$constant_generic	= '_' . strtoupper($this->area)
 										. '_' . strtoupper( $this->original_subarea )
@@ -4003,7 +4006,7 @@ class AECToolbox {
 	function visualstrlen( $string ) {
 
 		// Visually Short Chars
-		$srt = array( 'i', 'j', 'l' );
+		$srt = array( 'i', 'j', 'l', ',', '.' );
 		// Visually Long Chars
 		$lng = array( 'm', 'w', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Y', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' );
 
@@ -4014,15 +4017,15 @@ class AECToolbox {
 		// Iterate through array counting the visual length of the string
 		foreach( $char_array as $char ) {
 			if( in_array( $char, $srt ) ) {
-				$vlen += 1;
+				$vlen += 0.5;
 			} elseif( in_array( $char, $srt ) ) {
-				$vlen += 3;
-			} else {
 				$vlen += 2;
+			} else {
+				$vlen += 1;
 			}
 		}
 
-		return $vlen;
+		return (int) $vlen;
 	}
 
 	function rewriteEngine( $subject, $metaUser=null, $subscriptionPlan=null ) {
@@ -4398,7 +4401,11 @@ class microIntegration extends paramDBTable {
 
 			// Autoload Params if they have not been called in by the MI
 			foreach( $settings as $name => $setting ) {
-				if( !isset( $setting[3] ) ) {
+				if( !isset( $setting[1] ) ) {
+					if( !isset( $params[$name] ) ) {
+						$settings[$name][1] = $params[$name];
+					}
+				} elseif( !isset( $setting[3] ) ) {
 					$settings[$name][3] = $params[$name];
 				}
 			}
