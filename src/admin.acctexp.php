@@ -1752,7 +1752,7 @@ function editSettings( $option ) {
 		$mi = new microIntegration( $database );
 		$mi->class_name = $name;
 		if( $mi->callIntegration() ){
-			$len = 30 - strlen( trim( $mi->name ) );
+			$len = 30 - AECToolbox::visualstrlen( trim( $mi->name ) );
 			$fullname = str_replace( '#', '&nbsp;', str_pad( $mi->name, $len, '#' ) ) . ' - ' . $mi->desc;
 			$mi_htmllist[] = mosHTML::makeOption( $name, $fullname );
 		}
@@ -2647,7 +2647,7 @@ function editMicroIntegration ( $id, $option ) {
 				$mi_item = new microIntegration( $database );
 				$mi_item->class_name = $name;
 				if( $mi_item->callIntegration() ) {
-					$len = 30 - strlen( trim( $mi->name ) );
+					$len = 30 - AECToolbox::visualstrlen( trim( $mi->name ) );
 					$fullname = str_replace( '#', '&nbsp;', str_pad( $mi_item->name, $len, '#' ) )
 					. ' - ' . $mi_item->desc;
 					$mi_htmllist[] = mosHTML::makeOption( $name, $fullname );
@@ -2661,7 +2661,7 @@ function editMicroIntegration ( $id, $option ) {
 		}
 	}else{
 		// Call MI and Settings
-		if( $mi->callIntegration() ) {
+		if( $mi->callIntegration() || ($mi->active === 0)  {
 			$mi_settings = $mi->getSettings();
 
 			// Get lists supplied by the MI
