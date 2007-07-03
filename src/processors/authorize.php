@@ -64,10 +64,11 @@ class processor_authorize {
 		$settings['transaction_key'] = "transaction_key";
 		$settings['testmode'] = 0;
 		$settings['currency'] = "USD";
-		$settings['item_name'] = "Subscription at [[cms_live_site]] - User: [[user_name]] ([[user_username]])";
 		$settings['item_name'] = array("inputE");
  		$rewriteswitches = array("cms", "user", "expiration", "subscription", "plan");
-        $settings['rewriteInfo'] = array("fieldset", "Rewriting Info", AECToolbox::rewriteEngineInfo($rewriteswitches));
+        $settings['item_name']		= sprintf( _AEC_MI_SET1_INAME, '[[cms_live_site]]',
+									'[[user_name]]', '[[user_username]]' );
+		$settings['rewriteInfo']	= array("fieldset", "Rewriting Info", AECToolbox::rewriteEngineInfo($rewriteswitches));
 
 		return $settings;
 	}
@@ -137,9 +138,9 @@ class processor_authorize {
 	   // Creates an md5 HMAC.
 	   // Eliminates the need to install mhash to compute a HMAC
 	   // Hacked by Lance Rushing
-	
+
 	   $b = 64; // byte length for md5
-	
+
 	   if (strlen($key) > $b) {
 	       $key = pack("H*",md5($key));
 	   }
@@ -148,7 +149,7 @@ class processor_authorize {
 	   $opad = str_pad('', $b, chr(0x5c));
 	   $k_ipad = $key ^ $ipad ;
 	   $k_opad = $key ^ $opad;
-	
+
 	   return md5($k_opad  . pack("H*",md5($k_ipad . $data)));
 	}
 

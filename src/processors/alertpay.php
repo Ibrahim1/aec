@@ -58,7 +58,9 @@ class processor_alertpay {
 		$settings['merchant'] = "merchant";
 		$settings['securitycode'] = "security code";
 		$settings['testmode'] = 0;
-		$settings['item_name'] = "Subscription at [[cms_live_site]] - User: [[user_name]] ([[user_username]])";
+		$settings['item_name']		= sprintf( _AEC_MI_SET1_INAME, '[[cms_live_site]]',
+									'[[user_name]]', '[[user_username]]' );
+		$settings['rewriteInfo']	= ''; // added mic
 
 		return $settings;
 	}
@@ -90,7 +92,7 @@ class processor_alertpay {
 		$var['ap_merchant']		= $cfg['merchant'];
 		$var['ap_itemname']		= $int_var['invoice'];
 		$var['ap_currency']		= $cfg['currency_code'];
-		$var['ap_returnurl']	= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=thanks");				
+		$var['ap_returnurl']	= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=thanks");
 		$var['ap_quantity']		= "";
 		$var['ap_description']	= "Subscription at " . $mosConfig_live_site . " - User: ". $metaUser->cmsUser->name . " (" . $metaUser->cmsUser->username . ")";
 		if (isset($cfg['tax']) && @$cfg['tax'] > 0) {
@@ -98,7 +100,7 @@ class processor_alertpay {
 			$var['ap_amount'] 	= round($tax, 2);
 		} else {
 			$var['ap_amount'] 	= $int_var['amount'];
-		}				
+		}
 		$var['ap_cancelurl']	= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=cancel");
 
 		$var['apc_1']		= $metaUser->cmsUser->id;

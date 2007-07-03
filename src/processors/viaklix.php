@@ -59,7 +59,10 @@ class processor_viaklix {
 		$settings['userid'] = "your user id";
 		$settings['pin'] = "your pin";
 		$settings['testmode'] = 0;
-		$settings['item_name'] = "Subscription at [[cms_live_site]] - User: [[user_name]] ([[user_username]])";
+		$settings['item_name']		= sprintf( _AEC_MI_SET1_INAME, '[[cms_live_site]]',
+									'[[user_name]]', '[[user_username]]' );
+		$settings['rewriteInfo']	= ''; // added mic
+
 
 		return $settings;
 	}
@@ -110,7 +113,7 @@ class processor_viaklix {
 		$ssl_cvv2_response		= $_POST['ssl_cvv2_response'];
 		$ssl_avs_response		= $_POST['ssl_avs_response'];
 		$ssl_transaction_type	= $_POST['ssl_transaction_type'];
-	
+
 		$ssl_amount				= $_POST['ssl_amount'];
 		$ssl_email				= $_POST['ssl_email'];
 		$ssl_description		= $_POST['ssl_description'];

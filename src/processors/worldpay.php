@@ -62,7 +62,10 @@ class processor_worldpay {
 		$settings['instId'] = "your instId";
 		$settings['testmode'] = 0;
 		$settings['currency'] = "USD";
-		$settings['item_name'] = "Subscription at [[cms_live_site]] - User: [[user_name]] ([[user_username]])";
+		$settings['item_name']		= sprintf( _AEC_MI_SET1_INAME, '[[cms_live_site]]',
+									'[[user_name]]', '[[user_username]]' );
+		$settings['rewriteInfo']	= ''; // added mic
+
 
 		return $settings;
 	}

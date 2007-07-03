@@ -71,8 +71,9 @@ class processor_2checkout {
 		$settings['testmode']		= 0;
 		$settings['alt2courl']		= '';
 		$settings['info']			= ''; // new mic
-		$settings['rewriteinfo']	= ''; // new mic
-		$settings['item_name']		= 'Subscription at [[cms_live_site]] - User: [[user_name]] ([[user_username]])';
+		$settings['item_name']		= sprintf( _AEC_MI_SET1_INAME, '[[cms_live_site]]',
+									'[[user_name]]', '[[user_username]]' );
+		$settings['rewriteInfo']	= ''; // added mic
 
 		return $settings;
 	}

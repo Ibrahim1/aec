@@ -246,6 +246,7 @@ define( '_AEC_HELP_DIAG_PAYPAL_BUSS_ID_DESC1',	'Falls PayPal-Zahlungen eintreffe
 // micro integration
 	// general
 define( '_AEC_MI_REWRITING_INFO',				'Vorlagen Platzhalter' );
+define( '_AEC_MI_SET1_INAME',					'Abonnement auf %s - Benutzer: %s (%s)' );
 	// htaccess
 define( '_AEC_MI_HTACCESS_INFO_DESC',			'Sch&uuml;tzt ein Verzeichnis mit einer .htaccess Datei und erlaubt den Zugriff nur Benutzern dieses Abos' );
 	// email

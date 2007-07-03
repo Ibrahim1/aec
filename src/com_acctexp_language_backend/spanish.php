@@ -242,7 +242,8 @@ define( '_AEC_HELP_DIAG_PAYPAL_BUSS_ID_DESC1',	'Please disable this setting in c
 // micro integration
 	// general
 define( '_AEC_MI_REWRITING_INFO',				'Rewriting Info' );
-	// htaccess
+define( '_AEC_MI_SET1_INAME',					'Subscription at %s - User: %s (%s)' );
+// htaccess
 define( '_AEC_MI_HTACCESS_INFO_DESC',			'Protect a folder with a .htaccess file and only allow users of this subscription to access it with their joomla account details.' );
 	// email
 define( '_AEC_MI_EMAIL_INFO_DESC',				'Send an Email to one or more adresses on application or expiration of the subscription' );
