@@ -1362,7 +1362,6 @@ class HTML_AcctExp {
 											<br />
 											<?php
 											echo _MI_E_FUNCTION_DESC;
-											echo _MI_E_FUNCTION_DESC;
 										}else{
 											echo _AEC_MSG_MIS_NOT_DEFINED;
 										} ?>

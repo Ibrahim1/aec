@@ -4296,15 +4296,15 @@ class microIntegration extends paramDBTable {
 		return $database->loadResult();
 	}
 
-	function callIntegration () {
+	function callIntegration ( $override = 0 ) {
 		global $mosConfig_absolute_path;
 
 		$filename = $mosConfig_absolute_path . '/components/com_acctexp/micro_integration/' . $this->class_name . '.php';
 
-		if( ( !$this->active && $this->id ) || !file_exists( $filename ) ) {
+		if( ( ( !$this->active && $this->id ) || !file_exists( $filename ) ) && !$override ) {
 			// MI does not exist or is deactivated
 			return false;
-		}else{
+		}elseif( file_exists( $filename ) ){
 			include_once $filename;
 
 			$class = $this->class_name;
@@ -4401,12 +4401,15 @@ class microIntegration extends paramDBTable {
 
 			// Autoload Params if they have not been called in by the MI
 			foreach( $settings as $name => $setting ) {
-				if( !isset( $setting[1] ) ) {
-					if( !isset( $params[$name] ) ) {
+				// Do we have a parameter at third position?
+				if( isset( $setting[1] ) ) {
+					if( isset( $params[$name] ) ) {
+						$settings[$name][3] = $params[$name];
+					}
+				}else{
+					if( isset( $params[$name] ) ) {
 						$settings[$name][1] = $params[$name];
 					}
-				} elseif( !isset( $setting[3] ) ) {
-					$settings[$name][3] = $params[$name];
 				}
 			}
 

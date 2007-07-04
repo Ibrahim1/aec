@@ -2660,8 +2660,8 @@ function editMicroIntegration ( $id, $option ) {
 			$lists['class_name'] = '';
 		}
 	}else{
-		// Call MI and Settings
-		if( $mi->callIntegration() || ($mi->active === 0) ) {
+		// Call MI (override active check) and Settings
+		if( $mi->callIntegration( 1 ) ) {
 			$mi_settings = $mi->getSettings();
 
 			// Get lists supplied by the MI
