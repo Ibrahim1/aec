@@ -1121,11 +1121,11 @@ class aecHTML {
 		switch ( $type ) {
 			case 'inputA':
 				$return .= '<div class="setting_form">';
-				$return .= '<input name="' . $name . '" type="text" size="4" maxlength="5" value="' . $value . '" />';
+				$return .= '<input name="' . $name . '" type="text" size="4" value="' . $value . '" />';
 				break;
 			case 'inputB':
 				$return .= '<div class="setting_form">';
-				$return .= '<input class="inputbox" type="text" name="' . $name . '" size="8" maxlength="10" value="' . $value . '" />';
+				$return .= '<input class="inputbox" type="text" name="' . $name . '" size="8" value="' . $value . '" />';
 				$return .= '</div>';
 				break;
 			case 'inputC':
@@ -3502,15 +3502,13 @@ class Subscription extends paramDBTable {
 		mosMail( $adminEmail2, $adminName2, $email, $subject, $message );
 
 		// Send notification to all administrators
-		$msg = '';
 		if( $renew ) {
-			$msg = _ACCTEXP_SEND_MSG_RENEW;
-		}else{
-			$msg = _ACCTEXP_SEND_MSG;
+			$subject2 = sprintf (_ACCTEXP_SEND_MSG_RENEW, $name, $mosConfig_sitename);
+			$message2 = sprintf (_ACCTEXP_ASEND_MSG_RENEW, $adminName2, $mosConfig_sitename, $name, $email, $username, $plan->id, $plan->name);
+		} else {
+			$subject2 = sprintf (_ACCTEXP_SEND_MSG, $name, $mosConfig_sitename);
+			$message2 = sprintf (_ACCTEXP_ASEND_MSG, $adminName2, $mosConfig_sitename, $name, $email, $username, $plan->id, $plan->name);
 		}
-
-		$subject2 = sprintf( $msg, $name, $mainframe->getCfg( 'sitename' ) );
-		$message2 = sprintf( $msg, $adminName2, $mainframe->getCfg( 'sitename' ), $name, $email, $username, $plan->id, $plan->name );
 
 		$subject2 = html_entity_decode( $subject2, ENT_QUOTES );
 		$message2 = html_entity_decode( $message2, ENT_QUOTES );
