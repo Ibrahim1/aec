@@ -50,10 +50,10 @@ class mi_example {
 
 		// remember to link the params array correctly to the settings - call on the same name
 
-		// Syntax: Field Type || Field Name || Parameter->Variable Name || Description || Variable Name
+		// Syntax: ['name'] => Field Type || Field Name || Field Description
 		$settings = array();
-		$settings[] = array("inputA", "Name", "description");
-		$settings[] = array("inputD", "SET", "description2");
+		$settings['param_name1'] = array("inputA", "Name", "description");
+		$settings['param_name2'] = array("inputD", "SET", "description2");
 
 		return $settings;
 	}
