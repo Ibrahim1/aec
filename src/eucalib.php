@@ -111,4 +111,47 @@ class paramDBTable extends mosDBTable {
 		}
 	}
 }
+
+class languageFileHandler {
+
+	function languageFileHandler( $filepath ) {
+		$this->filepath = $filepath;
+	}
+	
+	function getConstantsArray() {
+
+		$file = fopen( $this->filepath, "r" )
+	
+		$array = array();
+		while( !feof( $file ) ) {
+			$buffer = fgets($file, 4096);
+			if( strpos( $buffer, 'define') !== false ) {
+				$linearray = explode( '\'', $buffer );
+				if( count( $linearray ) === 5 ) {
+					$array[$linearray[1]] = $linearray[3];
+				}
+			}
+    	}
+
+		return $array;
+	}
+	
+	function getHTML() {
+
+		$file = fopen( $this->filepath, "r" )
+	
+		$array = array();
+		while( !feof( $file ) ) {
+			$buffer = fgets($file, 4096);
+			if( strpos( $buffer, 'define') !== false ) {
+				$linearray = explode( '\'', $buffer );
+				if( count( $linearray ) === 5 ) {
+					$array[$linearray[1]] = $linearray[3];
+				}
+			}
+    	}
+
+		return $array;
+	}
+}
 ?>

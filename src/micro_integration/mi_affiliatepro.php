@@ -92,7 +92,7 @@ class mi_affiliatepro {
 		$passvars['aff_id']		= ''; //REPLACE with Affiliate Id - how will AEC know this?
 		$passvars['group_id']	= $params['mi_affPRO_group_id'];
 
-		//Get the transaction amount from AEC
+		// Get the transaction amount from AEC
 		$query = 'SELECT amount'
 		. ' FROM #__acctexp_invoices'
 		. ' WHERE invoice_number = \'' . $passvars['txn_id'] . '\''
@@ -100,7 +100,7 @@ class mi_affiliatepro {
 		$database->setQuery( $query );
 		$passvars['amount'] = $database->loadResult();
 
-		//Get the currency from AEC - NOTE this MAY NOT WORK - does AEC use ISO currency codes??
+		// Get the currency from AEC
 		$query = 'SELECT currency'
 		. ' FROM #__acctexp_invoices'
 		. ' WHERE invoice_number = \'' . $passvars['txn_id'] . '\''
@@ -110,13 +110,15 @@ class mi_affiliatepro {
 
 		$passvars['country_code']	= '';// REPLACE with Country Code? Where could that come from?
 		$passvars['add_info']		= 'userid_' . $userid . '_plan_' . $plan->id . '_' . $params['mi_additional_info'];
-		$url						= 'http://' . $params['mi_affPRO_url'] . '/callbacks/callback_sample.php?';
 
 		$vars_encode = array();
 		foreach( $passvars as $key => $value ) {
-			$vars_encode[] = $key . '=' . $value;
+			if( !empty( $value ) ) {
+				$vars_encode[] = $key . '=' . $value;
+			}
 		}
 
+		$url = 'http://' . $params['mi_affPRO_url'] . '/callbacks/callback_sample.php?';
 		$url .= implode( '&', $vars_encode );
 
 		$request=fopen( $url, 'r' );
