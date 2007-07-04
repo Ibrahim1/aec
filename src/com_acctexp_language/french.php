@@ -63,168 +63,142 @@ define( '_COUPON_INFO_CHECKOUT',			'Please enter your coupon code here and click
 // end mic ########################################################
 
 // --== PAGE PLANS ==--
-DEFINE ('_NOPLANS_ERROR', 'Aucun plan disponible pour le moment.');
+define( '_NOPLANS_ERROR', 'Aucun plan disponible pour le moment.');
 
 // --== PAGE INFORMATIONS DU COMPTE ==--
-DEFINE ('_CHK_USERNAME_AVAIL', "Le nom d&acute;utilisateur %s est disponible");
-DEFINE ('_CHK_USERNAME_NOTAVAIL', "Le nom d&acute;utilisateur %s est d&eacute;j&agrave; pris!");
+define( '_CHK_USERNAME_AVAIL', "Le nom d&acute;utilisateur %s est disponible");
+define( '_CHK_USERNAME_NOTAVAIL', "Le nom d&acute;utilisateur %s est d&eacute;j&agrave; pris!");
 
 // --== PAGE ABONNEMENT ==--
-DEFINE ('_HISTORY_TITLE', 'Historique des abonnements - 10 Derniers paiements');
-DEFINE ('_HISTORY_SUBTITLE', 'Membre depuis ');
-DEFINE ('_HISTORY_COL1_TITLE', 'Facture');
-DEFINE ('_HISTORY_COL2_TITLE', 'Montant');
-DEFINE ('_HISTORY_COL3_TITLE', 'Date de Paiement');
-DEFINE ('_HISTORY_COL4_TITLE', 'M&eacute;thode');
-DEFINE ('_HISTORY_COL5_TITLE', 'Action');
-DEFINE ('_HISTORY_COL6_TITLE', 'Plan');
-DEFINE ('_HISTORY_ACTION_REPEAT', 'pay');
-DEFINE ('_HISTORY_ACTION_CANCEL', 'cancel');
-DEFINE ('_RENEW_LIFETIME', 'Vous avez un abonnement &agrave; vie.');
-DEFINE ('_RENEW_DAYSLEFT', 'jours restants');
-DEFINE ('_RENEW_DAYSLEFT_EXCLUDED', 'You are excluded from expiration');
-DEFINE ('_RENEW_DAYSLEFT_INFINITE', '&#8734');
-DEFINE ('_RENEW_INFO', 'Vous utilisez les paiements r&eacute;currents.');
-DEFINE ('_RENEW_OFFLINE', 'Renouveler');
-DEFINE ('_RENEW_BUTTON_UPGRADE', 'Mettre &agrave; jour');
-DEFINE ('_PAYMENT_PENDING_REASON_ECHECK', 'echeck uncleared (1-4 business days)');
-DEFINE ('_PAYMENT_PENDING_REASON_TRANSFER', 'awaiting transfer payment');
+define( '_HISTORY_TITLE', 'Historique des abonnements - 10 Derniers paiements');
+define( '_HISTORY_SUBTITLE', 'Membre depuis ');
+define( '_HISTORY_COL1_TITLE', 'Facture');
+define( '_HISTORY_COL2_TITLE', 'Montant');
+define( '_HISTORY_COL3_TITLE', 'Date de Paiement');
+define( '_HISTORY_COL4_TITLE', 'M&eacute;thode');
+define( '_HISTORY_COL5_TITLE', 'Action');
+define( '_HISTORY_COL6_TITLE', 'Plan');
+define( '_HISTORY_ACTION_REPEAT', 'pay');
+define( '_HISTORY_ACTION_CANCEL', 'cancel');
+define( '_RENEW_LIFETIME', 'Vous avez un abonnement &agrave; vie.');
+define( '_RENEW_DAYSLEFT', 'jours restants');
+define( '_RENEW_DAYSLEFT_EXCLUDED', 'You are excluded from expiration');
+define( '_RENEW_DAYSLEFT_INFINITE', '&#8734');
+define( '_RENEW_INFO', 'Vous utilisez les paiements r&eacute;currents.');
+define( '_RENEW_OFFLINE', 'Renouveler');
+define( '_RENEW_BUTTON_UPGRADE', 'Mettre &agrave; jour');
+define( '_PAYMENT_PENDING_REASON_ECHECK', 'echeck uncleared (1-4 business days)');
+define( '_PAYMENT_PENDING_REASON_TRANSFER', 'awaiting transfer payment');
 
 // --== PAGE EXPIRATION ==--
-DEFINE ('_EXPIRE_INFO', 'Votre compte est actif jusqu&acute;&agrave;');
-DEFINE ('_RENEW_BUTTON', 'Renouveler Maintenant');
-DEFINE ('_ACCT_DATE_FORMAT', '%d-%m-%Y');
-DEFINE ('_EXPIRED', "Votre compte est d&eacute;sactiv&eacute;<br> Merci de nous contacter pour renouveler votre inscription.<br>Date d&acute;expiration :");
-DEFINE ('_EXPIRED_TRIAL', 'Votre p&eacute;riode d&acute;essai a expir&eacute; le: ');
-DEFINE ('_ERRTIMESTAMP', 'Impossible de convertir l&acute;horodatage.');
-DEFINE ('_EXPIRED_TITLE', 'Compte Expir&eacute; !');
-DEFINE ('_DEAR', 'Cher(e) ');
+define( '_EXPIRE_INFO', 'Votre compte est actif jusqu&acute;&agrave;');
+define( '_RENEW_BUTTON', 'Renouveler Maintenant');
+define( '_ACCT_DATE_FORMAT', '%d-%m-%Y');
+define( '_EXPIRED', "Votre compte est d&eacute;sactiv&eacute;<br> Merci de nous contacter pour renouveler votre inscription.<br>Date d&acute;expiration :");
+define( '_EXPIRED_TRIAL', 'Votre p&eacute;riode d&acute;essai a expir&eacute; le: ');
+define( '_ERRTIMESTAMP', 'Impossible de convertir l&acute;horodatage.');
+define( '_EXPIRED_TITLE', 'Compte Expir&eacute; !');
+define( '_DEAR', 'Cher(e) ');
 
 // --== FORMULAIRE DE CONFIRMATION ==--
-DEFINE ('_CONFIRM_TITLE', 'Formulaire de Confirmation');
-DEFINE ('_CONFIRM_COL1_TITLE', 'Compte');
-DEFINE ('_CONFIRM_COL2_TITLE', 'Informations');
-DEFINE ('_CONFIRM_COL3_TITLE', 'Montant');
-DEFINE ('_CONFIRM_ROW_NAME', 'Nom: ');
-DEFINE ('_CONFIRM_ROW_USERNAME', 'Nom d&acute;utilisateur: ');
-DEFINE ('_CONFIRM_ROW_EMAIL', 'Courriel:');
-DEFINE ('_CONFIRM_INFO', 'Veuillez utiliser le bouton Continuer pour compl&eacute;ter votre enregistrement.');
-DEFINE ('_BUTTON_CONFIRM', 'Continuer');
-DEFINE ('_CONFIRM_TOS', "I have read and agree to the <a href=\"%s\" target=\"_BLANK\">Terms of Service</a>");
-DEFINE ('_CONFIRM_TOS_ERROR', 'Please read and agree to our Terms of Service');
-DEFINE ('_CONFIRM_COUPON_INFO', 'If you have a coupon code, you can enter it on the Checkout Page to get a rebate on your payment');
+define( '_CONFIRM_TITLE', 'Formulaire de Confirmation');
+define( '_CONFIRM_COL1_TITLE', 'Compte');
+define( '_CONFIRM_COL2_TITLE', 'Informations');
+define( '_CONFIRM_COL3_TITLE', 'Montant');
+define( '_CONFIRM_ROW_NAME', 'Nom: ');
+define( '_CONFIRM_ROW_USERNAME', 'Nom d&acute;utilisateur: ');
+define( '_CONFIRM_ROW_EMAIL', 'Courriel:');
+define( '_CONFIRM_INFO', 'Veuillez utiliser le bouton Continuer pour compl&eacute;ter votre enregistrement.');
+define( '_BUTTON_CONFIRM', 'Continuer');
+define( '_CONFIRM_TOS', "I have read and agree to the <a href=\"%s\" target=\"_BLANK\">Terms of Service</a>");
+define( '_CONFIRM_TOS_ERROR', 'Please read and agree to our Terms of Service');
+define( '_CONFIRM_COUPON_INFO', 'If you have a coupon code, you can enter it on the Checkout Page to get a rebate on your payment');
 
 // --== FORMULAIRE DE PAIEMENT ==--
-DEFINE ('_CHECKOUT_TITLE', 'Passer &agrave; la caisse');
-DEFINE ('_CHECKOUT_INFO', 'Votre Enregistrement a &eacute;t&eacute; sauvegard&eacute;. Afin d&acute;utiliser votre nouveau compte, vous devez passer &agrave; la caisse via une passerelle de paiement en cliquant sur le bouton ci-dessous. <br /> Si un probl&egrave;me arrive durant la proc&eacute;dure, vous pouvez toujours revenir en arri&egrave;re, &agrave; cette &eacute;tape en vous connectant &agrave; notre site avec vos nouveaux renseignements - Notre Syst&egrave;me vous redonnera la chance de r&eacute;essayer le paiement.');
-DEFINE ('_CHECKOUT_INFO_REPEAT', 'Thank you for coming back. To complete your payment, you need to proceed to the Payment Gateway by clicking the button below. <br /> If something goes wrong along the way, you can always come back to this step by logging in to our site with your new details - Our System will give you an option to try your payment again.');
-DEFINE ('_CHECKOUT_INFO_TRANSFER', 'Votre Enregistrement a &eacute;t&eacute; sauvegard&eacute;. Afin d&acute;utiliser votre nouveau compte, vous devez suivre les &eacute;tapes ci-dessous. <br /> Si un probl&egrave;me arrive durant la proc&eacute;dure, vous pouvez toujours revenir en arri&egrave;re, &agrave; cette &eacute;tape en vous connectant &agrave; note site avec vos nouveaux renseignements - Notre Syst&egrave;me vous redonnera la chance de revoir cette page.');
-DEFINE ('_CHECKOUT_INFO_TRANSFER_REPEAT', 'Thank you for coming back. To complete your payment, you need to follow the details below. <br /> If something goes wrong along the way, you can always come back to this step by logging in to our site with your new details - Our System will give you an option to view this page again.');
-DEFINE ('_BUTTON_CHECKOUT', 'Passer &agrave; la caisse');
-DEFINE ('_BUTTON_APPEND', 'Append');
-DEFINE ('_CHECKOUT_COUPON_CODE', 'Coupon Code');
-DEFINE ('_CHECKOUT_INVOICE_AMOUNT', 'Invoice Amount');
-DEFINE ('_CHECKOUT_INVOICE_COUPON', 'Coupon');
-DEFINE ('_CHECKOUT_INVOICE_COUPON_REMOVE', 'remove');
-DEFINE ('_CHECKOUT_INVOICE_TOTAL_AMOUNT', 'Total Amount');
-DEFINE ('_CHECKOUT_COUPON_INFO', 'If you have a coupon code, you can enter it here to get a rebate on your payment');
+define( '_CHECKOUT_TITLE', 'Passer &agrave; la caisse');
+define( '_CHECKOUT_INFO', 'Votre Enregistrement a &eacute;t&eacute; sauvegard&eacute;. Afin d&acute;utiliser votre nouveau compte, vous devez passer &agrave; la caisse via une passerelle de paiement en cliquant sur le bouton ci-dessous. <br /> Si un probl&egrave;me arrive durant la proc&eacute;dure, vous pouvez toujours revenir en arri&egrave;re, &agrave; cette &eacute;tape en vous connectant &agrave; notre site avec vos nouveaux renseignements - Notre Syst&egrave;me vous redonnera la chance de r&eacute;essayer le paiement.');
+define( '_CHECKOUT_INFO_REPEAT', 'Thank you for coming back. To complete your payment, you need to proceed to the Payment Gateway by clicking the button below. <br /> If something goes wrong along the way, you can always come back to this step by logging in to our site with your new details - Our System will give you an option to try your payment again.');
+define( '_CHECKOUT_INFO_TRANSFER', 'Votre Enregistrement a &eacute;t&eacute; sauvegard&eacute;. Afin d&acute;utiliser votre nouveau compte, vous devez suivre les &eacute;tapes ci-dessous. <br /> Si un probl&egrave;me arrive durant la proc&eacute;dure, vous pouvez toujours revenir en arri&egrave;re, &agrave; cette &eacute;tape en vous connectant &agrave; note site avec vos nouveaux renseignements - Notre Syst&egrave;me vous redonnera la chance de revoir cette page.');
+define( '_CHECKOUT_INFO_TRANSFER_REPEAT', 'Thank you for coming back. To complete your payment, you need to follow the details below. <br /> If something goes wrong along the way, you can always come back to this step by logging in to our site with your new details - Our System will give you an option to view this page again.');
+define( '_BUTTON_CHECKOUT', 'Passer &agrave; la caisse');
+define( '_BUTTON_APPEND', 'Append');
+define( '_CHECKOUT_COUPON_CODE', 'Coupon Code');
+define( '_CHECKOUT_INVOICE_AMOUNT', 'Invoice Amount');
+define( '_CHECKOUT_INVOICE_COUPON', 'Coupon');
+define( '_CHECKOUT_INVOICE_COUPON_REMOVE', 'remove');
+define( '_CHECKOUT_INVOICE_TOTAL_AMOUNT', 'Total Amount');
+define( '_CHECKOUT_COUPON_INFO', 'If you have a coupon code, you can enter it here to get a rebate on your payment');
 
 // --== ALLOPASS ==--
-DEFINE ('_REGTITLE','INSCRIPTION');
-DEFINE ('_ERRORCODE','Erreur de code Allopass');
-DEFINE ('_FTEXTA','Le code que vous avez utilis&eacute; n&acute;est pas valide! Pour obtenir un code valide, composez le num&eacute;ro de t&eacute;l&eacute;phone, indiqu&eacute; dans une fen&ecirc;tre pop-up, apr&egrave;s avoir cliqu&eacute; sur le drapeau de votre pays. Votre navigateur doit accepter les cookies.<br><br>Si vous &ecirc;tes certain, que vous avez le bon code, attendez quelques secondes et r&eacute;essayez encore une fois!<br><br>Sinon prenez note de la date et de l&acute;heure de cet avertissement d&acute;erreur et informez le Webmaster de ce probl&egrave;me en indiquant le code utilis&eacute;.');
-DEFINE ('_RECODE','Saisir de nouveau le code Allopass');
+define( '_REGTITLE','INSCRIPTION');
+define( '_ERRORCODE','Erreur de code Allopass');
+define( '_FTEXTA','Le code que vous avez utilis&eacute; n&acute;est pas valide! Pour obtenir un code valide, composez le num&eacute;ro de t&eacute;l&eacute;phone, indiqu&eacute; dans une fen&ecirc;tre pop-up, apr&egrave;s avoir cliqu&eacute; sur le drapeau de votre pays. Votre navigateur doit accepter les cookies.<br><br>Si vous &ecirc;tes certain, que vous avez le bon code, attendez quelques secondes et r&eacute;essayez encore une fois!<br><br>Sinon prenez note de la date et de l&acute;heure de cet avertissement d&acute;erreur et informez le Webmaster de ce probl&egrave;me en indiquant le code utilis&eacute;.');
+define( '_RECODE','Saisir de nouveau le code Allopass');
 
 // --== ETAPES D'ENREGISTREMENT ==--
-DEFINE ('_STEP_DATA', 'Vos informations');
-DEFINE ('_STEP_CONFIRM', 'Confirmer');
-DEFINE ('_STEP_PLAN', 'S&eacute;lectionner le Plan');
-DEFINE ('_STEP_EXPIRED', 'Expir&eacute;!');
+define( '_STEP_DATA', 'Vos informations');
+define( '_STEP_CONFIRM', 'Confirmer');
+define( '_STEP_PLAN', 'S&eacute;lectionner le Plan');
+define( '_STEP_EXPIRED', 'Expir&eacute;!');
 
 // --== PAGE NON DISPONIBLE ==--
-DEFINE ('_NOT_ALLOWED_HEADLINE', 'Abonnement requis!');
-DEFINE ('_NOT_ALLOWED_FIRSTPAR', 'Le Contenu que vous tentez d&acute;acc&eacute;der est disponible aux abonn&eacute;es de notre site uniquement. Si vous &ecirc;tes d&eacute;j&agrave; abonn&eacute; vous devez vous connecter d&acute;abord. Veuillez suivre ce lien si vous d&eacute;sirez vous enregistrer:');
-DEFINE ('_NOT_ALLOWED_REGISTERLINK', 'Page d&acute;enregistrement');
-DEFINE ('_NOT_ALLOWED_FIRSTPAR_LOGGED', 'The Content you are trying to see is available only for members of our site who have a certain subscription. Please follow this link if you want to change your subscription: ');
-DEFINE ('_NOT_ALLOWED_REGISTERLINK_LOGGED', 'Subscription Page');
-DEFINE ('_NOT_ALLOWED_SECONDPAR', 'Vous abonnez ne prendra que quelques minutes - nous utilisons les services de:');
+define( '_NOT_ALLOWED_HEADLINE', 'Abonnement requis!');
+define( '_NOT_ALLOWED_FIRSTPAR', 'Le Contenu que vous tentez d&acute;acc&eacute;der est disponible aux abonn&eacute;es de notre site uniquement. Si vous &ecirc;tes d&eacute;j&agrave; abonn&eacute; vous devez vous connecter d&acute;abord. Veuillez suivre ce lien si vous d&eacute;sirez vous enregistrer:');
+define( '_NOT_ALLOWED_REGISTERLINK', 'Page d&acute;enregistrement');
+define( '_NOT_ALLOWED_FIRSTPAR_LOGGED', 'The Content you are trying to see is available only for members of our site who have a certain subscription. Please follow this link if you want to change your subscription: ');
+define( '_NOT_ALLOWED_REGISTERLINK_LOGGED', 'Subscription Page');
+define( '_NOT_ALLOWED_SECONDPAR', 'Vous abonnez ne prendra que quelques minutes - nous utilisons les services de:');
 
 // --== PAGE ANNULATION ==--
-DEFINE ('_CANCEL_TITLE', 'R&eacute;sultat d&acute;abonnement: Annul&eacute;!');
-DEFINE ('_CANCEL_MSG', 'Notre Syst&egrave;me &agrave; re&ccedil;u un message, que vous avez choisi d&acute;annuler votre paiement. Si cela est d� &agrave; un probl&egrave;me rencontr&eacute; sur notre site, n&acute;h&eacute;sitez pas &agrave; nous contacter!');
+define( '_CANCEL_TITLE', 'R&eacute;sultat d&acute;abonnement: Annul&eacute;!');
+define( '_CANCEL_MSG', 'Notre Syst&egrave;me &agrave; re&ccedil;u un message, que vous avez choisi d&acute;annuler votre paiement. Si cela est d� &agrave; un probl&egrave;me rencontr&eacute; sur notre site, n&acute;h&eacute;sitez pas &agrave; nous contacter!');
 
 // --== PAGE EN ATTENTE ==--
-DEFINE ('_WARN_PENDING', 'Votre compte est toujours en attente. Si vous avez ce statut  depuis plusieurs heures et que votre paiement a &eacute;t&eacute; confirm&eacute;, veuillez contacter l&acute;administrateur du site Internet.');
-DEFINE ('_PENDING_OPENINVOICE', 'Il semble que vous ayez une facture non pay&eacute;e dans notre syst&egrave;me - Si jamais vous rencontrez un probl&egrave;me lors de la proc&eacute;dure, vous pourrez revenir &agrave; la page de paiement de nouveau et r&eacute;essayer de nouveau:');
-DEFINE ('_GOTO_CHECKOUT', 'Retourner &agrave; la page de paiement &agrave; nouveau');
-DEFINE ('_GOTO_CHECKOUT_CANCEL', 'you may also cancel the payment (you will have the possibility to go to the Plan Selection screen once again):');
-DEFINE ('_PENDING_NOINVOICE', 'It appears that you have cancelled the only invoice that was left for your account. Please use the button below to go to the Plan Selection page again:');
-DEFINE ('_PENDING_NOINVOICE_BUTTON', 'Plan Selection');
-DEFINE ('_PENDING_REASON_ECHECK', '(According to our information however, you decided to pay by echeck, so you it might be that you just have to wait until this payment is cleared - which usually takes 1-4 days.)');
-DEFINE ('_PENDING_REASON_TRANSFER', '(According to our information however, you decided to pay by an offline payment means, so you it might be that you just have to wait until this payment is cleared - which can take a couple of days.)');
+define( '_WARN_PENDING', 'Votre compte est toujours en attente. Si vous avez ce statut  depuis plusieurs heures et que votre paiement a &eacute;t&eacute; confirm&eacute;, veuillez contacter l&acute;administrateur du site Internet.');
+define( '_PENDING_OPENINVOICE', 'Il semble que vous ayez une facture non pay&eacute;e dans notre syst&egrave;me - Si jamais vous rencontrez un probl&egrave;me lors de la proc&eacute;dure, vous pourrez revenir &agrave; la page de paiement de nouveau et r&eacute;essayer de nouveau:');
+define( '_GOTO_CHECKOUT', 'Retourner &agrave; la page de paiement &agrave; nouveau');
+define( '_GOTO_CHECKOUT_CANCEL', 'you may also cancel the payment (you will have the possibility to go to the Plan Selection screen once again):');
+define( '_PENDING_NOINVOICE', 'It appears that you have cancelled the only invoice that was left for your account. Please use the button below to go to the Plan Selection page again:');
+define( '_PENDING_NOINVOICE_BUTTON', 'Plan Selection');
+define( '_PENDING_REASON_ECHECK', '(According to our information however, you decided to pay by echeck, so you it might be that you just have to wait until this payment is cleared - which usually takes 1-4 days.)');
+define( '_PENDING_REASON_TRANSFER', '(According to our information however, you decided to pay by an offline payment means, so you it might be that you just have to wait until this payment is cleared - which can take a couple of days.)');
 
 // --== PAGE REMERCIEMENT ==--
-DEFINE ('_THANKYOU_TITLE', 'Merci!');
-DEFINE ('_SUB_FEPARTICLE_HEAD', 'Abonnement Compl&eacute;t&eacute;!');
-DEFINE ('_SUB_FEPARTICLE_HEAD_RENEW', 'Renouvellement d&acute;abonnement Compl&eacute;t&eacute;!');
-DEFINE ('_SUB_FEPARTICLE_LOGIN', 'Vous pouvez vous connecter maintenant.');
-DEFINE ('_SUB_FEPARTICLE_THANKS', 'Merci de vous &ecirc;tre abonn&eacute;. ');
-DEFINE ('_SUB_FEPARTICLE_THANKSRENEW', 'Merci d&acute;avoir renouvel&eacute; votre abonnement. ');
-DEFINE ('_SUB_FEPARTICLE_PROCESS', 'Notre syst&egrave;me va maintenant traiter votre demande. ');
-DEFINE ('_SUB_FEPARTICLE_PROCESSPAY', 'Notre syst&egrave;me est en attente de votre paiement. ');
-DEFINE ('_SUB_FEPARTICLE_ACTMAIL', 'Vous allez recevoir un message par courriel qui contiendra un lien d&acute;activation quand notre syst&egrave;me aura trait&eacute; votre demande. ');
-DEFINE ('_SUB_FEPARTICLE_MAIL', 'Vous allez recevoir un message courriel une fois que notre syst&egrave;me. ');
+define( '_THANKYOU_TITLE', 'Merci!');
+define( '_SUB_FEPARTICLE_HEAD', 'Abonnement Compl&eacute;t&eacute;!');
+define( '_SUB_FEPARTICLE_HEAD_RENEW', 'Renouvellement d&acute;abonnement Compl&eacute;t&eacute;!');
+define( '_SUB_FEPARTICLE_LOGIN', 'Vous pouvez vous connecter maintenant.');
+define( '_SUB_FEPARTICLE_THANKS', 'Merci de vous &ecirc;tre abonn&eacute;. ');
+define( '_SUB_FEPARTICLE_THANKSRENEW', 'Merci d&acute;avoir renouvel&eacute; votre abonnement. ');
+define( '_SUB_FEPARTICLE_PROCESS', 'Notre syst&egrave;me va maintenant traiter votre demande. ');
+define( '_SUB_FEPARTICLE_PROCESSPAY', 'Notre syst&egrave;me est en attente de votre paiement. ');
+define( '_SUB_FEPARTICLE_ACTMAIL', 'Vous allez recevoir un message par courriel qui contiendra un lien d&acute;activation quand notre syst&egrave;me aura trait&eacute; votre demande. ');
+define( '_SUB_FEPARTICLE_MAIL', 'Vous allez recevoir un message courriel une fois que notre syst&egrave;me. ');
 
 // --== COUPON ERROR MESSAGES ==--
-DEFINE ('_COUPON_WARNING_AMOUNT', 'One Coupon that you have added to this invoice does not affect the next payment, so although it seems that it does not affect this invoice, it will affect a subsequent payment.');
-DEFINE ('_COUPON_ERROR_PRETEXT', 'We are terribly sorry:');
-DEFINE ('_COUPON_ERROR_EXPIRED', 'This coupon has expired.');
-DEFINE ('_COUPON_ERROR_NOTSTARTED', 'Using this coupon is not permitted yet.');
-DEFINE ('_COUPON_ERROR_NOTFOUND', 'This coupon code could not be found.');
-DEFINE ('_COUPON_ERROR_MAX_REUSE', 'This coupon has exceeded the maximum uses.');
-DEFINE ('_COUPON_ERROR_PERMISSION', 'You don\'t have the permission to use this coupon.');
-DEFINE ('_COUPON_ERROR_WRONG_USAGE', 'You can not use this coupon for this.');
-DEFINE ('_COUPON_ERROR_WRONG_PLAN', 'You are not in the correct Subscription Plan for this coupon.');
-DEFINE ('_COUPON_ERROR_WRONG_PLAN_PREVIOUS', 'To use this coupon, your last Subscription Plan must be different.');
-DEFINE ('_COUPON_ERROR_WRONG_PLANS_OVERALL', 'You don\'t have the right Subscription Plans in your usage history to be allowed to use this coupon.');
-DEFINE ('_COUPON_ERROR_TRIAL_ONLY', 'You may only use this coupon for a Trial Period.');
+define( '_COUPON_WARNING_AMOUNT', 'One Coupon that you have added to this invoice does not affect the next payment, so although it seems that it does not affect this invoice, it will affect a subsequent payment.');
+define( '_COUPON_ERROR_PRETEXT', 'We are terribly sorry:');
+define( '_COUPON_ERROR_EXPIRED', 'This coupon has expired.');
+define( '_COUPON_ERROR_NOTSTARTED', 'Using this coupon is not permitted yet.');
+define( '_COUPON_ERROR_NOTFOUND', 'This coupon code could not be found.');
+define( '_COUPON_ERROR_MAX_REUSE', 'This coupon has exceeded the maximum uses.');
+define( '_COUPON_ERROR_PERMISSION', 'You don\'t have the permission to use this coupon.');
+define( '_COUPON_ERROR_WRONG_USAGE', 'You can not use this coupon for this.');
+define( '_COUPON_ERROR_WRONG_PLAN', 'You are not in the correct Subscription Plan for this coupon.');
+define( '_COUPON_ERROR_WRONG_PLAN_PREVIOUS', 'To use this coupon, your last Subscription Plan must be different.');
+define( '_COUPON_ERROR_WRONG_PLANS_OVERALL', 'You don\'t have the right Subscription Plans in your usage history to be allowed to use this coupon.');
+define( '_COUPON_ERROR_TRIAL_ONLY', 'You may only use this coupon for a Trial Period.');
 
 // ----======== TEXTE POUR MESSAGES COURRIELS ========----
 
-DEFINE ('_ACCTEXP_SEND_MSG','Abonnement pour %s &agrave; %s');
-DEFINE ('_ACCTEXP_SEND_MSG_RENEW','Renouvellement de l&acute;abonnement pour %s &agrave; %s');
-DEFINE ('_ACCTEXP_MAILPARTICLE_GREETING', "Bonjour %s,
-
-");
-DEFINE ('_ACCTEXP_MAILPARTICLE_THANKSREG', "Merci de vous &ecirc;tre abonn&eacute; &agrave; %s.
-");
-DEFINE ('_ACCTEXP_MAILPARTICLE_THANKSREN', "Merci d&acute;avoir renouvel&eacute; votre abonnement &agrave; %s. ");
-DEFINE ('_ACCTEXP_MAILPARTICLE_PAYREC', "Votre paiement pour votre abonnement a &eacute;t&eacute; re&ccedil;u. ");
-DEFINE ('_ACCTEXP_MAILPARTICLE_LOGIN', "Vous pouvez maintenant vous connecter &agrave; %s avec votre nom d&acute;utilisateur et mot de passe. ");
-DEFINE ('_ACCTEXP_MAILPARTICLE_FOOTER',"
-
-Ne pas r&eacute;pondre &agrave; ce message il a &eacute;t&eacute; g&eacute;n&eacute;r&eacute; automatiquement et seulement pour votre information.");
-
-DEFINE ('_ACCTEXP_ASEND_MSG',"Bonjour %s,
-
-Un nouvel utilisateur a cr&eacute;&eacute; un abonnement &agrave; %s.
-
-Les informations pour cet utilisateur sont:
-
-Nom - %s
-Courriel - %s
-Nom d&acute;utilisateur - %s
-
-Ne pas r&eacute;pondre &agrave; ce message il a &eacute;t&eacute; g&eacute;n&eacute;r&eacute; automatiquement et seulement pour votre information.");
-DEFINE ('_ACCTEXP_ASEND_MSG_RENEW',"Bonjour %s,
-
-Un utilisateur a renouvel&eacute; son abonnement &agrave; %s.
-
-Les informations pour cet utilisateur sont:
-
-Nom - %s
-Courriel - %s
-Nom d&acute;utilisateur - %s
-
-Ne pas r&eacute;pondre &agrave; ce message il a &eacute;t&eacute; g&eacute;n&eacute;r&eacute; automatiquement et seulement pour votre information.");
+define( '_ACCTEXP_SEND_MSG','Abonnement pour %s &agrave; %s');
+define( '_ACCTEXP_SEND_MSG_RENEW','Renouvellement de l&acute;abonnement pour %s &agrave; %s');
+define( '_ACCTEXP_MAILPARTICLE_GREETING', "Bonjour %s,\n\n");
+define( '_ACCTEXP_MAILPARTICLE_THANKSREG', "Merci de vous &ecirc;tre abonn&eacute; &agrave; %s.\n");
+define( '_ACCTEXP_MAILPARTICLE_THANKSREN', "Merci d&acute;avoir renouvel&eacute; votre abonnement &agrave; %s. ");
+define( '_ACCTEXP_MAILPARTICLE_PAYREC', "Votre paiement pour votre abonnement a &eacute;t&eacute; re&ccedil;u. ");
+define( '_ACCTEXP_MAILPARTICLE_LOGIN', "Vous pouvez maintenant vous connecter &agrave; %s avec votre nom d&acute;utilisateur et mot de passe. ");
+define( '_ACCTEXP_MAILPARTICLE_FOOTER',"\n\nNe pas r&eacute;pondre &agrave; ce message il a &eacute;t&eacute; g&eacute;n&eacute;r&eacute; automatiquement et seulement pour votre information.");
+define( '_ACCTEXP_ASEND_MSG',"Bonjour %s,\n\nUn nouvel utilisateur a cr&eacute;&eacute; un abonnement &agrave; %s.\n\nLes informations pour cet utilisateur sont:\n\nNom - %s\nCourriel - %s\nNom d&acute;utilisateur - %s\n\nNe pas r&eacute;pondre &agrave; ce message il a &eacute;t&eacute; g&eacute;n&eacute;r&eacute; automatiquement et seulement pour votre information.");
+define( '_ACCTEXP_ASEND_MSG_RENEW',"Bonjour %s,\n\nUn utilisateur a renouvel&eacute; son abonnement &agrave; %s.\n\nLes informations pour cet utilisateur sont:\n\nNom - %s\nCourriel - %s\nNom d&acute;utilisateur - %s\n\nNe pas r&eacute;pondre &agrave; ce message il a &eacute;t&eacute; g&eacute;n&eacute;r&eacute; automatiquement et seulement pour votre information.");
 ?>
