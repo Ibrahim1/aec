@@ -97,6 +97,12 @@ class mi_mosets_tree {
 		return true;
 	}
 
+	function detect_application () {
+		global $mosConfig_absolute_path;
+
+		return is_dir( $mosConfig_absolute_path . '/components/com_mtree' );
+	}
+	
 	function hacks () {
 		global $mosConfig_absolute_path;
 
@@ -107,13 +113,13 @@ class mi_mosets_tree {
 		. '$mi_mosetshandler = new mosetstree( $database );' . "\n"
 		. '$mi_mosetshandler->loadUserID( $my->id );' . "\n"
 		. 'if( $mi_mosetshandler->id ) {' . "\n"
-		. '	if( !$mi_mosetshandler->hasListingsLeft() ) {' . "\n"
-		. '		echo "' . _AEC_MI_HACK1_MOSETS . '";' . "\n"
-		. '		return;' . "\n"
-		. '	}' . "\n"
-		. '	echo "' . _AEC_MI_HACK2_MOSETS . '";' . "\n"
-		. '	return;' . "\n"
+		. 'if( !$mi_mosetshandler->hasListingsLeft() ) {' . "\n"
+		. 'echo "' . _AEC_MI_HACK1_MOSETS . '";' . "\n"
+		. 'return;' . "\n"
 		. '}' . "\n"
+		. '}else{' . "\n"
+		. 'echo "' . _AEC_MI_HACK2_MOSETS . '";' . "\n"
+		. 'return;' . "\n"
 		. '}' . "\n"
 		;
 
@@ -168,6 +174,15 @@ class mosetstree extends mosDBTable {
 	var $params				= null;
 
 	function mosetstree( &$db ) {
+		global $mainframe;
+
+		$langPathMI = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/micro_integration/language/';
+		if( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
+			include_once( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' );
+		}else{
+			include_once( $langPathMI . 'english.php' );
+		}
+
 		$this->mosDBTable( '#__acctexp_mi_mosetstree', 'id', $db );
 	}
 

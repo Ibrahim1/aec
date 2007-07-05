@@ -4177,8 +4177,8 @@ class microIntegrationHandler {
 	function getHacks () {
 
 		$integrations = $this->getIntegrationList();
-		$hacks = array();
 
+		$hacks = array();
 		foreach( $integrations as $n => $name ) {
 			$file = $this->mi_dir . '/' . $name . '.php';
 
@@ -4188,7 +4188,7 @@ class microIntegrationHandler {
 				$mi = new $name();
 
 				if( method_exists( $mi, 'hacks' ) ) {
-					if( method_exists( $name, 'detect_application' ) ) {
+					if( method_exists( $mi, 'detect_application' ) ) {
 						if( $mi->detect_application() ) {
 							$hacks = array_merge( $hacks, $mi->hacks() );
 						}

@@ -104,7 +104,7 @@ class mi_remository {
 		$hacks[$n]['desc']				=	_AEC_MI_HACK2_REMOS;
 		$hacks[$n]['type']				=	'file';
 		$hacks[$n]['filename']			=	$mosConfig_absolute_path
-											. '/components/com_remository/com_remository_startdown.php';
+											. '/components/com_remository/c-classes/remository_download_Controller.php';
 		$hacks[$n]['read']				=	'//Update download count';
 		$hacks[$n]['insert']			=	$downloadhack . "\n"  . $hacks[$n]['read'];
 

@@ -120,7 +120,7 @@ class languageFileHandler {
 	
 	function getConstantsArray() {
 
-		$file = fopen( $this->filepath, "r" )
+		$file = fopen( $this->filepath, "r" );
 	
 		$array = array();
 		while( !feof( $file ) ) {
@@ -138,7 +138,7 @@ class languageFileHandler {
 	
 	function getHTML() {
 
-		$file = fopen( $this->filepath, "r" )
+		$file = fopen( $this->filepath, "r" );
 	
 		$array = array();
 		while( !feof( $file ) ) {

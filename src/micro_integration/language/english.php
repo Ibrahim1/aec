@@ -108,7 +108,7 @@ define( '_MI_MI_MOSETS_TREE_SET_LISTINGS_DESC',		'Input the amount of listings y
 define( '_MI_MI_MOSETS_TREE_ADD_LISTINGS_NAME',		'Add listings' );
 define( '_MI_MI_MOSETS_TREE_ADD_LISTINGS_DESC',		'Input the amount of listings you want to add with this call' );
 define( '_AEC_MI_HACK1_MOSETS',		'No Listings left' );
-define( '_AEC_MI_HACK2_MOSETS',		'Registration Required' );
+define( '_AEC_MI_HACK2_MOSETS',		'Registration and correct Subscription Required!' );
 define( '_AEC_MI_HACK3_MOSETS',		'Prevent user from creating a new listing if he or she has run out of granted listings' );
 define( '_AEC_MI_HACK4_MOSETS',		'Prevent user from saving a new listing if he or she has run out of granted listings' );
 define( '_AEC_MI_DIV1_MOSETS',		'You have <strong>%s</strong> listings left in our directory.' );
