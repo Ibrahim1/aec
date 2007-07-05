@@ -21,14 +21,6 @@ class mi_acajoom {
 		return $info;
 	}
 
-	function checkInstallation () {
-		return true;
-	}
-
-	function install () {
-		return;
-	}
-
 	function Settings( $params ) {
 		$query = 'SELECT id, list_name, list_type'
 		. ' FROM #__acajoom_lists'
@@ -48,8 +40,12 @@ class mi_acajoom {
 		$settings['lists']['list']		= mosHTML::selectList($li, 'list', 'size="4"', 'value', 'text', $params['list']);
 		$settings['lists']['list_exp']	= mosHTML::selectList($li, 'list_exp', 'size="4"', 'value', 'text', $params['list_exp']);
 
-		$settings[] = array( 'inputA' );
-		$settings[] = array( 'inputD' );
+		$settings['list'] = array( 'list' );
+		$settings['list_exp'] = array( 'list' );
+		$settings['receive_html'] = array( 'list_yesno' );
+		$settings['confirmed'] = array( 'list_yesno' );
+		$settings['blacklist'] = array( 'list_yesno' );
+		$settings['language_iso'] = array( 'InputB' );
 
 		return $settings;
 	}
@@ -72,8 +68,7 @@ class mi_acajoom {
 		// id, user_id, name, email, receive_html, confirmed, blacklist, timezone, language_iso, subscribe_date, params
 
 		if( !$acauser->id ) {
-			$query  = 'SELECT *'
-			. ' FROM #__acajoom_subscribers'
+			$query  = 'INSERT INTO #__acajoom_subscribers'
 			. ' WHERE userid = \'' . $userid . '\''
 			;
 			$database->setQuery( $query );

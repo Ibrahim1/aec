@@ -14,6 +14,10 @@ defined( '_VALID_MOS' ) or die( 'Not really ....' );
 // acajoom
 define( '_AEC_MI_NAME_ACAJOOM',		'Acajoom' );
 define( '_AEC_MI_DESC_ACAJOOM',		'Includes the newsletter Acajoom (free edition)' );
+define( '_MI_MI_ACAJOOM_LIST_NAME',		'Set List' );
+define( '_MI_MI_ACAJOOM_LIST_DESC',		'Which Mailing list do you want to assign this user to?' );
+define( '_MI_MI_ACAJOOM_LIST_NAME',		'Set List' );
+define( '_MI_MI_ACAJOOM_LIST_DESC',		'Which Mailing list do you want to assign this user to?' );
 
 // htaccess
 define( '_AEC_MI_NAME_HTACCESS',	'.htaccess' );
