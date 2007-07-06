@@ -123,6 +123,37 @@ class mi_mosets_tree {
 		. '}' . "\n"
 		;
 
+		$edithack2 = 'if ($row->link_approved == 1) {' . "\n"
+		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_mosets_tree.php\' );' . "\n"
+		. '$mi_mosetshandler = new mosetstree( $database );' . "\n"
+		. '$mi_mosetshandler->loadUserID( $my->id );' . "\n"
+		. 'if( $mi_mosetshandler->id ) {' . "\n"
+		. 'if( !$mi_mosetshandler->hasListingsLeft() ) {' . "\n"
+		. '$mi_mosetshandler->useListing();' . "\n"
+		. '}else{' . "\n"
+		. 'echo "' . _AEC_MI_HACK1_MOSETS . '";' . "\n"
+		. 'return;' . "\n"
+		. '}' . "\n"
+		. '}else{' . "\n"
+		. 'echo "' . _AEC_MI_HACK2_MOSETS . '";' . "\n"
+		. 'return;' . "\n"
+		. '}' . "\n"
+		;
+
+		$edithack3 = 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_mosets_tree.php\' );' . "\n"
+		. '$mi_mosetshandler = new mosetstree( $database );' . "\n"
+		. '$mi_mosetshandler->loadUserID( $mtLinks->user_id );' . "\n"
+		. 'if( $mi_mosetshandler->id ) {' . "\n"
+		. 'if( !$mi_mosetshandler->hasListingsLeft() ) {' . "\n"
+		. '$mi_mosetshandler->useListing();' . "\n"
+		. '}else{' . "\n"
+		. 'continue;' . "\n"
+		. '}' . "\n"
+		. '}else{' . "\n"
+		. 'continue;' . "\n"
+		. '}' . "\n"
+		;
+
 		$n = 'mtree1';
 		$hacks[$n]['name']				=	'mtree.php #1';
 		$hacks[$n]['desc']				=	_AEC_MI_HACK3_MOSETS;
@@ -139,6 +170,22 @@ class mi_mosets_tree {
 		$hacks[$n]['read']				=	'$row->link_created = date( "Y-m-d H:i:s" );';
 		$hacks[$n]['insert']			=	$edithack . "\n"  . $hacks[$n]['read'];
 
+		$n = 'mtree3';
+		$hacks[$n]['name']				=	'mtree.php #3';
+		$hacks[$n]['desc']				=	_AEC_MI_HACK5_MOSETS;
+		$hacks[$n]['type']				=	'file';
+		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_mtree/mtree.php';
+		$hacks[$n]['read']				=	'# Modification to existing record';
+		$hacks[$n]['insert']			=	$edithack2 . "\n"  . $hacks[$n]['read'];
+
+		$n = 'adminmtree3';
+		$hacks[$n]['name']				=	'admin.mtree.php #3';
+		$hacks[$n]['desc']				=	_AEC_MI_HACK5_MOSETS;
+		$hacks[$n]['type']				=	'file';
+		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/administrator/components/com_mtree/admin.mtree.php';
+		$hacks[$n]['read']				=	'$mtLinks->updateLinkCount( 1 );';
+		$hacks[$n]['insert']			=	$edithack3 . "\n"  . $hacks[$n]['read'];
+
 		return $hacks;
 	}
 
@@ -151,9 +198,9 @@ class mi_mosets_tree {
 
 		if( $id ) {
 			$mi_mosetshandler->load( $id );
-			return '<p>' . sprintf( _AEC_MI_DIV1_MOSETS, $mi_mosetshandler->getListingsLeft ) . '</p>';
+			return '<p>' . sprintf( _AEC_MI_DIV1_MOSETS, $mi_mosetshandler->getListingsLeft() ) . '</p>';
 		}else{
-			return false;
+			return '';
 		}
 	}
 
