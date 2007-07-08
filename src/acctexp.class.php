@@ -438,6 +438,7 @@ class aecHeartbeat extends mosDBTable {
 		. ' WHERE a.expiration <= \'' . $expiration_limit . '\''
 		. ' AND b.status != \'Expired\''
 		. ' AND b.status != \'Closed\''
+		. ' AND b.status != \'Excluded\''
 		. ' ORDER BY a.expiration'
 		;
 		$database->setQuery( $query );
@@ -3302,9 +3303,18 @@ class Subscription extends paramDBTable {
 	function expire () {
 		global $database;
 
-		$subscription_plan = new SubscriptionPlan( $database );
-		$subscription_plan->load( $this->plan );
-		$plan_params = $subscription_plan->getParams();
+		if( strcmp( $this->status, 'Excluded' ) === 0 ) {
+			return false;
+		}
+
+		if( $this->plan ) {
+			$subscription_plan = new SubscriptionPlan( $database );
+			$subscription_plan->load( $this->plan );
+			$plan_params = $subscription_plan->getParams();
+		}else{
+			$plan_params = array();
+		}
+
 		$this_params = $this->getParams();
 
 		if( !empty( $plan_params['fallback'] ) ) {
