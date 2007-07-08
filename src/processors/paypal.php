@@ -75,6 +75,7 @@ class processor_paypal {
 		$settings['currency']		= 'USD';
 		$settings['checkbusiness']	= 0;
 		$settings['lc']				= 'US';
+		$settings['no_shipping']	= 1;
 		$settings['altipnurl']		= '';
 		$settings['item_name']		= sprintf( _AEC_MI_SET1_INAME, '[[cms_live_site]]',
 									'[[user_name]]', '[[user_username]]' );
@@ -93,6 +94,7 @@ class processor_paypal {
 		$settings['currency']		= array( 'list_currency' );
 		$settings['checkbusiness']	= array( 'list_yesno' );
 		$settings['lc']				= array( 'list_language' );
+		$settings['no_shipping']	= array( 'list_yesno' );
 		$settings['altipnurl']		= array( 'inputC' );
 		$settings['item_name']		= array( 'inputE' );
 
@@ -134,7 +136,7 @@ class processor_paypal {
 		$var['item_number']		= $metaUser->cmsUser->id;
 		$var['item_name']		= AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription );
 
-		$var['no_shipping']		= '1';
+		$var['no_shipping']		= $cfg['no_shipping'];
 		$var['no_note']			= '1';
 		$var['rm']				= '2';
 

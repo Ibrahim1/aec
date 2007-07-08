@@ -67,6 +67,7 @@ class processor_paypal_subscription {
 		$settings['currency']		= 'USD';
 		$settings['checkbusiness']	= 0;
 		$settings['lc']				= 'US';
+		$settings['no_shipping']	= 1;
 		$settings['altipnurl']		= '';
 		$settings['item_name']		= 'Subscription at [[cms_live_site]] - User: [[user_name]] ([[user_username]])';
 		$settings['rewriteInfo']	= ''; // added mic
@@ -84,6 +85,7 @@ class processor_paypal_subscription {
 		$settings['currency']		= array( 'list_currency' );
 		$settings['checkbusiness']	= array( 'list_yesno' );
 		$settings['lc']				= array( 'list_language' );
+		$settings['no_shipping']	= array( 'list_yesno' );
 		$settings['altipnurl']		= array( 'inputC' );
 		$settings['item_name']		= array( 'inputE' );
 
@@ -141,7 +143,7 @@ class processor_paypal_subscription {
 		$var['item_number']		= $metaUser->cmsUser->id;
 		$var['item_name']		= AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription );
 
-		$var['no_shipping']		= '1';
+		$var['no_shipping']		= $cfg['no_shipping'];
 		$var['no_note']			= '1';
 		$var['rm']				= '2';
 
