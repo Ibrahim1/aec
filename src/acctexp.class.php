@@ -205,17 +205,17 @@ class metaUser {
 						// Check whether the user has used the plan at least a certain number of times
 						case 'plan_amount_min':
 							if( $this->hasSubscription ) {
-								$array = $this->objSubscription->getUsedPlans();
-								$array2 = explode( ',', $value );
-								if( isset( $array[$array2[0]] ) ) {
+								$usage = $this->objSubscription->getUsedPlans();
+								$check = explode( ',', $value );
+								if( isset( $usage[$check[0]] ) ) {
 									// We have to add one here if the user is currently in the plan
-									if( $this->objSubscription->plan === $array2[0] ) {
-										$used_times = $array2[1] + 1;
+									if( $this->objSubscription->plan === $check[0] ) {
+										$used_times = $check[1] + 1;
 									}else{
-										$used_times = $array2[1];
+										$used_times = $check[1];
 									}
 
-									if( $array[$array2[0]] >= $used_times ) {
+									if( $usage[$check[0]] >= $used_times ) {
 										$status = true;
 									}else{
 										$status = false;
@@ -230,17 +230,17 @@ class metaUser {
 						// Check whether the user has used the plan at max a certain number of times
 						case 'plan_amount_max':
 							if( $this->hasSubscription ) {
-								$array = $this->objSubscription->getUsedPlans();
-								$array2 = explode( ',', $value );
-								if( isset($array[$array2[0]] ) ) {
+								$usage = $this->objSubscription->getUsedPlans();
+								$check = explode( ',', $value );
+								if( isset($array[$check[0]] ) ) {
 									// We have to add one here if the user is currently in the plan
-									if( $this->objSubscription->plan === $array2[0] ) {
-										$used_times = $array2[1] + 1;
+									if( $this->objSubscription->plan === $check[0] ) {
+										$used_times = $check[1] + 1;
 									}else{
-										$used_times = $array2[1];
+										$used_times = $check[1];
 									}
 
-									if( $array[$array2[0]] <= $used_times ) {
+									if( $usage[$check[0]] <= $used_times ) {
 										$status = true;
 									}else{
 										$status = false;
