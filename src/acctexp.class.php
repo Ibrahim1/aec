@@ -3274,7 +3274,7 @@ class Subscription extends paramDBTable {
 		$cfg = new Config_General( $database );
 
 		if( strcmp( $this->status, 'Expired') === 0 ) {
-				$expired = true;
+			$expired = true;
 		}else{
 			$expiration = new AcctExp( $database );
 			$expiration->load( AECfetchfromDB::ExpirationIDfromUserID( $this->userid ) );
@@ -3291,10 +3291,8 @@ class Subscription extends paramDBTable {
 
 			if( $expire ) {
 				mosRedirect( 'index.php?option=com_acctexp&amp;task=expired&amp;Itemid=' . $this->userid );
-			}else{
-				mosRedirect( 'index.php?option=com_acctexp&amp;task=expired&amp;Itemid=' . $this->userid );
+				exit();
 			}
-			exit();
 		}elseif( ( strcmp( $this->status, 'Pending' ) === 0 ) || $block ) {
 			mosRedirect( 'index.php?option=com_acctexp&amp;task=pending&amp;Itemid=' . $this->userid );
 			exit();
@@ -3306,10 +3304,10 @@ class Subscription extends paramDBTable {
 
 		$subscription_plan = new SubscriptionPlan( $database );
 		$subscription_plan->load( $this->plan );
-		$params = $subscription_plan->getParams();
+		$plan_params = $subscription_plan->getParams();
 
 		if( !empty( $params['fallback'] ) ) {
-			$this->applyUsage( $params['fallback'] );
+			$this->applyUsage( $plan_params['fallback'] );
 			return false;
 		}else{
 			// Set a Trial flag if this is an expired Trial
@@ -3354,7 +3352,7 @@ class Subscription extends paramDBTable {
 		$this->store();
 	}
 
-	function applyUsage( $usage = 0, $processor = 'none' ) {
+	function applyUsage( $usage = 0, $processor = 'none', $silent = 0 ) {
 		global $database, $mosConfig_offset_user, $mosConfig_dbprefix, $acl;
 
 		if( !$usage ) {
@@ -3364,7 +3362,7 @@ class Subscription extends paramDBTable {
 		$new_plan = new SubscriptionPlan( $database );
 		$new_plan->load($usage);
 
-		$renew = $new_plan->applyPlan( $this->userid, $processor );
+		$renew = $new_plan->applyPlan( $this->userid, $processor, $silent );
 
 		return $renew;
 	}
@@ -3874,7 +3872,7 @@ class AECToolbox {
 						$user_subscription = new mosSubscription( $database );
 						$user_subscription->load(0);
 						$user_subscription->createNew( $id, 'Free', 0 );
-						$user_subscription->applyUsage( $cfg->cfg['entry_plan'] );
+						$user_subscription->applyUsage( $cfg->cfg['entry_plan'], 'none', 0 );
 					}else{
 						mosRedirect( 'index.php?option=com_acctexp&amp;task=subscribe&amp;Itemid=' . $id );
 						return null;
