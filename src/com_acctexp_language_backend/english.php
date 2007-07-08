@@ -286,7 +286,7 @@ define( '_AEC_SEL_PENDING',						'Pending' );
 define( '_AEC_SEL_ACTIVE',						'Active' );
 define( '_AEC_SEL_EXPIRED',						'Expired' );
 define( '_AEC_SEL_CLOSED',						'Closed' );
-define( '_AEC_SEL_CANCELLED',					'Storno' );
+define( '_AEC_SEL_CANCELLED',					'Cancelled' );
 define( '_AEC_SEL_NOT_CONFIGURED',				'Not Configured' );
 
 // footer

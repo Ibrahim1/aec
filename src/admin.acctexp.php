@@ -879,7 +879,7 @@ function editUser( $userid, $option, $task ) {
 	$group_selection[] = mosHTML::makeOption( 'include',	_EXPIRE_INCLUDE );
 	$group_selection[] = mosHTML::makeOption( 'close',		_EXPIRE_CLOSE );
 
-	$lists['set_status'] = mosHTML::selectList( $group_selection, 'set_expiration', 'class="inputbox" size="1"', 'value', 'text', '' );
+	$lists['set_status'] = mosHTML::selectList( $group_selection, 'set_status', 'class="inputbox" size="1"', 'value', 'text', '' );
 
 	$invoices = array();
 	foreach( $invoice_ids as $inv_id ) {

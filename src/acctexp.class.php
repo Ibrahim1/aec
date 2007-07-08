@@ -3305,18 +3305,19 @@ class Subscription extends paramDBTable {
 		$subscription_plan = new SubscriptionPlan( $database );
 		$subscription_plan->load( $this->plan );
 		$plan_params = $subscription_plan->getParams();
+		$this_params = $this->getParams();
 
-		if( !empty( $params['fallback'] ) ) {
+		if( !empty( $plan_params['fallback'] ) ) {
 			$this->applyUsage( $plan_params['fallback'] );
 			return false;
 		}else{
 			// Set a Trial flag if this is an expired Trial
 			if( strcmp( $this->status, 'Trial' ) === 0 ) {
-				$params = array( 'trialflag' => 1 );
-				$this->addParams( $params );
-			}elseif( in_array( 'trialflag', $params ) ) {
-				$params = array( 'trialflag' );
-				$this->delParams( $params );
+				$this->addParams( array( 'trialflag' => 1 ) );
+			}elseif( is_array( $this_params ) ) {
+				if( in_array( 'trialflag', $this_params ) ) {
+					$this->delParams( array( 'trialflag' ) );
+				}
 			}
 
 			if( !( strcmp( $this->status, 'Expired' ) === 0 ) && !( strcmp( $this->status, 'Closed' ) === 0 ) ) {
