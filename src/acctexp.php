@@ -893,7 +893,7 @@ function thanks ( $option, $renew, $free ) {
 
 	$cfg = new Config_General( $database );
 
-	if( $mosConfig_useractivation && ( $cfg->cfg['activatepaid'] || $free ) ) {
+	if( $mosConfig_useractivation && ( $cfg->cfg['activate_paid'] || $free ) ) {
 		$activation = 1;
 	}else{
 		$activation = 0;
