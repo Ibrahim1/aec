@@ -3320,7 +3320,7 @@ class Subscription extends paramDBTable {
 		$this_params = $this->getParams();
 
 		if( !empty( $plan_params['fallback'] ) ) {
-			$this->applyUsage( $plan_params['fallback'] );
+			$this->applyUsage( $plan_params['fallback'], 'none', 1 );
 			return false;
 		}else{
 			// Set a Trial flag if this is an expired Trial
@@ -3885,7 +3885,7 @@ class AECToolbox {
 						$user_subscription = new mosSubscription( $database );
 						$user_subscription->load(0);
 						$user_subscription->createNew( $id, 'Free', 0 );
-						$user_subscription->applyUsage( $cfg->cfg['entry_plan'], 'none', 0 );
+						$user_subscription->applyUsage( $cfg->cfg['entry_plan'], 'none', 1 );
 					}else{
 						mosRedirect( 'index.php?option=com_acctexp&amp;task=subscribe&amp;Itemid=' . $id );
 						return null;

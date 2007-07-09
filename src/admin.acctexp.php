@@ -1294,7 +1294,7 @@ function activatePendingSubscription( $userid, $option, $renew ) {
 			$plan = $user_subscription->plan;
 		}
 
-		$renew = $user_subscription->applyUsage( $plan );
+		$renew = $user_subscription->applyUsage( $plan, 'none', 1 );
 	}
 	if( $renew ) {
 		// Admin confirmed an offline payment for a renew
