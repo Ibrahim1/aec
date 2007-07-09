@@ -2729,6 +2729,8 @@ class Invoice extends paramDBTable {
 
 			$metaUser = new metaUser( $this->userid ? $this->userid : 0 );
 
+			$recurring = '';
+
 			switch( $this->method ) {
 				case 'transfer':
 					$cfg = new Config_General( $database );
@@ -3512,11 +3514,11 @@ class Subscription extends paramDBTable {
 
 		// Send notification to all administrators
 		if( $renew ) {
-			$subject2 = sprintf (_ACCTEXP_SEND_MSG_RENEW, $name, $mosConfig_sitename);
-			$message2 = sprintf (_ACCTEXP_ASEND_MSG_RENEW, $adminName2, $mosConfig_sitename, $name, $email, $username, $plan->id, $plan->name);
+			$subject2 = sprintf( _ACCTEXP_SEND_MSG_RENEW, $name, $mainframe->getCfg( 'sitename' ) );
+			$message2 = sprintf( _ACCTEXP_ASEND_MSG_RENEW, $adminName2, $mainframe->getCfg( 'sitename' ), $name, $email, $username, $plan->id, $plan->name );
 		} else {
-			$subject2 = sprintf (_ACCTEXP_SEND_MSG, $name, $mosConfig_sitename);
-			$message2 = sprintf (_ACCTEXP_ASEND_MSG, $adminName2, $mosConfig_sitename, $name, $email, $username, $plan->id, $plan->name);
+			$subject2 = sprintf( _ACCTEXP_SEND_MSG, $name, $mainframe->getCfg( 'sitename' ) );
+			$message2 = sprintf( _ACCTEXP_ASEND_MSG, $adminName2, $mainframe->getCfg( 'sitename' ), $name, $email, $username, $plan->id, $plan->name );
 		}
 
 		$subject2 = html_entity_decode( $subject2, ENT_QUOTES );
