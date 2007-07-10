@@ -92,7 +92,18 @@ class metaUser {
 	function instantGIDchange( $gid ) {
 		global $database, $acl;
 
-		// Set group id
+		if( $this->gid >= 24 ) {
+			$query = 'SELECT count(*)'
+			. ' FROM #__core_acl_groups_aro_map'
+			. ' WHERE group_id = \'25\''
+			;
+			$database->setQuery( $query );
+			if( $database->loadResult() <= 1) {
+				return false;
+			}
+		}
+
+		// Get ARO ID for user
 		$query = 'SELECT aro_id'
 		. ' FROM #__core_acl_aro'
 		. ' WHERE value = \'' . (int) $this->userid . '\''
@@ -100,6 +111,7 @@ class metaUser {
 		$database->setQuery( $query );
 		$aro_id = $database->loadResult();
 
+		// Carry out ARO ID -> ACL group mapping
 		$query = 'UPDATE #__core_acl_groups_aro_map'
 		. ' SET group_id = \'' . (int) $gid . '\''
 		. ' WHERE aro_id = \'' . $aro_id . '\''
