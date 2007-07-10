@@ -2275,11 +2275,8 @@ class InvoiceFactory {
 					registerForm($option, $mainframe->getCfg( 'emailpass' ), null);
 
 				}else{
-					// This is a joomla registration, borrowing their code to register the user
-
-					include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_registration/registration.php' );
-
-					registerForm( $option, $mainframe->getCfg( 'useractivation' ) );
+					include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/acctexp.html.php' );
+					joomlaregisterForm( $option, $mainframe->getCfg( 'useractivation' ) );
 				}
 			}else{
 				$this->confirm ( $option, $var, $passthrough );
