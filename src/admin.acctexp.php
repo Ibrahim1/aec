@@ -3492,6 +3492,22 @@ function migrate( $option ) {
 			$expirationHandler->store();
 		}
 	}
+
+// Fix JACLplus associations after uninstall/reinstall
+$query = 'SELECT id'
+. ' FROM #__users'
+. ' WHERE gid = \'31\''
+;
+$database->setQuery( $query );
+$rows = $database->loadResultArray();
+
+foreach( $rows as $userid ){
+	$user = new mosUser($database);
+	$user->load(1)
+	print_r($user);
+}
+exit();
+
 }
 
 function hackcorefile( $option, $filename, $check_hack, $undohack ) {
