@@ -14,8 +14,6 @@
 /* == "Not Allowed" Page styling == */
 
 table#cc_list {
-position: relative;
-float: left;
 clear: both;
 width: 100%;
 }
@@ -230,19 +228,15 @@ margin: 0px;
 /* == Styling for the Expired Page == */
 
 #box_expired {
-position:relative;
-float:left;
 width: 90%;
-margin: 5% 20px;
+margin: 5% auto;
 text-align: center;
 padding-bottom: 40px;
 }
 
 #box_pending {
-position:relative;
-float:left;
 width: 90%;
-margin: 5% 20px;
+margin: 5% auto;
 text-align: center;
 padding-bottom: 40px;
 }
@@ -336,10 +330,8 @@ width: 97%;
 }
 
 #confirmation table {
-position: relative;
-float: left;
 width: 100%;
-padding-top:10px;
+padding-top: 10px;
 }
 
 #confirmation th {
@@ -355,7 +347,6 @@ text-align: center;
 }
 
 td.confirmation_button {
-position: relative;
 text-align: right;
 text-indent: 10%;
 display: block;
@@ -375,13 +366,9 @@ width: 97%;
 }
 
 #checkout table {
-position: relative;
-float: left;
 }
 
 table.amount {
-position: relative;
-float: left;
 width: 100%;
 padding: 2px 10%;
 }
@@ -401,46 +388,34 @@ line-height: 32px;
 }
 
 td.item {
-position: relative;
-float: left;
 text-align: left;
 width: 50%;
 }
 
 td.amount {
-position: relative;
-float: left;
 text-align: right;
 width: 40%;
 }
 
 td.item_later {
-position: relative;
-float: left;
 text-align: left;
 width: 50%;
 color: #999;
 }
 
 td.amount_later {
-position: relative;
-float: left;
 text-align: right;
 width: 40%;
 color: #999;
 }
 
 .couponerror {
-position: relative;
-float: left;
 background-color: #fcc;
 clear: both;
 width: 100%;
 }
 
 .couponwarning {
-position: relative;
-float: left;
 background-color: #ffb;
 clear: both;
 width: 100%;
@@ -457,8 +432,6 @@ font-size: 14px;
 }
 
 #subscription_details table {
-position: relative;
-float: left;
 width: 100%;
 padding-top:10px;
 }
