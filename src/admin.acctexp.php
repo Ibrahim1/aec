@@ -1666,7 +1666,6 @@ function editSettings( $option ) {
 	$lists['enable_coupons']		= mosHTML::yesnoSelectList('enable_coupons', '', $cfg->cfg['enable_coupons']);
 	$lists['enable_mimeta']			= mosHTML::yesnoSelectList('enable_mimeta', '', ( !empty( $cfg->cfg['enable_mimeta'] ) ? $cfg->cfg['enable_mimeta'] : '' ) );
 	$lists['displayccinfo']			= mosHTML::yesnoSelectList('displayccinfo', '', $cfg->cfg['displayccinfo']);
-	$lists['activate_paid']			= mosHTML::yesnoSelectList('activate_paid', '', $cfg->cfg['activate_paid']);
 
 	$lists['customtext_confirm_keeporiginal']		= mosHTML::yesnoSelectList('customtext_confirm_keeporiginal', '', $cfg->cfg['customtext_confirm_keeporiginal']);
 	$lists['customtext_checkout_keeporiginal']		= mosHTML::yesnoSelectList('customtext_checkout_keeporiginal', '', $cfg->cfg['customtext_checkout_keeporiginal']);
@@ -1791,7 +1790,6 @@ function editSettings( $option ) {
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_DISPLAYCCINFO_NAME, _CFG_GENERAL_DISPLAYCCINFO_DESC, '0', 'displayccinfo');
 	$tab_data[0][] = array( 'inputC', _CFG_TAB1_OPT15NAME, _CFG_TAB1_OPT15DESC, $cfg->cfg['bypassintegration'], 'bypassintegration');
 	$tab_data[0][] = array( 'list', _CFG_TAB1_OPT21NAME, _CFG_TAB1_OPT21DESC, '0', 'plans_first');
-	$tab_data[0][] = array( 'list', _CFG_GENERAL_ACTIVATE_PAID_NAME, _CFG_GENERAL_ACTIVATE_PAID_DESC, '0', 'activate_paid');
 	$tab_data[0][] = array( 'list', _CFG_TAB1_OPT16NAME, _CFG_TAB1_OPT16DESC, '0', 'simpleurls');
 	$tab_data[0][] = array( 'inputA', _CFG_TAB1_OPT17NAME, _CFG_TAB1_OPT17DESC, $cfg->cfg['expiration_cushion'], 'expiration_cushion');
 	$tab_data[0][] = array( 'inputA', _CFG_TAB1_OPT18NAME, _CFG_TAB1_OPT18DESC, $cfg->cfg['heartbeat_cycle'], 'heartbeat_cycle');

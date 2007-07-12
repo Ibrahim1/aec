@@ -1312,7 +1312,6 @@ class Config_General extends paramDBTable {
 		$settings_defaults['customtext_pending_keeporiginal']	= 1;
 		$settings_defaults['customtext_expired_keeporiginal']	= 1;
 		// new 0.12.4
-		$settings_defaults['activate_paid']						= 1;
 		$settings_defaults['transfer']							= 0;
 		$settings_defaults['bypassintegration']					= 0;
 		$settings_defaults['customintro']						= '';
@@ -3845,12 +3844,21 @@ class AECToolbox {
 
 			$new_url = sefRelToAbs( $url );
 
-			// Prefix with live_site if not found, look out for malformed live_site
 			if( !( strpos( $new_url, $mosConfig_live_site ) === 0 ) ) {
+				// look out for malformed live_site
 				if( strpos( $mosConfig_live_site, '/' ) === strlen( $mosConfig_live_site ) ) {
 					$new_url = substr( $mosConfig_live_site, 0, -1 ) . $new_url;
 				}else{
-					$new_url = $mosConfig_live_site . $new_url;
+					// It seems we have a sefRelToAbs malfunction (subdirectory is not appended)
+					$metaurl = explode( '/', $mosConfig_live_site );
+					$rooturl = $metaurl[0] . '//' . $metaurl[2];
+
+					// Replace root to include subdirectory - if all fails, just prefix the live site
+					if( strpos( $new_url, $rooturl ) === 0 ) {
+						$new_url = $mosConfig_live_site . substr( $new_url, strlen( $rooturl ) );
+					}else{
+						$new_url = $mosConfig_live_site . $new_url;
+					}
 				}
 			}
 		}
