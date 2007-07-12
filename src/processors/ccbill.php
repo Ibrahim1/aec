@@ -97,7 +97,7 @@ class processor_ccbill {
 		$var['clientSubacc']	= $cfg['clientSubacc'];
 		$var['formName']		= $cfg['formName'];
 
-		$var['invoice']	= $int_var['invoice'];
+		$var['invoice']			= $int_var['invoice'];
 		$var['username']		= $metaUser->cmsUser->username;
 		$var['password']		= "xxxxxx"; // hard coded because the CCBILL system can't deal with an empty password - despite having an option to ignore it...
 		$var['email']			= $metaUser->cmsUser->email;
@@ -199,7 +199,7 @@ class processor_ccbill {
 		$response['valid'] = 1;
 		$response['pending_reason'] = $reasonForDecline;
 		$response['checksum'] = $checksum;
-
+		$response['amount_paid'] = $initialPrice;
 		$validate			= md5($cfg['secretWord'] . $username);
 		
 		if (strlen($reasonForDecline) > 0){
