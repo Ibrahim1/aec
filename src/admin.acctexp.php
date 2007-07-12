@@ -3501,7 +3501,7 @@ $rows = $database->loadResultArray();
 
 foreach( $rows as $userid ){
 	$user = new mosUser($database);
-	$user->load(1)
+	$user->load(1);
 	print_r($user);
 }
 exit();
@@ -3512,16 +3512,16 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 	global $mosConfig_absolute_path, $database;
 	global $mosConfig_debug;
 
-	$aec_hack_start				= 	'// AEC CHANGE %s START' . "\n";
-	$aec_hack_end				= 	'// AEC CHANGE %s END' . "\n";
-	$aec_condition_start		=	'if( file_exists( $mosConfig_absolute_path . \'/components/com_acctexp/acctexp.class.php\' ) ) {' . "\n";
+	$aec_hack_start				= 	"// AEC HACK %s START" . "\n";
+	$aec_hack_end				= 	"// AEC HACK %s END" . "\n";
+	$aec_condition_start		=	'if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {' . "\n";
 	$aec_condition_end			=	'}' . "\n";
-	$aec_include_class			=	'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/acctexp.class.php\' );' . "\n";
+	$aec_include_class			=	'include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");' . "\n";
 	$aec_verification_check		=	"AECToolBox::VerifyUsername( %s );" . "\n";
 	$aec_userchange_clause		=	'$mih = new microIntegrationHandler();' . "\n"
-	. "\t" . '$mih->userchange( $row, $_POST, \'%s\' );' . "\n";
-	$aec_global_call			=	'global $mosConfig_absolute_path;' . "\n";
-	$aec_redirect_notallowed	=	'mosRedirect( \'index.php?option=com_acctexp&task=NotAllowed\' );' . "\n";
+										. '$mih->userchange($row, $_POST, \'%s\');' . "\n";
+	$aec_global_call			=	'global $mosConfig_live_site, $mosConfig_absolute_path;' . "\n";
+	$aec_redirect_notallowed	=	'mosRedirect( $mosConfig_live_site . "/index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
 
 	$aec_normal_hack = $aec_hack_start
 	. $aec_global_call
@@ -3531,28 +3531,27 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 	. $aec_hack_end;
 
 	$aec_jhack1 = $aec_hack_start
-					. 'function mosNotAuth( $override = false ) {' . "\n"
-					. "\t" . $aec_global_call
-					. "\t" . $aec_condition_start
-					. "\t\t" . 'if( !$override ) {' . "\n"
-					. "\t\t\t" . $aec_redirect_notallowed
-					. "\t\t" . $aec_condition_end
-					//. "\t" . $aec_condition_end
-					. "\t" . $aec_condition_end
+					. 'function mosNotAuth($override=false) {' . "\n"
+					. $aec_global_call
+					. $aec_condition_start
+					. 'if (!$override) {' . "\n"
+					. $aec_redirect_notallowed
+					. $aec_condition_end
+					. $aec_condition_end
 					. $aec_hack_end;
 
 	$aec_jhack2 = $aec_hack_start
 					. $aec_global_call
 					. $aec_condition_start
-					. "\t" . $aec_redirect_notallowed
+					. $aec_redirect_notallowed
 					. $aec_condition_end
 					. $aec_hack_end;
 
 	$aec_jhack3 = $aec_hack_start
 					. $aec_global_call
 					. $aec_condition_start
-					. "\t" . $aec_include_class
-					. "\t" . sprintf( $aec_verification_check, '$row->username' )
+					. $aec_include_class
+					. sprintf( $aec_verification_check, '$row->username' )
 					. $aec_condition_end
 					. $aec_hack_end;
 
@@ -3563,18 +3562,18 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 	$aec_uchangehack =	$aec_hack_start
 						. $aec_global_call
 						. $aec_condition_start
-						. "\t" . $aec_include_class
-						. "\t" . $aec_userchange_clause
+						. $aec_include_class
+						. $aec_userchange_clause
 						. $aec_condition_end
 						. $aec_hack_end;
 
 	$aec_rhackbefore =	$aec_hack_start
 						. $aec_global_call
 						. $aec_condition_start
-						. "\t" . 'if (!isset($_POST[\'planid\'])) {' . "\n"
-						. "\t\t" . $aec_include_class
-						. "\t\t" . 'mosRedirect( \'index.php?option=com_acctexp&amp;task=subscribe\' );' . "\n"
-						. "\t" . $aec_condition_end
+						. 'if (!isset($_POST[\'planid\'])) {' . "\n"
+						. $aec_include_class
+						. 'mosRedirect($mosConfig_live_site . "/index.php?option=com_acctexp&amp;task=subscribe");' . "\n"
+						. $aec_condition_end
 						. $aec_condition_end
 						. $aec_hack_end;
 
@@ -3583,18 +3582,18 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 	$aec_rhackbefore2 =	$aec_hack_start
 						. $aec_global_call . 'global $mainframe;' . "\n"
 						. $aec_condition_start
-						. "\t" . 'require_once( $mainframe->getPath( \'front_html\', \'com_registration\' ) );' . "\n"
-						. "\t\t" . 'if (!isset($_POST[\'usage\'])) {' . "\n"
-						. "\t\t" . $aec_include_class
-						. "\t\t" . 'mosRedirect( \'index.php?option=com_acctexp&amp;task=subscribe\' );' . "\n"
-						. "\t" . $aec_condition_end
+						. 'require_once( $mainframe->getPath( "front_html", "com_registration" ) );' . "\n"
+						. 'if (!isset($_POST[\'usage\'])) {' . "\n"
+						. $aec_include_class
+						. 'mosRedirect($mosConfig_live_site . "/index.php?option=com_acctexp&amp;task=subscribe");' . "\n"
+						. $aec_condition_end
 						. $aec_condition_end
 						. $aec_hack_end;
 
 	$aec_optionhack =	$aec_hack_start
 						. $aec_global_call
 						. $aec_condition_start
-						. "\t" . '$option = \'com_acctexp\';' . "\n"
+						. '$option = "com_acctexp";' . "\n"
 						. $aec_condition_end
 						. $aec_hack_end;
 
@@ -3745,7 +3744,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['condition']		=	'comprofilerphp3';
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.html.php';
-		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveregisters" />';
+		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveRegistration" />';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack, $n, $n);
 		$hacks[$n]['legacy']		=	1;
 
@@ -3756,7 +3755,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 		$hacks[$n]['condition']		=	'comprofilerphp6';
 		$hacks[$n]['uncondition']	=	'comprofilerhtml';
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.html.php';
-		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveregisters" />';
+		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveRegistration" />';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
 		$hacks[$n]['important']		=	1;
 
