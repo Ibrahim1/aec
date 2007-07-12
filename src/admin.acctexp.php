@@ -3744,7 +3744,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['condition']		=	'comprofilerphp3';
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.html.php';
-		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveRegistration" />';
+		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveregisters" />';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack, $n, $n);
 		$hacks[$n]['legacy']		=	1;
 
@@ -3755,7 +3755,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 		$hacks[$n]['condition']		=	'comprofilerphp6';
 		$hacks[$n]['uncondition']	=	'comprofilerhtml';
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.html.php';
-		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveRegistration" />';
+		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveregisters" />';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
 		$hacks[$n]['important']		=	1;
 
@@ -3793,7 +3793,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['condition']		=	'comprofilerphp6';
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.html.php';
-		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveregisters" />';
+		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveRegistration" />';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack, $n, $n);
 		$hacks[$n]['legacy']		=	1;
 
@@ -3804,7 +3804,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 		$hacks[$n]['condition']		=	'comprofilerphp6';
 		$hacks[$n]['uncondition']	=	'comprofilerhtml';
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.html.php';
-		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveregisters" />';
+		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveRegistration" />';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
 		$hacks[$n]['important']		=	1;
 	}else{
