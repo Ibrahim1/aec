@@ -1784,7 +1784,9 @@ class SubscriptionPlan extends paramDBTable {
 
 		$params = array();
 		foreach( $fixed as $varname ) {
-			if( is_array( $post[$varname] ) ) {
+			if( $post[$varname] == '' ) {
+				$params[$varname] = 0;
+			} elseif( is_array( $post[$varname] ) ) {
 				$params[$varname] = implode( ';', $post[$varname] );
 			} else {
 				$params[$varname] = $post[$varname];
