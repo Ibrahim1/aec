@@ -407,7 +407,6 @@ define( '_PAYPLAN_USERCOUNT', 'Abonnees');
 define( '_PAYPLAN_EXPIREDCOUNT', 'Expired');
 define( '_PAYPLAN_TOTALCOUNT', 'Total');
 define( '_PAYPLAN_REORDER', 'Herschikken');
-define( '_PAYPLANS_HEADER', 'Abonnementsvormen');
 define( '_PAYPLAN_DETAIL', 'Settings');
 define( '_ALTERNATIVE_PAYMENT', 'Bank Transactie');
 define( '_SUBSCR_DATE', 'Datum registratie');

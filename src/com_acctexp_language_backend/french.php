@@ -505,7 +505,6 @@ define( '_PAYPLAN_USERCOUNT', 'Abonn&eacute;');
 define( '_PAYPLAN_EXPIREDCOUNT', 'Expired');
 define( '_PAYPLAN_TOTALCOUNT', 'Total');
 define( '_PAYPLAN_REORDER', 'R&eacute;ordonner');
-define( '_PAYPLANS_HEADER', ' Plans');
 define( '_PAYPLAN_DETAIL', 'R&eacute;gulier');
 define( '_ALTERNATIVE_PAYMENT', 'Virement bancaire');
 define( '_SUBSCR_DATE', 'Date d&acute;abonnement');

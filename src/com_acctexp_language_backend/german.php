@@ -509,7 +509,6 @@ define( '_PAYPLAN_USERCOUNT', 'Abonnenten' );
 define( '_PAYPLAN_EXPIREDCOUNT', 'abgelaufen' );
 define( '_PAYPLAN_TOTALCOUNT', 'Total' );
 define( '_PAYPLAN_REORDER', 'Neuordnen' );
-define( '_PAYPLANS_HEADER', 'Bezahlungspl&auml;ne' );
 define( '_PAYPLAN_DETAIL', 'Einstellungen' );
 define( '_ALTERNATIVE_PAYMENT',		'Bank&uuml;berweisung' );
 define( '_SUBSCR_DATE', 'Anmeldedatum' );

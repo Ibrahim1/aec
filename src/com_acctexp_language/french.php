@@ -73,6 +73,7 @@ define( '_COUPON_INFO_CHECKOUT',			'Please enter your coupon code here and click
 // end mic ########################################################
 
 // --== PAGE PLANS ==--
+define( '_PAYPLANS_HEADER', ' Plans');
 define( '_NOPLANS_ERROR', 'Aucun plan disponible pour le moment.');
 
 // --== PAGE INFORMATIONS DU COMPTE ==--

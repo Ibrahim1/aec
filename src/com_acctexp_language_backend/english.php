@@ -407,7 +407,6 @@ define( '_PAYPLAN_USERCOUNT', 'Subscribers');
 define( '_PAYPLAN_EXPIREDCOUNT', 'Expired');
 define( '_PAYPLAN_TOTALCOUNT', 'Total');
 define( '_PAYPLAN_REORDER', 'Reorder');
-define( '_PAYPLANS_HEADER', 'Payment Plans');
 define( '_PAYPLAN_DETAIL', 'Settings');
 define( '_ALTERNATIVE_PAYMENT', 'Bank Transfer');
 define( '_SUBSCR_DATE', 'Sign Up Date');

@@ -68,6 +68,7 @@ define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR',	'Unknown Error' );
 // end mic ########################################################
 
 // --== PAYMENT PLANS PAGE ==--
+define( '_PAYPLANS_HEADER', 'Payment Plans');
 define( '_NOPLANS_ERROR', 'No payment plans available. Please contact administrator.');
 
 // --== ACCOUNT DETAILS PAGE ==--

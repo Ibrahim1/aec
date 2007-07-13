@@ -505,7 +505,6 @@ define( '_PAYPLAN_USERCOUNT', '订阅者');
 define( '_PAYPLAN_EXPIREDCOUNT', 'Expired');
 define( '_PAYPLAN_TOTALCOUNT', 'Total');
 define( '_PAYPLAN_REORDER', '�?新订阅');
-define( '_PAYPLANS_HEADER', '支付计划');
 define( '_PAYPLAN_DETAIL', 'Settings');
 define( '_ALTERNATIVE_PAYMENT', '银行转账');
 define( '_SUBSCR_DATE', '注册日期');

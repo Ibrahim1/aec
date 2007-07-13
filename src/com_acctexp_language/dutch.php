@@ -73,6 +73,7 @@ define( '_COUPON_INFO_CHECKOUT',			'Please enter your coupon code here and click
 // end mic ########################################################
 
 // --== PAYMENT PLANS PAGE ==--
+define( '_PAYPLANS_HEADER', 'Abonnementsvormen');
 define( '_NOPLANS_ERROR', 'Er zijn geen abonnementsvormen beschikbaar. Neem alsjeblieft contact op met de webmaster.');
 
 // --== ACCOUNT DETAILS PAGE ==--

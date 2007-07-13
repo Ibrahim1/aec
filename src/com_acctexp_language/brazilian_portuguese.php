@@ -72,6 +72,7 @@ define( '_COUPON_INFO_CHECKOUT',			'Please enter your coupon code here and click
 // end mic ########################################################
 
 // --== PAYMENT PLANS PAGE ==--
+define( '_PAYPLANS_HEADER', 'Planos de Pagamento');
 define( '_NOPLANS_ERROR', 'No payment plans available. Please contact administrator.');
 
 // --== ACCOUNT DETAILS PAGE ==--

@@ -506,7 +506,6 @@ define( '_PAYPLAN_USERCOUNT', 'Inscizioni');
 define( '_PAYPLAN_EXPIREDCOUNT', 'Expired');
 define( '_PAYPLAN_TOTALCOUNT', 'Total');
 define( '_PAYPLAN_REORDER', 'Riordina');
-define( '_PAYPLANS_HEADER', 'Piani Pagamento');
 define( '_PAYPLAN_DETAIL', 'Settings');
 define( '_ALTERNATIVE_PAYMENT', 'Trasferimenti Bancari');
 define( '_SUBSCR_DATE', 'Registra Data');
