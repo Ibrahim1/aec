@@ -68,6 +68,7 @@ define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR',	'Unbekannter Fehler' );
 // end mic ########################################################
 
 // --== PAYMENT PLANS PAGE ==--
+define( '_PAYPLANS_HEADER',					'Bezahlungspl&auml;ne' );
 define( '_NOPLANS_ERROR',					'Es trat ein interner Fehler auf, dadurch sind momentan keine Abonnements vorhanden, bitte den Administrator informieren - danke!');
 
 // --== ACCOUNT DETAILS PAGE ==--
@@ -204,12 +205,12 @@ define( '_COUPON_ERROR_TRIAL_ONLY',			'Dieser Gutschein gilt nur f&uuml;r ein Pr
 
 define( '_ACCTEXP_SEND_MSG',				'Abonnement: %s bei %s');
 define( '_ACCTEXP_SEND_MSG_RENEW',			'Erneuerung eines Abonnements: %s bei %s');
-define( '_ACCTEXP_MAILPARTICLE_GREETING',	'Hallo %s,\n\n');
+define( '_ACCTEXP_MAILPARTICLE_GREETING',	"Hallo %s,\n\n");
 define( '_ACCTEXP_MAILPARTICLE_THANKSREG',	'Vielen Dank f&uuml;r ihr Abonnement auf %s.');
 define( '_ACCTEXP_MAILPARTICLE_THANKSREN',	'Vielen Dank f&uuml;r die Erneuerung ihres Abonnements auf %s.' );
 define( '_ACCTEXP_MAILPARTICLE_PAYREC',		'Ihre Bezahlung wurde dankend entgegengenommen.' );
 define( '_ACCTEXP_MAILPARTICLE_LOGIN',		'Sie k&ouml;nnen sich nun auf %s mit dem gew&auml;hlten Benutzernamen und Passwort einw&auml;hlen.');
-define( '_ACCTEXP_MAILPARTICLE_FOOTER',		'\n\nBitte nicht auf dieses Email antworten, es wurde automatisch generiert und dient nur der Information.' );
-define( '_ACCTEXP_ASEND_MSG',				'Hallo %s,\n\nein neues Abonnement auf %s wurde abgeschlossen.\n\nHier weitere Benutzerdetails:\n\nName......: %s\nEmail.....: %s\nUsername..: %s\n\nBitte nicht antworten, das ist eine automatisch generierte Nachricht');
-define( '_ACCTEXP_ASEND_MSG_RENEW',			'Hallo %s,\n\neine Aboverl&auml;ngerung auf %s.\n\nHier die Benutzerdetails:\n\nName......: %s\nEmail.....: %s\nUsername..: %s\n\nBitte nicht antworten, das ist eine automatisch generierte Nachricht' );
+define( '_ACCTEXP_MAILPARTICLE_FOOTER',		"\n\nBitte nicht auf dieses Email antworten, es wurde automatisch generiert und dient nur der Information." );
+define( '_ACCTEXP_ASEND_MSG',				"Hallo %s,\n\nein neues Abonnement auf %s wurde abgeschlossen.\n\nHier weitere Benutzerdetails:\n\nName......: %s\nEmail.....: %s\nUsername..: %s\n\nBitte nicht antworten, das ist eine automatisch generierte Nachricht");
+define( '_ACCTEXP_ASEND_MSG_RENEW',			"Hallo %s,\n\neine Aboverl&auml;ngerung auf %s.\n\nHier die Benutzerdetails:\n\nName......: %s\nEmail.....: %s\nUsername..: %s\n\nBitte nicht antworten, das ist eine automatisch generierte Nachricht");
 ?>

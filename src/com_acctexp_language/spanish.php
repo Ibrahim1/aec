@@ -203,12 +203,12 @@ define( '_COUPON_ERROR_TRIAL_ONLY', 'You may only use this coupon for a Trial Pe
 
 define( '_ACCTEXP_SEND_MSG','Subscription for %s at %s');
 define( '_ACCTEXP_SEND_MSG_RENEW','Subscription renew for %s at %s');
-define( '_ACCTEXP_MAILPARTICLE_GREETING', 'Hello %s, \n\n');
+define( '_ACCTEXP_MAILPARTICLE_GREETING', "Hello %s, \n\n");
 define( '_ACCTEXP_MAILPARTICLE_THANKSREG', 'Thank you for registering at %s.');
 define( '_ACCTEXP_MAILPARTICLE_THANKSREN', 'Thank you for renewing your subscription at %s.');
 define( '_ACCTEXP_MAILPARTICLE_PAYREC', 'Your payment for your membership has been received.');
 define( '_ACCTEXP_MAILPARTICLE_LOGIN', 'You may now login to %s with your username and password.');
-define( '_ACCTEXP_MAILPARTICLE_FOOTER','\n\nPlease do not respond to this message as it is automatically generated and is for information purposes only.');
-define( '_ACCTEXP_ASEND_MSG','Hello %s,\nA new user has created a subscription at %s.\nThe details for this user are:\nName - %s\ne-mail - %s\nUsername - %s\nPayment Plan - %s (%s)\n\nPlease do not respond to this message as it is automatically generated and is for information purposes only.');
-define( '_ACCTEXP_ASEND_MSG_RENEW','Hello %s,\n\nA user has renewed his subscription at %s.\n\nThe details for this user are:\n\nName - %s\ne-mail - %s\nUsername - %s\nPayment Plan - %s (%s)\n\nPlease do not respond to this message as it is automatically generated and is for information purposes only.');
+define( '_ACCTEXP_MAILPARTICLE_FOOTER',"\n\nPlease do not respond to this message as it is automatically generated and is for information purposes only.");
+define( '_ACCTEXP_ASEND_MSG',"Hello %s,\nA new user has created a subscription at %s.\nThe details for this user are:\nName - %s\ne-mail - %s\nUsername - %s\nPayment Plan - %s (%s)\n\nPlease do not respond to this message as it is automatically generated and is for information purposes only.");
+define( '_ACCTEXP_ASEND_MSG_RENEW',"Hello %s,\n\nA user has renewed his subscription at %s.\n\nThe details for this user are:\n\nName - %s\ne-mail - %s\nUsername - %s\nPayment Plan - %s (%s)\n\nPlease do not respond to this message as it is automatically generated and is for information purposes only.");
 ?>
