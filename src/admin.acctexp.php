@@ -3582,7 +3582,6 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 	$aec_rhackbefore2 =	$aec_hack_start
 						. $aec_global_call . 'global $mainframe;' . "\n"
 						. $aec_condition_start
-						. 'require_once( $mainframe->getPath( "front_html", "com_registration" ) );' . "\n"
 						. 'if (!isset($_POST[\'usage\'])) {' . "\n"
 						. $aec_include_class
 						. 'mosRedirect($mosConfig_live_site . "/index.php?option=com_acctexp&amp;task=subscribe");' . "\n"
