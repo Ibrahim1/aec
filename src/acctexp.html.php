@@ -204,8 +204,7 @@ class HTML_frontEnd {
 						<p><strong><?php echo _RENEW_LIFETIME; ?></strong></p><?php
 					}else{ ?>
 						<p>
-							<?php echo _EXPIRE_INFO;?>:&nbsp;
-							<strong><?php echo HTML_frontend::DisplayDateInLocalTime( $metaUser->objExpiration->expiration ); ?></strong>
+							<?php echo HTML_frontend::DisplayDateInLocalTime( $metaUser->objExpiration->expiration, true, true ); ?>
 						</p>
 						<?php
 					} ?>
@@ -217,10 +216,15 @@ class HTML_frontEnd {
 						$daysleft_append	= _RENEW_DAYSLEFT;
 					}elseif( strcmp( $alert['daysleft'], 'excluded' ) === 0 ) {
 						$daysleft			= _RENEW_DAYSLEFT_EXCLUDED;
-						$daysleft_append	= "";
+						$daysleft_append	= '';
 					}else{
-						$daysleft			= $alert['daysleft'];
-						$daysleft_append	= _RENEW_DAYSLEFT;
+						if( $alert['daysleft'] >= 0 ) {
+							$daysleft			= $alert['daysleft'];
+							$daysleft_append	= _RENEW_DAYSLEFT;
+						}else{
+							$daysleft			= $alert['daysleft'];
+							$daysleft_append	= _AEC_DAYS_ELAPSED;
+						}
 					} ?>
 					<p><strong><?php echo $daysleft; ?></strong>&nbsp;&nbsp;<?php echo $daysleft_append; ?></p>
 				</div>
@@ -322,15 +326,56 @@ class HTML_frontEnd {
 		}
 	}
 
-	function DisplayDateInLocalTime( $SQLDate ){
+	/**
+	 * Formats a given date
+	 *
+	 * @param string	$SQLDate
+	 * @param bool		$check		check time diference
+	 * @param bool		$display	out with text (only in combination with $check)
+	 * @return formatted date
+	 */
+	function DisplayDateInLocalTime( $SQLDate, $check = false, $dislay = false ){
+		global $now;
+
 		if( $SQLDate == '' ) {
 			return _AEC_EXPIRE_NOT_SET;
 		}else{
-			global $mosConfig_offset_user, $database;
+			global $mosConfig_offset, $mosConfig_offset_user;
+			global $database;
+
+			// compatibility with Mambo
+			if( !empty( $mosConfig_offset_user ) ) {
+				$timeOffset = $mosConfig_offset_user * 3600;
+			}else{
+				$timeOffset = $mosConfig_offset * 3600;
+			}
 
 			$cfg = new Config_General( $database );
 
-			return strftime( $cfg->cfg['display_date_backend'], ( strtotime( $SQLDate ) + $mosConfig_offset_user * 3600 ) );
+			$retVal = strftime( $cfg->cfg['display_date_backend'], ( strtotime( $SQLDate ) + $timeOffset ) );
+
+			if( $check ) {
+				$timeDif = strtotime( $SQLDate ) - $now;
+				if( $timeDif < 0 ) {
+					$valid = false;
+				}elseif( ( $timeDif >= 0 ) && ( $timeDif < 86400 ) ) {
+					$valid = 1;
+				}else{
+					$valid = 2;
+				}
+
+				if( $valid ) {
+					if( $valid = 1 ) {
+						$retVal = _AEC_EXPIRE_TODAY;
+					}else{
+						$retVal = _AEC_EXPIRE_FUTURE . ': ' . $retVal;
+					}
+				}else{
+					$retVal = _AEC_EXPIRE_PAST . ':&nbsp;<strong>' . $retVal . '</strong>';
+				}
+			}
+
+			return $retVal;
 		}
 	}
 
