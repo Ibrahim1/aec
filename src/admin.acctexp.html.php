@@ -2109,15 +2109,30 @@ class HTML_AcctExp {
    		return $x;
 	}
 
+	/**
+	 * Formats a given date
+	 *
+	 * @param string	$SQLDate
+	 * @return string	formatted date
+	 */
 	function DisplayDateInLocalTime( $SQLDate ){
 
 		if( $SQLDate == '' || $SQLDate == '-' ) {
 			return _AEC_CMN_NOT_SET;
 		}else{
-			global $mosConfig_offset_user, $database;
+			global $mosConfig_offset, $mosConfig_offset_user;
+			global $database;
+
+			// compatibility with Mambo
+			if( !empty( $mosConfig_offset_user ) ) {
+				$timeOffset = $mosConfig_offset_user * 3600;
+			}else{
+				$timeOffset = $mosConfig_offset * 3600;
+			}
+
 			$cfg = new Config_General( $database );
 
-			return strftime( $cfg->cfg['display_date_backend'], ( strtotime( $SQLDate ) + $mosConfig_offset_user * 3600 ) );
+			return strftime( $cfg->cfg['display_date_backend'], ( strtotime( $SQLDate ) + $timeOffset ) );
 		}
 	}
 }

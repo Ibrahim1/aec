@@ -30,7 +30,16 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( '�?容许直接访问这儿.' );
 
-// new mic
+if( defined( '_AEC_LANG' ) ) {
+	return;
+}
+
+// new 12.0.4
+define( '_AEC_EXPIRE_TODAY',				'Heute' );
+define( '_AEC_EXPIRE_FUTURE',				'This account is active until' );
+define( '_AEC_EXPIRE_PAST',					'This account was valid until' );
+define( '_AEC_DAYS_ELAPSED',				'day(s) elapsed');
+
 define( '_AEC_EXPIRE_NOT_SET',				'Not Set' );
 define( '_AEC_GEN_ERROR',					'<h1>General Error</h1><p>We had problems processing your request. Please contact the web site administrator.</p>' );
 

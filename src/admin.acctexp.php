@@ -1263,7 +1263,7 @@ function removePendingSubscription ( $userid, $option ) {
 }
 
 function activatePendingSubscription( $userid, $option, $renew ) {
-	global $database, $my, $acl, $mosConfig_offset_user;
+	global $database;
 
     if (!is_array( $userid ) || count( $userid ) < 1) {
 	    echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";

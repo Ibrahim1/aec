@@ -34,6 +34,12 @@ if( defined( '_AEC_LANG' ) ) {
 	return;
 }
 
+// new 2007.07.10
+define( '_AEC_EXPIRE_TODAY',				'Heute' );
+define( '_AEC_EXPIRE_FUTURE',				'Das Konto ist aktiv bis' );
+define( '_AEC_EXPIRE_PAST',					'Das Konto war aktiv bis' );
+define( '_AEC_DAYS_ELAPSED',				'Tag(e) abgelaufen' );
+
 // new 0.12.4 (mic)
 define( '_AEC_EXPIRE_NOT_SET',				'Nicht definiert' );
 define( '_AEC_GEN_ERROR',					'<h1>FEHLER!</h1><p>Leider trat w&auml;hrend der Bearbeitung ein Fehler auf - bitte informieren Sie auch den Administrator. Danke.</p>' );
@@ -69,7 +75,7 @@ define( '_CHK_USERNAME_AVAIL',				'Benutzername %s ist verf&uuml;gbar' );
 define( '_CHK_USERNAME_NOTAVAIL',			'Leider ist dieser Benutzername %s bereits vergeben!');
 
 // --== MY SUBSCRIPTION PAGE ==--
-define( '_HISTORY_TITLE',					'Abonnementverlauf - die letzten Vorg&auml;nge');
+define( '_HISTORY_TITLE',					'Abonnementverlauf - die letzten 10 Vorg&auml;nge');
 define( '_HISTORY_SUBTITLE',				'Abonnent seit ');
 define( '_HISTORY_COL1_TITLE',				'Rechnung');
 define( '_HISTORY_COL2_TITLE',				'Wert');
@@ -80,12 +86,12 @@ define( '_HISTORY_COL6_TITLE', 				'Plan');
 define( '_HISTORY_ACTION_REPEAT', 			'bezahlen');
 define( '_HISTORY_ACTION_CANCEL', 			'l&ouml;schen');
 define( '_RENEW_LIFETIME', 					'Sie haben ein permanentes Benutzerkonto.');
-define( '_RENEW_DAYSLEFT', 					'Tage &uuml;brig');
+define( '_RENEW_DAYSLEFT', 					'Tag(e) &uuml;brig');
 define( '_RENEW_DAYSLEFT_EXCLUDED', 		'Ihr Konto unterliegt keinem Ablauf.');
 define( '_RENEW_DAYSLEFT_INFINITE', 		'&#8734');
 define( '_RENEW_INFO', 						'Sie verwenden automatisch wiederkehrende Zahlungen.');
 define( '_RENEW_OFFLINE', 					'Erneuern');
-define( '_RENEW_BUTTON_UPGRADE', 			'Ver&auml;ndern');
+define( '_RENEW_BUTTON_UPGRADE', 			'Upgraden / Erneuern');
 define( '_PAYMENT_PENDING_REASON_ECHECK',	'ECheck noch ausst&auml;ndig (1-4 Arbeitstage)');
 define( '_PAYMENT_PENDING_REASON_TRANSFER', 'Zahlungsanweisung wird erwartet');
 
@@ -110,7 +116,7 @@ define( '_CONFIRM_ROW_EMAIL',				'Email:');
 define( '_CONFIRM_INFO',					'Benutzen Sie bitte den Best&auml;tigungsbutton um Ihre Bestellung abzuschlie&szlig;en.');
 define( '_BUTTON_CONFIRM',					'Best&auml;tigen');
 define( '_CONFIRM_TOS',						'Ich habe die <a href="%s" target="_blank" title="AGBs>AGBs</a> gelesen und bin einverstanden.');
-define( '_CONFIRM_TOS_ERROR',				'Sie m&uuml;ssen unsere AGB lesen und akzeptieren');
+define( '_CONFIRM_TOS_ERROR',				'Sie m&uuml;ssen unsere AGBs lesen und akzeptieren');
 define( '_CONFIRM_COUPON_INFO',				'Falls Sie einen Gutscheincode haben geben Sie ihn bitte auf den nachfolgenden Seiten an, um einen allf&auml;lligen Abzug zu ber&uuml;cksichtigen');
 
 // --== CHECKOUT FORM ==--

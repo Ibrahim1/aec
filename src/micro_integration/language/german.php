@@ -81,14 +81,10 @@ define( '_MI_MI_EMAIL_SUBJECT_EXP_NAME',			'Betreff' );
 define( '_MI_MI_EMAIL_SUBJECT_EXP_DESC',			'Text bei Ablauf eines Abos' );
 define( '_MI_MI_EMAIL_TEXT_EXP_HTML_NAME',			'HTML Format' );
 define( '_MI_MI_EMAIL_TEXT_EXP_HTML_DESC',			'Soll dieses Email im HTML-Format gesendet werden? (Achtung: dann d&uuml;rfen keine TAGS enthalten sein falls das nicht gew&uuml;nscht ist)' );
-define( '_MI_MI_EMAIL_TEXT_EXP_NAME',				'Ablauftext');
-define( '_MI_MI_EMAIL_TEXT_EXP_DESC',				'Text des Emails wenn das Abo abl&auml;ft (siehe weitere Felder unten)' );
-define( '_MI_MI_EMAIL_SUBJECT_PRE_EXP_NAME',		'Betreff' );
-define( '_MI_MI_EMAIL_SUBJECT_PRE_EXP_DESC',		'Text bevor das Abo abl&auml;ft' );
-define( '_MI_MI_EMAIL_TEXT_PRE_EXP_HTML_NAME',		'HTML Format' );
-define( '_MI_MI_EMAIL_TEXT_PRE_EXP_HTML_DESC',		'Soll dieses Email im HTML-Format gesendet werden? (Achtung: dann d&uuml;rfen keine TAGS enthalten sein falls das nicht gew&uuml;nscht ist)' );
 define( '_MI_MI_EMAIL_SUBJECT_PRE_EXP_NAME',		'Text vor Ablauf' );
 define( '_MI_MI_EMAIL_SUBJECT_PRE_EXP_DESC',		'Text welcher gesendet wird bevor das Abo abl&auml;ft (siehe weitere Felder unten)' );
+define( '_MI_MI_EMAIL_TEXT_PRE_EXP_HTML_NAME',		'HTML Format' );
+define( '_MI_MI_EMAIL_TEXT_PRE_EXP_HTML_DESC',		'Soll dieses Email im HTML-Format gesendet werden? (Achtung: dann d&uuml;rfen keine TAGS enthalten sein falls das nicht gew&uuml;nscht ist)' );
 define( '_AEC_MI_SET11_EMAIL',		'Weitere Infos' );
 
 // iDevAffiliate
