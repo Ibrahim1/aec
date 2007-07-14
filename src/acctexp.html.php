@@ -467,9 +467,9 @@ class Payment_HTML {
 			. ' "method="post">' . "\n"
 			. '<input type="image" src="' . $urlbutton;
 			if( isset( $processor['statement'] ) ) {
-				$html_code .= '" border="0" name="submit" alt="' . $processor['statement'] . '" />' . "\n"
+				$html_code .= '" border="0" name="submit" alt="' . $processor['statement'] . '" />' . "\n";
 			}else{
-				$html_code .= '" border="0" name="submit" alt="" />' . "\n"
+				$html_code .= '" border="0" name="submit" alt="" />' . "\n";
 			}
 			$html_code .= '<input type="hidden" name="option" value="' . $option . '" />' . "\n"
 			. '<input type="hidden" name="task" value="' . $task . '" />' . "\n"
