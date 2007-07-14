@@ -30,7 +30,7 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-global $mosConfig_absolute_path, $mosConfig_offset_user, $now;
+global $mosConfig_absolute_path, $mosConfig_offset_user;
 
 if( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
 	// mic: call only if called from the backend
@@ -48,13 +48,9 @@ if( !class_exists( 'paramDBTable' ) ) {
 }
 
 // compatibility w/ Mambo
-if( !empty( $mosConfig_offset_user ) ) {
-	// Joomla
-	$now = time() + $mosConfig_offset_user * 3600;
-}else{
-	// Mambo
+if( empty( $mosConfig_offset_user ) ) {
 	global $mosConfig_offset;
-	$now = time() + $mosConfig_offset * 3600;
+	$mosConfig_offset_user = $mosConfig_offset;
 }
 
 class metaUser {
@@ -319,8 +315,7 @@ class AcctExp extends mosDBTable {
 	}
 
 	function is_expired( $offset=false ) {
-		global $database;
-		global $now;
+		global $database, $mosConfig_offset_user;
 
 		$cfg = new Config_General( $database );
 
@@ -333,7 +328,7 @@ class AcctExp extends mosDBTable {
 				$expstamp = strtotime( ( '+' . $expiration_cushion . ' hours' ), strtotime( $this->expiration ) );
 			}
 
-			if( ( $expstamp > 0 ) && ( ( $expstamp - ( $now ) ) < 0 ) ) {
+			if( ( $expstamp > 0 ) && ( ( $expstamp - ( time() + $mosConfig_offset_user*3600 ) ) < 0 ) ) {
 				return true;
 			}else{
 				return false;
@@ -353,8 +348,9 @@ class AcctExp extends mosDBTable {
 	}
 
 	function setExpiration( $unit, $value, $extend ) {
-		global $mainframe;
-		global $now;
+		global $mainframe, $mosConfig_offset_user;
+
+		$now = time() + $mosConfig_offset_user*3600;
 
 		if( $extend ) {
 			$current = strtotime( $this->expiration . ' 00:00:00' );
@@ -406,8 +402,7 @@ class aecHeartbeat extends mosDBTable {
 	}
 
 	function ping( $configCycle ) {
-		global $mainframe;
-		global $now;
+		global $mainframe, $mosConfig_offset_user;
 
 		if( $this->last_beat ) {
 			$offset	= '+' . $configCycle . ' hour';
@@ -417,7 +412,7 @@ class aecHeartbeat extends mosDBTable {
 		}
 
 		if( ( $ping - time() ) <= 0 ) {
-			$this->last_beat = date( 'Y-m-d H:i:s', $now );
+			$this->last_beat = date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 );
 			$this->check();
 			$this->store();
 
@@ -608,7 +603,11 @@ class aecHeartbeat extends mosDBTable {
 		$tags	= array( 'heartbeat' );
 
 		if( $e ) {
-			$event .= 'Expires ' . $e . ' user' . ( $e > 1 ) ? 's' : '';
+			if( $e > 1 ) {
+				$event .= 'Expires ' . $e . ' users';
+			}else{
+				$event .= 'Expires 1 user';
+			}
 			$tags[] = 'expiration';
 			if( $exp_actions ) {
 				$event .= ', ';
@@ -651,9 +650,9 @@ class eventLog extends paramDBTable {
 	}
 
 	function issue( $short, $tags, $text, $params = null ) {
-		global $now;
+		global $mosConfig_offset_user;
 
-		$this->datetime	= gmstrftime ( '%Y-%m-%d %H:%M:%S', $now );
+		$this->datetime	= gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
 		$this->short	= $short;
 		$this->tags		= $tags;
 		$this->event	= $text;
@@ -1414,8 +1413,7 @@ class SubscriptionPlan extends paramDBTable {
 	}
 
 	function applyPlan( $userid, $processor = 'none', $silent = 0 ) {
-		global $database, $mainframe;
-		global $now;
+		global $database, $mainframe, $mosConfig_offset_user;
 
 		$cfg = new Config_General($database);
 
@@ -1472,7 +1470,7 @@ class SubscriptionPlan extends paramDBTable {
 
 		if( $is_pending ) {
 			// Is new = set signup date
-			$metaUser->objSubscription->signup_date = gmstrftime( '%Y-%m-%d %H:%M:%S', $now );
+			$metaUser->objSubscription->signup_date = gmstrftime( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 ) );
 			if( $params['trial_period'] > 0 && !$is_trial ) {
 				$status = 'Trial';
 			}else{
@@ -1492,7 +1490,7 @@ class SubscriptionPlan extends paramDBTable {
 		$metaUser->objSubscription->status = $status;
 		$metaUser->objSubscription->setPlanID( $this->id );
 
-		$metaUser->objSubscription->lastpay_date	= gmstrftime( '%Y-%m-%d %H:%M:%S', $now );
+		$metaUser->objSubscription->lastpay_date	= gmstrftime( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
 		$metaUser->objSubscription->type = $processor;
 
 		$pp = new PaymentProcessor();
@@ -1884,8 +1882,7 @@ class logHistory extends mosDBTable {
 	}
 
 	function entryFromInvoice ( $objInvoice, $response, $processor ) {
-		global $database;
-		global $now;
+		global $database, $mosConfig_offset_user;
 
 		$user = new mosUser($database);
 		$user->load( $objInvoice->userid );
@@ -1905,7 +1902,7 @@ class logHistory extends mosDBTable {
 		$this->user_name		= $user->username;
 		$this->plan_id			= $plan->id;
 		$this->plan_name		= $plan->name;
-	    $this->transaction_date	= gmstrftime ( '%Y-%m-%d %H:%M:%S', $now );
+	    $this->transaction_date	= gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
 	    $this->amount			= $objInvoice->amount;
 	    $this->invoice_number	= $objInvoice->invoice_number;
 	    $this->response			= $response;
@@ -2890,7 +2887,7 @@ class Invoice extends paramDBTable {
 	}
 
 	function create ( $userid, $usage, $processor ) {
-		global $now;
+		global $mosConfig_offset_user;
 
 		$invoice_number			= $this->generateInvoiceNumber();
 
@@ -2898,7 +2895,7 @@ class Invoice extends paramDBTable {
 		$this->invoice_number	= $invoice_number;
 		$this->active			= 1;
 		$this->fixed			= 0;
-		$this->created_date		= $now;
+		$this->created_date		= gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
 		$this->transaction_date	= '0000-00-00 00:00:00';
 		$this->userid			= $userid;
 		$this->method			= $processor;
@@ -2981,13 +2978,12 @@ class Invoice extends paramDBTable {
 	}
 
 	function setTransactionDate () {
-		global $database;
-		global $now;
+		global $database, $mosConfig_offset_user;
 
 		$cfg = new Config_General( $database );
 
-		$time_passed		= ( strtotime( $this->transaction_date ) - $now );
-		$transaction_date	= gmstrftime ( '%Y-%m-%d %H:%M:%S', $now );
+		$time_passed		= ( strtotime( $this->transaction_date ) - time() + $mosConfig_offset_user*3600 );
+		$transaction_date	= gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
 
 		if( strcmp( $this->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
 			$this->transaction_date	= $transaction_date;
@@ -3289,10 +3285,10 @@ class Subscription extends paramDBTable {
 	}
 
 	function createNew( $userid, $processor, $pending ) {
-		global $now;
+		global $mosConfig_offset_user;
 
 		$this->userid		= $userid;
-		$this->signup_date	= date( 'Y-m-d H:i:s', $now );
+		$this->signup_date	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 );
 		$this->status		= $pending ? 'Pending' : 'Active';
 		$this->type			= $processor;
 
@@ -3311,8 +3307,7 @@ class Subscription extends paramDBTable {
 	* alert['daysleft'] = number of days left to expire
 	*/
 	function GetAlertLevel () {
-		global $database;
-		global $now;
+		global $database, $mosConfig_offset_user;
 
 		$aecexpid = AECfetchfromDB::ExpirationIDfromUserID( $this->userid );
 
@@ -3328,7 +3323,7 @@ class Subscription extends paramDBTable {
 			$expstamp = strtotime( $objexpiration->expiration );
 
 			// Get how many days left to expire (3600 sec = 1 hour)
-			$alert['daysleft']	= round( ( $expstamp - ( $now ) ) / ( 3600 * 24 ) );
+			$alert['daysleft']	= round( ( $expstamp - ( time() + $mosConfig_offset_user*3600 ) ) / ( 3600 * 24 ) );
 
 			if( $alert['daysleft'] < 0 ) {
 				// Subscription already expired. Alert Level 0!
@@ -5125,8 +5120,9 @@ class userToken extends paramDBTable {
 	}
 
 	function createToken( $groupid, $tokenid, $userid ) {
-		global $database;
-		global $now;
+		global $database, $mosConfig_offset_user;
+
+		$now = time() + $mosConfig_offset_user*3600;
 
 		$token_group = new tokenGroup($database);
 		$token_group->load($groupid);
