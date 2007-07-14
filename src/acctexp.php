@@ -478,7 +478,7 @@ function subscriptionDetails ( $option ) {
 		$min_limit	= ( $rows_total > $rows_limit ) ? ( $rows_total - $rows_limit ) : 0;
 
 		// get payments from user
-		$query = 'SELECT invoice_number, transaction_date, method, amount, currency, params'
+		$query = 'SELECT invoice_number, transaction_date, method, amount, currency, params, fixed'
 		. ' FROM #__acctexp_invoices'
 		. ' WHERE userid = \'' . $my->id . '\''
 		. ' AND active = \'1\''
