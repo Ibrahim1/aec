@@ -465,9 +465,13 @@ class Payment_HTML {
 			$html_code .= '<div class="gateway_button">' . "\n"
 			. '<form action="' . AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=' . $task ) . '"'
 			. ' "method="post">' . "\n"
-			. '<input type="image" src="' . $urlbutton
-			. '" border="0" name="submit" alt="' . $processor['statement'] . '" />' . "\n"
-			. '<input type="hidden" name="option" value="' . $option . '" />' . "\n"
+			. '<input type="image" src="' . $urlbutton;
+			if( isset( $processor['statement'] ) ) {
+				$html_code .= '" border="0" name="submit" alt="' . $processor['statement'] . '" />' . "\n"
+			}else{
+				$html_code .= '" border="0" name="submit" alt="" />' . "\n"
+			}
+			$html_code .= '<input type="hidden" name="option" value="' . $option . '" />' . "\n"
 			. '<input type="hidden" name="task" value="' . $task . '" />' . "\n"
 			. '<input type="hidden" name="processor" value="' . strtolower( $processor['name'] ) . '" />' . "\n"
 			. '<input type="hidden" name="usage" value="' . $planid . '" />' . "\n"
