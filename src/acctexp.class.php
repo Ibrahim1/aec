@@ -2072,13 +2072,30 @@ class InvoiceFactory {
 
 		$return = $this->objUsage->SubscriptionAmount( $this->recurring, $user_subscription );
 
+		
 		if( is_array( $return['amount'] ) ) {
-			if( isset( $return['amount']['amount1'] ) ) {
-				$this->payment->amount = $return['amount']['amount1'];
-			}elseif( isset( $return['amount']['amount2'] ) ) {
-				$this->payment->amount = $return['amount']['amount2'];
-			}elseif( isset( $return['amount']['amount3'] ) ) {
-				$this->payment->amount = $return['amount']['amount3'];
+			$this->payment->amount = false;
+
+			if ( isset( $return['amount']['amount1'] ) {
+				if ( !is_null( $return['amount']['amount1'] ) {
+					$this->payment->amount = $return['amount']['amount1'];
+				}
+			}
+	
+			if( $this->payment->amount === false ) {
+				if( isset( $return['amount']['amount2'] ) ) {
+					if ( !is_null( $return['amount']['amount2'] ) {
+						$this->payment->amount = $return['amount']['amount2'];
+					}
+				}
+			}
+	
+			if( $this->payment->amount === false ) {
+				if( isset( $return['amount']['amount3'] ) ) {
+					if ( !is_null( $return['amount']['amount3'] ) {
+						$this->payment->amount = $return['amount']['amount3'];
+					}
+				}
 			}
 		}else{
 			$this->payment->amount = $return['amount'];
@@ -2825,21 +2842,41 @@ class Invoice extends paramDBTable {
 
 			if( is_array( $return['amount'] ) ) {
 				// Check whether we have a trial amount and whether this invoice has had a trial with a payment already
-				if ( isset( $return['amount']['amount1'] )
-				&& !is_null( $return['amount']['amount1'] )
-				&& !( ( $this->amount == $return['amount']['amount1'] )
-				&& !( strcmp( $this->transaction_date, '0000-00-00 00:00:00' ) === 0 ) ) ) {
-					$this->amount = $return['amount']['amount1'];
-				}elseif( !is_null( $return['amount']['amount2'] ) ) {
-					$this->amount = $return['amount']['amount2'];
-				}elseif( !is_null( $return['amount']['amount3'] ) ) {
-					$this->amount = $return['amount']['amount3'];
+				$this->amount = false;
+
+				if ( isset( $return['amount']['amount1'] ) {
+					if ( !is_null( $return['amount']['amount1'] )
+					&& !( ( $this->amount == $return['amount']['amount1'] )
+					&& !( strcmp( $this->transaction_date, '0000-00-00 00:00:00' ) === 0 ) ) ) {
+						$this->amount = $return['amount']['amount1'];
+					}
+				}
+
+				if( $this->amount === false ) {
+					if( isset( $return['amount']['amount2'] ) ) {
+						if ( !is_null( $return['amount']['amount2'] ) {
+							$this->amount = $return['amount']['amount2'];
+						}
+					}
+				}
+
+				if( $this->amount === false ) {
+					if( isset( $return['amount']['amount3'] ) ) {
+						if ( !is_null( $return['amount']['amount3'] ) {
+							$this->amount = $return['amount']['amount3'];
+						}
+					}
+				}
+
+				if( $this->amount === false ) {
+					$this->amount = '0.00';
 				}
 			}else{
 				$this->amount = $return['amount'];
 			}
 
-			if( is_null( $this->amount ) || ( $this->amount == '' ) ) {
+			// We cannot afford to have this ever come out as null, so we will rather have it as gratis
+			if( empty( $this->amount ) ) {
 				$this->amount = '0.00';
 			}
 
