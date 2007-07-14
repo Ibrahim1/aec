@@ -965,50 +965,40 @@ function saveUser( $option ) {
 	global $database, $mainframe, $mosConfig_list_limit;
 
 	$dbchange		= 0;
-	$subscriptionid	= AECfetchfromDB::SubscriptionIDfromUserID( $_POST['userid'] );
-	$expirationid	= AECfetchfromDB::ExpirationIDfromUserID( $_POST['userid'] );
-
-	$subscriptionHandler = new Subscription( $database );
-
-	if( $subscriptionid ) {
-		$subscriptionHandler->load( $subscriptionid );
-	}else{
-		$subscriptionHandler->load(0);
-	}
+	$metaUser = new metaUser($_POST['userid']);
 
 	if( $_POST['assignto_plan'] ) {
-		if( !$subscriptionid ) {
-			$subscriptionHandler->createNew($_POST['userid'], '', 1);
+		if( !$metaUser->hasSubscription ) {
+			$metaUser->objSubscription = new Subscription( $database );	
+			$metaUser->objSubscription->createNew($_POST['userid'], '', 1);
 		}
-		$subscriptionHandler->applyUsage( $_POST['assignto_plan'], 'none', 1 );
+		$metaUser->objSubscription->applyUsage( $_POST['assignto_plan'], 'none', 1 );
 	}
 
 	$ck_lifetime = mosGetParam( $_POST,'ck_lifetime', 'off' );
 
 	$expirationHandler = new AcctExp( $database );
 
-	if( $expirationid ) {
-		$expirationHandler->load( $expirationid );
-	}else{
-		$expirationHandler->load(0);
-		$expirationHandler->userid = $_POST['userid'];
+	if( !$metaUser->hasExpiration ) {
+		$this->objExpiration->load(0);
+		$this->objExpiration->userid = $_POST['userid'];
 	}
 
 	if( strcmp( $ck_lifetime, 'on' ) == 0 ) {
-		$dbchange						= 1;
-		$expirationHandler->expiration	= '9999-12-31 00:00:00';
-		$subscriptionHandler->status	= 'Active';
-		$subscriptionHandler->lifetime	= 1;
+		$dbchange								= 1;
+		$metaUser->objExpiration->expiration	= '9999-12-31 00:00:00';
+		$metaUser->objSubscription->status		= 'Active';
+		$metaUser->objSubscription->lifetime	= 1;
 	}else{
 		if( !empty( $_POST['expiration'] ) ) {
 			$dbchange = 1;
 			if( strpos( $_POST, ':' ) === false ) {
-				$expirationHandler->expiration = $_POST['expiration'] . ' 00:00:00';
+				$metaUser->objExpiration->expiration = $_POST['expiration'] . ' 00:00:00';
 			}else{
-				$expirationHandler->expiration = $_POST['expiration'];
+				$metaUser->objExpiration->expiration = $_POST['expiration'];
 			}
-			$subscriptionHandler->status	= 'Active';
-			$subscriptionHandler->lifetime	= 0;
+			$metaUser->objSubscription->status	= 'Active';
+			$metaUser->objSubscription->lifetime	= 0;
 		}
 	}
 
@@ -1016,36 +1006,36 @@ function saveUser( $option ) {
 
 	if( !is_null( $expire ) ) {
 		if( strcmp( $expire, 'now' ) === 0 ) {
-			$subscriptionHandler->expire();
+			$metaUser->objSubscription->expire();
 			$dbchange = 1;
 		}elseif( strcmp( $expire, 'exclude' ) === 0 ) {
-			$subscriptionHandler->setStatus( 'Excluded' );
+			$metaUser->objSubscription->setStatus( 'Excluded' );
 			$dbchange = 1;
 		}elseif( strcmp( $expire, 'close' ) === 0 ) {
-			$subscriptionHandler->setStatus( 'Closed' );
+			$metaUser->objSubscription->setStatus( 'Closed' );
 			$dbchange = 1;
 		}elseif( strcmp( $expire, 'include' ) === 0 ) {
-			$subscriptionHandler->setStatus( 'Active' );
+			$metaUser->objSubscription->setStatus( 'Active' );
 			$dbchange = 1;
 		}
 	}
 
 	if( $dbchange ) {
-		if( !$expirationHandler->check() ) {
-			echo "<script> alert('".$expirationHandler->getError()."'); window.history.go(-1); </script>\n";
+		if( !$metaUser->objExpiration->check() ) {
+			echo "<script> alert('".$metaUser->objExpiration->getError()."'); window.history.go(-1); </script>\n";
 			exit();
 		}
-		if( !$expirationHandler->store() ) {
-			echo "<script> alert('".$expirationHandler->getError()."'); window.history.go(-1); </script>\n";
+		if( !$metaUser->objExpiration->store() ) {
+			echo "<script> alert('".$metaUser->objExpiration->getError()."'); window.history.go(-1); </script>\n";
 			exit();
 		}
 
-		if( !$subscriptionHandler->check() ) {
-			echo "<script> alert('".$subscriptionHandler->getError()."'); window.history.go(-1); </script>\n";
+		if( !$metaUser->objSubscription->check() ) {
+			echo "<script> alert('".$metaUser->objSubscription->getError()."'); window.history.go(-1); </script>\n";
 			exit();
 		}
-		if( !$subscriptionHandler->store() ) {
-			echo "<script> alert('".$subscriptionHandler->getError()."'); window.history.go(-1); </script>\n";
+		if( !$metaUser->objSubscription->store() ) {
+			echo "<script> alert('".$metaUser->objSubscription->getError()."'); window.history.go(-1); </script>\n";
 			exit();
 		}
 	}
