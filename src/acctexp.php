@@ -519,10 +519,10 @@ function subscriptionDetails ( $option ) {
 
 				$actions = '<a href="'
 				.  AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice='
-				. $row->invoice_number ) . '>' . _HISTORY_ACTION_REPEAT
+				. $row->invoice_number ) . '">' . _HISTORY_ACTION_REPEAT
 				. '</a>';
 
-				if( is_null( $row->fixed ) ) {
+				if( is_null( $row->fixed ) || !$row->fixed ) {
 					$actions .= ' | '
 					. '<a href="'
 					. AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=cancelPayment&amp;invoice='
