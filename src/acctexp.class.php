@@ -4318,7 +4318,9 @@ class microIntegration extends paramDBTable {
 	function microIntegration (&$db) {
 		$this->mosDBTable( '#__acctexp_microintegrations', 'id', $db );
 
-		$this->_callMILanguage();
+		if( !is_defined( '_AEC_LANG_INCLUDED_MI' ) ) {
+			$this->_callMILanguage();
+		}
 	}
 
 	function _callMILanguage() {

@@ -11,15 +11,16 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Not really ....' );
 
-if( defined( '_AEC_LANG_MI_INCLUDED' ) ) {
-	return;
-}else{
-	define( '_AEC_LANG_MI_INCLUDED', true );
-}
+// Load Identifier
+define( '_AEC_LANG_INCLUDED_MI', 1);
 
 // acajoom
 define( '_AEC_MI_NAME_ACAJOOM',		'Acajoom' );
 define( '_AEC_MI_DESC_ACAJOOM',		'Bindet den Newsletter Acajoom ein (freie Version)' );
+define( '_MI_MI_ACAJOOM_LIST_NAME',		'Set List' );
+define( '_MI_MI_ACAJOOM_LIST_DESC',		'Which Mailing list do you want to assign this user to?' );
+define( '_MI_MI_ACAJOOM_LIST_EXP_NAME',		'Set Expiration List' );
+define( '_MI_MI_ACAJOOM_LIST_EXP_DESC',		'Which Mailing list do you want to assign this user to after expiration?' );
 
 // htaccess
 define( '_AEC_MI_NAME_HTACCESS',	'.htaccess' );
@@ -81,10 +82,14 @@ define( '_MI_MI_EMAIL_SUBJECT_EXP_NAME',			'Betreff' );
 define( '_MI_MI_EMAIL_SUBJECT_EXP_DESC',			'Text bei Ablauf eines Abos' );
 define( '_MI_MI_EMAIL_TEXT_EXP_HTML_NAME',			'HTML Format' );
 define( '_MI_MI_EMAIL_TEXT_EXP_HTML_DESC',			'Soll dieses Email im HTML-Format gesendet werden? (Achtung: dann d&uuml;rfen keine TAGS enthalten sein falls das nicht gew&uuml;nscht ist)' );
+define( '_MI_MI_EMAIL_TEXT_EXP_NAME',				'Expiration Text' );
+define( '_MI_MI_EMAIL_TEXT_EXP_DESC',				'Text to be sent when the plan expires. The rewriting routines explained below will work for this field.' );
 define( '_MI_MI_EMAIL_SUBJECT_PRE_EXP_NAME',		'Text vor Ablauf' );
 define( '_MI_MI_EMAIL_SUBJECT_PRE_EXP_DESC',		'Text welcher gesendet wird bevor das Abo abl&auml;ft (siehe weitere Felder unten)' );
 define( '_MI_MI_EMAIL_TEXT_PRE_EXP_HTML_NAME',		'HTML Format' );
 define( '_MI_MI_EMAIL_TEXT_PRE_EXP_HTML_DESC',		'Soll dieses Email im HTML-Format gesendet werden? (Achtung: dann d&uuml;rfen keine TAGS enthalten sein falls das nicht gew&uuml;nscht ist)' );
+define( '_MI_MI_EMAIL_TEXT_PRE_EXP_NAME',			'Pre Expiration Text' );
+define( '_MI_MI_EMAIL_TEXT_PRE_EXP_DESC',			'Text to be sent when the plan is about to expire (specify when on the previous tab). The rewriting routines explained below will work for this field.' );
 define( '_AEC_MI_SET11_EMAIL',		'Weitere Infos' );
 
 // iDevAffiliate
