@@ -3444,7 +3444,11 @@ class Subscription extends paramDBTable {
 
 			if( $entryarray[0] ) {
 				if( !empty( $entryarray[1] ) ) {
-					$amount = $entryarray[1];
+					if( isset( $entryarray[1] ) ) {
+						$amount = $entryarray[1];
+					}else{
+						$amount = 1;
+					}
 				}else{
 					$amount = 1;
 				}
