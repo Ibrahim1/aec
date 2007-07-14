@@ -678,21 +678,25 @@ class Payment_HTML {
 						<tr>
 							<td class="confirmation_button">
 								<?php
-								if( $InvoiceFactory->coupons['warning'] ) { ?>
-									<div class="couponwarning">
-										<p><strong><?php echo constant( $InvoiceFactory->coupons['warningmsg'] ); ?></strong></p>
-									</div>
-									<?php
+								if( isset( $InvoiceFactory->coupons['warning'] ) ) {
+									if( $InvoiceFactory->coupons['warning'] ) { ?>
+										<div class="couponwarning">
+											<p><strong><?php echo constant( $InvoiceFactory->coupons['warningmsg'] ); ?></strong></p>
+										</div>
+										<?php
+									}
 								}
-								if( $InvoiceFactory->coupons['error'] ) { ?>
-									<div class="couponerror">
-										<p>
-											<strong><?php echo _COUPON_ERROR_PRETEXT; ?></strong>
-											&nbsp;
-											<?php echo constant( $InvoiceFactory->coupons['errormsg'] ); ?>
-										</p>
-									</div>
-									<?php
+								if( isset( $InvoiceFactory->coupons['error'] ) ) {
+									if( $InvoiceFactory->coupons['error'] ) { ?>
+										<div class="couponerror">
+											<p>
+												<strong><?php echo _COUPON_ERROR_PRETEXT; ?></strong>
+												&nbsp;
+												<?php echo constant( $InvoiceFactory->coupons['errormsg'] ); ?>
+											</p>
+										</div>
+										<?php
+									}
 								} ?>
 								<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceAddCoupon' ); ?>" method="post">
 									<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
