@@ -943,6 +943,11 @@ function com_install() {
 			$cfg->saveSettings();
 		}
 
+		// create settings parameters that got added in this version
+		$cfg = new Config_General($database);
+		$cfg->initParams();
+		$cfg->saveSettings();
+
 		$result = null;
 		$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'maxgid'");
 		if( $database->loadObject( $result ) ) {
