@@ -2186,7 +2186,8 @@ class InvoiceFactory {
 		 	print_r( $rows );
 		}
 
-	 	if( count( $rows ) == 0 ) {
+	 	// There are no plans to begin with, so we need to punch out an error here
+		if( count( $rows ) == 0 ) {
 			mosRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_ERROR ) );
 	 		return;
 	 	}
@@ -2267,6 +2268,12 @@ class InvoiceFactory {
 			}
 			unset( $row );
 		}
+
+	 	// After filtering out the processors, no plan can be used, so we have to again issue an error
+		 if( count( $plans ) == 0 ) {
+			mosRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_ERROR ) );
+	 		return;
+	 	}
 
 		if( ( count( $plans ) === 1 ) && ( count( $plans[0]['gw'] ) === 1 ) ) {
 			// With only one processor and one plan, there is no need for a decision
