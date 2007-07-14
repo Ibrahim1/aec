@@ -619,8 +619,10 @@ class Payment_HTML {
 
 		HTML_frontend::aec_styling( $option );
 
-		$posturl = $var['post_url'];
-		unset( $var['post_url'] );
+		if ( isset( $var['post_url'] ) ) {
+			$posturl = $var['post_url'];
+			unset( $var['post_url'] );
+		}
 		$introtext = '_CHECKOUT_INFO' . ( isset( $var['transferinfo'] ) ? '_TRANSFER' : '' ) . ( $repeat ? '_REPEAT' : '' );
 
 		$cfg = new Config_General( $database ); ?>
