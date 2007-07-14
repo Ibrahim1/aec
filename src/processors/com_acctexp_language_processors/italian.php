@@ -72,6 +72,7 @@ define( '_CFG_PROCESSOR_DESC_NAME', 'Displayed Description');
 define( '_CFG_PROCESSOR_DESC_DESC', 'Change the description of this Processor, which is for example shown on the NotAllowed page, Confirmation and Checkout.');
 define( '_CFG_PROCESSOR_ITEM_NAME_NAME', 'Item Description');
 define( '_CFG_PROCESSOR_ITEM_NAME_DESC', 'The Item Description transmitted to the processor.');
+define( '_CFG_PROCESSOR_ITEM_NAME_DEFAULT',	'Subscription at %s - User: %s (%s)' );
 
 // Paypal Settings
 define( '_CFG_PAYPAL_BUSINESS_NAME', 'Business ID:');

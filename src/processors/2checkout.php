@@ -71,7 +71,7 @@ class processor_2checkout {
 		$settings['testmode']		= 0;
 		$settings['alt2courl']		= '';
 		$settings['info']			= ''; // new mic
-		$settings['item_name']		= sprintf( _AEC_MI_SET1_INAME, '[[cms_live_site]]',
+		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]',
 									'[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']	= ''; // added mic
 

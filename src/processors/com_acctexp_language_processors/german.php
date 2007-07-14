@@ -74,6 +74,7 @@ define( '_CFG_PROCESSOR_DESC_NAME',			'Beschreibung anzeigen' );
 define( '_CFG_PROCESSOR_DESC_DESC',			'Soll die Beschreibung f&uuml;r dieses Gateway angezeigt werden (z.B. auf der Nichteingeloggt-, Best&auml;tigungs- und Abschlussseite.' );
 define( '_CFG_PROCESSOR_ITEM_NAME_NAME',	'Artikelbeschreibung' );
 define( '_CFG_PROCESSOR_ITEM_NAME_DESC',	'Artikelbeschreibung dieses Services' );
+define( '_CFG_PROCESSOR_ITEM_NAME_DEFAULT',	'Mitgliedschaft bei %s - Benutzer: %s (%s)' );
 
 // Paypal Settings
 define( '_CFG_PAYPAL_BUSINESS_NAME',		'PayPal Gesch&auml;fts ID:' );

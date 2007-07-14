@@ -69,7 +69,8 @@ class processor_paypal_subscription {
 		$settings['lc']				= 'US';
 		$settings['no_shipping']	= 1;
 		$settings['altipnurl']		= '';
-		$settings['item_name']		= 'Subscription at [[cms_live_site]] - User: [[user_name]] ([[user_username]])';
+		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]',
+									'[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']	= ''; // added mic
 
 		return $settings;
