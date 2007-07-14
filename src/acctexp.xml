@@ -85,8 +85,6 @@
 	<administration>
 		<files>
 			<filename>index.html</filename>
-			<filename>Tar.php</filename>
-			<filename>PEAR.php</filename>
 			<filename>admin.acctexp.php</filename>
 			<filename>admin.acctexp.html.php</filename>
 			<filename>toolbar.acctexp.php</filename>

@@ -1193,7 +1193,7 @@ function com_install() {
 		$eventlog->issue( $short, $tags, $event, $params );
 
 		if( !class_exists( 'Archive_Tar' ) ) {
-			require_once( $mosConfig_absolute_path . '/administrator/components/com_acctexp/Tar.php' );
+			require_once( $mosConfig_absolute_path . '/includes/Archive/Tar.php' );
 		}
 
 		// Code borrowed from VirtueMart
