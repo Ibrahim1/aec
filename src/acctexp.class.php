@@ -3343,6 +3343,7 @@ class Subscription extends paramDBTable {
 			$plan_params = $subscription_plan->getParams();
 		}else{
 			$plan_params = array();
+			$subscription_plan = false;
 		}
 
 		$this_params = $this->getParams();
@@ -3369,7 +3370,7 @@ class Subscription extends paramDBTable {
 			$mih = new microIntegrationHandler();
 			$mi_autointegrations = $mih->getAutoIntegrations();
 
-			if( is_array( $mi_autointegrations ) ) {
+			if( is_array( $mi_autointegrations ) || !( $subscription_plan === false ) ) {
 
 				$user_integrations		= explode( ';', $subscription_plan->micro_integrations );
 				$user_auto_integrations = array_intersect( $mi_autointegrations, $user_integrations );
