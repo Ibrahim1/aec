@@ -30,7 +30,7 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-global $mosConfig_absolute_path, $now;
+global $mosConfig_absolute_path, $mosConfig_offset_user, $now;
 
 if( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
 	// mic: call only if called from the backend
@@ -53,6 +53,7 @@ if( !empty( $mosConfig_offset_user ) ) {
 	$now = time() + $mosConfig_offset_user * 3600;
 }else{
 	// Mambo
+	global $mosConfig_offset;
 	$now = time() + $mosConfig_offset * 3600;
 }
 
@@ -4326,7 +4327,7 @@ class microIntegration extends paramDBTable {
 	function microIntegration (&$db) {
 		$this->mosDBTable( '#__acctexp_microintegrations', 'id', $db );
 
-		if( !is_defined( '_AEC_LANG_INCLUDED_MI' ) ) {
+		if( !defined( '_AEC_LANG_INCLUDED_MI' ) ) {
 			$this->_callMILanguage();
 		}
 	}
