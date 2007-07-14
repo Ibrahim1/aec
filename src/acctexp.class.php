@@ -1318,6 +1318,7 @@ class Config_General extends paramDBTable {
 		$settings_defaults['display_date_backend']				= "%a, %d %b %Y %T %Z";
 		$settings_defaults['enable_mimeta']						= 0;
 		$settings_defaults['enable_coupons']					= 0;
+		$settings_defaults['gwlist']							= '';
 		$settings_defaults['milist']							= "mi_email;mi_htaccess;mi_mysql_query;mi_email;mi_virtuemart";
 		$settings_defaults['displayccinfo']						= 1;
 		$settings_defaults['customtext_confirm_keeporiginal']	= 1;

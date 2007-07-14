@@ -1847,6 +1847,8 @@ function editSettings( $option ) {
 
 	if( !empty( $cfg->cfg['gwlist'] ) ) {
 		$desc_list = explode( ';', $cfg->cfg['gwlist'] );
+	} else {
+		$desc_list = array();
 	}
 	$gwlist_selected = array();
 
