@@ -268,10 +268,10 @@ class metaUser {
 										$status = false;
 									}
 								}else{
-									$status = false;
+									$status = true;
 								}
 							}else{
-								$status = false;
+								$status = true;
 							}
 							break;
 					}
