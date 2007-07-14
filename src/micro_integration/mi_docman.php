@@ -119,7 +119,7 @@ class mi_docman {
 
 		// TODO: Make this a choice, also offer deletion of ALL groups
 		if ($params['set_group']) {
-			$this->DeleteUserFromGroup( userid, $params['group'] );
+			$this->DeleteUserFromGroup( $userid, $params['group'] );
 		}
 		
 		if( $params['set_group_exp'] ) {
