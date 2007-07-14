@@ -647,18 +647,20 @@ class Payment_HTML {
 						</td>
 					</tr>
 					<?php
-					if( $InvoiceFactory->coupons['active'] && $InvoiceFactory->coupons['coupons'] ) {
-						foreach( $InvoiceFactory->coupons['coupons'] as $id => $coupon ) { ?>
-							<tr>
-								<td class="item<?php echo $coupon['nodirectaction'] ? 'later' : ''; ?>">
-									<?php echo _CHECKOUT_INVOICE_COUPON; ?> (<?php echo $coupon['action']; ?>)
-									&nbsp;[
-									<a href="<?php echo AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=InvoiceRemoveCoupon&amp;invoice=' . $InvoiceFactory->invoice . '&amp;coupon_code=' . $coupon['code'] ); ?>" title="<?php echo _CHECKOUT_INVOICE_COUPON_REMOVE; ?>"><?php echo _CHECKOUT_INVOICE_COUPON_REMOVE; ?></a>
-									]
-								</td>
-								<td class="<?php echo $coupon['nodirectaction'] ? 'amount_later' : 'amount'; ?>">-<?php echo $coupon['discount'] . ' ' . $InvoiceFactory->payment->currency; ?></td>
-							</tr>
-							<?php
+					if( $InvoiceFactory->coupons['active'] ) {
+						if( isset( $InvoiceFactory->coupons['coupons'] ) ) {
+							foreach( $InvoiceFactory->coupons['coupons'] as $id => $coupon ) { ?>
+								<tr>
+									<td class="item<?php echo $coupon['nodirectaction'] ? 'later' : ''; ?>">
+										<?php echo _CHECKOUT_INVOICE_COUPON; ?> (<?php echo $coupon['action']; ?>)
+										&nbsp;[
+										<a href="<?php echo AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=InvoiceRemoveCoupon&amp;invoice=' . $InvoiceFactory->invoice . '&amp;coupon_code=' . $coupon['code'] ); ?>" title="<?php echo _CHECKOUT_INVOICE_COUPON_REMOVE; ?>"><?php echo _CHECKOUT_INVOICE_COUPON_REMOVE; ?></a>
+										]
+									</td>
+									<td class="<?php echo $coupon['nodirectaction'] ? 'amount_later' : 'amount'; ?>">-<?php echo $coupon['discount'] . ' ' . $InvoiceFactory->payment->currency; ?></td>
+								</tr>
+								<?php
+							}
 						}
 					} ?>
 					<tr class="total">
