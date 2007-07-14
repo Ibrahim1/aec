@@ -2436,7 +2436,7 @@ class InvoiceFactory {
 				global $acl;
 
 				// simple spoof check security
-				if( function_exists( josSpoofCheck ) ) {
+				if( function_exists( 'josSpoofCheck' ) ) {
 					josSpoofCheck();
 				}
 
