@@ -3094,24 +3094,28 @@ class Invoice extends paramDBTable {
 
 		$return['params'] = null;
 
-		if( is_array( $var['params'] ) ) {
-			if( count($var['params'] ) ) {
-				if( isset( $var['params']['lists'] ) ) {
-					$lists = $var['params']['lists'];
-					unset( $var['params']['lists'] );
-				}else{
-					$lists = null;
-				}
-
-				foreach( $var['params'] as $name => $entry ) {
-					if( !is_null( $name ) && !( $name == '' ) ) {
-						if( !isset( $entry[3] ) ) {
-							$entry[3] = $name;
-						}
-						$return['params'] .= aecHTML::createFormParticle( $name, $entry, $lists ) . "\n";
+		if( isset( $var['params'] ) ) {
+			if( is_array( $var['params'] ) ) {
+				if( count($var['params'] ) ) {
+					if( isset( $var['params']['lists'] ) ) {
+						$lists = $var['params']['lists'];
+						unset( $var['params']['lists'] );
+					}else{
+						$lists = null;
 					}
+	
+					foreach( $var['params'] as $name => $entry ) {
+						if( !is_null( $name ) && !( $name == '' ) ) {
+							if( !isset( $entry[3] ) ) {
+								$entry[3] = $name;
+							}
+							$return['params'] .= aecHTML::createFormParticle( $name, $entry, $lists ) . "\n";
+						}
+					}
+					unset( $var['params'] );
+				}else{
+					$return['params'] = false;
 				}
-				unset( $var['params'] );
 			}else{
 				$return['params'] = false;
 			}
