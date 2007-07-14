@@ -228,11 +228,12 @@ margin: 0px;
 /* == Styling for the Expired Page == */
 
 #box_expired {
-float:left;
-width: 90%;
-margin: 5% auto;
-text-align: center;
-padding-bottom: 40px;
+	float			: left;
+	width			: 90%;
+	margin			: 5% 20px;
+	text-align		: center;
+	/*padding-bottom	: 10px;*/
+	border			: 1px solid #FF0000;
 }
 
 #box_pending {
@@ -282,10 +283,12 @@ font-weight: bold;
 }
 
 #days_left{
-padding: 3px;
-border: 2px solid #fff;
-border-left: 30px solid #fff;
-border-right: 30px solid #fff;
+	padding			: 3px;
+	border			: 2px solid #fff;
+	/*
+	border-left		: 30px solid #fff;
+	border-right	: 30px solid #fff;
+	*/
 }
 
 * html #days_left{
@@ -316,13 +319,13 @@ border: 2px solid #fff;
 }
 
 #upgrade_button {
-padding: 25px;
-text-align: center;
-border: 2px solid #fff;
-position: relative;
-padding-left: 30px;
-text-align: center;
-display: block;
+	padding			: 15px;
+	text-align		: center;
+	border			: 2px solid #fff;
+	position		: relative;
+	/*padding-left	: 30px;*/
+	text-align		: center;
+	display			: block;
 }
 
 /* == Styling for the Confirmation Page == */
