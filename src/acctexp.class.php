@@ -2073,11 +2073,11 @@ class InvoiceFactory {
 		$return = $this->objUsage->SubscriptionAmount( $this->recurring, $user_subscription );
 
 		if( is_array( $return['amount'] ) ) {
-			if( $return['amount']['amount1'] ) {
+			if( isset( $return['amount']['amount1'] ) ) {
 				$this->payment->amount = $return['amount']['amount1'];
-			}elseif( $return['amount']['amount2'] ) {
+			}elseif( isset( $return['amount']['amount2'] ) ) {
 				$this->payment->amount = $return['amount']['amount2'];
-			}elseif( $return['amount']['amount3'] ) {
+			}elseif( isset( $return['amount']['amount3'] ) ) {
 				$this->payment->amount = $return['amount']['amount3'];
 			}
 		}else{
