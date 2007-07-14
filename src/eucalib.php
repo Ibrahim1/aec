@@ -33,7 +33,11 @@ class paramDBTable extends mosDBTable {
 		$array = array();
 		foreach( $params as $chunk ) {
 			$k = explode( '=', $chunk, 2 );
-			$array[$k[0]] = stripslashes( $k[1] );
+			if( isset( $k[1] ) {
+				$array[$k[0]] = stripslashes( $k[1] );
+			}else{
+				$array[$k[0]] = null;
+			}
 			unset( $k );
 		}
 		return $array;
