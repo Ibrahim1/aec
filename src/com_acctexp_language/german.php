@@ -35,7 +35,7 @@ if( defined( '_AEC_LANG' ) ) {
 }
 
 // new 2007.07.10
-define( '_AEC_EXPIRE_TODAY',				'Heute' );
+define( '_AEC_EXPIRE_TODAY',				'Das Konto ist bis heute aktiv' );
 define( '_AEC_EXPIRE_FUTURE',				'Das Konto ist aktiv bis' );
 define( '_AEC_EXPIRE_PAST',					'Das Konto war aktiv bis' );
 define( '_AEC_DAYS_ELAPSED',				'Tag(e) abgelaufen' );
