@@ -4804,7 +4804,7 @@ class couponHandler {
 				$this->amount = $newamount['amount3'];
 			}
 		}else{
-			$this->amount = $newamount - $this->amount;
+			$this->amount = $newamount;
 		}
 
 		if( is_array( $newamount ) ) {
