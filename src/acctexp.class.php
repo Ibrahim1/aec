@@ -2299,7 +2299,11 @@ class InvoiceFactory {
 			// With only one processor and one plan, there is no need for a decision
 
 			$var['usage']		= $plans[0]['id'];
-			$var['recurring']	= $plans[0]['gw'][0]['recurring'];
+			if( isset( $plans[0]['gw'][0]['recurring'] ) ) {
+				$var['recurring']	= $plans[0]['gw'][0]['recurring'];
+			}else{
+				$var['recurring']	= 0;
+			}
 			$var['processor']	= $plans[0]['gw'][0]['name'];
 
 			if( $invoice != 0 && is_null( $invoice ) ) {
