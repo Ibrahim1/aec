@@ -2267,7 +2267,7 @@ class InvoiceFactory {
 
 					if( $hasTransfer ) {
 						if( isset( $plan_gw[0] ) ) {
-							if( !(strcmp(strtolower( $plan_gw[0]['name']), 'free') === 0 ) )
+							if( !(strcmp(strtolower( $plan_gw[0]['name']), 'free') === 0 ) ) {
 								$plan_gw[]['name'] = 'transfer';
 							}
 						} else {

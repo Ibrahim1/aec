@@ -3607,6 +3607,14 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 
 	$aec_regvarshack_fix = str_replace( 'planid', 'usage', $aec_regvarshack);
 
+	$aec_regredirect = $aec_hack_start
+					. $aec_global_call
+					. $aec_condition_start
+					. $aec_redirect_subscribe
+					. $aec_condition_end
+					. $aec_hack_end;
+	
+
 	$cmsname = strtolower( GeneralInfoRequester::getCMSName() );
 
 	// menu entry
@@ -3850,6 +3858,15 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_registration/registration.html.php';
 		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveRegistration" />';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
+		$hacks[$n]['important']		=	1;
+
+		$n = 'registrationhtml3';
+		$hacks[$n]['name']			=	'registration.html.php ' . _AEC_HACK_HACK . ' #3';
+		$hacks[$n]['desc']			=	_AEC_HACKS_REG5;
+		$hacks[$n]['type']			=	'file';
+		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_registration/registration.html.php';
+		$hacks[$n]['read']			=	'// no direct access';
+		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regredirect, $n, $n);
 		$hacks[$n]['important']		=	1;
 	}
 
