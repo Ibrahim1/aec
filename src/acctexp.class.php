@@ -2295,7 +2295,68 @@ class InvoiceFactory {
 	 		return;
 	 	}
 
-		if( ( count( $plans ) === 1 ) && ( count( $plans[0]['gw'] ) === 1 ) ) {
+	 	$nochoice = ( count( $plans ) === 1 ) && ( count( $plans[0]['gw'] ) === 1 );
+
+	 	
+	 	if( $cfg->cfg['plans_first'] ) {
+	 		if( $register ) {
+	 			if( $nochoice ) {
+		 			$_POST['usage']		= $plans[0]['id'];
+					$_POST['processor'] = $plans[0]['gw'][0]['name'];
+
+					if( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+						// This is a CB registration, borrowing their code to register the user
+
+						include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.html.php' );
+						include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
+
+						registerForm($option, $mainframe->getCfg( 'emailpass' ), null);
+
+					}else{
+						//include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/acctexp.html.php' );
+						joomlaregisterForm( $option, $mainframe->getCfg( 'useractivation' ) );
+					}
+	 			}
+	 		}else{
+		 		$var['usage']		= $plans[0]['id'];
+
+		 		if( isset( $plans[0]['gw'][0]['recurring'] ) ) {
+					$var['recurring']	= $plans[0]['gw'][0]['recurring'];
+				}else{
+					$var['recurring']	= 0;
+				}
+
+				$var['processor']	= $plans[0]['gw'][0]['name'];
+	
+				if( ( $invoice != 0 ) && !is_null( $invoice ) ) {
+					$var['invoice']	= $invoice;
+				}
+
+				$this->confirm ( $option, $var, $passthrough );
+	 		}
+	 	}else{
+	 				if( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+						// This is a CB registration, borrowing their code to register the user
+
+						include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.html.php' );
+						include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
+
+						registerForm($option, $mainframe->getCfg( 'emailpass' ), null);
+
+					}else{
+						//include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/acctexp.html.php' );
+						joomlaregisterForm( $option, $mainframe->getCfg( 'useractivation' ) );
+					}
+	 	}
+	 	
+	 	Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $plans, $subscriptionClosed, $passthrough, $register );
+	 	
+	 	
+	 	
+	 	
+	 	
+	 	
+		if( $nochoice ) {
 			// With only one processor and one plan, there is no need for a decision
 
 			$var['usage']		= $plans[0]['id'];
@@ -2306,7 +2367,7 @@ class InvoiceFactory {
 			}
 			$var['processor']	= $plans[0]['gw'][0]['name'];
 
-			if( $invoice != 0 && is_null( $invoice ) ) {
+			if( ( $invoice != 0 ) && !is_null( $invoice ) ) {
 				$var['invoice']	= $invoice;
 			}
 
@@ -2324,7 +2385,7 @@ class InvoiceFactory {
 					registerForm($option, $mainframe->getCfg( 'emailpass' ), null);
 
 				}else{
-					include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/acctexp.html.php' );
+					//include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/acctexp.html.php' );
 					joomlaregisterForm( $option, $mainframe->getCfg( 'useractivation' ) );
 				}
 			}else{

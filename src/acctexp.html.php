@@ -453,8 +453,8 @@ class Payment_HTML {
 					$option	= 'com_comprofiler';
 					$task	= 'registers';
 				}else{
-					$option	= 'com_registration';
-					$task	= 'register';
+					$option	= 'com_acctexp';
+					$task	= 'subscribe';
 				}
 			}else{
 				$option		= 'com_acctexp';

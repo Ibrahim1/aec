@@ -3860,14 +3860,13 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
 		$hacks[$n]['important']		=	1;
 
-		$n = 'registrationhtml3';
-		$hacks[$n]['name']			=	'registration.html.php ' . _AEC_HACK_HACK . ' #3';
+		$n = 'registrationphp5';
+		$hacks[$n]['name']			=	'registration.php ' . _AEC_HACK_HACK . ' #5';
 		$hacks[$n]['desc']			=	_AEC_HACKS_REG5;
 		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_registration/registration.html.php';
+		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_registration/registration.php';
 		$hacks[$n]['read']			=	'// no direct access';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regredirect, $n, $n);
-		$hacks[$n]['important']		=	1;
 	}
 
 	if( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
