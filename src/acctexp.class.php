@@ -396,7 +396,7 @@ class aecHeartbeat extends mosDBTable {
 
 		$cfg = new Config_General($database);
 
-		if( !is_null( $cfg->cfg['heartbeat_cycle_backend'] ) || ($cfg->cfg['heartbeat_cycle_backend'] == 0)) {
+		if( !is_null( $cfg->cfg['heartbeat_cycle_backend'] ) || !($cfg->cfg['heartbeat_cycle_backend'] == 0) ) {
 			$this->ping( $cfg->cfg['heartbeat_cycle_backend'] );
 		}
 	}
@@ -3489,8 +3489,8 @@ class Subscription extends paramDBTable {
 			$entryarray = explode( ',', $entry );
 
 			if( $entryarray[0] ) {
-				if( !empty( $entryarray[1] ) ) {
-					if( isset( $entryarray[1] ) ) {
+				if( isset( $entryarray[1] ) ) {
+					if( !empty( $entryarray[1] ) ) {
 						$amount = $entryarray[1];
 					}else{
 						$amount = 1;
