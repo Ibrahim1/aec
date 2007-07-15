@@ -2265,11 +2265,17 @@ class InvoiceFactory {
 						}
 					}
 
-					if( $hasTransfer && !(strcmp(strtolower( $plan_gw[0]['name']), 'free') === 0 ) ) {
-						$plan_gw[]['name'] = 'transfer';
+					if( $hasTransfer ) {
+						if( isset( $plan_gw[0] ) ) {
+							if( !(strcmp(strtolower( $plan_gw[0]['name']), 'free') === 0 ) )
+								$plan_gw[]['name'] = 'transfer';
+							}
+						} else {
+							$plan_gw[]['name'] = 'transfer';
+						}
 					}
 
-					if( $plan_gw[0] ) {
+					if( isset( $plan_gw[0] ) ) {
 						$plans[$i]['gw'] = $plan_gw;
 					}else{
 						unset( $plans[$i] );
