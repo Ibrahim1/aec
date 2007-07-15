@@ -964,34 +964,33 @@ function editUser( $userid, $option, $task ) {
 function saveUser( $option ) {
 	global $database, $mainframe, $mosConfig_list_limit;
 
-	$dbchange		= 0;
-	$metaUser = new metaUser($_POST['userid']);
+	$metaUser = new metaUser( $_POST['userid'] );
 
 	if( $_POST['assignto_plan'] ) {
 		if( !$metaUser->hasSubscription ) {
 			$metaUser->objSubscription = new Subscription( $database );	
-			$metaUser->objSubscription->createNew($_POST['userid'], '', 1);
+			$metaUser->objSubscription->createNew( $_POST['userid'], '', 1 );
 		}
 		$metaUser->objSubscription->applyUsage( $_POST['assignto_plan'], 'none', 1 );
+
+		// We have to reload the metaUser object because it was changed underway
+		$metaUser = new metaUser( $_POST['userid'] );
 	}
+
 
 	$ck_lifetime = mosGetParam( $_POST,'ck_lifetime', 'off' );
 
-	$expirationHandler = new AcctExp( $database );
-
 	if( !$metaUser->hasExpiration ) {
-		$this->objExpiration->load(0);
-		$this->objExpiration->userid = $_POST['userid'];
+		$metaUser->objExpiration->load(0);
+		$metaUser->objExpiration->userid = $_POST['userid'];
 	}
 
 	if( strcmp( $ck_lifetime, 'on' ) == 0 ) {
-		$dbchange								= 1;
 		$metaUser->objExpiration->expiration	= '9999-12-31 00:00:00';
 		$metaUser->objSubscription->status		= 'Active';
 		$metaUser->objSubscription->lifetime	= 1;
-	}else{
-		if( !empty( $_POST['expiration'] ) ) {
-			$dbchange = 1;
+	}elseif( !empty( $_POST['expiration'] ) && !empty( $_POST['expiration_check'] ) ) {
+		if( $_POST['expiration'] != $_POST['expiration_check'] ) {
 			if( strpos( $_POST, ':' ) === false ) {
 				$metaUser->objExpiration->expiration = $_POST['expiration'] . ' 00:00:00';
 			}else{
@@ -1002,42 +1001,36 @@ function saveUser( $option ) {
 		}
 	}
 
-	$expire = trim( mosGetParam( $_REQUEST, 'set_status', null ) );
+	$set_status = trim( mosGetParam( $_REQUEST, 'set_status', null ) );
 
-	if( !is_null( $expire ) ) {
-		if( strcmp( $expire, 'now' ) === 0 ) {
+	if( !is_null( $set_status ) ) {
+		if( strcmp( $set_status, 'now' ) === 0 ) {
 			$metaUser->objSubscription->expire();
-			$dbchange = 1;
-		}elseif( strcmp( $expire, 'exclude' ) === 0 ) {
+		}elseif( strcmp( $set_status, 'exclude' ) === 0 ) {
 			$metaUser->objSubscription->setStatus( 'Excluded' );
-			$dbchange = 1;
-		}elseif( strcmp( $expire, 'close' ) === 0 ) {
+		}elseif( strcmp( $set_status, 'close' ) === 0 ) {
 			$metaUser->objSubscription->setStatus( 'Closed' );
-			$dbchange = 1;
-		}elseif( strcmp( $expire, 'include' ) === 0 ) {
+		}elseif( strcmp( $set_status, 'include' ) === 0 ) {
 			$metaUser->objSubscription->setStatus( 'Active' );
-			$dbchange = 1;
 		}
 	}
 
-	if( $dbchange ) {
-		if( !$metaUser->objExpiration->check() ) {
-			echo "<script> alert('".$metaUser->objExpiration->getError()."'); window.history.go(-1); </script>\n";
-			exit();
-		}
-		if( !$metaUser->objExpiration->store() ) {
-			echo "<script> alert('".$metaUser->objExpiration->getError()."'); window.history.go(-1); </script>\n";
-			exit();
-		}
+	if( !$metaUser->objExpiration->check() ) {
+		echo "<script> alert('".$metaUser->objExpiration->getError()."'); window.history.go(-1); </script>\n";
+		exit();
+	}
+	if( !$metaUser->objExpiration->store() ) {
+		echo "<script> alert('".$metaUser->objExpiration->getError()."'); window.history.go(-1); </script>\n";
+		exit();
+	}
 
-		if( !$metaUser->objSubscription->check() ) {
-			echo "<script> alert('".$metaUser->objSubscription->getError()."'); window.history.go(-1); </script>\n";
-			exit();
-		}
-		if( !$metaUser->objSubscription->store() ) {
-			echo "<script> alert('".$metaUser->objSubscription->getError()."'); window.history.go(-1); </script>\n";
-			exit();
-		}
+	if( !$metaUser->objSubscription->check() ) {
+		echo "<script> alert('".$metaUser->objSubscription->getError()."'); window.history.go(-1); </script>\n";
+		exit();
+	}
+	if( !$metaUser->objSubscription->store() ) {
+		echo "<script> alert('".$metaUser->objSubscription->getError()."'); window.history.go(-1); </script>\n";
+		exit();
 	}
 
  	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
@@ -2342,7 +2335,7 @@ function editSubscriptionPlan( $id, $option ) {
 	}
 
 	$selected_gw = array();
-	if( $params_values["processors"] ) {
+	if( isset( $params_values["processors"] ) ) {
 		$plan_procs = explode(";", $params_values["processors"]);
 
 		if( count( $plan_procs ) ) {
@@ -3384,7 +3377,7 @@ function eventlog( $option ) {
 	$query = 'SELECT *'
 	. ' FROM #__acctexp_eventlog'
 	. ( count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
-	. ' ORDER BY datetime DESC'
+	. ' ORDER BY id DESC'
 	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
 	;
 	$database->setQuery( $query );
