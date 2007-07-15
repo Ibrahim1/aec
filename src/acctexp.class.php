@@ -3541,13 +3541,15 @@ class Subscription extends paramDBTable {
 			$message .= sprintf( _ACCTEXP_MAILPARTICLE_THANKSREN, $mainframe->getCfg( 'sitename' ) );
 
 			if( $plan->email_desc ) {
-				$message .= $plan->email_desc;
+				$message .= "\n\n" . $plan->email_desc . "\n\n";
+			}else{
+				$message .= " ";
 			}
 
 			if( $free ) {
 				$message .= sprintf( _ACCTEXP_MAILPARTICLE_LOGIN, $mainframe->getCfg( 'live_site' ) );
 			}else{
-				$message .= _ACCTEXP_MAILPARTICLE_PAYREC
+				$message .= _ACCTEXP_MAILPARTICLE_PAYREC . " "
 				. sprintf( _ACCTEXP_MAILPARTICLE_LOGIN, $mainframe->getCfg( 'live_site' ) );
 			}
 		}else{
@@ -3556,13 +3558,15 @@ class Subscription extends paramDBTable {
 			$message .= sprintf(_ACCTEXP_MAILPARTICLE_THANKSREG, $mainframe->getCfg( 'sitename' ) );
 
 			if( $plan->email_desc ) {
-				$message .= $plan->email_desc;
+				$message .= "\n\n" . $plan->email_desc . "\n\n";
+			}else{
+				$message .= " ";
 			}
 
 			if( $free ) {
 				$message .= sprintf( _ACCTEXP_MAILPARTICLE_LOGIN, $mainframe->getCfg( 'live_site' ) );
 			}else{
-				$message .= _ACCTEXP_MAILPARTICLE_PAYREC
+				$message .= _ACCTEXP_MAILPARTICLE_PAYREC . " "
 				. sprintf( _ACCTEXP_MAILPARTICLE_LOGIN, $mainframe->getCfg( 'live_site' ) );
 			}
 		}
