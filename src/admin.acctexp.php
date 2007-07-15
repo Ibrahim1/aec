@@ -501,7 +501,7 @@ function cancel( $option ) {
 }
 
 function help ( $option ) {
-	global $database, $mainframe;
+	global $database, $mainframe, $mosConfig_live_site;
 
 	// diagnostic is the overall array that stores relational data that either gets transferred directly into the
 	// diagnose array or that is used in the process of that
