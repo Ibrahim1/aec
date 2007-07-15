@@ -1309,7 +1309,7 @@ function com_install() {
 						<a href="http://www.globalnerd.org" target="_blank"> <img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/globalnerd_logo_tiny.png" border="0" alt="globalnerd" /></a>
 						<p><?php echo _AEC_FOOT_TX_GPL; ?></p>
 						<p><?php echo _AEC_FOOT_TX_SUBSCRIBE; ?></p>
-						<p><?php echo _AEC_FOOT_CREDIT; ?></p>
+						<p><?php printf( _AEC_FOOT_CREDIT, AECToolbox::backendTaskLink( 'credits', _AEC_FOOT_CREDIT_LTEXT ) ); ?></p>
 				</div>
 			</td>
 		</tr>
