@@ -340,13 +340,14 @@ class HTML_frontEnd {
 		if( $SQLDate == '' ) {
 			return _AEC_EXPIRE_NOT_SET;
 		}else{
-			global $mosConfig_offset, $mosConfig_offset_user;
+			global $mosConfig_offset_user;
 			global $database;
 
 			// compatibility with Mambo
 			if( !empty( $mosConfig_offset_user ) ) {
 				$timeOffset = $mosConfig_offset_user * 3600;
 			}else{
+				global $mosConfig_offset;
 				$timeOffset = $mosConfig_offset * 3600;
 			}
 
@@ -685,7 +686,7 @@ class Payment_HTML {
 								if( isset( $InvoiceFactory->coupons['warning'] ) ) {
 									if( $InvoiceFactory->coupons['warning'] ) { ?>
 										<div class="couponwarning">
-											<p><strong><?php echo constant( $InvoiceFactory->coupons['warningmsg'] ); ?></strong></p>
+											<p><strong><?php echo $InvoiceFactory->coupons['warningmsg']; ?></strong></p>
 										</div>
 										<?php
 									}
@@ -696,7 +697,7 @@ class Payment_HTML {
 											<p>
 												<strong><?php echo _COUPON_ERROR_PRETEXT; ?></strong>
 												&nbsp;
-												<?php echo constant( $InvoiceFactory->coupons['errormsg'] ); ?>
+												<?php echo $InvoiceFactory->coupons['errormsg']; ?>
 											</p>
 										</div>
 										<?php
