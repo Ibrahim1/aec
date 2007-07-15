@@ -3497,6 +3497,17 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 	global $mosConfig_absolute_path, $database;
 	global $mosConfig_debug;
 
+	if( !defined( '_AEC_LANG_INCLUDED_MI' ) ) {
+		global $mainframe;
+
+		$langPathMI = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/micro_integration/language/';
+		if( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
+			include_once( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' );
+		}else{
+			include_once( $langPathMI . 'english.php' );
+		}
+	}
+
 	$aec_hack_start				= 	"// AEC HACK %s START" . "\n";
 	$aec_hack_end				= 	"// AEC HACK %s END" . "\n";
 	$aec_condition_start		=	'if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {' . "\n";
