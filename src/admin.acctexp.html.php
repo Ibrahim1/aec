@@ -595,6 +595,7 @@ class HTML_AcctExp {
 								<p>
 									<?php echo _AEC_USER_RESET_EXP_DATE; ?>:&nbsp;<?php echo aecHTML::Icon("clock_edit.png"); ?>
 									<input class="text_area" type="text" name="expiration" id="expiration" size="19" maxlength="19" value="<?php echo ( !empty( $expiration->expiration ) ? $expiration->expiration : date( 'Y-m-d H:i:s' ) ); ?>"/>
+									<input type="hidden" name="expiration_check" id="expiration_check" value="<?php echo ( !empty( $expiration->expiration ) ? $expiration->expiration : date( 'Y-m-d H:i:s' ) ); ?>"/>
 									<input type="reset" name="reset" class="button" onClick="return showCalendar('expiration', 'y-mm-dd');" value="..." title="<?php echo _AEC_USER_RESET_EXP_DATE; ?>" />
 								</p>
 								<?php
@@ -649,7 +650,7 @@ class HTML_AcctExp {
 											if( isset( $subscription->used_plans ) ) {
 												$used_plans = $subscription->getUsedPlans();
 												foreach ($used_plans as $used => $amount) { ?>
-													<strong>#<?php echo $used; ?></strong> - "<?php echo HTML_AcctExp::SubscriptionName( $used ); ?>" (<?php echo $amount . ( ( $amount > 1 ) ? _AEC_USER_TIMES : _AEC_USER_TIME ); ?>)
+													<strong>#<?php echo $used; ?></strong> - "<?php echo HTML_AcctExp::SubscriptionName( $used ); ?>" (<?php echo $amount . " " . ( ( $amount > 1 ) ? _AEC_USER_TIMES : _AEC_USER_TIME ); ?>)
 													<?php
 												}
 											}else{
