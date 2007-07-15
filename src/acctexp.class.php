@@ -98,7 +98,7 @@ class metaUser {
 	function instantGIDchange( $gid ) {
 		global $database, $acl;
 
-		if( $this->gid >= 24 ) {
+		if( $this->cmsUser->gid >= 24 ) {
 			$query = 'SELECT count(*)'
 			. ' FROM #__core_acl_groups_aro_map'
 			. ' WHERE group_id = \'25\''
