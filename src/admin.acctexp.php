@@ -968,7 +968,7 @@ function saveUser( $option ) {
 
 	if( $_POST['assignto_plan'] ) {
 		if( !$metaUser->hasSubscription ) {
-			$metaUser->objSubscription = new Subscription( $database );	
+			$metaUser->objSubscription = new Subscription( $database );
 			$metaUser->objSubscription->createNew( $_POST['userid'], '', 1 );
 		}
 		$metaUser->objSubscription->applyUsage( $_POST['assignto_plan'], 'none', 1 );
@@ -1656,54 +1656,7 @@ function editSettings( $option ) {
 	$lists['customtext_expired_keeporiginal']		= mosHTML::yesnoSelectList('customtext_expired_keeporiginal', '', $cfg->cfg['customtext_expired_keeporiginal']);
 	$lists['customtext_pending_keeporiginal']		= mosHTML::yesnoSelectList('customtext_pending_keeporiginal', '', $cfg->cfg['customtext_pending_keeporiginal']);
 
-	$currencies_main = 'EUR,USD,CHF,CAD,DKK,SEK,NOK,GBP,JPY';
-
-	$currencies_general	= 'AUD,CYP,CZK,EGP,HUF,GIP,HKD,UAH,ISK,'
-	. 'EEK,HRK,GEL,LVL,RON,BGN,LTL,MTL,FIM,MDL,ILS,NZD,ZAR,RUB,SKK,'
-	. 'TRY,PLN'
-	;
-
-	$currencies_other	= 'AFA,DZD,ARS,AMD,AWG,AZM,'
-	. 'BSD,BHD,THB,PAB,BBD,BYB,BZD,BMD,VEB,BOB,'
-	. 'BRL,BND,BIF,CVE,KYD,GHC,XOF,XAF,XPF,'
-	. 'CLP,COP,KMF,BAM,NIO,CRC,CUP,GMD,'
-	. 'MKD,AED,DJF,STD,DOP,VND,XCD,SVC,'
-	. 'ETB,FKP,FJD,CDF,FRF,HTG,PYG,GNF,'
-	. 'GWP,GYD,HKD,UAH,INR,IRR,IQD,JMD,'
-	. 'JOD,KES,PGK,LAK,KWD,MWK,ZMK,AOR,MMK,'
-	. 'LBP,ALL,HNL,SLL,LRD,LYD,SZL,'
-	. 'LSL,MGF,MYR,TMM,MUR,MZM,MXN,'
-	. 'MXV,MAD,ERN,NAD,NPR,ANG,'
-	. 'AON,TWD,ZRN,BTN,KPW,PEN,MRO,TOP,'
-	. 'PKR,XPD,MOP,UYU,PHP,XPT,BWP,QAR,GTQ,'
-	. 'ZAL,OMR,KHR,MVR,IDR,RWF,SAR,'
-	. 'SCR,XAG,SGD,SBD,KGS,SOS,LKR,SHP,ECS,'
-	. 'SDD,SRG,SYP,TJR,BDT,WST,TZS,KZT,TPE,'
-	. 'TTD,MNT,TND,UGX,ECV,CLF,USN,USS,UZS,'
-	. 'VUV,KRW,YER,CNY,ZWD'
-	;
-
-	$currency_code_list = array();
-
-	$currency_array = explode( ',', $currencies_main );
-	foreach( $currency_array as $currency ) {
-		$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
-	}
-
-	$currency_code_list[] = mosHTML::makeOption( '" disabled="disabled', '- - - - - - - - - - - - - -' );
-
-	$currency_array = explode( ',', $currencies_general );
-	foreach( $currency_array as $currency ) {
-		$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
-	}
-
-	$currency_code_list[] = mosHTML::makeOption( '" disabled="disabled', '- - - - - - - - - - - - - -' );
-
-	$currency_array = explode( ',', $currencies_other );
-	foreach( $currency_array as $currency ) {
-		$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
-	}
-
+	$currency_code_list	= _aecCurrencies::_CurrencyField( true, true, true );
 	$lists['currency_code_general'] = mosHTML::selectList( $currency_code_list, ( 'currency_code_general' ), 'size="10"', 'value', 'text', ( !empty( $cfg->cfg['currency_code_general'] ) ? $cfg->cfg['currency_code_general'] : '' ) );
 
 	// get entry Plan selection
@@ -3613,7 +3566,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 					. $aec_redirect_subscribe
 					. $aec_condition_end
 					. $aec_hack_end;
-	
+
 
 	$cmsname = strtolower( GeneralInfoRequester::getCMSName() );
 

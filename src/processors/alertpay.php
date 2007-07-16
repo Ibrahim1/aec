@@ -34,30 +34,33 @@ class processor_alertpay {
 	function processor_alertpay () {
 		global $mosConfig_absolute_path;
 
-		if (file_exists( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/'.$GLOBALS['mosConfig_lang'].'.php' )) {
-				include_once( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/'.$GLOBALS['mosConfig_lang'].'.php' );
-		} else {
-				include_once( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/english.php' );
+		if( !defined( '_AEC_LANG_PROCESSOR' ) ) {
+			$langPath = $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/';
+			if (file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
+				include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
+			}else{
+				include_once( $langPath . 'english.php' );
+			}
 		}
 	}
 
 	function info () {
 		$info = array();
-		$info['name'] = "alertpay";
-		$info['longname'] = "Alertpay";
-		$info['statement'] = "Make payments with Alertpay!";
-		$info['description'] = _DESCRIPTION_ALERTPAY;
-		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck";
-		$info['recurring'] = 0;
+		$info['name']				= 'alertpay';
+		$info['longname']			= _AEC_PROC_INFO_AP_LNAME;
+		$info['statement']			= _AEC_PROC_INFO_AP_STMNT;
+		$info['description']		= _DESCRIPTION_ALERTPAY;
+		$info['cc_list']			= 'visa,mastercard,discover,americanexpress,echeck';
+		$info['recurring']			= 0;
 
 		return $info;
 	}
 
 	function settings () {
 		$settings = array();
-		$settings['merchant'] = "merchant";
-		$settings['securitycode'] = "security code";
-		$settings['testmode'] = 0;
+		$settings['merchant']		= 'merchant';
+		$settings['securitycode']	= 'security code';
+		$settings['testmode']		= 0;
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]',
 									'[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']	= ''; // added mic
@@ -67,12 +70,13 @@ class processor_alertpay {
 
 	function backend_settings () {
 		$settings = array();
-		$settings['testmode'] = array("list_yesno");
-		$settings['merchant'] = array("inputC");
-		$settings['securitycode'] = array("inputC");
-		$settings['item_name'] = array("inputE");
- 		$rewriteswitches = array("cms", "user", "expiration", "subscription", "plan");
-        $settings['rewriteInfo'] = array("fieldset", "Rewriting Info", AECToolbox::rewriteEngineInfo($rewriteswitches));
+		$settings['testmode']		= array( 'list_yesno' );
+		$settings['merchant']		= array( 'inputC' );
+		$settings['securitycode']	= array( 'inputC' );
+		$settings['item_name']		= array( 'inputE' );
+ 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
+        $settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO,
+        							AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
 		return $settings;
 	}
@@ -81,8 +85,8 @@ class processor_alertpay {
 		global $mosConfig_live_site;
 
 		$post_url	= "http://www.alertpay.com/PayProcess.aspx";
-		if ($cfg->testmode) {
-			$var['ap_test'] = "1";
+		if( $cfg->testmode ) {
+			$var['ap_test'] = '1';
 		}
 
 		$var['ap_purchasetype']	= 'Item'; //Item or Subscription - Subscription not supported yet
@@ -93,8 +97,9 @@ class processor_alertpay {
 		$var['ap_itemname']		= $int_var['invoice'];
 		$var['ap_currency']		= $cfg['currency_code'];
 		$var['ap_returnurl']	= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=thanks");
-		$var['ap_quantity']		= "";
-		$var['ap_description']	= "Subscription at " . $mosConfig_live_site . " - User: ". $metaUser->cmsUser->name . " (" . $metaUser->cmsUser->username . ")";
+		$var['ap_quantity']		= '';
+		$var['ap_description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, $mosConfig_live_site,
+									$metaUser->cmsUser->name, $metaUser->cmsUser->username );
 		if (isset($cfg['tax']) && @$cfg['tax'] > 0) {
 			$tax = $int_var['amount']/(100+$cfg['tax'])*100;
 			$var['ap_amount'] 	= round($tax, 2);
@@ -103,9 +108,9 @@ class processor_alertpay {
 		}
 		$var['ap_cancelurl']	= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=cancel");
 
-		$var['apc_1']		= $metaUser->cmsUser->id;
-		$var['apc_2']		= AECToolbox::rewriteEngine($cfg['item_name'], $metaUser, $new_subscription);
-		$var['apc_3']		= $int_var['usage'];
+		$var['apc_1']			= $metaUser->cmsUser->id;
+		$var['apc_2']			= AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription );
+		$var['apc_3']			= $int_var['usage'];
 
 		return $var;
 	}
@@ -124,6 +129,5 @@ class processor_alertpay {
 
 		return $response;
 	}
-
 }
 ?>

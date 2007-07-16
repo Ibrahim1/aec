@@ -1113,7 +1113,7 @@ function com_install() {
 				}
 			}
 		}
-		
+
 		$result = null;
 		$database->setQuery("SHOW COLUMNS FROM #__acctexp_microintegrations LIKE 'system'");
 		if( $database->loadObject( $result ) ) {
@@ -1210,25 +1210,36 @@ function com_install() {
 		$admin_dir		= $mosConfig_absolute_path . '/administrator/components/com_acctexp/';
 		$admin_file		= $mosConfig_absolute_path . '/administrator/components/com_acctexp/admin_files.tar.gz';
 
+		// dirs
+		$dir0			= $mosConfig_absolute_path . '/administrator/components/com_acctexp/';			// admin
+		$dir1			= $mosConfig_absolute_path . '/components/com_acctexp/';						// user
+		$dir2			= $mosConfig_absolute_path . '/administrator/components/com_acctexp/install/';	// generic install dir
+
 		$files = array();
-		$files[] = array( 1, "images/icons/backend_icons.tar.gz",	"images/icons/" );
-		$files[] = array( 1, "images/icons/silk_icons.tar.gz",		"images/icons/" );
-		$files[] = array( 1, "images/backend_gfx/backend_gfx.tar.gz", "images/backend_gfx/" );
-		$files[] = array( 0, "images/cc_icons/cc_icons.tar.gz",		"images/cc_icons/" );
-		$files[] = array( 0, "images/gateway_buttons.tar.gz",		"images/" );
-		$files[] = array( 0, "images/gateway_logos.tar.gz",			"images/" );
+		// icons
+		$files[] = array( $dir0, 'images/cc_icons/cc_icons.tar.gz',			'images/cc_icons/' );
+		$files[] = array( $dir0, 'images/gateway_buttons.tar.gz',			'images/' );
+		$files[] = array( $dir0, 'images/gateway_logos.tar.gz',				'images/' );
+		$files[] = array( $dir1, 'images/icons/backend_icons.tar.gz',		'images/icons/' );
+		$files[] = array( $dir1, 'images/icons/silk_icons.tar.gz',			'images/icons/' );
+		$files[] = array( $dir1, 'images/backend_gfx/backend_gfx.tar.gz',	'images/backend_gfx/' );
+		// joomfish (check first if joomfish exists)
+		if( file_exists( $mosConfig_absolute_path . '/administrator/components/com_joomfish/admin_joomfish.php' ) ) {
+			$xmlFiles = $mosConfig_absolute_path . '/administrator/components/com_acctexp/install/';
+			if( file_exists( $xmlFiles . 'jf_content_elements_aec.' . _AEC_LANGUAGE . '.tar.gz' ) ) {
+				$xmlInst = $xmlFiles . 'jf_content_elements_aec.' . _AEC_LANGUAGE . '.tar.gz';
+			}else{
+				$xmlInst = $xmlFiles . 'jf_content_elements_aec.en.tar.gz';
+			}
+			$files[] = array( $dir2, $xmlInst, 'administrator/components/com_joomfish/contentelements/' );
+		}
 
 		foreach( $files as $file ) {
-			if( $file[0] ) {
-				$directory = $mosConfig_absolute_path . '/administrator/components/com_acctexp/';
-			}else{
-				$directory = $mosConfig_absolute_path . '/components/com_acctexp/';
-			}
 
-			$fullpath	= $directory . $file[1];
-			$deploypath = $directory . $file[2];
+			$fullpath	= $file[0] . $file[1];
+			$deploypath = $file[0] . $file[2];
 
-			$archive = new Archive_Tar( $fullpath, "gz" );
+			$archive = new Archive_Tar( $fullpath, 'gz' );
 
 			if( !@is_dir( $deploypath ) ) {
 				// Borrowed from php.net page on mkdir. Created by V-Tec (vojtech.vitek at seznam dot cz)

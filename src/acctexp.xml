@@ -10,7 +10,7 @@
 	<description>A complete subscription management system. By Helder Garcia (hlbog), David Deutsch (skOre) and the team of AEC at globalnerd.org</description>
 	<files>
 		<filename>index.html</filename>
-		<filename>acctexp.php</filename> 
+		<filename>acctexp.php</filename>
 		<filename>acctexp.class.php</filename>
 		<filename>acctexp.html.php</filename>
 		<filename>eucalib.php</filename>
@@ -30,6 +30,9 @@
 		<filename>images/gateway_logos.tar.gz</filename>
 		<filename>images/cc_icons/index.html</filename>
 		<filename>images/cc_icons/cc_icons.tar.gz</filename>
+		<filename>install/index.html</filename>
+		<filename>install/jf_content_elements_aec.de.tar.gz</filename>
+		<filename>install/jf_content_elements_aec.en.tar.gz</filename>
 		<filename>micro_integration/language/index.html</filename>
 		<filename>micro_integration/language/english.php</filename>
 		<filename>micro_integration/language/german.php</filename>

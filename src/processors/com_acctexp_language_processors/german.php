@@ -50,10 +50,20 @@ define( '_AEC_PROC_INFO_PPS_STMNT',			'Zahlungen mit PayPal - schnell, gratis un
 	// 2CheckOut
 define( '_AEC_PROC_INFO_2CO_LNAME',			'2CheckOut' );
 define( '_AEC_PROC_INFO_2CO_STMNT',			'Zahlung mit 2Checkout!' );
+
+// (new 2007.07.16)
+	// alertpay
+define( '_AEC_PROC_INFO_AP_LNAME',			'AlertPay' );
+define( '_AEC_PROC_INFO_AP_STMNT',			'Zahlungen mit AlertPay');
+	// alertpay
+define( '_AEC_PROC_INFO_WP_LNAME',			'WorldPay' );
+define( '_AEC_PROC_INFO_WP_STMNT',			'Zahlungen mit WorldPay');
+
+// end 2007.07.16
+
 // END 0.12.4
 
 define( '_DESCRIPTION_PAYPAL',				'Mit PayPal k&ouml;nnen Zahlungen an jeden gesendet werden, der eine Emailadresse besitzt. PayPal ist kostenlos und wird in das vorhandene Kreditkarten- und Bankkonto integriert.' );
-
 define( '_DESCRIPTION_PAYPAL_SUBSCRIPTION', 'PayPal Abonnement ist der kostenlose PayPal Service f&uuml;r wiederkehrende Zahlungen mit dem <strong>das  Konto dem Abonnement entsprechend automatisch wiederkehrend belastet wird</strong>. Diese Einstellung kann jederzeit im PayPal Konto ge&auml;ndert werden.' );
 
 define( '_DESCRIPTION_AUTHORIZE',			'Dieses Gateway erm&ouml;glicht es Interneth&auml;ndlern Onlinezahlungen mit Kreditkarte, Bankzahlung und E-Check sicher abzuwickeln.' );
@@ -61,7 +71,10 @@ define( '_DESCRIPTION_VIAKLIX',				'Bietet integriertes Kreditkarten und Lastsch
 define( '_DESCRIPTION_ALLOPASS',			'AlloPass, das europ&auml;ische Institut f&uuml;Micropayment, erlaubt Zahlungen via SMS, Telefon und Kreditkarten.' );
 define( '_DESCRIPTION_2CHECKOUT',			'Sofortige Kreditkartenabwicklung f&uuml;r Interneth&auml;ndler.' );
 define( '_DESCRIPTION_EPSNETPAY',			'EPS ist das einfache, sichere und kostenlose Zahlungssystem der &ouml;sterreichischen Banken f&uuml;r Eink&auml;ufe im Internet.' );
+
 define( '_DESCRIPTION_ALERTPAY',			'Sicheres Geld mit AlertPay\'s Sicherheitsgrundsatz. Offen f&uuml;r alle Gesch&auml;ftsm&ouml;glichkeiten.' );
+
+define( '_DESCRIPTION_WORLDPAY',			'Zahlungen f&uuml;r Internettransaktion mit Telefon, Fax, Email, Kredit- und Bankkarten, &Uuml;berweisungen und Ratenzahlungen. In jeder Sprache und fast allen W&auml;hrungen' );
 
 // Generic Processor Names&Descs
 define( '_CFG_PROCESSOR_TESTMODE_NAME',		'Test Modus?' );
@@ -74,7 +87,7 @@ define( '_CFG_PROCESSOR_DESC_NAME',			'Beschreibung anzeigen' );
 define( '_CFG_PROCESSOR_DESC_DESC',			'Soll die Beschreibung f&uuml;r dieses Gateway angezeigt werden (z.B. auf der Nichteingeloggt-, Best&auml;tigungs- und Abschlussseite.' );
 define( '_CFG_PROCESSOR_ITEM_NAME_NAME',	'Artikelbeschreibung' );
 define( '_CFG_PROCESSOR_ITEM_NAME_DESC',	'Artikelbeschreibung dieses Services' );
-define( '_CFG_PROCESSOR_ITEM_NAME_DEFAULT',	'Mitgliedschaft bei %s - Benutzer: %s (%s)' );
+define( '_CFG_PROCESSOR_ITEM_NAME_DEFAULT',	'Abonnement auf %s - Benutzer: %s (%s)' );
 
 // Paypal Settings
 define( '_CFG_PAYPAL_BUSINESS_NAME',		'PayPal Gesch&auml;fts ID:' );
@@ -147,6 +160,7 @@ define( '_CFG_2CHECKOUT_ALT2COURL_DESC',		'Alternative Url bei Problemen mit 2Ch
 
 // WorldPay Settings
 define( '_CFG_WORLDPAY_INSTID_NAME',			'instID' );
+define( '_CFG_WORLDPAY_INSTID_FIELD',			'Ihre WorldPay ID' ); // new 200707016
 define( '_CFG_WORLDPAY_INSTID_DESC',			'Die WorldPay Installations ID.' );
 
 // epsNetpay Settings

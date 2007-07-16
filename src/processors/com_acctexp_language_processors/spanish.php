@@ -50,6 +50,13 @@ define( '_AEC_PROC_INFO_PPS_STMNT',			'Make payments with PayPal - it\'s fast, f
 	// 2CheckOut
 define( '_AEC_PROC_INFO_2CO_LNAME',			'2CheckOut' );
 define( '_AEC_PROC_INFO_2CO_STMNT',			'Make payments with 2Checkout!' );
+	// alertpay
+define( '_AEC_PROC_INFO_AP_LNAME',			'AlertPay' );
+define( '_AEC_PROC_INFO_AP_STMNT',			'Payments with AlertPay' );
+	// worldpay
+define( '_AEC_PROC_INFO_WP_LNAME',			'WorldPay' );
+define( '_AEC_PROC_INFO_WP_STMNT',			'Payments with WorldPay' );
+define( '_DESCRIPTION_WORLDPAY',			'Accept payments on the internet, by phone, fax or mail. Credit and debit cards, bank transfers and instalments. In any language and most currencies' );
 // END 0.12.4
 
 define( '_DESCRIPTION_PAYPAL', 'PayPal lets you send money to anyone with email. PayPal is free for consumers and works seamlessly with your existing credit card and checking account.');
@@ -144,8 +151,9 @@ define( '_CFG_2CHECKOUT_ALT2COURL_NAME', 'Alternate Url');
 define( '_CFG_2CHECKOUT_ALT2COURL_DESC', 'Try this in case you encounter a parameter error.');
 
 // WorldPay Settings
-define( '_CFG_WORLDPAY_INSTID_NAME', 'instId');
-define( '_CFG_WORLDPAY_INSTID_DESC', 'Your WorldPay Installation Id.');
+define( '_CFG_WORLDPAY_INSTID_NAME', 	'instId');
+define( '_CFG_WORLDPAY_INSTID_FIELD',	'Your WorldPay ID' ); // new 0.12.4
+define( '_CFG_WORLDPAY_INSTID_DESC',	'Your WorldPay Installation Id.');
 
 // epsNetpay Settings
 define( '_CFG_EPSNETPAY_MERCHANTID_NAME', 'Merchant ID');

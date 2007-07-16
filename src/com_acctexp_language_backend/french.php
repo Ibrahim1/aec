@@ -31,7 +31,7 @@
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
 // mic: NEW 0.12.4
-
+define( '_AEC_LANGUAGE',						'fr' ); // DO NOT CHANGE!!
 define( '_CFG_GENERAL_ACTIVATE_PAID_NAME',		'Activate Paid Subscriptions' );
 define( '_CFG_GENERAL_ACTIVATE_PAID_DESC',		'Always activate Subscriptions that are paid for automatically instead of requiring an activation code' );
 
