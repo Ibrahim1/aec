@@ -274,10 +274,11 @@ function pending ( $option, $userid ) {
 function subscribe ( $option ) {
 	global $my, $database, $mosConfig_uniquemail;
 
-	$intro	= trim( mosGetParam( $_REQUEST, 'intro', 0 ) );
-	$usage	= trim( mosGetParam( $_REQUEST, 'usage', 0 ) );
-	$userid = trim( mosGetParam( $_REQUEST, 'userid', 0 ) );
-	$itemid = trim( mosGetParam( $_REQUEST, 'Itemid', 0 ) );
+	$intro		= trim( mosGetParam( $_REQUEST, 'intro', 0 ) );
+	$usage		= trim( mosGetParam( $_REQUEST, 'usage', 0 ) );
+	$processor	= trim( mosGetParam( $_REQUEST, 'processor', null ) );
+	$userid		= trim( mosGetParam( $_REQUEST, 'userid', 0 ) );
+	$itemid		= trim( mosGetParam( $_REQUEST, 'Itemid', 0 ) );
 
 	if( isset( $_POST['username'] ) && $usage ) {
 		$query = 'SELECT id'
@@ -303,7 +304,7 @@ function subscribe ( $option ) {
 			}
 		}
 
-		$invoicefact = new InvoiceFactory( $userid, $usage );
+		$invoicefact = new InvoiceFactory( $userid, $usage, $processor );
 		$invoicefact->confirm( $option, $_POST );
 	}else{
 		if( $my->id ) {
@@ -359,8 +360,8 @@ function subscribe ( $option ) {
 			}
 		}
 
-		$invoicefact = new InvoiceFactory( $userid );
-		$invoicefact->create( $option, $intro, $usage, 0, $passthrough );
+		$invoicefact = new InvoiceFactory( $userid, $usage, $processor );
+		$invoicefact->create( $option, $intro, $usage, $processor, 0, $passthrough );
 	}
 }
 

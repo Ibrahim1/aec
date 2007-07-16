@@ -795,34 +795,36 @@ function joomlaregisterForm($option, $useractivation) {
 		$validate = '';
 	}
 	?>
-	<script language="javascript" type="text/javascript">
-	function submitbutton_reg() {
-		var form = document.mosForm;
-		var r = new RegExp("[\<|\>|\"|\'|\%|\;|\(|\)|\&|\+|\-]", "i");
-
-		// do field validation
-		if (form.name.value == "") {
-			alert( "<?php echo html_entity_decode(_REGWARN_NAME);?>" );
-		} else if (form.username.value == "") {
-			alert( "<?php echo html_entity_decode(_REGWARN_UNAME);?>" );
-		} else if (r.exec(form.username.value) || form.username.value.length < 3) {
-			alert( "<?php printf( html_entity_decode(_VALID_AZ09_USER), html_entity_decode(_PROMPT_UNAME), 2 );?>" );
-		} else if (form.email.value == "") {
-			alert( "<?php echo html_entity_decode(_REGWARN_MAIL);?>" );
-		} else if (form.password.value.length < 6) {
-			alert( "<?php echo html_entity_decode(_REGWARN_PASS);?>" );
-		} else if (form.password2.value == "") {
-			alert( "<?php echo html_entity_decode(_REGWARN_VPASS1);?>" );
-		} else if ((form.password.value != "") && (form.password.value != form.password2.value)){
-			alert( "<?php echo html_entity_decode(_REGWARN_VPASS2);?>" );
-		} else if (r.exec(form.password.value)) {
-			alert( "<?php printf( html_entity_decode(_VALID_AZ09), html_entity_decode(_REGISTER_PASS), 6 );?>" );
-		} else {
-			form.submit();
+	<script type="text/javascript">
+		/* <![CDATA[ */
+		function submitbutton_reg() {
+			var form = document.mosForm;
+			var r = new RegExp("[\<|\>|\"|\'|\%|\;|\(|\)|\&|\+|\-]", "i");
+	
+			// do field validation
+			if (form.name.value == "") {
+				alert( "<?php echo html_entity_decode(_REGWARN_NAME);?>" );
+			} else if (form.username.value == "") {
+				alert( "<?php echo html_entity_decode(_REGWARN_UNAME);?>" );
+			} else if (r.exec(form.username.value) || form.username.value.length < 3) {
+				alert( "<?php printf( html_entity_decode(_VALID_AZ09_USER), html_entity_decode(_PROMPT_UNAME), 2 );?>" );
+			} else if (form.email.value == "") {
+				alert( "<?php echo html_entity_decode(_REGWARN_MAIL);?>" );
+			} else if (form.password.value.length < 6) {
+				alert( "<?php echo html_entity_decode(_REGWARN_PASS);?>" );
+			} else if (form.password2.value == "") {
+				alert( "<?php echo html_entity_decode(_REGWARN_VPASS1);?>" );
+			} else if ((form.password.value != "") && (form.password.value != form.password2.value)){
+				alert( "<?php echo html_entity_decode(_REGWARN_VPASS2);?>" );
+			} else if (r.exec(form.password.value)) {
+				alert( "<?php printf( html_entity_decode(_VALID_AZ09), html_entity_decode(_REGISTER_PASS), 6 );?>" );
+			} else {
+				form.submit();
+			}
 		}
-	}
+		/* ]]> */
 	</script>
-	<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=saveRegistration' ); ?>" method="post">
+	<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=saveRegistration' ); ?>" method="post" name="mosForm">
 
 	<div class="componentheading">
 		<?php echo _REGISTER_TITLE; ?>

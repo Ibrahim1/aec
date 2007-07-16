@@ -686,6 +686,17 @@ class PaymentProcessorHandler {
 		return $pp_list;
 	}
 
+	function getProcessorIdfromName( $name ) {
+		global $database;
+
+		$query = 'SELECT id'
+		. ' FROM #__acctexp_config_processors'
+		. ' WHERE name = \'' . $name . '\'';
+		$database->setQuery( $query );
+
+		return $database->loadResult();
+	}
+
 	/**
 	 * gets installed and active processors
 	 *
@@ -1938,15 +1949,12 @@ class InvoiceFactory {
 	/** @var int */
 	var $confirmed		= null;
 
-	function InvoiceFactory( $userid=null, $usage=null, $invoice=null ) {
+	function InvoiceFactory( $userid=null, $usage=null, $processor=null, $invoice=null ) {
 		global $database, $mainframe, $my;
 
 		require_once( $mainframe->getPath( 'front_html', 'com_acctexp' ) );
 
-		// Init variables
-		$this->userid	= $userid;
-		$this->usage	= $usage;
-
+		// Check whether this call is legitimate
 		if( !$my->id ) {
 			if( !$this->userid ) {
 				// Its ok, this is a registration/subscription hybrid call
@@ -1962,8 +1970,24 @@ class InvoiceFactory {
 			$this->userid = $my->id;
 		}
 
-		if( $invoice ) {
-			$this->invoice = $invoice;
+		// Init variables
+		$this->usage		= $usage;
+		$this->processor	= $processor;
+		$this->invoice		= $invoice;
+
+		if( !is_null( $this->userid ) ) {
+			$query = 'SELECT id'
+			. ' FROM #__users'
+			. ' WHERE id = \'' . $this->userid . '\'';
+			$database->setQuery( $query );
+	
+			if( $database->loadResult() ) {
+				$this->userid = $userid;
+			}else{
+				$this->userid = null;
+			}
+		}else{
+			$this->userid = null;
 		}
 
 		if( $this->usage ) {
@@ -2142,7 +2166,7 @@ class InvoiceFactory {
 		return;
 	}
 
-	function create ( $option, $intro=0, $usage=0, $invoice=0, $passthrough=false ) {
+	function create ( $option, $intro=0, $usage=0, $processor=null, $invoice=0, $passthrough=false ) {
 		global $database, $mainframe, $my;
 
 		$cfg = new Config_General( $database );
@@ -2244,6 +2268,13 @@ class InvoiceFactory {
 				if( ( ( $plan_params['processors'] != '' ) && !is_null( $plan_params['processors'] ) ) || $hasTransfer ) {
 					$processors = explode( ';', $plan_params['processors'] );
 
+					if( !is_null( $this->processor ) ) {
+						$processorid = PaymentProcessorHandler::getProcessorIdfromName( $this->processor );
+						if( in_array( $processorid, $processors ) ) {
+							$processors = array( $processorid );
+						}
+					}
+
 					$plan_gw = array();
 					if( count( $processors ) ) {
 						$k = 0;
@@ -2265,7 +2296,7 @@ class InvoiceFactory {
 						}
 					}
 
-					if( $hasTransfer ) {
+					if( $hasTransfer && is_null( $this->processor ) ) {
 						if( isset( $plan_gw[0] ) ) {
 							if( !(strcmp(strtolower( $plan_gw[0]['name']), 'free') === 0 ) ) {
 								$plan_gw[]['name'] = 'transfer';
@@ -2297,85 +2328,17 @@ class InvoiceFactory {
 
 	 	$nochoice = ( count( $plans ) === 1 ) && ( count( $plans[0]['gw'] ) === 1 );
 
-
-	 	if( $cfg->cfg['plans_first'] ) {
-	 		if( $register ) {
-	 			if( $nochoice ) {
-		 			$_POST['usage']		= $plans[0]['id'];
-					$_POST['processor'] = $plans[0]['gw'][0]['name'];
-
-					if( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
-						// This is a CB registration, borrowing their code to register the user
-
-						include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.html.php' );
-						include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
-
-						registerForm($option, $mainframe->getCfg( 'emailpass' ), null);
-
-					}else{
-						//include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/acctexp.html.php' );
-						joomlaregisterForm( $option, $mainframe->getCfg( 'useractivation' ) );
-					}
-	 			}
-	 		}else{
-		 		$var['usage']		= $plans[0]['id'];
-
-		 		if( isset( $plans[0]['gw'][0]['recurring'] ) ) {
-					$var['recurring']	= $plans[0]['gw'][0]['recurring'];
-				}else{
-					$var['recurring']	= 0;
-				}
-
-				$var['processor']	= $plans[0]['gw'][0]['name'];
-
-				if( ( $invoice != 0 ) && !is_null( $invoice ) ) {
-					$var['invoice']	= $invoice;
-				}
-
-				$this->confirm ( $option, $var, $passthrough );
-	 		}
-	 	}else{
-	 				if( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
-						// This is a CB registration, borrowing their code to register the user
-
-						include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.html.php' );
-						include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
-
-						registerForm($option, $mainframe->getCfg( 'emailpass' ), null);
-
-					}else{
-						//include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/acctexp.html.php' );
-						joomlaregisterForm( $option, $mainframe->getCfg( 'useractivation' ) );
-					}
-	 	}
-
-	 	Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $plans, $subscriptionClosed, $passthrough, $register );
-
-
-
-
-
-
+		// If we have only one processor on one plan, there is no need for a decision
 		if( $nochoice ) {
-			// With only one processor and one plan, there is no need for a decision
+			// If the user also needs to register, we need to guide him there after the selection has now been made
+			if( $register ) {
+				// The plans are supposed to be first, so the details form should hold the values
+				if( $cfg->cfg['plans_first'] ) {
+					$_POST['usage']		= $plans[0]['id'];
+					$_POST['processor'] = $plans[0]['gw'][0]['name'];
+				}
 
-			$var['usage']		= $plans[0]['id'];
-			if( isset( $plans[0]['gw'][0]['recurring'] ) ) {
-				$var['recurring']	= $plans[0]['gw'][0]['recurring'];
-			}else{
-				$var['recurring']	= 0;
-			}
-			$var['processor']	= $plans[0]['gw'][0]['name'];
-
-			if( ( $invoice != 0 ) && !is_null( $invoice ) ) {
-				$var['invoice']	= $invoice;
-			}
-
-			if( $cfg->cfg['plans_first'] && $register ) {
-
-				$_POST['usage']		= $plans[0]['id'];
-				$_POST['processor'] = $plans[0]['gw'][0]['name'];
-
+				// Send to CB or joomla!
 				if( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
 					// This is a CB registration, borrowing their code to register the user
 
@@ -2389,13 +2352,32 @@ class InvoiceFactory {
 					joomlaregisterForm( $option, $mainframe->getCfg( 'useractivation' ) );
 				}
 			}else{
+				// The user is already existing, so we need to move on to the confirmation page with the details
+				
+				$var['usage']		= $plans[0]['id'];
+				if( isset( $plans[0]['gw'][0]['recurring'] ) ) {
+					$var['recurring']	= $plans[0]['gw'][0]['recurring'];
+				}else{
+					$var['recurring']	= 0;
+				}
+				$var['processor']	= $plans[0]['gw'][0]['name'];
+	
+				if( ( $invoice != 0 ) && !is_null( $invoice ) ) {
+					$var['invoice']	= $invoice;
+				}
+
 				$this->confirm ( $option, $var, $passthrough );
 			}
 		}else{
+			// Reset $register if we seem to have all data
+			// TODO: find better solution for this
 			if( $register && isset( $passthrough['username'] ) ) {
 				$register = 0;
+			}else{
+				
 			}
 
+			// Of to the Subscription Plan Selection Page!
 			Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $plans, $subscriptionClosed, $passthrough, $register );
 		}
 	}
