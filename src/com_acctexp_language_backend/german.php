@@ -216,9 +216,8 @@ define( '_AEC_HELP_SER_SW_DIAG1_DESC2',			'Es wird empfohlen f&uuml;r die Dauer 
 define( '_AEC_HELP_SER_SW_DIAG2',				'CMS Dateirechte' );
 define( '_AEC_HELP_SER_SW_DIAG2_DESC',			'AEC hat erkannt, dass dieses CMS nicht die Rechte des Webservers besitzt.' );
 define( '_AEC_HELP_SER_SW_DIAG2_DESC2',			'Wenn ein SSH-Zugang zum Server vorhanden ist, in das Verzeichnis "<cmsinstallation/includes>" und geben dann entweder "chown wwwrun joomla.php" (oder "chown wwwrun mambo.php" - falls Mambo verwendet wird) eingeben.' );
-define( '_AEC_HELP_SER_SW_DIAG3',				'Veralterte Hacks erkannt' );
-define( '_AEC_HELP_SER_SW_DIAG3_DESC',			'Es sieht so aus als wenn wenigstens ein Hack nicht aktuell ist!' );
-define( '_AEC_HELP_SER_SW_DIAG3_DESC',			'Damit AEC ordnungsgem&auml;ss funktionieren kann, m&uuml;ssen veralterte Hacks wieder aus den Dateien entfernt werden. Hierzu entweder den Abschnitt mit der eingebauten Funktion auf der Hacks-Seite entfernen, oder die Datei mit der originalen &uuml;berschreiben.' );
+define( '_AEC_HELP_SER_SW_DIAG3',				'Veraltete &Auml;nderungen erkannt' );
+define( '_AEC_HELP_SER_SW_DIAG3_DESC',			'Es sieht so aus als wenn wenigstens eine &Auml;nderung nicht aktuell ist!<br />Damit AEC ordnungsgem&auml;ss funktionieren kann, m&uuml;ssen fr&uuml;her gemachte, veraltete &Auml;nderungen wieder aus den Dateien entfernt werden. Dazu entweder den Abschnitt mit der neuen (ge&auml;nderten) Funktion &uuml;ber die Spezialseite entfernen, oder die ge&auml;nderte Datei mit der Originaldatei &uuml;berschreiben.' );
 define( '_AEC_HELP_SER_SW_DIAG4',				'Dateirechte Probleme' );
 define( '_AEC_HELP_SER_SW_DIAG4_DESC',			'AEC kann die Schreibrechte der Dateien welche ge&auml;ndert werden m&uuml;ssen nicht erkennen. Entweder ist das hier ein WINDOWS-Server oder der Apacheserver wurde mit der Option "--disable-posix" kompiliert.<br /><strong>Sollten die &Auml;nderungen durchgef&uuml;hrt werden, dann jedoch nicht funktionieren liegt das Problem bei den Dateirechten</strong>' );
 define( '_AEC_HELP_SER_SW_DIAG4_DESC2',			'Es wird empfohlen entweder den Server mit der erw&auml;hnten Option zu kompilieren (Apache) oder den Admin zu kontaktieren' );
