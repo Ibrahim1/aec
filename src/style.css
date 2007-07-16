@@ -389,6 +389,7 @@ width: 50%;
 }
 
 td.amount {
+float: right;
 text-align: right;
 width: 40%;
 }
