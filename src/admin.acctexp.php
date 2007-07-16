@@ -8,13 +8,6 @@
  * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
  */
 
-/**
- * ----------- CONTRIBUTIONS --------------
- * "Expire Now" feature contributed by:
- * Rasmus Dahl-Sorensen (ford) - 2004.11.11
- * ----------------------------------------
- */
-
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License (GPL)
 // as published by the Free Software Foundation; either version 2
