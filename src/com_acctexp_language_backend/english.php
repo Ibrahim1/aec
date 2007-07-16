@@ -39,7 +39,7 @@ define( '_CFG_GENERAL_ACTIVATE_PAID_DESC',		'Always activate Subscriptions that 
 define( '_AEC_SPEC_MENU_ENTRY',					'My Subscription' );
 
 // common
-define( '_DESCRIPTION_PAYSIGNET',				'mic: Description Paysignnet - CHECK! -');
+define( '_DESCRIPTION_PAYSIGNET',				'mic: Description Paysignet - CHECK! -');
 define( '_AEC_CONFIG_SAVED',					'Configuration saved' );
 define( '_AEC_CONFIG_CANCELLED',				'Configuration cancelled' );
 define( '_AEC_TIP_NO_GROUP_PF_PB',				'Public Frontend" is NOT a usergroup - and neither is "Public Backend' );
@@ -106,16 +106,16 @@ define( '_AEC_USER_PAYMENT_PROC',				'Payment Processor' );
 define( '_AEC_USER_CURR_SUBSCR_PLAN',			'Current Subscription Plan' );
 define( '_AEC_USER_PREV_SUBSCR_PLAN',			'Previous Subscription Plan' );
 define( '_AEC_USER_USED_PLANS',					'Used Subscription Plans' );
-define( '_AEC_USER_NO_PREV_PLANS',				'No Subscriptions till yet' );
+define( '_AEC_USER_NO_PREV_PLANS',				'No Subscriptions yet' );
 define( '_AEC_USER_ASSIGN_TO_PLAN',				'Assign to Plan' );
 define( '_AEC_USER_TIME',						'time' );
 define( '_AEC_USER_TIMES',						'times' );
 define( '_AEC_USER_INVOICES',					'Invoices' );
-define( '_AEC_USER_NO_INVOICES',				'No invoices till yet' );
+define( '_AEC_USER_NO_INVOICES',				'No invoices yet' );
 define( '_AEC_USER_INVOICE_FACTORY',			'Invoice Factory' );
 
 // new (additional)
-define( '_AEC_MSG_MIS_NOT_DEFINED',				'You have not defined any integrations till now - see config' );
+define( '_AEC_MSG_MIS_NOT_DEFINED',				'You have not defined any integrations - see config' );
 
 // headers
 define( '_AEC_HEAD_SETTINGS',					'Settings' );

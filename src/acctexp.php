@@ -314,14 +314,6 @@ function subscribe ( $option ) {
 			$userid			= $itemid;
 			$passthrough	= false;
 		}elseif( !$userid ) {
-			unset( $_POST['option'] );
-			unset( $_POST['task'] );
-			if( isset( $_POST['usage'] ) ) {
-				unset( $_POST['intro'] );
-				unset( $_POST['usage'] );
-				unset( $_POST['Itemid'] );
-			}
-
 			if( isset( $_POST['username'] ) ) {
 				$query = 'SELECT id'
 				. ' FROM #__users'
@@ -345,6 +337,14 @@ function subscribe ( $option ) {
 						mosErrorAlert( _REGWARN_EMAIL_INUSE );
 					}
 				}
+			}
+
+			unset( $_POST['option'] );
+			unset( $_POST['task'] );
+			if( isset( $_POST['usage'] ) ) {
+				unset( $_POST['intro'] );
+				unset( $_POST['usage'] );
+				unset( $_POST['Itemid'] );
 			}
 
 			$passthrough = array();
