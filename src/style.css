@@ -227,12 +227,9 @@ margin: 0px;
 /* == Styling for the Expired Page == */
 
 #box_expired {
-	float			: left;
-	width			: 90%;
-	margin			: 5% 20px;
-	text-align		: center;
-	/*padding-bottom	: 10px;*/
-	border			: 1px solid #FF0000;
+width: 90%;
+margin: 5% auto;
+text-align: center;
 }
 
 #box_pending {
@@ -282,12 +279,8 @@ font-weight: bold;
 }
 
 #days_left{
-	padding			: 3px;
-	border			: 2px solid #fff;
-	/*
-	border-left		: 30px solid #fff;
-	border-right	: 30px solid #fff;
-	*/
+padding: 3px;
+border: 2px solid #fff;
 }
 
 * html #days_left{
