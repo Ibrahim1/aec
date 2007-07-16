@@ -50,9 +50,6 @@ class mi_acajoom {
 		return $settings;
 	}
 
-	function pre_expiration_action( $params, $userid, $plan, $mi_id ) {
-	}
-
 	function expiration_action( $params, $userid, $plan ) {
 	}
 
@@ -74,12 +71,6 @@ class mi_acajoom {
 			$database->setQuery( $query );
 			$acauser = $database->loadObject();
 		}
-	}
-
-	function on_userchange_action( $params, $row, $post, $trace ) {
-	}
-
-	function delete( $params ) {
 	}
 }
 ?>
