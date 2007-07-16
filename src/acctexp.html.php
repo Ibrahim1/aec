@@ -93,7 +93,7 @@ class HTML_frontEnd {
 				<div id="renew_button">
 					<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=renewSubscription' ); ?>" method="post">
 					<input type="hidden" name="option" value="<?php echo $option; ?>" />
-					<input type="hidden" name="Itemid" value="<?php echo $userid; ?>" />
+					<input type="hidden" name="userid" value="<?php echo $userid; ?>" />
 					<input type="hidden" name="task" value="renewSubscription" />
 					<input type="submit" class="button" value="<?php echo _RENEW_BUTTON;?>" />
 					</form>
@@ -144,7 +144,7 @@ class HTML_frontEnd {
 			<div id="upgrade_button">
 				<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=renewSubscription' ); ?>" method="post">
 					<input type="hidden" name="option" value="<?php echo $option; ?>" />
-					<input type="hidden" name="Itemid" value="<?php echo $objUser->id; ?>" />
+					<input type="hidden" name="userid" value="<?php echo $objUser->id; ?>" />
 					<input type="hidden" name="task" value="renewSubscription" />
 					<input type="submit" class="button" value="<?php echo _PENDING_NOINVOICE_BUTTON;?>" />
 				</form>

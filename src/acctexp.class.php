@@ -1951,6 +1951,8 @@ class InvoiceFactory {
 	function InvoiceFactory( $userid=null, $usage=null, $processor=null, $invoice=null ) {
 		global $database, $mainframe, $my;
 
+		$this->userid = $userid;
+
 		require_once( $mainframe->getPath( 'front_html', 'com_acctexp' ) );
 
 		// Check whether this call is legitimate
@@ -1962,6 +1964,8 @@ class InvoiceFactory {
 					// This user is not expired, so he could log in...
 					mosNotAuth();
 					return;
+				}else{
+					$this->userid = $userid;
 				}
 			}
 		}else{
@@ -3446,7 +3450,7 @@ class Subscription extends paramDBTable {
 			$this->applyUsage( $plan_params['fallback'], 'none', 1 );
 			return false;
 		}else{
-			if( !( strcmp( $this->status, 'Expired' ) === 0 ) && !( strcmp( $this->status, 'Closed' ) === 0 ) ) {
+			if( !( strcmp( $this->status, 'Expired' ) === 0 ) || !( strcmp( $this->status, 'Closed' ) === 0 ) ) {
 				$this->status = 'Expired';
 				$this->check();
 				$this->store();
@@ -4024,7 +4028,7 @@ class AECToolbox {
 			}else{
 				$cfg = new Config_General( $database );
 
-				if( $cfg->cfg['require_subscription'] && !( strcmp( $metaUser->cmsUser->usertype, "Super Administrator" ) === 0 ) ) {
+				if( $cfg->cfg['require_subscription'] ) {
 					if( $cfg->cfg['entry_plan'] ) {
 						$user_subscription = new mosSubscription( $database );
 						$user_subscription->load(0);

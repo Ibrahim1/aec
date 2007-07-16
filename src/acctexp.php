@@ -125,9 +125,9 @@ if ($task) {
 			break;
 
 		case 'renewsubscription':
-			$itemid		= trim( mosGetParam( $_REQUEST, 'Itemid', 0 ) );
+			$userid		= trim( mosGetParam( $_REQUEST, 'userid', 0 ) );
 
-			$invoicefact = new InvoiceFactory( $itemid );
+			$invoicefact = new InvoiceFactory( $userid );
 			$invoicefact->create( $option );
 			break;
 
@@ -204,6 +204,7 @@ function expired ( $option, $userid, $expiration ) {
 
 	if( $userid > 0 ) {
 		$metaUser = new metaUser( $userid );
+		$cfg = new Config_General( $database );
 
 		$expired = strtotime( $metaUser->objExpiration->expiration );
 
@@ -227,8 +228,12 @@ function expired ( $option, $userid, $expiration ) {
 			$invoice = false;
 		}
 
+		$expiration	= strftime( $cfg->cfg['display_date_frontend'], $expired);
+		$name		= $metaUser->cmsUser->name;
+		$username	= $metaUser->cmsUser->username;
+		
 		$frontend = new HTML_frontEnd ();
-		$frontend->expired( $option, $userid, strftime( _ACCT_DATE_FORMAT, $expired), $metaUser->cmsUser->name, $metaUser->cmsUser->username, $invoice, $trial );
+		$frontend->expired( $option, $metaUser->cmsUser->id, $expiration, $name, $username, $invoice, $trial );
 	}else{
 		mosRedirect( sefRelToAbs( 'index.php' ) );
 	}
