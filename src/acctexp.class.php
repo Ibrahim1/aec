@@ -405,13 +405,12 @@ class aecHeartbeat extends mosDBTable {
 		global $mainframe, $mosConfig_offset_user;
 
 		if( $this->last_beat ) {
-			$offset	= '+' . $configCycle . ' hour';
-			$ping	= ( strtotime( $offset, strtotime( $this->last_beat ) ) );
+			$ping	= strtotime( $this->last_beat ) + $configCycle*3600;
 		}else{
 			$ping = 0;
 		}
 
-		if( ( $ping - time() ) <= 0 ) {
+		if( ( $ping - (time() + $mosConfig_offset_user*3600) ) <= 0 ) {
 			$this->last_beat = date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 );
 			$this->check();
 			$this->store();
