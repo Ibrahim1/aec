@@ -182,4 +182,15 @@ define( '_CFG_ALERTPAY_MERCHANT_NAME',			'H&auml;ndler' );
 define( '_CFG_ALERTPAY_MERCHANT_DESC',			'Der H&auml;ndlername' );
 define( '_CFG_ALERTPAY_SECURITYCODE_NAME',		'Sicherheitscode' );
 define( '_CFG_ALERTPAY_SECURITYCODE_DESC',		'Der Sicherheitscode' );
+
+// eWay Settings
+define( '_CFG_EWAY_LONGNAME', 'eWay');
+define( '_CFG_EWAY_STATEMENT', 'Make payments with eWAY Shared Payment Solution!');
+define( '_CFG_EWAY_DESCRIPTION', 'eWAY is the easiest and most affordable payment gateway in Australia. Process credit card payments via eWAY\'s own secure Shared Payment Page in real-time.');
+define( '_CFG_EWAY_CUSTID_NAME', 'Customer ID');
+define( '_CFG_EWAY_CUSTID_DESC', 'Your Customer ID.');
+define( '_CFG_EWAY_AUTOREDIRECT_NAME', 'Autoredirect');
+define( '_CFG_EWAY_AUTOREDIRECT_DESC', 'Automatic Redirect for eWay Transaction');
+define( '_CFG_EWAY_SITETITLE_NAME', 'Site Title');
+define( '_CFG_EWAY_SITETITLE_DESC', 'The Site Title of the eWay Transaction');
 ?>
