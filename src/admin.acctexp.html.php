@@ -2121,13 +2121,14 @@ class HTML_AcctExp {
 		if( $SQLDate == '' || $SQLDate == '-' ) {
 			return _AEC_CMN_NOT_SET;
 		}else{
-			global $mosConfig_offset, $mosConfig_offset_user;
+			global $mosConfig_offset_user;
 			global $database;
 
 			// compatibility with Mambo
 			if( !empty( $mosConfig_offset_user ) ) {
 				$timeOffset = $mosConfig_offset_user * 3600;
 			}else{
+				global $mosConfig_offset;	
 				$timeOffset = $mosConfig_offset * 3600;
 			}
 

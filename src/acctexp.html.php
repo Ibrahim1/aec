@@ -334,8 +334,7 @@ class HTML_frontEnd {
 	 * @param bool		$display	out with text (only in combination with $check)
 	 * @return formatted date
 	 */
-	function DisplayDateInLocalTime( $SQLDate, $check = false, $dislay = false ){
-		global $now;
+	function DisplayDateInLocalTime( $SQLDate, $check = false, $display = false ){
 
 		if( $SQLDate == '' ) {
 			return _AEC_EXPIRE_NOT_SET;
@@ -353,26 +352,16 @@ class HTML_frontEnd {
 
 			$cfg = new Config_General( $database );
 
-			$retVal = strftime( $cfg->cfg['display_date_backend'], ( strtotime( $SQLDate ) + $timeOffset ) );
+			$retVal = strftime( $cfg->cfg['display_date_frontend'], ( strtotime( $SQLDate ) + $timeOffset ) );
 
 			if( $check ) {
-				$timeDif = strtotime( $SQLDate ) - $now;
+				$timeDif = strtotime( $SQLDate ) - (time() + $timeOffset);
 				if( $timeDif < 0 ) {
-					$valid = false;
-				}elseif( ( $timeDif >= 0 ) && ( $timeDif < 86400 ) ) {
-					$valid = 1;
-				}else{
-					$valid = 2;
-				}
-
-				if( $valid ) {
-					if( $valid = 1 ) {
-						$retVal = _AEC_EXPIRE_TODAY;
-					}else{
-						$retVal = _AEC_EXPIRE_FUTURE . ': ' . $retVal;
-					}
-				}else{
 					$retVal = _AEC_EXPIRE_PAST . ':&nbsp;<strong>' . $retVal . '</strong>';
+				}elseif( ( $timeDif >= 0 ) && ( $timeDif < 86400 ) ) {
+					$retVal = _AEC_EXPIRE_TODAY;
+				}else{
+					$retVal = _AEC_EXPIRE_FUTURE . ': ' . $retVal;
 				}
 			}
 

@@ -370,6 +370,7 @@ function confirmSubscription ( $option ) {
 
 	$userid		= trim( mosGetParam( $_REQUEST, 'userid', 0 ) );
 	$usage		= trim( mosGetParam( $_REQUEST, 'usage', 0 ) );
+	$processor	= trim( mosGetParam( $_REQUEST, 'processor', 0 ) );
 	$username	= trim( mosGetParam( $_REQUEST, 'username', 0 ) );
 
 	if( ( $usage > 0 ) && !$username && !$userid && !$my->id ) {
@@ -386,7 +387,7 @@ function confirmSubscription ( $option ) {
 			registerForm( $option, $mosConfig_useractivation );
 		}
 	}else{
-		$invoicefact = new InvoiceFactory( $userid, $usage );
+		$invoicefact = new InvoiceFactory( $userid, $usage, $processor );
 		$invoicefact->confirm( $option, $_POST );
 	}
 }

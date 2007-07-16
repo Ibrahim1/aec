@@ -230,6 +230,7 @@ margin: 0px;
 width: 90%;
 margin: 5% auto;
 text-align: center;
+clear: both;
 }
 
 #box_pending {

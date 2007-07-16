@@ -1980,9 +1980,7 @@ class InvoiceFactory {
 			. ' WHERE id = \'' . $this->userid . '\'';
 			$database->setQuery( $query );
 	
-			if( $database->loadResult() ) {
-				$this->userid = $userid;
-			}else{
+			if( !$database->loadResult() ) {
 				$this->userid = null;
 			}
 		}else{
@@ -2382,15 +2380,12 @@ class InvoiceFactory {
 	}
 
 	function confirm( $option, $var=false, $passthrough=false ) {
-		global $database;
+		global $database, $my;
 
 		if( isset( $var['task'] ) ) {
 			unset( $var['task'] );
 			unset( $var['option'] );
 		}
-
-		$this->processor	= $var['processor'];
-		$this->usage		= $var['usage'];
 
 		if( $this->userid ) {
 			$user = new mosUser( $database );
@@ -3843,7 +3838,7 @@ class GeneralInfoRequester {
 		if( count( $group_list ) > 0 ) {
 			return $group_list;
 		}else{
-			return null;
+			return array();
 		}
 	}
 }
