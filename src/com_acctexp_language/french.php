@@ -109,7 +109,7 @@ define( '_EXPIRED', "Votre compte est d&eacute;sactiv&eacute;<br> Merci de nous 
 define( '_EXPIRED_TRIAL', 'Votre p&eacute;riode d&acute;essai a expir&eacute; le: ');
 define( '_ERRTIMESTAMP', 'Impossible de convertir l&acute;horodatage.');
 define( '_EXPIRED_TITLE', 'Compte Expir&eacute; !');
-define( '_DEAR', 'Cher(e) ');
+define( '_DEAR', 'Cher(e) %s');
 
 // --== FORMULAIRE DE CONFIRMATION ==--
 define( '_CONFIRM_TITLE', 'Formulaire de Confirmation');

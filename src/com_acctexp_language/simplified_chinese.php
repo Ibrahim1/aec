@@ -108,7 +108,7 @@ define( '_EXPIRED', '你的�?�?�已�?过期: ');
 define( '_EXPIRED_TRIAL', 'Your trial period has expired on: ');
 define( '_ERRTIMESTAMP', '�?能转�?�时间戳.');
 define( '_EXPIRED_TITLE', '�?�?�无效!!');
-define( '_DEAR', 'Dear ');
+define( '_DEAR', 'Dear %s');
 
 // --== CONFIRMATION FORM ==--
 define( '_CONFIRM_TITLE', '批准表�?�');

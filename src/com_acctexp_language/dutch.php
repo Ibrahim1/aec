@@ -109,7 +109,7 @@ define( '_EXPIRED', 'Je abonnement is verlopen op: ');
 define( '_EXPIRED_TRIAL', 'Your trial period has expired on: ');
 define( '_ERRTIMESTAMP', 'Cannot convert timestamp.');
 define( '_EXPIRED_TITLE', 'Abonnement verlopen!!');
-define( '_DEAR', 'Beste ');
+define( '_DEAR', 'Beste %s');
 
 // --== CONFIRMATION FORM ==--
 define( '_CONFIRM_TITLE', 'Bevestigingsformulier');

@@ -108,7 +108,7 @@ define( '_EXPIRED', 'Il tuo account &egrave; scaduto il: ');
 define( '_EXPIRED_TRIAL', 'Your trial period has expired on: ');
 define( '_ERRTIMESTAMP', 'Non &egrave; possibile convertire il timestamp.');
 define( '_EXPIRED_TITLE', 'Account Scaduto!!');
-define( '_DEAR', 'Caro ');
+define( '_DEAR', 'Caro %s');
 
 // --== CONFIRMATION FORM ==--
 define( '_CONFIRM_TITLE', 'Riepilogo di conferma');

@@ -108,7 +108,7 @@ define( '_EXPIRED', 'Tu cuenta a caducado. Por favor contactanos para renovar tu
 define( '_EXPIRED_TRIAL', 'Your trial period has expired on: ');
 define( '_ERRTIMESTAMP', 'No puedo convertir la marca temporal.');
 define( '_EXPIRED_TITLE', 'Cuenta caducada!!');
-define( '_DEAR', 'Estimado ');
+define( '_DEAR', 'Estimado %s');
 
 // --== CONFIRMATION FORM ==--
 define( '_CONFIRM_TITLE', 'Confirmation Form');

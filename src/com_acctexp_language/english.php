@@ -104,7 +104,7 @@ define( '_EXPIRED', 'You Subscription has expired on: ');
 define( '_EXPIRED_TRIAL', 'Your trial period has expired on: ');
 define( '_ERRTIMESTAMP', 'Cannot convert timestamp.');
 define( '_EXPIRED_TITLE', 'Subscription Expired!');
-define( '_DEAR', 'Dear ');
+define( '_DEAR', 'Dear %s');
 
 // --== CONFIRMATION FORM ==--
 define( '_CONFIRM_TITLE', 'Confirmation');
