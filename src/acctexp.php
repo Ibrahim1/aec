@@ -211,7 +211,7 @@ function expired ( $option, $userid, $expiration ) {
 		if( $metaUser->hasSubscription ) {
 			$trial = (strcmp($metaUser->objSubscription->status, 'Trial' ) === 0 );
 			if (!$trial) {
-				$params = $metaUser->objSubscription->getParams( 'params' );
+				$params = $metaUser->objSubscription->getParams();
 				if( isset( $params['trialflag'])) {
 					$trial = 1;
 				}

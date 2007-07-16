@@ -3450,21 +3450,21 @@ class Subscription extends paramDBTable {
 			$this->applyUsage( $plan_params['fallback'], 'none', 1 );
 			return false;
 		}else{
-			if( !( strcmp( $this->status, 'Expired' ) === 0 ) || !( strcmp( $this->status, 'Closed' ) === 0 ) ) {
-				$this->status = 'Expired';
-				$this->check();
-				$this->store();
-			}else{
-				return false;
-			}
-
-			// Set a Trial flag if this is an expired Trial
+			// Set a Trial flag if this is an expired Trial for further reference
 			if( strcmp( $this->status, 'Trial' ) === 0 ) {
 				$this->addParams( array( 'trialflag' => 1 ) );
 			}elseif( is_array( $this_params ) ) {
 				if( in_array( 'trialflag', $this_params ) ) {
 					$this->delParams( array( 'trialflag' ) );
 				}
+			}
+
+			if( !( strcmp( $this->status, 'Expired' ) === 0 ) || !( strcmp( $this->status, 'Closed' ) === 0 ) ) {
+				$this->status = 'Expired';
+				$this->check();
+				$this->store();
+			}else{
+				return false;
 			}
 
 			$mih = new microIntegrationHandler();
