@@ -1656,7 +1656,7 @@ function editSettings( $option ) {
 	$lists['customtext_expired_keeporiginal']		= mosHTML::yesnoSelectList('customtext_expired_keeporiginal', '', $cfg->cfg['customtext_expired_keeporiginal']);
 	$lists['customtext_pending_keeporiginal']		= mosHTML::yesnoSelectList('customtext_pending_keeporiginal', '', $cfg->cfg['customtext_pending_keeporiginal']);
 
-	$currency_code_list	= _aecCurrencies::_CurrencyField( true, true, true );
+	$currency_code_list	= _aecTools::_aecCurrencyField( true, true, true );
 	$lists['currency_code_general'] = mosHTML::selectList( $currency_code_list, ( 'currency_code_general' ), 'size="10"', 'value', 'text', ( !empty( $cfg->cfg['currency_code_general'] ) ? $cfg->cfg['currency_code_general'] : '' ) );
 
 	// get entry Plan selection

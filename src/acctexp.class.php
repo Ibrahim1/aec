@@ -2598,10 +2598,13 @@ class InvoiceFactory {
 				mosMail( $adminEmail2, $adminName2, $email, $subject, $message );
 
 				// Send notification to all administrators
-				$subject2 = sprintf( _SEND_SUB, $name, $mainframe->getCfg( 'sitename' ) );
-				$message2 = sprintf( _ASEND_MSG, $adminName2, $mainframe->getCfg( 'sitename' ), $row->name, $email, $username);
-				$subject2 = html_entity_decode( $subject2, ENT_QUOTES );
-				$message2 = html_entity_decode( $message2, ENT_QUOTES );
+				$aecUser	= _aecTools::_aecIP();
+
+				$subject2	= sprintf( _SEND_SUB, $name, $mainframe->getCfg( 'sitename' ) );
+				$message2	= sprintf( _AEC_ASEND_MSG_NEW_REG, $adminName2, $mainframe->getCfg( 'sitename' ), $row->name, $email, $username, $aecUser['ip'], $aecUser['isp'] );
+
+				$subject2	= html_entity_decode( $subject2, ENT_QUOTES );
+				$message2	= html_entity_decode( $message2, ENT_QUOTES );
 
 				// get email addresses of all admins and superadmins set to recieve system emails
 				$query = 'SELECT email, sendEmail'
@@ -3667,12 +3670,14 @@ class Subscription extends paramDBTable {
 		mosMail( $adminEmail2, $adminName2, $email, $subject, $message );
 
 		// Send notification to all administrators
+		$aecUser = _aecTools::_aecIP();
+
 		if( $renew ) {
 			$subject2 = sprintf( _ACCTEXP_SEND_MSG_RENEW, $name, $mainframe->getCfg( 'sitename' ) );
-			$message2 = sprintf( _ACCTEXP_ASEND_MSG_RENEW, $adminName2, $mainframe->getCfg( 'sitename' ), $name, $email, $username, $plan->id, $plan->name );
+			$message2 = sprintf( _ACCTEXP_ASEND_MSG_RENEW, $adminName2, $mainframe->getCfg( 'sitename' ), $name, $email, $username, $plan->id, $plan->name, $aecUser['ip'], $aecUser['isp'] );
 		} else {
 			$subject2 = sprintf( _ACCTEXP_SEND_MSG, $name, $mainframe->getCfg( 'sitename' ) );
-			$message2 = sprintf( _ACCTEXP_ASEND_MSG, $adminName2, $mainframe->getCfg( 'sitename' ), $name, $email, $username, $plan->id, $plan->name );
+			$message2 = sprintf( _ACCTEXP_ASEND_MSG, $adminName2, $mainframe->getCfg( 'sitename' ), $name, $email, $username, $plan->id, $plan->name, $aecUser['ip'], $aecUser['isp'] );
 		}
 
 		$subject2 = html_entity_decode( $subject2, ENT_QUOTES );
@@ -5294,7 +5299,7 @@ class tokenGroup extends mosDBTable {
  * @author mic
  *
  */
-class _aecCurrencies {
+class _aecTools {
 
 	/**
 	 * Builds a list of valid currencies
@@ -5305,7 +5310,7 @@ class _aecCurrencies {
 	 * @since 0.12.4
 	 * @return array
 	 */
-	function _CurrencyField( $currMain = false, $currGen = false, $currOth = false ) {
+	function _aecCurrencyField( $currMain = false, $currGen = false, $currOth = false ) {
 
 		if( $currMain ) {
 			$currencies_main = 'EUR,USD,CHF,CAD,DKK,SEK,NOK,GBP,JPY';
@@ -5368,6 +5373,19 @@ class _aecCurrencies {
 		}
 
 		return $currency_code_list;
+	}
+
+	/**
+	 * get user ip & isp
+	 *
+	 * @return array w/ values
+	 */
+	function _aecIP() {
+		// userip & hostname
+		$aecUser['ip'] 	= $_SERVER['REMOTE_ADDR'];
+		$aecUser['isp'] = gethostbyaddr( $_SERVER['REMOTE_ADDR'] );
+
+		return $aecUser;
 	}
 }
 ?>
