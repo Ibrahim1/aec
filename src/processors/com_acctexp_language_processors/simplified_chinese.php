@@ -186,4 +186,18 @@ define( '_CFG_EWAY_AUTOREDIRECT_DESC', 'Automatic Redirect for eWay Transaction'
 define( '_CFG_EWAY_SITETITLE_NAME', 'Site Title');
 define( '_CFG_EWAY_SITETITLE_DESC', 'The Site Title of the eWay Transaction');
 
+// MoneyProxy Settings
+define( '_CFG_MONEYPROXY_LONGNAME', 'MoneyProxy');
+define( '_CFG_MONEYPROXY_STATEMENT', 'Make Payments in different digital currencies with Money Proxy!');
+define( '_CFG_MONEYPROXY_DESCRIPTION', 'Accept payments on a website in different digital currencies with a single merchant account.');
+define( '_CFG_MONEYPROXY_MERCHANT_ID_NAME', 'Merchant ID');
+define( '_CFG_MONEYPROXY_MERCHANT_ID_DESC', 'Your merchant identifier at MoneyProxy.');
+define( '_CFG_MONEYPROXY_FORCE_CLIENT_RECEIPT_NAME', 'Force Receipt');
+define( '_CFG_MONEYPROXY_FORCE_CLIENT_RECEIPT_DESC', 'By setting this parameter to "Yes", it forces Money Proxy to ask an e-mail address where to send a receipt of the payment. By default, the customer can skip the receipt without entering any e-mail address.');
+define( '_CFG_MONEYPROXY_SECRET_KEY_NAME', 'Site Title');
+define( '_CFG_MONEYPROXY_SECRET_KEY_DESC', 'Your secret key at MoneyProxy.');
+define( '_CFG_MONEYPROXY_SUGGESTEDMEMO_NAME', 'Suggested Memo');
+define( '_CFG_MONEYPROXY_SUGGESTEDMEMO_DESC', 'This parameter is used to pre-fill the memo field for many payment system. Unfortunately, it is possible that some payment systems do not support this feature. Maximum of 40 characters.');
+define( '_CFG_MONEYPROXY_PAYMENT_ID_NAME', 'Payment ID');
+define( '_CFG_MONEYPROXY_PAYMENT_ID_DESC', 'The merchant can use this field to track the payment when the status URL is called. It can be up to 10 digits with only letters and numbers (0-9a-zA-Z). You can use Rewrite tags here.');
 ?>
