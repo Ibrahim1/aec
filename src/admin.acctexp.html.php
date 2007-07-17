@@ -526,8 +526,15 @@ class HTML_AcctExp {
 			}
 			/* ]]> */
 		</script>
+
 		<table class="adminheading">
-			<tr><th><?php echo aecHTML::Icon( 'aec_symbol_edit.png' ); ?></th></tr>
+			<tr>
+				<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_edit.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+					<?php echo _AEC_HEAD_SUBCRIBER; ?>:
+					&nbsp;
+					<small><?php echo !empty( $expiration->id ) ? $user->username . ' (' . _AEC_CMN_ID . ': ' . $user->id . ')' : _AEC_CMN_NEW; ?></small>
+	        	</th>
+			</tr>
 		</table>
 		<form action="index2.php" method="post" name="adminForm">
 			<table class="adminform">
@@ -556,7 +563,7 @@ class HTML_AcctExp {
 							<p>
 								<?php echo _AEC_USER_EMAIL; ?>:&nbsp;<strong><?php echo $user->email; ?></strong>
 							 	(<a href="mailto:<?php echo $user->email; ?>"><?php echo aecHTML::Icon( 'email.png', _AEC_USER_SEND_MAIL ); ?>&nbsp;<?php echo _AEC_USER_SEND_MAIL; ?></a>)
-							 </p>
+							</p>
 							<p><?php echo _AEC_USER_TYPE; ?>:&nbsp;<strong><?php echo $user->usertype; ?></strong></p>
 							<p>
 								<?php echo _AEC_USER_REGISTERED; ?>:&nbsp;<?php echo aecHTML::Icon( 'date.png', _AEC_USER_REGISTERED ); ?>&nbsp;
@@ -577,6 +584,7 @@ class HTML_AcctExp {
 								<p>
 									<?php echo _AEC_USER_LIFETIME; ?>:&nbsp;
 									<input class="checkbox" type="checkbox" name="ck_lifetime" id="ck_lifetime" checked="checked" onclick="swap();" />
+								</p>
 								<p>
 									<?php echo _AEC_USER_RESET_EXP_DATE; ?>:&nbsp;
 									<?php echo aecHTML::Icon( 'clock_edit.png', _AEC_USER_RESET_EXP_DATE ); ?>
@@ -594,6 +602,7 @@ class HTML_AcctExp {
 								<p>
 									<?php echo _AEC_USER_LIFETIME; ?>:&nbsp;
 									<input class="checkbox" type="checkbox" name="ck_lifetime" id="ck_lifetime" onclick="swap();" />
+								</p>
 								<p>
 									<?php echo _AEC_USER_RESET_EXP_DATE; ?>:&nbsp;<?php echo aecHTML::Icon( 'clock_edit.png', _AEC_USER_RESET_EXP_DATE ); ?>
 									<input class="text_area" type="text" name="expiration" id="expiration" size="19" maxlength="19" value="<?php echo ( !empty( $expiration->expiration ) ? $expiration->expiration : date( 'Y-m-d H:i:s' ) ); ?>"/>
@@ -602,8 +611,7 @@ class HTML_AcctExp {
 								</p>
 								<?php
 							} ?>
-							<p><?php echo _AEC_USER_RESET_STATUS; ?>:&nbsp;<?php echo $lists['set_status']; ?><p>
-							</div>
+							<p><?php echo _AEC_USER_RESET_STATUS; ?>:&nbsp;<?php echo $lists['set_status']; ?></p>
 						</div>
 						<div class="userinfobox">
 							<h3><?php echo _AEC_USER_SUBSCRIPTION; ?></h3>
@@ -614,23 +622,32 @@ class HTML_AcctExp {
 										case 'Excluded':
 											$icon = 'cut_red.png';
 											break;
-											case 'Trial':
-											case 'Pending':
+
+										case 'Trial':
+										case 'Pending':
 											$icon 	= 'star.png';
 											$status	= _AEC_CMN_EXCLUDED;
 											break;
+
 										case 'Active':
 											$icon	= 'tick.png';
 											$status	= _AEC_CMN_ACTIVE;
 											break;
+
 										case 'Cancel':
 											$icon	= 'exclamation.png';
 											$status	= _AEC_CMN_CANCEL_STORNO;
 											break;
+
 										case 'Expired':
 										case 'Closed':
 											$icon	= 'cancel.png';
 											$status	= _AEC_CMN_EXPIRED_CLOSED;
+											break;
+
+										default:
+											$icon	= 'thumb_down.png';
+											$status	= _AEC_CMN_NOT_SET;
 											break;
 									} ?>
 									&nbsp;
@@ -638,7 +655,7 @@ class HTML_AcctExp {
 								</p>
 								<p>
 									<?php echo _AEC_USER_PAYMENT_PROC; ?>:&nbsp;
-									<strong><?php echo aecHTML::Icon( 'money.png', _AEC_USER_PAYMENT_PROC ); ?>&nbsp;<?php echo $subscription->type; ?></strong>
+									<strong><?php echo aecHTML::Icon( 'money.png', _AEC_USER_PAYMENT_PROC ); ?>&nbsp;<?php echo $subscription->type ? $subscription->type : _AEC_CMN_NOT_SET; ?></strong>
 								</p>
 								<table>
 									<tr>
@@ -668,7 +685,7 @@ class HTML_AcctExp {
 								<p>
 									<span style="vertical-align:top;"><?php echo _AEC_USER_ASSIGN_TO_PLAN; ?>:</span>&nbsp;
 									<?php echo $lists['assignto_plan']; ?>
-								<p>
+								</p>
 						</div>
 					</td>
 					<td width="50%" style="padding:10px; padding-right:20px; vertical-align:top;">
@@ -723,7 +740,7 @@ class HTML_AcctExp {
 			</table>
 
 			<input type="hidden" name="option" value="<?php echo $option; ?>" />
-			<input type="hidden" name="id" value="<?php echo $expiration->id; ?>" />
+			<input type="hidden" name="id" value="<?php echo !empty( $expiration->id ) ? $expiration->id : ''; ?>" />
 			<input type="hidden" name="userid" value="<?php echo $expiration->userid; ?>" />
 			<input type="hidden" name="task" value="" />
 			<input type="hidden" name="nexttask" value="<?php echo $nexttask;?>" />
@@ -1524,15 +1541,15 @@ class HTML_AcctExp {
 			}
 			/* ]]> */
 		</script>
-			<table class="adminheading">
-				<tr>
-					<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_plans.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
-						<?php echo _AEC_HEAD_PLAN_INFO; ?>:
-						&nbsp;
-						<small><?php echo $row->id ? $row->name : _AEC_CMN_NEW; ?></small>
-		        	</th>
-				</tr>
-			</table>
+		<table class="adminheading">
+			<tr>
+				<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_plans.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+					<?php echo _AEC_HEAD_PLAN_INFO; ?>:
+					&nbsp;
+					<small><?php echo $row->id ? $row->name : _AEC_CMN_NEW; ?></small>
+	        	</th>
+			</tr>
+		</table>
 		<!--<form action="index2.php" method="post" name="adminForm" enctype="multipart/form-data" onLoad="swap();" >-->
 		<form action="index2.php" method="post" name="adminForm" enctype="multipart/form-data">
 			<table cellspacing="0" cellpadding="0" width="100%">

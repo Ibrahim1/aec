@@ -1,9 +1,20 @@
 <?php
-// Dont allow direct linking
+/**
+ * @version $Id: mi_communitybuilder.php 1 2007-07-17 12:07:07Z mic $
+ * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
+ * @subpackage Micro Integrations - CommunityBuilder (CB)
+ * @copyright 2007 Copyright (C) David Deutsch
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.gobalnerd.org
+ * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
+ */
+
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
 class mi_communitybuilder {
 
+	function checkInstallation () {
+		return false;
+	}
 	function Info () {
 		$info = array();
 		$info['name'] = _AEC_MI_NAME_COMMUNITYBUILDER;
@@ -14,8 +25,8 @@ class mi_communitybuilder {
 
 	function Settings ( $params ) {
 		$settings = array();
-		$settings['approve'] = array( 'list_yesno' );
-		$settings['unapprove_exp'] = array( 'list_yesno' );
+		$settings['approve']		= array( 'list_yesno' );
+		$settings['unapprove_exp']	= array( 'list_yesno' );
 
 		return $settings;
 	}
@@ -48,5 +59,4 @@ class mi_communitybuilder {
 	}
 
 }
-
 ?>

@@ -136,7 +136,7 @@ define( '_AEC_HEAD_PENDING_SUBS',				'Pending Subscriber' );
 define( '_AEC_HEAD_CANCELLED_SUBS',				'Cancelled Subscriber' );
 define( '_AEC_HEAD_CLOSED_SUBS',				'Closed Subscriber' );
 define( '_AEC_HEAD_MANUAL_SUBS',				'Manual Subscriber' );
-define( '_AEC_CENTR_MANUAL',					'Manual' );
+define( '_AEC_HEAD_SUBCRIBER',					'Subscriber' );
 
 // hacks (special)
 define( '_AEC_HACK_HACK',						'Hack' );
@@ -286,6 +286,7 @@ define( '_AEC_CENTR_SPECIAL',					'Hacks' );
 define( '_AEC_CENTR_M_INTEGRATION',				'Micro Integr.' );
 define( '_AEC_CENTR_HELP',						'Help' );
 define( '_AEC_CENTR_LOG',						'EventLog' );
+define( '_AEC_CENTR_MANUAL',					'Manual' );
 
 // select lists
 define( '_AEC_SEL_EXCLUDED',					'Excluded' );

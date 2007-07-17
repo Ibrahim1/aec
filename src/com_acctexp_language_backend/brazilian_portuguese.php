@@ -136,6 +136,7 @@ define( '_AEC_HEAD_PENDING_SUBS',				'Pending Subscriber' );
 define( '_AEC_HEAD_CANCELLED_SUBS',				'Cancelled Subscriber' );
 define( '_AEC_HEAD_CLOSED_SUBS',				'Closed Subscriber' );
 define( '_AEC_HEAD_MANUAL_SUBS',				'Manual Subscriber' );
+define( '_AEC_HEAD_SUBCRIBER',					'Subscriber' );
 
 // hacks (special)
 define( '_AEC_HACK_HACK',						'Hack' );

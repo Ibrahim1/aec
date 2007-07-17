@@ -140,6 +140,7 @@ define( '_AEC_HEAD_PENDING_SUBS',				'Wartende Abonnenten' );
 define( '_AEC_HEAD_CANCELLED_SUBS',				'Stornierte Abonnenten' );
 define( '_AEC_HEAD_CLOSED_SUBS',				'Abgeschlossene Abonnenten' );
 define( '_AEC_HEAD_MANUAL_SUBS',				'Manuelle Abonnenten' );
+define( '_AEC_HEAD_SUBCRIBER',					'Abonnent' );
 
 // hacks (special)
 define( '_AEC_HACK_HACK',						'&Auml;nderung' );
@@ -297,7 +298,7 @@ define( '_AEC_SEL_ACTIVE',						'Aktiv' );
 define( '_AEC_SEL_EXPIRED',						'Abgelaufen' );
 define( '_AEC_SEL_CLOSED',						'Geschlossen' );
 define( '_AEC_SEL_CANCELLED',					'Storniert' );
-define( '_AEC_SEL_NOT_CONFIGURED',				'Ni. Konfiguriert' );
+define( '_AEC_SEL_NOT_CONFIGURED',				'Ni. Konfiguriert / Neu' );
 
 // footer
 define( '_AEC_FOOT_TX_CHOOSING',				'Danke dass Sie sich f&uuml;r AEC - Account Expiration Control entschieden haben!' );
