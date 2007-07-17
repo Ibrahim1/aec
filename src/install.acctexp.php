@@ -1217,12 +1217,12 @@ function com_install() {
 
 		$files = array();
 		// icons
-		$files[] = array( $dir0, 'images/cc_icons/cc_icons.tar.gz',			'images/cc_icons/' );
-		$files[] = array( $dir0, 'images/gateway_buttons.tar.gz',			'images/' );
-		$files[] = array( $dir0, 'images/gateway_logos.tar.gz',				'images/' );
-		$files[] = array( $dir1, 'images/icons/backend_icons.tar.gz',		'images/icons/' );
-		$files[] = array( $dir1, 'images/icons/silk_icons.tar.gz',			'images/icons/' );
-		$files[] = array( $dir1, 'images/backend_gfx/backend_gfx.tar.gz',	'images/backend_gfx/' );
+		$files[] = array( $dir1, 'images/cc_icons/cc_icons.tar.gz',			'images/cc_icons/' );
+		$files[] = array( $dir1, 'images/gateway_buttons.tar.gz',			'images/' );
+		$files[] = array( $dir1, 'images/gateway_logos.tar.gz',				'images/' );
+		$files[] = array( $dir0, 'images/icons/backend_icons.tar.gz',		'images/icons/' );
+		$files[] = array( $dir0, 'images/icons/silk_icons.tar.gz',			'images/icons/' );
+		$files[] = array( $dir0, 'images/backend_gfx/backend_gfx.tar.gz',	'images/backend_gfx/' );
 		// joomfish (check first if joomfish exists)
 		if( file_exists( $mosConfig_absolute_path . '/administrator/components/com_joomfish/admin_joomfish.php' ) ) {
 			$xmlFiles = $mosConfig_absolute_path . '/administrator/components/com_acctexp/install/';
