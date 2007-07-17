@@ -38,10 +38,12 @@
 		<filename>micro_integration/index.html</filename>
 		<filename>micro_integration/mi_acajoom.php</filename>
 		<filename>micro_integration/mi_affiliatepro.php</filename>
+		<filename>micro_integration/mi_communitybuilder.php</filename>
 		<filename>micro_integration/mi_docman.php</filename>
 		<filename>micro_integration/mi_email.php</filename>
 		<filename>micro_integration/mi_htaccess.php</filename>
 		<filename>micro_integration/mi_idevaffiliate.php</filename>
+		<filename>micro_integration/mi_joomlauser.php</filename>
 		<filename>micro_integration/mi_mosets_tree.php</filename>
 		<filename>micro_integration/mi_mysql_query.php</filename>
 		<filename>micro_integration/mi_remository.php</filename>
