@@ -1649,7 +1649,7 @@ function editSettings( $option ) {
 	$lists['customtext_expired_keeporiginal']		= mosHTML::yesnoSelectList('customtext_expired_keeporiginal', '', $cfg->cfg['customtext_expired_keeporiginal']);
 	$lists['customtext_pending_keeporiginal']		= mosHTML::yesnoSelectList('customtext_pending_keeporiginal', '', $cfg->cfg['customtext_pending_keeporiginal']);
 
-	$currency_code_list	= _aecTools::_aecCurrencyField( true, true, true );
+	$currency_code_list	= AECToolbox::_aecCurrencyField( true, true, true );
 	$lists['currency_code_general'] = mosHTML::selectList( $currency_code_list, ( 'currency_code_general' ), 'size="10"', 'value', 'text', ( !empty( $cfg->cfg['currency_code_general'] ) ? $cfg->cfg['currency_code_general'] : '' ) );
 
 	// get entry Plan selection
@@ -2054,10 +2054,14 @@ function saveSettings( $option ) {
 	$cfg->cfg = $general_settings;
 	$cfg->saveSettings();
 
+	$ip = AECToolbox::_aecIP();
+
 	$short	= _AEC_LOG_SH_SETT_SAVED;
 	$event	= _AEC_LOG_LO_SETT_SAVED . ' ' . $difference;
 	$tags	= 'settings,system';
-	$params = array( 'userid' => $my->id );
+	$params = array(	'userid' => $my->id,
+						'ip' => $ip['ip'],
+						'isp' => $ip['isp'] );
 
 	$eventlog = new eventLog( $database );
 	$eventlog->issue( $short, $tags, $event, $params );

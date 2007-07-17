@@ -2578,7 +2578,7 @@ class InvoiceFactory {
 				mosMail( $adminEmail2, $adminName2, $email, $subject, $message );
 
 				// Send notification to all administrators
-				$aecUser	= _aecTools::_aecIP();
+				$aecUser	= AECToolbox::_aecIP();
 
 				$subject2	= sprintf( _SEND_SUB, $name, $mainframe->getCfg( 'sitename' ) );
 				$message2	= sprintf( _AEC_ASEND_MSG_NEW_REG, $adminName2, $mainframe->getCfg( 'sitename' ), $row->name, $email, $username, $aecUser['ip'], $aecUser['isp'] );
@@ -3650,7 +3650,7 @@ class Subscription extends paramDBTable {
 		mosMail( $adminEmail2, $adminName2, $email, $subject, $message );
 
 		// Send notification to all administrators
-		$aecUser = _aecTools::_aecIP();
+		$aecUser = AECToolbox::_aecIP();
 
 		if( $renew ) {
 			$subject2 = sprintf( _ACCTEXP_SEND_MSG_RENEW, $name, $mainframe->getCfg( 'sitename' ) );
@@ -3935,6 +3935,93 @@ class AECfetchfromDB {
 }
 
 class AECToolbox {
+
+	/**
+	 * Builds a list of valid currencies
+	 *
+	 * @param bool	$currMain	main (most important currencies)
+	 * @param bool	$currGen	second important currencies
+	 * @param bool	$currOth	rest of the world currencies
+	 * @since 0.12.4
+	 * @return array
+	 */
+	function _aecCurrencyField( $currMain = false, $currGen = false, $currOth = false ) {
+
+		if( $currMain ) {
+			$currencies_main = 'EUR,USD,CHF,CAD,DKK,SEK,NOK,GBP,JPY';
+		}
+
+		if( $currGen ) {
+			$currencies_general	= 'AUD,CYP,CZK,EGP,HUF,GIP,HKD,UAH,ISK,'
+			. 'EEK,HRK,GEL,LVL,RON,BGN,LTL,MTL,FIM,MDL,ILS,NZD,ZAR,RUB,SKK,'
+			. 'TRY,PLN'
+			;
+		}
+
+		if( $currOth ) {
+			$currencies_other	= 'AFA,DZD,ARS,AMD,AWG,AZM,'
+			. 'BSD,BHD,THB,PAB,BBD,BYB,BZD,BMD,VEB,BOB,'
+			. 'BRL,BND,BIF,CVE,KYD,GHC,XOF,XAF,XPF,'
+			. 'CLP,COP,KMF,BAM,NIO,CRC,CUP,GMD,'
+			. 'MKD,AED,DJF,STD,DOP,VND,XCD,SVC,'
+			. 'ETB,FKP,FJD,CDF,FRF,HTG,PYG,GNF,'
+			. 'GWP,GYD,HKD,UAH,INR,IRR,IQD,JMD,'
+			. 'JOD,KES,PGK,LAK,KWD,MWK,ZMK,AOR,MMK,'
+			. 'LBP,ALL,HNL,SLL,LRD,LYD,SZL,'
+			. 'LSL,MGF,MYR,TMM,MUR,MZM,MXN,'
+			. 'MXV,MAD,ERN,NAD,NPR,ANG,'
+			. 'AON,TWD,ZRN,BTN,KPW,PEN,MRO,TOP,'
+			. 'PKR,XPD,MOP,UYU,PHP,XPT,BWP,QAR,GTQ,'
+			. 'ZAL,OMR,KHR,MVR,IDR,RWF,SAR,'
+			. 'SCR,XAG,SGD,SBD,KGS,SOS,LKR,SHP,ECS,'
+			. 'SDD,SRG,SYP,TJR,BDT,WST,TZS,KZT,TPE,'
+			. 'TTD,MNT,TND,UGX,ECV,CLF,USN,USS,UZS,'
+			. 'VUV,KRW,YER,CNY,ZWD'
+			;
+		}
+
+		$currency_code_list = array();
+
+		if( $currMain ) {
+			$currency_array = explode( ',', $currencies_main );
+			foreach( $currency_array as $currency ) {
+				$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
+			}
+
+			$currency_code_list[] = mosHTML::makeOption( '" disabled="disabled', '- - - - - - - - - - - - - -' );
+		}
+
+		if( $currGen ) {
+			$currency_array = explode( ',', $currencies_general );
+			foreach( $currency_array as $currency ) {
+				$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
+			}
+
+			$currency_code_list[] = mosHTML::makeOption( '" disabled="disabled', '- - - - - - - - - - - - - -' );
+		}
+
+		if( $currOth ) {
+			$currency_array = explode( ',', $currencies_other );
+			foreach( $currency_array as $currency ) {
+				$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
+			}
+		}
+
+		return $currency_code_list;
+	}
+
+	/**
+	 * get user ip & isp
+	 *
+	 * @return array w/ values
+	 */
+	function _aecIP() {
+		// userip & hostname
+		$aecUser['ip'] 	= $_SERVER['REMOTE_ADDR'];
+		$aecUser['isp'] = gethostbyaddr( $_SERVER['REMOTE_ADDR'] );
+
+		return $aecUser;
+	}
 
 	/**
 	 * Return a URL based on the sef and user settings
