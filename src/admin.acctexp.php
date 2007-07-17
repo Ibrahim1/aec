@@ -628,9 +628,15 @@ function help ( $option ) {
 	 * 5. Advice
 	 * 6. Detect Only (0:No, 1:Yes -Don't display if Status=0)
 	 */
-	$diagnose	= array();
+	$pdfPath = $mainframe->getCfg( 'live_site' ) . '/administrator/components/com_acctexp/manual/';
+	if( file_exists( $mainframe->getCfg( 'absolute_path' ) . '/administrator/components/com_acctexp/manual/AEC_Quickstart.' . _AEC_LANGUAGE . '.pdf' ) ) {
+		$pdfHelp = $pdfPath . 'AEC_Quickstart.' . _AEC_LANGUAGE . '.pdf';
+	}else{
+		$pdfHelp = $pdfPath . 'AEC_Quickstart.pdf';
+	}
 
-	$diagnose[]	= array( _AEC_HELP_QS_HEADER, 1, 1, aecHTML::Icon( 'page_white_acrobat.png' ) . sprintf( _AEC_HELP_QS_DESC, '<a href="' . $mosConfig_live_site . '/administrator/components/com_acctexp/manual/AEC_Quickstart.pdf" target="_blank" title="' . _AEC_HELP_QS_DESC_LTEXT . '">' . _AEC_HELP_QS_DESC_LTEXT . '</a>' ), '', 0 );
+	$diagnose	= array();
+	$diagnose[]	= array( _AEC_HELP_QS_HEADER, 1, 1, aecHTML::Icon( 'page_white_acrobat.png' ) . sprintf( _AEC_HELP_QS_DESC, '<a href="' . $pdfHelp . '" target="_blank" title="' . _AEC_HELP_QS_DESC_LTEXT . '">' . _AEC_HELP_QS_DESC_LTEXT . '</a>' ), '', 0 );
 
 /*
 	$diagnose[]	= array("AEC Version", $diagnostic['AEC_stable'], 1, "You are running the most recent stable Version of the AEC", 0, 1);
@@ -1185,7 +1191,7 @@ function removePendingSubscription ( $userid, $option ) {
 		echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
 	}
 
-	$query = '"DELETE FROM #__acctexp_log_history'
+	$query = 'DELETE FROM #__acctexp_log_history'
 	. ' WHERE user_id IN (' . $userids . ')'
 	;
  	$database->setQuery( $query );
@@ -1275,7 +1281,7 @@ function activatePendingSubscription( $userid, $option, $renew ) {
 	if( $renew ) {
 		// Admin confirmed an offline payment for a renew
 		// He is working on the Active queue
-		$msg = $n . '' . _AEC_MSG_SUBS_RENEWED;
+		$msg = $n . ' ' . _AEC_MSG_SUBS_RENEWED;
 		mosRedirect( 'index2.php?option=' . $option . '&task=showActive', $msg );
 	}else{
 		// Admin confirmed an offline payment for a new subscription
