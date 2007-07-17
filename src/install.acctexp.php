@@ -1301,7 +1301,7 @@ function com_install() {
 				</div>
 				<div class="usernote" style="width:350px;margin:8px;">
 					<h1><?php echo _AEC_INST_HINTS; ?></h1>
-					<p><?php echo _AEC_INST_HINT1; ?></p>
+					<p><?php echo sprintf( _AEC_INST_HINT1, 'https://globalnerd.org/index.php?option=com_fireboard&Itemid=88' ); ?></p>
 					<p><?php echo _AEC_INST_HINT2; ?></p>
 				</div>
 				<div class="usernote" style="width:350px;margin:8px;">
@@ -1317,7 +1317,7 @@ function com_install() {
 					<p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION; ?></p>
 					<p><?php echo _AEC_FOOT_TX_CHOOSING; ?></p>
 					<div style="margin: 0 auto;text-align:center;">
-						<a href="http://www.globalnerd.org" target="_blank"> <img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/globalnerd_logo_tiny.png" border="0" alt="globalnerd" /></a>
+						<a href="https://www.globalnerd.org" target="_blank"> <img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/globalnerd_logo_tiny.png" border="0" alt="globalnerd" /></a>
 						<p><?php echo _AEC_FOOT_TX_GPL; ?></p>
 						<p><?php echo _AEC_FOOT_TX_SUBSCRIBE; ?></p>
 						<p><?php printf( _AEC_FOOT_CREDIT, AECToolbox::backendTaskLink( 'credits', _AEC_FOOT_CREDIT_LTEXT ) ); ?></p>

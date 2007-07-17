@@ -1637,9 +1637,6 @@ class HTML_AcctExp {
 										<?php echo $aecHTML->createSettingsParticle( 'maxgid_enabled' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'maxgid' ); ?>
 									</div>
-									<div class="usernote" style="width:200px;">
-										<p><strong><?php echo _AEC_TIP_NO_GROUP_PF_PB; ?></strong></p>
-									</div>
 								</div>
 							</td></tr>
 							<tr><td>
@@ -1893,9 +1890,6 @@ class HTML_AcctExp {
 									<div style="position:relative;float:left;width:200px;">
 										<?php echo $aecHTML->createSettingsParticle( 'maxgid_enabled' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'maxgid' ); ?>
-									</div>
-									<div class="usernote" style="width:200px;">
-										<p><strong><?php echo _AEC_TIP_NO_GROUP_PF_PB; ?></strong></p>
 									</div>
 								</div>
 							</td></tr>

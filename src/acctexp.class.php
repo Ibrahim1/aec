@@ -1269,7 +1269,7 @@ class aecHTML {
 			$tip .= '<span onmouseover="'. $mousover .'" onmouseout="return nd();" '. $style .'>'. $text .'</span>';
 		}
 
-		return $tip;
+		return $tip . '&nbsp;';
 	}
 
 	/**
