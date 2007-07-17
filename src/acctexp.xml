@@ -6,7 +6,7 @@
 	<copyright>@Copyright (C) 2004-2007 Helder Garcia, David Deutsch</copyright>
 	<authorEmail>mails@globalnerd.org</authorEmail>
 	<authorUrl>https://globalnerd.org</authorUrl>
-	<version>0.12.4.RC1</version>
+	<version>0.12.4 RC2</version>
 	<description>A complete subscription management system. By Helder Garcia (hlbog), David Deutsch (skOre) and the team of AEC at globalnerd.org</description>
 	<files>
 		<filename>index.html</filename>
@@ -36,13 +36,11 @@
 		<filename>micro_integration/language/germanf.php</filename>
 		<filename>micro_integration/language/germani.php</filename>
 		<filename>micro_integration/index.html</filename>
-		<filename>micro_integration/mi_acajoom.php</filename>
 		<filename>micro_integration/mi_affiliatepro.php</filename>
 		<filename>micro_integration/mi_communitybuilder.php</filename>
 		<filename>micro_integration/mi_docman.php</filename>
 		<filename>micro_integration/mi_email.php</filename>
 		<filename>micro_integration/mi_htaccess.php</filename>
-		<filename>micro_integration/mi_idevaffiliate.php</filename>
 		<filename>micro_integration/mi_joomlauser.php</filename>
 		<filename>micro_integration/mi_mosets_tree.php</filename>
 		<filename>micro_integration/mi_mysql_query.php</filename>
