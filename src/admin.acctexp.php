@@ -3373,7 +3373,8 @@ function migrate( $option ) {
 
 	$query = 'SELECT id'
 	. ' FROM #__users'
-	. ' WHERE usertype != \'Super Administrator\''
+	. ' WHERE LOWER( usertype ) = \'superadministrator\''
+	. ' OR LOWER( usertype ) = \'super administrator\''
 	;
 	$database->setQuery( $query );
 	$rows = $database->loadResultArray();

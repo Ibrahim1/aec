@@ -231,7 +231,7 @@ function expired ( $option, $userid, $expiration ) {
 		$expiration	= strftime( $cfg->cfg['display_date_frontend'], $expired);
 		$name		= $metaUser->cmsUser->name;
 		$username	= $metaUser->cmsUser->username;
-		
+
 		$frontend = new HTML_frontEnd ();
 		$frontend->expired( $option, $metaUser->cmsUser->id, $expiration, $name, $username, $invoice, $trial );
 	}else{
@@ -949,7 +949,7 @@ function cancelPayment ( $option ) {
 	$obj->load( $userid );
 
 	if( $obj->id ) {
-		if( strcmp( $obj->type, 'Super Administrator' ) != 0 && strcmp( $obj->type, 'Administrator' ) != 0 && $obj->block == 1 ) {
+		if( ( strcasecmp( $obj->type, 'Super Administrator' ) != 0 || strcasecmp( $obj->type, 'superadministrator' ) != 0 ) && strcasecmp( $obj->type, 'Administrator' ) != 0 && $obj->block == 1 ) {
 			// If the user is not blocked this can be a false cancel
 			// So just delete user if he is blocked and is not an administrator or super admnistrator
 			$obj->delete();

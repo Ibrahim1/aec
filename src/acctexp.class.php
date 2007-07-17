@@ -1276,8 +1276,8 @@ class aecHTML {
 	 * displays an icon
 	 * mic: corrected name
 	 *
-	 * @param string $image
-	 * @
+	 * @param 	string	$image	image name
+	 * @param	string	$alt	optional alt/title text
 	 * @return html string
 	 */
 	function Icon( $image = 'error.png', $alt = '' ) {
@@ -1285,12 +1285,12 @@ class aecHTML {
 
 		if( !$alt ) {
 			$name	= explode( '.', $image );
+			$alt	= $name[0];
 		}
 		$image 	= $mosConfig_live_site . '/administrator/components/com_acctexp/images/icons/'. $image;
-		$alt	= $name[0];
+
 		return '<img src="'. $image .'" border="0" alt="' . $alt . '" title="' . $alt . '" class="aec_icon" />';
 	}
-
 }
 
 class Config_General extends paramDBTable {
@@ -1983,7 +1983,7 @@ class InvoiceFactory {
 			. ' FROM #__users'
 			. ' WHERE id = \'' . $this->userid . '\'';
 			$database->setQuery( $query );
-	
+
 			if( !$database->loadResult() ) {
 				$this->userid = null;
 			}
@@ -2354,7 +2354,7 @@ class InvoiceFactory {
 				}
 			}else{
 				// The user is already existing, so we need to move on to the confirmation page with the details
-				
+
 				$var['usage']		= $plans[0]['id'];
 				if( isset( $plans[0]['gw'][0]['recurring'] ) ) {
 					$var['recurring']	= $plans[0]['gw'][0]['recurring'];
@@ -2362,7 +2362,7 @@ class InvoiceFactory {
 					$var['recurring']	= 0;
 				}
 				$var['processor']	= $plans[0]['gw'][0]['name'];
-	
+
 				if( ( $invoice != 0 ) && !is_null( $invoice ) ) {
 					$var['invoice']	= $invoice;
 				}
@@ -2375,7 +2375,7 @@ class InvoiceFactory {
 			if( $register && isset( $passthrough['username'] ) ) {
 				$register = 0;
 			}else{
-				
+
 			}
 
 			// Of to the Subscription Plan Selection Page!
@@ -2562,7 +2562,7 @@ class InvoiceFactory {
 				}else{
 					// use email address and name of first superadmin for use in email sent to user
 					$query = 'SELECT name, email'
-					. 'FROM #__users'
+					. ' FROM #__users'
 					. ' WHERE LOWER( usertype ) = \'superadministrator\''
 					. ' OR LOWER( usertype ) = \'super administrator\''
 					;

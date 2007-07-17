@@ -42,13 +42,15 @@ class HTML_myCommon {
 	function ContentLegend( ) { ?>
 		<table cellspacing="0" cellpadding="4" border="0" align="center">
 			<tr align="center">
-				<td><?php echo aecHTML::Icon( 'accept.png' ); ?></td>
-				<td><?php echo _AEC_CMN_PUBLISHED; ?> |</td>
-				<td><?php echo aecHTML::Icon( 'cancel.png' ); ?></td>
-				<td><?php echo _AEC_CMN_NOT_PUBLISHED; ?></td>
-				</tr>
+				<td><?php echo aecHTML::Icon( 'accept.png', _AEC_CMN_PUBLISHED ); ?></td>
+				<td><?php echo _AEC_CMN_PUBLISHED; ?>&nbsp;|</td>
+				<td><?php echo aecHTML::Icon( 'cancel.png', _AEC_CMN_NOT_PUBLISHED . '/' . _AEC_CMN_INVISIBLE ); ?></td>
+				<td><?php echo _AEC_CMN_NOT_PUBLISHED . '/' . _AEC_CMN_INVISIBLE; ?>&nbsp;|</td>
+				<td><?php echo aecHTML::Icon( 'eye.png', _PAYPLAN_VISIBLE ); ?></td>
+				<td><?php echo _PAYPLAN_VISIBLE; ?></td>
+			</tr>
 			<tr>
-				<td colspan="8" align="center"><?php echo _AEC_CMN_CLICK_TO_CHANGE; ?></td>
+				<td colspan="6" align="center"><?php echo _AEC_CMN_CLICK_TO_CHANGE; ?></td>
 			</tr>
 		</table>
 		<?php
@@ -537,12 +539,12 @@ class HTML_AcctExp {
 								<?php echo _AEC_USER_USERID; ?>:&nbsp;<strong><?php echo $user->id; ?></strong>
 								&nbsp;|&nbsp;
 								<?php echo _AEC_USER_STATUS; ?>:&nbsp;
-								<strong><?php echo !$user->block ? aecHTML::Icon( 'accept.png') . '&nbsp;' . _AEC_USER_ACTIVE . '</strong>' : aecHTML::Icon( 'exclamation.png' ) . '&nbsp;' . _AEC_USER_BLOCKED . '</strong>' . ( ( !$user->activation == '' ) ? '' : ' (<a href="' . $mosConfig_live_site . '/index.php?option=com_registration&amp;task=activate&amp;activation=' . $user->activation . '" target="_blank">' . _AEC_USER_ACTIVE_LINK . '</a>)' ); ?>
+								<strong><?php echo !$user->block ? aecHTML::Icon( 'accept.png', _AEC_USER_ACTIVE ) . '&nbsp;' . _AEC_USER_ACTIVE . '</strong>' : aecHTML::Icon( 'exclamation.png', _AEC_USER_BLOCKED ) . '&nbsp;' . _AEC_USER_BLOCKED . '</strong>' . ( ( !$user->activation == '' ) ? '' : ' (<a href="' . $mosConfig_live_site . '/index.php?option=com_registration&amp;task=activate&amp;activation=' . $user->activation . '" target="_blank">' . _AEC_USER_ACTIVE_LINK . '</a>)' ); ?>
 							</p>
 							<p>
 								<?php echo _AEC_USER_PROFILE; ?>:
 								&nbsp;
-								<a href="index2.php?option=com_users&amp;task=editA&amp;id=<?php echo $user->id; ?>&amp;hidemainmenu=1"><?php echo aecHTML::Icon( 'user.png' ); ?>&nbsp;<?php echo _AEC_USER_PROFILE_LINK; ?></a><?php echo $cb ? (' | CB Profile: <a href="index2.php?option=com_comprofiler&amp;task=edit&amp;cid=' . $user->id . '">' . aecHTML::Icon( 'user_orange.png' ) . '&nbsp;' . _AEC_USER_PROFILE_LINK . '</a>') : ''; ?>
+								<a href="index2.php?option=com_users&amp;task=editA&amp;id=<?php echo $user->id; ?>&amp;hidemainmenu=1"><?php echo aecHTML::Icon( 'user.png', _AEC_USER_PROFILE_LINK ); ?>&nbsp;<?php echo _AEC_USER_PROFILE_LINK; ?></a><?php echo $cb ? (' | CB Profile: <a href="index2.php?option=com_comprofiler&amp;task=edit&amp;cid=' . $user->id . '">' . aecHTML::Icon( 'user_orange.png', _AEC_USER_PROFILE_LINK ) . '&nbsp;' . _AEC_USER_PROFILE_LINK . '</a>') : ''; ?>
 							</p>
 							<p>
 								<?php echo _AEC_USER_USERNAME; ?>:&nbsp;
@@ -553,15 +555,15 @@ class HTML_AcctExp {
 							</p>
 							<p>
 								<?php echo _AEC_USER_EMAIL; ?>:&nbsp;<strong><?php echo $user->email; ?></strong>
-							 	(<a href="mailto:<?php echo $user->email; ?>"><?php echo aecHTML::Icon( 'email.png' ); ?>&nbsp;<?php echo _AEC_USER_SEND_MAIL; ?></a>)
+							 	(<a href="mailto:<?php echo $user->email; ?>"><?php echo aecHTML::Icon( 'email.png', _AEC_USER_SEND_MAIL ); ?>&nbsp;<?php echo _AEC_USER_SEND_MAIL; ?></a>)
 							 </p>
 							<p><?php echo _AEC_USER_TYPE; ?>:&nbsp;<strong><?php echo $user->usertype; ?></strong></p>
 							<p>
-								<?php echo _AEC_USER_REGISTERED; ?>:&nbsp;<?php echo aecHTML::Icon( 'date.png'); ?>&nbsp;
+								<?php echo _AEC_USER_REGISTERED; ?>:&nbsp;<?php echo aecHTML::Icon( 'date.png', _AEC_USER_REGISTERED ); ?>&nbsp;
 								<strong><?php echo $user->registerDate; ?></strong>
 								&nbsp;|&nbsp;
 								<?php echo _AEC_USER_LAST_VISIT; ?>:&nbsp;
-								<strong><?php echo aecHTML::Icon( 'door_in.png' ); ?>&nbsp;<?php echo $user->lastvisitDate; ?></strong>
+								<strong><?php echo aecHTML::Icon( 'door_in.png', _AEC_USER_LAST_VISIT ); ?>&nbsp;<?php echo $user->lastvisitDate; ?></strong>
 							</p>
 						</div>
 						<div class="userinfobox">
@@ -570,14 +572,14 @@ class HTML_AcctExp {
 							if( !empty( $expiration->expiration ) && strcmp( $expiration->expiration, '9999-12-31 00:00:00' ) === 0 ) { ?>
 								<p>
 								<?php echo _AEC_USER_CURR_EXPIRE_DATE; ?>:&nbsp;
-								<?php echo aecHTML::Icon( 'clock_pause.png' ); ?>&nbsp;
+								<?php echo aecHTML::Icon( 'clock_pause.png', _AEC_USER_LIFETIME ); ?>&nbsp;
 								<strong><?php echo _AEC_USER_LIFETIME; ?></strong></p>
 								<p>
 									<?php echo _AEC_USER_LIFETIME; ?>:&nbsp;
 									<input class="checkbox" type="checkbox" name="ck_lifetime" id="ck_lifetime" checked="checked" onclick="swap();" />
 								<p>
 									<?php echo _AEC_USER_RESET_EXP_DATE; ?>:&nbsp;
-									<?php echo aecHTML::Icon( 'clock_edit.png' ); ?>
+									<?php echo aecHTML::Icon( 'clock_edit.png', _AEC_USER_RESET_EXP_DATE ); ?>
 									<input class="text_area" type="text" name="expiration" id="expiration" size="19" maxlength="19" value="<?php echo $expiration->expiration; ?>" disabled="disabled" />
 									<input type="reset" name="reset" class="button" onClick="return showCalendar('expiration', 'y-mm-dd');" value="..." disabled="disabled" />
 								</p>
@@ -586,14 +588,14 @@ class HTML_AcctExp {
 								?>
 								<p>
 									<?php echo _AEC_USER_CURR_EXPIRE_DATE; ?>:&nbsp;
-									<?php echo aecHTML::Icon( 'clock_red.png'); ?>&nbsp;
+									<?php echo aecHTML::Icon( 'clock_red.png', _AEC_USER_CURR_EXPIRE_DATE ); ?>&nbsp;
 									<strong><?php echo ( !empty( $expiration->expiration ) ? $expiration->expiration : _AEC_CMN_NOT_SET ); ?></strong>
 								</p>
 								<p>
 									<?php echo _AEC_USER_LIFETIME; ?>:&nbsp;
 									<input class="checkbox" type="checkbox" name="ck_lifetime" id="ck_lifetime" onclick="swap();" />
 								<p>
-									<?php echo _AEC_USER_RESET_EXP_DATE; ?>:&nbsp;<?php echo aecHTML::Icon("clock_edit.png"); ?>
+									<?php echo _AEC_USER_RESET_EXP_DATE; ?>:&nbsp;<?php echo aecHTML::Icon( 'clock_edit.png', _AEC_USER_RESET_EXP_DATE ); ?>
 									<input class="text_area" type="text" name="expiration" id="expiration" size="19" maxlength="19" value="<?php echo ( !empty( $expiration->expiration ) ? $expiration->expiration : date( 'Y-m-d H:i:s' ) ); ?>"/>
 									<input type="hidden" name="expiration_check" id="expiration_check" value="<?php echo ( !empty( $expiration->expiration ) ? $expiration->expiration : date( 'Y-m-d H:i:s' ) ); ?>"/>
 									<input type="reset" name="reset" class="button" onClick="return showCalendar('expiration', 'y-mm-dd');" value="..." title="<?php echo _AEC_USER_RESET_EXP_DATE; ?>" />
@@ -610,29 +612,33 @@ class HTML_AcctExp {
 									<?php
 									switch( $subscription->status ) {
 										case 'Excluded':
-											$icon = "cut_red.png";
+											$icon = 'cut_red.png';
 											break;
 											case 'Trial':
 											case 'Pending':
-											$icon = "star.png";
+											$icon 	= 'star.png';
+											$status	= _AEC_CMN_EXCLUDED;
 											break;
 										case 'Active':
-											$icon = "tick.png";
+											$icon	= 'tick.png';
+											$status	= _AEC_CMN_ACTIVE;
 											break;
 										case 'Cancel':
-											$icon = "exclamation.png";
+											$icon	= 'exclamation.png';
+											$status	= _AEC_CMN_CANCEL_STORNO;
 											break;
 										case 'Expired':
 										case 'Closed':
-											$icon = "cancel.png";
+											$icon	= 'cancel.png';
+											$status	= _AEC_CMN_EXPIRED_CLOSED;
 											break;
 									} ?>
 									&nbsp;
-									<?php echo aecHTML::Icon($icon); ?>&nbsp;<?php echo $subscription->status; ?></strong>
+									<?php echo aecHTML::Icon( $icon, $status ); ?>&nbsp;<?php echo $status; ?></strong>
 								</p>
 								<p>
 									<?php echo _AEC_USER_PAYMENT_PROC; ?>:&nbsp;
-									<strong><?php echo aecHTML::Icon( 'money.png' ); ?>&nbsp;<?php echo $subscription->type; ?></strong>
+									<strong><?php echo aecHTML::Icon( 'money.png', _AEC_USER_PAYMENT_PROC ); ?>&nbsp;<?php echo $subscription->type; ?></strong>
 								</p>
 								<table>
 									<tr>
@@ -1431,7 +1437,36 @@ class HTML_AcctExp {
 		<?php
 		$k = 0;
 		for( $i=0, $n=count( $rows ); $i < $n; $i++ ) {
-			$row = &$rows[$i]; ?>
+			$row = &$rows[$i];
+
+				switch( $row->visible ) {
+					case '1':
+						$vaction	= 'invisibleSubscriptionPlan';
+						$vicon		= 'eye.png';
+						$vtext		= _PAYPLAN_VISIBLE;
+						break;
+
+					case '0':
+						$vaction	= 'visibleSubscriptionPlan';
+						$vicon		= 'cancel.png';
+						$vtext		= _AEC_CMN_INVISIBLE;
+						break;
+				}
+
+				switch( $row->active ) {
+					case '1':
+						$aaction	= 'unpublishSubscriptionPlan';
+						$aicon		= 'accept.png';
+						$atext		= _AEC_CMN_PUBLISHED;
+						break;
+
+					case '0':
+						$aaction	= 'publishSubscriptionPlan';
+						$aicon		= 'cancel.png';
+						$atext		= _AEC_CMN_NOT_PUBLISHED;
+						break;
+				}
+				?>
 				<tr class="row<?php echo $k; ?>">
 					<td align="center"><?php echo $pageNav->rowNumber( $i ); ?></td>
 					<td align="right"><?php echo $row->id; ?></td>
@@ -1442,13 +1477,13 @@ class HTML_AcctExp {
 						echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
 					</td>
 					<td align="center">
-						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $row->active ? 'unpublishSubscriptionPlan' : 'publishSubscriptionPlan'; ?>')">
-							<?php echo aecHTML::Icon( $row->active ? 'accept.png' : 'cancel.png' ); ?>
+						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $aaction; ?>')">
+							<?php echo aecHTML::Icon( $aicon, $atext ); ?>
 						</a>
 					</td>
 					<td align="center">
-						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo ($row->visible) ? 'invisibleSubscriptionPlan' : 'visibleSubscriptionPlan'; ?>')">
-							<?php echo aecHTML::Icon( $row->visible ? 'eye.png' : 'cancel.png' ); ?>
+						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $vaction; ?>')">
+							<?php echo aecHTML::Icon( $vicon, $vtext ); ?>
 						</a>
 					</td>
 					<td align="right"><?php echo $pageNav->orderUpIcon( $i, true, 'orderplanup' ); ?></td>
@@ -2128,7 +2163,7 @@ class HTML_AcctExp {
 			if( !empty( $mosConfig_offset_user ) ) {
 				$timeOffset = $mosConfig_offset_user * 3600;
 			}else{
-				global $mosConfig_offset;	
+				global $mosConfig_offset;
 				$timeOffset = $mosConfig_offset * 3600;
 			}
 
