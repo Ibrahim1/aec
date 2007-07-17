@@ -2,20 +2,20 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_example {
+class mi_communitybuilder {
 
-	function checkInstallation () {
-		return true;
-	}
+	function Info () {
+		$info = array();
+		$info['name'] = _AEC_MI_NAME_COMMUNITYBUILDER;
+		$info['desc'] = _AEC_MI_DESC_COMMUNITYBUILDER;
 
-	function install () {
-		return;
+		return $info;
 	}
 
 	function Settings ( $params ) {
 		$settings = array();
-		$settings['param_name1'] = array("inputA", "Name", "description");
-		$settings['param_name2'] = array("inputD", "SET", "description2");
+		$settings['approve'] = array( 'list_yesno' );
+		$settings['unapprove_exp'] = array( 'list_yesno' );
 
 		return $settings;
 	}
@@ -24,15 +24,27 @@ class mi_example {
 	}
 
 	function expiration_action($params, $userid, $plan) {
+		global $database;
+
+		if( $params['unapprove_exp'] ) {
+			$query = 'UPDATE #__comprofiler'
+			.' SET approved = \'0\''
+			.' WHERE user_id = \'' . (int) $userid . '\'';
+			$database->setQuery( $query );
+			$database->query() or die( $database->stderr() );
+		}
 	}
 
 	function action($params, $userid, $plan) {
-	}
+		global $database;
 
-	function on_userchange_action($params, $row, $post, $trace) {
-	}
-
-	function delete($params) {
+		if( $params['approve'] ) {
+			$query = 'UPDATE #__comprofiler'
+			.' SET approved = \'1\''
+			.' WHERE user_id = \'' . (int) $userid . '\'';
+			$database->setQuery( $query );
+			$database->query() or die( $database->stderr() );
+		}
 	}
 
 }

@@ -154,4 +154,18 @@ define( '_MI_MI_VIRTUEMART_SET_SHOPPER_GROUP_EXP_NAME',		'Set group Expiration' 
 define( '_MI_MI_VIRTUEMART_SET_SHOPPER_GROUP_EXP_DESC',		'Choose Yes if you want this MI to set the Shopper Group when the calling payment plan expires.' );
 define( '_MI_MI_VIRTUEMART_SHOPPER_GROUP_EXP_NAME',	'Expiration Shopper group' );
 define( '_MI_MI_VIRTUEMART_SHOPPER_GROUP_EXP_DESC',	'The VirtueMart Shopper group that you want the user to be in when the subscription runs out.' );
+
+// Joomlauser
+define( '_AEC_MI_NAME_JOOMLAUSER',		'Joomla User' );
+define( '_AEC_MI_DESC_JOOMLAUSER',		'Actions that affect the joomla user account' );
+define( '_MI_MI_JOOMLAUSER_ACTIVATE_NAME',			'Activate' );
+define( '_MI_MI_JOOMLAUSER_ACTIVATE_DESC',			'Setting this to "Yes" will unblock a user and clean the activation code' );
+
+// CommunityBuilder
+define( '_AEC_MI_NAME_COMMUNITYBUILDER',		'Community Builder' );
+define( '_AEC_MI_NAME_COMMUNITYBUILDER',		'Actions that affect the Community Builder user account' );
+define( '_MI_MI_COMMUNITYBUILDER_APPROVE_NAME',			'Approve' );
+define( '_MI_MI_COMMUNITYBUILDER_APPROVE_DESC',			'Carry out an Admin Approval when this MI is triggered.' );
+define( '_MI_MI_COMMUNITYBUILDER_RESET_APPROVAL_NAME',	'Reset Approval' );
+define( '_MI_MI_COMMUNITYBUILDER_RESET_APPROVAL_DESC',	'Set the Admin Approval of a user to "No" when expired.' );
 ?>

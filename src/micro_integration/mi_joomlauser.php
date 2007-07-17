@@ -2,20 +2,19 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_example {
+class mi_joomlauser {
 
-	function checkInstallation () {
-		return true;
-	}
+	function Info () {
+		$info = array();
+		$info['name'] = _AEC_MI_NAME_JOOMLAUSER;
+		$info['desc'] = _AEC_MI_DESC_JOOMLAUSER;
 
-	function install () {
-		return;
+		return $info;
 	}
 
 	function Settings ( $params ) {
 		$settings = array();
-		$settings['param_name1'] = array("inputA", "Name", "description");
-		$settings['param_name2'] = array("inputD", "SET", "description2");
+		$settings['activate'] = array( 'list_yesno' );
 
 		return $settings;
 	}
@@ -27,12 +26,18 @@ class mi_example {
 	}
 
 	function action($params, $userid, $plan) {
+		global $database;
+
+		if( $params['activate'] ) {
+			$query = 'UPDATE #__users'
+			.' SET block = \'0\', activation = \'\''
+			.' WHERE id = \'' . (int) $userid . '\'';
+			$database->setQuery( $query );
+			$database->query() or die( $database->stderr() );
+		}
 	}
 
 	function on_userchange_action($params, $row, $post, $trace) {
-	}
-
-	function delete($params) {
 	}
 
 }
