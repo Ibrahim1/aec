@@ -1198,40 +1198,51 @@ function com_install() {
 
 		// Code borrowed from VirtueMart
 		// Workaround for Window$
+		/*
 		if( strstr( $mosConfig_absolute_path , ':' ) ) {
 		 	$path_begin = substr( $mosConfig_absolute_path, strpos( $mosConfig_absolute_path , ':' ) + 1, strlen($mosConfig_absolute_path ) );
 		 	$mosConfig_absolute_path = str_replace( "//", "/", $path_begin );
 		}
+		*/
 
 		// Now let's re-declare the paths for Window$
 		// mic: needed ???
+		/*
 		$frontend_dir	= $mosConfig_absolute_path . '/components/com_acctexp/';
 		$frontend_file	= $mosConfig_absolute_path . '/components/com_acctexp/frontend_files.tar.gz';
 		$admin_dir		= $mosConfig_absolute_path . '/administrator/components/com_acctexp/';
 		$admin_file		= $mosConfig_absolute_path . '/administrator/components/com_acctexp/admin_files.tar.gz';
+		*/
 
 		// dirs
-		$dir0			= $mosConfig_absolute_path . '/administrator/components/com_acctexp/';			// admin
-		$dir1			= $mosConfig_absolute_path . '/components/com_acctexp/';						// user
-		$dir2			= $mosConfig_absolute_path . '/administrator/components/com_acctexp/install/';	// generic install dir
+		$dir0			= $mosConfig_absolute_path . '/administrator/components/com_acctexp/';	// admin
+		$dir1			= $mosConfig_absolute_path . '/components/com_acctexp/';				// user
+		$dir2			= $mosConfig_absolute_path . '/administrator/components/';				// generic components dir
 
 		$files = array();
 		// icons
-		$files[] = array( $dir1, 'images/cc_icons/cc_icons.tar.gz',			'images/cc_icons/' );
-		$files[] = array( $dir1, 'images/gateway_buttons.tar.gz',			'images/' );
-		$files[] = array( $dir1, 'images/gateway_logos.tar.gz',				'images/' );
 		$files[] = array( $dir0, 'images/icons/backend_icons.tar.gz',		'images/icons/' );
 		$files[] = array( $dir0, 'images/icons/silk_icons.tar.gz',			'images/icons/' );
 		$files[] = array( $dir0, 'images/backend_gfx/backend_gfx.tar.gz',	'images/backend_gfx/' );
-		// joomfish (check first if joomfish exists)
-		if( file_exists( $mosConfig_absolute_path . '/administrator/components/com_joomfish/admin_joomfish.php' ) ) {
-			$xmlFiles = $mosConfig_absolute_path . '/administrator/components/com_acctexp/install/';
-			if( file_exists( $xmlFiles . 'jf_content_elements_aec.' . _AEC_LANGUAGE . '.tar.gz' ) ) {
-				$xmlInst = $xmlFiles . 'jf_content_elements_aec.' . _AEC_LANGUAGE . '.tar.gz';
+		$files[] = array( $dir1, 'images/cc_icons/cc_icons.tar.gz',			'images/cc_icons/' );
+		$files[] = array( $dir1, 'images/gateway_buttons.tar.gz',			'images/' );
+		$files[] = array( $dir1, 'images/gateway_logos.tar.gz',				'images/' );
+
+		// check if joomfish (joomla) or nokkaew (mambo) exists)
+		$translation = false;
+		if( file_exists( $mosConfig_absolute_path . '/administrator/components/com_joomfish/admin.joomfish.php' ) ) {
+			$translation = 'joomfish';
+		}elseif( file_exists( $mosConfig_absolute_path . '/administrator/components/com_nokkaew/admin.nokkaew.php' ) ) {
+			$translation = 'nokkaew';
+		}
+
+		if( $translation ) {
+			if( file_exists( $dir2 . 'com_acctexp/install/jf_content_elements_aec.' . _AEC_LANGUAGE . '.tar.gz' ) ) {
+				$xmlInst = 'com_acctexp/install/jf_content_elements_aec.' . _AEC_LANGUAGE . '.tar.gz';
 			}else{
-				$xmlInst = $xmlFiles . 'jf_content_elements_aec.en.tar.gz';
+				$xmlInst = 'com_acctexp/install/jf_content_elements_aec.en.tar.gz';
 			}
-			$files[] = array( $dir2, $xmlInst, 'administrator/components/com_joomfish/contentelements/' );
+			$files[] = array( $dir2, $xmlInst, 'com_' . $translation . '/contentelements/' );
 		}
 
 		foreach( $files as $file ) {
