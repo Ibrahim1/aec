@@ -1483,6 +1483,16 @@ class HTML_AcctExp {
 						$atext		= _AEC_CMN_NOT_PUBLISHED;
 						break;
 				}
+				
+				if( !is_null( $row->desc ) ) {
+					$description = strip_tags( $row->desc );
+					if( strlen( $description ) > 50 ) {
+						$description = substr( $description, 0, 50) . ' ...';
+					}
+				}else{
+					$description = '';
+				}
+				
 				?>
 				<tr class="row<?php echo $k; ?>">
 					<td align="center"><?php echo $pageNav->rowNumber( $i ); ?></td>
@@ -1491,7 +1501,7 @@ class HTML_AcctExp {
 					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editSubscriptionPlan')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $row->name; ?></a></td>
 					<td  align="left">
 						<?php
-						echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
+						echo $description; ?>
 					</td>
 					<td align="center">
 						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $aaction; ?>')">
