@@ -156,16 +156,16 @@ define( '_MI_MI_VIRTUEMART_SHOPPER_GROUP_EXP_NAME',	'Gruppe' );
 define( '_MI_MI_VIRTUEMART_SHOPPER_GROUP_EXP_DESC',	'Die VirtueMart-Gruppe definieren welche nach Aboablauf g&uuml;ltig sein soll' );
 
 // Joomlauser
-define( '_AEC_MI_NAME_JOOMLAUSER',		'Joomla Benutzer' );
-define( '_AEC_MI_DESC_JOOMLAUSER',		'Aktionen die das Joomla Benutzerkonto betreffen.' );
+define( '_AEC_MI_NAME_JOOMLAUSER',					'Joomla Benutzer' );
+define( '_AEC_MI_DESC_JOOMLAUSER',					'Aktionen die das Joomla Benutzerkonto betreffen.' );
 define( '_MI_MI_JOOMLAUSER_ACTIVATE_NAME',			'Aktivieren' );
 define( '_MI_MI_JOOMLAUSER_ACTIVATE_DESC',			'Mit "Ja" wird der Benutzer automatisch aktiviert, braucht also keinen Aktivierungslink mehr zu benutzen.' );
 
 // CommunityBuilder
-define( '_AEC_MI_NAME_COMMUNITYBUILDER',		'Community Builder' );
-define( '_AEC_MI_NAME_COMMUNITYBUILDER',		'Aktionen die das Community Builder Benutzerkonto betreffen.' );
+define( '_AEC_MI_NAME_COMMUNITYBUILDER',				'Community Builder' );
+define( '_AEC_MI_DESC_COMMUNITYBUILDER',				'Aktionen das Community-Builder-Benutzerkonto betreffend' );
 define( '_MI_MI_COMMUNITYBUILDER_APPROVE_NAME',			'Admin Freigabe' );
-define( '_MI_MI_COMMUNITYBUILDER_APPROVE_DESC',			'Setzt die Freigabe durch den Admin wenn die MI aufgerufen wird.' );
+define( '_MI_MI_COMMUNITYBUILDER_APPROVE_DESC',			'Setzt die Freigabe durch den Admin wenn diese Integration aufgerufen wird.' );
 define( '_MI_MI_COMMUNITYBUILDER_RESET_APPROVAL_NAME',	'Admin Freigabe zur&uuml;cknehmen' );
-define( '_MI_MI_COMMUNITYBUILDER_RESET_APPROVAL_DESC',	'Setzt die Admin-Freigabe wieder auf "Nein" zurück wenn die Mitgliedschaft abl&auml;uft.' );
+define( '_MI_MI_COMMUNITYBUILDER_RESET_APPROVAL_DESC',	'Setzt die Admin-Freigabe wieder auf "Nein" zur&uuml;ck wenn die Mitgliedschaft abl&auml;uft.' );
 ?>
