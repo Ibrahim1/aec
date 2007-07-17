@@ -40,33 +40,22 @@ class mi_virtuemart {
 		$settings['lists']['shopper_group_exp'] = mosHTML::selectList( $sg, 'shopper_group_exp', 'size="4"', 'value', 'text',
 												$params['shopper_group_exp'] );
 
-		$settings['set_shopper_group']			= array( 'list_yesno' );
-		$settings['shopper_group']				= array( 'list' );
-		$settings['set_shopper_group_exp']		= array( 'list_yesno' );
-		$settings['shopper_group_exp']			= array( 'list' );
+		$settings['set_shopper_group']		= array( 'list_yesno' );
+		$settings['shopper_group']			= array( 'list' );
+		$settings['set_shopper_group_exp']	= array( 'list_yesno' );
+		$settings['shopper_group_exp']		= array( 'list' );
+		$settings['create_account']			= array( 'list_yesno' );
 
 		return $settings;
 	}
 
 	function expiration_action( $params, $userid, $plan ) {
-		global $database;
-
 		if( $params['set_shopper_group_exp'] ) {
-			// Check vendor relationship
-			$query = 'SELECT vendor_id'
-			. ' FROM #__vm_auth_user_vendor'
-			. ' WHERE user_id = \'' . $userid . '\''
-			;
-			$database->setQuery( $query );
-			$vendor = $database->loadResult();
-
-			// Insert Shopper -ShopperGroup - Relationship
-			$query  = 'UPDATE #__vm_shopper_vendor_xref'
-			. ' SET shopper_group_id = \'' . $params['shopper_group_exp'] . '\''
-			. ' WHERE user_id = \'' . $userid . '\''
-			;
-			$database->setQuery( $query );
-			$database->query();
+			if( $this->checkVMuserexists( $userid ) ) {
+				$this->updateVMuserSgroup( $userid, $params['shopper_group_exp'] );
+			} elseif( $params['create_account'] ) {
+				$this->createVMuser( $userid, $params['shopper_group_exp'] );
+			}
 
 			return true;
 		}else{
@@ -78,26 +67,94 @@ class mi_virtuemart {
 		global $database;
 
 		if( $params['set_shopper_group'] ) {
-			// Check vendor relationship
-			$query = 'SELECT vendor_id'
-			. ' FROM #__vm_auth_user_vendor'
-			. ' WHERE user_id = \'' . $userid . '\''
-			;
-			$database->setQuery( $query );
-			$vendor = $database->loadResult();
-
-			// Insert Shopper -ShopperGroup - Relationship
-			$query  = 'UPDATE #__vm_shopper_vendor_xref'
-			. ' SET shopper_group_id = \'' . $params['shopper_group'] . '\''
-			. ' WHERE user_id = \'' . $userid . '\''
-			;
-			$database->setQuery( $query );
-			$database->query();
+			if( $this->checkVMuserexists( $userid ) ) {
+				$this->updateVMuserSgroup( $userid, $params['shopper_group'] );
+			} elseif( $params['create_account'] ) {
+				$this->createVMuser( $userid, $params['shopper_group'] );
+			}
 
 			return true;
 		}else{
 			return false;
 		}
+	}
+
+	function checkVMuserexists( $userid ) {
+		global $database;
+
+		$query  = 'SELECT id'
+		. ' FROM #__vm_user_info'
+		. ' WHERE user_id = \'' . $userid . '\''
+		;
+		$database->setQuery( $query );
+		return $database->loadResult();
+	}
+
+	function updateVMuserSgroup( $userid, $shoppergroup ) {
+		global $database;
+
+		$query  = 'UPDATE #__vm_shopper_vendor_xref'
+		. ' SET shopper_group_id = \'' . $shoppergroup . '\''
+		. ' WHERE user_id = \'' . $userid . '\''
+		;
+		$database->setQuery( $query );
+		$database->query();
+	}
+
+	function createVMuser( $userid, $shoppergroup ) {
+		global $database;
+
+		$metaUser = new metaUser( $database );
+
+		$name = explode( ' ', $metaUser->cmsUser->name );
+		$namount = count( $name ); 
+		if( $namount >= 3 ) {
+			$firstname = $name[0]; 
+			$mname = '';
+			for( $i=0; $i<$namount; $i++ ) {
+				$mname[] = $name[$i];
+			}
+			$middlename = implode( ' ', $mname );
+			$lastname = $name[$namount];
+		}elseif( count( $name ) == 2 ) {
+			$firstname = $name[0]; 
+			$middlename = '';
+			$lastname = $name[2];
+		}else{
+			$firstname = $name[0]; 
+			$middlename = '';
+			$lastname = '';
+		}
+
+		$numberofrows	= 1;
+		while( $numberofrows ) {
+			// seed random number generator
+			srand( (double) microtime() * 10000 );
+			$inum =	strtolower( substr( base64_encode( md5( rand() ) ), 0, 32 ) );
+			// Check if already exists
+			$query = 'SELECT count(*)'
+			. ' FROM #__vm_user_info'
+			. ' WHERE user_info_id = \'' . $inum . '\''
+			;
+			$database->setQuery( $query );
+			$numberofrows = $database->loadResult();
+		}
+
+		// Create Useraccount
+		$query  = 'INSERT INTO #__vm_user_info'
+		. ' (user_info_id, user_id, address_type, last_name, first_name, middle_name, user_email, cdate, mdate, perms, bank_account_type)'
+		. ' VALUES(\'' . $inum . '\', \'' . $userid . '\', \'BT\', \'' . $lastname . '\', \'' . $firstname . '\', \'' . $middlename . '\', \'' . $metaUser->cmsUser->email . '\', \'' . time() . '\', \'' . time() . '\', \'shopper\', \'Checking\')'
+		;
+		$database->setQuery( $query );
+		$database->query();
+
+		// Create Shopper -ShopperGroup - Relationship
+		$query  = 'INSERT INTO #__vm_shopper_vendor_xref'
+		. ' (user_id, shopper_group_id)'
+		. ' VALUES(\'' . $userid . '\', \'' . $shoppergroup . '\')'
+		;
+		$database->setQuery( $query );
+		$database->query();
 	}
 }
 ?>
