@@ -167,7 +167,7 @@ class mi_mosets_tree {
 		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_mtree/mtree.php';
 		$hacks[$n]['read']				=	'# OK, you can edit';
 		$hacks[$n]['insert']			=	$edithack . "\n"  . $hacks[$n]['read'];
---
+
 		$n = 'mtree2';
 		$hacks[$n]['name']				=	'mtree.php #2';
 		$hacks[$n]['desc']				=	_AEC_MI_HACK4_MOSETS;
