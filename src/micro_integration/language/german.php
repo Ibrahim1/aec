@@ -106,7 +106,7 @@ define( '_AEC_MI_DIV3_IDEV',		'und Wert =' );
 
 // MosetsTree
 define( '_AEC_MI_NAME_MOSETS',		'MosetsTree' );
-define( '_AEC_MI_DESC_MOSETS',		'Anzahl der maximalen Links ein Abonnent ver&ouml;ffentlichen darf' );
+define( '_AEC_MI_DESC_MOSETS',		'Anzahl der maximalen Eintr&auml;ge, die ein Abonnent ver&ouml;ffentlichen darf' );
 define( '_MI_MI_MOSETS_TREE_SET_LISTINGS_NAME',		'Eintr&auml;ge setzen' );
 define( '_MI_MI_MOSETS_TREE_SET_LISTINGS_DESC',		'Die Anzahl der Eintr&auml;ge, die der Benutzer einstellen darf wird auf diesen Wert (zur&uuml;ck)gesetzt' );
 define( '_MI_MI_MOSETS_TREE_ADD_LISTINGS_NAME',		'Eintr&auml;ge hinzuf&uuml;gen' );
@@ -114,7 +114,8 @@ define( '_MI_MI_MOSETS_TREE_ADD_LISTINGS_DESC',		'Anzahl der Eintr&auml;ge, die 
 define( '_AEC_MI_HACK1_MOSETS',		'Keine weiteren Eintr&auml;ge m&ouml;glich' );
 define( '_AEC_MI_HACK2_MOSETS',		'Registrierung erforderlich' );
 define( '_AEC_MI_HACK3_MOSETS',		'L&auml;sst keine weiteren neuen Eintr&auml;ge als die erlaubte Maximalanzahl zu' );
-define( '_AEC_MI_HACK4_MOSETS',		'L&auml;sst keine weiteren Listings als die erlaubte Maximalanzahl zu' );
+define( '_AEC_MI_HACK4_MOSETS',		'L&auml;sst beim Speichern eines Eintr&auml;ge keine weiteren Eintr&auml;ge als die erlaubte Maximalanzahl zu. Falls Eintr&auml;ge vom Admin best&auml;tigt werden m&uuml;ssen, bitte ausserdem den n&auml;chsten Hack nutzen.' );
+define( '_AEC_MI_HACK5_MOSETS',		'Wenn Eintr&auml;ge von Admins best&auml;tigt werden m&uuml;ssen, wird dieser Hack bei der Ausf&uuml;hrung dieser Aktion die erlaubte Maximalanzahl &uuml;berpr&uuml;fen. Falls der Benutzer weitere Eintr&auml;ge anlegen darf, werden diese freigegeben und der Z&auml;hler entsprechend ge&auml;ndert.' );
 define( '_AEC_MI_DIV1_MOSETS',		'Es sind noch <strong>%s</strong> Listings m&ouml;glich' );
 
 // MySQL Query

@@ -114,7 +114,8 @@ define( '_MI_MI_MOSETS_TREE_ADD_LISTINGS_DESC',		'Input the amount of listings y
 define( '_AEC_MI_HACK1_MOSETS',		'No Listings left' );
 define( '_AEC_MI_HACK2_MOSETS',		'Registration and correct Subscription Required!' );
 define( '_AEC_MI_HACK3_MOSETS',		'Prevent user from creating a new listing if he or she has run out of granted listings' );
-define( '_AEC_MI_HACK4_MOSETS',		'Prevent user from saving a new listing if he or she has run out of granted listings' );
+define( '_AEC_MI_HACK4_MOSETS',		'Prevent user from saving a new listing if he or she has run out of granted listings. Also use a listing if the user has one left and it does not need to be approved - if it does, his listings count will be updated on the following hack.' );
+define( '_AEC_MI_HACK5_MOSETS',		'Check for allowed listings and update the Used Listings counter when approving listings in the backend (see above for reference).' );
 define( '_AEC_MI_DIV1_MOSETS',		'You have <strong>%s</strong> listings left in our directory.' );
 
 // MySQL Query

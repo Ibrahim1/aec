@@ -88,7 +88,8 @@ class mi_remository {
 
 		$hacks = array();
 
-		$downloadhack =	'global $my, $mosConfig_absolute_path;' . "\n"
+		$downloadhack =	'// AEC HACK remositorystartdown START' . "\n"
+		. 'global $my, $mosConfig_absolute_path;' . "\n"
 		. 'include( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_remository.php\' );' . "\n\n"
 		. '$restrictionhandler = new remository_restriction( $database );' . "\n"
 		. '$restrict_id = $restrictionhandler->getIDbyUserID( $my->id );' . "\n"
@@ -97,7 +98,9 @@ class mi_remository {
 		. '	mosRedirect( \'index.php?option=com_remository\', ' . _AEC_MI_HACK1_REMOS . ' );' . "\n"
 		. '}else{' . "\n"
 		. '	$restrictionhandler->useDownload();' . "\n"
-		. '}' . "\n";
+		. '}' . "\n"
+		. '// AEC HACK remositorystartdown END' . "\n"
+		;
 
 		$n = 'remositorystartdown';
 		$hacks[$n]['name']				=	'com_remository_startdown.php';

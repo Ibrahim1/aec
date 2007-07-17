@@ -91,7 +91,8 @@ class mi_docman {
 
 		$hacks = array();
 
-		$downloadhack =	'global $my, $mosConfig_absolute_path;' . "\n"
+		$downloadhack =	'// AEC HACK docmandownloadphp START' . "\n"
+		. 'global $my, $mosConfig_absolute_path;' . "\n"
 		. 'include( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_docman.php\';' . "\n\n"
 		. '$restrictionhandler = new docman_restriction( $database );' . "\n"
 		. '$restrict_id = $restrictionhandler->getIDbyUserID( $my->id );' . "\n"
@@ -101,6 +102,7 @@ class mi_docman {
 		. '}else{' . "\n"
 		. "\t" . '$restrictionhandler->useDownload();' . "\n"
 		. '}' . "\n"
+		. '// AEC HACK docmandownloadphp END' . "\n"
 		;
 
 		$n = 'docmandownloadphp';

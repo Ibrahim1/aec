@@ -38,10 +38,6 @@ define( '_CFG_GENERAL_CUSTOMNOTALLOWED_NAME',	'Link zur Nichterlaubtseite:' );
 // hacks/install >> ATTENTION: MUST BE HERE AT THIS POSITION, needed later!
 define( '_AEC_SPEC_MENU_ENTRY',					'Mein Abonnement' );
 
-// cfg
-define( '_CFG_GENERAL_ACTIVATE_PAID_NAME',		'Aktiviere Bezahlabos' );
-define( '_CFG_GENERAL_ACTIVATE_PAID_DESC',		'Automatisch aktive Bezahlabos anzeigen, anstatt der Anforderung eines Aktivierungscodes' );
-
 // common
 define( '_DESCRIPTION_PAYSIGNET',				'Zahlungen mit allen g&auml;ngigen Kreditkarten und Bank&uuml;berweisung' );
 define( '_AEC_CONFIG_SAVED',					'Konfiguration erfolgreich gesichert' );
@@ -134,7 +130,7 @@ define( '_AEC_HEAD_LOG',						'Logdatei' );
 define( '_AEC_HEAD_CSS_EDITOR',					'CSS Editor' );
 define( '_AEC_HEAD_MICRO_INTEGRATION',			'Integration' );
 define( '_AEC_HEAD_ACTIVE_SUBS',				'Aktive Abonnenten' );
-define( '_AEC_HEAD_EXCLUDED_SUBS',				'Ausgeschlossene Abonnenten' );
+define( '_AEC_HEAD_EXCLUDED_SUBS',				'Ausgenommene Benutzer' );
 define( '_AEC_HEAD_EXPIRED_SUBS',				'Abgelaufene Abonnenten' );
 define( '_AEC_HEAD_PENDING_SUBS',				'Wartende Abonnenten' );
 define( '_AEC_HEAD_CANCELLED_SUBS',				'Stornierte Abonnenten' );
@@ -157,7 +153,7 @@ define( '_AEC_HACKS_NOTICE_DESC',				'Aus Sicherheitsgr&uuml;nden und damit AEC 
 define( '_AEC_HACKS_NOTICE_DESC2',				'<strong>Alle wichtigen Funktions&auml;nderungen sind mit einem Pfeil und Ausrufzeichen markiert!</strong>' );
 define( '_AEC_HACKS_NOTICE_DESC3',				'Die nachfolgenden Anzeigen sind <strong>nicht</strong> lt. der Nummerierung (#1, #3, #6, usw.) erforderlich.<br />Falls keine Nummer dabei steht, sind das wahrscheinlich veraltete (fr&uuml;here) &Auml;nderungen welche korrigiert werden m&uuml;ssen.' );
 define( '_AEC_HACKS_NOTICE_JACL',				'JACL Anmerkung' );
-define( '_AEC_HACKS_NOTICE_JACL_DESC',			'Falls geplant ist Erweiterungen wie JACL-Plus zu installieren, <strong>m&uuml;ssen die AEC-&Auml;nderungen danach durchgef&uuml;hrt werden!</strong>, da solche Komponenten eigene, weitere &Auml;nderungen vornehmen!' );
+define( '_AEC_HACKS_NOTICE_JACL_DESC',			'Falls geplant ist Erweiterungen wie JACL-Plus zu installieren (welche ebenfalls Dateien &auml;ndern), <strong>m&uuml;ssen die AEC-&Auml;nderungen danach durchgef&uuml;hrt werden!</strong>' );
 
 define( '_AEC_HACKS_MENU_ENTRY',				'Men&uuml;eintrag' );
 define( '_AEC_HACKS_MENU_ENTRY_DESC',			'F&uuml;gt dem Benutzermen&uuml; den neuen Eintrag <strong>' . _AEC_SPEC_MENU_ENTRY . '</strong> hinzu.<br />Damit kann dieser Benutzer sowohl die bisherigen Abos und Rechnungen, als auch neue/andere Abos bestellen/erneuern.' );
@@ -199,7 +195,7 @@ define( '_AEC_INST_NOTE_UPGRADE',				'<strong>Falls ein bestehendes AEC upgedate
 define( '_AEC_INST_NOTE_HELP',					'Um die wichtigsten Antworten auf Fragen bereit zu haben kann jederzeit die interne %s aufgerufen werden (Aufruf auch von der AEC-Verwaltung aus). Dort stehen auch weitere Tips zur nachfolgenden Einrichtung von AEC' );
 define( '_AEC_INST_NOTE_HELP_LTEXT',			'Hilfe' );
 define( '_AEC_INST_HINTS',						'Hinweise' );
-define( '_AEC_INST_HINT1',						'Wir w&uuml;rden uns freuen wenn das <a href="%s" target="_blank">Forum</a> besucht wird. Neben Diskussionen k&ouml;nnen auch weitere Tips, Anregungen usw. dort nachgelesen werden' );
+define( '_AEC_INST_HINT1',						'Bitte besuchen Sie auch unser <a href="%s" target="_blank">Forum</a>. Neben Diskussionen k&ouml;nnen auch weitere Tips, Anregungen usw. dort nachgelesen werden' );
 define( '_AEC_INST_HINT2',						'Auf alle F&auml;lle (und ganz speziell wenn AEC auf einer Liveseite eingesetzt wird), in Ruhe alle Einstellungen durchgehen, einen Testzugang f&uuml;r die diversen Bezahl-Gateways anlegen und diese ausgiebig testen!' );
 define( '_AEC_INST_ATTENTION',					'Immer die aktuellsten Programme von und f&uuml;r AEC einsetzen' );
 define( '_AEC_INST_ATTENTION1',					'Falls noch &auml;ltere AEC-Loginmodule in Verwendung sind, bitte deinstallieren und gegen die regul&auml;ren austauschen (egal ob Joomla, Mambo, CB, etc.)' );
@@ -282,8 +278,8 @@ define( '_AEC_CENTR_CLOSED',					'Beendet' );
 define( '_AEC_CENTR_SETTINGS',					'Einstellungen' );
 define( '_AEC_CENTR_EDIT_CSS',					'CSS Bearbeiten' );
 define( '_AEC_CENTR_V_INVOICES',				'Rechnungen' );
-define( '_AEC_CENTR_COUPONS',					'Einzel Gutscheine' );
-define( '_AEC_CENTR_COUPONS_STATIC',			'Gruppen Gutscheine' );
+define( '_AEC_CENTR_COUPONS',					'Gutscheine' );
+define( '_AEC_CENTR_COUPONS_STATIC',			'Feste Gutscheine' );
 define( '_AEC_CENTR_VIEW_HISTORY',				'Archiv' );
 define( '_AEC_CENTR_SPECIAL',					'Spezial' );
 define( '_AEC_CENTR_M_INTEGRATION',				'Integration' );
@@ -302,8 +298,8 @@ define( '_AEC_SEL_NOT_CONFIGURED',				'Ni. Konfiguriert / Neu' );
 
 // footer
 define( '_AEC_FOOT_TX_CHOOSING',				'Danke dass Sie sich f&uuml;r AEC - Account Expiration Control entschieden haben!' );
-define( '_AEC_FOOT_TX_GPL',						'Diese Komponente wurde entwickelt und ver&ouml;ffentlicht unter der <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank" title="GNU/GPL">GNU/GPL</a> von Helder Garcia, David Deutsch und dem Team von <a href="http://www.globalnerd.org" target="_blank" title="globalnerd.org">globalnerd.org</a>' );
-define( '_AEC_FOOT_TX_SUBSCRIBE',				'Weitere Features, professionelles Service, Updates, Handb&uuml;cher und Online Hilfe, einfach auf den Link oben klicken. Es hilft uns auch bei der weiteren Entwicklung!' );
+define( '_AEC_FOOT_TX_GPL',						'Diese Komponente wurde entwickelt und ver&ouml;ffentlicht unter der <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank" title="GNU/GPL">GNU/GPL</a> von Helder Garcia, David Deutsch und dem Team von <a href="https://globalnerd.org" target="_blank" title="globalnerd.org">globalnerd.org</a>' );
+define( '_AEC_FOOT_TX_SUBSCRIBE',				'Weitere Features, professionelles Service, Updates, Handb&uuml;cher und Online Hilfe, einfach auf den Link oben klicken. Es hilft uns vor allem auch bei der weiteren Entwicklung!' );
 define( '_AEC_FOOT_CREDIT',						'Bitte auch die %s lesen' );
 define( '_AEC_FOOT_CREDIT_LTEXT',				'Credits' );
 define( '_AEC_FOOT_VERSION_CHECK',				'Check auf neue Version' );
