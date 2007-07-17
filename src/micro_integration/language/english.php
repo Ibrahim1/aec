@@ -61,7 +61,8 @@ define( '_MI_MI_DOCMAN_GROUP_EXP_NAME',				'Set DocMan Group expiration' );
 define( '_MI_MI_DOCMAN_GROUP_EXP_DESC',				'Choose Yes if you want this MI to set the DocMan Group when the calling payment plan expires.' );
 define( '_MI_MI_DOCMAN_SET_GROUP_EXP_NAME',			'Expiration group' );
 define( '_MI_MI_DOCMAN_SET_GROUP_EXP_DESC',			'The DocMan group that you want the user to be in when the subscription runs out.' );
-define( '_AEC_MI_HACK1_DOCMAN',		'Build in a downloads restriction for DocMan, to be used with Micro Integrations.' );
+define( '_AEC_MI_HACK1_DOCMAN',						'Build in a downloads restriction for DocMan, to be used with Micro Integrations.' );
+define( '_AEC_MI_DOCMAN_NOCREDIT',					'We are terribly sorry: You have no downloads left.' );
 
 // email
 define( '_AEC_MI_NAME_EMAIL',		'Email' );

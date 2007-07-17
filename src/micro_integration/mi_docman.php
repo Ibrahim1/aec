@@ -97,18 +97,18 @@ class mi_docman {
 		. '$restrict_id = $restrictionhandler->getIDbyUserID( $my->id );' . "\n"
 		. '$restrictionhandler->load( $restrict_id );' . "\n\n"
 		. 'if (!$restrictionhandler->hasDownloadsLeft()) {' . "\n"
-		. "\t" . 'mosRedirect( \'index.php?option=com_docman\', _NO_CREDITS );' . "\n"
+		. "\t" . '$restrictionhandler->noDownloadsLeft();' . "\n"
 		. '}else{' . "\n"
 		. "\t" . '$restrictionhandler->useDownload();' . "\n"
 		. '}' . "\n"
 		;
 
-		$n = 'docmanstartdown';
-		$hacks[$n]['name']				=	'com_docman_startdown.php';
+		$n = 'docmandownloadphp';
+		$hacks[$n]['name']				=	'download.php';
 		$hacks[$n]['desc']				=	_AEC_MI_HACK1_DOCMAN;
 		$hacks[$n]['type']				=	'file';
-		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_docman/docman.php';
-		$hacks[$n]['read']				=	'//Update download count';
+		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_docman/includes_frontend/download.php';
+		$hacks[$n]['read']				=	'// If the remote host is not allowed';
 		$hacks[$n]['insert']			=	$downloadhack . "\n"  . $hacks[$n]['read'];
 
 		return $hacks;
@@ -236,7 +236,8 @@ class mi_docman {
 		$users = explode( ',', $database->loadResult() );
 
 		if( in_array( $userid, $users ) ) {
-			$users[] = $userid;
+			$key = array_search( $userid, $users );
+			unset( $users[$key] );
 
 			$query = 'UPDATE #__docman_groups'
 			. ' SET groups_members = \'' . implode( ',', $users ) . '\''
@@ -301,6 +302,22 @@ class docman_restriction extends mosDBTable {
 		} else {
 			return false;
 		}
+	}
+
+	function noDownloadsLeft () {
+
+		if( !defined( '_AEC_LANG_INCLUDED_MI' ) ) {
+			global $mainframe;
+
+			$langPathMI = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/micro_integration/language/';
+			if( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
+				include_once( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' );
+			}else{
+				include_once( $langPathMI . 'english.php' );
+			}
+		}
+
+		mosRedirect( 'index.php?option=com_docman', _AEC_MI_DOCMAN_NOCREDIT );
 	}
 
 	function useDownload () {

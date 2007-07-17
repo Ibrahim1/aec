@@ -61,7 +61,8 @@ define( '_MI_MI_DOCMAN_GROUP_EXP_NAME',				'DM-Gruppe bei Ablauf' );
 define( '_MI_MI_DOCMAN_GROUP_EXP_DESC',				'Auf "Ja" setzen, wenn die DocMan-Gruppe nach Abonnementablauf verwendet werden soll' );
 define( '_MI_MI_DOCMAN_SET_GROUP_EXP_NAME',			'DM-Gruppe definieren' );
 define( '_MI_MI_DOCMAN_SET_GROUP_EXP_DESC',			'Diejenige DocMan-Gruppe definieren welche nach Aboablauf g&uuml;ltig sein soll' );
-define( '_AEC_MI_HACK1_DOCMAN',		'Erstellt eine Downloadeinschr&auml;nkung f&uuml;r DocMan' );
+define( '_AEC_MI_HACK1_DOCMAN',						'Erstellt eine Downloadeinschr&auml;nkung f&uuml;r DocMan' );
+define( '_AEC_MI_DOCMAN_NOCREDIT',					'Es tut uns au&szlig;erordentlich leid, aber Sie haben keine verbleibenden Downloads &uuml;brig.' );
 
 // email
 define( '_AEC_MI_NAME_EMAIL',		'Email' );
