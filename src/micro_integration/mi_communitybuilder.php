@@ -12,9 +12,6 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 
 class mi_communitybuilder {
 
-	function checkInstallation () {
-		return false;
-	}
 	function Info () {
 		$info = array();
 		$info['name'] = _AEC_MI_NAME_COMMUNITYBUILDER;
