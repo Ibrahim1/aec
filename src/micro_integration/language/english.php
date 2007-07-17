@@ -162,8 +162,8 @@ define( '_MI_MI_JOOMLAUSER_ACTIVATE_NAME',			'Activate' );
 define( '_MI_MI_JOOMLAUSER_ACTIVATE_DESC',			'Setting this to "Yes" will unblock a user and clean the activation code' );
 
 // CommunityBuilder
-define( '_AEC_MI_NAME_COMMUNITYBUILDER',		'Community Builder' );
-define( '_AEC_MI_NAME_COMMUNITYBUILDER',		'Actions that affect the Community Builder user account' );
+define( '_AEC_MI_NAME_COMMUNITYBUILDER',				'Community Builder' );
+define( '_AEC_MI_DESC_COMMUNITYBUILDER',				'Actions that affect the Community Builder user account' );
 define( '_MI_MI_COMMUNITYBUILDER_APPROVE_NAME',			'Approve' );
 define( '_MI_MI_COMMUNITYBUILDER_APPROVE_DESC',			'Carry out an Admin Approval when this MI is triggered.' );
 define( '_MI_MI_COMMUNITYBUILDER_RESET_APPROVAL_NAME',	'Reset Approval' );
