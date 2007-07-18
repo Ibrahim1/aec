@@ -501,7 +501,7 @@ function help ( $option ) {
 	$diagonstic = array();
 
 	// Check for correct Global Settings:
-	$diagnostic['reachable']			= substr_count( $mainframe->getCfg( 'live_site' ), 'http://' );
+	$diagnostic['reachable']			= ( substr_count( $mainframe->getCfg( 'live_site' ), 'http://' ) || substr_count( $mainframe->getCfg( 'live_site' ), 'https://' ) );
 	$diagnostic['offline']				= $mainframe->getCfg( 'offline' );
 	$diagnostic['user_registration']	= $mainframe->getCfg( 'allowUserRegistration' );
 	$diagnostic['login_possible']		= $mainframe->getCfg( 'frontend_login' );
@@ -577,11 +577,6 @@ function help ( $option ) {
 
 	// Check for Modules and whether they are enabled
 	$modules = array();
-	$modules[] = array( 'mod_login',				'original_login',			'original_login_enabled' );
-	$modules[] = array( 'mod_cblogin',				'cb_login',					'cb_login_enabled' );
-	$modules[] = array( 'mod_cbelogin',				'cbe_login',				'cbe_login_enabled' );
-	$modules[] = array( 'mod_login-acctexp',		'aec_login',				'aec_login_enabled' );
-	$modules[] = array( 'mod_aec4cblogin',			'aeccb_login',				'aeccb_login_enabled' );
 	$modules[] = array( 'mod_comprofilermoderator',	'cb_comprofilermoderator', 'cb_comprofilermoderator_enabled' );
 
 	$mod_check = null;
@@ -669,12 +664,6 @@ function help ( $option ) {
 					_AEC_HELP_SER_SW_DIAG3_DESC2,
 					1
 				);
-/*
-			$diagnose[]	= array("registration.php File Permissions", !@$diagnostic['hack_registrationphp_permission'], 3, "The AEC has detected that your registration.php is not owned by the webserver.", "Access your webserver via ssh and go to the directory \"<yoursiteroot>/components/com_registration\". There, type in this command: \"chown wwwrun registration.php\".", 1);
-			if ($diagnostic['cb'] || ($diagnostic['cbe'])) {
-				$diagnose[]	= array("comprofiler.php File Permissions", !@$diagnostic['hack_comprofilerphp_permission'], 3, "The AEC has detected that your comprofiler.php is not owned by the webserver.", "Access your webserver via ssh and go to the directory \"<yoursiteroot>/components/com_comprofiler\". There, type in this command: \"chown wwwrun comprofiler.php\".", 1);
-			}
-*/
 			}else{
 			$diagnose[]	= array(
 				_AEC_HELP_SER_SW_DIAG4,
@@ -776,37 +765,7 @@ function help ( $option ) {
 		0,
 		1
 	);
-/*
-	if ($diagnostic['cb'] && !($diagnostic['cbe'])) {
-		$diagnose[]	= array("Community Builder", $diagnostic['cb'], 1, "The AEC has detected the Community Builder Component in your system and will consider this in the registration process.", 0, 1);
-		$diagnose[]	= array("comprofiler.php Hack", $diagnostic['hack_comprofilerphp'], 3, "This hack ensures that nobody uses the CB register function to create an account", "Go to the Hacks page and commit the hack.", 0);
-	} elseif ($diagnostic['cbe']) {
-		$diagnose[]	= array("Community Builder Enhanced", $diagnostic['cbe'], 1, "The AEC has detected the Community Builder Enhanced Component in your system and will consider this in the registration process.", 0, 1);
-		$diagnose[]	= array("comprofiler.php Hack", $diagnostic['hack_comprofilerphp'], 3, "This hack ensures that nobody uses the CB register function to create an account", "Go to the Hacks page and commit the hack.", 0);
-	}
 
-	if ($diagnostic['original_login']) {
-		if ($diagnostic['cb'] || $diagnostic['cbe']) {
-			$diagnose[] = array("Original joomla! Login", $diagnostic['original_login_enabled'], 3, "The original joomla! Login Module is still enabled - The AEC CB/CBE Login should be the only active login module!", "Please go to your module overview and unpublish the joomla! Login Module.", 1);
-		} else {
-			$diagnose[] = array("Original joomla! Login", $diagnostic['original_login_enabled'], 3, "The original joomla! Login Module is still enabled - The AEC Login should be the only active login module!", "Please go to your module overview and unpublish the joomla! Login Module.", 1);
-		}
-	}
-
-	if ($diagnostic['cb'] || $diagnostic['cbe']) {
-		if ($diagnostic['aeccb_login_enabled'] || !$diagnostic['aeccb_login']) {
-			$diagnose[] = array("AEC CB/CBE Login", $diagnostic['aeccb_login'], 3, "The AEC Login Module for CB/CBE is required to enable users to log in and register to your system in case you use CB or CBE.", "You need to download and install the AEC CB/CBE Login Module and replace the CB Login module with it!", 0);
-		} elseif (!$diagnostic['aeccb_login_enabled']) {
-			$diagnose[] = array("AEC CB/CBE Login Not Enabled!", $diagnostic['aeccb_login_enabled'], 3, "The AEC CB/CBE Login module has to be enabled to be used.", "Publish the module in your Site Module Screen.", 0);
-		}
-	} else {
-		if ($diagnostic['aec_login_enabled'] || !$diagnostic['aec_login']) {
-			$diagnose[] = array("AEC Login Module", $diagnostic['aec_login'], 3, "The AEC Login Module is required to enable users to log in and register to your system.", "You need to download and install the AEC Login Module and replace the joomla! Login module with it!", 0);
-		} elseif (!$diagnostic['aec_login_enabled']) {
-			$diagnose[] = array("AEC Login Not Enabled!", !$diagnostic['aec_login_enabled'], 3, "The AEC Login module has to be enabled to be used.", "Publish the module in your Site Module Screen.", 1);
-		}
-	}
-*/
 	if( $diagnostic['paypal'] ) {
 		$diagnose[]	= array(
 			_AEC_HELP_DIAG_PAYPAL_BUSS_ID,
