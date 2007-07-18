@@ -1059,7 +1059,7 @@ class HTML_AcctExp {
 								$icon_status = aecHTML::Icon( 'stop.png' );
 							} ?>
 							<div class="diagnose">
-								<img src="<?php echo $mosConfig_live_site;?>/administrator/components/com_acctexp/images/icons/aec_symbol_importance_<?php echo $importance; ?>.png" width="64" height="64" alt="" />
+								<img src="<?php echo $mosConfig_live_site;?>/administrator/components/com_acctexp/images/icons/aec_symbol_importance_<?php echo $importance; ?>.png" width="60" height="80" alt="" />
 								<h1 class="importance_<?php echo $importance; ?>"><?php echo $dia[0]; ?></h1>
 								<p class="notice_<?php echo $advice; ?>"><?php echo $icon_status; ?> <?php echo $dia[3]; ?></p>
 								<?php
