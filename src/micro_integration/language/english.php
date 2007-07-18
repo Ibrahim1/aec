@@ -172,6 +172,6 @@ define( '_AEC_MI_NAME_COMMUNITYBUILDER',				'Community Builder' );
 define( '_AEC_MI_DESC_COMMUNITYBUILDER',				'Actions that affect the Community Builder user account' );
 define( '_MI_MI_COMMUNITYBUILDER_APPROVE_NAME',			'Approve' );
 define( '_MI_MI_COMMUNITYBUILDER_APPROVE_DESC',			'Carry out an Admin Approval when this MI is triggered.' );
-define( '_MI_MI_COMMUNITYBUILDER_RESET_APPROVAL_NAME',	'Reset Approval' );
-define( '_MI_MI_COMMUNITYBUILDER_RESET_APPROVAL_DESC',	'Set the Admin Approval of a user to "No" when expired.' );
+define( '_MI_MI_COMMUNITYBUILDER_UNAPPROVE_EXP_NAME',	'Reset Approval' );
+define( '_MI_MI_COMMUNITYBUILDER_UNAPPROVE_EXP_DESC',	'Set the Admin Approval of a user to "No" when expired.' );
 ?>
