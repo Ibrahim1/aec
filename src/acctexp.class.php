@@ -452,7 +452,7 @@ class aecHeartbeat extends mosDBTable {
 		// Select all the users that are Active and have an expiration date
 		$query = 'SELECT a.id'
 		. ' FROM #__acctexp as a'
-		. ' INNER JOIN #__acctexp_subscr as b'
+		. ' INNER JOIN #__acctexp_subscr as b ON a.userid = b.userid'
 		. ' WHERE a.expiration <= \'' . $expiration_limit . '\''
 		. ' AND b.status != \'Expired\''
 		. ' AND b.status != \'Closed\''
