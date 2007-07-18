@@ -142,6 +142,7 @@ class mi_mosets_tree {
 		. 'echo "' . _AEC_MI_HACK2_MOSETS . '";' . "\n"
 		. 'return;' . "\n"
 		. '}' . "\n"
+		. '}' . "\n"
 		. '// AEC HACK mtree2 END' . "\n"
 		;
 
