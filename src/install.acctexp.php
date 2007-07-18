@@ -1096,9 +1096,15 @@ function com_install() {
 		$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'customparams'");
 		if( $database->loadObject( $result ) ) {
 			if(strcmp($result->Field, 'customparams') === 0) {
-				$database->setQuery("ALTER TABLE #__acctexp_plans CHANGE `customparams` `custom_params` text NULL");
-				if( !$database->query() ) {
-			    	$errors[] = array( $database->getErrorMsg(), $query );
+				$result = null;
+				$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'custom_params'");
+				if( $database->loadObject( $result ) ) {
+					if(!(strcmp($result->Field, 'custom_params') === 0)) {
+						$database->setQuery("ALTER TABLE #__acctexp_plans CHANGE `customparams` `custom_params` text NULL");
+						if( !$database->query() ) {
+					    	$errors[] = array( $database->getErrorMsg(), $query );
+						}
+					}
 				}
 			}
 		}
