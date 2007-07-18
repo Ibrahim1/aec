@@ -76,6 +76,7 @@ class mi_docman {
 		$settings['group']				= array( 'list' );
 		$settings['set_group_exp']		= array( 'list_yesno' );
 		$settings['group_exp']			= array( 'list' );
+		$settings['rebuild']			= array( 'list_yesno' );
 
 		return $settings;
 	}
@@ -84,6 +85,28 @@ class mi_docman {
 		global $mosConfig_absolute_path;
 
 		return is_dir( $mosConfig_absolute_path . '/components/com_docman' );
+	}
+
+	function saveparams ( $params ) {
+		global $mosConfig_absolute_path, $database;
+		$newparams = $params;
+
+		if ($params['rebuild']) {
+			$planlist = MicroIntegrationHandler::getPlansbyMI( $params['MI_ID'] );
+
+			foreach( $planlist as $planid ) {
+				$userlist = SubscriptionPlanHandler::getPlanUserlist( $planid );
+				foreach( $userlist as $userid ) {
+					if ($params['set_group']) {
+						$this->AddUserToGroup( $userid, $params['group'] );
+					}
+				}
+			}
+
+			$newparams['rebuild'] = 0;
+		}
+
+		return $newparams;
 	}
 
 	function hacks () {
@@ -212,6 +235,15 @@ class mi_docman {
 		if( !in_array( $userid, $users ) ) {
 			$users[] = $userid;
 
+			// Make sure we have no empty value
+			$search = 0;
+			while( $search !== false ) {
+				$search = array_search( '', $users );
+				if( $search !== false ) {
+					unset( $users[$search] );
+				}
+			}
+
 			$query = 'UPDATE #__docman_groups'
 			. ' SET groups_members = \'' . implode( ',', $users ) . '\''
 			. ' WHERE groups_id = \'' . $groupid . '\''
@@ -241,6 +273,15 @@ class mi_docman {
 			$key = array_search( $userid, $users );
 			unset( $users[$key] );
 
+			// Make sure we have no empty value
+			$search = 0;
+			while( $search !== false ) {
+				$search = array_search( '', $users );
+				if( $search !== false ) {
+					unset( $users[$search] );
+				}
+			}
+			
 			$query = 'UPDATE #__docman_groups'
 			. ' SET groups_members = \'' . implode( ',', $users ) . '\''
 			. ' WHERE groups_id = \'' . $groupid . '\''

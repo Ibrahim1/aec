@@ -1386,7 +1386,7 @@ class SubscriptionPlanHandler {
 
 		$query = 'SELECT userid'
 		. ' FROM #__acctexp_subscr'
-		. ' WHERE plan = \'' . $planid . '\''
+		. ' WHERE plan = \'' . $planid . '\' AND ( status = \'Active\' OR status = \'Trial\' ) '
 		;
 		$database->setQuery( $query );
 
