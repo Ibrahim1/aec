@@ -129,7 +129,7 @@ class HTML_frontEnd {
 		<div class="componentheading"><?php echo _PENDING_TITLE; ?></div>
 		<?php
 		if( $cfg->cfg['customtext_pending_keeporiginal'] ) { ?>
-			<p class="expired_dear"><?php echo _DEAR . $objUser->name . ','; ?></p>
+			<p class="expired_dear"><?php echo sprintf( _DEAR, $objUser->name ) . ','; ?></p>
 			<p class="expired_date"><?php echo _WARN_PENDING; ?></p>
 			<?php
 		}
