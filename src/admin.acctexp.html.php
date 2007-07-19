@@ -880,6 +880,9 @@ class HTML_AcctExp {
 					<p>Michael 'mic' Pagler, Steven 'corephp' Pignataro, Ethan 'ethanchai' Chai Voon Chong, Ben 'Slinky' Ingram, Charles 'Slydder' Williams</p>
 					<h1>Graphics</h1>
 					<p>All layout and graphics Design is CC-BY-NC-SA 2006-2007 David 'skOre' Deutsch. Additional icons are the silk icon set by Mark James (<a href="http://www.famfamfam.com/">famfamfam.com</a>).
+					<h1>Beta-Testers</h1>
+					<p>People who have helped to check releases before they went out:</p>
+					<p>Calum Polwart, Aleksey Pikulik</p>
 					<h1>Contributors</h1>
 					<p>People who have helped on our code at one place or another:</p>
 					<p>Rasmus Dahl-Sorensen</p>
