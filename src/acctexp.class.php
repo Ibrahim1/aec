@@ -1368,7 +1368,7 @@ class Config_General extends paramDBTable {
 				}
 				// mic: fix for NOT including JCE-settings into aec.database
 				if( substr( $key, 0, 4 ) != 'mce_' && substr( $value, 0, 4 ) != 'mce_') {
-					$settings[] = $key . '=' . addslashes( $value );
+					$settings[] = $key . '=' . $value;
 				}
 			}
 		}
