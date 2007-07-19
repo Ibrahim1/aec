@@ -1936,6 +1936,12 @@ function saveSettings( $option ) {
 
 	foreach( $total_processors as $procname ) {
 		$pp = new PaymentProcessor();
+
+		// Go next if this is the zero option selected
+		if( !$procname ) {
+			continue;
+		}
+
 		if( $pp->loadName( $procname ) ) {
 			$pp->fullInit();
 			$pp->processor->active = in_array( $procname, $pplist_enabled );
