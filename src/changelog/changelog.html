@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="de">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Account Expiration Control Component - Changelog</title>
+<meta name="description" content="the aec changelog" />
+<meta name="keywords" content="aec, changelog, globalnerd" />
+<meta name="Generator" content="generic" />
+<meta name="robots" content="index, follow" />
+<style type="text/css">
+body {
+font-family: dejavusans,verdana,sans;
+font-size: 70%;
+background-color: #fff;
+}
+ul {
+border: 1px solid #0577ff;
+background-color: #7db8ff;
+padding: 4px;
+padding-left: 20px;
+}
+ul>ul {
+border: 3px solid #fff;
+background-color: #bfddff;
+}
+h1,h2 {
+color: #003b82;
+}
+.todo {
+font-weight: bold;
+background-color: #ff8b8b !important;
+}
+.check {
+background-color: #ffe28b !important;
+}
+a {
+color: #333;
+}
+</style>
+</head>
+<body>
+<h1>0.12.4 branch overall additions and fixes:</h1>
+<ul>
+<li><strong>Major changes</strong></li>
+<ul>
+<li></li>
+</ul>
+</ul>
+<h2>0.14 version - <a href="http://en.wikipedia.org/wiki/Pleiades_%28star_cluster%29">Paleiades</a></h2>
+<ul>
+<li class="todo"><strong>Settings work</strong></li>
+<ul>
+<li class="todo">Switch aecSettings from relying on array field numbers to specific field names</li>
+<li class="todo">Refactor Settings into new aecSettings Object routine, rewrite language files (oh boy!)</li>
+<li class="todo">Switch for common currencies / all available currencies</li>
+<li class="todo">backend setting of formatting rules for price display</li>
+<li class="todo">Install field for getting MIs and processors on board</li>
+</ul>
+<li class="todo"><strong>AEC Plugin/Mambot creation</strong></li>
+<ul>
+<li class="todo">figure out how to do a plugin for joomla</li>
+<li class="todo">come up with lots of great stuff for this</li>
+</ul>
+<li class="todo"><strong>MI stuff</strong></li>
+<ul>
+<li class="todo">JUGA MI</li>
+<li class="todo">Part out a Usergroup MI</li>
+<li class="todo">Part out an Expiration Setting MI</li>
+<li class="todo">Offer more events for MIs (like cancel)</li>
+<li class="todo">Link on MI Edit page near php file selection to update only</li>
+</ul>
+<li class="todo"><strong>Plans Abstraction Preparation</strong></li>
+<ul>
+<li class="todo">Plan Groups Table</li>
+<li class="todo">Part out an Expiration Setting MI</li>
+<li class="todo">Possibility to set a expiration date instead of a cycle</li>
+</ul>
+<li class="todo"><strong>Plans Abstraction</strong></li>
+<ul>
+<li class="todo">Make Expiration Feature voluntary</li>
+<li class="todo">Part out an Expiration Setting MI</li>
+</ul>
+<li class="todo"><strong>Payment Processors</strong></li>
+<ul>
+<li class="todo">Worldpay</li>
+<li class="todo">Pay.bg</li>
+<li class="todo">Correctly bind in Psigate processor</li>
+</ul>
+<li class="todo"><strong>Event Logging</strong></li>
+<ul>
+<li class="todo">Backend administration of event log</li>
+<li class="todo">Extend event logging capabilities</li>
+</ul>
+<li class="todo"><strong>Minor Stuff</strong></li>
+<ul>
+<li class="todo">currency and amount verification for other processors</li>
+<li class="todo">Link from Plans Overview to Subscriptions, selecting correct plan and status</li>
+<li class="todo">instantGIDchange to be aware of special jacl column</li>
+<li class="todo">Notice on help page when plan selection is overridden</li>
+<li class="todo">Alternate button on (free) Trials</li>
+<li class="todo">backend setting of formatting rules for price display</li>
+<li class="todo">Popup-Box on Payment Plans Page to explain gateways</li>
+<li class="todo">Turn Transfer into API processor, extend API if neccessary</li>
+<li class="todo">Part functional and representative Settings objects</li>
+<li class="todo">directly choose coupon instead of plan on subscription</li>
+<li class="todo">choice to enter password on confirmation if not logged in for extra security</li>
+</ul>
+</ul>
+
+<h2>0.16 version - <a href="http://en.wikipedia.org/wiki/Red_Rectangle_Nebula">Red Rectangle Nebula</a></h2>
+<ul>
+<li class="todo"><strong>Invoice Administration</strong></li>
+<ul>
+<li class="todo">More abstract and general Invoices</li>
+<li class="todo">backend Invoice factory</li>
+<li class="todo">Invoice API to be reused in several features and by other components</li>
+<li class="todo">application of plan from backend to create an invoice if the admin wants that</li>
+<li class="todo">Reduce Invoice Action links to icons and have legend with the list</li>
+<li class="todo">Link to Invoice Editing page from UserForm</li>
+</ul>
+<li class="todo"><strong>Frontend Invoice Features</strong></li>
+<ul>
+<li class="todo">Printout feature for Invoices</li>
+<li class="todo">Lots of customization for the way invoices can be displayed</li>
+<li class="todo">Exporting of Invoices to various formats</li>
+</ul>
+</ul>
+
+<h2>0.18 version - <a href="http://en.wikipedia.org/wiki/Barnard%27s_Loop">Bernards Loop</a></h2>
+<ul>
+<li class="todo"><strong>Token Work preparation</strong></li>
+<ul>
+<li class="todo">Finish existing token objects and rework token workflow</li>
+<li class="todo">Create Includes for Content Editors to add AEC Access Marks</li>
+</ul>
+<li class="todo"><strong>Token Backend Administration</strong></li>
+<ul>
+<li class="todo">Create general functions and objects for token editing and listing</li>
+<li class="todo">Create Includes for Content Editors to add AEC Access Marks</li>
+<li class="todo">Administrative rules for Token Batch System</li>
+</ul>
+<li class="todo"><strong>Token Frontend Features</strong></li>
+<ul>
+<li class="todo">Create and Refine Token API that other components can use</li>
+<li class="todo">General frontpage includes for content access restrictions</li>
+</ul>
+<li class="todo"><strong>Finishing the Granular Access System</strong></li>
+<ul>
+<li class="todo">Configure Bot to look for AEC Access Marks</li>
+<li class="todo">Create Includes for Content Editors to add AEC Access Marks</li>
+</ul>
+</ul>
+<h2>1.0 version - <a href="http://en.wikipedia.org/wiki/Carina_Nebula">Eta Carinae Nebula</a></h2>
+<h2>future versions</h2>
+<ul>
+<li class="todo">AEC Message center</li>
+<li class="todo">AEC Message center to be included in rewrite engine</li>
+<li class="todo">AEC messages for plans etcpp</li>
+<li class="todo">Events System</li>
+<li class="todo">switch from ANT to Phing</li>
+<li class="todo">restructure build process, autopackaging of processors&amp;MIs and so forth</li>
+<li class="todo">On multiple MI calls, call according to their ordering</li>
+<li class="todo">Google Analytics Tracking</li>
+<li class="todo">Support UBL (<a href="http://docs.oasis-open.org/ubl/os-UBL-2.0/UBL-2.0.html">link</a>)</li>
+<li class="todo">handling of pure donations (which do trigger actions, like thank-you emails)</li>
+</ul>
+</body>
+</html>
