@@ -537,7 +537,7 @@ function help ( $option ) {
 		$diagnostic['hack_' . $hack_name] = ( !empty( $hack_content['status'] ) && $hack_content['status'] > 0 ) ? 1 : 0;
 
 		$diagnostic['hacks_legacy'] = 0;
-		if( !empty( $hack_content['legacy'] && ( $hack_content['status'] > 0 ) ) ) {
+		if( !empty( $hack_content['legacy'] ) && ( $hack_content['status'] > 0 ) ) {
 			$diagnostic['hacks_legacy'] = 1;
 		}
 		if ( isset( $hack_content['fileinfo']['gecos'] ) ) {
