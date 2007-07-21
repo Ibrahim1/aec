@@ -1,11 +1,18 @@
 <?php
 /**
- * @version $Id: eucalib.php 16 2007-06-25 09:04:04Z mic $
- * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
+ * @version $Id: eucalib.php
+ * @package Eucalib: Component library the Joomla! CMS
  * @subpackage Abstract Library for Joomla Components
  * @copyright Copyright (C) 2007 David Deutsch, All Rights Reserved
  * @author David Deutsch <skore@skore.de>
  * @license GNU/GPL v.2 or later http://www.gnu.org/copyleft/gpl.html
+ *
+ *                         _ _ _
+ *                        | (_) |
+ *     ___ _   _  ___ __ _| |_| |__
+ *    / _ \ | | |/ __/ _` | | | '_ \
+ *   |  __/ |_| | (_| (_| | | | |_) |
+ *    \___|\__,_|\___\__,_|_|_|_.__/  v1.0
  *
  * The Extremely Useful Component LIBrary will rock your socks. Seriously. Reuse it!
  */
@@ -17,25 +24,26 @@ defined( '_VALID_MOS' ) or die( 'Restricted access' );
 *
 * For use with as an abstract class that adds onto table entries
 */
-class paramDBTable extends mosDBTable {
-
+class paramDBTable extends mosDBTable
+{
 	/**
 	 * Receive Parameters and decode them into an array
 	 * @return array
 	 */
-	function getParams( $field = 'params' ) {
-		if( empty( $this->$field ) ) {
+	function getParams( $field = 'params' )
+	{
+		if ( empty( $this->$field ) ) {
 			return false;
 		}
 
 		$params = explode( "\n", $this->$field );
 
 		$array = array();
-		foreach( $params as $chunk ) {
+		foreach ( $params as $chunk ) {
 			$k = explode( '=', $chunk, 2 );
-			if( isset( $k[1] ) ) {
+			if ( isset( $k[1] ) ) {
 				$array[$k[0]] = stripslashes( $k[1] );
-			}else{
+			} else {
 				$array[$k[0]] = null;
 			}
 			unset( $k );
@@ -46,13 +54,14 @@ class paramDBTable extends mosDBTable {
 	/**
 	 * Encode array and set Parameter field
 	 */
-	function setParams( $array, $field = 'params' ) {
+	function setParams( $array, $field = 'params' )
+	{
 		$params = array();
 
-		foreach( $array as $key => $value ) {
-			if( !is_null( $key ) ) {
+		foreach ( $array as $key => $value ) {
+			if ( !is_null( $key ) ) {
 				$value = trim( $value );
-				if( !get_magic_quotes_gpc() ) {
+				if ( !get_magic_quotes_gpc() ) {
 					$value = addslashes( $value );
 				}
 
@@ -66,13 +75,14 @@ class paramDBTable extends mosDBTable {
 	/**
 	 * Add an array of Parameters to an existing parameter field
 	 */
-	function addParams( $array, $field = 'params', $overwrite = true ) {
+	function addParams( $array, $field = 'params', $overwrite = true )
+	{
 		$params = $this->getParams( $field );
-		foreach( $array as $key => $value ) {
-			if( $overwrite ) {
+		foreach ( $array as $key => $value ) {
+			if ( $overwrite ) {
 				$params[$key] = $value;
-			}else{
-				if( !isset( $params[$key] ) ) {
+			} else {
+				if ( !isset( $params[$key] ) ) {
 					$params[$key] = $value;
 				}
 			}
@@ -83,10 +93,11 @@ class paramDBTable extends mosDBTable {
 	/**
 	 * Delete a set of Parameters providing an array of key names
 	 */
-	function delParams( $array, $field = 'params' ) {
+	function delParams( $array, $field = 'params' )
+	{
 		$params = $this->getParams( $field );
-		foreach( $array as $key ) {
-			if( isset( $params[$key] ) ) {
+		foreach ( $array as $key ) {
+			if ( isset( $params[$key] ) ) {
 				unset( $params[$key] );
 			}
 		}
@@ -96,42 +107,45 @@ class paramDBTable extends mosDBTable {
 	/**
 	 * Return the differences between a new set of Parameters and the existing one
 	 */
-	function diffParams( $array, $field = 'params' ) {
+	function diffParams( $array, $field = 'params' )
+	{
 		$diff = array();
 
 		$params = $this->getParams( $field );
-		foreach( $array as $key => $value ) {
-			if( isset( $params[$key] ) ) {
+		foreach ( $array as $key => $value ) {
+			if ( isset( $params[$key] ) ) {
 				if( $value !== $params[$key] ) {
 					$diff[$key] = array( $params[$key], $value );
 				}
 			}
 		}
 
-		if( count( $diff ) ) {
+		if ( count( $diff ) ) {
 			return $diff;
-		}else{
+		} else {
 			return false;
 		}
 	}
 }
 
-class languageFileHandler {
+class languageFileHandler
+{
 
-	function languageFileHandler( $filepath ) {
+	function languageFileHandler( $filepath )
+	{
 		$this->filepath = $filepath;
 	}
 	
-	function getConstantsArray() {
-
+	function getConstantsArray()
+	{
 		$file = fopen( $this->filepath, "r" );
 	
 		$array = array();
-		while( !feof( $file ) ) {
+		while ( !feof( $file ) ) {
 			$buffer = fgets($file, 4096);
-			if( strpos( $buffer, 'define') !== false ) {
+			if ( strpos( $buffer, 'define') !== false ) {
 				$linearray = explode( '\'', $buffer );
-				if( count( $linearray ) === 5 ) {
+				if ( count( $linearray ) === 5 ) {
 					$array[$linearray[1]] = $linearray[3];
 				}
 			}
@@ -140,16 +154,16 @@ class languageFileHandler {
 		return $array;
 	}
 	
-	function getHTML() {
-
+	function getHTML()
+	{
 		$file = fopen( $this->filepath, "r" );
 	
 		$array = array();
-		while( !feof( $file ) ) {
+		while ( !feof( $file ) ) {
 			$buffer = fgets($file, 4096);
-			if( strpos( $buffer, 'define') !== false ) {
+			if ( strpos( $buffer, 'define') !== false ) {
 				$linearray = explode( '\'', $buffer );
-				if( count( $linearray ) === 5 ) {
+				if ( count( $linearray ) === 5 ) {
 					$array[$linearray[1]] = $linearray[3];
 				}
 			}
