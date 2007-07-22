@@ -100,23 +100,39 @@ class mi_htaccess {
 				$ht->setAuthName( $newparams['mi_name'] );
 			}
 
+			unlink($ht->fPasswd);
+
 			$planlist = MicroIntegrationHandler::getPlansbyMI( $params['MI_ID'] );
 
 			foreach( $planlist as $planid ) {
 				$userlist = SubscriptionPlanHandler::getPlanUserlist( $planid );
 				foreach( $userlist as $userid ) {
-					if( $params['use_md5'] ) {
-						$user = new mosUser( $database );
-						$user->load( $userid );
+					$user = new mosUser( $database );
+					$user->load( $userid );
+					if ( $user->id ) {
+						$username = $user->username;
+						$password = null;
+	
+						if( $params['use_md5'] ) {
+							$password = $user->password;
+						}else{
+							$apachepw = new apachepw( $database );
+							$apwid = $apachepw->getIDbyUserID( $userid );
+	
+							if ( $apwid > 0 ) {
+								$apachepw->load( $apwid );
+								$password = $apachepw->apachepw;
+							} else {
+								continue;
+							}
+						}
 
-						$ht->addUser( $user->username, $user->password );
-					}else{
-						$apachepw = new apachepw( $database );
-						$apwid = $apachepw->getIDbyUserID( $userid );
-
-						if ( $apwid ) {
-							$apachepw->load( $apwid );
-							$ht->addUser( $row->username, $apachepw->apachepw );
+						if ( empty($username) || is_null($username) || ($username == "") ) {
+							continue;
+						} elseif ( empty($password) || is_null($password) || ($password == "") ) {	
+							continue;
+						} else {
+							$ht->addUser( $username, $password );
 						}
 					}
 				}
@@ -232,51 +248,6 @@ class mi_htaccess {
 		}
 		return false;
 	}
-
-	function crypt_apr1_md5($plainpasswd) {
-		$salt = substr(str_shuffle("abcdefghijklmnopqrstuvwxyz0123456789"), 0, 8);
-		$len = strlen($plainpasswd);
-		$text = $plainpasswd.'$apr1$'.$salt;
-		$bin = pack("H32", md5($plainpasswd.$salt.$plainpasswd));
-
-		for ($i = $len; $i > 0; $i -= 16) {
-			$text .= substr($bin, 0, min(16, $i));
-		}
-
-		for ($i = $len; $i > 0; $i >>= 1) {
-			$text .= ($i & 1) ? chr(0) : $plainpasswd{0};
-		}
-
-		$bin = pack("H32", md5($text));
-
-		for ($i = 0; $i < 1000; $i++) {
-			$new = ($i & 1) ? $plainpasswd : $bin;
-			if ($i % 3) {
-				$new .= $salt;
-			}
-			if ($i % 7) {
-				$new .= $plainpasswd;
-			}
-			$new .= ($i & 1) ? $bin : $plainpasswd;
-			$bin = pack("H32", md5($new));
-		}
-
-		for ($i = 0; $i < 5; $i++) {
-			$k = $i + 6;
-			$j = $i + 12;
-			if ($j == 16) {
-				$j = 5;
-			}
-			$tmp = $bin[$i] . $bin[$k] . $bin[$j] . $tmp;
-		}
-
-		$tmp = chr(0) . chr(0) . $bin[11] . $tmp;
-		$tmp = strtr( strrev( substr( base64_encode( $tmp ), 2 ) ),
-			"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
-			"./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" );
-		return "$" . "apr1" . "$" . $salt . "$" . $tmp;
-	}
-
 }
 
 class apachepw extends mosDBTable {

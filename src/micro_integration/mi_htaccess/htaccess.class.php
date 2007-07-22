@@ -96,6 +96,7 @@ class htaccess{
         // Reading names from file
         $file=fopen($this->fPasswd,"r");
         $i=0;
+        $newUserlist = array();
         while($line=fgets($file,200)){
             $lineArr=explode(":",$line);
             if($username!=$lineArr[0]){

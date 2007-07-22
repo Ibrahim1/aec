@@ -128,10 +128,10 @@ class paramDBTable extends mosDBTable
 	}
 }
 
-class languageFileHandler
+class languageFile
 {
 
-	function languageFileHandler( $filepath )
+	function languageFile( $filepath )
 	{
 		$this->filepath = $filepath;
 	}
