@@ -78,9 +78,9 @@ class mi_htaccess {
 			$newparams['mi_passwordfolder'] = str_replace("[abovecmsroot]", $mosConfig_absolute_path_above, $params['mi_passwordfolder']);
 		}
 
-		$newparams['mi_folder_fullpath'] = $newparams['mi_folder'] . "/.htaccess";
+		$newparams['mi_folder_fullpath'] = dirname( $newparams['mi_folder'] ) . "/.htaccess";
 
-		$newparams['mi_folder_user_fullpath'] = $newparams['mi_passwordfolder'] .  "/.htuser" . str_replace("/", "_", str_replace(".", "/", $newparams['mi_folder']));
+		$newparams['mi_folder_user_fullpath'] = dirname( $newparams['mi_passwordfolder'] ) .  "/.htuser" . str_replace("/", "_", str_replace(".", "/", $newparams['mi_folder']));
 
 		if( !file_exists( $newparams['mi_folder_fullpath'] ) && !$params['rebuild'] ) {
 			$ht = new htaccess();

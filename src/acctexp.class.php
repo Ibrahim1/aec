@@ -3501,7 +3501,7 @@ class Subscription extends paramDBTable {
 		$new_plan->load($usage);
 
 		if ( $new_plan->id ) {
-			if ($this->plan != $new_plan->id ) {
+			if ( $this->plan !== $usage ) {
 				$this->expire();
 			}
 
