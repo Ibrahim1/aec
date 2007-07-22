@@ -1641,7 +1641,7 @@ class SubscriptionPlan extends paramDBTable {
 
 						if( $this->id === $used_subscription->id ) {
 							$used_comparison = 2;
-						}elseif( is_null( $thisparams['similarplans']) && is_null($thisparams['equalplans'] ) ) {
+						}elseif( is_null( $thisparams['similarplans'] ) && is_null( $thisparams['equalplans'] ) ) {
 							$used_comparison = false;
 						}else{
 							$used_comparison = $this->compareToPlan( $used_subscription );
@@ -1692,12 +1692,8 @@ class SubscriptionPlan extends paramDBTable {
 
 	function getMicroIntegrations () {
 
-		if( strlen( $this->micro_integrations )) {
-			if( strpos( ';', $this->micro_integrations ) ) {
-				return explode( ';', $this->micro_integrations );
-			}else{
-				return array( $this->micro_integrations );
-			}
+		if( strlen( $this->micro_integrations ) ) {
+			return explode( ';', $this->micro_integrations );
 		}else{
 			return false;
 		}
@@ -3504,9 +3500,16 @@ class Subscription extends paramDBTable {
 		$new_plan = new SubscriptionPlan( $database );
 		$new_plan->load($usage);
 
-		$renew = $new_plan->applyPlan( $this->userid, $processor, $silent );
+		if ( $new_plan->id ) {
+			if ($this->plan != $new_plan->id ) {
+				$this->expire();
+			}
 
-		return $renew;
+			$renew = $new_plan->applyPlan( $this->userid, $processor, $silent );
+			return $renew;
+		} else {
+			return false;
+		}
 	}
 
 	function setPlanID ( $id ) {
