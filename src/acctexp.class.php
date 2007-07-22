@@ -1439,6 +1439,10 @@ class SubscriptionPlan extends paramDBTable {
 
 		$params			= $this->getParams();
 
+		if ( !$comparison['comparison'] && ( $this->id !== $metaUser->objSubscription->plan ) ) {
+			$metaUser->objSubscription->expire(1);
+		}
+
 		if( $comparison['total_comparison'] === false || is_null($comparison['total_comparison']) || $is_pending ) {
 			// If user is using global trial period he still can use the trial period of a plan
 			if( $params['trial_period'] > 0 && !$is_trial ) {
@@ -3424,7 +3428,7 @@ class Subscription extends paramDBTable {
 		}
 	}
 
-	function expire () {
+	function expire ( $overridefallback=false ) {
 		global $database;
 
 		if( strcmp( $this->status, 'Excluded' ) === 0 ) {
@@ -3442,7 +3446,11 @@ class Subscription extends paramDBTable {
 
 		$this_params = $this->getParams();
 
-		if( !empty( $plan_params['fallback'] ) ) {
+		if( $plan_params['fallback'] && !$overridefallback ) {
+
+			$mih = new microIntegrationHandler();
+			$mih->userPlanExpireActions( $this->userid, $subscription_plan );
+		
 			$this->applyUsage( $plan_params['fallback'], 'none', 1 );
 			return false;
 		}else{
@@ -3464,21 +3472,7 @@ class Subscription extends paramDBTable {
 			}
 
 			$mih = new microIntegrationHandler();
-			$mi_autointegrations = $mih->getAutoIntegrations();
-
-			if( is_array( $mi_autointegrations ) || !( $subscription_plan === false ) ) {
-
-				$user_integrations		= explode( ';', $subscription_plan->micro_integrations );
-				$user_auto_integrations = array_intersect( $mi_autointegrations, $user_integrations );
-
-				foreach( $user_auto_integrations as $mi_id ) {
-					$mi = new microIntegration( $database );
-					$mi->load( $mi_id );
-					if( $mi->callIntegration() ) {
-						$mi->expiration_action( $this->userid, $subscription_plan );
-					}
-				}
-			}
+			$mih->userPlanExpireActions( $this->userid, $subscription_plan );
 
 			return true;
 		}
@@ -3501,10 +3495,6 @@ class Subscription extends paramDBTable {
 		$new_plan->load($usage);
 
 		if ( $new_plan->id ) {
-			if ( $this->plan !== $usage ) {
-				$this->expire();
-			}
-
 			$renew = $new_plan->applyPlan( $this->userid, $processor, $silent );
 			return $renew;
 		} else {
@@ -4423,6 +4413,28 @@ class microIntegrationHandler {
 		return $plan_list;
 	}
 
+	function userPlanExpireActions( $userid, $subscription_plan ) {
+		global $database;
+
+		$mi_autointegrations = $this->getAutoIntegrations();
+
+		if( is_array( $mi_autointegrations ) || ( $subscription_plan !== false ) ) {
+
+			$user_integrations		= explode( ';', $subscription_plan->micro_integrations );
+			$user_auto_integrations = array_intersect( $mi_autointegrations, $user_integrations );
+
+			if ( $user_auto_integrations[0] ) {
+				foreach( $user_auto_integrations as $mi_id ) {
+					$mi = new microIntegration( $database );
+					$mi->load( $mi_id );
+					if( $mi->callIntegration() ) {
+						$mi->expiration_action( $userid, $subscription_plan );
+					}
+				}
+			}
+		}
+	}
+	
 	function getHacks () {
 
 		$integrations = $this->getIntegrationList();

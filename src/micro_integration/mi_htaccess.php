@@ -78,9 +78,9 @@ class mi_htaccess {
 			$newparams['mi_passwordfolder'] = str_replace("[abovecmsroot]", $mosConfig_absolute_path_above, $params['mi_passwordfolder']);
 		}
 
-		$newparams['mi_folder_fullpath'] = dirname( $newparams['mi_folder'] ) . "/.htaccess";
+		$newparams['mi_folder_fullpath'] = $newparams['mi_folder'] . "/.htaccess";
 
-		$newparams['mi_folder_user_fullpath'] = dirname( $newparams['mi_passwordfolder'] ) .  "/.htuser" . str_replace("/", "_", str_replace(".", "/", $newparams['mi_folder']));
+		$newparams['mi_folder_user_fullpath'] = $newparams['mi_passwordfolder'] .  "/.htuser" . str_replace("/", "_", str_replace(".", "/", $newparams['mi_folder']));
 
 		if( !file_exists( $newparams['mi_folder_fullpath'] ) && !$params['rebuild'] ) {
 			$ht = new htaccess();
@@ -153,10 +153,6 @@ class mi_htaccess {
 
 		$ht = new htaccess();
 		$ht->setFPasswd( $params['mi_folder_user_fullpath'] );
-		$ht->setFHtaccess( $params['mi_folder_fullpath'] );
-		if( isset( $params['mi_name'] ) ) {
-			$ht->setAuthName( $params['mi_name'] );
-		}
 		$ht->delUser( $user->username );
 	}
 
@@ -170,10 +166,10 @@ class mi_htaccess {
 			$ht->setAuthName( $params['mi_name'] );
 		}
 
-		if( $params['use_md5'] ) {
-			$user = new mosUser( $database );
-			$user->load( $userid );
+		$user = new mosUser( $database );
+		$user->load( $userid );
 
+		if( $params['use_md5'] ) {
 			$ht->addUser( $user->username, $user->password );
 		}else{
 			$apachepw = new apachepw( $database );
@@ -186,7 +182,7 @@ class mi_htaccess {
 				return false;
 			}
 
-			$ht->addUser( $row->username, $apachepw->apachepw );
+			$ht->addUser( $user->username, $apachepw->apachepw );
 		}
 		$ht->addLogin();
 		return true;
