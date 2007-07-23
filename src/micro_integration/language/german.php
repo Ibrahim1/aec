@@ -174,4 +174,22 @@ define( '_MI_MI_COMMUNITYBUILDER_APPROVE_NAME',			'Admin Freigabe' );
 define( '_MI_MI_COMMUNITYBUILDER_APPROVE_DESC',			'Setzt die Freigabe durch den Admin wenn diese Integration aufgerufen wird.' );
 define( '_MI_MI_COMMUNITYBUILDER_UNAPPROVE_EXP_NAME',	'Admin Freigabe zur&uuml;cknehmen' );
 define( '_MI_MI_COMMUNITYBUILDER_UNAPPROVE_EXP_DESC',	'Setzt die Admin-Freigabe wieder auf "Nein" zur&uuml;ck wenn die Mitgliedschaft abl&auml;uft.' );
+
+// JUGA
+define( '_AEC_MI_NAME_JUGA',		'JUGA' );
+define( '_AEC_MI_DESC_JUGA',		'Set JUGA groups on apply or expire plan' );
+define( '_MI_MI_JUGA_SET_REMOVE_GROUP_NAME',		'Remove Groups' );
+define( '_MI_MI_JUGA_SET_REMOVE_GROUP_DESC',		'Set to yes, to delete all groups for this user before the groups below are applied, otherwise these groups will be added to existing groups.' );
+define( '_MI_MI_JUGA_SET_ENROLL_GROUP_NAME',		'Add to Group' );
+define( '_MI_MI_JUGA_SET_ENROLL_GROUP_DESC',		'Set to yes, and pick groups below to enroll the user in on application of plan? (Multiple select allowed)' );
+define( '_MI_MI_JUGA_SET_REMOVE_GROUP_EXP_NAME',	'Remove Groups Exp' );
+define( '_MI_MI_JUGA_SET_REMOVE_GROUP_EXP_DESC',	'Set to yes, to delete all groups for this user before the groups below are applied, otherwise these groups will be added to existing groups.' );
+define( '_MI_MI_JUGA_SET_ENROLL_GROUP_EXP_NAME',	'Add to Group Exp' );
+define( '_MI_MI_JUGA_SET_ENROLL_GROUP_EXP_DESC',	'Set to yes, and pick groups below to enroll the user in on expiration of plan? (Multiple select allowed)' );
+define( '_MI_MI_JUGA_ENROLL_GROUP_NAME',			'JUGA Group' );
+define( '_MI_MI_JUGA_ENROLL_GROUP_DESC',			'Select a plan to enroll the user in on application of plan:' );
+define( '_MI_MI_JUGA_ENROLL_GROUP_EXP_NAME',		'JUGA Group Exp' );
+define( '_MI_MI_JUGA_ENROLL_GROUP_EXP_DESC',		'Select a plan to enroll the user in on expiration of plan:' );
+define( '_MI_MI_JUGA_REBUILD_NAME',					'Rebuild' );
+define( '_MI_MI_JUGA_REBUILD_DESC',					'Select YES to rebuild the groups? - NOT CURRENTLY FUNCTIONAL' );
 ?>
