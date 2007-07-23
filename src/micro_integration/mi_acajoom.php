@@ -73,4 +73,9 @@ class mi_acajoom {
 		}
 	}
 }
+
+class acajoomsubscriber
+{
+	function ()
+}
 ?>
