@@ -59,26 +59,26 @@ class mi_juga
 		//Explode the selected groups
 		if ( !empty( $params['enroll_group'] ) ) {
 			$gplist = explode( ';', $params['enroll_group'] );
-			$selected_enrole_gps = array();
-			foreach ( $gplist as $enrole_group) {
-				$selected_enrole_gps[]->value = $enrole_group;
+			$selected_enroll_gps = array();
+			foreach ( $gplist as $enroll_group) {
+				$selected_enroll_gps[]->value = $enroll_group;
 			}
 		} else {
-			$selected_enrole_gps		= '';
+			$selected_enroll_gps		= '';
 		}
 
 		if ( !empty( $params['enroll_group_exp'] ) ) {
 			$gplist = explode( ';', $params['enroll_group_exp'] );
-			$selected_enrole_gps_exp = array();
-			foreach ( $gplist as $enrole_group_exp) {
-				$selected_enrole_gps_exp[]->value = $enrole_group_exp;
+			$selected_enroll_gps_exp = array();
+			foreach ( $gplist as $enroll_group_exp) {
+				$selected_enroll_gps_exp[]->value = $enroll_group_exp;
 			}
 		} else {
-			$selected_enrole_gps_exp		= '';
+			$selected_enroll_gps_exp		= '';
 		}
 
-		$settings['lists']['enroll_group']		= mosHTML::selectList( $sg, 'enroll_group[]', 'size="4" multiple="true"', 'value', 'text', $selected_enrole_gps );
-		$settings['lists']['enroll_group_exp']	= mosHTML::selectList( $sg, 'enroll_group_exp[]', 'size="4" multiple="true"', 'value', 'text', $selected_enrole_gps_exp );
+		$settings['lists']['enroll_group']		= mosHTML::selectList( $sg, 'enroll_group[]', 'size="4" multiple="true"', 'value', 'text', $selected_enroll_gps );
+		$settings['lists']['enroll_group_exp']	= mosHTML::selectList( $sg, 'enroll_group_exp[]', 'size="4" multiple="true"', 'value', 'text', $selected_enroll_gps_exp );
 		$settings['set_remove_group']			= array( 'list_yesno' );
 		$settings['set_enroll_group']			= array( 'list_yesno' );
 		$settings['enroll_group']				= array( 'list' );
@@ -101,10 +101,10 @@ class mi_juga
 		global $mosConfig_absolute_path, $database;
 		// IMPLODE THE ARRAYS
 	
-		$enrole_groups = implode( ';', $params['enroll_group']);
-		$params['enroll_group'] = $enrole_groups;
-		$enrole_groups_exp = implode( ';', $params['enroll_group_exp']);
-		$params['enroll_group_exp'] = $enrole_groups_exp;
+		$enroll_groups = implode( ';', $params['enroll_group']);
+		$params['enroll_group'] = $enroll_groups;
+		$enroll_groups_exp = implode( ';', $params['enroll_group_exp']);
+		$params['enroll_group_exp'] = $enroll_groups_exp;
 
 		//
 
@@ -124,9 +124,9 @@ class mi_juga
 		if ( $params['set_enroll_group_exp'] ) {
 			if ( !empty( $params['enroll_group_exp'] ) ) {
 				$gplist = explode( ';', $params['enroll_group_exp'] );
-				$selected_enrole_gps_exp = array();
-				foreach ( $gplist as $enrole_group_exp) {
-					$this->AddUserToGroup( $userid, $enrole_group_exp );
+				$selected_enroll_gps_exp = array();
+				foreach ( $gplist as $enroll_group_exp) {
+					$this->AddUserToGroup( $userid, $enroll_group_exp );
 				}
 			}
 		}
@@ -145,9 +145,9 @@ class mi_juga
 		if ( $params['set_enroll_group'] ) {
 			if( !empty( $params['enroll_group'] ) ) {
 				$gplist = explode( ';', $params['enroll_group'] );
-				$selected_enrole_gps = array();
-				foreach( $gplist as $enrole_group) {
-					$this->AddUserToGroup( $userid, $enrole_group );
+				$selected_enroll_gps = array();
+				foreach( $gplist as $enroll_group) {
+					$this->AddUserToGroup( $userid, $enroll_group );
 				}
 			}
 		}
@@ -172,7 +172,6 @@ class mi_juga
 			. ' SET group_id = \'' . $groupid . '\', user_id = \''.$userid . '\''
 			;
 
-
 			$database->setQuery( $query );
 			$database->query();
 
@@ -184,12 +183,12 @@ class mi_juga
 		//}
 	}
 
-	function DeleteUserFromGroup( $userid )
+	function DeleteUserFromGroup( $userid, $groupid )
 	{
 		global $database;
 
 		$query = 'DELETE FROM #__juga_u2g'
-		. ' WHERE user_id = \''.$userid . '\''
+		. ' WHERE user_id = \''. $userid . '\' AND group_id = \''. $groupid . '\''
 		;
 
 		$database->setQuery( $query );
