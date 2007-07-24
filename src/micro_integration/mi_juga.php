@@ -13,15 +13,8 @@
 
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-/**
- * THIS SECTION BELONGS IN THE MI LANGUAGE FILE BUT IS PROVIDED HERE FOR LAZYNESS...
- *
- */
-
-
-
-
-class mi_juga {
+class mi_juga
+{
 
 /** This section can be removed before deployment - its here as notes! SBS
  * Some info about how juga holds group allocations:
@@ -36,7 +29,8 @@ class mi_juga {
  * as removing
  */
 
-	function Info () {
+	function Info()
+	{
 		$info = array();
 		$info['name'] = _AEC_MI_NAME_JUGA;
 		$info['desc'] = _AEC_MI_DESC_JUGA;
@@ -44,15 +38,8 @@ class mi_juga {
 		return $info;
 	}
 
-	function checkInstallation () {
-		//No action required;
-	}
-
-	function install () {
-		// No action required;
-	}
-
-	function Settings( $params ) {
+	function Settings( $params )
+	{
 		global $database;
 
 		$query = 'SELECT id, title, description'
@@ -62,64 +49,56 @@ class mi_juga {
 	 	$groups = $database->loadObjectList();
 
 		$sg = array();
-		foreach( $groups as $group ) {
+		foreach ( $groups as $group ) {
 			$sg[] = mosHTML::makeOption( $group->id, $group->title . ' - '
 			. substr( strip_tags( $group->description ), 0, 30 ) );
 		}
 
         $settings = array();
 
-	//Explode the selected groups
-	if( !empty( $params['enroll_group'] ) ) {
-		$gplist = explode( ';', $params['enroll_group'] );
-		$selected_enrole_gps = array();
-		foreach( $gplist as $enrole_group) {
-			$selected_enrole_gps[]->value = $enrole_group;
+		//Explode the selected groups
+		if ( !empty( $params['enroll_group'] ) ) {
+			$gplist = explode( ';', $params['enroll_group'] );
+			$selected_enrole_gps = array();
+			foreach ( $gplist as $enrole_group) {
+				$selected_enrole_gps[]->value = $enrole_group;
+			}
+		} else {
+			$selected_enrole_gps		= '';
 		}
-	}else{
-		$selected_enrole_gps		= '';
-	}
 
-	if( !empty( $params['enroll_group_exp'] ) ) {
-		$gplist = explode( ';', $params['enroll_group_exp'] );
-		$selected_enrole_gps_exp = array();
-		foreach( $gplist as $enrole_group_exp) {
-			$selected_enrole_gps_exp[]->value = $enrole_group_exp;
+		if ( !empty( $params['enroll_group_exp'] ) ) {
+			$gplist = explode( ';', $params['enroll_group_exp'] );
+			$selected_enrole_gps_exp = array();
+			foreach ( $gplist as $enrole_group_exp) {
+				$selected_enrole_gps_exp[]->value = $enrole_group_exp;
+			}
+		} else {
+			$selected_enrole_gps_exp		= '';
 		}
-	}else{
-		$selected_enrole_gps_exp		= '';
-	}
 
-
-
-
-$settings['lists']['enroll_group']		= mosHTML::selectList( $sg, 'enroll_group[]', 'size="4" multiple="true"', 'value', 'text', $selected_enrole_gps );
-$settings['lists']['enroll_group_exp']	= mosHTML::selectList( $sg, 'enroll_group_exp[]', 'size="4" multiple="true"', 'value', 'text', $selected_enrole_gps_exp );
-$settings['set_remove_group']			= array( 'list_yesno' );
-$settings['set_enroll_group']			= array( 'list_yesno' );
-$settings['enroll_group']				= array( 'list' );
-$settings['set_enroll_group_exp']		= array( 'list_yesno' );
-$settings['set_remove_group_exp']		= array( 'list_yesno' );
-$settings['enroll_group_exp']			= array( 'list' );
-
-
-
+		$settings['lists']['enroll_group']		= mosHTML::selectList( $sg, 'enroll_group[]', 'size="4" multiple="true"', 'value', 'text', $selected_enrole_gps );
+		$settings['lists']['enroll_group_exp']	= mosHTML::selectList( $sg, 'enroll_group_exp[]', 'size="4" multiple="true"', 'value', 'text', $selected_enrole_gps_exp );
+		$settings['set_remove_group']			= array( 'list_yesno' );
+		$settings['set_enroll_group']			= array( 'list_yesno' );
+		$settings['enroll_group']				= array( 'list' );
+		$settings['set_enroll_group_exp']		= array( 'list_yesno' );
+		$settings['set_remove_group_exp']		= array( 'list_yesno' );
+		$settings['enroll_group_exp']			= array( 'list' );
 
 		return $settings;
 	}
 
-	function detect_application () {
+	function detect_application()
+	{
 		global $mosConfig_absolute_path;
 
 		return is_dir( $mosConfig_absolute_path . '/components/com_juga' );
 	}
 
-	function saveparams ( $params ) {
+	function saveparams( $params )
+	{
 		global $mosConfig_absolute_path, $database;
-		
-
-		
-
 		// IMPLODE THE ARRAYS
 	
 		$enrole_groups = implode( ';', $params['enroll_group']);
@@ -134,52 +113,36 @@ $settings['enroll_group_exp']			= array( 'list' );
 		return $newparams;
 	}
 
-	function hacks () {
-		// No hacks should be needed :-)
-	}
-
-	function expiration_action($params, $userid, $plan) {
+	function expiration_action( $params, $userid, $plan )
+	{
 		global $database;
 
-		
-		if ($params['set_remove_group_exp']) {
+		if ( $params['set_remove_group_exp'] ) {
 			$this->DeleteUserFromGroup( $userid );
 		}
-		else {
-		// No action 
-		}
 		
-		if( $params['set_enroll_group_exp'] ) {
-
-			if( !empty( $params['enroll_group_exp'] ) ) {
+		if ( $params['set_enroll_group_exp'] ) {
+			if ( !empty( $params['enroll_group_exp'] ) ) {
 				$gplist = explode( ';', $params['enroll_group_exp'] );
 				$selected_enrole_gps_exp = array();
-				foreach( $gplist as $enrole_group_exp) {
+				foreach ( $gplist as $enrole_group_exp) {
 					$this->AddUserToGroup( $userid, $enrole_group_exp );
 				}
 			}
 		}
-		else {
-		// No action
-		}
-
 
 		return true;
 	}
 
-	function action($params, $userid, $plan) {
-		
+	function action( $params, $userid, $plan )
+	{
 		global $database;
 
-		if ($params['set_remove_group']) {
+		if ( $params['set_remove_group'] ) {
 			$this->DeleteUserFromGroup( $userid );
 		}
-		else {
-		// No action
-		}
 
-
-		if ($params['set_enroll_group']) {
+		if ( $params['set_enroll_group'] ) {
 			if( !empty( $params['enroll_group'] ) ) {
 				$gplist = explode( ';', $params['enroll_group'] );
 				$selected_enrole_gps = array();
@@ -188,16 +151,10 @@ $settings['enroll_group_exp']			= array( 'list' );
 				}
 			}
 		}
-else {
-// No action
-	
-
-
 	}
-}
 
-
-	function AddUserToGroup ( $userid, $groupid ) {
+	function AddUserToGroup( $userid, $groupid )
+	{
 		global $database;
 		// Check user is not already a member of the group.
 		$query = 'SELECT user_id'
@@ -227,22 +184,18 @@ else {
 		//}
 	}
 
-	function DeleteUserFromGroup ( $userid ) {
+	function DeleteUserFromGroup( $userid )
+	{
 		global $database;
 
-		
-			$query = 'DELETE FROM #__juga_u2g'
-			. ' WHERE user_id = \''.$userid . '\''
-			;
+		$query = 'DELETE FROM #__juga_u2g'
+		. ' WHERE user_id = \''.$userid . '\''
+		;
 
-			$database->setQuery( $query );
-			$database->query();
+		$database->setQuery( $query );
+		$database->query();
 
-
-			return true;
-		
+		return true;
 	}
 }
-
-
 ?>

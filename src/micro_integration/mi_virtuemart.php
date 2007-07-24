@@ -10,9 +10,10 @@
 
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_virtuemart {
-
-	function Info () {
+class mi_virtuemart
+{
+	function Info()
+	{
 		$info = array();
 		$info['name'] = _AEC_MI_NAME_VIRTM;
 		$info['desc'] = _AEC_MI_DESC_VIRTM;
@@ -20,7 +21,8 @@ class mi_virtuemart {
 		return $info;
 	}
 
-	function Settings( $params ) {
+	function Settings( $params )
+	{
 		global $database;
 
 		$query = 'SELECT shopper_group_id, shopper_group_name'
@@ -30,7 +32,7 @@ class mi_virtuemart {
 	 	$shopper_groups = $database->loadObjectList();
 
 		$sg = array();
-		foreach( $shopper_groups as $group ) {
+		foreach ( $shopper_groups as $group ) {
 			$sg[] = mosHTML::makeOption( $group->shopper_group_id, $group->shopper_group_name );
 		}
 
@@ -49,27 +51,29 @@ class mi_virtuemart {
 		return $settings;
 	}
 
-	function expiration_action( $params, $userid, $plan ) {
-		if( $params['set_shopper_group_exp'] ) {
-			if( $this->checkVMuserexists( $userid ) ) {
+	function expiration_action( $params, $userid, $plan )
+	{
+		if ( $params['set_shopper_group_exp'] ) {
+			if ( $this->checkVMuserexists( $userid ) ) {
 				$this->updateVMuserSgroup( $userid, $params['shopper_group_exp'] );
-			} elseif( $params['create_account'] ) {
+			} elseif ( $params['create_account'] ) {
 				$this->createVMuser( $userid, $params['shopper_group_exp'] );
 			}
 
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
 
-	function action( $params, $userid, $plan ) {
+	function action( $params, $userid, $plan )
+	{
 		global $database;
 
-		if( $params['set_shopper_group'] ) {
-			if( $this->checkVMuserexists( $userid ) ) {
+		if ( $params['set_shopper_group'] ) {
+			if ( $this->checkVMuserexists( $userid ) ) {
 				$this->updateVMuserSgroup( $userid, $params['shopper_group'] );
-			} elseif( $params['create_account'] ) {
+			} elseif ( $params['create_account'] ) {
 				$this->createVMuser( $userid, $params['shopper_group'] );
 			}
 
@@ -79,7 +83,8 @@ class mi_virtuemart {
 		}
 	}
 
-	function checkVMuserexists( $userid ) {
+	function checkVMuserexists( $userid )
+	{
 		global $database;
 
 		$query  = 'SELECT id'
@@ -90,7 +95,8 @@ class mi_virtuemart {
 		return $database->loadResult();
 	}
 
-	function updateVMuserSgroup( $userid, $shoppergroup ) {
+	function updateVMuserSgroup( $userid, $shoppergroup )
+	{
 		global $database;
 
 		$query  = 'UPDATE #__vm_shopper_vendor_xref'
@@ -101,14 +107,15 @@ class mi_virtuemart {
 		$database->query();
 	}
 
-	function createVMuser( $userid, $shoppergroup ) {
+	function createVMuser( $userid, $shoppergroup )
+	{
 		global $database;
 
 		$metaUser = new metaUser( $database );
 
 		$name = explode( ' ', $metaUser->cmsUser->name );
 		$namount = count( $name ); 
-		if( $namount >= 3 ) {
+		if ( $namount >= 3 ) {
 			$firstname = $name[0]; 
 			$mname = '';
 			for( $i=0; $i<$namount; $i++ ) {
@@ -116,18 +123,18 @@ class mi_virtuemart {
 			}
 			$middlename = implode( ' ', $mname );
 			$lastname = $name[$namount];
-		}elseif( count( $name ) == 2 ) {
+		} elseif ( count( $name ) == 2 ) {
 			$firstname = $name[0]; 
 			$middlename = '';
 			$lastname = $name[2];
-		}else{
+		} else {
 			$firstname = $name[0]; 
 			$middlename = '';
 			$lastname = '';
 		}
 
 		$numberofrows	= 1;
-		while( $numberofrows ) {
+		while ( $numberofrows ) {
 			// seed random number generator
 			srand( (double) microtime() * 10000 );
 			$inum =	strtolower( substr( base64_encode( md5( rand() ) ), 0, 32 ) );

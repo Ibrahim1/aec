@@ -10,9 +10,10 @@
 
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_mysql_query {
-
-	function Info() {
+class mi_mysql_query
+{
+	function Info()
+	{
 		$info = array();
 		$info['name'] = _AEC_MI_NAME_MYSQL;
 		$info['desc'] = _AEC_MI_DESC_MYSQL;
@@ -20,7 +21,8 @@ class mi_mysql_query {
 		return $info;
 	}
 
-	function Settings( $params ) {
+	function Settings( $params )
+	{
         $settings = array();
         $settings['query']			= array( 'inputD' );
         $settings['query_exp']		= array( 'inputD' );
@@ -31,16 +33,17 @@ class mi_mysql_query {
 		return $settings;
 	}
 
-	function pre_expiration_action( $params, $userid, $plan, $mi_id ) {
+	function pre_expiration_action( $params, $userid, $plan, $mi_id )
+	{
 		global $database;
 
 		$metaUser = new metaUser( $userid );
 
 		$userflags = $metaUser->objSubscription->getMIflags( $plan->id, $mi_id );
 
-		if( is_array( $userflags ) ) {
-			if( isset( $userflags['DB_QUERY'] ) ) {
-				if( !( time() > $userflags['DB_QUERY_ABANDONCHECK'] ) ) {
+		if ( is_array( $userflags ) ) {
+			if ( isset( $userflags['DB_QUERY'] ) ) {
+				if ( !( time() > $userflags['DB_QUERY_ABANDONCHECK'] ) ) {
 					return false;
 				}
 			}
@@ -58,7 +61,8 @@ class mi_mysql_query {
 		return true;
 	}
 
-	function expiration_action( $params, $userid, $plan ) {
+	function expiration_action( $params, $userid, $plan )
+	{
 		global $database;
 
 		$metaUser = new metaUser( $userid );
@@ -71,7 +75,8 @@ class mi_mysql_query {
 		return true;
 	}
 
-	function action( $params, $userid, $plan ) {
+	function action( $params, $userid, $plan )
+	{
 		global $database;
 
 		$metaUser = new metaUser( $userid );

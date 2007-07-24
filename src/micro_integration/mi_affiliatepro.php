@@ -47,9 +47,10 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_affiliatepro {
-
-	function Info () {
+class mi_affiliatepro
+{
+	function Info()
+	{
 		$info = array();
 		$info['name'] = _AEC_MI_NAME_AFFPRO;
 		$info['desc'] = _AEC_MI_DESC_AFFPRO;
@@ -57,15 +58,18 @@ class mi_affiliatepro {
 		return $info;
 	}
 
-	function checkInstallation () {
+	function checkInstallation()
+	{
 		return true;
 	}
 
-	function install () {
+	function install()
+	{
 		return true;
 	}
 
-	function Settings ( $params ) {
+	function Settings( $params )
+	{
 		$settings = array();
 		$settings['add_info']	= array( 'inputC' );
 		$settings['url']		= array( 'inputB' );
@@ -74,7 +78,8 @@ class mi_affiliatepro {
 		return $settings;
 	}
 
-	function action( $params, $userid, $plan ) {
+	function action( $params, $userid, $plan )
+	{
 		global $database;
 
 		$passvars = array();
@@ -112,8 +117,8 @@ class mi_affiliatepro {
 		$passvars['add_info']		= 'userid_' . $userid . '_plan_' . $plan->id . '_' . $params['mi_additional_info'];
 
 		$vars_encode = array();
-		foreach( $passvars as $key => $value ) {
-			if( !empty( $value ) ) {
+		foreach ( $passvars as $key => $value ) {
+			if ( !empty( $value ) ) {
 				$vars_encode[] = $key . '=' . $value;
 			}
 		}

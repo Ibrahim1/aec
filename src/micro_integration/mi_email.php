@@ -38,9 +38,10 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_email {
-
-	function Info () {
+class mi_email
+{
+	function Info()
+	{
 		$info = array();
 		$info['name'] = _AEC_MI_NAME_EMAIL;
 		$info['desc'] = _AEC_MI_DESC_EMAIL;
@@ -48,7 +49,8 @@ class mi_email {
 		return $info;
 	}
 
-	function Settings ( $params ) {
+	function Settings( $params )
+	{
 		$settings = array();
 		$settings['sender']				= array( 'inputE' );
 		$settings['sender_name']		= array( 'inputE' );
@@ -74,14 +76,15 @@ class mi_email {
 		return $settings;
 	}
 
-	function pre_expiration_action( $params, $userid, $plan, $mi_id ) {
+	function pre_expiration_action( $params, $userid, $plan, $mi_id )
+	{
 		$metaUser = new metaUser( $userid );
 
 		$userflags = $metaUser->objSubscription->getMIflags( $plan->id, $mi_id );
 
-		if( is_array( $userflags ) ) {
-			if( isset( $userflags['EXP_MAIL_SENT'] ) ) {
-				if( !( time() > $userflags['EXP_MAIL_ABANDONCHECK'] ) ) {
+		if ( is_array( $userflags ) ) {
+			if ( isset( $userflags['EXP_MAIL_SENT'] ) ) {
+				if ( !( time() > $userflags['EXP_MAIL_ABANDONCHECK'] ) ) {
 					return false;
 				}
 			}
@@ -104,13 +107,14 @@ class mi_email {
 		return true;
 	}
 
-	function expiration_action( $params, $userid, $plan ) {
+	function expiration_action( $params, $userid, $plan )
+	{
 		$metaUser = new metaUser( $userid );
 
 		$message	= AECToolbox::rewriteEngine( $params['text_exp'], $metaUser, $plan );
 		$recipients = explode( ',', $params['recipient'] );
 
-		foreach( $recipients as $current => $email ) {
+		foreach ( $recipients as $current => $email ) {
 			$recipients[$current] = AECToolbox::rewriteEngine( trim( $email ), $metaUser, $plan );
 		}
 
@@ -118,13 +122,15 @@ class mi_email {
 		return true;
 	}
 
-	function action( $params, $userid, $plan ) {
+	function action( $params, $userid, $plan )
+	{
 		$metaUser = new metaUser( $userid );
 
 		$message	= AECToolbox::rewriteEngine( $params['text'], $metaUser, $plan );
 		$recipients = explode( ',', $params['recipient'] );
 
-		foreach( $recipients as $current => $email ) {
+		foreach ( $recipients as $current => $email )
+		{
 			$recipients[$current] = AECToolbox::rewriteEngine( trim( $email ), $metaUser, $plan );
 		}
 

@@ -10,9 +10,10 @@
 
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_htaccess {
-
-	function Info () {
+class mi_htaccess
+{
+	function Info()
+	{
 		$info = array();
 		$info['name'] = _AEC_MI_NAME_HTACCESS;
 		$info['desc'] = _AEC_MI_DESC_HTACCESS;
@@ -20,13 +21,15 @@ class mi_htaccess {
 		return $info;
 	}
 
-	function mi_htaccess () {
+	function mi_htaccess()
+	{
 		global $mosConfig_absolute_path;
 
 		include_once( $mosConfig_absolute_path . '/components/com_acctexp/micro_integration/mi_htaccess/htaccess.class.php' );
 	}
 
-	function checkInstallation () {
+	function checkInstallation()
+	{
 		global $database, $mosConfig_dbprefix;
 
 		$tables	= array();
@@ -35,7 +38,8 @@ class mi_htaccess {
 		return in_array( $mosConfig_dbprefix .'_acctexp_mi_htaccess_apachepw', $tables );
 	}
 
-	function install () {
+	function install()
+	{
 		global $database;
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_htaccess_apachepw`'
@@ -50,7 +54,8 @@ class mi_htaccess {
 		return;
 	}
 
-	function Settings ( $params ) {
+	function Settings( $params )
+	{
 		global $mosConfig_absolute_path;
 
 		$settings = array();
@@ -64,7 +69,8 @@ class mi_htaccess {
 		return $settings;
 	}
 
-	function saveparams ( $params ) {
+	function saveparams( $params )
+	{
 		global $mosConfig_absolute_path, $database;
 
 		$mosConfig_absolute_path_above = substr( $mosConfig_absolute_path, 0, strrpos($mosConfig_absolute_path, "/") );
@@ -82,7 +88,7 @@ class mi_htaccess {
 
 		$newparams['mi_folder_user_fullpath'] = $newparams['mi_passwordfolder'] .  "/.htuser" . str_replace("/", "_", str_replace(".", "/", $newparams['mi_folder']));
 
-		if( !file_exists( $newparams['mi_folder_fullpath'] ) && !$params['rebuild'] ) {
+		if ( !file_exists( $newparams['mi_folder_fullpath'] ) && !$params['rebuild'] ) {
 			$ht = new htaccess();
 			$ht->setFPasswd( $newparams['mi_folder_user_fullpath'] );
 			$ht->setFHtaccess( $newparams['mi_folder_fullpath'] );
@@ -104,18 +110,18 @@ class mi_htaccess {
 
 			$planlist = MicroIntegrationHandler::getPlansbyMI( $params['MI_ID'] );
 
-			foreach( $planlist as $planid ) {
+			foreach ( $planlist as $planid ) {
 				$userlist = SubscriptionPlanHandler::getPlanUserlist( $planid );
-				foreach( $userlist as $userid ) {
+				foreach ( $userlist as $userid ) {
 					$user = new mosUser( $database );
 					$user->load( $userid );
 					if ( $user->id ) {
 						$username = $user->username;
 						$password = null;
 	
-						if( $params['use_md5'] ) {
+						if ( $params['use_md5'] ) {
 							$password = $user->password;
-						}else{
+						} else {
 							$apachepw = new apachepw( $database );
 							$apwid = $apachepw->getIDbyUserID( $userid );
 	
@@ -145,7 +151,8 @@ class mi_htaccess {
 		return $newparams;
 	}
 
-	function expiration_action( $params, $userid, $plan ) {
+	function expiration_action( $params, $userid, $plan )
+	{
 		global $database;
 
 		$user = new mosUser( $database );
@@ -156,7 +163,8 @@ class mi_htaccess {
 		$ht->delUser( $user->username );
 	}
 
-	function action($params, $userid, $plan) {
+	function action($params, $userid, $plan)
+	{
 		global $database;
 
 		$ht = new htaccess();
@@ -188,43 +196,44 @@ class mi_htaccess {
 		return true;
 	}
 
-	function on_userchange_action( $params, $row, $post, $trace ) {
+	function on_userchange_action( $params, $row, $post, $trace )
+	{
 		global $database;
 
 		$apachepw = new apachepw( $database );
 		$apwid = $apachepw->getIDbyUserID( $row->id );
 
-		if( $apwid ) {
+		if ( $apwid ) {
 			$apachepw->load( $apwid );
-		}else{
+		} else {
 			$apachepw->load(0);
 			$apachepw->userid = $row->id;
 		}
 
-		if( isset( $post['password']) && $post['password'] != '' ) {
+		if ( isset( $post['password']) && $post['password'] != '' ) {
 			$apachepw->apachepw = crypt( $post['password'] );
 			$apachepw->check();
 			$apachepw->store();
-		}elseif( !$apwid ) {
+		} elseif ( !$apwid ) {
 			// No new password and no existing password - nothing to be done here
 			return;
 		}
 
-		if( !( strcmp( $trace, 'registration' ) === 0 ) ) {
+		if ( !( strcmp( $trace, 'registration' ) === 0 ) ) {
 			$ht = new htaccess();
 			$ht->setFPasswd( $params['mi_folder_user_fullpath'] );
 			$ht->setFHtaccess( $params['mi_folder_fullpath'] );
-			if( isset( $params['mi_name'] ) ) {
+			if ( isset( $params['mi_name'] ) ) {
 				$ht->setAuthName( $params['mi_name'] );
 			}
 
 			$userlist = $ht->getUsers();
 
-			if( in_array( $row->username, $userlist ) ) {
+			if ( in_array( $row->username, $userlist ) ) {
 				$ht->delUser( $row->username );
-				if( $params['use_md5'] ) {
+				if ( $params['use_md5'] ) {
 					$ht->addUser( $row->username, $row->password );
-				}else{
+				} else {
 					$ht->addUser( $row->username, $apachepw->apachepw );
 				}
 				$ht->addLogin();
@@ -233,7 +242,8 @@ class mi_htaccess {
 		return true;
 	}
 
-	function delete ( $params ) {
+	function delete( $params )
+	{
 		if (!file_exists($params['mi_folder_fullpath'])) {
 			$ht = new htaccess();
 			$ht->setFPasswd( $params['mi_folder_user_fullpath']);
@@ -246,7 +256,8 @@ class mi_htaccess {
 	}
 }
 
-class apachepw extends mosDBTable {
+class apachepw extends mosDBTable
+{
 	/** @var int Primary key */
 	var $id					= null;
 	/** @var int */
@@ -254,11 +265,13 @@ class apachepw extends mosDBTable {
 	/** @var string */
 	var $apachepw			= null;
 
-	function apachepw( &$db ) {
+	function apachepw( &$db )
+	{
 		$this->mosDBTable( '#__acctexp_mi_htaccess_apachepw', 'id', $db );
 	}
 
-	function getIDbyUserID( $userid ) {
+	function getIDbyUserID( $userid )
+	{
 		global $database;
 
 		$query = 'SELECT id'

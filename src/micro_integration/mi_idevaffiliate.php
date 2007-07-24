@@ -14,9 +14,10 @@
 
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_idevaffiliate {
-
-	function Info () {
+class mi_idevaffiliate
+{
+	function Info()
+	{
 		$info = array();
 		$info['name'] = _AEC_MI_NAME_IDEV;
 		$info['desc'] = _AEC_MI_DESC_IDEV;
@@ -24,22 +25,26 @@ class mi_idevaffiliate {
 		return $info;
 	}
 
-	function checkInstallation () {
+	function checkInstallation()
+	{
 		return true;
 	}
 
-	function install () {
+	function install()
+	{
 		return true;
 	}
 
-	function Settings( $params ) {
+	function Settings( $params )
+	{
 		$settings = array();
 		$settings['mi_order_id']		= array( 'inputA' );
 		$settings['mi_order_subtotal']	= array( 'inputB' );
 		return $settings;
 	}
 
-	function action( $params, $userid, $plan ) {
+	function action( $params, $userid, $plan )
+	{
 		global $database;
 
 		$query = 'SELECT idev_vartotal, idev_order'
@@ -51,7 +56,7 @@ class mi_idevaffiliate {
 		$varname		= $idevconfig[0];
 		$idev_tracking	= $idevconfig[1];
 
-		if( strpos( $params['mi_order_id'], '[invoice]' ) ) {
+		if ( strpos( $params['mi_order_id'], '[invoice]' ) ) {
 			$query = 'SELECT invoice_number'
 			. ' FROM #__acctexp_invoices'
 			. ' WHERE userid = \'' . $userid . '\''
@@ -59,17 +64,17 @@ class mi_idevaffiliate {
 			;
 			$database->setQuery( $query );
 			$idev_tracking = $database->loadResult(); // $$idev_tracking
-		}elseif( strpos( $params['mi_order_id'], '[planid]' ) ) {
+		} elseif ( strpos( $params['mi_order_id'], '[planid]' ) ) {
 			$metaUser = new metaUser( $userid );
 			$idev_tracking = $metaUser->objSubscription->plan;
-		}elseif( strpos( $params['mi_order_id'], '[userid]' ) ) {
+		} elseif ( strpos( $params['mi_order_id'], '[userid]' ) ) {
 			$metaUser = new metaUser( $userid );
 			$idev_tracking = $metaUser->cmsUser->id;
-		}else{
+		} else {
 			$idev_tracking = $params['mi_order_id'];
 		}
 
-		if( strpos( $params['mi_order_subtotal'], '[invoice]' ) ) {
+		if ( strpos( $params['mi_order_subtotal'], '[invoice]' ) ) {
 			$query = 'SELECT amount'
 			. ' FROM #__acctexp_invoices'
 			. ' WHERE userid = \'' . $userid . '\''
@@ -77,7 +82,7 @@ class mi_idevaffiliate {
 			;
 			$database->setQuery( $query );
 			$varname = $database->loadResult(); // $$varname
-		}else{
+		} else {
 			$varname = number_format( $params['mi_order_subtotal'], 2, '.', '' );
 		}
 
@@ -85,7 +90,7 @@ class mi_idevaffiliate {
 
 		$fr = fopen( $GLOBALS['mosConfig_absolute_path'] . '/jstmp.txt', 'a+' );
 		fputs( $fr, _AEC_MI_DIV1_IDEV . '\n' );
-		foreach( $params as $key=>$value ) {
+		foreach ( $params as $key=>$value ) {
 			fputs( $fr, _AEC_MI_DIV2_IDEV . ' ' . $key . ' ' . _AEC_MI_DIV3_IDEV . ' ' . $value . '\n' );
 		}
 		fclose( $fr );

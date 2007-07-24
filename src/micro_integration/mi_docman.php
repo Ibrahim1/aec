@@ -13,9 +13,10 @@
 
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_docman {
-
-	function Info () {
+class mi_docman
+{
+	function Info()
+	{
 		$info = array();
 		$info['name'] = _AEC_MI_NAME_DOCMAN;
 		$info['desc'] = _AEC_MI_DESC_DOCMAN;
@@ -23,7 +24,8 @@ class mi_docman {
 		return $info;
 	}
 
-	function checkInstallation () {
+	function checkInstallation()
+	{
 		global $database, $mosConfig_dbprefix;
 
 		$tables	= array();
@@ -32,7 +34,8 @@ class mi_docman {
 		return in_array( $mosConfig_dbprefix . 'acctexp_mi_docman', $tables );
 	}
 
-	function install () {
+	function install()
+	{
 		global $database;
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_docman` ('
@@ -50,7 +53,8 @@ class mi_docman {
 		return;
 	}
 
-	function Settings( $params ) {
+	function Settings( $params )
+	{
 		global $database;
 
 		$query = 'SELECT groups_id, groups_name, groups_description'
@@ -81,23 +85,25 @@ class mi_docman {
 		return $settings;
 	}
 
-	function detect_application () {
+	function detect_application()
+	{
 		global $mosConfig_absolute_path;
 
 		return is_dir( $mosConfig_absolute_path . '/components/com_docman' );
 	}
 
-	function saveparams ( $params ) {
+	function saveparams( $params )
+	{
 		global $mosConfig_absolute_path, $database;
 		$newparams = $params;
 
-		if ($params['rebuild']) {
+		if ( $params['rebuild'] ) {
 			$planlist = MicroIntegrationHandler::getPlansbyMI( $params['MI_ID'] );
 
-			foreach( $planlist as $planid ) {
+			foreach ( $planlist as $planid ) {
 				$userlist = SubscriptionPlanHandler::getPlanUserlist( $planid );
-				foreach( $userlist as $userid ) {
-					if ($params['set_group']) {
+				foreach ( $userlist as $userid ) {
+					if ( $params['set_group'] ) {
 						$this->AddUserToGroup( $userid, $params['group'] );
 					}
 				}
@@ -109,7 +115,8 @@ class mi_docman {
 		return $newparams;
 	}
 
-	function hacks () {
+	function hacks()
+	{
 		global $mosConfig_absolute_path;
 
 		$hacks = array();
@@ -139,15 +146,16 @@ class mi_docman {
 		return $hacks;
 	}
 
-	function expiration_action($params, $userid, $plan) {
+	function expiration_action($params, $userid, $plan)
+	{
 		global $database;
 
 		// TODO: Make this a choice, also offer deletion of ALL groups
-		if ($params['set_group']) {
+		if ( $params['set_group'] ) {
 			$this->DeleteUserFromGroup( $userid, $params['group'] );
 		}
 		
-		if( $params['set_group_exp'] ) {
+		if ( $params['set_group_exp'] ) {
 			$this->AddUserToGroup( $userid, $params['group_exp'] );
 		}
 
@@ -156,7 +164,7 @@ class mi_docman {
 		$mi_id = $id ? $id : 0;
 		$mi_docmanhandler->load( $mi_id );
 
-		if( $mi_id ) {
+		if ( $mi_id ) {
 			$mi_docmanhandler->active = 0;
 			$mi_docmanhandler->check();
 			$mi_docmanhandler->store();
@@ -165,10 +173,11 @@ class mi_docman {
 		return true;
 	}
 
-	function action( $params, $userid, $plan ) {
+	function action( $params, $userid, $plan )
+	{
 		global $database;
 
-		if ($params['set_group']) {
+		if ( $params['set_group'] ) {
 			$this->AddUserToGroup( $userid, $params['group'] );
 		}
 
@@ -177,14 +186,14 @@ class mi_docman {
 		$mi_id = $id ? $id : 0;
 		$mi_docmanhandler->load( $mi_id );
 
-		if( !$mi_id ) {
+		if ( !$mi_id ) {
 			$mi_docmanhandler->userid = $userid;
 			$mi_docmanhandler->active = 1;
 		}
 
-		if( $params['set_downloads'] ) {
+		if ( $params['set_downloads'] ) {
 			$mi_docmanhandler->setDownloads( $params['set_downloads'] );
-		}elseif( $params['add_downloads'] ) {
+		} elseif ( $params['add_downloads'] ) {
 			$mi_docmanhandler->addDownloads( $params['add_downloads'] );
 		}
 
@@ -194,7 +203,8 @@ class mi_docman {
 		return true;
 	}
 
-	function GetUserGroups ( $userid ) {
+	function GetUserGroups( $userid )
+	{
 		global $database;
 
 		$query = 'SELECT groups_id'
@@ -204,7 +214,7 @@ class mi_docman {
 		$ids = $database->loadResultArray();
 
 		$groups = array();
-		foreach( $ids as $groupid ) {
+		foreach ( $ids as $groupid ) {
 			$query = 'SELECT groups_members'
 			. ' FROM #__docman_groups'
 			. ' WHERE groups_id = \'' . $groupid . '\''
@@ -213,7 +223,7 @@ class mi_docman {
 			$database->setQuery( $query );
 			$users = explode( ',', $database->loadResult() );
 
-			if( in_array( $userid, $users ) ) {
+			if ( in_array( $userid, $users ) ) {
 				$groups[] = $groupid;
 			}
 		}
@@ -221,7 +231,8 @@ class mi_docman {
 		return $groups;
 	}
 
-	function AddUserToGroup ( $userid, $groupid ) {
+	function AddUserToGroup( $userid, $groupid )
+	{
 		global $database;
 
 		$query = 'SELECT groups_members'
@@ -232,14 +243,15 @@ class mi_docman {
 		$database->setQuery( $query );
 		$users = explode( ',', $database->loadResult() );
 
-		if( !in_array( $userid, $users ) ) {
+		if ( !in_array( $userid, $users ) )
+		{
 			$users[] = $userid;
 
 			// Make sure we have no empty value
 			$search = 0;
-			while( $search !== false ) {
+			while ( $search !== false ) {
 				$search = array_search( '', $users );
-				if( $search !== false ) {
+				if ( $search !== false ) {
 					unset( $users[$search] );
 				}
 			}
@@ -253,12 +265,13 @@ class mi_docman {
 			$database->query();
 
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
 
-	function DeleteUserFromGroup ( $userid, $groupid ) {
+	function DeleteUserFromGroup( $userid, $groupid )
+	{
 		global $database;
 
 		$query = 'SELECT groups_members'
@@ -269,15 +282,15 @@ class mi_docman {
 		$database->setQuery( $query );
 		$users = explode( ',', $database->loadResult() );
 
-		if( in_array( $userid, $users ) ) {
+		if ( in_array( $userid, $users ) ) {
 			$key = array_search( $userid, $users );
 			unset( $users[$key] );
 
 			// Make sure we have no empty value
 			$search = 0;
-			while( $search !== false ) {
+			while ( $search !== false ) {
 				$search = array_search( '', $users );
-				if( $search !== false ) {
+				if ( $search !== false ) {
 					unset( $users[$search] );
 				}
 			}
@@ -291,7 +304,7 @@ class mi_docman {
 			$database->query();
 
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
@@ -326,36 +339,39 @@ class docman_restriction extends mosDBTable {
 		$this->mosDBTable( '#__acctexp_mi_docman', 'id', $db );
 	}
 
-	function is_active () {
-		if( $this->active ) {
-			return true;
-		}else{
-			return false;
-		}
-	}
-
-	function getDownloadsLeft () {
-		$downloads_left = $this->granted_downloads - $this->used_downloads;
-		return $downloads_left;
-	}
-
-	function hasDownloadsLeft () {
-		if( $this->getDownloadsLeft() > 0 ) {
+	function is_active()
+	{
+		if ( $this->active ) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	function noDownloadsLeft () {
+	function getDownloadsLeft()
+	{
+		$downloads_left = $this->granted_downloads - $this->used_downloads;
+		return $downloads_left;
+	}
 
-		if( !defined( '_AEC_LANG_INCLUDED_MI' ) ) {
+	function hasDownloadsLeft()
+	{
+		if ( $this->getDownloadsLeft() > 0 ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function noDownloadsLeft()
+	{
+		if ( !defined( '_AEC_LANG_INCLUDED_MI' ) ) {
 			global $mainframe;
 
 			$langPathMI = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/micro_integration/language/';
-			if( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
+			if ( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
 				include_once( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' );
-			}else{
+			} else {
 				include_once( $langPathMI . 'english.php' );
 			}
 		}
@@ -363,22 +379,25 @@ class docman_restriction extends mosDBTable {
 		mosRedirect( 'index.php?option=com_docman', _AEC_MI_DOCMAN_NOCREDIT );
 	}
 
-	function useDownload () {
-		if( $this->hasDownloadsLeft() && $this->is_active() ) {
+	function useDownload()
+	{
+		if ( $this->hasDownloadsLeft() && $this->is_active() ) {
 			$this->used_downloads++;
 			$this->check();
 			$this->store();
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
 
-	function setDownloads( $set ) {
+	function setDownloads( $set )
+	{
 		$this->granted_downloads = $set;
 	}
 
-	function addDownloads( $add ) {
+	function addDownloads( $add )
+	{
 		$this->granted_downloads += $add;
 	}
 }

@@ -10,9 +10,10 @@
 
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_mosets_tree {
-
-	function Info () {
+class mi_mosets_tree
+{
+	function Info()
+	{
 		$info = array();
 		$info['name'] = _AEC_MI_NAME_MOSETS;
 		$info['desc'] = _AEC_MI_DESC_MOSETS;
@@ -20,7 +21,8 @@ class mi_mosets_tree {
 		return $info;
 	}
 
-	function checkInstallation () {
+	function checkInstallation()
+	{
 		global $database, $mosConfig_dbprefix;
 
 		$tables	= array();
@@ -29,7 +31,8 @@ class mi_mosets_tree {
 		return in_array( $mosConfig_dbprefix . '_acctexp_mi_mosetstree', $tables );
 	}
 
-	function install () {
+	function install()
+	{
 		global $database;
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_mosetstree` ('
@@ -47,7 +50,8 @@ class mi_mosets_tree {
 		return;
 	}
 
-	function Settings ( $params ) {
+	function Settings( $params )
+	{
 		// field type; name; variable value, description, extra (variable name)
 
 		$settings = array();
@@ -57,7 +61,8 @@ class mi_mosets_tree {
 		return $settings;
 	}
 
-	function expiration_action( $params, $userid, $plan ) {
+	function expiration_action( $params, $userid, $plan )
+	{
 		global $database;
 
 		$mi_mosetshandler = new mosetstree( $database );
@@ -72,7 +77,8 @@ class mi_mosets_tree {
 		return true;
 	}
 
-	function action( $params, $userid, $plan ) {
+	function action( $params, $userid, $plan )
+	{
 		global $database;
 
 		$mi_mosetshandler = new mosetstree( $database );
@@ -80,14 +86,14 @@ class mi_mosets_tree {
 		$mi_id = $id ? $id : 0;
 		$mi_mosetshandler->load( $mi_id );
 
-		if( !$mi_id ) {
+		if ( !$mi_id ){
 			$mi_mosetshandler->userid = $userid;
 			$mi_mosetshandler->active = 1;
 		}
 
-		if( $params['set_listings'] ) {
+		if ( $params['set_listings'] ) {
 			$mi_mosetshandler->setListings( $params['set_listings'] );
-		}elseif( $params['add_listings'] ) {
+		} elseif ( $params['add_listings'] ) {
 			$mi_mosetshandler->addListings( $params['add_listings'] );
 		}
 
@@ -97,13 +103,15 @@ class mi_mosets_tree {
 		return true;
 	}
 
-	function detect_application () {
+	function detect_application()
+	{
 		global $mosConfig_absolute_path;
 
 		return is_dir( $mosConfig_absolute_path . '/components/com_mtree' );
 	}
 	
-	function hacks () {
+	function hacks()
+	{
 		global $mosConfig_absolute_path;
 
 		$hacks = array();
@@ -190,7 +198,8 @@ class mi_mosets_tree {
 	}
 
 
-	function profile_info( $params, $userid ) {
+	function profile_info( $params, $userid )
+	{
 		global $database;
 
 		$mi_mosetshandler = new mosetstree( $database );
@@ -206,7 +215,8 @@ class mi_mosets_tree {
 
 }
 
-class mosetstree extends mosDBTable {
+class mosetstree extends mosDBTable
+{
 	/** @var int Primary key */
 	var $id					= null;
 	/** @var int */
@@ -220,7 +230,8 @@ class mosetstree extends mosDBTable {
 	/** @var text */
 	var $params				= null;
 
-	function mosetstree( &$db ) {
+	function mosetstree( &$db )
+	{
 		global $mainframe;
 
 		$langPathMI = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/micro_integration/language/';
@@ -233,7 +244,8 @@ class mosetstree extends mosDBTable {
 		$this->mosDBTable( '#__acctexp_mi_mosetstree', 'id', $db );
 	}
 
-	function getIDbyUserID( $userid ) {
+	function getIDbyUserID( $userid )
+	{
 		global $database;
 
 		$query = 'SELECT id'
@@ -244,12 +256,14 @@ class mosetstree extends mosDBTable {
 		return $database->loadResult();
 	}
 
-	function loadUserID( $userid ) {
+	function loadUserID( $userid )
+	{
 		$id = $this->getIDbyUserID( $userid );
 		$this->load( $id );
 	}
 
-	function is_active () {
+	function is_active()
+	{
 		if( $this->active ) {
 			return true;
 		}else{
@@ -257,12 +271,14 @@ class mosetstree extends mosDBTable {
 		}
 	}
 
-	function getListingsLeft () {
+	function getListingsLeft()
+	{
 		$listings_left = $this->granted_listings - $this->used_listings;
 		return $listings_left;
 	}
 
-	function hasListingsLeft () {
+	function hasListingsLeft()
+	{
 		if( $this->getListingsLeft() > 0 ) {
 			return true;
 		}else{
@@ -270,7 +286,8 @@ class mosetstree extends mosDBTable {
 		}
 	}
 
-	function useListing () {
+	function useListing()
+	{
 		if( $this->hasListingsLeft() && $this->is_active() ) {
 			$this->used_listings++;
 			$this->check();
@@ -281,11 +298,13 @@ class mosetstree extends mosDBTable {
 		}
 	}
 
-	function setListings( $set ) {
+	function setListings( $set )
+	{
 		$this->granted_listings = $set;
 	}
 
-	function addListings( $add ) {
+	function addListings( $add )
+	{
 		$this->granted_listings += $add;
 	}
 }

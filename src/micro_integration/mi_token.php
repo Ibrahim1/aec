@@ -11,9 +11,10 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_token {
-
-	function Info () {
+class mi_token
+{
+	function Info ()
+	{
 		$info = array();
 		$info['name'] = 'token';
 		$info['desc'] = 'DEVELOPMENT STAGE - empty description';

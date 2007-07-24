@@ -10,9 +10,10 @@
 
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_remository {
-
-	function Info () {
+class mi_remository
+{
+	function Info()
+	{
 		$info = array();
 		$info['name'] = _AEC_MI_NAME_REMOS;
 		$info['desc'] = _AEC_MI_DESC_REMOS;
@@ -20,7 +21,8 @@ class mi_remository {
 		return $info;
 	}
 
-	function checkInstallation () {
+	function checkInstallation()
+	{
 		global $database, $mosConfig_dbprefix;
 
 		$tables	= array();
@@ -29,7 +31,8 @@ class mi_remository {
 		return in_array( $mosConfig_dbprefix . 'acctexp_mi_remository', $tables );
 	}
 
-	function install () {
+	function install()
+	{
 		global $database;
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_remository` ('
@@ -47,7 +50,8 @@ class mi_remository {
 		return;
 	}
 
-	function Settings( $params ) {
+	function Settings( $params )
+	{
 		global $database;
 
 		$query = 'SELECT group_id, group_name, group_description'
@@ -57,7 +61,7 @@ class mi_remository {
 	 	$groups = $database->loadObjectList();
 
 		$sg = array();
-		foreach( $groups as $group ) {
+		foreach ( $groups as $group ) {
 			$sg[] = mosHTML::makeOption( $group->group_id, $group->group_name . ' - '
 			. substr( strip_tags( $group->group_name ), 0, 30 ) );
 		}
@@ -77,13 +81,15 @@ class mi_remository {
 		return $settings;
 	}
 
-	function detect_application () {
+	function detect_application()
+	{
 		global $mosConfig_absolute_path;
 
 		return is_dir( $mosConfig_absolute_path . '/components/com_remository' );
 	}
 
-	function hacks () {
+	function hacks()
+	{
 		global $mosConfig_absolute_path;
 
 		$hacks = array();
@@ -114,7 +120,8 @@ class mi_remository {
 		return $hacks;
 	}
 
-	function expiration_action( $params, $userid, $plan ) {
+	function expiration_action( $params, $userid, $plan )
+	{
 		global $database;
 
 		if ($params['set_group_exp']) {
@@ -126,12 +133,12 @@ class mi_remository {
 			$database->setQuery( $query );
 
 			// If already an entry exists -> update, if not -> create
-			if ($database->loadResult()) {
+			if ( $database->loadResult() ) {
 				$query = 'UPDATE #__mbt_group_member'
 				. ' SET group_id = \'' . $params['group_exp'] . '\''
 				. ' WHERE member_id = \'' . $userid . '\''
 				;
-			}else{
+			} else {
 				$query = 'INSERT INTO #__mbt_group_member'
 				. ' ( `group_id` , `member_id` )'
 				. ' VALUES (\'' . $params['group_exp'] . '\', \'' . $userid . '\')'
@@ -148,7 +155,7 @@ class mi_remository {
 		$mi_id = $id ? $id : 0;
 		$mi_remositoryhandler->load( $mi_id );
 
-		if( $mi_id ) {
+		if ( $mi_id ) {
 			$mi_remositoryhandler->active = 0;
 			$mi_remositoryhandler->check();
 			$mi_remositoryhandler->store();
@@ -157,10 +164,11 @@ class mi_remository {
 		return true;
 	}
 
-	function action( $params, $userid, $plan ) {
+	function action( $params, $userid, $plan )
+	{
 		global $database;
 
-		if( $params['set_group'] ) {
+		if ( $params['set_group'] ) {
 			// Check if exists
 			$query = 'SELECT group_id'
 			. ' FROM #__mbt_group_member'
@@ -169,7 +177,7 @@ class mi_remository {
 			$database->setQuery( $query );
 
 			// If already an entry exists -> update, if not -> create
-			if( $database->loadResult() ) {
+			if ( $database->loadResult() ) {
 				$query = 'UPDATE #__mbt_group_member'
 				. ' SET group_id = \'' . $params['group'] . '\''
 				. ' WHERE member_id = \'' . $userid . '\''
@@ -191,14 +199,14 @@ class mi_remository {
 		$mi_id = $id ? $id : 0;
 		$mi_remositoryhandler->load( $mi_id );
 
-		if( !$mi_id ) {
+		if ( !$mi_id ) {
 			$mi_remositoryhandler->userid = $userid;
 			$mi_remositoryhandler->active = 1;
 		}
 
-		if( $params['set_downloads'] ) {
+		if ( $params['set_downloads'] ) {
 			$mi_remositoryhandler->setDownloads( $params['set_downloads'] );
-		}elseif( $params['add_downloads'] ) {
+		} elseif ( $params['add_downloads'] ) {
 			$mi_remositoryhandler->addDownloads( $params['add_downloads'] );
 		}
 
@@ -223,7 +231,8 @@ class remository_restriction extends mosDBTable {
 	/** @var text */
 	var $params				= null;
 
-	function getIDbyUserID( $userid ) {
+	function getIDbyUserID( $userid )
+	{
 		global $database;
 
 		$query = 'SELECT id'
@@ -234,11 +243,13 @@ class remository_restriction extends mosDBTable {
 		return $database->loadResult();
 	}
 
-	function remository_restriction( &$db ) {
+	function remository_restriction( &$db )
+	{
 		$this->mosDBTable( '#__acctexp_mi_remository', 'id', $db );
 	}
 
-	function is_active() {
+	function is_active()
+	{
 		if( $this->active ) {
 			return true;
 		}else{
@@ -246,12 +257,14 @@ class remository_restriction extends mosDBTable {
 		}
 	}
 
-	function getDownloadsLeft() {
+	function getDownloadsLeft()
+	{
 		$downloads_left = $this->granted_downloads - $this->used_downloads;
 		return $downloads_left;
 	}
 
-	function hasDownloadsLeft() {
+	function hasDownloadsLeft()
+	{
 		if( $this->getDownloadsLeft() > 0 ) {
 			return true;
 		}else{
@@ -259,7 +272,8 @@ class remository_restriction extends mosDBTable {
 		}
 	}
 
-	function useDownload() {
+	function useDownload()
+	{
 		if( $this->hasDownloadsLeft() && $this->is_active() ) {
 			$this->used_downloads++;
 			$this->check();
@@ -270,11 +284,13 @@ class remository_restriction extends mosDBTable {
 		}
 	}
 
-	function setDownloads( $set ) {
+	function setDownloads( $set )
+	{
 		$this->granted_downloads = $set;
 	}
 
-	function addDownloads( $add ) {
+	function addDownloads( $add )
+	{
 		$this->granted_downloads += $add;
 	}
 }
