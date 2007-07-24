@@ -80,10 +80,13 @@ define( '_AEC_CMN_YES',							'Ja' );
 define( '_AEC_CMN_NO',							'Nein' );
 define( '_AEC_CMN_LANG_CONSTANT_IS_MISSING',	'Sprachenkonstante <strong>%s</strong> fehlt' );
 define( '_AEC_CMN_INVISIBLE',					'Unsichtbar' );
-define( '_AEC_CMN_EXCLUDED',					'Ausgeschlossen' );
+define( '_AEC_CMN_EXCLUDED',					'Ausgenommen' );
+define( '_AEC_CMN_PENDING',						'Schwebend' );
 define( '_AEC_CMN_ACTIVE',						'Aktiv' );
-define( '_AEC_CMN_CANCEL_STORNO',				'Abgebrochen/Storniert' );
-define( '_AEC_CMN_EXPIRED_CLOSED',				'Abgelaufen/Beendet' );
+define( '_AEC_CMN_TRIAL',						'Testzeit' );
+define( '_AEC_CMN_CANCEL',						'Abgebrochen/Storniert' );
+define( '_AEC_CMN_EXPIRED',						'Abgelaufen' );
+define( '_AEC_CMN_CLOSED',						'Geschlossen' );
 
 // user(info)
 define( '_AEC_USER_USER_INFO',					'Benutzerinfos' );

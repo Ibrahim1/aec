@@ -633,12 +633,16 @@ class HTML_AcctExp
 									switch( $subscription->status ) {
 										case 'Excluded':
 											$icon = 'cut_red.png';
+											$status	= _AEC_CMN_EXCLUDED;
 											break;
 
 										case 'Trial':
+											$icon 	= 'star.png';
+											$status	= _AEC_CMN_TRIAL;
+											break;
 										case 'Pending':
 											$icon 	= 'star.png';
-											$status	= _AEC_CMN_EXCLUDED;
+											$status	= _AEC_CMN_PENDING;
 											break;
 
 										case 'Active':
@@ -648,13 +652,17 @@ class HTML_AcctExp
 
 										case 'Cancel':
 											$icon	= 'exclamation.png';
-											$status	= _AEC_CMN_CANCEL_STORNO;
+											$status	= _AEC_CMN_CANCEL;
 											break;
 
 										case 'Expired':
+											$icon	= 'cancel.png';
+											$status	= _AEC_CMN_EXPIRED;
+											break;
+
 										case 'Closed':
 											$icon	= 'cancel.png';
-											$status	= _AEC_CMN_EXPIRED_CLOSED;
+											$status	= _AEC_CMN_CLOSED;
 											break;
 
 										default:
