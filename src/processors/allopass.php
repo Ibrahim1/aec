@@ -35,19 +35,24 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_allopass {
-
-	function processor_allopass () {
+class processor_allopass
+{
+	function processor_allopass()
+	{
 		global $mosConfig_absolute_path;
 
-		if (file_exists( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/'.$GLOBALS['mosConfig_lang'].'.php' )) {
-				include_once( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/'.$GLOBALS['mosConfig_lang'].'.php' );
-		} else {
-				include_once( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/english.php' );
+		if( !defined( '_AEC_LANG_PROCESSOR' ) ) {
+			$langPath = $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/';
+			if (file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
+				include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
+			}else{
+				include_once( $langPath . 'english.php' );
+			}
 		}
 	}
 
-	function info () {
+	function info()
+	{
 		$info = array();
 		$info['name'] = "allopass";
 		$info['longname'] = "Allopass";
@@ -59,7 +64,8 @@ class processor_allopass {
 		return $info;
 	}
 
-	function settings () {
+	function settings()
+	{
 		$settings = array();
 		$settings['siteid'] = "siteid";
 		$settings['docid'] = "docid";
@@ -72,7 +78,8 @@ class processor_allopass {
 		return $settings;
 	}
 
-	function backend_settings () {
+	function backend_settings()
+	{
 		$settings = array();
 		$settings['testmode'] = array("list_yesno");
 		$settings['siteid'] = array("inputC");
@@ -85,7 +92,8 @@ class processor_allopass {
 		return $settings;
 	}
 
-	function createGatewayLink ( $int_var, $cfg, $metaUser, $new_subscription ) {
+	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	{
 		global $mosConfig_live_site;
 
 		$var['post_url']       = AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=allopassnotification");
@@ -117,7 +125,8 @@ class processor_allopass {
 		return $var;
 	}
 
-	function parseNotification ( $post, $cfg ) {
+	function parseNotification( $post, $cfg )
+	{
 
    		$ssl_amount = mosGetParam( $_REQUEST, 'ssl_amount', '' ) ;
 

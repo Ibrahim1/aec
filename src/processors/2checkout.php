@@ -37,22 +37,24 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_2checkout {
-
-	function processor_2checkout () {
+class processor_2checkout
+{
+	function processor_2checkout ()
+	{
 		global $mosConfig_absolute_path;
 
-		if( !defined( '_AEC_LANG_PROCESSOR' ) ) {
+		if ( !defined( '_AEC_LANG_PROCESSOR' ) ) {
 			$langPath = $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/';
 			if (file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
 				include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
-			}else{
+			} else {
 				include_once( $langPath . 'english.php' );
 			}
 		}
 	}
 
-	function info () {
+	function info()
+	{
 		$info = array();
 		$info['name']				= '2checkout';
 		$info['longname'] 			= _AEC_PROC_INFO_2CO_LNAME;
@@ -64,7 +66,8 @@ class processor_2checkout {
 		return $info;
 	}
 
-	function settings () {
+	function settings()
+	{
 		$settings = array();
 		$settings['sid']			= '2checkout sid';
 		$settings['secret_word']	= 'secret_word';
@@ -78,7 +81,8 @@ class processor_2checkout {
 		return $settings;
 	}
 
-	function backend_settings () {
+	function backend_settings()
+	{
 		$settings = array();
 		$settings['testmode']		= array( 'list_yesno' );
 		$settings['sid']			= array( 'inputC' );
@@ -94,16 +98,17 @@ class processor_2checkout {
 		return $settings;
 	}
 
-	function createGatewayLink ( $int_var, $cfg, $metaUser, $new_subscription ) {
+	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	{
 		global $mosConfig_live_site;
 
-		if( $cfg['alt2courl'] ) {
+		if ( $cfg['alt2courl'] ) {
 			$var['post_url']		= 'https://www2.2checkout.com/2co/buyer/purchase';
-		}else{
+		} else {
 			$var['post_url']		= 'https://www.2checkout.com/2co/buyer/purchase';
 		}
 
-		if( $cfg['testmode'] ) {
+		if ( $cfg['testmode'] ) {
 			$var['testmode']		= 1;
 			$var['demo']			= 'Y';
 		}
@@ -121,7 +126,8 @@ class processor_2checkout {
 		return $var;
 	}
 
-	function parseNotification ( $post, $cfg ) {
+	function parseNotification( $post, $cfg )
+	{
 		$description			= $post['cart_order_id'];
 		$key					= $post['key'];
 		$total					= $post['total'];

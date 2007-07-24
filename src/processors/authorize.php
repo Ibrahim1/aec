@@ -29,19 +29,25 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_authorize {
+class processor_authorize
+{
 
-	function processor_authorize () {
+	function processor_authorize()
+	{
 		global $mosConfig_absolute_path;
 
-		if (file_exists( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/'.$GLOBALS['mosConfig_lang'].'.php' )) {
-				include_once( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/'.$GLOBALS['mosConfig_lang'].'.php' );
-		} else {
-				include_once( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/english.php' );
+		if( !defined( '_AEC_LANG_PROCESSOR' ) ) {
+			$langPath = $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/';
+			if (file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
+				include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
+			}else{
+				include_once( $langPath . 'english.php' );
+			}
 		}
 	}
 
-	function info () {
+	function info()
+	{
 		$info = array();
 		$info['name'] = "authorize";
 		$info['longname'] = "Authorize.net";
@@ -58,7 +64,8 @@ class processor_authorize {
 		return $info;
 	}
 
-	function settings () {
+	function settings()
+	{
 		$settings = array();
 		$settings['login'] = "login";
 		$settings['transaction_key'] = "transaction_key";
@@ -73,7 +80,8 @@ class processor_authorize {
 		return $settings;
 	}
 
-	function backend_settings () {
+	function backend_settings()
+	{
 		$settings = array();
 		$settings['testmode'] = array("list_yesno");
 		$settings['login'] = array("inputC");
@@ -83,10 +91,11 @@ class processor_authorize {
 		return $settings;
 	}
 
-	function createGatewayLink ( $int_var, $cfg, $metaUser, $new_subscription ) {
+	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	{
 		global $mosConfig_live_site;
 
-		if ($cfg['testmode']) {
+		if ( $cfg['testmode'] ) {
 			$var['post_url']	= "https://certification.authorize.net/gateway/transact.dll";
 		} else {
 			$var['post_url']	= "https://secure.authorize.net/gateway/transact.dll";
@@ -119,7 +128,8 @@ class processor_authorize {
 		return $var;
 	}
 
-	function parseNotification ( $post, $cfg ) {
+	function parseNotification( $post, $cfg )
+	{
 		$x_description			= $_POST['x_description'];
 		$x_response_code		= $_POST['x_response_code'];
 		$x_response_reason_text	= $_POST['x_response_reason_text'];
@@ -133,7 +143,8 @@ class processor_authorize {
 		return $response;
 	}
 
-	function hmac ($key, $data) {
+	function hmac( $key, $data )
+	{
 	   // RFC 2104 HMAC implementation for php.
 	   // Creates an md5 HMAC.
 	   // Eliminates the need to install mhash to compute a HMAC

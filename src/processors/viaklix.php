@@ -29,19 +29,24 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_viaklix {
-
-	function processor_viaklix () {
+class processor_viaklix
+{
+	function processor_viaklix()
+	{
 		global $mosConfig_absolute_path;
 
-		if (file_exists( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/'.$GLOBALS['mosConfig_lang'].'.php' )) {
-				include_once( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/'.$GLOBALS['mosConfig_lang'].'.php' );
-		} else {
-				include_once( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/english.php' );
+		if( !defined( '_AEC_LANG_PROCESSOR' ) ) {
+			$langPath = $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/';
+			if (file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
+				include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
+			}else{
+				include_once( $langPath . 'english.php' );
+			}
 		}
 	}
 
-	function info () {
+	function info()
+	{
 		$info = array();
 		$info['name'] = "viaklix";
 		$info['longname'] = "Viaklix";
@@ -53,7 +58,8 @@ class processor_viaklix {
 		return $info;
 	}
 
-	function settings () {
+	function settings()
+	{
 		$settings = array();
 		$settings['accountid'] = "your account id";
 		$settings['userid'] = "your user id";
@@ -67,7 +73,8 @@ class processor_viaklix {
 		return $settings;
 	}
 
-	function backend_settings () {
+	function backend_settings()
+	{
 		$settings = array();
 		$settings['testmode'] = array("list_yesno");
 		$settings['accountid'] = array("inputC");
@@ -80,7 +87,8 @@ class processor_viaklix {
 		return $settings;
 	}
 
-	function createGatewayLink ( $int_var, $cfg, $metaUser, $new_subscription ) {
+	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	{
 		global $mosConfig_live_site;
 
 		$var['post_url']	= "https://www.viaKLIX.com/process.asp";
@@ -105,7 +113,8 @@ class processor_viaklix {
 		return $var;
 	}
 
-	function parseNotification ( $post, $cfg ) {
+	function parseNotification( $post, $cfg )
+	{
 		$ssl_result				= $_POST['ssl_result'];
 		$ssl_result_message		= $_POST['ssl_result_message'];
 		$ssl_txn_id				= $_POST['ssl_txn_id'];

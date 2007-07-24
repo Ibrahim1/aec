@@ -44,19 +44,24 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_ccbill {
-
-	function processor_ccbill () {		
+class processor_ccbill
+{
+	function processor_ccbill()
+	{		
 		global $mosConfig_absolute_path;
 
-		if (file_exists( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/'.$GLOBALS['mosConfig_lang'].'.php' )) {
-				include_once( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/'.$GLOBALS['mosConfig_lang'].'.php' );
-		} else {
-				include_once( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/english.php' );
+		if( !defined( '_AEC_LANG_PROCESSOR' ) ) {
+			$langPath = $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/';
+			if (file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
+				include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
+			}else{
+				include_once( $langPath . 'english.php' );
+			}
 		}
 	}
 
-	function info () {
+	function info()
+	{
 		$info = array();
 		$info['name'] = "ccbill";
 		$info['longname'] = "CCBill";
@@ -69,7 +74,8 @@ class processor_ccbill {
 		return $info;
 	}
 
-	function settings () {
+	function settings()
+	{
 		$settings = array();
 		$settings['clientAccnum']	= "Client Account Number";
 		$settings['clientSubacc']	= "Client Sub Account";
@@ -79,7 +85,8 @@ class processor_ccbill {
 		return $settings;
 	}
 
-	function backend_settings () {
+	function backend_settings()
+	{
 		$settings = array();
 		$settings['clientAccnum']	= array("inputC","Client Account","Your CCBill Client Acc. No.");
 		$settings['clientSubacc']	= array("inputC","Client Account","Your CCBill Sub Acc. No.");
@@ -89,7 +96,8 @@ class processor_ccbill {
 		return $settings;
 	}
 
-	function createGatewayLink ( $int_var, $cfg, $metaUser, $new_subscription ) {
+	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	{
 		global $mosConfig_live_site;
 
 		$var['post_url']		= "https://bill.ccbill.com/jpost/signup.cgi";
@@ -139,7 +147,8 @@ class processor_ccbill {
 	*/
 	
 	
-	function parseNotification ( $post, $cfg ) {
+	function parseNotification( $post, $cfg )
+	{
 		$invoice			= $post['invoice'];	
 		$username			= $post['username'];	
 		$reasonForDecline	= $post['reasonForDecline'];
@@ -203,9 +212,8 @@ class processor_ccbill {
 		$validate			= md5($cfg['secretWord'] . $username);
 		
 		if (strlen($reasonForDecline) > 0){
-		$response['valid'] = 0;
-		return $response;
-		break;
+			$response['valid'] = 0;
+			return $response;
 		}
 		
 		$response['valid'] = (strcmp($validate, $checksum) == 0);

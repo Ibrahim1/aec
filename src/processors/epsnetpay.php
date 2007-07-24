@@ -29,19 +29,24 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_epsnetpay {
-
-	function processor_epsnetpay () {
+class processor_epsnetpay
+{
+	function processor_epsnetpay() 
+	{
 		global $mosConfig_absolute_path;
 
-		if (file_exists( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/'.$GLOBALS['mosConfig_lang'].'.php' )) {
-				include_once( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/'.$GLOBALS['mosConfig_lang'].'.php' );
-		} else {
-				include_once( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/english.php' );
+		if( !defined( '_AEC_LANG_PROCESSOR' ) ) {
+			$langPath = $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/';
+			if (file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
+				include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
+			}else{
+				include_once( $langPath . 'english.php' );
+			}
 		}
 	}
 
-	function info () {
+	function info()
+	{
 		$info = array();
 		$info['name'] = "epsnetpay";
 		$info['longname'] = "epsNetpay";
@@ -53,7 +58,8 @@ class processor_epsnetpay {
 		return $info;
 	}
 
-	function settings () {
+	function settings()
+	{
 		$settings = array();
 
 		$banks = array();
@@ -86,7 +92,8 @@ class processor_epsnetpay {
 		return $settings;
 	}
 
-	function backend_settings () {
+	function backend_settings()
+	{
 		$settings = array();
 		$settings['testmode'] = array("list_yesno");
 		$settings['acceptvok'] = array("list_yesno");
@@ -111,7 +118,8 @@ class processor_epsnetpay {
 		return $settings;
 	}
 
-	function createGatewayLink ( $int_var, $cfg, $metaUser, $new_subscription ) {
+	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	{
 		global $mosConfig_live_site;
 
 		$sapPopStsURL			= $mosConfig_live_site . "/index.php";
@@ -128,7 +136,7 @@ class processor_epsnetpay {
 		$var['sapPopStsParCnt']	= count($StsPar); // Number of custom values
 
 		$epsparams = "";
-		for ($i=0, $j=1; $i < count($StsPar); $i++, $j++) {
+		for ( $i=0, $j=1; $i < count($StsPar); $i++, $j++ ) {
 			$var['sapPopStsParName' . $j] = $StsPar[$i][0];
 			$var['sapPopStsParValue' . $j] = $StsPar[$i][1];
 			$epsparams .= $StsPar[$i][0] . $StsPar[$i][1];
@@ -157,14 +165,14 @@ class processor_epsnetpay {
 
 		$merchantnumber = 0;
 		$bank_selection = array();
-		while (isset($cfg['merchantactive_' . $merchantnumber])) {
+		while ( isset( $cfg['merchantactive_' . $merchantnumber] ) ) {
 			if ($cfg['merchantactive_' . $merchantnumber]) {
 				$bank_selection[] = mosHTML::makeOption( $merchantnumber, $cfg['merchantname_' . $merchantnumber] );
 			}
 			$merchantnumber++;
 		}
 
-		if (is_null($int_var['params']['bank_selection'])) {
+		if ( is_null( $int_var['params']['bank_selection'] ) ) {
 			$selected = 0;
 		} else {
 			$selected = $int_var['params']['bank_selection'];
@@ -210,7 +218,8 @@ class processor_epsnetpay {
 		return $var;
 	}
 
-	function parseNotification ( $post, $cfg ) {
+	function parseNotification( $post, $cfg )
+	{
 		global $database, $mosConfig_live_site;
 
 		$invoiceID				= $post['sapPopStsVwzweck'];
@@ -237,7 +246,7 @@ class processor_epsnetpay {
 		$var['sapPopStsParCnt']	= count($StsPar); // Number of custom values
 
 		$epsparams = "";
-		for ($i=0, $j=1; $i < count($StsPar); $i++, $j++) {
+		for ( $i=0, $j=1; $i < count($StsPar); $i++, $j++ ) {
 			$var['sapPopStsParName' . $j] = $StsPar[$i][0];
 			$var['sapPopStsParValue' . $j] = $StsPar[$i][1];
 			$epsparams .= $StsPar[$i][0] . $StsPar[$i][1];

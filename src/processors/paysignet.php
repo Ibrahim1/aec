@@ -29,19 +29,21 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_paysignet {
-
-	function processor_paysignet () {
+class processor_paysignet
+{
+	function processor_paysignet()
+	{
 		global $mosConfig_absolute_path;
 
-		if (file_exists( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/'.$GLOBALS['mosConfig_lang'].'.php' )) {
+		if ( file_exists( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/'.$GLOBALS['mosConfig_lang'].'.php' ) ) {
 				include_once( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/'.$GLOBALS['mosConfig_lang'].'.php' );
 		} else {
 				include_once( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/english.php' );
 		}
 	}
 
-	function info () {
+	function info()
+	{
 		$info = array();
 		$info['name'] = "paysignet";
 		$info['longname'] = "Paysignet";
@@ -53,7 +55,8 @@ class processor_paysignet {
 		return $info;
 	}
 
-	function settings () {
+	function settings()
+	{
 		$settings = array();
 		$settings['merchant'] = "merchant";
 		$settings['testmode'] = 0;
@@ -61,7 +64,8 @@ class processor_paysignet {
 		return $settings;
 	}
 
-	function backend_settings () {
+	function backend_settings()
+	{
 		$settings = array();
 		$settings['testmode'] = array("list_yesno");
 		$settings['merchant'] = array("inputC");
@@ -69,7 +73,8 @@ class processor_paysignet {
 		return $settings;
 	}
 
-	function createGatewayLink ( $int_var, $cfg, $metaUser, $new_subscription ) {
+	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	{
 		global $mosConfig_live_site;
 
 		$var['post_url']	= "https://www.paysignet.com/validate/paysign_getdetails.asp";
@@ -83,7 +88,8 @@ class processor_paysignet {
 		return $var;
 	}
 
-	function parseNotification ( $post, $cfg ) {
+	function parseNotification( $post, $cfg )
+	{
 
 		$order_id		= $post['order_id'];
 		$bank_name		= $post['bank_name'];

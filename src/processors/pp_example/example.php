@@ -2,13 +2,24 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_namehere {
+class processor_namehere
+{
+	function processor_namehere()
+	{
+		global $mosConfig_absolute_path;
 
-	function processor_namehere () {
-		
+		if( !defined( '_AEC_LANG_PROCESSOR' ) ) {
+			$langPath = $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/';
+			if (file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
+				include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
+			}else{
+				include_once( $langPath . 'english.php' );
+			}
+		}
 	}
 
-	function info () {
+	function info()
+	{
 		$info = array();
 		$info['longname'] = "PayPal";
 		$info['statement'] = "Make payments with PayPal - it's fast, free and secure!";
@@ -20,21 +31,24 @@ class processor_namehere {
 		return $info;
 	}
 
-	function settings () {
+	function settings()
+	{
 		$settings = array();
 		$settings['variable'] = "content";
 
 		return $settings;
 	}
 
-	function backend_settings () {
+	function backend_settings()
+	{
 		$settings = array();
 		$settings['variable'] = array("type", "name", "description");
 
 		return $settings;
 	}
 
-	function createGatewayLink ( $int_var, $metaUser, $cfg, $new_subscription ) {
+	function createGatewayLink( $int_var, $metaUser, $cfg, $new_subscription )
+	{
 		global $mosConfig_live_site;
 
 		$var['post_url']	= "https://www.sandbox.paypal.com/cgi-bin/webscr";
@@ -42,8 +56,8 @@ class processor_namehere {
 		return $var;
 	}
 
-	function parseNotification ( $post, $cfg ) {
-
+	function parseNotification( $post, $cfg )
+	{
 		$response = array();
 		$response['invoice'] = "";
 		$response['valid'] = 0;

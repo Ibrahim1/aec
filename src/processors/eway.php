@@ -11,13 +11,24 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 * @author Bruno Pourtier <bruno.pourtier@gmail.com>
 **/
 
-class processor_eway {
+class processor_eway
+{
+	function processor_eway ()
+	{
+		global $mosConfig_absolute_path;
 
-	function processor_eway () {
-		
+		if( !defined( '_AEC_LANG_PROCESSOR' ) ) {
+			$langPath = $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/';
+			if (file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
+				include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
+			}else{
+				include_once( $langPath . 'english.php' );
+			}
+		}
 	}
 
-	function info () {
+	function info()
+	{
 		$info = array();
 		$info['name']			= 'eway';
 		$info['longname']		= _CFG_EWAY_LONGNAME;
@@ -29,7 +40,8 @@ class processor_eway {
 		return $info;
 	}
 
-	function settings () {
+	function settings()
+	{
 		$settings = array();
 		$settings['testmode']		= "1";
 		$settings['custId']			= "87654321";		
@@ -43,7 +55,8 @@ class processor_eway {
 		return $settings;
 	}
 
-	function backend_settings () {
+	function backend_settings()
+	{
 		$settings = array();
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
 
@@ -59,7 +72,8 @@ class processor_eway {
 		return $settings;
 	}
 
-	function createGatewayLink ( $int_var, $cfg, $metaUser, $new_subscription ) {
+	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	{
 		global $mosConfig_live_site;
 
 		//URL returned by eWay
@@ -88,7 +102,8 @@ class processor_eway {
 		return $var;
 	}
 
-	function parseNotification ( $post, $cfg ) {
+	function parseNotification( $post, $cfg )
+	{
 		$eWAYResponseText = $post['eWAYresponseText'];
 		$eWAYTrxnNumber = $post['ewayTrxnNumber'];
 		$eWAYResponseCode = $post['eWAYresponseCode'];
@@ -99,7 +114,7 @@ class processor_eway {
 
 		$response = array();
 		$response['invoice'] = $post['eWAYoption2'];
-		if($post['ewayTrxnStatus'] == "True" && isset($eWAYAuthCode)) {
+		if ( $post['ewayTrxnStatus'] == "True" && isset( $eWAYAuthCode ) ) {
 			$response['valid'] = 1;
 		} else {
 			$response['valid'] = 0;

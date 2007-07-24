@@ -38,9 +38,10 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_paypal {
-
-	function processor_paypal () {
+class processor_paypal
+{
+	function processor_paypal()
+	{
 		global $mosConfig_absolute_path;
 
 		if( !defined( '_AEC_LANG_PROCESSOR' ) ) {
@@ -53,7 +54,8 @@ class processor_paypal {
 		}
 	}
 
-	function info () {
+	function info()
+	{
 		$info = array();
 		$info['name']				= 'paypal';
 		$info['longname']			= _AEC_PROC_INFO_PP_LNAME;
@@ -67,7 +69,8 @@ class processor_paypal {
 		return $info;
 	}
 
-	function settings () {
+	function settings()
+	{
 		$settings = array();
 		$settings['business']		= 'your@business.com';
 		$settings['testmode']		= 0;
@@ -84,7 +87,8 @@ class processor_paypal {
 		return $settings;
 	}
 
-	function backend_settings () {
+	function backend_settings()
+	{
 		$settings = array();
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
 
@@ -104,22 +108,23 @@ class processor_paypal {
 		return $settings;
 	}
 
-	function createGatewayLink ( $int_var, $cfg, $metaUser, $new_subscription ) {
+	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	{
 		global $mosConfig_live_site;
 
-		if( $cfg['testmode'] ) {
+		if ( $cfg['testmode'] ) {
 			$var['post_url']	= 'https://www.sandbox.paypal.com/cgi-bin/webscr';
-		}else{
+		} else {
 			$var['post_url']	= 'https://www.paypal.com/cgi-bin/webscr';
 		}
 
 		$var['cmd']				= '_xclick';
 
-		if( !empty( $cfg['tax'] ) && $cfg['tax'] > 0 ) {
+		if ( !empty( $cfg['tax'] ) && $cfg['tax'] > 0 ) {
 			$tax				= $int_var['amount'] / ( 100 + $cfg['tax'] ) * 100;
 			$var['tax']			= round( ( $int_var['amount'] - $tax ), 2 );
 			$var['amount']		= round( $tax, 2 );
-		}else{
+		} else {
 			$var['amount']		= $int_var['amount'];
 		}
 
@@ -127,9 +132,9 @@ class processor_paypal {
 		$var['invoice']			= $int_var['invoice'];
 		$var['cancel']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
 
-		if( strpos( $cfg['altipnurl'], 'http://' ) === 0 ) {
+		if ( strpos( $cfg['altipnurl'], 'http://' ) === 0 ) {
 			$var['notify_url']	= $cfg['altipnurl'] . '/index.php?option=com_acctexp&amp;task=paypalnotification';
-		}else{
+		} else {
 			$var['notify_url']	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=paypalnotification' );
 		}
 
@@ -147,13 +152,14 @@ class processor_paypal {
 		return $var;
 	}
 
-	function parseNotification( $post, $cfg ) {
+	function parseNotification( $post, $cfg )
+	{
 		global $database;
 
 		$txn_type			= $post['txn_type'];
 		$item_number		= $post['item_number'];
 		$mc_gross			= $post['mc_gross'];
-		if( $mc_gross == '' ) {
+		if ( $mc_gross == '' ) {
 			$mc_gross 		= $post['mc_amount1'];
 		}
 		$mc_currency		= $post['mc_currency'];
@@ -161,7 +167,7 @@ class processor_paypal {
 		$payment_status		= $post['payment_status'];
 		$payment_type		= $post['payment_type'];
 		$subscr_date		= $post['subscr_date'];
-		if( isset( $_POST['amount1'] ) ) {
+		if ( isset( $_POST['amount1'] ) ) {
 			$amount1		= $post['amount1'];
 		}
 		$invoice_number		= $post['invoice'];
@@ -175,7 +181,7 @@ class processor_paypal {
 
 		$req = 'cmd=_notify-validate';
 
-		foreach ($post as $key => $value) {
+		foreach ( $post as $key => $value ) {
 			$value = urlencode(stripslashes($value));
 			$req .= "&$key=$value";
 		}
@@ -198,7 +204,7 @@ class processor_paypal {
 
 		$id = AECfetchfromDB::InvoiceIDfromNumber($response['invoice']);
 
-		if($id) {
+		if ( $id ) {
 			$objInvoice = new Invoice($database);
 			$objInvoice->load($id);
 			$objInvoice->computeAmount();
@@ -209,41 +215,42 @@ class processor_paypal {
 
 		$response['valid'] = 0; // mic: set generic, if true will be set below
 
-		if( strcmp( $receiver_email, $cfg['business'] ) != 0 && $cfg['checkbusiness'] ) {
+		if ( strcmp( $receiver_email, $cfg['business'] ) != 0 && $cfg['checkbusiness'] ) {
 			$response['pending_reason'] = 'checkbusiness error';
-		}elseif( strcmp( $res, 'VERIFIED' ) == 0 ) {
+		} elseif ( strcmp( $res, 'VERIFIED' ) == 0 ) {
 			// Process payment: Paypal Subscription & Buy Now
-			if( strcmp( $txn_type, 'web_accept' ) == 0 || strcmp( $txn_type, 'subscr_payment' ) == 0 ) {
+			if ( strcmp( $txn_type, 'web_accept' ) == 0 || strcmp( $txn_type, 'subscr_payment' ) == 0 ) {
 
 				$recurring = ( strcmp( $txn_type, 'subscr_payment' ) == 0 );
 
-				if( strcmp( $payment_type, 'instant' ) == 0 && strcmp( $payment_status, 'Pending' ) == 0 ) {
+				if ( strcmp( $payment_type, 'instant' ) == 0 && strcmp( $payment_status, 'Pending' ) == 0 ) {
 					$response['pending_reason'] = $post['pending_reason'];
-				}elseif( strcmp( $payment_type, 'instant' ) == 0 && strcmp( $payment_status, 'Completed' ) == 0 ) {
+				} elseif ( strcmp( $payment_type, 'instant' ) == 0 && strcmp( $payment_status, 'Completed' ) == 0 ) {
 					$response['valid']			= 1;
-				}elseif( strcmp( $payment_type, 'echeck' ) == 0 && strcmp( $payment_status, 'Pending' ) == 0 ) {
+				} elseif ( strcmp( $payment_type, 'echeck' ) == 0 && strcmp( $payment_status, 'Pending' ) == 0 ) {
 					$response['pending']		= 1;
 					$response['pending_reason'] = 'echeck';
-				}elseif( strcmp( $payment_type, 'echeck' ) == 0 && strcmp( $payment_status, 'Completed' ) == 0 ) {
+				} elseif ( strcmp( $payment_type, 'echeck' ) == 0 && strcmp( $payment_status, 'Completed' ) == 0 ) {
 					$response['valid']			= 1;
 				}
-			}elseif( strcmp( $txn_type, 'subscr_signup' ) == 0 ) {
+			} elseif ( strcmp( $txn_type, 'subscr_signup' ) == 0 ) {
 				$response['valid']			= 0;
 				$response['pending']		= 1;
 				$response['pending_reason'] = 'signup';
-			}elseif( strcmp( $txn_type, 'subscr_eot' ) == 0 ) {
+			} elseif ( strcmp( $txn_type, 'subscr_eot' ) == 0 ) {
 				$response['eot']				= 1;
-			}elseif( strcmp( $txn_type, 'subscr_cancel' ) == 0 ) {
+			} elseif ( strcmp( $txn_type, 'subscr_cancel' ) == 0 ) {
 				$response['cancel']				= 1;
 			}
-		}else{
+		} else {
 			$response['pending_reason']			= 'error: ' . $res;
 		}
 
 		return $response;
 	}
 
-	function doTheCurl ( $url, $req ) {
+	function doTheCurl( $url, $req )
+	{
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_VERBOSE, 1);
 		//curl_setopt ($ch, CURLOPT_HTTPPROXYTUNNEL, TRUE);
@@ -261,7 +268,8 @@ class processor_paypal {
 		return $fp;
 	}
 
-	function doTheHttp ( $url, $req ) {
+	function doTheHttp( $url, $req )
+	{
 		$header  = ""
 		. "POST /cgi-bin/webscr HTTP/1.0\r\n"
 		. "Host: " . $url  . ":80\r\n"
@@ -270,16 +278,16 @@ class processor_paypal {
 		;
 		$fp = fsockopen( $url, 80, $errno, $errstr, 30 );
 
-		if( !$fp ) {
+		if ( !$fp ) {
 			return 'ERROR';
-		}else{
+		} else {
 			fwrite( $fp, $header . $req );
 
-			while( !feof( $fp ) ) {
+			while ( !feof( $fp ) ) {
 				$res = fgets( $fp, 1024 );
-				if( strcmp( $res, 'VERIFIED' ) == 0 ) {
+				if ( strcmp( $res, 'VERIFIED' ) == 0 ) {
 					return 'VERIFIED';
-				}elseif( strcmp( $res, 'INVALID' ) == 0 ) {
+				} elseif ( strcmp( $res, 'INVALID' ) == 0 ) {
 					return 'INVALID';
 				}
 			}

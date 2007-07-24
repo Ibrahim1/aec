@@ -29,22 +29,24 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_alertpay {
-
-	function processor_alertpay () {
+class processor_alertpay
+{
+	function processor_alertpay()
+	{
 		global $mosConfig_absolute_path;
 
-		if( !defined( '_AEC_LANG_PROCESSOR' ) ) {
+		if ( !defined( '_AEC_LANG_PROCESSOR' ) ) {
 			$langPath = $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/';
 			if (file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
 				include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
-			}else{
+			} else {
 				include_once( $langPath . 'english.php' );
 			}
 		}
 	}
 
-	function info () {
+	function info()
+	{
 		$info = array();
 		$info['name']				= 'alertpay';
 		$info['longname']			= _AEC_PROC_INFO_AP_LNAME;
@@ -56,7 +58,8 @@ class processor_alertpay {
 		return $info;
 	}
 
-	function settings () {
+	function settings()
+	{
 		$settings = array();
 		$settings['merchant']		= 'merchant';
 		$settings['securitycode']	= 'security code';
@@ -68,7 +71,8 @@ class processor_alertpay {
 		return $settings;
 	}
 
-	function backend_settings () {
+	function backend_settings()
+	{
 		$settings = array();
 		$settings['testmode']		= array( 'list_yesno' );
 		$settings['merchant']		= array( 'inputC' );
@@ -81,11 +85,12 @@ class processor_alertpay {
 		return $settings;
 	}
 
-	function createGatewayLink ( $int_var, $cfg, $metaUser, $new_subscription ) {
+	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	{
 		global $mosConfig_live_site;
 
 		$post_url	= "http://www.alertpay.com/PayProcess.aspx";
-		if( $cfg->testmode ) {
+		if ( $cfg->testmode ) {
 			$var['ap_test'] = '1';
 		}
 
@@ -100,7 +105,7 @@ class processor_alertpay {
 		$var['ap_quantity']		= '';
 		$var['ap_description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, $mosConfig_live_site,
 									$metaUser->cmsUser->name, $metaUser->cmsUser->username );
-		if (isset($cfg['tax']) && @$cfg['tax'] > 0) {
+		if ( isset( $cfg['tax'] ) && @$cfg['tax'] > 0) {
 			$tax = $int_var['amount']/(100+$cfg['tax'])*100;
 			$var['ap_amount'] 	= round($tax, 2);
 		} else {
@@ -115,7 +120,8 @@ class processor_alertpay {
 		return $var;
 	}
 
-	function parseNotification ( $post, $cfg ) {
+	function parseNotification( $post, $cfg )
+	{
 		$security_code			= $post['ap_securitycode'];
 		$description			= $post['ap_description'];
 		$total					= $post['ap_amount'];
@@ -125,7 +131,7 @@ class processor_alertpay {
 
 		$response = array();
 		$response['invoice'] = $invoice_number;
-		$response['valid'] = ((strcmp($_POST['ap_status'], "Success") === 0) && (strcmp($_POST['ap_securitycode'], $cfg->ap_securitycode) === 0));
+		$response['valid'] = ( ( strcmp( $_POST['ap_status'], "Success" ) === 0 ) && ( strcmp( $_POST['ap_securitycode'], $cfg->ap_securitycode ) === 0 ) );
 
 		return $response;
 	}

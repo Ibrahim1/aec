@@ -29,9 +29,10 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_worldpay {
-
-	function processor_worldpay () {
+class processor_worldpay
+{
+	function processor_worldpay()
+	{
 		global $mosConfig_absolute_path;
 
 		if( !defined( '_AEC_LANG_PROCESSOR' ) ) {
@@ -44,7 +45,8 @@ class processor_worldpay {
 		}
 	}
 
-	function info () {
+	function info()
+	{
 		$info = array();
 		$info['name']				= 'worldpay';
 		$info['longname']			= _AEC_PROC_INFO_WP_LNAME;
@@ -67,7 +69,8 @@ class processor_worldpay {
 		return $info;
 	}
 
-	function settings () {
+	function settings()
+	{
 		$settings = array();
 		$settings['instId']			= _CFG_WORLDPAY_INSTID_FIELD;
 		$settings['testmode'] 		= 0;
@@ -80,7 +83,8 @@ class processor_worldpay {
 		return $settings;
 	}
 
-	function backend_settings () {
+	function backend_settings()
+	{
 		$settings = array();
 		$settings['testmode']		= array( 'list_yesno');
 		$settings['instId']			= array( 'inputC');
@@ -92,7 +96,8 @@ class processor_worldpay {
 		return $settings;
 	}
 
-	function createGatewayLink ( $int_var, $cfg, $metaUser, $new_subscription ) {
+	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	{
 		global $mosConfig_live_site;
 
 		$var['post_url']	= 'https://select.worldpay.com/wcc/purchase';
@@ -110,8 +115,8 @@ class processor_worldpay {
 		return $var;
 	}
 
-	function parseNotification ( $post, $cfg ) {
-
+	function parseNotification( $post, $cfg )
+	{
 		$description			= $post['description'];
 		$key					= $post['key'];
 		$cart_order_id			= $post['cart_order_id'];

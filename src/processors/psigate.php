@@ -51,12 +51,24 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_psigate {
+class processor_psigate
+{
+	function processor_psigate()
+	{
+		global $mosConfig_absolute_path;
 
-	function processor_psigate () {
+		if( !defined( '_AEC_LANG_PROCESSOR' ) ) {
+			$langPath = $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/';
+			if (file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
+				include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
+			}else{
+				include_once( $langPath . 'english.php' );
+			}
+		}
 	}
 
-	function info () {
+	function info()
+	{
 		$info = array();
 		$info['name'] = "psigate";
 		$info['longname'] = "psigate";
@@ -69,7 +81,8 @@ class processor_psigate {
 		return $info;
 	}
 
-	function settings () {
+	function settings()
+	{
 		$settings = array();
 		$settings['StoreKey']	= "StoreKey";
 		$settings['secretWord']		= "Secret Word";
@@ -77,7 +90,8 @@ class processor_psigate {
 		return $settings;
 	}
 
-	function backend_settings () {
+	function backend_settings()
+	{
 		$settings = array();
 
 		$settings['testmode'] = array("list_yesno", "Test Mode", "Operate in PSIGate TEST mode");
@@ -86,10 +100,10 @@ class processor_psigate {
 		return $settings;
 	}
 
-	function createGatewayLink ( $int_var, $metaUser, $cfg ) {
-
+	function createGatewayLink( $int_var, $metaUser, $cfg )
+	{
 		global $mosConfig_live_site;
-		if ($cfg['testmode']) {
+		if ( $cfg['testmode'] ) {
 			$var['post_url']	= "https://dev.psigate.com/HTMLPost/HTMLMessenger";
 		} else {
 			$var['post_url']	= "https://checkout.psigate.com/HTMLPost/HTMLMessenger";
@@ -108,8 +122,8 @@ class processor_psigate {
 	}
 
 
-	function parseNotification ( $post, $cfg ) {
-
+	function parseNotification ( $post, $cfg )
+	{
 		if (isset($_GET['ReturnCode']) and $_GET['ReturnCode'] != "") {$ReturnCode = $_GET['ReturnCode'];} else {$ReturnCode = "NA";}
 		if (isset($_GET['CustomerRefNo']) and $_GET['CustomerRefNo'] != "") {$CustomerRefNo = $_GET['CustomerRefNo'];} else {$CustomerRefNo = "NA";}
 		if (isset($_GET['TransRefNumber']) and $_GET['TransRefNumber'] != "") {$TransRefNumber = $_GET['TransRefNumber'];} else {$TransRefNumber = "NA";}
@@ -132,24 +146,20 @@ class processor_psigate {
 		$validate			= md5($cfg['secretWord'] . $FullTotal);
 		$response['valid'] = (strcmp($validate, $checksum) == 0);
 
-		if($response['valid'] = 1){
-			if (substr($ReturnCode,0,1) == "Y"){
+		if ( $response['valid'] = 1 ){
+			if ( substr( $ReturnCode, 0, 1 ) == "Y" ) {
 				print_r("<b>Thankyou! - Your Card was approved</b><br/>");
 				print_r("</br>");
 				print_r("<b>Card No:</b>". $CardNumber . "<br/>");
 				print_r("<b>Total Charged:</b>". $FullTotal . "<br/>");
 				print_r("<br/>");
-			}
-			else
-			{
+			} else {
 				$response['valid'] = 0;
 				$response['pending']=1;
 				$response['pending_reason']=$ErrMsg;
 				print_r("<b>Transaction Declined <br/>Reason: </b>" .$ErrMsg . "<br/>");
 			}
-		}
-		else
-		{
+		} else  {
 			$response['valid'] = 0;
 			$response['pending']=1;
 			$response['pending_reason']=$ErrMsg;

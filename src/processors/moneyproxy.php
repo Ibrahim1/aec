@@ -2,13 +2,24 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_moneyproxy {
+class processor_moneyproxy
+{
+	function processor_moneyproxy()
+	{
+		global $mosConfig_absolute_path;
 
-	function processor_moneyproxy () {
-		
+		if( !defined( '_AEC_LANG_PROCESSOR' ) ) {
+			$langPath = $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/';
+			if (file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
+				include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
+			}else{
+				include_once( $langPath . 'english.php' );
+			}
+		}
 	}
 
-	function info () {
+	function info()
+	{
 		$info = array();
 		$info['name']			= 'moneyproxy';
 		$info['longname']		= _CFG_MONEYPROXY_LONGNAME;
@@ -22,7 +33,8 @@ class processor_moneyproxy {
 		return $info;
 	}
 
-	function settings () {
+	function settings()
+	{
 		$settings = array();
 		$settings['merchant_id']			= "merchant_id";
 		$settings['force_client_receipt']	= 0;
@@ -36,7 +48,8 @@ class processor_moneyproxy {
 		return $settings;
 	}
 
-	function backend_settings () {
+	function backend_settings()
+	{
 		$settings = array();
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
 
@@ -52,7 +65,8 @@ class processor_moneyproxy {
 		return $settings;
 	}
 
-	function createGatewayLink ( $int_var, $metaUser, $cfg, $new_subscription ) {
+	function createGatewayLink( $int_var, $metaUser, $cfg, $new_subscription )
+	{
 		global $mosConfig_live_site;
 
 		$var['merchant_id']				= $cfg['merchant_id'];
@@ -73,7 +87,8 @@ class processor_moneyproxy {
 		return $var;
 	}
 
-	function parseNotification ( $post, $cfg ) {
+	function parseNotification( $post, $cfg )
+	{
 
 		$checkhash = implode( ':', array( $post['MERCHANT_ID'], $post['REFERENCE_NO'], $post['PAYMENT_ID'], $post['AMOUNT'], $post['CURRENCY'], $post['AMOUNT_GAU'], $post['EXRATE'], $post['MONEYPROXY_FEES_GAU'], $post['SYSTEM_FEES_GAU'], $post['PAYMENT_SYSTEM'], $post['CUSTOM1'], $cfg['secret_key'] ) );
 
@@ -82,15 +97,13 @@ class processor_moneyproxy {
 		$response['amount_paid'] = $post['AMOUNT'];
 		$response['amount_currency'] = $post['CURRENCY'];
 
-		if( $post['HASH'] == $checkhash ) {
+		if ( $post['HASH'] == $checkhash ) {
 			$response['valid'] = true;
-		}else{
+		} else {
 			$response['valid'] = false;
 		}
 
 		return $response;
 	}
-
 }
-
 ?>

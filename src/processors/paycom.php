@@ -43,19 +43,24 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_paycom {
-
-	function processor_paycom () {
+class processor_paycom
+{
+	function processor_paycom()
+	{
 		global $mosConfig_absolute_path;
 
-		if (file_exists( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/'.$GLOBALS['mosConfig_lang'].'.php' )) {
-				include_once( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/'.$GLOBALS['mosConfig_lang'].'.php' );
-		} else {
-				include_once( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/english.php' );
+		if( !defined( '_AEC_LANG_PROCESSOR' ) ) {
+			$langPath = $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/';
+			if (file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
+				include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
+			}else{
+				include_once( $langPath . 'english.php' );
+			}
 		}
 	}
 
-	function info () {
+	function info()
+	{
 		$info = array();
 		$info['name'] = "paycom";
 		$info['longname'] = "paycom";
@@ -68,7 +73,8 @@ class processor_paycom {
 		return $info;
 	}
 
-	function settings () {
+	function settings()
+	{
 		$settings = array();
 		$settings['co_code']	= "Company Code";
 		$settings['product_id']	= "Product Code";
@@ -77,7 +83,8 @@ class processor_paycom {
 		return $settings;
 	}
 
-	function backend_settings () {
+	function backend_settings()
+	{
 		$settings = array();
 		$settings['co_code']	= array("inputC","Company Code","Three (3) alphanumeric ID assigned by Paycom.net");
 		$settings['product_id']	= array("inputC","Product Code","Alphanumeric product code assigned by Paycom.net");
@@ -85,7 +92,8 @@ class processor_paycom {
 		return $settings;
 	}
 
-	function createGatewayLink ( $int_var, $cfg, $metaUser, $new_subscription ) {
+	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	{
 		global $mosConfig_live_site;
 
 		$var['post_url']		= "https://wnu.com/secure/fpost.cgi";
@@ -107,7 +115,8 @@ class processor_paycom {
 	}
 
 
-	function parseNotification ( $post, $cfg ) {
+	function parseNotification( $post, $cfg )
+	{
 		$invoice			= $post['x_invoice'];
 		$name				= $post['name'];
 		$address			= $post['address'];
@@ -132,10 +141,9 @@ class processor_paycom {
 
 		$validate			= md5($cfg['secretWord'] . $username);
 
-		if (substr($ans,0,1) == "Y"){
-			$response['valid'] = 1;}
-			else
-			{
+		if ( substr( $ans, 0, 1 ) == "Y" ) {
+			$response['valid'] = 1;
+		} else {
 			$response['valid'] = 0;
 			$response['pending']=1;
 			$response['pending_reason']=$ans;
@@ -146,7 +154,6 @@ class processor_paycom {
 
 		$response['valid'] = (strcmp($validate, $checksum) == 0);
 		return $response;
-
 	}
 }
 ?>
