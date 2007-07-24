@@ -913,7 +913,11 @@ function editUser( $userid, $option, $task )
 	;
 	$database->setQuery( $query	);
 
- 	$available_plans	= array_merge( $available_plans, $database->loadObjectList() );
+	$dbaplans = $database->loadObjectList();
+
+	if ( is_array( $dbaplans ) ) {
+ 		$available_plans	= array_merge( $available_plans, $database->loadObjectList() );
+	}
 	$total_plans		= count( $available_plans ) + 1;
 
 	$selected_plan = isset( $row->fallback ) ? $row->fallback : '';
@@ -1561,11 +1565,15 @@ function listSubscriptions( $option, $set_group, $userid )
 	$db_plans = $database->loadObjectList();
 
 	$plans[] = mosHTML::makeOption( '0', _FILTER_PLAN, 'id', 'name' );
-	$plans = array_merge( $plans, $db_plans );
+	if ( is_array( $db_plans ) ) {
+		$plans = array_merge( $plans, $db_plans );
+	}
 	$lists['filterplanid']	= mosHTML::selectList( $plans, 'filter_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit( );"', 'id', 'name', $filter_planid );
 
 	$plans2[] = mosHTML::makeOption( '0', _BIND_USER, 'id', 'name' );
-	$plans2 = array_merge( $plans2, $db_plans );
+	if ( is_array( $db_plans ) ) {
+		$plans2 = array_merge( $plans2, $db_plans );
+	}
 	$lists['planid']	= mosHTML::selectList( $plans2, 'assign_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit( );"', 'id', 'name', 0 );
 
 	$group_selection = array();
@@ -1638,8 +1646,11 @@ function editSettings( $option )
 	. ' WHERE active = \'1\''
 	;
 	$database->setQuery( $query );
+	$dbaplans = $database->loadObjectList();
 
- 	$available_plans	= array_merge( $available_plans, $database->loadObjectList() );
+ 	if ( is_array( $dbaplans ) ) {
+ 		$available_plans	= array_merge( $available_plans, $dbaplans );
+ 	}
 	$total_plans		= count( $available_plans ) + 1;
 
 	$selected_plan = isset($cfg->cfg['entry_plan']) ? $cfg->cfg['entry_plan'] : '0';
@@ -1946,7 +1957,11 @@ function saveSettings( $option )
 
 	$pplist_enabled		= mosGetParam( $_POST,'gwlist_enabled', '' );
 	$pplist_installed	= PaymentProcessorHandler::getInstalledNameList();
-	$total_processors	= array_merge( $pplist_installed, $pplist_enabled );
+	if ( is_array( $pplist_enabled ) && is_array( $pplist_installed ) ) {
+		$total_processors = array_merge( $pplist_installed, $pplist_enabled );
+	} else {
+		$total_processors = array();
+	}
 
 	foreach ( $total_processors as $procname ) {
 		$pp = new PaymentProcessor();
@@ -2302,7 +2317,9 @@ function editSubscriptionPlan( $id, $option )
 	$database->setQuery( $query );
 	$payment_plans = $database->loadObjectList();
 
- 	$active_plans	= array_merge( $available_plans, $payment_plans );
+ 	if ( is_array( $payment_plans ) ) {
+ 		$active_plans	= array_merge( $available_plans, $payment_plans );
+ 	}
 	$total_plans	= min( max( (count( $active_plans ) + 1 ), 4 ), 20 );
 
 	$lists['fallback'] = mosHTML::selectList($active_plans, 'fallback', 'size="' . $total_plans . '"', 'value', 'text', arrayValueDefault($params_values, 'fallback', 0));
@@ -2345,8 +2362,13 @@ function editSubscriptionPlan( $id, $option )
 	. ' FROM #__acctexp_plans'
 	;
 	$database->setQuery( $query );
+	$plans = $database->loadObjectList();
 
- 	$all_plans	= array_merge( $available_plans, $database->loadObjectList() );
+ 	if ( is_array( $plans ) ) {
+ 		$all_plans	= array_merge( $available_plans, $plans );
+ 	} else {
+ 		$all_plans	= $available_plans;
+ 	}
 	$total_all_plans	= min( max( (count( $all_plans ) + 1 ), 4 ), 20 );
 
 	$lists['previousplan_req']	= mosHTML::selectList($all_plans, 'previousplan_req', 'size="' . $total_all_plans . '"', 											'value', 'text', arrayValueDefault($restrictions_values, 'previousplan_req', 0));
@@ -2913,8 +2935,13 @@ function editCoupon( $id, $option, $new, $type )
 	. ' FROM #__acctexp_plans'
 	;
 	$database->setQuery( $query );
+	$plans = $database->loadObjectList();
 
- 	$all_plans					= array_merge( $available_plans, $database->loadObjectList() );
+ 	if ( is_array( $plans ) ) {
+ 		$all_plans					= array_merge( $available_plans, $plans );
+ 	} else {
+ 		$all_plans					= $available_plans;
+ 	}
 	$total_all_plans			= min( max( ( count( $all_plans ) + 1 ), 4 ), 20 );
 
 	$lists['previousplan_req']	= mosHTML::selectList($all_plans, 'previousplan_req', 'size="' . $total_all_plans . '"',
@@ -2967,7 +2994,7 @@ function editCoupon( $id, $option, $new, $type )
 	$lists['micro_integrations'] = mosHTML::selectList( $mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple', 'value', 'text', $selected_mi );
 
 	$settings = new aecSettings( 'coupon', 'general' );
-	$settings->fullSettingsArray( $params, array_merge( $params_values, $discount_values, $restrictions_values ), $lists );
+	$settings->fullSettingsArray( $params, array_merge( (array) $params_values, (array) $discount_values, (array) $restrictions_values ), $lists );
 
 	// Call HTML Class
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
@@ -3931,7 +3958,9 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 	$mih = new microIntegrationHandler();
 	$new_hacks = $mih->getHacks();
 
-	$hacks = array_merge( $hacks, $new_hacks );
+	if ( is_array( $new_hacks ) ) {
+		$hacks = array_merge( $hacks, $new_hacks );
+	}
 
 	// Receive the status for the hacks
 	foreach ( $hacks as $name => $hack ) {

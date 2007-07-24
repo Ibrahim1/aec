@@ -4588,7 +4588,10 @@ class microIntegrationHandler
 				if ( method_exists( $mi, 'hacks' ) ) {
 					if ( method_exists( $mi, 'detect_application' ) ) {
 						if ( $mi->detect_application() ) {
-							$hacks = array_merge( $hacks, $mi->hacks() );
+							$mihacks = $mi->hacks();
+							if ( is_array( $mihacks ) ) {
+								$hacks = array_merge( $hacks, $mihacks );
+							}
 						}
 					}
 				}
