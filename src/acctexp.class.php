@@ -32,28 +32,29 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 
 global $mosConfig_absolute_path, $mosConfig_offset_user;
 
-if( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
+if ( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
 	// mic: call only if called from the backend
 	$langPath = $mosConfig_absolute_path . '/administrator/components/com_acctexp/com_acctexp_language_backend/';
-	if( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
+	if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
 			include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
-	}else{
+	} else {
 			include_once( $langPath. 'english.php' );
 	}
 	include_once( $langPath . 'general.php' );
 }
 
-if( !class_exists( 'paramDBTable' ) ) {
+if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( $mosConfig_absolute_path . '/components/com_acctexp/eucalib.php' );
 }
 
 // compatibility w/ Mambo
-if( empty( $mosConfig_offset_user ) ) {
+if ( empty( $mosConfig_offset_user ) ) {
 	global $mosConfig_offset;
 	$mosConfig_offset_user = $mosConfig_offset;
 }
 
-class metaUser {
+class metaUser
+{
 	/** @var int */
 	var $userid				= null;
 	/** @var object */
@@ -67,7 +68,8 @@ class metaUser {
 	/** @var int */
 	var $hasSubscription	= null;
 
-	function metaUser( $userid ) {
+	function metaUser( $userid )
+	{
 		global $database;
 
 		$this->userid = $userid;
@@ -77,34 +79,35 @@ class metaUser {
 
 		$aecexpid = AECfetchfromDB::ExpirationIDfromUserID( $userid );
 		$this->objExpiration = new AcctExp( $database );
-		if( $aecexpid ) {
+		if ( $aecexpid ) {
 			$this->objExpiration->load( $aecexpid );
 			$this->hasExpiration = 1;
-		}else{
+		} else {
 			$this->hasExpiration = 0;
 		}
 
 		$aecid = AECfetchfromDB::SubscriptionIDfromUserID( $userid );
 		$this->objSubscription = new Subscription( $database );
-		if( $aecid ) {
+		if ( $aecid ) {
 			$this->objSubscription->load( $aecid );
 			$this->hasSubscription = 1;
-		}else{
+		} else {
 			$this->hasSubscription = 0;
 		}
 
 	}
 
-	function instantGIDchange( $gid ) {
+	function instantGIDchange( $gid )
+	{
 		global $database, $acl;
 
-		if( $this->cmsUser->gid >= 24 ) {
+		if ( $this->cmsUser->gid >= 24 ) {
 			$query = 'SELECT count(*)'
 			. ' FROM #__core_acl_groups_aro_map'
 			. ' WHERE group_id = \'25\''
 			;
 			$database->setQuery( $query );
-			if( $database->loadResult() <= 1) {
+			if ( $database->loadResult() <= 1) {
 				return false;
 			}
 		}
@@ -143,43 +146,44 @@ class metaUser {
 		$database->query() or die( $database->stderr() );
 	}
 
-	function permissionResponse( $restrictions ) {
-		if( is_array( $restrictions ) ) {
+	function permissionResponse( $restrictions )
+	{
+		if ( is_array( $restrictions ) ) {
 			$return = array();
-			foreach( $restrictions as $name => $value ) {
+			foreach ( $restrictions as $name => $value ) {
 				if ( !is_null( $value ) && !($value == "") ) {
-					switch( $name ) {
+					switch ( $name ) {
 						// Check for set userid
 						case 'userid':
-							if( $this->cmsUser->id === $value ) {
+							if ( $this->cmsUser->id === $value ) {
 								$status = true;
-							}else{
+							} else {
 								$status = false;
 							}
 							break;
 						// Check for a certain GID
 						case 'fixgid':
-							if( $value === $this->cmsUser->gid ) {
+							if ( $value === $this->cmsUser->gid ) {
 								$status = true;
-							}else{
+							} else {
 								$status = false;
 							}
 							break;
 						// Check for Minimum GID
 						case 'mingid':
 							$groups = GeneralInfoRequester::getLowerACLGroup( $this->cmsUser->gid );
-							if( in_array( $value, $groups ) ) {
+							if ( in_array( $value, $groups ) ) {
 								$status = true;
-							}else{
+							} else {
 								$status = false;
 							}
 							break;
 						// Check for Maximum GID
 						case 'maxgid':
 							$groups = GeneralInfoRequester::getLowerACLGroup( $value );
-							if( in_array($this->cmsUser->gid, $groups) ) {
+							if ( in_array($this->cmsUser->gid, $groups) ) {
 								$status = true;
-							}else{
+							} else {
 								$status = false;
 							}
 							break;
@@ -188,85 +192,85 @@ class metaUser {
 							if ($this->hasSubscription) {
 								if ( $this->objSubscription->plan === $value ) {
 									$status = true;
-								}else{
+								} else {
 									$status = false;
 								}
-							}else{
+							} else {
 								$status = false;
 							}
 							break;
 						// Check whether the user was in the correct plan before
 						case 'plan_previous':
-							if( $this->hasSubscription ) {
-								if( $this->objSubscription->previous_plan == $value ) {
+							if ( $this->hasSubscription ) {
+								if ( $this->objSubscription->previous_plan == $value ) {
 									$status = true;
-								}else{
+								} else {
 									$status = false;
 								}
-							}else{
+							} else {
 								$status = false;
 							}
 							break;
 						// Check whether the user has used the right plan before
 						case 'plan_overall':
-							if( $this->hasSubscription ) {
+							if ( $this->hasSubscription ) {
 								$array = $this->objSubscription->getUsedPlans();
 								if ( isset( $array[$value] ) ) {
 									$status = true;
-								}else{
+								} else {
 									$status = false;
 								}
-							}else{
+							} else {
 								$status = false;
 							}
 							break;
 						// Check whether the user has used the plan at least a certain number of times
 						case 'plan_amount_min':
-							if( $this->hasSubscription ) {
+							if ( $this->hasSubscription ) {
 								$usage = $this->objSubscription->getUsedPlans();
 								$check = explode( ',', $value );
-								if( isset( $usage[$check[0]] ) ) {
+								if ( isset( $usage[$check[0]] ) ) {
 									// We have to add one here if the user is currently in the plan
-									if( $this->objSubscription->plan === $check[0] ) {
+									if ( $this->objSubscription->plan === $check[0] ) {
 										$used_times = $check[1] + 1;
-									}else{
+									} else {
 										$used_times = $check[1];
 									}
 
-									if( $usage[$check[0]] >= $used_times ) {
+									if ( $usage[$check[0]] >= $used_times ) {
 										$status = true;
-									}else{
+									} else {
 										$status = false;
 									}
-								}else{
+								} else {
 									$status = false;
 								}
-							}else{
+							} else {
 								$status = false;
 							}
 							break;
 						// Check whether the user has used the plan at max a certain number of times
 						case 'plan_amount_max':
-							if( $this->hasSubscription ) {
+							if ( $this->hasSubscription ) {
 								$usage = $this->objSubscription->getUsedPlans();
 								$check = explode( ',', $value );
-								if( isset($array[$check[0]] ) ) {
+								if ( isset($array[$check[0]] ) ) {
 									// We have to add one here if the user is currently in the plan
-									if( $this->objSubscription->plan === $check[0] ) {
+									if ( $this->objSubscription->plan === $check[0] ) {
 										$used_times = $check[1] + 1;
-									}else{
+									} else {
 										$used_times = $check[1];
 									}
 
-									if( $usage[$check[0]] <= $used_times ) {
+									if ( $usage[$check[0]] <= $used_times ) {
 										$status = true;
-									}else{
+									} else {
 										$status = false;
 									}
-								}else{
+								} else {
 									$status = true;
 								}
-							}else{
+							} else {
 								$status = true;
 							}
 							break;
@@ -275,7 +279,7 @@ class metaUser {
 				$return[$name] = $status;
 			}
 			return $return;
-		}else{
+		} else {
 			return false;
 		}
 	}
@@ -285,7 +289,8 @@ class metaUser {
  * acctexp table class
  */
 
-class AcctExp extends mosDBTable {
+class AcctExp extends mosDBTable
+{
 	/** @var int Primary key */
 	var $id=null;
 	/** @var int */
@@ -296,11 +301,13 @@ class AcctExp extends mosDBTable {
 	/**
 	 * @param database A database connector object
 	 */
-	function AcctExp( &$db ) {
+	function AcctExp( &$db )
+	{
 	 	$this->mosDBTable( '#__acctexp', 'id', $db );
 	}
 
-	function loadUserid( $userid ) {
+	function loadUserid( $userid )
+	{
 		global $database;
 
 		$query = 'SELECT id'
@@ -314,51 +321,54 @@ class AcctExp extends mosDBTable {
 		$this->load( $id ? $id : 0 );
 	}
 
-	function is_expired( $offset=false ) {
+	function is_expired( $offset=false )
+	{
 		global $database, $mosConfig_offset_user;
 
 		$cfg = new Config_General( $database );
 
-		if( !($this->expiration === '9999-12-31 00:00:00') ) {
+		if ( !($this->expiration === '9999-12-31 00:00:00') ) {
 			$expiration_cushion = str_pad( $cfg->cfg['expiration_cushion'], 2, '0', STR_PAD_LEFT );
 
-			if( $offset ) {
+			if ( $offset ) {
 				$expstamp = strtotime( ( '-' . $offset . ' days' ), strtotime( $this->expiration ) );
-			}else{
+			} else {
 				$expstamp = strtotime( ( '+' . $expiration_cushion . ' hours' ), strtotime( $this->expiration ) );
 			}
 
-			if( ( $expstamp > 0 ) && ( ( $expstamp - ( time() + $mosConfig_offset_user*3600 ) ) < 0 ) ) {
+			if ( ( $expstamp > 0 ) && ( ( $expstamp - ( time() + $mosConfig_offset_user*3600 ) ) < 0 ) ) {
 				return true;
-			}else{
+			} else {
 				return false;
 			}
-		}else{
+		} else {
 			return false;
 		}
 	}
 
-	function manualVerify() {
-		if( $this->is_expired() ) {
+	function manualVerify()
+	{
+		if ( $this->is_expired() ) {
 			mosRedirect( '/index.php?option=com_acctexp&amp;task=expired&amp;userid=' . (int) $this->userid );
 			return false;
-		}else{
+		} else {
 			return true;
 		}
 	}
 
-	function setExpiration( $unit, $value, $extend ) {
+	function setExpiration( $unit, $value, $extend )
+	{
 		global $mainframe, $mosConfig_offset_user;
 
 		$now = time() + $mosConfig_offset_user*3600;
 
-		if( $extend ) {
+		if ( $extend ) {
 			$current = strtotime( $this->expiration . ' 00:00:00' );
 
-			if( $current < $now ) {
+			if ( $current < $now ) {
 				$current = $now;
 			}
-		}else{
+		} else {
 			$current = $now;
 		}
 
@@ -367,7 +377,8 @@ class AcctExp extends mosDBTable {
 
 }
 
-class aecHeartbeat extends mosDBTable {
+class aecHeartbeat extends mosDBTable
+{
  	/** @var int Primary key */
 	var $id				= null;
  	/** @var datetime */
@@ -376,52 +387,57 @@ class aecHeartbeat extends mosDBTable {
 	/**
 	 * @param database A database connector object
 	 */
-	function aecHeartbeat( &$db ) {
+	function aecHeartbeat( &$db )
+	{
 	 	$this->mosDBTable( '#__acctexp_heartbeat', 'id', $db );
 	 	$this->load(1);
 	}
 
-	function frontendping() {
+	function frontendping()
+	{
 		global $database;
 
 		$cfg = new Config_General($database);
 
-		if( !is_null( $cfg->cfg['heartbeat_cycle'] ) || ($cfg->cfg['heartbeat_cycle'] == 0) ) {
+		if ( !is_null( $cfg->cfg['heartbeat_cycle'] ) || ($cfg->cfg['heartbeat_cycle'] == 0) ) {
 			$this->ping( $cfg->cfg['heartbeat_cycle'] );
 		}
 	}
 
-	function backendping() {
+	function backendping()
+	{
 		global $database;
 
 		$cfg = new Config_General($database);
 
-		if( !is_null( $cfg->cfg['heartbeat_cycle_backend'] ) || !($cfg->cfg['heartbeat_cycle_backend'] == 0) ) {
+		if ( !is_null( $cfg->cfg['heartbeat_cycle_backend'] ) || !($cfg->cfg['heartbeat_cycle_backend'] == 0) ) {
 			$this->ping( $cfg->cfg['heartbeat_cycle_backend'] );
 		}
 	}
 
-	function ping( $configCycle ) {
+	function ping( $configCycle )
+	{
 		global $mainframe, $mosConfig_offset_user;
 
-		if( $this->last_beat ) {
+		if ( $this->last_beat ) {
 			$ping	= strtotime( $this->last_beat ) + $configCycle*3600;
-		}else{
+		} else {
 			$ping = 0;
 		}
 
-		if( ( $ping - (time() + $mosConfig_offset_user*3600) ) <= 0 ) {
+		if ( ( $ping - (time() + $mosConfig_offset_user*3600) ) <= 0 ) {
 			$this->last_beat = date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 );
 			$this->check();
 			$this->store();
 
 			$this->beat();
-		}else{
+		} else {
 			// sleep, mechanical Hound, but do not sleep / kept awake with wolves teeth
 		}
 	}
 
-	function beat() {
+	function beat()
+	{
 		global $database;
 		// Other ideas: Clean out old Coupons
 
@@ -440,10 +456,10 @@ class aecHeartbeat extends mosDBTable {
 		$database->setQuery( $query );
 		$pre_expiration = $database->loadResult();
 
-		if( $pre_expiration ) {
+		if ( $pre_expiration ) {
 			// pre-expiration found, search limit set to the maximum pre-expiration time
 			$expiration_limit = AECToolbox::computeExpiration( ( $pre_expiration + 1 ), 'D', time() );
-		}else{
+		} else {
 			// No pre-expiration actions found, limiting search to all users who expire until tomorrow (just to be safe)
 			$pre_expiration		= false;
 			$expiration_limit	= AECToolbox::computeExpiration( 1, 'D', time() );
@@ -471,28 +487,28 @@ class aecHeartbeat extends mosDBTable {
 		$exp_users			= 0;
 
 		// Efficient way to check for expired users without checking on each one
-		if( !empty( $user_list[0] ) ) {
-			foreach( $user_list as $exp_id ) {
+		if ( !empty( $user_list[0] ) ) {
+			foreach ( $user_list as $exp_id ) {
 				$expiration = new AcctExp($database);
 				$expiration->load( $exp_id );
 
-				if( $expiration->id ) {
+				if ( $expiration->id ) {
 					$query = 'SELECT id'
 					. ' FROM #__users'
 					. ' WHERE id = \'' . $expiration->userid . '\''
 					;
 					$database->setQuery( $query );
-					if( $database->loadResult() ) {
-						if( $found_expired ) {
+					if ( $database->loadResult() ) {
+						if ( $found_expired ) {
 							$found_expired = $expiration->is_expired();
 
-							if( $found_expired && !in_array( $expiration->userid, $expired_users ) ) {
+							if ( $found_expired && !in_array( $expiration->userid, $expired_users ) ) {
 								$expired_users[] = $expiration->userid;
 							}
 						}
 
-						if( !$found_expired && !in_array( $expiration->userid, $pre_expired_users ) ) {
-							if( $pre_expiration ) {
+						if ( !$found_expired && !in_array( $expiration->userid, $pre_expired_users ) ) {
+							if ( $pre_expiration ) {
 								$pre_expired_users[] = $expiration->userid;
 							}
 						}
@@ -500,19 +516,19 @@ class aecHeartbeat extends mosDBTable {
 				}
 			}
 
-			if( isset( $expired_users[0] ) ) {
-				foreach( $expired_users as $n ) {
+			if ( isset( $expired_users[0] ) ) {
+				foreach ( $expired_users as $n ) {
 					$subscription = new Subscription( $database );
 					$subscription->loadUserID($n);
 
-					if( $subscription->expire() ) {
+					if ( $subscription->expire() ) {
 						$e++;
 					}
 				}
 			}
 
 			// Only go for pre expiration action if we have at least one user for it
-			if( $pre_expiration && isset( $pre_expired_users[0] ) ) {
+			if ( $pre_expiration && isset( $pre_expired_users[0] ) ) {
 				// Get all the MIs which have a pre expiration check
 				$query = 'SELECT id'
 				. ' FROM #__acctexp_microintegrations'
@@ -531,7 +547,7 @@ class aecHeartbeat extends mosDBTable {
 
 				// Filter out plans which have not got the right MIs applied
 				$expmi_plans = array();
-				foreach( $plans_mi as $plan_id ) {
+				foreach ( $plans_mi as $plan_id ) {
 					$query = 'SELECT micro_integrations'
 					. ' FROM #__acctexp_plans'
 					. ' WHERE id= \'' . $plan_id . '\''
@@ -540,7 +556,7 @@ class aecHeartbeat extends mosDBTable {
 					$plan_mis = explode( ';', $database->loadResult() );
 					$pexp_mis = array_intersect( $plan_mis, $mi_pexp );
 
-					if( count( $pexp_mis ) ) {
+					if ( count( $pexp_mis ) ) {
 						$expmi_plans[] = $plan_id;
 					}
 				}
@@ -554,12 +570,12 @@ class aecHeartbeat extends mosDBTable {
 				$database->setQuery( $query );
 				$user_list = $database->loadResultArray();
 
-				foreach( $pre_expired_users as $userid ) {
+				foreach ( $pre_expired_users as $userid ) {
 					$metaUser = new metaUser( $userid );
 
 					// Two double checks here, just to be sure
-					if( !( strcmp( $metaUser->objSubscription->status, 'Expired' ) === 0 ) && !$metaUser->objSubscription->recurring ) {
-						if( in_array( $metaUser->objSubscription->plan, $expmi_plans ) ) {
+					if ( !( strcmp( $metaUser->objSubscription->status, 'Expired' ) === 0 ) && !$metaUser->objSubscription->recurring ) {
+						if ( in_array( $metaUser->objSubscription->plan, $expmi_plans ) ) {
 							// Its ok - load the plan
 							$subscription_plan = new SubscriptionPlan( $database );
 							$subscription_plan->load( $metaUser->objSubscription->plan );
@@ -571,22 +587,22 @@ class aecHeartbeat extends mosDBTable {
 							// loop through MIs and apply pre exp action
 							$check_actions = $exp_actions;
 
-							foreach( $user_pexpmis as $mi_id ) {
+							foreach ( $user_pexpmis as $mi_id ) {
 								$mi = new microIntegration( $database );
 								$mi->load( $mi_id );
 
-								if( $mi->callIntegration() ) {
+								if ( $mi->callIntegration() ) {
 									// Do the actual pre expiration check on this MI
-									if( $metaUser->objExpiration->is_expired( $mi->pre_exp_check ) ) {
+									if ( $metaUser->objExpiration->is_expired( $mi->pre_exp_check ) ) {
 										$result = $mi->pre_expiration_action( $userid, $subscription_plan );
-										if( $result ) {
+										if ( $result ) {
 											$exp_actions++;
 										}
 									}
 								}
 							}
 
-							if( $exp_actions > $check_actions ) {
+							if ( $exp_actions > $check_actions ) {
 								$exp_users++;
 							}
 						}
@@ -601,24 +617,24 @@ class aecHeartbeat extends mosDBTable {
 		$event	= _AEC_LOG_LO_HEARTBEAT . ' ';
 		$tags	= array( 'heartbeat' );
 
-		if( $e ) {
-			if( $e > 1 ) {
+		if ( $e ) {
+			if ( $e > 1 ) {
 				$event .= 'Expires ' . $e . ' users';
-			}else{
+			} else {
 				$event .= 'Expires 1 user';
 			}
 			$tags[] = 'expiration';
-			if( $exp_actions ) {
+			if ( $exp_actions ) {
 				$event .= ', ';
 			}
 		}
-		if( $exp_actions ) {
+		if ( $exp_actions ) {
 			$event .= $exp_actions . ' Pre-expiration action' . ( $exp_actions > 1 ) ? 's' : ''
 						. ' for ' . $exp_users . ' user' . ( $exp_users > 1 ) ? 's' : '';
 			$tags[] = 'pre-expiration';
 		}
 
-		if( strcmp( _AEC_LOG_LO_HEARTBEAT . ' ', $event ) === 0 ) {
+		if ( strcmp( _AEC_LOG_LO_HEARTBEAT . ' ', $event ) === 0 ) {
 			$event .= _AEC_LOG_AD_HEARTBEAT_DO_NOTHING;
 		}
 
@@ -629,7 +645,8 @@ class aecHeartbeat extends mosDBTable {
 
 }
 
-class eventLog extends paramDBTable {
+class eventLog extends paramDBTable
+{
  	/** @var int Primary key */
 	var $id		= null;
  	/** @var string */
@@ -644,11 +661,13 @@ class eventLog extends paramDBTable {
 	/**
 	 * @param database A database connector object
 	 */
-	function eventLog( &$db ) {
+	function eventLog( &$db )
+	{
 	 	$this->mosDBTable( '#__acctexp_eventlog', 'id', $db );
 	}
 
-	function issue( $short, $tags, $text, $params = null ) {
+	function issue( $short, $tags, $text, $params = null )
+	{
 		global $mosConfig_offset_user;
 
 		$this->datetime	= gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
@@ -656,7 +675,7 @@ class eventLog extends paramDBTable {
 		$this->tags		= $tags;
 		$this->event	= $text;
 
-		if( !is_null( $params ) && is_array( $params ) ) {
+		if ( !is_null( $params ) && is_array( $params ) ) {
 			$this->setParams( $params );
 		}
 
@@ -666,18 +685,21 @@ class eventLog extends paramDBTable {
 
 }
 
-class PaymentProcessorHandler {
+class PaymentProcessorHandler
+{
 
-	function PaymentProcessorHandler() {
+	function PaymentProcessorHandler()
+	{
 		global $mosConfig_absolute_path;
 		$this->pp_dir = $mosConfig_absolute_path . '/components/com_acctexp/processors';
 	}
 
-	function getProcessorList() {
+	function getProcessorList()
+	{
 		$list = AECToolbox::getFileArray( $this->pp_dir, 'php', false, true );
 
 		$pp_list = array();
-		foreach( $list as $name ) {
+		foreach ( $list as $name ) {
 			$parts		= explode( '.', $name );
 			$pp_list[] = $parts[0];
 		}
@@ -685,7 +707,8 @@ class PaymentProcessorHandler {
 		return $pp_list;
 	}
 
-	function getProcessorIdfromName( $name ) {
+	function getProcessorIdfromName( $name )
+	{
 		global $database;
 
 		$query = 'SELECT id'
@@ -702,13 +725,14 @@ class PaymentProcessorHandler {
 	 * @param bool	$active		get only active objects
 	 * @return array of (active) payment processors
 	 */
-	function getInstalledObjectList( $active = false ) {
+	function getInstalledObjectList( $active = false )
+	{
 		global $database;
 
 		$query = 'SELECT id, active, name'
 		. ' FROM #__acctexp_config_processors'
 		;
-		if( $active ) {
+		if ( $active ) {
 			$query .= ' WHERE active = \'1\'';
 		}
 		$database->setQuery( $query );
@@ -716,13 +740,14 @@ class PaymentProcessorHandler {
 		return $database->loadObjectList();
 	}
 
-	function getInstalledNameList ($active=false) {
+	function getInstalledNameList($active=false)
+	{
 		global $database;
 
 		$query = 'SELECT name'
 		. ' FROM #__acctexp_config_processors'
 		;
-		if( $active !== false ) {
+		if ( $active !== false ) {
 			$query .= ' WHERE active = \'' . $active . '\'';
 		}
 		$database->setQuery( $query );
@@ -730,11 +755,12 @@ class PaymentProcessorHandler {
 		return $database->loadResultArray();
 	}
 
-	function processorReply( $url, $reply, $get = 0 ) {
+	function processorReply( $url, $reply, $get = 0 )
+	{
 		$fp = null;
 		// try to use fsockopen. some hosting systems disable fsockopen (godaddy.com)
 		$fp = $this->doTheHttp( $url, $reply, $get );
-		if( !$fp ) {
+		if ( !$fp ) {
 			// If fsockopen doesn't work try using curl
 			$fp = $this->doTheCurl( $url, $reply );
 		}
@@ -742,7 +768,8 @@ class PaymentProcessorHandler {
 		return $fp;
 	}
 
-	function doTheCurl ( $url, $req ) {
+	function doTheCurl( $url, $req )
+	{
 		$ch = curl_init();
 		curl_setopt( $ch, CURLOPT_VERBOSE, 1 );
 		//curl_setopt ($ch, CURLOPT_HTTPPROXYTUNNEL, TRUE);
@@ -760,7 +787,8 @@ class PaymentProcessorHandler {
 		return $fp;
 	}
 
-	function doTheHttp( $url, $req, $get) {
+	function doTheHttp( $url, $req, $get)
+	{
 		$header  = ''
 		. 'POST https://' . $url . '/cgi-bin/webscr HTTP/1.0' . "\r\n"
 		. 'Host: ' . $url  . ':80' . "\r\n"
@@ -769,15 +797,15 @@ class PaymentProcessorHandler {
 		;
 		$fp = fsockopen( $url, 80, $errno, $errstr, 30 );
 
-		if( !$fp ) {
+		if ( !$fp ) {
 			return 'ERROR';
-		}else{
+		} else {
 			fputs( $fp, $header . $req );
-			while( !feof( $fp ) ) {
+			while ( !feof( $fp ) ) {
 				$res = fgets( $fp, 1024 );
-				if( strcmp( $res, 'VERIFIED' ) == 0 ) {
+				if ( strcmp( $res, 'VERIFIED' ) == 0 ) {
 					return 'VERIFIED';
-				}elseif( strcmp( $res, 'INVALID' ) == 0 ) {
+				} elseif ( strcmp( $res, 'INVALID' ) == 0 ) {
 					return 'INVALID';
 				}
 			}
@@ -788,7 +816,8 @@ class PaymentProcessorHandler {
 
 }
 
-class PaymentProcessor {
+class PaymentProcessor
+{
 	/** var object **/
 	var $pph = null;
 	/** var int **/
@@ -802,12 +831,14 @@ class PaymentProcessor {
 	/** var array **/
 	var $info = null;
 
-	function PaymentProcessor () {
+	function PaymentProcessor()
+	{
 		// Init Payment Processor Handler
 		$this->pph = new PaymentProcessorHandler ();
 	}
 
-	function loadName( $name ) {
+	function loadName( $name )
+	{
 		global $database;
 
 		// Set Name
@@ -825,14 +856,14 @@ class PaymentProcessor {
 		$file = $this->pph->pp_dir . '/' . $this->processor_name . '.php';
 
 		// Check whether processor exists
-		if( file_exists( $file ) ) {
+		if ( file_exists( $file ) ) {
 
-			if( !defined( '_AEC_LANG_PROCESSOR' ) ) {
+			if ( !defined( '_AEC_LANG_PROCESSOR' ) ) {
 				$langPath = $this->pph->pp_dir . '/com_acctexp_language_processors/';
 				// Include language files for processors
-				if( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
+				if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
 					include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
-				}else{
+				} else {
 					include_once( $langPath . 'english.php' );
 				}
 			}
@@ -844,12 +875,13 @@ class PaymentProcessor {
 			$class_name = 'processor_' . $this->processor_name;
 			$this->p_class = new $class_name();
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
 
-	function loadId ( $ppid ) {
+	function loadId( $ppid )
+	{
 		global $database;
 
 		// Fetch name from db and load processor
@@ -859,34 +891,37 @@ class PaymentProcessor {
 		;
 		$database->setQuery( $query );
 		$name = $database->loadResult();
-		if( $name ) {
+		if ( $name ) {
 			return $this->loadName( $name );
-		}else{
+		} else {
 			return false;
 		}
 	}
 
-	function fullInit () {
+	function fullInit()
+	{
 		$this->init();
 		$this->getInfo();
 		$this->getSettings();
 	}
 
-	function init () {
+	function init()
+	{
 		global $database;
 
-		if( !$this->id ) {
+		if ( !$this->id ) {
 			// Install and recurse
 			$this->install();
 			$this->init();
-		}else{
+		} else {
 			// Initiate processor from db
 			$this->processor = new processor( $database );
 			$this->processor->load( $this->id );
 		}
 	}
 
-	function install () {
+	function install()
+	{
 		global $database;
 
 		// Create new db entry
@@ -917,57 +952,64 @@ class PaymentProcessor {
 		$this->id = $result ? $result : 0;
 	}
 
-	function getInfo () {
+	function getInfo()
+	{
 		$this->info	= $this->processor->getParams( 'info' );
 		$original	= $this->p_class->info();
 
-		foreach( $original as $name => $var ) {
-			if( !isset( $this->info[$name] ) ) {
+		foreach ( $original as $name => $var ) {
+			if ( !isset( $this->info[$name] ) ) {
 				$this->info[$name] = $var;
 			}
 		}
 	}
 
-	function getSettings () {
+	function getSettings()
+	{
 		$this->settings	= $this->processor->getParams( 'settings' );
 		$original		= $this->p_class->settings();
 
-		foreach( $original as $name => $var ) {
-			if( !isset( $this->settings[$name] ) ) {
+		foreach ( $original as $name => $var ) {
+			if ( !isset( $this->settings[$name] ) ) {
 				$this->settings[$name] = $var;
 			}
 		}
 	}
 
-	function setSettings () {
+	function setSettings()
+	{
 		// Test if values really are an array and write them to db
-		if( is_array( $this->settings ) ) {
+		if ( is_array( $this->settings ) ) {
 			$this->processor->setParams( $this->settings, 'settings' );
 			$this->processor->check();
 			$this->processor->store();
 		}
 	}
 
-	function setInfo () {
+	function setInfo()
+	{
 		// Test if values really are an array and write them to db
-		if( is_array( $this->info ) ) {
+		if ( is_array( $this->info ) ) {
 			$this->processor->setParams( $this->info, 'info' );
 			$this->processor->check();
 			$this->processor->store();
 		}
 	}
 
-	function getBackendSettings () {
+	function getBackendSettings()
+	{
 		return $this->p_class->backend_settings();
 	}
 
-	function getGatewayVariables( $int_var, $metaUser, $new_subscription ) {
+	function getGatewayVariables( $int_var, $metaUser, $new_subscription )
+	{
 		$this->getSettings();
 
 		return $this->p_class->createGatewayLink( $int_var, $this->settings, $metaUser, $new_subscription );
 	}
 
-	function parseNotification ( $post ) {
+	function parseNotification( $post )
+	{
 		$this->getSettings();
 
 		return $this->p_class->parseNotification( $post, $this->settings );
@@ -975,7 +1017,8 @@ class PaymentProcessor {
 
 }
 
-class processor extends paramDBTable {
+class processor extends paramDBTable
+{
 	/** @var int Primary key */
 	var $id					= null;
 	/** @var int */
@@ -992,11 +1035,13 @@ class processor extends paramDBTable {
 	/**
 	* @param database A database connector object
 	*/
-	function processor ( &$db ) {
+	function processor( &$db )
+	{
 		$this->mosDBTable( '#__acctexp_config_processors', 'id', $db );
 	}
 
-	function loadName( $name ) {
+	function loadName( $name )
+	{
 		global $database;
 
 		$query = 'SELECT id'
@@ -1007,7 +1052,8 @@ class processor extends paramDBTable {
 		$this->load( $database->loadResult() );
 	}
 
-	function createNew( $name, $info, $settings ) {
+	function createNew( $name, $info, $settings )
+	{
 		$this->id		= 0;
 		$this->name		= $name;
 		$this->active	= 1;
@@ -1020,9 +1066,11 @@ class processor extends paramDBTable {
 
 }
 
-class aecSettings {
+class aecSettings
+{
 
-	function aecSettings( $area, $subarea='' ) {
+	function aecSettings( $area, $subarea='' )
+	{
 		$this->area				= $area;
 		$this->original_subarea	= $subarea;
 		$this->subarea			= $subarea;
@@ -1034,7 +1082,7 @@ class aecSettings {
 		$this->lists			= $lists;
 		$this->settings			= $settings;
 
-		foreach( $this->params as $name => $content ) {
+		foreach ( $this->params as $name => $content ) {
 
 			// $content[0] = type
 			// $content[1] = value
@@ -1042,16 +1090,16 @@ class aecSettings {
 			// $content[3] = set name
 			// $content[4] = set description
 
-			if( isset( $this->params_values[$name] ) ) {
+			if ( isset( $this->params_values[$name] ) ) {
 				$value = $this->params_values[$name];
-			}else{
-				if( isset( $content[3] ) ) {
+			} else {
+				if ( isset( $content[3] ) ) {
 					$value						= $content[3];
 					$this->params_values[$name] = $content[3];
-				}elseif( isset( $content[1] ) ) {
+				} elseif ( isset( $content[1] ) ) {
 					$value						= $content[1];
 					$this->params_values[$name] = $content[1];
-				}else{
+				} else {
 					$value						= '';
 					$this->params_values[$name] = '';
 				}
@@ -1060,17 +1108,17 @@ class aecSettings {
 			// Checking for remap functions
 			$remap = 'remap_' . $content[0];
 
-			if( method_exists( $this, $remap ) ) {
+			if ( method_exists( $this, $remap ) ) {
 				$type = $this->$remap( $name, $value );
-			}else{
+			} else {
 				$type = $content[0];
 			}
 
-			if( strcmp( $type, 'DEL' ) === 0 ) {
+			if ( strcmp( $type, 'DEL' ) === 0 ) {
 				continue;
 			}
 
-			if( !isset( $content[2] ) || !$content[2] ) {
+			if ( !isset( $content[2] ) || !$content[2] ) {
 				// Create constant names
 				$constant_generic	= '_' . strtoupper($this->area)
 										. '_' . strtoupper( $this->original_subarea )
@@ -1082,29 +1130,29 @@ class aecSettings {
 				$constantdesc		= $constant . '_DESC';
 
 				// If the constantname does not exists, try a generic name or insert an error
-				if( defined( $constantname ) ) {
+				if ( defined( $constantname ) ) {
 					$info_name = constant( $constantname );
-				}else{
+				} else {
 					$genericname = $constant_generic . '_NAME';
-					if( defined( $genericname ) ) {
+					if ( defined( $genericname ) ) {
 						$info_name = constant( $genericname );
-					}else{
+					} else {
 						$info_name = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantname );
 					}
 				}
 
 				// If the constantname does not exists, try a generic name or insert an error
-				if( defined( $constantdesc ) ) {
+				if ( defined( $constantdesc ) ) {
 					$info_desc = constant( $constantdesc );
-				}else{
+				} else {
 					$genericdesc = $constant_generic . '_DESC';
-					if( defined( $genericname ) ) {
+					if ( defined( $genericname ) ) {
 						$info_desc = constant( $genericdesc );
-					}else{
+					} else {
 						$info_desc = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantdesc );
 					}
 				}
-			}else{
+			} else {
 				$info_name = $content[1];
 				$info_desc = $content[2];
 			}
@@ -1113,17 +1161,20 @@ class aecSettings {
 		}
 	}
 
-	function remap_subarea_change( $name, $value ) {
+	function remap_subarea_change( $name, $value )
+	{
 		$this->subarea = $value;
 		return 'DEL';
 	}
 
-	function remap_list_yesno( $name, $value ) {
+	function remap_list_yesno( $name, $value )
+	{
 		$this->lists[$name] = mosHTML::yesnoSelectList( $name, '', $value );
 		return 'list';
 	}
 
-	function remap_list_date( $name, $value ) {
+	function remap_list_date( $name, $value )
+	{
 		// mic: fix wrong name
 		$this->lists[$name] = '<input class="text_area" type="text" name="' . $name . '" id="' . $name . '" size="19" maxlength="19" value="' . $value . '"/>'
 		.'<input type="reset" name="reset" class="button" onClick="return showCalendar(\'' . $name . '\', \'y-mm-dd\');" value="..." />';
@@ -1131,9 +1182,11 @@ class aecSettings {
 	}
 }
 
-class aecHTML {
+class aecHTML
+{
 
-	function aecHTML( $rows, $lists=null ) {
+	function aecHTML( $rows, $lists=null )
+	{
 		//$this->area = $area;
 		//$this->fallback = $fallback;
 
@@ -1141,14 +1194,15 @@ class aecHTML {
 		$this->lists	= $lists;
 	}
 
-	function createSettingsParticle( $name ) {
+	function createSettingsParticle( $name )
+	{
 
 		$row	= $this->rows[$name];
 		$type	= $row[0];
 
-		if( isset($row[3] ) ) {
+		if ( isset($row[3] ) ) {
 			$value = $row[3];
-		}else{
+		} else {
 			$value = '';
 		}
 
@@ -1204,17 +1258,17 @@ class aecHTML {
 		return $return;
 	}
 
-	function createFormParticle( $name, $row, $lists ) {
-
+	function createFormParticle( $name, $row, $lists )
+	{
 		$type = $row[0];
 
-		if( isset( $row[3] ) ) {
+		if ( isset( $row[3] ) ) {
 			$value = $row[3];
 		}
 
 		$return = '<p><strong>' . $row[1] . '</strong></p>' . '<p>' . $row[2] . '</p>';
 
-		switch( $type ) {
+		switch ( $type ) {
 			case "inputA":
 				$return .= '<input name="' . $name . '" type="text" size="4" maxlength="5" value="' . $value . '"/>';
 				break;
@@ -1240,7 +1294,8 @@ class aecHTML {
 	* @param string Box title
 	* @returns HTML code for ToolTip
 	*/
-	function ToolTip( $tooltip, $title='', $width='', $image='help.png', $text='', $href='#', $link=1 ) {
+	function ToolTip( $tooltip, $title='', $width='', $image='help.png', $text='', $href='#', $link=1 )
+	{
 		global $mosConfig_live_site;
 
 		if ( $width ) {
@@ -1280,10 +1335,11 @@ class aecHTML {
 	 * @param	string	$alt	optional alt/title text
 	 * @return html string
 	 */
-	function Icon( $image = 'error.png', $alt = '' ) {
+	function Icon( $image = 'error.png', $alt = '' )
+	{
 		global $mosConfig_live_site;
 
-		if( !$alt ) {
+		if ( !$alt ) {
 			$name	= explode( '.', $image );
 			$alt	= $name[0];
 		}
@@ -1293,27 +1349,29 @@ class aecHTML {
 	}
 }
 
-class Config_General extends paramDBTable {
+class Config_General extends paramDBTable
+{
 	/** @var int Primary key */
 	var $id 				= null;
 	/** @var text */
 	var $settings 			= null;
 
-	function Config_General( &$db ) {
-
+	function Config_General( &$db )
+	{
 		$this->mosDBTable( '#__acctexp_config', 'id', $db );
 
 		$this->load(1);
 
 		$this->cfg = $this->getParams( 'settings' );
 
-		if( $this->cfg === false ) {
+		if ( $this->cfg === false ) {
 			$this->initParams();
 			$this->cfg = $this->getParams( 'settings' );
 		}
 	}
 
-	function initParams() {
+	function initParams()
+	{
 		$settings_defaults = array();
 		$settings_defaults['require_subscription']				= 0;
 		$settings_defaults['alertlevel2']						= 7;
@@ -1357,17 +1415,18 @@ class Config_General extends paramDBTable {
 		return true;
 	}
 
-	function saveSettings () {
+	function saveSettings()
+	{
 		$settings = array();
 		foreach ($this->cfg as $key => $value ) {
-			if( !is_null( $key ) ) {
+			if ( !is_null( $key ) ) {
 				// mic: added trim additional slash.check
 				$value = trim( $value );
-				if( !get_magic_quotes_gpc() ) {
+				if ( !get_magic_quotes_gpc() ) {
 					$value = addslashes( $value );
 				}
 				// mic: fix for NOT including JCE-settings into aec.database
-				if( substr( $key, 0, 4 ) != 'mce_' && substr( $value, 0, 4 ) != 'mce_') {
+				if ( substr( $key, 0, 4 ) != 'mce_' && substr( $value, 0, 4 ) != 'mce_') {
 					$settings[] = $key . '=' . $value;
 				}
 			}
@@ -1379,9 +1438,10 @@ class Config_General extends paramDBTable {
 	}
 }
 
-class SubscriptionPlanHandler {
-
-	function getPlanUserlist ( $planid ) {
+class SubscriptionPlanHandler
+{
+	function getPlanUserlist( $planid )
+	{
 		global $database;
 
 		$query = 'SELECT userid'
@@ -1394,7 +1454,8 @@ class SubscriptionPlanHandler {
 	}
 }
 
-class SubscriptionPlan extends paramDBTable {
+class SubscriptionPlan extends paramDBTable
+{
 	/** @var int Primary key */
 	var $id 				= null;
 	/** @var int */
@@ -1418,11 +1479,13 @@ class SubscriptionPlan extends paramDBTable {
 	/** @var text */
 	var $micro_integrations	= null;
 
-	function SubscriptionPlan( &$db ){
+	function SubscriptionPlan( &$db )
+	{
 		$this->mosDBTable( '#__acctexp_plans', 'id', $db );
 	}
 
-	function applyPlan( $userid, $processor = 'none', $silent = 0 ) {
+	function applyPlan( $userid, $processor = 'none', $silent = 0 )
+	{
 		global $database, $mainframe, $mosConfig_offset_user;
 
 		$cfg = new Config_General($database);
@@ -1443,38 +1506,38 @@ class SubscriptionPlan extends paramDBTable {
 			$metaUser->objSubscription->expire(1);
 		}
 
-		if( $comparison['total_comparison'] === false || is_null($comparison['total_comparison']) || $is_pending ) {
+		if ( $comparison['total_comparison'] === false || is_null($comparison['total_comparison']) || $is_pending ) {
 			// If user is using global trial period he still can use the trial period of a plan
-			if( $params['trial_period'] > 0 && !$is_trial ) {
+			if ( $params['trial_period'] > 0 && !$is_trial ) {
 				$value		= $params['trial_period'];
 				$perunit	= $params['trial_periodunit'];
 				$lifetime	= 0; // We are entering the trial period. The lifetime will come at the renew.
-			}else{
+			} else {
 				$value		= $params['full_period'];
 				$perunit	= $params['full_periodunit'];
 			}
-		}elseif( !$is_pending ) {
+		} elseif ( !$is_pending ) {
 			$value		= $params['full_period'];
 			$perunit	= $params['full_periodunit'];
-		}else{
+		} else {
 			return;
 		}
 
-		if( !$metaUser->hasExpiration ) {
+		if ( !$metaUser->hasExpiration ) {
 			$metaUser->objExpiration = new AcctExp( $database );
 			$metaUser->objExpiration->load( 0 );
 			$metaUser->objExpiration->userid = $metaUser->userid;
 			$metaUser->hasExpiration = 1;
 		}
 
-		if( $params['lifetime'] ) {
+		if ( $params['lifetime'] ) {
 			$metaUser->objExpiration->expiration = '9999-12-31 00:00:00';
 			$metaUser->objSubscription->lifetime = 1;
-		}else{
+		} else {
 			$metaUser->objSubscription->lifetime = 0;
-			if( ( $comparison['comparison'] == 2 ) && !$lifetime ) {
+			if ( ( $comparison['comparison'] == 2 ) && !$lifetime ) {
 				$metaUser->objExpiration->setExpiration( $perunit, $value, 1 );
-			}else{
+			} else {
 				$metaUser->objExpiration->setExpiration( $perunit, $value, 0 );
 			}
 		}
@@ -1482,20 +1545,20 @@ class SubscriptionPlan extends paramDBTable {
 		$metaUser->objExpiration->check();
 		$metaUser->objExpiration->store();
 
-		if( $is_pending ) {
+		if ( $is_pending ) {
 			// Is new = set signup date
 			$metaUser->objSubscription->signup_date = gmstrftime( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
-			if( $params['trial_period'] > 0 && !$is_trial ) {
+			if ( $params['trial_period'] > 0 && !$is_trial ) {
 				$status = 'Trial';
-			}else{
-				if( $params['full_period'] || $params['lifetime'] ) {
+			} else {
+				if ( $params['full_period'] || $params['lifetime'] ) {
 					$status = 'Active';
-				}else{
+				} else {
 					// This should not happen
 					$status = 'Pending';
 				}
 			}
-		}else{
+		} else {
 			// Renew subscription - Do NOT set signup_date
 			$status = 'Active';
 			$renew = 1;
@@ -1508,29 +1571,29 @@ class SubscriptionPlan extends paramDBTable {
 		$metaUser->objSubscription->type = $processor;
 
 		$pp = new PaymentProcessor();
-		if( $pp->loadName( strtolower( $processor ) ) ) {
+		if ( $pp->loadName( strtolower( $processor ) ) ) {
 			$pp->init();
 			$pp->getInfo();
 			$metaUser->objSubscription->recurring = $pp->info['recurring'];
-		}else{
+		} else {
 			$metaUser->objSubscription->recurring = 0;
 		}
 
 		$metaUser->objSubscription->check();
 		$metaUser->objSubscription->store();
 
-		if( $params['gid_enabled'] ) {
+		if ( $params['gid_enabled'] ) {
 			$metaUser->instantGIDchange($params['gid']);
 		}
 
 		$micro_integrations = $this->getMicroIntegrations();
 
-		if( is_array( $micro_integrations ) ) {
-			foreach( $micro_integrations as $mi_id ) {
+		if ( is_array( $micro_integrations ) ) {
+			foreach ( $micro_integrations as $mi_id ) {
 				$mi = new microIntegration( $database );
-				if( $mi->mi_exists( $mi_id ) ) {
+				if ( $mi->mi_exists( $mi_id ) ) {
 					$mi->load( $mi_id );
-					if( $mi->callIntegration() ) {
+					if ( $mi->callIntegration() ) {
 						$mi->action( $metaUser->userid, $this );
 					}
 				}
@@ -1538,8 +1601,8 @@ class SubscriptionPlan extends paramDBTable {
 			}
 		}
 
-		if(!$silent){
-			if( $this->id !== $cfg->cfg['entry_plan'] ) {
+		if (!$silent){
+			if ( $this->id !== $cfg->cfg['entry_plan'] ) {
 				$metaUser->objSubscription->sendEmailRegistered( $renew );
 			}
 		}
@@ -1547,10 +1610,11 @@ class SubscriptionPlan extends paramDBTable {
 		return $renew;
 	}
 
-	function SubscriptionAmount( $recurring, $user_subscription ) {
+	function SubscriptionAmount( $recurring, $user_subscription )
+	{
 		global $database;
 
-		if( is_object($user_subscription) ) {
+		if ( is_object($user_subscription) ) {
 			$comparison				= $this->doPlanComparison( $user_subscription );
 			$plans_comparison		= $comparison['comparison'];
 			$plans_comparison_total	= $comparison['total_comparison'];
@@ -1565,50 +1629,50 @@ class SubscriptionPlan extends paramDBTable {
 		$var		= null;
 		$params		= $this->getParams();
 
-		if( $recurring ) {
+		if ( $recurring ) {
 			$amount = array();
 
 			// Only Allow a Trial when the User is coming from a different PlanGroup or is new
-			if( ( $plans_comparison === false ) && ( $plans_comparison_total === false ) && $params['trial_period'] ) {
-				if( $params['trial_free'] ) {
+			if ( ( $plans_comparison === false ) && ( $plans_comparison_total === false ) && $params['trial_period'] ) {
+				if ( $params['trial_free'] ) {
 					$amount['amount1'] = '0.00';
-				}else{
+				} else {
 					$amount['amount1']	= $params['trial_amount'];
 				}
 				$amount['period1']	= $params['trial_period'];
 				$amount['unit1']	= $params['trial_periodunit'];
 			}
 
-			if( $params['full_free'] ) {
+			if ( $params['full_free'] ) {
 				$amount['amount3'] = '0.00';
-			}else{
+			} else {
 				$amount['amount3']	= $params['full_amount'];
 			}
 			$amount['amount3']		= $params['full_amount'];
 			$amount['period3']		= $params['full_period'];
 			$amount['unit3']		= $params['full_periodunit'];
-		}else{
-			if( !$params['trial_period'] && $params['full_free'] && $params['trial_free'] ) {
+		} else {
+			if ( !$params['trial_period'] && $params['full_free'] && $params['trial_free'] ) {
 				$amount = '0.00';
-			}else{
-				if( ( $plans_comparison === false ) && ( $plans_comparison_total === false ) ) {
-					if( !$is_trial && $params['trial_period'] ) {
-						if( $params['trial_free'] ) {
+			} else {
+				if ( ( $plans_comparison === false ) && ( $plans_comparison_total === false ) ) {
+					if ( !$is_trial && $params['trial_period'] ) {
+						if ( $params['trial_free'] ) {
 							$amount = '0.00';
-						}else{
+						} else {
 							$amount = $params['trial_amount'];
 						}
 					} else {
-						if( $params['full_free'] ) {
+						if ( $params['full_free'] ) {
 							$amount = '0.00';
-						}else{
+						} else {
 							$amount = $params['full_amount'];
 						}
 					}
-				}else{
-					if( $params['full_free'] ) {
+				} else {
+					if ( $params['full_free'] ) {
 						$amount = '0.00';
-					}else{
+					} else {
 						$amount = $params['full_amount'];
 					}
 				}
@@ -1623,35 +1687,36 @@ class SubscriptionPlan extends paramDBTable {
 		return $return;
 	}
 
-	function doPlanComparison ( $user_subscription ) {
+	function doPlanComparison( $user_subscription )
+	{
 		global $database;
 
 		$return['total_comparison']	= false;
 		$return['comparison']		= false;
 		$return['renew']			= 0;
 
-		if( !is_null( $user_subscription->plan ) ) {
+		if ( !is_null( $user_subscription->plan ) ) {
 			$return['renew'] = 1;
 
-			if( $user_subscription->used_plans ) {
+			if ( $user_subscription->used_plans ) {
 				$used_plans			= explode( ';', $user_subscription->used_plans );
 				$plans_comparison	= false;
 				$thisparams			= $this->getParams();
 
-				foreach( $used_plans as $used_plan_id ) {
-					if( $used_plan_id ) {
+				foreach ( $used_plans as $used_plan_id ) {
+					if ( $used_plan_id ) {
 						$used_subscription = new SubscriptionPlan( $database );
 						$used_subscription->load( $used_plan_id );
 
-						if( $this->id === $used_subscription->id ) {
+						if ( $this->id === $used_subscription->id ) {
 							$used_comparison = 2;
-						}elseif( is_null( $thisparams['similarplans'] ) && is_null( $thisparams['equalplans'] ) ) {
+						} elseif ( is_null( $thisparams['similarplans'] ) && is_null( $thisparams['equalplans'] ) ) {
 							$used_comparison = false;
-						}else{
+						} else {
 							$used_comparison = $this->compareToPlan( $used_subscription );
 						}
 
-						if( $used_comparison > $plans_comparison ) {
+						if ( $used_comparison > $plans_comparison ) {
 							$plans_comparison = $used_comparison;
 						}
 						unset( $used_subscription );
@@ -1663,17 +1728,17 @@ class SubscriptionPlan extends paramDBTable {
 			$used_subscription = new SubscriptionPlan( $database );
 			$used_subscription->load( $user_subscription->plan );
 
-			if( $this->id === $used_subscription->id ) {
+			if ( $this->id === $used_subscription->id ) {
 				$return['comparison'] = 2;
-			}else{
+			} else {
 				$return['comparison'] = $this->compareToPlan($used_subscription);
 			}
 		}
 		return $return;
 	}
 
-	function compareToPlan( $plan ) {
-
+	function compareToPlan( $plan )
+	{
 		$thisparams = $this->getParams();
 		$planparams = $plan->getParams();
 
@@ -1683,78 +1748,78 @@ class SubscriptionPlan extends paramDBTable {
 		$epg1		= explode( ';', $thisparams['equalplans'] );
 		$epg2		= explode( ';', $planparams['equalplans'] );
 
-		if( ( !count( $spg1 ) || !count( $spg2 ) ) && ( !count( $epg1 ) || !count( $epg2 ) ) ) {
+		if ( ( !count( $spg1 ) || !count( $spg2 ) ) && ( !count( $epg1 ) || !count( $epg2 ) ) ) {
 			return false;
-		}elseif( in_array( $this->id, $epg2 ) || in_array( $plan->id, $epg1 ) ) {
+		} elseif ( in_array( $this->id, $epg2 ) || in_array( $plan->id, $epg1 ) ) {
 			return 2;
-		}elseif( in_array( $this->id, $spg2 ) || in_array( $plan->id, $spg1 ) ) {
+		} elseif ( in_array( $this->id, $spg2 ) || in_array( $plan->id, $spg1 ) ) {
 			return 1;
-		}else{
+		} else {
 			return false;
 		}
 	}
 
-	function getMicroIntegrations () {
-
-		if( strlen( $this->micro_integrations ) ) {
+	function getMicroIntegrations()
+	{
+		if ( strlen( $this->micro_integrations ) ) {
 			return explode( ';', $this->micro_integrations );
-		}else{
+		} else {
 			return false;
 		}
 	}
 
-	function getRestrictionsArray () {
-
+	function getRestrictionsArray()
+	{
 		$restrictions = $this->getParams( 'restrictions' );
 
 		$planrestrictions = array();
 
 		// Check for a fixed GID - this certainly overrides the others
-		if( !empty( $restrictions['fixgid_enabled'] ) ) {
+		if ( !empty( $restrictions['fixgid_enabled'] ) ) {
 			$planrestrictions['fixgid'] = $restrictions['fixgid'];
-		}else{
+		} else {
 			// No fixed GID, check for min GID
-			if( !empty( $restrictions['mingid_enabled'] ) ) {
+			if ( !empty( $restrictions['mingid_enabled'] ) ) {
 				$planrestrictions['mingid'] = $restrictions['mingid'];
 			}
 			// Check for max GID
-			if( !empty( $restrictions['maxgid_enabled'] ) ) {
+			if ( !empty( $restrictions['maxgid_enabled'] ) ) {
 				$planrestrictions['maxgid'] = $restrictions['maxgid'];
 			}
 		}
 
 		// Check for a directly previously used plan
-		if( !empty( $restrictions['previousplan_req_enabled'] ) ) {
-			if( $restrictions['previousplan_req'] ) {
+		if ( !empty( $restrictions['previousplan_req_enabled'] ) ) {
+			if ( $restrictions['previousplan_req'] ) {
 				$planrestrictions['plan_previous'] = $restrictions['previousplan_req'];
 			}
 		}
 
 		// Check for a currently used plan
-		if( !empty( $restrictions['currentplan_req_enabled'] ) ) {
-			if( $restrictions['currentplan_req'] ) {
+		if ( !empty( $restrictions['currentplan_req_enabled'] ) ) {
+			if ( $restrictions['currentplan_req'] ) {
 				$planrestrictions['plan_present'] = $restrictions['currentplan_req'];
 			}
 		}
 
 		// Check for a overall used plan
-		if( !empty( $restrictions['currentplan_req_enabled'] ) ) {
-			if( $restrictions['currentplan_req'] ) {
+		if ( !empty( $restrictions['currentplan_req_enabled'] ) ) {
+			if ( $restrictions['currentplan_req'] ) {
 				$planrestrictions['plan_overall'] = $restrictions['currentplan_req'];
 			}
 		}
 
 		// Check for a overall used plan with amount minimum
-		if( !empty( $restrictions['used_plan_min_enabled'] ) ) {
-			if( $restrictions['used_plan_min_amount'] && $restrictions['used_plan_min'] ) {
+		if ( !empty( $restrictions['used_plan_min_enabled'] ) ) {
+			if ( $restrictions['used_plan_min_amount'] && $restrictions['used_plan_min'] ) {
 				$planrestrictions['plan_amount_min'] = $restrictions['used_plan_min']
 				. ',' . $restrictions['used_plan_min_amount'];
 			}
 		}
 
 		// Check for a overall used plan with amount maximum
-		if( !empty( $restrictions['used_plan_max_enabled'] ) ) {
-			if( $restrictions['used_plan_max_amount'] && $restrictions['used_plan_max'] ) {
+		if ( !empty( $restrictions['used_plan_max_enabled'] ) ) {
+			if ( $restrictions['used_plan_max_amount'] && $restrictions['used_plan_max'] ) {
 				$planrestrictions['plan_amount_max'] = $restrictions['used_plan_max']
 				. ',' . $restrictions['used_plan_max_amount'];
 			}
@@ -1763,13 +1828,14 @@ class SubscriptionPlan extends paramDBTable {
 		return $planrestrictions;
 	}
 
-	function savePOSTsettings ($post) {
+	function savePOSTsettings( $post )
+	{
 		global $database;
 
 		// Fake knowing the planid if is zero. TODO: This needs to replaced with something better later on!
-		if( !empty( $post['id'] ) ) {
+		if ( !empty( $post['id'] ) ) {
 			$planid = $post['id'];
-		}else{
+		} else {
 			$query = 'SELECT MAX(id)'
 			. ' FROM #__acctexp_plans'
 			;
@@ -1780,10 +1846,10 @@ class SubscriptionPlan extends paramDBTable {
 		// Filter out fixed variables
 		$fixed = array( 'active', 'visible', 'name', 'desc', 'email_desc', 'micro_integrations' );
 
-		foreach( $fixed as $varname ) {
-			if( is_array( $post[$varname] ) ) {
+		foreach ( $fixed as $varname ) {
+			if ( is_array( $post[$varname] ) ) {
 				$this->$varname = implode( ';', $post[$varname] );
-			}else{
+			} else {
 				$this->$varname = $post[$varname];
 			}
 			unset( $post[$varname] );
@@ -1793,10 +1859,10 @@ class SubscriptionPlan extends paramDBTable {
 		$fixed = array( 'full_free', 'full_amount', 'full_period', 'full_periodunit', 'trial_free', 'trial_amount', 'trial_period', 'trial_periodunit', 'gid_enabled', 'gid', 'lifetime', 'processors', 'fallback', 'similarplans', 'equalplans' );
 
 		$params = array();
-		foreach( $fixed as $varname ) {
-			if( $post[$varname] == '' ) {
+		foreach ( $fixed as $varname ) {
+			if ( $post[$varname] == '' ) {
 				$params[$varname] = 0;
-			} elseif( is_array( $post[$varname] ) ) {
+			} elseif ( is_array( $post[$varname] ) ) {
 				$params[$varname] = implode( ';', $post[$varname] );
 			} else {
 				$params[$varname] = $post[$varname];
@@ -1808,12 +1874,12 @@ class SubscriptionPlan extends paramDBTable {
 
 		// The rest of the vars are restrictions
 		$restrictions = array();
-		foreach( $post as $varname => $content ) {
+		foreach ( $post as $varname => $content ) {
 			// mic: fix for NOT including JCE-settings into aec.database
-			if( substr( $varname, 0, 4 ) != 'mce_' ) {
-				if( is_array( $content ) ) {
+			if ( substr( $varname, 0, 4 ) != 'mce_' ) {
+				if ( is_array( $content ) ) {
 					$restrictions[$varname] = implode( ';', $content );
-				}else{
+				} else {
 					$restrictions[$varname] = $content;
 				}
 			}
@@ -1823,29 +1889,30 @@ class SubscriptionPlan extends paramDBTable {
 		$this->saveRestrictions($restrictions);
 	}
 
-	function saveParams ( $params ) {
+	function saveParams( $params )
+	{
 		global $database;
 
 		// If the admin wants this to be a free plan, we have to make this more explicit
 		// Setting processors to zero and full_free
-		if( $params['full_free'] && ( $params['processors'] == '' ) ) {
+		if ( $params['full_free'] && ( $params['processors'] == '' ) ) {
 			$params['processors']	= '0';
-		}elseif( !$params['full_amount'] || ( $params['full_amount'] == '0.00' ) || ( $params['full_amount'] == '' ) ) {
+		} elseif ( !$params['full_amount'] || ( $params['full_amount'] == '0.00' ) || ( $params['full_amount'] == '' ) ) {
 			$params['full_free']	= 1;
 			$params['processors']	= '0';
 		}
 
 		// Correct a malformed Full Amount
-		if( !strlen( $params['full_amount'] ) ) {
+		if ( !strlen( $params['full_amount'] ) ) {
 			$params['full_amount']	= '0.00';
 			$params['full_free']	= 1;
 			$params['processors']	= '0';
-		}else{
+		} else {
 			$params['full_amount'] = AECToolbox::correctAmount( $params['full_amount'] );
 		}
 
 		// Correct a malformed Trial Amount
-		if( strlen( $params['trial_amount'] ) ) {
+		if ( strlen( $params['trial_amount'] ) ) {
 			$params['trial_amount'] = AECToolbox::correctAmount( $params['trial_amount'] );
 		}
 
@@ -1854,12 +1921,14 @@ class SubscriptionPlan extends paramDBTable {
 		$this->setParams( $params );
 	}
 
-	function saveRestrictions ( $restrictions ) {
+	function saveRestrictions( $restrictions )
+	{
 		$this->setParams( $restrictions, 'restrictions' );
 	}
 }
 
-class logHistory extends mosDBTable {
+class logHistory extends mosDBTable
+{
 	/** @var int Primary key */
 	var $id					= null;
 	/** @var int */
@@ -1887,11 +1956,13 @@ class logHistory extends mosDBTable {
 	* @param database A database connector object
 	*/
 
-	function logHistory( &$db ) {
+	function logHistory( &$db )
+	{
 		$this->mosDBTable( '#__acctexp_log_history', 'id', $db );
 	}
 
-	function entryFromInvoice ( $objInvoice, $response, $processor ) {
+	function entryFromInvoice( $objInvoice, $response, $processor )
+	{
 		global $database, $mosConfig_offset_user;
 
 		$user = new mosUser($database);
@@ -1925,18 +1996,19 @@ class logHistory extends mosDBTable {
 		$eventlog = new eventLog( $database );
 		$eventlog->issue( $short, $tags, $event, $params );
 
-		if( !$this->check() ) {
+		if ( !$this->check() ) {
 			echo "<script> alert('".$this->getError()."'); window.history.go(-1); </script>\n";
 			exit();
 		}
-		if( !$this->store() ) {
+		if ( !$this->store() ) {
 			echo "<script> alert('".$this->getError()."'); window.history.go(-1); </script>\n";
 			exit();
 		}
 	}
 }
 
-class InvoiceFactory {
+class InvoiceFactory
+{
 	/** @var int */
 	var $userid			= null;
 	/** @var string */
@@ -1948,7 +2020,8 @@ class InvoiceFactory {
 	/** @var int */
 	var $confirmed		= null;
 
-	function InvoiceFactory( $userid=null, $usage=null, $processor=null, $invoice=null ) {
+	function InvoiceFactory( $userid=null, $usage=null, $processor=null, $invoice=null )
+	{
 		global $database, $mainframe, $my;
 
 		$this->userid = $userid;
@@ -1956,19 +2029,19 @@ class InvoiceFactory {
 		require_once( $mainframe->getPath( 'front_html', 'com_acctexp' ) );
 
 		// Check whether this call is legitimate
-		if( !$my->id ) {
-			if( !$this->userid ) {
+		if ( !$my->id ) {
+			if ( !$this->userid ) {
 				// Its ok, this is a registration/subscription hybrid call
-			}elseif( $this->userid ) {
-				if( AECToolbox::quickVerifyUserID( $this->userid ) === true ) {
+			} elseif ( $this->userid ) {
+				if ( AECToolbox::quickVerifyUserID( $this->userid ) === true ) {
 					// This user is not expired, so he could log in...
 					mosNotAuth();
 					return;
-				}else{
+				} else {
 					$this->userid = $userid;
 				}
 			}
-		}else{
+		} else {
 			// Overwrite the given userid when user is logged in
 			$this->userid = $my->id;
 		}
@@ -1978,25 +2051,26 @@ class InvoiceFactory {
 		$this->processor	= $processor;
 		$this->invoice		= $invoice;
 
-		if( !is_null( $this->userid ) ) {
+		if ( !is_null( $this->userid ) ) {
 			$query = 'SELECT id'
 			. ' FROM #__users'
 			. ' WHERE id = \'' . $this->userid . '\'';
 			$database->setQuery( $query );
 
-			if( !$database->loadResult() ) {
+			if ( !$database->loadResult() ) {
 				$this->userid = null;
 			}
-		}else{
+		} else {
 			$this->userid = null;
 		}
 
-		if( $this->usage ) {
+		if ( $this->usage ) {
 			$this->verifyUsage();
 		}
 	}
 
-	function verifyUsage() {
+	function verifyUsage()
+	{
 		global $database;
 
 		$metaUser = new metaUser( $this->userid );
@@ -2006,30 +2080,31 @@ class InvoiceFactory {
 
 		$restrictions = $row->getRestrictionsArray();
 
-		if( count( $restrictions ) ) {
+		if ( count( $restrictions ) ) {
 			$status = $metaUser->permissionResponse( $restrictions );
 
-			foreach( $status as $stname => $ststatus ) {
-				if( !( $ststatus === true ) ) {
+			foreach ( $status as $stname => $ststatus ) {
+				if ( !( $ststatus === true ) ) {
 					mosNotAuth();
 				}
 			}
 		}
 	}
 
-	function puffer( $option ) {
+	function puffer( $option )
+	{
 		global $database;
 
-		if( $this->usage ) {
+		if ( $this->usage ) {
 			// get the payment plan
 			$this->objUsage = new SubscriptionPlan( $database );
 			$this->objUsage->load( $this->usage );
-		}else{
+		} else {
 			mosNotAuth();
 		}
 
-		if( !is_null( $this->processor ) && !( $this->processor == '' ) ) {
-			switch( $this->processor ) {
+		if ( !is_null( $this->processor ) && !( $this->processor == '' ) ) {
+			switch ( $this->processor ) {
 				case 'free':
 					$this->payment->method_name = _AEC_PAYM_METHOD_FREE;
 					$this->pp					= false;
@@ -2053,12 +2128,12 @@ class InvoiceFactory {
 
 				default:
 					$this->pp = new PaymentProcessor();
-					if( $this->pp->loadName( $this->processor ) ) {
+					if ( $this->pp->loadName( $this->processor ) ) {
 						$this->pp->fullInit();
 						$this->payment->method_name	= $this->pp->info['longname'];
 						$this->recurring			= isset( $this->pp->info['recurring'] ) ? $this->pp->info['recurring'] : 0;
 						$currency					= isset( $this->pp->settings['currency'] ) ? $this->pp->settings['currency'] : '';
-					}else{
+					} else {
 						$this->payment->method_name = _AEC_PAYM_METHOD_NONE;
 						$this->pp					= false;
 						$this->recurring			= 0;
@@ -2067,25 +2142,25 @@ class InvoiceFactory {
 					}
 					break;
 			}
-		}else{
+		} else {
 			mosNotAuth();
 		}
 
-		if( AECfetchfromDB::SubscriptionIDfromUserID( $this->userid ) ) {
+		if ( AECfetchfromDB::SubscriptionIDfromUserID( $this->userid ) ) {
 			$user_subscription = new Subscription( $database );
 			$user_subscription->loadUserID( $this->userid );
 
-			if( strcmp( $user_subscription->lastpay_date, '0000-00-00 00:00:00' ) === 0 ) {
+			if ( strcmp( $user_subscription->lastpay_date, '0000-00-00 00:00:00' ) === 0 ) {
 				$this->renew = 0;
-			}else{
+			} else {
 				$this->renew = 1;
 			}
-		}else{
-			if( $this->confirmed ) {
+		} else {
+			if ( $this->confirmed ) {
 				$user_subscription = new Subscription( $database );
 				$user_subscription->load(0);
 				$user_subscription->createNew( $this->userid, $this->processor, 1 );
-			}else{
+			} else {
 				$user_subscription = false;
 			}
 
@@ -2094,31 +2169,31 @@ class InvoiceFactory {
 
 		$return = $this->objUsage->SubscriptionAmount( $this->recurring, $user_subscription );
 
-		if( is_array( $return['amount'] ) ) {
+		if ( is_array( $return['amount'] ) ) {
 			$this->payment->amount = false;
 
-			if( isset( $return['amount']['amount1'] ) ) {
+			if ( isset( $return['amount']['amount1'] ) ) {
 				if ( !is_null( $return['amount']['amount1'] ) ) {
 					$this->payment->amount = $return['amount']['amount1'];
 				}
 			}
 
-			if( $this->payment->amount === false ) {
-				if( isset( $return['amount']['amount2'] ) ) {
+			if ( $this->payment->amount === false ) {
+				if ( isset( $return['amount']['amount2'] ) ) {
 					if ( !is_null( $return['amount']['amount2'] ) ) {
 						$this->payment->amount = $return['amount']['amount2'];
 					}
 				}
 			}
 
-			if( $this->payment->amount === false ) {
-				if( isset( $return['amount']['amount3'] ) ) {
+			if ( $this->payment->amount === false ) {
+				if ( isset( $return['amount']['amount3'] ) ) {
 					if ( !is_null( $return['amount']['amount3'] ) ) {
 						$this->payment->amount = $return['amount']['amount3'];
 					}
 				}
 			}
-		}else{
+		} else {
 			$this->payment->amount = $return['amount'];
 		}
 
@@ -2127,33 +2202,34 @@ class InvoiceFactory {
 		return;
 	}
 
-	function touchInvoice( $option, $invoice_number=false ) {
+	function touchInvoice( $option, $invoice_number=false )
+	{
 		global $database;
 
 		// Checking whether we are trying to repeat an invoice
-		if( $invoice_number !== false ) {
+		if ( $invoice_number !== false ) {
 			// Make sure the invoice really exists and that its the correct user carrying out this action
 			$invoiceid = AECfetchfromDB::InvoiceIDfromNumber($invoice_number, $this->userid);
 
-			if( $invoiceid ) {
+			if ( $invoiceid ) {
 				$this->invoice = $invoice_number;
 			}
 		}
 
 		$this->objInvoice = new Invoice( $database );
 
-		if( $this->invoice ) {
+		if ( $this->invoice ) {
 			$this->objInvoice->loadInvoiceNumber($this->invoice);
 
 			$this->processor = $this->objInvoice->method;
 			$this->usage = $this->objInvoice->usage;
 
-			if( is_null( $this->usage ) || ($this->usage < 1) || ($this->usage == '') ) {
+			if ( is_null( $this->usage ) || ($this->usage < 1) || ($this->usage == '') ) {
 				$this->create( $option, 0, 0, $this->invoice_number );
-			}elseif( is_null( $this->processor ) || ($this->processor == '') ) {
+			} elseif ( is_null( $this->processor ) || ($this->processor == '') ) {
 				$this->create( $option, 0, $this->usage, $this->invoice_number );
 			}
-		}else{
+		} else {
 			$this->objInvoice->create( $this->userid, $this->usage, $this->processor );
 
 			// Reset parameters
@@ -2167,19 +2243,20 @@ class InvoiceFactory {
 		return;
 	}
 
-	function create ( $option, $intro=0, $usage=0, $processor=null, $invoice=0, $passthrough=false ) {
+	function create ( $option, $intro=0, $usage=0, $processor=null, $invoice=0, $passthrough=false )
+	{
 		global $database, $mainframe, $my;
 
 		$cfg = new Config_General( $database );
 
 		$hasTransfer		= $cfg->cfg['transfer'];
 
-		if( !$this->userid ) {
+		if ( !$this->userid ) {
 			// Creating a dummy user object
 			$metaUser = new metaUser( 0 );
 			$metaUser->cmsUser->gid = 29;
 			$register = 1;
-		}else{
+		} else {
 			// Loading the actual user
 			$metaUser = new metaUser( $this->userid );
 			$register = 0;
@@ -2187,22 +2264,22 @@ class InvoiceFactory {
 
 		$where = array();
 
-		if( $metaUser->hasSubscription ) {
+		if ( $metaUser->hasSubscription ) {
 			$subscriptionClosed = ( strcmp( $metaUser->objSubscription->status, 'Closed' ) === 0 );
-		}else{
+		} else {
 			$subscriptionClosed = false;
 			// TODO: Check if the user has already subscribed once, if not - link to intro
 			// TODO: Make sure a registration hybrid wont get lost here
-			if( !$intro && ( $cfg->cfg['customintro'] != '' ) && !is_null( $cfg->cfg['customintro'] ) ) {
+			if ( !$intro && ( $cfg->cfg['customintro'] != '' ) && !is_null( $cfg->cfg['customintro'] ) ) {
 				mosRedirect( $cfg->cfg['customintro'] );
 			}
 		}
 
 		$where[] = 'active = \'1\'';
 
-		if( $usage ) {
+		if ( $usage ) {
 			$where[] = 'id=' . $usage;
-		}else{
+		} else {
 			$where[] = 'visible != \'0\'';
 		}
 
@@ -2213,12 +2290,12 @@ class InvoiceFactory {
 		;
 	 	$database->setQuery( $query );
 		$rows = $database->loadResultArray();
-	 	if( $database->getErrorNum() ) {
+	 	if ( $database->getErrorNum() ) {
 	 		echo $database->stderr();
 	 		return false;
 	 	}
 
-	 	if( $mainframe->getCfg( 'debug' ) ) {
+	 	if ( $mainframe->getCfg( 'debug' ) ) {
 	 		echo 'DEBUG - '. __FILE__ . ' - ' . __LINE__ . '<br />';
 			echo 'query: ' . $query . '<br />';
 		 	echo 'rows:<hr />';
@@ -2226,7 +2303,7 @@ class InvoiceFactory {
 		}
 
 	 	// There are no plans to begin with, so we need to punch out an error here
-		if( count( $rows ) == 0 ) {
+		if ( count( $rows ) == 0 ) {
 			mosRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_ERROR ) );
 	 		return;
 	 	}
@@ -2234,17 +2311,17 @@ class InvoiceFactory {
 		$plans	= array();
 		$i		= 0;
 
-		foreach( $rows as $planid ) {
+		foreach ( $rows as $planid ) {
 			$row = new SubscriptionPlan($database);
 			$row->load($planid);
 
 			$restrictions = $row->getRestrictionsArray();
 
-			if( count( $restrictions ) ) {
+			if ( count( $restrictions ) ) {
 				$status = $metaUser->permissionResponse( $restrictions );
 
-				foreach( $status as $stname => $ststatus ) {
-					if( !$ststatus ) {
+				foreach ( $status as $stname => $ststatus ) {
+					if ( !$ststatus ) {
 						continue 2;
 					}
 				}
@@ -2259,35 +2336,35 @@ class InvoiceFactory {
 			$plans[$i]['lifetime']	= $plan_params['lifetime'];
 			$plans[$i]['gw']		= array();
 
-			if( $plan_params['full_free'] ) {
+			if ( $plan_params['full_free'] ) {
 				$plans[$i]['gw'][0]					= array();
 				$plans[$i]['gw'][0]['name']			= 'free';
 				$plans[$i]['gw'][0]['recurring']	= 0;
 				$plans[$i]['gw'][0]['statement']	= '';
 				$i++;
-			}else{
-				if( ( ( $plan_params['processors'] != '' ) && !is_null( $plan_params['processors'] ) ) || $hasTransfer ) {
+			} else {
+				if ( ( ( $plan_params['processors'] != '' ) && !is_null( $plan_params['processors'] ) ) || $hasTransfer ) {
 					$processors = explode( ';', $plan_params['processors'] );
 
-					if( !is_null( $this->processor ) ) {
+					if ( !is_null( $this->processor ) ) {
 						$processorid = PaymentProcessorHandler::getProcessorIdfromName( $this->processor );
-						if( in_array( $processorid, $processors ) ) {
+						if ( in_array( $processorid, $processors ) ) {
 							$processors = array( $processorid );
 						}
 					}
 
 					$plan_gw = array();
-					if( count( $processors ) ) {
+					if ( count( $processors ) ) {
 						$k = 0;
-						foreach( $processors as $n ) {
+						foreach ( $processors as $n ) {
 							if ($n) {
 								$pp = new PaymentProcessor();
 								$loadproc = $pp->loadId( $n );
-								if( $loadproc ) {
+								if ( $loadproc ) {
 									$pp->init();
 									$pp->getInfo();
 
-									if( !($plan_params['lifetime'] && $pp->info['recurring'] ) ) {
+									if ( !($plan_params['lifetime'] && $pp->info['recurring'] ) ) {
 										$plan_gw[$k]['name']		= $pp->processor_name;
 										$plan_gw[$k]['statement']	= $pp->info->statement;
 									}
@@ -2297,9 +2374,9 @@ class InvoiceFactory {
 						}
 					}
 
-					if( $hasTransfer && is_null( $this->processor ) ) {
-						if( isset( $plan_gw[0] ) ) {
-							if( !(strcmp(strtolower( $plan_gw[0]['name']), 'free') === 0 ) ) {
+					if ( $hasTransfer && is_null( $this->processor ) ) {
+						if ( isset( $plan_gw[0] ) ) {
+							if ( !(strcmp(strtolower( $plan_gw[0]['name']), 'free') === 0 ) ) {
 								$plan_gw[]['name'] = 'transfer';
 							}
 						} else {
@@ -2307,9 +2384,9 @@ class InvoiceFactory {
 						}
 					}
 
-					if( isset( $plan_gw[0] ) ) {
+					if ( isset( $plan_gw[0] ) ) {
 						$plans[$i]['gw'] = $plan_gw;
-					}else{
+					} else {
 						unset( $plans[$i] );
 					}
 					unset( $plan_gw );
@@ -2322,7 +2399,7 @@ class InvoiceFactory {
 		}
 
 	 	// After filtering out the processors, no plan can be used, so we have to again issue an error
-		 if( count( $plans ) == 0 ) {
+		 if ( count( $plans ) == 0 ) {
 			mosRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_ERROR ) );
 	 		return;
 	 	}
@@ -2330,17 +2407,17 @@ class InvoiceFactory {
 	 	$nochoice = ( count( $plans ) === 1 ) && ( count( $plans[0]['gw'] ) === 1 );
 
 		// If we have only one processor on one plan, there is no need for a decision
-		if( $nochoice ) {
+		if ( $nochoice ) {
 			// If the user also needs to register, we need to guide him there after the selection has now been made
-			if( $register ) {
+			if ( $register ) {
 				// The plans are supposed to be first, so the details form should hold the values
-				if( $cfg->cfg['plans_first'] ) {
+				if ( $cfg->cfg['plans_first'] ) {
 					$_POST['usage']		= $plans[0]['id'];
 					$_POST['processor'] = $plans[0]['gw'][0]['name'];
 				}
 
 				// Send to CB or joomla!
-				if( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+				if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
 					// This is a CB registration, borrowing their code to register the user
 
 					include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.html.php' );
@@ -2348,33 +2425,33 @@ class InvoiceFactory {
 
 					registerForm($option, $mainframe->getCfg( 'emailpass' ), null);
 
-				}else{
+				} else {
 					//include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/acctexp.html.php' );
 					joomlaregisterForm( $option, $mainframe->getCfg( 'useractivation' ) );
 				}
-			}else{
+			} else {
 				// The user is already existing, so we need to move on to the confirmation page with the details
 
 				$var['usage']		= $plans[0]['id'];
-				if( isset( $plans[0]['gw'][0]['recurring'] ) ) {
+				if ( isset( $plans[0]['gw'][0]['recurring'] ) ) {
 					$var['recurring']	= $plans[0]['gw'][0]['recurring'];
-				}else{
+				} else {
 					$var['recurring']	= 0;
 				}
 				$var['processor']	= $plans[0]['gw'][0]['name'];
 
-				if( ( $invoice != 0 ) && !is_null( $invoice ) ) {
+				if ( ( $invoice != 0 ) && !is_null( $invoice ) ) {
 					$var['invoice']	= $invoice;
 				}
 
 				$this->confirm ( $option, $var, $passthrough );
 			}
-		}else{
+		} else {
 			// Reset $register if we seem to have all data
 			// TODO: find better solution for this
-			if( $register && isset( $passthrough['username'] ) ) {
+			if ( $register && isset( $passthrough['username'] ) ) {
 				$register = 0;
-			}else{
+			} else {
 
 			}
 
@@ -2383,44 +2460,45 @@ class InvoiceFactory {
 		}
 	}
 
-	function confirm( $option, $var=false, $passthrough=false ) {
+	function confirm( $option, $var=false, $passthrough=false )
+	{
 		global $database, $my;
 
-		if( isset( $var['task'] ) ) {
+		if ( isset( $var['task'] ) ) {
 			unset( $var['task'] );
 			unset( $var['option'] );
 		}
 
-		if( $this->userid ) {
+		if ( $this->userid ) {
 			$user = new mosUser( $database );
 			$user->load( $this->userid );
 
 			$passthrough = false;
-		}else{
+		} else {
 			unset( $var['usage'] );
 			unset( $var['processor'] );
 			unset( $var['currency'] );
 			unset( $var['amount'] );
 
-			if( is_array( $passthrough ) ) {
+			if ( is_array( $passthrough ) ) {
 				$user = new mosUser( $database );
 				$user->name		= $passthrough['name'];
 				$user->username = $passthrough['username'];
 				$user->email	= $passthrough['email'];
-			}else{
+			} else {
 				$user = new mosUser( $database );
 				$user->name		= $var['name'];
 				$user->username = $var['username'];
 				$user->email	= $var['email'];
 
 				$passthrough = array();
-				foreach( $var as $ke => $va ) {
+				foreach ( $var as $ke => $va ) {
 					// We have to support arrays for CB
-					if( is_array( $va ) ) {
-						foreach( $va as $con ) {
+					if ( is_array( $va ) ) {
+						foreach ( $va as $con ) {
 							$passthrough[$ke . '[]'] = $con;
 						}
-					}else{
+					} else {
 						$passthrough[$ke] = $va;
 					}
 				}
@@ -2439,48 +2517,49 @@ class InvoiceFactory {
 	}
 
 
-	function save ( $option, $var ) {
+	function save( $option, $var )
+	{
 		global $database, $mainframe, $task;
 
 		// ====== STEP 0 - Do the Registration Mumbo-Jumbo ======
 
-		if( isset( $var['task'] ) ) {
+		if ( isset( $var['task'] ) ) {
 			unset( $var['task'] );
 			unset( $var['option'] );
 		}
 
-		if( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+		if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
 			$savetask	= $task;
 			$task		= 'done';
 			include_once ( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
 			$task		= $savetask;
 		}
 
-		if( $this->usage == '' ) {
+		if ( $this->usage == '' ) {
 			$this->usage = $var['usage'];
 		}
-		if( $this->processor == '' ) {
+		if ( $this->processor == '' ) {
 			$this->processor = $var['processor'];
 		}
 		$this->confirmed = 1;
 
-		if( $this->userid ) {
+		if ( $this->userid ) {
 			$user = new mosUser( $database );
 			$user->load( $this->userid );
 
 			$passthrough = false;
-		}else{
+		} else {
 			// For joomla and CB, we must filter out some internal variables before handing over the POST data
 			$badbadvars = array( 'userid', 'method_name', 'usage', 'processor', 'currency', 'amount', 'invoice', 'id', 'gid' );
-			foreach( $badbadvars as $badvar ) {
-				if( isset( $var[$badvar] ) ) {
+			foreach ( $badbadvars as $badvar ) {
+				if ( isset( $var[$badvar] ) ) {
 					unset( $var[$badvar] );
 				}
 			}
 
 			$_POST = $var;
 
-			if( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+			if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
 				// This is a CB registration, borrowing their code to save the user
 
 				include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
@@ -2495,18 +2574,18 @@ class InvoiceFactory {
 				$database->setQuery( $query );
 				$this->userid = $database->loadResult();
 
-			}else{
+			} else {
 				// This is a joomla registration, borrowing their code to save the user
 				global $acl;
 
 				// simple spoof check security
-				if( function_exists( 'josSpoofCheck' ) ) {
+				if ( function_exists( 'josSpoofCheck' ) ) {
 					josSpoofCheck();
 				}
 
 				$row = new mosUser( $database );
 
-				if( !$row->bind( $_POST, 'usertype' )) {
+				if ( !$row->bind( $_POST, 'usertype' )) {
 					mosErrorAlert( $row->getError() );
 				}
 
@@ -2516,12 +2595,12 @@ class InvoiceFactory {
 				$row->usertype 	= '';
 				$row->gid 		= $acl->get_group_id( 'Registered', 'ARO' );
 
-				if( $mainframe->getCfg( 'useractivation' == 1 ) ) {
+				if ( $mainframe->getCfg( 'useractivation' == 1 ) ) {
 					$row->activation = md5( mosMakePassword() );
 					$row->block = '1';
 				}
 
-				if( !$row->check() ) {
+				if ( !$row->check() ) {
 					echo '<script>alert(\''
 					. html_entity_decode( $row->getError() )
 					. '\');window.history.go(-1);</script>' . "\n";
@@ -2532,7 +2611,7 @@ class InvoiceFactory {
 				$row->password 		= md5( $row->password );
 				$row->registerDate 	= date( 'Y-m-d H:i:s' );
 
-				if( !$row->store() ) {
+				if ( !$row->store() ) {
 					echo '<script>alert(\''
 					. html_entity_decode( $row->getError())
 					. '\');window.history.go(-1);</script>' . "\n";
@@ -2547,19 +2626,19 @@ class InvoiceFactory {
 				$subject 	= sprintf (_SEND_SUB, $name, $mainframe->getCfg( 'sitename' ) );
 				$subject 	= html_entity_decode( $subject, ENT_QUOTES );
 
-				if( $mainframe->getCfg( 'useractivation' )  == 1 ) {
+				if ( $mainframe->getCfg( 'useractivation' )  == 1 ) {
 					$message = sprintf( _USEND_MSG_ACTIVATE, $name, $mainframe->getCfg( 'sitename' ), $mainframe->getCfg( 'live_site' ) . '/index.php?option=com_registration&task=activate&activation=' . $row->activation, $mainframe->getCfg( 'live_site' ), $username, $pwd );
-				}else{
+				} else {
 					$message = sprintf( _USEND_MSG, $name, $mainframe->getCfg( 'sitename' ), $mainframe->getCfg( 'live_site' ) );
 				}
 
 				$message = html_entity_decode( $message, ENT_QUOTES );
 
 				// check if Global Config `mailfrom` and `fromname` values exist
-				if( $mainframe->getCfg( 'mailfrom' ) != '' && $mainframe->getCfg( 'fromname' ) != '' ) {
+				if ( $mainframe->getCfg( 'mailfrom' ) != '' && $mainframe->getCfg( 'fromname' ) != '' ) {
 					$adminName2 	= $mainframe->getCfg( 'fromname' );
 					$adminEmail2 	= $mainframe->getCfg( 'mailfrom' );
-				}else{
+				} else {
 					// use email address and name of first superadmin for use in email sent to user
 					$query = 'SELECT name, email'
 					. ' FROM #__users'
@@ -2609,7 +2688,8 @@ class InvoiceFactory {
 		$this->checkout( $option );
 	}
 
-	function checkout ( $option ) {
+	function checkout( $option )
+	{
 		global $database;
 
 		$cfg = new Config_General( $database );
@@ -2618,19 +2698,19 @@ class InvoiceFactory {
 
 		$this->puffer( $option );
 
-		if( (strcmp( strtolower( $this->processor ), 'none' ) === 0 )
+		if ( (strcmp( strtolower( $this->processor ), 'none' ) === 0 )
 		|| ( strcmp( strtolower( $this->processor ), 'free' ) === 0 ) ) {
 			$params = $this->objUsage->getParams();
 
-		 	if( $params['full_free'] || ($params['trial_free']
+		 	if ( $params['full_free'] || ($params['trial_free']
 		 	&& ( strcmp( $this->objInvoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) ) ) {
 				$this->objInvoice->pay();
 				thanks ( $option, $this->renew, 1 );
 				return;
-		 	}else{
+		 	} else {
 		 		return;
 		 	}
-		}elseif( strcmp( strtolower( $this->processor ), 'error' ) === 0 ) {
+		} elseif ( strcmp( strtolower( $this->processor ), 'error' ) === 0 ) {
 	 		// Nope, won't work buddy
 		 	notAllowed();
 		}
@@ -2642,52 +2722,52 @@ class InvoiceFactory {
 		$original_amount	= $this->objUsage->SubscriptionAmount( $this->recurring, $user_subscription );
 		$warning			= 0;
 
-		if( !empty( $cfg->cfg['enable_coupons'] ) ) {
+		if ( !empty( $cfg->cfg['enable_coupons'] ) ) {
 			$this->coupons['active'] = 1;
 
-			if( $this->objInvoice->coupons ) {
+			if ( $this->objInvoice->coupons ) {
 				$coupons = explode( ';', $this->objInvoice->coupons );
 
 				$this->coupons['coupons'] = array();
 
-				foreach( $coupons as $id => $coupon_code ) {
+				foreach ( $coupons as $id => $coupon_code ) {
 					$cph = new couponHandler();
 					$cph->load( $coupon_code );
 					$cph->getInfo( $amount );
 					$cph->checkRestrictions( $metaUser, $original_amount, $this );
 
-					if( $cph->status ) {
+					if ( $cph->status ) {
 						$this->coupons['coupons'][$id]['code']		= $cph->code;
 						$this->coupons['coupons'][$id]['name']		= $cph->name;
 						$this->coupons['coupons'][$id]['discount']	= AECToolbox::correctAmount( $cph->discount_amount );
 						$this->coupons['coupons'][$id]['action']	= $cph->action;
 						$this->coupons['coupons'][$id]['nodirectaction'] = 0;
 						// Set a warning notice that the amount doesn't seem to have changed althout its only for the next amount
-						if( is_array( $amount ) ) {
-							if( isset( $amount['amount']['amount1'] ) ) {
-								if( $amount['amount']['amount1'] == $cph->amount ) {
+						if ( is_array( $amount ) ) {
+							if ( isset( $amount['amount']['amount1'] ) ) {
+								if ( $amount['amount']['amount1'] == $cph->amount ) {
 									$this->coupons['coupons'][$id]['nodirectaction'] = 1;
 									$warning = 1;
 								}
-							}elseif( isset( $amount['amount']['amount2'] ) ) {
-								if( $amount['amount']['amount2'] == $cph->amount ) {
+							} elseif ( isset( $amount['amount']['amount2'] ) ) {
+								if ( $amount['amount']['amount2'] == $cph->amount ) {
 									$this->coupons['coupons'][$id]['nodirectaction'] = 1;
 									$warning = 1;
 								}
-							}elseif( isset( $amount['amount']['amount3'] ) ) {
-								if( $amount['amount']['amount3'] == $cph->amount ) {
+							} elseif ( isset( $amount['amount']['amount3'] ) ) {
+								if ( $amount['amount']['amount3'] == $cph->amount ) {
 									$this->coupons['coupons'][$id]['nodirectaction'] = 1;
 									$warning = 1;
 								}
 							}
-						}else{
-							if( $amount == $cph->amount ) {
+						} else {
+							if ( $amount == $cph->amount ) {
 								$this->coupons['coupons'][$id]['nodirectaction'] = 1;
 								$warning = 1;
 							}
 						}
 						$amount = AECToolbox::correctAmount( $cph->amount );
-					}else{
+					} else {
 						// Set Error
 						$this->coupons['error']		= 1;
 						$this->coupons['errormsg']	= $cph->error;
@@ -2702,15 +2782,15 @@ class InvoiceFactory {
 				}
 			}
 
-			if( $warning ) {
+			if ( $warning ) {
 				$this->coupons['warning'] = 1;
 				$this->coupons['warningmsg'] = html_entity_decode( _COUPON_WARNING_AMOUNT );
 			}
-		}else{
+		} else {
 			$this->coupons['active'] = 0;
 		}
 
-		if( $amount <= 0 )	{
+		if ( $amount <= 0 )	{
 			$this->objInvoice->pay();
 			thanks ( $option, $this->renew, 1 );
 			return;
@@ -2721,38 +2801,39 @@ class InvoiceFactory {
 		Payment_HTML::checkoutForm( $option, $var['var'], $var['params'], $this );
 	}
 
-	function thanks ( $option, $renew, $free ) {
+	function thanks( $option, $renew, $free )
+	{
 		global $database, $mosConfig_useractivation, $ueConfig, $mosConfig_dbprefix;
 
 		$cfg = new Config_General( $database );
 
-		if( $renew ) {
+		if ( $renew ) {
 			$msg = _SUB_FEPARTICLE_HEAD_RENEW
 			. '</p><p>'
 			. _SUB_FEPARTICLE_THANKSRENEW;
-			if( $free ) {
+			if ( $free ) {
 				$msg .= _SUB_FEPARTICLE_LOGIN;
-			}else{
+			} else {
 				$msg .= _SUB_FEPARTICLE_PROCESSPAY
 				. _SUB_FEPARTICLE_MAIL;
 			}
-		}else{
+		} else {
 			$msg = _SUB_FEPARTICLE_HEAD
 			. '</p><p>'
 			. _SUB_FEPARTICLE_THANKS;
-			if( $free ) {
-				if( $mosConfig_useractivation ) {
+			if ( $free ) {
+				if ( $mosConfig_useractivation ) {
 					$msg .= _SUB_FEPARTICLE_PROCESS
 					. _SUB_FEPARTICLE_ACTMAIL;
-				}else{
+				} else {
 					$msg .= _SUB_FEPARTICLE_PROCESS
 					. _SUB_FEPARTICLE_MAIL;
 				}
-			}else{
-				if( $mosConfig_useractivation ) {
+			} else {
+				if ( $mosConfig_useractivation ) {
 					$msg .= _SUB_FEPARTICLE_PROCESSPAY
 					. _SUB_FEPARTICLE_ACTMAIL;
-				}else{
+				} else {
 					$msg .= _SUB_FEPARTICLE_PROCESSPAY
 					. _SUB_FEPARTICLE_MAIL;
 				}
@@ -2760,7 +2841,7 @@ class InvoiceFactory {
 		}
 
 		// Look whether we have a custom ThankYou page
-		if( $cfg->cfg['customthanks'] ) {
+		if ( $cfg->cfg['customthanks'] ) {
 			mosRedirect( $cfg->cfg['customthanks'] );
 		} else {
 			HTML_Results::thanks( $option, $msg );
@@ -2768,7 +2849,8 @@ class InvoiceFactory {
 	}
 }
 
-class Invoice extends paramDBTable {
+class Invoice extends paramDBTable
+{
 	/** @var int Primary key */
 	var $id					= null;
 	/** @var int */
@@ -2796,11 +2878,13 @@ class Invoice extends paramDBTable {
 	/** @var text */
 	var $params 			= null;
 
-	function Invoice (&$db) {
+	function Invoice(&$db)
+	{
 		$this->mosDBTable( '#__acctexp_invoices', 'id', $db );
 	}
 
-	function loadInvoiceNumber( $invoiceNum ) {
+	function loadInvoiceNumber( $invoiceNum )
+	{
 		global $database;
 
 		$query = 'SELECT id'
@@ -2811,7 +2895,8 @@ class Invoice extends paramDBTable {
 		$this->load($database->loadResult());
 	}
 
-	function hasDuplicate ( $userid, $invoiceNum ) {
+	function hasDuplicate( $userid, $invoiceNum )
+	{
 		$db2 = $this->get( "_db" );
 		$query = 'SELECT count(*)'
 		. ' FROM #__acctexp_invoices'
@@ -2822,10 +2907,11 @@ class Invoice extends paramDBTable {
 		return $db2->loadResult();
 	}
 
-	function computeAmount () {
+	function computeAmount()
+	{
 		global $database;
 
-		if( !is_null( $this->usage ) && !( $this->usage == '' ) ) {
+		if ( !is_null( $this->usage ) && !( $this->usage == '' ) ) {
 			$plan = new SubscriptionPlan( $database );
 			$plan->load( $this->usage );
 
@@ -2833,13 +2919,13 @@ class Invoice extends paramDBTable {
 
 			$recurring = '';
 
-			switch( $this->method ) {
+			switch ( $this->method ) {
 				case 'transfer':
 					$cfg = new Config_General( $database );
 					$recurring = 0;
 					$this->currency = isset( $cfg->cfg['currency_code_general'] ) ? $cfg->cfg['currency_code_general'] : '';
 
-					if( ( strcmp( $this->transaction_date, '0000-00-00 00:00:00' ) === 0 ) ) {
+					if ( ( strcmp( $this->transaction_date, '0000-00-00 00:00:00' ) === 0 ) ) {
 						$params['pending_reason'] = 'transfer';
 					}
 					break;
@@ -2848,39 +2934,39 @@ class Invoice extends paramDBTable {
 					break;
 				default:
 					$pp = new PaymentProcessor();
-					if( $pp->loadName( $this->method ) ) {
+					if ( $pp->loadName( $this->method ) ) {
 						$pp->fullInit();
 
 						$recurring		= $pp->info['recurring'];
 						$this->currency = isset( $pp->settings['currency'] ) ? $pp->settings['currency'] : '';
-					}else{
+					} else {
 						// Log Error
 						return;
 					}
 			}
 
-			if( $metaUser->hasSubscription ) {
+			if ( $metaUser->hasSubscription ) {
 				$return = $plan->SubscriptionAmount( $recurring, $metaUser->objSubscription );
-			}else{
+			} else {
 				$return = $plan->SubscriptionAmount( $recurring, false );
 			}
 
-			if( $this->coupons ) {
+			if ( $this->coupons ) {
 				$coupons = explode( ';', $this->coupons );
 
-				foreach( $coupons as $arrayid => $coupon_code ) {
+				foreach ( $coupons as $arrayid => $coupon_code ) {
 					$cph = new couponHandler();
 					$cph->load( $coupon_code );
 
-					if( $cph->status ) {
+					if ( $cph->status ) {
 						// Coupon approved, checking restrictions
 						$cph->checkRestrictions( $metaUser );
-						if( $cph->status ) {
+						if ( $cph->status ) {
 							$return['amount'] = $cph->applyCoupon($return['amount']);
-						}else{
+						} else {
 							// Coupon restricted for this user, thus it needs to be deleted later on
 						}
-					}else{
+					} else {
 						// Coupon not approved, thus it needs to be deleted later on
 					}
 				}
@@ -2890,7 +2976,7 @@ class Invoice extends paramDBTable {
 				$this->store();
 			}
 
-			if( is_array( $return['amount'] ) ) {
+			if ( is_array( $return['amount'] ) ) {
 				// Check whether we have a trial amount and whether this invoice has had a trial with a payment already
 				$this->amount = false;
 
@@ -2902,44 +2988,45 @@ class Invoice extends paramDBTable {
 					}
 				}
 
-				if( $this->amount === false ) {
-					if( isset( $return['amount']['amount2'] ) ) {
+				if ( $this->amount === false ) {
+					if ( isset( $return['amount']['amount2'] ) ) {
 						if ( !is_null( $return['amount']['amount2'] ) ) {
 							$this->amount = $return['amount']['amount2'];
 						}
 					}
 				}
 
-				if( $this->amount === false ) {
-					if( isset( $return['amount']['amount3'] ) ) {
+				if ( $this->amount === false ) {
+					if ( isset( $return['amount']['amount3'] ) ) {
 						if ( !is_null( $return['amount']['amount3'] ) ) {
 							$this->amount = $return['amount']['amount3'];
 						}
 					}
 				}
 
-				if( $this->amount === false ) {
+				if ( $this->amount === false ) {
 					$this->amount = '0.00';
 				}
-			}else{
+			} else {
 				$this->amount = $return['amount'];
 			}
 
 			// We cannot afford to have this ever come out as null, so we will rather have it as gratis
-			if( empty( $this->amount ) ) {
+			if ( empty( $this->amount ) ) {
 				$this->amount = '0.00';
 			}
 
-			if( ( strcmp( $this->amount, '0.00' ) === 0 ) && !$recurring ) {
+			if ( ( strcmp( $this->amount, '0.00' ) === 0 ) && !$recurring ) {
 				$this->method = 'free';
-			}elseif( strcmp( $this->method, 'free' ) === 0 ) {
+			} elseif ( strcmp( $this->method, 'free' ) === 0 ) {
 				$this->method = 'error';
 				// TODO: Log Error
 			}
 		}
 	}
 
-	function create ( $userid, $usage, $processor ) {
+	function create( $userid, $usage, $processor )
+	{
 		global $mosConfig_offset_user;
 
 		$invoice_number			= $this->generateInvoiceNumber();
@@ -2956,22 +3043,23 @@ class Invoice extends paramDBTable {
 
 		$this->computeAmount();
 
-		if( !$this->check() ) {
+		if ( !$this->check() ) {
 			echo "<script> alert('problem with storing an invoice: ".$this->getError()."'); window.history.go(-1); </script>\n";
 			exit();
 		}
 
-		if( !$this->store() ) {
+		if ( !$this->store() ) {
 			echo "<script> alert('problem with storing an invoice: ".$this->getError()."'); window.history.go(-1); </script>\n";
 			exit();
 		}
 	}
 
-	function generateInvoiceNumber( $maxlength = 16 ) {
+	function generateInvoiceNumber( $maxlength = 16 )
+	{
 		global $database;
 
 		$numberofrows	= 1;
-		while( $numberofrows ) {
+		while ( $numberofrows ) {
 			// seed random number generator
 			srand( (double) microtime() * 10000 );
 			$inum =	'I' . substr( base64_encode( md5( rand() ) ), 0, $maxlength );
@@ -2986,14 +3074,15 @@ class Invoice extends paramDBTable {
 		return $inum;
 	}
 
-	function pay () {
+	function pay()
+	{
 		global $database;
 
 		// Get Subscription record
 		$metaUser = new metaUser( $this->userid );
 
 		// This should not happen, but we might have an fluid subscription system in the future
-		if( !$metaUser->hasSubscription ) {
+		if ( !$metaUser->hasSubscription ) {
 			$metaUser->objSubscription->load(0);
 			$metaUser->objSubscription->createNew ( $this->userid, $this->method, 0 );
 		}
@@ -3004,19 +3093,19 @@ class Invoice extends paramDBTable {
 		$new_plan = new SubscriptionPlan( $database );
 		$new_plan->load( $this->usage );
 
-		if( $this->coupons ) {
+		if ( $this->coupons ) {
 			$coupons = explode( ';', $this->coupons );
-			foreach( $coupons as $coupon_code ) {
+			foreach ( $coupons as $coupon_code ) {
 				$cph = new couponHandler();
 				$cph->load( $coupon_code );
 
-				if( $cph->coupon->micro_integrations ) {
+				if ( $cph->coupon->micro_integrations ) {
 					$micro_integrations = explode( ';', $cph->coupon->micro_integrations );
-					foreach( $micro_integrations as $mi_id ) {
+					foreach ( $micro_integrations as $mi_id ) {
 						$mi = new microIntegration( $database );
-						if( $mi->mi_exists( $mi_id ) ) {
+						if ( $mi->mi_exists( $mi_id ) ) {
 							$mi->load( $mi_id );
-							if( $mi->callIntegration() ) {
+							if ( $mi->callIntegration() ) {
 								$mi->action( $metaUser->userid, $new_plan );
 							}
 						}
@@ -3030,7 +3119,8 @@ class Invoice extends paramDBTable {
 		return $renew;
 	}
 
-	function setTransactionDate () {
+	function setTransactionDate()
+	{
 		global $database, $mosConfig_offset_user;
 
 		$cfg = new Config_General( $database );
@@ -3038,29 +3128,30 @@ class Invoice extends paramDBTable {
 		$time_passed		= ( strtotime( $this->transaction_date ) - time() + $mosConfig_offset_user*3600 );
 		$transaction_date	= gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
 
-		if( strcmp( $this->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
+		if ( strcmp( $this->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
 			$this->transaction_date	= $transaction_date;
 			$this->check();
 			$this->store();
-		}elseif( $time_passed > $cfg->cfg['invoicecushion'] ) {
+		} elseif ( $time_passed > $cfg->cfg['invoicecushion'] ) {
 			// TODO: Routine to add a recurring payment parameter that tracks recurring payments
 			$this->transaction_date	= $transaction_date;
 			$this->check();
 			$this->store();
-		}else{
+		} else {
 			return;
 		}
 	}
 
-	function prepareGatewayLink () {
+	function prepareGatewayLink()
+	{
 		global $database, $mosConfig_live_site;
 
 		$int_var['params'] = $this->getParams();
 
 		// Filter non-processor params
 		$nonproc = array( 'pending_reason', 'deactivated' );
-		foreach( $nonproc as $param ) {
-			if( isset( $int_var['params'][$param] ) ) {
+		foreach ( $nonproc as $param ) {
+			if ( isset( $int_var['params'][$param] ) ) {
 				unset( $int_var['params'][$param] );
 			}
 		}
@@ -3078,11 +3169,11 @@ class Invoice extends paramDBTable {
 		$method = strtolower( $this->method );
 
 		$pp1 = new PaymentProcessor();
-		if( $pp1->loadName( $method ) ) {
+		if ( $pp1->loadName( $method ) ) {
 			$pp1->init();
 			$pp1->getInfo();
 			$recurring = $pp1->info['recurring'];
-		}else{
+		} else {
 			$recurring = 0;
 		}
 
@@ -3090,22 +3181,22 @@ class Invoice extends paramDBTable {
 
 		$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], $user_subscription );
 
-		if( $this->coupons ) {
+		if ( $this->coupons ) {
 			$coupons = explode( ';', $this->coupons);
 
-			foreach( $coupons as $arrayid => $coupon_code) {
+			foreach ( $coupons as $arrayid => $coupon_code) {
 				$cph = new couponHandler();
 				$cph->load( $coupon_code );
 
-				if( $cph->status ) {
+				if ( $cph->status ) {
 					// Coupon approved, checking restrictions
 					$cph->checkRestrictions( $metaUser );
-					if( $cph->status ) {
+					if ( $cph->status ) {
 						$amount['amount'] = $cph->applyCoupon( $amount['amount'] );
-					}else{
+					} else {
 						// Coupon restricted for this user, thus it needs to be deleted later on
 					}
-				}else{
+				} else {
 					// Coupon not approved, thus it needs to be deleted later on
 				}
 			}
@@ -3123,28 +3214,28 @@ class Invoice extends paramDBTable {
 		$free		= 0;
 		$freetrial	= 0;
 
-		if( is_array( $int_var['amount'] ) ) {
-			if( isset( $int_var['amount']['amount1'] ) ) {
+		if ( is_array( $int_var['amount'] ) ) {
+			if ( isset( $int_var['amount']['amount1'] ) ) {
 				$freetrial = ( ( strcmp( $int_var['amount']['amount1'], '0.00' ) === 0 )
 				|| ( strcmp( $int_var['amount']['amount1'], '0' ) === 0 ) );
 			}
-			if( isset( $int_var['amount']['amount3'] ) ) {
+			if ( isset( $int_var['amount']['amount3'] ) ) {
 				$free = ( ( strcmp( $int_var['amount']['amount3'], '0.00' ) === 0 ) || ( strcmp( $int_var['amount']['amount3'], '0' ) === 0 ) );
 			}
-		}else{
+		} else {
 			$free = ( ( strcmp( $int_var['amount'], '0.00' ) === 0 ) || ( strcmp( $int_var['amount'], '0' ) === 0 ) );
 		}
 
-		if( !( strcmp( strtolower( $method ), 'free' ) === 0 ) && !( strcmp( strtolower( $method ), 'transfer' ) === 0 ) ) {
-			if( $free && !$recurring ) {
+		if ( !( strcmp( strtolower( $method ), 'free' ) === 0 ) && !( strcmp( strtolower( $method ), 'transfer' ) === 0 ) ) {
+			if ( $free && !$recurring ) {
 				$method			= 'free';
 				$var['plan']	= $this->usage;
 				$var['userid']	= $user_subscription->userid;
 				$var['method']	= 'free';
 				$var['invoice'] = $this->invoice_number;
 			}
-		}else{
-			if( $free ) {
+		} else {
+			if ( $free ) {
 				$method			= 'free';
 				$var['plan']	= $this->usage;
 				$var['userid']	= $user_subscription->userid;
@@ -3153,7 +3244,7 @@ class Invoice extends paramDBTable {
 			}
 		}
 
-		if( $free && !$recurring ) {
+		if ( $free && !$recurring ) {
 			$method			= 'free';
 			$var['plan']	= $this->usage;
 			$var['userid']	= $user_subscription->userid;
@@ -3176,10 +3267,10 @@ class Invoice extends paramDBTable {
 				break;
 			default:
 				$pp = new PaymentProcessor();
-				if( $pp->loadName( $method ) ) {
+				if ( $pp->loadName( $method ) ) {
 					$pp->init();
 					$var = $pp->getGatewayVariables( $int_var, $metaUser, $new_subscription );
-				}else{
+				} else {
 					exit();
 					// TODO: Log error
 				}
@@ -3189,32 +3280,32 @@ class Invoice extends paramDBTable {
 
 		$return['params'] = null;
 
-		if( isset( $var['params'] ) ) {
-			if( is_array( $var['params'] ) ) {
-				if( count($var['params'] ) ) {
-					if( isset( $var['params']['lists'] ) ) {
+		if ( isset( $var['params'] ) ) {
+			if ( is_array( $var['params'] ) ) {
+				if ( count($var['params'] ) ) {
+					if ( isset( $var['params']['lists'] ) ) {
 						$lists = $var['params']['lists'];
 						unset( $var['params']['lists'] );
-					}else{
+					} else {
 						$lists = null;
 					}
 
-					foreach( $var['params'] as $name => $entry ) {
-						if( !is_null( $name ) && !( $name == '' ) ) {
-							if( !isset( $entry[3] ) ) {
+					foreach ( $var['params'] as $name => $entry ) {
+						if ( !is_null( $name ) && !( $name == '' ) ) {
+							if ( !isset( $entry[3] ) ) {
 								$entry[3] = $name;
 							}
 							$return['params'] .= aecHTML::createFormParticle( $name, $entry, $lists ) . "\n";
 						}
 					}
 					unset( $var['params'] );
-				}else{
+				} else {
 					$return['params'] = false;
 				}
-			}else{
+			} else {
 				$return['params'] = false;
 			}
-		}else{
+		} else {
 			$return['params'] = false;
 		}
 
@@ -3223,14 +3314,15 @@ class Invoice extends paramDBTable {
 		return $return;
 	}
 
-	function addCoupon ( $couponcode ) {
-		if( $this->coupons ) {
+	function addCoupon( $couponcode )
+	{
+		if ( $this->coupons ) {
 			$oldcoupons = explode( ';', $this->coupons );
-		}else{
+		} else {
 			$oldcoupons = array();
 		}
 
-		if( !in_array( $couponcode, $oldcoupons ) ) {
+		if ( !in_array( $couponcode, $oldcoupons ) ) {
 			$oldcoupons[] = $couponcode;
 
 			$cph = new couponHandler();
@@ -3244,12 +3336,13 @@ class Invoice extends paramDBTable {
 		$this->coupons = implode( ';', $oldcoupons );
 	}
 
-	function removeCoupon ( $couponcode ) {
+	function removeCoupon( $couponcode )
+	{
 		$oldcoupons = explode( ';', $this->coupons );
 
-		if( in_array( $couponcode, $oldcoupons ) ) {
-			foreach( $oldcoupons as $id => $cc ) {
-				if( $cc == $couponcode ) {
+		if ( in_array( $couponcode, $oldcoupons ) ) {
+			foreach ( $oldcoupons as $id => $cc ) {
+				if ( $cc == $couponcode ) {
 					unset( $oldcoupons[$id] );
 				}
 			}
@@ -3264,7 +3357,8 @@ class Invoice extends paramDBTable {
 		$this->coupons = implode( ';', $oldcoupons );
 	}
 
-	function savePostParams ( $array ) {
+	function savePostParams( $array )
+	{
 		unset( $array['task'] );
 		unset( $array['option'] );
 		unset( $array['invoice'] );
@@ -3279,7 +3373,8 @@ class Invoice extends paramDBTable {
  * User management
  *
  */
-class Subscription extends paramDBTable {
+class Subscription extends paramDBTable
+{
 	/** @var int Primary key */
 	var $id					= null;
 	/** @var int */
@@ -3316,7 +3411,8 @@ class Subscription extends paramDBTable {
 	/**
 	* @param database A database connector object
 	*/
-	function Subscription ( &$db ) {
+	function Subscription( &$db )
+	{
 		$this->mosDBTable( '#__acctexp_subscr', 'id', $db );
 	}
 
@@ -3325,7 +3421,8 @@ class Subscription extends paramDBTable {
 	 *
 	 * @param int $userid
 	 */
-	function loadUserid ($userid) {
+	function loadUserid( $userid )
+	{
 		global $database;
 
 		$query = 'SELECT id'
@@ -3337,7 +3434,8 @@ class Subscription extends paramDBTable {
 		$this->load($database->loadResult());
 	}
 
-	function createNew( $userid, $processor, $pending ) {
+	function createNew( $userid, $processor, $pending )
+	{
 		global $mosConfig_offset_user;
 
 		$this->userid		= $userid;
@@ -3359,12 +3457,13 @@ class Subscription extends paramDBTable {
 	* alert['level'] =  2 means second level threshold has been reached (default: 14 days or less to expire)
 	* alert['daysleft'] = number of days left to expire
 	*/
-	function GetAlertLevel () {
+	function GetAlertLevel()
+	{
 		global $database, $mosConfig_offset_user;
 
 		$aecexpid = AECfetchfromDB::ExpirationIDfromUserID( $this->userid );
 
-		if( $aecexpid ) {
+		if ( $aecexpid ) {
 			$alert['level']		= -1;
 			$alert['daysleft']	= 0;
 
@@ -3378,17 +3477,17 @@ class Subscription extends paramDBTable {
 			// Get how many days left to expire (3600 sec = 1 hour)
 			$alert['daysleft']	= round( ( $expstamp - ( time() + $mosConfig_offset_user*3600 ) ) / ( 3600 * 24 ) );
 
-			if( $alert['daysleft'] < 0 ) {
+			if ( $alert['daysleft'] < 0 ) {
 				// Subscription already expired. Alert Level 0!
 				$alert['level']	= 1;
-			}else{
+			} else {
 				// Get alert levels
-				if( $alert['daysleft'] <= $cfg->cfg['alertlevel1'] ) {
+				if ( $alert['daysleft'] <= $cfg->cfg['alertlevel1'] ) {
 					// Less than $numberofdays to expire! This is a level 1
 					$alert['level']		= 1;
-				}elseif( ( $alert['daysleft'] > $cfg->cfg['alertlevel1'] ) && ( $alert['daysleft'] <= $cfg->cfg['alertlevel2'] ) ) {
+				} elseif ( ( $alert['daysleft'] > $cfg->cfg['alertlevel1'] ) && ( $alert['daysleft'] <= $cfg->cfg['alertlevel2'] ) ) {
 					$alert['level']		= 2;
-				}elseif( $alert['daysleft'] > $cfg->cfg['alertlevel2'] ) {
+				} elseif ( $alert['daysleft'] > $cfg->cfg['alertlevel2'] ) {
 					// Everything is ok. Level 3 means no threshold was reached
 					$alert['level']		= 3;
 				}
@@ -3397,77 +3496,79 @@ class Subscription extends paramDBTable {
 		return $alert;
 	}
 
-	function verifylogin( $block ) {
+	function verifylogin( $block )
+	{
 		global $mosConfig_live_site, $database;
 
 		$cfg = new Config_General( $database );
 
-		if( strcmp( $this->status, 'Expired' ) === 0 ) {
+		if ( strcmp( $this->status, 'Expired' ) === 0 ) {
 			$expired = true;
-		}else{
+		} else {
 			$expiration = new AcctExp( $database );
 			$expiration->load( AECfetchfromDB::ExpirationIDfromUserID( $this->userid ) );
 
-			if( $expiration->id > 0 ) {
+			if ( $expiration->id > 0 ) {
 				$expired = $expiration->is_expired();
-			}else{
+			} else {
 				$expired = false;
 			}
 		}
 
-		if( ( $expired || ( strcmp( $this->status, 'Closed' ) === 0 ) ) && $cfg->cfg['require_subscription'] ) {
+		if ( ( $expired || ( strcmp( $this->status, 'Closed' ) === 0 ) ) && $cfg->cfg['require_subscription'] ) {
 			$expire = $this->expire();
 
-			if( $expire ) {
+			if ( $expire ) {
 				mosRedirect( 'index.php?option=com_acctexp&amp;task=expired&amp;Itemid=' . $this->userid );
 				exit();
 			}
-		}elseif( ( strcmp( $this->status, 'Pending' ) === 0 ) || $block ) {
+		} elseif ( ( strcmp( $this->status, 'Pending' ) === 0 ) || $block ) {
 			mosRedirect( 'index.php?option=com_acctexp&amp;task=pending&amp;Itemid=' . $this->userid );
 			exit();
 		}
 	}
 
-	function expire ( $overridefallback=false ) {
+	function expire( $overridefallback=false )
+	{
 		global $database;
 
-		if( strcmp( $this->status, 'Excluded' ) === 0 ) {
+		if ( strcmp( $this->status, 'Excluded' ) === 0 ) {
 			return false;
 		}
 
-		if( $this->plan ) {
+		if ( $this->plan ) {
 			$subscription_plan = new SubscriptionPlan( $database );
 			$subscription_plan->load( $this->plan );
 			$plan_params = $subscription_plan->getParams();
-		}else{
+		} else {
 			$plan_params = array();
 			$subscription_plan = false;
 		}
 
 		$this_params = $this->getParams();
 
-		if( $plan_params['fallback'] && !$overridefallback ) {
+		if ( $plan_params['fallback'] && !$overridefallback ) {
 
 			$mih = new microIntegrationHandler();
 			$mih->userPlanExpireActions( $this->userid, $subscription_plan );
 		
 			$this->applyUsage( $plan_params['fallback'], 'none', 1 );
 			return false;
-		}else{
+		} else {
 			// Set a Trial flag if this is an expired Trial for further reference
-			if( strcmp( $this->status, 'Trial' ) === 0 ) {
+			if ( strcmp( $this->status, 'Trial' ) === 0 ) {
 				$this->addParams( array( 'trialflag' => 1 ) );
-			}elseif( is_array( $this_params ) ) {
-				if( in_array( 'trialflag', $this_params ) ) {
+			} elseif ( is_array( $this_params ) ) {
+				if ( in_array( 'trialflag', $this_params ) ) {
 					$this->delParams( array( 'trialflag' ) );
 				}
 			}
 
-			if( !( strcmp( $this->status, 'Expired' ) === 0 ) || !( strcmp( $this->status, 'Closed' ) === 0 ) ) {
+			if ( !( strcmp( $this->status, 'Expired' ) === 0 ) || !( strcmp( $this->status, 'Closed' ) === 0 ) ) {
 				$this->status = 'Expired';
 				$this->check();
 				$this->store();
-			}else{
+			} else {
 				return false;
 			}
 
@@ -3478,16 +3579,18 @@ class Subscription extends paramDBTable {
 		}
 	}
 
-	function setStatus( $status ) {
+	function setStatus( $status )
+	{
 		$this->status = $status;
 		$this->check();
 		$this->store();
 	}
 
-	function applyUsage( $usage = 0, $processor = 'none', $silent = 0 ) {
+	function applyUsage( $usage = 0, $processor = 'none', $silent = 0 )
+	{
 		global $database;
 
-		if( !$usage ) {
+		if ( !$usage ) {
 			$usage = $this->plan;
 		}
 
@@ -3502,25 +3605,27 @@ class Subscription extends paramDBTable {
 		}
 	}
 
-	function setPlanID ( $id ) {
-		if( $this->plan ) {
+	function setPlanID( $id )
+	{
+		if ( $this->plan ) {
 			$this->previous_plan = $this->plan;
 			$this->setUsedPlan( $this->plan );
 		}
 		$this->plan	= $id;
 	}
 
-	function setUsedPlan( $id ) {
+	function setUsedPlan( $id )
+	{
 		$used_plans = $this->getUsedPlans();
 
-		if( isset( $used_plans[$id] ) ) {
+		if ( isset( $used_plans[$id] ) ) {
 			$used_plans[$id]++;
-		}else{
+		} else {
 			$used_plans[$id] = 1;
 		}
 
 		$new_used_plans = array();
-		foreach( $used_plans as $planid => $n ) {
+		foreach ( $used_plans as $planid => $n ) {
 			$new_used_plans[] = $planid . ',' . $n;
 		}
 
@@ -3528,21 +3633,22 @@ class Subscription extends paramDBTable {
 
 	}
 
-	function getUsedPlans () {
+	function getUsedPlans()
+	{
 		$used_plans = explode( ';', $this->used_plans );
 
 		$array = array();
-		foreach( $used_plans as $entry ) {
+		foreach ( $used_plans as $entry ) {
 			$entryarray = explode( ',', $entry );
 
-			if( $entryarray[0] ) {
-				if( isset( $entryarray[1] ) ) {
-					if( !empty( $entryarray[1] ) ) {
+			if ( $entryarray[0] ) {
+				if ( isset( $entryarray[1] ) ) {
+					if ( !empty( $entryarray[1] ) ) {
 						$amount = $entryarray[1];
-					}else{
+					} else {
 						$amount = 1;
 					}
-				}else{
+				} else {
 					$amount = 1;
 				}
 
@@ -3553,13 +3659,14 @@ class Subscription extends paramDBTable {
 		return $array;
 	}
 
-	function sendEmailRegistered( $renew ) {
+	function sendEmailRegistered( $renew )
+	{
 		global $database, $acl, $mainframe;
 
 		$langPath = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/com_acctexp_language/';
-		if( file_exists( $langPath . $mainframe->getCfg( 'mosConfig_lang' ) . '.php' ) ) {
+		if ( file_exists( $langPath . $mainframe->getCfg( 'mosConfig_lang' ) . '.php' ) ) {
 			include_once( $langPath . $mainframe->getCfg( 'mosConfig_lang' ) . '.php' );
-		}else{
+		} else {
 			include_once( $langPath . 'english.php' );
 		}
 
@@ -3582,37 +3689,37 @@ class Subscription extends paramDBTable {
 		$message = sprintf( _ACCTEXP_MAILPARTICLE_GREETING, $name );
 
 		// Assemble E-Mail Subject & Message
-		if( $renew ) {
+		if ( $renew ) {
 			$subject = sprintf( _ACCTEXP_SEND_MSG_RENEW, $name, $mainframe->getCfg( 'sitename' ) );
 
 			$message .= sprintf( _ACCTEXP_MAILPARTICLE_THANKSREN, $mainframe->getCfg( 'sitename' ) );
 
-			if( $plan->email_desc ) {
+			if ( $plan->email_desc ) {
 				$message .= "\n\n" . $plan->email_desc . "\n\n";
-			}else{
+			} else {
 				$message .= " ";
 			}
 
-			if( $free ) {
+			if ( $free ) {
 				$message .= sprintf( _ACCTEXP_MAILPARTICLE_LOGIN, $mainframe->getCfg( 'live_site' ) );
-			}else{
+			} else {
 				$message .= _ACCTEXP_MAILPARTICLE_PAYREC . " "
 				. sprintf( _ACCTEXP_MAILPARTICLE_LOGIN, $mainframe->getCfg( 'live_site' ) );
 			}
-		}else{
+		} else {
 			$subject = sprintf( _ACCTEXP_SEND_MSG, $name, $mainframe->getCfg( 'sitename' ) );
 
 			$message .= sprintf(_ACCTEXP_MAILPARTICLE_THANKSREG, $mainframe->getCfg( 'sitename' ) );
 
-			if( $plan->email_desc ) {
+			if ( $plan->email_desc ) {
 				$message .= "\n\n" . $plan->email_desc . "\n\n";
-			}else{
+			} else {
 				$message .= " ";
 			}
 
-			if( $free ) {
+			if ( $free ) {
 				$message .= sprintf( _ACCTEXP_MAILPARTICLE_LOGIN, $mainframe->getCfg( 'live_site' ) );
-			}else{
+			} else {
 				$message .= _ACCTEXP_MAILPARTICLE_PAYREC . " "
 				. sprintf( _ACCTEXP_MAILPARTICLE_LOGIN, $mainframe->getCfg( 'live_site' ) );
 			}
@@ -3624,10 +3731,10 @@ class Subscription extends paramDBTable {
 		$message = html_entity_decode( $message, ENT_QUOTES );
 
 		// Send email to user
-		if( $mainframe->getCfg( 'mailfrom' ) != '' && $mainframe->getCfg( 'fromname' ) != '' ) {
+		if ( $mainframe->getCfg( 'mailfrom' ) != '' && $mainframe->getCfg( 'fromname' ) != '' ) {
 			$adminName2		= $mainframe->getCfg( 'fromname' );
 			$adminEmail2	= $mainframe->getCfg( 'mailfrom' );
-		}else{
+		} else {
 			$query = 'SELECT name, email'
 			. ' FROM #__users'
 			. ' WHERE usertype = \'superadministrator\''
@@ -3645,7 +3752,7 @@ class Subscription extends paramDBTable {
 		// Send notification to all administrators
 		$aecUser = AECToolbox::_aecIP();
 
-		if( $renew ) {
+		if ( $renew ) {
 			$subject2 = sprintf( _ACCTEXP_SEND_MSG_RENEW, $name, $mainframe->getCfg( 'sitename' ) );
 			$message2 = sprintf( _ACCTEXP_ASEND_MSG_RENEW, $adminName2, $mainframe->getCfg( 'sitename' ), $name, $email, $username, $plan->id, $plan->name, $aecUser['ip'], $aecUser['isp'] );
 		} else {
@@ -3669,13 +3776,14 @@ class Subscription extends paramDBTable {
 
 			$row = $rows[0];
 
-			if( $row->sendEmail ) {
+			if ( $row->sendEmail ) {
 				mosMail( $adminEmail2, $adminName2, $row->email, $subject2, $message2 );
 			}
 		}
 	}
 
-	function getMIflags( $usage, $mi ) {
+	function getMIflags( $usage, $mi )
+	{
 		// Get Params
 		$params = $this->getParams();
 
@@ -3684,9 +3792,9 @@ class Subscription extends paramDBTable {
 
 		// Filter out the params for this usage and MI
 		$mi_params = array();
-		if( $params ) {
-			foreach( $params as $name => $value ) {
-				if( strpos( $name, $flag_name ) == 0 ) {
+		if ( $params ) {
+			foreach ( $params as $name => $value ) {
+				if ( strpos( $name, $flag_name ) == 0 ) {
 					$paramname = substr( strtoupper( $name ), strlen( $flag_name ) + 1 );
 					$mi_params[$paramname] = $value;
 				}
@@ -3694,14 +3802,15 @@ class Subscription extends paramDBTable {
 		}
 
 		// Only return params if they exist
-		if( count( $mi_params ) ) {
+		if ( count( $mi_params ) ) {
 			return $mi_params;
-		}else{
+		} else {
 			return false;
 		}
 	}
 
-	function setMIflags( $usage, $mi, $flags ) {
+	function setMIflags( $usage, $mi, $flags )
+	{
 		// Get Params
 		$params = $this->getParams();
 
@@ -3709,7 +3818,7 @@ class Subscription extends paramDBTable {
 		$flag_name = 'MI_FLAG_USAGE_' . strtoupper( $usage ) . '_MI_' . $mi;
 
 		// Write to $params array
-		foreach( $flags as $name => $value ) {
+		foreach ( $flags as $name => $value ) {
 			$param_name = $flag_name . '_' . strtoupper( $name );
 			$params[$param_name] = $value;
 		}
@@ -3721,28 +3830,29 @@ class Subscription extends paramDBTable {
 	}
 }
 
-class GeneralInfoRequester {
-
+class GeneralInfoRequester
+{
 	/**
 	 * Check which CMS system is running
 	 * @return string
 	 */
-	function getCMSName() {
+	function getCMSName()
+	{
 		global $mosConfig_absolute_path;
 
 		$filename	= $mosConfig_absolute_path . '/includes/version.php';
 
-		if( file_exists( $filename ) ) {
+		if ( file_exists( $filename ) ) {
 			$originalFileHandle = fopen( $filename, 'r' ) or die ( "Cannot open $filename<br />" );
 			// Transfer File into variable
 			$Data = fread( $originalFileHandle, filesize( $filename ) );
 			fclose( $originalFileHandle );
 
-			if( strpos( $Data, '@package Joomla' ) ) {
+			if ( strpos( $Data, '@package Joomla' ) ) {
 				return 'Joomla';
-			}elseif( strpos( $Data, '@package Mambo' ) ) {
+			} elseif ( strpos( $Data, '@package Mambo' ) ) {
 				return 'Mambo';
-			}else{
+			} else {
 				return 'UNKNOWN'; // mic: DO NOT CHANGE THIS VALUE!! (used later)
 			}
 		}
@@ -3752,7 +3862,8 @@ class GeneralInfoRequester {
 	 * Check whether a component is installed
 	 * @return Bool
 	 */
-	function detect_component( $component ) {
+	function detect_component( $component )
+	{
 		global $database, $mainframe;
 
 		$tables	= array();
@@ -3762,13 +3873,13 @@ class GeneralInfoRequester {
 
 		$overrides = explode( ' ', $cfg->cfg['bypassintegration'] );
 
-		if( in_array( $component, $overrides ) ) {
+		if ( in_array( $component, $overrides ) ) {
 			return false;
 		}
 
 		$pathCB		= $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/';
 		$pathSMF	= $mainframe->getCfg( 'absolute_path' ) . '/administrator/components/com_smf/';
-		switch( $component ) {
+		switch ( $component ) {
 			case 'CB': // Community Builder
 				$is_cbe	= ( is_dir( $pathCB. 'enhanced' ) || is_dir( $pathCB . 'enhanced_admin' ) );
 				$is_cb	= ( is_dir( $pathCB ) && !$is_cbe );
@@ -3811,7 +3922,8 @@ class GeneralInfoRequester {
 	 * @parameter group id
 	 * @return string
 	 */
-	function getLowerACLGroup( $group_id ) {
+	function getLowerACLGroup( $group_id )
+	{
 		global $database;
 
 		$group_list	= array();
@@ -3832,17 +3944,18 @@ class GeneralInfoRequester {
 		    $group_list[$i] = $row->group_id;
 		}
 
-		if( count( $group_list ) > 0 ) {
+		if ( count( $group_list ) > 0 ) {
 			return $group_list;
-		}else{
+		} else {
 			return array();
 		}
 	}
 }
 
-class AECfetchfromDB {
-
-	function UserIDfromInvoiceNumber( $invoice_number ) {
+class AECfetchfromDB
+{
+	function UserIDfromInvoiceNumber( $invoice_number )
+	{
 		global $database;
 
 		$query = 'SELECT userid'
@@ -3853,7 +3966,8 @@ class AECfetchfromDB {
 		return $database->loadResult();
 	}
 
-	function InvoiceIDfromNumber( $invoice_number, $userid = 0 ) {
+	function InvoiceIDfromNumber( $invoice_number, $userid = 0 )
+	{
 		global $database;
 
 		$query = 'SELECT id'
@@ -3861,14 +3975,15 @@ class AECfetchfromDB {
 		. ' WHERE invoice_number = \'' . $invoice_number . '\''
 		. ' AND active = \'1\''
 		;
-		if( $userid ) {
+		if ( $userid ) {
 			$query .= ' AND userid = \'' . $userid . '\'';
 		}
 		$database->setQuery( $query );
 		return $database->loadResult();
 	}
 
-	function lastUnclearedInvoiceIDbyUserID( $userid ) {
+	function lastUnclearedInvoiceIDbyUserID( $userid )
+	{
 		global $database;
 
 		$query = 'SELECT invoice_number'
@@ -3881,7 +3996,8 @@ class AECfetchfromDB {
 		return $database->loadResult();
 	}
 
-	function InvoiceCountbyUserID( $userid ) {
+	function InvoiceCountbyUserID( $userid )
+	{
 		global $database;
 
 		$query = 'SELECT count(*)'
@@ -3893,7 +4009,8 @@ class AECfetchfromDB {
 		return $database->loadResult();
 	}
 
-	function SubscriptionIDfromUserID( $userid ) {
+	function SubscriptionIDfromUserID( $userid )
+	{
 		global $database;
 
 		$query = 'SELECT id'
@@ -3904,7 +4021,8 @@ class AECfetchfromDB {
 		return $database->loadResult();
 	}
 
-	function ExpirationIDfromUserID( $userid ) {
+	function ExpirationIDfromUserID( $userid )
+	{
 		global $database;
 
 		$query = 'SELECT id'
@@ -3915,7 +4033,8 @@ class AECfetchfromDB {
 		return $database->loadResult();
 	}
 
-	function UserIDfromExpirationID( $id ) {
+	function UserIDfromExpirationID( $id )
+	{
 		global $database;
 
 		$query = 'SELECT userid'
@@ -3927,8 +4046,8 @@ class AECfetchfromDB {
 	}
 }
 
-class AECToolbox {
-
+class AECToolbox
+{
 	/**
 	 * Builds a list of valid currencies
 	 *
@@ -3938,20 +4057,21 @@ class AECToolbox {
 	 * @since 0.12.4
 	 * @return array
 	 */
-	function _aecCurrencyField( $currMain = false, $currGen = false, $currOth = false ) {
+	function _aecCurrencyField( $currMain = false, $currGen = false, $currOth = false )
+	{
 
-		if( $currMain ) {
+		if ( $currMain ) {
 			$currencies_main = 'EUR,USD,CHF,CAD,DKK,SEK,NOK,GBP,JPY';
 		}
 
-		if( $currGen ) {
+		if ( $currGen ) {
 			$currencies_general	= 'AUD,CYP,CZK,EGP,HUF,GIP,HKD,UAH,ISK,'
 			. 'EEK,HRK,GEL,LVL,RON,BGN,LTL,MTL,FIM,MDL,ILS,NZD,ZAR,RUB,SKK,'
 			. 'TRY,PLN'
 			;
 		}
 
-		if( $currOth ) {
+		if ( $currOth ) {
 			$currencies_other	= 'AFA,DZD,ARS,AMD,AWG,AZM,'
 			. 'BSD,BHD,THB,PAB,BBD,BYB,BZD,BMD,VEB,BOB,'
 			. 'BRL,BND,BIF,CVE,KYD,GHC,XOF,XAF,XPF,'
@@ -3975,27 +4095,27 @@ class AECToolbox {
 
 		$currency_code_list = array();
 
-		if( $currMain ) {
+		if ( $currMain ) {
 			$currency_array = explode( ',', $currencies_main );
-			foreach( $currency_array as $currency ) {
+			foreach ( $currency_array as $currency ) {
 				$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
 			}
 
 			$currency_code_list[] = mosHTML::makeOption( '" disabled="disabled', '- - - - - - - - - - - - - -' );
 		}
 
-		if( $currGen ) {
+		if ( $currGen ) {
 			$currency_array = explode( ',', $currencies_general );
-			foreach( $currency_array as $currency ) {
+			foreach ( $currency_array as $currency ) {
 				$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
 			}
 
 			$currency_code_list[] = mosHTML::makeOption( '" disabled="disabled', '- - - - - - - - - - - - - -' );
 		}
 
-		if( $currOth ) {
+		if ( $currOth ) {
 			$currency_array = explode( ',', $currencies_other );
-			foreach( $currency_array as $currency ) {
+			foreach ( $currency_array as $currency ) {
 				$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
 			}
 		}
@@ -4008,7 +4128,8 @@ class AECToolbox {
 	 *
 	 * @return array w/ values
 	 */
-	function _aecIP() {
+	function _aecIP()
+	{
 		// userip & hostname
 		$aecUser['ip'] 	= $_SERVER['REMOTE_ADDR'];
 		$aecUser['isp'] = gethostbyaddr( $_SERVER['REMOTE_ADDR'] );
@@ -4021,7 +4142,8 @@ class AECToolbox {
 	 * @parameter url
 	 * @return string
 	 */
-	function backendTaskLink( $task, $text ) {
+	function backendTaskLink( $task, $text )
+	{
 		global $mosConfig_live_site;
 
 		return '<a href="' .  $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&amp;task=' . $task . '" title="' . $text . '">' . $text . '</a>';
@@ -4032,42 +4154,43 @@ class AECToolbox {
 	 * @parameter url
 	 * @return string
 	 */
-	function deadsureURL( $url ) {
+	function deadsureURL( $url )
+	{
 		global $mosConfig_live_site, $mosConfig_absolute_path, $database;
 
 		$cfg = new Config_General( $database );
 
-		if( $cfg->cfg['simpleurls'] ) {
+		if ( $cfg->cfg['simpleurls'] ) {
 			$new_url = $mosConfig_live_site . $url;
-		}else{
-			if( !strrpos( strtolower( $url ), 'Itemid' ) ) {
+		} else {
+			if ( !strrpos( strtolower( $url ), 'Itemid' ) ) {
 				global $Itemid;
-				if( $Itemid ) {
+				if ( $Itemid ) {
 					$url .= '&amp;Itemid=' . $Itemid;
-				}else{
+				} else {
 					$url .= '&amp;Itemid=';
 				}
 			}
 
-			if( !function_exists( 'sefRelToAbs' ) ) {
+			if ( !function_exists( 'sefRelToAbs' ) ) {
 				include_once( $mosConfig_absolute_path . '/includes/sef.php' );
 			}
 
 			$new_url = sefRelToAbs( $url );
 
-			if( !( strpos( $new_url, $mosConfig_live_site ) === 0 ) ) {
+			if ( !( strpos( $new_url, $mosConfig_live_site ) === 0 ) ) {
 				// look out for malformed live_site
-				if( strpos( $mosConfig_live_site, '/' ) === strlen( $mosConfig_live_site ) ) {
+				if ( strpos( $mosConfig_live_site, '/' ) === strlen( $mosConfig_live_site ) ) {
 					$new_url = substr( $mosConfig_live_site, 0, -1 ) . $new_url;
-				}else{
+				} else {
 					// It seems we have a sefRelToAbs malfunction (subdirectory is not appended)
 					$metaurl = explode( '/', $mosConfig_live_site );
 					$rooturl = $metaurl[0] . '//' . $metaurl[2];
 
 					// Replace root to include subdirectory - if all fails, just prefix the live site
-					if( strpos( $new_url, $rooturl ) === 0 ) {
+					if ( strpos( $new_url, $rooturl ) === 0 ) {
 						$new_url = $mosConfig_live_site . substr( $new_url, strlen( $rooturl ) );
-					}else{
+					} else {
 						$new_url = $mosConfig_live_site . $new_url;
 					}
 				}
@@ -4083,7 +4206,8 @@ class AECToolbox {
 	 * @parameter username
 	 * @return bool
 	 */
-	function VerifyUsername ( $username ) {
+	function VerifyUsername( $username )
+	{
 		global $database;
 
 		$heartbeat = new aecHeartbeat( $database );
@@ -4098,23 +4222,23 @@ class AECToolbox {
 
 		$metaUser = new metaUser( $id );
 
-		if( $metaUser->hasSubscription ) {
+		if ( $metaUser->hasSubscription ) {
 			$metaUser->objSubscription->verifyLogin( $metaUser->cmsUser->block );
-		}else{
+		} else {
 			$aecexpid = AECfetchfromDB::ExpirationIDfromUserID( $id );
 
-			if( $metaUser->hasExpiration ) {
+			if ( $metaUser->hasExpiration ) {
 				$metaUser->objExpiration->manualVerify();
-			}else{
+			} else {
 				$cfg = new Config_General( $database );
 
-				if( $cfg->cfg['require_subscription'] ) {
-					if( $cfg->cfg['entry_plan'] ) {
+				if ( $cfg->cfg['require_subscription'] ) {
+					if ( $cfg->cfg['entry_plan'] ) {
 						$user_subscription = new mosSubscription( $database );
 						$user_subscription->load(0);
 						$user_subscription->createNew( $id, 'Free', 0 );
 						$user_subscription->applyUsage( $cfg->cfg['entry_plan'], 'none', 1 );
-					}else{
+					} else {
 						mosRedirect( 'index.php?option=com_acctexp&amp;task=subscribe&amp;Itemid=' . $id );
 						return null;
 					}
@@ -4124,7 +4248,8 @@ class AECToolbox {
 		return true;
 	}
 
-	function quickVerifyUserID( $userid ) {
+	function quickVerifyUserID( $userid )
+	{
 		global $database;
 
 		$query = 'SELECT id'
@@ -4134,15 +4259,15 @@ class AECToolbox {
 	 	$database->setQuery( $query );
 		$aecid = $database->loadResult();
 
-		if( $aecid ) {
+		if ( $aecid ) {
 			$aecuser = new Subscription( $database );
 			$aecuser->load( $aecid );
-			if( strcmp( $aecuser->status, 'Active' ) === 0 ) {
+			if ( strcmp( $aecuser->status, 'Active' ) === 0 ) {
 				return true;
-			}else{
+			} else {
 				return false;
 			}
-		}else{
+		} else {
 			$query = 'SELECT id'
 			. ' FROM #__acctexp'
 			. ' WHERE userid = \'' . (int) $userid . '\''
@@ -4150,27 +4275,28 @@ class AECToolbox {
 			$database->setQuery( $query );
 			$aecexpid = $database->loadResult();
 
-			if( $aecexpid ) {
+			if ( $aecexpid ) {
 				$aecuser = new AcctExp( $database );
 				$aecuser->load( $aecexpid );
-				if( $aecuser->is_expired() ) {
+				if ( $aecuser->is_expired() ) {
 					return false;
-				}else{
+				} else {
 					return true;
 				}
-			}else{
+			} else {
 				return null;
 			}
 		}
 	}
 
-	function correctAmount( $amount ) {
-		if( strpos( $amount, '.' ) === 0 ) {
+	function correctAmount( $amount )
+	{
+		if ( strpos( $amount, '.' ) === 0 ) {
 			$amount = '0' . $amount;
-		}elseif( strpos( $amount, '.') === false ) {
-			if( strpos( $amount, ',' ) !== false ) {
+		} elseif ( strpos( $amount, '.') === false ) {
+			if ( strpos( $amount, ',' ) !== false ) {
 				$amount = str_replace( ',', '.', $amount );
-			}else{
+			} else {
 				$amount = $amount . '.00';
 			}
 		}
@@ -4181,10 +4307,11 @@ class AECToolbox {
 		return $amount;
 	}
 
-	function computeExpiration( $value, $unit, $timestamp ) {
+	function computeExpiration( $value, $unit, $timestamp )
+	{
 		$sign = strpos( $value, '-' ) ? '-' : '+';
 
-		switch( $unit ) {
+		switch ( $unit ) {
 			case 'D':
 				$add = $sign . $value . ' day';
 				break;
@@ -4203,11 +4330,12 @@ class AECToolbox {
 		return date( 'Y-m-d H:i:s', $timestamp );
 	}
 
-	function cleanPOST( $post ) {
+	function cleanPOST( $post )
+	{
 		$badparams = array( 'option', 'task' );
 
-		foreach( $badparams as $param ) {
-			if( isset( $post[$param] ) ) {
+		foreach ( $badparams as $param ) {
+			if ( isset( $post[$param] ) ) {
 				unset( $post[$param] );
 			}
 		}
@@ -4216,19 +4344,20 @@ class AECToolbox {
 	}
 
 
-	function getFileArray( $dir, $extension=false, $listDirectories=false, $skipDots=true ) {
+	function getFileArray( $dir, $extension=false, $listDirectories=false, $skipDots=true )
+	{
 		$dirArray	= array();
 		$handle		= dir( $dir );
 
-		while( false !== ( $file = $handle->read() ) ) {
-			if( ( $file != '.' && $file != '..' ) || $skipDots === true ) {
-				if( $listDirectories === false ) {
-					if( is_dir( $file ) ) {
+		while ( false !== ( $file = $handle->read() ) ) {
+			if ( ( $file != '.' && $file != '..' ) || $skipDots === true ) {
+				if ( $listDirectories === false ) {
+					if ( is_dir( $file ) ) {
 						continue;
 					}
 				}
-				if( $extension !== false ) {
-					if( strpos( basename( $file ), $extension ) === false ) {
+				if ( $extension !== false ) {
+					if ( strpos( basename( $file ), $extension ) === false ) {
 						continue;
 					}
 				}
@@ -4240,7 +4369,8 @@ class AECToolbox {
    		return $dirArray;
 	}
 
-	function visualstrlen( $string ) {
+	function visualstrlen( $string )
+	{
 
 		// Visually Short Chars
 		$srt = array( 'i', 'j', 'l', ',', '.' );
@@ -4252,10 +4382,10 @@ class AECToolbox {
 
 		$vlen = 0;
 		// Iterate through array counting the visual length of the string
-		foreach( $char_array as $char ) {
-			if( in_array( $char, $srt ) ) {
+		foreach ( $char_array as $char ) {
+			if ( in_array( $char, $srt ) ) {
 				$vlen += 0.5;
-			} elseif( in_array( $char, $srt ) ) {
+			} elseif ( in_array( $char, $srt ) ) {
 				$vlen += 2;
 			} else {
 				$vlen += 1;
@@ -4265,11 +4395,12 @@ class AECToolbox {
 		return (int) $vlen;
 	}
 
-	function rewriteEngine( $subject, $metaUser=null, $subscriptionPlan=null ) {
+	function rewriteEngine( $subject, $metaUser=null, $subscriptionPlan=null )
+	{
 		global $mosConfig_absolute_path, $mosConfig_live_site;
 
 		// Check whether a replacement exists at all
-		if( strpos( $subject, '[[' ) == false ) {
+		if ( strpos( $subject, '[[' ) == false ) {
 			return $subject;
 		}
 
@@ -4278,17 +4409,17 @@ class AECToolbox {
 			$rewrite['cms_absolute_path']	= $mosConfig_absolute_path;
 			$rewrite['cms_live_site']		= $mosConfig_live_site;
 
-		if( is_object( $metaUser ) ) {
+		if ( is_object( $metaUser ) ) {
 			$rewrite['user_id']			= $metaUser->cmsUser->id;
 			$rewrite['user_username']	= $metaUser->cmsUser->username;
 			$rewrite['user_name']		= $metaUser->cmsUser->name;
 			$rewrite['user_email']		= $metaUser->cmsUser->email;
 
-			if( $metaUser->hasExpiration ) {
+			if ( $metaUser->hasExpiration ) {
 				$rewrite['expiration_date'] = $metaUser->objExpiration->expiration;
 			}
 
-			if( $metaUser->hasSubscription ) {
+			if ( $metaUser->hasSubscription ) {
 				$rewrite['subscription_type']			= $metaUser->objSubscription->type;
 				$rewrite['subscription_status']			= $metaUser->objSubscription->status;
 				$rewrite['subscription_signup_date']	= $metaUser->objSubscription->signup_date;
@@ -4300,14 +4431,14 @@ class AECToolbox {
 			}
 		}
 
-		if( is_object( $subscriptionPlan ) ) {
+		if ( is_object( $subscriptionPlan ) ) {
 			$rewrite['plan_name'] = $subscriptionPlan->name;
 			$rewrite['plan_desc'] = $subscriptionPlan->desc;
 		}
 
 		$search = array();
 		$replace = array();
-		foreach( $rewrite as $name => $replacement ) {
+		foreach ( $rewrite as $name => $replacement ) {
 			$search[]	= '[[' . $name . ']]';
 			$replace[]	= $replacement;
 		}
@@ -4315,26 +4446,27 @@ class AECToolbox {
 		return str_replace( $search, $replace, $subject );
 	}
 
-	function rewriteEngineInfo( $switches ) {
+	function rewriteEngineInfo( $switches )
+	{
 		$rewrite = array();
 
-		if( in_array( 'cms', $switches ) ) {
+		if ( in_array( 'cms', $switches ) ) {
 			$rewrite['cms'][] = 'cms_absolute_path';
 			$rewrite['cms'][] = 'cms_live_site';
 		}
 
-		if( in_array( 'user', $switches ) ) {
+		if ( in_array( 'user', $switches ) ) {
 			$rewrite['user'][] = 'user_id';
 			$rewrite['user'][] = 'user_username';
 			$rewrite['user'][] = 'user_name';
 			$rewrite['user'][] = 'user_email';
 		}
 
-		if( in_array( 'expiration', $switches ) ) {
+		if ( in_array( 'expiration', $switches ) ) {
 			$rewrite['expiration'][] = 'expiration_date';
 		}
 
-		if( in_array( 'subscription', $switches ) ) {
+		if ( in_array( 'subscription', $switches ) ) {
 			$rewrite['subscription'][] = 'subscription_type';
 			$rewrite['subscription'][] = 'subscription_status';
 			$rewrite['subscription'][] = 'subscription_signup_date';
@@ -4345,18 +4477,18 @@ class AECToolbox {
 			$rewrite['subscription'][] = 'subscription_lifetime';
 		}
 
-		if( in_array( 'plan', $switches ) ) {
+		if ( in_array( 'plan', $switches ) ) {
 			$rewrite['plan'][] = 'plan_name';
 			$rewrite['plan'][] = 'plan_desc';
 		}
 
 		$return = '';
-		foreach( $rewrite as $area => $keys ) {
+		foreach ( $rewrite as $area => $keys ) {
 			$return .= '<div class="rewriteinfoblock">' . "\n"
 			. '<p><strong>' . constant( '_REWRITE_AREA_' . strtoupper( $area ) ) . '</strong></p>' . "\n"
 			. '<ul>' . "\n";
 
-			foreach( $keys as $key ) {
+			foreach ( $keys as $key ) {
 				$return .= '<li>[[' . $key . ']] =&gt; ' . constant( '_REWRITE_KEY_' . strtoupper( $key ) ) . '</li>' . "\n";
 			}
 			$return .= '</ul>' . "\n"
@@ -4368,19 +4500,21 @@ class AECToolbox {
 
 }
 
-class microIntegrationHandler {
-
-	function microIntegrationHandler () {
+class microIntegrationHandler
+{
+	function microIntegrationHandler()
+	{
 		global $mainframe;
 
 		$this->mi_dir = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/micro_integration';
 	}
 
-	function getIntegrationList () {
+	function getIntegrationList()
+	{
 		$list = AECToolbox::getFileArray( $this->mi_dir, 'php', false, true );
 
 		$integration_list = array();
-		foreach( $list as $name ) {
+		foreach ( $list as $name ) {
 			$parts = explode( '.', $name );
 			$integration_list[] = $parts[0];
 		}
@@ -4388,7 +4522,8 @@ class microIntegrationHandler {
 		return $integration_list;
 	}
 
-	function getPlansbyMI ( $mi_id ) {
+	function getPlansbyMI ( $mi_id )
+	{
 		global $database;
 
 		$query = 'SELECT id'
@@ -4399,12 +4534,12 @@ class microIntegrationHandler {
 		$plans = $database->loadResultArray();
 
 		$plan_list = array();
-		foreach( $plans as $planid ) {
+		foreach ( $plans as $planid ) {
 			$plan = new SubscriptionPlan( $database );
 			$plan->load( $planid );
 			$mis = $plan->getMicroIntegrations();
-			if( is_array( $mis ) ) {
-				if( in_array( $mi_id, $mis ) ) {
+			if ( is_array( $mis ) ) {
+				if ( in_array( $mi_id, $mis ) ) {
 					$plan_list[] = $planid;
 				}
 			}
@@ -4413,21 +4548,22 @@ class microIntegrationHandler {
 		return $plan_list;
 	}
 
-	function userPlanExpireActions( $userid, $subscription_plan ) {
+	function userPlanExpireActions( $userid, $subscription_plan )
+	{
 		global $database;
 
 		$mi_autointegrations = $this->getAutoIntegrations();
 
-		if( is_array( $mi_autointegrations ) || ( $subscription_plan !== false ) ) {
+		if ( is_array( $mi_autointegrations ) || ( $subscription_plan !== false ) ) {
 
 			$user_integrations		= explode( ';', $subscription_plan->micro_integrations );
 			$user_auto_integrations = array_intersect( $mi_autointegrations, $user_integrations );
 
 			if ( $user_auto_integrations[0] ) {
-				foreach( $user_auto_integrations as $mi_id ) {
+				foreach ( $user_auto_integrations as $mi_id ) {
 					$mi = new microIntegration( $database );
 					$mi->load( $mi_id );
-					if( $mi->callIntegration() ) {
+					if ( $mi->callIntegration() ) {
 						$mi->expiration_action( $userid, $subscription_plan );
 					}
 				}
@@ -4435,22 +4571,23 @@ class microIntegrationHandler {
 		}
 	}
 	
-	function getHacks () {
+	function getHacks()
+	{
 
 		$integrations = $this->getIntegrationList();
 
 		$hacks = array();
-		foreach( $integrations as $n => $name ) {
+		foreach ( $integrations as $n => $name ) {
 			$file = $this->mi_dir . '/' . $name . '.php';
 
-			if( file_exists( $file ) ) {
+			if ( file_exists( $file ) ) {
 				include_once $file;
 
 				$mi = new $name();
 
-				if( method_exists( $mi, 'hacks' ) ) {
-					if( method_exists( $mi, 'detect_application' ) ) {
-						if( $mi->detect_application() ) {
+				if ( method_exists( $mi, 'hacks' ) ) {
+					if ( method_exists( $mi, 'detect_application' ) ) {
+						if ( $mi->detect_application() ) {
 							$hacks = array_merge( $hacks, $mi->hacks() );
 						}
 					}
@@ -4461,7 +4598,8 @@ class microIntegrationHandler {
 		return $hacks;
 	}
 
-	function getAutoIntegrations () {
+	function getAutoIntegrations()
+	{
 		global $database;
 
 		$query = 'SELECT id'
@@ -4472,7 +4610,8 @@ class microIntegrationHandler {
 		return $database->loadResultArray();
 	}
 
-	function getUserChangeIntegrations () {
+	function getUserChangeIntegrations()
+	{
 		global $database;
 
 		$query = 'SELECT id'
@@ -4484,17 +4623,18 @@ class microIntegrationHandler {
 		return $database->loadResultArray();
 	}
 
-	function userchange ( $row, $post, $trace = '' ) {
+	function userchange( $row, $post, $trace = '' )
+	{
 		global $database;
 
 		$mi_list = $this->getUserChangeIntegrations();
 
-		if( count( $mi_list ) > 0 ) {
-			foreach( $mi_list as $mi_id ) {
-				if( !is_null( $mi_id ) && ( $mi_id != '' ) && $mi_id ) {
+		if ( count( $mi_list ) > 0 ) {
+			foreach ( $mi_list as $mi_id ) {
+				if ( !is_null( $mi_id ) && ( $mi_id != '' ) && $mi_id ) {
 					$mi = new microIntegration($database);
 					$mi->load( $mi_id );
-					if( $mi->callIntegration() ) {
+					if ( $mi->callIntegration() ) {
 						$mi->on_userchange_action( $row, $post, $trace );
 					}
 				}
@@ -4503,7 +4643,8 @@ class microIntegrationHandler {
 	}
 }
 
-class microIntegration extends paramDBTable {
+class microIntegration extends paramDBTable
+{
 	/** @var int Primary key */
 	var $id					= null;
 	/** @var int */
@@ -4527,26 +4668,29 @@ class microIntegration extends paramDBTable {
 	/** @var int */
 	var $on_userchange		= null;
 
-	function microIntegration (&$db) {
+	function microIntegration(&$db)
+	{
 		$this->mosDBTable( '#__acctexp_microintegrations', 'id', $db );
 
-		if( !defined( '_AEC_LANG_INCLUDED_MI' ) ) {
+		if ( !defined( '_AEC_LANG_INCLUDED_MI' ) ) {
 			$this->_callMILanguage();
 		}
 	}
 
-	function _callMILanguage() {
+	function _callMILanguage()
+	{
 		global $mainframe;
 
 		$langPathMI = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/micro_integration/language/';
-		if( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
+		if ( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
 			include_once( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' );
-		}else{
+		} else {
 			include_once( $langPathMI . 'english.php' );
 		}
 	}
 
-	function mi_exists( $mi_id ) {
+	function mi_exists( $mi_id )
+	{
 		global $database;
 
 		$query = 'SELECT count(*)'
@@ -4557,15 +4701,16 @@ class microIntegration extends paramDBTable {
 		return $database->loadResult();
 	}
 
-	function callIntegration ( $override = 0 ) {
+	function callIntegration( $override = 0 )
+	{
 		global $mosConfig_absolute_path;
 
 		$filename = $mosConfig_absolute_path . '/components/com_acctexp/micro_integration/' . $this->class_name . '.php';
 
-		if( ( ( !$this->active && $this->id ) || !file_exists( $filename ) ) && !$override ) {
+		if ( ( ( !$this->active && $this->id ) || !file_exists( $filename ) ) && !$override ) {
 			// MI does not exist or is deactivated
 			return false;
-		}elseif( file_exists( $filename ) ){
+		} elseif ( file_exists( $filename ) ){
 			include_once $filename;
 
 			$class = $this->class_name;
@@ -4574,11 +4719,11 @@ class microIntegration extends paramDBTable {
 
 			$info = $this->mi_class->Info();
 
-			if( is_null( $this->name ) || ( $this->name == '' ) ) {
+			if ( is_null( $this->name ) || ( $this->name == '' ) ) {
 				$this->name = $info['name'];
 			}
 
-			if( is_null( $this->desc ) || ( $this->desc == '' ) ) {
+			if ( is_null( $this->desc ) || ( $this->desc == '' ) ) {
 				$this->desc = $info['desc'];
 			}
 
@@ -4586,27 +4731,29 @@ class microIntegration extends paramDBTable {
 		}
 	}
 
-	function action ( $userid, $objplan=null ) {
+	function action( $userid, $objplan=null )
+	{
 		$params = $this->getParams();
 
-		if( is_array( $userid ) ){
-			foreach( $userid as $id ) {
+		if ( is_array( $userid ) ){
+			foreach ( $userid as $id ) {
 				$this->mi_class->action( $params, $id, $objplan );
 			}
-		}else{
+		} else {
 			$this->mi_class->action( $params, $userid, $objplan );
 		}
 	}
 
-	function pre_expiration_action( $userid, $objplan=null ) {
+	function pre_expiration_action( $userid, $objplan=null )
+	{
 		$params = $this->getParams();
 
-		if( method_exists( $this->mi_class, 'pre_expiration_action' ) ) {
-			if( is_array( $userid ) ) {
-				foreach( $userid as $id ) {
+		if ( method_exists( $this->mi_class, 'pre_expiration_action' ) ) {
+			if ( is_array( $userid ) ) {
+				foreach ( $userid as $id ) {
 					$return = $this->mi_class->pre_expiration_action( $params, $id, $objplan, $this->id );
 				}
-			}else{
+			} else {
 				$return = $this->mi_class->pre_expiration_action( $params, $userid, $objplan, $this->id );
 			}
 		}
@@ -4614,80 +4761,85 @@ class microIntegration extends paramDBTable {
 		return $return;
 	}
 
-	function expiration_action ( $userid, $objplan=null ) {
+	function expiration_action( $userid, $objplan=null )
+	{
 		$params = $this->getParams();
 
-		if( method_exists( $this->mi_class, 'expiration_action' ) ) {
-			if( is_array( $userid ) ){
-				foreach( $userid as $id ) {
+		if ( method_exists( $this->mi_class, 'expiration_action' ) ) {
+			if ( is_array( $userid ) ){
+				foreach ( $userid as $id ) {
 					$this->mi_class->expiration_action( $params, $id, $objplan );
 				}
-			}else{
+			} else {
 				$this->mi_class->expiration_action( $params, $userid, $objplan );
 			}
 		}
 	}
 
-	function on_userchange_action ( $row, $post, $trace ) {
+	function on_userchange_action( $row, $post, $trace )
+	{
 		$params = $this->getParams();
 
-		if( method_exists( $this->mi_class, 'on_userchange_action' ) ) {
+		if ( method_exists( $this->mi_class, 'on_userchange_action' ) ) {
 			$this->mi_class->on_userchange_action( $params, $row, $post, $trace );
 		}
 	}
 
-	function profile_info ( $userid ) {
+	function profile_info( $userid )
+	{
 		$params = $this->getParams();
 
-		if( method_exists( $this->mi_class, 'profile_info' ) ) {
+		if ( method_exists( $this->mi_class, 'profile_info' ) ) {
 			$return = $this->mi_class->profile_info( $params, $userid );
 			return $return;
-		}else{
+		} else {
 			return false;
 		}
 	}
 
-	function getSettings () {
+	function getSettings()
+	{
 		// See whether an install is neccessary (and possible)
-		if( method_exists( $this->mi_class, 'checkInstallation' ) && method_exists( $this->mi_class, 'install' ) ) {
-			if( !$this->mi_class->checkInstallation() ) {
+		if ( method_exists( $this->mi_class, 'checkInstallation' ) && method_exists( $this->mi_class, 'install' ) ) {
+			if ( !$this->mi_class->checkInstallation() ) {
 				$this->mi_class->install();
 			}
 		}
 
 		$params = $this->getParams();
 
-		if( method_exists( $this->mi_class, 'Settings' ) ) {
+		if ( method_exists( $this->mi_class, 'Settings' ) ) {
 			$settings = $this->mi_class->Settings( $params );
 
 			// Autoload Params if they have not been called in by the MI
-			foreach( $settings as $name => $setting ) {
+			foreach ( $settings as $name => $setting ) {
 				// Do we have a parameter at third position?
-				if( isset( $setting[1] ) ) {
-					if( isset( $params[$name] ) ) {
+				if ( isset( $setting[1] ) ) {
+					if ( isset( $params[$name] ) ) {
 						$settings[$name][3] = $params[$name];
 					}
-				}else{
-					if( isset( $params[$name] ) ) {
+				} else {
+					if ( isset( $params[$name] ) ) {
 						$settings[$name][1] = $params[$name];
 					}
 				}
 			}
 
 			return $settings;
-		}else{
+		} else {
 			return false;
 		}
 	}
 
-	function savePostParams( $array ) {
+	function savePostParams( $array )
+	{
 		$params = $this->stripNonParams($array);
 
 		$params = $this->commonParamInfo($params);
 
-		if( method_exists( $this->mi_class, 'saveparams' ) ) {
+		if ( method_exists( $this->mi_class, 'saveparams' ) ) {
 			$new_params = $this->mi_class->saveparams( $params );
-		}else{
+		} else {
 			$new_params = $params;
 		}
 
@@ -4697,24 +4849,27 @@ class microIntegration extends paramDBTable {
 		return true;
 	}
 
-	function stripNonParams ( $array ) {
+	function stripNonParams( $array )
+	{
 		$vars = get_class_vars( 'microIntegration' );
 
-		foreach( $vars as $name => $blind ) {
-			if( isset( $array[$name] ) ) {
+		foreach ( $vars as $name => $blind ) {
+			if ( isset( $array[$name] ) ) {
 				unset( $array[$name] );
 			}
 		}
 		return $array;
 	}
 
-	function commonParamInfo ( $params=array() ) {
+	function commonParamInfo( $params=array() )
+	{
 		$params['MI_ID'] = $this->id;
 
 		return $params;
 	}
 
-	function stripcommonParamInfo ( $params ) {
+	function stripcommonParamInfo( $params )
+	{
 		$commonparams = $this->commonParamInfo();
 
 		foreach ($commonparams as $key) {
@@ -4726,20 +4881,23 @@ class microIntegration extends paramDBTable {
 		return $params;
 	}
 
-	function getSettingsDescriptions () {
+	function getSettingsDescriptions()
+	{
 
 	}
 
-	function delete () {
+	function delete ()
+	{
 		$params = $this->getParams();
 
-		if( method_exists( $this->mi_class, 'delete' ) ){
+		if ( method_exists( $this->mi_class, 'delete' ) ){
 			$this->mi_class->delete( $params );
 		}
 	}
 }
 
-class couponHandler {
+class couponHandler
+{
 	/** @var bool */
 	var $status				= null;
 	/** @var string */
@@ -4747,17 +4905,20 @@ class couponHandler {
 	/** @var object */
 	var $coupon				= null;
 
-	function couponHandler () {
+	function couponHandler()
+	{
 	}
 
-	function setError( $error ) {
+	function setError( $error )
+	{
 		// Status = NOT OK
 		$this->status = false;
 		// Set error message
 		$this->error = $error;
 	}
 
-	function load( $coupon_code ) {
+	function load( $coupon_code )
+	{
 		global $database;
 
 		$query = 'SELECT id'
@@ -4767,9 +4928,9 @@ class couponHandler {
 		$database->setQuery( $query );
 		$couponid = $database->loadResult();
 
-		if( $couponid ) {
+		if ( $couponid ) {
 			$this->type = 1;
-		}else{
+		} else {
 			$query = 'SELECT id'
 			. ' FROM #__acctexp_coupons'
 			. ' WHERE coupon_code = \'' . $coupon_code . '\''
@@ -4779,7 +4940,7 @@ class couponHandler {
 			$this->type = 0;
 		}
 
-		if( $couponid ) {
+		if ( $couponid ) {
 			// Status = OK
 			$this->status = true;
 
@@ -4788,7 +4949,7 @@ class couponHandler {
 			$this->coupon->load( $couponid );
 
 			// Check whether coupon is active
-			if( !$this->coupon->active ) {
+			if ( !$this->coupon->active ) {
 				$this->setError( _COUPON_ERROR_EXPIRED );
 			}
 
@@ -4797,57 +4958,57 @@ class couponHandler {
 			$this->restrictions = $this->coupon->getParams( 'restrictions' );
 
 			// Check whether coupon can be used yet
-			if( $this->restrictions['has_start_date'] ) {
+			if ( $this->restrictions['has_start_date'] ) {
 				$expstamp = strtotime( $this->restrictions['start_date'] );
 
-				if( ( $expstamp > 0 ) && ( ( $expstamp-time() ) > 0 ) ) {
+				if ( ( $expstamp > 0 ) && ( ( $expstamp-time() ) > 0 ) ) {
 					$this->setError( _COUPON_ERROR_NOTSTARTED );
 				}
 			}
 
 			// Check whether coupon is expired
-			if( $this->restrictions['has_expiration'] ) {
+			if ( $this->restrictions['has_expiration'] ) {
 				$expstamp = strtotime( $this->restrictions['expiration'] );
 
-				if( ( $expstamp > 0 ) && ( ( $expstamp-time() ) < 0 ) ) {
+				if ( ( $expstamp > 0 ) && ( ( $expstamp-time() ) < 0 ) ) {
 					$this->setError( _COUPON_ERROR_EXPIRED );
 					$this->coupon->deactivate();
 				}
 			}
 
 			// Check for max reuse
-			if( $this->restrictions['has_max_reuse'] ) {
-				if( $this->restrictions['max_reuse'] ) {
-					if( $this->coupon->usecount > $this->restrictions['max_reuse'] ) {
+			if ( $this->restrictions['has_max_reuse'] ) {
+				if ( $this->restrictions['max_reuse'] ) {
+					if ( $this->coupon->usecount > $this->restrictions['max_reuse'] ) {
 						$this->setError( _COUPON_ERROR_MAX_REUSE );
 						return;
 					}
 				}
 			}
-		}else{
+		} else {
 			$this->setError( _COUPON_ERROR_NOTFOUND );
 		}
 	}
 
-	function checkRestrictions ( $metaUser, $original_amount=null, $invoiceFactory=null ) {
-
+	function checkRestrictions( $metaUser, $original_amount=null, $invoiceFactory=null )
+	{
 		$restrictions	= $this->getRestrictionsArray();
 		$permissions	= $metaUser->permissionResponse( $restrictions );
 
 		// Check for a set usage
-		if( !empty( $this->restrictions['usage_plans_enabled'] ) && !is_null( $invoiceFactory ) ) {
-			if( $this->restrictions['usage_plans'] ) {
-				if( strpos( $this->restrictions['usage_plans'], ';' ) !== false ) {
+		if ( !empty( $this->restrictions['usage_plans_enabled'] ) && !is_null( $invoiceFactory ) ) {
+			if ( $this->restrictions['usage_plans'] ) {
+				if ( strpos( $this->restrictions['usage_plans'], ';' ) !== false ) {
 					$plans = explode( ';', $this->restrictions['usage_plans'] );
-					if( in_array( $invoiceFactory->usage, $plans ) ) {
+					if ( in_array( $invoiceFactory->usage, $plans ) ) {
 						$permissions['usage'] = true;
-					}else{
+					} else {
 						$permissions['usage'] = false;
 					}
-				}else{
-					if( $invoiceFactory->usage == $this->restrictions['usage_plans'] ) {
+				} else {
+					if ( $invoiceFactory->usage == $this->restrictions['usage_plans'] ) {
 						$permissions['usage'] = true;
-					}else{
+					} else {
 						$permissions['usage'] = false;
 					}
 				}
@@ -4855,22 +5016,22 @@ class couponHandler {
 		}
 
 		// Check for Trial only
-		if( $this->discount['useon_trial'] && !$this->discount['useon_full'] && !is_null( $original_amount ) ) {
-			if( !is_null( $original_amount ) ) {
-				if( is_array( $original_amount ) ) {
-					if( isset( $original_amount['amount']['amount1'] ) ) {
+		if ( $this->discount['useon_trial'] && !$this->discount['useon_full'] && !is_null( $original_amount ) ) {
+			if ( !is_null( $original_amount ) ) {
+				if ( is_array( $original_amount ) ) {
+					if ( isset( $original_amount['amount']['amount1'] ) ) {
 						$permissions['trial_only'] = true;
-					}else{
+					} else {
 						$permissions['trial_only'] = false;
 					}
 				}
 			}
 		}
 
-		if( count( $permissions ) ) {
-			foreach( $permissions as $name => $value ) {
-				if( !$permissions[$name] ) {
-					switch( $name ) {
+		if ( count( $permissions ) ) {
+			foreach ( $permissions as $name => $value ) {
+				if ( !$permissions[$name] ) {
+					switch ( $name ) {
 						case 'mingid':			$this->setError( _COUPON_ERROR_PERMISSION );			break;
 						case 'maxgid':			$this->setError( _COUPON_ERROR_PERMISSION );			break;
 						case 'setgid':			$this->setError( _COUPON_ERROR_PERMISSION );			break;
@@ -4890,55 +5051,56 @@ class couponHandler {
 		return true;
 	}
 
-	function getRestrictionsArray () {
+	function getRestrictionsArray()
+	{
 		$restrictions = array();
 
 		// Check for a fixed GID - this certainly overrides the others
-		if( !empty( $this->restrictions['fixgid_enabled'] ) ) {
+		if ( !empty( $this->restrictions['fixgid_enabled'] ) ) {
 			$restrictions['fixgid'] = $this->restrictions['fixgid'];
-		}else{
+		} else {
 			// No fixed GID, check for min GID
-			if( !empty( $this->restrictions['mingid_enabled'] ) ) {
+			if ( !empty( $this->restrictions['mingid_enabled'] ) ) {
 				$restrictions['mingid'] = $this->restrictions['mingid'];
 			}
 			// Check for max GID
-			if( !empty( $this->restrictions['maxgid_enabled'] ) ) {
+			if ( !empty( $this->restrictions['maxgid_enabled'] ) ) {
 				$restrictions['maxgid'] = $this->restrictions['maxgid'];
 			}
 		}
 
 		// Check for a directly previously used plan
-		if( !empty( $this->restrictions['previousplan_req_enabled'] ) ) {
-			if( $this->restrictions['previousplan_req'] ) {
+		if ( !empty( $this->restrictions['previousplan_req_enabled'] ) ) {
+			if ( $this->restrictions['previousplan_req'] ) {
 				$restrictions['plan_previous'] = $this->restrictions['previousplan_req'];
 			}
 		}
 
 		// Check for a currently used plan
-		if( !empty( $this->restrictions['currentplan_req_enabled'] ) ) {
-			if( $this->restrictions['currentplan_req'] ) {
+		if ( !empty( $this->restrictions['currentplan_req_enabled'] ) ) {
+			if ( $this->restrictions['currentplan_req'] ) {
 				$restrictions['plan_present'] = $this->restrictions['currentplan_req'];
 			}
 		}
 
 		// Check for a overall used plan
-		if( !empty( $this->restrictions['currentplan_req_enabled'] ) ) {
-			if( $this->restrictions['currentplan_req'] ) {
+		if ( !empty( $this->restrictions['currentplan_req_enabled'] ) ) {
+			if ( $this->restrictions['currentplan_req'] ) {
 				$restrictions['plan_overall'] = $this->restrictions['currentplan_req'];
 			}
 		}
 
 		// Check for a overall used plan with amount minimum
-		if( !empty( $this->restrictions['used_plan_min_enabled'] ) ) {
-			if( $this->restrictions['used_plan_min_amount'] && $this->restrictions['used_plan_min'] ) {
+		if ( !empty( $this->restrictions['used_plan_min_enabled'] ) ) {
+			if ( $this->restrictions['used_plan_min_amount'] && $this->restrictions['used_plan_min'] ) {
 				$restrictions['plan_amount_min'] = $this->restrictions['used_plan_min']
 				. ',' . $this->restrictions['used_plan_min_amount'];
 			}
 		}
 
 		// Check for a overall used plan with amount maximum
-		if( !empty( $this->restrictions['used_plan_max_enabled'] ) ) {
-			if( $this->restrictions['used_plan_max_amount'] && $this->restrictions['used_plan_max'] ) {
+		if ( !empty( $this->restrictions['used_plan_max_enabled'] ) ) {
+			if ( $this->restrictions['used_plan_max_amount'] && $this->restrictions['used_plan_max'] ) {
 				$restrictions['plan_amount_max'] = $this->restrictions['used_plan_max']
 				. ',' . $this->restrictions['used_plan_max_amount'];
 			}
@@ -4947,57 +5109,58 @@ class couponHandler {
 		return $restrictions;
 	}
 
-	function getInfo( $amount ) {
+	function getInfo( $amount )
+	{
 		$this->code = $this->coupon->coupon_code;
 		$this->name = $this->coupon->name;
 
-		if( is_array( $amount ) ) {
+		if ( is_array( $amount ) ) {
 			$newamount = $this->applyCoupon( $amount['amount'] );
-		}else{
+		} else {
 			$newamount = $this->applyCoupon( $amount );
 		}
 
-		if( is_array( $newamount ) ) {
-			if( isset( $newamount['amount1'] ) ) {
+		if ( is_array( $newamount ) ) {
+			if ( isset( $newamount['amount1'] ) ) {
 				$this->amount = $newamount['amount1'];
-			}elseif( isset( $newamount['amount2'] ) ) {
+			} elseif ( isset( $newamount['amount2'] ) ) {
 				$this->amount = $newamount['amount2'];
-			}elseif( isset( $newamount['amount3'] ) ) {
+			} elseif ( isset( $newamount['amount3'] ) ) {
 				$this->amount = $newamount['amount3'];
 			}
-		}else{
+		} else {
 			$this->amount = $newamount;
 		}
 
-		if( is_array( $newamount ) ) {
-			if( isset( $newamount['amount1'] ) ) {
+		if ( is_array( $newamount ) ) {
+			if ( isset( $newamount['amount1'] ) ) {
 				$this->discount_amount = $amount['amount']['amount1'] - $newamount['amount1'];
-			}elseif( isset( $newamount['amount2'] ) ) {
+			} elseif ( isset( $newamount['amount2'] ) ) {
 				$this->discount_amount = $amount['amount']['amount3'] - $newamount['amount2'];
-			}elseif( isset( $newamount['amount3'] ) ) {
+			} elseif ( isset( $newamount['amount3'] ) ) {
 				$this->discount_amount = $amount['amount']['amount3'] - $newamount['amount3'];
 			}
-		}else{
+		} else {
 			$this->discount_amount = $amount['amount'] - $newamount;
 		}
 
 		$action = '';
-		if( $this->discount['percent_first'] ) {
-			if( $this->discount['amount_percent_use'] ) {
+		if ( $this->discount['percent_first'] ) {
+			if ( $this->discount['amount_percent_use'] ) {
 				$action .= '-' . $this->discount['amount_percent'] . '%';
 			}
-			if( $this->discount['amount_use'] ) {
-				if( !( $action === '' ) ) {
+			if ( $this->discount['amount_use'] ) {
+				if ( !( $action === '' ) ) {
 					$action .= ' &amp; ';
 				}
 				$action .= '-' . $this->discount['amount'];
 			}
-		}else{
-			if( $this->discount['amount_use']) {
+		} else {
+			if ( $this->discount['amount_use']) {
 				$action .= '-' . $this->discount['amount'];
 			}
 			if ($this->discount['amount_percent_use']) {
-				if( !( $action === '' ) ) {
+				if ( !( $action === '' ) ) {
 					$action .= ' &amp; ';
 				}
 				$action .= '-' . $this->discount['amount_percent'] . '%';
@@ -5007,47 +5170,49 @@ class couponHandler {
 		$this->action = $action;
 	}
 
-	function applyCoupon ( $amount ) {
+	function applyCoupon( $amount )
+	{
 
-		if( is_array( $amount ) ) {
-			if( isset( $amount['amount1'] ) ) {
-				if( $this->discount['useon_trial'] ) {
-					if( $amount['amount1'] > 0 ) {
+		if ( is_array( $amount ) ) {
+			if ( isset( $amount['amount1'] ) ) {
+				if ( $this->discount['useon_trial'] ) {
+					if ( $amount['amount1'] > 0 ) {
 						$amount['amount1'] = $this->applyDiscount( $amount['amount1'] );
 					}
 				}
 			}
-			if( isset( $amount['amount3'] ) ) {
-				if( $this->discount['useon_full'] ) {
-					if( $this->discount['useon_full_all'] ) {
+			if ( isset( $amount['amount3'] ) ) {
+				if ( $this->discount['useon_full'] ) {
+					if ( $this->discount['useon_full_all'] ) {
 						$amount['amount3']	= $this->applyDiscount($amount['amount3']);
-					}else{
+					} else {
 						$amount['amount2']	= $this->applyDiscount($amount['amount3']);
 						$amount['period2']	= $amount['period3'];
 						$amount['unit2']	= $amount['unit3'];
 					}
 				}
 			}
-		}else{
+		} else {
 			$amount = $this->applyDiscount( $amount );
 		}
 
 		return $amount;
 	}
 
-	function applyDiscount( $amount ) {
-		if( $this->discount['percent_first'] ) {
-			if( $this->discount['amount_percent_use'] ) {
+	function applyDiscount( $amount )
+	{
+		if ( $this->discount['percent_first'] ) {
+			if ( $this->discount['amount_percent_use'] ) {
 				$amount -= ( ( $amount / 100 ) * $this->discount['amount_percent'] );
 			}
-			if( $this->discount['amount_use'] ) {
+			if ( $this->discount['amount_use'] ) {
 				$amount -= $this->discount['amount'];
 			}
-		}else{
-			if( $this->discount['amount_use'] ) {
+		} else {
+			if ( $this->discount['amount_use'] ) {
 				$amount -= $this->discount['amount'];
 			}
-			if( $this->discount['amount_percent_use'] ) {
+			if ( $this->discount['amount_percent_use'] ) {
 				$amount -= ( ( $amount / 100 ) * $this->discount['amount_percent'] );
 			}
 		}
@@ -5055,7 +5220,8 @@ class couponHandler {
 	}
 }
 
-class coupon extends paramDBTable {
+class coupon extends paramDBTable
+{
 	/** @var int Primary key */
 	var $id					= null;
 	/** @var int */
@@ -5081,47 +5247,51 @@ class coupon extends paramDBTable {
 	/** @var text */
 	var $micro_integrations	= null;
 
-	function coupon ( &$db, $type ) {
-		if( $type ) {
+	function coupon( &$db, $type )
+	{
+		if ( $type ) {
 			$this->mosDBTable( '#__acctexp_coupons_static', 'id', $db );
-		}else{
+		} else {
 			$this->mosDBTable( '#__acctexp_coupons', 'id', $db );
 		}
 	}
 
-	function deactivate () {
+	function deactivate()
+	{
 		$this->active = 0;
 		$this->check();
 		$this->store();
 	}
 
-	function createNew( $code=null, $created=null ) {
+	function createNew( $code=null, $created=null )
+	{
 		$this->id		= 0;
 		$this->active	= 1;
 		// Override creation of new Coupon Code if one is supplied
-		if( is_null( $code ) ) {
+		if ( is_null( $code ) ) {
 			$this->coupon_code = $this->generateCouponCode();
-		}else{
+		} else {
 			$this->coupon_code = $code;
 		}
 		// Set created date if supplied
-		if( is_null( $created ) ) {
+		if ( is_null( $created ) ) {
 			$this->created_date = date( 'Y-m-d H:i:s' );
-		}else{
+		} else {
 			$this->created_date = $created;
 		}
 		$this->usecount = 0;
 	}
 
-	function savePOSTsettings( $post ) {
+	function savePOSTsettings( $post )
+	{
 
 		// Filter out fixed variables
 		$fixed = array( 'active', 'name', 'desc', 'coupon_code', 'usecount', 'micro_integrations' );
 
-		foreach( $fixed as $varname ) {
-			if( is_array( $post[$varname] ) ) {
+		foreach ( $fixed as $varname ) {
+			if ( is_array( $post[$varname] ) ) {
 				$this->$varname = implode( ';', $post[$varname] );
-			}else{
+			} else {
 				$this->$varname = $post[$varname];
 			}
 			unset( $post[$varname] );
@@ -5131,10 +5301,10 @@ class coupon extends paramDBTable {
 		$fixed = array( 'amount_use', 'amount', 'amount_percent_use', 'amount_percent', 'percent_first', 'useon_trial', 'useon_full', 'useon_full_all' );
 
 		$params = array();
-		foreach( $fixed as $varname ) {
-			if( is_array( $post[$varname] ) ) {
+		foreach ( $fixed as $varname ) {
+			if ( is_array( $post[$varname] ) ) {
 				$params[$varname] = implode( ';', $post[$varname] );
-			}else{
+			} else {
 				$params[$varname] = $post[$varname];
 			}
 			unset( $post[$varname] );
@@ -5145,10 +5315,10 @@ class coupon extends paramDBTable {
 		// The rest of the vars are restrictions
 		$restrictions = array();
 
-		foreach( $post as $varname => $content ) {
-			if( is_array( $content ) ) {
+		foreach ( $post as $varname => $content ) {
+			if ( is_array( $content ) ) {
 				$restrictions[$varname] = implode( ',', $content );
-			}else{
+			} else {
 				$restrictions[$varname] = $content;
 			}
 			unset( $post[$varname] );
@@ -5157,41 +5327,46 @@ class coupon extends paramDBTable {
 		$this->saveRestrictions( $restrictions );
 	}
 
-	function saveDiscount( $params ) {
+	function saveDiscount( $params )
+	{
 		global $database;
 
 		// Correct a malformed Amount
-		if( !strlen( $params['amount'] ) ) {
+		if ( !strlen( $params['amount'] ) ) {
 			$params['amount_use'] = 0;
-		}else{
+		} else {
 			$params['amount'] = AECToolbox::correctAmount( $params['amount'] );
 		}
 
 		$this->setParams( $params, 'discount' );
 	}
 
-	function saveRestrictions( $restrictions ) {
+	function saveRestrictions( $restrictions )
+	{
 		$this->setParams( $restrictions, 'restrictions' );
 	}
 
-	function incrementCount () {
+	function incrementCount()
+	{
 		$this->usecount += 1;
 		$this->check();
 		$this->store();
 	}
 
-	function decrementCount () {
+	function decrementCount()
+	{
 		$this->usecount -= 1;
 		$this->check();
 		$this->store();
 	}
 
-	function generateCouponCode( $maxlength = 6 ) {
+	function generateCouponCode( $maxlength = 6 )
+	{
 		global $database;
 
 		$numberofrows = 1;
 
-		while( $numberofrows ) {
+		while ( $numberofrows ) {
 			// seed random number generator
 			srand( (double) microtime() * 10000 );
 			$inum =	strtoupper( substr( base64_encode( md5( rand() ) ), 0, $maxlength ) );
@@ -5217,9 +5392,10 @@ class coupon extends paramDBTable {
 	}
 }
 
-class tokenCheck {
-
-	function tokenCheck( $token_id, $userid ) {
+class tokenCheck
+{
+	function tokenCheck( $token_id, $userid )
+	{
 		global $database;
 
 		$token = new accessToken($database);
@@ -5233,15 +5409,15 @@ class tokenCheck {
 		$status['status'] = true;
 		$status['reason'] = 'none';
 
-		if( !$token->active ) {
+		if ( !$token->active ) {
 			$status['status'] = false;
 			$status['reason'] = 'deactivated';
-		}elseif( !in_array( $user->gid, $groups ) ) {
+		} elseif ( !in_array( $user->gid, $groups ) ) {
 			$status['status'] = false;
 			$status['reason'] = 'permissions';
 		}
 
-		if( !$status['reason'] ) {
+		if ( !$status['reason'] ) {
 			return $status;
 		}
 
@@ -5253,7 +5429,7 @@ class tokenCheck {
 		$database->setQuery( $query );
 		$usertoken_id = $database->loadResult();
 
-		if( $usertoken_id ) {
+		if ( $usertoken_id ) {
 			$usertoken = new userToken( $database );
 			$usertoken->load( $usertoken_id );
 		} else {
@@ -5262,7 +5438,8 @@ class tokenCheck {
 	}
 }
 
-class userToken extends paramDBTable {
+class userToken extends paramDBTable
+{
 	/** @var int Primary key */
 	var $id					= null;
 	/** @var int */
@@ -5278,11 +5455,13 @@ class userToken extends paramDBTable {
 	/** @var datetime */
 	var $expiration			= null;
 
-	function userToken( &$db ) {
+	function userToken( &$db )
+	{
 		$this->mosDBTable( '#__acctexp_usertokens', 'id', $db );
 	}
 
-	function createToken( $groupid, $tokenid, $userid ) {
+	function createToken( $groupid, $tokenid, $userid )
+	{
 		global $database, $mosConfig_offset_user;
 
 		$now = time() + $mosConfig_offset_user*3600;
@@ -5295,16 +5474,17 @@ class userToken extends paramDBTable {
 		$this->token_id		= $tokenid;
 		$this->created_date	= $now;
 
-		if( $token_group->peramount ) {
+		if ( $token_group->peramount ) {
 			$expiration = AECToolbox::computeExpiration( $token_group->peramount, $token_group->perunit, $now );
 			$this->expiration = $expiration;
-		}else{
+		} else {
 			// We'll leave this at zero - the best indication that there is no expiration
 		}
 	}
 }
 
-class tokenBatch extends mosDBTable {
+class tokenBatch extends mosDBTable
+{
 	/** @var int Primary key */
 	var $id					= null;
 	/** @var int */
@@ -5318,17 +5498,19 @@ class tokenBatch extends mosDBTable {
 	/** @var datetime */
 	var $expiration			= null;
 
-	function tokenBatch (&$db) {
+	function tokenBatch(&$db)
+	{
 		$this->mosDBTable( '#__acctexp_tokenbatches', 'id', $db );
 	}
 
-	function tearToken ( $tokenid, $userid ) {
+	function tearToken( $tokenid, $userid )
+	{
 		global $database;
 
 		$token = new userToken($database);
 		$result = $token->createToken( $this->group_id, $tokenid, $userid );
 
-		if( $result === true ) {
+		if ( $result === true ) {
 
 		} else {
 
@@ -5336,7 +5518,8 @@ class tokenBatch extends mosDBTable {
 	}
 }
 
-class accessToken extends mosDBTable {
+class accessToken extends mosDBTable
+{
 	/** @var int Primary key */
 	var $id					= null;
 	/** @var int */
@@ -5346,12 +5529,14 @@ class accessToken extends mosDBTable {
 	/** @var int */
 	var $token_group_id		= null;
 
-	function accessToken (&$db) {
+	function accessToken(&$db)
+	{
 		$this->mosDBTable( '#__acctexp_accesstokens', 'id', $db );
 	}
 }
 
-class tokenGroup extends mosDBTable {
+class tokenGroup extends mosDBTable
+{
 	/** @var int Primary key */
 	var $id					= null;
 	/** @var int */
@@ -5371,103 +5556,9 @@ class tokenGroup extends mosDBTable {
 	/** @var int */
 	var $has_start_date		= null;
 
-	function tokenGroup (&$db) {
+	function tokenGroup(&$db)
+	{
 		$this->mosDBTable( '#__acctexp_tokengroups', 'id', $db );
-	}
-}
-
-/**
- * Generic class for currencies
- * @author mic
- *
- */
-class _aecTools {
-
-	/**
-	 * Builds a list of valid currencies
-	 *
-	 * @param bool	$currMain	main (most important currencies)
-	 * @param bool	$currGen	second important currencies
-	 * @param bool	$currOth	rest of the world currencies
-	 * @since 0.12.4
-	 * @return array
-	 */
-	function _aecCurrencyField( $currMain = false, $currGen = false, $currOth = false ) {
-
-		if( $currMain ) {
-			$currencies_main = 'EUR,USD,CHF,CAD,DKK,SEK,NOK,GBP,JPY';
-		}
-
-		if( $currGen ) {
-			$currencies_general	= 'AUD,CYP,CZK,EGP,HUF,GIP,HKD,UAH,ISK,'
-			. 'EEK,HRK,GEL,LVL,RON,BGN,LTL,MTL,FIM,MDL,ILS,NZD,ZAR,RUB,SKK,'
-			. 'TRY,PLN'
-			;
-		}
-
-		if( $currOth ) {
-			$currencies_other	= 'AFA,DZD,ARS,AMD,AWG,AZM,'
-			. 'BSD,BHD,THB,PAB,BBD,BYB,BZD,BMD,VEB,BOB,'
-			. 'BRL,BND,BIF,CVE,KYD,GHC,XOF,XAF,XPF,'
-			. 'CLP,COP,KMF,BAM,NIO,CRC,CUP,GMD,'
-			. 'MKD,AED,DJF,STD,DOP,VND,XCD,SVC,'
-			. 'ETB,FKP,FJD,CDF,FRF,HTG,PYG,GNF,'
-			. 'GWP,GYD,HKD,UAH,INR,IRR,IQD,JMD,'
-			. 'JOD,KES,PGK,LAK,KWD,MWK,ZMK,AOR,MMK,'
-			. 'LBP,ALL,HNL,SLL,LRD,LYD,SZL,'
-			. 'LSL,MGF,MYR,TMM,MUR,MZM,MXN,'
-			. 'MXV,MAD,ERN,NAD,NPR,ANG,'
-			. 'AON,TWD,ZRN,BTN,KPW,PEN,MRO,TOP,'
-			. 'PKR,XPD,MOP,UYU,PHP,XPT,BWP,QAR,GTQ,'
-			. 'ZAL,OMR,KHR,MVR,IDR,RWF,SAR,'
-			. 'SCR,XAG,SGD,SBD,KGS,SOS,LKR,SHP,ECS,'
-			. 'SDD,SRG,SYP,TJR,BDT,WST,TZS,KZT,TPE,'
-			. 'TTD,MNT,TND,UGX,ECV,CLF,USN,USS,UZS,'
-			. 'VUV,KRW,YER,CNY,ZWD'
-			;
-		}
-
-		$currency_code_list = array();
-
-		if( $currMain ) {
-			$currency_array = explode( ',', $currencies_main );
-			foreach( $currency_array as $currency ) {
-				$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
-			}
-
-			$currency_code_list[] = mosHTML::makeOption( '" disabled="disabled', '- - - - - - - - - - - - - -' );
-		}
-
-		if( $currGen ) {
-			$currency_array = explode( ',', $currencies_general );
-			foreach( $currency_array as $currency ) {
-				$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
-			}
-
-			$currency_code_list[] = mosHTML::makeOption( '" disabled="disabled', '- - - - - - - - - - - - - -' );
-		}
-
-		if( $currOth ) {
-			$currency_array = explode( ',', $currencies_other );
-			foreach( $currency_array as $currency ) {
-				$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
-			}
-		}
-
-		return $currency_code_list;
-	}
-
-	/**
-	 * get user ip & isp
-	 *
-	 * @return array w/ values
-	 */
-	function _aecIP() {
-		// userip & hostname
-		$aecUser['ip'] 	= $_SERVER['REMOTE_ADDR'];
-		$aecUser['isp'] = gethostbyaddr( $_SERVER['REMOTE_ADDR'] );
-
-		return $aecUser;
 	}
 }
 ?>

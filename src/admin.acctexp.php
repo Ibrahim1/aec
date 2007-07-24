@@ -34,16 +34,16 @@ require_once( $mainframe->getPath( 'admin_html' ) );
 require_once( $mainframe->getPath( 'class' ) );
 
 $langPathBE = $mosConfig_absolute_path . '/administrator/components/com_acctexp/com_acctexp_language_backend/';
-if( file_exists( $langPathBE . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
+if ( file_exists( $langPathBE . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
 	include_once( $langPathBE . $GLOBALS['mosConfig_lang'] . '.php' );
-}else{
+} else {
 	include_once( $langPathBE . 'english.php' );
 }
 
 $langPathPROC = $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/';
-if( file_exists( $langPathPROC . $GLOBALS['mosConfig_lang']. '.php' ) ) {
+if ( file_exists( $langPathPROC . $GLOBALS['mosConfig_lang']. '.php' ) ) {
 	include_once( $langPathPROC . $GLOBALS['mosConfig_lang'] . '.php' );
-}else{
+} else {
 	include_once( $langPathPROC . 'english.php' );
 }
 
@@ -70,7 +70,7 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'edit':
-		if( !is_array( $userid ) ) {
+		if ( !is_array( $userid ) ) {
 			$userid = array();
 			$userid[0] = trim( mosGetParam( $_REQUEST, 'userid', '' ) );
 		}
@@ -403,7 +403,7 @@ switch( strtolower( $task ) ) {
 		$check_hack	= $filename ? 0 : 1;
 
 		// mic: debug
-		if( $mosConfig_debug ) {
+		if ( $mosConfig_debug ) {
 			echo '<pre>'
 			. 'option: ' . $option . '<br />'
 			. 'filename: ' . $filename . '<br />'
@@ -450,16 +450,17 @@ switch( strtolower( $task ) ) {
 /**
 * Remove user from list of expirable accounts
 */
-function remove( $userid, $option, $task ) {
+function remove( $userid, $option, $task )
+{
 	global $database, $my;
 
 	// $userid contains values corresponding to id field of #__acctexp table
-    if( !is_array( $userid ) || count( $userid ) < 1 ) {
+    if ( !is_array( $userid ) || count( $userid ) < 1 ) {
 	    echo '<script>alert(\'' . _AEC_ALERT_SELECT_FIRST . '\');window.history.go(-1);</script>' . "\n";
 	    exit;
     }
 
-	foreach( $userid as $id ) {
+	foreach ( $userid as $id ) {
 		$subscription = new Subscription( $database );
 		$subscription->loadUserid( $userid );
 
@@ -483,7 +484,8 @@ function remove( $userid, $option, $task ) {
 /**
 * Cancels an edit operation
 */
-function cancel( $option ) {
+function cancel( $option )
+{
 	global $database, $mainframe, $mosConfig_list_limit;
 
  	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
@@ -493,7 +495,8 @@ function cancel( $option ) {
 	mosRedirect( 'index2.php?option=' . $option . '&task=' . $nexttask, _CANCELED );
 }
 
-function help ( $option ) {
+function help( $option )
+{
 	global $database, $mainframe, $mosConfig_live_site;
 
 	// diagnostic is the overall array that stores relational data that either gets transferred directly into the
@@ -510,7 +513,7 @@ function help ( $option ) {
 
 	$paypal = new PaymentProcessor();
 	$paypal->loadName( 'paypal' );
-	if( $paypal->id ) {
+	if ( $paypal->id ) {
 		$paypal->init();
 		$paypal->getSettings();
 
@@ -520,7 +523,7 @@ function help ( $option ) {
 
 	$hacks = hackcorefile( $option, 0, 1, 0 );
 
-	if( isset( $_SERVER['SERVER_SOFTWARE'] ) ) {
+	if ( isset( $_SERVER['SERVER_SOFTWARE'] ) ) {
 		$diagnostic['server_software']	= $_SERVER['SERVER_SOFTWARE'];
 	}
 
@@ -533,17 +536,17 @@ function help ( $option ) {
 	$diagnostic['hacks_legacy']			= 0;
 
 	// Test for file permissions
-	foreach( $hacks as $hack_name => $hack_content ) {
+	foreach ( $hacks as $hack_name => $hack_content ) {
 		$diagnostic['hack_' . $hack_name] = ( !empty( $hack_content['status'] ) && $hack_content['status'] > 0 ) ? 1 : 0;
 
 		$diagnostic['hacks_legacy'] = 0;
-		if( !empty( $hack_content['legacy'] ) && ( $hack_content['status'] > 0 ) ) {
+		if ( !empty( $hack_content['legacy'] ) && ( $hack_content['status'] > 0 ) ) {
 			$diagnostic['hacks_legacy'] = 1;
 		}
 		if ( isset( $hack_content['fileinfo']['gecos'] ) ) {
 			$diagnostic['hack_' . $hack_name . '_permission'] = ( strpos( $hack_content['fileinfo']['gecos'], 'apache' ) ) ? 1 : 0;
-			if( !$diagnostic['hack_' . $hack_name] ) {
-				if( !$diagnostic['hack_' . $hack_name . '_permission'] ) {
+			if ( !$diagnostic['hack_' . $hack_name] ) {
+				if ( !$diagnostic['hack_' . $hack_name . '_permission'] ) {
 					$diagnostic['permission_problem']++;
 				}
 			}
@@ -561,15 +564,15 @@ function help ( $option ) {
  	$database->setQuery( $query );
  	$database->loadObject( $objentry );
 
- 	if( $objentry ) { // mic: fixed php.notice if no active plans / $objentry->id
+ 	if ( $objentry ) { // mic: fixed php.notice if no active plans / $objentry->id
  		$diagnostic['no_plan'] = 0;
- 	}else{
+ 	} else {
  		$diagnostic['no_plan'] = 1;
  	}
 
- 	if( $cfg->cfg['entry_plan'] ) {
+ 	if ( $cfg->cfg['entry_plan'] ) {
  		$diagnostic['global_entry'] = 1;
- 	}else{
+ 	} else {
  		$diagnostic['global_entry'] = 0;
  	}
 
@@ -591,13 +594,13 @@ function help ( $option ) {
 		$database->setQuery( $query );
 		$result = $database->loadResult();
 
-		if( $result == 1 ) {
+		if ( $result == 1 ) {
 			$diagnostic[$modules[$i][1]] = 1;
 			$diagnostic[$modules[$i][2]] = 1;
-		}elseif( $result == 0 ) {
+		} elseif ( $result == 0 ) {
 			$diagnostic[$modules[$i][1]] = 1;
 			$diagnostic[$modules[$i][2]] = 0;
-		}elseif( $result == null ) {
+		} elseif ( $result == null ) {
 			$diagnostic[$modules[$i][1]] = 0;
 			$diagnostic[$modules[$i][2]] = 0;
 		}
@@ -624,9 +627,9 @@ function help ( $option ) {
 	 * 6. Detect Only (0:No, 1:Yes -Don't display if Status=0)
 	 */
 	$pdfPath = $mainframe->getCfg( 'live_site' ) . '/administrator/components/com_acctexp/manual/';
-	if( file_exists( $mainframe->getCfg( 'absolute_path' ) . '/administrator/components/com_acctexp/manual/AEC_Quickstart.' . _AEC_LANGUAGE . '.pdf' ) ) {
+	if ( file_exists( $mainframe->getCfg( 'absolute_path' ) . '/administrator/components/com_acctexp/manual/AEC_Quickstart.' . _AEC_LANGUAGE . '.pdf' ) ) {
 		$pdfHelp = $pdfPath . 'AEC_Quickstart.' . _AEC_LANGUAGE . '.pdf';
-	}else{
+	} else {
 		$pdfHelp = $pdfPath . 'AEC_Quickstart.pdf';
 	}
 
@@ -638,8 +641,8 @@ function help ( $option ) {
 	$diagnose[]	= array("AEC Version", !$diagnostic['AEC_stable'], 3, "There appears to be a more recent Version of the AEC available on <a href=\"http://www.globalnerd.org\">www.globalnerd.org</a>", 0, 1);
 */
 	// Apache related file permission problems
-	if( substr_count( $diagnostic['server_software'], 'Apache' ) ) {
-		if( $diagnostic['posix_getpwuid_available'] ) {
+	if ( substr_count( $diagnostic['server_software'], 'Apache' ) ) {
+		if ( $diagnostic['posix_getpwuid_available'] ) {
 				$diagnose[]	= array(
 					_AEC_HELP_SER_SW_DIAG1,
 					$diagnostic['permission_problem'],
@@ -664,7 +667,7 @@ function help ( $option ) {
 					_AEC_HELP_SER_SW_DIAG3_DESC2,
 					1
 				);
-			}else{
+			} else {
 			$diagnose[]	= array(
 				_AEC_HELP_SER_SW_DIAG4,
 				!$diagnostic['posix_getpwuid_available'],
@@ -766,7 +769,7 @@ function help ( $option ) {
 		1
 	);
 
-	if( $diagnostic['paypal'] ) {
+	if ( $diagnostic['paypal'] ) {
 		$diagnose[]	= array(
 			_AEC_HELP_DIAG_PAYPAL_BUSS_ID,
 			$diagnostic['pp_checkbusiness'],
@@ -780,17 +783,18 @@ function help ( $option ) {
 	HTML_AcctExp::help( $option, $diagnose ) ;
 }
 
-function editUser( $userid, $option, $task ) {
+function editUser( $userid, $option, $task )
+{
 	global $database, $mainframe;
 
 	$lists = array();
 
 	$expirationid = AECfetchfromDB::ExpirationIDfromUserID( $userid[0] );
 
-	if( !$expirationid ) {
+	if ( !$expirationid ) {
 		// Excluded
 		$expiration->userid = $userid[0];
-	}else{
+	} else {
 		$expiration = new AcctExp( $database );
 		$expiration->load( $expirationid );
 	}
@@ -810,9 +814,9 @@ function editUser( $userid, $option, $task ) {
 
  	$invoices_total	= $database->loadResult();
 	$invoices_limit	= 10;	// Returns last 10 payments
-	if( $invoices_total > $invoices_limit ) {
+	if ( $invoices_total > $invoices_limit ) {
  		$invoices_min_limit	= $invoices_total - $invoices_limit;
-	}else{
+	} else {
 		$invoices_min_limit	= 0;
 	}
 
@@ -825,7 +829,7 @@ function editUser( $userid, $option, $task ) {
  	;
  	$database->setQuery( $query );
  	$invoice_ids = $database->loadResultArray();
- 	if( $database->getErrorNum() ) {
+ 	if ( $database->getErrorNum() ) {
  		echo $database->stderr();
  		return false;
  	}
@@ -840,24 +844,24 @@ function editUser( $userid, $option, $task ) {
 	$lists['set_status'] = mosHTML::selectList( $group_selection, 'set_status', 'class="inputbox" size="1"', 'value', 'text', '' );
 
 	$invoices = array();
-	foreach( $invoice_ids as $inv_id ) {
+	foreach ( $invoice_ids as $inv_id ) {
 		$invoice = new Invoice( $database );
 		$invoice->load ($inv_id );
 
 		$status = 'uncleared';
 
 		$params = $invoice->getParams();
-		if( isset( $params['deactivated'] ) ) {
+		if ( isset( $params['deactivated'] ) ) {
 			$status = 'deactivated';
-		}elseif( isset( $params['pending_reason'] ) ) {
-			if(  defined( '_PAYMENT_PENDING_REASON_' . strtoupper( $params['pending_reason'] ) ) ) {
+		} elseif ( isset( $params['pending_reason'] ) ) {
+			if (  defined( '_PAYMENT_PENDING_REASON_' . strtoupper( $params['pending_reason'] ) ) ) {
 				$status = constant( '_PAYMENT_PENDING_REASON_' . strtoupper($params['pending_reason'] ) );
-			}else{
+			} else {
 				$status = $params['pending_reason'];
 			}
 		}
 
-		if( strcmp( $invoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
+		if ( strcmp( $invoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
 			$actions = '<a href="'
 			. AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice='
 			. $invoice->invoice_number ) . '">'
@@ -883,7 +887,7 @@ function editUser( $userid, $option, $task ) {
 			. _USERINVOICE_ACTION_CLEAR_APPLY . '</a>'
 			. '<br />';
 			$rowstyle = ' style="background-color:#fee;"';
-		}else{
+		} else {
 			$status		= $invoice->transaction_date;
 			$actions	= '- - -';
 			$rowstyle	= '';
@@ -919,13 +923,14 @@ function editUser( $userid, $option, $task ) {
 	HTML_AcctExp::userForm( $option, $expiration, $subscription, $user, $invoices, $lists, $task );
 }
 
-function saveUser( $option ) {
+function saveUser( $option )
+{
 	global $database, $mainframe, $mosConfig_list_limit;
 
 	$metaUser = new metaUser( $_POST['userid'] );
 
-	if( $_POST['assignto_plan'] ) {
-		if( !$metaUser->hasSubscription ) {
+	if ( $_POST['assignto_plan'] ) {
+		if ( !$metaUser->hasSubscription ) {
 			$metaUser->objSubscription = new Subscription( $database );
 			$metaUser->objSubscription->createNew( $_POST['userid'], '', 1 );
 		}
@@ -938,20 +943,20 @@ function saveUser( $option ) {
 
 	$ck_lifetime = mosGetParam( $_POST,'ck_lifetime', 'off' );
 
-	if( !$metaUser->hasExpiration ) {
+	if ( !$metaUser->hasExpiration ) {
 		$metaUser->objExpiration->load(0);
 		$metaUser->objExpiration->userid = $_POST['userid'];
 	}
 
-	if( strcmp( $ck_lifetime, 'on' ) == 0 ) {
+	if ( strcmp( $ck_lifetime, 'on' ) == 0 ) {
 		$metaUser->objExpiration->expiration	= '9999-12-31 00:00:00';
 		$metaUser->objSubscription->status		= 'Active';
 		$metaUser->objSubscription->lifetime	= 1;
-	}elseif( !empty( $_POST['expiration'] ) && !empty( $_POST['expiration_check'] ) ) {
-		if( $_POST['expiration'] != $_POST['expiration_check'] ) {
-			if( strpos( $_POST, ':' ) === false ) {
+	} elseif ( !empty( $_POST['expiration'] ) && !empty( $_POST['expiration_check'] ) ) {
+		if ( $_POST['expiration'] != $_POST['expiration_check'] ) {
+			if ( strpos( $_POST, ':' ) === false ) {
 				$metaUser->objExpiration->expiration = $_POST['expiration'] . ' 00:00:00';
-			}else{
+			} else {
 				$metaUser->objExpiration->expiration = $_POST['expiration'];
 			}
 			$metaUser->objSubscription->status	= 'Active';
@@ -961,32 +966,32 @@ function saveUser( $option ) {
 
 	$set_status = trim( mosGetParam( $_REQUEST, 'set_status', null ) );
 
-	if( !is_null( $set_status ) ) {
-		if( strcmp( $set_status, 'now' ) === 0 ) {
+	if ( !is_null( $set_status ) ) {
+		if ( strcmp( $set_status, 'now' ) === 0 ) {
 			$metaUser->objSubscription->expire();
-		}elseif( strcmp( $set_status, 'exclude' ) === 0 ) {
+		} elseif ( strcmp( $set_status, 'exclude' ) === 0 ) {
 			$metaUser->objSubscription->setStatus( 'Excluded' );
-		}elseif( strcmp( $set_status, 'close' ) === 0 ) {
+		} elseif ( strcmp( $set_status, 'close' ) === 0 ) {
 			$metaUser->objSubscription->setStatus( 'Closed' );
-		}elseif( strcmp( $set_status, 'include' ) === 0 ) {
+		} elseif ( strcmp( $set_status, 'include' ) === 0 ) {
 			$metaUser->objSubscription->setStatus( 'Active' );
 		}
 	}
 
-	if( !$metaUser->objExpiration->check() ) {
+	if ( !$metaUser->objExpiration->check() ) {
 		echo "<script> alert('".$metaUser->objExpiration->getError()."'); window.history.go(-1); </script>\n";
 		exit();
 	}
-	if( !$metaUser->objExpiration->store() ) {
+	if ( !$metaUser->objExpiration->store() ) {
 		echo "<script> alert('".$metaUser->objExpiration->getError()."'); window.history.go(-1); </script>\n";
 		exit();
 	}
 
-	if( !$metaUser->objSubscription->check() ) {
+	if ( !$metaUser->objSubscription->check() ) {
 		echo "<script> alert('".$metaUser->objSubscription->getError()."'); window.history.go(-1); </script>\n";
 		exit();
 	}
-	if( !$metaUser->objSubscription->store() ) {
+	if ( !$metaUser->objSubscription->store() ) {
 		echo "<script> alert('".$metaUser->objSubscription->getError()."'); window.history.go(-1); </script>\n";
 		exit();
 	}
@@ -999,11 +1004,12 @@ function saveUser( $option ) {
 	mosRedirect( 'index2.php?option=' . $option . '&task=' . $nexttask, _SAVED );
 }
 
-function removeUser( $userid, $option ) {
+function removeUser( $userid, $option )
+{
 	global $database, $my, $acl;
 
 	// $userid contains values corresponding to id field of #__acctexp table
-    if( !is_array( $userid ) || count( $userid ) < 1 ) {
+    if ( !is_array( $userid ) || count( $userid ) < 1 ) {
 	    echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
 	    exit;
     }
@@ -1011,9 +1017,9 @@ function removeUser( $userid, $option ) {
 	$userids	= implode( ',', $userid );
 	$msg		= _REMOVED;
 
-	if( count( $userid ) ) {
+	if ( count( $userid ) ) {
 		$obj = new mosUser( $database );
-		foreach( $userid as $id ) {
+		foreach ( $userid as $id ) {
 			// Get REAL UserID
 			$query = 'SELECT userid'
 			. ' FROM #__acctexp'
@@ -1023,18 +1029,18 @@ function removeUser( $userid, $option ) {
 			$database->setQuery( $query );
 			$uid = $database->loadResult();
 
-			if( $uid ) {
+			if ( $uid ) {
 				// check for a super admin ... can't delete them
 				$groups		= $acl->get_object_groups( 'users', $uid, 'ARO' );
 				$this_group = strtolower( $acl->get_group_name( $groups[0], 'ARO' ) );
 
-				if( $this_group == 'super administrator' ) {
+				if ( $this_group == 'super administrator' ) {
 					$msg = _AEC_MSG_NODELETE_SUPERADMIN;
-				}elseif( $uid == $my->id ){
+				} elseif ( $uid == $my->id ){
 					$msg = _AEC_MSG_NODELETE_YOURSELF;
-				}elseif( ( $this_group == 'administrator' ) && ( $my->gid == 24 ) ){
+				} elseif ( ( $this_group == 'administrator' ) && ( $my->gid == 24 ) ){
 					$msg = _AEC_MSG_NODELETE_EXCEPT_SUPERADMIN;
-				}else{
+				} else {
 					$query = 'DELETE FROM #__acctexp'
 					. ' WHERE userid = ' . $uid
 					;
@@ -1042,7 +1048,7 @@ function removeUser( $userid, $option ) {
 					if (!$database->query()) {
 						echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
 					}
-					if( !$obj->delete( $uid ) ) {
+					if ( !$obj->delete( $uid ) ) {
 						$msg = $obj->getError();
 					}
 				}
@@ -1054,7 +1060,8 @@ function removeUser( $userid, $option ) {
 
 }
 
-function removeClosedSubscription( $userid, $option ) {
+function removeClosedSubscription( $userid, $option )
+{
 	global $database, $my, $acl, $mosConfig_dbprefix;
 
 	// $userid contains values corresponding to id field of #__acctexp table
@@ -1068,7 +1075,7 @@ function removeClosedSubscription( $userid, $option ) {
 	. ' WHERE userid IN (' . $userids . ')'
 	;
  	$database->setQuery( $query );
-	if( !$database->query() ) {
+	if ( !$database->query() ) {
 		echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
 	}
 
@@ -1077,7 +1084,7 @@ function removeClosedSubscription( $userid, $option ) {
 	. ' WHERE user_id IN (' . $userids . ')'
 	;
  	$database->setQuery( $query );
-	if( !$database->query() ) {
+	if ( !$database->query() ) {
 		echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
 	}
 
@@ -1085,7 +1092,7 @@ function removeClosedSubscription( $userid, $option ) {
 	$tables	= array();
 	$tables	= $database->getTableList();
 
-	if( GeneralInfoRequester::detect_component('CB') && GeneralInfoRequester::detect_component('CBE') ) {
+	if ( GeneralInfoRequester::detect_component('CB') && GeneralInfoRequester::detect_component('CBE') ) {
 		$query = 'DELETE FROM #__comprofiler'
 		. ' WHERE id IN (' . $userids . ')'
 		;
@@ -1094,21 +1101,21 @@ function removeClosedSubscription( $userid, $option ) {
 	}
 
 	$msg = _REMOVED;
-	if( count( $userid ) ) {
+	if ( count( $userid ) ) {
 		$obj = new mosUser( $database );
-		foreach( $userid as $id ) {
+		foreach ( $userid as $id ) {
 			// check for a super admin ... can't delete them
 			$groups		= $acl->get_object_groups( 'users', $id, 'ARO' );
 			$this_group	= strtolower( $acl->get_group_name( $groups[0], 'ARO' ) );
 
-			if( $this_group == 'super administrator' ) {
+			if ( $this_group == 'super administrator' ) {
 				$msg = _AEC_MSG_NODELETE_SUPERADMIN;
-			}else if( $id == $my->id ){
+			}else if ( $id == $my->id ){
 				$msg = _AEC_MSG_NODELETE_YOURSELF;
-			}else if( ( $this_group == 'administrator' ) && ( $my->gid == 24 ) ){
+			}else if ( ( $this_group == 'administrator' ) && ( $my->gid == 24 ) ){
 				$msg = _AEC_MSG_NODELETE_EXCEPT_SUPERADMIN;
-			}else{
-				if( !$obj->delete( $id ) ) {
+			} else {
+				if ( !$obj->delete( $id ) ) {
 					$msg = $obj->getError();
 				}
 			}
@@ -1119,7 +1126,7 @@ function removeClosedSubscription( $userid, $option ) {
 	. ' WHERE userid IN (' . $userids . ')'
 	;
  	$database->setQuery( $query );
-	if( !$database->query() ) {
+	if ( !$database->query() ) {
 		echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
 	}
 
@@ -1127,15 +1134,17 @@ function removeClosedSubscription( $userid, $option ) {
 
 }
 
-function activateClosedSubscription( $userid, $option ) {
+function activateClosedSubscription( $userid, $option )
+{
 	global $database, $my, $acl, $mosConfig_dbprefix;
 }
 
-function removePendingSubscription ( $userid, $option ) {
+function removePendingSubscription( $userid, $option )
+{
 	global $database, $my, $acl, $mosConfig_dbprefix;
 
 	// $userid contains values corresponding to id field of #__acctexp table
-    if( !is_array( $userid ) || count( $userid ) < 1 ) {
+    if ( !is_array( $userid ) || count( $userid ) < 1 ) {
 	    echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
 	    exit;
     }
@@ -1146,7 +1155,7 @@ function removePendingSubscription ( $userid, $option ) {
 	. ' WHERE userid IN (' . $userids . ')'
 	;
  	$database->setQuery( $query );
-	if( !$database->query() ) {
+	if ( !$database->query() ) {
 		echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
 	}
 
@@ -1154,7 +1163,7 @@ function removePendingSubscription ( $userid, $option ) {
 	. ' WHERE user_id IN (' . $userids . ')'
 	;
  	$database->setQuery( $query );
-	if( !$database->query() ) {
+	if ( !$database->query() ) {
 		echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
 	}
 
@@ -1162,7 +1171,7 @@ function removePendingSubscription ( $userid, $option ) {
 	$tables	= array();
 	$tables	= $database->getTableList();
 
-	if( GeneralInfoRequester::detect_component( 'CB' ) && GeneralInfoRequester::detect_component( 'CBE' ) ) {
+	if ( GeneralInfoRequester::detect_component( 'CB' ) && GeneralInfoRequester::detect_component( 'CBE' ) ) {
 		$query = 'DELETE FROM #__comprofiler'
 		. ' WHERE id IN (' . $userids . ')'
 		;
@@ -1171,20 +1180,20 @@ function removePendingSubscription ( $userid, $option ) {
 	}
 
 	$msg = _REMOVED;
-	if( count( $userid ) ) {
+	if ( count( $userid ) ) {
 		$obj = new mosUser( $database );
-		foreach($userid as $id) {
+		foreach ($userid as $id) {
 			// check for a super admin ... can't delete them
 			$groups         = $acl->get_object_groups( 'users', $id, 'ARO' );
 			$this_group = strtolower( $acl->get_group_name( $groups[0], 'ARO' ) );
-			if( $this_group == 'super administrator' ) {
+			if ( $this_group == 'super administrator' ) {
 				$msg = _AEC_MSG_NODELETE_SUPERADMIN;
-			}else if( $id == $my->id ){
+			}else if ( $id == $my->id ){
 				$msg = _AEC_MSG_NODELETE_YOURSELF;
-			}else if( ( $this_group == 'administrator' ) && ( $my->gid == 24 ) ){
+			}else if ( ( $this_group == 'administrator' ) && ( $my->gid == 24 ) ){
 				$msg = _AEC_MSG_NODELETE_EXCEPT_SUPERADMIN;
-			}else{
-				if( !$obj->delete( $id ) ) {
+			} else {
+				if ( !$obj->delete( $id ) ) {
 					$msg = $obj->getError();
 				}
 			}
@@ -1195,7 +1204,7 @@ function removePendingSubscription ( $userid, $option ) {
 	. ' WHERE userid IN (' . $userids . ')'
 	;
  	$database->setQuery( $query );
-	if( !$database->query() ) {
+	if ( !$database->query() ) {
 		echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
 	}
 
@@ -1203,7 +1212,8 @@ function removePendingSubscription ( $userid, $option ) {
 
 }
 
-function activatePendingSubscription( $userid, $option, $renew ) {
+function activatePendingSubscription( $userid, $option, $renew )
+{
 	global $database;
 
     if (!is_array( $userid ) || count( $userid ) < 1) {
@@ -1213,36 +1223,36 @@ function activatePendingSubscription( $userid, $option, $renew ) {
 
 	$n = 0;
 
-	foreach( $userid as $id ) {
+	foreach ( $userid as $id ) {
 		$n++;
 
 		$user_subscription = new Subscription( $database );
 
-		if( $userid ) {
+		if ( $userid ) {
 			$user_subscription->loadUserID( $id );
-		}else{
+		} else {
 			return;
 		}
 
 		$invoiceid = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $id );
 
-		if( $invoiceid ) {
+		if ( $invoiceid ) {
 			$invoice = new Invoice( $database );
 			$invoice->load( $invoiceid );
 			$plan = $invoice->usage;
 			$invoice->setTransactionDate();
-		}else{
+		} else {
 			$plan = $user_subscription->plan;
 		}
 
 		$renew = $user_subscription->applyUsage( $plan, 'none', 1 );
 	}
-	if( $renew ) {
+	if ( $renew ) {
 		// Admin confirmed an offline payment for a renew
 		// He is working on the Active queue
 		$msg = $n . ' ' . _AEC_MSG_SUBS_RENEWED;
 		mosRedirect( 'index2.php?option=' . $option . '&task=showActive', $msg );
-	}else{
+	} else {
 		// Admin confirmed an offline payment for a new subscription
 		// He is working on the Pending queue
 		$msg = $n . ' ' . _AEC_MSG_SUBS_ACTIVATED;
@@ -1250,7 +1260,8 @@ function activatePendingSubscription( $userid, $option, $renew ) {
 	}
 }
 
-function listSubscriptions( $option, $set_group, $userid ) {
+function listSubscriptions( $option, $set_group, $userid )
+{
 	global $database, $mainframe, $mosConfig_list_limit;
 
 	$limit			= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
@@ -1262,12 +1273,12 @@ function listSubscriptions( $option, $set_group, $userid ) {
 
 	$filter_planid	= intval( $mainframe->getUserStateFromRequest( "filter_planid{$option}", 'filter_planid', 0 ) );
 
-	if( !empty( $_REQUEST['groups'] ) ) {
-		if( is_array($_REQUEST['groups'] ) ) {
+	if ( !empty( $_REQUEST['groups'] ) ) {
+		if ( is_array($_REQUEST['groups'] ) ) {
 			$groups 	= $_REQUEST['groups'];
 			$set_group	= $_REQUEST['groups'][0];
 		}
-	}else{
+	} else {
 		$groups		= array();
 		$groups[]	= $set_group;
 	}
@@ -1317,15 +1328,15 @@ function listSubscriptions( $option, $set_group, $userid ) {
 	$notconfig	= 0;
 
 	$planid = trim( mosGetParam( $_REQUEST, 'assign_planid', null ) );
-	if( $planid > 0 && is_array( $userid ) && count( $userid ) > 0 ) {
+	if ( $planid > 0 && is_array( $userid ) && count( $userid ) > 0 ) {
 		foreach ($userid as $k) {
 			$subscriptionid = AECfetchfromDB::SubscriptionIDfromUserID( $k );
 
 			$subscriptionHandler = new Subscription( $database );
 
-			if( $subscriptionid ) {
+			if ( $subscriptionid ) {
 				$subscriptionHandler->load( $subscriptionid );
-			}else{
+			} else {
 				$subscriptionHandler->load( 0 );
 				$subscriptionHandler->createNew( $k, '', 1 );
 			}
@@ -1336,67 +1347,67 @@ function listSubscriptions( $option, $set_group, $userid ) {
 
 	$expire = trim( mosGetParam( $_REQUEST, 'set_expiration', null ) );
 
-	if( !is_null($expire) && is_array( $userid ) && count( $userid ) > 0 ) {
-		foreach( $userid as $k ) {
+	if ( !is_null($expire) && is_array( $userid ) && count( $userid ) > 0 ) {
+		foreach ( $userid as $k ) {
 			$subscriptionid = AECfetchfromDB::SubscriptionIDfromUserID( $k );
 			$expirationid = AECfetchfromDB::ExpirationIDfromUserID( $k );
 
 			$subscriptionHandler = new Subscription( $database );
 
-			if( $subscriptionid ) {
+			if ( $subscriptionid ) {
 				$subscriptionHandler->load( 0 );
 				$subscriptionHandler->load( $subscriptionid );
-			}else{
+			} else {
 				$subscriptionHandler->createNew( $k, '', 1 );
 			}
 
 			$expirationHandler = new AcctExp( $database );
 
-			if( $expirationid ) {
+			if ( $expirationid ) {
 				$expirationHandler->load( $expirationid );
-			}else{
+			} else {
 				$expirationHandler->load( 0 );
 				$expirationHandler->userid = $k;
 			}
 
-			if( strcmp( $expire, 'now' ) === 0) {
+			if ( strcmp( $expire, 'now' ) === 0) {
 				$subscriptionHandler->expire();
 
-				if( !in_array( 'expired', $groups ) ) {
+				if ( !in_array( 'expired', $groups ) ) {
 					$groups[] = 'expired';
 				}
-			}elseif( strcmp( $expire, 'exclude' ) === 0 ) {
+			} elseif ( strcmp( $expire, 'exclude' ) === 0 ) {
 				$subscriptionHandler->setStatus( 'Excluded' );
 
 				if ( !in_array( 'excluded', $groups ) ) {
 					$groups[] = 'excluded';
 				}
-			}elseif( strcmp( $expire, 'close' ) === 0 ) {
+			} elseif ( strcmp( $expire, 'close' ) === 0 ) {
 				$subscriptionHandler->setStatus( 'Closed' );
 
-				if( !in_array( 'closed', $groups ) ) {
+				if ( !in_array( 'closed', $groups ) ) {
 					$groups[] = 'closed';
 				}
-			}elseif( strcmp( $expire, 'include' ) === 0 ) {
+			} elseif ( strcmp( $expire, 'include' ) === 0 ) {
 				$subscriptionHandler->setStatus( 'Active' );
 
-				if( !in_array( 'active', $groups ) ) {
+				if ( !in_array( 'active', $groups ) ) {
 					$groups[] = 'active';
 				}
-			}elseif( strpos( $expire, 'set' ) === 0 ) {
+			} elseif ( strpos( $expire, 'set' ) === 0 ) {
 				$expirationHandler->setExpiration( 'M', substr( $expire, 4 ), 0 );
 				$expirationHandler->check();
 				$expirationHandler->store();
 				$subscriptionHandler->lifetime = 0;
 				$subscriptionHandler->setStatus( 'Active' );
 
-				if( !in_array( 'active', $groups ) ) {
+				if ( !in_array( 'active', $groups ) ) {
 					$groups[] = 'active';
 				}
-			}elseif( strpos( $expire, 'add' ) === 0 ) {
-				if( $subscriptionHandler->lifetime) {
+			} elseif ( strpos( $expire, 'add' ) === 0 ) {
+				if ( $subscriptionHandler->lifetime) {
 					$expirationHandler->setExpiration( 'M', substr( $expire, 4 ), 0 );
-				}else{
+				} else {
 					$expirationHandler->setExpiration( 'M', substr( $expire, 4 ), 1 );
 				}
 				$expirationHandler->check();
@@ -1404,48 +1415,48 @@ function listSubscriptions( $option, $set_group, $userid ) {
 				$subscriptionHandler->lifetime = 0;
 				$subscriptionHandler->setStatus( 'Active' );
 
-				if( !in_array( 'active', $groups ) ) {
+				if ( !in_array( 'active', $groups ) ) {
 					$groups[] = 'active';
 				}
 			}
 		}
 	}
 
-	if( is_array(  $groups ) ) {
-		if( in_array( 'notconfig', $groups ) ) {
+	if ( is_array(  $groups ) ) {
+		if ( in_array( 'notconfig', $groups ) ) {
  			$notconfig = 1;
  			$groups = array( 'notconfig' );
 		}
-		if( in_array( 'excluded', $groups ) ) {
+		if ( in_array( 'excluded', $groups ) ) {
 			$where_or[] = "a.status = 'Excluded'";
 		}
-		if( in_array( 'expired', $groups ) ) {
+		if ( in_array( 'expired', $groups ) ) {
 			$where_or[] = "a.status = 'Expired'";
 		}
-		if( in_array( 'active', $groups ) ) {
+		if ( in_array( 'active', $groups ) ) {
 			$where_or[] = "(a.status = 'Active' || a.status = 'Trial')";
 		}
-		if( in_array( 'pending', $groups ) ) {
+		if ( in_array( 'pending', $groups ) ) {
 			$where_or[] = "a.status = 'Pending'";
 		}
-		if( in_array( 'cancelled', $groups ) ) {
+		if ( in_array( 'cancelled', $groups ) ) {
 			$where_or[] = "a.status = 'Cancelled'";
 		}
-		if( in_array( 'closed', $groups ) ) {
+		if ( in_array( 'closed', $groups ) ) {
  			$where_or[] = "a.status = 'Closed'";
 		}
 	}
 
-	if( isset( $search ) && $search!= '' ) {
+	if ( isset( $search ) && $search!= '' ) {
 		$where[] = "(b.username LIKE '%$search%' OR b.name LIKE '%$search%')";
 	}
 
-	if( isset($filter_planid) && $filter_planid > 0 ) {
+	if ( isset($filter_planid) && $filter_planid > 0 ) {
 		$where[] = "(a.plan='$filter_planid')";
 	}
 
 	// get the total number of records
-	if( $notconfig ) {
+	if ( $notconfig ) {
 		$query	= 'SELECT userid'
 		. ' FROM #__acctexp_subscr'
 		. ' WHERE userid != \'\''
@@ -1456,16 +1467,16 @@ function listSubscriptions( $option, $set_group, $userid ) {
 		$query = 'SELECT count(*)'
 		. ' FROM #__users'
 		;
-		if( count( $userarray ) > 0 ) {
+		if ( count( $userarray ) > 0 ) {
 			$query .= ' WHERE id NOT IN (' . implode(',', $userarray) . ')';
 		}
-	}else{
+	} else {
 		$query = 'SELECT count(*)'
 		. ' FROM #__acctexp_subscr AS a'
 		. ' INNER JOIN #__users AS b ON a.userid = b.id'
 		;
 
-		if( count( $where_or ) ) {
+		if ( count( $where_or ) ) {
 			$where[] = ( count( $where_or ) ? '(' . implode( ' OR ', $where_or ) . ')' : '' );
 		}
 
@@ -1480,7 +1491,7 @@ function listSubscriptions( $option, $set_group, $userid ) {
 	$pageNav = new mosPageNav( $total, $limitstart, $limit );
 
 	// get the subset (based on limits) of required records
-	if( $notconfig ) {
+	if ( $notconfig ) {
 		$query = 'SELECT userid'
 		. ' FROM #__acctexp_subscr'
 		. ' WHERE userid != \'\''
@@ -1488,8 +1499,8 @@ function listSubscriptions( $option, $set_group, $userid ) {
 		$database->setQuery( $query );
 		$userarray = $database->loadResultArray();
 
-	    foreach( $userarray as $i => $v ) {
-	        if( empty( $v ) ){
+	    foreach ( $userarray as $i => $v ) {
+	        if ( empty( $v ) ){
 	        	unset( $userarray[$i] );
 	        }
 	    }
@@ -1497,11 +1508,11 @@ function listSubscriptions( $option, $set_group, $userid ) {
 		$query = 'SELECT id AS userid, name, username, usertype'
 		. ' FROM #__users'
 		;
-		if( count( $userarray ) > 0) {
+		if ( count( $userarray ) > 0) {
 			$query .= ' WHERE id NOT IN (' . implode( ',', $userarray ) . ')';
 		}
 			$query .=	' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit;
-	}else{
+	} else {
 		$query = 'SELECT a.*, b.name, b.username, b.email, c.name AS plan_name, d.expiration AS expiration'
 		. ' FROM #__acctexp_subscr AS a'
 		. '  INNER JOIN #__users AS b ON a.userid = b.id'
@@ -1516,7 +1527,7 @@ function listSubscriptions( $option, $set_group, $userid ) {
 	$database->setQuery( $query );
 
 	$rows = $database->loadObjectList();
-	if( $database->getErrorNum() ) {
+	if ( $database->getErrorNum() ) {
 		echo $database->stderr();
 		return false;
 	}
@@ -1567,8 +1578,8 @@ function listSubscriptions( $option, $set_group, $userid ) {
 	$group_selection[] = mosHTML::makeOption( 'notconfig',	_AEC_SEL_NOT_CONFIGURED );
 
 	$selected_groups = array();
-	if( is_array( $groups ) ) {
-		foreach($groups as $name ) {
+	if ( is_array( $groups ) ) {
+		foreach ($groups as $name ) {
 			$selected_groups[] = mosHTML::makeOption( $name, $name );
 		}
 	}
@@ -1593,7 +1604,8 @@ function listSubscriptions( $option, $set_group, $userid ) {
 	HTML_AcctExp::listSubscriptions( $rows, $pageNav, $search, $option, $lists, $userid, $action );
 }
 
-function editSettings( $option ) {
+function editSettings( $option )
+{
 	global $database, $acl, $my;
 
 	$cfg = new Config_General( $database );
@@ -1641,23 +1653,23 @@ function editSettings( $option ) {
 	$mi_htmllist = array();
 	$mi_htmllist[]	= mosHTML::makeOption( '', _AEC_CMN_NONE_SELECTED );
 
-	foreach( $mi_list as $name ) {
+	foreach ( $mi_list as $name ) {
 		$mi = new microIntegration( $database );
 		$mi->class_name = $name;
-		if( $mi->callIntegration() ){
+		if ( $mi->callIntegration() ){
 			$len = 30 - AECToolbox::visualstrlen( trim( $mi->name ) );
 			$fullname = str_replace( '#', '&nbsp;', str_pad( $mi->name, $len, '#' ) ) . ' - ' . $mi->desc;
 			$mi_htmllist[] = mosHTML::makeOption( $name, $fullname );
 		}
 	}
 
-	if( !empty( $cfg->cfg['milist'] ) ) {
+	if ( !empty( $cfg->cfg['milist'] ) ) {
 		$milist = explode( ';', $cfg->cfg['milist'] );
 		$selected_mis = array();
-		foreach( $milist as $mi_name ) {
+		foreach ( $milist as $mi_name ) {
 			$selected_mis[]->value = $mi_name;
 		}
-	}else{
+	} else {
 		$cfg->cfg['milist'] = null;
 		$selected_mis		= '';
 	}
@@ -1739,22 +1751,22 @@ function editSettings( $option ) {
 	$gw_list_html[]			= mosHTML::makeOption( 'none', _AEC_CMN_NONE_SELECTED );
 	$gw_list_enabled_html[] = mosHTML::makeOption( 'none', _AEC_CMN_NONE_SELECTED );
 
-	if( !empty( $cfg->cfg['gwlist'] ) ) {
+	if ( !empty( $cfg->cfg['gwlist'] ) ) {
 		$desc_list = explode( ';', $cfg->cfg['gwlist'] );
 	} else {
 		$desc_list = array();
 	}
 	$gwlist_selected = array();
 
-	foreach( $gwlist as $gwname ) {
+	foreach ( $gwlist as $gwname ) {
 		// Load Payment Processor
 		$pp = new PaymentProcessor();
-		if( $pp->loadName( $gwname ) ) {
-			if( $pp->id ) {
+		if ( $pp->loadName( $gwname ) ) {
+			if ( $pp->id ) {
 				// Init Info and Settings
 				$pp->fullInit();
 
-				if( $pp->processor->active ) {
+				if ( $pp->processor->active ) {
 					// Get Backend Settings
 					$settings_array = $pp->getBackendSettings();
 
@@ -1766,7 +1778,7 @@ function editSettings( $option ) {
 					$tab[] = array( 'subtitle', '0', $pp->info['longname'], '0', '0' );
 
 					// Iterate through settings form assigning the db settings
-					foreach( $settings_array as $name => $values ) {
+					foreach ( $settings_array as $name => $values ) {
 						$setting_name = $pp->processor_name . '_' . $name;
 
 						switch( $settings_array[$name][0] ) {
@@ -1782,8 +1794,8 @@ function editSettings( $option ) {
 
 								// Transform currencies into OptionArray
 								$currency_code_list = array();
-								foreach( $currency_array as $currency ) {
-									if( defined( '_CURRENCY_' . $currency )) {
+								foreach ( $currency_array as $currency ) {
+									if ( defined( '_CURRENCY_' . $currency )) {
 										$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
 									}
 								}
@@ -1799,7 +1811,7 @@ function editSettings( $option ) {
 
 								// Transform languages into OptionArray
 								$language_code_list = array();
-								foreach( $language_array as $language ) {
+								foreach ( $language_array as $language ) {
 									$language_code_list[] = mosHTML::makeOption( $language, ( defined( '_AEC_LANG_' . $language  ) ? constant( '_AEC_LANG_' . $language ) : $language ) );
 								}
 								// Create list
@@ -1811,31 +1823,31 @@ function editSettings( $option ) {
 								break;
 						}
 
-						if( !isset( $settings_array[$name][1] ) ) {
+						if ( !isset( $settings_array[$name][1] ) ) {
 							// Create constant names
 							$constantname = '_CFG_' . strtoupper( $gwname ) . '_' . strtoupper($name) . '_NAME';
 							$constantdesc = '_CFG_' . strtoupper( $gwname ) . '_' . strtoupper($name) . '_DESC';
 
 							// If the constantname does not exists, try a generic name or insert an error
-							if( defined( $constantname ) ) {
+							if ( defined( $constantname ) ) {
 								$settings_array[$name][1] = constant( $constantname );
-							}else{
+							} else {
 								$genericname = '_CFG_PROCESSOR_' . strtoupper($name) . '_NAME';
-								if( defined( $genericname ) ) {
+								if ( defined( $genericname ) ) {
 									$settings_array[$name][1] = constant( $genericname );
-								}else{
+								} else {
 									$settings_array[$name][1] = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantname );
 								}
 							}
 
 							// If the constantname does not exists, try a generic name or insert an error
-							if( defined( $constantdesc ) ) {
+							if ( defined( $constantdesc ) ) {
 								$settings_array[$name][2] = constant( $constantdesc );
-							}else{
+							} else {
 								$genericdesc = '_CFG_PROCESSOR_' . strtoupper($name) . '_DESC';
-								if( defined( $genericname ) ) {
+								if ( defined( $genericname ) ) {
 									$settings_array[$name][2] = constant( $genericdesc );
-								}else{
+								} else {
 									$settings_array[$name][2] = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantdesc );
 								}
 							}
@@ -1844,9 +1856,9 @@ function editSettings( $option ) {
 						// It might be that the processor has got some new properties, so we need to double check here
 						$new_settings = $pp->p_class->settings();
 
-						if( isset( $pp->settings[$name] ) ) {
+						if ( isset( $pp->settings[$name] ) ) {
 							$tab[] = array_merge( $settings_array[$name], array( $pp->settings[$name], $setting_name ) );
-						}else{
+						} else {
 							$tab[] = array_merge( $settings_array[$name], array( $new_settings[$name], $setting_name ) );
 						}
 					}
@@ -1864,8 +1876,8 @@ function editSettings( $option ) {
 					$gw_list_enabled[]->value = $gwname;
 
 					// Add to selected Description List if existing in db entry
-					if( !empty( $desc_list ) ) {
-						if( in_array( $gwname, $desc_list ) ) {
+					if ( !empty( $desc_list ) ) {
+						if ( in_array( $gwname, $desc_list ) ) {
 							$gwlist_selected[]->value = $gwname;
 						}
 					}
@@ -1873,19 +1885,19 @@ function editSettings( $option ) {
 					// Add to Description List
 					$gw_list_enabled_html[] = mosHTML::makeOption( $gwname, $pp->info['longname'] );
 
-				}else{
+				} else {
 					$pp->Init();
 					$pp->getInfo();
 				}
 
 
-			}else{
+			} else {
 				$pp->info = $pp->p_class->info();
 			}
 
 			// Add to general PP List
 			$gw_list_html[] = mosHTML::makeOption( $gwname, $pp->info['longname'] );
-		}else{
+		} else {
 			// TODO: Log error
 		}
 	}
@@ -1904,9 +1916,9 @@ function editSettings( $option ) {
 	$tab_data[] = $tab;
 
 	$editors = array();
-	foreach( $tab_data as $tab ) {
-		foreach( $tab as $st_content ) {
-			if( strcmp( $st_content[0], 'editor' ) === 0 ) {
+	foreach ( $tab_data as $tab ) {
+		foreach ( $tab as $st_content ) {
+			if ( strcmp( $st_content[0], 'editor' ) === 0 ) {
 				$editors[] = $st_content[4];
 			}
 		}
@@ -1918,15 +1930,17 @@ function editSettings( $option ) {
 /**
 * Cancels an configure operation
 */
-function cancelSettings( $option ) {
+function cancelSettings( $option )
+{
 	mosRedirect( 'index2.php?option=' . $option . '&task=showCentral', _AEC_CONFIG_CANCELLED );
 }
 
 
-function saveSettings( $option ) {
+function saveSettings( $option )
+{
 	global $database, $mainframe, $my, $acl;
 
-	if( !$acl->acl_check( 'administration', 'manage', 'users', $my->usertype, 'components', 'com_users' ) ) {
+	if ( !$acl->acl_check( 'administration', 'manage', 'users', $my->usertype, 'components', 'com_users' ) ) {
 		mosRedirect( 'index2.php', _NOT_AUTH );
 	}
 
@@ -1934,15 +1948,15 @@ function saveSettings( $option ) {
 	$pplist_installed	= PaymentProcessorHandler::getInstalledNameList();
 	$total_processors	= array_merge( $pplist_installed, $pplist_enabled );
 
-	foreach( $total_processors as $procname ) {
+	foreach ( $total_processors as $procname ) {
 		$pp = new PaymentProcessor();
 
 		// Go next if this is the zero option selected
-		if( !$procname ) {
+		if ( !$procname ) {
 			continue;
 		}
 
-		if( $pp->loadName( $procname ) ) {
+		if ( $pp->loadName( $procname ) ) {
 			$pp->fullInit();
 			$pp->processor->active = in_array( $procname, $pplist_enabled );
 
@@ -1952,11 +1966,11 @@ function saveSettings( $option ) {
 			$longname		= $procname . '_info_longname';
 			$description	= $procname . '_info_description';
 
-			if( isset( $_POST[$longname] ) ) {
+			if ( isset( $_POST[$longname] ) ) {
 				$pp->info['longname'] = $_POST[$longname];
 				unset( $_POST[$longname] );
 			}
-			if( isset( $_POST[$description] ) ) {
+			if ( isset( $_POST[$description] ) ) {
 				$pp->info['description'] = $_POST[$description];
 				unset( $_POST[$description] );
 			}
@@ -1965,13 +1979,13 @@ function saveSettings( $option ) {
 
 			$settings = $pp->p_class->settings();
 
-			foreach( $settings as $name => $value ) {
+			foreach ( $settings as $name => $value ) {
 				$postname = $procname  . '_' . $name;
 
-				if( isset( $_POST[$postname] ) ) {
+				if ( isset( $_POST[$postname] ) ) {
 					$val = $_POST[$postname];
 
-					if( empty( $val ) ) {
+					if ( empty( $val ) ) {
 						switch( $name ) {
 							case 'currency':
 								$val = 'USD';
@@ -1987,7 +2001,7 @@ function saveSettings( $option ) {
 			}
 
 			$pp->setSettings();
-		}else{
+		} else {
 			// TODO: Log error
 		}
 	}
@@ -1999,10 +2013,10 @@ function saveSettings( $option ) {
 
 	$general_settings = array();
 
-	foreach( $_POST as $name => $value ) {
-		if( is_array( $value ) ) {
+	foreach ( $_POST as $name => $value ) {
+		if ( is_array( $value ) ) {
 			$general_settings[$name] = implode( ';', $value );
-		}else{
+		} else {
 			$general_settings[$name] = $value;
 		}
 	}
@@ -2012,13 +2026,13 @@ function saveSettings( $option ) {
 	$diff = $cfg->diffParams($general_settings, 'settings');
 	$difference = '';
 
-	if( is_array( $diff ) ) {
+	if ( is_array( $diff ) ) {
 		$newdiff = array();
-		foreach( $diff as $value => $change ) {
+		foreach ( $diff as $value => $change ) {
 			$newdiff[] = $value . '(' . implode( '->', $change ) . ')';
 		}
 		$difference = implode( ',', $newdiff );
-	}else{
+	} else {
 		$difference = 'none';
 	}
 
@@ -2040,7 +2054,8 @@ function saveSettings( $option ) {
 	mosRedirect( 'index2.php?option=' . $option . '&task=showSettings', _AEC_CONFIG_SAVED );
 }
 
-function listSubscriptionPlans( $option ) {
+function listSubscriptionPlans( $option )
+{
  	global $database, $mainframe, $mosConfig_list_limit;
 
  	$limit = $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
@@ -2054,7 +2069,7 @@ function listSubscriptionPlans( $option ) {
  	$total = $database->loadResult();
  	echo $database->getErrorMsg();
 
- 	if( $limit > $total ) {
+ 	if ( $limit > $total ) {
  		$limitstart = 0;
  	}
 
@@ -2071,12 +2086,12 @@ function listSubscriptionPlans( $option ) {
 	$database->setQuery( $query );
 
  	$rows = $database->loadObjectList();
- 	if( $database->getErrorNum() ) {
+ 	if ( $database->getErrorNum() ) {
  		echo $database->stderr();
  		return false;
  	}
 
-	foreach( $rows as $n => $row ) {
+	foreach ( $rows as $n => $row ) {
 		$query = 'SELECT count(*)'
 		. 'FROM #__users AS a'
 		. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
@@ -2086,7 +2101,7 @@ function listSubscriptionPlans( $option ) {
 		$database->setQuery( $query	);
 
 	 	$rows[$n]->usercount = $database->loadResult();
-	 	if( $database->getErrorNum() ) {
+	 	if ( $database->getErrorNum() ) {
 	 		echo $database->stderr();
 	 		return false;
 	 	}
@@ -2100,7 +2115,7 @@ function listSubscriptionPlans( $option ) {
 		$database->setQuery( $query	);
 
 	 	$rows[$n]->expiredcount = $database->loadResult();
-	 	if( $database->getErrorNum() ) {
+	 	if ( $database->getErrorNum() ) {
 	 		echo $database->stderr();
 	 		return false;
 	 	}
@@ -2109,7 +2124,8 @@ function listSubscriptionPlans( $option ) {
  	HTML_AcctExp::listSubscriptionPlans( $rows, $pageNav, $option );
  }
 
-function editSubscriptionPlan( $id, $option ) {
+function editSubscriptionPlan( $id, $option )
+{
 	global $database, $my, $acl;
 
 	$lists = array();
@@ -2119,7 +2135,7 @@ function editSubscriptionPlan( $id, $option ) {
 	$row = new SubscriptionPlan( $database );
 	$row->load( $id );
 
-	if( !$row->id ) {
+	if ( !$row->id ) {
 		$row->ordering	= 9999;
 		$hasrecusers	= false;
 
@@ -2128,7 +2144,7 @@ function editSubscriptionPlan( $id, $option ) {
 
 		$restrictions_values['gid_enabled']	= 1;
 		$restrictions_values['gid']			= 18;
-	}else{
+	} else {
 		$params_values = $row->getParams( 'params' );
 		$restrictions_values = $row->getParams( 'restrictions' );
 
@@ -2204,9 +2220,9 @@ function editSubscriptionPlan( $id, $option ) {
 
 	// ensure user can't add group higher than themselves
 	$my_groups = $acl->get_object_groups( 'users', $my->id, 'ARO' );
-	if( is_array( $my_groups ) && count( $my_groups ) > 0) {
+	if ( is_array( $my_groups ) && count( $my_groups ) > 0) {
 		$ex_groups = $acl->get_group_children( $my_groups[0], 'ARO', 'RECURSE' );
-	}else{
+	} else {
 		$ex_groups = array();
 	}
 
@@ -2218,10 +2234,10 @@ function editSubscriptionPlan( $id, $option ) {
 
 	// remove users 'above' me
 	$i = 0;
-	while( $i < count( $gtree ) ) {
-		if( in_array( $gtree[$i]->value, $ex_groups ) ) {
+	while ( $i < count( $gtree ) ) {
+		if ( in_array( $gtree[$i]->value, $ex_groups ) ) {
 			array_splice( $gtree, $i, 1 );
-		}else{
+		} else {
 			$i++;
 		}
 	}
@@ -2251,15 +2267,15 @@ function editSubscriptionPlan( $id, $option ) {
 	$database->setQuery( $query );
 	$processors = $database->loadObjectList();
 
-	foreach( $processors as $i ) {
+	foreach ( $processors as $i ) {
 		$available_gw[] = mosHTML::makeOption( $i->id, $i->name );
 	}
 
 	$selected_gw = array();
-	if( isset( $params_values["processors"] ) ) {
+	if ( isset( $params_values["processors"] ) ) {
 		$plan_procs = explode(";", $params_values["processors"]);
 
-		if( count( $plan_procs ) ) {
+		if ( count( $plan_procs ) ) {
 			$query = 'SELECT id AS value, name AS text'
 			. ' FROM #__acctexp_config_processors'
 			. ' WHERE id IN (' . implode( ',', $plan_procs ) . ')'
@@ -2267,7 +2283,7 @@ function editSubscriptionPlan( $id, $option ) {
 			$database->setQuery( $query );
 			$selected_gw = $database->loadObjectList();
 		}
-	}else{
+	} else {
 		$selected_gw[0]->value = 0;
 		$selected_gw[0]->text = _PAYPLAN_NOGW;
 	}
@@ -2292,7 +2308,7 @@ function editSubscriptionPlan( $id, $option ) {
 	$lists['fallback'] = mosHTML::selectList($active_plans, 'fallback', 'size="' . $total_plans . '"', 'value', 'text', arrayValueDefault($params_values, 'fallback', 0));
 
 	// get similar plans
-	if( !empty( $params_values['similarplans'] ) ) {
+	if ( !empty( $params_values['similarplans'] ) ) {
 		$query = 'SELECT id AS value, name As text'
 		. ' FROM #__acctexp_plans'
 		. ' WHERE id IN (' . implode( ',', explode( ';', $params_values['similarplans'] ) ) .')'
@@ -2300,14 +2316,14 @@ function editSubscriptionPlan( $id, $option ) {
 		$database->setQuery( $query );
 
 	 	$sel_similar_plans = $database->loadObjectList();
-	}else{
+	} else {
 		$sel_similar_plans = 0;
 	}
 
 	$lists['similarplans'] = mosHTML::selectList($payment_plans, 'similarplans[]', 'size="' . $total_plans . '" multiple', 'value', 'text', $sel_similar_plans);
 
 	// get equal plans
-	if( !empty( $params_values['equalplans'] ) ) {
+	if ( !empty( $params_values['equalplans'] ) ) {
 		$query = 'SELECT id AS value, name AS text'
 		. ' FROM #__acctexp_plans'
 		. ' WHERE id IN (' . implode( ',', explode( ';', $params_values['equalplans'] ) ) .')'
@@ -2315,7 +2331,7 @@ function editSubscriptionPlan( $id, $option ) {
 		$database->setQuery( $query );
 
 	 	$sel_equal_plans = $database->loadObjectList();
-	}else{
+	} else {
 		$sel_equal_plans = 0;
 	}
 
@@ -2370,15 +2386,17 @@ function editSubscriptionPlan( $id, $option ) {
 	HTML_AcctExp::editSubscriptionPlan( $option, $aecHTML, $row, $hasrecusers );
 }
 
-function arrayValueDefault( $array, $name, $default ) {
-	if( isset( $array[$name] ) ) {
+function arrayValueDefault( $array, $name, $default )
+{
+	if ( isset( $array[$name] ) ) {
 		return $array[$name];
-	}else{
+	} else {
 		return $default;
 	}
 }
 
-function saveSubscriptionPlan( $option ) {
+function saveSubscriptionPlan( $option )
+{
 	global $database, $mosConfig_live_site;
 
 	$row = new SubscriptionPlan( $database );
@@ -2388,11 +2406,11 @@ function saveSubscriptionPlan( $option ) {
 
 	$row->savePOSTsettings( $post );
 
-	if( !$row->check() ) {
+	if ( !$row->check() ) {
 		echo "<script> alert('".$row->getError()."'); window.history.go(-2); </script>\n";
 		exit();
 	}
-	if( !$row->store() ) {
+	if ( !$row->store() ) {
 		echo "<script> alert('".$row->getError()."'); window.history.go(-2); </script>\n";
 		exit();
 	}
@@ -2402,7 +2420,8 @@ function saveSubscriptionPlan( $option ) {
 
 }
 
-function removeSubscriptionPlan( $id, $option ) {
+function removeSubscriptionPlan( $id, $option )
+{
 	global $database, $mosConfig_live_site;
 
 	$ids = implode( ',', $id );
@@ -2414,7 +2433,7 @@ function removeSubscriptionPlan( $id, $option ) {
 	$database->setQuery( $query );
 	$total = $database->loadResult();
 
-	if( $total == 0 ) {
+	if ( $total == 0 ) {
 		echo "<script> alert('" . html_entity_decode( _AEC_MSG_NO_ITEMS_TO_DELETE ) . "'); window.history.go(-1);</script>\n";
 		exit;
 	}
@@ -2430,15 +2449,15 @@ function removeSubscriptionPlan( $id, $option ) {
 	$database->setQuery( $query );
 	$subscribers = $database->loadResult();
 
-	if( $subscribers > 0 ) {
+	if ( $subscribers > 0 ) {
 		$msg = _AEC_MSG_NO_DEL_W_ACTIVE_SUBSCRIBER;
-	}else{
+	} else {
 		// Delete plans
 		$query = 'DELETE FROM #__acctexp_plans'
 		. ' WHERE id IN (' . $ids . ')'
 		;
 		$database->setQuery( $query );
-		if( !$database->query() ) {
+		if ( !$database->query() ) {
 			echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
 			exit();
 		}
@@ -2448,16 +2467,18 @@ function removeSubscriptionPlan( $id, $option ) {
 	mosRedirect( 'index2.php?option=' . $option . '&task=showSubscriptionPlans', $msg );
 }
 
-function cancelSubscriptionPlan( $option ) {
+function cancelSubscriptionPlan( $option )
+{
 	global $mosConfig_live_site;
 
 	mosRedirect( 'index2.php?option=' . $option . '&task=showSubscriptionPlans', _AEC_CMN_EDIT_CANCELLED );
 }
 
-function changeSubscriptionPlan( $cid=null, $state=0, $type, $option ) {
+function changeSubscriptionPlan( $cid=null, $state=0, $type, $option )
+{
 	global $database, $mosConfig_live_site;
 
-	if( count( $cid ) < 1 ) {
+	if ( count( $cid ) < 1 ) {
 		echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
 		exit;
 	}
@@ -2471,14 +2492,14 @@ function changeSubscriptionPlan( $cid=null, $state=0, $type, $option ) {
 	;
 	$database->setQuery( $query );
 
-	if( !$database->query() ) {
+	if ( !$database->query() ) {
 		echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
 		exit();
 	}
 
-	if( $state == '1' ) {
+	if ( $state == '1' ) {
 		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? _AEC_CMN_PUBLISHED : _AEC_CMN_MADE_VISIBLE );
-	}elseif( $state == '0' ) {
+	} elseif ( $state == '0' ) {
 		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? _AEC_CMN_NOT_PUBLISHED : _AEC_CMN_MADE_INVISIBLE );
 	}
 
@@ -2487,7 +2508,8 @@ function changeSubscriptionPlan( $cid=null, $state=0, $type, $option ) {
 	mosRedirect( 'index2.php?option=' . $option . '&task=showSubscriptionPlans', $msg );
 }
 
-function listMicroIntegrations( $option ) {
+function listMicroIntegrations( $option )
+{
  	global $database, $mainframe, $mosConfig_list_limit;
 
  	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
@@ -2501,7 +2523,7 @@ function listMicroIntegrations( $option ) {
  	$total = $database->loadResult();
  	echo $database->getErrorMsg();
 
- 	if( $limit > $total ) {
+ 	if ( $limit > $total ) {
  		$limitstart = 0;
  	}
 
@@ -2518,7 +2540,7 @@ function listMicroIntegrations( $option ) {
  	$database->setQuery( $query );
 
  	$rows = $database->loadObjectList();
- 	if( $database->getErrorNum() ) {
+ 	if ( $database->getErrorNum() ) {
  		echo $database->stderr();
  		return false;
  	}
@@ -2526,7 +2548,8 @@ function listMicroIntegrations( $option ) {
  	HTML_AcctExp::listMicroIntegrations( $rows, $pageNav, $option );
  }
 
-function editMicroIntegration ( $id, $option ) {
+function editMicroIntegration ( $id, $option )
+{
 	global $database, $my, $acl;
 
 	$lists	= array();
@@ -2535,22 +2558,22 @@ function editMicroIntegration ( $id, $option ) {
 
 	$aecHTML = null;
 
-	if( !$mi->id ) {
+	if ( !$mi->id ) {
 		// Set lowest ordering
 		$mi->ordering	= 9999;
 		$mi_list		= array();
 		$mi_htmllist	= array();
 
 		$cfg = new Config_General($database);
-		if( $cfg->cfg['milist'] ) {
+		if ( $cfg->cfg['milist'] ) {
 			$mi_list = explode( ';', $cfg->cfg['milist'] );
 		}
 
-		if( count( $mi_list ) > 0 ) {
-			foreach( $mi_list as $name ) {
+		if ( count( $mi_list ) > 0 ) {
+			foreach ( $mi_list as $name ) {
 				$mi_item = new microIntegration( $database );
 				$mi_item->class_name = $name;
-				if( $mi_item->callIntegration() ) {
+				if ( $mi_item->callIntegration() ) {
 					$len = 30 - AECToolbox::visualstrlen( trim( $mi->name ) );
 					$fullname = str_replace( '#', '&nbsp;', str_pad( $mi_item->name, $len, '#' ) )
 					. ' - ' . $mi_item->desc;
@@ -2560,12 +2583,12 @@ function editMicroIntegration ( $id, $option ) {
 
 			// mic: to avoid displaing an empty list, show instead message at html.page
 			$lists['class_name'] = mosHTML::selectList( $mi_htmllist, 'class_name', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '"', 'value', 'text', '' );
-		}else{
+		} else {
 			$lists['class_name'] = '';
 		}
-	}else{
+	} else {
 		// Call MI (override active check) and Settings
-		if( $mi->callIntegration( 1 ) ) {
+		if ( $mi->callIntegration( 1 ) ) {
 			$mi_settings = $mi->getSettings();
 
 			// Get lists supplied by the MI
@@ -2592,7 +2615,8 @@ function editMicroIntegration ( $id, $option ) {
 	HTML_AcctExp::editMicroIntegration( $option, $mi, $lists, $aecHTML );
 }
 
-function saveMicroIntegration( $option ) {
+function saveMicroIntegration( $option )
+{
 	global $database, $mosConfig_live_site;
 
 	unset( $_POST['option'] );
@@ -2604,25 +2628,25 @@ function saveMicroIntegration( $option ) {
 	$mi->name			= $_POST['name'];
 	$mi->desc			= $_POST['desc'];
 	$mi->active			= $_POST['active'];
-	if($_POST['class_name']) {
+	if ($_POST['class_name']) {
 		$mi->class_name	= $_POST['class_name'];
 	}
 	$mi->auto_check		= $_POST['auto_check'];
 	$mi->on_userchange	= $_POST['on_userchange'];
 	$mi->pre_exp_check	= $_POST['pre_exp_check'];
 
-	if( $mi->callIntegration() ) {
+	if ( $mi->callIntegration() ) {
 		$mi->savePostParams( $_POST );
 
-		if( !$mi->check() ) {
+		if ( !$mi->check() ) {
 			echo "<script> alert('".$mi->getError()."'); window.history.go(-2); </script>\n";
 			exit();
 		}
-		if( !$mi->store() ) {
+		if ( !$mi->store() ) {
 			echo "<script> alert('".$mi->getError()."'); window.history.go(-2); </script>\n";
 			exit();
 		}
-	}else{
+	} else {
 		// TODO: log error
 	}
 
@@ -2632,7 +2656,8 @@ function saveMicroIntegration( $option ) {
 
 }
 
-function removeMicroIntegration( $id, $option ) {
+function removeMicroIntegration( $id, $option )
+{
 	global $database, $mosConfig_live_site;
 
 	$ids = implode( ',', $id );
@@ -2644,16 +2669,16 @@ function removeMicroIntegration( $id, $option ) {
 	$database->setQuery( $query );
 	$total = $database->loadResult();
 
-	if( $total==0 ) {
+	if ( $total==0 ) {
 		echo "<script> alert('" . html_entity_decode( _AEC_MSG_NO_ITEMS_TO_DELETE ) . "'); window.history.go(-1);</script>\n";
 		exit;
 	}
 
 	// Call On-Deletion function
-	foreach( $id as $k ) {
+	foreach ( $id as $k ) {
 		$mi = new microIntegration($database);
 		$mi->load($k);
-		if( $mi->callIntegration() ) {
+		if ( $mi->callIntegration() ) {
 			$mi->delete();
 		}
 	}
@@ -2664,7 +2689,7 @@ function removeMicroIntegration( $id, $option ) {
 	;
 	$database->setQuery( $query	);
 
-	if( !$database->query() ) {
+	if ( !$database->query() ) {
 		echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
 		exit();
 	}
@@ -2674,7 +2699,8 @@ function removeMicroIntegration( $id, $option ) {
 	mosRedirect( 'index2.php?option=' . $option . '&task=showMicroIntegrations', $msg );
 }
 
-function cancelMicroIntegration( $option ) {
+function cancelMicroIntegration( $option )
+{
 	global $mosConfig_live_site;
 
 	mosRedirect( 'index2.php?option=' . $option . '&task=showMicroIntegrations', _AEC_CMN_EDIT_CANCELLED );
@@ -2685,10 +2711,11 @@ function cancelMicroIntegration( $option ) {
 // @param integer 0 if unpublishing, 1 if publishing
 //
 
-function changeMicroIntegration( $cid=null, $state=0, $option ) {
+function changeMicroIntegration( $cid=null, $state=0, $option )
+{
 	global $database, $mosConfig_live_site;
 
-	if( count( $cid ) < 1 ) {
+	if ( count( $cid ) < 1 ) {
 		$action = $state == 1 ? _AEC_CMN_TOPUBLISH: _AEC_CMN_TOUNPUBLISH;
 		echo "<script> alert('" . sprintf( html_entity_decode( _AEC_ALERT_SELECT_FIRST_TO ), $action ) . "'); window.history.go(-1);</script>\n";
 		exit;
@@ -2702,21 +2729,22 @@ function changeMicroIntegration( $cid=null, $state=0, $option ) {
 	. ' WHERE id IN (' . $cids . ')'
 	;
 	$database->setQuery( $query );
-	if( !$database->query() ) {
+	if ( !$database->query() ) {
 		echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
 		exit();
 	}
 
-	if( $state == '1' ) {
+	if ( $state == '1' ) {
 		$msg = $total . ' ' . _AEC_MSG_ITEMS_SUCC_PUBLISHED;
-	}elseif( $state == '0' ) {
+	} elseif ( $state == '0' ) {
 		$msg = $total . ' ' . _AEC_MSG_ITEMS_SUCC_UNPUBLISHED;
 	}
 
 	mosRedirect( 'index2.php?option=' . $option . '&task=showMicroIntegrations', $msg );
 }
 
-function listCoupons( $option, $type ) {
+function listCoupons( $option, $type )
+{
  	global $database, $mainframe, $mosConfig_list_limit;
 
  	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
@@ -2724,9 +2752,9 @@ function listCoupons( $option, $type ) {
 
 	$total = 0;
 
-	if( !$type ) {
+	if ( !$type ) {
 	 	$table = '#__acctexp_coupons';
-	}else{
+	} else {
 	 	$table = '#__acctexp_coupons_static';
 	}
 
@@ -2736,7 +2764,7 @@ function listCoupons( $option, $type ) {
  	$database->setQuery( $query );
  	$total = $database->loadResult();
 
- 	if( $limit > $total ) {
+ 	if ( $limit > $total ) {
  		$limitstart = 0;
  	}
 
@@ -2753,7 +2781,7 @@ function listCoupons( $option, $type ) {
  	$database->setQuery( $query	);
 
  	$rows = $database->loadObjectList();
- 	if( $database->getErrorNum() ) {
+ 	if ( $database->getErrorNum() ) {
  		echo $database->stderr();
  		return false;
  	}
@@ -2761,7 +2789,8 @@ function listCoupons( $option, $type ) {
 	HTML_AcctExp::listCoupons( $rows, $pageNav, $option, $type );
  }
 
-function editCoupon( $id, $option, $new, $type ) {
+function editCoupon( $id, $option, $new, $type )
+{
 	global $database, $my, $acl;
 
 	$lists					= array();
@@ -2770,14 +2799,14 @@ function editCoupon( $id, $option, $new, $type ) {
 
 	$cph = new couponHandler();
 
-	if( !$new ) {
+	if ( !$new ) {
 		$cph->coupon = new Coupon($database, $type);
 		$cph->coupon->load( $id );
 
 		$params_values			= $cph->coupon->getParams( 'params' );
 		$discount_values		= $cph->coupon->getParams( 'discount' );
 		$restrictions_values	= $cph->coupon->getParams( 'restrictions' );
-	}else{
+	} else {
 		$cph->coupon = new coupon($database, 1);
 		$cph->coupon->createNew();
 		// mic_ fix php.error
@@ -2847,9 +2876,9 @@ function editCoupon( $id, $option, $new, $type ) {
 
 	// ensure user can't add group higher than themselves
 	$my_groups = $acl->get_object_groups( 'users', $my->id, 'ARO' );
-	if( is_array( $my_groups ) && count( $my_groups ) > 0 ) {
+	if ( is_array( $my_groups ) && count( $my_groups ) > 0 ) {
 		$ex_groups = $acl->get_group_children( $my_groups[0], 'ARO', 'RECURSE' );
-	}else{
+	} else {
 		$ex_groups = array();
 	}
 
@@ -2861,10 +2890,10 @@ function editCoupon( $id, $option, $new, $type ) {
 
 	// remove users 'above' me
 	$i = 0;
-	while( $i < count( $gtree ) ) {
-		if( in_array( $gtree[$i]->value, $ex_groups ) ) {
+	while ( $i < count( $gtree ) ) {
+		if ( in_array( $gtree[$i]->value, $ex_groups ) ) {
 			array_splice( $gtree, $i, 1 );
-		}else{
+		} else {
 			$i++;
 		}
 	}
@@ -2901,7 +2930,7 @@ function editCoupon( $id, $option, $new, $type ) {
 
 	// get usages
 	// mic: fix
-	if( !empty( $restrictions_values['usage_plans'] ) ) {
+	if ( !empty( $restrictions_values['usage_plans'] ) ) {
 		$query = 'SELECT id AS value, name As text'
 		. ' FROM #__acctexp_plans'
 		. ' WHERE id IN (' . implode( ',', explode( ';', $restrictions_values['usage_plans'] ) ) . ')'
@@ -2909,7 +2938,7 @@ function editCoupon( $id, $option, $new, $type ) {
 		$database->setQuery( $query );
 
 	 	$sel_usage_plans = $database->loadObjectList();
-	}else{
+	} else {
 		$sel_usage_plans = 0;
 	}
 
@@ -2946,41 +2975,42 @@ function editCoupon( $id, $option, $new, $type ) {
 	HTML_AcctExp::editCoupon( $option, $aecHTML, $cph->coupon, $type );
 }
 
-function saveCoupon( $option, $type ) {
+function saveCoupon( $option, $type )
+{
 	global $database, $mosConfig_live_site;
 
 	$new = 0;
 	$type = $_POST['type'];
 
-	if( $_POST['coupon_code'] != '' ) {
+	if ( $_POST['coupon_code'] != '' ) {
 
 		$cph = new couponHandler();
 
-		if( $_POST['id'] ) {
+		if ( $_POST['id'] ) {
 			$cph->coupon = new Coupon( $database, $type );
 			$cph->coupon->load( $_POST['id'] );
-			if( !$cph->coupon->id ) {
+			if ( !$cph->coupon->id ) {
 				$cph->coupon = new Coupon( $database, !$type );
 				$cph->coupon->load( $_POST['id'] );
 			}
-			if( $cph->coupon->id ) {
+			if ( $cph->coupon->id ) {
 				$cph->status = 1;
 			}
-		}else{
+		} else {
 			$cph->load( $_POST['coupon_code'] );
 		}
 
-		if( !$cph->status ) {
+		if ( !$cph->status ) {
 			$cph->coupon = new coupon($database, $type);
 			$cph->coupon->createNew($_POST['coupon_code']);
 			$cph->status = true;
 			$new = 1;
 		}
 
-		if( $cph->status ) {
+		if ( $cph->status ) {
 
-			if( !$new ) {
-				if( $cph->type != $_POST['type'] ) {
+			if ( !$new ) {
+				if ( $cph->type != $_POST['type'] ) {
 					// The type has been changed - switching this over to the other table
 					// Deleting old entry
 					$originaldate = $cph->coupon->created_date;
@@ -2997,27 +3027,28 @@ function saveCoupon( $option, $type ) {
 
 			$cph->coupon->savePOSTsettings( $post );
 
-			if( !$cph->coupon->check() ) {
+			if ( !$cph->coupon->check() ) {
 				echo "<script> alert('".$cph->coupon->getError()."'); window.history.go(-2); </script>\n";
 				exit();
 			}
-			if( !$cph->coupon->store() ) {
+			if ( !$cph->coupon->store() ) {
 				echo "<script> alert('".$cph->coupon->getError()."'); window.history.go(-2); </script>\n";
 				exit();
 			}
-		}else{
+		} else {
 			// TODO: log error
 		}
 
 		$cph->coupon->updateOrder();
 		mosRedirect( 'index2.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ) );
-	}else{
+	} else {
 		mosRedirect( 'index2.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ), _AEC_MSG_NO_COUPON_CODE );
 	}
 
 }
 
-function removeCoupon( $id, $option, $returnTask, $type ) {
+function removeCoupon( $id, $option, $returnTask, $type )
+{
 	global $database, $mosConfig_live_site;
 
 	$ids = implode( ',', $id );
@@ -3029,7 +3060,7 @@ function removeCoupon( $id, $option, $returnTask, $type ) {
 	;
 	$database->setQuery( $query	);
 
-	if( !$database->query() ) {
+	if ( !$database->query() ) {
 		echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
 		exit();
 	}
@@ -3039,16 +3070,18 @@ function removeCoupon( $id, $option, $returnTask, $type ) {
 	mosRedirect( 'index2.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ), $msg );
 }
 
-function cancelCoupon( $option, $type ) {
+function cancelCoupon( $option, $type )
+{
 	global $mosConfig_live_site;
 
 	mosRedirect( 'index2.php?option=' . $option . '&task=showCoupons' . ($type ? 'Static' : '' ), _AEC_CMN_EDIT_CANCELLED );
 }
 
-function changeCoupon( $cid=null, $state=0, $option, $type ) {
+function changeCoupon( $cid=null, $state=0, $option, $type )
+{
 	global $database, $mosConfig_live_site;
 
-	if( count( $cid ) < 1 ) {
+	if ( count( $cid ) < 1 ) {
 		$action = $state == 1 ? _AEC_CMN_TOPUBLISH : _AEC_CMN_TOUNPUBLISH;
 		echo "<script> alert('" . sprintf( html_entity_decode( _AEC_ALERT_SELECT_FIRST_TO ) ), $action . "'); window.history.go(-1);</script>\n";
 		exit;
@@ -3065,9 +3098,9 @@ function changeCoupon( $cid=null, $state=0, $option, $type ) {
 	$database->setQuery( $query	);
 	$database->query();
 
-	if( $state ) {
+	if ( $state ) {
 		$msg = $total . ' ' . _AEC_MSG_ITEMS_SUCC_PUBLISHED;
-	}else{
+	} else {
 		$msg = $total . ' ' . _AEC_MSG_ITEMS_SUCC_UNPUBLISHED;
 	}
 
@@ -3079,16 +3112,17 @@ function editCSS( $option ) {
 
 	$file = $mosConfig_absolute_path . '/components/' . $option . '/style.css';
 
-	if( $fp = fopen( $file, 'r' ) ) {
+	if ( $fp = fopen( $file, 'r' ) ) {
 		$content = fread( $fp, filesize( $file ) );
 		$content = htmlspecialchars( $content );
 		General_css::editCSSSource( $content, $option );
-	}else{
+	} else {
 		mosRedirect( 'index2.php?option='. $option .'&task=editCSS', sprintf( _AEC_MSG_OP_FAILED, $file ) );
 	}
 }
 
-function saveCSS( $option ) {
+function saveCSS( $option )
+{
 	global $mosConfig_absolute_path;
 
 	$filecontent = mosGetParam( $_POST, 'filecontent', '', _MOS_ALLOWHTML );
@@ -3101,36 +3135,38 @@ function saveCSS( $option ) {
 	$enable_write	= mosGetParam( $_POST, 'enable_write', 0 );
 	$oldperms		= fileperms( $file );
 
-	if( $enable_write ) {
+	if ( $enable_write ) {
 		@chmod( $file, $oldperms | 0222 );
 	}
 
 	clearstatcache();
-	if( is_writable( $file ) == false ) {
+	if ( is_writable( $file ) == false ) {
 		mosRedirect( 'index2.php?option='. $option .'&task=editCSS', _AEC_MSG_OP_FAILED_NOT_WRITEABLE );
 	}
 
-	if( $fp = fopen ($file, 'wb') ) {
+	if ( $fp = fopen ($file, 'wb') ) {
 		fputs( $fp, stripslashes( $filecontent ) );
 		fclose( $fp );
-		if( $enable_write ) {
+		if ( $enable_write ) {
 			@chmod( $file, $oldperms );
-		}elseif( mosGetParam( $_POST, 'disable_write', 0 ) ) {
+		} elseif ( mosGetParam( $_POST, 'disable_write', 0 ) ) {
 			@chmod( $file, $oldperms & 0777555 );
 		}
 		mosRedirect( 'index2.php?option='. $option .'&task=editCSS', _AEC_CMN_FILE_SAVED );
-	}elseif( $enable_write ) {
+	} elseif ( $enable_write ) {
 		@chmod($file, $oldperms);
 		mosRedirect( 'index2.php?option='. $option .'&task=editCSS', _AEC_MSG_OP_FAILED_NO_WRITE );
 	}
 
 }
 
-function cancelCSS ( $option ) {
+function cancelCSS ( $option )
+{
 	mosRedirect( 'index2.php?option='. $option );
 }
 
-function invoices ( $option ) {
+function invoices( $option )
+{
 	global $database, $mainframe, $mosConfig_list_limit;
 
 	$limit 		= intval( $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit ) );
@@ -3138,7 +3174,7 @@ function invoices ( $option ) {
 	$search 	= $mainframe->getUserStateFromRequest( "search{$option}_invoices", 'search', '' );
 
 	$where = array();
-	if( $search ) {
+	if ( $search ) {
 		$where[] = 'LOWER(invoice_number) LIKE \'%' . $database->getEscaped( trim( strtolower( $search ) ) ) . '%\'';
 	}
 
@@ -3163,7 +3199,7 @@ function invoices ( $option ) {
 	$database->setQuery( $query );
 	$rows = $database->loadObjectList();
 
-	if( $database->getErrorNum() ) {
+	if ( $database->getErrorNum() ) {
 		echo $database->stderr();
 		return false;
 	}
@@ -3171,24 +3207,25 @@ function invoices ( $option ) {
 	HTML_AcctExp::viewinvoices( $option, $rows, $search, $pageNav );
 }
 
-function clearInvoice( $option, $invoice_number, $applyplan, $task ) {
+function clearInvoice( $option, $invoice_number, $applyplan, $task )
+{
 	global $database;
 
 	$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number );
 
-	if( $invoiceid ) {
+	if ( $invoiceid ) {
 		$objInvoice = new Invoice( $database );
 		$objInvoice->load( $invoiceid );
 
-		if( $applyplan ) {
+		if ( $applyplan ) {
 			$objInvoice->pay();
-		}else{
+		} else {
 			$objInvoice->setTransactionDate();
 		}
 
-		if( strcmp( $task, 'edit' ) == 0) {
+		if ( strcmp( $task, 'edit' ) == 0) {
 			$userid = '&userid=' . $objInvoice->userid;
-		}else{
+		} else {
 			$userid = '';
 		}
 	}
@@ -3196,12 +3233,13 @@ function clearInvoice( $option, $invoice_number, $applyplan, $task ) {
 	mosRedirect( 'index2.php?option=' . $option . '&task=' . $task . $userid, _AEC_MSG_INVOICE_CLEARED );
 }
 
-function cancelInvoice( $option, $invoice_number, $task ) {
+function cancelInvoice( $option, $invoice_number, $task )
+{
 	global $database;
 
 	$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number );
 
-	if( $invoiceid ) {
+	if ( $invoiceid ) {
 		$objInvoice = new Invoice( $database );
 		$objInvoice->load( $invoiceid );
 
@@ -3211,9 +3249,9 @@ function cancelInvoice( $option, $invoice_number, $task ) {
 		$database->setQuery( $query );
 		$database->query();
 
-		if( strcmp( $task, 'edit' ) == 0) {
+		if ( strcmp( $task, 'edit' ) == 0) {
 			$userid = '&userid=' . $objInvoice->userid;
-		}else{
+		} else {
 			$userid = '';
 		}
 	}
@@ -3221,7 +3259,8 @@ function cancelInvoice( $option, $invoice_number, $task ) {
 	mosRedirect( 'index2.php?option=' . $option . '&task=' . $task . $userid, _REMOVED );
 }
 
-function history( $option ) {
+function history( $option )
+{
 	global $database, $mainframe, $mosConfig_list_limit;
 
 	$limit 		= intval( $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit ) );
@@ -3229,7 +3268,7 @@ function history( $option ) {
 	$search 	= $mainframe->getUserStateFromRequest( "search{$option}_log_history", 'search', '' );
 
 	$where = array();
-	if( $search ) {
+	if ( $search ) {
 		$where[] = 'LOWER(user_name) LIKE \'%' . $database->getEscaped( trim( strtolower( $search ) ) ) . '%\'';
 	}
 
@@ -3255,7 +3294,7 @@ function history( $option ) {
 	$database->setQuery( $query );
 	$rows = $database->loadObjectList();
 
-	if( $database->getErrorNum() ) {
+	if ( $database->getErrorNum() ) {
 		echo $database->stderr();
 		return false;
 	}
@@ -3263,7 +3302,8 @@ function history( $option ) {
 	HTML_AcctExp::viewhistory( $option, $rows, $search, $pageNav );
 }
 
-function eventlog( $option ) {
+function eventlog( $option )
+{
 	global $database, $mainframe, $mosConfig_list_limit;
 
 	$limit 		= intval( $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit ) );
@@ -3271,14 +3311,14 @@ function eventlog( $option ) {
 	$search 	= $mainframe->getUserStateFromRequest( "search{$option}_invoices", 'search', '' );
 
 	$where = array();
-	if( $search ) {
+	if ( $search ) {
 		$where[] = 'LOWER(event) LIKE \'%' . $database->getEscaped( trim( strtolower( $search ) ) ) . '%\'';
 	}
 
 	$tags = ( !empty( $_REQUEST['tags'] ) ? $_REQUEST['tags'] : null );
 
-	if( is_array( $tags ) ) {
-		foreach( $tags as $tag ) {
+	if ( is_array( $tags ) ) {
+		foreach ( $tags as $tag ) {
 			$where[] = 'LOWER(tags) LIKE \'%' . trim( strtolower( $tag ) ) . '%\'';
 		}
 	}
@@ -3304,13 +3344,13 @@ function eventlog( $option ) {
 	$database->setQuery( $query );
 	$rows = $database->loadObjectList();
 
-	if( $database->getErrorNum() ) {
+	if ( $database->getErrorNum() ) {
 		echo $database->stderr();
 		return false;
 	}
 
 	$events = array();
-	foreach( $rows as $id => $row ) {
+	foreach ( $rows as $id => $row ) {
 		$events[$id]->id		= $row->id;
 		$events[$id]->datetime	= $row->datetime;
 		$events[$id]->short		= $row->short;
@@ -3319,10 +3359,10 @@ function eventlog( $option ) {
 
 		$params = array();
 
-		if( $row->params ) {
-			foreach( explode( "\n", $row->params ) as $param ) {
+		if ( $row->params ) {
+			foreach ( explode( "\n", $row->params ) as $param ) {
 				$p = explode( '=', $param);
-				if( !($p[0] == '' ) ) {
+				if ( !($p[0] == '' ) ) {
 					$params[] = $p[0] . '(' . $p[1] . ')';
 				}
 			}
@@ -3333,7 +3373,8 @@ function eventlog( $option ) {
 	HTML_AcctExp::eventlog( $option, $events, $search, $pageNav );
 }
 
-function migrate( $option ) {
+function migrate( $option )
+{
 	global $database;
 
 	$query = 'SELECT id'
@@ -3344,13 +3385,13 @@ function migrate( $option ) {
 	$database->setQuery( $query );
 	$rows = $database->loadResultArray();
 
-	foreach( $rows as $userid ) {
+	foreach ( $rows as $userid ) {
 		$mosUser = new mosUser( $database );
 		$mosUser->load( $userid );
 
 		// Fixing mosLock broken user accounts
 		// it sometimes seems to forget setting the usertype
-		if( $mosUser->usertype == '' ) {
+		if ( $mosUser->usertype == '' ) {
 			$mosUser->usertype = 'Registered';
 			$mosUser->check();
 			$mosUser->store();
@@ -3358,7 +3399,7 @@ function migrate( $option ) {
 
 		// If subscription control was previously done by blocking,
 		// unblock users
-		if( $mosUser->block == 1 ) {
+		if ( $mosUser->block == 1 ) {
 			$mosUser->block = 0;
 			$mosUser->check();
 			$mosUser->store();
@@ -3370,7 +3411,7 @@ function migrate( $option ) {
 
 		$subscriptionHandler = new mosSubscription( $database );
 
-		if( !$subscriptionid ) {
+		if ( !$subscriptionid ) {
 			$subscriptionHandler->load( 0 );
 
 			$subscriptionHandler->plan			= 1;
@@ -3383,7 +3424,7 @@ function migrate( $option ) {
 		// Set Expiration date one year after registration
 		$expirationHandler = new mosAcctExp( $database );
 
-		if( !$expirationid ) {
+		if ( !$expirationid ) {
 			$expirationHandler->load(0);
 			$expirationHandler->userid = $userid;
 
@@ -3406,7 +3447,7 @@ $query = 'SELECT id'
 $database->setQuery( $query );
 $rows = $database->loadResultArray();
 
-foreach( $rows as $userid ){
+foreach ( $rows as $userid ){
 	$user = new mosUser($database);
 	$user->load(1);
 	print_r($user);
@@ -3415,17 +3456,18 @@ exit();
 
 }
 
-function hackcorefile( $option, $filename, $check_hack, $undohack ) {
+function hackcorefile( $option, $filename, $check_hack, $undohack )
+{
 	global $mosConfig_absolute_path, $database;
 	global $mosConfig_debug;
 
-	if( !defined( '_AEC_LANG_INCLUDED_MI' ) ) {
+	if ( !defined( '_AEC_LANG_INCLUDED_MI' ) ) {
 		global $mainframe;
 
 		$langPathMI = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/micro_integration/language/';
-		if( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
+		if ( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
 			include_once( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' );
-		}else{
+		} else {
 			include_once( $langPathMI . 'english.php' );
 		}
 	}
@@ -3557,7 +3599,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 	$hacks[$n]['legacy']			=	1;
 	$hacks[$n]['important']			=	1;
 
-	if( strcmp($cmsname, "joomla") === 0 ) {
+	if ( strcmp($cmsname, "joomla") === 0 ) {
 		$n = 'joomlaphp1';
 		$hacks[$n]['name']			=	$cmsname . '.php ' . _AEC_HACK_HACK . ' #1';
 		$hacks[$n]['desc']			=	_AEC_HACKS_NOTAUTH;
@@ -3621,7 +3663,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 	$hacks[$n]['legacy']			=	1;
 	$hacks[$n]['important']			=	1;
 
-	if( GeneralInfoRequester::detect_component( 'UHP2' ) ) {
+	if ( GeneralInfoRequester::detect_component( 'UHP2' ) ) {
 		$n = 'uhp2menuentry';
 		$hacks[$n]['name']			=	_AEC_HACKS_UHP2;
 		$hacks[$n]['desc']			=	_AEC_HACKS_UHP2_DESC;
@@ -3635,7 +3677,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 		. _AEC_SPEC_MENU_ENTRY . '</a>'."\n<?php ".$aec_hack_end."?>", $n, $n );
 	}
 
-	if( GeneralInfoRequester::detect_component( 'CB' ) ) {
+	if ( GeneralInfoRequester::detect_component( 'CB' ) ) {
 		$n = 'comprofilerphp2';
 		$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #2';
 		$hacks[$n]['desc']			=	_AEC_HACKS_CB2;
@@ -3733,7 +3775,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveRegistration" />';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
 		$hacks[$n]['important']		=	1;
-	}else{
+	} else {
 		$n = 'registrationphp2';
 		$hacks[$n]['name']			=	'registration.php ' . _AEC_HACK_HACK . ' #2';
 		$hacks[$n]['desc']			=	_AEC_HACKS_REG2;
@@ -3791,7 +3833,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regredirect, $n, $n);
 	}
 
-	if( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+	if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
 		$n = 'comprofilerphp4';
 		$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #4';
 		$hacks[$n]['desc']			=	_AEC_HACKS_MI1;
@@ -3838,7 +3880,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 		$hacks[$n]['read']			=	'$row->checkin();';
 		$hacks[$n]['insert']		=	sprintf( $aec_uchangehack, $n, 'adminuser', $n ) . "\n" . $hacks[$n]['read'];
 		*/
-	}else{
+	} else {
 		$n = 'userphp';
 		$hacks[$n]['name']			=	'user.php';
 		$hacks[$n]['desc']			=	_AEC_HACKS_MI1;
@@ -3864,7 +3906,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 		$hacks[$n]['read']			=	'$row->checkin();';
 		$hacks[$n]['insert']		=	sprintf( $aec_uchangehack, $n, 'adminuser',$n ) . "\n" . $hacks[$n]['read'];
 
-	if( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+	if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
 		$n = 'comprofilerphp';
 		$hacks[$n]['name']			=	"comprofiler.php";
 		$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY;
@@ -3876,7 +3918,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 		$hacks[$n]['important']		=	1;
 	}
 
-	if( GeneralInfoRequester::detect_component( 'CBM' ) ) {
+	if ( GeneralInfoRequester::detect_component( 'CBM' ) ) {
 		$n = 'comprofilermoderator';
 		$hacks[$n]['name']			=	'comprofilermoderator.php';
 		$hacks[$n]['desc']			=	_AEC_HACKS_CBM;
@@ -3892,30 +3934,30 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 	$hacks = array_merge( $hacks, $new_hacks );
 
 	// Receive the status for the hacks
-	foreach( $hacks as $name => $hack ) {
+	foreach ( $hacks as $name => $hack ) {
 
 		// mic: initialize var and set to 0
 		$hacks[$name]['status'] = 0;
 		$hacks[$name]['done']	= '';
 
-		if( $hack['type'] ) {
+		if ( $hack['type'] ) {
 			switch( $hack['type'] ) {
 				case 'file':
 					// mic: fix if CMS is not Joomla or Mambo
-					if( $hack['filename'] != 'UNKNOWN' ) {
+					if ( $hack['filename'] != 'UNKNOWN' ) {
 						$originalFileHandle = fopen( $hack['filename'], 'r' ) or die ( "Cannot open $originalFile<br>" );
 						$oldData			= fread( $originalFileHandle, filesize($hack['filename'] ) );
 						fclose( $originalFileHandle );
 
-						if( strpos( $oldData, 'AEC HACK START' ) || strpos( $oldData, 'AEC CHANGE START' )) {
+						if ( strpos( $oldData, 'AEC HACK START' ) || strpos( $oldData, 'AEC CHANGE START' )) {
 							$hacks[$name]['status'] = 1;
-						}else{
-							if( ( strpos( $oldData, 'AEC HACK ' . $name . ' START' ) > 0 ) || ( strpos( $oldData, 'AEC CHANGE ' . $name . ' START' ) > 0 )) {
+						} else {
+							if ( ( strpos( $oldData, 'AEC HACK ' . $name . ' START' ) > 0 ) || ( strpos( $oldData, 'AEC CHANGE ' . $name . ' START' ) > 0 )) {
 								$hacks[$name]['status'] = 1;
 							}
 						}
 
-						if( function_exists( 'posix_getpwuid' ) ) {
+						if ( function_exists( 'posix_getpwuid' ) ) {
 							$hacks[$name]['fileinfo'] = posix_getpwuid( fileowner( $hack['filename'] ) );
 						}
 					}
@@ -3930,7 +3972,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 					$database->setQuery( $query );
 					$count = $database->loadResult();
 
-					if( $count ) {
+					if ( $count ) {
 						$hacks[$name]['status'] = 1;
 					}
 					break;
@@ -3939,10 +3981,10 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 	}
 
 	// Commit the hacks
-	if( !$check_hack ) {
+	if ( !$check_hack ) {
 
 		// mic: debug
-		if( $mosConfig_debug ) {
+		if ( $mosConfig_debug ) {
 			echo '<pre>'
 			. '<hr />'
 			. 'filename: ' . $filename . '<br />'
@@ -3956,29 +3998,29 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 		switch( $hacks[$filename]['type'] ) {
 			case 'file':
 				// mic: fix if CMS is not Joomla or Mambo
-				if( $hack['filename'] != 'UNKNOWN' ) {
+				if ( $hack['filename'] != 'UNKNOWN' ) {
 					$originalFileHandle = fopen( $hacks[$filename]['filename'], 'r' ) or die ("Cannot open $originalFile<br>");
 					// Transfer File into variable $oldData
 					$oldData = fread( $originalFileHandle, filesize( $hacks[$filename]['filename'] ) );
 					fclose( $originalFileHandle );
 
-					if( !$undohack ) { // hack
+					if ( !$undohack ) { // hack
 						$newData			= str_replace( $hacks[$filename]['read'], $hacks[$filename]['insert'], $oldData );
 						$hacks[$filename]['done'] = 'Changes successfully commited';
 
 					    //make a backup
-					    if( !backupFile( $hacks[$filename]['filename'], $hacks[$filename]['filename'] . '.aec-backup' ) ) {
+					    if ( !backupFile( $hacks[$filename]['filename'], $hacks[$filename]['filename'] . '.aec-backup' ) ) {
 							// Echo error message
 
-					    }else{
+					    } else {
 					    	$hacks[$filename]['done'] .= '<br />Backup successfully created';
 					    }
 
-					}else{ // undo hack
-						if( ( strcmp( $hacks[$filename]['status'], 'legacy' ) === 0 ) && !$hacks[$filename]['legacy'] ) {
+					} else { // undo hack
+						if ( ( strcmp( $hacks[$filename]['status'], 'legacy' ) === 0 ) && !$hacks[$filename]['legacy'] ) {
 							$newData = preg_replace( "/(\/\/ AEC HACK START\n)((.*\n))*?(\/\/ AEC HACK END\n)/", $hacks[$filename]['read'], $oldData );
 							$newData = preg_replace( "/(\/\/ AEC CHANGE START\n)((.*\n))*?(\/\/ AEC CHANGE END\n)/", $hacks[$filename]['read'], $oldData );
-						}else{
+						} else {
 							$newData = str_replace( $hacks[$filename]['insert'], $hacks[$filename]['read'], $oldData );
 						}
 					}
@@ -3986,7 +4028,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 				    $oldperms = fileperms( $hacks[$filename]['filename'] );
 				    @chmod( $hacks[$filename]['filename'], $oldperms | 0222 );
 
-				    if( $fp = fopen( $hacks[$filename]['filename'], 'wb' ) ) {
+				    if ( $fp = fopen( $hacks[$filename]['filename'], 'wb' ) ) {
 				        fwrite( $fp, $newData, strlen( $newData ) );
 				        fclose( $fp );
 				        @chmod( $hacks[$filename]['filename'], $oldperms );
@@ -3995,11 +4037,11 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 				break;
 
 			case 'menuentry':
-				if( !$undohack ) { // Create menu entry
+				if ( !$undohack ) { // Create menu entry
 					$query = 'INSERT INTO #__menu'
 					. ' VALUES (\'\', \'usermenu\', \'' . _AEC_SPEC_MENU_ENTRY . '\', \'index.php?option=com_acctexp&task=subscriptionDetails\', \'url\', 1, 0, 0, 0, 6, 0, \'0000-00-00 00:00:00\', 0, 0, 1, 0, \'menu_image=-1\')'
 					;
-				}else{ // Remove menu entry
+				} else { // Remove menu entry
 					$query = 'DELETE'
 					. ' FROM #__menu'
 					. ' WHERE link LIKE \'index.php?option=com_acctexp%\''
@@ -4015,8 +4057,9 @@ function hackcorefile( $option, $filename, $check_hack, $undohack ) {
 	return $hacks;
 }
 
-function backupFile( $file, $file_new ) {
-    if( !copy( $file, $file_new ) ) {
+function backupFile( $file, $file_new )
+{
+    if ( !copy( $file, $file_new ) ) {
         return false;
     }
     return true;

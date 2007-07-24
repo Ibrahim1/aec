@@ -30,11 +30,13 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class ComponentMenu {
+class ComponentMenu
+{
 	/**
 	* Draws the menu
 	*/
-	function NEW_MENU () {  // To be deleted?
+	function NEW_MENU()
+	{  // To be deleted?
 		mosMenuBar::startTable();
 		mosMenuBar::custom( 'save', 'save.png',  'save_f2.png', _SAVE, false );
 		mosMenuBar::custom( 'cancel', 'cancel.png',  'cancel_f2.png', _CANCEL, false );
@@ -42,14 +44,16 @@ class ComponentMenu {
 		mosMenuBar::endTable();
 	}
 
-	function NEW_EXPIRATION () {
+	function NEW_EXPIRATION()
+	{
 		mosMenuBar::startTable();
 		mosMenuBar::custom( 'add', 'edit.png',  'edit_f2.png', _CONFIGURE );
 		mosMenuBar::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
 		mosMenuBar::endTable();
 	}
 
-	function EDIT_EXPIRATION () {
+	function EDIT_EXPIRATION()
+	{
 		mosMenuBar::startTable();
 		mosMenuBar::custom( 'edit', 'edit.png',  'edit_f2.png', _CONFIGURE );
 		mosMenuBar::custom( 'expire', 'restore.png',  'restore_f2.png', _REMOVE );
@@ -57,21 +61,24 @@ class ComponentMenu {
 		mosMenuBar::endTable();
 	}
 
-	function ADD_MENU () {
+	function ADD_MENU()
+	{
 		mosMenuBar::startTable();
 		mosMenuBar::custom( 'save', 'save.png',  'save_f2.png', _SAVE, false );
 		mosMenuBar::custom( 'cancel', 'cancel.png',  'cancel_f2.png', _CANCEL, false );
 		mosMenuBar::endTable();
 	}
 
-	function EDIT_MENU () {
+	function EDIT_MENU()
+	{
 		mosMenuBar::startTable();
 		mosMenuBar::custom( 'save', 'save.png',  'save_f2.png', _SAVE, false );
 		mosMenuBar::custom( 'cancel', 'cancel.png',  'cancel_f2.png', _CANCEL, false );
 		mosMenuBar::endTable();
 	}
 
-	function EDIT_SETTINGS () {
+	function EDIT_SETTINGS()
+	{
 		mosMenuBar::startTable();
 		mosMenuBar::custom( 'saveSettings', 'save.png',  'save_f2.png', _SAVE, false );
 		mosMenuBar::custom( 'cancelSettings', 'cancel.png',  'cancel_f2.png', _CANCEL, false );
@@ -79,7 +86,8 @@ class ComponentMenu {
 		mosMenuBar::endTable();
 	}
 
-	function LIST_SUBSCRIPTIONPLANS () {
+	function LIST_SUBSCRIPTIONPLANS()
+	{
 		mosMenuBar::startTable();
 		mosMenuBar::custom( 'publishSubscriptionPlan', 'publish.png',  'publish_f2.png', _PUBLISH_PAYPLAN, true );
 		mosMenuBar::custom( 'unpublishSubscriptionPlan', 'unpublish.png',  'unpublish_f2.png', _UNPUBLISH_PAYPLAN, true );
@@ -90,14 +98,16 @@ class ComponentMenu {
 		mosMenuBar::endTable();
 	}
 
-	function EDIT_SUBSCRIPTIONPLAN () {
+	function EDIT_SUBSCRIPTIONPLAN()
+	{
 		mosMenuBar::startTable();
 		mosMenuBar::custom( 'saveSubscriptionPlan', 'save.png',  'save_f2.png', _SAVE_PAYPLAN, false );
 		mosMenuBar::custom( 'cancelSubscriptionPlan', 'cancel.png',  'cancel_f2.png', _CANCEL_PAYPLAN, false );
 		mosMenuBar::endTable();
 	}
 
-	function LIST_MICROINTEGRATIONS () {
+	function LIST_MICROINTEGRATIONS()
+	{
 		mosMenuBar::startTable();
 		mosMenuBar::custom( 'publishMicroIntegration', 'publish.png',  'publish_f2.png', _PUBLISH_PAYPLAN, true );
 		mosMenuBar::custom( 'unpublishMicroIntegration', 'unpublish.png',  'unpublish_f2.png', _UNPUBLISH_PAYPLAN, true );
@@ -108,14 +118,16 @@ class ComponentMenu {
 		mosMenuBar::endTable();
 	}
 
-	function EDIT_MICROINTEGRATION () {
+	function EDIT_MICROINTEGRATION()
+	{
 		mosMenuBar::startTable();
 		mosMenuBar::custom( 'saveMicroIntegration', 'save.png',  'save_f2.png', _SAVE_PAYPLAN, false );
 		mosMenuBar::custom( 'cancelMicroIntegration', 'cancel.png',  'cancel_f2.png', _CANCEL_PAYPLAN, false );
 		mosMenuBar::endTable();
 	}
 
-	function LIST_COUPONS () {
+	function LIST_COUPONS()
+	{
 		mosMenuBar::startTable();
 		mosMenuBar::custom( 'publishCoupon', 'publish.png',  'publish_f2.png', _PUBLISH_PAYPLAN, true );
 		mosMenuBar::custom( 'unpublishCoupon', 'unpublish.png',  'unpublish_f2.png', _UNPUBLISH_PAYPLAN, true );
@@ -126,14 +138,16 @@ class ComponentMenu {
 		mosMenuBar::endTable();
 	}
 
-	function EDIT_COUPON () {
+	function EDIT_COUPON()
+	{
 		mosMenuBar::startTable();
 		mosMenuBar::custom( 'saveCoupon', 'save.png',  'save_f2.png', _SAVE_PAYPLAN, false );
 		mosMenuBar::custom( 'cancelCoupon', 'cancel.png',  'cancel_f2.png', _CANCEL_PAYPLAN, false );
 		mosMenuBar::endTable();
 	}
 
-	function LIST_COUPONS_STATIC () {
+	function LIST_COUPONS_STATIC()
+	{
 		mosMenuBar::startTable();
 		mosMenuBar::custom( 'publishCouponStatic', 'publish.png',  'publish_f2.png', _PUBLISH_PAYPLAN, true );
 		mosMenuBar::custom( 'unpublishCouponStatic', 'unpublish.png',  'unpublish_f2.png', _UNPUBLISH_PAYPLAN, true );
@@ -144,28 +158,33 @@ class ComponentMenu {
 		mosMenuBar::endTable();
 	}
 
-	function EDIT_COUPON_STATIC () {
+	function EDIT_COUPON_STATIC()
+	{
 		mosMenuBar::startTable();
 		mosMenuBar::custom( 'saveCouponStatic', 'save.png',  'save_f2.png', _SAVE_PAYPLAN, false );
 		mosMenuBar::custom( 'cancelCouponStatic', 'cancel.png',  'cancel_f2.png', _CANCEL_PAYPLAN, false );
 		mosMenuBar::endTable();
 	}
 
-	function NO_MENU () {
+	function NO_MENU()
+	{
 		mosMenuBar::startTable();
 		mosMenuBar::back();
 		mosMenuBar::endTable();
 	}
 
-	function MINI_MENU () {
+	function MINI_MENU()
+	{
 		aecMiniBar::_aecstartTable();
 		aecMiniBar::_aeccustom( 'showCentral', 'aec_logo_tiny_grey.png',  'aec_logo_tiny.png', _CENTRAL_PAGE , false );
 		aecMiniBar::_aecendTable();
 	}
 }
 
-class CommonMenu {
-	function EDIT_CSS_MENU (){
+class CommonMenu
+{
+	function EDIT_CSS_MENU()
+	{
 		mosMenuBar::startTable();
 		mosMenuBar::save( 'saveCSS' );
 		mosMenuBar::cancel('cancelCSS');
@@ -178,12 +197,14 @@ class CommonMenu {
  * adopted class from core
  *
  */
-class aecMiniBar {
-
+class aecMiniBar
+{
 	/**
 	* Writes the start of the button bar table
 	*/
-	function _aecstartTable() { ?>
+	function _aecstartTable()
+	{
+		?>
 		<script type="text/javascript">
 		    /* <![CDATA[ */
             function MM_swapImgRestore() { //v3.0
@@ -199,25 +220,28 @@ class aecMiniBar {
 	/**
 	* Writes the end of the menu bar table
 	*/
-    function _aecendTable() { ?>
+	function _aecendTable()
+	{
+    	?>
 		</tr>
 		</table>
 		<?php
-    }
+	}
 
 	/**
 	* Writes a custom option and task button for the button bar WITHOUT text (only alt & title)
-	* @param string		The task to perform (picked up by the switch($task) blocks
+	* @param string		The task to perform (picked up by the switch ($task) blocks
 	* @param string		The image to display
 	* @param string		The image to display when moused over
 	* @param string		The alt text for the icon image
 	* @param boolean	True if required to check that a standard list item is checked
 	* @param string		Hide menu
 	*/
-	function _aeccustom( $task='', $icon='', $iconOver='', $alt='', $listSelect = true, $path = '', $prefix = '' ) {
+	function _aeccustom( $task='', $icon='', $iconOver='', $alt='', $listSelect = true, $path = '', $prefix = '' )
+	{
 		global $adminLanguage;
 
-		if( !$path ) {
+		if ( !$path ) {
 			$path = '/administrator/components/com_acctexp/images/icons/';
 		}
 
@@ -225,28 +249,30 @@ class aecMiniBar {
 		$icon 	= ( $iconOver ? $iconOver : $icon );
 		$image2	= mosAdminMenus::ImageCheckAdmin( $icon, $path, NULL, NULL, $alt, $task, 0 );
 
-		if( $listSelect ) {
+		if ( $listSelect ) {
 			$js =  rawurlencode( 'if(document.adminForm.boxchecked.value==0){alert(\''
 			. aecMiniBar::encodeENT( _AEC_ALERT_SELECT_FIRST_TO . ' ' . $alt )
 			. '\');}else{' . $prefix . 'submitbutton(\''
 			. $task . '\');}' )
 			;
-		}else{
+		} else {
 			$js = $prefix .'submitbutton(\'' . $task . '\')';
 		}
 
 		$alt_tmp = str_replace( '<br />', ' ', $alt );
 
-		if( $icon && $iconOver ){ ?>
-            <td>
-                <a class="aectoolbar" href="javascript:<?php echo $js; ?>;" onmouseout="MM_swapImgRestore();" onmouseover="MM_swapImage('<?php echo $task; ?>','','<?php echo $image2; ?>',1);" title="<?php echo $alt_tmp; ?>"><img name="<?php echo $task; ?>" src="<?php echo $image; ?>" alt="<?php echo $alt_tmp; ?>" border="0" align="middle" /></a>
-            </td>
+		if ( $icon && $iconOver ){
+			?>
+			<td>
+				<a class="aectoolbar" href="javascript:<?php echo $js; ?>;" onmouseout="MM_swapImgRestore();" onmouseover="MM_swapImage('<?php echo $task; ?>','','<?php echo $image2; ?>',1);" title="<?php echo $alt_tmp; ?>"><img name="<?php echo $task; ?>" src="<?php echo $image; ?>" alt="<?php echo $alt_tmp; ?>" border="0" align="middle" /></a>
+			</td>
             <?php
-		}else{ ?>
-            <td>
-                <a class="aectoolbar" href="<?php echo $href; ?>" title="<?php echo $alt_tmp; ?>"></a>
-            </td>
-            <?php
+		} else {
+			?>
+			<td>
+				<a class="aectoolbar" href="<?php echo $href; ?>" title="<?php echo $alt_tmp; ?>"></a>
+			</td>
+			<?php
 		}
 	}
 
@@ -254,7 +280,8 @@ class aecMiniBar {
 	* Writes a custom option and task button for the button bar
 	* same as _aeccustom PLUS hide menu items
 	*/
-	function _aeccustomX( $task='', $icon='', $iconOver='', $alt='', $listSelect=true, $path ) {
+	function _aeccustomX( $task='', $icon='', $iconOver='', $alt='', $listSelect=true, $path )
+	{
         mosMenuBar::custom( $task, $icon, $iconOver, $alt, $listSelect, $path, 'hideMainMenu();' );
     }
 
@@ -262,8 +289,8 @@ class aecMiniBar {
 	* encodes given language string and send encoded text back
 	* new function by [ mic - www.joomx.com ] 2006.11.30
 	*/
-	function encodeENT( $text1, $text2='' ){
-
+	function encodeENT( $text1, $text2='' )
+	{
 		$text = sprintf( html_entity_decode( $text1 ), html_entity_decode( $text2 ) );
 		return $text;
 	}

@@ -39,13 +39,15 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 
 global $mosConfig_absolute_path;
 
-class HTML_frontEnd {
-
-	function HTML_frontEnd() {
+class HTML_frontEnd
+{
+	function HTML_frontEnd()
+	{
 		$this->aec_styling( 'com_acctexp' );
 	}
 
-	function aec_styling( $option ) {
+	function aec_styling( $option )
+	{
 		global $mainframe;
 
     	$html = '<link rel="stylesheet" type="text/css" media="all" href="'
@@ -57,7 +59,8 @@ class HTML_frontEnd {
     	$mainframe->appendMetaTag( 'keywords', 'AEC Account Expiration Control' );
 	}
 
-	function expired($option, $userid, $expiration, $name, $username, $invoice, $trial) {
+	function expired($option, $userid, $expiration, $name, $username, $invoice, $trial)
+	{
 		global $database;
 
 		$cfg = new Config_General( $database ); ?>
@@ -66,9 +69,9 @@ class HTML_frontEnd {
 		if ($cfg->cfg['customtext_expired_keeporiginal']) {?>
 			<div id="expired_greeting">
 				<p><?php echo sprintf( _DEAR, $name ); ?></p><p><?php
-					if( $trial ) {
+					if ( $trial ) {
 						echo _EXPIRED_TRIAL;
-					}else{
+					} else {
 						echo _EXPIRED;
 					}
 					echo $expiration; ?>
@@ -76,7 +79,7 @@ class HTML_frontEnd {
 			</div>
 			<?php
 		}
-		if( $cfg->cfg['customtext_expired'] ) { ?>
+		if ( $cfg->cfg['customtext_expired'] ) { ?>
 			<p><?php echo $cfg->cfg['customtext_expired']; ?></p>
 			<?php
 		} ?>
@@ -103,7 +106,8 @@ class HTML_frontEnd {
 		<?php
 	}
 
-	function pending($option, $objUser, $invoice, $reason = 0) {
+	function pending($option, $objUser, $invoice, $reason = 0)
+	{
 		global $database;
 
 		$actions =	_PENDING_OPENINVOICE
@@ -120,7 +124,7 @@ class HTML_frontEnd {
 		. _HISTORY_ACTION_CANCEL
 		. '</a>';
 
-		if( $reason !== 0 ) {
+		if ( $reason !== 0 ) {
 			$actions .= ' ' . $reason;
 		}
 
@@ -128,18 +132,18 @@ class HTML_frontEnd {
 
 		<div class="componentheading"><?php echo _PENDING_TITLE; ?></div>
 		<?php
-		if( $cfg->cfg['customtext_pending_keeporiginal'] ) { ?>
+		if ( $cfg->cfg['customtext_pending_keeporiginal'] ) { ?>
 			<p class="expired_dear"><?php echo sprintf( _DEAR, $objUser->name ) . ','; ?></p>
 			<p class="expired_date"><?php echo _WARN_PENDING; ?></p>
 			<?php
 		}
-		if( $cfg->cfg['customtext_pending'] ) { ?>
+		if ( $cfg->cfg['customtext_pending'] ) { ?>
 			<p><?php echo $cfg->cfg['customtext_pending']; ?></p>
 			<?php
 		} ?>
 		<div id="box_pending">
 		<?php
-		if( strcmp($invoice, "none") === 0 ) { ?>
+		if ( strcmp($invoice, "none") === 0 ) { ?>
 			<p><?php echo _PENDING_NOINVOICE; ?></p>
 			<div id="upgrade_button">
 				<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=renewSubscription' ); ?>" method="post">
@@ -150,7 +154,7 @@ class HTML_frontEnd {
 				</form>
 			</div>
 			<?php
-		}elseif( $invoice ) { ?>
+		} elseif ( $invoice ) { ?>
 			<p><?php echo $actions; ?></p>
 			<?php
 		} ?>
@@ -158,7 +162,8 @@ class HTML_frontEnd {
 		<?php
 	}
 
-	function subscriptionDetails( $option, $invoices, $metaUser, $recurring, $pp, $mi, $alert, $selected_plan = false ) {
+	function subscriptionDetails( $option, $invoices, $metaUser, $recurring, $pp, $mi, $alert, $selected_plan = false )
+	{
 		global $database;
 
 		$cfg = new Config_General( $database ); ?>
@@ -177,7 +182,7 @@ class HTML_frontEnd {
 					<th><?php echo _HISTORY_COL5_TITLE;?></th>
 				</tr>
 				<?php
-				foreach( $invoices as $invoice ) { ?>
+				foreach ( $invoices as $invoice ) { ?>
 					<tr<?php echo $invoice['rowstyle'] ?>>
 						<td><?php echo $invoice['invoice_number']; ?></td>
 						<td><?php echo $invoice['amount'] . '&nbsp;' . $invoice['currency_code']; ?></td>
@@ -189,20 +194,20 @@ class HTML_frontEnd {
 				} ?>
 			</table>
 			<?php
-			if( is_object( $selected_plan ) ) { ?>
+			if ( is_object( $selected_plan ) ) { ?>
 				<h2><?php echo $selected_plan->name; ?></h2>
 				<p><?php echo $selected_plan->desc; ?></p>
 				<?php
 			}
-			if( $mi ) {
+			if ( $mi ) {
 				echo $mi;
 			} ?>
 			<div id="box_expired">
 			<div id="alert_level_<?php echo $alert['level']; ?>">
 				<div id="expired_greeting"><?php
-					if( $metaUser->objSubscription->lifetime == 1 ) { ?>
+					if ( $metaUser->objSubscription->lifetime == 1 ) { ?>
 						<p><strong><?php echo _RENEW_LIFETIME; ?></strong></p><?php
-					}else{ ?>
+					} else { ?>
 						<p>
 							<?php echo HTML_frontend::DisplayDateInLocalTime( $metaUser->objExpiration->expiration, true, true ); ?>
 						</p>
@@ -211,17 +216,17 @@ class HTML_frontEnd {
 				</div>
 				<div id="days_left">
 					<?php
-					if( strcmp( $alert['daysleft'], 'infinite' ) === 0 ) {
+					if ( strcmp( $alert['daysleft'], 'infinite' ) === 0 ) {
 						$daysleft			= _RENEW_DAYSLEFT_INFINITE;
 						$daysleft_append	= _RENEW_DAYSLEFT;
-					}elseif( strcmp( $alert['daysleft'], 'excluded' ) === 0 ) {
+					} elseif ( strcmp( $alert['daysleft'], 'excluded' ) === 0 ) {
 						$daysleft			= _RENEW_DAYSLEFT_EXCLUDED;
 						$daysleft_append	= '';
-					}else{
-						if( $alert['daysleft'] >= 0 ) {
+					} else {
+						if ( $alert['daysleft'] >= 0 ) {
 							$daysleft			= $alert['daysleft'];
 							$daysleft_append	= _RENEW_DAYSLEFT;
-						}else{
+						} else {
 							$daysleft			= $alert['daysleft'];
 							$daysleft_append	= _AEC_DAYS_ELAPSED;
 						}
@@ -229,7 +234,7 @@ class HTML_frontEnd {
 					<p><strong><?php echo $daysleft; ?></strong>&nbsp;&nbsp;<?php echo $daysleft_append; ?></p>
 				</div>
 				<?php
-				if( $recurring == 0 ) { ?>
+				if ( $recurring == 0 ) { ?>
 					<div id="upgrade_button">
 						<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=renewsubscription' ); ?>" method="post">
 							<input type="hidden" name="option" value="<?php echo $option; ?>" />
@@ -239,11 +244,11 @@ class HTML_frontEnd {
 						</form>
 					</div>
 					<?php
-				}else{ ?>
+				} else { ?>
 					<p><strong><?php echo _RENEW_INFO; ?></strong></p>
 					<?php
-					if( is_object( $pp ) ) {
-						if( isset( $pp->info['cancel_info'] ) ) { ?>
+					if ( is_object( $pp ) ) {
+						if ( isset( $pp->info['cancel_info'] ) ) { ?>
 							<p><?php echo $pp->info['cancel_info'];?></p>
 							<?php
 						}
@@ -255,24 +260,25 @@ class HTML_frontEnd {
 		<?php
 	}
 
-	function notAllowed( $option, $processors, $registerlink, $loggedin = 0 ) {
+	function notAllowed( $option, $processors, $registerlink, $loggedin = 0 )
+	{
 		global $database;
 
 		$cfg = new Config_General( $database );
 
-		if( !is_object( $this ) ) {
+		if ( !is_object( $this ) ) {
 			HTML_frontEnd::aec_styling();
 		} ?>
 		<div class="componentheading"><?php echo _NOT_ALLOWED_HEADLINE; ?></div>
 		<?php
-		if( $cfg->cfg['customtext_notallowed_keeporiginal'] ) {?>
+		if ( $cfg->cfg['customtext_notallowed_keeporiginal'] ) {?>
 			<p>
 				<?php
-				if( $loggedin ) {
+				if ( $loggedin ) {
 					echo _NOT_ALLOWED_FIRSTPAR_LOGGED; ?>&nbsp;
 					<a href="<?php echo $registerlink; ?>" title="<?php echo _NOT_ALLOWED_REGISTERLINK_LOGGED; ?>"><?php echo _NOT_ALLOWED_REGISTERLINK_LOGGED; ?></a>
 					<?php
-				}else{
+				} else {
 					echo _NOT_ALLOWED_FIRSTPAR; ?>&nbsp;
 					<a href="<?php echo $registerlink; ?>" title="<?php echo _NOT_ALLOWED_REGISTERLINK; ?>"><?php echo _NOT_ALLOWED_REGISTERLINK; ?></a>
 					<?php
@@ -280,17 +286,17 @@ class HTML_frontEnd {
 			</p>
 			<?php
 		}
-		if( $cfg->cfg['customtext_notallowed'] ) { ?>
+		if ( $cfg->cfg['customtext_notallowed'] ) { ?>
 			<p><?php echo $cfg->cfg['customtext_notallowed']; ?></p>
 			<?php
 		} ?>
 		<p></p>
 		<?php
-		if( is_array( $processors ) ) { ?>
+		if ( is_array( $processors ) ) { ?>
 			<p><?php echo _NOT_ALLOWED_SECONDPAR; ?></p>
 			<table id="cc_list">
 				<?php
-				foreach( $processors as $processor ) {
+				foreach ( $processors as $processor ) {
 					HTML_frontEnd::processorInfo( $option, $processor, $cfg->cfg['displayccinfo'] );
 				} ?>
 			</table>
@@ -298,7 +304,8 @@ class HTML_frontEnd {
 		}
 	}
 
-	function processorInfo( $option, $processorObj, $displaycc = 1 ) {
+	function processorInfo( $option, $processorObj, $displaycc = 1 )
+	{
 		global $mosConfig_live_site; ?>
 
 		<tr>
@@ -308,14 +315,14 @@ class HTML_frontEnd {
 			<td class="cc_icons">
 				<p>
 					<?php
-					if( isset( $processorObj->info['description'] ) ) {
+					if ( isset( $processorObj->info['description'] ) ) {
 						echo $processorObj->info['description'];
 					} ?>
 				</p>
 			</td>
 		</tr>
 		<?php
-		if( $displaycc ) { ?>
+		if ( $displaycc ) { ?>
 			<tr>
 				<td class="cc_gateway"></td>
 				<td class="cc_icons">
@@ -334,18 +341,19 @@ class HTML_frontEnd {
 	 * @param bool		$display	out with text (only in combination with $check)
 	 * @return formatted date
 	 */
-	function DisplayDateInLocalTime( $SQLDate, $check = false, $display = false ){
+	function DisplayDateInLocalTime( $SQLDate, $check = false, $display = false )
+	{
 
-		if( $SQLDate == '' ) {
+		if ( $SQLDate == '' ) {
 			return _AEC_EXPIRE_NOT_SET;
-		}else{
+		} else {
 			global $mosConfig_offset_user;
 			global $database;
 
 			// compatibility with Mambo
-			if( !empty( $mosConfig_offset_user ) ) {
+			if ( !empty( $mosConfig_offset_user ) ) {
 				$timeOffset = $mosConfig_offset_user * 3600;
-			}else{
+			} else {
 				global $mosConfig_offset;
 				$timeOffset = $mosConfig_offset * 3600;
 			}
@@ -354,13 +362,13 @@ class HTML_frontEnd {
 
 			$retVal = strftime( $cfg->cfg['display_date_frontend'], ( strtotime( $SQLDate ) + $timeOffset ) );
 
-			if( $check ) {
+			if ( $check ) {
 				$timeDif = strtotime( $SQLDate ) - (time() + $timeOffset);
-				if( $timeDif < 0 ) {
+				if ( $timeDif < 0 ) {
 					$retVal = _AEC_EXPIRE_PAST . ':&nbsp;<strong>' . $retVal . '</strong>';
-				}elseif( ( $timeDif >= 0 ) && ( $timeDif < 86400 ) ) {
+				} elseif ( ( $timeDif >= 0 ) && ( $timeDif < 86400 ) ) {
 					$retVal = _AEC_EXPIRE_TODAY;
-				}else{
+				} else {
 					$retVal = _AEC_EXPIRE_FUTURE . ': ' . $retVal;
 				}
 			}
@@ -371,9 +379,10 @@ class HTML_frontEnd {
 
 }
 
-class HTML_Results {
-
-	function thanks( $option, $msg ) {
+class HTML_Results
+{
+	function thanks( $option, $msg )
+	{
 		HTML_frontend::aec_styling( $option );
 		?>
 		<div class="componentheading"><?php echo _THANKYOU_TITLE; ?></div>
@@ -383,7 +392,8 @@ class HTML_Results {
 		<?php
 	}
 
-	function cancel( $option ) {
+	function cancel( $option )
+	{
 		HTML_frontend::aec_styling( $option ); ?>
 		<div class="componentheading"><?php echo _CANCEL_TITLE; ?></div>
 		<div id="cancel_page">
@@ -393,9 +403,10 @@ class HTML_Results {
 	}
 }
 
-class Payment_HTML {
-
-	function selectSubscriptionPlanForm( $option, $userid, $plans, $expired, $passthrough = false, $register = false ) {
+class Payment_HTML
+{
+	function selectSubscriptionPlanForm( $option, $userid, $plans, $expired, $passthrough = false, $register = false )
+	{
 		global $mosConfig_live_site, $database;
 
 		HTML_frontend::aec_styling( $option );
@@ -403,13 +414,13 @@ class Payment_HTML {
 		$cfg = new Config_General( $database ); ?>
 		<div class="componentheading"><?php echo _PAYPLANS_HEADER; ?></div>
 		<?php
-		if( $cfg->cfg['customtext_plans'] ) { ?>
+		if ( $cfg->cfg['customtext_plans'] ) { ?>
 			<p><?php echo $cfg->cfg['customtext_plans']; ?></p>
 			<?php
 		} ?>
 		<div class="subscriptions">
 			<?php
-			foreach( $plans as $plan ) { ?>
+			foreach ( $plans as $plan ) { ?>
 				<table>
 					<th><?php echo $plan['name']; ?></th>
 					<tr><td><?php echo $plan['desc']; ?></td></tr>
@@ -427,25 +438,26 @@ class Payment_HTML {
 		<?php
 	}
 
-	function getPayButtonHTML( $gw, $planid, $userid, $passthrough = false, $register = false ) {
+	function getPayButtonHTML( $gw, $planid, $userid, $passthrough = false, $register = false )
+	{
 		global $mosConfig_live_site, $database, $my;
 
 		$cfg = new Config_General( $database );
 
 		$html_code = '';
 
-		foreach( $gw as $n => $processor ) {
+		foreach ( $gw as $n => $processor ) {
 			$gw_current = strtolower( $processor['name'] );
 
-			if( $register ) {
-				if( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+			if ( $register ) {
+				if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
 					$option	= 'com_comprofiler';
 					$task	= 'registers';
-				}else{
+				} else {
 					$option	= 'com_acctexp';
 					$task	= 'subscribe';
 				}
-			}else{
+			} else {
 				$option		= 'com_acctexp';
 				$task		= 'confirm';
 			}
@@ -456,9 +468,9 @@ class Payment_HTML {
 			. '<form action="' . AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=' . $task ) . '"'
 			. ' "method="post">' . "\n"
 			. '<input type="image" src="' . $urlbutton;
-			if( isset( $processor['statement'] ) ) {
+			if ( isset( $processor['statement'] ) ) {
 				$html_code .= '" border="0" name="submit" alt="' . $processor['statement'] . '" />' . "\n";
-			}else{
+			} else {
 				$html_code .= '" border="0" name="submit" alt="" />' . "\n";
 			}
 			$html_code .= '<input type="hidden" name="option" value="' . $option . '" />' . "\n"
@@ -467,8 +479,8 @@ class Payment_HTML {
 			. '<input type="hidden" name="usage" value="' . $planid . '" />' . "\n"
 			. '<input type="hidden" name="userid" value="' . ( $userid ? $userid : 0 ) . '" />' . "\n";
 
-			if( $passthrough != false ) {
-				foreach( $passthrough as $key => $value ) {
+			if ( $passthrough != false ) {
+				foreach ( $passthrough as $key => $value ) {
 					$html_code .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
 				}
 			}
@@ -478,7 +490,8 @@ class Payment_HTML {
 		return $html_code;
 	}
 
-	function getCCiconsHTML( $option, $cc_list ) {
+	function getCCiconsHTML( $option, $cc_list )
+	{
 		global $mosConfig_live_site;
 		// This function first looks whether a specific gateway has been asked for,
 		// if that is the case, it creates a cc list that is to be passed on.
@@ -498,7 +511,8 @@ class Payment_HTML {
 		return $html_code;
 	}
 
-	function confirmForm( $option, $InvoiceFactory, $user, $tos=null, $passthrough = false) {
+	function confirmForm( $option, $InvoiceFactory, $user, $tos=null, $passthrough = false)
+	{
 		global $database;
 
 		HTML_frontend::aec_styling( $option );
@@ -506,13 +520,13 @@ class Payment_HTML {
 		$cfg = new Config_General( $database ); ?>
 		<div class="componentheading"><?php echo _CONFIRM_TITLE; ?></div>
 		<?php
-		if( $tos ) { ?>
+		if ( $tos ) { ?>
 			<script type="text/javascript">
 				/* <![CDATA[ */
 				function submitPayment() {
-					if( document.confirmForm.tos.checked ) {
+					if ( document.confirmForm.tos.checked ) {
 						document.confirmForm.submit();
-					}else{
+					} else {
 						alert("<?php echo html_entity_decode( _CONFIRM_TOS_ERROR ); ?>");
 					}
 				}
@@ -530,7 +544,7 @@ class Payment_HTML {
 				<tr>
 					<td>
 						<?php
-						if( $user->name ) { ?>
+						if ( $user->name ) { ?>
 							<p><?php echo _CONFIRM_ROW_NAME; ?> <?php echo $user->name; ?></p>
 							<?php
 						} ?>
@@ -540,7 +554,7 @@ class Payment_HTML {
 					<td><p><?php echo $InvoiceFactory->objUsage->name; ?></p></td>
 					<td><p>
 						<?php
-						if( $InvoiceFactory->payment->amount ) {
+						if ( $InvoiceFactory->payment->amount ) {
 							echo $InvoiceFactory->payment->amount . ' ' . $InvoiceFactory->payment->currency; ?>&nbsp;-&nbsp;
 							<?php
 						}
@@ -552,15 +566,15 @@ class Payment_HTML {
 				</tr>
 			</table>
 			<?php
-			if( $cfg->cfg['customtext_confirm'] ) { ?>
+			if ( $cfg->cfg['customtext_confirm'] ) { ?>
 				<p><?php echo $cfg->cfg['customtext_confirm']; ?></p>
 				<?php
 			}
-			if( $cfg->cfg['customtext_confirm_keeporiginal'] ) { ?>
+			if ( $cfg->cfg['customtext_confirm_keeporiginal'] ) { ?>
 				<p><?php echo _CONFIRM_INFO; ?></p>
 				<?php
 			}
-			if( $InvoiceFactory->coupons['active'] ) { ?>
+			if ( $InvoiceFactory->coupons['active'] ) { ?>
 				<p><?php echo _CONFIRM_COUPON_INFO; ?></p>
 				<?php
 			} ?>
@@ -574,16 +588,16 @@ class Payment_HTML {
 						<input type="hidden" name="usage" value="<?php echo $InvoiceFactory->usage; ?>" />
 						<input type="hidden" name="processor" value="<?php echo $InvoiceFactory->processor; ?>" />
 						<?php
-						if( $tos ) { ?>
+						if ( $tos ) { ?>
 							<p><input name="tos" type="checkbox" /><?php echo sprintf( _CONFIRM_TOS, $tos ); ?></p>
 							<input type="button" onclick="javascript:submitPayment()" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
 							<?php
-						}else{ ?>
+						} else { ?>
 							<input type="submit" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
 							<?php
 						}
-						if( $passthrough != false ) {
-							foreach( $passthrough as $key => $value ) { ?>
+						if ( $passthrough != false ) {
+							foreach ( $passthrough as $key => $value ) { ?>
 								<input type="hidden" name="<?php echo $key; ?>" value="<?php echo $value; ?>" />
 								<?php
 							}
@@ -594,7 +608,7 @@ class Payment_HTML {
 				<tr><td>
 					<table>
 						<?php
-						if( is_object( $InvoiceFactory->pp ) ) {
+						if ( is_object( $InvoiceFactory->pp ) ) {
 							HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp );
 						} ?>
 					</table>
@@ -604,7 +618,8 @@ class Payment_HTML {
 		<?php
 	}
 
-	function checkoutForm( $option, $var, $params = null, $InvoiceFactory, $repeat = 0 ) {
+	function checkoutForm( $option, $var, $params = null, $InvoiceFactory, $repeat = 0 )
+	{
 		global $database;
 
 		HTML_frontend::aec_styling( $option );
@@ -620,11 +635,11 @@ class Payment_HTML {
 		<div class="componentheading"><?php echo _CHECKOUT_TITLE; ?></div>
 		<div id="checkout">
 			<?php
-			if( $cfg->cfg['customtext_checkout_keeporiginal'] ) { ?>
+			if ( $cfg->cfg['customtext_checkout_keeporiginal'] ) { ?>
 				<p><?php echo constant( $introtext ); ?></p>
 				<?php
 			}
-			if( $cfg->cfg['customtext_checkout'] ) { ?>
+			if ( $cfg->cfg['customtext_checkout'] ) { ?>
 				<p><?php echo $cfg->cfg['customtext_checkout']; ?></p>
 				<?php
 			} ?>
@@ -637,9 +652,9 @@ class Payment_HTML {
 						</td>
 					</tr>
 					<?php
-					if( $InvoiceFactory->coupons['active'] ) {
-						if( isset( $InvoiceFactory->coupons['coupons'] ) ) {
-							foreach( $InvoiceFactory->coupons['coupons'] as $id => $coupon ) { ?>
+					if ( $InvoiceFactory->coupons['active'] ) {
+						if ( isset( $InvoiceFactory->coupons['coupons'] ) ) {
+							foreach ( $InvoiceFactory->coupons['coupons'] as $id => $coupon ) { ?>
 								<tr>
 									<td class="item<?php echo $coupon['nodirectaction'] ? 'later' : ''; ?>">
 										<?php echo _CHECKOUT_INVOICE_COUPON; ?> (<?php echo $coupon['action']; ?>)
@@ -661,7 +676,7 @@ class Payment_HTML {
 					</tr>
 				</table>
 				<?php
-				if( $InvoiceFactory->coupons['active'] ) { ?>
+				if ( $InvoiceFactory->coupons['active'] ) { ?>
 					<p><?php echo _CHECKOUT_COUPON_INFO; ?></p>
 					<table width="100%" style="background-color:#DDD;">
 						<tr>
@@ -672,16 +687,16 @@ class Payment_HTML {
 						<tr>
 							<td class="confirmation_button">
 								<?php
-								if( isset( $InvoiceFactory->coupons['warning'] ) ) {
-									if( $InvoiceFactory->coupons['warning'] ) { ?>
+								if ( isset( $InvoiceFactory->coupons['warning'] ) ) {
+									if ( $InvoiceFactory->coupons['warning'] ) { ?>
 										<div class="couponwarning">
 											<p><strong><?php echo $InvoiceFactory->coupons['warningmsg']; ?></strong></p>
 										</div>
 										<?php
 									}
 								}
-								if( isset( $InvoiceFactory->coupons['error'] ) ) {
-									if( $InvoiceFactory->coupons['error'] ) { ?>
+								if ( isset( $InvoiceFactory->coupons['error'] ) ) {
+									if ( $InvoiceFactory->coupons['error'] ) { ?>
 										<div class="couponerror">
 											<p>
 												<strong><?php echo _COUPON_ERROR_PRETEXT; ?></strong>
@@ -704,7 +719,7 @@ class Payment_HTML {
 					</table>
 					<?php
 				}
-				if( $params ) { ?>
+				if ( $params ) { ?>
 					<table width="100%" style="margin-top:24px;background-color:#DDD;">
 						<tr>
 							<td class="append_button">
@@ -725,13 +740,13 @@ class Payment_HTML {
 				<tr>
 					<td class="confirmation_button">
 						<?php
-						if( isset( $var['transferinfo'] ) ) { ?>
+						if ( isset( $var['transferinfo'] ) ) { ?>
 							<p><?php echo $var['transferinfo']; ?></p>
 							<?php
-						}else{ ?>
+						} else { ?>
 							<form action="<?php echo $posturl; ?>" method="post">
 								<?php
-								foreach( $var as $key => $value ) { ?>
+								foreach ( $var as $key => $value ) { ?>
 									<input type="hidden" name="<?php echo $key; ?>" value="<?php echo $value; ?>" />
 									<?php
 								} ?>
@@ -744,7 +759,7 @@ class Payment_HTML {
 			</table>
 			<table width="100%">
 				<?php
-				if( is_object( $InvoiceFactory->pp ) ) {
+				if ( is_object( $InvoiceFactory->pp ) ) {
 					HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $cfg->cfg['displayccinfo'] );
 				} ?>
 			</table>
@@ -752,7 +767,8 @@ class Payment_HTML {
 		<?php
 	}
 
-    function errorAP( $option, $planid, $userid, $username, $name, $recurring ) {
+    function errorAP( $option, $planid, $userid, $username, $name, $recurring )
+    {
 		HTML_frontend::aec_styling($option);?>
        	<table class="single_subscription">
        		<th class="heading"><?php echo _REGTITLE ?> <?php echo _ERRORCODE ?></th>
@@ -770,15 +786,17 @@ class Payment_HTML {
 		<?php
 	}
 
-    function generalError ( $option ) {
+    function generalError( $option )
+    {
 		HTML_frontend::aec_styling( $option );
    		echo _AEC_GEN_ERROR;
 	}
 }
 
-function joomlaregisterForm($option, $useractivation) {
+function joomlaregisterForm($option, $useractivation)
+{
 	// used for spoof hardening
-	if( function_exists( 'josSpoofValue' ) ) {
+	if ( function_exists( 'josSpoofValue' ) ) {
 		$validate = josSpoofValue();
 	} else {
 		$validate = '';

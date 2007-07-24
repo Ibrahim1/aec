@@ -31,16 +31,17 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-function com_install() {
+function com_install()
+{
 	global $database, $mainframe, $mosConfig_absolute_path, $mosConfig_live_site, $mosConfig_dbprefix, $my;
 
 	$queri		= NULL;
 	$errors		= array();
 
 	$pathLang = $mainframe->getCfg( 'absolute_path' ) . '/administrator/components/com_acctexp/com_acctexp_language_backend/';
-	if( file_exists( $pathLang . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
+	if ( file_exists( $pathLang . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
 		include_once( $pathLang . $mainframe->getCfg( 'lang' ) . '.php' );
-	}else{
+	} else {
 		include_once( $pathLang . 'english.php' );
 	}
 
@@ -62,7 +63,7 @@ function com_install() {
 	$database->setQuery( $query );
 	$total = $database->loadResult();
 
-	if( !$total ) {
+	if ( !$total ) {
 		// must be new, go ahead
 		$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp` ('
 		. '`id` int(11) NOT NULL auto_increment,'
@@ -230,32 +231,32 @@ function com_install() {
 		. ') TYPE=MyISAM;'
 		;
 
-		foreach( $queri AS $query ) {
+		foreach ( $queri AS $query ) {
 			$database->setQuery( $query );
-		    if( !$database->query() ) {
+		    if ( !$database->query() ) {
 		        $errors[] = array( $database->getErrorMsg(), $query );
 		    }
 		}
 
-	}else{
+	} else {
 		// mic: TODO: AEC is/was already installed, maybe we want to backup the files (not implemented yet)
 
 		// Update routine 0.3.0 -> 0.6.0
 		$tables	= array();
 		$tables	= $database->getTableList();
-		if( in_array( $mosConfig_dbprefix . "acctexp_payplans", $tables ) ) {
+		if ( in_array( $mosConfig_dbprefix . "acctexp_payplans", $tables ) ) {
 			// Update routine 0.3.0 -> 0.6.0
 			// Check for existence of 'gid' column on table #__acctexp_payplans
 			// It is existent only from version 0.6.0
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_payplans LIKE 'gid'");
 			$database->loadObject($result);
-			if(strcmp($result->Field, 'gid') === 0) {
+			if (strcmp($result->Field, 'gid') === 0) {
 				// You're already running version 0.6.0 or later. No action required.
 			} else {
 				// You're not running version 0.6.0 or later. Update required.
 				$database->setQuery("ALTER TABLE #__acctexp_payplans ADD `gid` int(3) default NULL");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -268,7 +269,7 @@ function com_install() {
 		$database->setQuery("SHOW COLUMNS FROM #__acctexp_config LIKE 'alertlevel1'");
 		$database->loadObject($result);
 
-		if(!strcmp($result->Field, 'alertlevel1') === 0) {
+		if (!strcmp($result->Field, 'alertlevel1') === 0) {
 			$queri[] = "ALTER TABLE #__acctexp_config DROP `email`";
 			$queri[] = "ALTER TABLE #__acctexp_config DROP `paypal`";
 			$queri[] = "ALTER TABLE #__acctexp_config DROP `business`";
@@ -279,9 +280,9 @@ function com_install() {
 			$queri[] = "ALTER TABLE #__acctexp_config ADD `alertlevel2` int(6) default '14'";
 			$queri[] = "ALTER TABLE #__acctexp_config ADD `alertlevel3` int(6) default '21'";
 
-			foreach( $queri AS $query ) {
+			foreach ( $queri AS $query ) {
 				$database->setQuery( $query );
-			    if( !$database->query() ) {
+			    if ( !$database->query() ) {
 			        $errors[] = array( $database->getErrorMsg(), $query );
 			    }
 			}
@@ -325,9 +326,9 @@ function com_install() {
 			// Rename __acctexp_paylog to __acctexp_log_paypal...
 			$queri[] = "ALTER TABLE #__acctexp_paylog RENAME TO #__acctexp_log_paypal";
 
-			foreach( $queri AS $query ) {
+			foreach ( $queri AS $query ) {
 				$database->setQuery( $query );
-			    if( !$database->query() ) {
+			    if ( !$database->query() ) {
 			        $errors[] = array( $database->getErrorMsg(), $query );
 			    }
 			}
@@ -338,14 +339,14 @@ function com_install() {
 			for ($i=0, $n=count( $rows ); $i < $n; $i++) {
 				$row = &$rows[$i];
 				$database->setQuery("INSERT INTO `#__acctexp_processors_plans` VALUES ($row->id, '1')");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
 
 			// Configure extra01 field indicating recurring subscriptions...
 			$database->setQuery("UPDATE #__acctexp_subscr SET extra01='1' WHERE extra01 is NULL");
-			if( !$database->query() ) {
+			if ( !$database->query() ) {
 		    	$errors[] = array( $database->getErrorMsg(), $query );
 			}
 
@@ -353,7 +354,7 @@ function com_install() {
 			// You're running version 0.8.0 or later. No Update required here.
 		}
 
-		if( in_array( $mosConfig_dbprefix . "acctexp_log_paypal", $tables ) ) {
+		if ( in_array( $mosConfig_dbprefix . "acctexp_log_paypal", $tables ) ) {
 
 			$queri = null;
 
@@ -363,9 +364,9 @@ function com_install() {
 			$queri[] = "DROP TABLE  #__acctexp_log_authorize";
 			$queri[] = "DROP TABLE  #__acctexp_log_vklix";
 
-			foreach( $queri AS $query ) {
+			foreach ( $queri AS $query ) {
 				$database->setQuery( $query );
-			    if( !$database->query() ) {
+			    if ( !$database->query() ) {
 			        $errors[] = array( $database->getErrorMsg(), $query );
 			    }
 			}
@@ -375,14 +376,14 @@ function com_install() {
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'entry'");
 			$database->loadObject($result);
 
-			if(strcmp($result->Field, 'entry') === 0) {
+			if (strcmp($result->Field, 'entry') === 0) {
 				$database->setQuery("ALTER TABLE #__acctexp_plans DROP `entry`");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			} else {
 				$database->setQuery("ALTER TABLE #__acctexp_invoices CHANGE `invoice_number` `invoice_number` varchar(64) NULL");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -390,10 +391,10 @@ function com_install() {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'desc'");
 			$database->loadObject($result);
-			if( (strcmp($result->Field, 'desc') === 0) && (strcmp($result->Type, 'varchar(255)') === 0) ) {
+			if ( (strcmp($result->Field, 'desc') === 0) && (strcmp($result->Type, 'varchar(255)') === 0) ) {
 				// Give extra space for plan description
 				$database->setQuery("ALTER TABLE #__acctexp_plans CHANGE `desc` `desc` text NULL");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -401,9 +402,9 @@ function com_install() {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'lifetime'");
 			$database->loadObject($result);
-			if(!(strcmp($result->Field, 'lifetime') === 0)) {
+			if (!(strcmp($result->Field, 'lifetime') === 0)) {
 				$database->setQuery("ALTER TABLE #__acctexp_plans ADD `lifetime` int(4) default '0'");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -411,9 +412,9 @@ function com_install() {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_subscr LIKE 'lifetime'");
 			$database->loadObject($result);
-			if(!(strcmp($result->Field, 'lifetime') === 0)) {
+			if (!(strcmp($result->Field, 'lifetime') === 0)) {
 				$database->setQuery("ALTER TABLE #__acctexp_subscr CHANGE `extra05` `lifetime` int(1) default '0'");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -421,9 +422,9 @@ function com_install() {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'mingid'");
 			$database->loadObject($result);
-			if(!(strcmp($result->Field, 'mingid') === 0)) {
+			if (!(strcmp($result->Field, 'mingid') === 0)) {
 				$database->setQuery("ALTER TABLE #__acctexp_plans ADD `mingid` int(3) default '0'");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -431,9 +432,9 @@ function com_install() {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'similarpg'");
 			$database->loadObject($result);
-			if(!(strcmp($result->Field, 'similarpg') === 0)) {
+			if (!(strcmp($result->Field, 'similarpg') === 0)) {
 				$database->setQuery("ALTER TABLE #__acctexp_plans ADD `similarpg` varchar(255) NULL");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -441,9 +442,9 @@ function com_install() {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'equalpg'");
 			$database->loadObject($result);
-			if(!(strcmp($result->Field, 'equalpg') === 0)) {
+			if (!(strcmp($result->Field, 'equalpg') === 0)) {
 				$database->setQuery("ALTER TABLE #__acctexp_plans ADD `equalpg` varchar(255) NULL");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -451,9 +452,9 @@ function com_install() {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_subscr LIKE 'previous_plan'");
 			$database->loadObject($result);
-			if(!(strcmp($result->Field, 'previous_plan') === 0)) {
+			if (!(strcmp($result->Field, 'previous_plan') === 0)) {
 				$database->setQuery("ALTER TABLE #__acctexp_subscr ADD `previous_plan` int(11) NULL");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -461,9 +462,9 @@ function com_install() {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_subscr LIKE 'used_plans'");
 			$database->loadObject($result);
-			if(!(strcmp($result->Field, 'used_plans') === 0)) {
+			if (!(strcmp($result->Field, 'used_plans') === 0)) {
 				$database->setQuery("ALTER TABLE #__acctexp_subscr ADD `used_plans` varchar(255) NULL");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -471,9 +472,9 @@ function com_install() {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_subscr LIKE 'email_sent'");
 			$database->loadObject($result);
-			if(!(strcmp($result->Field, 'email_sent') === 0)) {
+			if (!(strcmp($result->Field, 'email_sent') === 0)) {
 				$database->setQuery("ALTER TABLE #__acctexp_subscr ADD `email_sent` datetime default '0000-00-00 00:00:00'");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -481,9 +482,9 @@ function com_install() {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'email_desc_exp'");
 			$database->loadObject($result);
-			if(!(strcmp($result->Field, 'email_desc_exp') === 0)) {
+			if (!(strcmp($result->Field, 'email_desc_exp') === 0)) {
 				$database->setQuery("ALTER TABLE #__acctexp_plans ADD `email_desc_exp` text NULL");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -491,9 +492,9 @@ function com_install() {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'desc_email'");
 			$database->loadObject($result);
-			if(strcmp($result->Field, 'desc_email') === 0) {
+			if (strcmp($result->Field, 'desc_email') === 0) {
 				$database->setQuery("ALTER TABLE #__acctexp_plans DROP `desc_email`");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -501,9 +502,9 @@ function com_install() {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'email_desc'");
 			$database->loadObject($result);
-			if(!(strcmp($result->Field, 'email_desc') === 0)) {
+			if (!(strcmp($result->Field, 'email_desc') === 0)) {
 				$database->setQuery("ALTER TABLE #__acctexp_plans ADD `email_desc` text NULL");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -511,9 +512,9 @@ function com_install() {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'send_exp_mail'");
 			$database->loadObject($result);
-			if(!(strcmp($result->Field, 'send_exp_mail') === 0)) {
+			if (!(strcmp($result->Field, 'send_exp_mail') === 0)) {
 				$database->setQuery("ALTER TABLE #__acctexp_plans ADD `send_exp_mail` int(4) default '0'");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -521,9 +522,9 @@ function com_install() {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'fallback'");
 			$database->loadObject($result);
-			if( !( strcmp( $result->Field, 'fallback') === 0 ) ) {
+			if ( !( strcmp( $result->Field, 'fallback') === 0 ) ) {
 				$database->setQuery("ALTER TABLE #__acctexp_plans ADD `fallback` int(11) NULL");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -531,9 +532,9 @@ function com_install() {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_invoices LIKE 'coupons'");
 			$database->loadObject($result);
-			if(!(strcmp($result->Field, 'coupons') === 0)) {
+			if (!(strcmp($result->Field, 'coupons') === 0)) {
 				$database->setQuery("ALTER TABLE #__acctexp_invoices ADD `coupons` varchar(255) NULL");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -541,9 +542,9 @@ function com_install() {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'maxgid'");
 			$database->loadObject($result);
-			if(!(strcmp($result->Field, 'maxgid') === 0)) {
+			if (!(strcmp($result->Field, 'maxgid') === 0)) {
 				$database->setQuery("ALTER TABLE #__acctexp_plans ADD `maxgid` int(3) default '0'");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -551,9 +552,9 @@ function com_install() {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'micro_integrations'");
 			$database->loadObject($result);
-			if(!(strcmp($result->Field, 'micro_integrations') === 0)) {
+			if (!(strcmp($result->Field, 'micro_integrations') === 0)) {
 				$database->setQuery("ALTER TABLE #__acctexp_plans ADD `micro_integrations` text NULL");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -561,9 +562,9 @@ function com_install() {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_invoices LIKE 'params'");
 			$database->loadObject($result);
-			if(!(strcmp($result->Field, 'params') === 0)) {
+			if (!(strcmp($result->Field, 'params') === 0)) {
 				$database->setQuery("ALTER TABLE #__acctexp_invoices ADD `params` text NULL");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -572,25 +573,25 @@ function com_install() {
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_invoices LIKE 'fixed'");
 			$database->loadObject($result);
 
-			if(!(strcmp($result->Field, 'fixed') === 0)) {
+			if (!(strcmp($result->Field, 'fixed') === 0)) {
 				$query = "ALTER TABLE #__acctexp_invoices ADD `fixed` int(4) default '0'";
-			} elseif( (strcmp($result->Field, 'fixed') === 0) && (strcmp($result->Type, 'int(4)') === 0) && $result->Null ) {
+			} elseif ( (strcmp($result->Field, 'fixed') === 0) && (strcmp($result->Type, 'int(4)') === 0) && $result->Null ) {
 				$query = "ALTER TABLE #__acctexp_invoices CHANGE `fixed` `fixed` int(4) default '0'";
-			} elseif( (strcmp($result->Field, 'fixed') === 0) && (strcmp($result->Type, "int(4)") === 0) && $result->Default ) {
+			} elseif ( (strcmp($result->Field, 'fixed') === 0) && (strcmp($result->Type, "int(4)") === 0) && $result->Default ) {
 				$query = "ALTER TABLE #__acctexp_invoices CHANGE `fixed` `fixed` int(4) default '0'";
 			}
 
 			$database->setQuery( $query );
-			if( !$database->query() ) {
+			if ( !$database->query() ) {
 		    	$errors[] = array( $database->getErrorMsg(), $query );
 			}
 
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'visible'");
 			$database->loadObject($result);
-			if(!(strcmp($result->Field, 'visible') === 0)) {
+			if (!(strcmp($result->Field, 'visible') === 0)) {
 				$database->setQuery("ALTER TABLE #__acctexp_plans ADD `visible` int(4) default '1'");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -598,9 +599,9 @@ function com_install() {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'recurring'");
 			$database->loadObject($result);
-			if(strcmp($result->Field, 'recurring') === 0) {
+			if (strcmp($result->Field, 'recurring') === 0) {
 				$database->setQuery("ALTER TABLE #__acctexp_plans DROP `recurring`");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -608,9 +609,9 @@ function com_install() {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_microintegrations LIKE 'on_userchange'");
 			$database->loadObject($result);
-			if( !( strcmp( $result->Field, 'on_userchange') === 0 ) ) {
+			if ( !( strcmp( $result->Field, 'on_userchange') === 0 ) ) {
 				$database->setQuery("ALTER TABLE #__acctexp_microintegrations ADD `on_userchange` int(4) default '0'");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -618,9 +619,9 @@ function com_install() {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_invoices LIKE 'created_date'");
 			$database->loadObject($result);
-			if(!(strcmp($result->Field, 'created_date') === 0)) {
+			if (!(strcmp($result->Field, 'created_date') === 0)) {
 				$database->setQuery("ALTER TABLE #__acctexp_invoices ADD `created_date` datetime NULL default '0000-00-00 00:00:00'");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -628,14 +629,14 @@ function com_install() {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_invoices LIKE 'planid'");
 			$database->loadObject($result);
-			if(strcmp($result->Field, 'planid') === 0) {
+			if (strcmp($result->Field, 'planid') === 0) {
 				$database->setQuery("ALTER TABLE #__acctexp_invoices CHANGE `planid` `usage` varchar(255) NULL");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			} else {
 				$database->setQuery("ALTER TABLE #__acctexp_invoices ADD `usage` varchar(255) NULL");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -643,9 +644,9 @@ function com_install() {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'reuse'");
 			$database->loadObject($result);
-			if((strcmp($result->Field, 'reuse') === 0)) {
+			if ((strcmp($result->Field, 'reuse') === 0)) {
 				$database->setQuery("ALTER TABLE #__acctexp_plans DROP COLUMN `reuse`");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -653,9 +654,9 @@ function com_install() {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'processors'");
 			$database->loadObject($result);
-			if(!(strcmp($result->Field, 'processors') === 0)) {
+			if (!(strcmp($result->Field, 'processors') === 0)) {
 				$database->setQuery("ALTER TABLE #__acctexp_plans ADD `processors` varchar(255) NULL");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -663,9 +664,9 @@ function com_install() {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_invoices LIKE 'active'");
 			$database->loadObject($result);
-			if(!(strcmp($result->Field, 'active') === 0)) {
+			if (!(strcmp($result->Field, 'active') === 0)) {
 				$database->setQuery("ALTER TABLE #__acctexp_invoices ADD `active` int(4) default '1'");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -674,7 +675,7 @@ function com_install() {
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_subscr LIKE 'extra01'");
 			$database->loadObject($result);
 
-			if(strcmp($result->Field, 'extra01') === 0) {
+			if (strcmp($result->Field, 'extra01') === 0) {
 
 				$queri = null;
 				$queri[] = "ALTER TABLE #__acctexp_subscr CHANGE `extra01` `recurring` int(1) NOT NULL default '0'";
@@ -682,27 +683,27 @@ function com_install() {
 				$queri[] = "ALTER TABLE #__acctexp_subscr DROP `extra03`";
 				$queri[] = "ALTER TABLE #__acctexp_subscr DROP `extra04`";
 
-				foreach( $queri AS $query ) {
+				foreach ( $queri AS $query ) {
 					$database->setQuery( $query );
-				    if( !$database->query() ) {
+				    if ( !$database->query() ) {
 				        $errors[] = array( $database->getErrorMsg(), $query );
 				    }
 				}
 			}
 
 			$database->setQuery("SELECT count(*) FROM  #__acctexp_config_processors");
-			if($database->loadResult() == 0) {
+			if ($database->loadResult() == 0) {
 
 				$database->setQuery( "SELECT proc_id FROM #__acctexp_processors_plans" );
 				$db_processors = $database->loadResultArray();
 
-				if( is_array( $db_processors ) ) {
+				if ( is_array( $db_processors ) ) {
 					$used_processors = array_unique($db_processors);
 
 					$legacy_processors_db = array("", "paypal", "vklix", "authorize", "allopass", "2checkout", "epsnetpay", "paysignet", "worldpay", "alertpay");
 					$legacy_processors_name = array("", "paypal", "viaklix", "authorize", "allopass", "2checkout", "epsnetpay", "paysignet", "worldpay", "alertpay");
 
-					foreach( $used_processors AS $i => $n ) {
+					foreach ( $used_processors AS $i => $n ) {
 
 						$old_cfg = null;
 						$database->setQuery( "SELECT * FROM #__acctexp_config_" . $legacy_processors_db[$n] );
@@ -784,7 +785,7 @@ function com_install() {
 					$database->setQuery( "SELECT * FROM #__acctexp_processors_plans" );
 					$procplans = $database->loadObjectList();
 
-					foreach($procplans as $planentry) {
+					foreach ($procplans as $planentry) {
 						$database->setQuery( "SELECT processors FROM #__acctexp_plans WHERE id='" . $planentry->plan_id . "'" );
 						$plan_procs = explode(";", $database->loadResult());
 
@@ -810,7 +811,7 @@ function com_install() {
 
 						if (count($plan_procs)) {
 							$database->setQuery( "UPDATE #__acctexp_plans SET processors='" . implode(";", $plan_procs) . "' WHERE id='" . $planentry->plan_id . "'" );
-							if( !$database->query() ) {
+							if ( !$database->query() ) {
 						    	$errors[] = array( $database->getErrorMsg(), $query );
 							}
 						}
@@ -831,9 +832,9 @@ function com_install() {
 				$queri[] = "DROP TABLE IF EXISTS #__acctexp_config_worldpay";
 				$queri[] = "DROP TABLE IF EXISTS #__acctexp_config_alertpay";
 
-				foreach( $queri AS $query ) {
+				foreach ( $queri AS $query ) {
 					$database->setQuery( $query );
-				    if( !$database->query() ) {
+				    if ( !$database->query() ) {
 				        $errors[] = array( $database->getErrorMsg(), $query );
 				    }
 				}
@@ -842,7 +843,7 @@ function com_install() {
 	} // end update
 
 	// go ahead if no erros occured and add menu entries
-	if( !$errors ) {
+	if ( !$errors ) {
 
 		// delete first old menu entries
 		$query = 'DELETE *'
@@ -860,7 +861,7 @@ function com_install() {
 		;
 
 		$database->setQuery( $query );
-		if( !$database->query() ) {
+		if ( !$database->query() ) {
 	    	$errors[] = array( $database->getErrorMsg(), $query );
 		}
 
@@ -899,7 +900,7 @@ function com_install() {
 			;
 
 			$database->setQuery( $query );
-			if( !$database->query() ) {
+			if ( !$database->query() ) {
 		    	$errors[] = array( $database->getErrorMsg(), $query );
 			}
 		}
@@ -915,7 +916,7 @@ function com_install() {
 		$database->setQuery( "SHOW COLUMNS FROM #__acctexp_config LIKE 'settings'" );
 		$database->loadObject($result);
 
-		if( !( strcmp( $result->Field, 'settings' ) === 0 ) ) {
+		if ( !( strcmp( $result->Field, 'settings' ) === 0 ) ) {
 			$columns = array("transferinfo", "initialexp", "alertlevel1", "alertlevel2", "alertlevel3", "gwlist", "customintro", "customthanks", "customcancel", "bypassintegration", "simpleurls", "expiration_cushion", "currency_code", "heartbeat_cycle", "tos", "require_subscription", "entry_plan", "plans_first", "transfer", "checkusername", "activate_paid" );
 
 			$newcfg = array();
@@ -923,19 +924,19 @@ function com_install() {
 				$result = null;
 				$database->setQuery("SHOW COLUMNS FROM #__acctexp_config LIKE '" . $column . "'");
 				$database->loadObject($result);
-				if(strcmp($result->Field, $column) === 0) {
+				if (strcmp($result->Field, $column) === 0) {
 					$database->setQuery( "SELECT " . $column . " FROM #__acctexp_config WHERE id='1'" );
 					$newcfg[$column] = $database->loadResult();
 
 					$database->setQuery("ALTER TABLE #__acctexp_config DROP COLUMN " . $column);
-					if( !$database->query() ) {
+					if ( !$database->query() ) {
 				    	$errors[] = array( $database->getErrorMsg(), $query );
 					}
 				}
 			}
 
 			$database->setQuery("ALTER TABLE #__acctexp_config ADD `settings` text");
-			if( !$database->query() ) {
+			if ( !$database->query() ) {
 		    	$errors[] = array( $database->getErrorMsg(), $query );
 			}
 
@@ -951,10 +952,10 @@ function com_install() {
 
 		$result = null;
 		$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'maxgid'");
-		if( $database->loadObject( $result ) ) {
-			if( strcmp( $result->Field, 'maxgid' ) === 0 ) {
+		if ( $database->loadObject( $result ) ) {
+			if ( strcmp( $result->Field, 'maxgid' ) === 0 ) {
 				$database->setQuery("ALTER TABLE #__acctexp_plans DROP COLUMN `maxgid`");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -962,10 +963,10 @@ function com_install() {
 
 		$result = null;
 		$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'email_desc_exp'");
-		if( $database->loadObject( $result ) ) {
-			if( strcmp( $result->Field, 'email_desc_exp' ) === 0 ) {
+		if ( $database->loadObject( $result ) ) {
+			if ( strcmp( $result->Field, 'email_desc_exp' ) === 0 ) {
 				$database->setQuery("ALTER TABLE #__acctexp_plans DROP COLUMN `email_desc_exp`");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -973,10 +974,10 @@ function com_install() {
 
 		$result = null;
 		$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'send_exp_mail'");
-		if( $database->loadObject($result) ) {
-			if( strcmp( $result->Field, 'send_exp_mail' ) === 0 ) {
+		if ( $database->loadObject($result) ) {
+			if ( strcmp( $result->Field, 'send_exp_mail' ) === 0 ) {
 				$database->setQuery("ALTER TABLE #__acctexp_plans DROP COLUMN `send_exp_mail`");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -987,19 +988,19 @@ function com_install() {
 		$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'params'");
 		$database->loadObject($result);
 
-		if( !( strcmp( $result->Field, 'params' ) === 0 ) ) {
+		if ( !( strcmp( $result->Field, 'params' ) === 0 ) ) {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'mingid'");
 			$database->loadObject($result);
 
-			if( strcmp( $result->Field, 'mingid' ) === 0 ) {
+			if ( strcmp( $result->Field, 'mingid' ) === 0 ) {
 				$database->setQuery("ALTER TABLE #__acctexp_plans ADD `restrictions` text NULL");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 
 				$database->setQuery("ALTER TABLE #__acctexp_plans ADD `params` text NULL");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 
@@ -1026,26 +1027,26 @@ function com_install() {
 				$plans = $database->loadObjectList();
 
 				$plans_new = array();
-				foreach( $remap_params as $field => $arrayfield ) {
-					foreach( $plans as $plan ) {
-						if( isset( $plan->$field ) ) {
+				foreach ( $remap_params as $field => $arrayfield ) {
+					foreach ( $plans as $plan ) {
+						if ( isset( $plan->$field ) ) {
 							$plans_new[$plan->id][$arrayfield] = $plan->$field;
-						}else{
+						} else {
 							$plans_new[$plan->id][$arrayfield] = "";
 						}
 					}
 
 					$database->setQuery("ALTER TABLE #__acctexp_plans DROP COLUMN `" . $field . "`");
-					if( !$database->query() ) {
+					if ( !$database->query() ) {
 				    	$errors[] = array( $database->getErrorMsg(), $query );
 					}
 				}
 
-				foreach( $plans_new as $id => $content ) {
+				foreach ( $plans_new as $id => $content ) {
 					$params			= '';
 					$restrictions	= '';
 
-					foreach( $content as $name => $var ) {
+					foreach ( $content as $name => $var ) {
 						// For some values, we need to set an accompaning switch
 						switch ($name) {
 							case 'mingid':
@@ -1085,7 +1086,7 @@ function com_install() {
 					$params .= "gid_enabled=1\n";
 
 					$database->setQuery("UPDATE #__acctexp_plans SET params='" . $params . "', restrictions='" . $restrictions . "' WHERE id='" . $id . "'");
-					if( !$database->query() ) {
+					if ( !$database->query() ) {
 				    	$errors[] = array( $database->getErrorMsg(), $query );
 					}
 				}
@@ -1095,14 +1096,14 @@ function com_install() {
 
 		$result = null;
 		$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'customparams'");
-		if( $database->loadObject( $result ) ) {
-			if(strcmp($result->Field, 'customparams') === 0) {
+		if ( $database->loadObject( $result ) ) {
+			if (strcmp($result->Field, 'customparams') === 0) {
 				$result = null;
 				$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'custom_params'");
-				if( $database->loadObject( $result ) ) {
-					if(!(strcmp($result->Field, 'custom_params') === 0)) {
+				if ( $database->loadObject( $result ) ) {
+					if (!(strcmp($result->Field, 'custom_params') === 0)) {
 						$database->setQuery("ALTER TABLE #__acctexp_plans CHANGE `customparams` `custom_params` text NULL");
-						if( !$database->query() ) {
+						if ( !$database->query() ) {
 					    	$errors[] = array( $database->getErrorMsg(), $query );
 						}
 					}
@@ -1112,10 +1113,10 @@ function com_install() {
 
 		$result = null;
 		$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'custom_params'");
-		if( $database->loadObject( $result ) ) {
-			if(!(strcmp($result->Field, 'custom_params') === 0)) {
+		if ( $database->loadObject( $result ) ) {
+			if (!(strcmp($result->Field, 'custom_params') === 0)) {
 				$database->setQuery("ALTER TABLE #__acctexp_plans ADD `custom_params` text NULL");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -1123,10 +1124,10 @@ function com_install() {
 
 		$result = null;
 		$database->setQuery("SHOW COLUMNS FROM #__acctexp_microintegrations LIKE 'system'");
-		if( $database->loadObject( $result ) ) {
-			if(!(strcmp($result->Field, 'system') === 0)) {
+		if ( $database->loadObject( $result ) ) {
+			if (!(strcmp($result->Field, 'system') === 0)) {
 				$database->setQuery("ALTER TABLE #__acctexp_microintegrations ADD `system` NOT NULL default '0'");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -1134,10 +1135,10 @@ function com_install() {
 
 		$result = null;
 		$database->setQuery("SHOW COLUMNS FROM #__acctexp_subscr LIKE 'params'");
-		if( $database->loadObject( $result ) ) {
-			if(!(strcmp($result->Field, 'params') === 0)) {
+		if ( $database->loadObject( $result ) ) {
+			if (!(strcmp($result->Field, 'params') === 0)) {
 				$database->setQuery("ALTER TABLE #__acctexp_subscr ADD `params` text NULL");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -1145,10 +1146,10 @@ function com_install() {
 
 		$result = null;
 		$database->setQuery("SHOW COLUMNS FROM #__acctexp_subscr LIKE 'customparams'");
-		if( $database->loadObject( $result ) ) {
-			if(!(strcmp($result->Field, 'customparams') === 0)) {
+		if ( $database->loadObject( $result ) ) {
+			if (!(strcmp($result->Field, 'customparams') === 0)) {
 				$database->setQuery("ALTER TABLE #__acctexp_subscr ADD `customparams` text NULL");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -1156,10 +1157,10 @@ function com_install() {
 
 		$result = null;
 		$database->setQuery("SHOW COLUMNS FROM #__acctexp_microintegrations LIKE 'pre_exp_check'");
-		if( $database->loadObject( $result ) ) {
-			if(!(strcmp($result->Field, 'pre_exp_check') === 0)) {
+		if ( $database->loadObject( $result ) ) {
+			if (!(strcmp($result->Field, 'pre_exp_check') === 0)) {
 				$database->setQuery("ALTER TABLE #__acctexp_microintegrations ADD `pre_exp_check` int(4) NULL");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -1167,11 +1168,11 @@ function com_install() {
 
 		$result = null;
 		$database->setQuery("SHOW COLUMNS FROM #__acctexp LIKE 'expiration'");
-		if( $database->loadObject( $result ) ) {
-			if( (strcmp($result->Field, 'expiration') === 0) && (strcmp($result->Type, 'date') === 0) ) {
+		if ( $database->loadObject( $result ) ) {
+			if ( (strcmp($result->Field, 'expiration') === 0) && (strcmp($result->Type, 'date') === 0) ) {
 				// Give extra space for plan description
 				$database->setQuery("ALTER TABLE #__acctexp CHANGE `expiration` `expiration` datetime NOT NULL default '0000-00-00 00:00:00'");
-				if( !$database->query() ) {
+				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
@@ -1180,10 +1181,10 @@ function com_install() {
 		$database->setQuery("SELECT id FROM #__users WHERE gid='25'");
 		$administrators = $database->loadResultArray();
 
-		foreach( $administrators as $adminid ) {
+		foreach ( $administrators as $adminid ) {
 			$metaUser = new metaUser( $adminid );
 
-			if( !$metaUser->hasSubscription ) {
+			if ( !$metaUser->hasSubscription ) {
 				$metaUser->objSubscription = new Subscription( $database ); // mic old: mosSubscription
 				$metaUser->objSubscription->createNew( $adminid, 'free', 0 );
 				$metaUser->objSubscription->setStatus( 'Excluded' );
@@ -1199,14 +1200,14 @@ function com_install() {
 		$params		= array( 'userid' => $my->id );
 		$eventlog->issue( $short, $tags, $event, $params );
 
-		if( !class_exists( 'Archive_Tar' ) ) {
+		if ( !class_exists( 'Archive_Tar' ) ) {
 			require_once( $mosConfig_absolute_path . '/includes/Archive/Tar.php' );
 		}
 
 		// Code borrowed from VirtueMart
 		// Workaround for Window$
 		/*
-		if( strstr( $mosConfig_absolute_path , ':' ) ) {
+		if ( strstr( $mosConfig_absolute_path , ':' ) ) {
 		 	$path_begin = substr( $mosConfig_absolute_path, strpos( $mosConfig_absolute_path , ':' ) + 1, strlen($mosConfig_absolute_path ) );
 		 	$mosConfig_absolute_path = str_replace( "//", "/", $path_begin );
 		}
@@ -1237,44 +1238,44 @@ function com_install() {
 
 		// check if joomfish (joomla) or nokkaew (mambo) exists)
 		$translation = false;
-		if( file_exists( $mosConfig_absolute_path . '/administrator/components/com_joomfish/admin.joomfish.php' ) ) {
+		if ( file_exists( $mosConfig_absolute_path . '/administrator/components/com_joomfish/admin.joomfish.php' ) ) {
 			$translation = 'joomfish';
-		}elseif( file_exists( $mosConfig_absolute_path . '/administrator/components/com_nokkaew/admin.nokkaew.php' ) ) {
+		} elseif ( file_exists( $mosConfig_absolute_path . '/administrator/components/com_nokkaew/admin.nokkaew.php' ) ) {
 			$translation = 'nokkaew';
 		}
 
-		if( $translation ) {
-			if( file_exists( $dir2 . 'com_acctexp/install/jf_content_elements_aec.' . _AEC_LANGUAGE . '.tar.gz' ) ) {
+		if ( $translation ) {
+			if ( file_exists( $dir2 . 'com_acctexp/install/jf_content_elements_aec.' . _AEC_LANGUAGE . '.tar.gz' ) ) {
 				$xmlInst = 'com_acctexp/install/jf_content_elements_aec.' . _AEC_LANGUAGE . '.tar.gz';
-			}else{
+			} else {
 				$xmlInst = 'com_acctexp/install/jf_content_elements_aec.en.tar.gz';
 			}
 			$files[] = array( $dir2, $xmlInst, 'com_' . $translation . '/contentelements/' );
 		}
 
-		foreach( $files as $file ) {
+		foreach ( $files as $file ) {
 
 			$fullpath	= $file[0] . $file[1];
 			$deploypath = $file[0] . $file[2];
 
 			$archive = new Archive_Tar( $fullpath, 'gz' );
 
-			if( !@is_dir( $deploypath ) ) {
+			if ( !@is_dir( $deploypath ) ) {
 				// Borrowed from php.net page on mkdir. Created by V-Tec (vojtech.vitek at seznam dot cz)
 				$folder_path = array( strstr( $deploypath, '.' ) ? dirname( $deploypath ) : $deploypath );
 
-				while( !@is_dir( dirname( end( $folder_path ) ) )
+				while ( !@is_dir( dirname( end( $folder_path ) ) )
 						&& dirname(end($folder_path)) != '/'
 						&& dirname(end($folder_path)) != '.'
 						&& dirname(end($folder_path)) != '' ) {
 					array_push( $folder_path, dirname( end( $folder_path ) ) );
 				}
 
-				while( $parent_folder_path = array_pop( $folder_path ) ) {
+				while ( $parent_folder_path = array_pop( $folder_path ) ) {
 					@mkdir( $parent_folder_path, 0644 );
 				}
 			}
-			if( $archive->extract( $deploypath ) ) {
+			if ( $archive->extract( $deploypath ) ) {
 				@unlink( $fullpath );
 			}
 		}
@@ -1292,11 +1293,11 @@ function com_install() {
 	</style>
 
 	<?php
-	if( $errors ) {
+	if ( $errors ) {
 		echo '<div style="color: #FF0000; text-align: left; border: 1px solid #FF0000;">' . "\n"
 		. _AEC_INST_ERRORS
 		. '<ul>' . "\n";
-		foreach( $errors AS $error ) {
+		foreach ( $errors AS $error ) {
 			echo '<li>' . $error[0] . ' - ' . $error[1] . '</li>';
 		}
 		echo '</ul>' . "\n"

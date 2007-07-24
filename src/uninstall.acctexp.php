@@ -42,7 +42,8 @@ global $mainframe;
 
 require_once( $mainframe->getPath( 'class', "com_acctexp" ) );
 
-function com_uninstall() {
+function com_uninstall()
+{
 	global $database, $my;
 
 	$short = "AEC uninstall";

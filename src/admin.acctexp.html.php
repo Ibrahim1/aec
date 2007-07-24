@@ -37,9 +37,11 @@ if (!$acl->acl_check( 'administration', 'config', 'users', $my->usertype )) {
 
 global $mosConfig_absolute_path;
 
-class HTML_myCommon {
-
-	function ContentLegend( ) { ?>
+class HTML_myCommon
+{
+	function ContentLegend()
+	{
+		?>
 		<table cellspacing="0" cellpadding="4" border="0" align="center">
 			<tr align="center">
 				<td><?php echo aecHTML::Icon( 'accept.png', _AEC_CMN_PUBLISHED ); ?></td>
@@ -66,7 +68,8 @@ class HTML_myCommon {
 	* @param string The name of the object variable for the option text
 	* @returns string HTML for the select list
 	*/
-	function radioListTable( &$arr, $tag_name, $tag_attribs, $selected=null, $key='value', $text='text' ) {
+	function radioListTable( &$arr, $tag_name, $tag_attribs, $selected=null, $key='value', $text='text' )
+	{
 		reset( $arr );
 		$html = '<table>';
 		$flop = 1;
@@ -77,27 +80,27 @@ class HTML_myCommon {
 
 			$extra = '';
 			$extra .= $id ? ' id="' . $arr[$i]->id . '"' : '';
-			if( is_array( $selected ) ) {
-				foreach( $selected as $obj ) {
+			if ( is_array( $selected ) ) {
+				foreach ( $selected as $obj ) {
 					$k2 = $obj->$key;
 					if ($k == $k2) {
 					$extra .= ' selected="selected"';
 					break;
 					}
 				}
-			}else{
+			} else {
 				$extra .= ( $k == $selected ? ' checked="checked"' : '');
 			}
-			if( $flop ) {
+			if ( $flop ) {
 				$html .= "\n\t" . '<tr><td height="50" valign="center">' . "\n"
 				. '<input type="radio" name="' . $tag_name . '" value="' . $k . '"'
 				. $extra . $tag_attribs . ' />' . $t . '</td>';
-				if( ( $i + 1 ) == $n ) {
+				if ( ( $i + 1 ) == $n ) {
 					// Last interaction, odd number of itens, we have to tr
 					$html .= '<td></td></tr>' . "\n";
 				}
 				$flop = 0;
-				}else{
+				} else {
 					$html .= "\n\t" . '<td height="50" valign="center">'
 					. '<input type="radio" name="' . $tag_name . '" value="' . $k . '"'
 					. $extra . $tag_attribs . ' />' . $t . '</td></tr>' . "\n";
@@ -108,7 +111,8 @@ class HTML_myCommon {
 		return $html;
 	}
 
-	function GlobalNerd() {
+	function GlobalNerd()
+	{
 		global $mosConfig_live_site;
 		?>
 		<div align="center" class="footer">
@@ -137,7 +141,8 @@ class HTML_myCommon {
 		<?php
 	}
 
-	function sidebar( $focus ) {
+	function sidebar( $focus )
+	{
 		global $mosConfig_live_site;
 
 		$sizing = array( 'small', 'mid', 'big' );
@@ -153,7 +158,7 @@ class HTML_myCommon {
 
 		for( $i = 0, $cursormax = $group[$i][1]; $i <= count( $group ); $i++, $cursormax += $group[$i][1] ) {
 			for( $k = 0; $k <= $cursormax; $k++, $cursor++) {
-				if( $cursor === $focus ) {
+				if ( $cursor === $focus ) {
 					$focusgroup = $i;
 				}
 			}
@@ -194,7 +199,7 @@ class HTML_myCommon {
 			}
 
 			for( $k = $cursor; $k <= $group[$i][1]; $k++, $cursor++ ) {
-				if( $cursor == $focus ) {
+				if ( $cursor == $focus ) {
 					$add = 1;
 				}
 				$html .= '<div class="sidebar_button_' . $sizing[$size + $add] . '>'
@@ -212,7 +217,8 @@ class HTML_myCommon {
 		return $html;
 	}
 
-	function createSettingsParticle( $rows, $lists ) {
+	function createSettingsParticle( $rows, $lists )
+	{
 		$thisrow_type	= $rows[0];
 		$thisrow_name	= $rows[1];
 		$thisrow_desc	= $rows[2];
@@ -317,19 +323,23 @@ class HTML_myCommon {
 		}
 	}
 
-	function addBackendCSS() {
+	function addBackendCSS()
+	{
 		global $mainframe; ?>
 		<link rel="stylesheet" type="text/css" media="all" href="<?php echo $mainframe->getCfg( 'live_site' ); ?>/administrator/components/com_acctexp/backend_style.css" />
 		<?php
 	}
 }
 
-class formParticles {
-	function formParticles () {
+class formParticles
+{
+	function formParticles()
+	{
 
 	}
 
-	function createSettingsParticle( $rows, $lists ) {
+	function createSettingsParticle( $rows, $lists )
+	{
 		$thisrow_type	= $rows[0];
 		$thisrow_name	= $rows[1];
 		$thisrow_desc	= $rows[2];
@@ -440,9 +450,10 @@ class formParticles {
 	}
 }
 
-class General_css {
-
-	function editCSSSource ( &$content, $option ) {
+class General_css
+{
+	function editCSSSource( &$content, $option )
+	{
 		global $mosConfig_absolute_path, $mosConfig_live_site;
 
 		$cssFile	= 'style.css';
@@ -462,7 +473,7 @@ class General_css {
 						</span>
 					</td>
 					<?php
-					if( mosIsChmodable( $css_path ) ) {
+					if ( mosIsChmodable( $css_path ) ) {
 						if ( is_writable( $css_path ) ) { ?>
 							<td>
 								<input type="checkbox" id="disable_write" name="disable_write" value="1" />
@@ -500,9 +511,10 @@ class General_css {
 	}
 }
 
-class HTML_AcctExp {
-
-	function userForm ( $option, $expiration, $subscription, $user, $invoices, $lists, $nexttask ) {
+class HTML_AcctExp
+{
+	function userForm( $option, $expiration, $subscription, $user, $invoices, $lists, $nexttask )
+	{
 		global $mosConfig_live_site;
 
 		mosMakeHtmlSafe( $expiration );
@@ -576,7 +588,7 @@ class HTML_AcctExp {
 						<div class="userinfobox">
 							<h3><?php echo _AEC_USER_EXPIRATION; ?></h3>
 							<?php
-							if( !empty( $expiration->expiration ) && strcmp( $expiration->expiration, '9999-12-31 00:00:00' ) === 0 ) { ?>
+							if ( !empty( $expiration->expiration ) && strcmp( $expiration->expiration, '9999-12-31 00:00:00' ) === 0 ) { ?>
 								<p>
 								<?php echo _AEC_USER_CURR_EXPIRE_DATE; ?>:&nbsp;
 								<?php echo aecHTML::Icon( 'clock_pause.png', _AEC_USER_LIFETIME ); ?>&nbsp;
@@ -592,7 +604,7 @@ class HTML_AcctExp {
 									<input type="reset" name="reset" class="button" onClick="return showCalendar('expiration', 'y-mm-dd');" value="..." disabled="disabled" />
 								</p>
 								<?php
-							}else{
+							} else {
 								?>
 								<p>
 									<?php echo _AEC_USER_CURR_EXPIRE_DATE; ?>:&nbsp;
@@ -670,13 +682,13 @@ class HTML_AcctExp {
 										<td><?php echo _AEC_USER_USED_PLANS; ?>:</td>
 										<td>
 											<?php
-											if( isset( $subscription->used_plans ) ) {
+											if ( isset( $subscription->used_plans ) ) {
 												$used_plans = $subscription->getUsedPlans();
 												foreach ($used_plans as $used => $amount) { ?>
 													<strong>#<?php echo $used; ?></strong> - "<?php echo HTML_AcctExp::SubscriptionName( $used ); ?>" (<?php echo $amount . " " . ( ( $amount > 1 ) ? _AEC_USER_TIMES : _AEC_USER_TIME ); ?>)
 													<?php
 												}
-											}else{
+											} else {
 												echo '<span style="color: #FF0000;">' . _AEC_USER_NO_PREV_PLANS . '</span>';
 											} ?>
 										</td>
@@ -707,8 +719,8 @@ class HTML_AcctExp {
 											<td colspan="6" style="border-top: 2px solid #999999;"></td>
 										</tr>
 										<?php
-										if( $invoices ) {
-											foreach( $invoices as $invoice ) { ?>
+										if ( $invoices ) {
+											foreach ( $invoices as $invoice ) { ?>
 												<tr<?php echo $invoice['rowstyle']; ?>>
 													<td><?php echo $invoice['invoice_number']; ?></td>
 													<td><?php echo $invoice['amount']; ?></td>
@@ -719,7 +731,7 @@ class HTML_AcctExp {
 												</tr>
 												<?php
 											}
-										}else{
+										} else {
 											echo '<tr><td colspan="6" style="text-align:center;">&gt;&gt;&nbsp;'
 											. _AEC_USER_NO_INVOICES
 											. '&nbsp;&lt;&lt;</td></tr>' . "\n";
@@ -750,7 +762,8 @@ class HTML_AcctExp {
 	<?php
 	}
 
-	function SubscriptionName( $subscriptionid ) {
+	function SubscriptionName( $subscriptionid )
+	{
 		global $database;
 
 		$subscription = new SubscriptionPlan($database);
@@ -767,8 +780,9 @@ class HTML_AcctExp {
 	 * @param string	$text
 	 * @param bool		$hideMenu
 	 */
-	function quickiconButton( $link, $image, $text, $hideMenu = false ) {
-		if( $hideMenu ) {
+	function quickiconButton( $link, $image, $text, $hideMenu = false )
+	{
+		if ( $hideMenu ) {
 			$hideMenu = '&amp;hidemainmenu=1';
 		} ?>
 		<div style="float:left;">
@@ -782,7 +796,8 @@ class HTML_AcctExp {
 	<?php
 	}
 
-	function central() {
+	function central()
+	{
 		global $mosConfig_live_site;
 		HTML_myCommon::addBackendCSS();
 		// frontpage table
@@ -867,7 +882,8 @@ class HTML_AcctExp {
 		<?php
 	}
 
-	function credits() {
+	function credits()
+	{
 		global $mosConfig_live_site;
 		HTML_myCommon::addBackendCSS();
 		?>
@@ -904,7 +920,8 @@ class HTML_AcctExp {
 		<?php
 	}
 
-	function hacks ( $option, $hacks ) {
+	function hacks ( $option, $hacks )
+	{
 		global $mosConfig_live_site;
 
 		$infohandler	= new GeneralInfoRequester();
@@ -942,19 +959,19 @@ class HTML_AcctExp {
 					</div>
 				</div>
 				<?php
-				foreach( $hacks as $handle => $content ) {
-					if( !$content['status'] ) {
-						if( isset($content['uncondition'] ) ) {
-							if( $hacks[$content['uncondition']]['status'] ) {
+				foreach ( $hacks as $handle => $content ) {
+					if ( !$content['status'] ) {
+						if ( isset($content['uncondition'] ) ) {
+							if ( $hacks[$content['uncondition']]['status'] ) {
 								continue ;
 							}
 						}
-						if( isset($content['condition'] ) ) {
-							if( !$hacks[$content['condition']]['status'] ) {
+						if ( isset($content['condition'] ) ) {
+							if ( !$hacks[$content['condition']]['status'] ) {
 								continue ;
 							}
 						}
-						if( isset($content['legacy'] ) ) {
+						if ( isset($content['legacy'] ) ) {
 							continue;
 						}
 					} ?>
@@ -969,26 +986,26 @@ class HTML_AcctExp {
 							 <a href="<?php echo 'index2.php?option=com_acctexp&amp;task=hacks&amp;filename=' . $handle . '&amp;undohack=' . $content['status'] ?>#<?php echo $handle; ?>"><?php echo $content['status'] ? _AEC_HACKS_UNDO : _AEC_HACKS_COMMIT ; ?></a>
 						</div>
 						<?php
-						if( isset( $content['important'] ) && !$content['status'] ) { ?>
+						if ( isset( $content['important'] ) && !$content['status'] ) { ?>
 							<div class="important">&nbsp;</div>
 							<?php
 						} ?>
 						<p style="width:60%; padding:3px;">
 							<?php
-							if( isset( $content['legacy'] ) ) { ?>
+							if ( isset( $content['legacy'] ) ) { ?>
 								<img src="<?php echo $mosConfig_live_site;?>/administrator/components/com_acctexp/images/icons/aec_symbol_importance_3.png" />
 								<?php
 							} ?>
 							<?php echo $content['desc']; ?>
 						</p>
 						<?php
-						if( ( strcmp( $content['type'], 'file' ) === 0 ) && !$content['status'] ) { ?>
+						if ( ( strcmp( $content['type'], 'file' ) === 0 ) && !$content['status'] ) { ?>
 							<div class="explainblock">
 								<p>
 									<strong><?php echo _AEC_HACKS_FILE; ?>:&nbsp;<?php echo $content['filename']; ?></strong>
 								</p>
 								<?php
-								if( !isset( $content['legacy'] ) ) { ?>
+								if ( !isset( $content['legacy'] ) ) { ?>
 									<p><?php echo _AEC_HACKS_LOOKS_FOR; ?>:</p>
 									<pre><?php print htmlentities( $content['read'] ); ?></pre>
 									<p><?php echo _AEC_HACKS_REPLACE_WITH; ?>:</p>
@@ -998,7 +1015,7 @@ class HTML_AcctExp {
 							</div>
 							<?php
 						}
-						if( $content['done'] ) { ?>
+						if ( $content['done'] ) { ?>
 							<div class="explainblock">
 								<p><?php echo $content['done']; ?></p>
 							</div>
@@ -1013,7 +1030,8 @@ class HTML_AcctExp {
 		HTML_myCommon::GlobalNerd();
 	}
 
-	function help ( $option, $diagnose ) {
+	function help ( $option, $diagnose )
+	{
 		global $mosConfig_live_site;
 
 		HTML_myCommon::addBackendCSS(); ?>
@@ -1050,7 +1068,7 @@ class HTML_AcctExp {
 					 * 4 Advice
 					 * 5 DetectOnly (0:No, 1:Yes -Don't display if Status=0)
 					 */
-					foreach( $diagnose as $dia ) {
+					foreach ( $diagnose as $dia ) {
 						if (!$dia[5] || ($dia[5] && $dia[1])) {
 							if (!$dia[5]) {
 								$importance = $dia[1] ? 1 : $dia[2];
@@ -1082,7 +1100,8 @@ class HTML_AcctExp {
 		HTML_myCommon::GlobalNerd();
 	}
 
-	function Settings( $option, $lists, $tab_data, $editors ) {
+	function Settings( $option, $lists, $tab_data, $editors )
+	{
 		global $mosConfig_live_site;
 
 		HTML_myCommon::addBackendCSS();
@@ -1111,7 +1130,7 @@ class HTML_AcctExp {
 		$tabs = new mosTabs(0);
 		$tabs->startPane( 'settings' );
 
-		foreach( $tab_data as $tab ) {
+		foreach ( $tab_data as $tab ) {
 			$tabs->startTab( $tab[0], $tab[0]); ?>
 			<table cellpadding="1" cellspacing="0" border="0" width="100%" class="adminform">
 				<?php
@@ -1132,7 +1151,8 @@ class HTML_AcctExp {
 		HTML_myCommon::GlobalNerd();
 	}
 
-	function listSubscriptions( $rows, $pageNav, $search, $option, $lists, $userid, $action ) {
+	function listSubscriptions( $rows, $pageNav, $search, $option, $lists, $userid, $action )
+	{
 		global $my, $mosConfig_live_site;
 
 		HTML_myCommon::addBackendCSS(); ?>
@@ -1177,7 +1197,7 @@ class HTML_AcctExp {
 				for( $i=0; $i < count( $rows ); $i++ ) {
 					$row = &$rows[$i];
 
-					if( !isset( $row->status ) ) {
+					if ( !isset( $row->status ) ) {
 						$row->status		= '-';
 						$row->signup_date	= '-';
 						$row->lastpay_date	= '-';
@@ -1188,8 +1208,8 @@ class HTML_AcctExp {
 					}
 
 					$rowstyle = '';
-					if( is_array( $userid ) ) {
-						if( in_array( $row->userid, $userid ) ) {
+					if ( is_array( $userid ) ) {
+						if ( in_array( $row->userid, $userid ) ) {
 							$rowstyle = ' style="border: 2px solid #DD0;"';
 						}
 					} ?>
@@ -1219,7 +1239,8 @@ class HTML_AcctExp {
  		<?php HTML_myCommon::GlobalNerd();
 	}
 
-	function listMicroIntegrations( &$rows, &$pageNav, $option ) {
+	function listMicroIntegrations( &$rows, &$pageNav, $option )
+	{
 		global $mosConfig_live_site;
 
 		HTML_myCommon::addBackendCSS(); ?>
@@ -1253,7 +1274,7 @@ class HTML_AcctExp {
 					<td width="20"><?php echo mosHTML::idBox( $i, $row->id, false, 'id' ); ?></td>
 					<td width="15%">
 						<?php
-						if(!isset($row->id)) {
+						if (!isset($row->id)) {
 							echo $row->name;
 						} else { ?>
 							<a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editMicroIntegration')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $row->name; ?></a> <?php
@@ -1288,7 +1309,8 @@ class HTML_AcctExp {
  		<?php HTML_myCommon::GlobalNerd();
 	}
 
-	function editMicroIntegration( $option, $row, $lists, $aecHTML ) {
+	function editMicroIntegration( $option, $row, $lists, $aecHTML )
+	{
 		global $mosConfig_live_site;
 		//$Returnid = intval( mosGetParam( $_REQUEST, 'Returnid', 0 ) );
 
@@ -1379,17 +1401,17 @@ class HTML_AcctExp {
 								</td>
 							</tr>
 							<?php
-							if( is_null( $aecHTML ) ) { ?>
+							if ( is_null( $aecHTML ) ) { ?>
 								<tr>
 									<td><?php echo _MI_E_FUNCTION_NAME; ?></td>
 									<td>
 										<?php
-										if( $lists['class_name'] ) {
+										if ( $lists['class_name'] ) {
 											echo $lists['class_name']; ?>
 											<br />
 											<?php
 											echo _MI_E_FUNCTION_DESC;
-										}else{
+										} else {
 											echo _AEC_MSG_MIS_NOT_DEFINED;
 										} ?>
 									</td>
@@ -1407,7 +1429,7 @@ class HTML_AcctExp {
 			                $tabs->startTab( _MI_E_SETTINGS, _MI_E_SETTINGS ); ?>
 				                <table width="100%" class="adminform">
 									<?php
-									foreach( $aecHTML->rows as $name => $content ) { ?>
+									foreach ( $aecHTML->rows as $name => $content ) { ?>
 				                		<tr><td><?php echo $aecHTML->createSettingsParticle( $name ); ?></td></tr>
 				                		<?php
 									} ?>
@@ -1426,7 +1448,8 @@ class HTML_AcctExp {
 		<?php HTML_myCommon::GlobalNerd();
 	}
 
-	function listSubscriptionPlans ( &$rows, &$pageNav, $option ) {
+	function listSubscriptionPlans( &$rows, &$pageNav, $option )
+	{
 		global $mosConfig_live_site;
 		HTML_myCommon::addBackendCSS(); ?>
 		<form action="index2.php" method="post" name="adminForm">
@@ -1487,12 +1510,12 @@ class HTML_AcctExp {
 						break;
 				}
 				
-				if( !is_null( $row->desc ) ) {
+				if ( !is_null( $row->desc ) ) {
 					$description = strip_tags( $row->desc );
-					if( strlen( $description ) > 50 ) {
+					if ( strlen( $description ) > 50 ) {
 						$description = substr( $description, 0, 50) . ' ...';
 					}
-				}else{
+				} else {
 					$description = '';
 				}
 				
@@ -1539,7 +1562,8 @@ class HTML_AcctExp {
  		<?php HTML_myCommon::GlobalNerd();
 	}
 
-	function editSubscriptionPlan( $option, $aecHTML, $row, $hasrecusers ) {
+	function editSubscriptionPlan( $option, $aecHTML, $row, $hasrecusers )
+	{
 		global $my, $mosConfig_live_site;
 		$Returnid = intval( mosGetParam( $_REQUEST, 'Returnid', 0 ) );
 
@@ -1734,7 +1758,8 @@ class HTML_AcctExp {
 		<?php HTML_myCommon::GlobalNerd();
 	}
 
-	function listCoupons( &$rows, &$pageNav, $option, $type ) {
+	function listCoupons( &$rows, &$pageNav, $option, $type )
+	{
 		global $mosConfig_live_site;
 
 		HTML_myCommon::addBackendCSS(); ?>
@@ -1799,7 +1824,8 @@ class HTML_AcctExp {
  		<?php HTML_myCommon::GlobalNerd();
 	}
 
-	function editCoupon( $option, $aecHTML, $row, $type ) {
+	function editCoupon( $option, $aecHTML, $row, $type )
+	{
 		global $my, $mosConfig_live_site;
 
 		$Returnid = intval( mosGetParam( $_REQUEST, 'Returnid', 0 ) );
@@ -1962,7 +1988,8 @@ class HTML_AcctExp {
 		<?php HTML_myCommon::GlobalNerd();
 	}
 
-	function viewinvoices( $option, &$rows, &$search, &$pageNav ) {
+	function viewinvoices( $option, &$rows, &$search, &$pageNav )
+	{
 		global $my;
 		global $mosConfig_live_site;
 
@@ -2024,7 +2051,8 @@ class HTML_AcctExp {
 		<?php HTML_myCommon::GlobalNerd();
 	}
 
-	function viewhistory( $option, $rows, $search, $pageNav ) {
+	function viewhistory( $option, $rows, $search, $pageNav )
+	{
 		global $my;
 		global $mosConfig_live_site;
 
@@ -2061,7 +2089,7 @@ class HTML_AcctExp {
 		  </tr>
 		<?php
 		$k = 0;
-		foreach( $rows as $row ) { ?>
+		foreach ( $rows as $row ) { ?>
 			<tr class="row<?php echo $k; ?>">
 				<td><?php echo $row->user_name; ?></td>
 				<td align="center"><?php echo $row->invoice_number; ?></td>
@@ -2072,7 +2100,7 @@ class HTML_AcctExp {
 				<td align="left">
 					<?php
 					$response = str_replace( "\n", '<br />', $row->response );
-					foreach( $keys as $key ) {
+					foreach ( $keys as $key ) {
 						$response = HTML_AcctExp::change( $response, $key );
 					}
 					echo $response; ?>
@@ -2091,7 +2119,8 @@ class HTML_AcctExp {
 		<?php HTML_myCommon::GlobalNerd();
 	}
 
-	function eventlog( $option, $events, $search, $pageNav ) {
+	function eventlog( $option, $events, $search, $pageNav )
+	{
 		global $my;
 		global $mosConfig_live_site;
 
@@ -2121,7 +2150,7 @@ class HTML_AcctExp {
 		  </tr>
 		<?php
 		$k = 0;
-		foreach( $events as $row ) { ?>
+		foreach ( $events as $row ) { ?>
 			<tr class="row<?php echo $k; ?>">
 				<td><?php echo $row->id; ?></td>
 				<td align="left" width="120"><?php echo $row->datetime; ?></td>
@@ -2150,16 +2179,17 @@ class HTML_AcctExp {
 	 * @param text $var
 	 * @return html.string
 	 */
-	function change( $x, $var ) {
-   		if( $var != '' ) {
+	function change( $x, $var )
+	{
+   		if ( $var != '' ) {
        		$xtemp	= '';
        		$i		= 0;
 
-       		while( $i<strlen( $x ) ) {
-           		if( ( ( $i + strlen( $var )) <= strlen( $x ) ) && ( strcasecmp( $var, substr( $x, $i, strlen( $var ) ) ) == 0 ) ) {
+       		while ( $i<strlen( $x ) ) {
+           		if ( ( ( $i + strlen( $var )) <= strlen( $x ) ) && ( strcasecmp( $var, substr( $x, $i, strlen( $var ) ) ) == 0 ) ) {
                    $xtemp .= '<span style="font-weight:bold;text-transform:uppercase;">' . substr( $x, $i , strlen( $var ) ) . '</span>';
                    $i += strlen( $var );
-           		}else{
+           		} else {
                		$xtemp .= $x{$i};
                		$i++;
            		}
@@ -2175,18 +2205,18 @@ class HTML_AcctExp {
 	 * @param string	$SQLDate
 	 * @return string	formatted date
 	 */
-	function DisplayDateInLocalTime( $SQLDate ){
-
-		if( $SQLDate == '' || $SQLDate == '-' ) {
+	function DisplayDateInLocalTime( $SQLDate )
+	{
+		if ( $SQLDate == '' || $SQLDate == '-' ) {
 			return _AEC_CMN_NOT_SET;
-		}else{
+		} else {
 			global $mosConfig_offset_user;
 			global $database;
 
 			// compatibility with Mambo
-			if( !empty( $mosConfig_offset_user ) ) {
+			if ( !empty( $mosConfig_offset_user ) ) {
 				$timeOffset = $mosConfig_offset_user * 3600;
-			}else{
+			} else {
 				global $mosConfig_offset;
 				$timeOffset = $mosConfig_offset * 3600;
 			}

@@ -42,11 +42,11 @@ global $mainframe, $mosConfig_absolute_path;
 
 define( '_AEC_FRONTEND', 1 );
 
-if( !defined( '_AEC_LANG' ) ) {
+if ( !defined( '_AEC_LANG' ) ) {
 	$langPath = $mosConfig_absolute_path . '/components/com_acctexp/com_acctexp_language/';
-	if( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
+	if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
 		include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
-	}else{
+	} else {
 		include_once( $langPath . 'english.php' );
 	}
 	define( '_AEC_LANG', 1 );
@@ -59,7 +59,7 @@ require_once( $mainframe->getPath( 'class',			'com_acctexp' ) );
 
 $task = trim( mosGetParam( $_REQUEST, 'task', '' ) );
 
-if ($task) {
+if ( $task ) {
 	switch ( strtolower( $task ) ) {
 		case 'register':
 			$intro = trim( mosGetParam( $_REQUEST, 'intro', 0 ) );
@@ -136,7 +136,7 @@ if ($task) {
 			$expiration = trim( mosGetParam( $_REQUEST, 'expiration', 0 ) );
 			$itemid		= trim( mosGetParam( $_REQUEST, 'Itemid', 0 ) );
 
-			if( $itemid ) {
+			if ( $itemid ) {
 				$userid = $itemid;
 			}
 
@@ -147,7 +147,7 @@ if ($task) {
 			$userid		= trim( mosGetParam( $_REQUEST, 'userid', '' ) );
 			$itemid		= trim( mosGetParam( $_REQUEST, 'Itemid', 0 ) );
 
-			if( $itemid ){
+			if ( $itemid ){
 				$userid = $itemid;
 			}
 
@@ -186,11 +186,11 @@ if ($task) {
 			break;
 
 		default:
-			if( strpos( $task, 'notification' ) > 0 ) {
+			if ( strpos( $task, 'notification' ) > 0 ) {
 				$processor = str_replace( 'notification', '', $task );
 
 				processNotification( $option, $processor );
-			}else{
+			} else {
 				$userid		= trim( mosGetParam( $_REQUEST, 'userid', '' ) );
 				$expiration = trim( mosGetParam( $_REQUEST, 'expiration', '' ) );
 				expired( $option, $userid, $expiration );
@@ -199,32 +199,33 @@ if ($task) {
 	}
 }
 
-function expired ( $option, $userid, $expiration ) {
+function expired( $option, $userid, $expiration )
+{
 	global $mosConfig_live_site, $database;
 
-	if( $userid > 0 ) {
+	if ( $userid > 0 ) {
 		$metaUser = new metaUser( $userid );
 		$cfg = new Config_General( $database );
 
 		$expired = strtotime( $metaUser->objExpiration->expiration );
 
-		if( $metaUser->hasSubscription ) {
+		if ( $metaUser->hasSubscription ) {
 			$trial = (strcmp($metaUser->objSubscription->status, 'Trial' ) === 0 );
 			if (!$trial) {
 				$params = $metaUser->objSubscription->getParams();
-				if( isset( $params['trialflag'])) {
+				if ( isset( $params['trialflag'])) {
 					$trial = 1;
 				}
 			}
-		}else{
+		} else {
 			$trial = false;
 		}
 
 		$invoices = AECfetchfromDB::InvoiceCountbyUserID( $userid );
 
-		if( $invoices ) {
+		if ( $invoices ) {
 			$invoice = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $userid );
-		}else{
+		} else {
 			$invoice = false;
 		}
 
@@ -234,49 +235,51 @@ function expired ( $option, $userid, $expiration ) {
 
 		$frontend = new HTML_frontEnd ();
 		$frontend->expired( $option, $metaUser->cmsUser->id, $expiration, $name, $username, $invoice, $trial );
-	}else{
+	} else {
 		mosRedirect( sefRelToAbs( 'index.php' ) );
 	}
 }
 
-function pending ( $option, $userid ) {
+function pending( $option, $userid )
+{
 	global $database;
 
-	if( $userid > 0 ) {
+	if ( $userid > 0 ) {
 		$objUser = new mosUser( $database );
 		$objUser->load( $userid );
 
 		$invoices = AECfetchfromDB::InvoiceCountbyUserID( $userid );
 
-		if( $invoices ) {
+		if ( $invoices ) {
 			$invoice = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $userid );
 			$objInvoice = new Invoice( $database );
 			$objInvoice->loadInvoiceNumber( $invoice );
 			$params = $objInvoice->getParams( 'params' );
 
-			if( isset( $params['pending_reason'] ) ) {
-				if( defined( '_PENDING_REASON_' . strtoupper( $params['pending_reason'] ) ) ) {
+			if ( isset( $params['pending_reason'] ) ) {
+				if ( defined( '_PENDING_REASON_' . strtoupper( $params['pending_reason'] ) ) ) {
 					$reason = constant( '_PENDING_REASON_' . strtoupper( $params['pending_reason'] ) );
-				}else{
+				} else {
 					$reason = $params['pending_reason'];
 				}
-			}elseif( strcmp( $objInvoice->method, 'transfer' ) === 0 ) {
+			} elseif ( strcmp( $objInvoice->method, 'transfer' ) === 0 ) {
 				$reason = 'transfer';
-			}else{
+			} else {
 				$reason = 0;
 			}
-		}else{
+		} else {
 			$invoice = 'none';
 		}
 
 		$frontend = new HTML_frontEnd ();
 		$frontend->pending( $option, $objUser, $invoice, $reason );
-	}else{
+	} else {
 		mosRedirect( sefRelToAbs( 'index.php' ) );
 	}
 }
 
-function subscribe ( $option ) {
+function subscribe( $option )
+{
 	global $my, $database, $mosConfig_uniquemail;
 
 	$intro		= trim( mosGetParam( $_REQUEST, 'intro', 0 ) );
@@ -285,25 +288,25 @@ function subscribe ( $option ) {
 	$userid		= trim( mosGetParam( $_REQUEST, 'userid', 0 ) );
 	$itemid		= trim( mosGetParam( $_REQUEST, 'Itemid', 0 ) );
 
-	if( isset( $_POST['username'] ) && $usage ) {
+	if ( isset( $_POST['username'] ) && $usage ) {
 		$query = 'SELECT id'
 		. ' FROM #__users'
 		. ' WHERE username = \'' . $_POST['username'] . '\''
 		;
 		$database->setQuery( $query );
-		if( $database->loadResult() ) {
+		if ( $database->loadResult() ) {
 			mosErrorAlert( _REGWARN_INUSE );
 		}
 
-		if( isset( $_POST['email'] ) ) {
-			if( $mosConfig_uniquemail ) {
+		if ( isset( $_POST['email'] ) ) {
+			if ( $mosConfig_uniquemail ) {
 				// check for existing email
 				$query = 'SELECT id'
 				. ' FROM #__users'
 				. ' WHERE email = \'' . $_POST['email'] . '\''
 				;
 				$database->setQuery( $query );
-				if( $database->loadResult() ) {
+				if ( $database->loadResult() ) {
 					mosErrorAlert( _REGWARN_EMAIL_INUSE );
 				}
 			}
@@ -311,34 +314,34 @@ function subscribe ( $option ) {
 
 		$invoicefact = new InvoiceFactory( $userid, $usage, $processor );
 		$invoicefact->confirm( $option, $_POST );
-	}else{
-		if( $my->id ) {
+	} else {
+		if ( $my->id ) {
 			$userid			= $my->id;
 			$passthrough	= false;
-		}elseif( $itemid ) {
+		} elseif ( $itemid ) {
 			$userid			= $itemid;
 			$passthrough	= false;
-		}elseif( !$userid ) {
-			if( isset( $_POST['username'] ) ) {
+		} elseif ( !$userid ) {
+			if ( isset( $_POST['username'] ) ) {
 				$query = 'SELECT id'
 				. ' FROM #__users'
 				. ' WHERE username = \'' . $_POST['username'] . '\''
 				;
 				$database->setQuery( $query );
-				if( $database->loadResult() ) {
+				if ( $database->loadResult() ) {
 					mosErrorAlert( _REGWARN_INUSE );
 				}
 			}
 
-			if( isset( $_POST['email'] ) ) {
-				if( $mosConfig_uniquemail ) {
+			if ( isset( $_POST['email'] ) ) {
+				if ( $mosConfig_uniquemail ) {
 					// check for existing email
 					$query = 'SELECT id'
 					. ' FROM #__users'
 					. ' WHERE email = \'' . $_POST['email'] . '\''
 					;
 					$database->setQuery( $query );
-					if( $database->loadResult() ) {
+					if ( $database->loadResult() ) {
 						mosErrorAlert( _REGWARN_EMAIL_INUSE );
 					}
 				}
@@ -346,7 +349,7 @@ function subscribe ( $option ) {
 
 			unset( $_POST['option'] );
 			unset( $_POST['task'] );
-			if( isset( $_POST['usage'] ) ) {
+			if ( isset( $_POST['usage'] ) ) {
 				unset( $_POST['intro'] );
 				unset( $_POST['usage'] );
 				unset( $_POST['Itemid'] );
@@ -354,12 +357,12 @@ function subscribe ( $option ) {
 
 			$passthrough = array();
 			// We have to support arrays for CB
-			foreach( $_POST as $ke => $va ) {
-				if( is_array( $va ) ) {
-					foreach( $va as $con ) {
+			foreach ( $_POST as $ke => $va ) {
+				if ( is_array( $va ) ) {
+					foreach ( $va as $con ) {
 						$passthrough[$ke . '[]'] = $con;
 					}
-				}else{
+				} else {
 					$passthrough[$ke] = $va;
 				}
 			}
@@ -370,7 +373,8 @@ function subscribe ( $option ) {
 	}
 }
 
-function confirmSubscription ( $option ) {
+function confirmSubscription( $option )
+{
 	global $mosConfig_absolute_path, $mosConfig_emailpass, $mosConfig_useractivation, $mainframe, $my;
 
 	$userid		= trim( mosGetParam( $_REQUEST, 'userid', 0 ) );
@@ -378,39 +382,40 @@ function confirmSubscription ( $option ) {
 	$processor	= trim( mosGetParam( $_REQUEST, 'processor', 0 ) );
 	$username	= trim( mosGetParam( $_REQUEST, 'username', 0 ) );
 
-	if( ( $usage > 0 ) && !$username && !$userid && !$my->id ) {
-		if( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+	if ( ( $usage > 0 ) && !$username && !$userid && !$my->id ) {
+		if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
 			// This is a CB registration, borrowing their code to register the user
 			include_once( $mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.html.php' );
 			include_once( $mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.php' );
 
 			registerForm( $option, $mosConfig_emailpass, null );
-		}else{
+		} else {
 			// This is a joomla registration, borrowing their code to register the user
 			include_once( $mosConfig_absolute_path . '/components/com_registration/registration.php' );
 
 			registerForm( $option, $mosConfig_useractivation );
 		}
-	}else{
+	} else {
 		$invoicefact = new InvoiceFactory( $userid, $usage, $processor );
 		$invoicefact->confirm( $option, $_POST );
 	}
 }
 
-function subscriptionDetails ( $option ) {
+function subscriptionDetails( $option )
+{
 	global $database, $my, $mainframe;
 
-	if( !$my->id ) {
+	if ( !$my->id ) {
 		notAllowed( $option );
-	}else{
+	} else {
 		$metaUser = new metaUser( $my->id );
 
-		if( !$metaUser->hasSubscription ) {
+		if ( !$metaUser->hasSubscription ) {
 			subscribe( $option );
 			exit();
 		}
 
-		switch( strtolower( $metaUser->objSubscription->type ) ) {
+		switch ( strtolower( $metaUser->objSubscription->type ) ) {
 			case 'free':
 			case 'none':
 			case 'transfer':
@@ -420,56 +425,56 @@ function subscriptionDetails ( $option ) {
 
 			default:
 				$pp = new PaymentProcessor();
-				if( $pp->loadName( $metaUser->objSubscription->type ) ) {
+				if ( $pp->loadName( $metaUser->objSubscription->type ) ) {
 					$pp->init();
 					$pp->getInfo();
-				}else{
+				} else {
 					$pp = false;
 				}
 				break;
 		}
 
-		if( strcmp( $metaUser->objSubscription->status, 'Cancelled' ) == 0 ) {
+		if ( strcmp( $metaUser->objSubscription->status, 'Cancelled' ) == 0 ) {
 			$recurring = 0;
-		}else{
+		} else {
 			$recurring = $metaUser->objSubscription->recurring;
 		}
 
 		$mi_info = '';
 		$selected_plan = new SubscriptionPlan( $database );
 
-		if( $metaUser->objSubscription->plan ) {
+		if ( $metaUser->objSubscription->plan ) {
 			$selected_plan->load( $metaUser->objSubscription->plan );
 
 			$mis = explode( ';', $selected_plan->micro_integrations );
 
-			if( count( $mis ) ) {
-				foreach( $mis as $mi_id ) {
-					if( $mi_id ) {
+			if ( count( $mis ) ) {
+				foreach ( $mis as $mi_id ) {
+					if ( $mi_id ) {
 						$mi = new MicroIntegration( $database );
 						$mi->load( $mi_id );
-						if( $mi->callIntegration() ) {
+						if ( $mi->callIntegration() ) {
 							$info = $mi->profile_info( $my->id );
-							if( !( $info === false ) ) {
+							if ( !( $info === false ) ) {
 								$mi_info .= $info;
 							}
 						}
 					}
 				}
 			}
-		}else{
+		} else {
 			$selected_plan	= false;
 			$mi				= false;
 		}
 
 		$alert = array();
-		if( strcmp( $metaUser->objSubscription->status, 'Excluded' ) === 0 ) {
+		if ( strcmp( $metaUser->objSubscription->status, 'Excluded' ) === 0 ) {
 			$alert['level']		= 3;
 			$alert['daysleft']	= 'excluded';
-		}elseif( $metaUser->objSubscription->lifetime ) {
+		} elseif ( $metaUser->objSubscription->lifetime ) {
 			$alert['level']		= 3;
 			$alert['daysleft']	= 'infinite';
-		}else{
+		} else {
 			$alert = $metaUser->objSubscription->GetAlertLevel();
 		}
 
@@ -494,33 +499,33 @@ function subscriptionDetails ( $option ) {
 		;
 		$database->setQuery( $query );
 		$rows = $database->loadObjectList();
-		if( $database->getErrorNum() ) {
+		if ( $database->getErrorNum() ) {
 			echo $database->stderr();
 			return false;
 		}
 
 		$invoices = array();
-		foreach( $rows as $rowid => $row ) {
-			if( strcmp( $row->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
-				if( strpos( $row->params, 'pending_reason' ) ) {
+		foreach ( $rows as $rowid => $row ) {
+			if ( strcmp( $row->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
+				if ( strpos( $row->params, 'pending_reason' ) ) {
 					$params = explode( "\n", $row->params );
 
 					$array = array();
-					foreach( $params as $chunk ) {
+					foreach ( $params as $chunk ) {
 						$k = explode( '=', $chunk );
 						$array[$k[0]] = stripslashes( $k[1] );
 					}
 
-					if( isset( $array['pending_reason'] ) ) {
-						if( defined( '_PAYMENT_PENDING_REASON_' . strtoupper( $array['pending_reason'] ) ) ) {
+					if ( isset( $array['pending_reason'] ) ) {
+						if ( defined( '_PAYMENT_PENDING_REASON_' . strtoupper( $array['pending_reason'] ) ) ) {
 							$transactiondate = constant( '_PAYMENT_PENDING_REASON_' . strtoupper( $array['pending_reason'] ) );
-						}else{
+						} else {
 							$transactiondate = $array['pending_reason'];
 						}
-					}else{
+					} else {
 						$transactiondate = 'uncleared';
 					}
-				}else{
+				} else {
 					$transactiondate = 'uncleared';
 				}
 
@@ -529,7 +534,7 @@ function subscriptionDetails ( $option ) {
 				. $row->invoice_number ) . '">' . _HISTORY_ACTION_REPEAT
 				. '</a>';
 
-				if( is_null( $row->fixed ) || !$row->fixed ) {
+				if ( is_null( $row->fixed ) || !$row->fixed ) {
 					$actions .= ' | '
 					. '<a href="'
 					. AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=cancelPayment&amp;invoice='
@@ -537,7 +542,7 @@ function subscriptionDetails ( $option ) {
 					. '</a>';
 				}
 				$rowstyle = ' style="background-color:#fee;"';
-			}else{
+			} else {
 				$transactiondate	= HTML_frontend::DisplayDateInLocalTime( $row->transaction_date );
 				$actions			= '- - -';
 				$rowstyle			= '';
@@ -557,71 +562,74 @@ function subscriptionDetails ( $option ) {
 	}
 }
 
-function repeatInvoice ( $option, $invoice_number, $userid ){
+function repeatInvoice( $option, $invoice_number, $userid )
+{
 	global $database, $my;
 
 	// Always rewrite to session userid
-	if( !empty( $my->id ) ) {
+	if ( !empty( $my->id ) ) {
 		$userid = $my->id;
 	}
 
 	$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, $userid );
 
 	// Only allow a user to access existing and own invoices
-	if( $invoiceid ) {
+	if ( $invoiceid ) {
 		$invoicefact = new InvoiceFactory( $userid );
 		$invoicefact->touchInvoice( $option, $invoice_number );
 		$invoicefact->checkout( $option );
-	}else{
+	} else {
 		mosNotAuth();
 		return;
 	}
 }
 
-function cancelInvoice ( $option, $invoice_number, $pending=0, $userid ){
+function cancelInvoice( $option, $invoice_number, $pending=0, $userid )
+{
 	global $database, $my;
 
-	if( empty($my->id ) ) {
-		if( $userid ) {
-			if( AECToolbox::quickVerifyUserID($userid) === true ) {
+	if ( empty($my->id ) ) {
+		if ( $userid ) {
+			if ( AECToolbox::quickVerifyUserID($userid) === true ) {
 				// This user is not expired, so he could log in...
 				mosNotAuth();
 				return;
 			}
-		}else{
+		} else {
 			mosNotAuth();
 		}
-	}else{
+	} else {
 		$userid = $my->id;
 	}
 
 	$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, $userid );
 
 	// Only allow a user to access existing and own invoices
-	if( $invoiceid ) {
+	if ( $invoiceid ) {
 		$objInvoice = new Invoice( $database );
 		$objInvoice->load( $invoiceid );
 
-		if( !$objInvoice->fixed ) {
+		if ( !$objInvoice->fixed ) {
 			$objInvoice->active = 0;
 			$objInvoice->setParams( array('deactivated' => 'cancel') );
 			$objInvoice->check();
 			$objInvoice->store();
 		}
-	}else{
+	} else {
 		mosNotAuth();
 		return;
 	}
 
-	if( $pending ) {
+	if ( $pending ) {
 		pending( $option, $userid );
-	}else{
+	} else {
 		subscriptionDetails( $option );
 	}
 
 }
 
-function InvoiceAddParams ( $option ){
+function InvoiceAddParams( $option )
+{
 	global $database;
 
 	$invoice = new Invoice( $database );
@@ -633,7 +641,8 @@ function InvoiceAddParams ( $option ){
 	repeatInvoice( $option, $_POST['invoice'], $invoice->userid );
 }
 
-function InvoiceAddCoupon ( $option ){
+function InvoiceAddCoupon( $option )
+{
 	global $database;
 
 	$invoice = new Invoice( $database );
@@ -645,7 +654,8 @@ function InvoiceAddCoupon ( $option ){
 	repeatInvoice( $option, $_POST['invoice'], $invoice->userid );
 }
 
-function InvoiceRemoveCoupon ( $option ){
+function InvoiceRemoveCoupon( $option )
+{
 	global $database;
 
 	$invoice = new Invoice( $database );
@@ -657,43 +667,44 @@ function InvoiceRemoveCoupon ( $option ){
 	repeatInvoice( $option, $_REQUEST['invoice'], $invoice->userid );
 }
 
-function notAllowed ( $option ) {
+function notAllowed( $option )
+{
 	global $database, $my;
 	$cfg = new Config_General( $database );
 
-	if( ( $cfg->cfg['customnotallowed'] != '' ) && !is_null( $cfg->cfg['customnotallowed'] ) ) {
+	if ( ( $cfg->cfg['customnotallowed'] != '' ) && !is_null( $cfg->cfg['customnotallowed'] ) ) {
 		mosRedirect( $cfg->cfg['customnotallowed'] );
 	}
 
 	$gwnames = explode( ';', $cfg->cfg['gwlist'] );
 
-	if( count( $gwnames ) && $gwnames[0] ) {
+	if ( count( $gwnames ) && $gwnames[0] ) {
 		$processors = array();
-		foreach( $gwnames as $procname ) {
+		foreach ( $gwnames as $procname ) {
 			$processor = trim( $procname );
 			$processors[$processor] = new PaymentProcessor();
-			if( $processors[$processor]->loadName( $processor ) ) {
+			if ( $processors[$processor]->loadName( $processor ) ) {
 				$processors[$processor]->init();
 				$processors[$processor]->getInfo();
-			}else{
+			} else {
 				// TODO: Log error
 				unset( $processors[$processor] );
 			}
 		}
-	}else{
+	} else {
 		$processors = false;
 	}
 
 	$CB = ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) );
 
-	if( $my->id ) {
+	if ( $my->id ) {
 		$registerlink = AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=renewsubscription' );
 		$loggedin = 1;
-	}else{
+	} else {
 		$loggedin = 0;
-		if( $CB ) {
+		if ( $CB ) {
 			$registerlink = AECToolbox::deadsureURL( '/index.php?option=com_comprofiler&amp;task=registers' );
-		}else{
+		} else {
 			$registerlink = AECToolbox::deadsureURL( '/index.php?option=com_registration&amp;task=register' );
 		}
 	}
@@ -702,11 +713,12 @@ function notAllowed ( $option ) {
 	$frontend->notAllowed( $option, $processors, $registerlink, $loggedin );
 }
 
-function backSubscription ( $option ) {
+function backSubscription( $option )
+{
 	global $mainframe, $database, $my, $acl;
 
 	// Rebuild array
-	foreach( $_POST as $key => $value ) {
+	foreach ( $_POST as $key => $value ) {
 		$var[$key]	= $value;
 	}
 
@@ -723,8 +735,8 @@ function backSubscription ( $option ) {
 	$objuser->load( $userid );
 
 	$unset = array( 'id', 'gid', 'task', 'option', 'name', 'username', 'email', 'password', '', 'password2' );
-	foreach( $unset as $key ) {
-		if( isset($var[$key] ) ) {
+	foreach ( $unset as $key ) {
+		if ( isset($var[$key] ) ) {
 			unset( $var[$key] );
 		}
 	}
@@ -733,7 +745,8 @@ function backSubscription ( $option ) {
 	Payment_HTML::subscribeForm( $option, $var, $objplan, null, $objuser );
 }
 
-function processNotification ( $option, $processor ) {
+function processNotification( $option, $processor )
+{
 	global $database;
 
 	// Init flags
@@ -741,7 +754,7 @@ function processNotification ( $option, $processor ) {
 	$free		= 0;
 
 	// Legacy naming support
-	switch( $processor ) {
+	switch ( $processor ) {
 		case 'vklix':
 			$processor = 'viaklix';
 			break;
@@ -759,12 +772,12 @@ function processNotification ( $option, $processor ) {
 	// Create Response String for History
 	$responsestring = '';
 	$post = array();
-	foreach( $_POST as $key => $value ) {
+	foreach ( $_POST as $key => $value ) {
 		$value = urlencode( stripslashes( $value ) );
 		$responsestring .= $key . '=' . $value . "\n";
 	}
 
-	switch ( strtolower($processor) ) {
+	switch ( strtolower( $processor ) ) {
 		case 'free':
 			$free = 1;
 			break;
@@ -773,13 +786,13 @@ function processNotification ( $option, $processor ) {
 		default:
 			// parse processor notification
 			$pp = new PaymentProcessor( $processor );
-			if( $pp->loadName( $processor ) ) {
+			if ( $pp->loadName( $processor ) ) {
 				$pp->init();
 				$response = $pp->parseNotification( $_POST );
-				if( isset( $response['processorresponse'] ) ) {
+				if ( isset( $response['processorresponse'] ) ) {
 					$responsestring = $response['processorresponse'] . "\n" . $responsestring;
 				}
-			}else{
+			} else {
 				exit();
 				// TODO: Log error
 			}
@@ -789,11 +802,11 @@ function processNotification ( $option, $processor ) {
 	// Get Invoice record
 	$id = AECfetchfromDB::InvoiceIDfromNumber( $response['invoice'] );
 
-	if( $id ) {
+	if ( $id ) {
 		$objInvoice = new Invoice( $database );
 		$objInvoice->load( $id );
 		$objInvoice->computeAmount();
-	}else{
+	} else {
 		$short	= _AEC_MSG_PROC_INVOICE_FAILED_SH;
 		$event	= sprintf( _AEC_MSG_PROC_INVOICE_FAILED_EV, $processor, $objInvoice->invoice_number )
 				. ' ' . $database->getErrorMsg();
@@ -820,19 +833,19 @@ function processNotification ( $option, $processor ) {
 
 	$event .= ' ';
 
-	if( $response['valid'] ) {
+	if ( $response['valid'] ) {
 		$break = 0;
 
-		if( isset( $response['amount_paid'] ) ) {
-			if( $response['amount_paid'] != $objInvoice->amount ) {
+		if ( isset( $response['amount_paid'] ) ) {
+			if ( $response['amount_paid'] != $objInvoice->amount ) {
 				// Amount Fraud, cancel payment and create error log addition
 				$event	.= sprintf( _AEC_MSG_PROC_INVOICE_ACTION_EV_FRAUD, $response['amount_paid'], $objInvoice->amount );
 				$tags	.= ',fraud_attempt,amount_fraud';
 				$break	= 1;
 			}
 		}
-		if( isset($response['amount_currency'] ) ) {
-			if( $response['amount_currency'] != $objInvoice->currency ) {
+		if ( isset($response['amount_currency'] ) ) {
+			if ( $response['amount_currency'] != $objInvoice->currency ) {
 				// Amount Fraud, cancel payment and create error log addition
 				$event	.= sprintf( _AEC_MSG_PROC_INVOICE_ACTION_EV_CURR, $response['amount_currency'], $objInvoice->currency );
 				$tags	.= ',fraud_attempt,currency_fraud';
@@ -840,39 +853,39 @@ function processNotification ( $option, $processor ) {
 			}
 		}
 
-		if( !$break ) {
+		if ( !$break ) {
 			$renew	= $objInvoice->pay();
 			thanks( $option, $renew, $free );
 			$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_VALID;
 			$tags	.= ',payment,action';
 		}
-	}else{
-		if( isset( $response['pending'] ) ) {
-			if( strcmp( $response['pending_reason'], 'signup' ) === 0 ) {
+	} else {
+		if ( isset( $response['pending'] ) ) {
+			if ( strcmp( $response['pending_reason'], 'signup' ) === 0 ) {
 				$plan = new SubscriptionPlan( $database );
 				$plan->load( $objInvoice->usage );
 				$params = $this->getParams( 'params' );
 
-				if( $params['trial_free'] ) {
+				if ( $params['trial_free'] ) {
 					$objInvoice->pay();
 					$objInvoice->setParams( array( 'free_trial' => $response['pending_reason'] ) );
 					$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_TRIAL;
 					$tags	.= ',payment,action,trial';
 				}
-			}else{
+			} else {
 				$objInvoice->setParams( array( 'pending_reason' => $response['pending_reason'] ) );
 				$event	.= sprintf( _AEC_MSG_PROC_INVOICE_ACTION_EV_PEND, $response['pending_reason'] );
 				$tags	.= ',payment,pending' . $response['pending_reason'];
 			}
 			$objInvoice->check();
 			$objInvoice->store();
-		}elseif( isset( $response['cancel'] ) ) {
+		} elseif ( isset( $response['cancel'] ) ) {
 			$metaUser = new metaUser();
 			$metaUser->load( $objInvoice->userid );
 			$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_CANCEL;
 			$tags	.= ',cancel';
 
-			if( $metaUser->objSubscription->hasSubscription ) {
+			if ( $metaUser->objSubscription->hasSubscription ) {
 				$metaUser->objSubscription->setStatus( 'Cancelled' );
 				$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS;
 			}
@@ -891,53 +904,56 @@ function processNotification ( $option, $processor ) {
 	$eventlog->issue( $short, $tags, $event, $params );
 }
 
-function errorAP ( $option, $usage, $userid, $username, $name, $recurring ) {
+function errorAP( $option, $usage, $userid, $username, $name, $recurring )
+{
 	Payment_HTML::errorAP( $option, $usage, $userid, $username, $name, $recurring );
 }
 
-function thanks ( $option, $renew, $free ) {
+function thanks( $option, $renew, $free )
+{
 	global $database, $mosConfig_useractivation, $ueConfig, $mosConfig_dbprefix;
 
 	$cfg = new Config_General( $database );
 
-	if( $mosConfig_useractivation ) {
+	if ( $mosConfig_useractivation ) {
 		$activation = 1;
-	}else{
+	} else {
 		$activation = 0;
 	}
 
-	if( $renew ) {
+	if ( $renew ) {
 		$msg = _SUB_FEPARTICLE_HEAD_RENEW
 		. '</p><p>'
 		. _SUB_FEPARTICLE_THANKSRENEW;
-		if( $free ) {
+		if ( $free ) {
 			$msg .= _SUB_FEPARTICLE_LOGIN;
-		}else{
+		} else {
 			$msg .= _SUB_FEPARTICLE_PROCESSPAY
 			. _SUB_FEPARTICLE_MAIL;
 		}
-	}else{
+	} else {
 		$msg = _SUB_FEPARTICLE_HEAD
 		. '</p><p>'
 		. _SUB_FEPARTICLE_THANKS;
-		if( $free ) {
+		if ( $free ) {
 			$msg .= _SUB_FEPARTICLE_PROCESS
 			. _SUB_FEPARTICLE_MAIL;
-		}else{
+		} else {
 			$msg .= _SUB_FEPARTICLE_PROCESSPAY
 			. _SUB_FEPARTICLE_MAIL;
 		}
 	}
 
 	// Look whether we have a custom ThankYou page
-	if( $cfg->cfg['customthanks'] ) {
+	if ( $cfg->cfg['customthanks'] ) {
 		mosRedirect( $cfg->cfg['customthanks'] );
-	}else{
+	} else {
 		HTML_Results::thanks( $option, $msg );
 	}
 }
 
-function cancelPayment ( $option ) {
+function cancelPayment( $option )
+{
 	global $database;
 
 	$cfg = new Config_General( $database );
@@ -948,8 +964,8 @@ function cancelPayment ( $option ) {
 	$obj = new mosUser( $database );
 	$obj->load( $userid );
 
-	if( $obj->id ) {
-		if( ( strcasecmp( $obj->type, 'Super Administrator' ) != 0 || strcasecmp( $obj->type, 'superadministrator' ) != 0 ) && strcasecmp( $obj->type, 'Administrator' ) != 0 && $obj->block == 1 ) {
+	if ( $obj->id ) {
+		if ( ( strcasecmp( $obj->type, 'Super Administrator' ) != 0 || strcasecmp( $obj->type, 'superadministrator' ) != 0 ) && strcasecmp( $obj->type, 'Administrator' ) != 0 && $obj->block == 1 ) {
 			// If the user is not blocked this can be a false cancel
 			// So just delete user if he is blocked and is not an administrator or super admnistrator
 			$obj->delete();
@@ -957,9 +973,9 @@ function cancelPayment ( $option ) {
 	}
 
 	// Look whether we have a custom Cancel page
-	if( $cfg->cfg['customcancel'] ) {
+	if ( $cfg->cfg['customcancel'] ) {
 		mosRedirect( $cfg->cfg['customcancel'] );
-	}else{
+	} else {
 		HTML_Results::cancel( $option );
 	}
 }
