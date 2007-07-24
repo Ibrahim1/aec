@@ -3502,7 +3502,9 @@ class Subscription extends paramDBTable
 
 		$cfg = new Config_General( $database );
 
-		if ( strcmp( $this->status, 'Expired' ) === 0 ) {
+		if ( strcmp( $this->status, 'Excluded' ) === 0 ) {
+			$expired = false;
+		} elseif ( strcmp( $this->status, 'Expired' ) === 0 ) {
 			$expired = true;
 		} else {
 			$expiration = new AcctExp( $database );
