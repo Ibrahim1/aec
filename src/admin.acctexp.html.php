@@ -1517,7 +1517,7 @@ class HTML_AcctExp
 						$atext		= _AEC_CMN_NOT_PUBLISHED;
 						break;
 				}
-				
+
 				if ( !is_null( $row->desc ) ) {
 					$description = strip_tags( $row->desc );
 					if ( strlen( $description ) > 50 ) {
@@ -1526,7 +1526,7 @@ class HTML_AcctExp
 				} else {
 					$description = '';
 				}
-				
+
 				?>
 				<tr class="row<?php echo $k; ?>">
 					<td align="center"><?php echo $pageNav->rowNumber( $i ); ?></td>

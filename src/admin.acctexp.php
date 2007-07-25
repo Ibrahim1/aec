@@ -3406,15 +3406,25 @@ function migrate( $option )
 
 	$query = 'SELECT id'
 	. ' FROM #__users'
-	. ' WHERE LOWER( usertype ) = \'superadministrator\''
-	. ' OR LOWER( usertype ) = \'super administrator\''
+	. ' WHERE LOWER( usertype ) != \'superadministrator\''
+	. ' OR LOWER( usertype ) != \'super administrator\''
 	;
 	$database->setQuery( $query );
 	$rows = $database->loadResultArray();
 
 	foreach ( $rows as $userid ) {
+
+		$metaUser = new metaUser($userid);
+		if ( $metaUser->hasSubscription ) {
+			if ($metaUser->objSubscription->plan == 1) {
+				$metaUser->instantGIDchange(31);
+			}
+		}
+
+/*
 		$mosUser = new mosUser( $database );
 		$mosUser->load( $userid );
+
 
 		// Fixing mosLock broken user accounts
 		// it sometimes seems to forget setting the usertype
@@ -3463,9 +3473,9 @@ function migrate( $option )
 
 			$expirationHandler->check();
 			$expirationHandler->store();
-		}
+		}*/
 	}
-
+		exit();
 // Fix JACLplus associations after uninstall/reinstall
 $query = 'SELECT id'
 . ' FROM #__users'
@@ -3479,7 +3489,7 @@ foreach ( $rows as $userid ){
 	$user->load(1);
 	print_r($user);
 }
-exit();
+
 
 }
 
