@@ -442,6 +442,9 @@ switch( strtolower( $task ) ) {
 		migrate ( $option );
 		break;
 
+	case 'quicklookup':
+		quicklookup ( $option );
+
 	default:
 		HTML_AcctExp::central();
 		break;
@@ -3257,7 +3260,7 @@ function clearInvoice( $option, $invoice_number, $applyplan, $task )
 		}
 	}
 
-	mosRedirect( 'index2.php?option=' . $option . '&task=' . $task . $userid, _AEC_MSG_INVOICE_CLEARED );
+	mosRedirect( 'index2.php?option=' . $option . '&task=' . $task . '&userid=' . $userid, _AEC_MSG_INVOICE_CLEARED );
 }
 
 function cancelInvoice( $option, $invoice_number, $task )
@@ -3283,7 +3286,7 @@ function cancelInvoice( $option, $invoice_number, $task )
 		}
 	}
 
-	mosRedirect( 'index2.php?option=' . $option . '&task=' . $task . $userid, _REMOVED );
+	mosRedirect( 'index2.php?option=' . $option . '&task=' . $task . '&userid=' . $userid, _REMOVED );
 }
 
 function history( $option )
@@ -3490,6 +3493,51 @@ foreach ( $rows as $userid ){
 	print_r($user);
 }
 
+
+}
+
+function quicklookup( $option )
+{
+	$search	= mosGetParam( $_REQUEST, 'search', 0 );
+	$search = $database->getEscaped( trim( strtolower( $search ) ) );
+
+
+	// Try to find this as a username or name
+	$query = 'SELECT id'
+	. ' FROM #__users'
+	. ' WHERE username LIKE \'' . $search . '\' OR name LIKE \'' . $search . '\''
+	;
+	$database->setQuery( $query );
+
+	$userid = $database->loadResult();
+
+	// If its not that, how about the user email?
+	if ( !$userid ) {
+		$query = 'SELECT id'
+		. ' FROM #__users'
+		. ' WHERE email = \'' . $search . '\''
+		;
+		$database->setQuery( $query );
+
+		$userid = $database->loadResult();
+	}
+
+	// Or maybe its an invoice number?
+	if ( !$userid ) {
+		$query = 'SELECT userid'
+		. ' FROM #__acctexp_invoices'
+		. ' WHERE invoice_number = \'' . $search . '\''
+		;
+		$database->setQuery( $query );
+
+		$userid = $database->loadResult();
+	}
+
+	if ( $userid ) {
+		mosRedirect( 'index2.php?option=' . $option . '&task=edit&userid=' . $userid );
+	} else {
+		mosRedirect( 'index2.php?option=' . $option . '&task=showcentral', "Not Found" );
+	}
 
 }
 

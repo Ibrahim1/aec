@@ -154,7 +154,7 @@ class mi_docman
 		if ( $params['set_group'] ) {
 			$this->DeleteUserFromGroup( $userid, $params['group'] );
 		}
-		
+
 		if ( $params['set_group_exp'] ) {
 			$this->AddUserToGroup( $userid, $params['group_exp'] );
 		}
@@ -294,7 +294,7 @@ class mi_docman
 					unset( $users[$search] );
 				}
 			}
-			
+
 			$query = 'UPDATE #__docman_groups'
 			. ' SET groups_members = \'' . implode( ',', $users ) . '\''
 			. ' WHERE groups_id = \'' . $groupid . '\''
