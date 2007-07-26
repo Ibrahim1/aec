@@ -114,7 +114,7 @@ class mi_affiliatepro
 		$passvars['cur'] = $database->loadResult();
 
 		$passvars['country_code']	= '';// REPLACE with Country Code? Where could that come from?
-		$passvars['add_info']		= 'userid_' . $userid . '_plan_' . $plan->id . '_' . $params['mi_additional_info'];
+		$passvars['add_info']		= 'userid_' . $userid . '_plan_' . $plan->id . '_' . $params['add_info'];
 
 		$vars_encode = array();
 		foreach ( $passvars as $key => $value ) {
@@ -123,7 +123,7 @@ class mi_affiliatepro
 			}
 		}
 
-		$url = 'http://' . $params['mi_affPRO_url'] . '/callbacks/callback_sample.php?';
+		$url = 'http://' . $params['url'] . '/callbacks/callback_sample.php?';
 		$url .= implode( '&', $vars_encode );
 
 		$request=fopen( $url, 'r' );
