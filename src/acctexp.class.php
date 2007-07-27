@@ -1484,6 +1484,15 @@ class SubscriptionPlan extends paramDBTable
 		$this->mosDBTable( '#__acctexp_plans', 'id', $db );
 	}
 
+	function getProperty( $name )
+	{
+		if ( isset( $this->$name ) ) {
+			return stripslashes( $this->$name );
+		} else {
+			return null;
+		}
+	}
+
 	function applyPlan( $userid, $processor = 'none', $silent = 0 )
 	{
 		global $database, $mainframe, $mosConfig_offset_user;
@@ -1850,7 +1859,11 @@ class SubscriptionPlan extends paramDBTable
 			if ( is_array( $post[$varname] ) ) {
 				$this->$varname = implode( ';', $post[$varname] );
 			} else {
-				$this->$varname = $post[$varname];
+				if ( !get_magic_quotes_gpc() ) {
+					$this->$varname = addslashes( $post[$varname] );
+				} else {
+					$this->$varname = $post[$varname];
+				}
 			}
 			unset( $post[$varname] );
 		}
@@ -2330,7 +2343,7 @@ class InvoiceFactory
 			$plan_params = $row->getParams();
 
 			$plans[$i]['name']		= $row->name;
-			$plans[$i]['desc']		= $row->desc;
+			$plans[$i]['desc']		= $row->getProperty( 'desc' );
 			$plans[$i]['id']		= $row->id;
 			$plans[$i]['ordering']	= $row->ordering;
 			$plans[$i]['lifetime']	= $plan_params['lifetime'];
@@ -3553,7 +3566,7 @@ class Subscription extends paramDBTable
 
 			$mih = new microIntegrationHandler();
 			$mih->userPlanExpireActions( $this->userid, $subscription_plan );
-		
+
 			$this->applyUsage( $plan_params['fallback'], 'none', 1 );
 			return false;
 		} else {
@@ -4435,7 +4448,7 @@ class AECToolbox
 
 		if ( is_object( $subscriptionPlan ) ) {
 			$rewrite['plan_name'] = $subscriptionPlan->name;
-			$rewrite['plan_desc'] = $subscriptionPlan->desc;
+			$rewrite['plan_desc'] = $subscriptionPlan->getProperty( 'desc' );
 		}
 
 		$search = array();
@@ -4572,7 +4585,7 @@ class microIntegrationHandler
 			}
 		}
 	}
-	
+
 	function getHacks()
 	{
 

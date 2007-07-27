@@ -2171,7 +2171,7 @@ function editSubscriptionPlan( $id, $option )
 		$params_values['visible']				= $row->visible;
 		$params_values['email_desc']			= $row->email_desc;
 		$params_values['name']					= $row->name;
-		$params_values['desc']					= $row->desc;
+		$params_values['desc']					= $row->getProperty( 'desc' );
 		$params_values['micro_integrations']	= $row->micro_integrations;
 
 		// Checking if there is already a user, which disables certain actions

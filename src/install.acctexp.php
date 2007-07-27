@@ -149,7 +149,6 @@ function com_install()
 	. '`name` varchar(40) NULL,'
 	. '`desc` text NULL,'
 	. '`email_desc` text NULL,'
-	. '`email_desc_exp` text NULL,'
 	. '`send_exp_mail` int(4) NOT NULL default \'0\','
 	. '`params` text NULL,'
 	. '`custom_params` text NULL,'
