@@ -466,7 +466,7 @@ class Payment_HTML
 
 			$html_code .= '<div class="gateway_button">' . "\n"
 			. '<form action="' . AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=' . $task ) . '"'
-			. ' "method="post">' . "\n"
+			. ' method="post">' . "\n"
 			. '<input type="image" src="' . $urlbutton;
 			if ( isset( $processor['statement'] ) ) {
 				$html_code .= '" border="0" name="submit" alt="' . $processor['statement'] . '" />' . "\n";
@@ -807,7 +807,7 @@ function joomlaregisterForm($option, $useractivation)
 		function submitbutton_reg() {
 			var form = document.mosForm;
 			var r = new RegExp("[\<|\>|\"|\'|\%|\;|\(|\)|\&|\+|\-]", "i");
-	
+
 			// do field validation
 			if (form.name.value == "") {
 				alert( "<?php echo html_entity_decode(_REGWARN_NAME);?>" );
