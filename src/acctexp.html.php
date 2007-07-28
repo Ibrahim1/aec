@@ -50,10 +50,10 @@ class HTML_frontEnd
 	{
 		global $mainframe;
 
-    	$html = '<link rel="stylesheet" type="text/css" media="all" href="'
-    	. $mainframe->getCfg( 'live_site' ) . '/components/' . $option . '/style.css" />';
+		$html = '<link rel="stylesheet" type="text/css" media="all" href="'
+		. $mainframe->getCfg( 'live_site' ) . '/components/' . $option . '/style.css" />';
 
-    	$mainframe->addCustomHeadTag( $html );
+		$mainframe->addCustomHeadTag( $html );
     	// $mainframe->setPageTitle( 'AEC - Account Evolution' ); // mic: reserved
  		$mainframe->appendMetaTag( 'description', 'AEC Account Expiration Control' );
     	$mainframe->appendMetaTag( 'keywords', 'AEC Account Expiration Control' );

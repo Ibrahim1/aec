@@ -2387,7 +2387,7 @@ class InvoiceFactory
 						}
 					}
 
-					if ( $hasTransfer && is_null( $this->processor ) ) {
+					if ( $hasTransfer && empty( $this->processor ) ) {
 						if ( isset( $plan_gw[0] ) ) {
 							if ( !(strcmp(strtolower( $plan_gw[0]['name']), 'free') === 0 ) ) {
 								$plan_gw[]['name'] = 'transfer';
