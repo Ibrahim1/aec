@@ -237,7 +237,7 @@ class HTML_myCommon
 				<tr align="left" valign="middle" >
 					<td width="10%" align="right"><?php echo $thisrow_name; ?></td>
         			<td align="left">
-	        			<input name="<?php echo $thisrow_extra; ?>" type="text" size="4" maxlength="5" value="<?php echo $thisrow_var; ?>"/>
+	        			<input name="<?php echo $thisrow_extra; ?>" type="text" size="4" maxlength="10" value="<?php echo $thisrow_var; ?>"/>
 					</td>
 					<td><?php echo $thisrow_desc; ?></td>
 				</tr>
@@ -247,7 +247,7 @@ class HTML_myCommon
 			case 'inputB': ?>
 				<tr>
 					<td width="10%"><?php echo $thisrow_name; ?></td>
-					<td width="10%"><input class="inputbox" type="text" name="<?php echo $thisrow_extra; ?>" size="2" maxlength="10" value="<?php echo $thisrow_var; ?>" /></td>
+					<td width="10%"><input class="inputbox" type="text" name="<?php echo $thisrow_extra; ?>" size="2" maxlength="20" value="<?php echo $thisrow_var; ?>" /></td>
 					<td align="left"><?php echo $thisrow_desc; ?></td>
 				</tr>
 				<?php
@@ -793,18 +793,16 @@ class HTML_AcctExp
 		if ( $hideMenu ) {
 			$hideMenu = '&amp;hidemainmenu=1';
 		} ?>
-		<div style="float:left;">
-			<div class="icon">
-				<a href="<?php echo $link . $hideMenu; ?>">
-					<?php echo mosAdminMenus::imageCheckAdmin( $image, '/administrator/components/com_acctexp/images/icons/', NULL, NULL, $text ); ?>
-					<span><?php echo $text; ?></span>
-				</a>
-			</div>
+		<div class="icon">
+			<a href="<?php echo $link . $hideMenu; ?>">
+				<?php echo mosAdminMenus::imageCheckAdmin( $image, '/administrator/components/com_acctexp/images/icons/', NULL, NULL, $text ); ?>
+				<span><?php echo $text; ?></span>
+			</a>
 		</div>
 	<?php
 	}
 
-	function central()
+	function central( $display=null )
 	{
 		global $mosConfig_live_site;
 		HTML_myCommon::addBackendCSS();
@@ -812,7 +810,7 @@ class HTML_AcctExp
 		?>
 		<table class="adminform">
 			<tr>
-				<td width="55%" valign="top">
+				<td valign="top">
 					<div id="aec_center">
 						<?php // Assemble Buttons
 						$link = 'index2.php?option=com_acctexp&amp;task=showExcluded';
@@ -869,9 +867,27 @@ class HTML_AcctExp
 						$link = 'index2.php?option=com_acctexp&amp;task=eventlog';
 						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_eventlog.png', _AEC_CENTR_LOG );
 						?>
+						<div class="quicksearch">
+							<h2><?php echo _AEC_QUICKSEARCH; ?></h2>
+							<p><?php echo _AEC_QUICKSEARCH_DESC; ?></p>
+							<form action="<?php echo $mosConfig_live_site; ?>/administrator/index2.php?option=com_acctexp&amp;task=quicklookup" method="post">
+							<input type="text" size="20" name="search" class="inputbox" value="" />
+							<input type="submit" />
+							</form>
+							<?php
+							if ( !empty( $display ) ) {
+							?>
+								<h2><?php echo _AEC_QUICKSEARCH_MULTIRES; ?></h2>
+								<p><?php echo _AEC_QUICKSEARCH_MULTIRES_DESC; ?></p>
+								<p><?php echo $display; ?></p>
+							<?php
+							}
+							?>
+
+						</div>
 					</div>
 				</td>
-				<td width="45%" valign="top">
+				<td width="480" valign="top" style="background-color:#fff;">
 					<br />
 					<center><img src="components/com_acctexp/images/icons/aec_logo_big.png" border="0" alt="AEC" width="200" height="232" /></center>
 					<br />

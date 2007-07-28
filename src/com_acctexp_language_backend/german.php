@@ -289,6 +289,12 @@ define( '_AEC_CENTR_M_INTEGRATION',				'Integration' );
 define( '_AEC_CENTR_HELP',						'Hilfe' );
 define( '_AEC_CENTR_LOG',						'Logdatei' );
 define( '_AEC_CENTR_MANUAL',					'Manuell' );
+define( '_AEC_QUICKSEARCH',						'Schnellsuche' );
+define( '_AEC_QUICKSEARCH_DESC',				'Geben sie den Namen, Benutzernamen, die Benutzer ID oder eine Rechnungsnummer ein um direkt zum Konto eines Benutzers weitergeleitet zu werden. Sollten mehrere Benutzer gefunden werden, so wird unten eine Auswahl angezeigt.' );
+define( '_AEC_QUICKSEARCH_MULTIRES',			'Mehrere Benutzer gefunden!' );
+define( '_AEC_QUICKSEARCH_MULTIRES_DESC',		'Bitte w&auml;hlen sie einen Benutzer aus:' );
+define( '_AEC_QUICKSEARCH_THANKS',				'Danke - Sie haben eine einfache Funktion sehr gl&uuml;cklick gemacht.' );
+define( '_AEC_QUICKSEARCH_NOTFOUND',			'Benutzer nicht gefunden' );
 
 // select lists
 define( '_AEC_SEL_EXCLUDED',					'Ausgeschlossen' );

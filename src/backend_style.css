@@ -2,11 +2,13 @@
 /* 2007.07.01 */
 
 #aec_center {
+float: left;
 text-align: center;
 vertical-align: middle;
 }
 
 #aec_center div.icon {
+float: left;
 margin: 3px;
 }
 
@@ -17,8 +19,12 @@ height: 100px;
 width: 80px;
 vertical-align: middle;
 text-decoration : none;
-border: 1px solid #DDD;
 padding: 2px 5px 1px 5px;
+margin: 2px;
+background-color:#fff;
+border-bottom: 1px solid #888;
+border-left: 1px solid #aaa;
+border-right: 1px solid #aaa;
 }
 
 #aec_center div.icon a:link {
@@ -28,9 +34,11 @@ color : #808080;
 
 #aec_center div.icon a:hover {
 color : #333;
-background-color: #f1e8e6;
-border: 1px solid #c24733;
-padding: 3px 4px 0px 6px;
+background-color:#fff;
+border-bottom: 2px solid #666;
+border-left: 1px solid #888;
+border-right: 1px solid #888;
+margin-bottom: 1px;
 }
 
 #aec_center div.icon a:active {
@@ -48,6 +56,18 @@ margin-top: 11px;
 #aec_center div.icon span {
 display: block;
 padding-top: 3px;
+}
+
+div.quicksearch {
+float: left;
+width: 90%;
+clear: both;
+padding: 0 12px 12px 12px;
+margin: 12px;
+background-color:#fff;
+border-top: 2px solid #888;
+border-left: 1px solid #aaa;
+border-right: 1px solid #aaa;
 }
 
 h1.importance_1 {

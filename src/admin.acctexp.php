@@ -443,7 +443,16 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'quicklookup':
-		quicklookup ( $option );
+		$return = quicklookup ( $option );
+
+		if ( strlen( $return ) > 32 ) {
+			HTML_AcctExp::central( $return );
+		} elseif ( $return ) {
+			mosRedirect( 'index2.php?option=' . $option . '&task=edit&userid=' . $return, _AEC_QUICKSEARCH_THANKS );
+		} else {
+			mosRedirect( 'index2.php?option=' . $option . '&task=showcentral', _AEC_QUICKSEARCH_NOTFOUND );
+		}
+		break;
 
 	default:
 		HTML_AcctExp::central();
@@ -3498,16 +3507,45 @@ foreach ( $rows as $userid ){
 
 function quicklookup( $option )
 {
+	global $database, $mosConfig_live_site;
+
 	$search	= mosGetParam( $_REQUEST, 'search', 0 );
 	$search = $database->getEscaped( trim( strtolower( $search ) ) );
 
+	$userid = 0;
 
 	// Try to find this as a username or name
-	$query = 'SELECT id'
+	$query = 'SELECT count(*)'
 	. ' FROM #__users'
-	. ' WHERE username LIKE \'' . $search . '\' OR name LIKE \'' . $search . '\''
+	. ' WHERE username LIKE \'%' . $search . '%\' OR name LIKE \'%' . $search . '%\''
 	;
 	$database->setQuery( $query );
+	$request = $database->loadResult();
+
+	$query = 'SELECT id'
+	. ' FROM #__users'
+	. ' WHERE username LIKE \'%' . $search . '%\' OR name LIKE \'%' . $search . '%\''
+	;
+	$database->setQuery( $query );
+
+	if ( $request > 1 ) {
+		$users = $database->loadResultArray();
+
+		$return = array();
+		foreach ( $users as $user ) {
+			$mosUser = new mosUser( $database );
+			$mosUser->load( $user );
+			$userlink = '<a href="';
+			$userlink .= $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&amp;task=edit&amp;userid=' . $mosUser->id;
+			$userlink .= '">';
+			$userlink .= $mosUser->name . ' (' . $mosUser->username . ')';
+			$userlink .= '</a>';
+
+			$return[] = $userlink;
+		}
+
+		return implode( ', ', $return );
+	}
 
 	$userid = $database->loadResult();
 
@@ -3520,6 +3558,8 @@ function quicklookup( $option )
 		$database->setQuery( $query );
 
 		$userid = $database->loadResult();
+	} else {
+		return $userid;
 	}
 
 	// Or maybe its an invoice number?
@@ -3531,14 +3571,18 @@ function quicklookup( $option )
 		$database->setQuery( $query );
 
 		$userid = $database->loadResult();
-	}
-
-	if ( $userid ) {
-		mosRedirect( 'index2.php?option=' . $option . '&task=edit&userid=' . $userid );
 	} else {
-		mosRedirect( 'index2.php?option=' . $option . '&task=showcentral', "Not Found" );
+		return $userid;
 	}
 
+	// Try to find this as a username or name
+	$query = 'SELECT id'
+	. ' FROM #__users'
+	. ' WHERE id LIKE \'' . $search . '\''
+	;
+	$database->setQuery( $query );
+
+	return $database->loadResult();
 }
 
 function hackcorefile( $option, $filename, $check_hack, $undohack )
