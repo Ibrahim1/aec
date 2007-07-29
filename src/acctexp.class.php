@@ -1364,7 +1364,7 @@ class Config_General extends paramDBTable
 
 		$this->cfg = $this->getParams( 'settings' );
 
-		if ( $this->cfg === false ) {
+		if ( empty( $this->cfg ) ) {
 			$this->initParams();
 			$this->cfg = $this->getParams( 'settings' );
 		}
@@ -1432,9 +1432,43 @@ class Config_General extends paramDBTable
 			}
 		}
 
+		if ( $this->RowDuplicationCheck() ) {
+			$this->CleanDuplicatedRows();
+			$this->load(1);
+		}
+
 		$this->settings = implode( "\n", $settings );
 		$this->check();
 		$this->store();
+	}
+
+	function RowDuplicationCheck()
+	{
+		global $database;
+
+		$query = 'SELECT count(*)'
+		. ' FROM #__acctexp_config'
+		;
+		$database->setQuery( $query );
+		$rows = $database->loadResult();
+
+		if ( $rows > 1 ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function CleanDuplicatedRows()
+	{
+		global $database;
+
+		$query = 'DELETE'
+		. ' FROM #__acctexp_config'
+		. ' WHERE id > \'1\''
+		;
+		$database->setQuery( $query );
+		$database->query();
 	}
 }
 
