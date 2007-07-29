@@ -56,7 +56,7 @@ class mi_juga
 
         $settings = array();
 
-		//Explode the selected groups
+		// Explode the selected groups
 		if ( !empty( $params['enroll_group'] ) ) {
 			$gplist = explode( ';', $params['enroll_group'] );
 			$selected_enroll_gps = array();
@@ -79,12 +79,13 @@ class mi_juga
 
 		$settings['lists']['enroll_group']		= mosHTML::selectList( $sg, 'enroll_group[]', 'size="4" multiple="true"', 'value', 'text', $selected_enroll_gps );
 		$settings['lists']['enroll_group_exp']	= mosHTML::selectList( $sg, 'enroll_group_exp[]', 'size="4" multiple="true"', 'value', 'text', $selected_enroll_gps_exp );
-		$settings['set_remove_group']			= array( 'list_yesno' );
 		$settings['set_enroll_group']			= array( 'list_yesno' );
 		$settings['enroll_group']				= array( 'list' );
+		$settings['set_remove_group']			= array( 'list_yesno' );
 		$settings['set_enroll_group_exp']		= array( 'list_yesno' );
-		$settings['set_remove_group_exp']		= array( 'list_yesno' );
 		$settings['enroll_group_exp']			= array( 'list' );
+		$settings['set_remove_group_exp']		= array( 'list_yesno' );
+		$settings['rebuild']					= array( 'list_yesno' );
 
 		return $settings;
 	}
@@ -99,16 +100,28 @@ class mi_juga
 	function saveparams( $params )
 	{
 		global $mosConfig_absolute_path, $database;
-		// IMPLODE THE ARRAYS
-	
-		$enroll_groups = implode( ';', $params['enroll_group']);
-		$params['enroll_group'] = $enroll_groups;
-		$enroll_groups_exp = implode( ';', $params['enroll_group_exp']);
-		$params['enroll_group_exp'] = $enroll_groups_exp;
-
-		//
-
 		$newparams = $params;
+
+		// Arrays -> semicolon separated fields
+		$newparams['enroll_group'] = implode( ';', $params['enroll_group']);
+		$newparams['enroll_group_exp'] = implode( ';', $params['enroll_group_exp']);
+
+		if ( $params['rebuild'] ) {
+			$planlist = MicroIntegrationHandler::getPlansbyMI( $params['MI_ID'] );
+
+			foreach ( $planlist as $planid ) {
+				$userlist = SubscriptionPlanHandler::getPlanUserlist( $planid );
+				foreach ( $userlist as $userid ) {
+					if ( $params['set_enroll_group'] ) {
+						foreach ( $params['enroll_group'] as $groupid ) {
+							$this->AddUserToGroup( $userid, $groupid );
+						}
+					}
+				}
+			}
+
+			$newparams['rebuild'] = 0;
+		}
 
 		return $newparams;
 	}
@@ -118,13 +131,15 @@ class mi_juga
 		global $database;
 
 		if ( $params['set_remove_group_exp'] ) {
-			$this->DeleteUserFromGroup( $userid );
+			$groups = explode( ';', $params['enroll_group'] );
+			foreach ( $groups as $groupid ) {
+				$this->DeleteUserFromGroup( $userid, $groupid );
+			}
 		}
-		
+
 		if ( $params['set_enroll_group_exp'] ) {
 			if ( !empty( $params['enroll_group_exp'] ) ) {
 				$gplist = explode( ';', $params['enroll_group_exp'] );
-				$selected_enroll_gps_exp = array();
 				foreach ( $gplist as $enroll_group_exp) {
 					$this->AddUserToGroup( $userid, $enroll_group_exp );
 				}
@@ -145,7 +160,6 @@ class mi_juga
 		if ( $params['set_enroll_group'] ) {
 			if( !empty( $params['enroll_group'] ) ) {
 				$gplist = explode( ';', $params['enroll_group'] );
-				$selected_enroll_gps = array();
 				foreach( $gplist as $enroll_group) {
 					$this->AddUserToGroup( $userid, $enroll_group );
 				}
@@ -156,6 +170,7 @@ class mi_juga
 	function AddUserToGroup( $userid, $groupid )
 	{
 		global $database;
+
 		// Check user is not already a member of the group.
 		$query = 'SELECT user_id'
 		. ' FROM #__juga_u2g'
@@ -165,7 +180,7 @@ class mi_juga
 		$database->setQuery( $query );
 		$user = $database->loadResult();
 
-		//if( $user !== $userid ) {
+		if( $user !== $userid ) {
 			// then the user is not already a member of this group and can be set
 
 			$query = 'INSERT INTO #__juga_u2g'
@@ -175,21 +190,23 @@ class mi_juga
 			$database->setQuery( $query );
 			$database->query();
 
-
 			return true;
-		//}else
-		//{
-			return false;  //likely because already a member of group
-		//}
+		} else {
+			return false;
+		}
 	}
 
-	function DeleteUserFromGroup( $userid, $groupid )
+	function DeleteUserFromGroup( $userid, $groupid=null )
 	{
 		global $database;
 
 		$query = 'DELETE FROM #__juga_u2g'
-		. ' WHERE user_id = \''. $userid . '\' AND group_id = \''. $groupid . '\''
+		. ' WHERE user_id = \''. $userid . '\''
 		;
+
+		if ( !empty( $groupid ) ) {
+			$query .= ' AND group_id = \''. $groupid . '\'';
+		}
 
 		$database->setQuery( $query );
 		$database->query();
