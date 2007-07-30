@@ -21,7 +21,7 @@ class mi_displaypipeline
 		$settings['once_per_user']		= array( 'list_yesno' );
 
 		$settings['expire']				= array( 'list_yesno' );
-		$settings['expstamp']			= array( 'inputE' );
+		$settings['expiration']			= array( 'inputE' );
 
 		$settings['displaymax']			= array( 'inputB' );
 		$settings['text']				= array( 'inputE' );

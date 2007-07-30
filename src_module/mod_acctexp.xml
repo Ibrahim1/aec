@@ -1,24 +1,24 @@
 <?xml version="1.0" ?>
 <mosinstall type="module">
-<name>AEC Login</name>
+<name>AEC Module</name>
 <creationDate>06/26/2006</creationDate>
 <author>Helder Garcia</author>
 <copyright>This module is released under the GNU/GPL License.  </copyright>
 <authorEmail>helder.garcia@gmail.com</authorEmail>
 <authorUrl>www.globalnerd.org</authorUrl>
 <version>0.12.3</version>
-<description>Login Module for use with Account Expiration Control Component.</description>
+<description>Module for use with Account Expiration Control Component.</description>
 <files>
-	<filename module="mod_login-acctexp">mod_login-acctexp.php</filename>
-	<filename>mod_login-acctexp_language/brazilian_portuguese.php</filename>
-	<filename>mod_login-acctexp_language/english.php</filename>
-	<filename>mod_login-acctexp_language/french.php</filename>
-	<filename>mod_login-acctexp_language/german.php</filename>
-	<filename>mod_login-acctexp_language/germani.php</filename>
-	<filename>mod_login-acctexp_language/italian.php</filename>
-	<filename>mod_login-acctexp_language/spanish.php</filename>
-	<filename>mod_login-acctexp_language/simplified_chinese.php</filename>
-	<filename>mod_login-acctexp_language/dutch.php</filename>
+	<filename module="mod_acctexp">mod_acctexp.php</filename>
+	<filename>mod_acctexp_language/brazilian_portuguese.php</filename>
+	<filename>mod_acctexp_language/english.php</filename>
+	<filename>mod_acctexp_language/french.php</filename>
+	<filename>mod_acctexp_language/german.php</filename>
+	<filename>mod_acctexp_language/germani.php</filename>
+	<filename>mod_acctexp_language/italian.php</filename>
+	<filename>mod_acctexp_language/spanish.php</filename>
+	<filename>mod_acctexp_language/simplified_chinese.php</filename>
+	<filename>mod_acctexp_language/dutch.php</filename>
 </files>
 <params>
 	<param name="pretext" type="text" default="" label="Pre Text" description="Text that you want to display before the automatically generated text." />
