@@ -15,8 +15,8 @@ defined( '_VALID_MOS' ) or die( 'Not really ....' );
 define( '_AEC_LANG_INCLUDED_MI', 1);
 
 // acajoom
-define( '_AEC_MI_NAME_ACAJOOM',		'Acajoom' );
-define( '_AEC_MI_DESC_ACAJOOM',		'Includes the newsletter Acajoom (free edition)' );
+define( '_AEC_MI_NAME_ACAJOOM',		'Acajoom (beta!)' );
+define( '_AEC_MI_DESC_ACAJOOM',		'Includes the newsletter Acajoom [Experimental - please give feedback to the developers!]' );
 define( '_MI_MI_ACAJOOM_LIST_NAME',		'Set List' );
 define( '_MI_MI_ACAJOOM_LIST_DESC',		'Which Mailing list do you want to assign this user to?' );
 define( '_MI_MI_ACAJOOM_LIST_EXP_NAME',		'Set Expiration List' );
@@ -56,7 +56,7 @@ define( '_MI_MI_DOCMAN_ADD_DOWNLOADS_DESC',			'Input the amount of downloads you
 define( '_MI_MI_DOCMAN_SET_GROUP_NAME',				'Set DocMan Group' );
 define( '_MI_MI_DOCMAN_SET_GROUP_DESC',				'Choose Yes if you want this MI to set the DocMan Group when it is called.' );
 define( '_MI_MI_DOCMAN_GROUP_NAME',					'DocMan Group' );
-define( '_MI_MI_DOCMAN_GROUP_DES',					'The DocMan group that you want the user to be in.' );
+define( '_MI_MI_DOCMAN_GROUP_DESC',					'The DocMan group that you want the user to be in.' );
 define( '_MI_MI_DOCMAN_GROUP_EXP_NAME',				'Set DocMan Group expiration' );
 define( '_MI_MI_DOCMAN_GROUP_EXP_DESC',				'Choose Yes if you want this MI to set the DocMan Group when the calling payment plan expires.' );
 define( '_MI_MI_DOCMAN_SET_GROUP_EXP_NAME',			'Expiration group' );

@@ -44,42 +44,94 @@ class mi_acajoom
 
 		$settings['list'] = array( 'list' );
 		$settings['list_exp'] = array( 'list' );
-		$settings['receive_html'] = array( 'list_yesno' );
-		$settings['confirmed'] = array( 'list_yesno' );
-		$settings['blacklist'] = array( 'list_yesno' );
-		$settings['language_iso'] = array( 'InputB' );
 
 		return $settings;
 	}
 
 	function expiration_action( $params, $userid, $plan )
 	{
+		$acauser = $this->getSubscriberID( $userid );
+
+		if ( !$acauser ) {
+			$this->createSubscriber( $userid );
+			$acauser = $this->getSubscriberID( $userid );
+		}
+
+		if ( $this->hasList( $acauser, $params['list'] ) )
+			$this->deleteFromList( $acauser, $params['list'] );
+		}
 	}
 
 	function action( $params, $userid, $plan )
 	{
-		$query = 'SELECT *'
+		$acauser = $this->getSubscriberID( $userid );
+
+		if ( !$acauser ) {
+			$this->createSubscriber( $userid );
+			$acauser = $this->getSubscriberID( $userid );
+		}
+
+		if ( !$this->hasList( $acauser, $params['list'] ) )
+			$this->addToList( $acauser, $params['list'] );
+		}
+	}
+
+	function createSubscriber( $userid )
+	{
+		global $database;
+
+		$user = new mosUser( $database );
+		$user->load( $userid );
+
+		$query  = 'INSERT INTO #__acajoom_subscribers'
+		. ' (user_id, name, email, receive_html, confirmed, blacklist, timezone, language_iso, subscribe_date, params)'
+		. ' VALUES(\'' . $userid . '\', \'' . $user->name . '\', \'' . $user->email . '\', \'1\', \'1\', \'0\', \'00:00:00\', \'eng\', \'' . date( 'Y-m-d H:i:s' ) . '\', \'\' )'
+		;
+		$database->setQuery( $query );
+		$database->query();
+	}
+
+	function hasList( $subscriber_id, $listid )
+	{
+		$query = 'SELECT id'
+		. ' FROM #__acajoom_queue'
+		. ' WHERE subscriber_id = \'' . $subscriber_id . '\' AND list_id = \'' . $listid . '\''
+		;
+		$database->setQuery( $query );
+		if ( $database->loadResult() ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function getSubscriberID( $userid )
+	{
+		$query = 'SELECT id'
 		. ' FROM #__acajoom_subscribers'
 		. ' WHERE userid = \'' . $userid . '\''
 		;
 		$database->setQuery( $query );
-		$acauser = $database->loadResultObject();
-
-		// Table fields for _acajoom_subscribers:
-		// id, user_id, name, email, receive_html, confirmed, blacklist, timezone, language_iso, subscribe_date, params
-
-		if ( !$acauser->id ) {
-			$query  = 'INSERT INTO #__acajoom_subscribers'
-			. ' WHERE userid = \'' . $userid . '\''
-			;
-			$database->setQuery( $query );
-			$acauser = $database->loadObject();
-		}
+		return $database->loadResult();
 	}
+
+	function addToList( $subscriber_id, $list_id )
+	{
+		$query  = 'INSERT INTO #__acajoom_queue'
+		. ' (type, subscriber_id, list_id, mailing_id, issue_nb, send_date, suspend, delay, acc_level, published, params)'
+		. ' VALUES(\'1\', \'' . $subscriber_id . '\', \'' . $list_id . '\', \'0\', \'0\', \'0000-00-00 00:00:00\', \'0\', \'0\', \'0\', \'0\', \'\' )'
+		;
+	}
+
+	function deleteFromList( $subscriber_id, $list_id )
+	{
+		$query = 'DELETE FROM #__acajoom_queue'
+		. ' WHERE subscriber_id = \'' . $subscriber_id . '\' AND list_id = \'' . $listid . '\''
+		;
+		$database->setQuery( $query );
+		$database->query();
+	}
+
 }
 
-class acajoomsubscriber
-{
-	function ()
-}
 ?>

@@ -487,7 +487,7 @@ class aecHeartbeat extends mosDBTable
 		$exp_users			= 0;
 
 		// Efficient way to check for expired users without checking on each one
-		if ( !empty( $user_list[0] ) ) {
+		if ( !empty( $user_list ) ) {
 			foreach ( $user_list as $exp_id ) {
 				$expiration = new AcctExp($database);
 				$expiration->load( $exp_id );
@@ -516,7 +516,7 @@ class aecHeartbeat extends mosDBTable
 				}
 			}
 
-			if ( isset( $expired_users[0] ) ) {
+			if ( !empty( $expired_users ) ) {
 				foreach ( $expired_users as $n ) {
 					$subscription = new Subscription( $database );
 					$subscription->loadUserID($n);
@@ -528,7 +528,7 @@ class aecHeartbeat extends mosDBTable
 			}
 
 			// Only go for pre expiration action if we have at least one user for it
-			if ( $pre_expiration && isset( $pre_expired_users[0] ) ) {
+			if ( $pre_expiration && !empty( $pre_expired_users ) ) {
 				// Get all the MIs which have a pre expiration check
 				$query = 'SELECT id'
 				. ' FROM #__acctexp_microintegrations'
@@ -671,7 +671,7 @@ class displayPipelineHandler
 		$events = array_merge( $events, $database->loadResultArray() );
 
 		$return = '';
-		if ( !isset( $events[0] ) ) {
+		if ( empty( $events ) ) {
 			return $return;
 		}
 
@@ -2577,7 +2577,7 @@ class InvoiceFactory
 					}
 
 					if ( $hasTransfer && empty( $this->processor ) ) {
-						if ( isset( $plan_gw[0] ) ) {
+						if ( !empty( $plan_gw ) ) {
 							if ( !(strcmp(strtolower( $plan_gw[0]['name']), 'free') === 0 ) ) {
 								$plan_gw[]['name'] = 'transfer';
 							}
@@ -2586,7 +2586,7 @@ class InvoiceFactory
 						}
 					}
 
-					if ( isset( $plan_gw[0] ) ) {
+					if ( !empty( $plan_gw ) ) {
 						$plans[$i]['gw'] = $plan_gw;
 					} else {
 						unset( $plans[$i] );
@@ -3845,7 +3845,7 @@ class Subscription extends paramDBTable
 		foreach ( $used_plans as $entry ) {
 			$entryarray = explode( ',', $entry );
 
-			if ( $entryarray[0] ) {
+			if ( !empty( $entryarray ) ) {
 				if ( isset( $entryarray[1] ) ) {
 					if ( !empty( $entryarray[1] ) ) {
 						$amount = $entryarray[1];
@@ -4763,7 +4763,7 @@ class microIntegrationHandler
 			$user_integrations		= explode( ';', $subscription_plan->micro_integrations );
 			$user_auto_integrations = array_intersect( $user_integrations, $mi_autointegrations );
 
-			if ( count($user_auto_integrations[0]) ) {
+			if ( count( $user_auto_integrations ) ) {
 				foreach ( $user_auto_integrations as $mi_id ) {
 					$mi = new microIntegration( $database );
 					$mi->load( $mi_id );
