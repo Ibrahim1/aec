@@ -503,9 +503,9 @@ class Payment_HTML
 		for( $i = 0; $i < count( $cc_array ); $i++ ) {
 			$html_code .= '<img src="' . $mosConfig_live_site . '/components/' . $option
 			. '/images/cc_icons/ccicon_' . $cc_array[$i] . '.png"'
-			. ' alt="' . $cc_array[$i]
-			. ' title="' . $cc_array[$i]
-			. '" class="cc_icon" />';
+			. ' alt="' . $cc_array[$i] . '"'
+			. ' title="' . $cc_array[$i] . '"'
+			. ' class="cc_icon" />';
 		}
 
 		return $html_code;
