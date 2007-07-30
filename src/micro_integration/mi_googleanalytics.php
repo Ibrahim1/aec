@@ -14,13 +14,13 @@
 
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_idevaffiliate
+class mi_googleanalytics
 {
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_IDEV;
-		$info['desc'] = _AEC_MI_DESC_IDEV;
+		$info['name'] = _AEC_MI_NAME_GOOGLEANALYTICS;
+		$info['desc'] = _AEC_MI_DESC_GOOGLEANALYTICS;
 
 		return $info;
 	}
@@ -38,12 +38,13 @@ class mi_idevaffiliate
 	function Settings( $params )
 	{
 		$settings = array();
+		$settings['account_id']		= array( 'inputB' );
 		return $settings;
 	}
 
 	function action( $params, $userid, $plan )
 	{
-		global $database, $mosConfig_live_site;
+		global $database, $mosConfig_live_site, $mosConfig_sitename;
 
 		$query = 'SELECT userid'
 		. ' FROM #__acctexp_invoices'
@@ -56,9 +57,19 @@ class mi_idevaffiliate
 		$invoice = new Invoice($database);
 		$invoice->load($lastinvoice);
 
-		$text = '<img border="0" '
-				.'src="' . $mosConfig_live_site .'/components/com_idevaffiliate/sale.php?idev_paypal_1=' . $invoice->amount . '&idev_paypal_2=' . $invoice->invoice_number . '" '
-				.'width="1" height="1">';
+		$text = '<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">'
+				. '</script>'
+				. '<script type="text/javascript">'
+				. '  _uacct="' . $params['account_id'] . '";'
+				. '  urchinTracker();'
+				. '</script>'
+				. '<form style="display:none;" name="utmform">'
+				. '<textarea id="utmtrans">UTM:T|' . $invoice->invoice_number . '|' . $mosConfig_sitename . '|' . $invoice->amount . '|0.00|0.00|||'
+				. 'UTM:I|' . $invoice->invoice_number . '|' . $plan->id . '|' . $plan->name . '|subscription|' . $invoice->amount . '|1 </textarea>'
+				. '</form>'
+				. '<script type="text/javascript">'
+				. '__utmSetTrans();'
+				. '</script>';
 
 		$displaypipeline = new displayPipeline($database);
 		$displaypipeline->create( $userid, 1, 0, 0, null, 1, $text );
