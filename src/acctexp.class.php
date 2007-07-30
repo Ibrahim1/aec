@@ -645,18 +645,172 @@ class aecHeartbeat extends mosDBTable
 
 }
 
+class displayPipelineHandler
+{
+	function displayPipelineHandler()
+	{
+
+	}
+
+	function getUserPipelineEvents( $userid )
+	{
+		global $database, $mosConfig_offset_user;
+
+		$query = 'SELECT id'
+		. ' FROM #__acctexp_displaypipeline'
+		. ' WHERE userid = \'' . $userid . '\' AND only_user = \'1\''
+		;
+		$database->setQuery( $query );
+		$events = $database->loadResultArray();
+
+		$query = 'SELECT id'
+		. ' FROM #__acctexp_displaypipeline'
+		. ' WHERE only_user = \'0\''
+		;
+		$database->setQuery( $query );
+		$events = array_merge( $events, $database->loadResultArray() );
+
+		$return = '';
+		if ( !isset( $events[0] ) ) {
+			return $return;
+		}
+
+		foreach ( $events as $eventid ) {
+			$displayPipeline = new displayPipeline( $database );
+			$displayPipeline->load( $eventid );
+			if ( $displayPipeline->id ) {
+
+				// If expire & expired -> delete
+				if ( $displayPipeline->expire ) {
+					$expstamp = strtotime( $this->expiration );
+					if ( ( $expstamp - ( time() + $mosConfig_offset_user*3600 ) ) < 0 ) {
+						$displayPipeline->delete();
+						continue;
+					}
+				}
+
+				// If displaymax exceeded -> delete
+				$displayremain = $displayPipeline->displaymax - $displayPipeline->displaycount;
+				if ( $displayremain <= 0 ) {
+					$displayPipeline->delete();
+					continue;
+				}
+
+				if ( $displayPipeline->once_per_user ) {
+					$params = $displayPipeline->getParams();
+
+					if ( isset( $params['displayedto'] ) ) {
+						$users = explode( ';', $params['displayedto'] );
+						if ( in_array( $userid, $users ) ) {
+							continue;
+						} else {
+							$users[] = $userid;
+							$params['displayedto'] = implode( ';', $users );
+							$displayPipeline->setParams( $params );
+						}
+					}
+				}
+
+				// Ok, now append text
+				$return .= stripslashes( $displayPipeline->displaytext );
+
+				// Update display if at least one display would remain
+				if ( $displayremain > 1 ) {
+					$displayPipeline->displaycount = $displayPipeline->displaycount + 1;
+					$displayPipeline->check();
+					$displayPipeline->store();
+				} else {
+					$displayPipeline->delete();
+				}
+			}
+		}
+
+		// Return the string
+		return $return;
+	}
+}
+
+class displayPipeline extends paramDBTable
+{
+	/** @var int Primary key */
+	var $id				= null;
+	/** @var int */
+	var $userid			= null;
+	/** @var int */
+	var $only_user		= null;
+	/** @var int */
+	var $once_per_user	= null;
+	/** @var datetime */
+	var $timestamp		= null;
+	/** @var int */
+	var $expire			= null;
+ 	/** @var datetime */
+	var $expstamp 		= null;
+ 	/** @var int */
+	var $displaycount	= null;
+	/** @var int */
+	var $displaymax		= null;
+	/** @var text */
+	var $displaytext	= null;
+	/** @var text */
+	var $params			= null;
+
+	/**
+	 * @param database A database connector object
+	 */
+	function displayPipeline( &$db )
+	{
+	 	$this->mosDBTable( '#__acctexp_displaypipeline', 'id', $db );
+	}
+
+	function create( $userid, $only_user, $once_per_user, $expiration, $displaymax, $displaytext, $params=null )
+	{
+		global $mosConfig_offset_user;
+
+		$this->id				= 0;
+		$this->userid			= $userid;
+		$this->only_user		= $only_user;
+		$this->once_per_user	= $once_per_user;
+		$this->timestamp		= gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
+		$this->expstamp			= strtotime( $expiration );
+		$this->displaycount		= 0;
+		$this->displaymax		= $displaymax;
+
+		if ( !get_magic_quotes_gpc() ) {
+			$this->displaytext	= addslashes( $displaytext );
+		} else {
+			$this->displaytext	= $displaytext;
+		}
+
+		if ( is_array( $params ) ) {
+			$this->setParams( $params );
+		}
+
+		$this->check();
+
+		if ( $this->store() ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+}
+
+
 class eventLog extends paramDBTable
 {
- 	/** @var int Primary key */
-	var $id		= null;
- 	/** @var string */
-	var $short 	= null;
- 	/** @var text */
-	var $tags 	= null;
- 	/** @var text */
-	var $event 	= null;
- 	/** @var text */
-	var $params	= null;
+	/** @var int Primary key */
+	var $id			= null;
+	/** @var datetime */
+	var $datetime	= null;
+	/** @var string */
+	var $short 		= null;
+	/** @var text */
+	var $tags 		= null;
+	/** @var text */
+	var $event 		= null;
+	/** @var text */
+	var $params		= null;
 
 	/**
 	 * @param database A database connector object

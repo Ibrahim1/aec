@@ -85,6 +85,22 @@ function com_install()
 	. ') TYPE=MyISAM AUTO_INCREMENT=1;'
 	;
 
+	$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_displaypipeline` ('
+	. '`id` int(11) NOT NULL auto_increment,'
+	. '`userid` int(11) NOT NULL default \'0\','
+	. '`only_user` int(4) NOT NULL default \'0\','
+	. '`once_per_user` int(4) NOT NULL default \'0\','
+    . '`timestamp` datetime NULL default \'0000-00-00 00:00:00\','
+	. '`expire` int(11) NOT NULL default \'0\','
+    . '`expstamp` datetime NULL default \'0000-00-00 00:00:00\','
+	. '`displaycount` int(11) NOT NULL default \'0\','
+	. '`displaymax` int(11) NOT NULL default \'0\','
+	. '`displaytext` text NULL,'
+	. '`params` text NULL,'
+	. ' PRIMARY KEY (`id`)'
+	. ') TYPE=MyISAM AUTO_INCREMENT=1;'
+	;
+
 	$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_eventlog` ('
 	. '`id` int(11) NOT NULL auto_increment,'
     . '`datetime` datetime NULL default \'0000-00-00 00:00:00\','
@@ -110,7 +126,7 @@ function com_install()
 	$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_invoices` ('
 	. '`id` int(11) NOT NULL auto_increment,'
 	. '`active` int(4) NOT NULL default \'1\','
-	. '`userid` int(11) NULL default \'0\','
+	. '`userid` int(11) NOT NULL default \'0\','
 	. '`invoice_number` varchar(64) NULL,'
 	. '`created_date` datetime NULL default \'0000-00-00 00:00:00\','
 	. '`transaction_date` datetime NULL default \'0000-00-00 00:00:00\','
