@@ -16,7 +16,7 @@
                <echo message="ant.version      = ${ant.version}"/>
 
                <property name="project.name" value="Account Expiration Module"/>
-               <property name="deployment.userdir" value="/home/skore/tmp/AEC_ModuleANT/administrator/components/com_acctexp"/>
+               <property name="deployment.userdir" value="/home/skore/tmp/AEC_ModuleANT"/>
                <property name="distribution.dir" value="/home/skore/tmp"/>
                <property name="source.dir" value="./src_module/"/>
 
@@ -33,14 +33,14 @@
                    		<include name="mod*"/>
                    </fileset>
                </copy>
-		        <copy todir="${deployment.userdir}/mod_login-acctexp_language" overwrite="yes">
-		            <fileset dir="${source.dir}/mod_login-acctexp_language">
+		        <copy todir="${deployment.userdir}/mod_acctexp_language" overwrite="yes">
+		            <fileset dir="${source.dir}/mod_acctexp_language">
 		        			<include name="*"/>
 		            </fileset>
 		        </copy>
        </target>
        <target name="dist.generate">
-       <zip destfile="${distribution.dir}/mod_acctexp_login_0_12_4.zip" update="true">
+       <zip destfile="${distribution.dir}/mod_acctexp_0_12_4.zip" update="true">
        <fileset dir="${source.dir}"/>
     	<exclude name="build.xml"/>
     	<exclude name=".project"/>
