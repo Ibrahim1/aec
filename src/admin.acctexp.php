@@ -1358,6 +1358,11 @@ function listSubscriptions( $option, $set_group, $userid )
 			}
 
 			$subscriptionHandler->applyUsage( $planid, 'none', 1 );
+
+			// Also show active users now
+			if ( !in_array( 'active', $groups ) ) {
+				$groups[] = 'active';
+			}
 		}
 	}
 
