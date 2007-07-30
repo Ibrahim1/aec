@@ -30,7 +30,9 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-global $mosConfig_absolute_path;
+global $mosConfig_absolute_path, $mainframe;
+
+require_once( $mainframe->getPath( 'class', 'com_acctexp' ) );
 
 $class_sfx				= $params->get( 'moduleclass_sfx', "");
 $pretext 				= $params->get( 'pretext' );
@@ -63,26 +65,58 @@ if ( $my->id ) {
 		$query = 'SELECT expiration'
 				. ' FROM #__acctexp'
 				. ' WHERE userid=' . $my->id
-				. ' AND expiration<>\'9999-12-31\'';
+				. ' AND expiration<>\'9999-12-31 00:00:00\'';
 		$database->setQuery($query);
 		$expiration = $database->loadResult();
 
-		if ($expiration == NULL) {
+		if ( $expiration == NULL ) {
 			?>
 			<p><?php echo _ACCOUNT_UNLIMIT; ?></p>
 			<?php
 		} else {
 			?>
 			<p><?php echo _ACCOUNT_EXPIRES; ?></p>
-			<p><?php echo DisplayShortDateInLocalTime($expiration . ' 23:59:59'); ?></p>
+			<p><?php echo DisplayShortDateInLocalTime( $expiration ); ?></p>
 			<?php
 		}
 	}
 
 	if ( $displaypipeline ) {
-
+		$dph = new displayPipelineHandler;
+		echo $dph->getUserPipelineEvents( $my->id );
 	}
 
+	if ( $posttext ) {
+		echo $posttext;
+	}
+
+}
+
+/**
+ * Formats a given date
+ *
+ * @param string	$SQLDate
+ * @param bool		$check		check time diference
+ * @param bool		$display	out with text (only in combination with $check)
+ * @return formatted date
+ */
+function DisplayDateInLocalTime( $SQLDate )
+{
+	global $mosConfig_offset_user, $database;
+
+	// compatibility with Mambo
+	if ( !empty( $mosConfig_offset_user ) ) {
+		$timeOffset = $mosConfig_offset_user * 3600;
+	} else {
+		global $mosConfig_offset;
+		$timeOffset = $mosConfig_offset * 3600;
+	}
+
+	$cfg = new Config_General( $database );
+
+	$retVal = strftime( $cfg->cfg['display_date_frontend'], ( strtotime( $SQLDate ) + $timeOffset ) );
+
+	return $retVal;
 }
 
 ?>

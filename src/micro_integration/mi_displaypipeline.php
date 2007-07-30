@@ -24,7 +24,7 @@ class mi_displaypipeline
 		$settings['expstamp']			= array( 'inputE' );
 
 		$settings['displaymax']			= array( 'inputB' );
-		$settings['text']				= array( 'editor' );
+		$settings['text']				= array( 'inputE' );
 
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
 		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL,
@@ -42,7 +42,7 @@ class mi_displaypipeline
 		$text = AECToolbox::rewriteEngine( $params['text'], $metaUser, $plan );
 
 		$displaypipeline = new displayPipeline($database);
-		$displaypipeline->create( $userid, $params['only_user'], $params['once_per_user'], $params['expiration'], $params['displaymax'], $text );
+		$displaypipeline->create( $userid, $params['only_user'], $params['once_per_user'], $params['expire'], $params['expiration'], $params['displaymax'], $text );
 		return true;
 	}
 

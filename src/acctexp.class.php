@@ -682,7 +682,7 @@ class displayPipelineHandler
 
 				// If expire & expired -> delete
 				if ( $displayPipeline->expire ) {
-					$expstamp = strtotime( $this->expiration );
+					$expstamp = strtotime( $displayPipeline->expstamp );
 					if ( ( $expstamp - ( time() + $mosConfig_offset_user*3600 ) ) < 0 ) {
 						$displayPipeline->delete();
 						continue;
@@ -763,7 +763,7 @@ class displayPipeline extends paramDBTable
 	 	$this->mosDBTable( '#__acctexp_displaypipeline', 'id', $db );
 	}
 
-	function create( $userid, $only_user, $once_per_user, $expiration, $displaymax, $displaytext, $params=null )
+	function create( $userid, $only_user, $once_per_user, $expire, $expiration, $displaymax, $displaytext, $params=null )
 	{
 		global $mosConfig_offset_user;
 
@@ -772,7 +772,8 @@ class displayPipeline extends paramDBTable
 		$this->only_user		= $only_user;
 		$this->once_per_user	= $once_per_user;
 		$this->timestamp		= gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
-		$this->expstamp			= strtotime( $expiration );
+		$this->expire			= $expire;
+		$this->expstamp			= gmstrftime ( '%Y-%m-%d %H:%M:%S', strtotime( $expiration ) );
 		$this->displaycount		= 0;
 		$this->displaymax		= $displaymax;
 
@@ -1384,7 +1385,7 @@ class aecHTML
 				break;
 			case 'inputE':
 				$return .= '<div class="setting_form">';
-				$return .= '<textarea style="width:400px" cols="70" rows="1" name="' . $name . '" />' . $value . '</textarea>';
+				$return .= '<textarea style="width:600px" cols="450" rows="1" name="' . $name . '" />' . $value . '</textarea>';
 				$return .= '</div>';
 				break;
 			case 'editor':

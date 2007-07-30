@@ -100,7 +100,7 @@ class processor_psigate
 		return $settings;
 	}
 
-	function createGatewayLink( $int_var, $metaUser, $cfg )
+	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
 	{
 		global $mosConfig_live_site;
 		if ( $cfg['testmode'] ) {
@@ -117,7 +117,7 @@ class processor_psigate
 		$var['ThanksURL']		= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=psigatenotification");
 		$var['NoThanksURL']		= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=psigatenotification");
 		$var['CardAction']		= "0";
-		$var['test123']		= "tester123";
+		$var['test123']			= "tester123";
 		return $var;
 	}
 
@@ -141,7 +141,7 @@ class processor_psigate
 		$response['CardNumber'] = $CardNumber;
 		$response['OrderID'] = $OrderID;
 		$response['invoice'] = $CustomerRefNo;
-		
+
 
 		$validate			= md5($cfg['secretWord'] . $FullTotal);
 		$response['valid'] = (strcmp($validate, $checksum) == 0);
@@ -172,11 +172,11 @@ class processor_psigate
 		//print_r("<b>Full Total:</b>". $response['FullTotal'] . "<br/>");
 		//print_r("<b>CardNumber:</b>". $response['CardNumber'] . "<br/>");
 		//print_r("<b>Approved:</b>". $response['Approved'] . "<br/>");
-		
+
 		print_r("<b>TransRefNumber:</b>". $response['TransRefNumber'] . "<br/>");
 		print_r("<b>Invoice:</b>". $response['invoice'] . "<br/>");
 		print_r("<b>OrderID:</b>". $response['OrderID']. "<br/>");
-		
+
 		return $response;
 	}
 }

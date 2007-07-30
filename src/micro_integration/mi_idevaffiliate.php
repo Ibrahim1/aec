@@ -45,55 +45,25 @@ class mi_idevaffiliate
 
 	function action( $params, $userid, $plan )
 	{
-		global $database;
+		global $database, $mosConfig_live_site;
 
-		$query = 'SELECT idev_vartotal, idev_order'
-		. ' FROM #__idevaff_integration'
+		$query = 'SELECT userid'
+		. ' FROM #__acctexp_invoices'
+		. ' WHERE userid = \'' . $userid . '\' AND usage = \'' . $plan->id . '\''
+		. ' ORDER BY transaction_date'
 		;
 		$database->setQuery( $query );
-		$idevconfig = $database->loadRow();
+		$lastinvoice = $database->loadResult();
 
-		$varname		= $idevconfig[0];
-		$idev_tracking	= $idevconfig[1];
+		$invoice = new Invoice($database);
+		$invoice->load($lastinvoice);
 
-		if ( strpos( $params['mi_order_id'], '[invoice]' ) ) {
-			$query = 'SELECT invoice_number'
-			. ' FROM #__acctexp_invoices'
-			. ' WHERE userid = \'' . $userid . '\''
-			. ' ORDER BY transaction_date DESC'
-			;
-			$database->setQuery( $query );
-			$idev_tracking = $database->loadResult(); // $$idev_tracking
-		} elseif ( strpos( $params['mi_order_id'], '[planid]' ) ) {
-			$metaUser = new metaUser( $userid );
-			$idev_tracking = $metaUser->objSubscription->plan;
-		} elseif ( strpos( $params['mi_order_id'], '[userid]' ) ) {
-			$metaUser = new metaUser( $userid );
-			$idev_tracking = $metaUser->cmsUser->id;
-		} else {
-			$idev_tracking = $params['mi_order_id'];
-		}
+		$text = '<img border="0" '
+				.'src="' . $mosConfig_live_site .'/components/com_idevaffiliate/sale.php?idev_paypal_1=' . $invoice->amount . '&idev_paypal_2=' . $invoice->invoice_number . '" '
+				.'width="1" height="1">';
 
-		if ( strpos( $params['mi_order_subtotal'], '[invoice]' ) ) {
-			$query = 'SELECT amount'
-			. ' FROM #__acctexp_invoices'
-			. ' WHERE userid = \'' . $userid . '\''
-			. ' ORDER BY transaction_date DESC'
-			;
-			$database->setQuery( $query );
-			$varname = $database->loadResult(); // $$varname
-		} else {
-			$varname = number_format( $params['mi_order_subtotal'], 2, '.', '' );
-		}
-
-		include( $GLOBALS['mosConfig_absolute_path'] . '/components/com_idevaffiliate/sale.php' );
-
-		$fr = fopen( $GLOBALS['mosConfig_absolute_path'] . '/jstmp.txt', 'a+' );
-		fputs( $fr, _AEC_MI_DIV1_IDEV . '\n' );
-		foreach ( $params as $key=>$value ) {
-			fputs( $fr, _AEC_MI_DIV2_IDEV . ' ' . $key . ' ' . _AEC_MI_DIV3_IDEV . ' ' . $value . '\n' );
-		}
-		fclose( $fr );
+		$displaypipeline = new displayPipeline($database);
+		$displaypipeline->create( $userid, 1, 0, 0, null, 1, $text );
 
 		return true;
 	}
