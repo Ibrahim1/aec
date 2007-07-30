@@ -4761,9 +4761,9 @@ class microIntegrationHandler
 		if ( is_array( $mi_autointegrations ) || ( $subscription_plan !== false ) ) {
 
 			$user_integrations		= explode( ';', $subscription_plan->micro_integrations );
-			$user_auto_integrations = array_intersect( $mi_autointegrations, $user_integrations );
+			$user_auto_integrations = array_intersect( $user_integrations, $mi_autointegrations );
 
-			if ( $user_auto_integrations[0] ) {
+			if ( count($user_auto_integrations[0]) ) {
 				foreach ( $user_auto_integrations as $mi_id ) {
 					$mi = new microIntegration( $database );
 					$mi->load( $mi_id );
