@@ -2,7 +2,17 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_example {
+class mi_example
+{
+
+	function Info()
+	{
+		$info = array();
+		$info['name'] = 'Long Name';
+		$info['desc'] = 'Full Description';
+
+		return $info;
+	}
 
 	function checkInstallation()
 	{

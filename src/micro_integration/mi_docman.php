@@ -235,6 +235,8 @@ class mi_docman
 	{
 		global $database;
 
+		$this->DeleteUserFromGroup( $userid, $groupid );
+
 		$query = 'SELECT groups_members'
 		. ' FROM #__docman_groups'
 		. ' WHERE groups_id = \'' . $groupid . '\''
@@ -243,31 +245,26 @@ class mi_docman
 		$database->setQuery( $query );
 		$users = explode( ',', $database->loadResult() );
 
-		if ( !in_array( $userid, $users ) )
-		{
-			$users[] = $userid;
+		$users[] = $userid;
 
-			// Make sure we have no empty value
-			$search = 0;
-			while ( $search !== false ) {
-				$search = array_search( '', $users );
-				if ( $search !== false ) {
-					unset( $users[$search] );
-				}
+		// Make sure we have no empty value
+		$search = 0;
+		while ( $search !== false ) {
+			$search = array_search( '', $users );
+			if ( $search !== false ) {
+				unset( $users[$search] );
 			}
-
-			$query = 'UPDATE #__docman_groups'
-			. ' SET groups_members = \'' . implode( ',', $users ) . '\''
-			. ' WHERE groups_id = \'' . $groupid . '\''
-			;
-
-			$database->setQuery( $query );
-			$database->query();
-
-			return true;
-		} else {
-			return false;
 		}
+
+		$query = 'UPDATE #__docman_groups'
+		. ' SET groups_members = \'' . implode( ',', $users ) . '\''
+		. ' WHERE groups_id = \'' . $groupid . '\''
+		;
+
+		$database->setQuery( $query );
+		$database->query();
+
+		return true;
 	}
 
 	function DeleteUserFromGroup( $userid, $groupid )

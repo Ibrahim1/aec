@@ -192,4 +192,21 @@ define( '_MI_MI_JUGA_SET_REMOVE_GROUP_EXP_NAME',	'Remove Groups Exp' );
 define( '_MI_MI_JUGA_SET_REMOVE_GROUP_EXP_DESC',	'Set to yes, to delete all groups for this user before the groups below are applied, otherwise these groups will be added to existing groups.' );
 define( '_MI_MI_JUGA_REBUILD_NAME',					'Rebuild' );
 define( '_MI_MI_JUGA_REBUILD_DESC',					'Select YES to rebuild the groups relations after saving this' );
+
+// DisplayPipeline
+define( '_AEC_MI_NAME_DISPLAYPIPELINE',		'DisplayPipeline' );
+define( '_AEC_MI_DESC_DISPLAYPIPELINE',		'Display Text on the AEC Module' );
+define( '_MI_MI_DISPLAYPIPELINE_ONLY_USER_NAME',		'Only to User' );
+define( '_MI_MI_DISPLAYPIPELINE_ONLY_USER_DESC',		'Only display this text to the user who issued this request' );
+define( '_MI_MI_DISPLAYPIPELINE_ONCE_PER_USER_NAME',	'Once per User' );
+define( '_MI_MI_DISPLAYPIPELINE_ONCE_PER_USER_DESC',	'Only display this text once to a user. This will be set to no automatically if you set the above switch to save ressources.' );
+define( '_MI_MI_DISPLAYPIPELINE_EXPIRE_NAME',			'Expire' );
+define( '_MI_MI_DISPLAYPIPELINE_EXPIRE_DESC',			'Do not display after a certain date.' );
+define( '_MI_MI_DISPLAYPIPELINE_EXPIRATION_NAME',		'Expiration' );
+define( '_MI_MI_DISPLAYPIPELINE_EXPIRATION_DESC',		'Set this as Expiration. Refer to <a href="http://www.php.net/manual/en/function.strtotime.php" alt="php.net manual on strtotime function">this manual</a> to see what you can use as input here.' );
+define( '_MI_MI_DISPLAYPIPELINE_DISPLAYMAX_NAME',		'Display Max' );
+define( '_MI_MI_DISPLAYPIPELINE_DISPLAYMAX_DESC',		'Set amount of times this can be displayed' );
+define( '_MI_MI_DISPLAYPIPELINE_TEXT_NAME',				'Text' );
+define( '_MI_MI_DISPLAYPIPELINE_TEXT_DESC',				'Text that is displayed to the user. You can use the rewrite strings explained below to insert dynamic data.' );
+
 ?>
