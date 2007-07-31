@@ -2304,7 +2304,7 @@ function editSubscriptionPlan( $id, $option )
 	}
 
 	$selected_gw = array();
-	if ( isset( $params_values["processors"] ) ) {
+	if ( $params_values["processors"] != 0 ) {
 		$plan_procs = explode(";", $params_values["processors"]);
 
 		if ( count( $plan_procs ) ) {
@@ -2542,7 +2542,7 @@ function changeSubscriptionPlan( $cid=null, $state=0, $type, $option )
 		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? _AEC_CMN_NOT_PUBLISHED : _AEC_CMN_MADE_INVISIBLE );
 	}
 
-	$msg = sprintf( _AEC_MSG_ITEMS_SUCESSFULLY, $total ) . $msg;
+	$msg = sprintf( _AEC_MSG_ITEMS_SUCESSFULLY, $total ) . ' ' . $msg;
 
 	mosRedirect( 'index2.php?option=' . $option . '&task=showSubscriptionPlans', $msg );
 }
