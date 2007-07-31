@@ -446,7 +446,7 @@ class Payment_HTML
 
 		$html_code = '';
 
-		foreach ( $gw as $n => $processor ) {
+		foreach ( $gw as $processor ) {
 			$gw_current = strtolower( $processor['name'] );
 
 			if ( $register ) {
@@ -468,10 +468,10 @@ class Payment_HTML
 			. '<form action="' . AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=' . $task ) . '"'
 			. ' method="post">' . "\n"
 			. '<input type="image" src="' . $urlbutton;
-			if ( isset( $processor['statement'] ) ) {
+			if ( !empty( $processor['statement'] ) ) {
 				$html_code .= '" border="0" name="submit" alt="' . $processor['statement'] . '" />' . "\n";
 			} else {
-				$html_code .= '" border="0" name="submit" alt="" />' . "\n";
+				$html_code .= '" border="0" name="submit" alt="' . $processor['name'] . '" />' . "\n";
 			}
 			$html_code .= '<input type="hidden" name="option" value="' . $option . '" />' . "\n"
 			. '<input type="hidden" name="task" value="' . $task . '" />' . "\n"
