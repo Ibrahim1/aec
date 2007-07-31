@@ -2062,10 +2062,10 @@ class SubscriptionPlan extends paramDBTable
 
 		$params = array();
 		foreach ( $fixed as $varname ) {
-			if ( $post[$varname] == '' ) {
-				$params[$varname] = 0;
-			} elseif ( is_array( $post[$varname] ) ) {
+			if ( is_array( $post[$varname] ) ) {
 				$params[$varname] = implode( ';', $post[$varname] );
+			} elseif ( empty( $post[$varname] ) ) {
+				$params[$varname] = 0;
 			} else {
 				$params[$varname] = $post[$varname];
 			}
@@ -2634,19 +2634,19 @@ class InvoiceFactory
 			} else {
 				// The user is already existing, so we need to move on to the confirmation page with the details
 
-				$var['usage']		= $plans[0]['id'];
+				$this->usage		= $plans[0]['id'];
 				if ( isset( $plans[0]['gw'][0]['recurring'] ) ) {
-					$var['recurring']	= $plans[0]['gw'][0]['recurring'];
+					$this->recurring	= $plans[0]['gw'][0]['recurring'];
 				} else {
-					$var['recurring']	= 0;
+					$this->recurring	= 0;
 				}
-				$var['processor']	= $plans[0]['gw'][0]['name'];
+				$this->processor	= $plans[0]['gw'][0]['name'];
 
 				if ( ( $invoice != 0 ) && !is_null( $invoice ) ) {
-					$var['invoice']	= $invoice;
+					$this->invoice	= $invoice;
 				}
 
-				$this->confirm ( $option, $var, $passthrough );
+				$this->confirm ( $option, array(), $passthrough );
 			}
 		} else {
 			// Reset $register if we seem to have all data
@@ -2662,7 +2662,7 @@ class InvoiceFactory
 		}
 	}
 
-	function confirm( $option, $var=false, $passthrough=false )
+	function confirm( $option, $var=array(), $passthrough=false )
 	{
 		global $database, $my;
 
