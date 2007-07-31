@@ -124,14 +124,47 @@ class processor_psigate
 
 	function parseNotification ( $post, $cfg )
 	{
-		if (isset($_GET['ReturnCode']) and $_GET['ReturnCode'] != "") {$ReturnCode = $_GET['ReturnCode'];} else {$ReturnCode = "NA";}
-		if (isset($_GET['CustomerRefNo']) and $_GET['CustomerRefNo'] != "") {$CustomerRefNo = $_GET['CustomerRefNo'];} else {$CustomerRefNo = "NA";}
-		if (isset($_GET['TransRefNumber']) and $_GET['TransRefNumber'] != "") {$TransRefNumber = $_GET['TransRefNumber'];} else {$TransRefNumber = "NA";}
-		if (isset($_GET['Approved']) and $_GET['Approved'] != "") {$Approved = $_GET['Approved'];} else {$Approved = "NA";}
-		if (isset($_GET['ErrMsg']) and $_GET['ErrMsg'] != "") {$ErrMsg = $_GET['ErrMsg'];} else {$ErrMsg = "NA";}
-		if (isset($_GET['FullTotal']) and $_GET['FullTotal'] != "") {$FullTotal = $_GET['FullTotal'];} else {$FullTotal = "NA";}
-		if (isset($_GET['CardNumber']) and $_GET['CardNumber'] != "") {$CardNumber = $_GET['CardNumber'];} else {$CardNumber = "NA";}
-		if (isset($_GET['OrderID']) and $_GET['OrderID'] != "") {$OrderID = $_GET['OrderID'];} else {$OrderID = "NA";}
+		if (isset($_GET['ReturnCode']) && $_GET['ReturnCode'] != "") {
+			$ReturnCode = $_GET['ReturnCode'];
+		} else {
+			$ReturnCode = "NA";
+		}
+		if (isset($_GET['CustomerRefNo']) && $_GET['CustomerRefNo'] != "") {
+			$CustomerRefNo = $_GET['CustomerRefNo'];
+		} else {
+			$CustomerRefNo = "NA";
+		}
+		if (isset($_GET['TransRefNumber']) && $_GET['TransRefNumber'] != "") {
+			$TransRefNumber = $_GET['TransRefNumber'];
+		} else {
+			$TransRefNumber = "NA";
+		}
+		if (isset($_GET['Approved']) && $_GET['Approved'] != "") {
+			$Approved = $_GET['Approved'];
+		} else {
+			$Approved = "NA";
+		}
+		if (isset($_GET['ErrMsg']) && $_GET['ErrMsg'] != "") {
+			$ErrMsg = $_GET['ErrMsg'];
+		} else {
+			$ErrMsg = "NA";
+		}
+		if (isset($_GET['FullTotal']) && $_GET['FullTotal'] != "") {
+			$FullTotal = $_GET['FullTotal'];
+		} else {
+			$FullTotal = "NA";
+		}
+		if (isset($_GET['CardNumber']) && $_GET['CardNumber'] != "") {
+			$CardNumber = $_GET['CardNumber'];
+		} else {
+			$CardNumber = "NA";
+		}
+		if (isset($_GET['OrderID']) && $_GET['OrderID'] != "") {
+			$OrderID = $_GET['OrderID'];
+		} else {
+			$OrderID = "NA";
+		}
+
 		$checksum = md5($OrderID . $FullTotal);
 
 		$response = array();
@@ -166,12 +199,6 @@ class processor_psigate
 			print_r("<b>Transaction Declined (cs)<br/>Reason: </b>" .$ErrMsg . "<br/>");
 
 		}
-		//print_r("<b>Valid:</b>". $response['valid'] . "<br/>");
-		//print_r("<b>Pending:</b>". $response['pending'] . "<br/>");
-		//print_r("<b>Pending_reason:</b>". $response['pending_reason'] . "<br/>");
-		//print_r("<b>Full Total:</b>". $response['FullTotal'] . "<br/>");
-		//print_r("<b>CardNumber:</b>". $response['CardNumber'] . "<br/>");
-		//print_r("<b>Approved:</b>". $response['Approved'] . "<br/>");
 
 		print_r("<b>TransRefNumber:</b>". $response['TransRefNumber'] . "<br/>");
 		print_r("<b>Invoice:</b>". $response['invoice'] . "<br/>");
