@@ -30,9 +30,6 @@ class mi_acajoom
 	 	$database->setQuery( $query );
 	 	$lists = $database->loadObjectList();
 
-		// Table fields for _acajoom_lists:
-		// id, list_name, list_desc, list_type, sendername, senderemail, bounceadres, layout, template, subscribemessage, unsubscribemessage, unsubscribesend, auto_add, user_choose, cat_id, delay_min, delay_max, follow_up, html, hidden, published, createdate, acc_level, acc_id, notification, owner, footer, notify_id, next_date, start_date, params
-
 		$li = array();
 		foreach( $lists as $list ) {
 			$li[] = mosHTML::makeOption( $list->id, $list->list_name );
@@ -57,7 +54,7 @@ class mi_acajoom
 			$acauser = $this->getSubscriberID( $userid );
 		}
 
-		if ( $this->hasList( $acauser, $params['list'] ) )
+		if ( $this->hasList( $acauser, $params['list'] ) ) {
 			$this->deleteFromList( $acauser, $params['list'] );
 		}
 	}
@@ -71,7 +68,7 @@ class mi_acajoom
 			$acauser = $this->getSubscriberID( $userid );
 		}
 
-		if ( !$this->hasList( $acauser, $params['list'] ) )
+		if ( !$this->hasList( $acauser, $params['list'] ) ) {
 			$this->addToList( $acauser, $params['list'] );
 		}
 	}
@@ -126,7 +123,7 @@ class mi_acajoom
 	function deleteFromList( $subscriber_id, $list_id )
 	{
 		$query = 'DELETE FROM #__acajoom_queue'
-		. ' WHERE subscriber_id = \'' . $subscriber_id . '\' AND list_id = \'' . $listid . '\''
+		. ' WHERE subscriber_id = \'' . $subscriber_id . '\' AND list_id = \'' . $list_id . '\''
 		;
 		$database->setQuery( $query );
 		$database->query();

@@ -58,16 +58,6 @@ class mi_affiliatepro
 		return $info;
 	}
 
-	function checkInstallation()
-	{
-		return true;
-	}
-
-	function install()
-	{
-		return true;
-	}
-
 	function Settings( $params )
 	{
 		$settings = array();

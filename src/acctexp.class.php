@@ -1817,13 +1817,14 @@ class SubscriptionPlan extends paramDBTable
 			$plans_comparison		= $comparison['comparison'];
 			$plans_comparison_total	= $comparison['total_comparison'];
 			$renew					= $comparison['renew'];
+			$is_trial	= (strcmp($user_subscription->status, 'Trial') === 0);
 		} else {
 			$plans_comparison		= false;
 			$plans_comparison_total	= false;
 			$renew					= 0;
+			$is_trial	= 0;
 		}
 
-		$is_trial	= (strcmp($user_subscription->status, 'Trial') === 0);
 		$var		= null;
 		$params		= $this->getParams();
 
@@ -4777,7 +4778,6 @@ class microIntegrationHandler
 
 	function getHacks()
 	{
-
 		$integrations = $this->getIntegrationList();
 
 		$hacks = array();

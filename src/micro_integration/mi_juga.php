@@ -15,20 +15,6 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 
 class mi_juga
 {
-
-/** This section can be removed before deployment - its here as notes! SBS
- * Some info about how juga holds group allocations:
- * juga groups are defined in: jos_juga_groups
- * fields being id, title, description (id is unique primary key) also has checkout fields but not interested ;-)
- * users are allocated to ONE or MORE GROUPS
- * in a table called jos_juga_u2g
- * fields being: user_id (joomla user id) and group_id (the id above)
- *
- * Since this MI will allocate to a group it also needs to remove from a group,
- * Since the a user can be in multiple groups at once - allocating a diferent group at paln expiry is not the same
- * as removing
- */
-
 	function Info()
 	{
 		$info = array();

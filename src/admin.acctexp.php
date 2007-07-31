@@ -402,17 +402,6 @@ switch( strtolower( $task ) ) {
 		$filename	= mosGetParam( $_REQUEST, 'filename', 0 );
 		$check_hack	= $filename ? 0 : 1;
 
-		// mic: debug
-		if ( $mosConfig_debug ) {
-			echo '<pre>'
-			. 'option: ' . $option . '<br />'
-			. 'filename: ' . $filename . '<br />'
-			. 'check_hack: ' . $check_hack . '<br />'
-			. 'undohack: ' . $undohack . '<br />'
-			. '</pre>'
-			;
-		}
-
 		hackcorefile( $option, $filename, $check_hack, $undohack );
 
 		HTML_AcctExp::hacks( $option, hackcorefile( $option, 0, 1, 0 ) );
@@ -3974,7 +3963,6 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_registration/registration.php';
 		$hacks[$n]['read']			=	'// no direct access';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regredirect, $n, $n);
-		$hacks[$n]['legacy']		=	1;
 	}
 
 	if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
@@ -4128,18 +4116,6 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 
 	// Commit the hacks
 	if ( !$check_hack ) {
-
-		// mic: debug
-		if ( $mosConfig_debug ) {
-			echo '<pre>'
-			. '<hr />'
-			. 'filename: ' . $filename . '<br />'
-			. 'hacks_filename_type: ' . $hacks[$filename]['type'] . '<br />'
-			. 'hacks_filename_name: ' . $hacks[$filename]['name'] . '<br />'
-			. 'hack_filename: ' . $hack['filename'] . '<br />'
-			. '</pre>'
-			;
-		}
 
 		switch( $hacks[$filename]['type'] ) {
 			case 'file':
