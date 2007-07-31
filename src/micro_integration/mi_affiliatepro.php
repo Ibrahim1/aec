@@ -71,63 +71,37 @@ class mi_affiliatepro
 	function Settings( $params )
 	{
 		$settings = array();
-		$settings['add_info']	= array( 'inputC' );
-		$settings['url']		= array( 'inputB' );
-		$settings['group_id']	= array( 'inputC' );
+		$settings['url']		= array( 'inputC' );
 
 		return $settings;
 	}
 
 	function action( $params, $userid, $plan )
 	{
-		global $database;
+		global $database, $mosConfig_live_site, $mosConfig_sitename;
 
-		$passvars = array();
-
-		$query = 'SELECT invoice_number'
+		$query = 'SELECT userid'
 		. ' FROM #__acctexp_invoices'
-		. ' WHERE userid = \'' . $userid . '\''
-		. ' AND active = \'1\''
-		. ' ORDER BY transaction_date DESC'
-		. ' LIMIT 1'
+		. ' WHERE userid = \'' . $userid . '\' AND usage = \'' . $plan->id . '\''
+		. ' ORDER BY transaction_date'
 		;
 		$database->setQuery( $query );
-		$passvars['txn_id'] = $database->loadResult();
+		$lastinvoice = $database->loadResult();
 
-		$passvars['aff_id']		= ''; //REPLACE with Affiliate Id - how will AEC know this?
-		$passvars['group_id']	= $params['mi_affPRO_group_id'];
+		$invoice = new Invoice($database);
+		$invoice->load($lastinvoice);
 
-		// Get the transaction amount from AEC
-		$query = 'SELECT amount'
-		. ' FROM #__acctexp_invoices'
-		. ' WHERE invoice_number = \'' . $passvars['txn_id'] . '\''
-		;
-		$database->setQuery( $query );
-		$passvars['amount'] = $database->loadResult();
+		$text = '<script id="pap_x2s6df8d" src="http://www.demo.qualityunit.com/postaffiliatepro3/scripts/sale.js" type="text/javascript"></script>'
+				. '<script type="text/javascript"><!--'
+				. '<script type="text/javascript">'
+				. 'var TotalCost="' . $invoice->amount . ';'
+				. 'var OrderID="' . $invoice->invoice_number . '";'
+				. 'var ProductID="' . $plan->id . '";'
+				. 'papSale();'
+				. '--></script>';
 
-		// Get the currency from AEC
-		$query = 'SELECT currency'
-		. ' FROM #__acctexp_invoices'
-		. ' WHERE invoice_number = \'' . $passvars['txn_id'] . '\''
-		;
-		$database->setQuery( $query );
-		$passvars['cur'] = $database->loadResult();
-
-		$passvars['country_code']	= '';// REPLACE with Country Code? Where could that come from?
-		$passvars['add_info']		= 'userid_' . $userid . '_plan_' . $plan->id . '_' . $params['add_info'];
-
-		$vars_encode = array();
-		foreach ( $passvars as $key => $value ) {
-			if ( !empty( $value ) ) {
-				$vars_encode[] = $key . '=' . $value;
-			}
-		}
-
-		$url = 'http://' . $params['url'] . '/callbacks/callback_sample.php?';
-		$url .= implode( '&', $vars_encode );
-
-		$request=fopen( $url, 'r' );
-		fclose( $request );
+		$displaypipeline = new displayPipeline($database);
+		$displaypipeline->create( $userid, 1, 0, 0, null, 1, $text );
 
 		return true;
 	}

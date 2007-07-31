@@ -39,12 +39,8 @@ define( '_MI_MI_HTACCESS_REBUILD_DESC',	'Sollte die htaccess-Datei ge&auml;ndert
 //affiliate PRO
 define( '_AEC_MI_NAME_AFFPRO',		'AffiliatePRO' );
 define( '_AEC_MI_DESC_AFFPRO',		'Verbindet AEC-Zahlungen mit AffilitePRO' );
-define( '_MI_MI_AFFILIATEPRO_ADD_INFO_NAME',		'Weitere Infos' );
-define( '_MI_MI_AFFILIATEPRO_ADD_INFO_DESC',		'Weitere Informationen welche an AffiliatePRO gesendet werden' );
 define( '_MI_MI_AFFILIATEPRO_URL_NAME',				'AffiliatePRO URL' );
-define( '_MI_MI_AFFILIATEPRO_URL_DESC',				'Hier die AffiliatePRO URL (ohne http://) angeben' );
-define( '_MI_MI_AFFILIATEPRO_GROUP_ID_NAME',		'AffiliatePRO ID' );
-define( '_MI_MI_AFFILIATEPRO_GROUP_ID_DESC',		'Hier die AffiliatePRO ID angeben welche f&uuml;r die Provisionierung verwendet wird' );
+define( '_MI_MI_AFFILIATEPRO_URL_DESC',				'Hier die AffiliatePRO URL angeben (wie: "http://www.demo.qualityunit.com/postaffiliatepro3/scripts/sale.js")' );
 
 // docman
 define( '_AEC_MI_NAME_DOCMAN',		'DocMan' );

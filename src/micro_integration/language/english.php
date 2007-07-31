@@ -39,12 +39,8 @@ define( '_MI_MI_HTACCESS_REBUILD_DESC',				'If you changed something important o
 //affiliate PRO
 define( '_AEC_MI_NAME_AFFPRO',		'AffiliatePRO' );
 define( '_AEC_MI_DESC_AFFPRO',		'Connect your AEC sales to AffiliatePRO' );
-define( '_MI_MI_AFFILIATEPRO_ADD_INFO_NAME',		'Additional Info' );
-define( '_MI_MI_AFFILIATEPRO_ADD_INFO_DESC',		'Any additional info to be passed to AffiliatePRO' );
-define( '_MI_MI_AFFILIATEPRO_URL_NAME',			'Affiliate PRO URL' );
-define( '_MI_MI_AFFILIATEPRO_URL_DESC',				'Enter the AffiliatePRO Url (without the http://) that points to your AffiliatePRO installation.' );
-define( '_MI_MI_AFFILIATEPRO_GROUP_ID_NAME',		'AffiliatePRO Group ID' );
-define( '_MI_MI_AFFILIATEPRO_GROUP_ID_DESC',		'Enter the Affiliate PRO product group identity to be used to calculate commission.' );
+define( '_MI_MI_AFFILIATEPRO_URL_NAME',				'Affiliate PRO URL' );
+define( '_MI_MI_AFFILIATEPRO_URL_DESC',				'Enter the AffiliatePRO Url that points to your AffiliatePRO sale.js (It should look like this: "http://www.demo.qualityunit.com/postaffiliatepro3/scripts/sale.js").' );
 
 // docman
 define( '_AEC_MI_NAME_DOCMAN',		'DocMan' );
