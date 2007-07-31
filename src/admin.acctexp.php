@@ -3952,7 +3952,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY;
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_registration/registration.php';
-		$hacks[$n]['read']			=	'case \'register\':';
+		$hacks[$n]['read']			=	'// no direct access';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regredirect, $n, $n);
 		$hacks[$n]['legacy']		=	1;
 
@@ -3960,8 +3960,9 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['name']			=	'registration.php ' . _AEC_HACK_HACK . ' #6';
 		$hacks[$n]['desc']			=	_AEC_HACKS_REG5;
 		$hacks[$n]['type']			=	'file';
+		$hacks[$n]['uncondition']	=	'registrationphp5';
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_registration/registration.php';
-		$hacks[$n]['read']			=	'// no direct access';
+		$hacks[$n]['read']			=	'case \'register\':';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regredirect, $n, $n);
 	}
 
