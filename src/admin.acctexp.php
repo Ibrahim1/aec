@@ -469,7 +469,7 @@ function remove( $userid, $option, $task )
 	// $userid contains values corresponding to id field of #__acctexp table
     if ( !is_array( $userid ) || count( $userid ) < 1 ) {
 	    echo '<script>alert(\'' . _AEC_ALERT_SELECT_FIRST . '\');window.history.go(-1);</script>' . "\n";
-	    exit;
+	    exit();
     }
 
 	foreach ( $userid as $id ) {
@@ -3960,11 +3960,21 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 
 		$n = 'registrationphp5';
 		$hacks[$n]['name']			=	'registration.php ' . _AEC_HACK_HACK . ' #5';
+		$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY;
+		$hacks[$n]['type']			=	'file';
+		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_registration/registration.php';
+		$hacks[$n]['read']			=	'case \'register\':';
+		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regredirect, $n, $n);
+		$hacks[$n]['legacy']		=	1;
+
+		$n = 'registrationphp6';
+		$hacks[$n]['name']			=	'registration.php ' . _AEC_HACK_HACK . ' #6';
 		$hacks[$n]['desc']			=	_AEC_HACKS_REG5;
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_registration/registration.php';
 		$hacks[$n]['read']			=	'// no direct access';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regredirect, $n, $n);
+		$hacks[$n]['legacy']		=	1;
 	}
 
 	if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
