@@ -4439,7 +4439,7 @@ class AECToolbox
 
 				if ( $cfg->cfg['require_subscription'] ) {
 					if ( $cfg->cfg['entry_plan'] ) {
-						$user_subscription = new mosSubscription( $database );
+						$user_subscription = new Subscription( $database );
 						$user_subscription->load(0);
 						$user_subscription->createNew( $id, 'Free', 0 );
 						$user_subscription->applyUsage( $cfg->cfg['entry_plan'], 'none', 1 );

@@ -562,7 +562,7 @@ class Payment_HTML
 					</p></td>
 				</tr>
 				<tr>
-					<td colspan="4" style="text-align: left;"><?php echo $InvoiceFactory->objUsage->desc; ?></td>
+					<td colspan="4" style="text-align: left;"><?php echo stripslashes( $InvoiceFactory->objUsage->desc ); ?></td>
 				</tr>
 			</table>
 			<?php
