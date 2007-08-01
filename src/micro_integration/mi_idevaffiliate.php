@@ -35,7 +35,7 @@ class mi_idevaffiliate
 	{
 		global $database, $mosConfig_live_site;
 
-		$query = 'SELECT userid'
+		$query = 'SELECT id'
 		. ' FROM #__acctexp_invoices'
 		. ' WHERE userid = \'' . $userid . '\' AND usage = \'' . $plan->id . '\''
 		. ' ORDER BY transaction_date'
