@@ -2568,6 +2568,7 @@ class InvoiceFactory
 									$pp->getInfo();
 
 									if ( !($plan_params['lifetime'] && $pp->info['recurring'] ) ) {
+										// TODO: This following line produces a notice under some circumstances - find out why!
 										$plan_gw[$k]['name']		= $pp->processor_name;
 										$plan_gw[$k]['statement']	= $pp->info->statement;
 									}
