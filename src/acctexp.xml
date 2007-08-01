@@ -60,10 +60,13 @@
 		<filename>processors/authorize.php</filename>
 		<filename>processors/ccbill.php</filename>
 		<filename>processors/epsnetpay.php</filename>
-		<filename>processors/paypal_subscription.php</filename>
+		<filename>processors/eway.php</filename>
+		<filename>processors/moneyproxy.php</filename>
 		<filename>processors/paycom.php</filename>
+		<filename>processors/paypal_subscription.php</filename>
 		<filename>processors/paypal.php</filename>
 		<filename>processors/paysignet.php</filename>
+		<filename>processors/psigate.php</filename>
 		<filename>processors/viaklix.php</filename>
 		<filename>processors/com_acctexp_language_processors/index.html</filename>
 		<filename>processors/com_acctexp_language_processors/brazilian_portuguese.php</filename>
