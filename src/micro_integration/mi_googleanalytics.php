@@ -46,13 +46,7 @@ class mi_googleanalytics
 	{
 		global $database, $mosConfig_live_site, $mosConfig_sitename;
 
-		$query = 'SELECT id'
-		. ' FROM #__acctexp_invoices'
-		. ' WHERE userid = \'' . $userid . '\' AND usage = \'' . $plan->id . '\''
-		. ' ORDER BY transaction_date'
-		;
-		$database->setQuery( $query );
-		$lastinvoice = $database->loadResult();
+		$lastinvoice = AECfetchfromDB::lastClearedInvoiceIDbyUserID( $userid, $plan->id );
 
 		$invoice = new Invoice($database);
 		$invoice->load($lastinvoice);

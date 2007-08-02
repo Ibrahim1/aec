@@ -4202,6 +4202,24 @@ class AECfetchfromDB
 		return $database->loadResult();
 	}
 
+	function lastClearedInvoiceIDbyUserID( $userid, $planid=0 )
+	{
+		global $database;
+
+		$query = 'SELECT id'
+		. ' FROM #__acctexp_invoices as a'
+		. ' WHERE a.userid = \'' . (int) $userid . '\'';
+
+		if ( $planid ) {
+			$query .= ' AND a.usage = \'' . (int) $planid . '\'';
+		}
+
+		$query .= ' ORDER BY transaction_date';
+
+		$database->setQuery( $query );
+		return $database->loadResult();
+	}
+
 	function InvoiceCountbyUserID( $userid )
 	{
 		global $database;

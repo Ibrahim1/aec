@@ -35,17 +35,11 @@ class mi_idevaffiliate
 	{
 		global $database, $mosConfig_live_site;
 
-		$query = 'SELECT id'
-		. ' FROM #__acctexp_invoices'
-		. ' WHERE userid = \'' . $userid . '\' AND usage = \'' . $plan->id . '\''
-		. ' ORDER BY transaction_date'
-		;
-		$database->setQuery( $query );
-		$lastinvoice = $database->loadResult();
-
-		$invoice = new Invoice($database);
-		$invoice->load($lastinvoice);
-
+		$lastinvoice = AECfetchfromDB::lastClearedInvoiceIDbyUserID( $userid, $plan->id );
+print_r($database);
+		$invoice = new Invoice( $database );
+		$invoice->load( $lastinvoice );
+print_r($lastinvoice);print_r($invoice);exit();
 		$text = '<img border="0" '
 				.'src="' . $mosConfig_live_site .'/components/com_idevaffiliate/sale.php?idev_paypal_1=' . $invoice->amount . '&idev_paypal_2=' . $invoice->invoice_number . '" '
 				.'width="1" height="1">';
