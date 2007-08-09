@@ -36,39 +36,39 @@ if( defined( '_AEC_LANG' ) ) {
 
 // new 0.12.4 (mic)
 
-define( '_AEC_EXPIRE_TODAY',				'This account is active until today' );
-define( '_AEC_EXPIRE_FUTURE',				'This account is active until' );
-define( '_AEC_EXPIRE_PAST',					'This account was valid until' );
-define( '_AEC_DAYS_ELAPSED',				'day(s) elapsed');
+define( '_AEC_EXPIRE_TODAY',				'Dit account is geldig tot vandaag' );
+define( '_AEC_EXPIRE_FUTURE',				'Dit account is geldig tot' );
+define( '_AEC_EXPIRE_PAST',					'Dit account was geldig tot' );
+define( '_AEC_DAYS_ELAPSED',				'dag(en) verstreken');
 
 define( '_AEC_EXPIRE_NOT_SET',				'Not Set' );
-define( '_AEC_GEN_ERROR',					'<h1>General Error</h1><p>We had problems processing your request. Please contact the web site administrator.</p>' );
+define( '_AEC_GEN_ERROR',					'<h1>Algemene foutmelding</h1><p>Er zijn problemen met het uitvoeren van je aanvraag. Neem contact op met de webmaster.</p>' );
 
 // payments
-define( '_AEC_PAYM_METHOD_FREE',			'Free' );
-define( '_AEC_PAYM_METHOD_NONE',			'None' );
+define( '_AEC_PAYM_METHOD_FREE',			'Gratis' );
+define( '_AEC_PAYM_METHOD_NONE',			'Geen' );
 define( '_AEC_PAYM_METHOD_TRANSFER',		'Transfer' );
 
 // processor errors
-define( '_AEC_MSG_PROC_INVOICE_FAILED_SH',			'Failed Invoice Payment' );
-define( '_AEC_MSG_PROC_INVOICE_FAILED_EV',			'Processor %s notification for %s has failed - invoice number does not exist:' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_SH',			'Invoice Payment Action' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV',			'Payment Notification Parser responds:' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_STATUS',	'Invoice status:' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_FRAUD',	'Amount verification failed, paid: %s, invoice: %s - payment aborted' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CURR',		'Currency verification failed, paid %s, invoice: %s - payment aborted' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_VALID',	'Payment valid, Action carried out' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_TRIAL',	'Payment valid - free trial' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_PEND',		'Payment invalid - status is pending, reason: %s' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CANCEL',	'No Payment - Subscription Cancel' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS',	', Userstatus has been updated to \'Cancelled\'' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EOT',		'No Payment - Subscription End Of Term' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR',	'Unknown Error' );
+define( '_AEC_MSG_PROC_INVOICE_FAILED_SH',			'Factuurbetaling mislukt' );
+define( '_AEC_MSG_PROC_INVOICE_FAILED_EV',			'Proces %s notificatie voor %s is mislukt - Factuurnummer bestaat niet:' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_SH',			'Factuurbetaling Actie' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV',			'Betalingsnotificatie Parser geeft aan:' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_STATUS',	'Factuur status:' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_FRAUD',	'Bedrag verificatie mislukt, betaald: %s, factuur: %s - betaling afgebroken' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CURR',		'Valuta verificatie mislukt, betaald %s, factuur: %s - betalingt afgebroken' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_VALID',	'Geldige betaling, Actie uitgevoerd' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_TRIAL',	'Geldige betaling - Gratis proefabonnement' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_PEND',		'Ongeldige betaling - status is pending, reden: %s' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CANCEL',	'Geen Betaling - Aanvraag geannuleerd' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS',	', Gebruikerstatus is gewijzigd naar \'Afgebroken\'' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EOT',		'Geen Betaling - Abonnementstermijn verlopen' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR',	'Onbekende foutmelding' );
 
 // --== COUPON INFO ==--
 define( '_COUPON_INFO',						'Coupons:' );
-define( '_COUPON_INFO_CONFIRM',				'If you want to use one or more coupons for this payment, you can do so on the checkout page.' );
-define( '_COUPON_INFO_CHECKOUT',			'Please enter your coupon code here and click the button to append it to this payment.' );
+define( '_COUPON_INFO_CONFIRM',				'Indien je meerdere coupons wilt gebruiken voor deze betaling, kun je dit doen op de checkout pagina.' );
+define( '_COUPON_INFO_CHECKOUT',			'Voer hier je couponcode in en selecteer de button om de betaling uit te voeren.' );
 
 // end mic ########################################################
 
@@ -88,25 +88,25 @@ define( '_HISTORY_COL2_TITLE', 'Bedrag');
 define( '_HISTORY_COL3_TITLE', 'Datum betaling');
 define( '_HISTORY_COL4_TITLE', 'Methode');
 define( '_HISTORY_COL5_TITLE', 'Action');
-define( '_HISTORY_COL6_TITLE', 'Plan');
-define( '_HISTORY_ACTION_REPEAT', 'pay');
-define( '_HISTORY_ACTION_CANCEL', 'cancel');
+define( '_HISTORY_COL6_TITLE', 'Abonnement');
+define( '_HISTORY_ACTION_REPEAT', 'Betaal');
+define( '_HISTORY_ACTION_CANCEL', 'Annuleer');
 define( '_RENEW_LIFETIME', 'Je hebt een abonnement voor het leven.');
 define( '_RENEW_DAYSLEFT', 'Resterende dagen');
-define( '_RENEW_DAYSLEFT_EXCLUDED', 'You are excluded from expiration');
+define( '_RENEW_DAYSLEFT_EXCLUDED', 'Afloop abonnement is niet van toepassing');
 define( '_RENEW_DAYSLEFT_INFINITE', '&#8734');
 define( '_RENEW_INFO', 'Je maakt gebruik van automatische betalingen.');
 define( '_RENEW_OFFLINE', 'Vernieuwen');
 define( '_RENEW_BUTTON_UPGRADE', 'Opwaarderen');
-define( '_PAYMENT_PENDING_REASON_ECHECK', 'echeck uncleared (1-4 business days)');
-define( '_PAYMENT_PENDING_REASON_TRANSFER', 'awaiting transfer payment');
+define( '_PAYMENT_PENDING_REASON_ECHECK', 'echeck nog open (1-4 werkdagen)');
+define( '_PAYMENT_PENDING_REASON_TRANSFER', 'In afwachting van betalingsverwerking');
 
 // --== EXPIRATION PAGE ==--
 define( '_EXPIRE_INFO', 'Je abonnement is geldig tot ');
-define( '_RENEW_BUTTON', 'Nu Vernieuwen');
+define( '_RENEW_BUTTON', 'Nu vernieuwen');
 define( '_ACCT_DATE_FORMAT', '%d-%m-%Y');
 define( '_EXPIRED', 'Je abonnement is verlopen op: ');
-define( '_EXPIRED_TRIAL', 'Your trial period has expired on: ');
+define( '_EXPIRED_TRIAL', 'Je proefabonnement is verlopen op: ');
 define( '_ERRTIMESTAMP', 'Cannot convert timestamp.');
 define( '_EXPIRED_TITLE', 'Abonnement verlopen!!');
 define( '_DEAR', 'Beste %s');
@@ -121,24 +121,24 @@ define( '_CONFIRM_ROW_USERNAME', 'Gebruikersnaam: ');
 define( '_CONFIRM_ROW_EMAIL', 'E-mail:');
 define( '_CONFIRM_INFO', 'Klik op de vervolg knop om het registratieproces te voltooien.');
 define( '_BUTTON_CONFIRM', 'Vervolg');
-define( '_CONFIRM_TOS', "I have read and agree to the <a href=\"%s\" target=\"_BLANK\">Terms of Service</a>");
-define( '_CONFIRM_TOS_ERROR', 'Please read and agree to our Terms of Service');
-define( '_CONFIRM_COUPON_INFO', 'If you have a coupon code, you can enter it on the Checkout Page to get a rebate on your payment');
+define( '_CONFIRM_TOS', "Ik ga akkoord met de <a href=\"%s\" target=\"_BLANK\">Algemene Voorwaarden</a>");
+define( '_CONFIRM_TOS_ERROR', 'U dient akkoord te gaan met de Algemene Voorwaarden');
+define( '_CONFIRM_COUPON_INFO', 'Indien u een couponcode bezit, kunt u deze invoeren op de Checkout Pagina voor een korting op uw betaling');
 
 // --== CHECKOUT FORM ==--
 define( '_CHECKOUT_TITLE', 'Checkout');
-define( '_CHECKOUT_INFO', 'Your Registration has been saved now. To be able to use your selected features, you need to proceed to the Payment Gateway by clicking the button below. <br /> If something goes wrong along the way, you can always come back to this step by logging in to our site with your new details - Our System will give you an option to try your payment again.');
-define( '_CHECKOUT_INFO_REPEAT', 'Thank you for coming back. To complete your payment, you need to proceed to the Payment Gateway by clicking the button below. <br /> If something goes wrong along the way, you can always come back to this step by logging in to our site with your new details - Our System will give you an option to try your payment again.');
-define( '_CHECKOUT_INFO_TRANSFER', 'Your Registration has been saved now. To be able to use your new account, you need to follow the details below. <br /> If something goes wrong along the way, you can always come back to this step by logging in to our site with your new details - Our System will give you an option to view this page again.');
-define( '_CHECKOUT_INFO_TRANSFER_REPEAT', 'Thank you for coming back. To complete your payment, you need to follow the details below. <br /> If something goes wrong along the way, you can always come back to this step by logging in to our site with your new details - Our System will give you an option to view this page again.');
+define( '_CHECKOUT_INFO', 'Uw registratie is opgeslagen. Om gebruik te maken van de geselecteerde optie, dient u verder te gaan naar de Payment Gateway door op de onderstaatnde button te klikken. <br /> Mocht er tijdens de verwerking een fout optreden, kunt u altijd terug naar deze stap door op de website te inloggen met uw nieuwe gebruikersnaam en wachtwoord - Ons systeem geeft de mogelijkheid om de betaling opnieuw aan te bieden.');
+define( '_CHECKOUT_INFO_REPEAT', 'Bedankt voor u terugkomst. Om uw betaling te voltooien dient u op de onderstaande button te klikken. <br /> Mocht er tijdens de verwerking een fout optreden, kunt u altijd terug naar deze stap door op de website te inloggen met uw nieuwe gebruikersnaam en wachtwoord - Ons systeem geeft de mogelijkheid om de betaling opnieuw aan te bieden.');
+define( '_CHECKOUT_INFO_TRANSFER', 'Uw registratie is nu opgeslagen. Om uw nieuwe account te gebruiken, raadpleeg de onderstaande gegevens. <br /> Mocht er tijdens de verwerking een fout optreden, kunt u altijd terug naar deze stap door op de website te inloggen met uw nieuwe gebruikersnaam en wachtwoord - Ons systeem geeft de mogelijkheid om deze pagina opnieuw aan te bekijken.');
+define( '_CHECKOUT_INFO_TRANSFER_REPEAT', 'Bedankt voor u terugkomst. Om uw betaling te voltooien dient u op de onderstaande button te klikken. <br /> Mocht er tijdens de verwerking een fout optreden, kunt u altijd terug naar deze stap door op de website te inloggen met uw nieuwe gebruikersnaam en wachtwoord - Ons systeem geeft de mogelijkheid om de betaling opnieuw aan te bieden.');
 define( '_BUTTON_CHECKOUT', 'Checkout');
 define( '_BUTTON_APPEND', 'Append');
 define( '_CHECKOUT_COUPON_CODE', 'Coupon Code');
-define( '_CHECKOUT_INVOICE_AMOUNT', 'Invoice Amount');
+define( '_CHECKOUT_INVOICE_AMOUNT', 'Factuurbedrag');
 define( '_CHECKOUT_INVOICE_COUPON', 'Coupon');
-define( '_CHECKOUT_INVOICE_COUPON_REMOVE', 'remove');
-define( '_CHECKOUT_INVOICE_TOTAL_AMOUNT', 'Total Amount');
-define( '_CHECKOUT_COUPON_INFO', 'If you have a coupon code, you can enter it here to get a rebate on your payment');
+define( '_CHECKOUT_INVOICE_COUPON_REMOVE', 'Verwijder');
+define( '_CHECKOUT_INVOICE_TOTAL_AMOUNT', 'Totaal Bedrag');
+define( '_CHECKOUT_COUPON_INFO', 'Indien u een couponcode bezit, kunt u deze invoeren op de Checkout Pagina voor een korting op uw betaling');
 
 // --== ALLOPASS SPECIFIC ==--
 define( '_REGTITLE','INSCRIPTION');
@@ -154,10 +154,10 @@ define( '_STEP_EXPIRED', 'Verlopen!');
 
 // --== NOT ALLOWED PAGE ==--
 define( '_NOT_ALLOWED_HEADLINE', 'Alleen voor abonnees!');
-define( '_NOT_ALLOWED_FIRSTPAR', 'Je probeert toegang te krijgen tot een pagina op deze website die alleen bestemd is voor abonnees. Wanneer je abonnee bent, moet je eerst inloggen om verder te kunnen. Klik op deze link om nu abonnee te te worden: ');
+define( '_NOT_ALLOWED_FIRSTPAR', 'Je probeert toegang te krijgen tot een pagina op deze website die alleen bestemd is voor abonnees. Wanneer je abonnee bent, moet je eerst inloggen om verder te kunnen. Klik op deze link om nu abonnee te worden: ');
 define( '_NOT_ALLOWED_REGISTERLINK', 'Registratie Pagina');
-define( '_NOT_ALLOWED_FIRSTPAR_LOGGED', 'The Content you are trying to see is available only for members of our site who have a certain subscription. Please follow this link if you want to change your subscription: ');
-define( '_NOT_ALLOWED_REGISTERLINK_LOGGED', 'Subscription Page');
+define( '_NOT_ALLOWED_FIRSTPAR_LOGGED', 'Je probeert toegang te krijgen tot een pagina op deze website die alleen bestemd is voor abonnees. Wanneer je abonnee bent, moet je eerst inloggen om verder te kunnen. Klik op deze link om nu abonnee te worden: ');
+define( '_NOT_ALLOWED_REGISTERLINK_LOGGED', 'Registratie Pagina');
 define( '_NOT_ALLOWED_SECONDPAR', 'Abonneren kost je minder dan een minuut van je tijd - onze digitale abonnee service wordt verzorgd door ');
 
 // --== CANCELLED PAGE ==--
@@ -166,14 +166,14 @@ define( '_CANCEL_MSG', 'We hebben bericht ontvangen van je beslissing om je abon
 
 // --== PENDING PAGE ==--
 define( '_WARN_PENDING', 'Je abonnement wordt momenteel geverifieerd. Dit mag niet langer dan uiterlijk 30 minuten duren - meestal duurt deze fase minder dan een minuut. Wanneer je na 30 minuten nog altijd niet kunt inloggen op de site en je wel een betalingsbevestiging hebt ontvangen, neem dan contact op met de webmaster van deze website.');
-define( '_WARN_PENDING', 'Your account is still pending. If you are in this state for more than some hours and your payment is confirmed, please contact the administrator of this web site.');
-define( '_PENDING_OPENINVOICE', 'It seems that you have an uncleared invoice in our database - If something went wrong along the way, you can go to the checkout page once again to try again:');
-define( '_GOTO_CHECKOUT', 'Go to the checkout page again');
-define( '_GOTO_CHECKOUT_CANCEL', 'you may also cancel the payment (you will have the possibility to go to the Plan Selection screen once again):');
-define( '_PENDING_NOINVOICE', 'It appears that you have cancelled the only invoice that was left for your account. Please use the button below to go to the Plan Selection page again:');
-define( '_PENDING_NOINVOICE_BUTTON', 'Plan Selection');
-define( '_PENDING_REASON_ECHECK', '(According to our information however, you decided to pay by echeck, so you it might be that you just have to wait until this payment is cleared - which usually takes 1-4 days.)');
-define( '_PENDING_REASON_TRANSFER', '(According to our information however, you decided to pay by an offline payment means, so you it might be that you just have to wait until this payment is cleared - which can take a couple of days.)');
+define( '_WARN_PENDING', 'Je abonnement wordt momenteel geverifieerd. Indien je betaling al is verwerkt en is goedgekeurd, neem dan contact op met de webmaster.');
+define( '_PENDING_OPENINVOICE', 'U heeft een openstaande factuur in onzer database - Indien er zich tijdens de betaling een fout heeft voorgedaan, kunt u terugkeren naar de checkout pagina en het opnieuw proberen:');
+define( '_GOTO_CHECKOUT', 'Ga opnieuw naar de checkout pagina');
+define( '_GOTO_CHECKOUT_CANCEL', 'U kunt uw betaling annuleren (U heeft altijd de mogelijkheid om terug te keren naar de pagina met de abonnementsvormen):');
+define( '_PENDING_NOINVOICE', 'U heeft uw enige factuur voor uw account geannuleerd. Gebruik de onderstaande button om terug te gaan naar de pagina met abonnementsvormen:');
+define( '_PENDING_NOINVOICE_BUTTON', 'Abonnement Selectie');
+define( '_PENDING_REASON_ECHECK', '(Volgens onze informatie wilt u betalen met een echeck, het kan enkele dagen duren voordat deze betaling wordt verwerkt - gebruikelijk duurt dit 1-4 werkdagen.)');
+define( '_PENDING_REASON_TRANSFER', '(Volgens onze informatie heeft u besloten te betalen via een offline methode (bankoverschrijving), Nadat deze betaling is verwerkt kunt u gegevens benaderen - waarschijnlijk binnen enkele werkdagen.)');
 
 // --== THANK YOU PAGE ==--
 define( '_THANKYOU_TITLE', 'Dank je!');
@@ -188,18 +188,18 @@ define( '_SUB_FEPARTICLE_ACTMAIL', 'Je ontvangt een email met een activatie link
 define( '_SUB_FEPARTICLE_MAIL', 'Je ontvangt een email You will receive an e-mail zodra ons systeem je verzoek heeft verwerkt. ');
 
 // --== COUPON ERROR MESSAGES ==--
-define( '_COUPON_WARNING_AMOUNT', 'One Coupon that you have added to this invoice does not affect the next payment, so although it seems that it does not affect this invoice, it will affect a subsequent payment.');
-define( '_COUPON_ERROR_PRETEXT', 'We are terribly sorry:');
-define( '_COUPON_ERROR_EXPIRED', 'This coupon has expired.');
-define( '_COUPON_ERROR_NOTSTARTED', 'Using this coupon is not permitted yet.');
-define( '_COUPON_ERROR_NOTFOUND', 'This coupon code could not be found.');
-define( '_COUPON_ERROR_MAX_REUSE', 'This coupon has exceeded the maximum uses.');
-define( '_COUPON_ERROR_PERMISSION', 'You don\'t have the permission to use this coupon.');
-define( '_COUPON_ERROR_WRONG_USAGE', 'You can not use this coupon for this.');
-define( '_COUPON_ERROR_WRONG_PLAN', 'You are not in the correct Subscription Plan for this coupon.');
-define( '_COUPON_ERROR_WRONG_PLAN_PREVIOUS', 'To use this coupon, your last Subscription Plan must be different.');
-define( '_COUPON_ERROR_WRONG_PLANS_OVERALL', 'You don\'t have the right Subscription Plans in your usage history to be allowed to use this coupon.');
-define( '_COUPON_ERROR_TRIAL_ONLY', 'You may only use this coupon for a Trial Period.');
+define( '_COUPON_WARNING_AMOUNT', 'De coupon die u aan deze factuur toevoegt heeft geen invloed op een eventuele volgende betaling, Voor deze factuur heeft dit geen gevolgen, echter wel voor een volgend abonnement.');
+define( '_COUPON_ERROR_PRETEXT', 'Het spijt ons:');
+define( '_COUPON_ERROR_EXPIRED', 'Deze coupon is verlopen.');
+define( '_COUPON_ERROR_NOTSTARTED', 'Deze coupon kan nog niet gebruikt worden.');
+define( '_COUPON_ERROR_NOTFOUND', 'Deze coupon code is onbekend.');
+define( '_COUPON_ERROR_MAX_REUSE', 'Deze coupon heeft zijn maximum bereikt.');
+define( '_COUPON_ERROR_PERMISSION', 'U bent niet geautoriseerd om deze coupon te gebruiken.');
+define( '_COUPON_ERROR_WRONG_USAGE', 'Hiervoor kunt u deze coupon niet gebruiken.');
+define( '_COUPON_ERROR_WRONG_PLAN', 'U gebruikt de verkeerde abonnementsvorm voor deze coupon.');
+define( '_COUPON_ERROR_WRONG_PLAN_PREVIOUS', 'Om deze coupon te gebruiken moet uw laatste abonnementsvorm verschillend zijn.');
+define( '_COUPON_ERROR_WRONG_PLANS_OVERALL', 'Uw gebruikersgeschiedenis beschikt niet over de juiste abonnementsvormen om deze coupon te gebruiken.');
+define( '_COUPON_ERROR_TRIAL_ONLY', 'U kunt deze coupon alleen gebruiken voor een proefabonnement.');
 
 // ----======== EMAIL TEXT ========----
 

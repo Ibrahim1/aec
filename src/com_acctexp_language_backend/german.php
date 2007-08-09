@@ -284,7 +284,7 @@ define( '_AEC_CENTR_V_INVOICES',				'Rechnungen' );
 define( '_AEC_CENTR_COUPONS',					'Gutscheine' );
 define( '_AEC_CENTR_COUPONS_STATIC',			'Feste Gutscheine' );
 define( '_AEC_CENTR_VIEW_HISTORY',				'Archiv' );
-define( '_AEC_CENTR_SPECIAL',					'Hacks' );
+define( '_AEC_CENTR_HACKS',						'Hacks' );
 define( '_AEC_CENTR_M_INTEGRATION',				'Integration' );
 define( '_AEC_CENTR_HELP',						'Hilfe' );
 define( '_AEC_CENTR_LOG',						'Logdatei' );
