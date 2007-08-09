@@ -907,7 +907,7 @@ function com_install()
 	$menu[] = array( 'symbol_mi',		'showMicroIntegrations',_AEC_CENTR_M_INTEGRATION,	8 );
 	$menu[] = array( 'symbol_settings',	'showSettings',			_AEC_CENTR_SETTINGS,		9 );
 	$menu[] = array( 'symbol_css',		'editCSS',				_AEC_CENTR_EDIT_CSS,		10 );
-	$menu[] = array( 'symbol_hacks',	'hacks',				_AEC_CENTR_SPECIAL,			11 );
+	$menu[] = array( 'symbol_hacks',	'hacks',				_AEC_CENTR_HACKS,			11 );
 	$menu[] = array( 'symbol_help',		'help',					_AEC_CENTR_HELP,			12 );
 
 	for( $i = 0; $i < count( $menu ); $i++ ) {

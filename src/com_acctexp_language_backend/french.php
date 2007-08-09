@@ -285,7 +285,7 @@ define( '_AEC_CENTR_V_INVOICES',				'View Invoices' );
 define( '_AEC_CENTR_COUPONS',					'Coupons' );
 define( '_AEC_CENTR_COUPONS_STATIC',			'Coupons Static' );
 define( '_AEC_CENTR_VIEW_HISTORY',				'View History' );
-define( '_AEC_CENTR_SPECIAL',					'Hacks' );
+define( '_AEC_CENTR_HACKS',						'Hacks' );
 define( '_AEC_CENTR_M_INTEGRATION',				'Micro Integr.' );
 define( '_AEC_CENTR_HELP',						'Help' );
 define( '_AEC_CENTR_LOG',						'EventLog' );

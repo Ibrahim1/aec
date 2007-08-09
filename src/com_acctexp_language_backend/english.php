@@ -141,7 +141,7 @@ define( '_AEC_HEAD_CLOSED_SUBS',				'Closed Subscriber' );
 define( '_AEC_HEAD_MANUAL_SUBS',				'Manual Subscriber' );
 define( '_AEC_HEAD_SUBCRIBER',					'Subscriber' );
 
-// hacks (special)
+// hacks
 define( '_AEC_HACK_HACK',						'Hack' );
 define( '_AEC_HACKS_ISHACKED',					'is hacked' );
 define( '_AEC_HACKS_NOTHACKED',					'is not hacked!' );
@@ -285,7 +285,7 @@ define( '_AEC_CENTR_V_INVOICES',				'View Invoices' );
 define( '_AEC_CENTR_COUPONS',					'Coupons' );
 define( '_AEC_CENTR_COUPONS_STATIC',			'Static Coupons' );
 define( '_AEC_CENTR_VIEW_HISTORY',				'View History' );
-define( '_AEC_CENTR_SPECIAL',					'Hacks' );
+define( '_AEC_CENTR_HACKS',						'Hacks' );
 define( '_AEC_CENTR_M_INTEGRATION',				'Micro Integr.' );
 define( '_AEC_CENTR_HELP',						'Help' );
 define( '_AEC_CENTR_LOG',						'EventLog' );
