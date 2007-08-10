@@ -281,7 +281,7 @@ function com_install()
 	$database->setQuery("SHOW COLUMNS FROM #__acctexp_config LIKE 'alertlevel1'");
 	$database->loadObject($result);
 
-	if (!strcmp($result->Field, 'alertlevel1') === 0) {
+	if (strcmp($result->Field, 'alertlevel1') === 0) {
 		$queri[] = "ALTER TABLE #__acctexp_config DROP `email`";
 		$queri[] = "ALTER TABLE #__acctexp_config DROP `paypal`";
 		$queri[] = "ALTER TABLE #__acctexp_config DROP `business`";
@@ -717,7 +717,9 @@ function com_install()
 	}
 
 	$database->setQuery("SELECT count(*) FROM  #__acctexp_config_processors");
-	if ($database->loadResult() == 0) {
+	$oldplans = ( $database->loadResult() == 0 || in_array( $mosConfig_dbprefix . '_acctexp_processors_plans', $database->getTableList() ) );
+
+	if ( $oldplans ) {
 
 		$database->setQuery( "SELECT proc_id FROM #__acctexp_processors_plans" );
 		$db_processors = $database->loadResultArray();
@@ -865,7 +867,7 @@ function com_install()
 		}
 	}
 
-	// delete first old menu entries
+	// first delete old menu entries
 	$query = 'DELETE *'
 	. ' FROM #__components'
 	. ' WHERE option = \'option=com_acctexp\''
