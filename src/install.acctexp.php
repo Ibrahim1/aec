@@ -56,13 +56,6 @@ function com_install()
 	$database->setQuery( $query );
 	$database->query();
 
-	// first check if this is a new install (no older AEC tables are existing)
-	$query = 'SELECT count(id)'
-	. ' FROM #__acctexp'
-	;
-	$database->setQuery( $query );
-	$total = $database->loadResult();
-
 	$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp` ('
 	. '`id` int(11) NOT NULL auto_increment,'
 	. '`userid` int(11) NOT NULL default \'0\','
@@ -72,7 +65,7 @@ function com_install()
 	;
 
 	$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_config` ('
-	. '`id` INT NOT NULL AUTO_INCREMENT,'
+	. '`id` int(11) NOT NULL AUTO_INCREMENT,'
 	. '`settings` text NULL,'
 	. ' PRIMARY KEY (`id`)'
 	. ') TYPE=MyISAM;'
@@ -113,7 +106,7 @@ function com_install()
 	;
 
 	$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_config_processors` ('
-	. '`id` INT NOT NULL AUTO_INCREMENT,'
+	. '`id` int(11) NOT NULL AUTO_INCREMENT,'
 	. '`name` varchar(60) NOT NULL,'
 	. '`active` int(4) NOT NULL default \'1\','
 	. '`info` text NULL,'
