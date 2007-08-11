@@ -4476,17 +4476,15 @@ class AECToolbox
 	{
 		global $database;
 
-		$query = 'SELECT id'
+		$query = 'SELECT status'
 		. ' FROM #__acctexp_subscr'
 		. ' WHERE userid = \'' . (int) $userid . '\''
 		;
 	 	$database->setQuery( $query );
-		$aecid = $database->loadResult();
+		$aecstatus = $database->loadResult();
 
-		if ( $aecid ) {
-			$aecuser = new Subscription( $database );
-			$aecuser->load( $aecid );
-			if ( strcmp( $aecuser->status, 'Active' ) === 0 ) {
+		if ( $aecstatus ) {
+			if ( strcmp( $aecstatus, 'Active' ) === 0 ) {
 				return true;
 			} else {
 				return false;
