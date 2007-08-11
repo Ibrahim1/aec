@@ -349,7 +349,7 @@ class AcctExp extends mosDBTable
 	function manualVerify()
 	{
 		if ( $this->is_expired() ) {
-			mosRedirect( '/index.php?option=com_acctexp&amp;task=expired&amp;userid=' . (int) $this->userid );
+			mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=expired&userid=' . (int) $this->userid ) );
 			return false;
 		} else {
 			return true;
@@ -2474,7 +2474,7 @@ class InvoiceFactory
 			// TODO: Check if the user has already subscribed once, if not - link to intro
 			// TODO: Make sure a registration hybrid wont get lost here
 			if ( !$intro && ( $cfg->cfg['customintro'] != '' ) && !is_null( $cfg->cfg['customintro'] ) ) {
-				mosRedirect( $cfg->cfg['customintro'] );
+				mosRedirect( AECToolbox::deadsureURL( $cfg->cfg['customintro'] ) );
 			}
 		}
 
@@ -3046,7 +3046,7 @@ class InvoiceFactory
 
 		// Look whether we have a custom ThankYou page
 		if ( $cfg->cfg['customthanks'] ) {
-			mosRedirect( $cfg->cfg['customthanks'] );
+			mosRedirect( AECToolbox::deadsureURL( $cfg->cfg['customthanks'] ) );
 		} else {
 			HTML_Results::thanks( $option, $msg );
 		}
@@ -3725,11 +3725,11 @@ class Subscription extends paramDBTable
 			$expire = $this->expire();
 
 			if ( $expire ) {
-				mosRedirect( 'index.php?option=com_acctexp&amp;task=expired&amp;Itemid=' . $this->userid );
+				mosRedirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=expired&Itemid=' . $this->userid ) );
 				exit();
 			}
 		} elseif ( ( strcmp( $this->status, 'Pending' ) === 0 ) || $block ) {
-			mosRedirect( 'index.php?option=com_acctexp&amp;task=pending&amp;Itemid=' . $this->userid );
+			mosRedirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=pending&Itemid=' . $this->userid ) );
 			exit();
 		}
 	}
@@ -4387,7 +4387,7 @@ class AECToolbox
 		if ( $cfg->cfg['simpleurls'] ) {
 			$new_url = $mosConfig_live_site . $url;
 		} else {
-			if ( !strrpos( strtolower( $url ), 'Itemid' ) ) {
+			if ( !strrpos( strtolower( $url ), 'itemid' ) ) {
 				global $Itemid;
 				if ( $Itemid ) {
 					$url .= '&amp;Itemid=' . $Itemid;
@@ -4463,7 +4463,7 @@ class AECToolbox
 						$user_subscription->createNew( $id, 'Free', 0 );
 						$user_subscription->applyUsage( $cfg->cfg['entry_plan'], 'none', 1 );
 					} else {
-						mosRedirect( 'index.php?option=com_acctexp&amp;task=subscribe&amp;Itemid=' . $id );
+						mosRedirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&Itemid=' . $id ) );
 						return null;
 					}
 				}
