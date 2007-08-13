@@ -1624,6 +1624,13 @@ function editSettings( $option )
 
 	$cfg = new Config_General( $database );
 
+	// See whether we have a duplication
+	if ( $cfg->RowDuplicationCheck() ) {
+		// Clean out duplication and reload settings
+		$cfg->CleanDuplicatedRows();
+		$cfg = new Config_General( $database );
+	}
+
 	$lists = array();
 
 	$lists['transfer']				= mosHTML::yesnoSelectList('transfer', '', $cfg->cfg['transfer']);

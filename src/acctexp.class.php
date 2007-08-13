@@ -1618,9 +1618,25 @@ class Config_General extends paramDBTable
 	{
 		global $database;
 
+		$query = 'SELECT min(id)'
+		. ' FROM #__acctexp_config'
+		;
+		$database->setQuery( $query );
+		$database->query();
+		$max = $database->loadResult();
+
+		if ( !( $max === 1 ) ) {
+			$query = 'UPDATE #__acctexp_config'
+			. ' SET id = \'1\''
+			. ' WHERE id =\'' . $max . '\''
+			;
+			$database->setQuery( $query );
+			$database->query();
+		}
+
 		$query = 'DELETE'
 		. ' FROM #__acctexp_config'
-		. ' WHERE id > \'1\''
+		. ' WHERE id != \'1\''
 		;
 		$database->setQuery( $query );
 		$database->query();
