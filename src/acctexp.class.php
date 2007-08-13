@@ -1572,6 +1572,11 @@ class Config_General extends paramDBTable
 
 	function saveSettings()
 	{
+		if ( $this->RowDuplicationCheck() ) {
+			$this->CleanDuplicatedRows();
+			$this->load(1);
+		}
+
 		$settings = array();
 		foreach ($this->cfg as $key => $value ) {
 			if ( !is_null( $key ) ) {
@@ -1585,11 +1590,6 @@ class Config_General extends paramDBTable
 					$settings[] = $key . '=' . $value;
 				}
 			}
-		}
-
-		if ( $this->RowDuplicationCheck() ) {
-			$this->CleanDuplicatedRows();
-			$this->load(1);
 		}
 
 		$this->settings = implode( "\n", $settings );
@@ -1618,14 +1618,14 @@ class Config_General extends paramDBTable
 	{
 		global $database;
 
-		$query = 'SELECT min(id)'
+		$query = 'SELECT max(id)'
 		. ' FROM #__acctexp_config'
 		;
 		$database->setQuery( $query );
 		$database->query();
 		$max = $database->loadResult();
 
-		if ( !( $max === 1 ) ) {
+		if ( !( $max == 1 ) ) {
 			$query = 'UPDATE #__acctexp_config'
 			. ' SET id = \'1\''
 			. ' WHERE id =\'' . $max . '\''
