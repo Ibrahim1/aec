@@ -1894,7 +1894,7 @@ class SubscriptionPlan extends paramDBTable
 			}
 		}
 
-		$return_url	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=thanks&amp;renew=' . $renew );
+		$return_url	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=thanks&amp;renew=' . $renew );
 
 		$return['return_url']	= $return_url;
 		$return['amount']		= $amount;
@@ -2490,7 +2490,7 @@ class InvoiceFactory
 			// TODO: Check if the user has already subscribed once, if not - link to intro
 			// TODO: Make sure a registration hybrid wont get lost here
 			if ( !$intro && ( $cfg->cfg['customintro'] != '' ) && !is_null( $cfg->cfg['customintro'] ) ) {
-				mosRedirect( AECToolbox::deadsureURL( $cfg->cfg['customintro'] ) );
+				mosRedirect( $cfg->cfg['customintro'] );
 			}
 		}
 
@@ -2523,7 +2523,7 @@ class InvoiceFactory
 
 	 	// There are no plans to begin with, so we need to punch out an error here
 		if ( count( $rows ) == 0 ) {
-			mosRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_ERROR ) );
+			mosRedirect( AECToolbox::deadsureURL( '/index.php?mosmsg=' . _NOPLANS_ERROR ) );
 	 		return;
 	 	}
 
@@ -2620,7 +2620,7 @@ class InvoiceFactory
 
 	 	// After filtering out the processors, no plan can be used, so we have to again issue an error
 		 if ( count( $plans ) == 0 ) {
-			mosRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_ERROR ) );
+			mosRedirect( AECToolbox::deadsureURL( '/index.php?mosmsg=' . _NOPLANS_ERROR ) );
 	 		return;
 	 	}
 
@@ -3062,7 +3062,7 @@ class InvoiceFactory
 
 		// Look whether we have a custom ThankYou page
 		if ( $cfg->cfg['customthanks'] ) {
-			mosRedirect( AECToolbox::deadsureURL( $cfg->cfg['customthanks'] ) );
+			mosRedirect( $cfg->cfg['customthanks'] );
 		} else {
 			HTML_Results::thanks( $option, $msg );
 		}
@@ -3741,11 +3741,11 @@ class Subscription extends paramDBTable
 			$expire = $this->expire();
 
 			if ( $expire ) {
-				mosRedirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=expired&Itemid=' . $this->userid ) );
+				mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=expired&Itemid=' . $this->userid ) );
 				exit();
 			}
 		} elseif ( ( strcmp( $this->status, 'Pending' ) === 0 ) || $block ) {
-			mosRedirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=pending&Itemid=' . $this->userid ) );
+			mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=pending&Itemid=' . $this->userid ) );
 			exit();
 		}
 	}
@@ -4479,7 +4479,7 @@ class AECToolbox
 						$user_subscription->createNew( $id, 'Free', 0 );
 						$user_subscription->applyUsage( $cfg->cfg['entry_plan'], 'none', 1 );
 					} else {
-						mosRedirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&Itemid=' . $id ) );
+						mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=subscribe&Itemid=' . $id ) );
 						return null;
 					}
 				}
