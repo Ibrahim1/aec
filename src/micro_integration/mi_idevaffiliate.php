@@ -8,10 +8,6 @@
  * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
  */
 
-/**
- * TODO (mic): check variable variables!
- */
-
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
 class mi_idevaffiliate
@@ -41,8 +37,8 @@ class mi_idevaffiliate
 		$invoice->load( $lastinvoice );
 
 		$text = '<img border="0" '
-				.'src="' . $mosConfig_live_site .'/components/com_idevaffiliate/sale.php?idev_paypal_1=' . $invoice->amount . '&idev_paypal_2=' . $invoice->invoice_number . '" '
-				.'width="1" height="1">';
+				.'src="' . $mosConfig_live_site .'/components/com_idevaffiliate/sale.php?idev_paypal_1=' . $invoice->amount . '&amp;idev_paypal_2=' . $invoice->invoice_number . '" '
+				.'width="1" height="1" />';
 
 		$displaypipeline = new displayPipeline($database);
 		$displaypipeline->create( $userid, 1, 0, 0, null, 1, $text );
