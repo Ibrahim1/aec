@@ -856,7 +856,7 @@ class HTML_AcctExp
 						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_history.png', _AEC_CENTR_VIEW_HISTORY );
 
 						$link = 'index2.php?option=com_acctexp&amp;task=hacks';
-						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_hacks.png', _AEC_CENTR_SPECIAL );
+						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_hacks.png', _AEC_CENTR_HACKS );
 
 						$link = 'index2.php?option=com_acctexp&amp;task=showMicroIntegrations';
 						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_microintegrations.png', _AEC_CENTR_M_INTEGRATION );
