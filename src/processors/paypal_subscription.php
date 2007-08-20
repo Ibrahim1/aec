@@ -130,7 +130,7 @@ class processor_paypal_subscription
 		$var['p3'] = $int_var['amount']['period3'];
 		$var['t3'] = $int_var['amount']['unit3'];
 
-		if ( isset($cfg['tax'] ) ) {
+		if ( !empty( $cfg['tax'] ) && $cfg['tax'] > 0 ) {
 			$tax = $var['a3']/(100+$cfg['tax'])*100;
 			$var['tax'] = round(($var['a3'] - $tax), 2);
 			$var['a3'] = round($tax, 2);
