@@ -3270,7 +3270,7 @@ function clearInvoice( $option, $invoice_number, $applyplan, $task )
 		}
 	}
 
-	mosRedirect( 'index2.php?option=' . $option . '&task=' . $task . '&userid=' . $userid, _AEC_MSG_INVOICE_CLEARED );
+	mosRedirect( 'index2.php?option=' . $option . '&task=' . $task . $userid, _AEC_MSG_INVOICE_CLEARED );
 }
 
 function cancelInvoice( $option, $invoice_number, $task )
@@ -3296,7 +3296,7 @@ function cancelInvoice( $option, $invoice_number, $task )
 		}
 	}
 
-	mosRedirect( 'index2.php?option=' . $option . '&task=' . $task . '&userid=' . $userid, _REMOVED );
+	mosRedirect( 'index2.php?option=' . $option . '&task=' . $task . $userid, _REMOVED );
 }
 
 function history( $option )
