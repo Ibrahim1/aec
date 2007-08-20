@@ -5426,9 +5426,15 @@ class couponHandler
 					if ( $this->discount['useon_full_all'] ) {
 						$amount['amount3']	= $this->applyDiscount($amount['amount3']);
 					} else {
-						$amount['amount2']	= $this->applyDiscount($amount['amount3']);
-						$amount['period2']	= $amount['period3'];
-						$amount['unit2']	= $amount['unit3'];
+						if ( $amount['amount1'] > 0 ) {
+							$amount['amount2']	= $this->applyDiscount($amount['amount3']);
+							$amount['period2']	= $amount['period3'];
+							$amount['unit2']	= $amount['unit3'];
+						} else {
+							$amount['amount1']	= $this->applyDiscount($amount['amount3']);
+							$amount['period1']	= $amount['period3'];
+							$amount['unit1']	= $amount['unit3'];
+						}
 					}
 				}
 			}
