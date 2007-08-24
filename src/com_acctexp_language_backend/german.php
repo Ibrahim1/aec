@@ -123,15 +123,15 @@ define( '_AEC_USER_NO_INVOICES',				'Keine Rechnungen bisher' );
 define( '_AEC_USER_INVOICE_FACTORY',			'Rechnungserstellung' );
 
 // new (additional)
-define( '_AEC_MSG_MIS_NOT_DEFINED',				'Es wurden noch keine Integrationen definiert - siehe Konfiguration' );
+define( '_AEC_MSG_MIS_NOT_DEFINED',				'Es wurden noch keine MicroIntegrationen definiert - siehe Konfiguration' );
 
 // headers
 define( '_AEC_HEAD_SETTINGS',					'Einstellungen' );
 define( '_AEC_HEAD_HACKS',						'Hacks' );
-define( '_AEC_HEAD_PLAN_INFO',					'Abonnement' );
+define( '_AEC_HEAD_PLAN_INFO',					'Plan Info' );
 define( '_AEC_HEAD_LOG',						'Logdatei' );
 define( '_AEC_HEAD_CSS_EDITOR',					'CSS Editor' );
-define( '_AEC_HEAD_MICRO_INTEGRATION',			'Integration' );
+define( '_AEC_HEAD_MICRO_INTEGRATION',			'MicroIntegration' );
 define( '_AEC_HEAD_ACTIVE_SUBS',				'Aktive Abonnenten' );
 define( '_AEC_HEAD_EXCLUDED_SUBS',				'Ausgenommene Benutzer' );
 define( '_AEC_HEAD_EXPIRED_SUBS',				'Abgelaufene Abonnenten' );
@@ -167,9 +167,9 @@ define( '_AEC_HACKS_REG2',						'Diese &Auml;nderung leitet den Benutzer zur Abo
 define( '_AEC_HACKS_REG3',						'Leitet den Benutzer direkt zur Abo&uuml;bersicht um falls vorher noch keine Wahl getroffen wurde' );
 define( '_AEC_HACKS_REG4',						'&Uml;bermittelt die AEC-Daten aus dem Anmeldeforumlar' );
 define( '_AEC_HACKS_REG5',						'Mit diesem Hack k&ouml;nnen sie das "Bezahlpl&auml;ne zuerst"-Feature benutzen. Nicht vergessen in den AEC Einstellungen den Schalter hierf&uuml;r zu setzen!' );
-define( '_AEC_HACKS_MI1',						'Einige Integrationen ben&ouml;tigen Klartextdaten.<br />Diese &Auml;nderung stellt sicher, dass die Integrationen die Benutzerdaten bei &Auml;nderung erhalten.' );
-define( '_AEC_HACKS_MI2',						'Einige Integrationen ben&ouml;tigen Klartextdaten.<br />Diese &Auml;nderung &uuml;bermittelt die Benutzerdaten nach der Registrierung' );
-define( '_AEC_HACKS_MI3',						'Einige Integrationen ben&ouml;tigen Klartextdaten.<br />Diese &Auml;nderung stellt sicher, dass bei Benutzerdaten&auml;nderung durch einen Admin diese weitergeleitet werden.' );
+define( '_AEC_HACKS_MI1',						'Einige MicroIntegrationen ben&ouml;tigen Klartextdaten.<br />Diese &Auml;nderung stellt sicher, dass die Integrationen die Benutzerdaten bei &Auml;nderung erhalten.' );
+define( '_AEC_HACKS_MI2',						'Einige MicroIntegrationen ben&ouml;tigen Klartextdaten.<br />Diese &Auml;nderung &uuml;bermittelt die Benutzerdaten nach der Registrierung' );
+define( '_AEC_HACKS_MI3',						'Einige MicroIntegrationen ben&ouml;tigen Klartextdaten.<br />Diese &Auml;nderung stellt sicher, dass bei Benutzerdaten&auml;nderung durch einen Admin diese weitergeleitet werden.' );
 define( '_AEC_HACKS_CB2',						'Leitet den Besucher nach der Registrierung in CB (Community Builder) zur Abonnementauswahl weiter.<br />Nur diese &Auml;nderung bewirkt, da&szlig; ein Abo beim Login ausgew&auml;hlt werden muss, anderenfalls sind noch 2 weitere A&uml;nderungen notwendig.<br /><strong>Soll vor dem Abschluss der Benutzerdetails (zur Registrierung) ein Abo ausgew&auml;hlt werden, sind alle 3 &Auml;nderungen erforderlich!</strong>' );
 define( '_AEC_HACKS_CB6',						'Leitet den Besucher zur Aboauwahl weiter wenn keine Auswahl bisher getroffen wurde.' );
 define( '_AEC_HACKS_CB_HTML2',					'Leitet die Benutzerdetails intern an AEC weiter.<br /><strong>Um diese &Auml;nderung wirksam werden zu lassen, muss in der AEC-Konfiguarion die Einstellung "Abo Zuerst" aktiviert werden</strong>' );
@@ -285,7 +285,7 @@ define( '_AEC_CENTR_COUPONS',					'Gutscheine' );
 define( '_AEC_CENTR_COUPONS_STATIC',			'Feste Gutscheine' );
 define( '_AEC_CENTR_VIEW_HISTORY',				'Archiv' );
 define( '_AEC_CENTR_HACKS',						'Hacks' );
-define( '_AEC_CENTR_M_INTEGRATION',				'Integration' );
+define( '_AEC_CENTR_M_INTEGRATION',				'MicroIntegration' );
 define( '_AEC_CENTR_HELP',						'Hilfe' );
 define( '_AEC_CENTR_LOG',						'Logdatei' );
 define( '_AEC_CENTR_MANUAL',					'Manuell' );
@@ -367,8 +367,8 @@ define( '_COUPON_GENERAL_ACTIVE_DESC',			'Ist dieser Gutschein aktiv (momentan g
 define( '_COUPON_GENERAL_TYPE_NAME',			'Gruppe' );
 define( '_COUPON_GENERAL_TYPE_DESC',			'Soll dieser Gutschein einmalig oder f&uuml;r eine Gruppe von mehreren Personen gelten (Einzel- oder Gruppengutschein)' );
 
-define( '_COUPON_GENERAL_MICRO_INTEGRATIONS_NAME',	'Gateways' );
-define( '_COUPON_GENERAL_MICRO_INTEGRATIONS_DESC',	'Diejenigen Gateways ausw&auml;hlen welche f&uuml;r diesen Gutschein g&uuml;ltig sein sollen' );
+define( '_COUPON_GENERAL_MICRO_INTEGRATIONS_NAME',	'Bezahldienste' );
+define( '_COUPON_GENERAL_MICRO_INTEGRATIONS_DESC',	'Diejenigen Bezahldienste ausw&auml;hlen welche f&uuml;r diesen Gutschein g&uuml;ltig sein sollen' );
 
 define( '_COUPON_PARAMS_AMOUNT_USE_NAME',		'Betrag verwenden' );
 define( '_COUPON_PARAMS_AMOUNT_USE_DESC', 		'Soll von der Rechnung direkt ein Betrag abgezogen werden' );
@@ -635,11 +635,11 @@ define( '_CFG_GENERAL_DISPLAYCCINFO_NAME',				'Zeige Kreditkartenicons:' );
 define( '_CFG_GENERAL_DISPLAYCCINFO_DESC',				'Sollen die Icons f&uuml;r jedes Gateway angezeigt werden' );
 
 // Global Micro Integration Settings
-define( '_CFG_TAB_MICROINTEGRATION_TITLE',				'Integration' );
-define( '_CFG_MI_ACTIVELIST_NAME',						'Aktive Integrationen' );
-define( '_CFG_MI_ACTIVELIST_DESC',						'W&auml;hlen welche Integrationen aktiv sein sollen' );
-define( '_CFG_MI_META_NAME',							'Integrationen Meta' );
-define( '_CFG_MI_META_DESC',							'Sollen die Integrationen untereinander Variablen austauschen d&uuml;rfen' );
+define( '_CFG_TAB_MICROINTEGRATION_TITLE',				'MicroIntegration' );
+define( '_CFG_MI_ACTIVELIST_NAME',						'Aktive MicroIntegrationen' );
+define( '_CFG_MI_ACTIVELIST_DESC',						'W&auml;hlen welche MicroIntegrationen aktiv sein sollen' );
+define( '_CFG_MI_META_NAME',							'MicroIntegrationen Meta' );
+define( '_CFG_MI_META_DESC',							'Sollen die MicroIntegrationen untereinander Variablen austauschen d&uuml;rfen' );
 
 // --== PAYMENT PLAN PAGE ==--
 // Additions of variables for free trial periods by Michael Spredemann (scubaguy)
@@ -941,7 +941,7 @@ define( '_CURRENCY_USN', 'US Dollar (N&auml;chster Tag)' );
 define( '_CURRENCY_USS', 'US Dollar (Gleicher Tag)' );
 
 // --== MICRO INTEGRATION OVERVIEW ==--
-define( '_MI_TITLE',						'Gateways' );
+define( '_MI_TITLE',						'MicroIntegrationen' );
 define( '_MI_NAME',							'Name' );
 define( '_MI_DESC',							'Beschreibung' );
 define( '_MI_ACTIVE',						'Aktiv' );
@@ -949,10 +949,10 @@ define( '_MI_REORDER',						'Reihenfolge' );
 define( '_MI_FUNCTION',						'Funktionsname' );
 
 // --== MICRO INTEGRATION EDIT ==--
-define( '_MI_E_TITLE',						'Gateway' );
+define( '_MI_E_TITLE',						'MicroIntegration' );
 define( '_MI_E_SETTINGS',					'Einstellungen' );
 define( '_MI_E_NAME_NAME',					'Name' );
-define( '_MI_E_NAME_DESC',					'Name f&uuml;r diese Integration' );
+define( '_MI_E_NAME_DESC',					'Name f&uuml;r diese MicroIntegration' );
 define( '_MI_E_DESC_NAME',					'Beschreibung' );
 define( '_MI_E_DESC_DESC',					'Kurzbeschreibung' );
 define( '_MI_E_ACTIVE_NAME',				'Aktiv' );
@@ -965,7 +965,7 @@ define( '_MI_E_PRE_EXP_NAME',				'Tage vor Ablauf' );
 define( '_MI_E_PRE_EXP_DESC',				'Anzahl der Tage vor dem Ablauf ab wann die Aktionen gelten sollen' );
 define( '_MI_E_FUNCTION_NAME',				'Funktionsname' );
 define( '_MI_E_FUNCTION_DESC',				'Welche der Systeme sollen verwendet weren' );
-define( '_MI_E_FUNCTION_EXPLANATION',		'Bevor die Integration definiert wird, muss bestimmt werden welche der Integrationen g&uuml;ltig/aktiv sind. Wahl treffen und speichern. Dann nochmals bearbeiten, die Einstellungen sind erst dann sichtbar. HINWEIS: einmal definiert lassen sich die Einstellungen nicht r&uuml;ckg&auml;ngig machen' );
+define( '_MI_E_FUNCTION_EXPLANATION',		'Bevor die MicroIntegration definiert wird, muss bestimmt werden welche der MicroIntegrationen g&uuml;ltig/aktiv sind. Wahl treffen und speichern. Dann nochmals bearbeiten, die Einstellungen sind erst dann sichtbar. HINWEIS: einmal definiert lassen sich die Einstellungen nicht r&uuml;ckg&auml;ngig machen' );
 
 // --== REWRITE EXPLANATION ==--
 define( '_REWRITE_AREA_USER',				'Benutzeraccount Bezogen' );
