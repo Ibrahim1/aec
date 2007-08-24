@@ -864,7 +864,7 @@ function processNotification( $option, $processor )
 			if ( strcmp( $response['pending_reason'], 'signup' ) === 0 ) {
 				$plan = new SubscriptionPlan( $database );
 				$plan->load( $objInvoice->usage );
-				$params = $this->getParams( 'params' );
+				$params = $plan->getParams( 'params' );
 
 				if ( $params['trial_free'] ) {
 					$objInvoice->pay();
@@ -877,6 +877,7 @@ function processNotification( $option, $processor )
 				$event	.= sprintf( _AEC_MSG_PROC_INVOICE_ACTION_EV_PEND, $response['pending_reason'] );
 				$tags	.= ',payment,pending' . $response['pending_reason'];
 			}
+
 			$objInvoice->check();
 			$objInvoice->store();
 		} elseif ( isset( $response['cancel'] ) ) {
