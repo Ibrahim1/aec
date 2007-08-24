@@ -34,19 +34,6 @@ class mi_communitybuilder
 	{
 	}
 
-	function expiration_action($params, $userid, $plan)
-	{
-		global $database;
-
-		if( $params['unapprove_exp'] ) {
-			$query = 'UPDATE #__comprofiler'
-			.' SET approved = \'0\''
-			.' WHERE user_id = \'' . (int) $userid . '\'';
-			$database->setQuery( $query );
-			$database->query() or die( $database->stderr() );
-		}
-	}
-
 	function action($params, $userid, $plan)
 	{
 		global $database;
@@ -54,6 +41,19 @@ class mi_communitybuilder
 		if( $params['approve'] ) {
 			$query = 'UPDATE #__comprofiler'
 			.' SET approved = \'1\''
+			.' WHERE user_id = \'' . (int) $userid . '\'';
+			$database->setQuery( $query );
+			$database->query() or die( $database->stderr() );
+		}
+	}
+
+	function expiration_action($params, $userid, $plan)
+	{
+		global $database;
+
+		if( $params['unapprove_exp'] ) {
+			$query = 'UPDATE #__comprofiler'
+			.' SET approved = \'0\''
 			.' WHERE user_id = \'' . (int) $userid . '\'';
 			$database->setQuery( $query );
 			$database->query() or die( $database->stderr() );
