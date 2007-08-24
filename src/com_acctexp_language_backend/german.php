@@ -633,6 +633,8 @@ define( '_CFG_GENERAL_ENABLE_COUPONS_NAME',				'Gutscheine Aktiviert:' );
 define( '_CFG_GENERAL_ENABLE_COUPONS_DESC',				'Sollen Gutscheine akzeptiert werden' );
 define( '_CFG_GENERAL_DISPLAYCCINFO_NAME',				'Zeige Kreditkartenicons:' );
 define( '_CFG_GENERAL_DISPLAYCCINFO_DESC',				'Sollen die Icons f&uuml;r jedes Gateway angezeigt werden' );
+define( '_CFG_GENERAL_ADMINACCESS_NAME', 'Administrator Zugriff:');
+define( '_CFG_GENERAL_ADMINACCESS_DESC', 'Hiermit d&uuml;rfen nicht nur Super Administratoren, sondern auch normale Administratoren auf das AEC Backend zugreifen.');
 
 // Global Micro Integration Settings
 define( '_CFG_TAB_MICROINTEGRATION_TITLE',				'MicroIntegration' );

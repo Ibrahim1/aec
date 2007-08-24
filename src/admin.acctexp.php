@@ -30,6 +30,14 @@
 // no direct access
 defined( '_VALID_MOS' ) or die( 'Restricted access' );
 
+if (!$acl->acl_check( 'administration', 'config', 'users', $my->usertype )) {
+	$cfg = new Config_General( $database );
+
+	if ( !(( strcmp( $my->usertype, 'administrator' ) === 0) && $cfg->cfg['adminaccess']) ) {
+		mosRedirect( 'index2.php', _NOT_AUTH );
+	}
+}
+
 require_once( $mainframe->getPath( 'admin_html' ) );
 require_once( $mainframe->getPath( 'class' ) );
 
@@ -453,7 +461,7 @@ switch( strtolower( $task ) ) {
 */
 function remove( $userid, $option, $task )
 {
-	global $database, $my;
+	global $database;
 
 	// $userid contains values corresponding to id field of #__acctexp table
     if ( !is_array( $userid ) || count( $userid ) < 1 ) {
@@ -1640,6 +1648,7 @@ function editSettings( $option )
 	$lists['enable_coupons']		= mosHTML::yesnoSelectList('enable_coupons', '', $cfg->cfg['enable_coupons']);
 	$lists['enable_mimeta']			= mosHTML::yesnoSelectList('enable_mimeta', '', ( !empty( $cfg->cfg['enable_mimeta'] ) ? $cfg->cfg['enable_mimeta'] : '' ) );
 	$lists['displayccinfo']			= mosHTML::yesnoSelectList('displayccinfo', '', $cfg->cfg['displayccinfo']);
+	$lists['adminaccess']			= mosHTML::yesnoSelectList('adminaccess', '', $cfg->cfg['adminaccess']);
 
 	$lists['customtext_confirm_keeporiginal']		= mosHTML::yesnoSelectList('customtext_confirm_keeporiginal', '', $cfg->cfg['customtext_confirm_keeporiginal']);
 	$lists['customtext_checkout_keeporiginal']		= mosHTML::yesnoSelectList('customtext_checkout_keeporiginal', '', $cfg->cfg['customtext_checkout_keeporiginal']);
@@ -1725,6 +1734,7 @@ function editSettings( $option )
 	$tab_data[0][] = array( 'inputA', _CFG_TAB1_OPT18NAME, _CFG_TAB1_OPT18DESC, $cfg->cfg['heartbeat_cycle'], 'heartbeat_cycle');
 	$tab_data[0][] = array( 'inputA', _CFG_GENERAL_HEARTBEAT_CYCLE_BACKEND_NAME, _CFG_GENERAL_HEARTBEAT_CYCLE_BACKEND_DESC, $cfg->cfg['heartbeat_cycle_backend'], 'heartbeat_cycle_backend');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_ENABLE_COUPONS_NAME, _CFG_GENERAL_ENABLE_COUPONS_DESC, '0', 'enable_coupons');
+	$tab_data[0][] = array( 'list', _CFG_GENERAL_ADMINACCESS_NAME, _CFG_GENERAL_ADMINACCESS_DESC, '0', 'adminaccess');
 
 	$tab_data[1] = array();
 	$tab_data[1][] = _CFG_TAB_CUSTOMIZATION_TITLE;
@@ -1963,10 +1973,6 @@ function cancelSettings( $option )
 function saveSettings( $option )
 {
 	global $database, $mainframe, $my, $acl;
-
-	if ( !$acl->acl_check( 'administration', 'manage', 'users', $my->usertype, 'components', 'com_users' ) ) {
-		mosRedirect( 'index2.php', _NOT_AUTH );
-	}
 
 	$pplist_enabled		= mosGetParam( $_POST,'gwlist_enabled', '' );
 	$pplist_installed	= PaymentProcessorHandler::getInstalledNameList();

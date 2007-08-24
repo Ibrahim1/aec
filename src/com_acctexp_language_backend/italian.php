@@ -635,6 +635,8 @@ define( '_CFG_GENERAL_ENABLE_COUPONS_NAME', 'Enable Coupons:');
 define( '_CFG_GENERAL_ENABLE_COUPONS_DESC', 'Enable the usage of coupons for your subscriptions.');
 define( '_CFG_GENERAL_DISPLAYCCINFO_NAME', 'Enable CC Display:');
 define( '_CFG_GENERAL_DISPLAYCCINFO_DESC', 'Enable the display of CreditCard icons for each payment processor.');
+define( '_CFG_GENERAL_ADMINACCESS_NAME', 'Administrator Access:');
+define( '_CFG_GENERAL_ADMINACCESS_DESC', 'Grant Access to the AEC not only to Super Administrators, but regular Administrators as well.');
 
 // Global Micro Integration Settings
 define( '_CFG_TAB_MICROINTEGRATION_TITLE', 'MicroIntegr');

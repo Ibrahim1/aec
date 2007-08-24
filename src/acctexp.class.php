@@ -1563,6 +1563,8 @@ class Config_General extends paramDBTable
 		$settings_defaults['customtext_pending']				= '';
 		$settings_defaults['customtext_expired']				= '';
 		$settings_defaults['transferinfo']						= '';
+		// new 0.12.4.1
+		$settings_defaults['adminaccess']						= 1;
 
 		// Write to Params, do not overwrite existing data
 		$this->addParams( $settings_defaults, 'settings', false );
