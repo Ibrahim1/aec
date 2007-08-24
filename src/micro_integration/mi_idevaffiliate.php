@@ -24,6 +24,7 @@ class mi_idevaffiliate
 	function Settings( $params )
 	{
 		$settings = array();
+		$settings['setupinfo'] = array( 'fieldset' );
 		return $settings;
 	}
 

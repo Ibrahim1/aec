@@ -93,14 +93,9 @@ define( '_AEC_MI_SET11_EMAIL',		'Weitere Infos' );
 
 // iDevAffiliate
 define( '_AEC_MI_NAME_IDEV',		'iDevAffiliate' );
-define( '_AEC_MI_DESC_IDEV',		'Zahlungen mit iDevAffiliate verbinden' );
-define( '_MI_MI_IDEVAFFILIATE_MI_ORDER_ID_NAME',		'Bestell ID' );
-define( '_MI_MI_IDEVAFFILIATE_MI_ORDER_ID_DESC',		'Die Bestellnummer.<br />Automatische Erg&auml;zungen:<br />\'[invoice]\' = Rechnungsnummer<br />\'[planid]\' = BenutzerID' );
-define( '_MI_MI_IDEVAFFILIATE_MI_ORDER_SUBTOTAL_NAME',	'Zwischensumme' );
-define( '_MI_MI_IDEVAFFILIATE_MI_ORDER_SUBTOTAL_DESC',	'Bisherige Summe dieser Bestellung. Das Feld \'[auto]\' angeben um es dem Rechnngsbetrag zu zuweisen' );
-define( '_AEC_MI_DIV1_IDEV',		'Zugriff erfolgt' );
-define( '_AEC_MI_DIV2_IDEV',		'Schluessel ist' );
-define( '_AEC_MI_DIV3_IDEV',		'und Wert =' );
+define( '_AEC_MI_DESC_IDEV',		'Zahlungen mit der iDevAffiliate Komponente verbinden' );
+define( '_MI_MI_IDEVAFFILIATE_SETUPINFO_NAME',		'Important Information' );
+define( '_MI_MI_IDEVAFFILIATE_SETUPINFO_NAME',		'Using the micro integration, you NEED TO make sure you make the settings for "cart integration" in your idev backend as follows:\n\n<ul><li>Use "manual integration"</li><li>As "Order Amount Variable Name: " use "idev_paypal_1" (if not already preset!)</li><li>As "Order Number Variable Name: " use "idev_paypal_2" (if not already preset!)</li></ul>' );
 
 // MosetsTree
 define( '_AEC_MI_NAME_MOSETS',		'MosetsTree' );

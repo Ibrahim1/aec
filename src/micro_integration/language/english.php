@@ -93,14 +93,9 @@ define( '_AEC_MI_SET11_EMAIL',		'Rewriting Info' );
 
 // iDevAffiliate
 define( '_AEC_MI_NAME_IDEV',		'iDevAffiliate' );
-define( '_AEC_MI_DESC_IDEV',		'Connect your sales to iDevAffiliate' );
-define( '_MI_MI_IDEVAFFILIATE_MI_ORDER_ID_NAME',		'Order ID' );
-define( '_MI_MI_IDEVAFFILIATE_MI_ORDER_ID_DESC',		'The order number. <br />Automatic mappings:<br />\'[invoice]\' = invoice number<br />\'[planid]\' = plan id<br />\'[userid]\' = user id' );
-define( '_MI_MI_IDEVAFFILIATE_MI_ORDER_SUBTOTAL_NAME',	'Order Subtotal' );
-define( '_MI_MI_IDEVAFFILIATE_MI_ORDER_SUBTOTAL_DESC',	'The amount spent on this order. Type \'[auto]\' to assign the invoice amount.' );
-define( '_AEC_MI_DIV1_IDEV',		'an access has been made' );
-define( '_AEC_MI_DIV2_IDEV',		'key is' );
-define( '_AEC_MI_DIV3_IDEV',		'and value =' );
+define( '_AEC_MI_DESC_IDEV',		'Connect your sales to the iDevAffiliate Component' );
+define( '_MI_MI_IDEVAFFILIATE_SETUPINFO_NAME',		'Important Information' );
+define( '_MI_MI_IDEVAFFILIATE_SETUPINFO_NAME',		'Using the micro integration, you NEED TO make sure you make the settings for "cart integration" in your idev backend as follows:\n\n<ul><li>Use "manual integration"</li><li>As "Order Amount Variable Name: " use "idev_paypal_1" (if not already preset!)</li><li>As "Order Number Variable Name: " use "idev_paypal_2" (if not already preset!)</li></ul>' );
 
 // MosetsTree
 define( '_AEC_MI_NAME_MOSETS',		'MosetsTree' );
@@ -210,4 +205,5 @@ define( '_AEC_MI_NAME_GOOGLEANALYTICS',		'Google Analytics [beta]' );
 define( '_AEC_MI_DESC_GOOGLEANALYTICS',		'With this, you can attach Google Analytics e-commerce tracking code to the DisplayPipeline. [Experimental - please give feedback to the developers!]' );
 define( '_MI_MI_GOOGLEANALYTICS_ACCOUNT_ID_NAME',		'Google Account ID' );
 define( '_MI_MI_GOOGLEANALYTICS_ACCOUNT_ID_DESC',		'Your Google Account id, it should look like this: UA-xxxx-x' );
+
 ?>
