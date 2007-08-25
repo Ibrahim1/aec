@@ -2175,6 +2175,7 @@ function editSubscriptionPlan( $id, $option )
 
 		$params_values['active']	= 1;
 		$params_values['visible']	= 0;
+		$params_values['processors'] = 0;
 
 		$restrictions_values['gid_enabled']	= 1;
 		$restrictions_values['gid']			= 18;
@@ -2306,8 +2307,8 @@ function editSubscriptionPlan( $id, $option )
 	}
 
 	$selected_gw = array();
-	if ( $params_values["processors"] != 0 ) {
-		$plan_procs = explode(";", $params_values["processors"]);
+	if ( $params_values['processors'] != 0 ) {
+		$plan_procs = explode(";", $params_values['processors']);
 
 		if ( count( $plan_procs ) ) {
 			$query = 'SELECT id AS value, name AS text'
