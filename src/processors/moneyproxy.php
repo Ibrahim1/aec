@@ -60,8 +60,7 @@ class processor_moneyproxy
 		$settings['language']				= array( 'list_language' );
 		$settings['item_name']				= array( 'inputE' );
 
-        $settings['rewriteInfo']			= array( 'fieldset', _AEC_MI_REWRITING_INFO,
-        									AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+        $settings['rewriteInfo']			= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 		return $settings;
 	}
 
@@ -83,7 +82,7 @@ class processor_moneyproxy
 		$var['custom1']					= $int_var['invoice'];
 
 		$var['input_hash']				= md5( implode( ':', $var ) . ':' . $cfg['secret_key'] );
-		
+
 		return $var;
 	}
 

@@ -67,15 +67,12 @@ class processor_authorize
 	function settings()
 	{
 		$settings = array();
-		$settings['login'] = "login";
-		$settings['transaction_key'] = "transaction_key";
-		$settings['testmode'] = 0;
-		$settings['currency'] = "USD";
-		$settings['item_name'] = array("inputE");
- 		$rewriteswitches = array("cms", "user", "expiration", "subscription", "plan");
-        $settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]',
-									'[[user_name]]', '[[user_username]]' );
-		$settings['rewriteInfo']	= array("fieldset", "Rewriting Info", AECToolbox::rewriteEngineInfo($rewriteswitches));
+		$settings['login']				= "login";
+		$settings['transaction_key']	= "transaction_key";
+		$settings['testmode']			= 0;
+		$settings['currency']			= "USD";
+        $settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['rewriteInfo']		= '';
 
 		return $settings;
 	}
@@ -83,10 +80,14 @@ class processor_authorize
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode'] = array("list_yesno");
-		$settings['login'] = array("inputC");
-		$settings['transaction_key'] = array("inputC");
-		$settings['currency'] = array("list_currency");
+		$settings['testmode']			= array("list_yesno");
+		$settings['login'] 				= array("inputC");
+		$settings['transaction_key']	= array("inputC");
+		$settings['currency']			= array("list_currency");
+		$settings['item_name']			= array("inputE");
+ 		$rewriteswitches 				= array("cms", "user", "expiration", "subscription", "plan");
+        $settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['rewriteInfo']		= array("fieldset", "Rewriting Info", AECToolbox::rewriteEngineInfo($rewriteswitches));
 
 		return $settings;
 	}

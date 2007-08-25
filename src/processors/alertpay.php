@@ -64,8 +64,7 @@ class processor_alertpay
 		$settings['merchant']		= 'merchant';
 		$settings['securitycode']	= 'security code';
 		$settings['testmode']		= 0;
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]',
-									'[[user_name]]', '[[user_username]]' );
+		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']	= ''; // added mic
 
 		return $settings;
@@ -79,8 +78,7 @@ class processor_alertpay
 		$settings['securitycode']	= array( 'inputC' );
 		$settings['item_name']		= array( 'inputE' );
  		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
-        $settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO,
-        							AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+        $settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
 		return $settings;
 	}

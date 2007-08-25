@@ -35,8 +35,8 @@ class processor_eway
 		$info['statement']		= _CFG_EWAY_STATEMENT;
 		$info['description']	= _CFG_EWAY_DESCRIPTION;
 		$info['cc_list']		= 'visa,mastercard';
-		$info['recurring']		= 0;		
-        
+		$info['recurring']		= 0;
+
 		return $info;
 	}
 
@@ -44,12 +44,11 @@ class processor_eway
 	{
 		$settings = array();
 		$settings['testmode']		= "1";
-		$settings['custId']			= "87654321";		
+		$settings['custId']			= "87654321";
 		$settings['tax']			= "10";
-		$settings['autoRedirect']	= 1;		
+		$settings['autoRedirect']	= 1;
 		$settings['testAmount']		= "00";
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]',
-									'[[user_name]]', '[[user_username]]' );
+		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']	= ''; // added mic
 
 		return $settings;
@@ -66,8 +65,7 @@ class processor_eway
 		$settings['SiteTitle']		= array( 'inputC' );
 		$settings['item_name']		= array( 'inputE' );
 
-        $settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO,
-        							AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+        $settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
 		return $settings;
 	}
@@ -77,15 +75,15 @@ class processor_eway
 		global $mosConfig_live_site;
 
 		//URL returned by eWay
-		$return_url = AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=ewaynotification");  
+		$return_url = AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=ewaynotification");
 
 		//Genere un identifiant unique pour la transaction
 		$my_trxn_number = uniqid( "eway_" );
-		
+
 		$order_total = $int_var['amount'] * 100;
-		
+
 		$var = array(	"post_url" => "https://www.eWAY.com.au/gateway/payment.asp",
-						"ewayCustomerID" => $cfg['custId'],                                              
+						"ewayCustomerID" => $cfg['custId'],
 						"ewayTotalAmount" => $order_total,
 						"ewayCustomerFirstName" => $metaUser->cmsUser->username,
 						"ewayCustomerLastName" => $metaUser->cmsUser->name,
@@ -95,7 +93,7 @@ class processor_eway
 						"ewayOption2" => $int_var['invoice'], //Send in option2, the invoice number
 						"eWAYTrxnNumber" => $my_trxn_number,
 						"eWAYAutoRedirect" => $cfg['autoRedirect'],
-						"eWAYSiteTitle" => $cfg['SiteTitle'],                                                               
+						"eWAYSiteTitle" => $cfg['SiteTitle'],
 						"eWAYURL" => $return_url
 					);
 

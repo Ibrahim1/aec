@@ -75,8 +75,7 @@ class processor_worldpay
 		$settings['instId']			= _CFG_WORLDPAY_INSTID_FIELD;
 		$settings['testmode'] 		= 0;
 		$settings['currency'] 		= 'USD';
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]',
-									'[[user_name]]', '[[user_username]]' );
+		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']	= ''; // added mic
 
 
