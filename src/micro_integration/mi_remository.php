@@ -77,6 +77,7 @@ class mi_remository
 		$settings['set_group']			= array( 'list_yesno' );
 		$settings['group']				= array( 'list' );
 		$settings['set_group_exp']		= array( 'list_yesno' );
+		$settings['group_exp']				= array( 'list' );
 
 		return $settings;
 	}
@@ -132,22 +133,20 @@ class mi_remository
 			;
 			$database->setQuery( $query );
 
+			$groups = $database->loadResultArray();
+			$groups = is_array( $groups ) ? $groups : array();
+
 			// If already an entry exists -> update, if not -> create
-			if ( $database->loadResult() ) {
-				$query = 'UPDATE #__mbt_group_member'
-				. ' SET group_id = \'' . $params['group_exp'] . '\''
-				. ' WHERE member_id = \'' . $userid . '\''
-				;
-			} else {
+			if ( !in_array( $params['group_exp'], $groups ) ) {
 				$query = 'INSERT INTO #__mbt_group_member'
 				. ' ( `group_id` , `member_id` )'
 				. ' VALUES (\'' . $params['group_exp'] . '\', \'' . $userid . '\')'
 				;
+
+				$database->setQuery( $query );
+				$database->query();
 			}
 
-			// Carry out query
-			$database->setQuery( $query );
-			$database->query();
 		}
 
 		$mi_remositoryhandler = new remository_restriction( $database );
@@ -176,22 +175,19 @@ class mi_remository
 			;
 			$database->setQuery( $query );
 
+			$groups = $database->loadResultArray();
+			$groups = is_array( $groups ) ? $groups : array();
+
 			// If already an entry exists -> update, if not -> create
-			if ( $database->loadResult() ) {
-				$query = 'UPDATE #__mbt_group_member'
-				. ' SET group_id = \'' . $params['group'] . '\''
-				. ' WHERE member_id = \'' . $userid . '\''
-				;
-			} else {
+			if ( !in_array( $params['group'], $groups ) ) {
 				$query = 'INSERT INTO #__mbt_group_member'
 				. ' ( `group_id` , `member_id` )'
 				. ' VALUES (\'' . $params['group'] . '\', \'' . $userid . '\')'
 				;
-			}
 
-			// Carry out query
-			$database->setQuery( $query );
-			$database->query();
+				$database->setQuery( $query );
+				$database->query();
+			}
 		}
 
 		$mi_remositoryhandler = new remository_restriction( $database );

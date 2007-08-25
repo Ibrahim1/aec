@@ -125,16 +125,18 @@ define( '_AEC_MI_SET4_MYSQL',		'Weitere Infos' );
 // reMOSitory
 define( '_AEC_MI_NAME_REMOS',		'reMOSitory' );
 define( '_AEC_MI_DESC_REMOS',		'Anzahl der Dateien welche der Abonnent downloaden kann und welcher reMOSitory-Gruppe er angeh&ouml;rt' );
-define( '_MI_MI_REMOSITORY_ADD_DOWNLOADS_NAME',		'Anzahl der Listings' );
-define( '_MI_MI_REMOSITORY_ADD_DOWNLOADS_DESC',		'Anzahl der maximalen Anzeigen' );
-define( '_MI_MI_REMOSITORY_SET_DOWNLOADS_NAME',		'In Gruppe' );
-define( '_MI_MI_REMOSITORY_SET_DOWNLOADS_DESC',		'Hier "Ja" angeben wenn die reMOSitory-Gruppe verwendet werden soll' );
+define( '_MI_MI_REMOSITORY_ADD_DOWNLOADS_NAME',		'Downloads Addieren' );
+define( '_MI_MI_REMOSITORY_ADD_DOWNLOADS_DESC',		'Anzahl der Downloads die dem Benutzer zus&auml;tzlich gestattet werden sollen' );
+define( '_MI_MI_REMOSITORY_SET_DOWNLOADS_NAME',		'Downloads Setzen' );
+define( '_MI_MI_REMOSITORY_SET_DOWNLOADS_DESC',		'Anzahl der Downloads die dem Benutzer insgesamt gestattet werden sollen - &uuml;berschreibt den bisherigen Wert' );
 define( '_MI_MI_REMOSITORY_SET_GROUP_NAME',			'Gruppe' );
-define( '_MI_MI_REMOSITORY_SET_GROUP_DESC',			'Welche reMOSitory-Gruppe soll verwendet werden' );
-define( '_MI_MI_REMOSITORY_GROUP_NAME',				'Gruppe bei Ablauf' );
-define( '_MI_MI_REMOSITORY_GROUP_DESC',				'Mit "Ja" best&auml;tigen wenn die reMOSitory-Gruppe bei Aboablauf verwendet werden soll' );
-define( '_MI_MI_REMOSITORY_SET_GROUP_EXP_NAME',		'Gruppe' );
+define( '_MI_MI_REMOSITORY_SET_GROUP_DESC',			'Mit "Ja" best&auml;tigen wenn die reMOSitory-Gruppe bei Aboablauf verwendet werden soll' );
+define( '_MI_MI_REMOSITORY_GROUP_NAME',				'Gruppe' );
+define( '_MI_MI_REMOSITORY_GROUP_DESC',				'Welche reMOSitory-Gruppe soll verwendet werden?' );
+define( '_MI_MI_REMOSITORY_SET_GROUP_EXP_NAME',		'Gruppe bei Ablauf' );
 define( '_MI_MI_REMOSITORY_SET_GROUP_EXP_DESC',		'Hier die reMOSitory-Gruppe definieren welche nach Aboablauf f&uuml;r die Benutzer gelten soll' );
+define( '_MI_MI_REMOSITORY_GROUP_EXP_NAME',			'Expiration group' );
+define( '_MI_MI_REMOSITORY_GROUP_EXP_DESC',			'Mit "Ja" best&auml;tigen wenn die reMOSitory-Gruppe bei Aboablauf verwendet werden soll' );
 define( '_AEC_MI_HACK1_REMOS',		'Kein Guthaben' );
 define( '_AEC_MI_HACK2_REMOS',		'Bildet eine Downloadeinschr&auml;nkung f&uuml;reMOSitory' );
 

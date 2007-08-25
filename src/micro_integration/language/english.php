@@ -125,16 +125,18 @@ define( '_AEC_MI_SET4_MYSQL',		'Rewriting Info' );
 // reMOSitory
 define( '_AEC_MI_NAME_REMOS',		'reMOSitory' );
 define( '_AEC_MI_DESC_REMOS',		'Choose the amount of files a user can download and what reMOSitory group should be assigned to the user account' );
-define( '_MI_MI_REMOSITORY_ADD_DOWNLOADS_NAME',		'Amount of listings' );
-define( '_MI_MI_REMOSITORY_ADD_DOWNLOADS_DESC',		'Input the amount of listings you want as a overwriting set for this call' );
-define( '_MI_MI_REMOSITORY_SET_DOWNLOADS_NAME',		'Set group' );
-define( '_MI_MI_REMOSITORY_SET_DOWNLOADS_DESC',		'Choose Yes if you want this MI to set the Shopper Group when it is called.' );
-define( '_MI_MI_REMOSITORY_SET_GROUP_NAME',			'Group' );
-define( '_MI_MI_REMOSITORY_SET_GROUP_DESC',			'The ReMOSitory group that you want the user to be in.' );
-define( '_MI_MI_REMOSITORY_GROUP_NAME',				'Set group Expiration' );
-define( '_MI_MI_REMOSITORY_GROUP_DESC',				'Choose Yes if you want this MI to set the ReMOSitory Group when the calling payment plan expires' );
-define( '_MI_MI_REMOSITORY_SET_GROUP_EXP_NAME',		'Expiration group' );
-define( '_MI_MI_REMOSITORY_SET_GROUP_EXP_DESC',		'The ReMOSitory group that you want the user to be in when the subscription runs out.' );
+define( '_MI_MI_REMOSITORY_ADD_DOWNLOADS_NAME',		'Add listings' );
+define( '_MI_MI_REMOSITORY_ADD_DOWNLOADS_DESC',		'Input the amount of listings you want added to the users account for this call' );
+define( '_MI_MI_REMOSITORY_SET_DOWNLOADS_NAME',		'Set listings' );
+define( '_MI_MI_REMOSITORY_SET_DOWNLOADS_DESC',		'Input the amount of listings you want as a overwriting set for this call' );
+define( '_MI_MI_REMOSITORY_SET_GROUP_NAME',			'Set group' );
+define( '_MI_MI_REMOSITORY_SET_GROUP_DESC',			'Choose Yes if you want this MI to set the ReMOSitory Group when the calling payment plan expires' );
+define( '_MI_MI_REMOSITORY_GROUP_NAME',				'Group' );
+define( '_MI_MI_REMOSITORY_GROUP_DESC',				'The ReMOSitory group that you want the user to be in.' );
+define( '_MI_MI_REMOSITORY_SET_GROUP_EXP_NAME',		'Set group Expiration' );
+define( '_MI_MI_REMOSITORY_SET_GROUP_EXP_DESC',		'Choose Yes if you want this MI to set the ReMOSitory Group when the calling payment plan expires' );
+define( '_MI_MI_REMOSITORY_GROUP_EXP_NAME',			'Expiration group' );
+define( '_MI_MI_REMOSITORY_GROUP_EXP_DESC',			'The ReMOSitory group that you want the user to be in when the subscription runs out.' );
 define( '_AEC_MI_HACK1_REMOS',		'No Credits' );
 define( '_AEC_MI_HACK2_REMOS',		'Build in a downloads restriction for reMOSitory, to be used with Micro Integrations.' );
 
