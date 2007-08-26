@@ -1726,7 +1726,7 @@ class SubscriptionPlan extends paramDBTable
 			if ( ( $params['trial_period'] > 0 ) && !$is_trial ) {
 				$value		= $params['trial_period'];
 				$perunit	= $params['trial_periodunit'];
-				$lifetime	= 0; // We are entering the trial period. The lifetime will come at the renew.
+				$params['lifetime']	= 0; // We are entering the trial period. The lifetime will come at the renew.
 			} else {
 				$value		= $params['full_period'];
 				$perunit	= $params['full_periodunit'];
@@ -1972,9 +1972,7 @@ class SubscriptionPlan extends paramDBTable
 		$epg1		= explode( ';', $thisparams['equalplans'] );
 		$epg2		= explode( ';', $planparams['equalplans'] );
 
-		if ( ( !count( $spg1 ) || !count( $spg2 ) ) && ( !count( $epg1 ) || !count( $epg2 ) ) ) {
-			return false;
-		} elseif ( in_array( $this->id, $epg2 ) || in_array( $plan->id, $epg1 ) ) {
+		if ( in_array( $this->id, $epg2 ) || in_array( $plan->id, $epg1 ) ) {
 			return 2;
 		} elseif ( in_array( $this->id, $spg2 ) || in_array( $plan->id, $spg1 ) ) {
 			return 1;
