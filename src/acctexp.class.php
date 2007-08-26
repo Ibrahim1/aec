@@ -1713,18 +1713,17 @@ class SubscriptionPlan extends paramDBTable
 
 		$is_pending		= ( strcmp($metaUser->objSubscription->status, 'Pending' ) === 0 );
 		$is_trial		= ( strcmp($metaUser->objSubscription->status, 'Trial' ) === 0 );
-		$is_free		= ( strcmp(strtolower($metaUser->objSubscription->type), 'free' ) === 0 );
 		$lifetime		= $metaUser->objSubscription->lifetime;
 
 		$params			= $this->getParams();
 
-		if ( !$comparison['comparison'] && ( $this->id !== $metaUser->objSubscription->plan ) ) {
+		if ( !$comparison['comparison'] ) {
 			$metaUser->objSubscription->expire(1);
 		}
 
-		if ( $comparison['total_comparison'] === false || is_null($comparison['total_comparison']) || $is_pending ) {
+		if ( $comparison['total_comparison'] === false || $is_pending ) {
 			// If user is using global trial period he still can use the trial period of a plan
-			if ( $params['trial_period'] > 0 && !$is_trial ) {
+			if ( ( $params['trial_period'] > 0 ) && !$is_trial ) {
 				$value		= $params['trial_period'];
 				$perunit	= $params['trial_periodunit'];
 				$lifetime	= 0; // We are entering the trial period. The lifetime will come at the renew.
@@ -1768,7 +1767,11 @@ class SubscriptionPlan extends paramDBTable
 				$status = 'Trial';
 			} else {
 				if ( $params['full_period'] || $params['lifetime'] ) {
-					$status = 'Active';
+					if ( isset( $params['make_active'] ) ) {
+						$status = $params['make_active'] ? 'Active' : 'Pending';
+					} else {
+						$status = 'Active';
+					}
 				} else {
 					// This should not happen
 					$status = 'Pending';
@@ -1776,7 +1779,11 @@ class SubscriptionPlan extends paramDBTable
 			}
 		} else {
 			// Renew subscription - Do NOT set signup_date
-			$status = 'Active';
+			if ( isset( $params['make_active'] ) ) {
+				$status = $params['make_active'] ? 'Active' : 'Pending';
+			} else {
+				$status = 'Active';
+			}
 			$renew = 1;
 		}
 
@@ -1942,13 +1949,13 @@ class SubscriptionPlan extends paramDBTable
 				$return['total_comparison'] = $plans_comparison;
 			}
 
-			$used_subscription = new SubscriptionPlan( $database );
-			$used_subscription->load( $user_subscription->plan );
+			$last_subscription = new SubscriptionPlan( $database );
+			$last_subscription->load( $user_subscription->plan );
 
-			if ( $this->id === $used_subscription->id ) {
+			if ( $this->id === $last_subscription->id ) {
 				$return['comparison'] = 2;
 			} else {
-				$return['comparison'] = $this->compareToPlan($used_subscription);
+				$return['comparison'] = $this->compareToPlan( $last_subscription );
 			}
 		}
 		return $return;

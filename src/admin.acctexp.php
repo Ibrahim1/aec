@@ -2228,6 +2228,7 @@ function editSubscriptionPlan( $id, $option )
 	$params['lifetime']					= array("list_yesno", 0);
 	$params['processors']				= array("list", "");
 	$params['fallback']					= array("list", "");
+	$params['make_active']				= array("list_yesno", 1);
 
 	$params['similarplans']				= array("list", "");
 	$params['equalplans']				= array("list", "");
@@ -2389,7 +2390,7 @@ function editSubscriptionPlan( $id, $option )
  	} else {
  		$all_plans	= $available_plans;
  	}
-	$total_all_plans	= min( max( (count( $all_plans ) + 1 ), 4 ), 20 );
+	$total_all_plans	= min( max( ( count( $all_plans ) + 1 ), 4 ), 20 );
 
 	$lists['previousplan_req']	= mosHTML::selectList($all_plans, 'previousplan_req', 'size="' . $total_all_plans . '"', 											'value', 'text', arrayValueDefault($restrictions_values, 'previousplan_req', 0));
 	$lists['currentplan_req']	= mosHTML::selectList($all_plans, 'currentplan_req', 'size="' . $total_all_plans . '"',
