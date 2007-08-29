@@ -280,11 +280,6 @@ function com_install()
 		$queri[] = "ALTER TABLE #__acctexp_config DROP `business`";
 		$queri[] = "ALTER TABLE #__acctexp_config DROP `testmode`";
 
-		// Updating _config, adding alertlevel1, alertlevel2, alertlevel3
-		$queri[] = "ALTER TABLE #__acctexp_config ADD `alertlevel1` int(6) default '7'";
-		$queri[] = "ALTER TABLE #__acctexp_config ADD `alertlevel2` int(6) default '14'";
-		$queri[] = "ALTER TABLE #__acctexp_config ADD `alertlevel3` int(6) default '21'";
-
 		foreach ( $queri AS $query ) {
 			$database->setQuery( $query );
 		    if ( !$database->query() ) {
@@ -292,61 +287,61 @@ function com_install()
 		    }
 		}
 
-		$queri = null;
-
-		// Copy id -> id || active -> active || ordering -> ordering || name -> name || desc -> desc
 		// a1 -> amount1 || p1 -> period1 || t1 -> perunit1
 		// a2 -> amount2 || p2 -> period2 || t2 -> perunit2
 		// a3 -> amount3 || p3 -> period3 || t3 -> perunit3
-		// gid -> gid
 
-		// Drop new table __acctexp_plans. We going to recreate it from old __acctexp_payplans
-		$queri[] = "DROP TABLE  #__acctexp_plans";
-		// Rename __acctexp_payplans to __acctexp_plans... Magic!!
-		$queri[] = "ALTER TABLE #__acctexp_payplans RENAME TO #__acctexp_plans";
-		// Get rid of old stuff.
-		$queri[] = "ALTER TABLE #__acctexp_plans DROP `button`";
-		$queri[] = "ALTER TABLE #__acctexp_plans DROP `button_custom`";
-		$queri[] = "ALTER TABLE #__acctexp_plans DROP `src`";
-		$queri[] = "ALTER TABLE #__acctexp_plans DROP `sra`";
-		$queri[] = "ALTER TABLE #__acctexp_plans DROP `srt`";
-		$queri[] = "ALTER TABLE #__acctexp_plans DROP `invoice`";
-		$queri[] = "ALTER TABLE #__acctexp_plans DROP `tax`";
-		$queri[] = "ALTER TABLE #__acctexp_plans DROP `currency_code`";
-		$queri[] = "ALTER TABLE #__acctexp_plans DROP `modify`";
-		$queri[] = "ALTER TABLE #__acctexp_plans DROP `lc`";
-		$queri[] = "ALTER TABLE #__acctexp_plans DROP `page_style`";
-		// And rename fields that shoudl remain, but with generic names.
-		$queri[] = "ALTER TABLE #__acctexp_plans CHANGE `a1` `amount1` varchar(40) NULL";
-		$queri[] = "ALTER TABLE #__acctexp_plans CHANGE `a2` `amount2` varchar(40) NULL";
-		$queri[] = "ALTER TABLE #__acctexp_plans CHANGE `a3` `amount3` varchar(40) NULL";
-		$queri[] = "ALTER TABLE #__acctexp_plans CHANGE `p1` `period1` varchar(40) NULL";
-		$queri[] = "ALTER TABLE #__acctexp_plans CHANGE `p2` `period2` varchar(40) NULL";
-		$queri[] = "ALTER TABLE #__acctexp_plans CHANGE `p3` `period3` varchar(40) NULL";
-		$queri[] = "ALTER TABLE #__acctexp_plans CHANGE `t1` `perunit1` varchar(40) NULL";
-		$queri[] = "ALTER TABLE #__acctexp_plans CHANGE `t2` `perunit2` varchar(40) NULL";
-		$queri[] = "ALTER TABLE #__acctexp_plans CHANGE `t3` `perunit3` varchar(40) NULL";
-		// Drop new table __acctexp_log_paypal. We going to recreate it from old __acctexp_paylog
-		$queri[] = "DROP TABLE  #__acctexp_log_paypal";
-		// Rename __acctexp_paylog to __acctexp_log_paypal...
-		$queri[] = "ALTER TABLE #__acctexp_paylog RENAME TO #__acctexp_log_paypal";
+		if ( in_array( $mosConfig_dbprefix . '_acctexp_payplans', $tables ) ) {
+			$queri = null;
+			// Drop new table __acctexp_plans. We going to recreate it from old __acctexp_payplans
+			$queri[] = "DROP TABLE  #__acctexp_plans";
+			// Rename __acctexp_payplans to __acctexp_plans... Magic!!
+			$queri[] = "ALTER TABLE #__acctexp_payplans RENAME TO #__acctexp_plans";
+			// Get rid of old stuff.
+			$queri[] = "ALTER TABLE #__acctexp_plans DROP `button`";
+			$queri[] = "ALTER TABLE #__acctexp_plans DROP `button_custom`";
+			$queri[] = "ALTER TABLE #__acctexp_plans DROP `src`";
+			$queri[] = "ALTER TABLE #__acctexp_plans DROP `sra`";
+			$queri[] = "ALTER TABLE #__acctexp_plans DROP `srt`";
+			$queri[] = "ALTER TABLE #__acctexp_plans DROP `invoice`";
+			$queri[] = "ALTER TABLE #__acctexp_plans DROP `tax`";
+			$queri[] = "ALTER TABLE #__acctexp_plans DROP `currency_code`";
+			$queri[] = "ALTER TABLE #__acctexp_plans DROP `modify`";
+			$queri[] = "ALTER TABLE #__acctexp_plans DROP `lc`";
+			$queri[] = "ALTER TABLE #__acctexp_plans DROP `page_style`";
+			// And rename fields that shoudl remain, but with generic names.
+			$queri[] = "ALTER TABLE #__acctexp_plans CHANGE `a1` `amount1` varchar(40) NULL";
+			$queri[] = "ALTER TABLE #__acctexp_plans CHANGE `a2` `amount2` varchar(40) NULL";
+			$queri[] = "ALTER TABLE #__acctexp_plans CHANGE `a3` `amount3` varchar(40) NULL";
+			$queri[] = "ALTER TABLE #__acctexp_plans CHANGE `p1` `period1` varchar(40) NULL";
+			$queri[] = "ALTER TABLE #__acctexp_plans CHANGE `p2` `period2` varchar(40) NULL";
+			$queri[] = "ALTER TABLE #__acctexp_plans CHANGE `p3` `period3` varchar(40) NULL";
+			$queri[] = "ALTER TABLE #__acctexp_plans CHANGE `t1` `perunit1` varchar(40) NULL";
+			$queri[] = "ALTER TABLE #__acctexp_plans CHANGE `t2` `perunit2` varchar(40) NULL";
+			$queri[] = "ALTER TABLE #__acctexp_plans CHANGE `t3` `perunit3` varchar(40) NULL";
+			// Drop new table __acctexp_log_paypal. We going to recreate it from old __acctexp_paylog
+			$queri[] = "DROP TABLE  #__acctexp_log_paypal";
+			// Rename __acctexp_paylog to __acctexp_log_paypal...
+			$queri[] = "ALTER TABLE #__acctexp_paylog RENAME TO #__acctexp_log_paypal";
 
-		foreach ( $queri AS $query ) {
-			$database->setQuery( $query );
-		    if ( !$database->query() ) {
-		        $errors[] = array( $database->getErrorMsg(), $query );
-		    }
-		}
-
-		// Associate all those old plans with PayPal processors.
-		$database->setQuery("SELECT id FROM  #__acctexp_plans");
-		$rows = $database->loadObjectList();
-		for ($i=0, $n=count( $rows ); $i < $n; $i++) {
-			$row = &$rows[$i];
-			$database->setQuery("INSERT INTO `#__acctexp_processors_plans` VALUES ($row->id, '1')");
-			if ( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
+			foreach ( $queri as $query ) {
+				$database->setQuery( $query );
+			    if ( !$database->query() ) {
+			        $errors[] = array( $database->getErrorMsg(), $query );
+			    }
 			}
+
+			// Associate all those old plans with PayPal processors.
+			$database->setQuery("SELECT id FROM  #__acctexp_plans");
+			$rows = $database->loadObjectList();
+			for ($i=0, $n=count( $rows ); $i < $n; $i++) {
+				$row = &$rows[$i];
+				$database->setQuery("INSERT INTO `#__acctexp_processors_plans` VALUES ($row->id, '1')");
+				if ( !$database->query() ) {
+			    	$errors[] = array( $database->getErrorMsg(), $query );
+				}
+			}
+
 		}
 
 		// Configure extra01 field indicating recurring subscriptions...
@@ -367,7 +362,7 @@ function com_install()
 	$queri[] = "DROP TABLE IF EXISTS #__acctexp_log_authorize";
 	$queri[] = "DROP TABLE IF EXISTS #__acctexp_log_vklix";
 
-	foreach ( $queri AS $query ) {
+	foreach ( $queri as $query ) {
 		$database->setQuery( $query );
 	    if ( !$database->query() ) {
 	        $errors[] = array( $database->getErrorMsg(), $query );
@@ -701,7 +696,7 @@ function com_install()
 		$queri[] = "ALTER TABLE #__acctexp_subscr DROP `extra03`";
 		$queri[] = "ALTER TABLE #__acctexp_subscr DROP `extra04`";
 
-		foreach ( $queri AS $query ) {
+		foreach ( $queri as $query ) {
 			$database->setQuery( $query );
 		    if ( !$database->query() ) {
 		        $errors[] = array( $database->getErrorMsg(), $query );
@@ -852,7 +847,7 @@ function com_install()
 		$queri[] = "DROP TABLE IF EXISTS #__acctexp_config_worldpay";
 		$queri[] = "DROP TABLE IF EXISTS #__acctexp_config_alertpay";
 
-		foreach ( $queri AS $query ) {
+		foreach ( $queri as $query ) {
 			$database->setQuery( $query );
 		    if ( !$database->query() ) {
 		        $errors[] = array( $database->getErrorMsg(), $query );
@@ -1218,24 +1213,6 @@ function com_install()
 	if ( !class_exists( 'Archive_Tar' ) ) {
 		require_once( $mosConfig_absolute_path . '/includes/Archive/Tar.php' );
 	}
-
-	// Code borrowed from VirtueMart
-	// Workaround for Window$
-	/*
-	if ( strstr( $mosConfig_absolute_path , ':' ) ) {
-	 	$path_begin = substr( $mosConfig_absolute_path, strpos( $mosConfig_absolute_path , ':' ) + 1, strlen($mosConfig_absolute_path ) );
-	 	$mosConfig_absolute_path = str_replace( "//", "/", $path_begin );
-	}
-	*/
-
-	// Now let's re-declare the paths for Window$
-	// mic: needed ???
-	/*
-	$frontend_dir	= $mosConfig_absolute_path . '/components/com_acctexp/';
-	$frontend_file	= $mosConfig_absolute_path . '/components/com_acctexp/frontend_files.tar.gz';
-	$admin_dir		= $mosConfig_absolute_path . '/administrator/components/com_acctexp/';
-	$admin_file		= $mosConfig_absolute_path . '/administrator/components/com_acctexp/admin_files.tar.gz';
-	*/
 
 	// dirs
 	$dir0			= $mosConfig_absolute_path . '/administrator/components/com_acctexp/';	// admin
