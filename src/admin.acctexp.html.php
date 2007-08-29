@@ -1017,25 +1017,21 @@ class HTML_AcctExp
 							} ?>
 							<?php echo $content['desc']; ?>
 						</p>
-						<div class="explainblock">
-							<p>
-								<strong><?php echo _AEC_HACKS_FILE; ?>:&nbsp;<?php echo $content['filename']; ?></strong>
-							</p>
-						<?php
-						if ( ( strcmp( $content['type'], 'file' ) === 0 ) && !$content['status'] ) {
-							if ( !isset( $content['legacy'] ) ) { ?>
-								<p><?php echo _AEC_HACKS_LOOKS_FOR; ?>:</p>
-								<pre><?php print htmlentities( $content['read'] ); ?></pre>
-								<p><?php echo _AEC_HACKS_REPLACE_WITH; ?>:</p>
-								<pre><?php print htmlentities( $content['insert'] ); ?></pre>
-								<?php
-							}
-						} ?>
-						</div>
-						<?php
-						if ( $content['done'] ) { ?>
+						<?php if ( isset( $content['filename'] ) ) { ?>
 							<div class="explainblock">
-								<p><?php echo $content['done']; ?></p>
+								<p>
+									<strong><?php echo _AEC_HACKS_FILE; ?>:&nbsp;<?php echo $content['filename']; ?></strong>
+								</p>
+							<?php
+							if ( ( strcmp( $content['type'], 'file' ) === 0 ) && !$content['status'] ) {
+								if ( !isset( $content['legacy'] ) ) { ?>
+									<p><?php echo _AEC_HACKS_LOOKS_FOR; ?>:</p>
+									<pre><?php print htmlentities( $content['read'] ); ?></pre>
+									<p><?php echo _AEC_HACKS_REPLACE_WITH; ?>:</p>
+									<pre><?php print htmlentities( $content['insert'] ); ?></pre>
+									<?php
+								}
+							} ?>
 							</div>
 							<?php
 						} ?>
