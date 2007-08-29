@@ -548,14 +548,13 @@ function help( $option )
 	foreach ( $hacks as $hack_name => $hack_content ) {
 		$diagnostic['hack_' . $hack_name] = ( !empty( $hack_content['status'] ) && $hack_content['status'] > 0 ) ? 1 : 0;
 
-		$diagnostic['hacks_legacy'] = 0;
-		if ( !empty( $hack_content['legacy'] ) && ( $hack_content['status'] > 0 ) ) {
+		if ( !empty( $hack_content['legacy'] ) && ( $hack_content['status'] != 0 ) ) {
 			$diagnostic['hacks_legacy'] = 1;
 		}
 		if ( isset( $hack_content['fileinfo']['gecos'] ) ) {
 			$diagnostic['hack_' . $hack_name . '_permission'] = ( strpos( $hack_content['fileinfo']['gecos'], 'apache' ) ) ? 1 : 0;
 			if ( !$diagnostic['hack_' . $hack_name] ) {
-				if ( !$diagnostic['hack_' . $hack_name . '_permission'] ) {
+				if ( !$diagnostic['hack_' . $hack_name . '_permission'] && ( $hack_content['status'] == 0 ) ) {
 					$diagnostic['permission_problem']++;
 				}
 			}
@@ -670,7 +669,7 @@ function help( $option )
 				);
 				$diagnose[]	= array(
 					_AEC_HELP_SER_SW_DIAG3,
-					!$diagnostic['hacks_legacy'],
+					$diagnostic['hacks_legacy'],
 					3,
 					_AEC_HELP_SER_SW_DIAG3_DESC,
 					_AEC_HELP_SER_SW_DIAG3_DESC2,
@@ -4088,7 +4087,6 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 
 		// mic: initialize var and set to 0
 		$hacks[$name]['status'] = 0;
-		$hacks[$name]['done']	= '';
 
 		if ( $hack['type'] ) {
 			switch( $hack['type'] ) {
@@ -4100,7 +4098,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 						fclose( $originalFileHandle );
 
 						if ( strpos( $oldData, 'AEC HACK START' ) || strpos( $oldData, 'AEC CHANGE START' )) {
-							$hacks[$name]['status'] = 1;
+							$hacks[$name]['status'] = 'legacy';
 						} else {
 							if ( ( strpos( $oldData, 'AEC HACK ' . $name . ' START' ) > 0 ) || ( strpos( $oldData, 'AEC CHANGE ' . $name . ' START' ) > 0 )) {
 								$hacks[$name]['status'] = 1;
@@ -4144,22 +4142,17 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 
 					if ( !$undohack ) { // hack
 						$newData			= str_replace( $hacks[$filename]['read'], $hacks[$filename]['insert'], $oldData );
-						$hacks[$filename]['done'] = 'Changes successfully commited';
 
 					    //make a backup
 					    if ( !backupFile( $hacks[$filename]['filename'], $hacks[$filename]['filename'] . '.aec-backup' ) ) {
 							// Echo error message
-
-					    } else {
-					    	$hacks[$filename]['done'] .= '<br />Backup successfully created';
 					    }
 
 					} else { // undo hack
-						if ( ( strcmp( $hacks[$filename]['status'], 'legacy' ) === 0 ) && !$hacks[$filename]['legacy'] ) {
-							$newData = preg_replace( "/(\/\/ AEC HACK START\n)((.*\n))*?(\/\/ AEC HACK END\n)/", $hacks[$filename]['read'], $oldData );
-							$newData = preg_replace( "/(\/\/ AEC CHANGE START\n)((.*\n))*?(\/\/ AEC CHANGE END\n)/", $hacks[$filename]['read'], $oldData );
+						if ( strcmp( $hacks[$filename]['status'], 'legacy' ) === 0 ) {
+							$newData = preg_replace( '/\/\/ AEC (HACK|CHANGE) START\\n.*\/\/ AEC (HACK|CHANGE) END\\n', $hacks[$filename]['read'], $oldData );
 						} else {
-							$newData = str_replace( $hacks[$filename]['insert'], $hacks[$filename]['read'], $oldData );
+							$newData = preg_replace( '/\/\/ AEC (HACK|CHANGE) ' . $name . ' START\\n.*\/\/ AEC (HACK|CHANGE) ' . $name . ' END\\n/', $hacks[$filename]['read'], $oldData );
 						}
 					}
 
