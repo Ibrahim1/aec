@@ -114,7 +114,7 @@ class paramDBTable extends mosDBTable
 		$params = $this->getParams( $field );
 		foreach ( $array as $key => $value ) {
 			if ( isset( $params[$key] ) ) {
-				if( $value !== $params[$key] ) {
+				if( !( ( $value === $params[$key] ) || ( addslashes( $value ) === $params[$key] ) ) ) {
 					$diff[$key] = array( $params[$key], $value );
 				}
 			}
@@ -135,11 +135,11 @@ class languageFile
 	{
 		$this->filepath = $filepath;
 	}
-	
+
 	function getConstantsArray()
 	{
 		$file = fopen( $this->filepath, "r" );
-	
+
 		$array = array();
 		while ( !feof( $file ) ) {
 			$buffer = fgets($file, 4096);
@@ -153,11 +153,11 @@ class languageFile
 
 		return $array;
 	}
-	
+
 	function getHTML()
 	{
 		$file = fopen( $this->filepath, "r" );
-	
+
 		$array = array();
 		while ( !feof( $file ) ) {
 			$buffer = fgets($file, 4096);

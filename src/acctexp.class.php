@@ -2929,8 +2929,8 @@ class InvoiceFactory
 		|| ( strcmp( strtolower( $this->processor ), 'free' ) === 0 ) ) {
 			$params = $this->objUsage->getParams();
 
-		 	if ( $params['full_free'] || ($params['trial_free']
-		 	&& ( strcmp( $this->objInvoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) ) ) {
+		 	if ( $params['full_free'] || ( $params['trial_free'] &&
+		 	( strcmp( $this->objInvoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) ) ) {
 				$this->objInvoice->pay();
 				thanks ( $option, $this->renew, 1 );
 				return;
@@ -5570,7 +5570,7 @@ class coupon extends paramDBTable
 
 		foreach ( $post as $varname => $content ) {
 			if ( is_array( $content ) ) {
-				$restrictions[$varname] = implode( ',', $content );
+				$restrictions[$varname] = implode( ';', $content );
 			} else {
 				$restrictions[$varname] = $content;
 			}
