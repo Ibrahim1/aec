@@ -1579,22 +1579,8 @@ class Config_General extends paramDBTable
 			$this->load(1);
 		}
 
-		$settings = array();
-		foreach ($this->cfg as $key => $value ) {
-			if ( !is_null( $key ) ) {
-				// mic: added trim additional slash.check
-				$value = trim( $value );
-				if ( !get_magic_quotes_gpc() ) {
-					$value = addslashes( $value );
-				}
-				// mic: fix for NOT including JCE-settings into aec.database
-				if ( substr( $key, 0, 4 ) != 'mce_' && substr( $value, 0, 4 ) != 'mce_') {
-					$settings[] = $key . '=' . $value;
-				}
-			}
-		}
+		$this->setParams( $this->cfg, 'settings' );
 
-		$this->settings = implode( "\n", $settings );
 		$this->check();
 		$this->store();
 	}

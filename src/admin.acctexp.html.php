@@ -1120,12 +1120,16 @@ class HTML_AcctExp
 
 		HTML_myCommon::addBackendCSS();
 		mosCommonHTML::loadOverlib(); ?>
-		<script type="text/javascript">
+		<script language="javascript" type="text/javascript">
 		    /* <![CDATA[ */
 			function submitbutton(pressbutton) {
-				<?php foreach ($editors as $editor) {
-					getEditorContents( $editor, $editor ); ?>
-				<?php } ?>
+				<?php
+				$k = 1;
+				foreach ($editors as $editor) {
+					getEditorContents( 'editor' . $k, $editor );
+					$k++;
+				}
+				?>
 				submitform( pressbutton );
 			}
 			/* ]]> */
