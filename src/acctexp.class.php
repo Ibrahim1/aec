@@ -1627,6 +1627,14 @@ class Config_General extends paramDBTable
 		$database->query();
 		$max = $database->loadResult();
 
+		$query = 'DELETE'
+		. ' FROM #__acctexp_config'
+		. ' WHERE id != \'1\''
+		. ' AND id != \'' . $max . '\''
+		;
+		$database->setQuery( $query );
+		$database->query();
+
 		if ( !( $max == 1 ) ) {
 			$query = 'UPDATE #__acctexp_config'
 			. ' SET id = \'1\''
@@ -1635,13 +1643,6 @@ class Config_General extends paramDBTable
 			$database->setQuery( $query );
 			$database->query();
 		}
-
-		$query = 'DELETE'
-		. ' FROM #__acctexp_config'
-		. ' WHERE id != \'1\''
-		;
-		$database->setQuery( $query );
-		$database->query();
 	}
 }
 
