@@ -667,6 +667,8 @@ define( '_PAYPLAN_PARAMS_GID_ENABLED_NAME',				'Benutzergruppe' );
 define( '_PAYPLAN_PARAMS_GID_ENABLED_DESC',				'Auf JA setzen wenn der Benutzer zu dieser Benutzergruppe geh&ouml;ren soll' );
 define( '_PAYPLAN_PARAMS_GID_NAME',						'Zur Gruppe dazu:' );
 define( '_PAYPLAN_PARAMS_GID_DESC',						'Benutzer werden dieser Gruppe hinzugef&uuml;gt wenn das Abo gew&auml;hlt wird' );
+define( '_PAYPLAN_PARAMS_MAKE_ACTIVE_NAME', 			'Benutzer Aktivieren:');
+define( '_PAYPLAN_PARAMS_MAKE_ACTIVE_DESC',				'Auf "Nein" setzen, falls der Benutzer von Hand in die aktive Gruppe verschoben werden soll.');
 
 define( '_PAYPLAN_TEXT_TITLE',							'Abotext' );
 define( '_PAYPLAN_GENERAL_EMAIL_DESC_NAME',				'Emailtext:' );

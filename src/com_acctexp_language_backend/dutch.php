@@ -39,7 +39,7 @@ define( '_CFG_GENERAL_ACTIVATE_PAID_DESC',		'Always activate Subscriptions that 
 define( '_AEC_SPEC_MENU_ENTRY',					'My Subscription' );
 
 // common
-define( '_DESCRIPTION_PAYSIGNET',				'mic: Description Paysignnet - CHECK! -');
+define( '_DESCRIPTION_PAYSIGNET',				'mic: Description Paysignet - CHECK! -');
 define( '_AEC_CONFIG_SAVED',					'Configuration saved' );
 define( '_AEC_CONFIG_CANCELLED',				'Configuration cancelled' );
 define( '_AEC_TIP_NO_GROUP_PF_PB',				'Public Frontend" is NOT a usergroup - and neither is "Public Backend' );
@@ -141,7 +141,7 @@ define( '_AEC_HEAD_CLOSED_SUBS',				'Closed Subscriber' );
 define( '_AEC_HEAD_MANUAL_SUBS',				'Manual Subscriber' );
 define( '_AEC_HEAD_SUBCRIBER',					'Subscriber' );
 
-// hacks (special)
+// hacks
 define( '_AEC_HACK_HACK',						'Hack' );
 define( '_AEC_HACKS_ISHACKED',					'is hacked' );
 define( '_AEC_HACKS_NOTHACKED',					'is not hacked!' );
@@ -570,6 +570,8 @@ define( '_PAYPLAN_PARAMS_GID_ENABLED_NAME', 'Enable usergroup');
 define( '_PAYPLAN_PARAMS_GID_ENABLED_DESC', 'Switch this to Yes if you want users to be assigned the selected usergroup.');
 define( '_PAYPLAN_PARAMS_GID_NAME', 'Add User to Group:');
 define( '_PAYPLAN_PARAMS_GID_DESC', 'Users will be associated to this usergroup when the plan is applied.');
+define( '_PAYPLAN_PARAMS_MAKE_ACTIVE_NAME', 'Make Active:');
+define( '_PAYPLAN_PARAMS_MAKE_ACTIVE_DESC', 'Set this to "No" if you want to manually activate a user after he or she has paid.');
 
 define( '_PAYPLAN_TEXT_TITLE', 'Plan Text');
 define( '_PAYPLAN_GENERAL_EMAIL_DESC_NAME', 'Email Description:');
@@ -929,12 +931,111 @@ define( '_COUPON_ACTIVE', 'Published');
 define( '_COUPON_REORDER', 'Reorder');
 define( '_COUPON_USECOUNT', 'Use Count');
 
+// --== COUPON EDIT ==--
+define( '_COUPON_DETAIL_TITLE', 'Coupon');
+define( '_COUPON_RESTRICTIONS_TITLE', 'Restrict.');
+define( '_COUPON_RESTRICTIONS_TITLE_FULL', 'Restrictions');
+define( '_COUPON_MI', 'Micro Int.');
+define( '_COUPON_MI_FULL', 'Micro Integrations');
+
+define( '_COUPON_GENERAL_NAME_NAME', 'Name');
+define( '_COUPON_GENERAL_NAME_DESC', 'Enter the (internal&amp;external) name for this coupon');
+define( '_COUPON_GENERAL_COUPON_CODE_NAME', 'Coupon Code');
+define( '_COUPON_GENERAL_COUPON_CODE_DESC', 'Enter the Coupon Code for this coupon - the randomly generated coupon code is checked to be unique within the system');
+define( '_COUPON_GENERAL_DESC_NAME', 'Description');
+define( '_COUPON_GENERAL_DESC_DESC', 'Enter the (internal) description for this coupon');
+define( '_COUPON_GENERAL_ACTIVE_NAME', 'Active');
+define( '_COUPON_GENERAL_ACTIVE_DESC', 'Set whether this coupon is active (can be used)');
+define( '_COUPON_GENERAL_TYPE_NAME', 'Static');
+define( '_COUPON_GENERAL_TYPE_DESC', 'Select whether you want this to be a static coupon. These are stored in a separate table for quicker access, the general distinction being that static coupons are coupons that are used by a lot of users while non-static coupons are for one user.');
+
+define( '_COUPON_GENERAL_MICRO_INTEGRATIONS_NAME', 'Micro Integrations');
+define( '_COUPON_GENERAL_MICRO_INTEGRATIONS_DESC', 'Select the Micro Integration(s) which you want to be called when this coupon is used');
+
+define( '_COUPON_PARAMS_AMOUNT_USE_NAME', 'Use Amount');
+define( '_COUPON_PARAMS_AMOUNT_USE_DESC', 'Select whether you want to use a direct discount amount');
+define( '_COUPON_PARAMS_AMOUNT_NAME', 'Discount Amount');
+define( '_COUPON_PARAMS_AMOUNT_DESC', 'Enter the Amount that you want to deduct from the next amount');
+define( '_COUPON_PARAMS_AMOUNT_PERCENT_USE_NAME', 'Use Percentage');
+define( '_COUPON_PARAMS_AMOUNT_PERCENT_USE_DESC', 'Select whether you want a percentage deducted from the actual amount');
+define( '_COUPON_PARAMS_AMOUNT_PERCENT_NAME', 'Discount Percentage');
+define( '_COUPON_PARAMS_AMOUNT_PERCENT_DESC', 'Enter the percentage that you want deducted from the amount');
+define( '_COUPON_PARAMS_PERCENT_FIRST_NAME', 'Percent First');
+define( '_COUPON_PARAMS_PERCENT_FIRST_DESC', 'If you combine percentage and amount, do you want the percentage to be deducted first?');
+define( '_COUPON_PARAMS_USEON_TRIAL_NAME', 'Use On Trial?');
+define( '_COUPON_PARAMS_USEON_TRIAL_DESC', 'Do you want to let the user apply this discount to a trial amount?');
+define( '_COUPON_PARAMS_USEON_FULL_NAME', 'Use On Full?');
+define( '_COUPON_PARAMS_USEON_FULL_DESC', 'Do you want to let the user apply this discount to the actual amount? (With recurring billing: to the first regular payment)');
+define( '_COUPON_PARAMS_USEON_FULL_ALL_NAME', 'Every Full?');
+define( '_COUPON_PARAMS_USEON_FULL_ALL_DESC', 'If the user is using recurring payments, do you want to grant this discount for each subsequent payment? (Or just for the first, if that applies - then select no)');
+
+define( '_COUPON_PARAMS_HAS_START_DATE_NAME', 'Use Start Date');
+define( '_COUPON_PARAMS_HAS_START_DATE_DESC', 'Do you want to allow your users to use this coupon from a certain date on?');
+define( '_COUPON_PARAMS_START_DATE_NAME', 'Start Date');
+define( '_COUPON_PARAMS_START_DATE_DESC', 'Select the date at which you want to start allowing the usage of this coupon');
+define( '_COUPON_PARAMS_HAS_EXPIRATION_NAME', 'Use Expiration Date');
+define( '_COUPON_PARAMS_HAS_EXPIRATION_DESC', 'Do you want to restrict the usage of this coupon to a certain date?');
+define( '_COUPON_PARAMS_EXPIRATION_NAME', 'Expiration Date');
+define( '_COUPON_PARAMS_EXPIRATION_DESC', 'Select the date at which you want to stop allowing the usage of this coupon');
+define( '_COUPON_PARAMS_HAS_MAX_REUSE_NAME', 'Restrict Reuse?');
+define( '_COUPON_PARAMS_HAS_MAX_REUSE_DESC', 'Do you want to restrict the number of times this coupon may be used?');
+define( '_COUPON_PARAMS_MAX_REUSE_NAME', 'Max Uses');
+define( '_COUPON_PARAMS_MAX_REUSE_DESC', 'Choose the number of times this coupon can be used');
+
+define( '_COUPON_PARAMS_USECOUNT_NAME', 'Use Count');
+define( '_COUPON_PARAMS_USECOUNT_DESC', 'Reset the number of times this Coupon has been used');
+
+define( '_COUPON_PARAMS_USAGE_PLANS_ENABLED_NAME', 'Set Plan');
+define( '_COUPON_PARAMS_USAGE_PLANS_ENABLED_DESC', 'Do you want to allow this coupon only for certain plans?');
+define( '_COUPON_PARAMS_USAGE_PLANS_NAME', 'Plans');
+define( '_COUPON_PARAMS_USAGE_PLANS_DESC', 'Choose which plans this coupon can be used for');
+
+define( '_COUPON_RESTRICTIONS_MINGID_ENABLED_NAME', 'Enable Min GID:');
+define( '_COUPON_RESTRICTIONS_MINGID_ENABLED_DESC', 'Enable this setting if you want to restrict whether a user can use this coupon by a minimum usergroup.');
+define( '_COUPON_RESTRICTIONS_MINGID_NAME', 'Visibility Group:');
+define( '_COUPON_RESTRICTIONS_MINGID_DESC', 'The minimum user level required to use this coupon.');
+define( '_COUPON_RESTRICTIONS_FIXGID_ENABLED_NAME', 'Enable Fixed GID:');
+define( '_COUPON_RESTRICTIONS_FIXGID_ENABLED_DESC', 'Enable this setting if you want to restrict this coupon to one usergroup.');
+define( '_COUPON_RESTRICTIONS_FIXGID_NAME', 'Set Group:');
+define( '_COUPON_RESTRICTIONS_FIXGID_DESC', 'Only users with this usergroup can use this coupon.');
+define( '_COUPON_RESTRICTIONS_MAXGID_ENABLED_NAME', 'Enable Max GID:');
+define( '_COUPON_RESTRICTIONS_MAXGID_ENABLED_DESC', 'Enable this setting if you want to restrict whether a user use this coupon by a maximum usergroup.');
+define( '_COUPON_RESTRICTIONS_MAXGID_NAME', 'Maximum Group:');
+define( '_COUPON_RESTRICTIONS_MAXGID_DESC', 'The maximum user level a user can have to use this coupon.');
+
+define( '_COUPON_RESTRICTIONS_PREVIOUSPLAN_REQ_ENABLED_NAME', 'Required Prev. Plan:');
+define( '_COUPON_RESTRICTIONS_PREVIOUSPLAN_REQ_ENABLED_DESC', 'Enable checking for previous payment plan');
+define( '_COUPON_RESTRICTIONS_PREVIOUSPLAN_REQ_NAME', 'Plan:');
+define( '_COUPON_RESTRICTIONS_PREVIOUSPLAN_REQ_DESC', 'A user will only be able to use this coupon if he or she used the selected plan before the one currently in use');
+define( '_COUPON_RESTRICTIONS_CURRENTPLAN_REQ_ENABLED_NAME', 'Required Curr. Plan:');
+define( '_COUPON_RESTRICTIONS_CURRENTPLAN_REQ_ENABLED_DESC', 'Enable checking for currently present payment plan');
+define( '_COUPON_RESTRICTIONS_CURRENTPLAN_REQ_NAME', 'Plan:');
+define( '_COUPON_RESTRICTIONS_CURRENTPLAN_REQ_DESC', 'A user will only be able to use this coupon if he or she is currently assigned to, or has expired from the plan selected here');
+define( '_COUPON_RESTRICTIONS_OVERALLPLAN_REQ_ENABLED_NAME', 'Required Used Plan:');
+define( '_COUPON_RESTRICTIONS_OVERALLPLAN_REQ_ENABLED_DESC', 'Enable checking for overall used payment plan');
+define( '_COUPON_RESTRICTIONS_OVERALLPLAN_REQ_NAME', 'Plan:');
+define( '_COUPON_RESTRICTIONS_OVERALLPLAN_REQ_DESC', 'A user will only be able to use this coupon if he or she has used the selected plan once, no matter when');
+
+define( '_COUPON_RESTRICTIONS_USED_PLAN_MIN_ENABLED_NAME', 'Min Used Plan:');
+define( '_COUPON_RESTRICTIONS_USED_PLAN_MIN_ENABLED_DESC', 'Enable checking for the minimum number of times your consumers have subscribed to a specified payment plan in order to be able to use this coupon');
+define( '_COUPON_RESTRICTIONS_USED_PLAN_MIN_AMOUNT_NAME', 'Used Amount:');
+define( '_COUPON_RESTRICTIONS_USED_PLAN_MIN_AMOUNT_DESC', 'The minimum amount a user has to have used the selected plan');
+define( '_COUPON_RESTRICTIONS_USED_PLAN_MIN_NAME', 'Plan:');
+define( '_COUPON_RESTRICTIONS_USED_PLAN_MIN_DESC', 'The payment plan that the user has to have used the specified number of times at least');
+define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_ENABLED_NAME', 'Max Used Plan:');
+define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_ENABLED_DESC', 'Enable checking for the maximum number of times your consumers have subscribed to a specified payment plan in order to be able to use this coupon');
+define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_AMOUNT_NAME', 'Used Amount:');
+define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_AMOUNT_DESC', 'The maximum amount a user can have used the selected plan');
+define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_NAME', 'Plan:');
+define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_DESC', 'The payment plan that the user has to have used the specified number of times at most');
+
 // --== INVOICE OVERVIEW ==--
 define( '_INVOICE_TITLE', 'Invoices');
 define( '_INVOICE_SEARCH', 'Search');
 define( '_INVOICE_USERID', 'User Name');
 define( '_INVOICE_INVOICE_NUMBER', 'Invoice Number');
 define( '_INVOICE_TRANSACTION_DATE', 'Transaction Date');
+define( '_INVOICE_CREATED_DATE', 'Created Date');
 define( '_INVOICE_METHOD', 'Invoice Method');
 define( '_INVOICE_AMOUNT', 'Invoice Amount');
 define( '_INVOICE_CURRENCY', 'Invoices Currency');
@@ -946,7 +1047,6 @@ define( '_HISTORY_USERID', 'User Name');
 define( '_HISTORY_INVOICE_NUMBER', 'Invoice Number');
 define( '_HISTORY_PLAN_NAME', 'Plan Subscribed To');
 define( '_HISTORY_TRANSACTION_DATE', 'Transaction Date');
-define( '_INVOICE_CREATED_DATE', 'Created Date');
 define( '_HISTORY_METHOD', 'Invoice Method');
 define( '_HISTORY_AMOUNT', 'Invoice Amount');
 define( '_HISTORY_RESPONSE', 'Server Response');

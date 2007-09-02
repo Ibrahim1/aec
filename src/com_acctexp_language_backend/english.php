@@ -478,6 +478,7 @@ define( '_CFG_TAB1_OPT11NAME', 'Require Subscription:');
 define( '_CFG_TAB1_OPT11DESC', 'By default, a user who has no subscription set up with the AEC will be able to log in just fine. With this setting, you can make subscription a requirement.');
 define( '_CFG_ENTRYPLAN_NAME', 'Default Entry Plan');
 define( '_CFG_ENTRYPLAN_DESC', 'Free trial default plan.');
+
 define( '_CFG_TAB1_OPT15NAME', 'Disable Integration:');
 define( '_CFG_TAB1_OPT15DESC', 'Provide one name or a list of names (seperated by a whitespace) of integrations that you want to have disabled. Currently supporting the strings: <strong>CB,CBE,CBM,JACL,SMF,UE,UHP2,VM</strong>. This can be helpful when you have uninstalled CB but not deleted its tables (in which case the AEC would still recognize it as being installed).');
 define( '_CFG_TAB1_OPT16NAME', 'Simple URLs:');
@@ -569,6 +570,8 @@ define( '_PAYPLAN_PARAMS_GID_ENABLED_NAME', 'Enable usergroup');
 define( '_PAYPLAN_PARAMS_GID_ENABLED_DESC', 'Switch this to Yes if you want users to be assigned the selected usergroup.');
 define( '_PAYPLAN_PARAMS_GID_NAME', 'Add User to Group:');
 define( '_PAYPLAN_PARAMS_GID_DESC', 'Users will be associated to this usergroup when the plan is applied.');
+define( '_PAYPLAN_PARAMS_MAKE_ACTIVE_NAME', 'Make Active:');
+define( '_PAYPLAN_PARAMS_MAKE_ACTIVE_DESC', 'Set this to "No" if you want to manually activate a user after he or she has paid.');
 
 define( '_PAYPLAN_TEXT_TITLE', 'Plan Text');
 define( '_PAYPLAN_GENERAL_EMAIL_DESC_NAME', 'Email Description:');

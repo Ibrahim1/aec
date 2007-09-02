@@ -669,6 +669,8 @@ define( '_PAYPLAN_PARAMS_GID_ENABLED_NAME', 'Enable usergroup');
 define( '_PAYPLAN_PARAMS_GID_ENABLED_DESC', 'Switch this to Yes if you want users to be assigned the selected usergroup.');
 define( '_PAYPLAN_PARAMS_GID_NAME', 'Add User to Group:');
 define( '_PAYPLAN_PARAMS_GID_DESC', 'Users will be associated to this usergroup when the plan is applied.');
+define( '_PAYPLAN_PARAMS_MAKE_ACTIVE_NAME', 'Make Active:');
+define( '_PAYPLAN_PARAMS_MAKE_ACTIVE_DESC', 'Set this to "No" if you want to manually activate a user after he or she has paid.');
 
 define( '_PAYPLAN_TEXT_TITLE', 'Plan Text');
 define( '_PAYPLAN_GENERAL_EMAIL_DESC_NAME', 'Email Description:');
