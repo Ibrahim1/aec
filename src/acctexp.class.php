@@ -2129,6 +2129,11 @@ class SubscriptionPlan extends paramDBTable
 			$params['trial_amount'] = AECToolbox::correctAmount( $params['trial_amount'] );
 		}
 
+		// Prevent setting Trial Amount to 0.00 if no free trial was asked for
+		if ( !$params['trial_free'] && ( strcmp( $params['trial_amount'], "0.00" ) === 0 ) ) {
+			$params['trial_amount'] = '';
+		}
+
 		// TODO: Check for Similarity/Equality relations on other plans
 
 		$this->setParams( $params );
