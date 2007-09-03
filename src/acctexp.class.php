@@ -1163,6 +1163,17 @@ class PaymentProcessor
 		return $this->p_class->createGatewayLink( $int_var, $this->settings, $metaUser, $new_subscription );
 	}
 
+	function getCustomParams()
+	{
+		$this->getSettings();
+
+		if ( method_exists( $this->p_class, 'CustomParams' ) ) {
+			return $this->p_class->CustomParams( $this->settings );
+		} else {
+			return false;
+		}
+	}
+
 	function parseNotification( $post )
 	{
 		$this->getSettings();
@@ -1251,7 +1262,7 @@ class aecSettings
 				if ( isset( $content[3] ) ) {
 					$value						= $content[3];
 					$this->params_values[$name] = $content[3];
-				} elseif ( isset( $content[1] ) ) {
+				} elseif ( isset( $content[1] ) && !isset( $content[2] ) ) {
 					$value						= $content[1];
 					$this->params_values[$name] = $content[1];
 				} else {

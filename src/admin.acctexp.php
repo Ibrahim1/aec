@@ -2233,6 +2233,29 @@ function editSubscriptionPlan( $id, $option )
 	$params['similarplans']				= array("list", "");
 	$params['equalplans']				= array("list", "");
 
+	$params['cparams_remap']			= array("subarea_change", "custom_params");
+
+	if ( $params_values['processors'] != 0 ) {
+		$plan_procs = explode(";", $params_values['processors']);
+
+		if ( count( $plan_procs ) ) {
+			foreach ( $plan_procs as $processorid ) {
+				$pproc = new PaymentProcessor();
+				if ( $pproc->loadId( $processorid ) ) {
+					$customparams = $pproc->loadCustomParams();
+					if ( is_array( $customparams ) ) {
+						foreach ( $customparams as $customparam => $cpcontent ) {
+							$cp_name = strtoupper( $pproc->processor_name . "_cpp_" . $customparam . "_name" );
+							$cp_desc = strtoupper( $pproc->processor_name . "_cpp_" . $customparam . "_desc" );
+							$cpname = $processorid . "_cpp_" . $customparam;
+							$params[$cpname] = $cpcontent;
+						}
+					}
+				}
+			}
+		}
+	}
+
 	$params['restr_remap']				= array("subarea_change", "restrictions");
 
 	$params['mingid_enabled']			= array("list_yesno", 0);

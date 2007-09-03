@@ -103,20 +103,58 @@ define( '_CFG_PAYPAL_LC_DESC',				'Eine der vorhandenen Sprachen ausw&auml;hlen,
 define( '_CFG_PAYPAL_TAX_NAME',				'Steuer:' );
 define( '_CFG_PAYPAL_TAX_DESC',				'Steuer in % angeben. Z.B bei einem Bruttobetrag von 120 Euro dann hier 20 angeben, es wird der Nettobetrag von 100 und die Steuer von 20 Euro ausgewiesen' );
 
+define( '_CFG_PAYPAL_CBT_NAME', 'Continue Button');
+define( '_CFG_PAYPAL_CBT_DESC', 'Sets the text for the Continue button on the PayPal "Payment Complete" page.');
+define( '_CFG_PAYPAL_CN_NAME', 'Note Label');
+define( '_CFG_PAYPAL_CN_DESC', 'The label above the note field.');
+define( '_CFG_PAYPAL_CPP_HEADER_IMAGE_NAME', 'Header Image');
+define( '_CFG_PAYPAL_CPP_HEADER_IMAGE_DESC', 'URL for the image at the top left of the payment page (the maximum image size being 750x90 pixels)');
+define( '_CFG_PAYPAL_CPP_HEADERBACK_COLOR_NAME', 'Headerback Color');
+define( '_CFG_PAYPAL_CPP_HEADERBACK_COLOR_DESC', 'Background color for the payment page header (6 character HTML hexadecimal color code in ASCII)');
+define( '_CFG_PAYPAL_CPP_HEADERBORDER_COLOR_NAME', 'Headerborder Color');
+define( '_CFG_PAYPAL_CPP_HEADERBORDER_COLOR_DESC', 'Border color for the payment page header (6 character HTML hexadecimal color code in ASCII)');
+define( '_CFG_PAYPAL_CPP_PAYFLOW_COLOR_NAME', 'Payflow Color');
+define( '_CFG_PAYPAL_CPP_PAYFLOW_COLOR_DESC', 'Background color for the payment page below the header (6 character HTML hexadecimal color code in ASCII)');
+define( '_CFG_PAYPAL_CS_NAME', 'Background Tint');
+define( '_CFG_PAYPAL_CS_DESC', 'The default - "No" - leaves the overall background color at white, setting it to "Yes" will change it to black');
+define( '_CFG_PAYPAL_IMAGE_URL_NAME', 'Logo');
+define( '_CFG_PAYPAL_IMAGE_URL_DESC', 'URL of the image displayed as your logo in the upperleft corner of PayPals pages (150x50 pixels)');
+define( '_CFG_PAYPAL_PAGE_STYLE_NAME', 'Page Style');
+define( '_CFG_PAYPAL_PAGE_STYLE_DESC', 'Sets the custom payment page style for payment pages. Reserved: "primary" - Always use the page style set as primary, "paypal" - Use the default PayPal style. Any other name has to refer to the page style you have defined in the PayPal Backend (alphanumeric ASCII lower 7-bit characters only, no underscore nor spaces)');
+
 // Paypal Subscriptions Settings
-define( '_CFG_PAYPAL_SUBSCRIPTION_BUSINESS_NAME',	'Gesch&auml;fts ID:' );
-define( '_CFG_PAYPAL_SUBSCRIPTION_BUSINESS_DESC',	'Die Gesch&auml;fts-ID (= Email) bei PayPal:' );
-define( '_CFG_PAYPAL_SUBSCRIPTION_CHECKBUSINESS_NAME', 'Sicherheits&uuml;berpr&uuml;fung:' );
-define( '_CFG_PAYPAL_SUBSCRIPTION_CHECKBUSINESS_DESC', 'Wenn aktiviert, wird bei der &Uuml;bermittlung der Daten an Paypal getestet, ob die Empf&auml;ngeremailadresse mit der Angegebenen &uuml;bereinstimmt. Dies kann einen Fehler produzieren, falls bei Paypal mehr als eine Adresse genutzt wird. Wenn Benutzer also nicht aktiviert werden obwohl sie korrekt bezahlt haben, hier auf "Nein" stellen' );
-define( '_CFG_PAYPAL_SUBSCRIPTION_NO_SHIPPING_NAME', 'Keine Lieferaddresse:');
-define( '_CFG_PAYPAL_SUBSCRIPTION_NO_SHIPPING_DESC', 'Stellen Sie diese Einstellung auf "nein", falls sie m&ouml;chten, dass der Benutzer eine Lieferaddresse bei PayPal angibt.');
-define( '_CFG_PAYPAL_SUBSCRIPTION_ALTIPNURL_NAME', 'Alternative IPN Benachrichtigungsdomain:' );
-define( '_CFG_PAYPAL_SUBSCRIPTION_ALTIPNURL_DESC', 'Falls Server-Workload-Balancing eingesetzt wird (autom. Wechseln zwischen mehreren IP-Adressen) k&ouml;nnte es vorkommen dass PayPal die Verbindung abbricht w&auml;hrend die Best&auml;tigung (IPN) retour gesendet wird. Um diesen Fehler zu umgehen, kann z.B. eine neue Subdomain zu diesem Webserver/Webseite erstellt werden und das LOADBALANCING deaktivieren. Dann hier diese Subdomainadresse (z.B. http://subdomain.domain.com - KEIN Slash am Ende!) eintragen - PayPal wird dann nur an diese Adresse die IPN senden.<br /><strong>Feld leer lassen wenn keine Verwendung daf&uuml;r!</strong>' );
-define( '_CFG_PAYPAL_SUBSCRIPTION_LC_NAME', 	'Sprache:' );
-define( '_CFG_PAYPAL_SUBSCRIPTION_LC_DESC',		'Eine der vorhandenen Sprachen ausw&auml;hlen, die Benutzer werden dann zu dieser PayPalseite mit der gew&auml;hlten Sprache beim Zahlungsvorgang umgeleitet.' );
-define( '_CFG_PAYPAL_SUBSCRIPTION_TAX_NAME',	'Steuer:' );
-define( '_CFG_PAYPAL_SUBSCRIPTION_TAX_DESC',	'Steuer in % angeben. Z.B bei einem Bruttobetrag von 120 Euro dann hier 20 angeben, es wird der Nettobetrag von 100 und die Steuer von 20 Euro ausgewiesen' );
+define( '_CFG_PAYPAL_SUBSCRIPTION_BUSINESS_NAME', _CFG_PAYPAL_BUSINESS_NAME);
+define( '_CFG_PAYPAL_SUBSCRIPTION_BUSINESS_DESC', _CFG_PAYPAL_BUSINESS_DESC);
+define( '_CFG_PAYPAL_SUBSCRIPTION_CHECKBUSINESS_NAME', _CFG_PAYPAL_CHECKBUSINESS_NAME);
+define( '_CFG_PAYPAL_SUBSCRIPTION_CHECKBUSINESS_DESC', _CFG_PAYPAL_CHECKBUSINESS_DESC);
+define( '_CFG_PAYPAL_SUBSCRIPTION_NO_SHIPPING_NAME', _CFG_PAYPAL_NO_SHIPPING_NAME);
+define( '_CFG_PAYPAL_SUBSCRIPTION_NO_SHIPPING_DESC', _CFG_PAYPAL_NO_SHIPPING_DESC);
+define( '_CFG_PAYPAL_SUBSCRIPTION_ALTIPNURL_NAME', _CFG_PAYPAL_ALTIPNURL_NAME);
+define( '_CFG_PAYPAL_SUBSCRIPTION_ALTIPNURL_DESC', _CFG_PAYPAL_ALTIPNURL_DESC);
+define( '_CFG_PAYPAL_SUBSCRIPTION_LC_NAME', _CFG_PAYPAL_LC_NAME);
+define( '_CFG_PAYPAL_SUBSCRIPTION_LC_DESC', _CFG_PAYPAL_LC_DESC);
+define( '_CFG_PAYPAL_SUBSCRIPTION_TAX_NAME', _CFG_PAYPAL_TAX_NAME);
+define( '_CFG_PAYPAL_SUBSCRIPTION_TAX_DESC', _CFG_PAYPAL_TAX_DESC);
 define( '_PAYPAL_SUBSCRIPTION_CANCEL_INFO',		'Wenn das aktuelle Abonnement ge&auml;ndert werden soll, muss vorher das Aktuelle bei PayPal storniert werden!' );
+
+define( '_CFG_PAYPAL_SUBSCRIPTION_CBT_NAME', _CFG_PAYPAL_CBT_NAME);
+define( '_CFG_PAYPAL_SUBSCRIPTION_CBT_DESC', _CFG_PAYPAL_CBT_DESC);
+define( '_CFG_PAYPAL_SUBSCRIPTION_CN_NAME', _CFG_PAYPAL_CN_NAME);
+define( '_CFG_PAYPAL_SUBSCRIPTION_CN_DESC', _CFG_PAYPAL_CN_DESC);
+define( '_CFG_PAYPAL_SUBSCRIPTION_CPP_HEADER_IMAGE_NAME', _CFG_PAYPAL_CPP_HEADER_IMAGE_NAME);
+define( '_CFG_PAYPAL_SUBSCRIPTION_CPP_HEADER_IMAGE_DESC', _CFG_PAYPAL_CPP_HEADER_IMAGE_DESC);
+define( '_CFG_PAYPAL_SUBSCRIPTION_CPP_HEADERBACK_COLOR_NAME', _CFG_PAYPAL_CPP_HEADERBACK_COLOR_NAME);
+define( '_CFG_PAYPAL_SUBSCRIPTION_CPP_HEADERBACK_COLOR_DESC', _CFG_PAYPAL_CPP_HEADERBACK_COLOR_DESC);
+define( '_CFG_PAYPAL_SUBSCRIPTION_CPP_HEADERBORDER_COLOR_NAME', _CFG_PAYPAL_CPP_HEADERBORDER_COLOR_NAME);
+define( '_CFG_PAYPAL_SUBSCRIPTION_CPP_HEADERBORDER_COLOR_DESC', _CFG_PAYPAL_CPP_HEADERBORDER_COLOR_DESC);
+define( '_CFG_PAYPAL_SUBSCRIPTION_CPP_PAYFLOW_COLOR_NAME', _CFG_PAYPAL_CPP_PAYFLOW_COLOR_NAME);
+define( '_CFG_PAYPAL_SUBSCRIPTION_CPP_PAYFLOW_COLOR_DESC', _CFG_PAYPAL_CPP_PAYFLOW_COLOR_DESC);
+define( '_CFG_PAYPAL_SUBSCRIPTION_CS_NAME', _CFG_PAYPAL_CS_NAME);
+define( '_CFG_PAYPAL_SUBSCRIPTION_CS_DESC', _CFG_PAYPAL_CS_DESC);
+define( '_CFG_PAYPAL_SUBSCRIPTION_IMAGE_URL_NAME', _CFG_PAYPAL_IMAGE_URL_NAME);
+define( '_CFG_PAYPAL_SUBSCRIPTION_IMAGE_URL_DESC', _CFG_PAYPAL_IMAGE_URL_DESC);
+define( '_CFG_PAYPAL_SUBSCRIPTION_PAGE_STYLE_NAME', _CFG_PAYPAL_PAGE_STYLE_NAME);
+define( '_CFG_PAYPAL_SUBSCRIPTION_PAGE_STYLE_DESC', _CFG_PAYPAL_PAGE_STYLE_DESC);
 
 // Transfer Settings
 define( '_CFG_TRANSFER_TITLE',					'Manuell' );

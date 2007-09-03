@@ -839,34 +839,60 @@ color: #333;
 </ul>
 <h2>0.12.4.2 version - <a href="http://en.wikipedia.org/wiki/Eagle_Nebula">Eagle Nebula</a></h2>
 <ul>
-<li>Switched Username and Email in Admin Notification on new Registration</li>
-<li>Fixed "$this in acctexp.php - line 867" bug, which was causing a havoc on free trials and turned out fatal errors</li>
-<li>Fixing various strange coinings in the german translation</li>
+<li><strong>Frontend</strong>
+<ul>
+<li>Transfer of all frontend inline CSS to style.css</li>
+<li>all relative font sizing in style.css</li>
+</ul>
+</li>
+<li><strong>Backend</strong>
+<ul>
+<li>Better storing of parameter fields - now JCE editor fields save correctly</li>
 <li>Setting for allowing Administrators access to the AEC Backend</li>
+<li>Help page no longer wrongly talks about legacy hacks</li>
+<li>Display of Hacks Filename even if already hacked (on Hacks Page)</li>
+<li>Trying to also fix the problem where the help page would state a permission problem when hacks have been properly commited</li>
+<li>Fix for Eventlog on Settings saving registering a change in text although there was none</li>
+<li>Better way of preventing duplicated Settings Entries</li>
+<li>Installation fixes for a rare bug that would affect certain 0.12.3 versions upgrading, deleting the settings and spilling out errors</li>
+<li>Lots of small fixes to Installation</li>
+<li class="todo">New style unhacking that solves a lot of issues with automatic unhacking not working at all</li>
+<li>Option for not sending out any system emails</li>
+</ul>
+</li>
+<li><strong>Payment Plans</strong>
+<ul>
+<li>Per Plan Choice whether the user will be set to Active or Pending (if admin approval is wanted)</li>
+<li>Plan Setting for making users active in case the administrator wants to manually approve every payment</li>
+<li>Prevent setting Trial Amount to 0.00 if no free trial was asked for</li>
+<li>using integer typecasting in restrictions engine and before to secure correct behavior</li>
+</ul>
+</li>
+<li><strong>Payment Processors</strong>
+<ul>
+<li class="todo">Supporting per-processor parameters to be saved per-plan, this now makes some very awkward processor integrations possible</li>
+<li>Fixing issue which would spill out notices when using Authorize.net - rewriteEngineInfo was being used on the actual setting defaults</li>
+<li>Now supporting PayPal Customization Option</li>
+</ul>
+</li>
+<li><strong>Micro Integrations</strong>
+<ul>
+<li>Remository MI: Better recognition whether correct version of Remository is installed</li>
+<li>Fireboard MI - Thanks to Calum!</li>
 <li>Setup information for the iDev Integration</li>
 <li>Fixing Settings, language and group assignment in Remository MI</li>
 <li>Fixing iDevAffiliate MicroIntegration</li>
-<li>Fixing issue which would spill out notices when using Authorize.net - rewriteEngineInfo was being used on the actual setting defaults</li>
+</ul>
+</li>
+<li><strong>Minor Fixes</strong>
+<ul>
 <li>Fix for Undefined index: processors in admin.acctexp.php on line 2296</li>
-<li>Per Plan Choice whether the user will be set to Active or Pending (if admin approval is wanted)</li>
-<li>Display of Hacks Filename even if already hacked</li>
+<li>Switched Username and Email in Admin Notification on new Registration</li>
+<li>Fixed "$this in acctexp.php - line 867" bug, which was causing a havoc on free trials and turned out fatal errors</li>
+<li>Fixing various strange coinings in the german translation</li>
 <li>Fix for assignment of equal/similar plans and lifetime period</li>
-<li>Fireboard MI - Thanks to Calum!</li>
-<li>Installation fixes for a rare bug that would affect certain 0.12.3 versions upgrading, deleting the settings and spilling out errors</li>
-<li>Lots of small fixes to Installation</li>
-<li>Help page no longer wrongly talks about legacy hacks</li>
-<li>Trying to also fix the problem where the help page would state a permission problem when hacks have been properly commited</li>
-<li class="todo">New style unhacking that solves a lot of issues with automatic unhacking not working at all</li>
-<li>Fix for Eventlog on Settings saving registering a change in text although there was none</li>
-<li>Better way of preventing duplicated Settings Entries</li>
-<li>Better storing of parameter fields - now JCE editor fields save correctly</li>
-<li>Plan Setting for making users active in case the administrator wants to manually approve every payment</li>
-<li>Remository MI: Better recognition whether correct version of Remository is installed</li>
-<li>Transfer of all frontend inline CSS to style.css</li>
-<li>all relative font sizing in style.css</li>
-<li>Prevent setting Trial Amount to 0.00 if no free trial was asked for</li>
-<li>Option for not sending out any system emails</li>
-<li>using integrer typecasting in restrictions engine and before to secure correct behavior</li>
+</ul>
+</li>
 </ul>
 </body>
 </html>

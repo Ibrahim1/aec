@@ -83,6 +83,17 @@ class processor_paypal
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']	= ''; // added mic
 
+		// Customization Options
+		$settings['cbt']					= '';
+		$settings['cn']						= '';
+		$settings['cpp_header_image']		= '';
+		$settings['cpp_headerback_color']	= '';
+		$settings['cpp_headerborder_color']	= '';
+		$settings['cpp_payflow_color']		= '';
+		$settings['cs']						= 0;
+		$settings['image_url']				= '';
+		$settings['page_style']				= '';
+
 		return $settings;
 	}
 
@@ -100,6 +111,17 @@ class processor_paypal
 		$settings['no_shipping']	= array( 'list_yesno' );
 		$settings['altipnurl']		= array( 'inputC' );
 		$settings['item_name']		= array( 'inputE' );
+
+		// Customization Options
+		$settings['cbt']					= array( 'inputE' );
+		$settings['cn']						= array( 'inputE' );
+		$settings['cpp_header_image']		= array( 'inputE' );
+		$settings['cpp_headerback_color']	= array( 'inputC' );
+		$settings['cpp_headerborder_color']	= array( 'inputC' );
+		$settings['cpp_payflow_color']		= array( 'inputC' );
+		$settings['cs']						= array( 'list_yesno' );
+		$settings['image_url']				= array( 'inputE' );
+		$settings['page_style']				= array( 'inputE' );
 
         $settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
@@ -146,6 +168,23 @@ class processor_paypal
 		$var['return']			= $int_var['return_url'];
 		$var['currency_code']	= $cfg['currency'];
 		$var['lc']				= $cfg['lc'];
+
+		// Customizations
+		$customizations = array( 'cbt', 'cn', 'cpp_header_image', 'cpp_headerback_color', 'cpp_headerborder_color', 'cpp_payflow_color', 'image_url', 'page_style' );
+
+		foreach ( $customizations as $cust ) {
+			if ( isset( $cfg[$cust] ) ) {
+				if ( !empty( $cfg[$cust] ) ) {
+					$var[$cust] = $cfg[$cust];
+				}
+			}
+		}
+
+		if ( isset( $cfg['cs'] ) ) {
+			if ( $cfg['cs'] != 0 ) {
+				$var['cs'] = $cfg['cs'];
+			}
+		}
 
 		return $var;
 	}
