@@ -198,7 +198,8 @@ function com_install()
 	. '`used_plans` varchar(255) NULL,'
 	. '`recurring` int(1) NOT NULL default \'0\','
 	. '`lifetime` int(1) NOT NULL default \'0\','
-	. '`email_sent` datetime NULL default \'0000-00-00 00:00:00\','
+	. '`params` text NULL,'
+	. '`customparams` text NULL,'
 	. ' PRIMARY KEY (`id`)'
 	. ') TYPE=MyISAM;'
 	;
@@ -470,8 +471,8 @@ function com_install()
 	$result = null;
 	$database->setQuery("SHOW COLUMNS FROM #__acctexp_subscr LIKE 'email_sent'");
 	$database->loadObject($result);
-	if (!(strcmp($result->Field, 'email_sent') === 0)) {
-		$database->setQuery("ALTER TABLE #__acctexp_subscr ADD `email_sent` datetime default '0000-00-00 00:00:00'");
+	if (strcmp($result->Field, 'email_sent') === 0) {
+		$database->setQuery("ALTER TABLE #__acctexp_subscr DROP `email_sent`");
 		if ( !$database->query() ) {
 	    	$errors[] = array( $database->getErrorMsg(), $query );
 		}
