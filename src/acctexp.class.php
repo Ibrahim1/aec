@@ -163,7 +163,7 @@ class metaUser
 							break;
 						// Check for a certain GID
 						case 'fixgid':
-							if ( $value === $this->cmsUser->gid ) {
+							if ( (int) $value === (int) $this->cmsUser->gid ) {
 								$status = true;
 							} else {
 								$status = false;
@@ -171,8 +171,8 @@ class metaUser
 							break;
 						// Check for Minimum GID
 						case 'mingid':
-							$groups = GeneralInfoRequester::getLowerACLGroup( $this->cmsUser->gid );
-							if ( in_array( $value, $groups ) ) {
+							$groups = GeneralInfoRequester::getLowerACLGroup( (int) $this->cmsUser->gid );
+							if ( in_array( (int) $value, (array) $groups ) ) {
 								$status = true;
 							} else {
 								$status = false;
@@ -181,7 +181,7 @@ class metaUser
 						// Check for Maximum GID
 						case 'maxgid':
 							$groups = GeneralInfoRequester::getLowerACLGroup( $value );
-							if ( in_array($this->cmsUser->gid, $groups) ) {
+							if ( in_array( (int) $this->cmsUser->gid, (array) $groups) ) {
 								$status = true;
 							} else {
 								$status = false;
@@ -190,7 +190,7 @@ class metaUser
 						// Check whether the user is currently in the right plan
 						case 'plan_present':
 							if ($this->hasSubscription) {
-								if ( $this->objSubscription->plan === $value ) {
+								if ( (int) $this->objSubscription->plan === (int) $value ) {
 									$status = true;
 								} else {
 									$status = false;
@@ -202,7 +202,7 @@ class metaUser
 						// Check whether the user was in the correct plan before
 						case 'plan_previous':
 							if ( $this->hasSubscription ) {
-								if ( $this->objSubscription->previous_plan == $value ) {
+								if ( (int) $this->objSubscription->previous_plan === (int) $value ) {
 									$status = true;
 								} else {
 									$status = false;
@@ -215,7 +215,7 @@ class metaUser
 						case 'plan_overall':
 							if ( $this->hasSubscription ) {
 								$array = $this->objSubscription->getUsedPlans();
-								if ( isset( $array[$value] ) ) {
+								if ( isset( $array[(int) $value] ) ) {
 									$status = true;
 								} else {
 									$status = false;
@@ -229,15 +229,15 @@ class metaUser
 							if ( $this->hasSubscription ) {
 								$usage = $this->objSubscription->getUsedPlans();
 								$check = explode( ',', $value );
-								if ( isset( $usage[$check[0]] ) ) {
+								if ( isset( $usage[(int) $check[0]] ) ) {
 									// We have to add one here if the user is currently in the plan
-									if ( $this->objSubscription->plan === $check[0] ) {
-										$used_times = $check[1] + 1;
+									if ( (int) $this->objSubscription->plan === (int) $check[0] ) {
+										$used_times = (int) $check[1] + 1;
 									} else {
-										$used_times = $check[1];
+										$used_times = (int) $check[1];
 									}
 
-									if ( $usage[$check[0]] >= $used_times ) {
+									if ( $usage[(int) $check[0]] >= (int) $used_times ) {
 										$status = true;
 									} else {
 										$status = false;
@@ -254,15 +254,15 @@ class metaUser
 							if ( $this->hasSubscription ) {
 								$usage = $this->objSubscription->getUsedPlans();
 								$check = explode( ',', $value );
-								if ( isset($array[$check[0]] ) ) {
+								if ( isset( $array[(int) $check[0]] ) ) {
 									// We have to add one here if the user is currently in the plan
-									if ( $this->objSubscription->plan === $check[0] ) {
-										$used_times = $check[1] + 1;
+									if ( (int) $this->objSubscription->plan === (int) $check[0] ) {
+										$used_times = (int) $check[1] + 1;
 									} else {
-										$used_times = $check[1];
+										$used_times = (int) $check[1];
 									}
 
-									if ( $usage[$check[0]] <= $used_times ) {
+									if ( $usage[(int) $check[0]] <= (int) $used_times ) {
 										$status = true;
 									} else {
 										$status = false;
