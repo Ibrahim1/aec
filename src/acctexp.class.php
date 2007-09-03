@@ -1986,52 +1986,52 @@ class SubscriptionPlan extends paramDBTable
 
 		// Check for a fixed GID - this certainly overrides the others
 		if ( !empty( $restrictions['fixgid_enabled'] ) ) {
-			$planrestrictions['fixgid'] = $restrictions['fixgid'];
+			$planrestrictions['fixgid'] = (int) $restrictions['fixgid'];
 		} else {
 			// No fixed GID, check for min GID
 			if ( !empty( $restrictions['mingid_enabled'] ) ) {
-				$planrestrictions['mingid'] = $restrictions['mingid'];
+				$planrestrictions['mingid'] = (int) $restrictions['mingid'];
 			}
 			// Check for max GID
 			if ( !empty( $restrictions['maxgid_enabled'] ) ) {
-				$planrestrictions['maxgid'] = $restrictions['maxgid'];
+				$planrestrictions['maxgid'] = (int) $restrictions['maxgid'];
 			}
 		}
 
 		// Check for a directly previously used plan
 		if ( !empty( $restrictions['previousplan_req_enabled'] ) ) {
 			if ( $restrictions['previousplan_req'] ) {
-				$planrestrictions['plan_previous'] = $restrictions['previousplan_req'];
+				$planrestrictions['plan_previous'] = (int) $restrictions['previousplan_req'];
 			}
 		}
 
 		// Check for a currently used plan
 		if ( !empty( $restrictions['currentplan_req_enabled'] ) ) {
 			if ( $restrictions['currentplan_req'] ) {
-				$planrestrictions['plan_present'] = $restrictions['currentplan_req'];
+				$planrestrictions['plan_present'] = (int) $restrictions['currentplan_req'];
 			}
 		}
 
 		// Check for a overall used plan
 		if ( !empty( $restrictions['currentplan_req_enabled'] ) ) {
 			if ( $restrictions['currentplan_req'] ) {
-				$planrestrictions['plan_overall'] = $restrictions['currentplan_req'];
+				$planrestrictions['plan_overall'] = (int) $restrictions['currentplan_req'];
 			}
 		}
 
 		// Check for a overall used plan with amount minimum
 		if ( !empty( $restrictions['used_plan_min_enabled'] ) ) {
 			if ( $restrictions['used_plan_min_amount'] && $restrictions['used_plan_min'] ) {
-				$planrestrictions['plan_amount_min'] = $restrictions['used_plan_min']
-				. ',' . $restrictions['used_plan_min_amount'];
+				$planrestrictions['plan_amount_min'] = ( (int) $restrictions['used_plan_min'] )
+				. ',' . ( (int) $restrictions['used_plan_min_amount'] );
 			}
 		}
 
 		// Check for a overall used plan with amount maximum
 		if ( !empty( $restrictions['used_plan_max_enabled'] ) ) {
 			if ( $restrictions['used_plan_max_amount'] && $restrictions['used_plan_max'] ) {
-				$planrestrictions['plan_amount_max'] = $restrictions['used_plan_max']
-				. ',' . $restrictions['used_plan_max_amount'];
+				$planrestrictions['plan_amount_max'] = ( (int) $restrictions['used_plan_max'] )
+				. ',' . ( (int) $restrictions['used_plan_max_amount'] );
 			}
 		}
 
@@ -5219,7 +5219,7 @@ class couponHandler
 			// Check for max reuse
 			if ( $this->restrictions['has_max_reuse'] ) {
 				if ( $this->restrictions['max_reuse'] ) {
-					if ( $this->coupon->usecount > $this->restrictions['max_reuse'] ) {
+					if ( (int) $this->coupon->usecount > (int) $this->restrictions['max_reuse'] ) {
 						$this->setError( _COUPON_ERROR_MAX_REUSE );
 						return;
 					}
@@ -5246,7 +5246,7 @@ class couponHandler
 						$permissions['usage'] = false;
 					}
 				} else {
-					if ( $invoiceFactory->usage == $this->restrictions['usage_plans'] ) {
+					if ( (int) $invoiceFactory->usage === (int) $this->restrictions['usage_plans'] ) {
 						$permissions['usage'] = true;
 					} else {
 						$permissions['usage'] = false;
@@ -5297,52 +5297,52 @@ class couponHandler
 
 		// Check for a fixed GID - this certainly overrides the others
 		if ( !empty( $this->restrictions['fixgid_enabled'] ) ) {
-			$restrictions['fixgid'] = $this->restrictions['fixgid'];
+			$restrictions['fixgid'] = (int) $this->restrictions['fixgid'];
 		} else {
 			// No fixed GID, check for min GID
 			if ( !empty( $this->restrictions['mingid_enabled'] ) ) {
-				$restrictions['mingid'] = $this->restrictions['mingid'];
+				$restrictions['mingid'] = (int) $this->restrictions['mingid'];
 			}
 			// Check for max GID
 			if ( !empty( $this->restrictions['maxgid_enabled'] ) ) {
-				$restrictions['maxgid'] = $this->restrictions['maxgid'];
+				$restrictions['maxgid'] = (int) $this->restrictions['maxgid'];
 			}
 		}
 
 		// Check for a directly previously used plan
 		if ( !empty( $this->restrictions['previousplan_req_enabled'] ) ) {
 			if ( $this->restrictions['previousplan_req'] ) {
-				$restrictions['plan_previous'] = $this->restrictions['previousplan_req'];
+				$restrictions['plan_previous'] = (int) $this->restrictions['previousplan_req'];
 			}
 		}
 
 		// Check for a currently used plan
 		if ( !empty( $this->restrictions['currentplan_req_enabled'] ) ) {
 			if ( $this->restrictions['currentplan_req'] ) {
-				$restrictions['plan_present'] = $this->restrictions['currentplan_req'];
+				$restrictions['plan_present'] = (int) $this->restrictions['currentplan_req'];
 			}
 		}
 
 		// Check for a overall used plan
 		if ( !empty( $this->restrictions['currentplan_req_enabled'] ) ) {
 			if ( $this->restrictions['currentplan_req'] ) {
-				$restrictions['plan_overall'] = $this->restrictions['currentplan_req'];
+				$restrictions['plan_overall'] = (int) $this->restrictions['currentplan_req'];
 			}
 		}
 
 		// Check for a overall used plan with amount minimum
 		if ( !empty( $this->restrictions['used_plan_min_enabled'] ) ) {
 			if ( $this->restrictions['used_plan_min_amount'] && $this->restrictions['used_plan_min'] ) {
-				$restrictions['plan_amount_min'] = $this->restrictions['used_plan_min']
-				. ',' . $this->restrictions['used_plan_min_amount'];
+				$restrictions['plan_amount_min'] = ( (int) $this->restrictions['used_plan_min'] )
+				. ',' . ( (int) $this->restrictions['used_plan_min_amount'] );
 			}
 		}
 
 		// Check for a overall used plan with amount maximum
 		if ( !empty( $this->restrictions['used_plan_max_enabled'] ) ) {
 			if ( $this->restrictions['used_plan_max_amount'] && $this->restrictions['used_plan_max'] ) {
-				$restrictions['plan_amount_max'] = $this->restrictions['used_plan_max']
-				. ',' . $this->restrictions['used_plan_max_amount'];
+				$restrictions['plan_amount_max'] = ( (int) $this->restrictions['used_plan_max'] )
+				. ',' . ( (int) $this->restrictions['used_plan_max_amount'] );
 			}
 		}
 
