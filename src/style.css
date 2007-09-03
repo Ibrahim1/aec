@@ -344,6 +344,10 @@ margin: 3px;
 text-align: center;
 }
 
+td.confirmation_description {
+text-align: left;
+}
+
 td.confirmation_button {
 text-align: center;
 }
@@ -367,6 +371,11 @@ table.amount {
 float:left;
 width: 100%;
 padding: 2px 10%;
+padding-top: 16px;
+}
+
+div#amountbox {
+border:#DDD solid 1px;
 }
 
 table.amount tr {
@@ -420,6 +429,33 @@ clear: both;
 width: 100%;
 }
 
+td.couponinfo {
+text-align: center;
+background-color: #eee;
+}
+
+td.coupondetails {
+text-align: center;
+}
+
+table#couponsbox {
+background-color: #ddd;
+}
+
+table#paramsbox {
+margin-top: 24px;
+background-color: #ddd;
+}
+
+table#checkoutbox {
+margin-top: 24px;
+background-color: #ddd;
+}
+
+td.checkout_button {
+text-align: center;
+}
+
 /* == Styling for the Subscription Details Page == */
 
 #subscription_details {
@@ -437,7 +473,7 @@ padding-top:10px;
 }
 
 #subscription_details th {
-background: #EEEEEE;
+background: #eee;
 padding: 6px;
 margin: 3px;
 }

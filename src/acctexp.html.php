@@ -562,7 +562,7 @@ class Payment_HTML
 					</p></td>
 				</tr>
 				<tr>
-					<td colspan="4" style="text-align: left;"><?php echo stripslashes( $InvoiceFactory->objUsage->desc ); ?></td>
+					<td colspan="4" class="confirmation_description"><?php echo stripslashes( $InvoiceFactory->objUsage->desc ); ?></td>
 				</tr>
 			</table>
 			<?php
@@ -643,8 +643,8 @@ class Payment_HTML
 				<p><?php echo $cfg->cfg['customtext_checkout']; ?></p>
 				<?php
 			} ?>
-			<div style="border:#DDD solid 1px;">
-				<table class="amount" style="padding-top:16px;">
+			<div id="amountbox">
+				<table class="amount">
 					<tr>
 						<td class="item"><?php echo _CHECKOUT_INVOICE_AMOUNT; ?></td>
 						<td class="amount">
@@ -657,10 +657,7 @@ class Payment_HTML
 							foreach ( $InvoiceFactory->coupons['coupons'] as $id => $coupon ) { ?>
 								<tr>
 									<td class="item<?php echo $coupon['nodirectaction'] ? 'later' : ''; ?>">
-										<?php echo _CHECKOUT_INVOICE_COUPON; ?> (<?php echo $coupon['action']; ?>)
-										&nbsp;[
-										<a href="<?php echo AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=InvoiceRemoveCoupon&amp;invoice=' . $InvoiceFactory->invoice . '&amp;coupon_code=' . $coupon['code'] ); ?>" title="<?php echo _CHECKOUT_INVOICE_COUPON_REMOVE; ?>"><?php echo _CHECKOUT_INVOICE_COUPON_REMOVE; ?></a>
-										]
+										<?php echo _CHECKOUT_INVOICE_COUPON; ?> (<?php echo $coupon['action']; ?>)&nbsp;[<a href="<?php echo AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=InvoiceRemoveCoupon&amp;invoice=' . $InvoiceFactory->invoice . '&amp;coupon_code=' . $coupon['code'] ); ?>" title="<?php echo _CHECKOUT_INVOICE_COUPON_REMOVE; ?>"><?php echo _CHECKOUT_INVOICE_COUPON_REMOVE; ?></a>]
 									</td>
 									<td class="<?php echo $coupon['nodirectaction'] ? 'amount_later' : 'amount'; ?>">-<?php echo $coupon['discount'] . ' ' . $InvoiceFactory->payment->currency; ?></td>
 								</tr>
@@ -678,14 +675,14 @@ class Payment_HTML
 				<?php
 				if ( $InvoiceFactory->coupons['active'] ) { ?>
 					<p><?php echo _CHECKOUT_COUPON_INFO; ?></p>
-					<table width="100%" style="background-color:#DDD;">
+					<table width="100%" id="couponsbox">
 						<tr>
-							<td class="confirmation_button" style="background-color:#EEE;">
+							<td class="couponinfo">
 								<strong><?php echo _CHECKOUT_COUPON_CODE; ?></strong>
 							</td>
 						</tr>
 						<tr>
-							<td class="confirmation_button">
+							<td class="coupondetails">
 								<?php
 								if ( isset( $InvoiceFactory->coupons['warning'] ) ) {
 									if ( $InvoiceFactory->coupons['warning'] ) { ?>
@@ -720,7 +717,7 @@ class Payment_HTML
 					<?php
 				}
 				if ( $params ) { ?>
-					<table width="100%" style="margin-top:24px;background-color:#DDD;">
+					<table width="100%" id="paramsbox">
 						<tr>
 							<td class="append_button">
 								<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=InvoiceAddParams' ); ?>" method="post">
@@ -736,9 +733,9 @@ class Payment_HTML
 					<?php
 				} ?>
 			</div>
-			<table width="100%" style="margin-top:24px;background-color:#DDD;">
+			<table width="100%" id="checkoutbox">
 				<tr>
-					<td class="confirmation_button">
+					<td class="checkout_button">
 						<?php
 						if ( isset( $var['transferinfo'] ) ) { ?>
 							<p><?php echo $var['transferinfo']; ?></p>
