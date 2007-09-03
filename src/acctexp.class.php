@@ -1563,8 +1563,9 @@ class Config_General extends paramDBTable
 		$def['customtext_pending']					= '';
 		$def['customtext_expired']					= '';
 		$def['transferinfo']						= '';
-		// new 0.12.4.1
+		// new 0.12.4.2
 		$def['adminaccess']							= 1;
+		$def['noemails']							= 0;
 
 		// Write to Params, do not overwrite existing data
 		$this->addParams( $def, 'settings', false );
@@ -1812,7 +1813,7 @@ class SubscriptionPlan extends paramDBTable
 		}
 
 		if (!$silent){
-			if ( $this->id !== $cfg->cfg['entry_plan'] ) {
+			if ( ( $this->id !== $cfg->cfg['entry_plan'] ) && !$cfg->cfg['noemails'] ) {
 				$metaUser->objSubscription->sendEmailRegistered( $renew );
 			}
 		}

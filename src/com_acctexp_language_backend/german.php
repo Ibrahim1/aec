@@ -635,6 +635,8 @@ define( '_CFG_GENERAL_DISPLAYCCINFO_NAME',				'Zeige Kreditkartenicons:' );
 define( '_CFG_GENERAL_DISPLAYCCINFO_DESC',				'Sollen die Icons f&uuml;r jedes Gateway angezeigt werden' );
 define( '_CFG_GENERAL_ADMINACCESS_NAME', 'Administrator Zugriff:');
 define( '_CFG_GENERAL_ADMINACCESS_DESC', 'Hiermit d&uuml;rfen nicht nur Super Administratoren, sondern auch normale Administratoren auf das AEC Backend zugreifen.');
+define( '_CFG_GENERAL_NOEMAILS_NAME', 'Keine Emails');
+define( '_CFG_GENERAL_NOEMAILS_DESC', 'Mit dieser Einstellung versendet die AEC keine System-Emails mehr (bei Bezahlung einer Rechnung etc.), andere Emails, z.B. von MicroIntegrationen sind hiervon nicht betroffen.');
 
 // Global Micro Integration Settings
 define( '_CFG_TAB_MICROINTEGRATION_TITLE',				'MicroIntegration' );

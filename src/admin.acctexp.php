@@ -1648,6 +1648,7 @@ function editSettings( $option )
 	$lists['enable_mimeta']			= mosHTML::yesnoSelectList('enable_mimeta', '', ( !empty( $cfg->cfg['enable_mimeta'] ) ? $cfg->cfg['enable_mimeta'] : '' ) );
 	$lists['displayccinfo']			= mosHTML::yesnoSelectList('displayccinfo', '', $cfg->cfg['displayccinfo']);
 	$lists['adminaccess']			= mosHTML::yesnoSelectList('adminaccess', '', $cfg->cfg['adminaccess']);
+	$lists['noemails']				= mosHTML::yesnoSelectList('noemails', '', $cfg->cfg['noemails']);
 
 	$lists['customtext_confirm_keeporiginal']		= mosHTML::yesnoSelectList('customtext_confirm_keeporiginal', '', $cfg->cfg['customtext_confirm_keeporiginal']);
 	$lists['customtext_checkout_keeporiginal']		= mosHTML::yesnoSelectList('customtext_checkout_keeporiginal', '', $cfg->cfg['customtext_checkout_keeporiginal']);
