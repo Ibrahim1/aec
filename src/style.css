@@ -52,7 +52,7 @@ padding-top: 4px;
 .subscriptions th {
 padding: 2px;
 font-family: Georgia, "Times New Roman", serif;
-font-size: 20px;
+font-size: 120%;
 font-weight: normal;
 text-align: left;
 color: #000;
@@ -63,7 +63,7 @@ width: 100%;
 .subscriptions td {
 margin: 6px;
 font-family: Tahoma, Verdana, Helvetica, sans-serif;
-font-size: 12px;
+font-size: 100%;
 text-indent: 20px;
 color: #222;
 }
@@ -177,14 +177,14 @@ margin: 5px;
 
 H1.gateway_title { /*Description Text Heading*/
 display: block;
-font-size: 0.6em !important;
+font-size: 90% !important;
 border-bottom: 1px solid #003e56;
 padding-bottom: 2px;
 }
 
 P.gateway_description { /*Description Text*/
 display: block;
-font-size: 0.6em !important;
+font-size: 90% !important;
 }
 
 input.box_select { /*Radio Button Style*/
@@ -197,7 +197,7 @@ table.plan_disclaimer { /*disclaimer at the end of the PaymentPlan Site*/
 background: #eee;
 border: 1px solid #999;
 font-family: Tahoma, Verdana, Helvetica, sans-serif;
-font-size: 11px;
+font-size: 95%;
 text-indent: 2px;
 }
 
@@ -205,7 +205,7 @@ table.payment_details {
 background: #eee;
 border: 1px solid #999;
 font-family: Tahoma, Verdana, Helvetica, sans-serif;
-font-size: 11px;
+font-size: 95%;
 text-indent: 2px;
 }
 
@@ -289,19 +289,19 @@ border: 2px solid #fff;
 
 #days_left h1 {
 font-weight: bold;
-font-size: 1.2em;
+font-size: 130%;
 text-align: center;
 }
 
 #days_left p {
 font-weight: bold;
-font-size: 12px;
+font-size: 100%;
 text-align: center;
 }
 
 #days_left strong {
 font-weight: bold;
-font-size: 16px;
+font-size: 110%;
 text-align: center;
 }
 
@@ -463,7 +463,7 @@ text-align: center;
 
 #subscription_details h2 {
 font-weight: bold;
-font-size: 14px;
+font-size: 110%;
 }
 
 #subscription_details table {
