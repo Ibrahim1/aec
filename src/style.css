@@ -52,7 +52,7 @@ padding-top: 4px;
 .subscriptions th {
 padding: 2px;
 font-family: Georgia, "Times New Roman", serif;
-font-size: 120%;
+font-size: 160%;
 font-weight: normal;
 text-align: left;
 color: #000;
@@ -63,7 +63,7 @@ width: 100%;
 .subscriptions td {
 margin: 6px;
 font-family: Tahoma, Verdana, Helvetica, sans-serif;
-font-size: 100%;
+font-size: 110%;
 text-indent: 20px;
 color: #222;
 }
@@ -295,7 +295,7 @@ text-align: center;
 
 #days_left p {
 font-weight: bold;
-font-size: 100%;
+font-size: 110%;
 text-align: center;
 }
 
