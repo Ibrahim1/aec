@@ -86,7 +86,7 @@ class mi_remository
 	{
 		global $mosConfig_absolute_path;
 
-		return is_dir( $mosConfig_absolute_path . '/components/com_remository' );
+		return is_dir( $mosConfig_absolute_path . '/components/com_remository/c-classes' );
 	}
 
 	function hacks()
