@@ -51,6 +51,7 @@ class mi_email
 
 	function Settings( $params )
 	{
+
 		$settings = array();
 		$settings['sender']				= array( 'inputE' );
 		$settings['sender_name']		= array( 'inputE' );
@@ -59,15 +60,15 @@ class mi_email
 
 		$settings['subject']			= array( 'inputE' );
 		$settings['text_html']			= array( 'list_yesno' );
-		$settings['text']				= array( 'editor' );
+		$settings['text']				= array( $params['text_html'] ? 'editor' : 'inputD' );
 
 		$settings['subject_exp']		= array( 'inputE' );
 		$settings['text_exp_html']		= array( 'list_yesno' );
-		$settings['text_exp']			= array( 'editor' );
+		$settings['text_exp']			= array( $params['text_exp_html'] ? 'editor' : 'inputD' );
 
 		$settings['subject_pre_exp']	= array( 'inputE' );
 		$settings['text_pre_exp_html']	= array( 'list_yesno' );
-		$settings['text_pre_exp']		= array( 'editor' );
+		$settings['text_pre_exp']		= array( $params['text_pre_exp_html'] ? 'editor' : 'inputD' );
 
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
 		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL,

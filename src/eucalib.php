@@ -59,7 +59,6 @@ class paramDBTable extends mosDBTable
 
 		foreach ( $array as $key => $value ) {
 			if ( !empty( $key ) ) {
-				$value = trim( $value );
 				if ( get_magic_quotes_gpc() ) {
 					$value = stripslashes($value);
 				}
