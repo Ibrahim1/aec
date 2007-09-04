@@ -177,6 +177,20 @@ define( '_CFG_AUTHORIZE_LOGIN_NAME',			'Login ID' );
 define( '_CFG_AUTHORIZE_LOGIN_DESC',			'Die Login ID bei Authorize.net.' );
 define( '_CFG_AUTHORIZE_TRANSACTION_KEY_NAME',	'Transaktions Schl&uuml;ssel' );
 define( '_CFG_AUTHORIZE_TRANSACTION_KEY_DESC',	'Der Transaktions-Schl&uuml;ssel bei Authorize.net.' );
+define( '_CFG_AUTHORIZE_X_LOGO_URL_NAME', 'Logo URL');
+define( '_CFG_AUTHORIZE_X_LOGO_URL_DESC', 'This field is ideal for displaying a merchant logo on a page. The target of this URL will be displayed on the header of the Payment Form and Receipt Page.');
+define( '_CFG_AUTHORIZE_X_BACKGROUND_URL_NAME', 'Background URL');
+define( '_CFG_AUTHORIZE_X_BACKGROUND_URL_DESC', 'This field will allow the merchant to customize the background image of the Payment Form and Receipt Page. The target of the specified URL will be displayed as the background.');
+define( '_CFG_AUTHORIZE_X_COLOR_BACKGROUND_NAME', 'Background Color');
+define( '_CFG_AUTHORIZE_X_COLOR_BACKGROUND_DESC', 'Value in this field will set the background color for the Payment Form and Receipt Page.');
+define( '_CFG_AUTHORIZE_X_COLOR_LINK_NAME', 'Color Link');
+define( '_CFG_AUTHORIZE_X_COLOR_LINK_DESC', 'This field allows the color of the HTML links for the Payment Form and Receipt Page to be set to the value submitted in this field.');
+define( '_CFG_AUTHORIZE_X_COLOR_TEXT_NAME', 'Color Text');
+define( '_CFG_AUTHORIZE_X_COLOR_TEXT_DESC', 'This field allows the color of the text on the Payment Form and the Receipt Page to be set to the value submitted in this field.');
+define( '_CFG_AUTHORIZE_X_HEADER_HTML_RECEIPT_NAME', 'Header Receipt Page');
+define( '_CFG_AUTHORIZE_X_HEADER_HTML_RECEIPT_DESC', 'The text contained in this field will be displayed at the top of the Receipt Page.');
+define( '_CFG_AUTHORIZE_X_FOOTER_HTML_RECEIPT_NAME', 'Footer Receipt Page');
+define( '_CFG_AUTHORIZE_X_FOOTER_HTML_RECEIPT_DESC', 'The text contained in this field will be displayed at the bottom of the Receipt Page.');
 
 // Allopass Settings
 define( '_CFG_ALLOPASS_SITEID_NAME',			'SITE_ID' );

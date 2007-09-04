@@ -74,6 +74,15 @@ class processor_authorize
         $settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']		= '';
 
+		// Customization
+		$settings['x_logo_url']				= '';
+		$settings['x_background_url']		= '';
+		$settings['x_color_background']		= '';
+		$settings['x_color_link']			= '';
+		$settings['x_color_text']			= '';
+		$settings['x_header_html_receipt']	= '';
+		$settings['x_footer_html_receipt']	= '';
+
 		return $settings;
 	}
 
@@ -88,6 +97,15 @@ class processor_authorize
  		$rewriteswitches 				= array("cms", "user", "expiration", "subscription", "plan");
         $settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']		= array("fieldset", "Rewriting Info", AECToolbox::rewriteEngineInfo($rewriteswitches));
+
+		// Customization
+		$settings['x_logo_url']				= array( 'inputE' );
+		$settings['x_background_url']		= array( 'inputE' );
+		$settings['x_color_background']		= array( 'inputC' );
+		$settings['x_color_link']			= array( 'inputC' );
+		$settings['x_color_text']			= array( 'inputC' );
+		$settings['x_header_html_receipt']	= array( 'inputE' );
+		$settings['x_footer_html_receipt']	= array( 'inputE' );
 
 		return $settings;
 	}
