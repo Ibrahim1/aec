@@ -41,10 +41,9 @@ class paramDBTable extends mosDBTable
 		$array = array();
 		foreach ( $params as $chunk ) {
 			$k = explode( '=', $chunk, 2 );
-			if ( isset( $k[1] ) ) {
-				$array[$k[0]] = stripslashes( $k[1] );
-			} else {
-				$array[$k[0]] = null;
+			if ( !empty( $k[0] ) ) {
+				// Strip slashes, but preserve special characters
+				$array[$k[0]] = stripslashes( str_replace( array( '\n', '\t', '\r' ), array( "\n", "\t", "\r" ), $k[1] ) );
 			}
 			unset( $k );
 		}
@@ -59,10 +58,10 @@ class paramDBTable extends mosDBTable
 		$params = array();
 
 		foreach ( $array as $key => $value ) {
-			if ( !is_null( $key ) ) {
+			if ( !empty( $key ) ) {
 				$value = trim( $value );
 				if ( get_magic_quotes_gpc() ) {
-					$value = stripslashes( $value );
+					$value = stripslashes($value);
 				}
 				$value = $this->_db->getEscaped( $value );
 
