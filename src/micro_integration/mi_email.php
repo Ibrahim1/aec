@@ -129,13 +129,13 @@ class mi_email
 		$message	= AECToolbox::rewriteEngine( $params['text'], $metaUser, $plan );
 		$recipients = explode( ',', $params['recipient'] );
 
-		foreach ( $recipients as $current => $email )
-		{
+		foreach ( $recipients as $current => $email ) {
 			$recipients[$current] = AECToolbox::rewriteEngine( trim( $email ), $metaUser, $plan );
 		}
 
 		mosMail( $params['sender'], $params['sender_name'], $recipients, $params['subject'], $message, $params['text_html'] );
 		return true;
 	}
+
 }
 ?>

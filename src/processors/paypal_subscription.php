@@ -181,10 +181,8 @@ class processor_paypal_subscription
 		$customizations = array( 'cbt', 'cn', 'cpp_header_image', 'cpp_headerback_color', 'cpp_headerborder_color', 'cpp_payflow_color', 'image_url', 'page_style' );
 
 		foreach ( $customizations as $cust ) {
-			if ( isset( $cfg[$cust] ) ) {
-				if ( !empty( $cfg[$cust] ) ) {
-					$var[$cust] = $cfg[$cust];
-				}
+			if ( !empty( $cfg[$cust] ) ) {
+				$var[$cust] = $cfg[$cust];
 			}
 		}
 

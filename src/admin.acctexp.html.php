@@ -994,7 +994,7 @@ class HTML_AcctExp
 							continue;
 						}
 					} ?>
-					<div class="userinfobox" style="width: 99%;">
+					<div class="userinfobox">
 						<a name="<?php echo $handle; ?>"></a>
 						<h3><?php echo $content['name']; ?></h3>
 						<div class="action">

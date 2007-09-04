@@ -373,7 +373,7 @@ class docman_restriction extends mosDBTable {
 			}
 		}
 
-		mosRedirect( 'index.php?option=com_docman', _AEC_MI_DOCMAN_NOCREDIT );
+		mosRedirect( AECToolbox::deadsureURL( 'index.php?option=com_docman' ), _AEC_MI_DOCMAN_NOCREDIT );
 	}
 
 	function useDownload()
