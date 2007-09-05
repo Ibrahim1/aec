@@ -1735,6 +1735,7 @@ function editSettings( $option )
 	$tab_data[0][] = array( 'inputA', _CFG_GENERAL_HEARTBEAT_CYCLE_BACKEND_NAME, _CFG_GENERAL_HEARTBEAT_CYCLE_BACKEND_DESC, $cfg->cfg['heartbeat_cycle_backend'], 'heartbeat_cycle_backend');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_ENABLE_COUPONS_NAME, _CFG_GENERAL_ENABLE_COUPONS_DESC, '0', 'enable_coupons');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_ADMINACCESS_NAME, _CFG_GENERAL_ADMINACCESS_DESC, '0', 'adminaccess');
+	$tab_data[0][] = array( 'list', _CFG_GENERAL_NOEMAILS_NAME, _CFG_GENERAL_NOEMAILS_DESC, '0', 'noemails');
 
 	$tab_data[1] = array();
 	$tab_data[1][] = _CFG_TAB_CUSTOMIZATION_TITLE;

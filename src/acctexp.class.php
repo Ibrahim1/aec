@@ -1823,8 +1823,8 @@ class SubscriptionPlan extends paramDBTable
 			}
 		}
 
-		if (!$silent){
-			if ( ( $this->id !== $cfg->cfg['entry_plan'] ) && !$cfg->cfg['noemails'] ) {
+		if ( !( $silent && $cfg->cfg['noemails'] ) ) {
+			if ( ( $this->id !== $cfg->cfg['entry_plan'] ) ) {
 				$metaUser->objSubscription->sendEmailRegistered( $renew );
 			}
 		}
@@ -2807,7 +2807,7 @@ class InvoiceFactory
 
 			} else {
 				// This is a joomla registration, borrowing their code to save the user
-				global $acl;
+				global $acl, $mosConfig_useractivation, $mosConfig_sitename, $mosConfig_live_site;
 
 				// simple spoof check security
 				if ( function_exists( 'josSpoofCheck' ) ) {
@@ -2826,7 +2826,7 @@ class InvoiceFactory
 				$row->usertype 	= '';
 				$row->gid 		= $acl->get_group_id( 'Registered', 'ARO' );
 
-				if ( $mainframe->getCfg( 'useractivation' == 1 ) ) {
+				if ( $mosConfig_useractivation == 1 ) {
 					$row->activation = md5( mosMakePassword() );
 					$row->block = '1';
 				}
@@ -2857,10 +2857,10 @@ class InvoiceFactory
 				$subject 	= sprintf (_SEND_SUB, $name, $mainframe->getCfg( 'sitename' ) );
 				$subject 	= html_entity_decode( $subject, ENT_QUOTES );
 
-				if ( $mainframe->getCfg( 'useractivation' )  == 1 ) {
-					$message = sprintf( _USEND_MSG_ACTIVATE, $name, $mainframe->getCfg( 'sitename' ), $mainframe->getCfg( 'live_site' ) . '/index.php?option=com_registration&task=activate&activation=' . $row->activation, $mainframe->getCfg( 'live_site' ), $username, $pwd );
+				if ($mosConfig_useractivation == 1){
+					$message = sprintf (_USEND_MSG_ACTIVATE, $name, $mosConfig_sitename, $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=".$row->activation, $mosConfig_live_site, $username, $pwd);
 				} else {
-					$message = sprintf( _USEND_MSG, $name, $mainframe->getCfg( 'sitename' ), $mainframe->getCfg( 'live_site' ) );
+					$message = sprintf (_USEND_MSG, $name, $mosConfig_sitename, $mosConfig_live_site);
 				}
 
 				$message = html_entity_decode( $message, ENT_QUOTES );
@@ -3193,7 +3193,7 @@ class Invoice extends paramDBTable
 						// Coupon approved, checking restrictions
 						$cph->checkRestrictions( $metaUser );
 						if ( $cph->status ) {
-							$return['amount'] = $cph->applyCoupon($return['amount']);
+							$return['amount'] = $cph->applyCoupon( $return['amount'] );
 						} else {
 							// Coupon restricted for this user, thus it needs to be deleted later on
 						}
@@ -4646,7 +4646,7 @@ class AECToolbox
 
 	function rewriteEngine( $subject, $metaUser=null, $subscriptionPlan=null )
 	{
-		global $mosConfig_absolute_path, $mosConfig_live_site;
+		global $database, $mosConfig_absolute_path, $mosConfig_live_site;
 
 		// Check whether a replacement exists at all
 		if ( strpos( $subject, '[[' ) == false ) {
@@ -4659,13 +4659,41 @@ class AECToolbox
 			$rewrite['cms_live_site']		= $mosConfig_live_site;
 
 		if ( is_object( $metaUser ) ) {
+
+			if ( $metaUser->hasExpiration ) {
+				$rewrite['expiration_date'] = $metaUser->objExpiration->expiration;
+			}
+
 			$rewrite['user_id']			= $metaUser->cmsUser->id;
 			$rewrite['user_username']	= $metaUser->cmsUser->username;
 			$rewrite['user_name']		= $metaUser->cmsUser->name;
 			$rewrite['user_email']		= $metaUser->cmsUser->email;
 
-			if ( $metaUser->hasExpiration ) {
-				$rewrite['expiration_date'] = $metaUser->objExpiration->expiration;
+			if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+				$query = 'SELECT name'
+						. ' FROM #__comprofiler_fields'
+						. ' WHERE `table` != \'#__users\''
+						. ' AND `name` != \'NA\'';
+				$database->setQuery( $query );
+				$fields = $database->loadResultArray();
+
+				$query = 'SELECT cbactivation' . ( !empty( $fields ) ? ', ' . implode( ', ', $fields ) : '')
+						. ' FROM #__comprofiler'
+						. ' WHERE user_id = \'' . $metaUser->cmsUser->id . '\'';
+				$database->setQuery( $query );
+				$database->loadObject( $cbuser );
+
+				if ( !empty( $fields ) ) {
+					foreach ( $fields as $fieldname ) {
+						$rewrite['user_' . $fieldname][] = $cbuser->$fieldname;
+					}
+				}
+
+				$rewrite['user_activationcode']		= $metaUser->cmsUser->activation;
+				$rewrite['user_activationlink']		= $mosConfig_live_site."/index.php?option=com_comprofiler&task=confirm&confirmcode=" . $metaUser->cmsUser->activation;
+			} else {
+				$rewrite['user_activationcode']		= $metaUser->cmsUser->activation;
+				$rewrite['user_activationlink']		= $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=" . $metaUser->cmsUser->activation;
 			}
 
 			if ( $metaUser->hasSubscription ) {
@@ -4677,6 +4705,31 @@ class AECToolbox
 				$rewrite['subscription_previous_plan']	= $metaUser->objSubscription->previous_plan;
 				$rewrite['subscription_recurring']		= $metaUser->objSubscription->recurring;
 				$rewrite['subscription_lifetime']		= $metaUser->objSubscription->lifetime;
+			}
+
+			$lastinvoice = AECfetchfromDB::lastClearedInvoiceIDbyUserID( $metaUser->cmsUser->id );
+
+			if ( $lastinvoice ) {
+				$invoice = new Invoice( $database );
+				$invoice->load( $lastinvoice );
+
+				$rewrite['invoice_id']					= $invoice->id;
+				$rewrite['invoice_number']				= $invoice->invoice_number;
+				$rewrite['invoice_created_date']		= $invoice->created_date;
+				$rewrite['invoice_transaction_date']	= $invoice->transaction_date;
+				$rewrite['invoice_method']				= $invoice->method;
+				$rewrite['invoice_amount']				= $invoice->amount;
+				$rewrite['invoice_currency']			= $invoice->currency;
+				$rewrite['invoice_coupons']				= $invoice->coupons;
+			} else {
+				$rewrite['invoice_id']					= '';
+				$rewrite['invoice_number']				= '';
+				$rewrite['invoice_created_date']		= '';
+				$rewrite['invoice_transaction_date']	= '';
+				$rewrite['invoice_method']				= '';
+				$rewrite['invoice_amount']				= '';
+				$rewrite['invoice_currency']			= '';
+				$rewrite['invoice_coupons']				= '';
 			}
 		}
 
@@ -4700,35 +4753,71 @@ class AECToolbox
 		$rewrite = array();
 
 		if ( in_array( 'cms', $switches ) ) {
-			$rewrite['cms'][] = 'cms_absolute_path';
-			$rewrite['cms'][] = 'cms_live_site';
+			$rewrite['cms'][] = 'absolute_path';
+			$rewrite['cms'][] = 'live_site';
+		}Invoice Related
+
+		if ( in_array( 'expiration', $switches ) ) {
+			$rewrite['expiration'][] = 'date';
 		}
 
 		if ( in_array( 'user', $switches ) ) {
-			$rewrite['user'][] = 'user_id';
-			$rewrite['user'][] = 'user_username';
-			$rewrite['user'][] = 'user_name';
-			$rewrite['user'][] = 'user_email';
-		}
+			$rewrite['user'][] = 'id';
+			$rewrite['user'][] = 'username';
+			$rewrite['user'][] = 'name';
+			$rewrite['user'][] = 'email';
+			$rewrite['user'][] = 'activationcode';
+			$rewrite['user'][] = 'activationlink';
 
-		if ( in_array( 'expiration', $switches ) ) {
-			$rewrite['expiration'][] = 'expiration_date';
+			if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+				global $database;
+
+				$query = 'SELECT name, title'
+						. ' FROM #__comprofiler_fields'
+						. ' WHERE `table` != \'#__users\''
+						. ' AND name != \'NA\'';
+				$database->setQuery( $query );
+				$objects = $database->loadObjectList();
+
+				if ( is_array( $objects ) ) {
+					foreach ( $objects as $object ) {
+						$rewrite['user'][] = $object->name;
+
+						if ( strpos( $object->title, '_' ) === 0 ) {
+							define( '_REWRITE_KEY_USER_' . strtoupper( $object->name ), $object->name );
+						} else {
+							define( '_REWRITE_KEY_USER_' . strtoupper( $object->name ), $object->title );
+						}
+					}
+				}
+			}
 		}
 
 		if ( in_array( 'subscription', $switches ) ) {
-			$rewrite['subscription'][] = 'subscription_type';
-			$rewrite['subscription'][] = 'subscription_status';
-			$rewrite['subscription'][] = 'subscription_signup_date';
-			$rewrite['subscription'][] = 'subscription_lastpay_date';
-			$rewrite['subscription'][] = 'subscription_plan';
-			$rewrite['subscription'][] = 'subscription_previous_plan';
-			$rewrite['subscription'][] = 'subscription_recurring';
-			$rewrite['subscription'][] = 'subscription_lifetime';
+			$rewrite['subscription'][] = 'type';
+			$rewrite['subscription'][] = 'status';
+			$rewrite['subscription'][] = 'signup_date';
+			$rewrite['subscription'][] = 'lastpay_date';
+			$rewrite['subscription'][] = 'plan';
+			$rewrite['subscription'][] = 'previous_plan';
+			$rewrite['subscription'][] = 'recurring';
+			$rewrite['subscription'][] = 'lifetime';
+		}
+
+		if ( in_array( 'invoice', $switches ) ) {
+			$rewrite['invoice'][] = 'id';
+			$rewrite['invoice'][] = 'number';
+			$rewrite['invoice'][] = 'created_date';
+			$rewrite['invoice'][] = 'transaction_date';
+			$rewrite['invoice'][] = 'method';
+			$rewrite['invoice'][] = 'amount';
+			$rewrite['invoice'][] = 'currency';
+			$rewrite['invoice'][] = 'coupons';
 		}
 
 		if ( in_array( 'plan', $switches ) ) {
-			$rewrite['plan'][] = 'plan_name';
-			$rewrite['plan'][] = 'plan_desc';
+			$rewrite['plan'][] = 'name';
+			$rewrite['plan'][] = 'desc';
 		}
 
 		$return = '';
@@ -4738,7 +4827,7 @@ class AECToolbox
 			. '<ul>' . "\n";
 
 			foreach ( $keys as $key ) {
-				$return .= '<li>[[' . $key . ']] =&gt; ' . constant( '_REWRITE_KEY_' . strtoupper( $key ) ) . '</li>' . "\n";
+				$return .= '<li>[[' . $area . "_" . $key . ']] =&gt; ' . constant( '_REWRITE_KEY_' . strtoupper( $area . "_" . $key ) ) . '</li>' . "\n";
 			}
 			$return .= '</ul>' . "\n"
 			. '</div>' . "\n";

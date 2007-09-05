@@ -979,6 +979,8 @@ define( '_REWRITE_KEY_USER_ID',				'Benutzer ID' );
 define( '_REWRITE_KEY_USER_USERNAME',		'Benutzername' );
 define( '_REWRITE_KEY_USER_NAME',			'Name' );
 define( '_REWRITE_KEY_USER_EMAIL',			'Emailadresse' );
+define( '_REWRITE_KEY_USER_ACTIVATIONCODE', 'Aktivierungs Code');
+define( '_REWRITE_KEY_USER_ACTIVATIONLINK', 'Aktivierungs Link');
 
 define( '_REWRITE_AREA_EXPIRATION',			'Benutzer Ablaufbezogen' );
 define( '_REWRITE_KEY_EXPIRATION_DATE',		'Ablaufdatum' );
@@ -1000,6 +1002,16 @@ define( '_REWRITE_KEY_PLAN_DESC',			'Beschreibung' );
 define( '_REWRITE_AREA_CMS',				'CMS Bezogen' );
 define( '_REWRITE_KEY_CMS_ABSOLUTE_PATH',	'Absoluter Pfad zum CMS-Hauptverzeichnis (z.B. ../www/html/...' );
 define( '_REWRITE_KEY_CMS_LIVE_SITE',		'Relativer Pfad zur Webseite (z.B. http://www.meineseite.com)' );
+
+define( '_REWRITE_AREA_INVOICE', 'Rechnungs Bezogen');
+define( '_REWRITE_KEY_INVOICE_ID', 'Rechnungs ID');
+define( '_REWRITE_KEY_INVOICE_NUMBER', 'Rechnungs Nummer');
+define( '_REWRITE_KEY_INVOICE_CREATED_DATE', 'Datum der Erstellung');
+define( '_REWRITE_KEY_INVOICE_TRANSACTION_DATE', 'Datum der Bezahlung');
+define( '_REWRITE_KEY_INVOICE_METHOD', 'Bezahlungsmethode');
+define( '_REWRITE_KEY_INVOICE_AMOUNT', 'Betrag');
+define( '_REWRITE_KEY_INVOICE_CURRENCY', 'W&auml;hrung');
+define( '_REWRITE_KEY_INVOICE_COUPONS', 'Coupon Liste');
 
 // --== COUPONS OVERVIEW ==--
 define( '_COUPON_TITLE',					'Gutscheine' );
