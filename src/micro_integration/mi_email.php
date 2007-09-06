@@ -70,7 +70,7 @@ class mi_email
 		$settings['text_pre_exp_html']	= array( 'list_yesno' );
 		$settings['text_pre_exp']		= array( $params['text_pre_exp_html'] ? 'editor' : 'inputD' );
 
-		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
+		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL,
 										AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 

@@ -1691,7 +1691,7 @@ function editSettings( $option )
 		$mi->class_name = $name;
 		if ( $mi->callIntegration() ){
 			$len = 30 - AECToolbox::visualstrlen( trim( $mi->name ) );
-			$fullname = str_replace( '#', '&nbsp;', str_pad( $mi->name, $len, '#' ) ) . ' - ' . $mi->desc;
+			$fullname = str_replace( '#', '&nbsp;', str_pad( $mi->name, $len, '#' ) ) . ' - ' . substr($mi->desc, 0, 120);
 			$mi_htmllist[] = mosHTML::makeOption( $name, $fullname );
 		}
 	}

@@ -77,7 +77,7 @@ class mi_remository
 		$settings['set_group']			= array( 'list_yesno' );
 		$settings['group']				= array( 'list' );
 		$settings['set_group_exp']		= array( 'list_yesno' );
-		$settings['group_exp']				= array( 'list' );
+		$settings['group_exp']			= array( 'list' );
 
 		return $settings;
 	}

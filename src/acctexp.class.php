@@ -4755,7 +4755,7 @@ class AECToolbox
 		if ( in_array( 'cms', $switches ) ) {
 			$rewrite['cms'][] = 'absolute_path';
 			$rewrite['cms'][] = 'live_site';
-		}Invoice Related
+		}
 
 		if ( in_array( 'expiration', $switches ) ) {
 			$rewrite['expiration'][] = 'date';
