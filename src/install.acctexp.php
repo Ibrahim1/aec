@@ -119,16 +119,18 @@ function com_install()
 	$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_invoices` ('
 	. '`id` int(11) NOT NULL auto_increment,'
 	. '`active` int(4) NOT NULL default \'1\','
+	. '`counter` int(11) NOT NULL default \'0\','
 	. '`userid` int(11) NOT NULL default \'0\','
 	. '`invoice_number` varchar(64) NULL,'
 	. '`created_date` datetime NULL default \'0000-00-00 00:00:00\','
 	. '`transaction_date` datetime NULL default \'0000-00-00 00:00:00\','
+	. '`fixed` int(4) NOT NULL default \'0\','
 	. '`usage` varchar(255) NULL,'
 	. '`method` varchar(40) NULL,'
 	. '`amount` varchar(40) NULL,'
 	. '`currency` varchar(10) NULL,'
-	. '`fixed` int(4) NOT NULL default \'0\','
 	. '`coupons` varchar(255) NULL,'
+	. '`transactions` text NULL,'
 	. '`params` text NULL,'
 	. ' PRIMARY KEY (`id`)'
 	. ') TYPE=MyISAM;'
@@ -1186,6 +1188,26 @@ function com_install()
 			if ( !$database->query() ) {
 		    	$errors[] = array( $database->getErrorMsg(), $query );
 			}
+		}
+	}
+
+	$result = null;
+	$database->setQuery("SHOW COLUMNS FROM #__acctexp_invoices LIKE 'counter'");
+	$database->loadObject($result);
+	if (!(strcmp($result->Field, 'counter') === 0)) {
+		$database->setQuery("ALTER TABLE #__acctexp_invoices ADD `counter` int(11) NOT NULL default '0'");
+		if ( !$database->query() ) {
+	    	$errors[] = array( $database->getErrorMsg(), $query );
+		}
+	}
+
+	$result = null;
+	$database->setQuery("SHOW COLUMNS FROM #__acctexp_invoices LIKE 'transactions'");
+	$database->loadObject($result);
+	if (!(strcmp($result->Field, 'transactions') === 0)) {
+		$database->setQuery("ALTER TABLE #__acctexp_invoices ADD `transactions` text NULL");
+		if ( !$database->query() ) {
+	    	$errors[] = array( $database->getErrorMsg(), $query );
 		}
 	}
 

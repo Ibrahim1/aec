@@ -3356,16 +3356,18 @@ class Invoice extends paramDBTable
 
 		$cfg = new Config_General( $database );
 
-		$time_passed		= ( strtotime( $this->transaction_date ) - time() + $mosConfig_offset_user*3600 );
+		$time_passed		= ( strtotime( $this->transaction_date ) - time() + $mosConfig_offset_user*3600 ) / 3600;
 		$transaction_date	= gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
 
-		if ( strcmp( $this->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
+		if ( ( strcmp( $this->transaction_date, '0000-00-00 00:00:00' ) === 0 )
+			|| ( $time_passed > $cfg->cfg['invoicecushion'] ) ) {
+			$this->counter = $this->counter + 1;
 			$this->transaction_date	= $transaction_date;
-			$this->check();
-			$this->store();
-		} elseif ( $time_passed > $cfg->cfg['invoicecushion'] ) {
-			// TODO: Routine to add a recurring payment parameter that tracks recurring payments
-			$this->transaction_date	= $transaction_date;
+
+			$transactions = $this->getParams( 'transactions' );
+			$transactions[] = $transaction_date . ";" . $this->amount . ";" . $this->currency . ";" . $this->method;
+			$transactions = $this->setParams( $transactions, 'transactions' );
+
 			$this->check();
 			$this->store();
 		} else {
