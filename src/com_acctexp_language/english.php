@@ -200,6 +200,7 @@ define( '_COUPON_ERROR_WRONG_PLAN', 'You are not in the correct Subscription Pla
 define( '_COUPON_ERROR_WRONG_PLAN_PREVIOUS', 'To use this coupon, your last Subscription Plan must be different.');
 define( '_COUPON_ERROR_WRONG_PLANS_OVERALL', 'You don\'t have the right Subscription Plans in your usage history to be allowed to use this coupon.');
 define( '_COUPON_ERROR_TRIAL_ONLY', 'You may only use this coupon for a Trial Period.');
+define( '_COUPON_ERROR_COMBINATION', 'You cannot use this coupon with one of the other coupons');
 
 // ----======== EMAIL TEXT ========----
 

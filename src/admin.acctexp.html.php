@@ -1977,6 +1977,10 @@ class HTML_AcctExp
 										<?php echo $aecHTML->createSettingsParticle( 'used_plan_max_amount' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'used_plan_max' ); ?>
 									</div>
+									<div style="position:relative;float:left;width:200px;">
+										<?php echo $aecHTML->createSettingsParticle( 'restrict_combination' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'bad_combinations' ); ?>
+									</div>
 								</div>
 						</td></tr>
 						</table>

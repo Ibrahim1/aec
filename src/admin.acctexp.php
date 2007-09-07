@@ -2929,17 +2929,19 @@ function editCoupon( $id, $option, $new, $type )
 	$params['maxgid_enabled']				= array( 'list_yesno',		0 );
 	$params['maxgid']						= array( 'list',			21 );
 	$params['previousplan_req_enabled']		= array( 'list_yesno',		0 );
-	$params['previousplan_req']				= array( 'list',			0 );
+	$params['previousplan_req']				= array( 'list',			'' );
 	$params['currentplan_req_enabled']		= array( 'list_yesno',		0 );
-	$params['currentplan_req']				= array( 'list',			0 );
+	$params['currentplan_req']				= array( 'list',			'' );
 	$params['overallplan_req_enabled']		= array( 'list_yesno',		0 );
-	$params['overallplan_req']				= array( 'list',			0 );
+	$params['overallplan_req']				= array( 'list',			'' );
 	$params['used_plan_min_enabled']		= array( 'list_yesno',		0 );
 	$params['used_plan_min_amount']			= array( 'inputB',			0 );
-	$params['used_plan_min']				= array( 'list',			0 );
+	$params['used_plan_min']				= array( 'list',			'' );
 	$params['used_plan_max_enabled']		= array( 'list_yesno',		0 );
 	$params['used_plan_max_amount']			= array( 'inputB',			0 );
-	$params['used_plan_max']				= array( 'list',			0 );
+	$params['used_plan_max']				= array( 'list',			'' );
+	$params['restrict_combination']			= array( 'list_yesno',		0 );
+	$params['bad_combinations']				= array( 'list',			'' );
 
 	// ensure user can't add group higher than themselves
 	$my_groups = $acl->get_object_groups( 'users', $my->id, 'ARO' );
@@ -3001,9 +3003,8 @@ function editCoupon( $id, $option, $new, $type )
 									'value', 'text', arrayValueDefault($restrictions_values, 'used_plan_max', 0));
 
 	// get usages
-	// mic: fix
 	if ( !empty( $restrictions_values['usage_plans'] ) ) {
-		$query = 'SELECT id AS value, name As text'
+		$query = 'SELECT id AS value, name as text'
 		. ' FROM #__acctexp_plans'
 		. ' WHERE id IN (' . implode( ',', explode( ';', $restrictions_values['usage_plans'] ) ) . ')'
 		;
@@ -3037,6 +3038,41 @@ function editCoupon( $id, $option, $new, $type )
 	$selected_mi = $database->loadObjectList();
 
 	$lists['micro_integrations'] = mosHTML::selectList( $mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple', 'value', 'text', $selected_mi );
+
+	$query = 'SELECT coupon_code as value, coupon_code as text'
+	. ' FROM #__acctexp_coupons'
+	. ' WHERE coupon_code != \'' . $cph->coupon->coupon_code . '\''
+	;
+	$database->setQuery( $query );
+	$coupons = $database->loadObjectList();
+
+	$query = 'SELECT coupon_code as value, coupon_code as text'
+	. ' FROM #__acctexp_coupons_static'
+	. ' WHERE coupon_code != \'' . $cph->coupon->coupon_code . '\''
+	;
+	$database->setQuery( $query );
+	$coupons = array_merge( $database->loadObjectList(), $coupons );
+
+	if ( !empty( $restrictions_values['bad_combinations'] ) ) {
+		$query = 'SELECT coupon_code as value, coupon_code as text'
+		. ' FROM #__acctexp_coupons'
+		. ' WHERE coupon_code IN (\'' . implode( '\',\'', explode( ';', $restrictions_values['bad_combinations'] ) ) . '\')'
+		;
+		$database->setQuery( $query );
+		$sel_coupons = $database->loadObjectList();
+
+		$query = 'SELECT coupon_code as value, coupon_code as text'
+		. ' FROM #__acctexp_coupons_static'
+		. ' WHERE coupon_code IN (\'' . implode( '\',\'', explode( ';', $restrictions_values['bad_combinations'] ) ) . '\')'
+		;
+		$database->setQuery( $query );
+		$sel_coupons = array_merge( $database->loadObjectList(), $sel_coupons );
+	} else {
+		$sel_coupons = '';
+	}
+
+	$lists['bad_combinations']		= mosHTML::selectList($coupons, 'bad_combinations[]', 'size="' . min((count( $coupons ) + 1), 25) . '" multiple',
+									'value', 'text', $sel_coupons);
 
 	$settings = new aecSettings( 'coupon', 'general' );
 	$settings->fullSettingsArray( $params, array_merge( (array) $params_values, (array) $discount_values, (array) $restrictions_values ), $lists );

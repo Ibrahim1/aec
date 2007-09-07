@@ -2961,44 +2961,64 @@ class InvoiceFactory
 
 				$this->coupons['coupons'] = array();
 
+				$applied_coupons = array();
+				$global_nomix = array();
 				foreach ( $coupons as $id => $coupon_code ) {
 					$cph = new couponHandler();
 					$cph->load( $coupon_code );
-					$cph->getInfo( $amount );
-					$cph->checkRestrictions( $metaUser, $original_amount, $this );
 
-					if ( $cph->status ) {
-						$this->coupons['coupons'][$id]['code']		= $cph->code;
-						$this->coupons['coupons'][$id]['name']		= $cph->name;
-						$this->coupons['coupons'][$id]['discount']	= AECToolbox::correctAmount( $cph->discount_amount );
-						$this->coupons['coupons'][$id]['action']	= $cph->action;
-						$this->coupons['coupons'][$id]['nodirectaction'] = 0;
-						// Set a warning notice that the amount doesn't seem to have changed althout its only for the next amount
-						if ( is_array( $amount ) ) {
-							if ( isset( $amount['amount']['amount1'] ) ) {
-								if ( $amount['amount']['amount1'] == $cph->amount ) {
-									$this->coupons['coupons'][$id]['nodirectaction'] = 1;
-									$warning = 1;
-								}
-							} elseif ( isset( $amount['amount']['amount2'] ) ) {
-								if ( $amount['amount']['amount2'] == $cph->amount ) {
-									$this->coupons['coupons'][$id]['nodirectaction'] = 1;
-									$warning = 1;
-								}
-							} elseif ( isset( $amount['amount']['amount3'] ) ) {
-								if ( $amount['amount']['amount3'] == $cph->amount ) {
-									$this->coupons['coupons'][$id]['nodirectaction'] = 1;
-									$warning = 1;
-								}
-							}
-						} else {
-							if ( $amount == $cph->amount ) {
-								$this->coupons['coupons'][$id]['nodirectaction'] = 1;
-								$warning = 1;
-							}
-						}
-						$amount = AECToolbox::correctAmount( $cph->amount );
+					if ( $cph->restrictions['restrict_combination'] ) {
+						$nomix = explode( ';', $cph->restrictions['bad_combinations'] );
 					} else {
+						$nomix = array();
+					}
+
+					if ( count( array_intersect( $applied_coupons, $nomix ) ) || in_array( $coupon_code, $global_nomix ) ) {
+						// This coupon either interferes with one of the coupons already applied, or the other way round
+						$cph->setError( _COUPON_ERROR_COMBINATION );
+					} else {
+						$cph->getInfo( $amount );
+						$cph->checkRestrictions( $metaUser, $original_amount, $this );
+
+						if ( $cph->status ) {
+							$this->coupons['coupons'][$id]['code']		= $cph->code;
+							$this->coupons['coupons'][$id]['name']		= $cph->name;
+							$this->coupons['coupons'][$id]['discount']	= AECToolbox::correctAmount( $cph->discount_amount );
+							$this->coupons['coupons'][$id]['action']	= $cph->action;
+							$this->coupons['coupons'][$id]['nodirectaction'] = 0;
+
+							$applied_coupons[] = $coupon_code;
+							$global_nomix = array_merge( $global_nomix, $nomix );
+
+							// Set a warning notice that the amount doesn't seem to have changed althout its only for the next amount
+							if ( is_array( $amount ) ) {
+								if ( isset( $amount['amount']['amount1'] ) ) {
+									if ( $amount['amount']['amount1'] == $cph->amount ) {
+										$this->coupons['coupons'][$id]['nodirectaction'] = 1;
+										$warning = 1;
+									}
+								} elseif ( isset( $amount['amount']['amount2'] ) ) {
+									if ( $amount['amount']['amount2'] == $cph->amount ) {
+										$this->coupons['coupons'][$id]['nodirectaction'] = 1;
+										$warning = 1;
+									}
+								} elseif ( isset( $amount['amount']['amount3'] ) ) {
+									if ( $amount['amount']['amount3'] == $cph->amount ) {
+										$this->coupons['coupons'][$id]['nodirectaction'] = 1;
+										$warning = 1;
+									}
+								}
+							} else {
+								if ( $amount == $cph->amount ) {
+									$this->coupons['coupons'][$id]['nodirectaction'] = 1;
+									$warning = 1;
+								}
+							}
+							$amount = AECToolbox::correctAmount( $cph->amount );
+						}
+					}
+
+					if ( !$cph->status ) {
 						// Set Error
 						$this->coupons['error']		= 1;
 						$this->coupons['errormsg']	= $cph->error;
@@ -3185,26 +3205,9 @@ class Invoice extends paramDBTable
 			if ( $this->coupons ) {
 				$coupons = explode( ';', $this->coupons );
 
-				foreach ( $coupons as $arrayid => $coupon_code ) {
-					$cph = new couponHandler();
-					$cph->load( $coupon_code );
+				$cpsh = new couponsHandler();
 
-					if ( $cph->status ) {
-						// Coupon approved, checking restrictions
-						$cph->checkRestrictions( $metaUser );
-						if ( $cph->status ) {
-							$return['amount'] = $cph->applyCoupon( $return['amount'] );
-						} else {
-							// Coupon restricted for this user, thus it needs to be deleted later on
-						}
-					} else {
-						// Coupon not approved, thus it needs to be deleted later on
-					}
-				}
-
-				$this->coupons = implode( ';', $coupons);
-				$this->check();
-				$this->store();
+				$return['amount'] = $cpsh->applyCoupons( $return['amount'], $coupons, $metaUser );
 			}
 
 			if ( is_array( $return['amount'] ) ) {
@@ -3417,26 +3420,9 @@ class Invoice extends paramDBTable
 		if ( $this->coupons ) {
 			$coupons = explode( ';', $this->coupons);
 
-			foreach ( $coupons as $arrayid => $coupon_code) {
-				$cph = new couponHandler();
-				$cph->load( $coupon_code );
+			$cpsh = new couponsHandler();
 
-				if ( $cph->status ) {
-					// Coupon approved, checking restrictions
-					$cph->checkRestrictions( $metaUser );
-					if ( $cph->status ) {
-						$amount['amount'] = $cph->applyCoupon( $amount['amount'] );
-					} else {
-						// Coupon restricted for this user, thus it needs to be deleted later on
-					}
-				} else {
-					// Coupon not approved, thus it needs to be deleted later on
-				}
-			}
-
-			$this->coupons = implode( ';', $coupons);
-			$this->check();
-			$this->store();
+			$amount['amount'] = $cpsh->applyCoupons( $amount['amount'], $coupons, $metaUser );
 		}
 
 		$int_var['amount']		= $amount['amount'];
@@ -3511,35 +3497,26 @@ class Invoice extends paramDBTable
 				break;
 		}
 
-		$return['params'] = null;
-
-		if ( isset( $var['params'] ) ) {
-			if ( is_array( $var['params'] ) ) {
-				if ( count($var['params'] ) ) {
-					if ( isset( $var['params']['lists'] ) ) {
-						$lists = $var['params']['lists'];
-						unset( $var['params']['lists'] );
-					} else {
-						$lists = null;
-					}
-
-					foreach ( $var['params'] as $name => $entry ) {
-						if ( !is_null( $name ) && !( $name == '' ) ) {
-							if ( !isset( $entry[3] ) ) {
-								$entry[3] = $name;
-							}
-							$return['params'] .= aecHTML::createFormParticle( $name, $entry, $lists ) . "\n";
-						}
-					}
-					unset( $var['params'] );
+		$return['params'] = false;
+		if ( is_array( $var['params'] ) ) {
+			if ( !empty($var['params'] ) ) {
+				if ( isset( $var['params']['lists'] ) ) {
+					$lists = $var['params']['lists'];
+					unset( $var['params']['lists'] );
 				} else {
-					$return['params'] = false;
+					$lists = null;
 				}
-			} else {
-				$return['params'] = false;
+
+				foreach ( $var['params'] as $name => $entry ) {
+					if ( !is_null( $name ) && !( $name == '' ) ) {
+						if ( !isset( $entry[3] ) ) {
+							$entry[3] = $name;
+						}
+						$return['params'] .= aecHTML::createFormParticle( $name, $entry, $lists ) . "\n";
+					}
+				}
+				unset( $var['params'] );
 			}
-		} else {
-			$return['params'] = false;
 		}
 
 		$return['var'] = $var;
@@ -5235,6 +5212,45 @@ class microIntegration extends paramDBTable
 		if ( method_exists( $this->mi_class, 'delete' ) ){
 			$this->mi_class->delete( $params );
 		}
+	}
+}
+
+class couponsHandler
+{
+	function applyCoupons( $amount, $coupons, $metaUser )
+	{
+		$applied_coupons = array();
+		$global_nomix = array();
+		foreach ( $coupons as $arrayid => $coupon_code ) {
+			$cph = new couponHandler();
+			$cph->load( $coupon_code );
+
+			if ( $cph->restrictions['restrict_combination'] ) {
+				$nomix = explode( ';', $cph->restrictions['bad_combinations'] );
+			} else {
+				$nomix = array();
+			}
+
+			if ( count( array_intersect( $applied_coupons, $nomix ) ) || in_array( $coupon_code, $global_nomix ) ) {
+				// This coupon either interferes with one of the coupons already applied, or the other way round
+			} else {
+				if ( $cph->status ) {
+					// Coupon approved, checking restrictions
+					$cph->checkRestrictions( $metaUser );
+					if ( $cph->status ) {
+						$amount = $cph->applyCoupon( $amount );
+						$applied_coupons[] = $coupon_code;
+						$global_nomix = array_merge( $global_nomix, $nomix );
+					} else {
+						// Coupon restricted for this user, thus it needs to be deleted later on
+					}
+				} else {
+					// Coupon not approved, thus it needs to be deleted later on
+				}
+			}
+		}
+
+		return $amount;
 	}
 }
 
