@@ -197,10 +197,11 @@ margin-top: 4px;
 
 .userinfobox pre {
 display: block;
-float: left;
+width: 800px;
 color: #000;
 background-color: #e5f4ff;
-border: 1px solid #0070bd;
+border-left: 1px solid #998;
+border-top: 1px solid #998;
 }
 
 .userinfobox div.important {
@@ -228,7 +229,6 @@ position: relative;
 float: left;
 color: #000;
 background-color: #e5f4ff;
-border: 1px solid #0070bd;
 padding: 4px;
 margin: 4px;
 }
