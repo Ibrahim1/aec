@@ -2454,9 +2454,9 @@ class InvoiceFactory
 			$this->processor = $this->objInvoice->method;
 			$this->usage = $this->objInvoice->usage;
 
-			if ( is_null( $this->usage ) || ($this->usage < 1) || ($this->usage == '') ) {
+			if ( empty( $this->usage ) ) {
 				$this->create( $option, 0, 0, $this->invoice_number );
-			} elseif ( is_null( $this->processor ) || ($this->processor == '') ) {
+			} elseif ( empty( $this->processor ) ) {
 				$this->create( $option, 0, $this->usage, $this->invoice_number );
 			}
 		} else {
@@ -2750,7 +2750,7 @@ class InvoiceFactory
 
 	function save( $option, $var )
 	{
-		global $database, $mainframe, $task;
+		global $database, $mainframe, $task, $acl; // Need to load $acl for CBE
 
 		// ====== STEP 0 - Do the Registration Mumbo-Jumbo ======
 
@@ -2759,7 +2759,12 @@ class InvoiceFactory
 			unset( $var['option'] );
 		}
 
+		// Let CB think that everything is going fine
 		if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+			if ( GeneralInfoRequester::detect_component( 'CBE' ) ) {
+				global $ueConfig;
+			}
+
 			$savetask	= $task;
 			$task		= 'done';
 			include_once ( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
@@ -2792,8 +2797,6 @@ class InvoiceFactory
 
 			if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
 				// This is a CB registration, borrowing their code to save the user
-
-				include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
 
 				saveRegistration( $option );
 

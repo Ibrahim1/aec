@@ -839,11 +839,16 @@ color: #333;
 </ul>
 <h2>0.12.4.2 version - <a href="http://en.wikipedia.org/wiki/Eagle_Nebula">Eagle Nebula</a></h2>
 <ul>
+<li><strong>Major new stuff!</strong>
+<li>Decide which coupons can mix and which cannot</li>
+<li>Invoices now store data of recurring payments - each payment event will be logged individually</li>
+<li>CBE is now correctly handeled - make sure to disable their AEC integration stuff!</li>
+</ul>
+</li>
 <li><strong>Frontend</strong>
 <ul>
 <li>Transfer of all frontend inline CSS to style.css</li>
 <li>all relative font sizing in style.css</li>
-<li>Invoices now store data of recurring payments - each payment event will be logged individually</li>
 </ul>
 </li>
 <li><strong>Backend</strong>
@@ -862,7 +867,6 @@ color: #333;
 <li>Last Invoice Information accessible in Rewrite Engine</li>
 <li>Activation Code and Link also</li>
 <li>Community Builder Fields as well (YES - custom fields as well - NO dont ask!)</li>
-<li>Decide which coupons can mix and which cannot</li>
 </ul>
 </li>
 <li><strong>Payment Plans</strong>
@@ -870,7 +874,7 @@ color: #333;
 <li>Per Plan Choice whether the user will be set to Active or Pending (if admin approval is wanted)</li>
 <li>Plan Setting for making users active in case the administrator wants to manually approve every payment</li>
 <li>Prevent setting Trial Amount to 0.00 if no free trial was asked for</li>
-<li>using integer typecasting in restrictions engine and before to secure correct behavior</li>
+<li>using integer typecasting in restrictions engine and before to secure correct behavior (this also helps with coupons and alike)</li>
 </ul>
 </li>
 <li><strong>Payment Processors</strong>

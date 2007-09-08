@@ -84,9 +84,10 @@ if ( $task ) {
 		case 'savesubscription':
 			$userid = trim( mosGetParam( $_REQUEST, 'userid', 0 ) );
 			$usage = trim( mosGetParam( $_REQUEST, 'usage', 0 ) );
+			$processor = trim( mosGetParam( $_REQUEST, 'processor', null ) );
 
-			$invoicefact = new InvoiceFactory($userid, $usage);
-			$invoicefact->save($option, $_POST);
+			$invoicefact = new InvoiceFactory( $userid, $usage, $processor );
+			$invoicefact->save( $option, $_POST );
 			break;
 
 		case 'backsubscription':
