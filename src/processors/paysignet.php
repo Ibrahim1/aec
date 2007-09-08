@@ -29,19 +29,8 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_paysignet
+class processor_paysignet extends HTMLPOSTprocessor
 {
-	function processor_paysignet()
-	{
-		global $mosConfig_absolute_path;
-
-		if ( file_exists( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/'.$GLOBALS['mosConfig_lang'].'.php' ) ) {
-				include_once( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/'.$GLOBALS['mosConfig_lang'].'.php' );
-		} else {
-				include_once( $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/english.php' );
-		}
-	}
-
 	function info()
 	{
 		$info = array();

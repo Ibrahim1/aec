@@ -1028,7 +1028,7 @@ class PaymentProcessor
 
 			// Initiate Payment Processor Class
 			$class_name = 'processor_' . $this->processor_name;
-			$this->p_class = new $class_name();
+			$this->processor = new $class_name( $database );
 			return true;
 		} else {
 			return false;
@@ -1070,7 +1070,6 @@ class PaymentProcessor
 			$this->init();
 		} else {
 			// Initiate processor from db
-			$this->processor = new processor( $database );
 			$this->processor->load( $this->id );
 		}
 	}
@@ -1110,7 +1109,7 @@ class PaymentProcessor
 	function getInfo()
 	{
 		$this->info	= $this->processor->getParams( 'info' );
-		$original	= $this->p_class->info();
+		$original	= $this->processor->info();
 
 		foreach ( $original as $name => $var ) {
 			if ( !isset( $this->info[$name] ) ) {
@@ -1122,7 +1121,7 @@ class PaymentProcessor
 	function getSettings()
 	{
 		$this->settings	= $this->processor->getParams( 'settings' );
-		$original		= $this->p_class->settings();
+		$original		= $this->processor->settings();
 
 		foreach ( $original as $name => $var ) {
 			if ( !isset( $this->settings[$name] ) ) {
@@ -1153,22 +1152,62 @@ class PaymentProcessor
 
 	function getBackendSettings()
 	{
-		return $this->p_class->backend_settings();
+		return $this->processor->backend_settings();
 	}
 
-	function getGatewayVariables( $int_var, $metaUser, $new_subscription )
+	function checkoutAction( $int_var, $metaUser, $new_subscription )
 	{
 		$this->getSettings();
 
-		return $this->p_class->createGatewayLink( $int_var, $this->settings, $metaUser, $new_subscription );
+		return $this->processor->checkoutAction( $int_var, $this->settings, $metaUser, $new_subscription );
 	}
 
-	function getCustomParams()
+	function getParamsHTML( $params )
+	{
+		$this->getParams( $params );
+
+		$return['params'] = false;
+		if ( isset( $var['params'] ) ) {
+			if ( is_array( $var['params'] ) ) {
+				if ( !empty($var['params'] ) ) {
+					if ( isset( $var['params']['lists'] ) ) {
+						$lists = $var['params']['lists'];
+						unset( $var['params']['lists'] );
+					} else {
+						$lists = null;
+					}
+
+					foreach ( $var['params'] as $name => $entry ) {
+						if ( !is_null( $name ) && !( $name == '' ) ) {
+							if ( !isset( $entry[3] ) ) {
+								$entry[3] = $name;
+							}
+							$return['params'] .= aecHTML::createFormParticle( $name, $entry, $lists ) . "\n";
+						}
+					}
+					unset( $var['params'] );
+				}
+			}
+		}
+	}
+
+	function getParams( $params )
 	{
 		$this->getSettings();
 
-		if ( method_exists( $this->p_class, 'CustomParams' ) ) {
-			return $this->p_class->CustomParams( $this->settings );
+		if ( method_exists( $this->processor, 'Params' ) ) {
+			return $this->processor->Params( $this->settings, $params );
+		} else {
+			return false;
+		}
+	}
+
+	function getCustomPlanParams()
+	{
+		$this->getSettings();
+
+		if ( method_exists( $this->processor, 'CustomPlanParams' ) ) {
+			return $this->processor->CustomPlanParams( $this->settings );
 		} else {
 			return false;
 		}
@@ -1178,7 +1217,7 @@ class PaymentProcessor
 	{
 		$this->getSettings();
 
-		return $this->p_class->parseNotification( $post, $this->settings );
+		return $this->processor->parseNotification( $post, $this->settings );
 	}
 
 }
@@ -1230,6 +1269,66 @@ class processor extends paramDBTable
 		$this->store();
 	}
 
+	function checkoutAction( $int_var, $settings, $metaUser, $new_subscription )
+	{
+		$response = array();
+		$response['action'] ='<p>' . $settings['info'] . '</p>';
+		return $response;
+	}
+}
+
+class XMLprocessor extends processor
+{
+	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	{
+		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp' ) . '" method="post">' . "\n";
+		$return = '<input type="hidden" name="invoice" value="' . $int_var['invoice'] . '" />' . "\n";
+		$return = '<input type="hidden" name="userid" value="' . $metaUser->userid . '" />' . "\n";
+		$return = '<input type="hidden" name="task" value="checkout" />' . "\n";
+		$return .= '<input type="submit" class="button" value="' . _BUTTON_CHECKOUT . '" />' . "\n";
+		$return .= '</form>' . "\n";
+
+		return $return;
+	}
+}
+
+class HTMLPOSTprocessor extends processor
+{
+	function checkoutAction( $int_var, $settings, $metaUser, $new_subscription )
+	{
+		$var = $this->createGatewayLink( $int_var, $settings, $metaUser, $new_subscription );
+
+		$return = '<form action="' . $var['post_url'] . '" method="post">' . "\n";
+		unset( $var['posturl'] );
+
+		foreach ( $var as $key => $value ) {
+			$return .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
+		}
+
+		$return .= '<input type="submit" class="button" value="' . _BUTTON_CHECKOUT . '" />' . "\n";
+		$return .= '</form>' . "\n";
+
+		return $return;
+	}
+}
+
+class HTMLGETprocessor extends processor
+{
+	function checkoutAction( $int_var, $settings, $metaUser, $new_subscription )
+	{
+		$var = $this->createGatewayLink( $int_var, $settings, $metaUser, $new_subscription );
+
+		$return = '<a href="' . $var['post_url'];
+		unset( $var['posturl'] );
+
+		foreach ( $var as $key => $value ) {
+			$return .= '&amp;' . $key . '=' . $value;
+		}
+
+		$return .= '" >' . _BUTTON_CHECKOUT . '</a>' . "\n";
+
+		return $return;
+	}
 }
 
 class aecSettings
@@ -3050,9 +3149,14 @@ class InvoiceFactory
 			return;
 		}
 
-		$var = $this->objInvoice->prepareGatewayLink();
+		$var = $this->objInvoice->prepareProcessorLink();
 
 		Payment_HTML::checkoutForm( $option, $var['var'], $var['params'], $this );
+	}
+
+	function internalcheckout( $option, $invoice, $itemid )
+	{
+
 	}
 
 	function thanks( $option, $renew, $free )
@@ -3381,7 +3485,7 @@ class Invoice extends paramDBTable
 		}
 	}
 
-	function prepareGatewayLink()
+	function prepareProcessorLink()
 	{
 		global $database, $mosConfig_live_site;
 
@@ -3407,20 +3511,20 @@ class Invoice extends paramDBTable
 
 		$method = strtolower( $this->method );
 
-		$pp1 = new PaymentProcessor();
-		if ( $pp1->loadName( $method ) ) {
-			$pp1->init();
-			$pp1->getInfo();
-			$recurring = $pp1->info['recurring'];
-		} else {
-			$recurring = 0;
+		$pp = new PaymentProcessor();
+		if ( !$pp->loadName( $method ) ) {
+	 		// Nope, won't work buddy
+		 	notAllowed();
 		}
 
-		$int_var['recurring'] = $recurring;
+		$pp->init();
+		$pp->getInfo();
+
+		$int_var['recurring'] = $pp->info['recurring'];
 
 		$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], $user_subscription );
 
-		if ( $this->coupons ) {
+		if ( !empty( $this->coupons ) ) {
 			$coupons = explode( ';', $this->coupons);
 
 			$cpsh = new couponsHandler();
@@ -3433,96 +3537,9 @@ class Invoice extends paramDBTable
 		$int_var['invoice']		= $this->invoice_number;
 		$int_var['usage']		= $this->invoice_number;
 
-		$free		= 0;
-		$freetrial	= 0;
-
-		if ( is_array( $int_var['amount'] ) ) {
-			if ( isset( $int_var['amount']['amount1'] ) ) {
-				$freetrial = ( ( strcmp( $int_var['amount']['amount1'], '0.00' ) === 0 )
-				|| ( strcmp( $int_var['amount']['amount1'], '0' ) === 0 ) );
-			}
-			if ( isset( $int_var['amount']['amount3'] ) ) {
-				$free = ( ( strcmp( $int_var['amount']['amount3'], '0.00' ) === 0 ) || ( strcmp( $int_var['amount']['amount3'], '0' ) === 0 ) );
-			}
-		} else {
-			$free = ( ( strcmp( $int_var['amount'], '0.00' ) === 0 ) || ( strcmp( $int_var['amount'], '0' ) === 0 ) );
-		}
-
-		if ( !( strcmp( strtolower( $method ), 'free' ) === 0 ) && !( strcmp( strtolower( $method ), 'transfer' ) === 0 ) ) {
-			if ( $free && !$recurring ) {
-				$method			= 'free';
-				$var['plan']	= $this->usage;
-				$var['userid']	= $user_subscription->userid;
-				$var['method']	= 'free';
-				$var['invoice'] = $this->invoice_number;
-			}
-		} else {
-			if ( $free ) {
-				$method			= 'free';
-				$var['plan']	= $this->usage;
-				$var['userid']	= $user_subscription->userid;
-				$var['method']	= 'free';
-				$var['invoice'] = $this->invoice_number;
-			}
-		}
-
-		if ( $free && !$recurring ) {
-			$method			= 'free';
-			$var['plan']	= $this->usage;
-			$var['userid']	= $user_subscription->userid;
-			$var['method']	= 'free';
-			$var['invoice'] = $this->invoice_number;
-		}
-
-		// ====== STEP 2 - Assemble Gateway Variables ======
-
-		switch ( $method ) {
-			case 'free':
-				$amount					= '0.00';
-				$post_url				= '';
-				break;
-			case 'transfer':
-				$post_url       		= '';
-				$var['processor']		= $method;
-				$var['transferinfo']	= $cfg->cfg['transferinfo'];
-				$var['invoice']			= $this->invoice_number;
-				break;
-			default:
-				$pp = new PaymentProcessor();
-				if ( $pp->loadName( $method ) ) {
-					$pp->init();
-					$var = $pp->getGatewayVariables( $int_var, $metaUser, $new_subscription );
-				} else {
-					exit();
-					// TODO: Log error
-				}
-
-				break;
-		}
-
-		$return['params'] = false;
-		if ( is_array( $var['params'] ) ) {
-			if ( !empty($var['params'] ) ) {
-				if ( isset( $var['params']['lists'] ) ) {
-					$lists = $var['params']['lists'];
-					unset( $var['params']['lists'] );
-				} else {
-					$lists = null;
-				}
-
-				foreach ( $var['params'] as $name => $entry ) {
-					if ( !is_null( $name ) && !( $name == '' ) ) {
-						if ( !isset( $entry[3] ) ) {
-							$entry[3] = $name;
-						}
-						$return['params'] .= aecHTML::createFormParticle( $name, $entry, $lists ) . "\n";
-					}
-				}
-				unset( $var['params'] );
-			}
-		}
-
-		$return['var'] = $var;
+		// Assemble Processor Variables
+		$return['var']		= $pp->checkoutAction( $int_var, $metaUser, $new_subscription );
+		$return['params']	= $pp->getParamsHTML( $int_var['params'] );
 
 		return $return;
 	}

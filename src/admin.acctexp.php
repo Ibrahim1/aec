@@ -1889,7 +1889,7 @@ function editSettings( $option )
 						}
 
 						// It might be that the processor has got some new properties, so we need to double check here
-						$new_settings = $pp->p_class->settings();
+						$new_settings = $pp->processor->settings();
 
 						if ( isset( $pp->settings[$name] ) ) {
 							$tab[] = array_merge( $settings_array[$name], array( $pp->settings[$name], $setting_name ) );
@@ -1927,7 +1927,7 @@ function editSettings( $option )
 
 
 			} else {
-				$pp->info = $pp->p_class->info();
+				$pp->info = $pp->processor->info();
 			}
 
 			// Add to general PP List
@@ -2012,7 +2012,7 @@ function saveSettings( $option )
 
 			$pp->setInfo();
 
-			$settings = $pp->p_class->settings();
+			$settings = $pp->processor->settings();
 
 			foreach ( $settings as $name => $value ) {
 				$postname = $procname  . '_' . $name;

@@ -29,22 +29,8 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_epsnetpay
+class processor_epsnetpay extends HTMLPOSTprocessor
 {
-	function processor_epsnetpay() 
-	{
-		global $mosConfig_absolute_path;
-
-		if( !defined( '_AEC_LANG_PROCESSOR' ) ) {
-			$langPath = $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/';
-			if (file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
-				include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
-			}else{
-				include_once( $langPath . 'english.php' );
-			}
-		}
-	}
-
 	function info()
 	{
 		$info = array();
@@ -163,24 +149,6 @@ class processor_epsnetpay
 
 		$var['sapPopFingerPrint'] = md5($fingerprint); // Fingerprint
 
-		$merchantnumber = 0;
-		$bank_selection = array();
-		while ( isset( $cfg['merchantactive_' . $merchantnumber] ) ) {
-			if ($cfg['merchantactive_' . $merchantnumber]) {
-				$bank_selection[] = mosHTML::makeOption( $merchantnumber, $cfg['merchantname_' . $merchantnumber] );
-			}
-			$merchantnumber++;
-		}
-
-		if ( is_null( $int_var['params']['bank_selection'] ) ) {
-			$selected = 0;
-		} else {
-			$selected = $int_var['params']['bank_selection'];
-		}
-
-		$var['params']['lists']['bank_selection'] = mosHTML::selectList($bank_selection, 'bank_selection', 'size="5"', 'value', 'text', $selected);
-		$var['params']['bank_selection'] = array("list", "Bank Auswahl", "Bitte w&auml;hlen Sie die gew&uuml;nschte Bank aus.");
-
 		$bank = array();
 		// BANK AUSTRIA CREDITANSTALT
 		$bank[] = "https://pop.ba-ca.com/servlet/PopBACAEntry";
@@ -218,13 +186,34 @@ class processor_epsnetpay
 		return $var;
 	}
 
+	function Params( $cfg, $params )
+	{
+		$merchantnumber = 0;
+		$bank_selection = array();
+		while ( isset( $cfg['merchantactive_' . $merchantnumber] ) ) {
+			if ($cfg['merchantactive_' . $merchantnumber]) {
+				$bank_selection[] = mosHTML::makeOption( $merchantnumber, $cfg['merchantname_' . $merchantnumber] );
+			}
+			$merchantnumber++;
+		}
+
+		if ( empty( $params['bank_selection'] ) ) {
+			$selected = 0;
+		} else {
+			$selected = $params['bank_selection'];
+		}
+
+		$var['params']['lists']['bank_selection'] = mosHTML::selectList($bank_selection, 'bank_selection', 'size="5"', 'value', 'text', $selected);
+		$var['params']['bank_selection'] = array("list", "Bank Auswahl", "Bitte w&auml;hlen Sie die gew&uuml;nschte Bank aus.");
+	}
+
 	function parseNotification( $post, $cfg )
 	{
 		global $database, $mosConfig_live_site;
 
 		$invoiceID				= $post['sapPopStsVwzweck'];
 		$userid					= $post['sapPopStsRechnr'];
-	
+
 		$sapUgawVK				= $post['sapUgawVK']; // Amount. Value before the comma
 		$sapUgawNK				= $post['sapUgawNK']; // Amount. Value after the comma
 		$sapPopStsReturnStatus	= $post['sapPopStsReturnStatus']; // Statuscode (OK/NOK/VOK)

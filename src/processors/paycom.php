@@ -43,22 +43,8 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_paycom
+class processor_paycom extends HTMLPOSTprocessor
 {
-	function processor_paycom()
-	{
-		global $mosConfig_absolute_path;
-
-		if( !defined( '_AEC_LANG_PROCESSOR' ) ) {
-			$langPath = $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/';
-			if (file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
-				include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
-			}else{
-				include_once( $langPath . 'english.php' );
-			}
-		}
-	}
-
 	function info()
 	{
 		$info = array();
@@ -110,7 +96,7 @@ class processor_paycom
 		$var['no_userpass']		= "true"; //tells Paycom - we are handling the username and password
 		$var['x_username']		= $metaUser->cmsUser->username;
 		//		$var['bgcolor']			= $cfg['bgcolor'];
-		
+
 		return $var;
 	}
 
@@ -131,8 +117,8 @@ class processor_paycom
 		$ans				= $post['ans'];
 		$checksum			= $post['x_checksum'];
 		$username			= $post['x_username'];
-		
-		
+
+
 		$response = array();
 		$response['invoice'] = $invoice;
 		$response['valid'] = 1;
@@ -147,7 +133,7 @@ class processor_paycom
 			$response['valid'] = 0;
 			$response['pending']=1;
 			$response['pending_reason']=$ans;
-			
+
 			return $response;
 			break;
 		}

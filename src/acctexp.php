@@ -90,6 +90,13 @@ if ( $task ) {
 			$invoicefact->save( $option, $_POST );
 			break;
 
+		case 'checkout':
+			$invoice	= trim( mosGetParam( $_REQUEST, 'invoice', 0 ) );
+			$itemid		= trim( mosGetParam( $_REQUEST, 'Itemid', 0 ) );
+
+			internalcheckout( $option, $invoice, $itemid );
+			break;
+
 		case 'backsubscription':
 			backSubscription( $option );
 			break;
@@ -560,6 +567,28 @@ function subscriptionDetails( $option )
 
 		$html = new HTML_frontEnd();
 		$html->subscriptionDetails( $option, $invoices, $metaUser, $recurring, $pp, $mi_info, $alert, $my->id, $selected_plan );
+	}
+}
+
+function internalCheckout( $option, $invoice_number, $userid )
+{
+	global $database, $my;
+
+	// Always rewrite to session userid
+	if ( !empty( $my->id ) ) {
+		$userid = $my->id;
+	}
+
+	$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, $userid );
+
+	// Only allow a user to access existing and own invoices
+	if ( $invoiceid ) {
+		$invoicefact = new InvoiceFactory( $userid );
+		$invoicefact->touchInvoice( $option, $invoice_number );
+		$invoicefact->internalcheckout( $option );
+	} else {
+		mosNotAuth();
+		return;
 	}
 }
 

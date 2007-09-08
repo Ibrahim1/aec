@@ -624,11 +624,7 @@ class Payment_HTML
 
 		HTML_frontend::aec_styling( $option );
 
-		if ( isset( $var['post_url'] ) ) {
-			$posturl = $var['post_url'];
-			unset( $var['post_url'] );
-		}
-		$introtext = '_CHECKOUT_INFO' . ( isset( $var['transferinfo'] ) ? '_TRANSFER' : '' ) . ( $repeat ? '_REPEAT' : '' );
+		$introtext = '_CHECKOUT_INFO' . ( $repeat ? '_REPEAT' : '' );
 
 		$cfg = new Config_General( $database ); ?>
 
@@ -735,22 +731,10 @@ class Payment_HTML
 			</div>
 			<table width="100%" id="checkoutbox">
 				<tr>
-					<td class="checkout_button">
+					<td class="checkout_action">
 						<?php
-						if ( isset( $var['transferinfo'] ) ) { ?>
-							<p><?php echo $var['transferinfo']; ?></p>
-							<?php
-						} else { ?>
-							<form action="<?php echo $posturl; ?>" method="post">
-								<?php
-								foreach ( $var as $key => $value ) { ?>
-									<input type="hidden" name="<?php echo $key; ?>" value="<?php echo $value; ?>" />
-									<?php
-								} ?>
-								<input type="submit" class="button" value="<?php echo _BUTTON_CHECKOUT; ?>" />
-							</form>
-							<?php
-						} ?>
+						print $var
+						?>
 					</td>
 				</tr>
 			</table>

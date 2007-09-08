@@ -2,7 +2,7 @@
 
 /**
 * CCBill process interface BETA 1.0
-* 
+*
 * @copyright 2007 Ben Ingram
 * @license http://www.gnu.org/copyleft/gpl.html. GNU Public License
 * @version $Revision: 1.0 $
@@ -44,22 +44,8 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_ccbill
+class processor_ccbill extends HTMLPOSTprocessor
 {
-	function processor_ccbill()
-	{		
-		global $mosConfig_absolute_path;
-
-		if( !defined( '_AEC_LANG_PROCESSOR' ) ) {
-			$langPath = $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/';
-			if (file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
-				include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
-			}else{
-				include_once( $langPath . 'english.php' );
-			}
-		}
-	}
-
 	function info()
 	{
 		$info = array();
@@ -136,7 +122,7 @@ class processor_ccbill
 	zipcode				Customer Zip Code
 	start_date			The subscription start date Used to show individual corresponding yearly, monthly or daily dates for report data. The date function's format is year-month-day; for example, 2002-01-01., i.e., 2002-08-05 15:18:17
 	referer				Use other Affiliate Program (non-CCBill)
-	ccbill_referer		Use CCBill Affiliate Program 
+	ccbill_referer		Use CCBill Affiliate Program
 	reservationId		Customer�s subscription Reservation ID number
 	initialPrice		The initial price of the subscription
 	initialPeriod		The initial period of the subscription
@@ -145,27 +131,27 @@ class processor_ccbill
 	rebills				The number of subscription rebills
 	ip_address			Customer�s IP address , such as: 64.38.194.13
 	*/
-	
-	
+
+
 	function parseNotification( $post, $cfg )
 	{
-		$invoice			= $post['invoice'];	
-		$username			= $post['username'];	
+		$invoice			= $post['invoice'];
+		$username			= $post['username'];
 		$reasonForDecline	= $post['reasonForDecline'];
 		$checksum			= $post['checksum'];
-		$customer_fname		= $post['customer_fname'];	
+		$customer_fname		= $post['customer_fname'];
 		$customer_lname		= $post['customer_lname'];
-		$email				= $post['email'];	
-		$password			= $post['password'];	
-		$productDesc		= $post['productDesc'];	
-		$price				= $post['price'];	
+		$email				= $post['email'];
+		$password			= $post['password'];
+		$productDesc		= $post['productDesc'];
+		$price				= $post['price'];
 		$clientAccnum		= $post['clientAccnum'];
 		$clientSubacc		= $post['clientSubacc'];
 		$address1			= $post['address1'];
 		$city				= $post['city'];
 		$state				= $post['state'];
 		$country			= $post['country'];
-		$subscription_id	= $post['subscription_id'];	
+		$subscription_id	= $post['subscription_id'];
 		$phone_number		= $post['phone_number'];
 		$zipcode			= $post['zipcode'];
 		$start_date			= $post['start_date'];
@@ -178,11 +164,11 @@ class processor_ccbill
 		$recurringPeriod	= $post['recurringPeriod'];
 		$rebills			= $post['rebills'];
 		$ip_address			= $post['ip_address'];
-		$username			= $post['username'];	
-		$password			= $post['password'];	
-		$productDesc		= $post['productDesc'];	
-		$price				= $post['price'];	
-		$subscription_id	= $post['subscription_id'];	
+		$username			= $post['username'];
+		$password			= $post['password'];
+		$productDesc		= $post['productDesc'];
+		$price				= $post['price'];
+		$subscription_id	= $post['subscription_id'];
 		$reasonForDecline	= $post['reasonForDecline'];
 		$clientAccnum		= $post['clientAccnum'];
 		$clientSubacc		= $post['clientSubacc'];
@@ -210,12 +196,12 @@ class processor_ccbill
 		$response['checksum'] = $checksum;
 		$response['amount_paid'] = $initialPrice;
 		$validate			= md5($cfg['secretWord'] . $username);
-		
+
 		if (strlen($reasonForDecline) > 0){
 			$response['valid'] = 0;
 			return $response;
 		}
-		
+
 		$response['valid'] = (strcmp($validate, $checksum) == 0);
 		return $response;
 
