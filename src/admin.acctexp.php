@@ -2183,6 +2183,7 @@ function editSubscriptionPlan( $id, $option )
 	} else {
 		$params_values = $row->getParams( 'params' );
 		$restrictions_values = $row->getParams( 'restrictions' );
+		$customparams_values = $row->getParams( 'custom_params' );
 
 		// We need to convert the values that are set as object properties
 		$params_values['active']				= $row->active;
@@ -2350,6 +2351,8 @@ function editSubscriptionPlan( $id, $option )
 
 	$lists['processors'] = mosHTML::selectList($available_gw, 'processors[]', 'size="' . max(min(count($available_gw), 12), 2) . '" multiple', 'value', 'text', $selected_gw);
 
+	foreach
+
 	// get available active plans
 	$available_plans = array();
 	$available_plans[] = mosHTML::makeOption( '0', _PAYPLAN_NOPLAN );
@@ -2445,7 +2448,7 @@ function editSubscriptionPlan( $id, $option )
 	$lists['micro_integrations'] = mosHTML::selectList($mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple', 'value', 'text', $selected_mi);
 
 	$settings = new aecSettings ( 'payplan', 'general' );
-	$settings->fullSettingsArray( $params, array_merge( $params_values, $restrictions_values ), $lists) ;
+	$settings->fullSettingsArray( $params, array_merge( $params_values, $customparams_values, $restrictions_values ), $lists) ;
 
 	// Call HTML Class
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );

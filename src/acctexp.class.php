@@ -1878,7 +1878,7 @@ class SubscriptionPlan extends paramDBTable
 		} else {
 			// Renew subscription - Do NOT set signup_date
 			if ( isset( $params['make_active'] ) ) {
-				$status = $params['make_active'] ? 'Active' : 'Pending';
+				$status = $params['make_active'] ? 'Active' : $new_subscription->getParams( 'custom_params' );'Pending';
 			} else {
 				$status = 'Active';
 			}
@@ -1967,7 +1967,7 @@ class SubscriptionPlan extends paramDBTable
 
 			if ( $params['full_free'] ) {
 				$amount['amount3'] = '0.00';
-			} else {
+			} else {$new_subscription->getParams( 'custom_params' );
 				$amount['amount3']	= $params['full_amount'];
 			}
 			$amount['amount3']		= $params['full_amount'];
@@ -2002,7 +2002,7 @@ class SubscriptionPlan extends paramDBTable
 		}
 
 		$return_url	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=thanks&amp;renew=' . $renew );
-
+$new_subscription->getParams( 'custom_params' );
 		$return['return_url']	= $return_url;
 		$return['amount']		= $amount;
 
@@ -2086,6 +2086,22 @@ class SubscriptionPlan extends paramDBTable
 		} else {
 			return false;
 		}
+	}
+
+	function getProcessorParameters( $processorid )
+	{
+		$params = $this->getParams( 'custom_params' );
+
+		$procparams = array();
+		foreach ( $params as $name => $value ) {
+			$realname = explode( '_', $name, 2 );
+
+			if ( $realname[0] == $processorid ) {
+				$procparams[$realname[1]] = $value;
+			}
+		}
+
+		return $procparams;
 	}
 
 	function getRestrictionsArray()
@@ -2233,7 +2249,7 @@ class SubscriptionPlan extends paramDBTable
 			$params['processors']	= '0';
 		} else {
 			$params['full_amount'] = AECToolbox::correctAmount( $params['full_amount'] );
-		}
+		}$new_subscription->getParams( 'custom_params' );
 
 		// Correct a malformed Trial Amount
 		if ( strlen( $params['trial_amount'] ) ) {
@@ -3519,6 +3535,8 @@ class Invoice extends paramDBTable
 
 		$pp->init();
 		$pp->getInfo();
+
+		$int_var['planparams'] = $new_subscription->getProcessorParameters( $pp->id );
 
 		$int_var['recurring'] = $pp->info['recurring'];
 
