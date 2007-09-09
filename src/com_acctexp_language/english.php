@@ -118,7 +118,7 @@ define( '_CONFIRM_INFO', 'Please use the Continue-Button to complete your regist
 define( '_BUTTON_CONFIRM', 'Continue');
 define( '_CONFIRM_TOS', "I have read and agree to the <a href=\"%s\" target=\"_BLANK\">Terms of Service</a>");
 define( '_CONFIRM_TOS_ERROR', 'Please read and agree to our Terms of Service');
-define( '_CONFIRM_COUPON_INFO', 'If you have a coupon code, you can enter it on the Checkout Page to get a rebate on your payment');
+define( '_CONFIRM_COUPON_INFO', 'If you have a coupon code, you can enter it on the Checkout Page to get a discount on your payment');
 
 // --== CHECKOUT FORM ==--
 define( '_CHECKOUT_TITLE', 'Checkout');
@@ -133,7 +133,7 @@ define( '_CHECKOUT_INVOICE_AMOUNT', 'Invoice Amount');
 define( '_CHECKOUT_INVOICE_COUPON', 'Coupon');
 define( '_CHECKOUT_INVOICE_COUPON_REMOVE', 'remove');
 define( '_CHECKOUT_INVOICE_TOTAL_AMOUNT', 'Total Amount');
-define( '_CHECKOUT_COUPON_INFO', 'If you have a coupon code, you can enter it here to get a rebate on your payment');
+define( '_CHECKOUT_COUPON_INFO', 'If you have a coupon code, you can enter it here to get a discount on your payment');
 
 // --== ALLOPASS SPECIFIC ==--
 define( '_REGTITLE','INSCRIPTION');

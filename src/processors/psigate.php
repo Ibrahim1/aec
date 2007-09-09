@@ -51,7 +51,7 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_psigate extends HTMLPOSTprocessor
+class processor_psigate extends POSTprocessor
 {
 	function info()
 	{

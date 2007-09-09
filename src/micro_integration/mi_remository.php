@@ -102,7 +102,7 @@ class mi_remository
 		. '$restrict_id = $restrictionhandler->getIDbyUserID( $my->id );' . "\n"
 		. '$restrictionhandler->load( $restrict_id );' . "\n\n"
 		. 'if( !$restrictionhandler->hasDownloadsLeft() ) {' . "\n"
-		. '	mosRedirect( \'index.php?option=com_remository\', ' . _AEC_MI_HACK1_REMOS . ' );' . "\n"
+		. '	mosRedirect( \'index.php?option=com_remository\', \'' . _AEC_MI_HACK1_REMOS . '\' );' . "\n"
 		. '}else{' . "\n"
 		. '	$restrictionhandler->useDownload();' . "\n"
 		. '}' . "\n"
@@ -115,7 +115,7 @@ class mi_remository
 		$hacks[$n]['type']				=	'file';
 		$hacks[$n]['filename']			=	$mosConfig_absolute_path
 											. '/components/com_remository/c-classes/remository_download_Controller.php';
-		$hacks[$n]['read']				=	'//Update download count';
+		$hacks[$n]['read']				=	'$this->writeHeaders($ctype, $displayname, $len);';
 		$hacks[$n]['insert']			=	$downloadhack . "\n"  . $hacks[$n]['read'];
 
 		return $hacks;

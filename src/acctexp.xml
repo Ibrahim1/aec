@@ -63,6 +63,7 @@
 		<filename>processors/epsnetpay.php</filename>
 		<filename>processors/eway.php</filename>
 		<filename>processors/moneyproxy.php</filename>
+		<filename>processors/offline_payment.php</filename>
 		<filename>processors/paycom.php</filename>
 		<filename>processors/paypal_subscription.php</filename>
 		<filename>processors/paypal.php</filename>

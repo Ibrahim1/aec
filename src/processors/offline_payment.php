@@ -1,4 +1,12 @@
 <?php
+/**
+ * @version $Id: offline_payment.php
+ * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
+ * @subpackage Processors - Offline Payment
+ * @copyright Copyright (C) 2007 David Deutsch
+ * @author Davin Deutsch
+ * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
+ */
 // Copyright (C) 2006-2007 David Deutsch
 // All rights reserved.
 // This source file is part of the Account Expiration Control Component, a  Joomla
@@ -29,17 +37,16 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_paysignet extends POSTprocessor
+class processor_offline_payments
 {
 	function info()
 	{
 		$info = array();
-		$info['name'] = "paysignet";
-		$info['longname'] = "Paysignet";
-		$info['statement'] = "Make payments with Paysignet!";
-		$info['description'] = _DESCRIPTION_PAYSIGNET;
-		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck";
-		$info['recurring'] = 0;
+		$info['longname'] = _AEC_PAYM_METHOD_TRANSFER;
+		$info['statement'] = _AEC_PAYM_METHOD_TRANSFER;
+		$info['description'] = _AEC_PAYM_METHOD_TRANSFER;
+		$info['currencies'] = AECToolbox::_aecCurrencyField( true, true, true, true );
+		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck,giropay";
 
 		return $info;
 	}
@@ -47,8 +54,7 @@ class processor_paysignet extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['merchant'] = "merchant";
-		$settings['testmode'] = 0;
+		$settings['info'] = '';
 
 		return $settings;
 	}
@@ -56,41 +62,11 @@ class processor_paysignet extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode'] = array("list_yesno");
-		$settings['merchant'] = array("inputC");
+		$settings['info'] = array( 'editor' );
 
 		return $settings;
 	}
 
-	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
-	{
-		global $mosConfig_live_site;
-
-		$var['post_url']	= "https://www.paysignet.com/validate/paysign_getdetails.asp";
-
-		$var['epq_MMerchantOId']	= $int_var['invoice'];
-		$var['epq_AAmountA1']		= $int_var['amount'];
-		$var['epq_MMerchantB2']		= $cfg['merchant'];
-
-		$var['epqb_NNameA1']		= $metaUser->cmsUser->name;
-
-		return $var;
-	}
-
-	function parseNotification( $post, $cfg )
-	{
-
-		$order_id		= $post['order_id'];
-		$bank_name		= $post['bank_name'];
-		$trans_status	= $post['trans_status'];
-		$success		= $post['success'];
-
-		$response = array();
-		$response['invoice'] = $post['order_id'];
-		$response['valid'] = ($success == '1');
-
-		return $response;
-	}
-
 }
+
 ?>

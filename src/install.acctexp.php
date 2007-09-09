@@ -278,16 +278,21 @@ function com_install()
 	$database->loadObject($result);
 
 	if (strcmp($result->Field, 'alertlevel1') === 0) {
-		$queri[] = "ALTER TABLE #__acctexp_config DROP `email`";
-		$queri[] = "ALTER TABLE #__acctexp_config DROP `paypal`";
-		$queri[] = "ALTER TABLE #__acctexp_config DROP `business`";
-		$queri[] = "ALTER TABLE #__acctexp_config DROP `testmode`";
+		$database->setQuery("SHOW COLUMNS FROM #__acctexp_config LIKE 'email'");
+		$database->loadObject($result);
 
-		foreach ( $queri AS $query ) {
-			$database->setQuery( $query );
-		    if ( !$database->query() ) {
-		        $errors[] = array( $database->getErrorMsg(), $query );
-		    }
+		if (strcmp($result->Field, 'email') === 0) {
+			$queri[] = "ALTER TABLE #__acctexp_config DROP `email`";
+			$queri[] = "ALTER TABLE #__acctexp_config DROP `paypal`";
+			$queri[] = "ALTER TABLE #__acctexp_config DROP `business`";
+			$queri[] = "ALTER TABLE #__acctexp_config DROP `testmode`";
+
+			foreach ( $queri AS $query ) {
+				$database->setQuery( $query );
+			    if ( !$database->query() ) {
+			        $errors[] = array( $database->getErrorMsg(), $query );
+			    }
+			}
 		}
 
 		// a1 -> amount1 || p1 -> period1 || t1 -> perunit1
@@ -1209,6 +1214,15 @@ function com_install()
 		if ( !$database->query() ) {
 	    	$errors[] = array( $database->getErrorMsg(), $query );
 		}
+	}
+
+	// Rewrite old entries for hardcoded "transfer" processor to new API conform "offline_payment" processor
+	$query = 'UPDATE'
+	. ' SET method = \'offline_payment\''
+	. ' WHERE method = \'transfer\'';
+	$database->setQuery( $query );
+	if ( !$database->query() ) {
+    	$errors[] = array( $database->getErrorMsg(), $query );
 	}
 
 	$database->setQuery("SELECT id FROM #__users WHERE gid='25'");

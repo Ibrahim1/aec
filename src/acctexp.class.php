@@ -1292,7 +1292,7 @@ class XMLprocessor extends processor
 	}
 }
 
-class HTMLPOSTprocessor extends processor
+class POSTprocessor extends processor
 {
 	function checkoutAction( $int_var, $settings, $metaUser, $new_subscription )
 	{
@@ -1312,7 +1312,7 @@ class HTMLPOSTprocessor extends processor
 	}
 }
 
-class HTMLGETprocessor extends processor
+class GETprocessor extends processor
 {
 	function checkoutAction( $int_var, $settings, $metaUser, $new_subscription )
 	{
@@ -1321,10 +1321,12 @@ class HTMLGETprocessor extends processor
 		$return = '<a href="' . $var['post_url'];
 		unset( $var['posturl'] );
 
+		$vars = array();
 		foreach ( $var as $key => $value ) {
-			$return .= '&amp;' . $key . '=' . $value;
+			$vars[] .= $key . '=' . $value;
 		}
 
+		$return .= implode( '&amp;', $vars );
 		$return .= '" >' . _BUTTON_CHECKOUT . '</a>' . "\n";
 
 		return $return;
@@ -1659,7 +1661,7 @@ class Config_General extends paramDBTable
 		$def['customtext_pending_keeporiginal']		= 1;
 		$def['customtext_expired_keeporiginal']		= 1;
 		// new 0.12.4
-		$def['transfer']							= 0;
+
 		$def['bypassintegration']					= 0;
 		$def['customintro']							= '';
 		$def['customthanks']						= '';
@@ -1672,7 +1674,6 @@ class Config_General extends paramDBTable
 		$def['customtext_notallowed']				= '';
 		$def['customtext_pending']					= '';
 		$def['customtext_expired']					= '';
-		$def['transferinfo']						= '';
 		// new 0.12.4.2
 		$def['adminaccess']							= 1;
 		$def['noemails']							= 0;
@@ -1878,7 +1879,7 @@ class SubscriptionPlan extends paramDBTable
 		} else {
 			// Renew subscription - Do NOT set signup_date
 			if ( isset( $params['make_active'] ) ) {
-				$status = $params['make_active'] ? 'Active' : $new_subscription->getParams( 'custom_params' );'Pending';
+				$status = $params['make_active'] ? 'Active' : 'Pending';
 			} else {
 				$status = 'Active';
 			}
@@ -1967,7 +1968,7 @@ class SubscriptionPlan extends paramDBTable
 
 			if ( $params['full_free'] ) {
 				$amount['amount3'] = '0.00';
-			} else {$new_subscription->getParams( 'custom_params' );
+			} else {
 				$amount['amount3']	= $params['full_amount'];
 			}
 			$amount['amount3']		= $params['full_amount'];
@@ -2002,7 +2003,7 @@ class SubscriptionPlan extends paramDBTable
 		}
 
 		$return_url	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=thanks&amp;renew=' . $renew );
-$new_subscription->getParams( 'custom_params' );
+
 		$return['return_url']	= $return_url;
 		$return['amount']		= $amount;
 
@@ -2249,7 +2250,7 @@ $new_subscription->getParams( 'custom_params' );
 			$params['processors']	= '0';
 		} else {
 			$params['full_amount'] = AECToolbox::correctAmount( $params['full_amount'] );
-		}$new_subscription->getParams( 'custom_params' );
+		}
 
 		// Correct a malformed Trial Amount
 		if ( strlen( $params['trial_amount'] ) ) {
@@ -2464,13 +2465,6 @@ class InvoiceFactory
 					$currency					= '';
 					break;
 
-				case 'transfer':
-					$this->payment->method_name = _AEC_PAYM_METHOD_TRANSFER;
-					$this->pp					= false;
-					$this->recurring			= 0;
-					$currency					= '';
-					break;
-
 				default:
 					$this->pp = new PaymentProcessor();
 					if ( $this->pp->loadName( $this->processor ) ) {
@@ -2594,8 +2588,6 @@ class InvoiceFactory
 
 		$cfg = new Config_General( $database );
 
-		$hasTransfer		= $cfg->cfg['transfer'];
-
 		if ( !$this->userid ) {
 			// Creating a dummy user object
 			$metaUser = new metaUser( 0 );
@@ -2688,7 +2680,7 @@ class InvoiceFactory
 				$plans[$i]['gw'][0]['statement']	= '';
 				$i++;
 			} else {
-				if ( ( ( $plan_params['processors'] != '' ) && !is_null( $plan_params['processors'] ) ) || $hasTransfer ) {
+				if ( ( $plan_params['processors'] != '' ) && !is_null( $plan_params['processors'] ) ) {
 					$processors = explode( ';', $plan_params['processors'] );
 
 					if ( !is_null( $this->processor ) ) {
@@ -2717,16 +2709,6 @@ class InvoiceFactory
 									$k++;
 								}
 							}
-						}
-					}
-
-					if ( $hasTransfer && empty( $this->processor ) ) {
-						if ( !empty( $plan_gw ) ) {
-							if ( !(strcmp(strtolower( $plan_gw[0]['name']), 'free') === 0 ) ) {
-								$plan_gw[]['name'] = 'transfer';
-							}
-						} else {
-							$plan_gw[]['name'] = 'transfer';
 						}
 					}
 
@@ -3294,15 +3276,6 @@ class Invoice extends paramDBTable
 			$recurring = '';
 
 			switch ( $this->method ) {
-				case 'transfer':
-					$cfg = new Config_General( $database );
-					$recurring = 0;
-					$this->currency = isset( $cfg->cfg['currency_code_general'] ) ? $cfg->cfg['currency_code_general'] : '';
-
-					if ( ( strcmp( $this->transaction_date, '0000-00-00 00:00:00' ) === 0 ) ) {
-						$params['pending_reason'] = 'transfer';
-					}
-					break;
 				case 'none':
 				case 'free':
 					break;
@@ -4325,22 +4298,23 @@ class AECToolbox
 	 * @since 0.12.4
 	 * @return array
 	 */
-	function _aecCurrencyField( $currMain = false, $currGen = false, $currOth = false )
+	function _aecCurrencyField( $currMain = false, $currGen = false, $currOth = false, $list_only = false )
 	{
+		$currencies = array();
 
 		if ( $currMain ) {
-			$currencies_main = 'EUR,USD,CHF,CAD,DKK,SEK,NOK,GBP,JPY';
+			$currencies[] = 'EUR,USD,CHF,CAD,DKK,SEK,NOK,GBP,JPY';
 		}
 
 		if ( $currGen ) {
-			$currencies_general	= 'AUD,CYP,CZK,EGP,HUF,GIP,HKD,UAH,ISK,'
+			$currencies[]	= 'AUD,CYP,CZK,EGP,HUF,GIP,HKD,UAH,ISK,'
 			. 'EEK,HRK,GEL,LVL,RON,BGN,LTL,MTL,FIM,MDL,ILS,NZD,ZAR,RUB,SKK,'
 			. 'TRY,PLN'
 			;
 		}
 
 		if ( $currOth ) {
-			$currencies_other	= 'AFA,DZD,ARS,AMD,AWG,AZM,'
+			$currencies[]	= 'AFA,DZD,ARS,AMD,AWG,AZM,'
 			. 'BSD,BHD,THB,PAB,BBD,BYB,BZD,BMD,VEB,BOB,'
 			. 'BRL,BND,BIF,CVE,KYD,GHC,XOF,XAF,XPF,'
 			. 'CLP,COP,KMF,BAM,NIO,CRC,CUP,GMD,'
@@ -4361,30 +4335,18 @@ class AECToolbox
 			;
 		}
 
-		$currency_code_list = array();
+		if ( $list_only ) {
+			$currency_code_list = implode( ',', $currencies);
+		} else {
+			$currency_code_list = array();
 
-		if ( $currMain ) {
-			$currency_array = explode( ',', $currencies_main );
-			foreach ( $currency_array as $currency ) {
-				$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
-			}
+			foreach ( $currencies as $currencyfield ) {
+				$currency_array = explode( ',', $currencyfield );
+				foreach ( $currency_array as $currency ) {
+					$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
+				}
 
-			$currency_code_list[] = mosHTML::makeOption( '" disabled="disabled', '- - - - - - - - - - - - - -' );
-		}
-
-		if ( $currGen ) {
-			$currency_array = explode( ',', $currencies_general );
-			foreach ( $currency_array as $currency ) {
-				$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
-			}
-
-			$currency_code_list[] = mosHTML::makeOption( '" disabled="disabled', '- - - - - - - - - - - - - -' );
-		}
-
-		if ( $currOth ) {
-			$currency_array = explode( ',', $currencies_other );
-			foreach ( $currency_array as $currency ) {
-				$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
+				$currency_code_list[] = mosHTML::makeOption( '" disabled="disabled', '- - - - - - - - - - - - - -' );
 			}
 		}
 

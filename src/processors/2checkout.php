@@ -37,7 +37,7 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_2checkout extends HTMLPOSTprocessor
+class processor_2checkout extends POSTprocessor
 {
 	function info()
 	{

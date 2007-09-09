@@ -4,20 +4,6 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 
 class processor_namehere
 {
-	function processor_namehere()
-	{
-		global $mosConfig_absolute_path;
-
-		if( !defined( '_AEC_LANG_PROCESSOR' ) ) {
-			$langPath = $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/';
-			if (file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
-				include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
-			}else{
-				include_once( $langPath . 'english.php' );
-			}
-		}
-	}
-
 	function info()
 	{
 		$info = array();

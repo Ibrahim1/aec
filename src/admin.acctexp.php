@@ -1640,7 +1640,6 @@ function editSettings( $option )
 
 	$lists = array();
 
-	$lists['transfer']				= mosHTML::yesnoSelectList('transfer', '', $cfg->cfg['transfer']);
 	$lists['simpleurls']			= mosHTML::yesnoSelectList('simpleurls', '', $cfg->cfg['simpleurls']);
 	$lists['require_subscription']	= mosHTML::yesnoSelectList('require_subscription', '', $cfg->cfg['require_subscription']);
 	$lists['plans_first']			= mosHTML::yesnoSelectList('plans_first', '', $cfg->cfg['plans_first']);

@@ -11,7 +11,7 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 * @author Bruno Pourtier <bruno.pourtier@gmail.com>
 **/
 
-class processor_eway extends HTMLPOSTprocessor
+class processor_eway extends POSTprocessor
 {
 	function info()
 	{
