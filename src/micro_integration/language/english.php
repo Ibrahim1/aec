@@ -167,6 +167,11 @@ define( '_MI_MI_COMMUNITYBUILDER_APPROVE_NAME',			'Approve' );
 define( '_MI_MI_COMMUNITYBUILDER_APPROVE_DESC',			'Carry out an Admin Approval when this MI is triggered.' );
 define( '_MI_MI_COMMUNITYBUILDER_UNAPPROVE_EXP_NAME',	'Reset Approval' );
 define( '_MI_MI_COMMUNITYBUILDER_UNAPPROVE_EXP_DESC',	'Set the Admin Approval of a user to "No" when expired.' );
+define( '_MI_MI_COMMUNITYBUILDER_SET_FIELDS_NAME',		'Set Fields' );
+define( '_MI_MI_COMMUNITYBUILDER_SET_FIELDS_DESC',		'Automatically set the fields (which are not marked with "(expiration)" when the plan is paid for.' );
+define( '_MI_MI_COMMUNITYBUILDER_SET_FIELDS_EXP_NAME',	'Set Fields Expiration' );
+define( '_MI_MI_COMMUNITYBUILDER_SET_FIELDS_EXP_DESC',	'Automatically set the fields (which are marked with "(expiration)" when the plan is paid for.' );
+define( '_MI_MI_COMMUNITYBUILDER_EXPMARKER',			'(expiration)' );
 
 // JUGA
 define( '_AEC_MI_NAME_JUGA',		'JUGA' );
