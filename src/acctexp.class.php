@@ -1213,6 +1213,13 @@ class PaymentProcessor
 		}
 	}
 
+	function invoiceCreationAction( $objinvoice )
+	{
+		$this->getSettings();
+
+		$this->processor->invoiceCreationAction( $objinvoice, $this->settings );
+	}
+
 	function parseNotification( $post )
 	{
 		$this->getSettings();
@@ -1677,6 +1684,7 @@ class Config_General extends paramDBTable
 		// new 0.12.4.2
 		$def['adminaccess']							= 1;
 		$def['noemails']							= 0;
+		$def['nojoomlaregemails']					= 0;
 
 		// Write to Params, do not overwrite existing data
 		$this->addParams( $def, 'settings', false );
@@ -2849,7 +2857,7 @@ class InvoiceFactory
 	{
 		global $database, $mainframe, $task, $acl; // Need to load $acl for CBE
 
-		// ====== STEP 0 - Do the Registration Mumbo-Jumbo ======
+		$cfg = new Config_General($database);
 
 		if ( isset( $var['task'] ) ) {
 			unset( $var['task'] );
@@ -2985,7 +2993,9 @@ class InvoiceFactory
 				}
 
 				// Send email to user
-				mosMail( $adminEmail2, $adminName2, $email, $subject, $message );
+				if ( !$cfg->cfg['nojoomlaregemails'] ) {
+					mosMail( $adminEmail2, $adminName2, $email, $subject, $message );
+				}
 
 				// Send notification to all administrators
 				$aecUser	= AECToolbox::_aecIP();
@@ -3370,6 +3380,12 @@ class Invoice extends paramDBTable
 		$this->userid			= $userid;
 		$this->method			= $processor;
 		$this->usage			= $usage;
+
+		$pp = new PaymentProcessor();
+		if ( $pp->loadName( $processor ) ) {
+			$pp->init();
+			$pp->invoiceCreationAction( $this );
+		}
 
 		$this->computeAmount();
 
@@ -5132,8 +5148,8 @@ class microIntegration extends paramDBTable
 
 			// Autoload Params if they have not been called in by the MI
 			foreach ( $settings as $name => $setting ) {
-				// Do we have a parameter at third position?
-				if ( isset( $setting[1] ) ) {
+				// Do we have a parameter at first position?
+				if ( isset( $setting[1] ) && !isset( $setting[3] ) ) {
 					if ( isset( $params[$name] ) ) {
 						$settings[$name][3] = $params[$name];
 					}

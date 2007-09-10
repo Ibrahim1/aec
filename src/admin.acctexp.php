@@ -1648,6 +1648,7 @@ function editSettings( $option )
 	$lists['displayccinfo']			= mosHTML::yesnoSelectList('displayccinfo', '', $cfg->cfg['displayccinfo']);
 	$lists['adminaccess']			= mosHTML::yesnoSelectList('adminaccess', '', $cfg->cfg['adminaccess']);
 	$lists['noemails']				= mosHTML::yesnoSelectList('noemails', '', $cfg->cfg['noemails']);
+	$lists['nojoomlaregemails']		= mosHTML::yesnoSelectList('noemails', '', $cfg->cfg['nojoomlaregemails']);
 
 	$lists['customtext_confirm_keeporiginal']		= mosHTML::yesnoSelectList('customtext_confirm_keeporiginal', '', $cfg->cfg['customtext_confirm_keeporiginal']);
 	$lists['customtext_checkout_keeporiginal']		= mosHTML::yesnoSelectList('customtext_checkout_keeporiginal', '', $cfg->cfg['customtext_checkout_keeporiginal']);
@@ -1735,6 +1736,7 @@ function editSettings( $option )
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_ENABLE_COUPONS_NAME, _CFG_GENERAL_ENABLE_COUPONS_DESC, '0', 'enable_coupons');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_ADMINACCESS_NAME, _CFG_GENERAL_ADMINACCESS_DESC, '0', 'adminaccess');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_NOEMAILS_NAME, _CFG_GENERAL_NOEMAILS_DESC, '0', 'noemails');
+	$tab_data[0][] = array( 'list', _CFG_GENERAL_NOJOOMLAREGEMAILS_NAME, _CFG_GENERAL_NOJOOMLAREGEMAILS_DESC, '0', 'nojoomlaregemails');
 
 	$tab_data[1] = array();
 	$tab_data[1][] = _CFG_TAB_CUSTOMIZATION_TITLE;
@@ -1938,16 +1940,6 @@ function editSettings( $option )
 
 	$lists['gwlist_enabled']	= mosHTML::selectList($gw_list_html, 'gwlist_enabled[]', 'size="' . max(min(count($gwlist), 12), 2) . '" multiple', 'value', 'text', $gw_list_enabled);
 	$lists['gwlist']			= mosHTML::selectList($gw_list_enabled_html, 'gwlist[]', 'size="' . max(min(count($gw_list_enabled), 12), 3) . '" multiple', 'value', 'text', $gwlist_selected);
-
-	// Tab: Offline Payment
-	$tab = array();
-	$tab[] = _CFG_TRANSFER_TITLE;
-	$tab[] = array( 'subtitle',	'0', _CFG_TRANSFER_SUBTITLE, '0', '0' );
-	$tab[] = array( 'list',	_CFG_TRANSFER_ENABLE_NAME, _CFG_TRANSFER_ENABLE_DESC, '0', 'transfer' );
-	$tab[] = array( 'list',	_CFG_PROCESSOR_CURRENCY_NAME, _CFG_PROCESSOR_CURRENCY_DESC, '0', 'currency_code_general' );
-	$tab[] = array( 'editor', _CFG_TRANSFER_INFO_NAME, _CFG_TRANSFER_INFO_DESC, $cfg->cfg['transferinfo'], 'transferinfo' );
-
-	$tab_data[] = $tab;
 
 	$editors = array();
 	foreach ( $tab_data as $tab ) {
@@ -2234,29 +2226,6 @@ function editSubscriptionPlan( $id, $option )
 	$params['similarplans']				= array("list", "");
 	$params['equalplans']				= array("list", "");
 
-	$params['cparams_remap']			= array("subarea_change", "custom_params");
-
-	if ( $params_values['processors'] != 0 ) {
-		$plan_procs = explode(";", $params_values['processors']);
-
-		if ( count( $plan_procs ) ) {
-			foreach ( $plan_procs as $processorid ) {
-				$pproc = new PaymentProcessor();
-				if ( $pproc->loadId( $processorid ) ) {
-					$customparams = $pproc->loadCustomParams();
-					if ( is_array( $customparams ) ) {
-						foreach ( $customparams as $customparam => $cpcontent ) {
-							$cp_name = strtoupper( $pproc->processor_name . "_cpp_" . $customparam . "_name" );
-							$cp_desc = strtoupper( $pproc->processor_name . "_cpp_" . $customparam . "_desc" );
-							$cpname = $processorid . "_cpp_" . $customparam;
-							$params[$cpname] = $cpcontent;
-						}
-					}
-				}
-			}
-		}
-	}
-
 	$params['restr_remap']				= array("subarea_change", "restrictions");
 
 	$params['mingid_enabled']			= array("list_yesno", 0);
@@ -2316,6 +2285,31 @@ function editSubscriptionPlan( $id, $option )
 	$lists['trial_periodunit'] = mosHTML::selectList($perunit, 'trial_periodunit', 'size="4"', 'value', 'text', arrayValueDefault($params_values, 'trial_periodunit', "D"));
 	$lists['full_periodunit'] = mosHTML::selectList($perunit, 'full_periodunit', 'size="4"', 'value', 'text', arrayValueDefault($params_values, 'full_periodunit', "D"));
 
+
+	$params['cparams_remap']			= array("subarea_change", "plan_params");
+
+	if ( $params_values['processors'] != 0 ) {
+		$plan_procs = explode(";", $params_values['processors']);
+
+		if ( count( $plan_procs ) ) {
+			foreach ( $plan_procs as $processorid ) {
+				$pproc = new PaymentProcessor();
+				if ( $pproc->loadId( $processorid ) ) {
+					$customparams = $pproc->getCustomPlanParams();
+					if ( is_array( $customparams ) ) {
+						foreach ( $customparams as $customparam => $cpcontent ) {
+							// Write the params field
+							$cp_name = strtoupper( $pproc->processor_name . "_plan_params_" . $customparam . "_name" );
+							$cp_desc = strtoupper( $pproc->processor_name . "_plan_params_" . $customparam . "_desc" );
+							$shortname = $processorid . "_" . $customparam;
+							$params[$shortname] = array( $cpcontent, $cp_name, $cp_desc );
+						}
+					}
+				}
+			}
+		}
+	}
+
 	// get available processors
 	$available_gw = array();
 	$available_gw[] = mosHTML::makeOption( '0', _PAYPLAN_NOGW );
@@ -2349,8 +2343,6 @@ function editSubscriptionPlan( $id, $option )
 	}
 
 	$lists['processors'] = mosHTML::selectList($available_gw, 'processors[]', 'size="' . max(min(count($available_gw), 12), 2) . '" multiple', 'value', 'text', $selected_gw);
-
-	foreach
 
 	// get available active plans
 	$available_plans = array();
