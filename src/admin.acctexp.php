@@ -1855,6 +1855,12 @@ function editSettings( $option )
 								$settings_array[$name][0] = 'list';
 								break;
 
+							case 'list_plan':
+								// Create list
+								$lists[$setting_name] = mosHTML::selectList($available_plans, $name, 'size="' . $total_plans . '"', 'value', 'text', $pp->settings[$name] );
+								$settings_array[$name][0] = 'list';
+								break;
+
 							default:
 								break;
 						}
@@ -2288,56 +2294,42 @@ function editSubscriptionPlan( $id, $option )
 
 	$params['cparams_remap']			= array("subarea_change", "plan_params");
 
-	if ( $params_values['processors'] != 0 ) {
-		$plan_procs = explode(";", $params_values['processors']);
+	$pps = PaymentProcessorHandler::getInstalledObjectList( 1 );
 
-		if ( count( $plan_procs ) ) {
-			foreach ( $plan_procs as $processorid ) {
-				$pproc = new PaymentProcessor();
-				if ( $pproc->loadId( $processorid ) ) {
-					$customparams = $pproc->getCustomPlanParams();
-					if ( is_array( $customparams ) ) {
-						foreach ( $customparams as $customparam => $cpcontent ) {
-							// Write the params field
-							$cp_name = strtoupper( $pproc->processor_name . "_plan_params_" . $customparam . "_name" );
-							$cp_desc = strtoupper( $pproc->processor_name . "_plan_params_" . $customparam . "_desc" );
-							$shortname = $processorid . "_" . $customparam;
-							$params[$shortname] = array( $cpcontent, $cp_name, $cp_desc );
-						}
-					}
-				}
-			}
-		}
-	}
-
-	// get available processors
-	$available_gw = array();
-	$available_gw[] = mosHTML::makeOption( '0', _PAYPLAN_NOGW );
-
-	$query = 'SELECT id, name'
-	. ' FROM #__acctexp_config_processors'
-	. ' WHERE active = \'1\''
-	;
-	$database->setQuery( $query );
-	$processors = $database->loadObjectList();
-
-	foreach ( $processors as $i ) {
-		$available_gw[] = mosHTML::makeOption( $i->id, $i->name );
-	}
+	$plan_procs = explode(";", $params_values['processors']);
 
 	$selected_gw = array();
-	if ( $params_values['processors'] != 0 ) {
-		$plan_procs = explode(";", $params_values['processors']);
+	$available_gw = array();
+	$k = 0;
+	foreach ( $pps as $ppobj ) {
+		$pproc = new PaymentProcessor();
+		if ( $pproc->loadName( $ppobj->name ) ) {
+			$pproc->getInfo();
 
-		if ( count( $plan_procs ) ) {
-			$query = 'SELECT id AS value, name AS text'
-			. ' FROM #__acctexp_config_processors'
-			. ' WHERE id IN (' . implode( ',', $plan_procs ) . ')'
-			;
-			$database->setQuery( $query );
-			$selected_gw = $database->loadObjectList();
+			if ( in_array( $ppobj->id, $plan_procs ) ) {
+				$customparams = $pproc->getCustomPlanParams();
+				if ( is_array( $customparams ) ) {
+					foreach ( $customparams as $customparam => $cpcontent ) {
+						// Write the params field
+						$cp_name = strtoupper( $pproc->processor_name . "_plan_params_" . $customparam . "_name" );
+						$cp_desc = strtoupper( $pproc->processor_name . "_plan_params_" . $customparam . "_desc" );
+						$shortname = $pproc->id . "_" . $customparam;
+						$params[$shortname] = array( $cpcontent, $cp_name, $cp_desc );
+					}
+				}
+
+				$selected_gw[$k] = new stdClass();
+				$selected_gw[$k]->value = $pproc->id;
+				$selected_gw[$k]->text = $pproc->info['longname'];
+			}
+
+			$available_gw[] = mosHTML::makeOption( $pproc->id, $pproc->info['longname'] );
+			$k++;
 		}
-	} else {
+	}
+
+	if ( !count( $selected_gw ) ) {
+		$selected_gw[0] = new stdClass();
 		$selected_gw[0]->value = 0;
 		$selected_gw[0]->text = _PAYPLAN_NOGW;
 	}
@@ -2410,7 +2402,8 @@ function editSubscriptionPlan( $id, $option )
  	}
 	$total_all_plans	= min( max( ( count( $all_plans ) + 1 ), 4 ), 20 );
 
-	$lists['previousplan_req']	= mosHTML::selectList($all_plans, 'previousplan_req', 'size="' . $total_all_plans . '"', 											'value', 'text', arrayValueDefault($restrictions_values, 'previousplan_req', 0));
+	$lists['previousplan_req']	= mosHTML::selectList($all_plans, 'previousplan_req', 'size="' . $total_all_plans . '"',
+									'value', 'text', arrayValueDefault($restrictions_values, 'previousplan_req', 0));
 	$lists['currentplan_req']	= mosHTML::selectList($all_plans, 'currentplan_req', 'size="' . $total_all_plans . '"',
 									'value', 'text', arrayValueDefault($restrictions_values, 'currentplan_req', 0));
 	$lists['overallplan_req']	= mosHTML::selectList($all_plans, 'overallplan_req', 'size="' . $total_all_plans . '"',
