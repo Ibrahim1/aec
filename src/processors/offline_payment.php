@@ -37,14 +37,14 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_offline_payments
+class processor_offline_payment extends processor
 {
 	function info()
 	{
 		$info = array();
-		$info['longname'] = _AEC_PAYM_METHOD_TRANSFER;
-		$info['statement'] = _AEC_PAYM_METHOD_TRANSFER;
-		$info['description'] = _AEC_PAYM_METHOD_TRANSFER;
+		$info['longname'] = _AEC_OFFLINE_PAYMENT_LONGNAME;
+		$info['statement'] = _AEC_OFFLINE_PAYMENT_STATEMENT;
+		$info['description'] = _AEC_OFFLINE_PAYMENT_DESCRIPTION;
 		$info['currencies'] = AECToolbox::_aecCurrencyField( true, true, true, true );
 		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck,giropay";
 
@@ -62,9 +62,21 @@ class processor_offline_payments
 	function backend_settings()
 	{
 		$settings = array();
+		$settings['waitingplan'] = array( 'list_plan' );
 		$settings['info'] = array( 'editor' );
 
 		return $settings;
+	}
+
+	function invoiceCreationAction( $objInvoice, $cfg )
+	{
+		if ( $cfg['waitingplan'] ) {
+			$metaUser = new metaUser( $objInvoice->userid );
+
+			if ( $metaUser->hasSubscription ) {
+				$metaUser->objSubscription->applyUsage( $cfg['waitingplan'], 'none', 1 );
+			}
+		}
 	}
 
 }
