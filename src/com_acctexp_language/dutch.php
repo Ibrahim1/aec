@@ -127,10 +127,8 @@ define( '_CONFIRM_COUPON_INFO', 'Indien u een couponcode bezit, kunt u deze invo
 
 // --== CHECKOUT FORM ==--
 define( '_CHECKOUT_TITLE', 'Checkout');
-define( '_CHECKOUT_INFO', 'Uw registratie is opgeslagen. Om gebruik te maken van de geselecteerde optie, dient u verder te gaan naar de Payment Gateway door op de onderstaatnde button te klikken. <br /> Mocht er tijdens de verwerking een fout optreden, kunt u altijd terug naar deze stap door op de website te inloggen met uw nieuwe gebruikersnaam en wachtwoord - Ons systeem geeft de mogelijkheid om de betaling opnieuw aan te bieden.');
-define( '_CHECKOUT_INFO_REPEAT', 'Bedankt voor u terugkomst. Om uw betaling te voltooien dient u op de onderstaande button te klikken. <br /> Mocht er tijdens de verwerking een fout optreden, kunt u altijd terug naar deze stap door op de website te inloggen met uw nieuwe gebruikersnaam en wachtwoord - Ons systeem geeft de mogelijkheid om de betaling opnieuw aan te bieden.');
-define( '_CHECKOUT_INFO_TRANSFER', 'Uw registratie is nu opgeslagen. Om uw nieuwe account te gebruiken, raadpleeg de onderstaande gegevens. <br /> Mocht er tijdens de verwerking een fout optreden, kunt u altijd terug naar deze stap door op de website te inloggen met uw nieuwe gebruikersnaam en wachtwoord - Ons systeem geeft de mogelijkheid om deze pagina opnieuw aan te bekijken.');
-define( '_CHECKOUT_INFO_TRANSFER_REPEAT', 'Bedankt voor u terugkomst. Om uw betaling te voltooien dient u op de onderstaande button te klikken. <br /> Mocht er tijdens de verwerking een fout optreden, kunt u altijd terug naar deze stap door op de website te inloggen met uw nieuwe gebruikersnaam en wachtwoord - Ons systeem geeft de mogelijkheid om de betaling opnieuw aan te bieden.');
+define( '_CHECKOUT_INFO', 'Your Registration has been saved now. On this page, you can complete your payment. <br /> If something goes wrong along the way, you can always come back to this step by logging in to our site with your new details - Our System will give you an option to try your payment again.');
+define( '_CHECKOUT_INFO_REPEAT', 'Thank you for coming back. On this page, you can complete your payment. <br /> If something goes wrong along the way, you can always come back to this step by logging in to our site with your new details - Our System will give you an option to try your payment again.');
 define( '_BUTTON_CHECKOUT', 'Checkout');
 define( '_BUTTON_APPEND', 'Append');
 define( '_CHECKOUT_COUPON_CODE', 'Coupon Code');

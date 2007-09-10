@@ -1079,7 +1079,6 @@ class PaymentProcessor
 		global $database;
 
 		// Create new db entry
-		$this->processor = new processor( $database );
 		$this->processor->id = 0;
 
 		// Call default values for Info and Settings
@@ -1278,9 +1277,7 @@ class processor extends paramDBTable
 
 	function checkoutAction( $int_var, $settings, $metaUser, $new_subscription )
 	{
-		$response = array();
-		$response['action'] ='<p>' . $settings['info'] . '</p>';
-		return $response;
+		return '<p>' . $settings['info'] . '</p>';
 	}
 }
 
@@ -1669,7 +1666,7 @@ class Config_General extends paramDBTable
 		$def['customtext_expired_keeporiginal']		= 1;
 		// new 0.12.4
 
-		$def['bypassintegration']					= 0;
+		$def['bypassintegration']					= '';
 		$def['customintro']							= '';
 		$def['customthanks']						= '';
 		$def['customcancel']						= '';
@@ -2102,11 +2099,13 @@ class SubscriptionPlan extends paramDBTable
 		$params = $this->getParams( 'custom_params' );
 
 		$procparams = array();
-		foreach ( $params as $name => $value ) {
-			$realname = explode( '_', $name, 2 );
+		if ( !empty( $params ) ) {
+			foreach ( $params as $name => $value ) {
+				$realname = explode( '_', $name, 2 );
 
-			if ( $realname[0] == $processorid ) {
-				$procparams[$realname[1]] = $value;
+				if ( $realname[0] == $processorid ) {
+					$procparams[$realname[1]] = $value;
+				}
 			}
 		}
 

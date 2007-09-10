@@ -1217,7 +1217,7 @@ function com_install()
 	}
 
 	// Rewrite old entries for hardcoded "transfer" processor to new API conform "offline_payment" processor
-	$query = 'UPDATE'
+	$query = 'UPDATE #__acctexp_invoices'
 	. ' SET method = \'offline_payment\''
 	. ' WHERE method = \'transfer\'';
 	$database->setQuery( $query );

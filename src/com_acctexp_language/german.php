@@ -124,8 +124,6 @@ define( '_CONFIRM_COUPON_INFO',				'Falls Sie einen Gutscheincode haben geben Si
 define( '_CHECKOUT_TITLE',					'Abschlie&szlig;ssen');
 define( '_CHECKOUT_INFO',					'Die Angaben wurden gespeichert, es ist jetzt erforderlich, dass Sie mit der Bezahlung ihrer getroffenen Auswahl fortfahren.<br />Sollte es im Folgenden Unklarheiten geben, k&ouml;nnen Sie immer zu dieser Seite zur&uuml;ckkehren, indem Sie sich mit ihren Zugangsdaten einw&auml;hlen.');
 define( '_CHECKOUT_INFO_REPEAT',			'Willkommen zur&uuml;ck! Die Bezahlung ihrer getroffenen Auswahl ist noch ausst&auml;ndig.<br />Sollte es im Folgenden Unklarheiten geben, k&ouml;nnen Sie immer zu dieser Seite zur&uuml;ckkehren, indem Sie sich mit ihren Zugangsdaten einw&auml;hlen.');
-define( '_CHECKOUT_INFO_TRANSFER',			'Ihre Wahl wurde gespeichert. Die Bezahlung ihrer getroffenen Auswahl ist noch ausst&auml;ndig.<br />Sollte es im Folgenden Unklarheiten geben, k&ouml;nnen Sie immer zu dieser Seite zur&uuml;ckkehren, indem Sie sich mit ihren Zugangsdaten einw&auml;hlen.');
-define( '_CHECKOUT_INFO_TRANSFER_REPEAT',	'Willkommen zur&uuml;ck! Die Bezahlung ihrer getroffenen Auswahl ist noch ausst&auml;ndig.<br />Sollte es im Folgenden Unklarheiten geben, k&ouml;nnen Sie immer zu dieser Seite zur&uuml;ckkehren, indem Sie sich mit ihren Zugangsdaten einw&auml;hlen.<br />Bitte fahren Sie mit den unten beschriebenen Schritten weiter.');
 define( '_BUTTON_CHECKOUT',					'Fortfahren');
 define( '_BUTTON_APPEND',					'Hinzuf&uuml;gen');
 define( '_CHECKOUT_COUPON_CODE',			'Gutscheincode');
