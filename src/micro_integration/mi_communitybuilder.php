@@ -23,9 +23,36 @@ class mi_communitybuilder
 
 	function Settings( $params )
 	{
+		global $database;
+
 		$settings = array();
 		$settings['approve']		= array( 'list_yesno' );
 		$settings['unapprove_exp']	= array( 'list_yesno' );
+		$settings['set_fields']		= array( 'list_yesno' );
+		$settings['set_fields_exp']	= array( 'list_yesno' );
+
+		$query = 'SELECT name, title'
+				. ' FROM #__comprofiler_fields'
+				. ' WHERE `table` != \'#__users\''
+				. ' AND name != \'NA\'';
+		$database->setQuery( $query );
+		$objects = $database->loadObjectList();
+
+		foreach ( $objects as $object ) {
+			if ( strpos( $object->title, '_' ) === 0 ) {
+				$title = $object->name;
+			} else {
+				$title = $object->title;
+			}
+
+			$settings['cbfield_' . $object->name] = array( 'inputE', $title, $title );
+			$expname = $title . " "  . _MI_MI_COMMUNITYBUILDER_EXPMARKER;
+			$settings['cbfield_' . $object->name . '_exp' ] = array( 'inputE', $expname, $expname );
+		}
+
+		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
+		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL,
+										AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
 		return $settings;
 	}
@@ -45,6 +72,36 @@ class mi_communitybuilder
 			$database->setQuery( $query );
 			$database->query() or die( $database->stderr() );
 		}
+
+		if ( $params['set_fields'] ) {
+			$metaUser = new metaUser( $userid );
+
+			$query = 'SELECT name, title'
+					. ' FROM #__comprofiler_fields'
+					. ' WHERE `table` != \'#__users\''
+					. ' AND name != \'NA\'';
+			$database->setQuery( $query );
+			$objects = $database->loadObjectList();
+
+			foreach ( $objects as $object ) {
+				if ( !empty( $params['cbfield_' . $object->name] ) ) {
+					$changes[$object->name] = $params['cbfield_' . $object->name];
+				}
+			}
+
+			if ( !empty( $changes ) ) {
+				$alterstring = array();
+				foreach ( $changes as $name => $value ) {
+					$alterstring[] = '\'' . $name . '\' = \'' . AECToolbox::rewriteEngine( $value, $metaUser, $plan ) . '\'';
+				}
+
+				$query = 'UPDATE #__comprofiler'
+						. ' SET ' . implode( ', ', $alterstring )
+						. ' WHERE user_id = \'' . (int) $userid . '\'';
+				$database->setQuery( $query );
+				$database->query() or die( $database->stderr() );
+			}
+		}
 	}
 
 	function expiration_action($params, $userid, $plan)
@@ -57,6 +114,36 @@ class mi_communitybuilder
 			.' WHERE user_id = \'' . (int) $userid . '\'';
 			$database->setQuery( $query );
 			$database->query() or die( $database->stderr() );
+		}
+
+		if ( $params['set_fields_exp'] ) {
+			$metaUser = new metaUser( $userid );
+
+			$query = 'SELECT name, title'
+					. ' FROM #__comprofiler_fields'
+					. ' WHERE `table` != \'#__users\''
+					. ' AND name != \'NA\'';
+			$database->setQuery( $query );
+			$objects = $database->loadObjectList();
+
+			foreach ( $objects as $object ) {
+				if ( !empty( $params['cbfield_' . $object->name . '_exp' ] ) ) {
+					$changes[$object->name] = $params['cbfield_' . $object->name . '_exp' ];
+				}
+			}
+
+			if ( !empty( $changes ) ) {
+				$alterstring = array();
+				foreach ( $changes as $name => $value ) {
+					$alterstring[] = '\'' . $name . '\' = \'' . AECToolbox::rewriteEngine( $value, $metaUser, $plan ) . '\'';
+				}
+
+				$query = 'UPDATE #__comprofiler'
+						. ' SET ' . implode( ', ', $alterstring )
+						. ' WHERE user_id = \'' . (int) $userid . '\'';
+				$database->setQuery( $query );
+				$database->query() or die( $database->stderr() );
+			}
 		}
 	}
 

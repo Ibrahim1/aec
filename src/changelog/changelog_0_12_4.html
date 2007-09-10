@@ -841,7 +841,7 @@ color: #333;
 <ul>
 <li><strong>Major new stuff!</strong>
 <li>Decide which coupons can mix and which cannot</li>
-<li>Invoices now store data of recurring payments - each payment event will be logged individually</li>
+<li>Invoices now store data of recurring payments - each payment event will be logged individually (although you won't see any of this yet)</li>
 <li>CBE is now correctly handeled - make sure to disable their AEC integration stuff!</li>
 </ul>
 </li>
@@ -884,6 +884,8 @@ color: #333;
 <li>Fixing issue which would spill out notices when using Authorize.net - rewriteEngineInfo was being used on the actual setting defaults</li>
 <li>Now supporting PayPal and Authorize.net Customization Option</li>
 <li>New PayPal Logo, plus update on the processor logo presentation</li>
+<li>Transfer is now an actual processor called "Offline Payment"</li>
+<li>With the "Offline Payment" processor, you can assign a user to a temporary plan while the payment is pending</li>
 </ul>
 </li>
 <li><strong>Micro Integrations</strong>
@@ -894,6 +896,7 @@ color: #333;
 <li>Fixing Settings, language and group assignment in Remository MI</li>
 <li>Fixing iDevAffiliate MicroIntegration</li>
 <li>eMail MI Text fields switch to regular text fields after "no html" has been saved</li>
+<li>CB MI can now assign values to a user profile (has rewriteEngine as well!)</li>
 </ul>
 </li>
 <li><strong>Minor Fixes</strong>
