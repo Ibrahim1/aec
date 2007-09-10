@@ -1667,8 +1667,8 @@ class HTML_AcctExp
 		                $tabs->startTab( _PAYPLAN_TEXT_TITLE, _PAYPLAN_TEXT_TITLE );
 		                ?>
 		                <table width="100%" class="adminform"><tr><td>
+							<h2><?php echo _PAYPLAN_TEXT_TITLE; ?></h2>
 							<div class="userinfobox">
-								<h2><?php echo _PAYPLAN_TEXT_TITLE; ?></h2>
 								<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
 								<?php echo $aecHTML->createSettingsParticle( 'email_desc' ); ?>
 							</div>
@@ -1729,8 +1729,8 @@ class HTML_AcctExp
 		                $tabs->startTab( _PAYPLAN_TRIAL_TITLE, _PAYPLAN_TRIAL_TITLE );
 						?>
 						<table width="100%" class="adminform"><tr><td>
+							<h2><?php echo _PAYPLAN_TRIAL_TITLE; ?><?php echo $aecHTML->ToolTip( _PAYPLAN_TRIAL_DESC, _PAYPLAN_TRIAL ); ?></h2>
 							<div class="userinfobox">
-								<h2><?php echo _PAYPLAN_TRIAL_TITLE; ?><?php echo $aecHTML->ToolTip( _PAYPLAN_TRIAL_DESC, _PAYPLAN_TRIAL ); ?></h2>
 								<?php echo $aecHTML->createSettingsParticle( 'trial_free' ); ?>
 								<?php echo $aecHTML->createSettingsParticle( 'trial_amount' ); ?>
 								<?php echo $aecHTML->createSettingsParticle( 'trial_period' ); ?>
@@ -1745,8 +1745,8 @@ class HTML_AcctExp
 		                $tabs->startTab( _PAYPLAN_RELATIONS_TITLE, _PAYPLAN_RELATIONS_TITLE );
 						?>
 						<table width="100%" class="adminform"><tr><td>
+							<h2><?php echo _PAYPLAN_RELATIONS_TITLE; ?></h2>
 							<div class="userinfobox">
-								<h2><?php echo _PAYPLAN_RELATIONS_TITLE; ?></h2>
 								<?php echo $aecHTML->createSettingsParticle( 'similarplans' ); ?>
 								<?php echo $aecHTML->createSettingsParticle( 'equalplans' ); ?>
 							</div>
