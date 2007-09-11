@@ -1857,7 +1857,7 @@ function editSettings( $option )
 
 							case 'list_plan':
 								// Create list
-								$lists[$setting_name] = mosHTML::selectList($available_plans, $name, 'size="' . $total_plans . '"', 'value', 'text', $pp->settings[$name] );
+								$lists[$setting_name] = mosHTML::selectList($available_plans, $setting_name, 'size="' . $total_plans . '"', 'value', 'text', $pp->settings[$name] );
 								$settings_array[$name][0] = 'list';
 								break;
 
