@@ -1216,7 +1216,11 @@ class PaymentProcessor
 	{
 		$this->getSettings();
 
-		$this->processor->invoiceCreationAction( $objinvoice, $this->settings );
+		if ( method_exists( $this->processor, 'CustomPlanParams' ) ) {
+			$this->processor->invoiceCreationAction( $objinvoice, $this->settings );
+		} else {
+			return false;
+		}
 	}
 
 	function parseNotification( $post )
