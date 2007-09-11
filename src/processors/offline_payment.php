@@ -55,6 +55,7 @@ class processor_offline_payment extends processor
 	{
 		$settings = array();
 		$settings['info'] = '';
+		$settings['waitingplan'] = 0;
 
 		return $settings;
 	}
