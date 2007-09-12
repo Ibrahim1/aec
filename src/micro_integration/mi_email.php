@@ -97,6 +97,7 @@ class mi_email
 		$metaUser->objSubscription->setMIflags( $plan->id, $mi_id, $newflags );
 
 		$message = AECToolbox::rewriteEngine( $params['text_pre_exp'], $metaUser, $plan );
+		$subject	= AECToolbox::rewriteEngine( $params['subject_pre_exp'], $metaUser, $plan );
 
 		$recipients = explode( ',', $params['recipient'] );
 
@@ -104,7 +105,7 @@ class mi_email
 			$recipients[$current] = AECToolbox::rewriteEngine( trim( $email ), $metaUser, $plan );
 		}
 
-		mosMail( $params['sender'], $params['sender_name'], $recipients, $params['subject_pre_exp'], $message, $params['text_pre_exp_html'] );
+		mosMail( $params['sender'], $params['sender_name'], $recipients, $subject, $message, $params['text_pre_exp_html'] );
 		return true;
 	}
 
@@ -113,13 +114,15 @@ class mi_email
 		$metaUser = new metaUser( $userid );
 
 		$message	= AECToolbox::rewriteEngine( $params['text_exp'], $metaUser, $plan );
+		$subject	= AECToolbox::rewriteEngine( $params['subject_exp'], $metaUser, $plan );
+
 		$recipients = explode( ',', $params['recipient'] );
 
 		foreach ( $recipients as $current => $email ) {
 			$recipients[$current] = AECToolbox::rewriteEngine( trim( $email ), $metaUser, $plan );
 		}
 
-		mosMail( $params['sender'], $params['sender_name'], $recipients, $params['subject_exp'], $message, $params['text_exp_html'] );
+		mosMail( $params['sender'], $params['sender_name'], $recipients, $subject, $message, $params['text_exp_html'] );
 		return true;
 	}
 
@@ -128,13 +131,15 @@ class mi_email
 		$metaUser = new metaUser( $userid );
 
 		$message	= AECToolbox::rewriteEngine( $params['text'], $metaUser, $plan );
+		$subject	= AECToolbox::rewriteEngine( $params['subject'], $metaUser, $plan );
+
 		$recipients = explode( ',', $params['recipient'] );
 
 		foreach ( $recipients as $current => $email ) {
 			$recipients[$current] = AECToolbox::rewriteEngine( trim( $email ), $metaUser, $plan );
 		}
 
-		mosMail( $params['sender'], $params['sender_name'], $recipients, $params['subject'], $message, $params['text_html'] );
+		mosMail( $params['sender'], $params['sender_name'], $recipients, $subject, $message, $params['text_html'] );
 		return true;
 	}
 
