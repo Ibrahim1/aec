@@ -175,31 +175,31 @@ class metaUser
 		$s = array();
 		$n = 0;
 		foreach ( $restrictions as $restriction ) {
-			$check1 = AECToolbox::rewriteEngine( $restriction[0] );
-			$check2 = AECToolbox::rewriteEngine( $restriction[2] );
+			$check1 = AECToolbox::rewriteEngine( $restriction[0], $this );
+			$check2 = AECToolbox::rewriteEngine( $restriction[2], $this );
 
 			switch ( $restriction[1] ) {
 				case '=':
-					$status = ( $check1 == $check2 );
+					$status = (bool) ( $check1 == $check2 );
 					break;
 				case '<>':
-					$status = ( $check1 != $check2 );
+					$status = (bool) ( $check1 != $check2 );
 					break;
 				case '<=':
-					$status = ( $check1 <= $check2 );
+					$status = (bool) ( $check1 <= $check2 );
 					break;
 				case '>=':
-					$status = ( $check1 >= $check2 );
+					$status = (bool) ( $check1 >= $check2 );
 					break;
 				case '>':
-					$status = ( $check1 > $check2 );
+					$status = (bool) ( $check1 > $check2 );
 					break;
 				case '<':
-					$status = ( $check1 < $check2 );
+					$status = (bool) ( $check1 < $check2 );
 					break;
 			}
 
-			$s[$restriction[0].$n] = $status;
+			$s['customchecker'.$n] = $status;
 			$n++;
 		}
 
@@ -2263,7 +2263,7 @@ class SubscriptionPlan extends paramDBTable
 
 		$custom = array();
 		foreach ( $cr as $field ) {
-			$custom = explode( ' ', $field );
+			$custom[] = explode( ' ', $field );
 		}
 
 		return $custom;
@@ -2706,15 +2706,20 @@ class InvoiceFactory
 				$cmsfields = array( 'name', 'username', 'email', 'password' );
 
 				foreach( $cmsfields as $cmsfield ) {
-					$metaUser->$cmsfield = $cpass[$cmsfield];
+					$metaUser->cmsUser->$cmsfield = $cpass[$cmsfield];
 					unset( $cpass[$cmsfield] );
 				}
 
 				if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+					$metaUser->hasCBprofile = 1;
 					$metaUser->cbUser = new stdClass();
 
-					foreach ( $cpass as $cbfield  => $cbvalue ) {
-						$metaUser->cbUser->$cbfield = $cbvalue;
+					foreach ( $cpass as $cbfield => $cbvalue ) {
+						if ( is_array( $cbvalue ) ) {
+							$metaUser->cbUser->$cbfield = implode( ';', $cbvalue );
+						} else {
+							$metaUser->cbUser->$cbfield = $cbvalue;
+						}
 					}
 				}
 			}
@@ -2780,12 +2785,14 @@ class InvoiceFactory
 			$restrictions = $row->getRestrictionsArray();
 
 			if ( count( $restrictions ) ) {
-				$status = $metaUser->permissionResponse( $restrictions );
+				$status = array();
 
 				if ( isset( $restrictions['custom_restrictions'] ) ) {
 					$status = array_merge( $status, $metaUser->CustomRestrictionResponse( $restrictions['custom_restrictions'] ) );
 					unset( $restrictions['custom_restrictions'] );
 				}
+
+				$status = array_merge( $status, $metaUser->permissionResponse( $restrictions ) );
 
 				foreach ( $status as $stname => $ststatus ) {
 					if ( !$ststatus ) {
@@ -4766,14 +4773,14 @@ class AECToolbox
 		global $database, $mosConfig_absolute_path, $mosConfig_live_site;
 
 		// Check whether a replacement exists at all
-		if ( strpos( $subject, '[[' ) == false ) {
+		if ( strpos( $subject, '[[' ) === false ) {
 			return $subject;
 		}
 
 		$rewrite = array();
 
-			$rewrite['cms_absolute_path']	= $mosConfig_absolute_path;
-			$rewrite['cms_live_site']		= $mosConfig_live_site;
+		$rewrite['cms_absolute_path']	= $mosConfig_absolute_path;
+		$rewrite['cms_live_site']		= $mosConfig_live_site;
 
 		if ( is_object( $metaUser ) ) {
 
@@ -4792,9 +4799,16 @@ class AECToolbox
 				}
 
 				if ( $metaUser->hasCBprofile ) {
+					$query = 'SELECT name'
+							. ' FROM #__comprofiler_fields'
+							. ' WHERE `table` != \'#__users\''
+							. ' AND name != \'NA\'';
+					$database->setQuery( $query );
+					$fields = $database->loadResultArray();
+
 					if ( !empty( $fields ) ) {
 						foreach ( $fields as $fieldname ) {
-							$rewrite['user_' . $fieldname][] = $cbuser->$fieldname;
+							$rewrite['user_' . $fieldname] = $metaUser->cbUser->$fieldname;
 						}
 					}
 
