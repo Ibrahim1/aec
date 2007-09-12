@@ -42,7 +42,7 @@ define( '_AEC_SPEC_MENU_ENTRY',					'My Subscription' );
 define( '_DESCRIPTION_PAYSIGNET',				'mic: Description Paysignet - CHECK! -');
 define( '_AEC_CONFIG_SAVED',					'Configuration saved' );
 define( '_AEC_CONFIG_CANCELLED',				'Configuration cancelled' );
-define( '_AEC_TIP_NO_GROUP_PF_PB',				'Public Frontend" is NOT a usergroup - and neither is "Public Backend' );
+define( '_AEC_TIP_NO_GROUP_PF_PB',				'Public Frontend is NOT a usergroup - and neither is "Public Backend' );
 define( '_AEC_CGF_LINK_ABO_FRONTEND',			'Direct Frontend link' );
 define( '_AEC_NOT_SET',							'Not set' );
 define( '_AEC_COUPON',							'Coupon' );
@@ -575,7 +575,7 @@ define( '_PAYPLAN_PARAMS_GID_ENABLED_DESC', 'Switch this to Yes if you want user
 define( '_PAYPLAN_PARAMS_GID_NAME', 'Add User to Group:');
 define( '_PAYPLAN_PARAMS_GID_DESC', 'Users will be associated to this usergroup when the plan is applied.');
 define( '_PAYPLAN_PARAMS_MAKE_ACTIVE_NAME', 'Make Active:');
-define( '_PAYPLAN_PARAMS_MAKE_ACTIVE_DESC', 'Set this to "No" if you want to manually activate a user after he or she has paid.');
+define( '_PAYPLAN_PARAMS_MAKE_ACTIVE_DESC', 'Set this to >No< if you want to manually activate a user after he or she has paid.');
 
 define( '_PAYPLAN_TEXT_TITLE', 'Plan Text');
 define( '_PAYPLAN_GENERAL_EMAIL_DESC_NAME', 'Email Description:');
