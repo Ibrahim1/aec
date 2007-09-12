@@ -196,19 +196,28 @@ class metaUser
 									$status = false;
 								}
 							} else {
-								$status = false;
+								if ( ( (int) $value ) === 0 ) {
+									$status = true;
+								} else {
+									$status = false;
+								}
 							}
 							break;
 						// Check whether the user was in the correct plan before
 						case 'plan_previous':
 							if ( $this->hasSubscription ) {
-								if ( (int) $this->objSubscription->previous_plan === (int) $value ) {
+								if ( ( (int) $this->objSubscription->previous_plan === (int) $value )
+									|| ( ( ( (int) $value ) === 0 ) && is_null( $this->objSubscription->previous_plan ) ) ) {
 									$status = true;
 								} else {
 									$status = false;
 								}
 							} else {
-								$status = false;
+								if ( ( (int) $value ) === 0 ) {
+									$status = true;
+								} else {
+									$status = false;
+								}
 							}
 							break;
 						// Check whether the user has used the right plan before
@@ -221,7 +230,11 @@ class metaUser
 									$status = false;
 								}
 							} else {
-								$status = false;
+								if ( ( (int) $value ) === 0 ) {
+									$status = true;
+								} else {
+									$status = false;
+								}
 							}
 							break;
 						// Check whether the user has used the plan at least a certain number of times
