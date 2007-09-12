@@ -74,7 +74,7 @@ define( '_CFG_PROCESSOR_TESTMODE_DESC', 'Select Yes if you want to run this proc
 define( '_CFG_PROCESSOR_CURRENCY_NAME', 'Currency Selection');
 define( '_CFG_PROCESSOR_CURRENCY_DESC', 'Select the currency that you want to use for this processor.');
 define( '_CFG_PROCESSOR_NAME_NAME', 'Displayed Name');
-define( '_CFG_PROCESSOR_NAME_DESC', 'Change how this Processor is called.');
+define( '_CFG_PROCESSOR_NAME_DESC', 'Change what this Processor is called.');
 define( '_CFG_PROCESSOR_DESC_NAME', 'Displayed Description');
 define( '_CFG_PROCESSOR_DESC_DESC', 'Change the description of this Processor, which is for example shown on the NotAllowed page, Confirmation and Checkout.');
 define( '_CFG_PROCESSOR_ITEM_NAME_NAME', 'Item Description');
