@@ -245,6 +245,10 @@ float: left;
 padding: 4px;
 }
 
+fieldset {
+float: left
+}
+
 /* adopted toolbar */
 table#aectoolbar {
 	margin-right		: 10px;

@@ -1681,15 +1681,15 @@ class HTML_AcctExp
 						<table class="adminform" style="border-collapse:separate;">
 							<tr><td>
 								<div class="userinfobox">
-									<div style="position:relative;float:left;width:200px;">
+									<div style="position:relative;float:left;width:230px;">
 										<?php echo $aecHTML->createSettingsParticle( 'mingid_enabled' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'mingid' ); ?>
 									</div>
-									<div style="position:relative;float:left;width:200px;">
+									<div style="position:relative;float:left;width:230px;">
 										<?php echo $aecHTML->createSettingsParticle( 'fixgid_enabled' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'fixgid' ); ?>
 									</div>
-									<div style="position:relative;float:left;width:200px;">
+									<div style="position:relative;float:left;width:230px;">
 										<?php echo $aecHTML->createSettingsParticle( 'maxgid_enabled' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'maxgid' ); ?>
 									</div>
@@ -1720,6 +1720,14 @@ class HTML_AcctExp
 										<?php echo $aecHTML->createSettingsParticle( 'used_plan_max_enabled' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'used_plan_max_amount' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'used_plan_max' ); ?>
+									</div>
+								</div>
+								<div class="userinfobox">
+									<div style="position:relative;float:left;">
+										<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions_enabled' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions' ); ?>
+										<br />
+										<?php echo $aecHTML->createSettingsParticle( 'rewriteInfo' ); ?>
 									</div>
 								</div>
 						</td></tr>
@@ -1763,6 +1771,22 @@ class HTML_AcctExp
 						</td></tr></table>
 						<?php
 		                $tabs->endTab();
+		                if ( is_array( $aecHTML->customparams ) ) {
+			                $tabs->startTab( _PAYPLAN_CUSTOMPARAMS_TITLE, _PAYPLAN_CUSTOMPARAMS_TITLE );
+							?>
+							<table width="100%" class="adminform"><tr><td>
+								<h2><?php echo _PAYPLAN_CUSTOMPARAMS_TITLE; ?></h2>
+								<div class="userinfobox">
+									<?php
+										foreach ( $aecHTML->customparams as $customparam ) {
+											echo $aecHTML->createSettingsParticle( $customparam );
+										}
+									?>
+								</div>
+							</td></tr></table>
+							<?php
+			                $tabs->endTab();
+		                }
 		                $tabs->endPane();
 						?>
 					</td>

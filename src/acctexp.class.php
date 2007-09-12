@@ -146,6 +146,66 @@ class metaUser
 		$database->query() or die( $database->stderr() );
 	}
 
+	function loadCBuser()
+	{
+		global $database;
+
+				$query = 'SELECT name'
+				. ' FROM #__comprofiler_fields'
+				. ' WHERE `table` != \'#__users\''
+				. ' AND `name` != \'NA\'';
+		$database->setQuery( $query );
+		$fields = $database->loadResultArray();
+
+		$query = 'SELECT cbactivation' . ( !empty( $fields ) ? ', ' . implode( ', ', $fields ) : '')
+				. ' FROM #__comprofiler'
+				. ' WHERE user_id = \'' . (int) $this->userid . '\'';
+		$database->setQuery( $query );
+		$database->loadObject( $this->cbUser );
+
+		if ( is_object( $this->cbUser ) ) {
+			$this->hasCBprofile = true;
+		} else {
+			$this->hasCBprofile = false;
+		}
+	}
+
+	function CustomRestrictionResponse( $restrictions )
+	{
+		$s = array();
+		$n = 0;
+		foreach ( $restrictions as $restriction ) {
+			$check1 = AECToolbox::rewriteEngine( $restriction[0] );
+			$check2 = AECToolbox::rewriteEngine( $restriction[2] );
+
+			switch ( $restriction[1] ) {
+				case '=':
+					$status = ( $check1 == $check2 );
+					break;
+				case '<>':
+					$status = ( $check1 != $check2 );
+					break;
+				case '<=':
+					$status = ( $check1 <= $check2 );
+					break;
+				case '>=':
+					$status = ( $check1 >= $check2 );
+					break;
+				case '>':
+					$status = ( $check1 > $check2 );
+					break;
+				case '<':
+					$status = ( $check1 < $check2 );
+					break;
+			}
+
+			$s[$restriction[0].$n] = $status;
+			$n++;
+		}
+
+		return $s;
+	}
+
 	function permissionResponse( $restrictions )
 	{
 		if ( is_array( $restrictions ) ) {
@@ -1092,7 +1152,7 @@ class PaymentProcessor
 		global $database;
 
 		// Create new db entry
-		$this->processor->id = 0;
+		$this->processor->load( 0 );
 
 		// Call default values for Info and Settings
 		$this->getInfo();
@@ -2187,7 +2247,26 @@ class SubscriptionPlan extends paramDBTable
 			}
 		}
 
+		// Check for a directly previously used plan
+		if ( !empty( $restrictions['custom_restrictions_enabled'] ) ) {
+			if ( $restrictions['custom_restrictions'] ) {
+				$planrestrictions['custom_restrictions'] = $this->transformCustomRestrictions( $restrictions['custom_restrictions'] );
+			}
+		}
+
 		return $planrestrictions;
+	}
+
+	function transformCustomRestrictions( $customrestrictions )
+	{
+		$cr = explode( "\n", $customrestrictions);
+
+		$custom = array();
+		foreach ( $cr as $field ) {
+			$custom = explode( ' ', $field );
+		}
+
+		return $custom;
 	}
 
 	function savePOSTsettings( $post )
@@ -2681,6 +2760,11 @@ class InvoiceFactory
 
 			if ( count( $restrictions ) ) {
 				$status = $metaUser->permissionResponse( $restrictions );
+
+				if ( isset( $restrictions['custom_restrictions'] ) ) {
+					$status = array_merge( $status, $metaUser->CustomRestrictionResponse( $restrictions['custom_restrictions'] ) );
+					unset( $restrictions['custom_restrictions'] );
+				}
 
 				foreach ( $status as $stname => $ststatus ) {
 					if ( !$ststatus ) {
@@ -4682,27 +4766,23 @@ class AECToolbox
 			$rewrite['user_email']		= $metaUser->cmsUser->email;
 
 			if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
-				$query = 'SELECT name'
-						. ' FROM #__comprofiler_fields'
-						. ' WHERE `table` != \'#__users\''
-						. ' AND `name` != \'NA\'';
-				$database->setQuery( $query );
-				$fields = $database->loadResultArray();
-
-				$query = 'SELECT cbactivation' . ( !empty( $fields ) ? ', ' . implode( ', ', $fields ) : '')
-						. ' FROM #__comprofiler'
-						. ' WHERE user_id = \'' . $metaUser->cmsUser->id . '\'';
-				$database->setQuery( $query );
-				$database->loadObject( $cbuser );
-
-				if ( !empty( $fields ) ) {
-					foreach ( $fields as $fieldname ) {
-						$rewrite['user_' . $fieldname][] = $cbuser->$fieldname;
-					}
+				if ( !$metaUser->hasCBprofile ) {
+					$metaUser->loadCBuser();
 				}
 
-				$rewrite['user_activationcode']		= $metaUser->cmsUser->activation;
-				$rewrite['user_activationlink']		= $mosConfig_live_site."/index.php?option=com_comprofiler&task=confirm&confirmcode=" . $metaUser->cmsUser->activation;
+				if ( $metaUser->hasCBprofile ) {
+					if ( !empty( $fields ) ) {
+						foreach ( $fields as $fieldname ) {
+							$rewrite['user_' . $fieldname][] = $cbuser->$fieldname;
+						}
+					}
+
+					$rewrite['user_activationcode']		= $metaUser->cbUser->cbactivation;
+					$rewrite['user_activationlink']		= $mosConfig_live_site."/index.php?option=com_comprofiler&task=confirm&confirmcode=" . $metaUser->cbUser->cbactivation;
+				} else {
+					$rewrite['user_activationcode']		= $metaUser->cmsUser->activation;
+					$rewrite['user_activationlink']		= $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=" . $metaUser->cmsUser->activation;
+				}
 			} else {
 				$rewrite['user_activationcode']		= $metaUser->cmsUser->activation;
 				$rewrite['user_activationlink']		= $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=" . $metaUser->cmsUser->activation;

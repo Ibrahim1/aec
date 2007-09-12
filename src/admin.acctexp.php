@@ -2204,55 +2204,60 @@ function editSubscriptionPlan( $id, $option )
 	}
 
 	// params and their type values
-	$params['active']					= array("list_yesno", 1);
-	$params['visible']					= array("list_yesno", 0);
+	$params['active']					= array( 'list_yesno', 1 );
+	$params['visible']					= array( 'list_yesno', 0 );
 
-	$params['name']						= array("inputC", "");
-	$params['desc']						= array("editor", "");
-	$params['email_desc']				= array("inputD", "");
-	$params['micro_integrations']		= array("list", "");
+	$params['name']						= array( 'inputC', '' );
+	$params['desc']						= array( 'editor', '' );
+	$params['email_desc']				= array( 'inputD', '' );
+	$params['micro_integrations']		= array( 'list', '' );
 
-	$params['params_remap']				= array("subarea_change", "params");
+	$params['params_remap']				= array( 'subarea_change', 'params' );
 
-	$params['full_free']				= array("list_yesno", "");
-	$params['full_amount']				= array("inputB", "");
-	$params['full_period']				= array("inputB", "");
-	$params['full_periodunit']			= array("list", "D");
-	$params['trial_free']				= array("list_yesno", "");
-	$params['trial_amount']				= array("inputB", "");
-	$params['trial_period']				= array("inputB", "");
-	$params['trial_periodunit']			= array("list", "D");
+	$params['full_free']				= array( 'list_yesno', '' );
+	$params['full_amount']				= array( 'inputB', '' );
+	$params['full_period']				= array( 'inputB', '' );
+	$params['full_periodunit']			= array( 'list', 'D' );
+	$params['trial_free']				= array( 'list_yesno', '' );
+	$params['trial_amount']				= array( 'inputB', '' );
+	$params['trial_period']				= array( 'inputB', '' );
+	$params['trial_periodunit']			= array( 'list', 'D' );
 
-	$params['gid_enabled']				= array("list_yesno", 1);
-	$params['gid']						= array("list", 18);
-	$params['lifetime']					= array("list_yesno", 0);
-	$params['processors']				= array("list", "");
-	$params['fallback']					= array("list", "");
-	$params['make_active']				= array("list_yesno", 1);
+	$params['gid_enabled']				= array( 'list_yesno', 1 );
+	$params['gid']						= array( 'list', 18 );
+	$params['lifetime']					= array( 'list_yesno', 0 );
+	$params['processors']				= array( 'list', '' );
+	$params['fallback']					= array( 'list', '' );
+	$params['make_active']				= array( 'list_yesno', 1 );
 
-	$params['similarplans']				= array("list", "");
-	$params['equalplans']				= array("list", "");
+	$params['similarplans']				= array( 'list', '' );
+	$params['equalplans']				= array( 'list', '' );
 
-	$params['restr_remap']				= array("subarea_change", "restrictions");
+	$params['restr_remap']				= array( 'subarea_change', 'restrictions' );
 
-	$params['mingid_enabled']			= array("list_yesno", 0);
-	$params['mingid']					= array("list", 18);
-	$params['fixgid_enabled']			= array("list_yesno", 0);
-	$params['fixgid']					= array("list", 19);
-	$params['maxgid_enabled']			= array("list_yesno", 0);
-	$params['maxgid']					= array("list", 21);
-	$params['previousplan_req_enabled'] = array("list_yesno", 0);
-	$params['previousplan_req']			= array("list", 0);
-	$params['currentplan_req_enabled']	= array("list_yesno", 0);
-	$params['currentplan_req']			= array("list", 0);
-	$params['overallplan_req_enabled']	= array("list_yesno", 0);
-	$params['overallplan_req']			= array("list", 0);
-	$params['used_plan_min_enabled']	= array("list_yesno", 0);
-	$params['used_plan_min_amount']		= array("inputB", 0);
-	$params['used_plan_min']			= array("list", 0);
-	$params['used_plan_max_enabled']	= array("list_yesno", 0);
-	$params['used_plan_max_amount']		= array("inputB", 0);
-	$params['used_plan_max']			= array("list", 0);
+	$params['mingid_enabled']			= array( 'list_yesno', 0 );
+	$params['mingid']					= array( 'list', 18 );
+	$params['fixgid_enabled']			= array( 'list_yesno', 0 );
+	$params['fixgid']					= array( 'list', 19 );
+	$params['maxgid_enabled']			= array( 'list_yesno', 0 );
+	$params['maxgid']					= array( 'list', 21 );
+	$params['previousplan_req_enabled'] = array( 'list_yesno', 0 );
+	$params['previousplan_req']			= array( 'list', 0 );
+	$params['currentplan_req_enabled']	= array( 'list_yesno', 0 );
+	$params['currentplan_req']			= array( 'list', 0 );
+	$params['overallplan_req_enabled']	= array( 'list_yesno', 0 );
+	$params['overallplan_req']			= array( 'list', 0 );
+	$params['used_plan_min_enabled']	= array( 'list_yesno', 0 );
+	$params['used_plan_min_amount']		= array( 'inputB', 0 );
+	$params['used_plan_min']			= array( 'list', 0 );
+	$params['used_plan_max_enabled']	= array( 'list_yesno', 0 );
+	$params['used_plan_max_amount']		= array( 'inputB', 0 );
+	$params['used_plan_max']			= array( 'list', 0 );
+	$params['custom_restrictions_enabled']		= array( 'list_yesno', '' );
+	$params['custom_restrictions']		= array( 'inputD', '' );
+	$rewriteswitches					= array( 'cms', 'user' );
+	$params['rewriteInfo']				= array( 'fieldset', '', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+
 
 	// ensure user can't add group higher than themselves
 	$my_groups = $acl->get_object_groups( 'users', $my->id, 'ARO' );
@@ -2301,6 +2306,7 @@ function editSubscriptionPlan( $id, $option )
 
 	$selected_gw = array();
 	$available_gw = array();
+	$customparamsarray = array();
 	$k = 0;
 	foreach ( $pps as $ppobj ) {
 		$pproc = new PaymentProcessor();
@@ -2316,6 +2322,7 @@ function editSubscriptionPlan( $id, $option )
 						$cp_desc = strtoupper( $pproc->processor_name . "_plan_params_" . $customparam . "_desc" );
 						$shortname = $pproc->id . "_" . $customparam;
 						$params[$shortname] = array( $cpcontent, $cp_name, $cp_desc );
+						$customparamsarray[] = $shortname;
 					}
 				}
 
@@ -2437,6 +2444,9 @@ function editSubscriptionPlan( $id, $option )
 
 	// Call HTML Class
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+	if ( !empty( $customparamsarray ) ) {
+		$aecHTML->customparams = $customparamsarray;
+	}
 
 	HTML_AcctExp::editSubscriptionPlan( $option, $aecHTML, $row, $hasrecusers );
 }
