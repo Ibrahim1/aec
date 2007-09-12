@@ -272,5 +272,7 @@ define( '_CFG_VEROTEL_SITEID_NAME', 'Site ID');
 define( '_CFG_VEROTEL_SITEID_DESC', 'Your site identifier for this website.');
 define( '_CFG_VEROTEL_SECRETCODE_NAME', 'Secret Code');
 define( '_CFG_VEROTEL_SECRETCODE_DESC', 'Your secret Verotel code.');
+define( 'CFG__VEROTEL_PLAN_PARAMS_VEROTEL_PRODUCT_NAME', 'Product Name');
+define( 'CFG__VEROTEL_PLAN_PARAMS_VEROTEL_PRODUCT_DESC', 'The Product Name identifying this plan to Verotel');
 
 ?>

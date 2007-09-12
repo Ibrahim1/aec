@@ -2318,10 +2318,10 @@ function editSubscriptionPlan( $id, $option )
 				if ( is_array( $customparams ) ) {
 					foreach ( $customparams as $customparam => $cpcontent ) {
 						// Write the params field
-						$cp_name = strtoupper( "_" . $pproc->processor_name . "_plan_params_" . $customparam . "_name" );
-						$cp_desc = strtoupper( "_" . $pproc->processor_name . "_plan_params_" . $customparam . "_desc" );
+						$cp_name = strtoupper( "_CFG_" . $pproc->processor_name . "_plan_params_" . $customparam . "_name" );
+						$cp_desc = strtoupper( "_CFG_" . $pproc->processor_name . "_plan_params_" . $customparam . "_desc" );
 						$shortname = $pproc->id . "_" . $customparam;
-						$params[$shortname] = array( $cpcontent, $cp_name, $cp_desc );
+						$params[$shortname] = array_merge( $cpcontent, array( $cp_name, $cp_desc ) );
 						$customparamsarray[] = $shortname;
 					}
 				}
@@ -2447,7 +2447,7 @@ function editSubscriptionPlan( $id, $option )
 	if ( !empty( $customparamsarray ) ) {
 		$aecHTML->customparams = $customparamsarray;
 	}
-
+print_r($aecHTML);
 	HTML_AcctExp::editSubscriptionPlan( $option, $aecHTML, $row, $hasrecusers );
 }
 
