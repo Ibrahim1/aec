@@ -2695,8 +2695,29 @@ class InvoiceFactory
 		if ( !$this->userid ) {
 			// Creating a dummy user object
 			$metaUser = new metaUser( 0 );
+			$metaUser->cmsUser = new stdClass();
 			$metaUser->cmsUser->gid = 29;
 			$register = 1;
+
+			if ( $passthrough ) {
+				$cpass = $passthrough;
+				unset( $cpass['id'] );
+
+				$cmsfields = array( 'name', 'username', 'email', 'password' );
+
+				foreach( $cmsfields as $cmsfield ) {
+					$metaUser->$cmsfield = $cpass[$cmsfield];
+					unset( $cpass[$cmsfield] );
+				}
+
+				if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+					$metaUser->cbUser = new stdClass();
+
+					foreach ( $cpass as $cbfield  => $cbvalue ) {
+						$metaUser->cbUser->$cbfield = $cbvalue;
+					}
+				}
+			}
 		} else {
 			// Loading the actual user
 			$metaUser = new metaUser( $this->userid );
