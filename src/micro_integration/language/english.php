@@ -95,7 +95,7 @@ define( '_AEC_MI_SET11_EMAIL',		'Rewriting Info' );
 define( '_AEC_MI_NAME_IDEV',		'iDevAffiliate' );
 define( '_AEC_MI_DESC_IDEV',		'Connect your sales to the iDevAffiliate Component' );
 define( '_MI_MI_IDEVAFFILIATE_SETUPINFO_NAME',		'Important Information' );
-define( '_MI_MI_IDEVAFFILIATE_SETUPINFO_NAME',		'Using the micro integration, you NEED TO make sure you make the settings for "cart integration" in your idev backend as follows:\n\n<ul><li>Use "manual integration"</li><li>As "Order Amount Variable Name: " use "idev_paypal_1" (if not already preset!)</li><li>As "Order Number Variable Name: " use "idev_paypal_2" (if not already preset!)</li></ul>' );
+define( '_MI_MI_IDEVAFFILIATE_SETUPINFO_DESC',		'Using the micro integration, you NEED TO make sure you make the settings for "cart integration" in your idev backend as follows:\n\n<ul><li>Use "manual integration"</li><li>As "Order Amount Variable Name: " use "idev_paypal_1" (if not already preset!)</li><li>As "Order Number Variable Name: " use "idev_paypal_2" (if not already preset!)</li></ul>' );
 
 // MosetsTree
 define( '_AEC_MI_NAME_MOSETS',		'MosetsTree' );
