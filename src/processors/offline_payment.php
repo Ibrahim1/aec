@@ -46,7 +46,7 @@ class processor_offline_payment extends processor
 		$info['statement']		= _CFG_OFFLINE_PAYMENT_STATEMENT;
 		$info['description']	= _CFG_OFFLINE_PAYMENT_DESCRIPTION;
 		$info['currencies']		= AECToolbox::_aecCurrencyField( true, true, true, true );
-		$info['cc_list']		= "visa,mastercard,discover,americanexpress,echeck,giropay";
+		$info['cc_list']		= "";
 		$info['recurring']		= 0;
 
 		return $info;
