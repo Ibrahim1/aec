@@ -2225,9 +2225,9 @@ class SubscriptionPlan extends paramDBTable
 		}
 
 		// Check for a overall used plan
-		if ( !empty( $restrictions['currentplan_req_enabled'] ) ) {
-			if ( $restrictions['currentplan_req'] ) {
-				$planrestrictions['plan_overall'] = (int) $restrictions['currentplan_req'];
+		if ( !empty( $restrictions['overallplan_req_enabled'] ) ) {
+			if ( $restrictions['overallplan_req'] ) {
+				$planrestrictions['plan_overall'] = (int) $restrictions['overallplan_req'];
 			}
 		}
 
