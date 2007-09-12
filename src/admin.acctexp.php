@@ -4211,7 +4211,11 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 						if ( strcmp( $hacks[$filename]['status'], 'legacy' ) === 0 ) {
 							$newData = preg_replace( '/\/\/.AEC.(HACK|CHANGE).START\\n.*\/\/.AEC.(HACK|CHANGE).END\\n/s', $hacks[$filename]['read'], $oldData );
 						} else {
-							$newData = preg_replace( '/\/\/.AEC.(HACK|CHANGE).' . $filename . '.START\\n.*\/\/.AEC.(HACK|CHANGE).' . $filename . '.END\\n/s', $hacks[$filename]['read'], $oldData );
+							if ( strpos( $oldData, $hacks[$filename]['insert'] ) ) {
+								$newData = str_replace( $hacks[$filename]['insert'], $hacks[$filename]['read'], $oldData );
+							} else {
+								$newData = preg_replace( '/\/\/.AEC.(HACK|CHANGE).' . $filename . '.START\\n.*\/\/.AEC.(HACK|CHANGE).' . $filename . '.END\\n/s', $hacks[$filename]['read'], $oldData );
+							}
 						}
 					}
 
