@@ -86,7 +86,7 @@ class paramDBTable extends mosDBTable
 				}
 			}
 		}
-		$this->setParams ($params, $field);
+		$this->setParams( $params, $field );
 	}
 
 	/**

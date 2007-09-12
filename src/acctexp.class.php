@@ -1669,7 +1669,6 @@ class Config_General extends paramDBTable
 		$def['customtext_pending_keeporiginal']		= 1;
 		$def['customtext_expired_keeporiginal']		= 1;
 		// new 0.12.4
-
 		$def['bypassintegration']					= '';
 		$def['customintro']							= '';
 		$def['customthanks']						= '';
@@ -1689,6 +1688,8 @@ class Config_General extends paramDBTable
 
 		// Write to Params, do not overwrite existing data
 		$this->addParams( $def, 'settings', false );
+		$this->check();
+		$this->store();
 
 		return true;
 	}
