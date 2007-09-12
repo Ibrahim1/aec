@@ -4783,9 +4783,14 @@ class AECToolbox
 						$rewrite['user'][] = $object->name;
 
 						if ( strpos( $object->title, '_' ) === 0 ) {
-							define( '_REWRITE_KEY_USER_' . strtoupper( $object->name ), $object->name );
+							$content = $object->name;
 						} else {
-							define( '_REWRITE_KEY_USER_' . strtoupper( $object->name ), $object->title );
+							$content = $object->title;
+						}
+
+						$name = '_REWRITE_KEY_USER_' . strtoupper( $object->name );
+						if ( !defined( $name ) ) {
+							define( $name, $content );
 						}
 					}
 				}
