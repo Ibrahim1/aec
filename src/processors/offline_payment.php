@@ -42,9 +42,9 @@ class processor_offline_payment extends processor
 	function info()
 	{
 		$info = array();
-		$info['longname']		= _AEC_OFFLINE_PAYMENT_LONGNAME;
-		$info['statement']		= _AEC_OFFLINE_PAYMENT_STATEMENT;
-		$info['description']	= _AEC_OFFLINE_PAYMENT_DESCRIPTION;
+		$info['longname']		= _CFG_OFFLINE_PAYMENT_LONGNAME;
+		$info['statement']		= _CFG_OFFLINE_PAYMENT_STATEMENT;
+		$info['description']	= _CFG_OFFLINE_PAYMENT_DESCRIPTION;
 		$info['currencies']		= AECToolbox::_aecCurrencyField( true, true, true, true );
 		$info['cc_list']		= "visa,mastercard,discover,americanexpress,echeck,giropay";
 		$info['recurring']		= 0;

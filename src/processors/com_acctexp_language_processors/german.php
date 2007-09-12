@@ -262,12 +262,23 @@ define( '_CFG_MONEYPROXY_PAYMENT_ID_NAME', 'Payment ID');
 define( '_CFG_MONEYPROXY_PAYMENT_ID_DESC', 'The merchant can use this field to track the payment when the status URL is called. It can be up to 10 digits with only letters and numbers (0-9a-zA-Z). You can use Rewrite tags here.');
 
 // Offline Payment
-define( '_AEC_OFFLINE_PAYMENT_LONGNAME', 'Offline Zahlungen');
-define( '_AEC_OFFLINE_PAYMENT_STATEMENT', 'W&auml;hlen sie diese Option, um auf anderem Wege als &uuml;ber das Internet zu zahlen');
-define( '_AEC_OFFLINE_PAYMENT_DESCRIPTION', 'W&auml;hlen sie diese Option, um auf anderem Wege als &uuml;ber das Internet zu zahlen');
+define( '_CFG_OFFLINE_PAYMENT_LONGNAME', 'Offline Zahlungen');
+define( '_CFG_OFFLINE_PAYMENT_STATEMENT', 'W&auml;hlen sie diese Option, um auf anderem Wege als &uuml;ber das Internet zu zahlen');
+define( '_CFG_OFFLINE_PAYMENT_DESCRIPTION', 'W&auml;hlen sie diese Option, um auf anderem Wege als &uuml;ber das Internet zu zahlen');
 define( '_CFG_OFFLINE_PAYMENT_INFO_NAME', 'Info');
 define( '_CFG_OFFLINE_PAYMENT_INFO_DESC', 'Die Information, die dem Benutzer auf der Checkout-Seite pr&auml;sentiert wird');
 define( '_CFG_OFFLINE_PAYMENT_WAITINGPLAN_NAME', 'Warte-Plan');
 define( '_CFG_OFFLINE_PAYMENT_WAITINGPLAN_DESC', 'Mit dieser Option wird der Benutzer einem Plan zugewiesen w&auml;hrend die Zahlung unterwegs ist');
+
+// Verotel
+define( '_CFG_VEROTEL_LONGNAME', 'Verotel');
+define( '_CFG_VEROTEL_STATEMENT', 'Use Verotel: Putting Trust in Global Payments');
+define( '_CFG_VEROTEL_DESCRIPTION', 'erotel offers a range of billing methods for your website, including VISA/MasterCard/JCB, Chinese debit, Direct Debit in European countries, pay per phonecall, pay per minute, SMS billing and more!');
+define( '_CFG_VEROTEL_MERCHANTID_NAME', 'Merchant ID');
+define( '_CFG_VEROTEL_MERCHANTID_DESC', 'Your merchant identifier at Verotel.');
+define( '_CFG_VEROTEL_SITEID_NAME', 'Site ID');
+define( '_CFG_VEROTEL_SITEID_DESC', 'Your site identifier for this website.');
+define( '_CFG_VEROTEL_SECRETCODE_NAME', 'Secret Code');
+define( '_CFG_VEROTEL_SECRETCODE_DESC', 'Your secret Verotel code.');
 
 ?>

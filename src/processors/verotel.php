@@ -43,12 +43,12 @@ class processor_verotel extends GETprocessor
 	function info()
 	{
 		$i = array();
-		$i['longname'] = "Verotel";
-		$i['statement'] = "Make payments with PayPal - it's fast, free and secure!";
-		$i['description'] = "description";
+		$i['longname'] = _AEC_VEROTEL_LONGNAME;
+		$i['statement'] = _AEC_VEROTEL_STATEMENT;
+		$i['description'] = _AEC_VEROTEL_DESCRIPTION;
 		$i['currencies'] = 'USD';
 		$i['languages'] = 'AU,DE,FR,IT,GB,ES,US';
-		$i['cc_list'] = 'visa,mastercard,discover,americanexpress,echeck,giropay';
+		$i['cc_list'] = 'visa,mastercard,discover,americanexpress,echeck';
 
 		return $i;
 	}
