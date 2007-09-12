@@ -67,6 +67,7 @@ $heartbeat = new aecHeartbeat( $database );
 $heartbeat->backendping();
 
 switch( strtolower( $task ) ) {
+	case 'heartbeat':
 	case 'beat':
 		// Manual Heartbeat
 		aecHeartbeat::beat();
