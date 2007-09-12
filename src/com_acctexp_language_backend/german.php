@@ -765,6 +765,10 @@ define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MAX_AMOUNT_NAME',		'Anzahl:' );
 define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MAX_AMOUNT_DESC',		'Maximale Anzahl an Benutzern die dieses Abo verwendet d&uuml;rfen' );
 define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MAX_NAME',				'Abo:' );
 define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MAX_DESC',				'Das Abo welches maximal verwendet werden darf' );
+define( '_PAYPLAN_RESTRICTIONS_CUSTOM_RESTRICTIONS_NAME', 'Custom Restrictions:');
+define( '_PAYPLAN_RESTRICTIONS_CUSTOM_RESTRICTIONS_DESC', 'Use RewriteEngine fields to check for specific strings in this form:<br />[[user_id]] >= 1500<br />[[parametername]] = value<br />(Create separate rules by entering a new line).<br />You can use =, <=, >=, <, >, <> as comparing elements. You MUST use spaces between parameters, values and comparators!');
+
+define( '_PAYPLAN_CUSTOMPARAMS_TITLE', 'Proc. Params');
 
 define( '_PAYPLAN_MI',											'Komponenten' );
 define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_NAME',				'Komponentenname:' );

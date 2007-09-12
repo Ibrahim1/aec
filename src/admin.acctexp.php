@@ -2318,8 +2318,8 @@ function editSubscriptionPlan( $id, $option )
 				if ( is_array( $customparams ) ) {
 					foreach ( $customparams as $customparam => $cpcontent ) {
 						// Write the params field
-						$cp_name = strtoupper( $pproc->processor_name . "_plan_params_" . $customparam . "_name" );
-						$cp_desc = strtoupper( $pproc->processor_name . "_plan_params_" . $customparam . "_desc" );
+						$cp_name = strtoupper( "_" . $pproc->processor_name . "_plan_params_" . $customparam . "_name" );
+						$cp_desc = strtoupper( "_" . $pproc->processor_name . "_plan_params_" . $customparam . "_desc" );
 						$shortname = $pproc->id . "_" . $customparam;
 						$params[$shortname] = array( $cpcontent, $cp_name, $cp_desc );
 						$customparamsarray[] = $shortname;
