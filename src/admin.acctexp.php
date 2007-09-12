@@ -2447,7 +2447,7 @@ function editSubscriptionPlan( $id, $option )
 	if ( !empty( $customparamsarray ) ) {
 		$aecHTML->customparams = $customparamsarray;
 	}
-print_r($aecHTML);
+
 	HTML_AcctExp::editSubscriptionPlan( $option, $aecHTML, $row, $hasrecusers );
 }
 
