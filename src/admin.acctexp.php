@@ -2164,6 +2164,7 @@ function editSubscriptionPlan( $id, $option )
 	$lists = array();
 	$params_values = array();
 	$restrictions_values = array();
+	$customparams_values = array();
 
 	$row = new SubscriptionPlan( $database );
 	$row->load( $id );
@@ -2440,7 +2441,12 @@ function editSubscriptionPlan( $id, $option )
 	$lists['micro_integrations'] = mosHTML::selectList($mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple', 'value', 'text', $selected_mi);
 
 	$settings = new aecSettings ( 'payplan', 'general' );
-	$settings->fullSettingsArray( $params, array_merge( $params_values, $customparams_values, $restrictions_values ), $lists) ;
+	if ( is_array( $customparams_values ) ) {
+		$settingsparams = array_merge( $params_values, $customparams_values, $restrictions_values );
+	} else {
+		$settingsparams = array_merge( $params_values, $restrictions_values );
+	}
+	$settings->fullSettingsArray( $params, $settingsparams, $lists) ;
 
 	// Call HTML Class
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
