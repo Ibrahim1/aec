@@ -47,8 +47,38 @@ class mi_virtuemart
 		$settings['set_shopper_group_exp']	= array( 'list_yesno' );
 		$settings['shopper_group_exp']		= array( 'list' );
 		$settings['create_account']			= array( 'list_yesno' );
+		$settings['rebuild']			= array( 'list_yesno' );
 
 		return $settings;
+	}
+
+	function saveparams( $params )
+	{
+		global $mosConfig_absolute_path, $database;
+		$newparams = $params;
+
+		if ( $params['rebuild'] ) {
+			$planlist = MicroIntegrationHandler::getPlansbyMI( $params['MI_ID'] );
+
+			foreach ( $planlist as $planid ) {
+				$userlist = SubscriptionPlanHandler::getPlanUserlist( $planid );
+				foreach ( $userlist as $userid ) {
+					if ( $params['set_shopper_group'] ) {
+						if ( $this->checkVMuserexists( $userid ) ) {
+							$this->updateVMuserSgroup( $userid, $params['shopper_group'] );
+						} elseif ( $params['create_account'] ) {
+							$this->createVMuser( $userid, $params['shopper_group'] );
+						}
+
+						return true;
+					}
+				}
+			}
+
+			$newparams['rebuild'] = 0;
+		}
+
+		return $newparams;
 	}
 
 	function expiration_action( $params, $userid, $plan )
@@ -114,9 +144,9 @@ class mi_virtuemart
 		$metaUser = new metaUser( $database );
 
 		$name = explode( ' ', $metaUser->cmsUser->name );
-		$namount = count( $name ); 
+		$namount = count( $name );
 		if ( $namount >= 3 ) {
-			$firstname = $name[0]; 
+			$firstname = $name[0];
 			$mname = '';
 			for( $i=0; $i<$namount; $i++ ) {
 				$mname[] = $name[$i];
@@ -124,11 +154,11 @@ class mi_virtuemart
 			$middlename = implode( ' ', $mname );
 			$lastname = $name[$namount];
 		} elseif ( count( $name ) == 2 ) {
-			$firstname = $name[0]; 
+			$firstname = $name[0];
 			$middlename = '';
 			$lastname = $name[2];
 		} else {
-			$firstname = $name[0]; 
+			$firstname = $name[0];
 			$middlename = '';
 			$lastname = '';
 		}

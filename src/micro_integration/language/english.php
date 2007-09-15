@@ -58,7 +58,7 @@ define( '_MI_MI_DOCMAN_GROUP_EXP_DESC',				'Choose Yes if you want this MI to se
 define( '_MI_MI_DOCMAN_SET_GROUP_EXP_NAME',			'Expiration group' );
 define( '_MI_MI_DOCMAN_SET_GROUP_EXP_DESC',			'The DocMan group that you want the user to be in when the subscription runs out.' );
 define( '_MI_MI_DOCMAN_REBUILD_NAME',				'Rebuild' );
-define( '_MI_MI_DOCMAN_REBUILD_DESC',				'Attempt to rebuild the list of users assigned to the usergroup - "Set DocMan Group" and "DocMan Group" have to both be set for this.' );
+define( '_MI_MI_DOCMAN_REBUILD_DESC',				'Attempt to rebuild the list of users assigned to the usergroup - >Set DocMan Group< and >DocMan Group< have to both be set for this.' );
 define( '_AEC_MI_HACK1_DOCMAN',						'Build in a downloads restriction for DocMan, to be used with Micro Integrations.' );
 define( '_AEC_MI_DOCMAN_NOCREDIT',					'We are terribly sorry: You have no downloads left.' );
 
@@ -153,6 +153,8 @@ define( '_MI_MI_VIRTUEMART_SHOPPER_GROUP_EXP_NAME',	'Expiration Shopper group' )
 define( '_MI_MI_VIRTUEMART_SHOPPER_GROUP_EXP_DESC',	'The VirtueMart Shopper group that you want the user to be in when the subscription runs out.' );
 define( '_MI_MI_VIRTUEMART_CREATE_ACCOUNT_NAME',	'Auto Create Account' );
 define( '_MI_MI_VIRTUEMART_CREATE_ACCOUNT_DESC',	'Select "Yes" if you want this MI to also create a new VirtueMart account if there is none for the user.' );
+define( '_MI_MI_VIRTUEMART_REBUILD_NAME',	'Rebuild' );
+define( '_MI_MI_VIRTUEMART_REBUILD_DESC',	'Attempt to rebuild the list of users assigned to the usergroup according to their relationship to a plan that holds this MI.' );
 
 // Joomlauser
 define( '_AEC_MI_NAME_JOOMLAUSER',		'Joomla User' );

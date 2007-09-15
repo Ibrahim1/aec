@@ -153,6 +153,8 @@ define( '_MI_MI_VIRTUEMART_SHOPPER_GROUP_EXP_NAME',	'Gruppe' );
 define( '_MI_MI_VIRTUEMART_SHOPPER_GROUP_EXP_DESC',	'Die VirtueMart-Gruppe definieren welche nach Aboablauf g&uuml;ltig sein soll' );
 define( '_MI_MI_VIRTUEMART_CREATE_ACCOUNT_NAME',	'Konto erstellen' );
 define( '_MI_MI_VIRTUEMART_CREATE_ACCOUNT_DESC',	'Legt automatisch ein neues Benutzerkonto an, falls keines vorhanden ist.' );
+define( '_MI_MI_VIRTUEMART_REBUILD_NAME',	'Rebuild' );
+define( '_MI_MI_VIRTUEMART_REBUILD_DESC',	'Attempt to rebuild the list of users assigned to the usergroup according to their relationship to a plan that holds this MI.' );
 
 // Joomlauser
 define( '_AEC_MI_NAME_JOOMLAUSER',					'Joomla Benutzer' );
@@ -172,7 +174,6 @@ define( '_MI_MI_COMMUNITYBUILDER_SET_FIELDS_DESC',		'Automatisch Felder eines Be
 define( '_MI_MI_COMMUNITYBUILDER_SET_FIELDS_EXP_NAME',	'Felder setzen (Ablauf)' );
 define( '_MI_MI_COMMUNITYBUILDER_SET_FIELDS_EXP_DESC',	'Automatisch Felder eines Benutzerkontos &auml;ndern (siehe unten - Eintr&auml;ge, die mit "(ablauf)"), gekennzeichnet sind) sobald der Plan bezahlt ist' );
 define( '_MI_MI_COMMUNITYBUILDER_EXPMARKER',			'(ablauf)' );
-
 
 // JUGA
 define( '_AEC_MI_NAME_JUGA',		'JUGA' );
