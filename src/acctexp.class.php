@@ -1604,7 +1604,6 @@ class aecHTML
 			case 'editor':
 				$return = '<p>' . $this->ToolTip( $row[2], $row[1]) . $row[1] . '</p>';
 				$return .= '<div class="setting_form">';
-				$return .= '<!-- <textarea name="' . $name . ' cols="60" maxlength="2048" rows="5">' . $value . '</textarea> //-->';
 				$return .= editorArea( $name, $value, $name, '100%;', '250', '10', '60' );
 				$return .= '</div>';
 				break;

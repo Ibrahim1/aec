@@ -278,7 +278,6 @@ class HTML_myCommon
         		<tr align="left" valign="middle" >
 					<td colspan="3">
 						<?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null ); ?><?php echo $thisrow_name; ?>
-						<!-- <textarea name="<?php echo $thisrow_extra; ?>" align="left" cols="60" maxlength="2048" rows="5"><?php echo $thisrow_var; ?></textarea> //-->
 						<?php editorArea( $thisrow_extra, $thisrow_var, $thisrow_extra, '100%;', '250', '10', '60' ); ?>
 					</td>
 				</tr>
