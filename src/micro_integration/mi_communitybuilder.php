@@ -84,7 +84,7 @@ class mi_communitybuilder
 			$objects = $database->loadObjectList();
 
 			foreach ( $objects as $object ) {
-				if ( !empty( $params['cbfield_' . $object->name] ) ) {
+				if ( $params['cbfield_' . $object->name] !== '' ) {
 					$changes[$object->name] = $params['cbfield_' . $object->name];
 				}
 			}
@@ -92,7 +92,11 @@ class mi_communitybuilder
 			if ( !empty( $changes ) ) {
 				$alterstring = array();
 				foreach ( $changes as $name => $value ) {
-					$alterstring[] = '\'' . $name . '\' = \'' . AECToolbox::rewriteEngine( $value, $metaUser, $plan ) . '\'';
+					if ( strcmp( $value, 'NULL' ) === 0 ) {
+						$alterstring[] = $name . ' = NULL';
+					} else {
+						$alterstring[] = $name . ' = \'' . AECToolbox::rewriteEngine( $value, $metaUser, $plan ) . '\'';
+					}
 				}
 
 				$query = 'UPDATE #__comprofiler'
@@ -135,7 +139,11 @@ class mi_communitybuilder
 			if ( !empty( $changes ) ) {
 				$alterstring = array();
 				foreach ( $changes as $name => $value ) {
-					$alterstring[] = '\'' . $name . '\' = \'' . AECToolbox::rewriteEngine( $value, $metaUser, $plan ) . '\'';
+					if ( strcmp( $value, 'NULL' ) === 0 ) {
+						$alterstring[] = $name . ' = NULL';
+					} else {
+						$alterstring[] = $name . ' = \'' . AECToolbox::rewriteEngine( $value, $metaUser, $plan ) . '\'';
+					}
 				}
 
 				$query = 'UPDATE #__comprofiler'
