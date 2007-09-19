@@ -1225,6 +1225,23 @@ function com_install()
     	$errors[] = array( $database->getErrorMsg(), $query );
 	}
 
+	$query = 'UPDATE #__acctexp_subscr'
+	. ' SET type = \'offline_payment\''
+	. ' WHERE type = \'transfer\'';
+	$database->setQuery( $query );
+	if ( !$database->query() ) {
+    	$errors[] = array( $database->getErrorMsg(), $query );
+	}
+
+	// Cater a strange bug that resets recurring due to the above
+	$query = 'UPDATE #__acctexp_subscr'
+	. ' SET recurring = \'0\''
+	. ' WHERE type = \'transfer\' OR type = \'offline_payment\'';
+	$database->setQuery( $query );
+	if ( !$database->query() ) {
+    	$errors[] = array( $database->getErrorMsg(), $query );
+	}
+
 	$database->setQuery("SELECT id FROM #__users WHERE gid='25'");
 	$administrators = $database->loadResultArray();
 
