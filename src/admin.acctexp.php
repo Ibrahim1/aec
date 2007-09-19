@@ -30,6 +30,9 @@
 // no direct access
 defined( '_VALID_MOS' ) or die( 'Restricted access' );
 
+require_once( $mainframe->getPath( 'admin_html' ) );
+require_once( $mainframe->getPath( 'class' ) );
+
 if (!$acl->acl_check( 'administration', 'config', 'users', $my->usertype )) {
 	$cfg = new Config_General( $database );
 
@@ -37,9 +40,6 @@ if (!$acl->acl_check( 'administration', 'config', 'users', $my->usertype )) {
 		mosRedirect( 'index2.php', _NOT_AUTH );
 	}
 }
-
-require_once( $mainframe->getPath( 'admin_html' ) );
-require_once( $mainframe->getPath( 'class' ) );
 
 $langPathBE = $mosConfig_absolute_path . '/administrator/components/com_acctexp/com_acctexp_language_backend/';
 if ( file_exists( $langPathBE . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
