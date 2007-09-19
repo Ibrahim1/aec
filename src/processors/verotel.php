@@ -38,7 +38,7 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_verotel extends GETprocessor
+class processor_verotel extends POSTprocessor
 {
 	function info()
 	{
@@ -88,14 +88,16 @@ class processor_verotel extends GETprocessor
 	{
 		// Payment Plans are required to have a productid assigned
 		if ( empty( $int_var['planparams']['verotel_product'] ) ) {
-			notAllowed();
+			$product = $cfg['siteid'];
+		} else {
+			$product = $int_var['planparams']['verotel_product'];
 		}
 
         $var = array(
 			'post_url'	=> "https://secure.verotel.com/cgi-bin/vtjp.pl?",
 			'verotel_id'    => $cfg['merchant_id'],
-            'verotel_product' => $int_var['planparams']['verotel_product'],
-            'verotel_website'     => $cfg['siteid'],
+            'verotel_product' => $product,
+            'verotel_website'     => $product,
             'verotel_usercode'  => $metaUser->cmsUser->username,
             'verotel_custom1'      => $int_var['invoice'],
             'verotel_custom2'      => AECToolbox::rewriteEngine( $cfg['custom_name'], $metaUser, $new_subscription ),

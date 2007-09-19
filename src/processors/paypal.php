@@ -63,11 +63,12 @@ class processor_paypal extends POSTprocessor
 		$settings['tax']			= '';
 		$settings['currency']		= 'USD';
 		$settings['checkbusiness']	= 0;
+		$settings['acceptpendingecheck'] = 0;
 		$settings['lc']				= 'US';
 		$settings['no_shipping']	= 1;
 		$settings['altipnurl']		= '';
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
-		$settings['rewriteInfo']	= ''; // added mic
+		$settings['rewriteInfo']	= '';
 
 		// Customization Options
 		$settings['cbt']					= '';
@@ -93,6 +94,7 @@ class processor_paypal extends POSTprocessor
 		$settings['tax']			= array( 'inputA' );
 		$settings['currency']		= array( 'list_currency' );
 		$settings['checkbusiness']	= array( 'list_yesno' );
+		$settings['acceptpendingecheck']	= array( 'list_yesno' );
 		$settings['lc']				= array( 'list_language' );
 		$settings['no_shipping']	= array( 'list_yesno' );
 		$settings['altipnurl']		= array( 'inputC' );
@@ -249,13 +251,40 @@ class processor_paypal extends POSTprocessor
 				} elseif ( strcmp( $payment_type, 'instant' ) == 0 && strcmp( $payment_status, 'Completed' ) == 0 ) {
 					$response['valid']			= 1;
 				} elseif ( strcmp( $payment_type, 'echeck' ) == 0 && strcmp( $payment_status, 'Pending' ) == 0 ) {
-					$response['pending']		= 1;
-					$response['pending_reason'] = 'echeck';
+					if ( $cfg['acceptpendingecheck'] ) {
+						if ( is_object( $objInvoice ) ) {
+							$objInvoice->setParams( array( 'acceptedpendingecheck' => 1 ) );
+							$objInvoice->check();
+							$objInvoice->store();
+						}
+
+						$response['valid']			= 1;
+						$response['pending_reason'] = 'echeck';
+					} else {
+						$response['pending']		= 1;
+						$response['pending_reason'] = 'echeck';
+					}
 				} elseif ( strcmp( $payment_type, 'echeck' ) == 0 && strcmp( $payment_status, 'Completed' ) == 0 ) {
-					$response['valid']			= 1;
+					if ( $cfg['acceptpendingecheck'] ) {
+						if ( is_object( $objInvoice ) ) {
+							$invoiceparams = $objInvoice->getParams();
+
+							if ( isset( $invoiceparams['acceptedpendingecheck'] ) ) {
+								$response['valid']		= 0;
+								$response['duplicate']	= 1;
+
+								$objInvoice->delParams( array( 'acceptedpendingecheck' ) );
+								$objInvoice->check();
+								$objInvoice->store();
+							}
+						} else {
+							$response['valid']			= 1;
+						}
+					} else {
+						$response['valid']			= 1;
+					}
 				}
 			} elseif ( strcmp( $txn_type, 'subscr_signup' ) == 0 ) {
-				$response['valid']			= 0;
 				$response['pending']		= 1;
 				$response['pending_reason'] = 'signup';
 			} elseif ( strcmp( $txn_type, 'subscr_eot' ) == 0 ) {

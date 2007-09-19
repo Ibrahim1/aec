@@ -925,6 +925,11 @@ function processNotification( $option, $processor )
 			$metaUser->load($objInvoice->userid);
 			$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_EOT;
 			$tags	.= ',eot';
+		} elseif (isset($response['duplicate'])) {
+			$metaUser = new metaUser();
+			$metaUser->load($objInvoice->userid);
+			$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_DUPLICATE;
+			$tags	.= ',duplicate';
 		} else {
 			$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR;
 			$tags	.= ',general_error';

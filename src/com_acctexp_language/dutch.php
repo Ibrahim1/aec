@@ -63,6 +63,7 @@ define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_PEND',		'Ongeldige betaling - status is
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CANCEL',	'Geen Betaling - Aanvraag geannuleerd' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS',	', Gebruikerstatus is gewijzigd naar \'Afgebroken\'' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EOT',		'Geen Betaling - Abonnementstermijn verlopen' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_DUPLICATE','No Payment - Duplicate' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR',	'Onbekende foutmelding' );
 
 // --== COUPON INFO ==--

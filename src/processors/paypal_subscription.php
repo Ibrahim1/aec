@@ -251,10 +251,38 @@ class processor_paypal_subscription extends POSTprocessor
 				} elseif ( strcmp( $payment_type, 'instant' ) == 0 && strcmp( $payment_status, 'Completed' ) == 0 ) {
 					$response['valid']			= 1;
 				} elseif ( strcmp( $payment_type, 'echeck' ) == 0 && strcmp( $payment_status, 'Pending' ) == 0 ) {
-					$response['pending']		= 1;
-					$response['pending_reason'] = 'echeck';
+					if ( $cfg['acceptpendingecheck'] ) {
+						if ( is_object( $objInvoice ) ) {
+							$objInvoice->setParams( array( 'acceptedpendingecheck' => 1 ) );
+							$objInvoice->check();
+							$objInvoice->store();
+						}
+
+						$response['valid']			= 1;
+						$response['pending_reason'] = 'echeck';
+					} else {
+						$response['pending']		= 1;
+						$response['pending_reason'] = 'echeck';
+					}
 				} elseif ( strcmp( $payment_type, 'echeck' ) == 0 && strcmp( $payment_status, 'Completed' ) == 0 ) {
-					$response['valid']			= 1;
+					if ( $cfg['acceptpendingecheck'] ) {
+						if ( is_object( $objInvoice ) ) {
+							$invoiceparams = $objInvoice->getParams();
+
+							if ( isset( $invoiceparams['acceptedpendingecheck'] ) ) {
+								$response['valid']		= 0;
+								$response['duplicate']	= 1;
+
+								$objInvoice->delParams( array( 'acceptedpendingecheck' ) );
+								$objInvoice->check();
+								$objInvoice->store();
+							}
+						} else {
+							$response['valid']			= 1;
+						}
+					} else {
+						$response['valid']			= 1;
+					}
 				}
 			} elseif ( strcmp( $txn_type, 'subscr_signup' ) == 0 ) {
 				$response['valid']			= 0;
