@@ -1399,6 +1399,26 @@ class GETprocessor extends processor
 	{
 		$var = $this->createGatewayLink( $int_var, $settings, $metaUser, $new_subscription );
 
+		$return = '<form action="' . $var['post_url'] . '" method="get">' . "\n";
+		unset( $var['posturl'] );
+
+		foreach ( $var as $key => $value ) {
+			$return .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
+		}
+
+		$return .= '<input type="submit" class="button" value="' . _BUTTON_CHECKOUT . '" />' . "\n";
+		$return .= '</form>' . "\n";
+
+		return $return;
+	}
+}
+
+class URLprocessor extends processor
+{
+	function checkoutAction( $int_var, $settings, $metaUser, $new_subscription )
+	{
+		$var = $this->createGatewayLink( $int_var, $settings, $metaUser, $new_subscription );
+
 		$return = '<a href="' . $var['post_url'];
 		unset( $var['posturl'] );
 
