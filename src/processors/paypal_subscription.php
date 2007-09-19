@@ -55,6 +55,7 @@ class processor_paypal_subscription extends POSTprocessor
 		$settings['tax']			= '';
 		$settings['currency']		= 'USD';
 		$settings['checkbusiness']	= 0;
+		$settings['acceptpendingecheck'] = 0;
 		$settings['lc']				= 'US';
 		$settings['no_shipping']	= 1;
 		$settings['altipnurl']		= '';
@@ -85,6 +86,7 @@ class processor_paypal_subscription extends POSTprocessor
 		$settings['tax']			= array( 'inputA' );
 		$settings['currency']		= array( 'list_currency' );
 		$settings['checkbusiness']	= array( 'list_yesno' );
+		$settings['acceptpendingecheck']	= array( 'list_yesno' );
 		$settings['lc']				= array( 'list_language' );
 		$settings['no_shipping']	= array( 'list_yesno' );
 		$settings['altipnurl']		= array( 'inputC' );
