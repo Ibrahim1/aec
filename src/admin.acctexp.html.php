@@ -553,7 +553,7 @@ class HTML_AcctExp
 								<?php echo _AEC_USER_USERID; ?>:&nbsp;<strong><?php echo $user->id; ?></strong>
 								&nbsp;|&nbsp;
 								<?php echo _AEC_USER_STATUS; ?>:&nbsp;
-								<strong><?php echo !$user->block ? aecHTML::Icon( 'accept.png', _AEC_USER_ACTIVE ) . '&nbsp;' . _AEC_USER_ACTIVE . '</strong>' : aecHTML::Icon( 'exclamation.png', _AEC_USER_BLOCKED ) . '&nbsp;' . _AEC_USER_BLOCKED . '</strong>' . ( ( !$user->activation == '' ) ? '' : ' (<a href="' . $mosConfig_live_site . '/index.php?option=com_registration&amp;task=activate&amp;activation=' . $user->activation . '" target="_blank">' . _AEC_USER_ACTIVE_LINK . '</a>)' ); ?>
+								<strong><?php echo !$user->block ? aecHTML::Icon( 'accept.png', _AEC_USER_ACTIVE ) . '&nbsp;' . _AEC_USER_ACTIVE . '</strong>' : aecHTML::Icon( 'exclamation.png', _AEC_USER_BLOCKED ) . '&nbsp;' . _AEC_USER_BLOCKED . '</strong>' . ( ( $user->activation == '' ) ? '' : ' (<a href="' . $mosConfig_live_site . '/index.php?option=com_registration&amp;task=activate&amp;activation=' . $user->activation . '" target="_blank">' . _AEC_USER_ACTIVE_LINK . '</a>)' ); ?>
 							</p>
 							<p>
 								<?php echo _AEC_USER_PROFILE; ?>:
