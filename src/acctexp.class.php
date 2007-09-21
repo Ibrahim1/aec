@@ -327,7 +327,7 @@ class metaUser
 							if ( $this->hasSubscription ) {
 								$usage = $this->objSubscription->getUsedPlans();
 								$check = explode( ',', $value );
-								if ( isset( $array[(int) $check[0]] ) ) {
+								if ( isset( $usage[(int) $check[0]] ) ) {
 									// We have to add one here if the user is currently in the plan
 									if ( (int) $this->objSubscription->plan === (int) $check[0] ) {
 										$used_times = (int) $check[1] + 1;
