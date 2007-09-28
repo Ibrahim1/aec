@@ -123,7 +123,7 @@ class mi_docman
 
 		$downloadhack =	'// AEC HACK docmandownloadphp START' . "\n"
 		. 'global $my, $mosConfig_absolute_path;' . "\n"
-		. 'include( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_docman.php\';' . "\n\n"
+		. 'include( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_docman.php\');' . "\n\n"
 		. '$restrictionhandler = new docman_restriction( $database );' . "\n"
 		. '$restrict_id = $restrictionhandler->getIDbyUserID( $my->id );' . "\n"
 		. '$restrictionhandler->load( $restrict_id );' . "\n\n"
@@ -373,7 +373,7 @@ class docman_restriction extends mosDBTable {
 			}
 		}
 
-		mosRedirect( AECToolbox::deadsureURL( 'index.php?option=com_docman' ), _AEC_MI_DOCMAN_NOCREDIT );
+		mosRedirect(  'index.php?option=com_docman' , _AEC_MI_DOCMAN_NOCREDIT );
 	}
 
 	function useDownload()
