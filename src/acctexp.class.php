@@ -3443,7 +3443,10 @@ class Invoice extends paramDBTable
 						$pp->fullInit();
 
 						$recurring		= $pp->info['recurring'];
-						$this->currency = isset( $pp->settings['currency'] ) ? $pp->settings['currency'] : '';
+
+						if ( empty( $this->currency ) ) {
+							$this->currency = isset( $pp->settings['currency'] ) ? $pp->settings['currency'] : '';
+						}
 					} else {
 						// Log Error
 						return;
