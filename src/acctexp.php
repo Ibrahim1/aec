@@ -894,9 +894,9 @@ function processNotification( $option, $processor )
 			if ( strcmp( $response['pending_reason'], 'signup' ) === 0 ) {
 				$plan = new SubscriptionPlan( $database );
 				$plan->load( $objInvoice->usage );
-				$params = $plan->getParams( 'params' );
+				$plan_params = $plan->getParams( 'params' );
 
-				if ( $params['trial_free'] ) {
+				if ( $plan_params['trial_free'] ) {
 					$objInvoice->pay();
 					$objInvoice->setParams( array( 'free_trial' => $response['pending_reason'] ) );
 					$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_TRIAL;
