@@ -70,7 +70,7 @@ class processor_offline_payment extends processor
 		return $settings;
 	}
 
-	function invoiceCreationAction( $objInvoice, $cfg )
+	function invoiceCreationAction( $cfg, $objInvoice )
 	{
 		if ( $cfg['waitingplan'] ) {
 			$metaUser = new metaUser( $objInvoice->userid );

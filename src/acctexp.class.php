@@ -1290,7 +1290,7 @@ class PaymentProcessor
 		$this->getSettings();
 
 		if ( method_exists( $this->processor, 'CustomPlanParams' ) ) {
-			$this->processor->invoiceCreationAction( $objinvoice, $this->settings );
+			$this->processor->invoiceCreationAction( $this->settings, $objinvoice );
 		} else {
 			return false;
 		}
@@ -3053,14 +3053,6 @@ class InvoiceFactory
 
 				saveRegistration( $option );
 
-				// We need the new userid, so we're fetching it from the newly created entry here
-				$query = 'SELECT id'
-				. ' FROM #__users'
-				. ' WHERE username = \'' . $var['username'] . '\''
-				;
-				$database->setQuery( $query );
-				$this->userid = $database->loadResult();
-
 			} else {
 				// This is a joomla registration, borrowing their code to save the user
 				global $acl, $mosConfig_useractivation, $mosConfig_sitename, $mosConfig_live_site;
@@ -3168,9 +3160,15 @@ class InvoiceFactory
 					// send email to admin & super admin set to recieve system emails
 					mosMail( $adminEmail2, $adminName2, $admin->email, $subject2, $message2 );
 				}
-
-				$this->userid = $row->id;
 			}
+
+			// We need the new userid, so we're fetching it from the newly created entry here
+			$query = 'SELECT id'
+			. ' FROM #__users'
+			. ' WHERE username = \'' . $var['username'] . '\''
+			;
+			$database->setQuery( $query );
+			$this->userid = $database->loadResult();
 		}
 
 		$this->touchInvoice( $option );
