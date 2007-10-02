@@ -436,7 +436,7 @@ class AcctExp extends mosDBTable
 		$now = time() + $mosConfig_offset_user*3600;
 
 		if ( $extend ) {
-			$current = strtotime( $this->expiration . ' 00:00:00' );
+			$current = strtotime( $this->expiration );
 
 			if ( $current < $now ) {
 				$current = $now;
