@@ -36,7 +36,7 @@ require_once( $mainframe->getPath( 'class' ) );
 if (!$acl->acl_check( 'administration', 'config', 'users', $my->usertype )) {
 	$cfg = new Config_General( $database );
 
-	if ( !(( strcmp( $my->usertype, 'administrator' ) === 0) && $cfg->cfg['adminaccess']) ) {
+	if ( !( ( strcmp( $my->usertype, 'Administrator' ) === 0) && $cfg->cfg['adminaccess'] ) ) {
 		mosRedirect( 'index2.php', _NOT_AUTH );
 	}
 }

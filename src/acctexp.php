@@ -1,12 +1,12 @@
 <?php
 /**
-* AcctExp Component
-* @package AcctExp
-* @copyright 2004-2007 Helder Garcia, David Deutsch
-* @license http://www.gnu.org/copyleft/gpl.html. GNU Public License
-* @version $Revision: 1.2 $
-* @author Helder Garcia <helder.garcia@gmail.com>, David Deutsch <skore@skore.de>
-**/
+ * @version $Id: acctexp.php
+ * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
+ * @subpackage Main Frontend
+ * @copyright Copyright (C) 2004-2007, All Rights Reserved, Helder Garcia, David Deutsch
+ * @author Helder Garcia <helder.garcia@gmail.com>, David Deutsch <skore@skore.de> & Team AEC - http://www.gobalnerd.org
+ * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
+ */
 //
 // Copyright (C) 2004-2007 Helder Garcia, David Deutsch
 // All rights reserved.

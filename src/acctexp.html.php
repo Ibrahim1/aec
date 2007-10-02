@@ -1,20 +1,18 @@
 <?php
 /**
- * @version $Id: acctexp.html.php 16 2007-06-27 09:04:04Z mic $
+ * @version $Id: acctexp.html.php
  * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
  * @subpackage Main HTML Frontend
  * @copyright Copyright (C) 2004-2007, All Rights Reserved, Helder Garcia, David Deutsch
  * @author Helder Garcia <helder.garcia@gmail.com>, David Deutsch <skore@skore.de> & Team AEC - http://www.gobalnerd.org
  * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
  */
-
-/**
- * ----------- CONTRIBUTIONS --------------
- * "Expire Now" feature contributed by:
- * Rasmus Dahl-Sorensen (ford) - 2004.11.11
- * ----------------------------------------
- */
-
+//
+// Copyright (C) 2004-2007 Helder Garcia, David Deutsch
+// All rights reserved.
+// This source file is part of the Account Expiration Control Component, a  Joomla
+// custom Component By Helder Garcia and David Deutsch - http://www.globalnerd.org
+//
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License (GPL)
 // as published by the Free Software Foundation; either version 2
@@ -106,7 +104,7 @@ class HTML_frontEnd
 		<?php
 	}
 
-	function pending($option, $objUser, $invoice, $reason = 0)
+	function pending( $option, $objUser, $invoice, $reason=0 )
 	{
 		global $database;
 
