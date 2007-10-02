@@ -2052,6 +2052,7 @@ class SubscriptionPlan extends paramDBTable
 		}
 
 		$var		= null;
+		$free_trial = false;
 		$params		= $this->getParams();
 
 		if ( $recurring ) {
@@ -2061,6 +2062,7 @@ class SubscriptionPlan extends paramDBTable
 			if ( ( $plans_comparison === false ) && ( $plans_comparison_total === false ) && $params['trial_period'] ) {
 				if ( $params['trial_free'] ) {
 					$amount['amount1'] = '0.00';
+					$free_trial = true;
 				} else {
 					$amount['amount1']	= $params['trial_amount'];
 				}
@@ -2084,6 +2086,7 @@ class SubscriptionPlan extends paramDBTable
 					if ( !$is_trial && $params['trial_period'] ) {
 						if ( $params['trial_free'] ) {
 							$amount = '0.00';
+							$free_trial = true;
 						} else {
 							$amount = $params['trial_amount'];
 						}
@@ -2108,6 +2111,7 @@ class SubscriptionPlan extends paramDBTable
 
 		$return['return_url']	= $return_url;
 		$return['amount']		= $amount;
+		$return['free_trial']	= $free_trial;
 
 		return $return;
 	}
@@ -2128,26 +2132,44 @@ class SubscriptionPlan extends paramDBTable
 				$plans_comparison	= false;
 				$thisparams			= $this->getParams();
 
-				foreach ( $used_plans as $used_plan_id ) {
-					if ( $used_plan_id ) {
-						$used_subscription = new SubscriptionPlan( $database );
-						$used_subscription->load( $used_plan_id );
+				if ( is_array( $used_plans ) ) {
+					foreach ( $used_plans as $used_plan_id ) {
+						if ( $used_plan_id ) {
+							$planid = explode( ',', $used_plan_id);
 
-						if ( $this->id === $used_subscription->id ) {
-							$used_comparison = 2;
-						} elseif ( is_null( $thisparams['similarplans'] ) && is_null( $thisparams['equalplans'] ) ) {
-							$used_comparison = false;
-						} else {
-							$used_comparison = $this->compareToPlan( $used_subscription );
-						}
+							if ( isset( $planid[1] ) ){
+								if ( !is_null( $planid[1] ) && !( $planid[1] != '' ) ) {
+									$planid = $planid[1];
+								} else {
+									continue;
+								}
+							} else {
+								if ( !is_null( $planid[0] ) && !( $planid[0] != '' ) ) {
+									$planid = $planid[0];
+								} else {
+									continue;
+								}
+							}
 
-						if ( $used_comparison > $plans_comparison ) {
-							$plans_comparison = $used_comparison;
+							$used_subscription = new SubscriptionPlan( $database );
+							$used_subscription->load( $used_plan_id );
+
+							if ( $this->id === $used_subscription->id ) {
+								$used_comparison = 2;
+							} elseif ( is_null( $thisparams['similarplans'] ) && is_null( $thisparams['equalplans'] ) ) {
+								$used_comparison = false;
+							} else {
+								$used_comparison = $this->compareToPlan( $used_subscription );
+							}
+
+							if ( $used_comparison > $plans_comparison ) {
+								$plans_comparison = $used_comparison;
+							}
+							unset( $used_subscription );
 						}
-						unset( $used_subscription );
 					}
+					$return['total_comparison'] = $plans_comparison;
 				}
-				$return['total_comparison'] = $plans_comparison;
 			}
 
 			$last_subscription = new SubscriptionPlan( $database );
@@ -2660,6 +2682,9 @@ class InvoiceFactory
 			}
 		} else {
 			$this->payment->amount = $return['amount'];
+			if ( ( $this->payment->amount = '0.00' ) && $return['free_trial'] ) {
+				$this->payment->freetrial = 1;
+			}
 		}
 
 		$this->payment->currency = $currency;
