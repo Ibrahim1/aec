@@ -73,10 +73,20 @@ class processor_offline_payment extends processor
 	function invoiceCreationAction( $cfg, $objInvoice )
 	{
 		if ( $cfg['waitingplan'] ) {
+			global $database;
+
 			$metaUser = new metaUser( $objInvoice->userid );
 
 			if ( $metaUser->hasSubscription ) {
 				$metaUser->objSubscription->applyUsage( $cfg['waitingplan'], 'none', 1 );
+
+				$short	= 'waiting plan';
+				$event	= 'Offline Payment waiting plan assigned for ' . $objInvoice->invoice_number;
+				$tags	= 'processor,waitingplan';
+				$params = array( 'invoice_number' => $objInvoice->invoice_number );
+
+				$eventlog = new eventLog( $database );
+				$eventlog->issue( $short, $tags, $event, $params );
 			}
 		}
 	}

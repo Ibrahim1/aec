@@ -51,7 +51,6 @@ class mi_email
 
 	function Settings( $params )
 	{
-
 		$settings = array();
 		$settings['sender']				= array( 'inputE' );
 		$settings['sender_name']		= array( 'inputE' );
@@ -62,6 +61,10 @@ class mi_email
 		$settings['text_html']			= array( 'list_yesno' );
 		$settings['text']				= array( $params['text_html'] ? 'editor' : 'inputD' );
 
+		$settings['subject_first']		= array( 'inputE' );
+		$settings['text_first_html']	= array( 'list_yesno' );
+		$settings['text_first']			= array( $params['text_first_html'] ? 'editor' : 'inputD' );
+
 		$settings['subject_exp']		= array( 'inputE' );
 		$settings['text_exp_html']		= array( 'list_yesno' );
 		$settings['text_exp']			= array( $params['text_exp_html'] ? 'editor' : 'inputD' );
@@ -71,8 +74,7 @@ class mi_email
 		$settings['text_pre_exp']		= array( $params['text_pre_exp_html'] ? 'editor' : 'inputD' );
 
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
-		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL,
-										AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
 		return $settings;
 	}
@@ -96,42 +98,33 @@ class mi_email
 
 		$metaUser->objSubscription->setMIflags( $plan->id, $mi_id, $newflags );
 
-		$message = AECToolbox::rewriteEngine( $params['text_pre_exp'], $metaUser, $plan );
-		$subject	= AECToolbox::rewriteEngine( $params['subject_pre_exp'], $metaUser, $plan );
-
-		$recipients = explode( ',', $params['recipient'] );
-
-		foreach( $recipients as $current => $email ) {
-			$recipients[$current] = AECToolbox::rewriteEngine( trim( $email ), $metaUser, $plan );
-		}
-
-		mosMail( $params['sender'], $params['sender_name'], $recipients, $subject, $message, $params['text_pre_exp_html'] );
-		return true;
+		return $this->mailOut( $params, $userid, $plan, '_pre_exp' );
 	}
 
 	function expiration_action( $params, $userid, $plan )
 	{
-		$metaUser = new metaUser( $userid );
-
-		$message	= AECToolbox::rewriteEngine( $params['text_exp'], $metaUser, $plan );
-		$subject	= AECToolbox::rewriteEngine( $params['subject_exp'], $metaUser, $plan );
-
-		$recipients = explode( ',', $params['recipient'] );
-
-		foreach ( $recipients as $current => $email ) {
-			$recipients[$current] = AECToolbox::rewriteEngine( trim( $email ), $metaUser, $plan );
-		}
-
-		mosMail( $params['sender'], $params['sender_name'], $recipients, $subject, $message, $params['text_exp_html'] );
-		return true;
+		return $this->mailOut( $params, $userid, $plan, '_exp' );
 	}
 
 	function action( $params, $userid, $plan )
 	{
+		return $this->mailOut( $params, $userid, $plan, '' );
+	}
+
+	function mailOut( $params, $userid, $plan, $area )
+	{
 		$metaUser = new metaUser( $userid );
 
-		$message	= AECToolbox::rewriteEngine( $params['text'], $metaUser, $plan );
-		$subject	= AECToolbox::rewriteEngine( $params['subject'], $metaUser, $plan );
+		if ( $area == '' ) {
+			if ( !empty( $params['text_first'] ) ) {
+				if ( empty( $metaUser->objSubscription->previousplans ) ) {
+					$area = '_first';
+				}
+			}
+		}
+
+		$message	= AECToolbox::rewriteEngine( $params['text' . $area], $metaUser, $plan );
+		$subject	= AECToolbox::rewriteEngine( $params['subject' . $area], $metaUser, $plan );
 
 		$recipients = explode( ',', $params['recipient'] );
 
@@ -139,9 +132,9 @@ class mi_email
 			$recipients[$current] = AECToolbox::rewriteEngine( trim( $email ), $metaUser, $plan );
 		}
 
-		mosMail( $params['sender'], $params['sender_name'], $recipients, $subject, $message, $params['text_html'] );
+		mosMail( $params['sender'], $params['sender_name'], $recipients, $subject, $message, $params['text' . $area . '_html'] );
+
 		return true;
 	}
-
 }
 ?>
