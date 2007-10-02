@@ -120,6 +120,7 @@ define( '_BUTTON_CONFIRM',					'Best&auml;tigen');
 define( '_CONFIRM_TOS',						'Ich habe die <a href="%s" target="_blank" title="AGBs>AGBs</a> gelesen und bin einverstanden.');
 define( '_CONFIRM_TOS_ERROR',				'Sie m&uuml;ssen unsere AGBs lesen und akzeptieren');
 define( '_CONFIRM_COUPON_INFO',				'Falls Sie einen Gutscheincode haben geben Sie ihn bitte auf den nachfolgenden Seiten an, um einen allf&auml;lligen Abzug zu ber&uuml;cksichtigen');
+define( '_CONFIRM_FREETRIAL', 'Kostenlose Testphase');
 
 // --== CHECKOUT FORM ==--
 define( '_CHECKOUT_TITLE',					'Abschlie&szlig;ssen');

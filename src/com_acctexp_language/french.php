@@ -125,6 +125,7 @@ define( '_BUTTON_CONFIRM', 'Continuer');
 define( '_CONFIRM_TOS', "J'ai lu et j\'accepte les <a href=\"%s\" target=\"_BLANK\">conditions d\'utilisation</a>");
 define( '_CONFIRM_TOS_ERROR', 'Veuillez lire et accepter nos conditions d\'utilisation');
 define( '_CONFIRM_COUPON_INFO', 'Si vous avez un code de bon de réduction, vous pourrez le saisir sur la page du r&egrave;glement pour qu\'il soit pris en compte.');
+define( '_CONFIRM_FREETRIAL', 'Free Trial');
 
 // --== FORMULAIRE DE PAIEMENT ==--
 define( '_CHECKOUT_TITLE', 'Effectuer votre r&egrave;glement');

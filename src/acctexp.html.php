@@ -557,6 +557,8 @@ class Payment_HTML
 						if ( $InvoiceFactory->payment->amount && ( $InvoiceFactory->payment->amount != '0.00' ) ) {
 							echo $InvoiceFactory->payment->amount . ' ' . $InvoiceFactory->payment->currency; ?>&nbsp;-&nbsp;
 							<?php
+						} elseif ( isset( $InvoiceFactory->payment->freetrial ) ) {
+							echo _CONFIRM_FREETRIAL . '&nbsp;-&nbsp;';
 						}
 						echo $InvoiceFactory->payment->method_name; ?>
 					</p></td>

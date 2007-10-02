@@ -2637,6 +2637,9 @@ class InvoiceFactory
 			if ( isset( $return['amount']['amount1'] ) ) {
 				if ( !is_null( $return['amount']['amount1'] ) ) {
 					$this->payment->amount = $return['amount']['amount1'];
+					if ( $this->payment->amount = '0.00' ) {
+						$this->payment->freetrial = 1;
+					}
 				}
 			}
 

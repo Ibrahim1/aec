@@ -120,6 +120,7 @@ define( '_BUTTON_CONFIRM', 'Continue');
 define( '_CONFIRM_TOS', "I have read and agree to the <a href=\"%s\" target=\"_BLANK\">Terms of Service</a>");
 define( '_CONFIRM_TOS_ERROR', 'Please read and agree to our Terms of Service');
 define( '_CONFIRM_COUPON_INFO', 'If you have a coupon code, you can enter it on the Checkout Page to get a discount on your payment');
+define( '_CONFIRM_FREETRIAL', 'Free Trial');
 
 // --== CHECKOUT FORM ==--
 define( '_CHECKOUT_TITLE', 'Checkout');
