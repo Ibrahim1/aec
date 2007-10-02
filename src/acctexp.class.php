@@ -1289,7 +1289,7 @@ class PaymentProcessor
 	{
 		$this->getSettings();
 
-		if ( method_exists( $this->processor, 'CustomPlanParams' ) ) {
+		if ( method_exists( $this->processor, 'invoiceCreationAction' ) ) {
 			$this->processor->invoiceCreationAction( $this->settings, $objinvoice );
 		} else {
 			return false;
