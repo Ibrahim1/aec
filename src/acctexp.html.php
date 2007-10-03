@@ -552,10 +552,10 @@ class Payment_HTML
 					<td><p><?php echo $InvoiceFactory->objUsage->name; ?></p></td>
 					<td><p>
 						<?php
-						if ( ( $InvoiceFactory->payment->amount && ( $InvoiceFactory->payment->amount != '0.00' ) ) && !isset( $InvoiceFactory->payment->freetrial ) ) {
+						if ( ( !empty( $InvoiceFactory->payment->amount ) && ( $InvoiceFactory->payment->amount != '0.00' ) ) && !$InvoiceFactory->payment->freetrial ) {
 							echo $InvoiceFactory->payment->amount . ' ' . $InvoiceFactory->payment->currency; ?>&nbsp;-&nbsp;
 							<?php
-						} elseif ( isset( $InvoiceFactory->payment->freetrial ) ) {
+						} elseif ( $InvoiceFactory->payment->freetrial ) {
 							echo _CONFIRM_FREETRIAL . '&nbsp;-&nbsp;';
 						}
 						echo $InvoiceFactory->payment->method_name; ?>

@@ -2042,17 +2042,17 @@ class SubscriptionPlan extends paramDBTable
 			$comparison				= $this->doPlanComparison( $user_subscription );
 			$plans_comparison		= $comparison['comparison'];
 			$plans_comparison_total	= $comparison['total_comparison'];
-			$renew					= $comparison['renew'];
-			$is_trial	= (strcmp($user_subscription->status, 'Trial') === 0);
+			$renew					= $comparison['renew'] ? 1 : 0;
+			$is_trial				= (strcmp($user_subscription->status, 'Trial') === 0);
 		} else {
 			$plans_comparison		= false;
 			$plans_comparison_total	= false;
 			$renew					= 0;
-			$is_trial	= 0;
+			$is_trial				= 0;
 		}
 
 		$var		= null;
-		$free_trial = false;
+		$free_trial = 0;
 		$params		= $this->getParams();
 
 		if ( $recurring ) {
@@ -2062,7 +2062,7 @@ class SubscriptionPlan extends paramDBTable
 			if ( ( $plans_comparison === false ) && ( $plans_comparison_total === false ) && $params['trial_period'] ) {
 				if ( $params['trial_free'] ) {
 					$amount['amount1'] = '0.00';
-					$free_trial = true;
+					$free_trial = 1;
 				} else {
 					$amount['amount1']	= $params['trial_amount'];
 				}
@@ -2075,6 +2075,7 @@ class SubscriptionPlan extends paramDBTable
 			} else {
 				$amount['amount3']	= $params['full_amount'];
 			}
+
 			$amount['amount3']		= $params['full_amount'];
 			$amount['period3']		= $params['full_period'];
 			$amount['unit3']		= $params['full_periodunit'];
@@ -2083,10 +2084,10 @@ class SubscriptionPlan extends paramDBTable
 				$amount = '0.00';
 			} else {
 				if ( ( $plans_comparison === false ) && ( $plans_comparison_total === false ) ) {
-					if ( !$is_trial && $params['trial_period'] ) {
+					if ( !$is_trial && !empty($params['trial_period']) ) {
 						if ( $params['trial_free'] ) {
 							$amount = '0.00';
-							$free_trial = true;
+							$free_trial = 1;
 						} else {
 							$amount = $params['trial_amount'];
 						}
@@ -2137,26 +2138,22 @@ class SubscriptionPlan extends paramDBTable
 						if ( $used_plan_id ) {
 							$planid = explode( ',', $used_plan_id);
 
-							if ( isset( $planid[1] ) ){
-								if ( !is_null( $planid[1] ) && !( $planid[1] != '' ) ) {
-									$planid = $planid[1];
-								} else {
+							if ( isset( $planid[0] ) ){
+								if ( empty( $planid[0] ) ) {
 									continue;
+								} else {
+									$planid = $planid[0];
 								}
 							} else {
-								if ( !is_null( $planid[0] ) && !( $planid[0] != '' ) ) {
-									$planid = $planid[0];
-								} else {
-									continue;
-								}
+								continue;
 							}
 
 							$used_subscription = new SubscriptionPlan( $database );
-							$used_subscription->load( $used_plan_id );
+							$used_subscription->load( $planid );
 
 							if ( $this->id === $used_subscription->id ) {
 								$used_comparison = 2;
-							} elseif ( is_null( $thisparams['similarplans'] ) && is_null( $thisparams['equalplans'] ) ) {
+							} elseif ( empty( $thisparams['similarplans'] ) && empty( $thisparams['equalplans'] ) ) {
 								$used_comparison = false;
 							} else {
 								$used_comparison = $this->compareToPlan( $used_subscription );
@@ -2653,6 +2650,8 @@ class InvoiceFactory
 
 		$return = $this->objUsage->SubscriptionAmount( $this->recurring, $user_subscription );
 
+		$this->payment->freetrial = 0;
+
 		if ( is_array( $return['amount'] ) ) {
 			$this->payment->amount = false;
 
@@ -2669,6 +2668,9 @@ class InvoiceFactory
 				if ( isset( $return['amount']['amount2'] ) ) {
 					if ( !is_null( $return['amount']['amount2'] ) ) {
 						$this->payment->amount = $return['amount']['amount2'];
+						if ( $this->payment->amount = '0.00' ) {
+							$this->payment->freetrial = 1;
+						}
 					}
 				}
 			}
@@ -2682,7 +2684,7 @@ class InvoiceFactory
 			}
 		} else {
 			$this->payment->amount = $return['amount'];
-			if ( ( $this->payment->amount = '0.00' ) && $return['free_trial'] ) {
+			if ( ( $this->payment->amount == '0.00' ) && $return['free_trial'] ) {
 				$this->payment->freetrial = 1;
 			}
 		}
