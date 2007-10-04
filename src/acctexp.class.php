@@ -2038,7 +2038,7 @@ class SubscriptionPlan extends paramDBTable
 	{
 		global $database;
 
-		if ( is_object($user_subscription) ) {
+		if ( is_object( $user_subscription ) ) {
 			$comparison				= $this->doPlanComparison( $user_subscription );
 			$plans_comparison		= $comparison['comparison'];
 			$plans_comparison_total	= $comparison['total_comparison'];
@@ -2059,7 +2059,7 @@ class SubscriptionPlan extends paramDBTable
 			$amount = array();
 
 			// Only Allow a Trial when the User is coming from a different PlanGroup or is new
-			if ( ( $plans_comparison === false ) && ( $plans_comparison_total === false ) && $params['trial_period'] ) {
+			if ( ( $plans_comparison === false ) && ( $plans_comparison_total === false ) && !empty( $params['trial_period'] ) ) {
 				if ( $params['trial_free'] ) {
 					$amount['amount1'] = '0.00';
 					$free_trial = 1;
@@ -2627,25 +2627,26 @@ class InvoiceFactory
 			mosNotAuth();
 		}
 
-		if ( AECfetchfromDB::SubscriptionIDfromUserID( $this->userid ) ) {
-			$user_subscription = new Subscription( $database );
-			$user_subscription->loadUserID( $this->userid );
+		$user_subscription = false;
+		$this->renew = 0;
 
-			if ( strcmp( $user_subscription->lastpay_date, '0000-00-00 00:00:00' ) === 0 ) {
-				$this->renew = 0;
-			} else {
-				$this->renew = 1;
+		if ( !empty( $this->userid ) ) {
+			if ( AECfetchfromDB::SubscriptionIDfromUserID( $this->userid ) ) {
+				$user_subscription = new Subscription( $database );
+				$user_subscription->loadUserID( $this->userid );
+
+				if ( !( strcmp( $user_subscription->lastpay_date, '0000-00-00 00:00:00' ) === 0 ) ) {
+					$this->renew = 1;
+				}
 			}
 		} else {
-			if ( $this->confirmed ) {
-				$user_subscription = new Subscription( $database );
-				$user_subscription->load(0);
-				$user_subscription->createNew( $this->userid, $this->processor, 1 );
-			} else {
-				$user_subscription = false;
+			if ( isset( $this->confirmed ) ) {
+				if ( $this->confirmed ) {
+					$user_subscription = new Subscription( $database );
+					$user_subscription->load(0);
+					$user_subscription->createNew( $this->userid, $this->processor, 1 );
+				}
 			}
-
-			$this->renew = 0;
 		}
 
 		$return = $this->objUsage->SubscriptionAmount( $this->recurring, $user_subscription );
@@ -2658,7 +2659,7 @@ class InvoiceFactory
 			if ( isset( $return['amount']['amount1'] ) ) {
 				if ( !is_null( $return['amount']['amount1'] ) ) {
 					$this->payment->amount = $return['amount']['amount1'];
-					if ( $this->payment->amount = '0.00' ) {
+					if ( $this->payment->amount == '0.00' ) {
 						$this->payment->freetrial = 1;
 					}
 				}
@@ -2668,7 +2669,7 @@ class InvoiceFactory
 				if ( isset( $return['amount']['amount2'] ) ) {
 					if ( !is_null( $return['amount']['amount2'] ) ) {
 						$this->payment->amount = $return['amount']['amount2'];
-						if ( $this->payment->amount = '0.00' ) {
+						if ( $this->payment->amount == '0.00' ) {
 							$this->payment->freetrial = 1;
 						}
 					}
@@ -3215,7 +3216,7 @@ class InvoiceFactory
 
 		$this->puffer( $option );
 
-		if ( (strcmp( strtolower( $this->processor ), 'none' ) === 0 )
+		if ( ( strcmp( strtolower( $this->processor ), 'none' ) === 0 )
 		|| ( strcmp( strtolower( $this->processor ), 'free' ) === 0 ) ) {
 			$params = $this->objUsage->getParams();
 
