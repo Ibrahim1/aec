@@ -195,7 +195,7 @@ define( '_AEC_INST_NOTE_SECURITY',				'For <strong>your system security</strong>
 define( '_AEC_INST_APPLY_HACKS',				'In order to commit these hacks right now, go to the %s. (You can also access this page later on from the AEC central view or menu)' );
 define( '_AEC_INST_APPLY_HACKS_LTEXT',			'hacks page' );
 define( '_AEC_INST_NOTE_UPGRADE',				'<strong>If you are upgrading, make sure to check the hacks page anyways, since there are changes from time to time!!!</strong>' );
-define( '_AEC_INST_NOTE_HELP',					'To help you along with frequently encountered problems, we have created a %s that will help you ship around the most common setup problems (access is also avaliable from the AEC central.' );
+define( '_AEC_INST_NOTE_HELP',					'To help you along with frequently encountered problems, we have created a %s that will help you ship around the most common setup problems (access is also available from the AEC central).' );
 define( '_AEC_INST_NOTE_HELP_LTEXT',			'help function' );
 define( '_AEC_INST_HINTS',						'Hints' );
 define( '_AEC_INST_HINT1',						'We encourage you to visit the <a href="%s" target="_blank">globalnerd.org forums</a> and to <strong>participate in the discussion there</strong>. Chances are, that other users have found the same bugs and it is equally likely that there is at least a fix to hack in or even a new version.' );
