@@ -1908,7 +1908,7 @@ class SubscriptionPlan extends paramDBTable
 		$cfg = new Config_General($database);
 
 		$metaUser = new metaUser($userid);
-
+print_R($metaUser);
 		$comparison		= $this->doPlanComparison( $metaUser->objSubscription );
 		$renew			= $comparison['renew'];
 
@@ -1968,10 +1968,10 @@ class SubscriptionPlan extends paramDBTable
 				$status = 'Trial';
 			} else {
 				if ( $params['full_period'] || $params['lifetime'] ) {
-					if ( isset( $params['make_active'] ) ) {
-						$status = $params['make_active'] ? 'Active' : 'Pending';
-					} else {
+					if ( !isset( $params['make_active'] ) ) {
 						$status = 'Active';
+					} else {
+						$status = ( $params['make_active'] ? 'Active' : 'Pending');
 					}
 				} else {
 					// This should not happen
@@ -1980,10 +1980,10 @@ class SubscriptionPlan extends paramDBTable
 			}
 		} else {
 			// Renew subscription - Do NOT set signup_date
-			if ( isset( $params['make_active'] ) ) {
-				$status = $params['make_active'] ? 'Active' : 'Pending';
-			} else {
+			if ( !isset( $params['make_active'] ) ) {
 				$status = 'Active';
+			} else {
+				$status = ( $params['make_active'] ? 'Active' : 'Pending');
 			}
 			$renew = 1;
 		}
@@ -2322,6 +2322,10 @@ class SubscriptionPlan extends paramDBTable
 			$planid = $database->loadResult() + 1;
 		}
 
+		if ( isset( $post['id'] ) ) {
+			unset( $post['id'] );
+		}
+
 		// Filter out fixed variables
 		$fixed = array( 'active', 'visible', 'name', 'desc', 'email_desc', 'micro_integrations' );
 
@@ -2339,7 +2343,7 @@ class SubscriptionPlan extends paramDBTable
 		}
 
 		// Filter out params
-		$fixed = array( 'full_free', 'full_amount', 'full_period', 'full_periodunit', 'trial_free', 'trial_amount', 'trial_period', 'trial_periodunit', 'gid_enabled', 'gid', 'lifetime', 'processors', 'fallback', 'similarplans', 'equalplans' );
+		$fixed = array( 'full_free', 'full_amount', 'full_period', 'full_periodunit', 'trial_free', 'trial_amount', 'trial_period', 'trial_periodunit', 'gid_enabled', 'gid', 'lifetime', 'processors', 'fallback', 'similarplans', 'equalplans', 'make_active' );
 
 		$params = array();
 		foreach ( $fixed as $varname ) {
@@ -4662,8 +4666,11 @@ class AECToolbox
 					if ( $cfg->cfg['entry_plan'] ) {
 						$user_subscription = new Subscription( $database );
 						$user_subscription->load(0);
-						$user_subscription->createNew( $id, 'Free', 0 );
-						$user_subscription->applyUsage( $cfg->cfg['entry_plan'], 'none', 1 );
+						$user_subscription->createNew( $id, 'Free', 1 );
+
+						$metaUser = new metaUser( $id );
+						$metaUser->objSubscription->applyUsage( $cfg->cfg['entry_plan'], 'none', 1 );
+						AECToolbox::VerifyUsername( $username );
 					} else {
 						mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=subscribe&Itemid=' . $id ) );
 						return null;
