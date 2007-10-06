@@ -2693,8 +2693,10 @@ function saveMicroIntegration( $option )
 	unset( $_POST['option'] );
 	unset( $_POST['task'] );
 
+	$id = isset( $_POST['id'] ) ? $_POST['id'] : 0;
+
 	$mi = new microIntegration( $database );
-	$mi->load( $_POST['id'] );
+	$mi->load( $id );
 
 	$mi->name			= $_POST['name'];
 	$mi->desc			= $_POST['desc'];
@@ -2721,9 +2723,19 @@ function saveMicroIntegration( $option )
 		// TODO: log error
 	}
 
+	if ( !$id ) {
+		$query = "SELECT max(id) FROM #__acctexp_microintegration";
+		$database->setQuery( $query );
+		$newid = $database->loadResult();
+	}
+
 	$mi->updateOrder();
 
-	mosRedirect( 'index2.php?option=' . $option . '&task=showMicroIntegrations', _AEC_MSG_SUCESSFULLY_SAVED );
+	if ( $id ) {
+		mosRedirect( 'index2.php?option=' . $option . '&task=showMicroIntegrations', _AEC_MSG_SUCESSFULLY_SAVED );
+	} else {
+		editMicroIntegration ( $newid, $option );
+	}
 
 }
 
