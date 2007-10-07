@@ -1542,13 +1542,19 @@ function listSubscriptions( $option, $set_group, $userid )
 		;
 	}
 
-	$database->setQuery( $query );
+	$database->setQuery( 'SET SQL_BIG_SELECTS=1');
+	$database->query();
 
+	$database->setQuery( $query );
 	$rows = $database->loadObjectList();
+
 	if ( $database->getErrorNum() ) {
 		echo $database->stderr();
 		return false;
 	}
+
+	$database->setQuery( 'SET SQL_BIG_SELECTS=0');
+	$database->query();
 
 	$sel = array();
 	$sel[] = mosHTML::makeOption( 'expiration ASC',		_EXP_ASC );
