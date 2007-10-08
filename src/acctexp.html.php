@@ -642,7 +642,7 @@ class Payment_HTML
 			<div id="amountbox">
 				<table class="amount">
 					<tr>
-						<td class="item"><?php echo _CHECKOUT_INVOICE_AMOUNT; ?></td>
+						<td class="item"><?php echo _CHECKOUT_INVOICE_AMOUNT; ?> (<?php echo $InvoiceFactory->objInvoice->invoice_number; ?>)</td>
 						<td class="amount">
 							<?php echo $InvoiceFactory->payment->amount . '&nbsp;' . $InvoiceFactory->payment->currency; ?>
 						</td>
