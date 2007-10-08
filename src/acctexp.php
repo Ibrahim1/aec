@@ -607,7 +607,7 @@ function repeatInvoice( $option, $invoice_number, $userid )
 	if ( $invoiceid ) {
 		$invoicefact = new InvoiceFactory( $userid );
 		$invoicefact->touchInvoice( $option, $invoice_number );
-		$invoicefact->checkout( $option );
+		$invoicefact->checkout( $option, 1 );
 	} else {
 		mosNotAuth();
 		return;

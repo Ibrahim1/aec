@@ -3210,7 +3210,7 @@ class InvoiceFactory
 		$this->checkout( $option );
 	}
 
-	function checkout( $option )
+	function checkout( $option, $repeat=0 )
 	{
 		global $database;
 
@@ -3340,7 +3340,7 @@ class InvoiceFactory
 
 		$var = $this->objInvoice->prepareProcessorLink();
 
-		Payment_HTML::checkoutForm( $option, $var['var'], $var['params'], $this );
+		Payment_HTML::checkoutForm( $option, $var['var'], $var['params'], $this, $repeat );
 	}
 
 	function internalcheckout( $option, $invoice, $itemid )
