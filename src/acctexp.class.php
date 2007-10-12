@@ -1380,7 +1380,7 @@ class POSTprocessor extends processor
 		$var = $this->createGatewayLink( $int_var, $settings, $metaUser, $new_subscription );
 
 		$return = '<form action="' . $var['post_url'] . '" method="post">' . "\n";
-		unset( $var['posturl'] );
+		unset( $var['post_url'] );
 
 		foreach ( $var as $key => $value ) {
 			$return .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
@@ -1400,7 +1400,7 @@ class GETprocessor extends processor
 		$var = $this->createGatewayLink( $int_var, $settings, $metaUser, $new_subscription );
 
 		$return = '<form action="' . $var['post_url'] . '" method="get">' . "\n";
-		unset( $var['posturl'] );
+		unset( $var['post_url'] );
 
 		foreach ( $var as $key => $value ) {
 			$return .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
@@ -1420,7 +1420,7 @@ class URLprocessor extends processor
 		$var = $this->createGatewayLink( $int_var, $settings, $metaUser, $new_subscription );
 
 		$return = '<a href="' . $var['post_url'];
-		unset( $var['posturl'] );
+		unset( $var['post_url'] );
 
 		$vars = array();
 		foreach ( $var as $key => $value ) {
@@ -1908,7 +1908,7 @@ class SubscriptionPlan extends paramDBTable
 		$cfg = new Config_General($database);
 
 		$metaUser = new metaUser($userid);
-print_R($metaUser);
+
 		$comparison		= $this->doPlanComparison( $metaUser->objSubscription );
 		$renew			= $comparison['renew'];
 

@@ -2,7 +2,7 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_namehere
+class processor_[namehere]
 {
 	function info()
 	{
@@ -20,7 +20,7 @@ class processor_namehere
 	function settings()
 	{
 		$settings = array();
-		$settings['variable'] = "content";
+		$settings['variable'] = "default value";
 
 		return $settings;
 	}

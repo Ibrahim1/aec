@@ -1801,6 +1801,8 @@ function editSettings( $option )
 	}
 	$gwlist_selected = array();
 
+	asort($gwlist);
+
 	foreach ( $gwlist as $gwname ) {
 		// Load Payment Processor
 		$pp = new PaymentProcessor();

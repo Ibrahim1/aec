@@ -38,14 +38,14 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_verotel extends POSTprocessor
+class processor_verotel extends URLprocessor
 {
 	function info()
 	{
 		$i = array();
-		$i['longname'] = _AEC_VEROTEL_LONGNAME;
-		$i['statement'] = _AEC_VEROTEL_STATEMENT;
-		$i['description'] = _AEC_VEROTEL_DESCRIPTION;
+		$i['longname'] = _CFG_VEROTEL_LONGNAME;
+		$i['statement'] = _CFG_VEROTEL_STATEMENT;
+		$i['description'] = _CFG_VEROTEL_DESCRIPTION;
 		$i['currencies'] = 'USD';
 		$i['languages'] = 'AU,DE,FR,IT,GB,ES,US';
 		$i['cc_list'] = 'visa,mastercard,discover,americanexpress,echeck';
@@ -57,8 +57,11 @@ class processor_verotel extends POSTprocessor
 	{
 		$s = array();
 		$s['merchantid']	= "merchantid";
+		$s['resellerid']	= "merchantid";
 		$s['siteid']		= "siteid";
 		$s['secretcode']	= "secretcode";
+		$s['use_ticketsclub']	= 1;
+		$s['custom_name']	= "";
 
 		return $s;
 	}
@@ -66,9 +69,11 @@ class processor_verotel extends POSTprocessor
 	function backend_settings()
 	{
 		$s = array();
-		$s['merchantid']	= array( 'inputC' );
-		$s['siteid']		= array( 'inputC' );
-		$s['secretcode']	= array( 'inputC' );
+		$s['merchantid']		= array( 'inputC' );
+		$s['merchant']		= array( 'inputC' );
+		$s['siteid']			= array( 'inputC' );
+		$s['secretcode']		= array( 'inputC' );
+		$s['use_ticketsclub']	= array( 'list_yesno' );
 		$s['custom_name']	= array( 'inputE' );
 
 		$rewriteswitches	= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
@@ -84,7 +89,7 @@ class processor_verotel extends POSTprocessor
 		return $p;
 	}
 
-	function createGatewayLink( $int_var, $metaUser, $cfg, $new_subscription )
+	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
 	{
 		// Payment Plans are required to have a productid assigned
 		if ( empty( $int_var['planparams']['verotel_product'] ) ) {
@@ -93,43 +98,53 @@ class processor_verotel extends POSTprocessor
 			$product = $int_var['planparams']['verotel_product'];
 		}
 
-        $var = array(
-			'post_url'	=> "https://secure.verotel.com/cgi-bin/vtjp.pl?",
-			'verotel_id'    => $cfg['merchant_id'],
-            'verotel_product' => $product,
-            'verotel_website'     => $product,
-            'verotel_usercode'  => $metaUser->cmsUser->username,
-            'verotel_custom1'      => $int_var['invoice'],
-            'verotel_custom2'      => AECToolbox::rewriteEngine( $cfg['custom_name'], $metaUser, $new_subscription ),
-        );
+		if ( $cfg['use_ticketsclub'] ) {
+			$var['post_url'] = "https://secure.ticketsclub.com/cgi-bin/boxoffice-one.tc?";
+			$var['fldcustomerid'] = $cfg['merchantid'];
+			$var['fldwebsitenr'] = $product;
+			$var['tc_custom1'] = $int_var['invoice'];
+			$var['tc_custom2'] = $metaUser->cmsUser->username;
+		} else {
+			$var['post_url'] = "https://secure.verotel.com/cgi-bin/vtjp.pl?";
+			$var['verotel_id'] = $cfg['merchantid'];
+			$var['verotel_product'] = $product;
+			$var['verotel_website'] = $cfg['siteid'];
+			$var['verotel_usercode'] = $metaUser->cmsUser->username;
+			$var['verotel_passcode'] = $metaUser->cmsUser->password;
+			$var['verotel_custom1'] = $int_var['invoice'];
+		}
 
 		return $var;
 	}
 
 	function parseNotification( $post, $cfg )
 	{
-		$vercode = $post['vercode'];
-		$res = split(":", $vercode);
+		$res = explode(":", $_GET['vercode']);
 
-		$action     = $post['trn'];
-		$amount     = $post['amount'];
-		$payment_id = intval($post['custom1']);
-		$pnref 	    = $post['trn_id'];
-		$secret = $res[2];
-
+		$secret		= $res[2];
+		$action     = $res[3];
+		$amount     = $res[4];
+		$payment_id = $res[5];
+		$pnref 	    = $res[6];
 
 		$response = array();
-		$response['invoice'] = $post['custom1'];
-		$response['valid'] = 0;
+		$response['invoice'] = $payment_id;
+
+		if( $cfg['secretcode'] == $secret ) {
+			$response['valid'] = 1;
+		} else {
+			$response['valid'] = 0;
+			$response['pending_reason'] = 'INVALID SECRET WORD, provided: ' . $secret;
+		}
 
 		switch ( $action ) {
 			case 'add':
-				$response['amount_paid'] = $post['amount'];
+				$response['amount_paid'] = $amount;
 				break;
 			case 'cancel':
 				break;
 			case 'rebill':
-				$response['amount_paid'] = $post['amount'];
+				$response['amount_paid'] = $amount;
 				break;
 		}
 
