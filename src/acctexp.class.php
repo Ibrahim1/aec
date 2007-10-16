@@ -1568,7 +1568,7 @@ class aecHTML
 		$row	= $this->rows[$name];
 		$type	= $row[0];
 
-		if ( isset($row[3] ) ) {
+		if ( isset( $row[3] ) ) {
 			$value = $row[3];
 		} else {
 			$value = '';
