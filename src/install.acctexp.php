@@ -936,6 +936,7 @@ function com_install()
 	$files[] = array( 'images/cc_icons/cc_icons.tar.gz',		'images/cc_icons/', 0 );
 	$files[] = array( 'images/gateway_buttons.tar.gz',			'images/', 0 );
 	$files[] = array( 'images/gateway_logos.tar.gz',			'images/', 0 );
+	$files[] = array( 'lib/krumo/krumo_0.2a.zip',				'lib/krumo/', 0 );
 
 	// check if joomfish (joomla) or nokkaew (mambo) exists)
 	$translation = false;
