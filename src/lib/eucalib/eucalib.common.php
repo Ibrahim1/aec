@@ -1,7 +1,7 @@
 <?php
 /**
  * @version $Id: eucalib.common.php
- * @package Eucalib: Component library the Joomla! CMS
+ * @package Eucalib: Component library for the Joomla! CMS
  * @subpackage Eucalib Common Files
  * @copyright Copyright (C) 2007 David Deutsch, All Rights Reserved
  * @author David Deutsch <skore@skore.de>

@@ -1,7 +1,7 @@
 <?php
 /**
  * @version $Id: eucalib.php
- * @package Eucalib: Component library the Joomla! CMS
+ * @package Eucalib: Component library for the Joomla! CMS
  * @subpackage Frontend Proxy to relay to subtask files
  * @copyright Copyright (C) 2007 David Deutsch, All Rights Reserved
  * @author David Deutsch <skore@skore.de>

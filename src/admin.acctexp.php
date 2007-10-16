@@ -30,6 +30,9 @@
 // no direct access
 defined( '_VALID_MOS' ) or die( 'Restricted access' );
 
+require_once( $mosConfig_absolute_path . '/components/com_acctexp/libraries/eucalib/eucalib.php' );
+require_once( $mosConfig_absolute_path . '/components/com_acctexp/libraries/eucalib/eucalib.proxy.php' );
+
 require_once( $mainframe->getPath( 'admin_html' ) );
 require_once( $mainframe->getPath( 'class' ) );
 

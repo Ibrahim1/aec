@@ -1,7 +1,7 @@
 <?php
 /**
  * @version $Id: eucalib.admin.common.php
- * @package Eucalib: Component library the Joomla! CMS
+ * @package Eucalib: Component library for the Joomla! CMS
  * @subpackage Eucalib Common Admin Files
  * @copyright Copyright (C) 2007 David Deutsch, All Rights Reserved
  * @author David Deutsch <skore@skore.de>
@@ -96,7 +96,7 @@ class eucaSettings
 			}
 
 			// First try a generic name or insert blank constant for easy copy and paste
-			$constantdesc		= $constant . '_DESC';
+			$constantdesc = $constant . '_DESC';
 			if ( defined( $constantdesc ) ) {
 				$info_desc = constant( $constantdesc );
 			} else {
@@ -149,8 +149,7 @@ class eucaHTMLbackend
 
 	function createSettingsParticle( $name )
 	{
-		$row	= $this->rows[$name];
-		$type	= $row[0];
+		$row = getRow( $name );
 
 		if ( isset($row[3] ) ) {
 			$value = $row[3];
@@ -161,7 +160,7 @@ class eucaHTMLbackend
 		$return = '<div class="setting_desc">' . $this->ToolTip( $row[2], $row[1]) . $row[1] . '</div>';
 		$return .= '<div class="setting_form">';
 
-		$method = 'displaymethod_' . $type;
+		$method = 'displaymethod_' . $row[0];
 
 		if ( method_exists( $this, $method ) ) {
 			$return = $this->$method( $name, $value, $return );
@@ -169,11 +168,26 @@ class eucaHTMLbackend
 			$return = $this->displaymethod_inputA( $name, $value, $return );
 		}
 
-		if ( strpos( $return, '<div class="setting_form">' ) ) {
+		if ( strpos( $return, '<div class="setting_form">' ) === 0 ) {
 			$return .= '</div>';
 		}
 
 		return $return;
+	}
+
+	function getRow( $name )
+	{
+		if ( is_array( $name ) ) {
+
+		} else {
+			$arr_keys = array_keys( $this->rows[$name] );
+
+			if ( is_array( $this->rows[$name][$arr_keys[0]] ) ) {
+				return $this->getRow( array( $name => $arr_keys ) );
+			} else {
+				return $this->rows[$name];
+			}
+		}
 	}
 
 	function displaymethod_startform( $name, $value, $return )

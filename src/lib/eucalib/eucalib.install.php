@@ -1,7 +1,7 @@
 <?php
 /**
  * @version $Id: eucalib.common.php
- * @package Eucalib: Component library the Joomla! CMS
+ * @package Eucalib: Component library for the Joomla! CMS
  * @subpackage Eucalib Common Files
  * @copyright Copyright (C) 2007 David Deutsch, All Rights Reserved
  * @author David Deutsch <skore@skore.de>
@@ -36,12 +36,12 @@ class eucaInstall
 
 		foreach ( $array as $file ) {
 			if ( $file[2] ) {
-				$basepath = $mosConfig_absolute_path . '/administrator/components/com_' . _EUCA_APP_SHORTNAME;
+				$basepath = $mosConfig_absolute_path . '/administrator/components/' . _EUCA_APP_COMPNAME;
 
 				$fullpath	= $basepath . $file[0];
 				$deploypath = $basepath . $file[1];
 			} else {
-				$basepath = $mosConfig_absolute_path . '/components/com_' . _EUCA_APP_SHORTNAME;
+				$basepath = $mosConfig_absolute_path . '/components/' . _EUCA_APP_COMPNAME;
 
 				$fullpath	= $basepath . $file[0];
 				$deploypath = $basepath . $file[1];
@@ -71,18 +71,20 @@ class eucaInstall
 		}
 	}
 
-	function createAdminMenuEntry( $entry )
+	function deleteAdminMenuEntries()
 	{
 		global $database;
 
-		// Delete old menu entries
 		$query = 'DELETE *'
 		. ' FROM #__components'
-		. ' WHERE option = \'option=com_' . _EUCA_APP_SHORTNAME . '\''
+		. ' WHERE option = \'option=' . _EUCA_APP_COMPNAME . '\''
 		;
 		$database->setQuery( $query );
 		$database->query();
+	}
 
+	function createAdminMenuEntry( $entry )
+	{
 		// Create new entry
 		$return = $this->AdminMenuEntry( $entry, 0, 0 );
 
@@ -100,7 +102,7 @@ class eucaInstall
 		// get id from component entry
 		$query = 'SELECT id'
 		. ' FROM #__components'
-		. ' WHERE link = \'option=com_' . _EUCA_APP_SHORTNAME . '\''
+		. ' WHERE link = \'option=' . _EUCA_APP_COMPNAME . '\''
 		;
 		$database->setQuery( $query );
 		$database->query();
@@ -129,13 +131,13 @@ class eucaInstall
 		$values = array();
 		$values[] = '';
 		$values[] = $entry[1];
-		$values[] = 'option=com_' . _EUCA_APP_SHORTNAME;
-		$values[] = $ordering;
+		$values[] = 'option=' . _EUCA_APP_COMPNAME;
+		$values[] = isset( $entry[3] ) ? $entry[3] : $ordering;
 		$values[] = $id;
-		$values[] = 'option=com_' . _EUCA_APP_SHORTNAME . '&task=' . $entry[0];
+		$values[] = 'option=' . _EUCA_APP_COMPNAME . '&task=' . $entry[0];
 		$values[] = $entry[1];
-		$values[] = 'com_' . _EUCA_APP_SHORTNAME;
-		$values[] = $ordering;
+		$values[] = _EUCA_APP_COMPNAME;
+		$values[] = isset( $entry[3] ) ? $entry[3] : $ordering;
 		$values[] = $entry[2];
 		$values[] = '0';
 		$values[] = '';

@@ -1,7 +1,7 @@
 <?php
 /**
  * @version $Id: eucalib.common.php
- * @package Eucalib: Component library the Joomla! CMS
+ * @package Eucalib: Component library for the Joomla! CMS
  * @subpackage Eucalib Common Files
  * @copyright Copyright (C) 2007 David Deutsch, All Rights Reserved
  * @author David Deutsch <skore@skore.de>
@@ -24,11 +24,12 @@ global $mainframe, $mosConfig_absolute_path, $mosConfig_live_site;
 include_once( $mosConfig_absolute_path . '/components/com_dvs/libraries/eucalib/eucalib.php' );
 
 define( '_EUCA_CFG_LOADED', 1 );
-define( '_EUCA_APP_SHORTNAME', 'dvs' );
-define( '_EUCA_BASEDIR', $mosConfig_absolute_path . '/components/com_' . _EUCA_APP_SHORTNAME . '/libraries/eucalib' );
-define( '_EUCA_APP_COMPDIR', $mosConfig_absolute_path . '/components/com_' . _EUCA_APP_SHORTNAME );
-define( '_EUCA_APP_ICONSDIR', $mosConfig_live_site . '/components/com_' . _EUCA_APP_SHORTNAME . '/images/icons' );
-define( '_EUCA_APP_ADMINDIR', $mosConfig_absolute_path . '/administrator/components/com_' . _EUCA_APP_SHORTNAME );
-define( '_EUCA_APP_ADMINICONSDIR', $mosConfig_live_site . '/administrator/components/com_' . _EUCA_APP_SHORTNAME . '/images/icons' );
-define( '_EUCA_APP_ADMINACTIONURL', $mosConfig_live_site . '/administrator/index2.php?option=com_' . _EUCA_APP_SHORTNAME );
+define( '_EUCA_APP_SHORTNAME', 'acctexp' );
+define( '_EUCA_APP_COMPNAME', 'com_' . _EUCA_APP_SHORTNAME );
+define( '_EUCA_BASEDIR', $mosConfig_absolute_path . '/components/' . _EUCA_APP_COMPNAME . '/lib/eucalib' );
+define( '_EUCA_APP_COMPDIR', $mosConfig_absolute_path . '/components/' . _EUCA_APP_COMPNAME );
+define( '_EUCA_APP_ICONSDIR', $mosConfig_live_site . '/components/' . _EUCA_APP_COMPNAME . '/images/icons' );
+define( '_EUCA_APP_ADMINDIR', $mosConfig_absolute_path . '/administrator/components/' . _EUCA_APP_COMPNAME );
+define( '_EUCA_APP_ADMINICONSDIR', $mosConfig_live_site . '/administrator/components/' . _EUCA_APP_COMPNAME . '/images/icons' );
+define( '_EUCA_APP_ADMINACTIONURL', $mosConfig_live_site . '/administrator/index2.php?option=' . _EUCA_APP_COMPNAME );
 ?>

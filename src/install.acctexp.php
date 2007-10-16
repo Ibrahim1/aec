@@ -45,6 +45,12 @@ function com_install()
 		include_once( $pathLang . 'english.php' );
 	}
 
+	require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.php' );
+	require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.install.php' );
+
+	// Load root install object
+	$eucaInstall = new eucaInstall();
+
 	include_once( $pathLang . 'general.php' );
 	require_once( $mainframe->getPath( 'class', 'com_acctexp' ) );
 
@@ -865,64 +871,28 @@ function com_install()
 	}
 
 	// first delete old menu entries
-	$query = 'DELETE *'
-	. ' FROM #__components'
-	. ' WHERE option = \'option=com_acctexp\''
-	;
-	$database->setQuery( $query );
-	$database->query();
+	$eucaInstall->deleteAdminMenuEntries();
 
 	// insert first component entry
-	$query = 'INSERT INTO #__components VALUES '
-	. '(\'\', \'' . _AEC_INST_MAIN_COMP_ENTRY . '\', \'\', 0, \'\', \'option=com_acctexp&task=showCentral\', \''
-	. _AEC_INST_MAIN_COMP_ENTRY . '\', \'com_acctexp\', 0,'
-	. ' \'../administrator/components/com_acctexp/images/icons/aec_logo_tiny.png\', 0, \'\')'
-	;
-
-	$database->setQuery( $query );
-	if ( !$database->query() ) {
-    	$errors[] = array( $database->getErrorMsg(), $query );
-	}
-
-	// get id from first entry
-	$query = 'SELECT id'
-	. ' FROM #__components'
-	. ' WHERE link = \'option=com_acctexp\''
-	;
-	$database->setQuery( $query );
-	$database->query();
-	$id = $database->insertid();
+	$eucaInstall->createAdminMenuEntry( array( 'showCentral', _AEC_INST_MAIN_COMP_ENTRY, '../administrator/components/com_acctexp/images/icons/aec_logo_tiny.png', 0 ) );
 
 	// insert components | image | task | menutext | menuid
 	$menu = array();
-	$menu[] = array( 'logo',			'showCentral',			_AEC_CENTR_CENTRAL,			0 );
-	$menu[] = array( 'symbol_plans',	'showSubscriptionPlans',_AEC_CENTR_PLANS,			1 );
-	$menu[] = array( 'symbol_active',	'showActive',			_AEC_CENTR_ACTIVE,			2 );
-	$menu[] = array( 'symbol_pending',	'showPending',			_AEC_CENTR_PENDING,			3 );
-	$menu[] = array( 'symbol_cancelled','showCancelled',		_AEC_CENTR_CANCELLED,		4 );
-	$menu[] = array( 'symbol_closed',	'showClosed',			_AEC_CENTR_CLOSED,			5 );
-	$menu[] = array( 'symbol_excluded',	'showExcluded',			_AEC_CENTR_EXCLUDED,		6 );
-	$menu[] = array( 'symbol_manual',	'showManual',			_AEC_CENTR_MANUAL,			7 );
-	$menu[] = array( 'symbol_mi',		'showMicroIntegrations',_AEC_CENTR_M_INTEGRATION,	8 );
-	$menu[] = array( 'symbol_settings',	'showSettings',			_AEC_CENTR_SETTINGS,		9 );
-	$menu[] = array( 'symbol_css',		'editCSS',				_AEC_CENTR_EDIT_CSS,		10 );
-	$menu[] = array( 'symbol_hacks',	'hacks',				_AEC_CENTR_HACKS,			11 );
-	$menu[] = array( 'symbol_help',		'help',					_AEC_CENTR_HELP,			12 );
+	$menu[] = array( 'showCentral',			_AEC_CENTR_CENTRAL,			_EUCA_APP_ADMINICONSDIR . 'aec_logo.png' );
+	$menu[] = array( 'showSubscriptionPlans',_AEC_CENTR_PLANS,			_EUCA_APP_ADMINICONSDIR . 'aec_symbol_plans.png' );
+	$menu[] = array( 'showActive',			_AEC_CENTR_ACTIVE,			_EUCA_APP_ADMINICONSDIR . 'aec_symbol_active.png' );
+	$menu[] = array( 'showPending',			_AEC_CENTR_PENDING,			_EUCA_APP_ADMINICONSDIR . 'aec_symbol_pending.png' );
+	$menu[] = array( 'showCancelled',		_AEC_CENTR_CANCELLED,		_EUCA_APP_ADMINICONSDIR . 'aec_symbol_cancelled.png' );
+	$menu[] = array( 'showClosed',			_AEC_CENTR_CLOSED,			_EUCA_APP_ADMINICONSDIR . 'aec_symbol_closed.png' );
+	$menu[] = array( 'showExcluded',		_AEC_CENTR_EXCLUDED,		_EUCA_APP_ADMINICONSDIR . 'aec_symbol_excluded.png' );
+	$menu[] = array( 'showManual',			_AEC_CENTR_MANUAL,			_EUCA_APP_ADMINICONSDIR . 'aec_symbol_manual.png' );
+	$menu[] = array( 'showMicroIntegrations',_AEC_CENTR_M_INTEGRATION,	_EUCA_APP_ADMINICONSDIR . 'aec_symbol_mi.png' );
+	$menu[] = array( 'showSettings',		_AEC_CENTR_SETTINGS,		_EUCA_APP_ADMINICONSDIR . 'aec_symbol_settings.png' );
+	$menu[] = array( 'editCSS',				_AEC_CENTR_EDIT_CSS,		_EUCA_APP_ADMINICONSDIR . 'aec_symbol_css.png' );
+	$menu[] = array( 'hacks',				_AEC_CENTR_HACKS,			_EUCA_APP_ADMINICONSDIR . 'aec_symbol_hacks.png' );
+	$menu[] = array( 'help',				_AEC_CENTR_HELP,			_EUCA_APP_ADMINICONSDIR . 'aec_symbol_help.png' );
 
-	for( $i = 0; $i < count( $menu ); $i++ ) {
-		$query = 'INSERT INTO #__components VALUES '
-		. '(\'\', \'' . $menu[$i][2] . '\', \'\', ' . $menu[$i][3] . ', '
-		. $id . ', \'option=com_acctexp&task=' . $menu[$i][1] . '\', \''
-		. $menu[$i][2] . '\', \'com_acctexp\', ' . $menu[$i][3] . ','
-		. ' \'../administrator/components/com_acctexp/images/icons/aec_'
-		. $menu[$i][0] . '_tiny.png\', 0, \'\')'
-		;
-
-		$database->setQuery( $query );
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
+	$eucaInstall->populateAdminMenuEntry( $menu );
 
 	/**
 	 * initialize new database

@@ -1,7 +1,7 @@
 <?php
 /**
  * @version $Id: eucalib.php
- * @package Eucalib: Component library the Joomla! CMS
+ * @package Eucalib: Component library the for Joomla! CMS
  * @subpackage Abstract Library for Joomla Components
  * @copyright Copyright (C) 2007 David Deutsch, All Rights Reserved
  * @author David Deutsch <skore@skore.de>
