@@ -23,7 +23,7 @@ class eucaInstall
 {
 	function eucaInstall()
 	{
-
+		$this->errors = array();
 	}
 
 	function unpackFileArray( $array )
@@ -80,7 +80,10 @@ class eucaInstall
 		. ' WHERE option = \'option=' . _EUCA_APP_COMPNAME . '\''
 		;
 		$database->setQuery( $query );
-		$database->query();
+
+		if ( !$database->query() ) {
+	    	$this->errors[] = array( $database->getErrorMsg(), $query );
+		}
 	}
 
 	function createAdminMenuEntry( $entry )
@@ -111,16 +114,10 @@ class eucaInstall
 		$k = 0;
 		$errors = array();
 		foreach ( $array as $entry ) {
-			$return = $this->AdminMenuEntry( $entry, $id, $k );
-
-			if ( $return === true ) {
+			if ( $this->AdminMenuEntry( $entry, $id, $k ) ) {
 				$k++;
-			} else {
-				$errors[] = $return;
 			}
 		}
-
-		return $errors;
 	}
 
 	function AdminMenuEntry ( $entry, $id, $ordering )
@@ -148,12 +145,97 @@ class eucaInstall
 		;
 
 		$database->setQuery( $query );
+
 		if ( !$database->query() ) {
-	    	return $database->getErrorMsg();
+	    	$this->errors[] = array( $database->getErrorMsg(), $query );
+	    	return false;
 		} else {
 			return true;
 		}
 	}
+}
+
+class eucaInstallDB
+{
+	function eucaInstallDB()
+	{
+		$this->errors = array();
+	}
+
+	function ColumninTable( $column=null, $table=null, $prefix=true )
+	{
+		$result = null;
+
+		if ( !empty( $column ) ) {
+			$this->column = $column;
+		}
+
+		if ( !empty( $table ) ) {
+			if ( $prefix ) {
+				$this->table = _EUCA_APP_SHORTNAME . $table;
+			} else {
+				$this->table = $table;
+			}
+		}
+
+		$query = 'SHOW COLUMNS FROM #__' . $this->table
+		. ' LIKE \'' . $this->column . '\''
+		;
+
+		$database->setQuery( $query );
+		$database->loadObject( $result );
+
+		if ( strcmp($result->Field, $column) === 0 ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function dropColmnifExists( $column, $table, $prefix=true )
+	{
+		if ( !$eucaInstalldb->ColumninTable( $column, $table, $prefix ) ) {
+			return $this->dropColumn();
+		}
+	}
+
+	function addColifNotExists( $column, $options, $table, $prefix=true )
+	{
+		if ( !$eucaInstalldb->ColumninTable( $column, $table, $prefix ) ) {
+			return $this->addColumn( $options );
+		}
+	}
+
+	function addColumn( $options )
+	{
+		$query = 'ALTER TABLE #__' . $this->table
+		. ' ADD \'' . $this->column . '\'' . $options
+		;
+
+		$database->setQuery( $query );
+		if ( !$database->query() ) {
+	    	$this->errors[] = array( $database->getErrorMsg(), $query );
+	    	return false;
+		} else {
+			return true;
+		}
+	}
+
+	function dropColumn( $options )
+	{
+		$query = 'ALTER TABLE #__' . $this->table
+		. ' DROP \'' . $this->column . '\''
+		;
+
+		$database->setQuery( $query );
+		if ( !$database->query() ) {
+	    	$this->errors[] = array( $database->getErrorMsg(), $query );
+	    	return false;
+		} else {
+			return true;
+		}
+	}
+
 }
 
 ?>

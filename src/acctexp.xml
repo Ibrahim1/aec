@@ -13,7 +13,6 @@
 		<filename>acctexp.php</filename>
 		<filename>acctexp.class.php</filename>
 		<filename>acctexp.html.php</filename>
-		<filename>eucalib.php</filename>
 		<filename>style.css</filename>
 		<filename>com_acctexp_language/index.html</filename>
 		<filename>com_acctexp_language/brazilian_portuguese.php</filename>
@@ -30,6 +29,14 @@
 		<filename>images/gateway_logos.tar.gz</filename>
 		<filename>images/cc_icons/index.html</filename>
 		<filename>images/cc_icons/cc_icons.tar.gz</filename>
+		<filename>lib/eucalib/index.php</filename>
+		<filename>lib/eucalib/eucalib.admin.common.php</filename>
+		<filename>lib/eucalib/eucalib.admin.proxy.php</filename>
+		<filename>lib/eucalib/eucalib.common.php</filename>
+		<filename>lib/eucalib/eucalib.config.php</filename>
+		<filename>lib/eucalib/eucalib.install.php</filename>
+		<filename>lib/eucalib/eucalib.php</filename>
+		<filename>lib/eucalib/eucalib.proxy.php</filename>
 		<filename>micro_integration/language/index.html</filename>
 		<filename>micro_integration/language/english.php</filename>
 		<filename>micro_integration/language/german.php</filename>

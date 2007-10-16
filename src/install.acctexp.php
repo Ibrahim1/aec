@@ -48,8 +48,9 @@ function com_install()
 	require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.php' );
 	require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.install.php' );
 
-	// Load root install object
-	$eucaInstall = new eucaInstall();
+	// Load root install and database object
+	$eucaInstall	= new eucaInstall();
+	$eucaInstalldb	= new eucaInstallDB();
 
 	include_once( $pathLang . 'general.php' );
 	require_once( $mainframe->getPath( 'class', 'com_acctexp' ) );
@@ -385,11 +386,8 @@ function com_install()
 	}
 
 	// Update routine 0.8.0x -> 1.0.0 RC1
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'entry'");
-	$database->loadObject($result);
 
-	if (strcmp($result->Field, 'entry') === 0) {
+	if ( $eucaInstalldb->columnintable( 'entry', 'plans' ) ) {
 		$database->setQuery("ALTER TABLE #__acctexp_plans DROP `entry`");
 		if ( !$database->query() ) {
 	    	$errors[] = array( $database->getErrorMsg(), $query );
@@ -412,175 +410,31 @@ function com_install()
 		}
 	}
 
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'lifetime'");
-	$database->loadObject($result);
-	if (!(strcmp($result->Field, 'lifetime') === 0)) {
-		$database->setQuery("ALTER TABLE #__acctexp_plans ADD `lifetime` int(4) default '0'");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
+	$eucaInstalldb->addColifNotExists( 'lifetime', "int(4) default '0'",  'plans' );
 
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_subscr LIKE 'lifetime'");
-	$database->loadObject($result);
-	if (!(strcmp($result->Field, 'lifetime') === 0)) {
+	if ( !$eucaInstalldb->columnintable( 'lifetime', 'subscr' ) ) {
 		$database->setQuery("ALTER TABLE #__acctexp_subscr CHANGE `extra05` `lifetime` int(1) default '0'");
 		if ( !$database->query() ) {
 	    	$errors[] = array( $database->getErrorMsg(), $query );
 		}
 	}
 
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'mingid'");
-	$database->loadObject($result);
-	if (!(strcmp($result->Field, 'mingid') === 0)) {
-		$database->setQuery("ALTER TABLE #__acctexp_plans ADD `mingid` int(3) default '0'");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'similarpg'");
-	$database->loadObject($result);
-	if (!(strcmp($result->Field, 'similarpg') === 0)) {
-		$database->setQuery("ALTER TABLE #__acctexp_plans ADD `similarpg` varchar(255) NULL");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'equalpg'");
-	$database->loadObject($result);
-	if (!(strcmp($result->Field, 'equalpg') === 0)) {
-		$database->setQuery("ALTER TABLE #__acctexp_plans ADD `equalpg` varchar(255) NULL");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_subscr LIKE 'previous_plan'");
-	$database->loadObject($result);
-	if (!(strcmp($result->Field, 'previous_plan') === 0)) {
-		$database->setQuery("ALTER TABLE #__acctexp_subscr ADD `previous_plan` int(11) NULL");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_subscr LIKE 'used_plans'");
-	$database->loadObject($result);
-	if (!(strcmp($result->Field, 'used_plans') === 0)) {
-		$database->setQuery("ALTER TABLE #__acctexp_subscr ADD `used_plans` varchar(255) NULL");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_subscr LIKE 'email_sent'");
-	$database->loadObject($result);
-	if (strcmp($result->Field, 'email_sent') === 0) {
-		$database->setQuery("ALTER TABLE #__acctexp_subscr DROP `email_sent`");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'email_desc_exp'");
-	$database->loadObject($result);
-	if (!(strcmp($result->Field, 'email_desc_exp') === 0)) {
-		$database->setQuery("ALTER TABLE #__acctexp_plans ADD `email_desc_exp` text NULL");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'desc_email'");
-	$database->loadObject($result);
-	if (strcmp($result->Field, 'desc_email') === 0) {
-		$database->setQuery("ALTER TABLE #__acctexp_plans DROP `desc_email`");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'email_desc'");
-	$database->loadObject($result);
-	if (!(strcmp($result->Field, 'email_desc') === 0)) {
-		$database->setQuery("ALTER TABLE #__acctexp_plans ADD `email_desc` text NULL");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'send_exp_mail'");
-	$database->loadObject($result);
-	if (!(strcmp($result->Field, 'send_exp_mail') === 0)) {
-		$database->setQuery("ALTER TABLE #__acctexp_plans ADD `send_exp_mail` int(4) default '0'");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'fallback'");
-	$database->loadObject($result);
-	if ( !( strcmp( $result->Field, 'fallback') === 0 ) ) {
-		$database->setQuery("ALTER TABLE #__acctexp_plans ADD `fallback` int(11) NULL");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_invoices LIKE 'coupons'");
-	$database->loadObject($result);
-	if (!(strcmp($result->Field, 'coupons') === 0)) {
-		$database->setQuery("ALTER TABLE #__acctexp_invoices ADD `coupons` varchar(255) NULL");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'maxgid'");
-	$database->loadObject($result);
-	if (!(strcmp($result->Field, 'maxgid') === 0)) {
-		$database->setQuery("ALTER TABLE #__acctexp_plans ADD `maxgid` int(3) default '0'");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'micro_integrations'");
-	$database->loadObject($result);
-	if (!(strcmp($result->Field, 'micro_integrations') === 0)) {
-		$database->setQuery("ALTER TABLE #__acctexp_plans ADD `micro_integrations` text NULL");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_invoices LIKE 'params'");
-	$database->loadObject($result);
-	if (!(strcmp($result->Field, 'params') === 0)) {
-		$database->setQuery("ALTER TABLE #__acctexp_invoices ADD `params` text NULL");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
+	$eucaInstalldb->addColifNotExists( 'mingid', "int(3) default '0'",  'plans' );
+	$eucaInstalldb->addColifNotExists( 'similarpg', "varchar(255) NULL",  'plans' );
+	$eucaInstalldb->addColifNotExists( 'equalpg', "varchar(255) NULL",  'plans' );
+	$eucaInstalldb->addColifNotExists( 'previous_plan', "int(11) NULL",  'subscr' );
+	$eucaInstalldb->addColifNotExists( 'used_plans', "varchar(255) NULL",  'subscr' );
+	$eucaInstalldb->dropColmnifExists( 'email_sent', 'subscr' );
+	$eucaInstalldb->addColifNotExists( 'email_desc_exp', "text NULL",  'plans' );
+	$eucaInstalldb->dropColmnifExists( 'desc_email', 'plans' );
+	$eucaInstalldb->addColifNotExists( 'email_desc', "text NULL",  'plans' );
+	$eucaInstalldb->addColifNotExists( 'send_exp_mail', "int(4) default '0'",  'plans' );
+	$eucaInstalldb->addColifNotExists( 'fallback', "int(11) NULL",  'plans' );
+	$eucaInstalldb->addColifNotExists( 'coupons', "varchar(255) NULL",  'invoices' );
+	$eucaInstalldb->addColifNotExists( 'maxgid', "int(3) default '0'",  'plans' );
+	$eucaInstalldb->addColifNotExists( 'micro_integrations', "text NULL",  'plans' );
+	$eucaInstalldb->addColifNotExists( 'coupons', "varchar(255) NULL",  'invoices' );
+	$eucaInstalldb->addColifNotExists( 'params', "varchar(255) NULL",  'invoices' );
 
 	$result = null;
 	$database->setQuery("SHOW COLUMNS FROM #__acctexp_invoices LIKE 'fixed'");
@@ -599,45 +453,10 @@ function com_install()
     	$errors[] = array( $database->getErrorMsg(), $query );
 	}
 
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'visible'");
-	$database->loadObject($result);
-	if (!(strcmp($result->Field, 'visible') === 0)) {
-		$database->setQuery("ALTER TABLE #__acctexp_plans ADD `visible` int(4) default '1'");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'recurring'");
-	$database->loadObject($result);
-	if (strcmp($result->Field, 'recurring') === 0) {
-		$database->setQuery("ALTER TABLE #__acctexp_plans DROP `recurring`");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_microintegrations LIKE 'on_userchange'");
-	$database->loadObject($result);
-	if ( !( strcmp( $result->Field, 'on_userchange') === 0 ) ) {
-		$database->setQuery("ALTER TABLE #__acctexp_microintegrations ADD `on_userchange` int(4) default '0'");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_invoices LIKE 'created_date'");
-	$database->loadObject($result);
-	if (!(strcmp($result->Field, 'created_date') === 0)) {
-		$database->setQuery("ALTER TABLE #__acctexp_invoices ADD `created_date` datetime NULL default '0000-00-00 00:00:00'");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
+	$eucaInstalldb->addColifNotExists( 'visible', "int(4) default '1'",  'plans' );
+	$eucaInstalldb->dropColmnifExists( 'recurring', 'plans' );
+	$eucaInstalldb->addColifNotExists( 'on_userchange', "int(4) default '0'",  'microintegrations' );
+	$eucaInstalldb->addColifNotExists( 'created_date', "datetime NULL default '0000-00-00 00:00:00'",  'invoices' );
 
 	$result = null;
 	$database->setQuery("SHOW COLUMNS FROM #__acctexp_invoices LIKE 'planid'");
@@ -669,35 +488,9 @@ function com_install()
 		}
 	}
 
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'reuse'");
-	$database->loadObject($result);
-	if ((strcmp($result->Field, 'reuse') === 0)) {
-		$database->setQuery("ALTER TABLE #__acctexp_plans DROP COLUMN `reuse`");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'processors'");
-	$database->loadObject($result);
-	if (!(strcmp($result->Field, 'processors') === 0)) {
-		$database->setQuery("ALTER TABLE #__acctexp_plans ADD `processors` varchar(255) NULL");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_invoices LIKE 'active'");
-	$database->loadObject($result);
-	if (!(strcmp($result->Field, 'active') === 0)) {
-		$database->setQuery("ALTER TABLE #__acctexp_invoices ADD `active` int(4) default '1'");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
+	$eucaInstalldb->dropColmnifExists( 'reuse', 'plans' );
+	$eucaInstalldb->addColifNotExists( 'processors', "varchar(255) NULL",  'plans' );
+	$eucaInstalldb->addColifNotExists( 'active', "int(4) default '1'",  'invoices' );
 
 	$result = null;
 	$database->setQuery("SHOW COLUMNS FROM #__acctexp_subscr LIKE 'extra01'");
@@ -939,38 +732,9 @@ function com_install()
 	$cfg->initParams();
 	$cfg->saveSettings();
 
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'maxgid'");
-	if ( $database->loadObject( $result ) ) {
-		if ( strcmp( $result->Field, 'maxgid' ) === 0 ) {
-			$database->setQuery("ALTER TABLE #__acctexp_plans DROP COLUMN `maxgid`");
-			if ( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
-			}
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'email_desc_exp'");
-	if ( $database->loadObject( $result ) ) {
-		if ( strcmp( $result->Field, 'email_desc_exp' ) === 0 ) {
-			$database->setQuery("ALTER TABLE #__acctexp_plans DROP COLUMN `email_desc_exp`");
-			if ( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
-			}
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'send_exp_mail'");
-	if ( $database->loadObject($result) ) {
-		if ( strcmp( $result->Field, 'send_exp_mail' ) === 0 ) {
-			$database->setQuery("ALTER TABLE #__acctexp_plans DROP COLUMN `send_exp_mail`");
-			if ( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
-			}
-		}
-	}
+	$eucaInstalldb->dropColmnifExists( 'maxgid', 'plans' );
+	$eucaInstalldb->dropColmnifExists( 'email_desc_exp', 'plans' );
+	$eucaInstalldb->dropColmnifExists( 'send_exp_mail', 'plans' );
 
 	// check for old values and update (if happen) old tables
 	$result = null;
@@ -1100,60 +864,13 @@ function com_install()
 		}
 	}
 
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'custom_params'");
-	if ( $database->loadObject( $result ) ) {
-		if (!(strcmp($result->Field, 'custom_params') === 0)) {
-			$database->setQuery("ALTER TABLE #__acctexp_plans ADD `custom_params` text NULL");
-			if ( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
-			}
-		}
-	}
+	$eucaInstalldb->dropColmnifExists( 'maxgid', 'plans' );
 
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_microintegrations LIKE 'system'");
-	if ( $database->loadObject( $result ) ) {
-		if (!(strcmp($result->Field, 'system') === 0)) {
-			$database->setQuery("ALTER TABLE #__acctexp_microintegrations ADD `system` NOT NULL default '0'");
-			if ( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
-			}
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_subscr LIKE 'params'");
-	if ( $database->loadObject( $result ) ) {
-		if (!(strcmp($result->Field, 'params') === 0)) {
-			$database->setQuery("ALTER TABLE #__acctexp_subscr ADD `params` text NULL");
-			if ( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
-			}
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_subscr LIKE 'customparams'");
-	if ( $database->loadObject( $result ) ) {
-		if (!(strcmp($result->Field, 'customparams') === 0)) {
-			$database->setQuery("ALTER TABLE #__acctexp_subscr ADD `customparams` text NULL");
-			if ( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
-			}
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_microintegrations LIKE 'pre_exp_check'");
-	if ( $database->loadObject( $result ) ) {
-		if (!(strcmp($result->Field, 'pre_exp_check') === 0)) {
-			$database->setQuery("ALTER TABLE #__acctexp_microintegrations ADD `pre_exp_check` int(4) NULL");
-			if ( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
-			}
-		}
-	}
+	$eucaInstalldb->addColifNotExists( 'custom_params', "text NULL",  'plans' );
+	$eucaInstalldb->addColifNotExists( 'system', "int(4) NOT NULL default '0'",  'microintegrations' );
+	$eucaInstalldb->addColifNotExists( 'params', "text NULL",  'subscr' );
+	$eucaInstalldb->addColifNotExists( 'customparams', "text NULL",  'subscr' );
+	$eucaInstalldb->addColifNotExists( 'pre_exp_check', "int(4) NULL",  'microintegrations' );
 
 	$result = null;
 	$database->setQuery("SHOW COLUMNS FROM #__acctexp LIKE 'expiration'");
@@ -1167,25 +884,8 @@ function com_install()
 		}
 	}
 
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_invoices LIKE 'counter'");
-	$database->loadObject($result);
-	if (!(strcmp($result->Field, 'counter') === 0)) {
-		$database->setQuery("ALTER TABLE #__acctexp_invoices ADD `counter` int(11) NOT NULL default '0'");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
-
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_invoices LIKE 'transactions'");
-	$database->loadObject($result);
-	if (!(strcmp($result->Field, 'transactions') === 0)) {
-		$database->setQuery("ALTER TABLE #__acctexp_invoices ADD `transactions` text NULL");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
-		}
-	}
+	$eucaInstalldb->addColifNotExists( 'counter', "int(11) NOT NULL default '0'",  'invoices' );
+	$eucaInstalldb->addColifNotExists( 'transactions', "text NULL",  'invoices' );
 
 	// Rewrite old entries for hardcoded "transfer" processor to new API conform "offline_payment" processor
 	$query = 'UPDATE #__acctexp_invoices'
@@ -1226,32 +926,14 @@ function com_install()
 		}
 	}
 
-	// log
-	$short		= _AEC_LOG_SH_INST;
-	$event		= sprintf( _AEC_LOG_LO_INST, _AEC_VERSION );
-	$tags		= 'install,system';
-
-	$eventlog	= new eventLog($database);
-	$params		= array( 'userid' => $my->id );
-	$eventlog->issue( $short, $tags, $event, $params );
-
-	if ( !class_exists( 'Archive_Tar' ) ) {
-		require_once( $mosConfig_absolute_path . '/includes/Archive/Tar.php' );
-	}
-
-	// dirs
-	$dir0			= $mosConfig_absolute_path . '/administrator/components/com_acctexp/';	// admin
-	$dir1			= $mosConfig_absolute_path . '/components/com_acctexp/';				// user
-	$dir2			= $mosConfig_absolute_path . '/administrator/components/';				// generic components dir
-
 	$files = array();
 	// icons
-	$files[] = array( $dir0, 'images/icons/backend_icons.tar.gz',		'images/icons/' );
-	$files[] = array( $dir0, 'images/icons/silk_icons.tar.gz',			'images/icons/' );
-	$files[] = array( $dir0, 'images/backend_gfx/backend_gfx.tar.gz',	'images/backend_gfx/' );
-	$files[] = array( $dir1, 'images/cc_icons/cc_icons.tar.gz',			'images/cc_icons/' );
-	$files[] = array( $dir1, 'images/gateway_buttons.tar.gz',			'images/' );
-	$files[] = array( $dir1, 'images/gateway_logos.tar.gz',				'images/' );
+	$files[] = array( 'images/icons/backend_icons.tar.gz',		'images/icons/', 1 );
+	$files[] = array( 'images/icons/silk_icons.tar.gz',			'images/icons/', 1 );
+	$files[] = array( 'images/backend_gfx/backend_gfx.tar.gz',	'images/backend_gfx/', 1 );
+	$files[] = array( 'images/cc_icons/cc_icons.tar.gz',		'images/cc_icons/', 0 );
+	$files[] = array( 'images/gateway_buttons.tar.gz',			'images/', 0 );
+	$files[] = array( 'images/gateway_logos.tar.gz',			'images/', 0 );
 
 	// check if joomfish (joomla) or nokkaew (mambo) exists)
 	$translation = false;
@@ -1262,40 +944,25 @@ function com_install()
 	}
 
 	if ( $translation ) {
-		if ( file_exists( $dir2 . 'com_acctexp/install/jf_content_elements_aec.' . _AEC_LANGUAGE . '.tar.gz' ) ) {
+		if ( file_exists( $mosConfig_absolute_path . '/administrator/components/com_acctexp/install/jf_content_elements_aec.' . _AEC_LANGUAGE . '.tar.gz' ) ) {
 			$xmlInst = 'com_acctexp/install/jf_content_elements_aec.' . _AEC_LANGUAGE . '.tar.gz';
 		} else {
 			$xmlInst = 'com_acctexp/install/jf_content_elements_aec.en.tar.gz';
 		}
-		$files[] = array( $dir2, $xmlInst, 'com_' . $translation . '/contentelements/' );
+		$files[] = array( $xmlInst, '../com_' . $translation . '/contentelements/', 1 );
 	}
 
-	foreach ( $files as $file ) {
+	$eucaInstall->unpackFileArray( $files );
 
-		$fullpath	= $file[0] . $file[1];
-		$deploypath = $file[0] . $file[2];
+	// log installation
+	$short		= _AEC_LOG_SH_INST;
+	$event		= sprintf( _AEC_LOG_LO_INST, _AEC_VERSION );
+	$tags		= 'install,system';
 
-		$archive = new Archive_Tar( $fullpath, 'gz' );
+	$eventlog	= new eventLog($database);
+	$params		= array( 'userid' => $my->id );
+	$eventlog->issue( $short, $tags, $event, $params );
 
-		if ( !@is_dir( $deploypath ) ) {
-			// Borrowed from php.net page on mkdir. Created by V-Tec (vojtech.vitek at seznam dot cz)
-			$folder_path = array( strstr( $deploypath, '.' ) ? dirname( $deploypath ) : $deploypath );
-
-			while ( !@is_dir( dirname( end( $folder_path ) ) )
-					&& dirname(end($folder_path)) != '/'
-					&& dirname(end($folder_path)) != '.'
-					&& dirname(end($folder_path)) != '' ) {
-				array_push( $folder_path, dirname( end( $folder_path ) ) );
-			}
-
-			while ( $parent_folder_path = array_pop( $folder_path ) ) {
-				@mkdir( $parent_folder_path, 0644 );
-			}
-		}
-		if ( $archive->extract( $deploypath ) ) {
-			@unlink( $fullpath );
-		}
-	}
 	?>
 
 	<style type="text/css">
