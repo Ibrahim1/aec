@@ -44,7 +44,7 @@ if ( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
 }
 
 if ( !class_exists( 'paramDBTable' ) ) {
-	include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib.php' );
+	include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.common.php' );
 }
 
 // compatibility w/ Mambo
@@ -1224,7 +1224,11 @@ class PaymentProcessor
 
 	function getBackendSettings()
 	{
-		return $this->processor->backend_settings();
+		if ( !isset( $this->settings ) ) {
+			$this->getSettings();
+		}
+
+		return $this->processor->backend_settings( $this->settings );
 	}
 
 	function checkoutAction( $int_var, $metaUser, $new_subscription )

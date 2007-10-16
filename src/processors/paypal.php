@@ -84,7 +84,7 @@ class processor_paypal extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	function backend_settings( $cfg )
 	{
 		$settings = array();
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );

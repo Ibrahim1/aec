@@ -30,8 +30,8 @@
 // no direct access
 defined( '_VALID_MOS' ) or die( 'Restricted access' );
 
-require_once( $mosConfig_absolute_path . '/components/com_acctexp/libraries/eucalib/eucalib.php' );
-require_once( $mosConfig_absolute_path . '/components/com_acctexp/libraries/eucalib/eucalib.proxy.php' );
+require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.php' );
+require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.proxy.php' );
 
 require_once( $mainframe->getPath( 'admin_html' ) );
 require_once( $mainframe->getPath( 'class' ) );
@@ -1818,6 +1818,11 @@ function editSettings( $option )
 					// Get Backend Settings
 					$settings_array = $pp->getBackendSettings();
 
+					if ( isset( $settings_array['lists'] ) ) {//print_R($settings_array['lists']);exit();
+						$lists = array_merge( $lists, $settings_array['lists'] );
+						unset( $settings_array['lists'] );
+					}
+
 					// Create new Tab
 					$tab = array();
 
@@ -2735,7 +2740,7 @@ function saveMicroIntegration( $option )
 	}
 
 	if ( !$id ) {
-		$query = "SELECT max(id) FROM #__acctexp_microintegration";
+		$query = "SELECT max(id) FROM #__acctexp_microintegrations";
 		$database->setQuery( $query );
 		$newid = $database->loadResult();
 	}
@@ -2745,7 +2750,7 @@ function saveMicroIntegration( $option )
 	if ( $id ) {
 		mosRedirect( 'index2.php?option=' . $option . '&task=showMicroIntegrations', _AEC_MSG_SUCESSFULLY_SAVED );
 	} else {
-		editMicroIntegration ( $newid, $option );
+		mosRedirect( 'index2.php?option=' . $option . '&task=editMicroIntegration&id=' . $newid, _AEC_MSG_SUCESSFULLY_SAVED );
 	}
 
 }

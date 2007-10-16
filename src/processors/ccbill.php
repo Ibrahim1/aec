@@ -71,7 +71,7 @@ class processor_ccbill extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	function backend_settings( $cfg )
 	{
 		$settings = array();
 		$settings['clientAccnum']	= array("inputC","Client Account","Your CCBill Client Acc. No.");

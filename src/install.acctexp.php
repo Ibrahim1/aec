@@ -666,24 +666,26 @@ function com_install()
 	// first delete old menu entries
 	$eucaInstall->deleteAdminMenuEntries();
 
+	$iconroot = '../administrator/components/com_acctexp/images/icons/';
+
 	// insert first component entry
-	$eucaInstall->createAdminMenuEntry( array( 'showCentral', _AEC_INST_MAIN_COMP_ENTRY, '../administrator/components/com_acctexp/images/icons/aec_logo_tiny.png', 0 ) );
+	$eucaInstall->createAdminMenuEntry( array( 'showCentral', _AEC_INST_MAIN_COMP_ENTRY, $iconroot . 'aec_logo_tiny.png', 0 ) );
 
 	// insert components | image | task | menutext | menuid
 	$menu = array();
-	$menu[] = array( 'showCentral',			_AEC_CENTR_CENTRAL,			_EUCA_APP_ADMINICONSDIR . 'aec_logo.png' );
-	$menu[] = array( 'showSubscriptionPlans',_AEC_CENTR_PLANS,			_EUCA_APP_ADMINICONSDIR . 'aec_symbol_plans.png' );
-	$menu[] = array( 'showActive',			_AEC_CENTR_ACTIVE,			_EUCA_APP_ADMINICONSDIR . 'aec_symbol_active.png' );
-	$menu[] = array( 'showPending',			_AEC_CENTR_PENDING,			_EUCA_APP_ADMINICONSDIR . 'aec_symbol_pending.png' );
-	$menu[] = array( 'showCancelled',		_AEC_CENTR_CANCELLED,		_EUCA_APP_ADMINICONSDIR . 'aec_symbol_cancelled.png' );
-	$menu[] = array( 'showClosed',			_AEC_CENTR_CLOSED,			_EUCA_APP_ADMINICONSDIR . 'aec_symbol_closed.png' );
-	$menu[] = array( 'showExcluded',		_AEC_CENTR_EXCLUDED,		_EUCA_APP_ADMINICONSDIR . 'aec_symbol_excluded.png' );
-	$menu[] = array( 'showManual',			_AEC_CENTR_MANUAL,			_EUCA_APP_ADMINICONSDIR . 'aec_symbol_manual.png' );
-	$menu[] = array( 'showMicroIntegrations',_AEC_CENTR_M_INTEGRATION,	_EUCA_APP_ADMINICONSDIR . 'aec_symbol_mi.png' );
-	$menu[] = array( 'showSettings',		_AEC_CENTR_SETTINGS,		_EUCA_APP_ADMINICONSDIR . 'aec_symbol_settings.png' );
-	$menu[] = array( 'editCSS',				_AEC_CENTR_EDIT_CSS,		_EUCA_APP_ADMINICONSDIR . 'aec_symbol_css.png' );
-	$menu[] = array( 'hacks',				_AEC_CENTR_HACKS,			_EUCA_APP_ADMINICONSDIR . 'aec_symbol_hacks.png' );
-	$menu[] = array( 'help',				_AEC_CENTR_HELP,			_EUCA_APP_ADMINICONSDIR . 'aec_symbol_help.png' );
+	$menu[] = array( 'showCentral',			_AEC_CENTR_CENTRAL,			$iconroot . 'aec_logo_tiny.png' );
+	$menu[] = array( 'showSubscriptionPlans',_AEC_CENTR_PLANS,			$iconroot . 'aec_symbol_plans_tiny.png' );
+	$menu[] = array( 'showActive',			_AEC_CENTR_ACTIVE,			$iconroot . 'aec_symbol_active_tiny.png' );
+	$menu[] = array( 'showPending',			_AEC_CENTR_PENDING,			$iconroot . 'aec_symbol_pending_tiny.png' );
+	$menu[] = array( 'showCancelled',		_AEC_CENTR_CANCELLED,		$iconroot . 'aec_symbol_cancelled_tiny.png' );
+	$menu[] = array( 'showClosed',			_AEC_CENTR_CLOSED,			$iconroot . 'aec_symbol_closed_tiny.png' );
+	$menu[] = array( 'showExcluded',		_AEC_CENTR_EXCLUDED,		$iconroot . 'aec_symbol_excluded_tiny.png' );
+	$menu[] = array( 'showManual',			_AEC_CENTR_MANUAL,			$iconroot . 'aec_symbol_manual_tiny.png' );
+	$menu[] = array( 'showMicroIntegrations',_AEC_CENTR_M_INTEGRATION,	$iconroot . 'aec_symbol_mi_tiny.png' );
+	$menu[] = array( 'showSettings',		_AEC_CENTR_SETTINGS,		$iconroot . 'aec_symbol_settings_tiny.png' );
+	$menu[] = array( 'editCSS',				_AEC_CENTR_EDIT_CSS,		$iconroot . 'aec_symbol_css_tiny.png' );
+	$menu[] = array( 'hacks',				_AEC_CENTR_HACKS,			$iconroot . 'aec_symbol_hacks_tiny.png' );
+	$menu[] = array( 'help',				_AEC_CENTR_HELP,			$iconroot . 'aec_symbol_help_tiny.png' );
 
 	$eucaInstall->populateAdminMenuEntry( $menu );
 
@@ -945,9 +947,9 @@ function com_install()
 
 	if ( $translation ) {
 		if ( file_exists( $mosConfig_absolute_path . '/administrator/components/com_acctexp/install/jf_content_elements_aec.' . _AEC_LANGUAGE . '.tar.gz' ) ) {
-			$xmlInst = 'com_acctexp/install/jf_content_elements_aec.' . _AEC_LANGUAGE . '.tar.gz';
+			$xmlInst = 'install/jf_content_elements_aec.' . _AEC_LANGUAGE . '.tar.gz';
 		} else {
-			$xmlInst = 'com_acctexp/install/jf_content_elements_aec.en.tar.gz';
+			$xmlInst = 'install/jf_content_elements_aec.en.tar.gz';
 		}
 		$files[] = array( $xmlInst, '../com_' . $translation . '/contentelements/', 1 );
 	}

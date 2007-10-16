@@ -36,12 +36,12 @@ class eucaInstall
 
 		foreach ( $array as $file ) {
 			if ( $file[2] ) {
-				$basepath = $mosConfig_absolute_path . '/administrator/components/' . _EUCA_APP_COMPNAME;
+				$basepath = $mosConfig_absolute_path . '/administrator/components/' . _EUCA_APP_COMPNAME . '/';
 
 				$fullpath	= $basepath . $file[0];
 				$deploypath = $basepath . $file[1];
 			} else {
-				$basepath = $mosConfig_absolute_path . '/components/' . _EUCA_APP_COMPNAME;
+				$basepath = $mosConfig_absolute_path . '/components/' . _EUCA_APP_COMPNAME . '/';
 
 				$fullpath	= $basepath . $file[0];
 				$deploypath = $basepath . $file[1];
@@ -164,6 +164,8 @@ class eucaInstallDB
 
 	function ColumninTable( $column=null, $table=null, $prefix=true )
 	{
+		global $database;
+
 		$result = null;
 
 		if ( !empty( $column ) ) {
@@ -172,7 +174,7 @@ class eucaInstallDB
 
 		if ( !empty( $table ) ) {
 			if ( $prefix ) {
-				$this->table = _EUCA_APP_SHORTNAME . $table;
+				$this->table = _EUCA_APP_SHORTNAME . '_' . $table;
 			} else {
 				$this->table = $table;
 			}
@@ -194,20 +196,22 @@ class eucaInstallDB
 
 	function dropColmnifExists( $column, $table, $prefix=true )
 	{
-		if ( !$eucaInstalldb->ColumninTable( $column, $table, $prefix ) ) {
-			return $this->dropColumn();
+		if ( !$this->ColumninTable( $column, $table, $prefix ) ) {
+			return $this->dropColumn( $column );
 		}
 	}
 
 	function addColifNotExists( $column, $options, $table, $prefix=true )
 	{
-		if ( !$eucaInstalldb->ColumninTable( $column, $table, $prefix ) ) {
+		if ( !$this->ColumninTable( $column, $table, $prefix ) ) {
 			return $this->addColumn( $options );
 		}
 	}
 
 	function addColumn( $options )
 	{
+		global $database;
+
 		$query = 'ALTER TABLE #__' . $this->table
 		. ' ADD \'' . $this->column . '\'' . $options
 		;
@@ -223,6 +227,8 @@ class eucaInstallDB
 
 	function dropColumn( $options )
 	{
+		global $database;
+
 		$query = 'ALTER TABLE #__' . $this->table
 		. ' DROP \'' . $this->column . '\''
 		;

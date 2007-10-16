@@ -279,4 +279,23 @@ define( '_CFG_VEROTEL_SECRETCODE_DESC', 'Your secret Verotel code.');
 define( '_CFG_VEROTEL_PLAN_PARAMS_VEROTEL_PRODUCT_NAME', 'Product Name');
 define( '_CFG_VEROTEL_PLAN_PARAMS_VEROTEL_PRODUCT_DESC', 'The Product Name identifying this plan to Verotel');
 
+// Cybermut
+define( '_CFG_CYBERMUT_LONGNAME', 'Cybermut');
+define( '_CFG_CYBERMUT_STATEMENT', 'Cybermut - Le groupe Cr&eacute;dit Mutuel');
+define( '_CFG_CYBERMUT_DESCRIPTION', 'Cybermut - Le groupe Cr&eacute;dit Mutuel');
+define( '_CFG_CYBERMUT_TPE_NAME', 'TPE');
+define( '_CFG_CYBERMUT_TPE_DESC', 'No TPE &racute; 7 chiffres, fourni par la banque');
+define( '_CFG_CYBERMUT_VER_NAME', 'Version');
+define( '_CFG_CYBERMUT_VER_DESC', 'The Protocol Version - leave at "1.2open" if you don\'t know what this is');
+define( '_CFG_CYBERMUT_SOC_NAME', 'Code Soci&eacute;t&eacute;');
+define( '_CFG_CYBERMUT_SOC_DESC', 'Code Soci&eacute;t&eacute;, fourni par la banque');
+define( '_CFG_CYBERMUT_PASS_NAME', 'pass');
+define( '_CFG_CYBERMUT_PASS_DESC', 'Valeur de la variable pass');
+define( '_CFG_CYBERMUT_KEY_NAME', 'Cl&eacute;');
+define( '_CFG_CYBERMUT_KEY_DESC', 'cl&eacute; info');
+define( '_CFG_CYBERMUT_SERVER_NAME', 'Serveur bancair');
+define( '_CFG_CYBERMUT_SERVER_DESC', 'Choissisez votre banque');
+define( '_CFG_CYBERMUT_LANGUAGE_NAME', 'Language:');
+define( '_CFG_CYBERMUT_LANGUAGE_DESC', 'Select one of the possible language settings for the paypal site that your user will see when issuing a payment.');
+
 ?>

@@ -76,7 +76,7 @@ class processor_psigate extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	function backend_settings( $cfg )
 	{
 		$settings = array();
 

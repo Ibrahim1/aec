@@ -33,7 +33,7 @@ class processor_[namehere]
 		return $settings;
 	}
 
-	function createGatewayLink( $int_var, $metaUser, $cfg, $new_subscription )
+	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
 	{
 		global $mosConfig_live_site;
 

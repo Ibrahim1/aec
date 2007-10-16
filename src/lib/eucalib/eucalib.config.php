@@ -21,7 +21,7 @@ defined( '_VALID_MOS' ) or die( 'Restricted access' );
 
 global $mainframe, $mosConfig_absolute_path, $mosConfig_live_site;
 
-include_once( $mosConfig_absolute_path . '/components/com_dvs/libraries/eucalib/eucalib.php' );
+include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.php' );
 
 define( '_EUCA_CFG_LOADED', 1 );
 define( '_EUCA_APP_SHORTNAME', 'acctexp' );

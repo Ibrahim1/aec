@@ -66,7 +66,7 @@ class processor_verotel extends URLprocessor
 		return $s;
 	}
 
-	function backend_settings()
+	function backend_settings( $cfg )
 	{
 		$s = array();
 		$s['merchantid']		= array( 'inputC' );

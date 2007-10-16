@@ -78,7 +78,7 @@ class processor_epsnetpay extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	function backend_settings( $cfg )
 	{
 		$settings = array();
 		$settings['testmode'] = array("list_yesno");

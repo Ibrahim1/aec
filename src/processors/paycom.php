@@ -69,7 +69,7 @@ class processor_paycom extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	function backend_settings( $cfg )
 	{
 		$settings = array();
 		$settings['co_code']	= array("inputC","Company Code","Three (3) alphanumeric ID assigned by Paycom.net");

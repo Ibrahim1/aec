@@ -61,7 +61,7 @@ class processor_offline_payment extends processor
 		return $settings;
 	}
 
-	function backend_settings()
+	function backend_settings( $cfg )
 	{
 		$settings = array();
 		$settings['waitingplan'] = array( 'list_plan' );
