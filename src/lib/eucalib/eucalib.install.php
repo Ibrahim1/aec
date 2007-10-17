@@ -244,4 +244,40 @@ class eucaInstallDB
 
 }
 
+class eucaInstalleditfile
+{
+	function eucaInstalleditfile()
+	{
+		$this->errors = array();
+	}
+
+	function fileEdit( $path, $search, $replace, $throwerror )
+	{
+		$originalFileHandle = fopen( $path, 'r' );
+
+		if ( $originalFileHandle != false ) {
+			// Transfer File into variable $oldData
+			$oldData = fread( $originalFileHandle, filesize( $path ) );
+			fclose( $originalFileHandle );
+
+			$newData = str_replace( $search, $replace, $oldData );
+
+			$oldperms = fileperms( $path );
+			@chmod( $path, $oldperms | 0222 );
+
+			if ( $fp = fopen( $path, 'wb' ) ) {
+				if ( fwrite( $fp, $newData, strlen( $newData ) ) != -1 ) {
+					fclose( $fp );
+					@chmod( $path, $oldperms );
+					return true;
+				}
+		    }
+		}
+
+		$this->error[] = $throwerror;
+		return false;
+	}
+
+}
+
 ?>
