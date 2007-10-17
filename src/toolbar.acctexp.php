@@ -110,11 +110,11 @@ switch ( $task ) {
 	case 'showExcluded':
 	case 'showManual':
 	case 'showPending':
-		ComponentMenu::MINI_MENU();
+		ComponentMenu::NO_MENU();
 		break;
 
 	default:
-		//ComponentMenu::NO_MENU();
+		ComponentMenu::NO_MENU();
 		break;
 }
 ?>

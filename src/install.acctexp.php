@@ -669,7 +669,11 @@ function com_install()
 	// first delete old menu entries
 	$eucaInstall->deleteAdminMenuEntries();
 
-	$iconroot = '../administrator/components/com_acctexp/images/icons/';
+	if ( class_exists( 'JConfig' ) ) {
+		$iconroot = '/components/com_acctexp/images/icons/';
+	} else {
+		$iconroot = '../administrator/components/com_acctexp/images/icons/';
+	}
 
 	// insert first component entry
 	$eucaInstall->createAdminMenuEntry( array( 'showCentral', _AEC_INST_MAIN_COMP_ENTRY, $iconroot . 'aec_logo_tiny.png', 0 ) );
@@ -939,7 +943,7 @@ function com_install()
 	$files[] = array( 'images/cc_icons/cc_icons.tar.gz',		'images/cc_icons/', 0 );
 	$files[] = array( 'images/gateway_buttons.tar.gz',			'images/', 0 );
 	$files[] = array( 'images/gateway_logos.tar.gz',			'images/', 0 );
-	$files[] = array( 'lib/krumo/krumo.tar.gz',				'lib/krumo/', 0 );
+	$files[] = array( 'lib/krumo/krumo.tar.gz',					'lib/krumo/', 0 );
 	$files[] = array( 'lib/php_debug/php_debug_1and2.tar.gz',	'lib/php_debug/', 0 );
 
 	// check if joomfish (joomla) or nokkaew (mambo) exists)

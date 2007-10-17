@@ -248,28 +248,6 @@ padding: 4px;
 fieldset {
 }
 
-/* adopted toolbar */
-table#aectoolbar {
-	margin-right		: 10px;
-}
-table#aectoolbar a.aectoolbar {
-	color				: #808080;
-	text-decoration		: none;
-	display				: block;
-	border				: 1px solid #DDD;
-	width				: 22px;
-	padding				: 2px 2px 2px 2px;
-	margin-left			: 2px;
-}
-table#aectoolbar a.aectoolbar:hover {
-	color				: #C64934;
-	border				: 1px solid #c24733;
-	background-color	: #f1e8e6;
-	padding				: 2px 2px 2px 2px;
-	text-decoration		: none;
-	margin-left			: 2px;
-}
-table#aectoolbar a.aectoolbar:active {
-	color				: #FF9900;
-	text-decoration		: none;
+div#aec_footer {
+clear: both;
 }

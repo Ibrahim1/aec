@@ -31,7 +31,11 @@ class eucaInstall
 		global $mosConfig_absolute_path;
 
 		if ( !class_exists( 'Archive_Tar' ) ) {
-			require_once( $mosConfig_absolute_path . '/includes/Archive/Tar.php' );
+			if ( class_exists( 'JConfig' ) ) {
+				require_once( $mosConfig_absolute_path . '/libraries/archive/Tar.php' );
+			} else {
+				require_once( $mosConfig_absolute_path . '/includes/Archive/Tar.php' );
+			}
 		}
 
 		foreach ( $array as $file ) {
@@ -75,9 +79,9 @@ class eucaInstall
 	{
 		global $database;
 
-		$query = 'DELETE *'
+		$query = 'DELETE'
 		. ' FROM #__components'
-		. ' WHERE option = \'option=' . _EUCA_APP_COMPNAME . '\''
+		. ' WHERE \'option\' = \'option=' . _EUCA_APP_COMPNAME . '\''
 		;
 		$database->setQuery( $query );
 
@@ -108,7 +112,6 @@ class eucaInstall
 		. ' WHERE link = \'option=' . _EUCA_APP_COMPNAME . '\''
 		;
 		$database->setQuery( $query );
-		$database->query();
 		$id = $database->loadResult();
 
 		$k = 0;
@@ -124,20 +127,22 @@ class eucaInstall
 	{
 		global $database;
 
-		// id, name, link, menuid, parent, admin_menu_link, admin_menu_alt, option, ordering, admin_menu_img, iscore, params
 		$values = array();
-		$values[] = '';
+		$values[] = 0;
 		$values[] = $entry[1];
 		$values[] = 'option=' . _EUCA_APP_COMPNAME;
-		$values[] = isset( $entry[3] ) ? $entry[3] : $ordering;
+		$values[] = 0;
 		$values[] = $id;
 		$values[] = 'option=' . _EUCA_APP_COMPNAME . '&task=' . $entry[0];
 		$values[] = $entry[1];
 		$values[] = _EUCA_APP_COMPNAME;
 		$values[] = isset( $entry[3] ) ? $entry[3] : $ordering;
 		$values[] = $entry[2];
-		$values[] = '0';
+		$values[] = 0;
 		$values[] = '';
+		if ( class_exists( 'JConfig' ) ) {
+			$values[] = 1;
+		}
 
 		$query = 'INSERT INTO #__components'
 		. ' VALUES '

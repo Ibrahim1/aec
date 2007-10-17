@@ -110,7 +110,7 @@ class HTML_myCommon
 	{
 		global $mosConfig_live_site;
 		?>
-		<div align="center" class="footer">
+		<div align="center" id="aec_footer">
 			<table width="500" border="0">
 			<tr>
 				<td align="center">
