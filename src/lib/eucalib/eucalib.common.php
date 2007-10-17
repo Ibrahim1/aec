@@ -298,15 +298,17 @@ function resolveProxy ( $task, $returntask=null, $admin=false )
 		}
 	}
 
-	if ( $atask[1] ) {
-		$subtask = $atask[1];
-		if ( isset( $atask[2] ) ) {
-			$action = $atask[2];
-		} else {
-			$action = 'init';
+	$subtask = '';
+
+	if ( isset( $atask[1] ) ) {
+		if ( $atask[1] ) {
+			$subtask = $atask[1];
+			if ( isset( $atask[2] ) ) {
+				$action = $atask[2];
+			} else {
+				$action = 'init';
+			}
 		}
-	} else {
-		$subtask = '';
 	}
 
 	if ( class_exists ( $subtask ) ) {
@@ -385,6 +387,7 @@ class eucaDebug
 	function eucaDebug()
 	{
 		if ( phpversion() >= "5.0.0") {
+			include_once( _EUCA_APP_PEAR );
 			include_once( _EUCA_APP_LIBDIR . '/php_debug/php_debug_2/PHP/Debug.php' );
 
 			// Options array for Debug object

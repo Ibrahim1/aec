@@ -187,8 +187,12 @@ class eucaInstallDB
 		$database->setQuery( $query );
 		$database->loadObject( $result );
 
-		if ( strcmp($result->Field, $column) === 0 ) {
-			return true;
+		if( is_object( $result ) ) {
+			if ( strcmp($result->Field, $column) === 0 ) {
+				return true;
+			} else {
+				return false;
+			}
 		} else {
 			return false;
 		}

@@ -138,7 +138,7 @@ class HTML_myCommon
 		if ( _EUCA_DEBUGMODE ) {
 			global $eucaDebug;
 
-			$eucaDebug->Dbg->DebugDisplay();
+			$eucaDebug->displayDebug();
 		}
 	}
 

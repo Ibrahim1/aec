@@ -497,19 +497,21 @@ function com_install()
 	$database->setQuery("SHOW COLUMNS FROM #__acctexp_subscr LIKE 'extra01'");
 	$database->loadObject($result);
 
-	if (strcmp($result->Field, 'extra01') === 0) {
+	if ( is_object( $result ) ) {
+		if (strcmp($result->Field, 'extra01') === 0) {
 
-		$queri = null;
-		$queri[] = "ALTER TABLE #__acctexp_subscr CHANGE `extra01` `recurring` int(1) NOT NULL default '0'";
-		$queri[] = "ALTER TABLE #__acctexp_subscr DROP `extra02`";
-		$queri[] = "ALTER TABLE #__acctexp_subscr DROP `extra03`";
-		$queri[] = "ALTER TABLE #__acctexp_subscr DROP `extra04`";
+			$queri = null;
+			$queri[] = "ALTER TABLE #__acctexp_subscr CHANGE `extra01` `recurring` int(1) NOT NULL default '0'";
+			$queri[] = "ALTER TABLE #__acctexp_subscr DROP `extra02`";
+			$queri[] = "ALTER TABLE #__acctexp_subscr DROP `extra03`";
+			$queri[] = "ALTER TABLE #__acctexp_subscr DROP `extra04`";
 
-		foreach ( $queri as $query ) {
-			$database->setQuery( $query );
-		    if ( !$database->query() ) {
-		        $errors[] = array( $database->getErrorMsg(), $query );
-		    }
+			foreach ( $queri as $query ) {
+				$database->setQuery( $query );
+			    if ( !$database->query() ) {
+			        $errors[] = array( $database->getErrorMsg(), $query );
+			    }
+			}
 		}
 	}
 
