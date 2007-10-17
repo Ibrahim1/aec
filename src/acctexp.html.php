@@ -59,12 +59,11 @@ class HTML_frontEnd
 
 	function expired($option, $userid, $expiration, $name, $username, $invoice, $trial)
 	{
-		global $database;
-
-		$cfg = new Config_General( $database ); ?>
+		global $database, $aecConfig;
+		?>
 		<div class="componentheading"><?php echo _EXPIRED_TITLE; ?></div>
 		<?php
-		if ($cfg->cfg['customtext_expired_keeporiginal']) {?>
+		if ($aecConfig->cfg['customtext_expired_keeporiginal']) {?>
 			<div id="expired_greeting">
 				<p><?php echo sprintf( _DEAR, $name ); ?></p><p><?php
 					if ( $trial ) {
@@ -77,8 +76,8 @@ class HTML_frontEnd
 			</div>
 			<?php
 		}
-		if ( $cfg->cfg['customtext_expired'] ) { ?>
-			<p><?php echo $cfg->cfg['customtext_expired']; ?></p>
+		if ( $aecConfig->cfg['customtext_expired'] ) { ?>
+			<p><?php echo $aecConfig->cfg['customtext_expired']; ?></p>
 			<?php
 		} ?>
 		<div id="box_expired">
@@ -106,7 +105,7 @@ class HTML_frontEnd
 
 	function pending( $option, $objUser, $invoice, $reason=0 )
 	{
-		global $database;
+		global $database, $aecConfig;
 
 		$actions =	_PENDING_OPENINVOICE
 		. ' <a href="'
@@ -125,18 +124,17 @@ class HTML_frontEnd
 		if ( $reason !== 0 ) {
 			$actions .= ' ' . $reason;
 		}
-
-		$cfg = new Config_General( $database ); ?>
+		?>
 
 		<div class="componentheading"><?php echo _PENDING_TITLE; ?></div>
 		<?php
-		if ( $cfg->cfg['customtext_pending_keeporiginal'] ) { ?>
+		if ( $aecConfig->cfg['customtext_pending_keeporiginal'] ) { ?>
 			<p class="expired_dear"><?php echo sprintf( _DEAR, $objUser->name ) . ','; ?></p>
 			<p class="expired_date"><?php echo _WARN_PENDING; ?></p>
 			<?php
 		}
-		if ( $cfg->cfg['customtext_pending'] ) { ?>
-			<p><?php echo $cfg->cfg['customtext_pending']; ?></p>
+		if ( $aecConfig->cfg['customtext_pending'] ) { ?>
+			<p><?php echo $aecConfig->cfg['customtext_pending']; ?></p>
 			<?php
 		} ?>
 		<div id="box_pending">
@@ -162,9 +160,9 @@ class HTML_frontEnd
 
 	function subscriptionDetails( $option, $invoices, $metaUser, $recurring, $pp, $mi, $alert, $selected_plan = false )
 	{
-		global $database;
+		global $database, $aecConfig;
+		?>
 
-		$cfg = new Config_General( $database ); ?>
 		<div class="componentheading"><?php echo _HISTORY_TITLE;?></div>
 		<div id="subscription_details">
 			<h2>
@@ -260,16 +258,14 @@ class HTML_frontEnd
 
 	function notAllowed( $option, $processors, $registerlink, $loggedin = 0 )
 	{
-		global $database;
-
-		$cfg = new Config_General( $database );
+		global $database, $aecConfig;
 
 		if ( !is_object( $this ) ) {
 			HTML_frontEnd::aec_styling();
 		} ?>
 		<div class="componentheading"><?php echo _NOT_ALLOWED_HEADLINE; ?></div>
 		<?php
-		if ( $cfg->cfg['customtext_notallowed_keeporiginal'] ) {?>
+		if ( $aecConfig->cfg['customtext_notallowed_keeporiginal'] ) {?>
 			<p>
 				<?php
 				if ( $loggedin ) {
@@ -284,8 +280,8 @@ class HTML_frontEnd
 			</p>
 			<?php
 		}
-		if ( $cfg->cfg['customtext_notallowed'] ) { ?>
-			<p><?php echo $cfg->cfg['customtext_notallowed']; ?></p>
+		if ( $aecConfig->cfg['customtext_notallowed'] ) { ?>
+			<p><?php echo $aecConfig->cfg['customtext_notallowed']; ?></p>
 			<?php
 		} ?>
 		<p></p>
@@ -295,7 +291,7 @@ class HTML_frontEnd
 			<table id="cc_list">
 				<?php
 				foreach ( $processors as $processor ) {
-					HTML_frontEnd::processorInfo( $option, $processor, $cfg->cfg['displayccinfo'] );
+					HTML_frontEnd::processorInfo( $option, $processor, $aecConfig->cfg['displayccinfo'] );
 				} ?>
 			</table>
 			<?php
@@ -341,6 +337,7 @@ class HTML_frontEnd
 	 */
 	function DisplayDateInLocalTime( $SQLDate, $check = false, $display = false )
 	{
+		global $aecConfig;
 
 		if ( $SQLDate == '' ) {
 			return _AEC_EXPIRE_NOT_SET;
@@ -356,9 +353,7 @@ class HTML_frontEnd
 				$timeOffset = $mosConfig_offset * 3600;
 			}
 
-			$cfg = new Config_General( $database );
-
-			$retVal = strftime( $cfg->cfg['display_date_frontend'], ( strtotime( $SQLDate ) + $timeOffset ) );
+			$retVal = strftime( $aecConfig->cfg['display_date_frontend'], ( strtotime( $SQLDate ) + $timeOffset ) );
 
 			if ( $check ) {
 				$timeDif = strtotime( $SQLDate ) - (time() + $timeOffset);
@@ -405,15 +400,15 @@ class Payment_HTML
 {
 	function selectSubscriptionPlanForm( $option, $userid, $plans, $expired, $passthrough = false, $register = false )
 	{
-		global $mosConfig_live_site, $database;
+		global $mosConfig_live_site, $database, $aecConfig;
 
 		HTML_frontend::aec_styling( $option );
+		?>
 
-		$cfg = new Config_General( $database ); ?>
 		<div class="componentheading"><?php echo _PAYPLANS_HEADER; ?></div>
 		<?php
-		if ( $cfg->cfg['customtext_plans'] ) { ?>
-			<p><?php echo $cfg->cfg['customtext_plans']; ?></p>
+		if ( $aecConfig->cfg['customtext_plans'] ) { ?>
+			<p><?php echo $aecConfig->cfg['customtext_plans']; ?></p>
 			<?php
 		} ?>
 		<div class="subscriptions">
@@ -438,9 +433,7 @@ class Payment_HTML
 
 	function getPayButtonHTML( $gw, $planid, $userid, $passthrough = false, $register = false )
 	{
-		global $mosConfig_live_site, $database, $my;
-
-		$cfg = new Config_General( $database );
+		global $mosConfig_live_site, $database, $my, $aecConfig;
 
 		$html_code = '';
 
@@ -511,11 +504,11 @@ class Payment_HTML
 
 	function confirmForm( $option, $InvoiceFactory, $user, $tos=null, $passthrough = false)
 	{
-		global $database;
+		global $database, $aecConfig;
 
 		HTML_frontend::aec_styling( $option );
+		?>
 
-		$cfg = new Config_General( $database ); ?>
 		<div class="componentheading"><?php echo _CONFIRM_TITLE; ?></div>
 		<?php
 		if ( $tos ) { ?>
@@ -566,11 +559,11 @@ class Payment_HTML
 				</tr>
 			</table>
 			<?php
-			if ( $cfg->cfg['customtext_confirm'] ) { ?>
-				<p><?php echo $cfg->cfg['customtext_confirm']; ?></p>
+			if ( $aecConfig->cfg['customtext_confirm'] ) { ?>
+				<p><?php echo $aecConfig->cfg['customtext_confirm']; ?></p>
 				<?php
 			}
-			if ( $cfg->cfg['customtext_confirm_keeporiginal'] ) { ?>
+			if ( $aecConfig->cfg['customtext_confirm_keeporiginal'] ) { ?>
 				<p><?php echo _CONFIRM_INFO; ?></p>
 				<?php
 			}
@@ -620,23 +613,22 @@ class Payment_HTML
 
 	function checkoutForm( $option, $var, $params = null, $InvoiceFactory, $repeat = 0 )
 	{
-		global $database;
+		global $database, $aecConfig;
 
 		HTML_frontend::aec_styling( $option );
 
 		$introtext = '_CHECKOUT_INFO' . ( $repeat ? '_REPEAT' : '' );
-
-		$cfg = new Config_General( $database ); ?>
+		?>
 
 		<div class="componentheading"><?php echo _CHECKOUT_TITLE; ?></div>
 		<div id="checkout">
 			<?php
-			if ( $cfg->cfg['customtext_checkout_keeporiginal'] ) { ?>
+			if ( $aecConfig->cfg['customtext_checkout_keeporiginal'] ) { ?>
 				<p><?php echo constant( $introtext ); ?></p>
 				<?php
 			}
-			if ( $cfg->cfg['customtext_checkout'] ) { ?>
-				<p><?php echo $cfg->cfg['customtext_checkout']; ?></p>
+			if ( $aecConfig->cfg['customtext_checkout'] ) { ?>
+				<p><?php echo $aecConfig->cfg['customtext_checkout']; ?></p>
 				<?php
 			} ?>
 			<div id="amountbox">
@@ -741,7 +733,7 @@ class Payment_HTML
 			<table width="100%">
 				<?php
 				if ( is_object( $InvoiceFactory->pp ) ) {
-					HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $cfg->cfg['displayccinfo'] );
+					HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $aecConfig->cfg['displayccinfo'] );
 				} ?>
 			</table>
 		</div>

@@ -38,7 +38,15 @@ require_once( $mainframe->getPath( 'class' ) );
 
 $aecConfig = new Config_General( $database );
 
-define( '_AEC_DEBUGMODE', $aecConfig->cfg['debugmode'] );
+if ( !defined( '_EUCA_DEBUGMODE' ) ) {
+	define( '_EUCA_DEBUGMODE', $aecConfig->cfg['debugmode'] );
+}
+
+if ( _EUCA_DEBUGMODE ) {
+	global $eucaDebug;
+
+	$eucaDebug = new eucaDebug();
+}
 
 if (!$acl->acl_check( 'administration', 'config', 'users', $my->usertype )) {
 

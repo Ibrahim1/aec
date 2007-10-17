@@ -134,6 +134,12 @@ class HTML_myCommon
 			</table>
 		</div>
 		<?php
+
+		if ( _EUCA_DEBUGMODE ) {
+			global $eucaDebug;
+
+			$eucaDebug->Dbg->DebugDisplay();
+		}
 	}
 
 	function sidebar( $focus )
@@ -507,6 +513,11 @@ class General_css
 
 class HTML_AcctExp
 {
+	function HTML_AcctExp()
+	{
+
+	}
+
 	function userForm( $option, $expiration, $subscription, $user, $invoices, $lists, $nexttask )
 	{
 		global $mosConfig_live_site;
@@ -760,8 +771,12 @@ class HTML_AcctExp
 			<input type="hidden" name="nexttask" value="<?php echo $nexttask;?>" />
 		</form>
 
-		<?php HTML_myCommon::GlobalNerd(); ?>
-	<?php
+ 		<?php
+		if ( _EUCA_DEBUGMODE ) {
+			krumo( $option, $expiration, $subscription, $user, $invoices, $lists, $nexttask );
+		}
+
+ 		HTML_myCommon::GlobalNerd();
 	}
 
 	function SubscriptionName( $subscriptionid )
@@ -1039,8 +1054,13 @@ class HTML_AcctExp
 				} ?>
 			</td></tr>
 		</table>
-		<?php
-		HTML_myCommon::GlobalNerd();
+
+ 		<?php
+		if ( _EUCA_DEBUGMODE ) {
+			krumo( $option, $hacks );
+		}
+
+ 		HTML_myCommon::GlobalNerd();
 	}
 
 	function help ( $option, $diagnose )
@@ -1109,8 +1129,13 @@ class HTML_AcctExp
 				</table>
 			</tr>
 		</table>
-		<?php
-		HTML_myCommon::GlobalNerd();
+
+ 		<?php
+		if ( _EUCA_DEBUGMODE ) {
+			krumo( $option, $diagnose );
+		}
+
+ 		HTML_myCommon::GlobalNerd();
 	}
 
 	function Settings( $option, $lists, $tab_data, $editors )
@@ -1165,7 +1190,12 @@ class HTML_AcctExp
 		<?php
 		// close pane and include footer
 		$tabs->endPane();
-		HTML_myCommon::GlobalNerd();
+
+		if ( _EUCA_DEBUGMODE ) {
+			krumo( $option, $lists, $tab_data, $editors );
+		}
+
+ 		HTML_myCommon::GlobalNerd();
 	}
 
 	function listSubscriptions( $rows, $pageNav, $search, $option, $lists, $userid, $action )
@@ -1253,10 +1283,15 @@ class HTML_AcctExp
 			<input type="hidden" name="boxchecked" value="0" />
 		</form>
 
- 		<?php HTML_myCommon::GlobalNerd();
+ 		<?php
+		if ( _EUCA_DEBUGMODE ) {
+			krumo( $my, $rows, $pageNav, $search, $option, $lists, $userid, $action );
+		}
+
+ 		HTML_myCommon::GlobalNerd();
 	}
 
-	function listMicroIntegrations( &$rows, &$pageNav, $option )
+	function listMicroIntegrations( $rows, $pageNav, $option )
 	{
 		global $mosConfig_live_site;
 
@@ -1323,7 +1358,12 @@ class HTML_AcctExp
 		<input type="hidden" name="boxchecked" value="0" />
 		</form>
 
- 		<?php HTML_myCommon::GlobalNerd();
+		<?php
+		if ( _EUCA_DEBUGMODE ) {
+			krumo( $rows, $pageNav, $option );
+		}
+
+ 		HTML_myCommon::GlobalNerd();
 	}
 
 	function editMicroIntegration( $option, $row, $lists, $aecHTML )
@@ -1462,10 +1502,16 @@ class HTML_AcctExp
 			<input type="hidden" name="option" value="<?php echo $option; ?>" />
 			<input type="hidden" name="task" value="" />
 		</form>
-		<?php HTML_myCommon::GlobalNerd();
+
+		<?php
+		if ( _EUCA_DEBUGMODE ) {
+			krumo( $option, $row, $lists, $aecHTML );
+		}
+
+ 		HTML_myCommon::GlobalNerd();
 	}
 
-	function listSubscriptionPlans( &$rows, &$pageNav, $option )
+	function listSubscriptionPlans( $rows, $pageNav, $option )
 	{
 		global $mosConfig_live_site;
 		HTML_myCommon::addBackendCSS(); ?>
@@ -1497,9 +1543,7 @@ class HTML_AcctExp
 		<?php
 		$k = 0;
 		for( $i=0, $n=count( $rows ); $i < $n; $i++ ) {
-			$row = &$rows[$i];
-
-				switch( $row->visible ) {
+				switch( $rows[$i]->visible ) {
 					case '1':
 						$vaction	= 'invisibleSubscriptionPlan';
 						$vicon		= 'eye.png';
@@ -1513,7 +1557,7 @@ class HTML_AcctExp
 						break;
 				}
 
-				switch( $row->active ) {
+				switch( $rows[$i]->active ) {
 					case '1':
 						$aaction	= 'unpublishSubscriptionPlan';
 						$aicon		= 'accept.png';
@@ -1527,8 +1571,8 @@ class HTML_AcctExp
 						break;
 				}
 
-				if ( !is_null( $row->desc ) ) {
-					$description = strip_tags( $row->desc );
+				if ( !is_null( $rows[$i]->desc ) ) {
+					$description = strip_tags( $rows[$i]->desc );
 					if ( strlen( $description ) > 50 ) {
 						$description = substr( $description, 0, 50) . ' ...';
 					}
@@ -1539,8 +1583,8 @@ class HTML_AcctExp
 				?>
 				<tr class="row<?php echo $k; ?>">
 					<td align="center"><?php echo $pageNav->rowNumber( $i ); ?></td>
-					<td align="right"><?php echo $row->id; ?></td>
-					<td><?php echo mosHTML::idBox( $i, $row->id, false, 'id' ); ?></td>
+					<td align="right"><?php echo $rows[$i]->id; ?></td>
+					<td><?php echo mosHTML::idBox( $i, $rows[$i]->id, false, 'id' ); ?></td>
 					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editSubscriptionPlan')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $row->name; ?></a></td>
 					<td  align="left">
 						<?php
@@ -1558,9 +1602,9 @@ class HTML_AcctExp
 					</td>
 					<td align="right"><?php echo $pageNav->orderUpIcon( $i, true, 'orderplanup' ); ?></td>
 					<td align="right"><?php echo $pageNav->orderDownIcon( $i, $n, true, 'orderplandown' ); ?></td>
-					<td align="center"><strong><?php echo $row->usercount; ?></strong></td>
-					<td align="center"><?php echo $row->expiredcount; ?></td>
-					<td align="center"><strong><?php echo $row->usercount + $row->expiredcount; ?></strong></td>
+					<td align="center"><strong><?php echo $rows[$i]->usercount; ?></strong></td>
+					<td align="center"><?php echo $rows[$i]->expiredcount; ?></td>
+					<td align="center"><strong><?php echo $rows[$i]->usercount + $rows[$i]->expiredcount; ?></strong></td>
 				</tr>
 			<?php
 			$k = 1 - $k;
@@ -1575,8 +1619,12 @@ class HTML_AcctExp
 		<input type="hidden" name="boxchecked" value="0" />
 	</form>
 
-		<!-- include footer -->
- 		<?php HTML_myCommon::GlobalNerd();
+		<?php
+		if ( _EUCA_DEBUGMODE ) {
+			krumo( $rows, $pageNav, $option );
+		}
+
+ 		HTML_myCommon::GlobalNerd();
 	}
 
 	function editSubscriptionPlan( $option, $aecHTML, $row, $hasrecusers )
@@ -1797,10 +1845,16 @@ class HTML_AcctExp
 		<input type="hidden" name="task" value="" />
 		</form>
 		<!--<script>swap();</script>-->
-		<?php HTML_myCommon::GlobalNerd();
+
+		<?php
+		if ( _EUCA_DEBUGMODE ) {
+			krumo( $option, $aecHTML, $row, $hasrecusers );
+		}
+
+ 		HTML_myCommon::GlobalNerd();
 	}
 
-	function listCoupons( &$rows, &$pageNav, $option, $type )
+	function listCoupons( $rows, $pageNav, $option, $type )
 	{
 		global $mosConfig_live_site;
 
@@ -1830,24 +1884,24 @@ class HTML_AcctExp
 		<?php
 		$k = 0;
 		for( $i=0, $n=count( $rows ); $i < $n; $i++ ) {
-			$row = &$rows[$i]; ?>
+			?>
 				<tr class="row<?php echo $k; ?>">
 					<td align="center"><?php echo $pageNav->rowNumber( $i ); ?></td>
-					<td><?php echo mosHTML::idBox( $i, $row->id, false, 'id' ); ?></td>
-					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editCoupon<?php echo $type ? "Static" : ""; ?>')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $row->name; ?></a></td>
-					<td align="center"><strong><?php echo $row->coupon_code; ?></strong></td>
+					<td><?php echo mosHTML::idBox( $i, $rows[$i]->id, false, 'id' ); ?></td>
+					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editCoupon<?php echo $type ? "Static" : ""; ?>')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $rows[$i]->name; ?></a></td>
+					<td align="center"><strong><?php echo $rows[$i]->coupon_code; ?></strong></td>
 					<td align="left">
 						<?php
-						echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
+						echo $rows[$i]->desc ? ( strlen( strip_tags( $rows[$i]->desc ) > 50 ) ? substr( strip_tags( $rows[$i]->desc ), 0, 50) . ' ...' : strip_tags( $rows[$i]->desc ) ) : ''; ?>
 					</td>
 					<td align="center">
-						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo ( ( $row->active ? 'unpublishCoupon' : 'publishCoupon') . ( $type ? 'Static' : '' ) ); ?>')">
-							<?php echo aecHTML::Icon( ( $row->active ) ? 'accept.png' : 'cancel.png' ); ?>
+						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo ( ( $rows[$i]->active ? 'unpublishCoupon' : 'publishCoupon') . ( $type ? 'Static' : '' ) ); ?>')">
+							<?php echo aecHTML::Icon( ( $rows[$i]->active ) ? 'accept.png' : 'cancel.png' ); ?>
 						</a>
 					</td>
 					<td align="right"><?php echo $pageNav->orderUpIcon( $i, true, 'ordercoupon' . ( $type ? 'static' : '' ) . 'up' ); ?></td>
 					<td align="right"><?php echo $pageNav->orderDownIcon( $i, $n, true, 'ordercoupon' . ( $type ? 'static' : '' ) . 'down' ); ?></td>
-					<td align="center"><strong><?php echo $row->usecount; ?></strong></td>
+					<td align="center"><strong><?php echo $rows[$i]->usecount; ?></strong></td>
 				</tr>
 			<?php
 			$k = 1 - $k;
@@ -1860,10 +1914,14 @@ class HTML_AcctExp
 		<input type="hidden" name="task" value="" />
 		<input type="hidden" name="returnTask" value="showCoupons<?php echo $type ? 'Static' : ''; ?>" />
 		<input type="hidden" name="boxchecked" value="0" />
-	</form>
+		</form>
 
-		<!-- include footer -->
- 		<?php HTML_myCommon::GlobalNerd();
+		<?php
+		if ( _EUCA_DEBUGMODE ) {
+			krumo( $rows, $pageNav, $option, $type );
+		}
+
+ 		HTML_myCommon::GlobalNerd();
 	}
 
 	function editCoupon( $option, $aecHTML, $row, $type )
@@ -2030,11 +2088,16 @@ class HTML_AcctExp
 		<input type="hidden" name="task" value="" />
 		</form>
 		<!--<script>swap();</script>-->
-		<!-- include footer -->
-		<?php HTML_myCommon::GlobalNerd();
+
+		<?php
+		if ( _EUCA_DEBUGMODE ) {
+			krumo( $option, $aecHTML, $row, $type );
+		}
+
+ 		HTML_myCommon::GlobalNerd();
 	}
 
-	function viewinvoices( $option, &$rows, &$search, &$pageNav )
+	function viewinvoices( $option, $rows, $search, $pageNav )
 	{
 		global $my;
 		global $mosConfig_live_site;
@@ -2070,17 +2133,17 @@ class HTML_AcctExp
 		<?php
 		$k = 0;
 		for( $i=0, $n=count( $rows ); $i < $n; $i++ ) {
-			$row = &$rows[$i]; ?>
+			?>
 			<tr class="row<?php echo $k; ?>">
 				<td><?php echo $pageNav->rowNumber( $i ); ?></td>
-				<td><?php echo $row->userid; ?></td>
-				<td align="center"><?php echo $row->invoice_number; ?></td>
-				<td align="center"><?php echo $row->created_date; ?></td>
-				<td align="center"><?php echo $row->transaction_date; ?></td>
-	  			<td align="center"><?php echo $row->usage; ?></td>
-	  			<td align="center"><?php echo $row->method; ?></td>
-				<td align="center"><?php echo $row->amount; ?></td>
-				<td align="center"><?php echo $row->currency; ?></td>
+				<td><?php echo $rows[$i]->userid; ?></td>
+				<td align="center"><?php echo $rows[$i]->invoice_number; ?></td>
+				<td align="center"><?php echo $rows[$i]->created_date; ?></td>
+				<td align="center"><?php echo $rows[$i]->transaction_date; ?></td>
+	  			<td align="center"><?php echo $rows[$i]->usage; ?></td>
+	  			<td align="center"><?php echo $rows[$i]->method; ?></td>
+				<td align="center"><?php echo $rows[$i]->amount; ?></td>
+				<td align="center"><?php echo $rows[$i]->currency; ?></td>
 			</tr>
 			<?php
 			$k = 1 - $k;
@@ -2093,8 +2156,12 @@ class HTML_AcctExp
 		<input type="hidden" name="boxchecked" value="0" />
 		</form>
 
-		<!-- include footer -->
-		<?php HTML_myCommon::GlobalNerd();
+		<?php
+		if ( _EUCA_DEBUGMODE ) {
+			krumo( $option, $rows, $search, $pageNav );
+		}
+
+ 		HTML_myCommon::GlobalNerd();
 	}
 
 	function viewhistory( $option, $rows, $search, $pageNav )
@@ -2162,7 +2229,13 @@ class HTML_AcctExp
 		<input type="hidden" name="returnTask" value="history" />
 		<input type="hidden" name="boxchecked" value="0" />
 		</form>
-		<?php HTML_myCommon::GlobalNerd();
+
+		<?php
+		if ( _EUCA_DEBUGMODE ) {
+			krumo( $option, $rows, $search, $pageNav );
+		}
+
+ 		HTML_myCommon::GlobalNerd();
 	}
 
 	function eventlog( $option, $events, $search, $pageNav )
@@ -2215,7 +2288,13 @@ class HTML_AcctExp
 		<input type="hidden" name="returnTask" value="eventlog" />
 		<input type="hidden" name="boxchecked" value="0" />
 		</form>
-		<?php HTML_myCommon::GlobalNerd();
+
+		<?php
+		if ( _EUCA_DEBUGMODE ) {
+			krumo( $option, $events, $search, $pageNav );
+		}
+
+ 		HTML_myCommon::GlobalNerd();
 	}
 
 	/**
@@ -2256,8 +2335,7 @@ class HTML_AcctExp
 		if ( $SQLDate == '' || $SQLDate == '-' ) {
 			return _AEC_CMN_NOT_SET;
 		} else {
-			global $mosConfig_offset_user;
-			global $database;
+			global $mosConfig_offset_user, $database, $aecConfig;
 
 			// compatibility with Mambo
 			if ( !empty( $mosConfig_offset_user ) ) {
@@ -2267,9 +2345,7 @@ class HTML_AcctExp
 				$timeOffset = $mosConfig_offset * 3600;
 			}
 
-			$cfg = new Config_General( $database );
-
-			return strftime( $cfg->cfg['display_date_backend'], ( strtotime( $SQLDate ) + $timeOffset ) );
+			return strftime( $aecConfig->cfg['display_date_backend'], ( strtotime( $SQLDate ) + $timeOffset ) );
 		}
 	}
 }

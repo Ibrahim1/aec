@@ -28,8 +28,9 @@ define( '_EUCA_APP_SHORTNAME', 'acctexp' );
 define( '_EUCA_APP_COMPNAME', 'com_' . _EUCA_APP_SHORTNAME );
 define( '_EUCA_BASEDIR', $mosConfig_absolute_path . '/components/' . _EUCA_APP_COMPNAME . '/lib/eucalib' );
 define( '_EUCA_APP_COMPDIR', $mosConfig_absolute_path . '/components/' . _EUCA_APP_COMPNAME );
-define( '_EUCA_APP_ICONSDIR', $mosConfig_live_site . '/components/' . _EUCA_APP_COMPNAME . '/images/icons' );
+define( '_EUCA_APP_LIBDIR', _EUCA_APP_COMPDIR . '/lib' );
+define( '_EUCA_APP_ICONSDIR', _EUCA_APP_COMPDIR . '/images/icons' );
 define( '_EUCA_APP_ADMINDIR', $mosConfig_absolute_path . '/administrator/components/' . _EUCA_APP_COMPNAME );
-define( '_EUCA_APP_ADMINICONSDIR', $mosConfig_live_site . '/administrator/components/' . _EUCA_APP_COMPNAME . '/images/icons' );
+define( '_EUCA_APP_ADMINICONSDIR', _EUCA_APP_ADMINDIR . '/images/icons' );
 define( '_EUCA_APP_ADMINACTIONURL', $mosConfig_live_site . '/administrator/index2.php?option=' . _EUCA_APP_COMPNAME );
 ?>

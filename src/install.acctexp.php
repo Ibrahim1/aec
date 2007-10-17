@@ -937,7 +937,7 @@ function com_install()
 	$files[] = array( 'images/cc_icons/cc_icons.tar.gz',		'images/cc_icons/', 0 );
 	$files[] = array( 'images/gateway_buttons.tar.gz',			'images/', 0 );
 	$files[] = array( 'images/gateway_logos.tar.gz',			'images/', 0 );
-	$files[] = array( 'lib/krumo/krumo_0.2a.zip',				'lib/krumo/', 0 );
+	$files[] = array( 'lib/krumo/krumo.tar.gz',				'lib/krumo/', 0 );
 	$files[] = array( 'lib/php_debug/php_debug_1and2.tar.gz',	'lib/php_debug/', 0 );
 
 	// check if joomfish (joomla) or nokkaew (mambo) exists)
@@ -962,7 +962,7 @@ function com_install()
 	$krumoabspath = $mosConfig_absolute_path . '/components/com_acctexp/lib/krumo/';
 	$krumourlpath = $mosConfig_live_site . '/components/com_acctexp/lib/krumo/';
 
-	$eucaInstallef->fileEdit( $krumoabspath . 'krumo.ini', 'http://www.example.com/Krumo/', $krumourlpath );
+	$eucaInstallef->fileEdit( $krumoabspath . 'krumo.ini', 'http://www.example.com/Krumo/', $krumourlpath, "Krumor Debug Lib did not receive a proper url path, due to writing permission problems" );
 
 	// log installation
 	$short		= _AEC_LOG_SH_INST;
