@@ -933,6 +933,16 @@ function processNotification( $option, $processor )
 				$metaUser->objSubscription->setStatus( 'Cancelled' );
 				$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS;
 			}
+		} elseif ( isset( $response['delete'] ) ) {
+			$metaUser = new metaUser();
+			$metaUser->load( $objInvoice->userid );
+			$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_REFUND;
+			$tags	.= ',refund';
+
+			if ( $metaUser->objSubscription->hasSubscription ) {
+				$metaUser->objSubscription->expire();
+				$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED;
+			}
 		} elseif (isset($response['eot'])) {
 			$metaUser = new metaUser();
 			$metaUser->load($objInvoice->userid);

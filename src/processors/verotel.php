@@ -142,6 +142,10 @@ class processor_verotel extends URLprocessor
 				$response['amount_paid'] = $amount;
 				break;
 			case 'cancel':
+				$response['cancel'] = 1;
+				break;
+			case 'delete':
+				$response['delete'] = 1;
 				break;
 			case 'rebill':
 				$response['amount_paid'] = $amount;

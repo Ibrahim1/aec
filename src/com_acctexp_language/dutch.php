@@ -65,6 +65,8 @@ define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS',	', Gebruikerstatus is gewijzi
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EOT',		'Geen Betaling - Abonnementstermijn verlopen' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_DUPLICATE','No Payment - Duplicate' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR',	'Onbekende foutmelding' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_REFUND',	'No Payment - Subscription Deleted (refund)' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED',	', User has been expired' );
 
 // --== COUPON INFO ==--
 define( '_COUPON_INFO',						'Coupons:' );
