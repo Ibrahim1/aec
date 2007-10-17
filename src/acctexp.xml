@@ -38,7 +38,9 @@
 		<filename>lib/eucalib/eucalib.php</filename>
 		<filename>lib/eucalib/eucalib.proxy.php</filename>
 		<filename>lib/krumo/index.html</filename>
-		<filename>lib/krumo/krumo_0.2a.zip</filename>
+		<filename>lib/krumo/krumo.tar.gz</filename>
+		<filename>lib/php_debug/index.html</filename>
+		<filename>lib/php_debug/php_debug_1and2.tar.gz</filename>
 		<filename>micro_integration/language/index.html</filename>
 		<filename>micro_integration/language/english.php</filename>
 		<filename>micro_integration/language/german.php</filename>

@@ -51,6 +51,7 @@ function com_install()
 	// Load root install and database object
 	$eucaInstall	= new eucaInstall();
 	$eucaInstalldb	= new eucaInstallDB();
+	$eucaInstallef	= new eucaInstalleditfile();
 
 	include_once( $pathLang . 'general.php' );
 	require_once( $mainframe->getPath( 'class', 'com_acctexp' ) );
@@ -937,6 +938,7 @@ function com_install()
 	$files[] = array( 'images/gateway_buttons.tar.gz',			'images/', 0 );
 	$files[] = array( 'images/gateway_logos.tar.gz',			'images/', 0 );
 	$files[] = array( 'lib/krumo/krumo_0.2a.zip',				'lib/krumo/', 0 );
+	$files[] = array( 'lib/php_debug/php_debug_1and2.tar.gz',	'lib/php_debug/', 0 );
 
 	// check if joomfish (joomla) or nokkaew (mambo) exists)
 	$translation = false;
@@ -956,6 +958,11 @@ function com_install()
 	}
 
 	$eucaInstall->unpackFileArray( $files );
+
+	$krumoabspath = $mosConfig_absolute_path . '/components/com_acctexp/lib/krumo/';
+	$krumourlpath = $mosConfig_live_site . '/components/com_acctexp/lib/krumo/';
+
+	$eucaInstallef->fileEdit( $krumoabspath . 'krumo.ini', 'http://www.example.com/Krumo/', $krumourlpath );
 
 	// log installation
 	$short		= _AEC_LOG_SH_INST;

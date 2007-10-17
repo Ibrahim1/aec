@@ -38,7 +38,9 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-global $mainframe, $mosConfig_absolute_path;
+global $mainframe, $mosConfig_absolute_path, $aecConfig;
+
+$aecConfig = new Config_General( $database );
 
 require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.php' );
 require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.proxy.php' );
@@ -212,11 +214,10 @@ if ( $task ) {
 
 function expired( $option, $userid, $expiration )
 {
-	global $mosConfig_live_site, $database;
+	global $mosConfig_live_site, $database, $aecConfig;
 
 	if ( $userid > 0 ) {
 		$metaUser = new metaUser( $userid );
-		$cfg = new Config_General( $database );
 
 		$expired = strtotime( $metaUser->objExpiration->expiration );
 
@@ -240,7 +241,7 @@ function expired( $option, $userid, $expiration )
 			$invoice = false;
 		}
 
-		$expiration	= strftime( $cfg->cfg['display_date_frontend'], $expired);
+		$expiration	= strftime( $aecConfig->cfg['display_date_frontend'], $expired);
 		$name		= $metaUser->cmsUser->name;
 		$username	= $metaUser->cmsUser->username;
 
@@ -702,14 +703,13 @@ function InvoiceRemoveCoupon( $option )
 
 function notAllowed( $option )
 {
-	global $database, $my;
-	$cfg = new Config_General( $database );
+	global $database, $aecConfig, $my;
 
-	if ( ( $cfg->cfg['customnotallowed'] != '' ) && !is_null( $cfg->cfg['customnotallowed'] ) ) {
-		mosRedirect( $cfg->cfg['customnotallowed'] );
+	if ( ( $aecConfig->cfg['customnotallowed'] != '' ) && !is_null( $aecConfig->cfg['customnotallowed'] ) ) {
+		mosRedirect( $aecConfig->cfg['customnotallowed'] );
 	}
 
-	$gwnames = explode( ';', $cfg->cfg['gwlist'] );
+	$gwnames = explode( ';', $aecConfig->cfg['gwlist'] );
 
 	if ( count( $gwnames ) && $gwnames[0] ) {
 		$processors = array();
@@ -950,9 +950,7 @@ function errorAP( $option, $usage, $userid, $username, $name, $recurring )
 
 function thanks( $option, $renew, $free )
 {
-	global $database, $mosConfig_useractivation, $ueConfig, $mosConfig_dbprefix;
-
-	$cfg = new Config_General( $database );
+	global $database, $aecConfig, $mosConfig_useractivation, $ueConfig, $mosConfig_dbprefix;
 
 	if ( $mosConfig_useractivation ) {
 		$activation = 1;
@@ -984,8 +982,8 @@ function thanks( $option, $renew, $free )
 	}
 
 	// Look whether we have a custom ThankYou page
-	if ( $cfg->cfg['customthanks'] ) {
-		mosRedirect( $cfg->cfg['customthanks'] );
+	if ( $aecConfig->cfg['customthanks'] ) {
+		mosRedirect( $aecConfig->cfg['customthanks'] );
 	} else {
 		HTML_Results::thanks( $option, $msg );
 	}
@@ -993,9 +991,7 @@ function thanks( $option, $renew, $free )
 
 function cancelPayment( $option )
 {
-	global $database;
-
-	$cfg = new Config_General( $database );
+	global $database, $aecConfig;
 
 	$userid = trim( mosGetParam( $_REQUEST, 'itemnumber', '' ) );
 	// The user cancel the payment operation
@@ -1012,7 +1008,7 @@ function cancelPayment( $option )
 	}
 
 	// Look whether we have a custom Cancel page
-	if ( $cfg->cfg['customcancel'] ) {
+	if ( $aecConfig->cfg['customcancel'] ) {
 		mosRedirect( $cfg->cfg['customcancel'] );
 	} else {
 		HTML_Results::cancel( $option );

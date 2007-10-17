@@ -36,10 +36,13 @@ require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eu
 require_once( $mainframe->getPath( 'admin_html' ) );
 require_once( $mainframe->getPath( 'class' ) );
 
-if (!$acl->acl_check( 'administration', 'config', 'users', $my->usertype )) {
-	$cfg = new Config_General( $database );
+$aecConfig = new Config_General( $database );
 
-	if ( !( ( strcmp( $my->usertype, 'Administrator' ) === 0) && $cfg->cfg['adminaccess'] ) ) {
+define( '_AEC_DEBUGMODE', $aecConfig->cfg['debugmode'] );
+
+if (!$acl->acl_check( 'administration', 'config', 'users', $my->usertype )) {
+
+	if ( !( ( strcmp( $my->usertype, 'Administrator' ) === 0) && $aecConfig->cfg['adminaccess'] ) ) {
 		mosRedirect( 'index2.php', _NOT_AUTH );
 	}
 }
@@ -510,7 +513,7 @@ function cancel( $option )
 
 function help( $option )
 {
-	global $database, $mainframe, $mosConfig_live_site;
+	global $database, $mainframe, $mosConfig_live_site, $aecConfig;
 
 	// diagnostic is the overall array that stores relational data that either gets transferred directly into the
 	// diagnose array or that is used in the process of that
@@ -521,8 +524,6 @@ function help( $option )
 	$diagnostic['offline']				= $mainframe->getCfg( 'offline' );
 	$diagnostic['user_registration']	= $mainframe->getCfg( 'allowUserRegistration' );
 	$diagnostic['login_possible']		= $mainframe->getCfg( 'frontend_login' );
-
-	$cfg = new Config_General( $database );
 
 	$paypal = new PaymentProcessor();
 	$paypal->loadName( 'paypal' );
@@ -582,7 +583,7 @@ function help( $option )
  		$diagnostic['no_plan'] = 1;
  	}
 
- 	if ( $cfg->cfg['entry_plan'] ) {
+ 	if ( $aecConfig->cfg['entry_plan'] ) {
  		$diagnostic['global_entry'] = 1;
  	} else {
  		$diagnostic['global_entry'] = 0;
@@ -1637,37 +1638,36 @@ function listSubscriptions( $option, $set_group, $userid )
 
 function editSettings( $option )
 {
-	global $database, $acl, $my;
-
-	$cfg = new Config_General( $database );
+	global $database, $acl, $my, $aecConfig;
 
 	// See whether we have a duplication
-	if ( $cfg->RowDuplicationCheck() ) {
+	if ( $aecConfig->RowDuplicationCheck() ) {
 		// Clean out duplication and reload settings
-		$cfg->CleanDuplicatedRows();
-		$cfg = new Config_General( $database );
+		$aecConfig->CleanDuplicatedRows();
+		$aecConfig = new Config_General( $database );
 	}
 
 	$lists = array();
 
-	$lists['simpleurls']			= mosHTML::yesnoSelectList('simpleurls', '', $cfg->cfg['simpleurls']);
-	$lists['require_subscription']	= mosHTML::yesnoSelectList('require_subscription', '', $cfg->cfg['require_subscription']);
-	$lists['plans_first']			= mosHTML::yesnoSelectList('plans_first', '', $cfg->cfg['plans_first']);
-	$lists['enable_coupons']		= mosHTML::yesnoSelectList('enable_coupons', '', $cfg->cfg['enable_coupons']);
-	$lists['enable_mimeta']			= mosHTML::yesnoSelectList('enable_mimeta', '', ( !empty( $cfg->cfg['enable_mimeta'] ) ? $cfg->cfg['enable_mimeta'] : '' ) );
-	$lists['displayccinfo']			= mosHTML::yesnoSelectList('displayccinfo', '', $cfg->cfg['displayccinfo']);
-	$lists['adminaccess']			= mosHTML::yesnoSelectList('adminaccess', '', $cfg->cfg['adminaccess']);
-	$lists['noemails']				= mosHTML::yesnoSelectList('noemails', '', $cfg->cfg['noemails']);
-	$lists['nojoomlaregemails']		= mosHTML::yesnoSelectList('nojoomlaregemails', '', $cfg->cfg['nojoomlaregemails']);
+	$lists['simpleurls']			= mosHTML::yesnoSelectList('simpleurls', '', $aecConfig->cfg['simpleurls']);
+	$lists['require_subscription']	= mosHTML::yesnoSelectList('require_subscription', '', $aecConfig->cfg['require_subscription']);
+	$lists['plans_first']			= mosHTML::yesnoSelectList('plans_first', '', $aecConfig->cfg['plans_first']);
+	$lists['enable_coupons']		= mosHTML::yesnoSelectList('enable_coupons', '', $aecConfig->cfg['enable_coupons']);
+	$lists['enable_mimeta']			= mosHTML::yesnoSelectList('enable_mimeta', '', ( !empty( $aecConfig->cfg['enable_mimeta'] ) ? $aecConfig->cfg['enable_mimeta'] : '' ) );
+	$lists['displayccinfo']			= mosHTML::yesnoSelectList('displayccinfo', '', $aecConfig->cfg['displayccinfo']);
+	$lists['adminaccess']			= mosHTML::yesnoSelectList('adminaccess', '', $aecConfig->cfg['adminaccess']);
+	$lists['noemails']				= mosHTML::yesnoSelectList('noemails', '', $aecConfig->cfg['noemails']);
+	$lists['nojoomlaregemails']		= mosHTML::yesnoSelectList('nojoomlaregemails', '', $aecConfig->cfg['nojoomlaregemails']);
+	$lists['debugmode']				= mosHTML::yesnoSelectList('debugmode', '', $aecConfig->cfg['debugmode']);
 
-	$lists['customtext_confirm_keeporiginal']		= mosHTML::yesnoSelectList('customtext_confirm_keeporiginal', '', $cfg->cfg['customtext_confirm_keeporiginal']);
-	$lists['customtext_checkout_keeporiginal']		= mosHTML::yesnoSelectList('customtext_checkout_keeporiginal', '', $cfg->cfg['customtext_checkout_keeporiginal']);
-	$lists['customtext_notallowed_keeporiginal']	= mosHTML::yesnoSelectList('customtext_notallowed_keeporiginal', '', $cfg->cfg['customtext_notallowed_keeporiginal']);
-	$lists['customtext_expired_keeporiginal']		= mosHTML::yesnoSelectList('customtext_expired_keeporiginal', '', $cfg->cfg['customtext_expired_keeporiginal']);
-	$lists['customtext_pending_keeporiginal']		= mosHTML::yesnoSelectList('customtext_pending_keeporiginal', '', $cfg->cfg['customtext_pending_keeporiginal']);
+	$lists['customtext_confirm_keeporiginal']		= mosHTML::yesnoSelectList('customtext_confirm_keeporiginal', '', $aecConfig->cfg['customtext_confirm_keeporiginal']);
+	$lists['customtext_checkout_keeporiginal']		= mosHTML::yesnoSelectList('customtext_checkout_keeporiginal', '', $aecConfig->cfg['customtext_checkout_keeporiginal']);
+	$lists['customtext_notallowed_keeporiginal']	= mosHTML::yesnoSelectList('customtext_notallowed_keeporiginal', '', $aecConfig->cfg['customtext_notallowed_keeporiginal']);
+	$lists['customtext_expired_keeporiginal']		= mosHTML::yesnoSelectList('customtext_expired_keeporiginal', '', $aecConfig->cfg['customtext_expired_keeporiginal']);
+	$lists['customtext_pending_keeporiginal']		= mosHTML::yesnoSelectList('customtext_pending_keeporiginal', '', $aecConfig->cfg['customtext_pending_keeporiginal']);
 
 	$currency_code_list	= AECToolbox::_aecCurrencyField( true, true, true );
-	$lists['currency_code_general'] = mosHTML::selectList( $currency_code_list, ( 'currency_code_general' ), 'size="10"', 'value', 'text', ( !empty( $cfg->cfg['currency_code_general'] ) ? $cfg->cfg['currency_code_general'] : '' ) );
+	$lists['currency_code_general'] = mosHTML::selectList( $currency_code_list, ( 'currency_code_general' ), 'size="10"', 'value', 'text', ( !empty( $aecConfig->cfg['currency_code_general'] ) ? $aecConfig->cfg['currency_code_general'] : '' ) );
 
 	// get entry Plan selection
 	$available_plans	= array();
@@ -1685,7 +1685,7 @@ function editSettings( $option )
  	}
 	$total_plans		= count( $available_plans ) + 1;
 
-	$selected_plan = isset($cfg->cfg['entry_plan']) ? $cfg->cfg['entry_plan'] : '0';
+	$selected_plan = isset($aecConfig->cfg['entry_plan']) ? $aecConfig->cfg['entry_plan'] : '0';
 
 	$lists['entry_plan'] = mosHTML::selectList($available_plans, 'entry_plan', 'size="' . $total_plans . '"', 'value', 'text', $selected_plan);
 
@@ -1706,14 +1706,14 @@ function editSettings( $option )
 		}
 	}
 
-	if ( !empty( $cfg->cfg['milist'] ) ) {
-		$milist = explode( ';', $cfg->cfg['milist'] );
+	if ( !empty( $aecConfig->cfg['milist'] ) ) {
+		$milist = explode( ';', $aecConfig->cfg['milist'] );
 		$selected_mis = array();
 		foreach ( $milist as $mi_name ) {
 			$selected_mis[]->value = $mi_name;
 		}
 	} else {
-		$cfg->cfg['milist'] = null;
+		$aecConfig->cfg['milist'] = null;
 		$selected_mis		= '';
 	}
 
@@ -1731,51 +1731,52 @@ function editSettings( $option )
 	$tab_data[0][] = _CFG_TAB1_TITLE;
 	$tab_data[0][] = array( 'subtitle', '0', _CFG_TAB1_SUBTITLE, '0', '0');
 	$tab_data[0][] = array( 'list', _CFG_TAB1_OPT9NAME, _CFG_TAB1_OPT9DESC, '0', 'require_subscription');
-	$tab_data[0][] = array( 'inputA', _CFG_TAB1_OPT3NAME, _CFG_TAB1_OPT3DESC, $cfg->cfg['alertlevel2'], 'alertlevel2');
-	$tab_data[0][] = array( 'inputA', _CFG_TAB1_OPT4NAME, _CFG_TAB1_OPT4DESC, $cfg->cfg['alertlevel1'], 'alertlevel1');
+	$tab_data[0][] = array( 'inputA', _CFG_TAB1_OPT3NAME, _CFG_TAB1_OPT3DESC, $aecConfig->cfg['alertlevel2'], 'alertlevel2');
+	$tab_data[0][] = array( 'inputA', _CFG_TAB1_OPT4NAME, _CFG_TAB1_OPT4DESC, $aecConfig->cfg['alertlevel1'], 'alertlevel1');
 	$tab_data[0][] = array( 'list', _CFG_TAB1_OPT20NAME, _CFG_TAB1_OPT20DESC, '0', 'gwlist_enabled');
 	$tab_data[0][] = array( 'list', _CFG_TAB1_OPT10NAME, _CFG_TAB1_OPT10DESC, '0', 'gwlist');
 	$tab_data[0][] = array( 'list', _CFG_TAB1_OPT5NAME, _CFG_TAB1_OPT5DESC, '0', 'entry_plan');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_DISPLAYCCINFO_NAME, _CFG_GENERAL_DISPLAYCCINFO_DESC, '0', 'displayccinfo');
-	$tab_data[0][] = array( 'inputC', _CFG_TAB1_OPT15NAME, _CFG_TAB1_OPT15DESC, $cfg->cfg['bypassintegration'], 'bypassintegration');
+	$tab_data[0][] = array( 'inputC', _CFG_TAB1_OPT15NAME, _CFG_TAB1_OPT15DESC, $aecConfig->cfg['bypassintegration'], 'bypassintegration');
 	$tab_data[0][] = array( 'list', _CFG_TAB1_OPT21NAME, _CFG_TAB1_OPT21DESC, '0', 'plans_first');
 	$tab_data[0][] = array( 'list', _CFG_TAB1_OPT16NAME, _CFG_TAB1_OPT16DESC, '0', 'simpleurls');
-	$tab_data[0][] = array( 'inputA', _CFG_TAB1_OPT17NAME, _CFG_TAB1_OPT17DESC, $cfg->cfg['expiration_cushion'], 'expiration_cushion');
-	$tab_data[0][] = array( 'inputA', _CFG_TAB1_OPT18NAME, _CFG_TAB1_OPT18DESC, $cfg->cfg['heartbeat_cycle'], 'heartbeat_cycle');
-	$tab_data[0][] = array( 'inputA', _CFG_GENERAL_HEARTBEAT_CYCLE_BACKEND_NAME, _CFG_GENERAL_HEARTBEAT_CYCLE_BACKEND_DESC, $cfg->cfg['heartbeat_cycle_backend'], 'heartbeat_cycle_backend');
+	$tab_data[0][] = array( 'inputA', _CFG_TAB1_OPT17NAME, _CFG_TAB1_OPT17DESC, $aecConfig->cfg['expiration_cushion'], 'expiration_cushion');
+	$tab_data[0][] = array( 'inputA', _CFG_TAB1_OPT18NAME, _CFG_TAB1_OPT18DESC, $aecConfig->cfg['heartbeat_cycle'], 'heartbeat_cycle');
+	$tab_data[0][] = array( 'inputA', _CFG_GENERAL_HEARTBEAT_CYCLE_BACKEND_NAME, _CFG_GENERAL_HEARTBEAT_CYCLE_BACKEND_DESC, $aecConfig->cfg['heartbeat_cycle_backend'], 'heartbeat_cycle_backend');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_ENABLE_COUPONS_NAME, _CFG_GENERAL_ENABLE_COUPONS_DESC, '0', 'enable_coupons');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_ADMINACCESS_NAME, _CFG_GENERAL_ADMINACCESS_DESC, '0', 'adminaccess');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_NOEMAILS_NAME, _CFG_GENERAL_NOEMAILS_DESC, '0', 'noemails');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_NOJOOMLAREGEMAILS_NAME, _CFG_GENERAL_NOJOOMLAREGEMAILS_DESC, '0', 'nojoomlaregemails');
+	$tab_data[0][] = array( 'list', _CFG_GENERAL_DEBUGMODE_NAME, _CFG_GENERAL_DEBUGMODE_DESC, '0', 'debugmode');
 
 	$tab_data[1] = array();
 	$tab_data[1][] = _CFG_TAB_CUSTOMIZATION_TITLE;
-	$tab_data[1][] = array( 'inputC', _CFG_TAB1_OPT12NAME, _CFG_TAB1_OPT12DESC, $cfg->cfg['customintro'], 'customintro');
-	$tab_data[1][] = array( 'inputC', _CFG_TAB1_OPT13NAME, _CFG_TAB1_OPT13DESC, $cfg->cfg['customthanks'], 'customthanks');
-	$tab_data[1][] = array( 'inputC', _CFG_TAB1_OPT14NAME, _CFG_TAB1_OPT14DESC, $cfg->cfg['customcancel'], 'customcancel');
-	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_CUSTOMNOTALLOWED_NAME, _CFG_GENERAL_CUSTOMNOTALLOWED_DESC, $cfg->cfg['customnotallowed'], 'customnotallowed');
+	$tab_data[1][] = array( 'inputC', _CFG_TAB1_OPT12NAME, _CFG_TAB1_OPT12DESC, $aecConfig->cfg['customintro'], 'customintro');
+	$tab_data[1][] = array( 'inputC', _CFG_TAB1_OPT13NAME, _CFG_TAB1_OPT13DESC, $aecConfig->cfg['customthanks'], 'customthanks');
+	$tab_data[1][] = array( 'inputC', _CFG_TAB1_OPT14NAME, _CFG_TAB1_OPT14DESC, $aecConfig->cfg['customcancel'], 'customcancel');
+	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_CUSTOMNOTALLOWED_NAME, _CFG_GENERAL_CUSTOMNOTALLOWED_DESC, $aecConfig->cfg['customnotallowed'], 'customnotallowed');
 
-	$tab_data[1][] = array( 'inputC', _CFG_TAB1_OPT19NAME, _CFG_TAB1_OPT19DESC, $cfg->cfg['tos'], 'tos');
-	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_DISPLAY_DATE_FRONTEND_NAME, _CFG_GENERAL_DISPLAY_DATE_FRONTEND_DESC, $cfg->cfg['display_date_frontend'], 'display_date_frontend');
-	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_DISPLAY_DATE_BACKEND_NAME, _CFG_GENERAL_DISPLAY_DATE_BACKEND_DESC, $cfg->cfg['display_date_backend'], 'display_date_backend');
+	$tab_data[1][] = array( 'inputC', _CFG_TAB1_OPT19NAME, _CFG_TAB1_OPT19DESC, $aecConfig->cfg['tos'], 'tos');
+	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_DISPLAY_DATE_FRONTEND_NAME, _CFG_GENERAL_DISPLAY_DATE_FRONTEND_DESC, $aecConfig->cfg['display_date_frontend'], 'display_date_frontend');
+	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_DISPLAY_DATE_BACKEND_NAME, _CFG_GENERAL_DISPLAY_DATE_BACKEND_DESC, $aecConfig->cfg['display_date_backend'], 'display_date_backend');
 
-	$tab_data[1][] = array( 'editor', _CFG_GENERAL_CUSTOMTEXT_PLANS_NAME, _CFG_GENERAL_CUSTOMTEXT_PLANS_DESC, $cfg->cfg['customtext_plans'], 'customtext_plans');
+	$tab_data[1][] = array( 'editor', _CFG_GENERAL_CUSTOMTEXT_PLANS_NAME, _CFG_GENERAL_CUSTOMTEXT_PLANS_DESC, $aecConfig->cfg['customtext_plans'], 'customtext_plans');
 	$tab_data[1][] = array( 'list', _CFG_GENERAL_CUSTOMTEXT_CONFIRM_KEEPORIGINAL_NAME, _CFG_GENERAL_CUSTOMTEXT_CONFIRM_KEEPORIGINAL_DESC, '0', 'customtext_confirm_keeporiginal');
-	$tab_data[1][] = array( 'editor', _CFG_GENERAL_CUSTOMTEXT_CONFIRM_NAME, _CFG_GENERAL_CUSTOMTEXT_CONFIRM_DESC, $cfg->cfg['customtext_confirm'], 'customtext_confirm');
+	$tab_data[1][] = array( 'editor', _CFG_GENERAL_CUSTOMTEXT_CONFIRM_NAME, _CFG_GENERAL_CUSTOMTEXT_CONFIRM_DESC, $aecConfig->cfg['customtext_confirm'], 'customtext_confirm');
 	$tab_data[1][] = array( 'list', _CFG_GENERAL_CUSTOMTEXT_CHECKOUT_KEEPORIGINAL_NAME, _CFG_GENERAL_CUSTOMTEXT_CHECKOUT_KEEPORIGINAL_DESC, '0', 'customtext_checkout_keeporiginal');
-	$tab_data[1][] = array( 'editor', _CFG_GENERAL_CUSTOMTEXT_CHECKOUT_NAME, _CFG_GENERAL_CUSTOMTEXT_CHECKOUT_DESC, $cfg->cfg['customtext_checkout'], 'customtext_checkout');
+	$tab_data[1][] = array( 'editor', _CFG_GENERAL_CUSTOMTEXT_CHECKOUT_NAME, _CFG_GENERAL_CUSTOMTEXT_CHECKOUT_DESC, $aecConfig->cfg['customtext_checkout'], 'customtext_checkout');
 
 	$tab_data[1][] = array( 'list', _CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_KEEPORIGINAL_NAME, _CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_KEEPORIGINAL_DESC, '0', 'customtext_notallowed_keeporiginal');
-	$tab_data[1][] = array( 'editor', _CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_NAME, _CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_DESC, $cfg->cfg['customtext_notallowed'], 'customtext_notallowed');
+	$tab_data[1][] = array( 'editor', _CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_NAME, _CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_DESC, $aecConfig->cfg['customtext_notallowed'], 'customtext_notallowed');
 	$tab_data[1][] = array( 'list', _CFG_GENERAL_CUSTOMTEXT_PENDING_KEEPORIGINAL_NAME, _CFG_GENERAL_CUSTOMTEXT_PENDING_KEEPORIGINAL_DESC, '0', 'customtext_pending_keeporiginal');
-	$tab_data[1][] = array( 'editor', _CFG_GENERAL_CUSTOMTEXT_PENDING_NAME, _CFG_GENERAL_CUSTOMTEXT_PENDING_DESC, $cfg->cfg['customtext_pending'], 'customtext_pending');
+	$tab_data[1][] = array( 'editor', _CFG_GENERAL_CUSTOMTEXT_PENDING_NAME, _CFG_GENERAL_CUSTOMTEXT_PENDING_DESC, $aecConfig->cfg['customtext_pending'], 'customtext_pending');
 	$tab_data[1][] = array( 'list', _CFG_GENERAL_CUSTOMTEXT_EXPIRED_KEEPORIGINAL_NAME, _CFG_GENERAL_CUSTOMTEXT_EXPIRED_KEEPORIGINAL_DESC, '0', 'customtext_expired_keeporiginal');
-	$tab_data[1][] = array( 'editor', _CFG_GENERAL_CUSTOMTEXT_EXPIRED_NAME, _CFG_GENERAL_CUSTOMTEXT_EXPIRED_DESC, $cfg->cfg['customtext_expired'], 'customtext_expired');
+	$tab_data[1][] = array( 'editor', _CFG_GENERAL_CUSTOMTEXT_EXPIRED_NAME, _CFG_GENERAL_CUSTOMTEXT_EXPIRED_DESC, $aecConfig->cfg['customtext_expired'], 'customtext_expired');
 
 	$tab_data[2] = array();
 	$tab_data[2][] = _CFG_TAB_MICROINTEGRATION_TITLE;
-	$tab_data[2][] = array( 'list_big', _CFG_MI_ACTIVELIST_NAME, _CFG_MI_ACTIVELIST_DESC, $cfg->cfg['milist'], 'milist' );
-//	$tab_data[2][] = array('list', _CFG_MI_META_NAME, _CFG_MI_META_DESC, $cfg->cfg['enable_mimeta'], 'enable_mimeta');
+	$tab_data[2][] = array( 'list_big', _CFG_MI_ACTIVELIST_NAME, _CFG_MI_ACTIVELIST_DESC, $aecConfig->cfg['milist'], 'milist' );
+//	$tab_data[2][] = array('list', _CFG_MI_META_NAME, _CFG_MI_META_DESC, $aecConfig->cfg['enable_mimeta'], 'enable_mimeta');
 
 	// TODO: reparse settings with new style aecSettings
 	/*
@@ -1797,8 +1798,8 @@ function editSettings( $option )
 	$gw_list_html[]			= mosHTML::makeOption( 'none', _AEC_CMN_NONE_SELECTED );
 	$gw_list_enabled_html[] = mosHTML::makeOption( 'none', _AEC_CMN_NONE_SELECTED );
 
-	if ( !empty( $cfg->cfg['gwlist'] ) ) {
-		$desc_list = explode( ';', $cfg->cfg['gwlist'] );
+	if ( !empty( $aecConfig->cfg['gwlist'] ) ) {
+		$desc_list = explode( ';', $aecConfig->cfg['gwlist'] );
 	} else {
 		$desc_list = array();
 	}
@@ -1987,7 +1988,7 @@ function cancelSettings( $option )
 
 function saveSettings( $option )
 {
-	global $database, $mainframe, $my, $acl;
+	global $database, $mainframe, $my, $acl, $aecConfig;
 
 	$pplist_enabled		= mosGetParam( $_POST,'gwlist_enabled', '' );
 	$pplist_installed	= PaymentProcessorHandler::getInstalledNameList();
@@ -2070,9 +2071,7 @@ function saveSettings( $option )
 		}
 	}
 
-	$cfg = new Config_General($database);
-
-	$diff = $cfg->diffParams($general_settings, 'settings');
+	$diff = $aecConfig->diffParams($general_settings, 'settings');
 	$difference = '';
 
 	if ( is_array( $diff ) ) {
@@ -2085,8 +2084,8 @@ function saveSettings( $option )
 		$difference = 'none';
 	}
 
-	$cfg->cfg = $general_settings;
-	$cfg->saveSettings();
+	$aecConfig->cfg = $general_settings;
+	$aecConfig->saveSettings();
 
 	$ip = AECToolbox::_aecIP();
 
@@ -2637,7 +2636,7 @@ function listMicroIntegrations( $option )
 
 function editMicroIntegration ( $id, $option )
 {
-	global $database, $my, $acl;
+	global $database, $my, $acl, $aecConfig;
 
 	$lists	= array();
 	$mi		= new microIntegration( $database );
@@ -2651,9 +2650,8 @@ function editMicroIntegration ( $id, $option )
 		$mi_list		= array();
 		$mi_htmllist	= array();
 
-		$cfg = new Config_General($database);
-		if ( $cfg->cfg['milist'] ) {
-			$mi_list = explode( ';', $cfg->cfg['milist'] );
+		if ( $aecConfig->cfg['milist'] ) {
+			$mi_list = explode( ';', $aecConfig->cfg['milist'] );
 		}
 
 		if ( count( $mi_list ) > 0 ) {

@@ -1781,6 +1781,8 @@ class Config_General extends paramDBTable
 		$def['adminaccess']							= 1;
 		$def['noemails']							= 0;
 		$def['nojoomlaregemails']					= 0;
+		// new 0.12.4.10
+		$def['debugmode']							= 0;
 
 		// Write to Params, do not overwrite existing data
 		$this->addParams( $def, 'settings', false );
