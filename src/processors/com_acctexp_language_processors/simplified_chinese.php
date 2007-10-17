@@ -173,6 +173,8 @@ define( '_CFG_AUTHORIZE_LOGIN_NAME', 'API登陆ID');
 define( '_CFG_AUTHORIZE_LOGIN_DESC', '你在Authorize.net的API登陆ID.');
 define( '_CFG_AUTHORIZE_TRANSACTION_KEY_NAME', '事务密�?');
 define( '_CFG_AUTHORIZE_TRANSACTION_KEY_DESC', '你在Authorize.net上的事务密�?.');
+define( '_CFG_AUTHORIZE_TIMESTAMP_OFFSET_NAME', 'Timestamp offest');
+define( '_CFG_AUTHORIZE_TIMESTAMP_OFFSET_DESC', 'If you get an Error 97 when trying to create a transaction, please <a href="http://developer.authorize.net/tools/responsecode97/">take a look at this</a>. It might be that you need to set a timestamp offset here.');
 define( '_CFG_AUTHORIZE_X_LOGO_URL_NAME', 'Logo URL');
 define( '_CFG_AUTHORIZE_X_LOGO_URL_DESC', 'This field is ideal for displaying a merchant logo on a page. The target of this URL will be displayed on the header of the Payment Form and Receipt Page.');
 define( '_CFG_AUTHORIZE_X_BACKGROUND_URL_NAME', 'Background URL');

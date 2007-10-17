@@ -56,6 +56,7 @@ class processor_authorize extends POSTprocessor
 		$settings['transaction_key']	= "transaction_key";
 		$settings['testmode']			= 0;
 		$settings['currency']			= "USD";
+		$settings['timestamp_offset']	= '';
         $settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']		= '';
 
@@ -78,6 +79,7 @@ class processor_authorize extends POSTprocessor
 		$settings['login'] 				= array("inputC");
 		$settings['transaction_key']	= array("inputC");
 		$settings['currency']			= array("list_currency");
+		$settings['timestamp_offset']	= array("inputC");
 		$settings['item_name']			= array("inputE");
  		$rewriteswitches 				= array("cms", "user", "expiration", "subscription", "plan");
         $settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
@@ -117,13 +119,17 @@ class processor_authorize extends POSTprocessor
 		$var['x_amount'] = $int_var['amount'];
 		srand(time());
 		$sequence = rand(1, 1000);
-		$tstamp = time ();
+		$tstamp = time();
 		// Calculate fingerprint
 		$data = $cfg['login'] . "^" . $sequence . "^" . $tstamp . "^" . $int_var['amount'] . "^" . "";
 		$fingerprint = $this->hmac($cfg['transaction_key'], $data);
 		// Insert the form elements required for SIM
 		$var['x_fp_sequence']	= $sequence;
-		$var['x_fp_timestamp']	= $tstamp;
+		if ( !empty( $cfg['timestamp_offset'] ) ) {
+			$var['x_fp_timestamp']	= $tstamp + $cfg['timestamp_offset'];
+		} else {
+			$var['x_fp_timestamp']	= $tstamp;
+		}
 		$var['x_fp_hash']		= $fingerprint;
 
 		$var['x_cust_id']			= $metaUser->cmsUser->id;
