@@ -3708,16 +3708,27 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		}
 	}
 
-	$aec_hack_start				= 	"// AEC HACK %s START" . "\n";
-	$aec_hack_end				= 	"// AEC HACK %s END" . "\n";
-	$aec_condition_start		=	'if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {' . "\n";
-	$aec_condition_end			=	'}' . "\n";
-	$aec_include_class			=	'include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");' . "\n";
-	$aec_verification_check		=	"AECToolBox::VerifyUsername( %s );" . "\n";
-	$aec_userchange_clause		=	'$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($row, $_POST, \'%s\');' . "\n";
-	$aec_global_call			=	'global $mosConfig_live_site, $mosConfig_absolute_path;' . "\n";
-	$aec_redirect_notallowed	=	'mosRedirect( $mosConfig_live_site . "/index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
-	$aec_redirect_subscribe		=	'mosRedirect( $mosConfig_live_site . "/index.php?option=com_acctexp&task=subscribe" );' . "\n";
+	$cmsname = strtolower( GeneralInfoRequester::getCMSName() );
+
+	if ( strcmp( $cmsname, 'joomla15' ) === 0 ) {
+		$cmsname = 'joomla';
+		$v15 = true;
+	} else {
+		$v15 = false;
+	}
+
+	$aec_hack_start				= "// AEC HACK %s START" . "\n";
+	$aec_hack_end				= "// AEC HACK %s END" . "\n";
+	$aec_condition_start		= 'if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {' . "\n";
+	$aec_condition_end			= '}' . "\n";
+	$aec_include_class			= 'include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");' . "\n";
+	$aec_verification_check		= "AECToolBox::VerifyUsername( %s );" . "\n";
+	$aec_userchange_clause		= '$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($row, $_POST, \'%s\');' . "\n";
+	$aec_userchange_clause15	= '$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($userid, $post, \'%s\');' . "\n";
+	$aec_userregchange_clause15	= '$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($user, $post, \'%s\');' . "\n";
+	$aec_global_call			= 'global $mosConfig_live_site, $mosConfig_absolute_path;' . "\n";
+	$aec_redirect_notallowed	= 'mosRedirect( $mosConfig_live_site . "/index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
+	$aec_redirect_subscribe		= 'mosRedirect( $mosConfig_live_site . "/index.php?option=com_acctexp&task=subscribe" );' . "\n";
 
 	$aec_normal_hack = $aec_hack_start
 	. $aec_global_call
@@ -3760,6 +3771,22 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 						. $aec_condition_start
 						. $aec_include_class
 						. $aec_userchange_clause
+						. $aec_condition_end
+						. $aec_hack_end;
+
+	$aec_uchangehack15 =	$aec_hack_start
+						. $aec_global_call
+						. $aec_condition_start
+						. $aec_include_class
+						. $aec_userregchange_clause15
+						. $aec_condition_end
+						. $aec_hack_end;
+
+	$aec_uchangereghack15 =	$aec_hack_start
+						. $aec_global_call
+						. $aec_condition_start
+						. $aec_include_class
+						. $aec_userchange_clause15
 						. $aec_condition_end
 						. $aec_hack_end;
 
@@ -3812,16 +3839,6 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 					. $aec_redirect_subscribe
 					. $aec_condition_end
 					. $aec_hack_end;
-
-
-	$cmsname = strtolower( GeneralInfoRequester::getCMSName() );
-
-	if ( strcmp( $cmsname, 'joomla15' ) ) {
-		$cmsname = 'joomla';
-		$v15 = true;
-	} else {
-		$v15 = false;
-	}
 
 	// menu entry
 	$n = 'menuentry';
@@ -4155,39 +4172,39 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['desc']			=	_AEC_HACKS_MI1;
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/components/com_user/controller.php' ) : ( $mosConfig_absolute_path . '/components/com_user/user.php' );
-		$hacks[$n]['read']			=	$v15 ? () : ( '// check if username has been changed' );
-		$hacks[$n]['insert']		=	sprintf( $aec_uchangehack, $n, "user", $n ) . "\n" . $hacks[$n]['read'];
+		$hacks[$n]['read']			=	$v15 ? ( 'if ($model->store($post)) {' ) : ( '// check if username has been changed' );
+		$hacks[$n]['insert']		=	sprintf( ( $v15 ? $aec_uchangehack15 : $aec_uchangehack ), $n, "user", $n ) . "\n" . $hacks[$n]['read'];
 
 		$n = 'registrationphp1';
 		$hacks[$n]['name']			=	'registration.php ' . _AEC_HACK_HACK . ' #1';
 		$hacks[$n]['desc']			=	_AEC_HACKS_MI2;
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/components/com_user/controller.php' ) : ( $mosConfig_absolute_path . '/components/com_registration/registration.php' );
-		$hacks[$n]['read']			=	'$row->checkin();';
-		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( $aec_uchangehack, $n, "registration", $n );
+		$hacks[$n]['read']			=	$v15 ? 'if ( !$user->save() ) ' : '$row->checkin();';
+		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( ( $v15 ? $aec_uchangereghack15 : $aec_uchangehack ), $n, "registration", $n );
 	}
 
 	$n = 'adminuserphp';
 	$hacks[$n]['name']			=	'admin.user.php';
 	$hacks[$n]['desc']			=	_AEC_HACKS_MI3;
 	$hacks[$n]['type']			=	'file';
-	$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/administrator/components/com_users/admin.users.php';
-	$hacks[$n]['read']			=	'$row->checkin();';
-	$hacks[$n]['insert']		=	sprintf( $aec_uchangehack, $n, 'adminuser',$n ) . "\n" . $hacks[$n]['read'];
+	$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/administrator/components/com_user/controller.php' ) : ( $mosConfig_absolute_path . '/administrator/components/com_users/admin.users.php' );
+	$hacks[$n]['read']			=	$v15 ? 'if ( !$user->save() ) ' : '$row->checkin();';
+	$hacks[$n]['insert']		=	sprintf( ( $v15 ? $aec_uchangehack15 : $aec_uchangehack ), $n, 'adminuser', $n ) . "\n" . $hacks[$n]['read'];
 
-		if ( !$v15 ) {
-			if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
-				$n = 'comprofilerphp';
-				$hacks[$n]['name']			=	"comprofiler.php";
-				$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY;
-				$hacks[$n]['type']			=	'file';
-				$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.php';
-				$hacks[$n]['read']			=	'case "registers":';
-				$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_normal_hack, $n, $n);
-				$hacks[$n]['legacy']		=	1;
-				$hacks[$n]['important']		=	1;
-			}
+	if ( !$v15 ) {
+		if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+			$n = 'comprofilerphp';
+			$hacks[$n]['name']			=	"comprofiler.php";
+			$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY;
+			$hacks[$n]['type']			=	'file';
+			$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.php';
+			$hacks[$n]['read']			=	'case "registers":';
+			$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_normal_hack, $n, $n);
+			$hacks[$n]['legacy']		=	1;
+			$hacks[$n]['important']		=	1;
 		}
+	}
 
 	if ( GeneralInfoRequester::detect_component( 'CBM' ) ) {
 		$n = 'comprofilermoderator';

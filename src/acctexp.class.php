@@ -5167,6 +5167,13 @@ class microIntegrationHandler
 
 		$mi_list = $this->getUserChangeIntegrations();
 
+		if ( !is_object( $row ) ) {
+			$userid = $row;
+
+			$row = new mosUser( $database );
+			$row->load( $userid );
+		}
+
 		if ( count( $mi_list ) > 0 ) {
 			foreach ( $mi_list as $mi_id ) {
 				if ( !is_null( $mi_id ) && ( $mi_id != '' ) && $mi_id ) {
