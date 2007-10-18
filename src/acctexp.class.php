@@ -4284,6 +4284,8 @@ class GeneralInfoRequester
 			} else {
 				return 'UNKNOWN'; // mic: DO NOT CHANGE THIS VALUE!! (used later)
 			}
+		} elseif ( class_exists( 'JConfig' ) ) {
+			return 'Joomla15';
 		}
 	}
 
