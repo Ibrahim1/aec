@@ -24,6 +24,8 @@ class mi_acajoom
 
 	function Settings( $params )
 	{
+		global $database;
+
 		$query = 'SELECT id, list_name, list_type'
 		. ' FROM #__acajoom_lists'
 		;
