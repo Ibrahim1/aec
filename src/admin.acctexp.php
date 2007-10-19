@@ -3860,7 +3860,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['important']			=	1;
 	}
 
-	if ( strcmp($cmsname, "joomla") === 0 ) {
+	if ( ( strcmp($cmsname, "joomla") === 0 ) && !$v15 ) {
 		$n = 'joomlaphp1';
 		$hacks[$n]['name']			=	$cmsname . '.php ' . _AEC_HACK_HACK . ' #1';
 		$hacks[$n]['desc']			=	_AEC_HACKS_NOTAUTH;
@@ -3893,15 +3893,15 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 	}
 
 	$n = 'joomlaphp4';
-	$hacks[$n]['name']				=	$cmsname . '.php ' . _AEC_HACK_HACK . ' #4';
+	$hacks[$n]['name']				=	$v15 ? ( 'authentication.php' ) : ( $cmsname . '.php ' . _AEC_HACK_HACK . ' #4' );
 	$hacks[$n]['desc']				=	_AEC_HACKS_SUB_REQUIRED;
 	$hacks[$n]['uncondition']		=	'joomlaphp';
 	$hacks[$n]['type']				=	'file';
 
 	switch( $cmsname ) {
 		case 'joomla':
-			$hacks[$n]['filename']	=	$mosConfig_absolute_path . '/includes/' . $cmsname . '.php';
-			$hacks[$n]['read'] 		=	'// initialize session data';
+			$hacks[$n]['filename']	=	$v15 ? ( $mosConfig_absolute_path . '/libraries/joomla/user/authentication.php' ) : ( $mosConfig_absolute_path . '/includes/' . $cmsname . '.php' );
+			$hacks[$n]['read'] 		=	$v15 ? '// OK, the credentials are authenticated.  Lets fire the onLogin event' : '// initialize session data';
 			break;
 
 		case 'mambo':
@@ -4077,15 +4077,17 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['read']			=	'HTML_registration::registerForm';
 		$hacks[$n]['insert']		=	sprintf($aec_rhackbefore_fix, $n, $n) . "\n" . $hacks[$n]['read'];
 
+		if ( !$v15 ) {
 		$n = 'registrationhtml';
-		$hacks[$n]['name']			=	'registration.html.php ' . _AEC_HACK_HACK . ' #1';
-		$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY;
-		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['condition']		=	'registrationhtml';
-		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_registration/registration.html.php';
-		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveRegistration" />';
-		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack, $n, $n);
-		$hacks[$n]['legacy']		=	1;
+			$hacks[$n]['name']			=	'registration.html.php ' . _AEC_HACK_HACK . ' #1';
+			$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY;
+			$hacks[$n]['type']			=	'file';
+			$hacks[$n]['condition']		=	'registrationhtml';
+			$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_registration/registration.html.php';
+			$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveRegistration" />';
+			$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack, $n, $n);
+			$hacks[$n]['legacy']		=	1;
+		}
 
 		$n = 'registrationhtml2';
 		$hacks[$n]['name']			=	'registration.html.php ' . _AEC_HACK_HACK . ' #2';
