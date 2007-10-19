@@ -89,7 +89,7 @@ define( '_CFG_PAYPAL_CHECKBUSINESS_DESC', 'Select Yes to enable a security check
 define( '_CFG_PAYPAL_NO_SHIPPING_NAME', 'No Shipping Required:');
 define( '_CFG_PAYPAL_NO_SHIPPING_DESC', 'Set this to NO if you want your customers to specify a shipping address - in case you offer a product that needs to be physically distributed');
 define( '_CFG_PAYPAL_ALTIPNURL_NAME', 'Alternate IPN Notification Domain:');
-define( '_CFG_PAYPAL_ALTIPNURL_DESC', 'If you use server workload balancing (switching between IP adresses), it might be that Paypal dislikes this and breaks the connection when trying to send an IPN. To work around this, you can for example create a new subdomain on this server and disable the loadbalancing for this. Putting this address in here (In the form "http://subdomain.domain.com" - no trailing slash and whatever you want for subdomain and domain) will make sure that Paypal sends only the IPN back to this Address. <strong>If you are not sure what this means, leave it completely blank!</strong>');
+define( '_CFG_PAYPAL_ALTIPNURL_DESC', 'If you use server workload balancing (switching between IP adresses), it might be that Paypal dislikes this and breaks the connection when trying to send an IPN. To work around this, you can for example create a new subdomain on this server and disable the loadbalancing for this. Putting this address in here (In the form >>http://subdomain.domain.com<< - no trailing slash and whatever you want for subdomain and domain) will make sure that Paypal sends only the IPN back to this Address. <strong>If you are not sure what this means, leave it completely blank!</strong>');
 define( '_CFG_PAYPAL_LC_NAME', 'Language:');
 define( '_CFG_PAYPAL_LC_DESC', 'Select one of the possible language settings for the paypal site that your user will see when issuing a payment.');
 define( '_CFG_PAYPAL_TAX_NAME', 'Tax:');
@@ -98,7 +98,7 @@ define( '_CFG_PAYPAL_ACCEPTPENDINGECHECK_NAME', 'Accept Pending eCheck:');
 define( '_CFG_PAYPAL_ACCEPTPENDINGECHECK_DESC', 'Accept Pending eChecks which usually take 4 days to clear. Set this to No to prevent eCheck fraud.');
 
 define( '_CFG_PAYPAL_CBT_NAME', 'Continue Button');
-define( '_CFG_PAYPAL_CBT_DESC', 'Sets the text for the Continue button on the PayPal "Payment Complete" page.');
+define( '_CFG_PAYPAL_CBT_DESC', 'Sets the text for the Continue button on the PayPal >>Payment Complete<< page.');
 define( '_CFG_PAYPAL_CN_NAME', 'Note Label');
 define( '_CFG_PAYPAL_CN_DESC', 'The label above the note field.');
 define( '_CFG_PAYPAL_CPP_HEADER_IMAGE_NAME', 'Header Image');
@@ -110,11 +110,11 @@ define( '_CFG_PAYPAL_CPP_HEADERBORDER_COLOR_DESC', 'Border color for the payment
 define( '_CFG_PAYPAL_CPP_PAYFLOW_COLOR_NAME', 'Payflow Color');
 define( '_CFG_PAYPAL_CPP_PAYFLOW_COLOR_DESC', 'Background color for the payment page below the header (6 character HTML hexadecimal color code in ASCII)');
 define( '_CFG_PAYPAL_CS_NAME', 'Background Tint');
-define( '_CFG_PAYPAL_CS_DESC', 'The default - "No" - leaves the overall background color at white, setting it to "Yes" will change it to black');
+define( '_CFG_PAYPAL_CS_DESC', 'The default - >>No<< - leaves the overall background color at white, setting it to >>Yes<< will change it to black');
 define( '_CFG_PAYPAL_IMAGE_URL_NAME', 'Logo');
 define( '_CFG_PAYPAL_IMAGE_URL_DESC', 'URL of the image displayed as your logo in the upperleft corner of PayPals pages (150x50 pixels)');
 define( '_CFG_PAYPAL_PAGE_STYLE_NAME', 'Page Style');
-define( '_CFG_PAYPAL_PAGE_STYLE_DESC', 'Sets the custom payment page style for payment pages. Reserved: "primary" - Always use the page style set as primary, "paypal" - Use the default PayPal style. Any other name has to refer to the page style you have defined in the PayPal Backend (alphanumeric ASCII lower 7-bit characters only, no underscore nor spaces)');
+define( '_CFG_PAYPAL_PAGE_STYLE_DESC', 'Sets the custom payment page style for payment pages. Reserved: >>primary<< - Always use the page style set as primary, >>paypal<< - Use the default PayPal style. Any other name has to refer to the page style you have defined in the PayPal Backend (alphanumeric ASCII lower 7-bit characters only, no underscore nor spaces)');
 
 // Paypal Subscriptions Settings
 define( '_CFG_PAYPAL_SUBSCRIPTION_BUSINESS_NAME', _CFG_PAYPAL_BUSINESS_NAME);
@@ -204,7 +204,7 @@ define( '_CFG_2CHECKOUT_SID_DESC', 'Your 2checkout account number.');
 define( '_CFG_2CHECKOUT_SECRET_WORD_NAME', 'Secret Word');
 define( '_CFG_2CHECKOUT_SECRET_WORD_DESC', 'Same secret word set by yourself on the Look and Feel page.');
 define( '_CFG_2CHECKOUT_INFO_NAME', 'IMPORTANT NOTE!');
-define( '_CFG_2CHECKOUT_INFO_DESC', 'On your 2Checkout Account Homepage, "Helpful Links" section, locate and click the "Look and Feel" link. Set up the field "Approved URL" with the URL "http://yoursite.com/index.php?option=com_acctexp&task=2conotification". Replace "yoursite.com" with your own domain.');
+define( '_CFG_2CHECKOUT_INFO_DESC', 'On your 2Checkout Account Homepage, >>Helpful Links<< section, locate and click the >>Look and Feel<< link. Set up the field >>Approved URL<< with the URL "http://yoursite.com/index.php?option=com_acctexp&task=2conotification". Replace "yoursite.com" with your own domain.');
 define( '_CFG_2CHECKOUT_ALT2COURL_NAME', 'Alternate Url');
 define( '_CFG_2CHECKOUT_ALT2COURL_DESC', 'Try this in case you encounter a parameter error.');
 
@@ -221,7 +221,7 @@ define( '_CFG_EPSNETPAY_MERCHANTPIN_DESC', 'Your Merchant PIN.');
 define( '_CFG_EPSNETPAY_ACTIVATE_NAME', 'Activate');
 define( '_CFG_EPSNETPAY_ACTIVATE_DESC', 'Offer this Bank.');
 define( '_CFG_EPSNETPAY_ACCEPTVOK_NAME', 'Accept VOK');
-define( '_CFG_EPSNETPAY_ACCEPTVOK_DESC', 'It might be that due to the account type you have, you will never get an "OK" response, but always "VOK". If that is the case, please switch this on.');
+define( '_CFG_EPSNETPAY_ACCEPTVOK_DESC', 'It might be that due to the account type you have, you will never get an >>OK<< response, but always >>VOK<<. If that is the case, please switch this on.');
 
 // Paysignet Settings
 define( '_CFG_PAYSIGNET_MERCHANT_NAME', 'Merchant');
@@ -251,7 +251,7 @@ define( '_CFG_MONEYPROXY_DESCRIPTION', 'Accept payments on a website in differen
 define( '_CFG_MONEYPROXY_MERCHANT_ID_NAME', 'Merchant ID');
 define( '_CFG_MONEYPROXY_MERCHANT_ID_DESC', 'Your merchant identifier at MoneyProxy.');
 define( '_CFG_MONEYPROXY_FORCE_CLIENT_RECEIPT_NAME', 'Force Receipt');
-define( '_CFG_MONEYPROXY_FORCE_CLIENT_RECEIPT_DESC', 'By setting this parameter to "Yes", it forces Money Proxy to ask an e-mail address where to send a receipt of the payment. By default, the customer can skip the receipt without entering any e-mail address.');
+define( '_CFG_MONEYPROXY_FORCE_CLIENT_RECEIPT_DESC', 'By setting this parameter to >>Yes<<, it forces Money Proxy to ask an e-mail address where to send a receipt of the payment. By default, the customer can skip the receipt without entering any e-mail address.');
 define( '_CFG_MONEYPROXY_SECRET_KEY_NAME', 'Site Title');
 define( '_CFG_MONEYPROXY_SECRET_KEY_DESC', 'Your secret key at MoneyProxy.');
 define( '_CFG_MONEYPROXY_SUGGESTEDMEMO_NAME', 'Suggested Memo');
@@ -288,7 +288,7 @@ define( '_CFG_CYBERMUT_DESCRIPTION', 'Cybermut - Le groupe Cr&eacute;dit Mutuel'
 define( '_CFG_CYBERMUT_TPE_NAME', 'TPE');
 define( '_CFG_CYBERMUT_TPE_DESC', 'No TPE &racute; 7 chiffres, fourni par la banque');
 define( '_CFG_CYBERMUT_VER_NAME', 'Version');
-define( '_CFG_CYBERMUT_VER_DESC', 'The Protocol Version - leave at "1.2open" if you don\'t know what this is');
+define( '_CFG_CYBERMUT_VER_DESC', 'The Protocol Version - leave at >>1.2open<< if you don\'t know what this is');
 define( '_CFG_CYBERMUT_SOC_NAME', 'Code Soci&eacute;t&eacute;');
 define( '_CFG_CYBERMUT_SOC_DESC', 'Code Soci&eacute;t&eacute;, fourni par la banque');
 define( '_CFG_CYBERMUT_PASS_NAME', 'pass');
