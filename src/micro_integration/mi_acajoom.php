@@ -92,6 +92,7 @@ class mi_acajoom
 
 	function hasList( $subscriber_id, $listid )
 	{
+		global $database;
 		$query = 'SELECT id'
 		. ' FROM #__acajoom_queue'
 		. ' WHERE subscriber_id = \'' . $subscriber_id . '\' AND list_id = \'' . $listid . '\''
@@ -106,6 +107,7 @@ class mi_acajoom
 
 	function getSubscriberID( $userid )
 	{
+		global $database;
 		$query = 'SELECT id'
 		. ' FROM #__acajoom_subscribers'
 		. ' WHERE userid = \'' . $userid . '\''
@@ -124,6 +126,7 @@ class mi_acajoom
 
 	function deleteFromList( $subscriber_id, $list_id )
 	{
+		global $database;
 		$query = 'DELETE FROM #__acajoom_queue'
 		. ' WHERE subscriber_id = \'' . $subscriber_id . '\' AND list_id = \'' . $list_id . '\''
 		;
