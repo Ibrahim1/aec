@@ -30,6 +30,8 @@
 // no direct access
 defined( '_VALID_MOS' ) or die( 'Restricted access' );
 
+global $aecConfig;
+
 require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.php' );
 require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.proxy.php' );
 
@@ -1827,7 +1829,7 @@ function editSettings( $option )
 					// Get Backend Settings
 					$settings_array = $pp->getBackendSettings();
 
-					if ( isset( $settings_array['lists'] ) ) {//print_R($settings_array['lists']);exit();
+					if ( isset( $settings_array['lists'] ) ) {
 						$lists = array_merge( $lists, $settings_array['lists'] );
 						unset( $settings_array['lists'] );
 					}
@@ -4053,7 +4055,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['desc']			=	_AEC_HACKS_REG2;
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/components/com_user/controller.php' ) : ( $mosConfig_absolute_path . '/components/com_registration/registration.php' );
-		$hacks[$n]['read']			=	'$mainframe->SetPageTitle(_REGISTER_TITLE);';
+		$hacks[$n]['read']			=	$v15 ? ( 'JRequest::setVar(\'view\', \'register\');' ) : ( '$mainframe->SetPageTitle(_REGISTER_TITLE);' );
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( $aec_optionhack, $n, $n );
 
 		if ( !$v15 ) {
@@ -4068,15 +4070,6 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 			$hacks[$n]['legacy']		=	1;
 		}
 
-		$n = 'registrationphp4';
-		$hacks[$n]['name']			=	'registration.php ' . _AEC_HACK_HACK . ' #4';
-		$hacks[$n]['desc']			=	_AEC_HACKS_REG3;
-		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['condition']		=	'registrationphp3';
-		$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/components/com_user/controller.php' ) : ( $mosConfig_absolute_path . '/components/com_registration/registration.php' );
-		$hacks[$n]['read']			=	'HTML_registration::registerForm';
-		$hacks[$n]['insert']		=	sprintf($aec_rhackbefore_fix, $n, $n) . "\n" . $hacks[$n]['read'];
-
 		if ( !$v15 ) {
 		$n = 'registrationhtml';
 			$hacks[$n]['name']			=	'registration.html.php ' . _AEC_HACK_HACK . ' #1';
@@ -4089,16 +4082,16 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 			$hacks[$n]['legacy']		=	1;
 		}
 
-		$n = 'registrationhtml2';
+		/*$n = 'registrationhtml2';
 		$hacks[$n]['name']			=	'registration.html.php ' . _AEC_HACK_HACK . ' #2';
 		$hacks[$n]['desc']			=	_AEC_HACKS_REG4;
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['uncondition']	=	'registrationhtml';
-		$hacks[$n]['condition']		=	'registrationphp4';
-		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_registration/registration.html.php';
-		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveRegistration" />';
+		$hacks[$n]['condition']		=	'registrationphp2';
+		$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/components/com_user/views/register/tmpl/default.php' ) : ( $mosConfig_absolute_path . '/components/com_registration/registration.html.php' );
+		$hacks[$n]['read']			=	$v15 ? ( '<input type="hidden" name="task" value="register_save" />' ) : ( '<input type="hidden" name="task" value="saveRegistration" />' );
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
-		$hacks[$n]['important']		=	1;
+		$hacks[$n]['important']		=	1;*/
 
 		if ( !$v15 ) {
 			$n = 'registrationphp5';
@@ -4190,7 +4183,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 	$hacks[$n]['name']			=	'admin.user.php';
 	$hacks[$n]['desc']			=	_AEC_HACKS_MI3;
 	$hacks[$n]['type']			=	'file';
-	$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/administrator/components/com_user/controller.php' ) : ( $mosConfig_absolute_path . '/administrator/components/com_users/admin.users.php' );
+	$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/administrator/components/com_users/controller.php' ) : ( $mosConfig_absolute_path . '/administrator/components/com_users/admin.users.php' );
 	$hacks[$n]['read']			=	$v15 ? 'if ( !$user->save() ) ' : '$row->checkin();';
 	$hacks[$n]['insert']		=	sprintf( ( $v15 ? $aec_uchangehack15 : $aec_uchangehack ), $n, 'adminuser', $n ) . "\n" . $hacks[$n]['read'];
 

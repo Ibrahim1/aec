@@ -1617,7 +1617,6 @@ class aecHTML
 				$return .= '</div>';
 				break;
 			case 'fieldset':
-				$return = '';
 				$return .= '<fieldset><legend>' . $row[1] . '</legend>' . "\n"
 				. '<table cellpadding="1" cellspacing="1" border="0">' . "\n"
 				. '<tr align="left" valign="middle" ><td>' . $row[2] . '</td></tr>' . "\n"
@@ -1733,10 +1732,12 @@ class Config_General extends paramDBTable
 
 		$this->load(1);
 
-		$this->cfg = $this->getParams( 'settings' );
+		if ( empty( $this->settings ) ) {
+			$this->load(0);
 
-		if ( empty( $this->cfg ) ) {
 			$this->initParams();
+			$this->cfg = $this->getParams( 'settings' );
+		} else {
 			$this->cfg = $this->getParams( 'settings' );
 		}
 	}
@@ -1786,6 +1787,9 @@ class Config_General extends paramDBTable
 
 		// Write to Params, do not overwrite existing data
 		$this->addParams( $def, 'settings', false );
+
+		unset( $this->cfg );
+
 		$this->check();
 		$this->store();
 
@@ -1800,6 +1804,8 @@ class Config_General extends paramDBTable
 		}
 
 		$this->setParams( $this->cfg, 'settings' );
+
+		unset( $this->cfg );
 
 		$this->check();
 		$this->store();
@@ -1835,8 +1841,7 @@ class Config_General extends paramDBTable
 
 		$query = 'DELETE'
 		. ' FROM #__acctexp_config'
-		. ' WHERE id != \'1\''
-		. ' AND id != \'' . $max . '\''
+		. ' WHERE id != \'' . $max . '\''
 		;
 		$database->setQuery( $query );
 		$database->query();
@@ -2648,6 +2653,14 @@ class InvoiceFactory
 				if ( !( strcmp( $user_subscription->lastpay_date, '0000-00-00 00:00:00' ) === 0 ) ) {
 					$this->renew = 1;
 				}
+			} else {
+				if ( isset( $this->confirmed ) ) {
+					if ( $this->confirmed ) {
+						$user_subscription = new Subscription( $database );
+						$user_subscription->load(0);
+						$user_subscription->createNew( $this->userid, $this->processor, 1 );
+					}
+				}
 			}
 		} else {
 			if ( isset( $this->confirmed ) ) {
@@ -3100,7 +3113,14 @@ class InvoiceFactory
 
 				// simple spoof check security
 				if ( function_exists( 'josSpoofCheck' ) ) {
-					josSpoofCheck();
+					if ( class_exists( 'JConfig' ) ) {
+						$token	= JUtility::getToken();
+						if(!JRequest::getInt($token, 0, 'post')) {
+							JError::raiseError(403, 'Request Forbidden');
+						}
+					} else {
+						josSpoofCheck();
+					}
 				}
 
 				$row = new mosUser( $database );
@@ -3113,7 +3133,20 @@ class InvoiceFactory
 
 				$row->id 		= 0;
 				$row->usertype 	= '';
-				$row->gid 		= $acl->get_group_id( 'Registered', 'ARO' );
+				if ( class_exists( 'JConfig' ) ) {
+					$authorize	=& JFactory::getACL();
+
+					// Initialize new usertype setting
+					$usersConfig = &JComponentHelper::getParams( 'com_users' );
+					$newUsertype = $usersConfig->get( 'new_usertype' );
+					if (!$newUsertype) {
+						$newUsertype = 'Registered';
+					}
+
+					$row->gid 		= $authorize->get_group_id( '', $newUsertype, 'ARO' );
+				} else {
+					$row->gid 		= $acl->get_group_id( 'Registered', 'ARO' );
+				}
 
 				if ( $mosConfig_useractivation == 1 ) {
 					$row->activation = md5( mosMakePassword() );
@@ -3127,8 +3160,17 @@ class InvoiceFactory
 					exit();
 				}
 
-				$pwd 				= $row->password;
-				$row->password 		= md5( $row->password );
+				if ( class_exists( 'JConfig' ) ) {
+					jimport('joomla.user.helper');
+
+					$salt = JUserHelper::genRandomPassword(32);
+					$crypt = JUserHelper::getCryptedPassword($row->password, $salt);
+					$row->password = $crypt.':'.$salt;
+				} else {
+					$pwd 				= $row->password;
+					$row->password 		= md5( $row->password );
+				}
+
 				$row->registerDate 	= date( 'Y-m-d H:i:s' );
 
 				if ( !$row->store() ) {

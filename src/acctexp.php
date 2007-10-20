@@ -40,18 +40,6 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 
 global $mainframe, $mosConfig_absolute_path, $aecConfig;
 
-$aecConfig = new Config_General( $database );
-
-if ( !defined( '_EUCA_DEBUGMODE' ) ) {
-	define( '_EUCA_DEBUGMODE', $aecConfig->cfg['debugmode'] );
-}
-
-if ( _EUCA_DEBUGMODE ) {
-	global $eucaDebug;
-
-	$eucaDebug = new eucaDebug();
-}
-
 require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.php' );
 require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.proxy.php' );
 
@@ -71,6 +59,18 @@ include_once( $mosConfig_absolute_path . '/administrator/components/com_acctexp/
 
 require_once( $mainframe->getPath( 'front_html',	'com_acctexp' ) );
 require_once( $mainframe->getPath( 'class',			'com_acctexp' ) );
+
+$aecConfig = new Config_General( $database );
+
+if ( !defined( '_EUCA_DEBUGMODE' ) ) {
+	define( '_EUCA_DEBUGMODE', $aecConfig->cfg['debugmode'] );
+}
+
+if ( _EUCA_DEBUGMODE ) {
+	global $eucaDebug;
+
+	$eucaDebug = new eucaDebug();
+}
 
 $task = trim( mosGetParam( $_REQUEST, 'task', '' ) );
 

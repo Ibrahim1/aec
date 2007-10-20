@@ -1585,7 +1585,7 @@ class HTML_AcctExp
 					<td align="center"><?php echo $pageNav->rowNumber( $i ); ?></td>
 					<td align="right"><?php echo $rows[$i]->id; ?></td>
 					<td><?php echo mosHTML::idBox( $i, $rows[$i]->id, false, 'id' ); ?></td>
-					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editSubscriptionPlan')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $row->name; ?></a></td>
+					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editSubscriptionPlan')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $rows[$i]->name; ?></a></td>
 					<td  align="left">
 						<?php
 						echo $description; ?>
