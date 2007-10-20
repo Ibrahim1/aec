@@ -1602,7 +1602,7 @@ class aecHTML
 				break;
 			case 'inputE':
 				$return .= '<div class="setting_form">';
-				$return .= '<textarea style="width:600px" cols="450" rows="1" name="' . $name . '" />' . $value . '</textarea>';
+				$return .= '<textarea style="width:520px" cols="450" rows="1" name="' . $name . '" />' . $value . '</textarea>';
 				$return .= '</div>';
 				break;
 			case 'editor':

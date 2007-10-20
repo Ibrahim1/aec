@@ -696,11 +696,8 @@ function com_install()
 
 	$eucaInstall->populateAdminMenuEntry( $menu );
 
-	/**
-	 * initialize new database
-	 */
-	// now set some standard values
-
+	// load settings (creates settings parameters that got added in this version)
+	$cfg = new Config_General($database);
 
 	$result = null;
 
@@ -710,14 +707,13 @@ function com_install()
 	if ( !( strcmp( $result->Field, 'settings' ) === 0 ) ) {
 		$columns = array("transferinfo", "initialexp", "alertlevel1", "alertlevel2", "alertlevel3", "gwlist", "customintro", "customthanks", "customcancel", "bypassintegration", "simpleurls", "expiration_cushion", "currency_code", "heartbeat_cycle", "tos", "require_subscription", "entry_plan", "plans_first", "transfer", "checkusername", "activate_paid" );
 
-		$newcfg = array();
 		foreach ($columns as $column) {
 			$result = null;
 			$database->setQuery("SHOW COLUMNS FROM #__acctexp_config LIKE '" . $column . "'");
 			$database->loadObject($result);
 			if (strcmp($result->Field, $column) === 0) {
 				$database->setQuery( "SELECT " . $column . " FROM #__acctexp_config WHERE id='1'" );
-				$newcfg[$column] = $database->loadResult();
+				$cfg->cfg[$column] = $database->loadResult();
 
 				$database->setQuery("ALTER TABLE #__acctexp_config DROP COLUMN " . $column);
 				if ( !$database->query() ) {
@@ -730,15 +726,8 @@ function com_install()
 		if ( !$database->query() ) {
 	    	$errors[] = array( $database->getErrorMsg(), $query );
 		}
-
-		$cfg = new Config_General($database);
-		$cfg->cfg = $newcfg;
-		$cfg->saveSettings();
 	}
 
-	// create settings parameters that got added in this version
-	$cfg = new Config_General($database);
-	$cfg->initParams();
 	$cfg->saveSettings();
 
 	$eucaInstalldb->dropColmnifExists( 'maxgid', 'plans' );
