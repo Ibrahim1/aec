@@ -174,17 +174,23 @@ class paramDBTable extends mosDBTable
 
 		$this->load( $post['id'] );
 
+		// Travel through preset parameters
 		foreach ( $params as $param => $ptype ) {
+			// If the entry has child entries, we need to parse them here
 			if ( is_array( $ptype ) ) {
 				$paramarray = array();
 				foreach ( $ptype as $paramitem => $pitype ) {
+					// The name is a composition between the item and child item name
 					$supposedfield = $param . '_' . $paramitem;
+
+					// See whether we have such an entry
 					if ( isset( $post[$supposedfield] ) ) {
 						if ( is_array( $post[$supposedfield] ) ) {
-							$paramarray[$paramitem] = implode( ';', $post[$supposedfield]);
+							$paramarray[$paramitem] = implode( ';', $post[$supposedfield] );
 						} else {
 							$paramarray[$paramitem] = $post[$supposedfield];
 						}
+					// Or maybe its within an array?
 					} elseif ( is_array( $post[$param] ) ) {
 						if ( isset( $post[$param][$paramitem] ) ) {
 							if ( is_array( $post[$param][$paramitem] ) ) {
@@ -197,13 +203,21 @@ class paramDBTable extends mosDBTable
 				}
 
 				$this->setParams( $paramarray, $param );
-
+			// For regular entries, its rather simple
 			} else {
 				if ( isset( $post[$param] ) ) {
 					if ( is_array( $post[$param] ) ) {
-						$this->$param = implode( ';', $post[$param]);
+						if ( get_magic_quotes_gpc() ) {
+							$this->$param = $this->_db->getEscaped( stripslashes( implode( ';', $post[$param] ) ) );
+						} else {
+							$this->$param = $this->_db->getEscaped( implode( ';', $post[$param] ) );
+						}
 					} else {
-						$this->$param = $post[$param];
+						if ( get_magic_quotes_gpc() ) {
+							$this->$param = $this->_db->getEscaped( stripslashes( $post[$param] ) );
+						} else {
+							$this->$param = $this->_db->getEscaped( $post[$param] );
+						}
 					}
 				}
 			}

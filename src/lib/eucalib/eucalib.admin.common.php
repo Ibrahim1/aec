@@ -252,8 +252,9 @@ class eucaHTMLbackend
 
 	function displaymethod_editor( $name, $value, $return )
 	{
-		editorArea( $name, $value, $name, '100%;', '250', '10', '60' );
-		return $return . '<!-- <textarea name="' . $name . ' cols="60" maxlength="2048" rows="5">' . $value . '</textarea> //-->';
+		$return .= '<div class="setting_form">';
+		$return .= editorArea( $name, $value, $name, '100%;', '250', '10', '60' );
+		$return .= '</div>';
 	}
 
 	function displaymethod_list( $name, $value, $return )
