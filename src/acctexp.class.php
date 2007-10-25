@@ -211,7 +211,7 @@ class metaUser
 		if ( is_array( $restrictions ) ) {
 			$return = array();
 			foreach ( $restrictions as $name => $value ) {
-				if ( !is_null( $value ) && !($value == "") ) {
+				if ( !is_null( $value ) && !($value === "") ) {
 					switch ( $name ) {
 						// Check for set userid
 						case 'userid':
@@ -249,14 +249,14 @@ class metaUser
 							break;
 						// Check whether the user is currently in the right plan
 						case 'plan_present':
-							if ($this->hasSubscription) {
+							if ( $this->hasSubscription ) {
 								if ( (int) $this->objSubscription->plan === (int) $value ) {
 									$status = true;
 								} else {
 									$status = false;
 								}
 							} else {
-								if ( ( (int) $value ) === 0 ) {
+								if ( $value === 0 ) {
 									$status = true;
 								} else {
 									$status = false;
@@ -266,8 +266,10 @@ class metaUser
 						// Check whether the user was in the correct plan before
 						case 'plan_previous':
 							if ( $this->hasSubscription ) {
-								if ( ( (int) $this->objSubscription->previous_plan === (int) $value )
-									|| ( ( ( (int) $value ) === 0 ) && is_null( $this->objSubscription->previous_plan ) ) ) {
+								if (
+									( (int) $this->objSubscription->previous_plan === (int) $value )
+									|| ( ( ( (int) $value ) === 0 ) && is_null( $this->objSubscription->previous_plan ) )
+									) {
 									$status = true;
 								} else {
 									$status = false;
@@ -284,7 +286,9 @@ class metaUser
 						case 'plan_overall':
 							if ( $this->hasSubscription ) {
 								$array = $this->objSubscription->getUsedPlans();
-								if ( isset( $array[(int) $value] ) ) {
+								if ( ( (int) $value ) === 0 ) {
+									$status = false;
+								} elseif ( ( isset( $array[(int) $value] ) || ( $this->objSubscription->plan == $value ) ) ) {
 									$status = true;
 								} else {
 									$status = false;
@@ -2261,28 +2265,28 @@ class SubscriptionPlan extends paramDBTable
 
 		// Check for a directly previously used plan
 		if ( !empty( $restrictions['previousplan_req_enabled'] ) ) {
-			if ( $restrictions['previousplan_req'] ) {
+			if ( isset( $restrictions['previousplan_req'] ) ) {
 				$planrestrictions['plan_previous'] = (int) $restrictions['previousplan_req'];
 			}
 		}
 
 		// Check for a currently used plan
 		if ( !empty( $restrictions['currentplan_req_enabled'] ) ) {
-			if ( $restrictions['currentplan_req'] ) {
+			if ( isset( $restrictions['currentplan_req'] ) ) {
 				$planrestrictions['plan_present'] = (int) $restrictions['currentplan_req'];
 			}
 		}
 
 		// Check for a overall used plan
 		if ( !empty( $restrictions['overallplan_req_enabled'] ) ) {
-			if ( $restrictions['overallplan_req'] ) {
+			if ( isset( $restrictions['overallplan_req'] ) ) {
 				$planrestrictions['plan_overall'] = (int) $restrictions['overallplan_req'];
 			}
 		}
 
 		// Check for a overall used plan with amount minimum
 		if ( !empty( $restrictions['used_plan_min_enabled'] ) ) {
-			if ( $restrictions['used_plan_min_amount'] && $restrictions['used_plan_min'] ) {
+			if ( isset( $restrictions['used_plan_min_amount'] ) && isset( $restrictions['used_plan_min'] ) ) {
 				$planrestrictions['plan_amount_min'] = ( (int) $restrictions['used_plan_min'] )
 				. ',' . ( (int) $restrictions['used_plan_min_amount'] );
 			}
@@ -2290,7 +2294,7 @@ class SubscriptionPlan extends paramDBTable
 
 		// Check for a overall used plan with amount maximum
 		if ( !empty( $restrictions['used_plan_max_enabled'] ) ) {
-			if ( $restrictions['used_plan_max_amount'] && $restrictions['used_plan_max'] ) {
+			if ( isset( $restrictions['used_plan_max_amount'] ) && isset( $restrictions['used_plan_max'] ) ) {
 				$planrestrictions['plan_amount_max'] = ( (int) $restrictions['used_plan_max'] )
 				. ',' . ( (int) $restrictions['used_plan_max_amount'] );
 			}
@@ -2298,7 +2302,7 @@ class SubscriptionPlan extends paramDBTable
 
 		// Check for a directly previously used plan
 		if ( !empty( $restrictions['custom_restrictions_enabled'] ) ) {
-			if ( $restrictions['custom_restrictions'] ) {
+			if ( isset( $restrictions['custom_restrictions'] ) ) {
 				$planrestrictions['custom_restrictions'] = $this->transformCustomRestrictions( $restrictions['custom_restrictions'] );
 			}
 		}
@@ -2770,6 +2774,8 @@ class InvoiceFactory
 			$metaUser = new metaUser( 0 );
 			$metaUser->cmsUser = new stdClass();
 			$metaUser->cmsUser->gid = 29;
+			$metaUser->hasSubscription = false;
+			$metaUser->hasExpiration = false;
 			$register = 1;
 
 			if ( $passthrough ) {
