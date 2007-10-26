@@ -80,7 +80,7 @@ class processor_cybermut extends POSTprocessor
 		$settings['language']	= array( 'list_language' );
 		$settings['item_name']	= array( 'inputE' );
 
-		$servers = array( 'paiement.creditmutuel.fr/VAD', 'ssl.paiement.cic-banques.fr', 'ssl.paiement.banque-obc.fr', 'paiement.caixanet.fr', 'www.creditmutuel.fr/telepaiement' );
+		$servers = array( 'paiement.creditmutuel.fr/VAD', 'ssl.paiement.cic-banques.fr', 'ssl.paiement.banque-obc.fr', 'paiement.caixanet.fr', 'creditmutuel.fr/telepaiement' );
 
 		$server_selection = array();
 		foreach ( $servers as $i => $server ) {
@@ -96,7 +96,7 @@ class processor_cybermut extends POSTprocessor
 	{
 		global $mosConfig_live_site;
 
-		$servers = array( 'paiement.creditmutuel.fr/VAD', 'ssl.paiement.cic-banques.fr', 'ssl.paiement.banque-obc.fr', 'paiement.caixanet.fr', 'www.creditmutuel.fr/telepaiement' );
+		$servers = array( 'paiement.creditmutuel.fr/VAD', 'ssl.paiement.cic-banques.fr', 'ssl.paiement.banque-obc.fr', 'paiement.caixanet.fr', 'creditmutuel.fr/telepaiement' );
 
 		$var['post_url']		= "https://" . $servers[$cfg['server']] . "/paiement.cgi";
 		$var['version']			= $cfg['ver'];
