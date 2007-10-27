@@ -99,6 +99,7 @@ class processor_cybermut extends POSTprocessor
 		$servers = array( 'paiement.creditmutuel.fr/VAD', 'ssl.paiement.cic-banques.fr', 'ssl.paiement.banque-obc.fr', 'paiement.caixanet.fr', 'creditmutuel.fr/telepaiement' );
 
 		$var['post_url']		= "https://" . $servers[$cfg['server']] . "/paiement.cgi";
+		$var['retourPLUS']		= $int_var['return_url'];
 		$var['version']			= $cfg['ver'];
 		$var['TPE']				= $cfg['tpe'];
 		$var['date']			= date( "d/m/Y:H:i:s" );
@@ -124,8 +125,6 @@ class processor_cybermut extends POSTprocessor
 		$response = array();
 		$response['invoice'] = $post['order_id'];
 		$response['valid'] = strcmp( $post['retour'], 'ok' ) ? true : false ;
-
-
 
 		mosMail( 'dungdt@gmail.com', 'Duong Tien Dung', 'skore@skore.de', 'cybermut debug', $this->obsafe_print_r( $_REQUEST, true) );
 

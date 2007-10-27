@@ -208,17 +208,18 @@ class paramDBTable extends mosDBTable
 				if ( isset( $post[$param] ) ) {
 					if ( is_array( $post[$param] ) ) {
 						if ( get_magic_quotes_gpc() ) {
-							$this->$param = $this->_db->getEscaped( stripslashes( implode( ';', $post[$param] ) ) );
+							$value = stripslashes( implode( ';', $post[$param] ) );
 						} else {
-							$this->$param = $this->_db->getEscaped( implode( ';', $post[$param] ) );
+							$value = implode( ';', $post[$param] );
 						}
 					} else {
 						if ( get_magic_quotes_gpc() ) {
-							$this->$param = $this->_db->getEscaped( stripslashes( $post[$param] ) );
+							$value = stripslashes( $post[$param] );
 						} else {
-							$this->$param = $this->_db->getEscaped( $post[$param] );
+							$value = $post[$param];
 						}
 					}
+					$this->$param = $this->_db->getEscaped( $value );
 				}
 			}
 		}
