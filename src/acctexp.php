@@ -107,9 +107,9 @@ if ( $task ) {
 
 		case 'checkout':
 			$invoice	= trim( mosGetParam( $_REQUEST, 'invoice', 0 ) );
-			$itemid		= trim( mosGetParam( $_REQUEST, 'Itemid', 0 ) );
+			$userid		= trim( mosGetParam( $_REQUEST, 'userid', 0 ) );
 
-			internalcheckout( $option, $invoice, $itemid );
+			internalcheckout( $option, $invoice, $userid );
 			break;
 
 		case 'backsubscription':

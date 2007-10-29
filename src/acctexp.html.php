@@ -725,7 +725,7 @@ class Payment_HTML
 				<tr>
 					<td class="checkout_action">
 						<?php
-						print $var
+						print $var;
 						?>
 					</td>
 				</tr>

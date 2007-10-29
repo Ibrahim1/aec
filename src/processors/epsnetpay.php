@@ -205,6 +205,8 @@ class processor_epsnetpay extends POSTprocessor
 
 		$var['params']['lists']['bank_selection'] = mosHTML::selectList($bank_selection, 'bank_selection', 'size="5"', 'value', 'text', $selected);
 		$var['params']['bank_selection'] = array("list", "Bank Auswahl", "Bitte w&auml;hlen Sie die gew&uuml;nschte Bank aus.");
+
+		return $var;
 	}
 
 	function parseNotification( $post, $cfg )

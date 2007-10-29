@@ -29,15 +29,15 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_authorize extends POSTprocessor
+class processor_authorize_arb extends XMLprocessor
 {
 	function info()
 	{
 		$info = array();
-		$info['name'] = "authorize";
-		$info['longname'] = "Authorize.net";
+		$info['name'] = "authorize_arb";
+		$info['longname'] = "Authorize.net ARB";
 		$info['statement'] = "Make payments with Authorize.net!";
-		$info['description'] = _DESCRIPTION_AUTHORIZE;
+		$info['description'] = _DESCRIPTION_AUTHORIZE_ARB;
 		$info['currencies'] = 'AFA,DZD,ADP,ARS,AMD,AWG,AUD,AZM,BSD,BHD,THB,PAB,BBD,BYB,BEF,BZD,BMD,VEB,BOB,BRL,BND,BGN,BIF,CAD,CVE,KYD,GHC,XOF,XAF,XPF,CLP,COP,KMF,BAM,NIO,CRC,CUP,CYP,CZK,GMD,'.
 								'DKK,MKD,DEM,AED,DJF,STD,DOP,VND,GRD,XCD,EGP,SVC,ETB,EUR,FKP,FJD,HUF,CDF,FRF,GIP,XAU,HTG,PYG,GNF,GWP,GYD,HKD,UAH,ISK,INR,IRR,IQD,IEP,ITL,JMD,JOD,KES,PGK,LAK,EEK,'.
 								'HRK,KWD,MWK,ZMK,AOR,MMK,GEL,LVL,LBP,ALL,HNL,SLL,ROL,BGL,LRD,LYD,SZL,LTL,LSL,LUF,MGF,MYR,MTL,TMM,FIM,MUR,MZM,MXN,MXV,MDL,MAD,BOV,NGN,ERN,NAD,NPR,ANG,NLG,YUM,ILS,'.
@@ -57,17 +57,10 @@ class processor_authorize extends POSTprocessor
 		$settings['testmode']			= 0;
 		$settings['currency']			= "USD";
 		$settings['timestamp_offset']	= '';
-        $settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']		= '';
-
-		// Customization
-		$settings['x_logo_url']				= '';
-		$settings['x_background_url']		= '';
-		$settings['x_color_background']		= '';
-		$settings['x_color_link']			= '';
-		$settings['x_color_text']			= '';
-		$settings['x_header_html_receipt']	= '';
-		$settings['x_footer_html_receipt']	= '';
+		$settings['totalOccurrences']	= 12;
+		$settings['trialOccurrences']	= 1;
 
 		return $settings;
 	}
@@ -82,22 +75,15 @@ class processor_authorize extends POSTprocessor
 		$settings['timestamp_offset']	= array("inputC");
 		$settings['item_name']			= array("inputE");
  		$rewriteswitches 				= array("cms", "user", "expiration", "subscription", "plan");
-        $settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']		= array("fieldset", "Rewriting Info", AECToolbox::rewriteEngineInfo($rewriteswitches));
-
-		// Customization
-		$settings['x_logo_url']				= array( 'inputE' );
-		$settings['x_background_url']		= array( 'inputE' );
-		$settings['x_color_background']		= array( 'inputC' );
-		$settings['x_color_link']			= array( 'inputC' );
-		$settings['x_color_text']			= array( 'inputC' );
-		$settings['x_header_html_receipt']	= array( 'inputE' );
-		$settings['x_footer_html_receipt']	= array( 'inputE' );
+		$settings['totalOccurrences']	= array("inputA");
+		$settings['trialOccurrences']	= array("inputA");
 
 		return $settings;
 	}
 
-	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	function checkoutform( $int_var, $cfg, $metaUser, $new_subscription )
 	{
 		global $mosConfig_live_site;
 
@@ -119,20 +105,12 @@ class processor_authorize extends POSTprocessor
 		$var['x_amount'] = $int_var['amount'];
 		srand(time());
 		$sequence = rand(1, 1000);
-
-		if ( !empty( $cfg['timestamp_offset'] ) ) {
-			$tstamp = time() + $cfg['timestamp_offset'];
-		} else {
-			$tstamp = time();
-		}
-
+		$tstamp = time();
 		// Calculate fingerprint
 		$data = $cfg['login'] . "^" . $sequence . "^" . $tstamp . "^" . $int_var['amount'] . "^" . "";
 		$fingerprint = $this->hmac($cfg['transaction_key'], $data);
 		// Insert the form elements required for SIM
 		$var['x_fp_sequence']	= $sequence;
-
-		$var['x_fp_timestamp']	= $tstamp;
 		$var['x_fp_hash']		= $fingerprint;
 
 		$var['x_cust_id']			= $metaUser->cmsUser->id;
@@ -141,40 +119,60 @@ class processor_authorize extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post, $cfg )
+	function creatRequestXML( $int_var, $cfg, $metaUser, $new_subscription )
 	{
-		$x_description			= $_POST['x_description'];
-		$x_response_code		= $_POST['x_response_code'];
-		$x_response_reason_text	= $_POST['x_response_reason_text'];
-		$x_amount				= $_POST['x_amount'];
-		$userid					= $_POST['x_cust_id'];
+		global $mosConfig_live_site;
 
-		$response = array();
-		$response['invoice'] = $_POST['x_invoice_num'];
-		$response['valid'] = ($x_response_code == '1');
+		// Start xml, add login and transaction key, as well as invoice number
+		$content =	'<?xml version="1.0" encoding="utf-8"?>'
+					. '<ARBCreateSubscriptionRequest xmlns=\"AnetApi/xml/v1/schema/AnetApiSchema.xsd\">'
+					. '<merchantAuthentication>'
+					. '<name>' . substr( $cfg['login'], 0, 25 ) . '</name>'
+					. '<transactionKey>' . substr( $cfg['transaction_key'], 0, 16 ) . '</transactionKey>'
+					. '</merchantAuthentication>'
+					. '<refId>' . $int_var['invoice'] . '</refId>';
 
-		return $response;
-	}
 
-	function hmac( $key, $data )
-	{
-	   // RFC 2104 HMAC implementation for php.
-	   // Creates an md5 HMAC.
-	   // Eliminates the need to install mhash to compute a HMAC
-	   // Hacked by Lance Rushing
+		// Add Payment information
+		$content .=	'<subscription>'
+					. '<name>' . substr( AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription ), 0, 20 ) . '</name>'
+					. '<paymentSchedule>'
+					. '<interval>'
+					. '<length>' . $int_var['amount']['period3'] . '</length>'
+					. '<unit>' . $int_var['amount']['unit3'] . '</unit>'
+					. '</interval>'
+					. '<startDate>' . date( 'Y-m-d' ) . '</startDate>'
+					. '<totalOccurrences>' . $cfg['totalOccurrences'] . '</totalOccurrences>';
 
-	   $b = 64; // byte length for md5
+		if ( isset( $int_var['amount']['amount1'] ) ) {
+			$content .=	'<trialOccurrences>' . $cfg['trialOccurrences'] . '</trialOccurrences>';
+		}
 
-	   if (strlen($key) > $b) {
-	       $key = pack("H*",md5($key));
-	   }
-	   $key  = str_pad($key, $b, chr(0x00));
-	   $ipad = str_pad('', $b, chr(0x36));
-	   $opad = str_pad('', $b, chr(0x5c));
-	   $k_ipad = $key ^ $ipad ;
-	   $k_opad = $key ^ $opad;
+		$content .=	 '</paymentSchedule>'
+					. '<amount>' . $int_var['amount']['amount3'] .'</amount>';
 
-	   return md5($k_opad  . pack("H*",md5($k_ipad . $data)));
+		if ( isset( $int_var['amount']['amount1'] ) ) {
+			$content .=	 '<trialAmount>' . $int_var['amount']['amount1'] . '</trialAmount>';
+		}
+
+		$expirationDate =  $int_var['params']['expirationYear'] . '-' . str_pad( $int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT );
+
+		$content .=	'<payment>'
+					. '<creditCard>'
+					. '<cardNumber>' . $int_var['params']['cardNumber'] . '</cardNumber>'
+					. '<expirationDate>' . $expirationDate . '</expirationDate>'
+					. '</creditCard>'
+					. '</payment>'
+					. '<billTo>'
+					. '<firstName>'. $int_var['params']['billFirstName'] . '</firstName>'
+					. '<lastName>' . $int_var['params']['billLastName'] . '</lastName>'
+					. '</billTo>'
+					. '</subscription>';
+
+		// Close Request
+		$content .=	'</ARBCreateSubscriptionRequest>';
+
+		return $content;
 	}
 
 }

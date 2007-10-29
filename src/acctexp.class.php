@@ -30,7 +30,11 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-global $mosConfig_absolute_path, $mosConfig_offset_user;
+global $mosConfig_absolute_path, $mosConfig_offset_user, $aecConfig;
+
+if ( !is_object( $aecConfig ) ) {
+	$aecConfig = new Config_General( $database );
+}
 
 if ( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
 	// mic: call only if called from the backend
@@ -400,12 +404,10 @@ class AcctExp extends mosDBTable
 
 	function is_expired( $offset=false )
 	{
-		global $database, $mosConfig_offset_user;
-
-		$cfg = new Config_General( $database );
+		global $database, $mosConfig_offset_user, $aecConfig;
 
 		if ( !($this->expiration === '9999-12-31 00:00:00') ) {
-			$expiration_cushion = str_pad( $cfg->cfg['expiration_cushion'], 2, '0', STR_PAD_LEFT );
+			$expiration_cushion = str_pad( $aecConfig->cfg['expiration_cushion'], 2, '0', STR_PAD_LEFT );
 
 			if ( $offset ) {
 				$expstamp = strtotime( ( '-' . $offset . ' days' ), strtotime( $this->expiration ) );
@@ -472,23 +474,19 @@ class aecHeartbeat extends mosDBTable
 
 	function frontendping()
 	{
-		global $database;
+		global $database, $aecConfig;
 
-		$cfg = new Config_General($database);
-
-		if ( !is_null( $cfg->cfg['heartbeat_cycle'] ) || ($cfg->cfg['heartbeat_cycle'] == 0) ) {
-			$this->ping( $cfg->cfg['heartbeat_cycle'] );
+		if ( !is_null( $aecConfig->cfg['heartbeat_cycle'] ) || ($aecConfig->cfg['heartbeat_cycle'] == 0) ) {
+			$this->ping( $aecConfig->cfg['heartbeat_cycle'] );
 		}
 	}
 
 	function backendping()
 	{
-		global $database;
+		global $database, $aecConfig;
 
-		$cfg = new Config_General($database);
-
-		if ( !is_null( $cfg->cfg['heartbeat_cycle_backend'] ) || !($cfg->cfg['heartbeat_cycle_backend'] == 0) ) {
-			$this->ping( $cfg->cfg['heartbeat_cycle_backend'] );
+		if ( !is_null( $aecConfig->cfg['heartbeat_cycle_backend'] ) || !($aecConfig->cfg['heartbeat_cycle_backend'] == 0) ) {
+			$this->ping( $aecConfig->cfg['heartbeat_cycle_backend'] );
 		}
 	}
 
@@ -515,15 +513,11 @@ class aecHeartbeat extends mosDBTable
 
 	function beat()
 	{
-		global $database;
+		global $database, $aecConfig;
 		// Other ideas: Clean out old Coupons
 
 		// TODO: function to clean up database before doing the checks - could improve performance
 		// maybe just set a database flag for this, so that database cleanup is done only every X days
-
-		// General disclaimer : I'm not using count() to detect whether an array has entries since I find looking for at least one entry more efficient
-
-		$cfg = new Config_General( $database );
 
 		// Receive maximum pre expiration time
 		$query = 'SELECT MAX(pre_exp_check)'
@@ -1242,33 +1236,31 @@ class PaymentProcessor
 		return $this->processor->checkoutAction( $int_var, $this->settings, $metaUser, $new_subscription );
 	}
 
-	function getParamsHTML( $params )
+	function getParamsHTML( $params, $values )
 	{
-		$this->getParams( $params );
-
 		$return['params'] = false;
-		if ( isset( $var['params'] ) ) {
-			if ( is_array( $var['params'] ) ) {
-				if ( !empty($var['params'] ) ) {
-					if ( isset( $var['params']['lists'] ) ) {
-						$lists = $var['params']['lists'];
-						unset( $var['params']['lists'] );
-					} else {
-						$lists = null;
-					}
-
-					foreach ( $var['params'] as $name => $entry ) {
-						if ( !is_null( $name ) && !( $name == '' ) ) {
-							if ( !isset( $entry[3] ) ) {
-								$entry[3] = $name;
-							}
-							$return['params'] .= aecHTML::createFormParticle( $name, $entry, $lists ) . "\n";
-						}
-					}
-					unset( $var['params'] );
+		if ( !empty( $values['params'] ) ) {
+			if ( is_array( $values['params'] ) ) {
+				if ( isset( $values['params']['lists'] ) ) {
+					$lists = $values['params']['lists'];
+					unset( $values['params']['lists'] );
+				} else {
+					$lists = null;
 				}
+
+				foreach ( $values['params'] as $name => $entry ) {
+					if ( !is_null( $name ) && !( $name == '' ) ) {
+						if ( !isset( $entry[3] ) ) {
+							$entry[3] = $name;
+						}
+						$return['params'] .= aecHTML::createFormParticle( $name, $entry, $lists ) . "\n";
+					}
+				}
+				unset( $values['params'] );
 			}
 		}
+
+		return $return;
 	}
 
 	function getParams( $params )
@@ -1368,14 +1360,44 @@ class processor extends paramDBTable
 
 class XMLprocessor extends processor
 {
-	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	function checkoutAction( $int_var, $settings, $metaUser, $new_subscription )
 	{
-		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp' ) . '" method="post">' . "\n";
-		$return = '<input type="hidden" name="invoice" value="' . $int_var['invoice'] . '" />' . "\n";
-		$return = '<input type="hidden" name="userid" value="' . $metaUser->userid . '" />' . "\n";
-		$return = '<input type="hidden" name="task" value="checkout" />' . "\n";
+		$var = $this->checkoutform( $int_var, $settings, $metaUser, $new_subscription );
+
+		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp', true ) . '" method="post">' . "\n";
+		$return .= $this->getParamsHTML( $var );
+		$return .= '<input type="hidden" name="invoice" value="' . $int_var['invoice'] . '" />' . "\n";
+		$return .= '<input type="hidden" name="userid" value="' . $metaUser->userid . '" />' . "\n";
+		$return .= '<input type="hidden" name="task" value="checkout" />' . "\n";
 		$return .= '<input type="submit" class="button" value="' . _BUTTON_CHECKOUT . '" />' . "\n";
 		$return .= '</form>' . "\n";
+
+		return $return;
+	}
+
+	function getParamsHTML( $params )
+	{
+		$return = '';
+		if ( !empty( $params['params'] ) ) {
+			if ( is_array( $params['params'] ) ) {
+				if ( isset( $params['params']['lists'] ) ) {
+					$lists = $params['params']['lists'];
+					unset( $params['params']['lists'] );
+				} else {
+					$lists = null;
+				}
+
+				foreach ( $params['params'] as $name => $entry ) {
+					if ( !is_null( $name ) && !( $name == '' ) ) {
+						if ( !isset( $entry[3] ) ) {
+							$entry[3] = $name;
+						}
+						$return['params'] .= aecHTML::createFormParticle( $name, $entry, $lists ) . "\n";
+					}
+				}
+				unset( $params['params'] );
+			}
+		}
 
 		return $return;
 	}
@@ -1918,9 +1940,7 @@ class SubscriptionPlan extends paramDBTable
 
 	function applyPlan( $userid, $processor = 'none', $silent = 0 )
 	{
-		global $database, $mainframe, $mosConfig_offset_user;
-
-		$cfg = new Config_General($database);
+		global $database, $mainframe, $mosConfig_offset_user, $aecConfig;
 
 		$metaUser = new metaUser($userid);
 
@@ -2040,8 +2060,8 @@ class SubscriptionPlan extends paramDBTable
 			}
 		}
 
-		if ( !( $silent && $cfg->cfg['noemails'] ) ) {
-			if ( ( $this->id !== $cfg->cfg['entry_plan'] ) ) {
+		if ( !( $silent && $aecConfig->cfg['noemails'] ) ) {
+			if ( ( $this->id !== $aecConfig->cfg['entry_plan'] ) ) {
 				$metaUser->objSubscription->sendEmailRegistered( $renew );
 			}
 		}
@@ -2765,9 +2785,7 @@ class InvoiceFactory
 
 	function create ( $option, $intro=0, $usage=0, $processor=null, $invoice=0, $passthrough=false )
 	{
-		global $database, $mainframe, $my;
-
-		$cfg = new Config_General( $database );
+		global $database, $mainframe, $my, $aecConfig;
 
 		if ( !$this->userid ) {
 			// Creating a dummy user object
@@ -2816,8 +2834,8 @@ class InvoiceFactory
 			$subscriptionClosed = false;
 			// TODO: Check if the user has already subscribed once, if not - link to intro
 			// TODO: Make sure a registration hybrid wont get lost here
-			if ( !$intro && ( $cfg->cfg['customintro'] != '' ) && !is_null( $cfg->cfg['customintro'] ) ) {
-				mosRedirect( $cfg->cfg['customintro'] );
+			if ( !$intro && ( $aecConfig->cfg['customintro'] != '' ) && !is_null( $aecConfig->cfg['customintro'] ) ) {
+				mosRedirect( $aecConfig->cfg['customintro'] );
 			}
 		}
 
@@ -2955,7 +2973,7 @@ class InvoiceFactory
 			// If the user also needs to register, we need to guide him there after the selection has now been made
 			if ( $register ) {
 				// The plans are supposed to be first, so the details form should hold the values
-				if ( $cfg->cfg['plans_first'] ) {
+				if ( $aecConfig->cfg['plans_first'] ) {
 					$_POST['usage']		= $plans[0]['id'];
 					$_POST['processor'] = $plans[0]['gw'][0]['name'];
 				}
@@ -3051,11 +3069,10 @@ class InvoiceFactory
 
 		$this->puffer( $option );
 
-		$cfg = new Config_General( $database );
-		$tos = ( !is_null( $cfg->cfg['tos'] ) ) ? $cfg->cfg['tos'] : 0;
+		$tos = ( !is_null( $aecConfig->cfg['tos'] ) ) ? $aecConfig->cfg['tos'] : 0;
 
 		$this->coupons = array();
-		$this->coupons['active'] = $cfg->cfg['enable_coupons'];
+		$this->coupons['active'] = $aecConfig->cfg['enable_coupons'];
 
 		Payment_HTML::confirmForm( $option, $this, $user, $tos, $passthrough );
 	}
@@ -3063,9 +3080,7 @@ class InvoiceFactory
 
 	function save( $option, $var )
 	{
-		global $database, $mainframe, $task, $acl; // Need to load $acl for CBE
-
-		$cfg = new Config_General($database);
+		global $database, $mainframe, $task, $acl, $aecConfig; // Need to load $acl for CBE
 
 		if ( isset( $var['task'] ) ) {
 			unset( $var['task'] );
@@ -3222,7 +3237,7 @@ class InvoiceFactory
 				}
 
 				// Send email to user
-				if ( !$cfg->cfg['nojoomlaregemails'] ) {
+				if ( !$aecConfig->cfg['nojoomlaregemails'] ) {
 					mosMail( $adminEmail2, $adminName2, $email, $subject, $message );
 				}
 
@@ -3268,8 +3283,6 @@ class InvoiceFactory
 	{
 		global $database;
 
-		$cfg = new Config_General( $database );
-
 		$metaUser = new metaUser( $this->userid );
 
 		$this->puffer( $option );
@@ -3298,7 +3311,7 @@ class InvoiceFactory
 		$original_amount	= $this->objUsage->SubscriptionAmount( $this->recurring, $user_subscription );
 		$warning			= 0;
 
-		if ( !empty( $cfg->cfg['enable_coupons'] ) ) {
+		if ( !empty( $aecConfig->cfg['enable_coupons'] ) ) {
 			$this->coupons['active'] = 1;
 
 			if ( $this->objInvoice->coupons ) {
@@ -3397,16 +3410,14 @@ class InvoiceFactory
 		Payment_HTML::checkoutForm( $option, $var['var'], $var['params'], $this, $repeat );
 	}
 
-	function internalcheckout( $option, $invoice, $itemid )
+	function internalcheckout( $option, $invoice, $userid )
 	{
-
+		$this->puffer( $option );
 	}
 
 	function thanks( $option, $renew, $free )
 	{
 		global $database, $mosConfig_useractivation, $ueConfig, $mosConfig_dbprefix;
-
-		$cfg = new Config_General( $database );
 
 		if ( $renew ) {
 			$msg = _SUB_FEPARTICLE_HEAD_RENEW
@@ -3442,8 +3453,8 @@ class InvoiceFactory
 		}
 
 		// Look whether we have a custom ThankYou page
-		if ( $cfg->cfg['customthanks'] ) {
-			mosRedirect( $cfg->cfg['customthanks'] );
+		if ( $aecConfig->cfg['customthanks'] ) {
+			mosRedirect( $aecConfig->cfg['customthanks'] );
 		} else {
 			HTML_Results::thanks( $option, $msg );
 		}
@@ -3705,15 +3716,13 @@ class Invoice extends paramDBTable
 
 	function setTransactionDate()
 	{
-		global $database, $mosConfig_offset_user;
-
-		$cfg = new Config_General( $database );
+		global $database, $mosConfig_offset_user, $aecConfig;
 
 		$time_passed		= ( strtotime( $this->transaction_date ) - time() + $mosConfig_offset_user*3600 ) / 3600;
 		$transaction_date	= gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
 
 		if ( ( strcmp( $this->transaction_date, '0000-00-00 00:00:00' ) === 0 )
-			|| ( $time_passed > $cfg->cfg['invoicecushion'] ) ) {
+			|| ( $time_passed > $aecConfig->cfg['invoicecushion'] ) ) {
 			$this->counter = $this->counter + 1;
 			$this->transaction_date	= $transaction_date;
 
@@ -3742,20 +3751,13 @@ class Invoice extends paramDBTable
 			}
 		}
 
-		$cfg = new Config_General( $database );
-
 		$metaUser = new metaUser( $this->userid );
 
 		$new_subscription = new SubscriptionPlan( $database );
 		$new_subscription->load( $this->usage );
 
-		$user_subscription = new Subscription( $database );
-		$user_subscription->loadUserID( $this->userid );
-
-		$method = strtolower( $this->method );
-
 		$pp = new PaymentProcessor();
-		if ( !$pp->loadName( $method ) ) {
+		if ( !$pp->loadName( strtolower( $this->method ) ) ) {
 	 		// Nope, won't work buddy
 		 	notAllowed();
 		}
@@ -3764,17 +3766,16 @@ class Invoice extends paramDBTable
 		$pp->getInfo();
 
 		$int_var['planparams'] = $new_subscription->getProcessorParameters( $pp->id );
-
 		$int_var['recurring'] = $pp->info['recurring'];
 
-		$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], $user_subscription );
+		$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], $metaUser->objsubscription );
 
 		if ( !empty( $this->coupons ) ) {
 			$coupons = explode( ';', $this->coupons);
 
-			$cpsh = new couponsHandler();
+			$cph = new couponsHandler();
 
-			$amount['amount'] = $cpsh->applyCoupons( $amount['amount'], $coupons, $metaUser );
+			$amount['amount'] = $cph->applyCoupons( $amount['amount'], $coupons, $metaUser );
 		}
 
 		$int_var['amount']		= $amount['amount'];
@@ -3782,9 +3783,9 @@ class Invoice extends paramDBTable
 		$int_var['invoice']		= $this->invoice_number;
 		$int_var['usage']		= $this->invoice_number;
 
-		// Assemble Processor Variables
+		// Assemble Checkout Response
 		$return['var']		= $pp->checkoutAction( $int_var, $metaUser, $new_subscription );
-		$return['params']	= $pp->getParamsHTML( $int_var['params'] );
+		$return['params']	= $pp->getParamsHTML( $int_var['params'], $pp->getParams( $int_var['params'] ) );
 
 		return $return;
 	}
@@ -3934,15 +3935,13 @@ class Subscription extends paramDBTable
 	*/
 	function GetAlertLevel()
 	{
-		global $database, $mosConfig_offset_user;
+		global $database, $mosConfig_offset_user, $aecConfig;
 
 		$aecexpid = AECfetchfromDB::ExpirationIDfromUserID( $this->userid );
 
 		if ( $aecexpid ) {
 			$alert['level']		= -1;
 			$alert['daysleft']	= 0;
-
-			$cfg = new Config_General( $database );
 
 			$objexpiration = new AcctExp( $database );
 			$objexpiration->load( $aecexpid );
@@ -3957,12 +3956,12 @@ class Subscription extends paramDBTable
 				$alert['level']	= 1;
 			} else {
 				// Get alert levels
-				if ( $alert['daysleft'] <= $cfg->cfg['alertlevel1'] ) {
+				if ( $alert['daysleft'] <= $aecConfig->cfg['alertlevel1'] ) {
 					// Less than $numberofdays to expire! This is a level 1
 					$alert['level']		= 1;
-				} elseif ( ( $alert['daysleft'] > $cfg->cfg['alertlevel1'] ) && ( $alert['daysleft'] <= $cfg->cfg['alertlevel2'] ) ) {
+				} elseif ( ( $alert['daysleft'] > $aecConfig->cfg['alertlevel1'] ) && ( $alert['daysleft'] <= $aecConfig->cfg['alertlevel2'] ) ) {
 					$alert['level']		= 2;
-				} elseif ( $alert['daysleft'] > $cfg->cfg['alertlevel2'] ) {
+				} elseif ( $alert['daysleft'] > $aecConfig->cfg['alertlevel2'] ) {
 					// Everything is ok. Level 3 means no threshold was reached
 					$alert['level']		= 3;
 				}
@@ -3973,9 +3972,7 @@ class Subscription extends paramDBTable
 
 	function verifylogin( $block )
 	{
-		global $mosConfig_live_site, $database;
-
-		$cfg = new Config_General( $database );
+		global $mosConfig_live_site, $database, $aecConfig;
 
 		if ( strcmp( $this->status, 'Excluded' ) === 0 ) {
 			$expired = false;
@@ -3992,7 +3989,7 @@ class Subscription extends paramDBTable
 			}
 		}
 
-		if ( ( $expired || ( strcmp( $this->status, 'Closed' ) === 0 ) ) && $cfg->cfg['require_subscription'] ) {
+		if ( ( $expired || ( strcmp( $this->status, 'Closed' ) === 0 ) ) && $aecConfig->cfg['require_subscription'] ) {
 			$expire = $this->expire();
 
 			if ( $expire ) {
@@ -4146,8 +4143,6 @@ class Subscription extends paramDBTable
 		} else {
 			include_once( $langPath . 'english.php' );
 		}
-
-		$cfg = new Config_General( $database );
 
 		$free = ( strcmp( strtolower( $this->type ), 'none' ) == 0 || strcmp( strtolower( $this->type ), 'free' ) == 0 );
 
@@ -4343,14 +4338,12 @@ class GeneralInfoRequester
 	 */
 	function detect_component( $component )
 	{
-		global $database, $mainframe;
+		global $database, $mainframe, $aecConfig;
 
 		$tables	= array();
 		$tables	= $database->getTableList();
 
-		$cfg = new Config_General( $database );
-
-		$overrides = explode( ' ', $cfg->cfg['bypassintegration'] );
+		$overrides = explode( ' ', $aecConfig->cfg['bypassintegration'] );
 
 		if ( in_array( $component, $overrides ) ) {
 			return false;
@@ -4640,13 +4633,11 @@ class AECToolbox
 	 * @parameter url
 	 * @return string
 	 */
-	function deadsureURL( $url )
+	function deadsureURL( $url, $secure=false )
 	{
-		global $mosConfig_live_site, $mosConfig_absolute_path, $database;
+		global $mosConfig_live_site, $mosConfig_absolute_path, $database, $aecConfig;
 
-		$cfg = new Config_General( $database );
-
-		if ( $cfg->cfg['simpleurls'] ) {
+		if ( $aecConfig->cfg['simpleurls'] ) {
 			$new_url = $mosConfig_live_site . $url;
 		} else {
 			if ( !strrpos( strtolower( $url ), 'itemid' ) ) {
@@ -4683,6 +4674,10 @@ class AECToolbox
 			}
 		}
 
+		if ( $secure && ( strpos( $new_url, 'https:' ) !== 0 ) ) {
+			$new_url = str_replace( 'http:', 'https:', $new_url );
+		}
+
 		return $new_url;
 	}
 
@@ -4694,7 +4689,7 @@ class AECToolbox
 	 */
 	function VerifyUsername( $username )
 	{
-		global $database;
+		global $database, $aecConfig;
 
 		$heartbeat = new aecHeartbeat( $database );
 		$heartbeat->frontendping();
@@ -4716,16 +4711,14 @@ class AECToolbox
 			if ( $metaUser->hasExpiration ) {
 				$metaUser->objExpiration->manualVerify();
 			} else {
-				$cfg = new Config_General( $database );
-
-				if ( $cfg->cfg['require_subscription'] ) {
-					if ( $cfg->cfg['entry_plan'] ) {
+				if ( $aecConfig->cfg['require_subscription'] ) {
+					if ( $aecConfig->cfg['entry_plan'] ) {
 						$user_subscription = new Subscription( $database );
 						$user_subscription->load(0);
 						$user_subscription->createNew( $id, 'Free', 1 );
 
 						$metaUser = new metaUser( $id );
-						$metaUser->objSubscription->applyUsage( $cfg->cfg['entry_plan'], 'none', 1 );
+						$metaUser->objSubscription->applyUsage( $aecConfig->cfg['entry_plan'], 'none', 1 );
 						AECToolbox::VerifyUsername( $username );
 					} else {
 						mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=subscribe&Itemid=' . $id ) );
