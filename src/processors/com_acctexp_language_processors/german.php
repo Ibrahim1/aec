@@ -89,6 +89,14 @@ define( '_CFG_PROCESSOR_ITEM_NAME_NAME',	'Artikelbeschreibung' );
 define( '_CFG_PROCESSOR_ITEM_NAME_DESC',	'Artikelbeschreibung dieses Services' );
 define( '_CFG_PROCESSOR_ITEM_NAME_DEFAULT',	'Abonnement auf %s - Benutzer: %s (%s)' );
 
+// Generic Credit Card Form
+define( '_AEC_CCFORM_CARDNUMBER_NAME', 'Card Number');
+define( '_AEC_CCFORM_CARDNUMBER_DESC', 'The number of your credit card');
+define( '_AEC_CCFORM_EXPIRATIONYEAR_NAME', 'Expiration Year');
+define( '_AEC_CCFORM_EXPIRATIONYEAR_DESC', 'The Year your card will expire');
+define( '_AEC_CCFORM_EXPIRATIONMONTH_NAME', 'Expiration Month');
+define( '_AEC_CCFORM_EXPIRATIONMONTH_DESC', 'The Month your card will expire');
+
 // Paypal Settings
 define( '_CFG_PAYPAL_BUSINESS_NAME',		'PayPal Gesch&auml;fts ID:' );
 define( '_CFG_PAYPAL_BUSINESS_DESC',		'Die PayPal-ID um Gesch&auml;fte durchf&uuml;hren zu k&ouml;nnen' );

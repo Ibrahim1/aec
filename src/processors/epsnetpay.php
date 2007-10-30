@@ -217,7 +217,7 @@ class processor_epsnetpay extends POSTprocessor
 		$userid					= $post['sapPopStsRechnr'];
 
 		$sapUgawVK				= $post['sapUgawVK']; // Amount. Value before the comma
-		$sapUgawNK				= $post['sapUgawNK']; // Amount. Value after the comma
+		$sapUgawNK				= $post['sapUgawNK']; // Amount. Decimal places
 		$sapPopStsReturnStatus	= $post['sapPopStsReturnStatus']; // Statuscode (OK/NOK/VOK)
 
 		$invoice = new Invoice($database);

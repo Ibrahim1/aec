@@ -35,16 +35,16 @@ class processor_authorize_arb extends XMLprocessor
 	{
 		$info = array();
 		$info['name'] = "authorize_arb";
-		$info['longname'] = "Authorize.net ARB";
-		$info['statement'] = "Make payments with Authorize.net!";
-		$info['description'] = _DESCRIPTION_AUTHORIZE_ARB;
+		$info['longname'] = _CFG_AUTHORIZE_ARB_LONGNAME;
+		$info['statement'] = _CFG_AUTHORIZE_ARB_STATEMENT;
+		$info['description'] = _CFG_AUTHORIZE_ARB_DESCRIPTION;
 		$info['currencies'] = 'AFA,DZD,ADP,ARS,AMD,AWG,AUD,AZM,BSD,BHD,THB,PAB,BBD,BYB,BEF,BZD,BMD,VEB,BOB,BRL,BND,BGN,BIF,CAD,CVE,KYD,GHC,XOF,XAF,XPF,CLP,COP,KMF,BAM,NIO,CRC,CUP,CYP,CZK,GMD,'.
 								'DKK,MKD,DEM,AED,DJF,STD,DOP,VND,GRD,XCD,EGP,SVC,ETB,EUR,FKP,FJD,HUF,CDF,FRF,GIP,XAU,HTG,PYG,GNF,GWP,GYD,HKD,UAH,ISK,INR,IRR,IQD,IEP,ITL,JMD,JOD,KES,PGK,LAK,EEK,'.
 								'HRK,KWD,MWK,ZMK,AOR,MMK,GEL,LVL,LBP,ALL,HNL,SLL,ROL,BGL,LRD,LYD,SZL,LTL,LSL,LUF,MGF,MYR,MTL,TMM,FIM,MUR,MZM,MXN,MXV,MDL,MAD,BOV,NGN,ERN,NAD,NPR,ANG,NLG,YUM,ILS,'.
 								'AON,TWD,ZRN,NZD,BTN,KPW,NOK,PEN,MRO,TOP,PKR,XPD,MOP,UYU,PHP,XPT,PTE,GBP,BWP,QAR,GTQ,ZAL,ZAR,OMR,KHR,MVR,IDR,RUB,RUR,RWF,SAR,ATS,SCR,XAG,SGD,SKK,SBD,KGS,SOS,ESP,'.
 								'LKR,SHP,ECS,SDD,SRG,SEK,CHF,SYP,TJR,BDT,WST,TZS,KZT,TPE,SIT,TTD,MNT,TND,TRL,UGX,ECV,CLF,USN,USS,USD,UZS,VUV,KRW,YER,JPY,CNY,ZWD,PLN';
 		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
-		$info['recurring'] = 0;
+		$info['recurring'] = 1;
 
 		return $info;
 	}
@@ -56,11 +56,10 @@ class processor_authorize_arb extends XMLprocessor
 		$settings['transaction_key']	= "transaction_key";
 		$settings['testmode']			= 0;
 		$settings['currency']			= "USD";
-		$settings['timestamp_offset']	= '';
-		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
-		$settings['rewriteInfo']		= '';
 		$settings['totalOccurrences']	= 12;
 		$settings['trialOccurrences']	= 1;
+		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['rewriteInfo']		= '';
 
 		return $settings;
 	}
@@ -72,13 +71,11 @@ class processor_authorize_arb extends XMLprocessor
 		$settings['login'] 				= array("inputC");
 		$settings['transaction_key']	= array("inputC");
 		$settings['currency']			= array("list_currency");
-		$settings['timestamp_offset']	= array("inputC");
-		$settings['item_name']			= array("inputE");
- 		$rewriteswitches 				= array("cms", "user", "expiration", "subscription", "plan");
-		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
-		$settings['rewriteInfo']		= array("fieldset", "Rewriting Info", AECToolbox::rewriteEngineInfo($rewriteswitches));
 		$settings['totalOccurrences']	= array("inputA");
 		$settings['trialOccurrences']	= array("inputA");
+		$settings['item_name']			= array("inputE");
+ 		$rewriteswitches 				= array("cms", "user", "expiration", "subscription", "plan");
+		$settings['rewriteInfo']		= array("fieldset", "Rewriting Info", AECToolbox::rewriteEngineInfo($rewriteswitches));
 
 		return $settings;
 	}
@@ -87,34 +84,16 @@ class processor_authorize_arb extends XMLprocessor
 	{
 		global $mosConfig_live_site;
 
-		if ( $cfg['testmode'] ) {
-			$var['post_url']	= "https://certification.authorize.net/gateway/transact.dll";
-		} else {
-			$var['post_url']	= "https://secure.authorize.net/gateway/transact.dll";
+		$var = $this->getCCform();
+
+		$name = explode( ' ', $metaUser->cmsUser->name );
+
+		if ( !empty( $name[1] ) ) {
+			$name[1] = "";
 		}
 
-		$var['x_login']					= $cfg['login'];
-		$var['x_invoice_num']			= $int_var['invoice'];
-		$var['x_receipt_link_method']	= "POST";
-		$var['x_receipt_link_url']		= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=authorizenotification");
-		$var['x_receipt_link_text']		= "Continue";
-		$var['x_show_form']				= "PAYMENT_FORM";
-		//$var['x_relay_response']		= "True";
-		//$var['x_relay_url']			= AECToolbox::deadsureURL('/index.php?option=com_acctexp&task=authnotification');
-
-		$var['x_amount'] = $int_var['amount'];
-		srand(time());
-		$sequence = rand(1, 1000);
-		$tstamp = time();
-		// Calculate fingerprint
-		$data = $cfg['login'] . "^" . $sequence . "^" . $tstamp . "^" . $int_var['amount'] . "^" . "";
-		$fingerprint = $this->hmac($cfg['transaction_key'], $data);
-		// Insert the form elements required for SIM
-		$var['x_fp_sequence']	= $sequence;
-		$var['x_fp_hash']		= $fingerprint;
-
-		$var['x_cust_id']			= $metaUser->cmsUser->id;
-		$var['x_description']		= AECToolbox::rewriteEngine($cfg['item_name'], $metaUser, $new_subscription);
+		$var['params']['billFirstName'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLFIRSTNAME_NAME, _AEC_AUTHORIZE_ARB_PARAMS_BILLFIRSTNAME_DESC, $name[0]);
+		$var['params']['billLastName'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLLASTNAME_NAME, _AEC_AUTHORIZE_ARB_PARAMS_BILLLASTNAME_DESC, $name[1]);
 
 		return $var;
 	}
@@ -125,47 +104,47 @@ class processor_authorize_arb extends XMLprocessor
 
 		// Start xml, add login and transaction key, as well as invoice number
 		$content =	'<?xml version="1.0" encoding="utf-8"?>'
-					. '<ARBCreateSubscriptionRequest xmlns=\"AnetApi/xml/v1/schema/AnetApiSchema.xsd\">'
+					. '<ARBCreateSubscriptionRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">'
 					. '<merchantAuthentication>'
-					. '<name>' . substr( $cfg['login'], 0, 25 ) . '</name>'
-					. '<transactionKey>' . substr( $cfg['transaction_key'], 0, 16 ) . '</transactionKey>'
+					. '<name>' . trim( substr( $cfg['login'], 0, 25 ) ) . '</name>'
+					. '<transactionKey>' . trim( substr( $cfg['transaction_key'], 0, 16 ) ) . '</transactionKey>'
 					. '</merchantAuthentication>'
 					. '<refId>' . $int_var['invoice'] . '</refId>';
 
 
 		// Add Payment information
 		$content .=	'<subscription>'
-					. '<name>' . substr( AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription ), 0, 20 ) . '</name>'
+					. '<name>' . trim( substr( AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription ), 0, 20 ) ) . '</name>'
 					. '<paymentSchedule>'
 					. '<interval>'
-					. '<length>' . $int_var['amount']['period3'] . '</length>'
-					. '<unit>' . $int_var['amount']['unit3'] . '</unit>'
+					. '<length>' . trim( $int_var['amount']['period3'] ) . '</length>'
+					. '<unit>' . trim( $int_var['amount']['unit3'] ) . '</unit>'
 					. '</interval>'
-					. '<startDate>' . date( 'Y-m-d' ) . '</startDate>'
-					. '<totalOccurrences>' . $cfg['totalOccurrences'] . '</totalOccurrences>';
+					. '<startDate>' . trim( date( 'Y-m-d' ) ) . '</startDate>'
+					. '<totalOccurrences>' . trim( $cfg['totalOccurrences'] ) . '</totalOccurrences>';
 
 		if ( isset( $int_var['amount']['amount1'] ) ) {
-			$content .=	'<trialOccurrences>' . $cfg['trialOccurrences'] . '</trialOccurrences>';
+			$content .=	'<trialOccurrences>' . trim( $cfg['trialOccurrences'] ) . '</trialOccurrences>';
 		}
 
 		$content .=	 '</paymentSchedule>'
-					. '<amount>' . $int_var['amount']['amount3'] .'</amount>';
+					. '<amount>' . trim( $int_var['amount']['amount3'] ) .'</amount>';
 
 		if ( isset( $int_var['amount']['amount1'] ) ) {
-			$content .=	 '<trialAmount>' . $int_var['amount']['amount1'] . '</trialAmount>';
+			$content .=	 '<trialAmount>' . trim( $int_var['amount']['amount1'] ) . '</trialAmount>';
 		}
 
 		$expirationDate =  $int_var['params']['expirationYear'] . '-' . str_pad( $int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT );
 
 		$content .=	'<payment>'
 					. '<creditCard>'
-					. '<cardNumber>' . $int_var['params']['cardNumber'] . '</cardNumber>'
-					. '<expirationDate>' . $expirationDate . '</expirationDate>'
+					. '<cardNumber>' . trim( $int_var['params']['cardNumber'] ) . '</cardNumber>'
+					. '<expirationDate>' . trim( $expirationDate ) . '</expirationDate>'
 					. '</creditCard>'
 					. '</payment>'
 					. '<billTo>'
-					. '<firstName>'. $int_var['params']['billFirstName'] . '</firstName>'
-					. '<lastName>' . $int_var['params']['billLastName'] . '</lastName>'
+					. '<firstName>'. trim( $int_var['params']['billFirstName'] ) . '</firstName>'
+					. '<lastName>' . trim( $int_var['params']['billLastName'] ) . '</lastName>'
 					. '</billTo>'
 					. '</subscription>';
 
@@ -190,11 +169,11 @@ class processor_authorize_arb extends XMLprocessor
 		$return['raw'] = $response;
 
 		if ( $response ) {
-			$return['invoice'] = substring_between($response,'<refId>','</refId>');
-			$resultCode = substring_between($response,'<resultCode>','</resultCode>');
+			$return['invoice'] = $this->substring_between($response,'<refId>','</refId>');
+			$resultCode = $this->substring_between($response,'<resultCode>','</resultCode>');
 
-			$code = substring_between($response,'<code>','</code>');
-			$text = substring_between($response,'<text>','</text>');
+			$code = $this->substring_between($response,'<code>','</code>');
+			$text = $this->substring_between($response,'<text>','</text>');
 
 			if ( strcmp( $resultCode, 'Ok' ) === 0) {
 				$return['valid'] = 1;
@@ -202,12 +181,23 @@ class processor_authorize_arb extends XMLprocessor
 				$return['error'] = $text;
 			}
 
-			$subscriptionId = substring_between($response,'<subscriptionId>','</subscriptionId>');
+			$subscriptionId = $this->substring_between($response,'<subscriptionId>','</subscriptionId>');
 
 			$return['invoiceparams'] = array( "subscriptionid" => $subscriptionId );
 		}
 
 		return $return;
+	}
+
+	function substring_between( $haystack, $start, $end )
+	{
+		if ( strpos( $haystack, $start ) === false || strpos( $haystack, $end ) === false ) {
+			return false;
+	   } else {
+			$start_position = strpos( $haystack, $start ) + strlen( $start );
+			$end_position = strpos( $haystack, $end );
+			return substr( $haystack, $start_position, $end_position - $start_position );
+		}
 	}
 
 }

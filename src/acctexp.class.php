@@ -30,11 +30,7 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-global $mosConfig_absolute_path, $mosConfig_offset_user, $aecConfig;
-
-if ( !is_object( $aecConfig ) ) {
-	$aecConfig = new Config_General( $database );
-}
+global $mosConfig_absolute_path, $mosConfig_offset_user;
 
 if ( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
 	// mic: call only if called from the backend
@@ -1364,12 +1360,12 @@ class XMLprocessor extends processor
 	{
 		$var = $this->checkoutform( $int_var, $settings, $metaUser, $new_subscription );
 
-		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp', true ) . '" method="post">' . "\n";
-		$return .= $this->getParamsHTML( $var );
+		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=checkout', false ) . '" method="post">' . "\n";
+		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
 		$return .= '<input type="hidden" name="invoice" value="' . $int_var['invoice'] . '" />' . "\n";
 		$return .= '<input type="hidden" name="userid" value="' . $metaUser->userid . '" />' . "\n";
 		$return .= '<input type="hidden" name="task" value="checkout" />' . "\n";
-		$return .= '<input type="submit" class="button" value="' . _BUTTON_CHECKOUT . '" />' . "\n";
+		$return .= '<input type="submit" class="button" value="' . _BUTTON_CHECKOUT . '" /><br /><br />' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -1392,7 +1388,7 @@ class XMLprocessor extends processor
 						if ( !isset( $entry[3] ) ) {
 							$entry[3] = $name;
 						}
-						$return['params'] .= aecHTML::createFormParticle( $name, $entry, $lists ) . "\n";
+						$return .= aecHTML::createFormParticle( $name, $entry, $lists ) . "\n";
 					}
 				}
 				unset( $params['params'] );
@@ -1404,6 +1400,9 @@ class XMLprocessor extends processor
 
 	function getCCform()
 	{
+		// Request the Card number
+		$var['params']['cardNumber'] = array( 'inputC', _AEC_CCFORM_CARDNUMBER_NAME, _AEC_CCFORM_CARDNUMBER_NAME, '');
+
 		// Create a selection box with 12 months
 		$months = array();
 		for( $i = 1; $i < 13; $i++ ){
@@ -1411,7 +1410,7 @@ class XMLprocessor extends processor
 			$months[] = mosHTML::makeOption( $month, $month );
 		}
 
-		$var['params']['lists']['expirationMonth'] = mosHTML::selectList($months, 'expirationMonth', 'size="10"', 'value', 'text', 0);
+		$var['params']['lists']['expirationMonth'] = mosHTML::selectList($months, 'expirationMonth', 'size="4"', 'value', 'text', 0);
 		$var['params']['expirationMonth'] = array( 'list', _AEC_CCFORM_EXPIRATIONMONTH_NAME, _AEC_CCFORM_EXPIRATIONMONTH_DESC);
 
 		// Create a selection box with the next 10 years
@@ -1421,8 +1420,8 @@ class XMLprocessor extends processor
 			$years[] = mosHTML::makeOption( $i, $i );
 		}
 
-		$var['params']['lists']['expirationYear'] = mosHTML::selectList($years, 'expirationYear', 'size="10"', 'value', 'text', 0);
-		$var['params']['expirationMonth'] = array( 'list', _AEC_CCFORM_EXPIRATIONYEAR_NAME, _AEC_CCFORM_EXPIRATIONYEAR_DESC);
+		$var['params']['lists']['expirationYear'] = mosHTML::selectList($years, 'expirationYear', 'size="4"', 'value', 'text', 0);
+		$var['params']['expirationYear'] = array( 'list', _AEC_CCFORM_EXPIRATIONYEAR_NAME, _AEC_CCFORM_EXPIRATIONYEAR_DESC);
 
 		return $var;
 	}
@@ -1433,7 +1432,7 @@ class XMLprocessor extends processor
 
 		// Create the xml string
 		$xml = $this->createRequestXML( $int_var, $settings, $metaUser, $new_subscription );
-
+print_r($xml);exit();
 		// Transmit xml to server
 		$response = $this->transmitRequestXML( $xml, $int_var, $settings, $metaUser, $new_subscription );
 
@@ -1772,15 +1771,15 @@ class aecHTML
 
 	function createFormParticle( $name, $row, $lists )
 	{
-		$type = $row[0];
-
 		if ( isset( $row[3] ) ) {
 			$value = $row[3];
+		} else {
+			$value = '';
 		}
 
 		$return = '<p><strong>' . $row[1] . '</strong></p>' . '<p>' . $row[2] . '</p>';
 
-		switch ( $type ) {
+		switch ( $row[0] ) {
 			case "inputA":
 				$return .= '<input name="' . $name . '" type="text" size="4" maxlength="5" value="' . $value . '"/>';
 				break;
@@ -3520,7 +3519,7 @@ class InvoiceFactory
 		Payment_HTML::checkoutForm( $option, $var['var'], $var['params'], $this, $repeat );
 	}
 
-	function internalcheckout( $option, $invoice, $userid )
+	function internalcheckout( $option )
 	{
 		global $database;
 
@@ -3528,12 +3527,24 @@ class InvoiceFactory
 
 		$this->puffer( $option );
 
-		$var = $this->objInvoice->prepareProcessorLink();
+		$var = $this->objInvoice->getFullVars();
 
 		$new_subscription = new SubscriptionPlan( $database );
 		$new_subscription->load( $this->objInvoice->usage );
 
-		$response = $this->pp->checkoutProcess( $var['var'], $this->pp->settings, $metaUser, $new_subscription );
+		$badbadvars = array( 'userid', 'invoice', 'task', 'option' );
+		foreach ( $badbadvars as $badvar ) {
+			if ( isset( $_POST[$badvar] ) ) {
+				unset( $_POST[$badvar] );
+			}
+		}
+
+		$var['params'] = array();
+		foreach ( $_POST as $varname => $varvalue ) {
+			$var['params'][$varname] = $varvalue;
+		}
+//
+		$response = $this->pp->processor->checkoutProcess( $var, $this->pp->settings, $metaUser, $new_subscription );
 
 		if ( isset( $response['error'] ) ) {
 			$this->error( $option, $metaUser->cmsUser, $this->objInvoice->invoice_number, $response['error'] );
@@ -3969,6 +3980,55 @@ class Invoice extends paramDBTable
 		} else {
 			return;
 		}
+	}
+
+	function getFullVars()
+	{
+		global $database, $mosConfig_live_site;
+
+		$int_var['params'] = $this->getParams();
+
+		// Filter non-processor params
+		$nonproc = array( 'pending_reason', 'deactivated' );
+		foreach ( $nonproc as $param ) {
+			if ( isset( $int_var['params'][$param] ) ) {
+				unset( $int_var['params'][$param] );
+			}
+		}
+
+		$metaUser = new metaUser( $this->userid );
+
+		$new_subscription = new SubscriptionPlan( $database );
+		$new_subscription->load( $this->usage );
+
+		$pp = new PaymentProcessor();
+		if ( !$pp->loadName( strtolower( $this->method ) ) ) {
+	 		// Nope, won't work buddy
+		 	notAllowed();
+		}
+
+		$pp->init();
+		$pp->getInfo();
+
+		$int_var['planparams'] = $new_subscription->getProcessorParameters( $pp->id );
+		$int_var['recurring'] = $pp->info['recurring'];
+
+		$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], $metaUser->objsubscription );
+
+		if ( !empty( $this->coupons ) ) {
+			$coupons = explode( ';', $this->coupons);
+
+			$cph = new couponsHandler();
+
+			$amount['amount'] = $cph->applyCoupons( $amount['amount'], $coupons, $metaUser );
+		}
+
+		$int_var['amount']		= $amount['amount'];
+		$int_var['return_url']	= $amount['return_url'];
+		$int_var['invoice']		= $this->invoice_number;
+		$int_var['usage']		= $this->invoice_number;
+
+		return $int_var;
 	}
 
 	function prepareProcessorLink()

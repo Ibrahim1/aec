@@ -81,6 +81,14 @@ define( '_CFG_PROCESSOR_ITEM_NAME_NAME', 'Item Description');
 define( '_CFG_PROCESSOR_ITEM_NAME_DESC', 'The Item Description transmitted to the processor.');
 define( '_CFG_PROCESSOR_ITEM_NAME_DEFAULT',	'Subscription at %s - User: %s (%s)' );
 
+// Generic Credit Card Form
+define( '_AEC_CCFORM_CARDNUMBER_NAME', 'Card Number');
+define( '_AEC_CCFORM_CARDNUMBER_DESC', 'The number of your credit card');
+define( '_AEC_CCFORM_EXPIRATIONYEAR_NAME', 'Expiration Year');
+define( '_AEC_CCFORM_EXPIRATIONYEAR_DESC', 'The Year your card will expire');
+define( '_AEC_CCFORM_EXPIRATIONMONTH_NAME', 'Expiration Month');
+define( '_AEC_CCFORM_EXPIRATIONMONTH_DESC', 'The Month your card will expire');
+
 // Paypal Settings
 define( '_CFG_PAYPAL_BUSINESS_NAME', 'Business ID:');
 define( '_CFG_PAYPAL_BUSINESS_DESC', 'Your Merchant ID (email) on PayPal.');
@@ -299,5 +307,18 @@ define( '_CFG_CYBERMUT_SERVER_NAME', 'Serveur bancair');
 define( '_CFG_CYBERMUT_SERVER_DESC', 'Choissisez votre banque');
 define( '_CFG_CYBERMUT_LANGUAGE_NAME', 'Language:');
 define( '_CFG_CYBERMUT_LANGUAGE_DESC', 'Select one of the possible language settings for the paypal site that your user will see when issuing a payment.');
+
+// Authorize.net Settings
+define( '_CFG_AUTHORIZE_ARB_LONGNAME', 'Authorize.net ARB');
+define( '_CFG_AUTHORIZE_ARB_STATEMENT', 'Make recurring payments with Authorize.net');
+define( '_CFG_AUTHORIZE_ARB_DESCRIPTION', 'Make recurring payments with Authorize.net');
+define( '_CFG_AUTHORIZE_ARB_LOGIN_NAME', 'API Login ID');
+define( '_CFG_AUTHORIZE_ARB_LOGIN_DESC', 'Your API Login ID on Authorize.net.');
+define( '_CFG_AUTHORIZE_ARB_TRANSACTION_KEY_NAME', 'Transaction Key');
+define( '_CFG_AUTHORIZE_ARB_TRANSACTION_KEY_DESC', 'Your Transaction Key on Authorize.net.');
+define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLFIRSTNAME_NAME', 'First Name');
+define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLFIRSTNAME_DESC', 'The First Name this should be billed to.');
+define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLLASTNAME_NAME', 'Last Name');
+define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLLASTNAME_DESC', 'The Last Name this should be billed to.');
 
 ?>
