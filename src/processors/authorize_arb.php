@@ -204,7 +204,7 @@ class processor_authorize_arb extends XMLprocessor
 
 			$subscriptionId = substring_between($response,'<subscriptionId>','</subscriptionId>');
 
-			$return['invoiceparams'] = array( "subscriptionid" => $subscriptionId )
+			$return['invoiceparams'] = array( "subscriptionid" => $subscriptionId );
 		}
 
 		return $return;
