@@ -119,7 +119,7 @@ class processor_authorize_arb extends XMLprocessor
 		return $var;
 	}
 
-	function creatRequestXML( $int_var, $cfg, $metaUser, $new_subscription )
+	function createRequestXML( $int_var, $cfg, $metaUser, $new_subscription )
 	{
 		global $mosConfig_live_site;
 
@@ -173,6 +173,41 @@ class processor_authorize_arb extends XMLprocessor
 		$content .=	'</ARBCreateSubscriptionRequest>';
 
 		return $content;
+	}
+
+	function transmitRequestXML( $xml, $int_var, $settings, $metaUser, $new_subscription )
+	{
+		$path = "/xml/v1/request.api";
+		if ( $settings['testmode'] ) {
+			$url = "https://apitest.authorize.net" . $path;
+		} else {
+			$url = "https://api.authorize.net" . $path;
+		}
+
+		$response = $this->transmitRequest( $url, $path, $xml, 443 );
+
+		$return['valid'] = false;
+		$return['raw'] = $response;
+
+		if ( $response ) {
+			$return['invoice'] = substring_between($response,'<refId>','</refId>');
+			$resultCode = substring_between($response,'<resultCode>','</resultCode>');
+
+			$code = substring_between($response,'<code>','</code>');
+			$text = substring_between($response,'<text>','</text>');
+
+			if ( strcmp( $resultCode, 'Ok' ) === 0) {
+				$return['valid'] = 1;
+			} else {
+				$return['error'] = $text;
+			}
+
+			$subscriptionId = substring_between($response,'<subscriptionId>','</subscriptionId>');
+
+			$return['invoiceparams'] = array( "subscriptionid" => $subscriptionId )
+		}
+
+		return $return;
 	}
 
 }

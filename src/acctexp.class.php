@@ -1401,6 +1401,97 @@ class XMLprocessor extends processor
 
 		return $return;
 	}
+
+	function checkoutProcess( $int_var, $settings, $metaUser, $new_subscription )
+	{
+		global $database;
+
+		// Create the xml string
+		$xml = $this->createRequestXML( $int_var, $settings, $metaUser, $new_subscription );
+
+		// Transmit xml to server
+		$response = $this->transmitRequestXML( $xml, $int_var, $settings, $metaUser, $new_subscription );
+
+		if ( $response != false ) {
+
+			$invoice = new Invoice( $database );
+			$invoice->loadInvoiceNumber( $response['invoice'] );
+
+			if ( isset( $response['raw'] ) ) {
+				$responsestring = $response['raw'];
+				unset( $response['raw'] );
+			} else {
+				$responsestring = '';
+			}
+
+			if ( isset( $response['invoiceparams'] ) ) {
+				$invoice->addParams( $response['invoiceparams'] );
+			}
+
+			$invoice->processorResponse( $this, $response, $responsestring );
+		} else {
+			return false;
+		}
+	}
+
+	function transmitRequest( $url, $path, $content, $port=443 )
+	{
+		$response = null;
+
+		$response = $this->doTheCurl( $url, $content );
+		if ( !$response ) {
+			// If curl doesn't work try using fsockopen
+			$response = $this->doTheHttp( $url, $path, $content, $port );
+		}
+
+		return $response;
+	}
+
+	function doTheHttp( $url, $path, $content, $port=443 )
+	{
+		$header  =	"Host: " . $url  . "\r\n"
+					. "User-Agent: PHP Script\r\n"
+					. "Content-Type: text/xml\r\n"
+					. "Content-Length: " . strlen($content) . "\r\n\r\n"
+					. "Connection: close\r\n\r\n";
+					;
+		$connection = fsockopen( $url, $port, $errno, $errstr, 30 );
+
+		if ( !$connection ) {
+			return false;
+		} else {
+			fwrite( $connection, "POST " . $path . " HTTP/1.1\r\n" );
+			fwrite( $connection, $header . $content );
+
+			while ( !feof( $connection ) ) {
+				$res = fgets( $connection, 1024 );
+				if ( strcmp( $res, 'VERIFIED' ) == 0 ) {
+					return true;
+				} elseif ( strcmp( $res, 'INVALID' ) == 0 ) {
+					return false;
+				}
+			}
+			fclose( $connection );
+		}
+		return false;
+	}
+
+	function doTheCurl( $url, $content )
+	{
+		$ch = curl_init();
+		curl_setopt( $ch, CURLOPT_URL, $url );
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
+		curl_setopt( $ch, CURLOPT_HTTPHEADER, Array("Content-Type: text/xml") );
+		curl_setopt( $ch, CURLOPT_HEADER, 1 );
+		curl_setopt( $ch, CURLOPT_POST, 1 );
+		curl_setopt( $ch, CURLOPT_POSTFIELDS, $content );
+		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, FALSE );
+		$response = curl_exec( $ch );
+		curl_close( $ch );
+
+		return $response;
+	}
+
 }
 
 class POSTprocessor extends processor
@@ -2488,7 +2579,7 @@ class logHistory extends mosDBTable
 		$this->mosDBTable( '#__acctexp_log_history', 'id', $db );
 	}
 
-	function entryFromInvoice( $objInvoice, $response, $processor )
+	function entryFromInvoice( $objInvoice, $response, $pp )
 	{
 		global $database, $mosConfig_offset_user;
 
@@ -2498,14 +2589,8 @@ class logHistory extends mosDBTable
 		$plan = new SubscriptionPlan( $database );
 		$plan->load( $objInvoice->usage );
 
-		$query = 'SELECT id'
-		. ' FROM #__acctexp_config_processors'
-		. ' WHERE name = \'' . $processor . '\''
-		;
-		$database->setQuery( $query );
-
-		$this->proc_id			= $database->loadResult();
-		$this->proc_name		= $processor;
+		$this->proc_id			= $pp->id;
+		$this->proc_name		= $pp->processor_name;
 		$this->user_id			= $user->id;
 		$this->user_name		= $user->username;
 		$this->plan_id			= $plan->id;
@@ -2516,7 +2601,7 @@ class logHistory extends mosDBTable
 	    $this->response			= $response;
 
 		$short	= 'history entry';
-		$event	= 'Processor (' . $processor . ') notification for ' . $objInvoice->invoice_number;
+		$event	= 'Processor (' . $pp->processor_name . ') notification for ' . $objInvoice->invoice_number;
 		$tags	= 'history,processor,payment';
 		$params = array( 'invoice_number' => $objInvoice->invoice_number );
 
@@ -3412,7 +3497,22 @@ class InvoiceFactory
 
 	function internalcheckout( $option, $invoice, $userid )
 	{
+		global $database;
+
+		$metaUser = new metaUser( $this->userid );
+
 		$this->puffer( $option );
+
+		$var = $this->objInvoice->prepareProcessorLink();
+
+		$new_subscription = new SubscriptionPlan( $database );
+		$new_subscription->load( $this->objInvoice->usage );
+
+		$response = $this->pp->checkoutProcess( $var['var'], $this->pp->settings, $metaUser, $new_subscription );
+
+		if ( isset( $response['error'] ) ) {
+			$this->error( $option, $metaUser->cmsUser, $this->objInvoice->invoice_number, $response['error'] );
+		}
 	}
 
 	function thanks( $option, $renew, $free )
@@ -3458,6 +3558,11 @@ class InvoiceFactory
 		} else {
 			HTML_Results::thanks( $option, $msg );
 		}
+	}
+
+	function error( $option, $objUser, $invoice, $error )
+	{
+		Payment_HTML::error( $option, $objUser, $invoice, $error );
 	}
 }
 
@@ -3667,6 +3772,114 @@ class Invoice extends paramDBTable
 			$numberofrows = $database->loadResult();
 		}
 		return $inum;
+	}
+
+	function processorResponse( $pp, $response, $responsestring )
+	{
+		global $database;
+
+		$this->computeAmount();
+
+		// Create history entry
+		$history = new logHistory( $database );
+		$history->entryFromInvoice ( $this, $responsestring, $pp );
+
+		$short = _AEC_MSG_PROC_INVOICE_ACTION_SH;
+		$event = _AEC_MSG_PROC_INVOICE_ACTION_EV . "\n";
+		foreach ($response as $key => $value) {
+			$event .= $key . "=" . $value . "\n";
+		}
+		$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_STATUS;
+		$tags	= 'invoice,processor';
+		$params = array( 'invoice_number' => $this->invoice_number );
+
+		$event .= ' ';
+
+		if ( $response['valid'] ) {
+			$break = 0;
+
+			if ( isset( $response['amount_paid'] ) ) {
+				if ( $response['amount_paid'] != $this->amount ) {
+					// Amount Fraud, cancel payment and create error log addition
+					$event	.= sprintf( _AEC_MSG_PROC_INVOICE_ACTION_EV_FRAUD, $response['amount_paid'], $this->amount );
+					$tags	.= ',fraud_attempt,amount_fraud';
+					$break	= 1;
+				}
+			}
+			if ( isset($response['amount_currency'] ) ) {
+				if ( $response['amount_currency'] != $this->currency ) {
+					// Amount Fraud, cancel payment and create error log addition
+					$event	.= sprintf( _AEC_MSG_PROC_INVOICE_ACTION_EV_CURR, $response['amount_currency'], $this->currency );
+					$tags	.= ',fraud_attempt,currency_fraud';
+					$break	= 1;
+				}
+			}
+
+			if ( !$break ) {
+				$renew	= $this->pay();
+				thanks( 'com_acctexp', $renew, ($pp === 0) );
+				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_VALID;
+				$tags	.= ',payment,action';
+			}
+		} else {
+			if ( isset( $response['pending'] ) ) {
+				if ( strcmp( $response['pending_reason'], 'signup' ) === 0 ) {
+					$plan = new SubscriptionPlan( $database );
+					$plan->load( $this->usage );
+					$plan_params = $plan->getParams( 'params' );
+
+					if ( $plan_params['trial_free'] ) {
+						$this->pay();
+						$this->setParams( array( 'free_trial' => $response['pending_reason'] ) );
+						$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_TRIAL;
+						$tags	.= ',payment,action,trial';
+					}
+				} else {
+					$this->setParams( array( 'pending_reason' => $response['pending_reason'] ) );
+					$event	.= sprintf( _AEC_MSG_PROC_INVOICE_ACTION_EV_PEND, $response['pending_reason'] );
+					$tags	.= ',payment,pending' . $response['pending_reason'];
+				}
+
+				$this->check();
+				$this->store();
+			} elseif ( isset( $response['cancel'] ) ) {
+				$metaUser = new metaUser();
+				$metaUser->load( $this->userid );
+				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_CANCEL;
+				$tags	.= ',cancel';
+
+				if ( $metaUser->objSubscription->hasSubscription ) {
+					$metaUser->objSubscription->setStatus( 'Cancelled' );
+					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS;
+				}
+			} elseif ( isset( $response['delete'] ) ) {
+				$metaUser = new metaUser();
+				$metaUser->load( $this->userid );
+				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_REFUND;
+				$tags	.= ',refund';
+
+				if ( $metaUser->objSubscription->hasSubscription ) {
+					$metaUser->objSubscription->expire();
+					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED;
+				}
+			} elseif (isset($response['eot'])) {
+				$metaUser = new metaUser();
+				$metaUser->load($this->userid);
+				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_EOT;
+				$tags	.= ',eot';
+			} elseif (isset($response['duplicate'])) {
+				$metaUser = new metaUser();
+				$metaUser->load($this->userid);
+				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_DUPLICATE;
+				$tags	.= ',duplicate';
+			} else {
+				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR;
+				$tags	.= ',general_error';
+			}
+		}
+
+		$eventlog = new eventLog( $database );
+		$eventlog->issue( $short, $tags, $event, $params );
 	}
 
 	function pay()

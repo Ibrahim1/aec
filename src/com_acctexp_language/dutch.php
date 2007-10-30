@@ -189,6 +189,11 @@ define( '_SUB_FEPARTICLE_PROCESSPAY', 'Ons systeem is in afwachting van je betal
 define( '_SUB_FEPARTICLE_ACTMAIL', 'Je ontvangt een email met een activatie link zodra ons systeem je verzoek heeft verwerkt. ');
 define( '_SUB_FEPARTICLE_MAIL', 'Je ontvangt een email You will receive an e-mail zodra ons systeem je verzoek heeft verwerkt. ');
 
+// --== CHECKOUT ERROR PAGE ==--
+define( '_CHECKOUT_ERROR_TITLE', 'Error while processing the payment!');
+define( '_CHECKOUT_ERROR_EXPLANATION', 'An error occured while processing your payment');
+define( '_CHECKOUT_ERROR_OPENINVOICE', 'This leaves your invoice uncleared. To retry the payment, you can go to the checkout page once again to try again:');
+
 // --== COUPON ERROR MESSAGES ==--
 define( '_COUPON_WARNING_AMOUNT', 'De coupon die u aan deze factuur toevoegt heeft geen invloed op een eventuele volgende betaling, Voor deze factuur heeft dit geen gevolgen, echter wel voor een volgend abonnement.');
 define( '_COUPON_ERROR_PRETEXT', 'Het spijt ons:');

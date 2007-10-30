@@ -188,6 +188,11 @@ define( '_SUB_FEPARTICLE_PROCESSPAY', 'Our system will now await your payment. '
 define( '_SUB_FEPARTICLE_ACTMAIL', 'You will receive an e-mail with an activation link once our system has processed your request. ');
 define( '_SUB_FEPARTICLE_MAIL', 'You will receive an e-mail once our system has processed your request. ');
 
+// --== CHECKOUT ERROR PAGE ==--
+define( '_CHECKOUT_ERROR_TITLE', 'Error while processing the payment!');
+define( '_CHECKOUT_ERROR_EXPLANATION', 'An error occured while processing your payment');
+define( '_CHECKOUT_ERROR_OPENINVOICE', 'This leaves your invoice uncleared. To retry the payment, you can go to the checkout page once again to try again:');
+
 // --== COUPON ERROR MESSAGES ==--
 define( '_COUPON_WARNING_AMOUNT', 'One Coupon that you have added to this invoice does not affect the next payment, so although it seems that it does not affect this invoice, it will affect a subsequent payment.');
 define( '_COUPON_ERROR_PRETEXT', 'We are terribly sorry:');

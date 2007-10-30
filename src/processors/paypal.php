@@ -236,7 +236,7 @@ class processor_paypal extends POSTprocessor
 			$invoiceamount = false;
 		}
 
-		$response['valid'] = 0; // mic: set generic, if true will be set below
+		$response['valid'] = 0;
 
 		if ( strcmp( $receiver_email, $cfg['business'] ) != 0 && $cfg['checkbusiness'] ) {
 			$response['pending_reason'] = 'checkbusiness error';
@@ -302,16 +302,13 @@ class processor_paypal extends POSTprocessor
 	function doTheCurl( $url, $req )
 	{
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_VERBOSE, 1);
-		//curl_setopt ($ch, CURLOPT_HTTPPROXYTUNNEL, TRUE);
-		curl_setopt ($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
-		curl_setopt ($ch, CURLOPT_PROXY,"http://proxy.shr.secureserver.net:3128");
-		curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-		curl_setopt ($ch, CURLOPT_URL, $url);
-		curl_setopt ($ch, CURLOPT_POST, 1);
-		curl_setopt ($ch, CURLOPT_POSTFIELDS, $req);
-		curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt ($ch, CURLOPT_TIMEOUT, 120);
+		curl_setopt( $ch, CURLOPT_VERBOSE, 1 );
+		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, FALSE );
+		curl_setopt( $ch, CURLOPT_URL, $url );
+		curl_setopt( $ch, CURLOPT_POST, 1 );
+		curl_setopt( $ch, CURLOPT_POSTFIELDS, $req );
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
+		curl_setopt( $ch, CURLOPT_TIMEOUT, 120 );
 		$fp = curl_exec ($ch);
 		curl_close($ch);
 

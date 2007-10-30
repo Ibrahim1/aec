@@ -822,7 +822,7 @@ function processNotification( $option, $processor )
 
 	switch ( strtolower( $processor ) ) {
 		case 'free':
-			$free = 1;
+			$pp = 0;
 			break;
 		case 'transfer':
 			break;
@@ -845,11 +845,7 @@ function processNotification( $option, $processor )
 	// Get Invoice record
 	$id = AECfetchfromDB::InvoiceIDfromNumber( $response['invoice'] );
 
-	if ( $id ) {
-		$objInvoice = new Invoice( $database );
-		$objInvoice->load( $id );
-		$objInvoice->computeAmount();
-	} else {
+	if ( !$id ) {
 		$short	= _AEC_MSG_PROC_INVOICE_FAILED_SH;
 		$event	= sprintf( _AEC_MSG_PROC_INVOICE_FAILED_EV, $processor, $objInvoice->invoice_number )
 				. ' ' . $database->getErrorMsg();
@@ -861,106 +857,9 @@ function processNotification( $option, $processor )
 		return;
 	}
 
-	// Create history entry
-	$history = new logHistory( $database );
-	$history->entryFromInvoice ( $objInvoice, $responsestring, $processor );
-
-	$short = _AEC_MSG_PROC_INVOICE_ACTION_SH;
-	$event = _AEC_MSG_PROC_INVOICE_ACTION_EV . "\n";
-	foreach ($response as $key => $value) {
-		$event .= $key . "=" . $value . "\n";
-	}
-	$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_STATUS;
-	$tags	= 'invoice,processor';
-	$params = array( 'invoice_number' => $objInvoice->invoice_number );
-
-	$event .= ' ';
-
-	if ( $response['valid'] ) {
-		$break = 0;
-
-		if ( isset( $response['amount_paid'] ) ) {
-			if ( $response['amount_paid'] != $objInvoice->amount ) {
-				// Amount Fraud, cancel payment and create error log addition
-				$event	.= sprintf( _AEC_MSG_PROC_INVOICE_ACTION_EV_FRAUD, $response['amount_paid'], $objInvoice->amount );
-				$tags	.= ',fraud_attempt,amount_fraud';
-				$break	= 1;
-			}
-		}
-		if ( isset($response['amount_currency'] ) ) {
-			if ( $response['amount_currency'] != $objInvoice->currency ) {
-				// Amount Fraud, cancel payment and create error log addition
-				$event	.= sprintf( _AEC_MSG_PROC_INVOICE_ACTION_EV_CURR, $response['amount_currency'], $objInvoice->currency );
-				$tags	.= ',fraud_attempt,currency_fraud';
-				$break	= 1;
-			}
-		}
-
-		if ( !$break ) {
-			$renew	= $objInvoice->pay();
-			thanks( $option, $renew, $free );
-			$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_VALID;
-			$tags	.= ',payment,action';
-		}
-	} else {
-		if ( isset( $response['pending'] ) ) {
-			if ( strcmp( $response['pending_reason'], 'signup' ) === 0 ) {
-				$plan = new SubscriptionPlan( $database );
-				$plan->load( $objInvoice->usage );
-				$plan_params = $plan->getParams( 'params' );
-
-				if ( $plan_params['trial_free'] ) {
-					$objInvoice->pay();
-					$objInvoice->setParams( array( 'free_trial' => $response['pending_reason'] ) );
-					$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_TRIAL;
-					$tags	.= ',payment,action,trial';
-				}
-			} else {
-				$objInvoice->setParams( array( 'pending_reason' => $response['pending_reason'] ) );
-				$event	.= sprintf( _AEC_MSG_PROC_INVOICE_ACTION_EV_PEND, $response['pending_reason'] );
-				$tags	.= ',payment,pending' . $response['pending_reason'];
-			}
-
-			$objInvoice->check();
-			$objInvoice->store();
-		} elseif ( isset( $response['cancel'] ) ) {
-			$metaUser = new metaUser();
-			$metaUser->load( $objInvoice->userid );
-			$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_CANCEL;
-			$tags	.= ',cancel';
-
-			if ( $metaUser->objSubscription->hasSubscription ) {
-				$metaUser->objSubscription->setStatus( 'Cancelled' );
-				$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS;
-			}
-		} elseif ( isset( $response['delete'] ) ) {
-			$metaUser = new metaUser();
-			$metaUser->load( $objInvoice->userid );
-			$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_REFUND;
-			$tags	.= ',refund';
-
-			if ( $metaUser->objSubscription->hasSubscription ) {
-				$metaUser->objSubscription->expire();
-				$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED;
-			}
-		} elseif (isset($response['eot'])) {
-			$metaUser = new metaUser();
-			$metaUser->load($objInvoice->userid);
-			$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_EOT;
-			$tags	.= ',eot';
-		} elseif (isset($response['duplicate'])) {
-			$metaUser = new metaUser();
-			$metaUser->load($objInvoice->userid);
-			$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_DUPLICATE;
-			$tags	.= ',duplicate';
-		} else {
-			$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR;
-			$tags	.= ',general_error';
-		}
-	}
-
-	$eventlog = new eventLog( $database );
-	$eventlog->issue( $short, $tags, $event, $params );
+	$objInvoice = new Invoice( $database );
+	$objInvoice->load( $id );
+	$objInvoice->processorResponse( $pp, $response, $responsestring );
 }
 
 function errorAP( $option, $usage, $userid, $username, $name, $recurring )

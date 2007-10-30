@@ -740,6 +740,34 @@ class Payment_HTML
 		<?php
 	}
 
+	function error( $option, $objUser, $invoice, $error=false )
+	{
+		global $database, $aecConfig;
+
+		$actions =	_CHECKOUT_ERROR_OPENINVOICE
+		. ' <a href="'
+		.  AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice='
+		. $invoice . '&amp;Itemid=' . $objUser->id ) . '" title="' . _GOTO_CHECKOUT . '">'
+		. _GOTO_CHECKOUT
+		. '</a>'
+		. ', ' . _GOTO_CHECKOUT_CANCEL . ' '
+		. '<a href="'
+		. AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=cancelPayment&amp;invoice='
+		. $invoice . '&amp;Itemid=' . $objUser->id . '&amp;pending=1' )
+		. '" title="' . _HISTORY_ACTION_CANCEL . '">'
+		. _HISTORY_ACTION_CANCEL
+		. '</a>'
+		;
+		?>
+
+		<div class="componentheading"><?php echo _CHECKOUT_ERROR_TITLE; ?></div>
+		<div id="box_pending">
+			<p><?php echo _CHECKOUT_ERROR_EXPLANATION . ( $error ? ( ': ' . $error) : '' ); ?></p>
+			<p><?php echo $actions; ?></p>
+		</div>
+		<?php
+	}
+
     function errorAP( $option, $planid, $userid, $username, $name, $recurring )
     {
 		HTML_frontend::aec_styling($option);?>

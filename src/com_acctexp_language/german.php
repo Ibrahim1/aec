@@ -184,6 +184,11 @@ define( '_SUB_FEPARTICLE_PROCESSPAY',		'Wir werden nun ihre Bezahlung abwarten.'
 define( '_SUB_FEPARTICLE_ACTMAIL',			'Sobald die Anfrage abgeschlossen ist, erhalten sie ein Email mit dem Aktivierungscode');
 define( '_SUB_FEPARTICLE_MAIL',				'Sobald die Anfrage abgeschlossen ist, erhalten Sie von uns ein Email');
 
+// --== CHECKOUT ERROR PAGE ==--
+define( '_CHECKOUT_ERROR_TITLE', 'Error while processing the payment!');
+define( '_CHECKOUT_ERROR_EXPLANATION', 'An error occured while processing your payment');
+define( '_CHECKOUT_ERROR_OPENINVOICE', 'This leaves your invoice uncleared. To retry the payment, you can go to the checkout page once again to try again:');
+
 // --== COUPON INFO ==--
 define( '_COUPON_INFO',						'Gutscheine:');
 define( '_COUPON_INFO_CONFIRM',				'Falls Sie einen Gutschein f&uuml;r die Bezahlung verwenden m&ouml;chten, geben Sie diesen bitte auf der Rechnungsseite an.');

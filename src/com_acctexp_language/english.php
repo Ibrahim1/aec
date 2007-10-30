@@ -164,7 +164,7 @@ define( '_CANCEL_MSG', 'Our System has received the message, that you have chose
 // --== PENDING PAGE ==--
 define( '_PENDING_TITLE', 'Account Pending');
 define( '_WARN_PENDING', 'Your account is pending or temporarily suspended. If you are in this state for more than some hours and your payment is confirmed, please contact the administrator of this web site.');
-define( '_PENDING_OPENINVOICE', 'It seems that you have an uncleared invoice in our database - If something went wrong along the way, you can go to the checkout page once again to try again:');
+define( '_PENDING_OPENINVOICE', 'It seems that you have an uncleared invoice in our database - If something went wrong along the way, you can go to the checkout page to try again:');
 define( '_GOTO_CHECKOUT', 'Go to the checkout page again');
 define( '_GOTO_CHECKOUT_CANCEL', 'you may also cancel the payment (you will have the possibility to go to the Plan Selection screen once again):');
 define( '_PENDING_NOINVOICE', 'It appears that you have cancelled the only invoice that was left for your account. Please use the button below to go to the Plan Selection page again:');
@@ -183,6 +183,11 @@ define( '_SUB_FEPARTICLE_PROCESS', 'Our system will now work on your request. ')
 define( '_SUB_FEPARTICLE_PROCESSPAY', 'Our system will now await your payment. ');
 define( '_SUB_FEPARTICLE_ACTMAIL', 'You will receive an e-mail with an activation link once our system has processed your request. ');
 define( '_SUB_FEPARTICLE_MAIL', 'You will receive an e-mail once our system has processed your request. ');
+
+// --== CHECKOUT ERROR PAGE ==--
+define( '_CHECKOUT_ERROR_TITLE', 'Error while processing the payment!');
+define( '_CHECKOUT_ERROR_EXPLANATION', 'An error occured while processing your payment');
+define( '_CHECKOUT_ERROR_OPENINVOICE', 'This leaves your invoice uncleared. To retry the payment, you can go to the checkout page once again to try again:');
 
 // --== COUPON INFO ==--
 define( '_COUPON_INFO', 'Coupons:');

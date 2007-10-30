@@ -188,6 +188,11 @@ define( '_SUB_FEPARTICLE_PROCESSPAY', 'Notre syst&egrave;me est en attente de vo
 define( '_SUB_FEPARTICLE_ACTMAIL', 'Vous allez recevoir un message par mail qui contiendra un lien d\'activation quand notre syst&egrave;me aura trait&eacute; votre demande. ');
 define( '_SUB_FEPARTICLE_MAIL', 'Vous allez recevoir un mail une fois que notre syst&egrave;me. ');
 
+// --== CHECKOUT ERROR PAGE ==--
+define( '_CHECKOUT_ERROR_TITLE', 'Error while processing the payment!');
+define( '_CHECKOUT_ERROR_EXPLANATION', 'An error occured while processing your payment');
+define( '_CHECKOUT_ERROR_OPENINVOICE', 'This leaves your invoice uncleared. To retry the payment, you can go to the checkout page once again to try again:');
+
 // --== COUPON ERROR MESSAGES ==--
 define( '_COUPON_WARNING_AMOUNT', 'Un des bons de r&eacute;duction que vous avez ajout&eacute; &agrave; cette facture ne modifie pas le montant du prochain paiement. Bien qu\'il semble ne pas affecter cette facture, il modifie en r&eacute;alit&eacute; un paiement ult&eacute;rieur.');
 define( '_COUPON_ERROR_PRETEXT', 'Nous sommes d&eacute;sol&eacute;s :');
