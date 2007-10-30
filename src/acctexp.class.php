@@ -1402,6 +1402,31 @@ class XMLprocessor extends processor
 		return $return;
 	}
 
+	function getCCform()
+	{
+		// Create a selection box with 12 months
+		$months = array();
+		for( $i = 1; $i < 13; $i++ ){
+			$month = str_pad( $i, 2, "0", STR_PAD_LEFT );
+			$months[] = mosHTML::makeOption( $month, $month );
+		}
+
+		$var['params']['lists']['expirationMonth'] = mosHTML::selectList($months, 'expirationMonth', 'size="10"', 'value', 'text', 0);
+		$var['params']['expirationMonth'] = array( 'list', _AEC_CCFORM_EXPIRATIONMONTH_NAME, _AEC_CCFORM_EXPIRATIONMONTH_DESC);
+
+		// Create a selection box with the next 10 years
+		$year = date('Y');
+		$years = array();
+		for( $i = $year; $i < $year + 10; $i++ ) {
+			$years[] = mosHTML::makeOption( $i, $i );
+		}
+
+		$var['params']['lists']['expirationYear'] = mosHTML::selectList($years, 'expirationYear', 'size="10"', 'value', 'text', 0);
+		$var['params']['expirationMonth'] = array( 'list', _AEC_CCFORM_EXPIRATIONYEAR_NAME, _AEC_CCFORM_EXPIRATIONYEAR_DESC);
+
+		return $var;
+	}
+
 	function checkoutProcess( $int_var, $settings, $metaUser, $new_subscription )
 	{
 		global $database;
@@ -3843,8 +3868,7 @@ class Invoice extends paramDBTable
 				$this->check();
 				$this->store();
 			} elseif ( isset( $response['cancel'] ) ) {
-				$metaUser = new metaUser();
-				$metaUser->load( $this->userid );
+				$metaUser = new metaUser( $this->userid );
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_CANCEL;
 				$tags	.= ',cancel';
 
@@ -3853,8 +3877,7 @@ class Invoice extends paramDBTable
 					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS;
 				}
 			} elseif ( isset( $response['delete'] ) ) {
-				$metaUser = new metaUser();
-				$metaUser->load( $this->userid );
+				$metaUser = new metaUser( $this->userid );
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_REFUND;
 				$tags	.= ',refund';
 
@@ -3863,13 +3886,11 @@ class Invoice extends paramDBTable
 					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED;
 				}
 			} elseif (isset($response['eot'])) {
-				$metaUser = new metaUser();
-				$metaUser->load($this->userid);
+				$metaUser = new metaUser( $this->userid );
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_EOT;
 				$tags	.= ',eot';
 			} elseif (isset($response['duplicate'])) {
-				$metaUser = new metaUser();
-				$metaUser->load($this->userid);
+				$metaUser = new metaUser( $this->userid );
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_DUPLICATE;
 				$tags	.= ',duplicate';
 			} else {
