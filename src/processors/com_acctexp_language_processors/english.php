@@ -308,7 +308,7 @@ define( '_CFG_CYBERMUT_SERVER_DESC', 'Choissisez votre banque');
 define( '_CFG_CYBERMUT_LANGUAGE_NAME', 'Language:');
 define( '_CFG_CYBERMUT_LANGUAGE_DESC', 'Select one of the possible language settings for the paypal site that your user will see when issuing a payment.');
 
-// Authorize.net Settings
+// Authorize.net ARB Settings
 define( '_CFG_AUTHORIZE_ARB_LONGNAME', 'Authorize.net ARB');
 define( '_CFG_AUTHORIZE_ARB_STATEMENT', 'Make recurring payments with Authorize.net');
 define( '_CFG_AUTHORIZE_ARB_DESCRIPTION', 'Make recurring payments with Authorize.net');
@@ -316,6 +316,10 @@ define( '_CFG_AUTHORIZE_ARB_LOGIN_NAME', 'API Login ID');
 define( '_CFG_AUTHORIZE_ARB_LOGIN_DESC', 'Your API Login ID on Authorize.net.');
 define( '_CFG_AUTHORIZE_ARB_TRANSACTION_KEY_NAME', 'Transaction Key');
 define( '_CFG_AUTHORIZE_ARB_TRANSACTION_KEY_DESC', 'Your Transaction Key on Authorize.net.');
+define( '_CFG_AUTHORIZE_ARB_TOTALOCCURRENCES_NAME', 'Total Occurances');
+define( '_CFG_AUTHORIZE_ARB_TOTALOCCURRENCES_DESC', 'Authorize.net requires that you set the total amount of occurances of a payment. Make sure the total lifespan of a subscription does not exceed three years');
+define( '_CFG_AUTHORIZE_ARB_TRIALOCCURRENCES_NAME', 'Trial Occurances');
+define( '_CFG_AUTHORIZE_ARB_TRIALOCCURRENCES_DESC', 'Specify the amount of trial periods that are granted to the user. This amount will be substracted from the total occurances.');
 define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLFIRSTNAME_NAME', 'First Name');
 define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLFIRSTNAME_DESC', 'The First Name this should be billed to.');
 define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLLASTNAME_NAME', 'Last Name');

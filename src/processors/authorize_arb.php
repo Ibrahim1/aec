@@ -111,14 +111,15 @@ class processor_authorize_arb extends XMLprocessor
 					. '</merchantAuthentication>'
 					. '<refId>' . $int_var['invoice'] . '</refId>';
 
+		$full = $this->convertPeriodUnit( $int_var['amount']['period3'], $int_var['amount']['unit3'] );
 
 		// Add Payment information
 		$content .=	'<subscription>'
 					. '<name>' . trim( substr( AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription ), 0, 20 ) ) . '</name>'
 					. '<paymentSchedule>'
 					. '<interval>'
-					. '<length>' . trim( $int_var['amount']['period3'] ) . '</length>'
-					. '<unit>' . trim( $int_var['amount']['unit3'] ) . '</unit>'
+					. '<length>' . trim( $full['period'] ) . '</length>'
+					. '<unit>' . trim( $full['unit'] ) . '</unit>'
 					. '</interval>'
 					. '<startDate>' . trim( date( 'Y-m-d' ) ) . '</startDate>'
 					. '<totalOccurrences>' . trim( $cfg['totalOccurrences'] ) . '</totalOccurrences>';
@@ -200,5 +201,34 @@ class processor_authorize_arb extends XMLprocessor
 		}
 	}
 
+	function convertPeriodUnit( $period, $unit )
+	{
+		$return = array();
+		switch ( $unit ) {
+			case 'D':
+				$return['unit'] = 'days';
+				$return['period'] = $period;
+				break;
+			case 'W':
+				if ( $period%4 == 0 ) {
+					$return['unit'] = 'months';
+					$return['period'] = $period/4;
+				} else {
+					$return['unit'] = 'days';
+					$return['period'] = $period*7;
+				}
+				break;
+			case 'M':
+				$return['unit'] = 'months';
+				$return['period'] = $period;
+				break;
+			case 'Y':
+				$return['unit'] = 'months';
+				$return['period'] = $period*12;
+				break;
+		}
+
+		return $return;
+	}
 }
 ?>

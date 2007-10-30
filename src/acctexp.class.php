@@ -1432,7 +1432,7 @@ class XMLprocessor extends processor
 
 		// Create the xml string
 		$xml = $this->createRequestXML( $int_var, $settings, $metaUser, $new_subscription );
-print_r($xml);exit();
+
 		// Transmit xml to server
 		$response = $this->transmitRequestXML( $xml, $int_var, $settings, $metaUser, $new_subscription );
 
