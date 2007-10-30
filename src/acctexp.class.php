@@ -3543,7 +3543,7 @@ class InvoiceFactory
 		foreach ( $_POST as $varname => $varvalue ) {
 			$var['params'][$varname] = $varvalue;
 		}
-//
+
 		$response = $this->pp->processor->checkoutProcess( $var, $this->pp->settings, $metaUser, $new_subscription );
 
 		if ( isset( $response['error'] ) ) {

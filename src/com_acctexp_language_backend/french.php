@@ -646,6 +646,8 @@ define( '_CFG_GENERAL_NOEMAILS_NAME', 'No Emails');
 define( '_CFG_GENERAL_NOEMAILS_DESC', 'Set this to prevent AEC System Emails (to the user in events of invoices paid or alike) from being sent out. This does not affect emails being sent from MicroIntegrations.');
 define( '_CFG_GENERAL_NOJOOMLAREGEMAILS_NAME', 'No Joomla Emails');
 define( '_CFG_GENERAL_NOJOOMLAREGEMAILS_DESC', 'Set this to prevent Joomla Registration Confirmation emails from being sent out.');
+define( '_CFG_GENERAL_DEBUGMODE_NAME', 'Debug Mode');
+define( '_CFG_GENERAL_DEBUGMODE_DESC', 'Activates the display of debug information.');
 
 // Global Micro Integration Settings
 define( '_CFG_TAB_MICROINTEGRATION_TITLE', 'MicroIntegr');
