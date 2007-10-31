@@ -90,6 +90,8 @@ define( '_CFG_PROCESSOR_ITEM_NAME_DESC',	'Artikelbeschreibung dieses Services' )
 define( '_CFG_PROCESSOR_ITEM_NAME_DEFAULT',	'Abonnement auf %s - Benutzer: %s (%s)' );
 
 // Generic Credit Card Form
+define( '_AEC_CCFORM_CARDHOLDER_NAME', 'Cardholder\'s Name');
+define( '_AEC_CCFORM_CARDHOLDER_DESC', 'The name of the credit card holder');
 define( '_AEC_CCFORM_CARDNUMBER_NAME', 'Card Number');
 define( '_AEC_CCFORM_CARDNUMBER_DESC', 'The number of your credit card');
 define( '_AEC_CCFORM_EXPIRATIONYEAR_NAME', 'Expiration Year');

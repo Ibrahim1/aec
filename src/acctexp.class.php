@@ -1358,7 +1358,8 @@ class XMLprocessor extends processor
 {
 	function checkoutAction( $int_var, $settings, $metaUser, $new_subscription )
 	{
-		$var = $this->checkoutform( $int_var, $settings, $metaUser, $new_subscription );
+		//$var = $this->checkoutform( $int_var, $settings, $metaUser, $new_subscription );
+		$var = $this->getCCform();
 
 		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=checkout', false ) . '" method="post">' . "\n";
 		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
@@ -1400,8 +1401,9 @@ class XMLprocessor extends processor
 
 	function getCCform()
 	{
+		$var['params']['cardName'] = array( 'inputC', _AEC_CCFORM_CARDHOLDER_NAME, _AEC_CCFORM_CARDHOLDER_DESC, '');
 		// Request the Card number
-		$var['params']['cardNumber'] = array( 'inputC', _AEC_CCFORM_CARDNUMBER_NAME, _AEC_CCFORM_CARDNUMBER_NAME, '');
+		$var['params']['cardNumber'] = array( 'inputC', _AEC_CCFORM_CARDNUMBER_NAME, _AEC_CCFORM_CARDNUMBER_DESC, '');
 
 		// Create a selection box with 12 months
 		$months = array();
@@ -1453,6 +1455,7 @@ class XMLprocessor extends processor
 			}
 
 			$invoice->processorResponse( $this, $response, $responsestring );
+			return $response;
 		} else {
 			return false;
 		}
@@ -1505,8 +1508,8 @@ class XMLprocessor extends processor
 		$ch = curl_init();
 		curl_setopt( $ch, CURLOPT_URL, $url );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-		curl_setopt( $ch, CURLOPT_HTTPHEADER, Array("Content-Type: text/xml") );
-		curl_setopt( $ch, CURLOPT_HEADER, 1 );
+		//curl_setopt( $ch, CURLOPT_HTTPHEADER, Array("Content-Type: text/xml") );
+		//curl_setopt( $ch, CURLOPT_HEADER, 1 );
 		curl_setopt( $ch, CURLOPT_POST, 1 );
 		curl_setopt( $ch, CURLOPT_POSTFIELDS, $content );
 		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, FALSE );
@@ -1777,7 +1780,7 @@ class aecHTML
 			$value = '';
 		}
 
-		$return = '<p><strong>' . $row[1] . '</strong></p>' . '<p>' . $row[2] . '</p>';
+		$return = '<label><strong>' . $row[1] . '</strong></label>'; //. '<p>' . $row[2] . '</p>';
 
 		switch ( $row[0] ) {
 			case "inputA":
@@ -3390,7 +3393,7 @@ class InvoiceFactory
 
 	function checkout( $option, $repeat=0 )
 	{
-		global $database;
+		global $database, $aecConfig;
 
 		$metaUser = new metaUser( $this->userid );
 
@@ -3419,7 +3422,7 @@ class InvoiceFactory
 		$amount				= $this->objUsage->SubscriptionAmount( $this->recurring, $user_subscription );
 		$original_amount	= $this->objUsage->SubscriptionAmount( $this->recurring, $user_subscription );
 		$warning			= 0;
-
+		
 		if ( !empty( $aecConfig->cfg['enable_coupons'] ) ) {
 			$this->coupons['active'] = 1;
 

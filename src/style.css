@@ -455,6 +455,24 @@ background-color: #ddd;
 td.checkout_action {
 text-align: center;
 }
+#checkoutbox label {
+	display:block;
+	float:left;
+	width:48%;
+	clear:left;
+	text-align:right;
+	padding-right:2%;
+}
+#checkoutbox .inputbox, #checkoutbox select{
+	display:block;
+	float:left;
+	clear:right;
+}
+#checkoutbox .button{
+	clear: both;
+	display:block;
+	float:right;
+}
 
 /* == Styling for the Subscription Details Page == */
 

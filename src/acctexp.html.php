@@ -661,6 +661,7 @@ class Payment_HTML
 					</tr>
 				</table>
 				<?php
+				
 				if ( $InvoiceFactory->coupons['active'] ) { ?>
 					<p><?php echo _CHECKOUT_COUPON_INFO; ?></p>
 					<table width="100%" id="couponsbox">
