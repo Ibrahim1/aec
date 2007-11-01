@@ -654,6 +654,12 @@ define( '_CFG_MI_ACTIVELIST_DESC',						'W&auml;hlen welche MicroIntegrationen a
 define( '_CFG_MI_META_NAME',							'MicroIntegrationen Meta' );
 define( '_CFG_MI_META_DESC',							'Sollen die MicroIntegrationen untereinander Variablen austauschen d&uuml;rfen' );
 
+//Invoice settings
+define( '_CFG_GENERAL_SENDINVOICE_NAME', 'Send an invoice email');
+define( '_CFG_GENERAL_SENDINVOICE_DESC', 'Send and invoice/purchase order email (for tax reasons)');
+define( '_CFG_GENERAL_INVOICETMPL_NAME', 'Invoice Template');
+define( '_CFG_GENERAL_INVOICETMPL_DESC', 'Template for invoices/purchase orders');
+
 // --== PAYMENT PLAN PAGE ==--
 // Additions of variables for free trial periods by Michael Spredemann (scubaguy)
 

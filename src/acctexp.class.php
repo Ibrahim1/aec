@@ -169,6 +169,22 @@ class metaUser
 			$this->hasCBprofile = false;
 		}
 	}
+	function loadVMUser()
+	{
+		global $database;
+		
+		$query = 'SELECT * FROM #__vm_user_info '
+				. 'WHERE user_id = \'' .(int) $this->userid. '\'';
+				
+		$database->setQuery( $query );
+		$database->loadObject( $this->vmUser );
+		
+		if ( is_object( $this->vmUser ) ) {
+			$this->hasVMprofile = true;
+		} else {
+			$this->hasVMprofile = false;
+		}
+	}
 
 	function CustomRestrictionResponse( $restrictions )
 	{
@@ -1928,6 +1944,9 @@ class Config_General extends paramDBTable
 		$def['nojoomlaregemails']					= 0;
 		// new 0.12.4.10
 		$def['debugmode']							= 0;
+		
+		$def['sendinvoice']							= 0;
+		$def['invoicetemplate']						= '';
 
 		// Write to Params, do not overwrite existing data
 		$this->addParams( $def, 'settings', false );
@@ -4139,6 +4158,162 @@ class Invoice extends paramDBTable
 		$this->addParams( $array );
 		return true;
 	}
+	
+	function sendInvoice($option){
+		global $mosConfig_sitename, $mosConfig_mailfrom, $database, $aecConfig;
+		
+		$user = new metaUser($this->userid);
+		$user->loadVMuser();
+		
+		if($this->usage != 2 && $this->usage != 4){
+			
+			$query = "SELECT * FROM #__vm_user_info WHERE user_id = ".$this->userid;
+			$database->setQuery($query);
+			$vm_user_details = $database->loadAssocList();
+			$vm_user_details = $vm_user_details[0];			
+			
+			$user = new metaUser($this->userid);
+			$body = '<h3>Spark of Life Membership Tax Invoice</h3>
+<p>
+Dementia Care Australia<br />
+PO Box 378<br />
+Mooroolbark,
+VIC<br />
+Australia,
+3138</p>
+<p>ABN: 57 062 386 216</p>
+<h4>Order Information </h4>
+<table width="100%" border="0" cellspacing="5" cellpadding="0">
+  <tr>
+    <td>Invoice Number</td>
+    <td>{inv_no}</td>
+  </tr>
+  <tr>
+    <td width="74%">Order Date </td>
+    <td width="26%">{date}</td>
+  </tr>
+</table>
+<h4>Customer Details  </h4>
+<table border="0" cellspacing="5" cellpadding="0">
+  <tr>
+    <td width="146">Name:</td>
+    <td width="281">{name}</td>
+  </tr>
+  <tr>
+    <td>Username:</td>
+    <td>{username}</td>
+  </tr>
+  <tr>
+    <td>Company:</td>
+    <td>{company}</td>
+  </tr>
+  <tr>
+    <td>Address:</td>
+    <td>{address}</td>
+  </tr>
+  <tr>
+    <td>City:</td>
+    <td>{city}</td>
+  </tr>
+  <tr>
+    <td>State:</td>
+    <td>{state}</td>
+  </tr>
+  <tr>
+    <td>Postcode:</td>
+    <td>{postcode}</td>
+  </tr>
+  <tr>
+    <td>Country:</td>
+    <td>{country}</td>
+  </tr>
+  <tr>
+    <td>Phone:</td>
+    <td>{phone}</td>
+  </tr>
+  <tr>
+    <td>Email:</td>
+    <td>{email}</td>
+  </tr>
+</table>
+<h4>Order Items  </h4>
+<table style="border-width: 0px; width: 100%" border="0" cellspacing="5" cellpadding="0">
+	<tbody>
+		<tr>
+			<td>{invoice_desc}:</td>
+			<td align="right">{cost}			</td>
+		</tr>
+		<tr>
+			<td>GST (for Australian customers):</td>
+			<td align="right">{gst}			</td>
+		</tr>
+		<tr>
+			<td><strong>Total:</strong></td>
+			<td align="right"><strong>{total} 
+			</strong></td>
+		</tr>
+	</tbody>
+</table>
+<h4>Payment Infomation </h4>
+<p>{pay_method}
+</p>';
+			$body = str_replace("{inv_no}",$this->invoice_number,$body);
+			$body = str_replace("{date}",date('D, jS M Y',strtotime($this->created_date)),$body);
+			$body = str_replace("{name}",$user->cmsUser->name,$body);
+			$body = str_replace("{username}",$user->cmsUser->username,$body);
+			$body = str_replace("{company}",$vm_user_details['company'],$body);
+			$body = str_replace("{address}",$vm_user_details['address_1'],$body);
+			$body = str_replace("{city}",$vm_user_details['city'],$body);
+			$body = str_replace("{state}",$vm_user_details['state'],$body);
+			$body = str_replace("{postcode}",$vm_user_details['zip'],$body);
+			$body = str_replace("{country}",$vm_user_details['country'],$body);
+			$body = str_replace("{phone}",$vm_user_details['phone_1'],$body);
+			$body = str_replace("{email}",$user->cmsUser->email,$body);
+			if($this->usage == 3){
+				$body = str_replace("{invoice_desc}","Spark of life Facility Membership",$body);
+			}else{
+				$body = str_replace("{invoice_desc}","Spark of life Individual Membership",$body);
+			}
+			
+			$body = str_replace("{cost}","$".$this->amount,$body);
+			$body = str_replace("{total}","$".$this->amount,$body);
+			$body = str_replace("{gst}","$".number_format($this->amount / 11,2),$body);
+			
+			if($this->method == 'transfer'){
+				$body = str_replace("{pay_method}","Cheque / Money Order <br /><br />Please print this invoice and return it, along with your payment to:<p>
+Dementia Care Australia<br />
+PO Box 378<br />
+Mooroolbark,
+VIC<br />
+Australia,
+3138</p>",$body);
+			}else{
+				$body = str_replace("{pay_method}","Credit Card",$body);
+			}
+			
+			$subject = "Spark of Life Membership Invoice #".$this->invoice_number;
+			
+			$query = "SELECT * FROM #__vm_vendor WHERE vendor_id = 1";
+			$database->setQuery($query);
+			$vm_vendor = $database->loadAssocList();
+			$vm_vendor = $vm_vendor[0];
+			
+			if($this->method == 'transfer'){
+				if($this->transaction_date == '0000-00-00 00:00:00'){
+					
+					mosMail($mosConfig_mailfrom, $mosConfig_sitename, $user->cmsUser->email, $subject, $body, 1);
+					mosMail($mosConfig_mailfrom, $mosConfig_sitename, $vm_vendor['contact_email'], $subject, $body, 1);
+				}
+			}else{
+				if($this->transaction_date != '0000-00-00 00:00:00'){
+					
+					mosMail($mosConfig_mailfrom, $mosConfig_sitename, $user->cmsUser->email, $subject, $body, 1);
+					mosMail($mosConfig_mailfrom, $mosConfig_sitename, $vm_vendor['contact_email'], $subject, $body, 1);
+				}
+			}
+		}
+	}
+}
 
 }
 

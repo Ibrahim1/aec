@@ -654,6 +654,11 @@ define( '_CFG_MI_ACTIVELIST_DESC', 'Select which MicroIntegrations you want to u
 define( '_CFG_MI_META_NAME', 'MI Meta Transmit');
 define( '_CFG_MI_META_DESC', 'Allow MicroIntegrations to share an internal array of variables to communicate');
 
+//Invoice settings
+define( '_CFG_GENERAL_SENDINVOICE_NAME', 'Send an invoice email');
+define( '_CFG_GENERAL_SENDINVOICE_DESC', 'Send and invoice/purchase order email (for tax reasons)');
+define( '_CFG_GENERAL_INVOICETMPL_NAME', 'Invoice Template');
+define( '_CFG_GENERAL_INVOICETMPL_DESC', 'Template for invoices/purchase orders');
 // --== PAYMENT PLAN PAGE ==--
 // Additions of variables for free trial periods by Michael Spredemann (scubaguy)
 

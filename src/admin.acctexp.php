@@ -1669,12 +1669,14 @@ function editSettings( $option )
 	$lists['noemails']				= mosHTML::yesnoSelectList('noemails', '', $aecConfig->cfg['noemails']);
 	$lists['nojoomlaregemails']		= mosHTML::yesnoSelectList('nojoomlaregemails', '', $aecConfig->cfg['nojoomlaregemails']);
 	$lists['debugmode']				= mosHTML::yesnoSelectList('debugmode', '', $aecConfig->cfg['debugmode']);
+	$lists['sendinvoice']				= mosHTML::yesnoSelectList('sendinvoice', '', $aecConfig->cfg['sendinvoice']);
 
 	$lists['customtext_confirm_keeporiginal']		= mosHTML::yesnoSelectList('customtext_confirm_keeporiginal', '', $aecConfig->cfg['customtext_confirm_keeporiginal']);
 	$lists['customtext_checkout_keeporiginal']		= mosHTML::yesnoSelectList('customtext_checkout_keeporiginal', '', $aecConfig->cfg['customtext_checkout_keeporiginal']);
 	$lists['customtext_notallowed_keeporiginal']	= mosHTML::yesnoSelectList('customtext_notallowed_keeporiginal', '', $aecConfig->cfg['customtext_notallowed_keeporiginal']);
 	$lists['customtext_expired_keeporiginal']		= mosHTML::yesnoSelectList('customtext_expired_keeporiginal', '', $aecConfig->cfg['customtext_expired_keeporiginal']);
 	$lists['customtext_pending_keeporiginal']		= mosHTML::yesnoSelectList('customtext_pending_keeporiginal', '', $aecConfig->cfg['customtext_pending_keeporiginal']);
+	
 
 	$currency_code_list	= AECToolbox::_aecCurrencyField( true, true, true );
 	$lists['currency_code_general'] = mosHTML::selectList( $currency_code_list, ( 'currency_code_general' ), 'size="10"', 'value', 'text', ( !empty( $aecConfig->cfg['currency_code_general'] ) ? $aecConfig->cfg['currency_code_general'] : '' ) );
@@ -1758,6 +1760,8 @@ function editSettings( $option )
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_NOEMAILS_NAME, _CFG_GENERAL_NOEMAILS_DESC, '0', 'noemails');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_NOJOOMLAREGEMAILS_NAME, _CFG_GENERAL_NOJOOMLAREGEMAILS_DESC, '0', 'nojoomlaregemails');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_DEBUGMODE_NAME, _CFG_GENERAL_DEBUGMODE_DESC, '0', 'debugmode');
+	$tab_data[0][] = array( 'list', _CFG_GENERAL_SENDINVOICE_NAME, _CFG_GENERAL_SENDINVOICE_DESC, '0', 'sendinvoice');
+	$tab_data[0][] = array( 'editor', _CFG_GENERAL_INVOICETMPL_NAME, _CFG_GENERAL_INVOICETMPL_DESC, $aecConfig->cfg['invoicetemplate'], 'invoicetemplate');
 
 	$tab_data[1] = array();
 	$tab_data[1][] = _CFG_TAB_CUSTOMIZATION_TITLE;
