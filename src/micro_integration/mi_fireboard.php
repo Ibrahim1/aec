@@ -49,6 +49,8 @@ class mi_fireboard
 		$settings['group']				= array( 'list' );
 		$settings['set_group_exp']		= array( 'list_yesno' );
 		$settings['group_exp']			= array('list');
+		$settings['rebuild']			= array( 'list_yesno' );
+
 		return $settings;
 	}
 
@@ -57,6 +59,37 @@ class mi_fireboard
 		global $mosConfig_absolute_path;
 
 		return is_dir( $mosConfig_absolute_path . '/components/com_fireboard' );
+	}
+
+	function saveparams( $params )
+	{
+		global $database;
+		$newparams = $params;
+
+		if ( $params['rebuild'] && $params['set_group'] && $params['group'] ) {
+			$planlist = MicroIntegrationHandler::getPlansbyMI( $params['MI_ID'] );
+
+			foreach ( $planlist as $planid ) {
+				$userlist = SubscriptionPlanHandler::getPlanUserlist( $planid );
+				foreach ( $userlist as $userid ) {
+					if ( $database->loadResult() ) {
+						$query = 'UPDATE #__fb_users'
+						. ' SET group_id = \'' . $params['group'] . '\''
+						. ' WHERE userid = \'' . $userid . '\''
+						;
+					} else {
+						$query = 'INSERT INTO #__fb_users'
+						. ' ( `group_id` , `userid` )'
+						. ' VALUES (\'' . $params['group'] . '\', \'' . $userid . '\')'
+						;
+					}
+				}
+			}
+
+			$newparams['rebuild'] = 0;
+		}
+
+		return $newparams;
 	}
 
 	function expiration_action( $params, $userid, $plan )
