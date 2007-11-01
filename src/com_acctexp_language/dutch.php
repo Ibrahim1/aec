@@ -103,6 +103,8 @@ define( '_RENEW_OFFLINE', 'Vernieuwen');
 define( '_RENEW_BUTTON_UPGRADE', 'Opwaarderen');
 define( '_PAYMENT_PENDING_REASON_ECHECK', 'echeck nog open (1-4 werkdagen)');
 define( '_PAYMENT_PENDING_REASON_TRANSFER', 'In afwachting van betalingsverwerking');
+define( '_YOUR_SUBSCRIPTION', 'Your Subscription');
+define( '_PLAN_PROCESSOR_ACTIONS', 'For this, you have the following options:');
 
 // --== EXPIRATION PAGE ==--
 define( '_EXPIRE_INFO', 'Je abonnement is geldig tot ');

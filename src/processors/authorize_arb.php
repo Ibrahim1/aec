@@ -45,6 +45,7 @@ class processor_authorize_arb extends XMLprocessor
 								'LKR,SHP,ECS,SDD,SRG,SEK,CHF,SYP,TJR,BDT,WST,TZS,KZT,TPE,SIT,TTD,MNT,TND,TRL,UGX,ECV,CLF,USN,USS,USD,UZS,VUV,KRW,YER,JPY,CNY,ZWD,PLN';
 		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring'] = 1;
+		$info['actions'] = 'cancel';
 
 		return $info;
 	}
@@ -182,6 +183,10 @@ class processor_authorize_arb extends XMLprocessor
 				$return['error'] = $text;
 			}
 
+			if ( $settings['totalOccurrences'] > 1 ) {
+				$return['multiplicator'] = $settings['totalOccurrences'];
+			}
+
 			$subscriptionId = $this->substring_between($response,'<subscriptionId>','</subscriptionId>');
 
 			$return['invoiceparams'] = array( "subscriptionid" => $subscriptionId );
@@ -229,6 +234,11 @@ class processor_authorize_arb extends XMLprocessor
 		}
 
 		return $return;
+	}
+
+	function customaction_cancel()
+	{
+
 	}
 }
 ?>

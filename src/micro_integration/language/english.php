@@ -46,9 +46,9 @@ define( '_MI_MI_AFFILIATEPRO_URL_DESC',				'Enter the AffiliatePRO Url that poin
 define( '_AEC_MI_NAME_DOCMAN',		'DocMan' );
 define( '_AEC_MI_DESC_DOCMAN',		'Choose the amount of files a user can download and what DocMan group should be assigned to the user account' );
 define( '_MI_MI_DOCMAN_SET_DOWNLOADS_NAME',			'Set Downloads' );
-define( '_MI_MI_DOCMAN_SET_DOWNLOADS_DESC',			'Input the total amount of downloads you want to grant to the user account - only the total granted downloads get reset, NOT the amount of downloads the user has already used.' );
+define( '_MI_MI_DOCMAN_SET_DOWNLOADS_DESC',			'SET this amount of downloads granted to the user - OVERRIDES THE >>ADD<< Setting! (does NOT reset the amount of downloads a user has already used!)' );
 define( '_MI_MI_DOCMAN_ADD_DOWNLOADS_NAME',			'Add Downloads' );
-define( '_MI_MI_DOCMAN_ADD_DOWNLOADS_DESC',			'Input the amount of downloads you want to add to the users account.' );
+define( '_MI_MI_DOCMAN_ADD_DOWNLOADS_DESC',			'Add this amount of downloads to the total granted amount of downloads for this user. Will be overridden by SET if you put a value for that as well!.' );
 define( '_MI_MI_DOCMAN_SET_GROUP_NAME',				'Set DocMan Group' );
 define( '_MI_MI_DOCMAN_SET_GROUP_DESC',				'Choose Yes if you want this MI to set the DocMan Group when it is called.' );
 define( '_MI_MI_DOCMAN_GROUP_NAME',					'DocMan Group' );

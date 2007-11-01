@@ -21,7 +21,6 @@
 			value="/home/skore/tmp/AEC_JoomlaANT/administrator/components/com_acctexp" />
 		<property name="deployment.userdir"
 			value="/home/skore/tmp/AEC_JoomlaANT/components/com_acctexp" />
-		<!--      <property name="distribution.dir" value="c:\Eclipse"/> -->
 		<property name="distribution.dir" value="/home/skore/tmp" />
 		<property name="source.dir" value="./src/" />
 

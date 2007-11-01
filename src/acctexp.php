@@ -181,7 +181,7 @@ if ( $task ) {
 			$invoice	= trim( mosGetParam( $_REQUEST, 'invoice', 0 ) );
 			$itemid		= trim( mosGetParam( $_REQUEST, 'Itemid', 0 ) );
 
-			repeatInvoice($option, $invoice, $itemid);
+			repeatInvoice( $option, $invoice, $itemid );
 			break;
 
 		case 'cancelpayment':
@@ -190,6 +190,12 @@ if ( $task ) {
 			$itemid		= trim( mosGetParam( $_REQUEST, 'Itemid', 0 ) );
 
 			cancelInvoice( $option, $invoice, $pending, $itemid );
+			break;
+
+		case 'planaction':
+			$action	= trim( mosGetParam( $_REQUEST, 'action', 0 ) );
+
+			planaction( $option, $action );
 			break;
 
 		case 'invoiceaddcoupon':
@@ -463,9 +469,9 @@ function subscriptionDetails( $option )
 		}
 
 		$mi_info = '';
-		$selected_plan = new SubscriptionPlan( $database );
 
 		if ( $metaUser->objSubscription->plan ) {
+			$selected_plan = new SubscriptionPlan( $database );
 			$selected_plan->load( $metaUser->objSubscription->plan );
 
 			$mis = explode( ';', $selected_plan->micro_integrations );
@@ -477,13 +483,23 @@ function subscriptionDetails( $option )
 						$mi->load( $mi_id );
 						if ( $mi->callIntegration() ) {
 							$info = $mi->profile_info( $my->id );
-							if ( !( $info === false ) ) {
+							if ( $info !== false ) {
 								$mi_info .= $info;
 							}
 						}
 					}
 				}
 			}
+
+			if ( isset( $pp->info['actions'] ) ) {
+				$actions = explode( ';', $pp->info['actions'] );
+
+				$selected_plan->proc_actions = array();
+				foreach ( $actions as $action ) {
+					$selected_plan->proc_actions[] = AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action );
+				}
+			}
+
 		} else {
 			$selected_plan	= false;
 			$mi				= false;
@@ -580,7 +596,7 @@ function subscriptionDetails( $option )
 		}
 
 		$html = new HTML_frontEnd();
-		$html->subscriptionDetails( $option, $invoices, $metaUser, $recurring, $pp, $mi_info, $alert, $my->id, $selected_plan );
+		$html->subscriptionDetails( $option, $invoices, $metaUser, $recurring, $pp, $mi_info, $alert, $selected_plan );
 	}
 }
 
@@ -670,6 +686,28 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid )
 		subscriptionDetails( $option );
 	}
 
+}
+
+function planaction( $option, $action )
+{
+	global $database, $my;
+
+	// Always rewrite to session userid
+	if ( !empty( $my->id ) ) {
+		$userid = $my->id;
+	}
+
+	$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, $userid );
+
+	// Only allow a user to access existing and own invoices
+	if ( $invoiceid ) {
+		$invoicefact = new InvoiceFactory( $userid );
+		$invoicefact->touchInvoice( $option, $invoice_number );
+		$invoicefact->checkout( $option, 1 );
+	} else {
+		mosNotAuth();
+		return;
+	}
 }
 
 function InvoiceAddParams( $option )

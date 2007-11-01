@@ -191,9 +191,14 @@ class HTML_frontEnd
 			</table>
 			<?php
 			if ( is_object( $selected_plan ) ) { ?>
-				<h2><?php echo $selected_plan->name; ?></h2>
+				<h2><?php echo _YOUR_SUBSCRIPTION; ?></h2>
+				<p><strong><?php echo $selected_plan->name; ?></strong></p>
 				<p><?php echo $selected_plan->desc; ?></p>
 				<?php
+				if ( isset( $selected_plan->proc_actions ) ) { ?>
+					<p><?php echo _PLAN_PROCESSOR_ACTIONS . ' ' . implode( " | ", $selected_plan->proc_actions ); ?></p>
+					<?php
+				}
 			}
 			if ( $mi ) {
 				echo $mi;
@@ -661,7 +666,6 @@ class Payment_HTML
 					</tr>
 				</table>
 				<?php
-				
 				if ( $InvoiceFactory->coupons['active'] ) { ?>
 					<p><?php echo _CHECKOUT_COUPON_INFO; ?></p>
 					<table width="100%" id="couponsbox">
@@ -738,6 +742,92 @@ class Payment_HTML
 				} ?>
 			</table>
 		</div>
+		<?php
+	}
+
+	function printInvoice( $option, $var, $params = null, $InvoiceFactory, $repeat = 0 )
+	{
+		global $database, $aecConfig;
+
+		HTML_frontend::aec_styling( $option );
+		?>
+		<h3>Name</h3>
+		<p>Details</p>
+		<p>Details</p>
+		<h4>Order Information </h4>
+		<table width="100%" border="0" cellspacing="5" cellpadding="0">
+			<tr>
+				<td>Invoice Number</td>
+				<td>{inv_no}</td>
+			</tr>
+			<tr>
+				<td width="74%">Order Date </td>
+				<td width="26%">{date}</td>
+			</tr>
+		</table>
+		<h4>Customer Details	</h4>
+		<table border="0" cellspacing="5" cellpadding="0">
+			<tr>
+				<td width="146">Name:</td>
+				<td width="281">{name}</td>
+			</tr>
+			<tr>
+				<td>Username:</td>
+				<td>{username}</td>
+			</tr>
+			<tr>
+				<td>Company:</td>
+				<td>{company}</td>
+			</tr>
+			<tr>
+				<td>Address:</td>
+				<td>{address}</td>
+			</tr>
+			<tr>
+				<td>City:</td>
+				<td>{city}</td>
+			</tr>
+			<tr>
+				<td>State:</td>
+				<td>{state}</td>
+			</tr>
+			<tr>
+				<td>Postcode:</td>
+				<td>{postcode}</td>
+			</tr>
+			<tr>
+				<td>Country:</td>
+				<td>{country}</td>
+			</tr>
+			<tr>
+				<td>Phone:</td>
+				<td>{phone}</td>
+			</tr>
+			<tr>
+				<td>Email:</td>
+				<td>{email}</td>
+			</tr>
+		</table>
+		<h4>Order Items	</h4>
+		<table style="border-width: 0px; width: 100%" border="0" cellspacing="5" cellpadding="0">
+			<tbody>
+				<tr>
+					<td>{invoice_desc}:</td>
+					<td align="right">{cost}			</td>
+				</tr>
+				<tr>
+					<td>GST (for Australian customers):</td>
+					<td align="right">{gst}			</td>
+				</tr>
+				<tr>
+					<td><strong>Total:</strong></td>
+					<td align="right"><strong>{total}
+					</strong></td>
+				</tr>
+			</tbody>
+		</table>
+		<h4>Payment Infomation </h4>
+		<p>{pay_method}</p>
 		<?php
 	}
 

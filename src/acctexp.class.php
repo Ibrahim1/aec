@@ -169,22 +169,6 @@ class metaUser
 			$this->hasCBprofile = false;
 		}
 	}
-	function loadVMUser()
-	{
-		global $database;
-		
-		$query = 'SELECT * FROM #__vm_user_info '
-				. 'WHERE user_id = \'' .(int) $this->userid. '\'';
-				
-		$database->setQuery( $query );
-		$database->loadObject( $this->vmUser );
-		
-		if ( is_object( $this->vmUser ) ) {
-			$this->hasVMprofile = true;
-		} else {
-			$this->hasVMprofile = false;
-		}
-	}
 
 	function CustomRestrictionResponse( $restrictions )
 	{
@@ -1374,8 +1358,7 @@ class XMLprocessor extends processor
 {
 	function checkoutAction( $int_var, $settings, $metaUser, $new_subscription )
 	{
-		//$var = $this->checkoutform( $int_var, $settings, $metaUser, $new_subscription );
-		$var = $this->getCCform();
+		$var = $this->checkoutform( $int_var, $settings, $metaUser, $new_subscription );
 
 		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=checkout', false ) . '" method="post">' . "\n";
 		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
@@ -1417,9 +1400,8 @@ class XMLprocessor extends processor
 
 	function getCCform()
 	{
-		$var['params']['cardName'] = array( 'inputC', _AEC_CCFORM_CARDHOLDER_NAME, _AEC_CCFORM_CARDHOLDER_DESC, '');
 		// Request the Card number
-		$var['params']['cardNumber'] = array( 'inputC', _AEC_CCFORM_CARDNUMBER_NAME, _AEC_CCFORM_CARDNUMBER_DESC, '');
+		$var['params']['cardNumber'] = array( 'inputC', _AEC_CCFORM_CARDNUMBER_NAME, _AEC_CCFORM_CARDNUMBER_NAME, '');
 
 		// Create a selection box with 12 months
 		$months = array();
@@ -1466,12 +1448,7 @@ class XMLprocessor extends processor
 				$responsestring = '';
 			}
 
-			if ( isset( $response['invoiceparams'] ) ) {
-				$invoice->addParams( $response['invoiceparams'] );
-			}
-
 			$invoice->processorResponse( $this, $response, $responsestring );
-			return $response;
 		} else {
 			return false;
 		}
@@ -1524,8 +1501,8 @@ class XMLprocessor extends processor
 		$ch = curl_init();
 		curl_setopt( $ch, CURLOPT_URL, $url );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-		//curl_setopt( $ch, CURLOPT_HTTPHEADER, Array("Content-Type: text/xml") );
-		//curl_setopt( $ch, CURLOPT_HEADER, 1 );
+		curl_setopt( $ch, CURLOPT_HTTPHEADER, Array("Content-Type: text/xml") );
+		curl_setopt( $ch, CURLOPT_HEADER, 1 );
 		curl_setopt( $ch, CURLOPT_POST, 1 );
 		curl_setopt( $ch, CURLOPT_POSTFIELDS, $content );
 		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, FALSE );
@@ -1796,7 +1773,7 @@ class aecHTML
 			$value = '';
 		}
 
-		$return = '<label><strong>' . $row[1] . '</strong></label>'; //. '<p>' . $row[2] . '</p>';
+		$return = '<p><strong>' . $row[1] . '</strong></p>' . '<p>' . $row[2] . '</p>';
 
 		switch ( $row[0] ) {
 			case "inputA":
@@ -1944,9 +1921,6 @@ class Config_General extends paramDBTable
 		$def['nojoomlaregemails']					= 0;
 		// new 0.12.4.10
 		$def['debugmode']							= 0;
-		
-		$def['sendinvoice']							= 0;
-		$def['invoicetemplate']						= '';
 
 		// Write to Params, do not overwrite existing data
 		$this->addParams( $def, 'settings', false );
@@ -2075,7 +2049,7 @@ class SubscriptionPlan extends paramDBTable
 		}
 	}
 
-	function applyPlan( $userid, $processor = 'none', $silent = 0 )
+	function applyPlan( $userid, $processor = 'none', $silent = 0, $multiplicator = 1 )
 	{
 		global $database, $mainframe, $mosConfig_offset_user, $aecConfig;
 
@@ -2094,7 +2068,7 @@ class SubscriptionPlan extends paramDBTable
 			$metaUser->objSubscription->expire(1);
 		}
 
-		if ( $comparison['total_comparison'] === false || $is_pending ) {
+		if ( ( $comparison['total_comparison'] === false ) || $is_pending ) {
 			// If user is using global trial period he still can use the trial period of a plan
 			if ( ( $params['trial_period'] > 0 ) && !$is_trial ) {
 				$value		= $params['trial_period'];
@@ -2123,6 +2097,9 @@ class SubscriptionPlan extends paramDBTable
 			$metaUser->objSubscription->lifetime = 1;
 		} else {
 			$metaUser->objSubscription->lifetime = 0;
+
+			$value *= $multiplicator;
+
 			if ( ( $comparison['comparison'] == 2 ) && !$lifetime ) {
 				$metaUser->objExpiration->setExpiration( $perunit, $value, 1 );
 			} else {
@@ -3412,7 +3389,7 @@ class InvoiceFactory
 
 	function checkout( $option, $repeat=0 )
 	{
-		global $database, $aecConfig;
+		global $database;
 
 		$metaUser = new metaUser( $this->userid );
 
@@ -3441,7 +3418,7 @@ class InvoiceFactory
 		$amount				= $this->objUsage->SubscriptionAmount( $this->recurring, $user_subscription );
 		$original_amount	= $this->objUsage->SubscriptionAmount( $this->recurring, $user_subscription );
 		$warning			= 0;
-		
+
 		if ( !empty( $aecConfig->cfg['enable_coupons'] ) ) {
 			$this->coupons['active'] = 1;
 
@@ -3838,6 +3815,18 @@ class Invoice extends paramDBTable
 
 		$this->computeAmount();
 
+		if ( isset( $response['invoiceparams'] ) ) {
+			$this->addParams( $response['invoiceparams'] );
+			unset( $response['invoiceparams'] );
+		}
+
+		if ( isset( $response['multiplicator'] ) ) {
+			$multiplicator = $response['multiplicator'];
+			unset( $response['multiplicator'] );
+		} else {
+			$multiplicator = 1;
+		}
+
 		// Create history entry
 		$history = new logHistory( $database );
 		$history->entryFromInvoice ( $this, $responsestring, $pp );
@@ -3864,7 +3853,7 @@ class Invoice extends paramDBTable
 					$break	= 1;
 				}
 			}
-			if ( isset($response['amount_currency'] ) ) {
+			if ( isset( $response['amount_currency'] ) ) {
 				if ( $response['amount_currency'] != $this->currency ) {
 					// Amount Fraud, cancel payment and create error log addition
 					$event	.= sprintf( _AEC_MSG_PROC_INVOICE_ACTION_EV_CURR, $response['amount_currency'], $this->currency );
@@ -3874,7 +3863,7 @@ class Invoice extends paramDBTable
 			}
 
 			if ( !$break ) {
-				$renew	= $this->pay();
+				$renew	= $this->pay( $multiplicator );
 				thanks( 'com_acctexp', $renew, ($pp === 0) );
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_VALID;
 				$tags	.= ',payment,action';
@@ -3887,7 +3876,7 @@ class Invoice extends paramDBTable
 					$plan_params = $plan->getParams( 'params' );
 
 					if ( $plan_params['trial_free'] ) {
-						$this->pay();
+						$this->pay( $multiplicator );
 						$this->setParams( array( 'free_trial' => $response['pending_reason'] ) );
 						$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_TRIAL;
 						$tags	.= ',payment,action,trial';
@@ -3918,11 +3907,11 @@ class Invoice extends paramDBTable
 					$metaUser->objSubscription->expire();
 					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED;
 				}
-			} elseif (isset($response['eot'])) {
+			} elseif ( isset( $response['eot'] ) ) {
 				$metaUser = new metaUser( $this->userid );
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_EOT;
 				$tags	.= ',eot';
-			} elseif (isset($response['duplicate'])) {
+			} elseif ( isset( $response['duplicate'] ) ) {
 				$metaUser = new metaUser( $this->userid );
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_DUPLICATE;
 				$tags	.= ',duplicate';
@@ -3936,7 +3925,7 @@ class Invoice extends paramDBTable
 		$eventlog->issue( $short, $tags, $event, $params );
 	}
 
-	function pay()
+	function pay( $multiplicator=1 )
 	{
 		global $database;
 
@@ -3950,7 +3939,7 @@ class Invoice extends paramDBTable
 		}
 
 		// Apply the Plan
-		$renew = $metaUser->objSubscription->applyUsage( $this->usage, $this->method );
+		$renew = $metaUser->objSubscription->applyUsage( $this->usage, $this->method, 0, $multiplicator );
 
 		$new_plan = new SubscriptionPlan( $database );
 		$new_plan->load( $this->usage );
@@ -4158,105 +4147,21 @@ class Invoice extends paramDBTable
 		$this->addParams( $array );
 		return true;
 	}
-	
-	function sendInvoice($option){
-		global $mosConfig_sitename, $mosConfig_mailfrom, $database, $aecConfig;
-		
-		$user = new metaUser($this->userid);
-		$user->loadVMuser();
-		
+
+	function printInvoice($option)
+	{
+		global $mosConfig_sitename, $mosConfig_mailfrom, $database;
+
+
 		if($this->usage != 2 && $this->usage != 4){
-			
+
 			$query = "SELECT * FROM #__vm_user_info WHERE user_id = ".$this->userid;
 			$database->setQuery($query);
 			$vm_user_details = $database->loadAssocList();
-			$vm_user_details = $vm_user_details[0];			
-			
+			$vm_user_details = $vm_user_details[0];
+
 			$user = new metaUser($this->userid);
-			$body = '<h3>Spark of Life Membership Tax Invoice</h3>
-<p>
-Dementia Care Australia<br />
-PO Box 378<br />
-Mooroolbark,
-VIC<br />
-Australia,
-3138</p>
-<p>ABN: 57 062 386 216</p>
-<h4>Order Information </h4>
-<table width="100%" border="0" cellspacing="5" cellpadding="0">
-  <tr>
-    <td>Invoice Number</td>
-    <td>{inv_no}</td>
-  </tr>
-  <tr>
-    <td width="74%">Order Date </td>
-    <td width="26%">{date}</td>
-  </tr>
-</table>
-<h4>Customer Details  </h4>
-<table border="0" cellspacing="5" cellpadding="0">
-  <tr>
-    <td width="146">Name:</td>
-    <td width="281">{name}</td>
-  </tr>
-  <tr>
-    <td>Username:</td>
-    <td>{username}</td>
-  </tr>
-  <tr>
-    <td>Company:</td>
-    <td>{company}</td>
-  </tr>
-  <tr>
-    <td>Address:</td>
-    <td>{address}</td>
-  </tr>
-  <tr>
-    <td>City:</td>
-    <td>{city}</td>
-  </tr>
-  <tr>
-    <td>State:</td>
-    <td>{state}</td>
-  </tr>
-  <tr>
-    <td>Postcode:</td>
-    <td>{postcode}</td>
-  </tr>
-  <tr>
-    <td>Country:</td>
-    <td>{country}</td>
-  </tr>
-  <tr>
-    <td>Phone:</td>
-    <td>{phone}</td>
-  </tr>
-  <tr>
-    <td>Email:</td>
-    <td>{email}</td>
-  </tr>
-</table>
-<h4>Order Items  </h4>
-<table style="border-width: 0px; width: 100%" border="0" cellspacing="5" cellpadding="0">
-	<tbody>
-		<tr>
-			<td>{invoice_desc}:</td>
-			<td align="right">{cost}			</td>
-		</tr>
-		<tr>
-			<td>GST (for Australian customers):</td>
-			<td align="right">{gst}			</td>
-		</tr>
-		<tr>
-			<td><strong>Total:</strong></td>
-			<td align="right"><strong>{total} 
-			</strong></td>
-		</tr>
-	</tbody>
-</table>
-<h4>Payment Infomation </h4>
-<p>{pay_method}
-</p>';
+			$body = '';
 			$body = str_replace("{inv_no}",$this->invoice_number,$body);
 			$body = str_replace("{date}",date('D, jS M Y',strtotime($this->created_date)),$body);
 			$body = str_replace("{name}",$user->cmsUser->name,$body);
@@ -4274,47 +4179,33 @@ Australia,
 			}else{
 				$body = str_replace("{invoice_desc}","Spark of life Individual Membership",$body);
 			}
-			
+
 			$body = str_replace("{cost}","$".$this->amount,$body);
 			$body = str_replace("{total}","$".$this->amount,$body);
 			$body = str_replace("{gst}","$".number_format($this->amount / 11,2),$body);
-			
-			if($this->method == 'transfer'){
-				$body = str_replace("{pay_method}","Cheque / Money Order <br /><br />Please print this invoice and return it, along with your payment to:<p>
-Dementia Care Australia<br />
-PO Box 378<br />
-Mooroolbark,
-VIC<br />
-Australia,
-3138</p>",$body);
-			}else{
-				$body = str_replace("{pay_method}","Credit Card",$body);
-			}
-			
+
 			$subject = "Spark of Life Membership Invoice #".$this->invoice_number;
-			
+
 			$query = "SELECT * FROM #__vm_vendor WHERE vendor_id = 1";
 			$database->setQuery($query);
 			$vm_vendor = $database->loadAssocList();
 			$vm_vendor = $vm_vendor[0];
-			
+
 			if($this->method == 'transfer'){
 				if($this->transaction_date == '0000-00-00 00:00:00'){
-					
+
 					mosMail($mosConfig_mailfrom, $mosConfig_sitename, $user->cmsUser->email, $subject, $body, 1);
 					mosMail($mosConfig_mailfrom, $mosConfig_sitename, $vm_vendor['contact_email'], $subject, $body, 1);
 				}
 			}else{
 				if($this->transaction_date != '0000-00-00 00:00:00'){
-					
+
 					mosMail($mosConfig_mailfrom, $mosConfig_sitename, $user->cmsUser->email, $subject, $body, 1);
 					mosMail($mosConfig_mailfrom, $mosConfig_sitename, $vm_vendor['contact_email'], $subject, $body, 1);
 				}
 			}
 		}
 	}
-}
-
 }
 
 /**
@@ -4532,7 +4423,7 @@ class Subscription extends paramDBTable
 		$this->store();
 	}
 
-	function applyUsage( $usage = 0, $processor = 'none', $silent = 0 )
+	function applyUsage( $usage = 0, $processor = 'none', $silent = 0, $multiplicator = 1 )
 	{
 		global $database;
 
@@ -4544,7 +4435,7 @@ class Subscription extends paramDBTable
 		$new_plan->load($usage);
 
 		if ( $new_plan->id ) {
-			$renew = $new_plan->applyPlan( $this->userid, $processor, $silent );
+			$renew = $new_plan->applyPlan( $this->userid, $processor, $silent, $multiplicator );
 			return $renew;
 		} else {
 			return false;

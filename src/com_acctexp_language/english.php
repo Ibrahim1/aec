@@ -98,6 +98,8 @@ define( '_RENEW_OFFLINE', 'Renew');
 define( '_RENEW_BUTTON_UPGRADE', 'Upgrade/Renew');
 define( '_PAYMENT_PENDING_REASON_ECHECK', 'echeck uncleared (1-4 business days)');
 define( '_PAYMENT_PENDING_REASON_TRANSFER', 'awaiting transfer payment');
+define( '_YOUR_SUBSCRIPTION', 'Your Subscription');
+define( '_PLAN_PROCESSOR_ACTIONS', 'For this, you have the following options:');
 
 // --== EXPIRATION PAGE ==--
 define( '_EXPIRE_INFO', 'Your account is active until');
