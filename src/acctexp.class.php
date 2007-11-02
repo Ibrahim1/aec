@@ -1247,7 +1247,7 @@ class PaymentProcessor
 
 	function getParamsHTML( $params, $values )
 	{
-		$return['params'] = false;
+		$return = false;
 		if ( !empty( $values['params'] ) ) {
 			if ( is_array( $values['params'] ) ) {
 				if ( isset( $values['params']['lists'] ) ) {
@@ -1262,7 +1262,7 @@ class PaymentProcessor
 						if ( !isset( $entry[3] ) ) {
 							$entry[3] = $name;
 						}
-						$return['params'] .= aecHTML::createFormParticle( $name, $entry, $lists ) . "\n";
+						$return .= aecHTML::createFormParticle( $name, $entry, $lists ) . "\n";
 					}
 				}
 				unset( $values['params'] );
@@ -3402,7 +3402,7 @@ class InvoiceFactory
 
 	function checkout( $option, $repeat=0 )
 	{
-		global $database;
+		global $database, $aecConfig;
 
 		$metaUser = new metaUser( $this->userid );
 
@@ -4123,6 +4123,10 @@ class Invoice extends paramDBTable
 		// Assemble Checkout Response
 		$return['var']		= $pp->checkoutAction( $int_var, $metaUser, $new_subscription );
 		$return['params']	= $pp->getParamsHTML( $int_var['params'], $pp->getParams( $int_var['params'] ) );
+
+		if ( empty( $return['params'] ) ) {
+			$return['params'] = null;
+		}
 
 		return $return;
 	}
@@ -5221,6 +5225,10 @@ class AECToolbox
 			} else {
 				$amount = $amount . '.00';
 			}
+		}
+
+		if ( strpos( $amount, '-') ) {
+			$amount = '0.00';
 		}
 
 		$a		= explode( '.', $amount );

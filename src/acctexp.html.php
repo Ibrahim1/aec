@@ -709,7 +709,7 @@ class Payment_HTML
 					</table>
 					<?php
 				}
-				if ( $params ) { ?>
+				if ( !empty( $params ) ) { ?>
 					<table width="100%" id="paramsbox">
 						<tr>
 							<td class="append_button">
