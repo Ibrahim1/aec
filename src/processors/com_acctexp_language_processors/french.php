@@ -255,6 +255,17 @@ define( '_CFG_EWAY_AUTOREDIRECT_DESC', 'Automatic Redirect for eWay Transaction'
 define( '_CFG_EWAY_SITETITLE_NAME', 'Site Title');
 define( '_CFG_EWAY_SITETITLE_DESC', 'The Site Title of the eWay Transaction');
 
+// eWayXML Settings
+define( '_CFG_EWAYXML_LONGNAME', 'eWayXML');
+define( '_CFG_EWAYXML_STATEMENT', 'Make payments with eWAY Shared Payment Solution!');
+define( '_CFG_EWAYXML_DESCRIPTION', 'eWAY is the easiest and most affordable payment gateway in Australia. Process credit card payments via eWAY\'s own secure Shared Payment Page in real-time.');
+define( '_CFG_EWAYXML_CUSTID_NAME', 'Customer ID');
+define( '_CFG_EWAYXML_CUSTID_DESC', 'Your Customer ID.');
+define( '_CFG_EWAYXML_AUTOREDIRECT_NAME', 'Autoredirect');
+define( '_CFG_EWAYXML_AUTOREDIRECT_DESC', 'Automatic Redirect for eWay Transaction');
+define( '_CFG_EWAYXML_SITETITLE_NAME', 'Site Title');
+define( '_CFG_EWAYXML_SITETITLE_DESC', 'The Site Title of the eWay Transaction');
+
 // MoneyProxy Settings
 define( '_CFG_MONEYPROXY_LONGNAME', 'MoneyProxy');
 define( '_CFG_MONEYPROXY_STATEMENT', 'Make Payments in different digital currencies with Money Proxy!');

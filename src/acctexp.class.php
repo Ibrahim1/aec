@@ -4207,16 +4207,16 @@ class Invoice extends paramDBTable
 			$body = str_replace("{phone}",$vm_user_details['phone_1'],$body);
 			$body = str_replace("{email}",$user->cmsUser->email,$body);
 			if($this->usage == 3){
-				$body = str_replace("{invoice_desc}","Spark of life Facility Membership",$body);
+				$body = str_replace("{invoice_desc}","",$body);
 			}else{
-				$body = str_replace("{invoice_desc}","Spark of life Individual Membership",$body);
+				$body = str_replace("{invoice_desc}","",$body);
 			}
 
 			$body = str_replace("{cost}","$".$this->amount,$body);
 			$body = str_replace("{total}","$".$this->amount,$body);
 			$body = str_replace("{gst}","$".number_format($this->amount / 11,2),$body);
 
-			$subject = "Spark of Life Membership Invoice #".$this->invoice_number;
+			$subject = "".$this->invoice_number;
 
 			$query = "SELECT * FROM #__vm_vendor WHERE vendor_id = 1";
 			$database->setQuery($query);
