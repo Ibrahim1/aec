@@ -219,7 +219,7 @@ class paramDBTable extends mosDBTable
 							$value = $post[$param];
 						}
 					}
-					$this->$param = $this->_db->getEscaped( $value );
+					$this->$param = $value;
 				}
 			}
 		}
