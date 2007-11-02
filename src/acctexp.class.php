@@ -1232,6 +1232,19 @@ class PaymentProcessor
 		return $this->processor->checkoutAction( $int_var, $this->settings, $metaUser, $new_subscription );
 	}
 
+	function customAction( $action, $invoice, $metaUser )
+	{
+		$this->getSettings();
+
+		$method = 'customaction_' . $action;
+
+		if ( method_exists( $this->processor, $method ) ) {
+			return $this->processor->$method( $this, $this->settings, $invoice, $metaUser );
+		} else {
+			return false;
+		}
+	}
+
 	function getParamsHTML( $params, $values )
 	{
 		$return['params'] = false;
@@ -3550,6 +3563,25 @@ class InvoiceFactory
 		}
 	}
 
+	function planprocessoraction( $action )
+	{
+		global $database;
+
+		$metaUser = new metaUser( $this->userid );
+
+		$invoice = new Invoice( $database );
+		$invoice->load( AECfetchfromDB::lastClearedInvoiceIDbyUserID( $this->userid, $metaUser->objSubscription->plan ) );
+
+		if ( !is_object( $invoice ) ) {
+			$invoice->load( AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $this->userid, $metaUser->objSubscription->plan ) );
+		}
+
+		$pp = new PaymentProcessor( $database );
+		$pp->loadName( $invoice->method );
+
+		$pp->customAction( $action, $invoice, $metaUser );
+	}
+
 	function thanks( $option, $renew, $free )
 	{
 		global $database, $mosConfig_useractivation, $ueConfig, $mosConfig_dbprefix;
@@ -3894,8 +3926,8 @@ class Invoice extends paramDBTable
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_CANCEL;
 				$tags	.= ',cancel';
 
-				if ( $metaUser->objSubscription->hasSubscription ) {
-					$metaUser->objSubscription->setStatus( 'Cancelled' );
+				if ( $metaUser->hasSubscription ) {
+					$metaUser->objSubscription->cancel( $this );
 					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS;
 				}
 			} elseif ( isset( $response['delete'] ) ) {
@@ -3903,7 +3935,7 @@ class Invoice extends paramDBTable
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_REFUND;
 				$tags	.= ',refund';
 
-				if ( $metaUser->objSubscription->hasSubscription ) {
+				if ( $metaUser->hasSubscription ) {
 					$metaUser->objSubscription->expire();
 					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED;
 				}
@@ -4414,6 +4446,53 @@ class Subscription extends paramDBTable
 
 			return true;
 		}
+	}
+
+	function cancel( $invoice, $overridefallback=false )
+	{
+		global $database;
+
+		// Since some processors do not notify each period, we need to check whether the expiration
+		// lies to far in the future and cut it down to the end of the period the user has paid
+
+		if ( $this->expire( $overridefallback ) ) {
+			if ( $this->plan ) {
+				$subscription_plan = new SubscriptionPlan( $database );
+				$subscription_plan->load( $this->plan );
+				$plan_params = $subscription_plan->getParams();
+
+				$expiration = new AcctExp( $database );
+				$expiration->loadUserid( $this->userid );
+
+				// Resolve blocks that we are going to substract from the set expiration date
+				$unit = 60*60*24;
+				switch ( $plan_params['full_periodunit'] ) {
+					case 'D': $periodlength = $plan_params['full_period'] * $unit; break;
+					case 'W': $unit *= 7;	$periodlength = $plan_params['full_period'] * $unit; break;
+					case 'M': $unit *= 31;	$periodlength = $plan_params['full_period'] * $unit; break;
+					case 'Y': $unit *= 356;	$periodlength = $plan_params['full_period'] * $unit; break;
+				}
+
+				$newexpiration = strtotime( $expiration->expiration );
+				$now = time();
+
+				// ...cut away blocks until we are in the past
+				for ( $i=$newexpiration; $i>=$now; $i-=$unit ) {
+					$newexpiration = $i;
+				}
+
+				// And we get the bare expiration date
+				$expiration->expiration = date( 'Y-m-d H:i:s', $newexpiration );
+				$expiration->check();
+				$expiration->store();
+
+				$this->setStatus( 'Cancelled' );
+
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	function setStatus( $status )

@@ -236,8 +236,50 @@ class processor_authorize_arb extends XMLprocessor
 		return $return;
 	}
 
-	function customaction_cancel()
+	function customaction_cancel( $pp, $cfg, $invoice, $metaUser )
 	{
+		$content =	'<?xml version="1.0" encoding="utf-8"?>'
+					. '<ARBCancelSubscriptionRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">'
+					. '<merchantAuthentication>'
+					. '<name>' . trim( substr( $cfg['login'], 0, 25 ) ) . '</name>'
+					. '<transactionKey>' . trim( substr( $cfg['transaction_key'], 0, 16 ) ) . '</transactionKey>'
+					. '</merchantAuthentication>'
+					. '<refId>' . $invoice->invoice_number . '</refId>';
+
+		$invoiceparams = $invoice->getParams();
+
+		// Add Payment information
+		$content .=	'<subscriptionId>' . $invoiceparams['subscriptionid'] . '</subscriptionId>';
+
+		// Close Request
+		$content .=	'</ARBCancelSubscriptionRequest>';
+
+		$path = "/xml/v1/request.api";
+		if ( $cfg['testmode'] ) {
+			$url = "https://apitest.authorize.net" . $path;
+		} else {
+			$url = "https://api.authorize.net" . $path;
+		}
+
+		$response = $this->transmitRequest( $url, $path, $content, 443 );
+
+		$responsestring = $response;
+
+		$resultCode = $this->substring_between($response,'<resultCode>','</resultCode>');
+
+		$code = $this->substring_between($response,'<code>','</code>');
+		$text = $this->substring_between($response,'<text>','</text>');
+
+		//if ( strcmp( $resultCode, 'Ok' ) === 0 ) {
+		if ( 1) {
+			$return['valid'] = 0;
+			$return['cancel'] = true;
+		} else {
+			$return['valid'] = 0;
+			$return['error'] = $text;
+		}
+
+		$invoice->processorResponse( $pp, $return, $responsestring );
 
 	}
 }

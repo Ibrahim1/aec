@@ -491,12 +491,12 @@ function subscriptionDetails( $option )
 				}
 			}
 
-			if ( isset( $pp->info['actions'] ) ) {
+			if ( isset( $pp->info['actions'] ) && ( strcmp( $metaUser->objSubscription->status, 'Active' ) === 0 ) ) {
 				$actions = explode( ';', $pp->info['actions'] );
 
 				$selected_plan->proc_actions = array();
 				foreach ( $actions as $action ) {
-					$selected_plan->proc_actions[] = AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action );
+					$selected_plan->proc_actions[] = '<a href="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action . '">' . $action . '</a>' );
 				}
 			}
 
@@ -695,15 +695,9 @@ function planaction( $option, $action )
 	// Always rewrite to session userid
 	if ( !empty( $my->id ) ) {
 		$userid = $my->id;
-	}
 
-	$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, $userid );
-
-	// Only allow a user to access existing and own invoices
-	if ( $invoiceid ) {
 		$invoicefact = new InvoiceFactory( $userid );
-		$invoicefact->touchInvoice( $option, $invoice_number );
-		$invoicefact->checkout( $option, 1 );
+		$invoicefact->planprocessoraction( $action );
 	} else {
 		mosNotAuth();
 		return;
