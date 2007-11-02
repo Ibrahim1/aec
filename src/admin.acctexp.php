@@ -967,8 +967,7 @@ function saveUser( $option )
 		$metaUser = new metaUser( $_POST['userid'] );
 	}
 
-
-	$ck_lifetime = mosGetParam( $_POST,'ck_lifetime', 'off' );
+	$ck_lifetime = mosGetParam( $_POST, 'ck_lifetime', 'off' );
 
 	if ( !$metaUser->hasExpiration ) {
 		$metaUser->objExpiration->load(0);
@@ -979,15 +978,15 @@ function saveUser( $option )
 		$metaUser->objExpiration->expiration	= '9999-12-31 00:00:00';
 		$metaUser->objSubscription->status		= 'Active';
 		$metaUser->objSubscription->lifetime	= 1;
-	} elseif ( !empty( $_POST['expiration'] ) && !empty( $_POST['expiration_check'] ) ) {
-		if ( $_POST['expiration'] != $_POST['expiration_check'] ) {
+	} elseif ( !empty( $_POST['expiration'] ) ) {
+		if ( $_POST['expiration'] != $metaUser->objExpiration->expiration ) {
 			if ( strpos( $_POST, ':' ) === false ) {
 				$metaUser->objExpiration->expiration = $_POST['expiration'] . ' 00:00:00';
 			} else {
 				$metaUser->objExpiration->expiration = $_POST['expiration'];
 			}
-			$metaUser->objSubscription->status	= 'Active';
-			$metaUser->objSubscription->lifetime	= 0;
+			$metaUser->objSubscription->status = 'Active';
+			$metaUser->objSubscription->lifetime = 0;
 		}
 	}
 
