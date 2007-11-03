@@ -2,7 +2,7 @@
 /**
  * @version $Id: mi_idevaffiliate.php 16 2007-07-02 13:29:29Z mic $
  * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
- * @subpackage Micro Integrations - Email
+ * @subpackage Micro Integrations - iDevAffiliate
  * @copyright 2006/2007 Copyright (C) David Deutsch
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.gobalnerd.org
  * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html

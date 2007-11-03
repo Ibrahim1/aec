@@ -3903,7 +3903,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 	switch( $cmsname ) {
 		case 'joomla':
 			$hacks[$n]['filename']	=	$v15 ? ( $mosConfig_absolute_path . '/libraries/joomla/user/authentication.php' ) : ( $mosConfig_absolute_path . '/includes/' . $cmsname . '.php' );
-			$hacks[$n]['read'] 		=	$v15 ? '// OK, the credentials are authenticated.  Lets fire the onLogin event' : '// initialize session data';
+			$hacks[$n]['read'] 		=	$v15 ? 'if(empty($response->username)) {' : '// initialize session data';
 			break;
 
 		case 'mambo':
@@ -4184,7 +4184,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 	$hacks[$n]['desc']			=	_AEC_HACKS_MI3;
 	$hacks[$n]['type']			=	'file';
 	$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/administrator/components/com_users/controller.php' ) : ( $mosConfig_absolute_path . '/administrator/components/com_users/admin.users.php' );
-	$hacks[$n]['read']			=	$v15 ? 'if ( !$user->save() ) ' : '$row->checkin();';
+	$hacks[$n]['read']			=	$v15 ? 'if (!$user->save())' : '$row->checkin();';
 	$hacks[$n]['insert']		=	sprintf( ( $v15 ? $aec_uchangehack15 : $aec_uchangehack ), $n, 'adminuser', $n ) . "\n" . $hacks[$n]['read'];
 
 	if ( !$v15 ) {
