@@ -1505,6 +1505,17 @@ class processor extends paramDBTable
 	{
 		return '<p>' . $settings['info'] . '</p>';
 	}
+
+	function exchangeSettings( $settings, $planvars )
+	{
+		 foreach ( $settings as $key => $value ) {
+		 	if ( isset( $planvars[$key] ) ) {
+		 		$settings[$key] = $planvars[$key];
+		 	}
+		 }
+
+		return $settings;
+	}
 }
 
 class XMLprocessor extends processor
@@ -1592,6 +1603,12 @@ class XMLprocessor extends processor
 		global $database;
 
 		// Create the xml string
+		if ( isset( $int_var['planparams']['aec_overwrite_settings'] ) ) {
+			if ( $int_var['planparams']['aec_overwrite_settings'] ) {
+				$settings = $this->exchangeSettings( $settings, $int_var['planparams']);
+			}
+		}
+
 		$xml = $this->createRequestXML( $int_var, $settings, $metaUser, $new_subscription );
 
 		// Transmit xml to server
@@ -1679,6 +1696,12 @@ class POSTprocessor extends processor
 {
 	function checkoutAction( $int_var, $settings, $metaUser, $new_subscription )
 	{
+		if ( isset( $int_var['planparams']['aec_overwrite_settings'] ) ) {
+			if ( $int_var['planparams']['aec_overwrite_settings'] ) {
+				$settings = $this->exchangeSettings( $settings, $int_var['planparams']);
+			}
+		}
+
 		$var = $this->createGatewayLink( $int_var, $settings, $metaUser, $new_subscription );
 
 		$return = '<form action="' . $var['post_url'] . '" method="post">' . "\n";
@@ -1699,6 +1722,12 @@ class GETprocessor extends processor
 {
 	function checkoutAction( $int_var, $settings, $metaUser, $new_subscription )
 	{
+		if ( isset( $int_var['planparams']['aec_overwrite_settings'] ) ) {
+			if ( $int_var['planparams']['aec_overwrite_settings'] ) {
+				$settings = $this->exchangeSettings( $settings, $int_var['planparams']);
+			}
+		}
+
 		$var = $this->createGatewayLink( $int_var, $settings, $metaUser, $new_subscription );
 
 		$return = '<form action="' . $var['post_url'] . '" method="get">' . "\n";
@@ -1719,6 +1748,12 @@ class URLprocessor extends processor
 {
 	function checkoutAction( $int_var, $settings, $metaUser, $new_subscription )
 	{
+		if ( isset( $int_var['planparams']['aec_overwrite_settings'] ) ) {
+			if ( $int_var['planparams']['aec_overwrite_settings'] ) {
+				$settings = $this->exchangeSettings( $settings, $int_var['planparams']);
+			}
+		}
+
 		$var = $this->createGatewayLink( $int_var, $settings, $metaUser, $new_subscription );
 
 		$return = '<a href="' . $var['post_url'];
@@ -1870,13 +1905,23 @@ class aecHTML
 		$row	= $this->rows[$name];
 		$type	= $row[0];
 
-		if ( isset( $row[3] ) ) {
-			$value = $row[3];
-		} else {
-			$value = '';
-		}
+		if ( isset( $row[2] ) ) {
+			if ( isset( $row[3] ) ) {
+				$value = $row[3];
+			} else {
+				$value = '';
+			}
 
-		$return = '<div class="setting_desc">' . $this->ToolTip( $row[2], $row[1]) . $row[1] . '</div>';
+			if ( !empty( $row[1] ) && !empty( $row[2] ) ) {
+				$return = '<div class="setting_desc">' . $this->ToolTip( $row[2], $row[1]) . $row[1] . '</div>';
+			}
+		} else {
+			if ( isset( $row[1] ) ) {
+				$value = $row[1];
+			} else {
+				$value = '';
+			}
+		}
 
 		switch ( $type ) {
 			case 'inputA':
@@ -1901,6 +1946,11 @@ class aecHTML
 			case 'inputE':
 				$return .= '<div class="setting_form">';
 				$return .= '<textarea style="width:520px" cols="450" rows="1" name="' . $name . '" />' . $value . '</textarea>';
+				$return .= '</div>';
+				break;
+			case 'checkbox':
+				$return .= '<div class="setting_form">';
+				$return .= '<input type="checkbox" name="' . $name . '" ' . ( $value ? 'checked="checked" ' : '' ) . '/>';
 				$return .= '</div>';
 				break;
 			case 'editor':

@@ -637,6 +637,7 @@ define( '_PAYPLAN_PARAMS_EQUALPLANS_DESC', 'Select which plans are equal to this
 // Payplan Restrictions
 
 define( '_PAYPLAN_RESTRICTIONS_TITLE', 'Restrictions');
+
 define( '_PAYPLAN_RESTRICTIONS_MINGID_ENABLED_NAME', 'Enable Min GID:');
 define( '_PAYPLAN_RESTRICTIONS_MINGID_ENABLED_DESC', 'Enable this setting if you want to restrict whether a user is shown this plan by a minimum usergroup.');
 define( '_PAYPLAN_RESTRICTIONS_MINGID_NAME', 'Visibility Group:');
@@ -680,7 +681,13 @@ define( '_PAYPLAN_RESTRICTIONS_CUSTOM_RESTRICTIONS_ENABLED_DESC', 'Enable the us
 define( '_PAYPLAN_RESTRICTIONS_CUSTOM_RESTRICTIONS_NAME', 'Custom Restrictions:');
 define( '_PAYPLAN_RESTRICTIONS_CUSTOM_RESTRICTIONS_DESC', 'Use RewriteEngine fields to check for specific strings in this form:<br />[[user_id]] >= 1500<br />[[parametername]] = value<br />(Create separate rules by entering a new line).<br />You can use =, <=, >=, <, >, <> as comparing elements. You MUST use spaces between parameters, values and comparators!');
 
-define( '_PAYPLAN_CUSTOMPARAMS_TITLE', 'Proc. Params');
+define( '_PAYPLAN_PROCESSORS_TITLE', 'Processors');
+define( '_PAYPLAN_PROCESSORS_TITLE_LONG', 'Payment Processors');
+
+define( '_PAYPLAN_PROCESSORS_ACTIVATE_NAME', 'Active');
+define( '_PAYPLAN_PROCESSORS_ACTIVATE_DESC', 'Offer this Payment Processor for this Payment Plan.');
+define( '_PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_NAME', 'Overwrite Global Settings');
+define( '_PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_DESC', 'If you want to, you can check this box and after saving the plan edit every setting from the global configuration to be different for this plan individually.');
 
 define( '_PAYPLAN_MI', 'Micro Integr.');
 define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_NAME', 'Micro Integrations:');

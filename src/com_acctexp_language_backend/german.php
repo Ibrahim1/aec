@@ -778,7 +778,13 @@ define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MAX_DESC',				'Das Abo welches maximal 
 define( '_PAYPLAN_RESTRICTIONS_CUSTOM_RESTRICTIONS_NAME', 'Custom Restrictions:');
 define( '_PAYPLAN_RESTRICTIONS_CUSTOM_RESTRICTIONS_DESC', 'Use RewriteEngine fields to check for specific strings in this form:<br />[[user_id]] >= 1500<br />[[parametername]] = value<br />(Create separate rules by entering a new line).<br />You can use =, <=, >=, <, >, <> as comparing elements. You MUST use spaces between parameters, values and comparators!');
 
-define( '_PAYPLAN_CUSTOMPARAMS_TITLE', 'Proc. Params');
+define( '_PAYPLAN_PROCESSORS_TITLE', 'Bezahldienste');
+define( '_PAYPLAN_PROCESSORS_TITLE_LONG', 'Zugewiesene Bezahldienste');
+
+define( '_PAYPLAN_PROCESSORS_ACTIVATE_NAME', 'Aktiv');
+define( '_PAYPLAN_PROCESSORS_ACTIVATE_DESC', 'Offer this Payment Processor for this Payment Plan.');
+define( '_PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_NAME', 'Overwrite Global Settings');
+define( '_PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_DESC', 'If you want to, you can check this box and after saving the plan edit every setting from the global configuration to be different for this plan individually.');
 
 define( '_PAYPLAN_MI',											'Komponenten' );
 define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_NAME',				'Komponentenname:' );

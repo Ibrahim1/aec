@@ -1711,10 +1711,29 @@ class HTML_AcctExp
 						</table>
 						<?php
 		                $tabs->endTab();
+		                $tabs->startTab( _PAYPLAN_PROCESSORS_TITLE, _PAYPLAN_PROCESSORS_TITLE );
+						?>
+						<h2><?php echo _PAYPLAN_PROCESSORS_TITLE_LONG; ?></h2>
+						<table width="100%" class="adminform"><tr><td>
+							<div class="userinfobox">
+								<?php
+									foreach ( $aecHTML->customparams as $id => $processor ) {
+										?>
+										<h2><?php echo $processor['name']; ?></h2>
+										<?php
+										foreach ( $processor['params'] as $customparam ) {
+											echo $aecHTML->createSettingsParticle( $customparam );
+										}
+									}
+								?>
+							</div>
+						</td></tr></table>
+						<?php
+		                $tabs->endTab();
 		                $tabs->startTab( _PAYPLAN_TEXT_TITLE, _PAYPLAN_TEXT_TITLE );
 		                ?>
+		                <h2><?php echo _PAYPLAN_TEXT_TITLE; ?></h2>
 		                <table width="100%" class="adminform"><tr><td>
-							<h2><?php echo _PAYPLAN_TEXT_TITLE; ?></h2>
 							<div class="userinfobox">
 								<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
 								<?php echo $aecHTML->createSettingsParticle( 'email_desc' ); ?>
@@ -1783,8 +1802,8 @@ class HTML_AcctExp
 		                $tabs->endTab();
 		                $tabs->startTab( _PAYPLAN_TRIAL_TITLE, _PAYPLAN_TRIAL_TITLE );
 						?>
+						<h2><?php echo _PAYPLAN_TRIAL_TITLE; ?><?php echo $aecHTML->ToolTip( _PAYPLAN_TRIAL_DESC, _PAYPLAN_TRIAL ); ?></h2>
 						<table width="100%" class="adminform"><tr><td>
-							<h2><?php echo _PAYPLAN_TRIAL_TITLE; ?><?php echo $aecHTML->ToolTip( _PAYPLAN_TRIAL_DESC, _PAYPLAN_TRIAL ); ?></h2>
 							<div class="userinfobox">
 								<?php echo $aecHTML->createSettingsParticle( 'trial_free' ); ?>
 								<?php echo $aecHTML->createSettingsParticle( 'trial_amount' ); ?>
@@ -1799,8 +1818,8 @@ class HTML_AcctExp
 		                $tabs->endTab();
 		                $tabs->startTab( _PAYPLAN_RELATIONS_TITLE, _PAYPLAN_RELATIONS_TITLE );
 						?>
+						<h2><?php echo _PAYPLAN_RELATIONS_TITLE; ?></h2>
 						<table width="100%" class="adminform"><tr><td>
-							<h2><?php echo _PAYPLAN_RELATIONS_TITLE; ?></h2>
 							<div class="userinfobox">
 								<?php echo $aecHTML->createSettingsParticle( 'similarplans' ); ?>
 								<?php echo $aecHTML->createSettingsParticle( 'equalplans' ); ?>
@@ -1810,30 +1829,14 @@ class HTML_AcctExp
 		                $tabs->endTab();
 		                $tabs->startTab( _PAYPLAN_MI, _PAYPLAN_MI );
 		                ?>
+		                <h2><?php echo _PAYPLAN_MI; ?></h2>
 		                <table width="100%" class="adminform"><tr><td>
 							<div class="userinfobox">
-								<h2><?php echo _PAYPLAN_MI; ?></h2>
 								<?php echo $aecHTML->createSettingsParticle( 'micro_integrations' ); ?>
 							</div>
 						</td></tr></table>
 						<?php
 		                $tabs->endTab();
-		                if ( is_array( $aecHTML->customparams ) ) {
-			                $tabs->startTab( _PAYPLAN_CUSTOMPARAMS_TITLE, _PAYPLAN_CUSTOMPARAMS_TITLE );
-							?>
-							<table width="100%" class="adminform"><tr><td>
-								<h2><?php echo _PAYPLAN_CUSTOMPARAMS_TITLE; ?></h2>
-								<div class="userinfobox">
-									<?php
-										foreach ( $aecHTML->customparams as $customparam ) {
-											echo $aecHTML->createSettingsParticle( $customparam );
-										}
-									?>
-								</div>
-							</td></tr></table>
-							<?php
-			                $tabs->endTab();
-		                }
 		                $tabs->endPane();
 						?>
 					</td>

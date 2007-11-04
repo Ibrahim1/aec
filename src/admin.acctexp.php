@@ -2325,8 +2325,7 @@ function editSubscriptionPlan( $id, $option )
 	$lists['trial_periodunit'] = mosHTML::selectList($perunit, 'trial_periodunit', 'size="4"', 'value', 'text', arrayValueDefault($params_values, 'trial_periodunit', "D"));
 	$lists['full_periodunit'] = mosHTML::selectList($perunit, 'full_periodunit', 'size="4"', 'value', 'text', arrayValueDefault($params_values, 'full_periodunit', "D"));
 
-
-	$params['cparams_remap']			= array("subarea_change", "plan_params");
+	$params['processors_remap'] = array("subarea_change", "plan_params");
 
 	$pps = PaymentProcessorHandler::getInstalledObjectList( 1 );
 
@@ -2337,37 +2336,126 @@ function editSubscriptionPlan( $id, $option )
 	$customparamsarray = array();
 	$k = 0;
 	foreach ( $pps as $ppobj ) {
-		$pproc = new PaymentProcessor();
-		if ( $pproc->loadName( $ppobj->name ) ) {
-			$pproc->getInfo();
+		if ( $ppobj->active ) {
+			$pp = new PaymentProcessor();
 
-			if ( in_array( $ppobj->id, $plan_procs ) ) {
-				$customparams = $pproc->getCustomPlanParams();
-				if ( is_array( $customparams ) ) {
-					foreach ( $customparams as $customparam => $cpcontent ) {
-						// Write the params field
-						$cp_name = strtoupper( "_CFG_" . $pproc->processor_name . "_plan_params_" . $customparam . "_name" );
-						$cp_desc = strtoupper( "_CFG_" . $pproc->processor_name . "_plan_params_" . $customparam . "_desc" );
-						$shortname = $pproc->id . "_" . $customparam;
-						$params[$shortname] = array_merge( $cpcontent, array( $cp_name, $cp_desc ) );
-						$customparamsarray[] = $shortname;
+			if ( $pp->loadName( $ppobj->name ) ) {
+				$pp->getInfo();
+
+				$customparamsarray[$pp->id] = array();
+				$customparamsarray[$pp->id]['name'] = array();
+
+				$params['processor_' . $pp->id] = array();
+
+				$params[$pp->id . '_aec_overwrite_settings'] = array( 'checkbox', _PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_NAME, _PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_DESC );
+				$params[$pp->id . '_aec_overwrite_settings'] = array( 'checkbox', _PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_NAME, _PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_DESC );
+
+				if ( in_array( $pp->id, $plan_procs ) ) {
+					$customparams = $pp->getCustomPlanParams();
+					if ( is_array( $customparams ) ) {
+						foreach ( $customparams as $customparam => $cpcontent ) {
+							// Write the params field
+							$cp_name = strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_name" );
+							$cp_desc = strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_desc" );
+							$shortname = $pp->id . "_" . $customparam;
+							$params[$shortname] = array_merge( $cpcontent, array( $cp_name, $cp_desc ) );
+							$customparamsarray[] = $shortname;
+						}
+					}
+
+					$settings_array = $pp->getBackendSettings();
+
+					if ( isset( $settings_array['lists'] ) ) {
+						$lists = array_merge( $lists, $settings_array['lists'] );
+						unset( $settings_array['lists'] );
+					}
+
+					// Iterate through settings form assigning the db settings
+					foreach ( $settings_array as $name => $values ) {
+						$setting_name = $pp->processor_name . '_' . $name;
+
+						switch( $settings_array[$name][0] ) {
+							case 'list_yesno':
+								$lists[$setting_name] = mosHTML::yesnoSelectList( $setting_name, '', $pp->settings[$name] );
+
+								$settings_array[$name][0] = 'list';
+								break;
+
+							case 'list_currency':
+								// Get currency list
+								$currency_array	= explode( ',', $pp->info['currencies'] );
+
+								// Transform currencies into OptionArray
+								$currency_code_list = array();
+								foreach ( $currency_array as $currency ) {
+									if ( defined( '_CURRENCY_' . $currency )) {
+										$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
+									}
+								}
+
+								// Create list
+								$lists[$setting_name] = mosHTML::selectList( $currency_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
+								$settings_array[$name][0] = 'list';
+								break;
+
+							case 'list_language':
+								// Get language list
+								$language_array	= explode( ',', $pp->info['languages'] );
+
+								// Transform languages into OptionArray
+								$language_code_list = array();
+								foreach ( $language_array as $language ) {
+									$language_code_list[] = mosHTML::makeOption( $language, ( defined( '_AEC_LANG_' . $language  ) ? constant( '_AEC_LANG_' . $language ) : $language ) );
+								}
+								// Create list
+								$lists[$setting_name] = mosHTML::selectList( $language_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
+								$settings_array[$name][0] = 'list';
+								break;
+
+							case 'list_plan':
+								unset( $settings_array[$name] );
+								break;
+
+							default:
+								break;
+						}
+
+						if ( !isset( $settings_array[$name][1] ) ) {
+							// Create constant names
+							$constantname = '_CFG_' . strtoupper( $ppobj->name ) . '_' . strtoupper($name) . '_NAME';
+							$constantdesc = '_CFG_' . strtoupper( $ppobj->name ) . '_' . strtoupper($name) . '_DESC';
+
+							// If the constantname does not exists, try a generic name or insert an error
+							if ( defined( $constantname ) ) {
+								$settings_array[$name][1] = constant( $constantname );
+							} else {
+								$genericname = '_CFG_PROCESSOR_' . strtoupper($name) . '_NAME';
+								if ( defined( $genericname ) ) {
+									$settings_array[$name][1] = constant( $genericname );
+								} else {
+									$settings_array[$name][1] = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantname );
+								}
+							}
+
+							// If the constantname does not exists, try a generic name or insert an error
+							if ( defined( $constantdesc ) ) {
+								$settings_array[$name][2] = constant( $constantdesc );
+							} else {
+								$genericdesc = '_CFG_PROCESSOR_' . strtoupper($name) . '_DESC';
+								if ( defined( $genericname ) ) {
+									$settings_array[$name][2] = constant( $genericdesc );
+								} else {
+									$settings_array[$name][2] = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantdesc );
+								}
+							}
+						}
 					}
 				}
 
-				$selected_gw[$k] = new stdClass();
-				$selected_gw[$k]->value = $pproc->id;
-				$selected_gw[$k]->text = $pproc->info['longname'];
+				$available_gw[] = mosHTML::makeOption( $pproc->id, $pproc->info['longname'] );
+				$k++;
 			}
-
-			$available_gw[] = mosHTML::makeOption( $pproc->id, $pproc->info['longname'] );
-			$k++;
 		}
-	}
-
-	if ( !count( $selected_gw ) ) {
-		$selected_gw[0] = new stdClass();
-		$selected_gw[0]->value = 0;
-		$selected_gw[0]->text = _PAYPLAN_NOGW;
 	}
 
 	$lists['processors'] = mosHTML::selectList($available_gw, 'processors[]', 'size="' . max(min(count($available_gw), 12), 2) . '" multiple', 'value', 'text', $selected_gw);

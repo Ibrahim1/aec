@@ -82,6 +82,14 @@ class processor_ccbill extends POSTprocessor
 		return $settings;
 	}
 
+	function CustomPlanParams()
+	{
+		$p = array();
+		$p['Allowedtypes']	= array( 'inputC' );
+
+		return $p;
+	}
+
 	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
 	{
 		global $mosConfig_live_site;

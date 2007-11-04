@@ -14,7 +14,7 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 class processor_ewayXML extends XMLprocessor
 {
 	var $processor_name = 'ewayXML';
-	
+
 	function info()
 	{
 		$info = array();
@@ -58,12 +58,12 @@ class processor_ewayXML extends XMLprocessor
 
 		return $settings;
 	}
-	
+
 	function createRequestXML($int_var, $settings, $metaUser, $new_subscription){
-		
+
 		$order_total = $int_var['amount'] * 100;
 		$my_trxn_number = uniqid( "eway_" );
-		
+
 		$nodes = array(	"ewayCustomerID" => $settings['custId'],
 					"ewayTotalAmount" => $order_total,
 					"ewayCustomerFirstName" => $metaUser->cmsUser->username,
@@ -75,38 +75,40 @@ class processor_ewayXML extends XMLprocessor
 					"ewayTrxnNumber" => $my_trxn_number,
 					"ewaySiteTitle" => $settings['SiteTitle'],
 					"ewayCardHoldersName" => $int_var['params']['cardHolder'],
-					"ewayCardNumber" => $int_var['params']['cardNumber'], 
-					"ewayCardExpiryMonth" => $int_var['params']['expirationMonth'], 
+					"ewayCardNumber" => $int_var['params']['cardNumber'],
+					"ewayCardExpiryMonth" => $int_var['params']['expirationMonth'],
 					"ewayCardExpiryYear" => $int_var['params']['expirationYear'],
-					"ewayCustomerEmail" => $metaUser->cmsUser->email, 
-					"ewayCustomerAddress" => '', 
-					"ewayCustomerPostcode" => '', 
+					"ewayCustomerEmail" => $metaUser->cmsUser->email,
+					"ewayCustomerAddress" => '',
+					"ewayCustomerPostcode" => '',
 					"ewayOption3" => ''
 					);
 		$xml = '<ewaygateway>';
-		
+
 		foreach($nodes as $name => $value){
 			$xml .= "<" . $name . ">" . $value . "</" . $name . ">";
 		}
 		$xml .= '</ewaygateway>';
-		
+
 		return $xml;
 	}
-	function transmitRequestXML($xml, $int_var, $settings, $metaUser, $new_subscription){
+
+	function transmitRequestXML($xml, $int_var, $settings, $metaUser, $new_subscription)
+	{
 		if($settings['testmode']){
 			$url = 'https://www.eway.com.au/gateway/xmltest/testpage.asp';
 		}else{
 			$url = 'https://www.eway.com.au/gateway/xmlpayment.asp';
 		}
 		$response = array();
-		
+
 		if($objResponse = simplexml_load_string($this->transmitRequest($url,'',$xml))){
-			
-			
+
+
 			$response['amount_paid'] = $objResponse->ewayReturnAmount / 100;
 			$response['invoice'] = $objResponse->ewayTrxnOption2;
 			//$response['raw'] = $objResponse->ewayTrxnError;
-			
+
 			if($objResponse->ewayTrxnStatus == 'True'){
 				$response['valid'] = 1;
 			}else{
@@ -117,9 +119,10 @@ class processor_ewayXML extends XMLprocessor
 			$response['valid'] = 0;
 			$response['error'] = _CFG_EWAYXML_CONNECTION_ERROR;
 		}
-		
+
 		return $response;
 	}
+
 	function checkoutform()
 	{
 		$var['params']['cardHolder'] = array( 'inputC', _AEC_CCFORM_CARDHOLDER_NAME, _AEC_CCFORM_CARDHOLDER_NAME, '');
@@ -148,6 +151,7 @@ class processor_ewayXML extends XMLprocessor
 
 		return $var;
 	}
+
 	function doTheCurl( $url, $content )
 	{
 		$ch = curl_init();
