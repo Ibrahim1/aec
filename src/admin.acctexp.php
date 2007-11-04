@@ -1668,6 +1668,7 @@ function editSettings( $option )
 	$lists['noemails']				= mosHTML::yesnoSelectList('noemails', '', $aecConfig->cfg['noemails']);
 	$lists['nojoomlaregemails']		= mosHTML::yesnoSelectList('nojoomlaregemails', '', $aecConfig->cfg['nojoomlaregemails']);
 	$lists['debugmode']				= mosHTML::yesnoSelectList('debugmode', '', $aecConfig->cfg['debugmode']);
+	$lists['override_reqssl']		= mosHTML::yesnoSelectList('override_reqssl', '', $aecConfig->cfg['override_reqssl']);
 
 	$lists['customtext_confirm_keeporiginal']		= mosHTML::yesnoSelectList('customtext_confirm_keeporiginal', '', $aecConfig->cfg['customtext_confirm_keeporiginal']);
 	$lists['customtext_checkout_keeporiginal']		= mosHTML::yesnoSelectList('customtext_checkout_keeporiginal', '', $aecConfig->cfg['customtext_checkout_keeporiginal']);
@@ -1757,6 +1758,7 @@ function editSettings( $option )
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_ADMINACCESS_NAME, _CFG_GENERAL_ADMINACCESS_DESC, '0', 'adminaccess');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_NOEMAILS_NAME, _CFG_GENERAL_NOEMAILS_DESC, '0', 'noemails');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_NOJOOMLAREGEMAILS_NAME, _CFG_GENERAL_NOJOOMLAREGEMAILS_DESC, '0', 'nojoomlaregemails');
+	$tab_data[0][] = array( 'list', _CFG_GENERAL_OVERRIDE_REQSSL_NAME, _CFG_GENERAL_OVERRIDE_REQSSL_DESC, '0', 'override_reqssl');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_DEBUGMODE_NAME, _CFG_GENERAL_DEBUGMODE_DESC, '0', 'debugmode');
 
 	$tab_data[1] = array();

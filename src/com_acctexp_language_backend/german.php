@@ -646,6 +646,8 @@ define( '_CFG_GENERAL_NOJOOMLAREGEMAILS_NAME', 'Keine Joomla Emails');
 define( '_CFG_GENERAL_NOJOOMLAREGEMAILS_DESC', 'Mit dieser Einstellung verhindern Sie das versenden von Joomla Registrations-Best&auml;tigungsmails.');
 define( '_CFG_GENERAL_DEBUGMODE_NAME', 'Debug Mode');
 define( '_CFG_GENERAL_DEBUGMODE_DESC', 'Activates the display of debug information.');
+define( '_CFG_GENERAL_OVERRIDE_REQSSL_NAME', 'Override SSL Requirement');
+define( '_CFG_GENERAL_OVERRIDE_REQSSL_DESC', 'Some payment processors require an SSL secured connection to the user - for example when sensitive information (like CreditCard data) is required on the frontend.');
 
 // Global Micro Integration Settings
 define( '_CFG_TAB_MICROINTEGRATION_TITLE',				'MicroIntegration' );

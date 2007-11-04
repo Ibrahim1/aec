@@ -452,6 +452,146 @@ class AcctExp extends mosDBTable
 
 }
 
+class Config_General extends paramDBTable
+{
+	/** @var int Primary key */
+	var $id 				= null;
+	/** @var text */
+	var $settings 			= null;
+
+	function Config_General( &$db )
+	{
+		$this->mosDBTable( '#__acctexp_config', 'id', $db );
+
+		$this->load(1);
+
+		if ( empty( $this->settings ) ) {
+			$this->load(0);
+
+			$this->initParams();
+			$this->cfg = $this->getParams( 'settings' );
+		} else {
+			$this->cfg = $this->getParams( 'settings' );
+		}
+	}
+
+	function initParams()
+	{
+		$def = array();
+		$def['require_subscription']				= 0;
+		$def['alertlevel2']							= 7;
+		$def['alertlevel1']							= 3;
+		$def['expiration_cushion']					= 12;
+		$def['heartbeat_cycle']						= 24;
+		$def['heartbeat_cycle_backend']				= 1;
+		$def['plans_first']							= 0;
+		$def['simpleurls']							= 0;
+		$def['display_date_frontend']				= "%a, %d %b %Y %T %Z";
+		$def['display_date_backend']				= "%a, %d %b %Y %T %Z";
+		$def['enable_mimeta']						= 0;
+		$def['enable_coupons']						= 0;
+		$def['gwlist']								= '';
+		$def['milist']								= "mi_email;mi_htaccess;mi_mysql_query;mi_email;mi_virtuemart";
+		$def['displayccinfo']						= 1;
+		$def['customtext_confirm_keeporiginal']		= 1;
+		$def['customtext_checkout_keeporiginal']	= 1;
+		$def['customtext_notallowed_keeporiginal']	= 1;
+		$def['customtext_pending_keeporiginal']		= 1;
+		$def['customtext_expired_keeporiginal']		= 1;
+		// new 0.12.4
+		$def['bypassintegration']					= '';
+		$def['customintro']							= '';
+		$def['customthanks']						= '';
+		$def['customcancel']						= '';
+		$def['customnotallowed']					= '';
+		$def['tos']									= '';
+		$def['customtext_plans']					= '';
+		$def['customtext_confirm']					= '';
+		$def['customtext_checkout']					= '';
+		$def['customtext_notallowed']				= '';
+		$def['customtext_pending']					= '';
+		$def['customtext_expired']					= '';
+		// new 0.12.4.2
+		$def['adminaccess']							= 1;
+		$def['noemails']							= 0;
+		$def['nojoomlaregemails']					= 0;
+		// new 0.12.4.10
+		$def['debugmode']							= 0;
+		// new 0.12.4.12
+		$def['override_reqssl']						= 0;
+
+		// Write to Params, do not overwrite existing data
+		$this->addParams( $def, 'settings', false );
+
+		unset( $this->cfg );
+
+		$this->check();
+		$this->store();
+
+		return true;
+	}
+
+	function saveSettings()
+	{
+		if ( $this->RowDuplicationCheck() ) {
+			$this->CleanDuplicatedRows();
+			$this->load(1);
+		}
+
+		$this->setParams( $this->cfg, 'settings' );
+
+		unset( $this->cfg );
+
+		$this->check();
+		$this->store();
+	}
+
+	function RowDuplicationCheck()
+	{
+		global $database;
+
+		$query = 'SELECT count(*)'
+		. ' FROM #__acctexp_config'
+		;
+		$database->setQuery( $query );
+		$rows = $database->loadResult();
+
+		if ( $rows > 1 ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function CleanDuplicatedRows()
+	{
+		global $database;
+
+		$query = 'SELECT max(id)'
+		. ' FROM #__acctexp_config'
+		;
+		$database->setQuery( $query );
+		$database->query();
+		$max = $database->loadResult();
+
+		$query = 'DELETE'
+		. ' FROM #__acctexp_config'
+		. ' WHERE id != \'' . $max . '\''
+		;
+		$database->setQuery( $query );
+		$database->query();
+
+		if ( !( $max == 1 ) ) {
+			$query = 'UPDATE #__acctexp_config'
+			. ' SET id = \'1\''
+			. ' WHERE id =\'' . $max . '\''
+			;
+			$database->setQuery( $query );
+			$database->query();
+		}
+	}
+}
+
 class aecHeartbeat extends mosDBTable
 {
  	/** @var int Primary key */
@@ -1371,9 +1511,17 @@ class XMLprocessor extends processor
 {
 	function checkoutAction( $int_var, $settings, $metaUser, $new_subscription )
 	{
+		global $aecConfig;
+
 		$var = $this->checkoutform( $int_var, $settings, $metaUser, $new_subscription );
 
-		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=checkout', false ) . '" method="post">' . "\n";
+		if ( $aecConfig->cfg['override_reqssl'] ) {
+			$secure = false;
+		} else {
+			$secure = true;
+		}
+
+		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=checkout', $secure ) . '" method="post">' . "\n";
 		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
 		$return .= '<input type="hidden" name="invoice" value="' . $int_var['invoice'] . '" />' . "\n";
 		$return .= '<input type="hidden" name="userid" value="' . $metaUser->userid . '" />' . "\n";
@@ -1866,144 +2014,6 @@ class aecHTML
 		$image 	= $mosConfig_live_site . '/administrator/components/com_acctexp/images/icons/'. $image;
 
 		return '<img src="'. $image .'" border="0" alt="' . $alt . '" title="' . $alt . '" class="aec_icon" />';
-	}
-}
-
-class Config_General extends paramDBTable
-{
-	/** @var int Primary key */
-	var $id 				= null;
-	/** @var text */
-	var $settings 			= null;
-
-	function Config_General( &$db )
-	{
-		$this->mosDBTable( '#__acctexp_config', 'id', $db );
-
-		$this->load(1);
-
-		if ( empty( $this->settings ) ) {
-			$this->load(0);
-
-			$this->initParams();
-			$this->cfg = $this->getParams( 'settings' );
-		} else {
-			$this->cfg = $this->getParams( 'settings' );
-		}
-	}
-
-	function initParams()
-	{
-		$def = array();
-		$def['require_subscription']				= 0;
-		$def['alertlevel2']							= 7;
-		$def['alertlevel1']							= 3;
-		$def['expiration_cushion']					= 12;
-		$def['heartbeat_cycle']						= 24;
-		$def['heartbeat_cycle_backend']				= 1;
-		$def['plans_first']							= 0;
-		$def['simpleurls']							= 0;
-		$def['display_date_frontend']				= "%a, %d %b %Y %T %Z";
-		$def['display_date_backend']				= "%a, %d %b %Y %T %Z";
-		$def['enable_mimeta']						= 0;
-		$def['enable_coupons']						= 0;
-		$def['gwlist']								= '';
-		$def['milist']								= "mi_email;mi_htaccess;mi_mysql_query;mi_email;mi_virtuemart";
-		$def['displayccinfo']						= 1;
-		$def['customtext_confirm_keeporiginal']		= 1;
-		$def['customtext_checkout_keeporiginal']	= 1;
-		$def['customtext_notallowed_keeporiginal']	= 1;
-		$def['customtext_pending_keeporiginal']		= 1;
-		$def['customtext_expired_keeporiginal']		= 1;
-		// new 0.12.4
-		$def['bypassintegration']					= '';
-		$def['customintro']							= '';
-		$def['customthanks']						= '';
-		$def['customcancel']						= '';
-		$def['customnotallowed']					= '';
-		$def['tos']									= '';
-		$def['customtext_plans']					= '';
-		$def['customtext_confirm']					= '';
-		$def['customtext_checkout']					= '';
-		$def['customtext_notallowed']				= '';
-		$def['customtext_pending']					= '';
-		$def['customtext_expired']					= '';
-		// new 0.12.4.2
-		$def['adminaccess']							= 1;
-		$def['noemails']							= 0;
-		$def['nojoomlaregemails']					= 0;
-		// new 0.12.4.10
-		$def['debugmode']							= 0;
-
-		// Write to Params, do not overwrite existing data
-		$this->addParams( $def, 'settings', false );
-
-		unset( $this->cfg );
-
-		$this->check();
-		$this->store();
-
-		return true;
-	}
-
-	function saveSettings()
-	{
-		if ( $this->RowDuplicationCheck() ) {
-			$this->CleanDuplicatedRows();
-			$this->load(1);
-		}
-
-		$this->setParams( $this->cfg, 'settings' );
-
-		unset( $this->cfg );
-
-		$this->check();
-		$this->store();
-	}
-
-	function RowDuplicationCheck()
-	{
-		global $database;
-
-		$query = 'SELECT count(*)'
-		. ' FROM #__acctexp_config'
-		;
-		$database->setQuery( $query );
-		$rows = $database->loadResult();
-
-		if ( $rows > 1 ) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	function CleanDuplicatedRows()
-	{
-		global $database;
-
-		$query = 'SELECT max(id)'
-		. ' FROM #__acctexp_config'
-		;
-		$database->setQuery( $query );
-		$database->query();
-		$max = $database->loadResult();
-
-		$query = 'DELETE'
-		. ' FROM #__acctexp_config'
-		. ' WHERE id != \'' . $max . '\''
-		;
-		$database->setQuery( $query );
-		$database->query();
-
-		if ( !( $max == 1 ) ) {
-			$query = 'UPDATE #__acctexp_config'
-			. ' SET id = \'1\''
-			. ' WHERE id =\'' . $max . '\''
-			;
-			$database->setQuery( $query );
-			$database->query();
-		}
 	}
 }
 
