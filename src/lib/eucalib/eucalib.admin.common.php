@@ -296,7 +296,7 @@ class eucaHTMLbackend
 			$href = '#';
 		}
 
-		$mousover = 'return overlib(\''. $tooltip .'\''. $title .', BELOW, RIGHT'. $width .');';
+		$mousover = 'return overlib(\''. htmlentities( $tooltip ) .'\''. $title .', BELOW, RIGHT'. $width .');';
 
 		$tip = '';
 		if ( $link ) {

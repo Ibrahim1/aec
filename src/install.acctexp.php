@@ -168,7 +168,6 @@ function com_install()
 	. '`name` varchar(40) NULL,'
 	. '`desc` text NULL,'
 	. '`email_desc` text NULL,'
-	. '`send_exp_mail` int(4) NOT NULL default \'0\','
 	. '`params` text NULL,'
 	. '`custom_params` text NULL,'
 	. '`restrictions` text NULL,'
@@ -420,22 +419,14 @@ function com_install()
 		}
 	}
 
-	$eucaInstalldb->addColifNotExists( 'mingid', "int(3) default '0'",  'plans' );
-	$eucaInstalldb->addColifNotExists( 'similarpg', "varchar(255) NULL",  'plans' );
-	$eucaInstalldb->addColifNotExists( 'equalpg', "varchar(255) NULL",  'plans' );
 	$eucaInstalldb->addColifNotExists( 'previous_plan', "int(11) NULL",  'subscr' );
 	$eucaInstalldb->addColifNotExists( 'used_plans', "varchar(255) NULL",  'subscr' );
-	$eucaInstalldb->dropColmnifExists( 'email_sent', 'subscr' );
-	$eucaInstalldb->addColifNotExists( 'email_desc_exp', "text NULL",  'plans' );
-	$eucaInstalldb->dropColmnifExists( 'desc_email', 'plans' );
-	$eucaInstalldb->addColifNotExists( 'email_desc', "text NULL",  'plans' );
-	$eucaInstalldb->addColifNotExists( 'send_exp_mail', "int(4) default '0'",  'plans' );
-	$eucaInstalldb->addColifNotExists( 'fallback', "int(11) NULL",  'plans' );
+	$eucaInstalldb->dropColifExists( 'email_sent', 'subscr' );
 	$eucaInstalldb->addColifNotExists( 'coupons', "varchar(255) NULL",  'invoices' );
-	$eucaInstalldb->addColifNotExists( 'maxgid', "int(3) default '0'",  'plans' );
 	$eucaInstalldb->addColifNotExists( 'micro_integrations', "text NULL",  'plans' );
 	$eucaInstalldb->addColifNotExists( 'coupons', "varchar(255) NULL",  'invoices' );
 	$eucaInstalldb->addColifNotExists( 'params', "varchar(255) NULL",  'invoices' );
+	$eucaInstalldb->addColifNotExists( 'email_desc', "text NULL", 'plans' );
 
 	$result = null;
 	$database->setQuery("SHOW COLUMNS FROM #__acctexp_invoices LIKE 'fixed'");
@@ -455,7 +446,7 @@ function com_install()
 	}
 
 	$eucaInstalldb->addColifNotExists( 'visible', "int(4) default '1'",  'plans' );
-	$eucaInstalldb->dropColmnifExists( 'recurring', 'plans' );
+	$eucaInstalldb->dropColifExists( 'recurring', 'plans' );
 	$eucaInstalldb->addColifNotExists( 'on_userchange', "int(4) default '0'",  'microintegrations' );
 	$eucaInstalldb->addColifNotExists( 'created_date', "datetime NULL default '0000-00-00 00:00:00'",  'invoices' );
 
@@ -489,7 +480,7 @@ function com_install()
 		}
 	}
 
-	$eucaInstalldb->dropColmnifExists( 'reuse', 'plans' );
+	$eucaInstalldb->dropColifExists( 'reuse', 'plans' );
 	$eucaInstalldb->addColifNotExists( 'processors', "varchar(255) NULL",  'plans' );
 	$eucaInstalldb->addColifNotExists( 'active', "int(4) default '1'",  'invoices' );
 
@@ -730,9 +721,16 @@ function com_install()
 
 	$cfg->saveSettings();
 
-	$eucaInstalldb->dropColmnifExists( 'maxgid', 'plans' );
-	$eucaInstalldb->dropColmnifExists( 'email_desc_exp', 'plans' );
-	$eucaInstalldb->dropColmnifExists( 'send_exp_mail', 'plans' );
+	$eucaInstalldb->dropColifExists( 'mingid', 'plans' );
+	$eucaInstalldb->dropColifExists( 'similarpg', 'plans' );
+	$eucaInstalldb->dropColifExists( 'equalpg', 'plans' );
+	$eucaInstalldb->dropColifExists( 'maxgid', 'plans' );
+	$eucaInstalldb->dropColifExists( 'email_desc_exp', 'plans' );
+	$eucaInstalldb->dropColifExists( 'send_exp_mail', 'plans' );
+	$eucaInstalldb->dropColifExists( 'desc_email', 'plans' );
+	$eucaInstalldb->dropColifExists( 'email_desc_exp', 'plans' );
+	$eucaInstalldb->dropColifExists( 'send_exp_mail', 'plans' );
+	$eucaInstalldb->dropColifExists( 'fallback', 'plans' );
 
 	// check for old values and update (if happen) old tables
 	$result = null;
@@ -845,24 +843,17 @@ function com_install()
 		}
 	}
 
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'customparams'");
-	if ( $database->loadObject( $result ) ) {
-		if (strcmp($result->Field, 'customparams') === 0) {
-			$result = null;
-			$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'custom_params'");
-			if ( $database->loadObject( $result ) ) {
-				if (!(strcmp($result->Field, 'custom_params') === 0)) {
-					$database->setQuery("ALTER TABLE #__acctexp_plans CHANGE `customparams` `custom_params` text NULL");
-					if ( !$database->query() ) {
-				    	$errors[] = array( $database->getErrorMsg(), $query );
-					}
-				}
+	if ( $eucaInstalldb->ColumninTable( 'customparams', 'plans' ) ) {
+		$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'custom_params'");
+		if ( !$eucaInstalldb->ColumninTable( 'custom_params', 'plans' ) ) {
+			$database->setQuery("ALTER TABLE #__acctexp_plans CHANGE `customparams` `custom_params` text NULL");
+			if ( !$database->query() ) {
+		    	$errors[] = array( $database->getErrorMsg(), $query );
 			}
 		}
 	}
 
-	$eucaInstalldb->dropColmnifExists( 'maxgid', 'plans' );
+	$eucaInstalldb->dropColifExists( 'maxgid', 'plans' );
 
 	$eucaInstalldb->addColifNotExists( 'custom_params', "text NULL",  'plans' );
 	$eucaInstalldb->addColifNotExists( 'system', "int(4) NOT NULL default '0'",  'microintegrations' );

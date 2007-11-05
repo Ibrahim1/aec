@@ -81,7 +81,7 @@ class eucaInstall
 
 		$query = 'DELETE'
 		. ' FROM #__components'
-		. ' WHERE \'option\' = \'option=' . _EUCA_APP_COMPNAME . '\''
+		. ' WHERE `option` = \'option=' . _EUCA_APP_COMPNAME . '\''
 		;
 		$database->setQuery( $query );
 
@@ -109,7 +109,7 @@ class eucaInstall
 		// get id from component entry
 		$query = 'SELECT id'
 		. ' FROM #__components'
-		. ' WHERE link = \'option=' . _EUCA_APP_COMPNAME . '\''
+		. ' WHERE `link` = \'option=' . _EUCA_APP_COMPNAME . '\''
 		;
 		$database->setQuery( $query );
 		$id = $database->loadResult();
@@ -203,9 +203,9 @@ class eucaInstallDB
 		}
 	}
 
-	function dropColmnifExists( $column, $table, $prefix=true )
+	function dropColifExists( $column, $table, $prefix=true )
 	{
-		if ( !$this->ColumninTable( $column, $table, $prefix ) ) {
+		if ( $this->ColumninTable( $column, $table, $prefix ) ) {
 			return $this->dropColumn( $column );
 		}
 	}
@@ -222,11 +222,14 @@ class eucaInstallDB
 		global $database;
 
 		$query = 'ALTER TABLE #__' . $this->table
-		. ' ADD \'' . $this->column . '\'' . $options
+		. ' ADD COLUMN `' . $this->column . '` ' . $options
 		;
 
 		$database->setQuery( $query );
-		if ( !$database->query() ) {
+
+		$result = $database->query();
+
+		if ( !$result ) {
 	    	$this->errors[] = array( $database->getErrorMsg(), $query );
 	    	return false;
 		} else {
@@ -239,11 +242,14 @@ class eucaInstallDB
 		global $database;
 
 		$query = 'ALTER TABLE #__' . $this->table
-		. ' DROP \'' . $this->column . '\''
+		. ' DROP COLUMN `' . $this->column . '`'
 		;
 
 		$database->setQuery( $query );
-		if ( !$database->query() ) {
+
+		$result = $database->query();
+
+		if ( !$result ) {
 	    	$this->errors[] = array( $database->getErrorMsg(), $query );
 	    	return false;
 		} else {
