@@ -1715,7 +1715,7 @@ class HTML_AcctExp
 							<?php
 								foreach ( $aecHTML->customparams as $id => $processor ) {
 									?>
-									<div class="userinfobox">
+									<div class="userinfobox clear">
 										<h2 style="clear:both;"><?php echo $processor['name']; ?></h2>
 										<?php
 										$k = 0;

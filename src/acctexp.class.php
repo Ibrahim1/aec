@@ -1510,7 +1510,7 @@ class processor extends paramDBTable
 	{
 		 foreach ( $settings as $key => $value ) {
 		 	if ( isset( $planvars[$key] ) ) {
-				if ( !is_null( $planvars[$key] ) ) {
+				if ( !is_null( $planvars[$key] ) && ( $planvars[$key] != '' ) ) {
 		 			$settings[$key] = $planvars[$key];
 				}
 		 	}
@@ -1915,7 +1915,7 @@ class aecHTML
 			}
 
 			if ( !empty( $row[1] ) && !empty( $row[2] ) ) {
-				$return = '<div class="setting_desc">' . $this->ToolTip( $row[2], $row[1]) . $row[1] . '</div>';
+				$return = '<div class="setting_desc">' . $this->ToolTip( $row[2], $row[1] ) . $row[1] . '</div>';
 			}
 		} else {
 			if ( isset( $row[1] ) ) {
@@ -1967,7 +1967,7 @@ class aecHTML
 				$return .= '</div>';
 				break;
 			case 'fieldset':
-				$return = '<div class="setting_desc">' . "\n"
+				$return = '<div class="setting_form">' . "\n"
 				. '<fieldset><legend>' . $row[1] . '</legend>' . "\n"
 				. '<table cellpadding="1" cellspacing="1" border="0">' . "\n"
 				. '<tr align="left" valign="middle" ><td>' . $row[2] . '</td></tr>' . "\n"

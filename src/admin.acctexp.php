@@ -2331,6 +2331,18 @@ function editSubscriptionPlan( $id, $option )
 
 	$plan_procs = explode(";", $params_values['processors']);
 
+	$firstarray = array();
+	$secndarray = array();
+	foreach ( $pps as $ppo ) {
+		if ( in_array( $ppo->id, $plan_procs ) && !empty( $customparams_values[$ppo->id . '_aec_overwrite_settings'] ) ) {
+			$firstarray[] = $ppo;
+		} else {
+			$secndarray[] = $ppo;
+		}
+	}
+
+	$pps = array_merge( $firstarray, $secndarray );
+
 	$selected_gw = array();
 	$customparamsarray = array();
 	foreach ( $pps as $ppobj ) {
@@ -2385,7 +2397,7 @@ function editSubscriptionPlan( $id, $option )
 
 					// Iterate through settings form assigning the db settings
 					foreach ( $settings_array as $name => $values ) {
-						$setting_name = $pp->processor_name . '_' . $name;
+						$setting_name = $pp->id . '_' . $name;
 
 						switch( $settings_array[$name][0] ) {
 							case 'list_yesno':
@@ -2575,7 +2587,7 @@ function editSubscriptionPlan( $id, $option )
 		$settingsparams = array_merge( $params_values, $restrictions_values );
 	}
 	$settings->fullSettingsArray( $params, $settingsparams, $lists) ;
-
+//print_r($params);print_r($lists);exit();
 	// Call HTML Class
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 	if ( !empty( $customparamsarray ) ) {

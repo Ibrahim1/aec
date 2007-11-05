@@ -244,6 +244,10 @@ float: left;
 padding: 4px;
 }
 
+div.clear div.setting_desc {
+clear: both;
+}
+
 fieldset {
 }
 
