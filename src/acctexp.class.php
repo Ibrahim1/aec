@@ -3060,7 +3060,7 @@ class InvoiceFactory
 			$subscriptionClosed = false;
 			// TODO: Check if the user has already subscribed once, if not - link to intro
 			// TODO: Make sure a registration hybrid wont get lost here
-			if ( !$intro && ( $aecConfig->cfg['customintro'] != '' ) && !is_null( $aecConfig->cfg['customintro'] ) ) {
+			if ( !$intro && !empty( $aecConfig->cfg['customintro'] ) ) {
 				mosRedirect( $aecConfig->cfg['customintro'] );
 			}
 		}

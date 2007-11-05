@@ -105,6 +105,10 @@ class processor_ccbill extends POSTprocessor
 		$var['email']			= $metaUser->cmsUser->email;
 		$var['checksum']		= md5($cfg['secretWord'] . $metaUser->cmsUser->username);
 
+		if ( !empty( $int_var['planparams']['Allowedtypes'] ) ) {
+			$var['Allowedtypes'] = $cfg['Allowedtypes'];
+		}
+
 		return $var;
 	}
 
