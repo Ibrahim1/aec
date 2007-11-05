@@ -2332,9 +2332,7 @@ function editSubscriptionPlan( $id, $option )
 	$plan_procs = explode(";", $params_values['processors']);
 
 	$selected_gw = array();
-	$available_gw = array();
 	$customparamsarray = array();
-	$k = 0;
 	foreach ( $pps as $ppobj ) {
 		if ( $ppobj->active ) {
 			$pp = new PaymentProcessor();
@@ -2343,30 +2341,45 @@ function editSubscriptionPlan( $id, $option )
 				$pp->getInfo();
 
 				$customparamsarray[$pp->id] = array();
-				$customparamsarray[$pp->id]['name'] = array();
+				$customparamsarray[$pp->id]['name'] = $pp->info['longname'];
+				$customparamsarray[$pp->id]['params'] = array();
 
-				$params['processor_' . $pp->id] = array();
+				$params['processor_' . $pp->id] = array( 'checkbox', _PAYPLAN_PROCESSORS_ACTIVATE_NAME, _PAYPLAN_PROCESSORS_ACTIVATE_DESC  );
+				$customparamsarray[$pp->id]['params'][] = 'processor_' . $pp->id;
 
 				$params[$pp->id . '_aec_overwrite_settings'] = array( 'checkbox', _PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_NAME, _PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_DESC );
-				$params[$pp->id . '_aec_overwrite_settings'] = array( 'checkbox', _PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_NAME, _PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_DESC );
+				$customparamsarray[$pp->id]['params'][] = $pp->id . '_aec_overwrite_settings';
 
 				if ( in_array( $pp->id, $plan_procs ) ) {
+					$params_values['processor_' . $pp->id] = 1;
+
 					$customparams = $pp->getCustomPlanParams();
 					if ( is_array( $customparams ) ) {
 						foreach ( $customparams as $customparam => $cpcontent ) {
 							// Write the params field
-							$cp_name = strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_name" );
-							$cp_desc = strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_desc" );
+							$cp_name = constant( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_name" ) );
+							$cp_desc = constant( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_desc" ) );
 							$shortname = $pp->id . "_" . $customparam;
 							$params[$shortname] = array_merge( $cpcontent, array( $cp_name, $cp_desc ) );
-							$customparamsarray[] = $shortname;
+							$customparamsarray[$pp->id]['params'][] = $shortname;
 						}
+					}
+
+					if ( isset( $customparams_values[$pp->id . '_aec_overwrite_settings'] ) ) {
+						if ( !$customparams_values[$pp->id . '_aec_overwrite_settings'] ) {
+							continue;
+						}
+					} else {
+						continue;
 					}
 
 					$settings_array = $pp->getBackendSettings();
 
 					if ( isset( $settings_array['lists'] ) ) {
-						$lists = array_merge( $lists, $settings_array['lists'] );
+						foreach ( $settings_array['lists'] as $listname => $listcontent ) {
+							$lists[$pp->id . '_' . $listname] = $listcontent;
+						}
+
 						unset( $settings_array['lists'] );
 					}
 
@@ -2449,16 +2462,16 @@ function editSubscriptionPlan( $id, $option )
 								}
 							}
 						}
+
+						$params[$pp->id . '_' . $name] = $settings_array[$name];
+						$customparamsarray[$pp->id]['params'][] = $pp->id . '_' . $name;
 					}
+
 				}
 
-				$available_gw[] = mosHTML::makeOption( $pproc->id, $pproc->info['longname'] );
-				$k++;
 			}
 		}
 	}
-
-	$lists['processors'] = mosHTML::selectList($available_gw, 'processors[]', 'size="' . max(min(count($available_gw), 12), 2) . '" multiple', 'value', 'text', $selected_gw);
 
 	// get available active plans
 	$available_plans = array();

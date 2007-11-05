@@ -65,9 +65,8 @@ class paramDBTable extends mosDBTable
 	function setParams( $array, $field = 'params' )
 	{
 		$params = array();
-
 		foreach ( $array as $key => $value ) {
-			if ( !empty( $key ) ) {
+			if ( !is_null( $key ) ) {
 				if ( get_magic_quotes_gpc() ) {
 					$value = stripslashes($value);
 				}
@@ -95,7 +94,7 @@ class paramDBTable extends mosDBTable
 				}
 			}
 		}
-		$this->setParams ($params, $field);
+		$this->setParams( $params, $field );
 	}
 
 	/**

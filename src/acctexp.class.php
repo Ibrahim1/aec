@@ -1510,7 +1510,9 @@ class processor extends paramDBTable
 	{
 		 foreach ( $settings as $key => $value ) {
 		 	if ( isset( $planvars[$key] ) ) {
-		 		$settings[$key] = $planvars[$key];
+				if ( !is_null( $planvars[$key] ) ) {
+		 			$settings[$key] = $planvars[$key];
+				}
 		 	}
 		 }
 
@@ -1965,11 +1967,13 @@ class aecHTML
 				$return .= '</div>';
 				break;
 			case 'fieldset':
-				$return .= '<fieldset><legend>' . $row[1] . '</legend>' . "\n"
+				$return = '<div class="setting_desc">' . "\n"
+				. '<fieldset><legend>' . $row[1] . '</legend>' . "\n"
 				. '<table cellpadding="1" cellspacing="1" border="0">' . "\n"
 				. '<tr align="left" valign="middle" ><td>' . $row[2] . '</td></tr>' . "\n"
 				. '</table>' . "\n"
 				. '</fieldset>' . "\n"
+				. '</div>'
 				;
 				break;
 		}
@@ -2033,7 +2037,7 @@ class aecHTML
 			$href = '#';
 		}
 
-		$mousover = 'return overlib(\''. $tooltip .'\''. $title .', BELOW, RIGHT'. $width .');';
+		$mousover = 'return overlib(\''. htmlentities( $tooltip ) .'\''. $title .', BELOW, RIGHT'. $width .');';
 
 		$tip = '';
 		if ( $link ) {
@@ -2564,8 +2568,21 @@ class SubscriptionPlan extends paramDBTable
 			unset( $post[$varname] );
 		}
 
+		// Get selected processors ( have to be filtered out )
+
+		$processors = array();
+		foreach ( $post as $key => $value ) {
+			if ( ( strpos( $key, 'processor_' ) === 0 ) && ( $value == 'on') ) {
+				$processors[] = str_replace( 'processor_', '', $key );
+				unset( $post[$key] );
+			}
+		}
+
 		// Filter out params
-		$fixed = array( 'full_free', 'full_amount', 'full_period', 'full_periodunit', 'trial_free', 'trial_amount', 'trial_period', 'trial_periodunit', 'gid_enabled', 'gid', 'lifetime', 'processors', 'fallback', 'similarplans', 'equalplans', 'make_active' );
+		$fixed = array( 'full_free', 'full_amount', 'full_period', 'full_periodunit',
+						'trial_free', 'trial_amount', 'trial_period', 'trial_periodunit',
+						'gid_enabled', 'gid', 'lifetime', 'fallback',
+						'similarplans', 'equalplans', 'make_active' );
 
 		$params = array();
 		foreach ( $fixed as $varname ) {
@@ -2579,23 +2596,46 @@ class SubscriptionPlan extends paramDBTable
 			unset( $post[$varname] );
 		}
 
+		$params['processors'] = implode( ';', $processors );
+
 		$this->saveParams( $params );
 
-		// The rest of the vars are restrictions
+		// Filter out restrictions
+		$fixed = array( 'make_active', 'mingid_enabled', 'mingid', 'fixgid_enabled',
+						'fixgid', 'maxgid_enabled', 'maxgid', 'previousplan_req_enabled',
+						'previousplan_req', 'currentplan_req_enabled', 'currentplan_req', 'overallplan_req_enabled',
+						'overallplan_req', 'used_plan_min_enabled', 'used_plan_min_amount', 'used_plan_min',
+						'used_plan_max_enabled', 'used_plan_max_amount', 'used_plan_max', 'custom_restrictions_enabled',
+						'custom_restrictions' );
+
 		$restrictions = array();
-		foreach ( $post as $varname => $content ) {
-			// mic: fix for NOT including JCE-settings into aec.database
-			if ( substr( $varname, 0, 4 ) != 'mce_' ) {
-				if ( is_array( $content ) ) {
-					$restrictions[$varname] = implode( ';', $content );
-				} else {
-					$restrictions[$varname] = $content;
-				}
+		foreach ( $fixed as $varname ) {
+			if ( is_array( $post[$varname] ) ) {
+				$restrictions[$varname] = implode( ';', $post[$varname] );
+			} elseif ( empty( $post[$varname] ) ) {
+				$restrictions[$varname] = 0;
+			} else {
+				$restrictions[$varname] = $post[$varname];
 			}
 			unset( $post[$varname] );
 		}
 
 		$this->saveRestrictions($restrictions);
+
+		// The rest of the vars are custom params
+		$custom_params = array();
+		foreach ( $post as $varname => $content ) {
+			if ( substr( $varname, 0, 4 ) != 'mce_' ) {
+				if ( is_array( $content ) ) {
+					$custom_params[$varname] = implode( ';', $content );
+				} else {
+					$custom_params[$varname] = $content;
+				}
+			}
+			unset( $post[$varname] );
+		}
+
+		$this->saveCustomParams($custom_params);
 	}
 
 	function saveParams( $params )
@@ -2605,17 +2645,17 @@ class SubscriptionPlan extends paramDBTable
 		// If the admin wants this to be a free plan, we have to make this more explicit
 		// Setting processors to zero and full_free
 		if ( $params['full_free'] && ( $params['processors'] == '' ) ) {
-			$params['processors']	= '0';
+			$params['processors']	= '';
 		} elseif ( !$params['full_amount'] || ( $params['full_amount'] == '0.00' ) || ( $params['full_amount'] == '' ) ) {
 			$params['full_free']	= 1;
-			$params['processors']	= '0';
+			$params['processors']	= '';
 		}
 
 		// Correct a malformed Full Amount
 		if ( !strlen( $params['full_amount'] ) ) {
 			$params['full_amount']	= '0.00';
 			$params['full_free']	= 1;
-			$params['processors']	= '0';
+			$params['processors']	= '';
 		} else {
 			$params['full_amount'] = AECToolbox::correctAmount( $params['full_amount'] );
 		}
@@ -2638,6 +2678,11 @@ class SubscriptionPlan extends paramDBTable
 	function saveRestrictions( $restrictions )
 	{
 		$this->setParams( $restrictions, 'restrictions' );
+	}
+
+	function saveCustomParams( $custom_params )
+	{
+		$this->setParams( $custom_params, 'custom_params' );
 	}
 }
 

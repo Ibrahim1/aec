@@ -1679,9 +1679,6 @@ class HTML_AcctExp
 											<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
 										</div>
-										<div class="userinfobox">
-											<?php echo $aecHTML->createSettingsParticle( 'processors' ); ?>
-										</div>
 									</div>
 									<div style="position:relative;float:left;width:48%;padding:4px;">
 										<div class="userinfobox">
@@ -1715,18 +1712,21 @@ class HTML_AcctExp
 						?>
 						<h2><?php echo _PAYPLAN_PROCESSORS_TITLE_LONG; ?></h2>
 						<table width="100%" class="adminform"><tr><td>
-							<div class="userinfobox">
-								<?php
-									foreach ( $aecHTML->customparams as $id => $processor ) {
-										?>
-										<h2><?php echo $processor['name']; ?></h2>
+							<?php
+								foreach ( $aecHTML->customparams as $id => $processor ) {
+									?>
+									<div class="userinfobox">
+										<h2 style="clear:both;"><?php echo $processor['name']; ?></h2>
 										<?php
+										$k = 0;
 										foreach ( $processor['params'] as $customparam ) {
 											echo $aecHTML->createSettingsParticle( $customparam );
 										}
-									}
-								?>
-							</div>
+										?>
+									</div>
+									<?php
+								}
+							?>
 						</td></tr></table>
 						<?php
 		                $tabs->endTab();
