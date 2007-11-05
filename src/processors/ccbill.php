@@ -49,10 +49,10 @@ class processor_ccbill extends POSTprocessor
 	function info()
 	{
 		$info = array();
-		$info['name'] = "ccbill";
-		$info['longname'] = "CCBill";
-		$info['statement'] = "Make payments with CCBill!";
-		$info['description'] = "CCBill";
+		$info['name'] = 'ccbill';
+		$info['longname'] = _CFG_CCBILL_LONGNAME;
+		$info['statement'] = _CFG_CCBILL_STATEMENT;
+		$info['description'] = _CFG_CCBILL_DESCRIPTION;
 		$info['cc_list'] = "visa,mastercard,discover,echeck,jcb";
 		$info['currencies'] = "USD";
 		$info['recurring'] = 0;
@@ -63,8 +63,8 @@ class processor_ccbill extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['clientAccnum']	= "Client Account Number";
-		$settings['clientSubacc']	= "Client Sub Account";
+		$settings['clientAccnum']	= "Account Number";
+		$settings['clientSubacc']	= "Sub Account";
 		$settings['formName']		= "Form Name";
 		$settings['secretWord']		= "Secret Word";
 
@@ -74,11 +74,11 @@ class processor_ccbill extends POSTprocessor
 	function backend_settings( $cfg )
 	{
 		$settings = array();
-		$settings['clientAccnum']	= array("inputC","Client Account","Your CCBill Client Acc. No.");
-		$settings['clientSubacc']	= array("inputC","Client Account","Your CCBill Sub Acc. No.");
-		$settings['formName']		= array("inputC","Form ID","The CCBill layout you wish to use (tip look at the HTML form downloaded from CCBILL");
-		$settings['secretWord']		= array("inputC","Secret Word","Used to encrypt and protect transactions");
-		$settings['info']			= array("fieldset", "Postback URL", "You need to remember to set the 'postback' url in the CCBILL control panel... for both approves and declines this should be...<br />http://[YOUR JOOMLA LOCATION]/index.php?option=com_acctexp&task=ccbillnotification<br />Thats it.");
+		$settings['clientAccnum']	= array( 'inputC' );
+		$settings['clientSubacc']	= array( 'inputC' );
+		$settings['formName']		= array( 'inputC' );
+		$settings['secretWord']		= array( 'inputC' );
+		$settings['info']			= array( 'fieldset' );
 		return $settings;
 	}
 
@@ -160,30 +160,6 @@ class processor_ccbill extends POSTprocessor
 		$state				= $post['state'];
 		$country			= $post['country'];
 		$subscription_id	= $post['subscription_id'];
-		$phone_number		= $post['phone_number'];
-		$zipcode			= $post['zipcode'];
-		$start_date			= $post['start_date'];
-		$referer			= $post['referer'];
-		$ccbill_referer		= $post['ccbill_referer'];
-		$reservationId		= $post['reservationId'];
-		$initialPrice		= $post['initialPrice'];
-		$initialPeriod		= $post['initialPeriod'];
-		$recurringPrice		= $post['recurringPrice'];
-		$recurringPeriod	= $post['recurringPeriod'];
-		$rebills			= $post['rebills'];
-		$ip_address			= $post['ip_address'];
-		$username			= $post['username'];
-		$password			= $post['password'];
-		$productDesc		= $post['productDesc'];
-		$price				= $post['price'];
-		$subscription_id	= $post['subscription_id'];
-		$reasonForDecline	= $post['reasonForDecline'];
-		$clientAccnum		= $post['clientAccnum'];
-		$clientSubacc		= $post['clientSubacc'];
-		$address1			= $post['address1'];
-		$city				= $post['city'];
-		$state				= $post['state'];
-		$country			= $post['country'];
 		$phone_number		= $post['phone_number'];
 		$zipcode			= $post['zipcode'];
 		$start_date			= $post['start_date'];
