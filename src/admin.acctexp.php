@@ -2362,20 +2362,20 @@ function editSubscriptionPlan( $id, $option )
 				$params[$pp->id . '_aec_overwrite_settings'] = array( 'checkbox', _PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_NAME, _PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_DESC );
 				$customparamsarray[$pp->id]['params'][] = $pp->id . '_aec_overwrite_settings';
 
+				$customparams = $pp->getCustomPlanParams();
+				if ( is_array( $customparams ) ) {
+					foreach ( $customparams as $customparam => $cpcontent ) {
+						// Write the params field
+						$cp_name = constant( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_name" ) );
+						$cp_desc = constant( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_desc" ) );
+						$shortname = $pp->id . "_" . $customparam;
+						$params[$shortname] = array_merge( $cpcontent, array( $cp_name, $cp_desc ) );
+						$customparamsarray[$pp->id]['params'][] = $shortname;
+					}
+				}
+
 				if ( in_array( $pp->id, $plan_procs ) ) {
 					$params_values['processor_' . $pp->id] = 1;
-
-					$customparams = $pp->getCustomPlanParams();
-					if ( is_array( $customparams ) ) {
-						foreach ( $customparams as $customparam => $cpcontent ) {
-							// Write the params field
-							$cp_name = constant( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_name" ) );
-							$cp_desc = constant( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_desc" ) );
-							$shortname = $pp->id . "_" . $customparam;
-							$params[$shortname] = array_merge( $cpcontent, array( $cp_name, $cp_desc ) );
-							$customparamsarray[$pp->id]['params'][] = $shortname;
-						}
-					}
 
 					if ( isset( $customparams_values[$pp->id . '_aec_overwrite_settings'] ) ) {
 						if ( !$customparams_values[$pp->id . '_aec_overwrite_settings'] ) {
