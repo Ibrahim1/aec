@@ -56,6 +56,7 @@ class processor_cybermut extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
+		$settings['testmode']	= 0;
 		$settings['tpe']		= '7654321';
 		$settings['ver']		= '1.2open';
 		$settings['soc']		= 'doNot';
@@ -71,6 +72,7 @@ class processor_cybermut extends POSTprocessor
 	function backend_settings( $cfg )
 	{
 		$settings = array();
+		$settings['testmode']	= array( 'list_yesno' );
 		$settings['tpe']		= array( 'inputC' );
 		$settings['ver']		= array( 'inputC' );
 		$settings['soc']		= array( 'inputC' );
@@ -80,7 +82,7 @@ class processor_cybermut extends POSTprocessor
 		$settings['language']	= array( 'list_language' );
 		$settings['item_name']	= array( 'inputE' );
 
-		$servers = array( 'paiement.creditmutuel.fr/VAD', 'ssl.paiement.cic-banques.fr', 'ssl.paiement.banque-obc.fr', 'paiement.caixanet.fr', 'creditmutuel.fr/telepaiement' );
+		$servers = array( 'paiement.creditmutuel.fr', 'ssl.paiement.cic-banques.fr', 'ssl.paiement.banque-obc.fr', 'paiement.caixanet.fr', 'creditmutuel.fr/telepaiement' );
 
 		$server_selection = array();
 		foreach ( $servers as $i => $server ) {
@@ -96,10 +98,14 @@ class processor_cybermut extends POSTprocessor
 	{
 		global $mosConfig_live_site;
 
-		$servers = array( 'paiement.creditmutuel.fr/VAD', 'ssl.paiement.cic-banques.fr', 'ssl.paiement.banque-obc.fr', 'paiement.caixanet.fr', 'creditmutuel.fr/telepaiement' );
+		$servers = array( 'paiement.creditmutuel.fr', 'ssl.paiement.cic-banques.fr', 'ssl.paiement.banque-obc.fr', 'paiement.caixanet.fr', 'creditmutuel.fr/telepaiement' );
 
-		$var['post_url']		= "https://" . $servers[$cfg['server']] . "/paiement.cgi";
-		$var['retourPLUS']		= $int_var['return_url'];
+		if ( $cfg['testmode'] ) {
+			$var['post_url'] = "https://www.creditmutuel.fr/telepaiement/test/paiement.cgi";
+		} else {
+			$var['post_url'] = "https://" . $servers[$cfg['server']] . "/paiement.cgi";
+		}
+
 		$var['version']			= $cfg['ver'];
 		$var['TPE']				= $cfg['tpe'];
 		$var['date']			= date( "d/m/Y:H:i:s" );
@@ -108,18 +114,33 @@ class processor_cybermut extends POSTprocessor
 
 		$HMAC = $var['TPE']."*".$var['date']."*".$int_var['amount'].$int_var['currency']."*".$var['reference']."*".$var['comment']."*".$var['version']."*".$var['lgue']."*".$cfg['soc']."*";
 
-		$var['MAC']				= "V1.03.sha1.php4--CtlHmac-" . $cfg['ver'] . "-[" . $cfg['tpe'] . "]-" . $this->CMCIC_hmac( $cfg, $HMAC );
+		//$var['MAC']				= "V1.03.sha1.php4--CtlHmac-" . $cfg['ver'] . "-[" . $cfg['tpe'] . "]-" . $this->CMCIC_hmac( $cfg, $HMAC );
+		$var['MAC']				= $this->CMCIC_hmac( $cfg, $HMAC );
 		$var['url_retour']		= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=thanks' );
 		$var['url_retour_ok']	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cybermutnotification' );
 		$var['url_retour_err']	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
 		$var['lgue']			= $cfg['language'];
-
-		$var['societe']			= $cfg['key'];
 		$var['texte-libre']		= AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription );
+
+		/*$var['retourPLUS']		= $int_var['return_url'];
+		$var['societe']			= $cfg['key'];*/
 
 		return $var;
 	}
-
+/*<form action="https://paiement.creditmutuel.fr/paiement.cgi" method="post">
+<input type="hidden" name="version" value="1.2" />
+<input type="hidden" name="TPE" value="0044917" />
+<input type="hidden" name="date" value="05/11/19107:23:41:59" />
+<input type="hidden" name="montant" value="86.11EUR" />
+<input type="hidden" name="reference" value="100004090324" />
+<input type="hidden" name="MAC" value="3e65627bcc58eab4098af2ffc71ff153e1a60b7a" />
+<input type="hidden" name="url_retour" value="https://www.gandi.net" />
+<input type="hidden" name="url_retour_ok" value="https://www.gandi.net/domain/renew/payment/done" />
+<input type="hidden" name="url_retour_err" value="https://www.gandi.net/domain/renew/payment/failed" />
+<input type="hidden" name="lgue" value="anglais" /> <input type="hidden" name="societe" value="gandi" />
+<input type="hidden" name="texte-libre" value="Domain(s) purchased" />
+<input type="submit" value="Accept" class="button" />
+</form>*/
 	function parseNotification( $post, $cfg )
 	{
 		$response = array();
