@@ -2601,7 +2601,7 @@ class SubscriptionPlan extends paramDBTable
 		$this->saveParams( $params );
 
 		// Filter out restrictions
-		$fixed = array( 'make_active', 'mingid_enabled', 'mingid', 'fixgid_enabled',
+		$fixed = array( 'mingid_enabled', 'mingid', 'fixgid_enabled',
 						'fixgid', 'maxgid_enabled', 'maxgid', 'previousplan_req_enabled',
 						'previousplan_req', 'currentplan_req_enabled', 'currentplan_req', 'overallplan_req_enabled',
 						'overallplan_req', 'used_plan_min_enabled', 'used_plan_min_amount', 'used_plan_min',
