@@ -46,8 +46,8 @@ class processor_cybermut extends POSTprocessor
 		$info['longname'] = _CFG_CYBERMUT_LONGNAME;
 		$info['statement'] = _CFG_CYBERMUT_STATEMENT;
 		$info['description'] = _CFG_CYBERMUT_DESCRIPTION;
-		$info['currencies'] = "EUR";
-		$info['languages'] = "AU,DE,FR,IT,GB,ES,US";
+		$info['currencies'] = "EUR,USD,GBP,CHF";
+		$info['languages'] = "FR,EN,DE,IT,ES,NL";
 		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck,giropay";
 
 		return $info;
@@ -110,74 +110,58 @@ class processor_cybermut extends POSTprocessor
 		$var['TPE']				= $cfg['tpe'];
 		$var['date']			= date( "d/m/Y:H:i:s" );
 		$var['montant']			= $int_var['amount'] . $int_var['currency'];
-		$var['reference']		= $int_var['invoice'];
+		$var['reference']		= $metaUser->userid;
+		$var['texte-libre']		= $int_var['invoice'];
+		$var['lgue']			= $cfg['language'];
+		$var['societe']			= $cfg['soc'];
+		$var['url_retour']		= AECToolbox::deadsureURL( '/index.php' );
+		$var['url_retour_ok']	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=thanks' );
+		$var['url_retour_err']	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
 
-		$HMAC = $var['TPE']."*".$var['date']."*".$int_var['amount'].$int_var['currency']."*".$var['reference']."*".$var['comment']."*".$var['version']."*".$var['lgue']."*".$cfg['soc']."*";
+		$HMAC = $var['TPE']."*".$var['date']."*".$var['montant']."*".$var['reference']."*".$var['texte-libre']."*".$var['version']."*".$var['lgue']."*".$var['societe']."*";
 
 		//$var['MAC']				= "V1.03.sha1.php4--CtlHmac-" . $cfg['ver'] . "-[" . $cfg['tpe'] . "]-" . $this->CMCIC_hmac( $cfg, $HMAC );
 		$var['MAC']				= $this->CMCIC_hmac( $cfg, $HMAC );
-		$var['url_retour']		= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=thanks' );
-		$var['url_retour_ok']	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cybermutnotification' );
-		$var['url_retour_err']	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
-		$var['lgue']			= $cfg['language'];
-		$var['texte-libre']		= AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription );
 
 		/*$var['retourPLUS']		= $int_var['return_url'];
 		$var['societe']			= $cfg['key'];*/
 
+		foreach ( $var as $k => $v ) {
+			$var[$k] = htmlentities($v);
+		}
+
 		return $var;
 	}
-/*<form action="https://paiement.creditmutuel.fr/paiement.cgi" method="post">
-<input type="hidden" name="version" value="1.2" />
-<input type="hidden" name="TPE" value="0044917" />
-<input type="hidden" name="date" value="05/11/19107:23:41:59" />
-<input type="hidden" name="montant" value="86.11EUR" />
-<input type="hidden" name="reference" value="100004090324" />
-<input type="hidden" name="MAC" value="3e65627bcc58eab4098af2ffc71ff153e1a60b7a" />
-<input type="hidden" name="url_retour" value="https://www.gandi.net" />
-<input type="hidden" name="url_retour_ok" value="https://www.gandi.net/domain/renew/payment/done" />
-<input type="hidden" name="url_retour_err" value="https://www.gandi.net/domain/renew/payment/failed" />
-<input type="hidden" name="lgue" value="anglais" /> <input type="hidden" name="societe" value="gandi" />
-<input type="hidden" name="texte-libre" value="Domain(s) purchased" />
-<input type="submit" value="Accept" class="button" />
-</form>*/
+
 	function parseNotification( $post, $cfg )
 	{
 		$response = array();
-		$response['invoice'] = $post['order_id'];
-		$response['valid'] = strcmp( $post['retour'], 'ok' ) ? true : false ;
+		$response['invoice'] = $post['texte-libre'];
 
-		mosMail( 'dungdt@gmail.com', 'Duong Tien Dung', 'skore@skore.de', 'cybermut debug', $this->obsafe_print_r( $_REQUEST, true) );
+		switch( $post['retour'] ) {
+			case 'payetest':
+				$response['valid'] = $cfg['testmode'] ? true : false;
+				break;
+			case 'paiement':
+				$response['valid'] = true;
+				break;
+			case 'annulation':
+				$response['valid'] = false;
+				$response['cancel'] = 1;
+				break;
+		}
+
+		$HMAC = $cfg['tpe']."*".$post['date']."*".$post['montant']."*".$post['reference']."*".$post['texte-libre']."*".$cfg['version']."*".$cfg['lgue']."*".$cfg['soc']."*";
+
+		if ( $post['MAC'] !== $this->CMIC_hmac( $cfg, $HMAC ) ) {
+			$response['pending_reason'] = 'invalid HMAC';
+			$response['valid'] = false;
+		}
+
+		$response['amount_paid'] = substr( $response['montant'], -3 );
+		$response['amount_currency'] = str_replace( $response['amount_paid'], '', $response['montant'] );
 
 		return $response;
-	}
-
-	function obsafe_print_r($var, $return = false, $html = false, $level = 0) {
-	    $spaces = "";
-	    $space = $html ? "&nbsp;" : " ";
-	    $newline = $html ? "<br />" : "\n";
-	    for ($i = 1; $i <= 6; $i++) {
-	        $spaces .= $space;
-	    }
-	    $tabs = $spaces;
-	    for ($i = 1; $i <= $level; $i++) {
-	        $tabs .= $spaces;
-	    }
-	    if (is_array($var)) {
-	        $title = "Array";
-	    } elseif (is_object($var)) {
-	        $title = get_class($var)." Object";
-	    }
-	    $output = $title . $newline . $newline;
-	    foreach($var as $key => $value) {
-	        if (is_array($value) || is_object($value)) {
-	            $level++;
-	            $value = obsafe_print_r($value, true, $html, $level);
-	            $level--;
-	        }
-	        $output .= $tabs . "[" . $key . "] => " . $value . $newline;
-	    }
-	    if ($return) return $output;
 	}
 
 	function CMCIC_hmac( $cfg, $data="")

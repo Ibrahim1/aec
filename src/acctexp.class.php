@@ -1590,7 +1590,7 @@ class XMLprocessor extends processor
 		// Create a selection box with the next 10 years
 		$year = date('Y');
 		$years = array();
-		for( $i = $year; $i < $year + 10; $i++ ) {
+		for( $i = $year; $i < $year + 15; $i++ ) {
 			$years[] = mosHTML::makeOption( $i, $i );
 		}
 
