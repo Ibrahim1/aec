@@ -1459,7 +1459,7 @@ class PaymentProcessor
 
 			if ( isset( $planparams['aec_overwrite_settings'] ) ) {
 				if ( $planparams['aec_overwrite_settings'] ) {
-					$settings = $this->exchangeSettings( $this->settings, $planparams );
+					$settings = $this->processor->exchangeSettings( $this->settings, $planparams );
 				}
 			}
 
@@ -3972,9 +3972,9 @@ class Invoice extends paramDBTable
 		$plan = new SubscriptionPlan( $database );
 		$plan->load( $this->usage );
 
-		$planparams = $new_subscription->getProcessorParameters( $pp->id );
+		$planparams = $plan->getProcessorParameters( $pp->id );
 
-		$pp->validateNotification( $response, $_POST, $planparams);
+		$pp->validateNotification( $response, $_POST, $planparams, $this );
 
 		if ( isset( $response['invoiceparams'] ) ) {
 			$this->addParams( $response['invoiceparams'] );

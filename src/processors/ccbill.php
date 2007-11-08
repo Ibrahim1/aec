@@ -6,7 +6,7 @@
 * @copyright 2007 Ben Ingram
 * @license http://www.gnu.org/copyleft/gpl.html. GNU Public License
 * @version $Revision: 1.0 $
-* @author Ben Ingram <beningram@hotmail.com>
+* @author Ben Ingram <beningram@hotmail.com>, David Deutsch <skore@skore.de>
 **
 *********************************************************************
 ** If you find this useful, why not make my day and send a donation to me by PayPal
@@ -180,27 +180,35 @@ class processor_ccbill extends POSTprocessor
 		$response = array();
 		$response['invoice'] = $invoice;
 		$response['valid'] = 1;
-		$response['pending_reason'] = $reasonForDecline;
+
+		if ( strlen( $reasonForDecline ) > 0 ) {
+			$response['pending_reason'] = $reasonForDecline;
+		}
+
 		$response['checksum'] = $checksum;
-		$response['amount_paid'] = $initialPrice;
+
+		if ( $rebills > 0 ) {
+			$response['amount_paid'] = $recurringPrice;
+		} else {
+			$response['amount_paid'] = $initialPrice;
+		}
 
 		return $response;
 
 	}
 
-	function validateNotification( $response, $post, $settings, $invoice )
+	function validateNotification( $response, $post, $cfg, $invoice )
 	{
 		$username			= $post['username'];
-		$checksum			= $post['checksum'];
 
-		$validate			= md5($settings['secretWord'] . $username);
+		$validate			= md5( $cfg['secretWord'] . $username );
 
-		if (strlen($response['pending_reason']) > 0){
+		if ( isset( $response['pending_reason'] ) ){
 			$response['valid'] = 0;
 			return $response;
 		}
 
-		$response['valid'] = (strcmp($validate, $checksum) == 0);
+		$response['valid'] = ( strcmp( $validate, $response['checksum'] ) == 0 );
 
 		return $response;
 	}

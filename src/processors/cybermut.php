@@ -138,6 +138,11 @@ class processor_cybermut extends POSTprocessor
 		$response = array();
 		$response['invoice'] = $post['texte-libre'];
 
+		return $response;
+	}
+
+	function validateNotification( $response, $post, $cfg, $invoice )
+	{
 		switch( $post['retour'] ) {
 			case 'payetest':
 				$response['valid'] = $cfg['testmode'] ? true : false;
@@ -151,7 +156,7 @@ class processor_cybermut extends POSTprocessor
 				break;
 		}
 
-		$HMAC = $cfg['tpe']."*".$post['date']."*".$post['montant']."*".$post['reference']."*".$post['texte-libre']."*".$cfg['version']."*".$cfg['lgue']."*".$cfg['soc']."*";
+		$HMAC = $post['retourPLUS']."+".$cfg['tpe']."+".$post['date']."+".$post['montant']."+".$post['reference']."+".$post['texte-libre']."+".$cfg['version']."+".$post['retour']."+";
 
 		if ( $post['MAC'] !== $this->CMIC_hmac( $cfg, $HMAC ) ) {
 			$response['pending_reason'] = 'invalid HMAC';
