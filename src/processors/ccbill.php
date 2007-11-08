@@ -183,16 +183,26 @@ class processor_ccbill extends POSTprocessor
 		$response['pending_reason'] = $reasonForDecline;
 		$response['checksum'] = $checksum;
 		$response['amount_paid'] = $initialPrice;
-		$validate			= md5($cfg['secretWord'] . $username);
 
-		if (strlen($reasonForDecline) > 0){
+		return $response;
+
+	}
+
+	function validateNotification( $response, $post, $settings, $invoice )
+	{
+		$username			= $post['username'];
+		$checksum			= $post['checksum'];
+
+		$validate			= md5($settings['secretWord'] . $username);
+
+		if (strlen($response['pending_reason']) > 0){
 			$response['valid'] = 0;
 			return $response;
 		}
 
 		$response['valid'] = (strcmp($validate, $checksum) == 0);
-		return $response;
 
+		return $response;
 	}
 }
 ?>

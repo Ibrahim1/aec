@@ -30,7 +30,7 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-global $mosConfig_absolute_path, $mosConfig_offset_user;
+global $mosConfig_absolute_path, $mosConfig_offset_user, $aecConfig;
 
 if ( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
 	// mic: call only if called from the backend
@@ -1450,6 +1450,23 @@ class PaymentProcessor
 		$this->getSettings();
 
 		return $this->processor->parseNotification( $post, $this->settings );
+	}
+
+	function validateNotification( $response, $post, $planparams, $invoice )
+	{
+		if ( method_exists( $this->processor, 'validateNotification' ) ) {
+			$this->getSettings();
+
+			if ( isset( $planparams['aec_overwrite_settings'] ) ) {
+				if ( $planparams['aec_overwrite_settings'] ) {
+					$settings = $this->exchangeSettings( $this->settings, $planparams );
+				}
+			}
+
+			$response = array_merge( $response, $this->processor->validateNotification( $response, $post, $settings, $invoice ) );
+		}
+
+		return $response;
 	}
 
 }
@@ -3952,6 +3969,13 @@ class Invoice extends paramDBTable
 
 		$this->computeAmount();
 
+		$plan = new SubscriptionPlan( $database );
+		$plan->load( $this->usage );
+
+		$planparams = $new_subscription->getProcessorParameters( $pp->id );
+
+		$pp->validateNotification( $response, $_POST, $planparams);
+
 		if ( isset( $response['invoiceparams'] ) ) {
 			$this->addParams( $response['invoiceparams'] );
 			unset( $response['invoiceparams'] );
@@ -4008,8 +4032,6 @@ class Invoice extends paramDBTable
 		} else {
 			if ( isset( $response['pending'] ) ) {
 				if ( strcmp( $response['pending_reason'], 'signup' ) === 0 ) {
-					$plan = new SubscriptionPlan( $database );
-					$plan->load( $this->usage );
 					$plan_params = $plan->getParams( 'params' );
 
 					if ( $plan_params['trial_free'] ) {
@@ -5257,11 +5279,13 @@ class AECToolbox
 		if ( $metaUser->hasSubscription ) {
 			$metaUser->objSubscription->verifyLogin( $metaUser->cmsUser->block );
 		} else {
-			$aecexpid = AECfetchfromDB::ExpirationIDfromUserID( $id );
-
 			if ( $metaUser->hasExpiration ) {
 				$metaUser->objExpiration->manualVerify();
 			} else {
+				if ( !is_object( $aecConfig ) ) {
+					$aecConfig = new Config_General( $database );
+				}
+
 				if ( $aecConfig->cfg['require_subscription'] ) {
 					if ( $aecConfig->cfg['entry_plan'] ) {
 						$user_subscription = new Subscription( $database );
