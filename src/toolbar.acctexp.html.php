@@ -73,6 +73,7 @@ class ComponentMenu
 	{
 		mosMenuBar::startTable();
 		mosMenuBar::custom( 'save', 'save.png',  'save_f2.png', _SAVE, false );
+		mosMenuBar::custom( 'apply', 'apply.png',  'apply_f2.png', _APPLY_PAYPLAN, false );
 		mosMenuBar::custom( 'cancel', 'cancel.png',  'cancel_f2.png', _CANCEL, false );
 		mosMenuBar::endTable();
 	}

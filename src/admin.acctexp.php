@@ -107,6 +107,10 @@ switch( strtolower( $task ) ) {
 		saveUser( $option );
 		break;
 
+	case 'apply':
+		saveUser( $option, 1 );
+		break;
+
 	case 'cancel':
 		cancel( $option );
 		break;
@@ -1032,7 +1036,7 @@ function editUser( $userid, $option, $task )
 	HTML_AcctExp::userForm( $option, $expiration, $subscription, $user, $invoices, $lists, $task );
 }
 
-function saveUser( $option )
+function saveUser( $option, $apply=0 )
 {
 	global $database, $mainframe, $mosConfig_list_limit;
 
@@ -1108,8 +1112,11 @@ function saveUser( $option )
 	$limitstart	= $mainframe->getUserStateFromRequest( "viewnotconf{$option}limitstart", 'limitstart', 0 );
 
 	$nexttask	= mosGetParam( $_REQUEST, 'nexttask', 'config' ) ;
-
-	mosRedirect( 'index2.php?option=' . $option . '&task=' . $nexttask, _SAVED );
+	if ( $apply ) {
+		mosRedirect( 'index2.php?option=' . $option . '&task=edit&id=' . $_POST['userid'], _AEC_MSG_SUCESSFULLY_SAVED );
+	} else {
+		mosRedirect( 'index2.php?option=' . $option . '&task=' . $nexttask, _SAVED );
+	}
 }
 
 function removeUser( $userid, $option )
@@ -1165,7 +1172,6 @@ function removeUser( $userid, $option )
 	}
 
 	mosRedirect( 'index2.php?option=' . $option . '&task=showManual', $msg );
-
 }
 
 function removeClosedSubscription( $userid, $option )
