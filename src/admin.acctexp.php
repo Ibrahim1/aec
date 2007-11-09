@@ -238,6 +238,10 @@ switch( strtolower( $task ) ) {
 		saveSubscriptionPlan( $option );
 		break;
 
+	case 'applysubscriptionplan':
+		saveSubscriptionPlan( $option, 1 );
+		break;
+
 	case 'publishsubscriptionplan':
 		changeSubscriptionPlan( $id, 1, 'active', $option );
 		break;
@@ -292,6 +296,10 @@ switch( strtolower( $task ) ) {
 
 	case 'savemicrointegration':
 		saveMicroIntegration( $option );
+		break;
+
+	case 'applymicrointegration':
+		saveMicroIntegration( $option, 1 );
 		break;
 
 	case 'copymicrointegration':
@@ -375,6 +383,10 @@ switch( strtolower( $task ) ) {
 		saveCoupon( $option, 0 );
 		break;
 
+	case 'appplycoupon':
+		saveCoupon( $option, 0, 1 );
+		break;
+
 	case 'publishcoupon':
 		changeCoupon( $id, 1, $option, 0 );
 		break;
@@ -422,6 +434,10 @@ switch( strtolower( $task ) ) {
 
 	case 'savecouponstatic':
 		saveCoupon( $option, 1 );
+		break;
+
+	case 'appplycouponstatic':
+		saveCoupon( $option, 1, 1 );
 		break;
 
 	case 'publishcouponstatic':
@@ -2672,7 +2688,7 @@ function arrayValueDefault( $array, $name, $default )
 	}
 }
 
-function saveSubscriptionPlan( $option )
+function saveSubscriptionPlan( $option, $apply=0 )
 {
 	global $database, $mosConfig_live_site;
 
@@ -2693,8 +2709,18 @@ function saveSubscriptionPlan( $option )
 	}
 
 	$row->updateOrder();
-	mosRedirect( 'index2.php?option=' . $option . '&task=showSubscriptionPlans' );
 
+	if ( $_POST['id'] ) {
+		$id = $_POST['id'];
+	} else {
+		$id = $row->getMax();
+	}
+
+	if ( $apply ) {
+		mosRedirect( 'index2.php?option=' . $option . '&task=editSubscriptionPlan&id=' . $id, _AEC_MSG_SUCESSFULLY_SAVED );
+	} else {
+		mosRedirect( 'index2.php?option=' . $option . '&task=showSubscriptionPlans' );
+	}
 }
 
 function removeSubscriptionPlan( $id, $option )
@@ -2891,7 +2917,7 @@ function editMicroIntegration ( $id, $option )
 	HTML_AcctExp::editMicroIntegration( $option, $mi, $lists, $aecHTML );
 }
 
-function saveMicroIntegration( $option )
+function saveMicroIntegration( $option, $apply=0 )
 {
 	global $database, $mosConfig_live_site;
 
@@ -2928,18 +2954,16 @@ function saveMicroIntegration( $option )
 		// TODO: log error
 	}
 
-	if ( !$id ) {
-		$query = "SELECT max(id) FROM #__acctexp_microintegrations";
-		$database->setQuery( $query );
-		$newid = $database->loadResult();
-	}
-
 	$mi->updateOrder();
 
 	if ( $id ) {
-		mosRedirect( 'index2.php?option=' . $option . '&task=showMicroIntegrations', _AEC_MSG_SUCESSFULLY_SAVED );
+		if ( $apply ) {
+			mosRedirect( 'index2.php?option=' . $option . '&task=editMicroIntegration&id=' . $id, _AEC_MSG_SUCESSFULLY_SAVED );
+		} else {
+			mosRedirect( 'index2.php?option=' . $option . '&task=showMicroIntegrations', _AEC_MSG_SUCESSFULLY_SAVED );
+		}
 	} else {
-		mosRedirect( 'index2.php?option=' . $option . '&task=editMicroIntegration&id=' . $newid, _AEC_MSG_SUCESSFULLY_SAVED );
+		mosRedirect( 'index2.php?option=' . $option . '&task=editMicroIntegration&id=' . $mi->getMax(), _AEC_MSG_SUCESSFULLY_SAVED );
 	}
 
 }
@@ -3304,7 +3328,7 @@ function editCoupon( $id, $option, $new, $type )
 	HTML_AcctExp::editCoupon( $option, $aecHTML, $cph->coupon, $type );
 }
 
-function saveCoupon( $option, $type )
+function saveCoupon( $option, $type, $apply=0 )
 {
 	global $database, $mosConfig_live_site;
 
@@ -3330,8 +3354,8 @@ function saveCoupon( $option, $type )
 		}
 
 		if ( !$cph->status ) {
-			$cph->coupon = new coupon($database, $type);
-			$cph->coupon->createNew($_POST['coupon_code']);
+			$cph->coupon = new coupon( $database, $type );
+			$cph->coupon->createNew( $_POST['coupon_code'] );
 			$cph->status = true;
 			$new = 1;
 		}
@@ -3369,7 +3393,18 @@ function saveCoupon( $option, $type )
 		}
 
 		$cph->coupon->updateOrder();
-		mosRedirect( 'index2.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ) );
+
+		if ( $_POST['id'] ) {
+			$id = $_POST['id'];
+		} else {
+			$id = $cph->coupon->getMax();
+		}
+
+		if ( $apply ) {
+			mosRedirect( 'index2.php?option=' . $option . '&task=editCoupon' . ( $type ? 'Static' : '' ) . '&id=' . $id, _AEC_MSG_SUCESSFULLY_SAVED );
+		} else {
+			mosRedirect( 'index2.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ) );
+		}
 	} else {
 		mosRedirect( 'index2.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ), _AEC_MSG_NO_COUPON_CODE );
 	}

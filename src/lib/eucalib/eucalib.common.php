@@ -227,6 +227,13 @@ class paramDBTable extends mosDBTable
 		$this->store();
 	}
 
+	function getMax( $field='id' )
+	{
+		$query = "SELECT max($field) FROM $this->_tbl";
+		$this->_db->setQuery( $query );
+
+		return $this->_db->loadResult();
+	}
 }
 
 class languageFileHandler
