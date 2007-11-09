@@ -187,24 +187,23 @@ class processor_paypal_subscription extends POSTprocessor
 	{
 		global $database;
 
-		$txn_type			= $post['txn_type'];
-		$item_number		= $post['item_number'];
 		$mc_gross			= $post['mc_gross'];
 		if ( $mc_gross == '' ) {
 			$mc_gross 		= $post['mc_amount1'];
 		}
 		$mc_currency		= $post['mc_currency'];
-		$receiver_email		= $post['receiver_email'];
-		$payment_status		= $post['payment_status'];
-		$payment_type		= $post['payment_type'];
-		$subscr_date		= $post['subscr_date'];
-		if ( isset( $_POST['amount1'] ) ) {
-			$amount1			= $post['amount1'];
-		}
-		$invoice_number		= $post['invoice'];
-		$custom				= trim($post['custom']);
 
-		if ( $cfg['testmode'] ) {
+		$response = array();
+		$response['invoice'] = $_POST['invoice'];
+		$response['amount_paid'] = $mc_gross;
+		$response['amount_currency'] = $mc_currency;
+
+		return $response;
+	}
+
+	function validateNotification( $response, $post, $cfg, $invoice )
+	{
+		if ($cfg['testmode']) {
 			$ppurl = 'www.sandbox.paypal.com';
 		} else {
 			$ppurl = 'www.paypal.com';
@@ -213,7 +212,7 @@ class processor_paypal_subscription extends POSTprocessor
 		$req = 'cmd=_notify-validate';
 
 		foreach ( $post as $key => $value ) {
-			$value = urlencode(stripslashes($value));
+			$value = urlencode( stripslashes( $value ) );
 			$req .= "&$key=$value";
 		}
 
@@ -227,22 +226,20 @@ class processor_paypal_subscription extends POSTprocessor
 
 		$res = $fp;
 
-		$response = array();
-		$response['invoice'] = $_POST['invoice'];
-		$response['processorresponse'] = $res;
-		$response['amount_paid'] = $mc_gross;
-		$response['amount_currency'] = $mc_currency;
+		if ( isset( $response['processorresponse'] ) ) {
+			$response['processorresponse'] = $res . "\n" . $response['processorresponse'];
+		}
 
-		$objInvoice = new Invoice($database);
-		$objInvoice->loadInvoiceNumber($_POST['invoice']);
-		$objInvoice->computeAmount();
-		$invoiceamount = $objInvoice->amount;
+		$txn_type			= $post['txn_type'];
+		$receiver_email		= $post['receiver_email'];
+		$payment_status		= $post['payment_status'];
+		$payment_type		= $post['payment_type'];
+
+		$response['valid'] = 0;
 
 		if ( strcmp( $receiver_email, $cfg['business'] ) != 0 && $cfg['checkbusiness'] ) {
-			$response['valid'] = 0;
-			$response['pending_reason'] = "checkbusiness error";
-		} elseif ( strcmp($res, "VERIFIED") == 0 ) {
-			$response['valid'] = 0; // mic: set generic, if true will be set below
+			$response['pending_reason'] = 'checkbusiness error';
+		} elseif ( strcmp( $res, 'VERIFIED' ) == 0 ) {
 			// Process payment: Paypal Subscription & Buy Now
 			if ( strcmp( $txn_type, 'web_accept' ) == 0 || strcmp( $txn_type, 'subscr_payment' ) == 0 ) {
 
@@ -254,10 +251,10 @@ class processor_paypal_subscription extends POSTprocessor
 					$response['valid']			= 1;
 				} elseif ( strcmp( $payment_type, 'echeck' ) == 0 && strcmp( $payment_status, 'Pending' ) == 0 ) {
 					if ( $cfg['acceptpendingecheck'] ) {
-						if ( is_object( $objInvoice ) ) {
-							$objInvoice->setParams( array( 'acceptedpendingecheck' => 1 ) );
-							$objInvoice->check();
-							$objInvoice->store();
+						if ( is_object( $invoice ) ) {
+							$invoice->setParams( array( 'acceptedpendingecheck' => 1 ) );
+							$invoice->check();
+							$invoice->store();
 						}
 
 						$response['valid']			= 1;
@@ -268,16 +265,16 @@ class processor_paypal_subscription extends POSTprocessor
 					}
 				} elseif ( strcmp( $payment_type, 'echeck' ) == 0 && strcmp( $payment_status, 'Completed' ) == 0 ) {
 					if ( $cfg['acceptpendingecheck'] ) {
-						if ( is_object( $objInvoice ) ) {
-							$invoiceparams = $objInvoice->getParams();
+						if ( is_object( $invoice ) ) {
+							$invoiceparams = $invoice->getParams();
 
 							if ( isset( $invoiceparams['acceptedpendingecheck'] ) ) {
 								$response['valid']		= 0;
 								$response['duplicate']	= 1;
 
-								$objInvoice->delParams( array( 'acceptedpendingecheck' ) );
-								$objInvoice->check();
-								$objInvoice->store();
+								$invoice->delParams( array( 'acceptedpendingecheck' ) );
+								$invoice->check();
+								$invoice->store();
 							}
 						} else {
 							$response['valid']			= 1;
@@ -287,7 +284,6 @@ class processor_paypal_subscription extends POSTprocessor
 					}
 				}
 			} elseif ( strcmp( $txn_type, 'subscr_signup' ) == 0 ) {
-				$response['valid']			= 0;
 				$response['pending']		= 1;
 				$response['pending_reason'] = 'signup';
 			} elseif ( strcmp( $txn_type, 'subscr_eot' ) == 0 ) {
@@ -305,16 +301,13 @@ class processor_paypal_subscription extends POSTprocessor
 	function doTheCurl( $url, $req )
 	{
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_VERBOSE, 1);
-		//curl_setopt ($ch, CURLOPT_HTTPPROXYTUNNEL, TRUE);
-		curl_setopt ($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
-		curl_setopt ($ch, CURLOPT_PROXY,"http://proxy.shr.secureserver.net:3128");
-		curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-		curl_setopt ($ch, CURLOPT_URL, $url);
-		curl_setopt ($ch, CURLOPT_POST, 1);
-		curl_setopt ($ch, CURLOPT_POSTFIELDS, $req);
-		curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt ($ch, CURLOPT_TIMEOUT, 120);
+		curl_setopt( $ch, CURLOPT_VERBOSE, 1 );
+		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, FALSE );
+		curl_setopt( $ch, CURLOPT_URL, $url );
+		curl_setopt( $ch, CURLOPT_POST, 1 );
+		curl_setopt( $ch, CURLOPT_POSTFIELDS, $req );
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
+		curl_setopt( $ch, CURLOPT_TIMEOUT, 120 );
 		$fp = curl_exec ($ch);
 		curl_close($ch);
 

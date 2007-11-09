@@ -179,23 +179,22 @@ class processor_paypal extends POSTprocessor
 	{
 		global $database;
 
-		$txn_type			= $post['txn_type'];
-		$item_number		= $post['item_number'];
 		$mc_gross			= $post['mc_gross'];
 		if ( $mc_gross == '' ) {
 			$mc_gross 		= $post['mc_amount1'];
 		}
 		$mc_currency		= $post['mc_currency'];
-		$receiver_email		= $post['receiver_email'];
-		$payment_status		= $post['payment_status'];
-		$payment_type		= $post['payment_type'];
-		$subscr_date		= $post['subscr_date'];
-		if ( isset( $_POST['amount1'] ) ) {
-			$amount1		= $post['amount1'];
-		}
-		$invoice_number		= $post['invoice'];
-		$custom				= trim( $post['custom'] );
 
+		$response = array();
+		$response['invoice'] = $_POST['invoice'];
+		$response['amount_paid'] = $mc_gross;
+		$response['amount_currency'] = $mc_currency;
+
+		return $response;
+	}
+
+	function validateNotification( $response, $post, $cfg, $invoice )
+	{
 		if ($cfg['testmode']) {
 			$ppurl = 'www.sandbox.paypal.com';
 		} else {
@@ -205,7 +204,7 @@ class processor_paypal extends POSTprocessor
 		$req = 'cmd=_notify-validate';
 
 		foreach ( $post as $key => $value ) {
-			$value = urlencode(stripslashes($value));
+			$value = urlencode( stripslashes( $value ) );
 			$req .= "&$key=$value";
 		}
 
@@ -219,22 +218,14 @@ class processor_paypal extends POSTprocessor
 
 		$res = $fp;
 
-		$response = array();
-		$response['invoice'] = $_POST['invoice'];
-		$response['processorresponse'] = $res;
-		$response['amount_paid'] = $mc_gross;
-		$response['amount_currency'] = $mc_currency;
-
-		$id = AECfetchfromDB::InvoiceIDfromNumber($response['invoice']);
-
-		if ( $id ) {
-			$objInvoice = new Invoice($database);
-			$objInvoice->load($id);
-			$objInvoice->computeAmount();
-			$invoiceamount = $objInvoice->amount;
-		} else {
-			$invoiceamount = false;
+		if ( isset( $response['processorresponse'] ) ) {
+			$response['processorresponse'] = $res . "\n" . $response['processorresponse'];
 		}
+
+		$txn_type			= $post['txn_type'];
+		$receiver_email		= $post['receiver_email'];
+		$payment_status		= $post['payment_status'];
+		$payment_type		= $post['payment_type'];
 
 		$response['valid'] = 0;
 
@@ -252,10 +243,10 @@ class processor_paypal extends POSTprocessor
 					$response['valid']			= 1;
 				} elseif ( strcmp( $payment_type, 'echeck' ) == 0 && strcmp( $payment_status, 'Pending' ) == 0 ) {
 					if ( $cfg['acceptpendingecheck'] ) {
-						if ( is_object( $objInvoice ) ) {
-							$objInvoice->setParams( array( 'acceptedpendingecheck' => 1 ) );
-							$objInvoice->check();
-							$objInvoice->store();
+						if ( is_object( $invoice ) ) {
+							$invoice->setParams( array( 'acceptedpendingecheck' => 1 ) );
+							$invoice->check();
+							$invoice->store();
 						}
 
 						$response['valid']			= 1;
@@ -266,16 +257,16 @@ class processor_paypal extends POSTprocessor
 					}
 				} elseif ( strcmp( $payment_type, 'echeck' ) == 0 && strcmp( $payment_status, 'Completed' ) == 0 ) {
 					if ( $cfg['acceptpendingecheck'] ) {
-						if ( is_object( $objInvoice ) ) {
-							$invoiceparams = $objInvoice->getParams();
+						if ( is_object( $invoice ) ) {
+							$invoiceparams = $invoice->getParams();
 
 							if ( isset( $invoiceparams['acceptedpendingecheck'] ) ) {
 								$response['valid']		= 0;
 								$response['duplicate']	= 1;
 
-								$objInvoice->delParams( array( 'acceptedpendingecheck' ) );
-								$objInvoice->check();
-								$objInvoice->store();
+								$invoice->delParams( array( 'acceptedpendingecheck' ) );
+								$invoice->check();
+								$invoice->store();
 							}
 						} else {
 							$response['valid']			= 1;

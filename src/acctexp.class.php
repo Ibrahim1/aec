@@ -3988,6 +3988,13 @@ class Invoice extends paramDBTable
 			$multiplicator = 1;
 		}
 
+		if ( isset( $response['responsestring'] ) ) {
+			$responsestring = $response['responsestring'];
+			unset( $response['responsestring'] );
+		} else {
+			$responsestring = 1;
+		}
+
 		// Create history entry
 		$history = new logHistory( $database );
 		$history->entryFromInvoice ( $this, $responsestring, $pp );

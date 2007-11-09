@@ -864,9 +864,6 @@ function processNotification( $option, $processor )
 			if ( $pp->loadName( $processor ) ) {
 				$pp->init();
 				$response = $pp->parseNotification( $_POST );
-				if ( isset( $response['processorresponse'] ) ) {
-					$responsestring = $response['processorresponse'] . "\n" . $responsestring;
-				}
 			} else {
 				exit();
 				// TODO: Log error
@@ -889,9 +886,11 @@ function processNotification( $option, $processor )
 		return;
 	}
 
+	$response['responsestring'] = $responsestring;
+
 	$objInvoice = new Invoice( $database );
 	$objInvoice->load( $id );
-	$objInvoice->processorResponse( $pp, $response, $responsestring );
+	$objInvoice->processorResponse( $pp, $response );
 }
 
 function errorAP( $option, $usage, $userid, $username, $name, $recurring )
