@@ -120,17 +120,18 @@ class processor_allopass extends POSTprocessor
 
    		$ssl_amount = mosGetParam( $_REQUEST, 'ssl_amount', '' ) ;
 
-	    $AUTH	= $cfg['auth'];
-	    $RECALL = $post['RECALL'];
-	    $CODE0  = $post['CODE0'];
-
 		$response = array();
 		$response['invoice'] = $post['ssl_invoice_number'];
 
-		if (trim($RECALL)=="") {
+		return $response;
+	}
+
+	function validateNotification( $response, $post, $cfg, $invoice )
+	{
+		if (trim($post['RECALL'])=="") {
 			$response['valid'] = false;
 		} else {
-			$r=@file("http://www.allopass.com/check/vf.php4?CODE=" . $CODE0 . "&AUTH=" . $AUTH)  ;
+			$r=@file("http://www.allopass.com/check/vf.php4?CODE=" . $post['CODE0'] . "&AUTH=" . $cfg['auth'] )  ;
 
 			$test_ap = substr($r[0],0,2);
 			if ( $test_ap != "OK") {

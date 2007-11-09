@@ -211,24 +211,28 @@ class processor_epsnetpay extends POSTprocessor
 
 	function parseNotification( $post, $cfg )
 	{
-		global $database, $mosConfig_live_site;
-
 		$invoiceID				= $post['sapPopStsVwzweck'];
 		$userid					= $post['sapPopStsRechnr'];
 
 		$sapUgawVK				= $post['sapUgawVK']; // Amount. Value before the comma
 		$sapUgawNK				= $post['sapUgawNK']; // Amount. Decimal places
-		$sapPopStsReturnStatus	= $post['sapPopStsReturnStatus']; // Statuscode (OK/NOK/VOK)
 
-		$invoice = new Invoice($database);
-		$invoice->loadInvoiceNumber($post['sapPopStsVwzweck']);
+		$response = array();
+		$response['invoice'] = $post['sapPopStsVwzweck'];
+
+		return $response;
+	}
+
+	function validateNotification( $response, $post, $cfg, $invoice )
+	{
+		global $mosConfig_live_site;
+
 		$params = $invoice->getParams("params");
 
 		$merchantid = $cfg['merchantid_' . $params['bank_selection']];
 		$merchantpin = $cfg['merchantpin_' . $params['bank_selection']];
+		$sapPopStsReturnStatus	= $post['sapPopStsReturnStatus']; // Statuscode (OK/NOK/VOK)
 
-		$response = array();
-		$response['invoice'] = $_POST['sapPopStsVwzweck'];
 
 		$StsPar = array();
 		$StsPar[] = array("option", "com_acctexp");
@@ -245,10 +249,11 @@ class processor_epsnetpay extends POSTprocessor
 
 		$sapPopStsURL = $mosConfig_live_site . "/index.php";
 
-		$sapPopStsDurchfDatum = isset($_POST['sapPopStsDurchfDatum']) ? @$_POST['sapPopStsDurchfDatum'] : "";
+		$sapPopStsDurchfDatum = isset($post['sapPopStsDurchfDatum']) ? @$post['sapPopStsDurchfDatum'] : "";
+
 
 		// Check Fingerprint
-		if (($fingerprint = md5($_POST['sapPopStsReturnStatus'].$merchantpin.$merchantid.$_POST['sapPopStsEmpfname'].$_POST['sapPopStsEmpfnr'].$_POST['sapPopStsEmpfblz'].$_POST['sapPopStsGawVK'].$_POST['sapPopStsGawNK'].$_POST['sapPopStsGawWhg'].$_POST['sapPopStsVwzweck'].$_POST['sapPopStsRechnr'].$_POST['sapPopStsZusatz'].$sapPopStsDurchfDatum.$sapPopStsURL.$epsparams)) == $_POST['sapPopStsReturnFingerPrint']) {
+		if (($fingerprint = md5($post['sapPopStsReturnStatus'].$merchantpin.$merchantid.$post['sapPopStsEmpfname'].$post['sapPopStsEmpfnr'].$post['sapPopStsEmpfblz'].$post['sapPopStsGawVK'].$post['sapPopStsGawNK'].$post['sapPopStsGawWhg'].$post['sapPopStsVwzweck'].$post['sapPopStsRechnr'].$post['sapPopStsZusatz'].$sapPopStsDurchfDatum.$sapPopStsURL.$epsparams)) == $post['sapPopStsReturnFingerPrint']) {
 			if ($cfg['acceptvok']) {
 				$response['valid'] = ( ($sapPopStsReturnStatus == 'OK') || ($sapPopStsReturnStatus == 'VOK'));
 			} else {
@@ -258,6 +263,7 @@ class processor_epsnetpay extends POSTprocessor
 			$response['valid'] = false;
 			$response['pending_reason'] = "fingerprint mismatch";
 		}
+
 
 		return $response;
 	}

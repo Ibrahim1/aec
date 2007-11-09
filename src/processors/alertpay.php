@@ -115,9 +115,16 @@ class processor_alertpay extends POSTprocessor
 
 		$response = array();
 		$response['invoice'] = $invoice_number;
-		$response['valid'] = ( ( strcmp( $_POST['ap_status'], "Success" ) === 0 ) && ( strcmp( $_POST['ap_securitycode'], $cfg->ap_securitycode ) === 0 ) );
 
 		return $response;
 	}
+
+	function validateNotification( $response, $post, $cfg, $invoice )
+	{
+		$response['valid'] = ( ( strcmp( $post['ap_status'], "Success" ) === 0 ) && ( strcmp( $post['ap_securitycode'], $cfg->ap_securitycode ) === 0 ) );
+
+		return $response;
+	}
+
 }
 ?>

@@ -100,22 +100,28 @@ class processor_viaklix extends POSTprocessor
 
 	function parseNotification( $post, $cfg )
 	{
-		$ssl_result				= $_POST['ssl_result'];
-		$ssl_result_message		= $_POST['ssl_result_message'];
-		$ssl_txn_id				= $_POST['ssl_txn_id'];
-		$ssl_approval_code		= $_POST['ssl_approval_code'];
-		$ssl_cvv2_response		= $_POST['ssl_cvv2_response'];
-		$ssl_avs_response		= $_POST['ssl_avs_response'];
-		$ssl_transaction_type	= $_POST['ssl_transaction_type'];
+		$ssl_result				= $post['ssl_result'];
+		$ssl_result_message		= $post['ssl_result_message'];
+		$ssl_txn_id				= $post['ssl_txn_id'];
+		$ssl_approval_code		= $post['ssl_approval_code'];
+		$ssl_cvv2_response		= $post['ssl_cvv2_response'];
+		$ssl_avs_response		= $post['ssl_avs_response'];
+		$ssl_transaction_type	= $post['ssl_transaction_type'];
 
-		$ssl_amount				= $_POST['ssl_amount'];
-		$ssl_email				= $_POST['ssl_email'];
-		$ssl_description		= $_POST['ssl_description'];
-		$userid					= $_POST['ssl_customer_code'];
+		$ssl_amount				= $post['ssl_amount'];
+		$ssl_email				= $post['ssl_email'];
+		$ssl_description		= $post['ssl_description'];
+		$userid					= $post['ssl_customer_code'];
 
 		$response = array();
-		$response['invoice'] = $_POST['ssl_invoice_number'];
-		$response['valid'] = ( $ssl_result == 0 ) && ( strcmp ( $ssl_result_message, "APPROVED") == 0 );
+		$response['invoice'] = $post['ssl_invoice_number'];
+
+		return $response;
+	}
+
+	function validateNotification( $response, $post, $cfg, $invoice )
+	{
+		$response['valid'] = ( $post['ssl_result'] == 0 ) && ( strcmp ( $post['ssl_result_message'], "APPROVED") == 0 );
 
 		return $response;
 	}

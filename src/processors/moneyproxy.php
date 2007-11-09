@@ -74,13 +74,17 @@ class processor_moneyproxy extends POSTprocessor
 
 	function parseNotification( $post, $cfg )
 	{
-
-		$checkhash = implode( ':', array( $post['MERCHANT_ID'], $post['REFERENCE_NO'], $post['PAYMENT_ID'], $post['AMOUNT'], $post['CURRENCY'], $post['AMOUNT_GAU'], $post['EXRATE'], $post['MONEYPROXY_FEES_GAU'], $post['SYSTEM_FEES_GAU'], $post['PAYMENT_SYSTEM'], $post['CUSTOM1'], $cfg['secret_key'] ) );
-
 		$response = array();
 		$response['invoice'] = $post['CUSTOM1'];
 		$response['amount_paid'] = $post['AMOUNT'];
 		$response['amount_currency'] = $post['CURRENCY'];
+
+		return $response;
+	}
+
+	function validateNotification( $response, $post, $cfg, $invoice )
+	{
+		$checkhash = implode( ':', array( $post['MERCHANT_ID'], $post['REFERENCE_NO'], $post['PAYMENT_ID'], $post['AMOUNT'], $post['CURRENCY'], $post['AMOUNT_GAU'], $post['EXRATE'], $post['MONEYPROXY_FEES_GAU'], $post['SYSTEM_FEES_GAU'], $post['PAYMENT_SYSTEM'], $post['CUSTOM1'], $cfg['secret_key'] ) );
 
 		if ( $post['HASH'] == $checkhash ) {
 			$response['valid'] = true;
@@ -90,5 +94,6 @@ class processor_moneyproxy extends POSTprocessor
 
 		return $response;
 	}
+
 }
 ?>

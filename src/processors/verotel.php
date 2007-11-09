@@ -130,16 +130,23 @@ class processor_verotel extends URLprocessor
 		$response = array();
 		$response['invoice'] = $payment_id;
 
-		if( $cfg['secretcode'] == $secret ) {
+		return $response;
+	}
+
+	function validateNotification( $response, $post, $cfg, $invoice )
+	{
+		$res = explode(":", $_GET['vercode']);
+
+		if( $cfg['secretcode'] == $res[2] ) {
 			$response['valid'] = 1;
 		} else {
 			$response['valid'] = 0;
-			$response['pending_reason'] = 'INVALID SECRET WORD, provided: ' . $secret;
+			$response['pending_reason'] = 'INVALID SECRET WORD, provided: ' . $res[3];
 		}
 
-		switch ( $action ) {
+		switch ( $res[3] ) {
 			case 'add':
-				$response['amount_paid'] = $amount;
+				$response['amount_paid'] = $res[4];
 				break;
 			case 'cancel':
 				$response['cancel'] = 1;
@@ -150,10 +157,9 @@ class processor_verotel extends URLprocessor
 				$response['valid'] = 0;
 				break;
 			case 'rebill':
-				$response['amount_paid'] = $amount;
+				$response['amount_paid'] = $res[4];
 				break;
 		}
-
 
 		return $response;
 	}

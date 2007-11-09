@@ -79,7 +79,6 @@ class processor_paysignet extends POSTprocessor
 
 	function parseNotification( $post, $cfg )
 	{
-
 		$order_id		= $post['order_id'];
 		$bank_name		= $post['bank_name'];
 		$trans_status	= $post['trans_status'];

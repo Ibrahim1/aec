@@ -98,7 +98,13 @@ class processor_eway extends POSTprocessor
 
 		$response = array();
 		$response['invoice'] = $post['eWAYoption2'];
-		if ( $post['ewayTrxnStatus'] == "True" && isset( $eWAYAuthCode ) ) {
+
+		return $response;
+	}
+
+	function validateNotification( $response, $post, $cfg, $invoice )
+	{
+		if ( $post['ewayTrxnStatus'] == "True" && isset( $post['eWAYAuthCode'] ) ) {
 			$response['valid'] = 1;
 		} else {
 			$response['valid'] = 0;

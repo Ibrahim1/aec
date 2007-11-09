@@ -125,21 +125,28 @@ class processor_paycom extends POSTprocessor
 		$response['ans'] = $ans;
 		$response['checksum'] = $checksum;
 
-		$validate			= md5($cfg['secretWord'] . $username);
 
-		if ( substr( $ans, 0, 1 ) == "Y" ) {
+		return $response;
+	}
+
+	function validateNotification( $response, $post, $cfg, $invoice )
+	{
+		$validate			= md5( $cfg['secretWord'] . $post['x_username'] );
+
+		if ( substr( $post['ans'], 0, 1 ) == "Y" ) {
 			$response['valid'] = 1;
 		} else {
 			$response['valid'] = 0;
-			$response['pending']=1;
-			$response['pending_reason']=$ans;
+			$response['pending'] = 1;
+			$response['pending_reason'] = $post['ans'];
 
 			return $response;
-			break;
 		}
 
-		$response['valid'] = (strcmp($validate, $checksum) == 0);
+		$response['valid'] = ( strcmp( $validate, $post['x_checksum'] ) == 0 );
+
 		return $response;
 	}
+
 }
 ?>

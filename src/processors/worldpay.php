@@ -115,6 +115,13 @@ class processor_worldpay extends POSTprocessor
 		return $response;
 	}
 
+	function validateNotification( $response, $post, $cfg, $invoice )
+	{
+		$response['valid'] = ( $post['ssl_result'] == 0 ) && ( strcmp ( $post['ssl_result_message'], "APPROVED") == 0 );
+
+		return $response;
+	}
+
 }
 
 ?>

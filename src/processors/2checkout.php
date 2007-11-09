@@ -123,15 +123,22 @@ class processor_2checkout extends POSTprocessor
 		$planid					= $post['planid'];
 		$name					= $post['name'];
 
+		$response = array();
+		$response['invoice'] = $invoice_number;
+
+		return $response;
+	}
+
+	function validateNotification( $response, $post, $cfg, $invoice )
+	{
 		if ($cfg['testmode']) {
 			$string_to_hash	= $cfg['secret_word'].$cfg['sid']."1".$total;
 		} else {
 			$string_to_hash	= $cfg['secret_word'].$cfg['sid'].$order_number.$total;
 		}
+
 		$check_key		= strtoupper(md5($string_to_hash));
 
-		$response = array();
-		$response['invoice'] = $invoice_number;
 		$response['valid'] = (strcmp($check_key, $key) == 0);
 
 		return $response;

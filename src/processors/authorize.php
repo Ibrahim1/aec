@@ -143,14 +143,22 @@ class processor_authorize extends POSTprocessor
 
 	function parseNotification( $post, $cfg )
 	{
-		$x_description			= $_POST['x_description'];
-		$x_response_code		= $_POST['x_response_code'];
-		$x_response_reason_text	= $_POST['x_response_reason_text'];
-		$x_amount				= $_POST['x_amount'];
-		$userid					= $_POST['x_cust_id'];
+		$x_description			= $post['x_description'];
+
+		$x_amount				= $post['x_amount'];
+		$userid					= $post['x_cust_id'];
 
 		$response = array();
-		$response['invoice'] = $_POST['x_invoice_num'];
+		$response['invoice'] = $post['x_invoice_num'];
+
+		return $response;
+	}
+
+	function validateNotification( $response, $post, $cfg, $invoice )
+	{
+		$x_response_code		= $post['x_response_code'];
+		$x_response_reason_text	= $post['x_response_reason_text'];
+
 		$response['valid'] = ($x_response_code == '1');
 
 		return $response;
