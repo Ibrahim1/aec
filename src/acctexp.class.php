@@ -2261,6 +2261,7 @@ class SubscriptionPlan extends paramDBTable
 				if ( $mi->mi_exists( $mi_id ) ) {
 					$mi->load( $mi_id );
 					if ( $mi->callIntegration() ) {
+						if ( ( ( strcmp( $mi->class_name, 'mi_email' ) === 0 ) && !$silent ) || ( strcmp( $mi->class_name, 'mi_email' ) !== 0 ) )
 						$mi->action( $metaUser->userid, $this );
 					}
 				}
