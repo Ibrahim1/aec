@@ -114,9 +114,6 @@ class processor_cybermut extends POSTprocessor
 		$var['texte-libre']		= $int_var['invoice'];
 		$var['lgue']			= $cfg['language'];
 		$var['societe']			= $cfg['soc'];
-		$var['url_retour']		= AECToolbox::deadsureURL( '/index.php' );
-		$var['url_retour_ok']	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=thanks' );
-		$var['url_retour_err']	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
 
 		$HMAC = $var['TPE']."*".$var['date']."*".$var['montant']."*".$var['reference']."*".$var['texte-libre']."*".$var['version']."*".$var['lgue']."*".$var['societe']."*";
 
@@ -126,9 +123,16 @@ class processor_cybermut extends POSTprocessor
 		/*$var['retourPLUS']		= $int_var['return_url'];
 		$var['societe']			= $cfg['key'];*/
 
+		$search		= array(':','/','?');
+		$replace	= array('&#x3a;','&#x2f;','&#x3f;');
+
 		foreach ( $var as $k => $v ) {
-			$var[$k] = htmlentities($v);
+			$var[$k] = str_replace( $search, $replace, str_replace( '&', '&#x3d;', $v ) );
 		}
+
+		$var['url_retour']		= AECToolbox::deadsureURL( '/index.php' );
+		$var['url_retour_ok']	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=thanks' );
+		$var['url_retour_err']	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
 
 		return $var;
 	}
