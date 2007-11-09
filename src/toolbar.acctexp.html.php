@@ -93,6 +93,7 @@ class ComponentMenu
 		mosMenuBar::custom( 'unpublishSubscriptionPlan', 'unpublish.png',  'unpublish_f2.png', _UNPUBLISH_PAYPLAN, true );
 		mosMenuBar::custom( 'newSubscriptionPlan', 'new.png',  'new_f2.png', _NEW_PAYPLAN, false );
 		mosMenuBar::custom( 'editSubscriptionPlan', 'edit.png',  'edit_f2.png', _EDIT_PAYPLAN, true );
+		mosMenuBar::custom( 'copySubscriptionPlan', 'copy.png', 'copy_f2.png', _COPY_PAYPLAN, true );
 		mosMenuBar::custom( 'removeSubscriptionPlan', 'delete.png',  'delete_f2.png', _REMOVE_PAYPLAN, true );
 		mosMenuBar::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
 		mosMenuBar::endTable();
@@ -102,6 +103,7 @@ class ComponentMenu
 	{
 		mosMenuBar::startTable();
 		mosMenuBar::custom( 'saveSubscriptionPlan', 'save.png',  'save_f2.png', _SAVE_PAYPLAN, false );
+		mosMenuBar::custom( 'applySubscriptionPlan', 'apply.png',  'apply_f2.png', _APPLY_PAYPLAN, false );
 		mosMenuBar::custom( 'cancelSubscriptionPlan', 'cancel.png',  'cancel_f2.png', _CANCEL_PAYPLAN, false );
 		mosMenuBar::endTable();
 	}
@@ -113,6 +115,7 @@ class ComponentMenu
 		mosMenuBar::custom( 'unpublishMicroIntegration', 'unpublish.png',  'unpublish_f2.png', _UNPUBLISH_PAYPLAN, true );
 		mosMenuBar::custom( 'newMicroIntegration', 'new.png',  'new_f2.png', _NEW_PAYPLAN, false );
 		mosMenuBar::custom( 'editMicroIntegration', 'edit.png',  'edit_f2.png', _EDIT_PAYPLAN, true );
+		mosMenuBar::custom( 'copyMicroIntegration', 'copy.png', 'copy_f2.png', _COPY_PAYPLAN, true );
 		mosMenuBar::custom( 'removeMicroIntegration', 'delete.png',  'delete_f2.png', _REMOVE_PAYPLAN, true );
 		mosMenuBar::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
 		mosMenuBar::endTable();
@@ -122,6 +125,7 @@ class ComponentMenu
 	{
 		mosMenuBar::startTable();
 		mosMenuBar::custom( 'saveMicroIntegration', 'save.png',  'save_f2.png', _SAVE_PAYPLAN, false );
+		mosMenuBar::custom( 'applyMicroIntegration', 'apply.png',  'apply_f2.png', _APPLY_PAYPLAN, false );
 		mosMenuBar::custom( 'cancelMicroIntegration', 'cancel.png',  'cancel_f2.png', _CANCEL_PAYPLAN, false );
 		mosMenuBar::endTable();
 	}
@@ -133,6 +137,7 @@ class ComponentMenu
 		mosMenuBar::custom( 'unpublishCoupon', 'unpublish.png',  'unpublish_f2.png', _UNPUBLISH_PAYPLAN, true );
 		mosMenuBar::custom( 'newCoupon', 'new.png',  'new_f2.png', _NEW_PAYPLAN, false );
 		mosMenuBar::custom( 'editCoupon', 'edit.png',  'edit_f2.png', _EDIT_PAYPLAN, true );
+		mosMenuBar::custom( 'copyCoupon', 'copy.png', 'copy_f2.png', 'Copy' );
 		mosMenuBar::custom( 'removeCoupon', 'delete.png',  'delete_f2.png', _REMOVE_PAYPLAN, true );
 		mosMenuBar::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
 		mosMenuBar::endTable();
@@ -142,6 +147,7 @@ class ComponentMenu
 	{
 		mosMenuBar::startTable();
 		mosMenuBar::custom( 'saveCoupon', 'save.png',  'save_f2.png', _SAVE_PAYPLAN, false );
+		mosMenuBar::custom( 'applyCoupon', 'apply.png',  'apply_f2.png', _APPLY_PAYPLAN, false );
 		mosMenuBar::custom( 'cancelCoupon', 'cancel.png',  'cancel_f2.png', _CANCEL_PAYPLAN, false );
 		mosMenuBar::endTable();
 	}
@@ -153,6 +159,7 @@ class ComponentMenu
 		mosMenuBar::custom( 'unpublishCouponStatic', 'unpublish.png',  'unpublish_f2.png', _UNPUBLISH_PAYPLAN, true );
 		mosMenuBar::custom( 'newCouponStatic', 'new.png',  'new_f2.png', _NEW_PAYPLAN, false );
 		mosMenuBar::custom( 'editCouponStatic', 'edit.png',  'edit_f2.png', _EDIT_PAYPLAN, true );
+		mosMenuBar::custom( 'copyCouponStatic', 'copy.png', 'copy_f2.png', _COPY_PAYPLAN, true );
 		mosMenuBar::custom( 'removeCouponStatic', 'delete.png',  'delete_f2.png', _REMOVE_PAYPLAN, true );
 		mosMenuBar::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
 		mosMenuBar::endTable();
@@ -162,6 +169,7 @@ class ComponentMenu
 	{
 		mosMenuBar::startTable();
 		mosMenuBar::custom( 'saveCouponStatic', 'save.png',  'save_f2.png', _SAVE_PAYPLAN, false );
+		mosMenuBar::custom( 'applyCouponStatic', 'apply.png',  'apply_f2.png', _APPLY_PAYPLAN, false );
 		mosMenuBar::custom( 'cancelCouponStatic', 'cancel.png',  'cancel_f2.png', _CANCEL_PAYPLAN, false );
 		mosMenuBar::endTable();
 	}

@@ -509,6 +509,8 @@ define( '_FORCE_CLOSE', 'Forzar Desuscripcion');
 define( '_PUBLISH_PAYPLAN', 'Publicar');
 define( '_UNPUBLISH_PAYPLAN', 'Despublicar');
 define( '_NEW_PAYPLAN', 'Nuevo');
+define( '_COPY_PAYPLAN', 'Copy');
+define( '_APPLY_PAYPLAN', 'Apply');
 define( '_EDIT_PAYPLAN', 'Editar');
 define( '_REMOVE_PAYPLAN', 'Borrar');
 define( '_SAVE_PAYPLAN', 'Grabar');

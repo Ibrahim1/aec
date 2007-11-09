@@ -509,6 +509,8 @@ define( '_FORCE_CLOSE', 'Schliessen erzwingen' );
 define( '_PUBLISH_PAYPLAN', 'Ver&ouml;ffentlichen' );
 define( '_UNPUBLISH_PAYPLAN', 'Unver&ouml;ffentlichen' );
 define( '_NEW_PAYPLAN', 'Neu' );
+define( '_COPY_PAYPLAN', 'Kopieren');
+define( '_APPLY_PAYPLAN', 'Anwenden');
 define( '_EDIT_PAYPLAN', 'Bearbeiten' );
 define( '_REMOVE_PAYPLAN', 'L&ouml;schen' );
 define( '_SAVE_PAYPLAN', 'Speichern' );

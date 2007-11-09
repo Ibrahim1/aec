@@ -511,6 +511,8 @@ define( '_FORCE_CLOSE', 'Chiudi Ora');
 define( '_PUBLISH_PAYPLAN', 'Pubblica');
 define( '_UNPUBLISH_PAYPLAN', 'Non Pubblicare');
 define( '_NEW_PAYPLAN', 'Nuovo');
+define( '_COPY_PAYPLAN', 'Copy');
+define( '_APPLY_PAYPLAN', 'Apply');
 define( '_EDIT_PAYPLAN', 'Modifica');
 define( '_REMOVE_PAYPLAN', 'Elimina');
 define( '_SAVE_PAYPLAN', 'Salva');

@@ -218,6 +218,22 @@ switch( strtolower( $task ) ) {
 		editSubscriptionPlan( $id[0], $option );
 		break;
 
+	case 'copysubscriptionplan':
+	    global $database;
+
+	    if ( is_array( $id ) ) {
+		    foreach ( $id as $pid ) {
+				$row = new SubscriptionPlan( $database );
+				$row->load( $pid );
+				$row->id = 0;
+				$row->check();
+				$row->store();
+		    }
+	    }
+
+	    mosRedirect( 'index2.php?option='. $option . '&task=showSubscriptionPlans' );
+		break;
+
 	case 'savesubscriptionplan':
 		saveSubscriptionPlan( $option );
 		break;
@@ -278,6 +294,22 @@ switch( strtolower( $task ) ) {
 		saveMicroIntegration( $option );
 		break;
 
+	case 'copymicrointegration':
+	    global $database;
+
+	    if ( is_array( $id ) ) {
+		    foreach ( $id as $pid ) {
+				$row = new microIntegration( $database );
+				$row->load( $pid );
+				$row->id = 0;
+				$row->check();
+				$row->store();
+		    }
+	    }
+
+	    mosRedirect( 'index2.php?option='. $option . '&task=showMicroIntegrations' );
+		break;
+
 	case 'publishmicrointegration':
 		changeMicroIntegration( $id, 1, $option );
 		break;
@@ -314,6 +346,23 @@ switch( strtolower( $task ) ) {
 		listCoupons( $option, 0);
 		break;
 
+	case 'copycoupon':
+	    global $database;
+
+	    if ( is_array( $id ) ) {
+		    foreach ( $id as $pid ) {
+				$row = new Coupon( $database, 0 );
+				$row->load( $pid );
+				$row->id = 0;
+				$row->coupon_code = $row->generateCouponCode();
+				$row->check();
+				$row->store();
+		    }
+	    }
+
+	    mosRedirect( 'index2.php?option='. $option . '&task=showCoupons' );
+		break;
+
 	case 'newcoupon':
 		editCoupon( 0, $option, 1, 0 );
 		break;
@@ -344,6 +393,23 @@ switch( strtolower( $task ) ) {
 
 	case 'showcouponsstatic':
 		listCoupons( $option, 1);
+		break;
+
+	case 'copycouponstatic':
+	    global $database;
+
+	    if ( is_array( $id ) ) {
+		    foreach ( $id as $pid ) {
+				$row = new Coupon( $database, 1 );
+				$row->load( $pid );
+				$row->id = 0;
+				$row->coupon_code = $row->generateCouponCode();
+				$row->check();
+				$row->store();
+		    }
+	    }
+
+	    mosRedirect( 'index2.php?option='. $option . '&task=showCouponsStatic' );
 		break;
 
 	case 'newcouponstatic':
@@ -433,19 +499,19 @@ switch( strtolower( $task ) ) {
 		break;
 
     case 'help':
-		help ( $option );
+		help( $option );
 		break;
 
 	case 'invoices':
-		invoices ( $option );
+		invoices( $option );
 		break;
 
 	case 'history':
-		history ( $option );
+		history( $option );
 		break;
 
 	case 'eventlog':
-		eventlog ( $option );
+		eventlog( $option );
 		break;
 
 	case 'credits':
@@ -453,11 +519,11 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'migrate':
-		migrate ( $option );
+		migrate( $option );
 		break;
 
 	case 'quicklookup':
-		$return = quicklookup ( $option );
+		$return = quicklookup( $option );
 
 		if ( strlen( $return ) > 32 ) {
 			HTML_AcctExp::central( $return );

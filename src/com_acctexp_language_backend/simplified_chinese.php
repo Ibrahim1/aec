@@ -510,6 +510,8 @@ define( '_FORCE_CLOSE', '马上关闭');
 define( '_PUBLISH_PAYPLAN', '�?�布');
 define( '_UNPUBLISH_PAYPLAN', '�?�?�布');
 define( '_NEW_PAYPLAN', '新建');
+define( '_COPY_PAYPLAN', 'Copy');
+define( '_APPLY_PAYPLAN', 'Apply');
 define( '_EDIT_PAYPLAN', '编辑');
 define( '_REMOVE_PAYPLAN', '删除');
 define( '_SAVE_PAYPLAN', '�?存');

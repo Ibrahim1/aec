@@ -407,6 +407,8 @@ define( '_FORCE_CLOSE', 'Close Now');
 define( '_PUBLISH_PAYPLAN', 'Publish');
 define( '_UNPUBLISH_PAYPLAN', 'Unpublish');
 define( '_NEW_PAYPLAN', 'New');
+define( '_COPY_PAYPLAN', 'Copy');
+define( '_APPLY_PAYPLAN', 'Apply');
 define( '_EDIT_PAYPLAN', 'Edit');
 define( '_REMOVE_PAYPLAN', 'Delete');
 define( '_SAVE_PAYPLAN', 'Save');
