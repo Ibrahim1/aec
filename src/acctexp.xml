@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <mosinstall type="component">
 	<name>acctexp</name>
-	<creationDate>2007.10.03</creationDate>
+	<creationDate>2007.11.09</creationDate>
 	<author>Helder Garcia, David Deutsch, Team AEC</author>
 	<copyright>@Copyright (C) 2004-2007 Helder Garcia, David Deutsch</copyright>
 	<authorEmail>mails@globalnerd.org</authorEmail>
