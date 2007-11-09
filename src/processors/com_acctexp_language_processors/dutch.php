@@ -337,4 +337,21 @@ define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLFIRSTNAME_DESC', 'The First Name this sho
 define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLLASTNAME_NAME', 'Last Name');
 define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLLASTNAME_DESC', 'The Last Name this should be billed to.');
 
+// CCBill
+define( '_CFG_CCBILL_LONGNAME', 'CCBill');
+define( '_CFG_CCBILL_STATEMENT', 'Make payments with CCBill!');
+define( '_CFG_CCBILL_DESCRIPTION', 'CCBill');
+define( '_CFG_CCBILL_CLIENTACCNUM_NAME', 'Client Account');
+define( '_CFG_CCBILL_CLIENTACCNUM_DESC', 'Your CCBill Client Account Number');
+define( '_CFG_CCBILL_CLIENTSUBACC_NAME', 'Client SubAccount');
+define( '_CFG_CCBILL_CLIENTSUBACC_DESC', 'Your CCBill Client Sub Account Number');
+define( '_CFG_CCBILL_SECRETWORD_NAME', 'Secret Word');
+define( '_CFG_CCBILL_SECRETWORD_DESC', 'Your secret word used to encrypt and protect transactions');
+define( '_CFG_CCBILL_FORMNAME_NAME', 'Form ID');
+define( '_CFG_CCBILL_FORMNAME_DESC', 'The CCBill layout you wish to use (look at the HTML form downloaded from CCBILL)');
+define( '_CFG_CCBILL_INFO_NAME', 'Postback URL');
+define( '_CFG_CCBILL_INFO_DESC', 'You need to remember to set the \'postback\' url in the CCBILL control panel... for both approves and declines this should be...<br />http://[YOUR JOOMLA LOCATION]/index.php?option=com_acctexp&task=ccbillnotification<br />Thats it.');
+define( '_CFG_CCBILL_PLAN_PARAMS_ALLOWEDTYPES_NAME', 'Allowed types');
+define( '_CFG_CCBILL_PLAN_PARAMS_ALLOWEDTYPES_DESC', 'insert the payment options that the user is supposed to have after being led on to CCBill (refer to your CCBill account for the product IDs you have set up)');
+
 ?>
