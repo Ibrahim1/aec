@@ -109,7 +109,7 @@ class mi_mosets_tree
 
 		return is_dir( $mosConfig_absolute_path . '/components/com_mtree' );
 	}
-	
+
 	function hacks()
 	{
 		global $mosConfig_absolute_path;
@@ -126,7 +126,7 @@ class mi_mosets_tree
 		. 'echo "' . _AEC_MI_HACK1_MOSETS . '";' . "\n"
 		. 'return;' . "\n"
 		. '}' . "\n"
-		. '}else{' . "\n"
+		. '} else {' . "\n"
 		. 'echo "' . _AEC_MI_HACK2_MOSETS . '";' . "\n"
 		. 'return;' . "\n"
 		. '}' . "\n"
@@ -142,11 +142,11 @@ class mi_mosets_tree
 		. 'if( $mi_mosetshandler->id ) {' . "\n"
 		. 'if( !$mi_mosetshandler->hasListingsLeft() ) {' . "\n"
 		. '$mi_mosetshandler->useListing();' . "\n"
-		. '}else{' . "\n"
+		. '} else {' . "\n"
 		. 'echo "' . _AEC_MI_HACK1_MOSETS . '";' . "\n"
 		. 'return;' . "\n"
 		. '}' . "\n"
-		. '}else{' . "\n"
+		. '} else {' . "\n"
 		. 'echo "' . _AEC_MI_HACK2_MOSETS . '";' . "\n"
 		. 'return;' . "\n"
 		. '}' . "\n"
@@ -161,10 +161,10 @@ class mi_mosets_tree
 		. 'if( $mi_mosetshandler->id ) {' . "\n"
 		. 'if( !$mi_mosetshandler->hasListingsLeft() ) {' . "\n"
 		. '$mi_mosetshandler->useListing();' . "\n"
-		. '}else{' . "\n"
+		. '} else {' . "\n"
 		. 'continue;' . "\n"
 		. '}' . "\n"
-		. '}else{' . "\n"
+		. '} else {' . "\n"
 		. 'continue;' . "\n"
 		. '}' . "\n"
 		. '// AEC HACK adminmtree3 END' . "\n"
@@ -183,7 +183,7 @@ class mi_mosets_tree
 		$hacks[$n]['desc']				=	_AEC_MI_HACK4_MOSETS;
 		$hacks[$n]['type']				=	'file';
 		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_mtree/mtree.php';
-		$hacks[$n]['read']				=	'# Modification to existing record';
+		$hacks[$n]['read']				=	'$row->updateLinkCount( 1 );';
 		$hacks[$n]['insert']			=	$edithack2 . "\n"  . $hacks[$n]['read'];
 
 		$n = 'adminmtree3';
