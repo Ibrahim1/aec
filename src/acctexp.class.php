@@ -1472,13 +1472,11 @@ class PaymentProcessor
 
 			if ( isset( $planparams['aec_overwrite_settings'] ) ) {
 				if ( $planparams['aec_overwrite_settings'] ) {
-					$settings = $this->processor->exchangeSettings( $this->settings, $planparams );
+					$this->processor->exchangeSettings( $this->settings, $planparams );
 				}
-			} else {
-				$settings = $this->settings;
 			}
 
-			$response = array_merge( $response, $this->processor->validateNotification( $response, $post, $settings, $invoice ) );
+			$response = $this->processor->validateNotification( $response, $post, $this->settings, $invoice );
 		}
 
 		return $response;
@@ -3288,7 +3286,7 @@ class InvoiceFactory
 
 	function confirm( $option, $var=array(), $passthrough=false )
 	{
-		global $database, $my;
+		global $database, $my, $aecConfig;
 
 		if ( isset( $var['task'] ) ) {
 			unset( $var['task'] );

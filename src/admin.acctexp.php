@@ -979,19 +979,19 @@ function editUser( $userid, $option, $task )
 			. '<br />'
 			. '<a href="'
 			. AECToolbox::deadsureURL( '/administrator/index2.php?option=' . $option . '&amp;task=cancelpayment&amp;invoice='
-			. $invoice->invoice_number . '&amp;returnTask=edit' ) . '">'
+			. $invoice->invoice_number . '&amp;returnTask=edit&userid=' . $user->id ) . '">'
 			. aecHTML::Icon( 'delete.png' ) . '&nbsp;'
 			. _USERINVOICE_ACTION_CANCEL . '</a>'
 			. '<br />'
 			. '<a href="'
 			. AECToolbox::deadsureURL( '/administrator/index2.php?option=' . $option . '&amp;task=clearpayment&amp;invoice='
-			. $invoice->invoice_number . '&amp;returnTask=edit' ) . '">'
+			. $invoice->invoice_number . '&amp;returnTask=edit&userid=' . $user->id ) . '">'
 			. aecHTML::Icon( 'coins.png' ) . '&nbsp;'
 			. _USERINVOICE_ACTION_CLEAR . '</a>'
 			. '<br />'
 			. '<a href="'
 			. AECToolbox::deadsureURL( '/administrator/index2.php?option=' . $option . '&amp;task=clearpayment&amp;invoice='
-			. $invoice->invoice_number . '&amp;applyplan=1&amp;returnTask=edit' ) . '">'
+			. $invoice->invoice_number . '&amp;applyplan=1&amp;returnTask=edit&userid=' . $user->id ) . '">'
 			. aecHTML::Icon( 'coins_add.png' ) . '&nbsp;'
 			. _USERINVOICE_ACTION_CLEAR_APPLY . '</a>'
 			. '<br />';
@@ -3897,7 +3897,7 @@ function quicklookup( $option )
 	if ( !$userid ) {
 		$query = 'SELECT userid'
 		. ' FROM #__acctexp_invoices'
-		. ' WHERE invoice_number = \'' . $search . '\''
+		. ' WHERE invoice_number LIKE \'%' . $search . '%\''
 		;
 		$database->setQuery( $query );
 
@@ -3906,7 +3906,7 @@ function quicklookup( $option )
 		return $userid;
 	}
 
-	// Try to find this as a username or name
+	// Try to find this as a userid
 	$query = 'SELECT id'
 	. ' FROM #__users'
 	. ' WHERE id LIKE \'' . $search . '\''
