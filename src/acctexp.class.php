@@ -4707,7 +4707,11 @@ class Subscription extends paramDBTable
 					$amount = 1;
 				}
 
-				$array[$entryarray[0]] += $amount;
+				if ( isset( $array[$entryarray[0]] ) ) {
+					$array[$entryarray[0]] += $amount;
+				} else {
+					$array[$entryarray[0]] = 1;
+				}
 			}
 		}
 
