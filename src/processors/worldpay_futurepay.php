@@ -29,15 +29,21 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_worldpay extends POSTprocessor
+// http://support.worldpay.com/kb/product_guides/futurepay/whnjs.htm
+// http://support.worldpay.com/kb/product_guides/futurepay/fpay2330.html
+// http://support.worldpay.com/kb/integration_guides/junior/integration/help/appendicies/sjig_10100.html#response
+// http://support.worldpay.com/kb/integration_guides/junior/integration/help/whnjs.htm
+// http://support.worldpay.com/kb/integration_guides/junior/quickstep/whnjs.htm
+
+class processor_worldpay_futurepay extends POSTprocessor
 {
 	function info()
 	{
 		$info = array();
-		$info['name']				= 'worldpay';
-		$info['longname']			= _CFG_WORLDPAY_LONGNAME;
-		$info['statement']			= _CFG_WORLDPAY_STATEMENT;
-		$info['description']		= _CFG_WORLDPAY_DESCRIPTION;
+		$info['name']				= 'worldpay_futurepay';
+		$info['longname']			= _CFG_WORLDPAY_FUTUREPAY_LONGNAME;
+		$info['statement']			= _CFG_WORLDPAY_FUTUREPAY_STATEMENT;
+		$info['description']		= _CFG_WORLDPAY_FUTUREPAY_DESCRIPTION;
 		$info['currencies']			= 'AFA,ALL,DZD,AON,ARS,AWG,AUD,EUR,BSD,BHD,BDT,BBD,BZD,BMD,BOB,BAD,BWP,BRL,BND,BGL,XOF,'
 									. 'BIF,KHR,XAF,CAD,CVE,KYD,CLP,CNY,COP,KMF,CRC,HRK,CUP,CYP,CZK,DKK,DJF,XCD,DOP,TPE,ECS,'
 									. 'EGP,SVC,EEK,ETB,FKP,FJD,XPF,GMD,GHC,GIP,GTQ,GNF,GWP,GYD,HTG,HNL,HKD,HUF,ISK,INR,IDR,'
