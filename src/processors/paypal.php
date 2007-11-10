@@ -186,7 +186,7 @@ class processor_paypal extends POSTprocessor
 		$mc_currency		= $post['mc_currency'];
 
 		$response = array();
-		$response['invoice'] = $_POST['invoice'];
+		$response['invoice'] = $post['invoice'];
 		$response['amount_paid'] = $mc_gross;
 		$response['amount_currency'] = $mc_currency;
 
@@ -218,9 +218,7 @@ class processor_paypal extends POSTprocessor
 
 		$res = $fp;
 
-		if ( isset( $response['processorresponse'] ) ) {
-			$response['processorresponse'] = $res . "\n" . $response['processorresponse'];
-		}
+		$response['responsestring'] = $res . "\n" . $response['responsestring'];
 
 		$txn_type			= $post['txn_type'];
 		$receiver_email		= $post['receiver_email'];
@@ -237,7 +235,7 @@ class processor_paypal extends POSTprocessor
 
 				$recurring = ( strcmp( $txn_type, 'subscr_payment' ) == 0 );
 
-				if ( strcmp( $payment_type, 'instant' ) == 0 && strcmp( $payment_status, 'Pending' ) == 0 ) {
+				if ( ( strcmp( $payment_type, 'instant' ) == 0 ) && ( strcmp( $payment_status, 'Pending' ) == 0 ) ) {
 					$response['pending_reason'] = $post['pending_reason'];
 				} elseif ( strcmp( $payment_type, 'instant' ) == 0 && strcmp( $payment_status, 'Completed' ) == 0 ) {
 					$response['valid']			= 1;

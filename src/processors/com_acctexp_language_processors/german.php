@@ -227,9 +227,22 @@ define( '_CFG_2CHECKOUT_ALT2COURL_NAME',		'Alternativ-Url' );
 define( '_CFG_2CHECKOUT_ALT2COURL_DESC',		'Alternative Url bei Problemen mit 2Checkout' );
 
 // WorldPay Settings
-define( '_CFG_WORLDPAY_INSTID_NAME',			'instID' );
-define( '_CFG_WORLDPAY_INSTID_FIELD',			'Ihre WorldPay ID' ); // new 200707016
-define( '_CFG_WORLDPAY_INSTID_DESC',			'Die WorldPay Installations ID.' );
+define( '_CFG_WORLDPAY_LONGNAME',		'WorldPay' );
+define( '_CFG_WORLDPAY_STATEMENT',		'Payments with WorldPay' );
+define( '_CFG_WORLDPAY_DESCRIPTION',	'Accept payments on the internet, by phone, fax or mail. Credit and debit cards, bank transfers and instalments. In any language and most currencies' );
+define( '_CFG_WORLDPAY_INSTID_NAME', 	'instId');
+define( '_CFG_WORLDPAY_INSTID_DESC', 	'Your WorldPay Installation Id.');
+define( '_CFG_WORLDPAY_CALLBACKPW_NAME', 	'Callback Password');
+define( '_CFG_WORLDPAY_CALLBACKPW_DESC', 	'Please set a Callback Password in your Worldpay Account and enter it here once again. With this, the payment notifications can .');
+
+// WorldPay Futurepay Settings
+define( '_CFG_WORLDPAY_FUTUREPAY_LONGNAME',		'WorldPay Futurepay' );
+define( '_CFG_WORLDPAY_FUTUREPAY_STATEMENT',	'Recurring Payments with WorldPay' );
+define( '_CFG_WORLDPAY_FUTUREPAY_DESCRIPTION',	'Accepts payments on the internet, by phone, fax or mail. Credit and debit cards, bank transfers and instalments. In any language and most currencies' );
+define( '_CFG_WORLDPAY_FUTUREPAY_INSTID_NAME', 	'instId');
+define( '_CFG_WORLDPAY_FUTUREPAY_INSTID_DESC', 	'Your WorldPay Installation Id.');
+define( '_CFG_WORLDPAY_FUTUREPAY_CALLBACKPW_NAME', 	'Callback Password');
+define( '_CFG_WORLDPAY_FUTUREPAY_CALLBACKPW_DESC', 	'Please set a Callback Password in your Worldpay Account and enter it here once again. With this, the payment notifications can .');
 
 // epsNetpay Settings
 define( '_CFG_EPSNETPAY_MERCHANTID_NAME',		'H&auml;ndler ID' );

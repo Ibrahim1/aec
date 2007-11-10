@@ -1346,6 +1346,19 @@ class PaymentProcessor
 		}
 	}
 
+	function exchangeSettings( $plan )
+	{
+		$this->getSettings();
+
+		$planparams = $plan->getProcessorParameters( $pp->id );
+
+		if ( isset( $planparams['aec_overwrite_settings'] ) ) {
+			if ( $planparams['aec_overwrite_settings'] ) {
+				$this->settings = $this->processor->exchangeSettings( $this->settings, $planparams );
+			}
+		}
+	}
+
 	function setInfo()
 	{
 		// Test if values really are an array and write them to db
@@ -1461,6 +1474,8 @@ class PaymentProcessor
 				if ( $planparams['aec_overwrite_settings'] ) {
 					$settings = $this->processor->exchangeSettings( $this->settings, $planparams );
 				}
+			} else {
+				$settings = $this->settings;
 			}
 
 			$response = array_merge( $response, $this->processor->validateNotification( $response, $post, $settings, $invoice ) );
@@ -1528,7 +1543,11 @@ class processor extends paramDBTable
 		 foreach ( $settings as $key => $value ) {
 		 	if ( isset( $planvars[$key] ) ) {
 				if ( !is_null( $planvars[$key] ) && ( $planvars[$key] != '' ) ) {
-		 			$settings[$key] = $planvars[$key];
+		 			if ( strcmp( $planvars[$key], '[[SET_TO_NULL]]' ) === 0 ) {
+		 				$settings[$key] = '';
+		 			} else {
+		 				$settings[$key] = $planvars[$key];
+		 			}
 				}
 		 	}
 		 }
@@ -2894,6 +2913,7 @@ class InvoiceFactory
 					$this->pp = new PaymentProcessor();
 					if ( $this->pp->loadName( $this->processor ) ) {
 						$this->pp->fullInit();
+						$this->pp->exchangeSettings( $this->objUsage );
 						$this->payment->method_name	= $this->pp->info['longname'];
 						$this->recurring			= isset( $this->pp->info['recurring'] ) ? $this->pp->info['recurring'] : 0;
 						$currency					= isset( $this->pp->settings['currency'] ) ? $this->pp->settings['currency'] : '';
@@ -3834,6 +3854,7 @@ class Invoice extends paramDBTable
 					$pp = new PaymentProcessor();
 					if ( $pp->loadName( $this->method ) ) {
 						$pp->fullInit();
+						$pp->exchangeSettings( $plan );
 
 						$recurring		= $pp->info['recurring'];
 
@@ -3964,7 +3985,7 @@ class Invoice extends paramDBTable
 		return $inum;
 	}
 
-	function processorResponse( $pp, $response, $responsestring )
+	function processorResponse( $pp, $response )
 	{
 		global $database;
 
@@ -5276,6 +5297,10 @@ class AECToolbox
 	{
 		global $database, $aecConfig;
 
+		if ( !is_object( $aecConfig ) ) {
+			$aecConfig = new Config_General( $database );
+		}
+
 		$heartbeat = new aecHeartbeat( $database );
 		$heartbeat->frontendping();
 
@@ -5294,10 +5319,6 @@ class AECToolbox
 			if ( $metaUser->hasExpiration ) {
 				$metaUser->objExpiration->manualVerify();
 			} else {
-				if ( !is_object( $aecConfig ) ) {
-					$aecConfig = new Config_General( $database );
-				}
-
 				if ( $aecConfig->cfg['require_subscription'] ) {
 					if ( $aecConfig->cfg['entry_plan'] ) {
 						$user_subscription = new Subscription( $database );

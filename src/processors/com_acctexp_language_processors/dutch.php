@@ -54,11 +54,6 @@ define( '_AEC_PROC_INFO_2CO_STMNT',			'Make payments with 2Checkout!' );
 	// alertpay
 define( '_AEC_PROC_INFO_AP_LNAME',			'AlertPay' );
 define( '_AEC_PROC_INFO_AP_STMNT',			'Payments with AlertPay' );
-	// worldpay
-define( '_AEC_PROC_INFO_WP_LNAME',			'WorldPay' );
-define( '_AEC_PROC_INFO_WP_STMNT',			'Payments with WorldPay' );
-define( '_DESCRIPTION_WORLDPAY',			'Accept payments on the internet, by phone, fax or mail. Credit and debit cards, bank transfers and instalments. In any language and most currencies' );
-// END 0.12.4
 
 define( '_DESCRIPTION_PAYPAL', 'PayPal laat je geld overmaken aan iedereen met een emailadres. De Paypal service is gratis voor consumenten en werkt naadloos samen met je bestaande credit card rekening.');
 define( '_DESCRIPTION_PAYPAL_SUBSCRIPTION', 'PayPal Subscription is the Subscription Service that will <strong>automatically bill your account each subscription period</strong>. You can cancel a subscription any time you want from your PayPal account. PayPal is free for consumers and works seamlessly with your existing credit card and checking account.');
@@ -218,9 +213,22 @@ define( '_CFG_2CHECKOUT_ALT2COURL_NAME', 'Alternate Url');
 define( '_CFG_2CHECKOUT_ALT2COURL_DESC', 'Try this in case you encounter a parameter error.');
 
 // WorldPay Settings
-define( '_CFG_WORLDPAY_INSTID_NAME',	'instId');
-define( '_CFG_WORLDPAY_INSTID_FIELD',	'Your WorldPay ID' ); // new 0.12.4
+define( '_CFG_WORLDPAY_LONGNAME',		'WorldPay' );
+define( '_CFG_WORLDPAY_STATEMENT',		'Payments with WorldPay' );
+define( '_CFG_WORLDPAY_DESCRIPTION',	'Accept payments on the internet, by phone, fax or mail. Credit and debit cards, bank transfers and instalments. In any language and most currencies' );
+define( '_CFG_WORLDPAY_INSTID_NAME', 	'instId');
 define( '_CFG_WORLDPAY_INSTID_DESC', 	'Your WorldPay Installation Id.');
+define( '_CFG_WORLDPAY_CALLBACKPW_NAME', 	'Callback Password');
+define( '_CFG_WORLDPAY_CALLBACKPW_DESC', 	'Please set a Callback Password in your Worldpay Account and enter it here once again. With this, the payment notifications can .');
+
+// WorldPay Futurepay Settings
+define( '_CFG_WORLDPAY_FUTUREPAY_LONGNAME',		'WorldPay Futurepay' );
+define( '_CFG_WORLDPAY_FUTUREPAY_STATEMENT',	'Recurring Payments with WorldPay' );
+define( '_CFG_WORLDPAY_FUTUREPAY_DESCRIPTION',	'Accepts payments on the internet, by phone, fax or mail. Credit and debit cards, bank transfers and instalments. In any language and most currencies' );
+define( '_CFG_WORLDPAY_FUTUREPAY_INSTID_NAME', 	'instId');
+define( '_CFG_WORLDPAY_FUTUREPAY_INSTID_DESC', 	'Your WorldPay Installation Id.');
+define( '_CFG_WORLDPAY_FUTUREPAY_CALLBACKPW_NAME', 	'Callback Password');
+define( '_CFG_WORLDPAY_FUTUREPAY_CALLBACKPW_DESC', 	'Please set a Callback Password in your Worldpay Account and enter it here once again. With this, the payment notifications can .');
 
 // epsNetpay Settings
 define( '_CFG_EPSNETPAY_MERCHANTID_NAME', 'Merchant ID');
