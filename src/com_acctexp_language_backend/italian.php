@@ -548,12 +548,12 @@ define( '_PLAN_FILTER','Filter Plan:');
 define( '_CENTRAL_PAGE','Central');
 
 // --== USER FORM ==--
-define( '_HISTORY_COL1_TITLE', 'Invoice');
-define( '_HISTORY_COL2_TITLE', 'Amount');
-define( '_HISTORY_COL3_TITLE', 'Payment Date');
-define( '_HISTORY_COL4_TITLE', 'Method');
-define( '_HISTORY_COL5_TITLE', 'Action');
-define( '_HISTORY_COL6_TITLE', 'Plan');
+define( '_HISTORY_COL_INVOICE', 'Invoice');
+define( '_HISTORY_COL_AMOUNT', 'Amount');
+define( '_HISTORY_COL_DATE', 'Payment Date');
+define( '_HISTORY_COL_METHOD', 'Method');
+define( '_HISTORY_COL_ACTION', 'Action');
+define( '_HISTORY_COL_PLAN', 'Plan');
 define( '_USERINVOICE_ACTION_REPEAT','repeat&nbsp;Link');
 define( '_USERINVOICE_ACTION_CANCEL','cancel');
 define( '_USERINVOICE_ACTION_CLEAR','mark&nbsp;cleared');

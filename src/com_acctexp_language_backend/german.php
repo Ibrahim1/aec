@@ -546,12 +546,12 @@ define( '_PLAN_FILTER',				'Abofilter:' );
 define( '_CENTRAL_PAGE',			'Zentrale' );
 
 // --== USER FORM ==--
-define( '_HISTORY_COL1_TITLE',			'Rechnung' );
-define( '_HISTORY_COL2_TITLE',			'Betrag' );
-define( '_HISTORY_COL3_TITLE',			'Bezahlt' );
-define( '_HISTORY_COL4_TITLE',			'Methode' );
-define( '_HISTORY_COL5_TITLE',			'Aktion' );
-define( '_HISTORY_COL6_TITLE',			'Abo' );
+define( '_HISTORY_COL_INVOICE', 'Rechnung');
+define( '_HISTORY_COL_AMOUNT', 'Betrag');
+define( '_HISTORY_COL_DATE', 'Bezahlt');
+define( '_HISTORY_COL_METHOD', 'Methode');
+define( '_HISTORY_COL_ACTION', 'Aktion');
+define( '_HISTORY_COL_PLAN', 'Abo');
 define( '_USERINVOICE_ACTION_REPEAT',	'Wiederholung' );
 define( '_USERINVOICE_ACTION_CANCEL',	'l&ouml;schen' );
 define( '_USERINVOICE_ACTION_CLEAR',	'als&nbsp;bezahlt&nbsp;markieren' );

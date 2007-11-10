@@ -721,12 +721,12 @@ class HTML_AcctExp
 							<div style="float: left; text-align: left;">
 								<table width="100%">
 										<tr>
-											<td><?php echo _HISTORY_COL1_TITLE;?></td>
-											<td><?php echo _HISTORY_COL2_TITLE;?></td>
-											<td><?php echo _HISTORY_COL3_TITLE;?></td>
-											<td><?php echo _HISTORY_COL4_TITLE;?></td>
-											<td><?php echo _HISTORY_COL6_TITLE;?></td>
-											<td><?php echo _HISTORY_COL5_TITLE;?></td>
+											<td><?php echo _HISTORY_COL_INVOICE;?></td>
+											<td><?php echo _HISTORY_COL_AMOUNT;?></td>
+											<td><?php echo _HISTORY_COL_DATE;?></td>
+											<td><?php echo _HISTORY_COL_METHOD;?></td>
+											<td><?php echo _HISTORY_COL_ACTION;?></td>
+											<td><?php echo _HISTORY_COL_PLAN;?></td>
 										</tr>
 										<tr>
 											<td colspan="6" style="border-top: 2px solid #999999;"></td>

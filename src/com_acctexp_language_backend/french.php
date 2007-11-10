@@ -555,12 +555,12 @@ define( '_USERINVOICE_ACTION_CLEAR_APPLY','clear&nbsp;&amp;&nbsp;apply&nbsp;Plan
 // --== PARAMETRES BACKEND ==--
 
 // TAB 1 - Param�tres de AEC
-define( '_HISTORY_COL1_TITLE', 'Invoice');
-define( '_HISTORY_COL2_TITLE', 'Amount');
-define( '_HISTORY_COL3_TITLE', 'Payment Date');
-define( '_HISTORY_COL4_TITLE', 'Method');
-define( '_HISTORY_COL5_TITLE', 'Action');
-define( '_HISTORY_COL6_TITLE', 'Plan');
+define( '_HISTORY_COL_INVOICE', 'Invoice');
+define( '_HISTORY_COL_AMOUNT', 'Amount');
+define( '_HISTORY_COL_DATE', 'Payment Date');
+define( '_HISTORY_COL_METHOD', 'Method');
+define( '_HISTORY_COL_ACTION', 'Action');
+define( '_HISTORY_COL_PLAN', 'Plan');
 define( '_CFG_TAB1_TITLE', ' Configuration');
 define( '_CFG_TAB1_SUBTITLE', 'Options utilisateur');
 
