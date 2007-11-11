@@ -398,7 +398,11 @@ define( '_COUPON_PARAMS_EXPIRATION_DESC',		'Datum ausw&auml;hlen bis wann dieser
 define( '_COUPON_PARAMS_HAS_MAX_REUSE_NAME',	'Eingeschr&auml;nkt?' );
 define( '_COUPON_PARAMS_HAS_MAX_REUSE_DESC',	'Soll dieser max. x verwendet werden d&uuml;rfen?' );
 define( '_COUPON_PARAMS_MAX_REUSE_NAME',		'Anzahl' );
-define( '_COUPON_PARAMS_MAX_REUSE_DESC',		'Hier die Anzahl eintragen wieoft dieser Gutschein verwendet werden darf' );
+define( '_COUPON_PARAMS_MAX_REUSE_DESC',		'Hier die Anzahl eintragen wie oft dieser Gutschein verwendet werden darf' );
+define( '_COUPON_PARAMS_HAS_MAX_PERUSER_REUSE_NAME', 'Restrict Reuse per User?');
+define( '_COUPON_PARAMS_HAS_MAX_PERUSER_REUSE_DESC', 'Do you want to restrict the number of times every user is allowed to use this coupon?');
+define( '_COUPON_PARAMS_MAX_PERUSER_REUSE_NAME', 'Max Uses per User');
+define( '_COUPON_PARAMS_MAX_PERUSER_REUSE_DESC', 'Choose the number of times this coupon can be used by each user');
 
 define( '_COUPON_PARAMS_USECOUNT_NAME',			'Reset' );
 define( '_COUPON_PARAMS_USECOUNT_DESC',			'Hier kann der Z&auml;hler r&uuml;ckgesetzt werden' );

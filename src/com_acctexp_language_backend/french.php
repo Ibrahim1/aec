@@ -400,6 +400,10 @@ define( '_COUPON_PARAMS_HAS_MAX_REUSE_NAME', 'Restrict Reuse?');
 define( '_COUPON_PARAMS_HAS_MAX_REUSE_DESC', 'Do you want to restrict the number of times this coupon may be used?');
 define( '_COUPON_PARAMS_MAX_REUSE_NAME', 'Max Uses');
 define( '_COUPON_PARAMS_MAX_REUSE_DESC', 'Choose the number of times this coupon can be used');
+define( '_COUPON_PARAMS_HAS_MAX_PERUSER_REUSE_NAME', 'Restrict Reuse per User?');
+define( '_COUPON_PARAMS_HAS_MAX_PERUSER_REUSE_DESC', 'Do you want to restrict the number of times every user is allowed to use this coupon?');
+define( '_COUPON_PARAMS_MAX_PERUSER_REUSE_NAME', 'Max Uses per User');
+define( '_COUPON_PARAMS_MAX_PERUSER_REUSE_DESC', 'Choose the number of times this coupon can be used by each user');
 
 define( '_COUPON_PARAMS_USECOUNT_NAME', 'Use Count');
 define( '_COUPON_PARAMS_USECOUNT_DESC', 'Reset the number of times this Coupon has been used');

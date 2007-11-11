@@ -150,10 +150,10 @@ class metaUser
 	{
 		global $database;
 
-				$query = 'SELECT name'
-				. ' FROM #__comprofiler_fields'
-				. ' WHERE `table` != \'#__users\''
-				. ' AND `name` != \'NA\'';
+		$query = 'SELECT name'
+		. ' FROM #__comprofiler_fields'
+		. ' WHERE `table` != \'#__users\''
+		. ' AND `name` != \'NA\'';
 		$database->setQuery( $query );
 		$fields = $database->loadResultArray();
 
@@ -356,6 +356,27 @@ class metaUser
 				$return[$name] = $status;
 			}
 			return $return;
+		} else {
+			return false;
+		}
+	}
+
+	function usedCoupon ( $couponid, $type )
+	{
+		global $database;
+
+		$query = 'SELECT usecount'
+		. ' FROM #__acctexp_couponsxuser'
+		. ' WHERE `userid` = \'' . $this->userid . '\''
+		. ' AND `coupon_id` = \'' . $couponid . '\''
+		. ' AND `type` = \'' . $type . '\''
+		;
+
+		$database->setQuery( $query );
+		$usecount = $database->loadResult();
+
+		if ( $usecount ) {
+			return $usecount;
 		} else {
 			return false;
 		}
@@ -6340,6 +6361,16 @@ class couponHandler
 					} else {
 						$permissions['trial_only'] = false;
 					}
+				}
+			}
+		}
+
+		// Check for max reuse per user
+		if ( $this->restrictions['has_max_peruser_reuse'] ) {
+			if ( $this->restrictions['has_max_reuse'] ) {
+				if ( (int) $metaUser->usedCoupon( $this->coupon->id, $this->type ) > (int) $this->restrictions['has_max_reuse'] ) {
+					$this->setError( _COUPON_ERROR_MAX_REUSE );
+					return;
 				}
 			}
 		}
