@@ -824,10 +824,6 @@ function processNotification( $option, $processor )
 {
 	global $database;
 
-	// Init flags
-	$recurring	= 0;
-	$free		= 0;
-
 	// Legacy naming support
 	switch ( $processor ) {
 		case 'vklix':
@@ -846,29 +842,19 @@ function processNotification( $option, $processor )
 
 	// Create Response String for History
 	$responsestring = '';
-	$post = array();
 	foreach ( $_POST as $key => $value ) {
 		$value = urlencode( stripslashes( $value ) );
 		$responsestring .= $key . '=' . $value . "\n";
 	}
 
-	switch ( strtolower( $processor ) ) {
-		case 'free':
-			$pp = 0;
-			break;
-		case 'transfer':
-			break;
-		default:
-			// parse processor notification
-			$pp = new PaymentProcessor( $processor );
-			if ( $pp->loadName( $processor ) ) {
-				$pp->init();
-				$response = $pp->parseNotification( $_POST );
-			} else {
-				exit();
-				// TODO: Log error
-			}
-			break;
+	// parse processor notification
+	$pp = new PaymentProcessor( $processor );
+	if ( $pp->loadName( $processor ) ) {
+		$pp->init();
+		$response = $pp->parseNotification( $_POST );
+	} else {
+		exit();
+		// TODO: Log error
 	}
 
 	// Get Invoice record

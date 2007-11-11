@@ -247,6 +247,19 @@ function com_install()
 	. ') TYPE=MyISAM;'
 	;
 
+	$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_couponsxuser` ('
+	. '`id` int(11) NOT NULL auto_increment,'
+	. '`coupon_id` int(11) NULL,'
+	. '`coupon_type` int(2) NOT NULL default \'0\','
+	. '`coupon_code` varchar(255) NULL,'
+	. '`userid` int(11) NOT NULL,'
+    . '`set_date` datetime NULL default \'0000-00-00 00:00:00\','
+	. '`params` text NULL,'
+	. '`usecount` int(64) NOT NULL default \'0\','
+	. ' PRIMARY KEY (`id`)'
+	. ') TYPE=MyISAM;'
+	;
+
 	foreach ( $queri AS $query ) {
 		$database->setQuery( $query );
 	    if ( !$database->query() ) {

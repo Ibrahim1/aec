@@ -1465,17 +1465,9 @@ class PaymentProcessor
 		return $this->processor->parseNotification( $post, $this->settings );
 	}
 
-	function validateNotification( $response, $post, $planparams, $invoice )
+	function validateNotification( $response, $post, $invoice )
 	{
 		if ( method_exists( $this->processor, 'validateNotification' ) ) {
-			$this->getSettings();
-
-			if ( isset( $planparams['aec_overwrite_settings'] ) ) {
-				if ( $planparams['aec_overwrite_settings'] ) {
-					$this->processor->exchangeSettings( $this->settings, $planparams );
-				}
-			}
-
 			$response = $this->processor->validateNotification( $response, $post, $this->settings, $invoice );
 		}
 
@@ -3992,9 +3984,8 @@ class Invoice extends paramDBTable
 		$plan = new SubscriptionPlan( $database );
 		$plan->load( $this->usage );
 
-		$planparams = $plan->getProcessorParameters( $pp->id );
-
-		$pp->validateNotification( $response, $_POST, $planparams, $this );
+		$pp->exchangeSettings( $plan );
+		$pp->validateNotification( $response, $_POST, $this );
 
 		if ( isset( $response['invoiceparams'] ) ) {
 			$this->addParams( $response['invoiceparams'] );
@@ -6630,6 +6621,50 @@ class coupon extends paramDBTable
 			$numberofrows = $numberofrows_normal + $numberofrows_static;
 		}
 		return $inum;
+	}
+}
+
+class couponXuser extends paramDBTable
+{
+	/** @var int Primary key */
+	var $id					= null;
+	/** @var int */
+	var $coupon_id			= null;
+	/** @var int */
+	var $coupon_type		= null;
+	/** @var string */
+	var $coupon_code		= null;
+	/** @var int */
+	var $userid				= null;
+	/** @var datetime */
+	var $set_date 			= null;
+	/** @var text */
+	var $params				= null;
+	/** @var int */
+	var $usecount			= null;
+
+	function couponXuser( &$db )
+	{
+		$this->mosDBTable( '#__acctexp_couponsxuser', 'id', $db );
+	}
+
+	function createNew( $userid, $coupon, $type, $params )
+	{
+		$this->id = 0;
+		$this->coupon_id = $coupon->id;
+		$this->coupon_type = $type;
+		$this->coupon_code = $coupon->coupon_code;
+		$this->userid = $userid;
+		$this->set_date = date( 'Y-m-d H:i:s' );
+
+		if ( is_array( $params ) ) {
+			$this->setParams( $params );
+		}
+
+		$this->usercount = 1;
+
+		$this->check();
+		$this->store();
 	}
 }
 
