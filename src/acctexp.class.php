@@ -1468,6 +1468,7 @@ class PaymentProcessor
 	function validateNotification( $response, $post, $invoice )
 	{
 		if ( method_exists( $this->processor, 'validateNotification' ) ) {
+			global $database; $eventlog = new eventLog($database); $eventlog->issue( 'debugdebug', 'debug', 'calling validateNotification', '' );
 			$response = $this->processor->validateNotification( $response, $post, $this->settings, $invoice );
 		}
 
@@ -3985,7 +3986,7 @@ class Invoice extends paramDBTable
 		$plan->load( $this->usage );
 
 		$pp->exchangeSettings( $plan );
-		$pp->validateNotification( $response, $_POST, $this );
+		$response = $pp->validateNotification( $response, $_POST, $this );
 
 		if ( isset( $response['invoiceparams'] ) ) {
 			$this->addParams( $response['invoiceparams'] );
@@ -4003,12 +4004,12 @@ class Invoice extends paramDBTable
 			$responsestring = $response['responsestring'];
 			unset( $response['responsestring'] );
 		} else {
-			$responsestring = 1;
+			$responsestring = '';
 		}
 
 		// Create history entry
 		$history = new logHistory( $database );
-		$history->entryFromInvoice ( $this, $responsestring, $pp );
+		$history->entryFromInvoice( $this, $responsestring, $pp );
 
 		$short = _AEC_MSG_PROC_INVOICE_ACTION_SH;
 		$event = _AEC_MSG_PROC_INVOICE_ACTION_EV . "\n";
@@ -4291,7 +4292,7 @@ class Invoice extends paramDBTable
 			$cph->load( $couponcode );
 
 			if ( $cph->status ) {
-				$cph->coupon->incrementCount();
+				$cph->incrementCount( $this );
 			}
 		}
 
@@ -6216,6 +6217,95 @@ class couponHandler
 		}
 	}
 
+	function switchType()
+	{
+		global $database;
+
+		// Duplicate Coupon at other table
+		$newcoupon = new coupon( $database, !$this->type );
+		$newcoupon->createNew( $this->coupon->coupon_code, $this->coupon->created_date );
+
+		$oldid = $this->coupon->id;
+		$newid = $newcoupon->getMax();
+
+		// Delete old coupon
+		$this->coupon->delete();
+		// Create new entry
+
+		// Migrate usage entries
+		$query = 'UPDATE #__acctexp_couponsxuser'
+				. ' SET `coupon_id` = \'' . $newid . '\''
+				. ' WHERE `coupon_id` = \'' . $oldid . '\''
+				;
+
+		$database->setQuery( $query );
+		$database->query();
+	}
+
+	function incrementCount( $invoice )
+	{
+		global $database;
+
+		$query = 'SELECT id'
+				. ' FROM #__acctexp_couponsxuser'
+				. ' WHERE `userid` = \'' . $invoice->userid . '\''
+				. ' AND `coupon_id` = \'' . $this->coupon->id . '\''
+				. ' AND `type` = \'' . $this->type . '\''
+				;
+
+		$database->setQuery( $query );
+		$id = $database->loadResult();
+
+		$couponxuser = new couponXuser( $database );
+
+		if ( $id ) {
+			$couponxuser->load( $id );
+			$couponxuser->usecount += 1;
+			$couponxuser->addInvoice( $invoice->invoice_number );
+			$couponxuser->check();
+			$couponxuser->store();
+		} else {
+			$couponxuser->createNew( $invoice->userid, $this->coupon, $this->type );
+			$couponxuser->addInvoice( $invoice->invoice_number );
+			$couponxuser->check();
+			$couponxuser->store();
+		}
+
+		$this->coupon->incrementcount();
+	}
+
+	function decrementCount()
+	{
+		global $database;
+
+		$query = 'SELECT id'
+				. ' FROM #__acctexp_couponsxuser'
+				. ' WHERE `userid` = \'' . $invoice->userid . '\''
+				. ' AND `coupon_id` = \'' . $this->coupon->id . '\''
+				. ' AND `type` = \'' . $this->type . '\''
+				;
+
+		$database->setQuery( $query );
+		$id = $database->loadResult();
+
+		$couponxuser = new couponXuser( $database );
+
+		if ( $id ) {
+			$couponxuser->load( $id );
+			$couponxuser->usecount -= 1;
+
+			if ( $couponxuser->usecount ) {
+				$couponxuser->delInvoice( $invoice->invoice_number );
+				$couponxuser->check();
+				$couponxuser->store();
+			} else{
+				$couponxuser->delete();
+			}
+		}
+
+		$this->coupon->decrementcount();
+	}
+
 	function checkRestrictions( $metaUser, $original_amount=null, $invoiceFactory=null )
 	{
 		$restrictions	= $this->getRestrictionsArray();
@@ -6561,8 +6651,6 @@ class coupon extends paramDBTable
 
 	function saveDiscount( $params )
 	{
-		global $database;
-
 		// Correct a malformed Amount
 		if ( !strlen( $params['amount'] ) ) {
 			$params['amount_use'] = 0;
@@ -6637,7 +6725,9 @@ class couponXuser extends paramDBTable
 	/** @var int */
 	var $userid				= null;
 	/** @var datetime */
-	var $set_date 			= null;
+	var $created_date 		= null;
+	/** @var datetime */
+	var $last_updated		= null;
 	/** @var text */
 	var $params				= null;
 	/** @var int */
@@ -6648,14 +6738,15 @@ class couponXuser extends paramDBTable
 		$this->mosDBTable( '#__acctexp_couponsxuser', 'id', $db );
 	}
 
-	function createNew( $userid, $coupon, $type, $params )
+	function createNew( $userid, $coupon, $type, $params=null )
 	{
 		$this->id = 0;
 		$this->coupon_id = $coupon->id;
 		$this->coupon_type = $type;
 		$this->coupon_code = $coupon->coupon_code;
 		$this->userid = $userid;
-		$this->set_date = date( 'Y-m-d H:i:s' );
+		$this->created_date = date( 'Y-m-d H:i:s' );
+		$this->last_updated = date( 'Y-m-d H:i:s' );
 
 		if ( is_array( $params ) ) {
 			$this->setParams( $params );
@@ -6665,6 +6756,65 @@ class couponXuser extends paramDBTable
 
 		$this->check();
 		$this->store();
+	}
+
+	function getInvoiceList()
+	{
+		$params = $this->getParams();
+
+		$invoicelist = array();
+		if ( isset( $params['invoices'] ) ) {
+			$invoices = explode( ';', $params['invoices'] );
+
+			foreach ( $invoices as $invoice ) {
+				$inv = explode( ',', $invoice );
+
+				$invoicelist[$invoice[0]] = $invoice[1];
+			}
+		}
+
+		return $invoicelist;
+	}
+
+	function setInvoiceList( $invoicelist )
+	{
+		$invoices = array();
+
+		foreach ( $invoicelist as $invoicenumber => $counter ) {
+			$invoices[] = $invoicenumber . ',' . $counter;
+		}
+
+		$params['invoices'] = implode( ';', $invoices );
+
+		$this->addParams( $params );
+	}
+
+	function addInvoice( $invoicenumber )
+	{
+		$invoicelist = $this->getInvoiceList();
+
+		if ( isset( $invoicelist[$invoicenumber] ) ) {
+			$invoicelist[$invoicenumber] += 1;
+		} else {
+			$invoicelist[$invoicenumber] = 1;
+		}
+
+		$this->setInvoiceList( $invoicelist );
+	}
+
+	function delInvoice( $invoicenumber )
+	{
+		$invoicelist = $this->getInvoiceList();
+
+		if ( !isset( $invoicelist[$invoicenumber] ) ) {
+			$invoicelist[$invoicenumber] -= 1;
+		}
+
+		if ( $invoicelist[$invoicenumber] === 0 ) {
+			unset( $invoicelist[$invoicenumber] );
+		}
+
+		$this->setInvoiceList( $invoicelist );
 	}
 }
 

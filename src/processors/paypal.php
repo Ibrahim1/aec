@@ -218,7 +218,7 @@ class processor_paypal extends POSTprocessor
 
 		$res = $fp;
 
-		$response['responsestring'] = $res . "\n" . $response['responsestring'];
+		$response['responsestring'] = 'paypal_verification=' . $res . "\n" . $response['responsestring'];
 
 		$txn_type			= $post['txn_type'];
 		$receiver_email		= $post['receiver_email'];
@@ -301,7 +301,16 @@ class processor_paypal extends POSTprocessor
 		$fp = curl_exec ($ch);
 		curl_close($ch);
 
-		return $fp;
+		if ( !$fp ) {
+			return 'ERROR';
+		} else {
+			if ( strcmp( $fp, 'VERIFIED' ) == 0 ) {
+				return 'VERIFIED';
+			} elseif ( strcmp( $fp, 'INVALID' ) == 0 ) {
+				return 'INVALID';
+			}
+		}
+		return 'ERROR';
 	}
 
 	function doTheHttp( $url, $req )
@@ -321,6 +330,7 @@ class processor_paypal extends POSTprocessor
 
 			while ( !feof( $fp ) ) {
 				$res = fgets( $fp, 1024 );
+
 				if ( strcmp( $res, 'VERIFIED' ) == 0 ) {
 					return 'VERIFIED';
 				} elseif ( strcmp( $res, 'INVALID' ) == 0 ) {

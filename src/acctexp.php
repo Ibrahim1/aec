@@ -869,7 +869,7 @@ function processNotification( $option, $processor )
 
 		$eventlog = new eventLog($database);
 		$eventlog->issue( $short, $tags, $event, $params );
-		return;
+		exit();
 	}
 
 	$response['responsestring'] = $responsestring;

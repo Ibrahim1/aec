@@ -3367,16 +3367,9 @@ function saveCoupon( $option, $type, $apply=0 )
 		}
 
 		if ( $cph->status ) {
-
 			if ( !$new ) {
 				if ( $cph->type != $_POST['type'] ) {
-					// The type has been changed - switching this over to the other table
-					// Deleting old entry
-					$originaldate = $cph->coupon->created_date;
-					$cph->coupon->delete();
-					// Create new entry
-					$cph->coupon = new coupon($database, $_POST['type']);
-					$cph->coupon->createNew($_POST['coupon_code'], $originaldate);
+					$cph->switchType();
 				}
 			}
 
