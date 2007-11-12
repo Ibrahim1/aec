@@ -145,16 +145,10 @@ class processor_worldpay extends POSTprocessor
 
 	function parseNotification( $post, $cfg )
 	{
-		$description			= $post['description'];
-		$key					= $post['key'];
-		$cart_order_id			= $post['cart_order_id'];
-		$total					= $post['total'];
-		$userid					= $post['cust_id'];
-
 		$response = array();
-		$response['invoice'] = $post['cart_order_id'];
-		$response['amount_paid'] = $post['cost'];
-		$response['amount_currency'] = $post['currency'];
+		$response['invoice'] = $post['cartId'];
+		$response['amount_paid'] = $post['authAmount'];
+		$response['amount_currency'] = $post['authCurrency'];
 
 		return $response;
 	}

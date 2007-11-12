@@ -29,12 +29,6 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-// http://support.worldpay.com/kb/product_guides/futurepay/whnjs.htm
-// http://support.worldpay.com/kb/product_guides/futurepay/fpay2330.html
-// http://support.worldpay.com/kb/integration_guides/junior/integration/help/appendicies/sjig_10100.html#response
-// http://support.worldpay.com/kb/integration_guides/junior/integration/help/whnjs.htm
-// http://support.worldpay.com/kb/integration_guides/junior/quickstep/whnjs.htm
-
 class processor_worldpay_futurepay extends POSTprocessor
 {
 	function info()
@@ -101,9 +95,21 @@ class processor_worldpay_futurepay extends POSTprocessor
 		$var['instId']		= $cfg['instId'];
 		$var['currency']	= $cfg['currency'];
 		$var['cartId']		= $int_var['invoice'];
-		$var['amount']		= $int_var['amount'];
-
 		$var['desc']	= AECToolbox::rewriteEngine($cfg['item_name'], $metaUser, $new_subscription);
+
+		$var['futurePayType']		= 'regular';
+		$var['option']		= '0';
+
+		$units = array( 'D' => '1', 'W' => '2', 'M' => '3', 'Y' => '4' );
+
+		$var['intervalUnit'] = $units[$int_var['amount']['unit3']];
+		$var['intervalMult'] = $int_var['amount']['period3'];
+
+		if ( isset( $int_var['amount']['amount1'] ) ) {
+			$var['initialAmount'] = $int_var['amount']['amount1'];
+		}
+
+		$var['normalAmount'] = $int_var['amount']['amount1'];
 
 		return $var;
 	}
@@ -151,16 +157,10 @@ class processor_worldpay_futurepay extends POSTprocessor
 
 	function parseNotification( $post, $cfg )
 	{
-		$description			= $post['description'];
-		$key					= $post['key'];
-		$cart_order_id			= $post['cart_order_id'];
-		$total					= $post['total'];
-		$userid					= $post['cust_id'];
-
 		$response = array();
-		$response['invoice'] = $post['cart_order_id'];
-		$response['amount_paid'] = $post['cost'];
-		$response['amount_currency'] = $post['currency'];
+		$response['invoice'] = $post['cartId'];
+		$response['amount_paid'] = $post['authAmount'];
+		$response['amount_currency'] = $post['authCurrency'];
 
 		return $response;
 	}
