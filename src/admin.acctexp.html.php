@@ -2000,11 +2000,13 @@ class HTML_AcctExp
 												<?php echo $aecHTML->createSettingsParticle( 'expiration' ); ?>
 											</div>
 											<div style="position:relative;float:left;">
-											<?php echo $aecHTML->createSettingsParticle( 'has_max_reuse' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'max_reuse' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'usecount' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'has_max_peruser_reuse' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'max_peruser_reuse' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'has_max_reuse' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'max_reuse' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'usecount' ); ?>
+											</div>
+											<div style="position:relative;float:left;">
+												<?php echo $aecHTML->createSettingsParticle( 'has_max_peruser_reuse' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'max_peruser_reuse' ); ?>
 											</div>
 											<div style="position:relative;float:left;">
 												<?php echo $aecHTML->createSettingsParticle( 'usage_plans_enabled' ); ?>
