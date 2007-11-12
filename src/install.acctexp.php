@@ -130,6 +130,7 @@ function com_install()
 	. '`counter` int(11) NOT NULL default \'0\','
 	. '`userid` int(11) NOT NULL default \'0\','
 	. '`invoice_number` varchar(64) NULL,'
+	. '`secondary_ident` varchar(64) NULL,'
 	. '`created_date` datetime NULL default \'0000-00-00 00:00:00\','
 	. '`transaction_date` datetime NULL default \'0000-00-00 00:00:00\','
 	. '`fixed` int(4) NOT NULL default \'0\','
@@ -253,7 +254,8 @@ function com_install()
 	. '`coupon_type` int(2) NOT NULL default \'0\','
 	. '`coupon_code` varchar(255) NULL,'
 	. '`userid` int(11) NOT NULL,'
-    . '`set_date` datetime NULL default \'0000-00-00 00:00:00\','
+    . '`created_date` datetime NULL default \'0000-00-00 00:00:00\','
+    . '`last_updated` datetime NULL default \'0000-00-00 00:00:00\','
 	. '`params` text NULL,'
 	. '`usecount` int(64) NOT NULL default \'0\','
 	. ' PRIMARY KEY (`id`)'
@@ -889,6 +891,8 @@ function com_install()
 	$eucaInstalldb->addColifNotExists( 'counter', "int(11) NOT NULL default '0'",  'invoices' );
 	$eucaInstalldb->addColifNotExists( 'transactions', "text NULL",  'invoices' );
 
+	$eucaInstalldb->addColifNotExists( 'secondary_ident', "varchar(64) NULL",  'invoices' );
+
 	// Rewrite old entries for hardcoded "transfer" processor to new API conform "offline_payment" processor
 	$query = 'UPDATE #__acctexp_invoices'
 	. ' SET method = \'offline_payment\''
@@ -922,7 +926,7 @@ function com_install()
 		$metaUser = new metaUser( $adminid );
 
 		if ( !$metaUser->hasSubscription ) {
-			$metaUser->objSubscription = new Subscription( $database ); // mic old: mosSubscription
+			$metaUser->objSubscription = new Subscription( $database );
 			$metaUser->objSubscription->createNew( $adminid, 'free', 0 );
 			$metaUser->objSubscription->setStatus( 'Excluded' );
 		}

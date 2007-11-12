@@ -3798,6 +3798,8 @@ class Invoice extends paramDBTable
 	var $userid 			= null;
 	/** @var string */
 	var $invoice_number 	= null;
+	/** @var string */
+	var $secondary_ident 	= null;
 	/** @var datetime */
 	var $created_date	 	= null;
 	/** @var datetime */
@@ -6283,6 +6285,7 @@ class couponHandler
 			$couponxuser->load( $id );
 			$couponxuser->usecount += 1;
 			$couponxuser->addInvoice( $invoice->invoice_number );
+			$couponxuser->last_updated = date( 'Y-m-d H:i:s' );
 			$couponxuser->check();
 			$couponxuser->store();
 		} else {
@@ -6314,6 +6317,7 @@ class couponHandler
 		if ( $id ) {
 			$couponxuser->load( $id );
 			$couponxuser->usecount -= 1;
+			$couponxuser->last_updated = date( 'Y-m-d H:i:s' );
 
 			if ( $couponxuser->usecount ) {
 				$couponxuser->delInvoice( $invoice->invoice_number );
