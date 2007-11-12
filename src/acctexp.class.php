@@ -3831,6 +3831,7 @@ class Invoice extends paramDBTable
 		$query = 'SELECT id'
 		. ' FROM #__acctexp_invoices'
 		. ' WHERE invoice_number = \'' . $invoiceNum . '\''
+		. ' OR secondary_ident = \'' . $invoiceNum . '\''
 		;
 		$database->setQuery( $query );
 		$this->load($database->loadResult());
