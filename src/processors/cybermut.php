@@ -61,6 +61,7 @@ class processor_cybermut extends POSTprocessor
 		$settings['ver']		= '1.2open';
 		$settings['soc']		= 'doNot';
 		$settings['key']		= '000102030405060708090A0B0C0D0E0F10111213';
+		$settings['currency']	= 'EUR';
 		$settings['language']	= 'FR';
 		$settings['server']		= 0;
 		$settings['item_name']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
@@ -78,6 +79,7 @@ class processor_cybermut extends POSTprocessor
 		$settings['soc']		= array( 'inputC' );
 		$settings['pass']		= array( 'inputC' );
 		$settings['key']		= array( 'inputC' );
+		$settings['currency']		= array( 'list_currency' );
 		$settings['server']		= array( 'list' );
 		$settings['language']	= array( 'list_language' );
 		$settings['item_name']	= array( 'inputE' );
@@ -98,7 +100,7 @@ class processor_cybermut extends POSTprocessor
 	{
 		global $mosConfig_live_site;
 
-		$servers = array( 'paiement.creditmutuel.fr', 'ssl.paiement.cic-banques.fr', 'ssl.paiement.banque-obc.fr', 'paiement.caixanet.fr', 'creditmutuel.fr/telepaiement' );
+		$servers = array( 'paiement.creditmutuel.fr', 'ssl.paiement.cic-banques.fr', 'ssl.paiement.banque-obc.fr', 'paiement.caixanet.fr', 'creditmutuel.fr/telepaiement/test' );
 
 		if ( $cfg['testmode'] ) {
 			$var['post_url'] = "https://www.creditmutuel.fr/telepaiement/test/paiement.cgi";
@@ -109,12 +111,12 @@ class processor_cybermut extends POSTprocessor
 		$var['version']			= $cfg['ver'];
 		$var['TPE']				= $cfg['tpe'];
 		$var['date']			= date( "d/m/Y:H:i:s" );
-		$var['montant']			= $int_var['amount'] . $int_var['currency'];
+		$var['montant']			= $int_var['amount'] . $cfg['currency'];
 		$var['reference']		= $metaUser->userid;
 		$var['texte-libre']		= $int_var['invoice'];
 		$var['lgue']			= $cfg['language'];
 		$var['societe']			= $cfg['soc'];
-
+//print_r($var);print_r($int_var);exit();
 		$HMAC = $var['TPE']."*".$var['date']."*".$var['montant']."*".$var['reference']."*".$var['texte-libre']."*".$var['version']."*".$var['lgue']."*".$var['societe']."*";
 
 		//$var['MAC']				= "V1.03.sha1.php4--CtlHmac-" . $cfg['ver'] . "-[" . $cfg['tpe'] . "]-" . $this->CMCIC_hmac( $cfg, $HMAC );

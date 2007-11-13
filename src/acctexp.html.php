@@ -897,12 +897,6 @@ function joomlaregisterForm($option, $useractivation)
 	// -->
 	</script>
 
-	<?php
-		if(isset($this->message)){
-			$this->display('message');
-		}
-	?>
-
 	<form action="<?php echo JRoute::_( 'index.php?option=com_acctexp' ); ?>" method="post" id="josForm" name="josForm" class="form-validate">
 
 	<div class="componentheading">
