@@ -299,9 +299,9 @@ define( '_CFG_OFFLINE_PAYMENT_WAITINGPLAN_NAME', 'Waiting Plan');
 define( '_CFG_OFFLINE_PAYMENT_WAITINGPLAN_DESC', 'You can assign a user to this plan while he or she waits for the payment to arrive');
 
 // Verotel
-define( '_AEC_VEROTEL_LONGNAME', 'Verotel');
-define( '_AEC_VEROTEL_STATEMENT', 'Use Verotel: Putting Trust in Global Payments');
-define( '_AEC_VEROTEL_DESCRIPTION', 'Verotel offers a range of billing methods for your website, including VISA/MasterCard/JCB, Chinese debit, Direct Debit in European countries, pay per phonecall, pay per minute, SMS billing and more!');
+define( '_CFG_VEROTEL_LONGNAME', 'Verotel');
+define( '_CFG_VEROTEL_STATEMENT', 'Use Verotel: Putting Trust in Global Payments');
+define( '_CFG_VEROTEL_DESCRIPTION', 'Verotel offers a range of billing methods for your website, including VISA/MasterCard/JCB, Chinese debit, Direct Debit in European countries, pay per phonecall, pay per minute, SMS billing and more!');
 define( '_CFG_VEROTEL_MERCHANTID_NAME', 'Merchant ID');
 define( '_CFG_VEROTEL_MERCHANTID_DESC', 'Your merchant identifier at Verotel.');
 define( '_CFG_VEROTEL_SITEID_NAME', 'Site ID');

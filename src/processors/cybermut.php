@@ -59,7 +59,8 @@ class processor_cybermut extends POSTprocessor
 		$settings['testmode']	= 0;
 		$settings['tpe']		= '7654321';
 		$settings['ver']		= '1.2open';
-		$settings['soc']		= 'doNot';
+		$settings['soc']		= 'societe';
+		$settings['pass']		= 'passphrase';
 		$settings['key']		= '000102030405060708090A0B0C0D0E0F10111213';
 		$settings['currency']	= 'EUR';
 		$settings['language']	= 'FR';
@@ -125,16 +126,13 @@ class processor_cybermut extends POSTprocessor
 		/*$var['retourPLUS']		= $int_var['return_url'];
 		$var['societe']			= $cfg['key'];*/
 
-		$search		= array(':','/','?');
-		$replace	= array('&#x3a;','&#x2f;','&#x3f;');
+		$var['url_retour']		= $mosConfig_live_site . '/index.php';
+		$var['url_retour_ok']	= $mosConfig_live_site . '/index.php?option=com_acctexp&task=thanks';
+		$var['url_retour_err']	= $mosConfig_live_site . '/index.php?option=com_acctexp&task=cancel';
 
 		foreach ( $var as $k => $v ) {
-			$var[$k] = str_replace( $search, $replace, str_replace( '&', '&#x3d;', $v ) );
+			$var[$k] = $this->HtmlEncode( $v );
 		}
-
-		$var['url_retour']		= AECToolbox::deadsureURL( '/index.php' );
-		$var['url_retour_ok']	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=thanks' );
-		$var['url_retour_err']	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
 
 		return $var;
 	}
@@ -173,6 +171,23 @@ class processor_cybermut extends POSTprocessor
 		$response['amount_currency'] = str_replace( $response['amount_paid'], '', $response['montant'] );
 
 		return $response;
+	}
+
+	function HtmlEncode( $data )
+	{
+		$SAFE_OUT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890._-";
+		$encoded_data = "";
+		$result = "";
+		for ($i=0; $i<strlen($data); $i++) {
+			if (strchr($SAFE_OUT_CHARS, $data{$i})) {
+				$result .= $data{$i};
+			} else if (($var = bin2hex(substr($data,$i,1))) <= "7F") {
+				$result .= "&#x" . $var . ";";
+			} else {
+				$result .= $data{$i};
+			}
+		}
+		return $result;
 	}
 
 	function CMCIC_hmac( $cfg, $data="")
