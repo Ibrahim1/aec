@@ -87,7 +87,7 @@
 		<filename>processors/worldpay.php</filename>
 		<filename>processors/worldpay_futurepay.php</filename>
 		<filename>processors/cybermut/index.html</filename>
-		<filename>processors/cybermut/cybermut.php</filename>
+		<filename>processors/cybermut/cybermutnotification.php</filename>
 		<filename>processors/com_acctexp_language_processors/index.html</filename>
 		<filename>processors/com_acctexp_language_processors/english.php</filename>
 		<filename>processors/com_acctexp_language_processors/french.php</filename>
