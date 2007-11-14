@@ -1717,6 +1717,7 @@ class HTML_AcctExp
 									?>
 									<div class="userinfobox clear">
 										<h2 style="clear:both;"><?php echo $processor['name']; ?></h2>
+										<p><a href="<?php echo $mosConfig_live_site; ?>/index.php?option=com_acctexp&amp;task=subscribe&amp;usage=<?php echo $row->id; ?>&amp;processor=<?php echo $processor['handle']; ?>" title="<?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?></a></p>
 										<?php
 										$k = 0;
 										foreach ( $processor['params'] as $customparam ) {

@@ -2441,6 +2441,7 @@ function editSubscriptionPlan( $id, $option )
 				$pp->getInfo();
 
 				$customparamsarray[$pp->id] = array();
+				$customparamsarray[$pp->id]['handle'] = $ppobj->name;
 				$customparamsarray[$pp->id]['name'] = $pp->info['longname'];
 				$customparamsarray[$pp->id]['params'] = array();
 
