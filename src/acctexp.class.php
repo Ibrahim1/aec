@@ -78,8 +78,8 @@ class metaUser
 		$this->cmsUser->load( $userid );
 
 		$aecexpid = AECfetchfromDB::ExpirationIDfromUserID( $userid );
-		$this->objExpiration = new AcctExp( $database );
 		if ( $aecexpid ) {
+			$this->objExpiration = new AcctExp( $database );
 			$this->objExpiration->load( $aecexpid );
 			$this->hasExpiration = 1;
 		} else {
@@ -87,14 +87,20 @@ class metaUser
 		}
 
 		$aecid = AECfetchfromDB::SubscriptionIDfromUserID( $userid );
-		$this->objSubscription = new Subscription( $database );
 		if ( $aecid ) {
+			$this->objSubscription = new Subscription( $database );
 			$this->objSubscription->load( $aecid );
 			$this->hasSubscription = 1;
 		} else {
 			$this->hasSubscription = 0;
 		}
 
+	}
+
+	function procTriggerCreate( $user, $planid, $invoiceid )
+	{
+		// Create a new cmsUser from user details - only allowing basic details so far
+		//
 	}
 
 	function instantGIDchange( $gid )
