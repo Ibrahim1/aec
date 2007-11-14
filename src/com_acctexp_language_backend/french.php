@@ -1070,7 +1070,7 @@ define( '_REWRITE_KEY_INVOICE_COUPONS', 'List of Coupons');
 
 // --== COUPONS OVERVIEW ==--
 define( '_COUPON_TITLE', 'Coupons');
-define( '_COUPON_TITLE', 'Static Coupons');
+define( '_COUPON_TITLE_STATIC', 'Static Coupons');
 define( '_COUPON_NAME', 'Name');
 define( '_COUPON_DESC', 'Description (first 50 chars)');
 define( '_COUPON_ACTIVE', 'Published');
