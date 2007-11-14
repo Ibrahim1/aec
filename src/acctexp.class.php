@@ -84,6 +84,7 @@ class metaUser
 			$this->hasExpiration = 1;
 		} else {
 			$this->hasExpiration = 0;
+			$this->objExpiration = null;
 		}
 
 		$aecid = AECfetchfromDB::SubscriptionIDfromUserID( $userid );
@@ -93,6 +94,7 @@ class metaUser
 			$this->hasSubscription = 1;
 		} else {
 			$this->hasSubscription = 0;
+			$this->objSubscription = null;
 		}
 
 	}
@@ -1377,7 +1379,7 @@ class PaymentProcessor
 	{
 		$this->getSettings();
 
-		$planparams = $plan->getProcessorParameters( $pp->id );
+		$planparams = $plan->getProcessorParameters( $this->id );
 
 		if ( isset( $planparams['aec_overwrite_settings'] ) ) {
 			if ( $planparams['aec_overwrite_settings'] ) {
@@ -3877,7 +3879,11 @@ class Invoice extends paramDBTable
 						$pp->fullInit();
 						$pp->exchangeSettings( $plan );
 
-						$recurring		= $pp->info['recurring'];
+						if ( isset( $pp->info['recurring'] ) ) {
+							$recurring = $pp->info['recurring'];
+						} else {
+							$recurring = 0;
+						}
 
 						if ( empty( $this->currency ) ) {
 							$this->currency = isset( $pp->settings['currency'] ) ? $pp->settings['currency'] : '';
@@ -4230,9 +4236,13 @@ class Invoice extends paramDBTable
 		$pp->getInfo();
 
 		$int_var['planparams'] = $new_subscription->getProcessorParameters( $pp->id );
-		$int_var['recurring'] = $pp->info['recurring'];
+		if ( isset( $pp->info['recurring'] ) ) {
+			$int_var['recurring'] = $pp->info['recurring'];
+		} else {
+			$int_var['recurring'] = 0;
+		}
 
-		$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], $metaUser->objsubscription );
+		$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], $metaUser->objSubscription );
 
 		if ( !empty( $this->coupons ) ) {
 			$coupons = explode( ';', $this->coupons);
@@ -4279,9 +4289,13 @@ class Invoice extends paramDBTable
 		$pp->getInfo();
 
 		$int_var['planparams'] = $new_subscription->getProcessorParameters( $pp->id );
-		$int_var['recurring'] = $pp->info['recurring'];
+		if ( isset( $pp->info['recurring'] ) ) {
+			$int_var['recurring'] = $pp->info['recurring'];
+		} else {
+			$int_var['recurring'] = 0;
+		}
 
-		$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], $metaUser->objsubscription );
+		$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], $metaUser->objSubscription );
 
 		if ( !empty( $this->coupons ) ) {
 			$coupons = explode( ';', $this->coupons);
