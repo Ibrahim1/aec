@@ -465,19 +465,8 @@ function com_install()
 	$eucaInstalldb->addColifNotExists( 'on_userchange', "int(4) default '0'",  'microintegrations' );
 	$eucaInstalldb->addColifNotExists( 'created_date', "datetime NULL default '0000-00-00 00:00:00'",  'invoices' );
 
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_invoices LIKE 'planid'");
-	$database->loadObject($result);
-	if (strcmp($result->Field, 'planid') === 0) {
-		$result = null;
-		$database->setQuery("SHOW COLUMNS FROM #__acctexp_invoices LIKE 'usage'");
-		$database->loadObject($result);
-		if ( strcmp($result->Field, 'usage') === 0 ) {
-			$database->setQuery("ALTER TABLE #__acctexp_invoices DROP `usage`");
-			if ( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
-			}
-		}
+	if ( $eucaInstalldb->columnintable( 'planid', 'invoices' ) ) {
+		$eucaInstalldb->dropColifExists( 'usage', 'invoices' );
 
 		$database->setQuery("ALTER TABLE #__acctexp_invoices CHANGE `planid` `usage` varchar(255) NULL");
 		if ( !$database->query() ) {
@@ -487,7 +476,7 @@ function com_install()
 		$result = null;
 		$database->setQuery("SHOW COLUMNS FROM #__acctexp_invoices LIKE 'usage'");
 		$database->loadObject($result);
-		if (!(strcmp($result->Field, 'usage') === 0)) {
+		if ( !$eucaInstalldb->columnintable( 'usage', 'invoices' ) ) {
 			$database->setQuery("ALTER TABLE #__acctexp_invoices ADD `usage` varchar(255) NULL");
 			if ( !$database->query() ) {
 		    	$errors[] = array( $database->getErrorMsg(), $query );
@@ -975,6 +964,8 @@ function com_install()
 	$eventlog	= new eventLog($database);
 	$params		= array( 'userid' => $my->id );
 	$eventlog->issue( $short, $tags, $event, $params );
+
+	$errors = array_merge( $errors, $eucaInstalldb->errors );
 
 	?>
 
