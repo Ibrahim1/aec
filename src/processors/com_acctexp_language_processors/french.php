@@ -290,9 +290,9 @@ define( '_CFG_MONEYPROXY_PAYMENT_ID_NAME', 'Payment ID');
 define( '_CFG_MONEYPROXY_PAYMENT_ID_DESC', 'The merchant can use this field to track the payment when the status URL is called. It can be up to 10 digits with only letters and numbers (0-9a-zA-Z). You can use Rewrite tags here.');
 
 // Offline Payment
-define( '_AEC_OFFLINE_PAYMENT_LONGNAME', 'Offline Payment');
-define( '_AEC_OFFLINE_PAYMENT_STATEMENT', 'You can use this option to not pay through the Internet');
-define( '_AEC_OFFLINE_PAYMENT_DESCRIPTION', 'You can use this option to not pay through the Internet');
+define( '_CFG_OFFLINE_PAYMENT_LONGNAME', 'Offline Payment');
+define( '_CFG_OFFLINE_PAYMENT_STATEMENT', 'You can use this option to not pay through the Internet');
+define( '_CFG_OFFLINE_PAYMENT_DESCRIPTION', 'You can use this option to not pay through the Internet');
 define( '_CFG_OFFLINE_PAYMENT_INFO_NAME', 'Info');
 define( '_CFG_OFFLINE_PAYMENT_INFO_DESC', 'The Info that will be displayed to the user on checkout');
 define( '_CFG_OFFLINE_PAYMENT_WAITINGPLAN_NAME', 'Waiting Plan');
