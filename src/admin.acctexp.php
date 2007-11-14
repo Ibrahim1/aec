@@ -3978,7 +3978,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 					. $aec_global_call
 					. $aec_condition_start
 					. $aec_include_class
-					. sprintf( $aec_verification_check, '$row->username' )
+					. sprintf( $aec_verification_check, ( $v15 ? '$credentials[\'username\']' : '$row->username' ) )
 					. $aec_condition_end
 					. $aec_hack_end;
 
