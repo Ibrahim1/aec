@@ -198,7 +198,7 @@ class processor_cybermut extends POSTprocessor
 		$l2 = strlen( $k2 );
 
 		if ( $l1 > $l2 ) {
-			$k2 = str_pad( $k2, $l1, chr(0x00) );
+			//$k2 = str_pad( $k2, $l1, chr(0x00) );
 		} elseif ( $l2 > $l1 ) {
 			$k1 = str_pad( $k1, $l2, chr(0x00) );
 		}
@@ -209,7 +209,8 @@ class processor_cybermut extends POSTprocessor
 			$d = $data;
 		}
 
-		return strtolower( $this->hmac( $k1 ^ $k2, $d ) );
+		return strtolower( $this->hmac( $k2, $d ) );
+		// return strtolower( $this->hmac( $k1 ^ $k2, $d ) );
 	}
 
 	function hmac( $key, $data )
