@@ -102,7 +102,9 @@ class metaUser
 	function procTriggerCreate( $user, $planid, $invoiceid )
 	{
 		// Create a new cmsUser from user details - only allowing basic details so far
-		//
+		// Create a new invoice with $invoiceid as secondary ident
+		// Email out details?
+		// return userid, real invoiceid
 	}
 
 	function instantGIDchange( $gid )
@@ -619,6 +621,11 @@ class Config_General extends paramDBTable
 			$database->query();
 		}
 	}
+}
+
+if ( !is_object( $aecConfig ) ) {
+	global $database;
+	$aecConfig = new Config_General( $database );
 }
 
 class aecHeartbeat extends mosDBTable
@@ -5330,10 +5337,6 @@ class AECToolbox
 	function VerifyUsername( $username )
 	{
 		global $database, $aecConfig;
-
-		if ( !is_object( $aecConfig ) ) {
-			$aecConfig = new Config_General( $database );
-		}
 
 		$heartbeat = new aecHeartbeat( $database );
 		$heartbeat->frontendping();

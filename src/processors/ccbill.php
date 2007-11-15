@@ -199,9 +199,9 @@ class processor_ccbill extends POSTprocessor
 
 	function validateNotification( $response, $post, $cfg, $invoice )
 	{
-		$username			= $post['username'];
+		$username = $post['username'];
 
-		$validate			= md5( $cfg['secretWord'] . $username );
+		$validate = md5( $cfg['secretWord'] . $username );
 
 		if ( isset( $response['pending_reason'] ) ){
 			$response['valid'] = 0;
