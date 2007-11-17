@@ -237,6 +237,33 @@ class eucaInstallDB
 		}
 	}
 
+	function dropTableifExists( $table, $prefix=true )
+	{
+		global $database;
+
+		if ( !empty( $table ) ) {
+			if ( $prefix ) {
+				$this->table = _EUCA_APP_SHORTNAME . '_' . $table;
+			} else {
+				$this->table = $table;
+			}
+		}
+
+		$query = 'DROP TABLE IF EXISTS #__' . $this->table
+		;
+
+		$database->setQuery( $query );
+
+		$result = $database->query();
+
+		if ( !$result ) {
+	    	$this->errors[] = array( $database->getErrorMsg(), $query );
+	    	return false;
+		} else {
+			return true;
+		}
+	}
+
 	function dropColumn( $options )
 	{
 		global $database;

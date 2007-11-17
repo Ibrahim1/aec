@@ -64,14 +64,6 @@ function com_install()
 	$database->setQuery( $query );
 	$database->query();
 
-	$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp` ('
-	. '`id` int(11) NOT NULL auto_increment,'
-	. '`userid` int(11) NOT NULL default \'0\','
-	. '`expiration` datetime NOT NULL default \'0000-00-00 00:00:00\','
-	. ' PRIMARY KEY (`id`)'
-	. ') TYPE=MyISAM AUTO_INCREMENT=1;'
-	;
-
 	$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_config` ('
 	. '`id` int(11) NOT NULL AUTO_INCREMENT,'
 	. '`settings` text NULL,'
@@ -208,6 +200,7 @@ function com_install()
 	. '`used_plans` varchar(255) NULL,'
 	. '`recurring` int(1) NOT NULL default \'0\','
 	. '`lifetime` int(1) NOT NULL default \'0\','
+	. '`expiration` datetime NULL default \'0000-00-00 00:00:00\','
 	. '`params` text NULL,'
 	. '`customparams` text NULL,'
 	. ' PRIMARY KEY (`id`)'
@@ -859,28 +852,57 @@ function com_install()
 
 	$eucaInstalldb->dropColifExists( 'maxgid', 'plans' );
 
-	$eucaInstalldb->addColifNotExists( 'custom_params', "text NULL",  'plans' );
-	$eucaInstalldb->addColifNotExists( 'system', "int(4) NOT NULL default '0'",  'microintegrations' );
-	$eucaInstalldb->addColifNotExists( 'params', "text NULL",  'subscr' );
-	$eucaInstalldb->addColifNotExists( 'customparams', "text NULL",  'subscr' );
-	$eucaInstalldb->addColifNotExists( 'pre_exp_check', "int(4) NULL",  'microintegrations' );
+	$eucaInstalldb->addColifNotExists( 'custom_params', "text NULL", 'plans' );
+	$eucaInstalldb->addColifNotExists( 'system', "int(4) NOT NULL default '0'", 'microintegrations' );
+	$eucaInstalldb->addColifNotExists( 'params', "text NULL", 'subscr' );
+	$eucaInstalldb->addColifNotExists( 'customparams', "text NULL", 'subscr' );
+	$eucaInstalldb->addColifNotExists( 'pre_exp_check', "int(4) NULL", 'microintegrations' );
 
-	$result = null;
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp LIKE 'expiration'");
-	if ( $database->loadObject( $result ) ) {
-		if ( (strcmp($result->Field, 'expiration') === 0) && (strcmp($result->Type, 'date') === 0) ) {
-			// Give extra space for plan description
-			$database->setQuery("ALTER TABLE #__acctexp CHANGE `expiration` `expiration` datetime NOT NULL default '0000-00-00 00:00:00'");
-			if ( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
+	if ( in_array( $mosConfig_dbprefix . "acctexp", $tables ) ) {
+		$result = null;
+		$database->setQuery("SHOW COLUMNS FROM #__acctexp LIKE 'expiration'");
+		if ( $database->loadObject( $result ) ) {
+			if ( (strcmp($result->Field, 'expiration') === 0) && (strcmp($result->Type, 'date') === 0) ) {
+				// Give extra space for plan description
+				$database->setQuery("ALTER TABLE #__acctexp CHANGE `expiration` `expiration` datetime NOT NULL default '0000-00-00 00:00:00'");
+				if ( !$database->query() ) {
+			    	$errors[] = array( $database->getErrorMsg(), $query );
+				}
 			}
 		}
 	}
 
-	$eucaInstalldb->addColifNotExists( 'counter', "int(11) NOT NULL default '0'",  'invoices' );
-	$eucaInstalldb->addColifNotExists( 'transactions', "text NULL",  'invoices' );
+	$eucaInstalldb->addColifNotExists( 'counter', "int(11) NOT NULL default '0'", 'invoices' );
+	$eucaInstalldb->addColifNotExists( 'transactions', "text NULL", 'invoices' );
 
-	$eucaInstalldb->addColifNotExists( 'secondary_ident', "varchar(64) NULL",  'invoices' );
+	$eucaInstalldb->addColifNotExists( 'secondary_ident', "varchar(64) NULL", 'invoices' );
+
+	// This updates from the old one-plan-per-subscription plus expiration table
+	// to the new multi-plans-per-user architecture
+	if ( in_array( $mosConfig_dbprefix . "acctexp", $tables ) ) {
+		// create new primary and expiration fields
+		$eucaInstalldb->addColifNotExists( 'primary', "int(4) NOT NULL default '0'", 'subscr' );
+		$eucaInstalldb->addColifNotExists( 'expiration', "datetime NULL default '0000-00-00 00:00:00'", 'subscr' );
+
+		// All Subscriptions are primary
+		$query = 'UPDATE #__acctexp_subscr'
+		. ' SET `primary` = \'1\''
+		;
+		$database->setQuery( $query );
+		$database->query();
+
+		// copy expiration date
+		$query = 'UPDATE #__acctexp_subscr as a'
+		. ' INNER JOIN #__acctexp as b ON a.userid = b.userid'
+		. ' SET a.expiration = b.expiration'
+		;
+		$database->setQuery( $query );
+		$database->query();
+
+		// delete old expiration table
+		$eucaInstalldb->dropTableifExists( 'acctexp', false );
+	}
+
 
 	// Rewrite old entries for hardcoded "transfer" processor to new API conform "offline_payment" processor
 	$query = 'UPDATE #__acctexp_invoices'

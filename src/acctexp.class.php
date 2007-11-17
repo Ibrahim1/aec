@@ -60,11 +60,7 @@ class metaUser
 	/** @var object */
 	var $cmsUser			= null;
 	/** @var object */
-	var $objExpiration		= null;
-	/** @var object */
 	var $objSubscription	= null;
-	/** @var int */
-	var $hasExpiration		= null;
 	/** @var int */
 	var $hasSubscription	= null;
 
@@ -76,16 +72,6 @@ class metaUser
 
 		$this->cmsUser = new mosUser( $database );
 		$this->cmsUser->load( $userid );
-
-		$aecexpid = AECfetchfromDB::ExpirationIDfromUserID( $userid );
-		if ( $aecexpid ) {
-			$this->objExpiration = new AcctExp( $database );
-			$this->objExpiration->load( $aecexpid );
-			$this->hasExpiration = 1;
-		} else {
-			$this->hasExpiration = 0;
-			$this->objExpiration = null;
-		}
 
 		$aecid = AECfetchfromDB::SubscriptionIDfromUserID( $userid );
 		if ( $aecid ) {
@@ -391,96 +377,6 @@ class metaUser
 			return false;
 		}
 	}
-}
-
-/**
- * acctexp table class
- */
-
-class AcctExp extends mosDBTable
-{
-	/** @var int Primary key */
-	var $id=null;
-	/** @var int */
-	var $userid=null;
-	/** @var time */
-	var $expiration=null;
-
-	/**
-	 * @param database A database connector object
-	 */
-	function AcctExp( &$db )
-	{
-	 	$this->mosDBTable( '#__acctexp', 'id', $db );
-	}
-
-	function loadUserid( $userid )
-	{
-		global $database;
-
-		$query = 'SELECT id'
-		. ' FROM #__acctexp'
-		. ' WHERE userid = \'' . (int) $userid . '\''
-		;
-		$database->setQuery( $query );
-
-		$id = $database->loadResult();
-
-		$this->load( $id ? $id : 0 );
-	}
-
-	function is_expired( $offset=false )
-	{
-		global $database, $mosConfig_offset_user, $aecConfig;
-
-		if ( !($this->expiration === '9999-12-31 00:00:00') ) {
-			$expiration_cushion = str_pad( $aecConfig->cfg['expiration_cushion'], 2, '0', STR_PAD_LEFT );
-
-			if ( $offset ) {
-				$expstamp = strtotime( ( '-' . $offset . ' days' ), strtotime( $this->expiration ) );
-			} else {
-				$expstamp = strtotime( ( '+' . $expiration_cushion . ' hours' ), strtotime( $this->expiration ) );
-			}
-
-			if ( ( $expstamp > 0 ) && ( ( $expstamp - ( time() + $mosConfig_offset_user*3600 ) ) < 0 ) ) {
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
-	}
-
-	function manualVerify()
-	{
-		if ( $this->is_expired() ) {
-			mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=expired&userid=' . (int) $this->userid ) );
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	function setExpiration( $unit, $value, $extend )
-	{
-		global $mainframe, $mosConfig_offset_user;
-
-		$now = time() + $mosConfig_offset_user*3600;
-
-		if ( $extend ) {
-			$current = strtotime( $this->expiration );
-
-			if ( $current < $now ) {
-				$current = $now;
-			}
-		} else {
-			$current = $now;
-		}
-
-		$this->expiration = AECToolbox::computeExpiration( $value, $unit, $current );
-	}
-
 }
 
 class Config_General extends paramDBTable
@@ -836,7 +732,7 @@ class aecHeartbeat extends mosDBTable
 
 								if ( $mi->callIntegration() ) {
 									// Do the actual pre expiration check on this MI
-									if ( $metaUser->objExpiration->is_expired( $mi->pre_exp_check ) ) {
+									if ( $metaUser->objSubscription->is_expired( $mi->pre_exp_check ) ) {
 										$result = $mi->pre_expiration_action( $userid, $subscription_plan );
 										if ( $result ) {
 											$exp_actions++;
@@ -4451,6 +4347,8 @@ class Subscription extends paramDBTable
 	var $id					= null;
 	/** @var int */
 	var $userid				= null;
+	/** @var int */
+	var $primary			= null;
 	/** @var string */
 	var $type				= null;
 	/** @var string */
@@ -4475,6 +4373,8 @@ class Subscription extends paramDBTable
 	var $recurring			= null;
 	/** @var int */
 	var $lifetime			= null;
+	/** @var datetime */
+	var $expiration			= null;
 	/** @var text */
 	var $params 			= null;
 	/** @var text */
@@ -4505,6 +4405,16 @@ class Subscription extends paramDBTable
 
 		$this->load($database->loadResult());
 	}
+	function manualVerify()
+	{
+		if ( $this->is_expired() ) {
+			mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=expired&userid=' . (int) $this->userid ) );
+			return false;
+		} else {
+			return true;
+		}
+	}
+
 
 	function createNew( $userid, $processor, $pending )
 	{
@@ -4518,6 +4428,50 @@ class Subscription extends paramDBTable
 		$this->check();
 		$this->store();
 	}
+
+
+	function is_expired( $offset=false )
+	{
+		global $database, $mosConfig_offset_user, $aecConfig;
+
+		if ( !($this->expiration === '9999-12-31 00:00:00') ) {
+			$expiration_cushion = str_pad( $aecConfig->cfg['expiration_cushion'], 2, '0', STR_PAD_LEFT );
+
+			if ( $offset ) {
+				$expstamp = strtotime( ( '-' . $offset . ' days' ), strtotime( $this->expiration ) );
+			} else {
+				$expstamp = strtotime( ( '+' . $expiration_cushion . ' hours' ), strtotime( $this->expiration ) );
+			}
+
+			if ( ( $expstamp > 0 ) && ( ( $expstamp - ( time() + $mosConfig_offset_user*3600 ) ) < 0 ) ) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
+	function setExpiration( $unit, $value, $extend )
+	{
+		global $mainframe, $mosConfig_offset_user;
+
+		$now = time() + $mosConfig_offset_user*3600;
+
+		if ( $extend ) {
+			$current = strtotime( $this->expiration );
+
+			if ( $current < $now ) {
+				$current = $now;
+			}
+		} else {
+			$current = $now;
+		}
+
+		$this->expiration = AECToolbox::computeExpiration( $value, $unit, $current );
+	}
+
 
 	/**
 	* Get alert level for a subscription
@@ -4539,10 +4493,7 @@ class Subscription extends paramDBTable
 			$alert['level']		= -1;
 			$alert['daysleft']	= 0;
 
-			$objexpiration = new AcctExp( $database );
-			$objexpiration->load( $aecexpid );
-
-			$expstamp = strtotime( $objexpiration->expiration );
+			$expstamp = strtotime( $this->expiration );
 
 			// Get how many days left to expire (3600 sec = 1 hour)
 			$alert['daysleft']	= round( ( $expstamp - ( time() + $mosConfig_offset_user*3600 ) ) / ( 3600 * 24 ) );
@@ -5353,22 +5304,18 @@ class AECToolbox
 		if ( $metaUser->hasSubscription ) {
 			$metaUser->objSubscription->verifyLogin( $metaUser->cmsUser->block );
 		} else {
-			if ( $metaUser->hasExpiration ) {
-				$metaUser->objExpiration->manualVerify();
-			} else {
-				if ( $aecConfig->cfg['require_subscription'] ) {
-					if ( $aecConfig->cfg['entry_plan'] ) {
-						$user_subscription = new Subscription( $database );
-						$user_subscription->load(0);
-						$user_subscription->createNew( $id, 'Free', 1 );
+			if ( $aecConfig->cfg['require_subscription'] ) {
+				if ( $aecConfig->cfg['entry_plan'] ) {
+					$user_subscription = new Subscription( $database );
+					$user_subscription->load(0);
+					$user_subscription->createNew( $id, 'Free', 1 );
 
-						$metaUser = new metaUser( $id );
-						$metaUser->objSubscription->applyUsage( $aecConfig->cfg['entry_plan'], 'none', 1 );
-						AECToolbox::VerifyUsername( $username );
-					} else {
-						mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=subscribe&Itemid=' . $id ) );
-						return null;
-					}
+					$metaUser = new metaUser( $id );
+					$metaUser->objSubscription->applyUsage( $aecConfig->cfg['entry_plan'], 'none', 1 );
+					AECToolbox::VerifyUsername( $username );
+				} else {
+					mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=subscribe&Itemid=' . $id ) );
+					return null;
 				}
 			}
 		}
