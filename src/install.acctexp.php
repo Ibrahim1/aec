@@ -899,6 +899,19 @@ function com_install()
 		$database->setQuery( $query );
 		$database->query();
 
+		// Get plans
+		$query = 'SELECT id'
+		. ' FROM #__acctexp_plans'
+		;
+		$database->setQuery( $query );
+
+		// Assign new make_primary flag to all old plans
+		foreach ( $database->loadResultArray() as $planid ) {
+			$subscription_plan = new SubscriptionPlan( $database );
+
+			$subscription_plan->addParams( array( 'make_primary' => 1 ) );
+		}
+
 		// delete old expiration table
 		$eucaInstalldb->dropTableifExists( 'acctexp', false );
 	}

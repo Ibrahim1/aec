@@ -68,21 +68,25 @@ class metaUser
 	{
 		global $database;
 
-		$this->userid = $userid;
+		$this->cmsUser = false;
+		$this->userid = 0;
 
-		$this->cmsUser = new mosUser( $database );
-		$this->cmsUser->load( $userid );
+		$this->hasSubscription = 0;
+		$this->objSubscription = null;
 
-		$aecid = AECfetchfromDB::SubscriptionIDfromUserID( $userid );
-		if ( $aecid ) {
-			$this->objSubscription = new Subscription( $database );
-			$this->objSubscription->load( $aecid );
-			$this->hasSubscription = 1;
-		} else {
-			$this->hasSubscription = 0;
-			$this->objSubscription = null;
+		if ( $userid ) {
+			$this->userid = $userid;
+
+			$this->cmsUser = new mosUser( $database );
+			$this->cmsUser->load( $userid );
+
+			$aecid = AECfetchfromDB::SubscriptionIDfromUserID( $userid );
+			if ( $aecid ) {
+				$this->objSubscription = new Subscription( $database );
+				$this->objSubscription->load( $aecid );
+				$this->hasSubscription = 1;
+			}
 		}
-
 	}
 
 	function procTriggerCreate( $user, $planid, $invoiceid )
@@ -211,36 +215,52 @@ class metaUser
 					switch ( $name ) {
 						// Check for set userid
 						case 'userid':
-							if ( $this->cmsUser->id === $value ) {
-								$status = true;
+							if ( is_object( $this->cmsUser ) ) {
+								if ( $this->cmsUser->id === $value ) {
+									$status = true;
+								} else {
+									$status = false;
+								}
 							} else {
 								$status = false;
 							}
 							break;
 						// Check for a certain GID
 						case 'fixgid':
-							if ( (int) $value === (int) $this->cmsUser->gid ) {
-								$status = true;
+							if ( is_object( $this->cmsUser ) ) {
+								if ( (int) $value === (int) $this->cmsUser->gid ) {
+									$status = true;
+								} else {
+									$status = false;
+								}
 							} else {
 								$status = false;
 							}
 							break;
 						// Check for Minimum GID
 						case 'mingid':
-							$groups = GeneralInfoRequester::getLowerACLGroup( (int) $this->cmsUser->gid );
-							if ( in_array( (int) $value, (array) $groups ) ) {
-								$status = true;
+							if ( is_object( $this->cmsUser ) ) {
+								$groups = GeneralInfoRequester::getLowerACLGroup( (int) $this->cmsUser->gid );
+								if ( in_array( (int) $value, (array) $groups ) ) {
+									$status = true;
+								} else {
+									$status = false;
+								}
 							} else {
 								$status = false;
 							}
 							break;
 						// Check for Maximum GID
 						case 'maxgid':
-							$groups = GeneralInfoRequester::getLowerACLGroup( $value );
-							if ( in_array( (int) $this->cmsUser->gid, (array) $groups) ) {
-								$status = true;
+							if ( is_object( $this->cmsUser ) ) {
+								$groups = GeneralInfoRequester::getLowerACLGroup( $value );
+								if ( in_array( (int) $this->cmsUser->gid, (array) $groups) ) {
+									$status = true;
+								} else {
+									$status = false;
+								}
 							} else {
-								$status = false;
+								$status = true;
 							}
 							break;
 						// Check whether the user is currently in the right plan
@@ -2089,110 +2109,107 @@ class SubscriptionPlan extends paramDBTable
 	{
 		global $database, $mainframe, $mosConfig_offset_user, $aecConfig;
 
-		$metaUser = new metaUser($userid);
-
-		$comparison		= $this->doPlanComparison( $metaUser->objSubscription );
-		$renew			= $comparison['renew'];
-
-		$is_pending		= ( strcmp($metaUser->objSubscription->status, 'Pending' ) === 0 );
-		$is_trial		= ( strcmp($metaUser->objSubscription->status, 'Trial' ) === 0 );
-		$lifetime		= $metaUser->objSubscription->lifetime;
-
-		$params			= $this->getParams();
-
-		if ( !$comparison['comparison'] ) {
-			$metaUser->objSubscription->expire(1);
+		if ( $multiplicator < 1 ) {
+			$multiplicator = 1;
 		}
 
-		if ( ( $comparison['total_comparison'] === false ) || $is_pending ) {
-			// If user is using global trial period he still can use the trial period of a plan
-			if ( ( $params['trial_period'] > 0 ) && !$is_trial ) {
-				$value		= $params['trial_period'];
-				$perunit	= $params['trial_periodunit'];
-				$params['lifetime']	= 0; // We are entering the trial period. The lifetime will come at the renew.
-			} else {
+		if ( $userid ) {
+			$metaUser = new metaUser( $userid );
+
+			$comparison		= $this->doPlanComparison( $metaUser->objSubscription );
+			$renew			= $comparison['renew'];
+
+			$is_pending		= ( strcmp($metaUser->objSubscription->status, 'Pending' ) === 0 );
+			$is_trial		= ( strcmp($metaUser->objSubscription->status, 'Trial' ) === 0 );
+			$lifetime		= $metaUser->objSubscription->lifetime;
+
+			$params			= $this->getParams();
+
+			if ( !$comparison['comparison'] ) {
+				$metaUser->objSubscription->expire(1);
+			}
+
+			if ( ( $comparison['total_comparison'] === false ) || $is_pending ) {
+				// If user is using global trial period he still can use the trial period of a plan
+				if ( ( $params['trial_period'] > 0 ) && !$is_trial ) {
+					$value		= $params['trial_period'];
+					$perunit	= $params['trial_periodunit'];
+					$params['lifetime']	= 0; // We are entering the trial period. The lifetime will come at the renew.
+				} else {
+					$value		= $params['full_period'];
+					$perunit	= $params['full_periodunit'];
+				}
+			} elseif ( !$is_pending ) {
 				$value		= $params['full_period'];
 				$perunit	= $params['full_periodunit'];
-			}
-		} elseif ( !$is_pending ) {
-			$value		= $params['full_period'];
-			$perunit	= $params['full_periodunit'];
-		} else {
-			return;
-		}
-
-		if ( !$metaUser->hasExpiration ) {
-			$metaUser->objExpiration = new AcctExp( $database );
-			$metaUser->objExpiration->load( 0 );
-			$metaUser->objExpiration->userid = $metaUser->userid;
-			$metaUser->hasExpiration = 1;
-		}
-
-		if ( $params['lifetime'] ) {
-			$metaUser->objExpiration->expiration = '9999-12-31 00:00:00';
-			$metaUser->objSubscription->lifetime = 1;
-		} else {
-			$metaUser->objSubscription->lifetime = 0;
-
-			$value *= $multiplicator;
-
-			if ( ( $comparison['comparison'] == 2 ) && !$lifetime ) {
-				$metaUser->objExpiration->setExpiration( $perunit, $value, 1 );
 			} else {
-				$metaUser->objExpiration->setExpiration( $perunit, $value, 0 );
+				return;
 			}
-		}
 
-		$metaUser->objExpiration->check();
-		$metaUser->objExpiration->store();
-
-		if ( $is_pending ) {
-			// Is new = set signup date
-			$metaUser->objSubscription->signup_date = gmstrftime( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
-			if ( $params['trial_period'] > 0 && !$is_trial ) {
-				$status = 'Trial';
+			if ( $params['lifetime'] ) {
+				$metaUser->objSubscription->expiration = '9999-12-31 00:00:00';
+				$metaUser->objSubscription->lifetime = 1;
 			} else {
-				if ( $params['full_period'] || $params['lifetime'] ) {
-					if ( !isset( $params['make_active'] ) ) {
-						$status = 'Active';
-					} else {
-						$status = ( $params['make_active'] ? 'Active' : 'Pending');
-					}
+				$metaUser->objSubscription->lifetime = 0;
+
+				$value *= $multiplicator;
+
+				if ( ( $comparison['comparison'] == 2 ) && !$lifetime ) {
+					$metaUser->objSubscription->setExpiration( $perunit, $value, 1 );
 				} else {
-					// This should not happen
-					$status = 'Pending';
+					$metaUser->objSubscription->setExpiration( $perunit, $value, 0 );
 				}
 			}
-		} else {
-			// Renew subscription - Do NOT set signup_date
-			if ( !isset( $params['make_active'] ) ) {
-				$status = 'Active';
+
+			if ( $is_pending ) {
+				// Is new = set signup date
+				$metaUser->objSubscription->signup_date = gmstrftime( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
+				if ( $params['trial_period'] > 0 && !$is_trial ) {
+					$status = 'Trial';
+				} else {
+					if ( $params['full_period'] || $params['lifetime'] ) {
+						if ( !isset( $params['make_active'] ) ) {
+							$status = 'Active';
+						} else {
+							$status = ( $params['make_active'] ? 'Active' : 'Pending');
+						}
+					} else {
+						// This should not happen
+						$status = 'Pending';
+					}
+				}
 			} else {
-				$status = ( $params['make_active'] ? 'Active' : 'Pending');
+				// Renew subscription - Do NOT set signup_date
+				if ( !isset( $params['make_active'] ) ) {
+					$status = 'Active';
+				} else {
+					$status = ( $params['make_active'] ? 'Active' : 'Pending');
+				}
+				$renew = 1;
 			}
-			$renew = 1;
-		}
 
-		$metaUser->objSubscription->status = $status;
-		$metaUser->objSubscription->setPlanID( $this->id );
+			$metaUser->objSubscription->status = $status;
+			$metaUser->objSubscription->setPlanID( $this->id );
 
-		$metaUser->objSubscription->lastpay_date	= gmstrftime( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
-		$metaUser->objSubscription->type = $processor;
+			$metaUser->objSubscription->lastpay_date	= gmstrftime( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
+			$metaUser->objSubscription->type = $processor;
 
-		$pp = new PaymentProcessor();
-		if ( $pp->loadName( strtolower( $processor ) ) ) {
-			$pp->init();
-			$pp->getInfo();
-			$metaUser->objSubscription->recurring = $pp->info['recurring'];
-		} else {
-			$metaUser->objSubscription->recurring = 0;
-		}
+			$pp = new PaymentProcessor();
+			if ( $pp->loadName( strtolower( $processor ) ) ) {
+				$pp->init();
+				$pp->getInfo();
+				$metaUser->objSubscription->recurring = $pp->info['recurring'];
+			} else {
+				$metaUser->objSubscription->recurring = 0;
+			}
 
-		$metaUser->objSubscription->check();
-		$metaUser->objSubscription->store();
+			$metaUser->objSubscription->check();
+			$metaUser->objSubscription->store();
 
-		if ( $params['gid_enabled'] ) {
-			$metaUser->instantGIDchange($params['gid']);
+			if ( $params['gid_enabled'] ) {
+				$metaUser->instantGIDchange($params['gid']);
+			}
+
 		}
 
 		$micro_integrations = $this->getMicroIntegrations();
@@ -2542,7 +2559,7 @@ class SubscriptionPlan extends paramDBTable
 		$fixed = array( 'full_free', 'full_amount', 'full_period', 'full_periodunit',
 						'trial_free', 'trial_amount', 'trial_period', 'trial_periodunit',
 						'gid_enabled', 'gid', 'lifetime', 'fallback',
-						'similarplans', 'equalplans', 'make_active' );
+						'similarplans', 'equalplans', 'make_active', 'make_primary' );
 
 		$params = array();
 		foreach ( $fixed as $varname ) {
@@ -4046,20 +4063,25 @@ class Invoice extends paramDBTable
 	{
 		global $database;
 
+		$new_plan = new SubscriptionPlan( $database );
+		$new_plan->load( $this->usage );
+
 		// Get Subscription record
 		$metaUser = new metaUser( $this->userid );
 
-		// This should not happen, but we might have an fluid subscription system in the future
-		if ( !$metaUser->hasSubscription ) {
-			$metaUser->objSubscription->load(0);
-			$metaUser->objSubscription->createNew ( $this->userid, $this->method, 0 );
+		if ( $metaUser->userid ) {
+			// To be failsafe, a new subscription may have to be added in here
+			if ( !$metaUser->hasSubscription ) {
+				$metaUser->objSubscription = new Subscription( $database );
+				$metaUser->objSubscription->load(0);
+				$metaUser->objSubscription->createNew ( $this->userid, $this->method, 0 );
+			}
+
+			// Apply the Plan
+			$renew = $metaUser->objSubscription->applyUsage( $this->usage, $this->method, 0, $multiplicator );
+		} else {
+			$new_plan->applyPlan( 0, $this->method, 0, $multiplicator );
 		}
-
-		// Apply the Plan
-		$renew = $metaUser->objSubscription->applyUsage( $this->usage, $this->method, 0, $multiplicator );
-
-		$new_plan = new SubscriptionPlan( $database );
-		$new_plan->load( $this->usage );
 
 		if ( $this->coupons ) {
 			$coupons = explode( ';', $this->coupons );
@@ -5109,29 +5131,6 @@ class AECfetchfromDB
 		return $database->loadResult();
 	}
 
-	function ExpirationIDfromUserID( $userid )
-	{
-		global $database;
-
-		$query = 'SELECT id'
-		. ' FROM #__acctexp'
-		. ' WHERE userid = \'' . (int) $userid . '\''
-		;
-		$database->setQuery( $query );
-		return $database->loadResult();
-	}
-
-	function UserIDfromExpirationID( $id )
-	{
-		global $database;
-
-		$query = 'SELECT userid'
-		. ' FROM #__acctexp'
-		. ' WHERE id = \'' . (int) $id . '\''
-		;
-		$database->setQuery( $query );
-		return $database->loadResult();
-	}
 }
 
 class AECToolbox
@@ -5329,35 +5328,19 @@ class AECToolbox
 		$query = 'SELECT status'
 		. ' FROM #__acctexp_subscr'
 		. ' WHERE userid = \'' . (int) $userid . '\''
+		. ' AND `primary` = \'1\''
 		;
 	 	$database->setQuery( $query );
 		$aecstatus = $database->loadResult();
 
 		if ( $aecstatus ) {
-			if ( strcmp( $aecstatus, 'Active' ) === 0 ) {
+			if ( ( strcmp( $aecstatus, 'Active' ) === 0 ) || ( strcmp( $aecstatus, 'Trial' ) === 0 ) ) {
 				return true;
 			} else {
 				return false;
 			}
 		} else {
-			$query = 'SELECT id'
-			. ' FROM #__acctexp'
-			. ' WHERE userid = \'' . (int) $userid . '\''
-			;
-			$database->setQuery( $query );
-			$aecexpid = $database->loadResult();
-
-			if ( $aecexpid ) {
-				$aecuser = new AcctExp( $database );
-				$aecuser->load( $aecexpid );
-				if ( $aecuser->is_expired() ) {
-					return false;
-				} else {
-					return true;
-				}
-			} else {
-				return null;
-			}
+			return null;
 		}
 	}
 

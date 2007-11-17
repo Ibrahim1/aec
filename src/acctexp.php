@@ -235,7 +235,7 @@ function expired( $option, $userid, $expiration )
 	if ( $userid > 0 ) {
 		$metaUser = new metaUser( $userid );
 
-		$expired = strtotime( $metaUser->objExpiration->expiration );
+		$expired = strtotime( $metaUser->objSubscription->expiration );
 
 		if ( $metaUser->hasSubscription ) {
 			$trial = (strcmp($metaUser->objSubscription->status, 'Trial' ) === 0 );

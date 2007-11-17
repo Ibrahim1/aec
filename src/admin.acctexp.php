@@ -1055,21 +1055,16 @@ function saveUser( $option, $apply=0 )
 
 	$ck_lifetime = mosGetParam( $_POST, 'ck_lifetime', 'off' );
 
-	if ( !$metaUser->hasExpiration ) {
-		$metaUser->objExpiration->load(0);
-		$metaUser->objExpiration->userid = $_POST['userid'];
-	}
-
 	if ( strcmp( $ck_lifetime, 'on' ) == 0 ) {
-		$metaUser->objExpiration->expiration	= '9999-12-31 00:00:00';
+		$metaUser->objSubscription->expiration	= '9999-12-31 00:00:00';
 		$metaUser->objSubscription->status		= 'Active';
 		$metaUser->objSubscription->lifetime	= 1;
 	} elseif ( !empty( $_POST['expiration'] ) ) {
-		if ( $_POST['expiration'] != $metaUser->objExpiration->expiration ) {
+		if ( $_POST['expiration'] != $metaUser->objSubscription->expiration ) {
 			if ( strpos( $_POST, ':' ) === false ) {
-				$metaUser->objExpiration->expiration = $_POST['expiration'] . ' 00:00:00';
+				$metaUser->objSubscription->expiration = $_POST['expiration'] . ' 00:00:00';
 			} else {
-				$metaUser->objExpiration->expiration = $_POST['expiration'];
+				$metaUser->objSubscription->expiration = $_POST['expiration'];
 			}
 			$metaUser->objSubscription->status = 'Active';
 			$metaUser->objSubscription->lifetime = 0;
@@ -1088,15 +1083,6 @@ function saveUser( $option, $apply=0 )
 		} elseif ( strcmp( $set_status, 'include' ) === 0 ) {
 			$metaUser->objSubscription->setStatus( 'Active' );
 		}
-	}
-
-	if ( !$metaUser->objExpiration->check() ) {
-		echo "<script> alert('".$metaUser->objExpiration->getError()."'); window.history.go(-1); </script>\n";
-		exit();
-	}
-	if ( !$metaUser->objExpiration->store() ) {
-		echo "<script> alert('".$metaUser->objExpiration->getError()."'); window.history.go(-1); </script>\n";
-		exit();
 	}
 
 	if ( !$metaUser->objSubscription->check() ) {
@@ -2345,6 +2331,7 @@ function editSubscriptionPlan( $id, $option )
 	$params['processors']				= array( 'list', '' );
 	$params['fallback']					= array( 'list', '' );
 	$params['make_active']				= array( 'list_yesno', 1 );
+	$params['make_primary']				= array( 'list_yesno', 1 );
 
 	$params['similarplans']				= array( 'list', '' );
 	$params['equalplans']				= array( 'list', '' );

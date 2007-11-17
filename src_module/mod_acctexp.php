@@ -90,9 +90,10 @@ if ( $my->id ) {
 
 		$expiration = null;
 		$query = 'SELECT expiration'
-				. ' FROM #__acctexp'
-				. ' WHERE userid=' . $my->id
-				. ' AND expiration<>\'9999-12-31 00:00:00\'';
+				. ' FROM #__acctexp_subscr'
+				. ' WHERE userid = \'' . $my->id . '\''
+				. ' WHERE primary = \'1\''
+				. ' AND expiration != \'9999-12-31 00:00:00\'';
 		$database->setQuery($query);
 		$expiration = $database->loadResult();
 

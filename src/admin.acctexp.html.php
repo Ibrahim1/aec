@@ -1702,6 +1702,7 @@ class HTML_AcctExp
 										<?php echo $aecHTML->createSettingsParticle( 'gid' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'fallback' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'make_active' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'make_primary' ); ?>
 									</div>
 								</td>
 							</tr>
