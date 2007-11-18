@@ -73,6 +73,7 @@ class metaUser
 
 		$this->hasSubscription = 0;
 		$this->objSubscription = null;
+		$this->focusSubscription = null;
 
 		if ( $userid ) {
 			$this->userid = $userid;
@@ -84,6 +85,7 @@ class metaUser
 			if ( $aecid ) {
 				$this->objSubscription = new Subscription( $database );
 				$this->objSubscription->load( $aecid );
+				$this->focusSubscription = $this->objSubscription;
 				$this->hasSubscription = 1;
 			}
 		}
@@ -2114,19 +2116,43 @@ class SubscriptionPlan extends paramDBTable
 		}
 
 		if ( $userid ) {
+
 			$metaUser = new metaUser( $userid );
-
-			$comparison		= $this->doPlanComparison( $metaUser->objSubscription );
-			$renew			= $comparison['renew'];
-
-			$is_pending		= ( strcmp($metaUser->objSubscription->status, 'Pending' ) === 0 );
-			$is_trial		= ( strcmp($metaUser->objSubscription->status, 'Trial' ) === 0 );
-			$lifetime		= $metaUser->objSubscription->lifetime;
 
 			$params			= $this->getParams();
 
+			if ( $params['make_primary'] ) {
+				$primary = 1;
+			} else {
+				$metaUser->focusSubscription = new Subscription( $database );
+
+				if ( $params['update_existing'] ) {
+					$query = 'SELECT id'
+					. ' FROM #__acctexp_subscr'
+					. ' WHERE userid = \'' . $userid . '\''
+					. ' AND primary != \'1\''
+					. ' AND plan = \'' . $this->id . '\''
+					;
+					$database->setQuery( $query );
+					$updatesubscr = $database->loadResult();
+				} else {
+					$updatesubscr = 0;
+				}
+
+				$metaUser->focusSubscription->load( $updatesubscr );
+				$metaUser->focusSubscription->primary = 0;
+				$metaUser->focusSubscription->createNew( $userid, $processor, true );
+			}
+
+			$comparison		= $this->doPlanComparison( $metaUser->focusSubscription );
+			$renew			= $comparison['renew'];
+
+			$is_pending		= ( strcmp($metaUser->focusSubscription->status, 'Pending' ) === 0 );
+			$is_trial		= ( strcmp($metaUser->focusSubscription->status, 'Trial' ) === 0 );
+			$lifetime		= $metaUser->focusSubscription->lifetime;
+
 			if ( !$comparison['comparison'] ) {
-				$metaUser->objSubscription->expire(1);
+				$metaUser->focusSubscription->expire(1);
 			}
 
 			if ( ( $comparison['total_comparison'] === false ) || $is_pending ) {
@@ -2147,23 +2173,23 @@ class SubscriptionPlan extends paramDBTable
 			}
 
 			if ( $params['lifetime'] ) {
-				$metaUser->objSubscription->expiration = '9999-12-31 00:00:00';
-				$metaUser->objSubscription->lifetime = 1;
+				$metaUser->focusSubscription->expiration = '9999-12-31 00:00:00';
+				$metaUser->focusSubscription->lifetime = 1;
 			} else {
-				$metaUser->objSubscription->lifetime = 0;
+				$metaUser->focusSubscription->lifetime = 0;
 
 				$value *= $multiplicator;
 
 				if ( ( $comparison['comparison'] == 2 ) && !$lifetime ) {
-					$metaUser->objSubscription->setExpiration( $perunit, $value, 1 );
+					$metaUser->focusSubscription->setExpiration( $perunit, $value, 1 );
 				} else {
-					$metaUser->objSubscription->setExpiration( $perunit, $value, 0 );
+					$metaUser->focusSubscription->setExpiration( $perunit, $value, 0 );
 				}
 			}
 
 			if ( $is_pending ) {
 				// Is new = set signup date
-				$metaUser->objSubscription->signup_date = gmstrftime( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
+				$metaUser->focusSubscription->signup_date = gmstrftime( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
 				if ( $params['trial_period'] > 0 && !$is_trial ) {
 					$status = 'Trial';
 				} else {
@@ -2188,23 +2214,23 @@ class SubscriptionPlan extends paramDBTable
 				$renew = 1;
 			}
 
-			$metaUser->objSubscription->status = $status;
-			$metaUser->objSubscription->setPlanID( $this->id );
+			$metaUser->focusSubscription->status = $status;
+			$metaUser->focusSubscription->setPlanID( $this->id );
 
-			$metaUser->objSubscription->lastpay_date	= gmstrftime( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
-			$metaUser->objSubscription->type = $processor;
+			$metaUser->focusSubscription->lastpay_date	= gmstrftime( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
+			$metaUser->focusSubscription->type = $processor;
 
 			$pp = new PaymentProcessor();
 			if ( $pp->loadName( strtolower( $processor ) ) ) {
 				$pp->init();
 				$pp->getInfo();
-				$metaUser->objSubscription->recurring = $pp->info['recurring'];
+				$metaUser->focusSubscription->recurring = $pp->info['recurring'];
 			} else {
-				$metaUser->objSubscription->recurring = 0;
+				$metaUser->focusSubscription->recurring = 0;
 			}
 
-			$metaUser->objSubscription->check();
-			$metaUser->objSubscription->store();
+			$metaUser->focusSubscription->check();
+			$metaUser->focusSubscription->store();
 
 			if ( $params['gid_enabled'] ) {
 				$metaUser->instantGIDchange($params['gid']);
@@ -2230,7 +2256,7 @@ class SubscriptionPlan extends paramDBTable
 
 		if ( !( $silent && $aecConfig->cfg['noemails'] ) ) {
 			if ( ( $this->id !== $aecConfig->cfg['entry_plan'] ) ) {
-				$metaUser->objSubscription->sendEmailRegistered( $renew );
+				$metaUser->focusSubscription->sendEmailRegistered( $renew );
 			}
 		}
 
@@ -5510,14 +5536,14 @@ class AECToolbox
 			}
 
 			if ( $metaUser->hasSubscription ) {
-				$rewrite['subscription_type']			= $metaUser->objSubscription->type;
-				$rewrite['subscription_status']			= $metaUser->objSubscription->status;
-				$rewrite['subscription_signup_date']	= $metaUser->objSubscription->signup_date;
-				$rewrite['subscription_lastpay_date']	= $metaUser->objSubscription->lastpay_date;
-				$rewrite['subscription_plan']			= $metaUser->objSubscription->plan;
-				$rewrite['subscription_previous_plan']	= $metaUser->objSubscription->previous_plan;
-				$rewrite['subscription_recurring']		= $metaUser->objSubscription->recurring;
-				$rewrite['subscription_lifetime']		= $metaUser->objSubscription->lifetime;
+				$rewrite['subscription_type']			= $metaUser->focusSubscription->type;
+				$rewrite['subscription_status']			= $metaUser->focusSubscription->status;
+				$rewrite['subscription_signup_date']	= $metaUser->focusSubscription->signup_date;
+				$rewrite['subscription_lastpay_date']	= $metaUser->focusSubscription->lastpay_date;
+				$rewrite['subscription_plan']			= $metaUser->focusSubscription->plan;
+				$rewrite['subscription_previous_plan']	= $metaUser->focusSubscription->previous_plan;
+				$rewrite['subscription_recurring']		= $metaUser->focusSubscription->recurring;
+				$rewrite['subscription_lifetime']		= $metaUser->focusSubscription->lifetime;
 			}
 
 			$lastinvoice = AECfetchfromDB::lastClearedInvoiceIDbyUserID( $metaUser->cmsUser->id );

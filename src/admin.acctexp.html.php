@@ -1703,6 +1703,7 @@ class HTML_AcctExp
 										<?php echo $aecHTML->createSettingsParticle( 'fallback' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'make_active' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'make_primary' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'update_existing' ); ?>
 									</div>
 								</td>
 							</tr>

@@ -2332,6 +2332,7 @@ function editSubscriptionPlan( $id, $option )
 	$params['fallback']					= array( 'list', '' );
 	$params['make_active']				= array( 'list_yesno', 1 );
 	$params['make_primary']				= array( 'list_yesno', 1 );
+	$params['update_existing']			= array( 'list_yesno', 1 );
 
 	$params['similarplans']				= array( 'list', '' );
 	$params['equalplans']				= array( 'list', '' );
