@@ -1000,11 +1000,33 @@ color: #333;
 <li>Worldpay Futurepay</li>
 <li>Direct to-processor-and-plan link in Plan Settings</li>
 <li>cleaning up the install some more</li>
-<li class="todo">finishing cybermut</li>
 </ul>
 <h2>0.12.4.14 version - <a href="http://en.wikipedia.org/wiki/Eagle_Nebula">Eagle Nebula</a></h2>
 <ul>
+<li>Supporting multiple payment plans per user</li>
+<li>Abolition of the expiration table - now merged into the subscription table</li>
+<li>Changing all references to old expiration table</li>
+<li>Distinction between primary and secondary subscriptions</li>
+<li>Distinction between primary and currently in focus subscription (for example in RewriteEngine)</li>
+<li class="todo">Add Hook that Processors can use to validate expiration for recurring payments</li>
 <li class="todo">CCBill recurring billing</li>
+</ul>
+<h2>0.12.4.16 version - <a href="http://en.wikipedia.org/wiki/Eagle_Nebula">Eagle Nebula</a></h2>
+<ul>
+<li class="todo">Plan groups</li>
+<li class="todo">Distinction of which Plan Groups to display</li>
+<li class="todo">Plan Groups in Restrictions Processing</li>
+<li class="todo">MicroIntegrations to feature Config Overwrite similar to per-plan processor parameters</li>
+<li class="todo">First version of Payment Modalities spec, which includes every previous functionality</li>
+<li class="todo">Second version of Payment Modalities spec, which includes Version one and additional features like set dates and voluntary amounts</li>
+<li class="todo">Routine to convert fixed payment options into new V1 modalities spec</li>
+<li class="todo">Automatically upgrade old payment plans on installation to new specs</li>
+<li class="todo">copying of modalities to invoice</li>
+<li class="todo">correct application of modalities to subscription entry</li>
+<li class="todo">finishing cybermut</li>
+<li class="todo">Attend Events MicroIntegration</li>
+<li class="todo">Invoice API</li>
+<li class="todo">Invoice API to be used by AttendEvents</li>
 <li class="todo">Adding functionality that allows user accounts to be created by incoming payments</li>
 </ul>
 </body>

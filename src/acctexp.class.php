@@ -627,14 +627,13 @@ class aecHeartbeat extends mosDBTable
 		}
 
 		// Select all the users that are Active and have an expiration date
-		$query = 'SELECT a.id'
-		. ' FROM #__acctexp as a'
-		. ' INNER JOIN #__acctexp_subscr as b ON a.userid = b.userid'
-		. ' WHERE a.expiration <= \'' . $expiration_limit . '\''
-		. ' AND b.status != \'Expired\''
-		. ' AND b.status != \'Closed\''
-		. ' AND b.status != \'Excluded\''
-		. ' ORDER BY a.expiration'
+		$query = 'SELECT `id`'
+		. ' FROM #__acctexp_subscr'
+		. ' WHERE `expiration` <= \'' . $expiration_limit . '\''
+		. ' AND `status` != \'Expired\''
+		. ' AND `status` != \'Closed\''
+		. ' AND `status` != \'Excluded\''
+		. ' ORDER BY `expiration`'
 		;
 		$database->setQuery( $query );
 		$user_list = $database->loadResultArray();
@@ -724,7 +723,7 @@ class aecHeartbeat extends mosDBTable
 
 				// Filter out the users which dont have the correct plan
 				$query = 'SELECT id'
-				. ' FROM #__acctexp'
+				. ' FROM #__acctexp_subscr'
 				. ' WHERE userid IN (' . implode( ',', $pre_expired_users ) . ')'
 				. ' AND plan IN (' . implode( ',', $expmi_plans) . ')'
 				;
@@ -2066,6 +2065,36 @@ class SubscriptionPlanHandler
 
 		return $database->loadResultArray();
 	}
+}
+
+class PlanGroup extends paramDBTable
+{
+	/** @var int Primary key */
+	var $id 				= null;
+	/** @var int */
+	var $active				= null;
+	/** @var int */
+	var $visible			= null;
+	/** @var int */
+	var $parent				= null;
+	/** @var int */
+	var $ordering			= null;
+	/** @var string */
+	var $name				= null;
+	/** @var string */
+	var $desc				= null;
+	/** @var text */
+	var $params 			= null;
+	/** @var text */
+	var $custom_params		= null;
+	/** @var text */
+	var $restrictions		= null;
+
+	function PlanGroup( &$db )
+	{
+		$this->mosDBTable( '#__acctexp_plangroups', 'id', $db );
+	}
+
 }
 
 class SubscriptionPlan extends paramDBTable
