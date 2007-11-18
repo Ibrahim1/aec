@@ -210,7 +210,7 @@ class HTML_frontEnd
 						<p><strong><?php echo _RENEW_LIFETIME; ?></strong></p><?php
 					} else { ?>
 						<p>
-							<?php echo HTML_frontend::DisplayDateInLocalTime( $metaUser->objExpiration->expiration, true, true ); ?>
+							<?php echo HTML_frontend::DisplayDateInLocalTime( $metaUser->focusSubscription->expiration, true, true ); ?>
 						</p>
 						<?php
 					} ?>

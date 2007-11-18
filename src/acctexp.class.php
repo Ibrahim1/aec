@@ -628,15 +628,15 @@ class aecHeartbeat extends mosDBTable
 
 		// Select all the users that are Active and have an expiration date
 		$query = 'SELECT `id`'
-		. ' FROM #__acctexp_subscr'
-		. ' WHERE `expiration` <= \'' . $expiration_limit . '\''
-		. ' AND `status` != \'Expired\''
-		. ' AND `status` != \'Closed\''
-		. ' AND `status` != \'Excluded\''
-		. ' ORDER BY `expiration`'
-		;
+				. ' FROM #__acctexp_subscr'
+				. ' WHERE `expiration` <= \'' . $expiration_limit . '\''
+				. ' AND `status` != \'Expired\''
+				. ' AND `status` != \'Closed\''
+				. ' AND `status` != \'Excluded\''
+				. ' ORDER BY `expiration`'
+				;
 		$database->setQuery( $query );
-		$user_list = $database->loadResultArray();
+		$subscription_list = $database->loadResultArray();
 
 		$expired_users		= array();
 		$pre_expired_users	= array();
@@ -647,42 +647,24 @@ class aecHeartbeat extends mosDBTable
 		$exp_users			= 0;
 
 		// Efficient way to check for expired users without checking on each one
-		if ( !empty( $user_list ) ) {
-			foreach ( $user_list as $exp_id ) {
-				$expiration = new AcctExp($database);
-				$expiration->load( $exp_id );
+		if ( !empty( $subscription_list ) ) {
+			foreach ( $subscription_list as $sub_id ) {
+				$subscription = new Subscription($database);
+				$subscription->load( $sub_id );
 
-				if ( $expiration->id ) {
-					$query = 'SELECT id'
-					. ' FROM #__users'
-					. ' WHERE id = \'' . $expiration->userid . '\''
-					;
-					$database->setQuery( $query );
-					if ( $database->loadResult() ) {
-						if ( $found_expired ) {
-							$found_expired = $expiration->is_expired();
+				if ( $found_expired ) {
+					$found_expired = $subscription->is_expired();
 
-							if ( $found_expired && !in_array( $expiration->userid, $expired_users ) ) {
-								$expired_users[] = $expiration->userid;
-							}
-						}
-
-						if ( !$found_expired && !in_array( $expiration->userid, $pre_expired_users ) ) {
-							if ( $pre_expiration ) {
-								$pre_expired_users[] = $expiration->userid;
-							}
+					if ( $found_expired && !in_array( $subscription->userid, $expired_users ) ) {
+						if ( $subscription->expire() ) {
+							$e++;
 						}
 					}
 				}
-			}
 
-			if ( !empty( $expired_users ) ) {
-				foreach ( $expired_users as $n ) {
-					$subscription = new Subscription( $database );
-					$subscription->loadUserID($n);
-
-					if ( $subscription->expire() ) {
-						$e++;
+				if ( !$found_expired && !in_array( $subscription->userid, $pre_expired_users ) ) {
+					if ( $pre_expiration ) {
+						$pre_expired_users[] = $subscription->userid;
 					}
 				}
 			}
@@ -770,8 +752,6 @@ class aecHeartbeat extends mosDBTable
 				}
 			}
 		}
-
-		// Travel through users to see which ones are soon to expire
 
 		$short	= _AEC_LOG_SH_HEARTBEAT;
 		$event	= _AEC_LOG_LO_HEARTBEAT . ' ';
@@ -3932,7 +3912,7 @@ class Invoice extends paramDBTable
 		}
 	}
 
-	function create( $userid, $usage, $processor )
+	function create( $userid, $usage, $processor, $second_ident=null )
 	{
 		global $mosConfig_offset_user;
 
@@ -3940,6 +3920,11 @@ class Invoice extends paramDBTable
 
 		$this->load(0);
 		$this->invoice_number	= $invoice_number;
+
+		if ( !is_null( $second_ident ) ) {
+			$this->second_ident		= $second_ident;
+		}
+
 		$this->active			= 1;
 		$this->fixed			= 0;
 		$this->created_date		= gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
@@ -3965,6 +3950,50 @@ class Invoice extends paramDBTable
 			echo "<script> alert('problem with storing an invoice: ".$this->getError()."'); window.history.go(-1); </script>\n";
 			exit();
 		}
+	}
+
+	function createPassive( $second_ident, $usage, $processor, $user )
+	{
+		global $database;
+
+		$username = $user['username'];
+
+		$query = 'SELECT id'
+		. ' FROM #__users'
+		. ' WHERE username = \'' . $username . '\''
+		;
+		$database->setQuery( $query );
+
+		$id = $database->loadResult();
+
+		if ( $id ) {
+			$username = $user['username'] . substr( md5( $user['name'] ), 0, 3 );
+
+			$query = 'SELECT id'
+			. ' FROM #__users'
+			. ' WHERE username = \'' . $username . '\''
+			;
+			$database->setQuery( $query );
+
+			$id = $database->loadResult();
+		}
+
+		if ( $id ) {
+			$username = $user['username'] . substr( md5( ( $user['name'] . date( 'Y-m-d' ) ) ), 0, 3 );
+
+			$query = 'SELECT id'
+			. ' FROM #__users'
+			. ' WHERE username = \'' . $username . '\''
+			;
+			$database->setQuery( $query );
+
+			$id = $database->loadResult();
+		}
+
+		$user = new mosUser( $database );
+		$user->username = $username;
+
+		$this->create( $userid, $usage, $processor, $second_ident );
 	}
 
 	function generateInvoiceNumber( $maxlength = 16 )
@@ -5119,8 +5148,9 @@ class AECfetchfromDB
 
 		$query = 'SELECT id'
 		. ' FROM #__acctexp_invoices'
-		. ' WHERE invoice_number = \'' . $invoice_number . '\''
-		. ' AND active = \'1\''
+		. ' WHERE active = \'1\''
+		. ' AND ( invoice_number = \'' . $invoice_number . '\''
+		. ' OR secondary_ident = \'' . $invoice_number . '\' )'
 		;
 		if ( $userid ) {
 			$query .= ' AND userid = \'' . $userid . '\'';

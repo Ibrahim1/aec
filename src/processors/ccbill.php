@@ -177,6 +177,21 @@ class processor_ccbill extends POSTprocessor
 		$rebills			= $post['rebills'];
 		$ip_address			= $post['ip_address'];
 
+		if ( empty( $invoice ) ) {
+			if ( empty( AECfetchfromDB::InvoiceIDfromNumber( $subscription_id ) ) ) {
+				$user = array();
+				$user['name'] = $customer_fname . ' ' . $customer_lname;
+				$user['email'] = $email;
+				$user['username'] = $email;
+				$user['password'] = $password;
+				$user['email'] = $email;
+
+
+			} else {
+				$invoice = $subscription_id;
+			}
+		}
+
 		$response = array();
 		$response['invoice'] = $invoice;
 		$response['valid'] = 1;
