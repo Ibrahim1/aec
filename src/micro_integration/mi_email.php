@@ -126,6 +126,10 @@ class mi_email
 		$message	= AECToolbox::rewriteEngine( $params['text' . $area], $metaUser, $plan );
 		$subject	= AECToolbox::rewriteEngine( $params['subject' . $area], $metaUser, $plan );
 
+		if ( empty( $message ) ) {
+			return false;
+		}
+
 		$recipients = explode( ',', $params['recipient'] );
 
 		foreach ( $recipients as $current => $email ) {
