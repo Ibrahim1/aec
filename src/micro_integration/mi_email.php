@@ -117,7 +117,7 @@ class mi_email
 
 		if ( $area == '' ) {
 			if ( !empty( $params['text_first'] ) ) {
-				if ( empty( $metaUser->objSubscription->previousplans ) ) {
+				if ( empty( $metaUser->objSubscription->previous_plan ) ) {
 					$area = '_first';
 				}
 			}
