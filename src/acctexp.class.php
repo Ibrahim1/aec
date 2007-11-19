@@ -656,8 +656,23 @@ class aecHeartbeat extends mosDBTable
 					$found_expired = $subscription->is_expired();
 
 					if ( $found_expired && !in_array( $subscription->userid, $expired_users ) ) {
-						if ( $subscription->expire() ) {
-							$e++;
+						if ( !isset( $pps[$subscription->type] ) ) {
+							$pps[$subscription->type] = new PaymentProcessor();
+							$checkvalidation = $pps[$subscription->type]->loadName( $subscription->type );
+						} else {
+							$checkvalidation = 0;
+						}
+
+						if ( $checkvalidation ) {
+							$validation = $pps[$subscription->type]->validateSubscription();
+						} else {
+							$validation = false;
+						}
+
+						if ( empty( $validation ) ) {
+							if ( $subscription->expire() ) {
+								$e++;
+							}
 						}
 					}
 				}
@@ -1401,8 +1416,18 @@ class PaymentProcessor
 	function validateNotification( $response, $post, $invoice )
 	{
 		if ( method_exists( $this->processor, 'validateNotification' ) ) {
-			global $database; $eventlog = new eventLog($database); $eventlog->issue( 'debugdebug', 'debug', 'calling validateNotification', '' );
 			$response = $this->processor->validateNotification( $response, $post, $this->settings, $invoice );
+		}
+
+		return $response;
+	}
+
+	function validateSubscription()
+	{
+		if ( method_exists( $this->processor, 'validateSubscription' ) ) {
+			$response = $this->processor->validateSubscription();
+		} else {
+			$response = null;
 		}
 
 		return $response;
@@ -4639,6 +4664,16 @@ class Subscription extends paramDBTable
 				$expired = $expiration->is_expired();
 			} else {
 				$expired = false;
+			}
+		}
+
+		if ( $expired ) {
+			$pp = new PaymentProcessor();
+
+			if ( $pp->loadName( $subscription->type ) ) {
+				$validation = $pp->validateSubscription();
+			} else {
+				$validation = false;
 			}
 		}
 
