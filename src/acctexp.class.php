@@ -91,12 +91,47 @@ class metaUser
 		}
 	}
 
-	function procTriggerCreate( $user, $planid, $invoiceid )
+	function procTriggerCreate( $user, $payment, $usage )
 	{
+		global $database, $aecConfig;
+
 		// Create a new cmsUser from user details - only allowing basic details so far
+		// Try different types of usernames to make sure we have a unique one
+		$usernames = array( $user['username'],
+							$user['username'] . substr( md5( $user['name'] ), 0, 3 ),
+							$user['username'] . substr( md5( ( $user['name'] . time() ) ), 0, 3 )
+							);
+
+		$id = 1;
+		$k = 0;
+		while ( $id ) {
+			$username = $usernames[min( $k, ( count( $usernames ) - 1 ) )];
+
+			$query = 'SELECT id'
+			. ' FROM #__users'
+			. ' WHERE username = \'' . $username . '\''
+			;
+			$database->setQuery( $query );
+
+			$id = $database->loadResult();
+			$k++;
+		}
+
+		$var['id'] 			= 0;
+		$var['gid'] 		= 0;
+		$var['username']	= $username;
+		$var['name']		= $user['name'];
+		$var['email']		= $user['email'];
+		$var['password']	= $user['password'];
+
+		$userid = AECToolbox::saveUserRegistration( 'com_acctexp', $var );
+
 		// Create a new invoice with $invoiceid as secondary ident
-		// Email out details?
-		// return userid, real invoiceid
+		$invoice = new Invoice( $database );
+		$invoice->createNew( $userid, $usage, $payment['processor'], $payment['secondary_ident'] );
+
+		// return nothing, the invoice will be handled by the second ident anyways
+		return;
 	}
 
 	function instantGIDchange( $gid )
@@ -3344,23 +3379,11 @@ class InvoiceFactory
 
 	function save( $option, $var )
 	{
-		global $database, $mainframe, $task, $acl, $aecConfig; // Need to load $acl for CBE
+		global $database, $mainframe, $task; // Need to load $acl for Joomla and CBE
 
 		if ( isset( $var['task'] ) ) {
 			unset( $var['task'] );
 			unset( $var['option'] );
-		}
-
-		// Let CB think that everything is going fine
-		if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
-			if ( GeneralInfoRequester::detect_component( 'CBE' ) ) {
-				global $ueConfig;
-			}
-
-			$savetask	= $task;
-			$task		= 'done';
-			include_once ( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
-			$task		= $savetask;
 		}
 
 		if ( $this->usage == '' ) {
@@ -3377,166 +3400,7 @@ class InvoiceFactory
 
 			$passthrough = false;
 		} else {
-			// For joomla and CB, we must filter out some internal variables before handing over the POST data
-			$badbadvars = array( 'userid', 'method_name', 'usage', 'processor', 'currency', 'amount', 'invoice', 'id', 'gid' );
-			foreach ( $badbadvars as $badvar ) {
-				if ( isset( $var[$badvar] ) ) {
-					unset( $var[$badvar] );
-				}
-			}
-
-			$_POST = $var;
-
-			if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
-				// This is a CB registration, borrowing their code to save the user
-
-				saveRegistration( $option );
-
-			} else {
-				// This is a joomla registration, borrowing their code to save the user
-				global $acl, $mosConfig_useractivation, $mosConfig_sitename, $mosConfig_live_site;
-
-				// simple spoof check security
-				if ( function_exists( 'josSpoofCheck' ) ) {
-					if ( class_exists( 'JConfig' ) ) {
-						$token	= JUtility::getToken();
-						if(!JRequest::getInt($token, 0, 'post')) {
-							JError::raiseError(403, 'Request Forbidden');
-						}
-					} else {
-						josSpoofCheck();
-					}
-				}
-
-				$row = new mosUser( $database );
-
-				if ( !$row->bind( $_POST, 'usertype' )) {
-					mosErrorAlert( $row->getError() );
-				}
-
-				mosMakeHtmlSafe( $row );
-
-				$row->id 		= 0;
-				$row->usertype 	= '';
-				if ( class_exists( 'JConfig' ) ) {
-					$authorize	=& JFactory::getACL();
-
-					// Initialize new usertype setting
-					$usersConfig = &JComponentHelper::getParams( 'com_users' );
-					$newUsertype = $usersConfig->get( 'new_usertype' );
-					if (!$newUsertype) {
-						$newUsertype = 'Registered';
-					}
-
-					$row->gid 		= $authorize->get_group_id( '', $newUsertype, 'ARO' );
-				} else {
-					$row->gid 		= $acl->get_group_id( 'Registered', 'ARO' );
-				}
-
-				if ( $mosConfig_useractivation == 1 ) {
-					$row->activation = md5( mosMakePassword() );
-					$row->block = '1';
-				}
-
-				if ( !$row->check() ) {
-					echo '<script>alert(\''
-					. html_entity_decode( $row->getError() )
-					. '\');window.history.go(-1);</script>' . "\n";
-					exit();
-				}
-
-				if ( class_exists( 'JConfig' ) ) {
-					jimport('joomla.user.helper');
-
-					$salt = JUserHelper::genRandomPassword(32);
-					$crypt = JUserHelper::getCryptedPassword($row->password, $salt);
-					$row->password = $crypt.':'.$salt;
-				} else {
-					$pwd 				= $row->password;
-					$row->password 		= md5( $row->password );
-				}
-
-				$row->registerDate 	= date( 'Y-m-d H:i:s' );
-
-				if ( !$row->store() ) {
-					echo '<script>alert(\''
-					. html_entity_decode( $row->getError())
-					. '\');window.history.go(-1);</script>' . "\n";
-					exit();
-				}
-				$row->checkin();
-
-				$name 		= $row->name;
-				$email 		= $row->email;
-				$username 	= $row->username;
-
-				$subject 	= sprintf (_SEND_SUB, $name, $mainframe->getCfg( 'sitename' ) );
-				$subject 	= html_entity_decode( $subject, ENT_QUOTES );
-
-				if ($mosConfig_useractivation == 1){
-					$message = sprintf (_USEND_MSG_ACTIVATE, $name, $mosConfig_sitename, $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=".$row->activation, $mosConfig_live_site, $username, $pwd);
-				} else {
-					$message = sprintf (_USEND_MSG, $name, $mosConfig_sitename, $mosConfig_live_site);
-				}
-
-				$message = html_entity_decode( $message, ENT_QUOTES );
-
-				// check if Global Config `mailfrom` and `fromname` values exist
-				if ( $mainframe->getCfg( 'mailfrom' ) != '' && $mainframe->getCfg( 'fromname' ) != '' ) {
-					$adminName2 	= $mainframe->getCfg( 'fromname' );
-					$adminEmail2 	= $mainframe->getCfg( 'mailfrom' );
-				} else {
-					// use email address and name of first superadmin for use in email sent to user
-					$query = 'SELECT name, email'
-					. ' FROM #__users'
-					. ' WHERE LOWER( usertype ) = \'superadministrator\''
-					. ' OR LOWER( usertype ) = \'super administrator\''
-					;
-					$database->setQuery( $query );
-					$rows = $database->loadObjectList();
-					$row2 			= $rows[0];
-
-					$adminName2 	= $row2->name;
-					$adminEmail2 	= $row2->email;
-				}
-
-				// Send email to user
-				if ( !$aecConfig->cfg['nojoomlaregemails'] ) {
-					mosMail( $adminEmail2, $adminName2, $email, $subject, $message );
-				}
-
-				// Send notification to all administrators
-				$aecUser	= AECToolbox::_aecIP();
-
-				$subject2	= sprintf( _SEND_SUB, $name, $mainframe->getCfg( 'sitename' ) );
-				$message2	= sprintf( _AEC_ASEND_MSG_NEW_REG, $adminName2, $mainframe->getCfg( 'sitename' ), $row->name, $email, $username, $aecUser['ip'], $aecUser['isp'] );
-
-				$subject2	= html_entity_decode( $subject2, ENT_QUOTES );
-				$message2	= html_entity_decode( $message2, ENT_QUOTES );
-
-				// get email addresses of all admins and superadmins set to recieve system emails
-				$query = 'SELECT email, sendEmail'
-				. ' FROM #__users'
-				. ' WHERE ( gid = 24 OR gid = 25 )'
-				. ' AND sendEmail = 1'
-				. ' AND block = 0'
-				;
-				$database->setQuery( $query );
-				$admins = $database->loadObjectList();
-
-				foreach ( $admins as $admin ) {
-					// send email to admin & super admin set to recieve system emails
-					mosMail( $adminEmail2, $adminName2, $admin->email, $subject2, $message2 );
-				}
-			}
-
-			// We need the new userid, so we're fetching it from the newly created entry here
-			$query = 'SELECT id'
-			. ' FROM #__users'
-			. ' WHERE username = \'' . $var['username'] . '\''
-			;
-			$database->setQuery( $query );
-			$this->userid = $database->loadResult();
+			$this->userid = AECToolbox::saveUserRegistration( $option, $var );
 		}
 
 		$this->touchInvoice( $option );
@@ -3977,63 +3841,18 @@ class Invoice extends paramDBTable
 		}
 	}
 
-	function createPassive( $second_ident, $usage, $processor, $user )
-	{
-		global $database;
-
-		$username = $user['username'];
-
-		$query = 'SELECT id'
-		. ' FROM #__users'
-		. ' WHERE username = \'' . $username . '\''
-		;
-		$database->setQuery( $query );
-
-		$id = $database->loadResult();
-
-		if ( $id ) {
-			$username = $user['username'] . substr( md5( $user['name'] ), 0, 3 );
-
-			$query = 'SELECT id'
-			. ' FROM #__users'
-			. ' WHERE username = \'' . $username . '\''
-			;
-			$database->setQuery( $query );
-
-			$id = $database->loadResult();
-		}
-
-		if ( $id ) {
-			$username = $user['username'] . substr( md5( ( $user['name'] . date( 'Y-m-d' ) ) ), 0, 3 );
-
-			$query = 'SELECT id'
-			. ' FROM #__users'
-			. ' WHERE username = \'' . $username . '\''
-			;
-			$database->setQuery( $query );
-
-			$id = $database->loadResult();
-		}
-
-		$user = new mosUser( $database );
-		$user->username = $username;
-
-		$this->create( $userid, $usage, $processor, $second_ident );
-	}
-
 	function generateInvoiceNumber( $maxlength = 16 )
 	{
 		global $database;
 
 		$numberofrows	= 1;
 		while ( $numberofrows ) {
-			// seed random number generator
-			srand( (double) microtime() * 10000 );
 			$inum =	'I' . substr( base64_encode( md5( rand() ) ), 0, $maxlength );
 			// Check if already exists
 			$query = 'SELECT count(*)'
 			. ' FROM #__acctexp_invoices'
 			. ' WHERE invoice_number = \'' . $inum . '\''
+			. ' OR secondary_ident = \'' . $inum . '\''
 			;
 			$database->setQuery( $query );
 			$numberofrows = $database->loadResult();
@@ -5441,6 +5260,183 @@ class AECToolbox
 		return true;
 	}
 
+	function saveUserRegistration( $option, $var )
+	{
+		global $database, $mainframe, $task, $acl, $aecConfig; // Need to load $acl for Joomla and CBE
+
+		// Let CB think that everything is going fine
+		if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+			if ( GeneralInfoRequester::detect_component( 'CBE' ) ) {
+				global $ueConfig;
+			}
+
+			$savetask	= $task;
+			$task		= 'done';
+			include_once ( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
+			$task		= $savetask;
+		}
+
+		// For joomla and CB, we must filter out some internal variables before handing over the POST data
+		$badbadvars = array( 'userid', 'method_name', 'usage', 'processor', 'currency', 'amount', 'invoice', 'id', 'gid' );
+		foreach ( $badbadvars as $badvar ) {
+			if ( isset( $var[$badvar] ) ) {
+				unset( $var[$badvar] );
+			}
+		}
+
+		$_POST = $var;
+
+		if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+			// This is a CB registration, borrowing their code to save the user
+
+			saveRegistration( $option );
+		} else {
+			// This is a joomla registration, borrowing their code to save the user
+			global $mosConfig_useractivation, $mosConfig_sitename, $mosConfig_live_site;
+
+			// simple spoof check security
+			if ( function_exists( 'josSpoofCheck' ) ) {
+				if ( class_exists( 'JConfig' ) ) {
+					$token	= JUtility::getToken();
+					if(!JRequest::getInt($token, 0, 'post')) {
+						JError::raiseError(403, 'Request Forbidden');
+					}
+				} else {
+					josSpoofCheck();
+				}
+			}
+
+			$row = new mosUser( $database );
+
+			if ( !$row->bind( $_POST, 'usertype' )) {
+				mosErrorAlert( $row->getError() );
+			}
+
+			mosMakeHtmlSafe( $row );
+
+			$row->id 		= 0;
+			$row->usertype 	= '';
+			if ( class_exists( 'JConfig' ) ) {
+				$authorize	=& JFactory::getACL();
+
+				// Initialize new usertype setting
+				$usersConfig = &JComponentHelper::getParams( 'com_users' );
+				$newUsertype = $usersConfig->get( 'new_usertype' );
+				if (!$newUsertype) {
+					$newUsertype = 'Registered';
+				}
+
+				$row->gid 		= $authorize->get_group_id( '', $newUsertype, 'ARO' );
+			} else {
+				$row->gid 		= $acl->get_group_id( 'Registered', 'ARO' );
+			}
+
+			if ( $mosConfig_useractivation == 1 ) {
+				$row->activation = md5( mosMakePassword() );
+				$row->block = '1';
+			}
+
+			if ( !$row->check() ) {
+				echo '<script>alert(\''
+				. html_entity_decode( $row->getError() )
+				. '\');window.history.go(-1);</script>' . "\n";
+				exit();
+			}
+
+			if ( class_exists( 'JConfig' ) ) {
+				jimport('joomla.user.helper');
+
+				$salt = JUserHelper::genRandomPassword(32);
+				$crypt = JUserHelper::getCryptedPassword($row->password, $salt);
+				$row->password = $crypt.':'.$salt;
+			} else {
+				$pwd 				= $row->password;
+				$row->password 		= md5( $row->password );
+			}
+
+			$row->registerDate 	= date( 'Y-m-d H:i:s' );
+
+			if ( !$row->store() ) {
+				echo '<script>alert(\''
+				. html_entity_decode( $row->getError())
+				. '\');window.history.go(-1);</script>' . "\n";
+				exit();
+			}
+			$row->checkin();
+
+			$name 		= $row->name;
+			$email 		= $row->email;
+			$username 	= $row->username;
+
+			$subject 	= sprintf (_SEND_SUB, $name, $mainframe->getCfg( 'sitename' ) );
+			$subject 	= html_entity_decode( $subject, ENT_QUOTES );
+
+			if ($mosConfig_useractivation == 1){
+				$message = sprintf (_USEND_MSG_ACTIVATE, $name, $mosConfig_sitename, $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=".$row->activation, $mosConfig_live_site, $username, $pwd);
+			} else {
+				$message = sprintf (_USEND_MSG, $name, $mosConfig_sitename, $mosConfig_live_site);
+			}
+
+			$message = html_entity_decode( $message, ENT_QUOTES );
+
+			// check if Global Config `mailfrom` and `fromname` values exist
+			if ( $mainframe->getCfg( 'mailfrom' ) != '' && $mainframe->getCfg( 'fromname' ) != '' ) {
+				$adminName2 	= $mainframe->getCfg( 'fromname' );
+				$adminEmail2 	= $mainframe->getCfg( 'mailfrom' );
+			} else {
+				// use email address and name of first superadmin for use in email sent to user
+				$query = 'SELECT name, email'
+				. ' FROM #__users'
+				. ' WHERE LOWER( usertype ) = \'superadministrator\''
+				. ' OR LOWER( usertype ) = \'super administrator\''
+				;
+				$database->setQuery( $query );
+				$rows = $database->loadObjectList();
+				$row2 			= $rows[0];
+
+				$adminName2 	= $row2->name;
+				$adminEmail2 	= $row2->email;
+			}
+
+			// Send email to user
+			if ( !$aecConfig->cfg['nojoomlaregemails'] ) {
+				mosMail( $adminEmail2, $adminName2, $email, $subject, $message );
+			}
+
+			// Send notification to all administrators
+			$aecUser	= AECToolbox::_aecIP();
+
+			$subject2	= sprintf( _SEND_SUB, $name, $mainframe->getCfg( 'sitename' ) );
+			$message2	= sprintf( _AEC_ASEND_MSG_NEW_REG, $adminName2, $mainframe->getCfg( 'sitename' ), $row->name, $email, $username, $aecUser['ip'], $aecUser['isp'] );
+
+			$subject2	= html_entity_decode( $subject2, ENT_QUOTES );
+			$message2	= html_entity_decode( $message2, ENT_QUOTES );
+
+			// get email addresses of all admins and superadmins set to recieve system emails
+			$query = 'SELECT email, sendEmail'
+			. ' FROM #__users'
+			. ' WHERE ( gid = 24 OR gid = 25 )'
+			. ' AND sendEmail = 1'
+			. ' AND block = 0'
+			;
+			$database->setQuery( $query );
+			$admins = $database->loadObjectList();
+
+			foreach ( $admins as $admin ) {
+				// send email to admin & super admin set to recieve system emails
+				mosMail( $adminEmail2, $adminName2, $admin->email, $subject2, $message2 );
+			}
+		}
+
+		// We need the new userid, so we're fetching it from the newly created entry here
+		$query = 'SELECT id'
+		. ' FROM #__users'
+		. ' WHERE username = \'' . $var['username'] . '\''
+		;
+		$database->setQuery( $query );
+		return $database->loadResult();
+	}
+
 	function quickVerifyUserID( $userid )
 	{
 		global $database;
@@ -6796,8 +6792,6 @@ class coupon extends paramDBTable
 		$numberofrows = 1;
 
 		while ( $numberofrows ) {
-			// seed random number generator
-			srand( (double) microtime() * 10000 );
 			$inum =	strtoupper( substr( base64_encode( md5( rand() ) ), 0, $maxlength ) );
 			// check single coupons
 			$query = 'SELECT count(*)'

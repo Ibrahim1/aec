@@ -177,7 +177,9 @@ class processor_ccbill extends POSTprocessor
 		$rebills			= $post['rebills'];
 		$ip_address			= $post['ip_address'];
 
+		// Check whether this is a passive registration
 		if ( empty( $invoice ) ) {
+			// Make sure that we have not set this up before
 			if ( empty( AECfetchfromDB::InvoiceIDfromNumber( $subscription_id ) ) ) {
 				$user = array();
 				$user['name'] = $customer_fname . ' ' . $customer_lname;
@@ -186,7 +188,11 @@ class processor_ccbill extends POSTprocessor
 				$user['password'] = $password;
 				$user['email'] = $email;
 
+				$payment['secondary_ident'] = $subscription_id;
+				$payment['processor'] = 'ccbill';
 
+				$metaUser = new metaUser();
+				$metaUser->procTriggerCreate( $user, $invoice, $post['usage'] );
 			} else {
 				$invoice = $subscription_id;
 			}
