@@ -208,10 +208,10 @@ class processor_ccbill extends POSTprocessor
 
 		$response['checksum'] = $checksum;
 
-		if ( $rebills > 0 ) {
-			$response['amount_paid'] = $recurringPrice;
-		} else {
+		if ( $initialPrice ) {
 			$response['amount_paid'] = $initialPrice;
+		} else {
+			$response['amount_paid'] = $recurringPrice;
 		}
 
 		return $response;
