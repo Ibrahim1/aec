@@ -694,6 +694,10 @@ define( '_PAYPLAN_PARAMS_GID_NAME',						'Zur Gruppe dazu:' );
 define( '_PAYPLAN_PARAMS_GID_DESC',						'Benutzer werden dieser Gruppe hinzugef&uuml;gt wenn das Abo gew&auml;hlt wird' );
 define( '_PAYPLAN_PARAMS_MAKE_ACTIVE_NAME', 			'Benutzer Aktivieren:');
 define( '_PAYPLAN_PARAMS_MAKE_ACTIVE_DESC',				'Auf >Nein< setzen, falls der Benutzer von Hand in die aktive Gruppe verschoben werden soll.');
+define( '_PAYPLAN_PARAMS_MAKE_PRIMARY_NAME', 'Primary:');
+define( '_PAYPLAN_PARAMS_MAKE_PRIMARY_DESC', 'Set this to "yes" to make this the primary subscription plan for the user. The primary subscription is the one which governs overal site expiration.');
+define( '_PAYPLAN_PARAMS_UPDATE_EXISTING_NAME', 'Update Existing:');
+define( '_PAYPLAN_PARAMS_UPDATE_EXISTING_NAME', 'If not a primary plan, should this plan update other existing non-primary subscriptions of the user? This can be helpful for secondary subscriptions of which the user should have only one at a time.');
 
 define( '_PAYPLAN_TEXT_TITLE',							'Abotext' );
 define( '_PAYPLAN_GENERAL_EMAIL_DESC_NAME',				'Emailtext:' );
