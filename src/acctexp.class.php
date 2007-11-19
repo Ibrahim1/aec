@@ -3994,19 +3994,30 @@ class Invoice extends paramDBTable
 		$new_plan = new SubscriptionPlan( $database );
 		$new_plan->load( $this->usage );
 
+		$plan_params = $new_plan->getParams();
+
 		// Get Subscription record
 		$metaUser = new metaUser( $this->userid );
 
+		$existing_record = getSubscriptionID( $this->userid, $this->usage, null );
+
 		if ( $metaUser->userid ) {
 			// To be failsafe, a new subscription may have to be added in here
-			if ( !$metaUser->hasSubscription ) {
-				$metaUser->objSubscription = new Subscription( $database );
-				$metaUser->objSubscription->load(0);
-				$metaUser->objSubscription->createNew ( $this->userid, $this->method, 0 );
+			if ( !$metaUser->hasSubscription || !$plan_params['make_primary'] ) {
+				if ( $existing_record && $plan_params['update_existing'] ) {
+					// Update existing non-primary subscription
+					$metaUser->focusSubscription = new Subscription( $database );
+					$metaUser->focusSubscription->load( $existing_record );
+				} else {
+					// Create new subscription
+					$metaUser->focusSubscription = new Subscription( $database );
+					$metaUser->focusSubscription->load(0);
+					$metaUser->focusSubscription->createNew( $this->userid, $this->method, 0, $plan_params['make_primary'] );
+				}
 			}
 
 			// Apply the Plan
-			$renew = $metaUser->objSubscription->applyUsage( $this->usage, $this->method, 0, $multiplicator );
+			$renew = $metaUser->focusSubscription->applyUsage( $this->usage, $this->method, 0, $multiplicator );
 		} else {
 			$new_plan->applyPlan( 0, $this->method, 0, $multiplicator );
 		}
@@ -4345,16 +4356,33 @@ class Subscription extends paramDBTable
 	 */
 	function loadUserid( $userid )
 	{
+		$this->load( $this->getSubscriptionID( $userid ) );
+	}
+
+	function getSubscriptionID( $userid, $usage=null, $primary=1 )
+	{
 		global $database;
 
 		$query = 'SELECT id'
 		. ' FROM #__acctexp_subscr'
 		. ' WHERE userid = \'' . $userid . '\''
 		;
+
+		if ( !empty( $usage ) ) {
+			$query .= ' AND `plan` = \'' . $usage . '\'';
+		}
+
+		if ( $primary ) {
+			$query .= ' AND `primary` = \'1\'';
+		} elseif ( $primary === false ) {
+			$query .= ' AND `primary` = \'0\'';
+		}
+
 		$database->setQuery( $query );
 
-		$this->load($database->loadResult());
+		return $database->loadResult();
 	}
+
 	function manualVerify()
 	{
 		if ( $this->is_expired() ) {
@@ -4366,11 +4394,12 @@ class Subscription extends paramDBTable
 	}
 
 
-	function createNew( $userid, $processor, $pending )
+	function createNew( $userid, $processor, $pending, $primary=1 )
 	{
 		global $mosConfig_offset_user;
 
 		$this->userid		= $userid;
+		$this->primary		= $primary;
 		$this->signup_date	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 );
 		$this->status		= $pending ? 'Pending' : 'Active';
 		$this->type			= $processor;

@@ -10,6 +10,20 @@
 
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
+/*
+ * <img border="0" src="http://www.YOURSITE.com/idevaffiliate/sale.php?profile=72198&idev_saleamt=XXX&idev_ordernum=YYY" width="1" height="1">
+ *
+ * XXX needs replaced with the variable that holds the sale amount.
+ * YYY needs replaced with the variable that holds the order number.
+ *
+ * profile=72198&idev_saleamt=XXX&idev_ordernum=YYY&idev_option_1=AAA&idev_option_2=BBB&idev_option_3=CCC
+ *
+ * AAA, BBB and CCC can be any value from the cart you want.
+ *
+ * If you build it in to pass these 3 optional pieces of data, I just need to know what you're passing such as the customer name,
+ * customer phone, etc.  The name of these custom fields are set in the admin center and I can pre-set those to whatever you want to send.
+ */
+
 class mi_idevaffiliate
 {
 	function Info()
