@@ -897,16 +897,6 @@ function editUser( $userid, $option, $task )
 
 	$lists = array();
 
-	$expirationid = AECfetchfromDB::ExpirationIDfromUserID( $userid[0] );
-
-	if ( !$expirationid ) {
-		// Excluded
-		$expiration->userid = $userid[0];
-	} else {
-		$expiration = new AcctExp( $database );
-		$expiration->load( $expirationid );
-	}
-
 	$user = new mosUser( $database );
 	$user->load( $userid[0] );
 
@@ -1032,7 +1022,7 @@ function editUser( $userid, $option, $task )
 
 	$lists['assignto_plan'] = mosHTML::selectList( $available_plans, 'assignto_plan', 'size="5"', 'value', 'text', 0 );
 
-	HTML_AcctExp::userForm( $option, $expiration, $subscription, $user, $invoices, $lists, $task );
+	HTML_AcctExp::userForm( $option, $subscription, $user, $invoices, $lists, $task );
 }
 
 function saveUser( $option, $apply=0 )
@@ -1617,11 +1607,10 @@ function listSubscriptions( $option, $set_group, $userid )
 		}
 			$query .=	' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit;
 	} else {
-		$query = 'SELECT a.*, b.name, b.username, b.email, c.name AS plan_name, d.expiration AS expiration'
+		$query = 'SELECT a.*, b.name, b.username, b.email, c.name AS plan_name, expiration'
 		. ' FROM #__acctexp_subscr AS a'
 		. '  INNER JOIN #__users AS b ON a.userid = b.id'
 		. ' LEFT JOIN #__acctexp_plans AS c ON a.plan = c.id'
-		. ' LEFT JOIN #__acctexp AS d ON a.userid = d.userid'
 		. ( count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
 		. ' ORDER BY ' . $orderby
 		. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit

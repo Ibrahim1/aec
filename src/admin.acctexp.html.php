@@ -518,11 +518,10 @@ class HTML_AcctExp
 
 	}
 
-	function userForm( $option, $expiration, $subscription, $user, $invoices, $lists, $nexttask )
+	function userForm( $option, $subscription, $user, $invoices, $lists, $nexttask )
 	{
 		global $mosConfig_live_site;
 
-		mosMakeHtmlSafe( $expiration );
 		HTML_myCommon::addBackendCSS();
 
 		mosCommonHTML::loadOverlib();
@@ -549,7 +548,7 @@ class HTML_AcctExp
 				<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_edit.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
 					<?php echo _AEC_HEAD_SUBCRIBER; ?>:
 					&nbsp;
-					<small><?php echo !empty( $expiration->id ) ? $user->username . ' (' . _AEC_CMN_ID . ': ' . $user->id . ')' : _AEC_CMN_NEW; ?></small>
+					<small><?php echo !empty( $subscription->id ) ? $user->username . ' (' . _AEC_CMN_ID . ': ' . $user->id . ')' : _AEC_CMN_NEW; ?></small>
 	        	</th>
 			</tr>
 		</table>
@@ -593,7 +592,7 @@ class HTML_AcctExp
 						<div class="userinfobox">
 							<h3><?php echo _AEC_USER_EXPIRATION; ?></h3>
 							<?php
-							if ( !empty( $expiration->expiration ) && strcmp( $expiration->expiration, '9999-12-31 00:00:00' ) === 0 ) { ?>
+							if ( !empty( $subscription->expiration ) && strcmp( $subscription->expiration, '9999-12-31 00:00:00' ) === 0 ) { ?>
 								<p>
 								<?php echo _AEC_USER_CURR_EXPIRE_DATE; ?>:&nbsp;
 								<?php echo aecHTML::Icon( 'clock_pause.png', _AEC_USER_LIFETIME ); ?>&nbsp;
@@ -605,7 +604,7 @@ class HTML_AcctExp
 								<p>
 									<?php echo _AEC_USER_RESET_EXP_DATE; ?>:&nbsp;
 									<?php echo aecHTML::Icon( 'clock_edit.png', _AEC_USER_RESET_EXP_DATE ); ?>
-									<input class="text_area" type="text" name="expiration" id="expiration" size="19" maxlength="19" value="<?php echo $expiration->expiration; ?>" disabled="disabled" />
+									<input class="text_area" type="text" name="expiration" id="expiration" size="19" maxlength="19" value="<?php echo $subscription->expiration; ?>" disabled="disabled" />
 									<input type="reset" name="reset" class="button" onClick="return showCalendar('expiration', 'y-mm-dd');" value="..." disabled="disabled" />
 								</p>
 								<?php
@@ -614,7 +613,7 @@ class HTML_AcctExp
 								<p>
 									<?php echo _AEC_USER_CURR_EXPIRE_DATE; ?>:&nbsp;
 									<?php echo aecHTML::Icon( 'clock_red.png', _AEC_USER_CURR_EXPIRE_DATE ); ?>&nbsp;
-									<strong><?php echo ( !empty( $expiration->expiration ) ? $expiration->expiration : _AEC_CMN_NOT_SET ); ?></strong>
+									<strong><?php echo ( !empty( $subscription->expiration ) ? $subscription->expiration : _AEC_CMN_NOT_SET ); ?></strong>
 								</p>
 								<p>
 									<?php echo _AEC_USER_LIFETIME; ?>:&nbsp;
@@ -622,8 +621,8 @@ class HTML_AcctExp
 								</p>
 								<p>
 									<?php echo _AEC_USER_RESET_EXP_DATE; ?>:&nbsp;<?php echo aecHTML::Icon( 'clock_edit.png', _AEC_USER_RESET_EXP_DATE ); ?>
-									<input class="text_area" type="text" name="expiration" id="expiration" size="19" maxlength="19" value="<?php echo ( !empty( $expiration->expiration ) ? $expiration->expiration : date( 'Y-m-d H:i:s' ) ); ?>"/>
-									<input type="hidden" name="expiration_check" id="expiration_check" value="<?php echo ( !empty( $expiration->expiration ) ? $expiration->expiration : date( 'Y-m-d H:i:s' ) ); ?>"/>
+									<input class="text_area" type="text" name="expiration" id="expiration" size="19" maxlength="19" value="<?php echo ( !empty( $subscription->expiration ) ? $subscription->expiration : date( 'Y-m-d H:i:s' ) ); ?>"/>
+									<input type="hidden" name="expiration_check" id="expiration_check" value="<?php echo ( !empty( $subscription->expiration ) ? $subscription->expiration : date( 'Y-m-d H:i:s' ) ); ?>"/>
 									<input type="reset" name="reset" class="button" onClick="return showCalendar('expiration', 'y-mm-dd');" value="..." title="<?php echo _AEC_USER_RESET_EXP_DATE; ?>" />
 								</p>
 								<?php
@@ -765,15 +764,15 @@ class HTML_AcctExp
 			</table>
 
 			<input type="hidden" name="option" value="<?php echo $option; ?>" />
-			<input type="hidden" name="id" value="<?php echo !empty( $expiration->id ) ? $expiration->id : ''; ?>" />
-			<input type="hidden" name="userid" value="<?php echo $expiration->userid; ?>" />
+			<input type="hidden" name="id" value="<?php echo !empty( $subscription->id ) ? $subscription->id : ''; ?>" />
+			<input type="hidden" name="userid" value="<?php echo $subscription->userid; ?>" />
 			<input type="hidden" name="task" value="" />
 			<input type="hidden" name="nexttask" value="<?php echo $nexttask;?>" />
 		</form>
 
  		<?php
 		if ( _EUCA_DEBUGMODE ) {
-			krumo( $option, $expiration, $subscription, $user, $invoices, $lists, $nexttask );
+			krumo( $option, $subscription, $user, $invoices, $lists, $nexttask );
 		}
 
  		HTML_myCommon::GlobalNerd();
