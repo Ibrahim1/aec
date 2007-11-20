@@ -210,6 +210,7 @@ define( '_COUPON_ERROR_WRONG_PLAN_PREVIOUS',	'Um diesen Gutschein zu verwenden m
 define( '_COUPON_ERROR_WRONG_PLANS_OVERALL',	'Sie haben leider nicht das richtige Abonnement in den bisherigen Abos um diesen Gutschein zu verwenden.');
 define( '_COUPON_ERROR_TRIAL_ONLY',			'Dieser Gutschein gilt nur f&uuml;r ein Probezeit-/Gratisabo.');
 define( '_COUPON_ERROR_COMBINATION', 'Dieser Gutschein kann nicht mit einem der zuvor eingegebenen Gutscheine verwendet werden.');
+define( '_COUPON_ERROR_SPONSORSHIP_ENDED', 'Die Patenschaft f&uuml;r diesen Coupon ist entweder abgelaufen oder zur Zeit nicht aktiv.');
 
 // ----======== EMAIL TEXT ========----
 

@@ -6334,6 +6334,24 @@ class couponHandler
 					}
 				}
 			}
+
+			// Check for max reuse
+			if ( !empty( $this->restrictions['depend_on_subscr_id'] ) ) {
+				if ( $this->restrictions['subscr_id_dependency'] ) {
+					$query = 'SELECT `status`'
+							. ' FROM #__acctexp_subscr'
+							. ' WHERE `id` = \'' . $this->restrictions['subscr_id_dependency'] . '\''
+							;
+					$database->setQuery( $query );
+
+					$subscr_status = strtolower( $database->loadResult() );
+
+					if ( ( strcmp( $subscr_status, 'active' ) === 0 ) || ( ( strcmp( $subscr_status, 'trial' ) === 0 ) && $this->restrictions['allow_trial_depend_subscr'] ) ) {
+						$this->setError( _COUPON_ERROR_SPONSORSHIP_ENDED );
+						return;
+					}
+				}
+			}
 		} else {
 			$this->setError( _COUPON_ERROR_NOTFOUND );
 		}

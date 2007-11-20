@@ -3172,6 +3172,9 @@ function editCoupon( $id, $option, $new, $type )
 	$params['used_plan_max']				= array( 'list',			'' );
 	$params['restrict_combination']			= array( 'list_yesno',		0 );
 	$params['bad_combinations']				= array( 'list',			'' );
+	$params['depend_on_subscr_id']			= array( 'list_yesno',		0 );
+	$params['subscr_id_dependency']			= array( 'inputB',			'' );
+	$params['allow_trial_depend_subscr']	= array( 'list_yesno',		0 );
 
 	// ensure user can't add group higher than themselves
 	$my_groups = $acl->get_object_groups( 'users', $my->id, 'ARO' );

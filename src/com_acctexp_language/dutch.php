@@ -209,7 +209,8 @@ define( '_COUPON_ERROR_WRONG_PLAN', 'U gebruikt de verkeerde abonnementsvorm voo
 define( '_COUPON_ERROR_WRONG_PLAN_PREVIOUS', 'Om deze coupon te gebruiken moet uw laatste abonnementsvorm verschillend zijn.');
 define( '_COUPON_ERROR_WRONG_PLANS_OVERALL', 'Uw gebruikersgeschiedenis beschikt niet over de juiste abonnementsvormen om deze coupon te gebruiken.');
 define( '_COUPON_ERROR_TRIAL_ONLY', 'U kunt deze coupon alleen gebruiken voor een proefabonnement.');
-define( '_COUPON_ERROR_COMBINATION', 'You cannot use this coupon with one of the other coupons');
+define( '_COUPON_ERROR_COMBINATION', 'You cannot use this coupon with one of the other coupons.');
+define( '_COUPON_ERROR_SPONSORSHIP_ENDED', 'Sponsorship for this Coupon has ended or is currently inactive.');
 
 // ----======== EMAIL TEXT ========----
 

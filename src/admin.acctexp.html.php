@@ -2070,6 +2070,7 @@ class HTML_AcctExp
 									<div style="position:relative;float:left;width:200px;">
 										<?php echo $aecHTML->createSettingsParticle( 'restrict_combination' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'bad_combinations' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'depend_on_subscr_id' ); ?>
 									</div>
 								</div>
 						</td></tr>
