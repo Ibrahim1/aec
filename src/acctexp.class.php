@@ -134,6 +134,29 @@ class metaUser
 		return;
 	}
 
+	function establishFocus( $payment_plan, $processor )
+	{
+		global $database;
+
+		$plan_params = $payment_plan->getParams();
+
+		$existing_record = $this->focusSubscription->getSubscriptionID( $this->userid, $payment_plan->id, null );
+
+		// To be failsafe, a new subscription may have to be added in here
+		if ( !$this->hasSubscription || !$plan_params['make_primary'] ) {
+			if ( $existing_record && $plan_params['update_existing'] ) {
+				// Update existing non-primary subscription
+				$this->focusSubscription = new Subscription( $database );
+				$this->focusSubscription->load( $existing_record );
+			} else {
+				// Create new subscription
+				$this->focusSubscription = new Subscription( $database );
+				$this->focusSubscription->load(0);
+				$this->focusSubscription->createNew( $this->userid, $processor, 0, $plan_params['make_primary'] );
+			}
+		}
+	}
+
 	function instantGIDchange( $gid )
 	{
 		global $database, $acl;
@@ -2193,24 +2216,7 @@ class SubscriptionPlan extends paramDBTable
 			if ( $params['make_primary'] ) {
 				$primary = 1;
 			} else {
-				$metaUser->focusSubscription = new Subscription( $database );
-
-				if ( $params['update_existing'] ) {
-					$query = 'SELECT id'
-					. ' FROM #__acctexp_subscr'
-					. ' WHERE userid = \'' . $userid . '\''
-					. ' AND primary != \'1\''
-					. ' AND plan = \'' . $this->id . '\''
-					;
-					$database->setQuery( $query );
-					$updatesubscr = $database->loadResult();
-				} else {
-					$updatesubscr = 0;
-				}
-
-				$metaUser->focusSubscription->load( $updatesubscr );
-				$metaUser->focusSubscription->primary = 0;
-				$metaUser->focusSubscription->createNew( $userid, $processor, true );
+				$metaUser->establishFocus( $this, $processor );
 			}
 
 			$comparison		= $this->doPlanComparison( $metaUser->focusSubscription );
@@ -3648,6 +3654,8 @@ class Invoice extends paramDBTable
 	var $active 			= null;
 	/** @var int */
 	var $userid 			= null;
+	/** @var int */
+	var $subscr_id 			= null;
 	/** @var string */
 	var $invoice_number 	= null;
 	/** @var string */
@@ -3994,30 +4002,21 @@ class Invoice extends paramDBTable
 		$new_plan = new SubscriptionPlan( $database );
 		$new_plan->load( $this->usage );
 
-		$plan_params = $new_plan->getParams();
-
 		// Get Subscription record
 		$metaUser = new metaUser( $this->userid );
 
-		$existing_record = getSubscriptionID( $this->userid, $this->usage, null );
-
 		if ( $metaUser->userid ) {
-			// To be failsafe, a new subscription may have to be added in here
-			if ( !$metaUser->hasSubscription || !$plan_params['make_primary'] ) {
-				if ( $existing_record && $plan_params['update_existing'] ) {
-					// Update existing non-primary subscription
-					$metaUser->focusSubscription = new Subscription( $database );
-					$metaUser->focusSubscription->load( $existing_record );
-				} else {
-					// Create new subscription
-					$metaUser->focusSubscription = new Subscription( $database );
-					$metaUser->focusSubscription->load(0);
-					$metaUser->focusSubscription->createNew( $this->userid, $this->method, 0, $plan_params['make_primary'] );
-				}
+			if ( empty( $this->subscr_id ) ) {
+				$metaUser->establishFocus( $new_plan, $this->method );
+
+				$this->subscr_id = $metaUser->focusSubscription->id;
+			} else {
+				$metaUser->focusSubscription->load( $this->subscr_id );
 			}
 
 			// Apply the Plan
 			$renew = $metaUser->focusSubscription->applyUsage( $this->usage, $this->method, 0, $multiplicator );
+
 		} else {
 			$new_plan->applyPlan( 0, $this->method, 0, $multiplicator );
 		}
@@ -4406,6 +4405,7 @@ class Subscription extends paramDBTable
 
 		$this->check();
 		$this->store();
+		$this->id = $this->getMax();
 	}
 
 
@@ -4652,7 +4652,7 @@ class Subscription extends paramDBTable
 		}
 
 		$new_plan = new SubscriptionPlan( $database );
-		$new_plan->load($usage);
+		$new_plan->load( $usage );
 
 		if ( $new_plan->id ) {
 			$renew = $new_plan->applyPlan( $this->userid, $processor, $silent, $multiplicator );
