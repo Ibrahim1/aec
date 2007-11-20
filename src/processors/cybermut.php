@@ -101,10 +101,10 @@ class processor_cybermut extends POSTprocessor
 	{
 		global $mosConfig_live_site;
 
-		$servers = array( 'paiement.creditmutuel.fr', 'ssl.paiement.cic-banques.fr', 'ssl.paiement.banque-obc.fr', 'paiement.caixanet.fr', 'creditmutuel.fr/telepaiement/test' );
+		$servers = array( 'paiement.creditmutuel.fr', 'ssl.paiement.cic-banques.fr', 'ssl.paiement.banque-obc.fr', 'paiement.caixanet.fr', 'creditmutuel.fr/telepaiement' );
 
 		if ( $cfg['testmode'] ) {
-			$var['post_url'] = "https://www.creditmutuel.fr/telepaiement/test/paiement.cgi";
+			$var['post_url'] = "https://" . $servers[$cfg['server']] . "/test/paiement.cgi";
 		} else {
 			$var['post_url'] = "https://" . $servers[$cfg['server']] . "/paiement.cgi";
 		}

@@ -194,8 +194,9 @@ if ( $task ) {
 
 		case 'planaction':
 			$action	= trim( mosGetParam( $_REQUEST, 'action', 0 ) );
+			$subscr	= trim( mosGetParam( $_REQUEST, 'subscr', '' ) );
 
-			planaction( $option, $action );
+			planaction( $option, $action, $subscr );
 			break;
 
 		case 'invoiceaddcoupon':
@@ -516,6 +517,41 @@ function subscriptionDetails( $option )
 			$alert = $metaUser->objSubscription->GetAlertLevel();
 		}
 
+		$user_subscriptions = $metaUser->getSecondarySubscriptions();
+
+		if ( !empty( $user_subscriptions ) ) {
+			$subscriptions = array();
+			foreach( $user_subscriptions as $subscription ) {
+				$secondary_plan = new SubscriptionPlan( $database );
+				$secondary_plan->load( $subscription->plan );
+
+				$spp = new PaymentProcessor();
+				if ( $spp->loadName( $subscription->type ) ) {
+					$spp->init();
+					$spp->getInfo();
+				} else {
+					$spp = false;
+				}
+
+				if ( isset( $spp->info['actions'] ) && ( strcmp( $metaUser->objSubscription->status, 'Active' ) === 0 ) ) {
+					$actions = explode( ';', $spp->info['actions'] );
+
+					$secondary_plan->proc_actions = array();
+					foreach ( $actions as $action ) {
+						$secondary_plan->proc_actions[] = '<a href="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action . '&amp;subscr=' . $subscription->id . '">' . $action . '</a>' );
+					}
+				}
+
+				$subscriptions[] = $secondary_plan;
+			}
+
+			if ( empty( $subscriptions ) ) {
+				$subscriptions = null;
+			}
+		} else {
+			$subscriptions = null;
+		}
+
 		// count number of payments from user
 		$query = 'SELECT count(*)'
 		. ' FROM #__acctexp_invoices'
@@ -596,7 +632,7 @@ function subscriptionDetails( $option )
 		}
 
 		$html = new HTML_frontEnd();
-		$html->subscriptionDetails( $option, $invoices, $metaUser, $recurring, $pp, $mi_info, $alert, $selected_plan );
+		$html->subscriptionDetails( $option, $invoices, $metaUser, $recurring, $pp, $mi_info, $alert, $selected_plan, $subscriptions );
 	}
 }
 
@@ -688,7 +724,7 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid )
 
 }
 
-function planaction( $option, $action )
+function planaction( $option, $action, $subscr )
 {
 	global $database, $my;
 
@@ -697,7 +733,7 @@ function planaction( $option, $action )
 		$userid = $my->id;
 
 		$invoicefact = new InvoiceFactory( $userid );
-		$invoicefact->planprocessoraction( $action );
+		$invoicefact->planprocessoraction( $action, $subscr );
 	} else {
 		mosNotAuth();
 		return;
@@ -936,7 +972,7 @@ function cancelPayment( $option )
 	$obj->load( $userid );
 
 	if ( $obj->id ) {
-		if ( ( strcasecmp( $obj->type, 'Super Administrator' ) != 0 || strcasecmp( $obj->type, 'superadministrator' ) != 0 ) && strcasecmp( $obj->type, 'Administrator' ) != 0 && $obj->block == 1 ) {
+		if ( (  (strcasecmp( $obj->type, 'Super Administrator' ) != 0 ) || ( strcasecmp( $obj->type, 'superadministrator' ) != 0 ) ) && ( strcasecmp( $obj->type, 'Administrator' ) != 0 ) && ( $obj->block == 1 ) ) {
 			// If the user is not blocked this can be a false cancel
 			// So just delete user if he is blocked and is not an administrator or super admnistrator
 			$obj->delete();

@@ -91,6 +91,20 @@ class metaUser
 		}
 	}
 
+	function getSecondarySubscriptions()
+	{
+		global $database;
+
+		$query = 'SELECT id, plan, type'
+		. ' FROM #__acctexp_subscr'
+		. ' WHERE userid = \'' . (int) $this->userid . '\''
+		. ' AND `primary` = \'0\''
+		. ' ORDER BY `lastpay_date` DESC'
+		;
+		$database->setQuery( $query );
+		return $database->loadObjectList();
+	}
+
 	function procTriggerCreate( $user, $payment, $usage )
 	{
 		global $database, $aecConfig;
@@ -154,6 +168,24 @@ class metaUser
 				$this->focusSubscription->load(0);
 				$this->focusSubscription->createNew( $this->userid, $processor, 0, $plan_params['make_primary'] );
 			}
+		}
+	}
+
+	function moveFocus( $subscrid )
+	{
+		global $database;
+
+		$subscription = new Subscription( $database );
+		$subscription->load( $subscrid );
+
+		if ( $subscription->id ) {
+			if ( $subscription->userid == $this->userid ) {
+				$this->focusSubscription = $subscription;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
 		}
 	}
 
@@ -2660,7 +2692,7 @@ class SubscriptionPlan extends paramDBTable
 		$fixed = array( 'full_free', 'full_amount', 'full_period', 'full_periodunit',
 						'trial_free', 'trial_amount', 'trial_period', 'trial_periodunit',
 						'gid_enabled', 'gid', 'lifetime', 'fallback',
-						'similarplans', 'equalplans', 'make_active', 'make_primary' );
+						'similarplans', 'equalplans', 'make_active', 'make_primary', 'update_existing' );
 
 		$params = array();
 		foreach ( $fixed as $varname ) {
@@ -3576,17 +3608,26 @@ class InvoiceFactory
 		}
 	}
 
-	function planprocessoraction( $action )
+	function planprocessoraction( $action, $subscr=null )
 	{
 		global $database;
 
 		$metaUser = new metaUser( $this->userid );
 
 		$invoice = new Invoice( $database );
-		$invoice->load( AECfetchfromDB::lastClearedInvoiceIDbyUserID( $this->userid, $metaUser->objSubscription->plan ) );
 
-		if ( !is_object( $invoice ) ) {
-			$invoice->load( AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $this->userid, $metaUser->objSubscription->plan ) );
+		if ( !empty( $subscr ) ) {
+			if ( $metaUser->moveFocus( $subscr ) ) {
+				$invoice->loadbySubscription( $metaUser->focusSubscription->id, $metaUser->userid );
+			}
+		}
+
+		if ( empty( $invoice->id ) ) {
+			$invoice->load( AECfetchfromDB::lastClearedInvoiceIDbyUserID( $this->userid, $metaUser->focusSubscription->plan ) );
+		}
+
+		if ( empty( $invoice->id ) ) {
+			$invoice->load( AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $this->userid, $metaUser->focusSubscription->plan ) );
 		}
 
 		$pp = new PaymentProcessor( $database );
@@ -3695,6 +3736,23 @@ class Invoice extends paramDBTable
 		;
 		$database->setQuery( $query );
 		$this->load($database->loadResult());
+	}
+
+	function loadbySubscriptionId( $subscrid, $userid=null )
+	{
+		global $database;
+
+		$query = 'SELECT id'
+		. ' FROM #__acctexp_invoices'
+		. ' WHERE subscr_id = \'' . $subscrid . '\''
+		;
+
+		if ( !empty( $userid ) ) {
+			$query .= ' AND `userid` = \'' . $userid . '\'';
+		}
+
+		$database->setQuery( $query );
+		$this->load( $database->loadResult() );
 	}
 
 	function hasDuplicate( $userid, $invoiceNum )
@@ -4466,9 +4524,7 @@ class Subscription extends paramDBTable
 	{
 		global $database, $mosConfig_offset_user, $aecConfig;
 
-		$aecexpid = AECfetchfromDB::ExpirationIDfromUserID( $this->userid );
-
-		if ( $aecexpid ) {
+		if ( $this->expiration ) {
 			$alert['level']		= -1;
 			$alert['daysleft']	= 0;
 
@@ -4505,14 +4561,7 @@ class Subscription extends paramDBTable
 		} elseif ( strcmp( $this->status, 'Expired' ) === 0 ) {
 			$expired = true;
 		} else {
-			$expiration = new AcctExp( $database );
-			$expiration->load( AECfetchfromDB::ExpirationIDfromUserID( $this->userid ) );
-
-			if ( $expiration->id > 0 ) {
-				$expired = $expiration->is_expired();
-			} else {
-				$expired = false;
-			}
+			$expired = $this->is_expired();
 		}
 
 		if ( $expired ) {
@@ -4602,9 +4651,6 @@ class Subscription extends paramDBTable
 				$subscription_plan->load( $this->plan );
 				$plan_params = $subscription_plan->getParams();
 
-				$expiration = new AcctExp( $database );
-				$expiration->loadUserid( $this->userid );
-
 				// Resolve blocks that we are going to substract from the set expiration date
 				$unit = 60*60*24;
 				switch ( $plan_params['full_periodunit'] ) {
@@ -4614,7 +4660,7 @@ class Subscription extends paramDBTable
 					case 'Y': $unit *= 356;	$periodlength = $plan_params['full_period'] * $unit; break;
 				}
 
-				$newexpiration = strtotime( $expiration->expiration );
+				$newexpiration = strtotime( $this->expiration );
 				$now = time();
 
 				// ...cut away blocks until we are in the past
@@ -4623,9 +4669,9 @@ class Subscription extends paramDBTable
 				}
 
 				// And we get the bare expiration date
-				$expiration->expiration = date( 'Y-m-d H:i:s', $newexpiration );
-				$expiration->check();
-				$expiration->store();
+				$this->expiration = date( 'Y-m-d H:i:s', $newexpiration );
+				$this->check();
+				$this->store();
 
 				$this->setStatus( 'Cancelled' );
 
@@ -5094,6 +5140,7 @@ class AECfetchfromDB
 		$query = 'SELECT id'
 		. ' FROM #__acctexp_subscr'
 		. ' WHERE userid = \'' . (int) $userid . '\''
+		. ' ORDER BY `primary` DESC'
 		;
 		$database->setQuery( $query );
 		return $database->loadResult();

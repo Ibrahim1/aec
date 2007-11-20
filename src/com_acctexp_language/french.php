@@ -104,6 +104,7 @@ define( '_RENEW_BUTTON_UPGRADE', 'Mettre &agrave; jour');
 define( '_PAYMENT_PENDING_REASON_ECHECK', '&eacute;chec non r&eacute;solu (1-4 jours ouvr&eacute;s)');
 define( '_PAYMENT_PENDING_REASON_TRANSFER', 'en attente de transfert du paiement');
 define( '_YOUR_SUBSCRIPTION', 'Your Subscription');
+define( '_YOUR_FURTHER_SUBSCRIPTION', 'Further Subscriptions');
 define( '_PLAN_PROCESSOR_ACTIONS', 'For this, you have the following options:');
 
 // --== PAGE EXPIRATION ==--

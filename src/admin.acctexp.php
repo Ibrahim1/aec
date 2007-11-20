@@ -1444,7 +1444,6 @@ function listSubscriptions( $option, $set_group, $userid )
 	if ( !is_null($expire) && is_array( $userid ) && count( $userid ) > 0 ) {
 		foreach ( $userid as $k ) {
 			$subscriptionid = AECfetchfromDB::SubscriptionIDfromUserID( $k );
-			$expirationid = AECfetchfromDB::ExpirationIDfromUserID( $k );
 
 			$subscriptionHandler = new Subscription( $database );
 
@@ -1453,15 +1452,6 @@ function listSubscriptions( $option, $set_group, $userid )
 				$subscriptionHandler->load( $subscriptionid );
 			} else {
 				$subscriptionHandler->createNew( $k, '', 1 );
-			}
-
-			$expirationHandler = new AcctExp( $database );
-
-			if ( $expirationid ) {
-				$expirationHandler->load( $expirationid );
-			} else {
-				$expirationHandler->load( 0 );
-				$expirationHandler->userid = $k;
 			}
 
 			if ( strcmp( $expire, 'now' ) === 0) {
@@ -1489,9 +1479,8 @@ function listSubscriptions( $option, $set_group, $userid )
 					$groups[] = 'active';
 				}
 			} elseif ( strpos( $expire, 'set' ) === 0 ) {
-				$expirationHandler->setExpiration( 'M', substr( $expire, 4 ), 0 );
-				$expirationHandler->check();
-				$expirationHandler->store();
+				$subscriptionHandler->setExpiration( 'M', substr( $expire, 4 ), 0 );
+
 				$subscriptionHandler->lifetime = 0;
 				$subscriptionHandler->setStatus( 'Active' );
 
@@ -1500,12 +1489,11 @@ function listSubscriptions( $option, $set_group, $userid )
 				}
 			} elseif ( strpos( $expire, 'add' ) === 0 ) {
 				if ( $subscriptionHandler->lifetime) {
-					$expirationHandler->setExpiration( 'M', substr( $expire, 4 ), 0 );
+					$subscriptionHandler->setExpiration( 'M', substr( $expire, 4 ), 0 );
 				} else {
-					$expirationHandler->setExpiration( 'M', substr( $expire, 4 ), 1 );
+					$subscriptionHandler->setExpiration( 'M', substr( $expire, 4 ), 1 );
 				}
-				$expirationHandler->check();
-				$expirationHandler->store();
+
 				$subscriptionHandler->lifetime = 0;
 				$subscriptionHandler->setStatus( 'Active' );
 
