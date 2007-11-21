@@ -3508,7 +3508,8 @@ function invoices( $option )
 
 	$where = array();
 	if ( $search ) {
-		$where[] = 'LOWER(invoice_number) LIKE \'%' . $database->getEscaped( trim( strtolower( $search ) ) ) . '%\'';
+		$where[] = '( LOWER(invoice_number) LIKE \'%' . $database->getEscaped( trim( strtolower( $search ) ) ) . '%\''
+					. ' OR LOWER(secondary_ident) LIKE \'%' . $database->getEscaped( trim( strtolower( $search ) ) ) . '%\' )';
 	}
 
 	// get the total number of records
