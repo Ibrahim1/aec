@@ -182,6 +182,10 @@ class processor_ccbill extends POSTprocessor
 			// Make sure that we have not set this up before
 			$exists = AECfetchfromDB::InvoiceIDfromNumber( $subscription_id );
 			if ( empty( $exists ) ) {
+				if ( $password == 'xxxxxx' ) {
+					$password = strtoupper( substr( base64_encode( md5( rand() ) ), 0, 6 ) );
+				}
+
 				$user = array();
 				$user['name'] = $customer_fname . ' ' . $customer_lname;
 				$user['email'] = $email;
@@ -191,6 +195,39 @@ class processor_ccbill extends POSTprocessor
 
 				$payment['secondary_ident'] = $subscription_id;
 				$payment['processor'] = 'ccbill';
+
+				if ( isset( $post['usage'] ) ) {
+					$usage = $post['usage'];
+				} elseif( $post['typeId'] ) {
+					$typeId = $post['typeId'];
+
+					$firstzero = 1;
+					while( $firstzero ) {
+						substr( $typeId, 1 );
+
+						$firstzero = ( strpos( $typeId, "0" ) === 0 );
+					}
+
+					$search = 'Allowedtypes=' . $typeId;
+
+					$query = 'SELECT id'
+					. ' FROM #__acctexp_plans'
+					. ' WHERE custom_params LIKE \'%' . $search . '%\''
+					;
+
+					$database->setQuery( $query );
+					$planid = $database->loadResult();
+
+					if ( $planid ) {
+						$usage = $planid;
+					}
+				} else {
+					$usage = null;
+				}
+
+				if ( empty( $usage ) ) {
+					$response['pending_reason'] = 'Could not identify usage';
+				}
 
 				$metaUser = new metaUser();
 				$metaUser->procTriggerCreate( $user, $invoice, $post['usage'] );
