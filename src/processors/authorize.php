@@ -102,7 +102,7 @@ class processor_authorize extends POSTprocessor
 		global $mosConfig_live_site;
 
 		if ( $cfg['testmode'] ) {
-			$var['post_url']	= "https://certification.authorize.net/gateway/transact.dll";
+			$var['post_url']	= "https://test.authorize.net/gateway/transact.dll";
 		} else {
 			$var['post_url']	= "https://secure.authorize.net/gateway/transact.dll";
 		}

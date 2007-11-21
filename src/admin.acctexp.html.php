@@ -2133,6 +2133,7 @@ class HTML_AcctExp
 			<th width="5%">#</th>
 			<th align="left" width="10%"><?php echo _INVOICE_USERID; ?></th>
 			<th align="center" width="10%"><?php echo _INVOICE_INVOICE_NUMBER; ?></th>
+			<th align="center" width="10%"><?php echo _INVOICE_SECONDARY_IDENT; ?></th>
 			<th align="center" width="30%"><?php echo _INVOICE_CREATED_DATE; ?></th>
 			<th align="center" width="30%"><?php echo _INVOICE_TRANSACTION_DATE; ?></th>
 			<th align="center" width="10%"><?php echo _USERPLAN; ?></th>
@@ -2148,6 +2149,7 @@ class HTML_AcctExp
 				<td><?php echo $pageNav->rowNumber( $i ); ?></td>
 				<td><?php echo $rows[$i]->userid; ?></td>
 				<td align="center"><?php echo $rows[$i]->invoice_number; ?></td>
+				<td align="center"><?php echo $rows[$i]->secondary_ident; ?></td>
 				<td align="center"><?php echo $rows[$i]->created_date; ?></td>
 				<td align="center"><?php echo $rows[$i]->transaction_date; ?></td>
 	  			<td align="center"><?php echo $rows[$i]->usage; ?></td>
