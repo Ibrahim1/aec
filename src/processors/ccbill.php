@@ -180,7 +180,8 @@ class processor_ccbill extends POSTprocessor
 		// Check whether this is a passive registration
 		if ( empty( $invoice ) ) {
 			// Make sure that we have not set this up before
-			if ( empty( AECfetchfromDB::InvoiceIDfromNumber( $subscription_id ) ) ) {
+			$exists = AECfetchfromDB::InvoiceIDfromNumber( $subscription_id );
+			if ( empty( $exists ) ) {
 				$user = array();
 				$user['name'] = $customer_fname . ' ' . $customer_lname;
 				$user['email'] = $email;
