@@ -43,6 +43,16 @@ if ( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
 	include_once( $langPath . 'general.php' );
 }
 
+if ( !defined( '_AEC_LANG' ) ) {
+	$langPath = $mosConfig_absolute_path . '/components/com_acctexp/com_acctexp_language/';
+	if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
+		include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
+	} else {
+		include_once( $langPath . 'english.php' );
+	}
+	define( '_AEC_LANG', 1 );
+}
+
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.common.php' );
 }
@@ -154,7 +164,15 @@ class metaUser
 
 		$plan_params = $payment_plan->getParams();
 
-		$existing_record = $this->focusSubscription->getSubscriptionID( $this->userid, $payment_plan->id, null );
+		if ( $this->hasSubscription ) {
+			$existing_record = $this->focusSubscription->getSubscriptionID( $this->userid, $payment_plan->id, null );
+		} else {
+			$existing_record = 0;
+		}
+
+		if ( !isset( $plan_params['make_primary'] ) ) {
+			$plan_params['make_primary'] = 1;
+		}
 
 		// To be failsafe, a new subscription may have to be added in here
 		if ( !$this->hasSubscription || !$plan_params['make_primary'] ) {
@@ -2245,6 +2263,10 @@ class SubscriptionPlan extends paramDBTable
 
 			$params			= $this->getParams();
 
+			if ( !isset( $params['make_primary'] ) ) {
+				$params['make_primary'] = 1;
+			}
+
 			if ( $params['make_primary'] ) {
 				$primary = 1;
 			} else {
@@ -3014,14 +3036,6 @@ class InvoiceFactory
 				if ( !( strcmp( $user_subscription->lastpay_date, '0000-00-00 00:00:00' ) === 0 ) ) {
 					$this->renew = 1;
 				}
-			} else {
-				if ( isset( $this->confirmed ) ) {
-					if ( $this->confirmed ) {
-						$user_subscription = new Subscription( $database );
-						$user_subscription->load(0);
-						$user_subscription->createNew( $this->userid, $this->processor, 1 );
-					}
-				}
 			}
 		}
 
@@ -3462,11 +3476,8 @@ class InvoiceFactory
 		 	notAllowed();
 		}
 
-		$user_subscription	= new Subscription( $database );
-		$user_subscription->loadUserID( $this->userid );
-
-		$amount				= $this->objUsage->SubscriptionAmount( $this->recurring, $user_subscription );
-		$original_amount	= $this->objUsage->SubscriptionAmount( $this->recurring, $user_subscription );
+		$amount				= $this->objUsage->SubscriptionAmount( $this->recurring, $metaUser->objSubscription );
+		$original_amount	= $this->objUsage->SubscriptionAmount( $this->recurring, $metaUser->objSubscription );
 		$warning			= 0;
 
 		if ( !empty( $aecConfig->cfg['enable_coupons'] ) ) {

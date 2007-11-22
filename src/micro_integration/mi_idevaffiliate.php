@@ -60,5 +60,6 @@ class mi_idevaffiliate
 
 		return true;
 	}
+
 }
 ?>

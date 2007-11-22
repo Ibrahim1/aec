@@ -906,9 +906,10 @@ function com_install()
 		. ' FROM #__acctexp_plans'
 		;
 		$database->setQuery( $query );
+		$pplans = $database->loadResultArray();
 
 		// Assign new make_primary flag to all old plans
-		foreach ( $database->loadResultArray() as $planid ) {
+		foreach ( $pplans as $planid ) {
 			$subscription_plan = new SubscriptionPlan( $database );
 
 			$subscription_plan->addParams( array( 'make_primary' => 1 ) );
