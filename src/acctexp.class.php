@@ -2354,7 +2354,7 @@ class SubscriptionPlan extends paramDBTable
 					$mi->load( $mi_id );
 					if ( $mi->callIntegration() ) {
 						if ( ( ( strcmp( $mi->class_name, 'mi_email' ) === 0 ) && !$silent ) || ( strcmp( $mi->class_name, 'mi_email' ) !== 0 ) )
-						$mi->action( $metaUser->userid, $this );
+						$mi->action( $metaUser->userid, null, $this );
 					}
 				}
 				unset($mi);
@@ -3023,14 +3023,6 @@ class InvoiceFactory
 					}
 				}
 			}
-		} else {
-			if ( isset( $this->confirmed ) ) {
-				if ( $this->confirmed ) {
-					$user_subscription = new Subscription( $database );
-					$user_subscription->load(0);
-					$user_subscription->createNew( $this->userid, $this->processor, 1 );
-				}
-			}
 		}
 
 		$return = $this->objUsage->SubscriptionAmount( $this->recurring, $user_subscription );
@@ -3101,7 +3093,7 @@ class InvoiceFactory
 			$this->processor = $this->objInvoice->method;
 			$this->usage = $this->objInvoice->usage;
 
-			if ( empty( $this->usage ) ) {
+			if ( empty( $this->usage ) && empty( $this->objInvoice->conditions ) ) {
 				$this->create( $option, 0, 0, $this->invoice_number );
 			} elseif ( empty( $this->processor ) ) {
 				$this->create( $option, 0, $this->usage, $this->invoice_number );
@@ -3571,6 +3563,10 @@ class InvoiceFactory
 			return;
 		}
 
+	}
+
+	function InvoiceToCheckout( $option, $repeat=0 )
+	{
 		$var = $this->objInvoice->prepareProcessorLink();
 
 		Payment_HTML::checkoutForm( $option, $var['var'], $var['params'], $this, $repeat );
@@ -4057,26 +4053,79 @@ class Invoice extends paramDBTable
 	{
 		global $database;
 
-		$new_plan = new SubscriptionPlan( $database );
-		$new_plan->load( $this->usage );
+		$metaUser = false;
+		$new_plan = false;
 
-		// Get Subscription record
-		$metaUser = new metaUser( $this->userid );
+		if ( !empty( $this->userid ) ) {
+			$metaUser = new metaUser( $this->userid );
+		}
 
-		if ( $metaUser->userid ) {
-			if ( empty( $this->subscr_id ) ) {
-				$metaUser->establishFocus( $new_plan, $this->method );
+		if ( !empty( $this->usage ) ) {
+			$new_plan = new SubscriptionPlan( $database );
+			$new_plan->load( $this->usage );
+		}
 
-				$this->subscr_id = $metaUser->focusSubscription->id;
+		if ( is_object( $metaUser ) && is_object( $new_plan ) ) {
+			if ( $metaUser->userid ) {
+				if ( empty( $this->subscr_id ) ) {
+					$metaUser->establishFocus( $new_plan, $this->method );
+
+					$this->subscr_id = $metaUser->focusSubscription->id;
+				} else {
+					$metaUser->focusSubscription->load( $this->subscr_id );
+				}
+
+				// Apply the Plan
+				$renew = $metaUser->focusSubscription->applyUsage( $this->usage, $this->method, 0, $multiplicator );
 			} else {
-				$metaUser->focusSubscription->load( $this->subscr_id );
+				$new_plan->applyPlan( 0, $this->method, 0, $multiplicator );
+			}
+		}
+
+		if ( !empty( $this->conditions ) ) {
+			$micro_integrations = false;
+
+			if ( strpos( 'mi_attendevents' ) ) {
+				$micro_integration['name'] = 'mi_attendevents';
+				$micro_integration['parameters'] = array( 'registration_id' => $this->substring_between( $this->conditions, '<registration_id>', '</registration_id>' ) );
+				$micro_integrations = array();
+				$micro_integrations[] = $micro_integration;
 			}
 
-			// Apply the Plan
-			$renew = $metaUser->focusSubscription->applyUsage( $this->usage, $this->method, 0, $multiplicator );
+			if ( is_array( $micro_integrations ) ) {
+				foreach ( $micro_integrations as $micro_int ) {
+					$mi = new microIntegration( $database );
 
-		} else {
-			$new_plan->applyPlan( 0, $this->method, 0, $multiplicator );
+					if ( isset( $micro_integration['parameters'] ) ) {
+						$exchange = $micro_integration['parameters'];
+					} else {
+						$exchange = null;
+					}
+
+					if ( isset( $micro_int['name'] ) ) {
+						if ( $mi->callDry( $micro_int['name'] ) ) {
+							if ( is_object( $metaUser ) ) {
+								$mi->action( $metaUser->userid, $exchange, $new_plan );
+							} else {
+								$mi->action( false, $exchange, $new_plan );
+							}
+						}
+					} elseif ( isset( $micro_int['id'] ) ) {
+						if ( $mi->mi_exists( $micro_int['id'] ) ) {
+							$mi->load( $micro_int['id'] );
+							if ( $mi->callIntegration() ) {
+								if ( is_object( $metaUser ) ) {
+									$mi->action( $metaUser->userid, $exchange, $new_plan );
+								} else {
+									$mi->action( false, $exchange, $new_plan );
+								}
+							}
+						}
+					}
+
+					unset($mi);
+				}
+			}
 		}
 
 		if ( $this->coupons ) {
@@ -4092,7 +4141,11 @@ class Invoice extends paramDBTable
 						if ( $mi->mi_exists( $mi_id ) ) {
 							$mi->load( $mi_id );
 							if ( $mi->callIntegration() ) {
-								$mi->action( $metaUser->userid, $new_plan );
+								if ( is_object( $metaUser ) ) {
+									$mi->action( $metaUser->userid, null, $new_plan );
+								} else {
+									$mi->action( false, null, $new_plan );
+								}
 							}
 						}
 					}
@@ -4103,6 +4156,17 @@ class Invoice extends paramDBTable
 		$this->setTransactionDate();
 
 		return $renew;
+	}
+
+	function substring_between( $haystack, $start, $end )
+	{
+		if ( strpos( $haystack, $start ) === false || strpos( $haystack, $end ) === false ) {
+			return false;
+	   } else {
+			$start_position = strpos( $haystack, $start ) + strlen( $start );
+			$end_position = strpos( $haystack, $end );
+			return substr( $haystack, $start_position, $end_position - $start_position );
+		}
 	}
 
 	function setTransactionDate()
@@ -4197,9 +4261,6 @@ class Invoice extends paramDBTable
 
 		$metaUser = new metaUser( $this->userid );
 
-		$new_subscription = new SubscriptionPlan( $database );
-		$new_subscription->load( $this->usage );
-
 		$pp = new PaymentProcessor();
 		if ( !$pp->loadName( strtolower( $this->method ) ) ) {
 	 		// Nope, won't work buddy
@@ -4209,14 +4270,22 @@ class Invoice extends paramDBTable
 		$pp->init();
 		$pp->getInfo();
 
-		$int_var['planparams'] = $new_subscription->getProcessorParameters( $pp->id );
-		if ( isset( $pp->info['recurring'] ) ) {
-			$int_var['recurring'] = $pp->info['recurring'];
+		if ( $this->usage ) {
+			$new_subscription = new SubscriptionPlan( $database );
+			$new_subscription->load( $this->usage );
+
+			$int_var['planparams'] = $new_subscription->getProcessorParameters( $pp->id );
+			if ( isset( $pp->info['recurring'] ) ) {
+				$int_var['recurring'] = $pp->info['recurring'];
+			} else {
+				$int_var['recurring'] = 0;
+			}
+
+			$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], $metaUser->objSubscription );
 		} else {
+			$amount['amount'] = $this->amount;
 			$int_var['recurring'] = 0;
 		}
-
-		$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], $metaUser->objSubscription );
 
 		if ( !empty( $this->coupons ) ) {
 			$coupons = explode( ';', $this->coupons);
@@ -4227,7 +4296,13 @@ class Invoice extends paramDBTable
 		}
 
 		$int_var['amount']		= $amount['amount'];
-		$int_var['return_url']	= $amount['return_url'];
+
+		if ( !empty( $amount['return_url'] ) ) {
+			$int_var['return_url'] = $amount['return_url'];
+		} else {
+			$int_var['return_url'] = AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=thanks&amp;renew=0' );
+		}
+
 		$int_var['invoice']		= $this->invoice_number;
 		$int_var['usage']		= $this->invoice_number;
 
@@ -6058,6 +6133,17 @@ class microIntegration extends paramDBTable
 		return $database->loadResult();
 	}
 
+	function callDry( $mi_name )
+	{
+		global $mosConfig_absolute_path;
+
+		$this->class_name = $mi_name;
+
+		$filename = $mosConfig_absolute_path . '/components/com_acctexp/micro_integration/' . $this->class_name . '.php';
+
+		$this->callIntegration( true );
+	}
+
 	function callIntegration( $override = 0 )
 	{
 		global $mosConfig_absolute_path;
@@ -6067,7 +6153,7 @@ class microIntegration extends paramDBTable
 		if ( ( ( !$this->active && $this->id ) || !file_exists( $filename ) ) && !$override ) {
 			// MI does not exist or is deactivated
 			return false;
-		} elseif ( file_exists( $filename ) ){
+		} elseif ( file_exists( $filename ) ) {
 			include_once $filename;
 
 			$class = $this->class_name;
@@ -6085,12 +6171,18 @@ class microIntegration extends paramDBTable
 			}
 
 			return true;
+		} else {
+			return false;
 		}
 	}
 
-	function action( $userid, $objplan=null )
+	function action( $userid, $exchange=null, $objplan=null )
 	{
-		$params = $this->getParams();
+		if ( !is_array( $exchange ) ) {
+			$params = $this->getExchangedSettings( $exchange );
+		} else {
+			$params = $this->getParams();
+		}
 
 		if ( is_array( $userid ) ){
 			foreach ( $userid as $id ) {
@@ -6186,6 +6278,25 @@ class microIntegration extends paramDBTable
 		} else {
 			return false;
 		}
+	}
+
+	function getExchangedSettings( $exchange )
+	{
+		$settings = $this->getParams();
+
+		 foreach ( $settings as $key => $value ) {
+		 	if ( isset( $exchange[$key] ) ) {
+				if ( !is_null( $exchange[$key] ) && ( $exchange[$key] != '' ) ) {
+		 			if ( strcmp( $exchange[$key], '[[SET_TO_NULL]]' ) === 0 ) {
+		 				$settings[$key] = '';
+		 			} else {
+		 				$settings[$key] = $exchange[$key];
+		 			}
+				}
+		 	}
+		 }
+
+		return $settings;
 	}
 
 	function savePostParams( $array )

@@ -652,6 +652,9 @@ class Payment_HTML
 			} ?>
 			<div id="amountbox">
 				<table class="amount">
+					<?php
+					if ( isset( $InvoiceFactory->payment ) ) {
+					?>
 					<tr>
 						<td class="item"><?php echo _CHECKOUT_INVOICE_AMOUNT; ?> (<?php echo $InvoiceFactory->objInvoice->invoice_number; ?>)</td>
 						<td class="amount">
@@ -659,6 +662,8 @@ class Payment_HTML
 						</td>
 					</tr>
 					<?php
+					}
+
 					if ( $InvoiceFactory->coupons['active'] ) {
 						if ( isset( $InvoiceFactory->coupons['coupons'] ) ) {
 							foreach ( $InvoiceFactory->coupons['coupons'] as $id => $coupon ) { ?>

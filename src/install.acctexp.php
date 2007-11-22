@@ -134,6 +134,7 @@ function com_install()
 	. '`coupons` varchar(255) NULL,'
 	. '`transactions` text NULL,'
 	. '`params` text NULL,'
+	. '`conditions` text NULL,'
 	. ' PRIMARY KEY (`id`)'
 	. ') TYPE=MyISAM;'
 	;
@@ -918,6 +919,7 @@ function com_install()
 	}
 
 	$eucaInstalldb->addColifNotExists( 'subscr_id', "int(11) NULL", 'invoices' );
+	$eucaInstalldb->addColifNotExists( 'conditions', "text NULL", 'invoices' );
 
 	// Rewrite old entries for hardcoded "transfer" processor to new API conform "offline_payment" processor
 	$query = 'UPDATE #__acctexp_invoices'
