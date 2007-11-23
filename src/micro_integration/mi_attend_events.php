@@ -24,18 +24,25 @@ class mi_attend_events
 	function Settings( $params )
 	{
 		$settings = array();
-		$settings['setupinfo'] = array( 'fieldset' );
 		return $settings;
 	}
 
-
 	function action( $params, $userid, $plan )
 	{
-		global $database, $mosConfig_live_site;
+		global $database, $mosConfig_live_site, $mosConfig_absolute_path;
+
+		include_once( $mosConfig_absolute_path . '/components/com_attend_events/attend_events.class.php' );
+
+		$database->setQuery("SELECT transaction_id FROM #__events_transactions WHERE ( registration_id = '" . $params['registration_id'] . "' )");
+		$transaction_id = $database->loadResult();
 
 		// mark ae invoice as cleared
-		// make paypal log entry
-		//
+		$transaction = new comAETransaction( $database );
+		$transaction->load( $transaction_id );
+		$transaction->bind($_POST);
+		$transaction->gateway = 'Cybermut';
+		$transaction->check();
+		$transaction->store();
 
 		return true;
 	}
