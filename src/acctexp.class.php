@@ -3726,6 +3726,8 @@ class Invoice extends paramDBTable
 	var $coupons 			= null;
 	/** @var text */
 	var $params 			= null;
+	/** @var text */
+	var $conditions			= null;
 
 	function Invoice(&$db)
 	{

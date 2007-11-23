@@ -33,7 +33,9 @@ class mi_attend_events
 	{
 		global $database, $mosConfig_live_site;
 
-
+		// mark ae invoice as cleared
+		// make paypal log entry
+		//
 
 		return true;
 	}
