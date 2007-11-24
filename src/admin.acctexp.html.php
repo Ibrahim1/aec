@@ -724,8 +724,8 @@ class HTML_AcctExp
 											<td><?php echo _HISTORY_COL_AMOUNT;?></td>
 											<td><?php echo _HISTORY_COL_DATE;?></td>
 											<td><?php echo _HISTORY_COL_METHOD;?></td>
+<!-- polc: fixed transposed column headings -->											<td><?php echo _HISTORY_COL_PLAN;?></td>
 											<td><?php echo _HISTORY_COL_ACTION;?></td>
-											<td><?php echo _HISTORY_COL_PLAN;?></td>
 										</tr>
 										<tr>
 											<td colspan="6" style="border-top: 2px solid #999999;"></td>
