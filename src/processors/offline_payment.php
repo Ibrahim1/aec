@@ -57,6 +57,7 @@ class processor_offline_payment extends processor
 		$settings = array();
 		$settings['info'] = '';
 		$settings['waitingplan'] = 0;
+		$settings['currency']='';
 
 		return $settings;
 	}
@@ -66,6 +67,7 @@ class processor_offline_payment extends processor
 		$settings = array();
 		$settings['waitingplan'] = array( 'list_plan' );
 		$settings['info'] = array( 'editor' );
+		$settings['currency'] = array( 'list_currency' );
 
 		return $settings;
 	}
