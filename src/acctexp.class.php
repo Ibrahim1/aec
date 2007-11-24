@@ -753,6 +753,7 @@ class aecHeartbeat extends mosDBTable
 		$pe					= 0;
 		$exp_actions		= 0;
 		$exp_users			= 0;
+		$pps				= array();
 
 		// Efficient way to check for expired users without checking on each one
 		if ( !empty( $subscription_list ) ) {
