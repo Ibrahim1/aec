@@ -3575,6 +3575,7 @@ class InvoiceFactory
 			return;
 		}
 
+		$this->InvoiceToCheckout( $option, $repeat );
 	}
 
 	function InvoiceToCheckout( $option, $repeat=0 )
