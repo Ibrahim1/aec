@@ -464,8 +464,6 @@ text-align: center;
 	padding-right:2%;
 }
 #checkoutbox .inputbox, #checkoutbox select{
-	display:block;
-	float:left;
 	clear:right;
 }
 #checkoutbox .button{

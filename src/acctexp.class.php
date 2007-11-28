@@ -3413,12 +3413,10 @@ class InvoiceFactory
 
 		$this->puffer( $option );
 
-		$tos = ( !is_null( $aecConfig->cfg['tos'] ) ) ? $aecConfig->cfg['tos'] : 0;
-
 		$this->coupons = array();
 		$this->coupons['active'] = $aecConfig->cfg['enable_coupons'];
 
-		Payment_HTML::confirmForm( $option, $this, $user, $tos, $passthrough );
+		Payment_HTML::confirmForm( $option, $this, $user, $passthrough );
 	}
 
 

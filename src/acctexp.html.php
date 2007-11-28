@@ -521,7 +521,7 @@ class Payment_HTML
 		return $html_code;
 	}
 
-	function confirmForm( $option, $InvoiceFactory, $user, $tos=null, $passthrough = false)
+	function confirmForm( $option, $InvoiceFactory, $user, $passthrough = false)
 	{
 		global $database, $aecConfig;
 
@@ -530,7 +530,7 @@ class Payment_HTML
 
 		<div class="componentheading"><?php echo _CONFIRM_TITLE; ?></div>
 		<?php
-		if ( $tos ) { ?>
+		if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
 			<script type="text/javascript">
 				/* <![CDATA[ */
 				function submitPayment() {
@@ -600,8 +600,8 @@ class Payment_HTML
 						<input type="hidden" name="usage" value="<?php echo $InvoiceFactory->usage; ?>" />
 						<input type="hidden" name="processor" value="<?php echo $InvoiceFactory->processor; ?>" />
 						<?php
-						if ( $tos ) { ?>
-							<p><input name="tos" type="checkbox" /><?php echo sprintf( _CONFIRM_TOS, $tos ); ?></p>
+						if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
+							<p><input name="tos" type="checkbox" /><?php echo sprintf( _CONFIRM_TOS, $aecConfig->cfg['tos'] ); ?></p>
 							<input type="button" onclick="javascript:submitPayment()" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
 							<?php
 						} else { ?>
