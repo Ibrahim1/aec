@@ -57,6 +57,7 @@ class processor_authorize_arb extends XMLprocessor
 		$settings['transaction_key']	= "transaction_key";
 		$settings['testmode']			= 0;
 		$settings['currency']			= "USD";
+		$settings['promptAddress']		= 0;
 		$settings['totalOccurrences']	= 12;
 		$settings['trialOccurrences']	= 1;
 		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
@@ -72,6 +73,7 @@ class processor_authorize_arb extends XMLprocessor
 		$settings['login'] 				= array("inputC");
 		$settings['transaction_key']	= array("inputC");
 		$settings['currency']			= array("list_currency");
+		$settings['promptAddress']		= array("list_yesno");
 		$settings['totalOccurrences']	= array("inputA");
 		$settings['trialOccurrences']	= array("inputA");
 		$settings['item_name']			= array("inputE");
@@ -95,6 +97,14 @@ class processor_authorize_arb extends XMLprocessor
 
 		$var['params']['billFirstName'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLFIRSTNAME_NAME, _AEC_AUTHORIZE_ARB_PARAMS_BILLFIRSTNAME_DESC, $name[0]);
 		$var['params']['billLastName'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLLASTNAME_NAME, _AEC_AUTHORIZE_ARB_PARAMS_BILLLASTNAME_DESC, $name[1]);
+
+		if ( !empty( $cfg['promptAddress'] ) ) {
+			$var['params']['billAddress'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLADDRESS_NAME );
+			$var['params']['billCity'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLCITY_NAME );
+			$var['params']['billState'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLSTATE_NAME );
+			$var['params']['billZip'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLZIP_NAME );
+			$var['params']['billCountry'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLCITY_NAME );
+		}
 
 		return $var;
 	}
@@ -144,11 +154,24 @@ class processor_authorize_arb extends XMLprocessor
 					. '<expirationDate>' . trim( $expirationDate ) . '</expirationDate>'
 					. '</creditCard>'
 					. '</payment>'
-					. '<billTo>'
+					;
+		$content .=	 '<billTo>'
 					. '<firstName>'. trim( $int_var['params']['billFirstName'] ) . '</firstName>'
 					. '<lastName>' . trim( $int_var['params']['billLastName'] ) . '</lastName>'
-					. '</billTo>'
-					. '</subscription>';
+					;
+
+		if ( isset( $int_var['params']['billAddress'] ) ) {
+		$content .=	 '<billTo>'
+					. '<address>'. trim( $int_var['params']['billAddress'] ) . '</address>'
+					. '<city>' . trim( $int_var['params']['billCity'] ) . '</city>'
+					. '<state>'. trim( $int_var['params']['billState'] ) . '</state>'
+					. '<zip>' . trim( $int_var['params']['billZip'] ) . '</zip>'
+					. '<country>'. trim( $int_var['params']['billCountry'] ) . '</country>'
+					;
+		}
+
+		$content .=	'</billTo>';
+		$content .=	'</subscription>';
 
 		// Close Request
 		$content .=	'</ARBCreateSubscriptionRequest>';
