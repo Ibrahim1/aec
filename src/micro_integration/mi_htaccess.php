@@ -4,7 +4,7 @@
  * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
  * @subpackage Micro Integrations - .htaccess
  * @copyright Copyright (C) 2007, All Rights Reserved, David Deutsch
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.gobalnerd.org
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
  * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
  */
 
@@ -118,13 +118,13 @@ class mi_htaccess
 					if ( $user->id ) {
 						$username = $user->username;
 						$password = null;
-	
+
 						if ( $params['use_md5'] ) {
 							$password = $user->password;
 						} else {
 							$apachepw = new apachepw( $database );
 							$apwid = $apachepw->getIDbyUserID( $userid );
-	
+
 							if ( $apwid > 0 ) {
 								$apachepw->load( $apwid );
 								$password = $apachepw->apachepw;
@@ -135,7 +135,7 @@ class mi_htaccess
 
 						if ( empty($username) || is_null($username) || ($username == "") ) {
 							continue;
-						} elseif ( empty($password) || is_null($password) || ($password == "") ) {	
+						} elseif ( empty($password) || is_null($password) || ($password == "") ) {
 							continue;
 						} else {
 							$ht->addUser( $username, $password );

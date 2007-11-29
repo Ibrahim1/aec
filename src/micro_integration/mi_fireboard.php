@@ -4,7 +4,7 @@
  * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
  * @subpackage Micro Integrations - Fireboard
  * @copyright 2006/2007 Copyright (C) David Deutsch
- * @author Calum Polwart & Team AEC - http://www.gobalnerd.org
+ * @author Calum Polwart & Team AEC - http://www.globalnerd.org
  * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
  * Based on code from the mi_remository.php file from sk0re.
  */

@@ -4,7 +4,7 @@
  * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
  * @subpackage Micro Integrations - Token
  * @copyright Copyright (C) 2007, All Rights Reserved, David Deutsch
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.gobalnerd.org
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
  * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
  */
 

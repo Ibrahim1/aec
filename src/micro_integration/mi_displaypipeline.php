@@ -1,4 +1,13 @@
 <?php
+/**
+ * @version $Id: mi_displaypipeline.php
+ * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
+ * @subpackage Micro Integrations - DisplayPipeline
+ * @copyright 2006/2007 Copyright (C) David Deutsch
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
+ * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
+ */
+
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
