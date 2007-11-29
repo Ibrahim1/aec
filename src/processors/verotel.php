@@ -111,7 +111,7 @@ class processor_verotel extends URLprocessor
 			$var['verotel_product'] = $product;
 			$var['verotel_website'] = $cfg['siteid'];
 			$var['verotel_usercode'] = $metaUser->cmsUser->username;
-			$var['verotel_passcode'] = $metaUser->cmsUser->password;
+			$var['verotel_passcode'] = substr( $metaUser->cmsUser->password, 0, 12 );
 			$var['verotel_custom1'] = $int_var['invoice'];
 		}
 

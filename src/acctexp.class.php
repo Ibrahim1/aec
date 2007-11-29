@@ -1678,7 +1678,7 @@ class XMLprocessor extends processor
 			$months[] = mosHTML::makeOption( $month, $month );
 		}
 
-		$var['params']['lists']['expirationMonth'] = mosHTML::selectList($months, 'expirationMonth', 'size="4"', 'value', 'text', 0);
+		$var['params']['lists']['expirationMonth'] = mosHTML::selectList($months, 'expirationMonth', 'size="1" style="width:50px;"', 'value', 'text', 0);
 		$var['params']['expirationMonth'] = array( 'list', _AEC_CCFORM_EXPIRATIONMONTH_NAME, _AEC_CCFORM_EXPIRATIONMONTH_DESC);
 
 		// Create a selection box with the next 10 years
@@ -1688,7 +1688,7 @@ class XMLprocessor extends processor
 			$years[] = mosHTML::makeOption( $i, $i );
 		}
 
-		$var['params']['lists']['expirationYear'] = mosHTML::selectList($years, 'expirationYear', 'size="4"', 'value', 'text', 0);
+		$var['params']['lists']['expirationYear'] = mosHTML::selectList($years, 'expirationYear', 'size="1" style="width:70px;"', 'value', 'text', 0);
 		$var['params']['expirationYear'] = array( 'list', _AEC_CCFORM_EXPIRATIONYEAR_NAME, _AEC_CCFORM_EXPIRATIONYEAR_DESC);
 
 		return $var;
@@ -2082,7 +2082,7 @@ class aecHTML
 			$value = '';
 		}
 
-		$return = '<p><strong>' . $row[1] . '</strong></p>' . '<p>' . $row[2] . '</p>';
+		$return = '<p><strong>' . $row[1] . ':</strong> ';
 
 		switch ( $row[0] ) {
 			case "inputA":
@@ -2101,6 +2101,9 @@ class aecHTML
 				$return .= $lists[$value];
 				break;
 		}
+
+		$return .= '</p>';
+
 		return $return;
 	}
 
@@ -2163,6 +2166,7 @@ class aecHTML
 
 		return '<img src="'. $image .'" border="0" alt="' . $alt . '" title="' . $alt . '" class="aec_icon" />';
 	}
+
 }
 
 class SubscriptionPlanHandler
