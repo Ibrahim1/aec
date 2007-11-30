@@ -10,20 +10,6 @@
 
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-/*
- * <img border="0" src="http://www.YOURSITE.com/idevaffiliate/sale.php?profile=72198&idev_saleamt=XXX&idev_ordernum=YYY" width="1" height="1">
- *
- * XXX needs replaced with the variable that holds the sale amount.
- * YYY needs replaced with the variable that holds the order number.
- *
- * profile=72198&idev_saleamt=XXX&idev_ordernum=YYY&idev_option_1=AAA&idev_option_2=BBB&idev_option_3=CCC
- *
- * AAA, BBB and CCC can be any value from the cart you want.
- *
- * If you build it in to pass these 3 optional pieces of data, I just need to know what you're passing such as the customer name,
- * customer phone, etc.  The name of these custom fields are set in the admin center and I can pre-set those to whatever you want to send.
- */
-
 class mi_idevaffiliate
 {
 	function Info()
@@ -39,6 +25,9 @@ class mi_idevaffiliate
 	{
 		$settings = array();
 		$settings['setupinfo'] = array( 'fieldset' );
+		$settings['profile'] = array( 'inputC' );
+		$settings['rooturl'] = array( 'inputC' );
+		$settings['calcrooturl'] = array( 'fieldset', '',  );
 		return $settings;
 	}
 
@@ -51,8 +40,10 @@ class mi_idevaffiliate
 		$invoice = new Invoice( $database );
 		$invoice->load( $lastinvoice );
 
+		$rooturl = $this->getPath( $params );
+
 		$text = '<img border="0" '
-				.'src="' . $mosConfig_live_site .'/components/com_idevaffiliate/sale.php?idev_paypal_1=' . $invoice->amount . '&amp;idev_paypal_2=' . $invoice->invoice_number . '" '
+				.'src="' . $rooturl .'/sale.php?profile=' . $params['profile'] . '&amp;idev_saleamt=' . $invoice->amount . '&amp;idev_ordernum=' . $invoice->invoice_number . '" '
 				.'width="1" height="1" />';
 
 		$displaypipeline = new displayPipeline($database);
@@ -61,5 +52,19 @@ class mi_idevaffiliate
 		return true;
 	}
 
+	function getPath( $params )
+	{
+		global $mosConfig_live_site;
+
+		if ( !empty( $params['rooturl'] ) ) {
+			if ( ( strpos( $params['rooturl'], 'http://' ) === 0 ) || ( strpos( $params['rooturl'], 'https://' ) === 0 ) ) {
+				$rooturl = $params['rooturl'];
+			} else {
+				$rooturl = $mosConfig_live_site . $params['rooturl'];
+			}
+		} else {
+			$rooturl = $mosConfig_live_site . '/idevaffiliate';
+		}
+	}
 }
 ?>
