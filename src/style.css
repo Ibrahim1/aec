@@ -365,6 +365,15 @@ width: 97%;
 
 #checkout table {
 float:left;
+margin: 0 auto;
+}
+
+td.cleft {
+text-align: right;
+}
+
+td.cright {
+text-align: left;
 }
 
 table.amount {

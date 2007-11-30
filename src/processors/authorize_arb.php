@@ -103,7 +103,7 @@ class processor_authorize_arb extends XMLprocessor
 			$var['params']['billCity'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLCITY_NAME );
 			$var['params']['billState'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLSTATE_NAME );
 			$var['params']['billZip'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLZIP_NAME );
-			$var['params']['billCountry'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLCITY_NAME );
+			$var['params']['billCountry'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLCOUNTRY_NAME );
 		}
 
 		return $var;

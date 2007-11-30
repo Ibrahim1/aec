@@ -341,9 +341,12 @@ define( '_CFG_AUTHORIZE_ARB_TOTALOCCURRENCES_DESC', 'Authorize.net requires that
 define( '_CFG_AUTHORIZE_ARB_TRIALOCCURRENCES_NAME', 'Trial Occurances');
 define( '_CFG_AUTHORIZE_ARB_TRIALOCCURRENCES_DESC', 'Specify the amount of trial periods that are granted to the user. This amount will be substracted from the total occurances.');
 define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLFIRSTNAME_NAME', 'First Name');
-define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLFIRSTNAME_DESC', 'The First Name this should be billed to.');
 define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLLASTNAME_NAME', 'Last Name');
-define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLLASTNAME_DESC', 'The Last Name this should be billed to.');
+define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLADDRESS_NAME', 'Address');
+define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLCITY_NAME', 'City');
+define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLSTATE_NAME', 'State');
+define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLZIP_NAME', 'Zip');
+define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLCOUNTRY_NAME', 'Country');
 
 // CCBill
 define( '_CFG_CCBILL_LONGNAME', 'CCBill');

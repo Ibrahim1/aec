@@ -1467,14 +1467,21 @@ class PaymentProcessor
 					$lists = null;
 				}
 
+				if ( count( $params['params'] ) > 2 ) {
+					$table = 1;
+					$return .= '<table>';
+				} else {
+					$table = 0;
+				}
+
 				foreach ( $values['params'] as $name => $entry ) {
 					if ( !is_null( $name ) && !( $name == '' ) ) {
-						if ( !isset( $entry[3] ) ) {
-							$entry[3] = $name;
-						}
-						$return .= aecHTML::createFormParticle( $name, $entry, $lists ) . "\n";
+						$return .= aecHTML::createFormParticle( $name, $entry, $lists, $table ) . "\n";
 					}
 				}
+
+				$return .= $table ? '</table>' : '';
+
 				unset( $values['params'] );
 			}
 		}
@@ -1651,14 +1658,21 @@ class XMLprocessor extends processor
 					$lists = null;
 				}
 
+				if ( count( $params['params'] ) > 2 ) {
+					$table = 1;
+					$return .= '<table>';
+				} else {
+					$table = 0;
+				}
+
 				foreach ( $params['params'] as $name => $entry ) {
 					if ( !is_null( $name ) && !( $name == '' ) ) {
-						if ( !isset( $entry[3] ) ) {
-							$entry[3] = $name;
-						}
-						$return .= aecHTML::createFormParticle( $name, $entry, $lists ) . "\n";
+						$return .= aecHTML::createFormParticle( $name, $entry, $lists, $table ) . "\n";
 					}
 				}
+
+				$return .= $table ? '</table>' : '';
+
 				unset( $params['params'] );
 			}
 		}
@@ -2074,15 +2088,20 @@ class aecHTML
 		return $return;
 	}
 
-	function createFormParticle( $name, $row, $lists )
+	function createFormParticle( $name, $row, $lists, $table=0 )
 	{
+		$return = '';
 		if ( isset( $row[3] ) ) {
 			$value = $row[3];
 		} else {
 			$value = '';
 		}
 
-		$return = '<p><strong>' . $row[1] . ':</strong> ';
+		$return .= $table ? '<tr><td class="cleft">' : '<p>';
+
+		$return .= '<strong>' . $row[1] . ':</strong>';
+
+		$return .= $table ? '</td><td class="cright">' : ' ';
 
 		switch ( $row[0] ) {
 			case "inputA":
@@ -2098,11 +2117,11 @@ class aecHTML
 				$return .= '<textarea align="left" cols="60" rows="5" name="' . $name . '" />' . $value . '</textarea>';
 				break;
 			case "list":
-				$return .= $lists[$value];
+				$return .= $lists[$value ? $value : $name];
 				break;
 		}
 
-		$return .= '</p>';
+		$return .= $table ? '</td></tr>' : '</p>';
 
 		return $return;
 	}
