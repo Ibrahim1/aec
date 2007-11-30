@@ -1086,6 +1086,7 @@ define( '_INVOICE_TITLE', 'Invoices');
 define( '_INVOICE_SEARCH', 'Search');
 define( '_INVOICE_USERID', 'User Name');
 define( '_INVOICE_INVOICE_NUMBER', 'Invoice Number');
+define( '_INVOICE_SECONDARY_IDENT', 'Secondary Identification');
 define( '_INVOICE_TRANSACTION_DATE', 'Transaction Date');
 define( '_INVOICE_METHOD', 'Invoice Method');
 define( '_INVOICE_AMOUNT', 'Invoice Amount');

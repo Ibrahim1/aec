@@ -1095,6 +1095,7 @@ define( '_HISTORY_TITLE2', 'Your Current Transaction History');
 define( '_HISTORY_SEARCH', 'Search');
 define( '_HISTORY_USERID', 'User Name');
 define( '_HISTORY_INVOICE_NUMBER', 'Invoice Number');
+define( '_INVOICE_SECONDARY_IDENT', 'Secondary Identification');
 define( '_INVOICE_CREATED_DATE', 'Created Date');
 define( '_HISTORY_PLAN_NAME', 'Plan Subscribed To');
 define( '_HISTORY_TRANSACTION_DATE', 'Transaction Date');
