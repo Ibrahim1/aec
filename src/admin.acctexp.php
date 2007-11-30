@@ -1719,6 +1719,7 @@ function editSettings( $option )
 	$lists['nojoomlaregemails']		= mosHTML::yesnoSelectList('nojoomlaregemails', '', $aecConfig->cfg['nojoomlaregemails']);
 	$lists['debugmode']				= mosHTML::yesnoSelectList('debugmode', '', $aecConfig->cfg['debugmode']);
 	$lists['override_reqssl']		= mosHTML::yesnoSelectList('override_reqssl', '', $aecConfig->cfg['override_reqssl']);
+	$lists['invoicenum_display_id']		= mosHTML::yesnoSelectList('invoicenum_display_id', '', $aecConfig->cfg['invoicenum_display_id']);
 
 	$lists['customtext_confirm_keeporiginal']		= mosHTML::yesnoSelectList('customtext_confirm_keeporiginal', '', $aecConfig->cfg['customtext_confirm_keeporiginal']);
 	$lists['customtext_checkout_keeporiginal']		= mosHTML::yesnoSelectList('customtext_checkout_keeporiginal', '', $aecConfig->cfg['customtext_checkout_keeporiginal']);
@@ -1822,6 +1823,12 @@ function editSettings( $option )
 	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_DISPLAY_DATE_FRONTEND_NAME, _CFG_GENERAL_DISPLAY_DATE_FRONTEND_DESC, $aecConfig->cfg['display_date_frontend'], 'display_date_frontend');
 	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_DISPLAY_DATE_BACKEND_NAME, _CFG_GENERAL_DISPLAY_DATE_BACKEND_DESC, $aecConfig->cfg['display_date_backend'], 'display_date_backend');
 
+	$tab_data[1][] = array( 'list', _CFG_GENERAL_INVOICENUM_DISPLAY_ID_NAME, _CFG_GENERAL_INVOICENUM_DISPLAY_ID_DESC, $aecConfig->cfg['invoicenum_display_id'], 'invoicenum_display_id');
+	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_INVOICENUM_DISPLAY_IDINFLATE_NAME, _CFG_GENERAL_INVOICENUM_DISPLAY_IDINFLATE_DESC, $aecConfig->cfg['invoicenum_display_idinflate'], 'invoicenum_display_idinflate');
+	$tab_data[1][] = array( 'list', _CFG_GENERAL_INVOICENUM_DISPLAY_CASE_NAME, _CFG_GENERAL_INVOICENUM_DISPLAY_CASE_DESC, $aecConfig->cfg['invoicenum_display_case'], 'invoicenum_display_case');
+	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_INVOICENUM_DISPLAY_CHUNKING_NAME, _CFG_GENERAL_INVOICENUM_DISPLAY_CHUNKING_DESC, $aecConfig->cfg['invoicenum_display_chunking'], 'invoicenum_display_chunking');
+	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_INVOICENUM_DISPLAY_SEPARATOR_NAME, _CFG_GENERAL_INVOICENUM_DISPLAY_SEPARATOR_DESC, $aecConfig->cfg['invoicenum_display_separator'], 'invoicenum_display_separator');
+
 	$tab_data[1][] = array( 'editor', _CFG_GENERAL_CUSTOMTEXT_PLANS_NAME, _CFG_GENERAL_CUSTOMTEXT_PLANS_DESC, $aecConfig->cfg['customtext_plans'], 'customtext_plans');
 	$tab_data[1][] = array( 'list', _CFG_GENERAL_CUSTOMTEXT_CONFIRM_KEEPORIGINAL_NAME, _CFG_GENERAL_CUSTOMTEXT_CONFIRM_KEEPORIGINAL_DESC, '0', 'customtext_confirm_keeporiginal');
 	$tab_data[1][] = array( 'editor', _CFG_GENERAL_CUSTOMTEXT_CONFIRM_NAME, _CFG_GENERAL_CUSTOMTEXT_CONFIRM_DESC, $aecConfig->cfg['customtext_confirm'], 'customtext_confirm');
@@ -1848,6 +1855,11 @@ function editSettings( $option )
 		}
 	}
 	*/
+
+	$invoicenum_display_case[] = mosHTML::makeOption( 'NONE', _CFG_GENERAL_INVOICENUM_DISPLAY_CASE_NONE );
+	$invoicenum_display_case[] = mosHTML::makeOption( 'UPPER', _CFG_GENERAL_INVOICENUM_DISPLAY_CASE_UPPER );
+	$invoicenum_display_case[] = mosHTML::makeOption( 'LOWER', _CFG_GENERAL_INVOICENUM_DISPLAY_CASE_LOWER );
+	$lists['invoicenum_display_case']			= mosHTML::selectList($invoicenum_display_case, 'invoicenum_display_case[]', 'size="1"', 'value', 'text', $aecConfig->cfg['invoicenum_display_case'] );
 
 	$pph					= new PaymentProcessorHandler();
 	$gwlist					= $pph->getProcessorList();

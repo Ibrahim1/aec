@@ -564,7 +564,7 @@ function subscriptionDetails( $option )
 		$min_limit	= ( $rows_total > $rows_limit ) ? ( $rows_total - $rows_limit ) : 0;
 
 		// get payments from user
-		$query = 'SELECT invoice_number, transaction_date, method, amount, currency, params, fixed'
+		$query = 'SELECT id'
 		. ' FROM #__acctexp_invoices'
 		. ' WHERE userid = \'' . $my->id . '\''
 		. ' AND active = \'1\''
@@ -572,14 +572,17 @@ function subscriptionDetails( $option )
 		. ' LIMIT ' . $min_limit . ',' . $rows_limit
 		;
 		$database->setQuery( $query );
-		$rows = $database->loadObjectList();
+		$rows = $database->loadResultArray();
 		if ( $database->getErrorNum() ) {
 			echo $database->stderr();
 			return false;
 		}
 
 		$invoices = array();
-		foreach ( $rows as $rowid => $row ) {
+		foreach ( $rows as $rowid ) {
+			$row = new Invoice( $database );
+			$row->load( $rowid );
+
 			if ( strcmp( $row->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
 				if ( strpos( $row->params, 'pending_reason' ) ) {
 					$params = explode( "\n", $row->params );
@@ -622,6 +625,7 @@ function subscriptionDetails( $option )
 				$rowstyle			= '';
 			}
 
+			$row->formatInvoiceNumber();
 			$invoices[$rowid]['invoice_number']	= $row->invoice_number;
 			$invoices[$rowid]['amount']			= $row->amount;
 			$invoices[$rowid]['currency_code']	= $row->currency;

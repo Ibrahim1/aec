@@ -576,6 +576,12 @@ class Config_General extends paramDBTable
 		$def['debugmode']							= 0;
 		// new 0.12.4.12
 		$def['override_reqssl']						= 0;
+		// new 0.12.4.16
+		$def['invoicenum_display_id']				= 0;
+		$def['invoicenum_display_idinflate']		= '';
+		$def['invoicenum_display_case']				= 0;
+		$def['invoicenum_display_chunking']			= 4;
+		$def['invoicenum_display_separator']		= '-';
 
 		// Write to Params, do not overwrite existing data
 		$this->addParams( $def, 'settings', false );
@@ -3596,6 +3602,8 @@ class InvoiceFactory
 			return;
 		}
 
+		$this->objInvoice->formatInvoiceNumber();
+
 		$this->InvoiceToCheckout( $option, $repeat );
 	}
 
@@ -3768,6 +3776,45 @@ class Invoice extends paramDBTable
 		;
 		$database->setQuery( $query );
 		$this->load($database->loadResult());
+	}
+
+	function formatInvoiceNumber()
+	{
+		global $aecConfig;
+
+		if ( empty( $aecConfig->cfg['invoicenum_display_id'] ) ) {
+			if ( !empty( $aecConfig->cfg['invoicenum_display_case'] ) ) {
+				switch ( $aecConfig->cfg['invoicenum_display_case'] ) {
+					case 'UPPER':
+						$this->invoice_number = strtoupper( $this->invoice_number );
+						break;
+					case 'LOWER':
+						$this->invoice_number = strtolower( $this->invoice_number );
+						break;
+				}
+			}
+
+			if ( !empty( $aecConfig->cfg['invoicenum_display_chunking'] ) ) {
+				if ( !empty( $aecConfig->cfg['invoicenum_display_separator'] ) ) {
+					$separator = $aecConfig->cfg['invoicenum_display_separator'];
+				} else {
+					$separator = '-';
+				}
+
+				if ( function_exists( 'str_split' ) ) {
+					$chunks = str_split( $this->invoice_number, $aecConfig->cfg['invoicenum_display_chunking'] );
+				} else {
+					$chunks = AECToolbox::str_split_php4( $this->invoice_number, $aecConfig->cfg['invoicenum_display_chunking'] );
+				}
+				$this->invoice_number = implode( $separator, $chunks );
+			}
+		} else {
+			if ( !empty( $aecConfig->cfg['invoicenum_display_idinflate'] ) ) {
+				$this->invoice_number = $this->id + $aecConfig->cfg['invoicenum_display_idinflate'];
+			} else {
+				$this->invoice_number = $this->id;
+			}
+		}
 	}
 
 	function loadbySubscriptionId( $subscrid, $userid=null )
@@ -5755,6 +5802,19 @@ class AECToolbox
 		}
 
 		return (int) $vlen;
+	}
+
+	function str_split_php4( $text, $split = 1 ) {
+		// place each character of the string into and array
+		$array = array();
+		for ( $i=0; $i < strlen( $text ); ){
+			$key = NULL;
+			for ( $j = 0; $j < $split; $j++, $i++ ) {
+				$key .= $text[$i];
+			}
+			array_push( $array, $key );
+		}
+		return $array;
 	}
 
 	function rewriteEngine( $subject, $metaUser=null, $subscriptionPlan=null )
