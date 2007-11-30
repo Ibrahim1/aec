@@ -103,7 +103,7 @@ define( '_RENEW_OFFLINE', 'Rinnova');
 define( '_PAYMENT_PENDING_REASON_ECHECK', 'echeck uncleared (1-4 business days)');
 define( '_PAYMENT_PENDING_REASON_TRANSFER', 'awaiting transfer payment');
 define( '_YOUR_SUBSCRIPTION', 'Your Subscription');
-define( '_YOUR_FURTHER_SUBSCRIPTION', 'Further Subscriptions');
+define( '_YOUR_FURTHER_SUBSCRIPTIONS', 'Further Subscriptions');
 define( '_PLAN_PROCESSOR_ACTIONS', 'For this, you have the following options:');
 
 // --== EXPIRATION PAGE ==--

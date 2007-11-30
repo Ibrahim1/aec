@@ -93,7 +93,7 @@ class eucaInstall
 	function createAdminMenuEntry( $entry )
 	{
 		// Create new entry
-		$return = $this->AdminMenuEntry( $entry, 0, 0 );
+		$return = $this->AdminMenuEntry( $entry, 0, 0, 1 );
 
 		if ( $return === true ) {
 			return;
@@ -123,14 +123,14 @@ class eucaInstall
 		}
 	}
 
-	function AdminMenuEntry ( $entry, $id, $ordering )
+	function AdminMenuEntry ( $entry, $id, $ordering, $frontend=0 )
 	{
 		global $database;
 
 		$values = array();
 		$values[] = 0;
 		$values[] = $entry[1];
-		$values[] = 'option=' . _EUCA_APP_COMPNAME;
+		$values[] = $frontend ? ( 'option=' . _EUCA_APP_COMPNAME ) : '' ;
 		$values[] = 0;
 		$values[] = $id;
 		$values[] = 'option=' . _EUCA_APP_COMPNAME . '&task=' . $entry[0];

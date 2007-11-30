@@ -99,7 +99,7 @@ define( '_RENEW_BUTTON_UPGRADE', 			'Upgraden / Erneuern');
 define( '_PAYMENT_PENDING_REASON_ECHECK',	'ECheck noch ausst&auml;ndig (1-4 Arbeitstage)');
 define( '_PAYMENT_PENDING_REASON_TRANSFER', 'Zahlungsanweisung wird erwartet');
 define( '_YOUR_SUBSCRIPTION', 'Ihre Mitgliedschaft');
-define( '_YOUR_FURTHER_SUBSCRIPTION', 'Weitere Mitgliedschaften');
+define( '_YOUR_FURTHER_SUBSCRIPTIONS', 'Weitere Mitgliedschaften');
 define( '_PLAN_PROCESSOR_ACTIONS', 'Hierzu k&ouml;nnen sie folgende Anweisungen ausf&uuml;hren:');
 
 // --== EXPIRATION PAGE ==--
