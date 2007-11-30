@@ -614,6 +614,22 @@ define( '_CFG_GENERAL_DISPLAY_DATE_FRONTEND_NAME',	'Frontend Datumsformat' );
 define( '_CFG_GENERAL_DISPLAY_DATE_FRONTEND_DESC',	'Hier angeben wie die Datumsangaben den Besuchern gegen&uuml;ber erfolgen sollen. Mehr dazu im <a href="http://www.php.net/manual/de/function.strftime.php" target="_blank" title="PHP Handbuch">PHP Handbuch</a>' );
 define( '_CFG_GENERAL_DISPLAY_DATE_BACKEND_NAME',	'Backend Datumsformat' );
 define( '_CFG_GENERAL_DISPLAY_DATE_BACKEND_DESC',	'Hier angeben wie die Datumsangaben im Backend erfolgen sollen. Mehr dazu im <a href="http://www.php.net/manual/de/function.strftime.php" target="_blank" title="PHP Handbuch">PHP Handbuch</a>' );
+
+define( '_CFG_GENERAL_INVOICENUM_DISPLAY_ID_NAME', 'Display Invoice ID');
+define( '_CFG_GENERAL_INVOICENUM_DISPLAY_ID_DESC', 'Display the Invoice ID (a number) instead of the identification string (mixed - numbers and characters) to the user');
+define( '_CFG_GENERAL_INVOICENUM_DISPLAY_IDINFLATE_NAME', 'Inflate ID');
+define( '_CFG_GENERAL_INVOICENUM_DISPLAY_IDINFLATE_DESC', 'Add a fixed number to the invoice ids');
+define( '_CFG_GENERAL_INVOICENUM_DISPLAY_CASE_NAME', 'Character case');
+define( '_CFG_GENERAL_INVOICENUM_DISPLAY_CASE_DESC', 'Change the display of characters in an invoice number');
+define( '_CFG_GENERAL_INVOICENUM_DISPLAY_CHUNKING_NAME', 'Chunking');
+define( '_CFG_GENERAL_INVOICENUM_DISPLAY_CHUNKING_DESC', 'Display an invoice number in chunks of X (or less, if remaining) characters');
+define( '_CFG_GENERAL_INVOICENUM_DISPLAY_SEPARATOR_NAME', 'Separator');
+define( '_CFG_GENERAL_INVOICENUM_DISPLAY_SEPARATOR_DESC', 'The character which will separate the chunks');
+
+define( '_CFG_GENERAL_INVOICENUM_DISPLAY_CASE_NONE', 'Original');
+define( '_CFG_GENERAL_INVOICENUM_DISPLAY_CASE_UPPER', 'All Uppercase');
+define( '_CFG_GENERAL_INVOICENUM_DISPLAY_CASE_LOWER', 'All Lowercase');
+
 define( '_CFG_GENERAL_CUSTOMTEXT_PLANS_NAME',		'Text Abo&uuml;bersicht' );
 define( '_CFG_GENERAL_CUSTOMTEXT_PLANS_DESC',		'Individueller Text zur &Uuml;bersicht der Abonnements' );
 define( '_CFG_GENERAL_CUSTOMTEXT_CONFIRM_NAME',		'Text Best&auml;tigungsseite' );
