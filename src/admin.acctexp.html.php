@@ -518,7 +518,7 @@ class HTML_AcctExp
 
 	}
 
-	function userForm( $option, $subscription, $user, $invoices, $lists, $nexttask )
+	function userForm( $option, $metaUser, $invoices, $lists, $nexttask )
 	{
 		global $mosConfig_live_site;
 
@@ -548,7 +548,7 @@ class HTML_AcctExp
 				<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_edit.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
 					<?php echo _AEC_HEAD_SUBCRIBER; ?>:
 					&nbsp;
-					<small><?php echo !empty( $subscription->id ) ? $user->username . ' (' . _AEC_CMN_ID . ': ' . $user->id . ')' : _AEC_CMN_NEW; ?></small>
+					<small><?php echo !empty( $metaUser->userid ) ? $metaUser->cmsUser->username . ' (' . _AEC_CMN_ID . ': ' . $metaUser->userid . ')' : _AEC_CMN_NEW; ?></small>
 	        	</th>
 			</tr>
 		</table>
@@ -559,40 +559,40 @@ class HTML_AcctExp
 						<div class="userinfobox">
 							<h3><?php echo _AEC_USER_USER_INFO; ?></h3>
 							<p>
-								<?php echo _AEC_USER_USERID; ?>:&nbsp;<strong><?php echo $user->id; ?></strong>
+								<?php echo _AEC_USER_USERID; ?>:&nbsp;<strong><?php echo $metaUser->userid; ?></strong>
 								&nbsp;|&nbsp;
 								<?php echo _AEC_USER_STATUS; ?>:&nbsp;
-								<strong><?php echo !$user->block ? aecHTML::Icon( 'accept.png', _AEC_USER_ACTIVE ) . '&nbsp;' . _AEC_USER_ACTIVE . '</strong>' : aecHTML::Icon( 'exclamation.png', _AEC_USER_BLOCKED ) . '&nbsp;' . _AEC_USER_BLOCKED . '</strong>' . ( ( $user->activation == '' ) ? '' : ' (<a href="' . $mosConfig_live_site . '/index.php?option=com_registration&amp;task=activate&amp;activation=' . $user->activation . '" target="_blank">' . _AEC_USER_ACTIVE_LINK . '</a>)' ); ?>
+								<strong><?php echo !$metaUser->cmsUser->block ? aecHTML::Icon( 'accept.png', _AEC_USER_ACTIVE ) . '&nbsp;' . _AEC_USER_ACTIVE . '</strong>' : aecHTML::Icon( 'exclamation.png', _AEC_USER_BLOCKED ) . '&nbsp;' . _AEC_USER_BLOCKED . '</strong>' . ( ( $metaUser->cmsUser->activation == '' ) ? '' : ' (<a href="' . $mosConfig_live_site . '/index.php?option=com_registration&amp;task=activate&amp;activation=' . $metaUser->cmsUser->activation . '" target="_blank">' . _AEC_USER_ACTIVE_LINK . '</a>)' ); ?>
 							</p>
 							<p>
 								<?php echo _AEC_USER_PROFILE; ?>:
 								&nbsp;
-								<a href="index2.php?option=com_users&amp;task=editA&amp;id=<?php echo $user->id; ?>&amp;hidemainmenu=1"><?php echo aecHTML::Icon( 'user.png', _AEC_USER_PROFILE_LINK ); ?>&nbsp;<?php echo _AEC_USER_PROFILE_LINK; ?></a><?php echo $cb ? (' | CB Profile: <a href="index2.php?option=com_comprofiler&amp;task=edit&amp;cid=' . $user->id . '">' . aecHTML::Icon( 'user_orange.png', _AEC_USER_PROFILE_LINK ) . '&nbsp;' . _AEC_USER_PROFILE_LINK . '</a>') : ''; ?>
+								<a href="index2.php?option=com_users&amp;task=editA&amp;id=<?php echo $metaUser->userid; ?>&amp;hidemainmenu=1"><?php echo aecHTML::Icon( 'user.png', _AEC_USER_PROFILE_LINK ); ?>&nbsp;<?php echo _AEC_USER_PROFILE_LINK; ?></a><?php echo $cb ? (' | CB Profile: <a href="index2.php?option=com_comprofiler&amp;task=edit&amp;cid=' . $metaUser->userid . '">' . aecHTML::Icon( 'user_orange.png', _AEC_USER_PROFILE_LINK ) . '&nbsp;' . _AEC_USER_PROFILE_LINK . '</a>') : ''; ?>
 							</p>
 							<p>
 								<?php echo _AEC_USER_USERNAME; ?>:&nbsp;
-								<strong><?php echo $user->username; ?></strong>
+								<strong><?php echo $metaUser->cmsUser->username; ?></strong>
 								&nbsp;|&nbsp;
 								<?php echo _AEC_USER_NAME; ?>:&nbsp;<strong>
-								<?php echo $user->name; ?></strong>
+								<?php echo $metaUser->cmsUser->name; ?></strong>
 							</p>
 							<p>
-								<?php echo _AEC_USER_EMAIL; ?>:&nbsp;<strong><?php echo $user->email; ?></strong>
-							 	(<a href="mailto:<?php echo $user->email; ?>"><?php echo aecHTML::Icon( 'email.png', _AEC_USER_SEND_MAIL ); ?>&nbsp;<?php echo _AEC_USER_SEND_MAIL; ?></a>)
+								<?php echo _AEC_USER_EMAIL; ?>:&nbsp;<strong><?php echo $metaUser->cmsUser->email; ?></strong>
+							 	(<a href="mailto:<?php echo $metaUser->cmsUser->email; ?>"><?php echo aecHTML::Icon( 'email.png', _AEC_USER_SEND_MAIL ); ?>&nbsp;<?php echo _AEC_USER_SEND_MAIL; ?></a>)
 							</p>
-							<p><?php echo _AEC_USER_TYPE; ?>:&nbsp;<strong><?php echo $user->usertype; ?></strong></p>
+							<p><?php echo _AEC_USER_TYPE; ?>:&nbsp;<strong><?php echo $metaUser->cmsUser->usertype; ?></strong></p>
 							<p>
 								<?php echo _AEC_USER_REGISTERED; ?>:&nbsp;<?php echo aecHTML::Icon( 'date.png', _AEC_USER_REGISTERED ); ?>&nbsp;
-								<strong><?php echo $user->registerDate; ?></strong>
+								<strong><?php echo $metaUser->cmsUser->registerDate; ?></strong>
 								&nbsp;|&nbsp;
 								<?php echo _AEC_USER_LAST_VISIT; ?>:&nbsp;
-								<strong><?php echo aecHTML::Icon( 'door_in.png', _AEC_USER_LAST_VISIT ); ?>&nbsp;<?php echo $user->lastvisitDate; ?></strong>
+								<strong><?php echo aecHTML::Icon( 'door_in.png', _AEC_USER_LAST_VISIT ); ?>&nbsp;<?php echo $metaUser->cmsUser->lastvisitDate; ?></strong>
 							</p>
 						</div>
 						<div class="userinfobox">
 							<h3><?php echo _AEC_USER_EXPIRATION; ?></h3>
 							<?php
-							if ( !empty( $subscription->expiration ) && strcmp( $subscription->expiration, '9999-12-31 00:00:00' ) === 0 ) { ?>
+							if ( !empty( $metaUser->focusSubscription->expiration ) && strcmp( $metaUser->focusSubscription->expiration, '9999-12-31 00:00:00' ) === 0 ) { ?>
 								<p>
 								<?php echo _AEC_USER_CURR_EXPIRE_DATE; ?>:&nbsp;
 								<?php echo aecHTML::Icon( 'clock_pause.png', _AEC_USER_LIFETIME ); ?>&nbsp;
@@ -604,7 +604,7 @@ class HTML_AcctExp
 								<p>
 									<?php echo _AEC_USER_RESET_EXP_DATE; ?>:&nbsp;
 									<?php echo aecHTML::Icon( 'clock_edit.png', _AEC_USER_RESET_EXP_DATE ); ?>
-									<input class="text_area" type="text" name="expiration" id="expiration" size="19" maxlength="19" value="<?php echo $subscription->expiration; ?>" disabled="disabled" />
+									<input class="text_area" type="text" name="expiration" id="expiration" size="19" maxlength="19" value="<?php echo $metaUser->focusSubscription->expiration; ?>" disabled="disabled" />
 									<input type="reset" name="reset" class="button" onClick="return showCalendar('expiration', 'y-mm-dd');" value="..." disabled="disabled" />
 								</p>
 								<?php
@@ -613,7 +613,7 @@ class HTML_AcctExp
 								<p>
 									<?php echo _AEC_USER_CURR_EXPIRE_DATE; ?>:&nbsp;
 									<?php echo aecHTML::Icon( 'clock_red.png', _AEC_USER_CURR_EXPIRE_DATE ); ?>&nbsp;
-									<strong><?php echo ( !empty( $subscription->expiration ) ? $subscription->expiration : _AEC_CMN_NOT_SET ); ?></strong>
+									<strong><?php echo ( !empty( $metaUser->focusSubscription->expiration ) ? $metaUser->focusSubscription->expiration : _AEC_CMN_NOT_SET ); ?></strong>
 								</p>
 								<p>
 									<?php echo _AEC_USER_LIFETIME; ?>:&nbsp;
@@ -621,8 +621,8 @@ class HTML_AcctExp
 								</p>
 								<p>
 									<?php echo _AEC_USER_RESET_EXP_DATE; ?>:&nbsp;<?php echo aecHTML::Icon( 'clock_edit.png', _AEC_USER_RESET_EXP_DATE ); ?>
-									<input class="text_area" type="text" name="expiration" id="expiration" size="19" maxlength="19" value="<?php echo ( !empty( $subscription->expiration ) ? $subscription->expiration : date( 'Y-m-d H:i:s' ) ); ?>"/>
-									<input type="hidden" name="expiration_check" id="expiration_check" value="<?php echo ( !empty( $subscription->expiration ) ? $subscription->expiration : date( 'Y-m-d H:i:s' ) ); ?>"/>
+									<input class="text_area" type="text" name="expiration" id="expiration" size="19" maxlength="19" value="<?php echo ( !empty( $metaUser->focusSubscription->expiration ) ? $metaUser->focusSubscription->expiration : date( 'Y-m-d H:i:s' ) ); ?>"/>
+									<input type="hidden" name="expiration_check" id="expiration_check" value="<?php echo ( !empty( $metaUser->focusSubscription->expiration ) ? $metaUser->focusSubscription->expiration : date( 'Y-m-d H:i:s' ) ); ?>"/>
 									<input type="reset" name="reset" class="button" onClick="return showCalendar('expiration', 'y-mm-dd');" value="..." title="<?php echo _AEC_USER_RESET_EXP_DATE; ?>" />
 								</p>
 								<?php
@@ -634,7 +634,7 @@ class HTML_AcctExp
 								<p>
 									<?php echo _AEC_USER_STATUS; ?>:&nbsp;<strong>
 									<?php
-									switch( $subscription->status ) {
+									switch( $metaUser->focusSubscription->status ) {
 										case 'Excluded':
 											$icon = 'cut_red.png';
 											$status	= _AEC_CMN_EXCLUDED;
@@ -679,23 +679,23 @@ class HTML_AcctExp
 								</p>
 								<p>
 									<?php echo _AEC_USER_PAYMENT_PROC; ?>:&nbsp;
-									<strong><?php echo aecHTML::Icon( 'money.png', _AEC_USER_PAYMENT_PROC ); ?>&nbsp;<?php echo $subscription->type ? $subscription->type : _AEC_CMN_NOT_SET; ?></strong>
+									<strong><?php echo aecHTML::Icon( 'money.png', _AEC_USER_PAYMENT_PROC ); ?>&nbsp;<?php echo $metaUser->focusSubscription->type ? $metaUser->focusSubscription->type : _AEC_CMN_NOT_SET; ?></strong>
 								</p>
 								<table>
 									<tr>
 										<td width="120"><?php echo _AEC_USER_CURR_SUBSCR_PLAN; ?>:</td>
-										<td><strong>#<?php echo $subscription->plan; ?></strong> - "<?php echo ( $subscription->plan ? HTML_AcctExp::SubscriptionName( $subscription->plan ) : '<span style="color:#FF0000;">' . _AEC_CMN_NOT_SET . '</span>' ); ?>"</td>
+										<td><strong>#<?php echo $metaUser->focusSubscription->plan; ?></strong> - "<?php echo ( $metaUser->focusSubscription->plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->plan ) : '<span style="color:#FF0000;">' . _AEC_CMN_NOT_SET . '</span>' ); ?>"</td>
 									</tr>
 									<tr>
 										<td><?php echo _AEC_USER_PREV_SUBSCR_PLAN; ?>:</td>
-										<td><strong>#<?php echo $subscription->previous_plan; ?></strong> - "<?php echo ( $subscription->previous_plan ? HTML_AcctExp::SubscriptionName( $subscription->previous_plan ) : '<span style="color: #FF0000;">' . _AEC_CMN_NOT_SET . '</span>' ); ?>"</td>
+										<td><strong>#<?php echo $metaUser->focusSubscription->previous_plan; ?></strong> - "<?php echo ( $metaUser->focusSubscription->previous_plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->previous_plan ) : '<span style="color: #FF0000;">' . _AEC_CMN_NOT_SET . '</span>' ); ?>"</td>
 									</tr>
 									<tr>
 										<td><?php echo _AEC_USER_USED_PLANS; ?>:</td>
 										<td>
 											<?php
-											if ( isset( $subscription->used_plans ) ) {
-												$used_plans = $subscription->getUsedPlans();
+											if ( isset( $metaUser->focusSubscription->used_plans ) ) {
+												$used_plans = $metaUser->focusSubscription->getUsedPlans();
 												foreach ($used_plans as $used => $amount) { ?>
 													<strong>#<?php echo $used; ?></strong> - "<?php echo HTML_AcctExp::SubscriptionName( $used ); ?>" (<?php echo $amount . " " . ( ( $amount > 1 ) ? _AEC_USER_TIMES : _AEC_USER_TIME ); ?>)
 													<?php
@@ -751,28 +751,28 @@ class HTML_AcctExp
 								</table>
 							</div>
 						</div>
-						<div class="userinfobox">
+						<!--<div class="userinfobox">
 							<div style="float: left; text-align: right;">
 								<h3><?php echo _AEC_USER_INVOICE_FACTORY; ?></h3>
 							</div>
 							<div style="float: left; text-align: center;">
 								<?php echo _AEC_FEATURE_NOT_ACTIVE; ?>
 							</div>
-						</div>
+						</div>-->
 					</td>
 				</tr>
 			</table>
 
 			<input type="hidden" name="option" value="<?php echo $option; ?>" />
-			<input type="hidden" name="id" value="<?php echo !empty( $subscription->id ) ? $subscription->id : ''; ?>" />
-			<input type="hidden" name="userid" value="<?php echo $subscription->userid; ?>" />
+			<input type="hidden" name="id" value="<?php echo !empty( $metaUser->focusSubscription->id ) ? $metaUser->focusSubscription->id : ''; ?>" />
+			<input type="hidden" name="userid" value="<?php echo $metaUser->focusSubscription->userid; ?>" />
 			<input type="hidden" name="task" value="" />
 			<input type="hidden" name="nexttask" value="<?php echo $nexttask;?>" />
 		</form>
 
  		<?php
 		if ( _EUCA_DEBUGMODE ) {
-			krumo( $option, $subscription, $user, $invoices, $lists, $nexttask );
+			krumo( $option, $metaUser, $invoices, $lists, $nexttask );
 		}
 
  		HTML_myCommon::GlobalNerd();
@@ -1197,7 +1197,7 @@ class HTML_AcctExp
  		HTML_myCommon::GlobalNerd();
 	}
 
-	function listSubscriptions( $rows, $pageNav, $search, $option, $lists, $userid, $action )
+	function listSubscriptions( $rows, $pageNav, $search, $option, $lists, $subscriptionid, $action )
 	{
 		global $my, $mosConfig_live_site;
 
@@ -1254,14 +1254,14 @@ class HTML_AcctExp
 					}
 
 					$rowstyle = '';
-					if ( is_array( $userid ) ) {
-						if ( in_array( $row->userid, $userid ) ) {
+					if ( is_array( $subscriptionid ) ) {
+						if ( in_array( $row->id, $subscriptionid ) ) {
 							$rowstyle = ' style="border: 2px solid #DD0;"';
 						}
 					} ?>
 						<tr class="row<?php echo $k; ?>"<?php echo $rowstyle; ?>>
 							<td width="20" align="center"><?php echo $pageNav->rowNumber( $i ); ?></td>
-							<td width="20"><?php echo mosHTML::idBox( $i, $row->userid, false, 'userid' ); ?></td>
+							<td width="20"><?php echo mosHTML::idBox( $i, $row->id, false, 'subscriptionid' ); ?></td>
 							<td width="15%" align="left"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','edit')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $row->name; ?> </a></td>
 							<td width="10%" align="left"><?php echo $row->username; ?></td>
 							<td width="10%" align="left"><?php echo $row->status; ?></td>
@@ -1284,7 +1284,7 @@ class HTML_AcctExp
 
  		<?php
 		if ( _EUCA_DEBUGMODE ) {
-			krumo( $my, $rows, $pageNav, $search, $option, $lists, $userid, $action );
+			krumo( $my, $rows, $pageNav, $search, $option, $lists, $subscriptionid, $action );
 		}
 
  		HTML_myCommon::GlobalNerd();

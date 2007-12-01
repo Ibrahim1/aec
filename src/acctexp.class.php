@@ -5304,6 +5304,19 @@ class AECfetchfromDB
 		return $database->loadResult();
 	}
 
+	function UserIDfromSubscriptionID( $susbcriptionid )
+	{
+		global $database;
+
+		$query = 'SELECT userid'
+		. ' FROM #__acctexp_subscr'
+		. ' WHERE id = \'' . (int) $susbcriptionid . '\''
+		. ' ORDER BY `primary` DESC'
+		;
+		$database->setQuery( $query );
+		return $database->loadResult();
+	}
+
 }
 
 class AECToolbox

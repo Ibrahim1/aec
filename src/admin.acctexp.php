@@ -75,6 +75,7 @@ include_once( $langPathBE . 'general.php' );
 $task		= trim( mosGetParam( $_REQUEST, 'task', null ) );
 $returnTask = trim( mosGetParam( $_REQUEST, 'returnTask', null ) );
 $userid		= mosGetParam( $_REQUEST, 'userid', null );
+$subscriptionid	= mosGetParam( $_REQUEST, 'subscriptionid', null );
 $id			= mosGetParam( $_REQUEST, 'id', null );
 
 // Auto Heartbeat renew every one hour to make sure that the admin gets a view as recent as possible
@@ -96,7 +97,11 @@ switch( strtolower( $task ) ) {
 	case 'edit':
 		if ( !is_array( $userid ) ) {
 			$userid = array();
-			$userid[0] = trim( mosGetParam( $_REQUEST, 'userid', '' ) );
+			$userid[0] = $userid;
+		}
+
+		if ( !empty( $subscriptionid ) ) {
+			$userid[0] = AECfetchfromDB::UserIDfromSubscriptionID( $subscriptionid[0] );
 		}
 
 		editUser( $userid, $option, $returnTask );
@@ -154,35 +159,35 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'showsubscriptions':
-		listSubscriptions( $option, 'active', $userid );
+		listSubscriptions( $option, 'active', $subscriptionid );
 		break;
 
 	case 'showexcluded':
-		listSubscriptions( $option, 'excluded', $userid );
+		listSubscriptions( $option, 'excluded', $subscriptionid );
 		break;
 
 	case 'showactive':
-		listSubscriptions( $option, 'active', $userid );
+		listSubscriptions( $option, 'active', $subscriptionid );
 		break;
 
 	case 'showexpired':
-		listSubscriptions( $option, 'expired', $userid );
+		listSubscriptions( $option, 'expired', $subscriptionid );
 		break;
 
 	case 'showpending':
-		listSubscriptions( $option, 'pending', $userid );
+		listSubscriptions( $option, 'pending', $subscriptionid );
 		break;
 
 	case 'showcancelled':
-		listSubscriptions( $option, 'cancelled', $userid );
+		listSubscriptions( $option, 'cancelled', $subscriptionid );
 		break;
 
 	case 'showclosed':
-		listSubscriptions( $option, 'closed', $userid );
+		listSubscriptions( $option, 'closed', $subscriptionid );
 		break;
 
 	case 'showmanual':
-		listSubscriptions( $option, 'notconfig', $userid );
+		listSubscriptions( $option, 'notconfig', $subscriptionid );
 		break;
 
 	case 'showsettings':
@@ -897,11 +902,7 @@ function editUser( $userid, $option, $task )
 
 	$lists = array();
 
-	$user = new mosUser( $database );
-	$user->load( $userid[0] );
-
-	$subscription = new Subscription( $database );
-	$subscription->loadUserID( $user->id );
+	$metaUser = new metaUser( $userid[0] );
 
  	// count number of payments of user
  	$query = 'SELECT count(*)'
@@ -968,19 +969,19 @@ function editUser( $userid, $option, $task )
 			. '<br />'
 			. '<a href="'
 			. AECToolbox::deadsureURL( '/administrator/index2.php?option=' . $option . '&amp;task=cancelpayment&amp;invoice='
-			. $invoice->invoice_number . '&amp;returnTask=edit&userid=' . $user->id ) . '">'
+			. $invoice->invoice_number . '&amp;returnTask=edit&userid=' . $metaUser->userid ) . '">'
 			. aecHTML::Icon( 'delete.png' ) . '&nbsp;'
 			. _USERINVOICE_ACTION_CANCEL . '</a>'
 			. '<br />'
 			. '<a href="'
 			. AECToolbox::deadsureURL( '/administrator/index2.php?option=' . $option . '&amp;task=clearpayment&amp;invoice='
-			. $invoice->invoice_number . '&amp;returnTask=edit&userid=' . $user->id ) . '">'
+			. $invoice->invoice_number . '&amp;returnTask=edit&userid=' . $metaUser->userid ) . '">'
 			. aecHTML::Icon( 'coins.png' ) . '&nbsp;'
 			. _USERINVOICE_ACTION_CLEAR . '</a>'
 			. '<br />'
 			. '<a href="'
 			. AECToolbox::deadsureURL( '/administrator/index2.php?option=' . $option . '&amp;task=clearpayment&amp;invoice='
-			. $invoice->invoice_number . '&amp;applyplan=1&amp;returnTask=edit&userid=' . $user->id ) . '">'
+			. $invoice->invoice_number . '&amp;applyplan=1&amp;returnTask=edit&userid=' . $metaUser->userid ) . '">'
 			. aecHTML::Icon( 'coins_add.png' ) . '&nbsp;'
 			. _USERINVOICE_ACTION_CLEAR_APPLY . '</a>'
 			. '<br />';
@@ -1022,7 +1023,7 @@ function editUser( $userid, $option, $task )
 
 	$lists['assignto_plan'] = mosHTML::selectList( $available_plans, 'assignto_plan', 'size="5"', 'value', 'text', 0 );
 
-	HTML_AcctExp::userForm( $option, $subscription, $user, $invoices, $lists, $task );
+	HTML_AcctExp::userForm( $option, $metaUser, $invoices, $lists, $task );
 }
 
 function saveUser( $option, $apply=0 )
@@ -1349,7 +1350,7 @@ function activatePendingSubscription( $userid, $option, $renew )
 	}
 }
 
-function listSubscriptions( $option, $set_group, $userid )
+function listSubscriptions( $option, $set_group, $subscriptionid )
 {
 	global $database, $mainframe, $mosConfig_list_limit;
 
@@ -1417,14 +1418,12 @@ function listSubscriptions( $option, $set_group, $userid )
 	$notconfig	= 0;
 
 	$planid = trim( mosGetParam( $_REQUEST, 'assign_planid', null ) );
-	if ( $planid > 0 && is_array( $userid ) && count( $userid ) > 0 ) {
-		foreach ($userid as $k) {
-			$subscriptionid = AECfetchfromDB::SubscriptionIDfromUserID( $k );
-
+	if ( $planid > 0 && is_array( $subscriptionid ) && count( $subscriptionid ) > 0 ) {
+		foreach ($subscriptionid as $k) {
 			$subscriptionHandler = new Subscription( $database );
 
-			if ( $subscriptionid ) {
-				$subscriptionHandler->load( $subscriptionid );
+			if ( !empty( $k ) ) {
+				$subscriptionHandler->load( $k );
 			} else {
 				$subscriptionHandler->load( 0 );
 				$subscriptionHandler->createNew( $k, '', 1 );
@@ -1441,15 +1440,12 @@ function listSubscriptions( $option, $set_group, $userid )
 
 	$expire = trim( mosGetParam( $_REQUEST, 'set_expiration', null ) );
 
-	if ( !is_null($expire) && is_array( $userid ) && count( $userid ) > 0 ) {
-		foreach ( $userid as $k ) {
-			$subscriptionid = AECfetchfromDB::SubscriptionIDfromUserID( $k );
-
+	if ( !is_null($expire) && is_array( $subscriptionid ) && count( $subscriptionid ) > 0 ) {
+		foreach ( $subscriptionid as $k ) {
 			$subscriptionHandler = new Subscription( $database );
 
-			if ( $subscriptionid ) {
-				$subscriptionHandler->load( 0 );
-				$subscriptionHandler->load( $subscriptionid );
+			if ( !empty( $k ) ) {
+				$subscriptionHandler->load( $k );
 			} else {
 				$subscriptionHandler->createNew( $k, '', 1 );
 			}
@@ -1692,7 +1688,7 @@ function listSubscriptions( $option, $set_group, $userid )
 
 	$lists['set_expiration'] = mosHTML::selectList($group_selection, 'set_expiration', 'class="inputbox" size="1" onchange="document.adminForm.submit( );"', 'value', 'text', "");
 
-	HTML_AcctExp::listSubscriptions( $rows, $pageNav, $search, $option, $lists, $userid, $action );
+	HTML_AcctExp::listSubscriptions( $rows, $pageNav, $search, $option, $lists, $subscriptionid, $action );
 }
 
 function editSettings( $option )
