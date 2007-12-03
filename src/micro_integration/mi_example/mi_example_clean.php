@@ -26,8 +26,8 @@ class mi_example
 	function Settings( $params )
 	{
 		$settings = array();
-		$settings['param_name1'] = array("inputA", "Name", "description");
-		$settings['param_name2'] = array("inputD", "SET", "description2");
+		$settings['param_name1'] = array( "inputA", "Name", "description" );
+		$settings['param_name2'] = array( "inputD", "SET", "description2" );
 
 		return $settings;
 	}
@@ -40,7 +40,7 @@ class mi_example
 	{
 	}
 
-	function action( $params, $userid, $plan )
+	function action( $params, $userid, $invoice, $plan )
 	{
 	}
 

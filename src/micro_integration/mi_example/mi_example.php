@@ -81,7 +81,7 @@ class mi_example
 		// Here you can specify whatever you want to happen before the plan runs out.
 	}
 
-	function action( $params, $userid, $plan )
+	function action( $params, $userid, $invoice, $plan )
 	{
 		// And here what should happen when the plan is applied.
 		// Note that both functions always receive the full parameter array
