@@ -2406,7 +2406,7 @@ class SubscriptionPlan extends paramDBTable
 					$mi->load( $mi_id );
 					if ( $mi->callIntegration() ) {
 						if ( ( ( strcmp( $mi->class_name, 'mi_email' ) === 0 ) && !$silent ) || ( strcmp( $mi->class_name, 'mi_email' ) !== 0 ) )
-						$mi->action( $metaUser->userid, null, $this );
+						$mi->action( $metaUser->userid, null, null, $this );
 					}
 				}
 				unset($mi);
@@ -4225,9 +4225,9 @@ class Invoice extends paramDBTable
 							$mi->load( $mi_id );
 							if ( $mi->callIntegration() ) {
 								if ( is_object( $metaUser ) ) {
-									$mi->action( $metaUser->userid, null, $new_plan );
+									$mi->action( $metaUser->userid, null, $this, $new_plan );
 								} else {
-									$mi->action( false, null, $new_plan );
+									$mi->action( false, null, $this, $new_plan );
 								}
 							}
 						}
@@ -6285,7 +6285,7 @@ class microIntegration extends paramDBTable
 		}
 	}
 
-	function action( $userid, $exchange=null, $objplan=null )
+	function action( $userid, $exchange=null, $invoice=null, $objplan=null )
 	{
 		if ( !is_array( $exchange ) ) {
 			$params = $this->getExchangedSettings( $exchange );
@@ -6295,10 +6295,10 @@ class microIntegration extends paramDBTable
 
 		if ( is_array( $userid ) ){
 			foreach ( $userid as $id ) {
-				$this->mi_class->action( $params, $id, $objplan );
+				$this->mi_class->action( $params, $id, $invoice, $objplan );
 			}
 		} else {
-			$this->mi_class->action( $params, $userid, $objplan );
+			$this->mi_class->action( $params, $userid, $invoice, $objplan );
 		}
 	}
 

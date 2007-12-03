@@ -106,7 +106,7 @@ class mi_email
 		return $this->mailOut( $params, $userid, $plan, '_exp' );
 	}
 
-	function action( $params, $userid, $plan )
+	function action( $params, $userid, $invoice, $plan )
 	{
 		return $this->mailOut( $params, $userid, $plan, '' );
 	}

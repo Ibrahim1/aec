@@ -136,7 +136,7 @@ class mi_juga
 		return true;
 	}
 
-	function action( $params, $userid, $plan )
+	function action( $params, $userid, $invoice, $plan )
 	{
 		global $database;
 

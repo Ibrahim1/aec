@@ -27,7 +27,7 @@ class mi_attend_events
 		return $settings;
 	}
 
-	function action( $params, $userid, $plan )
+	function action( $params, $userid, $invoice, $plan )
 	{
 		global $database, $mosConfig_live_site, $mosConfig_absolute_path;
 

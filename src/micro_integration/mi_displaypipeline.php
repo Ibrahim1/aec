@@ -42,7 +42,7 @@ class mi_displaypipeline
 		return $settings;
 	}
 
-	function action( $params, $userid, $plan )
+	function action( $params, $userid, $invoice, $plan )
 	{
 		global $database;
 

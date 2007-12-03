@@ -66,7 +66,7 @@ class mi_affiliatepro
 		return $settings;
 	}
 
-	function action( $params, $userid, $plan )
+	function action( $params, $userid, $invoice, $plan )
 	{
 		global $database, $mosConfig_live_site, $mosConfig_sitename;
 

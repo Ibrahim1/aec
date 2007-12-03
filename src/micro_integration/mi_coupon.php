@@ -25,12 +25,19 @@ class mi_coupon
 	{
 		$settings = array();
 		$settings['setupinfo'] = array( 'fieldset' );
+		$settings['coupon_amount'] = array( 'inputC' );
+		$settings['master_coupon'] = array( 'inputC' );
+		$settings['bind_subscription'] = array( 'inputC' );
+		$settings['rebill_new_coupons'] = array( 'inputC' );
+		$settings['rebill_old_coupons'] = array( 'inputC' );
 		return $settings;
 	}
 
 	function action( $params, $userid, $plan )
 	{
 		global $database, $mosConfig_live_site;
+
+
 
 		// Send out X coupons based on master coupon Y
 		// Bind coupons to plan

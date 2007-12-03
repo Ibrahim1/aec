@@ -42,14 +42,9 @@ class mi_googleanalytics
 		return $settings;
 	}
 
-	function action( $params, $userid, $plan )
+	function action( $params, $userid, $invoice, $plan )
 	{
 		global $database, $mosConfig_live_site, $mosConfig_sitename;
-
-		$lastinvoice = AECfetchfromDB::lastClearedInvoiceIDbyUserID( $userid, $plan->id );
-
-		$invoice = new Invoice($database);
-		$invoice->load($lastinvoice);
 
 		$text = '<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">'
 				. '</script>'

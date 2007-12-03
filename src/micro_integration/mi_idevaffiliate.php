@@ -31,14 +31,9 @@ class mi_idevaffiliate
 		return $settings;
 	}
 
-	function action( $params, $userid, $plan )
+	function action( $params, $userid, $invoice, $plan )
 	{
 		global $database, $mosConfig_live_site;
-
-		$lastinvoice = AECfetchfromDB::lastClearedInvoiceIDbyUserID( $userid, $plan->id );
-
-		$invoice = new Invoice( $database );
-		$invoice->load( $lastinvoice );
 
 		$rooturl = $this->getPath( $params );
 

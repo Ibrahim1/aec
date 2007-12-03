@@ -75,7 +75,7 @@ class mi_mysql_query
 		return true;
 	}
 
-	function action( $params, $userid, $plan )
+	function action( $params, $userid, $invoice, $plan )
 	{
 		global $database;
 
