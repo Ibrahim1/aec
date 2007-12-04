@@ -14,7 +14,7 @@ $_MAMBOTS->registerFunction( 'onAfterStart', 'checkLoginLinkForIntrusion' );
 function checkLoginLinkForIntrusion ()
 {
 	$option = mosGetParam($_REQUEST, "option", '');
-	$task	 = mosGetParam($_REQUEST, "task", '');
+	$task	= mosGetParam($_REQUEST, "task", '');
 
 	if( trim(strtolower($option)) == 'com_registration' && trim(strtolower($task)) == 'register' ) {
 		mosRedirect(sefRelToAbs("index.php?option=com_acctexp&task=subscribe&itemid=0"));
