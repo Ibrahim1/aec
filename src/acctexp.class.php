@@ -6269,6 +6269,8 @@ class microIntegration extends paramDBTable
 
 			$this->mi_class = new $class ();
 
+			$this->mi_class->id = $this->id;
+
 			$info = $this->mi_class->Info();
 
 			if ( is_null( $this->name ) || ( $this->name == '' ) ) {
@@ -6309,10 +6311,10 @@ class microIntegration extends paramDBTable
 		if ( method_exists( $this->mi_class, 'pre_expiration_action' ) ) {
 			if ( is_array( $userid ) ) {
 				foreach ( $userid as $id ) {
-					$return = $this->mi_class->pre_expiration_action( $params, $id, $objplan, $this->id );
+					$return = $this->mi_class->pre_expiration_action( $params, $id, $objplan );
 				}
 			} else {
-				$return = $this->mi_class->pre_expiration_action( $params, $userid, $objplan, $this->id );
+				$return = $this->mi_class->pre_expiration_action( $params, $userid, $objplan );
 			}
 		}
 

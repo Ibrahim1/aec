@@ -61,7 +61,7 @@ class mi_communitybuilder
 	{
 	}
 
-	function action($params, $userid, $invoice, $plan)
+	function action( $params, $userid, $invoice, $plan )
 	{
 		global $database;
 
