@@ -26,8 +26,12 @@ class mi_idevaffiliate
 		$settings = array();
 		$settings['setupinfo'] = array( 'fieldset' );
 		$settings['profile'] = array( 'inputC' );
-		$settings['rooturl'] = array( 'inputC' );
-		$settings['calcrooturl'] = array( 'fieldset', '',  );
+		$settings['directory'] = array( 'inputC' );
+		$settings['onlycustomparams'] = array( 'list_yesno' );
+		$settings['customparams'] = array( 'inputD' );
+		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
+		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+
 		return $settings;
 	}
 
@@ -36,6 +40,31 @@ class mi_idevaffiliate
 		global $database, $mosConfig_live_site;
 
 		$rooturl = $this->getPath( $params );
+
+		$getparams = array();
+
+		if ( !empty( $params['profile'] ) ) {
+			$getparams[] = 'profile=' . $params['profile'];
+		}
+
+		$getparams[] = 'idev_saleamt=' . $invoice->amount;
+		$getparams[] = 'idev_ordernum=' . $invoice->invoice_number;
+
+		if ( !empty( $params['onlycustomparams'] ) && !empty( $params['customparams'] ) ) {
+			$getparams = array();
+		}
+
+		if ( !empty( $params['customparams'] ) ) {
+			$metaUser = new metaUser( $userid );
+
+			$rw_params = AECToolbox::rewriteEngine( $params['customparams'], $metaUser, $plan );
+
+			$cps = explode( "\n", $rw_params );
+
+			foreach ( $cps as $cp ) {
+				$getparams[] = $cp;
+			}
+		}
 
 		$text = '<img border="0" '
 				.'src="' . $rooturl .'/sale.php?profile=' . $params['profile'] . '&amp;idev_saleamt=' . $invoice->amount . '&amp;idev_ordernum=' . $invoice->invoice_number . '" '
@@ -51,11 +80,15 @@ class mi_idevaffiliate
 	{
 		global $mosConfig_live_site;
 
-		if ( !empty( $params['rooturl'] ) ) {
-			if ( ( strpos( $params['rooturl'], 'http://' ) === 0 ) || ( strpos( $params['rooturl'], 'https://' ) === 0 ) ) {
-				$rooturl = $params['rooturl'];
+		if ( !empty( $params['directory'] ) ) {
+			if ( ( strpos( $params['directory'], 'http://' ) === 0 ) || ( strpos( $params['directory'], 'https://' ) === 0 ) ) {
+				$rooturl = $params['directory'];
 			} else {
-				$rooturl = $mosConfig_live_site . $params['rooturl'];
+				if ( strpos( "/", $params['directory'] ) !== 0 ) {
+					$params['directory'] = "/" . $params['directory'];
+				}
+
+				$rooturl = $mosConfig_live_site . $params['directory'];
 			}
 		} else {
 			$rooturl = $mosConfig_live_site . '/idevaffiliate';

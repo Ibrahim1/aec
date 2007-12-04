@@ -99,9 +99,17 @@ define( '_AEC_MI_SET11_EMAIL',		'Text-Felder zum Ersetzen durch dynamischem Text
 
 // iDevAffiliate
 define( '_AEC_MI_NAME_IDEV',		'iDevAffiliate' );
-define( '_AEC_MI_DESC_IDEV',		'Zahlungen mit der iDevAffiliate Komponente verbinden' );
+define( '_AEC_MI_DESC_IDEV',		'Connect your sales to the iDevAffiliate Component' );
 define( '_MI_MI_IDEVAFFILIATE_SETUPINFO_NAME',		'Important Information' );
-define( '_MI_MI_IDEVAFFILIATE_SETUPINFO_DESC',		'Using the micro integration, you NEED TO make sure you make the settings for "cart integration" in your idev backend as follows:\n\n<ul><li>Use "manual integration"</li><li>As "Order Amount Variable Name: " use "idev_paypal_1" (if not already preset!)</li><li>As "Order Number Variable Name: " use "idev_paypal_2" (if not already preset!)</li></ul>' );
+define( '_MI_MI_IDEVAFFILIATE_SETUPINFO_DESC',		'Using the micro integration, you NEED TO make sure that you are using the official joomla component by the iDev Team. This MI will automatically call to <yourjoomlaroot>/idevaffiliate. If you want to specify it otherwise, please do so in the directory setting below. You may leave out the root url that joomla sits in.' );
+define( '_MI_MI_IDEVAFFILIATE_PROFILE_NAME',		'Profile' );
+define( '_MI_MI_IDEVAFFILIATE_PROFILE_DESC',		'The Profile identification within iDevAffiliate' );
+define( '_MI_MI_IDEVAFFILIATE_DIRECTORY_NAME',		'iDev Directory' );
+define( '_MI_MI_IDEVAFFILIATE_DIRECTORY_DESC',		'Specify a subdirectory if iDevAffiliate does not rest in the directory as explained in the above box.' );
+define( '_MI_MI_IDEVAFFILIATE_ONLYCUSTOMPARAMS_NAME',		'Only Custom Parameters' );
+define( '_MI_MI_IDEVAFFILIATE_ONLYCUSTOMPARAMS_DESC',		'Only transmit the custom parameters as specified below (instead of transmitting the regular - invoice number and amount - and the profile id if set).' );
+define( '_MI_MI_IDEVAFFILIATE_CUSTOMPARAMS_NAME',		'Custom Parameters' );
+define( '_MI_MI_IDEVAFFILIATE_CUSTOMPARAMS_DESC',		'If you want to transmit custom parameters instead of or additional to the regular parameters, please put them in here. Separated by linebreaks in the form of "parameter_name=parameter_value". The RewriteEngine works as specified below.' );
 
 // MosetsTree
 define( '_AEC_MI_NAME_MOSETS',		'MosetsTree' );
