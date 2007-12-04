@@ -37,6 +37,17 @@ class mi_coupon
 	{
 		global $database, $mosConfig_live_site;
 
+		$metaUser = new metaUser( $userid );
+
+		$userflags = $metaUser->objSubscription->getMIflags( $plan->id, $this->id );
+
+		if ( is_array( $userflags ) ) {
+			if ( isset( $userflags['EXP_MAIL_SENT'] ) ) {
+				if ( !( time() > $userflags['EXP_MAIL_ABANDONCHECK'] ) ) {
+					return false;
+				}
+			}
+		}
 
 
 		// Send out X coupons based on master coupon Y
