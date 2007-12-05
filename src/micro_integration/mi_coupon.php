@@ -28,40 +28,114 @@ class mi_coupon
 		$settings['coupon_amount'] = array( 'inputC' );
 		$settings['master_coupon'] = array( 'inputC' );
 		$settings['bind_subscription'] = array( 'inputC' );
-		$settings['always_new_coupons'] = array( 'inputC' );
+		$settings['create_new_coupons'] = array( 'inputC' );
+		$settings['mail_out_coupons'] = array( 'list_yesno' );
+		$settings['always_new_coupons'] = array( 'list_yesno' );
 		$settings['inc_old_coupons'] = array( 'inputC' );
+
+		$settings['sender']				= array( 'inputE' );
+		$settings['sender_name']		= array( 'inputE' );
+
+		$settings['recipient']			= array( 'inputE' );
+
+		$settings['subject']			= array( 'inputE' );
+		$settings['text_html']			= array( 'list_yesno' );
+		$settings['text']				= array( $params['text_html'] ? 'editor' : 'inputD' );
+
+		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
+		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+
 		return $settings;
 	}
 
-	function action( $params, $userid, $invoice, $plan )
+	function action( $params, $metaUser, $invoice, $plan )
 	{
 		global $database, $mosConfig_live_site;
 
-		$metaUser = new metaUser( $userid );
+		$userflags = $metaUser->focusSubscription->getMIflags( $plan->id, $this->id );
 
-		$userflags = $metaUser->objSubscription->getMIflags( $plan->id, $this->id );
+		$total_coupons = array();
 
+		$existing_coupons = array();
 		if ( is_array( $userflags ) ) {
-			if ( isset( $userflags['COUPONS'] ) ) {
+			if ( !empty( $userflags['COUPONS'] ) ) {
 				$existing_coupons = explode( ',', $userflags['COUPONS'] );
+				$total_coupons = array_merge( $total_coupons, $existing_coupons );
 
-				if ( $params['inc_old_coupons'] ) {
+				if ( !empty( $params['inc_old_coupons'] ) ) {
 					foreach ( $existing_coupons as $cid ) {
-						$cph = new couponHandler();
-						$cph->load( $cid );
-						$cph->restrictions['max_reuse'] + $params['inc_old_coupons'];
-						$cph->coupon->setParams( $cph->restrictions, 'restrictions' );
+						$ocph = new couponHandler();
+						$ocph->load( $cid );
+						$ocph->coupon->active = 1;
+						$ocph->restrictions['max_reuse'] + $params['inc_old_coupons'];
+						$ocph->coupon->setParams( $ocph->restrictions, 'restrictions' );
+						$ocph->coupon->check();
+						$ocph->coupon->store();
 					}
 				}
 			}
-		} else {
-			$existing_coupons = array();
 		}
 
-		// Send out X coupons based on master coupon Y
-		// Bind coupons to plan
-		// Add coupon usages on rebill
-		// for that, coupons have to be remembered on invoice!
+		$newcodes = array();
+		if ( ( !empty( $existing_coupons ) && !empty( $settings['always_new_coupons'] ) ) || empty( $existing_coupons ) ) {
+			if ( !empty( $settings['create_new_coupons'] ) && !empty( $settings['master_coupon'] ) ) {
+
+				$cph = new CouponHandler(  );
+				$cph->load( $settings['master_coupon'] );
+
+				if ( is_object( $cph->coupon ) ) {
+					for ( $i=0; $i<$settings['create_new_coupons']; $i++ ) {
+						$newcode = $cph->coupon->generateCouponCode();
+						$newcodes[] = $newcode;
+
+						$cph->coupon->id = 0;
+						$cph->coupon->coupon_code = $newcode;
+						$cph->coupon->active = 1;
+
+						if ( !empty( $settings['bind_subscription'] ) ) {
+							$cph->restrictions['depend_on_subscr_id'] = 1;
+							$cph->restrictions['subscr_id_dependency'] = $metaUser->focusSubscription->id;
+							$cph->coupon->setParams( $cph->restrictions, 'restrictions' );
+						}
+
+						$cph->coupon->check();
+						$cph->coupon->store();
+					}
+
+					if ( !empty( $settings['mail_out_coupons'] ) ) {
+						$this->mailOut( $params, $metaUser, $plan, $newcodes );
+					}
+				}
+			}
+		}
+
+		$total_coupons = array_merge( $total_coupons, $newcodes );
+
+		$newflags['coupons'] = implode( ',', $total_coupons );
+
+		$metaUser->objSubscription->setMIflags( $plan->id, $this->id, $newflags );
+
+		return true;
+	}
+
+	function mailOut( $params, $metaUser, $plan, $newcodes )
+	{
+		$message	= sprintf( $message, implode( "\n", $newcodes ) );
+
+		$message	= AECToolbox::rewriteEngine( $params['text'], $metaUser, $plan );
+		$subject	= AECToolbox::rewriteEngine( $params['subject'], $metaUser, $plan );
+
+		if ( empty( $message ) ) {
+			return false;
+		}
+
+		$recipients = explode( ',', $params['recipient'] );
+
+		foreach ( $recipients as $current => $email ) {
+			$recipients[$current] = AECToolbox::rewriteEngine( trim( $email ), $metaUser, $plan );
+		}
+
+		mosMail( $params['sender'], $params['sender_name'], $recipients, $subject, $message, $params['text_html'] );
 
 		return true;
 	}
