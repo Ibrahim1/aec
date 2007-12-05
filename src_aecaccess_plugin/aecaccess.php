@@ -69,16 +69,30 @@ class plgAuthenticationAECaccess extends JPlugin
 	function onAuthenticate( $credentials, $options, &$response )
 	{
 		jimport('joomla.user.helper');
-/*
-		include_once( JPATH_BASE .DS.'components'.DS.'com_acctexp'.DS.'acctexp.php' );
 
-		if ( AECToolbox::VerifyUsername( $credentials['username'] ) ) {
+		if ( strpos( JPATH_BASE, '/administrator' ) ) {
+			$response->status = JAUTHENTICATE_STATUS_SUCCESS;
+			return true;
+		}
+
+		$savetask = '';
+		if ( isset( $_REQUEST['task'] ) ) {
+			$_REQUEST['task'] = '';
+			$savetask = $_REQUEST['task'];
+		}
+
+		include_once( JPATH_ROOT .DS.'components'.DS.'com_acctexp'.DS.'acctexp.php' );
+
+		$_REQUEST['task'] = $savetask;
+
+		$verification = AECToolbox::VerifyUser( $credentials['username'] );
+		//$verification = true;
+
+		if ( $verification == true ) {
 			$response->status = JAUTHENTICATE_STATUS_SUCCESS;
 		} else {
 			$response->status = JAUTHENTICATE_STATUS_FAILURE;
 		}
-*/
-$response->status = JAUTHENTICATE_STATUS_SUCCESS;
 
 	}
 }

@@ -41,7 +41,6 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 global $mainframe, $mosConfig_absolute_path, $aecConfig;
 
 require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.php' );
-require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.proxy.php' );
 
 define( '_AEC_FRONTEND', 1 );
 
@@ -60,8 +59,6 @@ include_once( $mosConfig_absolute_path . '/administrator/components/com_acctexp/
 require_once( $mainframe->getPath( 'front_html',	'com_acctexp' ) );
 require_once( $mainframe->getPath( 'class',			'com_acctexp' ) );
 
-$aecConfig = new Config_General( $database );
-
 if ( !defined( '_EUCA_DEBUGMODE' ) ) {
 	define( '_EUCA_DEBUGMODE', $aecConfig->cfg['debugmode'] );
 }
@@ -74,7 +71,7 @@ if ( _EUCA_DEBUGMODE ) {
 
 $task = trim( mosGetParam( $_REQUEST, 'task', '' ) );
 
-if ( $task ) {
+if ( !empty( $task ) ) {
 	switch ( strtolower( $task ) ) {
 		case 'register':
 			$intro = trim( mosGetParam( $_REQUEST, 'intro', 0 ) );

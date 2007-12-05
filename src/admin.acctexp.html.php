@@ -1003,7 +1003,7 @@ class HTML_AcctExp
 								continue ;
 							}
 						}
-						if ( isset($content['legacy'] ) ) {
+						if ( !empty($content['legacy'] ) ) {
 							continue;
 						}
 					} ?>
@@ -1018,13 +1018,13 @@ class HTML_AcctExp
 							 <a href="<?php echo 'index2.php?option=com_acctexp&amp;task=hacks&amp;filename=' . $handle . '&amp;undohack=' . $content['status'] ?>#<?php echo $handle; ?>"><?php echo $content['status'] ? _AEC_HACKS_UNDO : _AEC_HACKS_COMMIT ; ?></a>
 						</div>
 						<?php
-						if ( isset( $content['important'] ) && !$content['status'] ) { ?>
+						if ( !empty( $content['important'] ) && !$content['status'] ) { ?>
 							<div class="important">&nbsp;</div>
 							<?php
 						} ?>
 						<p style="width:60%; padding:3px;">
 							<?php
-							if ( isset( $content['legacy'] ) ) { ?>
+							if ( !empty( $content['legacy'] ) ) { ?>
 								<img src="<?php echo $mosConfig_live_site;?>/administrator/components/com_acctexp/images/icons/aec_symbol_importance_3.png" />
 								<?php
 							} ?>
@@ -1037,7 +1037,7 @@ class HTML_AcctExp
 								</p>
 							<?php
 							if ( ( strcmp( $content['type'], 'file' ) === 0 ) && !$content['status'] ) {
-								if ( !isset( $content['legacy'] ) ) { ?>
+								if ( empty( $content['legacy'] ) ) { ?>
 									<p><?php echo _AEC_HACKS_LOOKS_FOR; ?>:</p>
 									<pre><?php print htmlentities( $content['read'] ); ?></pre>
 									<p><?php echo _AEC_HACKS_REPLACE_WITH; ?>:</p>

@@ -517,14 +517,12 @@ class Config_General extends paramDBTable
 	var $settings 			= null;
 
 	function Config_General( &$db )
-	{print_r($db);
+	{
 		$this->mosDBTable( '#__acctexp_config', 'id', $db );
 
 		$this->load(1);
 
 		if ( empty( $this->settings ) ) {
-			$this->load(0);
-
 			$this->initParams();
 			$this->cfg = $this->getParams( 'settings' );
 		} else {
@@ -4746,6 +4744,39 @@ class Subscription extends paramDBTable
 		}
 	}
 
+	function verify( $block )
+	{
+		global $mosConfig_live_site, $database, $aecConfig;
+
+		if ( strcmp( $this->status, 'Excluded' ) === 0 ) {
+			$expired = false;
+		} elseif ( strcmp( $this->status, 'Expired' ) === 0 ) {
+			$expired = true;
+		} else {
+			$expired = $this->is_expired();
+		}
+
+		if ( $expired ) {
+			$pp = new PaymentProcessor();
+
+			if ( $pp->loadName( $this->type ) ) {
+				$expired = !$pp->validateSubscription( $this );
+			}
+		}
+
+		if ( ( $expired || ( strcmp( $this->status, 'Closed' ) === 0 ) ) && $aecConfig->cfg['require_subscription'] ) {
+			$expire = $this->expire();
+
+			if ( $expire ) {
+				JApplication::redirect( '/index.php?option=com_acctexp&task=expired&Itemid=' . $this->userid );
+				exit();
+			}
+		} elseif ( ( strcmp( $this->status, 'Pending' ) === 0 ) || $block ) {
+			JApplication::redirect( '/index.php?option=com_acctexp&task=pending&Itemid=' . $this->userid );
+			exit();
+		}
+	}
+
 	function expire( $overridefallback=false )
 	{
 		global $database;
@@ -5502,6 +5533,42 @@ class AECToolbox
 				} else {
 					mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=subscribe&Itemid=' . $id ) );
 					return null;
+				}
+			}
+		}
+		return true;
+	}
+
+	function VerifyUser( $username )
+	{
+		global $database, $aecConfig;
+
+		$heartbeat = new aecHeartbeat( $database );
+		$heartbeat->frontendping();
+
+		$query = 'SELECT id'
+		. ' FROM #__users'
+		. ' WHERE username = \'' . $username . '\''
+		;
+		$database->setQuery( $query );
+		$id = $database->loadResult();
+
+		$metaUser = new metaUser( $id );
+
+		if ( $metaUser->hasSubscription ) {
+			$metaUser->objSubscription->verify( $metaUser->cmsUser->block );
+		} else {
+			if ( $aecConfig->cfg['require_subscription'] ) {
+				if ( $aecConfig->cfg['entry_plan'] ) {
+					$user_subscription = new Subscription( $database );
+					$user_subscription->load(0);
+					$user_subscription->createNew( $id, 'Free', 1 );
+
+					$metaUser = new metaUser( $id );
+					$metaUser->objSubscription->applyUsage( $aecConfig->cfg['entry_plan'], 'none', 1 );
+					AECToolbox::VerifyUser( $username );
+				} else {
+					return false;
 				}
 			}
 		}

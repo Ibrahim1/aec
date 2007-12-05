@@ -37,8 +37,6 @@ require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eu
 require_once( $mainframe->getPath( 'admin_html' ) );
 require_once( $mainframe->getPath( 'class' ) );
 
-$aecConfig = new Config_General( $database );
-
 if ( !defined( '_EUCA_DEBUGMODE' ) ) {
 	define( '_EUCA_DEBUGMODE', $aecConfig->cfg['debugmode'] );
 }
@@ -4090,7 +4088,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 
 	$n = 'joomlaphp4';
 	$hacks[$n]['name']				=	$v15 ? ( 'authentication.php' ) : ( $cmsname . '.php ' . _AEC_HACK_HACK . ' #4' );
-	$hacks[$n]['desc']				=	_AEC_HACKS_SUB_REQUIRED;
+	$hacks[$n]['desc']				=	$v15 ? _AEC_HACKS_LEGACY_PLUGIN:_AEC_HACKS_SUB_REQUIRED;
 	$hacks[$n]['uncondition']		=	'joomlaphp';
 	$hacks[$n]['type']				=	'file';
 
@@ -4107,7 +4105,8 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 	}
 
 	$hacks[$n]['insert']			=	sprintf($aec_jhack3, $n, $n) . "\n" . $hacks[$n]['read'];
-	$hacks[$n]['important']			=	1;
+	$hacks[$n]['important']			=	$v15 ? 0:1;
+	$hacks[$n]['legacy']			=	$v15 ? 1:0;
 
 	// registration.php
 	if ( !$v15 ) {
