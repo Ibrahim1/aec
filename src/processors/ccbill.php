@@ -79,6 +79,7 @@ class processor_ccbill extends POSTprocessor
 		$settings['formName']		= array( 'inputC' );
 		$settings['secretWord']		= array( 'inputC' );
 		$settings['info']			= array( 'fieldset' );
+		$settings['datalink_username']		= array( 'inputC' );
 		return $settings;
 	}
 
@@ -274,8 +275,73 @@ class processor_ccbill extends POSTprocessor
 		return $response;
 	}
 
-	function validateSubscription( $subscription ) {
+	function validateSubscription( $cfg, $subscription )
+	{
+		if ( empty( $this->datalink_temp ) ) {
+			$get = array();
+			$get['startTime'] = date( 'YmdHis', ( time() - 2*24*60*60 ) );
+			$get['endTime'] = date( 'YmdHis' );
+			$get['transactionTypes'] = 'REBILL,REFUND,CHARGEBACK';
+			$get['clientAccnum'] = $cfg['clientAccnum'];
+			$get['clientSubacc'] = $cfg['clientSubacc'];
+			$get['username'] = $cfg['datalink_username'];
+			$get['password'] = $cfg['secretWord'];
 
+			$fullget = array();
+			foreach ( $get as $name => $value ) {
+				$fullget[] = $name . '=' . $value;
+			}
+
+			$link = 'https://datalink.ccbill.com/data/main.cgi?';
+
+			$link .= implode( '&', $fullget );
+
+			$fp = null;
+			$fp = $this->fetchURL( $link );
+
+			$lines = explode( "\n", $fp );
+
+			$this->datalink_temp = array();
+			foreach ( $lines as $line ) {
+				$info = explode( ",", $line );
+
+				$this->datalink_temp
+			}
+		}
+	}
+
+	function fetchURL( $url ) {
+		$url_parsed = parse_url($url);
+
+		$host = $url_parsed["host"];
+		$port = $url_parsed["port"];
+		if ( $port == 0 ) {
+			$port = 80;
+		}
+		$path = $url_parsed["path"];
+
+		//if url is http://example.com without final "/"
+		//I was getting a 400 error
+		if ( empty( $path ) ) {
+			$path="/";
+		}
+
+		if ( $url_parsed["query"] != "" ) {
+			$path .= "?".$url_parsed["query"];
+		}
+
+		$out = "GET $path HTTP/1.0\r\nHost: $host\r\n\r\n";
+		$fp = fsockopen( $host, $port, $errno, $errstr, 30 );
+		fwrite( $fp, $out );
+
+		$return = '';
+		while ( !feof( $fp ) ) {
+			$return .= fgets($fp, 1024);
+		}
+
+		fclose( $fp );
+
+		return $return;
 	}
 }
 ?>

@@ -1544,10 +1544,12 @@ class PaymentProcessor
 		return $response;
 	}
 
-	function validateSubscription()
+	function validateSubscription( $subscription )
 	{
+		$this->getSettings();
+
 		if ( method_exists( $this->processor, 'validateSubscription' ) ) {
-			$response = $this->processor->validateSubscription();
+			$response = $this->processor->validateSubscription( $this->settings, $subscription );
 		} else {
 			$response = null;
 		}
