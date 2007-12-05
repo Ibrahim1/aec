@@ -79,10 +79,8 @@ class mi_email
 		return $settings;
 	}
 
-	function pre_expiration_action( $params, $userid, $plan )
+	function pre_expiration_action( $params, $metaUser, $plan )
 	{
-		$metaUser = new metaUser( $userid );
-
 		$userflags = $metaUser->objSubscription->getMIflags( $plan->id, $this->id );
 
 		if ( is_array( $userflags ) ) {
@@ -98,23 +96,21 @@ class mi_email
 
 		$metaUser->objSubscription->setMIflags( $plan->id, $this->id, $newflags );
 
-		return $this->mailOut( $params, $userid, $plan, '_pre_exp' );
+		return $this->mailOut( $params, $metaUser->userid, $plan, '_pre_exp' );
 	}
 
-	function expiration_action( $params, $userid, $plan )
+	function expiration_action( $params, $metaUser, $plan )
 	{
-		return $this->mailOut( $params, $userid, $plan, '_exp' );
+		return $this->mailOut( $params, $metaUser->userid, $plan, '_exp' );
 	}
 
-	function action( $params, $userid, $invoice, $plan )
+	function action( $params, $metaUser, $invoice, $plan )
 	{
-		return $this->mailOut( $params, $userid, $plan, '' );
+		return $this->mailOut( $params, $metaUser->userid, $plan, '' );
 	}
 
-	function mailOut( $params, $userid, $plan, $area )
+	function mailOut( $params, $metaUser, $plan, $area )
 	{
-		$metaUser = new metaUser( $userid );
-
 		if ( $area == '' ) {
 			if ( !empty( $params['text_first'] ) ) {
 				if ( empty( $metaUser->objSubscription->previous_plan ) ) {

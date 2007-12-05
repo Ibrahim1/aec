@@ -21,22 +21,14 @@ class mi_joomlauser
 		return $settings;
 	}
 
-	function pre_expiration_action( $params, $userid, $plan, $mi_id )
-	{
-
-	}
-
-	function expiration_action( $params, $userid, $plan ) {
-	}
-
-	function action( $params, $userid, $invoice, $plan )
+	function action( $params, $metaUser, $invoice, $plan )
 	{
 		global $database;
 
 		if ( $params['activate'] ) {
 			$query = 'UPDATE #__users'
 			.' SET block = \'0\', activation = \'\''
-			.' WHERE id = \'' . (int) $userid . '\'';
+			.' WHERE id = \'' . (int) $metaUser->userid . '\'';
 			$database->setQuery( $query );
 			$database->query() or die( $database->stderr() );
 		}

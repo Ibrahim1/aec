@@ -81,13 +81,13 @@ class mi_virtuemart
 		return $newparams;
 	}
 
-	function expiration_action( $params, $userid, $plan )
+	function expiration_action( $params, $metaUser, $plan )
 	{
 		if ( $params['set_shopper_group_exp'] ) {
-			if ( $this->checkVMuserexists( $userid ) ) {
-				$this->updateVMuserSgroup( $userid, $params['shopper_group_exp'] );
+			if ( $this->checkVMuserexists( $metaUser->userid ) ) {
+				$this->updateVMuserSgroup( $metaUser->userid, $params['shopper_group_exp'] );
 			} elseif ( $params['create_account'] ) {
-				$this->createVMuser( $userid, $params['shopper_group_exp'] );
+				$this->createVMuser( $metaUser->userid, $params['shopper_group_exp'] );
 			}
 
 			return true;
@@ -96,15 +96,15 @@ class mi_virtuemart
 		}
 	}
 
-	function action( $params, $userid, $invoice, $plan )
+	function action( $params, $metaUser, $invoice, $plan )
 	{
 		global $database;
 
 		if ( $params['set_shopper_group'] ) {
-			if ( $this->checkVMuserexists( $userid ) ) {
-				$this->updateVMuserSgroup( $userid, $params['shopper_group'] );
+			if ( $this->checkVMuserexists( $metaUser->userid ) ) {
+				$this->updateVMuserSgroup( $metaUser->userid, $params['shopper_group'] );
 			} elseif ( $params['create_account'] ) {
-				$this->createVMuser( $userid, $params['shopper_group'] );
+				$this->createVMuser( $metaUser->userid, $params['shopper_group'] );
 			}
 
 			return true;

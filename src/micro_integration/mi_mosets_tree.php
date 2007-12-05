@@ -61,12 +61,12 @@ class mi_mosets_tree
 		return $settings;
 	}
 
-	function expiration_action( $params, $userid, $plan )
+	function expiration_action( $params, $metaUser, $plan )
 	{
 		global $database;
 
 		$mi_mosetshandler = new mosetstree( $database );
-		$id = $mi_mosetshandler->getIDbyUserID( $userid );
+		$id = $mi_mosetshandler->getIDbyUserID( $metaUser->userid );
 
 		$mi_mosetshandler->load( $id );
 		$mi_mosetshandler->active = 0;
@@ -77,17 +77,17 @@ class mi_mosets_tree
 		return true;
 	}
 
-	function action( $params, $userid, $invoice, $plan )
+	function action( $params, $metaUser, $invoice, $plan )
 	{
 		global $database;
 
 		$mi_mosetshandler = new mosetstree( $database );
-		$id = $mi_mosetshandler->getIDbyUserID( $userid );
+		$id = $mi_mosetshandler->getIDbyUserID( $metaUser->userid );
 		$mi_id = $id ? $id : 0;
 		$mi_mosetshandler->load( $mi_id );
 
 		if ( !$mi_id ){
-			$mi_mosetshandler->userid = $userid;
+			$mi_mosetshandler->userid = $metaUser->userid;
 			$mi_mosetshandler->active = 1;
 		}
 

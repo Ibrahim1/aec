@@ -121,7 +121,7 @@ class mi_remository
 		return $hacks;
 	}
 
-	function expiration_action( $params, $userid, $plan )
+	function expiration_action( $params, $metaUser, $plan )
 	{
 		global $database;
 
@@ -129,7 +129,7 @@ class mi_remository
 			// Check if exists
 			$query = 'SELECT group_id'
 			. ' FROM #__mbt_group_member'
-			. ' WHERE member_id = \'' . $userid . '\''
+			. ' WHERE member_id = \'' . $metaUser->userid . '\''
 			;
 			$database->setQuery( $query );
 
@@ -140,7 +140,7 @@ class mi_remository
 			if ( !in_array( $params['group_exp'], $groups ) ) {
 				$query = 'INSERT INTO #__mbt_group_member'
 				. ' ( `group_id` , `member_id` )'
-				. ' VALUES (\'' . $params['group_exp'] . '\', \'' . $userid . '\')'
+				. ' VALUES (\'' . $params['group_exp'] . '\', \'' . $metaUser->userid . '\')'
 				;
 
 				$database->setQuery( $query );
@@ -150,7 +150,7 @@ class mi_remository
 		}
 
 		$mi_remositoryhandler = new remository_restriction( $database );
-		$id = $mi_remositoryhandler->getIDbyUserID( $userid );
+		$id = $mi_remositoryhandler->getIDbyUserID( $metaUser->userid );
 		$mi_id = $id ? $id : 0;
 		$mi_remositoryhandler->load( $mi_id );
 
@@ -163,7 +163,7 @@ class mi_remository
 		return true;
 	}
 
-	function action( $params, $userid, $invoice, $plan )
+	function action( $params, $metaUser, $invoice, $plan )
 	{
 		global $database;
 
@@ -171,7 +171,7 @@ class mi_remository
 			// Check if exists
 			$query = 'SELECT group_id'
 			. ' FROM #__mbt_group_member'
-			. ' WHERE member_id = \'' . $userid . '\''
+			. ' WHERE member_id = \'' . $metaUser->userid . '\''
 			;
 			$database->setQuery( $query );
 
@@ -182,7 +182,7 @@ class mi_remository
 			if ( !in_array( $params['group'], $groups ) ) {
 				$query = 'INSERT INTO #__mbt_group_member'
 				. ' ( `group_id` , `member_id` )'
-				. ' VALUES (\'' . $params['group'] . '\', \'' . $userid . '\')'
+				. ' VALUES (\'' . $params['group'] . '\', \'' . $metaUser->userid . '\')'
 				;
 
 				$database->setQuery( $query );
@@ -191,12 +191,12 @@ class mi_remository
 		}
 
 		$mi_remositoryhandler = new remository_restriction( $database );
-		$id = $mi_remositoryhandler->getIDbyUserID( $userid );
+		$id = $mi_remositoryhandler->getIDbyUserID( $metaUser->userid );
 		$mi_id = $id ? $id : 0;
 		$mi_remositoryhandler->load( $mi_id );
 
 		if ( !$mi_id ) {
-			$mi_remositoryhandler->userid = $userid;
+			$mi_remositoryhandler->userid = $metaUser->userid;
 			$mi_remositoryhandler->active = 1;
 		}
 

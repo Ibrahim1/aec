@@ -146,21 +146,21 @@ class mi_docman
 		return $hacks;
 	}
 
-	function expiration_action($params, $userid, $plan)
+	function expiration_action($params, $metaUser, $plan)
 	{
 		global $database;
 
 		// TODO: Make this a choice, also offer deletion of ALL groups
 		if ( $params['set_group'] ) {
-			$this->DeleteUserFromGroup( $userid, $params['group'] );
+			$this->DeleteUserFromGroup( $metaUser->userid, $params['group'] );
 		}
 
 		if ( $params['set_group_exp'] ) {
-			$this->AddUserToGroup( $userid, $params['group_exp'] );
+			$this->AddUserToGroup( $metaUser->userid, $params['group_exp'] );
 		}
 
 		$mi_docmanhandler = new docman_restriction( $database );
-		$id = $mi_docmanhandler->getIDbyUserID( $userid );
+		$id = $mi_docmanhandler->getIDbyUserID( $metaUser->userid );
 		$mi_id = $id ? $id : 0;
 		$mi_docmanhandler->load( $mi_id );
 
@@ -173,21 +173,21 @@ class mi_docman
 		return true;
 	}
 
-	function action( $params, $userid, $invoice, $plan )
+	function action( $params, $metaUser, $invoice, $plan )
 	{
 		global $database;
 
 		if ( $params['set_group'] ) {
-			$this->AddUserToGroup( $userid, $params['group'] );
+			$this->AddUserToGroup( $metaUser->userid, $params['group'] );
 		}
 
 		$mi_docmanhandler = new docman_restriction( $database );
-		$id = $mi_docmanhandler->getIDbyUserID( $userid );
+		$id = $mi_docmanhandler->getIDbyUserID( $metaUser->userid );
 		$mi_id = $id ? $id : 0;
 		$mi_docmanhandler->load( $mi_id );
 
 		if ( !$mi_id ) {
-			$mi_docmanhandler->userid = $userid;
+			$mi_docmanhandler->userid = $metaUser->userid;
 			$mi_docmanhandler->active = 1;
 		}
 

@@ -91,14 +91,14 @@ class mi_fireboard
 		return $newparams;
 	}
 
-	function expiration_action( $params, $userid, $plan )
+	function expiration_action( $params, $metaUser, $plan )
 	{
 		global $database;
 
 		if ($params['set_group_exp']) {
 			$query = 'UPDATE #__fb_users'
 			. ' SET group_id = \'' . $params['group_exp'] . '\''
-			. ' WHERE userid = \'' . $userid . '\''
+			. ' WHERE userid = \'' . $metaUser->userid . '\''
 			;
 
 			// Carry out query
@@ -109,7 +109,7 @@ class mi_fireboard
 		return true;
 	}
 
-	function action( $params, $userid, $plan )
+	function action( $params, $metaUser, $plan )
 	{
 		global $database;
 
@@ -117,7 +117,7 @@ class mi_fireboard
 			// Check if exists - users only appear in FB users table normally when they have posted
 			$query = 'SELECT group_id'
 			. ' FROM #__fb_users'
-			. ' WHERE userid = \'' . $userid . '\''
+			. ' WHERE userid = \'' . $metaUser->userid . '\''
 			;
 			$database->setQuery( $query );
 
@@ -125,12 +125,12 @@ class mi_fireboard
 			if ( $database->loadResult() ) {
 				$query = 'UPDATE #__fb_users'
 				. ' SET group_id = \'' . $params['group'] . '\''
-				. ' WHERE userid = \'' . $userid . '\''
+				. ' WHERE userid = \'' . $metaUser->userid . '\''
 				;
 			} else {
 				$query = 'INSERT INTO #__fb_users'
 				. ' ( `group_id` , `userid` )'
-				. ' VALUES (\'' . $params['group'] . '\', \'' . $userid . '\')'
+				. ' VALUES (\'' . $params['group'] . '\', \'' . $metaUser->userid . '\')'
 				;
 			}
 

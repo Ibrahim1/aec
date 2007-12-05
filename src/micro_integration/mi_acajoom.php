@@ -47,13 +47,13 @@ class mi_acajoom
 		return $settings;
 	}
 
-	function expiration_action( $params, $userid, $plan )
+	function expiration_action( $params, $metaUser, $plan )
 	{
-		$acauser = $this->getSubscriberID( $userid );
+		$acauser = $this->getSubscriberID( $metaUser->userid );
 
 		if ( !$acauser ) {
-			$this->createSubscriber( $userid );
-			$acauser = $this->getSubscriberID( $userid );
+			$this->createSubscriber( $metaUser->userid );
+			$acauser = $this->getSubscriberID( $metaUser->userid );
 		}
 
 		if ( $this->hasList( $acauser, $params['list'] ) ) {
@@ -61,13 +61,13 @@ class mi_acajoom
 		}
 	}
 
-	function action( $params, $userid, $invoice, $plan )
+	function action( $params, $metaUser, $invoice, $plan )
 	{
-		$acauser = $this->getSubscriberID( $userid );
+		$acauser = $this->getSubscriberID( $metaUser->userid );
 
 		if ( !$acauser ) {
-			$this->createSubscriber( $userid );
-			$acauser = $this->getSubscriberID( $userid );
+			$this->createSubscriber( $metaUser->userid );
+			$acauser = $this->getSubscriberID( $metaUser->userid );
 		}
 
 		if ( !$this->hasList( $acauser, $params['list'] ) ) {

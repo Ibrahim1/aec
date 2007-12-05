@@ -151,19 +151,16 @@ class mi_htaccess
 		return $newparams;
 	}
 
-	function expiration_action( $params, $userid, $plan )
+	function expiration_action( $params, $metaUser, $plan )
 	{
 		global $database;
 
-		$user = new mosUser( $database );
-		$user->load( $userid );
-
 		$ht = new htaccess();
 		$ht->setFPasswd( $params['mi_folder_user_fullpath'] );
-		$ht->delUser( $user->username );
+		$ht->delUser( $metaUser->cmsUser->username );
 	}
 
-	function action($params, $userid, $invoice, $plan)
+	function action($params, $metaUser, $invoice, $plan)
 	{
 		global $database;
 
@@ -174,11 +171,8 @@ class mi_htaccess
 			$ht->setAuthName( $params['mi_name'] );
 		}
 
-		$user = new mosUser( $database );
-		$user->load( $userid );
-
 		if( $params['use_md5'] ) {
-			$ht->addUser( $user->username, $user->password );
+			$ht->addUser( $metaUser->cmsUser->username, $metaUser->cmsUser->password );
 		}else{
 			$apachepw = new apachepw( $database );
 			$apwid = $apachepw->getIDbyUserID( $userid );
@@ -190,7 +184,7 @@ class mi_htaccess
 				return false;
 			}
 
-			$ht->addUser( $user->username, $apachepw->apachepw );
+			$ht->addUser( $metaUser->cmsUser->username, $apachepw->apachepw );
 		}
 		$ht->addLogin();
 		return true;

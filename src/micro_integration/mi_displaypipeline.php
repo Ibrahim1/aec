@@ -42,16 +42,14 @@ class mi_displaypipeline
 		return $settings;
 	}
 
-	function action( $params, $userid, $invoice, $plan )
+	function action( $params, $metaUser, $invoice, $plan )
 	{
 		global $database;
-
-		$metaUser = new metaUser( $userid );
 
 		$text = AECToolbox::rewriteEngine( $params['text'], $metaUser, $plan );
 
 		$displaypipeline = new displayPipeline($database);
-		$displaypipeline->create( $userid, $params['only_user'], $params['once_per_user'], $params['expire'], $params['expiration'], $params['displaymax'], $text );
+		$displaypipeline->create( $metaUser->userid, $params['only_user'], $params['once_per_user'], $params['expire'], $params['expiration'], $params['displaymax'], $text );
 		return true;
 	}
 

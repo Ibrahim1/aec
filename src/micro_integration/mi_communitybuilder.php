@@ -57,24 +57,20 @@ class mi_communitybuilder
 		return $settings;
 	}
 
-	function pre_expiration_action($params, $userid, $plan, $mi_id)
-	{
-	}
-
-	function action( $params, $userid, $invoice, $plan )
+	function action( $params, $metaUser, $invoice, $plan )
 	{
 		global $database;
 
 		if( $params['approve'] ) {
 			$query = 'UPDATE #__comprofiler'
 			.' SET approved = \'1\''
-			.' WHERE user_id = \'' . (int) $userid . '\'';
+			.' WHERE user_id = \'' . (int) $metaUser->userid . '\'';
 			$database->setQuery( $query );
 			$database->query() or die( $database->stderr() );
 		}
 
 		if ( $params['set_fields'] ) {
-			$metaUser = new metaUser( $userid );
+			$metaUser = new metaUser( $metaUser->userid );
 
 			$query = 'SELECT name, title'
 					. ' FROM #__comprofiler_fields'
@@ -101,27 +97,27 @@ class mi_communitybuilder
 
 				$query = 'UPDATE #__comprofiler'
 						. ' SET ' . implode( ', ', $alterstring )
-						. ' WHERE user_id = \'' . (int) $userid . '\'';
+						. ' WHERE user_id = \'' . (int) $metaUser->userid . '\'';
 				$database->setQuery( $query );
 				$database->query() or die( $database->stderr() );
 			}
 		}
 	}
 
-	function expiration_action($params, $userid, $plan)
+	function expiration_action( $params, $metaUser, $plan )
 	{
 		global $database;
 
 		if( $params['unapprove_exp'] ) {
 			$query = 'UPDATE #__comprofiler'
 			.' SET approved = \'0\''
-			.' WHERE user_id = \'' . (int) $userid . '\'';
+			.' WHERE user_id = \'' . (int) $metaUser->userid . '\'';
 			$database->setQuery( $query );
 			$database->query() or die( $database->stderr() );
 		}
 
 		if ( $params['set_fields_exp'] ) {
-			$metaUser = new metaUser( $userid );
+			$metaUser = new metaUser( $metaUser->userid );
 
 			$query = 'SELECT name, title'
 					. ' FROM #__comprofiler_fields'
@@ -148,7 +144,7 @@ class mi_communitybuilder
 
 				$query = 'UPDATE #__comprofiler'
 						. ' SET ' . implode( ', ', $alterstring )
-						. ' WHERE user_id = \'' . (int) $userid . '\'';
+						. ' WHERE user_id = \'' . (int) $metaUser->userid . '\'';
 				$database->setQuery( $query );
 				$database->query() or die( $database->stderr() );
 			}

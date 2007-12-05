@@ -833,23 +833,24 @@ class aecHeartbeat extends mosDBTable
 				}
 
 				// Filter out the users which dont have the correct plan
-				$query = 'SELECT id'
+				$query = 'SELECT id, userid'
 				. ' FROM #__acctexp_subscr'
 				. ' WHERE userid IN (' . implode( ',', $pre_expired_users ) . ')'
 				. ' AND plan IN (' . implode( ',', $expmi_plans) . ')'
 				;
 				$database->setQuery( $query );
-				$user_list = $database->loadResultArray();
+				$user_list = $database->loadObjectList();
 
-				foreach ( $pre_expired_users as $userid ) {
-					$metaUser = new metaUser( $userid );
+				foreach ( $pre_expired_users as $usid ) {
+					$metaUser = new metaUser( $usid->userid );
+					$metaUser->moveFocus( $usid->id );
 
 					// Two double checks here, just to be sure
-					if ( !( strcmp( $metaUser->objSubscription->status, 'Expired' ) === 0 ) && !$metaUser->objSubscription->recurring ) {
-						if ( in_array( $metaUser->objSubscription->plan, $expmi_plans ) ) {
+					if ( !( strcmp( $metaUser->focusSubscription->status, 'Expired' ) === 0 ) && !$metaUser->focusSubscription->recurring ) {
+						if ( in_array( $metaUser->focusSubscription->plan, $expmi_plans ) ) {
 							// Its ok - load the plan
 							$subscription_plan = new SubscriptionPlan( $database );
-							$subscription_plan->load( $metaUser->objSubscription->plan );
+							$subscription_plan->load( $metaUser->focusSubscription->plan );
 							$userplan_mis = explode( ';', $subscription_plan->micro_integrations );
 
 							// Get the right MIs
@@ -864,8 +865,8 @@ class aecHeartbeat extends mosDBTable
 
 								if ( $mi->callIntegration() ) {
 									// Do the actual pre expiration check on this MI
-									if ( $metaUser->objSubscription->is_expired( $mi->pre_exp_check ) ) {
-										$result = $mi->pre_expiration_action( $userid, $subscription_plan );
+									if ( $metaUser->focusSubscription->is_expired( $mi->pre_exp_check ) ) {
+										$result = $mi->pre_expiration_action( $metaUser, $subscription_plan );
 										if ( $result ) {
 											$exp_actions++;
 										}
@@ -2405,7 +2406,7 @@ class SubscriptionPlan extends paramDBTable
 					$mi->load( $mi_id );
 					if ( $mi->callIntegration() ) {
 						if ( ( ( strcmp( $mi->class_name, 'mi_email' ) === 0 ) && !$silent ) || ( strcmp( $mi->class_name, 'mi_email' ) !== 0 ) )
-						$mi->action( $metaUser->userid, null, null, $this );
+						$mi->action( $metaUser, null, null, $this );
 					}
 				}
 				unset($mi);
@@ -4187,7 +4188,7 @@ class Invoice extends paramDBTable
 					if ( isset( $micro_int['name'] ) ) {
 						if ( $mi->callDry( $micro_int['name'] ) ) {
 							if ( is_object( $metaUser ) ) {
-								$mi->action( $metaUser->userid, $exchange, $new_plan );
+								$mi->action( $metaUser, $exchange, $new_plan );
 							} else {
 								$mi->action( false, $exchange, $new_plan );
 							}
@@ -4197,7 +4198,7 @@ class Invoice extends paramDBTable
 							$mi->load( $micro_int['id'] );
 							if ( $mi->callIntegration() ) {
 								if ( is_object( $metaUser ) ) {
-									$mi->action( $metaUser->userid, $exchange, $new_plan );
+									$mi->action( $metaUser, $exchange, $new_plan );
 								} else {
 									$mi->action( false, $exchange, $new_plan );
 								}
@@ -6355,7 +6356,7 @@ class microIntegration extends paramDBTable
 		}
 	}
 
-	function action( $userid, $exchange=null, $invoice=null, $objplan=null )
+	function action( $metaUser, $exchange=null, $invoice=null, $objplan=null )
 	{
 		if ( !is_array( $exchange ) ) {
 			$params = $this->getExchangedSettings( $exchange );
@@ -6363,44 +6364,26 @@ class microIntegration extends paramDBTable
 			$params = $this->getParams();
 		}
 
-		if ( is_array( $userid ) ){
-			foreach ( $userid as $id ) {
-				$this->mi_class->action( $params, $id, $invoice, $objplan );
-			}
-		} else {
-			$this->mi_class->action( $params, $userid, $invoice, $objplan );
-		}
+		$this->mi_class->action( $params, $metaUser, $invoice, $objplan );
 	}
 
-	function pre_expiration_action( $userid, $objplan=null )
+	function pre_expiration_action( $metaUser, $objplan=null )
 	{
 		$params = $this->getParams();
 
 		if ( method_exists( $this->mi_class, 'pre_expiration_action' ) ) {
-			if ( is_array( $userid ) ) {
-				foreach ( $userid as $id ) {
-					$return = $this->mi_class->pre_expiration_action( $params, $id, $objplan );
-				}
-			} else {
-				$return = $this->mi_class->pre_expiration_action( $params, $userid, $objplan );
-			}
+			$return = $this->mi_class->pre_expiration_action( $params, $metaUser, $objplan );
 		}
 
 		return $return;
 	}
 
-	function expiration_action( $userid, $objplan=null )
+	function expiration_action( $metaUser, $objplan=null )
 	{
 		$params = $this->getParams();
 
 		if ( method_exists( $this->mi_class, 'expiration_action' ) ) {
-			if ( is_array( $userid ) ){
-				foreach ( $userid as $id ) {
-					$this->mi_class->expiration_action( $params, $id, $objplan );
-				}
-			} else {
-				$this->mi_class->expiration_action( $params, $userid, $objplan );
-			}
+			$this->mi_class->expiration_action( $params, $metaUser, $objplan );
 		}
 	}
 

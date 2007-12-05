@@ -113,14 +113,14 @@ class mi_juga
 		return $newparams;
 	}
 
-	function expiration_action( $params, $userid, $plan )
+	function expiration_action( $params, $metaUser, $plan )
 	{
 		global $database;
 
 		if ( $params['set_remove_group_exp'] ) {
 			$groups = explode( ';', $params['enroll_group'] );
 			foreach ( $groups as $groupid ) {
-				$this->DeleteUserFromGroup( $userid, $groupid );
+				$this->DeleteUserFromGroup( $metaUser->userid, $groupid );
 			}
 		}
 
@@ -128,7 +128,7 @@ class mi_juga
 			if ( !empty( $params['enroll_group_exp'] ) ) {
 				$gplist = explode( ';', $params['enroll_group_exp'] );
 				foreach ( $gplist as $enroll_group_exp) {
-					$this->AddUserToGroup( $userid, $enroll_group_exp );
+					$this->AddUserToGroup( $metaUser->userid, $enroll_group_exp );
 				}
 			}
 		}
@@ -136,19 +136,19 @@ class mi_juga
 		return true;
 	}
 
-	function action( $params, $userid, $invoice, $plan )
+	function action( $params, $metaUser, $invoice, $plan )
 	{
 		global $database;
 
 		if ( $params['set_remove_group'] ) {
-			$this->DeleteUserFromGroup( $userid );
+			$this->DeleteUserFromGroup( $metaUser->userid );
 		}
 
 		if ( $params['set_enroll_group'] ) {
 			if( !empty( $params['enroll_group'] ) ) {
 				$gplist = explode( ';', $params['enroll_group'] );
 				foreach( $gplist as $enroll_group) {
-					$this->AddUserToGroup( $userid, $enroll_group );
+					$this->AddUserToGroup( $metaUser->userid, $enroll_group );
 				}
 			}
 		}

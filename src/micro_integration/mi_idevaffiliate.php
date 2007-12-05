@@ -35,7 +35,7 @@ class mi_idevaffiliate
 		return $settings;
 	}
 
-	function action( $params, $userid, $invoice, $plan )
+	function action( $params, $metaUser, $invoice, $plan )
 	{
 		global $database, $mosConfig_live_site;
 
@@ -55,8 +55,6 @@ class mi_idevaffiliate
 		}
 
 		if ( !empty( $params['customparams'] ) ) {
-			$metaUser = new metaUser( $userid );
-
 			$rw_params = AECToolbox::rewriteEngine( $params['customparams'], $metaUser, $plan );
 
 			$cps = explode( "\n", $rw_params );
@@ -71,7 +69,7 @@ class mi_idevaffiliate
 				.'width="1" height="1" />';
 
 		$displaypipeline = new displayPipeline($database);
-		$displaypipeline->create( $userid, 1, 0, 0, null, 1, $text );
+		$displaypipeline->create( $metaUser->userid, 1, 0, 0, null, 1, $text );
 
 		return true;
 	}

@@ -66,11 +66,11 @@ class mi_affiliatepro
 		return $settings;
 	}
 
-	function action( $params, $userid, $invoice, $plan )
+	function action( $params, $metaUser, $invoice, $plan )
 	{
 		global $database, $mosConfig_live_site, $mosConfig_sitename;
 
-		$lastinvoice = AECfetchfromDB::lastClearedInvoiceIDbyUserID( $userid, $plan->id );
+		$lastinvoice = AECfetchfromDB::lastClearedInvoiceIDbyUserID( $metaUser->userid, $plan->id );
 
 		$invoice = new Invoice($database);
 		$invoice->load($lastinvoice);
@@ -84,7 +84,7 @@ class mi_affiliatepro
 				. '--></script>';
 
 		$displaypipeline = new displayPipeline($database);
-		$displaypipeline->create( $userid, 1, 0, 0, null, 1, $text );
+		$displaypipeline->create( $metaUser->userid, 1, 0, 0, null, 1, $text );
 
 		return true;
 	}

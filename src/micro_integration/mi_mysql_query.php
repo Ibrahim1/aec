@@ -33,11 +33,9 @@ class mi_mysql_query
 		return $settings;
 	}
 
-	function pre_expiration_action( $params, $userid, $plan )
+	function pre_expiration_action( $params, $metaUser, $plan )
 	{
 		global $database;
-
-		$metaUser = new metaUser( $userid );
 
 		$userflags = $metaUser->objSubscription->getMIflags( $plan->id, $this->id );
 
@@ -61,11 +59,9 @@ class mi_mysql_query
 		return true;
 	}
 
-	function expiration_action( $params, $userid, $plan )
+	function expiration_action( $params, $metaUser, $plan )
 	{
 		global $database;
-
-		$metaUser = new metaUser( $userid );
 
 		$query = AECToolbox::rewriteEngine( $params['query_exp'], $metaUser, $plan );
 
@@ -75,11 +71,9 @@ class mi_mysql_query
 		return true;
 	}
 
-	function action( $params, $userid, $invoice, $plan )
+	function action( $params, $metaUser, $invoice, $plan )
 	{
 		global $database;
-
-		$metaUser = new metaUser( $userid );
 
 		$query = AECToolbox::rewriteEngine( $params['query'], $metaUser, $plan );
 
