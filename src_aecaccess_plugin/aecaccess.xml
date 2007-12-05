@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<install version="1.5" type="plugin" group="system">
-	<name>AECaccess</name>
+<install version="1.5" type="plugin" group="authentication">
+	<name>Authentication - AECaccess</name>
 	<author>David Deutsch</author>
 	<creationDate>04.12.2007</creationDate>
 	<copyright>Copyright (C) 2007 David Deutsch</copyright>
@@ -12,6 +12,5 @@
 	<files>
 		<filename plugin="aecaccess">aecaccess.php</filename>
 	</files>
-	<params>
-	</params>
+	<params/>
 </install>

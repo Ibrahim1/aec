@@ -273,5 +273,9 @@ class processor_ccbill extends POSTprocessor
 
 		return $response;
 	}
+
+	function validateSubscription( $subscription ) {
+
+	}
 }
 ?>

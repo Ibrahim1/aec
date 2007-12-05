@@ -517,7 +517,7 @@ class Config_General extends paramDBTable
 	var $settings 			= null;
 
 	function Config_General( &$db )
-	{
+	{print_r($db);
 		$this->mosDBTable( '#__acctexp_config', 'id', $db );
 
 		$this->load(1);
@@ -657,6 +657,7 @@ class Config_General extends paramDBTable
 
 if ( !is_object( $aecConfig ) ) {
 	global $database;
+
 	$aecConfig = new Config_General( $database );
 }
 

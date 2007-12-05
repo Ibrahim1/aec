@@ -28,8 +28,8 @@ class mi_coupon
 		$settings['coupon_amount'] = array( 'inputC' );
 		$settings['master_coupon'] = array( 'inputC' );
 		$settings['bind_subscription'] = array( 'inputC' );
-		$settings['rebill_new_coupons'] = array( 'inputC' );
-		$settings['rebill_old_coupons'] = array( 'inputC' );
+		$settings['always_new_coupons'] = array( 'inputC' );
+		$settings['inc_old_coupons'] = array( 'inputC' );
 		return $settings;
 	}
 
@@ -42,13 +42,21 @@ class mi_coupon
 		$userflags = $metaUser->objSubscription->getMIflags( $plan->id, $this->id );
 
 		if ( is_array( $userflags ) ) {
-			if ( isset( $userflags['EXP_MAIL_SENT'] ) ) {
-				if ( !( time() > $userflags['EXP_MAIL_ABANDONCHECK'] ) ) {
-					return false;
+			if ( isset( $userflags['COUPONS'] ) ) {
+				$existing_coupons = explode( ',', $userflags['COUPONS'] );
+
+				if ( $params['inc_old_coupons'] ) {
+					foreach ( $existing_coupons as $cid ) {
+						$cph = new couponHandler();
+						$cph->load( $cid );
+						$cph->restrictions['max_reuse'] + $params['inc_old_coupons'];
+						$cph->coupon->setParams( $cph->restrictions, 'restrictions' );
+					}
 				}
 			}
+		} else {
+			$existing_coupons = array();
 		}
-
 
 		// Send out X coupons based on master coupon Y
 		// Bind coupons to plan
