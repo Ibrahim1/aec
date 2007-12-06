@@ -275,8 +275,10 @@ class processor_ccbill extends POSTprocessor
 		return $response;
 	}
 
-	function validateSubscription( $cfg, $subscription )
+	function validateSubscription( $cfg, $subscription_id, $subscription_list )
 	{
+		global $database;
+
 		if ( empty( $this->datalink_temp ) ) {
 			$get = array();
 			$get['startTime'] = date( 'YmdHis', ( time() - 2*24*60*60 ) );
@@ -305,8 +307,51 @@ class processor_ccbill extends POSTprocessor
 			foreach ( $lines as $line ) {
 				$info = explode( ",", $line );
 
-				$this->datalink_temp
+				$query = 'SELECT subscr_id'
+				. ' FROM #__acctexp_invoices'
+				. ' WHERE invoice_number = \'' . $info[4] . '\''
+				. ' OR secondary_ident = \'' . $info[4] . '\''
+				;
+				$database->setQuery( $query );
+				$subscription_id = $database->loadResult();
+
+				switch ( $info[0] ) {
+					case 'REBILL':
+						$this->datalink_temp[] = $subscription_id;
+						break;
+					case 'REFUND':
+					case 'CHARGEBACK':
+						// No need to add this to the list - the payment has been reversed or cancelled by the user
+
+						if ( $subscription_id ) {
+							// Don't do anything if the user is about to expire anyways
+							if ( !in_array( $subscription_id, $subscription_list ) ) {
+								// But if that is not the case, expire and set to cancel
+
+								$subscription = new Subscription( $database );
+								$subscription->load( $subscription_id );
+								$subscription->cancel();
+							}
+						}
+						break;
+				}
 			}
+		}
+
+		// Now lets check for this subscription
+		if ( in_array( $subscription_id, $this->datalink_temp ) ) {
+			$invoice = new Invoice( $database );
+			$invoice->loadbySubscriptionId( $subscription_id );
+
+			if ( $invoice->id ) {
+				$invoice->computeAmount();
+				$invoice->pay();
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
 		}
 	}
 

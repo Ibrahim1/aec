@@ -27,7 +27,7 @@ class mi_coupon
 		$settings['setupinfo'] = array( 'fieldset' );
 		$settings['coupon_amount'] = array( 'inputC' );
 		$settings['master_coupon'] = array( 'inputC' );
-		$settings['bind_subscription'] = array( 'inputC' );
+		$settings['bind_subscription'] = array( 'list_yesno' );
 		$settings['create_new_coupons'] = array( 'inputC' );
 		$settings['mail_out_coupons'] = array( 'list_yesno' );
 		$settings['always_new_coupons'] = array( 'list_yesno' );

@@ -772,13 +772,11 @@ class aecHeartbeat extends mosDBTable
 					if ( $found_expired && !in_array( $subscription->userid, $expired_users ) ) {
 						if ( !isset( $pps[$subscription->type] ) ) {
 							$pps[$subscription->type] = new PaymentProcessor();
-							$checkvalidation = $pps[$subscription->type]->loadName( $subscription->type );
-						} else {
-							$checkvalidation = 0;
+							$pps[$subscription->type]->loadName( $subscription->type );
 						}
 
-						if ( $checkvalidation ) {
-							$validation = $pps[$subscription->type]->validateSubscription();
+						if ( isset( $pps[$subscription->type] ) ) {
+							$validation = $pps[$subscription->type]->validateSubscription( $sub_id, $subscription_list );
 						} else {
 							$validation = false;
 						}
@@ -787,6 +785,8 @@ class aecHeartbeat extends mosDBTable
 							if ( $subscription->expire() ) {
 								$e++;
 							}
+						} else {
+
 						}
 					}
 				}
@@ -1544,12 +1544,12 @@ class PaymentProcessor
 		return $response;
 	}
 
-	function validateSubscription( $subscription )
+	function validateSubscription( $subscription_id, $subscription_list )
 	{
 		$this->getSettings();
 
 		if ( method_exists( $this->processor, 'validateSubscription' ) ) {
-			$response = $this->processor->validateSubscription( $this->settings, $subscription );
+			$response = $this->processor->validateSubscription( $this->settings, $subscription_id, $subscription_list );
 		} else {
 			$response = null;
 		}
@@ -3826,6 +3826,7 @@ class Invoice extends paramDBTable
 		$query = 'SELECT id'
 		. ' FROM #__acctexp_invoices'
 		. ' WHERE subscr_id = \'' . $subscrid . '\''
+		. ' ORDER BY `transaction_date` DESC'
 		;
 
 		if ( !empty( $userid ) ) {
@@ -4831,7 +4832,7 @@ class Subscription extends paramDBTable
 		}
 	}
 
-	function cancel( $invoice, $overridefallback=false )
+	function cancel( $invoice=null, $overridefallback=false )
 	{
 		global $database;
 
