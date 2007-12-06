@@ -67,6 +67,7 @@ class processor_ccbill extends POSTprocessor
 		$settings['clientSubacc']	= "Sub Account";
 		$settings['formName']		= "Form Name";
 		$settings['secretWord']		= "Secret Word";
+		$settings['datalink_username']		= "Secret Word";
 
 		return $settings;
 	}
