@@ -772,10 +772,14 @@ class aecHeartbeat extends mosDBTable
 					if ( $found_expired && !in_array( $subscription->userid, $expired_users ) ) {
 						if ( !isset( $pps[$subscription->type] ) ) {
 							$pps[$subscription->type] = new PaymentProcessor();
-							$pps[$subscription->type]->loadName( $subscription->type );
+							if ( $pps[$subscription->type]->loadName( $subscription->type ) ) {
+								$pps[$subscription->type]->init();
+							} else {
+								$pps[$subscription->type] = false;
+							}
 						}
 
-						if ( isset( $pps[$subscription->type] ) ) {
+						if ( !empty( $pps[$subscription->type] ) ) {
 							$validation = $pps[$subscription->type]->validateSubscription( $sub_id, $subscription_list );
 						} else {
 							$validation = false;
