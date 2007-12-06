@@ -199,6 +199,7 @@ class processor_ccbill extends POSTprocessor
 				$payment['secondary_ident'] = $subscription_id;
 				$payment['processor'] = 'ccbill';
 
+				$usage = null;
 				if ( isset( $post['usage'] ) ) {
 					$usage = $post['usage'];
 				} elseif( $post['typeId'] ) {
@@ -224,15 +225,13 @@ class processor_ccbill extends POSTprocessor
 					if ( $planid ) {
 						$usage = $planid;
 					}
-				} else {
-					$usage = null;
 				}
 
 				if ( empty( $usage ) ) {
 					$response['pending_reason'] = 'Could not identify usage';
 				}
 
-				$metaUser = new metaUser();
+				$metaUser = new metaUser( 0 );
 				$metaUser->procTriggerCreate( $user, $payment, $post['usage'] );
 			} else {
 				$invoice = $subscription_id;
@@ -279,74 +278,78 @@ class processor_ccbill extends POSTprocessor
 	{
 		global $database;
 
-		if ( empty( $this->datalink_temp ) ) {
-			$get = array();
-			$get['startTime'] = date( 'YmdHis', ( time() - 2*24*60*60 ) );
-			$get['endTime'] = date( 'YmdHis' );
-			$get['transactionTypes'] = 'REBILL,REFUND,CHARGEBACK';
-			$get['clientAccnum'] = $cfg['clientAccnum'];
-			$get['clientSubacc'] = $cfg['clientSubacc'];
-			$get['username'] = $cfg['datalink_username'];
-			$get['password'] = $cfg['secretWord'];
+		if ( !empty( $cfg['datalink_username'] ) ) {
+			if ( empty( $this->datalink_temp ) ) {
+				$get = array();
+				$get['startTime'] = date( 'YmdHis', ( time() - 2*24*60*60 ) );
+				$get['endTime'] = date( 'YmdHis' );
+				$get['transactionTypes'] = 'REBILL,REFUND,CHARGEBACK';
+				$get['clientAccnum'] = $cfg['clientAccnum'];
+				$get['clientSubacc'] = $cfg['clientSubacc'];
+				$get['username'] = $cfg['datalink_username'];
+				$get['password'] = $cfg['secretWord'];
 
-			$fullget = array();
-			foreach ( $get as $name => $value ) {
-				$fullget[] = $name . '=' . $value;
-			}
+				$fullget = array();
+				foreach ( $get as $name => $value ) {
+					$fullget[] = $name . '=' . $value;
+				}
 
-			$link = 'https://datalink.ccbill.com/data/main.cgi?';
+				$link = 'https://datalink.ccbill.com/data/main.cgi?';
 
-			$link .= implode( '&', $fullget );
+				$link .= implode( '&', $fullget );
 
-			$fp = null;
-			$fp = $this->fetchURL( $link );
+				$fp = null;
+				$fp = $this->fetchURL( $link );
 
-			$lines = explode( "\n", $fp );
+				$lines = explode( "\n", $fp );
 
-			$this->datalink_temp = array();
-			foreach ( $lines as $line ) {
-				$info = explode( ",", $line );
+				$this->datalink_temp = array();
+				foreach ( $lines as $line ) {
+					$info = explode( ",", $line );
 
-				$query = 'SELECT subscr_id'
-				. ' FROM #__acctexp_invoices'
-				. ' WHERE invoice_number = \'' . $info[4] . '\''
-				. ' OR secondary_ident = \'' . $info[4] . '\''
-				;
-				$database->setQuery( $query );
-				$subscription_id = $database->loadResult();
+					$query = 'SELECT subscr_id'
+					. ' FROM #__acctexp_invoices'
+					. ' WHERE invoice_number = \'' . $info[4] . '\''
+					. ' OR secondary_ident = \'' . $info[4] . '\''
+					;
+					$database->setQuery( $query );
+					$subscription_id = $database->loadResult();
 
-				switch ( $info[0] ) {
-					case 'REBILL':
-						$this->datalink_temp[] = $subscription_id;
-						break;
-					case 'REFUND':
-					case 'CHARGEBACK':
-						// No need to add this to the list - the payment has been reversed or cancelled by the user
+					switch ( $info[0] ) {
+						case 'REBILL':
+							$this->datalink_temp[] = $subscription_id;
+							break;
+						case 'REFUND':
+						case 'CHARGEBACK':
+							// No need to add this to the list - the payment has been reversed or cancelled by the user
 
-						if ( $subscription_id ) {
-							// Don't do anything if the user is about to expire anyways
-							if ( !in_array( $subscription_id, $subscription_list ) ) {
-								// But if that is not the case, expire and set to cancel
+							if ( $subscription_id ) {
+								// Don't do anything if the user is about to expire anyways
+								if ( !in_array( $subscription_id, $subscription_list ) ) {
+									// But if that is not the case, expire and set to cancel
 
-								$subscription = new Subscription( $database );
-								$subscription->load( $subscription_id );
-								$subscription->cancel();
+									$subscription = new Subscription( $database );
+									$subscription->load( $subscription_id );
+									$subscription->cancel();
+								}
 							}
-						}
-						break;
+							break;
+					}
 				}
 			}
-		}
 
-		// Now lets check for this subscription
-		if ( in_array( $subscription_id, $this->datalink_temp ) ) {
-			$invoice = new Invoice( $database );
-			$invoice->loadbySubscriptionId( $subscription_id );
+			// Now lets check for this subscription
+			if ( in_array( $subscription_id, $this->datalink_temp ) ) {
+				$invoice = new Invoice( $database );
+				$invoice->loadbySubscriptionId( $subscription_id );
 
-			if ( $invoice->id ) {
-				$invoice->computeAmount();
-				$invoice->pay();
-				return true;
+				if ( $invoice->id ) {
+					$invoice->computeAmount();
+					$invoice->pay();
+					return true;
+				} else {
+					return false;
+				}
 			} else {
 				return false;
 			}
