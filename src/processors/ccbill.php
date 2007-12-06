@@ -347,15 +347,11 @@ class processor_ccbill extends POSTprocessor
 					$invoice->computeAmount();
 					$invoice->pay();
 					return true;
-				} else {
-					return false;
 				}
-			} else {
-				return false;
 			}
-		} else {
-			return false;
 		}
+
+		return false;
 	}
 
 	function fetchURL( $url ) {
