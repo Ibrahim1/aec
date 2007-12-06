@@ -206,7 +206,7 @@ class processor_ccbill extends POSTprocessor
 
 					$firstzero = 1;
 					while( $firstzero ) {
-						substr( $typeId, 1 );
+						$typeId = substr( $typeId, 1 );
 
 						$firstzero = ( strpos( $typeId, "0" ) === 0 );
 					}
