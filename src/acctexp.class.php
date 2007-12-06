@@ -4804,10 +4804,13 @@ class Subscription extends paramDBTable
 
 		$this_params = $this->getParams();
 
+		$metaUser = new metaUser( $this->userid );
+		$metaUser->moveFocus( $this->id );
+
 		if ( $plan_params['fallback'] && !$overridefallback ) {
 
 			$mih = new microIntegrationHandler();
-			$mih->userPlanExpireActions( $this->userid, $subscription_plan );
+			$mih->userPlanExpireActions( $metaUser, $subscription_plan );
 
 			$this->applyUsage( $plan_params['fallback'], 'none', 1 );
 			return false;
@@ -4830,7 +4833,7 @@ class Subscription extends paramDBTable
 			}
 
 			$mih = new microIntegrationHandler();
-			$mih->userPlanExpireActions( $this->userid, $subscription_plan );
+			$mih->userPlanExpireActions( $metaUser, $subscription_plan );
 
 			return true;
 		}
@@ -6156,7 +6159,7 @@ class microIntegrationHandler
 		return $plan_list;
 	}
 
-	function userPlanExpireActions( $userid, $subscription_plan )
+	function userPlanExpireActions( $metaUser, $subscription_plan )
 	{
 		global $database;
 
@@ -6172,7 +6175,7 @@ class microIntegrationHandler
 					$mi = new microIntegration( $database );
 					$mi->load( $mi_id );
 					if ( $mi->callIntegration() ) {
-						$mi->expiration_action( $userid, $subscription_plan );
+						$mi->expiration_action( $metaUser, $subscription_plan );
 					}
 				}
 			}
