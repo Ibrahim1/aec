@@ -62,7 +62,6 @@ class processor_verotel extends URLprocessor
 		$s['siteid']		= "siteid";
 		$s['secretcode']	= "secretcode";
 		$s['use_ticketsclub']	= 1;
-		$s['custom_name']	= "";
 
 		return $s;
 	}
@@ -75,7 +74,6 @@ class processor_verotel extends URLprocessor
 		$s['siteid']			= array( 'inputC' );
 		$s['secretcode']		= array( 'inputC' );
 		$s['use_ticketsclub']	= array( 'list_yesno' );
-		$s['custom_name']	= array( 'inputE' );
 
 		$rewriteswitches	= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
         $s['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
@@ -103,6 +101,8 @@ class processor_verotel extends URLprocessor
 			$var['post_url'] = "https://secure.ticketsclub.com/cgi-bin/boxoffice-one.tc?";
 			$var['fldcustomerid'] = $cfg['merchantid'];
 			$var['fldwebsitenr'] = $product;
+			$var['tc_usercode'] = $metaUser->cmsUser->username;
+			$var['tc_passcode'] = substr( $metaUser->cmsUser->password, 0, 12 );
 			$var['tc_custom1'] = $int_var['invoice'];
 			$var['tc_custom2'] = $metaUser->cmsUser->username;
 		} else {

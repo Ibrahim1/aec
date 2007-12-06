@@ -176,7 +176,7 @@ class metaUser
 
 		// To be failsafe, a new subscription may have to be added in here
 		if ( !$this->hasSubscription || !$plan_params['make_primary'] ) {
-			if ( $existing_record && $plan_params['update_existing'] ) {
+			if ( $existing_record && ( $plan_params['update_existing'] || $plan_params['make_primary'] ) ) {
 				// Update existing non-primary subscription
 				$this->focusSubscription = new Subscription( $database );
 				$this->focusSubscription->load( $existing_record );
@@ -778,7 +778,7 @@ class aecHeartbeat extends mosDBTable
 								$pps[$subscription->type] = false;
 							}
 						}
-
+// TODO: Cancel heartbeat if processor verification connection fails
 						if ( !empty( $pps[$subscription->type] ) ) {
 							$validation = $pps[$subscription->type]->validateSubscription( $sub_id, $subscription_list );
 						} else {
