@@ -774,11 +774,20 @@ class aecHeartbeat extends mosDBTable
 							$pps[$subscription->type] = new PaymentProcessor();
 							if ( $pps[$subscription->type]->loadName( $subscription->type ) ) {
 								$pps[$subscription->type]->init();
+								$prepval = $pps[$subscription->type]->prepareValidation();
+								if ( $prepval === null ) {
+									$pps[$subscription->type] = false;
+								} elseif ( $prepval === false ) {
+									// Break - we have a problem with one processor
+									$eventlog = new eventLog( $database );
+									$eventlog->issue( 'heartbeat failed - processor', 'heartbeat, failure,'.$subscription->type, 'The payment processor failed to respond to validation request - waiting for next turn' );
+									return;
+								}
 							} else {
 								$pps[$subscription->type] = false;
 							}
 						}
-// TODO: Cancel heartbeat if processor verification connection fails
+
 						if ( !empty( $pps[$subscription->type] ) ) {
 							$validation = $pps[$subscription->type]->validateSubscription( $sub_id, $subscription_list );
 						} else {
@@ -1548,14 +1557,27 @@ class PaymentProcessor
 		return $response;
 	}
 
-	function validateSubscription( $subscription_id, $subscription_list )
+	function prepareValidation( $subscription_list )
+	{
+		$this->getSettings();
+
+		if ( method_exists( $this->processor, 'prepareValidation' ) ) {
+			$response = $this->processor->prepareValidation( $this->settings, $subscription_list );
+		} else {
+			$response = null;
+		}
+
+		return $response;
+	}
+
+	function validateSubscription( $subscription_id )
 	{
 		$this->getSettings();
 
 		if ( method_exists( $this->processor, 'validateSubscription' ) ) {
-			$response = $this->processor->validateSubscription( $this->settings, $subscription_id, $subscription_list );
+			$response = $this->processor->validateSubscription( $this->settings, $subscription_id );
 		} else {
-			$response = null;
+			$response = false;
 		}
 
 		return $response;

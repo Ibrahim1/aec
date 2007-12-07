@@ -149,6 +149,8 @@ class processor_ccbill extends POSTprocessor
 
 	function parseNotification( $post, $cfg )
 	{
+		global $database;
+
 		$invoice			= $post['invoice'];
 		$username			= $post['username'];
 		$reasonForDecline	= $post['reasonForDecline'];
@@ -230,10 +232,10 @@ class processor_ccbill extends POSTprocessor
 
 				if ( empty( $usage ) ) {
 					$response['pending_reason'] = 'Could not identify usage';
+				} else {
+					$metaUser = new metaUser( 0 );
+					$metaUser->procTriggerCreate( $user, $payment, $usage );
 				}
-
-				$metaUser = new metaUser( 0 );
-				$metaUser->procTriggerCreate( $user, $payment, $post['usage'] );
 			} else {
 				$invoice = $subscription_id;
 			}
@@ -275,14 +277,14 @@ class processor_ccbill extends POSTprocessor
 		return $response;
 	}
 
-	function validateSubscription( $cfg, $subscription_id, $subscription_list )
+	function prepareValidation( $cfg, $subscription_id, $subscription_list )
 	{
 		global $database;
 
 		if ( !empty( $cfg['datalink_username'] ) ) {
 			if ( empty( $this->datalink_temp ) ) {
 				$get = array();
-				$get['startTime'] = date( 'YmdHis', ( time() - 24*60*60 ) );
+				$get['startTime'] = date( 'YmdHis', ( time() - 24*60*60 - 1 ) );
 				$get['endTime'] = date( 'YmdHis' );
 				$get['transactionTypes'] = 'REBILL,REFUND,CHARGEBACK';
 				$get['clientAccnum'] = $cfg['clientAccnum'];
@@ -302,43 +304,58 @@ class processor_ccbill extends POSTprocessor
 				$fp = null;
 				$fp = $this->fetchURL( $link );
 
-				$lines = explode( "\n", $fp );
+				if ( !empty( $fp ) ) {
+					$lines = explode( "\n", $fp );
 
-				$this->datalink_temp = array();
-				foreach ( $lines as $line ) {
-					$info = explode( ",", $line );
+					$this->datalink_temp = array();
+					foreach ( $lines as $line ) {
+						$info = explode( ",", $line );
 
-					$query = 'SELECT subscr_id'
-					. ' FROM #__acctexp_invoices'
-					. ' WHERE invoice_number = \'' . $info[4] . '\''
-					. ' OR secondary_ident = \'' . $info[4] . '\''
-					;
-					$database->setQuery( $query );
-					$subscription_id = $database->loadResult();
+						$query = 'SELECT subscr_id'
+						. ' FROM #__acctexp_invoices'
+						. ' WHERE invoice_number = \'' . $info[4] . '\''
+						. ' OR secondary_ident = \'' . $info[4] . '\''
+						;
+						$database->setQuery( $query );
+						$subscription_id = $database->loadResult();
 
-					switch ( $info[0] ) {
-						case 'REBILL':
-							$this->datalink_temp[] = $subscription_id;
-							break;
-						case 'REFUND':
-						case 'CHARGEBACK':
-							// No need to add this to the list - the payment has been reversed or cancelled by the user
+						switch ( $info[0] ) {
+							case 'REBILL':
+								$this->datalink_temp[] = $subscription_id;
+								break;
+							case 'REFUND':
+							case 'CHARGEBACK':
+								// No need to add this to the list - the payment has been reversed or cancelled by the user
 
-							if ( $subscription_id ) {
-								// Don't do anything if the user is about to expire anyways
-								if ( !in_array( $subscription_id, $subscription_list ) ) {
-									// But if that is not the case, expire and set to cancel
+								if ( $subscription_id ) {
+									// Don't do anything if the user is about to expire anyways
+									if ( !in_array( $subscription_id, $subscription_list ) ) {
+										// But if that is not the case, expire and set to cancel
 
-									$subscription = new Subscription( $database );
-									$subscription->load( $subscription_id );
-									$subscription->cancel();
+										$subscription = new Subscription( $database );
+										$subscription->load( $subscription_id );
+										$subscription->cancel();
+									}
 								}
-							}
-							break;
+								break;
+						}
 					}
+				} else {
+					return false;
 				}
 			}
 
+			return true;
+		} else {
+			return null;
+		}
+	}
+
+	function validateSubscription( $cfg, $subscription_id )
+	{
+		global $database;
+
+		if ( !empty( $this->datalink_temp ) ) {
 			// Now lets check for this subscription
 			if ( in_array( $subscription_id, $this->datalink_temp ) ) {
 				$invoice = new Invoice( $database );
