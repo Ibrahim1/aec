@@ -94,8 +94,9 @@ switch( strtolower( $task ) ) {
 
 	case 'edit':
 		if ( !is_array( $userid ) ) {
+			$temp = $userid;
 			$userid = array();
-			$userid[0] = $userid;
+			$userid[0] = $temp;
 		}
 
 		if ( !empty( $subscriptionid ) ) {
@@ -1030,12 +1031,15 @@ function saveUser( $option, $apply=0 )
 
 	$metaUser = new metaUser( $_POST['userid'] );
 
-	if ( $_POST['assignto_plan'] ) {
+	if ( !empty( $_POST['assignto_plan'] ) ) {
+		$plan = new SubscriptionPlan( $database );
+		$plan->load( $_POST['assignto_plan'] );
+
 		if ( !$metaUser->hasSubscription ) {
-			$metaUser->objSubscription = new Subscription( $database );
-			$metaUser->objSubscription->createNew( $_POST['userid'], '', 1 );
+			$metaUser->establishFocus( $plan );
 		}
-		$metaUser->objSubscription->applyUsage( $_POST['assignto_plan'], 'none', 1 );
+
+		$metaUser->focusSubscription->applyUsage( $_POST['assignto_plan'], 'none', 1 );
 
 		// We have to reload the metaUser object because it was changed underway
 		$metaUser = new metaUser( $_POST['userid'] );
@@ -1044,18 +1048,18 @@ function saveUser( $option, $apply=0 )
 	$ck_lifetime = mosGetParam( $_POST, 'ck_lifetime', 'off' );
 
 	if ( strcmp( $ck_lifetime, 'on' ) == 0 ) {
-		$metaUser->objSubscription->expiration	= '9999-12-31 00:00:00';
-		$metaUser->objSubscription->status		= 'Active';
-		$metaUser->objSubscription->lifetime	= 1;
+		$metaUser->focusSubscription->expiration	= '9999-12-31 00:00:00';
+		$metaUser->focusSubscription->status		= 'Active';
+		$metaUser->focusSubscription->lifetime	= 1;
 	} elseif ( !empty( $_POST['expiration'] ) ) {
-		if ( $_POST['expiration'] != $metaUser->objSubscription->expiration ) {
+		if ( $_POST['expiration'] != $metaUser->focusSubscription->expiration ) {
 			if ( strpos( $_POST, ':' ) === false ) {
-				$metaUser->objSubscription->expiration = $_POST['expiration'] . ' 00:00:00';
+				$metaUser->focusSubscription->expiration = $_POST['expiration'] . ' 00:00:00';
 			} else {
-				$metaUser->objSubscription->expiration = $_POST['expiration'];
+				$metaUser->focusSubscription->expiration = $_POST['expiration'];
 			}
-			$metaUser->objSubscription->status = 'Active';
-			$metaUser->objSubscription->lifetime = 0;
+			$metaUser->focusSubscription->status = 'Active';
+			$metaUser->focusSubscription->lifetime = 0;
 		}
 	}
 
@@ -1063,22 +1067,22 @@ function saveUser( $option, $apply=0 )
 
 	if ( !is_null( $set_status ) ) {
 		if ( strcmp( $set_status, 'now' ) === 0 ) {
-			$metaUser->objSubscription->expire();
+			$metaUser->focusSubscription->expire();
 		} elseif ( strcmp( $set_status, 'exclude' ) === 0 ) {
-			$metaUser->objSubscription->setStatus( 'Excluded' );
+			$metaUser->focusSubscription->setStatus( 'Excluded' );
 		} elseif ( strcmp( $set_status, 'close' ) === 0 ) {
-			$metaUser->objSubscription->setStatus( 'Closed' );
+			$metaUser->focusSubscription->setStatus( 'Closed' );
 		} elseif ( strcmp( $set_status, 'include' ) === 0 ) {
-			$metaUser->objSubscription->setStatus( 'Active' );
+			$metaUser->focusSubscription->setStatus( 'Active' );
 		}
 	}
 
-	if ( !$metaUser->objSubscription->check() ) {
-		echo "<script> alert('".$metaUser->objSubscription->getError()."'); window.history.go(-1); </script>\n";
+	if ( !$metaUser->focusSubscription->check() ) {
+		echo "<script> alert('".$metaUser->focusSubscription->getError()."'); window.history.go(-1); </script>\n";
 		exit();
 	}
-	if ( !$metaUser->objSubscription->store() ) {
-		echo "<script> alert('".$metaUser->objSubscription->getError()."'); window.history.go(-1); </script>\n";
+	if ( !$metaUser->focusSubscription->store() ) {
+		echo "<script> alert('".$metaUser->focusSubscription->getError()."'); window.history.go(-1); </script>\n";
 		exit();
 	}
 
@@ -1581,7 +1585,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid )
 	        }
 	    }
 
-		$query = 'SELECT id AS userid, name, username, usertype'
+		$query = 'SELECT id, name, username, usertype'
 		. ' FROM #__users'
 		;
 		if ( count( $userarray ) > 0) {

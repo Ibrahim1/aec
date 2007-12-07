@@ -15,8 +15,8 @@ class mi_mysql_query
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_MYSQL;
-		$info['desc'] = _AEC_MI_DESC_MYSQL;
+		$info['name'] = _AEC_MI_NAME_HTTP_QUERY;
+		$info['desc'] = _AEC_MI_DESC_HTTP_QUERY;
 
 		return $info;
 	}
@@ -81,6 +81,40 @@ class mi_mysql_query
 		$database->query();
 
 		return true;
+	}
+
+	function fetchURL( $url ) {
+		$url_parsed = parse_url($url);
+
+		$host = $url_parsed["host"];
+		$port = $url_parsed["port"];
+		if ( $port == 0 ) {
+			$port = 80;
+		}
+		$path = $url_parsed["path"];
+
+		//if url is http://example.com without final "/"
+		//I was getting a 400 error
+		if ( empty( $path ) ) {
+			$path="/";
+		}
+
+		if ( $url_parsed["query"] != "" ) {
+			$path .= "?".$url_parsed["query"];
+		}
+
+		$out = "GET $path HTTP/1.0\r\nHost: $host\r\n\r\n";
+		$fp = fsockopen( $host, $port, $errno, $errstr, 30 );
+		fwrite( $fp, $out );
+
+		$return = '';
+		while ( !feof( $fp ) ) {
+			$return .= fgets($fp, 1024);
+		}
+
+		fclose( $fp );
+
+		return $return;
 	}
 }
 ?>

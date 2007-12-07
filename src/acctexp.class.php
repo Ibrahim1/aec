@@ -158,7 +158,7 @@ class metaUser
 		return;
 	}
 
-	function establishFocus( $payment_plan, $processor )
+	function establishFocus( $payment_plan, $processor='none' )
 	{
 		global $database;
 
@@ -183,8 +183,9 @@ class metaUser
 			} else {
 				// Create new subscription
 				$this->focusSubscription = new Subscription( $database );
-				$this->focusSubscription->load(0);
+				$this->focusSubscription->id = 0;
 				$this->focusSubscription->createNew( $this->userid, $processor, 0, $plan_params['make_primary'] );
+				$this->hasSubscription = 1;
 			}
 		}
 	}
@@ -774,7 +775,7 @@ class aecHeartbeat extends mosDBTable
 							$pps[$subscription->type] = new PaymentProcessor();
 							if ( $pps[$subscription->type]->loadName( $subscription->type ) ) {
 								$pps[$subscription->type]->init();
-								$prepval = $pps[$subscription->type]->prepareValidation();
+								$prepval = $pps[$subscription->type]->prepareValidation( $subscription_list );
 								if ( $prepval === null ) {
 									$pps[$subscription->type] = false;
 								} elseif ( $prepval === false ) {
@@ -1422,11 +1423,13 @@ class PaymentProcessor
 		}
 	}
 
-	function exchangeSettings( $plan )
+	function exchangeSettings( $plan, $plan_params=null )
 	{
 		$this->getSettings();
 
-		$planparams = $plan->getProcessorParameters( $this->id );
+		if ( empty( $plan_params ) ) {
+			$planparams = $plan->getProcessorParameters( $this->id );
+		}
 
 		if ( isset( $planparams['aec_overwrite_settings'] ) ) {
 			if ( $planparams['aec_overwrite_settings'] ) {
@@ -1742,15 +1745,17 @@ class XMLprocessor extends processor
 		return $var;
 	}
 
-	function checkoutProcess( $int_var, $settings, $metaUser, $new_subscription )
+	function checkoutProcess( $int_var, $pp, $metaUser, $new_subscription )
 	{
 		global $database;
 
 		// Create the xml string
 		if ( isset( $int_var['planparams']['aec_overwrite_settings'] ) ) {
 			if ( $int_var['planparams']['aec_overwrite_settings'] ) {
-				$settings = $this->exchangeSettings( $settings, $int_var['planparams']);
+				$settings = $this->exchangeSettings( $pp->settings, $int_var['planparams']);
 			}
+		} else {
+			$settings = $pp->settings;
 		}
 
 		$xml = $this->createRequestXML( $int_var, $settings, $metaUser, $new_subscription );
@@ -1770,7 +1775,7 @@ class XMLprocessor extends processor
 				$responsestring = '';
 			}
 
-			$invoice->processorResponse( $this, $response, $responsestring );
+			$invoice->processorResponse( $pp, $response, $responsestring );
 		} else {
 			return false;
 		}
@@ -2316,7 +2321,6 @@ class SubscriptionPlan extends paramDBTable
 		}
 
 		if ( $userid ) {
-
 			$metaUser = new metaUser( $userid );
 
 			$params			= $this->getParams();
@@ -2325,7 +2329,7 @@ class SubscriptionPlan extends paramDBTable
 				$params['make_primary'] = 1;
 			}
 
-			if ( $params['make_primary'] ) {
+			if ( $params['make_primary'] && $metaUser->hasSubscription ) {
 				$primary = 1;
 			} else {
 				$metaUser->establishFocus( $this, $processor );
@@ -3667,7 +3671,7 @@ class InvoiceFactory
 			$var['params'][$varname] = $varvalue;
 		}
 
-		$response = $this->pp->processor->checkoutProcess( $var, $this->pp->settings, $metaUser, $new_subscription );
+		$response = $this->pp->processor->checkoutProcess( $var, $this->pp, $metaUser, $new_subscription );
 
 		if ( isset( $response['error'] ) ) {
 			$this->error( $option, $metaUser->cmsUser, $this->objInvoice->invoice_number, $response['error'] );
@@ -4042,8 +4046,9 @@ class Invoice extends paramDBTable
 
 		$plan = new SubscriptionPlan( $database );
 		$plan->load( $this->usage );
+		$plan_params = $plan->getParams( 'params' );
 
-		$pp->exchangeSettings( $plan );
+		$pp->exchangeSettings( $plan, $plan_params );
 		$response = $pp->validateNotification( $response, $_POST, $this );
 
 		if ( isset( $response['invoiceparams'] ) ) {
@@ -4109,8 +4114,6 @@ class Invoice extends paramDBTable
 		} else {
 			if ( isset( $response['pending'] ) ) {
 				if ( strcmp( $response['pending_reason'], 'signup' ) === 0 ) {
-					$plan_params = $plan->getParams( 'params' );
-
 					if ( $plan_params['trial_free'] ) {
 						$this->pay( $multiplicator );
 						$this->setParams( array( 'free_trial' => $response['pending_reason'] ) );

@@ -57,7 +57,6 @@ class processor_verotel extends URLprocessor
 	{
 		$s = array();
 		$s['merchantid']	= "merchantid";
-		$s['merchant']		= 'merchant';
 		$s['resellerid']	= "resellerid";
 		$s['siteid']		= "siteid";
 		$s['secretcode']	= "secretcode";

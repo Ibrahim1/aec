@@ -91,7 +91,7 @@ class mi_email
 			}
 		}
 
-		$newflags['exp_mail_abandoncheck']	= strtotime( $metaUser->objExpiration->expiration );
+		$newflags['exp_mail_abandoncheck']	= strtotime( $metaUser->objSubscription->expiration );
 		$newflags['exp_mail_sent']			= time();
 
 		$metaUser->objSubscription->setMIflags( $plan->id, $this->id, $newflags );
