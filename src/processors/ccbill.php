@@ -203,7 +203,7 @@ class processor_ccbill extends POSTprocessor
 				$payment['processor'] = 'ccbill';
 
 				$usage = null;
-				if ( isset( $post['usage'] ) ) {
+				if ( !empty( $post['usage'] ) ) {
 					$usage = $post['usage'];
 				} elseif( $post['typeId'] ) {
 					$typeId = $post['typeId'];
@@ -236,8 +236,6 @@ class processor_ccbill extends POSTprocessor
 					$metaUser = new metaUser( 0 );
 					$metaUser->procTriggerCreate( $user, $payment, $usage );
 				}
-			} else {
-				$invoice = $subscription_id;
 			}
 		}
 
