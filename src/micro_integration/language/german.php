@@ -242,4 +242,35 @@ define( '_MI_MI_FIREBOARD_GROUP_EXP_NAME','Fireboard group to apply member to on
 define( '_MI_MI_FIREBOARD_GROUP_EXP_DESC','The group you wish to use if the plan expires.  Manually add groups to the table jos_fb_groups');
 define( '_MI_MI_FIREBOARD_REBUILD_NAME',				'Rebuild Groups' );
 define( '_MI_MI_FIREBOARD_REBUILD_DESC',				'This option will rebuild your whole Fireboard group assignment by looking for each plan that has this MI applied and then add each user that uses one of these plans to the file.' );
+
+// Coupon
+define( '_AEC_MI_NAME_COUPON', 'Coupons');
+define( '_AEC_MI_DESC_COUPON', 'Create and send out coupons');
+define( '_MI_MI_COUPON_MASTER_COUPON_NAME', 'Master Coupon');
+define( '_MI_MI_COUPON_MASTER_COUPON_DESC', 'Which Master Coupon should these be copied from?');
+define( '_MI_MI_COUPON_BIND_SUBSCRIPTION_NAME', 'Bind to Subscription');
+define( '_MI_MI_COUPON_BIND_SUBSCRIPTION_DESC', 'If activated, the coupons will only be usable if the subscription they have been created with is still active as well');
+define( '_MI_MI_COUPON_CREATE_NEW_COUPONS_NAME', 'Amount');
+define( '_MI_MI_COUPON_CREATE_NEW_COUPONS_DESC', 'The amount of coupons that should be created');
+define( '_MI_MI_COUPON_MAX_REUSE_NAME', 'Max Reuse Coupons');
+define( '_MI_MI_COUPON_MAX_REUSE_DESC', 'The amount of times these coupons can be used');
+define( '_MI_MI_COUPON_MAIL_OUT_COUPONS_NAME', 'Mail out Coupons');
+define( '_MI_MI_COUPON_MAIL_OUT_COUPONS_DESC', 'This will send the coupons in an email to the address specified below');
+define( '_MI_MI_COUPON_ALWAYS_NEW_COUPONS_NAME', 'Amount');
+define( '_MI_MI_COUPON_ALWAYS_NEW_COUPONS_DESC', 'Always create new coupons (Yes) if the MI is triggered or only on the first time (No)?');
+define( '_MI_MI_COUPON_INC_OLD_COUPONS_NAME', 'Increment Old Coupons');
+define( '_MI_MI_COUPON_INC_OLD_COUPONS_DESC', 'Will increment the uses of old coupons by the given amount, so that they can be used again after the subscription has been renewed');
+define( '_MI_MI_COUPON_SENDER_NAME',				'Sender E-Mail' );
+define( '_MI_MI_COUPON_SENDER_DESC',				'Sender E-Mail Address' );
+define( '_MI_MI_COUPON_SENDER_NAME_NAME',			'Sender Name' );
+define( '_MI_MI_COUPON_SENDER_NAME_DESC',			'The displayed name of the Sender' );
+define( '_MI_MI_COUPON_RECIPIENT_NAME',				'Recipient(s)' );
+define( '_MI_MI_COUPON_RECIPIENT_DESC',				'Who is to receive this E-Mail? Separate with comma. The rewriting routines explained below will work for this field.' );
+define( '_MI_MI_COUPON_SUBJECT_NAME',				'Subject' );
+define( '_MI_MI_COUPON_SUBJECT_DESC',				'Subject of this email (Uses RewriteEngine explained below as well)' );
+define( '_MI_MI_COUPON_TEXT_HTML_NAME',				'HTML Encoding' );
+define( '_MI_MI_COUPON_TEXT_HTML_DESC',				'Do you want this email to be HTML encoded? (Make sure that there are not tags in it if you do not want this)' );
+define( '_MI_MI_COUPON_TEXT_NAME',					'Text' );
+define( '_MI_MI_COUPON_TEXT_DESC',					'Text to be sent when the coupons are created. The rewriting routines explained below will work for this field. Mark the point where the coupon codes are displayed with "%s"!' );
+
 ?>

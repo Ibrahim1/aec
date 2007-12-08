@@ -167,7 +167,7 @@ class processor_ccbill extends POSTprocessor
 		$city				= $post['city'];
 		$state				= $post['state'];
 		$country			= $post['country'];
-		$subscription_id	= $post['subscription_id'];
+		$subscription_id	= $_GET['subscription_id'];
 		$phone_number		= $post['phone_number'];
 		$zipcode			= $post['zipcode'];
 		$start_date			= $post['start_date'];
@@ -205,8 +205,8 @@ class processor_ccbill extends POSTprocessor
 				$usage = null;
 				if ( !empty( $post['usage'] ) ) {
 					$usage = $post['usage'];
-				} elseif( $post['typeId'] ) {
-					$typeId = $post['typeId'];
+				} elseif( $_GET['typeId'] ) {
+					$typeId = $_GET['typeId'];
 
 					$firstzero = 1;
 					while( $firstzero ) {

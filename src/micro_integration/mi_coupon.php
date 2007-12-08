@@ -24,11 +24,10 @@ class mi_coupon
 	function Settings( $params )
 	{
 		$settings = array();
-		$settings['setupinfo'] = array( 'fieldset' );
-		$settings['coupon_amount'] = array( 'inputC' );
 		$settings['master_coupon'] = array( 'inputC' );
 		$settings['bind_subscription'] = array( 'list_yesno' );
 		$settings['create_new_coupons'] = array( 'inputC' );
+		$settings['max_reuse'] = array( 'inputC' );
 		$settings['mail_out_coupons'] = array( 'list_yesno' );
 		$settings['always_new_coupons'] = array( 'list_yesno' );
 		$settings['inc_old_coupons'] = array( 'inputC' );
@@ -91,6 +90,12 @@ class mi_coupon
 						$cph->coupon->id = 0;
 						$cph->coupon->coupon_code = $newcode;
 						$cph->coupon->active = 1;
+
+						if ( !empty( $settings['create_new_coupons'] ) ) {
+							$ocph->restrictions['max_reuse'] = $settings['max_reuse'];
+						} else {
+							$ocph->restrictions['max_reuse'] = 1;
+						}
 
 						if ( !empty( $settings['bind_subscription'] ) ) {
 							$cph->restrictions['depend_on_subscr_id'] = 1;

@@ -148,8 +148,8 @@ class metaUser
 		$var['email']		= $user['email'];
 		$var['password']	= $user['password'];
 
-		$userid = AECToolbox::saveUserRegistration( 'com_acctexp', $var );
-
+		$userid = AECToolbox::saveUserRegistration( 'com_acctexp', $var, true );
+print_r($this);exit();
 		// Create a new invoice with $invoiceid as secondary ident
 		$invoice = new Invoice( $database );
 		$invoice->createNew( $userid, $usage, $payment['processor'], $payment['secondary_ident'] );
@@ -5611,7 +5611,7 @@ class AECToolbox
 		return true;
 	}
 
-	function saveUserRegistration( $option, $var )
+	function saveUserRegistration( $option, $var, $internal=false )
 	{
 		global $database, $mainframe, $task, $acl, $aecConfig; // Need to load $acl for Joomla and CBE
 
@@ -5646,7 +5646,7 @@ class AECToolbox
 			global $mosConfig_useractivation, $mosConfig_sitename, $mosConfig_live_site;
 
 			// simple spoof check security
-			if ( function_exists( 'josSpoofCheck' ) ) {
+			if ( function_exists( 'josSpoofCheck' ) && !$internal ) {
 				if ( class_exists( 'JConfig' ) ) {
 					$token	= JUtility::getToken();
 					if(!JRequest::getInt($token, 0, 'post')) {
