@@ -98,7 +98,9 @@ class processor_ccbill extends POSTprocessor
 
 		$var['post_url']		= "https://bill.ccbill.com/jpost/signup.cgi";
 		$var['clientAccnum']	= $cfg['clientAccnum'];
-		$var['clientSubacc']	= $cfg['clientSubacc'];
+		if ( !empty( $cfg['clientSubacc'] ) ) {
+			$var['clientSubacc']	= $cfg['clientSubacc'];
+		}
 		$var['formName']		= $cfg['formName'];
 
 		$var['invoice']			= $int_var['invoice'];
@@ -195,9 +197,8 @@ class processor_ccbill extends POSTprocessor
 				$user = array();
 				$user['name'] = $customer_fname . ' ' . $customer_lname;
 				$user['email'] = $email;
-				$user['username'] = $email;
+				$user['username'] = $username;
 				$user['password'] = $password;
-				$user['email'] = $email;
 
 				$payment['secondary_ident'] = $subscription_id;
 				$payment['processor'] = 'ccbill';
@@ -286,7 +287,11 @@ class processor_ccbill extends POSTprocessor
 				$get['endTime'] = date( 'YmdHis' );
 				$get['transactionTypes'] = 'REBILL,REFUND,CHARGEBACK';
 				$get['clientAccnum'] = $cfg['clientAccnum'];
-				$get['clientSubacc'] = $cfg['clientSubacc'];
+
+				if ( !empty( $cfg['clientSubacc'] ) ) {
+					$get['clientSubacc'] = $cfg['clientSubacc'];
+				}
+
 				$get['username'] = $cfg['datalink_username'];
 				$get['password'] = $cfg['secretWord'];
 
