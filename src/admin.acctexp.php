@@ -158,35 +158,35 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'showsubscriptions':
-		listSubscriptions( $option, 'active', $subscriptionid );
+		listSubscriptions( $option, 'active', $subscriptionid, $userid );
 		break;
 
 	case 'showexcluded':
-		listSubscriptions( $option, 'excluded', $subscriptionid );
+		listSubscriptions( $option, 'excluded', $subscriptionid, $userid );
 		break;
 
 	case 'showactive':
-		listSubscriptions( $option, 'active', $subscriptionid );
+		listSubscriptions( $option, 'active', $subscriptionid, $userid );
 		break;
 
 	case 'showexpired':
-		listSubscriptions( $option, 'expired', $subscriptionid );
+		listSubscriptions( $option, 'expired', $subscriptionid, $userid );
 		break;
 
 	case 'showpending':
-		listSubscriptions( $option, 'pending', $subscriptionid );
+		listSubscriptions( $option, 'pending', $subscriptionid, $userid );
 		break;
 
 	case 'showcancelled':
-		listSubscriptions( $option, 'cancelled', $subscriptionid );
+		listSubscriptions( $option, 'cancelled', $subscriptionid, $userid );
 		break;
 
 	case 'showclosed':
-		listSubscriptions( $option, 'closed', $subscriptionid );
+		listSubscriptions( $option, 'closed', $subscriptionid, $userid );
 		break;
 
 	case 'showmanual':
-		listSubscriptions( $option, 'notconfig', $subscriptionid );
+		listSubscriptions( $option, 'notconfig', $subscriptionid, $userid );
 		break;
 
 	case 'showsettings':
@@ -1352,7 +1352,7 @@ function activatePendingSubscription( $userid, $option, $renew )
 	}
 }
 
-function listSubscriptions( $option, $set_group, $subscriptionid )
+function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array() )
 {
 	global $database, $mainframe, $mosConfig_list_limit;
 
@@ -1419,6 +1419,16 @@ function listSubscriptions( $option, $set_group, $subscriptionid )
 	$where_or	= array();
 	$notconfig	= 0;
 
+	if ( !empty( $userid ) ) {
+		foreach ( $userid as $uid ) {
+			$subscriptionHandler = new Subscription( $database );
+			$subscriptionHandler->createNew( $uid, '', 1 );
+			$subscriptionHandler->check();
+			$subscriptionHandler->store();
+			$subscriptionid[] = $subscriptionHandler->getMax();
+		}
+	}
+
 	$planid = trim( mosGetParam( $_REQUEST, 'assign_planid', null ) );
 	if ( $planid > 0 && is_array( $subscriptionid ) && count( $subscriptionid ) > 0 ) {
 		foreach ($subscriptionid as $k) {
@@ -1441,8 +1451,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid )
 	}
 
 	$expire = trim( mosGetParam( $_REQUEST, 'set_expiration', null ) );
-
-	if ( !is_null($expire) && is_array( $subscriptionid ) && count( $subscriptionid ) > 0 ) {
+	if ( !is_null( $expire ) && is_array( $subscriptionid ) && count( $subscriptionid ) > 0 ) {
 		foreach ( $subscriptionid as $k ) {
 			$subscriptionHandler = new Subscription( $database );
 
