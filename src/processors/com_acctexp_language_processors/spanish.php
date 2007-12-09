@@ -371,4 +371,19 @@ define( '_CFG_CCBILL_INFO_DESC', 'You need to remember to set the \'postback\' u
 define( '_CFG_CCBILL_PLAN_PARAMS_ALLOWEDTYPES_NAME', 'Allowed types');
 define( '_CFG_CCBILL_PLAN_PARAMS_ALLOWEDTYPES_DESC', 'insert the payment options that the user is supposed to have after being led on to CCBill (refer to your CCBill account for the product IDs you have set up)');
 
+// iDeal Basic
+define( '_CFG_CCBILL_LONGNAME', 'iDeal');
+define( '_CFG_IDEAL_BASIC_STATEMENT', 'Make payments with iDeal');
+define( '_CFG_IDEAL_BASIC_DESCRIPTION', 'De veilige manier van betalen op internet.');
+define( '_CFG_IDEAL_BASIC_MERCHANTID_NAME', 'Merchant ID');
+define( '_CFG_IDEAL_BASIC_MERCHANTID_DESC', 'Your Merchant ID');
+define( '_CFG_IDEAL_BASIC_TESTMODESTAGE_NAME', 'Testmode Stage');
+define( '_CFG_IDEAL_BASIC_TESTMODESTAGE_DESC', 'Which of the tests (1-7) do you want to conduct?');
+define( '_CFG_IDEAL_BASIC_SUBID_NAME', 'Testmode Stage');
+define( '_CFG_IDEAL_BASIC_SUBID_DESC', 'Set to 0 unless you have specific reasons not to');
+define( '_CFG_IDEAL_BASIC_KEY_NAME', 'Key');
+define( '_CFG_IDEAL_BASIC_KEY_DESC', 'Your secret key');
+define( '_CFG_IDEAL_BASIC_DESCRIPTION_NAME', 'Item Description');
+define( '_CFG_IDEAL_BASIC_DESCRIPTION_DESC', 'The Item description that is shown on the invoice - max 32 characters!');
+
 ?>

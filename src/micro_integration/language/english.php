@@ -273,4 +273,7 @@ define( '_MI_MI_COUPON_TEXT_HTML_DESC',				'Do you want this email to be HTML en
 define( '_MI_MI_COUPON_TEXT_NAME',					'Text' );
 define( '_MI_MI_COUPON_TEXT_DESC',					'Text to be sent when the coupons are created. The rewriting routines explained below will work for this field. Mark the point where the coupon codes are displayed with "%s"!' );
 
+// Attend Events
+define( '_AEC_MI_NAME_ATTEND_EVENTS',		'Attend Events' );
+define( '_AEC_MI_DESC_ATTEND_EVENTS',		'Dummy MicroIntegration - for now only links payments from AE to AEC' );
 ?>
