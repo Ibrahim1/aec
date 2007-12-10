@@ -149,7 +149,7 @@ class metaUser
 		$var['password']	= $user['password'];
 
 		$userid = AECToolbox::saveUserRegistration( 'com_acctexp', $var, true );
-print_r($this);exit();
+
 		// Create a new invoice with $invoiceid as secondary ident
 		$invoice = new Invoice( $database );
 		$invoice->createNew( $userid, $usage, $payment['processor'], $payment['secondary_ident'] );
