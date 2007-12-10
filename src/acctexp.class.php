@@ -183,7 +183,7 @@ class metaUser
 			} else {
 				// Create new subscription
 				$this->focusSubscription = new Subscription( $database );
-				$this->focusSubscription->id = 0;
+				$this->focusSubscription->load( 0 );
 				$this->focusSubscription->createNew( $this->userid, $processor, 0, $plan_params['make_primary'] );
 				$this->hasSubscription = 1;
 			}

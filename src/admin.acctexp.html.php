@@ -765,7 +765,7 @@ class HTML_AcctExp
 
 			<input type="hidden" name="option" value="<?php echo $option; ?>" />
 			<input type="hidden" name="id" value="<?php echo !empty( $metaUser->focusSubscription->id ) ? $metaUser->focusSubscription->id : ''; ?>" />
-			<input type="hidden" name="userid" value="<?php echo $metaUser->focusSubscription->userid; ?>" />
+			<input type="hidden" name="userid" value="<?php echo $metaUser->userid; ?>" />
 			<input type="hidden" name="task" value="" />
 			<input type="hidden" name="nexttask" value="<?php echo $nexttask;?>" />
 		</form>
