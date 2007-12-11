@@ -173,9 +173,9 @@ class mi_htaccess
 
 		if( $params['use_md5'] ) {
 			$ht->addUser( $metaUser->cmsUser->username, $metaUser->cmsUser->password );
-		}else{
+		} else {
 			$apachepw = new apachepw( $database );
-			$apwid = $apachepw->getIDbyUserID( $userid );
+			$apwid = $apachepw->getIDbyUserID( $metaUser->cmsUser->userid );
 
 			if( $apwid ) {
 				$apachepw->load( $apwid );
