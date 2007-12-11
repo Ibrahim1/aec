@@ -298,6 +298,11 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'editmicrointegration':
+		if ( !is_array( $id ) ) {
+			$i = array( $id );
+			$id = $i;
+		}
+
 		editMicroIntegration( $id[0], $option );
 		break;
 
@@ -2922,7 +2927,7 @@ function saveMicroIntegration( $option, $apply=0 )
 	unset( $_POST['option'] );
 	unset( $_POST['task'] );
 
-	$id = isset( $_POST['id'] ) ? $_POST['id'] : 0;
+	$id = $_POST['id'] ? $_POST['id'] : 0;
 
 	$mi = new microIntegration( $database );
 	$mi->load( $id );
@@ -2961,7 +2966,7 @@ function saveMicroIntegration( $option, $apply=0 )
 			mosRedirect( 'index2.php?option=' . $option . '&task=showMicroIntegrations', _AEC_MSG_SUCESSFULLY_SAVED );
 		}
 	} else {
-		mosRedirect( 'index2.php?option=' . $option . '&task=editMicroIntegration&id=' . $mi->getMax(), _AEC_MSG_SUCESSFULLY_SAVED );
+		mosRedirect( 'index2.php?option=' . $option . '&task=editMicroIntegration&id=' . $mi->getMax() , _AEC_MSG_SUCESSFULLY_SAVED );
 	}
 
 }

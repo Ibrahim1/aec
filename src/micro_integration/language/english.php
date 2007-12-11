@@ -276,4 +276,21 @@ define( '_MI_MI_COUPON_TEXT_DESC',					'Text to be sent when the coupons are cre
 // Attend Events
 define( '_AEC_MI_NAME_ATTEND_EVENTS',		'Attend Events' );
 define( '_AEC_MI_DESC_ATTEND_EVENTS',		'Dummy MicroIntegration - for now only links payments from AE to AEC' );
+
+// HTTP QUERY
+define( '_AEC_MI_NAME_HTTP_QUERY',		'HTTP Query' );
+define( '_AEC_MI_DESC_HTTP_QUERY',		'Sends out a HTTP request to an url, including GET variables' );
+define( '_MI_MI_HTTP_QUERY_URL_NAME',			'URL' );
+define( '_MI_MI_HTTP_QUERY_URL_DESC',			'The URL that this Request should go to.' );
+define( '_MI_MI_HTTP_QUERY_QUERY_NAME',			'Query Variables' );
+define( '_MI_MI_HTTP_QUERY_QUERY_DESC',			'Transmit these variables via HTTP GET when calling the URL. Separated by linebreaks in the form of "parameter_name=parameter_value". The RewriteEngine works as specified below.' );
+define( '_MI_MI_HTTP_QUERY_URL_EXP_NAME',			'URL (Expiration)' );
+define( '_MI_MI_HTTP_QUERY_URL_EXP_DESC',			'The URL that this Request should go to when the plan is expired.' );
+define( '_MI_MI_HTTP_QUERY_QUERY_EXP_NAME',			'Query Variables' );
+define( '_MI_MI_HTTP_QUERY_QUERY_EXP_DESC',			'Transmit these variables via HTTP GET when calling the URL. Separated by linebreaks in the form of "parameter_name=parameter_value". The RewriteEngine works as specified below.' );
+define( '_MI_MI_HTTP_QUERY_URL_PRE_EXP_NAME',			'URL (Before Expiration)' );
+define( '_MI_MI_HTTP_QUERY_URL_PRE_EXP_DESC',			'The URL that this Request should go to before the plan is expired.' );
+define( '_MI_MI_HTTP_QUERY_QUERY_PRE_EXP_NAME',			'Query Variables' );
+define( '_MI_MI_HTTP_QUERY_QUERY_PRE_EXP_DESC',			'Transmit these variables via HTTP GET when calling the URL. Separated by linebreaks in the form of "parameter_name=parameter_value". The RewriteEngine works as specified below.' );
+
 ?>

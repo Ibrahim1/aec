@@ -3533,7 +3533,7 @@ class InvoiceFactory
 		 	}
 		} elseif ( strcmp( strtolower( $this->processor ), 'error' ) === 0 ) {
 	 		// Nope, won't work buddy
-		 	notAllowed();
+		 	notAllowed( $option );
 		}
 
 		$amount				= $this->objUsage->SubscriptionAmount( $this->recurring, $metaUser->objSubscription );
@@ -4278,9 +4278,9 @@ class Invoice extends paramDBTable
 					if ( isset( $micro_int['name'] ) ) {
 						if ( $mi->callDry( $micro_int['name'] ) ) {
 							if ( is_object( $metaUser ) ) {
-								$mi->action( $metaUser, $exchange, $new_plan );
+								$mi->action( $metaUser, $exchange, $this, $new_plan );
 							} else {
-								$mi->action( false, $exchange, $new_plan );
+								$mi->action( false, $exchange, $this, $new_plan );
 							}
 						}
 					} elseif ( isset( $micro_int['id'] ) ) {
@@ -4288,9 +4288,9 @@ class Invoice extends paramDBTable
 							$mi->load( $micro_int['id'] );
 							if ( $mi->callIntegration() ) {
 								if ( is_object( $metaUser ) ) {
-									$mi->action( $metaUser, $exchange, $new_plan );
+									$mi->action( $metaUser, $exchange, $this, $new_plan );
 								} else {
-									$mi->action( false, $exchange, $new_plan );
+									$mi->action( false, $exchange, $this, $new_plan );
 								}
 							}
 						}
@@ -4387,7 +4387,7 @@ class Invoice extends paramDBTable
 		$pp = new PaymentProcessor();
 		if ( !$pp->loadName( strtolower( $this->method ) ) ) {
 	 		// Nope, won't work buddy
-		 	notAllowed();
+		 	notAllowed( 'com_acctexp' );
 		}
 
 		$pp->init();
@@ -4437,7 +4437,7 @@ class Invoice extends paramDBTable
 		$pp = new PaymentProcessor();
 		if ( !$pp->loadName( strtolower( $this->method ) ) ) {
 	 		// Nope, won't work buddy
-		 	notAllowed();
+		 	notAllowed( 'com_acctexp' );
 		}
 
 		$pp->init();
@@ -5992,7 +5992,7 @@ class AECToolbox
 		return $array;
 	}
 
-	function rewriteEngine( $subject, $metaUser=null, $subscriptionPlan=null )
+	function rewriteEngine( $subject, $metaUser=null, $subscriptionPlan=null, $invoice=null )
 	{
 		global $database, $mosConfig_absolute_path, $mosConfig_live_site;
 
@@ -6058,12 +6058,14 @@ class AECToolbox
 				$rewrite['subscription_lifetime']		= $metaUser->focusSubscription->lifetime;
 			}
 
-			$lastinvoice = AECfetchfromDB::lastClearedInvoiceIDbyUserID( $metaUser->cmsUser->id );
+			if ( is_null( $invoice ) ) {
+				$lastinvoice = AECfetchfromDB::lastClearedInvoiceIDbyUserID( $metaUser->cmsUser->id );
 
-			if ( $lastinvoice ) {
 				$invoice = new Invoice( $database );
 				$invoice->load( $lastinvoice );
+			}
 
+			if ( is_object( $invoice ) ) {
 				$rewrite['invoice_id']					= $invoice->id;
 				$rewrite['invoice_number']				= $invoice->invoice_number;
 				$rewrite['invoice_created_date']		= $invoice->created_date;

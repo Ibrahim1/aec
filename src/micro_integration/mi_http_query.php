@@ -10,7 +10,7 @@
 
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_mysql_query
+class mi_http_query
 {
 	function Info()
 	{
@@ -24,8 +24,11 @@ class mi_mysql_query
 	function Settings( $params )
 	{
         $settings = array();
+        $settings['url']			= array( 'inputE' );
         $settings['query']			= array( 'inputD' );
+        $settings['url_exp']		= array( 'inputE' );
         $settings['query_exp']		= array( 'inputD' );
+        $settings['url_pre_exp']	= array( 'inputE' );
         $settings['query_pre_exp']	= array( 'inputD' );
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 		$settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_SET4_MYSQL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
@@ -35,52 +38,47 @@ class mi_mysql_query
 
 	function pre_expiration_action( $params, $metaUser, $plan )
 	{
-		global $database;
-
 		$userflags = $metaUser->objSubscription->getMIflags( $plan->id, $this->id );
 
 		if ( is_array( $userflags ) ) {
-			if ( isset( $userflags['DB_QUERY'] ) ) {
-				if ( !( time() > $userflags['DB_QUERY_ABANDONCHECK'] ) ) {
+			if ( isset( $userflags['HTTP_QUERY'] ) ) {
+				if ( !( time() > $userflags['HTTP_QUERY_ABANDONCHECK'] ) ) {
 					return false;
 				}
 			}
 		}
 
-		$newflags['db_query_abandoncheck']	= strtotime( $metaUser->objSubscription->expiration );
-		$newflags['db_query']				= time();
+		$newflags['http_query_abandoncheck']	= strtotime( $metaUser->objSubscription->expiration );
+		$newflags['http_query']				= time();
 		$metaUser->objSubscription->setMIflags( $plan->id, $this->id, $newflags );
 
-		$query = AECToolbox::rewriteEngine( $params['query_pre_exp'], $metaUser, $plan );
-
-		$database->setQuery( $query );
-		$database->query();
-
-		return true;
+		return $this->fetchURL( AECToolbox::rewriteEngine( $this->createURL( $params['url_pre_exp'], $params['query_pre_exp'] ), $metaUser, $plan ) );
 	}
 
 	function expiration_action( $params, $metaUser, $plan )
 	{
-		global $database;
-
-		$query = AECToolbox::rewriteEngine( $params['query_exp'], $metaUser, $plan );
-
-		$database->setQuery( $query );
-		$database->query();
-
-		return true;
+		return $this->fetchURL( AECToolbox::rewriteEngine( $this->createURL( $params['url_exp'], $params['query_exp'] ), $metaUser, $plan ) );
 	}
 
 	function action( $params, $metaUser, $invoice, $plan )
 	{
-		global $database;
+		return $this->fetchURL( AECToolbox::rewriteEngine( $this->createURL( $params['url'], $params['query'] ), $metaUser, $plan, $invoice ) );
+	}
 
-		$query = AECToolbox::rewriteEngine( $params['query'], $metaUser, $plan );
+	function createURL( $url, $params ) {
+		$urlsplit = explode( '?', $url );
 
-		$database->setQuery( $query );
-		$database->query();
+		$p = explode( "\n", $params );
 
-		return true;
+		if ( !empty( $urlsplit[1] ) ) {
+			$p2 = explode( '&', $urlsplit[1] );
+
+			if ( !empty( $p2 ) ) {
+				$p = array_merge( $p2, $p );
+			}
+		}
+
+		return $urlsplit[0] . '?' . implode( '&', $p );
 	}
 
 	function fetchURL( $url ) {
@@ -105,16 +103,21 @@ class mi_mysql_query
 
 		$out = "GET $path HTTP/1.0\r\nHost: $host\r\n\r\n";
 		$fp = fsockopen( $host, $port, $errno, $errstr, 30 );
-		fwrite( $fp, $out );
 
-		$return = '';
-		while ( !feof( $fp ) ) {
-			$return .= fgets($fp, 1024);
+		if ( $fp ) {
+			fwrite( $fp, $out );
+
+			$return = '';
+			while ( !feof( $fp ) ) {
+				$return .= fgets($fp, 1024);
+			}
+
+			fclose( $fp );
+
+			return $return;
+		} else {
+			return false;
 		}
-
-		fclose( $fp );
-
-		return $return;
 	}
 }
 ?>

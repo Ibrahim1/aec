@@ -65,7 +65,7 @@ class mi_idevaffiliate
 		}
 
 		$text = '<img border="0" '
-				.'src="' . $rooturl .'/sale.php?profile=' . $params['profile'] . '&amp;idev_saleamt=' . $invoice->amount . '&amp;idev_ordernum=' . $invoice->invoice_number . '" '
+				.'src="' . $rooturl .'/sale.php?' . implode( '&amp;', $getparams ) . '" '
 				.'width="1" height="1" />';
 
 		$displaypipeline = new displayPipeline($database);
