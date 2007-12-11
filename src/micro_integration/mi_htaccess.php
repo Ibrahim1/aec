@@ -160,7 +160,7 @@ class mi_htaccess
 		$ht->delUser( $metaUser->cmsUser->username );
 	}
 
-	function action($params, $metaUser, $invoice, $plan)
+	function action( $params, $metaUser, $invoice, $plan )
 	{
 		global $database;
 
@@ -175,11 +175,11 @@ class mi_htaccess
 			$ht->addUser( $metaUser->cmsUser->username, $metaUser->cmsUser->password );
 		} else {
 			$apachepw = new apachepw( $database );
-			$apwid = $apachepw->getIDbyUserID( $metaUser->cmsUser->userid );
+			$apwid = $apachepw->getIDbyUserID( $metaUser->userid );
 
-			if( $apwid ) {
+			if ( $apwid ) {
 				$apachepw->load( $apwid );
-			}else{
+			} else {
 				// notify User? Admin?
 				return false;
 			}
