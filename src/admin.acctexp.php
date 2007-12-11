@@ -991,9 +991,17 @@ function editUser( $userid, $option, $task )
 			$rowstyle	= '';
 		}
 
+		$non_formatted = $invoice->invoice_number;
+		$invoice->formatInvoiceNumber();
+		$is_formatted = $invoice->invoice_number;
+
+		if ( $non_formatted != $is_formatted ) {
+			$is_formatted = $non_formatted . "\n" . '(' . $is_formatted . ')';
+		}
+
 		$invoices[$inv_id] = array();
 		$invoices[$inv_id]['rowstyle']			= $rowstyle;
-		$invoices[$inv_id]['invoice_number']	= $invoice->invoice_number;
+		$invoices[$inv_id]['invoice_number']	= $is_formatted;
 		$invoices[$inv_id]['amount']			= $invoice->amount . '&nbsp;' . $invoice->currency;
 		$invoices[$inv_id]['status']			= $status;
 		$invoices[$inv_id]['processor']			= $invoice->method;
@@ -3519,16 +3527,30 @@ function cancelCSS ( $option )
 
 function invoices( $option )
 {
-	global $database, $mainframe, $mosConfig_list_limit;
+	global $database, $mainframe, $mosConfig_list_limit, $aecConfig;
 
 	$limit 		= intval( $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit ) );
 	$limitstart = intval( $mainframe->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
 	$search 	= $mainframe->getUserStateFromRequest( "search{$option}_invoices", 'search', '' );
 
-	$where = array();
 	if ( $search ) {
-		$where[] = '( LOWER(invoice_number) LIKE \'%' . $database->getEscaped( trim( strtolower( $search ) ) ) . '%\''
-					. ' OR LOWER(secondary_ident) LIKE \'%' . $database->getEscaped( trim( strtolower( $search ) ) ) . '%\' )';
+		$unformatted = $database->getEscaped( trim( strtolower( $search ) ) );
+
+		$fakeinvoice = new stdClass();
+		$fakeinvoice->invoice_number = $unformatted;
+		$fakeinvoice->id = $unformatted;
+
+		$formatted =  Invoice::deformatInvoiceNumber( $fakeinvoice );
+
+		$where = 'LOWER(invoice_number) LIKE \'%' . $unformatted . '%\''
+					. ' OR LOWER(secondary_ident) LIKE \'%' . $unformatted . '%\''
+					. ' OR id LIKE \'%' . $unformatted . '%\'';
+
+		if ( $formatted != $unformatted ) {
+			$where .= ' OR LOWER(invoice_number) LIKE \'%' . $formatted . '%\''
+						. ' OR LOWER(secondary_ident) LIKE \'%' . $formatted . '%\''
+						. ' OR id LIKE \'%' . $formatted . '%\'';
+		}
 	}
 
 	// get the total number of records
@@ -3545,7 +3567,7 @@ function invoices( $option )
 	// Lets grab the data and fill it in.
 	$query = 'SELECT *'
 	. ' FROM #__acctexp_invoices'
-	. ( count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
+	. ' WHERE ' . $where . ' '
 	. ' ORDER BY created_date DESC'
 	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit;
 	;
@@ -3555,6 +3577,16 @@ function invoices( $option )
 	if ( $database->getErrorNum() ) {
 		echo $database->stderr();
 		return false;
+	}
+
+	foreach ( $rows as $id => $row ) {
+		$in_formatted = Invoice::formatInvoiceNumber( $row );
+
+		if ( $in_formatted == $row->invoice_number ) {
+			continue;
+		} else {
+			$rows[$id]->invoice_number = $row->invoice_number . "\n" . '(' . $in_formatted . ')';
+		}
 	}
 
 	HTML_AcctExp::viewinvoices( $option, $rows, $search, $pageNav );

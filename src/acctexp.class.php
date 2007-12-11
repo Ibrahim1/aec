@@ -3810,43 +3810,101 @@ class Invoice extends paramDBTable
 		$this->load($database->loadResult());
 	}
 
-	function formatInvoiceNumber()
+	function formatInvoiceNumber( $invoice=null )
 	{
 		global $aecConfig;
+
+		if ( empty( $invoice ) ) {
+			$invoice_number	= $this->invoice_number;
+			$invoice_id		= $this->id;
+		} else {
+			$invoice_number = $invoice->invoice_number;
+			$invoice_id		= $invoice->id;
+		}
 
 		if ( empty( $aecConfig->cfg['invoicenum_display_id'] ) ) {
 			if ( !empty( $aecConfig->cfg['invoicenum_display_case'] ) ) {
 				switch ( $aecConfig->cfg['invoicenum_display_case'] ) {
 					case 'UPPER':
-						$this->invoice_number = strtoupper( $this->invoice_number );
+						$invoice_number = strtoupper( $invoice_number );
 						break;
 					case 'LOWER':
-						$this->invoice_number = strtolower( $this->invoice_number );
+						$invoice_number = strtolower( $invoice_number );
 						break;
 				}
-			}
-
-			if ( !empty( $aecConfig->cfg['invoicenum_display_chunking'] ) ) {
-				if ( !empty( $aecConfig->cfg['invoicenum_display_separator'] ) ) {
-					$separator = $aecConfig->cfg['invoicenum_display_separator'];
-				} else {
-					$separator = '-';
-				}
-
-				if ( function_exists( 'str_split' ) ) {
-					$chunks = str_split( $this->invoice_number, $aecConfig->cfg['invoicenum_display_chunking'] );
-				} else {
-					$chunks = AECToolbox::str_split_php4( $this->invoice_number, $aecConfig->cfg['invoicenum_display_chunking'] );
-				}
-				$this->invoice_number = implode( $separator, $chunks );
 			}
 		} else {
 			if ( !empty( $aecConfig->cfg['invoicenum_display_idinflate'] ) ) {
-				$this->invoice_number = $this->id + $aecConfig->cfg['invoicenum_display_idinflate'];
+				$invoice_number = (string) ( $invoice_id + $aecConfig->cfg['invoicenum_display_idinflate'] );
 			} else {
-				$this->invoice_number = $this->id;
+				$invoice_number = (string) $invoice_id;
 			}
 		}
+
+		if ( !empty( $aecConfig->cfg['invoicenum_display_chunking'] ) ) {
+			if ( !empty( $aecConfig->cfg['invoicenum_display_separator'] ) ) {
+				$separator = $aecConfig->cfg['invoicenum_display_separator'];
+			} else {
+				$separator = '-';
+			}
+
+			if ( function_exists( 'str_split' ) ) {
+				$chunks = str_split( $invoice_number, $aecConfig->cfg['invoicenum_display_chunking'] );
+			} else {
+				$chunks = AECToolbox::str_split_php4( $invoice_number, $aecConfig->cfg['invoicenum_display_chunking'] );
+			}
+			$invoice_number = implode( $separator, $chunks );
+		}
+
+		if ( empty( $invoice ) ) {
+			$this->invoice_number = $invoice_number;
+			$this->id = $invoice_id;
+			return true;
+		} else {
+			return $invoice_number;
+		}
+
+	}
+
+	function deformatInvoiceNumber( $invoice=null )
+	{
+		global $aecConfig;
+
+		if ( empty( $invoice ) ) {
+			$invoice_number	= $this->invoice_number;
+			$invoice_id		= $this->id;
+		} else {
+			$invoice_number = $invoice->invoice_number;
+			$invoice_id		= $invoice->id;
+		}
+
+		if ( !empty( $aecConfig->cfg['invoicenum_display_chunking'] ) ) {
+			if ( !empty( $aecConfig->cfg['invoicenum_display_separator'] ) ) {
+				$separator = $aecConfig->cfg['invoicenum_display_separator'];
+			} else {
+				$separator = '-';
+			}
+
+			$invoice_number = str_replace( $separator, '', $invoice_number);
+			$invoice_id = str_replace( $separator, '', $invoice_id);
+		}
+
+		if ( !empty( $aecConfig->cfg['invoicenum_display_id'] ) ) {
+			if ( !empty( $aecConfig->cfg['invoicenum_display_idinflate'] ) ) {
+				$invoice_number = (string) ( $invoice_id - $aecConfig->cfg['invoicenum_display_idinflate'] );
+			} else {
+				$invoice_number = (string) $invoice_id;
+			}
+		}
+
+		if ( empty( $invoice ) ) {
+			$this->invoice_number = $invoice_number;
+			$this->id = $invoice_id;
+			return true;
+		} else {
+			return $invoice_number;
+		}
+
 	}
 
 	function loadbySubscriptionId( $subscrid, $userid=null )
