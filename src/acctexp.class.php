@@ -3634,14 +3634,14 @@ class InvoiceFactory
 			return;
 		}
 
-		$this->objInvoice->formatInvoiceNumber();
-
 		$this->InvoiceToCheckout( $option, $repeat );
 	}
 
 	function InvoiceToCheckout( $option, $repeat=0 )
 	{
 		$var = $this->objInvoice->prepareProcessorLink();
+
+		$this->objInvoice->formatInvoiceNumber();
 
 		Payment_HTML::checkoutForm( $option, $var['var'], $var['params'], $this, $repeat );
 	}

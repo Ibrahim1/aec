@@ -3572,7 +3572,7 @@ function invoices( $option )
 	// Lets grab the data and fill it in.
 	$query = 'SELECT *'
 	. ' FROM #__acctexp_invoices'
-	. ' WHERE ' . $where . ' '
+	. ( !empty( $where ) ? ( ' WHERE ' . $where . ' ' ) : '' )
 	. ' ORDER BY created_date DESC'
 	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit;
 	;
