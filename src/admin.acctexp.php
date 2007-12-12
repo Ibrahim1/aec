@@ -2011,9 +2011,9 @@ function editSettings( $option )
 						$new_settings = $pp->processor->settings();
 
 						if ( isset( $pp->settings[$name] ) ) {
-							$tab[] = array_merge( $settings_array[$name], array( $pp->settings[$name], $setting_name ) );
+							$tab[] = array_merge( (array) $settings_array[$name], array( $pp->settings[$name], $setting_name ) );
 						} else {
-							$tab[] = array_merge( $settings_array[$name], array( $new_settings[$name], $setting_name ) );
+							$tab[] = array_merge( (array) $settings_array[$name], array( $new_settings[$name], $setting_name ) );
 						}
 					}
 
@@ -2084,7 +2084,7 @@ function saveSettings( $option )
 {
 	global $database, $mainframe, $my, $acl, $aecConfig;
 
-	$pplist_enabled		= mosGetParam( $_POST,'gwlist_enabled', '' );
+	$pplist_enabled		= mosGetParam( $_POST,'gwlist_enabled', array() );
 	$pplist_installed	= PaymentProcessorHandler::getInstalledNameList();
 	if ( is_array( $pplist_enabled ) && is_array( $pplist_installed ) ) {
 		$total_processors = array_merge( $pplist_installed, $pplist_enabled );
@@ -2096,7 +2096,7 @@ function saveSettings( $option )
 		$pp = new PaymentProcessor();
 
 		// Go next if this is the zero option selected
-		if ( !$procname ) {
+		if ( empty( $procname ) ) {
 			continue;
 		}
 
