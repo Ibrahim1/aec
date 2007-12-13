@@ -855,7 +855,7 @@ class aecHeartbeat extends mosDBTable
 				$database->setQuery( $query );
 				$user_list = $database->loadObjectList();
 
-				foreach ( $pre_expired_users as $usid ) {
+				foreach ( $user_list as $usid ) {
 					$metaUser = new metaUser( $usid->userid );
 					$metaUser->moveFocus( $usid->id );
 
