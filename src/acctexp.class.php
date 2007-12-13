@@ -3536,6 +3536,11 @@ class InvoiceFactory
 		 	notAllowed( $option );
 		}
 
+		if ( !empty( $this->pp->info['secure'] ) && !isset( $_SERVER['HTTPS'] ) ) {
+		    mosRedirect( AECToolbox::deadsureURL( "/index.php?option=" . $option . "&task=repeatPayment&invoice=" . $this->objInvoice->invoice_number . "&first=" . !$repeat . "\n\n", true ) );
+		    exit();
+		};
+
 		$amount				= $this->objUsage->SubscriptionAmount( $this->recurring, $metaUser->objSubscription );
 		$original_amount	= $this->objUsage->SubscriptionAmount( $this->recurring, $metaUser->objSubscription );
 		$warning			= 0;

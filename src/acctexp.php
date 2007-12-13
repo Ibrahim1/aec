@@ -177,8 +177,9 @@ if ( !empty( $task ) ) {
 		case 'repeatpayment':
 			$invoice	= trim( mosGetParam( $_REQUEST, 'invoice', 0 ) );
 			$itemid		= trim( mosGetParam( $_REQUEST, 'Itemid', 0 ) );
+			$first		= trim( mosGetParam( $_REQUEST, 'first', 0 ) );
 
-			repeatInvoice( $option, $invoice, $itemid );
+			repeatInvoice( $option, $invoice, $itemid, $first );
 			break;
 
 		case 'cancelpayment':
@@ -659,7 +660,7 @@ function internalCheckout( $option, $invoice_number, $userid )
 	}
 }
 
-function repeatInvoice( $option, $invoice_number, $userid )
+function repeatInvoice( $option, $invoice_number, $userid, $first )
 {
 	global $database, $my;
 
@@ -674,7 +675,7 @@ function repeatInvoice( $option, $invoice_number, $userid )
 	if ( $invoiceid ) {
 		$invoicefact = new InvoiceFactory( $userid );
 		$invoicefact->touchInvoice( $option, $invoice_number );
-		$invoicefact->checkout( $option, 1 );
+		$invoicefact->checkout( $option, !$first );
 	} else {
 		mosNotAuth();
 		return;

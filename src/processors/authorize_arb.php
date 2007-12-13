@@ -34,7 +34,7 @@ class processor_authorize_arb extends XMLprocessor
 	function info()
 	{
 		$info = array();
-		$info['name'] = "authorize_arb";
+		$info['name'] = 'authorize_arb';
 		$info['longname'] = _CFG_AUTHORIZE_ARB_LONGNAME;
 		$info['statement'] = _CFG_AUTHORIZE_ARB_STATEMENT;
 		$info['description'] = _CFG_AUTHORIZE_ARB_DESCRIPTION;
@@ -46,6 +46,7 @@ class processor_authorize_arb extends XMLprocessor
 		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring'] = 1;
 		$info['actions'] = 'cancel';
+		$info['secure'] = 1;
 
 		return $info;
 	}
