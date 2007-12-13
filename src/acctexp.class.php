@@ -152,7 +152,7 @@ class metaUser
 
 		// Create a new invoice with $invoiceid as secondary ident
 		$invoice = new Invoice( $database );
-		$invoice->createNew( $userid, $usage, $payment['processor'], $payment['secondary_ident'] );
+		$invoice->create( $userid, $usage, $payment['processor'], $payment['secondary_ident'] );
 
 		// return nothing, the invoice will be handled by the second ident anyways
 		return;
@@ -1762,6 +1762,10 @@ class XMLprocessor extends processor
 
 		// Transmit xml to server
 		$response = $this->transmitRequestXML( $xml, $int_var, $settings, $metaUser, $new_subscription );
+
+		if ( isset( $response['error'] ) ) {
+			return $response;
+		}
 
 		if ( $response != false ) {
 
@@ -4052,7 +4056,7 @@ class Invoice extends paramDBTable
 		$this->invoice_number	= $invoice_number;
 
 		if ( !is_null( $second_ident ) ) {
-			$this->second_ident		= $second_ident;
+			$this->secondary_ident		= $second_ident;
 		}
 
 		$this->active			= 1;
