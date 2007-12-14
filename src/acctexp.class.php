@@ -5782,6 +5782,9 @@ class AECToolbox
 			}
 			$row->checkin();
 
+			$mih = new microIntegrationHandler();
+			$mih->userchange($row, $_POST, 'registration');
+
 			$name 		= $row->name;
 			$email 		= $row->email;
 			$username 	= $row->username;
