@@ -162,8 +162,7 @@ class processor_authorize_arb extends XMLprocessor
 					;
 
 		if ( isset( $int_var['params']['billAddress'] ) ) {
-		$content .=	 '<billTo>'
-					. '<address>'. trim( $int_var['params']['billAddress'] ) . '</address>'
+		$content .=	 '<address>'. trim( $int_var['params']['billAddress'] ) . '</address>'
 					. '<city>' . trim( $int_var['params']['billCity'] ) . '</city>'
 					. '<state>'. trim( $int_var['params']['billState'] ) . '</state>'
 					. '<zip>' . trim( $int_var['params']['billZip'] ) . '</zip>'
