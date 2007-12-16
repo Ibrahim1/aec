@@ -2147,7 +2147,7 @@ class HTML_AcctExp
 			?>
 			<tr class="row<?php echo $k; ?>">
 				<td><?php echo $pageNav->rowNumber( $i ); ?></td>
-				<td>a href="index2.php?option=com_acctexp&amp;task=edit&userid=<?php echo $rows[$i]->userid; ?>"><?php echo $rows[$i]->userid; ?></a></td>
+				<td><a href="index2.php?option=com_acctexp&amp;task=edit&userid=<?php echo $rows[$i]->userid; ?>"><?php echo $rows[$i]->userid; ?></a></td>
 				<td align="center"><?php echo $rows[$i]->invoice_number; ?></td>
 				<td align="center"><?php echo $rows[$i]->secondary_ident; ?></td>
 				<td align="center"><?php echo $rows[$i]->created_date; ?></td>
