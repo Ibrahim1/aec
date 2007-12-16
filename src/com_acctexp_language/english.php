@@ -199,7 +199,7 @@ define( '_COUPON_INFO_CHECKOUT', 'Please enter your coupon code here and click t
 
 // --== COUPON ERROR MESSAGES ==--
 define( '_COUPON_WARNING_AMOUNT', 'One Coupon that you have added to this invoice does not affect the next payment, so although it seems that it does not affect this invoice, it will affect a subsequent payment.');
-define( '_COUPON_ERROR_PRETEXT', 'We are terribly sorry:');
+define( '_COUPON_ERROR_PRETEXT', 'We are sorry:');
 define( '_COUPON_ERROR_EXPIRED', 'This coupon has expired.');
 define( '_COUPON_ERROR_NOTSTARTED', 'Using this coupon is not permitted yet.');
 define( '_COUPON_ERROR_NOTFOUND', 'This coupon code could not be found.');

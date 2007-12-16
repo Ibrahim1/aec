@@ -409,6 +409,11 @@ function confirmSubscription( $option )
 	$processor	= trim( mosGetParam( $_REQUEST, 'processor', 0 ) );
 	$username	= trim( mosGetParam( $_REQUEST, 'username', 0 ) );
 
+	// Don't ask. I have no idea why this is needed in some situations.
+	if ( empty( $processor ) && !empty( $_POST["processor"] ) ) {
+		$processor = $_POST["processor"];
+	}
+
 	if ( ( $usage > 0 ) && !$username && !$userid && !$my->id ) {
 		if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
 			// This is a CB registration, borrowing their code to register the user
