@@ -332,7 +332,7 @@ define( '_CFG_CYBERMUT_SERVER_DESC', 'Choissisez votre banque');
 define( '_CFG_CYBERMUT_LANGUAGE_NAME', 'Language:');
 define( '_CFG_CYBERMUT_LANGUAGE_DESC', 'Select one of the possible language settings for the paypal site that your user will see when issuing a payment.');
 
-// Authorize.net ARB Settings
+// Authorize.net ARB
 define( '_CFG_AUTHORIZE_ARB_LONGNAME', 'Authorize.net ARB');
 define( '_CFG_AUTHORIZE_ARB_STATEMENT', 'Make recurring payments with Authorize.net');
 define( '_CFG_AUTHORIZE_ARB_DESCRIPTION', 'Make recurring payments with Authorize.net');
@@ -385,5 +385,23 @@ define( '_CFG_IDEAL_BASIC_KEY_NAME', 'Key');
 define( '_CFG_IDEAL_BASIC_KEY_DESC', 'Your secret key');
 define( '_CFG_IDEAL_BASIC_DESCRIPTION_NAME', 'Item Description');
 define( '_CFG_IDEAL_BASIC_DESCRIPTION_DESC', 'The Item description that is shown on the invoice - max 32 characters!');
+
+// Authorize.net AIM
+define( '_CFG_AUTHORIZE_AIM_LONGNAME', 'Authorize.net AIM');
+define( '_CFG_AUTHORIZE_AIM_STATEMENT', 'Make on-site CreditCard payments with Authorize.net');
+define( '_CFG_AUTHORIZE_AIM_DESCRIPTION', 'Make on-site CreditCard payments with Authorize.net');
+define( '_CFG_AUTHORIZE_AIM_LOGIN_NAME', 'API Login ID');
+define( '_CFG_AUTHORIZE_AIM_LOGIN_DESC', 'Your API Login ID on Authorize.net.');
+define( '_CFG_AUTHORIZE_AIM_TRANSACTION_KEY_NAME', 'Transaction Key');
+define( '_CFG_AUTHORIZE_AIM_TRANSACTION_KEY_DESC', 'Your Transaction Key on Authorize.net.');
+define( '_CFG_AUTHORIZE_AIM_PROMPTADDRESS_NAME', 'Prompt for Address');
+define( '_CFG_AUTHORIZE_AIM_PROMPTADDRESS_DESC', 'Ask the user to put in an Address with the Billing Name.');
+define( '_AEC_AUTHORIZE_AIM_PARAMS_BILLFIRSTNAME_NAME', 'First Name');
+define( '_AEC_AUTHORIZE_AIM_PARAMS_BILLLASTNAME_NAME', 'Last Name');
+define( '_AEC_AUTHORIZE_AIM_PARAMS_BILLADDRESS_NAME', 'Address');
+define( '_AEC_AUTHORIZE_AIM_PARAMS_BILLCITY_NAME', 'City');
+define( '_AEC_AUTHORIZE_AIM_PARAMS_BILLSTATE_NAME', 'State');
+define( '_AEC_AUTHORIZE_AIM_PARAMS_BILLZIP_NAME', 'Zip');
+define( '_AEC_AUTHORIZE_AIM_PARAMS_BILLCOUNTRY_NAME', 'Country');
 
 ?>

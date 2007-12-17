@@ -73,6 +73,7 @@
 		<filename>processors/alertpay.php</filename>
 		<filename>processors/allopass.php</filename>
 		<filename>processors/authorize.php</filename>
+		<filename>processors/authorize_aim.php</filename>
 		<filename>processors/authorize_arb.php</filename>
 		<filename>processors/ccbill.php</filename>
 		<filename>processors/cybermut.php</filename>
