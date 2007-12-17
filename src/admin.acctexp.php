@@ -562,6 +562,21 @@ switch( strtolower( $task ) ) {
 		}
 		break;
 
+	case 'proctriggertest':
+		$payment = array(
+							'secondary_ident' => 'test1',
+							'processor' => 'ccbill'
+							);
+		$user = array(
+							'name' => 'test1',
+							'email' => 'test1@test1.com',
+							'username' => 'test1',
+							'password' => 'test1'
+							);
+
+		metaUser::procTriggerCreate( $user, $payment, 1 );
+		break;
+
 	default:
 		HTML_AcctExp::central();
 		break;
