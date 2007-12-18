@@ -114,39 +114,39 @@ class processor_authorize_aim extends XMLprocessor
 	{
 		global $mosConfig_live_site;
 
-		$authnet_values				= array(
-			"x_login"				=> trim( substr( $cfg['login'], 0, 25 ) ),
-			"x_version"				=> "3.1",
-			"x_delim_char"			=> "|",
-			"x_delim_data"			=> "TRUE",
-			"x_url"					=> "FALSE",
-			"x_type"				=> "AUTH_CAPTURE",
-			"x_method"				=> "CC",
-		 	"x_tran_key"			=> $cfg['transaction_key'],
-		 	"x_currency_code"		=> $cfg['currency'],
-		 	"x_relay_response"		=> "FALSE",
-			"x_card_num"			=> trim( $int_var['params']['cardNumber'] ),
-			"x_exp_date"			=> ( str_pad( $int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ) . $int_var['params']['expirationYear'] ),
-			"x_description"			=> trim( substr( AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription ), 0, 20 ) ),
-			"x_invoice_num"			=> $int_var['invoice'],
-			"x_amount"				=> $int_var['amount'],
-			"x_first_name"			=> trim( $int_var['params']['billFirstName'] ),
-			"x_last_name"			=> trim( $int_var['params']['billLastName'] )
-		);
+		$a = array();
+
+		$a['x_login']			= trim( substr( $cfg['login'], 0, 25 ) );
+		$a['x_version']			= "3.1";
+		$a['x_delim_char']		= "|";
+		$a['x_delim_data']		= "TRUE";
+		$a['x_url']				= "FALSE";
+		$a['x_type']			= "AUTH_CAPTURE";
+		$a['x_method']			= "CC";
+		$a['x_tran_key']		= $cfg['transaction_key'];
+		$a['x_currency_code']	= $cfg['currency'];
+		$a['x_relay_response']	= "FALSE";
+		$a['x_card_num']		= trim( $int_var['params']['cardNumber'] );
+		$a['x_exp_date']		= str_pad( $int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ) . $int_var['params']['expirationYear'];
+		$a['x_description']		= trim( substr( AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription ), 0, 20 ) );
+		$a['x_invoice_num']		= $int_var['invoice'];
+		$a['x_amount']			= $int_var['amount'];
+		$a['x_first_name']		= trim( $int_var['params']['billFirstName'] );
+		$a['x_last_name']		= trim( $int_var['params']['billLastName'] );
 
 		if ( isset( $int_var['params']['billAddress'] ) ) {
-			$addressarray = array(
-				"x_address"				=> trim( $int_var['params']['billAddress'] ),
-				"x_city"				=> trim( $int_var['params']['billCity'] ),
-				"x_state"				=> trim( $int_var['params']['billState'] ),
-				"x_zip"					=> trim( $int_var['params']['billCountry'] )
-			);
+			$a['x_address']		= trim( $int_var['params']['billAddress'] );
+			$a['x_city']		= trim( $int_var['params']['billCity'] );
+			$a['x_state']		= trim( $int_var['params']['billState'] );
+			$a['x_zip']			= trim( $int_var['params']['billCountry'] );
+		}
 
-			$authnet_values = array_merge( $authnet_values, $addressarray );
+		if ( $cfg['testmode'] ) {
+			$a['x_test_request']		= "TRUE";
 		}
 
 		$stringarray = array();
-		foreach ( $authnet_values as $name => $value ) {
+		foreach ( $a as $name => $value ) {
 			$stringarray[] = $name . '=' . urlencode( $value );
 		}
 
