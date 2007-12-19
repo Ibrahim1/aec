@@ -850,24 +850,28 @@ class Payment_HTML
 		<?php
 	}
 
-	function error( $option, $objUser, $invoice, $error=false )
+	function error( $option, $objUser, $invoice, $error=false, $suppressactions=false )
 	{
 		global $database, $aecConfig;
 
-		$actions =	_CHECKOUT_ERROR_OPENINVOICE
-		. ' <a href="'
-		.  AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice='
-		. $invoice . '&amp;Itemid=' . $objUser->id ) . '" title="' . _GOTO_CHECKOUT . '">'
-		. _GOTO_CHECKOUT
-		. '</a>'
-		. ', ' . _GOTO_CHECKOUT_CANCEL . ' '
-		. '<a href="'
-		. AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=cancelPayment&amp;invoice='
-		. $invoice . '&amp;Itemid=' . $objUser->id . '&amp;pending=1' )
-		. '" title="' . _HISTORY_ACTION_CANCEL . '">'
-		. _HISTORY_ACTION_CANCEL
-		. '</a>'
-		;
+		if ( !$suppressactions ) {
+			$actions =	_CHECKOUT_ERROR_OPENINVOICE
+			. ' <a href="'
+			.  AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice='
+			. $invoice . '&amp;Itemid=' . $objUser->id ) . '" title="' . _GOTO_CHECKOUT . '">'
+			. _GOTO_CHECKOUT
+			. '</a>'
+			. ', ' . _GOTO_CHECKOUT_CANCEL . ' '
+			. '<a href="'
+			. AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=cancelPayment&amp;invoice='
+			. $invoice . '&amp;Itemid=' . $objUser->id . '&amp;pending=1' )
+			. '" title="' . _HISTORY_ACTION_CANCEL . '">'
+			. _HISTORY_ACTION_CANCEL
+			. '</a>'
+			;
+		} else {
+			$actions = '';
+		}
 		?>
 
 		<div class="componentheading"><?php echo _CHECKOUT_ERROR_TITLE; ?></div>
