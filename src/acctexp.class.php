@@ -3773,6 +3773,8 @@ class Invoice extends paramDBTable
 	/** @var int */
 	var $active 			= null;
 	/** @var int */
+	var $counter 			= null;
+	/** @var int */
 	var $userid 			= null;
 	/** @var int */
 	var $subscr_id 			= null;
@@ -4267,7 +4269,7 @@ class Invoice extends paramDBTable
 		if ( !empty( $this->conditions ) ) {
 			$micro_integrations = false;
 
-			if ( strpos( 'mi_attendevents' ) ) {
+			if ( strpos( $this->conditions, 'mi_attendevents' ) ) {
 				$micro_integration['name'] = 'mi_attendevents';
 				$micro_integration['parameters'] = array( 'registration_id' => $this->substring_between( $this->conditions, '<registration_id>', '</registration_id>' ) );
 				$micro_integrations = array();
