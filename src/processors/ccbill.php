@@ -68,6 +68,7 @@ class processor_ccbill extends POSTprocessor
 		$settings['formName']		= "Form Name";
 		$settings['secretWord']		= "Secret Word";
 		$settings['datalink_username']		= "Secret Word";
+		$settings['customparams']		= "";
 		$settings['rewriteInfo']	= '';
 
 		return $settings;
@@ -85,7 +86,7 @@ class processor_ccbill extends POSTprocessor
 		$settings['secretWord']		= array( 'inputC' );
 		$settings['info']			= array( 'fieldset' );
 		$settings['datalink_username']		= array( 'inputC' );
-		$settings['customparams']	= array( 'inputC' );
+		$settings['customparams']	= array( 'inputD' );
 		$settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
 		return $settings;
@@ -124,11 +125,12 @@ class processor_ccbill extends POSTprocessor
 			$rw_params = AECToolbox::rewriteEngine( $cfg['customparams'], $metaUser, $new_subscription );
 
 			$cps = explode( "\n", $rw_params );
+
 			foreach ( $cps as $cp ) {
 				$cpa = explode( '=', $cp );
 
-				if ( !empty( $cp[0] ) && isset( $cp[1] ) ) {
-					$var[$cp[0]] = $cp[1];
+				if ( !empty( $cpa[0] ) && isset( $cp[1] ) ) {
+					$var[$cpa[0]] = $cpa[1];
 				}
 			}
 		}
@@ -296,7 +298,7 @@ class processor_ccbill extends POSTprocessor
 		return $response;
 	}
 
-	function prepareValidation( $cfg, $subscription_id, $subscription_list )
+	function prepareValidation( $cfg, $subscription_list )
 	{
 		global $database;
 
@@ -327,7 +329,7 @@ class processor_ccbill extends POSTprocessor
 				$fp = null;
 				$fp = $this->fetchURL( $link );
 
-				if ( !empty( $fp ) ) {
+				if ( $fp ) {
 					$lines = explode( "\n", $fp );
 
 					$this->datalink_temp = array();
@@ -401,7 +403,11 @@ class processor_ccbill extends POSTprocessor
 		$host = $url_parsed["host"];
 		$port = $url_parsed["port"];
 		if ( $port == 0 ) {
-			$port = 80;
+			if ( strpos( "https://" ) !== false) {
+				$port = 443;
+			} else {
+				$port = 80;
+			}
 		}
 		$path = $url_parsed["path"];
 
@@ -417,16 +423,21 @@ class processor_ccbill extends POSTprocessor
 
 		$out = "GET $path HTTP/1.0\r\nHost: $host\r\n\r\n";
 		$fp = fsockopen( $host, $port, $errno, $errstr, 30 );
-		fwrite( $fp, $out );
 
-		$return = '';
-		while ( !feof( $fp ) ) {
-			$return .= fgets($fp, 1024);
+		if ( $fp ) {
+			fwrite( $fp, $out );
+
+			$return = '';
+			while ( !feof( $fp ) ) {
+				$return .= fgets($fp, 1024);
+			}
+
+			fclose( $fp );
+
+			return $return;
+		} else {
+			return false;
 		}
-
-		fclose( $fp );
-
-		return $return;
 	}
 }
 ?>

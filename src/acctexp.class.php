@@ -3758,7 +3758,7 @@ class InvoiceFactory
 class Invoice extends paramDBTable
 {
 	/** @var int Primary key */
-	var $id					= null;
+	var $id				= null;
 	/** @var int */
 	var $active 			= null;
 	/** @var int */
@@ -3766,7 +3766,7 @@ class Invoice extends paramDBTable
 	/** @var int */
 	var $userid 			= null;
 	/** @var int */
-	var $subscr_id 			= null;
+	var $subscr_id 		= null;
 	/** @var string */
 	var $invoice_number 	= null;
 	/** @var string */
@@ -3790,7 +3790,7 @@ class Invoice extends paramDBTable
 	/** @var text */
 	var $params 			= null;
 	/** @var text */
-	var $conditions			= null;
+	var $conditions		= null;
 
 	function Invoice(&$db)
 	{
