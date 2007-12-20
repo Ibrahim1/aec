@@ -323,17 +323,32 @@ class metaUser
 			$return = array();
 			foreach ( $restrictions as $name => $value ) {
 				if ( !is_null( $value ) && !($value === "") ) {
+					if ( strpos( '_excluded', $name ) ) {
+						$invert = true;
+						$name = str_replace( '_excluded', '', $name );
+					} else {
+						$invert = false;
+					}
+
+					if ( !is_array( $value ) ) {
+						if ( strpos( ';', $value ) !== false ) {
+							$check = explode( ';', $value );
+						} else {
+							$check = array( (int) $value );
+						}
+					} else {
+						$check = $value;
+					}
+
+					$status = false;
+
 					switch ( $name ) {
 						// Check for set userid
 						case 'userid':
 							if ( is_object( $this->cmsUser ) ) {
 								if ( $this->cmsUser->id === $value ) {
 									$status = true;
-								} else {
-									$status = false;
 								}
-							} else {
-								$status = false;
 							}
 							break;
 						// Check for a certain GID
@@ -341,11 +356,7 @@ class metaUser
 							if ( is_object( $this->cmsUser ) ) {
 								if ( (int) $value === (int) $this->cmsUser->gid ) {
 									$status = true;
-								} else {
-									$status = false;
 								}
-							} else {
-								$status = false;
 							}
 							break;
 						// Check for Minimum GID
@@ -354,11 +365,7 @@ class metaUser
 								$groups = GeneralInfoRequester::getLowerACLGroup( (int) $this->cmsUser->gid );
 								if ( in_array( (int) $value, (array) $groups ) ) {
 									$status = true;
-								} else {
-									$status = false;
 								}
-							} else {
-								$status = false;
 							}
 							break;
 						// Check for Maximum GID
@@ -367,8 +374,6 @@ class metaUser
 								$groups = GeneralInfoRequester::getLowerACLGroup( $value );
 								if ( in_array( (int) $this->cmsUser->gid, (array) $groups) ) {
 									$status = true;
-								} else {
-									$status = false;
 								}
 							} else {
 								$status = true;
@@ -377,16 +382,12 @@ class metaUser
 						// Check whether the user is currently in the right plan
 						case 'plan_present':
 							if ( $this->hasSubscription ) {
-								if ( (int) $this->objSubscription->plan === (int) $value ) {
+								if ( in_array( (int) $this->focusSubscription->plan, $check ) ) {
 									$status = true;
-								} else {
-									$status = false;
 								}
 							} else {
-								if ( $value === 0 ) {
+								if ( in_array( 0, $check ) ) {
 									$status = true;
-								} else {
-									$status = false;
 								}
 							}
 							break;
@@ -394,48 +395,41 @@ class metaUser
 						case 'plan_previous':
 							if ( $this->hasSubscription ) {
 								if (
-									( (int) $this->objSubscription->previous_plan === (int) $value )
-									|| ( ( ( (int) $value ) === 0 ) && is_null( $this->objSubscription->previous_plan ) )
+									( in_array( (int) $this->focusSubscription->previous_plan, $check ) )
+									|| ( ( in_array( 0, $check ) ) && is_null( $this->focusSubscription->previous_plan ) )
 									) {
 									$status = true;
-								} else {
-									$status = false;
 								}
 							} else {
-								if ( ( (int) $value ) === 0 ) {
+								if ( in_array( 0, $check ) ) {
 									$status = true;
-								} else {
-									$status = false;
 								}
 							}
 							break;
 						// Check whether the user has used the right plan before
 						case 'plan_overall':
 							if ( $this->hasSubscription ) {
-								$array = $this->objSubscription->getUsedPlans();
-								if ( ( (int) $value ) === 0 ) {
-									$status = false;
-								} elseif ( ( isset( $array[(int) $value] ) || ( $this->objSubscription->plan == $value ) ) ) {
-									$status = true;
-								} else {
-									$status = false;
+
+								$array = $this->focusSubscription->getUsedPlans();
+								foreach ( $check as $v ) {
+									if ( ( !empty( $array[(int) $v] ) || ( $this->focusSubscription->plan == $v ) ) ) {
+										$status = true;
+									}
 								}
 							} else {
-								if ( ( (int) $value ) === 0 ) {
+								if ( in_array( 0, $check ) ) {
 									$status = true;
-								} else {
-									$status = false;
 								}
 							}
 							break;
 						// Check whether the user has used the plan at least a certain number of times
 						case 'plan_amount_min':
 							if ( $this->hasSubscription ) {
-								$usage = $this->objSubscription->getUsedPlans();
+								$usage = $this->focusSubscription->getUsedPlans();
 								$check = explode( ',', $value );
 								if ( isset( $usage[(int) $check[0]] ) ) {
 									// We have to add one here if the user is currently in the plan
-									if ( (int) $this->objSubscription->plan === (int) $check[0] ) {
+									if ( (int) $this->focusSubscription->plan === (int) $check[0] ) {
 										$used_times = (int) $check[1] + 1;
 									} else {
 										$used_times = (int) $check[1];
@@ -443,24 +437,18 @@ class metaUser
 
 									if ( $usage[(int) $check[0]] >= (int) $used_times ) {
 										$status = true;
-									} else {
-										$status = false;
 									}
-								} else {
-									$status = false;
 								}
-							} else {
-								$status = false;
 							}
 							break;
 						// Check whether the user has used the plan at max a certain number of times
 						case 'plan_amount_max':
 							if ( $this->hasSubscription ) {
-								$usage = $this->objSubscription->getUsedPlans();
+								$usage = $this->focusSubscription->getUsedPlans();
 								$check = explode( ',', $value );
 								if ( isset( $usage[(int) $check[0]] ) ) {
 									// We have to add one here if the user is currently in the plan
-									if ( (int) $this->objSubscription->plan === (int) $check[0] ) {
+									if ( (int) $this->focusSubscription->plan === (int) $check[0] ) {
 										$used_times = (int) $check[1] + 1;
 									} else {
 										$used_times = (int) $check[1];
@@ -468,19 +456,20 @@ class metaUser
 
 									if ( $usage[(int) $check[0]] <= (int) $used_times ) {
 										$status = true;
-									} else {
-										$status = false;
 									}
 								} else {
 									$status = true;
 								}
-							} else {
-								$status = true;
 							}
 							break;
 					}
 				}
-				$return[$name] = $status;
+				if ( $invert ) {
+					$name = $name . '_excluded';
+					$return[$name] = !$status;
+				} else {
+					$return[$name] = $status;
+				}
 			}
 			return $return;
 		} else {

@@ -2651,11 +2651,11 @@ function editSubscriptionPlan( $id, $option )
  	}
 	$total_all_plans	= min( max( ( count( $all_plans ) + 1 ), 4 ), 20 );
 
-	$lists['previousplan_req']	= mosHTML::selectList($all_plans, 'previousplan_req', 'size="' . $total_all_plans . '"',
+	$lists['previousplan_req']	= mosHTML::selectList($all_plans, 'previousplan_req', 'size="' . $total_all_plans . '" multiple',
 									'value', 'text', arrayValueDefault($restrictions_values, 'previousplan_req', 0));
-	$lists['currentplan_req']	= mosHTML::selectList($all_plans, 'currentplan_req', 'size="' . $total_all_plans . '"',
+	$lists['currentplan_req']	= mosHTML::selectList($all_plans, 'currentplan_req', 'size="' . $total_all_plans . '" multiple',
 									'value', 'text', arrayValueDefault($restrictions_values, 'currentplan_req', 0));
-	$lists['overallplan_req']	= mosHTML::selectList($all_plans, 'overallplan_req', 'size="' . $total_all_plans . '"',
+	$lists['overallplan_req']	= mosHTML::selectList($all_plans, 'overallplan_req', 'size="' . $total_all_plans . '" multiple',
 									'value', 'text', arrayValueDefault($restrictions_values, 'overallplan_req', 0));
 	$lists['used_plan_min']		= mosHTML::selectList($all_plans, 'used_plan_min', 'size="' . $total_all_plans . '"',
 									'value', 'text', arrayValueDefault($restrictions_values, 'used_plan_min', 0));
@@ -2700,7 +2700,18 @@ function editSubscriptionPlan( $id, $option )
 function arrayValueDefault( $array, $name, $default )
 {
 	if ( isset( $array[$name] ) ) {
-		return $array[$name];
+		if ( strpos( ';', $array[$name] ) !== false ) {
+			$list = explode( ';', $array[$name] );
+
+			$selected = array();
+			foreach ( $list as $value ) {
+				$selected[]->value = $value;
+			}
+
+			return $selected;
+		} else {
+			return $array[$name];
+		}
 	} else {
 		return $default;
 	}
