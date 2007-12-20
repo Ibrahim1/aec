@@ -55,7 +55,7 @@ class mi_idevaffiliate
 		}
 
 		if ( !empty( $params['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $params['customparams'], $metaUser, $plan );
+			$rw_params = AECToolbox::rewriteEngine( $params['customparams'], $metaUser, $plan, $invoice );
 
 			$cps = explode( "\n", $rw_params );
 

@@ -111,7 +111,7 @@ class processor_paypal extends POSTprocessor
 		$settings['image_url']				= array( 'inputE' );
 		$settings['page_style']				= array( 'inputE' );
 
-        $settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+		$settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
 		return $settings;
 	}

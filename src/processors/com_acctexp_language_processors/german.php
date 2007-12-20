@@ -88,6 +88,8 @@ define( '_CFG_PROCESSOR_DESC_DESC',			'Soll die Beschreibung f&uuml;r dieses Gat
 define( '_CFG_PROCESSOR_ITEM_NAME_NAME',	'Artikelbeschreibung' );
 define( '_CFG_PROCESSOR_ITEM_NAME_DESC',	'Artikelbeschreibung dieses Services' );
 define( '_CFG_PROCESSOR_ITEM_NAME_DEFAULT',	'Abonnement auf %s - Benutzer: %s (%s)' );
+define( '_CFG_PROCESSOR_CUSTOMPARAMS_NAME', 'Custom Parameters');
+define( '_CFG_PROCESSOR_CUSTOMPARAMS_DESC', 'Custom Parameters that the AEC should transmit to the Payment Processor on Checkout. Separated by linebreaks in the form of "parameter_name=parameter_value". The RewriteEngine works as specified below.');
 
 // Generic Credit Card Form
 define( '_AEC_CCFORM_CARDHOLDER_NAME', 'Cardholder\'s Name');

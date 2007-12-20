@@ -68,6 +68,7 @@ class processor_ccbill extends POSTprocessor
 		$settings['formName']		= "Form Name";
 		$settings['secretWord']		= "Secret Word";
 		$settings['datalink_username']		= "Secret Word";
+		$settings['rewriteInfo']	= '';
 
 		return $settings;
 	}
@@ -75,12 +76,18 @@ class processor_ccbill extends POSTprocessor
 	function backend_settings( $cfg )
 	{
 		$settings = array();
+		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
+
+		$settings = array();
 		$settings['clientAccnum']	= array( 'inputC' );
 		$settings['clientSubacc']	= array( 'inputC' );
 		$settings['formName']		= array( 'inputC' );
 		$settings['secretWord']		= array( 'inputC' );
 		$settings['info']			= array( 'fieldset' );
 		$settings['datalink_username']		= array( 'inputC' );
+		$settings['customparams']	= array( 'inputC' );
+		$settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+
 		return $settings;
 	}
 
@@ -111,6 +118,19 @@ class processor_ccbill extends POSTprocessor
 
 		if ( !empty( $int_var['planparams']['Allowedtypes'] ) ) {
 			$var['allowedTypes'] = $int_var['planparams']['Allowedtypes'];
+		}
+
+		if ( !empty( $cfg['customparams'] ) ) {
+			$rw_params = AECToolbox::rewriteEngine( $cfg['customparams'], $metaUser, $new_subscription );
+
+			$cps = explode( "\n", $rw_params );
+			foreach ( $cps as $cp ) {
+				$cpa = explode( '=', $cp );
+
+				if ( !empty( $cp[0] ) && isset( $cp[1] ) ) {
+					$var[$cp[0]] = $cp[1];
+				}
+			}
 		}
 
 		return $var;
