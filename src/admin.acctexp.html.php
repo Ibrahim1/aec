@@ -1770,12 +1770,24 @@ class HTML_AcctExp
 										<?php echo $aecHTML->createSettingsParticle( 'previousplan_req' ); ?>
 									</div>
 									<div style="position:relative;float:left;width:200px;">
+										<?php echo $aecHTML->createSettingsParticle( 'previousplan_req_enabled_excluded' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'previousplan_req_excluded' ); ?>
+									</div>
+									<div style="position:relative;float:left;width:200px;">
 										<?php echo $aecHTML->createSettingsParticle( 'currentplan_req_enabled' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'currentplan_req' ); ?>
 									</div>
 									<div style="position:relative;float:left;width:200px;">
+										<?php echo $aecHTML->createSettingsParticle( 'currentplan_req_enabled_excluded' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'currentplan_req_excluded' ); ?>
+									</div>
+									<div style="position:relative;float:left;width:200px;">
 										<?php echo $aecHTML->createSettingsParticle( 'overallplan_req_enabled' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'overallplan_req' ); ?>
+									</div>
+									<div style="position:relative;float:left;width:200px;">
+										<?php echo $aecHTML->createSettingsParticle( 'overallplan_req_enabled_excluded' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'overallplan_req_excluded' ); ?>
 									</div>
 								</div>
 								<div class="userinfobox">

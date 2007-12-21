@@ -403,7 +403,7 @@ class processor_ccbill extends POSTprocessor
 		$host = $url_parsed["host"];
 		$port = $url_parsed["port"];
 		if ( $port == 0 ) {
-			if ( strpos( "https://" ) !== false) {
+			if ( strpos( $url, "https://" ) !== false) {
 				$port = 443;
 			} else {
 				$port = 80;

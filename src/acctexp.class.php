@@ -2664,21 +2664,42 @@ class SubscriptionPlan extends paramDBTable
 		// Check for a directly previously used plan
 		if ( !empty( $restrictions['previousplan_req_enabled'] ) ) {
 			if ( isset( $restrictions['previousplan_req'] ) ) {
-				$planrestrictions['plan_previous'] = (int) $restrictions['previousplan_req'];
+				$planrestrictions['plan_previous'] = $restrictions['previousplan_req'];
 			}
 		}
 
 		// Check for a currently used plan
 		if ( !empty( $restrictions['currentplan_req_enabled'] ) ) {
 			if ( isset( $restrictions['currentplan_req'] ) ) {
-				$planrestrictions['plan_present'] = (int) $restrictions['currentplan_req'];
+				$planrestrictions['plan_present'] = $restrictions['currentplan_req'];
 			}
 		}
 
 		// Check for a overall used plan
 		if ( !empty( $restrictions['overallplan_req_enabled'] ) ) {
 			if ( isset( $restrictions['overallplan_req'] ) ) {
-				$planrestrictions['plan_overall'] = (int) $restrictions['overallplan_req'];
+				$planrestrictions['plan_overall'] = $restrictions['overallplan_req'];
+			}
+		}
+
+		// Check for a directly previously used plan
+		if ( !empty( $restrictions['previousplan_req_enabled_excluded'] ) ) {
+			if ( isset( $restrictions['previousplan_req_excluded'] ) ) {
+				$planrestrictions['plan_previous_excluded'] = $restrictions['previousplan_req_excluded'];
+			}
+		}
+
+		// Check for a currently used plan
+		if ( !empty( $restrictions['currentplan_req_enabled_excluded'] ) ) {
+			if ( isset( $restrictions['currentplan_req_excluded'] ) ) {
+				$planrestrictions['plan_present_excluded'] = $restrictions['currentplan_req_excluded'];
+			}
+		}
+
+		// Check for a overall used plan
+		if ( !empty( $restrictions['overallplan_req_enabled_excluded'] ) ) {
+			if ( isset( $restrictions['overallplan_req_excluded'] ) ) {
+				$planrestrictions['plan_overall_excluded'] = $restrictions['overallplan_req_excluded'];
 			}
 		}
 
@@ -2788,12 +2809,13 @@ class SubscriptionPlan extends paramDBTable
 		$this->saveParams( $params );
 
 		// Filter out restrictions
-		$fixed = array( 'mingid_enabled', 'mingid', 'fixgid_enabled',
-						'fixgid', 'maxgid_enabled', 'maxgid', 'previousplan_req_enabled',
-						'previousplan_req', 'currentplan_req_enabled', 'currentplan_req', 'overallplan_req_enabled',
-						'overallplan_req', 'used_plan_min_enabled', 'used_plan_min_amount', 'used_plan_min',
-						'used_plan_max_enabled', 'used_plan_max_amount', 'used_plan_max', 'custom_restrictions_enabled',
-						'custom_restrictions' );
+		$fixed = array( 'mingid_enabled', 'mingid', 'fixgid_enabled', 'fixgid',
+						'maxgid_enabled', 'maxgid', 'previousplan_req_enabled', 'previousplan_req',
+						'currentplan_req_enabled', 'currentplan_req', 'overallplan_req_enabled', 'overallplan_req',
+						'previousplan_req_enabled', 'previousplan_req', 'currentplan_req_enabled', 'currentplan_req',
+						'overallplan_req_enabled', 'overallplan_req', 'used_plan_min_enabled', 'used_plan_min_amount',
+						'used_plan_min', 'used_plan_max_enabled', 'used_plan_max_amount', 'used_plan_max',
+						'custom_restrictions_enabled', 'custom_restrictions' );
 
 		$restrictions = array();
 		foreach ( $fixed as $varname ) {

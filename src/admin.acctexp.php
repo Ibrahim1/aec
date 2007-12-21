@@ -2370,10 +2370,16 @@ function editSubscriptionPlan( $id, $option )
 	$params['maxgid']					= array( 'list', 21 );
 	$params['previousplan_req_enabled'] = array( 'list_yesno', 0 );
 	$params['previousplan_req']			= array( 'list', 0 );
+	$params['previousplan_req_enabled_excluded']	= array( 'list_yesno', 0 );
+	$params['previousplan_req_excluded']			= array( 'list', 0 );
 	$params['currentplan_req_enabled']	= array( 'list_yesno', 0 );
 	$params['currentplan_req']			= array( 'list', 0 );
+	$params['currentplan_req_enabled_excluded']	= array( 'list_yesno', 0 );
+	$params['currentplan_req_excluded']			= array( 'list', 0 );
 	$params['overallplan_req_enabled']	= array( 'list_yesno', 0 );
 	$params['overallplan_req']			= array( 'list', 0 );
+	$params['overallplan_req_enabled_excluded']	= array( 'list_yesno', 0 );
+	$params['overallplan_req_excluded']			= array( 'list', 0 );
 	$params['used_plan_min_enabled']	= array( 'list_yesno', 0 );
 	$params['used_plan_min_amount']		= array( 'inputB', 0 );
 	$params['used_plan_min']			= array( 'list', 0 );
@@ -2662,6 +2668,13 @@ function editSubscriptionPlan( $id, $option )
 	$lists['used_plan_max']		= mosHTML::selectList($all_plans, 'used_plan_max', 'size="' . $total_all_plans . '"',
 									'value', 'text', arrayValueDefault($restrictions_values, 'used_plan_max', 0));
 
+	$lists['previousplan_req_excluded']	= mosHTML::selectList($all_plans, 'previousplan_req_excluded', 'size="' . $total_all_plans . '" multiple',
+									'value', 'text', arrayValueDefault($restrictions_values, 'previousplan_req_excluded', 0));
+	$lists['currentplan_req_excluded']	= mosHTML::selectList($all_plans, 'currentplan_req_excluded', 'size="' . $total_all_plans . '" multiple',
+									'value', 'text', arrayValueDefault($restrictions_values, 'currentplan_req_excluded', 0));
+	$lists['overallplan_req_excluded']	= mosHTML::selectList($all_plans, 'overallplan_req_excluded', 'size="' . $total_all_plans . '" multiple',
+									'value', 'text', arrayValueDefault($restrictions_values, 'overallplan_req_excluded', 0));
+
 	// get available micro integrations
 	$query = 'SELECT id AS value, CONCAT(`name`, " - ", `desc`) AS text'
 	. ' FROM #__acctexp_microintegrations'
@@ -2687,7 +2700,7 @@ function editSubscriptionPlan( $id, $option )
 		$settingsparams = array_merge( $params_values, $restrictions_values );
 	}
 	$settings->fullSettingsArray( $params, $settingsparams, $lists) ;
-//print_r($params);print_r($lists);exit();
+
 	// Call HTML Class
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 	if ( !empty( $customparamsarray ) ) {
