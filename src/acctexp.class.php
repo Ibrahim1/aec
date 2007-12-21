@@ -2812,8 +2812,8 @@ class SubscriptionPlan extends paramDBTable
 		$fixed = array( 'mingid_enabled', 'mingid', 'fixgid_enabled', 'fixgid',
 						'maxgid_enabled', 'maxgid', 'previousplan_req_enabled', 'previousplan_req',
 						'currentplan_req_enabled', 'currentplan_req', 'overallplan_req_enabled', 'overallplan_req',
-						'previousplan_req_enabled', 'previousplan_req', 'currentplan_req_enabled', 'currentplan_req',
-						'overallplan_req_enabled', 'overallplan_req', 'used_plan_min_enabled', 'used_plan_min_amount',
+						'previousplan_req_enabled_excluded', 'previousplan_req_excluded', 'currentplan_req_enabled_excluded', 'currentplan_req_excluded',
+						'overallplan_req_enabled_excluded', 'overallplan_req_excluded', 'used_plan_min_enabled', 'used_plan_min_amount',
 						'used_plan_min', 'used_plan_max_enabled', 'used_plan_max_amount', 'used_plan_max',
 						'custom_restrictions_enabled', 'custom_restrictions' );
 

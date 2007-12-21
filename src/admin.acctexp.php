@@ -2623,7 +2623,7 @@ function editSubscriptionPlan( $id, $option )
 		$sel_similar_plans = 0;
 	}
 
-	$lists['similarplans'] = mosHTML::selectList($payment_plans, 'similarplans[]', 'size="' . $total_plans . '" multiple', 'value', 'text', $sel_similar_plans);
+	$lists['similarplans'] = mosHTML::selectList($payment_plans, 'similarplans[]', 'size="' . $total_plans . '" multiple="multiple"', 'value', 'text', $sel_similar_plans);
 
 	// get equal plans
 	if ( !empty( $params_values['equalplans'] ) ) {
@@ -2638,7 +2638,7 @@ function editSubscriptionPlan( $id, $option )
 		$sel_equal_plans = 0;
 	}
 
-	$lists['equalplans'] = mosHTML::selectList($payment_plans, 'equalplans[]', 'size="' . $total_plans . '" multiple', 'value', 'text', $sel_equal_plans);
+	$lists['equalplans'] = mosHTML::selectList($payment_plans, 'equalplans[]', 'size="' . $total_plans . '" multiple="multiple"', 'value', 'text', $sel_equal_plans);
 
 	// get available plans
 	$available_plans = array();
@@ -2657,22 +2657,22 @@ function editSubscriptionPlan( $id, $option )
  	}
 	$total_all_plans	= min( max( ( count( $all_plans ) + 1 ), 4 ), 20 );
 
-	$lists['previousplan_req']	= mosHTML::selectList($all_plans, 'previousplan_req', 'size="' . $total_all_plans . '" multiple',
+	$lists['previousplan_req']	= mosHTML::selectList($all_plans, 'previousplan_req[]', 'size="' . $total_all_plans . '" multiple="multiple"',
 									'value', 'text', arrayValueDefault($restrictions_values, 'previousplan_req', 0));
-	$lists['currentplan_req']	= mosHTML::selectList($all_plans, 'currentplan_req', 'size="' . $total_all_plans . '" multiple',
+	$lists['currentplan_req']	= mosHTML::selectList($all_plans, 'currentplan_req[]', 'size="' . $total_all_plans . '" multiple="multiple"',
 									'value', 'text', arrayValueDefault($restrictions_values, 'currentplan_req', 0));
-	$lists['overallplan_req']	= mosHTML::selectList($all_plans, 'overallplan_req', 'size="' . $total_all_plans . '" multiple',
+	$lists['overallplan_req']	= mosHTML::selectList($all_plans, 'overallplan_req[]', 'size="' . $total_all_plans . '" multiple="multiple"',
 									'value', 'text', arrayValueDefault($restrictions_values, 'overallplan_req', 0));
 	$lists['used_plan_min']		= mosHTML::selectList($all_plans, 'used_plan_min', 'size="' . $total_all_plans . '"',
 									'value', 'text', arrayValueDefault($restrictions_values, 'used_plan_min', 0));
 	$lists['used_plan_max']		= mosHTML::selectList($all_plans, 'used_plan_max', 'size="' . $total_all_plans . '"',
 									'value', 'text', arrayValueDefault($restrictions_values, 'used_plan_max', 0));
 
-	$lists['previousplan_req_excluded']	= mosHTML::selectList($all_plans, 'previousplan_req_excluded', 'size="' . $total_all_plans . '" multiple',
+	$lists['previousplan_req_excluded']	= mosHTML::selectList($all_plans, 'previousplan_req_excluded[]', 'size="' . $total_all_plans . '" multiple="multiple"',
 									'value', 'text', arrayValueDefault($restrictions_values, 'previousplan_req_excluded', 0));
-	$lists['currentplan_req_excluded']	= mosHTML::selectList($all_plans, 'currentplan_req_excluded', 'size="' . $total_all_plans . '" multiple',
+	$lists['currentplan_req_excluded']	= mosHTML::selectList($all_plans, 'currentplan_req_excluded[]', 'size="' . $total_all_plans . '" multiple="multiple"',
 									'value', 'text', arrayValueDefault($restrictions_values, 'currentplan_req_excluded', 0));
-	$lists['overallplan_req_excluded']	= mosHTML::selectList($all_plans, 'overallplan_req_excluded', 'size="' . $total_all_plans . '" multiple',
+	$lists['overallplan_req_excluded']	= mosHTML::selectList($all_plans, 'overallplan_req_excluded[]', 'size="' . $total_all_plans . '" multiple="multiple"',
 									'value', 'text', arrayValueDefault($restrictions_values, 'overallplan_req_excluded', 0));
 
 	// get available micro integrations
@@ -2691,7 +2691,7 @@ function editSubscriptionPlan( $id, $option )
  	$database->setQuery( $query );
 	$selected_mi = $database->loadObjectList();
 
-	$lists['micro_integrations'] = mosHTML::selectList($mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple', 'value', 'text', $selected_mi);
+	$lists['micro_integrations'] = mosHTML::selectList($mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $selected_mi);
 
 	$settings = new aecSettings ( 'payplan', 'general' );
 	if ( is_array( $customparams_values ) ) {
@@ -2713,7 +2713,7 @@ function editSubscriptionPlan( $id, $option )
 function arrayValueDefault( $array, $name, $default )
 {
 	if ( isset( $array[$name] ) ) {
-		if ( strpos( ';', $array[$name] ) !== false ) {
+		if ( strpos( $array[$name], ';' ) !== false ) {
 			$list = explode( ';', $array[$name] );
 
 			$selected = array();
