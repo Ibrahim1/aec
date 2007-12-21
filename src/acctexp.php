@@ -94,9 +94,9 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'savesubscription':
-			$userid = trim( mosGetParam( $_REQUEST, 'userid', 0 ) );
-			$usage = trim( mosGetParam( $_REQUEST, 'usage', 0 ) );
-			$processor = trim( mosGetParam( $_REQUEST, 'processor', null ) );
+			$userid = aecGetParam( 'userid' );
+			$usage = aecGetParam( 'usage' );
+			$processor = aecGetParam( 'processor' );
 
 			$invoicefact = new InvoiceFactory( $userid, $usage, $processor );
 			$invoicefact->save( $option, $_POST );
@@ -993,4 +993,16 @@ function cancelPayment( $option )
 		HTML_Results::cancel( $option );
 	}
 }
+
+function aecGetParam( $name )
+{
+	$return = trim( mosGetParam( $_REQUEST, $name, '' ) );
+
+	if ( empty( $return ) && !empty( $_POST[(string) $name] ) ) {
+		$processor = $_POST[(string) $name];
+	}
+
+	return $return;
+}
+
 ?>

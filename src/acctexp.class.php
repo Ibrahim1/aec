@@ -3498,7 +3498,7 @@ class InvoiceFactory
 
 	function save( $option, $var )
 	{
-		global $database, $mainframe, $task; // Need to load $acl for Joomla and CBE
+		global $database, $mainframe, $task;
 
 		if ( isset( $var['task'] ) ) {
 			unset( $var['task'] );
@@ -4849,11 +4849,9 @@ class Subscription extends paramDBTable
 
 			if ( $expire ) {
 				mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=expired&Itemid=' . $this->userid ) );
-				exit();
 			}
 		} elseif ( ( strcmp( $this->status, 'Pending' ) === 0 ) || $block ) {
 			mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=pending&Itemid=' . $this->userid ) );
-			exit();
 		}
 	}
 
@@ -4882,11 +4880,9 @@ class Subscription extends paramDBTable
 
 			if ( $expire ) {
 				JApplication::redirect( '/index.php?option=com_acctexp&task=expired&Itemid=' . $this->userid );
-				exit();
 			}
 		} elseif ( ( strcmp( $this->status, 'Pending' ) === 0 ) || $block ) {
 			JApplication::redirect( '/index.php?option=com_acctexp&task=pending&Itemid=' . $this->userid );
-			exit();
 		}
 	}
 

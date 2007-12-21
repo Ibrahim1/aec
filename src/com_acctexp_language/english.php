@@ -189,7 +189,7 @@ define( '_SUB_FEPARTICLE_MAIL', 'You will receive an e-mail once our system has 
 
 // --== CHECKOUT ERROR PAGE ==--
 define( '_CHECKOUT_ERROR_TITLE', 'Error while processing the payment!');
-define( '_CHECKOUT_ERROR_EXPLANATION', 'An error occured while processing your payment');
+define( '_CHECKOUT_ERROR_EXPLANATION', 'An error occurred while processing your payment');
 define( '_CHECKOUT_ERROR_OPENINVOICE', 'This leaves your invoice uncleared. To retry the payment, you can go to the checkout page once again to try again:');
 
 // --== COUPON INFO ==--
