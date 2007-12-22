@@ -40,18 +40,14 @@ class mi_http_query_cod
 	{
 		global $database;
 
+		$metaUser->loadCBuser();
+
 		if ( $metaUser->focusSubscription->previous_plan == 8 ) {
 			if ( in_array( $plan->id, array( 6, 10, 12 ) ) ) {
-				$query = 'UPDATE #__comprofiler'
-					. ' SET cb_orgid = \'' . (int) $metaUser->username . '\''
-					. ' WHERE user_id = \'' . (int) $metaUser->userid . '\'';
-				$database->setQuery( $query );
-				$database->query();
+				$metaUser->cbUser->cb_orgid = (int) $metaUser->username;
 			}
 		}
 
-		$metaUser->loadCBuser();
-//print_r($metaUser);print_r($this);exit();
 		$plansabbrev = array(
 								6 => 'AS',
 								7 => 'AP',
@@ -95,6 +91,16 @@ class mi_http_query_cod
 		$return = $this->fetchURL( $link );
 
 		if ( strpos( $return, "<Errors>" ) === false ) {
+			if ( $metaUser->focusSubscription->previous_plan == 8 ) {
+				if ( in_array( $plan->id, array( 6, 10, 12 ) ) ) {
+					$query = 'UPDATE #__comprofiler'
+						. ' SET cb_orgid = \'' . (int) $metaUser->username . '\''
+						. ' WHERE user_id = \'' . (int) $metaUser->userid . '\'';
+					$database->setQuery( $query );
+					$database->query();
+				}
+			}
+
 			return true;
 		} else {
 			global $mainframe, $acl, $database;
@@ -103,8 +109,6 @@ class mi_http_query_cod
 			// The user plan should go to the fallback as specified in AEC for that plan
 			$plan = new SubscriptionPlan( $database );
 			$plan->load( $metaUser->focusSubscription->plan );
-
-			$metaUser->focusSubscription->expire();
 
 			// The error should be logged somewhere … a file? the AEC event log?
 			$eventlog = new eventLog( $database );
@@ -153,6 +157,7 @@ class mi_http_query_cod
 
 			// The user should be given the error message
 			Payment_HTML::error( 'com_acctexp', $metaUser->cmsUser, $invoice->invoice_number, "You are not listed in our customer database. Please contact the System Administrator!", true );
+			return false;
 		}
 	}
 

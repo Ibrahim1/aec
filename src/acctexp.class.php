@@ -2413,9 +2413,6 @@ class SubscriptionPlan extends paramDBTable
 				$metaUser->focusSubscription->recurring = 0;
 			}
 
-			$metaUser->focusSubscription->check();
-			$metaUser->focusSubscription->store();
-
 			if ( $params['gid_enabled'] ) {
 				$metaUser->instantGIDchange($params['gid']);
 			}
@@ -2431,11 +2428,18 @@ class SubscriptionPlan extends paramDBTable
 					$mi->load( $mi_id );
 					if ( $mi->callIntegration() ) {
 						if ( ( ( strcmp( $mi->class_name, 'mi_email' ) === 0 ) && !$silent ) || ( strcmp( $mi->class_name, 'mi_email' ) !== 0 ) )
-						$mi->action( $metaUser, null, null, $this );
+						if ( $mi->action( $metaUser, null, null, $this ) === false ) {
+							return false;
+						}
 					}
 				}
 				unset($mi);
 			}
+		}
+
+		if ( $userid ) {
+			$metaUser->focusSubscription->check();
+			$metaUser->focusSubscription->store();
 		}
 
 		if ( !( $silent && $aecConfig->cfg['noemails'] ) ) {
@@ -3540,9 +3544,12 @@ class InvoiceFactory
 
 		 	if ( $params['full_free'] || ( $params['trial_free'] &&
 		 	( strcmp( $this->objInvoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) ) ) {
-				$this->objInvoice->pay();
-				thanks ( $option, $this->renew, 1 );
-				return;
+				if ( $this->objInvoice->pay() !== false ) {
+					thanks ( $option, $this->renew, 1 );
+					return;
+				} else {
+					return;
+				}
 		 	} else {
 		 		return;
 		 	}
@@ -4271,9 +4278,13 @@ class Invoice extends paramDBTable
 				}
 
 				// Apply the Plan
-				$renew = $metaUser->focusSubscription->applyUsage( $this->usage, $this->method, 0, $multiplicator );
+				$application = $metaUser->focusSubscription->applyUsage( $this->usage, $this->method, 0, $multiplicator );
 			} else {
-				$new_plan->applyPlan( 0, $this->method, 0, $multiplicator );
+				$application = $new_plan->applyPlan( 0, $this->method, 0, $multiplicator );
+			}
+
+			if ( $application === false ) {
+				return false;
 			}
 		}
 
@@ -4337,9 +4348,15 @@ class Invoice extends paramDBTable
 							$mi->load( $mi_id );
 							if ( $mi->callIntegration() ) {
 								if ( is_object( $metaUser ) ) {
-									$mi->action( $metaUser->userid, null, $this, $new_plan );
+									if ( $mi->action( $metaUser->userid, null, $this, $new_plan ) === false ) {
+										return false;
+									} else {
+									}
 								} else {
-									$mi->action( false, null, $this, $new_plan );
+									if ( $mi->action( false, null, $this, $new_plan ) === false ) {
+										return false;
+									} else {
+									}
 								}
 							}
 						}
@@ -5003,8 +5020,7 @@ class Subscription extends paramDBTable
 		$new_plan->load( $usage );
 
 		if ( $new_plan->id ) {
-			$renew = $new_plan->applyPlan( $this->userid, $processor, $silent, $multiplicator );
-			return $renew;
+			return $new_plan->applyPlan( $this->userid, $processor, $silent, $multiplicator );
 		} else {
 			return false;
 		}
@@ -6480,7 +6496,7 @@ class microIntegration extends paramDBTable
 			$params = $this->getParams();
 		}
 
-		$this->mi_class->action( $params, $metaUser, $invoice, $objplan );
+		return $this->mi_class->action( $params, $metaUser, $invoice, $objplan );
 	}
 
 	function pre_expiration_action( $metaUser, $objplan=null )
@@ -6488,10 +6504,10 @@ class microIntegration extends paramDBTable
 		$params = $this->getParams();
 
 		if ( method_exists( $this->mi_class, 'pre_expiration_action' ) ) {
-			$return = $this->mi_class->pre_expiration_action( $params, $metaUser, $objplan );
+			return  $this->mi_class->pre_expiration_action( $params, $metaUser, $objplan );
+		} else {
+			return null;
 		}
-
-		return $return;
 	}
 
 	function expiration_action( $metaUser, $objplan=null )
@@ -6499,7 +6515,9 @@ class microIntegration extends paramDBTable
 		$params = $this->getParams();
 
 		if ( method_exists( $this->mi_class, 'expiration_action' ) ) {
-			$this->mi_class->expiration_action( $params, $metaUser, $objplan );
+			return $this->mi_class->expiration_action( $params, $metaUser, $objplan );
+		} else {
+			return null;
 		}
 	}
 
@@ -6508,7 +6526,9 @@ class microIntegration extends paramDBTable
 		$params = $this->getParams();
 
 		if ( method_exists( $this->mi_class, 'on_userchange_action' ) ) {
-			$this->mi_class->on_userchange_action( $params, $row, $post, $trace );
+			return $this->mi_class->on_userchange_action( $params, $row, $post, $trace );
+		} else {
+			return null;
 		}
 	}
 
@@ -6517,10 +6537,9 @@ class microIntegration extends paramDBTable
 		$params = $this->getParams();
 
 		if ( method_exists( $this->mi_class, 'profile_info' ) ) {
-			$return = $this->mi_class->profile_info( $params, $userid );
-			return $return;
+			return $this->mi_class->profile_info( $params, $userid );
 		} else {
-			return false;
+			return null;
 		}
 	}
 
