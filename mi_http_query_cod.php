@@ -78,6 +78,11 @@ class mi_http_query_cod
 		$a['Operation'] = "RegisterTransaction";
 		$a['CustomerID'] = $metaUser->cmsUser->username;
 		$a['UserID'] = $metaUser->cbUser->cb_orgid;
+
+		// Fixing variables for now
+		$a['CustomerID'] = 'deutsch';
+		$a['UserID'] = 'brendainc';
+
 		$a['TransactionTypeID'] = "JOOMLA";
 		$a['Description'] = $prev . '-' . $cur . '-' . $invoice->counter;
 

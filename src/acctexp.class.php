@@ -2322,9 +2322,11 @@ class SubscriptionPlan extends paramDBTable
 				$params['make_primary'] = 1;
 			}
 
-			if ( $params['make_primary'] && $metaUser->hasSubscription ) {
+			if ( $params['make_primary'] ) {
 				$primary = 1;
-			} else {
+			}
+
+			if ( !$metaUser->hasSubscription || empty( $params['make_primary'] ) ) {
 				$metaUser->establishFocus( $this, $processor );
 			}
 
@@ -2381,7 +2383,7 @@ class SubscriptionPlan extends paramDBTable
 						if ( !isset( $params['make_active'] ) ) {
 							$status = 'Active';
 						} else {
-							$status = ( $params['make_active'] ? 'Active' : 'Pending');
+							$status = ( $params['make_active'] ? 'Active' : 'Pending' );
 						}
 					} else {
 						// This should not happen
@@ -2393,7 +2395,7 @@ class SubscriptionPlan extends paramDBTable
 				if ( !isset( $params['make_active'] ) ) {
 					$status = 'Active';
 				} else {
-					$status = ( $params['make_active'] ? 'Active' : 'Pending');
+					$status = ( $params['make_active'] ? 'Active' : 'Pending' );
 				}
 				$renew = 1;
 			}
@@ -2427,9 +2429,10 @@ class SubscriptionPlan extends paramDBTable
 				if ( $mi->mi_exists( $mi_id ) ) {
 					$mi->load( $mi_id );
 					if ( $mi->callIntegration() ) {
-						if ( ( ( strcmp( $mi->class_name, 'mi_email' ) === 0 ) && !$silent ) || ( strcmp( $mi->class_name, 'mi_email' ) !== 0 ) )
-						if ( $mi->action( $metaUser, null, null, $this ) === false ) {
-							return false;
+						if ( ( ( strcmp( $mi->class_name, 'mi_email' ) === 0 ) && !$silent ) || ( strcmp( $mi->class_name, 'mi_email' ) !== 0 ) ) {
+							if ( $mi->action( $metaUser, null, null, $this ) === false ) {
+								return false;
+							}
 						}
 					}
 				}
@@ -4329,7 +4332,7 @@ class Invoice extends paramDBTable
 						}
 					}
 
-					unset($mi);
+					unset( $mi );
 				}
 			}
 		}
@@ -4367,7 +4370,7 @@ class Invoice extends paramDBTable
 
 		$this->setTransactionDate();
 
-		return $renew;
+		return $application;
 	}
 
 	function substring_between( $haystack, $start, $end )
