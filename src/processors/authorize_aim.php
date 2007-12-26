@@ -59,6 +59,7 @@ class processor_authorize_aim extends XMLprocessor
 		$settings['testmode']			= 0;
 		$settings['currency']			= "USD";
 		$settings['promptAddress']		= 0;
+		$settings['promptZipOnly']		= 0;
 		$settings['totalOccurrences']	= 12;
 		$settings['trialOccurrences']	= 1;
 		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
@@ -75,6 +76,7 @@ class processor_authorize_aim extends XMLprocessor
 		$settings['transaction_key']	= array("inputC");
 		$settings['currency']			= array("list_currency");
 		$settings['promptAddress']		= array("list_yesno");
+		$settings['promptZipOnly']		= array("list_yesno");
 		$settings['totalOccurrences']	= array("inputA");
 		$settings['trialOccurrences']	= array("inputA");
 		$settings['item_name']			= array("inputE");
@@ -99,12 +101,18 @@ class processor_authorize_aim extends XMLprocessor
 		$var['params']['billFirstName'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLFIRSTNAME_NAME, _AEC_AUTHORIZE_AIM_PARAMS_BILLFIRSTNAME_DESC, $name[0]);
 		$var['params']['billLastName'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLLASTNAME_NAME, _AEC_AUTHORIZE_AIM_PARAMS_BILLLASTNAME_DESC, $name[1]);
 
-		if ( !empty( $cfg['promptAddress'] ) ) {
-			$var['params']['billAddress'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLADDRESS_NAME );
-			$var['params']['billCity'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLCITY_NAME );
-			$var['params']['billState'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLSTATE_NAME );
+		if ( !empty( $cfg['promptAddress'] ) || !empty( $cfg['promptZipOnly'] ) ) {
+			if ( empty( $cfg['promptZipOnly'] ) ) {
+				$var['params']['billAddress'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLADDRESS_NAME );
+				$var['params']['billCity'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLCITY_NAME );
+				$var['params']['billState'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLSTATE_NAME );
+			}
+
 			$var['params']['billZip'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLZIP_NAME );
-			$var['params']['billCountry'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLCOUNTRY_NAME );
+
+			if ( empty( $cfg['promptZipOnly'] ) ) {
+				$var['params']['billCountry'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLCOUNTRY_NAME );
+			}
 		}
 
 		return $var;
@@ -134,11 +142,18 @@ class processor_authorize_aim extends XMLprocessor
 		$a['x_first_name']		= trim( $int_var['params']['billFirstName'] );
 		$a['x_last_name']		= trim( $int_var['params']['billLastName'] );
 
-		if ( isset( $int_var['params']['billAddress'] ) ) {
-			$a['x_address']		= trim( $int_var['params']['billAddress'] );
-			$a['x_city']		= trim( $int_var['params']['billCity'] );
-			$a['x_state']		= trim( $int_var['params']['billState'] );
-			$a['x_zip']			= trim( $int_var['params']['billCountry'] );
+		if ( isset( $int_var['params']['billZip'] ) ) {
+			if ( isset( $int_var['params']['billAddress'] ) ) {
+				$a['x_address']		= trim( $int_var['params']['billAddress'] );
+				$a['x_city']		= trim( $int_var['params']['billCity'] );
+				$a['x_state']		= trim( $int_var['params']['billState'] );
+			}
+
+			$a['x_zip']			= trim( $int_var['params']['billZip'] );
+
+			if ( isset( $int_var['params']['billAddress'] ) ) {
+				$a['x_country']			= trim( $int_var['params']['billCountry'] );
+			}
 		}
 
 		if ( $cfg['testmode'] ) {
