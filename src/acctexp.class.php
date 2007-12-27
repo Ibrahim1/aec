@@ -331,7 +331,7 @@ class metaUser
 					}
 
 					if ( !is_array( $value ) ) {
-						if ( strpos( ';', $value ) !== false ) {
+						if ( strpos( $value, ';' ) !== false ) {
 							$check = explode( ';', $value );
 						} else {
 							$check = array( (int) $value );
@@ -1752,7 +1752,7 @@ class XMLprocessor extends processor
 		// Transmit xml to server
 		$response = $this->transmitRequestXML( $xml, $int_var, $settings, $metaUser, $new_subscription );
 
-		if ( isset( $response['error'] ) ) {
+		if ( !empty( $response['error'] ) ) {
 			return $response;
 		}
 
@@ -2333,13 +2333,9 @@ class SubscriptionPlan extends paramDBTable
 			$comparison		= $this->doPlanComparison( $metaUser->focusSubscription );
 			$renew			= $comparison['renew'];
 
-			$is_pending		= ( strcmp($metaUser->focusSubscription->status, 'Pending' ) === 0 );
-			$is_trial		= ( strcmp($metaUser->focusSubscription->status, 'Trial' ) === 0 );
+			$is_pending		= ( strcmp( $metaUser->focusSubscription->status, 'Pending' ) === 0 );
+			$is_trial		= ( strcmp( $metaUser->focusSubscription->status, 'Trial' ) === 0 );
 			$lifetime		= $metaUser->focusSubscription->lifetime;
-
-			if ( !$comparison['comparison'] ) {
-				$metaUser->focusSubscription->expire(1);
-			}
 
 			if ( ( $comparison['total_comparison'] === false ) || $is_pending ) {
 				// If user is using global trial period he still can use the trial period of a plan
@@ -2414,11 +2410,6 @@ class SubscriptionPlan extends paramDBTable
 			} else {
 				$metaUser->focusSubscription->recurring = 0;
 			}
-
-			if ( $params['gid_enabled'] ) {
-				$metaUser->instantGIDchange($params['gid']);
-			}
-
 		}
 
 		$micro_integrations = $this->getMicroIntegrations();
@@ -2441,6 +2432,10 @@ class SubscriptionPlan extends paramDBTable
 		}
 
 		if ( $userid ) {
+			if ( $params['gid_enabled'] ) {
+				$metaUser->instantGIDchange($params['gid']);
+			}
+
 			$metaUser->focusSubscription->check();
 			$metaUser->focusSubscription->store();
 		}
@@ -4910,10 +4905,12 @@ class Subscription extends paramDBTable
 	{
 		global $database;
 
+		// Users who are excluded cannot expire
 		if ( strcmp( $this->status, 'Excluded' ) === 0 ) {
 			return false;
 		}
 
+		// Load plan variables, otherwise load dummies
 		if ( $this->plan ) {
 			$subscription_plan = new SubscriptionPlan( $database );
 			$subscription_plan->load( $this->plan );
@@ -4925,11 +4922,12 @@ class Subscription extends paramDBTable
 
 		$this_params = $this->getParams();
 
+		// Move the focus Subscription
 		$metaUser = new metaUser( $this->userid );
 		$metaUser->moveFocus( $this->id );
 
+		// Recognize the fallback plan, if not overridden
 		if ( $plan_params['fallback'] && !$overridefallback ) {
-
 			$mih = new microIntegrationHandler();
 			$mih->userPlanExpireActions( $metaUser, $subscription_plan );
 
@@ -4953,6 +4951,7 @@ class Subscription extends paramDBTable
 				return false;
 			}
 
+			// Call Expiration MIs
 			$mih = new microIntegrationHandler();
 			$mih->userPlanExpireActions( $metaUser, $subscription_plan );
 

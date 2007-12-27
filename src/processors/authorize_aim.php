@@ -258,7 +258,7 @@ class processor_authorize_aim extends XMLprocessor
 
 			$return['invoice'] = $responsearray['invoice_number'];
 
-			if ( $responsearray['response_code'] == 1 ){
+			if ( ( $responsearray['response_code'] == 1 ) || ( strcmp( $responsearray['response_reason_text'], "This transaction has been approved." ) === 0 ) ) {
 				$return['valid'] = 1;
 			} else {
 				$return['error'] = $responsearray['response_reason_text'];
