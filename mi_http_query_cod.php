@@ -76,15 +76,15 @@ class mi_http_query_cod
 
 		$a = array();
 		$a['Operation'] = "RegisterTransaction";
-		$a['CustomerID'] = $metaUser->cmsUser->username;
-		$a['UserID'] = $metaUser->cbUser->cb_orgid;
+		$a['CustomerID'] = $metaUser->cbUser->cb_orgid;
+		$a['UserID'] = $metaUser->cmsUser->username;
 
 		// Fixing variables for now
-		$a['CustomerID'] = 'deutsch';
-		$a['UserID'] = 'brendainc';
+		// $a['CustomerID'] = 'brendainc';
+		// $a['UserID'] = 'deutsch';
 
 		$a['TransactionTypeID'] = "JOOMLA";
-		$a['Description'] = $prev . '-' . $cur . '-' . $invoice->counter;
+		$a['Description'] = $prev . '-' . $cur;
 
 		$la = array();
 		foreach ( $a as $n => $v ) {
@@ -93,7 +93,8 @@ class mi_http_query_cod
 
 		$link = "https://www.catalog-on-demand.com/smanager/api.do?" . implode( "&", $la );
 
-		$return = $this->fetchURL( $link );
+		$return = $this->fetchURL( $link.'-1' );
+		$return .= $this->fetchURL( $link.'-2' );
 
 		if ( strpos( $return, "<Errors>" ) === false ) {
 			if ( $metaUser->focusSubscription->previous_plan == 8 ) {
