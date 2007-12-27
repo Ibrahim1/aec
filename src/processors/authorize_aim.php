@@ -235,15 +235,15 @@ class processor_authorize_aim extends XMLprocessor
 						$fname = 'card_response';
 
 						if ( $content == "M" ) {
-							$fval = "M = Match";
+							$fval = "M - Match";
 						} elseif ( $content == "N" ) {
-							$fval = "N = No Match";
+							$fval = "N - No Match";
 						} elseif($content == "P" ) {
-							$fval = "P = Not Processed";
+							$fval = "P - Not Processed";
 						} elseif($content == "S" ) {
-							$fval = "S = Should have been present";
+							$fval = "S - Should have been present";
 						} elseif ( $content == "U" ) {
-							$fval = "U = Issuer unable to process request";
+							$fval = "U - Issuer unable to process request";
 						} else {
 							$fval = "NO VALUE RETURNED";
 						}
@@ -258,7 +258,7 @@ class processor_authorize_aim extends XMLprocessor
 
 			$return['invoice'] = $responsearray['invoice_number'];
 
-			if ( $responsearray['response_code'] == "1"){
+			if ( $responsearray['response_code'] == 1 ){
 				$return['valid'] = 1;
 			} else {
 				$return['error'] = $responsearray['response_reason_text'];
