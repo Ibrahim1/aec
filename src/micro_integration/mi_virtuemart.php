@@ -117,7 +117,7 @@ class mi_virtuemart
 	{
 		global $database;
 
-		$query  = 'SELECT id'
+		$query  = 'SELECT user_id' // Jonathan Appleton changed this from id to user_id - good find indeed!
 		. ' FROM #__vm_user_info'
 		. ' WHERE user_id = \'' . $userid . '\''
 		;
