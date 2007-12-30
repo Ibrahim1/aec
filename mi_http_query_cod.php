@@ -80,8 +80,8 @@ class mi_http_query_cod
 		$a['UserID'] = $metaUser->cmsUser->username;
 
 		// Fixing variables for now
-		// $a['CustomerID'] = 'brendainc';
-		// $a['UserID'] = 'deutsch';
+		 $a['CustomerID'] = 'brendainc';
+		 $a['UserID'] = 'deutsch';
 
 		$a['TransactionTypeID'] = "JOOMLA";
 		$a['Description'] = $prev . '-' . $cur;

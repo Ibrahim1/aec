@@ -309,11 +309,11 @@ function subscribe( $option )
 {
 	global $my, $database, $mosConfig_uniquemail;
 
-	$intro		= trim( mosGetParam( $_REQUEST, 'intro', 0 ) );
-	$usage		= trim( mosGetParam( $_REQUEST, 'usage', 0 ) );
-	$processor	= trim( mosGetParam( $_REQUEST, 'processor', null ) );
-	$userid		= trim( mosGetParam( $_REQUEST, 'userid', 0 ) );
-	$itemid		= trim( mosGetParam( $_REQUEST, 'Itemid', 0 ) );
+	$intro		= aecGetParam( 'intro', 0 );
+	$usage		= aecGetParam( 'usage', 0 );
+	$processor	= aecGetParam( 'processor', null );
+	$userid		= aecGetParam( 'userid', 0 );
+	$itemid		= aecGetParam( 'Itemid', 0 );
 
 	if ( isset( $_POST['username'] ) && $usage ) {
 		$query = 'SELECT id'
@@ -994,7 +994,7 @@ function cancelPayment( $option )
 	}
 }
 
-function aecGetParam( $name )
+function aecGetParam( $name, $default='' )
 {
 	$return = trim( mosGetParam( $_REQUEST, $name, '' ) );
 

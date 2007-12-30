@@ -2322,10 +2322,6 @@ class SubscriptionPlan extends paramDBTable
 				$params['make_primary'] = 1;
 			}
 
-			if ( $params['make_primary'] ) {
-				$primary = 1;
-			}
-
 			if ( !$metaUser->hasSubscription || empty( $params['make_primary'] ) ) {
 				$metaUser->establishFocus( $this, $processor );
 			}
@@ -3395,7 +3391,7 @@ class InvoiceFactory
 			// If the user also needs to register, we need to guide him there after the selection has now been made
 			if ( $register ) {
 				// The plans are supposed to be first, so the details form should hold the values
-				if ( $aecConfig->cfg['plans_first'] ) {
+				if ( $aecConfig->cfg['plans_first'] && !empty( $plans[0]['id'] ) ) {
 					$_POST['usage']		= $plans[0]['id'];
 					$_POST['processor'] = $plans[0]['gw'][0]['name'];
 				}
@@ -3410,6 +3406,11 @@ class InvoiceFactory
 					registerForm($option, $mainframe->getCfg( 'emailpass' ), null);
 
 				} else {
+					if ( !isset( $_POST['usage'] ) ) {
+						$_POST['intro'] = $intro;
+						$_POST['usage'] = $usage;
+					}
+
 					//include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/acctexp.html.php' );
 					joomlaregisterForm( $option, $mainframe->getCfg( 'useractivation' ) );
 				}
@@ -4743,6 +4744,7 @@ class Subscription extends paramDBTable
 		$this->userid		= $userid;
 		$this->primary		= $primary;
 		$this->signup_date	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 );
+		$this->expiration	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 );
 		$this->status		= $pending ? 'Pending' : 'Active';
 		$this->type			= $processor;
 
