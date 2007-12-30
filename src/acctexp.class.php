@@ -570,6 +570,9 @@ class Config_General extends paramDBTable
 		$def['invoicenum_display_case']				= 0;
 		$def['invoicenum_display_chunking']			= 4;
 		$def['invoicenum_display_separator']		= '-';
+		$def['use_recaptcha']						= 0;
+		$def['recaptcha_privatekey']				= '';
+		$def['recaptcha_publickey']				= '';
 
 		// Write to Params, do not overwrite existing data
 		$this->addParams( $def, 'settings', false );
@@ -3447,7 +3450,7 @@ class InvoiceFactory
 
 	function confirm( $option, $var=array(), $passthrough=false )
 	{
-		global $database, $my, $aecConfig;
+		global $database, $my, $aecConfig, $mosConfig_absolute_path;
 
 		if ( isset( $var['task'] ) ) {
 			unset( $var['task'] );
@@ -3487,6 +3490,20 @@ class InvoiceFactory
 						$passthrough[$ke] = $va;
 					}
 				}
+			}
+		}
+
+		if ( $aecConfig->cfg['use_recaptcha'] && !empty( $aecConfig->cfg['recaptcha_privatekey'] ) ) {
+			// require the recaptcha library
+			require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
+
+			//finally chack with reCAPTCHA if the entry was correct
+			$resp = recaptcha_check_answer ( $aecConfig->cfg['recaptcha_privatekey'], $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"] );
+
+			//if the response is INvalid, then go back one page, and try again. Give a nice message
+			if (!$resp->is_valid) {
+				echo "<script> alert('The reCAPTCHA entered incorrectly. Go back and try it again. reCAPTCHA said: " . $resp->error . "'); window.history.go(-1); </script>\n";
+				exit();
 			}
 		}
 

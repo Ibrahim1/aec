@@ -910,6 +910,8 @@ class Payment_HTML
 
 function joomlaregisterForm($option, $useractivation)
 {
+	global $aecConfig, $mosConfig_absolute_path;
+
 	if ( class_exists( 'JConfig' ) ) {
 	?>
 	<script type="text/javascript">
@@ -977,6 +979,12 @@ function joomlaregisterForm($option, $useractivation)
 		</td>
 	</tr>
 	</table>
+	<?php
+	if ( $aecConfig->cfg['use_recaptcha'] && !empty( $aecConfig->cfg['recaptcha_publickey'] ) ) {
+		require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
+		echo recaptcha_get_html( $aecConfig->cfg['recaptcha_publickey'] );
+	}
+	?>
 	<button class="button validate" type="submit"><?php echo JText::_('Register'); ?></button>
 	<input type="hidden" name="task" value="saveRegistration" />
 	<input type="hidden" name="id" value="0" />
@@ -1082,7 +1090,12 @@ function joomlaregisterForm($option, $useractivation)
 		</td>
 	</tr>
 	</table>
-
+	<?php
+	if ( $aecConfig->cfg['use_recaptcha'] && !empty( $aecConfig->cfg['recaptcha_publickey'] ) ) {
+		require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
+		echo recaptcha_get_html( $aecConfig->cfg['recaptcha_publickey'] );
+	}
+	?>
 	<input type="hidden" name="id" value="0" />
 	<input type="hidden" name="gid" value="0" />
 	<input type="hidden" name="useractivation" value="<?php echo $useractivation;?>" />

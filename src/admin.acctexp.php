@@ -1755,6 +1755,7 @@ function editSettings( $option )
 	$lists['debugmode']				= mosHTML::yesnoSelectList('debugmode', '', $aecConfig->cfg['debugmode']);
 	$lists['override_reqssl']		= mosHTML::yesnoSelectList('override_reqssl', '', $aecConfig->cfg['override_reqssl']);
 	$lists['invoicenum_display_id']		= mosHTML::yesnoSelectList('invoicenum_display_id', '', $aecConfig->cfg['invoicenum_display_id']);
+	$lists['use_recaptcha']		= mosHTML::yesnoSelectList('use_recaptcha', '', $aecConfig->cfg['use_recaptcha']);
 
 	$lists['customtext_confirm_keeporiginal']		= mosHTML::yesnoSelectList('customtext_confirm_keeporiginal', '', $aecConfig->cfg['customtext_confirm_keeporiginal']);
 	$lists['customtext_checkout_keeporiginal']		= mosHTML::yesnoSelectList('customtext_checkout_keeporiginal', '', $aecConfig->cfg['customtext_checkout_keeporiginal']);
@@ -1863,6 +1864,10 @@ function editSettings( $option )
 	$tab_data[1][] = array( 'list', _CFG_GENERAL_INVOICENUM_DISPLAY_CASE_NAME, _CFG_GENERAL_INVOICENUM_DISPLAY_CASE_DESC, $aecConfig->cfg['invoicenum_display_case'], 'invoicenum_display_case');
 	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_INVOICENUM_DISPLAY_CHUNKING_NAME, _CFG_GENERAL_INVOICENUM_DISPLAY_CHUNKING_DESC, $aecConfig->cfg['invoicenum_display_chunking'], 'invoicenum_display_chunking');
 	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_INVOICENUM_DISPLAY_SEPARATOR_NAME, _CFG_GENERAL_INVOICENUM_DISPLAY_SEPARATOR_DESC, $aecConfig->cfg['invoicenum_display_separator'], 'invoicenum_display_separator');
+
+	$tab_data[1][] = array( 'list', _CFG_GENERAL_USE_RECAPTCHA_NAME, _CFG_GENERAL_USE_RECAPTCHA_DESC, $aecConfig->cfg['use_recaptcha'], 'use_recaptcha');
+	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_RECAPTCHA_PRIVATEKEY_NAME, _CFG_GENERAL_RECAPTCHA_PRIVATEKEY_DESC, $aecConfig->cfg['recaptcha_privatekey'], 'recaptcha_privatekey');
+	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_RECAPTCHA_PUBLICKEY_NAME, _CFG_GENERAL_RECAPTCHA_PUBLICKEY_DESC, $aecConfig->cfg['recaptcha_publickey'], 'recaptcha_publickey');
 
 	$tab_data[1][] = array( 'editor', _CFG_GENERAL_CUSTOMTEXT_PLANS_NAME, _CFG_GENERAL_CUSTOMTEXT_PLANS_DESC, $aecConfig->cfg['customtext_plans'], 'customtext_plans');
 	$tab_data[1][] = array( 'list', _CFG_GENERAL_CUSTOMTEXT_CONFIRM_KEEPORIGINAL_NAME, _CFG_GENERAL_CUSTOMTEXT_CONFIRM_KEEPORIGINAL_DESC, '0', 'customtext_confirm_keeporiginal');

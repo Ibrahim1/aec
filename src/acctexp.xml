@@ -41,6 +41,8 @@
 		<filename>lib/krumo/krumo.tar.gz</filename>
 		<filename>lib/php_debug/index.html</filename>
 		<filename>lib/php_debug/php_debug_1and2.tar.gz</filename>
+		<filename>lib/recaptcha/index.html</filename>
+		<filename>lib/recaptcha/recaptchalib.php</filename>
 		<filename>micro_integration/language/index.html</filename>
 		<filename>micro_integration/language/english.php</filename>
 		<filename>micro_integration/language/german.php</filename>
