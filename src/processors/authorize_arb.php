@@ -286,24 +286,26 @@ class processor_authorize_arb extends XMLprocessor
 
 		$response = $this->transmitRequest( $url, $path, $content, 443 );
 
-		$responsestring = $response;
+		if ( !empty( $response ) ) {
+			$responsestring = $response;
 
-		$resultCode = $this->substring_between($response,'<resultCode>','</resultCode>');
+			$resultCode = $this->substring_between( $response,'<resultCode>','</resultCode>' );
 
-		$code = $this->substring_between($response,'<code>','</code>');
-		$text = $this->substring_between($response,'<text>','</text>');
+			$code = $this->substring_between($response,'<code>','</code>');
+			$text = $this->substring_between($response,'<text>','</text>');
 
-		//if ( strcmp( $resultCode, 'Ok' ) === 0 ) {
-		if ( 1) {
-			$return['valid'] = 0;
-			$return['cancel'] = true;
+			if ( strcmp( $resultCode, 'Ok' ) === 0 ) {
+				$return['valid'] = 0;
+				$return['cancel'] = true;
+			} else {
+				$return['valid'] = 0;
+				$return['error'] = $text;
+			}
+
+			$invoice->processorResponse( $pp, $return, $responsestring );
 		} else {
-			$return['valid'] = 0;
-			$return['error'] = $text;
+			Payment_HTML::error( 'com_acctexp', $metaUser->cmsUser, $invoice, "An error occured when cancelling your subscription. Please contact the system administrator!", true );
 		}
-
-		$invoice->processorResponse( $pp, $return, $responsestring );
-
 	}
 }
 ?>

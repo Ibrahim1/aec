@@ -525,6 +525,10 @@ function subscriptionDetails( $option )
 		if ( !empty( $user_subscriptions ) ) {
 			$subscriptions = array();
 			foreach( $user_subscriptions as $subscription ) {
+				if ( empty( $subscription->id ) || empty( $subscription->plan ) ) {
+					continue;
+				}
+
 				$secondary_plan = new SubscriptionPlan( $database );
 				$secondary_plan->load( $subscription->plan );
 
