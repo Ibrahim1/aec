@@ -978,13 +978,25 @@ function joomlaregisterForm($option, $useractivation)
 			<input class="inputbox required validate-passverify" type="password" id="password2" name="password2" size="40" value="" /> *
 		</td>
 	</tr>
-	</table>
 	<?php
 	if ( $aecConfig->cfg['use_recaptcha'] && !empty( $aecConfig->cfg['recaptcha_publickey'] ) ) {
 		require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
+		?>
+		<tr>
+		<td height="40">
+			<label>
+			</label>
+		</td>
+		<td>
+		<?php
 		echo recaptcha_get_html( $aecConfig->cfg['recaptcha_publickey'] );
+		?>
+		</td>
+		</tr>
+		<?php
 	}
 	?>
+	</table>
 	<button class="button validate" type="submit"><?php echo JText::_('Register'); ?></button>
 	<input type="hidden" name="task" value="saveRegistration" />
 	<input type="hidden" name="id" value="0" />
@@ -1085,17 +1097,22 @@ function joomlaregisterForm($option, $useractivation)
 		  <td colspan="2">
 		  </td>
 	</tr>
-	<tr>
-		<td colspan=2>
-		</td>
-	</tr>
-	</table>
 	<?php
 	if ( $aecConfig->cfg['use_recaptcha'] && !empty( $aecConfig->cfg['recaptcha_publickey'] ) ) {
 		require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
+		?>
+		<tr>
+		<td></td>
+		<td>
+		<?php
 		echo recaptcha_get_html( $aecConfig->cfg['recaptcha_publickey'] );
+		?>
+		</td>
+		</tr>
+		<?php
 	}
 	?>
+	</table>
 	<input type="hidden" name="id" value="0" />
 	<input type="hidden" name="gid" value="0" />
 	<input type="hidden" name="useractivation" value="<?php echo $useractivation;?>" />

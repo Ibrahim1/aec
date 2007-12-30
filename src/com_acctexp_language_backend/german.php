@@ -655,6 +655,13 @@ define( '_CFG_GENERAL_CUSTOMTEXT_PENDING_KEEPORIGINAL_DESC',	'Diese Option aktiv
 define( '_CFG_GENERAL_CUSTOMTEXT_EXPIRED_KEEPORIGINAL_NAME',	'Behalte Originaltext' );
 define( '_CFG_GENERAL_CUSTOMTEXT_EXPIRED_KEEPORIGINAL_DESC',	'Diese Option aktivieren, wenn der Originaltext auf der Abgelaufenseite angezeigt werden soll (anstatt des Individuellen)' );
 
+define( '_CFG_GENERAL_USE_RECAPTCHA_NAME', 'Use ReCAPTCHA');
+define( '_CFG_GENERAL_USE_RECAPTCHA_DESC', 'If you have an account for <a href="http://recaptcha.net/">ReCAPTCHA</a>, you can activate this option. Do NOT forget to put in the keys below.');
+define( '_CFG_GENERAL_RECAPTCHA_PRIVATEKEY_NAME', 'Private ReCAPTCHA Key');
+define( '_CFG_GENERAL_RECAPTCHA_PRIVATEKEY_DESC', 'Your Private ReCAPTCHA Key.');
+define( '_CFG_GENERAL_RECAPTCHA_PUBLICKEY_NAME', 'Public ReCAPTCHA Key');
+define( '_CFG_GENERAL_RECAPTCHA_PUBLICKEY_DESC', 'Your Public ReCAPTCHA Key.');
+
 define( '_CFG_GENERAL_HEARTBEAT_CYCLE_BACKEND_NAME',			'Heartbeat Zyklus Backend:' );
 define( '_CFG_GENERAL_HEARTBEAT_CYCLE_BACKEND_DESC',			'Heartbeat - Herzklopfen: eine Funktion welche angegebene Funktionen am Leben h&auml;lt. Hier die Anzahl der Stunden angeben welche AEC als Abhorchrythmus nehmen soll um dann die spezifizierten Funktionen auszuf&uuml;hren' );
 define( '_CFG_GENERAL_ENABLE_COUPONS_NAME',				'Gutscheine Aktiviert:' );
