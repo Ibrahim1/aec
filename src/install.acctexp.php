@@ -190,6 +190,7 @@ function com_install()
 	$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_subscr` ('
 	. '`id` int(11) NOT NULL auto_increment,'
 	. '`userid` int(11) NULL,'
+	. '`primary` int(1) NOT NULL default \'0\','
 	. '`type` varchar(40) NULL,'
 	. '`status` varchar(10) NULL,'
 	. '`signup_date` datetime NULL default \'0000-00-00 00:00:00\','
@@ -918,6 +919,9 @@ function com_install()
 		// delete old expiration table
 		$eucaInstalldb->dropTableifExists( 'acctexp', false );
 	}
+
+	// fix for 0.12.4.15f mistake
+	$eucaInstalldb->addColifNotExists( 'primary', "int(1) NOT NULL default '0'", 'subscr' );
 
 	$eucaInstalldb->addColifNotExists( 'subscr_id', "int(11) NULL", 'invoices' );
 	$eucaInstalldb->addColifNotExists( 'conditions', "text NULL", 'invoices' );
