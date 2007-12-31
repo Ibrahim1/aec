@@ -2330,7 +2330,11 @@ class SubscriptionPlan extends paramDBTable
 			}
 
 			$comparison		= $this->doPlanComparison( $metaUser->focusSubscription );
-			$renew			= $comparison['renew'];
+			if ( empty( $comparison['renew'] ) ) {
+				$renew = 0;
+			} else {
+				$renew = 1;
+			}
 
 			$is_pending		= ( strcmp( $metaUser->focusSubscription->status, 'Pending' ) === 0 );
 			$is_trial		= ( strcmp( $metaUser->focusSubscription->status, 'Trial' ) === 0 );

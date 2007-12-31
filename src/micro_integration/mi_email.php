@@ -123,7 +123,7 @@ class mi_email
 		$subject	= AECToolbox::rewriteEngine( $params['subject' . $area], $metaUser, $plan );
 
 		if ( empty( $message ) ) {
-			return false;
+			return null;
 		}
 
 		$recipients = explode( ',', $params['recipient'] );
