@@ -97,14 +97,12 @@ class mi_http_query_cod
 		$return .= $this->fetchURL( $link.'-2' );
 
 		if ( strpos( $return, "<Errors>" ) === false ) {
-			if ( $metaUser->focusSubscription->previous_plan == 8 ) {
-				if ( in_array( $plan->id, array( 6, 10, 12 ) ) ) {
-					$query = 'UPDATE #__comprofiler'
-						. ' SET cb_orgid = \'' . (int) $metaUser->username . '\''
-						. ' WHERE user_id = \'' . (int) $metaUser->userid . '\'';
-					$database->setQuery( $query );
-					$database->query();
-				}
+			if ( ( $metaUser->focusSubscription->previous_plan == 8 ) || ( $metaUser->focusSubscription->plan == 8 ) ) {
+				$query = 'UPDATE #__comprofiler'
+					. ' SET cb_orgid = \'' . (int) $metaUser->username . '\''
+					. ' WHERE user_id = \'' . (int) $metaUser->userid . '\'';
+				$database->setQuery( $query );
+				$database->query();
 			}
 
 			return true;

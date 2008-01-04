@@ -669,7 +669,7 @@ function internalCheckout( $option, $invoice_number, $userid )
 	}
 }
 
-function repeatInvoice( $option, $invoice_number, $userid, $first )
+function repeatInvoice( $option, $invoice_number, $userid, $first=0 )
 {
 	global $database, $my;
 
@@ -697,7 +697,7 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid )
 
 	if ( empty($my->id ) ) {
 		if ( $userid ) {
-			if ( AECToolbox::quickVerifyUserID($userid) === true ) {
+			if ( AECToolbox::quickVerifyUserID( $userid ) === true ) {
 				// This user is not expired, so he could log in...
 				mosNotAuth();
 				return;

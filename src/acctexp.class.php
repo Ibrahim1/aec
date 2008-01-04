@@ -200,6 +200,7 @@ class metaUser
 		if ( $subscription->id ) {
 			if ( $subscription->userid == $this->userid ) {
 				$this->focusSubscription = $subscription;
+				return true;
 			} else {
 				return false;
 			}
