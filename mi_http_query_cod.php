@@ -44,7 +44,7 @@ class mi_http_query_cod
 
 		if ( $metaUser->focusSubscription->previous_plan == 8 ) {
 			if ( in_array( $plan->id, array( 6, 10, 12 ) ) ) {
-				$metaUser->cbUser->cb_orgid = (int) $metaUser->username;
+				$metaUser->cbUser->cb_orgid = $metaUser->cmsUser->username;
 			}
 		}
 
@@ -99,7 +99,7 @@ class mi_http_query_cod
 		if ( strpos( $return, "<Errors>" ) === false ) {
 			if ( ( $metaUser->focusSubscription->previous_plan == 8 ) || ( $metaUser->focusSubscription->plan == 8 ) ) {
 				$query = 'UPDATE #__comprofiler'
-					. ' SET cb_orgid = \'' . (int) $metaUser->username . '\''
+					. ' SET cb_orgid = \'' . $metaUser->cmsUser->username . '\''
 					. ' WHERE user_id = \'' . (int) $metaUser->userid . '\'';
 				$database->setQuery( $query );
 				$database->query();
