@@ -88,10 +88,6 @@ switch( strtolower( $task ) ) {
 		echo "wolves teeth";
 		break;
 
-	case 'add':
-		editUser( null, $userid, $option, 'notconfig' );
-		break;
-
 	case 'edit':
 		if ( !is_array( $userid ) ) {
 			$temp = $userid;
@@ -103,7 +99,7 @@ switch( strtolower( $task ) ) {
 			$userid[0] = AECfetchfromDB::UserIDfromSubscriptionID( $subscriptionid[0] );
 		}
 
-		editUser( $userid, $option, $returnTask );
+		editUser( $option, $userid, $subscriptionid, $returnTask );
 		break;
 
 	case 'save':
@@ -577,6 +573,8 @@ switch( strtolower( $task ) ) {
 		metaUser::procTriggerCreate( $user, $payment, 1 );
 		break;
 
+	case 'add': editUser( null, $userid, $option, 'notconfig' ); break;
+
 	default:
 		HTML_AcctExp::central();
 		break;
@@ -915,13 +913,26 @@ function help( $option )
 	HTML_AcctExp::help( $option, $diagnose ) ;
 }
 
-function editUser( $userid, $option, $task )
+function editUser(  $option, $userid, $subscriptionid, $task )
 {
 	global $database, $mainframe;
 
 	$lists = array();
 
 	$metaUser = new metaUser( $userid[0] );
+
+	if ( !empty( $subscriptionid[0] ) ) {
+		$metaUser->moveFocus( $subscriptionid[0] );
+	}
+
+	if ( $metaUser->loadSubscriptions() && !empty( $subscriptionid[0] ) ) {
+		foreach ( $metaUser->allSubscriptions as $s_id => $s_c ) {
+			if ( $s_c->id == $subscriptionid[0] ) {
+				$metaUser->allSubscriptions[$s_id]->current_focus = true;
+				continue;
+			}
+		}
+	}
 
  	// count number of payments of user
  	$query = 'SELECT count(*)'

@@ -113,10 +113,6 @@ if ( !empty( $task ) ) {
 			backSubscription( $option );
 			break;
 
-		case 'ipn':
-			processNotification($option, "paypal");
-			break;
-
 		case 'thanks':
 			$renew = trim( mosGetParam( $_REQUEST, 'renew', 0 ) );
 			$free = trim( mosGetParam( $_REQUEST, 'free', 0 ) );
@@ -134,10 +130,6 @@ if ( !empty( $task ) ) {
 			$name           = trim( mosGetParam( $_REQUEST, 'name', '' ) );
 			$recurring      = trim( mosGetParam( $_REQUEST, 'recurring', 0 ) );
 			errorAP( $option, $usage, $userid, $username, $name, $recurring);
-			break;
-
-		case 'activateft':
-			activateFT( $option );
 			break;
 
 		case 'subscriptiondetails':
@@ -212,6 +204,10 @@ if ( !empty( $task ) ) {
 		case 'notallowed':
 			notAllowed( $option );
 			break;
+
+		// Legacy - to be deprecated after thorough check
+		case 'ipn': processNotification($option, "paypal"); break;
+		case 'activateft': activateFT( $option ); break;
 
 		default:
 			if ( strpos( $task, 'notification' ) > 0 ) {

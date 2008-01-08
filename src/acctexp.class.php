@@ -209,6 +209,30 @@ class metaUser
 		}
 	}
 
+	function loadSubscriptions()
+	{
+		global $database;
+
+		$query = 'SELECT id'
+		. ' FROM #__acctexp_subscr'
+		. ' WHERE userid = \'' . (int) $this->userid . '\''
+		;
+		$database->setQuery( $query );
+		$subscrids = $database->loadResultArray();
+
+		if ( count( $subscrids ) > 1 ) {
+			$this->allSubscriptions = array();
+
+			foreach ( $subscrids as $subscrid ) {
+			$this->allSubscriptions[] = new Subscription( $database );
+			$this->allSubscriptions[]->load( $subscrid );
+			}
+		} else {
+			$this->allSubscriptions = false;
+			return false;
+		}
+	}
+
 	function instantGIDchange( $gid )
 	{
 		global $database, $acl;

@@ -710,6 +710,16 @@ class HTML_AcctExp
 									<span style="vertical-align:top;"><?php echo _AEC_USER_ASSIGN_TO_PLAN; ?>:</span>&nbsp;
 									<?php echo $lists['assignto_plan']; ?>
 								</p>
+								<?php if ( !empty( $metaUser->allSubscriptions ) ) { ?>
+								<table>
+									<?php foreach ( $metaUser->allSubscriptions as $subs ) { ?>
+										<tr<?php echo isset( $subs->current_focus ) ? 'class="focus"' : ''; ?>>
+											<td><?php echo $subs->id; ?></td>
+										</tr>
+										<?php
+									} ?>
+								</table>
+								<?php } ?>
 						</div>
 					</td>
 					<td width="50%" style="padding:10px; padding-right:20px; vertical-align:top;">
