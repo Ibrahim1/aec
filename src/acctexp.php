@@ -303,7 +303,7 @@ function pending( $option, $userid )
 
 function subscribe( $option )
 {
-	global $my, $database, $mosConfig_uniquemail;
+	global $my, $database, $mosConfig_uniquemail, $aecConfig;
 
 	$intro		= aecGetParam( 'intro', 0 );
 	$usage		= aecGetParam( 'usage', 0 );

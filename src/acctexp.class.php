@@ -602,6 +602,7 @@ class Config_General extends paramDBTable
 		$def['use_recaptcha']						= 0;
 		$def['recaptcha_privatekey']				= '';
 		$def['recaptcha_publickey']				= '';
+		$def['ssl_signup']						= 0;
 
 		// Write to Params, do not overwrite existing data
 		$this->addParams( $def, 'settings', false );

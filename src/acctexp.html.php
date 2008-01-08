@@ -91,7 +91,7 @@ class HTML_frontEnd
 					<?php
 				} ?>
 				<div id="renew_button">
-					<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=renewSubscription' ); ?>" method="post">
+					<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=renewSubscription', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 					<input type="hidden" name="option" value="<?php echo $option; ?>" />
 					<input type="hidden" name="userid" value="<?php echo $userid; ?>" />
 					<input type="hidden" name="task" value="renewSubscription" />
@@ -142,7 +142,7 @@ class HTML_frontEnd
 		if ( strcmp($invoice, "none") === 0 ) { ?>
 			<p><?php echo _PENDING_NOINVOICE; ?></p>
 			<div id="upgrade_button">
-				<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=renewSubscription' ); ?>" method="post">
+				<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=renewSubscription', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 					<input type="hidden" name="option" value="<?php echo $option; ?>" />
 					<input type="hidden" name="userid" value="<?php echo $objUser->id; ?>" />
 					<input type="hidden" name="task" value="renewSubscription" />
@@ -251,7 +251,7 @@ class HTML_frontEnd
 				<?php
 				if ( $recurring == 0 ) { ?>
 					<div id="upgrade_button">
-						<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=renewsubscription' ); ?>" method="post">
+						<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=renewsubscription', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 							<input type="hidden" name="option" value="<?php echo $option; ?>" />
 							<input type="hidden" name="task" value="renewsubscription" />
 							<input type="hidden" name="userid" value="<?php echo $metaUser->cmsUser->id; ?>" />
@@ -475,7 +475,7 @@ class Payment_HTML
 			$urlbutton = $mosConfig_live_site . '/components/com_acctexp/images/gw_button_' . $processor['name'] . '.png';
 
 			$html_code .= '<div class="gateway_button">' . "\n"
-			. '<form action="' . AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=' . $task ) . '"'
+			. '<form action="' . AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=' . $task, $aecConfig->cfg['ssl_signup'] ) . '"'
 			. ' method="post">' . "\n"
 			. '<input type="image" src="' . $urlbutton;
 			if ( !empty( $processor['statement'] ) ) {
@@ -593,7 +593,7 @@ class Payment_HTML
 			<table>
 				<tr>
 					<td class="confirmation_button">
-						<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( '/index.php?option=' . $option ); ?>" method="post">
+						<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( '/index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 						<input type="hidden" name="option" value="<?php echo $option; ?>" />
 						<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0; ?>" />
 						<input type="hidden" name="task" value="saveSubscription" />
@@ -716,7 +716,7 @@ class Payment_HTML
 										<?php
 									}
 								} ?>
-								<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=InvoiceAddCoupon' ); ?>" method="post">
+								<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=InvoiceAddCoupon', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 									<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
 									<input type="hidden" name="option" value="<?php echo $option; ?>" />
 									<input type="hidden" name="task" value="InvoiceAddCoupon" />
@@ -732,7 +732,7 @@ class Payment_HTML
 					<table width="100%" id="paramsbox">
 						<tr>
 							<td class="append_button">
-								<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=InvoiceAddParams' ); ?>" method="post">
+								<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=InvoiceAddParams', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 									<?php echo $params; ?>
 									<input type="hidden" name="option" value="<?php echo $option; ?>" />
 									<input type="hidden" name="task" value="InvoiceAddParams" />

@@ -386,7 +386,7 @@ define( '_CFG_CCBILL_PLAN_PARAMS_ALLOWEDTYPES_NAME', 'Allowed types');
 define( '_CFG_CCBILL_PLAN_PARAMS_ALLOWEDTYPES_DESC', 'insert the payment options that the user is supposed to have after being led on to CCBill (refer to your CCBill account for the product IDs you have set up)');
 
 // iDeal Basic
-define( '_CFG_CCBILL_LONGNAME', 'iDeal');
+define( '_CFG_IDEAL_BASIC_LONGNAME', 'iDeal');
 define( '_CFG_IDEAL_BASIC_STATEMENT', 'Make payments with iDeal');
 define( '_CFG_IDEAL_BASIC_DESCRIPTION', 'De veilige manier van betalen op internet.');
 define( '_CFG_IDEAL_BASIC_MERCHANTID_NAME', 'Merchant ID');
