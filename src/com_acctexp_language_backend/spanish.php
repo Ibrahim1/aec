@@ -121,6 +121,15 @@ define( '_AEC_USER_TIMES',						'times' );
 define( '_AEC_USER_INVOICES',					'Invoices' );
 define( '_AEC_USER_NO_INVOICES',				'No invoices till yet' );
 define( '_AEC_USER_INVOICE_FACTORY',			'Invoice Factory' );
+define( '_AEC_USER_ALL_SUBSCRIPTIONS',			'All Subscriptions by this User' );
+define( '_AEC_USER_ALL_SUBSCRIPTIONS_NOPE',	'This is the only subscription this user currently holds.' );
+define( '_AEC_USER_SUBSCRIPTIONS_ID',			'ID' );
+define( '_AEC_USER_SUBSCRIPTIONS_STATUS',		'Status' );
+define( '_AEC_USER_SUBSCRIPTIONS_PROCESSOR',	'Processor' );
+define( '_AEC_USER_SUBSCRIPTIONS_SINGUP',		'Signup' );
+define( '_AEC_USER_SUBSCRIPTIONS_EXPIRATION',	'Expiration' );
+define( '_AEC_USER_SUBSCRIPTIONS_PRIMARY',		'primary' );
+define( '_AEC_USER_CURR_SUBSCR_PLAN_PRIMARY',	'Primary' );
 
 // new (additional)
 define( '_AEC_MSG_MIS_NOT_DEFINED',				'You have not defined any integrations till now - see config' );
