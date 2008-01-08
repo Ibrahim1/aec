@@ -89,13 +89,17 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'edit':
-		if ( !is_array( $userid ) ) {
+		if ( !empty( $userid ) && !is_array( $userid ) ) {
 			$temp = $userid;
-			$userid = array();
-			$userid[0] = $temp;
+			$userid = array( 0 => $temp );
 		}
 
 		if ( !empty( $subscriptionid ) ) {
+			if ( !is_array( $subscriptionid ) ) {
+				$sid = $subscriptionid;
+				$subscriptionid = array( 0 => $sid );
+			}
+
 			$userid[0] = AECfetchfromDB::UserIDfromSubscriptionID( $subscriptionid[0] );
 		}
 
@@ -923,6 +927,8 @@ function editUser(  $option, $userid, $subscriptionid, $task )
 
 	if ( !empty( $subscriptionid[0] ) ) {
 		$metaUser->moveFocus( $subscriptionid[0] );
+	} else {
+		$subscriptionid[0] = $metaUser->focusSubscription->id;
 	}
 
 	if ( $metaUser->loadSubscriptions() && !empty( $subscriptionid[0] ) ) {
@@ -1070,6 +1076,16 @@ function saveUser( $option, $apply=0 )
 
 	$metaUser = new metaUser( $_POST['userid'] );
 
+	if ( $metaUser->hasSubscription && !empty( $_POST['id'] ) ) {
+		$metaUser->moveFocus( $_POST['id'] );
+	}
+
+	$ck_primary = mosGetParam( $_POST, 'ck_primary', 'off' );
+
+	if ( ( strcmp( $ck_primary, 'on' ) == 0 ) && !$metaUser->focusSubscription->primary ) {
+		$metaUser->focusSubscription->makePrimary();
+	}
+
 	if ( !empty( $_POST['assignto_plan'] ) ) {
 		$plan = new SubscriptionPlan( $database );
 		$plan->load( $_POST['assignto_plan'] );
@@ -1130,7 +1146,7 @@ function saveUser( $option, $apply=0 )
 
 	$nexttask	= mosGetParam( $_REQUEST, 'nexttask', 'config' ) ;
 	if ( $apply ) {
-		mosRedirect( 'index2.php?option=' . $option . '&task=edit&id=' . $_POST['userid'], _AEC_MSG_SUCESSFULLY_SAVED );
+		mosRedirect( 'index2.php?option=' . $option . '&task=edit&subscriptionid=' . $_POST['id'], _AEC_MSG_SUCESSFULLY_SAVED );
 	} else {
 		mosRedirect( 'index2.php?option=' . $option . '&task=' . $nexttask, _SAVED );
 	}

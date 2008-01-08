@@ -592,7 +592,7 @@ class HTML_AcctExp
 						<div class="userinfobox">
 							<h3><?php echo _AEC_USER_EXPIRATION; ?></h3>
 							<?php
-							if ( !empty( $metaUser->focusSubscription->expiration ) && strcmp( $metaUser->focusSubscription->expiration, '9999-12-31 00:00:00' ) === 0 ) { ?>
+							if ( !empty( $metaUser->focusSubscription->expiration ) && $metaUser->focusSubscription->lifetime ) { ?>
 								<p>
 								<?php echo _AEC_USER_CURR_EXPIRE_DATE; ?>:&nbsp;
 								<?php echo aecHTML::Icon( 'clock_pause.png', _AEC_USER_LIFETIME ); ?>&nbsp;
@@ -631,57 +631,54 @@ class HTML_AcctExp
 						</div>
 						<div class="userinfobox">
 							<h3><?php echo _AEC_USER_SUBSCRIPTION; ?></h3>
-								<p>
-									<?php echo _AEC_USER_STATUS; ?>:&nbsp;<strong>
-									<?php
-									switch( $metaUser->focusSubscription->status ) {
-										case 'Excluded':
-											$icon = 'cut_red.png';
-											$status	= _AEC_CMN_EXCLUDED;
-											break;
-
-										case 'Trial':
-											$icon 	= 'star.png';
-											$status	= _AEC_CMN_TRIAL;
-											break;
-										case 'Pending':
-											$icon 	= 'star.png';
-											$status	= _AEC_CMN_PENDING;
-											break;
-
-										case 'Active':
-											$icon	= 'tick.png';
-											$status	= _AEC_CMN_ACTIVE;
-											break;
-
-										case 'Cancel':
-											$icon	= 'exclamation.png';
-											$status	= _AEC_CMN_CANCEL;
-											break;
-
-										case 'Expired':
-											$icon	= 'cancel.png';
-											$status	= _AEC_CMN_EXPIRED;
-											break;
-
-										case 'Closed':
-											$icon	= 'cancel.png';
-											$status	= _AEC_CMN_CLOSED;
-											break;
-
-										default:
-											$icon	= 'thumb_down.png';
-											$status	= _AEC_CMN_NOT_SET;
-											break;
-									} ?>
-									&nbsp;
-									<?php echo aecHTML::Icon( $icon, $status ); ?>&nbsp;<?php echo $status; ?></strong>
-								</p>
-								<p>
-									<?php echo _AEC_USER_PAYMENT_PROC; ?>:&nbsp;
-									<strong><?php echo aecHTML::Icon( 'money.png', _AEC_USER_PAYMENT_PROC ); ?>&nbsp;<?php echo $metaUser->focusSubscription->type ? $metaUser->focusSubscription->type : _AEC_CMN_NOT_SET; ?></strong>
-								</p>
 								<table>
+									<tr>
+										<td width="120"><?php echo _AEC_USER_STATUS; ?>:</td>
+										<?php
+										switch( $metaUser->focusSubscription->status ) {
+											case 'Excluded':
+												$icon = 'cut_red.png';
+												$status	= _AEC_CMN_EXCLUDED;
+												break;
+											case 'Trial':
+												$icon 	= 'star.png';
+												$status	= _AEC_CMN_TRIAL;
+												break;
+											case 'Pending':
+												$icon 	= 'star.png';
+												$status	= _AEC_CMN_PENDING;
+												break;
+											case 'Active':
+												$icon	= 'tick.png';
+												$status	= _AEC_CMN_ACTIVE;
+												break;
+											case 'Cancel':
+												$icon	= 'exclamation.png';
+												$status	= _AEC_CMN_CANCEL;
+												break;
+											case 'Expired':
+												$icon	= 'cancel.png';
+												$status	= _AEC_CMN_EXPIRED;
+												break;
+											case 'Closed':
+												$icon	= 'cancel.png';
+												$status	= _AEC_CMN_CLOSED;
+												break;
+											default:
+												$icon	= 'thumb_down.png';
+												$status	= _AEC_CMN_NOT_SET;
+												break;
+										} ?>
+										<td><strong><?php echo aecHTML::Icon( $icon, $status ); ?>&nbsp;<?php echo $status; ?></strong></td>
+									</tr>
+									<tr>
+										<td width="120"><?php echo _AEC_USER_PAYMENT_PROC; ?>:</td>
+										<td><strong><?php echo aecHTML::Icon( 'money.png', _AEC_USER_PAYMENT_PROC ); ?>&nbsp;<?php echo $metaUser->focusSubscription->type ? $metaUser->focusSubscription->type : _AEC_CMN_NOT_SET; ?></strong></td>
+									</tr>
+									<tr>
+										<td width="120"><?php echo _AEC_USER_CURR_SUBSCR_PLAN_PRIMARY; ?>:</td>
+										<td><input class="checkbox" type="checkbox" name="ck_primary" id="ck_primary" <?php echo $metaUser->focusSubscription->primary ? 'checked="checked" ' : ''; ?>/></td>
+									</tr>
 									<tr>
 										<td width="120"><?php echo _AEC_USER_CURR_SUBSCR_PLAN; ?>:</td>
 										<td><strong>#<?php echo $metaUser->focusSubscription->plan; ?></strong> - "<?php echo ( $metaUser->focusSubscription->plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->plan ) : '<span style="color:#FF0000;">' . _AEC_CMN_NOT_SET . '</span>' ); ?>"</td>
@@ -711,14 +708,36 @@ class HTML_AcctExp
 									<?php echo $lists['assignto_plan']; ?>
 								</p>
 								<?php if ( !empty( $metaUser->allSubscriptions ) ) { ?>
-								<table>
-									<?php foreach ( $metaUser->allSubscriptions as $subs ) { ?>
-										<tr<?php echo isset( $subs->current_focus ) ? 'class="focus"' : ''; ?>>
-											<td><?php echo $subs->id; ?></td>
+									<br />
+									<p><strong><?php echo _AEC_USER_ALL_SUBSCRIPTIONS;?>:</strong></p>
+									<table>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+											<td><?php echo _AEC_USER_SUBSCRIPTIONS_ID;?></td>
+											<td><?php echo _AEC_USER_SUBSCRIPTIONS_STATUS;?></td>
+											<td><?php echo _AEC_USER_SUBSCRIPTIONS_PROCESSOR;?></td>
+											<td><?php echo _AEC_USER_SUBSCRIPTIONS_SINGUP;?></td>
+											<td><?php echo _AEC_USER_SUBSCRIPTIONS_EXPIRATION;?></td>
 										</tr>
-										<?php
-									} ?>
-								</table>
+										<tr>
+											<td colspan="7" style="border-top: 2px solid #999999;"></td>
+										</tr>
+										<?php foreach ( $metaUser->allSubscriptions as $subs ) { ?>
+											<tr<?php echo isset( $subs->current_focus ) ? ' style="background-color:#eff;"' : ''; ?>>
+												<td><?php echo isset( $subs->current_focus ) ? '&rArr;' : '&nbsp;'; ?></td>
+												<td><?php echo $subs->primary ? aecHTML::Icon( 'star.png', _AEC_USER_SUBSCRIPTIONS_PRIMARY ) : '&nbsp;'; ?></td>
+												<td><?php echo !isset( $subs->current_focus ) ? '<a href="index2.php?option=com_acctexp&amp;task=edit&subscriptionid=' . $subs->id . '">' . $subs->id . '</a>' : $subs->id; ?></td>
+												<td><?php echo $subs->status; ?></td>
+												<td><?php echo $subs->type; ?></td>
+												<td><?php echo $subs->signup_date; ?></td>
+												<td><?php echo $subs->lifetime ? _AEC_CMN_LIFETIME : HTML_AcctExp::DisplayDateInLocalTime($subs->expiration); ?></td>
+											</tr>
+											<?php
+										} ?>
+									</table>
+								<?php } else { ?>
+									<p><?php echo _AEC_USER_ALL_SUBSCRIPTIONS_NOPE;?></p>
 								<?php } ?>
 						</div>
 					</td>
@@ -1239,6 +1258,7 @@ class HTML_AcctExp
 				<tr>
 					<th width="20">#</th>
 					<th width="20"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
+					<th width="20">&nbsp;</th>
 					<th width="15%" align="left" nowrap="nowrap"><?php echo _CNAME; ?></th>
 					<th width="10%" align="left" nowrap="nowrap"><?php echo _USERLOGIN; ?></th>
 					<th width="10%" align="left" nowrap="nowrap"><?php echo _AEC_CMN_STATUS; ?></th>
@@ -1272,6 +1292,7 @@ class HTML_AcctExp
 						<tr class="row<?php echo $k; ?>"<?php echo $rowstyle; ?>>
 							<td width="20" align="center"><?php echo $pageNav->rowNumber( $i ); ?></td>
 							<td width="20"><?php echo mosHTML::idBox( $i, $row->id, false, ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) ); ?></td>
+							<td width="20"><?php echo $row->primary ? aecHTML::Icon( 'star.png', _AEC_USER_SUBSCRIPTIONS_PRIMARY ) : '&nbsp;'; ?></td>
 							<td width="15%" align="left"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','edit')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $row->name; ?> </a></td>
 							<td width="10%" align="left"><?php echo $row->username; ?></td>
 							<td width="10%" align="left"><?php echo $row->status; ?></td>

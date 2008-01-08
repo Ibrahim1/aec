@@ -224,9 +224,13 @@ class metaUser
 			$this->allSubscriptions = array();
 
 			foreach ( $subscrids as $subscrid ) {
-			$this->allSubscriptions[] = new Subscription( $database );
-			$this->allSubscriptions[]->load( $subscrid );
+			$subscription = new Subscription( $database );
+			$subscription->load( $subscrid );
+
+			$this->allSubscriptions[] = $subscription;
 			}
+
+			return true;
 		} else {
 			$this->allSubscriptions = false;
 			return false;
@@ -4770,6 +4774,22 @@ class Subscription extends paramDBTable
 		$database->setQuery( $query );
 
 		return $database->loadResult();
+	}
+
+	function makePrimary()
+	{
+		global $database;
+
+		$query = 'UPDATE #__acctexp_subscr'
+		. ' SET `primary` = \'0\''
+		. ' WHERE userid = \'' . $this->userid . '\''
+		;
+		$database->setQuery( $query );
+		$database->query();
+
+		$this->primary = 1;
+		$this->check();
+		$this->store();
 	}
 
 	function manualVerify()
