@@ -1107,7 +1107,7 @@ function saveUser( $option, $apply=0 )
 		$metaUser->focusSubscription->status		= 'Active';
 		$metaUser->focusSubscription->lifetime	= 1;
 	} elseif ( !empty( $_POST['expiration'] ) ) {
-		if ( $_POST['expiration'] != $metaUser->focusSubscription->expiration ) {
+		if ( $_POST['expiration'] != $_POST['expiration_check'] ) {
 			if ( strpos( $_POST, ':' ) === false ) {
 				$metaUser->focusSubscription->expiration = $_POST['expiration'] . ' 00:00:00';
 			} else {
