@@ -677,7 +677,7 @@ class HTML_AcctExp
 									</tr>
 									<tr>
 										<td width="120"><?php echo _AEC_USER_CURR_SUBSCR_PLAN_PRIMARY; ?>:</td>
-										<td><input class="checkbox" type="checkbox" name="ck_primary" id="ck_primary" <?php echo $metaUser->focusSubscription->primary ? 'checked="checked" ' : ''; ?>/></td>
+										<td><input class="checkbox" type="checkbox" name="ck_primary" id="ck_primary" <?php echo $metaUser->focusSubscription->primary ? 'checked="checked" disabled="disabled" ' : ''; ?>/></td>
 									</tr>
 									<tr>
 										<td width="120"><?php echo _AEC_USER_CURR_SUBSCR_PLAN; ?>:</td>

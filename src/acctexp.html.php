@@ -60,10 +60,9 @@ class HTML_frontEnd
 	function expired($option, $userid, $expiration, $name, $username, $invoice, $trial)
 	{
 		global $database, $aecConfig;
-		?>
-		<div class="componentheading"><?php echo _EXPIRED_TITLE; ?></div>
-		<?php
+
 		if ($aecConfig->cfg['customtext_expired_keeporiginal']) {?>
+			<div class="componentheading"><?php echo _EXPIRED_TITLE; ?></div>
 			<div id="expired_greeting">
 				<p><?php echo sprintf( _DEAR, $name ); ?></p><p><?php
 					if ( $trial ) {
@@ -124,11 +123,9 @@ class HTML_frontEnd
 		if ( $reason !== 0 ) {
 			$actions .= ' ' . $reason;
 		}
-		?>
 
-		<div class="componentheading"><?php echo _PENDING_TITLE; ?></div>
-		<?php
 		if ( $aecConfig->cfg['customtext_pending_keeporiginal'] ) { ?>
+			<div class="componentheading"><?php echo _PENDING_TITLE; ?></div>
 			<p class="expired_dear"><?php echo sprintf( _DEAR, $objUser->name ) . ','; ?></p>
 			<p class="expired_date"><?php echo _WARN_PENDING; ?></p>
 			<?php
@@ -282,9 +279,9 @@ class HTML_frontEnd
 		if ( !is_object( $this ) ) {
 			HTML_frontEnd::aec_styling();
 		} ?>
-		<div class="componentheading"><?php echo _NOT_ALLOWED_HEADLINE; ?></div>
 		<?php
 		if ( $aecConfig->cfg['customtext_notallowed_keeporiginal'] ) {?>
+			<div class="componentheading"><?php echo _NOT_ALLOWED_HEADLINE; ?></div>
 			<p>
 				<?php
 				if ( $loggedin ) {
@@ -300,7 +297,7 @@ class HTML_frontEnd
 			<?php
 		}
 		if ( $aecConfig->cfg['customtext_notallowed'] ) { ?>
-			<p><?php echo $aecConfig->cfg['customtext_notallowed']; ?></p>
+			<?php echo $aecConfig->cfg['customtext_notallowed']; ?>
 			<?php
 		} ?>
 		<p></p>
