@@ -2338,7 +2338,7 @@ class SubscriptionPlan extends paramDBTable
 		}
 	}
 
-	function applyPlan( $userid, $processor = 'none', $silent = 0, $multiplicator = 1 )
+	function applyPlan( $userid, $processor = 'none', $silent = 0, $multiplicator = 1, $invoice = null )
 	{
 		global $database, $mainframe, $mosConfig_offset_user, $aecConfig;
 
@@ -2454,7 +2454,7 @@ class SubscriptionPlan extends paramDBTable
 					$mi->load( $mi_id );
 					if ( $mi->callIntegration() ) {
 						if ( ( ( strcmp( $mi->class_name, 'mi_email' ) === 0 ) && !$silent ) || ( strcmp( $mi->class_name, 'mi_email' ) !== 0 ) ) {
-							if ( $mi->action( $metaUser, null, null, $this ) === false ) {
+							if ( $mi->action( $metaUser, null, $invoice, $this ) === false ) {
 								return false;
 							}
 						}
@@ -4328,9 +4328,9 @@ class Invoice extends paramDBTable
 				}
 
 				// Apply the Plan
-				$application = $metaUser->focusSubscription->applyUsage( $this->usage, $this->method, 0, $multiplicator );
+				$application = $metaUser->focusSubscription->applyUsage( $this->usage, $this->method, 0, $multiplicator, $this );
 			} else {
-				$application = $new_plan->applyPlan( 0, $this->method, 0, $multiplicator );
+				$application = $new_plan->applyPlan( 0, $this->method, 0, $multiplicator, $this );
 			}
 
 			if ( $application === false ) {
@@ -5079,7 +5079,7 @@ class Subscription extends paramDBTable
 		$this->store();
 	}
 
-	function applyUsage( $usage = 0, $processor = 'none', $silent = 0, $multiplicator = 1 )
+	function applyUsage( $usage = 0, $processor = 'none', $silent = 0, $multiplicator = 1, $invoice=null )
 	{
 		global $database;
 
@@ -5091,7 +5091,7 @@ class Subscription extends paramDBTable
 		$new_plan->load( $usage );
 
 		if ( $new_plan->id ) {
-			return $new_plan->applyPlan( $this->userid, $processor, $silent, $multiplicator );
+			return $new_plan->applyPlan( $this->userid, $processor, $silent, $multiplicator, $invoice );
 		} else {
 			return false;
 		}
