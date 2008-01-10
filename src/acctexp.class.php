@@ -2373,14 +2373,17 @@ class SubscriptionPlan extends paramDBTable
 			if ( ( $comparison['total_comparison'] === false ) || $is_pending ) {
 				// If user is using global trial period he still can use the trial period of a plan
 				if ( ( $params['trial_period'] > 0 ) && !$is_trial ) {
+					$trial		= true;
 					$value		= $params['trial_period'];
 					$perunit	= $params['trial_periodunit'];
 					$params['lifetime']	= 0; // We are entering the trial period. The lifetime will come at the renew.
 				} else {
+					$trial		= false;
 					$value		= $params['full_period'];
 					$perunit	= $params['full_periodunit'];
 				}
 			} elseif ( !$is_pending ) {
+				$trial		= false;
 				$value		= $params['full_period'];
 				$perunit	= $params['full_periodunit'];
 			} else {
@@ -2422,9 +2425,9 @@ class SubscriptionPlan extends paramDBTable
 			} else {
 				// Renew subscription - Do NOT set signup_date
 				if ( !isset( $params['make_active'] ) ) {
-					$status = 'Active';
+					$status = $trial ? 'Trial' : 'Active';
 				} else {
-					$status = ( $params['make_active'] ? 'Active' : 'Pending' );
+					$status = ( $params['make_active'] ? ( $trial ? 'Trial' : 'Active' ) : 'Pending' );
 				}
 				$renew = 1;
 			}
@@ -2524,7 +2527,6 @@ class SubscriptionPlan extends paramDBTable
 				$amount['amount3']	= $params['full_amount'];
 			}
 
-			$amount['amount3']		= $params['full_amount'];
 			$amount['period3']		= $params['full_period'];
 			$amount['unit3']		= $params['full_periodunit'];
 		} else {
@@ -3238,7 +3240,7 @@ class InvoiceFactory
 		return;
 	}
 
-	function create ( $option, $intro=0, $usage=0, $processor=null, $invoice=0, $passthrough=false )
+	function create( $option, $intro=0, $usage=0, $processor=null, $invoice=0, $passthrough=false )
 	{
 		global $database, $mainframe, $my, $aecConfig;
 
@@ -3391,9 +3393,8 @@ class InvoiceFactory
 									$pp->getInfo();
 
 									if ( !($plan_params['lifetime'] && $pp->info['recurring'] ) ) {
-										// TODO: This following line produces a notice under some circumstances - find out why!
 										$plan_gw[$k]['name']		= $pp->processor_name;
-										$plan_gw[$k]['statement']	= $pp->info->statement;
+										$plan_gw[$k]['statement']	= $pp->info['statement'];
 									}
 									$k++;
 								}
@@ -5122,7 +5123,6 @@ class Subscription extends paramDBTable
 		}
 
 		$this->used_plans = implode( ';', $new_used_plans );
-
 	}
 
 	function getUsedPlans()
@@ -5133,13 +5133,9 @@ class Subscription extends paramDBTable
 		foreach ( $used_plans as $entry ) {
 			$entryarray = explode( ',', $entry );
 
-			if ( !empty( $entryarray ) ) {
-				if ( isset( $entryarray[1] ) ) {
-					if ( !empty( $entryarray[1] ) ) {
-						$amount = $entryarray[1];
-					} else {
-						$amount = 1;
-					}
+			if ( !empty( $entryarray[0] ) ) {
+				if ( !empty( $entryarray[1] ) ) {
+					$amount = $entryarray[1];
 				} else {
 					$amount = 1;
 				}
@@ -5147,7 +5143,7 @@ class Subscription extends paramDBTable
 				if ( isset( $array[$entryarray[0]] ) ) {
 					$array[$entryarray[0]] += $amount;
 				} else {
-					$array[$entryarray[0]] = 1;
+					$array[$entryarray[0]] = $amount;
 				}
 			}
 		}
