@@ -361,18 +361,10 @@ class HTML_frontEnd
 			global $mosConfig_offset_user;
 			global $database;
 
-			// compatibility with Mambo
-			if ( !empty( $mosConfig_offset_user ) ) {
-				$timeOffset = $mosConfig_offset_user * 3600;
-			} else {
-				global $mosConfig_offset;
-				$timeOffset = $mosConfig_offset * 3600;
-			}
-
-			$retVal = strftime( $aecConfig->cfg['display_date_frontend'], ( strtotime( $SQLDate ) + $timeOffset ) );
+			$retVal = strftime( $aecConfig->cfg['display_date_frontend'], strtotime( $SQLDate ) );
 
 			if ( $check ) {
-				$timeDif = strtotime( $SQLDate ) - (time() + $timeOffset);
+				$timeDif = strtotime( $SQLDate ) - time();
 				if ( $timeDif < 0 ) {
 					$retVal = _AEC_EXPIRE_PAST . ':&nbsp;<strong>' . $retVal . '</strong>';
 				} elseif ( ( $timeDif >= 0 ) && ( $timeDif < 86400 ) ) {

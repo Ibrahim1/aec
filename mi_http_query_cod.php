@@ -97,7 +97,7 @@ class mi_http_query_cod
 		$return .= $this->fetchURL( $link.'-2' );
 
 		if ( strpos( $return, "<Errors>" ) === false ) {
-			if ( ( $metaUser->focusSubscription->previous_plan == 8 ) || ( $metaUser->focusSubscription->plan == 8 ) ) {
+			if ( $metaUser->focusSubscription->previous_plan == 8 ) {
 				$query = 'UPDATE #__comprofiler'
 					. ' SET cb_orgid = \'' . $metaUser->cmsUser->username . '\''
 					. ' WHERE user_id = \'' . (int) $metaUser->userid . '\'';

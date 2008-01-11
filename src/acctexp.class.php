@@ -5038,6 +5038,8 @@ class Subscription extends paramDBTable
 
 		if ( $this->expire( $overridefallback ) ) {
 			if ( $this->plan ) {
+				global $mosConfig_offset_user;
+
 				$subscription_plan = new SubscriptionPlan( $database );
 				$subscription_plan->load( $this->plan );
 				$plan_params = $subscription_plan->getParams();
@@ -5052,7 +5054,7 @@ class Subscription extends paramDBTable
 				}
 
 				$newexpiration = strtotime( $this->expiration );
-				$now = time();
+				$now = time() + $mosConfig_offset_user*3600;
 
 				// ...cut away blocks until we are in the past
 				for ( $i=$newexpiration; $i>=$now; $i-=$unit ) {
@@ -6921,10 +6923,12 @@ class couponHandler
 		$couponxuser = new couponXuser( $database );
 
 		if ( $id ) {
+			global $mosConfig_offset_user;
+
 			$couponxuser->load( $id );
 			$couponxuser->usecount += 1;
 			$couponxuser->addInvoice( $invoice->invoice_number );
-			$couponxuser->last_updated = date( 'Y-m-d H:i:s' );
+			$couponxuser->last_updated = date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 );
 			$couponxuser->check();
 			$couponxuser->store();
 		} else {
@@ -6954,9 +6958,11 @@ class couponHandler
 		$couponxuser = new couponXuser( $database );
 
 		if ( $id ) {
+			global $mosConfig_offset_user;
+
 			$couponxuser->load( $id );
 			$couponxuser->usecount -= 1;
-			$couponxuser->last_updated = date( 'Y-m-d H:i:s' );
+			$couponxuser->last_updated = date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 );
 
 			if ( $couponxuser->usecount ) {
 				$couponxuser->delInvoice( $invoice->invoice_number );
@@ -7271,7 +7277,9 @@ class coupon extends paramDBTable
 		}
 		// Set created date if supplied
 		if ( is_null( $created ) ) {
-			$this->created_date = date( 'Y-m-d H:i:s' );
+			global $mosConfig_offset_user;
+
+			$this->created_date = date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 );
 		} else {
 			$this->created_date = $created;
 		}
@@ -7412,13 +7420,15 @@ class couponXuser extends paramDBTable
 
 	function createNew( $userid, $coupon, $type, $params=null )
 	{
+		global $mosConfig_offset_user;
+
 		$this->id = 0;
 		$this->coupon_id = $coupon->id;
 		$this->coupon_type = $type;
 		$this->coupon_code = $coupon->coupon_code;
 		$this->userid = $userid;
-		$this->created_date = date( 'Y-m-d H:i:s' );
-		$this->last_updated = date( 'Y-m-d H:i:s' );
+		$this->created_date = date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 );
+		$this->last_updated = date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 );
 
 		if ( is_array( $params ) ) {
 			$this->setParams( $params );

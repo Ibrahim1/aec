@@ -2393,17 +2393,9 @@ class HTML_AcctExp
 		if ( $SQLDate == '' || $SQLDate == '-' ) {
 			return _AEC_CMN_NOT_SET;
 		} else {
-			global $mosConfig_offset_user, $database, $aecConfig;
+			global $database, $aecConfig;
 
-			// compatibility with Mambo
-			if ( !empty( $mosConfig_offset_user ) ) {
-				$timeOffset = $mosConfig_offset_user * 3600;
-			} else {
-				global $mosConfig_offset;
-				$timeOffset = $mosConfig_offset * 3600;
-			}
-
-			return strftime( $aecConfig->cfg['display_date_backend'], ( strtotime( $SQLDate ) + $timeOffset ) );
+			return strftime( $aecConfig->cfg['display_date_backend'], strtotime( $SQLDate )  );
 		}
 	}
 }
