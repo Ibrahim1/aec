@@ -1233,9 +1233,6 @@ class PaymentProcessorHandler
 	{
 		$ch = curl_init();
 		curl_setopt( $ch, CURLOPT_VERBOSE, 1 );
-		//curl_setopt ($ch, CURLOPT_HTTPPROXYTUNNEL, TRUE);
-		curl_setopt( $ch, CURLOPT_PROXYTYPE,		CURLPROXY_HTTP );
-		curl_setopt( $ch, CURLOPT_PROXY,			'http://proxy.shr.secureserver.net:3128' );
 		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER,	FALSE );
 		curl_setopt( $ch, CURLOPT_URL,				$url );
 		curl_setopt( $ch, CURLOPT_POST,				1 );
