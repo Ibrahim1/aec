@@ -37,8 +37,8 @@
  */
 define("RECAPTCHA_API_SERVER", "http://api.recaptcha.net");
 define("RECAPTCHA_API_SECURE_SERVER", "https://api-secure.recaptcha.net");
-define("RECAPTCHA_VERIFY_SERVER", "69.12.97.166");
-
+//define("RECAPTCHA_VERIFY_SERVER", "69.12.97.166");
+define("RECAPTCHA_VERIFY_SERVER", "api-verify.recaptcha.net");
 /**
  * Encodes the given data into a query string format
  * @param $data - array of string elements to be encoded
@@ -71,12 +71,25 @@ function _recaptcha_http_post($host, $path, $data, $port = 80) {
         $http_request  = "POST $path HTTP/1.0\r\n";
         $http_request .= "Host: $host\r\n";
         $http_request .= "Content-Type: application/x-www-form-urlencoded;\r\n";
-        $http_request .= "Content-Length: " . strlen($req) . "\r\n\r\n";
+        $http_request .= "Content-Length: " . strlen($req) . "\r\n";
         $http_request .= "User-Agent: reCAPTCHA/PHP\r\n";
         $http_request .= "\r\n";
         $http_request .= $req;
 
         $response = '';
+
+        /*
+        if( false == ( $fs = @fsockopen($host, $port, $errno, $errstr, 10) ) ) {
+                die ('Could not open socket');
+        }
+
+        fwrite($fs, $http_request);
+
+        while ( !feof($fs) )
+                $response .= fgets($fs, 1160); // One TCP-IP packet
+        fclose($fs);
+
+		*/
 
 		$response = CAPTCHAdoTheCurl( $host.$path, $port, $req);
 
@@ -116,7 +129,7 @@ function _recaptcha_http_post($host, $path, $data, $port = 80) {
 		. 'POST ' . $path . ' HTTP/1.0' . "\r\n"
 		. 'Host: ' . $host  . '' . "\r\n"
 		. 'Content-Type: application/x-www-form-urlencoded' . "\r\n"
-		. 'Content-Length: ' . strlen($req) . "\r\n\r\n"
+		. 'Content-Length: ' . strlen($req) . "\r\n"
 		. 'User-Agent: reCAPTCHA/PHP' . "\r\n"
 		. "\r\n"
 		;
