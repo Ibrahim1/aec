@@ -94,19 +94,11 @@ class processor_ideal_basic extends URLprocessor
 
 	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
 	{
-		// Payment Plans are required to have a productid assigned
-		if ( empty( $int_var['planparams']['verotel_product'] ) ) {
-			$product = $cfg['siteid'];
-		} else {
-			$product = $int_var['planparams']['verotel_product'];
-		}
-
 		if ( $cfg['testmode'] ) {
 			$var['post_url']		= "https://ideal.secure-ing.com";
 		} else {
 			$var['post_url']		= "https://ideal.secure-ing.com";
 		}
-
 
 		$var['merchantID']			= $cfg['merchantid'];
 		$var['subID']				= $cfg['subid'];

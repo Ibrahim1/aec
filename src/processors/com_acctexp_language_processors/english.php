@@ -386,6 +386,21 @@ define( '_CFG_IDEAL_BASIC_KEY_DESC', 'Your secret key');
 define( '_CFG_IDEAL_BASIC_DESCRIPTION_NAME', 'Item Description');
 define( '_CFG_IDEAL_BASIC_DESCRIPTION_DESC', 'The Item description that is shown on the invoice - max 32 characters!');
 
+// iDeal Advanced
+define( '_CFG_IDEAL_ADVANCED_LONGNAME', 'iDeal');
+define( '_CFG_IDEAL_ADVANCED_STATEMENT', 'Make payments with iDeal');
+define( '_CFG_IDEAL_ADVANCED_DESCRIPTION', 'De veilige manier van betalen op internet.');
+define( '_CFG_IDEAL_ADVANCED_MERCHANTID_NAME', 'Merchant ID');
+define( '_CFG_IDEAL_ADVANCED_MERCHANTID_DESC', 'Your Merchant ID');
+define( '_CFG_IDEAL_ADVANCED_TESTMODESTAGE_NAME', 'Testmode Stage');
+define( '_CFG_IDEAL_ADVANCED_TESTMODESTAGE_DESC', 'Which of the tests (1-7) do you want to conduct?');
+define( '_CFG_IDEAL_ADVANCED_SUBID_NAME', 'Testmode Stage');
+define( '_CFG_IDEAL_ADVANCED_SUBID_DESC', 'Set to 0 unless you have specific reasons not to');
+define( '_CFG_IDEAL_ADVANCED_KEY_NAME', 'Key');
+define( '_CFG_IDEAL_ADVANCED_KEY_DESC', 'Your secret key');
+define( '_CFG_IDEAL_ADVANCED_DESCRIPTION_NAME', 'Item Description');
+define( '_CFG_IDEAL_ADVANCED_DESCRIPTION_DESC', 'The Item description that is shown on the invoice - max 32 characters!');
+
 // Authorize.net AIM
 define( '_CFG_AUTHORIZE_AIM_LONGNAME', 'Authorize.net AIM');
 define( '_CFG_AUTHORIZE_AIM_STATEMENT', 'Make on-site CreditCard payments with Authorize.net');
