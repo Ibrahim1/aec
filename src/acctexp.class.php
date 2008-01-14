@@ -3249,7 +3249,6 @@ class InvoiceFactory
 			$metaUser->cmsUser->gid = 29;
 			$metaUser->hasSubscription = false;
 			$metaUser->hasExpiration = false;
-			$register = 1;
 
 			if ( $passthrough ) {
 				$cpass = $passthrough;
@@ -3257,11 +3256,13 @@ class InvoiceFactory
 
 				$cmsfields = array( 'name', 'username', 'email', 'password' );
 
+				// Create dummy CMS user
 				foreach( $cmsfields as $cmsfield ) {
 					$metaUser->cmsUser->$cmsfield = $cpass[$cmsfield];
 					unset( $cpass[$cmsfield] );
 				}
 
+				// Create dummy CB/CBE user
 				if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
 					$metaUser->hasCBprofile = 1;
 					$metaUser->cbUser = new stdClass();
@@ -3274,6 +3275,10 @@ class InvoiceFactory
 						}
 					}
 				}
+
+				$register = 0;
+			} else {
+				$register = 1;
 			}
 		} else {
 			// Loading the actual user

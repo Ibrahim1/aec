@@ -341,7 +341,7 @@ function subscribe( $option )
 		if ( $my->id ) {
 			$userid			= $my->id;
 			$passthrough	= false;
-		} elseif ( $itemid ) {
+		} elseif ( !empty( $itemid ) && !isset( $_POST['username'] ) ) {
 			$userid			= $itemid;
 			$passthrough	= false;
 		} elseif ( !$userid ) {
