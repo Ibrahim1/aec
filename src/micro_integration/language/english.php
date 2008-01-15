@@ -293,4 +293,8 @@ define( '_MI_MI_HTTP_QUERY_URL_PRE_EXP_DESC',			'The URL that this Request shoul
 define( '_MI_MI_HTTP_QUERY_QUERY_PRE_EXP_NAME',			'Query Variables' );
 define( '_MI_MI_HTTP_QUERY_QUERY_PRE_EXP_DESC',			'Transmit these variables via HTTP GET when calling the URL. Separated by linebreaks in the form of "parameter_name=parameter_value". The RewriteEngine works as specified below.' );
 
+
+// MySMS
+define('_AEC_MI_NAME_MYSMS', 'MySMS Micro Integration');
+define('_AEC_MI_DESC_MYSMS', 'Will automate enable a user to send sms, and add x cerdits to the account. The amount is configurable.');
 ?>
