@@ -122,6 +122,8 @@ class mi_acajoom
 		. ' (type, subscriber_id, list_id, mailing_id, issue_nb, send_date, suspend, delay, acc_level, published, params)'
 		. ' VALUES(\'1\', \'' . $subscriber_id . '\', \'' . $list_id . '\', \'0\', \'0\', \'0000-00-00 00:00:00\', \'0\', \'0\', \'0\', \'0\', \'\' )'
 		;
+		$database->setQuery( $query );
+		return $database->loadResult();
 	}
 
 	function deleteFromList( $subscriber_id, $list_id )
