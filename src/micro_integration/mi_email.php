@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: mi_acajoom.php 16 2007-07-01 12:07:07Z mic $
+ * @version $Id: mi_email.php
  * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
  * @subpackage Micro Integrations - Email
  * @copyright 2006/2007 Copyright (C) David Deutsch
