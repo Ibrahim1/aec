@@ -110,7 +110,7 @@ class mi_acajoom
 		global $database;
 		$query = 'SELECT id'
 		. ' FROM #__acajoom_subscribers'
-		. ' WHERE userid = \'' . $userid . '\''
+		. ' WHERE user_id = \'' . $userid . '\''
 		;
 		$database->setQuery( $query );
 		return $database->loadResult();
