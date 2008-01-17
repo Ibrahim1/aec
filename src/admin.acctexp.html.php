@@ -2117,6 +2117,8 @@ class HTML_AcctExp
 										<?php echo $aecHTML->createSettingsParticle( 'restrict_combination' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'bad_combinations' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'depend_on_subscr_id' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'subscr_id_dependency' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'allow_trial_depend_subscr' ); ?>
 									</div>
 								</div>
 						</td></tr>

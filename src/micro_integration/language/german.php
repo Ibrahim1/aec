@@ -256,7 +256,7 @@ define( '_MI_MI_COUPON_MAX_REUSE_NAME', 'Max Reuse Coupons');
 define( '_MI_MI_COUPON_MAX_REUSE_DESC', 'The amount of times these coupons can be used');
 define( '_MI_MI_COUPON_MAIL_OUT_COUPONS_NAME', 'Mail out Coupons');
 define( '_MI_MI_COUPON_MAIL_OUT_COUPONS_DESC', 'This will send the coupons in an email to the address specified below');
-define( '_MI_MI_COUPON_ALWAYS_NEW_COUPONS_NAME', 'Amount');
+define( '_MI_MI_COUPON_ALWAYS_NEW_COUPONS_NAME', 'Always new ones?');
 define( '_MI_MI_COUPON_ALWAYS_NEW_COUPONS_DESC', 'Always create new coupons (Yes) if the MI is triggered or only on the first time (No)?');
 define( '_MI_MI_COUPON_INC_OLD_COUPONS_NAME', 'Increment Old Coupons');
 define( '_MI_MI_COUPON_INC_OLD_COUPONS_DESC', 'Will increment the uses of old coupons by the given amount, so that they can be used again after the subscription has been renewed');
