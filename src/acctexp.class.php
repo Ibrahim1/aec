@@ -6897,7 +6897,9 @@ class couponHandler
 
 		// Delete old coupon
 		$this->coupon->delete();
+
 		// Create new entry
+		$this->coupon = $newcoupon;
 
 		// Migrate usage entries
 		$query = 'UPDATE #__acctexp_couponsxuser'

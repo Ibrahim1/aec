@@ -15,8 +15,8 @@ defined( '_VALID_MOS' ) or die( 'Not really ....' );
 define( '_AEC_LANG_INCLUDED_MI', 1);
 
 // acajoom
-define( '_AEC_MI_NAME_ACAJOOM',		'Acajoom (beta!)' );
-define( '_AEC_MI_DESC_ACAJOOM',		'Includes the newsletter Acajoom [Experimental - please give feedback to the developers!]' );
+define( '_AEC_MI_NAME_ACAJOOM',		'Acajoom' );
+define( '_AEC_MI_DESC_ACAJOOM',		'Includes the newsletter Acajoom' );
 define( '_MI_MI_ACAJOOM_LIST_NAME',		'Set List' );
 define( '_MI_MI_ACAJOOM_LIST_DESC',		'Which Mailing list do you want to assign this user to?' );
 define( '_MI_MI_ACAJOOM_LIST_EXP_NAME',		'Set Expiration List' );

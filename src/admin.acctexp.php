@@ -3420,10 +3420,10 @@ function saveCoupon( $option, $type, $apply=0 )
 
 		$cph = new couponHandler();
 
-		if ( $_POST['id'] ) {
+		if ( !empty( $_POST['id'] ) ) {
 			$cph->coupon = new Coupon( $database, $type );
 			$cph->coupon->load( $_POST['id'] );
-			if ( !$cph->coupon->id ) {
+			if ( empty( $cph->coupon->id ) ) {
 				$cph->coupon = new Coupon( $database, !$type );
 				$cph->coupon->load( $_POST['id'] );
 			}

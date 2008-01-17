@@ -16,7 +16,7 @@ define( '_AEC_LANG_INCLUDED_MI', 1);
 
 // acajoom
 define( '_AEC_MI_NAME_ACAJOOM',		'Acajoom' );
-define( '_AEC_MI_DESC_ACAJOOM',		'Bindet den Newsletter Acajoom ein (freie Version)' );
+define( '_AEC_MI_DESC_ACAJOOM',		'Bindet den Newsletter Acajoom ein' );
 define( '_MI_MI_ACAJOOM_LIST_NAME',		'Set List' );
 define( '_MI_MI_ACAJOOM_LIST_DESC',		'Which Mailing list do you want to assign this user to?' );
 define( '_MI_MI_ACAJOOM_LIST_EXP_NAME',		'Set Expiration List' );
