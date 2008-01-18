@@ -2436,6 +2436,9 @@ class SubscriptionPlan extends paramDBTable
 			$metaUser->focusSubscription->lastpay_date	= gmstrftime( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
 			$metaUser->focusSubscription->type = $processor;
 
+			// Clear parameters
+			$metaUser->focusSubscription->params = '';
+
 			$pp = new PaymentProcessor();
 			if ( $pp->loadName( strtolower( $processor ) ) ) {
 				$pp->init();
