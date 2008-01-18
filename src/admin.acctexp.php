@@ -698,7 +698,7 @@ function help( $option )
  	$database->setQuery( $query );
  	$database->loadObject( $objentry );
 
- 	if ( $objentry ) { // mic: fixed php.notice if no active plans / $objentry->id
+ 	if ( $objentry ) {
  		$diagnostic['no_plan'] = 0;
  	} else {
  		$diagnostic['no_plan'] = 1;
@@ -777,141 +777,43 @@ function help( $option )
 	// Apache related file permission problems
 	if ( substr_count( $diagnostic['server_software'], 'Apache' ) ) {
 		if ( $diagnostic['posix_getpwuid_available'] ) {
-				$diagnose[]	= array(
-					_AEC_HELP_SER_SW_DIAG1,
-					$diagnostic['permission_problem'],
-					3,
-					_AEC_HELP_SER_SW_DIAG1_DESC,
-					_AEC_HELP_SER_SW_DIAG1_DESC2,
-					1
-				);
-				$diagnose[]	= array(
-					_AEC_HELP_SER_SW_DIAG2,
-					!@$diagnostic['hack_joomlaphp_permission'],
-					3,
-					_AEC_HELP_SER_SW_DIAG2_DESC,
-					_AEC_HELP_SER_SW_DIAG2_DESC2,
-					1
-				);
-				$diagnose[]	= array(
-					_AEC_HELP_SER_SW_DIAG3,
-					$diagnostic['hacks_legacy'],
-					3,
-					_AEC_HELP_SER_SW_DIAG3_DESC,
-					_AEC_HELP_SER_SW_DIAG3_DESC2,
-					1
-				);
+				$diagnose[]	= array( _AEC_HELP_SER_SW_DIAG1, $diagnostic['permission_problem'], 3, _AEC_HELP_SER_SW_DIAG1_DESC, _AEC_HELP_SER_SW_DIAG1_DESC2, 1 );
+				$diagnose[]	= array( _AEC_HELP_SER_SW_DIAG2, !@$diagnostic['hack_joomlaphp_permission'], 3, _AEC_HELP_SER_SW_DIAG2_DESC, _AEC_HELP_SER_SW_DIAG2_DESC2, 1 );
+				$diagnose[]	= array( _AEC_HELP_SER_SW_DIAG3, $diagnostic['hacks_legacy'], 3, _AEC_HELP_SER_SW_DIAG3_DESC, _AEC_HELP_SER_SW_DIAG3_DESC2, 1 );
 			} else {
-			$diagnose[]	= array(
-				_AEC_HELP_SER_SW_DIAG4,
-				!$diagnostic['posix_getpwuid_available'],
-				3,
-				_AEC_HELP_SER_SW_DIAG4_DESC,
-				_AEC_HELP_SER_SW_DIAG4_DESC2,
-				1
-			);
+			$diagnose[]	= array( _AEC_HELP_SER_SW_DIAG4, !$diagnostic['posix_getpwuid_available'], 3, _AEC_HELP_SER_SW_DIAG4_DESC, _AEC_HELP_SER_SW_DIAG4_DESC2, 1 );
 		}
 	}
 
 	// generic CMS changes
-	$diagnose[]	= array(
-		_AEC_HELP_DIAG_CMN1,
-		$diagnostic['hack_joomlaphp4'],
-		3,
-		_AEC_HELP_DIAG_CMN1_DESC,
-		_AEC_HELP_DIAG_CMN1_DESC2,
-		0
-	);
+	$diagnose[]	= array( _AEC_HELP_DIAG_CMN1, $diagnostic['hack_joomlaphp4'], 3, _AEC_HELP_DIAG_CMN1_DESC, _AEC_HELP_DIAG_CMN1_DESC2, 0 );
 
 	// menu entry
-	$diagnose[]	= array(
-		_AEC_HELP_DIAG_CMN2,
-		$diagnostic['hack_menuentry'],
-		2,
-		_AEC_HELP_DIAG_CMN2_DESC,
-		_AEC_HELP_DIAG_CMN2_DESC2,
-		0
-	);
+	$diagnose[]	= array( _AEC_HELP_DIAG_CMN2, $diagnostic['hack_menuentry'], 2, _AEC_HELP_DIAG_CMN2_DESC, _AEC_HELP_DIAG_CMN2_DESC2, 0 );
 
 	// no active plan
-	$diagnose[]	= array(
-		_AEC_HELP_DIAG_NO_PAY_PLAN,
-		$diagnostic['no_plan'],
-		3,
-		_AEC_HELP_DIAG_NO_PAY_PLAN_DESC,
-		0,
-		1
-	);
+	$diagnose[]	= array( _AEC_HELP_DIAG_NO_PAY_PLAN, $diagnostic['no_plan'], 3, _AEC_HELP_DIAG_NO_PAY_PLAN_DESC, 0, 1 );
 
 	// global entry plan
-	$diagnose[]	= array(
-		_AEC_HELP_DIAG_GLOBAL_PLAN,
-		$diagnostic['global_entry'],
-		1,
-		_AEC_HELP_DIAG_GLOBAL_PLAN_DESC,
-		0,
-		1
-	);
+	$diagnose[]	= array( _AEC_HELP_DIAG_GLOBAL_PLAN, $diagnostic['global_entry'], 1, _AEC_HELP_DIAG_GLOBAL_PLAN_DESC, 0, 1 );
 
 	// server is not reachable
-	$diagnose[]	= array(
-		_AEC_HELP_DIAG_SERVER_NOT_REACHABLE,
-		!$diagnostic['reachable'],
-		3,
-		_AEC_HELP_DIAG_SERVER_NOT_REACHABLE_DESC,
-		0,
-		1
-	);
+	$diagnose[]	= array( _AEC_HELP_DIAG_SERVER_NOT_REACHABLE, !$diagnostic['reachable'], 3, _AEC_HELP_DIAG_SERVER_NOT_REACHABLE_DESC, 0, 1 );
 
 	// site offline
-	$diagnose[]	= array(
-		_AEC_HELP_DIAG_SITE_OFFLINE,
-		$diagnostic['offline'],
-		3,
-		_AEC_HELP_DIAG_SITE_OFFLINE_DESC,
-		0,
-		1
-	);
+	$diagnose[]	= array( _AEC_HELP_DIAG_SITE_OFFLINE, $diagnostic['offline'], 3, _AEC_HELP_DIAG_SITE_OFFLINE_DESC, 0, 1 );
 
 	// disabled registration
-	$diagnose[]	= array(
-		_AEC_HELP_DIAG_REG_DISABLED,
-		!$diagnostic['user_registration'],
-		2,
-		_AEC_HELP_DIAG_REG_DISABLED_DESC,
-		0,
-		1
-	);
+	$diagnose[]	= array( _AEC_HELP_DIAG_REG_DISABLED, !$diagnostic['user_registration'], 2, _AEC_HELP_DIAG_REG_DISABLED_DESC, 0, 1 );
 
 	// login disabled
-	$diagnose[]	= array(
-		_AEC_HELP_DIAG_LOGIN_DISABLED,
-		!$diagnostic['login_possible'],
-		2,
-		_AEC_HELP_DIAG_LOGIN_DISABLED_DESC,
-		0,
-		1
-	);
+	$diagnose[]	= array( _AEC_HELP_DIAG_LOGIN_DISABLED, !$diagnostic['login_possible'], 2, _AEC_HELP_DIAG_LOGIN_DISABLED_DESC, 0, 1 );
 
 	// check JACL
-	$diagnose[]	= array(
-		_AEC_HELP_DIAG_CMN3,
-		!$diagnostic['jacl'],
-		1,
-		_AEC_HELP_DIAG_CMN3_DESC,
-		0,
-		1
-	);
+	$diagnose[]	= array( _AEC_HELP_DIAG_CMN3, !$diagnostic['jacl'], 1, _AEC_HELP_DIAG_CMN3_DESC, 0, 1 );
 
 	if ( $diagnostic['paypal'] ) {
-		$diagnose[]	= array(
-			_AEC_HELP_DIAG_PAYPAL_BUSS_ID,
-			$diagnostic['pp_checkbusiness'],
-			2,
-			_AEC_HELP_DIAG_PAYPAL_BUSS_ID_DESC,
-			_AEC_HELP_DIAG_PAYPAL_BUSS_ID_DESC1,
-			1
-		);
+		$diagnose[]	= array( _AEC_HELP_DIAG_PAYPAL_BUSS_ID, $diagnostic['pp_checkbusiness'], 2, _AEC_HELP_DIAG_PAYPAL_BUSS_ID_DESC, _AEC_HELP_DIAG_PAYPAL_BUSS_ID_DESC1, 1 );
 	}
 
 	HTML_AcctExp::help( $option, $diagnose ) ;

@@ -6675,7 +6675,7 @@ class microIntegration extends paramDBTable
 	{
 		$params = $this->stripNonParams($array);
 
-		$params = $this->commonParamInfo($params);
+		$params = $this->addCommonParamInfo($params);
 
 		if ( method_exists( $this->mi_class, 'saveparams' ) ) {
 			$new_params = $this->mi_class->saveparams( $params );
@@ -6686,6 +6686,7 @@ class microIntegration extends paramDBTable
 		$new_params = $this->stripcommonParamInfo( $new_params );
 
 		$this->setParams( $new_params );
+
 		return true;
 	}
 
@@ -6698,10 +6699,11 @@ class microIntegration extends paramDBTable
 				unset( $array[$name] );
 			}
 		}
+
 		return $array;
 	}
 
-	function commonParamInfo( $params=array() )
+	function addCommonParamInfo( $params=array() )
 	{
 		$params['MI_ID'] = $this->id;
 
@@ -6710,7 +6712,7 @@ class microIntegration extends paramDBTable
 
 	function stripcommonParamInfo( $params )
 	{
-		$commonparams = $this->commonParamInfo();
+		$commonparams = $this->addCommonParamInfo();
 
 		foreach ($commonparams as $key) {
 			if (isset($params[$key])) {
