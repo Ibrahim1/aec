@@ -114,7 +114,7 @@ class mi_acl
 				$selected[]->value = $value;
 			}
 
-			$settings['lists'][$groupname] = mosHTML::selectList( $gtree, $groupname, 'size="6" multiple="multiple"', 'value', 'text', $selected );
+			$settings['lists'][$groupname] = mosHTML::selectList( $gtree, $groupname.'[]', 'size="6" multiple="multiple"', 'value', 'text', $selected );
 		}
 
 		return $settings;
@@ -123,7 +123,7 @@ class mi_acl
 	function saveparams( $params )
 	{
 		$subgroups = array( 'sub_gid_del', 'sub_gid', 'sub_gid_exp_del', 'sub_gid_exp', 'sub_gid_pre_exp_del', 'sub_gid_pre_exp' );
-print_r($_POST);print_r($params);exit();
+
 		foreach ( $subgroups as $groupname ) {
 			$temp = implode( ';', $params[$groupname] );
 			$params[$groupname] = $temp;
