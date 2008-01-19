@@ -6543,7 +6543,7 @@ class microIntegration extends paramDBTable
 
 			$class = $this->class_name;
 
-			$this->mi_class = new $class ();
+			$this->mi_class = new $class();
 
 			$this->mi_class->id = $this->id;
 

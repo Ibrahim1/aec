@@ -2917,7 +2917,7 @@ function saveMicroIntegration( $option, $apply=0 )
 	$mi->on_userchange	= $_POST['on_userchange'];
 	$mi->pre_exp_check	= $_POST['pre_exp_check'];
 
-	if ( $mi->callIntegration() ) {
+	if ( $mi->callIntegration( 1 ) ) {
 		$mi->savePostParams( $_POST );
 
 		if ( !$mi->check() ) {

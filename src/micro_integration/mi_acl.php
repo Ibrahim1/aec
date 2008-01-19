@@ -54,11 +54,6 @@ class mi_acl
 		global $my, $acl;
 
 		$settings = array();
-		$settings['sender']			= array( 'inputE' );
-		$settings['sender_name']		= array( 'inputE' );
-
-		$settings['recipient']			= array( 'inputE' );
-
 		$settings['change_session']	= array( 'list_yesno' );
 
 		$settings['set_gid']			= array( 'list_yesno' );
@@ -72,10 +67,13 @@ class mi_acl
 		$settings['delete_subgroups']	= array( 'list_yesno' );
 
 		$settings['sub_set_gid']			= array( 'list_yesno' );
+		$settings['sub_gid_del']			= array( 'list' );
 		$settings['sub_gid']				= array( 'list' );
 		$settings['sub_set_gid_exp']		= array( 'list_yesno' );
+		$settings['sub_gid_exp_del']		= array( 'list' );
 		$settings['sub_gid_exp']			= array( 'list' );
 		$settings['sub_set_gid_pre_exp']	= array( 'list_yesno' );
+		$settings['sub_gid_pre_exp_del']	= array( 'list' );
 		$settings['sub_gid_pre_exp']		= array( 'list' );
 
 		// ensure user can't add group higher than themselves
@@ -116,15 +114,8 @@ class mi_acl
 				$selected[]->value = $value;
 			}
 
-			$params[$groupname] = $selected;
+			$settings['lists'][$groupname] = mosHTML::selectList( $gtree, $groupname, 'size="6" multiple="multiple"', 'value', 'text', $selected );
 		}
-
-		$settings['lists']['sub_gid_del'] 			= mosHTML::selectList( $gtree, 'sub_gid_del', 'size="6" multiple="multiple"', 'value', 'text', $params['sub_gid_del'] );
-		$settings['lists']['sub_gid'] 				= mosHTML::selectList( $gtree, 'sub_gid', 'size="6" multiple="multiple"', 'value', 'text',  $params['sub_gid'] );
-		$settings['lists']['sub_gid_exp_del'] 		= mosHTML::selectList( $gtree, 'sub_gid_exp_del', 'size="6" multiple="multiple"', 'value', 'text', $params['sub_gid_exp_del'] );
-		$settings['lists']['sub_gid_exp'] 			= mosHTML::selectList( $gtree, 'sub_gid_exp', 'size="6" multiple="multiple"', 'value', 'text', $params['sub_gid_exp'] );
-		$settings['lists']['sub_gid_pre_exp_del'] 	= mosHTML::selectList( $gtree, 'sub_gid_pre_exp_del', 'size="6" multiple="multiple"', 'value', 'text', $params['sub_gid_pre_exp_del'] );
-		$settings['lists']['sub_gid_pre_exp'] 		= mosHTML::selectList( $gtree, 'sub_gid_pre_exp', 'size="6" multiple="multiple"', 'value', 'text', $params['sub_gid_pre_exp'] );
 
 		return $settings;
 	}
@@ -132,9 +123,10 @@ class mi_acl
 	function saveparams( $params )
 	{
 		$subgroups = array( 'sub_gid_del', 'sub_gid', 'sub_gid_exp_del', 'sub_gid_exp', 'sub_gid_pre_exp_del', 'sub_gid_pre_exp' );
-
+print_r($_POST);print_r($params);exit();
 		foreach ( $subgroups as $groupname ) {
-			$params[$groupname] = implode( ';', $params[$groupname] );
+			$temp = implode( ';', $params[$groupname] );
+			$params[$groupname] = $temp;
 		}
 
 		return $params;
@@ -238,8 +230,9 @@ class mi_acl
 			. ' AND group_type = \'main\''
 			;
 			$database->setQuery( $query );
+			$groupid = $database->loadResult();
 
-			if ( !empty( $database->loadResult() ) ) {
+			if ( !empty( $groupid ) ) {
 				$query = 'UPDATE #__jaclplus_user_group'
 				. ' SET group_id = \'' . (int)$params[$section] . '\''
 				. ' WHERE id = \'' . (int) $metaUser->userid . '\''
@@ -259,7 +252,7 @@ class mi_acl
 		return true;
 	}
 
-	function instantGIDchange( $metaUser, $params, $section )
+	function jaclplusGIDchange( $metaUser, $params, $section )
 	{
 		global $database, $acl;
 
@@ -308,22 +301,6 @@ class mi_acl
 					$database->query() or die( $database->stderr() );
 				}
 			}
-		}
-
-		if ( !empty( $database->loadResult() ) ) {
-			$query = 'UPDATE #__jaclplus_user_group'
-			. ' SET group_id = \'' . (int)$params[$section] . '\''
-			. ' WHERE userid = \'' . (int) $metaUser->userid . '\''
-			. ' AND group_type = \'main\''
-			;
-			$database->setQuery( $query );
-			$database->query() or die( $database->stderr() );
-		} else {
-			$query = 'INSERT INTO #__jaclplus_user_group'
-			. ' VALUES( \'' . (int) $metaUser->userid . '\', \'main\', \'' . (int) $params[$section] . '\' )'
-			;
-			$database->setQuery( $query );
-			$database->query() or die( $database->stderr() );
 		}
 
 		return true;
