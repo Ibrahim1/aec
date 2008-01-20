@@ -5353,7 +5353,7 @@ class GeneralInfoRequester
 			} else {
 				return 'UNKNOWN'; // mic: DO NOT CHANGE THIS VALUE!! (used later)
 			}
-		} elseif ( class_exists( 'JConfig' ) ) {
+		} elseif (  defined( 'JPATH_BASE' ) ) {
 			return 'Joomla15';
 		}
 	}
@@ -5814,7 +5814,7 @@ class AECToolbox
 
 			// simple spoof check security
 			if ( function_exists( 'josSpoofCheck' ) && !$internal ) {
-				if ( class_exists( 'JConfig' ) ) {
+				if (  defined( 'JPATH_BASE' ) ) {
 					$token	= JUtility::getToken();
 					if(!JRequest::getInt($token, 0, 'post')) {
 						JError::raiseError(403, 'Request Forbidden');
@@ -5834,7 +5834,7 @@ class AECToolbox
 
 			$row->id 		= 0;
 			$row->usertype 	= '';
-			if ( class_exists( 'JConfig' ) ) {
+			if (  defined( 'JPATH_BASE' ) ) {
 				$authorize	=& JFactory::getACL();
 
 				// Initialize new usertype setting
@@ -5861,7 +5861,7 @@ class AECToolbox
 				exit();
 			}
 
-			if ( class_exists( 'JConfig' ) ) {
+			if (  defined( 'JPATH_BASE' ) ) {
 				jimport('joomla.user.helper');
 
 				$salt = JUserHelper::genRandomPassword(32);

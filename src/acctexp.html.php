@@ -901,7 +901,7 @@ function joomlaregisterForm($option, $useractivation)
 {
 	global $aecConfig, $mosConfig_absolute_path;
 
-	if ( class_exists( 'JConfig' ) ) {
+	if (  defined( 'JPATH_BASE' ) ) {
 	?>
 	<script type="text/javascript">
 	<!--

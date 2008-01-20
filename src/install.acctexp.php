@@ -660,7 +660,7 @@ function com_install()
 	// first delete old menu entries
 	$eucaInstall->deleteAdminMenuEntries();
 
-	if ( class_exists( 'JConfig' ) ) {
+	if (  defined( 'JPATH_BASE' ) ) {
 		$iconroot = '/components/com_acctexp/images/icons/';
 	} else {
 		$iconroot = '../administrator/components/com_acctexp/images/icons/';

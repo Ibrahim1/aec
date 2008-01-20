@@ -31,7 +31,7 @@ class eucaInstall
 		global $mosConfig_absolute_path;
 
 		if ( !class_exists( 'Archive_Tar' ) ) {
-			if ( class_exists( 'JConfig' ) ) {
+			if (  defined( 'JPATH_BASE' ) ) {
 				require_once( $mosConfig_absolute_path . '/libraries/archive/Tar.php' );
 			} else {
 				require_once( $mosConfig_absolute_path . '/includes/Archive/Tar.php' );
@@ -128,6 +128,21 @@ class eucaInstall
 		global $database;
 
 		$values = array();
+		$fields = array();
+
+		$fields[] = 'id';
+		$fields[] = 'name';
+		$fields[] = 'link';
+		$fields[] = 'menuid';
+		$fields[] = 'parent';
+		$fields[] = 'admin_menu_link';
+		$fields[] = 'admin_menu_alt';
+		$fields[] = 'option';
+		$fields[] = 'ordering';
+		$fields[] = 'admin_menu_img';
+		$fields[] = 'iscore';
+		$fields[] = 'params';
+
 		$values[] = 0;
 		$values[] = $entry[1];
 		$values[] = $frontend ? ( 'option=' . _EUCA_APP_COMPNAME ) : '' ;
@@ -140,11 +155,14 @@ class eucaInstall
 		$values[] = $entry[2];
 		$values[] = 0;
 		$values[] = '';
-		if ( class_exists( 'JConfig' ) ) {
+
+		if ( defined( 'JPATH_BASE' ) ) {
+			$fields[] = 'enabled';
 			$values[] = 1;
 		}
 
 		$query = 'INSERT INTO #__components'
+		. ' (\'' . implode( '\', \'', $fields) . '\')'
 		. ' VALUES '
 		. '(\'' . implode( '\', \'', $values) . '\')'
 		;
