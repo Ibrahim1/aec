@@ -75,6 +75,7 @@ class processor_worldpay_futurepay extends POSTprocessor
 		$settings['testmode']		= array( 'list_yesno');
 		$settings['instId']			= array( 'inputC');
 		$settings['currency']		= array( 'list_currency');
+		$settings['info']			= array( 'fieldset' );
 		$settings['item_name']		= array( 'inputE');
  		$settings['callbackPW']		= array( 'inputC');
  		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan');
