@@ -605,6 +605,17 @@ class Config_General extends paramDBTable
 		$def['recaptcha_publickey']				= '';
 		$def['ssl_signup']						= 0;
 
+		// Insert a new entry if there is none yet
+		if ( empty( $this->settings ) ) {
+			global $database;
+
+			$query = 'INSERT INTO #__acctexp_config'
+			. ' VALUES( \'1\', \'\' )'
+			;
+			$database->setQuery( $query );
+			$database->query() or die( $database->stderr() );
+		}
+
 		// Write to Params, do not overwrite existing data
 		$this->addParams( $def, 'settings', false );
 

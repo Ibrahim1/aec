@@ -33,7 +33,7 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 
 function com_install()
 {
-	global $database, $mainframe, $mosConfig_absolute_path, $mosConfig_live_site, $mosConfig_dbprefix, $my;
+	global $database, $mainframe, $mosConfig_absolute_path, $mosConfig_live_site, $mosConfig_dbprefix, $my, $aecConfig;
 
 	$queri		= NULL;
 	$errors		= array();
@@ -688,8 +688,6 @@ function com_install()
 	$eucaInstall->populateAdminMenuEntry( $menu );
 
 	// load settings (creates settings parameters that got added in this version)
-	$cfg = new Config_General($database);
-
 	$result = null;
 
 	$database->setQuery( "SHOW COLUMNS FROM #__acctexp_config LIKE 'settings'" );
@@ -704,7 +702,7 @@ function com_install()
 			$database->loadObject($result);
 			if (strcmp($result->Field, $column) === 0) {
 				$database->setQuery( "SELECT " . $column . " FROM #__acctexp_config WHERE id='1'" );
-				$cfg->cfg[$column] = $database->loadResult();
+				$aecConfig->cfg[$column] = $database->loadResult();
 
 				$database->setQuery("ALTER TABLE #__acctexp_config DROP COLUMN " . $column);
 				if ( !$database->query() ) {
@@ -719,8 +717,8 @@ function com_install()
 		}
 	}
 
-	$cfg->saveSettings();
-
+	$aecConfig->saveSettings();
+print_r($aecConfig);print_r($aecConfig);exit();
 	$eucaInstalldb->dropColifExists( 'mingid', 'plans' );
 	$eucaInstalldb->dropColifExists( 'similarpg', 'plans' );
 	$eucaInstalldb->dropColifExists( 'equalpg', 'plans' );
