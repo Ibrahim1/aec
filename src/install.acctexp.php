@@ -661,7 +661,7 @@ function com_install()
 	$eucaInstall->deleteAdminMenuEntries();
 
 	if (  defined( 'JPATH_BASE' ) ) {
-		$iconroot = '/components/com_acctexp/images/icons/';
+		$iconroot = '../administrator/components/com_acctexp/images/icons/';
 	} else {
 		$iconroot = '../administrator/components/com_acctexp/images/icons/';
 	}
