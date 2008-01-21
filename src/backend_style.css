@@ -254,3 +254,9 @@ fieldset {
 div#aec_footer {
 clear: both;
 }
+
+/* Joomla 1.5 Component Menu */
+
+a.icon-16-aec_logo_tiny {
+background-image: url(/images/icons/aec_logo_tiny.png);
+}

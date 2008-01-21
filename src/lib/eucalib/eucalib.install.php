@@ -30,9 +30,9 @@ class eucaInstall
 	{
 		global $mosConfig_absolute_path;
 
-		if ( !class_exists( 'Archive_Tar' ) ) {
+		if ( !class_exists( 'Archive_Tar' ) || function_exists( 'PclTarExtract' ) ) {
 			if (  defined( 'JPATH_BASE' ) ) {
-				require_once( $mosConfig_absolute_path . '/libraries/archive/Tar.php' );
+				require_once( $mosConfig_absolute_path . '/administrator/includes/pcl/pcltar.lib.php' );
 			} else {
 				require_once( $mosConfig_absolute_path . '/includes/Archive/Tar.php' );
 			}
@@ -51,8 +51,6 @@ class eucaInstall
 				$deploypath = $basepath . $file[1];
 			}
 
-			$archive = new Archive_Tar( $fullpath, 'gz' );
-
 			if ( !@is_dir( $deploypath ) ) {
 				// Borrowed from php.net page on mkdir. Created by V-Tec (vojtech.vitek at seznam dot cz)
 				$folder_path = array( strstr( $deploypath, '.' ) ? dirname( $deploypath ) : $deploypath );
@@ -69,8 +67,16 @@ class eucaInstall
 				}
 			}
 
-			if ( $archive->extract( $deploypath ) ) {
-				@unlink( $fullpath );
+			if (  defined( 'JPATH_BASE' ) ) {
+				if ( PclTarExtract( $fullpath, $deploypath) !== 0 ) {
+					@unlink( $fullpath );
+				}
+			} else {
+				$archive = new Archive_Tar( $fullpath, 'gz' );
+
+				if ( $archive->extract( $deploypath ) ) {
+					@unlink( $fullpath );
+				}
 			}
 		}
 	}
@@ -131,29 +137,28 @@ class eucaInstall
 		$fields = array();
 
 		$fields[] = 'id';
+		$values[] = '';
 		$fields[] = 'name';
+		$values[] = $entry[1];
 		$fields[] = 'link';
-		$fields[] = 'menuid';
-		$fields[] = 'parent';
-		$fields[] = 'admin_menu_link';
-		$fields[] = 'admin_menu_alt';
-		$fields[] = 'option';
-		$fields[] = 'ordering';
-		$fields[] = 'admin_menu_img';
-		$fields[] = 'iscore';
-		$fields[] = 'params';
-
-		$values[] = 0;
-		$values[] = $entry[1];
 		$values[] = $frontend ? ( 'option=' . _EUCA_APP_COMPNAME ) : '' ;
+		$fields[] = 'menuid';
 		$values[] = 0;
+		$fields[] = 'parent';
 		$values[] = $id;
+		$fields[] = 'admin_menu_link';
 		$values[] = 'option=' . _EUCA_APP_COMPNAME . '&task=' . $entry[0];
+		$fields[] = 'admin_menu_alt';
 		$values[] = $entry[1];
+		$fields[] = 'option';
 		$values[] = _EUCA_APP_COMPNAME;
+		$fields[] = 'ordering';
 		$values[] = isset( $entry[3] ) ? $entry[3] : $ordering;
+		$fields[] = 'admin_menu_img';
 		$values[] = $entry[2];
+		$fields[] = 'iscore';
 		$values[] = 0;
+		$fields[] = 'params';
 		$values[] = '';
 
 		if ( defined( 'JPATH_BASE' ) ) {
@@ -162,7 +167,7 @@ class eucaInstall
 		}
 
 		$query = 'INSERT INTO #__components'
-		. ' (\'' . implode( '\', \'', $fields) . '\')'
+		. ' (`' . implode( '`, `', $fields) . '`)'
 		. ' VALUES '
 		. '(\'' . implode( '\', \'', $values) . '\')'
 		;
