@@ -3458,6 +3458,18 @@ class InvoiceFactory
 					include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.html.php' );
 					include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
 
+					global $task;
+
+					$task = 'done';
+
+					registerForm($option, $mainframe->getCfg( 'emailpass' ), null);
+
+				} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
+					// This is a CB registration, borrowing their code to register the user
+
+					include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.html.php' );
+					include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
+
 					registerForm($option, $mainframe->getCfg( 'emailpass' ), null);
 
 				} else {
