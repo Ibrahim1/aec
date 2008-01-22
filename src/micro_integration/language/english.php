@@ -300,5 +300,41 @@ define('_AEC_MI_DESC_MYSMS', 'Will automate enable a user to send sms, and add x
 // ACL
 define('_AEC_MI_NAME_ACL', 'Usergroup MI (ACL)');
 define('_AEC_MI_DESC_ACL', 'Set the usergroup for the user account.');
+define('_MI_MI_ACL_CHANGE_SESSION_NAME', '');
+define('_MI_MI_ACL_CHANGE_SESSION_NAME', '');
+define('_MI_MI_ACL_SET_GID_NAME', '');
+define('_MI_MI_ACL_SET_GID_NAME', '');
+define('_MI_MI_ACL_GID_NAME', '');
+define('_MI_MI_ACL_GID_NAME', '');
+define('_MI_MI_ACL_SET_GID_EXP_NAME', '');
+define('_MI_MI_ACL_SET_GID_EXP_NAME', '');
+define('_MI_MI_ACL_GID_EXP_NAME', '');
+define('_MI_MI_ACL_GID_EXP_NAME', '');
+define('_MI_MI_ACL_SET_GID_PRE_EXP_NAME', '');
+define('_MI_MI_ACL_SET_GID_PRE_EXP_NAME', '');
+define('_MI_MI_ACL_GID_PRE_EXP_NAME', '');
+define('_MI_MI_ACL_GID_PRE_EXP_NAME', '');
+define('_MI_MI_ACL_JACLPLUSPRO_NAME', '');
+define('_MI_MI_ACL_JACLPLUSPRO_NAME', '');
+define('_MI_MI_ACL_DELETE_SUBGROUPS_NAME', '');
+define('_MI_MI_ACL_DELETE_SUBGROUPS_NAME', '');
+define('_MI_MI_ACL_SUB_SET_GID_NAME', '');
+define('_MI_MI_ACL_SUB_SET_GID_NAME', '');
+define('_MI_MI_ACL_SUB_GID_DEL_NAME', '');
+define('_MI_MI_ACL_SUB_GID_DEL_NAME', '');
+define('_MI_MI_ACL_SUB_GID_NAME', '');
+define('_MI_MI_ACL_SUB_GID_NAME', '');
+define('_MI_MI_ACL_SUB_SET_GID_EXP_NAME', '');
+define('_MI_MI_ACL_SUB_SET_GID_EXP_NAME', '');
+define('_MI_MI_ACL_SUB_GID_EXP_DEL_NAME', '');
+define('_MI_MI_ACL_SUB_GID_EXP_DEL_NAME', '');
+define('_MI_MI_ACL_SUB_GID_EXP_NAME', '');
+define('_MI_MI_ACL_SUB_GID_EXP_NAME', '');
+define('_MI_MI_ACL_SUB_SET_GID_PRE_EXP_NAME', '');
+define('_MI_MI_ACL_SUB_SET_GID_PRE_EXP_NAME', '');
+define('_MI_MI_ACL_SUB_GID_PRE_EXP_DEL_NAME', '');
+define('_MI_MI_ACL_SUB_GID_PRE_EXP_DEL_NAME', '');
+define('_MI_MI_ACL_SUB_GID_PRE_EXP_NAME', '');
+define('_MI_MI_ACL_SUB_GID_PRE_EXP_NAME', '');
 
 ?>
