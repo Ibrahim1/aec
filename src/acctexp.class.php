@@ -5423,6 +5423,10 @@ class GeneralInfoRequester
          	case 'UHP2':
             	return file_exists( $mainframe->getCfg( 'absolute_path' ) . '/modules/mod_uhp2_manage.php' );
             	break;
+
+         	case 'JUSER':
+            	return file_exists( $mainframe->getCfg( 'absolute_path' ) . '/components/com_juser/juser.class.php' );
+            	break;
 		}
 	}
 

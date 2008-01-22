@@ -38,7 +38,7 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_ideal_advanced extends URLprocessor
+class processor_ideal_advanced extends XMLprocessor
 {
 	function info()
 	{
@@ -90,6 +90,32 @@ class processor_ideal_advanced extends URLprocessor
 		$p['verotel_product']	= array( 'inputC' );
 
 		return $p;
+	}
+
+	function checkoutform( $int_var, $cfg, $metaUser, $new_subscription )
+	{
+		global $mosConfig_live_site;
+
+		$var = $this->getCCform();
+
+		$name = explode( ' ', $metaUser->cmsUser->name );
+
+		if ( !empty( $name[1] ) ) {
+			$name[1] = "";
+		}
+
+		$var['params']['billFirstName'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLFIRSTNAME_NAME, _AEC_AUTHORIZE_ARB_PARAMS_BILLFIRSTNAME_DESC, $name[0]);
+		$var['params']['billLastName'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLLASTNAME_NAME, _AEC_AUTHORIZE_ARB_PARAMS_BILLLASTNAME_DESC, $name[1]);
+
+		if ( !empty( $cfg['promptAddress'] ) ) {
+			$var['params']['billAddress'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLADDRESS_NAME );
+			$var['params']['billCity'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLCITY_NAME );
+			$var['params']['billState'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLSTATE_NAME );
+			$var['params']['billZip'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLZIP_NAME );
+			$var['params']['billCountry'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLCOUNTRY_NAME );
+		}
+
+		return $var;
 	}
 
 	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )

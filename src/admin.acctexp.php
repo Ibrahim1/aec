@@ -4267,6 +4267,14 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveRegistration" />';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
 		$hacks[$n]['important']		=	1;
+	} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
+		$n = 'comprofilerphp2';
+		$hacks[$n]['name']			=	'juser.html.php ' . _AEC_HACK_HACK . ' #1';
+		$hacks[$n]['desc']			=	_AEC_HACKS_JUSER;
+		$hacks[$n]['type']			=	'file';
+		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_juser/juser.html.php';
+		$hacks[$n]['read']			=	'<input type="hidden" name="option" value="com_juser" />';
+		$hacks[$n]['insert']		=	sprintf($aec_regvarshack_fix, $n, $n) . "\n" . '<input type="hidden" name="option" value="com_acctexp" />';
 	} else {
 		$n = 'registrationphp2';
 		$hacks[$n]['name']			=	'registration.php ' . _AEC_HACK_HACK . ' #2';
