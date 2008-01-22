@@ -3455,12 +3455,15 @@ class InvoiceFactory
 				if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
 					// This is a CB registration, borrowing their code to register the user
 
+					global $task;
+
+					$savetask	= $task;
+					$task = 'done';
+
 					include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.html.php' );
 					include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
 
-					global $task;
-
-					$task = 'done';
+					$task = $savetask;
 
 					registerForm($option, $mainframe->getCfg( 'emailpass' ), null);
 
