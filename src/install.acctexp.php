@@ -718,7 +718,7 @@ function com_install()
 	}
 
 	$aecConfig->saveSettings();
-print_r($aecConfig);print_r($aecConfig);exit();
+
 	$eucaInstalldb->dropColifExists( 'mingid', 'plans' );
 	$eucaInstalldb->dropColifExists( 'similarpg', 'plans' );
 	$eucaInstalldb->dropColifExists( 'equalpg', 'plans' );

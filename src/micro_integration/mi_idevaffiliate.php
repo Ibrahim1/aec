@@ -54,6 +54,25 @@ class mi_idevaffiliate
 			$getparams = array();
 		}
 
+		$userflags = $metaUser->objSubscription->getMIflags( $plan->id, $this->id );
+
+		if ( !empty( $userflags['IDEV_IP_ADDRESS'] ) ) {
+			$ip = $userflags['IDEV_IP_ADDRESS'];
+		} else {
+			$subscr_params = $metaUser->focusSubscription->getParams();
+
+			if ( isset( $subscr_params['creator_ip'] ) ) {
+				$ip = $subscr_params['creator_ip'];
+			} else {
+				$ip = $_SERVER['REMOTE_ADDR'];
+			}
+
+			$newflags['idev_ip_address'] = $ip;
+			$metaUser->objSubscription->setMIflags( $plan->id, $this->id, $newflags );
+		}
+
+		$getparams[] = 'ip_address=' . $ip;
+
 		if ( !empty( $params['customparams'] ) ) {
 			$rw_params = AECToolbox::rewriteEngine( $params['customparams'], $metaUser, $plan, $invoice );
 
@@ -64,12 +83,11 @@ class mi_idevaffiliate
 			}
 		}
 
-		$text = '<img border="0" '
-				.'src="' . $rooturl .'/sale.php?' . implode( '&amp;', $getparams ) . '" '
-				.'width="1" height="1" />';
-
-		$displaypipeline = new displayPipeline($database);
-		$displaypipeline->create( $metaUser->userid, 1, 0, 0, null, 1, $text );
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $rooturl . "/sale.php?" . implode( '&amp;', $getparams ) );
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_exec($ch);
+		curl_close($ch);
 
 		return true;
 	}

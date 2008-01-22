@@ -2359,6 +2359,7 @@ class SubscriptionPlan extends paramDBTable
 			$metaUser = new metaUser( $userid );
 
 			$params			= $this->getParams();
+			$invoice_params	= $invoice->getParams();
 
 			if ( !isset( $params['make_primary'] ) ) {
 				$params['make_primary'] = 1;
@@ -2482,6 +2483,10 @@ class SubscriptionPlan extends paramDBTable
 		if ( $userid ) {
 			if ( $params['gid_enabled'] ) {
 				$metaUser->instantGIDchange($params['gid']);
+			}
+
+			if ( isset( $invoice_params['creator_ip'] ) ) {
+				$metaUser->focusSubscription->addParams( array( 'creator_ip' => $invoice_params['creator_ip'] ), 'params', false );
 			}
 
 			$metaUser->focusSubscription->check();
@@ -4177,6 +4182,8 @@ class Invoice extends paramDBTable
 		}
 
 		$this->computeAmount();
+
+		$this->addParams( array( 'creator_ip' => $_SERVER['REMOTE_ADDR'] ), 'params', false );
 
 		if ( !$this->check() ) {
 			echo "<script> alert('problem with storing an invoice: ".$this->getError()."'); window.history.go(-1); </script>\n";
