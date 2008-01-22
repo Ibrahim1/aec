@@ -91,7 +91,7 @@ class AEC_subscribers_Report extends Report
 
 		$database->setQuery( $query );
 		$rows = $database->loadAssocList();  //this is exporting data with column heading
-		$buffer = trim( ExportToCSV( $rows ) );
+		$buffer = trim( $this->ExportToCSV( $rows ) );
 
 		$filename = "AEC_subscribers";
 		        header( "Content-type: application/octet-stream" );
