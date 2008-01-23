@@ -27,6 +27,7 @@ class mi_idevaffiliate
 		$settings['setupinfo'] = array( 'fieldset' );
 		$settings['profile'] = array( 'inputC' );
 		$settings['directory'] = array( 'inputC' );
+		$settings['use_curl'] = array( 'list_yesno' );
 		$settings['onlycustomparams'] = array( 'list_yesno' );
 		$settings['customparams'] = array( 'inputD' );
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
@@ -83,11 +84,21 @@ class mi_idevaffiliate
 			}
 		}
 
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $rooturl . "/sale.php?" . implode( '&amp;', $getparams ) );
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_exec($ch);
-		curl_close($ch);
+		if ( !empty( $params['use_curl'] ) ) {
+			$ch = curl_init();
+			$curl_url = $rooturl . "/sale.php?" . implode( '&amp;', $getparams );
+			curl_setopt($ch, CURLOPT_URL, $curl_url );
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_exec($ch);
+			curl_close($ch);
+		} else {
+			$text = '<img border="0" '
+					.'src="' . $rooturl .'/sale.php?' . implode( '&amp;', $getparams ) . '" '
+					.'width="1" height="1" />';
+
+			$displaypipeline = new displayPipeline($database);
+			$displaypipeline->create( $metaUser->userid, 1, 0, 0, null, 1, $text );
+		}
 
 		return true;
 	}
@@ -100,7 +111,9 @@ class mi_idevaffiliate
 			if ( ( strpos( $params['directory'], 'http://' ) === 0 ) || ( strpos( $params['directory'], 'https://' ) === 0 ) ) {
 				$rooturl = $params['directory'];
 			} else {
-				if ( strpos( "/", $params['directory'] ) !== 0 ) {
+				if ( ( strpos( $params['directory'], 'www' ) === 0 ) ) {
+					$params['directory'] = "http://" . $params['directory'];
+				} elseif ( strpos( "/", $params['directory'] ) !== 0 ) {
 					$params['directory'] = "/" . $params['directory'];
 				}
 
@@ -109,6 +122,8 @@ class mi_idevaffiliate
 		} else {
 			$rooturl = $mosConfig_live_site . '/idevaffiliate';
 		}
+
+		return $rooturl;
 	}
 }
 ?>
