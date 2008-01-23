@@ -2359,7 +2359,12 @@ class SubscriptionPlan extends paramDBTable
 			$metaUser = new metaUser( $userid );
 
 			$params			= $this->getParams();
-			$invoice_params	= $invoice->getParams();
+
+			if ( is_object( $invoice ) ) {
+				$invoice_params	= $invoice->getParams();
+			} else {
+				$invoice_params	= array();
+			}
 
 			if ( !isset( $params['make_primary'] ) ) {
 				$params['make_primary'] = 1;
