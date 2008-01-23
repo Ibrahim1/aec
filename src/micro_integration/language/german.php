@@ -101,11 +101,13 @@ define( '_AEC_MI_SET11_EMAIL',		'Text-Felder zum Ersetzen durch dynamischem Text
 define( '_AEC_MI_NAME_IDEV',		'iDevAffiliate' );
 define( '_AEC_MI_DESC_IDEV',		'Connect your sales to the iDevAffiliate Component' );
 define( '_MI_MI_IDEVAFFILIATE_SETUPINFO_NAME',		'Important Information' );
-define( '_MI_MI_IDEVAFFILIATE_SETUPINFO_DESC',		'Using the micro integration, you NEED TO make sure that you are using the official joomla component by the iDev Team. This MI will automatically call to <yourjoomlaroot>/idevaffiliate. If you want to specify it otherwise, please do so in the directory setting below. You may leave out the root url that joomla sits in.' );
+define( '_MI_MI_IDEVAFFILIATE_SETUPINFO_DESC',		'Since you surely don\'t have your sale.php in your root directory, you must specify it otherwise, please do so in the directory setting below. You may leave out the root url that joomla sits in as that will be filled automatically. If you do put in a full path (since you might have your joomla in a completely different directory as iDev), the MI will understand that and NOT prefix any root url.' );
 define( '_MI_MI_IDEVAFFILIATE_PROFILE_NAME',		'Profile' );
 define( '_MI_MI_IDEVAFFILIATE_PROFILE_DESC',		'The Profile identification within iDevAffiliate' );
 define( '_MI_MI_IDEVAFFILIATE_DIRECTORY_NAME',		'iDev Directory' );
 define( '_MI_MI_IDEVAFFILIATE_DIRECTORY_DESC',		'Specify a subdirectory if iDevAffiliate does not rest in the directory as explained in the above box.' );
+define( '_MI_MI_IDEVAFFILIATE_USE_CURL_NAME',		'Use CURL' );
+define( '_MI_MI_IDEVAFFILIATE_USE_CURL_DESC',		'Normally, this MI will write to the DisplayPipeline (a module is required and the tracking code will be displayed to the user), but you can also do the tracking internally - the Payment Data and IP Address of the user will be transmitted directly when the payment arrives andd this MI is triggered.' );
 define( '_MI_MI_IDEVAFFILIATE_ONLYCUSTOMPARAMS_NAME',		'Only Custom Parameters' );
 define( '_MI_MI_IDEVAFFILIATE_ONLYCUSTOMPARAMS_DESC',		'Only transmit the custom parameters as specified below (instead of transmitting the regular - invoice number and amount - and the profile id if set).' );
 define( '_MI_MI_IDEVAFFILIATE_CUSTOMPARAMS_NAME',		'Custom Parameters' );
@@ -296,4 +298,45 @@ define( '_MI_MI_HTTP_QUERY_QUERY_PRE_EXP_DESC',			'Transmit these variables via 
 // MySMS
 define('_AEC_MI_NAME_MYSMS', 'MySMS Micro Integration');
 define('_AEC_MI_DESC_MYSMS', 'Erlaubt es einem Benutzer Sms zu versenden, auch werden x Credits dem Benuterkonto gutgeschrieben. Die Anzahl der Gutschrift kann im Backend eingestellt werden');
+
+// ACL
+define('_AEC_MI_NAME_ACL', 'Usergroup MI (ACL)');
+define('_AEC_MI_DESC_ACL', 'Set the usergroup for the user account.');
+define('_MI_MI_ACL_CHANGE_SESSION_NAME', 'Change Session');
+define('_MI_MI_ACL_CHANGE_SESSION_NAME', 'Do a direct write on the Session data, so that the user account is immediately changed and not just on the next login.');
+define('_MI_MI_ACL_SET_GID_NAME', 'Set GID?');
+define('_MI_MI_ACL_SET_GID_NAME', 'Activate setting of a GID when applying the plan');
+define('_MI_MI_ACL_GID_NAME', 'GID');
+define('_MI_MI_ACL_GID_NAME', 'Set this Usergroup for the Account.');
+define('_MI_MI_ACL_SET_GID_EXP_NAME', 'Set on Expir.?');
+define('_MI_MI_ACL_SET_GID_EXP_NAME', 'Activate setting of a GID on Expiration');
+define('_MI_MI_ACL_GID_EXP_NAME', 'Expir. GID');
+define('_MI_MI_ACL_GID_EXP_NAME', 'Set this Usergroup for the Account when it expires.');
+define('_MI_MI_ACL_SET_GID_PRE_EXP_NAME', 'Set PreExpir.?');
+define('_MI_MI_ACL_SET_GID_PRE_EXP_NAME', 'Activate setting of a GID before expiration');
+define('_MI_MI_ACL_GID_PRE_EXP_NAME', 'PreExpir. GID');
+define('_MI_MI_ACL_GID_PRE_EXP_NAME', 'Set this Usergroup for the Account when before expires');
+define('_MI_MI_ACL_JACLPLUSPRO_NAME', 'Use JACLplus PRO');
+define('_MI_MI_ACL_JACLPLUSPRO_NAME', 'With JACLplus PRO, you can use a few other ACL features specified below');
+define('_MI_MI_ACL_DELETE_SUBGROUPS_NAME', 'Clear Subgroups');
+define('_MI_MI_ACL_DELETE_SUBGROUPS_NAME', 'Always delete all Subgroups that the user holds before applying new ones');
+define('_MI_MI_ACL_SUB_SET_GID_NAME', 'Set Subgroups');
+define('_MI_MI_ACL_SUB_SET_GID_NAME', 'Activate setting of Subgroups when applying the plan');
+define('_MI_MI_ACL_SUB_GID_DEL_NAME', 'Delete Subgroups');
+define('_MI_MI_ACL_SUB_GID_DEL_NAME', 'Delete these Subgroups if the user holds them (CTRL+click to select multiple)');
+define('_MI_MI_ACL_SUB_GID_NAME', 'Add Subgroups');
+define('_MI_MI_ACL_SUB_GID_NAME', 'Add these Subgroups (CTRL+click to select multiple)');
+define('_MI_MI_ACL_SUB_SET_GID_EXP_NAME', 'Set Subgroups Expiration');
+define('_MI_MI_ACL_SUB_SET_GID_EXP_NAME', 'Activate setting of Subgroups when the plan expires');
+define('_MI_MI_ACL_SUB_GID_EXP_DEL_NAME', 'Delete Subgroups');
+define('_MI_MI_ACL_SUB_GID_EXP_DEL_NAME', 'Delete these Subgroups if the user holds them (CTRL+click to select multiple)');
+define('_MI_MI_ACL_SUB_GID_EXP_NAME', 'Add Subgroups');
+define('_MI_MI_ACL_SUB_GID_EXP_NAME', 'Add these Subgroups (CTRL+click to select multiple)');
+define('_MI_MI_ACL_SUB_SET_GID_PRE_EXP_NAME', 'Set Subgroups PreExpiration');
+define('_MI_MI_ACL_SUB_SET_GID_PRE_EXP_NAME', 'Activate setting of Subgroups before the plan expires');
+define('_MI_MI_ACL_SUB_GID_PRE_EXP_DEL_NAME', 'Delete Subgroups');
+define('_MI_MI_ACL_SUB_GID_PRE_EXP_DEL_NAME', 'Delete these Subgroups if the user holds them (CTRL+click to select multiple)');
+define('_MI_MI_ACL_SUB_GID_PRE_EXP_NAME', 'Add Subgroups');
+define('_MI_MI_ACL_SUB_GID_PRE_EXP_NAME', 'Add these Subgroups (CTRL+click to select multiple)');
+
 ?>
