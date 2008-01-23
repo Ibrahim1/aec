@@ -114,69 +114,66 @@ class processor_ipaymeffnt_silent extends XMLprocessor
 	{
 		global $mosConfig_live_site;
 
-		// Start xml, add login and transaction key, as well as invoice number
-		$content =	'<?xml version="1.0" encoding="utf-8"?>'
-					. '<ARBCreateSubscriptionRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">'
-					. '<merchantAuthentication>'
-					. '<name>' . trim( substr( $cfg['login'], 0, 25 ) ) . '</name>'
-					. '<transactionKey>' . trim( substr( $cfg['transaction_key'], 0, 16 ) ) . '</transactionKey>'
-					. '</merchantAuthentication>'
-					. '<refId>' . $int_var['invoice'] . '</refId>';
-
-		$full = $this->convertPeriodUnit( $int_var['amount']['period3'], $int_var['amount']['unit3'] );
-
-		// Add Payment information
-		$content .=	'<subscription>'
-					. '<name>' . trim( substr( AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription ), 0, 20 ) ) . '</name>'
-					. '<paymentSchedule>'
-					. '<interval>'
-					. '<length>' . trim( $full['period'] ) . '</length>'
-					. '<unit>' . trim( $full['unit'] ) . '</unit>'
-					. '</interval>'
-					. '<startDate>' . trim( date( 'Y-m-d' ) ) . '</startDate>'
-					. '<totalOccurrences>' . trim( $cfg['totalOccurrences'] ) . '</totalOccurrences>';
-
-		if ( isset( $int_var['amount']['amount1'] ) ) {
-			$content .=	'<trialOccurrences>' . trim( $cfg['trialOccurrences'] ) . '</trialOccurrences>';
+		if ( is_object( $invoice ) ) {
+			$invoice_params	= $invoice->getParams();
+		} else {
+			$invoice_params	= array();
 		}
 
-		$content .=	 '</paymentSchedule>'
-					. '<amount>' . trim( $int_var['amount']['amount3'] ) .'</amount>';
+		$a = array();
 
-		if ( isset( $int_var['amount']['amount1'] ) ) {
-			$content .=	 '<trialAmount>' . trim( $int_var['amount']['amount1'] ) . '</trialAmount>';
+		$a['silent']			= trim( substr( $cfg['login'], 0, 25 ) );
+		$a['trx_paymenttyp']			= ;
+		$a['trxuser_id']			= ;
+		$a['trxpassword']			= ;
+		$a['$content']			= ;
+		$a['strict_id_check']			= ;
+		$a['from_ip']			= ;
+		$a['trx_currency']			= ;
+		$a['trx_amount']			= ;
+		$a['trx_typ']			= ;
+		$a['addr_email']			= ;
+		$a['addr_street']			= ;
+		$a['addr_city']			= ;
+		$a['addr_zip']			= ;
+		$a['addr_country']			= ;
+		$a['addr_state']			= ;
+		$a['addr_telefon']			= ;
+		$a['redirect_url']			= ;
+		$a['silent_error_url']			= ;
+		$a['client_name']			= 'aec';
+		$a['client_version']			= '0.12';
+
+      $process_button_string = tep_draw_hidden_field('silent', '1') .
+                               tep_draw_hidden_field('trx_paymenttyp', 'cc') .
+                               tep_draw_hidden_field('trxuser_id', MODULE_PAYMENT_IPAYMENT_CC_USER_ID) .
+                               tep_draw_hidden_field('trxpassword', MODULE_PAYMENT_IPAYMENT_CC_PASSWORD) .
+//                               tep_draw_hidden_field('order_id', '') .
+//                               tep_draw_hidden_field('strict_id_check', 1) .
+                               tep_draw_hidden_field('from_ip', tep_get_ip_address()) .
+                               tep_draw_hidden_field('trx_currency', $currency) .
+                               tep_draw_hidden_field('trx_amount', $this->format_raw($order->info['total'])*100) .
+                               tep_draw_hidden_field('trx_typ', ((MODULE_PAYMENT_IPAYMENT_CC_TRANSACTION_METHOD == 'Capture') ? 'auth' : 'preauth')) .
+                               tep_draw_hidden_field('addr_email', $order->customer['email_address']) .
+                               tep_draw_hidden_field('addr_street', $order->billing['street_address']) .
+                               tep_draw_hidden_field('addr_city', $order->billing['city']) .
+                               tep_draw_hidden_field('addr_zip', $order->billing['postcode']) .
+                               tep_draw_hidden_field('addr_country', $order->billing['country']['iso_code_2']) .
+                               tep_draw_hidden_field('addr_state', $zone_code) .
+                               tep_draw_hidden_field('addr_telefon', $order->customer['telephone']) .
+                               tep_draw_hidden_field('redirect_url', tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', true)) .
+                               tep_draw_hidden_field('silent_error_url', tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL', true)) .
+                               tep_draw_hidden_field('client_name', 'oscommerce') .
+                               tep_draw_hidden_field('client_version', PROJECT_VERSION);
+
+		$stringarray = array();
+		foreach ( $a as $name => $value ) {
+			$stringarray[] = $name . '=' . urlencode( $value );
 		}
 
-		$expirationDate =  $int_var['params']['expirationYear'] . '-' . str_pad( $int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT );
+		$string = implode( '&', $stringarray );
 
-		$content .=	'<payment>'
-					. '<creditCard>'
-					. '<cardNumber>' . trim( $int_var['params']['cardNumber'] ) . '</cardNumber>'
-					. '<expirationDate>' . trim( $expirationDate ) . '</expirationDate>'
-					. '</creditCard>'
-					. '</payment>'
-					;
-		$content .=	 '<billTo>'
-					. '<firstName>'. trim( $int_var['params']['billFirstName'] ) . '</firstName>'
-					. '<lastName>' . trim( $int_var['params']['billLastName'] ) . '</lastName>'
-					;
-
-		if ( isset( $int_var['params']['billAddress'] ) ) {
-		$content .=	 '<address>'. trim( $int_var['params']['billAddress'] ) . '</address>'
-					. '<city>' . trim( $int_var['params']['billCity'] ) . '</city>'
-					. '<state>'. trim( $int_var['params']['billState'] ) . '</state>'
-					. '<zip>' . trim( $int_var['params']['billZip'] ) . '</zip>'
-					. '<country>'. trim( $int_var['params']['billCountry'] ) . '</country>'
-					;
-		}
-
-		$content .=	'</billTo>';
-		$content .=	'</subscription>';
-
-		// Close Request
-		$content .=	'</ARBCreateSubscriptionRequest>';
-
-		return $content;
+		return $string;
 	}
 
 /*
