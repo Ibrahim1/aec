@@ -4059,6 +4059,11 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 					. $aec_condition_end
 					. $aec_hack_end;
 
+	$juser_blind = $aec_hack_start
+					. 'case \'blind\':'. "\n"
+					. 'break;'. "\n"
+					. $aec_hack_end;
+
 	// menu entry
 	$n = 'menuentry';
 	$hacks[$n]['name'] =	_AEC_HACKS_MENU_ENTRY;
@@ -4268,13 +4273,29 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
 		$hacks[$n]['important']		=	1;
 	} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
-		$n = 'comprofilerphp2';
+		$n = 'juserhtml1';
 		$hacks[$n]['name']			=	'juser.html.php ' . _AEC_HACK_HACK . ' #1';
-		$hacks[$n]['desc']			=	_AEC_HACKS_JUSER;
+		$hacks[$n]['desc']			=	_AEC_HACKS_JUSER_HTML1;
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_juser/juser.html.php';
 		$hacks[$n]['read']			=	'<input type="hidden" name="option" value="com_juser" />';
 		$hacks[$n]['insert']		=	sprintf($aec_regvarshack_fix, $n, $n) . "\n" . '<input type="hidden" name="option" value="com_acctexp" />';
+
+		$n = 'juserphp1';
+		$hacks[$n]['name']			=	'juser.php ' . _AEC_HACK_HACK . ' #1';
+		$hacks[$n]['desc']			=	_AEC_HACKS_JUSER_PHP1;
+		$hacks[$n]['type']			=	'file';
+		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_juser/juser.php';
+		$hacks[$n]['read']			=	'HTML_JUser::userEdit( $row, $option, $params, $ext_row, \'saveUserRegistration\' );';
+		$hacks[$n]['insert']		=	sprintf($aec_rhackbefore_fix, $n, $n) . "\n" . $hacks[$n]['read'];
+
+		$n = 'juserphp2';
+		$hacks[$n]['name']			=	'juser.php ' . _AEC_HACK_HACK . ' #2';
+		$hacks[$n]['desc']			=	_AEC_HACKS_JUSER_PHP2;
+		$hacks[$n]['type']			=	'file';
+		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_juser/juser.php';
+		$hacks[$n]['read']			=	'default:';
+		$hacks[$n]['insert']		=	sprintf($juser_blind, $n, $n) . "\n" . $hacks[$n]['read'];
 	} else {
 		$n = 'registrationphp2';
 		$hacks[$n]['name']			=	'registration.php ' . _AEC_HACK_HACK . ' #2';

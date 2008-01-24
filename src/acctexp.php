@@ -83,6 +83,8 @@ if ( !empty( $task ) ) {
 
 		// Catch hybrid CB registration
 		case 'saveregisters':
+		// Catch hybrid jUser registration
+		case 'saveuserregistration':
 		// Catch hybrid CMS registration
 		case 'saveregistration':
 		case 'subscribe':
@@ -310,7 +312,7 @@ function subscribe( $option )
 	$processor	= aecGetParam( 'processor', null );
 	$userid		= aecGetParam( 'userid', 0 );
 	$itemid		= aecGetParam( 'Itemid', 0 );
-
+//print_r($_POST);exit();
 	if ( isset( $_POST['username'] ) && $usage ) {
 		$query = 'SELECT id'
 		. ' FROM #__users'
@@ -372,22 +374,37 @@ function subscribe( $option )
 
 			unset( $_POST['option'] );
 			unset( $_POST['task'] );
+
 			if ( isset( $_POST['usage'] ) ) {
 				unset( $_POST['intro'] );
 				unset( $_POST['usage'] );
+				unset( $_POST['processor'] );
 				unset( $_POST['Itemid'] );
 			}
 
-			$passthrough = array();
-			// We have to support arrays for CB
-			foreach ( $_POST as $ke => $va ) {
-				if ( is_array( $va ) ) {
-					foreach ( $va as $con ) {
-						$passthrough[$ke . '[]'] = $con;
+			if ( isset( $_POST['submit_y'] ) ) {
+				unset( $_POST['submit_x'] );
+				unset( $_POST['submit_y'] );
+			}
+
+			if ( isset( $_POST['userid'] ) ) {
+				unset( $_POST['userid'] );
+			}
+
+			if ( !empty( $_POST ) ) {
+				$passthrough = array();
+				// We have to support arrays for CB
+				foreach ( $_POST as $ke => $va ) {
+					if ( is_array( $va ) ) {
+						foreach ( $va as $con ) {
+							$passthrough[$ke . '[]'] = $con;
+						}
+					} else {
+						$passthrough[$ke] = $va;
 					}
-				} else {
-					$passthrough[$ke] = $va;
 				}
+			} else {
+				$passthrough = false;
 			}
 		}
 

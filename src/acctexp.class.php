@@ -3476,15 +3476,20 @@ class InvoiceFactory
 					$task = $savetask;
 
 					registerForm($option, $mainframe->getCfg( 'emailpass' ), null);
-
 				} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
-					// This is a CB registration, borrowing their code to register the user
+					// This is a JUSER registration, borrowing their code to register the user
 
-					include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.html.php' );
-					include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
+					global $task, $mosConfig_absolute_path;
 
-					registerForm($option, $mainframe->getCfg( 'emailpass' ), null);
+					$savetask	= $task;
+					$task = 'blind';
 
+					include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_juser/juser.html.php' );
+					include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_juser/juser.php' );
+
+					$task = $savetask;
+
+					userRegistration( $option, null );
 				} else {
 					if ( !isset( $_POST['usage'] ) ) {
 						$_POST['intro'] = $intro;
@@ -5452,7 +5457,7 @@ class GeneralInfoRequester
             	break;
 
          	case 'JUSER':
-            	return file_exists( $mainframe->getCfg( 'absolute_path' ) . '/components/com_juser/juser.class.php' );
+            	return file_exists( $mainframe->getCfg( 'absolute_path' ) . '/components/com_juser/juser.php' );
             	break;
 		}
 	}
@@ -5824,7 +5829,7 @@ class AECToolbox
 	{
 		global $database, $mainframe, $task, $acl, $aecConfig; // Need to load $acl for Joomla and CBE
 
-		// Let CB think that everything is going fine
+		// Let CB/JUSER think that everything is going fine
 		if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
 			if ( GeneralInfoRequester::detect_component( 'CBE' ) ) {
 				global $ueConfig;
@@ -5833,6 +5838,13 @@ class AECToolbox
 			$savetask	= $task;
 			$task		= 'done';
 			include_once ( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
+			$task		= $savetask;
+		} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
+			global $mosConfig_absolute_path;
+
+			$savetask	= $task;
+			$task		= 'blind';
+			include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_juser/juser.php' );
 			$task		= $savetask;
 		}
 
@@ -5848,7 +5860,9 @@ class AECToolbox
 
 		if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
 			// This is a CB registration, borrowing their code to save the user
-
+			saveRegistration( $option );
+		} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
+			// This is a JUSER registration, borrowing their code to save the user
 			saveRegistration( $option );
 		} else {
 			// This is a joomla registration, borrowing their code to save the user
