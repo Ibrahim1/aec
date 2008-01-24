@@ -54,15 +54,15 @@ class processor_ipaymeffnt_silent extends XMLprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['login']				= "login";
-		$settings['transaction_key']	= "transaction_key";
-		$settings['testmode']			= 0;
-		$settings['currency']			= "USD";
-		$settings['promptAddress']		= 0;
-		$settings['totalOccurrences']	= 12;
-		$settings['trialOccurrences']	= 1;
-		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
-		$settings['rewriteInfo']		= '';
+
+		$settings['testmode']		= 0;
+		$settings['fake_account']	= 0;
+		$settings['user_id']		= "user_id";
+		$settings['password']		= "password";
+		$settings['currency']		= "USD";
+		$settings['promptAddress']	= 0;
+		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['rewriteInfo']	= '';
 
 		return $settings;
 	}
@@ -70,16 +70,15 @@ class processor_ipaymeffnt_silent extends XMLprocessor
 	function backend_settings( $cfg )
 	{
 		$settings = array();
-		$settings['testmode']			= array("list_yesno");
-		$settings['login'] 				= array("inputC");
-		$settings['transaction_key']	= array("inputC");
-		$settings['currency']			= array("list_currency");
-		$settings['promptAddress']		= array("list_yesno");
-		$settings['totalOccurrences']	= array("inputA");
-		$settings['trialOccurrences']	= array("inputA");
-		$settings['item_name']			= array("inputE");
- 		$rewriteswitches 				= array("cms", "user", "expiration", "subscription", "plan");
-		$settings['rewriteInfo']		= array("fieldset", "Rewriting Info", AECToolbox::rewriteEngineInfo($rewriteswitches));
+		$settings['testmode']		= array("list_yesno");
+		$settings['fake_account']	= array("list_yesno");
+		$settings['user_id'] 		= array("inputC");
+		$settings['password']		= array("inputC");
+		$settings['currency']		= array("list_currency");
+		$settings['promptAddress']	= array("list_yesno");
+		$settings['item_name']		= array("inputE");
+ 		$rewriteswitches 			= array("cms", "user", "expiration", "subscription", "plan");
+		$settings['rewriteInfo']	= array("fieldset", "Rewriting Info", AECToolbox::rewriteEngineInfo($rewriteswitches));
 
 		return $settings;
 	}
@@ -105,6 +104,7 @@ class processor_ipaymeffnt_silent extends XMLprocessor
 			$var['params']['billState'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLSTATE_NAME );
 			$var['params']['billZip'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLZIP_NAME );
 			$var['params']['billCountry'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLCOUNTRY_NAME );
+			$var['params']['billTelephone'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLTELEPHONE_NAME );
 		}
 
 		return $var;
@@ -114,57 +114,43 @@ class processor_ipaymeffnt_silent extends XMLprocessor
 	{
 		global $mosConfig_live_site;
 
-		if ( is_object( $invoice ) ) {
-			$invoice_params	= $invoice->getParams();
+		$subscr_params = $metaUser->focusSubscription->getParams();
+
+		if ( isset( $subscr_params['creator_ip'] ) ) {
+			$ip = $subscr_params['creator_ip'];
 		} else {
-			$invoice_params	= array();
+			$ip = $_SERVER['REMOTE_ADDR'];
 		}
 
 		$a = array();
 
 		$a['silent']			= trim( substr( $cfg['login'], 0, 25 ) );
-		$a['trx_paymenttyp']			= ;
-		$a['trxuser_id']			= ;
-		$a['trxpassword']			= ;
-		$a['$content']			= ;
-		$a['strict_id_check']			= ;
-		$a['from_ip']			= ;
-		$a['trx_currency']			= ;
-		$a['trx_amount']			= ;
-		$a['trx_typ']			= ;
-		$a['addr_email']			= ;
-		$a['addr_street']			= ;
-		$a['addr_city']			= ;
-		$a['addr_zip']			= ;
-		$a['addr_country']			= ;
-		$a['addr_state']			= ;
-		$a['addr_telefon']			= ;
-		$a['redirect_url']			= ;
-		$a['silent_error_url']			= ;
-		$a['client_name']			= 'aec';
-		$a['client_version']			= '0.12';
+		$a['trx_paymenttyp']	= 'cc';
 
-      $process_button_string = tep_draw_hidden_field('silent', '1') .
-                               tep_draw_hidden_field('trx_paymenttyp', 'cc') .
-                               tep_draw_hidden_field('trxuser_id', MODULE_PAYMENT_IPAYMENT_CC_USER_ID) .
-                               tep_draw_hidden_field('trxpassword', MODULE_PAYMENT_IPAYMENT_CC_PASSWORD) .
-//                               tep_draw_hidden_field('order_id', '') .
-//                               tep_draw_hidden_field('strict_id_check', 1) .
-                               tep_draw_hidden_field('from_ip', tep_get_ip_address()) .
-                               tep_draw_hidden_field('trx_currency', $currency) .
-                               tep_draw_hidden_field('trx_amount', $this->format_raw($order->info['total'])*100) .
-                               tep_draw_hidden_field('trx_typ', ((MODULE_PAYMENT_IPAYMENT_CC_TRANSACTION_METHOD == 'Capture') ? 'auth' : 'preauth')) .
-                               tep_draw_hidden_field('addr_email', $order->customer['email_address']) .
-                               tep_draw_hidden_field('addr_street', $order->billing['street_address']) .
-                               tep_draw_hidden_field('addr_city', $order->billing['city']) .
-                               tep_draw_hidden_field('addr_zip', $order->billing['postcode']) .
-                               tep_draw_hidden_field('addr_country', $order->billing['country']['iso_code_2']) .
-                               tep_draw_hidden_field('addr_state', $zone_code) .
-                               tep_draw_hidden_field('addr_telefon', $order->customer['telephone']) .
-                               tep_draw_hidden_field('redirect_url', tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', true)) .
-                               tep_draw_hidden_field('silent_error_url', tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL', true)) .
-                               tep_draw_hidden_field('client_name', 'oscommerce') .
-                               tep_draw_hidden_field('client_version', PROJECT_VERSION);
+		if ( $cfg['fake_account'] ) {
+			$a['trxuser_id']		= '99999';
+			$a['trxpassword']		= '0';
+		} else {
+			$a['trxuser_id']		= $cfg['user_id'];
+			$a['trxpassword']		= $cfg['password'];
+		}
+
+		$a['order_id']			= AECfetchfromDB::InvoiceIDfromNumber( $int_var['invoice'] );
+		$a['from_ip']			= $ip;
+		$a['trx_currency']		= $cfg['currency'];
+		$a['trx_amount']		= $int_var['amount'];
+		$a['trx_typ']			= 'auth';
+		$a['invoice_text']		= $int_var['invoice'];
+		$a['addr_email']		= $metaUser->cmsUser->email;
+		$a['addr_street']		= trim( $int_var['params']['billAddress'] );
+		$a['addr_city']			= trim( $int_var['params']['billCity'] );
+		$a['addr_zip']			= trim( $int_var['params']['billZip'] );
+		$a['addr_country']		= trim( $int_var['params']['billCountry'] );
+		$a['addr_state']		= trim( $int_var['params']['billState'] );
+		$a['addr_telefon']		= trim( $int_var['params']['billTelephone'] );
+		$a['client_name']		= 'aec';
+		$a['client_version']	= '0.12';
+		$a['silent']			= 1;
 
 		$stringarray = array();
 		foreach ( $a as $name => $value ) {
@@ -176,20 +162,19 @@ class processor_ipaymeffnt_silent extends XMLprocessor
 		return $string;
 	}
 
-/*
-Simulation:
-Account-ID:               99999
-User-ID:                  99999
-Transaktions-Passwort:         0
-Administrations-Passwort: 5cfgRT34xsdedtFLdfHxj7tfwx24fe
-*/
 	function transmitRequestXML( $xml, $int_var, $settings, $metaUser, $new_subscription )
 	{
-		if ( $settings['testmode'] ) {
-			$url = "https://ipayment.de/merchant/" . $settings['account_id'] . "/example.php";
+		if ( $settings['testmode'] || $settings['fake_account'] ) {
+			if ( $settings['fake_account'] ) {
+				$path = "99999/example.php";
+			} else {
+				$url = $settings['account_id'] . "/example.php";
+			}
 		} else {
-			$url = "https://ipayment.de/merchant/" . $settings['account_id'] . "/processor.php";
+			$url = $settings['account_id'] . "/processor.php";
 		}
+
+		$url = "https://ipayment.de/merchant/" . $path;
 
 		$response = $this->transmitRequest( $url, $path, $xml, 443 );
 
@@ -197,6 +182,16 @@ Administrations-Passwort: 5cfgRT34xsdedtFLdfHxj7tfwx24fe
 		$return['raw'] = $response;
 
 		if ( $response ) {
+			$resp_array = explode( "&", $response );
+
+			foreach ( $resp_array as $arr_id => $arr_content ) {
+				$ac = explode( "=", $arr_content );
+				$resp_array[$ac[0]] = $ac[1];
+
+				unset( $resp_array[$arr_id] );
+			}
+
+
 			$return['invoice'] = $this->substring_between($response,'<refId>','</refId>');
 			$resultCode = $this->substring_between($response,'<resultCode>','</resultCode>');
 
