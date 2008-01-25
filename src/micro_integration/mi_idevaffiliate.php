@@ -55,7 +55,7 @@ class mi_idevaffiliate
 			$getparams = array();
 		}
 
-		$userflags = $metaUser->objSubscription->getMIflags( $plan->id, $this->id );
+		$userflags = $metaUser->focusSubscription->getMIflags( $plan->id, $this->id );
 
 		if ( !empty( $userflags['IDEV_IP_ADDRESS'] ) ) {
 			$ip = $userflags['IDEV_IP_ADDRESS'];
@@ -86,7 +86,7 @@ class mi_idevaffiliate
 
 		if ( !empty( $params['use_curl'] ) ) {
 			$ch = curl_init();
-			$curl_url = $rooturl . "/sale.php?" . implode( '&amp;', $getparams );
+			$curl_url = $rooturl . "/sale.php?" . implode( '&', $getparams );
 			curl_setopt($ch, CURLOPT_URL, $curl_url );
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_exec($ch);

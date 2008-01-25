@@ -95,7 +95,8 @@ class metaUser
 			if ( $aecid ) {
 				$this->objSubscription = new Subscription( $database );
 				$this->objSubscription->load( $aecid );
-				$this->focusSubscription = $this->objSubscription;
+				$this->focusSubscription = new Subscription( $database );
+				$this->focusSubscription->load( $aecid );
 				$this->hasSubscription = 1;
 			}
 		}
@@ -2456,6 +2457,10 @@ class SubscriptionPlan extends paramDBTable
 			// Clear parameters
 			$metaUser->focusSubscription->params = '';
 
+			if ( !empty( $invoice_params['creator_ip'] ) ) {
+				$metaUser->focusSubscription->addParams( array( 'creator_ip' => $invoice_params['creator_ip'] ), 'params', false );
+			}
+
 			$pp = new PaymentProcessor();
 			if ( $pp->loadName( strtolower( $processor ) ) ) {
 				$pp->init();
@@ -2488,10 +2493,6 @@ class SubscriptionPlan extends paramDBTable
 		if ( $userid ) {
 			if ( $params['gid_enabled'] ) {
 				$metaUser->instantGIDchange($params['gid']);
-			}
-
-			if ( isset( $invoice_params['creator_ip'] ) ) {
-				$metaUser->focusSubscription->addParams( array( 'creator_ip' => $invoice_params['creator_ip'] ), 'params', false );
 			}
 
 			$metaUser->focusSubscription->check();
