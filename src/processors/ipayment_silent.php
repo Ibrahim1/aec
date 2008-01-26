@@ -142,6 +142,20 @@ class processor_ipayment_silent extends XMLprocessor
 		$a['trx_typ']			= 'auth';
 		$a['invoice_text']		= $int_var['invoice'];
 		$a['addr_email']		= $metaUser->cmsUser->email;
+
+		$varray = array(	'addr_street'	=>	'billAddress',
+							'addr_city'	=>	'billCity',
+							'addr_zip'	=>	'billZip',
+							'addr_country'	=>	'billCountry',
+							'addr_state'	=>	'billState',
+							'addr_telefon'	=>	'billTelephone',
+							'cc_number'	=>	'cardNumber',
+							'cc_expdate_month'	=>	'expirationMonth',
+							'cc_expdat_year'	=>	'expirationYear',
+							'cc_checkcode'	=>	''
+						);
+
+
 		$a['addr_street']		= trim( $int_var['params']['billAddress'] );
 		$a['addr_city']			= trim( $int_var['params']['billCity'] );
 		$a['addr_zip']			= trim( $int_var['params']['billZip'] );
