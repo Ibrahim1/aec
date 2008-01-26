@@ -6177,7 +6177,7 @@ class AECToolbox
 
 		if ( is_object( $metaUser ) ) {
 
-			if ( $metaUser->hasExpiration ) {
+			if ( !empty( $metaUser->hasExpiration ) ) {
 				$rewrite['expiration_date'] = $metaUser->objExpiration->expiration;
 			}
 
