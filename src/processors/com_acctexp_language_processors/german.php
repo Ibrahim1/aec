@@ -424,4 +424,15 @@ define( '_AEC_AUTHORIZE_AIM_PARAMS_BILLSTATE_NAME', 'State');
 define( '_AEC_AUTHORIZE_AIM_PARAMS_BILLZIP_NAME', 'Zip');
 define( '_AEC_AUTHORIZE_AIM_PARAMS_BILLCOUNTRY_NAME', 'Country');
 
+// iPayment Silent
+define( '_CFG_IPAYMENT_SILENT_LONGNAME', 'iPayment silent');
+define( '_CFG_IPAYMENT_SILENT_STATEMENT', 'Kreditkarten-Zahlungen mit iPayment');
+define( '_CFG_IPAYMENT_SILENT_DESCRIPTION', 'Kreditkarten-Zahlungen mit iPaymen');
+define( '_CFG_IPAYMENT_SILENT_FAKE_ACCOUNT_NAME', 'Falscher Account');
+define( '_CFG_IPAYMENT_SILENT_FAKE_ACCOUNT_DESC', 'Einen falschen Account (99999) zum Testen benutzen.');
+define( '_CFG_IPAYMENT_SILENT_USER_ID_NAME', 'User Id');
+define( '_CFG_IPAYMENT_SILENT_USER_ID_DESC', 'Die User Id Ihres iPayment Accounts.');
+define( '_CFG_IPAYMENT_SILENT_PASSWORD_NAME', 'Passwort');
+define( '_CFG_IPAYMENT_SILENT_PASSWORD_DESC', 'Das Passwort Ihres iPayment Accounts.');
+
 ?>

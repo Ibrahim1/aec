@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <mosinstall type="component">
 	<name>acctexp</name>
-	<creationDate>2007.12.19</creationDate>
+	<creationDate>2008.01.26</creationDate>
 	<author>Helder Garcia, David Deutsch, Team AEC</author>
-	<copyright>@Copyright (C) 2004-2007 Helder Garcia, David Deutsch</copyright>
+	<copyright>@Copyright (C) 2004-2008 Helder Garcia, David Deutsch</copyright>
 	<authorEmail>mails@globalnerd.org</authorEmail>
 	<authorUrl>https://globalnerd.org</authorUrl>
 	<version>0.12.4.15i</version>
@@ -83,6 +83,7 @@
 		<filename>processors/epsnetpay.php</filename>
 		<filename>processors/eway.php</filename>
 		<filename>processors/ideal_basic.php</filename>
+		<filename>processors/ipayment_silent.php</filename>
 		<filename>processors/moneyproxy.php</filename>
 		<filename>processors/offline_payment.php</filename>
 		<filename>processors/paycom.php</filename>

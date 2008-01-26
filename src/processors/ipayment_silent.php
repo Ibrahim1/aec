@@ -29,7 +29,7 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_ipaymeffnt_silent extends XMLprocessor
+class processor_ipayment_silent extends XMLprocessor
 {
 	function info()
 	{
