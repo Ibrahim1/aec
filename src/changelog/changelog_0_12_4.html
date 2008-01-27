@@ -1019,88 +1019,110 @@ color: #333;
 </ul>
 <h2>0.12.4.16 version - <a href="http://en.wikipedia.org/wiki/Eagle_Nebula">Eagle Nebula</a></h2>
 <ul>
+<li><strong>Payment Processors</strong>
+<ul>
 <li>finishing cybermut</li>
 <li>correctly identifying passive CCBill registrations</li>
-<li>invoices overview to look for secondary ident</li>
-<li>Make Invoice handling immune to lacking user or payment plan conditions</li>
-<li>MicroIntegrations can now be called without existing instance</li>
-<li>MicroIntegrations to feature Config Overwrite similar to per-plan processor parameters</li>
-<li>fixing a bug with the display of TOS</li>
-<li>fixing display of processor fields on checkout</li>
-<li>more compact formatting for additional processor parameters on checkout form</li>
 <li>minor fix for verotel</li>
 <li>verotel to fix signup screen</li>
 <li>Option to prompt User for Address details on Authorize.net ARB</li>
-<li>Lots of formatting options for display of Invoice Number</li>
-<li>Display Invoice ID instead of number (including an offset for the kind of guys that think people are more confident paying invoice number 100032 than 32)</li>
-<li>Get rid of duplicated AEC Component links (in adding of menu item for example)</li>
+<li>more compact formatting for additional processor parameters on checkout form</li>
+<li>CCBill recurring billing</li>
+<li>CCBill passive signup</li>
+<li>iDeal Payment Processor</li>
+<li>fixing display of processor fields on checkout</li>
+<li>Checkout Link->Button</li>
+<li>Authorize.net AIM</li>
+<li>Fixing a bug in the authorize_arb xml when using full address</li>
+<li>Custom Variables for CCBill</li>
+<li>Worldpay setup info</li>
+</ul>
+<li><strong>Micro Integrations</strong>
+<ul>
+<li>MicroIntegrations can now be called without existing instance</li>
+<li>MicroIntegrations to feature Config Overwrite similar to per-plan processor parameters</li>
 <li>iDevAffiliate MI fit for new iDev Joomla component</li>
 <li>iDevAffiliate MI to have custom parameters</li>
 <li>Attend Events MI</li>
 <li>making MI id a property of MI handler sub-object for better identification of per-subscription custom params</li>
-<li>CCBill recurring billing</li>
-<li>CCBill passive signup</li>
 <li>Coupon MI</li>
-<li>Fixing bugs with Heartbeat and the new subscriptions-only policy</li>
 <li>Switching to passing on metaUser object to MIs instead of just the userid - this way, focusSubscription can be preserved</li>
 <li>MicroIntegrations to have access to Invoice data</li>
-<li>Correct Backend handling of multiple subscriptions</li>
-<li>Replace Hacks for J! 1.5 with authorization plugin</li>
-<li>Fixing assignment of Subscription from Manual Backend Screen</li>
-<li>Checkout Link->Button</li>
-<li>iDeal Payment Processor</li>
 <li>HTTP Query MI</li>
-<li>Authorize.net AIM</li>
-<li>Redirect to https when entering checkout page as well</li>
 <li>Fixing pre-expiration MI actions (thank you thank you thank you calum!!!)</li>
-<li>Fixing display of error messages on XML checkout</li>
-<li>Fixing a bug in the authorize_arb xml when using full address</li>
 <li>Fixing registration call for MIs</li>
-<li>Added link to user from invoices view. Code from Brad (soccerbs) see: Forum thread 4466</li>
-<li>Fixing a rare condition where a notAllowed would pop up while registering (no idea why this happens, but I fixed it)</li>
-<li>Restrictions Engine: Multi-Choice Fields for Required Current, Previous, Overall Plan</li>
-<li>Restrictions Engine: Excluded as negative copy of Required Current, P, O P</li>
-<li>Custom Variables for CCBill</li>
-<li>Fix Saving of Coupons (appears to delete after edit - not after create)</li>
 <li>Fix for VirtueMart MI - good find indeed, Jonathan Appleton!</li>
-<li>Fix custom plan actions</li>
-<li>Fix for missing 'primary' field in subscr table</li>
+<li>Part out a Usergroup/ACL MI</li>
+<li>fix for Acajoom MI - adding a user to a list was not working and in general</li>
+<li>fixing MI save when MI deactivated (was not saving anything then)</li>
+<li>Cleanup MI flags on transition to a new plan</li>
+<li>iDev MI finally works and can also do the cURL. Thanks alot to Marc *the Marketing Guru* Gamble and the iDev team.</li>
+<li>Calum: adding "delete from groups" in docman MI</li>
+</ul>
+<li><strong>Frontend Fixes</strong>
+<ul>
+<li>fixing a bug with the display of TOS</li>
+<li>Display Invoice ID instead of number (including an offset for the kind of guys that think people are more confident paying invoice number 100032 than 32)</li>
+<li>Redirect to https when entering checkout page as well</li>
+<li>Fixing display of error messages on XML checkout</li>
+<li>Fixing a rare condition where a notAllowed would pop up while registering (no idea why this happens, but I fixed it)</li>
 <li>Fix for glitch with plans first and regular joomla signup - the plans window would be called up before and after entering the detail</li>
-<li>ReCaptcha for Joomla Registration</li>
-<li>choice to have SSL throughout signup operation</li>
+<li>Do not display heading when admin selected to not show original text</li>
+<li>fixing a notice on the frontend (thanks Gregory Palchikovskiy!)</li>
+<li>fixing a registration loop when only using one plan, one processor and plans second</li>
+</ul>
+<li><strong>Backend Fixes</strong>
+<ul>
+<li>invoices overview to look for secondary ident</li>
+<li>Lots of formatting options for display of Invoice Number</li>
+<li>Get rid of duplicated AEC Component links (in adding of menu item for example)</li>
+<li>Correct Backend handling of multiple subscriptions</li>
+<li>Fixing assignment of Subscription from Manual Backend Screen</li>
+<li>Added link to user from invoices view. Code from Brad (soccerbs) see: Forum thread 4466</li>
+<li>Fix Saving of Coupons (appears to delete after edit - not after create)</li>
 <li>Make userform truly multi Subscriptions compatible</li>
 <li>fixing userform when saving Subscriptions and Expirations</li>
 <li>Show Primary in Userform and on Subscriptions List</li>
-<li>Do not display heading when admin selected to not show original text</li>
+<li>consistent dates and timezones</li>
 <li>fixing a bug where expiration date would not be set on application of plan from userform</li>
+<li>fix for coupon restrictions backend</li>
+<li>fixing a situation where no settings entry would ever be generated</li>
+<li>New Error Reporting using levels of errors</li>
+<li>Display of Notices on the Central Page according to specified level of errors</li>
+<li>Sending of Error Notices via Email according to specified level of errors</li>
+</ul>
+<li><strong>Joomla 1.5 Fixes</strong>
+<ul>
+<li>Replace Hacks for J! 1.5 with authorization plugin</li>
+<li>fixing installation for latest Joomla 1.5 RC (phew)</li>
+<li>fixing menu icons J!1.5</li>
+</ul>
+<li><strong>Minor Fixes</strong>
+<ul>
+<li>Make Invoice handling immune to lacking user or payment plan conditions</li>
+<li>Fixing bugs with Heartbeat and the new subscriptions-only policy</li>
+<li>Restrictions Engine: Multi-Choice Fields for Required Current, Previous, Overall Plan</li>
+<li>Restrictions Engine: Excluded as negative copy of Required Current, P, O P</li>
+<li>Fix custom plan actions</li>
+<li>Fix for missing 'primary' field in subscr table</li>
+<li>ReCaptcha for Joomla Registration</li>
+<li>choice to have SSL throughout signup operation</li>
 <li>fixing that trials were only applied when a user was Pending before</li>
 <li>fixing setting of used plans</li>
-<li>fixing a notice on the frontend (thanks Gregory Palchikovskiy!)</li>
-<li>consistent dates and timezones</li>
-<li>Worldpay setup info</li>
-<li>fixing a registration loop when only using one plan, one processor and plans second</li>
-<li>Part out a Usergroup/ACL MI</li>
 <li class="check">JUser Integration</li>
 <li class="check">Make ACL MI support JACLplus PRO (grr)</li>
 <li class="todo">iPayment Integration</li>
 <li class="todo">iDeal Advanced Integration</li>
 <li class="todo">MySMS MI (Thanks to Axel Sauerh&ounml;fer!!!)</li>
-<li>fix for Acajoom MI - adding a user to a list was not working and in general</li>
-<li>fix for coupon restrictions backend</li>
 <li class="todo">fix for problems when saving coupons</li>
-<li>Cleanup MI flags on transition to a new plan</li>
 <li class="todo">Finally fix the damn help page to not show errors if Hacks are committed. And make the text less dramatic (done).</li>
 <li class="todo">MIs to have a default function for default parameters</li>
-<li>fixing MI save when MI deactivated (was not saving anything then)</li>
-<li>fixing installation for latest Joomla 1.5 RC (phew)</li>
-<li>fixing menu icons J!1.5</li>
-<li>fixing a situation where no settings entry would ever be generated</li>
 <li>fixing display of "You have to register to" etcpp in CB on integrated Subscription</li>
 <li>fix for rokreporter report.php (remember to release this!)</li>
-<li>iDev MI finally works and can also do the cURL. Thanks alot to Marc *the Marketing Guru* Gamble and the iDev team.</li>
 <li class="todo">Extend standard CC Form in XML processors to allow for further styles of CCs</li>
 <li class="todo">MI for creating an EventLog entry</li>
 <li class="todo">put in processor functionality that automatically reduces the displayed expiration time to reduce confusion (if the processor uses extended periods)</li>
+</ul>
 </ul>
 </body>
 </html>

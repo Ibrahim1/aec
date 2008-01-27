@@ -653,6 +653,9 @@ class Config_General extends paramDBTable
 
 		$this->check();
 		$this->store();
+
+		// Reload Settings
+		$this->cfg = $this->getParams( 'settings' );
 	}
 
 	function RowDuplicationCheck()
