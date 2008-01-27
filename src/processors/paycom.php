@@ -55,6 +55,7 @@ class processor_paycom extends POSTprocessor
 		$info['cc_list'] = "visa,mastercard,discover,echeck,jcb";
 		$info['currencies'] = "USD";
 		$info['recurring'] = 0;
+		$info['notify_trail_thanks'] = 1;
 
 		return $info;
 	}

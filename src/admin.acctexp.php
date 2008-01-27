@@ -3911,7 +3911,8 @@ function quicklookup( $option )
 	if ( !$userid ) {
 		$query = 'SELECT userid'
 		. ' FROM #__acctexp_invoices'
-		. ' WHERE invoice_number LIKE \'%' . $search . '%\''
+		. ' WHERE invoice_number = \'' . $search . '\''
+		. ' OR secondary_ident = \'' . $search . '\''
 		;
 		$database->setQuery( $query );
 

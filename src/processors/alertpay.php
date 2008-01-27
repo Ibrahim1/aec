@@ -40,6 +40,7 @@ class processor_alertpay extends POSTprocessor
 		$info['description']		= _DESCRIPTION_ALERTPAY;
 		$info['cc_list']			= 'visa,mastercard,discover,americanexpress,echeck';
 		$info['recurring']			= 0;
+		$info['notify_trail_thanks'] = 1;
 
 		return $info;
 	}

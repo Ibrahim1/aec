@@ -40,6 +40,7 @@ class processor_epsnetpay extends POSTprocessor
 		$info['description'] = _DESCRIPTION_EPSNETPAY;
 		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck,giropay";
 		$info['recurring'] = 0;
+		$info['notify_trail_thanks'] = 1;
 
 		return $info;
 	}

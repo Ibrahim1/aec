@@ -45,6 +45,7 @@ class processor_authorize extends POSTprocessor
 								'LKR,SHP,ECS,SDD,SRG,SEK,CHF,SYP,TJR,BDT,WST,TZS,KZT,TPE,SIT,TTD,MNT,TND,TRL,UGX,ECV,CLF,USN,USS,USD,UZS,VUV,KRW,YER,JPY,CNY,ZWD,PLN';
 		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring'] = 0;
+		$info['notify_trail_thanks'] = 1;
 
 		return $info;
 	}

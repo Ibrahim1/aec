@@ -4365,7 +4365,9 @@ class Invoice extends paramDBTable
 
 			if ( !$break ) {
 				$renew	= $this->pay( $multiplicator );
-				thanks( 'com_acctexp', $renew, ($pp === 0) );
+				if ( !empty( $pp->info['notify_trail_thanks'] ) ) {
+					thanks( 'com_acctexp', $renew, ($pp === 0) );
+				}
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_VALID;
 				$tags	.= ',payment,action';
 			}

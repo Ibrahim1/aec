@@ -928,7 +928,7 @@ class HTML_AcctExp
 							<h2><?php echo _AEC_NOTICES_FOUND; ?></h2>
 							<p><?php echo _AEC_NOTICES_FOUND_DESC; ?></p>
 							<p><a href="index2.php?option=com_acctexp&amp;task=readAllNotices"><?php echo _AEC_NOTICE_MARK_ALL_READ; ?></a></p>
-							<table>
+							<table align="center">
 							<?php
 							foreach( $notices as $notice ) {
 							?>
