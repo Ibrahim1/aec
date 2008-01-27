@@ -928,7 +928,7 @@ function processNotification( $option, $processor )
 		$params = array( 'invoice_number' => $objInvoice->invoice_number );
 
 		$eventlog = new eventLog($database);
-		$eventlog->issue( $short, $tags, $event, $params );
+		$eventlog->issue( $short, $tags, $event, 128, $params );
 		exit();
 	}
 

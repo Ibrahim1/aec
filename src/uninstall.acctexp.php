@@ -49,10 +49,10 @@ function com_uninstall()
 	$short = "AEC uninstall";
 	$event = "AEC has been removed";
 	$tags = "uninstall,system";
-	
+
 	$eventlog = new eventLog($database);
 	$params = array("userid" => $my->id);
-	$eventlog->issue( $short, $tags, $event, $params );
+	$eventlog->issue( $short, $tags, $event, 2, $params );
 
 	echo "Component successfully uninstalled";
 }

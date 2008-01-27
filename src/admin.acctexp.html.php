@@ -839,7 +839,7 @@ class HTML_AcctExp
 	<?php
 	}
 
-	function central( $display=null )
+	function central( $display=null, $notices=null )
 	{
 		global $mosConfig_live_site;
 		HTML_myCommon::addBackendCSS();
@@ -904,7 +904,7 @@ class HTML_AcctExp
 						$link = 'index2.php?option=com_acctexp&amp;task=eventlog';
 						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_eventlog.png', _AEC_CENTR_LOG );
 						?>
-						<div class="quicksearch">
+						<div class="central_quicksearch">
 							<h2><?php echo _AEC_QUICKSEARCH; ?></h2>
 							<p><?php echo _AEC_QUICKSEARCH_DESC; ?></p>
 							<form action="<?php echo $mosConfig_live_site; ?>/administrator/index2.php?option=com_acctexp&amp;task=quicklookup" method="post">
@@ -920,8 +920,37 @@ class HTML_AcctExp
 							<?php
 							}
 							?>
-
 						</div>
+						<?php
+						if ( !empty( $notices ) ) {
+						?>
+						<div class="central_notices">
+							<h2><?php echo _AEC_NOTICES_FOUND; ?></h2>
+							<p><?php echo _AEC_NOTICES_FOUND_DESC; ?></p>
+							<p><a href="index2.php?option=com_acctexp&amp;task=readAllNotices"><?php echo _AEC_NOTICE_MARK_ALL_READ; ?></a></p>
+							<table>
+							<?php
+							foreach( $notices as $notice ) {
+							?>
+								<tr><td class="notice_level_<?php echo $notice->level; ?>" colspan="3"><?php echo constant( "_AEC_NOTICE_NUMBER_" . $notice->level ); ?></tr>
+								<tr>
+									<td><?php echo $notice->datetime; ?></td>
+									<td><?php echo $notice->short; ?></td>
+									<td>[<a href="index2.php?option=com_acctexp&amp;task=readNotice&amp;id=<?php echo $notice->id; ?>"><?php echo _AEC_NOTICE_MARK_READ; ?></a>]</td>
+								</tr>
+								<tr>
+									<td class="notice_level_<?php echo $notice->level; ?>">&nbsp;</td>
+									<td><?php echo $notice->event; ?></td>
+									<td><?php echo $notice->tags; ?></td>
+								</tr>
+							<?php
+							}
+							?>
+							</table>
+						</div>
+						<?php
+						}
+						?>
 					</div>
 				</td>
 				<td width="480" valign="top" class="centerlogo">
@@ -2322,6 +2351,8 @@ class HTML_AcctExp
 		<tr>
 			<th align="left" width="30"><?php echo _AEC_CMN_ID; ?></th>
 			<th align="left" width="120"><?php echo _AEC_CMN_DATE; ?></th>
+			<th align="left">&nbsp;</th>
+			<th align="left">&nbsp;</th>
 			<th align="left"><?php echo _AEC_CMN_EVENT; ?></th>
 			<th align="left"><?php echo _AEC_CMN_TAGS; ?></th>
 			<th align="left"><?php echo _AEC_CMN_ACTION; ?></th>
@@ -2333,6 +2364,8 @@ class HTML_AcctExp
 			<tr class="row<?php echo $k; ?>">
 				<td><?php echo $row->id; ?></td>
 				<td align="left" width="120"><?php echo $row->datetime; ?></td>
+				<td align="left"><?php echo $row->notify ? aecHTML::Icon( 'star.png', '' ) : '&nbsp;'; ?></td>
+				<td class="notice_level_<?php echo $row->level; ?>"><?php echo constant( "_AEC_NOTICE_NUMBER_" . $row->level ); ?>
 				<td align="left"><?php echo $row->short; ?></td>
 	  			<td align="left"><?php echo $row->tags; ?></td>
 				<td align="left"><?php echo $row->event; ?></td>

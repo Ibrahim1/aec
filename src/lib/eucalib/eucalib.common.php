@@ -64,6 +64,10 @@ class paramDBTable extends mosDBTable
 	 */
 	function setParams( $array, $field = 'params' )
 	{
+		if ( empty( $array ) ) {
+			return false;
+		}
+
 		$params = array();
 		foreach ( $array as $key => $value ) {
 			if ( !is_null( $key ) ) {
@@ -77,6 +81,7 @@ class paramDBTable extends mosDBTable
 		}
 
 		$this->$field = implode( "\n", $params );
+		return true;
 	}
 
 	/**

@@ -88,7 +88,7 @@ class processor_offline_payment extends processor
 				$params = array( 'invoice_number' => $objInvoice->invoice_number );
 
 				$eventlog = new eventLog( $database );
-				$eventlog->issue( $short, $tags, $event, $params );
+				$eventlog->issue( $short, $tags, $event, 2, $params );
 			}
 		}
 	}

@@ -58,7 +58,7 @@ display: block;
 padding-top: 3px;
 }
 
-div.quicksearch {
+div.central_quicksearch {
 float: left;
 width: 90%;
 clear: both;
@@ -68,6 +68,50 @@ background-color:#fff;
 border-top: 2px solid #888;
 border-left: 1px solid #aaa;
 border-right: 1px solid #aaa;
+}
+
+div.central_notices {
+float: left;
+width: 90%;
+clear: both;
+padding: 0 12px 12px 12px;
+margin: 12px;
+background-color:#fff;
+border-top: 2px solid #888;
+border-left: 1px solid #aaa;
+border-right: 1px solid #aaa;
+}
+
+td.notice_level_2 {
+color: #fff;
+background-color: #61b0c1;
+text-align: right !important;
+font-weight: bold;
+font-size: 110%;
+}
+
+td.notice_level_8 {
+color: #fff;
+background-color: #7fc161;
+text-align: right !important;
+font-weight: bold;
+font-size: 110%;
+}
+
+td.notice_level_32 {
+color: #fff;
+background-color: #c1bb61;
+text-align: right !important;
+font-weight: bold;
+font-size: 110%;
+}
+
+td.notice_level_128 {
+color: #fff;
+background-color: #c16161;
+text-align: right !important;
+font-weight: bold;
+font-size: 110%;
 }
 
 .centerlogo {
@@ -256,10 +300,4 @@ fieldset {
 
 div#aec_footer {
 clear: both;
-}
-
-/* Joomla 1.5 Component Menu */
-
-a.icon-16-aec_logo_tiny {
-background-image: url(/images/icons/aec_logo_tiny.png);
 }

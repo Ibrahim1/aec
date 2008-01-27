@@ -605,16 +605,25 @@ class Config_General extends paramDBTable
 		$def['recaptcha_privatekey']				= '';
 		$def['recaptcha_publickey']				= '';
 		$def['ssl_signup']						= 0;
+		$def['error_notification_level']		= 32;
+		$def['email_notification_level']		= 512;
 
 		// Insert a new entry if there is none yet
 		if ( empty( $this->settings ) ) {
 			global $database;
 
-			$query = 'INSERT INTO #__acctexp_config'
-			. ' VALUES( \'1\', \'\' )'
+			$query = 'SELECT * FROM #__acctexp_config'
+			. ' WHERE id = \'1\''
 			;
 			$database->setQuery( $query );
-			$database->query() or die( $database->stderr() );
+
+			if ( !$database->loadResult() ) {
+				$query = 'INSERT INTO #__acctexp_config'
+				. ' VALUES( \'1\', \'\' )'
+				;
+				$database->setQuery( $query );
+				$database->query() or die( $database->stderr() );
+			}
 		}
 
 		// Write to Params, do not overwrite existing data
@@ -624,6 +633,9 @@ class Config_General extends paramDBTable
 
 		$this->check();
 		$this->store();
+
+		// Reload Settings
+		$this->cfg = $this->getParams( 'settings' );
 
 		return true;
 	}
@@ -816,7 +828,7 @@ class aecHeartbeat extends mosDBTable
 								} elseif ( $prepval === false ) {
 									// Break - we have a problem with one processor
 									$eventlog = new eventLog( $database );
-									$eventlog->issue( 'heartbeat failed - processor', 'heartbeat, failure,'.$subscription->type, 'The payment processor failed to respond to validation request - waiting for next turn' );
+									$eventlog->issue( 'heartbeat failed - processor', 'heartbeat, failure,'.$subscription->type, 'The payment processor failed to respond to validation request - waiting for next turn', 128 );
 									return;
 								}
 							} else {
@@ -958,7 +970,7 @@ class aecHeartbeat extends mosDBTable
 		}
 
 		$eventlog = new eventLog( $database );
-		$eventlog->issue( $short, implode( ',', $tags ), $event );
+		$eventlog->issue( $short, implode( ',', $tags ), $event, 2 );
 
 	}
 
@@ -1129,6 +1141,10 @@ class eventLog extends paramDBTable
 	var $tags 		= null;
 	/** @var text */
 	var $event 		= null;
+	/** @var int */
+	var $level		= null;
+	/** @var int */
+	var $notify		= null;
 	/** @var text */
 	var $params		= null;
 
@@ -1140,16 +1156,67 @@ class eventLog extends paramDBTable
 	 	$this->mosDBTable( '#__acctexp_eventlog', 'id', $db );
 	}
 
-	function issue( $short, $tags, $text, $params = null )
+	function issue( $short, $tags, $text, $level = 2, $params = null, $force_notify = 0, $force_email = 0 )
 	{
-		global $mosConfig_offset_user;
+		global $mosConfig_offset_user, $aecConfig;
 
 		$this->datetime	= gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
 		$this->short	= $short;
 		$this->tags		= $tags;
 		$this->event	= $text;
+		$this->level	= $level;
 
-		if ( !is_null( $params ) && is_array( $params ) ) {
+		if ( $level >= $aecConfig->cfg['error_notification_level'] ) {
+			$this->notify	= 1;
+		} else {
+			$this->notify	= $force_notify ? 1 : 0;
+		}
+
+		if ( ( $level >= $aecConfig->cfg['email_notification_level'] ) || $force_email ) {
+			global $mainframe, $database;
+
+			// check if Global Config `mailfrom` and `fromname` values exist
+			if ( $mainframe->getCfg( 'mailfrom' ) != '' && $mainframe->getCfg( 'fromname' ) != '' ) {
+				$adminName2 	= $mainframe->getCfg( 'fromname' );
+				$adminEmail2 	= $mainframe->getCfg( 'mailfrom' );
+			} else {
+				// use email address and name of first superadmin for use in email sent to user
+				$query = 'SELECT name, email'
+				. ' FROM #__users'
+				. ' WHERE LOWER( usertype ) = \'superadministrator\''
+				. ' OR LOWER( usertype ) = \'super administrator\''
+				;
+				$database->setQuery( $query );
+				$rows = $database->loadObjectList();
+
+				$adminName2 	= $rows[0]->name;
+				$adminEmail2 	= $rows[0]->email;
+			}
+
+			// Send notification to all administrators
+			$subject2	= sprintf( _AEC_ASEND_NOTICE, constant( "_AEC_NOTICE_NUMBER_" . $this->level ), $short, $mainframe->getCfg( 'sitename' ) );
+			$message2	= sprintf( _AEC_ASEND_NOTICE_MSG, $text  );
+
+			$subject2	= html_entity_decode( $subject2, ENT_QUOTES );
+			$message2	= html_entity_decode( $message2, ENT_QUOTES );
+
+			// get email addresses of all admins and superadmins set to recieve system emails
+			$query = 'SELECT email'
+			. ' FROM #__users'
+			. ' WHERE ( gid = 24 OR gid = 25 )'
+			. ' AND sendEmail = 1'
+			. ' AND block = 0'
+			;
+			$database->setQuery( $query );
+			$admins = $database->loadObjectList();
+
+			foreach ( $admins as $admin ) {
+				// send email to admin & super admin set to recieve system emails
+				mosMail( $adminEmail2, $adminName2, $admin->email, $subject2, $message2 );
+			}
+		}
+
+		if ( !empty( $params ) && is_array( $params ) ) {
 			$this->setParams( $params );
 		}
 
@@ -3016,7 +3083,7 @@ class logHistory extends mosDBTable
 		$params = array( 'invoice_number' => $objInvoice->invoice_number );
 
 		$eventlog = new eventLog( $database );
-		$eventlog->issue( $short, $tags, $event, $params );
+		$eventlog->issue( $short, $tags, $event, 2, $params );
 
 		if ( !$this->check() ) {
 			echo "<script> alert('".$this->getError()."'); window.history.go(-1); </script>\n";
@@ -4349,7 +4416,7 @@ class Invoice extends paramDBTable
 		}
 
 		$eventlog = new eventLog( $database );
-		$eventlog->issue( $short, $tags, $event, $params );
+		$eventlog->issue( $short, $tags, $event, $params, 2 );
 	}
 
 	function pay( $multiplicator=1 )

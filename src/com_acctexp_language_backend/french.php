@@ -307,6 +307,16 @@ define( '_AEC_QUICKSEARCH_MULTIRES_DESC',		'Please pick one of the following use
 define( '_AEC_QUICKSEARCH_THANKS',				'Thank you for making a simple function very happy.' );
 define( '_AEC_QUICKSEARCH_NOTFOUND',			'User not found' );
 
+define( '_AEC_NOTICES_FOUND',					'Eventlog Notices' );
+define( '_AEC_NOTICES_FOUND_DESC',				'The following entries in the Eventlog deserve your attention. You can mark them read if you want them to disappear. You can also change the types of notices that show up here in the Settings.' );
+define( '_AEC_NOTICE_MARK_READ',				'mark read' );
+define( '_AEC_NOTICE_MARK_ALL_READ',			'Mark all Notices read' );
+define( '_AEC_NOTICE_NUMBER_2',					'Event' );
+define( '_AEC_NOTICE_NUMBER_8',					'Notice' );
+define( '_AEC_NOTICE_NUMBER_32',				'Warning' );
+define( '_AEC_NOTICE_NUMBER_128',				'Error' );
+define( '_AEC_NOTICE_NUMBER_512',				'None' );
+
 // select lists
 define( '_AEC_SEL_EXCLUDED',					'Excluded' );
 define( '_AEC_SEL_PENDING',						'Pending' );
@@ -697,6 +707,11 @@ define( '_CFG_GENERAL_OVERRIDE_REQSSL_NAME', 'Override SSL Requirement');
 define( '_CFG_GENERAL_OVERRIDE_REQSSL_DESC', 'Some payment processors require an SSL secured connection to the user - for example when sensitive information (like CreditCard data) is required on the frontend.');
 define( '_CFG_GENERAL_SSL_SIGNUP_NAME', 'SSL Signup');
 define( '_CFG_GENERAL_SSL_SIGNUP_DESC', 'Use SSL Encryption on all links that have to do with the user singing up within the AEC.');
+
+define( '_CFG_GENERAL_ERROR_NOTIFICATION_LEVEL_NAME', 'Notification Level');
+define( '_CFG_GENERAL_ERROR_NOTIFICATION_LEVEL_DESC', 'Select which level of entries to the EventLog is required to make it appear on the central page for your convenience.');
+define( '_CFG_GENERAL_EMAIL_NOTIFICATION_LEVEL_NAME', 'Email Notification Level');
+define( '_CFG_GENERAL_EMAIL_NOTIFICATION_LEVEL_DESC', 'Select which level of entries to the EventLog is required to make the AEC send them as an E-Mail to all Administrators.');
 
 // Global Micro Integration Settings
 define( '_CFG_TAB_MICROINTEGRATION_TITLE', 'MicroIntegr');

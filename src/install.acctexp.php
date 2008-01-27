@@ -100,6 +100,8 @@ function com_install()
 	. '`short` varchar(60) NOT NULL,'
 	. '`tags` text NULL,'
 	. '`event` text NULL,'
+	. '`level` int(4) NOT NULL default \'2\','
+	. '`notify` int(1) NOT NULL default \'0\','
 	. '`params` text NULL,'
 	. ' PRIMARY KEY (`id`)'
 	. ') TYPE=MyISAM AUTO_INCREMENT=1;'
@@ -687,6 +689,10 @@ function com_install()
 
 	$eucaInstall->populateAdminMenuEntry( $menu );
 
+	// Force Init Params
+	$aecConfig = new Config_General( $database );
+	$aecConfig->initParams();
+
 	// load settings (creates settings parameters that got added in this version)
 	$result = null;
 
@@ -924,6 +930,9 @@ function com_install()
 	$eucaInstalldb->addColifNotExists( 'subscr_id', "int(11) NULL", 'invoices' );
 	$eucaInstalldb->addColifNotExists( 'conditions', "text NULL", 'invoices' );
 
+	$eucaInstalldb->addColifNotExists( 'subscr_id', "int(11) NULL", 'invoices' );
+	$eucaInstalldb->addColifNotExists( 'conditions', "text NULL", 'invoices' );
+
 	// Rewrite old entries for hardcoded "transfer" processor to new API conform "offline_payment" processor
 	$query = 'UPDATE #__acctexp_invoices'
 	. ' SET method = \'offline_payment\''
@@ -950,6 +959,12 @@ function com_install()
     	$errors[] = array( $database->getErrorMsg(), $query );
 	}
 
+	$eucaInstalldb->addColifNotExists( 'level', "int(4) NOT NULL default '2'", 'eventlog' );
+	$eucaInstalldb->addColifNotExists( 'notify', "int(1) NOT NULL default '0'", 'eventlog' );
+
+	// --- [ END OF DATABASE ACTIONS ] ---
+
+	// Make all Superadmins excluded by default
 	$database->setQuery("SELECT id FROM #__users WHERE gid='25'");
 	$administrators = $database->loadResultArray();
 
@@ -1005,7 +1020,7 @@ function com_install()
 
 	$eventlog	= new eventLog($database);
 	$params		= array( 'userid' => $my->id );
-	$eventlog->issue( $short, $tags, $event, $params );
+	$eventlog->issue( $short, $tags, $event, 2, $params, 1 );
 
 	$errors = array_merge( $errors, $eucaInstalldb->errors );
 

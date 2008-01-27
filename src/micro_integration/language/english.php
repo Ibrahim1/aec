@@ -62,7 +62,7 @@ define( '_MI_MI_DOCMAN_REBUILD_DESC',				'Attempt to rebuild the list of users a
 define( '_AEC_MI_HACK1_DOCMAN',						'Build in a downloads restriction for DocMan, to be used with Micro Integrations. <b>Note:</b> This is an optional hack which adds the ability to restrict number of file downloads.  It should ONLY be applied if this is desired.' );
 define( '_AEC_MI_DOCMAN_NOCREDIT',					'We are terribly sorry: You have no downloads left.' );
 define( '_MI_MI_DOCMAN_DELETE_ON_EXP_NAME', 			'Action for existing groups when account expires:');
-define( '_MI_MI_DOCMAN_DELETE_ON_EXP_DESC',			'Choose what action you want to happen to already defined DocMan groups when the user expires.')
+define( '_MI_MI_DOCMAN_DELETE_ON_EXP_DESC',			'Choose what action you want to happen to already defined DocMan groups when the user expires.');
 
 // email
 define( '_AEC_MI_NAME_EMAIL',		'Email' );

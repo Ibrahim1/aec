@@ -119,7 +119,7 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'showcentral':
-		HTML_AcctExp::central();
+		aecCentral( $option );
 		break;
 
 	case 'clearpayment':
@@ -197,20 +197,12 @@ switch( strtolower( $task ) ) {
 		saveSettings( $option );
 		break;
 
-	case 'apply':
-        saveSettings( $option );
+	case 'applysettings':
+        saveSettings( $option, 1 );
         break;
 
 	case 'cancelsettings':
 		cancelSettings( $option );
-		break;
-
-    case 'remove':
-		remove( $id, $option, $returnTask );
-		break;
-
-    case 'exclude':
-		exclude( $id, $option, $returnTask );
 		break;
 
 	case 'showsubscriptionplans':
@@ -554,7 +546,7 @@ switch( strtolower( $task ) ) {
 		$return = quicklookup( $option );
 
 		if ( strlen( $return ) > 32 ) {
-			HTML_AcctExp::central( $return );
+			aecCentral( $option, $searchresult );
 		} elseif ( $return ) {
 			mosRedirect( 'index2.php?option=' . $option . '&task=edit&userid=' . $return, _AEC_QUICKSEARCH_THANKS );
 		} else {
@@ -577,45 +569,56 @@ switch( strtolower( $task ) ) {
 		metaUser::procTriggerCreate( $user, $payment, 1 );
 		break;
 
+	case 'readnotice':
+		global $database;
+
+		$query = 'UPDATE #__acctexp_eventlog'
+		. ' SET notify = \'0\''
+		. ' WHERE id = \'' . $id . '\''
+		;
+		$database->setQuery( $query	);
+		$database->query();
+
+		aecCentral( $option );
+		break;
+
+	case 'readallnotices':
+		global $database;
+
+		$query = 'UPDATE #__acctexp_eventlog'
+		. ' SET notify = \'0\''
+		. ' WHERE notify = \'1\''
+		;
+		$database->setQuery( $query	);
+		$database->query();
+
+		aecCentral( $option );
+		break;
+
 	case 'add': editUser( null, $userid, $option, 'notconfig' ); break;
 
 	default:
-		HTML_AcctExp::central();
+		aecCentral( $option );
 		break;
 }
 
 /**
-* Remove user from list of expirable accounts
+* Central Page
 */
-function remove( $userid, $option, $task )
+function aecCentral( $option, $searchresult=null )
 {
-	global $database;
+	global $database, $mainframe, $mosConfig_list_limit;
 
-	// $userid contains values corresponding to id field of #__acctexp table
-    if ( !is_array( $userid ) || count( $userid ) < 1 ) {
-	    echo '<script>alert(\'' . _AEC_ALERT_SELECT_FIRST . '\');window.history.go(-1);</script>' . "\n";
-	    exit();
-    }
-
-	foreach ( $userid as $id ) {
-		$subscription = new Subscription( $database );
-		$subscription->loadUserid( $userid );
-
-		$subscription->setStatus( 'Excluded' );
-	}
-
-	$userids = implode( ',', $userid );
-
-	$query = 'DELETE'
-	. ' FROM #__acctexp'
-	. ' WHERE userid IN (' . $userids . ')'
+	$query = 'SELECT *'
+	. ' FROM #__acctexp_eventlog'
+	. ' WHERE notify = \'1\''
+	. ' ORDER BY datetime DESC'
+	. ' LIMIT 0, 10'
 	;
- 	$database->setQuery( $query );
-	if ( !$database->query() ) {
-		echo '<script>alert(\'' . $database->getErrorMsg() . '\');window.history.go(-1); </script>' . "\n";
-	}
+	$database->setQuery( $query	);
+	$notices = $database->loadObjectList();
 
-	mosRedirect( 'index2.php?option=' . $option . '&task=' . $task, _REMOVED );
+ 	HTML_AcctExp::central( $searchresult, $notices );
 }
 
 /**
@@ -1778,6 +1781,8 @@ function editSettings( $option )
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_SSL_SIGNUP_NAME, _CFG_GENERAL_SSL_SIGNUP_DESC, '0', 'ssl_signup');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_OVERRIDE_REQSSL_NAME, _CFG_GENERAL_OVERRIDE_REQSSL_DESC, '0', 'override_reqssl');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_DEBUGMODE_NAME, _CFG_GENERAL_DEBUGMODE_DESC, '0', 'debugmode');
+	$tab_data[0][] = array( 'list', _CFG_GENERAL_ERROR_NOTIFICATION_LEVEL_NAME, _CFG_GENERAL_ERROR_NOTIFICATION_LEVEL_DESC, '0', 'error_notification_level');
+	$tab_data[0][] = array( 'list', _CFG_GENERAL_EMAIL_NOTIFICATION_LEVEL_NAME, _CFG_GENERAL_EMAIL_NOTIFICATION_LEVEL_DESC, '0', 'email_notification_level');
 
 	$tab_data[1] = array();
 	$tab_data[1][] = _CFG_TAB_CUSTOMIZATION_TITLE;
@@ -1830,7 +1835,15 @@ function editSettings( $option )
 	$invoicenum_display_case[] = mosHTML::makeOption( 'NONE', _CFG_GENERAL_INVOICENUM_DISPLAY_CASE_NONE );
 	$invoicenum_display_case[] = mosHTML::makeOption( 'UPPER', _CFG_GENERAL_INVOICENUM_DISPLAY_CASE_UPPER );
 	$invoicenum_display_case[] = mosHTML::makeOption( 'LOWER', _CFG_GENERAL_INVOICENUM_DISPLAY_CASE_LOWER );
-	$lists['invoicenum_display_case']			= mosHTML::selectList($invoicenum_display_case, 'invoicenum_display_case[]', 'size="1"', 'value', 'text', $aecConfig->cfg['invoicenum_display_case'] );
+	$lists['invoicenum_display_case']			= mosHTML::selectList($invoicenum_display_case, 'invoicenum_display_case', 'size="1"', 'value', 'text', $aecConfig->cfg['invoicenum_display_case'] );
+
+	$error_reporting_notices[] = mosHTML::makeOption( 2, _AEC_NOTICE_NUMBER_2 );
+	$error_reporting_notices[] = mosHTML::makeOption( 8, _AEC_NOTICE_NUMBER_8 );
+	$error_reporting_notices[] = mosHTML::makeOption( 32, _AEC_NOTICE_NUMBER_32 );
+	$error_reporting_notices[] = mosHTML::makeOption( 128, _AEC_NOTICE_NUMBER_128 );
+	$error_reporting_notices[] = mosHTML::makeOption( 512, _AEC_NOTICE_NUMBER_512 );
+	$lists['error_notification_level']			= mosHTML::selectList($error_reporting_notices, 'error_notification_level', 'size="5"', 'value', 'text', $aecConfig->cfg['error_notification_level'] );
+	$lists['email_notification_level']			= mosHTML::selectList($error_reporting_notices, 'email_notification_level', 'size="5"', 'value', 'text', $aecConfig->cfg['email_notification_level'] );
 
 	$pph					= new PaymentProcessorHandler();
 	$gwlist					= $pph->getProcessorList();
@@ -2031,7 +2044,7 @@ function cancelSettings( $option )
 }
 
 
-function saveSettings( $option )
+function saveSettings( $option, $return=0 )
 {
 	global $database, $mainframe, $my, $acl, $aecConfig;
 
@@ -2122,7 +2135,7 @@ function saveSettings( $option )
 	if ( is_array( $diff ) ) {
 		$newdiff = array();
 		foreach ( $diff as $value => $change ) {
-			$newdiff[] = $value . '(' . implode( '->', $change ) . ')';
+			$newdiff[] = $value . '(' . implode( ' -> ', $change ) . ')';
 		}
 		$difference = implode( ',', $newdiff );
 	} else {
@@ -2142,9 +2155,13 @@ function saveSettings( $option )
 						'isp' => $ip['isp'] );
 
 	$eventlog = new eventLog( $database );
-	$eventlog->issue( $short, $tags, $event, $params );
+	$eventlog->issue( $short, $tags, $event, 2, $params );
 
-	mosRedirect( 'index2.php?option=' . $option . '&task=showSettings', _AEC_CONFIG_SAVED );
+	if ( $return ) {
+		mosRedirect( 'index2.php?option=' . $option . '&task=showSettings', _AEC_CONFIG_SAVED );
+	} else {
+		mosRedirect( 'index2.php?option=' . $option . '&task=showCentral', _AEC_CONFIG_SAVED );
+	}
 }
 
 function listSubscriptionPlans( $option )
@@ -3721,6 +3738,8 @@ function eventlog( $option )
 		$events[$id]->short		= $row->short;
 		$events[$id]->tags		= implode( ', ', explode( ',', $row->tags ) );
 		$events[$id]->event		= $row->event;
+		$events[$id]->level		= $row->level;
+		$events[$id]->notify	= $row->notify;
 
 		$params = array();
 

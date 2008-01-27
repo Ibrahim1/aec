@@ -61,6 +61,8 @@ define( '_MI_MI_DOCMAN_SET_REBUILD_NAME',			'Neu Erstellen' );
 define( '_MI_MI_DOCMAN_SET_REBUILD_DESC',			'Die Gruppenzuweisung aufgrund der Benutzer-Plan-MI Beziehung neu aufbauen.' );
 define( '_AEC_MI_HACK1_DOCMAN',						'Erstellt eine Downloadeinschr&auml;nkung f&uuml;r DocMan' );
 define( '_AEC_MI_DOCMAN_NOCREDIT',					'Es tut uns au&szlig;erordentlich leid, aber Sie haben keine verbleibenden Downloads &uuml;brig.' );
+define( '_MI_MI_DOCMAN_DELETE_ON_EXP_NAME', 			'Action for existing groups when account expires:');
+define( '_MI_MI_DOCMAN_DELETE_ON_EXP_DESC',			'Choose what action you want to happen to already defined DocMan groups when the user expires.');
 
 // email
 define( '_AEC_MI_NAME_EMAIL',		'Email' );
