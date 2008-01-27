@@ -68,7 +68,12 @@ class mi_docman
 			$sg[] = mosHTML::makeOption( $group->groups_id, $group->groups_name . ' - '
 			. substr( strip_tags( $group->groups_description ), 0, 30 ) );
 		}
-
+		
+ 		$del_opts = array();
+		$del_opts[0] = mosHTML::makeOption ("No", "Just apply group below."); // Should probably be langauge file defined?
+		$del_opts[1] = mosHTML::makeOption ("All", "Delete ALL, then apply group below.");
+		$del_opts[2] = mosHTML::makeOption ("Set","Delete Group Set on Application, then apply group below.");
+        
         $settings = array();
 		$settings['add_downloads']		= array( 'inputA' );
 		$settings['set_downloads']		= array( 'inputA' );
@@ -79,6 +84,7 @@ class mi_docman
 		$settings['set_group']			= array( 'list_yesno' );
 		$settings['group']				= array( 'list' );
 		$settings['set_group_exp']		= array( 'list_yesno' );
+		$settings['delete_on_exp'] 		= array('list');
 		$settings['group_exp']			= array( 'list' );
 		$settings['rebuild']			= array( 'list_yesno' );
 
@@ -150,9 +156,15 @@ class mi_docman
 	{
 		global $database;
 
-		// TODO: Make this a choice, also offer deletion of ALL groups
-		if ( $params['set_group'] ) {
+ 		if ( $params['delete_on_exp']=="Set" ) {
 			$this->DeleteUserFromGroup( $metaUser->userid, $params['group'] );
+		}
+
+		if ( $params['delete_on_exp']=="All" ) {
+			$groups = $this->GetUserGroups( $metaUser->userid );
+			foreach ($groups as $group) {
+				$this->DeleteUserFromGroup( $metaUser->userid, $group );
+			}
 		}
 
 		if ( $params['set_group_exp'] ) {
