@@ -5918,6 +5918,7 @@ class AECToolbox
 			$savetask	= $task;
 			$task		= 'blind';
 			include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_juser/juser.php' );
+			include_once( $mosConfig_absolute_path .'/administrator/components/com_juser/juser.class.php' );
 			$task		= $savetask;
 		}
 
@@ -5937,6 +5938,27 @@ class AECToolbox
 		} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
 			// This is a JUSER registration, borrowing their code to save the user
 			saveRegistration( $option );
+
+			$query = 'SELECT id'
+			. ' FROM #__users'
+			. ' WHERE username = \'' . $var['username'] . '\''
+			;
+			$database->setQuery( $query );
+			$uid = $database->loadResult();
+			JUser::saveUser_ext( $uid );
+			//synchronize dublicate user data
+			$query = 'SELECT `id`' .
+					' FROM #__juser_integration' .
+					' WHERE `published` = \'1\'' .
+					' AND `export_status` = \'1\'';
+    		$database->setQuery( $query );
+    		$components = $database->loadObjectList();
+    		if ( !empty( $components ) ) {
+	    		foreach ( $components as $component ) {
+					$synchronize = require_integration( $component->id );
+					$synchronize->synchronizeFrom( $uid );
+				}
+			}
 		} else {
 			// This is a joomla registration, borrowing their code to save the user
 			global $mosConfig_useractivation, $mosConfig_sitename, $mosConfig_live_site;
