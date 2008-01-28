@@ -5939,7 +5939,7 @@ class AECToolbox
 			// This is a JUSER registration, borrowing their code to save the user
 			saveRegistration( $option );
 
-			$query = 'SELECT id'
+			$query = 'SELECT `id`'
 			. ' FROM #__users'
 			. ' WHERE username = \'' . $var['username'] . '\''
 			;
