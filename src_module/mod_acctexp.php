@@ -81,7 +81,7 @@ if ( $my->id ) {
 	}
 
 	if ( $showExpiration ) {
-		$langPath = $mosConfig_absolute_path . '/modules/mod_acctexp_language/';
+		$langPath = $mosConfig_absolute_path . '/modules/mod_acctexp/mod_acctexp_language/';
 		if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
 				include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
 		} else {
