@@ -3346,9 +3346,11 @@ function saveCoupon( $option, $type, $apply=0 )
 		if ( !empty( $_POST['id'] ) ) {
 			$cph->coupon = new Coupon( $database, $type );
 			$cph->coupon->load( $_POST['id'] );
+			$cph->type = $type;
 			if ( empty( $cph->coupon->id ) ) {
 				$cph->coupon = new Coupon( $database, !$type );
 				$cph->coupon->load( $_POST['id'] );
+				$cph->type = !$type;
 			}
 			if ( $cph->coupon->id ) {
 				$cph->status = 1;
@@ -3363,7 +3365,7 @@ function saveCoupon( $option, $type, $apply=0 )
 			$cph->status = true;
 			$new = 1;
 		}
-
+//print_r($_POST);print_r($cph);exit();
 		if ( $cph->status ) {
 			if ( !$new ) {
 				if ( $cph->type != $_POST['type'] ) {
