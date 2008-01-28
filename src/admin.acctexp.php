@@ -1841,11 +1841,11 @@ function editSettings( $option )
 	$invoicenum_display_case[] = mosHTML::makeOption( 'LOWER', _CFG_GENERAL_INVOICENUM_DISPLAY_CASE_LOWER );
 	$lists['invoicenum_display_case']			= mosHTML::selectList($invoicenum_display_case, 'invoicenum_display_case', 'size="1"', 'value', 'text', $aecConfig->cfg['invoicenum_display_case'] );
 
-	$error_reporting_notices[] = mosHTML::makeOption( 2, _AEC_NOTICE_NUMBER_2 );
-	$error_reporting_notices[] = mosHTML::makeOption( 8, _AEC_NOTICE_NUMBER_8 );
-	$error_reporting_notices[] = mosHTML::makeOption( 32, _AEC_NOTICE_NUMBER_32 );
-	$error_reporting_notices[] = mosHTML::makeOption( 128, _AEC_NOTICE_NUMBER_128 );
 	$error_reporting_notices[] = mosHTML::makeOption( 512, _AEC_NOTICE_NUMBER_512 );
+	$error_reporting_notices[] = mosHTML::makeOption( 128, _AEC_NOTICE_NUMBER_128 );
+	$error_reporting_notices[] = mosHTML::makeOption( 32, _AEC_NOTICE_NUMBER_32 );
+	$error_reporting_notices[] = mosHTML::makeOption( 8, _AEC_NOTICE_NUMBER_8 );
+	$error_reporting_notices[] = mosHTML::makeOption( 2, _AEC_NOTICE_NUMBER_2 );
 	$lists['error_notification_level']			= mosHTML::selectList($error_reporting_notices, 'error_notification_level', 'size="5"', 'value', 'text', $aecConfig->cfg['error_notification_level'] );
 	$lists['email_notification_level']			= mosHTML::selectList($error_reporting_notices, 'email_notification_level', 'size="5"', 'value', 'text', $aecConfig->cfg['email_notification_level'] );
 

@@ -6611,6 +6611,37 @@ class microIntegrationHandler
 	}
 }
 
+class MI
+{
+	function autoduplicatesettings( $settings, $ommit=array() )
+	{
+		if ( isset( $settings['lists'] ) ) {
+			$lists = $settings['lists'];
+			unset( $settings['lists'] );
+		} else {
+			$lists = array();
+		}
+
+		$new_settings = array();
+		$new_lists = array();
+		foreach ( $settings as $name => $content ) {
+			if ( in_array( $name, $ommit) ) {
+				continue;
+			}
+
+			$new_settings[$name]				= $content;
+			$new_settings[$name.'_exp']		= $content;
+			$new_settings[$name.'_pre_exp']	= $content;
+		}
+
+		if ( !empty( $new_lists ) ) {
+			$new_settings['lists'] = $lists;
+		}
+
+		return $new_settings;
+	}
+}
+
 class microIntegration extends paramDBTable
 {
 	/** @var int Primary key */

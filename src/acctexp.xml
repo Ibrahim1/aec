@@ -58,6 +58,7 @@
 		<filename>micro_integration/mi_displaypipeline.php</filename>
 		<filename>micro_integration/mi_docman.php</filename>
 		<filename>micro_integration/mi_email.php</filename>
+		<filename>micro_integration/mi_eventlog.php</filename>
 		<filename>micro_integration/mi_fireboard.php</filename>
 		<filename>micro_integration/mi_googleanalytics.php</filename>
 		<filename>micro_integration/mi_htaccess.php</filename>

@@ -341,4 +341,44 @@ define('_MI_MI_ACL_SUB_GID_PRE_EXP_DEL_NAME', 'Delete these Subgroups if the use
 define('_MI_MI_ACL_SUB_GID_PRE_EXP_NAME', 'Add Subgroups');
 define('_MI_MI_ACL_SUB_GID_PRE_EXP_NAME', 'Add these Subgroups (CTRL+click to select multiple)');
 
+// eventlog
+define( '_AEC_MI_NAME_EVENTLOG', 'Eventlog' );
+define( '_AEC_MI_DESC_EVENTLOG', 'Make entries into the Eventlog' );
+define( '_MI_MI_EVENTLOG_SHORT_NAME', 'Short' );
+define( '_MI_MI_EVENTLOG_SHORT_DESC', 'The short explanation or title of the entry.' );
+define( '_MI_MI_EVENTLOG_TAGS_NAME', 'Tags' );
+define( '_MI_MI_EVENTLOG_TAGS_DESC', 'Tags for this entry' );
+define( '_MI_MI_EVENTLOG_TEXT_NAME', 'Text' );
+define( '_MI_MI_EVENTLOG_TEXT_DESC', 'Text or long explanation of the entry.' );
+define( '_MI_MI_EVENTLOG_LEVEL_NAME', 'Level' );
+define( '_MI_MI_EVENTLOG_LEVEL_DESC', 'Importance Level of the entry' );
+define( '_MI_MI_EVENTLOG_FORCE_NOTIFY_NAME', 'Force Notification' );
+define( '_MI_MI_EVENTLOG_FORCE_NOTIFY_DESC', 'Force appearance of this entry on the central page, regardless of the settings for notification.' );
+define( '_MI_MI_EVENTLOG_FORCE_EMAIL_NAME', 'Force E-Mail' );
+define( '_MI_MI_EVENTLOG_FORCE_EMAIL_DESC', 'Force emailing of this entry, regardless of the settings for notification.' );
+define( '_MI_MI_EVENTLOG_SHORT_EXP_NAME', 'Short (Expiration)' );
+define( '_MI_MI_EVENTLOG_SHORT_EXP_DESC', 'The short explanation or title of the entry.' );
+define( '_MI_MI_EVENTLOG_TAGS_EXP_NAME', 'Tags (Expiration)' );
+define( '_MI_MI_EVENTLOG_TAGS_EXP_DESC', 'Tags for this entry' );
+define( '_MI_MI_EVENTLOG_TEXT_EXP_NAME', 'Text (Expiration)' );
+define( '_MI_MI_EVENTLOG_TEXT_EXP_DESC', 'Text or long explanation of the entry.' );
+define( '_MI_MI_EVENTLOG_LEVEL_EXP_NAME', 'Level (Expiration)' );
+define( '_MI_MI_EVENTLOG_LEVEL_EXP_DESC', 'Importance Level of the entry' );
+define( '_MI_MI_EVENTLOG_FORCE_NOTIFY_EXP_NAME', 'Force Notification (Expiration)' );
+define( '_MI_MI_EVENTLOG_FORCE_NOTIFY_EXP_DESC', 'Force appearance of this entry on the central page, regardless of the settings for notification.' );
+define( '_MI_MI_EVENTLOG_FORCE_EMAIL_EXP_NAME', 'Force E-Mail (Expiration)' );
+define( '_MI_MI_EVENTLOG_FORCE_EMAIL_EXP_DESC', 'Force emailing of this entry, regardless of the settings for notification.' );
+define( '_MI_MI_EVENTLOG_SHORT_PRE_EXP_NAME', 'Short (Pre-Expiration)' );
+define( '_MI_MI_EVENTLOG_SHORT_PRE_EXP_DESC', 'The short explanation or title of the entry.' );
+define( '_MI_MI_EVENTLOG_TAGS_PRE_EXP_NAME', 'Tags (Pre-Expiration)' );
+define( '_MI_MI_EVENTLOG_TAGS_PRE_EXP_DESC', 'Tags for this entry' );
+define( '_MI_MI_EVENTLOG_TEXT_PRE_EXP_NAME', 'Text (Pre-Expiration)' );
+define( '_MI_MI_EVENTLOG_TEXT_PRE_EXP_DESC', 'Text or long explanation of the entry.' );
+define( '_MI_MI_EVENTLOG_LEVEL_PRE_EXP_NAME', 'Level (Pre-Expiration)' );
+define( '_MI_MI_EVENTLOG_LEVEL_PRE_EXP_DESC', 'Importance Level of the entry' );
+define( '_MI_MI_EVENTLOG_FORCE_NOTIFY_PRE_EXP_NAME', 'Force Notification (Pre-Expiration)' );
+define( '_MI_MI_EVENTLOG_FORCE_NOTIFY_PRE_EXP_DESC', 'Force appearance of this entry on the central page, regardless of the settings for notification.' );
+define( '_MI_MI_EVENTLOG_FORCE_EMAIL_PRE_EXP_NAME', 'Force E-Mail (Pre-Expiration)' );
+define( '_MI_MI_EVENTLOG_FORCE_EMAIL_PRE_EXP_DESC', 'Force emailing of this entry, regardless of the settings for notification.' );
+
 ?>
