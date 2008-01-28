@@ -953,7 +953,7 @@ class HTML_AcctExp
 						?>
 					</div>
 				</td>
-				<td width="480" valign="top" class="centerlogo">
+				<td width="320" valign="top" class="centerlogo">
 					<br />
 					<center><img src="components/com_acctexp/images/icons/aec_logo_big.png" border="0" alt="AEC" width="200" height="232" /></center>
 					<br />

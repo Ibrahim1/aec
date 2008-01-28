@@ -685,8 +685,12 @@ function help( $option )
 			if ( !$diagnostic['hack_' . $hack_name] ) {
 				if ( !$diagnostic['hack_' . $hack_name . '_permission'] && ( $hack_content['status'] == 0 ) ) {
 					$diagnostic['permission_problem']++;
+				} else {
+					$diagnostic['no_permission_problem']++;
 				}
 			}
+		} elseif ( $hack_content['status'] == 0 ) {
+			$diagnostic['no_permission_problem']++;
 		}
 	}
 
@@ -778,12 +782,12 @@ function help( $option )
 	$diagnose[]	= array("AEC Version", !$diagnostic['AEC_stable'], 3, "There appears to be a more recent Version of the AEC available on <a href=\"http://www.globalnerd.org\">www.globalnerd.org</a>", 0, 1);
 */
 	// Apache related file permission problems
-	if ( substr_count( $diagnostic['server_software'], 'Apache' ) ) {
+	if ( substr_count( $diagnostic['server_software'], 'Apache' ) && !$diagnostic['no_permission_problem'] ) {
 		if ( $diagnostic['posix_getpwuid_available'] ) {
-				$diagnose[]	= array( _AEC_HELP_SER_SW_DIAG1, $diagnostic['permission_problem'], 3, _AEC_HELP_SER_SW_DIAG1_DESC, _AEC_HELP_SER_SW_DIAG1_DESC2, 1 );
-				$diagnose[]	= array( _AEC_HELP_SER_SW_DIAG2, !@$diagnostic['hack_joomlaphp_permission'], 3, _AEC_HELP_SER_SW_DIAG2_DESC, _AEC_HELP_SER_SW_DIAG2_DESC2, 1 );
-				$diagnose[]	= array( _AEC_HELP_SER_SW_DIAG3, $diagnostic['hacks_legacy'], 3, _AEC_HELP_SER_SW_DIAG3_DESC, _AEC_HELP_SER_SW_DIAG3_DESC2, 1 );
-			} else {
+			$diagnose[]	= array( _AEC_HELP_SER_SW_DIAG1, $diagnostic['permission_problem'], 3, _AEC_HELP_SER_SW_DIAG1_DESC, _AEC_HELP_SER_SW_DIAG1_DESC2, 1 );
+			$diagnose[]	= array( _AEC_HELP_SER_SW_DIAG2, !@$diagnostic['hack_joomlaphp_permission'], 3, _AEC_HELP_SER_SW_DIAG2_DESC, _AEC_HELP_SER_SW_DIAG2_DESC2, 1 );
+			$diagnose[]	= array( _AEC_HELP_SER_SW_DIAG3, $diagnostic['hacks_legacy'], 3, _AEC_HELP_SER_SW_DIAG3_DESC, _AEC_HELP_SER_SW_DIAG3_DESC2, 1 );
+		} else {
 			$diagnose[]	= array( _AEC_HELP_SER_SW_DIAG4, !$diagnostic['posix_getpwuid_available'], 3, _AEC_HELP_SER_SW_DIAG4_DESC, _AEC_HELP_SER_SW_DIAG4_DESC2, 1 );
 		}
 	}
