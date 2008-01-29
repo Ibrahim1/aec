@@ -56,6 +56,7 @@ class processor_paypal_subscription extends POSTprocessor
 		$settings['currency']		= 'USD';
 		$settings['checkbusiness']	= 0;
 		$settings['acceptpendingecheck'] = 0;
+		$settings['srt']			= '';
 		$settings['lc']				= 'US';
 		$settings['no_shipping']	= 1;
 		$settings['altipnurl']		= '';
@@ -87,6 +88,7 @@ class processor_paypal_subscription extends POSTprocessor
 		$settings['currency']		= array( 'list_currency' );
 		$settings['checkbusiness']	= array( 'list_yesno' );
 		$settings['acceptpendingecheck']	= array( 'list_yesno' );
+		$settings['srt']			= array( 'inputA' );
 		$settings['lc']				= array( 'list_language' );
 		$settings['no_shipping']	= array( 'list_yesno' );
 		$settings['altipnurl']		= array( 'inputC' );
@@ -159,11 +161,14 @@ class processor_paypal_subscription extends POSTprocessor
 
 		$var['no_shipping']		= $cfg['no_shipping'];
 		$var['no_note']			= '1';
-		$var['rm']				= '2';
+		$var['rm']					= '2';
 
 		$var['return']			= $int_var['return_url'];
 		$var['currency_code']	= $cfg['currency'];
 		$var['lc']				= $cfg['lc'];
+		if ( !empty( $cfg['srt'] ) ) {
+			$var['srt']			=  $cfg['srt'];
+		}
 
 		// Customizations
 		$customizations = array( 'cbt', 'cn', 'cpp_header_image', 'cpp_headerback_color', 'cpp_headerborder_color', 'cpp_payflow_color', 'image_url', 'page_style' );
