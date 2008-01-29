@@ -2,8 +2,8 @@
 /**
  * $Id:$
  *
-* @author Axel Sauerhöfer <axel@willcodejoomlaforfood.de>
-* @copyright Copyright &copy; 2007, Axel Sauerhöfer
+* @author Axel Sauerhï¿½fer <axel@willcodejoomlaforfood.de>
+* @copyright Copyright &copy; 2007, Axel Sauerhï¿½fer
 * @version 0.8
 * @package MySMS
  *
@@ -27,29 +27,16 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
  */
 class mi_mysms
 {
-	/**
-	 * Return the information about this microintegration, show in backend
-	 *
-	 * @return array $info
-	 */
+
 	function Info()
 	{
 		$info = array();
-		$info['name'] = '_AEC_MI_NAME_MYSMS';
-		$info['desc'] = '_AEC_MI_DESC_MYSMS';
+		$info['name'] = _AEC_MI_NAME_MYSMS;
+		$info['desc'] = _AEC_MI_DESC_MYSMS;
 
 		return $info;
 	}
 
-	/**
-	 * Return the settings, which are configurable in backend.
-	 *
-	 * The only setting we needed is the amount of credits, which should be
-	 * added, when a user subscribe.
-	 *
-	 * @param array $params
-	 * @return array $settings
-	 */
 	function Settings( $params )
 	{
 		$settings = array();
@@ -57,40 +44,28 @@ class mi_mysms
 		return $settings;
 	}
 
-	/**
-	 * Check if our com_mysms is installed, if we find our com_mysms folder,
-	 * we return true otherwise false.
-	 *
-	 * @return bool true if com_mysms is installed, otherwise false
-	 */
 	function detect_application()
 	{
 		global $mosConfig_absolute_path;
 		return is_dir( $mosConfig_absolute_path . '/components/com_mysms' );
 	}
 
-	/**
-	 * The subscription is expired, we take the user offline
-	 *
-	 * @param array $params
-	 * @param int $userid
-	 * @param array $plan
-	 */
 	function expiration_action($params, $userid, $plan)
 	{
 		global $database;
-		
-		//unpublish the user
-		$sql = "UPDATE #__mysms_joomlauser SET state=0 WHERE userid=$userid LIMIT 1";
-		$database->setQuery( $sql );
+
+		// unpublish the user
+		$query = 'UPDATE' .
+				' #__mysms_joomlauser' .
+				' SET `status` = \'0\'' .
+				' WHERE `userid` = \'' . $userid . '\'' .
+				' LIMIT 1';
+		$database->setQuery( $query );
 		$database->query();
 
 		return true;
 	}
 
-	/**
-	 * The customer subscribed to a plan, now mark the user as active
-	 */
 	function action( $params, $userid, $plan )
 	{
 		global $database;
