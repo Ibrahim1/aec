@@ -196,7 +196,7 @@ define( '_AEC_LOG_SH_HEARTBEAT',				'Heartbeat' );
 define( '_AEC_LOG_LO_HEARTBEAT',				'Heartbeataktion:' );
 define( '_AEC_LOG_AD_HEARTBEAT_DO_NOTHING',		'keine' );
 	// install
-define( '_AEC_LOG_SH_INST',						'AEC Installierung' );
+define( '_AEC_LOG_SH_INST',						'AEC Installation' );
 define( '_AEC_LOG_LO_INST',						'AEC Version %s wurde installiert' );
 
 // install texts
