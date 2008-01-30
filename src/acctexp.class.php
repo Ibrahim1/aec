@@ -5857,6 +5857,16 @@ class AECToolbox
 					$metaUser->objSubscription->applyUsage( $aecConfig->cfg['entry_plan'], 'none', 1 );
 					AECToolbox::VerifyUsername( $username );
 				} else {
+					$invoices = AECfetchfromDB::InvoiceCountbyUserID( $metaUser->userid );
+
+					if ( $invoices ) {
+						$invoice = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $metaUser->userid );
+
+						if ( $invoice ) {
+							mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=pending&userid=' . $id ) );
+						}
+					}
+
 					mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=subscribe&Itemid=' . $id ) );
 					return null;
 				}
@@ -5967,8 +5977,8 @@ class AECToolbox
 			global $mosConfig_useractivation, $mosConfig_sitename, $mosConfig_live_site;
 
 			// simple spoof check security
-			if ( function_exists( 'josSpoofCheck' ) && !$internal ) {
-				if (  defined( 'JPATH_BASE' ) ) {
+			if ( ( function_exists( 'josSpoofCheck' ) || defined( 'JPATH_BASE' ) ) && !$internal ) {
+				if ( defined( 'JPATH_BASE' ) ) {
 					$token	= JUtility::getToken();
 					if(!JRequest::getInt($token, 0, 'post')) {
 						JError::raiseError(403, 'Request Forbidden');

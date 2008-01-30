@@ -437,7 +437,7 @@ define( '_AEC_AUTHORIZE_AIM_PARAMS_BILLZIP_NAME', 'Zip');
 define( '_AEC_AUTHORIZE_AIM_PARAMS_BILLCOUNTRY_NAME', 'Country');
 
 // iPayment Silent
-define( '_CFG_IPAYMENT_SILENT_LONGNAME', 'iPayment silent');
+define( '_CFG_IPAYMENT_SILENT_LONGNAME', 'iPayment');
 define( '_CFG_IPAYMENT_SILENT_STATEMENT', 'Kreditkarten-Zahlungen mit iPayment');
 define( '_CFG_IPAYMENT_SILENT_DESCRIPTION', 'Kreditkarten-Zahlungen mit iPayment');
 define( '_CFG_IPAYMENT_SILENT_FAKE_ACCOUNT_NAME', 'Falscher Account');
@@ -456,6 +456,6 @@ define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLCITY_NAME', 'Stadt');
 define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLSTATE_NAME', 'Bundesland');
 define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLZIP_NAME', 'PLZ');
 define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLCOUNTRY_NAME', 'Land');
-define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLCOUNTRY_NAME', 'Telefonnummer');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLTELEPHONE_NAME', 'Telefonnummer');
 
 ?>

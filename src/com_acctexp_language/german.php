@@ -168,7 +168,7 @@ define( '_CANCEL_MSG',						'Unsere Datenverarbeitung hat die R&uuml;ckmeldung e
 define( '_PENDING_TITLE',					'Account Schwebend!');
 define( '_WARN_PENDING',					'Ihr Konto ist noch immer nicht vollst&auml;ndig. Sollte dies f&uuml;r l&auml;ngere Zeit so bleiben obwohl Ihre Zahlung durchgef&uuml;hrt wurde, kontaktieren sie bitte den Administrator dieser Internetseite.');
 define( '_PENDING_OPENINVOICE',				'Es scheint, Sie haben eine unbezahlte Rechnung in unserer Datenbank - Falls mit der Bezahlung etwas schief gelaufen ist, k&ouml;nnen Sie diese gerne erneut in Auftrag geben:');
-define( '_GOTO_CHECKOUT',					'Noch einmal zum Auschecken gehen');
+define( '_GOTO_CHECKOUT',					'Noch einmal zum Bezahlen gehen');
 define( '_GOTO_CHECKOUT_CANCEL',			'Sie k&ouml;nnen die Rechnungserstellung auch abbrechen (Sie werden dann zu einer neuen Auswahl umgeleitet):');
 define( '_PENDING_NOINVOICE',				'Es scheint, Sie haben die letzte offene Rechnung nicht beglichen. Bitte benutzen Sie diesen Button um erneut zur Auswahl eines Abos zu gelangen:');
 define( '_PENDING_NOINVOICE_BUTTON',		'Aboauswahl');

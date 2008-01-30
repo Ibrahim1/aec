@@ -71,6 +71,12 @@ if ( _EUCA_DEBUGMODE ) {
 
 $task = trim( mosGetParam( $_REQUEST, 'task', '' ) );
 
+if ( trim( mosGetParam( $_REQUEST, 'Itemid', '' ) == 99999999  ) ) {
+	unset( $_POST['Itemid'] );
+	unset( $_GET['Itemid'] );
+	unset( $_REQUEST['Itemid'] );
+}
+
 if ( !empty( $task ) ) {
 	switch ( strtolower( $task ) ) {
 		case 'register':
@@ -312,7 +318,7 @@ function subscribe( $option )
 	$processor	= aecGetParam( 'processor', null );
 	$userid		= aecGetParam( 'userid', 0 );
 	$itemid		= aecGetParam( 'Itemid', 0 );
-//print_r($_POST);exit();
+
 	if ( isset( $_POST['username'] ) && $usage ) {
 		$query = 'SELECT id'
 		. ' FROM #__users'

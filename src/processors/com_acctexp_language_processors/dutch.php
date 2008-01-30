@@ -425,7 +425,7 @@ define( '_AEC_AUTHORIZE_AIM_PARAMS_BILLZIP_NAME', 'Zip');
 define( '_AEC_AUTHORIZE_AIM_PARAMS_BILLCOUNTRY_NAME', 'Country');
 
 // iPayment Silent
-define( '_CFG_IPAYMENT_SILENT_LONGNAME', 'iPayment silent');
+define( '_CFG_IPAYMENT_SILENT_LONGNAME', 'iPayment');
 define( '_CFG_IPAYMENT_SILENT_STATEMENT', 'Make on-site CreditCard payments with iPayment');
 define( '_CFG_IPAYMENT_SILENT_DESCRIPTION', 'Make on-site CreditCard payments with iPayment');
 define( '_CFG_IPAYMENT_SILENT_FAKE_ACCOUNT_NAME', 'Fake Account');
