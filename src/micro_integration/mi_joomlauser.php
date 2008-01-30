@@ -33,12 +33,6 @@ class mi_joomlauser
 			$database->query() or die( $database->stderr() );
 		}
 	}
-
-	function on_userchange_action( $params, $row, $post, $trace )
-	{
-
-	}
-
 }
 
 ?>

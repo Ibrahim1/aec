@@ -1048,6 +1048,7 @@ color: #333;
 <li>Attend Events MI</li>
 <li>making MI id a property of MI handler sub-object for better identification of per-subscription custom params</li>
 <li>Coupon MI</li>
+<li>Fix for email MI sending out the wrong email on first or further emails</li>
 <li>Switching to passing on metaUser object to MIs instead of just the userid - this way, focusSubscription can be preserved</li>
 <li>MicroIntegrations to have access to Invoice data</li>
 <li>HTTP Query MI</li>
@@ -1062,6 +1063,7 @@ color: #333;
 <li>Calum: adding "delete from groups" in docman MI</li>
 <li>MI for creating an EventLog entry</li>
 <li>MySMS MI (Thanks to Axel Sauerh&ouml;fer!!!)</li>
+<li>Automate pre-expiration MI functionality that prevents retrigger</li>
 </ul>
 <li><strong>Frontend Fixes</strong>
 <ul>
@@ -1123,9 +1125,7 @@ color: #333;
 <li>fixing display of "You have to register to" etcpp in CB on integrated Subscription</li>
 <li>fix for rokreporter report.php (remember to release this!)</li>
 <li class="todo">Extend standard CC Form in XML processors to allow for further styles of CCs</li>
-<li class="todo">Automate pre-expiration MI functionality that prevents retrigger</li>
-<li class="todo">put in processor functionality that automatically reduces the displayed expiration time to reduce confusion (if the processor uses extended periods)</li>
-<li class="todo">MIs to have a default function for default parameters</li>
+<li>MIs to have a default function for default parameters</li>
 </ul>
 </ul>
 </body>

@@ -38,20 +38,6 @@ class mi_http_query
 
 	function pre_expiration_action( $params, $metaUser, $plan )
 	{
-		$userflags = $metaUser->objSubscription->getMIflags( $plan->id, $this->id );
-
-		if ( is_array( $userflags ) ) {
-			if ( isset( $userflags['HTTP_QUERY'] ) ) {
-				if ( !( time() > $userflags['HTTP_QUERY_ABANDONCHECK'] ) ) {
-					return false;
-				}
-			}
-		}
-
-		$newflags['http_query_abandoncheck']	= strtotime( $metaUser->objSubscription->expiration );
-		$newflags['http_query']				= time();
-		$metaUser->objSubscription->setMIflags( $plan->id, $this->id, $newflags );
-
 		return $this->fetchURL( AECToolbox::rewriteEngine( $this->createURL( $params['url_pre_exp'], $params['query_pre_exp'] ), $metaUser, $plan ) );
 	}
 

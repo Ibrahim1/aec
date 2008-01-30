@@ -6761,7 +6761,27 @@ class microIntegration extends paramDBTable
 		$params = $this->getParams();
 
 		if ( method_exists( $this->mi_class, 'pre_expiration_action' ) ) {
-			return  $this->mi_class->pre_expiration_action( $params, $metaUser, $objplan );
+			$userflags = $metaUser->objSubscription->getMIflags( $plan->id, $this->id );
+
+			$spc = 'system_preexp_call';
+			$spa = $spc . '_abandoncheck';
+
+			if ( is_array( $userflags ) && !empty( $userflags ) ) {
+				if ( isset( $userflags[strtoupper($spc)] ) ) {
+					if ( $userflags[strtoupper($spc)] == strtotime( $metaUser->objSubscription->expiration ) ) {
+						// There is something wrong with this, probably an old flag
+					} elseif ( !( time() > $userflags[strtoupper($spa)] ) ) {
+						return false;
+					}
+				}
+			}
+
+			$newflags[$spc]	= strtotime( $metaUser->objSubscription->expiration );
+			$newflags[$spa]	= time();
+
+			$metaUser->objSubscription->setMIflags( $plan->id, $this->id, $newflags );
+
+			return $this->mi_class->pre_expiration_action( $params, $metaUser, $objplan );
 		} else {
 			return null;
 		}
@@ -6812,6 +6832,10 @@ class microIntegration extends paramDBTable
 		$params = $this->getParams();
 
 		if ( method_exists( $this->mi_class, 'Settings' ) ) {
+			if ( method_exists( $this->mi_class, 'Defaults' ) && empty( $params ) ) {
+				$params = $this->mi_class->Defaults();
+			}
+
 			$settings = $this->mi_class->Settings( $params );
 
 			// Autoload Params if they have not been called in by the MI

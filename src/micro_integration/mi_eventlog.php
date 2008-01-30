@@ -51,20 +51,6 @@ class mi_eventlog extends MI
 
 	function pre_expiration_action( $params, $metaUser, $plan )
 	{
-		$userflags = $metaUser->objSubscription->getMIflags( $plan->id, $this->id );
-
-		if ( is_array( $userflags ) ) {
-			if ( isset( $userflags['EVENTLOG'] ) ) {
-				if ( !( time() > $userflags['EVENTLOG_ABANDONCHECK'] ) ) {
-					return false;
-				}
-			}
-		}
-
-		$newflags['eventlog_abandoncheck']	= strtotime( $metaUser->objSubscription->expiration );
-		$newflags['eventlog']				= time();
-		$metaUser->objSubscription->setMIflags( $plan->id, $this->id, $newflags );
-
 		return $this->logentry( $params, $metaUser, $plan, '' );
 	}
 

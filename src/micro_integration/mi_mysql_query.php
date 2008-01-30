@@ -35,22 +35,6 @@ class mi_mysql_query
 
 	function pre_expiration_action( $params, $metaUser, $plan )
 	{
-		global $database;
-
-		$userflags = $metaUser->objSubscription->getMIflags( $plan->id, $this->id );
-
-		if ( is_array( $userflags ) ) {
-			if ( isset( $userflags['DB_QUERY'] ) ) {
-				if ( !( time() > $userflags['DB_QUERY_ABANDONCHECK'] ) ) {
-					return false;
-				}
-			}
-		}
-
-		$newflags['db_query_abandoncheck']	= strtotime( $metaUser->objSubscription->expiration );
-		$newflags['db_query']				= time();
-		$metaUser->objSubscription->setMIflags( $plan->id, $this->id, $newflags );
-
 		$query = AECToolbox::rewriteEngine( $params['query_pre_exp'], $metaUser, $plan );
 
 		$database->setQuery( $query );

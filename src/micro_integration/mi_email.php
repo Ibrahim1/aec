@@ -81,21 +81,6 @@ class mi_email
 
 	function pre_expiration_action( $params, $metaUser, $plan )
 	{
-		$userflags = $metaUser->objSubscription->getMIflags( $plan->id, $this->id );
-
-		if ( is_array( $userflags ) ) {
-			if ( isset( $userflags['EXP_MAIL_SENT'] ) ) {
-				if ( !( time() > $userflags['EXP_MAIL_ABANDONCHECK'] ) ) {
-					return false;
-				}
-			}
-		}
-
-		$newflags['exp_mail_abandoncheck']	= strtotime( $metaUser->objSubscription->expiration );
-		$newflags['exp_mail_sent']			= time();
-
-		$metaUser->objSubscription->setMIflags( $plan->id, $this->id, $newflags );
-
 		return $this->mailOut( $params, $metaUser, $plan, '_pre_exp' );
 	}
 
