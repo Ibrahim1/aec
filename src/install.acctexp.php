@@ -54,7 +54,6 @@ function com_install()
 	$eucaInstallef	= new eucaInstalleditfile();
 
 	include_once( $pathLang . 'general.php' );
-	require_once( $mainframe->getPath( 'class', 'com_acctexp' ) );
 
 	// in any case, delete an already existing menu entry
 	$query = 'DELETE'
@@ -267,7 +266,7 @@ function com_install()
 	    }
 	}
 
-	// mic: TODO: AEC is/was already installed, maybe we want to backup the files (not implemented yet)
+	require_once( $mainframe->getPath( 'class', 'com_acctexp' ) );
 
 	// Update routine 0.3.0 -> 0.6.0
 	$tables	= array();
