@@ -85,10 +85,10 @@ class processor_ipayment_silent extends XMLprocessor
 	{
 		global $mosConfig_live_site;
 
-		$var['params']['accountName'] = array( 'inputC', _AEC_WTFORM_ACCOUNTNAME_NAME, _AEC_WTFORM_ACCOUNTNAME_NAME, '');
-		$var['params']['accountNumber'] = array( 'inputC', _AEC_WTFORM_ACCOUNTNUMBER_NAME, _AEC_WTFORM_ACCOUNTNUMBER_NAME, '');
-		$var['params']['bankNumber'] = array( 'inputC', _AEC_WTFORM_BANKNUMBER_NAME, _AEC_WTFORM_BANKNUMBER_NAME, '');
-		$var['params']['bankName'] = array( 'inputC', _AEC_WTFORM_BANKNAME_NAME, _AEC_WTFORM_BANKNAME_NAME, '');
+		$var['params']['accountName'] = array( 'inputC', _AEC_WTFORM_ACCOUNTNAME_NAME, _AEC_WTFORM_ACCOUNTNAME_NAME, $metaUser->cmsUser->name );
+		$var['params']['accountNumber'] = array( 'inputC', _AEC_WTFORM_ACCOUNTNUMBER_NAME, _AEC_WTFORM_ACCOUNTNUMBER_NAME, '' );
+		$var['params']['bankNumber'] = array( 'inputC', _AEC_WTFORM_BANKNUMBER_NAME, _AEC_WTFORM_BANKNUMBER_NAME, '' );
+		$var['params']['bankName'] = array( 'inputC', _AEC_WTFORM_BANKNAME_NAME, _AEC_WTFORM_BANKNAME_NAME, '' );
 
 		$name = explode( ' ', $metaUser->cmsUser->name );
 
@@ -97,8 +97,8 @@ class processor_ipayment_silent extends XMLprocessor
 		}
 
 		$var['params']['billInfo'] = array( 'p', _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO, _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO );
-		$var['params']['billFirstName'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_DESC, $name[0]);
-		$var['params']['billLastName'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_DESC, $name[1]);
+		$var['params']['billFirstName'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_DESC, $name[0] );
+		$var['params']['billLastName'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_DESC, $name[1] );
 
 		if ( !empty( $cfg['promptAddress'] ) ) {
 			$var['params']['billAddress'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLADDRESS_NAME );
@@ -126,8 +126,7 @@ class processor_ipayment_silent extends XMLprocessor
 
 		$a = array();
 
-		$a['silent']			= trim( substr( $cfg['login'], 0, 25 ) );
-		$a['trx_paymenttyp']	= 'cc';
+		$a['trx_paymenttyp']	= 'elv';
 
 		if ( $cfg['fake_account'] ) {
 			$a['trxuser_id']		= '99999';
@@ -146,6 +145,7 @@ class processor_ipayment_silent extends XMLprocessor
 		$a['addr_email']		= $metaUser->cmsUser->email;
 
 		$varray = array(	'addr_street'	=>	'billAddress',
+							'addr_street'	=>	'billAddress',
 							'addr_city'	=>	'billCity',
 							'addr_zip'	=>	'billZip',
 							'addr_country'	=>	'billCountry',
@@ -154,16 +154,20 @@ class processor_ipayment_silent extends XMLprocessor
 							'cc_number'	=>	'cardNumber',
 							'cc_expdate_month'	=>	'expirationMonth',
 							'cc_expdat_year'	=>	'expirationYear',
-							'cc_checkcode'	=>	''
+							'cc_checkcode'	=>	'',
+							'bank_accountnumber'	=>	'accountNumber',
+							'bank_code'	=>	'bankNumber',
+							'bank_name'	=>	'bankName',
+							'bank_code'	=>	'billAddress',
+							'bank_code'	=>	'billAddress',
+
 						);
+		foreach ( $varray as $n => $p ) {
+			if ( isset( $int_var['params'][$p] ) ) {
+				$a[$n] = $int_var['params'][$p];
+			}
+		}
 
-
-		$a['addr_street']		= trim( $int_var['params']['billAddress'] );
-		$a['addr_city']			= trim( $int_var['params']['billCity'] );
-		$a['addr_zip']			= trim( $int_var['params']['billZip'] );
-		$a['addr_country']		= trim( $int_var['params']['billCountry'] );
-		$a['addr_state']		= trim( $int_var['params']['billState'] );
-		$a['addr_telefon']		= trim( $int_var['params']['billTelephone'] );
 		$a['client_name']		= 'aec';
 		$a['client_version']	= '0.12';
 		$a['silent']			= 1;
@@ -243,83 +247,5 @@ class processor_ipayment_silent extends XMLprocessor
 		}
 	}
 
-	function convertPeriodUnit( $period, $unit )
-	{
-		$return = array();
-		switch ( $unit ) {
-			case 'D':
-				$return['unit'] = 'days';
-				$return['period'] = $period;
-				break;
-			case 'W':
-				if ( $period%4 == 0 ) {
-					$return['unit'] = 'months';
-					$return['period'] = $period/4;
-				} else {
-					$return['unit'] = 'days';
-					$return['period'] = $period*7;
-				}
-				break;
-			case 'M':
-				$return['unit'] = 'months';
-				$return['period'] = $period;
-				break;
-			case 'Y':
-				$return['unit'] = 'months';
-				$return['period'] = $period*12;
-				break;
-		}
-
-		return $return;
-	}
-
-	function customaction_cancel( $pp, $cfg, $invoice, $metaUser )
-	{
-		$content =	'<?xml version="1.0" encoding="utf-8"?>'
-					. '<ARBCancelSubscriptionRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">'
-					. '<merchantAuthentication>'
-					. '<name>' . trim( substr( $cfg['login'], 0, 25 ) ) . '</name>'
-					. '<transactionKey>' . trim( substr( $cfg['transaction_key'], 0, 16 ) ) . '</transactionKey>'
-					. '</merchantAuthentication>'
-					. '<refId>' . $invoice->invoice_number . '</refId>';
-
-		$invoiceparams = $invoice->getParams();
-
-		// Add Payment information
-		$content .=	'<subscriptionId>' . $invoiceparams['subscriptionid'] . '</subscriptionId>';
-
-		// Close Request
-		$content .=	'</ARBCancelSubscriptionRequest>';
-
-		$path = "/xml/v1/request.api";
-		if ( $cfg['testmode'] ) {
-			$url = "https://apitest.authorize.net" . $path;
-		} else {
-			$url = "https://api.authorize.net" . $path;
-		}
-
-		$response = $this->transmitRequest( $url, $path, $content, 443 );
-
-		if ( !empty( $response ) ) {
-			$responsestring = $response;
-
-			$resultCode = $this->substring_between( $response,'<resultCode>','</resultCode>' );
-
-			$code = $this->substring_between($response,'<code>','</code>');
-			$text = $this->substring_between($response,'<text>','</text>');
-
-			if ( strcmp( $resultCode, 'Ok' ) === 0 ) {
-				$return['valid'] = 0;
-				$return['cancel'] = true;
-			} else {
-				$return['valid'] = 0;
-				$return['error'] = $text;
-			}
-
-			$invoice->processorResponse( $pp, $return, $responsestring );
-		} else {
-			Payment_HTML::error( 'com_acctexp', $metaUser->cmsUser, $invoice, "An error occured when cancelling your subscription. Please contact the system administrator!", true );
-		}
-	}
 }
 ?>
