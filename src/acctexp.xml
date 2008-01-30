@@ -67,6 +67,7 @@
 		<filename>micro_integration/mi_joomlauser.php</filename>
 		<filename>micro_integration/mi_juga.php</filename>
 		<filename>micro_integration/mi_mosets_tree.php</filename>
+		<filename>micro_integration/mi_mysms.php</filename>
 		<filename>micro_integration/mi_mysql_query.php</filename>
 		<filename>micro_integration/mi_remository.php</filename>
 		<filename>micro_integration/mi_virtuemart.php</filename>

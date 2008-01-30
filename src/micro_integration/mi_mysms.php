@@ -41,41 +41,44 @@ class mi_mysms
 	{
 		$settings = array();
 		$settings['add_credits']		= array( 'inputA' );
+		$settings['disable_exp']		= array( 'list_yesno' );
 		return $settings;
 	}
 
-	function detect_application()
-	{
-		global $mosConfig_absolute_path;
-		return is_dir( $mosConfig_absolute_path . '/components/com_mysms' );
-	}
-
-	function expiration_action($params, $userid, $plan)
+	function expiration_action( $params, $metaUser, $plan )
 	{
 		global $database;
 
-		// unpublish the user
-		$query = 'UPDATE' .
-				' #__mysms_joomlauser' .
-				' SET `status` = \'0\'' .
-				' WHERE `userid` = \'' . $userid . '\'' .
-				' LIMIT 1';
-		$database->setQuery( $query );
-		$database->query();
+		if ( !empty( $params['disable_exp'] ) ) {
+			// unpublish the user
+			$query = 'UPDATE' .
+					' #__mysms_joomlauser' .
+					' SET `status` = \'0\'' .
+					' WHERE `userid` = \'' . $metaUser->userid . '\'' .
+					' LIMIT 1';
+			$database->setQuery( $query );
+			$database->query();
+		}
 
 		return true;
 	}
 
-	function action( $params, $userid, $plan )
+	function action( $params, $metaUser, $invoice, $plan )
 	{
 		global $database;
 
-		$credits = (int)$params['add_credits'];
+		if ( !empty( $params['add_credits'] ) ) {
+			$credits = (int) $params['add_credits'];
 
-		//set the user active and the new credits
-		$sql = "UPDATE #__mysms_joomlauser SET state=1, credits=credits+$credits WHERE userid=$userid LIMIT 1";
-		$database->setQuery( $sql );
-		$database->query();
+			//set the user active and the new credits
+			$query = 'UPDATE #__mysms_joomlauser' .
+					' SET `state` = \'1\',' .
+					' `credits` = credits+' . $credits .
+					' WHERE `userid` = \'' . $metaUser->userid . '\'' .
+					' LIMIT 1';
+			$database->setQuery( $query );
+			$database->query();
+		}
 
 		return true;
 	}

@@ -299,47 +299,49 @@ define( '_MI_MI_HTTP_QUERY_QUERY_PRE_EXP_DESC',			'Transmit these variables via 
 
 // MySMS
 define('_AEC_MI_NAME_MYSMS', 'MySMS Micro Integration');
-define('_AEC_MI_DESC_MYSMS', 'Erlaubt es einem Benutzer Sms zu versenden, auch werden x Credits dem Benuterkonto gutgeschrieben. Die Anzahl der Gutschrift kann im Backend eingestellt werden');
+define('_AEC_MI_DESC_MYSMS', 'Erlaubt es einem Benutzer Sms mit MySMS zu versenden, indem x Credits dem Benuterkonto gutgeschrieben.');
+define('_MI_MI_MYSMS_DISABLE_EXP_NAME', 'Disable Account (Expiration)');
+define('_MI_MI_MYSMS_DISABLE_EXP_DESC', 'Disable the user account on expiration.');
 
 // ACL
 define('_AEC_MI_NAME_ACL', 'Usergroup MI (ACL)');
 define('_AEC_MI_DESC_ACL', 'Set the usergroup for the user account.');
 define('_MI_MI_ACL_CHANGE_SESSION_NAME', 'Change Session');
-define('_MI_MI_ACL_CHANGE_SESSION_NAME', 'Do a direct write on the Session data, so that the user account is immediately changed and not just on the next login.');
+define('_MI_MI_ACL_CHANGE_SESSION_DESC', 'Do a direct write on the Session data, so that the user account is immediately changed and not just on the next login.');
 define('_MI_MI_ACL_SET_GID_NAME', 'Set GID?');
-define('_MI_MI_ACL_SET_GID_NAME', 'Activate setting of a GID when applying the plan');
+define('_MI_MI_ACL_SET_GID_DESC', 'Activate setting of a GID when applying the plan');
 define('_MI_MI_ACL_GID_NAME', 'GID');
-define('_MI_MI_ACL_GID_NAME', 'Set this Usergroup for the Account.');
+define('_MI_MI_ACL_GID_DESC', 'Set this Usergroup for the Account.');
 define('_MI_MI_ACL_SET_GID_EXP_NAME', 'Set on Expir.?');
-define('_MI_MI_ACL_SET_GID_EXP_NAME', 'Activate setting of a GID on Expiration');
+define('_MI_MI_ACL_SET_GID_EXP_DESC', 'Activate setting of a GID on Expiration');
 define('_MI_MI_ACL_GID_EXP_NAME', 'Expir. GID');
-define('_MI_MI_ACL_GID_EXP_NAME', 'Set this Usergroup for the Account when it expires.');
+define('_MI_MI_ACL_GID_EXP_DESC', 'Set this Usergroup for the Account when it expires.');
 define('_MI_MI_ACL_SET_GID_PRE_EXP_NAME', 'Set PreExpir.?');
-define('_MI_MI_ACL_SET_GID_PRE_EXP_NAME', 'Activate setting of a GID before expiration');
+define('_MI_MI_ACL_SET_GID_PRE_EXP_DESC', 'Activate setting of a GID before expiration');
 define('_MI_MI_ACL_GID_PRE_EXP_NAME', 'PreExpir. GID');
-define('_MI_MI_ACL_GID_PRE_EXP_NAME', 'Set this Usergroup for the Account when before expires');
+define('_MI_MI_ACL_GID_PRE_EXP_DESC', 'Set this Usergroup for the Account when before expires');
 define('_MI_MI_ACL_JACLPLUSPRO_NAME', 'Use JACLplus PRO');
-define('_MI_MI_ACL_JACLPLUSPRO_NAME', 'With JACLplus PRO, you can use a few other ACL features specified below');
+define('_MI_MI_ACL_JACLPLUSPRO_DESC', 'With JACLplus PRO, you can use a few other ACL features specified below');
 define('_MI_MI_ACL_DELETE_SUBGROUPS_NAME', 'Clear Subgroups');
-define('_MI_MI_ACL_DELETE_SUBGROUPS_NAME', 'Always delete all Subgroups that the user holds before applying new ones');
+define('_MI_MI_ACL_DELETE_SUBGROUPS_DESC', 'Always delete all Subgroups that the user holds before applying new ones');
 define('_MI_MI_ACL_SUB_SET_GID_NAME', 'Set Subgroups');
-define('_MI_MI_ACL_SUB_SET_GID_NAME', 'Activate setting of Subgroups when applying the plan');
+define('_MI_MI_ACL_SUB_SET_GID_DESC', 'Activate setting of Subgroups when applying the plan');
 define('_MI_MI_ACL_SUB_GID_DEL_NAME', 'Delete Subgroups');
-define('_MI_MI_ACL_SUB_GID_DEL_NAME', 'Delete these Subgroups if the user holds them (CTRL+click to select multiple)');
+define('_MI_MI_ACL_SUB_GID_DEL_DESC', 'Delete these Subgroups if the user holds them (CTRL+click to select multiple)');
 define('_MI_MI_ACL_SUB_GID_NAME', 'Add Subgroups');
-define('_MI_MI_ACL_SUB_GID_NAME', 'Add these Subgroups (CTRL+click to select multiple)');
+define('_MI_MI_ACL_SUB_GID_DESC', 'Add these Subgroups (CTRL+click to select multiple)');
 define('_MI_MI_ACL_SUB_SET_GID_EXP_NAME', 'Set Subgroups Expiration');
-define('_MI_MI_ACL_SUB_SET_GID_EXP_NAME', 'Activate setting of Subgroups when the plan expires');
+define('_MI_MI_ACL_SUB_SET_GID_EXP_DESC', 'Activate setting of Subgroups when the plan expires');
 define('_MI_MI_ACL_SUB_GID_EXP_DEL_NAME', 'Delete Subgroups');
-define('_MI_MI_ACL_SUB_GID_EXP_DEL_NAME', 'Delete these Subgroups if the user holds them (CTRL+click to select multiple)');
+define('_MI_MI_ACL_SUB_GID_EXP_DEL_DESC', 'Delete these Subgroups if the user holds them (CTRL+click to select multiple)');
 define('_MI_MI_ACL_SUB_GID_EXP_NAME', 'Add Subgroups');
-define('_MI_MI_ACL_SUB_GID_EXP_NAME', 'Add these Subgroups (CTRL+click to select multiple)');
+define('_MI_MI_ACL_SUB_GID_EXP_DESC', 'Add these Subgroups (CTRL+click to select multiple)');
 define('_MI_MI_ACL_SUB_SET_GID_PRE_EXP_NAME', 'Set Subgroups PreExpiration');
-define('_MI_MI_ACL_SUB_SET_GID_PRE_EXP_NAME', 'Activate setting of Subgroups before the plan expires');
+define('_MI_MI_ACL_SUB_SET_GID_PRE_EXP_DESC', 'Activate setting of Subgroups before the plan expires');
 define('_MI_MI_ACL_SUB_GID_PRE_EXP_DEL_NAME', 'Delete Subgroups');
-define('_MI_MI_ACL_SUB_GID_PRE_EXP_DEL_NAME', 'Delete these Subgroups if the user holds them (CTRL+click to select multiple)');
+define('_MI_MI_ACL_SUB_GID_PRE_EXP_DEL_DESC', 'Delete these Subgroups if the user holds them (CTRL+click to select multiple)');
 define('_MI_MI_ACL_SUB_GID_PRE_EXP_NAME', 'Add Subgroups');
-define('_MI_MI_ACL_SUB_GID_PRE_EXP_NAME', 'Add these Subgroups (CTRL+click to select multiple)');
+define('_MI_MI_ACL_SUB_GID_PRE_EXP_DESC', 'Add these Subgroups (CTRL+click to select multiple)');
 
 // eventlog
 define( '_AEC_MI_NAME_EVENTLOG', 'Eventlog' );
