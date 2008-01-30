@@ -44,8 +44,6 @@ class processor_ipayment_silent extends XMLprocessor
 								'AON,TWD,ZRN,NZD,BTN,KPW,NOK,PEN,MRO,TOP,PKR,XPD,MOP,UYU,PHP,XPT,PTE,GBP,BWP,QAR,GTQ,ZAL,ZAR,OMR,KHR,MVR,IDR,RUB,RUR,RWF,SAR,ATS,SCR,XAG,SGD,SKK,SBD,KGS,SOS,ESP,'.
 								'LKR,SHP,ECS,SDD,SRG,SEK,CHF,SYP,TJR,BDT,WST,TZS,KZT,TPE,SIT,TTD,MNT,TND,TRL,UGX,ECV,CLF,USN,USS,USD,UZS,VUV,KRW,YER,JPY,CNY,ZWD,PLN';
 		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
-		$info['recurring'] = 1;
-		$info['actions'] = 'cancel';
 		$info['secure'] = 1;
 
 		return $info;
@@ -87,7 +85,10 @@ class processor_ipayment_silent extends XMLprocessor
 	{
 		global $mosConfig_live_site;
 
-		$var = $this->getCCform();
+		$var['params']['accountName'] = array( 'inputC', _AEC_WTFORM_ACCOUNTNAME_NAME, _AEC_WTFORM_ACCOUNTNAME_NAME, '');
+		$var['params']['accountNumber'] = array( 'inputC', _AEC_WTFORM_ACCOUNTNUMBER_NAME, _AEC_WTFORM_ACCOUNTNUMBER_NAME, '');
+		$var['params']['bankNumber'] = array( 'inputC', _AEC_WTFORM_BANKNUMBER_NAME, _AEC_WTFORM_BANKNUMBER_NAME, '');
+		$var['params']['bankName'] = array( 'inputC', _AEC_WTFORM_BANKNAME_NAME, _AEC_WTFORM_BANKNAME_NAME, '');
 
 		$name = explode( ' ', $metaUser->cmsUser->name );
 
@@ -95,6 +96,8 @@ class processor_ipayment_silent extends XMLprocessor
 			$name[1] = "";
 		}
 
+
+		$var['params']['billInfo'] = array( 'p', _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO, _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO );
 		$var['params']['billFirstName'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_DESC, $name[0]);
 		$var['params']['billLastName'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_DESC, $name[1]);
 

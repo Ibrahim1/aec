@@ -79,7 +79,7 @@ define( '_CFG_PROCESSOR_CUSTOMPARAMS_NAME', 'Custom Parameters');
 define( '_CFG_PROCESSOR_CUSTOMPARAMS_DESC', 'Custom Parameters that the AEC should transmit to the Payment Processor on Checkout. Separated by linebreaks in the form of "parameter_name=parameter_value". The RewriteEngine works as specified below.');
 
 // Generic Credit Card Form
-define( '_AEC_CCFORM_CARDHOLDER_NAME', 'Cardholder\'s Name');
+define( '_AEC_CCFORM_CARDHOLDER_NAME', 'Card owner Name');
 define( '_AEC_CCFORM_CARDHOLDER_DESC', 'The name of the credit card holder');
 define( '_AEC_CCFORM_CARDNUMBER_NAME', 'Card Number');
 define( '_AEC_CCFORM_CARDNUMBER_DESC', 'The number of your credit card');
@@ -87,6 +87,16 @@ define( '_AEC_CCFORM_EXPIRATIONYEAR_NAME', 'Expiration Year');
 define( '_AEC_CCFORM_EXPIRATIONYEAR_DESC', 'The Year your card will expire');
 define( '_AEC_CCFORM_EXPIRATIONMONTH_NAME', 'Expiration Month');
 define( '_AEC_CCFORM_EXPIRATIONMONTH_DESC', 'The Month your card will expire');
+
+// Generic Wire Transfer Form
+define( '_AEC_WTFORM_ACCOUNTNAME_NAME', 'Account owner Name');
+define( '_AEC_WTFORM_ACCOUNTNAME_DESC', 'The name of the person holding this account');
+define( '_AEC_WTFORM_ACCOUNTNUMBER_NAME', 'Account Number');
+define( '_AEC_WTFORM_ACCOUNTNUMBER_DESC', 'The number of the account');
+define( '_AEC_WTFORM_BANKNUMBER_NAME', 'Bank Number');
+define( '_AEC_WTFORM_BANKNUMBER_DESC', 'The Bank Number');
+define( '_AEC_WTFORM_BANKNAME_NAME', 'Bank Name');
+define( '_AEC_WTFORM_BANKNAME_DESC', 'The Name of the Bank');
 
 // Paypal Settings
 define( '_CFG_PAYPAL_BUSINESS_NAME', 'Business ID:');
@@ -423,5 +433,16 @@ define( '_CFG_IPAYMENT_SILENT_USER_ID_NAME', 'User Id');
 define( '_CFG_IPAYMENT_SILENT_USER_ID_DESC', 'The User Id of your iPayment Account.');
 define( '_CFG_IPAYMENT_SILENT_PASSWORD_NAME', 'Password');
 define( '_CFG_IPAYMENT_SILENT_PASSWORD_DESC', 'The Password of your iPayment Account.');
+define( '_CFG_IPAYMENT_SILENT_PROMPTADDRESS_NAME', 'Prompt for Address');
+define( '_CFG_IPAYMENT_SILENT_PROMPTADDRESS_DESC', 'Ask the user to put in an Address with the Billing Name.');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLINFO', 'Billing Details');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_NAME', 'First Name');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_NAME', 'Last Name');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLADDRESS_NAME', 'Address');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLCITY_NAME', 'City');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLSTATE_NAME', 'State');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLZIP_NAME', 'Zip');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLCOUNTRY_NAME', 'Country');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLTELEPHONE_NAME', 'Telephone');
 
 ?>

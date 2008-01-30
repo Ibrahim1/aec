@@ -2264,6 +2264,9 @@ class aecHTML
 			case "list":
 				$return .= $lists[$value ? $value : $name];
 				break;
+			default:
+				$return .= '<' . $row[0] . '>' . $row[2] . '</' . $row[0] . '>';
+				break;
 		}
 
 		$return .= $table ? '</td></tr>' : '</p>';

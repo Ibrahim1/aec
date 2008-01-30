@@ -92,7 +92,7 @@ define( '_CFG_PROCESSOR_CUSTOMPARAMS_NAME', 'Custom Parameters');
 define( '_CFG_PROCESSOR_CUSTOMPARAMS_DESC', 'Custom Parameters that the AEC should transmit to the Payment Processor on Checkout. Separated by linebreaks in the form of "parameter_name=parameter_value". The RewriteEngine works as specified below.');
 
 // Generic Credit Card Form
-define( '_AEC_CCFORM_CARDHOLDER_NAME', 'Cardholder\'s Name');
+define( '_AEC_CCFORM_CARDHOLDER_NAME', 'Card owner Name');
 define( '_AEC_CCFORM_CARDHOLDER_DESC', 'The name of the credit card holder');
 define( '_AEC_CCFORM_CARDNUMBER_NAME', 'Card Number');
 define( '_AEC_CCFORM_CARDNUMBER_DESC', 'The number of your credit card');
@@ -100,6 +100,16 @@ define( '_AEC_CCFORM_EXPIRATIONYEAR_NAME', 'Expiration Year');
 define( '_AEC_CCFORM_EXPIRATIONYEAR_DESC', 'The Year your card will expire');
 define( '_AEC_CCFORM_EXPIRATIONMONTH_NAME', 'Expiration Month');
 define( '_AEC_CCFORM_EXPIRATIONMONTH_DESC', 'The Month your card will expire');
+
+// Generic Wire Transfer Form
+define( '_AEC_WTFORM_ACCOUNTNAME_NAME', 'Konto Besitzer');
+define( '_AEC_WTFORM_ACCOUNTNAME_DESC', 'Der Name des Kontobesitzers oder der Kontobesitzerin');
+define( '_AEC_WTFORM_ACCOUNTNUMBER_NAME', 'Kontonummer');
+define( '_AEC_WTFORM_ACCOUNTNUMBER_DESC', 'Die Kontonummer der Bankverbindung');
+define( '_AEC_WTFORM_BANKNUMBER_NAME', 'BLZ');
+define( '_AEC_WTFORM_BANKNUMBER_DESC', 'Die Bankleitzahl');
+define( '_AEC_WTFORM_BANKNAME_NAME', 'Bank Name');
+define( '_AEC_WTFORM_BANKNAME_DESC', 'Der Name der Bank');
 
 // Paypal Settings
 define( '_CFG_PAYPAL_BUSINESS_NAME',		'PayPal Gesch&auml;fts ID:' );
@@ -429,12 +439,23 @@ define( '_AEC_AUTHORIZE_AIM_PARAMS_BILLCOUNTRY_NAME', 'Country');
 // iPayment Silent
 define( '_CFG_IPAYMENT_SILENT_LONGNAME', 'iPayment silent');
 define( '_CFG_IPAYMENT_SILENT_STATEMENT', 'Kreditkarten-Zahlungen mit iPayment');
-define( '_CFG_IPAYMENT_SILENT_DESCRIPTION', 'Kreditkarten-Zahlungen mit iPaymen');
+define( '_CFG_IPAYMENT_SILENT_DESCRIPTION', 'Kreditkarten-Zahlungen mit iPayment');
 define( '_CFG_IPAYMENT_SILENT_FAKE_ACCOUNT_NAME', 'Falscher Account');
 define( '_CFG_IPAYMENT_SILENT_FAKE_ACCOUNT_DESC', 'Einen falschen Account (99999) zum Testen benutzen.');
 define( '_CFG_IPAYMENT_SILENT_USER_ID_NAME', 'User Id');
 define( '_CFG_IPAYMENT_SILENT_USER_ID_DESC', 'Die User Id Ihres iPayment Accounts.');
 define( '_CFG_IPAYMENT_SILENT_PASSWORD_NAME', 'Passwort');
 define( '_CFG_IPAYMENT_SILENT_PASSWORD_DESC', 'Das Passwort Ihres iPayment Accounts.');
+define( '_CFG_IPAYMENT_SILENT_PROMPTADDRESS_NAME', 'Addressdaten abfragen');
+define( '_CFG_IPAYMENT_SILENT_PROMPTADDRESS_DESC', 'Separat zu Rechnungsvor- und Nachnahme auch Rechnungsadresse abfragen.');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLINFO', 'Rechnungs-Details');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_NAME', 'Vorname');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_NAME', 'Nachname');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLADDRESS_NAME', 'Adresse');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLCITY_NAME', 'Stadt');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLSTATE_NAME', 'Bundesland');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLZIP_NAME', 'PLZ');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLCOUNTRY_NAME', 'Land');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLCOUNTRY_NAME', 'Telefonnummer');
 
 ?>
