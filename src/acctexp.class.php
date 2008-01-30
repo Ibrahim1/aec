@@ -1768,13 +1768,7 @@ class XMLprocessor extends processor
 
 		$var = $this->checkoutform( $int_var, $settings, $metaUser, $new_subscription );
 
-		if ( $aecConfig->cfg['override_reqssl'] ) {
-			$secure = false;
-		} else {
-			$secure = true;
-		}
-
-		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=checkout', $secure ) . '" method="post">' . "\n";
+		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=checkout', true ) . '" method="post">' . "\n";
 		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
 		$return .= '<input type="hidden" name="invoice" value="' . $int_var['invoice'] . '" />' . "\n";
 		$return .= '<input type="hidden" name="userid" value="' . $metaUser->userid . '" />' . "\n";
@@ -3710,6 +3704,10 @@ class InvoiceFactory
 
 		$this->puffer( $option );
 
+		if ( empty( $repeat ) ) {
+			$repeat = 0;
+		}
+
 		if ( ( strcmp( strtolower( $this->processor ), 'none' ) === 0 )
 		|| ( strcmp( strtolower( $this->processor ), 'free' ) === 0 ) ) {
 			$params = $this->objUsage->getParams();
@@ -3730,8 +3728,10 @@ class InvoiceFactory
 		 	notAllowed( $option );
 		}
 
-		if ( !empty( $this->pp->info['secure'] ) && !isset( $_SERVER['HTTPS'] ) ) {
-		    mosRedirect( AECToolbox::deadsureURL( "/index.php?option=" . $option . "&task=repeatPayment&invoice=" . $this->objInvoice->invoice_number . "&first=" . !$repeat . "\n\n", true ) );
+		$first = $repeat ? 0 : 1;
+
+		if ( !empty( $this->pp->info['secure'] ) && !isset( $_SERVER['HTTPS'] ) && !$aecConfig->cfg['override_reqssl'] ) {
+		    mosRedirect( AECToolbox::deadsureURL( "/index.php?option=" . $option . "&task=repeatPayment&invoice=" . $this->objInvoice->invoice_number . "&first=" . $first, true ) );
 		    exit();
 		};
 
@@ -5777,6 +5777,10 @@ class AECToolbox
 	function deadsureURL( $url, $secure=false )
 	{
 		global $mosConfig_live_site, $mosConfig_absolute_path, $database, $aecConfig;
+
+		if ( $aecConfig->cfg['override_reqssl'] ) {
+			$secure = false;
+		}
 
 		if ( $aecConfig->cfg['simpleurls'] ) {
 			$new_url = $mosConfig_live_site . $url;
