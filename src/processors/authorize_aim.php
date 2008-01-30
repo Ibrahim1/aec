@@ -94,7 +94,7 @@ class processor_authorize_aim extends XMLprocessor
 
 		$name = explode( ' ', $metaUser->cmsUser->name );
 
-		if ( !empty( $name[1] ) ) {
+		if ( empty( $name[1] ) ) {
 			$name[1] = "";
 		}
 

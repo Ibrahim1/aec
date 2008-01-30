@@ -100,7 +100,7 @@ class processor_ideal_advanced extends XMLprocessor
 
 		$name = explode( ' ', $metaUser->cmsUser->name );
 
-		if ( !empty( $name[1] ) ) {
+		if ( empty( $name[1] ) ) {
 			$name[1] = "";
 		}
 

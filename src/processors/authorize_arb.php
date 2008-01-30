@@ -92,7 +92,7 @@ class processor_authorize_arb extends XMLprocessor
 
 		$name = explode( ' ', $metaUser->cmsUser->name );
 
-		if ( !empty( $name[1] ) ) {
+		if ( empty( $name[1] ) ) {
 			$name[1] = "";
 		}
 

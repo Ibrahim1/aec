@@ -92,10 +92,9 @@ class processor_ipayment_silent extends XMLprocessor
 
 		$name = explode( ' ', $metaUser->cmsUser->name );
 
-		if ( !empty( $name[1] ) ) {
+		if ( empty( $name[1] ) ) {
 			$name[1] = "";
 		}
-
 
 		$var['params']['billInfo'] = array( 'p', _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO, _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO );
 		$var['params']['billFirstName'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_DESC, $name[0]);
