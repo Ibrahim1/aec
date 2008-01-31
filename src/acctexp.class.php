@@ -1813,7 +1813,7 @@ class XMLprocessor extends processor
 		return $return;
 	}
 
-	function getCCform()
+	function getCCform( $var=array() )
 	{
 		// Request the Card number
 		$var['params']['cardNumber'] = array( 'inputC', _AEC_CCFORM_CARDNUMBER_NAME, _AEC_CCFORM_CARDNUMBER_NAME, '');

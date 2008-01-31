@@ -85,6 +85,7 @@ class processor_ipayment_silent extends XMLprocessor
 	{
 		global $mosConfig_live_site;
 
+		$var['params']['billInfo'] = array( 'p', _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_ELV_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_ELV_DESC );
 		$var['params']['accountName'] = array( 'inputC', _AEC_WTFORM_ACCOUNTNAME_NAME, _AEC_WTFORM_ACCOUNTNAME_NAME, $metaUser->cmsUser->name );
 		$var['params']['accountNumber'] = array( 'inputC', _AEC_WTFORM_ACCOUNTNUMBER_NAME, _AEC_WTFORM_ACCOUNTNUMBER_NAME, '' );
 		$var['params']['bankNumber'] = array( 'inputC', _AEC_WTFORM_BANKNUMBER_NAME, _AEC_WTFORM_BANKNUMBER_NAME, '' );
@@ -96,7 +97,11 @@ class processor_ipayment_silent extends XMLprocessor
 			$name[1] = "";
 		}
 
-		$var['params']['billInfo'] = array( 'p', _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO, _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO );
+		$var['params']['billInfo2'] = array( 'p', _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_CC_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_CC_DESC );
+
+		$var = $this->getCCform( $var );
+
+		$var['params']['billInfo'] = array( 'p', _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_DESC );
 		$var['params']['billFirstName'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_DESC, $name[0] );
 		$var['params']['billLastName'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_DESC, $name[1] );
 
@@ -144,7 +149,7 @@ class processor_ipayment_silent extends XMLprocessor
 		$a['invoice_text']		= $int_var['invoice'];
 		$a['addr_email']		= $metaUser->cmsUser->email;
 
-		$varray = array(	'addr_street'	=>	'billAddress',
+		$varray = array(	'addr_name'	=>	'billFirstName',
 							'addr_street'	=>	'billAddress',
 							'addr_city'	=>	'billCity',
 							'addr_zip'	=>	'billZip',
@@ -163,7 +168,7 @@ class processor_ipayment_silent extends XMLprocessor
 
 						);
 		foreach ( $varray as $n => $p ) {
-			if ( isset( $int_var['params'][$p] ) ) {
+			if ( !empty( $int_var['params'][$p] ) ) {
 				$a[$n] = $int_var['params'][$p];
 			}
 		}
@@ -211,40 +216,18 @@ class processor_ipayment_silent extends XMLprocessor
 				unset( $resp_array[$arr_id] );
 			}
 
+			$return['invoice'] = $resp_array['invoice_text'];
 
-			$return['invoice'] = $this->substring_between($response,'<refId>','</refId>');
-			$resultCode = $this->substring_between($response,'<resultCode>','</resultCode>');
-
-			$code = $this->substring_between($response,'<code>','</code>');
-			$text = $this->substring_between($response,'<text>','</text>');
-
-			if ( strcmp( $resultCode, 'Ok' ) === 0) {
-				$return['valid'] = 1;
+			if ( isset( $resp_array['ret_errormsg'] ) ) {
+				$return['error'] = $resp_array['ret_errormsg'];
 			} else {
-				$return['error'] = $text;
+				$return['valid'] = 1;
 			}
 
-			if ( $settings['totalOccurrences'] > 1 ) {
-				$return['multiplicator'] = $settings['totalOccurrences'];
-			}
-
-			$subscriptionId = $this->substring_between($response,'<subscriptionId>','</subscriptionId>');
-
-			$return['invoiceparams'] = array( "subscriptionid" => $subscriptionId );
+			$return['invoiceparams'] = array( "subscriptionid" => $resp_array['ret_booknr'] );
 		}
 
 		return $return;
-	}
-
-	function substring_between( $haystack, $start, $end )
-	{
-		if ( strpos( $haystack, $start ) === false || strpos( $haystack, $end ) === false ) {
-			return false;
-	   } else {
-			$start_position = strpos( $haystack, $start ) + strlen( $start );
-			$end_position = strpos( $haystack, $end );
-			return substr( $haystack, $start_position, $end_position - $start_position );
-		}
 	}
 
 }
