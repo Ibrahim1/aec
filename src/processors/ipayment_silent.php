@@ -179,6 +179,9 @@ class processor_ipayment_silent extends XMLprocessor
 
 		$stringarray = array();
 		foreach ( $a as $name => $value ) {
+			if ( is_array( $value ) ) {
+				aecDebug( $name );
+			}
 			$stringarray[] = $name . '=' . urlencode( $value );
 		}
 

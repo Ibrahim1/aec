@@ -68,7 +68,7 @@ function aecDebug( $text )
 	global $database;
 
 	$eventlog = new eventLog( $database );
-	$eventlog->issue( 'debug', 'debug entry: '.$text, '', 128 );
+	$eventlog->issue( 'debug', 'debug', 'debug entry: '.$text, 128 );
 }
 
 class metaUser
@@ -2610,7 +2610,7 @@ class SubscriptionPlan extends paramDBTable
 		$free_trial = 0;
 		$params		= $this->getParams();
 
-		if ( $recurring ) {
+		if ( empty( $recurring ) ) {
 			$amount = array();
 
 			// Only Allow a Trial when the User is coming from a different PlanGroup or is new
