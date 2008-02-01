@@ -157,6 +157,8 @@ define( '_MI_MI_REMOSITORY_GROUP_EXP_NAME',			'Expiration group' );
 define( '_MI_MI_REMOSITORY_GROUP_EXP_DESC',			'The ReMOSitory group that you want the user to be in when the subscription runs out.' );
 define( '_AEC_MI_HACK1_REMOS',		'No Credits' );
 define( '_AEC_MI_HACK2_REMOS',		'Build in a downloads restriction for reMOSitory, to be used with Micro Integrations.' );
+define( '_MI_MI_REMOSITORY_DELETE_ON_EXP_NAME', 			'Action for existing groups when account expires:');
+define( '_MI_MI_REMOSITORY_DELETE_ON_EXP_DESC',			'Choose what action you want to happen to already defined ReMOSitory groups when the user expires.');
 
 // VirtueMart
 define( '_AEC_MI_NAME_VIRTM',		'VirtueMart' );

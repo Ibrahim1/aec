@@ -65,7 +65,12 @@ class mi_remository
 			$sg[] = mosHTML::makeOption( $group->group_id, $group->group_name . ' - '
 			. substr( strip_tags( $group->group_name ), 0, 30 ) );
 		}
-
+		
+ 		$del_opts = array();
+		$del_opts[0] = mosHTML::makeOption ("No", "Just apply group below."); // Should probably be langauge file defined?
+		$del_opts[1] = mosHTML::makeOption ("All", "Delete ALL, then apply group below.");
+		$del_opts[2] = mosHTML::makeOption ("Set","Delete Group Set on Application, then apply group below.");
+		
         $settings = array();
 		$settings['add_downloads']		= array( 'inputA' );
 		$settings['set_downloads']		= array( 'inputA' );
@@ -76,6 +81,7 @@ class mi_remository
 
 		$settings['set_group']			= array( 'list_yesno' );
 		$settings['group']				= array( 'list' );
+		$settings['delete_on_exp'] 		= array('list');
 		$settings['set_group_exp']		= array( 'list_yesno' );
 		$settings['group_exp']			= array( 'list' );
 
@@ -124,6 +130,22 @@ class mi_remository
 	function expiration_action( $params, $metaUser, $plan )
 	{
 		global $database;
+
+ 		if ( $params['delete_on_exp']=="Set" ) {
+ 			$query = 'DELETE FROM #__mbt_group_member'
+ 			. ' WHERE member_id = \'' . $metaUser->userid.'\' AND group_id = \'' .$params['group'].'\''
+ 			;
+ 			$database->setQuery( $query );		
+		}
+
+		if ( $params['delete_on_exp']=="All" ) {
+ 			$query = 'DELETE FROM #__mbt_group_member'
+ 			. ' WHERE member_id = \'' . $metaUser->userid.'\''
+ 			;
+ 			$database->setQuery( $query );
+			}
+		
+
 
 		if ($params['set_group_exp']) {
 			// Check if exists
