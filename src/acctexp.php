@@ -102,9 +102,9 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'savesubscription':
-			$userid = aecGetParam( 'userid' );
-			$usage = aecGetParam( 'usage' );
-			$processor = aecGetParam( 'processor' );
+			$userid		= aecGetParam( 'userid' );
+			$usage		= aecGetParam( 'usage' );
+			$processor	= aecGetParam( 'processor' );
 
 			$invoicefact = new InvoiceFactory( $userid, $usage, $processor );
 			$invoicefact->save( $option, $_POST );
@@ -378,23 +378,14 @@ function subscribe( $option )
 				}
 			}
 
-			unset( $_POST['option'] );
-			unset( $_POST['task'] );
+			$nopass = array( 'option', 'task', 'intro', 'usage', 'processor', 'Itemid', 'submit_x', 'submit_y', 'userid' );
 
-			if ( isset( $_POST['usage'] ) ) {
-				unset( $_POST['intro'] );
-				unset( $_POST['usage'] );
-				unset( $_POST['processor'] );
-				unset( $_POST['Itemid'] );
-			}
-
-			if ( isset( $_POST['submit_y'] ) ) {
-				unset( $_POST['submit_x'] );
-				unset( $_POST['submit_y'] );
-			}
-
-			if ( isset( $_POST['userid'] ) ) {
-				unset( $_POST['userid'] );
+			$passafter = array();
+			foreach ( $nopass as $varname ) {
+				if ( isset( $_POST[$varname] ) ) {
+					$passafter[$varname] = $_POST[$varname];
+					unset( $_POST[$varname] );
+				}
 			}
 
 			if ( !empty( $_POST ) ) {
@@ -411,6 +402,12 @@ function subscribe( $option )
 				}
 			} else {
 				$passthrough = false;
+			}
+
+			if ( !empty( $passafter ) ) {
+				foreach ( $passafter as $varname => $varcontent ) {
+					$_POST[$varname] = $varcontent;
+				}
 			}
 		}
 
@@ -1019,7 +1016,7 @@ function cancelPayment( $option )
 
 function aecGetParam( $name, $default='' )
 {
-	$return = trim( mosGetParam( $_REQUEST, $name, '' ) );
+	$return = trim( mosGetParam( $_REQUEST, $name, $default ) );
 
 	if ( empty( $return ) && !empty( $_POST[(string) $name] ) ) {
 		$processor = $_POST[(string) $name];

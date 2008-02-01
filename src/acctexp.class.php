@@ -3526,7 +3526,7 @@ class InvoiceFactory
 				// The plans are supposed to be first, so the details form should hold the values
 				if ( $aecConfig->cfg['plans_first'] && !empty( $plans[0]['id'] ) ) {
 					$_POST['usage']		= $plans[0]['id'];
-					$_POST['processor'] = $plans[0]['gw'][0]['name'];
+					$_POST['processor']	= $plans[0]['gw'][0]['name'];
 				}
 
 				// Send to CB or joomla!
