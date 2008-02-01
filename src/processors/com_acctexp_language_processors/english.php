@@ -97,16 +97,6 @@ define( '_AEC_WTFORM_BANKNUMBER_DESC', 'The Bank Number');
 define( '_AEC_WTFORM_BANKNAME_NAME', 'Bank Name');
 define( '_AEC_WTFORM_BANKNAME_DESC', 'The Name of the Bank');
 
-// Generic Credit Card Form
-define( '_AEC_CCFORM_CARDHOLDER_NAME', 'Cardholder\'s Name');
-define( '_AEC_CCFORM_CARDHOLDER_DESC', 'The name of the credit card holder');
-define( '_AEC_CCFORM_CARDNUMBER_NAME', 'Card Number');
-define( '_AEC_CCFORM_CARDNUMBER_DESC', 'The number of your credit card');
-define( '_AEC_CCFORM_EXPIRATIONYEAR_NAME', 'Expiration Year');
-define( '_AEC_CCFORM_EXPIRATIONYEAR_DESC', 'The Year your card will expire');
-define( '_AEC_CCFORM_EXPIRATIONMONTH_NAME', 'Expiration Month');
-define( '_AEC_CCFORM_EXPIRATIONMONTH_DESC', 'The Month your card will expire');
-
 // Paypal Settings
 define( '_CFG_PAYPAL_BUSINESS_NAME', 'Business ID:');
 define( '_CFG_PAYPAL_BUSINESS_DESC', 'Your Merchant ID (email) on PayPal.');

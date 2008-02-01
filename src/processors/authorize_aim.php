@@ -118,7 +118,7 @@ class processor_authorize_aim extends XMLprocessor
 		return $var;
 	}
 
-	function createRequestXML( $int_var, $cfg, $metaUser, $new_subscription )
+	function createRequestXML( $int_var, $cfg, $metaUser, $new_subscription, $invoice )
 	{
 		global $mosConfig_live_site;
 
@@ -170,7 +170,7 @@ class processor_authorize_aim extends XMLprocessor
 		return $string;
 	}
 
-	function transmitRequestXML( $xml, $int_var, $settings, $metaUser, $new_subscription )
+	function transmitRequestXML( $xml, $int_var, $settings, $metaUser, $new_subscription, $invoice )
 	{
 		$path = "/gateway/transact.dll";
 		if ( $settings['testmode'] ) {

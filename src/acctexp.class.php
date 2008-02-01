@@ -63,6 +63,14 @@ if ( empty( $mosConfig_offset_user ) ) {
 	$mosConfig_offset_user = $mosConfig_offset;
 }
 
+function aecDebug( $text )
+{
+	global $database;
+
+	$eventlog = new eventLog( $database );
+	$eventlog->issue( 'debug', 'debug entry: '.$text, '', 128 );
+}
+
 class metaUser
 {
 	/** @var int */
@@ -1163,19 +1171,25 @@ class eventLog extends paramDBTable
 	{
 		global $mosConfig_offset_user, $aecConfig;
 
+		$legal_levels = array( 2, 8, 32, 128 );
+
+		if ( !in_array( $level, $legal_levels ) ) {
+			$levels = $legal_levels[0];
+		}
+
 		$this->datetime	= gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
 		$this->short	= $short;
 		$this->tags		= $tags;
 		$this->event	= $text;
-		$this->level	= $level;
+		$this->level	= (int) $level;
 
-		if ( $level >= $aecConfig->cfg['error_notification_level'] ) {
+		if ( $this->level >= $aecConfig->cfg['error_notification_level'] ) {
 			$this->notify	= 1;
 		} else {
 			$this->notify	= $force_notify ? 1 : 0;
 		}
 
-		if ( ( $level >= $aecConfig->cfg['email_notification_level'] ) || $force_email ) {
+		if ( ( $this->level >= $aecConfig->cfg['email_notification_level'] ) || $force_email ) {
 			global $mainframe, $database;
 
 			// check if Global Config `mailfrom` and `fromname` values exist
@@ -1197,8 +1211,8 @@ class eventLog extends paramDBTable
 			}
 
 			// Send notification to all administrators
-			$subject2	= sprintf( _AEC_ASEND_NOTICE, constant( "_AEC_NOTICE_NUMBER_" . $this->level ), $short, $mainframe->getCfg( 'sitename' ) );
-			$message2	= sprintf( _AEC_ASEND_NOTICE_MSG, $text  );
+			$subject2	= sprintf( _AEC_ASEND_NOTICE, constant( "_AEC_NOTICE_NUMBER_" . $this->level ), $this->short, $mainframe->getCfg( 'sitename' ) );
+			$message2	= sprintf( _AEC_ASEND_NOTICE_MSG, $this->event  );
 
 			$subject2	= html_entity_decode( $subject2, ENT_QUOTES );
 			$message2	= html_entity_decode( $message2, ENT_QUOTES );
@@ -1841,7 +1855,7 @@ class XMLprocessor extends processor
 		return $var;
 	}
 
-	function checkoutProcess( $int_var, $pp, $metaUser, $new_subscription )
+	function checkoutProcess( $int_var, $pp, $metaUser, $new_subscription, $invoice )
 	{
 		global $database;
 
@@ -1854,10 +1868,10 @@ class XMLprocessor extends processor
 			$settings = $pp->settings;
 		}
 
-		$xml = $this->createRequestXML( $int_var, $settings, $metaUser, $new_subscription );
+		$xml = $this->createRequestXML( $int_var, $settings, $metaUser, $new_subscription, $invoice );
 
 		// Transmit xml to server
-		$response = $this->transmitRequestXML( $xml, $int_var, $settings, $metaUser, $new_subscription );
+		$response = $this->transmitRequestXML( $xml, $int_var, $settings, $metaUser, $new_subscription, $invoice );
 
 		if ( !empty( $response['error'] ) ) {
 			return $response;
@@ -3870,7 +3884,7 @@ class InvoiceFactory
 			$var['params'][$varname] = $varvalue;
 		}
 
-		$response = $this->pp->processor->checkoutProcess( $var, $this->pp, $metaUser, $new_subscription );
+		$response = $this->pp->processor->checkoutProcess( $var, $this->pp, $metaUser, $new_subscription, $this->objInvoice );
 
 		if ( isset( $response['error'] ) ) {
 			$this->error( $option, $metaUser->cmsUser, $this->objInvoice->invoice_number, $response['error'] );
@@ -4299,7 +4313,7 @@ class Invoice extends paramDBTable
 		return $inum;
 	}
 
-	function processorResponse( $pp, $response )
+	function processorResponse( $pp, $response, $responsestring='' )
 	{
 		global $database;
 
@@ -4327,8 +4341,6 @@ class Invoice extends paramDBTable
 		if ( isset( $response['responsestring'] ) ) {
 			$responsestring = $response['responsestring'];
 			unset( $response['responsestring'] );
-		} else {
-			$responsestring = '';
 		}
 
 		// Create history entry
@@ -4609,6 +4621,7 @@ class Invoice extends paramDBTable
 		$pp->getInfo();
 
 		$int_var['planparams'] = $new_subscription->getProcessorParameters( $pp->id );
+
 		if ( isset( $pp->info['recurring'] ) ) {
 			$int_var['recurring'] = $pp->info['recurring'];
 		} else {

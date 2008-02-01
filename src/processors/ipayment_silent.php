@@ -117,14 +117,14 @@ class processor_ipayment_silent extends XMLprocessor
 		return $var;
 	}
 
-	function createRequestXML( $int_var, $cfg, $metaUser, $new_subscription )
+	function createRequestXML( $int_var, $cfg, $metaUser, $new_subscription, $invoice )
 	{
-		global $mosConfig_live_site;
+		global $mosConfig_live_site, $database;
 
-		$subscr_params = $metaUser->focusSubscription->getParams();
+		$invoice_params = $invoice->getParams();
 
-		if ( isset( $subscr_params['creator_ip'] ) ) {
-			$ip = $subscr_params['creator_ip'];
+		if ( isset( $invoice_params['creator_ip'] ) ) {
+			$ip = $invoice_params['creator_ip'];
 		} else {
 			$ip = $_SERVER['REMOTE_ADDR'];
 		}
@@ -143,10 +143,10 @@ class processor_ipayment_silent extends XMLprocessor
 
 		$a['order_id']			= AECfetchfromDB::InvoiceIDfromNumber( $int_var['invoice'] );
 		$a['from_ip']			= $ip;
-		$a['trx_currency']		= $cfg['currency'];
+		$a['trx_currency']	= $cfg['currency'];
 		$a['trx_amount']		= $int_var['amount'];
 		$a['trx_typ']			= 'auth';
-		$a['invoice_text']		= $int_var['invoice'];
+		$a['invoice_text']	= $int_var['invoice'];
 		$a['addr_email']		= $metaUser->cmsUser->email;
 
 		$varray = array(	'addr_name'	=>	'billFirstName',
@@ -187,7 +187,7 @@ class processor_ipayment_silent extends XMLprocessor
 		return $string;
 	}
 
-	function transmitRequestXML( $xml, $int_var, $settings, $metaUser, $new_subscription )
+	function transmitRequestXML( $xml, $int_var, $settings, $metaUser, $new_subscription, $invoice )
 	{
 		if ( $settings['testmode'] || $settings['fake_account'] ) {
 			if ( $settings['fake_account'] ) {

@@ -453,7 +453,7 @@ define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_DESC', '');
 define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_ELV_NAME', 'Lastschrift');
 define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_ELV_DESC', 'Ihre Kontoverbindung für das Lastschriftverfahren');
 define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_CC_NAME', 'Kreditkarte');
-define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_CC_DESC', 'Anstatt der Kontoverbindung können Sie auch mit Kreditkarte bezahlen');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_CC_DESC', 'Anstatt der Kontoverbindung k&ouml;nnen Sie auch mit Kreditkarte bezahlen');
 define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_NAME', 'Vorname');
 define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_NAME', 'Nachname');
 define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLADDRESS_NAME', 'Adresse');

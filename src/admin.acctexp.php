@@ -711,7 +711,7 @@ function help( $option )
  		$diagnostic['no_plan'] = 1;
  	}
 
- 	if ( $aecConfig->cfg['entry_plan'] ) {
+ 	if ( !empty( $aecConfig->cfg['entry_plan'] ) ) {
  		$diagnostic['global_entry'] = 1;
  	} else {
  		$diagnostic['global_entry'] = 0;
@@ -819,7 +819,7 @@ function help( $option )
 	// check JACL
 	$diagnose[]	= array( _AEC_HELP_DIAG_CMN3, !$diagnostic['jacl'], 1, _AEC_HELP_DIAG_CMN3_DESC, 0, 1 );
 
-	if ( $diagnostic['paypal'] ) {
+	if ( !empty( $diagnostic['paypal'] ) ) {
 		$diagnose[]	= array( _AEC_HELP_DIAG_PAYPAL_BUSS_ID, $diagnostic['pp_checkbusiness'], 2, _AEC_HELP_DIAG_PAYPAL_BUSS_ID_DESC, _AEC_HELP_DIAG_PAYPAL_BUSS_ID_DESC1, 1 );
 	}
 
@@ -4581,18 +4581,20 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 				break;
 
 			case 'menuentry':
-				if ( !$undohack && !$v15 ) { // Create menu entry (J1.0) = Note this may produce links which break renewals (item id is added by J!)?
-					$query = 'INSERT INTO #__menu'
-					. ' VALUES (\'\', \'usermenu\', \'' . _AEC_SPEC_MENU_ENTRY . '\', \'index.php?option=com_acctexp&task=subscriptionDetails\', \'url\', 1, 0, 0, 0, 6, 0, \'0000-00-00 00:00:00\', 0, 0, 1, 0, \'menu_image=-1\')'
-					;
-				} elseif (!$undohack && !$v15 ) { //Create menu entry (J1.5)
-							$query = 'INSERT INTO #__menu'
-					. ' VALUES (\'\', \'usermenu\', \'' . _AEC_SPEC_MENU_ENTRY . '\', \'my-subs\', \'index.php?option=com_acctexp&task=subscriptionDetails\', \'url\', 1, 0, 0, 0, 6, 0, \'0000-00-00 00:00:00\', 0, 0, 1, 0, \'menu_image=-1\', 0, 0, 0)'
-					;
-				}elseif ($undohack) { // Remove menu entry works for J1.0 or 1.5
+				if ( !$undohack ) { // Create menu entry
+					if ( defined( 'JPATH_BASE' ) ) {
+						$query = 'INSERT INTO #__menu'
+						. ' VALUES (\'\', \'usermenu\', \'' . _AEC_SPEC_MENU_ENTRY . '\', \'' . strtolower( _AEC_SPEC_MENU_ENTRY ) . '\', \'index.php?option=com_acctexp&task=subscriptionDetails\', \'url\', 1, 0, 0, 6, 0, 0, \'0000-00-00 00:00:00\', 0, 0, 1, 0, \'menu_image=-1\', 0, 0, 0)'
+						;
+					} else {
+						$query = 'INSERT INTO #__menu'
+						. ' VALUES (\'\', \'usermenu\', \'' . _AEC_SPEC_MENU_ENTRY . '\', \'index.php?option=com_acctexp&task=subscriptionDetails\', \'url\', 1, 0, 0, 0, 6, 0, \'0000-00-00 00:00:00\', 0, 0, 1, 0, \'menu_image=-1\')'
+						;
+					}
+				} else { // Remove menu entry
 					$query = 'DELETE'
 					. ' FROM #__menu'
-					. ' WHERE link LIKE \'index.php?option=com_acctexp%\''
+					. ' WHERE link LIKE \'index.php?option=com_acctexp&task=subscriptionDetails%\''
 					;
 				}
 
