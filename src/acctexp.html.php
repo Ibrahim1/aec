@@ -510,6 +510,29 @@ class Payment_HTML
 		return $html_code;
 	}
 
+	function pending( $option, $var )
+	{
+		global $database, $aecConfig;
+
+		if ( $aecConfig->cfg['customtext_pending'] ) { ?>
+			<p><?php echo $aecConfig->cfg['customtext_pending']; ?></p>
+			<?php
+		} ?>
+		<div id="box_pending">
+			<p><?php echo _PENDING_NOINVOICE; ?></p>
+			<div id="upgrade_button">
+				<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=tempAuth', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+					<input type="password" size="10" class="inputbox" id="password" name="password"/>
+					<input type="hidden" name="option" value="<?php echo $option; ?>" />
+					<input type="hidden" name="userid" value="<?php echo $objUser->id; ?>" />
+					<input type="hidden" name="task" value="renewSubscription" />
+					<input type="submit" class="button" value="<?php echo _PENDING_NOINVOICE_BUTTON;?>" />
+				</form>
+			</div>
+		</div>
+		<?php
+	}
+
 	function confirmForm( $option, $InvoiceFactory, $user, $passthrough = false)
 	{
 		global $database, $aecConfig;

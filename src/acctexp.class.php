@@ -110,6 +110,65 @@ class metaUser
 		}
 	}
 
+	function getTempAuth()
+	{
+		$return = false;
+
+		if ( $this->hasSubscription ) {
+			$params = $this->objSubscription->getParams();
+
+			if ( isset( $params['tempauth_exptime'] ) && isset( $params['tempauth_ip'] ) ) {
+				if ( ( $params['tempauth_ip'] == $_SERVER['REMOTE_ADDR'] ) && ( $params['tempauth_exptime'] >= time() ) ) {
+					$return = true;
+				}
+			}
+		} else {
+			if ( is_object( $this->cmsUser ) ) {
+				$params = explode( "\n", $this->cmsUser->params );
+
+				$array = array();
+				foreach ( $params as $chunk ) {
+					$k = explode( '=', $chunk, 2 );
+					$array[$k[0]] = isset( $k[1] ) ? $k[1] : '';
+				}
+
+				if ( isset( $array['tempauth_exptime'] ) && isset( $array['tempauth_ip'] ) ) {
+					if ( ( $array['tempauth_ip'] == $_SERVER['REMOTE_ADDR'] ) && ( $array['tempauth_exptime'] >= time() ) ) {
+						$return = true;
+					}
+				}
+			}
+		}
+
+		return $return;
+	}
+
+	function setTempAuth()
+	{
+		global $aecConfig;
+
+		$params = array();
+		$params['tempauth_ip'] = $_SERVER['REMOTE_ADDR'];
+		$params['tempauth_exptime'] = strtotime( '+' . max( 10, $aecConfig->cfg['temp_auth_exp'] ) . ' minutes', time() );
+
+		if ( $this->hasSubscription ) {
+			$this->objSubscription->addParams( $params );
+		} else {
+			if ( is_object( $this->cmsUser ) ) {
+				$add = strpos( "\n", $this->cmsUser->params ) ? "\n" : '';
+
+				$array = array();
+				foreach ( $params as $name => $value ) {
+					$array[] = $name . "=" . $value;
+				}
+
+				$this->cmsUser->params .= $add . implode( "/n", $array );
+				$this->cmsUser->check();
+				$this->cmsUser->store();
+			}
+		}
+	}
+
 	function getSecondarySubscriptions()
 	{
 		global $database;
@@ -615,6 +674,7 @@ class Config_General extends paramDBTable
 		$def['ssl_signup']						= 0;
 		$def['error_notification_level']		= 32;
 		$def['email_notification_level']		= 512;
+		$def['temp_auth_exp']						= 60;
 
 		// Insert a new entry if there is none yet
 		if ( empty( $this->settings ) ) {
@@ -3128,6 +3188,7 @@ class InvoiceFactory
 		global $database, $mainframe, $my;
 
 		$this->userid = $userid;
+		$this->authed = false;
 
 		require_once( $mainframe->getPath( 'front_html', 'com_acctexp' ) );
 
@@ -3135,6 +3196,7 @@ class InvoiceFactory
 		if ( !$my->id ) {
 			if ( !$this->userid ) {
 				// Its ok, this is a registration/subscription hybrid call
+				$this->authed = true;
 			} elseif ( $this->userid ) {
 				if ( AECToolbox::quickVerifyUserID( $this->userid ) === true ) {
 					// This user is not expired, so he could log in...
@@ -3147,6 +3209,7 @@ class InvoiceFactory
 		} else {
 			// Overwrite the given userid when user is logged in
 			$this->userid = $my->id;
+			$this->authed = true;
 		}
 
 		// Init variables
@@ -3176,7 +3239,9 @@ class InvoiceFactory
 	{
 		global $database;
 
-		$metaUser = new metaUser( $this->userid );
+		if ( !is_object( $this->metaUser ) ) {
+			$this->metaUser = new metaUser( $this->userid );
+		}
 
 		$row = new SubscriptionPlan( $database );
 		$row->load( $this->usage );
@@ -3184,7 +3249,7 @@ class InvoiceFactory
 		$restrictions = $row->getRestrictionsArray();
 
 		if ( count( $restrictions ) ) {
-			$status = $metaUser->permissionResponse( $restrictions );
+			$status = $this->metaUser->permissionResponse( $restrictions );
 
 			foreach ( $status as $stname => $ststatus ) {
 				if ( !( $ststatus === true ) ) {
@@ -3344,17 +3409,19 @@ class InvoiceFactory
 		return;
 	}
 
-	function create( $option, $intro=0, $usage=0, $processor=null, $invoice=0, $passthrough=false )
+	function loadMetaUser( $passthrough=false, $force=false )
 	{
-		global $database, $mainframe, $my, $aecConfig;
+		if ( is_object( $this->metaUser ) && !$force ) {
+			return false;
+		}
 
 		if ( !$this->userid ) {
 			// Creating a dummy user object
-			$metaUser = new metaUser( 0 );
-			$metaUser->cmsUser = new stdClass();
-			$metaUser->cmsUser->gid = 29;
-			$metaUser->hasSubscription = false;
-			$metaUser->hasExpiration = false;
+			$this->metaUser = new metaUser( 0 );
+			$this->metaUser->cmsUser = new stdClass();
+			$this->metaUser->cmsUser->gid = 29;
+			$this->metaUser->hasSubscription = false;
+			$this->metaUser->hasExpiration = false;
 
 			if ( $passthrough ) {
 				$cpass = $passthrough;
@@ -3364,38 +3431,45 @@ class InvoiceFactory
 
 				// Create dummy CMS user
 				foreach( $cmsfields as $cmsfield ) {
-					$metaUser->cmsUser->$cmsfield = $cpass[$cmsfield];
+					$this->metaUser->cmsUser->$cmsfield = $cpass[$cmsfield];
 					unset( $cpass[$cmsfield] );
 				}
 
 				// Create dummy CB/CBE user
 				if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
-					$metaUser->hasCBprofile = 1;
-					$metaUser->cbUser = new stdClass();
+					$this->metaUser->hasCBprofile = 1;
+					$this->metaUser->cbUser = new stdClass();
 
 					foreach ( $cpass as $cbfield => $cbvalue ) {
 						if ( is_array( $cbvalue ) ) {
-							$metaUser->cbUser->$cbfield = implode( ';', $cbvalue );
+							$this->metaUser->cbUser->$cbfield = implode( ';', $cbvalue );
 						} else {
-							$metaUser->cbUser->$cbfield = $cbvalue;
+							$this->metaUser->cbUser->$cbfield = $cbvalue;
 						}
 					}
 				}
 
-				$register = 0;
+				return false;
 			} else {
-				$register = 1;
+				return true;
 			}
 		} else {
 			// Loading the actual user
-			$metaUser = new metaUser( $this->userid );
-			$register = 0;
+			$this->metaUser = new metaUser( $this->userid );
+			return false;
 		}
+	}
+
+	function create( $option, $intro=0, $usage=0, $processor=null, $invoice=0, $passthrough=false )
+	{
+		global $database, $mainframe, $my, $aecConfig;
+
+		$register = $this->loadMetaUser( $passthrough );
 
 		$where = array();
 
-		if ( $metaUser->hasSubscription ) {
-			$subscriptionClosed = ( strcmp( $metaUser->objSubscription->status, 'Closed' ) === 0 );
+		if ( $this->metaUser->hasSubscription ) {
+			$subscriptionClosed = ( strcmp( $this->metaUser->objSubscription->status, 'Closed' ) === 0 );
 		} else {
 			$subscriptionClosed = false;
 			// TODO: Check if the user has already subscribed once, if not - link to intro
@@ -3425,13 +3499,6 @@ class InvoiceFactory
 	 		return false;
 	 	}
 
-	 	if ( $mainframe->getCfg( 'debug' ) ) {
-	 		echo 'DEBUG - '. __FILE__ . ' - ' . __LINE__ . '<br />';
-			echo 'query: ' . $query . '<br />';
-		 	echo 'rows:<hr />';
-		 	print_r( $rows );
-		}
-
 	 	// There are no plans to begin with, so we need to punch out an error here
 		if ( count( $rows ) == 0 ) {
 			mosRedirect( AECToolbox::deadsureURL( '/index.php?mosmsg=' . _NOPLANS_ERROR ) );
@@ -3451,11 +3518,11 @@ class InvoiceFactory
 				$status = array();
 
 				if ( isset( $restrictions['custom_restrictions'] ) ) {
-					$status = array_merge( $status, $metaUser->CustomRestrictionResponse( $restrictions['custom_restrictions'] ) );
+					$status = array_merge( $status, $this->metaUser->CustomRestrictionResponse( $restrictions['custom_restrictions'] ) );
 					unset( $restrictions['custom_restrictions'] );
 				}
 
-				$status = array_merge( $status, $metaUser->permissionResponse( $restrictions ) );
+				$status = array_merge( $status, $this->metaUser->permissionResponse( $restrictions ) );
 
 				foreach ( $status as $stname => $ststatus ) {
 					if ( !$ststatus ) {
@@ -3612,9 +3679,22 @@ class InvoiceFactory
 		}
 	}
 
+	function promptpassword( $option, $var )
+	{
+
+	}
+
 	function confirm( $option, $var=array(), $passthrough=false )
 	{
 		global $database, $my, $aecConfig, $mosConfig_absolute_path;
+
+		if ( !$this->authed && !$passthrough ) {
+			$this->loadMetaUser(  );
+
+			if ( !$this->metaUser->getTempAuth() ) {
+				$this->promptpassword( $option, $var );
+			}
+		}
 
 		if ( isset( $var['task'] ) ) {
 			unset( $var['task'] );
@@ -3704,6 +3784,9 @@ class InvoiceFactory
 			$passthrough = false;
 		} else {
 			$this->userid = AECToolbox::saveUserRegistration( $option, $var );
+
+			$this->loadMetaUser();
+			$this->metaUser->setTempAuth();
 		}
 
 		$this->touchInvoice( $option );
@@ -3714,7 +3797,7 @@ class InvoiceFactory
 	{
 		global $database, $aecConfig;
 
-		$metaUser = new metaUser( $this->userid );
+		$this->metaUser = new metaUser( $this->userid );
 
 		$this->puffer( $option );
 
@@ -3749,8 +3832,8 @@ class InvoiceFactory
 		    exit();
 		};
 
-		$amount				= $this->objUsage->SubscriptionAmount( $this->recurring, $metaUser->objSubscription );
-		$original_amount	= $this->objUsage->SubscriptionAmount( $this->recurring, $metaUser->objSubscription );
+		$amount				= $this->objUsage->SubscriptionAmount( $this->recurring, $this->metaUser->objSubscription );
+		$original_amount	= $amount;
 		$warning			= 0;
 
 		if ( !empty( $aecConfig->cfg['enable_coupons'] ) ) {
@@ -3778,7 +3861,7 @@ class InvoiceFactory
 						$cph->setError( _COUPON_ERROR_COMBINATION );
 					} else {
 						$cph->getInfo( $amount );
-						$cph->checkRestrictions( $metaUser, $original_amount, $this );
+						$cph->checkRestrictions( $this->metaUser, $original_amount, $this );
 
 						if ( $cph->status ) {
 							$this->coupons['coupons'][$id]['code']		= $cph->code;
@@ -3863,7 +3946,7 @@ class InvoiceFactory
 	{
 		global $database;
 
-		$metaUser = new metaUser( $this->userid );
+		$this->metaUser = new metaUser( $this->userid );
 
 		$this->puffer( $option );
 
@@ -3884,10 +3967,10 @@ class InvoiceFactory
 			$var['params'][$varname] = $varvalue;
 		}
 
-		$response = $this->pp->processor->checkoutProcess( $var, $this->pp, $metaUser, $new_subscription, $this->objInvoice );
+		$response = $this->pp->processor->checkoutProcess( $var, $this->pp, $this->metaUser, $new_subscription, $this->objInvoice );
 
 		if ( isset( $response['error'] ) ) {
-			$this->error( $option, $metaUser->cmsUser, $this->objInvoice->invoice_number, $response['error'] );
+			$this->error( $option, $this->metaUser->cmsUser, $this->objInvoice->invoice_number, $response['error'] );
 		}
 	}
 
@@ -3895,28 +3978,28 @@ class InvoiceFactory
 	{
 		global $database;
 
-		$metaUser = new metaUser( $this->userid );
+		$this->metaUser = new metaUser( $this->userid );
 
 		$invoice = new Invoice( $database );
 
 		if ( !empty( $subscr ) ) {
-			if ( $metaUser->moveFocus( $subscr ) ) {
-				$invoice->loadbySubscription( $metaUser->focusSubscription->id, $metaUser->userid );
+			if ( $this->metaUser->moveFocus( $subscr ) ) {
+				$invoice->loadbySubscription( $this->metaUser->focusSubscription->id, $this->metaUser->userid );
 			}
 		}
 
 		if ( empty( $invoice->id ) ) {
-			$invoice->load( AECfetchfromDB::lastClearedInvoiceIDbyUserID( $this->userid, $metaUser->focusSubscription->plan ) );
+			$invoice->load( AECfetchfromDB::lastClearedInvoiceIDbyUserID( $this->userid, $this->metaUser->focusSubscription->plan ) );
 		}
 
 		if ( empty( $invoice->id ) ) {
-			$invoice->load( AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $this->userid, $metaUser->focusSubscription->plan ) );
+			$invoice->load( AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $this->userid, $this->metaUser->focusSubscription->plan ) );
 		}
 
 		$pp = new PaymentProcessor( $database );
 		$pp->loadName( $invoice->method );
 
-		$pp->customAction( $action, $invoice, $metaUser );
+		$pp->customAction( $action, $invoice, $this->metaUser );
 	}
 
 	function thanks( $option, $renew, $free )
