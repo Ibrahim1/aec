@@ -101,8 +101,7 @@
 		<filename>processors/cybermut/index.html</filename>
 		<filename>processors/cybermut/cybermutnotification.php</filename>
 		<filename>processors/com_acctexp_language_processors/index.html</filename>
-		<filename>processors/com_acctexp_language_processors/brazilian_portuguese.php</filename>
-		<filename>processors/com_acctexp_language_processors/dutch.php</filename
+		<filename>processors/com_acctexp_language_processors/dutch.php</filename>
 		<filename>processors/com_acctexp_language_processors/english.php</filename>
 		<filename>processors/com_acctexp_language_processors/french.php</filename>
 		<filename>processors/com_acctexp_language_processors/german.php</filename>
@@ -136,6 +135,7 @@
 			<filename>manual/AEC_Quickstart.pdf</filename>
 			<filename>com_acctexp_language_backend/index.html</filename>
 			<filename>com_acctexp_language_backend/brazilian_portuguese.php</filename>
+			<filename>com_acctexp_language_backend/dutch.php</filename>
 			<filename>com_acctexp_language_backend/english.php</filename>
 			<filename>com_acctexp_language_backend/french.php</filename>
 			<filename>com_acctexp_language_backend/general.php</filename>
