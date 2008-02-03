@@ -132,6 +132,11 @@ define( '_CONFIRM_TOS_ERROR', 'U dient akkoord te gaan met de Algemene Voorwaard
 define( '_CONFIRM_COUPON_INFO', 'Indien u een couponcode bezit, kunt u deze invoeren op de Checkout Pagina voor een korting op uw betaling');
 define( '_CONFIRM_FREETRIAL', 'Free Trial');
 
+// --== PROMPT PASSWORD FORM ==--
+define( '_AEC_PROMPT_PASSWORD', 'For security reasons, you need to put in your password to continue.');
+define( '_AEC_PROMPT_PASSWORD_WRONG', 'The Password you have entered does not match with the one we have registered for you in our database. Please try again.');
+define( '_AEC_PROMPT_PASSWORD_BUTTON', 'Continue');
+
 // --== CHECKOUT FORM ==--
 define( '_CHECKOUT_TITLE', 'Checkout');
 define( '_CHECKOUT_INFO', 'Your Registration has been saved now. On this page, you can complete your payment. <br /> If something goes wrong along the way, you can always come back to this step by logging in to our site with your new details - Our System will give you an option to try your payment again.');

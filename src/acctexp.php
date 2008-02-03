@@ -81,8 +81,8 @@ if ( trim( mosGetParam( $_REQUEST, 'Itemid', '' ) == 99999999  ) ) {
 if ( !empty( $task ) ) {
 	switch ( strtolower( $task ) ) {
 		case 'register':
-			$intro = trim( mosGetParam( $_REQUEST, 'intro', 0 ) );
-			$usage = trim( mosGetParam( $_REQUEST, 'usage', 0 ) );
+			$intro = aecGetParam( 'intro', 0 );
+			$usage = aecGetParam( 'usage', 0 );
 
 			$invoicefact = new InvoiceFactory(0);
 			$invoicefact->create($option, $intro, $usage);
@@ -103,17 +103,17 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'savesubscription':
-			$userid		= aecGetParam( 'userid' );
-			$usage		= aecGetParam( 'usage' );
-			$processor	= aecGetParam( 'processor' );
+			$userid		= aecGetParam( 'userid', 0 );
+			$usage		= aecGetParam( 'usage', 0 );
+			$processor	= aecGetParam( 'processor', '' );
 
 			$invoicefact = new InvoiceFactory( $userid, $usage, $processor );
 			$invoicefact->save( $option, $_POST );
 			break;
 
 		case 'checkout':
-			$invoice	= trim( mosGetParam( $_REQUEST, 'invoice', 0 ) );
-			$userid		= trim( mosGetParam( $_REQUEST, 'userid', 0 ) );
+			$invoice	= aecGetParam( 'invoice', 0 );
+			$userid		= aecGetParam( 'userid', 0 );
 
 			internalcheckout( $option, $invoice, $userid );
 			break;
@@ -123,8 +123,8 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'thanks':
-			$renew = trim( mosGetParam( $_REQUEST, 'renew', 0 ) );
-			$free = trim( mosGetParam( $_REQUEST, 'free', 0 ) );
+			$renew = aecGetParam( 'renew', 0 );
+			$free = aecGetParam( 'free', 0 );
 			thanks( $option, $renew, $free );
 			break;
 
@@ -133,11 +133,11 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'errap':
-			$usage         = trim( mosGetParam( $_REQUEST, 'usage', '' ) );
-			$userid         = trim( mosGetParam( $_REQUEST, 'userid', '' ) );
-			$username       = trim( mosGetParam( $_REQUEST, 'username', '' ) );
-			$name           = trim( mosGetParam( $_REQUEST, 'name', '' ) );
-			$recurring      = trim( mosGetParam( $_REQUEST, 'recurring', 0 ) );
+			$usage			= aecGetParam( 'usage' );
+			$userid         = aecGetParam( 'userid' );
+			$username       = aecGetParam( 'username' );
+			$name           = aecGetParam( 'name' );
+			$recurring      = aecGetParam( 'recurring', 0 );
 			errorAP( $option, $usage, $userid, $username, $name, $recurring);
 			break;
 
@@ -146,54 +146,44 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'renewsubscription':
-			$userid		= trim( mosGetParam( $_REQUEST, 'userid', 0 ) );
+			$userid		= aecGetParam( 'userid', 0 );
 
 			$invoicefact = new InvoiceFactory( $userid );
 			$invoicefact->create( $option );
 			break;
 
 		case 'expired':
-			$userid		= trim( mosGetParam( $_REQUEST, 'userid', 0 ) );
-			$expiration = trim( mosGetParam( $_REQUEST, 'expiration', 0 ) );
-			$itemid		= trim( mosGetParam( $_REQUEST, 'Itemid', 0 ) );
-
-			if ( $itemid ) {
-				$userid = $itemid;
-			}
+			$userid		= aecGetParam( 'userid', 0 );
+			$expiration = aecGetParam( 'expiration', 0 );
 
 			expired( $option, $userid, $expiration );
 			break;
 
 		case 'pending':
-			$userid		= trim( mosGetParam( $_REQUEST, 'userid', '' ) );
-			$itemid		= trim( mosGetParam( $_REQUEST, 'Itemid', 0 ) );
-
-			if ( $itemid ){
-				$userid = $itemid;
-			}
+			$userid		= aecGetParam( 'userid' );
 
 			pending( $option, $userid );
 			break;
 
 		case 'repeatpayment':
-			$invoice	= trim( mosGetParam( $_REQUEST, 'invoice', 0 ) );
-			$itemid		= trim( mosGetParam( $_REQUEST, 'Itemid', 0 ) );
-			$first		= trim( mosGetParam( $_REQUEST, 'first', 0 ) );
+			$invoice	= aecGetParam( 'invoice', 0 );
+			$userid		= aecGetParam( 'userid', 0 );
+			$first		= aecGetParam( 'first', 0 );
 
-			repeatInvoice( $option, $invoice, $itemid, $first );
+			repeatInvoice( $option, $invoice, $userid, $first );
 			break;
 
 		case 'cancelpayment':
-			$invoice	= trim( mosGetParam( $_REQUEST, 'invoice', 0 ) );
-			$pending	= trim( mosGetParam( $_REQUEST, 'pending', 0 ) );
-			$itemid		= trim( mosGetParam( $_REQUEST, 'Itemid', 0 ) );
+			$invoice	= aecGetParam( 'invoice', 0 );
+			$pending	= aecGetParam( 'pending', 0 );
+			$userid		= aecGetParam( 'userid', 0 );
 
-			cancelInvoice( $option, $invoice, $pending, $itemid );
+			cancelInvoice( $option, $invoice, $pending, $userid );
 			break;
 
 		case 'planaction':
-			$action	= trim( mosGetParam( $_REQUEST, 'action', 0 ) );
-			$subscr	= trim( mosGetParam( $_REQUEST, 'subscr', '' ) );
+			$action	= aecGetParam( 'action', 0 );
+			$subscr	= aecGetParam( 'subscr' );
 
 			planaction( $option, $action, $subscr );
 			break;
@@ -224,8 +214,8 @@ if ( !empty( $task ) ) {
 
 				processNotification( $option, $processor );
 			} else {
-				$userid		= trim( mosGetParam( $_REQUEST, 'userid', '' ) );
-				$expiration = trim( mosGetParam( $_REQUEST, 'expiration', '' ) );
+				$userid		= aecGetParam( 'userid' );
+				$expiration = aecGetParam( 'expiration' );
 				expired( $option, $userid, $expiration );
 			}
 			break;
@@ -421,15 +411,10 @@ function confirmSubscription( $option )
 {
 	global $mosConfig_absolute_path, $mosConfig_emailpass, $mosConfig_useractivation, $mainframe, $my;
 
-	$userid		= trim( mosGetParam( $_REQUEST, 'userid', 0 ) );
-	$usage		= trim( mosGetParam( $_REQUEST, 'usage', 0 ) );
-	$processor	= trim( mosGetParam( $_REQUEST, 'processor', 0 ) );
-	$username	= trim( mosGetParam( $_REQUEST, 'username', 0 ) );
-
-	// Don't ask. I have no idea why this is needed in some situations.
-	if ( empty( $processor ) && !empty( $_POST["processor"] ) ) {
-		$processor = $_POST["processor"];
-	}
+	$userid		= aecGetParam( 'userid', 0 );
+	$usage		= aecGetParam( 'usage', 0 );
+	$processor	= aecGetParam( 'processor', 0 );
+	$username	= aecGetParam( 'username', 0 );
 
 	if ( ( $usage > 0 ) && !$username && !$userid && !$my->id ) {
 		if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
@@ -699,6 +684,13 @@ function repeatInvoice( $option, $invoice_number, $userid, $first=0 )
 
 	// Only allow a user to access existing and own invoices
 	if ( $invoiceid ) {
+		if ( !isset( $_POST['invoice'] ) ) {
+			$_POST['option']	= $option;
+			$_POST['task']		= 'repeatPayment';
+			$_POST['invoice']	= $invoice_number;
+			$_POST['userid']	= $userid;
+		}
+
 		$invoicefact = new InvoiceFactory( $userid );
 		$invoicefact->touchInvoice( $option, $invoice_number );
 		$invoicefact->checkout( $option, !$first );
@@ -993,7 +985,7 @@ function cancelPayment( $option )
 {
 	global $database, $aecConfig;
 
-	$userid = trim( mosGetParam( $_REQUEST, 'itemnumber', '' ) );
+	$userid = aecGetParam( 'itemnumber' );
 	// The user cancel the payment operation
 	// But user is already created as blocked on database, so we need to delete it
 	$obj = new mosUser( $database );

@@ -127,6 +127,11 @@ define( '_CONFIRM_TOS_ERROR',				'Sie m&uuml;ssen unsere AGBs lesen und akzeptie
 define( '_CONFIRM_COUPON_INFO',				'Falls Sie einen Gutscheincode haben geben Sie ihn bitte auf den nachfolgenden Seiten an, um einen allf&auml;lligen Abzug zu ber&uuml;cksichtigen');
 define( '_CONFIRM_FREETRIAL', 'Kostenlose Testphase');
 
+// --== PROMPT PASSWORD FORM ==--
+define( '_AEC_PROMPT_PASSWORD', 'Aus Sicherheitsgr&uuml;nden m&uuml;ssen Sie ihr Passwort eingeben.');
+define( '_AEC_PROMPT_PASSWORD_WRONG', 'Das Passwort stimmt nicht mit dem &uuml;berein, welches wir in unserer Datenbank f&uuml;r dieses Konto registriert haben. Bitte versuchen Sie es noch einmal.');
+define( '_AEC_PROMPT_PASSWORD_BUTTON', 'Weiter');
+
 // --== CHECKOUT FORM ==--
 define( '_CHECKOUT_TITLE',					'Abschlie&szlig;ssen');
 define( '_CHECKOUT_INFO',					'Die Angaben wurden gespeichert, es ist jetzt erforderlich, dass Sie mit der Bezahlung ihrer getroffenen Auswahl fortfahren.<br />Sollte es im Folgenden Unklarheiten geben, k&ouml;nnen Sie immer zu dieser Seite zur&uuml;ckkehren, indem Sie sich mit ihren Zugangsdaten einw&auml;hlen.');

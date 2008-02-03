@@ -132,6 +132,11 @@ define( '_CONFIRM_TOS_ERROR', 'Veuillez lire et accepter nos conditions d\'utili
 define( '_CONFIRM_COUPON_INFO', 'Si vous avez un code de bon de réduction, vous pourrez le saisir sur la page du r&egrave;glement pour qu\'il soit pris en compte.');
 define( '_CONFIRM_FREETRIAL', 'Free Trial');
 
+// --== PROMPT PASSWORD FORM ==--
+define( '_AEC_PROMPT_PASSWORD', 'For security reasons, you need to put in your password to continue.');
+define( '_AEC_PROMPT_PASSWORD_WRONG', 'The Password you have entered does not match with the one we have registered for you in our database. Please try again.');
+define( '_AEC_PROMPT_PASSWORD_BUTTON', 'Continue');
+
 // --== FORMULAIRE DE PAIEMENT ==--
 define( '_CHECKOUT_TITLE', 'Effectuer votre r&egrave;glement');
 define( '_CHECKOUT_INFO', 'Your Registration has been saved now. On this page, you can complete your payment. <br /> If something goes wrong along the way, you can always come back to this step by logging in to our site with your new details - Our System will give you an option to try your payment again.');

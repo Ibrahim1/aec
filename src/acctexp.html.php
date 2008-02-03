@@ -85,7 +85,7 @@ class HTML_frontEnd
 				if ($invoice) { ?>
 					<p>
 						<?php echo _PENDING_OPENINVOICE; ?>&nbsp;
-						<a href="<?php echo AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice=' . $invoice . '&amp;Itemid=' . $userid ); ?>" title="<?php echo _GOTO_CHECKOUT; ?>"><?php echo _GOTO_CHECKOUT; ?></a>
+						<a href="<?php echo AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice=' . $invoice . '&amp;userid=' . $userid ); ?>" title="<?php echo _GOTO_CHECKOUT; ?>"><?php echo _GOTO_CHECKOUT; ?></a>
 					</p>
 					<?php
 				} ?>
@@ -109,13 +109,13 @@ class HTML_frontEnd
 		$actions =	_PENDING_OPENINVOICE
 		. ' <a href="'
 		.  AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice='
-		. $invoice . '&amp;Itemid=' . $objUser->id ) . '" title="' . _GOTO_CHECKOUT . '">'
+		. $invoice . '&amp;userid=' . $objUser->id ) . '" title="' . _GOTO_CHECKOUT . '">'
 		. _GOTO_CHECKOUT
 		. '</a>'
 		. ', ' . _GOTO_CHECKOUT_CANCEL . ' '
 		. '<a href="'
 		. AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=cancelPayment&amp;invoice='
-		. $invoice . '&amp;Itemid=' . $objUser->id . '&amp;pending=1' )
+		. $invoice . '&amp;userid=' . $objUser->id . '&amp;pending=1' )
 		. '" title="' . _HISTORY_ACTION_CANCEL . '">'
 		. _HISTORY_ACTION_CANCEL
 		. '</a>';
@@ -510,23 +510,26 @@ class Payment_HTML
 		return $html_code;
 	}
 
-	function pending( $option, $var )
+	function promptpassword( $option, $var, $wrong )
 	{
 		global $database, $aecConfig;
-
-		if ( $aecConfig->cfg['customtext_pending'] ) { ?>
-			<p><?php echo $aecConfig->cfg['customtext_pending']; ?></p>
-			<?php
-		} ?>
+		?>
 		<div id="box_pending">
-			<p><?php echo _PENDING_NOINVOICE; ?></p>
+			<p><?php echo _AEC_PROMPT_PASSWORD; ?></p>
+			<?php
+				if ($wrong ) {
+					echo '<p><strong>' . _AEC_PROMPT_PASSWORD_WRONG . '</strong></p>';
+				}
+			?>
 			<div id="upgrade_button">
-				<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=tempAuth', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+				<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 					<input type="password" size="10" class="inputbox" id="password" name="password"/>
-					<input type="hidden" name="option" value="<?php echo $option; ?>" />
-					<input type="hidden" name="userid" value="<?php echo $objUser->id; ?>" />
-					<input type="hidden" name="task" value="renewSubscription" />
-					<input type="submit" class="button" value="<?php echo _PENDING_NOINVOICE_BUTTON;?>" />
+					<?php
+						foreach ( $var as $name => $value ) {
+							echo '<input type="hidden" name="' . $name . '" value="' . $value . '" />';
+						}
+					?>
+					<input type="submit" class="button" value="<?php echo _AEC_PROMPT_PASSWORD_BUTTON;?>" />
 				</form>
 			</div>
 		</div>
@@ -870,13 +873,13 @@ class Payment_HTML
 			$actions =	_CHECKOUT_ERROR_OPENINVOICE
 			. ' <a href="'
 			.  AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice='
-			. $invoice . '&amp;Itemid=' . $objUser->id ) . '" title="' . _GOTO_CHECKOUT . '">'
+			. $invoice . '&amp;userid=' . $objUser->id ) . '" title="' . _GOTO_CHECKOUT . '">'
 			. _GOTO_CHECKOUT
 			. '</a>'
 			. ', ' . _GOTO_CHECKOUT_CANCEL . ' '
 			. '<a href="'
 			. AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=cancelPayment&amp;invoice='
-			. $invoice . '&amp;Itemid=' . $objUser->id . '&amp;pending=1' )
+			. $invoice . '&amp;userid=' . $objUser->id . '&amp;pending=1' )
 			. '" title="' . _HISTORY_ACTION_CANCEL . '">'
 			. _HISTORY_ACTION_CANCEL
 			. '</a>'

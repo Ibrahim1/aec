@@ -16,6 +16,7 @@
 		<filename>style.css</filename>
 		<filename>com_acctexp_language/index.html</filename>
 		<filename>com_acctexp_language/brazilian_portuguese.php</filename>
+		<filename>com_acctexp_language/dutch.php</filename>
 		<filename>com_acctexp_language/english.php</filename>
 		<filename>com_acctexp_language/french.php</filename>
 		<filename>com_acctexp_language/german.php</filename>
@@ -100,9 +101,12 @@
 		<filename>processors/cybermut/index.html</filename>
 		<filename>processors/cybermut/cybermutnotification.php</filename>
 		<filename>processors/com_acctexp_language_processors/index.html</filename>
+		<filename>processors/com_acctexp_language_processors/brazilian_portuguese.php</filename>
+		<filename>processors/com_acctexp_language_processors/dutch.php</filename
 		<filename>processors/com_acctexp_language_processors/english.php</filename>
 		<filename>processors/com_acctexp_language_processors/french.php</filename>
 		<filename>processors/com_acctexp_language_processors/german.php</filename>
+		<filename>processors/com_acctexp_language_processors/germanf.php</filename>
 		<filename>processors/com_acctexp_language_processors/germani.php</filename>
 		<filename>processors/com_acctexp_language_processors/italian.php</filename>
 		<filename>processors/com_acctexp_language_processors/simplified_chinese.php</filename>

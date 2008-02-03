@@ -116,36 +116,49 @@ class metaUser
 
 		if ( $this->hasSubscription ) {
 			$params = $this->objSubscription->getParams();
-
-			if ( isset( $params['tempauth_exptime'] ) && isset( $params['tempauth_ip'] ) ) {
-				if ( ( $params['tempauth_ip'] == $_SERVER['REMOTE_ADDR'] ) && ( $params['tempauth_exptime'] >= time() ) ) {
-					$return = true;
-				}
-			}
 		} else {
 			if ( is_object( $this->cmsUser ) ) {
-				$params = explode( "\n", $this->cmsUser->params );
+				$par = explode( "\n", $this->cmsUser->params );
 
-				$array = array();
-				foreach ( $params as $chunk ) {
+				$params = array();
+				foreach ( $par as $chunk ) {
 					$k = explode( '=', $chunk, 2 );
-					$array[$k[0]] = isset( $k[1] ) ? $k[1] : '';
-				}
-
-				if ( isset( $array['tempauth_exptime'] ) && isset( $array['tempauth_ip'] ) ) {
-					if ( ( $array['tempauth_ip'] == $_SERVER['REMOTE_ADDR'] ) && ( $array['tempauth_exptime'] >= time() ) ) {
-						$return = true;
-					}
+					$params[$k[0]] = isset( $k[1] ) ? trim( $k[1] ) : '';
 				}
 			}
 		}
 
-		return $return;
+		if ( isset( $params['tempauth_exptime'] ) && isset( $params['tempauth_ip'] ) ) {
+			if ( ( $params['tempauth_ip'] == $_SERVER['REMOTE_ADDR'] ) && ( $params['tempauth_exptime'] >= time() ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
-	function setTempAuth()
+	function setTempAuth( $password=false )
 	{
 		global $aecConfig;
+
+		if ( $password !== false ) {
+			if ( strpos( $this->cmsUser->password, ':') === false ) {
+				if ( $this->cmsUser->password != md5( $password ) ) {
+					return false;
+				}
+			} else {
+				// Old password hash storage but authentic ... lets convert it
+				$salt = mosMakePassword(16);
+				$crypt = md5( $password . $salt);
+				$this->cmsUser->password = $crypt.':'.$salt;
+
+				list( $hash, $salt ) = explode(':', $this->cmsUser->password);
+				$cryptpass = md5( $password . $salt );
+				if ( $hash != $cryptpass ) {
+					return false;
+				}
+			}
+		}
 
 		$params = array();
 		$params['tempauth_ip'] = $_SERVER['REMOTE_ADDR'];
@@ -155,18 +168,19 @@ class metaUser
 			$this->objSubscription->addParams( $params );
 		} else {
 			if ( is_object( $this->cmsUser ) ) {
-				$add = strpos( "\n", $this->cmsUser->params ) ? "\n" : '';
+				$add = strpos( $this->cmsUser->params, "\n" ) ? "\n" : '';
 
 				$array = array();
 				foreach ( $params as $name => $value ) {
 					$array[] = $name . "=" . $value;
 				}
 
-				$this->cmsUser->params .= $add . implode( "/n", $array );
+				$this->cmsUser->params .= $add . implode( "\n", $array );print_r($this);exit();
 				$this->cmsUser->check();
 				$this->cmsUser->store();
 			}
 		}
+		return true;
 	}
 
 	function getSecondarySubscriptions()
@@ -3220,14 +3234,12 @@ class InvoiceFactory
 		if ( !is_null( $this->userid ) ) {
 			$query = 'SELECT id'
 			. ' FROM #__users'
-			. ' WHERE id = \'' . $this->userid . '\'';
+			. ' WHERE `id` = \'' . $this->userid . '\'';
 			$database->setQuery( $query );
 
 			if ( !$database->loadResult() ) {
 				$this->userid = null;
 			}
-		} else {
-			$this->userid = null;
 		}
 
 		if ( $this->usage ) {
@@ -3386,6 +3398,7 @@ class InvoiceFactory
 
 		if ( $this->invoice ) {
 			$this->objInvoice->loadInvoiceNumber($this->invoice);
+			$this->objInvoice->computeAmount();
 
 			$this->processor = $this->objInvoice->method;
 			$this->usage = $this->objInvoice->usage;
@@ -3397,14 +3410,13 @@ class InvoiceFactory
 			}
 		} else {
 			$this->objInvoice->create( $this->userid, $this->usage, $this->processor );
+			$this->objInvoice->computeAmount();
 
 			// Reset parameters
 			$this->processor	= $this->objInvoice->method;
 			$this->usage		= $this->objInvoice->usage;
 			$this->invoice		= $this->objInvoice->invoice_number;
 		}
-
-		$this->objInvoice->computeAmount();
 
 		return;
 	}
@@ -3458,6 +3470,37 @@ class InvoiceFactory
 			$this->metaUser = new metaUser( $this->userid );
 			return false;
 		}
+	}
+
+	function checkAuth( $option, $var )
+	{
+		$return = true;
+
+		if ( !is_object( $this->metaUser ) ) {
+			$this->loadMetaUser();
+		}
+
+		if ( empty( $this->authed ) ) {
+			if ( !$this->metaUser->getTempAuth() ) {
+				if ( isset( $var['password'] ) ) {
+					if ( !$this->metaUser->setTempAuth( $var['password'] ) ) {
+						unset( $var['password'] );
+						$this->promptpassword( $option, $var, true );
+						$return = false;
+					}
+				} else {
+					$this->promptpassword( $option, $var );
+					$return = false;
+				}
+			}
+		}
+
+		return $return;
+	}
+
+	function promptpassword( $option, $var, $wrong=false )
+	{
+		Payment_HTML::promptpassword( $option, $var, $wrong );
 	}
 
 	function create( $option, $intro=0, $usage=0, $processor=null, $invoice=0, $passthrough=false )
@@ -3679,20 +3722,13 @@ class InvoiceFactory
 		}
 	}
 
-	function promptpassword( $option, $var )
-	{
-
-	}
-
 	function confirm( $option, $var=array(), $passthrough=false )
 	{
 		global $database, $my, $aecConfig, $mosConfig_absolute_path;
 
-		if ( !$this->authed && !$passthrough ) {
-			$this->loadMetaUser(  );
-
-			if ( !$this->metaUser->getTempAuth() ) {
-				$this->promptpassword( $option, $var );
+		if ( !$passthrough ) {
+			if ( !$this->checkAuth( $option, $var ) ) {
+				return false;
 			}
 		}
 
@@ -3785,7 +3821,7 @@ class InvoiceFactory
 		} else {
 			$this->userid = AECToolbox::saveUserRegistration( $option, $var );
 
-			$this->loadMetaUser();
+			$this->loadMetaUser( false, true );
 			$this->metaUser->setTempAuth();
 		}
 
@@ -3797,7 +3833,9 @@ class InvoiceFactory
 	{
 		global $database, $aecConfig;
 
-		$this->metaUser = new metaUser( $this->userid );
+		if ( !$this->checkAuth( $option, $_POST ) ) {
+			return false;
+		}
 
 		$this->puffer( $option );
 
@@ -3805,8 +3843,7 @@ class InvoiceFactory
 			$repeat = 0;
 		}
 
-		if ( ( strcmp( strtolower( $this->processor ), 'none' ) === 0 )
-		|| ( strcmp( strtolower( $this->processor ), 'free' ) === 0 ) ) {
+		if ( ( strcmp( strtolower( $this->processor ), 'none' ) === 0 ) || ( strcmp( strtolower( $this->processor ), 'free' ) === 0 ) ) {
 			$params = $this->objUsage->getParams();
 
 		 	if ( $params['full_free'] || ( $params['trial_free'] &&
@@ -5154,10 +5191,10 @@ class Subscription extends paramDBTable
 			$expire = $this->expire();
 
 			if ( $expire ) {
-				mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=expired&Itemid=' . $this->userid ) );
+				mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=expired&userid=' . $this->userid ) );
 			}
 		} elseif ( ( strcmp( $this->status, 'Pending' ) === 0 ) || $block ) {
-			mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=pending&Itemid=' . $this->userid ) );
+			mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=pending&userid=' . $this->userid ) );
 		}
 	}
 
@@ -5185,10 +5222,10 @@ class Subscription extends paramDBTable
 			$expire = $this->expire();
 
 			if ( $expire ) {
-				JApplication::redirect( '/index.php?option=com_acctexp&task=expired&Itemid=' . $this->userid );
+				JApplication::redirect( '/index.php?option=com_acctexp&task=expired&userid=' . $this->userid );
 			}
 		} elseif ( ( strcmp( $this->status, 'Pending' ) === 0 ) || $block ) {
-			JApplication::redirect( '/index.php?option=com_acctexp&task=pending&Itemid=' . $this->userid );
+			JApplication::redirect( '/index.php?option=com_acctexp&task=pending&userid=' . $this->userid );
 		}
 	}
 
@@ -5967,7 +6004,7 @@ class AECToolbox
 						}
 					}
 
-					mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=subscribe&Itemid=' . $id ) );
+					mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=subscribe&userid=' . $id ) );
 					return null;
 				}
 			}
