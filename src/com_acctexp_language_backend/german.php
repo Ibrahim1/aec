@@ -687,6 +687,9 @@ define( '_CFG_GENERAL_RECAPTCHA_PRIVATEKEY_DESC', 'Your Private ReCAPTCHA Key.')
 define( '_CFG_GENERAL_RECAPTCHA_PUBLICKEY_NAME', 'Public ReCAPTCHA Key');
 define( '_CFG_GENERAL_RECAPTCHA_PUBLICKEY_DESC', 'Your Public ReCAPTCHA Key.');
 
+define( '_CFG_GENERAL_TEMP_AUTH_EXP_NAME', 'Logged-out Invoice Access');
+define( '_CFG_GENERAL_TEMP_AUTH_EXP_DESC', 'The time (in minutes) that a user is able to access an invoice only by referencing the userid. When that period expires, a password is prompted before allowing access for the same period again.');
+
 define( '_CFG_GENERAL_HEARTBEAT_CYCLE_BACKEND_NAME',			'Heartbeat Zyklus Backend:' );
 define( '_CFG_GENERAL_HEARTBEAT_CYCLE_BACKEND_DESC',			'Heartbeat - Herzklopfen: eine Funktion welche angegebene Funktionen am Leben h&auml;lt. Hier die Anzahl der Stunden angeben welche AEC als Abhorchrythmus nehmen soll um dann die spezifizierten Funktionen auszuf&uuml;hren' );
 define( '_CFG_GENERAL_ENABLE_COUPONS_NAME',				'Gutscheine Aktiviert:' );

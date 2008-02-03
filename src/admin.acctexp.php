@@ -1809,6 +1809,8 @@ function editSettings( $option )
 	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_RECAPTCHA_PRIVATEKEY_NAME, _CFG_GENERAL_RECAPTCHA_PRIVATEKEY_DESC, $aecConfig->cfg['recaptcha_privatekey'], 'recaptcha_privatekey');
 	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_RECAPTCHA_PUBLICKEY_NAME, _CFG_GENERAL_RECAPTCHA_PUBLICKEY_DESC, $aecConfig->cfg['recaptcha_publickey'], 'recaptcha_publickey');
 
+	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_TEMP_AUTH_EXP_NAME, _CFG_GENERAL_TEMP_AUTH_EXP_DESC, $aecConfig->cfg['temp_auth_exp'], 'temp_auth_exp');
+
 	$tab_data[1][] = array( 'editor', _CFG_GENERAL_CUSTOMTEXT_PLANS_NAME, _CFG_GENERAL_CUSTOMTEXT_PLANS_DESC, $aecConfig->cfg['customtext_plans'], 'customtext_plans');
 	$tab_data[1][] = array( 'list', _CFG_GENERAL_CUSTOMTEXT_CONFIRM_KEEPORIGINAL_NAME, _CFG_GENERAL_CUSTOMTEXT_CONFIRM_KEEPORIGINAL_DESC, '0', 'customtext_confirm_keeporiginal');
 	$tab_data[1][] = array( 'editor', _CFG_GENERAL_CUSTOMTEXT_CONFIRM_NAME, _CFG_GENERAL_CUSTOMTEXT_CONFIRM_DESC, $aecConfig->cfg['customtext_confirm'], 'customtext_confirm');
