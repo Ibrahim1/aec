@@ -175,7 +175,7 @@ class metaUser
 					$array[] = $name . "=" . $value;
 				}
 
-				$this->cmsUser->params .= $add . implode( "\n", $array );print_r($this);exit();
+				$this->cmsUser->params .= $add . implode( "\n", $array );
 				$this->cmsUser->check();
 				$this->cmsUser->store();
 			}

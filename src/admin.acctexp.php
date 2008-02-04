@@ -3367,7 +3367,7 @@ function saveCoupon( $option, $type, $apply=0 )
 			$cph->status = true;
 			$new = 1;
 		}
-//print_r($_POST);print_r($cph);exit();
+
 		if ( $cph->status ) {
 			if ( !$new ) {
 				if ( $cph->type != $_POST['type'] ) {
