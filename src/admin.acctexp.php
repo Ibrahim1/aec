@@ -4146,13 +4146,13 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 
 	$n = 'joomlaphp4';
 	$hacks[$n]['name']				=	$v15 ? ( 'authentication.php' ) : ( $cmsname . '.php ' . _AEC_HACK_HACK . ' #4' );
-	$hacks[$n]['desc']				=	$v15 ? _AEC_HACKS_LEGACY_PLUGIN:_AEC_HACKS_SUB_REQUIRED;
+	$hacks[$n]['desc']				=	$v15 ? _AEC_HACKS_LEGACY_PLUGIN : _AEC_HACKS_SUB_REQUIRED;
 	$hacks[$n]['uncondition']		=	'joomlaphp';
 	$hacks[$n]['type']				=	'file';
 
 	switch( $cmsname ) {
 		case 'joomla':
-			$hacks[$n]['filename']	=	$v15 ? ( $mosConfig_absolute_path . '/libraries/joomla/user/authentication.php' ) : ( $mosConfig_absolute_path . '/includes/' . $cmsname . '.php' );
+			$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/libraries/joomla/user/authentication.php' ) : ( $mosConfig_absolute_path . '/includes/' . $cmsname . '.php' );
 			$hacks[$n]['read'] 		=	$v15 ? 'if(empty($response->username)) {' : '// initialize session data';
 			break;
 

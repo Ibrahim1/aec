@@ -308,9 +308,9 @@ function subscribe( $option )
 	$usage		= aecGetParam( 'usage', 0 );
 	$processor	= aecGetParam( 'processor', null );
 	$userid		= aecGetParam( 'userid', 0 );
-	$itemid		= aecGetParam( 'Itemid', 0 );
+	$username	= aecGetParam( 'username', '' );
 
-	if ( isset( $_POST['username'] ) && $usage ) {
+	if ( !empty( $username ) && $usage ) {
 		$query = 'SELECT id'
 		. ' FROM #__users'
 		. ' WHERE username = \'' . $_POST['username'] . '\''
@@ -320,7 +320,7 @@ function subscribe( $option )
 			mosErrorAlert( _REGWARN_INUSE );
 		}
 
-		if ( isset( $_POST['email'] ) ) {
+		if ( !empty( $_POST['email'] ) ) {
 			if ( $mosConfig_uniquemail ) {
 				// check for existing email
 				$query = 'SELECT id'
@@ -340,8 +340,7 @@ function subscribe( $option )
 		if ( $my->id ) {
 			$userid			= $my->id;
 			$passthrough	= false;
-		} elseif ( !empty( $itemid ) && !isset( $_POST['username'] ) ) {
-			$userid			= $itemid;
+		} elseif ( !empty( $userid ) && !isset( $_POST['username'] ) ) {
 			$passthrough	= false;
 		} elseif ( !$userid ) {
 			if ( isset( $_POST['username'] ) ) {

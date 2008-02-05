@@ -1018,7 +1018,7 @@ function joomlaregisterForm($option, $useractivation)
 	<input type="hidden" name="gid" value="0" />
 	<input type="hidden" name="usage" value="<?php echo $_POST['usage'];?>" />
 	<input type="hidden" name="processor" value="<?php echo $_POST['processor'];?>" />
-	<input type="hidden" name="<?php echo JUtility::getToken(); ?>" value="1" />
+	<?php echo JHTML::_( 'form.token' ); ?>
 	</form>
 	<?php
 	} else {

@@ -88,11 +88,36 @@ class plgAuthenticationAECaccess extends JPlugin
 		$verification = AECToolbox::VerifyUser( $credentials['username'] );
 		//$verification = true;
 
-		if ( $verification == true ) {
+		if ( ( $verification === true ) && ( $response->status == JAUTHENTICATE_STATUS_SUCCESS ) ) {
 			$response->status = JAUTHENTICATE_STATUS_SUCCESS;
 		} else {
+			$this->_error = $verification;
 			$response->status = JAUTHENTICATE_STATUS_FAILURE;
 		}
 
+	}
+
+	function onAuthenticateFailure( $credentials, &$response )
+	{
+		global $database;
+
+		$query = 'SELECT id'
+		. ' FROM #__users'
+		. ' WHERE username = \'' . $credentials['username'] . '\''
+		;
+		$database->setQuery( $query );
+		$id = $database->loadResult();
+
+		switch( $this->_error ) {
+			case 'pending':
+			case 'open_invoice':
+				$app =& JFactory::getApplication();
+				$app->redirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=pending&userid=' . $id ) );
+				break;
+			case 'expired':
+				$app =& JFactory::getApplication();
+				$app->redirect( '/index.php?option=com_acctexp&task=expired&userid=' . $id );
+				break;
+		}
 	}
 }

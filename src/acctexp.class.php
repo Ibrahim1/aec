@@ -3242,7 +3242,7 @@ class InvoiceFactory
 			}
 		}
 
-		if ( $this->usage ) {
+		if ( $this->usage && $this->userid ) {
 			$this->verifyUsage();
 		}
 	}
@@ -3427,7 +3427,7 @@ class InvoiceFactory
 			return false;
 		}
 
-		if ( !$this->userid ) {
+		if ( empty( $this->userid ) ) {
 			// Creating a dummy user object
 			$this->metaUser = new metaUser( 0 );
 			$this->metaUser->cmsUser = new stdClass();
@@ -3435,7 +3435,7 @@ class InvoiceFactory
 			$this->metaUser->hasSubscription = false;
 			$this->metaUser->hasExpiration = false;
 
-			if ( $passthrough ) {
+			if ( is_array( $passthrough ) && !empty( $passthrough ) ) {
 				$cpass = $passthrough;
 				unset( $cpass['id'] );
 
@@ -3585,7 +3585,7 @@ class InvoiceFactory
 
 			if ( $plan_params['full_free'] ) {
 				$plans[$i]['gw'][0]					= array();
-				$plans[$i]['gw'][0]['name']			= 'free';
+				$plans[$i]['gw'][0]['name']		= 'free';
 				$plans[$i]['gw'][0]['recurring']	= 0;
 				$plans[$i]['gw'][0]['statement']	= '';
 				$i++;
@@ -3593,7 +3593,7 @@ class InvoiceFactory
 				if ( ( $plan_params['processors'] != '' ) && !is_null( $plan_params['processors'] ) ) {
 					$processors = explode( ';', $plan_params['processors'] );
 
-					if ( !is_null( $this->processor ) ) {
+					if ( !empty( $this->processor ) ) {
 						$processorid = PaymentProcessorHandler::getProcessorIdfromName( $this->processor );
 						if ( in_array( $processorid, $processors ) ) {
 							$processors = array( $processorid );
@@ -3864,7 +3864,7 @@ class InvoiceFactory
 
 		$first = $repeat ? 0 : 1;
 
-		if ( !empty( $this->pp->info['secure'] ) && !isset( $_SERVER['HTTPS'] ) && !$aecConfig->cfg['override_reqssl'] ) {
+		if ( !empty( $this->pp->info['secure'] ) && !( $_SERVER['HTTPS'] == 'on' ) && !$aecConfig->cfg['override_reqssl'] ) {
 		    mosRedirect( AECToolbox::deadsureURL( "/index.php?option=" . $option . "&task=repeatPayment&invoice=" . $this->objInvoice->invoice_number . "&first=" . $first, true ) );
 		    exit();
 		};
@@ -5222,11 +5222,13 @@ class Subscription extends paramDBTable
 			$expire = $this->expire();
 
 			if ( $expire ) {
-				JApplication::redirect( '/index.php?option=com_acctexp&task=expired&userid=' . $this->userid );
+				return 'expired';
 			}
 		} elseif ( ( strcmp( $this->status, 'Pending' ) === 0 ) || $block ) {
-			JApplication::redirect( '/index.php?option=com_acctexp&task=pending&userid=' . $this->userid );
+			return 'pending';
 		}
+
+		return true;
 	}
 
 	function expire( $overridefallback=false )
@@ -6029,7 +6031,7 @@ class AECToolbox
 		$metaUser = new metaUser( $id );
 
 		if ( $metaUser->hasSubscription ) {
-			$metaUser->objSubscription->verify( $metaUser->cmsUser->block );
+			return $metaUser->objSubscription->verify( $metaUser->cmsUser->block );
 		} else {
 			if ( $aecConfig->cfg['require_subscription'] ) {
 				if ( $aecConfig->cfg['entry_plan'] ) {
@@ -6039,9 +6041,19 @@ class AECToolbox
 
 					$metaUser = new metaUser( $id );
 					$metaUser->objSubscription->applyUsage( $aecConfig->cfg['entry_plan'], 'none', 1 );
-					AECToolbox::VerifyUser( $username );
+					return AECToolbox::VerifyUser( $username );
 				} else {
-					return false;
+					$invoices = AECfetchfromDB::InvoiceCountbyUserID( $metaUser->userid );
+
+					if ( $invoices ) {
+						$invoice = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $metaUser->userid );
+
+						if ( $invoice ) {
+							return 'open_invoice';
+						}
+					}
+
+					return 'subscribe';
 				}
 			}
 		}
