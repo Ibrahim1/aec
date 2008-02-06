@@ -380,14 +380,13 @@ function subscribe( $option )
 
 			if ( !empty( $_POST ) ) {
 				$passthrough = array();
-				// We have to support arrays for CB
 				foreach ( $_POST as $ke => $va ) {
 					if ( is_array( $va ) ) {
 						foreach ( $va as $con ) {
-							$passthrough[$ke . '[]'] = $con;
+							$passthrough[] = array( $ke . '[]', $con );
 						}
 					} else {
-						$passthrough[$ke] = $va;
+						$passthrough[] = array( $ke, $va );
 					}
 				}
 			} else {

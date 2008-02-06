@@ -479,8 +479,8 @@ class Payment_HTML
 			. '<input type="hidden" name="userid" value="' . ( $userid ? $userid : 0 ) . '" />' . "\n";
 
 			if ( $passthrough != false ) {
-				foreach ( $passthrough as $key => $value ) {
-					$html_code .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
+				foreach ( $passthrough as $key => $array ) {
+					$html_code .= '<input type="hidden" name="' . $array[0] . '" value="' . $array[1] . '" />' . "\n";
 				}
 			}
 			$html_code .= '</form></div>' . "\n";
@@ -525,8 +525,8 @@ class Payment_HTML
 				<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 					<input type="password" size="10" class="inputbox" id="password" name="password"/>
 					<?php
-						foreach ( $var as $name => $value ) {
-							echo '<input type="hidden" name="' . $name . '" value="' . $value . '" />';
+						foreach ( $var as $name => $array ) {
+							echo '<input type="hidden" name="' . $array[0] . '" value="' . $array[1] . '" />';
 						}
 					?>
 					<input type="submit" class="button" value="<?php echo _AEC_PROMPT_PASSWORD_BUTTON;?>" />
@@ -624,8 +624,8 @@ class Payment_HTML
 							<?php
 						}
 						if ( $passthrough != false ) {
-							foreach ( $passthrough as $key => $value ) { ?>
-								<input type="hidden" name="<?php echo $key; ?>" value="<?php echo $value; ?>" />
+							foreach ( $passthrough as $key => $array ) { ?>
+								<input type="hidden" name="<?php echo $array[0]; ?>" value="<?php echo $array[1]; ?>" />
 								<?php
 							}
 						} ?>
