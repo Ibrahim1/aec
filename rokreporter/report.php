@@ -1,10 +1,11 @@
 <?php
 /**
- * @version		$Id: report.php 1 2007-05-28 13:12:48Z Shiny Black Shoe $
+ * @version		$Id: report.php 2 2008-02-06 13:12:48Z Shiny Black Shoe $
  * @package		RokReporter
  * @copyright	(C) 2007, Shiny Black Shoe. Modified from RokReporter inbuilt reports
  * @license		GNU General Public License
  */
+ //uopdated for AEC releases > 0.12.4.11 which no longer have #__acctexp table
 
 // ensure this file is being included by a parent file
 defined( '_VALID_MOS' ) or die( 'Direct access not allowed' );
@@ -77,9 +78,9 @@ class AEC_subscribers_Report extends Report
 			$query .= $query."#__comprofiler.*, ";
 		}
 
-		$query .= "#__acctexp_subscr.*, #__acctexp.* ";
+		$query .= "#__acctexp_subscr.* ";
 		$query .= "FROM #__users ";
-		$query .= "LEFT JOIN #__acctexp ON #__users.id = #__acctexp.userid ";
+		// $query .= "LEFT JOIN #__acctexp ON #__users.id = #__acctexp.userid ";
 		$query .= "LEFT JOIN #__acctexp_subscr ON #__users.id = #__acctexp_subscr.userid ";
 
 		// Check if CB installed...
