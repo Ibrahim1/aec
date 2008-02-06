@@ -178,9 +178,9 @@ class mi_acl
 		// Always protect last administrator
 		if ( $metaUser->cmsUser->gid >= 24 ) {
 			$query = 'SELECT count(*)'
-			. ' FROM #__core_acl_groups_aro_map'
-			. ' WHERE group_id = \'25\''
-			;
+					. ' FROM #__core_acl_groups_aro_map'
+					. ' WHERE `group_id` = \'25\''
+					;
 			$database->setQuery( $query );
 			if ( $database->loadResult() <= 1) {
 				return false;
@@ -188,18 +188,18 @@ class mi_acl
 		}
 
 		// Get ARO ID for user
-		$query = 'SELECT aro_id'
+		$query = 'SELECT `aro_id`'
 		. ' FROM #__core_acl_aro'
-		. ' WHERE value = \'' . (int) $metaUser->userid . '\''
+		. ' WHERE `value` = \'' . (int) $metaUser->userid . '\''
 		;
 		$database->setQuery( $query );
 		$aro_id = $database->loadResult();
 
 		// Carry out ARO ID -> ACL group mapping
 		$query = 'UPDATE #__core_acl_groups_aro_map'
-		. ' SET group_id = \'' . (int) $params[$section] . '\''
-		. ' WHERE aro_id = \'' . $aro_id . '\''
-		;
+				. ' SET `group_id` = \'' . (int) $params[$section] . '\''
+				. ' WHERE `aro_id` = \'' . $aro_id . '\''
+				;
 		$database->setQuery( $query );
 		$database->query() or die( $database->stderr() );
 
@@ -207,16 +207,16 @@ class mi_acl
 		$gid_name = $acl->get_group_name( $params[$section], 'ARO' );
 
 		$query = 'UPDATE #__users'
-		. ' SET gid = \'' .  (int) $params[$section] . '\', usertype = \'' . $gid_name . '\''
-		. ' WHERE id = \''  . (int) $metaUser->userid . '\''
-		;
+				. ' SET `gid` = \'' .  (int) $params[$section] . '\', `usertype` = \'' . $gid_name . '\''
+				. ' WHERE `id` = \''  . (int) $metaUser->userid . '\''
+				;
 		$database->setQuery( $query );
 		$database->query() or die( $database->stderr() );
 
 		if ( $params['change_session'] ) {
 			$query = 'UPDATE #__session'
-			. ' SET usertype = \'' . $gid_name . '\''
-			. ' WHERE userid = \'' . (int) $metaUser->userid . '\''
+			. ' SET `usertype` = \'' . $gid_name . '\''
+			. ' WHERE `userid` = \'' . (int) $metaUser->userid . '\''
 			;
 			$database->setQuery( $query );
 			$database->query() or die( $database->stderr() );
@@ -224,26 +224,26 @@ class mi_acl
 
 		if ( $params['jaclpluspro'] ) {
 			// Check for main entry
-			$query = 'SELECT group_id'
-			. ' FROM #__jaclplus_user_group'
-			. ' WHERE id = \'' . (int) $metaUser->userid . '\''
-			. ' AND group_type = \'main\''
-			;
+			$query = 'SELECT `group_id`'
+					. ' FROM #__jaclplus_user_group'
+					. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
+					. ' AND `group_type` = \'main\''
+					;
 			$database->setQuery( $query );
 			$groupid = $database->loadResult();
 
 			if ( !empty( $groupid ) ) {
 				$query = 'UPDATE #__jaclplus_user_group'
-				. ' SET group_id = \'' . (int)$params[$section] . '\''
-				. ' WHERE id = \'' . (int) $metaUser->userid . '\''
-				. ' AND group_type = \'main\''
-				;
+						. ' SET `group_id` = \'' . (int)$params[$section] . '\''
+						. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
+						. ' AND `group_type` = \'main\''
+						;
 				$database->setQuery( $query );
 				$database->query() or die( $database->stderr() );
 			} else {
 				$query = 'INSERT INTO #__jaclplus_user_group'
-				. ' VALUES( \'' . (int) $metaUser->userid . '\', \'main\', \'' . (int) $params[$section] . '\' )'
-				;
+						. ' VALUES( \'' . (int) $metaUser->userid . '\', \'main\', \'' . (int) $params[$section] . '\' )'
+						;
 				$database->setQuery( $query );
 				$database->query() or die( $database->stderr() );
 			}
@@ -259,20 +259,20 @@ class mi_acl
 		if ( $params['delete_subgroups'] ) {
 			// Delete sub entries
 			$query = 'DELETE FROM #__jaclplus_user_group'
-			. ' WHERE id = \'' . (int) $metaUser->userid . '\''
-			. ' AND group_type = \'sub\''
-			;
+					. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
+					. ' AND `group_type` = \'sub\''
+					;
 			$database->setQuery( $query );
 			$database->query();
 
 			$groups = array();
 		} else {
 			// Check for sub entries
-			$query = 'SELECT group_id'
-			. ' FROM #__jaclplus_user_group'
-			. ' WHERE id = \'' . (int) $metaUser->userid . '\''
-			. ' AND group_type = \'sub\''
-			;
+			$query = 'SELECT `group_id`'
+					. ' FROM #__jaclplus_user_group'
+					. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
+					. ' AND `group_type` = \'sub\''
+					;
 			$database->setQuery( $query );
 			$groups = $database->loadResultArray();
 		}
@@ -281,10 +281,10 @@ class mi_acl
 			foreach ( $params[$section.'_del'] as $gid ) {
 				if ( in_array( $gid, $groups ) ) {
 					$query = 'DELETE FROM #__jaclplus_user_group'
-					. ' WHERE id = \'' . (int) $metaUser->userid . '\''
-					. ' AND group_type = \'sub\''
-					. ' AND group_id = \'' . (int) $gid . '\''
-					;
+							. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
+							. ' AND `group_type` = \'sub\''
+							. ' AND `group_id` = \'' . (int) $gid . '\''
+							;
 					$database->setQuery( $query );
 					$database->query() or die( $database->stderr() );
 				}
@@ -295,8 +295,8 @@ class mi_acl
 			foreach ( $params[$section] as $gid ) {
 				if ( !in_array( $gid, $groups ) ) {
 					$query = 'INSERT INTO #__jaclplus_user_group'
-					. ' VALUES( \'' . (int) $metaUser->userid . '\', \'sub\', \'' . $gid . '\' )'
-					;
+							. ' VALUES( \'' . (int) $metaUser->userid . '\', \'sub\', \'' . $gid . '\' )'
+							;
 					$database->setQuery( $query );
 					$database->query() or die( $database->stderr() );
 				}

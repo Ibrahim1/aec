@@ -1106,6 +1106,9 @@ define( '_REWRITE_AREA_USER', 'User Account Related');
 define( '_REWRITE_KEY_USER_ID', 'User Account ID');
 define( '_REWRITE_KEY_USER_USERNAME', 'Username');
 define( '_REWRITE_KEY_USER_NAME', 'Name');
+define( '_REWRITE_KEY_USER_FIRST_NAME', 'First Name');
+define( '_REWRITE_KEY_USER_FIRST_FIRST_NAME', 'First First Name');
+define( '_REWRITE_KEY_USER_LAST_NAME', 'Last Name');
 define( '_REWRITE_KEY_USER_EMAIL', 'E-Mail Address');
 define( '_REWRITE_KEY_USER_ACTIVATIONCODE', 'Activation Code');
 define( '_REWRITE_KEY_USER_ACTIVATIONLINK', 'Activation Link');
@@ -1130,6 +1133,12 @@ define( '_REWRITE_KEY_PLAN_DESC', 'Description');
 define( '_REWRITE_AREA_CMS', 'CMS Related');
 define( '_REWRITE_KEY_CMS_ABSOLUTE_PATH', 'Absolute path to cms directory');
 define( '_REWRITE_KEY_CMS_LIVE_SITE', 'Your Site URL');
+
+define( '_REWRITE_AREA_SYSTEM', 'System Related');
+define( '_REWRITE_KEY_SYSTEM_TIMESTAMP_NAME', 'Timestamp (Frontend Formatting)');
+define( '_REWRITE_KEY_SYSTEM_TIMESTAMP_BACKEND_NAME', 'Timestamp (Backend Formatting)');
+define( '_REWRITE_KEY_SYSTEM_SERVER_TIMESTAMP_NAME', 'Server Timestamp (Frontend Formatting)');
+define( '_REWRITE_KEY_SYSTEM_SERVER_TIMESTAMP_BACKEND_NAME', 'Server Timestamp (Backend Formatting)');
 
 define( '_REWRITE_AREA_INVOICE', 'Invoice Related');
 define( '_REWRITE_KEY_INVOICE_ID', 'Invoice ID');

@@ -28,9 +28,9 @@ class mi_fireboard
 	{
 		global $database;
 
-		$query = 'SELECT id, title'
-	 	. ' FROM #__fb_groups'
-	 	;
+		$query = 'SELECT `id`, `title`'
+			 	. ' FROM #__fb_groups'
+			 	;
 	 	$database->setQuery( $query );
 	 	$groups = $database->loadObjectList();
 
@@ -73,14 +73,14 @@ class mi_fireboard
 				foreach ( $userlist as $userid ) {
 					if ( $database->loadResult() ) {
 						$query = 'UPDATE #__fb_users'
-						. ' SET group_id = \'' . $params['group'] . '\''
-						. ' WHERE userid = \'' . $userid . '\''
-						;
+								. ' SET `group_id` = \'' . $params['group'] . '\''
+								. ' WHERE `userid` = \'' . $userid . '\''
+								;
 					} else {
 						$query = 'INSERT INTO #__fb_users'
-						. ' ( `group_id` , `userid` )'
-						. ' VALUES (\'' . $params['group'] . '\', \'' . $userid . '\')'
-						;
+								. ' ( `group_id` , `userid` )'
+								. ' VALUES (\'' . $params['group'] . '\', \'' . $userid . '\')'
+								;
 					}
 				}
 			}
@@ -97,11 +97,9 @@ class mi_fireboard
 
 		if ($params['set_group_exp']) {
 			$query = 'UPDATE #__fb_users'
-			. ' SET group_id = \'' . $params['group_exp'] . '\''
-			. ' WHERE userid = \'' . $metaUser->userid . '\''
-			;
-
-			// Carry out query
+				. ' SET `group_id` = \'' . $params['group_exp'] . '\''
+				. ' WHERE `userid` = \'' . $metaUser->userid . '\''
+				;
 			$database->setQuery( $query );
 			$database->query();
 		}
@@ -115,23 +113,23 @@ class mi_fireboard
 
 		if ( $params['set_group'] ) {
 			// Check if exists - users only appear in FB users table normally when they have posted
-			$query = 'SELECT group_id'
-			. ' FROM #__fb_users'
-			. ' WHERE userid = \'' . $metaUser->userid . '\''
-			;
+			$query = 'SELECT `group_id`'
+					. ' FROM #__fb_users'
+					. ' WHERE `userid` = \'' . $metaUser->userid . '\''
+					;
 			$database->setQuery( $query );
 
 			// If already an entry exists -> update, if not -> create
 			if ( $database->loadResult() ) {
 				$query = 'UPDATE #__fb_users'
-				. ' SET group_id = \'' . $params['group'] . '\''
-				. ' WHERE userid = \'' . $metaUser->userid . '\''
-				;
+						. ' SET `group_id` = \'' . $params['group'] . '\''
+						. ' WHERE `userid` = \'' . $metaUser->userid . '\''
+						;
 			} else {
 				$query = 'INSERT INTO #__fb_users'
-				. ' ( `group_id` , `userid` )'
-				. ' VALUES (\'' . $params['group'] . '\', \'' . $metaUser->userid . '\')'
-				;
+						. ' ( `group_id` , `userid` )'
+						. ' VALUES (\'' . $params['group'] . '\', \'' . $metaUser->userid . '\')'
+						;
 			}
 
 			// Carry out query

@@ -54,9 +54,9 @@ class mi_remository
 	{
 		global $database;
 
-		$query = 'SELECT group_id, group_name, group_description'
-	 	. ' FROM #__mbt_group'
-	 	;
+		$query = 'SELECT `group_id`, `group_name`, `group_description`'
+			 	. ' FROM #__mbt_group'
+			 	;
 	 	$database->setQuery( $query );
 	 	$groups = $database->loadObjectList();
 
@@ -65,12 +65,12 @@ class mi_remository
 			$sg[] = mosHTML::makeOption( $group->group_id, $group->group_name . ' - '
 			. substr( strip_tags( $group->group_name ), 0, 30 ) );
 		}
-		
+
  		$del_opts = array();
 		$del_opts[0] = mosHTML::makeOption ("No", "Just apply group below."); // Should probably be langauge file defined?
 		$del_opts[1] = mosHTML::makeOption ("All", "Delete ALL, then apply group below.");
 		$del_opts[2] = mosHTML::makeOption ("Set","Delete Group Set on Application, then apply group below.");
-		
+
         $settings = array();
 		$settings['add_downloads']		= array( 'inputA' );
 		$settings['set_downloads']		= array( 'inputA' );
@@ -133,26 +133,25 @@ class mi_remository
 
  		if ( $params['delete_on_exp']=="Set" ) {
  			$query = 'DELETE FROM #__mbt_group_member'
- 			. ' WHERE member_id = \'' . $metaUser->userid.'\' AND group_id = \'' .$params['group'].'\''
- 			;
- 			$database->setQuery( $query );		
+		 			. ' WHERE `member_id` = \'' . $metaUser->userid.'\''
+		 			. ' AND `group_id` = \'' .$params['group'].'\''
+		 			;
+ 			$database->setQuery( $query );
 		}
 
 		if ( $params['delete_on_exp']=="All" ) {
  			$query = 'DELETE FROM #__mbt_group_member'
- 			. ' WHERE member_id = \'' . $metaUser->userid.'\''
- 			;
+		 			. ' WHERE `member_id` = \'' . $metaUser->userid.'\''
+		 			;
  			$database->setQuery( $query );
-			}
-		
-
+		}
 
 		if ($params['set_group_exp']) {
 			// Check if exists
-			$query = 'SELECT group_id'
-			. ' FROM #__mbt_group_member'
-			. ' WHERE member_id = \'' . $metaUser->userid . '\''
-			;
+			$query = 'SELECT `group_id`'
+					. ' FROM #__mbt_group_member'
+					. ' WHERE `member_id` = \'' . $metaUser->userid . '\''
+					;
 			$database->setQuery( $query );
 
 			$groups = $database->loadResultArray();
@@ -164,7 +163,6 @@ class mi_remository
 				. ' ( `group_id` , `member_id` )'
 				. ' VALUES (\'' . $params['group_exp'] . '\', \'' . $metaUser->userid . '\')'
 				;
-
 				$database->setQuery( $query );
 				$database->query();
 			}
@@ -191,10 +189,10 @@ class mi_remository
 
 		if ( $params['set_group'] ) {
 			// Check if exists
-			$query = 'SELECT group_id'
-			. ' FROM #__mbt_group_member'
-			. ' WHERE member_id = \'' . $metaUser->userid . '\''
-			;
+			$query = 'SELECT `group_id`'
+					. ' FROM #__mbt_group_member'
+					. ' WHERE `member_id` = \'' . $metaUser->userid . '\''
+					;
 			$database->setQuery( $query );
 
 			$groups = $database->loadResultArray();
@@ -203,10 +201,9 @@ class mi_remository
 			// If already an entry exists -> update, if not -> create
 			if ( !in_array( $params['group'], $groups ) ) {
 				$query = 'INSERT INTO #__mbt_group_member'
-				. ' ( `group_id` , `member_id` )'
-				. ' VALUES (\'' . $params['group'] . '\', \'' . $metaUser->userid . '\')'
-				;
-
+						. ' ( `group_id` , `member_id` )'
+						. ' VALUES (\'' . $params['group'] . '\', \'' . $metaUser->userid . '\')'
+						;
 				$database->setQuery( $query );
 				$database->query();
 			}
@@ -253,10 +250,10 @@ class remository_restriction extends mosDBTable {
 	{
 		global $database;
 
-		$query = 'SELECT id'
-		. ' FROM #__acctexp_mi_remository'
-		. ' WHERE userid = \'' . $userid . '\''
-		;
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_mi_remository'
+				. ' WHERE `userid` = \'' . $userid . '\''
+				;
 		$database->setQuery( $query );
 		return $database->loadResult();
 	}

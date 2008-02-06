@@ -27,8 +27,9 @@ class mi_joomlauser
 
 		if ( $params['activate'] ) {
 			$query = 'UPDATE #__users'
-			.' SET block = \'0\', activation = \'\''
-			.' WHERE id = \'' . (int) $metaUser->userid . '\'';
+					.' SET `block` = \'0\', `activation` = \'\''
+					.' WHERE `id` = \'' . (int) $metaUser->userid . '\''
+					;
 			$database->setQuery( $query );
 			$database->query() or die( $database->stderr() );
 		}

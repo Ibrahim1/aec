@@ -68,12 +68,12 @@ class mi_docman
 			$sg[] = mosHTML::makeOption( $group->groups_id, $group->groups_name . ' - '
 			. substr( strip_tags( $group->groups_description ), 0, 30 ) );
 		}
-		
+
  		$del_opts = array();
 		$del_opts[0] = mosHTML::makeOption ("No", "Just apply group below."); // Should probably be langauge file defined?
 		$del_opts[1] = mosHTML::makeOption ("All", "Delete ALL, then apply group below.");
 		$del_opts[2] = mosHTML::makeOption ("Set","Delete Group Set on Application, then apply group below.");
-        
+
         $settings = array();
 		$settings['add_downloads']		= array( 'inputA' );
 		$settings['set_downloads']		= array( 'inputA' );
@@ -219,19 +219,18 @@ class mi_docman
 	{
 		global $database;
 
-		$query = 'SELECT groups_id'
-		. ' FROM #__docman_groups'
-		;
+		$query = 'SELECT `groups_id`'
+				. ' FROM #__docman_groups'
+				;
 		$database->setQuery( $query );
 		$ids = $database->loadResultArray();
 
 		$groups = array();
 		foreach ( $ids as $groupid ) {
-			$query = 'SELECT groups_members'
-			. ' FROM #__docman_groups'
-			. ' WHERE groups_id = \'' . $groupid . '\''
-			;
-
+			$query = 'SELECT `groups_members`'
+					. ' FROM #__docman_groups'
+					. ' WHERE `groups_id` = \'' . $groupid . '\''
+					;
 			$database->setQuery( $query );
 			$users = explode( ',', $database->loadResult() );
 
@@ -249,11 +248,10 @@ class mi_docman
 
 		$this->DeleteUserFromGroup( $userid, $groupid );
 
-		$query = 'SELECT groups_members'
-		. ' FROM #__docman_groups'
-		. ' WHERE groups_id = \'' . $groupid . '\''
-		;
-
+		$query = 'SELECT `groups_members`'
+			. ' FROM #__docman_groups'
+			. ' WHERE `groups_id` = \'' . $groupid . '\''
+			;
 		$database->setQuery( $query );
 		$users = explode( ',', $database->loadResult() );
 
@@ -269,10 +267,9 @@ class mi_docman
 		}
 
 		$query = 'UPDATE #__docman_groups'
-		. ' SET groups_members = \'' . implode( ',', $users ) . '\''
-		. ' WHERE groups_id = \'' . $groupid . '\''
-		;
-
+			. ' SET `groups_members` = \'' . implode( ',', $users ) . '\''
+			. ' WHERE `groups_id` = \'' . $groupid . '\''
+			;
 		$database->setQuery( $query );
 		$database->query();
 
@@ -283,11 +280,10 @@ class mi_docman
 	{
 		global $database;
 
-		$query = 'SELECT groups_members'
-		. ' FROM #__docman_groups'
-		. ' WHERE groups_id = \'' . $groupid . '\''
-		;
-
+		$query = 'SELECT `groups_members`'
+			. ' FROM #__docman_groups'
+			. ' WHERE `groups_id` = \'' . $groupid . '\''
+			;
 		$database->setQuery( $query );
 		$users = explode( ',', $database->loadResult() );
 
@@ -305,10 +301,9 @@ class mi_docman
 			}
 
 			$query = 'UPDATE #__docman_groups'
-			. ' SET groups_members = \'' . implode( ',', $users ) . '\''
-			. ' WHERE groups_id = \'' . $groupid . '\''
-			;
-
+				. ' SET `groups_members` = \'' . implode( ',', $users ) . '\''
+				. ' WHERE `groups_id` = \'' . $groupid . '\''
+				;
 			$database->setQuery( $query );
 			$database->query();
 
@@ -336,10 +331,10 @@ class docman_restriction extends mosDBTable {
 	function getIDbyUserID( $userid ) {
 		global $database;
 
-		$query = 'SELECT id'
-		. ' FROM #__acctexp_mi_docman'
-		. ' WHERE userid = \'' . $userid . '\''
-		;
+		$query = 'SELECT `id`'
+			. ' FROM #__acctexp_mi_docman'
+			. ' WHERE `userid` = \'' . $userid . '\''
+			;
 		$database->setQuery( $query );
 		return $database->loadResult();
 	}

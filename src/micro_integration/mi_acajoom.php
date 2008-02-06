@@ -26,9 +26,9 @@ class mi_acajoom
 	{
 		global $database;
 
-		$query = 'SELECT id, list_name, list_type'
-		. ' FROM #__acajoom_lists'
-		;
+		$query = 'SELECT `id`, `list_name`, `list_type`'
+				. ' FROM #__acajoom_lists'
+				;
 	 	$database->setQuery( $query );
 	 	$lists = $database->loadObjectList();
 
@@ -83,9 +83,9 @@ class mi_acajoom
 		$user->load( $userid );
 
 		$query  = 'INSERT INTO #__acajoom_subscribers'
-		. ' (user_id, name, email, receive_html, confirmed, blacklist, timezone, language_iso, subscribe_date, params)'
-		. ' VALUES(\'' . $userid . '\', \'' . $user->name . '\', \'' . $user->email . '\', \'1\', \'1\', \'0\', \'00:00:00\', \'eng\', \'' . date( 'Y-m-d H:i:s' ) . '\', \'\' )'
-		;
+				. ' (user_id, name, email, receive_html, confirmed, blacklist, timezone, language_iso, subscribe_date, params)'
+				. ' VALUES(\'' . $userid . '\', \'' . $user->name . '\', \'' . $user->email . '\', \'1\', \'1\', \'0\', \'00:00:00\', \'eng\', \'' . date( 'Y-m-d H:i:s' ) . '\', \'\' )'
+				;
 		$database->setQuery( $query );
 		$database->query();
 	}
@@ -93,10 +93,11 @@ class mi_acajoom
 	function hasList( $subscriber_id, $listid )
 	{
 		global $database;
-		$query = 'SELECT id'
-		. ' FROM #__acajoom_queue'
-		. ' WHERE subscriber_id = \'' . $subscriber_id . '\' AND list_id = \'' . $listid . '\''
-		;
+		$query = 'SELECT `id`'
+				. ' FROM #__acajoom_queue'
+				. ' WHERE `subscriber_id` = \'' . $subscriber_id . '\''
+				. ' AND `list_id` = \'' . $listid . '\''
+				;
 		$database->setQuery( $query );
 		if ( $database->loadResult() ) {
 			return true;
@@ -108,10 +109,10 @@ class mi_acajoom
 	function getSubscriberID( $userid )
 	{
 		global $database;
-		$query = 'SELECT id'
-		. ' FROM #__acajoom_subscribers'
-		. ' WHERE user_id = \'' . $userid . '\''
-		;
+		$query = 'SELECT `id`'
+				. ' FROM #__acajoom_subscribers'
+				. ' WHERE `user_id` = \'' . $userid . '\''
+				;
 		$database->setQuery( $query );
 		return $database->loadResult();
 	}
@@ -121,9 +122,9 @@ class mi_acajoom
 		global $database;
 
 		$query  = 'INSERT INTO #__acajoom_queue'
-		. ' (type, subscriber_id, list_id, mailing_id, issue_nb, send_date, suspend, delay, acc_level, published, params)'
-		. ' VALUES(\'1\', \'' . $subscriber_id . '\', \'' . $list_id . '\', \'0\', \'0\', \'0000-00-00 00:00:00\', \'0\', \'0\', \'0\', \'0\', \'\' )'
-		;
+				. ' (type, subscriber_id, list_id, mailing_id, issue_nb, send_date, suspend, delay, acc_level, published, params)'
+				. ' VALUES(\'1\', \'' . $subscriber_id . '\', \'' . $list_id . '\', \'0\', \'0\', \'0000-00-00 00:00:00\', \'0\', \'0\', \'0\', \'0\', \'\' )'
+				;
 		$database->setQuery( $query );
 		return $database->loadResult();
 	}
@@ -132,8 +133,9 @@ class mi_acajoom
 	{
 		global $database;
 		$query = 'DELETE FROM #__acajoom_queue'
-		. ' WHERE subscriber_id = \'' . $subscriber_id . '\' AND list_id = \'' . $list_id . '\''
-		;
+				. ' WHERE `subscriber_id` = \'' . $subscriber_id . '\''
+				. ' AND `list_id` = \'' . $list_id . '\''
+				;
 		$database->setQuery( $query );
 		$database->query();
 	}

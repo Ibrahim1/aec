@@ -268,10 +268,10 @@ class apachepw extends mosDBTable
 	{
 		global $database;
 
-		$query = 'SELECT id'
-		. ' FROM #__acctexp_mi_htaccess_apachepw'
-		. ' WHERE userid = \'' . $userid . '\''
-		;
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_mi_htaccess_apachepw'
+				. ' WHERE `userid` = \'' . $userid . '\''
+				;
 		$database->setQuery( $query );
 		return $database->loadResult();
 	}

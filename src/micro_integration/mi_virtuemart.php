@@ -25,9 +25,9 @@ class mi_virtuemart
 	{
 		global $database;
 
-		$query = 'SELECT shopper_group_id, shopper_group_name'
-		. ' FROM #__vm_shopper_group'
-		;
+		$query = 'SELECT `shopper_group_id`, `shopper_group_name`'
+				. ' FROM #__vm_shopper_group'
+				;
 	 	$database->setQuery( $query );
 	 	$shopper_groups = $database->loadObjectList();
 
@@ -117,10 +117,10 @@ class mi_virtuemart
 	{
 		global $database;
 
-		$query  = 'SELECT user_id' // Jonathan Appleton changed this from id to user_id - good find indeed!
-		. ' FROM #__vm_user_info'
-		. ' WHERE user_id = \'' . $userid . '\''
-		;
+		$query = 'SELECT `user_id`' // Jonathan Appleton changed this from id to user_id - good find indeed!
+				. ' FROM #__vm_user_info'
+				. ' WHERE vuser_id` = \'' . $userid . '\''
+				;
 		$database->setQuery( $query );
 		return $database->loadResult();
 	}
@@ -129,10 +129,10 @@ class mi_virtuemart
 	{
 		global $database;
 
-		$query  = 'UPDATE #__vm_shopper_vendor_xref'
-		. ' SET shopper_group_id = \'' . $shoppergroup . '\''
-		. ' WHERE user_id = \'' . $userid . '\''
-		;
+		$query = 'UPDATE #__vm_shopper_vendor_xref'
+				. ' SET `shopper_group_id` = \'' . $shoppergroup . '\''
+				. ' WHERE `user_id` = \'' . $userid . '\''
+				;
 		$database->setQuery( $query );
 		$database->query();
 	}
@@ -170,26 +170,26 @@ class mi_virtuemart
 			$inum =	strtolower( substr( base64_encode( md5( rand() ) ), 0, 32 ) );
 			// Check if already exists
 			$query = 'SELECT count(*)'
-			. ' FROM #__vm_user_info'
-			. ' WHERE user_info_id = \'' . $inum . '\''
-			;
+					. ' FROM #__vm_user_info'
+					. ' WHERE `user_info_id` = \'' . $inum . '\''
+					;
 			$database->setQuery( $query );
 			$numberofrows = $database->loadResult();
 		}
 
 		// Create Useraccount
 		$query  = 'INSERT INTO #__vm_user_info'
-		. ' (user_info_id, user_id, address_type, last_name, first_name, middle_name, user_email, cdate, mdate, perms, bank_account_type)'
-		. ' VALUES(\'' . $inum . '\', \'' . $userid . '\', \'BT\', \'' . $lastname . '\', \'' . $firstname . '\', \'' . $middlename . '\', \'' . $metaUser->cmsUser->email . '\', \'' . time() . '\', \'' . time() . '\', \'shopper\', \'Checking\')'
-		;
+				. ' (user_info_id, user_id, address_type, last_name, first_name, middle_name, user_email, cdate, mdate, perms, bank_account_type)'
+				. ' VALUES(\'' . $inum . '\', \'' . $userid . '\', \'BT\', \'' . $lastname . '\', \'' . $firstname . '\', \'' . $middlename . '\', \'' . $metaUser->cmsUser->email . '\', \'' . time() . '\', \'' . time() . '\', \'shopper\', \'Checking\')'
+				;
 		$database->setQuery( $query );
 		$database->query();
 
 		// Create Shopper -ShopperGroup - Relationship
 		$query  = 'INSERT INTO #__vm_shopper_vendor_xref'
-		. ' (user_id, shopper_group_id)'
-		. ' VALUES(\'' . $userid . '\', \'' . $shoppergroup . '\')'
-		;
+				. ' (user_id, shopper_group_id)'
+				. ' VALUES(\'' . $userid . '\', \'' . $shoppergroup . '\')'
+				;
 		$database->setQuery( $query );
 		$database->query();
 	}

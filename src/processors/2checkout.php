@@ -113,16 +113,16 @@ class processor_2checkout extends POSTprocessor
 
 	function parseNotification( $post, $cfg )
 	{
-		$description			= $post['cart_order_id'];
-		$key					= $post['key'];
-		$total					= $post['total'];
-		$userid					= $post['cust_id'];
-	    $invoice_number			= $post['invoice_number'];
-	    $order_number			= $post['order_number'];
-		$username				= $post['username'];
-		$name					= $post['name'];
-		$planid					= $post['planid'];
-		$name					= $post['name'];
+		$description	= $post['cart_order_id'];
+		$key			= $post['key'];
+		$total			= $post['total'];
+		$userid			= $post['cust_id'];
+	    $invoice_number	= $post['invoice_number'];
+	    $order_number	= $post['order_number'];
+		$username		= $post['username'];
+		$name			= $post['name'];
+		$planid			= $post['planid'];
+		$name			= $post['name'];
 
 		$response = array();
 		$response['invoice'] = $invoice_number;
@@ -133,14 +133,14 @@ class processor_2checkout extends POSTprocessor
 	function validateNotification( $response, $post, $cfg, $invoice )
 	{
 		if ($cfg['testmode']) {
-			$string_to_hash	= $cfg['secret_word'].$cfg['sid']."1".$total;
+			$string_to_hash	= $cfg['secret_word'].$cfg['sid']."1".$post['total'];
 		} else {
-			$string_to_hash	= $cfg['secret_word'].$cfg['sid'].$order_number.$total;
+			$string_to_hash	= $cfg['secret_word'].$cfg['sid'].$post['order_number'].$post['total'];
 		}
 
 		$check_key		= strtoupper(md5($string_to_hash));
 
-		$response['valid'] = (strcmp($check_key, $key) == 0);
+		$response['valid'] = (strcmp($check_key, $post['key']) == 0);
 
 		return $response;
 	}

@@ -28,9 +28,9 @@ class mi_juga
 	{
 		global $database;
 
-		$query = 'SELECT id, title, description'
-	 	. ' FROM #__juga_groups'
-	 	;
+		$query = 'SELECT `id`, `title`, `description`'
+			 	. ' FROM #__juga_groups'
+			 	;
 	 	$database->setQuery( $query );
 	 	$groups = $database->loadObjectList();
 
@@ -159,11 +159,11 @@ class mi_juga
 		global $database;
 
 		// Check user is not already a member of the group.
-		$query = 'SELECT user_id'
-		. ' FROM #__juga_u2g'
-		. ' WHERE group_id = \'' . $groupid . '\' AND user_id = \''.$userid . '\''
-		;
-
+		$query = 'SELECT `user_id`'
+				. ' FROM #__juga_u2g'
+				. ' WHERE `group_id` = \'' . $groupid . '\''
+				. ' AND `user_id` = \''.$userid . '\''
+				;
 		$database->setQuery( $query );
 		$user = $database->loadResult();
 
@@ -171,9 +171,8 @@ class mi_juga
 			// then the user is not already a member of this group and can be set
 
 			$query = 'INSERT INTO #__juga_u2g'
-			. ' SET group_id = \'' . $groupid . '\', user_id = \''.$userid . '\''
-			;
-
+					. ' SET `group_id` = \'' . $groupid . '\', `user_id` = \''.$userid . '\''
+					;
 			$database->setQuery( $query );
 			$database->query();
 
@@ -188,11 +187,11 @@ class mi_juga
 		global $database;
 
 		$query = 'DELETE FROM #__juga_u2g'
-		. ' WHERE user_id = \''. $userid . '\''
-		;
+				. ' WHERE `user_id` = \''. $userid . '\''
+				;
 
 		if ( !empty( $groupid ) ) {
-			$query .= ' AND group_id = \''. $groupid . '\'';
+			$query .= ' AND `group_id` = \''. $groupid . '\'';
 		}
 
 		$database->setQuery( $query );

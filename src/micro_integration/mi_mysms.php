@@ -51,8 +51,7 @@ class mi_mysms
 
 		if ( !empty( $params['disable_exp'] ) ) {
 			// unpublish the user
-			$query = 'UPDATE' .
-					' #__mysms_joomlauser' .
+			$query = 'UPDATE #__mysms_joomlauser' .
 					' SET `status` = \'0\'' .
 					' WHERE `userid` = \'' . $metaUser->userid . '\'' .
 					' LIMIT 1';

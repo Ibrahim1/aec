@@ -31,10 +31,11 @@ class mi_communitybuilder
 		$settings['set_fields']		= array( 'list_yesno' );
 		$settings['set_fields_exp']	= array( 'list_yesno' );
 
-		$query = 'SELECT name, title'
+		$query = 'SELECT `name`, `title`'
 				. ' FROM #__comprofiler_fields'
 				. ' WHERE `table` != \'#__users\''
-				. ' AND name != \'NA\'';
+				. ' AND `name` != \'NA\''
+				;
 		$database->setQuery( $query );
 		$objects = $database->loadObjectList();
 
@@ -63,8 +64,9 @@ class mi_communitybuilder
 
 		if( $params['approve'] ) {
 			$query = 'UPDATE #__comprofiler'
-			.' SET approved = \'1\''
-			.' WHERE user_id = \'' . (int) $metaUser->userid . '\'';
+					.' SET `approved` = \'1\''
+					.' WHERE `user_id` = \'' . (int) $metaUser->userid . '\''
+					;
 			$database->setQuery( $query );
 			$database->query() or die( $database->stderr() );
 		}
@@ -72,10 +74,11 @@ class mi_communitybuilder
 		if ( $params['set_fields'] ) {
 			$metaUser = new metaUser( $metaUser->userid );
 
-			$query = 'SELECT name, title'
+			$query = 'SELECT `name`, `title`'
 					. ' FROM #__comprofiler_fields'
 					. ' WHERE `table` != \'#__users\''
-					. ' AND name != \'NA\'';
+					. ' AND `name` != \'NA\''
+					;
 			$database->setQuery( $query );
 			$objects = $database->loadObjectList();
 
@@ -97,7 +100,8 @@ class mi_communitybuilder
 
 				$query = 'UPDATE #__comprofiler'
 						. ' SET ' . implode( ', ', $alterstring )
-						. ' WHERE user_id = \'' . (int) $metaUser->userid . '\'';
+						. ' WHERE `user_id` = \'' . (int) $metaUser->userid . '\''
+						;
 				$database->setQuery( $query );
 				$database->query() or die( $database->stderr() );
 			}
@@ -110,8 +114,9 @@ class mi_communitybuilder
 
 		if( $params['unapprove_exp'] ) {
 			$query = 'UPDATE #__comprofiler'
-			.' SET approved = \'0\''
-			.' WHERE user_id = \'' . (int) $metaUser->userid . '\'';
+					.' SET `approved` = \'0\''
+					.' WHERE `user_id` = \'' . (int) $metaUser->userid . '\''
+					;
 			$database->setQuery( $query );
 			$database->query() or die( $database->stderr() );
 		}
@@ -119,10 +124,11 @@ class mi_communitybuilder
 		if ( $params['set_fields_exp'] ) {
 			$metaUser = new metaUser( $metaUser->userid );
 
-			$query = 'SELECT name, title'
+			$query = 'SELECT `name`, `title`'
 					. ' FROM #__comprofiler_fields'
 					. ' WHERE `table` != \'#__users\''
-					. ' AND name != \'NA\'';
+					. ' AND `name` != \'NA\''
+					;
 			$database->setQuery( $query );
 			$objects = $database->loadObjectList();
 
@@ -136,15 +142,16 @@ class mi_communitybuilder
 				$alterstring = array();
 				foreach ( $changes as $name => $value ) {
 					if ( strcmp( $value, 'NULL' ) === 0 ) {
-						$alterstring[] = $name . ' = NULL';
+						$alterstring[] = '`' . $name . '`' . ' = NULL';
 					} else {
-						$alterstring[] = $name . ' = \'' . AECToolbox::rewriteEngine( $value, $metaUser, $plan ) . '\'';
+						$alterstring[] = '`' . $name . '`' . ' = \'' . AECToolbox::rewriteEngine( $value, $metaUser, $plan ) . '\'';
 					}
 				}
 
 				$query = 'UPDATE #__comprofiler'
 						. ' SET ' . implode( ', ', $alterstring )
-						. ' WHERE user_id = \'' . (int) $metaUser->userid . '\'';
+						. ' WHERE `user_id` = \'' . (int) $metaUser->userid . '\''
+						;
 				$database->setQuery( $query );
 				$database->query() or die( $database->stderr() );
 			}

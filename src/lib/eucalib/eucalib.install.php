@@ -86,9 +86,9 @@ class eucaInstall
 		global $database;
 
 		$query = 'DELETE'
-		. ' FROM #__components'
-		. ' WHERE `option` = \'option=' . _EUCA_APP_COMPNAME . '\''
-		;
+				. ' FROM #__components'
+				. ' WHERE `option` = \'option=' . _EUCA_APP_COMPNAME . '\''
+				;
 		$database->setQuery( $query );
 
 		if ( !$database->query() ) {
@@ -113,10 +113,10 @@ class eucaInstall
 		global $database;
 
 		// get id from component entry
-		$query = 'SELECT id'
-		. ' FROM #__components'
-		. ' WHERE `link` = \'option=' . _EUCA_APP_COMPNAME . '\''
-		;
+		$query = 'SELECT `id`'
+				. ' FROM #__components'
+				. ' WHERE `link` = \'option=' . _EUCA_APP_COMPNAME . '\''
+				;
 		$database->setQuery( $query );
 		$id = $database->loadResult();
 
@@ -167,11 +167,10 @@ class eucaInstall
 		}
 
 		$query = 'INSERT INTO #__components'
-		. ' (`' . implode( '`, `', $fields) . '`)'
-		. ' VALUES '
-		. '(\'' . implode( '\', \'', $values) . '\')'
-		;
-
+				. ' (`' . implode( '`, `', $fields) . '`)'
+				. ' VALUES '
+				. '(\'' . implode( '\', \'', $values) . '\')'
+				;
 		$database->setQuery( $query );
 
 		if ( !$database->query() ) {
@@ -209,8 +208,8 @@ class eucaInstallDB
 		}
 
 		$query = 'SHOW COLUMNS FROM #__' . $this->table
-		. ' LIKE \'' . $this->column . '\''
-		;
+				. ' LIKE \'' . $this->column . '\''
+				;
 
 		$database->setQuery( $query );
 		$database->loadObject( $result );
@@ -245,8 +244,8 @@ class eucaInstallDB
 		global $database;
 
 		$query = 'ALTER TABLE #__' . $this->table
-		. ' ADD COLUMN `' . $this->column . '` ' . $options
-		;
+				. ' ADD COLUMN `' . $this->column . '` ' . $options
+				;
 
 		$database->setQuery( $query );
 
@@ -292,8 +291,8 @@ class eucaInstallDB
 		global $database;
 
 		$query = 'ALTER TABLE #__' . $this->table
-		. ' DROP COLUMN `' . $this->column . '`'
-		;
+				. ' DROP COLUMN `' . $this->column . '`'
+				;
 
 		$database->setQuery( $query );
 

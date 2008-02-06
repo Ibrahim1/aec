@@ -248,10 +248,10 @@ class mosetstree extends mosDBTable
 	{
 		global $database;
 
-		$query = 'SELECT id'
-		. ' FROM #__acctexp_mi_mosetstree'
-		. ' WHERE userid = \'' . $userid . '\''
-		;
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_mi_mosetstree'
+				. ' WHERE `userid` = \'' . $userid . '\''
+				;
 		$database->setQuery( $query );
 		return $database->loadResult();
 	}
