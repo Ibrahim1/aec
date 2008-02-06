@@ -57,9 +57,9 @@ function com_install()
 
 	// in any case, delete an already existing menu entry
 	$query = 'DELETE'
-	. ' FROM #__menu'
-	. ' WHERE link LIKE \'index.php?option=com_acctexp%\''
-	;
+			. ' FROM #__menu'
+			. ' WHERE `link` LIKE \'index.php?option=com_acctexp%\''
+			;
 	$database->setQuery( $query );
 	$database->query();
 
@@ -892,23 +892,23 @@ function com_install()
 
 		// All Subscriptions are primary
 		$query = 'UPDATE #__acctexp_subscr'
-		. ' SET `primary` = \'1\''
-		;
+				. ' SET `primary` = \'1\''
+				;
 		$database->setQuery( $query );
 		$database->query();
 
 		// copy expiration date
 		$query = 'UPDATE #__acctexp_subscr as a'
-		. ' INNER JOIN #__acctexp as b ON a.userid = b.userid'
-		. ' SET a.expiration = b.expiration'
-		;
+				. ' INNER JOIN #__acctexp as b ON a.userid = b.userid'
+				. ' SET a.expiration = b.expiration'
+				;
 		$database->setQuery( $query );
 		$database->query();
 
 		// Get plans
-		$query = 'SELECT id'
-		. ' FROM #__acctexp_plans'
-		;
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_plans'
+				;
 		$database->setQuery( $query );
 		$pplans = $database->loadResultArray();
 
@@ -934,16 +934,16 @@ function com_install()
 
 	// Rewrite old entries for hardcoded "transfer" processor to new API conform "offline_payment" processor
 	$query = 'UPDATE #__acctexp_invoices'
-	. ' SET method = \'offline_payment\''
-	. ' WHERE method = \'transfer\'';
+			. ' SET `method` = \'offline_payment\''
+			. ' WHERE `method` = \'transfer\'';
 	$database->setQuery( $query );
 	if ( !$database->query() ) {
     	$errors[] = array( $database->getErrorMsg(), $query );
 	}
 
 	$query = 'UPDATE #__acctexp_subscr'
-	. ' SET type = \'offline_payment\''
-	. ' WHERE type = \'transfer\'';
+			. ' SET `type` = \'offline_payment\''
+			. ' WHERE `type` = \'transfer\'';
 	$database->setQuery( $query );
 	if ( !$database->query() ) {
     	$errors[] = array( $database->getErrorMsg(), $query );
@@ -951,8 +951,8 @@ function com_install()
 
 	// Cater a strange bug that resets recurring due to the above
 	$query = 'UPDATE #__acctexp_subscr'
-	. ' SET recurring = \'0\''
-	. ' WHERE type = \'transfer\' OR type = \'offline_payment\'';
+			. ' SET `recurring` = \'0\''
+			. ' WHERE `type` = \'transfer\' OR `type` = \'offline_payment\'';
 	$database->setQuery( $query );
 	if ( !$database->query() ) {
     	$errors[] = array( $database->getErrorMsg(), $query );

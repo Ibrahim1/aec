@@ -311,10 +311,10 @@ function subscribe( $option )
 	$username	= aecGetParam( 'username', '' );
 
 	if ( !empty( $username ) && $usage ) {
-		$query = 'SELECT id'
-		. ' FROM #__users'
-		. ' WHERE username = \'' . $_POST['username'] . '\''
-		;
+		$query = 'SELECT `id`'
+				. ' FROM #__users'
+				. ' WHERE `username` = \'' . $_POST['username'] . '\''
+				;
 		$database->setQuery( $query );
 		if ( $database->loadResult() ) {
 			mosErrorAlert( _REGWARN_INUSE );
@@ -323,10 +323,10 @@ function subscribe( $option )
 		if ( !empty( $_POST['email'] ) ) {
 			if ( $mosConfig_uniquemail || ( defined( 'JPATH_BASE' )) ) { //J1.5 forces unique email
 				// check for existing email
-				$query = 'SELECT id'
-				. ' FROM #__users'
-				. ' WHERE email = \'' . $_POST['email'] . '\''
-				;
+				$query = 'SELECT `id`'
+						. ' FROM #__users'
+						. ' WHERE `email` = \'' . $_POST['email'] . '\''
+						;
 				$database->setQuery( $query );
 				if ( $database->loadResult() ) {
 					mosErrorAlert( _REGWARN_EMAIL_INUSE );
@@ -344,10 +344,10 @@ function subscribe( $option )
 			$passthrough	= false;
 		} elseif ( !$userid ) {
 			if ( isset( $_POST['username'] ) ) {
-				$query = 'SELECT id'
-				. ' FROM #__users'
-				. ' WHERE username = \'' . $_POST['username'] . '\''
-				;
+				$query = 'SELECT `id`'
+						. ' FROM #__users'
+						. ' WHERE `username` = \'' . $_POST['username'] . '\''
+						;
 				$database->setQuery( $query );
 				if ( $database->loadResult() ) {
 					mosErrorAlert( _REGWARN_INUSE );
@@ -357,10 +357,10 @@ function subscribe( $option )
 			if ( isset( $_POST['email'] ) ) {
 				if ( $mosConfig_uniquemail ) {
 					// check for existing email
-					$query = 'SELECT id'
-					. ' FROM #__users'
-					. ' WHERE email = \'' . $_POST['email'] . '\''
-					;
+					$query = 'SELECT `id`'
+							. ' FROM #__users'
+							. ' WHERE `email` = \'' . $_POST['email'] . '\''
+							;
 					$database->setQuery( $query );
 					if ( $database->loadResult() ) {
 						mosErrorAlert( _REGWARN_EMAIL_INUSE );
@@ -561,9 +561,9 @@ function subscriptionDetails( $option )
 
 		// count number of payments from user
 		$query = 'SELECT count(*)'
-		. ' FROM #__acctexp_invoices'
-		. ' WHERE userid = \'' . $my->id . '\''
-		;
+				. ' FROM #__acctexp_invoices'
+				. ' WHERE `userid` = \'' . $my->id . '\''
+				;
 		$database->setQuery( $query );
 		$rows_total	= $database->loadResult();
 
@@ -571,13 +571,13 @@ function subscriptionDetails( $option )
 		$min_limit	= ( $rows_total > $rows_limit ) ? ( $rows_total - $rows_limit ) : 0;
 
 		// get payments from user
-		$query = 'SELECT id'
-		. ' FROM #__acctexp_invoices'
-		. ' WHERE userid = \'' . $my->id . '\''
-		. ' AND active = \'1\''
-		. ' ORDER BY transaction_date DESC'
-		. ' LIMIT ' . $min_limit . ',' . $rows_limit
-		;
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_invoices'
+				. ' WHERE `userid` = \'' . $my->id . '\''
+				. ' AND `active` = \'1\''
+				. ' ORDER BY `transaction_date` DESC'
+				. ' LIMIT ' . $min_limit . ',' . $rows_limit
+				;
 		$database->setQuery( $query );
 		$rows = $database->loadResultArray();
 		if ( $database->getErrorNum() ) {

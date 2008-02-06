@@ -187,12 +187,12 @@ class metaUser
 	{
 		global $database;
 
-		$query = 'SELECT id, plan, type'
-		. ' FROM #__acctexp_subscr'
-		. ' WHERE userid = \'' . (int) $this->userid . '\''
-		. ' AND `primary` = \'0\''
-		. ' ORDER BY `lastpay_date` DESC'
-		;
+		$query = 'SELECT `id`, `plan`, `type`'
+				. ' FROM #__acctexp_subscr'
+				. ' WHERE `userid` = \'' . (int) $this->userid . '\''
+				. ' AND `primary` = \'0\''
+				. ' ORDER BY `lastpay_date` DESC'
+				;
 		$database->setQuery( $query );
 		return $database->loadObjectList();
 	}
@@ -213,10 +213,10 @@ class metaUser
 		while ( $id ) {
 			$username = $usernames[min( $k, ( count( $usernames ) - 1 ) )];
 
-			$query = 'SELECT id'
-			. ' FROM #__users'
-			. ' WHERE username = \'' . $username . '\''
-			;
+			$query = 'SELECT `id`'
+					. ' FROM #__users'
+					. ' WHERE `username` = \'' . $username . '\''
+					;
 			$database->setQuery( $query );
 
 			$id = $database->loadResult();
@@ -296,9 +296,9 @@ class metaUser
 		global $database;
 
 		$query = 'SELECT id'
-		. ' FROM #__acctexp_subscr'
-		. ' WHERE userid = \'' . (int) $this->userid . '\''
-		;
+				. ' FROM #__acctexp_subscr'
+				. ' WHERE `userid` = \'' . (int) $this->userid . '\''
+				;
 		$database->setQuery( $query );
 		$subscrids = $database->loadResultArray();
 
@@ -326,9 +326,9 @@ class metaUser
 		// Always protect last administrator
 		if ( $this->cmsUser->gid >= 24 ) {
 			$query = 'SELECT count(*)'
-			. ' FROM #__core_acl_groups_aro_map'
-			. ' WHERE group_id = \'25\''
-			;
+					. ' FROM #__core_acl_groups_aro_map'
+					. ' WHERE `group_id` = \'25\''
+					;
 			$database->setQuery( $query );
 			if ( $database->loadResult() <= 1) {
 				return false;
@@ -336,18 +336,18 @@ class metaUser
 		}
 
 		// Get ARO ID for user
-		$query = 'SELECT aro_id'
-		. ' FROM #__core_acl_aro'
-		. ' WHERE value = \'' . (int) $this->userid . '\''
-		;
+		$query = 'SELECT `aro_id`'
+				. ' FROM #__core_acl_aro'
+				. ' WHERE `value` = \'' . (int) $this->userid . '\''
+				;
 		$database->setQuery( $query );
 		$aro_id = $database->loadResult();
 
 		// Carry out ARO ID -> ACL group mapping
 		$query = 'UPDATE #__core_acl_groups_aro_map'
-		. ' SET group_id = \'' . (int) $gid . '\''
-		. ' WHERE aro_id = \'' . $aro_id . '\''
-		;
+				. ' SET `group_id` = \'' . (int) $gid . '\''
+				. ' WHERE `aro_id` = \'' . $aro_id . '\''
+				;
 		$database->setQuery( $query );
 		$database->query() or die( $database->stderr() );
 
@@ -355,16 +355,16 @@ class metaUser
 		$gid_name = $acl->get_group_name( $gid, 'ARO' );
 
 		$query = 'UPDATE #__users'
-		. ' SET gid = \'' .  (int) $gid . '\', usertype = \'' . $gid_name . '\''
-		. ' WHERE id = \''  . (int) $this->userid . '\''
-		;
+				. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\''
+				. ' WHERE `id` = \''  . (int) $this->userid . '\''
+				;
 		$database->setQuery( $query );
 		$database->query() or die( $database->stderr() );
 
 		$query = 'UPDATE #__session'
-		. ' SET usertype = \'' . $gid_name . '\''
-		. ' WHERE userid = \'' . (int) $this->userid . '\''
-		;
+				. ' SET `usertype` = \'' . $gid_name . '\''
+				. ' WHERE `userid` = \'' . (int) $this->userid . '\''
+				;
 		$database->setQuery( $query );
 		$database->query() or die( $database->stderr() );
 	}
@@ -373,16 +373,16 @@ class metaUser
 	{
 		global $database;
 
-		$query = 'SELECT name'
-		. ' FROM #__comprofiler_fields'
-		. ' WHERE `table` != \'#__users\''
-		. ' AND `name` != \'NA\'';
+		$query = 'SELECT `name`'
+				. ' FROM #__comprofiler_fields'
+				. ' WHERE `table` != \'#__users\''
+				. ' AND `name` != \'NA\'';
 		$database->setQuery( $query );
 		$fields = $database->loadResultArray();
 
 		$query = 'SELECT cbactivation' . ( !empty( $fields ) ? ', ' . implode( ', ', $fields ) : '')
 				. ' FROM #__comprofiler'
-				. ' WHERE user_id = \'' . (int) $this->userid . '\'';
+				. ' WHERE `user_id` = \'' . (int) $this->userid . '\'';
 		$database->setQuery( $query );
 		$database->loadObject( $this->cbUser );
 
@@ -593,13 +593,12 @@ class metaUser
 	{
 		global $database;
 
-		$query = 'SELECT usecount'
-		. ' FROM #__acctexp_couponsxuser'
-		. ' WHERE `userid` = \'' . $this->userid . '\''
-		. ' AND `coupon_id` = \'' . $couponid . '\''
-		. ' AND `type` = \'' . $type . '\''
-		;
-
+		$query = 'SELECT `usecount`'
+				. ' FROM #__acctexp_couponsxuser'
+				. ' WHERE `userid` = \'' . $this->userid . '\''
+				. ' AND `coupon_id` = \'' . $couponid . '\''
+				. ' AND `type` = \'' . $type . '\''
+				;
 		$database->setQuery( $query );
 		$usecount = $database->loadResult();
 
@@ -696,7 +695,7 @@ class Config_General extends paramDBTable
 			global $database;
 
 			$query = 'SELECT * FROM #__acctexp_config'
-			. ' WHERE id = \'1\''
+			. ' WHERE `id` = \'1\''
 			;
 			$database->setQuery( $query );
 
@@ -746,8 +745,8 @@ class Config_General extends paramDBTable
 		global $database;
 
 		$query = 'SELECT count(*)'
-		. ' FROM #__acctexp_config'
-		;
+				. ' FROM #__acctexp_config'
+				;
 		$database->setQuery( $query );
 		$rows = $database->loadResult();
 
@@ -763,24 +762,24 @@ class Config_General extends paramDBTable
 		global $database;
 
 		$query = 'SELECT max(id)'
-		. ' FROM #__acctexp_config'
-		;
+				. ' FROM #__acctexp_config'
+				;
 		$database->setQuery( $query );
 		$database->query();
 		$max = $database->loadResult();
 
 		$query = 'DELETE'
-		. ' FROM #__acctexp_config'
-		. ' WHERE id != \'' . $max . '\''
-		;
+				. ' FROM #__acctexp_config'
+				. ' WHERE `id` != \'' . $max . '\''
+				;
 		$database->setQuery( $query );
 		$database->query();
 
 		if ( !( $max == 1 ) ) {
 			$query = 'UPDATE #__acctexp_config'
-			. ' SET id = \'1\''
-			. ' WHERE id =\'' . $max . '\''
-			;
+					. ' SET `id` = \'1\''
+					. ' WHERE `id` =\'' . $max . '\''
+					;
 			$database->setQuery( $query );
 			$database->query();
 		}
@@ -858,9 +857,9 @@ class aecHeartbeat extends mosDBTable
 
 		// Receive maximum pre expiration time
 		$query = 'SELECT MAX(pre_exp_check)'
-		. ' FROM #__acctexp_microintegrations'
-		. ' WHERE active = \'1\''
-		;
+				. ' FROM #__acctexp_microintegrations'
+				. ' WHERE `active` = \'1\''
+				;
 		$database->setQuery( $query );
 		$pre_expiration = $database->loadResult();
 
@@ -948,28 +947,28 @@ class aecHeartbeat extends mosDBTable
 			// Only go for pre expiration action if we have at least one user for it
 			if ( $pre_expiration && !empty( $pre_expired_users ) ) {
 				// Get all the MIs which have a pre expiration check
-				$query = 'SELECT id'
-				. ' FROM #__acctexp_microintegrations'
-				. ' WHERE pre_exp_check > \'0\''
-				;
+				$query = 'SELECT `id`'
+						. ' FROM #__acctexp_microintegrations'
+						. ' WHERE `pre_exp_check` > \'0\''
+						;
 				$database->setQuery( $query );
 				$mi_pexp = $database->loadResultArray();
 
 				// Get all the plans which have MIs
-				$query = 'SELECT id'
-				. ' FROM #__acctexp_plans'
-				. ' WHERE micro_integrations != \'\''
-				;
+				$query = 'SELECT `id`'
+						. ' FROM #__acctexp_plans'
+						. ' WHERE `micro_integrations` != \'\''
+						;
 				$database->setQuery( $query );
 				$plans_mi = $database->loadResultArray();
 
 				// Filter out plans which have not got the right MIs applied
 				$expmi_plans = array();
 				foreach ( $plans_mi as $plan_id ) {
-					$query = 'SELECT micro_integrations'
-					. ' FROM #__acctexp_plans'
-					. ' WHERE id= \'' . $plan_id . '\''
-					;
+					$query = 'SELECT `micro_integrations`'
+							. ' FROM #__acctexp_plans'
+							. ' WHERE `id` = \'' . $plan_id . '\''
+							;
 					$database->setQuery( $query );
 					$plan_mis = explode( ';', $database->loadResult() );
 					$pexp_mis = array_intersect( $plan_mis, $mi_pexp );
@@ -980,11 +979,11 @@ class aecHeartbeat extends mosDBTable
 				}
 
 				// Filter out the users which dont have the correct plan
-				$query = 'SELECT id, userid'
-				. ' FROM #__acctexp_subscr'
-				. ' WHERE userid IN (' . implode( ',', $pre_expired_users ) . ')'
-				. ' AND plan IN (' . implode( ',', $expmi_plans) . ')'
-				;
+				$query = 'SELECT `id`, `userid`'
+						. ' FROM #__acctexp_subscr'
+						. ' WHERE `userid` IN (' . implode( ',', $pre_expired_users ) . ')'
+						. ' AND `plan` IN (' . implode( ',', $expmi_plans) . ')'
+						;
 				$database->setQuery( $query );
 				$user_list = $database->loadObjectList();
 
@@ -1073,17 +1072,17 @@ class displayPipelineHandler
 	{
 		global $database, $mosConfig_offset_user;
 
-		$query = 'SELECT id'
-		. ' FROM #__acctexp_displaypipeline'
-		. ' WHERE userid = \'' . $userid . '\' AND only_user = \'1\''
-		;
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_displaypipeline'
+				. ' WHERE `userid` = \'' . $userid . '\' AND `only_user` = \'1\''
+				;
 		$database->setQuery( $query );
 		$events = $database->loadResultArray();
 
-		$query = 'SELECT id'
-		. ' FROM #__acctexp_displaypipeline'
-		. ' WHERE only_user = \'0\''
-		;
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_displaypipeline'
+				. ' WHERE `only_user` = \'0\''
+				;
 		$database->setQuery( $query );
 		$events = array_merge( $events, $database->loadResultArray() );
 
@@ -1273,11 +1272,11 @@ class eventLog extends paramDBTable
 				$adminEmail2 	= $mainframe->getCfg( 'mailfrom' );
 			} else {
 				// use email address and name of first superadmin for use in email sent to user
-				$query = 'SELECT name, email'
-				. ' FROM #__users'
-				. ' WHERE LOWER( usertype ) = \'superadministrator\''
-				. ' OR LOWER( usertype ) = \'super administrator\''
-				;
+				$query = 'SELECT `name`, `email`'
+						. ' FROM #__users'
+						. ' WHERE LOWER( usertype ) = \'superadministrator\''
+						. ' OR LOWER( usertype ) = \'super administrator\''
+						;
 				$database->setQuery( $query );
 				$rows = $database->loadObjectList();
 
@@ -1293,12 +1292,12 @@ class eventLog extends paramDBTable
 			$message2	= html_entity_decode( $message2, ENT_QUOTES );
 
 			// get email addresses of all admins and superadmins set to recieve system emails
-			$query = 'SELECT email'
-			. ' FROM #__users'
-			. ' WHERE ( gid = 24 OR gid = 25 )'
-			. ' AND sendEmail = 1'
-			. ' AND block = 0'
-			;
+			$query = 'SELECT `email`'
+					. ' FROM #__users'
+					. ' WHERE ( `gid` = 24 OR `gid` = 25 )'
+					. ' AND `sendEmail` = 1'
+					. ' AND `block` = 0'
+					;
 			$database->setQuery( $query );
 			$admins = $database->loadObjectList();
 
@@ -1344,9 +1343,9 @@ class PaymentProcessorHandler
 	{
 		global $database;
 
-		$query = 'SELECT id'
-		. ' FROM #__acctexp_config_processors'
-		. ' WHERE name = \'' . $name . '\'';
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_config_processors'
+				. ' WHERE `name` = \'' . $name . '\'';
 		$database->setQuery( $query );
 
 		return $database->loadResult();
@@ -1362,11 +1361,11 @@ class PaymentProcessorHandler
 	{
 		global $database;
 
-		$query = 'SELECT id, active, name'
-		. ' FROM #__acctexp_config_processors'
-		;
+		$query = 'SELECT `id`, `active`, `name`'
+				. ' FROM #__acctexp_config_processors'
+				;
 		if ( $active ) {
-			$query .= ' WHERE active = \'1\'';
+			$query .= ' WHERE `active` = \'1\'';
 		}
 		$database->setQuery( $query );
 
@@ -1377,11 +1376,11 @@ class PaymentProcessorHandler
 	{
 		global $database;
 
-		$query = 'SELECT name'
-		. ' FROM #__acctexp_config_processors'
-		;
+		$query = 'SELECT `name`'
+				. ' FROM #__acctexp_config_processors'
+				;
 		if ( $active !== false ) {
-			$query .= ' WHERE active = \'' . $active . '\'';
+			$query .= ' WHERE `active` = \'' . $active . '\'';
 		}
 		$database->setQuery( $query );
 
@@ -1476,9 +1475,9 @@ class PaymentProcessor
 
 		// See if the processor is installed & set id
 		$query = 'SELECT id'
-		. ' FROM #__acctexp_config_processors'
-		. ' WHERE name = \'' . $this->processor_name . '\''
-		;
+				. ' FROM #__acctexp_config_processors'
+				. ' WHERE `name` = \'' . $this->processor_name . '\''
+				;
 		$database->setQuery( $query );
 		$result = $database->loadResult();
 		$this->id = $result ? $result : 0;
@@ -1515,10 +1514,10 @@ class PaymentProcessor
 		global $database;
 
 		// Fetch name from db and load processor
-		$query = 'SELECT name'
-		. ' FROM #__acctexp_config_processors'
-		. ' WHERE id = \'' . $ppid . '\''
-		;
+		$query = 'SELECT `name`'
+				. ' FROM #__acctexp_config_processors'
+				. ' WHERE `id` = \'' . $ppid . '\''
+				;
 		$database->setQuery( $query );
 		$name = $database->loadResult();
 		if ( $name ) {
@@ -1570,10 +1569,10 @@ class PaymentProcessor
 		$this->processor->check();
 		$this->processor->store();
 
-		$query = 'SELECT id'
-		. ' FROM #__acctexp_config_processors'
-		. ' WHERE name = \'' . $this->processor_name . '\''
-		;
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_config_processors'
+				. ' WHERE `name` = \'' . $this->processor_name . '\''
+				;
 		$database->setQuery( $query );
 		$result = $database->loadResult();
 
@@ -1806,10 +1805,10 @@ class processor extends paramDBTable
 	{
 		global $database;
 
-		$query = 'SELECT id'
-		. ' FROM #__acctexp_config_processors'
-		. ' WHERE name = \'' . $name . '\''
-		;
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_config_processors'
+				. ' WHERE `name` = \'' . $name . '\''
+				;
 		$database->setQuery( $query );
 		$this->load( $database->loadResult() );
 	}
@@ -2425,10 +2424,10 @@ class SubscriptionPlanHandler
 	{
 		global $database;
 
-		$query = 'SELECT userid'
-		. ' FROM #__acctexp_subscr'
-		. ' WHERE plan = \'' . $planid . '\' AND ( status = \'Active\' OR status = \'Trial\' ) '
-		;
+		$query = 'SELECT `userid`'
+				. ' FROM #__acctexp_subscr'
+				. ' WHERE `plan` = \'' . $planid . '\' AND ( `status` = \'Active\' OR `status` = \'Trial\' ) '
+				;
 		$database->setQuery( $query );
 
 		return $database->loadResultArray();
@@ -2966,8 +2965,8 @@ class SubscriptionPlan extends paramDBTable
 			$planid = $post['id'];
 		} else {
 			$query = 'SELECT MAX(id)'
-			. ' FROM #__acctexp_plans'
-			;
+					. ' FROM #__acctexp_plans'
+					;
 			$database->setQuery( $query );
 			$planid = $database->loadResult() + 1;
 		}
@@ -3233,9 +3232,9 @@ class InvoiceFactory
 		$this->invoice		= $invoice;
 
 		if ( !is_null( $this->userid ) ) {
-			$query = 'SELECT id'
-			. ' FROM #__users'
-			. ' WHERE `id` = \'' . $this->userid . '\'';
+			$query = 'SELECT `id`'
+					. ' FROM #__users'
+					. ' WHERE `id` = \'' . $this->userid . '\'';
 			$database->setQuery( $query );
 
 			if ( !$database->loadResult() ) {
@@ -3523,19 +3522,19 @@ class InvoiceFactory
 			}
 		}
 
-		$where[] = 'active = \'1\'';
+		$where[] = '`active` = \'1\'';
 
 		if ( $usage ) {
-			$where[] = 'id=' . $usage;
+			$where[] = '`id` = ' . $usage;
 		} else {
-			$where[] = 'visible != \'0\'';
+			$where[] = '`visible` != \'0\'';
 		}
 
-		$query = 'SELECT id'
-		. ' FROM #__acctexp_plans'
-		. ( count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
-		. ' ORDER BY ordering'
-		;
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_plans'
+				. ( count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
+				. ' ORDER BY `ordering`'
+				;
 	 	$database->setQuery( $query );
 		$rows = $database->loadResultArray();
 	 	if ( $database->getErrorNum() ) {
@@ -4095,7 +4094,7 @@ class InvoiceFactory
 class Invoice extends paramDBTable
 {
 	/** @var int Primary key */
-	var $id				= null;
+	var $id					= null;
 	/** @var int */
 	var $active 			= null;
 	/** @var int */
@@ -4103,7 +4102,7 @@ class Invoice extends paramDBTable
 	/** @var int */
 	var $userid 			= null;
 	/** @var int */
-	var $subscr_id 		= null;
+	var $subscr_id 			= null;
 	/** @var string */
 	var $invoice_number 	= null;
 	/** @var string */
@@ -4127,7 +4126,7 @@ class Invoice extends paramDBTable
 	/** @var text */
 	var $params 			= null;
 	/** @var text */
-	var $conditions		= null;
+	var $conditions			= null;
 
 	function Invoice(&$db)
 	{
@@ -4248,11 +4247,11 @@ class Invoice extends paramDBTable
 	{
 		global $database;
 
-		$query = 'SELECT id'
-		. ' FROM #__acctexp_invoices'
-		. ' WHERE subscr_id = \'' . $subscrid . '\''
-		. ' ORDER BY `transaction_date` DESC'
-		;
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_invoices'
+				. ' WHERE `subscr_id` = \'' . $subscrid . '\''
+				. ' ORDER BY `transaction_date` DESC'
+				;
 
 		if ( !empty( $userid ) ) {
 			$query .= ' AND `userid` = \'' . $userid . '\'';
@@ -4266,10 +4265,10 @@ class Invoice extends paramDBTable
 	{
 		$db2 = $this->get( "_db" );
 		$query = 'SELECT count(*)'
-		. ' FROM #__acctexp_invoices'
-		. ' WHERE userid = ' . (int) $userid
-		. ' AND invoice_number = \'' . $invoiceNum . '\''
-		;
+				. ' FROM #__acctexp_invoices'
+				. ' WHERE `userid` = ' . (int) $userid
+				. ' AND `invoice_number` = \'' . $invoiceNum . '\''
+				;
 		$db2->setQuery( $query );
 		return $db2->loadResult();
 	}
@@ -4425,10 +4424,10 @@ class Invoice extends paramDBTable
 			$inum =	'I' . substr( base64_encode( md5( rand() ) ), 0, $maxlength );
 			// Check if already exists
 			$query = 'SELECT count(*)'
-			. ' FROM #__acctexp_invoices'
-			. ' WHERE invoice_number = \'' . $inum . '\''
-			. ' OR secondary_ident = \'' . $inum . '\''
-			;
+					. ' FROM #__acctexp_invoices'
+					. ' WHERE `invoice_number` = \'' . $inum . '\''
+					. ' OR `secondary_ident` = \'' . $inum . '\''
+					;
 			$database->setQuery( $query );
 			$numberofrows = $database->loadResult();
 		}
@@ -5018,10 +5017,10 @@ class Subscription extends paramDBTable
 	{
 		global $database;
 
-		$query = 'SELECT id'
-		. ' FROM #__acctexp_subscr'
-		. ' WHERE userid = \'' . $userid . '\''
-		;
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_subscr'
+				. ' WHERE `userid` = \'' . $userid . '\''
+				;
 
 		if ( !empty( $usage ) ) {
 			$query .= ' AND `plan` = \'' . $usage . '\'';
@@ -5043,9 +5042,9 @@ class Subscription extends paramDBTable
 		global $database;
 
 		$query = 'UPDATE #__acctexp_subscr'
-		. ' SET `primary` = \'0\''
-		. ' WHERE userid = \'' . $this->userid . '\''
-		;
+				. ' SET `primary` = \'0\''
+				. ' WHERE `userid` = \'' . $this->userid . '\''
+				;
 		$database->setQuery( $query );
 		$database->query();
 
@@ -5489,10 +5488,10 @@ class Subscription extends paramDBTable
 			$adminName2		= $mainframe->getCfg( 'fromname' );
 			$adminEmail2	= $mainframe->getCfg( 'mailfrom' );
 		} else {
-			$query = 'SELECT name, email'
-			. ' FROM #__users'
-			. ' WHERE usertype = \'superadministrator\''
-			;
+			$query = 'SELECT `name`, `email`'
+					. ' FROM #__users'
+					. ' WHERE `usertype` = \'superadministrator\''
+					;
 			$database->setQuery( $query );
 			$rows = $database->loadObjectList();
 			$row2 = $rows[0];
@@ -5521,10 +5520,10 @@ class Subscription extends paramDBTable
 		$admins = $acl->get_group_objects( 25, 'ARO' );
 
 		foreach ( $admins['users'] AS $id ) {
-			$query = 'SELECT email, sendEmail'
-			. ' FROM #__users'
-			. ' WHERE id = \'' . $id . '\''
-			;
+			$query = 'SELECT `email`, `sendEmail`'
+					. ' FROM #__users'
+					. ' WHERE `id` = \'' . $id . '\''
+					;
 			$database->setQuery( $query );
 			$rows = $database->loadObjectList();
 
@@ -5688,12 +5687,12 @@ class GeneralInfoRequester
 		$groups		= '';
 
 		$query = 'SELECT g2.group_id'
-		. ' FROM #__core_acl_aro_groups AS g1'
-		. ' INNER JOIN #__core_acl_aro_groups AS g2 ON g1.lft >= g2.lft AND g1.lft <= g2.rgt'
-		. ' WHERE g1.group_id = ' . $group_id
-		. ' GROUP BY g2.group_id'
-		. ' ORDER BY g2.lft'
-		;
+				. ' FROM #__core_acl_aro_groups AS g1'
+				. ' INNER JOIN #__core_acl_aro_groups AS g2 ON g1.lft >= g2.lft AND g1.lft <= g2.rgt'
+				. ' WHERE g1.group_id = ' . $group_id
+				. ' GROUP BY g2.group_id'
+				. ' ORDER BY g2.lft'
+				;
 		$database->setQuery( $query );
 		$rows = $database->loadObjectList();
 
@@ -5716,10 +5715,10 @@ class AECfetchfromDB
 	{
 		global $database;
 
-		$query = 'SELECT userid'
-		. ' FROM #__acctexp_invoices'
-		. ' WHERE invoice_number = \'' . $invoice_number . '\''
-		;
+		$query = 'SELECT `userid`'
+				. ' FROM #__acctexp_invoices'
+				. ' WHERE `invoice_number` = \'' . $invoice_number . '\''
+				;
 		$database->setQuery( $query );
 		return $database->loadResult();
 	}
@@ -5728,14 +5727,14 @@ class AECfetchfromDB
 	{
 		global $database;
 
-		$query = 'SELECT id'
-		. ' FROM #__acctexp_invoices'
-		. ' WHERE active = \'1\''
-		. ' AND ( invoice_number = \'' . $invoice_number . '\''
-		. ' OR secondary_ident = \'' . $invoice_number . '\' )'
-		;
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_invoices'
+				. ' WHERE `active` = \'1\''
+				. ' AND ( `invoice_number` = \'' . $invoice_number . '\''
+				. ' OR `secondary_ident` = \'' . $invoice_number . '\' )'
+				;
 		if ( $userid ) {
-			$query .= ' AND userid = \'' . $userid . '\'';
+			$query .= ' AND `userid` = \'' . $userid . '\'';
 		}
 		$database->setQuery( $query );
 		return $database->loadResult();
@@ -5745,12 +5744,12 @@ class AECfetchfromDB
 	{
 		global $database;
 
-		$query = 'SELECT invoice_number'
-		. ' FROM #__acctexp_invoices'
-		. ' WHERE userid = \'' . (int) $userid . '\''
-		. ' AND transaction_date = \'0000-00-00 00:00:00\''
-		. ' AND active = \'1\''
-		;
+		$query = 'SELECT `invoice_number`'
+				. ' FROM #__acctexp_invoices'
+				. ' WHERE `userid` = \'' . (int) $userid . '\''
+				. ' AND `transaction_date` = \'0000-00-00 00:00:00\''
+				. ' AND `active` = \'1\''
+				;
 		$database->setQuery( $query );
 		return $database->loadResult();
 	}
@@ -5760,14 +5759,15 @@ class AECfetchfromDB
 		global $database;
 
 		$query = 'SELECT id'
-		. ' FROM #__acctexp_invoices as a'
-		. ' WHERE a.userid = \'' . (int) $userid . '\'';
+				. ' FROM #__acctexp_invoices'
+				. ' WHERE `userid` = \'' . (int) $userid . '\''
+				;
 
 		if ( $planid ) {
-			$query .= ' AND a.usage = \'' . (int) $planid . '\'';
+			$query .= ' AND `usage` = \'' . (int) $planid . '\'';
 		}
 
-		$query .= ' ORDER BY transaction_date';
+		$query .= ' ORDER BY `transaction_date` DESC';
 
 		$database->setQuery( $query );
 		return $database->loadResult();
@@ -5778,10 +5778,10 @@ class AECfetchfromDB
 		global $database;
 
 		$query = 'SELECT count(*)'
-		. ' FROM #__acctexp_invoices'
-		. ' WHERE userid = \'' . (int) $userid . '\''
-		. ' AND active = \'1\''
-		;
+				. ' FROM #__acctexp_invoices'
+				. ' WHERE `userid` = \'' . (int) $userid . '\''
+				. ' AND `active` = \'1\''
+				;
 		$database->setQuery( $query );
 		return $database->loadResult();
 	}
@@ -5790,11 +5790,11 @@ class AECfetchfromDB
 	{
 		global $database;
 
-		$query = 'SELECT id'
-		. ' FROM #__acctexp_subscr'
-		. ' WHERE userid = \'' . (int) $userid . '\''
-		. ' ORDER BY `primary` DESC'
-		;
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_subscr'
+				. ' WHERE `userid` = \'' . (int) $userid . '\''
+				. ' ORDER BY `primary` DESC'
+				;
 		$database->setQuery( $query );
 		return $database->loadResult();
 	}
@@ -5803,11 +5803,11 @@ class AECfetchfromDB
 	{
 		global $database;
 
-		$query = 'SELECT userid'
-		. ' FROM #__acctexp_subscr'
-		. ' WHERE id = \'' . (int) $susbcriptionid . '\''
-		. ' ORDER BY `primary` DESC'
-		;
+		$query = 'SELECT `userid`'
+				. ' FROM #__acctexp_subscr'
+				. ' WHERE `id` = \'' . (int) $susbcriptionid . '\''
+				. ' ORDER BY `primary` DESC'
+				;
 		$database->setQuery( $query );
 		return $database->loadResult();
 	}
@@ -6104,9 +6104,9 @@ class AECToolbox
 			saveRegistration( $option );
 
 			$query = 'SELECT `id`'
-			. ' FROM #__users'
-			. ' WHERE username = \'' . $var['username'] . '\''
-			;
+					. ' FROM #__users'
+					. ' WHERE `username` = \'' . $var['username'] . '\''
+					;
 			$database->setQuery( $query );
 			$uid = $database->loadResult();
 			JUser::saveUser_ext( $uid );
@@ -6221,11 +6221,11 @@ class AECToolbox
 				$adminEmail2 	= $mainframe->getCfg( 'mailfrom' );
 			} else {
 				// use email address and name of first superadmin for use in email sent to user
-				$query = 'SELECT name, email'
-				. ' FROM #__users'
-				. ' WHERE LOWER( usertype ) = \'superadministrator\''
-				. ' OR LOWER( usertype ) = \'super administrator\''
-				;
+				$query = 'SELECT `name`, `email`'
+						. ' FROM #__users'
+						. ' WHERE LOWER( usertype ) = \'superadministrator\''
+						. ' OR LOWER( usertype ) = \'super administrator\''
+						;
 				$database->setQuery( $query );
 				$rows = $database->loadObjectList();
 				$row2 			= $rows[0];
@@ -6265,10 +6265,10 @@ class AECToolbox
 		}
 
 		// We need the new userid, so we're fetching it from the newly created entry here
-		$query = 'SELECT id'
-		. ' FROM #__users'
-		. ' WHERE username = \'' . $var['username'] . '\''
-		;
+		$query = 'SELECT `id`'
+				. ' FROM #__users'
+				. ' WHERE `username` = \'' . $var['username'] . '\''
+				;
 		$database->setQuery( $query );
 		return $database->loadResult();
 	}
@@ -6277,11 +6277,11 @@ class AECToolbox
 	{
 		global $database;
 
-		$query = 'SELECT status'
-		. ' FROM #__acctexp_subscr'
-		. ' WHERE userid = \'' . (int) $userid . '\''
-		. ' AND `primary` = \'1\''
-		;
+		$query = 'SELECT `status`'
+				. ' FROM #__acctexp_subscr'
+				. ' WHERE `userid` = \'' . (int) $userid . '\''
+				. ' AND `primary` = \'1\''
+				;
 	 	$database->setQuery( $query );
 		$aecstatus = $database->loadResult();
 
@@ -6421,7 +6421,7 @@ class AECToolbox
 
 	function rewriteEngine( $subject, $metaUser=null, $subscriptionPlan=null, $invoice=null )
 	{
-		global $database, $mosConfig_absolute_path, $mosConfig_live_site;
+		global $aecConfig, $database, $mosConfig_absolute_path, $mosConfig_live_site, $mosConfig_offset_user;
 
 		// Check whether a replacement exists at all
 		if ( strpos( $subject, '[[' ) === false ) {
@@ -6429,6 +6429,11 @@ class AECToolbox
 		}
 
 		$rewrite = array();
+
+		$rewrite['system_timestamp']			= strftime( $aecConfig->cfg['display_date_frontend'],  time() + $mosConfig_offset_user * 3600 );
+		$rewrite['system_timestamp_backend']	= strftime( $aecConfig->cfg['display_date_backend'], time() + $mosConfig_offset_user * 3600 );
+		$rewrite['system_serverstamp_time']	= strftime( $aecConfig->cfg['display_date_frontend'], time() );
+		$rewrite['system_server_timestamp_backend']	= strftime( $aecConfig->cfg['display_date_backend'], time() );
 
 		$rewrite['cms_absolute_path']	= $mosConfig_absolute_path;
 		$rewrite['cms_live_site']		= $mosConfig_live_site;
@@ -6439,10 +6444,21 @@ class AECToolbox
 				$rewrite['expiration_date'] = $metaUser->objExpiration->expiration;
 			}
 
-			$rewrite['user_id']			= $metaUser->cmsUser->id;
-			$rewrite['user_username']	= $metaUser->cmsUser->username;
-			$rewrite['user_name']		= $metaUser->cmsUser->name;
-			$rewrite['user_email']		= $metaUser->cmsUser->email;
+			// Explode Name
+			$namearray		= explode( " ", $metaUser->cmsUser->name );
+			$lastname		= $namearray[count($namearray)];
+			for ( $i=0; $i<count($namearray); $i++ ) {
+				$firstname .= $namearray[$i];
+			}
+			$firstfirstname	= $namearray[count($namearray)];
+
+			$rewrite['user_id']					= $metaUser->cmsUser->id;
+			$rewrite['user_username']			= $metaUser->cmsUser->username;
+			$rewrite['user_name']				= $metaUser->cmsUser->name;
+			$rewrite['user_first_name']			= $firstname;
+			$rewrite['user_first_first_name']	= $firstfirstname;
+			$rewrite['user_last_name']			= $lastname;
+			$rewrite['user_email']				= $metaUser->cmsUser->email;
 
 			if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
 				if ( !$metaUser->hasCBprofile ) {
@@ -6450,10 +6466,10 @@ class AECToolbox
 				}
 
 				if ( $metaUser->hasCBprofile ) {
-					$query = 'SELECT name'
+					$query = 'SELECT `name`'
 							. ' FROM #__comprofiler_fields'
 							. ' WHERE `table` != \'#__users\''
-							. ' AND name != \'NA\'';
+							. ' AND `name` != \'NA\'';
 					$database->setQuery( $query );
 					$fields = $database->loadResultArray();
 
@@ -6528,9 +6544,21 @@ class AECToolbox
 		return str_replace( $search, $replace, $subject );
 	}
 
-	function rewriteEngineInfo( $switches )
+	function rewriteEngineInfo( $switches=array() )
 	{
+		if ( !count( $switches ) ) {
+			$switches = array( 'cms', 'expiration', 'user', 'subscription', 'invoice', 'plan', 'system' );
+		}
+
+
 		$rewrite = array();
+
+		if ( in_array( 'system', $switches ) ) {
+			$rewrite['system'][] = 'timestamp';
+			$rewrite['system'][] = 'timestamp_backend';
+			$rewrite['system'][] = 'server_timestamp';
+			$rewrite['system'][] = 'server_timestamp_backend';
+		}
 
 		if ( in_array( 'cms', $switches ) ) {
 			$rewrite['cms'][] = 'absolute_path';
@@ -6545,6 +6573,9 @@ class AECToolbox
 			$rewrite['user'][] = 'id';
 			$rewrite['user'][] = 'username';
 			$rewrite['user'][] = 'name';
+			$rewrite['user'][] = 'first_name';
+			$rewrite['user'][] = 'first_first_name';
+			$rewrite['user'][] = 'last_name';
 			$rewrite['user'][] = 'email';
 			$rewrite['user'][] = 'activationcode';
 			$rewrite['user'][] = 'activationlink';
@@ -6649,10 +6680,10 @@ class microIntegrationHandler
 	{
 		global $database;
 
-		$query = 'SELECT id'
-		. ' FROM #__acctexp_plans'
-		. ' WHERE micro_integrations != \'\''
-		;
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_plans'
+				. ' WHERE `micro_integrations` != \'\''
+				;
 		$database->setQuery( $query );
 		$plans = $database->loadResultArray();
 
@@ -6727,10 +6758,10 @@ class microIntegrationHandler
 	{
 		global $database;
 
-		$query = 'SELECT id'
-		. ' FROM #__acctexp_microintegrations'
-		. ' WHERE auto_check = \'1\''
-		;
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_microintegrations'
+				. ' WHERE `auto_check` = \'1\''
+				;
 		$database->setQuery( $query );
 		return $database->loadResultArray();
 	}
@@ -6740,10 +6771,10 @@ class microIntegrationHandler
 		global $database;
 
 		$query = 'SELECT id'
-		. ' FROM #__acctexp_microintegrations'
-		. ' WHERE active = \'1\''
-		. ' AND on_userchange = \'1\''
-		;
+				. ' FROM #__acctexp_microintegrations'
+				. ' WHERE `active` = \'1\''
+				. ' AND `on_userchange` = \'1\''
+				;
 		$database->setQuery( $query );
 		return $database->loadResultArray();
 	}
@@ -6857,9 +6888,9 @@ class microIntegration extends paramDBTable
 		global $database;
 
 		$query = 'SELECT count(*)'
-		. ' FROM #__acctexp_microintegrations'
-		. ' WHERE id = \'' . $mi_id . '\''
-		;
+				. ' FROM #__acctexp_microintegrations'
+				. ' WHERE `id` = \'' . $mi_id . '\''
+				;
 		$database->setQuery( $query );
 		return $database->loadResult();
 	}
@@ -7172,20 +7203,20 @@ class couponHandler
 	{
 		global $database;
 
-		$query = 'SELECT id'
-		. ' FROM #__acctexp_coupons_static'
-		. ' WHERE coupon_code = \'' . $coupon_code . '\''
-		;
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_coupons_static'
+				. ' WHERE `coupon_code` = \'' . $coupon_code . '\''
+				;
 		$database->setQuery( $query );
 		$couponid = $database->loadResult();
 
 		if ( $couponid ) {
 			$this->type = 1;
 		} else {
-			$query = 'SELECT id'
-			. ' FROM #__acctexp_coupons'
-			. ' WHERE coupon_code = \'' . $coupon_code . '\''
-			;
+			$query = 'SELECT `id`'
+					. ' FROM #__acctexp_coupons'
+					. ' WHERE `coupon_code` = \'' . $coupon_code . '\''
+					;
 			$database->setQuery( $query );
 			$couponid = $database->loadResult();
 			$this->type = 0;
@@ -7290,7 +7321,7 @@ class couponHandler
 	{
 		global $database;
 
-		$query = 'SELECT id'
+		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_couponsxuser'
 				. ' WHERE `userid` = \'' . $invoice->userid . '\''
 				. ' AND `coupon_id` = \'' . $this->coupon->id . '\''
@@ -7325,7 +7356,7 @@ class couponHandler
 	{
 		global $database;
 
-		$query = 'SELECT id'
+		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_couponsxuser'
 				. ' WHERE `userid` = \'' . $invoice->userid . '\''
 				. ' AND `coupon_id` = \'' . $this->coupon->id . '\''
@@ -7752,17 +7783,17 @@ class coupon extends paramDBTable
 			$inum =	strtoupper( substr( base64_encode( md5( rand() ) ), 0, $maxlength ) );
 			// check single coupons
 			$query = 'SELECT count(*)'
-			. ' FROM #__acctexp_coupons'
-			. ' WHERE coupon_code = \'' . $inum . '\''
-			;
+					. ' FROM #__acctexp_coupons'
+					. ' WHERE `coupon_code` = \'' . $inum . '\''
+					;
 			$database->setQuery( $query );
 			$numberofrows_normal = $database->loadResult();
 
 			// check static coupons
 			$query = 'SELECT count(*)'
-			. ' FROM #__acctexp_coupons_static'
-			. ' WHERE coupon_code = \'' . $inum . '\''
-			;
+					. ' FROM #__acctexp_coupons_static'
+					. ' WHERE `coupon_code` = \'' . $inum . '\''
+					;
 			$database->setQuery( $query );
 			$numberofrows_static = $database->loadResult();
 
@@ -7909,11 +7940,11 @@ class tokenCheck
 			return $status;
 		}
 
-		$query = 'SELECT id'
-		. ' FROM #__acctexp_usertokens'
-		. ' WHERE userid = \'' . (int) $userid . '\''
-		. ' AND token_id = \'' . $token . '\''
-		;
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_usertokens'
+				. ' WHERE `userid` = \'' . (int) $userid . '\''
+				. ' AND `token_id` = \'' . $token . '\''
+				;
 		$database->setQuery( $query );
 		$usertoken_id = $database->loadResult();
 

@@ -554,28 +554,13 @@ switch( strtolower( $task ) ) {
 		}
 		break;
 
-	case 'proctriggertest':
-		$payment = array(
-							'secondary_ident' => 'test1',
-							'processor' => 'ccbill'
-							);
-		$user = array(
-							'name' => 'test1',
-							'email' => 'test1@test1.com',
-							'username' => 'test1',
-							'password' => 'test1'
-							);
-
-		metaUser::procTriggerCreate( $user, $payment, 1 );
-		break;
-
 	case 'readnotice':
 		global $database;
 
 		$query = 'UPDATE #__acctexp_eventlog'
-		. ' SET notify = \'0\''
-		. ' WHERE id = \'' . $id . '\''
-		;
+				. ' SET `notify` = \'0\''
+				. ' WHERE `id` = \'' . $id . '\''
+				;
 		$database->setQuery( $query	);
 		$database->query();
 
@@ -586,9 +571,9 @@ switch( strtolower( $task ) ) {
 		global $database;
 
 		$query = 'UPDATE #__acctexp_eventlog'
-		. ' SET notify = \'0\''
-		. ' WHERE notify = \'1\''
-		;
+				. ' SET `notify` = \'0\''
+				. ' WHERE `notify` = \'1\''
+				;
 		$database->setQuery( $query	);
 		$database->query();
 
@@ -610,11 +595,11 @@ function aecCentral( $option, $searchresult=null )
 	global $database, $mainframe, $mosConfig_list_limit;
 
 	$query = 'SELECT *'
-	. ' FROM #__acctexp_eventlog'
-	. ' WHERE notify = \'1\''
-	. ' ORDER BY datetime DESC'
-	. ' LIMIT 0, 10'
-	;
+			. ' FROM #__acctexp_eventlog'
+			. ' WHERE `notify` = \'1\''
+			. ' ORDER BY `datetime` DESC'
+			. ' LIMIT 0, 10'
+			;
 	$database->setQuery( $query	);
 	$notices = $database->loadObjectList();
 
@@ -699,9 +684,9 @@ function help( $option )
 	$objentry	= null;
 
 	$query = 'SELECT *'
-	. ' FROM #__acctexp_plans'
- 	. ' WHERE active = \'1\''
- 	;
+			. ' FROM #__acctexp_plans'
+		 	. ' WHERE `active` = \'1\''
+		 	;
  	$database->setQuery( $query );
  	$database->loadObject( $objentry );
 
@@ -728,10 +713,10 @@ function help( $option )
 		$result = null;
 		$module = $modules[$i][0];
 
-		$query = 'SELECT published'
-		. ' FROM #__modules'
-		. ' WHERE module = \'' . $module . '\''
-		;
+		$query = 'SELECT `published`'
+				. ' FROM #__modules'
+				. ' WHERE `module` = \'' . $module . '\''
+				;
 		$database->setQuery( $query );
 		$result = $database->loadResult();
 
@@ -851,9 +836,9 @@ function editUser(  $option, $userid, $subscriptionid, $task )
 
  	// count number of payments of user
  	$query = 'SELECT count(*)'
- 	. ' FROM #__acctexp_invoices'
- 	. ' WHERE userid = \'' . $userid[0] . '\''
- 	;
+		 	. ' FROM #__acctexp_invoices'
+		 	. ' WHERE `userid` = \'' . $userid[0] . '\''
+		 	;
  	$database->setQuery( $query );
 
  	$invoices_total	= $database->loadResult();
@@ -865,12 +850,12 @@ function editUser(  $option, $userid, $subscriptionid, $task )
 	}
 
  	// get payments of user
- 	$query = 'SELECT id'
- 	. ' FROM #__acctexp_invoices'
- 	. ' WHERE userid = \'' . $userid[0] . '\''
- 	. ' ORDER BY transaction_date DESC'
- 	. ' LIMIT ' . $invoices_min_limit . ',' . $invoices_limit
- 	;
+ 	$query = 'SELECT `id`'
+		 	. ' FROM #__acctexp_invoices'
+		 	. ' WHERE `userid` = \'' . $userid[0] . '\''
+		 	. ' ORDER BY `transaction_date` DESC'
+		 	. ' LIMIT ' . $invoices_min_limit . ',' . $invoices_limit
+		 	;
  	$database->setQuery( $query );
  	$invoice_ids = $database->loadResultArray();
  	if ( $database->getErrorNum() ) {
@@ -959,10 +944,10 @@ function editUser(  $option, $userid, $subscriptionid, $task )
 	$available_plans	= array();
 	$available_plans[]	= mosHTML::makeOption( '0', _PAYPLAN_NOPLAN );
 
-	$query = 'SELECT id AS value, name AS text'
-	. ' FROM #__acctexp_plans'
-	. ' WHERE active = \'1\''
-	;
+	$query = 'SELECT `id` AS value, `name` AS text'
+			. ' FROM #__acctexp_plans'
+			. ' WHERE `active` = \'1\''
+			;
 	$database->setQuery( $query	);
 
 	$dbaplans = $database->loadObjectList();
@@ -1079,9 +1064,9 @@ function removeUser( $userid, $option )
 		foreach ( $userid as $id ) {
 			// Get REAL UserID
 			$query = 'SELECT userid'
-			. ' FROM #__acctexp'
-			. ' WHERE id = ' . $id
-			;
+					. ' FROM #__acctexp'
+					. ' WHERE `id` = ' . $id
+					;
 			$uid = null;
 			$database->setQuery( $query );
 			$uid = $database->loadResult();
@@ -1128,8 +1113,8 @@ function removeClosedSubscription( $userid, $option )
 
 	$userids = implode(',', $userid);
 	$query  = 'DELETE FROM #__acctexp'
-	. ' WHERE userid IN (' . $userids . ')'
-	;
+			. ' WHERE `userid` IN (' . $userids . ')'
+			;
  	$database->setQuery( $query );
 	if ( !$database->query() ) {
 		echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
@@ -1137,8 +1122,8 @@ function removeClosedSubscription( $userid, $option )
 
 	// Delete from the payment history
 	$query = 'DELETE FROM #__acctexp_log_history'
-	. ' WHERE user_id IN (' . $userids . ')'
-	;
+			. ' WHERE `user_id` IN (' . $userids . ')'
+			;
  	$database->setQuery( $query );
 	if ( !$database->query() ) {
 		echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
@@ -1150,8 +1135,8 @@ function removeClosedSubscription( $userid, $option )
 
 	if ( GeneralInfoRequester::detect_component('CB') && GeneralInfoRequester::detect_component('CBE') ) {
 		$query = 'DELETE FROM #__comprofiler'
-		. ' WHERE id IN (' . $userids . ')'
-		;
+				. ' WHERE `id` IN (' . $userids . ')'
+				;
 		$database->setQuery($query);
 		$database->query();
 	}
@@ -1179,8 +1164,8 @@ function removeClosedSubscription( $userid, $option )
 	}
 
 	$query = 'DELETE FROM #__acctexp_subscr'
-	. ' WHERE userid IN (' . $userids . ')'
-	;
+			. ' WHERE `userid` IN (' . $userids . ')'
+			;
  	$database->setQuery( $query );
 	if ( !$database->query() ) {
 		echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
@@ -1208,16 +1193,16 @@ function removePendingSubscription( $userid, $option )
 	$userids = implode(',', $userid);
 
 	$query = 'DELETE FROM #__acctexp'
-	. ' WHERE userid IN (' . $userids . ')'
-	;
+			. ' WHERE `userid` IN (' . $userids . ')'
+			;
  	$database->setQuery( $query );
 	if ( !$database->query() ) {
 		echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
 	}
 
 	$query = 'DELETE FROM #__acctexp_log_history'
-	. ' WHERE user_id IN (' . $userids . ')'
-	;
+			. ' WHERE `user_id` IN (' . $userids . ')'
+			;
  	$database->setQuery( $query );
 	if ( !$database->query() ) {
 		echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
@@ -1229,8 +1214,8 @@ function removePendingSubscription( $userid, $option )
 
 	if ( GeneralInfoRequester::detect_component( 'CB' ) && GeneralInfoRequester::detect_component( 'CBE' ) ) {
 		$query = 'DELETE FROM #__comprofiler'
-		. ' WHERE id IN (' . $userids . ')'
-		;
+				. ' WHERE `id` IN (' . $userids . ')'
+				;
 		$database->setQuery( $query );
 		$database->query();
 	}
@@ -1257,8 +1242,8 @@ function removePendingSubscription( $userid, $option )
 	}
 
 	$query = 'DELETE FROM #__acctexp_subscr'
-	. ' WHERE userid IN (' . $userids . ')'
-	;
+			. ' WHERE `userid` IN (' . $userids . ')'
+			;
  	$database->setQuery( $query );
 	if ( !$database->query() ) {
 		echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
@@ -1510,24 +1495,24 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 	// get the total number of records
 	if ( $notconfig ) {
-		$query	= 'SELECT userid'
-		. ' FROM #__acctexp_subscr'
-		. ' WHERE userid != \'\''
-		;
+		$query	= 'SELECT `userid`'
+				. ' FROM #__acctexp_subscr'
+				. ' WHERE `userid` != \'\''
+				;
 		$database->setQuery( $query );
 		$userarray = $database->loadResultArray();
 
 		$query = 'SELECT count(*)'
-		. ' FROM #__users'
-		;
+				. ' FROM #__users'
+				;
 		if ( count( $userarray ) > 0 ) {
 			$query .= ' WHERE id NOT IN (' . implode(',', $userarray) . ')';
 		}
 	} else {
 		$query = 'SELECT count(*)'
-		. ' FROM #__acctexp_subscr AS a'
-		. ' INNER JOIN #__users AS b ON a.userid = b.id'
-		;
+				. ' FROM #__acctexp_subscr AS a'
+				. ' INNER JOIN #__users AS b ON a.userid = b.id'
+				;
 
 		if ( count( $where_or ) ) {
 			$where[] = ( count( $where_or ) ? '(' . implode( ' OR ', $where_or ) . ')' : '' );
@@ -1545,10 +1530,10 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 	// get the subset (based on limits) of required records
 	if ( $notconfig ) {
-		$query = 'SELECT userid'
-		. ' FROM #__acctexp_subscr'
-		. ' WHERE userid != \'\''
-		;
+		$query = 'SELECT `userid`'
+				. ' FROM #__acctexp_subscr'
+				. ' WHERE `userid` != \'\''
+				;
 		$database->setQuery( $query );
 		$userarray = $database->loadResultArray();
 
@@ -1558,22 +1543,22 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	        }
 	    }
 
-		$query = 'SELECT id, name, username, usertype'
-		. ' FROM #__users'
-		;
+		$query = 'SELECT `id`, `name`, `username`, `usertype`'
+				. ' FROM #__users'
+				;
 		if ( count( $userarray ) > 0) {
-			$query .= ' WHERE id NOT IN (' . implode( ',', $userarray ) . ')';
+			$query .= ' WHERE `id` NOT IN (' . implode( ',', $userarray ) . ')';
 		}
 			$query .=	' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit;
 	} else {
 		$query = 'SELECT a.*, b.name, b.username, b.email, c.name AS plan_name'
-		. ' FROM #__acctexp_subscr AS a'
-		. ' INNER JOIN #__users AS b ON a.userid = b.id'
-		. ' LEFT JOIN #__acctexp_plans AS c ON a.plan = c.id'
-		. ( count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
-		. ' ORDER BY ' . $orderby
-		. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
-		;
+				. ' FROM #__acctexp_subscr AS a'
+				. ' INNER JOIN #__users AS b ON a.userid = b.id'
+				. ' LEFT JOIN #__acctexp_plans AS c ON a.plan = c.id'
+				. ( count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
+				. ' ORDER BY ' . $orderby
+				. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+				;
 	}
 
 	$database->setQuery( 'SET SQL_BIG_SELECTS=1');
@@ -1611,10 +1596,10 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$lists['orderNav'] = mosHTML::selectList( $sel, 'orderby', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $orderby );
 
 	// Get list of plans for filter
-	$query = 'SELECT id, name'
-	. ' FROM #__acctexp_plans'
-	. ' ORDER BY ordering'
-	;
+	$query = 'SELECT `id`, `name`'
+			. ' FROM #__acctexp_plans'
+			. ' ORDER BY `ordering`'
+			;
 	$database->setQuery( $query );
 	$db_plans = $database->loadObjectList();
 
@@ -1709,10 +1694,10 @@ function editSettings( $option )
 	$available_plans	= array();
 	$available_plans[]	= mosHTML::makeOption( '0', _PAYPLAN_NOPLAN );
 
-	$query = 'SELECT id AS value, name AS text'
-	. ' FROM #__acctexp_plans'
-	. ' WHERE active = \'1\''
-	;
+	$query = 'SELECT `id` AS value, `name` AS text'
+			. ' FROM #__acctexp_plans'
+			. ' WHERE `active` = \'1\''
+			;
 	$database->setQuery( $query );
 	$dbaplans = $database->loadObjectList();
 
@@ -2181,8 +2166,8 @@ function listSubscriptionPlans( $option )
 
  	// get the total number of records
  	$query = 'SELECT count(*)'
- 	. ' FROM #__acctexp_plans'
- 	;
+		 	. ' FROM #__acctexp_plans'
+		 	;
  	$database->setQuery( $query );
  	$total = $database->loadResult();
  	echo $database->getErrorMsg();
@@ -2196,11 +2181,11 @@ function listSubscriptionPlans( $option )
 
  	// get the subset (based on limits) of records
  	$query = 'SELECT *'
- 	. ' FROM #__acctexp_plans'
- 	. ' GROUP BY id'
- 	. ' ORDER BY ordering'
- 	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
- 	;
+		 	. ' FROM #__acctexp_plans'
+		 	. ' GROUP BY `id`'
+		 	. ' ORDER BY `ordering`'
+		 	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+		 	;
 	$database->setQuery( $query );
 
  	$rows = $database->loadObjectList();
@@ -2211,11 +2196,11 @@ function listSubscriptionPlans( $option )
 
 	foreach ( $rows as $n => $row ) {
 		$query = 'SELECT count(*)'
-		. 'FROM #__users AS a'
-		. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
-		. ' WHERE b.plan = ' . $row->id
-		. ' AND (b.status = \'Active\' OR b.status = \'Trial\')'
-		;
+				. 'FROM #__users AS a'
+				. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
+				. ' WHERE b.plan = ' . $row->id
+				. ' AND (b.status = \'Active\' OR b.status = \'Trial\')'
+				;
 		$database->setQuery( $query	);
 
 	 	$rows[$n]->usercount = $database->loadResult();
@@ -2225,11 +2210,11 @@ function listSubscriptionPlans( $option )
 	 	}
 
 	 	$query = 'SELECT count(*)'
-		. ' FROM #__users AS a'
-		. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
-		. ' WHERE b.plan = ' . $row->id
-		. ' AND (b.status = \'Expired\')'
-		;
+				. ' FROM #__users AS a'
+				. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
+				. ' WHERE b.plan = ' . $row->id
+				. ' AND (b.status = \'Expired\')'
+				;
 		$database->setQuery( $query	);
 
 	 	$rows[$n]->expiredcount = $database->loadResult();
@@ -2279,12 +2264,12 @@ function editSubscriptionPlan( $id, $option )
 
 		// Checking if there is already a user, which disables certain actions
 		$query  = 'SELECT count(*)'
-		. ' FROM #__users AS a'
-		. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
-		. ' WHERE b.plan = ' . $row->id
-		. ' AND (b.status = \'Active\' OR b.status = \'Trial\')'
-		. ' AND recurring =\'1\''
-		;
+				. ' FROM #__users AS a'
+				. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
+				. ' WHERE b.plan = ' . $row->id
+				. ' AND (b.status = \'Active\' OR b.status = \'Trial\')'
+				. ' AND b.recurring =\'1\''
+				;
 		$database->setQuery( $query );
 		$hasrecusers = ( $database->loadResult() > 0 ) ? true : false;
 	}
@@ -2556,11 +2541,11 @@ function editSubscriptionPlan( $id, $option )
 	$available_plans = array();
 	$available_plans[] = mosHTML::makeOption( '0', _PAYPLAN_NOPLAN );
 
-	$query = 'SELECT id AS value, name AS text'
-	. ' FROM #__acctexp_plans'
-	. ' WHERE active = 1'
-	. ' AND id <> ' . $id
-	;
+	$query = 'SELECT `id` AS value, `name` AS text'
+			. ' FROM #__acctexp_plans'
+			. ' WHERE `active` = 1'
+			. ' AND `id` <> ' . $id
+			;
 	$database->setQuery( $query );
 	$payment_plans = $database->loadObjectList();
 
@@ -2573,10 +2558,10 @@ function editSubscriptionPlan( $id, $option )
 
 	// get similar plans
 	if ( !empty( $params_values['similarplans'] ) ) {
-		$query = 'SELECT id AS value, name As text'
-		. ' FROM #__acctexp_plans'
-		. ' WHERE id IN (' . implode( ',', explode( ';', $params_values['similarplans'] ) ) .')'
-		;
+		$query = 'SELECT `id` AS value, `name` As text'
+				. ' FROM #__acctexp_plans'
+				. ' WHERE `id` IN (' . implode( ',', explode( ';', $params_values['similarplans'] ) ) .')'
+				;
 		$database->setQuery( $query );
 
 	 	$sel_similar_plans = $database->loadObjectList();
@@ -2588,10 +2573,10 @@ function editSubscriptionPlan( $id, $option )
 
 	// get equal plans
 	if ( !empty( $params_values['equalplans'] ) ) {
-		$query = 'SELECT id AS value, name AS text'
-		. ' FROM #__acctexp_plans'
-		. ' WHERE id IN (' . implode( ',', explode( ';', $params_values['equalplans'] ) ) .')'
-		;
+		$query = 'SELECT `id` AS value, `name` AS text'
+				. ' FROM #__acctexp_plans'
+				. ' WHERE `id` IN (' . implode( ',', explode( ';', $params_values['equalplans'] ) ) .')'
+				;
 		$database->setQuery( $query );
 
 	 	$sel_equal_plans = $database->loadObjectList();
@@ -2605,9 +2590,9 @@ function editSubscriptionPlan( $id, $option )
 	$available_plans = array();
 	$available_plans[] = mosHTML::makeOption( '0', _PAYPLAN_NOPLAN );
 
-	$query = 'SELECT id AS value, name AS text'
-	. ' FROM #__acctexp_plans'
-	;
+	$query = 'SELECT `id` AS value, `name` AS text'
+			. ' FROM #__acctexp_plans'
+			;
 	$database->setQuery( $query );
 	$plans = $database->loadObjectList();
 
@@ -2637,18 +2622,18 @@ function editSubscriptionPlan( $id, $option )
 									'value', 'text', arrayValueDefault($restrictions_values, 'overallplan_req_excluded', 0));
 
 	// get available micro integrations
-	$query = 'SELECT id AS value, CONCAT(`name`, " - ", `desc`) AS text'
-	. ' FROM #__acctexp_microintegrations'
-	. ' WHERE active = 1'
-	. ' ORDER BY ordering'
-	;
+	$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
+			. ' FROM #__acctexp_microintegrations'
+			. ' WHERE `active` = 1'
+			. ' ORDER BY ordering'
+			;
 	$database->setQuery( $query );
 	$mi_list = $database->loadObjectList();
 
-	$query = 'SELECT id AS value, CONCAT(`name`, " - ", `desc`) AS text'
-	. ' FROM #__acctexp_microintegrations'
-	. ' WHERE id IN (' . implode( ',', explode( ';', $row->micro_integrations ) ) . ')'
-	;
+	$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
+			. ' FROM #__acctexp_microintegrations'
+			. ' WHERE `id` IN (' . implode( ',', explode( ';', $row->micro_integrations ) ) . ')'
+			;
  	$database->setQuery( $query );
 	$selected_mi = $database->loadObjectList();
 
@@ -2733,9 +2718,9 @@ function removeSubscriptionPlan( $id, $option )
 	$ids = implode( ',', $id );
 
 	$query = 'SELECT count(*)'
-	. ' FROM #__acctexp_plans'
-	. ' WHERE id IN (' . $ids . ')'
-	;
+			. ' FROM #__acctexp_plans'
+			. ' WHERE `id` IN (' . $ids . ')'
+			;
 	$database->setQuery( $query );
 	$total = $database->loadResult();
 
@@ -2747,11 +2732,11 @@ function removeSubscriptionPlan( $id, $option )
 	// See if we have registered users on this plan.
 	// If we have it, the plan(s) cannot be removed
 	$query = 'SELECT count(*)'
-	. ' FROM #__users AS a'
-	. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
-	. ' WHERE b.plan = ' . $row->id
-	. ' AND (b.status = \'Active\' OR b.status = \'Trial\')'
-	;
+			. ' FROM #__users AS a'
+			. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
+			. ' WHERE b.plan = ' . $row->id
+			. ' AND (b.status = \'Active\' OR b.status = \'Trial\')'
+			;
 	$database->setQuery( $query );
 	$subscribers = $database->loadResult();
 
@@ -2760,8 +2745,8 @@ function removeSubscriptionPlan( $id, $option )
 	} else {
 		// Delete plans
 		$query = 'DELETE FROM #__acctexp_plans'
-		. ' WHERE id IN (' . $ids . ')'
-		;
+				. ' WHERE `id` IN (' . $ids . ')'
+				;
 		$database->setQuery( $query );
 		if ( !$database->query() ) {
 			echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
@@ -2793,9 +2778,9 @@ function changeSubscriptionPlan( $cid=null, $state=0, $type, $option )
 	$cids	= implode( ',', $cid );
 
 	$query = 'UPDATE #__acctexp_plans'
-	. ' SET ' . $type . ' = \'' . $state . '\''
-	. ' WHERE id IN (' . $cids . ')'
-	;
+			. ' SET `' . $type . '` = \'' . $state . '\''
+			. ' WHERE `id` IN (' . $cids . ')'
+			;
 	$database->setQuery( $query );
 
 	if ( !$database->query() ) {
@@ -2823,8 +2808,8 @@ function listMicroIntegrations( $option )
 
  	// get the total number of records
  	$query = 'SELECT count(*)'
- 	. ' FROM #__acctexp_microintegrations'
- 	;
+		 	. ' FROM #__acctexp_microintegrations'
+		 	;
  	$database->setQuery( $query );
  	$total = $database->loadResult();
  	echo $database->getErrorMsg();
@@ -2838,11 +2823,11 @@ function listMicroIntegrations( $option )
 
  	// get the subset (based on limits) of required records
  	$query = 'SELECT *'
- 	. ' FROM #__acctexp_microintegrations'
- 	. ' GROUP BY id'
- 	. ' ORDER BY ordering'
- 	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
- 	;
+		 	. ' FROM #__acctexp_microintegrations'
+		 	. ' GROUP BY `id`'
+		 	. ' ORDER BY `ordering`'
+		 	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+		 	;
  	$database->setQuery( $query );
 
  	$rows = $database->loadObjectList();
@@ -2978,9 +2963,9 @@ function removeMicroIntegration( $id, $option )
 	$ids = implode( ',', $id );
 
 	$query = 'SELECT count(*)'
-	. ' FROM #__acctexp_microintegrations'
-	. ' WHERE id IN (' . $ids . ')'
-	;
+			. ' FROM #__acctexp_microintegrations'
+			. ' WHERE `id` IN (' . $ids . ')'
+			;
 	$database->setQuery( $query );
 	$total = $database->loadResult();
 
@@ -3000,8 +2985,8 @@ function removeMicroIntegration( $id, $option )
 
 	// Micro Integrations from table
 	$query = 'DELETE FROM #__acctexp_microintegrations'
-	. ' WHERE id IN (' . $ids . ')'
-	;
+			. ' WHERE `id` IN (' . $ids . ')'
+			;
 	$database->setQuery( $query	);
 
 	if ( !$database->query() ) {
@@ -3040,9 +3025,9 @@ function changeMicroIntegration( $cid=null, $state=0, $option )
 	$cids = implode( ',', $cid );
 
 	$query = 'UPDATE #__acctexp_microintegrations'
-	. ' SET active = \'' . $state . '\''
-	. ' WHERE id IN (' . $cids . ')'
-	;
+			. ' SET `active` = \'' . $state . '\''
+			. ' WHERE `id` IN (' . $cids . ')'
+			;
 	$database->setQuery( $query );
 	if ( !$database->query() ) {
 		echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
@@ -3074,8 +3059,8 @@ function listCoupons( $option, $type )
 	}
 
 	$query = 'SELECT count(*)'
-	. ' FROM ' . $table
-	;
+			. ' FROM ' . $table
+			;
  	$database->setQuery( $query );
  	$total = $database->loadResult();
 
@@ -3088,11 +3073,11 @@ function listCoupons( $option, $type )
 
  	// get the subset (based on limits) of required records
  	$query = 'SELECT *'
- 	. ' FROM ' . $table
- 	. ' GROUP BY id'
- 	. ' ORDER BY ordering'
- 	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
- 	;
+		 	. ' FROM ' . $table
+		 	. ' GROUP BY `id`'
+		 	. ' ORDER BY `ordering`'
+		 	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+		 	;
  	$database->setQuery( $query	);
 
  	$rows = $database->loadObjectList();
@@ -3231,9 +3216,9 @@ function editCoupon( $id, $option, $new, $type )
 	$available_plans = array();
 	$available_plans[]			= mosHTML::makeOption( '0', _PAYPLAN_NOPLAN );
 
-	$query = 'SELECT id as value, name as text'
-	. ' FROM #__acctexp_plans'
-	;
+	$query = 'SELECT `id` as value, `name` as text'
+			. ' FROM #__acctexp_plans'
+			;
 	$database->setQuery( $query );
 	$plans = $database->loadObjectList();
 
@@ -3257,10 +3242,10 @@ function editCoupon( $id, $option, $new, $type )
 
 	// get usages
 	if ( !empty( $restrictions_values['usage_plans'] ) ) {
-		$query = 'SELECT id AS value, name as text'
-		. ' FROM #__acctexp_plans'
-		. ' WHERE id IN (' . implode( ',', explode( ';', $restrictions_values['usage_plans'] ) ) . ')'
-		;
+		$query = 'SELECT `id` AS value, `name` as text'
+				. ' FROM #__acctexp_plans'
+				. ' WHERE `id` IN (' . implode( ',', explode( ';', $restrictions_values['usage_plans'] ) ) . ')'
+				;
 		$database->setQuery( $query );
 
 	 	$sel_usage_plans = $database->loadObjectList();
@@ -3274,50 +3259,50 @@ function editCoupon( $id, $option, $new, $type )
 	// get available micro integrations
 	$available_mi = array();
 
-	$query = 'SELECT id AS value, CONCAT(`name`, " - ", `desc`) AS text'
-	. ' FROM #__acctexp_microintegrations'
-	. ' WHERE active = 1'
-	. ' ORDER BY ordering'
-	;
+	$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
+			. ' FROM #__acctexp_microintegrations'
+			. ' WHERE `active` = 1'
+			. ' ORDER BY `ordering`'
+			;
 	$database->setQuery( $query );
 	$mi_list = $database->loadObjectList();
 
  	// mic: fix for wrong select
- 	$query = 'SELECT id AS value, CONCAT(`name`, " - ", `desc`) AS text'
- 	. ' FROM #__acctexp_microintegrations'
- 	. ( $mi_list ? ' WHERE id IN (' . implode( ',', explode( ',', $mi_list->value ) ) . ')' : '' )
- 	;
+ 	$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
+		 	. ' FROM #__acctexp_microintegrations'
+		 	. ( $mi_list ? ' WHERE `id` IN (' . implode( ',', explode( ',', $mi_list->value ) ) . ')' : '' )
+		 	;
  	$database->setQuery( $query );
 	$selected_mi = $database->loadObjectList();
 
 	$lists['micro_integrations'] = mosHTML::selectList( $mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple', 'value', 'text', $selected_mi );
 
-	$query = 'SELECT coupon_code as value, coupon_code as text'
-	. ' FROM #__acctexp_coupons'
-	. ' WHERE coupon_code != \'' . $cph->coupon->coupon_code . '\''
-	;
+	$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
+			. ' FROM #__acctexp_coupons'
+			. ' WHERE `coupon_code` != \'' . $cph->coupon->coupon_code . '\''
+			;
 	$database->setQuery( $query );
 	$coupons = $database->loadObjectList();
 
-	$query = 'SELECT coupon_code as value, coupon_code as text'
-	. ' FROM #__acctexp_coupons_static'
-	. ' WHERE coupon_code != \'' . $cph->coupon->coupon_code . '\''
-	;
+	$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
+			. ' FROM #__acctexp_coupons_static'
+			. ' WHERE `coupon_code` != \'' . $cph->coupon->coupon_code . '\''
+			;
 	$database->setQuery( $query );
 	$coupons = array_merge( $database->loadObjectList(), $coupons );
 
 	if ( !empty( $restrictions_values['bad_combinations'] ) ) {
-		$query = 'SELECT coupon_code as value, coupon_code as text'
-		. ' FROM #__acctexp_coupons'
-		. ' WHERE coupon_code IN (\'' . implode( '\',\'', explode( ';', $restrictions_values['bad_combinations'] ) ) . '\')'
-		;
+		$query = 'SELECT `coupon_codev` as value, `coupon_code` as text'
+				. ' FROM #__acctexp_coupons'
+				. ' WHERE `coupon_code` IN (\'' . implode( '\',\'', explode( ';', $restrictions_values['bad_combinations'] ) ) . '\')'
+				;
 		$database->setQuery( $query );
 		$sel_coupons = $database->loadObjectList();
 
-		$query = 'SELECT coupon_code as value, coupon_code as text'
-		. ' FROM #__acctexp_coupons_static'
-		. ' WHERE coupon_code IN (\'' . implode( '\',\'', explode( ';', $restrictions_values['bad_combinations'] ) ) . '\')'
-		;
+		$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
+				. ' FROM #__acctexp_coupons_static'
+				. ' WHERE `coupon_code` IN (\'' . implode( '\',\'', explode( ';', $restrictions_values['bad_combinations'] ) ) . '\')'
+				;
 		$database->setQuery( $query );
 		$sel_coupons = array_merge( $database->loadObjectList(), $sel_coupons );
 	} else {
@@ -3422,9 +3407,9 @@ function removeCoupon( $id, $option, $returnTask, $type )
 
 	// Delete Coupons from table
 	$query = 'DELETE FROM #__acctexp_coupons'
-	. ( $type ? '_static' : '' )
-	. ' WHERE id IN (' . $ids . ')'
-	;
+			. ( $type ? '_static' : '' )
+			. ' WHERE `id` IN (' . $ids . ')'
+			;
 	$database->setQuery( $query	);
 
 	if ( !$database->query() ) {
@@ -3457,11 +3442,10 @@ function changeCoupon( $cid=null, $state=0, $option, $type )
 	$total	= count( $cid );
 	$cids	= implode( ',', $cid );
 
-	$query = 'UPDATE #__acctexp_coupons'
-	. ( $type ? '_static' : '' )
-	. ' SET active = \'' . $state . '\''
-	. ' WHERE id IN (' . $cids . ')'
-	;
+	$query = 'UPDATE #__acctexp_coupons' . ( $type ? '_static' : '' )
+			. ' SET `active` = \'' . $state . '\''
+			. ' WHERE `id` IN (' . $cids . ')'
+			;
 	$database->setQuery( $query	);
 	$database->query();
 
@@ -3549,21 +3533,21 @@ function invoices( $option )
 
 		$formatted =  Invoice::deformatInvoiceNumber( $fakeinvoice );
 
-		$where = 'LOWER(invoice_number) LIKE \'%' . $unformatted . '%\''
-					. ' OR LOWER(secondary_ident) LIKE \'%' . $unformatted . '%\''
-					. ' OR id LIKE \'%' . $unformatted . '%\'';
+		$where = 'LOWER(`invoice_number`) LIKE \'%' . $unformatted . '%\''
+					. ' OR LOWER(`secondary_ident`) LIKE \'%' . $unformatted . '%\''
+					. ' OR `id` LIKE \'%' . $unformatted . '%\'';
 
 		if ( $formatted != $unformatted ) {
-			$where .= ' OR LOWER(invoice_number) LIKE \'%' . $formatted . '%\''
-						. ' OR LOWER(secondary_ident) LIKE \'%' . $formatted . '%\''
-						. ' OR id LIKE \'%' . $formatted . '%\'';
+			$where .= ' OR LOWER(`invoice_number`) LIKE \'%' . $formatted . '%\''
+						. ' OR LOWER(`secondary_ident`) LIKE \'%' . $formatted . '%\''
+						. ' OR `id` LIKE \'%' . $formatted . '%\'';
 		}
 	}
 
 	// get the total number of records
 	$query = 'SELECT count(*)'
-	. ' FROM #__acctexp_invoices'
-	;
+			. ' FROM #__acctexp_invoices'
+			;
 	$database->setQuery( $query );
 	$total = $database->loadResult();
 	echo $database->getErrorMsg();
@@ -3573,11 +3557,11 @@ function invoices( $option )
 
 	// Lets grab the data and fill it in.
 	$query = 'SELECT *'
-	. ' FROM #__acctexp_invoices'
-	. ( !empty( $where ) ? ( ' WHERE ' . $where . ' ' ) : '' )
-	. ' ORDER BY created_date DESC'
-	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit;
-	;
+			. ' FROM #__acctexp_invoices'
+			. ( !empty( $where ) ? ( ' WHERE ' . $where . ' ' ) : '' )
+			. ' ORDER BY `created_date` DESC'
+			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit;
+			;
 	$database->setQuery( $query );
 	$rows = $database->loadObjectList();
 
@@ -3636,8 +3620,8 @@ function cancelInvoice( $option, $invoice_number, $task )
 		$objInvoice->load( $invoiceid );
 
 		$query = 'DELETE FROM #__acctexp_invoices'
-		. ' WHERE invoice_number = \'' . $invoice_number . '\''
-		;
+				. ' WHERE `invoice_number` = \'' . $invoice_number . '\''
+				;
 		$database->setQuery( $query );
 		$database->query();
 
@@ -3661,13 +3645,13 @@ function history( $option )
 
 	$where = array();
 	if ( $search ) {
-		$where[] = 'LOWER(user_name) LIKE \'%' . $database->getEscaped( trim( strtolower( $search ) ) ) . '%\'';
+		$where[] = 'LOWER(`user_name`) LIKE \'%' . $database->getEscaped( trim( strtolower( $search ) ) ) . '%\'';
 	}
 
 	// get the total number of records
 	$query = 'SELECT count(*)'
-	. '  FROM #__acctexp_log_history'
-	;
+			. '  FROM #__acctexp_log_history'
+			;
 	$database->setQuery( $query );
 	$total = $database->loadResult();
 	echo $database->getErrorMsg();
@@ -3677,12 +3661,12 @@ function history( $option )
 
 	// Lets grab the data and fill it in.
 	$query = 'SELECT *'
-	. ' FROM #__acctexp_log_history'
-	. ( count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
-	. ' GROUP BY transaction_date'
-	. ' ORDER BY transaction_date DESC'
-	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
-	;
+			. ' FROM #__acctexp_log_history'
+			. ( count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
+			. ' GROUP BY `transaction_date`'
+			. ' ORDER BY `transaction_date` DESC'
+			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+			;
 	$database->setQuery( $query );
 	$rows = $database->loadObjectList();
 
@@ -3704,21 +3688,21 @@ function eventlog( $option )
 
 	$where = array();
 	if ( $search ) {
-		$where[] = 'LOWER(event) LIKE \'%' . $database->getEscaped( trim( strtolower( $search ) ) ) . '%\'';
+		$where[] = 'LOWER(`event`) LIKE \'%' . $database->getEscaped( trim( strtolower( $search ) ) ) . '%\'';
 	}
 
 	$tags = ( !empty( $_REQUEST['tags'] ) ? $_REQUEST['tags'] : null );
 
 	if ( is_array( $tags ) ) {
 		foreach ( $tags as $tag ) {
-			$where[] = 'LOWER(tags) LIKE \'%' . trim( strtolower( $tag ) ) . '%\'';
+			$where[] = 'LOWER(`tags`) LIKE \'%' . trim( strtolower( $tag ) ) . '%\'';
 		}
 	}
 
 	// get the total number of records
 	$query = 'SELECT count(*)'
-	. ' FROM #__acctexp_eventlog'
-	;
+			. ' FROM #__acctexp_eventlog'
+			;
 	$database->setQuery( $query );
 	$total = $database->loadResult();
 	echo $database->getErrorMsg();
@@ -3728,11 +3712,11 @@ function eventlog( $option )
 
 	// Lets grab the data and fill it in.
 	$query = 'SELECT *'
-	. ' FROM #__acctexp_eventlog'
-	. ( count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
-	. ' ORDER BY id DESC'
-	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
-	;
+			. ' FROM #__acctexp_eventlog'
+			. ( count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
+			. ' ORDER BY `id` DESC'
+			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+			;
 	$database->setQuery( $query );
 	$rows = $database->loadObjectList();
 
@@ -3771,11 +3755,11 @@ function migrate( $option )
 {
 	global $database;
 
-	$query = 'SELECT id'
-	. ' FROM #__users'
-	. ' WHERE LOWER( usertype ) != \'superadministrator\''
-	. ' OR LOWER( usertype ) != \'super administrator\''
-	;
+	$query = 'SELECT `id`'
+			. ' FROM #__users'
+			. ' WHERE LOWER( `usertype` ) != \'superadministrator\''
+			. ' OR LOWER( vusertype` ) != \'super administrator\''
+			;
 	$database->setQuery( $query );
 	$rows = $database->loadResultArray();
 
@@ -3871,16 +3855,16 @@ function quicklookup( $option )
 
 	// Try to find this as a username or name
 	$query = 'SELECT count(*)'
-	. ' FROM #__users'
-	. ' WHERE username LIKE \'%' . $search . '%\' OR name LIKE \'%' . $search . '%\''
-	;
+			. ' FROM #__users'
+			. ' WHERE `username` LIKE \'%' . $search . '%\' OR `name` LIKE \'%' . $search . '%\''
+			;
 	$database->setQuery( $query );
 	$request = $database->loadResult();
 
-	$query = 'SELECT id'
-	. ' FROM #__users'
-	. ' WHERE username LIKE \'%' . $search . '%\' OR name LIKE \'%' . $search . '%\''
-	;
+	$query = 'SELECT `id`'
+			. ' FROM #__users'
+			. ' WHERE `username` LIKE \'%' . $search . '%\' OR `name` LIKE \'%' . $search . '%\''
+			;
 	$database->setQuery( $query );
 
 	if ( $request > 1 ) {
@@ -3906,10 +3890,10 @@ function quicklookup( $option )
 
 	// If its not that, how about the user email?
 	if ( !$userid ) {
-		$query = 'SELECT id'
-		. ' FROM #__users'
-		. ' WHERE email = \'' . $search . '\''
-		;
+		$query = 'SELECT `id`'
+				. ' FROM #__users'
+				. ' WHERE `email` = \'' . $search . '\''
+				;
 		$database->setQuery( $query );
 
 		$userid = $database->loadResult();
@@ -3919,11 +3903,11 @@ function quicklookup( $option )
 
 	// Or maybe its an invoice number?
 	if ( !$userid ) {
-		$query = 'SELECT userid'
-		. ' FROM #__acctexp_invoices'
-		. ' WHERE invoice_number = \'' . $search . '\''
-		. ' OR secondary_ident = \'' . $search . '\''
-		;
+		$query = 'SELECT `userid`'
+				. ' FROM #__acctexp_invoices'
+				. ' WHERE `invoice_number` = \'' . $search . '\''
+				. ' OR `secondary_ident` = \'' . $search . '\''
+				;
 		$database->setQuery( $query );
 
 		$userid = $database->loadResult();
@@ -3932,10 +3916,10 @@ function quicklookup( $option )
 	}
 
 	// Try to find this as a userid
-	$query = 'SELECT id'
-	. ' FROM #__users'
-	. ' WHERE id LIKE \'' . $search . '\''
-	;
+	$query = 'SELECT `id`'
+			. ' FROM #__users'
+			. ' WHERE `id` LIKE \'' . $search . '\''
+			;
 	$database->setQuery( $query );
 
 	return $database->loadResult();
@@ -4527,9 +4511,9 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 				case 'menuentry':
 					$count = 0;
 					$query = 'SELECT COUNT(*)'
-					. ' FROM #__menu'
-					. ' WHERE link = \'index.php?option=com_acctexp&task=subscriptionDetails\''
-					;
+							. ' FROM #__menu'
+							. ' WHERE `link` = \'index.php?option=com_acctexp&task=subscriptionDetails\''
+							;
 					$database->setQuery( $query );
 					$count = $database->loadResult();
 
@@ -4588,18 +4572,18 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 				if ( !$undohack ) { // Create menu entry
 					if ( defined( 'JPATH_BASE' ) ) {
 						$query = 'INSERT INTO #__menu'
-						. ' VALUES (\'\', \'usermenu\', \'' . _AEC_SPEC_MENU_ENTRY . '\', \'' . strtolower( _AEC_SPEC_MENU_ENTRY ) . '\', \'index.php?option=com_acctexp&task=subscriptionDetails\', \'url\', 1, 0, 0, 6, 0, 0, \'0000-00-00 00:00:00\', 0, 0, 1, 0, \'menu_image=-1\', 0, 0, 0)'
-						;
+								. ' VALUES (\'\', \'usermenu\', \'' . _AEC_SPEC_MENU_ENTRY . '\', \'' . strtolower( _AEC_SPEC_MENU_ENTRY ) . '\', \'index.php?option=com_acctexp&task=subscriptionDetails\', \'url\', 1, 0, 0, 6, 0, 0, \'0000-00-00 00:00:00\', 0, 0, 1, 0, \'menu_image=-1\', 0, 0, 0)'
+								;
 					} else {
 						$query = 'INSERT INTO #__menu'
-						. ' VALUES (\'\', \'usermenu\', \'' . _AEC_SPEC_MENU_ENTRY . '\', \'index.php?option=com_acctexp&task=subscriptionDetails\', \'url\', 1, 0, 0, 0, 6, 0, \'0000-00-00 00:00:00\', 0, 0, 1, 0, \'menu_image=-1\')'
-						;
+								. ' VALUES (\'\', \'usermenu\', \'' . _AEC_SPEC_MENU_ENTRY . '\', \'index.php?option=com_acctexp&task=subscriptionDetails\', \'url\', 1, 0, 0, 0, 6, 0, \'0000-00-00 00:00:00\', 0, 0, 1, 0, \'menu_image=-1\')'
+								;
 					}
 				} else { // Remove menu entry
 					$query = 'DELETE'
-					. ' FROM #__menu'
-					. ' WHERE link LIKE \'index.php?option=com_acctexp&task=subscriptionDetails%\''
-					;
+							. ' FROM #__menu'
+							. ' WHERE `link` LIKE \'index.php?option=com_acctexp&task=subscriptionDetails%\''
+							;
 				}
 
 				$database->setQuery( $query );
