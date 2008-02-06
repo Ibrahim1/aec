@@ -88,7 +88,7 @@ class plgAuthenticationAECaccess extends JPlugin
 		$verification = AECToolbox::VerifyUser( $credentials['username'] );
 		//$verification = true;
 
-		if ( ( $verification === true ) && ( $response->status == JAUTHENTICATE_STATUS_SUCCESS ) ) {
+		if ( $verification === true ) {
 			$response->status = JAUTHENTICATE_STATUS_SUCCESS;
 		} else {
 			$this->_error = $verification;

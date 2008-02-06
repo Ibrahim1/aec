@@ -684,11 +684,12 @@ class Config_General extends paramDBTable
 		$def['invoicenum_display_separator']		= '-';
 		$def['use_recaptcha']						= 0;
 		$def['recaptcha_privatekey']				= '';
-		$def['recaptcha_publickey']				= '';
-		$def['ssl_signup']						= 0;
-		$def['error_notification_level']		= 32;
-		$def['email_notification_level']		= 512;
+		$def['recaptcha_publickey']					= '';
+		$def['ssl_signup']							= 0;
+		$def['error_notification_level']			= 32;
+		$def['email_notification_level']			= 512;
 		$def['temp_auth_exp']						= 60;
+		$def['skip_confirmation']					= 0;
 
 		// Insert a new entry if there is none yet
 		if ( empty( $this->settings ) ) {
@@ -3792,7 +3793,11 @@ class InvoiceFactory
 		$this->coupons = array();
 		$this->coupons['active'] = $aecConfig->cfg['enable_coupons'];
 
-		Payment_HTML::confirmForm( $option, $this, $user, $passthrough );
+		if ( !empty( $aecConfig->cfg['skip_confirmation'] ) ) {
+			$this->save( $option, $passthrough );
+		} else {
+			Payment_HTML::confirmForm( $option, $this, $user, $passthrough );
+		}
 	}
 
 
@@ -3816,8 +3821,6 @@ class InvoiceFactory
 		if ( $this->userid ) {
 			$user = new mosUser( $database );
 			$user->load( $this->userid );
-
-			$passthrough = false;
 		} else {
 			$this->userid = AECToolbox::saveUserRegistration( $option, $var );
 
