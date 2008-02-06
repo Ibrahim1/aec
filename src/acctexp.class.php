@@ -2685,7 +2685,7 @@ class SubscriptionPlan extends paramDBTable
 		$free_trial = 0;
 		$params		= $this->getParams();
 
-		if ( empty( $recurring ) ) {
+		if ( !empty( $recurring ) ) {
 			$amount = array();
 
 			// Only Allow a Trial when the User is coming from a different PlanGroup or is new
