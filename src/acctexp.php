@@ -321,7 +321,7 @@ function subscribe( $option )
 		}
 
 		if ( !empty( $_POST['email'] ) ) {
-			if ( $mosConfig_uniquemail ) {
+			if ( $mosConfig_uniquemail || ( defined( 'JPATH_BASE' )) ) { //J1.5 forces unique email
 				// check for existing email
 				$query = 'SELECT id'
 				. ' FROM #__users'
