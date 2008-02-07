@@ -71,13 +71,6 @@ if ( _EUCA_DEBUGMODE ) {
 
 $task = trim( mosGetParam( $_REQUEST, 'task', '' ) );
 
-// Getting rid of that darn Itemid
-if ( trim( mosGetParam( $_REQUEST, 'Itemid', '' ) == 99999999  ) ) {
-	unset( $_POST['Itemid'] );
-	unset( $_GET['Itemid'] );
-	unset( $_REQUEST['Itemid'] );
-}
-
 if ( !empty( $task ) ) {
 	switch ( strtolower( $task ) ) {
 		case 'register':

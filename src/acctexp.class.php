@@ -3500,7 +3500,18 @@ class InvoiceFactory
 
 	function promptpassword( $option, $var, $wrong=false )
 	{
-		Payment_HTML::promptpassword( $option, $var, $wrong );
+		$passthrough = array();
+		foreach ( $var as $ke => $va ) {
+			if ( is_array( $va ) ) {
+				foreach ( $va as $con ) {
+					$passthrough[] = array( $ke . '[]', $con );
+				}
+			} else {
+				$passthrough[] = array( $ke, $va );
+			}
+		}
+
+		Payment_HTML::promptpassword( $option, $passthrough, $wrong );
 	}
 
 	function create( $option, $intro=0, $usage=0, $processor=null, $invoice=0, $passthrough=false )
