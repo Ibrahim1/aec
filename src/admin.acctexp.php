@@ -4149,8 +4149,8 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 	}
 
 	$hacks[$n]['insert']			=	sprintf($aec_jhack3, $n, $n) . "\n" . $hacks[$n]['read'];
-	$hacks[$n]['important']			=	$v15 ? 0:1;
-	$hacks[$n]['legacy']			=	$v15 ? 1:0;
+	$hacks[$n]['important']		=	$v15 ? 0 : 1;
+	$hacks[$n]['legacy']			=	$v15 ? 1 : 0;
 
 	// registration.php
 	if ( !$v15 ) {
@@ -4311,15 +4311,15 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['read']			=	'default:';
 		$hacks[$n]['insert']		=	sprintf($juser_blind, $n, $n) . "\n" . $hacks[$n]['read'];
 	} else {
-		$n = 'registrationphp2';
-		$hacks[$n]['name']			=	'registration.php ' . _AEC_HACK_HACK . ' #2';
-		$hacks[$n]['desc']			=	_AEC_HACKS_REG2;
-		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/components/com_user/controller.php' ) : ( $mosConfig_absolute_path . '/components/com_registration/registration.php' );
-		$hacks[$n]['read']			=	$v15 ? ( 'JRequest::setVar(\'view\', \'register\');' ) : ( '$mainframe->SetPageTitle(_REGISTER_TITLE);' );
-		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( $aec_optionhack, $n, $n );
-
 		if ( !$v15 ) {
+			$n = 'registrationphp2';
+			$hacks[$n]['name']			=	'registration.php ' . _AEC_HACK_HACK . ' #2';
+			$hacks[$n]['desc']			=	_AEC_HACKS_REG2;
+			$hacks[$n]['type']			=	'file';
+			$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/components/com_user/controller.php' ) : ( $mosConfig_absolute_path . '/components/com_registration/registration.php' );
+			$hacks[$n]['read']			=	$v15 ? ( 'JRequest::setVar(\'view\', \'register\');' ) : ( '$mainframe->SetPageTitle(_REGISTER_TITLE);' );
+			$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( $aec_optionhack, $n, $n );
+
 			$n = 'registrationphp3';
 			$hacks[$n]['name']			=	'registration.php ' . _AEC_HACK_HACK . ' #3';
 			$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY;
@@ -4329,10 +4329,8 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 			$hacks[$n]['read']			=	'HTML_registration::registerForm';
 			$hacks[$n]['insert']		=	sprintf($aec_rhackbefore, $n, $n) . "\n" . $hacks[$n]['read'];
 			$hacks[$n]['legacy']		=	1;
-		}
 
-		if ( !$v15 ) {
-		$n = 'registrationhtml';
+			$n = 'registrationhtml';
 			$hacks[$n]['name']			=	'registration.html.php ' . _AEC_HACK_HACK . ' #1';
 			$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY;
 			$hacks[$n]['type']			=	'file';

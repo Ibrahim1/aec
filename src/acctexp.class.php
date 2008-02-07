@@ -6109,7 +6109,7 @@ class AECToolbox
 
 		if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
 			// This is a CB registration, borrowing their code to save the user
-			saveRegistration( $option );
+			@saveRegistration( $option );
 		} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
 			// This is a JUSER registration, borrowing their code to save the user
 			saveRegistration( $option );
