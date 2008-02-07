@@ -92,10 +92,19 @@ if ( $my->id ) {
 		$query = 'SELECT expiration'
 				. ' FROM #__acctexp_subscr'
 				. ' WHERE userid = \'' . $my->id . '\''
-				. ' WHERE primary = \'1\''
-				. ' AND expiration != \'9999-12-31 00:00:00\'';
+				. ' AND primary = \'1\''
+				. ' AND recurring != \'1\'';
 		$database->setQuery($query);
 		$expiration = $database->loadResult();
+
+		if ( $expiration == NULL ) {
+			$query = 'SELECT expiration'
+					. ' FROM #__acctexp_subscr'
+					. ' WHERE userid = \'' . $my->id . '\''
+					. ' AND recurring != \'1\'';
+			$database->setQuery($query);
+			$expiration = $database->loadResult();
+		}
 
 		if ( $expiration == NULL ) {
 			?>
