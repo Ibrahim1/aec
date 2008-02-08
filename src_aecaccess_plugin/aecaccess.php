@@ -70,6 +70,59 @@ class plgAuthenticationAECaccess extends JPlugin
 	{
 		jimport('joomla.user.helper');
 
+		// ---- Modified Copy of joomla access plugin until we have authorization layer ----
+		// COPY START
+
+		// Joomla does not like blank passwords
+		if (empty($credentials['password']))
+		{
+			$response->status = JAUTHENTICATE_STATUS_FAILURE;
+			$response->error_message = 'Empty password not allowed';
+			return false;
+		}
+
+		// Initialize variables
+		$conditions = '';
+
+		// Get a database object
+		$db =& JFactory::getDBO();
+
+		$query = 'SELECT `id`, `password`, `gid`'
+			. ' FROM `#__users`'
+			. ' WHERE username=' . $db->Quote( $credentials['username'] )
+			;
+		$db->setQuery( $query );
+		$result = $db->loadObject();
+
+		if($result)
+		{
+			$parts	= explode( ':', $result->password );
+			$crypt	= $parts[0];
+			$salt	= @$parts[1];
+			$testcrypt = JUserHelper::getCryptedPassword($credentials['password'], $salt);
+
+			if ($crypt == $testcrypt) {
+				$user = JUser::getInstance($result->id); // Bring this in line with the rest of the system
+				$response->email = $user->email;
+				$response->fullname = $user->name;
+				$response->status = JAUTHENTICATE_STATUS_SUCCESS;
+				$response->error_message = '';
+			} else {
+				$response->status = JAUTHENTICATE_STATUS_FAILURE;
+				$response->error_message = 'Invalid password';
+				return false;
+			}
+		}
+		else
+		{
+			$response->status = JAUTHENTICATE_STATUS_FAILURE;
+			$response->error_message = 'User does not exist';
+			return false;
+		}
+
+		// COPY END
+		// ---- Copy of joomla access plugin until we have authorization layer ----
+
 		if ( strpos( JPATH_BASE, '/administrator' ) ) {
 			$response->status = JAUTHENTICATE_STATUS_SUCCESS;
 			return true;
@@ -86,38 +139,43 @@ class plgAuthenticationAECaccess extends JPlugin
 		$_REQUEST['task'] = $savetask;
 
 		$verification = AECToolbox::VerifyUser( $credentials['username'] );
-		//$verification = true;
 
 		if ( $verification === true ) {
 			$response->status = JAUTHENTICATE_STATUS_SUCCESS;
 		} else {
 			$this->_error = $verification;
+			define( 'AEC_AUTH_ERROR_MSG', $this->_error );
+			define( 'AEC_AUTH_ERROR_UNAME', $credentials['username'] );
 			$response->status = JAUTHENTICATE_STATUS_FAILURE;
 		}
-
 	}
 
-	function onAuthenticateFailure( $credentials, &$response )
+	function onLoginFailure( &$response )
 	{
-		global $database;
+		$db =& JFactory::getDBO();
 
 		$query = 'SELECT id'
 		. ' FROM #__users'
-		. ' WHERE username = \'' . $credentials['username'] . '\''
+		. ' WHERE username = \'' . AEC_AUTH_ERROR_UNAME . '\''
 		;
-		$database->setQuery( $query );
-		$id = $database->loadResult();
+		$db->setQuery( $query );
+		$id = $db->loadResult();
 
-		switch( $this->_error ) {
+		$redirect = false;
+
+		switch( AEC_AUTH_ERROR_MSG ) {
 			case 'pending':
 			case 'open_invoice':
-				$app =& JFactory::getApplication();
-				$app->redirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=pending&userid=' . $id ) );
+				$redirect = '/index.php?option=com_acctexp&task=pending&userid=' . $id;
 				break;
 			case 'expired':
-				$app =& JFactory::getApplication();
-				$app->redirect( '/index.php?option=com_acctexp&task=expired&userid=' . $id );
+				$redirect = '/index.php?option=com_acctexp&task=expired&userid=' . $id ;
 				break;
+		}
+
+		if ( $redirect ) {
+			$app =& JFactory::getApplication();
+			$app->redirect( $redirect );
 		}
 	}
 }
