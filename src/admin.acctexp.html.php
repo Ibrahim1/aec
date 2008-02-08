@@ -1777,19 +1777,21 @@ class HTML_AcctExp
 						<h2><?php echo _PAYPLAN_PROCESSORS_TITLE_LONG; ?></h2>
 						<table width="100%" class="adminform"><tr><td>
 							<?php
-								foreach ( $aecHTML->customparams as $id => $processor ) {
-									?>
-									<div class="userinfobox clear">
-										<h2 style="clear:both;"><?php echo $processor['name']; ?></h2>
-										<p><a href="<?php echo $mosConfig_live_site; ?>/index.php?option=com_acctexp&amp;task=subscribe&amp;usage=<?php echo $row->id; ?>&amp;processor=<?php echo $processor['handle']; ?>" title="<?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?></a></p>
-										<?php
-										$k = 0;
-										foreach ( $processor['params'] as $customparam ) {
-											echo $aecHTML->createSettingsParticle( $customparam );
-										}
+								if ( !empty( $aecHTML->customparams ) ) {
+									foreach ( $aecHTML->customparams as $id => $processor ) {
 										?>
-									</div>
-									<?php
+										<div class="userinfobox clear">
+											<h2 style="clear:both;"><?php echo $processor['name']; ?></h2>
+											<p><a href="<?php echo $mosConfig_live_site; ?>/index.php?option=com_acctexp&amp;task=subscribe&amp;usage=<?php echo $row->id; ?>&amp;processor=<?php echo $processor['handle']; ?>" title="<?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?></a></p>
+											<?php
+											$k = 0;
+											foreach ( $processor['params'] as $customparam ) {
+												echo $aecHTML->createSettingsParticle( $customparam );
+											}
+											?>
+										</div>
+										<?php
+									}
 								}
 							?>
 						</td></tr></table>
