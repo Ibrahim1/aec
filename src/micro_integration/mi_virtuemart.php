@@ -119,7 +119,7 @@ class mi_virtuemart
 
 		$query = 'SELECT `user_id`' // Jonathan Appleton changed this from id to user_id - good find indeed!
 				. ' FROM #__vm_user_info'
-				. ' WHERE vuser_id` = \'' . $userid . '\''
+				. ' WHERE user_id` = \'' . $userid . '\''
 				;
 		$database->setQuery( $query );
 		return $database->loadResult();
