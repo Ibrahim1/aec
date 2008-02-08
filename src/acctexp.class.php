@@ -3555,7 +3555,7 @@ class InvoiceFactory
 
 	 	// There are no plans to begin with, so we need to punch out an error here
 		if ( count( $rows ) == 0 ) {
-			mosRedirect( AECToolbox::deadsureURL( '/index.php?mosmsg=' . _NOPLANS_ERROR ) );
+			mosRedirect( AECToolbox::deadsureURL( '/index.php?mosmsg=' . _NOPLANS_ERROR ), false, true );
 	 		return;
 	 	}
 
@@ -3648,7 +3648,7 @@ class InvoiceFactory
 
 	 	// After filtering out the processors, no plan can be used, so we have to again issue an error
 		 if ( count( $plans ) == 0 ) {
-			mosRedirect( AECToolbox::deadsureURL( '/index.php?mosmsg=' . _NOPLANS_ERROR ) );
+			mosRedirect( AECToolbox::deadsureURL( '/index.php?mosmsg=' . _NOPLANS_ERROR ), false, true );
 	 		return;
 	 	}
 
@@ -3877,7 +3877,7 @@ class InvoiceFactory
 		$first = $repeat ? 0 : 1;
 
 		if ( !empty( $this->pp->info['secure'] ) && !( $_SERVER['HTTPS'] == 'on' ) && !$aecConfig->cfg['override_reqssl'] ) {
-		    mosRedirect( AECToolbox::deadsureURL( "/index.php?option=" . $option . "&task=repeatPayment&invoice=" . $this->objInvoice->invoice_number . "&first=" . $first, true ) );
+		    mosRedirect( AECToolbox::deadsureURL( "/index.php?option=" . $option . "&task=repeatPayment&invoice=" . $this->objInvoice->invoice_number . "&first=" . $first, true, false ) );
 		    exit();
 		};
 
@@ -5067,7 +5067,7 @@ class Subscription extends paramDBTable
 	function manualVerify()
 	{
 		if ( $this->is_expired() ) {
-			mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=expired&userid=' . (int) $this->userid ) );
+			mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=expired&userid=' . (int) $this->userid ), false, true );
 			return false;
 		} else {
 			return true;
@@ -5203,10 +5203,10 @@ class Subscription extends paramDBTable
 			$expire = $this->expire();
 
 			if ( $expire ) {
-				mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=expired&userid=' . $this->userid ) );
+				mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=expired&userid=' . $this->userid ), false, true );
 			}
 		} elseif ( ( strcmp( $this->status, 'Pending' ) === 0 ) || $block ) {
-			mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=pending&userid=' . $this->userid ) );
+			mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=pending&userid=' . $this->userid ), false, true );
 		}
 	}
 
@@ -5922,7 +5922,7 @@ class AECToolbox
 	 * @parameter url
 	 * @return string
 	 */
-	function deadsureURL( $url, $secure=false )
+	function deadsureURL( $url, $secure=false, $internal=false )
 	{
 		global $mosConfig_live_site, $mosConfig_absolute_path, $database, $aecConfig;
 
@@ -5971,6 +5971,10 @@ class AECToolbox
 			$new_url = str_replace( 'http:', 'https:', $new_url );
 		}
 
+		if ( $internal ) {
+			$new_url = str_replace( '&amp;', '&', $new_url );
+		}
+
 		return $new_url;
 	}
 
@@ -6015,11 +6019,11 @@ class AECToolbox
 						$invoice = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $metaUser->userid );
 
 						if ( $invoice ) {
-							mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=pending&userid=' . $id ) );
+							mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=pending&userid=' . $id ), false, true );
 						}
 					}
 
-					mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=subscribe&userid=' . $id ) );
+					mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=subscribe&userid=' . $id ), false, true );
 					return null;
 				}
 			}
