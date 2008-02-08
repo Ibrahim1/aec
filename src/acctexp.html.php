@@ -963,6 +963,7 @@ function joomlaregisterForm($option, $useractivation)
 		<td>
 			<input type="text" id="username" name="username" size="40" value="" class="inputbox required validate-username" maxlength="25" /> *
 		</td>
+	</tr>
 	<tr>
 		<td height="40">
 			<label id="emailmsg" for="email">
