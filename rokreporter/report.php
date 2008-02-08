@@ -1,11 +1,11 @@
 <?php
 /**
- * @version		$Id: report.php 2 2008-02-06 13:12:48Z Shiny Black Shoe $
+ * @version		$Id: report.php 3 2008-02-09 12:01:48Z Shiny Black Shoe $
  * @package		RokReporter
  * @copyright	(C) 2007, Shiny Black Shoe. Modified from RokReporter inbuilt reports
  * @license		GNU General Public License
  */
- //uopdated for AEC releases > 0.12.4.11 which no longer have #__acctexp table
+ //updated for AEC releases > 0.12.4.11 which no longer have #__acctexp table
 
 // ensure this file is being included by a parent file
 defined( '_VALID_MOS' ) or die( 'Direct access not allowed' );
@@ -71,11 +71,11 @@ class AEC_subscribers_Report extends Report
 		global $mosConfig_absolute_path;
 		$database = &$this->getDBO();
 		$query = "";
-		$query .= "SELECT DISTINCT(#__users.id), #__users.*, ";
+		$query = "SELECT DISTINCT(#__users.id), #__users.*, ";
 
 		// Check if CB installed...
 		if (file_exists( $mosConfig_absolute_path . "/components/com_comprofiler/comprofiler.php"))  {
-			$query .= $query."#__comprofiler.*, ";
+			$query .= "#__comprofiler.*, ";
 		}
 
 		$query .= "#__acctexp_subscr.* ";
@@ -95,7 +95,11 @@ class AEC_subscribers_Report extends Report
 		$buffer = trim( $this->ExportToCSV( $rows ) );
 
 		$filename = "AEC_subscribers";
+
+                header("Content-type: application/force-download");
 		        header( "Content-type: application/octet-stream" );
+                header  (  "Content-Type:  application/download"  );
+                header  (  "Content-Type:  text/csv"  );
 		        header( "Content-Length: ".strlen( $buffer ) );
 		        header( "Content-disposition: attachment; filename=$filename-".date("Y-m-d").".csv" );
 		        header( "Pragma: no-cache" );
@@ -106,4 +110,4 @@ class AEC_subscribers_Report extends Report
 		}
 }
 
-?>
+?> 
