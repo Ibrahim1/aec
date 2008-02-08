@@ -1106,6 +1106,8 @@ define( '_REWRITE_KEY_SUBSCRIPTION_PLAN',			'Aktuelle Abo ID' );
 define( '_REWRITE_KEY_SUBSCRIPTION_PREVIOUS_PLAN',	'Vorige Abo ID' );
 define( '_REWRITE_KEY_SUBSCRIPTION_RECURRING',		'Wiederkehrende Zahlung' );
 define( '_REWRITE_KEY_SUBSCRIPTION_LIFETIME',		'Immerw&auml;hrendes Abo' );
+define( '_REWRITE_KEY_SUBSCRIPTION_EXPIRATION_DATE', 'Ablaufdatum (Frontend Formatting)');
+define( '_REWRITE_KEY_SUBSCRIPTION_EXPIRATION_DATE_BACKEND', 'Ablaufdatum (Backend Formatting)');
 
 define( '_REWRITE_AREA_PLAN', 				'Abo Bezogen' );
 define( '_REWRITE_KEY_PLAN_NAME',			'Name' );
@@ -1116,10 +1118,10 @@ define( '_REWRITE_KEY_CMS_ABSOLUTE_PATH',	'Absoluter Pfad zum CMS-Hauptverzeichn
 define( '_REWRITE_KEY_CMS_LIVE_SITE',		'Relativer Pfad zur Webseite (z.B. http://www.meineseite.com)' );
 
 define( '_REWRITE_AREA_SYSTEM', 'System Related');
-define( '_REWRITE_KEY_SYSTEM_TIMESTAMP_NAME', 'Timestamp (Frontend Formatting)');
-define( '_REWRITE_KEY_SYSTEM_TIMESTAMP_BACKEND_NAME', 'Timestamp (Backend Formatting)');
-define( '_REWRITE_KEY_SYSTEM_SERVER_TIMESTAMP_NAME', 'Server Timestamp (Frontend Formatting)');
-define( '_REWRITE_KEY_SYSTEM_SERVER_TIMESTAMP_BACKEND_NAME', 'Server Timestamp (Backend Formatting)');
+define( '_REWRITE_KEY_SYSTEM_TIMESTAMP_NAME', 'Zeitstempel (Frontend Formatting)');
+define( '_REWRITE_KEY_SYSTEM_TIMESTAMP_BACKEND_NAME', 'Zeitstempel (Backend Formatting)');
+define( '_REWRITE_KEY_SYSTEM_SERVER_TIMESTAMP_NAME', 'Server Zeitstempel (Frontend Formatting)');
+define( '_REWRITE_KEY_SYSTEM_SERVER_TIMESTAMP_BACKEND_NAME', 'Server Zeitstempel (Backend Formatting)');
 
 define( '_REWRITE_AREA_INVOICE', 'Rechnungs Bezogen');
 define( '_REWRITE_KEY_INVOICE_ID', 'Rechnungs ID');

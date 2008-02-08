@@ -1005,9 +1005,6 @@ define( '_REWRITE_KEY_USER_EMAIL', 'E-Mail Address');
 define( '_REWRITE_KEY_USER_ACTIVATIONCODE', 'Activation Code');
 define( '_REWRITE_KEY_USER_ACTIVATIONLINK', 'Activation Link');
 
-define( '_REWRITE_AREA_EXPIRATION', 'User Expiration Related');
-define( '_REWRITE_KEY_EXPIRATION_DATE', 'Expiration Date');
-
 define( '_REWRITE_AREA_SUBSCRIPTION', 'User Subscription Related');
 define( '_REWRITE_KEY_SUBSCRIPTION_TYPE', 'Payment Processor');
 define( '_REWRITE_KEY_SUBSCRIPTION_STATUS', 'Subscription Status');
@@ -1017,6 +1014,8 @@ define( '_REWRITE_KEY_SUBSCRIPTION_PLAN', 'Payment Plan ID');
 define( '_REWRITE_KEY_SUBSCRIPTION_PREVIOUS_PLAN', 'Previous Payment Plan ID');
 define( '_REWRITE_KEY_SUBSCRIPTION_RECURRING', 'Recurring Payment Flag');
 define( '_REWRITE_KEY_SUBSCRIPTION_LIFETIME', 'Lifetime Subscription Flag');
+define( '_REWRITE_KEY_SUBSCRIPTION_EXPIRATION_DATE', 'Expiration Date (Frontend Formatting)');
+define( '_REWRITE_KEY_SUBSCRIPTION_EXPIRATION_DATE_BACKEND', 'Expiration Date (Backend Formatting)');
 
 define( '_REWRITE_AREA_PLAN', 'Payment Plan Related');
 define( '_REWRITE_KEY_PLAN_NAME', 'Name');

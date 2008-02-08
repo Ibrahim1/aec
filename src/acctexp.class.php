@@ -3803,7 +3803,7 @@ class InvoiceFactory
 		$this->coupons['active'] = $aecConfig->cfg['enable_coupons'];
 
 		if ( !empty( $aecConfig->cfg['skip_confirmation'] ) ) {
-			$this->save( $option, $passthrough );
+			$this->save( $option, $var );
 		} else {
 			Payment_HTML::confirmForm( $option, $this, $user, $passthrough );
 		}
@@ -6138,75 +6138,107 @@ class AECToolbox
 			// This is a joomla registration, borrowing their code to save the user
 			global $mosConfig_useractivation, $mosConfig_sitename, $mosConfig_live_site;
 
-			// simple spoof check security
-			if ( ( function_exists( 'josSpoofCheck' ) || defined( 'JPATH_BASE' ) ) && !$internal ) {
-				if ( defined( 'JPATH_BASE' ) ) {
-					$token	= JUtility::getToken();
-					if(!JRequest::getInt($token, 0, 'post')) {
-						JError::raiseError(403, 'Request Forbidden');
-					}
-				} else {
-					josSpoofCheck();
-				}
-			}
 
-			$row = new mosUser( $database );
+			if ( defined( 'JPATH_BASE' ) ) {
+				global $mainframe;
 
-			if ( !$row->bind( $_POST, 'usertype' )) {
-				mosErrorAlert( $row->getError() );
-			}
+				// Check for request forgeries
+				JRequest::checkToken() or die( 'Invalid Token' );
 
-			mosMakeHtmlSafe( $row );
-
-			$row->id 		= 0;
-			$row->usertype 	= '';
-			if (  defined( 'JPATH_BASE' ) ) {
+				// Get required system objects
+				$user 		= clone(JFactory::getUser());
+				$pathway 	=& $mainframe->getPathway();
+				$config		=& JFactory::getConfig();
 				$authorize	=& JFactory::getACL();
+				$document   =& JFactory::getDocument();
+
+				// If user registration is not allowed, show 403 not authorized.
+				$usersConfig = &JComponentHelper::getParams( 'com_users' );
+				if ($usersConfig->get('allowUserRegistration') == '0') {
+					JError::raiseError( 403, JText::_( 'Access Forbidden' ));
+					return;
+				}
 
 				// Initialize new usertype setting
-				$usersConfig = &JComponentHelper::getParams( 'com_users' );
 				$newUsertype = $usersConfig->get( 'new_usertype' );
 				if (!$newUsertype) {
 					$newUsertype = 'Registered';
 				}
 
-				$row->gid 		= $authorize->get_group_id( '', $newUsertype, 'ARO' );
+				// Bind the post array to the user object
+				if (!$user->bind( JRequest::get('post'), 'usertype' )) {
+					JError::raiseError( 500, $user->getError());
+				}
+
+				// Set some initial user values
+				$user->set('id', 0);
+				$user->set('usertype', '');
+				$user->set('gid', $authorize->get_group_id( '', $newUsertype, 'ARO' ));
+
+				// TODO: Should this be JDate?
+				$user->set('registerDate', date('Y-m-d H:i:s'));
+
+				// If user activation is turned on, we need to set the activation information
+				$useractivation = $usersConfig->get( 'useractivation' );
+				if ($useractivation == '1')
+				{
+					jimport('joomla.user.helper');
+					$user->set('activation', md5( JUserHelper::genRandomPassword()) );
+					$user->set('block', '1');
+				}
+
+				// If there was an error with registration, set the message and display form
+				if ( !$user->save() )
+				{
+					JError::raiseWarning('', JText::_( $user->getError()));
+					echo JText::_( $user->getError());
+					return false;
+				}
+
+				$row = $user;
 			} else {
+				// simple spoof check security
+				if ( function_exists( 'josSpoofCheck' ) && !$internal ) {
+					josSpoofCheck();
+				}
+
+				$row = new mosUser( $database );
+
+				if ( !$row->bind( $_POST, 'usertype' )) {
+					mosErrorAlert( $row->getError() );
+				}
+
+				mosMakeHtmlSafe( $row );
+
+				$row->id 		= 0;
+				$row->usertype 	= '';
 				$row->gid 		= $acl->get_group_id( 'Registered', 'ARO' );
-			}
 
-			if ( $mosConfig_useractivation == 1 ) {
-				$row->activation = md5( mosMakePassword() );
-				$row->block = '1';
-			}
+				if ( $mosConfig_useractivation == 1 ) {
+					$row->activation = md5( mosMakePassword() );
+					$row->block = '1';
+				}
 
-			if ( !$row->check() ) {
-				echo '<script>alert(\''
-				. html_entity_decode( $row->getError() )
-				. '\');window.history.go(-1);</script>' . "\n";
-				exit();
-			}
+				if ( !$row->check() ) {
+					echo '<script>alert(\''
+					. html_entity_decode( $row->getError() )
+					. '\');window.history.go(-1);</script>' . "\n";
+					exit();
+				}
 
-			if (  defined( 'JPATH_BASE' ) ) {
-				jimport('joomla.user.helper');
-
-				$salt = JUserHelper::genRandomPassword(32);
-				$crypt = JUserHelper::getCryptedPassword($row->password, $salt);
-				$row->password = $crypt.':'.$salt;
-			} else {
 				$pwd 				= $row->password;
 				$row->password 		= md5( $row->password );
-			}
 
-			$row->registerDate 	= date( 'Y-m-d H:i:s' );
+				$row->registerDate 	= date( 'Y-m-d H:i:s' );
 
-			if ( !$row->store() ) {
-				echo '<script>alert(\''
-				. html_entity_decode( $row->getError())
-				. '\');window.history.go(-1);</script>' . "\n";
-				exit();
+				if ( !$row->store() ) {
+					echo '<script>alert(\''
+					. html_entity_decode( $row->getError())
+					. '\');window.history.go(-1);</script>' . "\n";
+					exit();
+				}
+				$row->checkin();
 			}
-			$row->checkin();
 
 			$mih = new microIntegrationHandler();
 			$mih->userchange($row, $_POST, 'registration');
@@ -6457,11 +6489,12 @@ class AECToolbox
 
 			// Explode Name
 			$namearray		= explode( " ", $metaUser->cmsUser->name );
-			$lastname		= $namearray[count($namearray)];
-			for ( $i=0; $i<count($namearray); $i++ ) {
+			$maxname		= count($namearray) - 1;
+			$lastname		= $namearray[$maxname];
+			for ( $i=0; $i<$maxname; $i++ ) {
 				$firstname .= $namearray[$i];
 			}
-			$firstfirstname	= $namearray[count($namearray)];
+			$firstfirstname	= $namearray[0];
 
 			$rewrite['user_id']					= $metaUser->cmsUser->id;
 			$rewrite['user_username']			= $metaUser->cmsUser->username;
@@ -6510,6 +6543,8 @@ class AECToolbox
 				$rewrite['subscription_previous_plan']	= $metaUser->focusSubscription->previous_plan;
 				$rewrite['subscription_recurring']		= $metaUser->focusSubscription->recurring;
 				$rewrite['subscription_lifetime']		= $metaUser->focusSubscription->lifetime;
+				$rewrite['subscription_expiration_date']		= strftime( $cfg->cfg['display_date_frontend'], strtotime( $metaUser->focusSubscription->expiration ) );
+				$rewrite['subscription_expiration_date_backend']		= strftime( $cfg->cfg['display_date_backend'], strtotime( $metaUser->focusSubscription->expiration ) );
 			}
 
 			if ( is_null( $invoice ) ) {
@@ -6629,6 +6664,8 @@ class AECToolbox
 			$rewrite['subscription'][] = 'previous_plan';
 			$rewrite['subscription'][] = 'recurring';
 			$rewrite['subscription'][] = 'lifetime';
+			$rewrite['subscription'][] = 'expiration_date';
+			$rewrite['subscription'][] = 'expiration_date_backend';
 		}
 
 		if ( in_array( 'invoice', $switches ) ) {
