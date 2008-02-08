@@ -521,7 +521,6 @@ class metaUser
 						// Check whether the user has used the right plan before
 						case 'plan_overall':
 							if ( $this->hasSubscription ) {
-
 								$array = $this->focusSubscription->getUsedPlans();
 								foreach ( $check as $v ) {
 									if ( ( !empty( $array[(int) $v] ) || ( $this->focusSubscription->plan == $v ) ) ) {
@@ -576,8 +575,9 @@ class metaUser
 							break;
 					}
 				}
+
 				if ( $invert ) {
-					$name = $name . '_excluded';
+					$name .= '_excluded';
 					$return[$name] = !$status;
 				} else {
 					$return[$name] = $status;

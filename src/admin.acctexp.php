@@ -76,6 +76,13 @@ $userid		= mosGetParam( $_REQUEST, 'userid', null );
 $subscriptionid	= mosGetParam( $_REQUEST, 'subscriptionid', null );
 $id			= mosGetParam( $_REQUEST, 'id', null );
 
+if ( !is_null( $id ) ) {
+	if ( !array( $id ) ) {
+		$savid = $id;
+		$id = array( $savid );
+	}
+}
+
 // Auto Heartbeat renew every one hour to make sure that the admin gets a view as recent as possible
 $heartbeat = new aecHeartbeat( $database );
 $heartbeat->backendping();
