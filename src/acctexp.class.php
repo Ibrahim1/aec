@@ -434,8 +434,8 @@ class metaUser
 		if ( is_array( $restrictions ) ) {
 			$return = array();
 			foreach ( $restrictions as $name => $value ) {
-				if ( !is_null( $value ) && !($value === "") ) {
-					if ( strpos( '_excluded', $name ) ) {
+				if ( !is_null( $value ) && !( $value === "" ) ) {
+					if ( strpos( $name, '_excluded' ) !== false ) {
 						$invert = true;
 						$name = str_replace( '_excluded', '', $name );
 					} else {
