@@ -4570,7 +4570,7 @@ class Invoice extends paramDBTable
 		}
 
 		$eventlog = new eventLog( $database );
-		$eventlog->issue( $short, $tags, $event, $params, 2 );
+		$eventlog->issue( $short, $tags, $event, 2, $params );
 	}
 
 	function pay( $multiplicator=1 )
