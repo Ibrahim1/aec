@@ -102,7 +102,7 @@ class processor_verotel extends URLprocessor
 			$var['fldcustomerid'] = $cfg['merchantid'];
 			$var['fldwebsitenr'] = $product;
 			$var['tc_usercode'] = $metaUser->cmsUser->username;
-			$var['tc_passcode'] = substr( $metaUser->cmsUser->password, 0, 12 );
+			$var['tc_passcode'] = "xxxxxxxx";
 			$var['tc_custom1'] = $int_var['invoice'];
 			$var['tc_custom2'] = $metaUser->cmsUser->username;
 		} else {
@@ -111,7 +111,7 @@ class processor_verotel extends URLprocessor
 			$var['verotel_product'] = $product;
 			$var['verotel_website'] = $cfg['siteid'];
 			$var['verotel_usercode'] = $metaUser->cmsUser->username;
-			$var['verotel_passcode'] = substr( $metaUser->cmsUser->password, 0, 12 );
+			$var['verotel_passcode'] = "xxxxxxxx";
 			$var['verotel_custom1'] = $int_var['invoice'];
 		}
 
