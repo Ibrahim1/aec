@@ -113,6 +113,7 @@ class metaUser
 	function getTempAuth()
 	{
 		$return = false;
+		$params = array();
 
 		if ( $this->hasSubscription ) {
 			$params = $this->objSubscription->getParams();
@@ -120,7 +121,6 @@ class metaUser
 			if ( is_object( $this->cmsUser ) ) {
 				$par = explode( "\n", $this->cmsUser->params );
 
-				$params = array();
 				foreach ( $par as $chunk ) {
 					$k = explode( '=', $chunk, 2 );
 					$params[$k[0]] = isset( $k[1] ) ? trim( $k[1] ) : '';
@@ -166,6 +166,8 @@ class metaUser
 
 		if ( $this->hasSubscription ) {
 			$this->objSubscription->addParams( $params );
+			$this->objSubscription->check();
+			$this->objSubscription->store();
 		} else {
 			if ( is_object( $this->cmsUser ) ) {
 				$add = strpos( $this->cmsUser->params, "\n" ) ? "\n" : '';
@@ -179,7 +181,7 @@ class metaUser
 				$this->cmsUser->check();
 				$this->cmsUser->store();
 			}
-		}
+		}print_r($this);print_r($params);exit();
 		return true;
 	}
 
