@@ -2509,7 +2509,7 @@ class SubscriptionPlan extends paramDBTable
 	{
 		global $database, $mainframe, $mosConfig_offset_user, $aecConfig;
 
-		if ( $multiplicator < 1 ) {
+		if ( is_int( $multiplicator ) && ( $multiplicator < 1 ) ) {
 			$multiplicator = 1;
 		}
 
@@ -2563,7 +2563,7 @@ class SubscriptionPlan extends paramDBTable
 				return;
 			}
 
-			if ( $params['lifetime'] ) {
+			if ( $params['lifetime'] || ( strcmp( $multiplicator, 'lifetime' ) === 0 ) ) {
 				$metaUser->focusSubscription->expiration = '9999-12-31 00:00:00';
 				$metaUser->focusSubscription->lifetime = 1;
 			} else {
