@@ -181,7 +181,7 @@ class metaUser
 				$this->cmsUser->check();
 				$this->cmsUser->store();
 			}
-		}print_r($this);print_r($params);exit();
+		}
 		return true;
 	}
 
@@ -6615,10 +6615,6 @@ class AECToolbox
 		if ( in_array( 'cms', $switches ) ) {
 			$rewrite['cms'][] = 'absolute_path';
 			$rewrite['cms'][] = 'live_site';
-		}
-
-		if ( in_array( 'expiration', $switches ) ) {
-			$rewrite['expiration'][] = 'date';
 		}
 
 		if ( in_array( 'user', $switches ) ) {
