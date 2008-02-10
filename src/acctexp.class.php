@@ -147,11 +147,6 @@ class metaUser
 					return false;
 				}
 			} else {
-				// Old password hash storage but authentic ... lets convert it
-				$salt = mosMakePassword(16);
-				$crypt = md5( $password . $salt);
-				$this->cmsUser->password = $crypt.':'.$salt;
-
 				list( $hash, $salt ) = explode(':', $this->cmsUser->password);
 				$cryptpass = md5( $password . $salt );
 				if ( $hash != $cryptpass ) {
