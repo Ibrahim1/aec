@@ -6544,8 +6544,8 @@ class AECToolbox
 				$rewrite['subscription_previous_plan']	= $metaUser->focusSubscription->previous_plan;
 				$rewrite['subscription_recurring']		= $metaUser->focusSubscription->recurring;
 				$rewrite['subscription_lifetime']		= $metaUser->focusSubscription->lifetime;
-				$rewrite['subscription_expiration_date']		= strftime( $cfg->cfg['display_date_frontend'], strtotime( $metaUser->focusSubscription->expiration ) );
-				$rewrite['subscription_expiration_date_backend']		= strftime( $cfg->cfg['display_date_backend'], strtotime( $metaUser->focusSubscription->expiration ) );
+				$rewrite['subscription_expiration_date']		= strftime( $aecConfig->cfg['display_date_frontend'], strtotime( $metaUser->focusSubscription->expiration ) );
+				$rewrite['subscription_expiration_date_backend']		= strftime( $aecConfig->cfg['display_date_backend'], strtotime( $metaUser->focusSubscription->expiration ) );
 			}
 
 			if ( is_null( $invoice ) ) {
