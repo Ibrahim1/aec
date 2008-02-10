@@ -84,6 +84,8 @@ class mi_docman
 		$settings['set_group']			= array( 'list_yesno' );
 		$settings['group']				= array( 'list' );
 		$settings['set_group_exp']		= array( 'list_yesno' );
+		$settings['group']				= array( 'list' );
+		$settings['lists']['delete_on_exp'] = mosHTML::selectList( $del_opts, 'delete_on_exp', 'size="3"', 'value', 'text',
 		$settings['delete_on_exp'] 		= array('list');
 		$settings['group_exp']			= array( 'list' );
 		$settings['rebuild']			= array( 'list_yesno' );
