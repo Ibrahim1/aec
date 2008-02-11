@@ -63,6 +63,7 @@ if ( empty( $mosConfig_offset_user ) ) {
 	$mosConfig_offset_user = $mosConfig_offset;
 }
 
+// Catch all debug function
 function aecDebug( $text )
 {
 	global $database;
@@ -115,6 +116,7 @@ class metaUser
 		$return = false;
 		$params = array();
 
+		// Get params either from the subscription or from the _user entry
 		if ( $this->hasSubscription ) {
 			$params = $this->objSubscription->getParams();
 		} else {
@@ -128,6 +130,7 @@ class metaUser
 			}
 		}
 
+		// Only authorize if user IP is matching and the grant is not expired
 		if ( isset( $params['tempauth_exptime'] ) && isset( $params['tempauth_ip'] ) ) {
 			if ( ( $params['tempauth_ip'] == $_SERVER['REMOTE_ADDR'] ) && ( $params['tempauth_exptime'] >= time() ) ) {
 				return true;
@@ -141,6 +144,7 @@ class metaUser
 	{
 		global $aecConfig;
 
+		// Make sure we catch traditional and new joomla passwords
 		if ( $password !== false ) {
 			if ( strpos( $this->cmsUser->password, ':') === false ) {
 				if ( $this->cmsUser->password != md5( $password ) ) {
@@ -155,10 +159,12 @@ class metaUser
 			}
 		}
 
+		// Set params
 		$params = array();
 		$params['tempauth_ip'] = $_SERVER['REMOTE_ADDR'];
 		$params['tempauth_exptime'] = strtotime( '+' . max( 10, $aecConfig->cfg['temp_auth_exp'] ) . ' minutes', time() );
 
+		// Save params either to subscription or to _user entry
 		if ( $this->hasSubscription ) {
 			$this->objSubscription->addParams( $params );
 			$this->objSubscription->check();
@@ -205,6 +211,7 @@ class metaUser
 							$user['username'] . substr( md5( ( $user['name'] . time() ) ), 0, 3 )
 							);
 
+		// Iterate through semi-random and pseudo-random usernames until a non-existing is found
 		$id = 1;
 		$k = 0;
 		while ( $id ) {
@@ -243,6 +250,7 @@ class metaUser
 
 		$plan_params = $payment_plan->getParams();
 
+		// Check whether a record exists
 		if ( $this->hasSubscription ) {
 			$existing_record = $this->focusSubscription->getSubscriptionID( $this->userid, $payment_plan->id, null );
 		} else {
@@ -276,14 +284,17 @@ class metaUser
 		$subscription = new Subscription( $database );
 		$subscription->load( $subscrid );
 
+		// If Subscription exists, move the focus to that one
 		if ( $subscription->id ) {
 			if ( $subscription->userid == $this->userid ) {
 				$this->focusSubscription = $subscription;
 				return true;
 			} else {
+				// This subscription does not belong to the user!
 				return false;
 			}
 		} else {
+			// This subscription does not exist
 			return false;
 		}
 	}
@@ -292,6 +303,7 @@ class metaUser
 	{
 		global $database;
 
+		// Get all the users subscriptions
 		$query = 'SELECT id'
 				. ' FROM #__acctexp_subscr'
 				. ' WHERE `userid` = \'' . (int) $this->userid . '\''
@@ -311,6 +323,7 @@ class metaUser
 
 			return true;
 		} else {
+			// There is only the one that is probably already loaded
 			$this->allSubscriptions = false;
 			return false;
 		}
@@ -325,6 +338,15 @@ class metaUser
 			$query = 'SELECT count(*)'
 					. ' FROM #__core_acl_groups_aro_map'
 					. ' WHERE `group_id` = \'25\''
+					;
+			$database->setQuery( $query );
+			if ( $database->loadResult() <= 1) {
+				return false;
+			}
+
+			$query = 'SELECT count(*)'
+					. ' FROM #__core_acl_groups_aro_map'
+					. ' WHERE `group_id` = \'24\''
 					;
 			$database->setQuery( $query );
 			if ( $database->loadResult() <= 1) {
@@ -351,6 +373,7 @@ class metaUser
 		// Moxie Mod - updated to add usertype to users table and update session table for immediate access to usertype features
 		$gid_name = $acl->get_group_name( $gid, 'ARO' );
 
+		// Set GID and usertype
 		$query = 'UPDATE #__users'
 				. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\''
 				. ' WHERE `id` = \''  . (int) $this->userid . '\''
@@ -358,6 +381,7 @@ class metaUser
 		$database->setQuery( $query );
 		$database->query() or die( $database->stderr() );
 
+		// Update Session
 		$query = 'UPDATE #__session'
 				. ' SET `usertype` = \'' . $gid_name . '\''
 				. ' WHERE `userid` = \'' . (int) $this->userid . '\''
@@ -431,7 +455,9 @@ class metaUser
 		if ( is_array( $restrictions ) ) {
 			$return = array();
 			foreach ( $restrictions as $name => $value ) {
+				// TODO: Tautological && ?
 				if ( !is_null( $value ) && !( $value === "" ) ) {
+					// Switch flag for inverted call
 					if ( strpos( $name, '_excluded' ) !== false ) {
 						$invert = true;
 						$name = str_replace( '_excluded', '', $name );
@@ -439,6 +465,7 @@ class metaUser
 						$invert = false;
 					}
 
+					// Convert values to array or explode to array if none
 					if ( !is_array( $value ) ) {
 						if ( strpos( $value, ';' ) !== false ) {
 							$check = explode( ';', $value );
@@ -485,6 +512,7 @@ class metaUser
 									$status = true;
 								}
 							} else {
+								// New user, so will always pass a max GID test
 								$status = true;
 							}
 							break;
@@ -496,6 +524,7 @@ class metaUser
 								}
 							} else {
 								if ( in_array( 0, $check ) ) {
+									// "None" chosen, so will always pass if new user
 									$status = true;
 								}
 							}
@@ -511,6 +540,7 @@ class metaUser
 								}
 							} else {
 								if ( in_array( 0, $check ) ) {
+									// "None" chosen, so will always pass if new user
 									$status = true;
 								}
 							}
@@ -526,6 +556,7 @@ class metaUser
 								}
 							} else {
 								if ( in_array( 0, $check ) ) {
+									// "None" chosen, so will always pass if new user
 									$status = true;
 								}
 							}
@@ -568,11 +599,15 @@ class metaUser
 								} else {
 									$status = true;
 								}
+							} else {
+								// New user will always pass max plan amount test
+								$status = true;
 							}
 							break;
 					}
 				}
 
+				// Swap if inverted and reestablish name
 				if ( $invert ) {
 					$name .= '_excluded';
 					$return[$name] = !$status;
@@ -620,6 +655,7 @@ class Config_General extends paramDBTable
 
 		$this->load(1);
 
+		// If we have no settings, init them
 		if ( empty( $this->settings ) ) {
 			$this->initParams();
 			$this->cfg = $this->getParams( 'settings' );
@@ -708,6 +744,7 @@ class Config_General extends paramDBTable
 		// Write to Params, do not overwrite existing data
 		$this->addParams( $def, 'settings', false );
 
+		// Temporarily unset this array as there is no database field called cfg
 		unset( $this->cfg );
 
 		$this->check();
@@ -721,6 +758,8 @@ class Config_General extends paramDBTable
 
 	function saveSettings()
 	{
+		// Extra check for duplicated rows
+		// TODO: Sometime in the future, this can be abandoned
 		if ( $this->RowDuplicationCheck() ) {
 			$this->CleanDuplicatedRows();
 			$this->load(1);
@@ -897,15 +936,22 @@ class aecHeartbeat extends mosDBTable
 				$subscription->load( $sub_id );
 
 				if ( $found_expired ) {
+					// Check whether this user really is expired
+					// If this check fails, this user and all following users will be put into pre expiration check
 					$found_expired = $subscription->is_expired();
 
 					if ( $found_expired && !in_array( $subscription->userid, $expired_users ) ) {
+						// We may need to carry out processor functions
 						if ( !isset( $pps[$subscription->type] ) ) {
+							// Load payment processor into overall array
 							$pps[$subscription->type] = new PaymentProcessor();
 							if ( $pps[$subscription->type]->loadName( $subscription->type ) ) {
 								$pps[$subscription->type]->init();
+
+								// Load prepare validation function
 								$prepval = $pps[$subscription->type]->prepareValidation( $subscription_list );
 								if ( $prepval === null ) {
+									// This Processor has no such function, set to false to ignore later calls
 									$pps[$subscription->type] = false;
 								} elseif ( $prepval === false ) {
 									// Break - we have a problem with one processor
@@ -914,16 +960,19 @@ class aecHeartbeat extends mosDBTable
 									return;
 								}
 							} else {
+								// Processor does not exist
 								$pps[$subscription->type] = false;
 							}
 						}
 
+						// Carry out validation if possible
 						if ( !empty( $pps[$subscription->type] ) ) {
 							$validation = $pps[$subscription->type]->validateSubscription( $sub_id, $subscription_list );
 						} else {
 							$validation = false;
 						}
 
+						// Validation failed or was not possible for this processor - expire
 						if ( empty( $validation ) ) {
 							if ( $subscription->expire() ) {
 								$e++;
@@ -934,6 +983,7 @@ class aecHeartbeat extends mosDBTable
 					}
 				}
 
+				// If we have found all expired users, put all others into pre expiration
 				if ( !$found_expired && !in_array( $subscription->userid, $pre_expired_users ) ) {
 					if ( $pre_expiration ) {
 						$pre_expired_users[] = $subscription->userid;
@@ -1069,6 +1119,7 @@ class displayPipelineHandler
 	{
 		global $database, $mosConfig_offset_user;
 
+		// Entries for this user only
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_displaypipeline'
 				. ' WHERE `userid` = \'' . $userid . '\' AND `only_user` = \'1\''
@@ -1076,6 +1127,7 @@ class displayPipelineHandler
 		$database->setQuery( $query );
 		$events = $database->loadResultArray();
 
+		// Entries for all users
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_displaypipeline'
 				. ' WHERE `only_user` = \'0\''
@@ -1109,6 +1161,7 @@ class displayPipelineHandler
 					continue;
 				}
 
+				// If this can only be displayed once per user, prevent it from being displayed again
 				if ( $displayPipeline->once_per_user ) {
 					$params = $displayPipeline->getParams();
 
@@ -1254,12 +1307,14 @@ class eventLog extends paramDBTable
 		$this->event	= $text;
 		$this->level	= (int) $level;
 
+		// Create a notification link if this matches the desired level
 		if ( $this->level >= $aecConfig->cfg['error_notification_level'] ) {
 			$this->notify	= 1;
 		} else {
 			$this->notify	= $force_notify ? 1 : 0;
 		}
 
+		// Mail out notification to all admins if this matches the desired level
 		if ( ( $this->level >= $aecConfig->cfg['email_notification_level'] ) || $force_email ) {
 			global $mainframe, $database;
 
@@ -7003,14 +7058,21 @@ class microIntegration extends paramDBTable
 		if ( method_exists( $this->mi_class, 'pre_expiration_action' ) ) {
 			$userflags = $metaUser->objSubscription->getMIflags( $plan->id, $this->id );
 
+			// We need the standard variables and their uppercase pendants
+			// System MI vars have to be stored and will automatically converted to uppercase
 			$spc = 'system_preexp_call';
 			$spa = $spc . '_abandoncheck';
+			$spcu = strtoupper( 'system_preexp_call' );
+			$spau = strtoupper( $spc . '_abandoncheck' );
 
+			// Check whether we have userflags to work with
 			if ( is_array( $userflags ) && !empty( $userflags ) ) {
-				if ( isset( $userflags[strtoupper($spc)] ) ) {
-					if ( $userflags[strtoupper($spc)] == strtotime( $metaUser->objSubscription->expiration ) ) {
+				// Check for this specific flag
+				if ( isset( $userflags[$spcu] ) ) {
+					if ( $userflags[$spcu] == strtotime( $metaUser->objSubscription->expiration ) ) {
 						// There is something wrong with this, probably an old flag
-					} elseif ( !( time() > $userflags[strtoupper($spa)] ) ) {
+					} elseif ( !( time() > $userflags[$spau] ) ) {
+						// This call has already been made
 						return false;
 					}
 				}
@@ -7019,6 +7081,7 @@ class microIntegration extends paramDBTable
 			$newflags[$spc]	= strtotime( $metaUser->objSubscription->expiration );
 			$newflags[$spa]	= time();
 
+			// Create the new flags
 			$metaUser->objSubscription->setMIflags( $plan->id, $this->id, $newflags );
 
 			return $this->mi_class->pre_expiration_action( $params, $metaUser, $objplan );
@@ -7105,6 +7168,8 @@ class microIntegration extends paramDBTable
 		 foreach ( $settings as $key => $value ) {
 		 	if ( isset( $exchange[$key] ) ) {
 				if ( !is_null( $exchange[$key] ) && ( $exchange[$key] != '' ) ) {
+		 			// Exception for NULL case
+		 			// TODO: SET_TO_NULL undocumented!!!
 		 			if ( strcmp( $exchange[$key], '[[SET_TO_NULL]]' ) === 0 ) {
 		 				$settings[$key] = '';
 		 			} else {
@@ -7119,16 +7184,21 @@ class microIntegration extends paramDBTable
 
 	function savePostParams( $array )
 	{
+		// Strip out params that we don't need
 		$params = $this->stripNonParams($array);
 
+		// Add variables that should be common to all calls
+		// TODO: Replace this with setting properties of the object
 		$params = $this->addCommonParamInfo($params);
 
+		// Check whether there is a custom function for saving params
 		if ( method_exists( $this->mi_class, 'saveparams' ) ) {
 			$new_params = $this->mi_class->saveparams( $params );
 		} else {
 			$new_params = $params;
 		}
 
+		// Strip out common variables
 		$new_params = $this->stripcommonParamInfo( $new_params );
 
 		$this->setParams( $new_params );
@@ -7138,6 +7208,7 @@ class microIntegration extends paramDBTable
 
 	function stripNonParams( $array )
 	{
+		// All variables of the class have to be stripped out
 		$vars = get_class_vars( 'microIntegration' );
 
 		foreach ( $vars as $name => $blind ) {
@@ -7158,6 +7229,7 @@ class microIntegration extends paramDBTable
 
 	function stripcommonParamInfo( $params )
 	{
+		// Borrowing the original array for this
 		$commonparams = $this->addCommonParamInfo();
 
 		foreach ($commonparams as $key) {
@@ -7171,13 +7243,15 @@ class microIntegration extends paramDBTable
 
 	function getSettingsDescriptions()
 	{
-
+		// TODO: Find out what this was about!
 	}
 
 	function delete ()
 	{
 		$params = $this->getParams();
 
+		// Maybe this function needs special actions on delete?
+		// TODO: There should be a way to manage complete deletion of use of an MI type
 		if ( method_exists( $this->mi_class, 'delete' ) ){
 			$this->mi_class->delete( $params );
 		}
@@ -7194,6 +7268,7 @@ class couponsHandler
 			$cph = new couponHandler();
 			$cph->load( $coupon_code );
 
+			// Get the coupons that this one cannot be mixed with
 			if ( $cph->restrictions['restrict_combination'] ) {
 				$nomix = explode( ';', $cph->restrictions['bad_combinations'] );
 			} else {
@@ -7248,6 +7323,7 @@ class couponHandler
 	{
 		global $database;
 
+		// Get this coupons id from the static table
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_coupons_static'
 				. ' WHERE `coupon_code` = \'' . $coupon_code . '\''
@@ -7256,14 +7332,18 @@ class couponHandler
 		$couponid = $database->loadResult();
 
 		if ( $couponid ) {
+			// Its static, so set type to 1
 			$this->type = 1;
 		} else {
+			// Coupon not found, take the regular table
 			$query = 'SELECT `id`'
 					. ' FROM #__acctexp_coupons'
 					. ' WHERE `coupon_code` = \'' . $coupon_code . '\''
 					;
 			$database->setQuery( $query );
 			$couponid = $database->loadResult();
+
+			// Its not static, so set type to 0
 			$this->type = 0;
 		}
 
@@ -7288,6 +7368,7 @@ class couponHandler
 			if ( $this->restrictions['has_start_date'] ) {
 				$expstamp = strtotime( $this->restrictions['start_date'] );
 
+				// Error: Use of this coupon has not started yet
 				if ( ( $expstamp > 0 ) && ( ( $expstamp-time() ) > 0 ) ) {
 					$this->setError( _COUPON_ERROR_NOTSTARTED );
 				}
@@ -7297,6 +7378,7 @@ class couponHandler
 			if ( $this->restrictions['has_expiration'] ) {
 				$expstamp = strtotime( $this->restrictions['expiration'] );
 
+				// Error: Use of this coupon has expired
 				if ( ( $expstamp > 0 ) && ( ( $expstamp-time() ) < 0 ) ) {
 					$this->setError( _COUPON_ERROR_EXPIRED );
 					$this->coupon->deactivate();
@@ -7306,6 +7388,8 @@ class couponHandler
 			// Check for max reuse
 			if ( $this->restrictions['has_max_reuse'] ) {
 				if ( $this->restrictions['max_reuse'] ) {
+
+					// Error: Max Reuse of this coupon is exceeded
 					if ( (int) $this->coupon->usecount > (int) $this->restrictions['max_reuse'] ) {
 						$this->setError( _COUPON_ERROR_MAX_REUSE );
 						return;
@@ -7313,9 +7397,10 @@ class couponHandler
 				}
 			}
 
-			// Check for max reuse
+			// Check for dependency on subscription
 			if ( !empty( $this->restrictions['depend_on_subscr_id'] ) ) {
 				if ( $this->restrictions['subscr_id_dependency'] ) {
+					// See whether this subscription is active
 					$query = 'SELECT `status`'
 							. ' FROM #__acctexp_subscr'
 							. ' WHERE `id` = \'' . $this->restrictions['subscr_id_dependency'] . '\''
@@ -7324,6 +7409,7 @@ class couponHandler
 
 					$subscr_status = strtolower( $database->loadResult() );
 
+					// Error: The Subscription this Coupon depends on has run out
 					if ( ( strcmp( $subscr_status, 'active' ) === 0 ) || ( ( strcmp( $subscr_status, 'trial' ) === 0 ) && $this->restrictions['allow_trial_depend_subscr'] ) ) {
 						$this->setError( _COUPON_ERROR_SPONSORSHIP_ENDED );
 						return;
@@ -7331,6 +7417,7 @@ class couponHandler
 				}
 			}
 		} else {
+			// Error: Coupon does not exist
 			$this->setError( _COUPON_ERROR_NOTFOUND );
 		}
 	}
@@ -7343,6 +7430,7 @@ class couponHandler
 		$newcoupon = new coupon( $database, !$this->type );
 		$newcoupon->createNew( $this->coupon->coupon_code, $this->coupon->created_date );
 
+		// Switch id over to new table max
 		$oldid = $this->coupon->id;
 		$newid = $newcoupon->getMax();
 
@@ -7366,6 +7454,7 @@ class couponHandler
 	{
 		global $database;
 
+		// Get existing coupon relations for this user
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_couponsxuser'
 				. ' WHERE `userid` = \'' . $invoice->userid . '\''
@@ -7379,6 +7468,7 @@ class couponHandler
 		$couponxuser = new couponXuser( $database );
 
 		if ( $id ) {
+			// Relation exists, update count
 			global $mosConfig_offset_user;
 
 			$couponxuser->load( $id );
@@ -7388,6 +7478,7 @@ class couponHandler
 			$couponxuser->check();
 			$couponxuser->store();
 		} else {
+			// Relation does not exist, create one
 			$couponxuser->createNew( $invoice->userid, $this->coupon, $this->type );
 			$couponxuser->addInvoice( $invoice->invoice_number );
 			$couponxuser->check();
@@ -7397,10 +7488,11 @@ class couponHandler
 		$this->coupon->incrementcount();
 	}
 
-	function decrementCount()
+	function decrementCount( $invoice )
 	{
 		global $database;
 
+		// Get existing coupon relations for this user
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_couponsxuser'
 				. ' WHERE `userid` = \'' . $invoice->userid . '\''
@@ -7413,18 +7505,22 @@ class couponHandler
 
 		$couponxuser = new couponXuser( $database );
 
+		// Only do something if a relation exists
 		if ( $id ) {
 			global $mosConfig_offset_user;
 
+			// Decrement use count
 			$couponxuser->load( $id );
 			$couponxuser->usecount -= 1;
 			$couponxuser->last_updated = date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 );
 
 			if ( $couponxuser->usecount ) {
+				// Use count is 1 or above - break invoice relation but leave overall relation intact
 				$couponxuser->delInvoice( $invoice->invoice_number );
 				$couponxuser->check();
 				$couponxuser->store();
 			} else{
+				// Use count is 0 or below - delete relationship
 				$couponxuser->delete();
 			}
 		}
@@ -7434,14 +7530,18 @@ class couponHandler
 
 	function checkRestrictions( $metaUser, $original_amount=null, $invoiceFactory=null )
 	{
+		// Load Restrictions and resulting Permissions
 		$restrictions	= $this->getRestrictionsArray();
 		$permissions	= $metaUser->permissionResponse( $restrictions );
 
 		// Check for a set usage
 		if ( !empty( $this->restrictions['usage_plans_enabled'] ) && !is_null( $invoiceFactory ) ) {
 			if ( $this->restrictions['usage_plans'] ) {
+				// Check whether this usage is restricted
+				// TODO: Make this convert to an array (I think something went wrong when I last tried it)
 				if ( strpos( $this->restrictions['usage_plans'], ';' ) !== false ) {
 					$plans = explode( ';', $this->restrictions['usage_plans'] );
+
 					if ( in_array( $invoiceFactory->usage, $plans ) ) {
 						$permissions['usage'] = true;
 					} else {
@@ -7480,15 +7580,19 @@ class couponHandler
 			}
 		}
 
+		// Plot out error messages
 		if ( count( $permissions ) ) {
 			foreach ( $permissions as $name => $value ) {
 				if ( !$permissions[$name] ) {
 					switch ( $name ) {
+						// ACL Permission Errors
 						case 'mingid':			$this->setError( _COUPON_ERROR_PERMISSION );			break;
 						case 'maxgid':			$this->setError( _COUPON_ERROR_PERMISSION );			break;
 						case 'setgid':			$this->setError( _COUPON_ERROR_PERMISSION );			break;
+						// Plan Permission Errors
 						case 'usage':			$this->setError( _COUPON_ERROR_WRONG_USAGE );			break;
 						case 'trial_only':		$this->setError( _COUPON_ERROR_TRIAL_ONLY );			break;
+						// Plan History or Status Errors
 						case 'plan_previous':	$this->setError( _COUPON_ERROR_WRONG_PLAN_PREVIOUS );	break;
 						case 'plan_present':	$this->setError( _COUPON_ERROR_WRONG_PLAN_PRESENT );	break;
 						case 'plan_overall':	$this->setError( _COUPON_ERROR_WRONG_PLANS_OVERALL );	break;
@@ -7572,6 +7676,7 @@ class couponHandler
 			$newamount = $this->applyCoupon( $amount );
 		}
 
+		// Load amount or convert amount array to current amount
 		if ( is_array( $newamount ) ) {
 			if ( isset( $newamount['amount1'] ) ) {
 				$this->amount = $newamount['amount1'];
@@ -7584,6 +7689,7 @@ class couponHandler
 			$this->amount = $newamount;
 		}
 
+		// Load amount or convert discount amount array to current amount
 		if ( is_array( $newamount ) ) {
 			if ( isset( $newamount['amount1'] ) ) {
 				$this->discount_amount = $amount['amount']['amount1'] - $newamount['amount1'];
@@ -7597,6 +7703,8 @@ class couponHandler
 		}
 
 		$action = '';
+
+		// Convert chosen rules to user information
 		if ( $this->discount['percent_first'] ) {
 			if ( $this->discount['amount_percent_use'] ) {
 				$action .= '-' . $this->discount['amount_percent'] . '%';
@@ -7624,8 +7732,9 @@ class couponHandler
 
 	function applyCoupon( $amount )
 	{
-
+		// Distinguish between recurring and one-off payments
 		if ( is_array( $amount ) ) {
+			// Check for Trial Rules
 			if ( isset( $amount['amount1'] ) ) {
 				if ( $this->discount['useon_trial'] ) {
 					if ( $amount['amount1'] > 0 ) {
@@ -7633,6 +7742,8 @@ class couponHandler
 					}
 				}
 			}
+
+			// Check for Full Rules
 			if ( isset( $amount['amount3'] ) ) {
 				if ( $this->discount['useon_full'] ) {
 					if ( $this->discount['useon_full_all'] ) {
@@ -7659,6 +7770,7 @@ class couponHandler
 
 	function applyDiscount( $amount )
 	{
+		// Apply Discount according to rules
 		if ( $this->discount['percent_first'] ) {
 			if ( $this->discount['amount_percent_use'] ) {
 				$amount -= ( ( $amount / 100 ) * $this->discount['amount_percent'] );
@@ -7674,6 +7786,8 @@ class couponHandler
 				$amount -= ( ( $amount / 100 ) * $this->discount['amount_percent'] );
 			}
 		}
+
+		// Fix Amount if broken and return
 		return AECToolbox::correctAmount( $amount );
 	}
 }
@@ -7955,6 +8069,8 @@ class couponXuser extends paramDBTable
 		$this->setInvoiceList( $invoicelist );
 	}
 }
+
+// Not yet active code for future features
 
 class tokenCheck
 {
