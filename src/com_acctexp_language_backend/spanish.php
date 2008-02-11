@@ -714,6 +714,9 @@ define( '_CFG_GENERAL_ERROR_NOTIFICATION_LEVEL_DESC', 'Select which level of ent
 define( '_CFG_GENERAL_EMAIL_NOTIFICATION_LEVEL_NAME', 'Email Notification Level');
 define( '_CFG_GENERAL_EMAIL_NOTIFICATION_LEVEL_DESC', 'Select which level of entries to the EventLog is required to make the AEC send them as an E-Mail to all Administrators.');
 
+define( '_CFG_GENERAL_SKIP_CONFIRMATION_NAME', 'Skip Confirmation');
+define( '_CFG_GENERAL_SKIP_CONFIRMATION_DESC', 'Do not display a Confirmation screen before checkout (which lets the user revisit the current decision).');
+
 // Global Micro Integration Settings
 define( '_CFG_TAB_MICROINTEGRATION_TITLE', 'MicroIntegr');
 define( '_CFG_MI_ACTIVELIST_NAME', 'Active MicroIntegrations');
