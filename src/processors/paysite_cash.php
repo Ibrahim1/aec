@@ -46,8 +46,8 @@ class processor_paysite_cash extends URLprocessor
 		$i['longname'] = _CFG_PAYSITE_CASH_LONGNAME;
 		$i['statement'] = _CFG_PAYSITE_CASH_STATEMENT;
 		$i['description'] = _CFG_PAYSITE_CASH_DESCRIPTION;
-		$i['currencies'] = 'USD';
-		$i['languages'] = 'AU,DE,FR,IT,GB,ES,US';
+		$i['currencies'] = 'EUR,USD,CAD,GBP,CHF';
+		$i['languages'] = 'FR,US';
 		$i['cc_list'] = 'visa,mastercard,discover,americanexpress,echeck';
 		$i['notify_trail_thanks'] = 1;
 
@@ -90,19 +90,17 @@ class processor_paysite_cash extends URLprocessor
 
 	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
 	{
-		// Payment Plans are required to have a productid assigned
-		if ( empty( $int_var['planparams']['paysite_cash_product'] ) ) {
-			$product = $cfg['siteid'];
-		} else {
-			$product = $int_var['planparams']['paysite_cash_product'];
+		if ( $cfg['testmode'] ) {
+			$var['test'] = 1;
 		}
 
-		$var['post_url'] = "https://secure.paysite_cash.com/cgi-bin/vtjp.pl?";
-		$var['paysite_cash_id'] = $cfg['merchantid'];
+		$var['post_url'] = " https://billing.paysite-cash.biz/?";
+		$var['site'] = $cfg['merchantid'];
+		$var['id_client'] = $cfg['merchantid'];
 		$var['montant'] = $product;
-		$var['paysite_cash_website'] = $cfg['siteid'];
-		$var['paysite_cash_usercode'] = $metaUser->cmsUser->username;
-		$var['paysite_cash_passcode'] = "xxxxxxxx";
+		$var['devise'] = $cfg['siteid'];
+		$var['divers'] = $metaUser->cmsUser->username;
+		$var['ref'] = "xxxxxxxx";
 		$var['paysite_cash_custom1'] = $int_var['invoice'];
 
 		return $var;
