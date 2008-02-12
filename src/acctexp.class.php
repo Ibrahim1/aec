@@ -1092,8 +1092,10 @@ class aecHeartbeat extends mosDBTable
 			}
 		}
 		if ( $exp_actions ) {
-			$event .= $exp_actions . ' Pre-expiration action' . ( $exp_actions > 1 ) ? 's' : ''
-						. ' for ' . $exp_users . ' user' . ( $exp_users > 1 ) ? 's' : '';
+			$event .= $exp_actions . ' Pre-expiration action';
+			$event .= ( $exp_actions > 1 ) ? 's' : '';
+			$event .= ' for ' . $exp_users . ' user';
+			$event .= ( $exp_users > 1 ) ? 's' : '';
 			$tags[] = 'pre-expiration';
 		}
 
@@ -7056,7 +7058,7 @@ class microIntegration extends paramDBTable
 		$params = $this->getParams();
 
 		if ( method_exists( $this->mi_class, 'pre_expiration_action' ) ) {
-			$userflags = $metaUser->objSubscription->getMIflags( $plan->id, $this->id );
+			$userflags = $metaUser->focusSubscription->getMIflags( $objplan->id, $this->id );
 
 			// We need the standard variables and their uppercase pendants
 			// System MI vars have to be stored and will automatically converted to uppercase
@@ -7069,7 +7071,7 @@ class microIntegration extends paramDBTable
 			if ( is_array( $userflags ) && !empty( $userflags ) ) {
 				// Check for this specific flag
 				if ( isset( $userflags[$spcu] ) ) {
-					if ( $userflags[$spcu] == strtotime( $metaUser->objSubscription->expiration ) ) {
+					if ( $userflags[$spcu] == strtotime( $metaUser->focusSubscription->expiration ) ) {
 						// There is something wrong with this, probably an old flag
 					} elseif ( !( time() > $userflags[$spau] ) ) {
 						// This call has already been made
@@ -7078,11 +7080,11 @@ class microIntegration extends paramDBTable
 				}
 			}
 
-			$newflags[$spc]	= strtotime( $metaUser->objSubscription->expiration );
+			$newflags[$spc]	= strtotime( $metaUser->focusSubscription->expiration );
 			$newflags[$spa]	= time();
 
 			// Create the new flags
-			$metaUser->objSubscription->setMIflags( $plan->id, $this->id, $newflags );
+			$metaUser->focusSubscription->setMIflags( $objplan->id, $this->id, $newflags );
 
 			return $this->mi_class->pre_expiration_action( $params, $metaUser, $objplan );
 		} else {
