@@ -310,7 +310,11 @@ function subscribe( $option )
 				;
 		$database->setQuery( $query );
 		if ( $database->loadResult() ) {
-			mosErrorAlert( _REGWARN_INUSE );
+			if ( !defined( 'JPATH_BASE' ) ) {
+				mosErrorAlert( _REGWARN_EMAIL_INUSE );
+			} else {
+				mosErrorAlert( JText::_( 'WARNREG_INUSE' ) );
+			}
 		}
 
 		if ( !empty( $_POST['email'] ) ) {
