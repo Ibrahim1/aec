@@ -3620,20 +3620,17 @@ function cancelInvoice( $option, $invoice_number, $task )
 {
 	global $database;
 
-	$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number );
+	$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, 0, true );
 
 	if ( $invoiceid ) {
 		$objInvoice = new Invoice( $database );
 		$objInvoice->load( $invoiceid );
+		$uid = $objInvoice->userid;
 
-		$query = 'DELETE FROM #__acctexp_invoices'
-				. ' WHERE `invoice_number` = \'' . $invoice_number . '\''
-				;
-		$database->setQuery( $query );
-		$database->query();
+		$objInvoice->delete();
 
-		if ( strcmp( $task, 'edit' ) == 0) {
-			$userid = '&userid=' . $objInvoice->userid;
+		if ( strcmp( $task, 'edit' ) == 0 ) {
+			$userid = '&userid=' . $uid;
 		} else {
 			$userid = '';
 		}

@@ -5788,19 +5788,28 @@ class AECfetchfromDB
 		return $database->loadResult();
 	}
 
-	function InvoiceIDfromNumber( $invoice_number, $userid = 0 )
+	function InvoiceIDfromNumber( $invoice_number, $userid = 0, $override_active = false )
 	{
 		global $database;
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_invoices'
-				. ' WHERE `active` = \'1\''
-				. ' AND ( `invoice_number` = \'' . $invoice_number . '\''
-				. ' OR `secondary_ident` = \'' . $invoice_number . '\' )'
 				;
+
+		if ( $override_active ) {
+			$query .= ' WHERE';
+		} else {
+			$query .= ' WHERE `active` = \'1\' AND';
+		}
+
+		$query .= ' ( `invoice_number` LIKE \'' . $invoice_number . '\''
+				. ' OR `secondary_ident` LIKE \'' . $invoice_number . '\' )'
+				;
+
 		if ( $userid ) {
 			$query .= ' AND `userid` = \'' . $userid . '\'';
 		}
+
 		$database->setQuery( $query );
 		return $database->loadResult();
 	}
