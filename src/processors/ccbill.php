@@ -273,12 +273,6 @@ class processor_ccbill extends POSTprocessor
 
 		$response['checksum'] = $checksum;
 
-		if ( $initialPrice ) {
-			$response['amount_paid'] = $initialPrice;
-		} else {
-			$response['amount_paid'] = $recurringPrice;
-		}
-
 		return $response;
 
 	}
@@ -315,7 +309,7 @@ class processor_ccbill extends POSTprocessor
 				$get = array();
 				$get['startTime'] = date( 'YmdHis', ( time() - 24*60*60 - 1 ) );
 				$get['endTime'] = date( 'YmdHis' );
-				$get['transactionTypes'] = 'REBILL,REFUND,CHARGEBACK';
+				$get['transactionTypes'] = 'EXPIRE';
 				$get['clientAccnum'] = $cfg['clientAccnum'];
 
 				if ( !empty( $cfg['clientSubacc'] ) ) {
@@ -353,8 +347,11 @@ class processor_ccbill extends POSTprocessor
 						$subscription_id = $database->loadResult();
 
 						switch ( $info[0] ) {
+							case 'EXPIRE':
+								$this->datalink_expire_temp[] = $subscription_id;
+								break;
 							case 'REBILL':
-								$this->datalink_temp[] = $subscription_id;
+								$this->datalink_rebill_temp[] = $subscription_id;
 								break;
 							case 'REFUND':
 							case 'CHARGEBACK':
@@ -388,9 +385,9 @@ class processor_ccbill extends POSTprocessor
 	{
 		global $database;
 
-		if ( !empty( $this->datalink_temp ) ) {
+		if ( !empty( $this->datalink_rebill_temp ) ) {
 			// Now lets check for this subscription
-			if ( in_array( $subscription_id, $this->datalink_temp ) ) {
+			if ( in_array( $subscription_id, $this->datalink_rebill_temp ) ) {
 				$invoice = new Invoice( $database );
 				$invoice->loadbySubscriptionId( $subscription_id );
 
@@ -399,6 +396,13 @@ class processor_ccbill extends POSTprocessor
 					$invoice->pay();
 					return true;
 				}
+			}
+		}
+
+		if ( !empty( $this->datalink_expire_temp ) ) {
+			// Now lets check for this subscription
+			if ( !in_array( $subscription_id, $this->datalink_expire_temp ) ) {
+				return true;
 			}
 		}
 

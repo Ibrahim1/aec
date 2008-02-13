@@ -143,12 +143,12 @@ class processor_verotel extends URLprocessor
 			$response['valid'] = 1;
 		} else {
 			$response['valid'] = 0;
-			$response['pending_reason'] = 'INVALID SECRET WORD, provided: ' . $res[3];
+			$response['pending_reason'] = 'INVALID SECRET WORD, provided: ' . $res[2];
 		}
 
 		switch ( $res[3] ) {
 			case 'add':
-				$response['amount_paid'] = $res[4];
+				$response['valid'] = 0;
 				if ( !empty( $post['planparams']['recurring'] ) ) {
 					$response['multiplicator'] = 'lifetime';
 				}
