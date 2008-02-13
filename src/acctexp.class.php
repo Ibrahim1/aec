@@ -7055,36 +7055,32 @@ class microIntegration extends paramDBTable
 
 	function pre_expiration_action( $metaUser, $objplan=null )
 	{
-		$params = $this->getParams();
-
 		if ( method_exists( $this->mi_class, 'pre_expiration_action' ) ) {
 			$userflags = $metaUser->focusSubscription->getMIflags( $objplan->id, $this->id );
 
 			// We need the standard variables and their uppercase pendants
 			// System MI vars have to be stored and will automatically converted to uppercase
-			$spc = 'system_preexp_call';
-			$spa = $spc . '_abandoncheck';
-			$spcu = strtoupper( 'system_preexp_call' );
-			$spau = strtoupper( $spc . '_abandoncheck' );
+			$spc = strtoupper( 'system_preexp_call' );
+			$spca = $spc . strtoupper( '_abandoncheck' );
 
 			// Check whether we have userflags to work with
 			if ( is_array( $userflags ) && !empty( $userflags ) ) {
 				// Check for this specific flag
-				if ( isset( $userflags[$spcu] ) ) {
-					if ( $userflags[$spcu] == strtotime( $metaUser->focusSubscription->expiration ) ) {
-						// There is something wrong with this, probably an old flag
-					} elseif ( !( time() > $userflags[$spau] ) ) {
+				if ( isset( $userflags[$spc] ) && isset( $userflags[$spca] ) ) {
+					if ( !( time() > $userflags[$spc] ) ) {
 						// This call has already been made
 						return false;
 					}
 				}
 			}
 
-			$newflags[$spc]	= strtotime( $metaUser->focusSubscription->expiration );
-			$newflags[$spa]	= time();
+			$newflags[$spc]		= strtotime( $metaUser->focusSubscription->expiration );
+			$newflags[$spca]	= time();
 
 			// Create the new flags
 			$metaUser->focusSubscription->setMIflags( $objplan->id, $this->id, $newflags );
+
+			$params = $this->getParams();
 
 			return $this->mi_class->pre_expiration_action( $params, $metaUser, $objplan );
 		} else {
@@ -7094,9 +7090,9 @@ class microIntegration extends paramDBTable
 
 	function expiration_action( $metaUser, $objplan=null )
 	{
-		$params = $this->getParams();
-
 		if ( method_exists( $this->mi_class, 'expiration_action' ) ) {
+			$params = $this->getParams();
+
 			return $this->mi_class->expiration_action( $params, $metaUser, $objplan );
 		} else {
 			return null;
@@ -7105,9 +7101,9 @@ class microIntegration extends paramDBTable
 
 	function on_userchange_action( $row, $post, $trace )
 	{
-		$params = $this->getParams();
-
 		if ( method_exists( $this->mi_class, 'on_userchange_action' ) ) {
+			$params = $this->getParams();
+
 			return $this->mi_class->on_userchange_action( $params, $row, $post, $trace );
 		} else {
 			return null;
