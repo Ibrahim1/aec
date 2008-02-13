@@ -716,6 +716,8 @@ define( '_CFG_GENERAL_EMAIL_NOTIFICATION_LEVEL_DESC', 'Select which level of ent
 
 define( '_CFG_GENERAL_SKIP_CONFIRMATION_NAME', 'Skip Confirmation');
 define( '_CFG_GENERAL_SKIP_CONFIRMATION_DESC', 'Do not display a Confirmation screen before checkout (which lets the user revisit the current decision).');
+define( '_CFG_GENERAL_SHOW_FIXEDDECISION_NAME', 'Show Fixed Decisions');
+define( '_CFG_GENERAL_SHOW_FIXEDDECISION_DESC', 'The AEC normally skips the payment plans page if there is no decision to be made (one payment plan with only one processor). With this option, you can force it to display the page.');
 
 // Global Micro Integration Settings
 define( '_CFG_TAB_MICROINTEGRATION_TITLE',				'MicroIntegration' );

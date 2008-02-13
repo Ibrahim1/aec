@@ -1671,28 +1671,18 @@ function editSettings( $option )
 
 	$lists = array();
 
-	$lists['simpleurls']			= mosHTML::yesnoSelectList('simpleurls', '', $aecConfig->cfg['simpleurls']);
-	$lists['require_subscription']	= mosHTML::yesnoSelectList('require_subscription', '', $aecConfig->cfg['require_subscription']);
-	$lists['plans_first']			= mosHTML::yesnoSelectList('plans_first', '', $aecConfig->cfg['plans_first']);
-	$lists['enable_coupons']		= mosHTML::yesnoSelectList('enable_coupons', '', $aecConfig->cfg['enable_coupons']);
-	$lists['enable_mimeta']			= mosHTML::yesnoSelectList('enable_mimeta', '', ( !empty( $aecConfig->cfg['enable_mimeta'] ) ? $aecConfig->cfg['enable_mimeta'] : '' ) );
-	$lists['displayccinfo']			= mosHTML::yesnoSelectList('displayccinfo', '', $aecConfig->cfg['displayccinfo']);
-	$lists['adminaccess']			= mosHTML::yesnoSelectList('adminaccess', '', $aecConfig->cfg['adminaccess']);
-	$lists['noemails']				= mosHTML::yesnoSelectList('noemails', '', $aecConfig->cfg['noemails']);
-	$lists['nojoomlaregemails']		= mosHTML::yesnoSelectList('nojoomlaregemails', '', $aecConfig->cfg['nojoomlaregemails']);
-	$lists['debugmode']				= mosHTML::yesnoSelectList('debugmode', '', $aecConfig->cfg['debugmode']);
-	$lists['override_reqssl']		= mosHTML::yesnoSelectList('override_reqssl', '', $aecConfig->cfg['override_reqssl']);
-	$lists['invoicenum_display_id']		= mosHTML::yesnoSelectList('invoicenum_display_id', '', $aecConfig->cfg['invoicenum_display_id']);
-	$lists['use_recaptcha']		= mosHTML::yesnoSelectList('use_recaptcha', '', $aecConfig->cfg['use_recaptcha']);
-	$lists['ssl_signup']		= mosHTML::yesnoSelectList('ssl_signup', '', $aecConfig->cfg['ssl_signup']);
-	$lists['skip_confirmation']		= mosHTML::yesnoSelectList('skip_confirmation', '', $aecConfig->cfg['skip_confirmation']);
+	$yn_lists = array( 'simpleurls', 'require_subscription', 'plans_first',
+						'enable_coupons', 'displayccinfo', 'adminaccess',
+						'noemails', 'nojoomlaregemails', 'debugmode',
+						'override_reqssl', 'invoicenum_display_id', 'use_recaptcha',
+						'ssl_signup', 'skip_confirmation', 'show_fixeddecision',
+						'customtext_confirm_keeporiginal', 'customtext_checkout_keeporiginal', 'customtext_notallowed_keeporiginal',
+						'customtext_expired_keeporiginal', 'customtext_pending_keeporiginal'
+						);
 
-	$lists['customtext_confirm_keeporiginal']		= mosHTML::yesnoSelectList('customtext_confirm_keeporiginal', '', $aecConfig->cfg['customtext_confirm_keeporiginal']);
-	$lists['customtext_checkout_keeporiginal']		= mosHTML::yesnoSelectList('customtext_checkout_keeporiginal', '', $aecConfig->cfg['customtext_checkout_keeporiginal']);
-	$lists['customtext_notallowed_keeporiginal']	= mosHTML::yesnoSelectList('customtext_notallowed_keeporiginal', '', $aecConfig->cfg['customtext_notallowed_keeporiginal']);
-	$lists['customtext_expired_keeporiginal']		= mosHTML::yesnoSelectList('customtext_expired_keeporiginal', '', $aecConfig->cfg['customtext_expired_keeporiginal']);
-	$lists['customtext_pending_keeporiginal']		= mosHTML::yesnoSelectList('customtext_pending_keeporiginal', '', $aecConfig->cfg['customtext_pending_keeporiginal']);
-
+	foreach ( $yn_lists as $ynname ) {
+		$lists[$ynname] = mosHTML::yesnoSelectList($ynname, '', $aecConfig->cfg[$ynname]);
+	}
 
 	$currency_code_list	= AECToolbox::_aecCurrencyField( true, true, true );
 	$lists['currency_code_general'] = mosHTML::selectList( $currency_code_list, ( 'currency_code_general' ), 'size="10"', 'value', 'text', ( !empty( $aecConfig->cfg['currency_code_general'] ) ? $aecConfig->cfg['currency_code_general'] : '' ) );
@@ -1778,6 +1768,7 @@ function editSettings( $option )
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_SSL_SIGNUP_NAME, _CFG_GENERAL_SSL_SIGNUP_DESC, '0', 'ssl_signup');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_OVERRIDE_REQSSL_NAME, _CFG_GENERAL_OVERRIDE_REQSSL_DESC, '0', 'override_reqssl');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_SKIP_CONFIRMATION_NAME, _CFG_GENERAL_SKIP_CONFIRMATION_DESC, '0', 'skip_confirmation');
+	$tab_data[0][] = array( 'list', _CFG_GENERAL_SHOW_FIXEDDECISION_NAME, _CFG_GENERAL_SHOW_FIXEDDECISION_DESC, '0', 'show_fixeddecision');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_DEBUGMODE_NAME, _CFG_GENERAL_DEBUGMODE_DESC, '0', 'debugmode');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_ERROR_NOTIFICATION_LEVEL_NAME, _CFG_GENERAL_ERROR_NOTIFICATION_LEVEL_DESC, '0', 'error_notification_level');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_EMAIL_NOTIFICATION_LEVEL_NAME, _CFG_GENERAL_EMAIL_NOTIFICATION_LEVEL_DESC, '0', 'email_notification_level');

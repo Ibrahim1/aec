@@ -722,6 +722,7 @@ class Config_General extends paramDBTable
 		$def['email_notification_level']			= 512;
 		$def['temp_auth_exp']						= 60;
 		$def['skip_confirmation']					= 0;
+		$def['show_fixeddecision']					= 0;
 
 		// Insert a new entry if there is none yet
 		if ( empty( $this->settings ) ) {
@@ -3709,7 +3710,7 @@ class InvoiceFactory
 	 	$nochoice = ( count( $plans ) === 1 ) && ( count( $plans[0]['gw'] ) === 1 );
 
 		// If we have only one processor on one plan, there is no need for a decision
-		if ( $nochoice ) {
+		if ( $nochoice && !$aecConfig->cfg['show_fixeddecision'] ) {
 			// If the user also needs to register, we need to guide him there after the selection has now been made
 			if ( $register ) {
 				// The plans are supposed to be first, so the details form should hold the values
