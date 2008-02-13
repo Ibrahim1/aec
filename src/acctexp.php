@@ -734,7 +734,7 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid )
 
 		if ( !$objInvoice->fixed ) {
 			$objInvoice->active = 0;
-			$objInvoice->setParams( array('deactivated' => 'cancel') );
+			$objInvoice->setParams( array( 'deactivated' => 'cancel' ) );
 			$objInvoice->check();
 			$objInvoice->store();
 		}
