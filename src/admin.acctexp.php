@@ -2416,10 +2416,17 @@ function editSubscriptionPlan( $id, $option )
 				if ( is_array( $customparams ) ) {
 					foreach ( $customparams as $customparam => $cpcontent ) {
 						// Write the params field
-						$cp_name = constant( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_name" ) );
-						$cp_desc = constant( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_desc" ) );
+						if ( defined( strtoupper( "_CFG_processor_plan_params_" . $customparam . "_name" ) ) ) {
+							$cp_name = constant( strtoupper( "_CFG_processor_plan_params_" . $customparam . "_name" ) );
+							$cp_desc = constant( strtoupper( "_CFG_processor_plan_params_" . $customparam . "_desc" ) );
+						} else {
+							$cp_name = constant( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_name" ) );
+							$cp_desc = constant( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_desc" ) );
+						}
+
 						$shortname = $pp->id . "_" . $customparam;
 						$params[$shortname] = array_merge( $cpcontent, array( $cp_name, $cp_desc ) );
+
 						$customparamsarray[$pp->id]['params'][] = $shortname;
 					}
 				}

@@ -79,6 +79,14 @@ class processor_paycom extends POSTprocessor
 		return $settings;
 	}
 
+	function CustomPlanParams()
+	{
+		$p = array();
+		$p['recurring']		= array( 'list_yesno' );
+
+		return $p;
+	}
+
 	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
 	{
 		global $mosConfig_live_site;

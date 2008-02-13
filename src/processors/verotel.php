@@ -84,6 +84,7 @@ class processor_verotel extends URLprocessor
 	{
 		$p = array();
 		$p['verotel_product']	= array( 'inputC' );
+		$p['recurring']		= array( 'list_yesno' );
 
 		return $p;
 	}
@@ -148,6 +149,9 @@ class processor_verotel extends URLprocessor
 		switch ( $res[3] ) {
 			case 'add':
 				$response['amount_paid'] = $res[4];
+				if ( !empty( $post['planparams']['recurring'] ) ) {
+					$response['multiplicator'] = 'lifetime';
+				}
 				break;
 			case 'cancel':
 				$response['cancel'] = 1;

@@ -4510,6 +4510,9 @@ class Invoice extends paramDBTable
 		$plan->load( $this->usage );
 		$plan_params = $plan->getParams( 'params' );
 
+		$post = $_POST;
+		$post['planparams'] = $plan->getProcessorParameters( $pp->id );
+
 		$pp->exchangeSettings( $plan, $plan_params );
 		$response = $pp->validateNotification( $response, $_POST, $this );
 

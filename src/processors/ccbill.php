@@ -97,6 +97,7 @@ class processor_ccbill extends POSTprocessor
 	{
 		$p = array();
 		$p['Allowedtypes']	= array( 'inputC' );
+		$p['recurring']		= array( 'list_yesno' );
 
 		return $p;
 	}
@@ -294,6 +295,12 @@ class processor_ccbill extends POSTprocessor
 			$validate = md5( $cfg['secretWord'] . $username );
 
 			$response['valid'] = ( strcmp( $validate, $response['checksum'] ) == 0 );
+		}
+
+		if ( !empty( $response['valid'] ) ) {
+			if ( !empty( $post['planparams']['recurring'] ) ) {
+				$response['multiplicator'] = 'lifetime';
+			}
 		}
 
 		return $response;
