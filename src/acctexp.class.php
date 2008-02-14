@@ -3710,7 +3710,7 @@ class InvoiceFactory
 	 	$nochoice = ( count( $plans ) === 1 ) && ( count( $plans[0]['gw'] ) === 1 );
 
 		// If we have only one processor on one plan, there is no need for a decision
-		if ( $nochoice && !$aecConfig->cfg['show_fixeddecision'] ) {
+		if ( $nochoice && !( $aecConfig->cfg['show_fixeddecision'] && empty( $processor ) ) ) {
 			// If the user also needs to register, we need to guide him there after the selection has now been made
 			if ( $register ) {
 				// The plans are supposed to be first, so the details form should hold the values

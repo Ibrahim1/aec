@@ -301,7 +301,7 @@ define( '_AEC_CENTR_HELP',						'Help' );
 define( '_AEC_CENTR_LOG',						'EventLog' );
 define( '_AEC_CENTR_MANUAL',					'Manual' );
 define( '_AEC_QUICKSEARCH',						'Quick Search' );
-define( '_AEC_QUICKSEARCH_DESC',				'Put in a users name, username, email address, userid or an invoice number to get directly linke to the users profile. If there are more than one result, they will be shown below.' );
+define( '_AEC_QUICKSEARCH_DESC',				'Put in a users name, username, email address, userid or an invoice number to get directly linked to the users profile. If there are more than one result, they will be shown below.' );
 define( '_AEC_QUICKSEARCH_MULTIRES',			'Multiple Results!' );
 define( '_AEC_QUICKSEARCH_MULTIRES_DESC',		'Please pick one of the following users:' );
 define( '_AEC_QUICKSEARCH_THANKS',				'Thank you for making a simple function very happy.' );

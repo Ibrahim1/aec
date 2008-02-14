@@ -1019,7 +1019,11 @@ function aecGetParam( $name, $default='' )
 	$return = trim( mosGetParam( $_REQUEST, $name, $default ) );
 
 	if ( empty( $return ) && !empty( $_POST[(string) $name] ) ) {
-		$processor = $_POST[(string) $name];
+		$return = $_POST[(string) $name];
+	}
+
+	if ( empty( $return ) && !empty( $_REQUEST[(string) $name] ) ) {
+		$return = $_REQUEST[(string) $name];
 	}
 
 	return $return;
