@@ -385,6 +385,10 @@ define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLCITY_NAME', 'City');
 define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLSTATE_NAME', 'State');
 define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLZIP_NAME', 'Zip');
 define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLCOUNTRY_NAME', 'Country');
+define( '_CFG_AUTHORIZE_ARB_USESILENTPOSTRESPONSE_NAME', 'Use Silent Post Response');
+define( '_CFG_AUTHORIZE_ARB_USESILENTPOSTRESPONSE_DESC', 'Please read explanation below');
+define( '_CFG_AUTHORIZE_ARB_SILENTPOST_INFO_NAME', 'Silent Postback');
+define( '_CFG_AUTHORIZE_ARB_SILENTPOST_INFO_DESC', 'When a recurring payment is set up with ARB, the AEC normally applies a multiplicated subscription period accordig to the Total Occurances. This way, the user will stay active throughout the subscription until it runs out or is cancelled. However, this also means that you would have to check for unpaid bills and manually deactivate the subscriptions if such a thing occurs. The other option is to use the Silent Postback which sends notifications for each subsequent payment that was successful. This in turn triggers the AEC to activate the user for another term. Please consult <a href="http://www.authorize.net/support/Merchant/Integration_Settings/Receipt_Page_Options.htm">this page</a> to find out how to set up the Silent Post Url. Enter http://[YOUR JOOMLA LOCATION]/index.php?option=com_acctexp&task=authorize_arbnotification as the Url.');
 
 // CCBill
 define( '_CFG_CCBILL_LONGNAME', 'CCBill');

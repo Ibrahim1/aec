@@ -61,6 +61,8 @@ class processor_authorize_arb extends XMLprocessor
 		$settings['promptAddress']		= 0;
 		$settings['totalOccurrences']	= 12;
 		$settings['trialOccurrences']	= 1;
+		$settings['useSilentPostResponse']	= 1;
+		$settings['SilentPostinfo']			= array( 'fieldset' );
 		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']		= '';
 
@@ -77,6 +79,7 @@ class processor_authorize_arb extends XMLprocessor
 		$settings['promptAddress']		= array("list_yesno");
 		$settings['totalOccurrences']	= array("inputA");
 		$settings['trialOccurrences']	= array("inputA");
+		$settings['useSilentPostResponse']		= array("list_yesno");
 		$settings['item_name']			= array("inputE");
  		$rewriteswitches 				= array("cms", "user", "expiration", "subscription", "plan");
 		$settings['rewriteInfo']		= array("fieldset", "Rewriting Info", AECToolbox::rewriteEngineInfo($rewriteswitches));
@@ -206,7 +209,7 @@ class processor_authorize_arb extends XMLprocessor
 				$return['error'] = $text;
 			}
 
-			if ( $settings['totalOccurrences'] > 1 ) {
+			if ( ( $settings['totalOccurrences'] > 1 ) && !$settings['useSilentPostResponse'] ) {
 				$return['multiplicator'] = $settings['totalOccurrences'];
 			}
 
