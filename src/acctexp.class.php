@@ -4075,6 +4075,8 @@ class InvoiceFactory
 
 		if ( isset( $response['error'] ) ) {
 			$this->error( $option, $this->metaUser->cmsUser, $this->objInvoice->invoice_number, $response['error'] );
+		} else {
+			$this->thanks( $option, $renew, false );
 		}
 	}
 
