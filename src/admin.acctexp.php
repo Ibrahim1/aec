@@ -4490,7 +4490,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 				case 'file':
 					// mic: fix if CMS is not Joomla or Mambo
 					if ( $hack['filename'] != 'UNKNOWN' ) {
-						$originalFileHandle = fopen( $hack['filename'], 'r' ) or die ( "Cannot open $originalFile<br>" );
+						$originalFileHandle = fopen( $hack['filename'], 'r' );
 						$oldData			= fread( $originalFileHandle, filesize($hack['filename'] ) );
 						fclose( $originalFileHandle );
 
