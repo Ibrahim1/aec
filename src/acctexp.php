@@ -572,6 +572,7 @@ function subscriptionDetails( $option )
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_invoices'
 				. ' WHERE `userid` = \'' . $my->id . '\''
+				. ' AND `active` = \'1\''
 				;
 		$database->setQuery( $query );
 		$rows_total	= $database->loadResult();
