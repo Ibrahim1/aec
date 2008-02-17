@@ -84,7 +84,7 @@ border-right: 1px solid #aaa;
 
 td.notice_level_2 {
 color: #fff;
-background-color: #61b0c1;
+background-color: #61b0c1 !important;
 text-align: right !important;
 font-weight: bold;
 font-size: 110%;
@@ -92,7 +92,7 @@ font-size: 110%;
 
 td.notice_level_8 {
 color: #fff;
-background-color: #7fc161;
+background-color: #7fc161 !important;
 text-align: right !important;
 font-weight: bold;
 font-size: 110%;
@@ -100,7 +100,7 @@ font-size: 110%;
 
 td.notice_level_32 {
 color: #fff;
-background-color: #c1bb61;
+background-color: #c1bb61 !important;
 text-align: right !important;
 font-weight: bold;
 font-size: 110%;
@@ -108,7 +108,7 @@ font-size: 110%;
 
 td.notice_level_128 {
 color: #fff;
-background-color: #c16161;
+background-color: #c16161 !important;
 text-align: right !important;
 font-weight: bold;
 font-size: 110%;
