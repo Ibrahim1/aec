@@ -847,25 +847,29 @@ class aecHeartbeat extends mosDBTable
 
 	function frontendping()
 	{
-		global $database, $aecConfig;
+		global $aecConfig;
 
-		if ( !is_null( $aecConfig->cfg['heartbeat_cycle'] ) || ($aecConfig->cfg['heartbeat_cycle'] == 0) ) {
+		if ( !empty( $aecConfig->cfg['heartbeat_cycle'] ) ) {
 			$this->ping( $aecConfig->cfg['heartbeat_cycle'] );
 		}
 	}
 
 	function backendping()
 	{
-		global $database, $aecConfig;
+		global $aecConfig;
 
-		if ( !is_null( $aecConfig->cfg['heartbeat_cycle_backend'] ) || !($aecConfig->cfg['heartbeat_cycle_backend'] == 0) ) {
+		if ( !empty( $aecConfig->cfg['heartbeat_cycle_backend'] ) ) {
 			$this->ping( $aecConfig->cfg['heartbeat_cycle_backend'] );
 		}
 	}
 
 	function ping( $configCycle )
 	{
-		global $mainframe, $mosConfig_offset_user;
+		global $mainframe;
+
+		if ( empty( $this->last_beat ) ) {
+			$this->load(1);
+		}
 
 		if ( $this->last_beat ) {
 			$ping	= strtotime( $this->last_beat ) + $configCycle*3600;
@@ -873,14 +877,16 @@ class aecHeartbeat extends mosDBTable
 			$ping = 0;
 		}
 
-		if ( ( $ping - (time() + $mosConfig_offset_user*3600) ) <= 0 ) {
-			$this->last_beat = date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 );
+		if ( ( $ping - time() ) <= 0 ) {
+			$this->last_beat = date( 'Y-m-d H:i:s', time() );
 			$this->check();
 			$this->store();
+			$this->load(1);
 
 			$this->beat();
 		} else {
-			// sleep, mechanical Hound, but do not sleep / kept awake with wolves teeth
+			// sleep, mechanical Hound, but do not sleep
+			// kept awake with wolves teeth
 		}
 	}
 
@@ -4075,8 +4081,8 @@ class InvoiceFactory
 
 		if ( isset( $response['error'] ) ) {
 			$this->error( $option, $this->metaUser->cmsUser, $this->objInvoice->invoice_number, $response['error'] );
-		} else {
-			$this->thanks( $option, $renew, false );
+		} else { // TODO: Check for renew!!!
+			$this->thanks( $option, 1, false );
 		}
 	}
 
@@ -4574,11 +4580,17 @@ class Invoice extends paramDBTable
 
 			if ( !$break ) {
 				$renew	= $this->pay( $multiplicator );
-				if ( !empty( $pp->info['notify_trail_thanks'] ) ) {
-					thanks( 'com_acctexp', $renew, ($pp === 0) );
+				if ( $renew === false ) {
+					// Something went wrong
+					$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_VALID_APPFAIL;
+					$tags	.= ',payment,action_failed';
+				} else {
+					if ( !empty( $pp->info['notify_trail_thanks'] ) ) {
+						thanks( 'com_acctexp', $renew, ($pp === 0) );
+					}
+					$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_VALID;
+					$tags	.= ',payment,action';
 				}
-				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_VALID;
-				$tags	.= ',payment,action';
 			}
 		} else {
 			if ( isset( $response['pending'] ) ) {

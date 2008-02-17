@@ -58,6 +58,7 @@ define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_STATUS',	'Factuur status:' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_FRAUD',	'Bedrag verificatie mislukt, betaald: %s, factuur: %s - betaling afgebroken' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CURR',		'Valuta verificatie mislukt, betaald %s, factuur: %s - betalingt afgebroken' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_VALID',	'Geldige betaling, Actie uitgevoerd' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_VALID_APPFAIL',	'Payment valid, Application failed!' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_TRIAL',	'Geldige betaling - Gratis proefabonnement' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_PEND',		'Ongeldige betaling - status is pending, reden: %s' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CANCEL',	'Geen Betaling - Aanvraag geannuleerd' );

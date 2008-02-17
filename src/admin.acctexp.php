@@ -30,7 +30,7 @@
 // no direct access
 defined( '_VALID_MOS' ) or die( 'Restricted access' );
 
-global $aecConfig, $mosConfig_absolute_path;
+global $aecConfig, $database, $mosConfig_absolute_path;
 
 require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.php' );
 
@@ -70,11 +70,11 @@ if ( file_exists( $langPathPROC . $GLOBALS['mosConfig_lang']. '.php' ) ) {
 
 include_once( $langPathBE . 'general.php' );
 
-$task		= trim( mosGetParam( $_REQUEST, 'task', null ) );
-$returnTask = trim( mosGetParam( $_REQUEST, 'returnTask', null ) );
-$userid		= mosGetParam( $_REQUEST, 'userid', null );
+$task			= trim( mosGetParam( $_REQUEST, 'task', null ) );
+$returnTask 	= trim( mosGetParam( $_REQUEST, 'returnTask', null ) );
+$userid			= mosGetParam( $_REQUEST, 'userid', null );
 $subscriptionid	= mosGetParam( $_REQUEST, 'subscriptionid', null );
-$id			= mosGetParam( $_REQUEST, 'id', null );
+$id				= mosGetParam( $_REQUEST, 'id', null );
 
 if ( !is_null( $id ) ) {
 	if ( !array( $id ) ) {
