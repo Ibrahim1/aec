@@ -843,6 +843,16 @@ class aecHeartbeat extends mosDBTable
 	{
 	 	$this->mosDBTable( '#__acctexp_heartbeat', 'id', $db );
 	 	$this->load(1);
+
+		if ( empty( $this->last_beat ) ) {
+			global $aecConfig;
+
+			$query = 'INSERT INTO #__acctexp_heartbeat'
+			. ' VALUES( \'1\', \'' . ( strtotime( $this->last_beat ) - $aecConfig->cfg['heartbeat_cycle'] * 3600 ) . '\' )'
+			;
+			$this->_db->setQuery( $query );
+			$this->_db->query() or die( $this->_db->stderr() );
+		}
 	}
 
 	function frontendping()
