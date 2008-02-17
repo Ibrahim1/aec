@@ -79,7 +79,7 @@ class processor_authorize_arb extends XMLprocessor
 		$settings['totalOccurrences']	= array("inputA");
 		$settings['trialOccurrences']	= array("inputA");
 		$settings['useSilentPostResponse']		= array("list_yesno");
-		$settings['SilentPostinfo']			= array( 'fieldset' );
+		$settings['SilentPost_info']			= array( 'fieldset' );
 		$settings['item_name']			= array("inputE");
  		$rewriteswitches 				= array("cms", "user", "expiration", "subscription", "plan");
 		$settings['rewriteInfo']		= array("fieldset", "Rewriting Info", AECToolbox::rewriteEngineInfo($rewriteswitches));

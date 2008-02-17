@@ -2599,6 +2599,12 @@ class SubscriptionPlan extends paramDBTable
 
 			if ( !$metaUser->hasSubscription || empty( $params['make_primary'] ) ) {
 				$metaUser->establishFocus( $this, $processor );
+
+				$is_pending		= true;
+				$is_trial		= false;
+			} else {
+				$is_pending		= ( strcmp( $metaUser->focusSubscription->status, 'Pending' ) === 0 );
+				$is_trial		= ( strcmp( $metaUser->focusSubscription->status, 'Trial' ) === 0 );
 			}
 
 			$comparison		= $this->doPlanComparison( $metaUser->focusSubscription );
@@ -2608,8 +2614,6 @@ class SubscriptionPlan extends paramDBTable
 				$renew = 1;
 			}
 
-			$is_pending		= ( strcmp( $metaUser->focusSubscription->status, 'Pending' ) === 0 );
-			$is_trial		= ( strcmp( $metaUser->focusSubscription->status, 'Trial' ) === 0 );
 			$lifetime		= $metaUser->focusSubscription->lifetime;
 
 			if ( ( $comparison['total_comparison'] === false ) || $is_pending ) {
@@ -7089,7 +7093,16 @@ class microIntegration extends paramDBTable
 			$params = $this->getParams();
 		}
 
-		return $this->mi_class->action( $params, $metaUser, $invoice, $objplan );
+		$return = $this->mi_class->action( $params, $metaUser, $invoice, $objplan );
+
+		if ( $return === false ) {
+			global $database;
+
+			$eventlog = new eventLog( $database );
+			$eventlog->issue( 'MI application failed', 'mi, failure,'.$this->class_name, 'The MI ' . $this->name . ' could not be carried out, plan application was halted', 128 );
+		}
+
+		return $return;
 	}
 
 	function pre_expiration_action( $metaUser, $objplan=null )
@@ -7121,7 +7134,16 @@ class microIntegration extends paramDBTable
 
 			$params = $this->getParams();
 
-			return $this->mi_class->pre_expiration_action( $params, $metaUser, $objplan );
+			$return = $this->mi_class->pre_expiration_action( $params, $metaUser, $objplan );
+
+			if ( $return === false ) {
+				global $database;
+
+				$eventlog = new eventLog( $database );
+				$eventlog->issue( 'MI pre-expiration action failed', 'mi, failure,'.$this->class_name, 'The MI ' . $this->name . ' Pre-Expiration Action could not be carried out', 128 );
+			}
+
+			return $return;
 		} else {
 			return null;
 		}
@@ -7132,7 +7154,16 @@ class microIntegration extends paramDBTable
 		if ( method_exists( $this->mi_class, 'expiration_action' ) ) {
 			$params = $this->getParams();
 
-			return $this->mi_class->expiration_action( $params, $metaUser, $objplan );
+			$return = $this->mi_class->expiration_action( $params, $metaUser, $objplan );
+
+			if ( $return === false ) {
+				global $database;
+
+				$eventlog = new eventLog( $database );
+				$eventlog->issue( 'MI expiration action failed', 'mi, failure,'.$this->class_name, 'The MI ' . $this->name . ' Expiration Action could not be carried out', 128 );
+			}
+
+			return $return;
 		} else {
 			return null;
 		}

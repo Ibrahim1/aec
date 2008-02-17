@@ -132,11 +132,13 @@ switch( strtolower( $task ) ) {
 	case 'clearpayment':
 		$invoice	= trim( mosGetParam( $_REQUEST, 'invoice', '' ) );
 		$applyplan	= trim( mosGetParam( $_REQUEST, 'applyplan', '0' ) );
-		clearInvoice($option, $invoice, $applyplan, $returnTask);
+
+		clearInvoice( $option, $invoice, $applyplan, $returnTask );
 		break;
 
 	case 'cancelpayment':
 		$invoice	= trim( mosGetParam( $_REQUEST, 'invoice', '' ) );
+
 		cancelInvoice( $option, $invoice, $returnTask );
 		break;
 
@@ -3592,9 +3594,11 @@ function clearInvoice( $option, $invoice_number, $applyplan, $task )
 {
 	global $database;
 
-	$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number );
+	$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, 0, true );
 
 	if ( $invoiceid ) {
+		global $database;
+
 		$objInvoice = new Invoice( $database );
 		$objInvoice->load( $invoiceid );
 
