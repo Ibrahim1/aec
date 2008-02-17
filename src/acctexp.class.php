@@ -4553,20 +4553,22 @@ class Invoice extends paramDBTable
 		if ( $response['valid'] ) {
 			$break = 0;
 
-			if ( isset( $response['amount_paid'] ) ) {
-				if ( $response['amount_paid'] != $this->amount ) {
-					// Amount Fraud, cancel payment and create error log addition
-					$event	.= sprintf( _AEC_MSG_PROC_INVOICE_ACTION_EV_FRAUD, $response['amount_paid'], $this->amount );
-					$tags	.= ',fraud_attempt,amount_fraud';
-					$break	= 1;
+			if ( !empty( $pp->settings['testmode'] ) ) {
+				if ( isset( $response['amount_paid'] ) ) {
+					if ( $response['amount_paid'] != $this->amount ) {
+						// Amount Fraud, cancel payment and create error log addition
+						$event	.= sprintf( _AEC_MSG_PROC_INVOICE_ACTION_EV_FRAUD, $response['amount_paid'], $this->amount );
+						$tags	.= ',fraud_attempt,amount_fraud';
+						$break	= 1;
+					}
 				}
-			}
-			if ( isset( $response['amount_currency'] ) ) {
-				if ( $response['amount_currency'] != $this->currency ) {
-					// Amount Fraud, cancel payment and create error log addition
-					$event	.= sprintf( _AEC_MSG_PROC_INVOICE_ACTION_EV_CURR, $response['amount_currency'], $this->currency );
-					$tags	.= ',fraud_attempt,currency_fraud';
-					$break	= 1;
+				if ( isset( $response['amount_currency'] ) ) {
+					if ( $response['amount_currency'] != $this->currency ) {
+						// Amount Fraud, cancel payment and create error log addition
+						$event	.= sprintf( _AEC_MSG_PROC_INVOICE_ACTION_EV_CURR, $response['amount_currency'], $this->currency );
+						$tags	.= ',fraud_attempt,currency_fraud';
+						$break	= 1;
+					}
 				}
 			}
 
