@@ -7099,7 +7099,7 @@ class microIntegration extends paramDBTable
 			global $database;
 
 			$eventlog = new eventLog( $database );
-			$eventlog->issue( 'MI application failed', 'mi, failure,'.$this->class_name, 'The MI ' . $this->name . ' could not be carried out, plan application was halted', 128 );
+			$eventlog->issue( 'MI application failed', 'mi, failure,'.$this->class_name, 'The MI "' . $this->name . '" ('.$this->class_name.') could not be carried out, plan application was halted', 128 );
 		}
 
 		return $return;
@@ -7140,7 +7140,7 @@ class microIntegration extends paramDBTable
 				global $database;
 
 				$eventlog = new eventLog( $database );
-				$eventlog->issue( 'MI pre-expiration action failed', 'mi, failure,'.$this->class_name, 'The MI ' . $this->name . ' Pre-Expiration Action could not be carried out', 128 );
+				$eventlog->issue( 'MI pre-expiration action failed', 'mi, failure,'.$this->class_name, 'The MI "' . $this->name . '" ('.$this->class_name.') Pre-Expiration Action could not be carried out', 128 );
 			}
 
 			return $return;
@@ -7160,7 +7160,7 @@ class microIntegration extends paramDBTable
 				global $database;
 
 				$eventlog = new eventLog( $database );
-				$eventlog->issue( 'MI expiration action failed', 'mi, failure,'.$this->class_name, 'The MI ' . $this->name . ' Expiration Action could not be carried out', 128 );
+				$eventlog->issue( 'MI expiration action failed', 'mi, failure,'.$this->class_name, 'The MI "' . $this->name . '" ('.$this->class_name.') Expiration Action could not be carried out', 128 );
 			}
 
 			return $return;

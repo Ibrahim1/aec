@@ -392,6 +392,8 @@ define( '_CFG_CCBILL_INFO_NAME', 'Postback URL');
 define( '_CFG_CCBILL_INFO_DESC', 'You need to remember to set the \'postback\' url in the CCBILL control panel... for both approves and declines this should be...<br />http://[YOUR JOOMLA LOCATION]/index.php?option=com_acctexp&task=ccbillnotification<br />Thats it.');
 define( '_CFG_CCBILL_PLAN_PARAMS_ALLOWEDTYPES_NAME', 'Allowed types');
 define( '_CFG_CCBILL_PLAN_PARAMS_ALLOWEDTYPES_DESC', 'insert the payment options that the user is supposed to have after being led on to CCBill (refer to your CCBill account for the product IDs you have set up)');
+define( '_CFG_CCBILL_DATALINK_USERNAME_NAME', 'Datalink Username');
+define( '_CFG_CCBILL_DATALINK_USERNAME_DESC', 'If you want to use Recurring Billing, you need to supply a Datalink Username here. Also remember to set the "recurring" switch in the payment plans that are supposed to have this functionality.');
 
 // iDeal Basic
 define( '_CFG_IDEAL_BASIC_LONGNAME', 'iDeal');

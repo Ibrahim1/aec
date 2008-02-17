@@ -2428,7 +2428,6 @@ function editSubscriptionPlan( $id, $option )
 
 						$shortname = $pp->id . "_" . $customparam;
 						$params[$shortname] = array_merge( $cpcontent, array( $cp_name, $cp_desc ) );
-
 						$customparamsarray[$pp->id]['params'][] = $shortname;
 					}
 				}
@@ -2454,10 +2453,11 @@ function editSubscriptionPlan( $id, $option )
 						unset( $settings_array['lists'] );
 					}
 
-					// Iterate through settings form assigning the db settings
+					// Iterate through settings form to...
 					foreach ( $settings_array as $name => $values ) {
 						$setting_name = $pp->id . '_' . $name;
 
+						// ...assign new list fields
 						switch( $settings_array[$name][0] ) {
 							case 'list_yesno':
 								$lists[$setting_name] = mosHTML::yesnoSelectList( $setting_name, '', $pp->settings[$name] );
@@ -2504,6 +2504,7 @@ function editSubscriptionPlan( $id, $option )
 								break;
 						}
 
+						// ...put in missing language fields
 						if ( !isset( $settings_array[$name][1] ) ) {
 							// Create constant names
 							$constantname = '_CFG_' . strtoupper( $ppobj->name ) . '_' . strtoupper($name) . '_NAME';
