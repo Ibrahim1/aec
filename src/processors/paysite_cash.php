@@ -97,56 +97,41 @@ class processor_paysite_cash extends URLprocessor
 		$var['post_url'] = " https://billing.paysite-cash.biz/?";
 		$var['site'] = $cfg['merchantid'];
 		$var['id_client'] = $cfg['merchantid'];
-		$var['montant'] = $product;
-		$var['devise'] = $cfg['siteid'];
-		$var['divers'] = $metaUser->cmsUser->username;
-		$var['ref'] = "xxxxxxxx";
-		$var['paysite_cash_custom1'] = $int_var['invoice'];
+		$var['montant'] = $int_var['amount'];
+		$var['devise'] = $cfg['currency'];
+
+		$var['ref'] = $int_var['invoice'];
 
 		return $var;
 	}
 
 	function parseNotification( $post, $cfg )
 	{
-		$res = explode(":", $_GET['vercode']);
-
-		$secret		= $res[2];
-		$action     = $res[3];
-		$amount     = $res[4];
-		$payment_id = $res[5];
-		$pnref 	    = $res[6];
-
 		$response = array();
-		$response['invoice'] = $payment_id;
+		$response['invoice'] = $post['ref'];
 
 		return $response;
 	}
 
 	function validateNotification( $response, $post, $cfg, $invoice )
 	{
-		$res = explode(":", $_GET['vercode']);
-
-		if( $cfg['secretcode'] == $res[2] ) {
-			$response['valid'] = 1;
-		} else {
-			$response['valid'] = 0;
-			$response['pending_reason'] = 'INVALID SECRET WORD, provided: ' . $res[3];
-		}
-
-		switch ( $res[3] ) {
-			case 'add':
-				$response['amount_paid'] = $res[4];
+		switch ( $post['res'] ) {
+			case 'ok':
+				$response['valid'] = true;
+				$response['amount_paid'] = $post['montant'];
+				$response['amount_currency'] = $post['devise'];
 				break;
-			case 'cancel':
-				$response['cancel'] = 1;
-				$response['valid'] = 0;
+			case 'ko':
+				$response['valid'] = false;
 				break;
-			case 'delete':
-				$response['delete'] = 1;
-				$response['valid'] = 0;
+			case 'end':
+				$response['valid'] = false;
 				break;
-			case 'rebill':
-				$response['amount_paid'] = $res[4];
+			case 'refund':
+				$response['valid'] = false;
+				break;
+			case 'chargeback':
+				$response['valid'] = false;
 				break;
 		}
 
