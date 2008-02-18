@@ -2321,7 +2321,15 @@ class aecHTML
 			}
 
 			if ( !empty( $row[1] ) && !empty( $row[2] ) ) {
-				$return = '<div class="setting_desc">' . $this->ToolTip( $row[2], $row[1] ) . $row[1] . '</div>';
+				if (  defined( 'JPATH_BASE' ) ) {
+					$return = '<div class="setting_desc">';
+					$return .= '<span class="editlinktip hasTip" title="';
+					$return .= htmlentities( $row[1] ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . ':' . htmlentities( $row[2] );
+					$return .= '">' . $this->Icon( 'help.png') . htmlentities( $row[1] ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . '</span>';
+					$return .= '</div>';
+				} else {
+					$return = '<div class="setting_desc">' . $this->ToolTip( $row[2], $row[1] ) . $row[1] . '</div>';
+				}
 			}
 		} else {
 			if ( isset( $row[1] ) ) {
