@@ -6356,13 +6356,17 @@ class AECToolbox
 			$email 		= $row->email;
 			$username 	= $row->username;
 
-			$subject 	= sprintf (_SEND_SUB, $name, $mainframe->getCfg( 'sitename' ) );
+			$send_sub = defined( 'JPATH_BASE' ) ? JText::_( 'Account details for' ) : _SEND_SUB;
+			$usend_msg = defined( 'JPATH_BASE' ) ? JText::_( 'SEND_MSG' ) : _USEND_MSG;
+			$usend_msg_act = defined( 'JPATH_BASE' ) ? JText::_( 'SEND_MSG_ACTIVATE' ) : _USEND_MSG_ACTIVATE;
+
+			$subject 	= sprintf ($send_sub, $name, $mainframe->getCfg( 'sitename' ) );
 			$subject 	= html_entity_decode( $subject, ENT_QUOTES );
 
 			if ($mosConfig_useractivation == 1){
-				$message = sprintf (_USEND_MSG_ACTIVATE, $name, $mosConfig_sitename, $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=".$row->activation, $mosConfig_live_site, $username, $pwd);
+				$message = sprintf ($usend_msg_act, $name, $mosConfig_sitename, $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=".$row->activation, $mosConfig_live_site, $username, $pwd);
 			} else {
-				$message = sprintf (_USEND_MSG, $name, $mosConfig_sitename, $mosConfig_live_site);
+				$message = sprintf ($usend_msg, $name, $mosConfig_sitename, $mosConfig_live_site);
 			}
 
 			$message = html_entity_decode( $message, ENT_QUOTES );
