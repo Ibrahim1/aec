@@ -6356,14 +6356,16 @@ class AECToolbox
 			$email 		= $row->email;
 			$username 	= $row->username;
 
-			$send_sub = defined( 'JPATH_BASE' ) ? JText::_( 'Account details for' ) : _SEND_SUB;
-			$usend_msg = defined( 'JPATH_BASE' ) ? JText::_( 'SEND_MSG' ) : _USEND_MSG;
-			$usend_msg_act = defined( 'JPATH_BASE' ) ? JText::_( 'SEND_MSG_ACTIVATE' ) : _USEND_MSG_ACTIVATE;
+			$v15 = defined( 'JPATH_BASE' );
+
+			$send_sub =  $v15 ? JText::_( 'ACCOUNT DETAILS FOR' ) : _SEND_SUB;
+			$usend_msg = $v15 ? JText::_( 'SEND_MSG' ) : _USEND_MSG;
+			$usend_msg_act = $v15 ? JText::_( 'SEND_MSG_ACTIVATE' ) : _USEND_MSG_ACTIVATE;
 
 			$subject 	= sprintf ($send_sub, $name, $mainframe->getCfg( 'sitename' ) );
 			$subject 	= html_entity_decode( $subject, ENT_QUOTES );
 
-			if ($mosConfig_useractivation == 1){
+			if ( $mosConfig_useractivation == 1 ) {
 				$message = sprintf ($usend_msg_act, $name, $mosConfig_sitename, $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=".$row->activation, $mosConfig_live_site, $username, $pwd);
 			} else {
 				$message = sprintf ($usend_msg, $name, $mosConfig_sitename, $mosConfig_live_site);
