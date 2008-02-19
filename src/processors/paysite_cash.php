@@ -118,8 +118,8 @@ class processor_paysite_cash extends URLprocessor
 		switch ( $post['res'] ) {
 			case 'ok':
 				$response['valid'] = true;
-				$response['amount_paid'] = $post['montant'];
-				$response['amount_currency'] = $post['devise'];
+				$response['amount_paid'] = $post['montant_sent'];
+				$response['amount_currency'] = $post['devise_sent'];
 				break;
 			case 'ko':
 				$response['valid'] = false;
