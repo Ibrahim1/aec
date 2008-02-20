@@ -334,7 +334,7 @@ class metaUser
 		global $database, $acl;
 
 		// Always protect last administrator
-		if ( $this->cmsUser->gid >= 24 ) {
+		if ( ( $this->cmsUser->gid == 24 ) || ( $this->cmsUser->gid == 25 ) ) {
 			$query = 'SELECT count(*)'
 					. ' FROM #__core_acl_groups_aro_map'
 					. ' WHERE `group_id` = \'25\''
