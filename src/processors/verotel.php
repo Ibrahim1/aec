@@ -101,7 +101,7 @@ class processor_verotel extends URLprocessor
 		if ( $cfg['use_ticketsclub'] ) {
 			$var['post_url'] = "https://secure.ticketsclub.com/cgi-bin/boxoffice-one.tc?";
 			$var['fldcustomerid'] = $cfg['merchantid'];
-			$var['fldwebsitenr'] = $product;
+			$var['fldwebsitenr'] = $cfg['siteid'];
 			$var['tc_usercode'] = $metaUser->cmsUser->username;
 			$var['tc_passcode'] = "xxxxxxxx";
 			$var['tc_custom1'] = $int_var['invoice'];
