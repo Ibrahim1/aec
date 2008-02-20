@@ -65,30 +65,28 @@ class mi_docman
 
 		$sg = array();
 		foreach( $groups as $group ) {
-			$sg[] = mosHTML::makeOption( $group->groups_id, $group->groups_name . ' - '
-			. substr( strip_tags( $group->groups_description ), 0, 30 ) );
+			$sg[] = mosHTML::makeOption( $group->groups_id, $group->groups_name . ' - ' . substr( strip_tags( $group->groups_description ), 0, 30 ) );
 		}
 
  		$del_opts = array();
-		$del_opts[0] = mosHTML::makeOption ("No", "Just apply group below."); // Should probably be langauge file defined?
-		$del_opts[1] = mosHTML::makeOption ("All", "Delete ALL, then apply group below.");
-		$del_opts[2] = mosHTML::makeOption ("Set","Delete Group Set on Application, then apply group below.");
+		$del_opts[0] = mosHTML::makeOption ( "No", "Just apply group below." ); // Should probably be langauge file defined?
+		$del_opts[1] = mosHTML::makeOption ( "All", "Delete ALL, then apply group below." );
+		$del_opts[2] = mosHTML::makeOption ( "Set", "Delete Group Set on Application, then apply group below." );
 
         $settings = array();
-		$settings['add_downloads']		= array( 'inputA' );
-		$settings['set_downloads']		= array( 'inputA' );
+		$settings['add_downloads']	= array( 'inputA' );
+		$settings['set_downloads']	= array( 'inputA' );
 
-		$settings['lists']['group']		= mosHTML::selectList( $sg, 'group', 'size="4"', 'value', 'text', $params['group'] );
-		$settings['lists']['group_exp'] = mosHTML::selectList( $sg, 'group_exp', 'size="4"', 'value', 'text',
-										$params['group_exp'] );
 		$settings['set_group']			= array( 'list_yesno' );
 		$settings['group']				= array( 'list' );
-		$settings['set_group_exp']		= array( 'list_yesno' );
-		$settings['group']				= array( 'list' );
-		$settings['lists']['delete_on_exp'] = mosHTML::selectList( $del_opts, 'delete_on_exp', 'size="3"', 'value', 'text', $params['delete_on_exp'] );
-		$settings['delete_on_exp'] 		= array('list');
+		$settings['set_group_exp']	= array( 'list_yesno' );
 		$settings['group_exp']			= array( 'list' );
+		$settings['delete_on_exp'] 	= array( 'list' );
 		$settings['rebuild']			= array( 'list_yesno' );
+
+		$settings['lists']['group']		= mosHTML::selectList( $sg, 'group', 'size="4"', 'value', 'text', $params['group'] );
+		$settings['lists']['group_exp'] = mosHTML::selectList( $sg, 'group_exp', 'size="4"', 'value', 'text', $params['group_exp'] );
+		$settings['lists']['delete_on_exp'] = mosHTML::selectList( $del_opts, 'delete_on_exp', 'size="3"', 'value', 'text', $params['delete_on_exp'] );
 
 		return $settings;
 	}
@@ -154,7 +152,7 @@ class mi_docman
 		return $hacks;
 	}
 
-	function expiration_action($params, $metaUser, $plan)
+	function expiration_action( $params, $metaUser, $plan )
 	{
 		global $database;
 
