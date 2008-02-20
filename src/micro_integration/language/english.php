@@ -387,4 +387,12 @@ define( '_MI_MI_EVENTLOG_FORCE_NOTIFY_PRE_EXP_DESC', 'Force appearance of this e
 define( '_MI_MI_EVENTLOG_FORCE_EMAIL_PRE_EXP_NAME', 'Force E-Mail (Pre-Expiration)' );
 define( '_MI_MI_EVENTLOG_FORCE_EMAIL_PRE_EXP_DESC', 'Force emailing of this entry, regardless of the settings for notification.' );
 
+// JARC
+define( '_AEC_MI_NAME_JARC', 'JARC' );
+define( '_AEC_MI_DESC_JARC', 'Create affililates and track payments in JARC' );
+define( '_MI_MI_JARC_CREATE_AFFILIATES_NAME', 'Create Affiliates' );
+define( '_MI_MI_JARC_CREATE_AFFILIATES_DESC', 'Create new affiliate accounts when the user is just registering at your site.' );
+define( '_MI_MI_JARC_LOG_PAYMENTS_NAME', 'Log Payments' );
+define( '_MI_MI_JARC_LOG_PAYMENTS_DESC', 'Log transactions in JARC.' );
+
 ?>
