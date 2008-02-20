@@ -57,11 +57,8 @@ class processor_paysite_cash extends URLprocessor
 	function settings()
 	{
 		$s = array();
-		$s['merchantid']	= "merchantid";
-		$s['resellerid']	= "resellerid";
-		$s['siteid']		= "siteid";
-		$s['secretcode']	= "secretcode";
-		$s['use_ticketsclub']	= 1;
+		$s['siteid']	= "siteid";
+		$s['secret']	= "secret";
 
 		return $s;
 	}
@@ -69,23 +66,12 @@ class processor_paysite_cash extends URLprocessor
 	function backend_settings( $cfg )
 	{
 		$s = array();
-		$s['merchantid']		= array( 'inputC' );
-		$s['merchant']			= array( 'inputC' );
-		$s['siteid']			= array( 'inputC' );
-		$s['secretcode']		= array( 'inputC' );
-		$s['use_ticketsclub']	= array( 'list_yesno' );
+		$s['siteid']		= array( 'inputC' );
+		$s['secret']		= array( 'inputC' );
 
 		$rewriteswitches	= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
         $s['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 		return $s;
-	}
-
-	function CustomPlanParams()
-	{
-		$p = array();
-		$p['paysite_cash_product']	= array( 'inputC' );
-
-		return $p;
 	}
 
 	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
@@ -95,12 +81,19 @@ class processor_paysite_cash extends URLprocessor
 		}
 
 		$var['post_url'] = " https://billing.paysite-cash.biz/?";
-		$var['site'] = $cfg['merchantid'];
-		$var['id_client'] = $cfg['merchantid'];
+		$var['site'] = $cfg['siteid'];
 		$var['montant'] = $int_var['amount'];
 		$var['devise'] = $cfg['currency'];
 
+		$var['divers'] = base64_encode( md5( $cfg['secret'] . $int_var['invoice'] . $int_var['amount'] . $cfg['currency'] ) );
+
 		$var['ref'] = $int_var['invoice'];
+
+		foreach ( $var as $key => $value ) {
+			if ( $key != 'post_url' ) {
+
+			}
+		}
 
 		return $var;
 	}
@@ -117,7 +110,14 @@ class processor_paysite_cash extends URLprocessor
 	{
 		switch ( $post['res'] ) {
 			case 'ok':
-				$response['valid'] = true;
+				$misc = base64_encode( md5( $cfg['secret'] . $post['ref'] . $post['montant_org'] . $post['devise_org'] ) );
+
+				if ( $misc == $post['divers'] ) {
+					$response['valid'] = true;
+				} else {
+					$response['valid'] = false;
+				}
+
 				$response['amount_paid'] = $post['montant_sent'];
 				$response['amount_currency'] = $post['devise_sent'];
 				break;

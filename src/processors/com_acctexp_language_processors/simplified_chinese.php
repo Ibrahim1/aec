@@ -453,4 +453,13 @@ define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLZIP_NAME', 'Zip');
 define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLCOUNTRY_NAME', 'Country');
 define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLTELEPHONE_NAME', 'Telephone');
 
+// Paysite Cash
+define( '_CFG_PAYSITE_CASH_LONGNAME', 'Paysite Cash');
+define( '_CFG_PAYSITE_CASH_STATEMENT', 'Make payments with Paysite Cash');
+define( '_CFG_PAYSITE_CASH_DESCRIPTION', 'Make payments with Paysite Cash');
+define( '_CFG_PAYSITE_CASH_SITEID_NAME', 'Site ID');
+define( '_CFG_PAYSITE_CASH_SITEID_DESC', 'Site number in Editor interface Pbiz');
+define( '_CFG_PAYSITE_CASH_SECRET_NAME', 'Secret Word');
+define( '_CFG_PAYSITE_CASH_SECRET_DESC', 'Choose a secret word or string that will internally secure the data transmitted and received from fraud.');
+
 ?>
