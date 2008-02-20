@@ -3607,7 +3607,7 @@ class InvoiceFactory
 
 		if ( $this->metaUser->hasSubscription ) {
 			$subscriptionClosed = ( strcmp( $this->metaUser->objSubscription->status, 'Closed' ) === 0 );
-		} else {
+		} elseif ( empty( $this->usage ) ) {
 			$subscriptionClosed = false;
 			// TODO: Check if the user has already subscribed once, if not - link to intro
 			// TODO: Make sure a registration hybrid wont get lost here
