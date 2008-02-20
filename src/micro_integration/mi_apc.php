@@ -51,13 +51,36 @@ class mi_apc
 		return $settings;
 	}
 
+	function saveparams( $params )
+	{
+		global $mosConfig_absolute_path, $database;
+		$newparams = $params;
+
+		if ( $params['rebuild'] ) {
+			$planlist = MicroIntegrationHandler::getPlansbyMI( $params['MI_ID'] );
+
+			foreach ( $planlist as $planid ) {
+				$userlist = SubscriptionPlanHandler::getPlanUserlist( $planid );
+				foreach ( $userlist as $userid ) {
+					if ( $params['set_group'] ) {
+						$this->setGroupId( $userid, $params['group'], $params['set_default'] );
+					}
+				}
+			}
+
+			$newparams['rebuild'] = 0;
+		}
+
+		return $newparams;
+	}
+
 	function expiration_action( $params, $metaUser, $plan )
 	{
 		global $database;
 
 		if( $this->integrationActive() ){
 			if ( $params['set_group_exp'] ) {
-				return $this->setGroupId( $metaUser->userid, $params['group_exp'], $params['set_default_exp']  );
+				return $this->setGroupId( $metaUser->userid, $params['group_exp'], $params['set_default_exp'] );
 			}
 		}
 	}
@@ -66,7 +89,7 @@ class mi_apc
 	{
 		if( $this->integrationActive() ){
 			if ( $params['set_group'] ) {
-				return $this->setGroupId( $metaUser->userid, $params['group'], $params['set_default']  );
+				return $this->setGroupId( $metaUser->userid, $params['group'], $params['set_default'] );
 			}
 		}
 	}
