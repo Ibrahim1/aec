@@ -38,10 +38,11 @@ class mi_apc
 
         $settings = array();
 		$settings['set_group']			= array( 'list_yesno' );
+		$settings['set_default']		= array( 'list_yesno' );
 		$settings['group']				= array( 'list' );
-		$settings['set_group_exp']	= array( 'list_yesno' );
+		$settings['set_group_exp']		= array( 'list_yesno' );
+		$settings['set_default_exp']	= array( 'list_yesno' );
 		$settings['group_exp']			= array( 'list' );
-		$settings['delete_on_exp'] 	= array( 'list_yesno' );
 		$settings['rebuild']			= array( 'list_yesno' );
 
 		$settings['lists']['group']		= mosHTML::selectList( $sg, 'group', 'size="4"', 'value', 'text', $params['group'] );
@@ -56,7 +57,7 @@ class mi_apc
 
 		if( $this->integrationActive() ){
 			if ( $params['set_group_exp'] ) {
-				$this->setGroupId( $metaUser->userid, $params['group_exp']  );
+				return $this->setGroupId( $metaUser->userid, $params['group_exp'], $params['set_default_exp']  );
 			}
 		}
 	}
@@ -65,21 +66,40 @@ class mi_apc
 	{
 		if( $this->integrationActive() ){
 			if ( $params['set_group'] ) {
-				$this->setGroupId( $metaUser->userid, $params['group']  );
+				return $this->setGroupId( $metaUser->userid, $params['group'], $params['set_default']  );
 			}
 		}
 	}
 
-	function setGroupId( $userid, $groupid )
+	function setGroupId( $userid, $groupid, $default = false )
 	{
 		global $database;
 
-		$query = 'SELECT title'
-	 	. ' FROM #__comprofiler_accesscontrol_groups'
-	 	. ' WHERE groupid = \'' .  . '\''
-	 	;
-	 	$database->setQuery( $query );
-	 	$groups = $database->loadResult();
+		if ( $default ) {
+			$query = 'SELECT title'
+		 	. ' FROM #__comprofiler_accesscontrol_groups'
+		 	. ' WHERE default = \'1\''
+		 	;
+		 	$database->setQuery( $query );
+		 	$group = $database->loadResult();
+		} else {
+			$query = 'SELECT title'
+		 	. ' FROM #__comprofiler_accesscontrol_groups'
+		 	. ' WHERE groupid = \'' . $groupid . '\''
+		 	;
+		 	$database->setQuery( $query );
+		 	$group = $database->loadResult();
+		}
+
+		if ( !empty( $group ) ) {
+			$query = 'UPDATE #__comprofiler'
+					. ' SET `apc_type` = \'' . $group . '\''
+					. ' WHERE `id` = \'' . (int) $this->userid . '\''
+					;
+			$database->setQuery( $query );
+		} else {
+			return false;
+		}
 	}
 
 	function integrationActive()

@@ -395,4 +395,22 @@ define( '_MI_MI_JARC_CREATE_AFFILIATES_DESC', 'Create new affiliate accounts whe
 define( '_MI_MI_JARC_LOG_PAYMENTS_NAME', 'Log Payments' );
 define( '_MI_MI_JARC_LOG_PAYMENTS_DESC', 'Log transactions in JARC.' );
 
+// APC
+define( '_AEC_MI_NAME_APC', 'APC' );
+define( '_AEC_MI_DESC_APC', 'Manage Advanced Profile Control access groups' );
+define( '_MI_MI_APC_SET_GROUP_NAME',		'Set APC Group' );
+define( '_MI_MI_APC_SET_GROUP_DESC',		'Choose Yes if you want this MI to set the APC Group when it is called.' );
+define( '_MI_MI_APC_SET_DEFAULT_NAME',		'Set Default' );
+define( '_MI_MI_APC_SET_DEFAULT_DESC',		'Disregard the group setting below and apply the default group.' );
+define( '_MI_MI_APC_GROUP_NAME',			'APC Group' );
+define( '_MI_MI_APC_GROUP_DESC',			'The APC group that you want the user to be in.' );
+define( '_MI_MI_APC_SET_GROUP_EXP_NAME',	'Expiration group' );
+define( '_MI_MI_APC_SET_GROUP_EXP_DESC',	'The APC group that you want the user to be in when the subscription runs out.' );
+define( '_MI_MI_APC_SET_DEFAULT_EXP_NAME',	'Set Default (exp)' );
+define( '_MI_MI_APC_SET_DEFAULT_EXP_DESC',	'Disregard the group setting below and apply the default group.' );
+define( '_MI_MI_APC_GROUP_EXP_NAME',		'Set APC Group expiration' );
+define( '_MI_MI_APC_GROUP_EXP_DESC',		'Choose Yes if you want this MI to set the APC Group when the calling payment plan expires.' );
+define( '_MI_MI_APC_REBUILD_NAME',			'Rebuild' );
+define( '_MI_MI_APC_REBUILD_DESC',			'Attempt to rebuild the list of users assigned to the usergroup - >Set APC Group< and >APC Group< have to both be set for this.' );
+
 ?>

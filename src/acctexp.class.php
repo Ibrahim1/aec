@@ -64,12 +64,12 @@ if ( empty( $mosConfig_offset_user ) ) {
 }
 
 // Catch all debug function
-function aecDebug( $text )
+function aecDebug( $text, $level = 128 )
 {
 	global $database;
 
 	$eventlog = new eventLog( $database );
-	$eventlog->issue( 'debug', 'debug', 'debug entry: '.$text, 128 );
+	$eventlog->issue( 'debug', 'debug', 'debug entry: '.$text, $level );
 }
 
 class metaUser
@@ -4056,7 +4056,7 @@ class InvoiceFactory
 			$this->coupons['active'] = 0;
 		}
 
-		if ( $amount <= 0 )	{
+		if ( empty( $amount ) || ( $amount == '0.00') )	{
 			$this->objInvoice->pay();
 			thanks ( $option, $this->renew, 1 );
 			return;

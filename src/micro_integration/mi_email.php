@@ -111,10 +111,11 @@ class mi_email
 			return null;
 		}
 
-		$recipients = explode( ',', $params['recipient'] );
+		$recipients = AECToolbox::rewriteEngine( $params['recipient'], $metaUser, $plan );
+		$recips = explode( ',', $recipients );
 
-		foreach ( $recipients as $current => $email ) {
-			$recipients[$current] = AECToolbox::rewriteEngine( trim( $email ), $metaUser, $plan );
+		foreach ( $recips as $current => $email ) {
+			$recipients[$current] = trim( $email );
 		}
 
 		mosMail( $params['sender'], $params['sender_name'], $recipients, $subject, $message, $params['text' . $area . '_html'] );
