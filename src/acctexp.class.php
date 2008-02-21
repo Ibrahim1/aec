@@ -3940,7 +3940,7 @@ class InvoiceFactory
 		if ( ( strcmp( strtolower( $this->processor ), 'none' ) === 0 ) || ( strcmp( strtolower( $this->processor ), 'free' ) === 0 ) ) {
 			$params = $this->objUsage->getParams();
 
-		 	if ( $params['full_free'] || ( $params['trial_free'] &&
+		 	if ( !empty( $this->objInvoice->made_free ) || $params['full_free'] || ( $params['trial_free'] &&
 		 	( strcmp( $this->objInvoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) ) ) {
 				if ( $this->objInvoice->pay() !== false ) {
 					thanks ( $option, $this->renew, 1 );
@@ -4457,10 +4457,12 @@ class Invoice extends paramDBTable
 			// We cannot afford to have this ever come out as null, so we will rather have it as gratis
 			if ( empty( $this->amount ) ) {
 				$this->amount = '0.00';
+				$this->made_free = true;
 			}
 
 			if ( ( strcmp( $this->amount, '0.00' ) === 0 ) && !$recurring ) {
 				$this->method = 'free';
+				$this->made_free = true;
 			} elseif ( strcmp( $this->method, 'free' ) === 0 ) {
 				$this->method = 'error';
 				// TODO: Log Error
