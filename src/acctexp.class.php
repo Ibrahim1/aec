@@ -171,14 +171,13 @@ class metaUser
 			$this->objSubscription->store();
 		} else {
 			if ( is_object( $this->cmsUser ) ) {
-				$add = strpos( $this->cmsUser->params, "\n" ) ? "\n" : '';
+				$array = explode( "\n", $this->cmsUser->params );
 
-				$array = array();
 				foreach ( $params as $name => $value ) {
 					$array[] = $name . "=" . $value;
 				}
 
-				$this->cmsUser->params .= $add . implode( "\n", $array );
+				$this->cmsUser->params .= implode( "\n", $array );
 				$this->cmsUser->check();
 				$this->cmsUser->store();
 			}
