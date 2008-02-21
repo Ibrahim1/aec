@@ -409,4 +409,18 @@ define( '_MI_MI_APC_GROUP_EXP_DESC',		'Choose Yes if you want this MI to set the
 define( '_MI_MI_APC_REBUILD_NAME',			'Rebuild' );
 define( '_MI_MI_APC_REBUILD_DESC',			'Attempt to rebuild the list of users assigned to the usergroup - >Set APC Group< and >APC Group< have to both be set for this.' );
 
+// Hot Property
+define( '_AEC_MI_NAME_HOTPROPERTY', 'Hot Property' );
+define( '_AEC_MI_DESC_HOTPROPERTY', 'Create Agents and Companies with this MI' );
+define( '_MI_MI_HOTPROPERTY_CREATE_AGENT_NAME',		'Create Agent' );
+define( '_MI_MI_HOTPROPERTY_CREATE_AGENT_DESC',		'Choose Yes if you want this MI to create an agent on Subscription (if there is none yet for this user).' );
+define( '_MI_MI_HOTPROPERTY_AGENT_FIELDS_NAME',		'Agent Fields' );
+define( '_MI_MI_HOTPROPERTY_AGENT_FIELDS_DESC',		'Tell the AEC which fields should be associated in setting up the agent account. As seen in the example, part individual columns with a newline break and for each column, make it look like this: "fieldname=content". You can use the RewriteEngine as mentioned below.' );
+define( '_MI_MI_HOTPROPERTY_CREATE_COMPANY_NAME',	'Create Company' );
+define( '_MI_MI_HOTPROPERTY_CREATE_COMPANY_DESC',	'Choose Yes if you want this MI to create a company on Subscription (if there is none yet for this user).' );
+define( '_MI_MI_HOTPROPERTY_COMPANY_FIELDS_NAME',	'Company Fields' );
+define( '_MI_MI_HOTPROPERTY_COMPANY_FIELDS_DESC',	'Tell the AEC which fields should be associated in setting up the company account. As seen in the example, part individual columns with a newline break and for each column, make it look like this: "fieldname=content". You can use the RewriteEngine as mentioned below.' );
+define( '_MI_MI_HOTPROPERTY_ASSOC_COMPANY_NAME',	'Associate Company' );
+define( '_MI_MI_HOTPROPERTY_ASSOC_COMPANY_DESC',	'Automatically associate the new user account with the new company account.' );
+
 ?>

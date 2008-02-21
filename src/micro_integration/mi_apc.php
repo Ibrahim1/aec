@@ -56,15 +56,13 @@ class mi_apc
 		global $mosConfig_absolute_path, $database;
 		$newparams = $params;
 
-		if ( $params['rebuild'] ) {
+		if ( $params['rebuild'] && $params['set_group'] ) {
 			$planlist = MicroIntegrationHandler::getPlansbyMI( $params['MI_ID'] );
 
 			foreach ( $planlist as $planid ) {
 				$userlist = SubscriptionPlanHandler::getPlanUserlist( $planid );
 				foreach ( $userlist as $userid ) {
-					if ( $params['set_group'] ) {
-						$this->setGroupId( $userid, $params['group'], $params['set_default'] );
-					}
+					$this->setGroupId( $userid, $params['group'], $params['set_default'] );
 				}
 			}
 

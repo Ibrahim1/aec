@@ -103,15 +103,13 @@ class mi_docman
 		global $mosConfig_absolute_path, $database;
 		$newparams = $params;
 
-		if ( $params['rebuild'] ) {
+		if ( $params['rebuild'] && $params['set_group'] ) {
 			$planlist = MicroIntegrationHandler::getPlansbyMI( $params['MI_ID'] );
 
 			foreach ( $planlist as $planid ) {
 				$userlist = SubscriptionPlanHandler::getPlanUserlist( $planid );
 				foreach ( $userlist as $userid ) {
-					if ( $params['set_group'] ) {
-						$this->AddUserToGroup( $userid, $params['group'] );
-					}
+					$this->AddUserToGroup( $userid, $params['group'] );
 				}
 			}
 

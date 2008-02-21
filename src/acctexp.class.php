@@ -7218,7 +7218,9 @@ class microIntegration extends paramDBTable
 
 		if ( method_exists( $this->mi_class, 'Settings' ) ) {
 			if ( method_exists( $this->mi_class, 'Defaults' ) && empty( $params ) ) {
-				$params = $this->mi_class->Defaults();
+				$defaults = $this->mi_class->Defaults();
+			} else {
+				$defaults = array();
 			}
 
 			$settings = $this->mi_class->Settings( $params );
@@ -7229,10 +7231,14 @@ class microIntegration extends paramDBTable
 				if ( isset( $setting[1] ) && !isset( $setting[3] ) ) {
 					if ( isset( $params[$name] ) ) {
 						$settings[$name][3] = $params[$name];
+					} elseif( isset( $defaults[$name] ) ) {
+						$settings[$name][3] = $defaults[$name];
 					}
 				} else {
 					if ( isset( $params[$name] ) ) {
 						$settings[$name][1] = $params[$name];
+					} elseif( isset( $defaults[$name] ) ) {
+						$settings[$name][1] = $defaults[$name];
 					}
 				}
 			}
