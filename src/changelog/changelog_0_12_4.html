@@ -1053,6 +1053,7 @@ color: #333;
 <li>Fixing currencies in Alertpay (started to break contacts)</li>
 <li>fix for verotel to not replace siteid with productid when using ticketsclub</li>
 </ul>
+</li>
 <li><strong>Micro Integrations</strong>
 <ul>
 <li>MicroIntegrations can now be called without existing instance</li>
@@ -1089,6 +1090,7 @@ color: #333;
 <li>Fix for VirtueMart MI (thanks Inge van Bremen-Valstar !!!)</li>
 <li class="check">Hot Property MI</li>
 </ul>
+</li>
 <li><strong>Frontend Fixes</strong>
 <ul>
 <li>fixing a bug with the display of TOS</li>
@@ -1110,6 +1112,7 @@ color: #333;
 <li>Fixing a lot of issues with custom intro</li>
 <li>Fixing application of full payment coupons (was turning up blank content when things like 100% were entered for the coupon value)</li>
 </ul>
+</li>
 <li><strong>Backend Fixes</strong>
 <ul>
 <li>invoices overview to look for secondary ident</li>
@@ -1133,6 +1136,7 @@ color: #333;
 <li>Finally fix the damn help page to not show errors if Hacks are committed. And make the text less dramatic.</li>
 <li>Fixing cancelling of invoices from userform</li>
 </ul>
+</li>
 <li><strong>Joomla 1.5 Fixes</strong>
 <ul>
 <li>Replace Hacks for J! 1.5 with authorization plugin</li>
@@ -1143,6 +1147,15 @@ color: #333;
 <li>fixing email text on registration</li>
 <li>fixing language link for module</li>
 </ul>
+</li>
+<li><strong>Rewrite Engine Extension</strong>
+<ul>
+<li>Now features internal functions like "[[invoice_created_date:date|Y]]" to get only the year of a date. The syntax being "[[value:function|var1;var2,...:function2|var1;var2,...:...]]".</li>
+<li>Now features nesting "[[es:__suffix|{{__condition|[{__compare|apples;oranges}],appl,orang}}]]"</li>
+<li>Nesting goes down to three levels: [[ {{ [{ {[ ]} }] }} ]]</li>
+<li>Replacing invoice formatting options with this</li>
+</ul>
+</li>
 <li><strong>Minor Fixes</strong>
 <ul>
 <li>Make Invoice handling immune to lacking user or payment plan conditions</li>
@@ -1176,6 +1189,7 @@ color: #333;
 <li>overall disable of amount/currency check when processor is in testmode</li>
 <li>Fix for not applying ACL groups when having JACLplus groups with a gid greater than 24 (thank you, thank you, thank you alex!)</li>
 </ul>
+</li>
 </ul>
 <h2>0.12.6 version - <a href="http://en.wikipedia.org/wiki/Boomerang_Nebula">Boomerang Nebula</a></h2>
 <ul>

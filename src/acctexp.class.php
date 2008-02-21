@@ -420,29 +420,9 @@ class metaUser
 		foreach ( $restrictions as $restriction ) {
 			$check1 = AECToolbox::rewriteEngine( $restriction[0], $this );
 			$check2 = AECToolbox::rewriteEngine( $restriction[2], $this );
+			$eval = $restriction[1];
 
-			switch ( $restriction[1] ) {
-				case '=':
-					$status = (bool) ( $check1 == $check2 );
-					break;
-				case '<>':
-					$status = (bool) ( $check1 != $check2 );
-					break;
-				case '<=':
-					$status = (bool) ( $check1 <= $check2 );
-					break;
-				case '>=':
-					$status = (bool) ( $check1 >= $check2 );
-					break;
-				case '>':
-					$status = (bool) ( $check1 > $check2 );
-					break;
-				case '<':
-					$status = (bool) ( $check1 < $check2 );
-					break;
-			}
-
-			$s['customchecker'.$n] = $status;
+			$s['customchecker'.$n] = AECToolbox::compare( $eval, $check1, $check2 );
 			$n++;
 		}
 
@@ -4201,6 +4181,8 @@ class Invoice extends paramDBTable
 	/** @var string */
 	var $invoice_number 	= null;
 	/** @var string */
+	var $invoice_number_format 	= null;
+	/** @var string */
 	var $secondary_ident 	= null;
 	/** @var datetime */
 	var $created_date	 	= null;
@@ -4245,46 +4227,50 @@ class Invoice extends paramDBTable
 	{
 		global $aecConfig;
 
-		if ( empty( $invoice ) ) {
-			$invoice_number	= $this->invoice_number;
-			$invoice_id		= $this->id;
-		} else {
-			$invoice_number = $invoice->invoice_number;
-			$invoice_id		= $invoice->id;
-		}
+		if ( empty( $this->invoice_number_format ) || !empty( $invoice ) ) {
+			if ( empty( $invoice ) ) {
+				$invoice_number	= $this->invoice_number;
+				$invoice_id		= $this->id;
+			} else {
+				$invoice_number = $invoice->invoice_number;
+				$invoice_id		= $invoice->id;
+			}
 
-		if ( empty( $aecConfig->cfg['invoicenum_display_id'] ) ) {
-			if ( !empty( $aecConfig->cfg['invoicenum_display_case'] ) ) {
-				switch ( $aecConfig->cfg['invoicenum_display_case'] ) {
-					case 'UPPER':
-						$invoice_number = strtoupper( $invoice_number );
-						break;
-					case 'LOWER':
-						$invoice_number = strtolower( $invoice_number );
-						break;
+			if ( empty( $aecConfig->cfg['invoicenum_display_id'] ) ) {
+				if ( !empty( $aecConfig->cfg['invoicenum_display_case'] ) ) {
+					switch ( $aecConfig->cfg['invoicenum_display_case'] ) {
+						case 'UPPER':
+							$invoice_number = strtoupper( $invoice_number );
+							break;
+						case 'LOWER':
+							$invoice_number = strtolower( $invoice_number );
+							break;
+					}
+				}
+			} else {
+				if ( !empty( $aecConfig->cfg['invoicenum_display_idinflate'] ) ) {
+					$invoice_number = (string) ( $invoice_id + $aecConfig->cfg['invoicenum_display_idinflate'] );
+				} else {
+					$invoice_number = (string) $invoice_id;
 				}
 			}
+
+			if ( !empty( $aecConfig->cfg['invoicenum_display_chunking'] ) ) {
+				if ( !empty( $aecConfig->cfg['invoicenum_display_separator'] ) ) {
+					$separator = $aecConfig->cfg['invoicenum_display_separator'];
+				} else {
+					$separator = ' ';
+				}
+
+				if ( function_exists( 'str_split' ) ) {
+					$chunks = str_split( $invoice_number, $aecConfig->cfg['invoicenum_display_chunking'] );
+				} else {
+					$chunks = AECToolbox::str_split_php4( $invoice_number, $aecConfig->cfg['invoicenum_display_chunking'] );
+				}
+				$invoice_number = implode( $separator, $chunks );
+			}
 		} else {
-			if ( !empty( $aecConfig->cfg['invoicenum_display_idinflate'] ) ) {
-				$invoice_number = (string) ( $invoice_id + $aecConfig->cfg['invoicenum_display_idinflate'] );
-			} else {
-				$invoice_number = (string) $invoice_id;
-			}
-		}
-
-		if ( !empty( $aecConfig->cfg['invoicenum_display_chunking'] ) ) {
-			if ( !empty( $aecConfig->cfg['invoicenum_display_separator'] ) ) {
-				$separator = $aecConfig->cfg['invoicenum_display_separator'];
-			} else {
-				$separator = '-';
-			}
-
-			if ( function_exists( 'str_split' ) ) {
-				$chunks = str_split( $invoice_number, $aecConfig->cfg['invoicenum_display_chunking'] );
-			} else {
-				$chunks = AECToolbox::str_split_php4( $invoice_number, $aecConfig->cfg['invoicenum_display_chunking'] );
-			}
-			$invoice_number = implode( $separator, $chunks );
+			$invoice_number = $this->invoice_number_format;
 		}
 
 		if ( empty( $invoice ) ) {
@@ -4313,7 +4299,7 @@ class Invoice extends paramDBTable
 			if ( !empty( $aecConfig->cfg['invoicenum_display_separator'] ) ) {
 				$separator = $aecConfig->cfg['invoicenum_display_separator'];
 			} else {
-				$separator = '-';
+				$separator = ' ';
 			}
 
 			$invoice_number = str_replace( $separator, '', $invoice_number);
@@ -6565,6 +6551,112 @@ class AECToolbox
 		return (int) $vlen;
 	}
 
+	function rewriteEngineInfo( $switches=array() )
+	{
+		if ( !count( $switches ) ) {
+			$switches = array( 'cms', 'expiration', 'user', 'subscription', 'invoice', 'plan', 'system' );
+		}
+
+
+		$rewrite = array();
+
+		if ( in_array( 'system', $switches ) ) {
+			$rewrite['system'][] = 'timestamp';
+			$rewrite['system'][] = 'timestamp_backend';
+			$rewrite['system'][] = 'server_timestamp';
+			$rewrite['system'][] = 'server_timestamp_backend';
+		}
+
+		if ( in_array( 'cms', $switches ) ) {
+			$rewrite['cms'][] = 'absolute_path';
+			$rewrite['cms'][] = 'live_site';
+		}
+
+		if ( in_array( 'user', $switches ) ) {
+			$rewrite['user'][] = 'id';
+			$rewrite['user'][] = 'username';
+			$rewrite['user'][] = 'name';
+			$rewrite['user'][] = 'first_name';
+			$rewrite['user'][] = 'first_first_name';
+			$rewrite['user'][] = 'last_name';
+			$rewrite['user'][] = 'email';
+			$rewrite['user'][] = 'activationcode';
+			$rewrite['user'][] = 'activationlink';
+
+			if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+				global $database;
+
+				$query = 'SELECT name, title'
+						. ' FROM #__comprofiler_fields'
+						. ' WHERE `table` != \'#__users\''
+						. ' AND name != \'NA\'';
+				$database->setQuery( $query );
+				$objects = $database->loadObjectList();
+
+				if ( is_array( $objects ) ) {
+					foreach ( $objects as $object ) {
+						$rewrite['user'][] = $object->name;
+
+						if ( strpos( $object->title, '_' ) === 0 ) {
+							$content = $object->name;
+						} else {
+							$content = $object->title;
+						}
+
+						$name = '_REWRITE_KEY_USER_' . strtoupper( $object->name );
+						if ( !defined( $name ) ) {
+							define( $name, $content );
+						}
+					}
+				}
+			}
+		}
+
+		if ( in_array( 'subscription', $switches ) ) {
+			$rewrite['subscription'][] = 'type';
+			$rewrite['subscription'][] = 'status';
+			$rewrite['subscription'][] = 'signup_date';
+			$rewrite['subscription'][] = 'lastpay_date';
+			$rewrite['subscription'][] = 'plan';
+			$rewrite['subscription'][] = 'previous_plan';
+			$rewrite['subscription'][] = 'recurring';
+			$rewrite['subscription'][] = 'lifetime';
+			$rewrite['subscription'][] = 'expiration_date';
+			$rewrite['subscription'][] = 'expiration_date_backend';
+		}
+
+		if ( in_array( 'invoice', $switches ) ) {
+			$rewrite['invoice'][] = 'id';
+			$rewrite['invoice'][] = 'number';
+			$rewrite['invoice'][] = 'created_date';
+			$rewrite['invoice'][] = 'transaction_date';
+			$rewrite['invoice'][] = 'method';
+			$rewrite['invoice'][] = 'amount';
+			$rewrite['invoice'][] = 'currency';
+			$rewrite['invoice'][] = 'coupons';
+		}
+
+		if ( in_array( 'plan', $switches ) ) {
+			$rewrite['plan'][] = 'name';
+			$rewrite['plan'][] = 'desc';
+		}
+
+		$return = '';
+		foreach ( $rewrite as $area => $keys ) {
+			$return .= '<div class="rewriteinfoblock">' . "\n"
+			. '<p><strong>' . constant( '_REWRITE_AREA_' . strtoupper( $area ) ) . '</strong></p>' . "\n"
+			. '<ul>' . "\n";
+
+			foreach ( $keys as $key ) {
+				$return .= '<li>[[' . $area . "_" . $key . ']] =&gt; ' . constant( '_REWRITE_KEY_' . strtoupper( $area . "_" . $key ) ) . '</li>' . "\n";
+			}
+			$return .= '</ul>' . "\n"
+			. '</div>' . "\n";
+		}
+
+		return $return;
+	}
+
 	function str_split_php4( $text, $split = 1 ) {
 		// place each character of the string into and array
 		$array = array();
@@ -6679,15 +6771,6 @@ class AECToolbox
 				$rewrite['invoice_amount']				= $invoice->amount;
 				$rewrite['invoice_currency']			= $invoice->currency;
 				$rewrite['invoice_coupons']				= $invoice->coupons;
-			} else {
-				$rewrite['invoice_id']					= '';
-				$rewrite['invoice_number']				= '';
-				$rewrite['invoice_created_date']		= '';
-				$rewrite['invoice_transaction_date']	= '';
-				$rewrite['invoice_method']				= '';
-				$rewrite['invoice_amount']				= '';
-				$rewrite['invoice_currency']			= '';
-				$rewrite['invoice_coupons']				= '';
 			}
 		}
 
@@ -6696,6 +6779,8 @@ class AECToolbox
 			$rewrite['plan_desc'] = $subscriptionPlan->getProperty( 'desc' );
 		}
 
+
+		$test = "ble bla bla [[invoice_created_date:date|D, jS M Y:mutate|var1,var2]]";
 		$search = array();
 		$replace = array();
 		foreach ( $rewrite as $name => $replacement ) {
@@ -6706,110 +6791,173 @@ class AECToolbox
 		return str_replace( $search, $replace, $subject );
 	}
 
-	function rewriteEngineInfo( $switches=array() )
+	function decodeTag( $subject, $rewrite, $scstart='[[', $scend=']]' )
 	{
-		if ( !count( $switches ) ) {
-			$switches = array( 'cms', 'expiration', 'user', 'subscription', 'invoice', 'plan', 'system' );
+		switch( $scstart ) {
+			case '[[':
+				$scstart_internal = '{{';
+				$scend_internal = '}}';
+				break;
+			case '{{':
+				$scstart_internal = '[{';
+				$scend_internal = '}]';
+				break;
+			case '[{':
+				$scstart_internal = '{[';
+				$scend_internal = ']}';
+				break;
 		}
 
+		$found = true;
+		$offset = 0;
+		while ( $found == true ) {
+			$nextlpos = strpos( $subject, $scstart, $offset ); //12
+			$nextrpos = strpos( $subject, $scend, $offset ); //29
+			$nextlen = $nextrpos - $nextlpos - 2; //17
+			$offset = $nextrpos + 2;
 
-		$rewrite = array();
+			$content = substr( $subject, $nextlpos+2, $nextlen );
 
-		if ( in_array( 'system', $switches ) ) {
-			$rewrite['system'][] = 'timestamp';
-			$rewrite['system'][] = 'timestamp_backend';
-			$rewrite['system'][] = 'server_timestamp';
-			$rewrite['system'][] = 'server_timestamp_backend';
-		}
+			if ( strpos( $content, ':' ) !== false ) {
+				$carray = explode( ':', $content );
 
-		if ( in_array( 'cms', $switches ) ) {
-			$rewrite['cms'][] = 'absolute_path';
-			$rewrite['cms'][] = 'live_site';
-		}
+				$result = '';
+				foreach( $carray as $cco ) {
+					$cres = $result;
 
-		if ( in_array( 'user', $switches ) ) {
-			$rewrite['user'][] = 'id';
-			$rewrite['user'][] = 'username';
-			$rewrite['user'][] = 'name';
-			$rewrite['user'][] = 'first_name';
-			$rewrite['user'][] = 'first_first_name';
-			$rewrite['user'][] = 'last_name';
-			$rewrite['user'][] = 'email';
-			$rewrite['user'][] = 'activationcode';
-			$rewrite['user'][] = 'activationlink';
+					$ccc = explode( '|', $cco, 1 );
 
-			if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
-				global $database;
+					if ( empty( $ccc[0] ) ) {
+						continue;
+					}
 
-				$query = 'SELECT name, title'
-						. ' FROM #__comprofiler_fields'
-						. ' WHERE `table` != \'#__users\''
-						. ' AND name != \'NA\'';
-				$database->setQuery( $query );
-				$objects = $database->loadObjectList();
+					if ( ( strpos( $result, $scstart_internal ) !== false ) && ( strpos( $result, $scend_internal ) !== false )) {
+						$ccc[0] = AECToolbox::decodeTag( $ccc[0], $rewrite, $scstart_internal, $scend_internal );
+					}
 
-				if ( is_array( $objects ) ) {
-					foreach ( $objects as $object ) {
-						$rewrite['user'][] = $object->name;
+					$ccv = isset( $ccc[1] ) ? explode( ';', $ccc[1] ) : array();
 
-						if ( strpos( $object->title, '_' ) === 0 ) {
-							$content = $object->name;
-						} else {
-							$content = $object->title;
+					foreach( $ccv as $ccvv ) {
+						if ( ( strpos( $ccvv, $scstart_internal ) !== false ) && ( strpos( $ccvv, $scend_internal ) !== false )) {
+							$ccvv = AECToolbox::decodeTag( $ccvv, $rewrite, $scstart_internal, $scend_internal );
 						}
+					}
 
-						$name = '_REWRITE_KEY_USER_' . strtoupper( $object->name );
-						if ( !defined( $name ) ) {
-							define( $name, $content );
-						}
+					switch( $ccc[0] ) {
+						case '__condition':
+							if ( empty( $ccv[0] ) || !isset( $ccv[1] ) ) {
+								if ( isset( $ccv[2] ) && !isset( $ccv[1] ) ) {
+									$result = $ccv[2];
+								} else {
+									$result = '';
+								}
+							} elseif ( isset( $ccv[1] ) ) {
+								$result = $ccv[1];
+							} else {
+								$result = '';
+							}
+							break;
+						case '__uppercase':
+							$result = strtoupper( $cres );
+							break;
+						case '__lowercase':
+							$result = strtoupper( $cres );
+							break;
+						case '__prefix':
+							foreach( $ccv as $val ) {
+								$result = $val . $cres;
+							}
+							break;
+						case '__suffix':
+							foreach( $ccv as $val ) {
+								$result = $cres .$val;
+							}
+							break;
+						case '__date':
+							date( $ccv[0], strtotime( $cres ) );
+							break;
+						case '__crop':
+							if ( isset( $ccv[1] ) ) {
+								$result = substr( $cres, $ccv[0],  $ccv[1] );
+							} else {
+								$result = substr( $cres, $ccv[0] );
+							}
+							break;
+						case '__compare':
+							if ( isset( $ccv[2] ) ) {
+								$result = AECToolbox::compare( $ccv[1], $ccv[0], $ccv[2] );
+							} else {
+								$result = 0;
+							}
+							break;
+						case '__math':
+							if ( isset( $ccv[2] ) ) {
+								$result = AECToolbox::math( $ccv[1], $ccv[0], $ccv[2] );
+							} else {
+								$result = 0;
+							}
+							break;
+						default:
+							$result = $ccc[0];
+							break;
 					}
 				}
 			}
 		}
 
-		if ( in_array( 'subscription', $switches ) ) {
-			$rewrite['subscription'][] = 'type';
-			$rewrite['subscription'][] = 'status';
-			$rewrite['subscription'][] = 'signup_date';
-			$rewrite['subscription'][] = 'lastpay_date';
-			$rewrite['subscription'][] = 'plan';
-			$rewrite['subscription'][] = 'previous_plan';
-			$rewrite['subscription'][] = 'recurring';
-			$rewrite['subscription'][] = 'lifetime';
-			$rewrite['subscription'][] = 'expiration_date';
-			$rewrite['subscription'][] = 'expiration_date_backend';
+		return $result;
+	}
+
+	function compare( $eval, $check1, $check2 )
+	{
+		$status = false;
+		switch ( $eval ) {
+			case '=':
+				$status = (bool) ( $check1 == $check2 );
+				break;
+			case '!=':
+			case '<>':
+				$status = (bool) ( $check1 != $check2 );
+				break;
+			case '<=':
+				$status = (bool) ( $check1 <= $check2 );
+				break;
+			case '>=':
+				$status = (bool) ( $check1 >= $check2 );
+				break;
+			case '>':
+				$status = (bool) ( $check1 > $check2 );
+				break;
+			case '<':
+				$status = (bool) ( $check1 < $check2 );
+				break;
 		}
 
-		if ( in_array( 'invoice', $switches ) ) {
-			$rewrite['invoice'][] = 'id';
-			$rewrite['invoice'][] = 'number';
-			$rewrite['invoice'][] = 'created_date';
-			$rewrite['invoice'][] = 'transaction_date';
-			$rewrite['invoice'][] = 'method';
-			$rewrite['invoice'][] = 'amount';
-			$rewrite['invoice'][] = 'currency';
-			$rewrite['invoice'][] = 'coupons';
+		return $status;
+	}
+
+	function math( $sign, $val1, $val2 )
+	{
+		$result = false;
+		switch ( $sign ) {
+			case '+':
+				$result = $val1 + $val2;
+				break;
+			case '-':
+				$result = $val1 - $val2;
+				break;
+			case '*':
+				$result = $val1 * $val2;
+				break;
+			case '/':
+				$result = $val1 / $val2;
+				break;
+			case '%':
+				$result = $val1 % $val2;
+				break;
 		}
 
-		if ( in_array( 'plan', $switches ) ) {
-			$rewrite['plan'][] = 'name';
-			$rewrite['plan'][] = 'desc';
-		}
-
-		$return = '';
-		foreach ( $rewrite as $area => $keys ) {
-			$return .= '<div class="rewriteinfoblock">' . "\n"
-			. '<p><strong>' . constant( '_REWRITE_AREA_' . strtoupper( $area ) ) . '</strong></p>' . "\n"
-			. '<ul>' . "\n";
-
-			foreach ( $keys as $key ) {
-				$return .= '<li>[[' . $area . "_" . $key . ']] =&gt; ' . constant( '_REWRITE_KEY_' . strtoupper( $area . "_" . $key ) ) . '</li>' . "\n";
-			}
-			$return .= '</ul>' . "\n"
-			. '</div>' . "\n";
-		}
-
-		return $return;
+		return $result;
 	}
 
 }
