@@ -745,7 +745,7 @@ function com_install()
 
 		if ( !empty( $aecConfig->cfg['invoicenum_display_chunking'] ) ) {
 			if ( !empty( $aecConfig->cfg['invoicenum_display_separator'] ) ) {
-				$temp = '{ "cmd":"chunk", "vars":[' . $temp . ',' . $aecConfig->cfg['invoicenum_display_chunking'] . ',' . $aecConfig->cfg['invoicenum_display_separator'] . '] }';
+				$temp = '{ "cmd":"chunk", "vars":[' . $temp . ',' . $aecConfig->cfg['invoicenum_display_chunking'] . ',"' . $aecConfig->cfg['invoicenum_display_separator'] . '"] }';
 				$separator = $aecConfig->cfg['invoicenum_display_separator'];
 			} else {
 				$temp = '{ "cmd":"chunk", "vars":[' . $temp . ',' . $aecConfig->cfg['invoicenum_display_chunking'] . '] }';
