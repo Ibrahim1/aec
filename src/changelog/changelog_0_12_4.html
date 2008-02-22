@@ -19,7 +19,7 @@ background-color: #7db8ff;
 padding: 4px;
 padding-left: 20px;
 }
-ul>ul {
+li>ul {
 border: 3px solid #fff;
 background-color: #bfddff;
 }
@@ -1150,9 +1150,24 @@ color: #333;
 </li>
 <li><strong>Rewrite Engine Extension</strong>
 <ul>
-<li>Now features internal functions like "[[{date|invoice_created_date,"Y"}]]" to get only the year of a date. The syntax being "[[{function|var1;var2,{function2|var1;var2}}]]".</li>
-<li>Now features nesting "[[{prefix|'These ',{suffix|'es',[[{condition|[[{compare|'apples';'oranges'}]],'appl','orang'}]]}}]]"</li>
-<li>Unlimited Nesting</li>
+<li>Now features internal functions like "{aecjson} { "cmd":"date", "vars": [ "Y", { "cmd":"rw_constant", "vars":"invoice_created_date" } ] } {/aecjson}" to get only the year of a date.</li>
+<li>This is based on JSON - objects are function calls with "cmd" and "vars" as its structure. The first being the function called, the second the variables passed.</li>
+<li>Of course this has the advantage that it supports indefinite nesting</li>
+<li><strong>Supported functions for now (required input in brackets):</strong>
+<ul>
+<li><i>constant</i> (string) - will return a PHP constant</li>
+<li><i>rw_constant</i> (string) - will return RewriteEngine constant, what was until now [[constant_name]]</li>
+<li><i>condition</i> (array) - will return its second variable if the first is true. If a third variable is supplied, that will be returned when the first is false.</li>
+<li><i>uppercase</i> (string) - make a string uppercase</li>
+<li><i>lowercase</i> (string) - make a string lowercase</li>
+<li><i>concat</i> (array) - print out array as continuous string</li>
+<li><i>date</i> (array) - format date (first var) according to rules (second var) - this uses the PHP date function</li>
+<li><i>crop</i> (array) - equivalent to the PHP substr function - will produce a crop out of variable 1, starting at the point specified in variable 2 (and ranging as many characters as specified in variable 3... if given at all)</li>
+<li><i>chunk</i> (array) - hacks a string (var 1) into pieces of a specified length (var2). If you provide a var3, it will insert that between the chunks.</li>
+<li><i>compare</i> (array) - will compare the first with the third variable, the comperator being the second variable</li>
+<li><i>math</i> (array) - will compute the result of the mathematical operation specified by variable 2 (+,-,*,/,%) of the variables 1 and 3</li>
+</ul>
+</li>
 <li>Replacing invoice formatting options with this</li>
 </ul>
 </li>

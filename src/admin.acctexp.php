@@ -1676,10 +1676,10 @@ function editSettings( $option )
 	$yn_lists = array( 'simpleurls', 'require_subscription', 'plans_first',
 						'enable_coupons', 'displayccinfo', 'adminaccess',
 						'noemails', 'nojoomlaregemails', 'debugmode',
-						'override_reqssl', 'invoicenum_display_id', 'use_recaptcha',
+						'override_reqssl', 'use_recaptcha',
 						'ssl_signup', 'skip_confirmation', 'show_fixeddecision',
 						'customtext_confirm_keeporiginal', 'customtext_checkout_keeporiginal', 'customtext_notallowed_keeporiginal',
-						'customtext_expired_keeporiginal', 'customtext_pending_keeporiginal'
+						'customtext_expired_keeporiginal', 'customtext_pending_keeporiginal', 'invoicenum_doformat'
 						);
 
 	foreach ( $yn_lists as $ynname ) {
@@ -1786,11 +1786,11 @@ function editSettings( $option )
 	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_DISPLAY_DATE_FRONTEND_NAME, _CFG_GENERAL_DISPLAY_DATE_FRONTEND_DESC, $aecConfig->cfg['display_date_frontend'], 'display_date_frontend');
 	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_DISPLAY_DATE_BACKEND_NAME, _CFG_GENERAL_DISPLAY_DATE_BACKEND_DESC, $aecConfig->cfg['display_date_backend'], 'display_date_backend');
 
-	$tab_data[1][] = array( 'list', _CFG_GENERAL_INVOICENUM_DISPLAY_ID_NAME, _CFG_GENERAL_INVOICENUM_DISPLAY_ID_DESC, $aecConfig->cfg['invoicenum_display_id'], 'invoicenum_display_id');
-	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_INVOICENUM_DISPLAY_IDINFLATE_NAME, _CFG_GENERAL_INVOICENUM_DISPLAY_IDINFLATE_DESC, $aecConfig->cfg['invoicenum_display_idinflate'], 'invoicenum_display_idinflate');
-	$tab_data[1][] = array( 'list', _CFG_GENERAL_INVOICENUM_DISPLAY_CASE_NAME, _CFG_GENERAL_INVOICENUM_DISPLAY_CASE_DESC, $aecConfig->cfg['invoicenum_display_case'], 'invoicenum_display_case');
-	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_INVOICENUM_DISPLAY_CHUNKING_NAME, _CFG_GENERAL_INVOICENUM_DISPLAY_CHUNKING_DESC, $aecConfig->cfg['invoicenum_display_chunking'], 'invoicenum_display_chunking');
-	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_INVOICENUM_DISPLAY_SEPARATOR_NAME, _CFG_GENERAL_INVOICENUM_DISPLAY_SEPARATOR_DESC, $aecConfig->cfg['invoicenum_display_separator'], 'invoicenum_display_separator');
+	$tab_data[1][] = array( 'list', _CFG_GENERAL_INVOICENUM_DOFORMAT_NAME, _CFG_GENERAL_INVOICENUM_DOFORMAT_DESC, $aecConfig->cfg['invoicenum_doformat'], 'invoicenum_doformat');
+	$tab_data[1][] = array( 'inputD', _CFG_GENERAL_INVOICENUM_FORMATTING_NAME, _CFG_GENERAL_INVOICENUM_FORMATTING_DESC, $aecConfig->cfg['invoicenum_formatting'], 'invoicenum_formatting');
+
+	$rewriteswitches	= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
+	$tab_data[1][]		= array( 'fieldset', 'RewriteEngine', AECToolbox::rewriteEngineInfo( $rewriteswitches ), '' );
 
 	$tab_data[1][] = array( 'list', _CFG_GENERAL_USE_RECAPTCHA_NAME, _CFG_GENERAL_USE_RECAPTCHA_DESC, $aecConfig->cfg['use_recaptcha'], 'use_recaptcha');
 	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_RECAPTCHA_PRIVATEKEY_NAME, _CFG_GENERAL_RECAPTCHA_PRIVATEKEY_DESC, $aecConfig->cfg['recaptcha_privatekey'], 'recaptcha_privatekey');
@@ -1824,11 +1824,6 @@ function editSettings( $option )
 		}
 	}
 	*/
-
-	$invoicenum_display_case[] = mosHTML::makeOption( 'NONE', _CFG_GENERAL_INVOICENUM_DISPLAY_CASE_NONE );
-	$invoicenum_display_case[] = mosHTML::makeOption( 'UPPER', _CFG_GENERAL_INVOICENUM_DISPLAY_CASE_UPPER );
-	$invoicenum_display_case[] = mosHTML::makeOption( 'LOWER', _CFG_GENERAL_INVOICENUM_DISPLAY_CASE_LOWER );
-	$lists['invoicenum_display_case']			= mosHTML::selectList($invoicenum_display_case, 'invoicenum_display_case', 'size="1"', 'value', 'text', $aecConfig->cfg['invoicenum_display_case'] );
 
 	$error_reporting_notices[] = mosHTML::makeOption( 512, _AEC_NOTICE_NUMBER_512 );
 	$error_reporting_notices[] = mosHTML::makeOption( 128, _AEC_NOTICE_NUMBER_128 );
@@ -3535,21 +3530,11 @@ function invoices( $option )
 	if ( $search ) {
 		$unformatted = $database->getEscaped( trim( strtolower( $search ) ) );
 
-		$fakeinvoice = new stdClass();
-		$fakeinvoice->invoice_number = $unformatted;
-		$fakeinvoice->id = $unformatted;
-
-		$formatted =  Invoice::deformatInvoiceNumber( $fakeinvoice );
-
 		$where = 'LOWER(`invoice_number`) LIKE \'%' . $unformatted . '%\''
-					. ' OR LOWER(`secondary_ident`) LIKE \'%' . $unformatted . '%\''
-					. ' OR `id` LIKE \'%' . $unformatted . '%\'';
-
-		if ( $formatted != $unformatted ) {
-			$where .= ' OR LOWER(`invoice_number`) LIKE \'%' . $formatted . '%\''
-						. ' OR LOWER(`secondary_ident`) LIKE \'%' . $formatted . '%\''
-						. ' OR `id` LIKE \'%' . $formatted . '%\'';
-		}
+				. ' OR LOWER(`secondary_ident`) LIKE \'%' . $unformatted . '%\''
+				. ' OR `id` LIKE \'%' . $unformatted . '%\''
+				. ' OR LOWER(`invoice_number_format`) LIKE \'%' . $unformatted . '%\''
+				;
 	}
 
 	// get the total number of records

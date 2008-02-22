@@ -643,20 +643,10 @@ define( '_CFG_GENERAL_DISPLAY_DATE_FRONTEND_DESC', 'Specify the way a date is di
 define( '_CFG_GENERAL_DISPLAY_DATE_BACKEND_NAME', 'Backend Date Format');
 define( '_CFG_GENERAL_DISPLAY_DATE_BACKEND_DESC', 'Specify the way a date is displayed on the backend. Refer to <a href="http://www.php.net/manual/en/function.strftime.php">the php manual</a> for the correct syntax.');
 
-define( '_CFG_GENERAL_INVOICENUM_DISPLAY_ID_NAME', 'Display Invoice ID');
-define( '_CFG_GENERAL_INVOICENUM_DISPLAY_ID_DESC', 'Display the Invoice ID (a number) instead of the identification string (mixed - numbers and characters) to the user');
-define( '_CFG_GENERAL_INVOICENUM_DISPLAY_IDINFLATE_NAME', 'Inflate ID');
-define( '_CFG_GENERAL_INVOICENUM_DISPLAY_IDINFLATE_DESC', 'Add a fixed number to the invoice ids');
-define( '_CFG_GENERAL_INVOICENUM_DISPLAY_CASE_NAME', 'Character case');
-define( '_CFG_GENERAL_INVOICENUM_DISPLAY_CASE_DESC', 'Change the display of characters in an invoice number');
-define( '_CFG_GENERAL_INVOICENUM_DISPLAY_CHUNKING_NAME', 'Chunking');
-define( '_CFG_GENERAL_INVOICENUM_DISPLAY_CHUNKING_DESC', 'Display an invoice number in chunks of X (or less, if remaining) characters');
-define( '_CFG_GENERAL_INVOICENUM_DISPLAY_SEPARATOR_NAME', 'Separator');
-define( '_CFG_GENERAL_INVOICENUM_DISPLAY_SEPARATOR_DESC', 'The character which will separate the chunks');
-
-define( '_CFG_GENERAL_INVOICENUM_DISPLAY_CASE_NONE', 'Original');
-define( '_CFG_GENERAL_INVOICENUM_DISPLAY_CASE_UPPER', 'All Uppercase');
-define( '_CFG_GENERAL_INVOICENUM_DISPLAY_CASE_LOWER', 'All Lowercase');
+define( '_CFG_GENERAL_INVOICENUM_DOFORMAT_NAME', 'Format Invoice Number');
+define( '_CFG_GENERAL_INVOICENUM_DOFORMAT_DESC', 'Display a formatted string instead of the original InvoiceNumber to the user. Must provide a formatting rule below.');
+define( '_CFG_GENERAL_INVOICENUM_FORMATTING_NAME', 'Formatting');
+define( '_CFG_GENERAL_INVOICENUM_FORMATTING_DESC', 'The Formatting - You can use the RewriteEngine as specified below');
 
 define( '_CFG_GENERAL_CUSTOMTEXT_PLANS_NAME', 'Custom Text Plans Page');
 define( '_CFG_GENERAL_CUSTOMTEXT_PLANS_DESC', 'Text that will be displayed on the Plans Page');
@@ -1156,6 +1146,9 @@ define( '_REWRITE_KEY_INVOICE_METHOD', 'Payment Method');
 define( '_REWRITE_KEY_INVOICE_AMOUNT', 'Amount Paid');
 define( '_REWRITE_KEY_INVOICE_CURRENCY', 'Currency');
 define( '_REWRITE_KEY_INVOICE_COUPONS', 'List of Coupons');
+
+define( '_REWRITE_ENGINE_AECJSON_TITLE', 'aecJSON');
+define( '_REWRITE_ENGINE_AECJSON_DESC', 'You can also use functions encoded in JSON markup, like this:<br />{aecjson} { "cmd":"date", "vars": [ "Y", { "cmd":"rw_constant", "vars":"invoice_created_date" } ] } {/aecjson}<br />It returns only the Year of a date. Refer to the manual and forums for further instructions!');
 
 // --== COUPONS OVERVIEW ==--
 define( '_COUPON_TITLE', 'Coupons');

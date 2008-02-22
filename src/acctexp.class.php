@@ -647,61 +647,58 @@ class Config_General extends paramDBTable
 	{
 		$def = array();
 		$def['require_subscription']				= 0;
-		$def['alertlevel2']							= 7;
-		$def['alertlevel1']							= 3;
-		$def['expiration_cushion']					= 12;
-		$def['heartbeat_cycle']						= 24;
-		$def['heartbeat_cycle_backend']				= 1;
-		$def['plans_first']							= 0;
-		$def['simpleurls']							= 0;
-		$def['display_date_frontend']				= "%a, %d %b %Y %T %Z";
+		$def['alertlevel2']						= 7;
+		$def['alertlevel1']						= 3;
+		$def['expiration_cushion']				= 12;
+		$def['heartbeat_cycle']					= 24;
+		$def['heartbeat_cycle_backend']			= 1;
+		$def['plans_first']						= 0;
+		$def['simpleurls']						= 0;
+		$def['display_date_frontend']			= "%a, %d %b %Y %T %Z";
 		$def['display_date_backend']				= "%a, %d %b %Y %T %Z";
 		$def['enable_mimeta']						= 0;
-		$def['enable_coupons']						= 0;
+		$def['enable_coupons']					= 0;
 		$def['gwlist']								= '';
 		$def['milist']								= "mi_email;mi_htaccess;mi_mysql_query;mi_email;mi_virtuemart";
 		$def['displayccinfo']						= 1;
 		$def['customtext_confirm_keeporiginal']		= 1;
-		$def['customtext_checkout_keeporiginal']	= 1;
+		$def['customtext_checkout_keeporiginal']		= 1;
 		$def['customtext_notallowed_keeporiginal']	= 1;
 		$def['customtext_pending_keeporiginal']		= 1;
 		$def['customtext_expired_keeporiginal']		= 1;
 		// new 0.12.4
-		$def['bypassintegration']					= '';
-		$def['customintro']							= '';
+		$def['bypassintegration']				= '';
+		$def['customintro']						= '';
 		$def['customthanks']						= '';
 		$def['customcancel']						= '';
 		$def['customnotallowed']					= '';
 		$def['tos']									= '';
 		$def['customtext_plans']					= '';
-		$def['customtext_confirm']					= '';
-		$def['customtext_checkout']					= '';
-		$def['customtext_notallowed']				= '';
-		$def['customtext_pending']					= '';
-		$def['customtext_expired']					= '';
+		$def['customtext_confirm']				= '';
+		$def['customtext_checkout']				= '';
+		$def['customtext_notallowed']			= '';
+		$def['customtext_pending']				= '';
+		$def['customtext_expired']				= '';
 		// new 0.12.4.2
-		$def['adminaccess']							= 1;
+		$def['adminaccess']						= 1;
 		$def['noemails']							= 0;
-		$def['nojoomlaregemails']					= 0;
+		$def['nojoomlaregemails']				= 0;
 		// new 0.12.4.10
 		$def['debugmode']							= 0;
 		// new 0.12.4.12
-		$def['override_reqssl']						= 0;
+		$def['override_reqssl']					= 0;
 		// new 0.12.4.16
-		$def['invoicenum_display_id']				= 0;
-		$def['invoicenum_display_idinflate']		= '';
-		$def['invoicenum_display_case']				= 0;
-		$def['invoicenum_display_chunking']			= 4;
-		$def['invoicenum_display_separator']		= '-';
+		$def['invoicenum_doformat']				= 1;
+		$def['invoicenum_formatting']			= '{aecjson} { "cmd":"concat", "vars": [ { "cmd":"date", "vars": [ "Y", { "cmd":"rw_constant", "vars":"invoice_created_date" } ] },"-",{ "cmd":"rw_constant", "vars":"invoice_id" } {/aecjson}';
 		$def['use_recaptcha']						= 0;
 		$def['recaptcha_privatekey']				= '';
-		$def['recaptcha_publickey']					= '';
-		$def['ssl_signup']							= 0;
-		$def['error_notification_level']			= 32;
-		$def['email_notification_level']			= 512;
+		$def['recaptcha_publickey']				= '';
+		$def['ssl_signup']						= 0;
+		$def['error_notification_level']		= 32;
+		$def['email_notification_level']		= 512;
 		$def['temp_auth_exp']						= 60;
-		$def['skip_confirmation']					= 0;
-		$def['show_fixeddecision']					= 0;
+		$def['skip_confirmation']				= 0;
+		$def['show_fixeddecision']				= 0;
 
 		// Insert a new entry if there is none yet
 		if ( empty( $this->settings ) ) {
@@ -4223,100 +4220,30 @@ class Invoice extends paramDBTable
 		$this->load($database->loadResult());
 	}
 
-	function formatInvoiceNumber( $invoice=null )
-	{
-		global $aecConfig;
-
-		if ( empty( $this->invoice_number_format ) || !empty( $invoice ) ) {
-			if ( empty( $invoice ) ) {
-				$invoice_number	= $this->invoice_number;
-				$invoice_id		= $this->id;
-			} else {
-				$invoice_number = $invoice->invoice_number;
-				$invoice_id		= $invoice->id;
-			}
-
-			if ( empty( $aecConfig->cfg['invoicenum_display_id'] ) ) {
-				if ( !empty( $aecConfig->cfg['invoicenum_display_case'] ) ) {
-					switch ( $aecConfig->cfg['invoicenum_display_case'] ) {
-						case 'UPPER':
-							$invoice_number = strtoupper( $invoice_number );
-							break;
-						case 'LOWER':
-							$invoice_number = strtolower( $invoice_number );
-							break;
-					}
-				}
-			} else {
-				if ( !empty( $aecConfig->cfg['invoicenum_display_idinflate'] ) ) {
-					$invoice_number = (string) ( $invoice_id + $aecConfig->cfg['invoicenum_display_idinflate'] );
-				} else {
-					$invoice_number = (string) $invoice_id;
-				}
-			}
-
-			if ( !empty( $aecConfig->cfg['invoicenum_display_chunking'] ) ) {
-				if ( !empty( $aecConfig->cfg['invoicenum_display_separator'] ) ) {
-					$separator = $aecConfig->cfg['invoicenum_display_separator'];
-				} else {
-					$separator = ' ';
-				}
-
-				if ( function_exists( 'str_split' ) ) {
-					$chunks = str_split( $invoice_number, $aecConfig->cfg['invoicenum_display_chunking'] );
-				} else {
-					$chunks = AECToolbox::str_split_php4( $invoice_number, $aecConfig->cfg['invoicenum_display_chunking'] );
-				}
-				$invoice_number = implode( $separator, $chunks );
-			}
-		} else {
-			$invoice_number = $this->invoice_number_format;
-		}
-
-		if ( empty( $invoice ) ) {
-			$this->invoice_number = $invoice_number;
-			$this->id = $invoice_id;
-			return true;
-		} else {
-			return $invoice_number;
-		}
-
-	}
-
-	function deformatInvoiceNumber( $invoice=null )
+	function formatInvoiceNumber( $invoice=null, $nostore=false )
 	{
 		global $aecConfig;
 
 		if ( empty( $invoice ) ) {
-			$invoice_number	= $this->invoice_number;
-			$invoice_id		= $this->id;
+			$subject = $this;
 		} else {
-			$invoice_number = $invoice->invoice_number;
-			$invoice_id		= $invoice->id;
+			$subject = $invoice;
 		}
 
-		if ( !empty( $aecConfig->cfg['invoicenum_display_chunking'] ) ) {
-			if ( !empty( $aecConfig->cfg['invoicenum_display_separator'] ) ) {
-				$separator = $aecConfig->cfg['invoicenum_display_separator'];
-			} else {
-				$separator = ' ';
+		if ( empty( $subject->invoice_number_format ) && $aecConfig->cfg['invoicenum_doformat'] ) {
+			$invoice_number = AECToolbox::rewriteEngine( $aecConfig->cfg['invoicenum_formatting'], null, null, $subject );
+		} else {
+			$invoice_number = $subject->invoice_number_format;
+		}
+
+		if ( empty( $invoice ) && !$nostore ) {
+			if ( $aecConfig->cfg['invoicenum_doformat'] && empty( $this->invoice_number_format ) ) {
+				$this->invoice_number_format = $invoice_number;
+				$this->check();
+				$this->store();
 			}
 
-			$invoice_number = str_replace( $separator, '', $invoice_number);
-			$invoice_id = str_replace( $separator, '', $invoice_id);
-		}
-
-		if ( !empty( $aecConfig->cfg['invoicenum_display_id'] ) ) {
-			if ( !empty( $aecConfig->cfg['invoicenum_display_idinflate'] ) ) {
-				$invoice_number = (string) ( $invoice_id - $aecConfig->cfg['invoicenum_display_idinflate'] );
-			} else {
-				$invoice_number = (string) $invoice_id;
-			}
-		}
-
-		if ( empty( $invoice ) ) {
 			$this->invoice_number = $invoice_number;
-			$this->id = $invoice_id;
 			return true;
 		} else {
 			return $invoice_number;
@@ -6551,6 +6478,19 @@ class AECToolbox
 		return (int) $vlen;
 	}
 
+	function str_split_php4( $text, $split = 1 ) {
+		// place each character of the string into and array
+		$array = array();
+		for ( $i=0; $i < strlen( $text ); ){
+			$key = NULL;
+			for ( $j = 0; $j < $split; $j++, $i++ ) {
+				$key .= $text[$i];
+			}
+			array_push( $array, $key );
+		}
+		return $array;
+	}
+
 	function rewriteEngineInfo( $switches=array() )
 	{
 		if ( !count( $switches ) ) {
@@ -6654,20 +6594,12 @@ class AECToolbox
 			. '</div>' . "\n";
 		}
 
-		return $return;
-	}
+		$return .= '<div class="rewriteinfoblock">' . "\n"
+		. '<p><strong>' . constant( '_REWRITE_ENGINE_AECJSON_TITLE' ) . '</strong></p>' . "\n"
+		. '<p>' . constant( '_REWRITE_ENGINE_AECJSON_DESC' ) . '</p>' . "\n"
+		. '</div>' . "\n";
 
-	function str_split_php4( $text, $split = 1 ) {
-		// place each character of the string into and array
-		$array = array();
-		for ( $i=0; $i < strlen( $text ); ){
-			$key = NULL;
-			for ( $j = 0; $j < $split; $j++, $i++ ) {
-				$key .= $text[$i];
-			}
-			array_push( $array, $key );
-		}
-		return $array;
+		return $return;
 	}
 
 	function rewriteEngine( $subject, $metaUser=null, $subscriptionPlan=null, $invoice=null )
@@ -6779,100 +6711,95 @@ class AECToolbox
 			$rewrite['plan_desc'] = $subscriptionPlan->getProperty( 'desc' );
 		}
 
-		$search = array();
-		$replace = array();
-		foreach ( $rewrite as $name => $replacement ) {
-			$search[]	= '[[' . $name . ']]';
-			$replace[]	= $replacement;
-		}
+		if ( strpos( '{aecjson', $subject ) !== false ) {
+			// We have at least one JSON object, switching to JSON mode
+			return AECToolbox::decodeTags( $subject, $rewrite );
+		} else {
+			// No JSON found, do traditional parsing
+			$search = array();
+			$replace = array();
+			foreach ( $rewrite as $name => $replacement ) {
+				$search[]	= '[[' . $name . ']]';
+				$replace[]	= $replacement;
+			}
 
-		return str_replace( $search, $replace, $subject );
+			return str_replace( $search, $replace, $subject );
+		}
 	}
 
-	function decodeTag( $subject, $rewrite )
+	function decodeTags( $subject, $rewrite )
 	{
-		$found = true;
-		$offset = 0;
-		$result = '';
+		global $mosConfig_absolute_path;
 
-		while ( $found == true ) {
-			// We are looking
-			$slooking = true;
-			// And it has to be a new bracket
-			$lspointer = $offset;
-			$rspointer = $offset;
-			// So we are one level deep in the [ brackets
-			$sdepth = 1;
-			while ( $slooking = true ) {
-				// Look for the next opening and closing brackets
-				$nl = strpos( $subject, '[[', $rspointer );
-				$nr = strpos( $subject, ']]', $rspointer );
+		// Example:
+		// {aecjson} {"cmd":"concat","vars":["These ",{"cmd":"condition","vars":{"cmd":"compare","vars":["apples","=","oranges"]},"appl","orang"},"es"} {/aecjson}
+		// ...would return either "These apples" or "These oranges", depending on whether the compare function thinks that they are the same
 
-				// Have we found the last one?
-				if ( ( $nl === false ) && ( $nl === false ) ) {
-					$slooking = false;
-					continue;
-				}
+		$regex = "#{aecjson}(.*?){/aecjson}#s";
 
-				if ( $nr < $nl ) {
-					// We have found a closing bracket for the last open one, so we go up a level
-					$sdepth--;
-					// Advance the right pointer to the last closed bracket
-					$rspointer = $nr;
+		// find all instances of json code
+		$matches = array();
+		preg_match_all( $regex, $row->text, $matches, PREG_SET_ORDER );
 
-					$chunk = substr( $subject, $lspointer, ( $rspointer - $lspointer ) );
+		if ( count( $matches ) < 1 ) {
+			return $subject;
+		}
 
-					$commands = explode( '-->', $chunk );
+		require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/json/json.php' );
 
-					foreach ( $commands as $command ) {
-						$cres = $result;
-						$temp = explode( '|', $command );
-						$command = $temp[0];
+		foreach ( $matches as $match ) {
+			// Cut away markup
+			$match_text = str_replace( '{aecjson}', '', $match );
+			$match_text = str_replace( '{/aecjson}', '', $match_text );
 
-						$vars = explode( ';', $temp[1] );
+			$JSONdec = new Services_JSON();
+			$json = $JSONdec->decode( $match );
 
-						$ccv = array();
-						foreach( $vars as $var ) {
-							$var = trim( $var );
-							if ( strpos( '\'' ) === 0 ) {
-								// variable content is a string, crop it out
-								$ccv[] = substr( $var, 1, ( strlen( $var ) - 2) );
-							} elseif ( isset( $rewrite[$var] ) ) {
-								// variable is a rewrite constant
-								$ccv[] = $rewrite[$var];
-							}
-						}
+			$result = AECToolbox::resolveJSONitem( $subject, $rewrite );
 
-						AECToolbox::executeCommand( $command, $vars );
-
-					}
-
-				} else {
-					// We have found an earlier opening bracket, so we are one step deeper
-					$sdepth++;
-					// Advance the left pointer to the last open bracket
-					$lspointer = $nl + 2;
-				}
-
-				if ( $sdepth ) {
-					// Still not finished the opened brackets, so try again
-				} else {
-					// Found the last closing bracket, so we're out
-					$slooking = false;
-					$offset = $nr + 2;
-				}
-			}
-$think = "[[{prefix|'These ',{suffix|'es',[[{condition|[[{compare|'apples';'oranges'}]],'appl','orang'}]]}]]";
-
-
+			$subject =  str_replace( $match, $result, $subject );
 		}
 
 		return $result;
 	}
 
-	function executeCommand( $command, $vars )
+	function resolveJSONitem( $current, $rewrite )
 	{
+		if ( is_object( $current ) ) {
+			if ( !isset( $current->cmd ) || !isset( $current->vars ) ) {
+				// Malformed String
+				return "JSON PARSE ERROR!!!";
+			}
+
+			$command = $current->cmd;
+			$variables = $current->vars;
+
+			$variables = AECToolbox::resolveJSONitem( $variables, $rewrite );
+
+			$current = AECToolbox::executeCommand( $command, $variables, $rewrite );
+		} elseif ( is_array( $current ) ) {
+			foreach( $current as $id => $item ) {
+				$current[$id] = AECToolbox::resolveJSONitem( $item, $rewrite );
+			}
+		}
+
+		return $current;
+	}
+
+	function executeCommand( $command, $vars, $rewrite )
+	{
+		$result = '';
 		switch( $command ) {
+			case 'rw_constant':
+				if ( isset( $rewrite[$vars] ) ) {
+					$result = $rewrite[$vars];
+				}
+				break;
+			case 'constant':
+				if ( defined( $vars ) ) {
+					$result = constant( $vars );
+				}
+				break;
 			case 'condition':
 				if ( empty( $vars[0] ) || !isset( $vars[1] ) ) {
 					if ( isset( $vars[2] ) && !isset( $vars[1] ) ) {
@@ -6887,22 +6814,35 @@ $think = "[[{prefix|'These ',{suffix|'es',[[{condition|[[{compare|'apples';'oran
 				}
 				break;
 			case 'uppercase':
-				$result = strtoupper( $vars[0] );
+				$result = strtoupper( $vars );
 				break;
 			case 'lowercase':
-				$result = strtoupper( $vars[0] );
+				$result = strtoupper( $vars );
 				break;
 			case 'concat':
-				$result = implode( $vars);
+				$result = implode( $vars );
 				break;
 			case 'date':
-				date( $vars[0], strtotime( $vars[0] ) );
+				date( $vars[0], strtotime( $vars[1] ) );
 				break;
 			case 'crop':
-				if ( isset( $vars[1] ) ) {
-					$result = substr( $vars[0], $vars[0],  $vars[1] );
+				if ( isset( $vars[2] ) ) {
+					$result = substr( $vars[0], (int) $vars[1], (int) $vars[2] );
 				} else {
-					$result = substr( $vars[0], $vars[0] );
+					$result = substr( $vars[0], (int) $vars[1] );
+				}
+				break;
+			case 'chunk':
+				if ( function_exists( 'str_split' ) ) {
+					$chunks = str_split( $vars[0], (int) $vars[1] );
+				} else {
+					$chunks = AECToolbox::str_split_php4( $vars[0], (int) $vars[1] );
+				}
+
+				if ( isset( $vars[2] ) ) {
+					$result = implode( $vars[2], $chunks );
+				} else {
+					$result = implode( ' ', $chunks );
 				}
 				break;
 			case 'compare':
@@ -6914,7 +6854,7 @@ $think = "[[{prefix|'These ',{suffix|'es',[[{condition|[[{compare|'apples';'oran
 				break;
 			case 'math':
 				if ( isset( $vars[2] ) ) {
-					$result = AECToolbox::math( $vars[1], $vars[0], $vars[2] );
+					$result = AECToolbox::math( $vars[1], (float) $vars[0], (float) $vars[2] );
 				} else {
 					$result = 0;
 				}
@@ -6923,6 +6863,8 @@ $think = "[[{prefix|'These ',{suffix|'es',[[{condition|[[{compare|'apples';'oran
 				$result = $command;
 				break;
 		}
+
+		return $result;
 	}
 
 	function compare( $eval, $check1, $check2 )

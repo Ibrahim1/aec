@@ -722,6 +722,45 @@ function com_install()
 		}
 	}
 
+	// Rewrite old Invoice Number Formatting options into aecjson string
+	if ( isset( $aecConfig->cfg['invoicenum_display_id'] ) ) {
+		if ( empty( $aecConfig->cfg['invoicenum_display_id'] ) ) {
+			$temp = '{ "cmd":"rw_constant", "vars":"invoice_number" }';
+			if ( !empty( $aecConfig->cfg['invoicenum_display_case'] ) ) {
+				switch ( $aecConfig->cfg['invoicenum_display_case'] ) {
+					case 'UPPER':
+						$temp = '{ "cmd":"uppercase", "vars":"' . $temp . '" }';
+						break;
+					case 'LOWER':
+						$temp = '{ "cmd":"lowercase", "vars":"' . $temp . '" }';
+						break;
+				}
+			}
+		} else {
+			$temp = '{ "cmd":"rw_constant", "vars":"invoice_id" }';
+			if ( !empty( $aecConfig->cfg['invoicenum_display_idinflate'] ) ) {
+				$temp = '{ "cmd":"math", "vars":[' . $temp . ',"+",' . $aecConfig->cfg['invoicenum_display_idinflate'] . '] }';
+			}
+		}
+
+		if ( !empty( $aecConfig->cfg['invoicenum_display_chunking'] ) ) {
+			if ( !empty( $aecConfig->cfg['invoicenum_display_separator'] ) ) {
+				$temp = '{ "cmd":"chunk", "vars":[' . $temp . ',' . $aecConfig->cfg['invoicenum_display_chunking'] . ',' . $aecConfig->cfg['invoicenum_display_separator'] . '] }';
+				$separator = $aecConfig->cfg['invoicenum_display_separator'];
+			} else {
+				$temp = '{ "cmd":"chunk", "vars":[' . $temp . ',' . $aecConfig->cfg['invoicenum_display_chunking'] . '] }';
+			}
+		}
+
+		$aecConfig->cfg['invoicenum_formatting'] = '{aecjson} ' . $temp . ' {/aecjson}';
+
+		unset( $aecConfig->cfg['invoicenum_display_id'] );
+		unset( $aecConfig->cfg['invoicenum_display_case'] );
+		unset( $aecConfig->cfg['invoicenum_display_idinflate'] );
+		unset( $aecConfig->cfg['invoicenum_display_chunking'] );
+		unset( $aecConfig->cfg['invoicenum_display_separator'] );
+	}
+
 	$aecConfig->saveSettings();
 
 	$eucaInstalldb->dropColifExists( 'mingid', 'plans' );
