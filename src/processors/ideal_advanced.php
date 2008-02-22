@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: verotel.php
+ * @version $Id: ideal_advanced.php
  * @package AEC - Account Expiration Control / Subscription management for Joomla
  * @subpackage Payment Processors
  * @author David Deutsch <skore@skore.de>
@@ -59,7 +59,6 @@ class processor_ideal_advanced extends XMLprocessor
 		$s = array();
 		$s['merchantid']	= "merchantid";
 		$s['testmode']		= 0;
-		$s['testmodestage']	= 1;
 		$s['subid']			= "0";
 		$s['language']		= "NL";
 		$s['key']			= "key";
@@ -73,23 +72,22 @@ class processor_ideal_advanced extends XMLprocessor
 		$s = array();
 		$s['merchantid']	= array( 'inputC' );
 		$s['testmode']		= array( 'list_yesno' );
-		$s['testmodestage']	= array( 'inputC' );
-		$s['subid']			= array( 'inputC' );
+		$s['bank']			= array( 'list' );
 		$s['language']		= array( 'list_language' );
-		$s['key']			= array( 'inputC' );
 		$s['description']	= array( 'inputE' );
+
+		$banks = array( 'ING', 'POSTBANK', 'RABOBANK', 'ABNAMRO' );
+
+		$bank_selection = array();
+		foreach ( $banks as $name ) {
+			$bank_selection[] = mosHTML::makeOption( $name, $name );
+		}
+
+		$s['lists']['bank'] = mosHTML::selectList($bank_selection, 'bank_selection', 'size="5"', 'value', 'text', $cfg['bank'] );
 
 		$rewriteswitches	= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
         $s['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 		return $s;
-	}
-
-	function CustomPlanParams()
-	{
-		$p = array();
-		$p['verotel_product']	= array( 'inputC' );
-
-		return $p;
 	}
 
 	function checkoutform( $int_var, $cfg, $metaUser, $new_subscription )
@@ -120,53 +118,102 @@ class processor_ideal_advanced extends XMLprocessor
 
 	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
 	{
-		if ( $cfg['testmode'] ) {
-			$var['post_url']		= "https://ideal.secure-ing.com";
-		} else {
-			$var['post_url']		= "https://ideal.secure-ing.com";
+		require_once( dirname(__FILE__) . "/ideal_advanced/ThinMPI.php" );
+		require_once( dirname(__FILE__) . "/ideal_advanced/AcquirerTrxRequest.php" );
+
+		$data = & new AcquirerTrxRequest();
+
+		//Set parameters for TransactionRequest
+		$data->setIssuerID( $metaUser->userid );
+		$data->setPurchaseID( $int_var['invoice'] );
+		$data->setAmount( $int_var['amount']*100 );
+		$data->setCurrency( $int_var['currency'] );
+		$data->setEntranceCode( $cfg['entrance_code'] );
+		$data->setMerchantReturnURL( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=ideal_advancednotification' ) );
+
+		return $data;
+	}
+
+	function transmitRequestXML( $xml, $int_var, $cfg, $metaUser, $new_subscription, $invoice )
+	{
+
+		$idealcfg = array();
+
+		$idealcfg['IDEAL_AcquirerPORT'] 		= '443';
+		$idealcfg['IDEAL_AcquirerDirPath'] 		= '/ideal/iDeal';
+		$idealcfg['IDEAL_AcquirerTransPath']	= '/ideal/iDeal';
+		$idealcfg['IDEAL_AcquirerStatPath']		= '/ideal/iDeal';
+		$idealcfg['IDEAL_AcquirerDirFile'] 		= '';
+		$idealcfg['IDEAL_AcquirerTransFile']	= '';
+		$idealcfg['IDEAL_AcquirerStatFile']		= '';
+
+		switch( $cfg['bank'] ) {
+			case 'ING':
+				if ( $cfg['testmode'] ) {
+					$idealcfg['IDEAL_AcquirerURL']		= 'ssl://idealtest.secure-ing.com';
+					$idealcfg['IDEAL_Certificate0']		= 'test_ing_ideal.cer';
+				} else {
+					$idealcfg['IDEAL_AcquirerURL']		= 'ssl://ideal.secure-ing.com';
+					$idealcfg['IDEAL_Certificate0']		= 'productie_ing_ideal.cer';
+				}
+				break;
+			case 'POSTBANK':
+				if ( $cfg['testmode'] ) {
+					$idealcfg['IDEAL_AcquirerURL']		= 'ssl://idealtest.secure-ing.com';
+					$idealcfg['IDEAL_Certificate0']		= 'test_postbank_ideal.cer';
+				} else {
+					$idealcfg['IDEAL_AcquirerURL']		= 'ssl://ideal.secure-ing.com';
+					$idealcfg['IDEAL_Certificate0']		= 'productie_postbank_ideal.cer';
+				}
+				break;
+			case 'RABOBANK':
+				if ( $cfg['testmode'] ) {
+					$idealcfg['IDEAL_AcquirerURL']		= 'ssl://idealtest.rabobank.nl';
+					$idealcfg['IDEAL_Certificate0']		= 'test_rabobank_ideal.cer';
+				} else {
+					$idealcfg['IDEAL_AcquirerURL']		= 'ssl://ideal.rabobank.nl';
+					$idealcfg['IDEAL_Certificate0']		= 'productie_rabobank_ideal.cer';
+				}
+				break;
+			case 'ABNAMRO':
+				if ( $cfg['testmode'] ) {
+					$idealcfg['IDEAL_AcquirerURL']		= 'ssl://idealm-et.abnamro.nl';
+					$idealcfg['IDEAL_Certificate0']		= 'test_abnamro_ideal.cer';
+				} else {
+					$idealcfg['IDEAL_AcquirerURL']		= 'ssl://idealm.abnamro.nl';
+					$idealcfg['IDEAL_Certificate0']		= 'productie_abnamro_ideal.cer';
+				}
+
+				$idealcfg['IDEAL_AcquirerDirPath'] 		= '/nl/issuerInformation/';
+				$idealcfg['IDEAL_AcquirerTransPath']	= '/nl/acquirerTrxRegistration/';
+				$idealcfg['IDEAL_AcquirerStatPath']		= '/nl/acquirerStatusInquiry/';
+				$idealcfg['IDEAL_AcquirerDirFile'] 		= 'getIssuerInformation.xml';
+				$idealcfg['IDEAL_AcquirerTransFile']	= 'getAcquirerTrxRegistration.xml';
+				$idealcfg['IDEAL_AcquirerStatFile']		= 'getAcquirerStatusInquiry.xml';
+				break;
 		}
 
-		$var['merchantID']			= $cfg['merchantid'];
-		$var['subID']				= $cfg['subid'];
-		$var['purchaseID']			= substr( $int_var['invoice'], 1 );
+		//Create ThinMPI instance
+		$rule = new ThinMPI( $idealcfg );
+		$result = new AcquirerTrxResponse();
 
-		if ( $cfg['testmode'] ) {
-			$var['amount']			= max( 1, min( 7, (int) $cfg['testmodestage'] ) ) . '.00';
+		//Process Request
+		$result = $rule->ProcessRequest( $xml );
+
+		if( $result->isOK() ) {
+			$transactionID = $result->getTransactionID();
+
+			$ISSURL = $result->getIssuerAuthenticationURL();
+			$ISSURL = html_entity_decode($ISSURL);
+
+			//Redirect the browser to the issuer URL
+			header("Location: $ISSURL");
+			exit();
 		} else {
-			$var['amount']			= $int_var['amount'];
+			$return['error'] = $result->getErrorMessage();
 		}
 
-
-		$var['currency']			= $cfg['currency'];
-		$var['language']			= strtolower( $cfg['language'] );
-		$var['description']			= substr( $cfg['description'], 0, 32);
-		$var['itemNumber1']			= $metaUser->userid;
-		$var['itemDescription1']	= substr( $cfg['description'], 0, 32);
-		$var['itemQuantity1']		= 1;
-		$var['itemPrice1']			= $int_var['amount'];
-		$var['paymentType']			= 'ideal';
-		$var['validUntil']			= $cfg['merchantid'];
-
-		$shastring = $cfg['key'].$var['merchantID'].$var['subID'].$var['amount'].$var['purchaseID'].$var['paymentType'].$var['validUntil']
-						.$var['itemNumber1'].$var['itemDescription1'].$var['itemQuantity1'].$var['itemPrice1'];
-
-		$shastring = str_replace( " ", "", $shastring );
-		$shastring = str_replace( "\t", "", $shastring );
-		$shastring = str_replace( "\n", "", $shastring );
-		$shastring = str_replace( "&amp;", "&", $shastring );
-		$shastring = str_replace( "&lt;", "<", $shastring );
-		$shastring = str_replace( "&gt;", ">", $shastring );
-		$shastring = str_replace( "&quot;", "\"", $shastring );
-
-		$shasign = sha1($shastring);
-
-		$var['hash']				= $shasign;
-		$var['urlSuccess']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=thanks' );
-		$var['urlCancel']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
-		$var['urlError']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
-		$var['urlService']			= AECToolbox::deadsureURL( '/index.php' );
-
-		return $var;
+		return $return;
 	}
 
 	function parseNotification( $post, $cfg )
