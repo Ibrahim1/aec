@@ -6779,8 +6779,6 @@ class AECToolbox
 			$rewrite['plan_desc'] = $subscriptionPlan->getProperty( 'desc' );
 		}
 
-
-		$test = "ble bla bla [[invoice_created_date:date|D, jS M Y:mutate|var1,var2]]";
 		$search = array();
 		$replace = array();
 		foreach ( $rewrite as $name => $replacement ) {
@@ -6791,121 +6789,140 @@ class AECToolbox
 		return str_replace( $search, $replace, $subject );
 	}
 
-	function decodeTag( $subject, $rewrite, $scstart='[[', $scend=']]' )
+	function decodeTag( $subject, $rewrite )
 	{
-		switch( $scstart ) {
-			case '[[':
-				$scstart_internal = '{{';
-				$scend_internal = '}}';
-				break;
-			case '{{':
-				$scstart_internal = '[{';
-				$scend_internal = '}]';
-				break;
-			case '[{':
-				$scstart_internal = '{[';
-				$scend_internal = ']}';
-				break;
-		}
-
 		$found = true;
 		$offset = 0;
+		$result = '';
+
 		while ( $found == true ) {
-			$nextlpos = strpos( $subject, $scstart, $offset ); //12
-			$nextrpos = strpos( $subject, $scend, $offset ); //29
-			$nextlen = $nextrpos - $nextlpos - 2; //17
-			$offset = $nextrpos + 2;
+			// We are looking
+			$slooking = true;
+			// And it has to be a new bracket
+			$lspointer = $offset;
+			$rspointer = $offset;
+			// So we are one level deep in the [ brackets
+			$sdepth = 1;
+			while ( $slooking = true ) {
+				// Look for the next opening and closing brackets
+				$nl = strpos( $subject, '[[', $rspointer );
+				$nr = strpos( $subject, ']]', $rspointer );
 
-			$content = substr( $subject, $nextlpos+2, $nextlen );
+				// Have we found the last one?
+				if ( ( $nl === false ) && ( $nl === false ) ) {
+					$slooking = false;
+					continue;
+				}
 
-			if ( strpos( $content, ':' ) !== false ) {
-				$carray = explode( ':', $content );
+				if ( $nr < $nl ) {
+					// We have found a closing bracket for the last open one, so we go up a level
+					$sdepth--;
+					// Advance the right pointer to the last closed bracket
+					$rspointer = $nr;
 
-				$result = '';
-				foreach( $carray as $cco ) {
-					$cres = $result;
+					$chunk = substr( $subject, $lspointer, ( $rspointer - $lspointer ) );
 
-					$ccc = explode( '|', $cco, 1 );
+					$commands = explode( '-->', $chunk );
 
-					if ( empty( $ccc[0] ) ) {
-						continue;
-					}
+					foreach ( $commands as $command ) {
+						$cres = $result;
+						$temp = explode( '|', $command );
+						$command = $temp[0];
 
-					if ( ( strpos( $result, $scstart_internal ) !== false ) && ( strpos( $result, $scend_internal ) !== false )) {
-						$ccc[0] = AECToolbox::decodeTag( $ccc[0], $rewrite, $scstart_internal, $scend_internal );
-					}
+						$vars = explode( ';', $temp[1] );
 
-					$ccv = isset( $ccc[1] ) ? explode( ';', $ccc[1] ) : array();
-
-					foreach( $ccv as $ccvv ) {
-						if ( ( strpos( $ccvv, $scstart_internal ) !== false ) && ( strpos( $ccvv, $scend_internal ) !== false )) {
-							$ccvv = AECToolbox::decodeTag( $ccvv, $rewrite, $scstart_internal, $scend_internal );
+						$ccv = array();
+						foreach( $vars as $var ) {
+							$var = trim( $var );
+							if ( strpos( '\'' ) === 0 ) {
+								// variable content is a string, crop it out
+								$ccv[] = substr( $var, 1, ( strlen( $var ) - 2) );
+							} elseif ( isset( $rewrite[$var] ) ) {
+								// variable is a rewrite constant
+								$ccv[] = $rewrite[$var];
+							}
 						}
+
+						AECToolbox::executeCommand( $command, $vars );
+
 					}
 
-					switch( $ccc[0] ) {
-						case '__condition':
-							if ( empty( $ccv[0] ) || !isset( $ccv[1] ) ) {
-								if ( isset( $ccv[2] ) && !isset( $ccv[1] ) ) {
-									$result = $ccv[2];
-								} else {
-									$result = '';
-								}
-							} elseif ( isset( $ccv[1] ) ) {
-								$result = $ccv[1];
-							} else {
-								$result = '';
-							}
-							break;
-						case '__uppercase':
-							$result = strtoupper( $cres );
-							break;
-						case '__lowercase':
-							$result = strtoupper( $cres );
-							break;
-						case '__prefix':
-							foreach( $ccv as $val ) {
-								$result = $val . $cres;
-							}
-							break;
-						case '__suffix':
-							foreach( $ccv as $val ) {
-								$result = $cres .$val;
-							}
-							break;
-						case '__date':
-							date( $ccv[0], strtotime( $cres ) );
-							break;
-						case '__crop':
-							if ( isset( $ccv[1] ) ) {
-								$result = substr( $cres, $ccv[0],  $ccv[1] );
-							} else {
-								$result = substr( $cres, $ccv[0] );
-							}
-							break;
-						case '__compare':
-							if ( isset( $ccv[2] ) ) {
-								$result = AECToolbox::compare( $ccv[1], $ccv[0], $ccv[2] );
-							} else {
-								$result = 0;
-							}
-							break;
-						case '__math':
-							if ( isset( $ccv[2] ) ) {
-								$result = AECToolbox::math( $ccv[1], $ccv[0], $ccv[2] );
-							} else {
-								$result = 0;
-							}
-							break;
-						default:
-							$result = $ccc[0];
-							break;
-					}
+				} else {
+					// We have found an earlier opening bracket, so we are one step deeper
+					$sdepth++;
+					// Advance the left pointer to the last open bracket
+					$lspointer = $nl + 2;
+				}
+
+				if ( $sdepth ) {
+					// Still not finished the opened brackets, so try again
+				} else {
+					// Found the last closing bracket, so we're out
+					$slooking = false;
+					$offset = $nr + 2;
 				}
 			}
+$think = "[[{prefix|'These ',{suffix|'es',[[{condition|[[{compare|'apples';'oranges'}]],'appl','orang'}]]}]]";
+
+
 		}
 
 		return $result;
+	}
+
+	function executeCommand( $command, $vars )
+	{
+		switch( $command ) {
+			case 'condition':
+				if ( empty( $vars[0] ) || !isset( $vars[1] ) ) {
+					if ( isset( $vars[2] ) && !isset( $vars[1] ) ) {
+						$result = $vars[2];
+					} else {
+						$result = '';
+					}
+				} elseif ( isset( $vars[1] ) ) {
+					$result = $vars[1];
+				} else {
+					$result = '';
+				}
+				break;
+			case 'uppercase':
+				$result = strtoupper( $vars[0] );
+				break;
+			case 'lowercase':
+				$result = strtoupper( $vars[0] );
+				break;
+			case 'concat':
+				$result = implode( $vars);
+				break;
+			case 'date':
+				date( $vars[0], strtotime( $vars[0] ) );
+				break;
+			case 'crop':
+				if ( isset( $vars[1] ) ) {
+					$result = substr( $vars[0], $vars[0],  $vars[1] );
+				} else {
+					$result = substr( $vars[0], $vars[0] );
+				}
+				break;
+			case 'compare':
+				if ( isset( $vars[2] ) ) {
+					$result = AECToolbox::compare( $vars[1], $vars[0], $vars[2] );
+				} else {
+					$result = 0;
+				}
+				break;
+			case 'math':
+				if ( isset( $vars[2] ) ) {
+					$result = AECToolbox::math( $vars[1], $vars[0], $vars[2] );
+				} else {
+					$result = 0;
+				}
+				break;
+			default:
+				$result = $command;
+				break;
+		}
 	}
 
 	function compare( $eval, $check1, $check2 )
