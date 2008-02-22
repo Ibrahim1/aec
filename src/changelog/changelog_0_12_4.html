@@ -1150,9 +1150,9 @@ color: #333;
 </li>
 <li><strong>Rewrite Engine Extension</strong>
 <ul>
-<li>Now features internal functions like "[[invoice_created_date:date|Y]]" to get only the year of a date. The syntax being "[[value:function|var1;var2,...:function2|var1;var2,...:...]]".</li>
-<li>Now features nesting "[[es:__suffix|{{__condition|[{__compare|apples;oranges}],appl,orang}}]]"</li>
-<li>Nesting goes down to three levels: [[ {{ [{ {[ ]} }] }} ]]</li>
+<li>Now features internal functions like "[[{date|invoice_created_date,"Y"}]]" to get only the year of a date. The syntax being "[[{function|var1;var2,{function2|var1;var2}}]]".</li>
+<li>Now features nesting "[[{prefix|'These ',{suffix|'es',[[{condition|[[{compare|'apples';'oranges'}]],'appl','orang'}]]}}]]"</li>
+<li>Unlimited Nesting</li>
 <li>Replacing invoice formatting options with this</li>
 </ul>
 </li>
