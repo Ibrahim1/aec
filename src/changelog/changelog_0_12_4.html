@@ -1165,6 +1165,7 @@ color: #333;
 <li><i>concat</i> (array) - print out array as continuous string</li>
 <li><i>date</i> (array) - format date (first var) according to rules (second var) - this uses the PHP date function</li>
 <li><i>crop</i> (array) - equivalent to the PHP substr function - will produce a crop out of variable 1, starting at the point specified in variable 2 (and ranging as many characters as specified in variable 3... if given at all)</li>
+<li><i>pad</i> (array) - equivalent to the PHP str_pad function - will pad variable 1, to the length specified in variable 2, with the characters as specified in variable 3 (optional) and according to the rule set in variable 4 ("left", "right", or "both" - also optional and right by default)</li>
 <li><i>chunk</i> (array) - hacks a string (var 1) into pieces of a specified length (var2). If you provide a var3, it will insert that between the chunks.</li>
 <li><i>compare</i> (array) - will compare the first with the third variable, the comperator being the second variable</li>
 <li><i>math</i> (array) - will compute the result of the mathematical operation specified by variable 2 (+,-,*,/,%) of the variables 1 and 3</li>

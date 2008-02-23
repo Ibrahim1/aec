@@ -6867,6 +6867,15 @@ class AECToolbox
 					$result = substr( $vars[0], (int) $vars[1] );
 				}
 				break;
+			case 'pad':
+				if ( isset( $vars[3] ) ) {
+					$result = str_pad($vars[0], (int) $vars[1], $vars[2], ( constant( "STR_PAD_" . strtoupper( $vars[3] ) ) ) );
+				} elseif ( isset( $vars[2] ) ) {
+					$result = str_pad( $vars[0], (int) $vars[1], $vars[2] );
+				} else {
+					$result = str_pad( $vars[0], (int) $vars[1] );
+				}
+				break;
 			case 'chunk':
 				if ( function_exists( 'str_split' ) ) {
 					$chunks = str_split( $vars[0], (int) $vars[1] );
