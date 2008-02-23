@@ -4208,6 +4208,17 @@ class Invoice extends paramDBTable
 		$this->mosDBTable( '#__acctexp_invoices', 'id', $db );
 	}
 
+	function check()
+	{
+		$unset = array( 'made_free' );
+
+		foreach ( $unset as $varname ) {
+			if ( isset( $this->$varname ) ) {
+				unset( $this->$varname );
+			}
+		}
+	}
+
 	function loadInvoiceNumber( $invoiceNum )
 	{
 		global $database;
