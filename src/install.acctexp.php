@@ -124,6 +124,7 @@ function com_install()
 	. '`userid` int(11) NOT NULL default \'0\','
 	. '`subscr_id` int(11) NULL,'
 	. '`invoice_number` varchar(64) NULL,'
+	. '`invoice_number_format` varchar(64) NULL,'
 	. '`secondary_ident` varchar(64) NULL,'
 	. '`created_date` datetime NULL default \'0000-00-00 00:00:00\','
 	. '`transaction_date` datetime NULL default \'0000-00-00 00:00:00\','
@@ -970,6 +971,7 @@ function com_install()
 
 	$eucaInstalldb->addColifNotExists( 'subscr_id', "int(11) NULL", 'invoices' );
 	$eucaInstalldb->addColifNotExists( 'conditions', "text NULL", 'invoices' );
+	$eucaInstalldb->addColifNotExists( 'invoice_number_format', "varchar(64)", 'invoices' );
 
 	// Rewrite old entries for hardcoded "transfer" processor to new API conform "offline_payment" processor
 	$query = 'UPDATE #__acctexp_invoices'

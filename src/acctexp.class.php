@@ -4230,14 +4230,16 @@ class Invoice extends paramDBTable
 			$subject = $invoice;
 		}
 
+		$invoice_number = $subject->invoice_number;
+
 		if ( empty( $subject->invoice_number_format ) && $aecConfig->cfg['invoicenum_doformat'] ) {
 			$invoice_number = AECToolbox::rewriteEngine( $aecConfig->cfg['invoicenum_formatting'], null, null, $subject );
 		} else {
 			$invoice_number = $subject->invoice_number_format;
 		}
 
-		if ( empty( $invoice ) && !$nostore ) {
-			if ( $aecConfig->cfg['invoicenum_doformat'] && empty( $this->invoice_number_format ) ) {
+		if ( empty( $invoice ) ) {
+			if ( $aecConfig->cfg['invoicenum_doformat'] && empty( $this->invoice_number_format ) && !empty( $invoice_number ) && !$nostore ) {
 				$this->invoice_number_format = $invoice_number;
 				$this->check();
 				$this->store();
@@ -6607,7 +6609,7 @@ class AECToolbox
 		global $aecConfig, $database, $mosConfig_absolute_path, $mosConfig_live_site, $mosConfig_offset_user;
 
 		// Check whether a replacement exists at all
-		if ( strpos( $subject, '[[' ) === false ) {
+		if ( ( strpos( $subject, '[[' ) === false ) && ( strpos( $subject, '{aecjson}' ) === false ) ) {
 			return $subject;
 		}
 
@@ -6622,7 +6624,6 @@ class AECToolbox
 		$rewrite['cms_live_site']		= $mosConfig_live_site;
 
 		if ( is_object( $metaUser ) ) {
-
 			if ( !empty( $metaUser->hasExpiration ) ) {
 				$rewrite['expiration_date'] = $metaUser->objExpiration->expiration;
 			}
@@ -6693,17 +6694,17 @@ class AECToolbox
 				$invoice = new Invoice( $database );
 				$invoice->load( $lastinvoice );
 			}
+		}
 
-			if ( is_object( $invoice ) ) {
-				$rewrite['invoice_id']					= $invoice->id;
-				$rewrite['invoice_number']				= $invoice->invoice_number;
-				$rewrite['invoice_created_date']		= $invoice->created_date;
-				$rewrite['invoice_transaction_date']	= $invoice->transaction_date;
-				$rewrite['invoice_method']				= $invoice->method;
-				$rewrite['invoice_amount']				= $invoice->amount;
-				$rewrite['invoice_currency']			= $invoice->currency;
-				$rewrite['invoice_coupons']				= $invoice->coupons;
-			}
+		if ( is_object( $invoice ) ) {
+			$rewrite['invoice_id']					= $invoice->id;
+			$rewrite['invoice_number']				= $invoice->invoice_number;
+			$rewrite['invoice_created_date']		= $invoice->created_date;
+			$rewrite['invoice_transaction_date']	= $invoice->transaction_date;
+			$rewrite['invoice_method']				= $invoice->method;
+			$rewrite['invoice_amount']				= $invoice->amount;
+			$rewrite['invoice_currency']			= $invoice->currency;
+			$rewrite['invoice_coupons']				= $invoice->coupons;
 		}
 
 		if ( is_object( $subscriptionPlan ) ) {
@@ -6711,7 +6712,7 @@ class AECToolbox
 			$rewrite['plan_desc'] = $subscriptionPlan->getProperty( 'desc' );
 		}
 
-		if ( strpos( '{aecjson', $subject ) !== false ) {
+		if ( strpos( $subject, '{aecjson}' ) !== false ) {
 			// We have at least one JSON object, switching to JSON mode
 			return AECToolbox::decodeTags( $subject, $rewrite );
 		} else {
@@ -6739,7 +6740,7 @@ class AECToolbox
 
 		// find all instances of json code
 		$matches = array();
-		preg_match_all( $regex, $row->text, $matches, PREG_SET_ORDER );
+		preg_match_all( $regex, $subject, $matches, PREG_SET_ORDER );
 
 		if ( count( $matches ) < 1 ) {
 			return $subject;
@@ -6748,14 +6749,10 @@ class AECToolbox
 		require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/json/json.php' );
 
 		foreach ( $matches as $match ) {
-			// Cut away markup
-			$match_text = str_replace( '{aecjson}', '', $match );
-			$match_text = str_replace( '{/aecjson}', '', $match_text );
-
 			$JSONdec = new Services_JSON();
-			$json = $JSONdec->decode( $match );
+			$json = $JSONdec->decode( $match[1] );
 
-			$result = AECToolbox::resolveJSONitem( $subject, $rewrite );
+			$result = AECToolbox::resolveJSONitem( $json, $rewrite );
 
 			$subject =  str_replace( $match, $result, $subject );
 		}
@@ -6777,6 +6774,7 @@ class AECToolbox
 			$variables = AECToolbox::resolveJSONitem( $variables, $rewrite );
 
 			$current = AECToolbox::executeCommand( $command, $variables, $rewrite );
+
 		} elseif ( is_array( $current ) ) {
 			foreach( $current as $id => $item ) {
 				$current[$id] = AECToolbox::resolveJSONitem( $item, $rewrite );
