@@ -49,6 +49,8 @@ define( '_MI_MI_DOCMAN_SET_DOWNLOADS_NAME',			'Set Downloads' );
 define( '_MI_MI_DOCMAN_SET_DOWNLOADS_DESC',			'SET this amount of downloads granted to the user - OVERRIDES THE >>ADD<< Setting! (does NOT reset the amount of downloads a user has already used!)' );
 define( '_MI_MI_DOCMAN_ADD_DOWNLOADS_NAME',			'Add Downloads' );
 define( '_MI_MI_DOCMAN_ADD_DOWNLOADS_DESC',			'Add this amount of downloads to the total granted amount of downloads for this user. Will be overridden by SET if you put a value for that as well!.' );
+define( '_MI_MI_DOCMAN_SET_UNLIMITED_NAME',			'Set Unlimited' );
+define( '_MI_MI_DOCMAN_SET_DOWNLOADS_DESC',			'Grant the user unlimited downloads.' );
 define( '_MI_MI_DOCMAN_SET_GROUP_NAME',				'Set DocMan Group' );
 define( '_MI_MI_DOCMAN_SET_GROUP_DESC',				'Choose Yes if you want this MI to set the DocMan Group when it is called.' );
 define( '_MI_MI_DOCMAN_GROUP_NAME',					'DocMan Group' );
@@ -143,10 +145,12 @@ define( '_AEC_MI_SET4_MYSQL',		'Rewriting Info' );
 // reMOSitory
 define( '_AEC_MI_NAME_REMOS',		'reMOSitory' );
 define( '_AEC_MI_DESC_REMOS',		'Choose the amount of files a user can download and what reMOSitory group should be assigned to the user account' );
-define( '_MI_MI_REMOSITORY_ADD_DOWNLOADS_NAME',		'Add listings' );
-define( '_MI_MI_REMOSITORY_ADD_DOWNLOADS_DESC',		'Input the amount of listings you want added to the users account for this call' );
-define( '_MI_MI_REMOSITORY_SET_DOWNLOADS_NAME',		'Set listings' );
+define( '_MI_MI_REMOSITORY_ADD_DOWNLOADS_NAME',		'Add Downloads' );
+define( '_MI_MI_REMOSITORY_ADD_DOWNLOADS_DESC',		'Input the amount of downloads you want added to the users account for this call' );
+define( '_MI_MI_REMOSITORY_SET_DOWNLOADS_NAME',		'Set Downloads' );
 define( '_MI_MI_REMOSITORY_SET_DOWNLOADS_DESC',		'Input the amount of listings you want as a overwriting set for this call' );
+define( '_MI_MI_REMOSITORY_SET_UNLIMITED_NAME',		'Set Unlimited' );
+define( '_MI_MI_REMOSITORY_SET_DOWNLOADS_DESC',		'Grant the user unlimited downloads.' );
 define( '_MI_MI_REMOSITORY_SET_GROUP_NAME',			'Set group' );
 define( '_MI_MI_REMOSITORY_SET_GROUP_DESC',			'Choose Yes if you want this MI to set the ReMOSitory Group when the calling payment plan expires' );
 define( '_MI_MI_REMOSITORY_GROUP_NAME',				'Group' );
@@ -230,7 +234,7 @@ define( '_MI_MI_DISPLAYPIPELINE_TEXT_NAME',				'Text' );
 define( '_MI_MI_DISPLAYPIPELINE_TEXT_DESC',				'Text that is displayed to the user. You can use the rewrite strings explained below to insert dynamic data.' );
 
 // GoogleAnalytics
-define( '_AEC_MI_NAME_GOOGLEANALYTICS',		'Google Analytics [beta]' );
+define( '_AEC_MI_NAME_GOOGLEANALYTICS',		'Google Analytics' );
 define( '_AEC_MI_DESC_GOOGLEANALYTICS',		'With this, you can attach Google Analytics e-commerce tracking code to the DisplayPipeline. [Experimental - please give feedback to the developers!]' );
 define( '_MI_MI_GOOGLEANALYTICS_ACCOUNT_ID_NAME',		'Google Account ID' );
 define( '_MI_MI_GOOGLEANALYTICS_ACCOUNT_ID_DESC',		'Your Google Account id, it should look like this: UA-xxxx-x' );

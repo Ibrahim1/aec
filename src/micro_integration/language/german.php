@@ -49,6 +49,8 @@ define( '_MI_MI_DOCMAN_SET_DOWNLOADS_NAME',			'Downloads setzen' );
 define( '_MI_MI_DOCMAN_SET_DOWNLOADS_DESC',			'Die Anzahl der Downloads auf die ein Benutzer (zur&uuml;ck) gesetzt wird. &Uuml;berschreibt den bisherigen Wert!' );
 define( '_MI_MI_DOCMAN_ADD_DOWNLOADS_NAME',			'Downloads anf&uuml;gen' );
 define( '_MI_MI_DOCMAN_ADD_DOWNLOADS_DESC',			'Anzahl der Downloads, die dem Benutzerkonto hinzugef&uuml;gt werden.' );
+define( '_MI_MI_DOCMAN_SET_UNLIMITED_NAME',			'Set Unlimited' );
+define( '_MI_MI_DOCMAN_SET_DOWNLOADS_DESC',			'Grant the user unlimited downloads.' );
 define( '_MI_MI_DOCMAN_SET_GROUP_NAME',				'Verwende DocMan Gruppe' );
 define( '_MI_MI_DOCMAN_SET_GROUP_DESC',				'Auf "Ja" setzen wenn die DocMan-Benutzergruppe f&uuml;r diese Integration verwendet werden soll' );
 define( '_MI_MI_DOCMAN_GROUP_NAME',					'DocMan Gruppe' );
@@ -147,6 +149,8 @@ define( '_MI_MI_REMOSITORY_ADD_DOWNLOADS_NAME',		'Downloads Addieren' );
 define( '_MI_MI_REMOSITORY_ADD_DOWNLOADS_DESC',		'Anzahl der Downloads die dem Benutzer zus&auml;tzlich gestattet werden sollen' );
 define( '_MI_MI_REMOSITORY_SET_DOWNLOADS_NAME',		'Downloads Setzen' );
 define( '_MI_MI_REMOSITORY_SET_DOWNLOADS_DESC',		'Anzahl der Downloads die dem Benutzer insgesamt gestattet werden sollen - &uuml;berschreibt den bisherigen Wert!' );
+define( '_MI_MI_REMOSITORY_SET_UNLIMITED_NAME',		'Set Unlimited' );
+define( '_MI_MI_REMOSITORY_SET_DOWNLOADS_DESC',		'Grant the user unlimited downloads.' );
 define( '_MI_MI_REMOSITORY_SET_GROUP_NAME',			'Gruppe' );
 define( '_MI_MI_REMOSITORY_SET_GROUP_DESC',			'Mit "Ja" best&auml;tigen wenn die reMOSitory-Gruppe bei Aboablauf verwendet werden soll' );
 define( '_MI_MI_REMOSITORY_GROUP_NAME',				'Gruppe' );
@@ -228,7 +232,7 @@ define( '_MI_MI_DISPLAYPIPELINE_TEXT_NAME',				'Text' );
 define( '_MI_MI_DISPLAYPIPELINE_TEXT_DESC',				'Text that is displayed to the user. You can use the rewrite strings explained below to insert dynamic data.' );
 
 // GoogleAnalytics
-define( '_AEC_MI_NAME_GOOGLEANALYTICS',		'Google Analytics [beta]' );
+define( '_AEC_MI_NAME_GOOGLEANALYTICS',		'Google Analytics' );
 define( '_AEC_MI_DESC_GOOGLEANALYTICS',		'With this, you can attach Google Analytics e-commerce tracking code to the DisplayPipeline. [Experimental - please give feedback to the developers!]' );
 define( '_MI_MI_GOOGLEANALYTICS_ACCOUNT_ID_NAME',		'Google Account ID' );
 define( '_MI_MI_GOOGLEANALYTICS_ACCOUNT_ID_DESC',		'Your Google Account id, it should look like this: UA-xxxx-x' );

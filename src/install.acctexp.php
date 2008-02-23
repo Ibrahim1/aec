@@ -973,6 +973,15 @@ function com_install()
 	$eucaInstalldb->addColifNotExists( 'conditions', "text NULL", 'invoices' );
 	$eucaInstalldb->addColifNotExists( 'invoice_number_format', "varchar(64)", 'invoices' );
 
+	// update remository and docman MI tables for unlimited downloads if they exist
+	if ( in_array( $mosConfig_dbprefix . "acctexp_mi_remository", $tables ) ) {
+		$eucaInstalldb->addColifNotExists( 'unlimited_downloads', "int(3) NULL", 'mi_remository' );
+	}
+
+	if ( in_array( $mosConfig_dbprefix . "acctexp_mi_docman", $tables ) ) {
+		$eucaInstalldb->addColifNotExists( 'unlimited_downloads', "int(3) NULL", 'mi_docman' );
+	}
+
 	// Rewrite old entries for hardcoded "transfer" processor to new API conform "offline_payment" processor
 	$query = 'UPDATE #__acctexp_invoices'
 			. ' SET `method` = \'offline_payment\''

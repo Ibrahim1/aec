@@ -34,6 +34,13 @@ class mi_docman
 		return in_array( $mosConfig_dbprefix . 'acctexp_mi_docman', $tables );
 	}
 
+	function detect_application()
+	{
+		global $mosConfig_absolute_path;
+
+		return is_dir( $mosConfig_absolute_path . '/components/com_docman' );
+	}
+
 	function install()
 	{
 		global $database;
@@ -43,6 +50,7 @@ class mi_docman
 		. '`userid` int(11) NOT NULL,'
 		. '`active` int(4) NOT NULL default \'1\','
 		. '`granted_downloads` int(11) NULL,'
+		. '`unlimited_downloads` int(3) NULL,'
 		. '`used_downloads` int(11) NULL,'
 		. '`params` text NULL,'
 		. ' PRIMARY KEY (`id`)'
@@ -76,6 +84,7 @@ class mi_docman
         $settings = array();
 		$settings['add_downloads']	= array( 'inputA' );
 		$settings['set_downloads']	= array( 'inputA' );
+		$settings['set_unlimited']	= array( 'list_yesno' );
 
 		$settings['set_group']			= array( 'list_yesno' );
 		$settings['group']				= array( 'list' );
@@ -84,18 +93,23 @@ class mi_docman
 		$settings['delete_on_exp'] 	= array( 'list' );
 		$settings['rebuild']			= array( 'list_yesno' );
 
-		$settings['lists']['group']		= mosHTML::selectList( $sg, 'group', 'size="4"', 'value', 'text', $params['group'] );
-		$settings['lists']['group_exp'] = mosHTML::selectList( $sg, 'group_exp', 'size="4"', 'value', 'text', $params['group_exp'] );
+		$settings['lists']['group']		= mosHTML::selectList( $sg, 'group', 'size="4" multiple="multiple"', 'value', 'text', $params['group'] );
+		$settings['lists']['group_exp'] = mosHTML::selectList( $sg, 'group_exp', 'size="4" multiple="multiple"', 'value', 'text', $params['group_exp'] );
 		$settings['lists']['delete_on_exp'] = mosHTML::selectList( $del_opts, 'delete_on_exp', 'size="3"', 'value', 'text', $params['delete_on_exp'] );
 
 		return $settings;
 	}
 
-	function detect_application()
+	function saveparams( $params )
 	{
-		global $mosConfig_absolute_path;
+		$subgroups = array( 'group', 'group_exp' );
 
-		return is_dir( $mosConfig_absolute_path . '/components/com_docman' );
+		foreach ( $subgroups as $groupname ) {
+			$temp = implode( ';', $params[$groupname] );
+			$params[$groupname] = $temp;
+		}
+
+		return $params;
 	}
 
 	function saveparams( $params )
@@ -321,6 +335,8 @@ class docman_restriction extends mosDBTable {
 	var $active				= null;
 	/** @var int */
 	var $granted_downloads	= null;
+	/** @var int */
+	var $unlimited_downloads	= null;
 	/** @var text */
 	var $used_downloads		= null;
 	/** @var text */
@@ -352,13 +368,17 @@ class docman_restriction extends mosDBTable {
 
 	function getDownloadsLeft()
 	{
-		$downloads_left = $this->granted_downloads - $this->used_downloads;
-		return $downloads_left;
+		if ( !empty( $this->unlimited_downloads ) ) {
+			return true;
+		} else {
+			$downloads_left = $this->granted_downloads - $this->used_downloads;
+			return $downloads_left;
+		}
 	}
 
 	function hasDownloadsLeft()
 	{
-		if ( $this->getDownloadsLeft() > 0 ) {
+		if ( !empty( $this->getDownloadsLeft() ) ) {
 			return true;
 		} else {
 			return false;

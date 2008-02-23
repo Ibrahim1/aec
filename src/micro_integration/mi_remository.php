@@ -38,10 +38,11 @@ class mi_remository
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_remository` ('
 		. '`id` int(11) NOT NULL auto_increment,'
 		. '`userid` int(11) NOT NULL,'
-		. '"`active` int(4) NOT NULL default \'1\','
+		. '`active` int(4) NOT NULL default \'1\','
 		. '`granted_downloads` int(11) NULL,'
+		. '`unlimited_downloads` int(3) NULL,'
 		. '`used_downloads` int(11) NULL,'
-		. '"`params` text NULL,'
+		. '`params` text NULL,'
 		. ' PRIMARY KEY (`id`)'
 		. ')'
 		;
@@ -67,27 +68,38 @@ class mi_remository
 		}
 
  		$del_opts = array();
-		$del_opts[0] = mosHTML::makeOption ("No", "Just apply group below."); // Should probably be langauge file defined?
-		$del_opts[1] = mosHTML::makeOption ("All", "Delete ALL, then apply group below.");
-		$del_opts[2] = mosHTML::makeOption ("Set","Delete Group Set on Application, then apply group below.");
+		$del_opts[0] = mosHTML::makeOption ( "No", "Just apply group(s) below." ); // Should probably be langauge file defined?
+		$del_opts[1] = mosHTML::makeOption ( "All", "Delete ALL, then apply group(s) below." );
+		$del_opts[2] = mosHTML::makeOption ( "Set", "Delete Group Set on Application, then apply group(s) below." );
 
         $settings = array();
 		$settings['add_downloads']		= array( 'inputA' );
 		$settings['set_downloads']		= array( 'inputA' );
+		$settings['set_unlimited']		= array( 'list_yesno' );
 
-		$settings['lists']['group']		= mosHTML::selectList($sg, 'group', 'size="4"', 'value', 'text', $params['group']);
-		$settings['lists']['group_exp'] = mosHTML::selectList($sg, 'group_exp', 'size="4"', 'value', 'text',
-										$params['group_exp']);
+		$settings['lists']['group']		= mosHTML::selectList($sg, 'group', 'size="4" multiple="multiple"', 'value', 'text', $params['group']);
+		$settings['lists']['group_exp']	= mosHTML::selectList($sg, 'group_exp', 'size="4" multiple="multiple"', 'value', 'text', $params['group_exp']);
 
-		$settings['set_group']			= array( 'list_yesno' );
-		$settings['group']				= array( 'list' );
-		$settings['lists']['delete_on_exp'] = mosHTML::selectList( $del_opts, 'delete_on_exp', 'size="3"', 'value', 'text',
-										$params['delete_on_exp'] );
+		$settings['set_group']				= array( 'list_yesno' );
+		$settings['group']					= array( 'list' );
+		$settings['lists']['delete_on_exp'] = mosHTML::selectList( $del_opts, 'delete_on_exp', 'size="3"', 'value', 'text', $params['delete_on_exp'] );
 		$settings['delete_on_exp']		= array( 'list' );
 		$settings['set_group_exp']		= array( 'list_yesno' );
-		$settings['group_exp']			= array( 'list' );
+		$settings['group_exp']				= array( 'list' );
 
 		return $settings;
+	}
+
+	function saveparams( $params )
+	{
+		$subgroups = array( 'group', 'group_exp' );
+
+		foreach ( $subgroups as $groupname ) {
+			$temp = implode( ';', $params[$groupname] );
+			$params[$groupname] = $temp;
+		}
+
+		return $params;
 	}
 
 	function detect_application()
@@ -243,6 +255,8 @@ class remository_restriction extends mosDBTable {
 	var $active				= null;
 	/** @var int */
 	var $granted_downloads	= null;
+	/** @var int */
+	var $unlimited_downloads	= null;
 	/** @var text */
 	var $used_downloads		= null;
 	/** @var text */
@@ -276,8 +290,12 @@ class remository_restriction extends mosDBTable {
 
 	function getDownloadsLeft()
 	{
-		$downloads_left = $this->granted_downloads - $this->used_downloads;
-		return $downloads_left;
+		if ( !empty( $this->unlimited_downloads ) ) {
+			return true;
+		} else {
+			$downloads_left = $this->granted_downloads - $this->used_downloads;
+			return $downloads_left;
+		}
 	}
 
 	function hasDownloadsLeft()
