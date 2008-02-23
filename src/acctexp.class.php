@@ -6858,6 +6858,12 @@ class AECToolbox
 					$result = 0;
 				}
 				break;
+			case 'php_function':
+				$result = call_user_func_array( $vars[0], $vars[1] );
+				break;
+			case 'php_method':
+				$result = call_user_method_array( $vars[0], $vars[1], $vars[2] );
+				break;
 			default:
 				$result = $command;
 				break;
