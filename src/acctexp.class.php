@@ -689,7 +689,7 @@ class Config_General extends paramDBTable
 		$def['override_reqssl']					= 0;
 		// new 0.12.4.16
 		$def['invoicenum_doformat']				= 1;
-		$def['invoicenum_formatting']			= '{aecjson} { "cmd":"concat", "vars": [ { "cmd":"date", "vars": [ "Y", { "cmd":"rw_constant", "vars":"invoice_created_date" } ] },"-",{ "cmd":"rw_constant", "vars":"invoice_id" } {/aecjson}';
+		$def['invoicenum_formatting']			= '{aecjson} { "cmd":"concat", "vars": [ { "cmd":"date", "vars": [ "Y", { "cmd":"rw_constant", "vars":"invoice_created_date" } ] },"-",{ "cmd":"rw_constant", "vars":"invoice_id" } } {/aecjson}';
 		$def['use_recaptcha']						= 0;
 		$def['recaptcha_privatekey']				= '';
 		$def['recaptcha_publickey']				= '';
@@ -6081,7 +6081,7 @@ class AECToolbox
 						}
 					}
 
-					mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=subscribe&userid=' . $id ), false, true );
+					mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=subscribe&userid=' . $id . '&intro=1' ), false, true );
 					return null;
 				}
 			}
@@ -6802,7 +6802,7 @@ class AECToolbox
 		if ( is_object( $current ) ) {
 			if ( !isset( $current->cmd ) || !isset( $current->vars ) ) {
 				// Malformed String
-				return "JSON PARSE ERROR!!!";
+				return "JSON PARSE ERROR - Malformed String!";
 			}
 
 			$command = $current->cmd;
