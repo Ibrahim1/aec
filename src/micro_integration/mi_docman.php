@@ -102,18 +102,6 @@ class mi_docman
 
 	function saveparams( $params )
 	{
-		$subgroups = array( 'group', 'group_exp' );
-
-		foreach ( $subgroups as $groupname ) {
-			$temp = implode( ';', $params[$groupname] );
-			$params[$groupname] = $temp;
-		}
-
-		return $params;
-	}
-
-	function saveparams( $params )
-	{
 		global $mosConfig_absolute_path, $database;
 		$newparams = $params;
 
@@ -128,6 +116,13 @@ class mi_docman
 			}
 
 			$newparams['rebuild'] = 0;
+		}
+
+		$subgroups = array( 'group', 'group_exp' );
+
+		foreach ( $subgroups as $groupname ) {
+			$temp = implode( ';', $params[$groupname] );
+			$params[$groupname] = $temp;
 		}
 
 		return $newparams;
@@ -378,7 +373,9 @@ class docman_restriction extends mosDBTable {
 
 	function hasDownloadsLeft()
 	{
-		if ( !empty( $this->getDownloadsLeft() ) ) {
+		$check = $this->getDownloadsLeft();
+
+		if ( !empty( $check ) ) {
 			return true;
 		} else {
 			return false;

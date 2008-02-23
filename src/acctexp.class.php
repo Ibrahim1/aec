@@ -4199,6 +4199,8 @@ class Invoice extends paramDBTable
 	/** @var text */
 	var $coupons 			= null;
 	/** @var text */
+	var $transactions		= null;
+	/** @var text */
 	var $params 			= null;
 	/** @var text */
 	var $conditions			= null;
@@ -4217,6 +4219,8 @@ class Invoice extends paramDBTable
 				unset( $this->$varname );
 			}
 		}
+
+		return true;
 	}
 
 	function loadInvoiceNumber( $invoiceNum )
@@ -5048,7 +5052,7 @@ class Subscription extends paramDBTable
 		$this->load( $this->getSubscriptionID( $userid ) );
 	}
 
-	function getSubscriptionID( $userid, $usage=null, $primary=1 )
+	function getSubscriptionID( $userid, $usage=null, $primary=1, $similar=false )
 	{
 		global $database;
 
@@ -5058,7 +5062,22 @@ class Subscription extends paramDBTable
 				;
 
 		if ( !empty( $usage ) ) {
-			$query .= ' AND `plan` = \'' . $usage . '\'';
+			if ( $similar ) {
+				$plan = new SubscriptionPlan( $database );
+				$plan->load( $usage );
+
+				$pparams = $plan->getParams();
+
+				$allplans = array_merge( $pparams['similarplans'], $pparams['equalplans'], array( $usage ) );
+
+				foreach ( $allplans as $apid => $pid ) {
+					$allplans[$apid] = '`plan` = \'' . $pid . '\'';
+				}
+
+				$query .= ' AND ' . implode( ' OR ', $allplans );
+			} else {
+				$query .= ' AND ' . '`plan` = \'' . $usage . '\'';
+			}
 		}
 
 		if ( $primary ) {
@@ -5069,7 +5088,13 @@ class Subscription extends paramDBTable
 
 		$database->setQuery( $query );
 
-		return $database->loadResult();
+		$subscriptionid = $database->loadResult();
+
+		if ( empty( $subscriptionid ) && !$similar ) {
+			return $this->getSubscriptionID( $userid, $usage, $primary, true );
+		}
+
+		return $subscriptionid;
 	}
 
 	function makePrimary()
