@@ -270,7 +270,7 @@ class metaUser
 				// Create new subscription
 				$this->focusSubscription = new Subscription( $database );
 				$this->focusSubscription->load( 0 );
-				$this->focusSubscription->createNew( $this->userid, $processor, 0, $plan_params['make_primary'] );
+				$this->focusSubscription->createNew( $this->userid, $processor, 1, $plan_params['make_primary'] );
 				$this->hasSubscription = 1;
 			}
 		}
@@ -2812,7 +2812,7 @@ class SubscriptionPlan extends paramDBTable
 		$return['comparison']		= false;
 		$return['renew']			= 0;
 
-		if ( !is_null( $user_subscription->plan ) ) {
+		if ( !empty( $user_subscription->plan ) ) {
 			$return['renew'] = 1;
 
 			if ( $user_subscription->used_plans ) {
@@ -2865,6 +2865,7 @@ class SubscriptionPlan extends paramDBTable
 				$return['comparison'] = $this->compareToPlan( $last_subscription );
 			}
 		}
+
 		return $return;
 	}
 
