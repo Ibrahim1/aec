@@ -4047,7 +4047,7 @@ class InvoiceFactory
 			$this->coupons['active'] = 0;
 		}
 
-		if ( empty( $amount ) || ( $amount == '0.00') )	{
+		if ( ( empty( $amount ) || ( $amount == '0.00') ) && !$this->recurring )	{
 			$this->objInvoice->pay();
 			thanks ( $option, $this->renew, 1 );
 			return;

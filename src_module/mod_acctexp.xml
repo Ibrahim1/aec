@@ -1,12 +1,12 @@
 <?xml version="1.0" ?>
 <mosinstall type="module">
 <name>AEC Module</name>
-<creationDate>06/26/2006</creationDate>
-<author>Helder Garcia</author>
+<creationDate>24.02.2008</creationDate>
+<author>Helder Garcia, David 'skOre' Deutsch</author>
 <copyright>This module is released under the GNU/GPL License.  </copyright>
-<authorEmail>helder.garcia@gmail.com</authorEmail>
+<authorEmail>mails@globalnerd.org</authorEmail>
 <authorUrl>www.globalnerd.org</authorUrl>
-<version>0.12.4.2</version>
+<version>0.12.4.4</version>
 <description>Module for use with Account Expiration Control Component.</description>
 <files>
 	<filename module="mod_acctexp">mod_acctexp.php</filename>
