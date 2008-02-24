@@ -72,6 +72,20 @@ function aecDebug( $text, $level = 128 )
 	$eventlog->issue( 'debug', 'debug', 'debug entry: '.$text, $level );
 }
 
+function aecGetParam( $name, $default='' )
+{
+	$return = trim( mosGetParam( $_REQUEST, $name, $default ) );
+
+	if ( empty( $return ) && !empty( $_POST[(string) $name] ) ) {
+		$return = $_POST[(string) $name];
+	}
+
+	if ( empty( $return ) && !empty( $_REQUEST[(string) $name] ) ) {
+		$return = $_REQUEST[(string) $name];
+	}
+
+	return $return;
+}
 class metaUser
 {
 	/** @var int */

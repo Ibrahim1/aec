@@ -130,14 +130,14 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'clearpayment':
-		$invoice	= trim( mosGetParam( $_REQUEST, 'invoice', '' ) );
-		$applyplan	= trim( mosGetParam( $_REQUEST, 'applyplan', '0' ) );
+		$invoice	= trim( aecGetParam( 'invoice', '' ) );
+		$applyplan	= trim( aecGetParam( 'applyplan', '0' ) );
 
 		clearInvoice( $option, $invoice, $applyplan, $returnTask );
 		break;
 
 	case 'cancelpayment':
-		$invoice	= trim( mosGetParam( $_REQUEST, 'invoice', '' ) );
+		$invoice	= trim( aecGetParam( 'invoice', '' ) );
 
 		cancelInvoice( $option, $invoice, $returnTask );
 		break;
@@ -518,8 +518,8 @@ switch( strtolower( $task ) ) {
 		break;
 
     case 'hacks':
-		$undohack	= mosGetParam( $_REQUEST, 'undohack', 0 );
-		$filename	= mosGetParam( $_REQUEST, 'filename', 0 );
+		$undohack	= aecGetParam( 'undohack', 0 );
+		$filename	= aecGetParam( 'filename', 0 );
 		$check_hack	= $filename ? 0 : 1;
 
 		hackcorefile( $option, $filename, $check_hack, $undohack );
@@ -624,7 +624,7 @@ function cancel( $option )
 
  	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
 	$limitstart = $mainframe->getUserStateFromRequest( "viewnotconf{$option}limitstart", 'limitstart', 0 );
-	$nexttask	= mosGetParam( $_REQUEST, 'nexttask', 'config' ) ;
+	$nexttask	= aecGetParam( 'nexttask', 'config' ) ;
 
 	mosRedirect( 'index2.php?option=' . $option . '&task=' . $nexttask, _CANCELED );
 }
@@ -983,7 +983,7 @@ function saveUser( $option, $apply=0 )
 		$metaUser->moveFocus( $_POST['id'] );
 	}
 
-	$ck_primary = mosGetParam( $_POST, 'ck_primary', 'off' );
+	$ck_primary = aecGetParam( 'ck_primary', 'off' );
 
 	if ( ( strcmp( $ck_primary, 'on' ) == 0 ) && !$metaUser->focusSubscription->primary ) {
 		$metaUser->focusSubscription->makePrimary();
@@ -1003,7 +1003,7 @@ function saveUser( $option, $apply=0 )
 		$metaUser = new metaUser( $_POST['userid'] );
 	}
 
-	$ck_lifetime = mosGetParam( $_POST, 'ck_lifetime', 'off' );
+	$ck_lifetime = aecGetParam( 'ck_lifetime', 'off' );
 
 	if ( strcmp( $ck_lifetime, 'on' ) == 0 ) {
 		$metaUser->focusSubscription->expiration	= '9999-12-31 00:00:00';
@@ -1021,7 +1021,7 @@ function saveUser( $option, $apply=0 )
 		}
 	}
 
-	$set_status = trim( mosGetParam( $_REQUEST, 'set_status', null ) );
+	$set_status = trim( aecGetParam( 'set_status', null ) );
 
 	if ( !is_null( $set_status ) ) {
 		if ( strcmp( $set_status, 'now' ) === 0 ) {
@@ -1047,7 +1047,7 @@ function saveUser( $option, $apply=0 )
  	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
 	$limitstart	= $mainframe->getUserStateFromRequest( "viewnotconf{$option}limitstart", 'limitstart', 0 );
 
-	$nexttask	= mosGetParam( $_REQUEST, 'nexttask', 'config' ) ;
+	$nexttask	= aecGetParam( 'nexttask', 'config' ) ;
 	if ( $apply ) {
 		mosRedirect( 'index2.php?option=' . $option . '&task=edit&subscriptionid=' . $_POST['id'], _AEC_MSG_SUCESSFULLY_SAVED );
 	} else {
@@ -1387,7 +1387,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 		}
 	}
 
-	$planid = trim( mosGetParam( $_REQUEST, 'assign_planid', null ) );
+	$planid = trim( aecGetParam( 'assign_planid', null ) );
 	if ( $planid > 0 && is_array( $subscriptionid ) && count( $subscriptionid ) > 0 ) {
 		foreach ($subscriptionid as $k) {
 			$subscriptionHandler = new Subscription( $database );
@@ -1408,7 +1408,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 		}
 	}
 
-	$expire = trim( mosGetParam( $_REQUEST, 'set_expiration', null ) );
+	$expire = trim( aecGetParam( 'set_expiration', null ) );
 	if ( !is_null( $expire ) && is_array( $subscriptionid ) && count( $subscriptionid ) > 0 ) {
 		foreach ( $subscriptionid as $k ) {
 			$subscriptionHandler = new Subscription( $database );
@@ -2036,7 +2036,7 @@ function saveSettings( $option, $return=0 )
 {
 	global $database, $mainframe, $my, $acl, $aecConfig;
 
-	$pplist_enabled		= mosGetParam( $_POST,'gwlist_enabled', array() );
+	$pplist_enabled		= aecGetParam( 'gwlist_enabled', array() );
 	$pplist_installed	= PaymentProcessorHandler::getInstalledNameList();
 	if ( is_array( $pplist_enabled ) && is_array( $pplist_installed ) ) {
 		$total_processors = array_merge( $pplist_installed, $pplist_enabled );
@@ -3479,14 +3479,14 @@ function saveCSS( $option )
 {
 	global $mosConfig_absolute_path;
 
-	$filecontent = mosGetParam( $_POST, 'filecontent', '', _MOS_ALLOWHTML );
+	$filecontent = aecGetParam( 'filecontent', '', _MOS_ALLOWHTML );
 
 	if ( !$filecontent ) {
 		mosRedirect( 'index2.php?option='. $option .'&task=editCSS', _AEC_MSG_OP_FAILED_EMPTY );
 	}
 
 	$file			= $mosConfig_absolute_path .'/components/' . $option . '/style.css';
-	$enable_write	= mosGetParam( $_POST, 'enable_write', 0 );
+	$enable_write	= aecGetParam( 'enable_write', 0 );
 	$oldperms		= fileperms( $file );
 
 	if ( $enable_write ) {
@@ -3503,7 +3503,7 @@ function saveCSS( $option )
 		fclose( $fp );
 		if ( $enable_write ) {
 			@chmod( $file, $oldperms );
-		} elseif ( mosGetParam( $_POST, 'disable_write', 0 ) ) {
+		} elseif ( aecGetParam( 'disable_write', 0 ) ) {
 			@chmod( $file, $oldperms & 0777555 );
 		}
 		mosRedirect( 'index2.php?option='. $option .'&task=editCSS', _AEC_CMN_FILE_SAVED );
@@ -3840,7 +3840,7 @@ function quicklookup( $option )
 {
 	global $database, $mosConfig_live_site;
 
-	$search	= mosGetParam( $_REQUEST, 'search', 0 );
+	$search	= aecGetParam( 'search', 0 );
 	$search = $database->getEscaped( trim( strtolower( $search ) ) );
 
 	$userid = 0;
@@ -4548,12 +4548,12 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 					}
 
 				    $oldperms = fileperms( $hacks[$filename]['filename'] );
-				    @chmod( $hacks[$filename]['filename'], $oldperms | 0222 );
+				    chmod( $hacks[$filename]['filename'], $oldperms | 0222 );
 
 				    if ( $fp = fopen( $hacks[$filename]['filename'], 'wb' ) ) {
 				        fwrite( $fp, $newData, strlen( $newData ) );
 				        fclose( $fp );
-				        @chmod( $hacks[$filename]['filename'], $oldperms );
+				        chmod( $hacks[$filename]['filename'], $oldperms );
 				    }
 				}
 				break;
