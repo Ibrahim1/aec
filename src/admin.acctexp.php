@@ -1789,7 +1789,7 @@ function editSettings( $option )
 	$tab_data[1][] = array( 'list', _CFG_GENERAL_INVOICENUM_DOFORMAT_NAME, _CFG_GENERAL_INVOICENUM_DOFORMAT_DESC, $aecConfig->cfg['invoicenum_doformat'], 'invoicenum_doformat');
 	$tab_data[1][] = array( 'inputD', _CFG_GENERAL_INVOICENUM_FORMATTING_NAME, _CFG_GENERAL_INVOICENUM_FORMATTING_DESC, $aecConfig->cfg['invoicenum_formatting'], 'invoicenum_formatting');
 
-	$rewriteswitches	= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
+	$rewriteswitches	= array( 'cms', 'invoice' );
 	$tab_data[1][]		= array( 'fieldset', 'RewriteEngine', AECToolbox::rewriteEngineInfo( $rewriteswitches ), '' );
 
 	$tab_data[1][] = array( 'list', _CFG_GENERAL_USE_RECAPTCHA_NAME, _CFG_GENERAL_USE_RECAPTCHA_DESC, $aecConfig->cfg['use_recaptcha'], 'use_recaptcha');

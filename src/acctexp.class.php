@@ -689,7 +689,7 @@ class Config_General extends paramDBTable
 		$def['override_reqssl']					= 0;
 		// new 0.12.4.16
 		$def['invoicenum_doformat']				= 1;
-		$def['invoicenum_formatting']			= '{aecjson} { "cmd":"concat", "vars": [ { "cmd":"date", "vars": [ "Y", { "cmd":"rw_constant", "vars":"invoice_created_date" } ] },"-",{ "cmd":"rw_constant", "vars":"invoice_id" } } {/aecjson}';
+		$def['invoicenum_formatting']			= '{aecjson} { "cmd":"concat", "vars": [ { "cmd":"date", "vars": [ "Y", { "cmd":"rw_constant", "vars":"invoice_created_date" } ] },"-",{ "cmd":"rw_constant", "vars":"invoice_id" } ] } {/aecjson}';
 		$def['use_recaptcha']						= 0;
 		$def['recaptcha_privatekey']				= '';
 		$def['recaptcha_publickey']				= '';
@@ -4256,9 +4256,11 @@ class Invoice extends paramDBTable
 
 		if ( empty( $invoice ) ) {
 			if ( $aecConfig->cfg['invoicenum_doformat'] && empty( $this->invoice_number_format ) && !empty( $invoice_number ) && !$nostore ) {
-				$this->invoice_number_format = $invoice_number;
-				$this->check();
-				$this->store();
+				if ( $invoice_number != "JSON PARSE ERROR - Malformed String!" ) {
+					$this->invoice_number_format = $invoice_number;
+					$this->check();
+					$this->store();
+				}
 			}
 
 			$this->invoice_number = $invoice_number;
@@ -6858,7 +6860,7 @@ class AECToolbox
 				$result = implode( $vars );
 				break;
 			case 'date':
-				date( $vars[0], strtotime( $vars[1] ) );
+				$result = date( $vars[0], strtotime( $vars[1] ) );
 				break;
 			case 'crop':
 				if ( isset( $vars[2] ) ) {
