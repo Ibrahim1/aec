@@ -6799,7 +6799,9 @@ class AECToolbox
 			return $subject;
 		}
 
-		require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/json/json.php' );
+		if ( !class_exists( "Services_JSON" ) ) {
+			require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/json/json.php' );
+		}
 
 		foreach ( $matches as $match ) {
 			$JSONdec = new Services_JSON();
