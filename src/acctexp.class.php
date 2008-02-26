@@ -2905,8 +2905,18 @@ class SubscriptionPlan extends paramDBTable
 
 	function getMicroIntegrations()
 	{
-		if ( strlen( $this->micro_integrations ) ) {
-			return explode( ';', $this->micro_integrations );
+		if ( !empty( $this->micro_integrations ) ) {
+			$mis = explode( ';', $this->micro_integrations );
+
+			$query = 'SELECT `id`'
+					. ' FROM #__acctexp_microintegrations'
+					. ' WHERE `id` IN (' . implode( ',', $mis ) . ')'
+					. ' ORDER BY `ordering` ASC'
+					;
+			$this->_db->setQuery( $query );
+			$mi_list = $this->_db->loadResultArray();
+
+			return $mi_list;
 		} else {
 			return false;
 		}
