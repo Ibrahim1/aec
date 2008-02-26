@@ -47,10 +47,10 @@ class processor_payboxfr extends POSTprocessor
 		$info['longname']			= _CFG_PAYBOXFR_LONGNAME;
 		$info['statement']			= _CFG_PAYBOXFR_STATEMENT;
 		$info['description'] 		= _CFG_PAYBOXFR_DESCRIPTION;
-		$info['currencies']			= 'EUR,USD,GBP,AUD,CAD,JPY,NZD';
+		$info['currencies']		= 'EUR,USD,GBP,AUD,CAD,JPY,NZD';
 		$info['languages']			= 'GB,DE,FR,IT,ES,US';
 		$info['cc_list']			= 'visa,mastercard,discover,americanexpress,echeck,giropay';
-		$info['recurring']			= 0;
+		$info['recurring']			= 2;
 
 		return $info;
 	}
@@ -59,6 +59,7 @@ class processor_payboxfr extends POSTprocessor
 	{
 		$settings = array();
 		$settings['site']			= 'site';
+		$settings['testmode']		= 1;
 		$settings['rank']			= 'rank';
 		$settings['currency']		= 'EUR';
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
@@ -72,12 +73,10 @@ class processor_payboxfr extends POSTprocessor
 		$settings = array();
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
 
-		$settings['business']		= array( 'inputC' );
+		$settings['site']			= array( 'inputC' );
 		$settings['testmode']		= array( 'list_yesno' );
-		$settings['tax']			= array( 'inputA' );
+		$settings['rank']			= array( 'inputC' );
 		$settings['currency']		= array( 'list_currency' );
-		$settings['checkbusiness']	= array( 'list_yesno' );
-		$settings['acceptpendingecheck']	= array( 'list_yesno' );
 		$settings['lc']				= array( 'list_language' );
 		$settings['no_shipping']	= array( 'list_yesno' );
 		$settings['altipnurl']		= array( 'inputC' );
