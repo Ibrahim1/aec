@@ -76,12 +76,16 @@ function aecGetParam( $name, $default='' )
 {
 	$return = trim( mosGetParam( $_REQUEST, $name, $default ) );
 
-	if ( empty( $return ) && !empty( $_POST[(string) $name] ) ) {
-		$return = $_POST[(string) $name];
+	if ( empty( $return ) && !empty( $_POST[$name] ) ) {
+		$return = $_POST[$name];
 	}
 
-	if ( empty( $return ) && !empty( $_REQUEST[(string) $name] ) ) {
-		$return = $_REQUEST[(string) $name];
+	if ( is_array( $_POST[$name] ) && !is_array( $return ) ) {
+		$return = $_POST[$name];
+	}
+
+	if ( empty( $return ) && !empty( $_REQUEST[$name] ) ) {
+		$return = $_REQUEST[$name];
 	}
 
 	return $return;
@@ -4885,7 +4889,7 @@ class Invoice extends paramDBTable
 
 		$int_var['planparams'] = $new_subscription->getProcessorParameters( $pp->id );
 
-		if ( isset( $pp->is_recurring() ) ) {
+		if ( $pp->is_recurring() ) {
 			$int_var['recurring'] = $pp->is_recurring();
 		} else {
 			$int_var['recurring'] = 0;

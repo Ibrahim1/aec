@@ -2036,12 +2036,13 @@ function saveSettings( $option, $return=0 )
 {
 	global $database, $mainframe, $my, $acl, $aecConfig;
 
-	$pplist_enabled		= aecGetParam( 'gwlist_enabled', array() );
+	$pplist_enabled		= aecGetParam( 'gwlist_enabled', '' );
 	$pplist_installed	= PaymentProcessorHandler::getInstalledNameList();
-	if ( is_array( $pplist_enabled ) && is_array( $pplist_installed ) ) {
+
+	if ( !empty( $pplist_installed ) ) {
 		$total_processors = array_merge( $pplist_installed, $pplist_enabled );
 	} else {
-		$total_processors = array();
+		$total_processors = $pplist_enabled;
 	}
 
 	foreach ( $total_processors as $procname ) {
