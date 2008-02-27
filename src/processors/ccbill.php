@@ -288,7 +288,13 @@ class processor_ccbill extends POSTprocessor
 			$username = $post['username'];
 			$validate = md5( $cfg['secretWord'] . $username );
 
-			$response['valid'] = ( strcmp( $validate, $response['checksum'] ) == 0 );
+			$checkvalid = ( strcmp( $validate, $response['checksum'] ) == 0 );
+
+			if ( !$checkvalid ) {
+				$response['valid'] = 0;
+				$response['pending_reason'] = 'Checksum mismatch';
+			}
+
 		}
 
 		if ( !empty( $response['valid'] ) ) {
