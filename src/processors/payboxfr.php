@@ -47,8 +47,8 @@ class processor_payboxfr extends POSTprocessor
 		$info['longname']			= _CFG_PAYBOXFR_LONGNAME;
 		$info['statement']			= _CFG_PAYBOXFR_STATEMENT;
 		$info['description'] 		= _CFG_PAYBOXFR_DESCRIPTION;
-		$info['currencies']		= 'EUR,USD,GBP,AUD,CAD,JPY,NZD';
-		$info['languages']			= 'GB,DE,FR,IT,ES,US';
+		$info['currencies']			= 'EUR,USD,GBP,AUD,CAD,JPY,NZD';
+		$info['languages']			= 'GB,DE,FR,IT,ES,SV,NL';
 		$info['cc_list']			= 'visa,mastercard,discover,americanexpress,echeck,giropay';
 		$info['recurring']			= 2;
 
@@ -62,6 +62,8 @@ class processor_payboxfr extends POSTprocessor
 		$settings['testmode']		= 1;
 		$settings['rank']			= 'rank';
 		$settings['currency']		= 'EUR';
+		$settings['language']		= 'FR';
+		$settings['recurring']		= 0;
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']	= '';
 
@@ -77,7 +79,8 @@ class processor_payboxfr extends POSTprocessor
 		$settings['testmode']		= array( 'list_yesno' );
 		$settings['rank']			= array( 'inputC' );
 		$settings['currency']		= array( 'list_currency' );
-		$settings['lc']				= array( 'list_language' );
+		$settings['language']		= array( 'list_language' );
+		$settings['recurring']		= array( 'list_recurring' );
 		$settings['no_shipping']	= array( 'list_yesno' );
 		$settings['altipnurl']		= array( 'inputC' );
 		$settings['item_name']		= array( 'inputE' );
@@ -111,6 +114,11 @@ class processor_payboxfr extends POSTprocessor
 
 		$var['PBX_CMD']			= $int_var['invoice'];
 		$var['PBX_PORTEUR']		= $metaUser->cmsUser->email;
+
+		$iso639_2to3 = array( 'GB' => 'GBR', 'DE' => 'DEU', 'FR' => 'FRA', 'IT' => 'ITA', 'ES' => 'ESP', 'SW' => 'SWE', 'NL' => 'NLD' );
+
+		$var['PBX_LANGUE']		= $iso639_2to3[$cfg['language']];
+
 		$var['cancel']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
 
 		$var['notify_url']		= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=payboxfrnotification' );
@@ -124,21 +132,6 @@ class processor_payboxfr extends POSTprocessor
 
 		$var['return']			= $int_var['return_url'];
 		$var['currency_code']	= $cfg['currency'];
-
-		// Customizations
-		$customizations = array( 'cbt', 'cn', 'cpp_header_image', 'cpp_headerback_color', 'cpp_headerborder_color', 'cpp_payflow_color', 'image_url', 'page_style' );
-
-		foreach ( $customizations as $cust ) {
-			if ( !empty( $cfg[$cust] ) ) {
-					$var[$cust] = $cfg[$cust];
-			}
-		}
-
-		if ( isset( $cfg['cs'] ) ) {
-			if ( $cfg['cs'] != 0 ) {
-				$var['cs'] = $cfg['cs'];
-			}
-		}
 
 		return $var;
 	}
@@ -256,58 +249,5 @@ class processor_payboxfr extends POSTprocessor
 		return $response;
 	}
 
-	function doTheCurl( $url, $req )
-	{
-		$ch = curl_init();
-		curl_setopt( $ch, CURLOPT_VERBOSE, 1 );
-		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, FALSE );
-		curl_setopt( $ch, CURLOPT_URL, $url );
-		curl_setopt( $ch, CURLOPT_POST, 1 );
-		curl_setopt( $ch, CURLOPT_POSTFIELDS, $req );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-		curl_setopt( $ch, CURLOPT_TIMEOUT, 120 );
-		$fp = curl_exec ($ch);
-		curl_close($ch);
-
-		if ( !$fp ) {
-			return 'ERROR';
-		} else {
-			if ( strcmp( $fp, 'VERIFIED' ) == 0 ) {
-				return 'VERIFIED';
-			} elseif ( strcmp( $fp, 'INVALID' ) == 0 ) {
-				return 'INVALID';
-			}
-		}
-		return 'ERROR';
-	}
-
-	function doTheHttp( $url, $req )
-	{
-		$header  = ""
-		. "POST /cgi-bin/webscr HTTP/1.0\r\n"
-		. "Host: " . $url  . ":80\r\n"
-		. "Content-Type: application/x-www-form-urlencoded\r\n"
-		. "Content-Length: " . strlen($req) . "\r\n\r\n"
-		;
-		$fp = fsockopen( $url, 80, $errno, $errstr, 30 );
-
-		if ( !$fp ) {
-			return 'ERROR';
-		} else {
-			fwrite( $fp, $header . $req );
-
-			while ( !feof( $fp ) ) {
-				$res = fgets( $fp, 1024 );
-
-				if ( strcmp( $res, 'VERIFIED' ) == 0 ) {
-					return 'VERIFIED';
-				} elseif ( strcmp( $res, 'INVALID' ) == 0 ) {
-					return 'INVALID';
-				}
-			}
-			fclose( $fp );
-		}
-		return 'ERROR';
-	}
 }
 ?>
