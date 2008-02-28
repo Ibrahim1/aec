@@ -478,6 +478,10 @@ class Payment_HTML
 			. '<input type="hidden" name="usage" value="' . $planid . '" />' . "\n"
 			. '<input type="hidden" name="userid" value="' . ( $userid ? $userid : 0 ) . '" />' . "\n";
 
+			if ( !empty( $processor['recurring'] ) ) {
+				$html_code .= '<input type="hidden" name="recurring" value="1" />' . "\n"
+			}
+
 			if ( $passthrough != false ) {
 				foreach ( $passthrough as $key => $array ) {
 					$html_code .= '<input type="hidden" name="' . $array[0] . '" value="' . $array[1] . '" />' . "\n";

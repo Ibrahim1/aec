@@ -1696,7 +1696,7 @@ class PaymentProcessor
 		}
 	}
 
-	function is_recurring()
+	function is_recurring( $choice=null )
 	{
 		if ( isset( $this->is_recurring ) ) {
 			return $this->is_recurring;
@@ -1720,6 +1720,10 @@ class PaymentProcessor
 				$return = $this->settings['recurring'];
 			} else {
 				$return = $this->info['recurring'];
+			}
+
+			if ( !is_null( $choice ) && ( $return === 2 ) ) {
+				$return = $choice;
 			}
 		} elseif ( !empty( $this->info['recurring'] ) ) {
 			$return = true;
@@ -3456,7 +3460,12 @@ class InvoiceFactory
 						$this->pp->fullInit();
 						$this->pp->exchangeSettings( $this->objUsage );
 						$this->payment->method_name	= $this->pp->info['longname'];
-						$this->recurring			= $this->pp->is_recurring();
+						if ( isset( $_POST['recurring'] ) ) {
+							$this->recurring	= $this->pp->is_recurring( $_POST['recurring'] );
+						} else {
+							$this->recurring	= $this->pp->is_recurring();
+						}
+
 						$currency					= isset( $this->pp->settings['currency'] ) ? $this->pp->settings['currency'] : '';
 					} else {
 						$this->payment->method_name = _AEC_PAYM_METHOD_NONE;
@@ -3766,27 +3775,30 @@ class InvoiceFactory
 					if ( count( $processors ) ) {
 						$k = 0;
 						foreach ( $processors as $n ) {
-							if ($n) {
+							if ( $n ) {
 								$pp = new PaymentProcessor();
 								$loadproc = $pp->loadId( $n );
 								if ( $loadproc ) {
 									$pp->init();
 									$pp->getInfo();
+									$pp->exchangeSettings( $row );
 									$recurring = $pp->is_recurring();
 
 									if ( $recurring > 1 ) {
 										$plan_gw[$k]['name']		= $pp->processor_name;
 										$plan_gw[$k]['statement']	= $pp->info['statement'];
+										$plan_gw[$k]['recurring']	= 0;
 										$k++;
 
-										$plan_gw[$k]['name']		= $pp->processor_name . '_recurring';
-										$plan_gw[$k]['statement']	= $pp->info['statement'];
-										$k++;
-									} else {
-										if ( !($plan_params['lifetime'] && $recurring ) ) {
+										if ( !$plan_params['lifetime'] ) {
 											$plan_gw[$k]['name']		= $pp->processor_name;
 											$plan_gw[$k]['statement']	= $pp->info['statement'];
+											$plan_gw[$k]['recurring']	= 1;
+											$k++;
 										}
+									} elseif ( !($plan_params['lifetime'] && $recurring ) ) {
+										$plan_gw[$k]['name']		= $pp->processor_name;
+										$plan_gw[$k]['statement']	= $pp->info['statement'];
 										$k++;
 									}
 								}
@@ -7879,7 +7891,7 @@ class couponHandler
 				$couponxuser->delInvoice( $invoice->invoice_number );
 				$couponxuser->check();
 				$couponxuser->store();
-			} else{
+			} else {
 				// Use count is 0 or below - delete relationship
 				$couponxuser->delete();
 			}
