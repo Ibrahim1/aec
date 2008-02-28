@@ -81,8 +81,7 @@ class processor_payboxfr extends POSTprocessor
 		$settings['currency']		= array( 'list_currency' );
 		$settings['language']		= array( 'list_language' );
 		$settings['recurring']		= array( 'list_recurring' );
-		$settings['no_shipping']	= array( 'list_yesno' );
-		$settings['altipnurl']		= array( 'inputC' );
+
 		$settings['item_name']		= array( 'inputE' );
 		$settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 

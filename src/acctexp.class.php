@@ -90,6 +90,7 @@ function aecGetParam( $name, $default='' )
 
 	return $return;
 }
+
 class metaUser
 {
 	/** @var int */
@@ -7009,10 +7010,18 @@ class AECToolbox
 				}
 				break;
 			case 'php_function':
-				$result = call_user_func_array( $vars[0], $vars[1] );
+				if ( isset( $vars[1] ) ) {
+					$result = call_user_func_array( $vars[0], $vars[1] );
+				} else {
+					$result = call_user_func_array( $vars[0] );
+				}
 				break;
 			case 'php_method':
-				$result = call_user_method_array( $vars[0], $vars[1], $vars[2] );
+				if ( isset( $vars[2] ) ) {
+					$result = call_user_method_array( $vars[0], $vars[1], $vars[2] );
+				} else {
+					$result = call_user_method_array( $vars[0], $vars[1] );
+				}
 				break;
 			default:
 				$result = $command;
