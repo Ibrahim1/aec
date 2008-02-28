@@ -1701,19 +1701,14 @@ class PaymentProcessor
 			return $this->is_recurring;
 		}
 
-		$return = null;
+		$return = false;
 
 		// Load Info if not loaded yet
-		// or return false if no info on recurring was set
 		if ( !isset( $this->info ) ) {
 			$this->getInfo();
-		} elseif ( !isset( $this->info['recurring'] ) ) {
-			$return = false;
 		}
 
-		if ( empty( $this->info['recurring'] ) ) {
-			$return = false;
-		} elseif ( $this->info['recurring'] > 1 ) {
+		if ( $this->info['recurring'] > 1 ) {
 			if ( !isset( $this->settings ) ) {
 				$this->getSettings();
 			}
@@ -1725,7 +1720,7 @@ class PaymentProcessor
 			} else {
 				$return = $this->info['recurring'];
 			}
-		} else {
+		} elseif ( !empty( $this->info['recurring'] ) ) {
 			$return = true;
 		}
 
@@ -3776,8 +3771,9 @@ class InvoiceFactory
 								if ( $loadproc ) {
 									$pp->init();
 									$pp->getInfo();
+									$recurring = $pp->is_recurring();
 
-									if ( $pp->is_recurring() == 2 ) {
+									if ( $recurring > 1 ) {
 										$plan_gw[$k]['name']		= $pp->processor_name;
 										$plan_gw[$k]['statement']	= $pp->info['statement'];
 										$k++;
@@ -3786,7 +3782,7 @@ class InvoiceFactory
 										$plan_gw[$k]['statement']	= $pp->info['statement'];
 										$k++;
 									} else {
-										if ( !($plan_params['lifetime'] && $pp->is_recurring() ) ) {
+										if ( !($plan_params['lifetime'] && $recurring ) ) {
 											$plan_gw[$k]['name']		= $pp->processor_name;
 											$plan_gw[$k]['statement']	= $pp->info['statement'];
 										}
@@ -7903,7 +7899,7 @@ class couponHandler
 						$permissions['usage'] = false;
 					}
 				} else {
-					if ( (int) $invoiceFactory->usage === (int) $this->restrictions['usage_plans'] ) {
+					if ( ( (int) $invoiceFactory->usage ) === ( (int) $this->restrictions['usage_plans'] ) ) {
 						$permissions['usage'] = true;
 					} else {
 						$permissions['usage'] = false;
