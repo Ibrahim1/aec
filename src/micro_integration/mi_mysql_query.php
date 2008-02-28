@@ -59,7 +59,7 @@ class mi_mysql_query
 	{
 		global $database;
 
-		$query = AECToolbox::rewriteEngine( $params['query'], $metaUser, $plan );
+		$query = AECToolbox::rewriteEngine( $params['query'], $metaUser, $plan, $invoice );
 
 		$database->setQuery( $query );
 		$database->query();

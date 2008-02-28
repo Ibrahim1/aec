@@ -74,22 +74,22 @@ class mi_hotproperty
 		return $newparams;
 	}
 
-	function action( $params, $metaUser, $plan )
+	function action( $params, $metaUser, $plan, $invoice )
 	{
 		if( $params['create_agent'] ){
 			if ( !empty( $params['agent_fields'] ) ) {
-				return $this->createAgent( $metaUser, $params['agent_fields'], $plan );
+				return $this->createAgent( $metaUser, $params['agent_fields'], $plan, $invoice );
 			}
 		}
 
 		if( $params['create_company'] ){
 			if ( !empty( $params['company_fields'] ) ) {
-				return $this->createAgent( $metaUser, $params['company_fields'], $params['assoc_company'], $plan );
+				return $this->createAgent( $metaUser, $params['company_fields'], $params['assoc_company'], $plan, $invoice );
 			}
 		}
 	}
 
-	function createAgent( $metaUser, $fields, $plan )
+	function createAgent( $metaUser, $fields, $plan, $invoice )
 	{
 		global $database;
 
@@ -102,7 +102,7 @@ class mi_hotproperty
 			return null;
 		}
 
-		$fields = AECToolbox::rewriteEngine( $fields, $metaUser, $plan );
+		$fields = AECToolbox::rewriteEngine( $fields, $metaUser, $plan, $invoice );
 
 		$fieldlist = explode( "\n", $fields );
 
@@ -129,7 +129,7 @@ class mi_hotproperty
 
 	}
 
-	function createCompany( $metaUser, $fields, $assoc, $plan )
+	function createCompany( $metaUser, $fields, $assoc, $plan, $invoice )
 	{
 		global $database;
 
@@ -142,7 +142,7 @@ class mi_hotproperty
 			return null;
 		}
 
-		$fields = AECToolbox::rewriteEngine( $fields, $metaUser, $plan );
+		$fields = AECToolbox::rewriteEngine( $fields, $metaUser, $plan, $invoice );
 
 		$fieldlist = explode( "\n", $fields );
 

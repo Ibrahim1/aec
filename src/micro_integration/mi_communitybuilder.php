@@ -94,7 +94,7 @@ class mi_communitybuilder
 					if ( strcmp( $value, 'NULL' ) === 0 ) {
 						$alterstring[] = $name . ' = NULL';
 					} else {
-						$alterstring[] = $name . ' = \'' . AECToolbox::rewriteEngine( $value, $metaUser, $plan ) . '\'';
+						$alterstring[] = $name . ' = \'' . AECToolbox::rewriteEngine( $value, $metaUser, $plan, $invoice ) . '\'';
 					}
 				}
 

@@ -81,20 +81,20 @@ class mi_email
 
 	function pre_expiration_action( $params, $metaUser, $plan )
 	{
-		return $this->mailOut( $params, $metaUser, $plan, '_pre_exp' );
+		return $this->mailOut( $params, $metaUser, $plan, null, '_pre_exp' );
 	}
 
 	function expiration_action( $params, $metaUser, $plan )
 	{
-		return $this->mailOut( $params, $metaUser, $plan, '_exp' );
+		return $this->mailOut( $params, $metaUser, $plan, null, '_exp' );
 	}
 
 	function action( $params, $metaUser, $invoice, $plan )
 	{
-		return $this->mailOut( $params, $metaUser, $plan, '' );
+		return $this->mailOut( $params, $metaUser, $plan, $invoice, '' );
 	}
 
-	function mailOut( $params, $metaUser, $plan, $area )
+	function mailOut( $params, $metaUser, $plan, $invoice, $area )
 	{
 		if ( $area == '' ) {
 			if ( !empty( $params['text_first'] ) ) {
@@ -104,14 +104,14 @@ class mi_email
 			}
 		}
 
-		$message	= AECToolbox::rewriteEngine( $params['text' . $area], $metaUser, $plan );
-		$subject	= AECToolbox::rewriteEngine( $params['subject' . $area], $metaUser, $plan );
+		$message	= AECToolbox::rewriteEngine( $params['text' . $area], $metaUser, $plan, $invoice );
+		$subject	= AECToolbox::rewriteEngine( $params['subject' . $area], $metaUser, $plan, $invoice );
 
 		if ( empty( $message ) ) {
 			return null;
 		}
 
-		$recipients = AECToolbox::rewriteEngine( $params['recipient'], $metaUser, $plan );
+		$recipients = AECToolbox::rewriteEngine( $params['recipient'], $metaUser, $plan, $invoice );
 		$recips = explode( ',', $recipients );
 
 		foreach ( $recips as $current => $email ) {

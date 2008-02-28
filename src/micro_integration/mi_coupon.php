@@ -108,7 +108,7 @@ class mi_coupon
 					}
 
 					if ( !empty( $settings['mail_out_coupons'] ) ) {
-						$this->mailOut( $params, $metaUser, $plan, $newcodes );
+						$this->mailOut( $params, $metaUser, $plan, $invoice, $newcodes );
 					}
 				}
 			}
@@ -123,12 +123,12 @@ class mi_coupon
 		return true;
 	}
 
-	function mailOut( $params, $metaUser, $plan, $newcodes )
+	function mailOut( $params, $metaUser, $plan, $invoice, $newcodes )
 	{
 		$message	= sprintf( $message, implode( "\n", $newcodes ) );
 
-		$message	= AECToolbox::rewriteEngine( $params['text'], $metaUser, $plan );
-		$subject	= AECToolbox::rewriteEngine( $params['subject'], $metaUser, $plan );
+		$message	= AECToolbox::rewriteEngine( $params['text'], $metaUser, $plan, $invoice );
+		$subject	= AECToolbox::rewriteEngine( $params['subject'], $metaUser, $plan, $invoice );
 
 		if ( empty( $message ) ) {
 			return false;
