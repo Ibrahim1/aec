@@ -556,7 +556,7 @@ switch( strtolower( $task ) ) {
 
 		if ( strlen( $return ) > 32 ) {
 			aecCentral( $option, $searchresult );
-		} elseif ( $return ) {
+		} elseif ( !empty( $return ) ) {
 			mosRedirect( 'index2.php?option=' . $option . '&task=edit&userid=' . $return, _AEC_QUICKSEARCH_THANKS );
 		} else {
 			mosRedirect( 'index2.php?option=' . $option . '&task=showcentral', _AEC_QUICKSEARCH_NOTFOUND );
@@ -3846,77 +3846,70 @@ function quicklookup( $option )
 	$search = $database->getEscaped( trim( strtolower( $search ) ) );
 
 	$userid = 0;
+	$k = 0;
 
-	// Try to find this as a username or name
-	$query = 'SELECT count(*)'
-			. ' FROM #__users'
-			. ' WHERE `username` LIKE \'%' . $search . '%\' OR `name` LIKE \'%' . $search . '%\''
-			;
-	$database->setQuery( $query );
-	$request = $database->loadResult();
-
-	$query = 'SELECT `id`'
-			. ' FROM #__users'
-			. ' WHERE `username` LIKE \'%' . $search . '%\' OR `name` LIKE \'%' . $search . '%\''
-			;
-	$database->setQuery( $query );
-
-	if ( $request > 1 ) {
-		$users = $database->loadResultArray();
-
-		$return = array();
-		foreach ( $users as $user ) {
-			$mosUser = new mosUser( $database );
-			$mosUser->load( $user );
-			$userlink = '<a href="';
-			$userlink .= $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&amp;task=edit&amp;userid=' . $mosUser->id;
-			$userlink .= '">';
-			$userlink .= $mosUser->name . ' (' . $mosUser->username . ')';
-			$userlink .= '</a>';
-
-			$return[] = $userlink;
-		}
-
-		return implode( ', ', $return );
-	}
-
-	$userid = $database->loadResult();
+	// Try username and name
+	$queries[$k] = 'FROM #__users'
+				. ' WHERE LOWER( `username` ) LIKE \'%' . $search . '%\' OR LOWER( `name` ) LIKE \'%' . $search . '%\''
+				;
+	$qfields[$k] = 'id';
+	$k++;
 
 	// If its not that, how about the user email?
-	if ( !$userid ) {
-		$query = 'SELECT `id`'
-				. ' FROM #__users'
-				. ' WHERE `email` = \'' . $search . '\''
+	$queries[$k] = 'FROM #__users'
+				. ' WHERE LOWER( `email` ) = \'' . $search . '\''
 				;
-		$database->setQuery( $query );
-
-		$userid = $database->loadResult();
-	} else {
-		return $userid;
-	}
-
-	// Or maybe its an invoice number?
-	if ( !$userid ) {
-		$query = 'SELECT `userid`'
-				. ' FROM #__acctexp_invoices'
-				. ' WHERE `invoice_number` = \'' . $search . '\''
-				. ' OR `secondary_ident` = \'' . $search . '\''
-				;
-		$database->setQuery( $query );
-
-		$userid = $database->loadResult();
-	} else {
-		return $userid;
-	}
+	$qfields[$k] = 'id';
+	$k++;
 
 	// Try to find this as a userid
-	$query = 'SELECT `id`'
-			. ' FROM #__users'
-			. ' WHERE `id` LIKE \'' . $search . '\''
-			;
-	$database->setQuery( $query );
+	$queries[$k] = 'FROM #__users'
+				. ' WHERE `id` = \'' . $search . '\''
+				;
+	$qfields[$k] = 'id';
+	$k++;
 
-	return $database->loadResult();
+	// Or maybe its an invoice number?
+	$queries[$k] = 'FROM #__acctexp_invoices'
+				. ' WHERE LOWER( `invoice_number` ) = \'' . $search . '\''
+				. ' OR LOWER( `secondary_ident` ) = \'' . $search . '\''
+				;
+	$qfields[$k] = 'userid';
+	$k++;
+
+	foreach ( $queries as $qid => $base_query ) {
+		$query = 'SELECT count(*) ' . $base_query;
+		$database->setQuery( $query );
+		$existing = $database->loadResult();
+
+		if ( $existing ) {
+			$query = 'SELECT `' . $qfields[$qid] . '` ' . $base_query;
+			$database->setQuery( $query );
+
+			if ( $existing > 1 ) {
+				$users = $database->loadResultArray();
+
+				$return = array();
+				foreach ( $users as $user ) {
+					$mosUser = new mosUser( $database );
+					$mosUser->load( $user );
+					$userlink = '<a href="';
+					$userlink .= $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&amp;task=edit&amp;userid=' . $mosUser->id;
+					$userlink .= '">';
+					$userlink .= $mosUser->name . ' (' . $mosUser->username . ')';
+					$userlink .= '</a>';
+
+					$return[] = $userlink;
+				}
+
+				return implode( ', ', $return );
+			} else {
+				return $database->loadResult();
+			}
+		}
+	}
+
+	return false;
 }
 
 function hackcorefile( $option, $filename, $check_hack, $undohack )
