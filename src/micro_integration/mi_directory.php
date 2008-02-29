@@ -1,0 +1,78 @@
+<?php
+/**
+ * @version $Id: mi_directory.php 16 2007-07-02 13:29:29Z mic $
+ * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
+ * @subpackage Micro Integrations - MySQL Query
+ * @copyright 2006/2007 Copyright (C) David Deutsch
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
+ * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
+ */
+
+defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
+
+class mi_directory
+{
+	function Info()
+	{
+		$info = array();
+		$info['name'] = _AEC_MI_NAME_DIRECTORY;
+		$info['desc'] = _AEC_MI_DESC_DIRECTORY;
+
+		return $info;
+	}
+
+	function Settings( $params )
+	{
+        $settings = array();
+        $settings['mkdir']			= array( 'inputD' );
+        $settings['mkdir_mode']		= array( 'inputC' );
+        $settings['mkdir_exp']		= array( 'inputD' );
+        $settings['mkdir_mode_exp']	= array( 'inputC' );
+        $settings['mkdir_pre_exp']	= array( 'inputD' );
+        $settings['mkdir_mode_pre_exp']		= array( 'inputC' );
+		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
+		$settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_SET4_MYSQL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+
+		return $settings;
+	}
+
+	function Defaults()
+	{
+        $defaults = array();
+        $defaults['mkdir_mode']			= '0755';
+        $defaults['mkdir_mode_exp']		= '0755';
+        $defaults['mkdir_mode_pre_exp']	= '0755';
+
+		return $defaults;
+	}
+
+	function pre_expiration_action( $params, $metaUser, $plan )
+	{
+		return $this->makedir( $params['mkdir_pre_exp'], $params['mkdir_mode_pre_exp'], $metaUser, $plan );
+	}
+
+	function expiration_action( $params, $metaUser, $plan )
+	{
+		return $this->makedir( $params['mkdir_exp'], $params['mkdir_mode_exp'], $metaUser, $plan );
+	}
+
+	function action( $params, $metaUser, $invoice, $plan )
+	{
+		return $this->makedir( $params['mkdir'], $params['mkdir_mode_pre_exp'], $metaUser, $plan, $invoice );
+	}
+
+	function makedir( $path, $mode, $metaUser, $plan, $invoice=null )
+	{
+		if ( empty( $path ) || empty( $mode ) ) {
+			return null;
+		}
+
+		if ( !file_exists( $path ) ) {
+			return mkdir( AECToolbox::rewriteEngine( $path, $metaUser, $plan, $invoice, $mode ) );
+		} else {
+			return true;
+		}
+	}
+
+}
+?>

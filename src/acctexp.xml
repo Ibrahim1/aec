@@ -59,6 +59,7 @@
 		<filename>micro_integration/mi_attend_events.php</filename>
 		<filename>micro_integration/mi_communitybuilder.php</filename>
 		<filename>micro_integration/mi_coupon.php</filename>
+		<filename>micro_integration/mi_directory.php</filename>
 		<filename>micro_integration/mi_displaypipeline.php</filename>
 		<filename>micro_integration/mi_docman.php</filename>
 		<filename>micro_integration/mi_email.php</filename>
