@@ -718,6 +718,7 @@ class Config_General extends paramDBTable
 		$def['temp_auth_exp']						= 60;
 		$def['skip_confirmation']				= 0;
 		$def['show_fixeddecision']				= 0;
+		$def['confirmation_coupons']			= 1;
 
 		// Insert a new entry if there is none yet
 		if ( empty( $this->settings ) ) {
@@ -3984,7 +3985,7 @@ class InvoiceFactory
 	}
 
 
-	function save( $option, $var )
+	function save( $option, $var, $coupon=null )
 	{
 		global $database, $mainframe, $task;
 
@@ -4012,6 +4013,13 @@ class InvoiceFactory
 		}
 
 		$this->touchInvoice( $option );
+
+		if ( !empty( $coupon ) ) {
+			$this->objInvoice->addCoupon( $_POST['coupon_code'] );
+			$this->objInvoice->check();
+			$this->objInvoice->store();
+		}
+
 		$this->checkout( $option );
 	}
 

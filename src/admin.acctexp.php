@@ -1676,7 +1676,7 @@ function editSettings( $option )
 	$yn_lists = array( 'simpleurls', 'require_subscription', 'plans_first',
 						'enable_coupons', 'displayccinfo', 'adminaccess',
 						'noemails', 'nojoomlaregemails', 'debugmode',
-						'override_reqssl', 'use_recaptcha',
+						'override_reqssl', 'use_recaptcha', 'confirmation_coupons',
 						'ssl_signup', 'skip_confirmation', 'show_fixeddecision',
 						'customtext_confirm_keeporiginal', 'customtext_checkout_keeporiginal', 'customtext_notallowed_keeporiginal',
 						'customtext_expired_keeporiginal', 'customtext_pending_keeporiginal', 'invoicenum_doformat'
@@ -1771,6 +1771,7 @@ function editSettings( $option )
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_OVERRIDE_REQSSL_NAME, _CFG_GENERAL_OVERRIDE_REQSSL_DESC, '0', 'override_reqssl');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_SKIP_CONFIRMATION_NAME, _CFG_GENERAL_SKIP_CONFIRMATION_DESC, '0', 'skip_confirmation');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_SHOW_FIXEDDECISION_NAME, _CFG_GENERAL_SHOW_FIXEDDECISION_DESC, '0', 'show_fixeddecision');
+	$tab_data[0][] = array( 'list', _CFG_GENERAL_CONFIRMATION_COUPONS_NAME, _CFG_GENERAL_CONFIRMATION_COUPONS_DESC, '0', 'confirmation_coupons');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_DEBUGMODE_NAME, _CFG_GENERAL_DEBUGMODE_DESC, '0', 'debugmode');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_ERROR_NOTIFICATION_LEVEL_NAME, _CFG_GENERAL_ERROR_NOTIFICATION_LEVEL_DESC, '0', 'error_notification_level');
 	$tab_data[0][] = array( 'list', _CFG_GENERAL_EMAIL_NOTIFICATION_LEVEL_NAME, _CFG_GENERAL_EMAIL_NOTIFICATION_LEVEL_DESC, '0', 'email_notification_level');

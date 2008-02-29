@@ -99,6 +99,7 @@ if ( !empty( $task ) ) {
 			$userid		= aecGetParam( 'userid', 0 );
 			$usage		= aecGetParam( 'usage', 0 );
 			$processor	= aecGetParam( 'processor', '' );
+			$coupon		= aecGetParam( 'coupon_code', '' );
 
 			$invoicefact = new InvoiceFactory( $userid, $usage, $processor );
 			$invoicefact->save( $option, $_POST );

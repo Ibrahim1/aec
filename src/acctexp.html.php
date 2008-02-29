@@ -479,7 +479,7 @@ class Payment_HTML
 			. '<input type="hidden" name="userid" value="' . ( $userid ? $userid : 0 ) . '" />' . "\n";
 
 			if ( !empty( $processor['recurring'] ) ) {
-				$html_code .= '<input type="hidden" name="recurring" value="1" />' . "\n"
+				$html_code .= '<input type="hidden" name="recurring" value="1" />' . "\n";
 			}
 
 			if ( $passthrough != false ) {
@@ -613,6 +613,10 @@ class Payment_HTML
 				<tr>
 					<td class="confirmation_button">
 						<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( '/index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+						<?php if ( !empty( $aecConfig->cfg['confirmation_coupons'] ) ) { ?>
+							<strong><?php echo _CHECKOUT_COUPON_CODE; ?></strong>
+							<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
+						<?php } ?>
 						<input type="hidden" name="option" value="<?php echo $option; ?>" />
 						<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0; ?>" />
 						<input type="hidden" name="task" value="saveSubscription" />
