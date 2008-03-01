@@ -3997,9 +3997,11 @@ class InvoiceFactory
 		if ( $this->usage == '' ) {
 			$this->usage = $var['usage'];
 		}
+
 		if ( $this->processor == '' ) {
 			$this->processor = $var['processor'];
 		}
+
 		$this->confirmed = 1;
 
 		if ( $this->userid ) {
