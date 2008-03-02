@@ -60,7 +60,7 @@ class htaccess{
 		$file=@fopen($this->fPasswd,"r");
 		$isAlready=false;
 		while($line=@fgets($file,200)){
-			$lineArr=explode(":",$line);
+			$lineArr=explode(":", $line, 2);
 			if($username==$lineArr[0]){
 				$isAlready=true;
 			 }
