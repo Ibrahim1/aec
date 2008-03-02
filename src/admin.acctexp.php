@@ -554,8 +554,8 @@ switch( strtolower( $task ) ) {
 	case 'quicklookup':
 		$return = quicklookup( $option );
 
-		if ( strlen( $return ) > 32 ) {
-			aecCentral( $option, $searchresult );
+		if ( strpos( $return, '</a>' ) ) {
+			aecCentral( $option, $return );
 		} elseif ( !empty( $return ) ) {
 			mosRedirect( 'index2.php?option=' . $option . '&task=edit&userid=' . $return, _AEC_QUICKSEARCH_THANKS );
 		} else {
