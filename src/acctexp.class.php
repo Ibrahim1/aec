@@ -33,7 +33,6 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 global $mosConfig_absolute_path, $mosConfig_offset_user, $aecConfig;
 
 if ( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
-	// mic: call only if called from the backend
 	$langPath = $mosConfig_absolute_path . '/administrator/components/com_acctexp/com_acctexp_language_backend/';
 	if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
 			include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
@@ -56,6 +55,9 @@ if ( !defined( '_AEC_LANG' ) ) {
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.common.php' );
 }
+
+// Make sure we are compatible with php4
+include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/php4/php4.php' );
 
 // compatibility w/ Mambo
 if ( empty( $mosConfig_offset_user ) ) {
@@ -6924,13 +6926,8 @@ class AECToolbox
 			return $subject;
 		}
 
-		if ( !class_exists( "Services_JSON" ) ) {
-			require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/json/json.php' );
-		}
-
 		foreach ( $matches as $match ) {
-			$JSONdec = new Services_JSON();
-			$json = $JSONdec->decode( $match[1] );
+			$json = json_decode( $match[1] );
 
 			$result = AECToolbox::resolveJSONitem( $json, $rewrite );
 
