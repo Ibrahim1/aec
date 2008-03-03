@@ -84,14 +84,6 @@ class processor_ideal_basic extends URLprocessor
 		return $s;
 	}
 
-	function CustomPlanParams()
-	{
-		$p = array();
-		$p['verotel_product']	= array( 'inputC' );
-
-		return $p;
-	}
-
 	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
 	{
 		if ( $cfg['testmode'] ) {

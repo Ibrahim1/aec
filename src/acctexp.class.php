@@ -1828,12 +1828,14 @@ class PaymentProcessor
 
 	function getCustomPlanParams()
 	{
-		if ( !isset( $this->settings ) ) {
-			$this->getSettings();
-		}
-
 		if ( method_exists( $this->processor, 'CustomPlanParams' ) ) {
-			return $this->processor->CustomPlanParams( $this->settings );
+			if ( $this->is_recurring() > 1 ) {
+				$return = array_merge( array( 'recurring' => array( 'list_recurring' ) ), $this->processor->CustomPlanParams( $this->settings ) );
+			} else {
+				$return = $this->processor->CustomPlanParams( $this->settings );
+			}
+
+			return $return;
 		} else {
 			return false;
 		}

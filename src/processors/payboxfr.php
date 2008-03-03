@@ -63,7 +63,6 @@ class processor_payboxfr extends POSTprocessor
 		$settings['rank']			= 'rank';
 		$settings['currency']		= 'EUR';
 		$settings['language']		= 'FR';
-		$settings['recurring']		= 0;
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']	= '';
 
@@ -80,7 +79,6 @@ class processor_payboxfr extends POSTprocessor
 		$settings['rank']			= array( 'inputC' );
 		$settings['currency']		= array( 'list_currency' );
 		$settings['language']		= array( 'list_language' );
-		$settings['recurring']		= array( 'list_recurring' );
 
 		$settings['item_name']		= array( 'inputE' );
 		$settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );

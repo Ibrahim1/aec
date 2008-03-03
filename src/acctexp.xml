@@ -44,6 +44,12 @@
 		<filename>lib/json/json.php</filename>
 		<filename>lib/php_debug/index.html</filename>
 		<filename>lib/php_debug/php_debug_1and2.tar.gz</filename>
+		<filename>lib/php4/index.html</filename>
+		<filename>lib/php4/php4.php</filename>
+		<filename>lib/php4/csv/index.html</filename>
+		<filename>lib/php4/csv/csv.php</filename>
+		<filename>lib/php4/json/index.html</filename>
+		<filename>lib/php4/json/json.php</filename>
 		<filename>lib/recaptcha/index.html</filename>
 		<filename>lib/recaptcha/recaptchalib.php</filename>
 		<filename>micro_integration/language/index.html</filename>
@@ -96,6 +102,7 @@
 		<filename>processors/ipayment_silent.php</filename>
 		<filename>processors/moneyproxy.php</filename>
 		<filename>processors/offline_payment.php</filename>
+		<filename>processors/payboxfr.php</filename>
 		<filename>processors/paycom.php</filename>
 		<filename>processors/paypal_subscription.php</filename>
 		<filename>processors/paypal.php</filename>
