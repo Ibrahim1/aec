@@ -3461,10 +3461,17 @@ class InvoiceFactory
 						$this->pp->fullInit();
 						$this->pp->exchangeSettings( $this->objUsage );
 						$this->payment->method_name	= $this->pp->info['longname'];
-						if ( isset( $_POST['recurring'] ) ) {
-							$this->recurring	= $this->pp->is_recurring( $_POST['recurring'] );
+
+						// Check whether we have a recurring payment
+						// If it has been selected just now, or earlier, check whether that is still permitted
+						if ( isset( $this->recurring ) ) {
+							$this->recurring	= $this->pp->is_recurring( $this->recurring );
 						} else {
-							$this->recurring	= $this->pp->is_recurring();
+							if ( isset( $_POST['recurring'] ) ) {
+								$this->recurring	= $this->pp->is_recurring( $_POST['recurring'] );
+							} else {
+								$this->recurring	= $this->pp->is_recurring();
+							}
 						}
 
 						$currency					= isset( $this->pp->settings['currency'] ) ? $this->pp->settings['currency'] : '';
@@ -3577,6 +3584,14 @@ class InvoiceFactory
 			$this->processor	= $this->objInvoice->method;
 			$this->usage		= $this->objInvoice->usage;
 			$this->invoice		= $this->objInvoice->invoice_number;
+		}
+
+		$invoiceparams = $this->objInvoice->getParams();
+
+		if ( isset( $invoiceparams['userselect_recurring'] ) ) {
+			$this->recurring = $invoiceparams['userselect_recurring'];
+		} elseif ( isset( $_POST['recurring'] ) ) {
+			$this->objInvoice->addParam( array( 'userselect_recurring' => $_POST['recurring'] ) );
 		}
 
 		return;
