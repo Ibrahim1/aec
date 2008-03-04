@@ -16,7 +16,7 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
  *
  * What gets integrated:
  *
- * - JSON encoding&decoding
+ * - JSON encoding&decoding ( Services_JSON - BSD licensed lib that is a PEAR Proposal )
  * - CSV handling
  *
  */

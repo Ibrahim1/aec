@@ -2409,6 +2409,7 @@ class aecHTML
 			case 'inputA':
 				$return .= '<div class="setting_form">';
 				$return .= '<input name="' . $name . '" type="text" size="4" value="' . $value . '" />';
+				$return .= '</div>';
 				break;
 			case 'inputB':
 				$return .= '<div class="setting_form">';
