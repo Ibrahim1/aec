@@ -1834,11 +1834,15 @@ class PaymentProcessor
 			} else {
 				$return = $this->processor->CustomPlanParams( $this->settings );
 			}
-
-			return $return;
 		} else {
-			return false;
+			if ( $this->is_recurring() > 1 ) {
+				$return = array( 'recurring' => array( 'list_recurring' ) );
+			} else {
+				$return = false;
+			}
 		}
+
+		return $return;
 	}
 
 	function invoiceCreationAction( $objinvoice )
