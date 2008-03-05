@@ -99,7 +99,27 @@ class processor_payboxfr extends POSTprocessor
 		$var['PBX_MODE']		= '1';
 		$var['PBX_SITE']		= $cfg['site'];
 		$var['PBX_RANG']		= $cfg['rank'];
-		$var['PBX_TOTAL']		= $int_var['amount'] * 100;
+
+		if ( is_array( $int_var['amount'] ) ) {
+
+			$svars = array();
+			$svars['IBS_2MONT'] = '0000000000';
+			$svars['IBS_NBPAIE'] = '00';
+			$svars['IBS_FREQ'] = str_pad( $int_var['amount']['period3'], 2, '0', STR_PAD_LEFT );
+			$svars['IBS_QUAND'] = '00';
+			$svars['IBS_DELAIS'] = '000';
+
+			foreach ( $svars as $svname => $svvar ) {
+				$append .= $svname . $svvar;
+			}
+
+			$var['PBX_TOTAL']		= $int_var['amount']['amount3'] * 100;
+
+			$var['PBX_CMD']			= $int_var['invoice'] . $append;
+		} else {
+			$var['PBX_TOTAL']		= $int_var['amount'] * 100;
+			$var['PBX_CMD']			= $int_var['invoice'];
+		}
 
 		$iso4217num = array( 'EUR' => 978, 'USD' => 840, 'GBP' => 826, 'AUD' => 036, 'CAD' => 124, 'JPY' => 392, 'NZD' => 554 );
 
@@ -109,26 +129,16 @@ class processor_payboxfr extends POSTprocessor
 			$var['PBX_DEVISE']		= '978';
 		}
 
-		$var['PBX_CMD']			= $int_var['invoice'];
 		$var['PBX_PORTEUR']		= $metaUser->cmsUser->email;
 
 		$iso639_2to3 = array( 'GB' => 'GBR', 'DE' => 'DEU', 'FR' => 'FRA', 'IT' => 'ITA', 'ES' => 'ESP', 'SW' => 'SWE', 'NL' => 'NLD' );
 
 		$var['PBX_LANGUE']		= $iso639_2to3[$cfg['language']];
 
-		$var['cancel']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
+		$var['PBX_EFFECTUE']		= $int_var['return_url'];
+		$var['PBX_ANNULE']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
 
-		$var['notify_url']		= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=payboxfrnotification' );
-
-		$var['item_number']		= $metaUser->cmsUser->id;
-		$var['item_name']		= AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription );
-
-		$var['no_shipping']		= $cfg['no_shipping'];
-		$var['no_note']			= '1';
-		$var['rm']				= '2';
-
-		$var['return']			= $int_var['return_url'];
-		$var['currency_code']	= $cfg['currency'];
+		$dummy = AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=payboxfrnotification' );
 
 		return $var;
 	}
