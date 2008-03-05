@@ -131,6 +131,7 @@ define( '_BUTTON_CONFIRM', 'Vervolg');
 define( '_CONFIRM_TOS', "Ik ga akkoord met de <a href=\"%s\" target=\"_BLANK\">Algemene Voorwaarden</a>");
 define( '_CONFIRM_TOS_ERROR', 'U dient akkoord te gaan met de Algemene Voorwaarden');
 define( '_CONFIRM_COUPON_INFO', 'Indien u een couponcode bezit, kunt u deze invoeren op de Checkout Pagina voor een korting op uw betaling');
+define( '_CONFIRM_COUPON_INFO_BOTH', 'If you have a coupon code, you can enter it here, or on the Checkout Page to get a discount on your payment');
 define( '_CONFIRM_FREETRIAL', 'Free Trial');
 
 // --== PROMPT PASSWORD FORM ==--

@@ -605,9 +605,12 @@ class Payment_HTML
 				<p><?php echo _CONFIRM_INFO; ?></p>
 				<?php
 			}
-			if ( $InvoiceFactory->coupons['active'] ) { ?>
-				<p><?php echo _CONFIRM_COUPON_INFO; ?></p>
-				<?php
+			if ( $InvoiceFactory->coupons['active'] ) {
+				if ( !empty( $aecConfig->cfg['confirmation_coupons'] ) ) {
+					?><p><?php echo _CONFIRM_COUPON_INFO_BOTH; ?></p><?php
+				} else {
+					?><p><?php echo _CONFIRM_COUPON_INFO; ?></p><?php
+				}
 			} ?>
 			<table>
 				<tr>
@@ -1027,6 +1030,9 @@ function joomlaregisterForm($option, $useractivation)
 	<input type="hidden" name="gid" value="0" />
 	<input type="hidden" name="usage" value="<?php echo $_POST['usage'];?>" />
 	<input type="hidden" name="processor" value="<?php echo $_POST['processor'];?>" />
+	<?php if ( isset( $_POST['recurring'] ) ) { ?>
+	<input type="hidden" name="recurring" value="<?php echo $_POST['recurring'];?>" />
+	<?php } ?>
 	<?php echo JHTML::_( 'form.token' ); ?>
 	</form>
 	<?php
@@ -1144,6 +1150,9 @@ function joomlaregisterForm($option, $useractivation)
 	<input type="hidden" name="task" value="saveRegistration" />
 	<input type="hidden" name="usage" value="<?php echo $_POST['usage'];?>" />
 	<input type="hidden" name="processor" value="<?php echo $_POST['processor'];?>" />
+	<?php if ( isset( $_POST['recurring'] ) ) { ?>
+	<input type="hidden" name="recurring" value="<?php echo $_POST['recurring'];?>" />
+	<?php } ?>
 	<input type="button" value="<?php echo _BUTTON_SEND_REG; ?>" class="button" onclick="submitbutton_reg()" />
 	<input type="hidden" name="<?php echo $validate; ?>" value="1" />
 	</form>

@@ -378,7 +378,7 @@ function subscribe( $option )
 				}
 			}
 
-			$nopass = array( 'option', 'task', 'intro', 'usage', 'processor', 'Itemid', 'submit_x', 'submit_y', 'userid' );
+			$nopass = array( 'option', 'task', 'intro', 'usage', 'processor', 'recurring', 'Itemid', 'submit_x', 'submit_y', 'userid' );
 
 			$passafter = array();
 			foreach ( $nopass as $varname ) {

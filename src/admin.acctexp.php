@@ -4047,6 +4047,11 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 						. '<input type="hidden" name="planid" value="<?php echo $_POST[\'planid\'];?>" />' . "\n"
 						. '<input type="hidden" name="processor" value="<?php echo $_POST[\'processor\'];?>" />' . "\n"
 						. '<?php' . "\n"
+						. 'if ( isset( $_POST[\'recurring\'] ) ) {'
+						. '?>' . "\n"
+						. '<input type="hidden" name="recurring" value="<?php echo $_POST[\'recurring\'];?>" />' . "\n"
+						. '<?php' . "\n"
+						. '}' . "\n"
 						. $aec_condition_end
 						. $aec_hack_end
 						. '?>' . "\n";
@@ -4587,4 +4592,23 @@ function backupFile( $file, $file_new )
     }
     return true;
 }
+
+function importData()
+{
+	// Check for input
+	// Get saved and previous calls
+	// Create select box for calls
+	// assemble Settings
+
+}
+
+function exportData()
+{
+	// Check for input
+	// Get saved and previous calls
+	// Create select box for calls
+	// assemble Settings
+
+}
+
 ?>

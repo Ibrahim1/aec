@@ -1725,7 +1725,7 @@ class PaymentProcessor
 				$return = $this->info['recurring'];
 			}
 
-			if ( !is_null( $choice ) && ( $return === 2 ) ) {
+			if ( !empty( $choice ) && ( $return > 1 ) ) {
 				$return = $choice;
 			}
 		} elseif ( !empty( $this->info['recurring'] ) ) {
@@ -3718,6 +3718,10 @@ class InvoiceFactory
 			}
 		}
 
+		if ( isset( $_POST['recurring'] ) ) {
+			$this->recurring	= $_POST['recurring'];
+		}
+
 		$where[] = '`active` = \'1\'';
 
 		if ( $usage ) {
@@ -3807,7 +3811,11 @@ class InvoiceFactory
 									$pp->init();
 									$pp->getInfo();
 									$pp->exchangeSettings( $row );
-									$recurring = $pp->is_recurring();
+									if ( isset( $this->recurring ) ) {
+										$recurring = $pp->is_recurring( $this->recurring );
+									} else {
+										$recurring = $pp->is_recurring();
+									}
 
 									if ( $recurring > 1 ) {
 										$plan_gw[$k]['name']		= $pp->processor_name;
@@ -3824,6 +3832,9 @@ class InvoiceFactory
 									} elseif ( !($plan_params['lifetime'] && $recurring ) ) {
 										$plan_gw[$k]['name']		= $pp->processor_name;
 										$plan_gw[$k]['statement']	= $pp->info['statement'];
+										if ( is_numeric( $recurring ) && $recurring ) {
+											$plan_gw[$k]['recurring']	= 1;
+										}
 										$k++;
 									}
 								}
@@ -3861,6 +3872,9 @@ class InvoiceFactory
 				if ( $aecConfig->cfg['plans_first'] && !empty( $plans[0]['id'] ) ) {
 					$_POST['usage']		= $plans[0]['id'];
 					$_POST['processor']	= $plans[0]['gw'][0]['name'];
+					if ( isset( $plans[0]['gw'][0]['recurring'] ) ) {
+						$_POST['recurring']	= $plans[0]['gw'][0]['recurring'];
+					}
 				}
 
 				// Send to CB or joomla!
@@ -6310,7 +6324,7 @@ class AECToolbox
 		}
 
 		// For joomla and CB, we must filter out some internal variables before handing over the POST data
-		$badbadvars = array( 'userid', 'method_name', 'usage', 'processor', 'currency', 'amount', 'invoice', 'id', 'gid' );
+		$badbadvars = array( 'userid', 'method_name', 'usage', 'processor', 'recurring', 'currency', 'amount', 'invoice', 'id', 'gid' );
 		foreach ( $badbadvars as $badvar ) {
 			if ( isset( $var[$badvar] ) ) {
 				unset( $var[$badvar] );
