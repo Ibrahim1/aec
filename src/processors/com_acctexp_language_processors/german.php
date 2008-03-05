@@ -338,6 +338,8 @@ define( '_CFG_VEROTEL_MERCHANTID_NAME', 'Merchant ID');
 define( '_CFG_VEROTEL_MERCHANTID_DESC', 'Your merchant identifier at Verotel.');
 define( '_CFG_VEROTEL_SITEID_NAME', 'Site ID');
 define( '_CFG_VEROTEL_SITEID_DESC', 'Your site identifier for this website.');
+define( '_CFG_VEROTEL_RESELLERID_NAME', 'Reseller ID');
+define( '_CFG_VEROTEL_RESELLERID_DESC', 'Your Reseller ID (if any).');
 define( '_CFG_VEROTEL_SECRETCODE_NAME', 'Secret Code');
 define( '_CFG_VEROTEL_SECRETCODE_DESC', 'Your secret Verotel code.');
 define( '_CFG_VEROTEL_USE_TICKETSCLUB_NAME', 'Tickets Club');

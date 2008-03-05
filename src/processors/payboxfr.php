@@ -61,9 +61,10 @@ class processor_payboxfr extends POSTprocessor
 		$settings['site']			= 'site';
 		$settings['testmode']		= 1;
 		$settings['rank']			= 'rank';
+		$settings['identifiant']	= 'identifiant';
+		$settings['path']			= '/cgi-bin/modulev2.cgi';
 		$settings['currency']		= 'EUR';
 		$settings['language']		= 'FR';
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']	= '';
 
 		return $settings;
@@ -72,16 +73,14 @@ class processor_payboxfr extends POSTprocessor
 	function backend_settings( $cfg )
 	{
 		$settings = array();
-		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
-
 		$settings['site']			= array( 'inputC' );
 		$settings['testmode']		= array( 'list_yesno' );
 		$settings['rank']			= array( 'inputC' );
+		$settings['identifiant']	= array( 'inputC' );
+		$settings['path']			= array( 'inputC' );
+		$settings['info']			= array( 'fieldset' );
 		$settings['currency']		= array( 'list_currency' );
 		$settings['language']		= array( 'list_language' );
-
-		$settings['item_name']		= array( 'inputE' );
-		$settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
 		return $settings;
 	}
@@ -92,11 +91,13 @@ class processor_payboxfr extends POSTprocessor
 
 		if ( $cfg['testmode'] ) {
 			$var['post_url']	= 'https://www.sandbox.payboxfr.com/cgi-bin/webscr';
+			$var['PBX_AUTOSEULE'] = 'O';
 		} else {
 			$var['post_url']	= 'https://www.payboxfr.com/cgi-bin/webscr';
 		}
 
 		$var['PBX_MODE']		= '1';
+		$var['PBX_RUF1']		= 'POST';
 		$var['PBX_SITE']		= $cfg['site'];
 		$var['PBX_RANG']		= $cfg['rank'];
 
@@ -137,8 +138,6 @@ class processor_payboxfr extends POSTprocessor
 
 		$var['PBX_EFFECTUE']		= $int_var['return_url'];
 		$var['PBX_ANNULE']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
-
-		$dummy = AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=payboxfrnotification' );
 
 		return $var;
 	}

@@ -78,6 +78,8 @@ define( '_CFG_PROCESSOR_CUSTOMPARAMS_NAME', 'Custom Parameters');
 define( '_CFG_PROCESSOR_CUSTOMPARAMS_DESC', 'Custom Parameters that the AEC should transmit to the Payment Processor on Checkout. Separated by linebreaks in the form of "parameter_name=parameter_value". The RewriteEngine works as specified below.');
 define( '_CFG_PROCESSOR_PLAN_PARAMS_RECURRING_NAME', 'Recurring Payment');
 define( '_CFG_PROCESSOR_PLAN_PARAMS_RECURRING_DESC', 'This is a recurring payment.');
+define( '_CFG_PROCESSOR_LANGUAGE_NAME', 'Language');
+define( '_CFG_PROCESSOR_LANGUAGE_DESC', 'Select one of the possible language settings for site that your user will see when issuing a payment.');
 
 // Generic Credit Card Form
 define( '_AEC_CCFORM_CARDHOLDER_NAME', 'Card owner Name');
@@ -324,6 +326,8 @@ define( '_CFG_VEROTEL_MERCHANTID_NAME', 'Merchant ID');
 define( '_CFG_VEROTEL_MERCHANTID_DESC', 'Your merchant identifier at Verotel.');
 define( '_CFG_VEROTEL_SITEID_NAME', 'Site ID');
 define( '_CFG_VEROTEL_SITEID_DESC', 'Your site identifier for this website.');
+define( '_CFG_VEROTEL_RESELLERID_NAME', 'Reseller ID');
+define( '_CFG_VEROTEL_RESELLERID_DESC', 'Your Reseller ID (if any).');
 define( '_CFG_VEROTEL_SECRETCODE_NAME', 'Secret Code');
 define( '_CFG_VEROTEL_SECRETCODE_DESC', 'Your secret Verotel code.');
 define( '_CFG_VEROTEL_USE_TICKETSCLUB_NAME', 'Tickets Club');
@@ -475,5 +479,20 @@ define( '_CFG_PAYSITE_CASH_SITEID_NAME', 'Site ID');
 define( '_CFG_PAYSITE_CASH_SITEID_DESC', 'Site number in Editor interface Pbiz');
 define( '_CFG_PAYSITE_CASH_SECRET_NAME', 'Secret Word');
 define( '_CFG_PAYSITE_CASH_SECRET_DESC', 'Choose a secret word or string that will internally secure the data transmitted and received from fraud.');
+
+// Paybox France
+define( '_CFG_PAYBOXFR_LONGNAME', 'Paybox');
+define( '_CFG_PAYBOXFR_STATEMENT', 'Paybox Services: solutions de paiement sur Internet; Terminal de paiement virtuel');
+define( '_CFG_PAYBOXFR_DESCRIPTION', 'Paybox Services: solutions de paiement sur Internet; Terminal de paiement virtuel');
+define( '_CFG_PAYBOXFR_SITE_NAME', 'Site number');
+define( '_CFG_PAYBOXFR_SITE_DESC', 'Site number (TPE) given by the bank.');
+define( '_CFG_PAYBOXFR_RANK_NAME', 'Rank number');
+define( '_CFG_PAYBOXFR_RANK_DESC', 'Rank number (‟machine‟) given by the bank.');
+define( '_CFG_PAYBOXFR_IDENTIFIANT_NAME', 'Paybox Identifiant');
+define( '_CFG_PAYBOXFR_IDENTIFIANT_DESC', 'PAYBOX identifier, supplied by PAYBOX SERVICES at the time of registration.');
+define( '_CFG_PAYBOXFR_PATH_NAME', 'Paybox Script Path');
+define( '_CFG_PAYBOXFR_PATH_DESC', 'The path where your paybox script is located.');
+define( '_CFG_PAYBOXFR_INFO_NAME', 'url http');
+define( '_CFG_PAYBOXFR_INFO_DESC', 'You need to set the "url http" in your Paybox settings. This is required so that Paybox will notify the AEC about transactions. The URL you have to put in there is: "http://yoursite.com/index.php?option=com_acctexp&task=payboxfrnotification"');
 
 ?>

@@ -447,6 +447,7 @@ class Payment_HTML
 
 		foreach ( $gw as $processor ) {
 			$gw_current = strtolower( $processor['name'] );
+			$hidden = array();
 
 			if ( $register ) {
 				if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
@@ -472,21 +473,34 @@ class Payment_HTML
 			} else {
 				$html_code .= '" border="0" name="submit" alt="' . $processor['name'] . '" />' . "\n";
 			}
-			$html_code .= '<input type="hidden" name="option" value="' . $option . '" />' . "\n"
-			. '<input type="hidden" name="task" value="' . $task . '" />' . "\n"
-			. '<input type="hidden" name="processor" value="' . strtolower( $processor['name'] ) . '" />' . "\n"
-			. '<input type="hidden" name="usage" value="' . $planid . '" />' . "\n"
-			. '<input type="hidden" name="userid" value="' . ( $userid ? $userid : 0 ) . '" />' . "\n";
 
-			if ( !empty( $processor['recurring'] ) ) {
-				$html_code .= '<input type="hidden" name="recurring" value="1" />' . "\n";
-			}
+			$hidden['option']		= $option;
+			$hidden['task']		= $task;
+			$hidden['processor']	= strtolower( $processor['name'] );
+			$hidden['usage']		= $planid;
+			$hidden['userid']		= $option;
+			$hidden['option']		= $userid ? $userid : 0;
 
-			if ( $passthrough != false ) {
-				foreach ( $passthrough as $key => $array ) {
-					$html_code .= '<input type="hidden" name="' . $array[0] . '" value="' . $array[1] . '" />' . "\n";
+			if ( isset( $processor['recurring'] ) ) {
+				if ( $processor['recurring'] ) {
+					$hidden['recurring'] = 1;
+				} else {
+					$hidden['recurring'] = 0;
 				}
 			}
+
+			// Rewrite Passthrough
+			if ( $passthrough != false ) {
+				foreach ( $passthrough as $key => $array ) {
+					$hidden[$array[0]] = $array[1];
+				}
+			}
+
+			// Assemble hidden fields
+			foreach ( $hidden as $key => $value ) {
+				$html_code .= '<input type="hidden" name="' . $key . '" value="' . $array . '" />' . "\n";
+			}
+
 			$html_code .= '</form></div>' . "\n";
 		}
 

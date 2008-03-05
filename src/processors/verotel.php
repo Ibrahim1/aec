@@ -70,7 +70,7 @@ class processor_verotel extends URLprocessor
 	{
 		$s = array();
 		$s['merchantid']		= array( 'inputC' );
-		$s['merchant']		= array( 'inputC' );
+		$s['resellerid']		= array( 'inputC' );
 		$s['siteid']			= array( 'inputC' );
 		$s['secretcode']		= array( 'inputC' );
 		$s['use_ticketsclub']	= array( 'list_yesno' );
