@@ -89,11 +89,10 @@ class processor_payboxfr extends POSTprocessor
 	{
 		global $mosConfig_live_site;
 
+		$var['post_url']	= $cfg['path'];
+
 		if ( $cfg['testmode'] ) {
-			$var['post_url']	= 'https://www.sandbox.payboxfr.com/cgi-bin/webscr';
 			$var['PBX_AUTOSEULE'] = 'O';
-		} else {
-			$var['post_url']	= 'https://www.payboxfr.com/cgi-bin/webscr';
 		}
 
 		$var['PBX_MODE']		= '1';
@@ -102,10 +101,25 @@ class processor_payboxfr extends POSTprocessor
 		$var['PBX_RANG']		= $cfg['rank'];
 
 		if ( is_array( $int_var['amount'] ) ) {
+			switch ( $int_var['amount']['unit3'] ) {
+				case 'D':
+					$period = max( 1, ( (int) ( $int_var['amount']['period3'] / 30 ) ) );
+					break;
+				case 'W':
+					$period = max( 1, ( (int) ( $int_var['amount']['period3'] / 4 ) ) );
+					break;
+				case 'M':
+					$period = $int_var['amount']['period3'];
+					break;
+				case 'Y':
+					$period = ( $int_var['amount']['period3'] * 12 );
+					break;
+			}
+
 			$svars = array();
 			$svars['IBS_2MONT'] = '0000000000';
 			$svars['IBS_NBPAIE'] = '00';
-			$svars['IBS_FREQ'] = str_pad( $int_var['amount']['period3'], 2, '0', STR_PAD_LEFT );
+			$svars['IBS_FREQ'] = str_pad( $period, 2, '0', STR_PAD_LEFT );
 			$svars['IBS_QUAND'] = '00';
 			$svars['IBS_DELAIS'] = '000';
 
@@ -138,6 +152,8 @@ class processor_payboxfr extends POSTprocessor
 		$var['PBX_EFFECTUE']		= $int_var['return_url'];
 		$var['PBX_ANNULE']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
 
+		$var['PBX_RETOUR']		= 'option:com_acctexp;task:payboxfrnotification;amount:M;invoice:R;authorization:A;transaction:T;subscriptionid:B;error:E;check:K';
+
 		return $var;
 	}
 
@@ -145,111 +161,43 @@ class processor_payboxfr extends POSTprocessor
 	{
 		global $database;
 
-		$mc_gross			= $post['mc_gross'];
-		if ( $mc_gross == '' ) {
-			$mc_gross 		= $post['mc_amount1'];
-		}
-		$mc_currency		= $post['mc_currency'];
-
 		$response = array();
-		$response['invoice'] = $post['invoice'];
-		$response['amount_paid'] = $mc_gross;
-		$response['amount_currency'] = $mc_currency;
+
+		$returnstring = $_GET['invoice'];
+		$checkpos = strpos( 'IBS_2MONT', $returnstring );
+
+		if ( $checkpos ) {
+			$response['invoice'] = substr( $returnstring, 0, $checkpos );
+		} else {
+			$response['invoice'] = $returnstring;
+		}
+
+		$response['amount_paid'] = $_GET['amount'] / 100;
 
 		return $response;
 	}
 
 	function validateNotification( $response, $post, $cfg, $invoice )
 	{
-		if ($cfg['testmode']) {
-			$ppurl = 'www.sandbox.payboxfr.com';
-		} else {
-			$ppurl = 'www.payboxfr.com';
-		}
-
-		$req = 'cmd=_notify-validate';
-
-		foreach ( $post as $key => $value ) {
-			$value = urlencode( stripslashes( $value ) );
-			$req .= "&$key=$value";
-		}
-
-		$fp = null;
-		// try to use fsockopen. some hosting systems disable fsockopen (godaddy.com)
-		$fp = $this->doTheHttp( $ppurl, $req );
-		if (!$fp) {
-			// If fsockopen doesn't work try using curl
-			$fp = $this->doTheCurl( $ppurl, $req );
-		}
-
-		$res = $fp;
-
-		$response['responsestring'] = 'payboxfr_verification=' . $res . "\n" . $response['responsestring'];
-
-		$txn_type			= $post['txn_type'];
-		$receiver_email		= $post['receiver_email'];
-		$payment_status		= $post['payment_status'];
-		$payment_type		= $post['payment_type'];
-
 		$response['valid'] = 0;
 
-		if ( strcmp( $receiver_email, $cfg['business'] ) != 0 && $cfg['checkbusiness'] ) {
-			$response['pending_reason'] = 'checkbusiness error';
-		} elseif ( strcmp( $res, 'VERIFIED' ) == 0 ) {
-			// Process payment: Paypal Subscription & Buy Now
-			if ( strcmp( $txn_type, 'web_accept' ) == 0 || strcmp( $txn_type, 'subscr_payment' ) == 0 ) {
+		$gets = array( 'option', 'task', 'amount', 'invoice', 'authorization', 'transaction', 'subscriptionid', 'error', 'check' );
 
-				$recurring = ( strcmp( $txn_type, 'subscr_payment' ) == 0 );
-
-				if ( ( strcmp( $payment_type, 'instant' ) == 0 ) && ( strcmp( $payment_status, 'Pending' ) == 0 ) ) {
-					$response['pending_reason'] = $post['pending_reason'];
-				} elseif ( strcmp( $payment_type, 'instant' ) == 0 && strcmp( $payment_status, 'Completed' ) == 0 ) {
-					$response['valid']			= 1;
-				} elseif ( strcmp( $payment_type, 'echeck' ) == 0 && strcmp( $payment_status, 'Pending' ) == 0 ) {
-					if ( $cfg['acceptpendingecheck'] ) {
-						if ( is_object( $invoice ) ) {
-							$invoice->setParams( array( 'acceptedpendingecheck' => 1 ) );
-							$invoice->check();
-							$invoice->store();
-						}
-
-						$response['valid']			= 1;
-						$response['pending_reason'] = 'echeck';
-					} else {
-						$response['pending']		= 1;
-						$response['pending_reason'] = 'echeck';
-					}
-				} elseif ( strcmp( $payment_type, 'echeck' ) == 0 && strcmp( $payment_status, 'Completed' ) == 0 ) {
-					if ( $cfg['acceptpendingecheck'] ) {
-						if ( is_object( $invoice ) ) {
-							$invoiceparams = $invoice->getParams();
-
-							if ( isset( $invoiceparams['acceptedpendingecheck'] ) ) {
-								$response['valid']		= 0;
-								$response['duplicate']	= 1;
-
-								$invoice->delParams( array( 'acceptedpendingecheck' ) );
-								$invoice->check();
-								$invoice->store();
-							}
-						} else {
-							$response['valid']			= 1;
-						}
-					} else {
-						$response['valid']			= 1;
-					}
-				}
-			} elseif ( strcmp( $txn_type, 'subscr_signup' ) == 0 ) {
-				$response['pending']		= 1;
-				$response['pending_reason'] = 'signup';
-			} elseif ( strcmp( $txn_type, 'subscr_eot' ) == 0 ) {
-				$response['eot']				= 1;
-			} elseif ( strcmp( $txn_type, 'subscr_cancel' ) == 0 ) {
-				$response['cancel']				= 1;
+		$return = array();
+		foreach ( $gets as $get ) {
+			if ( isset( $_GET[$get] ) ) {
+				$return[$get] = $_GET[$get];
 			}
-		} else {
-			$response['pending_reason']			= 'error: ' . $res;
 		}
+
+		if ( !isset( $return['check'] ) ) {
+			$response['pending_reason']			= 'error: No checking string provided';
+			return $response;
+		}
+
+		$check = base64_decode( urldecode( $return['check'] ) );
+
+		sha1
 
 		return $response;
 	}

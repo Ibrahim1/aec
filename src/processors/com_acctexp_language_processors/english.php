@@ -499,6 +499,6 @@ define( '_CFG_PAYBOXFR_IDENTIFIANT_DESC', 'PAYBOX identifier, supplied by PAYBOX
 define( '_CFG_PAYBOXFR_PATH_NAME', 'Paybox Script Path');
 define( '_CFG_PAYBOXFR_PATH_DESC', 'The path where your paybox script is located.');
 define( '_CFG_PAYBOXFR_INFO_NAME', 'url http');
-define( '_CFG_PAYBOXFR_INFO_DESC', 'You need to set the "url http" in your Paybox settings. This is required so that Paybox will notify the AEC about transactions. The URL you have to put in there is: "http://yoursite.com/index.php?option=com_acctexp&task=payboxfrnotification"');
+define( '_CFG_PAYBOXFR_INFO_DESC', 'You need to set the "url http" in your Paybox settings. This is required so that Paybox will notify the AEC about transactions. The URL you have to put in there is: "http://yoursite.com/index.php"');
 
 ?>
