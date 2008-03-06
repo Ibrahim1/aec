@@ -311,19 +311,6 @@ class processor_authorize_arb extends XMLprocessor
 		}
 	}
 
-	function parseNotification( $post, $cfg )
-	{
-		$x_description			= $post['x_description'];
-
-		$x_amount				= $post['x_amount'];
-		$userid					= $post['x_cust_id'];
-
-		$response = array();
-		$response['invoice'] = $post['x_invoice_num'];
-
-		return $response;
-	}
-
 	function validateNotification( $response, $post, $cfg, $invoice )
 	{
 		if ( $post['x_subscription_paynum'] > 1 ) {
