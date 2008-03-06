@@ -102,7 +102,6 @@ class processor_payboxfr extends POSTprocessor
 		$var['PBX_RANG']		= $cfg['rank'];
 
 		if ( is_array( $int_var['amount'] ) ) {
-
 			$svars = array();
 			$svars['IBS_2MONT'] = '0000000000';
 			$svars['IBS_NBPAIE'] = '00';

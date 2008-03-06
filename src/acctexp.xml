@@ -46,8 +46,6 @@
 		<filename>lib/php_debug/php_debug_1and2.tar.gz</filename>
 		<filename>lib/php4/index.html</filename>
 		<filename>lib/php4/php4.php</filename>
-		<filename>lib/php4/csv/index.html</filename>
-		<filename>lib/php4/csv/csv.php</filename>
 		<filename>lib/php4/json/index.html</filename>
 		<filename>lib/php4/json/json.php</filename>
 		<filename>lib/recaptcha/index.html</filename>

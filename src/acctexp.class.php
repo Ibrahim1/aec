@@ -1665,6 +1665,10 @@ class PaymentProcessor
 		$this->settings	= $this->processor->getParams( 'settings' );
 		$original		= $this->processor->settings();
 
+		if ( !isset( $this->settings['recurring'] ) && is_int( $this->is_recurring() ) ) {
+			$original['recurring'] = 1;
+		}
+
 		foreach ( $original as $name => $var ) {
 			if ( !isset( $this->settings[$name] ) ) {
 				$this->settings[$name] = $var;
@@ -1699,7 +1703,7 @@ class PaymentProcessor
 		}
 	}
 
-	function is_recurring( $choice=null )
+	function is_recurring( $choice=null, $test=false )
 	{
 		if ( isset( $this->is_recurring ) ) {
 			return $this->is_recurring;
@@ -1720,13 +1724,13 @@ class PaymentProcessor
 			// If recurring = 2, the processor can
 			// set this property on a per-plan basis
 			if ( isset( $this->settings['recurring'] ) ) {
-				$return = $this->settings['recurring'];
+				$return = (int) $this->settings['recurring'];
 			} else {
-				$return = $this->info['recurring'];
+				$return = (int) $this->info['recurring'];
 			}
 
-			if ( !empty( $choice ) && ( $return > 1 ) ) {
-				$return = $choice;
+			if ( !is_null( $choice ) && ( $return > 1 ) ) {
+				$return = (int) $choice;
 			}
 		} elseif ( !empty( $this->info['recurring'] ) ) {
 			$return = true;
@@ -1752,7 +1756,11 @@ class PaymentProcessor
 			$this->getSettings();
 		}
 
-		return $this->processor->backend_settings( $this->settings );
+		if ( is_int( $this->is_recurring() ) ) {
+			return array_merge( array( 'recurring' => array( 'list_recurring' ) ), $this->processor->backend_settings( $this->settings ) );
+		} else {
+			return $this->processor->backend_settings( $this->settings );
+		}
 	}
 
 	function checkoutAction( $int_var, $metaUser, $new_subscription )
@@ -1828,21 +1836,15 @@ class PaymentProcessor
 
 	function getCustomPlanParams()
 	{
-		if ( method_exists( $this->processor, 'CustomPlanParams' ) ) {
-			if ( $this->is_recurring() > 1 ) {
-				$return = array_merge( array( 'recurring' => array( 'list_recurring' ) ), $this->processor->CustomPlanParams( $this->settings ) );
-			} else {
-				$return = $this->processor->CustomPlanParams( $this->settings );
-			}
-		} else {
-			if ( $this->is_recurring() > 1 ) {
-				$return = array( 'recurring' => array( 'list_recurring' ) );
-			} else {
-				$return = false;
-			}
+		if ( !isset( $this->settings ) ) {
+			$this->getSettings();
 		}
 
-		return $return;
+		if ( method_exists( $this->processor, 'CustomPlanParams' ) ) {
+			return $this->processor->CustomPlanParams( $this->settings );
+		} else {
+			return false;
+		}
 	}
 
 	function invoiceCreationAction( $objinvoice )
@@ -2347,7 +2349,7 @@ class aecSettings
 
 	function remap_list_recurring( $name, $value )
 	{
-		$recurring[] = mosHTML::makeOption( 0, _AEC_SELECT_RECURRING_NONE );
+		$recurring[] = mosHTML::makeOption( 0, _AEC_SELECT_RECURRING_NO );
 		$recurring[] = mosHTML::makeOption( 1, _AEC_SELECT_RECURRING_YES );
 		$recurring[] = mosHTML::makeOption( 2, _AEC_SELECT_RECURRING_BOTH );
 
@@ -3600,7 +3602,9 @@ class InvoiceFactory
 		if ( isset( $invoiceparams['userselect_recurring'] ) ) {
 			$this->recurring = $invoiceparams['userselect_recurring'];
 		} elseif ( isset( $_POST['recurring'] ) ) {
-			$this->objInvoice->addParam( array( 'userselect_recurring' => $_POST['recurring'] ) );
+			$this->objInvoice->addParams( array( 'userselect_recurring' => $_POST['recurring'] ) );
+			$this->objInvoice->check();
+			$this->objInvoice->store();
 		}
 
 		return;
@@ -3829,11 +3833,11 @@ class InvoiceFactory
 											$plan_gw[$k]['recurring']	= 1;
 											$k++;
 										}
-									} elseif ( !($plan_params['lifetime'] && $recurring ) ) {
+									} elseif ( !( $plan_params['lifetime'] && $recurring ) ) {
 										$plan_gw[$k]['name']		= $pp->processor_name;
 										$plan_gw[$k]['statement']	= $pp->info['statement'];
-										if ( is_numeric( $recurring ) && $recurring ) {
-											$plan_gw[$k]['recurring']	= 1;
+										if ( is_int( $recurring ) ) {
+											$plan_gw[$k]['recurring']	= $recurring;
 										}
 										$k++;
 									}
@@ -4974,6 +4978,7 @@ class Invoice extends paramDBTable
 	{
 		global $database, $mosConfig_live_site;
 
+		$int_var = array();
 		$int_var['params'] = $this->getParams();
 
 		// Filter non-processor params
@@ -5000,8 +5005,15 @@ class Invoice extends paramDBTable
 			$new_subscription->load( $this->usage );
 
 			$int_var['planparams'] = $new_subscription->getProcessorParameters( $pp->id );
-			if ( $pp->is_recurring() ) {
-				$int_var['recurring'] = $pp->is_recurring();
+
+			if ( isset( $int_var['params']['userselect_recurring'] ) ) {
+				$recurring = $pp->is_recurring( $int_var['params']['userselect_recurring'], true );
+			} else {
+				$recurring = $pp->is_recurring();
+			}
+
+			if ( $recurring ) {
+				$int_var['recurring'] = $recurring;
 			} else {
 				$int_var['recurring'] = 0;
 			}

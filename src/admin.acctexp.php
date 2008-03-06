@@ -1920,6 +1920,16 @@ function editSettings( $option )
 								$settings_array[$name][0] = 'list';
 								break;
 
+							case 'list_recurring':
+								$recurring[] = mosHTML::makeOption( 0, _AEC_SELECT_RECURRING_NO );
+								$recurring[] = mosHTML::makeOption( 1, _AEC_SELECT_RECURRING_YES );
+								$recurring[] = mosHTML::makeOption( 2, _AEC_SELECT_RECURRING_BOTH );
+
+								$lists[$setting_name] = mosHTML::selectList($recurring, $setting_name, 'size="3"', 'value', 'text', $pp->settings[$name] );
+
+								$settings_array[$name][0] = 'list';
+								break;
+
 							case 'list_plan':
 								// Create list
 								$lists[$setting_name] = mosHTML::selectList($available_plans, $setting_name, 'size="' . $total_plans . '"', 'value', 'text', $pp->settings[$name] );
@@ -2076,6 +2086,10 @@ function saveSettings( $option, $return=0 )
 			$pp->setInfo();
 
 			$settings = $pp->processor->settings();
+
+			if ( is_int( $pp->is_recurring() ) ) {
+				$settings['recurring'] = 2;
+			}
 
 			foreach ( $settings as $name => $value ) {
 				$postname = $procname  . '_' . $name;

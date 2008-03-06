@@ -78,7 +78,15 @@ define( '_CFG_PROCESSOR_ITEM_NAME_DEFAULT',	'Subscription at %s - User: %s (%s)'
 define( '_CFG_PROCESSOR_CUSTOMPARAMS_NAME', 'Custom Parameters');
 define( '_CFG_PROCESSOR_CUSTOMPARAMS_DESC', 'Custom Parameters that the AEC should transmit to the Payment Processor on Checkout. Separated by linebreaks in the form of "parameter_name=parameter_value". The RewriteEngine works as specified below.');
 define( '_CFG_PROCESSOR_PLAN_PARAMS_RECURRING_NAME', 'Recurring Payment');
-define( '_CFG_PROCESSOR_PLAN_PARAMS_RECURRING_DESC', 'This is a recurring payment.');
+define( '_CFG_PROCESSOR_PLAN_PARAMS_RECURRING_DESC', 'Choose what type of billing to use for this.');
+define( '_CFG_PROCESSOR_LANGUAGE_NAME', 'Language');
+define( '_CFG_PROCESSOR_LANGUAGE_DESC', 'Select one of the possible language settings for site that your user will see when issuing a payment.');
+define( '_CFG_PROCESSOR_RECURRING_NAME', 'Recurring Payment');
+define( '_CFG_PROCESSOR_RECURRING_DESC', 'Choose what type of billing to use for this.');
+
+define( '_AEC_SELECT_RECURRING_NO', 'Non-Recurring');
+define( '_AEC_SELECT_RECURRING_YES', 'Recurring');
+define( '_AEC_SELECT_RECURRING_BOTH', 'Both');
 
 // Generic Credit Card Form
 define( '_AEC_CCFORM_CARDHOLDER_NAME', 'Card owner Name');

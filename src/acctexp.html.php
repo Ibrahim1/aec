@@ -475,11 +475,10 @@ class Payment_HTML
 			}
 
 			$hidden['option']		= $option;
-			$hidden['task']		= $task;
+			$hidden['task']			= $task;
 			$hidden['processor']	= strtolower( $processor['name'] );
 			$hidden['usage']		= $planid;
-			$hidden['userid']		= $option;
-			$hidden['option']		= $userid ? $userid : 0;
+			$hidden['userid']		= $userid ? $userid : 0;
 
 			if ( isset( $processor['recurring'] ) ) {
 				if ( $processor['recurring'] ) {
@@ -498,7 +497,7 @@ class Payment_HTML
 
 			// Assemble hidden fields
 			foreach ( $hidden as $key => $value ) {
-				$html_code .= '<input type="hidden" name="' . $key . '" value="' . $array . '" />' . "\n";
+				$html_code .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
 			}
 
 			$html_code .= '</form></div>' . "\n";
@@ -639,6 +638,9 @@ class Payment_HTML
 						<input type="hidden" name="task" value="saveSubscription" />
 						<input type="hidden" name="usage" value="<?php echo $InvoiceFactory->usage; ?>" />
 						<input type="hidden" name="processor" value="<?php echo $InvoiceFactory->processor; ?>" />
+						<?php if ( isset( $InvoiceFactory->recurring ) ) { ?>
+						<input type="hidden" name="recurring" value="<?php echo $InvoiceFactory->recurring;?>" />
+						<?php } ?>
 						<?php
 						if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
 							<p><input name="tos" type="checkbox" /><?php echo sprintf( _CONFIRM_TOS, $aecConfig->cfg['tos'] ); ?></p>
