@@ -62,6 +62,7 @@ class processor_payboxfr extends POSTprocessor
 		$settings['testmode']		= 1;
 		$settings['rank']			= 'rank';
 		$settings['identifiant']	= 'identifiant';
+		$settings['publickey']		= 'publickey';
 		$settings['path']			= '/cgi-bin/modulev2.cgi';
 		$settings['currency']		= 'EUR';
 		$settings['language']		= 'FR';
@@ -77,6 +78,7 @@ class processor_payboxfr extends POSTprocessor
 		$settings['testmode']		= array( 'list_yesno' );
 		$settings['rank']			= array( 'inputC' );
 		$settings['identifiant']	= array( 'inputC' );
+		$settings['publickey']		= array( 'inputC' );
 		$settings['path']			= array( 'inputC' );
 		$settings['info']			= array( 'fieldset' );
 		$settings['currency']		= array( 'list_currency' );
@@ -193,11 +195,25 @@ class processor_payboxfr extends POSTprocessor
 		if ( !isset( $return['check'] ) ) {
 			$response['pending_reason']			= 'error: No checking string provided';
 			return $response;
+		} elseif ( !isset( $cfg['publickey'] ) ) {
+			$response['pending_reason']			= 'error: No Public Key provided';
+			return $response;
 		}
 
 		$check = base64_decode( urldecode( $return['check'] ) );
 
-		sha1
+		unset( $return['check'] );
+
+		$carr = array();
+		foreach ( $return as $rname => $rvalue ) {
+			$carr[] = $rname . '=' . $rvalue;
+		}
+
+		$cstring = implode( '&', $carr );
+
+		if ( crypt( sha1( $cstring ), $cfg['publickey'] ) == $check ) {
+			$response['valid'] = 1;
+		}
 
 		return $response;
 	}

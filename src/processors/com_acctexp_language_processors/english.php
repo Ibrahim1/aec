@@ -496,6 +496,8 @@ define( '_CFG_PAYBOXFR_RANK_NAME', 'Rank number');
 define( '_CFG_PAYBOXFR_RANK_DESC', 'Rank number ("machine") given by the bank.');
 define( '_CFG_PAYBOXFR_IDENTIFIANT_NAME', 'Paybox Identifiant');
 define( '_CFG_PAYBOXFR_IDENTIFIANT_DESC', 'PAYBOX identifier, supplied by PAYBOX SERVICES at the time of registration.');
+define( '_CFG_PAYBOXFR_PUBLICKEY_NAME', 'Public Key');
+define( '_CFG_PAYBOXFR_PUBLICKEY_DESC', 'The public key to verify Paybox notifications (required!!).');
 define( '_CFG_PAYBOXFR_PATH_NAME', 'Paybox Script Path');
 define( '_CFG_PAYBOXFR_PATH_DESC', 'The path where your paybox script is located.');
 define( '_CFG_PAYBOXFR_INFO_NAME', 'url http');

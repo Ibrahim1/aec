@@ -111,13 +111,13 @@ class mi_idevaffiliate
 			if ( ( strpos( $params['directory'], 'http://' ) === 0 ) || ( strpos( $params['directory'], 'https://' ) === 0 ) ) {
 				$rooturl = $params['directory'];
 			} else {
-				if ( ( strpos( $params['directory'], 'www' ) === 0 ) ) {
-					$params['directory'] = "http://" . $params['directory'];
+				if ( ( strpos( $params['directory'], 'www.' ) === 0 ) ) {
+					$rooturl = "http://" . $params['directory'];
 				} elseif ( strpos( "/", $params['directory'] ) !== 0 ) {
-					$params['directory'] = "/" . $params['directory'];
+					$rooturl = $mosConfig_live_site . "/" . $params['directory'];
+				} else {
+					$rooturl = $mosConfig_live_site . $params['directory'];
 				}
-
-				$rooturl = $mosConfig_live_site . $params['directory'];
 			}
 		} else {
 			$rooturl = $mosConfig_live_site . '/idevaffiliate';
