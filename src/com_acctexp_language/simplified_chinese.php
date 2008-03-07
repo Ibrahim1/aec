@@ -127,7 +127,7 @@ define( '_CONFIRM_ROW_USERNAME', '用户�??: ');
 define( '_CONFIRM_ROW_EMAIL', 'E-mail:');
 define( '_CONFIRM_INFO', '请点击继续按钮去完�?注册.');
 define( '_BUTTON_CONFIRM', '继续');
-define( '_CONFIRM_TOS', "I have read and agree to the <a href=\"%s\" target=\"_BLANK\">Terms of Service</a>");
+define( '_CONFIRM_TOS', "I have read and agree to the <a href=\"%s\" target=\"_blank\" title=\"ToS\">Terms of Service</a>");
 define( '_CONFIRM_TOS_ERROR', 'Please read and agree to our Terms of Service');
 define( '_CONFIRM_COUPON_INFO', 'If you have a coupon code, you can enter it on the Checkout Page to get a rebate on your payment');
 define( '_CONFIRM_COUPON_INFO_BOTH', 'If you have a coupon code, you can enter it here, or on the Checkout Page to get a discount on your payment');

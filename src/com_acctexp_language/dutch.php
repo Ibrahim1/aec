@@ -128,7 +128,7 @@ define( '_CONFIRM_ROW_USERNAME', 'Gebruikersnaam: ');
 define( '_CONFIRM_ROW_EMAIL', 'E-mail:');
 define( '_CONFIRM_INFO', 'Klik op de vervolg knop om het registratieproces te voltooien.');
 define( '_BUTTON_CONFIRM', 'Vervolg');
-define( '_CONFIRM_TOS', "Ik ga akkoord met de <a href=\"%s\" target=\"_BLANK\">Algemene Voorwaarden</a>");
+define( '_CONFIRM_TOS', "Ik ga akkoord met de <a href=\"%s\" target=\"_blank\" title=\"AV\">Algemene Voorwaarden</a>");
 define( '_CONFIRM_TOS_ERROR', 'U dient akkoord te gaan met de Algemene Voorwaarden');
 define( '_CONFIRM_COUPON_INFO', 'Indien u een couponcode bezit, kunt u deze invoeren op de Checkout Pagina voor een korting op uw betaling');
 define( '_CONFIRM_COUPON_INFO_BOTH', 'If you have a coupon code, you can enter it here, or on the Checkout Page to get a discount on your payment');

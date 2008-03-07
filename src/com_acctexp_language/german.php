@@ -123,7 +123,7 @@ define( '_CONFIRM_ROW_USERNAME',			'Benutzername: ');
 define( '_CONFIRM_ROW_EMAIL',				'Email:');
 define( '_CONFIRM_INFO',					'Benutzen Sie bitte den Best&auml;tigungsbutton um Ihre Bestellung abzuschlie&szlig;en.');
 define( '_BUTTON_CONFIRM',					'Best&auml;tigen');
-define( '_CONFIRM_TOS',						'Ich habe die <a href="%s" target="_blank" title="AGBs>AGBs</a> gelesen und bin einverstanden.');
+define( '_CONFIRM_TOS',						"Ich habe die <a href=\"%s\" target=\"_blank\" title=\"AGBs\">AGBs</a> gelesen und bin einverstanden.");
 define( '_CONFIRM_TOS_ERROR',				'Sie m&uuml;ssen unsere AGBs lesen und akzeptieren');
 define( '_CONFIRM_COUPON_INFO',				'Falls Sie einen Gutscheincode haben geben Sie ihn bitte auf den nachfolgenden Seiten an, um einen allf&auml;lligen Abzug zu ber&uuml;cksichtigen');
 define( '_CONFIRM_COUPON_INFO_BOTH', 'If you have a coupon code, you can enter it here, or on the Checkout Page to get a discount on your payment');

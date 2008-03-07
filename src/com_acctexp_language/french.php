@@ -128,7 +128,7 @@ define( '_CONFIRM_ROW_USERNAME', 'Nom d\'utilisateur: ');
 define( '_CONFIRM_ROW_EMAIL', 'mail:');
 define( '_CONFIRM_INFO', 'Veuillez utiliser le bouton Continuer pour compl&eacute;ter votre enregistrement.');
 define( '_BUTTON_CONFIRM', 'Continuer');
-define( '_CONFIRM_TOS', "J'ai lu et j\'accepte les <a href=\"%s\" target=\"_BLANK\">conditions d\'utilisation</a>");
+define( '_CONFIRM_TOS', "J'ai lu et j\'accepte les <a href=\"%s\" target=\"_blank\" title=\"CdU\">conditions d\'utilisation</a>");
 define( '_CONFIRM_TOS_ERROR', 'Veuillez lire et accepter nos conditions d\'utilisation');
 define( '_CONFIRM_COUPON_INFO', 'Si vous avez un code de bon de réduction, vous pourrez le saisir sur la page du r&egrave;glement pour qu\'il soit pris en compte.');
 define( '_CONFIRM_COUPON_INFO_BOTH', 'If you have a coupon code, you can enter it here, or on the Checkout Page to get a discount on your payment');
