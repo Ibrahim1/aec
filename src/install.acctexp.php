@@ -628,6 +628,8 @@ function com_install()
 					}
 				}
 
+				$plan_procs_unique = array_unique( $plan_procs );
+
 				if (count($plan_procs)) {
 					$database->setQuery( "UPDATE #__acctexp_plans SET processors='" . implode(";", $plan_procs) . "' WHERE id='" . $planentry->plan_id . "'" );
 					if ( !$database->query() ) {
