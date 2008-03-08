@@ -34,10 +34,10 @@ global $mosConfig_absolute_path, $mosConfig_offset_user, $aecConfig;
 
 if ( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
 	$langPath = $mosConfig_absolute_path . '/administrator/components/com_acctexp/com_acctexp_language_backend/';
-	if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
-			include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
+	if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
+		include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
 	} else {
-			include_once( $langPath. 'english.php' );
+		include_once( $langPath. 'english.php' );
 	}
 	include_once( $langPath . 'general.php' );
 }
@@ -8495,6 +8495,31 @@ class couponXuser extends paramDBTable
 
 		$this->setInvoiceList( $invoicelist );
 	}
+}
+
+
+class subscription_export extends paramDBTable
+{
+	/** @var int Primary key */
+	var $id					= null;
+	/** @var int */
+	var $system				= null;
+	/** @var string */
+	var $name				= null;
+	/** @var datetime */
+	var $created_date 		= null;
+	/** @var datetime */
+	var $lastused_date 		= null;
+	/** @var text */
+	var $options			= null;
+	/** @var text */
+	var $params				= null;
+
+	function subscription_export( &$db )
+	{
+		$this->mosDBTable( '#__acctexp_subscr_export', 'id', $db );
+	}
+
 }
 
 // Not yet active code for future features

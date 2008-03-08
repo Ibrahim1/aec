@@ -260,6 +260,20 @@ function com_install()
 	. ') TYPE=MyISAM;'
 	;
 
+	$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_subscr_export` ('
+	. '`id` int(11) NOT NULL auto_increment,'
+	. '`system` int(2) NOT NULL default \'0\','
+	. '`name` varchar(255) NULL,'
+    . '`created_date` datetime NULL default \'0000-00-00 00:00:00\','
+    . '`lastused_date` datetime NULL default \'0000-00-00 00:00:00\','
+	. '`filter` text NULL,'
+	. '`options` text NULL,'
+	. '`export` varchar(255) NULL,'
+	. '`params` text NULL,'
+	. ' PRIMARY KEY (`id`)'
+	. ') TYPE=MyISAM;'
+	;
+
 	foreach ( $queri AS $query ) {
 		$database->setQuery( $query );
 	    if ( !$database->query() ) {

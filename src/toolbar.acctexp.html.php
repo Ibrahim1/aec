@@ -176,6 +176,23 @@ class ComponentMenu
 		mosMenuBar::endTable();
 	}
 
+	function EDIT_EXPORT()
+	{
+		mosMenuBar::startTable();
+		mosMenuBar::custom( 'applyExport', 'backup.png',  'backup_f2.png', _EXPORT, false );
+		mosMenuBar::custom( 'saveExport', 'save.png',  'save_f2.png', _SAVE_PAYPLAN, false );
+		mosMenuBar::custom( 'cancelSettings', 'cancel.png',  'cancel_f2.png', _CANCEL, false );
+		mosMenuBar::endTable();
+	}
+
+	function EDIT_IMPORT()
+	{
+		mosMenuBar::startTable();
+		mosMenuBar::custom( 'applyImport', 'apply.png',  'apply_f2.png', _APPLY_PAYPLAN, false );
+		mosMenuBar::custom( 'cancelSettings', 'cancel.png',  'cancel_f2.png', _CANCEL, false );
+		mosMenuBar::endTable();
+	}
+
 	function NO_MENU()
 	{
 		mosMenuBar::startTable();

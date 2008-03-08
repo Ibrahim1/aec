@@ -903,6 +903,9 @@ class HTML_AcctExp
 
 						$link = 'index2.php?option=com_acctexp&amp;task=eventlog';
 						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_eventlog.png', _AEC_CENTR_LOG );
+
+						$link = 'index2.php?option=com_acctexp&amp;task=export';
+						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_export.png', _AEC_CENTR_EXPORT );
 						?>
 						<div class="central_quicksearch">
 							<h2><?php echo _AEC_QUICKSEARCH; ?></h2>
@@ -2331,7 +2334,6 @@ class HTML_AcctExp
 
 	function eventlog( $option, $events, $search, $pageNav )
 	{
-		global $my;
 		global $mosConfig_live_site;
 
 		mosCommonHTML::loadOverlib();
@@ -2387,6 +2389,57 @@ class HTML_AcctExp
 		<?php
 		if ( _EUCA_DEBUGMODE ) {
 			krumo( $option, $events, $search, $pageNav );
+		}
+
+ 		HTML_myCommon::GlobalNerd();
+	}
+
+	function export( $option, $aecHTML, $displayexports )
+	{
+		global $mosConfig_live_site;
+
+		mosCommonHTML::loadOverlib();
+		HTML_myCommon::addBackendCSS(); ?>
+		<form action="index2.php" method="post" name="adminForm">
+		<table class="adminheading">
+		<tr>
+			<th width="100%" class="sectionname" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_export.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;" rowspan="2" nowrap="nowrap">
+				<?php echo _AEC_HEAD_LOG; ?>
+			</th>
+			<td nowrap="nowrap" style="padding: 0 5px;">
+			</td>
+		</tr>
+		</table>
+
+		<table class="adminform" style="border-collapse:separate;">
+			<tr>
+				<td style="padding:10px;" valign="top">
+					<div style="position:relative;float:left;width:98%;padding:4px;">
+						<div class="userinfobox">
+							<?php echo $aecHTML->createSettingsParticle( 'selected_export' ); ?>
+							<!-- Select Button -->
+						</div>
+					</div>
+					<div style="position:relative;float:left;width:98%;padding:4px;">
+						<div class="userinfobox">
+							<?php echo $aecHTML->createSettingsParticle( 'boobooboo' ); ?>
+							<div class="usernote" style="width:200px;">
+								<?php echo ""; ?>
+							</div>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+
+		<input type="hidden" name="option" value="<?php echo $option;?>" />
+		<input type="hidden" name="task" value="export" />
+		<input type="hidden" name="returnTask" value="export" />
+		</form>
+
+		<?php
+		if ( _EUCA_DEBUGMODE ) {
+			krumo( $option, $displayexports );
 		}
 
  		HTML_myCommon::GlobalNerd();

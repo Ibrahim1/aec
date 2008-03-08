@@ -301,6 +301,8 @@ define( '_AEC_CENTR_M_INTEGRATION',				'Micro Integr.' );
 define( '_AEC_CENTR_HELP',						'Help' );
 define( '_AEC_CENTR_LOG',						'EventLog' );
 define( '_AEC_CENTR_MANUAL',					'Manual' );
+define( '_AEC_CENTR_EXPORT',						'Export' );
+define( '_AEC_CENTR_IMPORT',						'Import' );
 define( '_AEC_QUICKSEARCH',						'Quick Search' );
 define( '_AEC_QUICKSEARCH_DESC',				'Put in a users name, username, userid or an invoice number to get directly linke to the users profile. If there are more than one result, they will be shown below.' );
 define( '_AEC_QUICKSEARCH_MULTIRES',			'Multiple Results!' );

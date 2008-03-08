@@ -299,6 +299,8 @@ define( '_AEC_CENTR_M_INTEGRATION',				'MicroIntegration' );
 define( '_AEC_CENTR_HELP',						'Hilfe' );
 define( '_AEC_CENTR_LOG',						'Logdatei' );
 define( '_AEC_CENTR_MANUAL',					'Manuell' );
+define( '_AEC_CENTR_EXPORT',						'Export' );
+define( '_AEC_CENTR_IMPORT',						'Import' );
 define( '_AEC_QUICKSEARCH',						'Schnellsuche' );
 define( '_AEC_QUICKSEARCH_DESC',				'Geben sie den Namen, Benutzernamen, Email Addresse, die Benutzer ID oder eine Rechnungsnummer ein um direkt zum Konto eines Benutzers weitergeleitet zu werden. Sollten mehrere Benutzer gefunden werden, so wird unten eine Auswahl angezeigt.' );
 define( '_AEC_QUICKSEARCH_MULTIRES',			'Mehrere Benutzer gefunden!' );

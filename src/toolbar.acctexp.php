@@ -94,6 +94,14 @@ switch ( $task ) {
 		ComponentMenu::EDIT_COUPON_STATIC();
 		break;
 
+	case 'export':
+		CommonMenu::EDIT_EXPORT();
+		break;
+
+	case 'import':
+		CommonMenu::EDIT_IMPORT();
+		break;
+
 	case 'editCSS':
 		CommonMenu::EDIT_CSS_MENU();
 		break;

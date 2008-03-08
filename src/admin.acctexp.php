@@ -543,6 +543,14 @@ switch( strtolower( $task ) ) {
 		eventlog( $option );
 		break;
 
+	case 'export':
+		exportData( $option );
+		break;
+
+	case 'import':
+		importData( $option );
+		break;
+
 	case 'credits':
 		HTML_AcctExp::credits();
 		break;
@@ -2664,7 +2672,7 @@ function editSubscriptionPlan( $id, $option )
 	} else {
 		$settingsparams = array_merge( $params_values, $restrictions_values );
 	}
-	$settings->fullSettingsArray( $params, $settingsparams, $lists) ;
+	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
 
 	// Call HTML Class
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
@@ -4621,9 +4629,18 @@ function importData()
 	//
 }
 
-function exportData()
+function exportData( $option )
 {
-	// Prepare Settings Object
+	global $database;
+
+	$selected_export = aecGetParam( 'selected_export', 0 );
+	$display = array();
+
+	$lists = array();
+	$params_values = array();
+	$restrictions_values = array();
+	$customparams_values = array();
+
 	// Preset Dialog
 	// Saved or Autosaved Preset?
 	// YES? -> Load values from db (JSON)
@@ -4631,11 +4648,69 @@ function exportData()
 	// Offer to save afterwards (put in name, store with date!)
 	// Always store the last ten calls
 
+	// Create Parameters
+
+	$params['selected_export']					= array( 'list', '' );
+
+	// Create a list of export options
+
+	// First, only the non-autosaved entries
+	$query = 'SELECT `id`, `name`, `created_date`, `lastused_date`'
+			. ' FROM #__acctexp_subscr_export'
+			. ' WHERE `system` = 0'
+			;
+	$database->setQuery( $query );
+	$user_exports = $database->loadObjectList();
+
+	// Then the autosaved entries
+	$query = 'SELECT `id`, `name`, `created_date`, `lastused_date`'
+			. ' FROM #__acctexp_subscr_export'
+			. ' WHERE `system` = 1'
+			;
+	$database->setQuery( $query );
+	$system_exports = $database->loadObjectList();
+
+	$entries = count( $user_exports ) + count( $system_exports );
+
+	if ( $entries > 0 ) {
+		$listitems = array();
+
+		$user = false;
+		for ( $i=0; $i <= $entries; $i++ ) {
+			if ( $i == count( $system_exports ) ) {
+				$user = $i;
+			}
+
+			if ( $user === false ) {
+				$listitems[] = mosHTML::makeOption( $system_exports[$i]->id, substr( $system_exports[$i]->name, 0, 64 ) . ' - ' . 'last used: ' . $system_exports[$i]->lastused_date . ', created: ' . $system_exports[$i]->created_date );
+			} else {
+				$ix = $i - $user;
+				$listitems[] = mosHTML::makeOption( $system_exports[$ix]->id, substr( $system_exports[$ix]->name, 0, 64 ) . ' - ' . 'last used: ' . $system_exports[$ix]->lastused_date . ', created: ' . $system_exports[$ix]->created_date );
+			}
+		}
+
+		$lists['selected_export'] = mosHTML::selectList($listitems, 'selected_export', 'size="' . min( 20, $entries ) . '"', 'value', 'text', arrayValueDefault($params_values, 'selected_export', "D"));
+	} else {
+		$displayexports = false;
+	}
+
 	/*
 	 * Exporting: Select pretty much everything that is on the Subscriptions Page,
 	 * Especially User Status and Payment Plans (both multi select)
 	 */
 
+	$settings = new aecSettings ( 'export', 'general' );
+	if ( is_array( $customparams_values ) ) {
+		$settingsparams = array_merge( $params_values, $customparams_values, $restrictions_values );
+	} else {
+		$settingsparams = array_merge( $params_values, $restrictions_values );
+	}
+	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
+
+	// Call HTML Class
+	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+
+	HTML_AcctExp::export( $option, $aecHTML, $displayexports );
 }
 
 ?>
