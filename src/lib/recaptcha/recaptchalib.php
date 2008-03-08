@@ -91,10 +91,10 @@ function _recaptcha_http_post($host, $path, $data, $port = 80) {
 
 		*/
 
-		$response = CAPTCHAdoTheCurl( $host.$path, $port, $req);
+		$response = CAPTCHAdoTheHttp($host, $path, $port, $req);
 
         if( false == $response ) {
-                $response = CAPTCHAdoTheHttp($host, $path, $port, $req);
+        	$response = CAPTCHAdoTheCurl( $host.$path, $port, $req);
         }
 
         if( false == $response ) {
@@ -128,24 +128,23 @@ function _recaptcha_http_post($host, $path, $data, $port = 80) {
 		$header  = ''
 		. 'POST ' . $path . ' HTTP/1.0' . "\r\n"
 		. 'Host: ' . $host  . '' . "\r\n"
-		. 'Content-Type: application/x-www-form-urlencoded' . "\r\n"
+		. 'Content-Type: application/x-www-form-urlencoded;' . "\r\n"
 		. 'Content-Length: ' . strlen($req) . "\r\n"
 		. 'User-Agent: reCAPTCHA/PHP' . "\r\n"
 		. "\r\n"
 		;
-		$fp = fsockopen( $host, $port, $errno, $errstr, 30 );
+		$fp = fsockopen( $host, $port, $errno, $errstr, 10 );
 
 		if ( !$fp ) {
-			return false;
+			$res = false;
 		} else {
-			fputs( $fp, $header . $req );
+			fwrite( $fp, $header . $req );
 			while ( !feof( $fp ) ) {
 				$res = fgets( $fp, 1160 );
-				return $res;
 			}
 			fclose( $fp );
 		}
-		return false;
+		return $res;
 	}
 
 
