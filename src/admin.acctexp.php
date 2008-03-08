@@ -4609,19 +4609,32 @@ function backupFile( $file, $file_new )
 
 function importData()
 {
-	// Check for input
-	// Get saved and previous calls
-	// Create select box for calls
-	// assemble Settings
-
+	// File Selected?
+	// No -> Show only file selection&upload dialog
+	// Yes:
+	// Preparse File (show 2 sample lines of data)
+	// Preset Dialog
+	// Prepare Settings Object
+	// Preset selected?
+	// YES -> Load Preset
+	// No -> Load Defaults
+	//
 }
 
 function exportData()
 {
-	// Check for input
-	// Get saved and previous calls
-	// Create select box for calls
-	// assemble Settings
+	// Prepare Settings Object
+	// Preset Dialog
+	// Saved or Autosaved Preset?
+	// YES? -> Load values from db (JSON)
+	// No? -> Load defaults
+	// Offer to save afterwards (put in name, store with date!)
+	// Always store the last ten calls
+
+	/*
+	 * Exporting: Select pretty much everything that is on the Subscriptions Page,
+	 * Especially User Status and Payment Plans (both multi select)
+	 */
 
 }
 
