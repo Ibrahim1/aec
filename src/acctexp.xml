@@ -40,6 +40,8 @@
 		<filename>lib/eucalib/eucalib.proxy.php</filename>
 		<filename>lib/krumo/index.html</filename>
 		<filename>lib/krumo/krumo.tar.gz</filename>
+		<filename>lib/mootools/index.html</filename>
+		<filename>lib/mootools/mootools.js</filename>
 		<filename>lib/json/index.html</filename>
 		<filename>lib/json/json.php</filename>
 		<filename>lib/php_debug/index.html</filename>

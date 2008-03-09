@@ -327,6 +327,9 @@ class HTML_myCommon
 	{
 		global $mainframe; ?>
 		<link rel="stylesheet" type="text/css" media="all" href="<?php echo $mainframe->getCfg( 'live_site' ); ?>/administrator/components/com_acctexp/backend_style.css" />
+		<?php if ( !defined( 'JPATH_BASE' ) ) { ?>
+		<script type="text/javascript" src="<?php echo $mainframe->getCfg( 'live_site' ); ?>/components/com_acctexp/lib/mootools/mootools.js"></script>
+		<?php } ?>
 		<?php
 	}
 }
@@ -1220,6 +1223,20 @@ class HTML_AcctExp
 				submitform( pressbutton );
 			}
 			/* ]]> */
+		</script>
+		<script type="text/javascript">
+			window.addEvent('domready', function(){
+				var accordion = new Accordion('h3.atStart', 'div.atStart', {
+					opacity: false,
+					onActive: function(toggler, element){
+						toggler.setStyle('color', '#ff3300');
+					},
+
+					onBackground: function(toggler, element){
+						toggler.setStyle('color', '#222');
+					}
+				}, $('accordion'));
+			});
 		</script>
 		<form action="index2.php" method="post" name="adminForm">
 		<table class="adminheading">
@@ -2400,6 +2417,20 @@ class HTML_AcctExp
 
 		mosCommonHTML::loadOverlib();
 		HTML_myCommon::addBackendCSS(); ?>
+		<script type="text/javascript">
+			window.addEvent('domready', function(){
+				var accordion = new Accordion('h3.atStart', 'div.atStart', {
+					opacity: false,
+					onActive: function(toggler, element){
+						toggler.setStyle('color', '#ff3300');
+					},
+
+					onBackground: function(toggler, element){
+						toggler.setStyle('color', '#222');
+					}
+				}, $('accordion'));
+			});
+		</script>
 		<form action="index2.php" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
@@ -2414,30 +2445,44 @@ class HTML_AcctExp
 		<table class="adminform" style="border-collapse:separate;">
 			<tr>
 				<td style="padding:10px;" valign="top">
-					<div style="position:relative;float:left;width:98%;padding:4px;">
-						<div class="userinfobox">
-							<?php echo $aecHTML->createSettingsParticle( 'selected_export' ); ?>
-							<?php echo $aecHTML->createSettingsParticle( 'delete' ); ?>
+					<div id="accordion">
+						<h3 class="toggler atStart">Preset</h3>
+						<div class="element atStart">
+							<div style="position:relative;float:left;width:98%;padding:4px;">
+								<div class="userinfobox">
+									<?php echo $aecHTML->createSettingsParticle( 'selected_export' ); ?>
+									<?php echo $aecHTML->createSettingsParticle( 'delete' ); ?>
+								</div>
+							</div>
 						</div>
-					</div>
-					<div style="position:relative;float:left;width:98%;padding:4px;">
-						<div class="userinfobox">
-							<?php echo $aecHTML->createSettingsParticle( 'planid' ); ?>
-							<?php echo $aecHTML->createSettingsParticle( 'status' ); ?>
-							<?php echo $aecHTML->createSettingsParticle( 'orderby' ); ?>
+						<h3 class="toggler atStart">Filters</h3>
+						<div class="element atStart">
+							<div style="position:relative;float:left;width:98%;padding:4px;">
+								<div class="userinfobox">
+									<?php echo $aecHTML->createSettingsParticle( 'planid' ); ?>
+									<?php echo $aecHTML->createSettingsParticle( 'status' ); ?>
+									<?php echo $aecHTML->createSettingsParticle( 'orderby' ); ?>
+								</div>
+							</div>
 						</div>
-					</div>
-					<div style="position:relative;float:left;width:98%;padding:4px;">
-						<div class="userinfobox">
-							<?php echo $aecHTML->createSettingsParticle( 'rewrite_rule' ); ?>
-							<?php echo $aecHTML->createSettingsParticle( 'rewriteInfo' ); ?>
-							<?php echo $aecHTML->createSettingsParticle( 'selected_export' ); ?>
+						<h3 class="toggler atStart">Rewrite</h3>
+						<div class="element atStart">
+							<div style="position:relative;float:left;width:98%;padding:4px;">
+								<div class="userinfobox">
+									<?php echo $aecHTML->createSettingsParticle( 'rewrite_rule' ); ?>
+									<?php echo $aecHTML->createSettingsParticle( 'rewriteInfo' ); ?>
+									<?php echo $aecHTML->createSettingsParticle( 'selected_export' ); ?>
+								</div>
+							</div>
 						</div>
-					</div>
-					<div style="position:relative;float:left;width:98%;padding:4px;">
-						<div class="userinfobox">
-							<?php echo $aecHTML->createSettingsParticle( 'save' ); ?>
-							<?php echo $aecHTML->createSettingsParticle( 'save_name' ); ?>
+						<h3 class="toggler atStart">Export</h3>
+						<div class="element atStart">
+							<div style="position:relative;float:left;width:98%;padding:4px;">
+								<div class="userinfobox">
+									<?php echo $aecHTML->createSettingsParticle( 'save' ); ?>
+									<?php echo $aecHTML->createSettingsParticle( 'save_name' ); ?>
+								</div>
+							</div>
 						</div>
 					</div>
 				</td>

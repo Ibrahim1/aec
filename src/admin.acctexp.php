@@ -1831,16 +1831,6 @@ function editSettings( $option )
 	$tab_data[2] = array();
 	$tab_data[2][] = _CFG_TAB_MICROINTEGRATION_TITLE;
 	$tab_data[2][] = array( 'list_big', _CFG_MI_ACTIVELIST_NAME, _CFG_MI_ACTIVELIST_DESC, $aecConfig->cfg['milist'], 'milist' );
-//	$tab_data[2][] = array('list', _CFG_MI_META_NAME, _CFG_MI_META_DESC, $aecConfig->cfg['enable_mimeta'], 'enable_mimeta');
-
-	// TODO: reparse settings with new style aecSettings
-	/*
-	foreach ($tab_data as $tab => $items) {
-		foreach ($items as $item => $content) {
-
-		}
-	}
-	*/
 
 	$error_reporting_notices[] = mosHTML::makeOption( 512, _AEC_NOTICE_NUMBER_512 );
 	$error_reporting_notices[] = mosHTML::makeOption( 128, _AEC_NOTICE_NUMBER_128 );
