@@ -4468,6 +4468,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/components/com_user/controller.php' ) : ( $mosConfig_absolute_path . '/components/com_registration/registration.php' );
 		$hacks[$n]['read']			=	$v15 ? 'UserController::_sendMail($user, $password);' : '$row->checkin();';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( ( $v15 ? $aec_uchangereghack15 : $aec_uchangehack ), $n, "registration", $n );
+
 	}
 
 	$n = 'adminuserphp';

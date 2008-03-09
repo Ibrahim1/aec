@@ -2352,7 +2352,7 @@ class HTML_AcctExp
 			<tr>
 				<td style="padding:10px;" valign="top">
 					<div id="accordion">
-						<h3 class="toggler atStart">Preset</h3>
+						<h3 class="aec_toggler atStart">Preset</h3>
 						<div class="element atStart">
 							<div style="position:relative;float:left;width:98%;padding:4px;">
 								<div class="userinfobox">
@@ -2361,7 +2361,7 @@ class HTML_AcctExp
 								</div>
 							</div>
 						</div>
-						<h3 class="toggler atStart">Filters</h3>
+						<h3 class="aec_toggler atStart">Filters</h3>
 						<div class="element atStart">
 							<div style="position:relative;float:left;width:98%;padding:4px;">
 								<div class="userinfobox">
@@ -2371,7 +2371,7 @@ class HTML_AcctExp
 								</div>
 							</div>
 						</div>
-						<h3 class="toggler atStart">Rewrite</h3>
+						<h3 class="aec_toggler atStart">Rewrite</h3>
 						<div class="element atStart">
 							<div style="position:relative;float:left;width:98%;padding:4px;">
 								<div class="userinfobox">
@@ -2381,7 +2381,7 @@ class HTML_AcctExp
 								</div>
 							</div>
 						</div>
-						<h3 class="toggler atStart">Export</h3>
+						<h3 class="aec_toggler atStart">Export</h3>
 						<div class="element atStart">
 							<div style="position:relative;float:left;width:98%;padding:4px;">
 								<div class="userinfobox">

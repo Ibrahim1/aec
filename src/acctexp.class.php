@@ -2456,7 +2456,7 @@ class aecHTML
 				$return = '<div id="accordion">';
 				break;
 			case 'accordion_itemstart':
-				$return = '<h3 class="toggler atStart">' . $value . '</h3><div class="element atStart">';
+				$return = '<h3 class="aec_toggler atStart">' . $value . '</h3><div class="element atStart">';
 				break;
 			case 'div_end':
 				$return = '</div>';
@@ -7304,7 +7304,7 @@ class microIntegrationHandler
 			$row->load( $userid );
 		}
 
-		if ( count( $mi_list ) > 0 ) {
+		if ( !empty( $mi_list ) ) {
 			foreach ( $mi_list as $mi_id ) {
 				if ( !is_null( $mi_id ) && ( $mi_id != '' ) && $mi_id ) {
 					$mi = new microIntegration($database);

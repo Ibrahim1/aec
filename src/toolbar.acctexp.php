@@ -103,7 +103,7 @@ switch ( $task ) {
 		break;
 
 	case 'editCSS':
-		ComponentMenu::EDIT_CSS_MENU();
+		CommonMenu::EDIT_CSS_MENU();
 		break;
 
 	case 'eventlog':
