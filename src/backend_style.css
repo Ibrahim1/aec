@@ -199,6 +199,10 @@ border-bottom: solid 3px #998;
 width: 95%;
 }
 
+#accordion .userinfobox {
+width : 100%;
+}
+
 .usernote {
 position: relative;
 float: left;
