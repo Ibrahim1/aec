@@ -1052,6 +1052,7 @@ function com_install()
 	$files[] = array( 'images/gateway_logos.tar.gz',			'images/', 0 );
 	$files[] = array( 'lib/krumo/krumo.tar.gz',					'lib/krumo/', 0 );
 	$files[] = array( 'lib/php_debug/php_debug_1and2.tar.gz',	'lib/php_debug/', 0 );
+	$files[] = array( 'lib/mootools/mootools.tar.gz',			'lib/mootools/', 0 );
 	$files[] = array( 'processors/ideal_advanced/ideal_advanced.tar.gz',	'processors/ideal_advanced/', 0 );
 
 	// check if joomfish (joomla) or nokkaew (mambo) exists)
