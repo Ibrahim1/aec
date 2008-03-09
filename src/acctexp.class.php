@@ -2353,7 +2353,7 @@ class aecSettings
 		$recurring[] = mosHTML::makeOption( 1, _AEC_SELECT_RECURRING_YES );
 		$recurring[] = mosHTML::makeOption( 2, _AEC_SELECT_RECURRING_BOTH );
 
-		$this->lists[$name] = mosHTML::selectList($recurring, $name, 'size="3"', 'value', 'text', $value );
+		$this->lists[$name] = mosHTML::selectList( $recurring, $name, 'size="3"', 'value', 'text', $value );
 
 		return 'list';
 	}
@@ -2443,15 +2443,29 @@ class aecHTML
 				$return .= '</div>';
 				break;
 			case 'editor':
-				$return = '<p>' . $this->ToolTip( $row[2], $row[1]) . $row[1] . '</p>';
 				$return .= '<div class="setting_form">';
-				$return .= editorArea( $name, $value, $name, '100%;', '250', '10', '60' );
+				$return .= '<div><div>' . editorArea( $name, $value, $name, '100%;', '250', '10', '60' ) . '</div></div>';
 				$return .= '</div>';
 				break;
 			case 'list':
 				$return .= '<div class="setting_form">';
 				$return .= $this->lists[$name];
 				$return .= '</div>';
+				break;
+			case 'accordion_start':
+				$return = '<div id="accordion">';
+				break;
+			case 'accordion_itemstart':
+				$return = '<h3 class="toggler atStart">' . $value . '</h3><div class="element atStart">';
+				break;
+			case 'div_end':
+				$return = '</div>';
+				break;
+			case '2div_end':
+				$return = '</div></div>';
+				break;
+			case 'userinfobox':
+				$return = '<div style="position:relative;float:left;width:' . $value . '%;padding:4px;"><div class="userinfobox">';
 				break;
 			case 'fieldset':
 				$return = '<div class="setting_form">' . "\n"

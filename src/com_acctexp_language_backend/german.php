@@ -595,47 +595,43 @@ define( '_USERINVOICE_ACTION_CLEAR_APPLY',	'als&nbsp;bezahlt&nbsp;markieren&nbsp
 define( '_CFG_TAB1_TITLE',				'Konfigurationsoptionen' );
 define( '_CFG_TAB1_SUBTITLE', 'Optionen f&uuml;r die Interaktion mit dem Benutzer' );
 
-define( '_CFG_TAB1_OPT1NAME',			'Unmittelbarer Ablauf:' );
-define( '_CFG_TAB1_OPT1DESC',			'Standard Ablaufzeitraum, in Tagen, f&uuml;r neue Registrierungen. Die Zahl verh&auml;lt sich relativ zum Registrierungsdatum, wenn also Benutzer grunds&auml;tzlich als Abgelaufen registriert werden sollen, -1 (minus eins) w&auml;hlen.<br />Dies hat keinen Effekt auf den normalen Anmeldevorgang &uuml;ber ein Zahlungsgateway' );
-define( '_CFG_TAB1_OPT3NAME',			'Alarmebene 2:' );
-define( '_CFG_TAB1_OPT3DESC',			'In Tagen. Dies ist die erste Grenze die beginnt den Benutzer auf den Auslauf seines Abonnements hinzuweisen.' );
-define( '_CFG_TAB1_OPT4NAME',			'Alarmebene 1:' );
-define( '_CFG_TAB1_OPT4DESC',			'In Tagen. Dies ist die letzte Grenze die beginnt den Benutzer auf den Auslauf seines Abonnements hinzuweisen.' );
-define( '_CFG_TAB1_OPT5NAME',			'Einstiegsplan:' );
-define( '_CFG_TAB1_OPT5DESC',			'Jeder Benutzer wird - wenn keine Abonnement - ohne Bezahlung diesem Plan zugewiesen' );
-define( '_CFG_TAB1_OPT9NAME',			'Erfordert Einschreibung:' );
-define( '_CFG_TAB1_OPT9DESC',			'Wenn aktiviert, <strong>muss</strong> der Benutzer ein g&uuml;ltiges Abonnement besitzen. Nicht aktiviert, Benutzer k&ouml;nnen ohne Abo einloggen.' );
+define( '_CFG_GENERAL_ALERTLEVEL2_NAME',			'Alarmebene 2:' );
+define( '_CFG_GENERAL_ALERTLEVEL2_DESC',			'In Tagen. Dies ist die erste Grenze die beginnt den Benutzer auf den Auslauf seines Abonnements hinzuweisen.' );
+define( '_CFG_GENERAL_ALERTLEVEL1_NAME',			'Alarmebene 1:' );
+define( '_CFG_GENERAL_ALERTLEVEL1_DESC',			'In Tagen. Dies ist die letzte Grenze die beginnt den Benutzer auf den Auslauf seines Abonnements hinzuweisen.' );
+define( '_CFG_GENERAL_ENTRY_PLAN_NAME',			'Einstiegsplan:' );
+define( '_CFG_GENERAL_ENTRY_PLAN_DESC',			'Jeder Benutzer wird - wenn keine Abonnement - ohne Bezahlung diesem Plan zugewiesen' );
+define( '_CFG_GENERAL_REQUIRE_SUBSCRIPTION_NAME',			'Erfordert Einschreibung:' );
+define( '_CFG_GENERAL_REQUIRE_SUBSCRIPTION_DESC',			'Wenn aktiviert, <strong>muss</strong> der Benutzer ein g&uuml;ltiges Abonnement besitzen. Nicht aktiviert, Benutzer k&ouml;nnen ohne Abo einloggen.' );
 
-define( '_CFG_TAB1_OPT10NAME',			'Gateway Erkl&auml;rungen:' );
-define( '_CFG_TAB1_OPT10DESC',			'Hier Bezahlm&ouml;glichkeiten markieren welche auf der Nichterlaubt-Seite angezeigt werden sollen (diese Liste sehen die Benutzer, wenn sie versuchen eine Seite anzusehen f&uuml;r die sie keine Berechtigung haben).<br /><strong>Hinweis: es werden nur die oben, zur Zeit Aktiven angezeigt</strong>' );
-define( '_CFG_TAB1_OPT20NAME',			'Aktivierte Zahlungsgateways:' );
-define( '_CFG_TAB1_OPT20DESC',			'Alle Gateways markieren welche aktiv sein sollen (STRG-Taste dr&uuml;cken f&uuml;r mehrere).<br /><strong>Um die ge&auml;nderten Einstellungen anzuzeigen, den Button Speichern anklicken</strong><br />Deaktivieren eines Gateways l&ouml;scht nicht die bisherigen Einstellungen.' );
-define( '_CFG_TAB1_OPT11NAME',			'Erfordert Abschluss:' );
-define( '_CFG_TAB1_OPT11DESC',			'Als Standardvorgabe gilt, wenn ein Benutzer kein Abo besitzt kann er sich trotzdem einloggen. Mit dieser Einstellung <strong>muss</strong> er ein Abo abschliessen.' );
-define( '_CFG_ENTRYPLAN_NAME',			'Standard Probeplan' );
-define( '_CFG_ENTRYPLAN_DESC',			'Der Standard-Plan f&uuml;r die freie Probezeit.' );
+define( '_CFG_GENERAL_GWLIST_NAME',			'Gateway Erkl&auml;rungen:' );
+define( '_CFG_GENERAL_GWLIST_DESC',			'Hier Bezahlm&ouml;glichkeiten markieren welche auf der Nichterlaubt-Seite angezeigt werden sollen (diese Liste sehen die Benutzer, wenn sie versuchen eine Seite anzusehen f&uuml;r die sie keine Berechtigung haben).<br /><strong>Hinweis: es werden nur die oben, zur Zeit Aktiven angezeigt</strong>' );
+define( '_CFG_GENERAL_GWLIST_ENABLED_NAME',			'Aktivierte Zahlungsgateways:' );
+define( '_CFG_GENERAL_GWLIST_ENABLED_DESC',			'Alle Gateways markieren welche aktiv sein sollen (STRG-Taste dr&uuml;cken f&uuml;r mehrere).<br /><strong>Um die ge&auml;nderten Einstellungen anzuzeigen, den Button Speichern anklicken</strong><br />Deaktivieren eines Gateways l&ouml;scht nicht die bisherigen Einstellungen.' );
+define( '_CFG_GENERAL_ENTRY_PLAN_NAME',			'Standard Probeplan' );
+define( '_CFG_GENERAL_ENTRY_PLAN_DESC',			'Der Standard-Plan f&uuml;r die freie Probezeit.' );
 
-define( '_CFG_TAB1_OPT15NAME',			'Komponenten abschalten:' );
-define( '_CFG_TAB1_OPT15DESC',			'Alle zu deaktivierenden Zusatzkomponenten angeben (mit Komma trennen!). Zur werden unterst&uuml;tzt: <strong>CB,CBE,CBM,JACL,SMF,UE,UHP2,VM</strong>.<br />Sollte z.B. CB (CommunityBuilder) deinstalliert werden aber dessen Datenbanktabellen noch vorhanden sein, jedoch hier <strong>kein</strong> Eintrag vermerkt sein, wird AEC dann weiterhin CB als installiert ansehen!.' );
+define( '_CFG_GENERAL_BYPASSINTEGRATION_NAME',			'Komponenten abschalten:' );
+define( '_CFG_GENERAL_BYPASSINTEGRATION_DESC',			'Alle zu deaktivierenden Zusatzkomponenten angeben (mit Komma trennen!). Zur werden unterst&uuml;tzt: <strong>CB,CBE,CBM,JACL,SMF,UE,UHP2,VM</strong>.<br />Sollte z.B. CB (CommunityBuilder) deinstalliert werden aber dessen Datenbanktabellen noch vorhanden sein, jedoch hier <strong>kein</strong> Eintrag vermerkt sein, wird AEC dann weiterhin CB als installiert ansehen!.' );
 
-define( '_CFG_TAB1_OPT16NAME',			'Einfache URLs:' );
-define( '_CFG_TAB1_OPT16DESC',			'SEF-URLs der jeweiligen Komponenten abschalten. Falls bei der Verendung von SEF-URLs Fehler auftauchen (FEHLER 404) wurde in der SEF-Konfiguration ein Fehler gemacht - das Abschalten dieser Option hier kann diese Fehler beseitigen.' );
-define( '_CFG_TAB1_OPT17NAME',			'Ablaufschonfrist:' );
-define( '_CFG_TAB1_OPT17DESC',			'Anzahl der Stunden welche AEC als Polster nimmt bevor der Account abgeschalten wird. Es sollte bedacht werden, dass der Zahlungseingang etliche Stunden dauern kann (t.w. bis zu 14 Stunden!)' );
-define( '_CFG_TAB1_OPT18NAME',			'Cronjob Zyklus:' );
-define( '_CFG_TAB1_OPT18DESC',			'Anzahl der Stunden die AEC als Trigger nimmt um anstehende, wiederkehrende Aktionen (wie z.B. Emailversand) auszuf&uuml;hren.' );
-define( '_CFG_TAB1_OPT21NAME',			'Plan Zuerst:' );
-define( '_CFG_TAB1_OPT21DESC',			'Wenn alle o.a. Zusatzkomponenten mit einer Aboaktion verbunden sind, aktiviert diese Option diese M&ouml;glichkeit. Falls das nicht gew&uuml;nscht ist oder nur die erste Integrationsm&ouml;glichkeit zur Auswahl stehen soll, dann hier nicht aktivieren - die Aboauswahl kommt dann <strong>nach</strong> der Anmeldung/Registrierung.' );
+define( '_CFG_GENERAL_SIMPLEURLS_NAME',			'Einfache URLs:' );
+define( '_CFG_GENERAL_SIMPLEURLS_DESC',			'SEF-URLs der jeweiligen Komponenten abschalten. Falls bei der Verendung von SEF-URLs Fehler auftauchen (FEHLER 404) wurde in der SEF-Konfiguration ein Fehler gemacht - das Abschalten dieser Option hier kann diese Fehler beseitigen.' );
+define( '_CFG_GENERAL_EXPIRATION_CUSHION_NAME',			'Ablaufschonfrist:' );
+define( '_CFG_GENERAL_EXPIRATION_CUSHION_DESC',			'Anzahl der Stunden welche AEC als Polster nimmt bevor der Account abgeschalten wird. Es sollte bedacht werden, dass der Zahlungseingang etliche Stunden dauern kann (t.w. bis zu 14 Stunden!)' );
+define( '_CFG_GENERAL_HEARTBEAT_CYCLE_NAME',			'Cronjob Zyklus:' );
+define( '_CFG_GENERAL_HEARTBEAT_CYCLE_DESC',			'Anzahl der Stunden die AEC als Trigger nimmt um anstehende, wiederkehrende Aktionen (wie z.B. Emailversand) auszuf&uuml;hren.' );
+define( '_CFG_GENERAL_PLANS_FIRST_NAME',			'Plan Zuerst:' );
+define( '_CFG_GENERAL_PLANS_FIRST_DESC',			'Wenn alle o.a. Zusatzkomponenten mit einer Aboaktion verbunden sind, aktiviert diese Option diese M&ouml;glichkeit. Falls das nicht gew&uuml;nscht ist oder nur die erste Integrationsm&ouml;glichkeit zur Auswahl stehen soll, dann hier nicht aktivieren - die Aboauswahl kommt dann <strong>nach</strong> der Anmeldung/Registrierung.' );
 
 define( '_CFG_TAB_CUSTOMIZATION_TITLE',	'Anpassen' );
-define( '_CFG_TAB1_OPT12NAME',			'Individuelle Einstiegsseite:' );
-define( '_CFG_TAB1_OPT12DESC',			'Hier den kompletten Link (inkl. http://) angeben der zur Einstiegsseite f&uuml;hren soll. Diese Seite sollte einen Link wie z.B. http://www.yourdomain.com/index.php?option=com_acctexp&amp;task=subscribe&amp;intro=1 beinhalten welcher die Einf&uuml;hrung &uuml;bergeht und den Benutzer direkt zur Aboseite oder Registrierungsseite f&uuml;hrt.<br />Wenn diese Option nicht gew&uuml;nscht wird, dann dieses Feld leer lassen.' );
-define( '_CFG_TAB1_OPT13NAME',			'Link zu individueller Dankeseite:' );
-define( '_CFG_TAB1_OPT13DESC',			'Kompletten Link (inkl. http://) angeben welchen die Besucher zur Dankeseite f&uuml;hrt. Wenn nicht gew&uuml;nscht dann leer lassen.' );
-define( '_CFG_TAB1_OPT14NAME',			'Link zu individueller Abbruchseite:' );
-define( '_CFG_TAB1_OPT14DESC',			'Kompletten Link (inkl. http://) angeben welchen die Besucher - wenn Abbruch - zu dieser  Seite f&uuml;hrt. Wenn nicht gew&uuml;nscht dann leer lassen.' );
-define( '_CFG_TAB1_OPT19NAME',			'Link zu den AGBs:' );
-define( '_CFG_TAB1_OPT19DESC',			'Hier den Link zu den AGBS angeben. Die Benutzer m&uuml;ssen dann dort zum Einverst&auml;ndnis eine Checkbox aktivieren. Leer lassen wenn nicht gew&uuml;nscht' );
+define( '_CFG_GENERAL_CUSTOMINTRO_NAME',			'Individuelle Einstiegsseite:' );
+define( '_CFG_GENERAL_CUSTOMINTRO_DESC',			'Hier den kompletten Link (inkl. http://) angeben der zur Einstiegsseite f&uuml;hren soll. Diese Seite sollte einen Link wie z.B. http://www.yourdomain.com/index.php?option=com_acctexp&amp;task=subscribe&amp;intro=1 beinhalten welcher die Einf&uuml;hrung &uuml;bergeht und den Benutzer direkt zur Aboseite oder Registrierungsseite f&uuml;hrt.<br />Wenn diese Option nicht gew&uuml;nscht wird, dann dieses Feld leer lassen.' );
+define( '_CFG_GENERAL_CUSTOMTHANKS_NAME',			'Link zu individueller Dankeseite:' );
+define( '_CFG_GENERAL_CUSTOMTHANKS_DESC',			'Kompletten Link (inkl. http://) angeben welchen die Besucher zur Dankeseite f&uuml;hrt. Wenn nicht gew&uuml;nscht dann leer lassen.' );
+define( '_CFG_GENERAL_CUSTOMCANCEL_NAME',			'Link zu individueller Abbruchseite:' );
+define( '_CFG_GENERAL_CUSTOMCANCEL_DESC',			'Kompletten Link (inkl. http://) angeben welchen die Besucher - wenn Abbruch - zu dieser  Seite f&uuml;hrt. Wenn nicht gew&uuml;nscht dann leer lassen.' );
+define( '_CFG_GENERAL_TOS_NAME',			'Link zu den AGBs:' );
+define( '_CFG_GENERAL_TOS_DESC',			'Hier den Link zu den AGBS angeben. Die Benutzer m&uuml;ssen dann dort zum Einverst&auml;ndnis eine Checkbox aktivieren. Leer lassen wenn nicht gew&uuml;nscht' );
 define( '_CFG_GENERAL_CUSTOMNOTALLOWED_DESC',	'Hier den kompletten Link (inkl. http://) angeben welche die Besucher zur Nichterlaubtseite f&uuml;hrt. Leer lassen wenn nicht gew&uuml;nscht.' );
 
 define( '_CFG_GENERAL_DISPLAY_DATE_FRONTEND_NAME',	'Frontend Datumsformat' );
@@ -715,10 +711,8 @@ define( '_CFG_GENERAL_CONFIRMATION_COUPONS_DESC', 'Offer to provide coupon codes
 
 // Global Micro Integration Settings
 define( '_CFG_TAB_MICROINTEGRATION_TITLE',				'MicroIntegration' );
-define( '_CFG_MI_ACTIVELIST_NAME',						'Aktive MicroIntegrationen' );
-define( '_CFG_MI_ACTIVELIST_DESC',						'W&auml;hlen welche MicroIntegrationen aktiv sein sollen' );
-define( '_CFG_MI_META_NAME',							'MicroIntegrationen Meta' );
-define( '_CFG_MI_META_DESC',							'Sollen die MicroIntegrationen untereinander Variablen austauschen d&uuml;rfen' );
+define( '_CFG_MI_MILIST_NAME',						'Aktive MicroIntegrationen' );
+define( '_CFG_MI_MILIST_DESC',						'W&auml;hlen welche MicroIntegrationen aktiv sein sollen' );
 
 //Invoice settings
 define( '_CFG_GENERAL_SENDINVOICE_NAME', 'Send an invoice email');

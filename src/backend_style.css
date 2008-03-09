@@ -196,6 +196,7 @@ background-repeat: no-repeat;
 margin: 5px;
 padding: 12px 3px 12px 6px;
 border-bottom: solid 3px #998;
+width: 95%;
 }
 
 .usernote {
@@ -283,6 +284,7 @@ div.setting_desc {
 position: relative;
 float: left;
 padding: 4px;
+clear: left;
 }
 
 div.setting_form {
@@ -295,6 +297,7 @@ clear: both;
 }
 
 fieldset {
+clear: both;
 }
 
 div#aec_footer {

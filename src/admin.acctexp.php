@@ -1666,10 +1666,10 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$group_selection[] = mosHTML::makeOption( 'close',		_EXPIRE_CLOSE );
 	$group_selection[] = mosHTML::makeOption( 'add_1',		_EXPIRE_ADD01MONTH );
 	$group_selection[] = mosHTML::makeOption( 'add_3',		_EXPIRE_ADD03MONTH );
-	$group_selection[] = mosHTML::makeOption( 'add_12',		_EXPIRE_ADD12MONTH );
+	$group_selection[] = mosHTML::makeOption( 'add_12',	_EXPIRE_ADD12MONTH );
 	$group_selection[] = mosHTML::makeOption( 'set_1',		_EXPIRE_01MONTH );
 	$group_selection[] = mosHTML::makeOption( 'set_3',		_EXPIRE_03MONTH );
-	$group_selection[] = mosHTML::makeOption( 'set_12',		_EXPIRE_12MONTH );
+	$group_selection[] = mosHTML::makeOption( 'set_12',	_EXPIRE_12MONTH );
 
 	$lists['set_expiration'] = mosHTML::selectList($group_selection, 'set_expiration', 'class="inputbox" size="1" onchange="document.adminForm.submit( );"', 'value', 'text', "");
 
@@ -1688,19 +1688,7 @@ function editSettings( $option )
 	}
 
 	$lists = array();
-
-	$yn_lists = array( 'simpleurls', 'require_subscription', 'plans_first',
-						'enable_coupons', 'displayccinfo', 'adminaccess',
-						'noemails', 'nojoomlaregemails', 'debugmode',
-						'override_reqssl', 'use_recaptcha', 'confirmation_coupons',
-						'ssl_signup', 'skip_confirmation', 'show_fixeddecision',
-						'customtext_confirm_keeporiginal', 'customtext_checkout_keeporiginal', 'customtext_notallowed_keeporiginal',
-						'customtext_expired_keeporiginal', 'customtext_pending_keeporiginal', 'invoicenum_doformat'
-						);
-
-	foreach ( $yn_lists as $ynname ) {
-		$lists[$ynname] = mosHTML::yesnoSelectList($ynname, '', $aecConfig->cfg[$ynname]);
-	}
+	$ppsettings = array();
 
 	$currency_code_list	= AECToolbox::_aecCurrencyField( true, true, true );
 	$lists['currency_code_general'] = mosHTML::selectList( $currency_code_list, ( 'currency_code_general' ), 'size="10"', 'value', 'text', ( !empty( $aecConfig->cfg['currency_code_general'] ) ? $aecConfig->cfg['currency_code_general'] : '' ) );
@@ -1755,82 +1743,120 @@ function editSettings( $option )
 
 	$lists['milist'] = mosHTML::selectList( $mi_htmllist, 'milist[]', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '" multiple', 'value', 'text', $selected_mis );
 
-	// Each Tab needs a name and a short description
-	// Start then by specifying how many values you want to show up and choose their type
-	// subtitle	= Subtitle line
-	// inputA-D	= Inputs with varying sizes
-	// list		= List choice
-	// fieldset	= Descriptive field
-
 	$tab_data = array();
-	$tab_data[0] = array();
-	$tab_data[0][] = _CFG_TAB1_TITLE;
-	$tab_data[0][] = array( 'subtitle', '0', _CFG_TAB1_SUBTITLE, '0', '0');
-	$tab_data[0][] = array( 'list', _CFG_TAB1_OPT9NAME, _CFG_TAB1_OPT9DESC, '0', 'require_subscription');
-	$tab_data[0][] = array( 'inputA', _CFG_TAB1_OPT3NAME, _CFG_TAB1_OPT3DESC, $aecConfig->cfg['alertlevel2'], 'alertlevel2');
-	$tab_data[0][] = array( 'inputA', _CFG_TAB1_OPT4NAME, _CFG_TAB1_OPT4DESC, $aecConfig->cfg['alertlevel1'], 'alertlevel1');
-	$tab_data[0][] = array( 'list', _CFG_TAB1_OPT20NAME, _CFG_TAB1_OPT20DESC, '0', 'gwlist_enabled');
-	$tab_data[0][] = array( 'list', _CFG_TAB1_OPT10NAME, _CFG_TAB1_OPT10DESC, '0', 'gwlist');
-	$tab_data[0][] = array( 'list', _CFG_TAB1_OPT5NAME, _CFG_TAB1_OPT5DESC, '0', 'entry_plan');
-	$tab_data[0][] = array( 'list', _CFG_GENERAL_DISPLAYCCINFO_NAME, _CFG_GENERAL_DISPLAYCCINFO_DESC, '0', 'displayccinfo');
-	$tab_data[0][] = array( 'inputC', _CFG_TAB1_OPT15NAME, _CFG_TAB1_OPT15DESC, $aecConfig->cfg['bypassintegration'], 'bypassintegration');
-	$tab_data[0][] = array( 'list', _CFG_TAB1_OPT21NAME, _CFG_TAB1_OPT21DESC, '0', 'plans_first');
-	$tab_data[0][] = array( 'list', _CFG_TAB1_OPT16NAME, _CFG_TAB1_OPT16DESC, '0', 'simpleurls');
-	$tab_data[0][] = array( 'inputA', _CFG_TAB1_OPT17NAME, _CFG_TAB1_OPT17DESC, $aecConfig->cfg['expiration_cushion'], 'expiration_cushion');
-	$tab_data[0][] = array( 'inputA', _CFG_TAB1_OPT18NAME, _CFG_TAB1_OPT18DESC, $aecConfig->cfg['heartbeat_cycle'], 'heartbeat_cycle');
-	$tab_data[0][] = array( 'inputA', _CFG_GENERAL_HEARTBEAT_CYCLE_BACKEND_NAME, _CFG_GENERAL_HEARTBEAT_CYCLE_BACKEND_DESC, $aecConfig->cfg['heartbeat_cycle_backend'], 'heartbeat_cycle_backend');
-	$tab_data[0][] = array( 'list', _CFG_GENERAL_ENABLE_COUPONS_NAME, _CFG_GENERAL_ENABLE_COUPONS_DESC, '0', 'enable_coupons');
-	$tab_data[0][] = array( 'list', _CFG_GENERAL_ADMINACCESS_NAME, _CFG_GENERAL_ADMINACCESS_DESC, '0', 'adminaccess');
-	$tab_data[0][] = array( 'list', _CFG_GENERAL_NOEMAILS_NAME, _CFG_GENERAL_NOEMAILS_DESC, '0', 'noemails');
-	$tab_data[0][] = array( 'list', _CFG_GENERAL_NOJOOMLAREGEMAILS_NAME, _CFG_GENERAL_NOJOOMLAREGEMAILS_DESC, '0', 'nojoomlaregemails');
-	$tab_data[0][] = array( 'list', _CFG_GENERAL_SSL_SIGNUP_NAME, _CFG_GENERAL_SSL_SIGNUP_DESC, '0', 'ssl_signup');
-	$tab_data[0][] = array( 'list', _CFG_GENERAL_OVERRIDE_REQSSL_NAME, _CFG_GENERAL_OVERRIDE_REQSSL_DESC, '0', 'override_reqssl');
-	$tab_data[0][] = array( 'list', _CFG_GENERAL_SKIP_CONFIRMATION_NAME, _CFG_GENERAL_SKIP_CONFIRMATION_DESC, '0', 'skip_confirmation');
-	$tab_data[0][] = array( 'list', _CFG_GENERAL_SHOW_FIXEDDECISION_NAME, _CFG_GENERAL_SHOW_FIXEDDECISION_DESC, '0', 'show_fixeddecision');
-	$tab_data[0][] = array( 'list', _CFG_GENERAL_CONFIRMATION_COUPONS_NAME, _CFG_GENERAL_CONFIRMATION_COUPONS_DESC, '0', 'confirmation_coupons');
-	$tab_data[0][] = array( 'list', _CFG_GENERAL_DEBUGMODE_NAME, _CFG_GENERAL_DEBUGMODE_DESC, '0', 'debugmode');
-	$tab_data[0][] = array( 'list', _CFG_GENERAL_ERROR_NOTIFICATION_LEVEL_NAME, _CFG_GENERAL_ERROR_NOTIFICATION_LEVEL_DESC, '0', 'error_notification_level');
-	$tab_data[0][] = array( 'list', _CFG_GENERAL_EMAIL_NOTIFICATION_LEVEL_NAME, _CFG_GENERAL_EMAIL_NOTIFICATION_LEVEL_DESC, '0', 'email_notification_level');
 
-	$tab_data[1] = array();
-	$tab_data[1][] = _CFG_TAB_CUSTOMIZATION_TITLE;
-	$tab_data[1][] = array( 'inputC', _CFG_TAB1_OPT12NAME, _CFG_TAB1_OPT12DESC, $aecConfig->cfg['customintro'], 'customintro');
-	$tab_data[1][] = array( 'inputC', _CFG_TAB1_OPT13NAME, _CFG_TAB1_OPT13DESC, $aecConfig->cfg['customthanks'], 'customthanks');
-	$tab_data[1][] = array( 'inputC', _CFG_TAB1_OPT14NAME, _CFG_TAB1_OPT14DESC, $aecConfig->cfg['customcancel'], 'customcancel');
-	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_CUSTOMNOTALLOWED_NAME, _CFG_GENERAL_CUSTOMNOTALLOWED_DESC, $aecConfig->cfg['customnotallowed'], 'customnotallowed');
+	$params['uib1']	= array( 'userinfobox', 30 );
+	$params['require_subscription']			= array( 'list_yesno', 0 );
+	$params['alertlevel2']					= array( 'inputA', 0 );
+	$params['alertlevel1']					= array( 'inputA', 0 );
+	$params['bypassintegration']				= array( 'inputC', 0 );
+	$params['simpleurls']						= array( 'list_yesno', 0 );
+	$params['expiration_cushion']			= array( 'inputA', 0 );
+	$params['heartbeat_cycle']				= array( 'inputA', 0 );
+	$params['heartbeat_cycle_backend']		= array( 'inputA', 0 );
+	$params['adminaccess']					= array( 'list_yesno', 0 );
+	$params['noemails']						= array( 'list_yesno', 0 );
+	$params['nojoomlaregemails']				= array( 'list_yesno', 0 );
+	$params['debugmode']						= array( 'list_yesno', 0 );
+	$params['error_notification_level']		= array( 'list', 0 );
+	$params['email_notification_level']		= array( 'list', 0 );
+	$params['uib1e']	= array( '2div_end', 0 );
 
-	$tab_data[1][] = array( 'inputC', _CFG_TAB1_OPT19NAME, _CFG_TAB1_OPT19DESC, $aecConfig->cfg['tos'], 'tos');
-	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_DISPLAY_DATE_FRONTEND_NAME, _CFG_GENERAL_DISPLAY_DATE_FRONTEND_DESC, $aecConfig->cfg['display_date_frontend'], 'display_date_frontend');
-	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_DISPLAY_DATE_BACKEND_NAME, _CFG_GENERAL_DISPLAY_DATE_BACKEND_DESC, $aecConfig->cfg['display_date_backend'], 'display_date_backend');
+	$params['uib2']	= array( 'userinfobox', 30 );
+	$params['gwlist_enabled']					= array( 'list', 0 );
+	$params['gwlist']							= array( 'list', 0 );
+	$params['entry_plan']						= array( 'list', 0 );
+	$params['uib2e']	= array( '2div_end', 0 );
 
-	$tab_data[1][] = array( 'list', _CFG_GENERAL_INVOICENUM_DOFORMAT_NAME, _CFG_GENERAL_INVOICENUM_DOFORMAT_DESC, $aecConfig->cfg['invoicenum_doformat'], 'invoicenum_doformat');
-	$tab_data[1][] = array( 'inputD', _CFG_GENERAL_INVOICENUM_FORMATTING_NAME, _CFG_GENERAL_INVOICENUM_FORMATTING_DESC, $aecConfig->cfg['invoicenum_formatting'], 'invoicenum_formatting');
+	$params['uib3']	= array( 'userinfobox', 30 );
+	$params['plans_first']					= array( 'list_yesno', 0 );
+	$params['displayccinfo']					= array( 'list_yesno', 0 );
+	$params['enable_coupons']					= array( 'list_yesno', 0 );
+	$params['ssl_signup']						= array( 'list_yesno', 0 );
+	$params['override_reqssl']				= array( 'list_yesno', 0 );
+	$params['skip_confirmation']				= array( 'list_yesno', 0 );
+	$params['show_fixeddecision']			= array( 'list_yesno', 0 );
+	$params['confirmation_coupons']			= array( 'list_yesno', 0 );
+	$params['uib3e']	= array( '2div_end', 0 );
 
-	$rewriteswitches	= array( 'cms', 'invoice' );
-	$tab_data[1][]		= array( 'fieldset', 'RewriteEngine', AECToolbox::rewriteEngineInfo( $rewriteswitches ), '' );
+	@end( $params );
+	$tab_data[] = array( _CFG_TAB1_TITLE, key( $params ) );
 
-	$tab_data[1][] = array( 'list', _CFG_GENERAL_USE_RECAPTCHA_NAME, _CFG_GENERAL_USE_RECAPTCHA_DESC, $aecConfig->cfg['use_recaptcha'], 'use_recaptcha');
-	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_RECAPTCHA_PRIVATEKEY_NAME, _CFG_GENERAL_RECAPTCHA_PRIVATEKEY_DESC, $aecConfig->cfg['recaptcha_privatekey'], 'recaptcha_privatekey');
-	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_RECAPTCHA_PUBLICKEY_NAME, _CFG_GENERAL_RECAPTCHA_PUBLICKEY_DESC, $aecConfig->cfg['recaptcha_publickey'], 'recaptcha_publickey');
+/*
+ * _CFG_TAB1_OPT9 - _CFG_GENERAL_REQUIRE_SUBSCRIPTION_
+ * _CFG_TAB1_OPT3 - CFG_GENERAL_ALERTLEVEL2_
+ * _CFG_TAB1_OPT4 - CFG_GENERAL_ALERTLEVEL1_
+ * _CFG_TAB1_OPT20 - _CFG_GENERAL_GWLIST_ENABLED_
+ * _CFG_TAB1_OPT10 - _CFG_GENERAL_GWLIST_
+ * _CFG_TAB1_OPT5 - _CFG_GENERAL_ENTRY_PLAN_
+ * _CFG_TAB1_OPT15 - _CFG_GENERAL_BYPASSINTEGRATION_
+ * _CFG_TAB1_OPT21 - _CFG_GENERAL_PLANS_FIRST_
+ * _CFG_TAB1_OPT16 - _CFG_GENERAL_SIMPLEURLS_
+ * _CFG_TAB1_OPT17 - _CFG_GENERAL_EXPIRATION_CUSHION_
+ * _CFG_TAB1_OPT18 - _CFG_GENERAL_HEARTBEAT_CYCLE_
+ * _CFG_TAB1_OPT12 - _CFG_GENERAL_CUSTOMINTRO_
+ * _CFG_TAB1_OPT13 - _CFG_GENERAL_CUSTOMTHANKS_
+ * _CFG_TAB1_OPT14 - _CFG_GENERAL_CUSTOMCANCEL_
+ * _CFG_TAB1_OPT19 - _CFG_GENERAL_TOS_
+ */
 
-	$tab_data[1][] = array( 'inputC', _CFG_GENERAL_TEMP_AUTH_EXP_NAME, _CFG_GENERAL_TEMP_AUTH_EXP_DESC, $aecConfig->cfg['temp_auth_exp'], 'temp_auth_exp');
+	$params['uib4']	= array( 'userinfobox', 45 );
+	$params['customintro']				= array( 'inputC', '' );
+	$params['customthanks']				= array( 'inputC', '' );
+	$params['customcancel']				= array( 'inputC', '' );
+	$params['customnotallowed']			= array( 'inputC', '' );
+	$params['tos']							= array( 'inputC', '' );
+	$params['display_date_frontend']	= array( 'inputC', '%a, %d %b %Y %T %Z' );
+	$params['display_date_backend']		= array( 'inputC', '%a, %d %b %Y %T %Z' );
+	$params['uib4e']	= array( '2div_end', 0 );
 
-	$tab_data[1][] = array( 'editor', _CFG_GENERAL_CUSTOMTEXT_PLANS_NAME, _CFG_GENERAL_CUSTOMTEXT_PLANS_DESC, $aecConfig->cfg['customtext_plans'], 'customtext_plans');
-	$tab_data[1][] = array( 'list', _CFG_GENERAL_CUSTOMTEXT_CONFIRM_KEEPORIGINAL_NAME, _CFG_GENERAL_CUSTOMTEXT_CONFIRM_KEEPORIGINAL_DESC, '0', 'customtext_confirm_keeporiginal');
-	$tab_data[1][] = array( 'editor', _CFG_GENERAL_CUSTOMTEXT_CONFIRM_NAME, _CFG_GENERAL_CUSTOMTEXT_CONFIRM_DESC, $aecConfig->cfg['customtext_confirm'], 'customtext_confirm');
-	$tab_data[1][] = array( 'list', _CFG_GENERAL_CUSTOMTEXT_CHECKOUT_KEEPORIGINAL_NAME, _CFG_GENERAL_CUSTOMTEXT_CHECKOUT_KEEPORIGINAL_DESC, '0', 'customtext_checkout_keeporiginal');
-	$tab_data[1][] = array( 'editor', _CFG_GENERAL_CUSTOMTEXT_CHECKOUT_NAME, _CFG_GENERAL_CUSTOMTEXT_CHECKOUT_DESC, $aecConfig->cfg['customtext_checkout'], 'customtext_checkout');
+	$params['uib5']	= array( 'userinfobox', 45 );
+	$params['invoicenum_doformat']		= array( 'list_yesno', '' );
+	$params['invoicenum_formatting']	= array( 'inputD', '' );
+	$params['use_recaptcha']				= array( 'list_yesno', '' );
+	$params['recaptcha_privatekey']		= array( 'inputC', '' );
+	$params['recaptcha_publickey']		= array( 'inputC', '' );
+	$params['temp_auth_exp']				= array( 'inputC', '' );
+	$params['uib5e']	= array( '2div_end', 0 );
 
-	$tab_data[1][] = array( 'list', _CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_KEEPORIGINAL_NAME, _CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_KEEPORIGINAL_DESC, '0', 'customtext_notallowed_keeporiginal');
-	$tab_data[1][] = array( 'editor', _CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_NAME, _CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_DESC, $aecConfig->cfg['customtext_notallowed'], 'customtext_notallowed');
-	$tab_data[1][] = array( 'list', _CFG_GENERAL_CUSTOMTEXT_PENDING_KEEPORIGINAL_NAME, _CFG_GENERAL_CUSTOMTEXT_PENDING_KEEPORIGINAL_DESC, '0', 'customtext_pending_keeporiginal');
-	$tab_data[1][] = array( 'editor', _CFG_GENERAL_CUSTOMTEXT_PENDING_NAME, _CFG_GENERAL_CUSTOMTEXT_PENDING_DESC, $aecConfig->cfg['customtext_pending'], 'customtext_pending');
-	$tab_data[1][] = array( 'list', _CFG_GENERAL_CUSTOMTEXT_EXPIRED_KEEPORIGINAL_NAME, _CFG_GENERAL_CUSTOMTEXT_EXPIRED_KEEPORIGINAL_DESC, '0', 'customtext_expired_keeporiginal');
-	$tab_data[1][] = array( 'editor', _CFG_GENERAL_CUSTOMTEXT_EXPIRED_NAME, _CFG_GENERAL_CUSTOMTEXT_EXPIRED_DESC, $aecConfig->cfg['customtext_expired'], 'customtext_expired');
+	$rewriteswitches						= array( 'cms', 'invoice' );
+	$params['RewriteEngine']				= array( 'fieldset', 'RewriteEngine', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
-	$tab_data[2] = array();
-	$tab_data[2][] = _CFG_TAB_MICROINTEGRATION_TITLE;
-	$tab_data[2][] = array( 'list_big', _CFG_MI_ACTIVELIST_NAME, _CFG_MI_ACTIVELIST_DESC, $aecConfig->cfg['milist'], 'milist' );
+
+	$params['accordion_s']							= array( 'accordion_start', '' );
+	$params['accordion_si1']							= array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_PLANS_NAME );
+	$params['customtext_plans']						= array( 'editor', '' );
+	$params['accordion_se1']							= array( 'div_end', '' );
+	$params['accordion_si2']							= array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_CONFIRM_NAME );
+	$params['customtext_confirm_keeporiginal']		= array( 'list_yesno', '' );
+	$params['customtext_confirm']					= array( 'editor', '' );
+	$params['accordion_se2']							= array( 'div_end', '' );
+	$params['accordion_si3']							= array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_CHECKOUT_NAME );
+	$params['customtext_checkout_keeporiginal']	= array( 'list_yesno', '' );
+	$params['customtext_checkout']					= array( 'editor', '' );
+	$params['accordion_se3']							= array( 'div_end', '' );
+	$params['accordion_si4']							= array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_NAME );
+	$params['customtext_notallowed_keeporiginal']	= array( 'list_yesno', '' );
+	$params['customtext_notallowed']				= array( 'editor', '' );
+	$params['accordion_se4']							= array( 'div_end', '' );
+	$params['accordion_si5']							= array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_PENDING_NAME );
+	$params['customtext_pending_keeporiginal']		= array( 'list_yesno', '' );
+	$params['customtext_pending']					= array( 'editor', '' );
+	$params['accordion_se5']							= array( 'div_end', '' );
+	$params['accordion_si6']							= array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_EXPIRED_NAME );
+	$params['customtext_expired_keeporiginal']		= array( 'list_yesno', '' );
+	$params['customtext_expired']					= array( 'editor', '' );
+	$params['accordion_se6']							= array( 'div_end', '' );
+	$params['accordion_e']							= array( 'div_end', '' );
+
+	@end( $params );
+	$tab_data[] = array( _CFG_TAB_CUSTOMIZATION_TITLE, key( $params ) );
+
+	$params['mi_remap']					= array( 'subarea_change', 'mi' );
+	$params['milist']						= array( 'list', '' );
+
+	@end( $params );
+	$tab_data[] = array( _CFG_TAB_MICROINTEGRATION_TITLE, key( $params ) );
 
 	$error_reporting_notices[] = mosHTML::makeOption( 512, _AEC_NOTICE_NUMBER_512 );
 	$error_reporting_notices[] = mosHTML::makeOption( 128, _AEC_NOTICE_NUMBER_128 );
@@ -1868,33 +1894,26 @@ function editSettings( $option )
 				// Init Info and Settings
 				$pp->fullInit();
 
+				foreach ( $pp->settings as $pname => $pvalue ) {
+					$ppsettings[$pp->processor_name . '_' . $pname] = $pvalue;
+				}
+
 				if ( $pp->processor->active ) {
 					// Get Backend Settings
 					$settings_array = $pp->getBackendSettings();
 
 					if ( isset( $settings_array['lists'] ) ) {
-						$lists = array_merge( $lists, $settings_array['lists'] );
+						foreach ( $settings_array['lists'] as $lname => $lvalue ) {
+							$lists[$pp->processor_name . '_' . $lname] = $lvalue;
+						}
 						unset( $settings_array['lists'] );
 					}
-
-					// Create new Tab
-					$tab = array();
-
-					// Set Name and Subtitle from Info
-					$tab[] = $pp->info['longname'];
-					$tab[] = array( 'subtitle', '0', $pp->info['longname'], '0', '0' );
 
 					// Iterate through settings form assigning the db settings
 					foreach ( $settings_array as $name => $values ) {
 						$setting_name = $pp->processor_name . '_' . $name;
 
 						switch( $settings_array[$name][0] ) {
-							case 'list_yesno':
-								$lists[$setting_name] = mosHTML::yesnoSelectList( $setting_name, '', $pp->settings[$name] );
-
-								$settings_array[$name][0] = 'list';
-								break;
-
 							case 'list_currency':
 								// Get currency list
 								$currency_array	= explode( ',', $pp->info['currencies'] );
@@ -1911,7 +1930,6 @@ function editSettings( $option )
 								$lists[$setting_name] = mosHTML::selectList( $currency_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
 								$settings_array[$name][0] = 'list';
 								break;
-
 							case 'list_language':
 								// Get language list
 								$language_array	= explode( ',', $pp->info['languages'] );
@@ -1925,23 +1943,11 @@ function editSettings( $option )
 								$lists[$setting_name] = mosHTML::selectList( $language_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
 								$settings_array[$name][0] = 'list';
 								break;
-
-							case 'list_recurring':
-								$recurring[] = mosHTML::makeOption( 0, _AEC_SELECT_RECURRING_NO );
-								$recurring[] = mosHTML::makeOption( 1, _AEC_SELECT_RECURRING_YES );
-								$recurring[] = mosHTML::makeOption( 2, _AEC_SELECT_RECURRING_BOTH );
-
-								$lists[$setting_name] = mosHTML::selectList($recurring, $setting_name, 'size="3"', 'value', 'text', $pp->settings[$name] );
-
-								$settings_array[$name][0] = 'list';
-								break;
-
 							case 'list_plan':
 								// Create list
 								$lists[$setting_name] = mosHTML::selectList($available_plans, $setting_name, 'size="' . $total_plans . '"', 'value', 'text', $pp->settings[$name] );
 								$settings_array[$name][0] = 'list';
 								break;
-
 							default:
 								break;
 						}
@@ -1980,20 +1986,24 @@ function editSettings( $option )
 						$new_settings = $pp->processor->settings();
 
 						if ( isset( $pp->settings[$name] ) ) {
-							$tab[] = array_merge( (array) $settings_array[$name], array( $pp->settings[$name], $setting_name ) );
+							$settings_array[$setting_name] = array_merge( (array) $settings_array[$name], array( $pp->settings[$name] ) );
 						} else {
-							$tab[] = array_merge( (array) $settings_array[$name], array( $new_settings[$name], $setting_name ) );
+							$settings_array[$setting_name] = array_merge( (array) $settings_array[$name], array( $new_settings[$name] ) );
 						}
+
+						unset( $settings_array[$name] );
 					}
 
-					$longname		= $gwname . '_info_longname';
-					$description	= $gwname . '_info_description';
+					$params = array_merge( $params, $settings_array );
 
-					$tab[] = array( 'inputC', _CFG_PROCESSOR_NAME_NAME, _CFG_PROCESSOR_NAME_DESC, $pp->info['longname'], $longname);
-					$tab[] = array( 'editor', _CFG_PROCESSOR_DESC_NAME, _CFG_PROCESSOR_DESC_DESC, $pp->info['description'], $description);
+					$longname = $gwname . '_info_longname';
+					$description = $gwname . '_info_description';
 
-					// Add to Settings Tabs
-					$tab_data[] = $tab;
+					$params[$longname] = array( 'inputC', _CFG_PROCESSOR_NAME_NAME, _CFG_PROCESSOR_NAME_DESC, $pp->info['longname'], $longname);
+					$params[$description] = array( 'editor', _CFG_PROCESSOR_DESC_NAME, _CFG_PROCESSOR_DESC_DESC, $pp->info['description'], $description);
+
+					@end( $params );
+					$tab_data[] = array( $pp->info['longname'], key( $params ) );
 
 					// Add to Active List
 					$gw_list_enabled[]->value = $gwname;
@@ -2037,7 +2047,17 @@ function editSettings( $option )
 		}
 	}
 
-	HTML_AcctExp::Settings( $option, $lists, $tab_data, $editors );
+	$settings = new aecSettings ( 'cfg', 'general' );
+	$settingsparams = array_merge( $aecConfig->cfg, $ppsettings );
+	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
+
+	// Call HTML Class
+	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+	if ( !empty( $customparamsarray ) ) {
+		$aecHTML->customparams = $customparamsarray;
+	}
+
+	HTML_AcctExp::Settings( $option, $aecHTML, $tab_data, $editors );
 }
 
 /**

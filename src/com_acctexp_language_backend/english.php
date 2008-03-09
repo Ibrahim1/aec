@@ -483,46 +483,42 @@ define( '_USERINVOICE_ACTION_CLEAR_APPLY','clear&nbsp;&amp;&nbsp;apply&nbsp;Plan
 define( '_CFG_TAB1_TITLE', 'Global');
 define( '_CFG_TAB1_SUBTITLE', 'General Setup');
 
-define( '_CFG_TAB1_OPT1NAME', 'Initial Expiration Period:');
-define( '_CFG_TAB1_OPT1DESC', 'Default expiration period, in days, for new registrations. This is relative to the registration date, so if you want new users be expired by default use -1 (minus one) here. This has no effect when user register using automatic payment system (e.g. PayPal Integration).');
-define( '_CFG_TAB1_OPT3NAME', 'Alert Level 2:');
-define( '_CFG_TAB1_OPT3DESC', 'In days. This is the first threshold to start warning user that his subscription is about to expire. <strong>This does not send out an email!</strong>');
-define( '_CFG_TAB1_OPT4NAME', 'Alert Level 1:');
-define( '_CFG_TAB1_OPT4DESC', 'In days. This is the final threshold to alert user that his subscription is about to expire. This should be the closest interval to expiration. <strong>This does not send out an email!</strong>');
-define( '_CFG_TAB1_OPT5NAME', 'Entry Plan:');
-define( '_CFG_TAB1_OPT5DESC', 'Every user will be subscribed to this plan (no payment!) when the user has no subscription yet');
-define( '_CFG_TAB1_OPT9NAME', 'Require Subscription:');
-define( '_CFG_TAB1_OPT9DESC', 'When enabled, a user MUST have a subscription. If disabled, users will be able to log in without one.');
+define( '_CFG_GENERAL_ALERTLEVEL2_NAME', 'Alert Level 2:');
+define( '_CFG_GENERAL_ALERTLEVEL2_DESC', 'In days. This is the first threshold to start warning user that his subscription is about to expire. <strong>This does not send out an email!</strong>');
+define( '_CFG_GENERAL_ALERTLEVEL1_NAME', 'Alert Level 1:');
+define( '_CFG_GENERAL_ALERTLEVEL1_DESC', 'In days. This is the final threshold to alert user that his subscription is about to expire. This should be the closest interval to expiration. <strong>This does not send out an email!</strong>');
+define( '_CFG_GENERAL_ENTRY_PLAN_NAME', 'Entry Plan:');
+define( '_CFG_GENERAL_ENTRY_PLAN_DESC', 'Every user will be subscribed to this plan (no payment!) when the user has no subscription yet');
+define( '_CFG_GENERAL_REQUIRE_SUBSCRIPTION_NAME', 'Require Subscription:');
+define( '_CFG_GENERAL_REQUIRE_SUBSCRIPTION_DESC', 'When enabled, a user MUST have a subscription. If disabled, users will be able to log in without one.');
 
-define( '_CFG_TAB1_OPT10NAME', 'Gateway Descriptions:');
-define( '_CFG_TAB1_OPT10DESC', 'List the Gateways you want to explain on the NotAllowed page (which your customers see when trying to access a page that they are not allowed to by their payment plan).');
-define( '_CFG_TAB1_OPT20NAME', 'Activated Gateways:');
-define( '_CFG_TAB1_OPT20DESC', 'Select the gateways you want to be activated (use the CTRL key to select more than one). After saving, the settings tabs for these gateways will show up. Deactivating a gateway will not erase its settings.');
-define( '_CFG_TAB1_OPT11NAME', 'Require Subscription:');
-define( '_CFG_TAB1_OPT11DESC', 'By default, a user who has no subscription set up with the AEC will be able to log in just fine. With this setting, you can make subscription a requirement.');
-define( '_CFG_ENTRYPLAN_NAME', 'Default Entry Plan');
-define( '_CFG_ENTRYPLAN_DESC', 'Free trial default plan.');
+define( '_CFG_GENERAL_GWLIST_NAME', 'Gateway Descriptions:');
+define( '_CFG_GENERAL_GWLIST_DESC', 'List the Gateways you want to explain on the NotAllowed page (which your customers see when trying to access a page that they are not allowed to by their payment plan).');
+define( '_CFG_GENERAL_GWLIST_ENABLED_NAME', 'Activated Gateways:');
+define( '_CFG_GENERAL_GWLIST_ENABLED_DESC', 'Select the gateways you want to be activated (use the CTRL key to select more than one). After saving, the settings tabs for these gateways will show up. Deactivating a gateway will not erase its settings.');
+define( '_CFG_GENERAL_ENTRY_PLAN_NAME', 'Default Entry Plan');
+define( '_CFG_GENERAL_ENTRY_PLAN_DESC', 'Free trial default plan.');
 
-define( '_CFG_TAB1_OPT15NAME', 'Disable Integration:');
-define( '_CFG_TAB1_OPT15DESC', 'Provide one name or a list of names (seperated by a whitespace) of integrations that you want to have disabled. Currently supporting the strings: <strong>CB,CBE,CBM,JACL,SMF,UE,UHP2,VM</strong>. This can be helpful when you have uninstalled CB but not deleted its tables (in which case the AEC would still recognize it as being installed).');
-define( '_CFG_TAB1_OPT16NAME', 'Simple URLs:');
-define( '_CFG_TAB1_OPT16DESC', 'Disable the use of Joomla/Mambo SEF Routines for Urls. With some setups using these will result in 404 Errors due to wrong rewriting. Try this option if you encounter any problems with redirects.');
-define( '_CFG_TAB1_OPT17NAME', 'Expiration Cushion:');
-define( '_CFG_TAB1_OPT17DESC', 'Number of hours that the AEC takes as cushion when determining expiration. Take a generous amount since payments arive later than the actual expiration (with Paypal about 6-8 hours later).');
-define( '_CFG_TAB1_OPT18NAME', 'Heartbeat Cycle:');
-define( '_CFG_TAB1_OPT18DESC', 'Number of hours that the AEC waits until understanding a login as a trigger for sending out Emails or doing other actions that you chose to be performed periodically.');
-define( '_CFG_TAB1_OPT21NAME', 'Plans First:');
-define( '_CFG_TAB1_OPT21DESC', 'If you have commited all three hacks to have an integrated Registration with direct Subscription, this switch will activate this behavior. Don\'t use it if you don\'t want that behavior or only commited the first hack (which means that the plans come after the user has put in his or her details) .');
+define( '_CFG_GENERAL_BYPASSINTEGRATION_NAME', 'Disable Integration:');
+define( '_CFG_GENERAL_BYPASSINTEGRATION_DESC', 'Provide one name or a list of names (seperated by a whitespace) of integrations that you want to have disabled. Currently supporting the strings: <strong>CB,CBE,CBM,JACL,SMF,UE,UHP2,VM</strong>. This can be helpful when you have uninstalled CB but not deleted its tables (in which case the AEC would still recognize it as being installed).');
+define( '_CFG_GENERAL_SIMPLEURLS_NAME', 'Simple URLs:');
+define( '_CFG_GENERAL_SIMPLEURLS_DESC', 'Disable the use of Joomla/Mambo SEF Routines for Urls. With some setups using these will result in 404 Errors due to wrong rewriting. Try this option if you encounter any problems with redirects.');
+define( '_CFG_GENERAL_EXPIRATION_CUSHION_NAME', 'Expiration Cushion:');
+define( '_CFG_GENERAL_EXPIRATION_CUSHION_DESC', 'Number of hours that the AEC takes as cushion when determining expiration. Take a generous amount since payments arive later than the actual expiration (with Paypal about 6-8 hours later).');
+define( '_CFG_GENERAL_HEARTBEAT_CYCLE_NAME', 'Heartbeat Cycle:');
+define( '_CFG_GENERAL_HEARTBEAT_CYCLE_DESC', 'Number of hours that the AEC waits until understanding a login as a trigger for sending out Emails or doing other actions that you chose to be performed periodically.');
+define( '_CFG_GENERAL_PLANS_FIRST_NAME', 'Plans First:');
+define( '_CFG_GENERAL_PLANS_FIRST_DESC', 'If you have commited all three hacks to have an integrated Registration with direct Subscription, this switch will activate this behavior. Don\'t use it if you don\'t want that behavior or only commited the first hack (which means that the plans come after the user has put in his or her details) .');
 
 define( '_CFG_TAB_CUSTOMIZATION_TITLE', 'Customize');
-define( '_CFG_TAB1_OPT12NAME', 'Custom intro page link:');
-define( '_CFG_TAB1_OPT12DESC', 'Provide a full link (including http://) that leads to your custom intro page. That page has to contain a link like this: http://www.yourdomain.com/index.php?option=com_acctexp&task=subscribe&intro=1 which bypasses the intro and correctly forwards the user to the payment plans or registration details page. Leave this field blank if you don\'t want this at all.');
-define( '_CFG_TAB1_OPT13NAME', 'Custom thanks page link:');
-define( '_CFG_TAB1_OPT13DESC', 'Provide a full link (including http://) that leads to your custom thanks page. Leave this field blank if you don\'t want this at all.');
-define( '_CFG_TAB1_OPT14NAME', 'Custom cancel page link:');
-define( '_CFG_TAB1_OPT14DESC', 'Provide a full link (including http://) that leads to your custom cancel page. Leave this field blank if you don\'t want this at all.');
-define( '_CFG_TAB1_OPT19NAME', 'Terms of Service:');
-define( '_CFG_TAB1_OPT19DESC', 'Enter a URL to your Terms of Service. The user will have to select a checkbox when confirming his account. If left blank, nothing will show up.');
+define( '_CFG_GENERAL_CUSTOMINTRO_NAME', 'Custom intro page link:');
+define( '_CFG_GENERAL_CUSTOMINTRO_DESC', 'Provide a full link (including http://) that leads to your custom intro page. That page has to contain a link like this: http://www.yourdomain.com/index.php?option=com_acctexp&task=subscribe&intro=1 which bypasses the intro and correctly forwards the user to the payment plans or registration details page. Leave this field blank if you don\'t want this at all.');
+define( '_CFG_GENERAL_CUSTOMTHANKS_NAME', 'Custom thanks page link:');
+define( '_CFG_GENERAL_CUSTOMTHANKS_DESC', 'Provide a full link (including http://) that leads to your custom thanks page. Leave this field blank if you don\'t want this at all.');
+define( '_CFG_GENERAL_CUSTOMCANCEL_NAME', 'Custom cancel page link:');
+define( '_CFG_GENERAL_CUSTOMCANCEL_DESC', 'Provide a full link (including http://) that leads to your custom cancel page. Leave this field blank if you don\'t want this at all.');
+define( '_CFG_GENERAL_TOS_NAME', 'Terms of Service:');
+define( '_CFG_GENERAL_TOS_DESC', 'Enter a URL to your Terms of Service. The user will have to select a checkbox when confirming his account. If left blank, nothing will show up.');
 define( '_CFG_GENERAL_CUSTOMNOTALLOWED_NAME', 'Custom NotAllowed link:');
 define( '_CFG_GENERAL_CUSTOMNOTALLOWED_DESC', 'Provide a full link (including http://) that leads to your custom NotAllowed page. Leave this field blank if you don\'t want this at all.');
 
@@ -603,10 +599,8 @@ define( '_CFG_GENERAL_CONFIRMATION_COUPONS_DESC', 'Offer to provide coupon codes
 
 // Global Micro Integration Settings
 define( '_CFG_TAB_MICROINTEGRATION_TITLE', 'MicroIntegr');
-define( '_CFG_MI_ACTIVELIST_NAME', 'Active MicroIntegrations');
-define( '_CFG_MI_ACTIVELIST_DESC', 'Select which MicroIntegrations you want to use');
-define( '_CFG_MI_META_NAME', 'MI Meta Transmit');
-define( '_CFG_MI_META_DESC', 'Allow MicroIntegrations to share an internal array of variables to communicate');
+define( '_CFG_MI_MILIST_NAME', 'Active MicroIntegrations');
+define( '_CFG_MI_MILIST_DESC', 'Select which MicroIntegrations you want to use');
 
 //Invoice settings
 define( '_CFG_GENERAL_SENDINVOICE_NAME', 'Send an invoice email');

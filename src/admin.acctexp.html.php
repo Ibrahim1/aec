@@ -218,111 +218,6 @@ class HTML_myCommon
 		return $html;
 	}
 
-	function createSettingsParticle( $rows, $lists )
-	{
-		$thisrow_type	= $rows[0];
-		$thisrow_name	= $rows[1];
-		$thisrow_desc	= $rows[2];
-		$thisrow_var	= $rows[3];
-		$thisrow_extra	= $rows[4];
-
-		switch( $thisrow_type ) {
-			case 'subtitle': ?>
-				<tr align="center" valign="middle">
-					<th colspan="3" width="20%"><?php echo $thisrow_desc; ?></th>
-				</tr>
-				<?php
-				break;
-
-			case 'inputA': ?>
-				<tr align="left" valign="middle" >
-					<td width="10%" align="right"><?php echo $thisrow_name; ?></td>
-        			<td align="left">
-	        			<input name="<?php echo $thisrow_extra; ?>" type="text" size="4" maxlength="10" value="<?php echo $thisrow_var; ?>"/>
-					</td>
-					<td><?php echo $thisrow_desc; ?></td>
-				</tr>
-				<?php
-				break;
-
-			case 'inputB': ?>
-				<tr>
-					<td width="10%"><?php echo $thisrow_name; ?></td>
-					<td width="10%"><input class="inputbox" type="text" name="<?php echo $thisrow_extra; ?>" size="2" maxlength="20" value="<?php echo $thisrow_var; ?>" /></td>
-					<td align="left"><?php echo $thisrow_desc; ?></td>
-				</tr>
-				<?php
-				break;
-
-			case 'inputC': ?>
-				<tr align="left" valign="middle" >
-					<td width="10%" align="right"><?php echo $thisrow_name; ?></td>
-					<td width="10%"><input type="text" size="20" name="<?php echo $thisrow_extra; ?>" class="inputbox" value="<?php echo $thisrow_var; ?>" /></td>
-					<td><?php echo $thisrow_desc; ?></td>
-				</tr>
-				<?php
-				break;
-
-			case 'inputD': ?>
-				<tr align="left" valign="middle" >
-					<td width="10%" align="right"><?php echo $thisrow_name; ?></td>
-					<td width="10%"><textarea align="left" cols="60" rows="5" name="<?php echo $thisrow_extra; ?>" /><?php echo $thisrow_var; ?></textarea></td>
-					<td><?php echo $thisrow_desc; ?></td>
-				</tr>
-				<?php
-				break;
-
-			case 'inputE': ?>
-				<tr align="left" valign="middle" >
-					<td><?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null ); ?><?php echo $thisrow_name; ?></td>
-					<td colspan="2" align="left"><input type="text" size="70" name="<?php echo $thisrow_extra; ?>" class="inputbox" value="<?php echo $thisrow_var; ?>" /></td>
-				</tr>
-				<?php
-				break;
-
-			case 'editor': ?>
-        		<tr align="left" valign="middle" >
-					<td colspan="3">
-						<?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null ); ?><?php echo $thisrow_name; ?>
-						<?php editorArea( $thisrow_extra, $thisrow_var, $thisrow_extra, '100%;', '250', '10', '60' ); ?>
-					</td>
-				</tr>
-				<?php
-				break;
-
-			case 'list': ?>
-				<tr>
-					<td width="10%" valign="top"><?php echo $thisrow_name; ?></td>
-					<td width="10%" align="left" valign="top"><?php echo $lists[$thisrow_extra]; ?></td>
-					<td align="left" valign="top"><?php echo $thisrow_desc; ?></td>
-				</tr>
-				<?php
-				break;
-
-			case 'list_big': ?>
-				<tr>
-					<td valign="top"><?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null ); ?><?php echo $thisrow_name; ?></td>
-					<td colspan="2" align="left" valign="top"><?php echo $lists[$thisrow_extra]; ?></td>
-				</tr>
-				<?php
-				break;
-
-			case 'fieldset': ?>
-				<tr><td colspan="3" >
-					<fieldset><legend><?php echo $thisrow_name; ?></legend>
-						<table cellpadding="1" cellspacing="1" border="0">
-							<tr align="left" valign="middle" >
-								<td><?php echo $thisrow_desc; ?></td>
-							</tr>
-						</table>
-					</fieldset>
-					</td>
-				</tr>
-				<?php
-				break;
-		}
-	}
-
 	function addBackendCSS()
 	{
 		global $mainframe; ?>
@@ -1204,7 +1099,7 @@ class HTML_AcctExp
  		HTML_myCommon::GlobalNerd();
 	}
 
-	function Settings( $option, $lists, $tab_data, $editors )
+	function Settings( $option, $aecHTML, $tab_data, $editors )
 	{
 		global $mosConfig_live_site;
 
@@ -1252,17 +1147,26 @@ class HTML_AcctExp
 		$tabs = new mosTabs(0);
 		$tabs->startPane( 'settings' );
 
-		foreach ( $tab_data as $tab ) {
-			$tabs->startTab( $tab[0], $tab[0]); ?>
-			<table cellpadding="1" cellspacing="0" border="0" width="100%" class="adminform">
-				<?php
-				for( $s = 1; $s < count( $tab ); $s++ ) {
-					HTML_mycommon::createSettingsParticle( $tab[$s], $lists );
-				} ?>
-			</table>
-			<?php
-			$tabs->endTab();
-		} ?>
+		$i = 0;
+
+		$tabs->startTab( $tab_data[$i][0], $tab_data[$i][0]);
+		echo '<table width="100%" class="adminform"><tr><td>';
+
+		foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
+			echo $aecHTML->createSettingsParticle( $rowname );
+
+			// Skip to next tab if last item in this one reached
+			if ( strcmp( $rowname, $tab_data[$i][1]) === 0 ) {
+				echo '</td></tr></table>';
+				$tabs->endTab();
+				$i++;
+				if ( isset( $tab_data[$i] ) ) {
+					$tabs->startTab( $tab_data[$i][0], $tab_data[$i][0]);
+					echo '<table width="100%" class="adminform"><tr><td>';
+				}
+			}
+		}
+		?>
 		<input type="hidden" name="id" value="1" />
 		<input type="hidden" name="task" value="" />
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
@@ -1272,7 +1176,7 @@ class HTML_AcctExp
 		$tabs->endPane();
 
 		if ( _EUCA_DEBUGMODE ) {
-			krumo( $option, $lists, $tab_data, $editors );
+			krumo( $option, $aecHTML, $tab_data, $editors );
 		}
 
  		HTML_myCommon::GlobalNerd();
@@ -1576,7 +1480,7 @@ class HTML_AcctExp
 								<?php
 							}
 			                $tabs->endTab();
-			                $tabs ->endPane(); ?>
+			                $tabs->endPane(); ?>
 						</td>
 					</tr>
 				</table>
@@ -1748,7 +1652,7 @@ class HTML_AcctExp
 						<table class="adminform" style="border-collapse:separate;">
 							<tr>
 								<td style="padding:10px;" valign="top">
-									<div style="position:relative;float:left;width:48%;padding:4px;">
+									<div style="position:relative;float:left;width:28%;padding:4px;">
 										<div class="userinfobox">
 											<div style="position:relative;float:left;width:100%;">
 												<?php
@@ -1762,7 +1666,7 @@ class HTML_AcctExp
 											<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
 										</div>
 									</div>
-									<div style="position:relative;float:left;width:48%;padding:4px;">
+									<div style="position:relative;float:left;width:28%;padding:4px;">
 										<div class="userinfobox">
 											<?php echo $aecHTML->createSettingsParticle( 'full_free' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'full_amount' ); ?>
@@ -1779,13 +1683,15 @@ class HTML_AcctExp
 											<?php } ?>
 										</div>
 									</div>
-									<div class="userinfobox">
-										<?php echo $aecHTML->createSettingsParticle( 'gid_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'gid' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'fallback' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'make_active' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'make_primary' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'update_existing' ); ?>
+									<div style="position:relative;float:left;width:28%;padding:4px;">
+										<div class="userinfobox">
+											<?php echo $aecHTML->createSettingsParticle( 'gid_enabled' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'gid' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'fallback' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'make_active' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'make_primary' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'update_existing' ); ?>
+										</div>
 									</div>
 								</td>
 							</tr>
