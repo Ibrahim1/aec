@@ -179,7 +179,8 @@ class ComponentMenu
 	function EDIT_EXPORT()
 	{
 		mosMenuBar::startTable();
-		mosMenuBar::custom( 'applyExport', 'backup.png',  'backup_f2.png', _EXPORT, false );
+		mosMenuBar::custom( 'export', 'apply.png',  'apply_f2.png', _EXPORT_APPLY, false );
+		mosMenuBar::custom( 'applyExport', 'download.png',  'download_f2.png', _EXPORT, false );
 		mosMenuBar::custom( 'saveExport', 'save.png',  'save_f2.png', _SAVE_PAYPLAN, false );
 		mosMenuBar::custom( 'cancelSettings', 'cancel.png',  'cancel_f2.png', _CANCEL, false );
 		mosMenuBar::endTable();

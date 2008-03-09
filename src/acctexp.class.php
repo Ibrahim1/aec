@@ -8498,7 +8498,7 @@ class couponXuser extends paramDBTable
 }
 
 
-class subscription_export extends paramDBTable
+class SubscriberExport extends jsonDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -8511,11 +8511,13 @@ class subscription_export extends paramDBTable
 	/** @var datetime */
 	var $lastused_date 		= null;
 	/** @var text */
+	var $filter				= null;
+	/** @var text */
 	var $options			= null;
 	/** @var text */
 	var $params				= null;
 
-	function subscription_export( &$db )
+	function SubscriberExport( &$db )
 	{
 		$this->mosDBTable( '#__acctexp_subscr_export', 'id', $db );
 	}

@@ -95,15 +95,15 @@ switch ( $task ) {
 		break;
 
 	case 'export':
-		CommonMenu::EDIT_EXPORT();
+		ComponentMenu::EDIT_EXPORT();
 		break;
 
 	case 'import':
-		CommonMenu::EDIT_IMPORT();
+		ComponentMenu::EDIT_IMPORT();
 		break;
 
 	case 'editCSS':
-		CommonMenu::EDIT_CSS_MENU();
+		ComponentMenu::EDIT_CSS_MENU();
 		break;
 
 	case 'eventlog':

@@ -241,6 +241,74 @@ class paramDBTable extends mosDBTable
 	}
 }
 
+/**
+* jsonized Database Table entry
+*
+* For use with as an abstract class that adds onto table entries
+*/
+class jsonDBTable extends paramDBTable
+{
+
+	/**
+	 * Receive Parameters and decode them into an array
+	 * @return array
+	 */
+	function getParams( $field = 'params' )
+	{
+		if ( empty( $this->$field ) ) {
+			return false;
+		}
+
+		return json_decode( $this->$field );
+/*
+		$array = array();
+		foreach ( $params as $chunk ) {
+			$k = explode( '=', $chunk, 2 );
+			if ( !empty( $k[0] ) ) {
+				// Strip slashes, but preserve special characters
+				$array[$k[0]] = stripslashes( str_replace( array( '\n', '\t', '\r' ), array( "\n", "\t", "\r" ), $k[1] ) );
+			}
+			unset( $k );
+		}
+		return $array;
+*/
+	}
+
+	/**
+	 * Encode array and set Parameter field
+	 */
+	function setParams( $array, $field = 'params' )
+	{
+		$this->$field = json_encode( $array );
+		return true;
+	}
+
+	/**
+	 * Add an array of Parameters to an existing parameter field
+	 */
+	function addParams( $array, $field = 'params', $overwrite = true )
+	{
+
+	}
+
+	/**
+	 * Delete a set of Parameters providing an array of key names
+	 */
+	function delParams( $array, $field = 'params' )
+	{
+
+	}
+
+	/**
+	 * Return the differences between a new set of Parameters and the existing one
+	 */
+	function diffParams( $array, $field = 'params' )
+	{
+
+	}
+
+}
+
 class languageFileHandler
 {
 	function languageFileHandler( $filepath ) {

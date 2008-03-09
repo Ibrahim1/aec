@@ -268,7 +268,6 @@ function com_install()
     . '`lastused_date` datetime NULL default \'0000-00-00 00:00:00\','
 	. '`filter` text NULL,'
 	. '`options` text NULL,'
-	. '`export` varchar(255) NULL,'
 	. '`params` text NULL,'
 	. ' PRIMARY KEY (`id`)'
 	. ') TYPE=MyISAM;'

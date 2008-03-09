@@ -21,7 +21,12 @@ class AECexport_cvs extends AECexport
 
 	}
 
-	function prepare_export()
+	function export_line()
+	{
+
+	}
+
+	function finish_export()
 	{
 
 	}

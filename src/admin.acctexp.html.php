@@ -2394,7 +2394,7 @@ class HTML_AcctExp
  		HTML_myCommon::GlobalNerd();
 	}
 
-	function export( $option, $aecHTML, $displayexports )
+	function export( $option, $aecHTML )
 	{
 		global $mosConfig_live_site;
 
@@ -2417,15 +2417,27 @@ class HTML_AcctExp
 					<div style="position:relative;float:left;width:98%;padding:4px;">
 						<div class="userinfobox">
 							<?php echo $aecHTML->createSettingsParticle( 'selected_export' ); ?>
-							<!-- Select Button -->
+							<?php echo $aecHTML->createSettingsParticle( 'delete' ); ?>
 						</div>
 					</div>
 					<div style="position:relative;float:left;width:98%;padding:4px;">
 						<div class="userinfobox">
-							<?php echo $aecHTML->createSettingsParticle( 'boobooboo' ); ?>
-							<div class="usernote" style="width:200px;">
-								<?php echo ""; ?>
-							</div>
+							<?php echo $aecHTML->createSettingsParticle( 'planid' ); ?>
+							<?php echo $aecHTML->createSettingsParticle( 'status' ); ?>
+							<?php echo $aecHTML->createSettingsParticle( 'orderby' ); ?>
+						</div>
+					</div>
+					<div style="position:relative;float:left;width:98%;padding:4px;">
+						<div class="userinfobox">
+							<?php echo $aecHTML->createSettingsParticle( 'rewrite_rule' ); ?>
+							<?php echo $aecHTML->createSettingsParticle( 'rewriteInfo' ); ?>
+							<?php echo $aecHTML->createSettingsParticle( 'selected_export' ); ?>
+						</div>
+					</div>
+					<div style="position:relative;float:left;width:98%;padding:4px;">
+						<div class="userinfobox">
+							<?php echo $aecHTML->createSettingsParticle( 'save' ); ?>
+							<?php echo $aecHTML->createSettingsParticle( 'save_name' ); ?>
 						</div>
 					</div>
 				</td>
@@ -2439,7 +2451,7 @@ class HTML_AcctExp
 
 		<?php
 		if ( _EUCA_DEBUGMODE ) {
-			krumo( $option, $displayexports );
+			krumo( $option, $aecHTML );
 		}
 
  		HTML_myCommon::GlobalNerd();

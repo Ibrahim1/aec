@@ -547,6 +547,14 @@ switch( strtolower( $task ) ) {
 		exportData( $option );
 		break;
 
+	case 'applyExport':
+		exportData( $option, 'apply' );
+		break;
+
+	case 'saveExport':
+		exportData( $option, 'save' );
+		break;
+
 	case 'import':
 		importData( $option );
 		break;
@@ -4629,45 +4637,76 @@ function importData()
 	//
 }
 
-function exportData( $option )
+function exportData( $option, $cmd=null )
 {
 	global $database;
 
+	$cmd_save = ( strcmp( 'save', $cmd ) === 0 );
+	$cmd_apply = ( strcmp( 'apply', $cmd ) === 0 );
+
 	$selected_export = aecGetParam( 'selected_export', 0 );
+	$delete = aecGetParam( 'delete', 0 );
 	$display = array();
 
 	$lists = array();
-	$params_values = array();
-	$restrictions_values = array();
-	$customparams_values = array();
+
+	if ( empty( $selected_export ) || $delete ) {
+		$filter_values = array();
+		$options_values = array();
+		$params_values = array();
+		$export_method = '';
+	}
+
+	if ( !empty( $selected_export ) ) {
+		$row = new SubscriberExport( $database );
+		$row->load( $selected_export );
+
+		if ( $delete ) {
+			$row->delete();
+		} else {
+			$filter_values = $row->getParams( 'filter' );
+			$filter_values = $row->getParams( 'options' );
+			$params_values = $row->getParams();
+			$export_method = $row->export;
+		}
+	}
 
 	// Preset Dialog
-	// Saved or Autosaved Preset?
-	// YES? -> Load values from db (JSON)
-	// No? -> Load defaults
 	// Offer to save afterwards (put in name, store with date!)
 	// Always store the last ten calls
 
 	// Create Parameters
 
-	$params['selected_export']					= array( 'list', '' );
+	$params['selected_export']	= array( 'list', '' );
+	$params['delete']			= array( 'checkbox', 0 );
+
+	$params['params_remap']		= array( 'subarea_change', 'filter' );
+	$params['planid']			= array( 'list', '' );
+	$params['status']			= array( 'list', '' );
+	$params['orderby']			= array( 'list', '' );
+
+	$params['params_remap']		= array( 'subarea_change', 'options' );
+	$params['rewrite_rule']		= array( 'inputD', '' );
+	$rewriteswitches			= array( 'cms', 'user' );
+	$params['rewriteInfo']		= array( 'fieldset', '', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+
+	$params['params_remap']		= array( 'subarea_change', 'params' );
+	$params['save']				= array( 'list_yesno', 0 );
+	$params['save_name']		= array( 'inputB', 0 );
+
 
 	// Create a list of export options
 
 	// First, only the non-autosaved entries
 	$query = 'SELECT `id`, `name`, `created_date`, `lastused_date`'
 			. ' FROM #__acctexp_subscr_export'
-			. ' WHERE `system` = 0'
+			. ' WHERE `system` = \''
 			;
-	$database->setQuery( $query );
+	$database->setQuery( $query . '0\'' );
 	$user_exports = $database->loadObjectList();
 
 	// Then the autosaved entries
-	$query = 'SELECT `id`, `name`, `created_date`, `lastused_date`'
-			. ' FROM #__acctexp_subscr_export'
-			. ' WHERE `system` = 1'
-			;
-	$database->setQuery( $query );
+	$database->setQuery( $query . '1\'' );
 	$system_exports = $database->loadObjectList();
 
 	$entries = count( $user_exports ) + count( $system_exports );
@@ -4688,29 +4727,85 @@ function exportData( $option )
 				$listitems[] = mosHTML::makeOption( $system_exports[$ix]->id, substr( $system_exports[$ix]->name, 0, 64 ) . ' - ' . 'last used: ' . $system_exports[$ix]->lastused_date . ', created: ' . $system_exports[$ix]->created_date );
 			}
 		}
-
-		$lists['selected_export'] = mosHTML::selectList($listitems, 'selected_export', 'size="' . min( 20, $entries ) . '"', 'value', 'text', arrayValueDefault($params_values, 'selected_export', "D"));
 	} else {
-		$displayexports = false;
+		$listitems[] = mosHTML::makeOption( 0, " --- No saved Preset available --- " );
 	}
+
+	$lists['selected_export'] = mosHTML::selectList($listitems, 'selected_export', 'size="' . min( 20, $entries ) . '"', 'value', 'text', arrayValueDefault($params_values, 'selected_export', '') );
 
 	/*
 	 * Exporting: Select pretty much everything that is on the Subscriptions Page,
 	 * Especially User Status and Payment Plans (both multi select)
 	 */
 
-	$settings = new aecSettings ( 'export', 'general' );
-	if ( is_array( $customparams_values ) ) {
-		$settingsparams = array_merge( $params_values, $customparams_values, $restrictions_values );
-	} else {
-		$settingsparams = array_merge( $params_values, $restrictions_values );
+	// Get list of plans for filter
+	$query = 'SELECT `id`, `name`'
+			. ' FROM #__acctexp_plans'
+			. ' ORDER BY `ordering`'
+			;
+	$database->setQuery( $query );
+	$db_plans = $database->loadObjectList();
+
+	$plans[] = mosHTML::makeOption( '0', _FILTER_PLAN, 'id', 'name' );
+	if ( is_array( $db_plans ) ) {
+		$plans = array_merge( $plans, $db_plans );
 	}
+	$lists['planid']	= mosHTML::selectList( $plans, 'planid[]', 'class="inputbox" size="' . min( 20, count( $plans ) ) . '" multiple="multiple"', 'id', 'name', arrayValueDefault($params_values, 'planid', '') );
+
+	$group_selection = array();
+	$group_selection[] = mosHTML::makeOption( 'excluded',	_AEC_SEL_EXCLUDED );
+	$group_selection[] = mosHTML::makeOption( 'pending',	_AEC_SEL_PENDING );
+	$group_selection[] = mosHTML::makeOption( 'active',		_AEC_SEL_ACTIVE );
+	$group_selection[] = mosHTML::makeOption( 'expired',	_AEC_SEL_EXPIRED );
+	$group_selection[] = mosHTML::makeOption( 'closed',		_AEC_SEL_CLOSED );
+	$group_selection[] = mosHTML::makeOption( 'cancelled',	_AEC_SEL_CANCELLED );
+	$group_selection[] = mosHTML::makeOption( 'notconfig',	_AEC_SEL_NOT_CONFIGURED );
+
+	$selected_groups = array();
+	if ( !empty( $filter_values['planid'] ) ) {
+		foreach ( $filter_values['planid'] as $name ) {
+			$selected_groups[] = mosHTML::makeOption( $name, $name );
+		}
+	}
+
+	$lists['status'] = mosHTML::selectList($group_selection, 'status[]', 'size="5" multiple="multiple"', 'value', 'text', $selected_groups);
+
+
+	$sel = array();
+	$sel[] = mosHTML::makeOption( 'expiration ASC',		_EXP_ASC );
+	$sel[] = mosHTML::makeOption( 'expiration DESC',	_EXP_DESC );
+	$sel[] = mosHTML::makeOption( 'name ASC',			_NAME_ASC );
+	$sel[] = mosHTML::makeOption( 'name DESC',			_NAME_DESC );
+	$sel[] = mosHTML::makeOption( 'username ASC',		_LOGIN_ASC );
+	$sel[] = mosHTML::makeOption( 'username DESC',		_LOGIN_DESC );
+	$sel[] = mosHTML::makeOption( 'signup_date ASC',	_SIGNUP_ASC );
+	$sel[] = mosHTML::makeOption( 'signup_date DESC',	_SIGNUP_DESC );
+	$sel[] = mosHTML::makeOption( 'lastpay_date ASC',	_LASTPAY_ASC );
+	$sel[] = mosHTML::makeOption( 'lastpay_date DESC',	_LASTPAY_DESC );
+	$sel[] = mosHTML::makeOption( 'plan_name ASC',		_PLAN_ASC );
+	$sel[] = mosHTML::makeOption( 'plan_name DESC',		_PLAN_DESC );
+	$sel[] = mosHTML::makeOption( 'status ASC',			_STATUS_ASC );
+	$sel[] = mosHTML::makeOption( 'status DESC',		_STATUS_DESC );
+	$sel[] = mosHTML::makeOption( 'type ASC',			_TYPE_ASC );
+	$sel[] = mosHTML::makeOption( 'type DESC',			_TYPE_DESC );
+
+	$lists['orderby'] = mosHTML::selectList( $sel, 'orderby', 'class="inputbox" size="1"', 'value', 'text', arrayValueDefault($params_values, 'orderby', '') );
+
+
+	$settings = new aecSettings ( 'export', 'general' );
+	$settingsparams = array_merge( $filter_values, $filter_values, $params_values );
+
 	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
 
 	// Call HTML Class
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
-	HTML_AcctExp::export( $option, $aecHTML, $displayexports );
+	if ( $cmd_apply && $export_method ) {
+		// Carry out filtering (only call in subscriptionids)
+
+	}
+
+	HTML_AcctExp::export( $option, $aecHTML );
 }
 
 ?>

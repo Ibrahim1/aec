@@ -1198,4 +1198,13 @@ define( '_PEND_TITLE', 'Pending Subscriptions');
 define( '_PEND_DESC', 'Subscriptions that does not complete the process. This state is common for a short time while system waits for the payment.');
 define( '_ACTIVATE', 'Activate');
 define( '_ACTIVATED', 'User activated.');
+
+// --== EXPORT ==--
+define( '_EXPORT_GENERAL_SELECTED_EXPORT_NAME', 'Export Preset');
+define( '_EXPORT_GENERAL_SELECTED_EXPORT_DESC', 'Select a preset (or an automatically saved previous export) instead of making the selections below. You can also click apply on the upper right and preview the preset.');
+define( '_EXPORT_GENERAL_DELETE_NAME', 'Delete Preset?');
+define( '_EXPORT_GENERAL_DELETE_DESC', 'Check this box to delete the selected preset on "apply"');
+
+
+
 ?>
