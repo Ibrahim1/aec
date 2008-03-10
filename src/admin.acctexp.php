@@ -4455,29 +4455,37 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 	} else {
 		$n = 'userphp';
 		$hacks[$n]['name']			=	'user.php';
-		$hacks[$n]['desc']			=	_AEC_HACKS_MI1;
+		$hacks[$n]['desc']			=	$v15 ? _AEC_HACKS_LEGACY : _AEC_HACKS_MI1;
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/components/com_user/controller.php' ) : ( $mosConfig_absolute_path . '/components/com_user/user.php' );
 		$hacks[$n]['read']			=	$v15 ? ( 'if ($model->store($post)) {' ) : ( '// check if username has been changed' );
 		$hacks[$n]['insert']		=	sprintf( ( $v15 ? $aec_uchangehack15 : $aec_uchangehack ), $n, "user", $n ) . "\n" . $hacks[$n]['read'];
+		if ( $v15 ) {
+			$hacks[$n]['legacy']	=	1;
+		}
 
 		$n = 'registrationphp1';
 		$hacks[$n]['name']			=	'registration.php ' . _AEC_HACK_HACK . ' #1';
-		$hacks[$n]['desc']			=	_AEC_HACKS_MI2;
+		$hacks[$n]['desc']			=	$v15 ? _AEC_HACKS_LEGACY : _AEC_HACKS_MI2;
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/components/com_user/controller.php' ) : ( $mosConfig_absolute_path . '/components/com_registration/registration.php' );
 		$hacks[$n]['read']			=	$v15 ? 'UserController::_sendMail($user, $password);' : '$row->checkin();';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( ( $v15 ? $aec_uchangereghack15 : $aec_uchangehack ), $n, "registration", $n );
-
+		if ( $v15 ) {
+			$hacks[$n]['legacy']	=	1;
+		}
 	}
 
 	$n = 'adminuserphp';
 	$hacks[$n]['name']			=	'admin.user.php';
-	$hacks[$n]['desc']			=	_AEC_HACKS_MI3;
+	$hacks[$n]['desc']			=	$v15 ? _AEC_HACKS_LEGACY : _AEC_HACKS_MI3;
 	$hacks[$n]['type']			=	'file';
 	$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/administrator/components/com_users/controller.php' ) : ( $mosConfig_absolute_path . '/administrator/components/com_users/admin.users.php' );
 	$hacks[$n]['read']			=	$v15 ? 'if (!$user->save())' : '$row->checkin();';
 	$hacks[$n]['insert']		=	sprintf( ( $v15 ? $aec_uchangehack15 : $aec_uchangehack ), $n, 'adminuser', $n ) . "\n" . $hacks[$n]['read'];
+	if ( $v15 ) {
+		$hacks[$n]['legacy']	=	1;
+	}
 
 	if ( !$v15 ) {
 		if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {

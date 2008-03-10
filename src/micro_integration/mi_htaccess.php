@@ -203,7 +203,7 @@ class mi_htaccess
 			$apachepw->load(0);
 			$apachepw->userid = $row->id;
 		}
-aecDebug( " apwid: ".json_encode($apwid)."<br />apachepw: ".json_encode($apachepw)."<br />post: ".json_encode($post)."<br />trace: ".json_encode($trace) );
+
 		if ( ( isset( $post['password'] ) && $post['password'] != '' ) || ( isset( $post['password2'] ) && $post['password2'] != '' )) {
 			$apachepw->apachepw = crypt( isset( $post['password2'] ) ? $post['password2'] : $post['password'] );
 			$apachepw->check();
@@ -212,7 +212,7 @@ aecDebug( " apwid: ".json_encode($apwid)."<br />apachepw: ".json_encode($apachep
 			// No new password and no existing password - nothing to be done here
 			return;
 		}
-aecDebug( "saved pw!" );
+
 		if ( !( strcmp( $trace, 'registration' ) === 0 ) ) {
 			$ht = new htaccess();
 			$ht->setFPasswd( $params['mi_folder_user_fullpath'] );

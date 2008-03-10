@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<install version="1.5" type="plugin" group="authentication">
-	<name>Authentication - AECuser</name>
+<install version="1.5" type="plugin" group="user">
+	<name>User - AECuser</name>
 	<author>David Deutsch</author>
 	<creationDate>09.03.2008</creationDate>
 	<copyright>Copyright (C) 2008 David Deutsch</copyright>

@@ -57,16 +57,27 @@ class plgUserAECuser extends JPlugin
 	}
 
 	/**
-	 * Example store user method
+	 * Store user method - propagating the change on to the MI Handler
 	 *
 	 * Method is called before user data is stored in the database
 	 *
 	 * @param 	array		holds the old user data
 	 * @param 	boolean		true if a new user is stored
 	 */
-	function onBeforeStoreUser($user, $isnew)
+	function onBeforeStoreUser( $user, $isnew )
 	{
-		global $mainframe;
+		include_once( JPATH_BASE . "/components/com_acctexp/acctexp.class.php" );
+
+		if ( $isnew ) {
+			$trace = 'registration';
+		} else {
+			$trace = 'user';
+		}
+
+		$mih = new microIntegrationHandler();
+		$mih->userchange( $user, $_POST, $trace );
 	}
 
 }
+
+?>
