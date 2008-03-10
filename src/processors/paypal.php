@@ -68,7 +68,6 @@ class processor_paypal extends POSTprocessor
 		$settings['no_shipping']	= 1;
 		$settings['altipnurl']		= '';
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
-		$settings['rewriteInfo']	= '';
 
 		// Customization Options
 		$settings['cbt']					= '';
@@ -111,7 +110,7 @@ class processor_paypal extends POSTprocessor
 		$settings['image_url']				= array( 'inputE' );
 		$settings['page_style']				= array( 'inputE' );
 
-		$settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		return $settings;
 	}

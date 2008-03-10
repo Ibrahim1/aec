@@ -65,7 +65,10 @@ class processor_cybermut extends POSTprocessor
 		$settings['currency']	= 'EUR';
 		$settings['language']	= 'FR';
 		$settings['server']		= 0;
-		$settings['item_name']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+
+		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
+		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		return $settings;
 	}

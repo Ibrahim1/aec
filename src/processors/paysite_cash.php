@@ -70,7 +70,7 @@ class processor_paysite_cash extends URLprocessor
 		$s['secret']		= array( 'inputC' );
 
 		$rewriteswitches	= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
-        $s['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 		return $s;
 	}
 

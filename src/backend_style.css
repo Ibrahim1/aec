@@ -183,7 +183,8 @@ color: #586c79;
 }
 
 img.aec_icon {
-vertical-align: middle;
+vertical-align: bottom;
+padding-right: 4px;
 }
 
 .userinfobox {
@@ -293,7 +294,6 @@ clear: left;
 }
 
 div.setting_form {
-position: relative;
 padding: 5px;
 }
 
@@ -312,6 +312,7 @@ clear: both;
 .aec_toggler {
 color: #222;
 margin: 0;
+margin-top: 3px;
 padding: 2px 5px;
 background: #eee;
 border-bottom: 1px solid #ddd;
@@ -321,6 +322,18 @@ border-left: 1px solid #f5f5f5;
 font-size: 11px;
 font-weight: normal;
 font-family: 'Andale Mono', sans-serif;
+clear: left;
+float: none !important;
+font-size: 11px !important;
+}
+
+.small_accordion {
+margin: 4px;
+width: 340px;
+}
+
+.accordion {
+margin: 4px;
 }
 
 .element {

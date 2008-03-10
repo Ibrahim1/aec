@@ -66,7 +66,6 @@ class processor_payboxfr extends POSTprocessor
 		$settings['path']			= '/cgi-bin/modulev2.cgi';
 		$settings['currency']		= 'EUR';
 		$settings['language']		= 'FR';
-		$settings['rewriteInfo']	= '';
 
 		return $settings;
 	}

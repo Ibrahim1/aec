@@ -35,7 +35,6 @@ class processor_eway extends POSTprocessor
 		$settings['autoRedirect']	= 1;
 		$settings['testAmount']		= "00";
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
-		$settings['rewriteInfo']	= ''; // added mic
 
 		return $settings;
 	}
@@ -51,7 +50,7 @@ class processor_eway extends POSTprocessor
 		$settings['SiteTitle']		= array( 'inputC' );
 		$settings['item_name']		= array( 'inputE' );
 
-        $settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		return $settings;
 	}

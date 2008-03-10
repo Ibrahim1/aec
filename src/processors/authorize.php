@@ -59,7 +59,6 @@ class processor_authorize extends POSTprocessor
 		$settings['currency']			= "USD";
 		$settings['timestamp_offset']	= '';
         $settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
-		$settings['rewriteInfo']		= '';
 
 		// Customization
 		$settings['x_logo_url']				= '';
@@ -83,8 +82,7 @@ class processor_authorize extends POSTprocessor
 		$settings['timestamp_offset']	= array("inputC");
 		$settings['item_name']			= array("inputE");
  		$rewriteswitches 				= array("cms", "user", "expiration", "subscription", "plan");
-        $settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
-		$settings['rewriteInfo']		= array("fieldset", "Rewriting Info", AECToolbox::rewriteEngineInfo($rewriteswitches));
+		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		// Customization
 		$settings['x_logo_url']				= array( 'inputE' );

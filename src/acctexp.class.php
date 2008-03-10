@@ -2370,13 +2370,14 @@ class aecSettings
 class aecHTML
 {
 
-	function aecHTML( $rows, $lists=null )
+	function aecHTML( $rows, $lists=null, $js=array() )
 	{
 		//$this->area = $area;
 		//$this->fallback = $fallback;
 
 		$this->rows		= $rows;
 		$this->lists	= $lists;
+		$this->js		= $js;
 	}
 
 	function createSettingsParticle( $name )
@@ -2453,7 +2454,23 @@ class aecHTML
 				$return .= '</div>';
 				break;
 			case 'accordion_start':
-				$return = '<div id="accordion">';
+				$this->accordions++;
+
+				// small accordion code
+				$this->js[] = "window.addEvent('domready',function(){ var accordion" . $this->accordions . " = new Accordion('#accordion" . $this->accordions . " h3.atStart', '#accordion" . $this->accordions . " div.atStart', {
+					duration: 200, alwaysHide: true,
+					onActive: function(toggler, element){
+						var activeFX = new Fx.Styles(toggler, {duration: 300, transition: Fx.Transitions.Expo.easeOut});
+						activeFX.start({ 'color':'#222', 'paddingLeft':'20px' });
+						toggler.setStyle('font-weight', 'bold');
+					},
+					onBackground: function(toggler, element){
+						var backFX = new Fx.Styles(toggler, {duration: 300, transition: Fx.Transitions.Expo.easeOut});
+						backFX.start({ 'color':'#444', 'paddingLeft':'10px' });
+						toggler.setStyle('font-weight', 'normal');
+					} }, $('accordion" . $this->accordions . "')); });";
+
+				$return = '<div id="accordion' . $this->accordions . '"' . ( !empty( $value ) ? ('class="'.$value.'"') : 'accordion') . '>';
 				break;
 			case 'accordion_itemstart':
 				$return = '<h3 class="aec_toggler atStart">' . $value . '</h3><div class="element atStart">';
@@ -2477,8 +2494,39 @@ class aecHTML
 				. '</div>'
 				;
 				break;
+			default:
+				$return = $value;
+				break;
 		}
 		return $return;
+	}
+
+	function loadJS( $return=null )
+	{
+		if ( !empty( $this->js ) || !empty( $return ) ) {
+			$js = "\n" . '<script type="text/javascript">';
+
+			if ( !empty( $this->js ) ) {
+				foreach ( $this->js as $scriptblock ) {
+					$js .= "\n";
+					$js .= $scriptblock;
+				}
+			}
+
+			$js .= $return;
+			$js .= "\n" . '</script>';
+
+			$return = $js;
+		}
+
+		return $return;
+	}
+
+	function printFull()
+	{
+		foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
+			echo $aecHTML->createSettingsParticle( $rowname );
+		}
 	}
 
 	function createFormParticle( $name, $row, $lists, $table=0 )
@@ -6720,7 +6768,7 @@ class AECToolbox
 		return $array;
 	}
 
-	function rewriteEngineInfo( $switches=array() )
+	function rewriteEngineInfo( $switches=array(), $params=null )
 	{
 		if ( !count( $switches ) ) {
 			$switches = array( 'cms', 'expiration', 'user', 'subscription', 'invoice', 'plan', 'system' );
@@ -6810,25 +6858,63 @@ class AECToolbox
 			$rewrite['plan'][] = 'desc';
 		}
 
-		$return = '';
-		foreach ( $rewrite as $area => $keys ) {
-			$return .= '<div class="rewriteinfoblock">' . "\n"
-			. '<p><strong>' . constant( '_REWRITE_AREA_' . strtoupper( $area ) ) . '</strong></p>' . "\n"
-			. '<ul>' . "\n";
+		if ( !empty( $params ) ) {
+			$params[] = array( 'accordion_start', 'small_accordion' );
 
-			foreach ( $keys as $key ) {
-				$return .= '<li>[[' . $area . "_" . $key . ']] =&gt; ' . constant( '_REWRITE_KEY_' . strtoupper( $area . "_" . $key ) ) . '</li>' . "\n";
-			}
-			$return .= '</ul>' . "\n"
+			$params[] = array( 'accordion_itemstart', constant( '_REWRITE_ENGINE_TITLE' ) );
+			$list = '<div class="rewriteinfoblock">' . "\n"
+			. '<p>' . constant( '_REWRITE_ENGINE_DESC' ) . '</p>' . "\n"
 			. '</div>' . "\n";
+			$params[] = array( 'literal', $list );
+			$params[] = array( 'div_end', '' );
+
+			foreach ( $rewrite as $area => $keys ) {
+				$params[] = array( 'accordion_itemstart', constant( '_REWRITE_AREA_' . strtoupper( $area ) ) );
+
+				$list = '<div class="rewriteinfoblock">' . "\n"
+				. '<ul>' . "\n";
+
+				foreach ( $keys as $key ) {
+					$list .= '<li>[[' . $area . "_" . $key . ']] =&gt; ' . constant( '_REWRITE_KEY_' . strtoupper( $area . "_" . $key ) ) . '</li>' . "\n";
+				}
+				$list .= '</ul>' . "\n"
+				. '</div>' . "\n";
+
+				$params[] = array( 'literal', $list );
+				$params[] = array( 'div_end', '' );
+			}
+
+			$params[] = array( 'accordion_itemstart', constant( '_REWRITE_ENGINE_AECJSON_TITLE' ) );
+			$list = '<div class="rewriteinfoblock">' . "\n"
+			. '<p>' . constant( '_REWRITE_ENGINE_AECJSON_DESC' ) . '</p>' . "\n"
+			. '</div>' . "\n";
+			$params[] = array( 'literal', $list );
+			$params[] = array( 'div_end', '' );
+
+			$params[] = array( 'div_end', '' );
+
+			return $params;
+		} else {
+			$return = '';
+			foreach ( $rewrite as $area => $keys ) {
+				$return .= '<div class="rewriteinfoblock">' . "\n"
+				. '<p><strong>' . constant( '_REWRITE_AREA_' . strtoupper( $area ) ) . '</strong></p>' . "\n"
+				. '<ul>' . "\n";
+
+				foreach ( $keys as $key ) {
+					$return .= '<li>[[' . $area . "_" . $key . ']] =&gt; ' . constant( '_REWRITE_KEY_' . strtoupper( $area . "_" . $key ) ) . '</li>' . "\n";
+				}
+				$return .= '</ul>' . "\n"
+				. '</div>' . "\n";
+			}
+
+			$return .= '<div class="rewriteinfoblock">' . "\n"
+			. '<p><strong>' . constant( '_REWRITE_ENGINE_AECJSON_TITLE' ) . '</strong></p>' . "\n"
+			. '<p>' . constant( '_REWRITE_ENGINE_AECJSON_DESC' ) . '</p>' . "\n"
+			. '</div>' . "\n";
+
+			return $return;
 		}
-
-		$return .= '<div class="rewriteinfoblock">' . "\n"
-		. '<p><strong>' . constant( '_REWRITE_ENGINE_AECJSON_TITLE' ) . '</strong></p>' . "\n"
-		. '<p>' . constant( '_REWRITE_ENGINE_AECJSON_DESC' ) . '</p>' . "\n"
-		. '</div>' . "\n";
-
-		return $return;
 	}
 
 	function rewriteEngine( $subject, $metaUser=null, $subscriptionPlan=null, $invoice=null )

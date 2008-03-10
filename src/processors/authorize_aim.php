@@ -63,7 +63,6 @@ class processor_authorize_aim extends XMLprocessor
 		$settings['totalOccurrences']	= 12;
 		$settings['trialOccurrences']	= 1;
 		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
-		$settings['rewriteInfo']		= '';
 
 		return $settings;
 	}
@@ -81,7 +80,7 @@ class processor_authorize_aim extends XMLprocessor
 		$settings['trialOccurrences']	= array("inputA");
 		$settings['item_name']			= array("inputE");
  		$rewriteswitches 				= array("cms", "user", "expiration", "subscription", "plan");
-		$settings['rewriteInfo']		= array("fieldset", "Rewriting Info", AECToolbox::rewriteEngineInfo($rewriteswitches));
+		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		return $settings;
 	}

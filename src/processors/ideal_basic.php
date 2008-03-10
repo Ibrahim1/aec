@@ -80,7 +80,7 @@ class processor_ideal_basic extends URLprocessor
 		$s['description']	= array( 'inputE' );
 
 		$rewriteswitches	= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
-        $s['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+		$s = AECToolbox::rewriteEngineInfo( $rewriteswitches, $s );
 		return $s;
 	}
 

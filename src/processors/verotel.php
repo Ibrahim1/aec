@@ -76,7 +76,7 @@ class processor_verotel extends URLprocessor
 		$s['use_ticketsclub']	= array( 'list_yesno' );
 
 		$rewriteswitches	= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
-        $s['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+		$s = AECToolbox::rewriteEngineInfo( $rewriteswitches, $s );
 		return $s;
 	}
 

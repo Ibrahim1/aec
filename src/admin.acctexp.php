@@ -1745,7 +1745,7 @@ function editSettings( $option )
 
 	$tab_data = array();
 
-	$params['uib1']	= array( 'userinfobox', 30 );
+	$params[] = array( 'userinfobox', 30 );
 	$params['require_subscription']			= array( 'list_yesno', 0 );
 	$params['alertlevel2']					= array( 'inputA', 0 );
 	$params['alertlevel1']					= array( 'inputA', 0 );
@@ -1760,15 +1760,15 @@ function editSettings( $option )
 	$params['debugmode']						= array( 'list_yesno', 0 );
 	$params['error_notification_level']		= array( 'list', 0 );
 	$params['email_notification_level']		= array( 'list', 0 );
-	$params['uib1e']	= array( '2div_end', 0 );
+	$params[] = array( '2div_end', 0 );
 
-	$params['uib2']	= array( 'userinfobox', 30 );
+	$params[] = array( 'userinfobox', 30 );
 	$params['gwlist_enabled']					= array( 'list', 0 );
 	$params['gwlist']							= array( 'list', 0 );
 	$params['entry_plan']						= array( 'list', 0 );
-	$params['uib2e']	= array( '2div_end', 0 );
+	$params[] = array( '2div_end', 0 );
 
-	$params['uib3']	= array( 'userinfobox', 30 );
+	$params[] = array( 'userinfobox', 30 );
 	$params['plans_first']					= array( 'list_yesno', 0 );
 	$params['displayccinfo']					= array( 'list_yesno', 0 );
 	$params['enable_coupons']					= array( 'list_yesno', 0 );
@@ -1777,7 +1777,7 @@ function editSettings( $option )
 	$params['skip_confirmation']				= array( 'list_yesno', 0 );
 	$params['show_fixeddecision']			= array( 'list_yesno', 0 );
 	$params['confirmation_coupons']			= array( 'list_yesno', 0 );
-	$params['uib3e']	= array( '2div_end', 0 );
+	$params[] = array( '2div_end', 0 );
 
 	@end( $params );
 	$tab_data[] = array( _CFG_TAB1_TITLE, key( $params ) );
@@ -1800,7 +1800,7 @@ function editSettings( $option )
  * _CFG_TAB1_OPT19 - _CFG_GENERAL_TOS_
  */
 
-	$params['uib4']	= array( 'userinfobox', 45 );
+	$params[] = array( 'userinfobox', 45 );
 	$params['customintro']				= array( 'inputC', '' );
 	$params['customthanks']				= array( 'inputC', '' );
 	$params['customcancel']				= array( 'inputC', '' );
@@ -1808,46 +1808,45 @@ function editSettings( $option )
 	$params['tos']							= array( 'inputC', '' );
 	$params['display_date_frontend']	= array( 'inputC', '%a, %d %b %Y %T %Z' );
 	$params['display_date_backend']		= array( 'inputC', '%a, %d %b %Y %T %Z' );
-	$params['uib4e']	= array( '2div_end', 0 );
+	$params[] = array( '2div_end', 0 );
 
-	$params['uib5']	= array( 'userinfobox', 45 );
+	$params[] = array( 'userinfobox', 45 );
 	$params['invoicenum_doformat']		= array( 'list_yesno', '' );
 	$params['invoicenum_formatting']	= array( 'inputD', '' );
 	$params['use_recaptcha']				= array( 'list_yesno', '' );
 	$params['recaptcha_privatekey']		= array( 'inputC', '' );
 	$params['recaptcha_publickey']		= array( 'inputC', '' );
 	$params['temp_auth_exp']				= array( 'inputC', '' );
-	$params['uib5e']	= array( '2div_end', 0 );
+	$params[] = array( '2div_end', 0 );
 
 	$rewriteswitches						= array( 'cms', 'invoice' );
-	$params['RewriteEngine']				= array( 'fieldset', 'RewriteEngine', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+	$params = AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
 
-
-	$params['accordion_s']							= array( 'accordion_start', '' );
-	$params['accordion_si1']							= array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_PLANS_NAME );
+	$params[] = array( 'accordion_start', '' );
+	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_PLANS_NAME );
 	$params['customtext_plans']						= array( 'editor', '' );
-	$params['accordion_se1']							= array( 'div_end', '' );
-	$params['accordion_si2']							= array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_CONFIRM_NAME );
+	$params[] = array( 'div_end', '' );
+	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_CONFIRM_NAME );
 	$params['customtext_confirm_keeporiginal']		= array( 'list_yesno', '' );
 	$params['customtext_confirm']					= array( 'editor', '' );
-	$params['accordion_se2']							= array( 'div_end', '' );
-	$params['accordion_si3']							= array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_CHECKOUT_NAME );
+	$params[] = array( 'div_end', '' );
+	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_CHECKOUT_NAME );
 	$params['customtext_checkout_keeporiginal']	= array( 'list_yesno', '' );
 	$params['customtext_checkout']					= array( 'editor', '' );
-	$params['accordion_se3']							= array( 'div_end', '' );
-	$params['accordion_si4']							= array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_NAME );
+	$params[] = array( 'div_end', '' );
+	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_NAME );
 	$params['customtext_notallowed_keeporiginal']	= array( 'list_yesno', '' );
 	$params['customtext_notallowed']				= array( 'editor', '' );
-	$params['accordion_se4']							= array( 'div_end', '' );
-	$params['accordion_si5']							= array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_PENDING_NAME );
+	$params[] = array( 'div_end', '' );
+	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_PENDING_NAME );
 	$params['customtext_pending_keeporiginal']		= array( 'list_yesno', '' );
 	$params['customtext_pending']					= array( 'editor', '' );
-	$params['accordion_se5']							= array( 'div_end', '' );
-	$params['accordion_si6']							= array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_EXPIRED_NAME );
+	$params[] = array( 'div_end', '' );
+	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_EXPIRED_NAME );
 	$params['customtext_expired_keeporiginal']		= array( 'list_yesno', '' );
 	$params['customtext_expired']					= array( 'editor', '' );
-	$params['accordion_se6']							= array( 'div_end', '' );
-	$params['accordion_e']							= array( 'div_end', '' );
+	$params[] = array( 'div_end', '' );
+	$params[] = array( 'div_end', '' );
 
 	@end( $params );
 	$tab_data[] = array( _CFG_TAB_CUSTOMIZATION_TITLE, key( $params ) );
@@ -4696,22 +4695,30 @@ function exportData( $option, $cmd=null )
 
 	// Create Parameters
 
+	$params[] = array( 'userinfobox', 100 );
 	$params['selected_export']	= array( 'list', '' );
 	$params['delete']			= array( 'checkbox', 0 );
+	$params[] = array( '2div_end', '' );
 
+	$params[] = array( 'userinfobox', 30 );
 	$params['params_remap']		= array( 'subarea_change', 'filter' );
 	$params['planid']			= array( 'list', '' );
 	$params['status']			= array( 'list', '' );
 	$params['orderby']			= array( 'list', '' );
+	$params[] = array( '2div_end', '' );
 
+	$params[] = array( 'userinfobox', 30 );
 	$params['params_remap']		= array( 'subarea_change', 'options' );
 	$params['rewrite_rule']		= array( 'inputD', '' );
 	$rewriteswitches			= array( 'cms', 'user' );
-	$params['rewriteInfo']		= array( 'fieldset', '', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+	$params = AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
+	$params[] = array( '2div_end', '' );
 
+	$params[] = array( 'userinfobox', 30 );
 	$params['params_remap']		= array( 'subarea_change', 'params' );
-	$params['save']				= array( 'list_yesno', 0 );
+	$params['save']				= array( 'checkbox', 0 );
 	$params['save_name']		= array( 'inputB', 0 );
+	$params[] = array( '2div_end', '' );
 
 
 	// Create a list of export options

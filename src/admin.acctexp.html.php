@@ -1104,7 +1104,8 @@ class HTML_AcctExp
 		global $mosConfig_live_site;
 
 		HTML_myCommon::addBackendCSS();
-		mosCommonHTML::loadOverlib(); ?>
+		mosCommonHTML::loadOverlib();
+		?>
 		<script language="javascript" type="text/javascript">
 		    /* <![CDATA[ */
 			function submitbutton(pressbutton) {
@@ -1118,20 +1119,6 @@ class HTML_AcctExp
 				submitform( pressbutton );
 			}
 			/* ]]> */
-		</script>
-		<script type="text/javascript">
-			window.addEvent('domready', function(){
-				var accordion = new Accordion('h3.atStart', 'div.atStart', {
-					opacity: false,
-					onActive: function(toggler, element){
-						toggler.setStyle('color', '#ff3300');
-					},
-
-					onBackground: function(toggler, element){
-						toggler.setStyle('color', '#222');
-					}
-				}, $('accordion'));
-			});
 		</script>
 		<form action="index2.php" method="post" name="adminForm">
 		<table class="adminheading">
@@ -1174,6 +1161,8 @@ class HTML_AcctExp
 		<?php
 		// close pane and include footer
 		$tabs->endPane();
+
+		echo $aecHTML->loadJS();
 
 		if ( _EUCA_DEBUGMODE ) {
 			krumo( $option, $aecHTML, $tab_data, $editors );
@@ -1616,7 +1605,6 @@ class HTML_AcctExp
 	function editSubscriptionPlan( $option, $aecHTML, $row, $hasrecusers )
 	{
 		global $my, $mosConfig_live_site;
-		$Returnid = intval( mosGetParam( $_REQUEST, 'Returnid', 0 ) );
 
 		mosCommonHTML::loadOverlib();
 		HTML_myCommon::addBackendCSS(); ?>
@@ -1935,8 +1923,6 @@ class HTML_AcctExp
 	function editCoupon( $option, $aecHTML, $row, $type )
 	{
 		global $my, $mosConfig_live_site;
-
-		$Returnid = intval( mosGetParam( $_REQUEST, 'Returnid', 0 ) );
 
 		mosCommonHTML::loadOverlib();
 		HTML_myCommon::addBackendCSS();
@@ -2322,21 +2308,8 @@ class HTML_AcctExp
 		global $mosConfig_live_site;
 
 		mosCommonHTML::loadOverlib();
-		HTML_myCommon::addBackendCSS(); ?>
-		<script type="text/javascript">
-			window.addEvent('domready', function(){
-				var accordion = new Accordion('h3.atStart', 'div.atStart', {
-					opacity: false,
-					onActive: function(toggler, element){
-						toggler.setStyle('color', '#ff3300');
-					},
-
-					onBackground: function(toggler, element){
-						toggler.setStyle('color', '#222');
-					}
-				}, $('accordion'));
-			});
-		</script>
+		HTML_myCommon::addBackendCSS();
+		?>
 		<form action="index2.php" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
@@ -2351,46 +2324,9 @@ class HTML_AcctExp
 		<table class="adminform">
 			<tr>
 				<td valign="top">
-					<div id="accordion">
-						<h3 class="aec_toggler atStart">Preset</h3>
-						<div class="element atStart">
-							<div style="position:relative;float:left;width:98%;padding-left:5px;padding-bottom:5px;">
-								<div class="userinfobox">
-									<?php echo $aecHTML->createSettingsParticle( 'selected_export' ); ?>
-									<?php echo $aecHTML->createSettingsParticle( 'delete' ); ?>
-								</div>
-							</div>
-						</div>
-						<h3 class="aec_toggler atStart">Filters</h3>
-						<div class="element atStart">
-							<div style="position:relative;float:left;width:98%;padding-left:5px;padding-bottom:5px;">
-								<div class="userinfobox">
-									<?php echo $aecHTML->createSettingsParticle( 'planid' ); ?>
-									<?php echo $aecHTML->createSettingsParticle( 'status' ); ?>
-									<?php echo $aecHTML->createSettingsParticle( 'orderby' ); ?>
-								</div>
-							</div>
-						</div>
-						<h3 class="aec_toggler atStart">Rewrite</h3>
-						<div class="element atStart">
-							<div style="position:relative;float:left;width:98%;padding-left:5px;padding-bottom:5px;">
-								<div class="userinfobox">
-									<?php echo $aecHTML->createSettingsParticle( 'rewrite_rule' ); ?>
-									<?php echo $aecHTML->createSettingsParticle( 'rewriteInfo' ); ?>
-									<?php echo $aecHTML->createSettingsParticle( 'selected_export' ); ?>
-								</div>
-							</div>
-						</div>
-						<h3 class="aec_toggler atStart">Export</h3>
-						<div class="element atStart">
-							<div style="position:relative;float:left;width:98%;padding-left:5px;padding-bottom:5px;">
-								<div class="userinfobox">
-									<?php echo $aecHTML->createSettingsParticle( 'save' ); ?>
-									<?php echo $aecHTML->createSettingsParticle( 'save_name' ); ?>
-								</div>
-							</div>
-						</div>
-					</div>
+					<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
+						echo $aecHTML->createSettingsParticle( $rowname );
+					} ?>
 				</td>
 			</tr>
 		</table>
@@ -2401,6 +2337,8 @@ class HTML_AcctExp
 		</form>
 
 		<?php
+		echo $aecHTML->loadJS();
+
 		if ( _EUCA_DEBUGMODE ) {
 			krumo( $option, $aecHTML );
 		}

@@ -46,7 +46,8 @@ class processor_moneyproxy extends POSTprocessor
 		$settings['language']				= array( 'list_language' );
 		$settings['item_name']				= array( 'inputE' );
 
-        $settings['rewriteInfo']			= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+        $settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+
 		return $settings;
 	}
 

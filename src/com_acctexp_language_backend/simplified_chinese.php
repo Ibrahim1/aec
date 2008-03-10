@@ -1144,6 +1144,8 @@ define( '_REWRITE_KEY_INVOICE_AMOUNT', 'Amount Paid');
 define( '_REWRITE_KEY_INVOICE_CURRENCY', 'Currency');
 define( '_REWRITE_KEY_INVOICE_COUPONS', 'List of Coupons');
 
+define( '_REWRITE_ENGINE_TITLE', 'Rewrite Engine');
+define( '_REWRITE_ENGINE_DESC', 'To create dynamic text, you can add these wiki-style tags in RWengine-enabled fields. Flick through the togglers below to see which tags are available');
 define( '_REWRITE_ENGINE_AECJSON_TITLE', 'aecJSON');
 define( '_REWRITE_ENGINE_AECJSON_DESC', 'You can also use functions encoded in JSON markup, like this:<br />{aecjson} { "cmd":"date", "vars": [ "Y", { "cmd":"rw_constant", "vars":"invoice_created_date" } ] } {/aecjson}<br />It returns only the Year of a date. Refer to the manual and forums for further instructions!');
 

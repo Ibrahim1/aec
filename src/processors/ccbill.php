@@ -70,7 +70,6 @@ class processor_ccbill extends POSTprocessor
 		$settings['secretWord']		= "Secret Word";
 		$settings['datalink_username']		= "Secret Word";
 		$settings['customparams']		= "";
-		$settings['rewriteInfo']	= '';
 
 		return $settings;
 	}
@@ -88,7 +87,7 @@ class processor_ccbill extends POSTprocessor
 		$settings['info']			= array( 'fieldset' );
 		$settings['datalink_username']		= array( 'inputC' );
 		$settings['customparams']	= array( 'inputD' );
-		$settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		return $settings;
 	}

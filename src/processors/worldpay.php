@@ -65,7 +65,6 @@ class processor_worldpay extends POSTprocessor
 		$settings['callbackPW'] 	= '';
 		$settings['rewriteInfo']	= '';
 
-
 		return $settings;
 	}
 
@@ -79,7 +78,7 @@ class processor_worldpay extends POSTprocessor
 		$settings['item_name']		= array( 'inputE');
  		$settings['callbackPW']		= array( 'inputC');
  		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan');
-        $settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo($rewriteswitches));
+		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		return $settings;
 	}
