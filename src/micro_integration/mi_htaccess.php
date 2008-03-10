@@ -204,7 +204,11 @@ class mi_htaccess
 			$apachepw->userid = $row->id;
 		}
 
-		if ( ( isset( $post['password'] ) && $post['password'] != '' ) || ( isset( $post['password2'] ) && $post['password2'] != '' )) {
+		if ( isset( $post['password_clear'] ) ) {
+			$apachepw->apachepw = crypt( $post['password_clear'] );
+			$apachepw->check();
+			$apachepw->store();
+		} elseif ( ( isset( $post['password'] ) && $post['password'] != '' ) || ( isset( $post['password2'] ) && $post['password2'] != '' )) {
 			$apachepw->apachepw = crypt( isset( $post['password2'] ) ? $post['password2'] : $post['password'] );
 			$apachepw->check();
 			$apachepw->store();

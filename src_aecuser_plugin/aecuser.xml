@@ -2,7 +2,7 @@
 <install version="1.5" type="plugin" group="user">
 	<name>User - AECuser</name>
 	<author>David Deutsch</author>
-	<creationDate>09.03.2008</creationDate>
+	<creationDate>11.03.2008</creationDate>
 	<copyright>Copyright (C) 2008 David Deutsch</copyright>
 	<license>GNU/GPL Version 2.0 or later - http://www.gnu.org/copyleft/gpl.html</license>
 	<authorEmail>mails@globalnerd.org</authorEmail>
