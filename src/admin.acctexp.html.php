@@ -2348,13 +2348,13 @@ class HTML_AcctExp
 		</tr>
 		</table>
 
-		<table class="adminform" style="border-collapse:separate;">
+		<table class="adminform">
 			<tr>
-				<td style="padding:10px;" valign="top">
+				<td valign="top">
 					<div id="accordion">
 						<h3 class="aec_toggler atStart">Preset</h3>
 						<div class="element atStart">
-							<div style="position:relative;float:left;width:98%;padding:4px;">
+							<div style="position:relative;float:left;width:98%;padding-left:5px;padding-bottom:5px;">
 								<div class="userinfobox">
 									<?php echo $aecHTML->createSettingsParticle( 'selected_export' ); ?>
 									<?php echo $aecHTML->createSettingsParticle( 'delete' ); ?>
@@ -2363,7 +2363,7 @@ class HTML_AcctExp
 						</div>
 						<h3 class="aec_toggler atStart">Filters</h3>
 						<div class="element atStart">
-							<div style="position:relative;float:left;width:98%;padding:4px;">
+							<div style="position:relative;float:left;width:98%;padding-left:5px;padding-bottom:5px;">
 								<div class="userinfobox">
 									<?php echo $aecHTML->createSettingsParticle( 'planid' ); ?>
 									<?php echo $aecHTML->createSettingsParticle( 'status' ); ?>
@@ -2373,7 +2373,7 @@ class HTML_AcctExp
 						</div>
 						<h3 class="aec_toggler atStart">Rewrite</h3>
 						<div class="element atStart">
-							<div style="position:relative;float:left;width:98%;padding:4px;">
+							<div style="position:relative;float:left;width:98%;padding-left:5px;padding-bottom:5px;">
 								<div class="userinfobox">
 									<?php echo $aecHTML->createSettingsParticle( 'rewrite_rule' ); ?>
 									<?php echo $aecHTML->createSettingsParticle( 'rewriteInfo' ); ?>
@@ -2383,7 +2383,7 @@ class HTML_AcctExp
 						</div>
 						<h3 class="aec_toggler atStart">Export</h3>
 						<div class="element atStart">
-							<div style="position:relative;float:left;width:98%;padding:4px;">
+							<div style="position:relative;float:left;width:98%;padding-left:5px;padding-bottom:5px;">
 								<div class="userinfobox">
 									<?php echo $aecHTML->createSettingsParticle( 'save' ); ?>
 									<?php echo $aecHTML->createSettingsParticle( 'save_name' ); ?>
