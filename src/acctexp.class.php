@@ -1605,8 +1605,6 @@ class PaymentProcessor
 
 	function init()
 	{
-		global $database;
-
 		if ( !$this->id ) {
 			// Install and recurse
 			$this->install();
@@ -8598,7 +8596,7 @@ class couponXuser extends paramDBTable
 }
 
 
-class SubscriberExport extends jsonDBTable
+class aecExport extends jsonDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -8617,14 +8615,62 @@ class SubscriberExport extends jsonDBTable
 	/** @var text */
 	var $params				= null;
 
-	function SubscriberExport( &$db )
+	function aecExport( &$db )
 	{
-		$this->mosDBTable( '#__acctexp_subscr_export', 'id', $db );
+		$this->mosDBTable( '#__acctexp_export', 'id', $db );
+	}
+
+	function useExport()
+	{
+		global $mosConfig_offset_user;
+
+		$this->lastused_date = gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
+		$this->check();
+		$this->store();
+	}
+
+	function save( $name, $filter, $options, $params, $system=false )
+	{
+		global $mosConfig_offset_user;
+
+		// Drop old system saves to always keep 10 records
+		if ( $system ) {
+			$query = 'SELECT count(*) '
+					. ' FROM #__acctexp_export'
+					. ' WHERE `system` = \'1\''
+					;
+			$this->_db->setQuery( $query );
+			$sysrows = $this->_db->loadResult();
+
+			if ( $sysrows > 9 ) {
+				$query = 'DELETE'
+						. ' FROM #__acctexp_export'
+						. ' WHERE `system` = \'1\''
+						. ' ORDER BY `id` ASC'
+						. ' LIMIT 1'
+						;
+				$this->_db->setQuery( $query );
+				$this->_db->query();
+			}
+		}
+
+		$this->name = $name;
+		$this->system = $system ? 1 : 0;
+		$this->setParams( $filter, 'filter' );
+		$this->setParams( $options, 'options' );
+		$this->setParams( $params );
+
+		if ( strcmp( $this->created_date, '0000-00-00 00:00:00' ) === 0 ) {
+			$this->created_date = date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 );
+		}
+
+		$this->check();
+		$this->store();
 	}
 
 }
 
-// Not yet active code for future features
+// --- Not yet active code for future features ---
 
 class tokenCheck
 {

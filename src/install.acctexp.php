@@ -260,7 +260,7 @@ function com_install()
 	. ') TYPE=MyISAM;'
 	;
 
-	$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_subscr_export` ('
+	$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_export` ('
 	. '`id` int(11) NOT NULL auto_increment,'
 	. '`system` int(2) NOT NULL default \'0\','
 	. '`name` varchar(255) NULL,'

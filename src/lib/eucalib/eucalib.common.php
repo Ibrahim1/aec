@@ -259,7 +259,7 @@ class jsonDBTable extends paramDBTable
 			return false;
 		}
 
-		return json_decode( $this->$field );
+		return json_decode( stripslashes( $this->$field ) );
 /*
 		$array = array();
 		foreach ( $params as $chunk ) {
@@ -279,7 +279,7 @@ class jsonDBTable extends paramDBTable
 	 */
 	function setParams( $array, $field = 'params' )
 	{
-		$this->$field = json_encode( $array );
+		$this->$field = $this->_db->getEscaped( json_encode( $array ) );
 		return true;
 	}
 
