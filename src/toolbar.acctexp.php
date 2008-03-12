@@ -97,6 +97,7 @@ switch ( $task ) {
 	case 'loadExport':
 	case 'applyExport':
 	case 'saveExport':
+	case 'exportExport':
 	case 'export':
 		ComponentMenu::EDIT_EXPORT();
 		break;

@@ -1,7 +1,7 @@
 <?php
-class AECexport_cvs extends AECexport
+class AECexport_csv extends AECexport
 {
-	function AECexport_cvs()
+	function AECexport_csv()
 	{
 
 	}
@@ -26,7 +26,7 @@ class AECexport_cvs extends AECexport
 		return $this->fputcsv( $array );
 	}
 
-	function fputcsv( $fields = array(), $delimiter = ';', $enclosure = '"' )
+	function fputcsv( $fields = array(), $delimiter = ',', $enclosure = '"' )
 	{
 		$str = '';
 		$escape_char = '\\';

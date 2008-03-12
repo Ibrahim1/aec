@@ -1192,4 +1192,28 @@ define( '_PEND_TITLE', 'Abonnements en attente');
 define( '_PEND_DESC', 'Abonnement qui n a pas compl&eacute;t&eacute; le processus. Ce statut est commun le temps que le syst&egrave;me attend le paiement.');
 define( '_ACTIVATE', 'Activ&eacute;');
 define( '_ACTIVATED', 'Utilisateur activ&eacute;.');
+
+// --== EXPORT ==--
+define( '_EXPORT', 'Export');
+define( '_EXPORT_LOAD', 'Load');
+define( '_EXPORT_APPLY', 'Apply');
+define( '_EXPORT_GENERAL_SELECTED_EXPORT_NAME', 'Export Preset');
+define( '_EXPORT_GENERAL_SELECTED_EXPORT_DESC', 'Select a preset (or an automatically saved previous export) instead of making the selections below. You can also click apply on the upper right and preview the preset.');
+define( '_EXPORT_GENERAL_DELETE_NAME', 'Delete');
+define( '_EXPORT_GENERAL_DELETE_DESC', 'Delete this Preset (on apply)');
+define( '_EXPORT_PARAMS_PLANID_NAME', 'Payment Plan');
+define( '_EXPORT_PARAMS_PLANID_DESC', 'Filter out subscriptions with this Payment Plan');
+define( '_EXPORT_PARAMS_STATUS_NAME', 'Status');
+define( '_EXPORT_PARAMS_STATUS_DESC', 'Only export subscriptions with this status');
+define( '_EXPORT_PARAMS_ORDERBY_NAME', 'Order by');
+define( '_EXPORT_PARAMS_ORDERBY_DESC', 'Order by one of the following');
+define( '_EXPORT_PARAMS_REWRITE_RULE_NAME', 'Fields');
+define( '_EXPORT_PARAMS_REWRITE_RULE_DESC', 'Put in the ReWrite Engine fields, separated by semicolons, that you want each exported item to hold.');
+define( '_EXPORT_PARAMS_SAVE_NAME', 'Save as New?');
+define( '_EXPORT_PARAMS_SAVE_DESC', 'Check this box to save your settings as a new preset');
+define( '_EXPORT_PARAMS_SAVE_NAME_NAME', 'Save Name');
+define( '_EXPORT_PARAMS_SAVE_NAME_DESC', 'Save new preset under this name');
+define( '_EXPORT_PARAMS_EXPORT_METHOD_NAME', 'Exporting Method');
+define( '_EXPORT_PARAMS_EXPORT_METHOD_DESC', 'The filetype you want to export to');
+
 ?>

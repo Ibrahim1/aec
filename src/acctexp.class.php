@@ -8661,40 +8661,48 @@ class aecExport extends jsonDBTable
 			}
 		}
 
-		$query = 'SELECT `id`, `userid` FROM #__acctexp_subscr';
+		$query = 'SELECT a.id, a.userid'
+				. ' FROM #__acctexp_subscr AS a'
+				. ' INNER JOIN #__users AS b ON a.userid = b.id';
 
 		if ( !empty( $where ) ) {
 			$query .= ' WHERE ' . implode( ' OR ', $where );
 		}
 
 		if ( !empty( $filter_values->orderby ) ) {
-			$query .= ' ORDER BY `' . $filter_values->orderby . '`';
+			$query .= ' ORDER BY ' . $filter_values->orderby . '';
 		}
 
 		$this->_db->setQuery( $query );
 
 		// Fetch Userlist
-		$userlist = $this->_db->loadObjectArray();
+		$userlist = $this->_db->loadObjectList();
 
 		// Plans Array
 		$plans = array();
 
 		// Iterate through userlist
-		foreach ( $userlist as $entry ) {
-			$metaUser = new metaUser( $entry->userid );
-			$metaUser->moveFocus( $entry->id );
+		if ( !empty( $userlist ) ) {
+			foreach ( $userlist as $entry ) {
+				$metaUser = new metaUser( $entry->userid );
+				$metaUser->moveFocus( $entry->id );
 
-			$planid = $metaUser->focusSubscription->plan;
+				$planid = $metaUser->focusSubscription->plan;
 
-			if ( !isset( $plans[$planid] ) ) {
-				$plans[$planid] = new SubscriptionPlan( $this->_db );
-				$plans[$planid]->load( $planid );
+				if ( !isset( $plans[$planid] ) ) {
+					$plans[$planid] = new SubscriptionPlan( $this->_db );
+					$plans[$planid]->load( $planid );
+				}
+
+				$line = AECToolbox::rewriteEngine( $options_values->rewrite_rule, $metaUser, $plans[$planid] );
+				$larray = explode( ';', $line );
+
+				echo $exphandler->export_line( $larray );
 			}
-
-			echo $exphandler->export_line( explode( ';', AECToolbox::rewriteEngine( $options_values->rewrite_rule, $metaUser, $plans[$planid] ) ) );
 		}
 
 		$this->setUsedDate();
+		exit;
 	}
 
 	function setUsedDate()
@@ -8737,7 +8745,7 @@ class aecExport extends jsonDBTable
 		$this->setParams( $options, 'options' );
 		$this->setParams( $params );
 
-		if ( strcmp( $this->created_date, '0000-00-00 00:00:00' ) === 0 ) {
+		if ( ( strcmp( $this->created_date, '0000-00-00 00:00:00' ) === 0 ) || empty( $this->created_date ) ) {
 			$this->created_date = date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 );
 		}
 

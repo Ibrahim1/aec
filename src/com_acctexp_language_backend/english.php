@@ -1211,13 +1211,11 @@ define( '_EXPORT_PARAMS_ORDERBY_NAME', 'Order by');
 define( '_EXPORT_PARAMS_ORDERBY_DESC', 'Order by one of the following');
 define( '_EXPORT_PARAMS_REWRITE_RULE_NAME', 'Fields');
 define( '_EXPORT_PARAMS_REWRITE_RULE_DESC', 'Put in the ReWrite Engine fields, separated by semicolons, that you want each exported item to hold.');
-define( '_EXPORT_PARAMS_SAVE_NAME', 'Save?');
+define( '_EXPORT_PARAMS_SAVE_NAME', 'Save as New?');
 define( '_EXPORT_PARAMS_SAVE_DESC', 'Check this box to save your settings as a new preset');
 define( '_EXPORT_PARAMS_SAVE_NAME_NAME', 'Save Name');
 define( '_EXPORT_PARAMS_SAVE_NAME_DESC', 'Save new preset under this name');
 define( '_EXPORT_PARAMS_EXPORT_METHOD_NAME', 'Exporting Method');
 define( '_EXPORT_PARAMS_EXPORT_METHOD_DESC', 'The filetype you want to export to');
-
-
 
 ?>

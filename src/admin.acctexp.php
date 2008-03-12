@@ -555,6 +555,10 @@ switch( strtolower( $task ) ) {
 		exportData( $option, 'apply' );
 		break;
 
+	case 'exportexport':
+		exportData( $option, 'export' );
+		break;
+
 	case 'saveexport':
 		exportData( $option, 'save' );
 		break;
@@ -4674,7 +4678,7 @@ function exportData( $option, $cmd=null )
 	$cmd_save = ( strcmp( 'save', $cmd ) === 0 );
 	$cmd_apply = ( strcmp( 'apply', $cmd ) === 0 );
 	$cmd_load = ( strcmp( 'load', $cmd ) === 0 );
-	$cmd_export = ( !empty( $cmd ) && !$cmd_save && !$cmd_apply && !$cmd_load );
+	$cmd_export = ( strcmp( 'export', $cmd ) === 0 );
 	$use_original = 0;
 
 	$system_values = array();
@@ -4685,7 +4689,7 @@ function exportData( $option, $cmd=null )
 	$getpost = array(	'system' => array( 'selected_export', 'delete', 'save', 'save_name' ),
 						'filter' => array( 'planid', 'status', 'orderby' ),
 						'options' => array( 'rewrite_rule' ),
-						'params' => array( 'export_type' )
+						'params' => array( 'export_method' )
 					);
 
 	$postfields = 0;
@@ -4693,8 +4697,8 @@ function exportData( $option, $cmd=null )
 		$field = $name . '_values';
 		$$field = new stdClass();
 		foreach( $array as $vname ) {
-			 $$field->$name = aecGetParam( $name, '' );
-			 if ( !empty( $_POST[$name] ) ) {
+			 $$field->$vname = aecGetParam( $vname, '' );
+			 if ( !( $$field->$vname == '' ) ) {
 			 	$postfields++;
 			 }
 		}
@@ -4707,10 +4711,20 @@ function exportData( $option, $cmd=null )
 		$row->load( isset( $system_values->selected_export ) ? $system_values->selected_export : 0 );
 
 		if ( !empty( $system_values->delete ) ) {
+			// User wants to delete the entry
 			$row->delete();
-		} elseif ( ( $cmd_save || $cmd_apply ) && ( !empty( $system_values->selected_export ) || $system_values->save_name ) ) {
-			$row->save( $system_values->name, $filter_values, $options_values, $params_values );
-		} elseif ( $cmd_load || ( ( $postfields <= 5 ) && $cmd_export )  ) {
+		} elseif ( ( $cmd_save || $cmd_apply ) && ( !empty( $system_values->selected_export ) || !empty( $system_values->save_name ) ) ) {
+			// User wants to save an entry
+			if ( $system_values->save == 'on' ) {
+				// But as a copy of another entry
+				$row->load( 0 );
+			}
+			$row->save( $system_values->save_name, $filter_values, $options_values, $params_values );
+		} elseif ( ( $cmd_save || $cmd_apply ) && ( empty( $system_values->selected_export ) && !empty( $system_values->save_name ) && ( $system_values->save == 'on' ) ) ) {
+			// User wants to save a new entry
+			$row->save( $system_values->save_name, $filter_values, $options_values, $params_values );
+		}  elseif ( $cmd_load || ( ( $postfields <= 5 ) && $cmd_export )  ) {
+			// User wants to load an entry
 			$filter_values = $row->getParams( 'filter' );
 			$options_values = $row->getParams( 'options' );
 			$params_values = $row->getParams();
@@ -4720,11 +4734,11 @@ function exportData( $option, $cmd=null )
 	}
 
 	if ( !isset( $pname ) ) {
-		$pname = '';
+		$pname = $system_values->save_name;
 	}
 
 	// Always store the last ten calls, but only if something is happening
-	if ( $cmd_save || $cmd_apply || $cmd_load || $cmd_export ) {
+	if ( $cmd_save || $cmd_apply || $cmd_export ) {
 		$autorow = new aecExport( $database );
 		$autorow->load(0);
 		$autorow->save( 'Autosave', $filter_values, $options_values, $params_values, true );
@@ -4777,8 +4791,8 @@ function exportData( $option, $cmd=null )
 		$listitems = array();
 
 		$user = false;
-		for ( $i=0; $i <= $entries; $i++ ) {
-			if ( $i == count( $system_exports ) ) {
+		for ( $i=0; $i < $entries; $i++ ) {
+			if ( ( $i >= count( $user_exports ) ) && ( $user === false ) ) {
 				$user = $i;
 			}
 
@@ -4803,18 +4817,19 @@ function exportData( $option, $cmd=null )
 	$database->setQuery( $query );
 	$db_plans = $database->loadObjectList();
 
-	if ( is_array( $db_plans ) ) {
-		$plans = array_merge( $plans, $db_plans );
-	}
-
 	$selected_plans = array();
-	if ( !empty( $filter_values->planid ) ) {
-		foreach ( $filter_values->planid as $name ) {
-			$selected_plans[] = mosHTML::makeOption( $name, $name );
+	$plans = array();
+	foreach ( $db_plans as $dbplan ) {
+		$plans[] = mosHTML::makeOption( $dbplan->id, $dbplan->name );
+
+		if ( !empty( $filter_values->planid ) ) {
+			if ( in_array( $dbplan->id, $filter_values->planid ) ) {
+				$selected_plans[] = mosHTML::makeOption( $dbplan->id, $dbplan->name );
+			}
 		}
 	}
 
-	$lists['planid']	= mosHTML::selectList( $plans, 'planid[]', 'class="inputbox" size="' . min( 20, count( $plans ) ) . '" multiple="multiple"', 'id', 'name', $selected_plans );
+	$lists['planid']	= mosHTML::selectList( $plans, 'planid[]', 'class="inputbox" size="' . min( 20, count( $plans ) ) . '" multiple="multiple"', 'value', 'text', $selected_plans );
 
 	// Statusfilter
 	$group_selection = array();
@@ -4859,7 +4874,7 @@ function exportData( $option, $cmd=null )
 	$sel = array();
 	$sel[] = mosHTML::makeOption( 'csv', 'csv' );
 
-	$lists['export_method'] = mosHTML::selectList( $sel, 'orderby', 'class="inputbox" size="4"', 'value', 'text', 'csv' );
+	$lists['export_method'] = mosHTML::selectList( $sel, 'export_method', 'class="inputbox" size="4"', 'value', 'text', 'csv' );
 
 	$settings = new aecSettings ( 'export', 'general' );
 
@@ -4871,7 +4886,7 @@ function exportData( $option, $cmd=null )
 		}
 	}
 
-	$settingsparams = array_merge( $filter_values, $filter_values, $params_values );
+	$settingsparams = array_merge( get_object_vars( $filter_values ), get_object_vars( $options_values ), get_object_vars( $params_values ) );
 
 	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
 
