@@ -148,7 +148,7 @@ class processor_verotel extends URLprocessor
 
 		switch ( $res[3] ) {
 			case 'add':
-				$response['valid'] = 0;
+				$response['valid'] = 1;
 				if ( !empty( $post['planparams']['recurring'] ) ) {
 					$response['multiplicator'] = 'lifetime';
 				}
