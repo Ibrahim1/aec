@@ -547,15 +547,15 @@ switch( strtolower( $task ) ) {
 		exportData( $option );
 		break;
 
-	case 'loadExport':
+	case 'loadexport':
 		exportData( $option, 'load' );
 		break;
 
-	case 'applyExport':
+	case 'applyexport':
 		exportData( $option, 'apply' );
 		break;
 
-	case 'saveExport':
+	case 'saveexport':
 		exportData( $option, 'save' );
 		break;
 
@@ -4675,6 +4675,7 @@ function exportData( $option, $cmd=null )
 	$cmd_apply = ( strcmp( 'apply', $cmd ) === 0 );
 	$cmd_load = ( strcmp( 'load', $cmd ) === 0 );
 	$cmd_export = ( !empty( $cmd ) && !$cmd_save && !$cmd_apply && !$cmd_load );
+	$use_original = 0;
 
 	$system_values = array();
 	$filter_values = array();
@@ -4687,10 +4688,15 @@ function exportData( $option, $cmd=null )
 						'params' => array( 'export_type' )
 					);
 
+	$postfields = 0;
 	foreach( $getpost as $name => $array ) {
 		$field = $name . '_values';
+		$$field = new stdClass();
 		foreach( $array as $vname ) {
 			 $$field->$name = aecGetParam( $name, '' );
+			 if ( !empty( $_POST[$name] ) ) {
+			 	$postfields++;
+			 }
 		}
 	}
 
@@ -4702,18 +4708,19 @@ function exportData( $option, $cmd=null )
 
 		if ( !empty( $system_values->delete ) ) {
 			$row->delete();
-		} elseif ( $cmd_load ) {
+		} elseif ( ( $cmd_save || $cmd_apply ) && ( !empty( $system_values->selected_export ) || $system_values->save_name ) ) {
+			$row->save( $system_values->name, $filter_values, $options_values, $params_values );
+		} elseif ( $cmd_load || ( ( $postfields <= 5 ) && $cmd_export )  ) {
 			$filter_values = $row->getParams( 'filter' );
 			$options_values = $row->getParams( 'options' );
 			$params_values = $row->getParams();
-			$name = $row->name;
-		} elseif ( $cmd_save || $cmd_apply ) {
-			$row->save( $system_values->name, $filter_values, $options_values, $params_values );
+			$pname = $row->name;
+			$use_original = 1;
 		}
 	}
 
-	if ( !isset( $name ) ) {
-		$name = '';
+	if ( !isset( $pname ) ) {
+		$pname = '';
 	}
 
 	// Always store the last ten calls, but only if something is happening
@@ -4740,14 +4747,14 @@ function exportData( $option, $cmd=null )
 	$params[] = array( 'userinfobox', 50 );
 	$params['params_remap']	= array( 'subarea_change', 'options' );
 	$params['rewrite_rule']	= array( 'inputD', '' );
-	$rewriteswitches			= array( 'cms', 'user' );
+	$rewriteswitches			= array( 'cms', 'user', 'subscription', 'plan' );
 	$params = AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
 	$params[] = array( '2div_end', '' );
 
 	$params[] = array( 'userinfobox', 20 );
 	$params['params_remap']	= array( 'subarea_change', 'params' );
 	$params['save']			= array( 'checkbox', 0 );
-	$params['save_name']		= array( 'inputB', $name );
+	$params['save_name']		= array( 'inputB', $pname );
 	$params['export_method']	= array( 'list', '' );
 	$params[] = array( '2div_end', '' );
 
@@ -4776,7 +4783,7 @@ function exportData( $option, $cmd=null )
 			}
 
 			if ( $user === false ) {
-				$listitems[] = mosHTML::makeOption( $system_exports[$i]->id, substr( $system_exports[$i]->name, 0, 64 ) . ' - ' . 'last used: ' . $system_exports[$i]->lastused_date . ', created: ' . $system_exports[$i]->created_date );
+				$listitems[] = mosHTML::makeOption( $user_exports[$i]->id, substr( $user_exports[$i]->name, 0, 64 ) . ' - ' . 'last used: ' . $user_exports[$i]->lastused_date . ', created: ' . $user_exports[$i]->created_date );
 			} else {
 				$ix = $i - $user;
 				$listitems[] = mosHTML::makeOption( $system_exports[$ix]->id, substr( $system_exports[$ix]->name, 0, 64 ) . ' - ' . 'last used: ' . $system_exports[$ix]->lastused_date . ', created: ' . $system_exports[$ix]->created_date );
@@ -4796,11 +4803,18 @@ function exportData( $option, $cmd=null )
 	$database->setQuery( $query );
 	$db_plans = $database->loadObjectList();
 
-	$plans[] = mosHTML::makeOption( '0', _FILTER_PLAN, 'id', 'name' );
 	if ( is_array( $db_plans ) ) {
 		$plans = array_merge( $plans, $db_plans );
 	}
-	$lists['planid']	= mosHTML::selectList( $plans, 'planid[]', 'class="inputbox" size="' . min( 20, count( $plans ) ) . '" multiple="multiple"', 'id', 'name', arrayValueDefault($filter_values, 'planid', '') );
+
+	$selected_plans = array();
+	if ( !empty( $filter_values->planid ) ) {
+		foreach ( $filter_values->planid as $name ) {
+			$selected_plans[] = mosHTML::makeOption( $name, $name );
+		}
+	}
+
+	$lists['planid']	= mosHTML::selectList( $plans, 'planid[]', 'class="inputbox" size="' . min( 20, count( $plans ) ) . '" multiple="multiple"', 'id', 'name', $selected_plans );
 
 	// Statusfilter
 	$group_selection = array();
@@ -4810,16 +4824,15 @@ function exportData( $option, $cmd=null )
 	$group_selection[] = mosHTML::makeOption( 'expired',	_AEC_SEL_EXPIRED );
 	$group_selection[] = mosHTML::makeOption( 'closed',		_AEC_SEL_CLOSED );
 	$group_selection[] = mosHTML::makeOption( 'cancelled',	_AEC_SEL_CANCELLED );
-	$group_selection[] = mosHTML::makeOption( 'notconfig',	_AEC_SEL_NOT_CONFIGURED );
 
-	$selected_groups = array();
-	if ( !empty( $filter_values['planid'] ) ) {
-		foreach ( $filter_values->planid as $name ) {
-			$selected_groups[] = mosHTML::makeOption( $name, $name );
+	$selected_status = array();
+	if ( !empty( $filter_values->status ) ) {
+		foreach ( $filter_values->status as $name ) {
+			$selected_status[] = mosHTML::makeOption( $name, $name );
 		}
 	}
 
-	$lists['status'] = mosHTML::selectList($group_selection, 'status[]', 'size="5" multiple="multiple"', 'value', 'text', $selected_groups);
+	$lists['status'] = mosHTML::selectList($group_selection, 'status[]', 'size="6" multiple="multiple"', 'value', 'text', $selected_status);
 
 	// Ordering
 	$sel = array();
@@ -4840,13 +4853,13 @@ function exportData( $option, $cmd=null )
 	$sel[] = mosHTML::makeOption( 'type ASC',				_TYPE_ASC );
 	$sel[] = mosHTML::makeOption( 'type DESC',				_TYPE_DESC );
 
-	$lists['orderby'] = mosHTML::selectList( $sel, 'orderby', 'class="inputbox" size="1"', 'value', 'text', arrayValueDefault($filter_values, 'orderby', '') );
+	$lists['orderby'] = mosHTML::selectList( $sel, 'orderby', 'class="inputbox" size="10"', 'value', 'text', arrayValueDefault($filter_values, 'orderby', '') );
 
 	// Export Method
 	$sel = array();
 	$sel[] = mosHTML::makeOption( 'csv', 'csv' );
 
-	$lists['export_method'] = mosHTML::selectList( $sel, 'orderby', 'class="inputbox" size="1"', 'value', 'text', 'csv' );
+	$lists['export_method'] = mosHTML::selectList( $sel, 'orderby', 'class="inputbox" size="4"', 'value', 'text', 'csv' );
 
 	$settings = new aecSettings ( 'export', 'general' );
 
@@ -4865,8 +4878,12 @@ function exportData( $option, $cmd=null )
 	// Call HTML Class
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
-	if ( $cmd_export && $params_values->export_method ) {
-		$row->useExport();
+	if ( $cmd_export && !empty( $params_values->export_method ) ) {
+		if ( $use_original ) {
+			$row->useExport();
+		} else {
+			$autorow->useExport();
+		}
 	}
 
 	if ( $cmd_save ) {

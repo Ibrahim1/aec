@@ -94,6 +94,9 @@ switch ( $task ) {
 		ComponentMenu::EDIT_COUPON_STATIC();
 		break;
 
+	case 'loadExport':
+	case 'applyExport':
+	case 'saveExport':
 	case 'export':
 		ComponentMenu::EDIT_EXPORT();
 		break;

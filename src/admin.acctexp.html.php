@@ -2332,7 +2332,7 @@ class HTML_AcctExp
 		</table>
 
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
-		<input type="hidden" name="task" value="export" />
+		<input type="hidden" name="task" value="" />
 		<input type="hidden" name="returnTask" value="export" />
 		</form>
 

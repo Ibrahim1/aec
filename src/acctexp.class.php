@@ -6769,9 +6769,8 @@ class AECToolbox
 	function rewriteEngineInfo( $switches=array(), $params=null )
 	{
 		if ( !count( $switches ) ) {
-			$switches = array( 'cms', 'expiration', 'user', 'subscription', 'invoice', 'plan', 'system' );
+			$switches = array( 'cms', 'user', 'subscription', 'invoice', 'plan', 'system' );
 		}
-
 
 		$rewrite = array();
 
@@ -8622,9 +8621,87 @@ class aecExport extends jsonDBTable
 
 	function useExport()
 	{
+		global $mosConfig_offset_user, $mosConfig_absolute_path;
+
+		// Load Export Parameters
+		$filter_values = $this->getParams( 'filter' );
+		$options_values = $this->getParams( 'options' );
+		$params_values = $this->getParams();
+
+		// Load Exporting Class
+		$filename = $mosConfig_absolute_path . '/components/com_acctexp/lib/export/' . $params_values->export_method . '.php';
+		$classname = 'AECexport_' . $params_values->export_method;
+
+		include_once( $filename );
+
+		$exphandler = new $classname();
+
+		$fname = 'aecexport_' . urlencode( $this->name ) . '_' . date( 'Y_m_d', time() + $mosConfig_offset_user*3600 );
+
+		// Send download header
+		header("Pragma: public");
+		header("Expires: 0");
+		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+
+		header("Content-Type: application/force-download");
+		header("Content-Type: application/octet-stream");
+
+		header("Content-Type: application/download");
+		header('Content-Disposition: inline; filename="' . $fname . '.csv"');
+
+		// Assemble Database call
+		$where = array();
+		if ( !empty( $filter_values->planid ) ) {
+			$where[] = '`plan` IN (' . implode( ',', $filter_values->planid ) . ')';
+		}
+
+		if ( !empty( $filter_values->status ) ) {
+			foreach ( $filter_values->status as $status ) {
+				$where[] = '`status` = \'' . $status . '\'';
+			}
+		}
+
+		$query = 'SELECT `id`, `userid` FROM #__acctexp_subscr';
+
+		if ( !empty( $where ) ) {
+			$query .= ' WHERE ' . implode( ' OR ', $where );
+		}
+
+		if ( !empty( $filter_values->orderby ) ) {
+			$query .= ' ORDER BY `' . $filter_values->orderby . '`';
+		}
+
+		$this->_db->setQuery( $query );
+
+		// Fetch Userlist
+		$userlist = $this->_db->loadObjectArray();
+
+		// Plans Array
+		$plans = array();
+
+		// Iterate through userlist
+		foreach ( $userlist as $entry ) {
+			$metaUser = new metaUser( $entry->userid );
+			$metaUser->moveFocus( $entry->id );
+
+			$planid = $metaUser->focusSubscription->plan;
+
+			if ( !isset( $plans[$planid] ) ) {
+				$plans[$planid] = new SubscriptionPlan( $this->_db );
+				$plans[$planid]->load( $planid );
+			}
+
+			echo $exphandler->export_line( explode( ';', AECToolbox::rewriteEngine( $options_values->rewrite_rule, $metaUser, $plans[$planid] ) ) );
+		}
+
+		$this->setUsedDate();
+	}
+
+	function setUsedDate()
+	{
 		global $mosConfig_offset_user;
 
-		$this->lastused_date = gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
+		$this->lastused_date = date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 );
 		$this->check();
 		$this->store();
 	}

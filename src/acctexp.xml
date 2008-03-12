@@ -38,6 +38,8 @@
 		<filename>lib/eucalib/eucalib.install.php</filename>
 		<filename>lib/eucalib/eucalib.php</filename>
 		<filename>lib/eucalib/eucalib.proxy.php</filename>
+		<filename>lib/export/index.html</filename>
+		<filename>lib/export/csv.php</filename>
 		<filename>lib/krumo/index.html</filename>
 		<filename>lib/krumo/krumo.tar.gz</filename>
 		<filename>lib/mootools/index.html</filename>
