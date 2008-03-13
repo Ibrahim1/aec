@@ -4448,9 +4448,17 @@ class InvoiceFactory
 		}
 
 		$pp = new PaymentProcessor( $database );
-		$pp->loadName( $invoice->method );
+		if ( $pp->loadName( $invoice->method ) ) {
+			$pp->fullInit();
+		}
 
-		$pp->customAction( $action, $invoice, $this->metaUser );
+		$response = $pp->customAction( $action, $invoice, $this->metaUser );
+
+		$invoice->processorResponse( $pp, $response );
+
+		if ( isset( $response['cancel'] ) ) {
+			HTML_Results::cancel( 'com_acctexp' );
+		}
 	}
 
 	function thanks( $option, $renew, $free )
