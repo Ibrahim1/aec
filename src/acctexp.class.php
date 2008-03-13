@@ -7082,7 +7082,7 @@ class AECToolbox
 					$metaUser->loadCBuser();
 				}
 
-				if ( $metaUser->hasCBprofile ) {
+				if ( !empty( $metaUser->hasCBprofile ) ) {
 					$query = 'SELECT `name`'
 							. ' FROM #__comprofiler_fields'
 							. ' WHERE `table` != \'#__users\''
