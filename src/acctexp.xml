@@ -90,6 +90,7 @@
 		<filename>micro_integration/mi_htaccess/htaccess.class.php</filename>
 		<filename>processors/index.html</filename>
 		<filename>processors/2checkout.php</filename>
+		<filename>processors/airtoy.php</filename>
 		<filename>processors/alertpay.php</filename>
 		<filename>processors/allopass.php</filename>
 		<filename>processors/authorize.php</filename>

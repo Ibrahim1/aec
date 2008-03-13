@@ -503,4 +503,19 @@ define( '_CFG_PAYBOXFR_PATH_DESC', 'The path where your paybox script is located
 define( '_CFG_PAYBOXFR_INFO_NAME', 'url http');
 define( '_CFG_PAYBOXFR_INFO_DESC', 'You need to set the "url http" in your Paybox settings. This is required so that Paybox will notify the AEC about transactions. The URL you have to put in there is: "http://yoursite.com/index.php"');
 
+// Airtoy
+define( '_CFG_AIRTOY_LONGNAME', 'Airtoy');
+define( '_CFG_AIRTOY_STATEMENT', 'Pay with Airtoy');
+define( '_CFG_AIRTOY_DESCRIPTION', 'Pay with Airtoy');
+define( '_CFG_AIRTOY_PHONE_NUMER_NAME', 'Phone Number');
+define( '_CFG_AIRTOY_PHONE_NUMER_DESC', 'The phone number which the customer should send the SMS to.');
+define( '_CFG_AIRTOY_PLAN_PARAMS_SMSCODE_PREFIX_NAME', 'SMS Code Prefix');
+define( '_CFG_AIRTOY_PLAN_PARAMS_SMSCODE_PREFIX_DESC', 'The Prefix for the SMS code the user has to send to Airtoy. The Code will always come out as "Prefix-XXX", where XXX is the invoice id');
+define( '_AEC_AIRTOY_PARAMS_EXPLAIN_NAME', 'Send SMS');
+define( '_AEC_AIRTOY_PARAMS_EXPLAIN_DESC', "Send an SMS with the text \"%s\" (no quotation marks) to %s. You will then receive a code that you can enter below to clear the payment.");
+define( '_AEC_AIRTOY_PARAMS_SMSCODE_NAME', 'SMS Code');
+define( '_AEC_AIRTOY_PARAMS_SMSCODE_DESC', 'Enter the SMS Code you have received after sending the above message.');
+define( '_AEC_AIRTOY_ERROR_NOCODE', 'You did not put in any code!');
+define( '_AEC_AIRTOY_CODE_WRONG', 'The code you have put in was wrong.');
+
 ?>

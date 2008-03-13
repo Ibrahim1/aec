@@ -80,7 +80,7 @@ class processor_authorize_arb extends XMLprocessor
 		$settings['useSilentPostResponse']		= array("list_yesno");
 		$settings['SilentPost_info']			= array( 'fieldset' );
 		$settings['item_name']			= array("inputE");
- 		$rewriteswitches 				= array("cms", "user", "expiration", "subscription", "plan");
+ 		$rewriteswitches 				= array("cms", "user", "subscription", "plan", "invoice");
 		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		return $settings;
@@ -129,7 +129,7 @@ class processor_authorize_arb extends XMLprocessor
 
 		// Add Payment information
 		$content .=	'<subscription>'
-					. '<name>' . trim( substr( AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription ), 0, 20 ) ) . '</name>'
+					. '<name>' . trim( substr( AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription, $invoice ), 0, 20 ) ) . '</name>'
 					. '<paymentSchedule>'
 					. '<interval>'
 					. '<length>' . trim( $full['period'] ) . '</length>'
