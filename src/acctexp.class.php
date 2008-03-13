@@ -8697,6 +8697,11 @@ class aecExport extends jsonDBTable
 				$line = AECToolbox::rewriteEngine( $options_values->rewrite_rule, $metaUser, $plans[$planid] );
 				$larray = explode( ';', $line );
 
+				// Remove whitespaces and newlines
+				foreach( $larray as $larrid => $larrval ) {
+					$larray[$larrid] = trim($larrval);
+				}
+
 				echo $exphandler->export_line( $larray );
 			}
 		}

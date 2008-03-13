@@ -4720,6 +4720,8 @@ function exportData( $option, $cmd=null )
 				$row->load( 0 );
 			}
 			$row->save( $system_values->save_name, $filter_values, $options_values, $params_values );
+
+			$system_values->selected_export = $row->getMax();
 		} elseif ( ( $cmd_save || $cmd_apply ) && ( empty( $system_values->selected_export ) && !empty( $system_values->save_name ) && ( $system_values->save == 'on' ) ) ) {
 			// User wants to save a new entry
 			$row->save( $system_values->save_name, $filter_values, $options_values, $params_values );
