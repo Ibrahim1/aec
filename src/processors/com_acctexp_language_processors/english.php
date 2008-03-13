@@ -440,6 +440,8 @@ define( '_CFG_IDEAL_ADVANCED_STATEMENT', 'Make payments with iDeal');
 define( '_CFG_IDEAL_ADVANCED_DESCRIPTION', 'De veilige manier van betalen op internet.');
 define( '_CFG_IDEAL_ADVANCED_MERCHANTID_NAME', 'Merchant ID');
 define( '_CFG_IDEAL_ADVANCED_MERCHANTID_DESC', 'Your Merchant ID');
+define( '_CFG_IDEAL_ADVANCED_BANK_NAME', 'Bank');
+define( '_CFG_IDEAL_ADVANCED_BANK_DESC', 'The Bank Name');
 define( '_CFG_IDEAL_ADVANCED_TESTMODESTAGE_NAME', 'Testmode Stage');
 define( '_CFG_IDEAL_ADVANCED_TESTMODESTAGE_DESC', 'Which of the tests (1-7) do you want to conduct?');
 define( '_CFG_IDEAL_ADVANCED_SUBID_NAME', 'Testmode Stage');

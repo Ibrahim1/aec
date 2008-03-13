@@ -83,7 +83,7 @@ class processor_airtoy extends XMLprocessor
 		$invoice = new Invoice( $database );
 		$invoice->loadInvoiceNumber( $int_var['invoice'] );
 
-		$code = $int_var['planparams']['smscode_prefix'] . '-' . $invoice->id;
+		$code = $int_var['planparams']['smscode_prefix'] . ' ' . $invoice->id;
 
 		$var['params']['explain'] = array( 'p', _AEC_AIRTOY_PARAMS_EXPLAIN_NAME, sprintf( _AEC_AIRTOY_PARAMS_EXPLAIN_DESC, $code, $cfg['phone_number'] ) );
 		$var['params']['smscode'] = array( 'inputC', _AEC_AIRTOY_PARAMS_SMSCODE_NAME, _AEC_AIRTOY_PARAMS_SMSCODE_DESC);
@@ -135,9 +135,9 @@ class processor_airtoy extends XMLprocessor
 	{
 		global $database;
 
-		$smscode = $_GET['smscode'];
+		$smscode = $_GET['sms'];
 
-		$sms = explode( '-', $smscode );
+		$sms = explode( ' ', $smscode );
 
 		$invoice = new Invoice( $database );
 		$invoice->load( $sms[1] );

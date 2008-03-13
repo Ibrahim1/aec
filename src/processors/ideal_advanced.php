@@ -59,9 +59,8 @@ class processor_ideal_advanced extends XMLprocessor
 		$s = array();
 		$s['merchantid']	= "merchantid";
 		$s['testmode']		= 0;
-		$s['subid']			= "0";
+		$s['bank']			= "ING";
 		$s['language']		= "NL";
-		$s['key']			= "key";
 		$s['description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 
 		return $s;

@@ -1790,24 +1790,6 @@ function editSettings( $option )
 	@end( $params );
 	$tab_data[] = array( _CFG_TAB1_TITLE, key( $params ) );
 
-/*
- * _CFG_TAB1_OPT9 - _CFG_GENERAL_REQUIRE_SUBSCRIPTION_
- * _CFG_TAB1_OPT3 - CFG_GENERAL_ALERTLEVEL2_
- * _CFG_TAB1_OPT4 - CFG_GENERAL_ALERTLEVEL1_
- * _CFG_TAB1_OPT20 - _CFG_GENERAL_GWLIST_ENABLED_
- * _CFG_TAB1_OPT10 - _CFG_GENERAL_GWLIST_
- * _CFG_TAB1_OPT5 - _CFG_GENERAL_ENTRY_PLAN_
- * _CFG_TAB1_OPT15 - _CFG_GENERAL_BYPASSINTEGRATION_
- * _CFG_TAB1_OPT21 - _CFG_GENERAL_PLANS_FIRST_
- * _CFG_TAB1_OPT16 - _CFG_GENERAL_SIMPLEURLS_
- * _CFG_TAB1_OPT17 - _CFG_GENERAL_EXPIRATION_CUSHION_
- * _CFG_TAB1_OPT18 - _CFG_GENERAL_HEARTBEAT_CYCLE_
- * _CFG_TAB1_OPT12 - _CFG_GENERAL_CUSTOMINTRO_
- * _CFG_TAB1_OPT13 - _CFG_GENERAL_CUSTOMTHANKS_
- * _CFG_TAB1_OPT14 - _CFG_GENERAL_CUSTOMCANCEL_
- * _CFG_TAB1_OPT19 - _CFG_GENERAL_TOS_
- */
-
 	$params[] = array( 'userinfobox', 45 );
 	$params['customintro']				= array( 'inputC', '' );
 	$params['customthanks']				= array( 'inputC', '' );
@@ -1894,6 +1876,8 @@ function editSettings( $option )
 	asort($gwlist);
 
 	foreach ( $gwlist as $gwname ) {
+		$readgwname = ucwords( str_replace( '_', ' ', strtolower( $gwname ) ) );
+
 		// Load Payment Processor
 		$pp = new PaymentProcessor();
 		if ( $pp->loadName( $gwname ) ) {
@@ -2010,7 +1994,7 @@ function editSettings( $option )
 					$params[$description] = array( 'editor', _CFG_PROCESSOR_DESC_NAME, _CFG_PROCESSOR_DESC_DESC, $pp->info['description'], $description);
 
 					@end( $params );
-					$tab_data[] = array( $pp->info['longname'], key( $params ) );
+					$tab_data[] = array( $readgwname, key( $params ) );
 
 					// Add to Active List
 					$gw_list_enabled[]->value = $gwname;
@@ -2036,7 +2020,7 @@ function editSettings( $option )
 			}
 
 			// Add to general PP List
-			$gw_list_html[] = mosHTML::makeOption( $gwname, $pp->info['longname'] );
+			$gw_list_html[] = mosHTML::makeOption( $gwname, $readgwname );
 		} else {
 			// TODO: Log error
 		}
