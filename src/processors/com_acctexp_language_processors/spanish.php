@@ -98,6 +98,10 @@ define( '_AEC_CCFORM_EXPIRATIONYEAR_NAME', 'Expiration Year');
 define( '_AEC_CCFORM_EXPIRATIONYEAR_DESC', 'The Year your card will expire');
 define( '_AEC_CCFORM_EXPIRATIONMONTH_NAME', 'Expiration Month');
 define( '_AEC_CCFORM_EXPIRATIONMONTH_DESC', 'The Month your card will expire');
+define( '_AEC_CCFORM_CARDTYPE_NAME', 'Card Type');
+define( '_AEC_CCFORM_CARDTYPE_DESC', 'The type of the credit card');
+define( '_AEC_CCFORM_CARDVV2_NAME', 'Card Verification Number');
+define( '_AEC_CCFORM_CARDVV2_DESC', 'The Verification Number of the Credit Card');
 
 // Generic Wire Transfer Form
 define( '_AEC_WTFORM_ACCOUNTNAME_NAME', 'Account owner Name');
@@ -506,5 +510,25 @@ define( '_AEC_AIRTOY_PARAMS_SMSCODE_NAME', 'SMS Code');
 define( '_AEC_AIRTOY_PARAMS_SMSCODE_DESC', 'Enter the SMS Code you have received after sending the above message.');
 define( '_AEC_AIRTOY_ERROR_NOCODE', 'You did not put in any code!');
 define( '_AEC_AIRTOY_CODE_WRONG', 'The code you have put in was wrong.');
+
+// PayPal WPP
+define( '_CFG_PAYPAL_WPP_LONGNAME', 'PayPal WPP');
+define( '_CFG_PAYPAL_WPP_STATEMENT', 'Make payments with PayPal - it\'s fast, free and secure!');
+define( '_CFG_PAYPAL_WPP_DESCRIPTION', 'PayPal lets you send money to anyone with email. PayPal is free for consumers and works seamlessly with your existing credit card and checking account.');
+
+define( '_CFG_PAYPAL_WPP_API_USER_NAME', 'API Username');
+define( '_CFG_PAYPAL_WPP_API_USER_DESC', 'Your PayPal API Username');
+define( '_CFG_PAYPAL_WPP_API_PASSWORD_NAME', 'API Password');
+define( '_CFG_PAYPAL_WPP_API_PASSWORD_DESC', 'Your PayPal API Password');
+define( '_CFG_PAYPAL_WPP_USE_CERTIFICATE_NAME', 'Use Certificate');
+define( '_CFG_PAYPAL_WPP_USE_CERTIFICATE_DESC', 'Use Certificate Authentication instead of the standard signature');
+define( '_CFG_PAYPAL_WPP_CERTIFICATE_PATH_NAME', 'Certificate Path');
+define( '_CFG_PAYPAL_WPP_CERTIFICATE_PATH_DESC', 'The path to your PayPal Certificate');
+define( '_CFG_PAYPAL_WPP_SIGNATURE_NAME', 'Signature');
+define( '_CFG_PAYPAL_WPP_SIGNATURE_DESC', 'Your PayPal Signature');
+define( '_CFG_PAYPAL_WPP_COUNTRY_NAME', 'Country');
+define( '_CFG_PAYPAL_WPP_COUNTRY_DESC', 'Choose the country of your business');
+define( '_CFG_PAYPAL_WPP_CANCEL_NOTE_NAME', 'Cancel Note');
+define( '_CFG_PAYPAL_WPP_CANCEL_NOTE_DESC', 'The Cancel Note the user gets displayed when a subscription via PayPal WPP is cancelled');
 
 ?>

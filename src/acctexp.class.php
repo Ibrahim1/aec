@@ -2031,30 +2031,119 @@ class XMLprocessor extends processor
 		return $return;
 	}
 
-	function getCCform( $var=array() )
+	function getCCform( $var=array(), $values=null )
 	{
-		// Request the Card number
-		$var['params']['cardNumber'] = array( 'inputC', _AEC_CCFORM_CARDNUMBER_NAME, _AEC_CCFORM_CARDNUMBER_NAME, '');
-
-		// Create a selection box with 12 months
-		$months = array();
-		for( $i = 1; $i < 13; $i++ ){
-			$month = str_pad( $i, 2, "0", STR_PAD_LEFT );
-			$months[] = mosHTML::makeOption( $month, $month );
+		if ( empty( $values ) ) {
+			$values = array( 'card_number', 'card_exp_month', 'card_exp_year' );
 		}
 
-		$var['params']['lists']['expirationMonth'] = mosHTML::selectList($months, 'expirationMonth', 'size="1" style="width:50px;"', 'value', 'text', 0);
-		$var['params']['expirationMonth'] = array( 'list', _AEC_CCFORM_EXPIRATIONMONTH_NAME, _AEC_CCFORM_EXPIRATIONMONTH_DESC);
+		foreach ( $values as $value ) {
+			switch ( $value ) {
+				case 'card_type':
+					$options = array();
+					$options['visa'] = mosHTML::makeOption( 'visa', 'Visa' );
+					$options['mastercard'] = mosHTML::makeOption( 'mastercard', 'MasterCard' );
+					$options['discover'] = mosHTML::makeOption( 'discover', 'Discover' );
+					$options['amex'] = mosHTML::makeOption( 'amex', 'American Express' );
 
-		// Create a selection box with the next 10 years
-		$year = date('Y');
-		$years = array();
-		for( $i = $year; $i < $year + 15; $i++ ) {
-			$years[] = mosHTML::makeOption( $i, $i );
+					$var['params']['lists']['cardType'] = mosHTML::selectList($options, 'cardType', 'size="1" style="width:70px;"', 'value', 'text', 0 );
+					$var['params']['cardType'] = array( 'list', _AEC_CCFORM_CARDTYPE_NAME, _AEC_CCFORM_CARDTYPE_DESC, '' );
+					break;
+				case 'card_number':
+					// Request the Card number
+					$var['params']['cardNumber'] = array( 'inputC', _AEC_CCFORM_CARDNUMBER_NAME, _AEC_CCFORM_CARDNUMBER_DESC, '' );
+					break;
+				case 'card_exp_month':
+					// Create a selection box with 12 months
+					$months = array();
+					for( $i = 1; $i < 13; $i++ ){
+						$month = str_pad( $i, 2, "0", STR_PAD_LEFT );
+						$months[] = mosHTML::makeOption( $month, $month );
+					}
+
+					$var['params']['lists']['expirationMonth'] = mosHTML::selectList($months, 'expirationMonth', 'size="1" style="width:50px;"', 'value', 'text', 0 );
+					$var['params']['expirationMonth'] = array( 'list', _AEC_CCFORM_EXPIRATIONMONTH_NAME, _AEC_CCFORM_EXPIRATIONMONTH_DESC );
+					break;
+				case 'card_exp_year':
+					// Create a selection box with the next 10 years
+					$year = date('Y');
+					$years = array();
+					for( $i = $year; $i < $year + 15; $i++ ) {
+						$years[] = mosHTML::makeOption( $i, $i );
+					}
+
+					$var['params']['lists']['expirationYear'] = mosHTML::selectList($years, 'expirationYear', 'size="1" style="width:70px;"', 'value', 'text', 0 );
+					$var['params']['expirationYear'] = array( 'list', _AEC_CCFORM_EXPIRATIONYEAR_NAME, _AEC_CCFORM_EXPIRATIONYEAR_DESC );
+					break;
+				case 'card_cvv2':
+					$var['params']['cardVV2'] = array( 'inputC', _AEC_CCFORM_CARDVV2_NAME, _AEC_CCFORM_CARDVV2_DESC, '' );
+					break;
+			}
 		}
 
-		$var['params']['lists']['expirationYear'] = mosHTML::selectList($years, 'expirationYear', 'size="1" style="width:70px;"', 'value', 'text', 0);
-		$var['params']['expirationYear'] = array( 'list', _AEC_CCFORM_EXPIRATIONYEAR_NAME, _AEC_CCFORM_EXPIRATIONYEAR_DESC);
+		return $var;
+	}
+
+	function getUserform( $var=array(), $values=null, $metaUser=null )
+	{
+		if ( empty( $values ) ) {
+			$values = array( 'firstname', 'lastname' );
+		}
+
+		if ( is_object( $metaUser ) ) {
+			$name = explode( ' ', $metaUser->cmsUser->name );
+
+			if ( empty( $name[1] ) ) {
+				$name[1] = "";
+			}
+		} else {
+			$name = array( '', '' );
+		}
+
+		foreach ( $values as $value ) {
+			switch ( $value ) {
+				case 'firstname':
+					$var['params']['billFirstName'] = array( 'inputC', _AEC_USERFORM_BILLFIRSTNAME_NAME, _AEC_USERFORM_BILLFIRSTNAME_NAME, $name[0] );
+					break;
+				case 'lastname':
+					$var['params']['billLastName'] = array( 'inputC', _AEC_USERFORM_BILLLASTNAME_NAME, _AEC_USERFORM_BILLLASTNAME_NAME, $name[1] );
+					break;
+				case 'address':
+					$var['params']['billAddress'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS_NAME );
+					break;
+				case 'address2':
+					$var['params']['billAddress2'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS2_NAME );
+					break;
+				case 'city':
+					$var['params']['billCity'] = array( 'inputC', _AEC_USERFORM_BILLCITY_NAME );
+					break;
+				case 'state':
+					$states = array( 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI',
+										'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME',
+										'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ',
+										'NM', 'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD',
+										'TN', 'TX', 'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY', 'AA',
+										'AE', 'AP', 'AS', 'FM', 'GU', 'MH', 'MP', 'PR', 'PW', 'VI' );
+
+					$statelist = array();
+					foreach ( $states as $state ) {
+						$statelist[] = mosHTML::makeOption( $state, $state );
+					}
+
+					$var['params']['lists']['billState'] = mosHTML::selectList($statelist, 'billState', 'size="1" style="width:70px;"', 'value', 'text', 0 );
+					$var['params']['billState'] = array( 'inputC', _AEC_USERFORM_BILLSTATE_NAME );
+					break;
+				case 'state_us':
+					$var['params']['billState'] = array( 'list', _AEC_USERFORM_BILLSTATE_NAME );
+					break;
+				case 'zip':
+					$var['params']['billZip'] = array( 'inputC', _AEC_USERFORM_BILLZIP_NAME );
+					break;
+				case 'country':
+					$var['params']['billCountry'] = array( 'inputC', _AEC_USERFORM_BILLCOUNTRY_NAME );
+					break;
+			}
+		}
 
 		return $var;
 	}
@@ -2099,11 +2188,11 @@ class XMLprocessor extends processor
 		}
 	}
 
-	function transmitRequest( $url, $path, $content, $port=443 )
+	function transmitRequest( $url, $path, $content, $port=443, $curlextra=null )
 	{
 		$response = null;
 
-		$response = $this->doTheCurl( $url, $content );
+		$response = $this->doTheCurl( $url, $content, $curlextra );
 		if ( !$response ) {
 			// If curl doesn't work try using fsockopen
 			$response = $this->doTheHttp( $url, $path, $content, $port );
@@ -2141,16 +2230,41 @@ class XMLprocessor extends processor
 		return false;
 	}
 
-	function doTheCurl( $url, $content )
+	function doTheCurl( $url, $content, $curlextra )
 	{
+		if ( empty( $curlextra ) ) {
+			$curlextra = array();
+		}
+
 		$ch = curl_init();
-		curl_setopt( $ch, CURLOPT_URL, $url );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-		curl_setopt( $ch, CURLOPT_HTTPHEADER, Array("Content-Type: text/xml") );
-		curl_setopt( $ch, CURLOPT_HEADER, 1 );
-		curl_setopt( $ch, CURLOPT_POST, 1 );
-		curl_setopt( $ch, CURLOPT_POSTFIELDS, $content );
-		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, FALSE );
+
+		$curl_calls = array();
+		$curl_calls[CURLOPT_URL]			= $url;
+		$curl_calls[CURLOPT_RETURNTRANSFER]	= 1;
+		$curl_calls[CURLOPT_HTTPHEADER]		= array( 'Content-Type: text/xml' );
+		$curl_calls[CURLOPT_HEADER]			= 1;
+		$curl_calls[CURLOPT_POST]			= 1;
+		$curl_calls[CURLOPT_POSTFIELDS]		= $content;
+		$curl_calls[CURLOPT_SSL_VERIFYPEER]	= false;
+		$curl_calls[CURLOPT_SSL_VERIFYHOST]	= false;
+
+		// Set Curl params, replacing them with extra values
+		foreach( $curl_calls as $name => $value ) {
+			if ( isset( $curlextra[$name] ) ) {
+				curl_setopt( $ch, $name, $curlextra[$name] );
+				unset( $curlextra[$name] );
+			} else {
+				curl_setopt( $ch, $name, $value );
+			}
+		}
+
+		// Add Curl params that were not set yet
+		if ( !empty( $curlextra ) ) {
+			foreach( $curlextra as $name => $value ) {
+				curl_setopt( $ch, $name, $value );
+			}
+		}
+
 		$response = curl_exec( $ch );
 		curl_close( $ch );
 

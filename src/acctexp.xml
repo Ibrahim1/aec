@@ -107,8 +107,9 @@
 		<filename>processors/offline_payment.php</filename>
 		<filename>processors/payboxfr.php</filename>
 		<filename>processors/paycom.php</filename>
-		<filename>processors/paypal_subscription.php</filename>
 		<filename>processors/paypal.php</filename>
+		<filename>processors/paypal_subscription.php</filename>
+		<filename>processors/paypal_wpp.php</filename>
 		<filename>processors/paysignet.php</filename>
 		<filename>processors/paysite_cash.php</filename>
 		<filename>processors/psigate.php</filename>

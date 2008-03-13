@@ -38,12 +38,12 @@ class processor_paypal_wpp extends XMLprocessor
 		$info['longname']		= _CFG_PAYPAL_WPP_LONGNAME;
 		$info['statement']		= _CFG_PAYPAL_WPP_STATEMENT;
 		$info['description']	= _CFG_PAYPAL_WPP_DESCRIPTION;
-		$info['currencies']		= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK';
+		$info['currencies']	= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK';
 		$info['languages']		= 'GB,DE,FR,IT,ES,US';
 		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck,giropay';
 		$info['recurring']		= 2;
 		$info['actions']		= 'cancel';
-		$info['secure']			= 1;
+		$info['secure']		= 1;
 
 		return $info;
 	}
@@ -51,15 +51,17 @@ class processor_paypal_wpp extends XMLprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['login']				= "login";
-		$settings['transaction_key']	= "transaction_key";
-		$settings['testmode']			= 0;
-		$settings['currency']			= "USD";
-		$settings['promptAddress']		= 0;
-		$settings['totalOccurrences']	= 12;
-		$settings['trialOccurrences']	= 1;
-		$settings['useSilentPostResponse']	= 1;
-		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['testmode']				= 0;
+		$settings['currency']				= 'USD';
+
+		$settings['api_user']				= '';
+		$settings['api_password']			= '';
+		$settings['use_certificate']		= '';
+		$settings['certificate_path']	= '';
+		$settings['signature']				= '';
+		$settings['country']				= 'US';
+
+		$settings['item_name']				= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 
 		return $settings;
 	}
@@ -67,17 +69,26 @@ class processor_paypal_wpp extends XMLprocessor
 	function backend_settings( $cfg )
 	{
 		$settings = array();
-		$settings['testmode']			= array("list_yesno");
-		$settings['login'] 				= array("inputC");
-		$settings['transaction_key']	= array("inputC");
-		$settings['currency']			= array("list_currency");
-		$settings['promptAddress']		= array("list_yesno");
-		$settings['totalOccurrences']	= array("inputA");
-		$settings['trialOccurrences']	= array("inputA");
-		$settings['useSilentPostResponse']		= array("list_yesno");
-		$settings['SilentPost_info']			= array( 'fieldset' );
-		$settings['item_name']			= array("inputE");
- 		$rewriteswitches 				= array("cms", "user", "expiration", "subscription", "plan");
+		$settings['testmode']				= array( 'list_yesno' );
+		$settings['currency']				= array( 'list_currency' );
+
+		$settings['api_user']				= array( 'inputC' );
+		$settings['api_password']			= array( 'inputC' );
+		$settings['use_certificate']		= array( 'list_yesno' );
+		$settings['certificate_path']	= array( 'inputC' );
+		$settings['signature'] 			= array( 'inputC' );
+		$settings['country'] 				= array( 'list' );
+
+		$settings['cancel_note']			= array( 'inputE' );
+		$settings['item_name']				= array( 'inputE' );
+
+		$country_sel = array();
+		$country_sel[] = mosHTML::makeOption( 'US', 'US' );
+		$country_sel[] = mosHTML::makeOption( 'UK', 'UK' );
+
+		$settings['lists']['country'] = mosHTML::selectList( $country_sel, 'country', 'size="2"', 'value', 'text', $cfg['country'] );
+
+ 		$rewriteswitches 					= array("cms", "user", "expiration", "subscription", "plan");
 		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		return $settings;
@@ -87,24 +98,13 @@ class processor_paypal_wpp extends XMLprocessor
 	{
 		global $mosConfig_live_site;
 
-		$var = $this->getCCform();
+		$var = array();
 
-		$name = explode( ' ', $metaUser->cmsUser->name );
+		$values = array( 'card_type', 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' );
+		$var = $this->getCCform( $var, $values );
 
-		if ( empty( $name[1] ) ) {
-			$name[1] = "";
-		}
-
-		$var['params']['billFirstName'] = array( 'inputC', _AEC_PAYPAL_WPP_PARAMS_BILLFIRSTNAME_NAME, _AEC_PAYPAL_WPP_PARAMS_BILLFIRSTNAME_DESC, $name[0]);
-		$var['params']['billLastName'] = array( 'inputC', _AEC_PAYPAL_WPP_PARAMS_BILLLASTNAME_NAME, _AEC_PAYPAL_WPP_PARAMS_BILLLASTNAME_DESC, $name[1]);
-
-		if ( !empty( $cfg['promptAddress'] ) ) {
-			$var['params']['billAddress'] = array( 'inputC', _AEC_PAYPAL_WPP_PARAMS_BILLADDRESS_NAME );
-			$var['params']['billCity'] = array( 'inputC', _AEC_PAYPAL_WPP_PARAMS_BILLCITY_NAME );
-			$var['params']['billState'] = array( 'inputC', _AEC_PAYPAL_WPP_PARAMS_BILLSTATE_NAME );
-			$var['params']['billZip'] = array( 'inputC', _AEC_PAYPAL_WPP_PARAMS_BILLZIP_NAME );
-			$var['params']['billCountry'] = array( 'inputC', _AEC_PAYPAL_WPP_PARAMS_BILLCOUNTRY_NAME );
-		}
+		$values = array( 'firstname', 'lastname', 'address', 'address2', 'city', 'state_us', 'zip', 'country' );
+		$var = $this->getUserform( $var, $values, $metaUser );
 
 		return $var;
 	}
@@ -113,119 +113,133 @@ class processor_paypal_wpp extends XMLprocessor
 	{
 		global $mosConfig_live_site;
 
-		// Start xml, add login and transaction key, as well as invoice number
-		$content =	'<?xml version="1.0" encoding="utf-8"?>'
-					. '<ARBCreateSubscriptionRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">'
-					. '<merchantAuthentication>'
-					. '<name>' . trim( substr( $cfg['login'], 0, 25 ) ) . '</name>'
-					. '<transactionKey>' . trim( substr( $cfg['transaction_key'], 0, 16 ) ) . '</transactionKey>'
-					. '</merchantAuthentication>'
-					. '<refId>' . $int_var['invoice'] . '</refId>';
+		$var = array();
 
-		$full = $this->convertPeriodUnit( $int_var['amount']['period3'], $int_var['amount']['unit3'] );
-
-		// Add Payment information
-		$content .=	'<subscription>'
-					. '<name>' . trim( substr( AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription ), 0, 20 ) ) . '</name>'
-					. '<paymentSchedule>'
-					. '<interval>'
-					. '<length>' . trim( $full['period'] ) . '</length>'
-					. '<unit>' . trim( $full['unit'] ) . '</unit>'
-					. '</interval>'
-					. '<startDate>' . trim( date( 'Y-m-d' ) ) . '</startDate>'
-					. '<totalOccurrences>' . trim( $cfg['totalOccurrences'] ) . '</totalOccurrences>';
-
-		if ( isset( $int_var['amount']['amount1'] ) ) {
-			$content .=	'<trialOccurrences>' . trim( $cfg['trialOccurrences'] ) . '</trialOccurrences>';
+		if ( is_array( $int_var['amount'] ) ) {
+			$var['Method']				= 'CreateRecurringPaymentsProfile';
+		} else {
+			$var['Method']				= 'DoDirectPayment';
 		}
 
-		$content .=	 '</paymentSchedule>'
-					. '<amount>' . trim( $int_var['amount']['amount3'] ) .'</amount>';
+		$var['Version']			= '3.0';
+		$var['user']				= $cfg['api_user'];
+		$var['pwd']					= $cfg['api_password'];
+		$var['signature']			= $cfg['signature'];
 
-		if ( isset( $int_var['amount']['amount1'] ) ) {
-			$content .=	 '<trialAmount>' . trim( $int_var['amount']['amount1'] ) . '</trialAmount>';
+		$var['paymentAction']		= 'Sale';
+		$var['IPaddress']			= $_SERVER['REMOTE_ADDR'];
+		$var['firstName']			= trim( $int_var['params']['billFirstName'] );
+		$var['lastName']			= trim( $int_var['params']['billLastName'] );
+		$var['creditCardType']	= $int_var['params']['cardType'];
+		$var['acct']				= $int_var['params']['cardNumber'];
+		$var['expDate']			= str_pad( $int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ).$int_var['params']['expirationYear'];
+
+		if ( is_array( $int_var['amount'] ) ) {
+			$var['CardVerificationValue'] = $int_var['params']['cardVV2'];
+		} else {
+			$var['cvv2']			= $int_var['params']['cardVV2'];
 		}
 
-		$expirationDate =  $int_var['params']['expirationYear'] . '-' . str_pad( $int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT );
+		$var['street']				= $int_var['params']['billAddress'];
 
-		$content .=	'<payment>'
-					. '<creditCard>'
-					. '<cardNumber>' . trim( $int_var['params']['cardNumber'] ) . '</cardNumber>'
-					. '<expirationDate>' . trim( $expirationDate ) . '</expirationDate>'
-					. '</creditCard>'
-					. '</payment>'
-					;
-		$content .=	 '<billTo>'
-					. '<firstName>'. trim( $int_var['params']['billFirstName'] ) . '</firstName>'
-					. '<lastName>' . trim( $int_var['params']['billLastName'] ) . '</lastName>'
-					;
-
-		if ( isset( $int_var['params']['billAddress'] ) ) {
-		$content .=	 '<address>'. trim( $int_var['params']['billAddress'] ) . '</address>'
-					. '<city>' . trim( $int_var['params']['billCity'] ) . '</city>'
-					. '<state>'. trim( $int_var['params']['billState'] ) . '</state>'
-					. '<zip>' . trim( $int_var['params']['billZip'] ) . '</zip>'
-					. '<country>'. trim( $int_var['params']['billCountry'] ) . '</country>'
-					;
+		if ( !empty( $int_var['params']['billAddress2'] ) ) {
+			$var['street2']			= $int_var['params']['billAddress2'];
 		}
 
-		$content .=	'</billTo>';
-		$content .=	'</subscription>';
+		$var['city']				= $int_var['params']['billCity'];
+		$var['state']				= $int_var['params']['billState'];
+		$var['zip']					= $int_var['params']['billZip'];
+		$var['countryCode']		= $cfg['country'];
+		$var['NotifyUrl']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=paypal_wppnotification' );
+		$var['desc']				= AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription );
+		$var['InvNum']				= $int_var['invoice'];;
 
-		// Close Request
-		$content .=	'</ARBCreateSubscriptionRequest>';
+		if ( is_array( $int_var['amount'] ) ) {
+			// $var['InitAmt'] = 'Initial Amount'; // Not Supported Yet
+			// $var['FailedInitAmtAction'] = 'ContinueOnFailure'; // Not Supported Yet (optional)
 
-		return $content;
+			if ( isset( $int_var['amount']['amount1'] ) ) {
+				$trial = $this->convertPeriodUnit( $int_var['amount']['period3'], $int_var['amount']['unit3'] );
+
+				$var['TrialBillingPeriod']		= $trial['period'];
+				$var['TrialBillingFrequency']	= $trial['unit'];
+				$var['TrialAmt']					= $int_var['amount']['amount1'];
+				// $var['TrialTotalBillingCycles'] = $int_var['amount']['amount1']; // Not Supported Yet
+			}
+
+			$full = $this->convertPeriodUnit( $int_var['amount']['period3'], $int_var['amount']['unit3'] );
+
+			$var['ProfilerStartDate']	= trim( date( 'Y-m-d' ) );
+			$var['BillingPeriod']			= $full['period'];
+			$var['BillingFrequency']		= $full['unit'];
+			$var['amt']						= $int_var['amount']['amount3'];
+		} else {
+			$var['amt']						= $int_var['amount'];
+		}
+
+		$var['currencyCode']		= $cfg['currency'];
+
+		$content = array();
+		foreach ( $var as $name => $value ) {
+			$content[] .= strtoupper( $name ) . '=' . urlencode( $value );
+		}
+
+		return implode( '&', $content );
 	}
 
 	function transmitRequestXML( $xml, $int_var, $settings, $metaUser, $new_subscription, $invoice )
 	{
-		$path = "/xml/v1/request.api";
+		$path = "/nvp";
+
 		if ( $settings['testmode'] ) {
-			$url = "https://apitest.authorize.net" . $path;
+			$url = "https://api.sandbox.paypal.com" . $path;
 		} else {
-			$url = "https://api.authorize.net" . $path;
+			if ( $settings['use_certificate'] ) {
+				$url = "https://api-3t.sandbox.paypal.com" . $path;
+			} else {
+				$url = "https://api.paypal.com" . $path;
+			}
 		}
 
-		$response = $this->transmitRequest( $url, $path, $xml, 443 );
+		$curlextra = array();
+		$curlextra[CURLOPT_VERBOSE] = 1;
+
+		$response = $this->transmitRequest( $url, $path, $xml, 443, $curlextra );
 
 		$return['valid'] = false;
 		$return['raw'] = $response;
 
+		// converting NVPResponse to an Associative Array
+		$nvpResArray = $this->deformatNVP( $response );
+		//$nvpReqArray = $this->deformatNVP( $xml );
+
 		if ( $response ) {
-			$return['invoice'] = $this->substring_between($response,'<refId>','</refId>');
-			$resultCode = $this->substring_between($response,'<resultCode>','</resultCode>');
+			$return['invoice'] = $invoice->invoice_number;
+			$resultCode = strtoupper( $response["ACK"] );
 
-			$code = $this->substring_between($response,'<code>','</code>');
-			$text = $this->substring_between($response,'<text>','</text>');
+			if ( strcmp( $resultCode, 'SUCCESS' ) === 0) {
+				if ( is_array( $int_var['amount'] ) ) {
+					$subscriptionId = $response['PROFILEID'];
+					$return['invoiceparams'] = array( "subscriptionid" => $subscriptionId );
 
-			if ( strcmp( $resultCode, 'Ok' ) === 0) {
-				$return['valid'] = 1;
+					if ( strtoupper( $response['STATUS'] ) == 'ACTIVEPROFILE' ) {
+						$return['valid'] = 1;
+					} else {
+						$response['pending_reason'] = 'pending';
+					}
+				} else {
+					$return['valid'] = 1;
+				}
 			} else {
-				$return['error'] = $text;
+				$count = 0;
+				while ( isset( $nvpResArray["L_SHORTMESSAGE".$count] ) ) {
+						$return['error'] .= 'Error ' . $nvpResArray["L_ERRORCODE".$count] . ' = ' . $nvpResArray["L_SHORTMESSAGE".$count] . ' (' . $nvpResArray["L_LONGMESSAGE".$count] . ')' . "\n";
+						$count=$count+1;
+				}
 			}
-
-			if ( ( $settings['totalOccurrences'] > 1 ) && !$settings['useSilentPostResponse'] ) {
-				$return['multiplicator'] = $settings['totalOccurrences'];
-			}
-
-			$subscriptionId = $this->substring_between($response,'<subscriptionId>','</subscriptionId>');
-
-			$return['invoiceparams'] = array( "subscriptionid" => $subscriptionId );
 		}
 
 		return $return;
-	}
-
-	function substring_between( $haystack, $start, $end )
-	{
-		if ( strpos( $haystack, $start ) === false || strpos( $haystack, $end ) === false ) {
-			return false;
-	   } else {
-			$start_position = strpos( $haystack, $start ) + strlen( $start );
-			$end_position = strpos( $haystack, $end );
-			return substr( $haystack, $start_position, $end_position - $start_position );
-		}
 	}
 
 	function convertPeriodUnit( $period, $unit )
@@ -250,8 +264,8 @@ class processor_paypal_wpp extends XMLprocessor
 				$return['period'] = $period;
 				break;
 			case 'Y':
-				$return['unit'] = 'months';
-				$return['period'] = $period*12;
+				$return['unit'] = 'years';
+				$return['period'] = $period;
 				break;
 		}
 
@@ -260,30 +274,48 @@ class processor_paypal_wpp extends XMLprocessor
 
 	function customaction_cancel( $pp, $cfg, $invoice, $metaUser )
 	{
-		$content =	'<?xml version="1.0" encoding="utf-8"?>'
-					. '<ARBCancelSubscriptionRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">'
-					. '<merchantAuthentication>'
-					. '<name>' . trim( substr( $cfg['login'], 0, 25 ) ) . '</name>'
-					. '<transactionKey>' . trim( substr( $cfg['transaction_key'], 0, 16 ) ) . '</transactionKey>'
-					. '</merchantAuthentication>'
-					. '<refId>' . $invoice->invoice_number . '</refId>';
+		$this->ManageRecurringPaymentsProfileStatus( $pp, $cfg, $invoice, $metaUser, 'Cancel', $cfg['cancel_note'] );
+	}
+
+	function ManageRecurringPaymentsProfileStatus( $pp, $cfg, $invoice, $metaUser, $command, $note )
+	{
+		$var['Method']				= 'ManageRecurringPaymentsProfileStatus';
+		$var['Version']			= '3.0';
+		$var['user']				= $cfg['api_user'];
+		$var['pwd']					= $cfg['api_password'];
+		$var['signature']			= $cfg['signature'];
 
 		$invoiceparams = $invoice->getParams();
 
 		// Add Payment information
-		$content .=	'<subscriptionId>' . $invoiceparams['subscriptionid'] . '</subscriptionId>';
+		$var['profileid'] = $invoiceparams['subscriptionid'];
 
-		// Close Request
-		$content .=	'</ARBCancelSubscriptionRequest>';
+		$var['action']				= $command;
+		$var['note']				= $note;
 
-		$path = "/xml/v1/request.api";
-		if ( $cfg['testmode'] ) {
-			$url = "https://apitest.authorize.net" . $path;
-		} else {
-			$url = "https://api.authorize.net" . $path;
+		$content = array();
+		foreach ( $var as $name => $value ) {
+			$content[] .= strtoupper( $name ) . '=' . urlencode( $value );
 		}
 
-		$response = $this->transmitRequest( $url, $path, $content, 443 );
+		$xml =  implode( '&', $content );
+
+		$path = "/nvp";
+
+		if ( $cfg['testmode'] ) {
+			$url = "https://api.sandbox.paypal.com" . $path;
+		} else {
+			if ( $cfg['use_certificate'] ) {
+				$url = "https://api-3t.sandbox.paypal.com" . $path;
+			} else {
+				$url = "https://api.paypal.com" . $path;
+			}
+		}
+
+		$curlextra = array();
+		$curlextra[CURLOPT_VERBOSE] = 1;
+
+		$response = $this->transmitRequest( $url, $path, $xml, 443, $curlextra );
 
 		if ( !empty( $response ) ) {
 			$responsestring = $response;
@@ -303,24 +335,32 @@ class processor_paypal_wpp extends XMLprocessor
 
 			$invoice->processorResponse( $pp, $return, $responsestring );
 		} else {
-			Payment_HTML::error( 'com_acctexp', $metaUser->cmsUser, $invoice, "An error occured when cancelling your subscription. Please contact the system administrator!", true );
+			Payment_HTML::error( 'com_acctexp', $metaUser->cmsUser, $invoice, "An error occured while cancelling your subscription. Please contact the system administrator!", true );
 		}
 	}
 
-	function validateNotification( $response, $post, $cfg, $invoice )
+	function deformatNVP( $nvpstr )
 	{
-		if ( $post['x_subscription_paynum'] > 1 ) {
-			$x_response_code		= $post['x_response_code'];
-			$x_response_reason_text	= $post['x_response_reason_text'];
 
-			$response['valid'] = ($x_response_code == '1');
-		} else {
-			$response['valid'] = 0;
-			$response['duplicate'] = true;
+		$intial=0;
+	 	$nvpArray = array();
+		while ( strlen( $nvpstr ) ) {
+			//postion of Key
+			$keypos= strpos($nvpstr,'=');
+			//position of value
+			$valuepos = strpos($nvpstr,'&') ? strpos($nvpstr,'&'): strlen($nvpstr);
+
+			/*getting the Key and Value values and storing in a Associative Array*/
+			$keyval=substr($nvpstr,$intial,$keypos);
+			$valval=substr($nvpstr,$keypos+1,$valuepos-$keypos-1);
+			//decoding the respose
+			$nvpArray[urldecode($keyval)] =urldecode( $valval);
+			$nvpstr=substr($nvpstr,$valuepos+1,strlen($nvpstr));
 		}
 
-		return $response;
+		return $nvpArray;
 	}
 
 }
+
 ?>
