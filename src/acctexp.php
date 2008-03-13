@@ -300,7 +300,7 @@ function subscribe( $option )
 
 	$intro		= aecGetParam( 'intro', 0 );
 	$usage		= aecGetParam( 'usage', 0 );
-	$processor	= aecGetParam( 'processor', null );
+	$processor	= aecGetParam( 'processor', '' );
 	$userid		= aecGetParam( 'userid', 0 );
 	$username	= aecGetParam( 'username', '' );
 
@@ -421,7 +421,7 @@ function confirmSubscription( $option )
 
 	$userid		= aecGetParam( 'userid', 0 );
 	$usage		= aecGetParam( 'usage', 0 );
-	$processor	= aecGetParam( 'processor', 0 );
+	$processor	= aecGetParam( 'processor', '' );
 	$username	= aecGetParam( 'username', 0 );
 
 	if ( ( $usage > 0 ) && !$username && !$userid && !$my->id ) {
