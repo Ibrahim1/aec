@@ -312,6 +312,7 @@ define( '_AEC_NOTICES_FOUND',					'Eventlog Notices' );
 define( '_AEC_NOTICES_FOUND_DESC',				'The following entries in the Eventlog deserve your attention. You can mark them read if you want them to disappear. You can also change the types of notices that show up here in the Settings.' );
 define( '_AEC_NOTICE_MARK_READ',				'mark read' );
 define( '_AEC_NOTICE_MARK_ALL_READ',			'Mark all Notices read' );
+define( '_AEC_NOTICE_NUMBER_1',					'Event' );
 define( '_AEC_NOTICE_NUMBER_2',					'Event' );
 define( '_AEC_NOTICE_NUMBER_8',					'Notice' );
 define( '_AEC_NOTICE_NUMBER_32',				'Warning' );

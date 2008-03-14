@@ -1314,8 +1314,8 @@ class eventLog extends paramDBTable
 
 		$legal_levels = array( 2, 8, 32, 128 );
 
-		if ( !in_array( $level, $legal_levels ) ) {
-			$levels = $legal_levels[0];
+		if ( !in_array( (int) $level, $legal_levels ) ) {
+			$level = $legal_levels[0];
 		}
 
 		$this->datetime	= gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
