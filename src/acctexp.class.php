@@ -5426,7 +5426,10 @@ class Subscription extends paramDBTable
 
 				$pparams = $plan->getParams();
 
-				$allplans = array_merge( $pparams['similarplans'], $pparams['equalplans'], array( $usage ) );
+				$similar = explode( ';', $pparams['similarplans'] );
+				$equalpl = explode( ';', $pparams['equalplans'] );
+
+				$allplans = array_merge( $similar, $equalpl, array( $usage ) );
 
 				foreach ( $allplans as $apid => $pid ) {
 					$allplans[$apid] = '`plan` = \'' . $pid . '\'';
