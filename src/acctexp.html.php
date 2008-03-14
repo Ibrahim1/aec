@@ -427,8 +427,7 @@ class Payment_HTML
 					<tr><td><?php echo $plan['desc']; ?></td></tr>
 					<tr>
 						<td class="buttons">
-							<?php
-							echo Payment_HTML::getPayButtonHTML( $plan['gw'], $plan['id'], $userid, $passthrough, $register ); ?>
+							<?php echo Payment_HTML::getPayButtonHTML( $plan['gw'], $plan['id'], $userid, $passthrough, $register ); ?>
 						</td>
 					</tr>
 				</table>
