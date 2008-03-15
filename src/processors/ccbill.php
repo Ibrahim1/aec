@@ -266,7 +266,7 @@ class processor_ccbill extends POSTprocessor
 		$response['invoice'] = $invoice;
 		$response['valid'] = 1;
 
-		if ( strlen( $reasonForDecline ) > 0 ) {
+		if ( !empty( $reasonForDecline ) ) {
 			$response['pending_reason'] = $reasonForDecline;
 		}
 
@@ -289,11 +289,12 @@ class processor_ccbill extends POSTprocessor
 
 			$checkvalid = ( strcmp( $validate, $response['checksum'] ) == 0 );
 
-			if ( !$checkvalid ) {
+			if ( !empty( $checkvalid ) ) {
+				$response['valid'] = 1;
+			} else {
 				$response['valid'] = 0;
 				$response['pending_reason'] = 'Checksum mismatch';
 			}
-
 		}
 
 		if ( !empty( $response['valid'] ) ) {
