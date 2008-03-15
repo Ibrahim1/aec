@@ -142,13 +142,25 @@ class processor_airtoy extends XMLprocessor
 		$invoice = new Invoice( $database );
 		$invoice->load( $sms[1] );
 
-		$returncode = rand( 111111, 999999 );
+		if ( $invoice->id ) {
+			$returncode = rand( 111111, 999999 );
 
-		$invoice->addParams( array( 'airtoy_smscode' => $returncode ) );
-		$invoice->check();
-		$invoice->store();
+			$invoice->addParams( array( 'airtoy_smscode' => $returncode ) );
+			$invoice->check();
+			$invoice->store();
 
-		echo $returncode;
+
+			if ( $cfg['testmode'] ) {
+				$url = "http://82.113.44.50/";
+			} else {
+				$url = "http://195.47.87.164/";
+			}
+
+			$resp = "OK;" . $returncode . ";1";
+			$response = $this->transmitRequest( $url, '', $resp, 443 );
+
+			echo $returncode;
+		}
 		exit;
 	}
 

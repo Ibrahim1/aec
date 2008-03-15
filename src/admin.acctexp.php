@@ -3788,10 +3788,10 @@ function migrate( $option )
 {
 	global $database;
 
-	$query = 'SELECT `id`'
-			. ' FROM #__users'
-			. ' WHERE LOWER( `usertype` ) != \'superadministrator\''
-			. ' OR LOWER( vusertype` ) != \'super administrator\''
+	$query = 'SELECT `userid`'
+			. ' FROM #__acctexp_subscr'
+			. ' WHERE LOWER( `status` ) = \'active\''
+			. ' AND `plan` != \'23\''
 			;
 	$database->setQuery( $query );
 	$rows = $database->loadResultArray();
@@ -3800,11 +3800,12 @@ function migrate( $option )
 
 		$metaUser = new metaUser($userid);
 		if ( $metaUser->hasSubscription ) {
-			if ($metaUser->objSubscription->plan == 1) {
-				$metaUser->instantGIDchange(31);
+			if ($metaUser->objSubscription->plan != 23) {
+				$metaUser->instantGIDchange(19);
 			}
 		}
-
+	}
+		exit();
 /*
 		$mosUser = new mosUser( $database );
 		$mosUser->load( $userid );
@@ -3858,8 +3859,7 @@ function migrate( $option )
 			$expirationHandler->check();
 			$expirationHandler->store();
 		}*/
-	}
-		exit();
+
 // Fix JACLplus associations after uninstall/reinstall
 $query = 'SELECT id'
 . ' FROM #__users'
