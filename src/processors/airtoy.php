@@ -51,6 +51,7 @@ class processor_airtoy extends XMLprocessor
 		$settings['testmode']			= 0;
 		$settings['phone_number']		= "222222";
 		$settings['response']			= "";
+		$settings['secret']			= "";
 
 		return $settings;
 	}
@@ -62,6 +63,7 @@ class processor_airtoy extends XMLprocessor
 		$settings['phone_number']		= array("inputC");
 
 		$settings['response']			= array("inputE");
+		$settings['secret']		= array("inputC");
  		$rewriteswitches 				= array("cms", "user", "subscription", "plan", "invoice");
 		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
@@ -149,6 +151,11 @@ class processor_airtoy extends XMLprocessor
 			$invoice->check();
 			$invoice->store();
 
+			if ( !empty( $cfg['secret'] ) && isset( $_GET['secret'] ) ) {
+				if ( $cfg['secret'] != $_GET['secret'] ) {
+					exit;
+				}
+			}
 
 			if ( $cfg['testmode'] ) {
 				$url = "http://82.113.44.50/";
