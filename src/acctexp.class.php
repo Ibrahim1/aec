@@ -2041,12 +2041,12 @@ class XMLprocessor extends processor
 			switch ( $value ) {
 				case 'card_type':
 					$options = array();
-					$options['visa'] = mosHTML::makeOption( 'visa', 'Visa' );
-					$options['mastercard'] = mosHTML::makeOption( 'mastercard', 'MasterCard' );
-					$options['discover'] = mosHTML::makeOption( 'discover', 'Discover' );
-					$options['amex'] = mosHTML::makeOption( 'amex', 'American Express' );
+					$options[] = mosHTML::makeOption( 'visa', 'Visa' );
+					$options[] = mosHTML::makeOption( 'mastercard', 'MasterCard' );
+					$options[] = mosHTML::makeOption( 'discover', 'Discover' );
+					$options[] = mosHTML::makeOption( 'amex', 'American Express' );
 
-					$var['params']['lists']['cardType'] = mosHTML::selectList($options, 'cardType', 'size="1" style="width:70px;"', 'value', 'text', 0 );
+					$var['params']['lists']['cardType'] = mosHTML::selectList($options, 'cardType', 'size="1" style="width:70px;"', 'value', 'text', 'visa' );
 					$var['params']['cardType'] = array( 'list', _AEC_CCFORM_CARDTYPE_NAME, _AEC_CCFORM_CARDTYPE_DESC, '' );
 					break;
 				case 'card_number':
@@ -2118,6 +2118,9 @@ class XMLprocessor extends processor
 					$var['params']['billCity'] = array( 'inputC', _AEC_USERFORM_BILLCITY_NAME );
 					break;
 				case 'state':
+					$var['params']['billState'] = array( 'inputC', _AEC_USERFORM_BILLSTATE_NAME );
+					break;
+				case 'state_us':
 					$states = array( 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI',
 										'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME',
 										'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ',
@@ -2130,10 +2133,7 @@ class XMLprocessor extends processor
 						$statelist[] = mosHTML::makeOption( $state, $state );
 					}
 
-					$var['params']['lists']['billState'] = mosHTML::selectList($statelist, 'billState', 'size="1" style="width:70px;"', 'value', 'text', 0 );
-					$var['params']['billState'] = array( 'inputC', _AEC_USERFORM_BILLSTATE_NAME );
-					break;
-				case 'state_us':
+					$var['params']['lists']['billState'] = mosHTML::selectList( $statelist, 'billState', 'size="1"', 'value', 'text', 'AK' );
 					$var['params']['billState'] = array( 'list', _AEC_USERFORM_BILLSTATE_NAME );
 					break;
 				case 'zip':
