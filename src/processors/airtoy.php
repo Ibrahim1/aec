@@ -168,11 +168,12 @@ class processor_airtoy extends XMLprocessor
 				$url = "http://195.47.87.164/";
 			}
 
-			$resp = "OK;" . $returncode . ";1";
-
 			$response = $this->transmitRequest( $url, '', $resp, 443 );
 */
-			echo $returncode;
+
+			$resp = "OK;" . $returncode . ";1";
+
+			echo $resp;
 		}
 		exit;
 	}
