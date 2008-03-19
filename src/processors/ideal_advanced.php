@@ -82,7 +82,7 @@ class processor_ideal_advanced extends XMLprocessor
 			$bank_selection[] = mosHTML::makeOption( $name, $name );
 		}
 
-		$s['lists']['bank'] = mosHTML::selectList($bank_selection, 'bank_selection', 'size="5"', 'value', 'text', $cfg['bank'] );
+		$s['lists']['bank'] = mosHTML::selectList($bank_selection, 'bank', 'size="5"', 'value', 'text', $cfg['bank'] );
 
 		$rewriteswitches	= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
 		$s = AECToolbox::rewriteEngineInfo( $rewriteswitches, $s );

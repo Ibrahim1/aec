@@ -117,7 +117,7 @@ class processor_airtoy extends XMLprocessor
 			$return['error'] = _AEC_AIRTOY_CODE_WRONG;
 		}
 
-
+/*
 		if ( $settings['testmode'] ) {
 			$url = "http://82.113.44.50/";
 		} else {
@@ -128,7 +128,7 @@ class processor_airtoy extends XMLprocessor
 			$resp = "OK;" . AECToolbox::rewriteEngine( $settings['response'], $metaUser, $new_subscription, $invoice ) . ";1;;";
 			$response = $this->transmitRequest( $url, '', $resp, 443 );
 		}
-
+*/
 		return $return;
 	}
 
@@ -137,9 +137,13 @@ class processor_airtoy extends XMLprocessor
 	{
 		global $database;
 
-		$smscode = $_GET['sms'];
+		$smscode = $_GET['smscode'];
 
 		$sms = explode( ' ', $smscode );
+
+		if ( !isset( $sms[1] ) ) {
+			$sms = explode( '+', $smscode );
+		}
 
 		$invoice = new Invoice( $database );
 		$invoice->load( $sms[1] );
@@ -155,8 +159,9 @@ class processor_airtoy extends XMLprocessor
 				if ( $cfg['secret'] != $_GET['secret'] ) {
 					exit;
 				}
-			}
 
+			}
+/*
 			if ( $cfg['testmode'] ) {
 				$url = "http://82.113.44.50/";
 			} else {
@@ -164,8 +169,9 @@ class processor_airtoy extends XMLprocessor
 			}
 
 			$resp = "OK;" . $returncode . ";1";
-			$response = $this->transmitRequest( $url, '', $resp, 443 );
 
+			$response = $this->transmitRequest( $url, '', $resp, 443 );
+*/
 			echo $returncode;
 		}
 		exit;
