@@ -125,7 +125,7 @@ class processor_airtoy extends XMLprocessor
 		}
 
 		if ( $return['valid'] ) {
-			$resp = "OK;" . AECToolbox::rewriteEngine( $settings['response'], $metaUser, $new_subscription, $invoice ) . ";on;;";
+			$resp = "OK;" . AECToolbox::rewriteEngine( $settings['response'], $metaUser, $new_subscription, $invoice ) . ";1;;";
 			$response = $this->transmitRequest( $url, '', $resp, 443 );
 		}
 
