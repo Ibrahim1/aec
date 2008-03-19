@@ -111,7 +111,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 	function createRequestXML( $int_var, $cfg, $metaUser, $new_subscription, $invoice )
 	{
-		global $mosConfig_live_site;
+		global $mosConfig_live_site, $mosConfig_offset_user;
 
 		$var = array();
 
@@ -121,7 +121,12 @@ class processor_paypal_wpp extends XMLprocessor
 			$var['Method']				= 'DoDirectPayment';
 		}
 
-		$var['Version']			= '3.0';
+		if ( is_array( $int_var['amount'] ) ) {
+			$var['Version']				= '3.2';
+		} else {
+			$var['Version']				= '50.0';
+		}
+
 		$var['user']				= $cfg['api_user'];
 		$var['pwd']					= $cfg['api_password'];
 		$var['signature']			= $cfg['signature'];
@@ -140,7 +145,7 @@ class processor_paypal_wpp extends XMLprocessor
 			$var['cvv2']			= $int_var['params']['cardVV2'];
 		}
 
-		$var['street']				= $int_var['params']['billAddress'];
+		$var['street1']				= $int_var['params']['billAddress'];
 
 		if ( !empty( $int_var['params']['billAddress2'] ) ) {
 			$var['street2']			= $int_var['params']['billAddress2'];
@@ -149,7 +154,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$var['city']				= $int_var['params']['billCity'];
 		$var['state']				= $int_var['params']['billState'];
 		$var['zip']					= $int_var['params']['billZip'];
-		$var['countryCode']		= $cfg['country'];
+		$var['country']		= $cfg['country'];
 		$var['NotifyUrl']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=paypal_wppnotification' );
 		$var['desc']				= AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription );
 		$var['InvNum']				= $int_var['invoice'];;
@@ -161,17 +166,17 @@ class processor_paypal_wpp extends XMLprocessor
 			if ( isset( $int_var['amount']['amount1'] ) ) {
 				$trial = $this->convertPeriodUnit( $int_var['amount']['period3'], $int_var['amount']['unit3'] );
 
-				$var['TrialBillingPeriod']		= $trial['period'];
-				$var['TrialBillingFrequency']	= $trial['unit'];
-				$var['TrialAmt']					= $int_var['amount']['amount1'];
-				// $var['TrialTotalBillingCycles'] = $int_var['amount']['amount1']; // Not Supported Yet
+				$var['TrialBillingPeriod']		= $trial['unit'];
+				$var['TrialBillingFrequency']	= $trial['period'];
+				$var['TrialAmt']				= $int_var['amount']['amount1'];
+				$var['TrialTotalBillingCycles'] = 1; // Not Fully Supported Yet
 			}
 
 			$full = $this->convertPeriodUnit( $int_var['amount']['period3'], $int_var['amount']['unit3'] );
 
-			$var['ProfilerStartDate']	= trim( date( 'Y-m-d' ) );
-			$var['BillingPeriod']			= $full['period'];
-			$var['BillingFrequency']		= $full['unit'];
+			$var['ProfileStartDate']	= time() - $mosConfig_offset_user*3600;
+			$var['BillingPeriod']			= $full['unit'];
+			$var['BillingFrequency']		= $full['period'];
 			$var['amt']						= $int_var['amount']['amount3'];
 		} else {
 			$var['amt']						= $int_var['amount'];
@@ -192,12 +197,16 @@ class processor_paypal_wpp extends XMLprocessor
 		$path = "/nvp";
 
 		if ( $settings['testmode'] ) {
-			$url = "https://api.sandbox.paypal.com" . $path;
+			if ( $settings['use_certificate'] ) {
+				$url = "https://api.sandbox.paypal.com" . $path;
+			} else {
+				$url = "https://api-3t.sandbox.paypal.com" . $path;
+			}
 		} else {
 			if ( $settings['use_certificate'] ) {
-				$url = "https://api-3t.sandbox.paypal.com" . $path;
-			} else {
 				$url = "https://api.paypal.com" . $path;
+			} else {
+				$url = "https://api-3t.paypal.com" . $path;
 			}
 		}
 
@@ -247,24 +256,24 @@ class processor_paypal_wpp extends XMLprocessor
 		$return = array();
 		switch ( $unit ) {
 			case 'D':
-				$return['unit'] = 'days';
+				$return['unit'] = 'day';
 				$return['period'] = $period;
 				break;
 			case 'W':
 				if ( $period%4 == 0 ) {
-					$return['unit'] = 'months';
+					$return['unit'] = 'month';
 					$return['period'] = $period/4;
 				} else {
-					$return['unit'] = 'days';
+					$return['unit'] = 'day';
 					$return['period'] = $period*7;
 				}
 				break;
 			case 'M':
-				$return['unit'] = 'months';
+				$return['unit'] = 'month';
 				$return['period'] = $period;
 				break;
 			case 'Y':
-				$return['unit'] = 'years';
+				$return['unit'] = 'year';
 				$return['period'] = $period;
 				break;
 		}
