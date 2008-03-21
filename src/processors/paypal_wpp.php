@@ -122,9 +122,9 @@ class processor_paypal_wpp extends XMLprocessor
 		}
 
 		if ( is_array( $int_var['amount'] ) ) {
-			$var['Version']				= '3.2';
-		} else {
 			$var['Version']				= '50.0';
+		} else {
+			$var['Version']				= '3.2';
 		}
 
 		$var['user']				= $cfg['api_user'];
@@ -164,7 +164,7 @@ class processor_paypal_wpp extends XMLprocessor
 			// $var['FailedInitAmtAction'] = 'ContinueOnFailure'; // Not Supported Yet (optional)
 
 			if ( isset( $int_var['amount']['amount1'] ) ) {
-				$trial = $this->convertPeriodUnit( $int_var['amount']['period3'], $int_var['amount']['unit3'] );
+				$trial = $this->convertPeriodUnit( $int_var['amount']['period1'], $int_var['amount']['unit1'] );
 
 				$var['TrialBillingPeriod']		= $trial['unit'];
 				$var['TrialBillingFrequency']	= $trial['period'];
