@@ -4465,6 +4465,10 @@ class InvoiceFactory
 	{
 		global $database, $mosConfig_useractivation, $ueConfig, $mosConfig_dbprefix;
 
+		if ( isset( $this->renew ) ) {
+			$renew = $this->renew;
+		}
+
 		if ( $renew ) {
 			$msg = _SUB_FEPARTICLE_HEAD_RENEW
 			. '</p><p>'
