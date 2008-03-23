@@ -3986,8 +3986,8 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 	$aec_userchange_clause15	= '$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($userid, $post, \'%s\');' . "\n";
 	$aec_userregchange_clause15	= '$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($user, $post, \'%s\');' . "\n";
 	$aec_global_call			= 'global $mosConfig_live_site, $mosConfig_absolute_path;' . "\n";
-	$aec_redirect_notallowed	= 'mosRedirect( $mosConfig_live_site . "/index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
-	$aec_redirect_subscribe		= 'mosRedirect( $mosConfig_live_site . "/index.php?option=com_acctexp&task=subscribe" );' . "\n";
+	$aec_redirect_notallowed	= 'mosRedirect( sefRelToAbs( "/index.php?option=com_acctexp&task=NotAllowed" ) );' . "\n";
+	$aec_redirect_subscribe		= 'mosRedirect( sefRelToAbs( "/index.php?option=com_acctexp&task=subscribe" ) );' . "\n";
 
 	$aec_normal_hack = $aec_hack_start
 	. $aec_global_call
