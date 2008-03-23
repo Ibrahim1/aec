@@ -30,7 +30,7 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-jimport('joomla.event.plugin');
+jimport('joomla.plugin.plugin');
 
 /**
  * AEC User plugin
@@ -69,7 +69,7 @@ class plgUserAECuser extends JPlugin
 	 */
 	function onAfterStoreUser($user, $isnew, $succes, $msg)
 	{
-		include_once( JPATH_BASE . "/components/com_acctexp/acctexp.class.php" );
+		include_once( JPATH_ADMINISTRATOR . "/../components/com_acctexp/acctexp.class.php" );
 
 		if ( $isnew ) {
 			$trace = 'registration';
