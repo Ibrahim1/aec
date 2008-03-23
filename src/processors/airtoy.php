@@ -113,6 +113,7 @@ class processor_airtoy extends XMLprocessor
 
 		if ( $compare ) {
 			$return['valid'] = true;
+			$return['invoice'] = $invoice->invoice_number;
 		} else {
 			$return['error'] = _AEC_AIRTOY_CODE_WRONG;
 		}
