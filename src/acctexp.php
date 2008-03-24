@@ -102,7 +102,7 @@ if ( !empty( $task ) ) {
 			$coupon		= aecGetParam( 'coupon_code', '' );
 
 			$invoicefact = new InvoiceFactory( $userid, $usage, $processor );
-			$invoicefact->save( $option, $_POST );
+			$invoicefact->save( $option, $_POST, $coupon );
 			break;
 
 		case 'checkout':
