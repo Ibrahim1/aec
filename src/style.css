@@ -392,13 +392,11 @@ line-height: 32px;
 
 td.item {
 text-align: left;
-width: 50%;
 }
 
 td.amount {
 float: right;
 text-align: right;
-width: 40%;
 }
 
 td.item_later {

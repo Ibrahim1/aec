@@ -82,8 +82,10 @@ function aecGetParam( $name, $default='' )
 		$return = $_POST[$name];
 	}
 
-	if ( is_array( $_POST[$name] ) && !is_array( $return ) ) {
-		$return = $_POST[$name];
+	if ( !empty( $_POST[$name] ) ) {
+		if ( is_array( $_POST[$name] ) && !is_array( $return ) ) {
+			$return = $_POST[$name];
+		}
 	}
 
 	if ( empty( $return ) && !empty( $_REQUEST[$name] ) ) {

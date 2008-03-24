@@ -70,16 +70,17 @@ if ( file_exists( $langPathPROC . $GLOBALS['mosConfig_lang']. '.php' ) ) {
 
 include_once( $langPathBE . 'general.php' );
 
-$task			= trim( mosGetParam( $_REQUEST, 'task', null ) );
-$returnTask 	= trim( mosGetParam( $_REQUEST, 'returnTask', null ) );
-$userid			= mosGetParam( $_REQUEST, 'userid', null );
-$subscriptionid	= mosGetParam( $_REQUEST, 'subscriptionid', null );
-$id				= mosGetParam( $_REQUEST, 'id', null );
+$task			= trim( aecGetParam( 'task', null ) );
+$returnTask 	= trim( aecGetParam( 'returnTask', null ) );
+$userid			= aecGetParam( 'userid', null );
+$subscriptionid	= aecGetParam( 'subscriptionid', null );
+$id				= aecGetParam( 'id', null );
 
 if ( !is_null( $id ) ) {
-	if ( !array( $id ) ) {
+	if ( !is_array( $id ) ) {
 		$savid = $id;
-		$id = array( $savid );
+		$id = array();
+		$id[0] = $savid;
 	}
 }
 
@@ -251,23 +252,23 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'publishsubscriptionplan':
-		changeSubscriptionPlan( $id, 1, 'active', $option );
+		changeSubscriptionPlan( $id[0], 1, 'active', $option );
 		break;
 
 	case 'unpublishsubscriptionplan':
-		changeSubscriptionPlan( $id, 0, 'active', $option );
+		changeSubscriptionPlan( $id[0], 0, 'active', $option );
 		break;
 
 	case 'visiblesubscriptionplan':
-		changeSubscriptionPlan( $id, 1, 'visible', $option );
+		changeSubscriptionPlan( $id[0], 1, 'visible', $option );
 		break;
 
 	case 'invisiblesubscriptionplan':
-		changeSubscriptionPlan( $id, 0, 'visible', $option );
+		changeSubscriptionPlan( $id[0], 0, 'visible', $option );
 		break;
 
 	case 'removesubscriptionplan':
-		removeSubscriptionPlan( $id, $option, $returnTask );
+		removeSubscriptionPlan( $id[0], $option, $returnTask );
 		break;
 
 	case 'cancelsubscriptionplan':
@@ -299,11 +300,6 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'editmicrointegration':
-		if ( !is_array( $id ) ) {
-			$i = array( $id );
-			$id = $i;
-		}
-
 		editMicroIntegration( $id[0], $option );
 		break;
 
@@ -332,15 +328,15 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'publishmicrointegration':
-		changeMicroIntegration( $id, 1, $option );
+		changeMicroIntegration( $id[0], 1, $option );
 		break;
 
 	case 'unpublishmicrointegration':
-		changeMicroIntegration( $id, 0, $option );
+		changeMicroIntegration( $id[0], 0, $option );
 		break;
 
 	case 'removemicrointegration':
-		removeMicroIntegration( $id, $option, $returnTask );
+		removeMicroIntegration( $id[0], $option, $returnTask );
 		break;
 
 	case 'cancelmicrointegration':
@@ -396,20 +392,20 @@ switch( strtolower( $task ) ) {
 		saveCoupon( $option, 0 );
 		break;
 
-	case 'appplycoupon':
+	case 'applycoupon':
 		saveCoupon( $option, 0, 1 );
 		break;
 
 	case 'publishcoupon':
-		changeCoupon( $id, 1, $option, 0 );
+		changeCoupon( $id[0], 1, $option, 0 );
 		break;
 
 	case 'unpublishcoupon':
-		changeCoupon( $id, 0, $option, 0 );
+		changeCoupon( $id[0], 0, $option, 0 );
 		break;
 
 	case 'removecoupon':
-		removeCoupon( $id, $option, $returnTask, 0 );
+		removeCoupon( $id[0], $option, $returnTask, 0 );
 		break;
 
 	case 'cancelcoupon':
@@ -454,15 +450,15 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'publishcouponstatic':
-		changeCoupon( $id, 1, $option, 1 );
+		changeCoupon( $id[0], 1, $option, 1 );
 		break;
 
 	case 'unpublishcouponstatic':
-		changeCoupon( $id, 0, $option, 1 );
+		changeCoupon( $id[0], 0, $option, 1 );
 		break;
 
 	case 'removecouponstatic':
-		removeCoupon( $id, $option, $returnTask, 1 );
+		removeCoupon( $id[0], $option, $returnTask, 1 );
 		break;
 
 	case 'cancelcouponstatic':
@@ -3435,7 +3431,7 @@ function saveCoupon( $option, $type, $apply=0 )
 		if ( $apply ) {
 			mosRedirect( 'index2.php?option=' . $option . '&task=editCoupon' . ( $type ? 'Static' : '' ) . '&id=' . $id, _AEC_MSG_SUCESSFULLY_SAVED );
 		} else {
-			mosRedirect( 'index2.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ) );
+			mosRedirect( 'index2.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ), _AEC_MSG_SUCESSFULLY_SAVED );
 		}
 	} else {
 		mosRedirect( 'index2.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ), _AEC_MSG_NO_COUPON_CODE );
