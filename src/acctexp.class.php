@@ -3592,9 +3592,7 @@ class InvoiceFactory
 	{
 		global $database;
 
-		if ( !is_object( $this->metaUser ) ) {
-			$this->metaUser = new metaUser( $this->userid );
-		}
+		$this->loadMetaUser( false, true );
 
 		$row = new SubscriptionPlan( $database );
 		$row->load( $this->usage );
@@ -3839,9 +3837,7 @@ class InvoiceFactory
 	{
 		$return = true;
 
-		if ( !is_object( $this->metaUser ) ) {
-			$this->loadMetaUser();
-		}
+		$this->loadMetaUser();
 
 		if ( empty( $this->authed ) ) {
 			if ( !$this->metaUser->getTempAuth() ) {
@@ -4194,6 +4190,10 @@ class InvoiceFactory
 		$this->coupons['active'] = $aecConfig->cfg['enable_coupons'];
 
 		if ( !empty( $aecConfig->cfg['skip_confirmation'] ) ) {
+			if ( $passthrough ) {
+				$this->loadMetaUser( $passthrough, true );
+			}
+
 			$this->save( $option, $var );
 		} else {
 			Payment_HTML::confirmForm( $option, $this, $user, $passthrough );
@@ -4226,7 +4226,7 @@ class InvoiceFactory
 		} else {
 			$this->userid = AECToolbox::saveUserRegistration( $option, $var );
 
-			$this->loadMetaUser( false, true );
+			$this->loadMetaUser( false, false );
 			$this->metaUser->setTempAuth();
 		}
 
