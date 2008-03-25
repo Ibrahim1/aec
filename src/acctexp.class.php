@@ -3956,7 +3956,7 @@ class InvoiceFactory
 
 			$plan_params = $row->getParams();
 
-			$plans[$i]['name']		= $row->name;
+			$plans[$i]['name']		= $row->getProperty( 'name' );
 			$plans[$i]['desc']		= $row->getProperty( 'desc' );
 			$plans[$i]['id']		= $row->id;
 			$plans[$i]['ordering']	= $row->ordering;
