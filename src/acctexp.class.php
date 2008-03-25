@@ -4914,7 +4914,7 @@ class Invoice extends paramDBTable
 			if ( isset( $response['pending'] ) ) {
 				if ( strcmp( $response['pending_reason'], 'signup' ) === 0 ) {
 					if ( $plan_params['trial_free'] ) {
-						$this->pay( $multiplicator );
+						$renew	= $this->pay( $multiplicator );
 						$this->setParams( array( 'free_trial' => $response['pending_reason'] ) );
 						$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_TRIAL;
 						$tags	.= ',payment,action,trial';
