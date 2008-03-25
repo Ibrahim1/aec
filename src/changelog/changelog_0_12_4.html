@@ -1213,36 +1213,52 @@ color: #333;
 </ul>
 <h2>0.12.6 version - <a href="http://en.wikipedia.org/wiki/Boomerang_Nebula">Boomerang Nebula</a></h2>
 <ul>
-<li>Fixing a bug with mosGetParams that would prevent processors from being saved</li>
-<li>Fixing a lot of MIs that did not pass the invoice object to the RWengine on action</li>
-<li>Better library handling that only calls in stuff that php4 needs to keep up with php5 (for a while!)</li>
-<li>Call MIs according to their sorting</li>
-<li>MI for creating directories</li>
-<li>Recurring=2 switch for conditional recurring (for processors that support both)</li>
+<li><strong>Payment Processors</strong>
+<ul>
 <li class="check">Paybox France Integration</li>
-<li>Additional Coupon field on Confirmation</li>
 <li>Fixing a bug with Authorize.net ARB that prevented invoices from clearing (alledging them to be duplicates)</li>
 <li>Fixing a rare installer bug that would lead to processors being assigned to plans multiple times (when upgrading from an ancient version)</li>
-<li>Fix Quicksearch (also got invoice numbers working!)</li>
 <li>Fixing some payment plan processor settings (when using inputA, a div was missing)</li>
-<li>Fixing ToS Link in german language file</li>
-<li>Now using Mootools (adding it in for pre-1.5 Joomla)</li>
-<li>Refactor Settings into new aecSettings Object routine</li>
-<li>Moving MI Hacks over to new Plugin for 1.5</li>
+<li>Recurring=2 switch for conditional recurring (for processors that support both)</li>
 <li>Fix for verotel</li>
 <li>Fix for Authorize ARB for Cancelling (thanks Kirk Lampert!)</li>
 <li>Fixing a problem where the processorname was reset to the id on invoice setup</li>
 <li>Airtoy Integration</li>
 <li class="check">PayPal Pro Integration</li>
 <li>Extend standard CC Form in XML processors to allow for further styles of CCs</li>
-<li>Exporting functions</li>
 <li>Fixing Renewing/New issue with XML processors</li>
+<li>Alertpay currency fix</li>
+</ul>
+</li>
+<li><strong>Backend</strong>
+<ul>
+<li>Fix Quicksearch (also got invoice numbers working!)</li>
+<li>Now using Mootools (adding it in for pre-1.5 Joomla)</li>
+<li>Fixing a bug with mosGetParams that would prevent processors from being saved</li>
+<li>Refactor Settings into new aecSettings Object routine</li>
+<li>Exporting functions</li>
+</ul>
+</li>
+<li><strong>Frontend</strong>
+<ul>
+<li>Additional Coupon field on Confirmation</li>
+<li>Fixing ToS Link in german language file</li>
+</ul>
+</li>
+<li><strong>Minor</strong>
+<ul>
+<li>Fixing a lot of MIs that did not pass the invoice object to the RWengine on action</li>
+<li>Better library handling that only calls in stuff that php4 needs to keep up with php5 (for a while!)</li>
+<li>Call MIs according to their sorting</li>
+<li>MI for creating directories</li>
+<li>Moving MI Hacks over to new Plugin for 1.5</li>
 <li class="check">Fix for MI Hacks on user account change (front- and backend in J!1.5)</li>
 <li class="check">Fix Situation that would turn up a fatal error when skipping confirmation in 1.5</li>
 <li class="check">Fixing coupons and display of invoice costs on checkout</li>
 <li class="check">Bug that will put extra escapes in the email text, description and name of a payment plan</li>
 <li class="check">Applying a payment plan (instead of saving it) sometimes loads a different plan afterwards</li>
 <li class="check">Correct Redirect after Custom Plan Action</li>
+<li class="todo">Better NotAuthorized handling for J!1.5</li>
 <li class="todo">Importing functions</li>
 <li class="todo">Check on Coupon application (on checkout) whether its a 100% discount (Trial and Full) for recurring billing</li>
 <li class="todo">Option to better show Trial/Full amount on checkout</li>
@@ -1256,6 +1272,8 @@ color: #333;
 <li class="todo">Express Checkout and PreAuth for PayPal Pro</li>
 <li class="todo">Setting to use generic processor buttons</li>
 <li class="todo">Come up with a good solution to the "A user might pick a secondary plan as his/her first" dilemma (Entry plan maybe?)</li>
+</ul>
+</li>
 </ul>
 </body>
 </html>

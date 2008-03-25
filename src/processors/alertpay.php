@@ -38,6 +38,7 @@ class processor_alertpay extends POSTprocessor
 		$info['longname']			= _AEC_PROC_INFO_AP_LNAME;
 		$info['statement']			= _AEC_PROC_INFO_AP_STMNT;
 		$info['description']		= _DESCRIPTION_ALERTPAY;
+		$info['currencies']			= 'USD';
 		$info['cc_list']			= 'visa,mastercard,discover,americanexpress,echeck';
 		$info['recurring']			= 0;
 		$info['notify_trail_thanks'] = 1;
