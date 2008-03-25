@@ -2168,6 +2168,10 @@ class XMLprocessor extends processor
 		// Transmit xml to server
 		$response = $this->transmitRequestXML( $xml, $int_var, $settings, $metaUser, $new_subscription, $invoice );
 
+		if ( empty( $response['invoice'] ) ) {
+			$response['invoice'] = $invoice->invoice_number;
+		}
+
 		if ( !empty( $response['error'] ) ) {
 			return $response;
 		}
@@ -4857,9 +4861,11 @@ class Invoice extends paramDBTable
 
 		$short = _AEC_MSG_PROC_INVOICE_ACTION_SH;
 		$event = _AEC_MSG_PROC_INVOICE_ACTION_EV . "\n";
-		foreach ($response as $key => $value) {
+
+		foreach ( $response as $key => $value ) {
 			$event .= $key . "=" . $value . "\n";
 		}
+
 		$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_STATUS;
 		$tags	= 'invoice,processor';
 		$params = array( 'invoice_number' => $this->invoice_number );
