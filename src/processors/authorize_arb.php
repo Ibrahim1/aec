@@ -310,20 +310,5 @@ class processor_authorize_arb extends XMLprocessor
 		}
 	}
 
-	function validateNotification( $response, $post, $cfg, $invoice )
-	{
-		if ( $post['x_subscription_paynum'] > 1 ) {
-			$x_response_code		= $post['x_response_code'];
-			$x_response_reason_text	= $post['x_response_reason_text'];
-
-			$response['valid'] = ($x_response_code == '1');
-		} else {
-			$response['valid'] = 0;
-			$response['duplicate'] = true;
-		}
-
-		return $response;
-	}
-
 }
 ?>
