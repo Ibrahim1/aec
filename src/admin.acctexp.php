@@ -252,23 +252,23 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'publishsubscriptionplan':
-		changeSubscriptionPlan( $id[0], 1, 'active', $option );
+		changeSubscriptionPlan( $id, 1, 'active', $option );
 		break;
 
 	case 'unpublishsubscriptionplan':
-		changeSubscriptionPlan( $id[0], 0, 'active', $option );
+		changeSubscriptionPlan( $id, 0, 'active', $option );
 		break;
 
 	case 'visiblesubscriptionplan':
-		changeSubscriptionPlan( $id[0], 1, 'visible', $option );
+		changeSubscriptionPlan( $id, 1, 'visible', $option );
 		break;
 
 	case 'invisiblesubscriptionplan':
-		changeSubscriptionPlan( $id[0], 0, 'visible', $option );
+		changeSubscriptionPlan( $id, 0, 'visible', $option );
 		break;
 
 	case 'removesubscriptionplan':
-		removeSubscriptionPlan( $id[0], $option, $returnTask );
+		removeSubscriptionPlan( $id, $option, $returnTask );
 		break;
 
 	case 'cancelsubscriptionplan':
@@ -328,15 +328,15 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'publishmicrointegration':
-		changeMicroIntegration( $id[0], 1, $option );
+		changeMicroIntegration( $id, 1, $option );
 		break;
 
 	case 'unpublishmicrointegration':
-		changeMicroIntegration( $id[0], 0, $option );
+		changeMicroIntegration( $id, 0, $option );
 		break;
 
 	case 'removemicrointegration':
-		removeMicroIntegration( $id[0], $option, $returnTask );
+		removeMicroIntegration( $id, $option, $returnTask );
 		break;
 
 	case 'cancelmicrointegration':
@@ -397,15 +397,15 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'publishcoupon':
-		changeCoupon( $id[0], 1, $option, 0 );
+		changeCoupon( $id, 1, $option, 0 );
 		break;
 
 	case 'unpublishcoupon':
-		changeCoupon( $id[0], 0, $option, 0 );
+		changeCoupon( $id, 0, $option, 0 );
 		break;
 
 	case 'removecoupon':
-		removeCoupon( $id[0], $option, $returnTask, 0 );
+		removeCoupon( $id, $option, $returnTask, 0 );
 		break;
 
 	case 'cancelcoupon':
@@ -450,15 +450,15 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'publishcouponstatic':
-		changeCoupon( $id[0], 1, $option, 1 );
+		changeCoupon( $id, 1, $option, 1 );
 		break;
 
 	case 'unpublishcouponstatic':
-		changeCoupon( $id[0], 0, $option, 1 );
+		changeCoupon( $id, 0, $option, 1 );
 		break;
 
 	case 'removecouponstatic':
-		removeCoupon( $id[0], $option, $returnTask, 1 );
+		removeCoupon( $id, $option, $returnTask, 1 );
 		break;
 
 	case 'cancelcouponstatic':
