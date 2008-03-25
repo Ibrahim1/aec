@@ -304,7 +304,7 @@ class processor_authorize_arb extends XMLprocessor
 				$return['error'] = $text;
 			}
 
-			$invoice->processorResponse( $pp, $return, $responsestring );
+			return $return;
 		} else {
 			Payment_HTML::error( 'com_acctexp', $metaUser->cmsUser, $invoice, "An error occured while cancelling your subscription. Please contact the system administrator!", true );
 		}

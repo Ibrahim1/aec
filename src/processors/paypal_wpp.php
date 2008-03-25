@@ -283,7 +283,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 	function customaction_cancel( $pp, $cfg, $invoice, $metaUser )
 	{
-		$this->ManageRecurringPaymentsProfileStatus( $pp, $cfg, $invoice, $metaUser, 'Cancel', $cfg['cancel_note'] );
+		return $this->ManageRecurringPaymentsProfileStatus( $pp, $cfg, $invoice, $metaUser, 'Cancel', $cfg['cancel_note'] );
 	}
 
 	function ManageRecurringPaymentsProfileStatus( $pp, $cfg, $invoice, $metaUser, $command, $note )
@@ -342,7 +342,7 @@ class processor_paypal_wpp extends XMLprocessor
 				$return['error'] = $text;
 			}
 
-			$invoice->processorResponse( $pp, $return, $responsestring );
+			return $return;
 		} else {
 			Payment_HTML::error( 'com_acctexp', $metaUser->cmsUser, $invoice, "An error occured while cancelling your subscription. Please contact the system administrator!", true );
 		}

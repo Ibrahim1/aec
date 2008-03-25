@@ -1781,13 +1781,10 @@ class PaymentProcessor
 		$method = 'customaction_' . $action;
 
 		if ( method_exists( $this->processor, $method ) ) {
-			$this->processor->$method( $this, $this->settings, $invoice, $metaUser );
+			return $this->processor->$method( $this, $this->settings, $invoice, $metaUser );
 		} else {
 			return false;
 		}
-
-		// TODO: Not exactly elegant
-		mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=subscriptionDetails' ), false, true );
 	}
 
 	function getParamsHTML( $params, $values )

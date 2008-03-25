@@ -169,7 +169,7 @@ define( '_NOT_ALLOWED_SECONDPAR', 'Joining will take you less than a minute - we
 
 // --== CANCELLED PAGE ==--
 define( '_CANCEL_TITLE', 'Subscription Result: Cancelled!');
-define( '_CANCEL_MSG', 'Our System has received the message, that you have chosen to cancel your payment. If this is due to problems that you encountered with our site, please don\'t hesiatate to contact us!');
+define( '_CANCEL_MSG', 'Our System has received the message, that you have chosen to cancel your payment. If this is due to problems that you encountered with our site, please don\'t hesitate to contact us!');
 
 // --== PENDING PAGE ==--
 define( '_PENDING_TITLE', 'Account Pending');
