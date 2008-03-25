@@ -4865,8 +4865,10 @@ class Invoice extends paramDBTable
 		$short = _AEC_MSG_PROC_INVOICE_ACTION_SH;
 		$event = _AEC_MSG_PROC_INVOICE_ACTION_EV . "\n";
 
-		foreach ( $response as $key => $value ) {
-			$event .= $key . "=" . $value . "\n";
+		if ( !empty( $response ) ) {
+			foreach ( $response as $key => $value ) {
+				$event .= $key . "=" . $value . "\n";
+			}
 		}
 
 		$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_STATUS;
