@@ -8257,9 +8257,9 @@ class couponHandler
 						case 'trial_only':		$this->setError( _COUPON_ERROR_TRIAL_ONLY );			break;
 						// Plan History or Status Errors
 						case 'plan_previous':	$this->setError( _COUPON_ERROR_WRONG_PLAN_PREVIOUS );	break;
-						case 'plan_present':	$this->setError( _COUPON_ERROR_WRONG_PLAN_PRESENT );	break;
+						case 'plan_present':	$this->setError( _COUPON_ERROR_WRONG_PLAN );	break;
 						case 'plan_overall':	$this->setError( _COUPON_ERROR_WRONG_PLANS_OVERALL );	break;
-						case 'plan_amount_min': $this->setError( _COUPON_ERROR_WRONG_PLAN_PRESENT );	break;
+						case 'plan_amount_min': $this->setError( _COUPON_ERROR_WRONG_PLAN );	break;
 						case 'plan_amount_max': $this->setError( _COUPON_ERROR_WRONG_PLANS_OVERALL );	break;
 					}
 					return false;
