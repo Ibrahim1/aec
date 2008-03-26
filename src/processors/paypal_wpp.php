@@ -139,11 +139,8 @@ class processor_paypal_wpp extends XMLprocessor
 		$var['acct']				= $int_var['params']['cardNumber'];
 		$var['expDate']			= str_pad( $int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ).$int_var['params']['expirationYear'];
 
-		if ( is_array( $int_var['amount'] ) ) {
-			$var['CardVerificationValue'] = $int_var['params']['cardVV2'];
-		} else {
-			$var['cvv2']			= $int_var['params']['cardVV2'];
-		}
+		$var['CardVerificationValue'] = $int_var['params']['cardVV2'];
+		$var['cvv2']			= $int_var['params']['cardVV2'];
 
 		$var['street1']				= $int_var['params']['billAddress'];
 
@@ -174,7 +171,8 @@ class processor_paypal_wpp extends XMLprocessor
 
 			$full = $this->convertPeriodUnit( $int_var['amount']['period3'], $int_var['amount']['unit3'] );
 
-			$var['ProfileStartDate']	= time() - $mosConfig_offset_user*3600;
+			$timestamp = time() - $mosConfig_offset_user*3600;
+			$var['ProfileStartDate']	= date( 'Y-m-d', $timestamp ) . 'T' . date( 'H:i:s', $timestamp ) . 'Z';
 			$var['BillingPeriod']			= $full['unit'];
 			$var['BillingFrequency']		= $full['period'];
 			$var['amt']						= $int_var['amount']['amount3'];
@@ -256,24 +254,19 @@ class processor_paypal_wpp extends XMLprocessor
 		$return = array();
 		switch ( $unit ) {
 			case 'D':
-				$return['unit'] = 'day';
+				$return['unit'] = 'Day';
 				$return['period'] = $period;
 				break;
 			case 'W':
-				if ( $period%4 == 0 ) {
-					$return['unit'] = 'month';
-					$return['period'] = $period/4;
-				} else {
-					$return['unit'] = 'day';
-					$return['period'] = $period*7;
-				}
+				$return['unit'] = 'Week';
+				$return['period'] = $period;
 				break;
 			case 'M':
-				$return['unit'] = 'month';
+				$return['unit'] = 'Month';
 				$return['period'] = $period;
 				break;
 			case 'Y':
-				$return['unit'] = 'year';
+				$return['unit'] = 'Year';
 				$return['period'] = $period;
 				break;
 		}
