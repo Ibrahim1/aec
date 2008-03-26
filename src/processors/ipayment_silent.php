@@ -196,10 +196,10 @@ class processor_ipayment_silent extends XMLprocessor
 			if ( $settings['fake_account'] ) {
 				$path = "99999/example.php";
 			} else {
-				$url = $settings['account_id'] . "/example.php";
+				$path = $settings['account_id'] . "/example.php";
 			}
 		} else {
-			$url = $settings['account_id'] . "/processor.php";
+			$path = $settings['account_id'] . "/processor.php";
 		}
 
 		$url = "https://ipayment.de/merchant/" . $path;
