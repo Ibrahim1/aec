@@ -39,7 +39,7 @@ class processor_paypal_subscription extends POSTprocessor
 		$info['statement'] 		= _AEC_PROC_INFO_PPS_STMNT;
 		$info['description'] 	= _DESCRIPTION_PAYPAL_SUBSCRIPTION;
 		$info['currencies'] 	= 'EUR,USD,AUD,CAD,GBP,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK';
-		$info['languages'] 		= 'GB,DE,FR,IT,ES,US,AU';
+		$info['languages'] 		= 'GB,DE,FR,IT,ES,US,AU,NL';
 		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck,giropay';
 		$info['recurring']		= 1;
 		$info['cancel_info']	= _PAYPAL_SUBSCRIPTION_CANCEL_INFO;
