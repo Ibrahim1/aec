@@ -4932,8 +4932,12 @@ class Invoice extends paramDBTable
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_CANCEL;
 				$tags	.= ',cancel';
 
+				if ( !empty( $this->subscr_id ) ) {
+					$metaUser->moveFocus( $this->subscr_id );
+				}
+
 				if ( $metaUser->hasSubscription ) {
-					$metaUser->objSubscription->cancel( $this );
+					$metaUser->focusSubscription->cancel( $this );
 					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS;
 				}
 			} elseif ( isset( $response['delete'] ) ) {
@@ -4941,8 +4945,12 @@ class Invoice extends paramDBTable
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_REFUND;
 				$tags	.= ',refund';
 
+				if ( !empty( $this->subscr_id ) ) {
+					$metaUser->moveFocus( $this->subscr_id );
+				}
+
 				if ( $metaUser->hasSubscription ) {
-					$metaUser->objSubscription->expire();
+					$metaUser->focusSubscription->expire();
 					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED;
 				}
 			} elseif ( isset( $response['eot'] ) ) {
@@ -5730,7 +5738,7 @@ class Subscription extends paramDBTable
 		global $database;
 
 		// Since some processors do not notify each period, we need to check whether the expiration
-		// lies to far in the future and cut it down to the end of the period the user has paid
+		// lies too far in the future and cut it down to the end of the period the user has paid
 
 		if ( $this->expire( $overridefallback ) ) {
 			if ( $this->plan ) {
