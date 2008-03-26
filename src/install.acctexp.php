@@ -1026,7 +1026,36 @@ function com_install()
 	$eucaInstalldb->addColifNotExists( 'level', "int(4) NOT NULL default '2'", 'eventlog' );
 	$eucaInstalldb->addColifNotExists( 'notify', "int(1) NOT NULL default '0'", 'eventlog' );
 
-	// --- [ END OF DATABASE ACTIONS ] ---
+	// --- [ END OF DATABASE UPGRADE ACTIONS ] ---
+
+	// Make sure settings & info = updated
+	$pp = null;
+	$pph = new PaymentProcessorHandler();
+
+	$pplist = $pph->getInstalledNameList();
+
+	foreach ( $pplist as $ppname ) {
+		$pp = new PaymentProcessor();
+		$pp->loadName( $ppname );
+
+		$pp->fullInit();
+
+		// Infos often change, so we protect the name and description and so on, but replace everything else
+		$original	= $pp->processor->info();
+
+		$protect = array( 'name', 'longname', 'statement', 'description' );
+
+		foreach ( $original as $name => $var ) {
+			if ( !in_array( $name, $protect ) ) {
+				$pp->info[$name] = $var;
+			}
+		}
+
+		$pp->setSettings();
+		$pp->setInfo();
+	}
+
+	// --- [ END OF STANDARD UPGRADE ACTIONS ] ---
 
 	// Make all Superadmins excluded by default
 	$database->setQuery("SELECT id FROM #__users WHERE gid='25'");
