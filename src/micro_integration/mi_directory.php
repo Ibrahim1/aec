@@ -39,9 +39,9 @@ class mi_directory
 	function Defaults()
 	{
         $defaults = array();
-        $defaults['mkdir_mode']			= '0755';
-        $defaults['mkdir_mode_exp']		= '0755';
-        $defaults['mkdir_mode_pre_exp']	= '0755';
+        $defaults['mkdir_mode']			= '0644';
+        $defaults['mkdir_mode_exp']		= '0644';
+        $defaults['mkdir_mode_pre_exp']	= '0644';
 
 		return $defaults;
 	}
@@ -58,7 +58,7 @@ class mi_directory
 
 	function action( $params, $metaUser, $invoice, $plan )
 	{
-		return $this->makedir( $params['mkdir'], $params['mkdir_mode_pre_exp'], $metaUser, $plan, $invoice );
+		return $this->makedir( $params['mkdir'], $params['mkdir_mode'], $metaUser, $plan, $invoice );
 	}
 
 	function makedir( $path, $mode, $metaUser, $plan, $invoice=null )
@@ -67,8 +67,10 @@ class mi_directory
 			return null;
 		}
 
-		if ( !file_exists( $path ) ) {
-			return mkdir( AECToolbox::rewriteEngine( $path, $metaUser, $plan, $invoice, $mode ) );
+		$fullpath = AECToolbox::rewriteEngine( $path, $metaUser, $plan, $invoice, $mode );
+
+		if ( !file_exists( $fullpath ) ) {
+			return mkdir( $fullpath );
 		} else {
 			return true;
 		}
