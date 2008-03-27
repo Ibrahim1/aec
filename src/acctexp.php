@@ -532,6 +532,8 @@ function subscriptionDetails( $option )
 
 		$user_subscriptions = $metaUser->getSecondarySubscriptions();
 
+		$processors = array();
+
 		if ( !empty( $user_subscriptions ) ) {
 			$subscriptions = array();
 			foreach( $user_subscriptions as $subscription ) {
@@ -542,13 +544,20 @@ function subscriptionDetails( $option )
 				$secondary_plan = new SubscriptionPlan( $database );
 				$secondary_plan->load( $subscription->plan );
 
-				$spp = new PaymentProcessor();
-				if ( $spp->loadName( $subscription->type ) ) {
-					$spp->init();
-					$spp->getInfo();
+				if ( !isset( $processors[$subscription->type] ) ) {
+					$spp = new PaymentProcessor();
+					if ( $spp->loadName( $subscription->type ) ) {
+						$spp->init();
+						$spp->getInfo();
+					} else {
+						$spp = false;
+					}
+
+					$processors[$subscription->type] = $spp;
 				} else {
-					$spp = false;
+					$spp = $processors[$subscription->type];
 				}
+
 
 				if ( isset( $spp->info['actions'] ) && ( strcmp( $metaUser->objSubscription->status, 'Active' ) === 0 ) ) {
 					$actions = explode( ';', $spp->info['actions'] );
@@ -643,11 +652,23 @@ function subscriptionDetails( $option )
 				$rowstyle			= '';
 			}
 
+			if ( !isset( $processors[$row->method] ) ) {
+				$processors[$row->method] = new PaymentProcessor();
+				if ( $processors[$row->method]->loadName( $row->method ) ) {
+					$processor = $processors[$row->method]->info['longname'];
+				} else {
+					$processor = $row->method;
+				}
+			} else {
+				$spp = $processors[$row->method];
+				$processor = $processors[$row->method]->info['longname'];
+			}
+
 			$row->formatInvoiceNumber();
 			$invoices[$rowid]['invoice_number']	= $row->invoice_number;
 			$invoices[$rowid]['amount']			= $row->amount;
 			$invoices[$rowid]['currency_code']	= $row->currency;
-			$invoices[$rowid]['processor']		= $row->method;
+			$invoices[$rowid]['processor']		= $processor;
 			$invoices[$rowid]['actions']		= $actions;
 			$invoices[$rowid]['rowstyle']		= $rowstyle;
 			$invoices[$rowid]['transactiondate'] = $transactiondate;
