@@ -2123,23 +2123,82 @@ class XMLprocessor extends processor
 					$var['params']['billState'] = array( 'inputC', _AEC_USERFORM_BILLSTATE_NAME );
 					break;
 				case 'state_us':
-					$states = array( 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI',
+					$states = array( '', '--- United States ---', 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI',
 										'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME',
 										'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ',
 										'NM', 'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD',
 										'TN', 'TX', 'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY', 'AA',
-										'AE', 'AP', 'AS', 'FM', 'GU', 'MH', 'MP', 'PR', 'PW', 'VI' );
+										'AE', 'AP', 'AS', 'FM', 'GU', 'MH', 'MP', 'PR', 'PW', 'VI'
+										);
 
 					$statelist = array();
 					foreach ( $states as $state ) {
-						$statelist[] = mosHTML::makeOption( $state, $state );
+						if ( strpos( $state, '---' ) !== false ) {
+							$statelist[] = mosHTML::makeOption( '" disabled="disabled', $state );
+						} else {
+							$statelist[] = mosHTML::makeOption( $state, $state );
+						}
 					}
 
-					$var['params']['lists']['billState'] = mosHTML::selectList( $statelist, 'billState', 'size="1"', 'value', 'text', 'AK' );
+					$var['params']['lists']['billState'] = mosHTML::selectList( $statelist, 'billState', 'size="1"', 'value', 'text', '' );
+					$var['params']['billState'] = array( 'list', _AEC_USERFORM_BILLSTATE_NAME );
+					break;
+				case 'state_usca':
+					$states = array( '', '--- United States ---', 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI',
+										'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME',
+										'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ',
+										'NM', 'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD',
+										'TN', 'TX', 'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY', 'AA',
+										'AE', 'AP', 'AS', 'FM', 'GU', 'MH', 'MP', 'PR', 'PW', 'VI',
+										'--- Canada ---','BC','MB','NB','NL','NT','NS','NU','ON','PE','QC','SK','YT'
+										);
+
+					$statelist = array();
+					foreach ( $states as $state ) {
+						if ( strpos( $state, '---' ) !== false ) {
+							$statelist[] = mosHTML::makeOption( '" disabled="disabled', $state );
+						} else {
+							$statelist[] = mosHTML::makeOption( $state, $state );
+						}
+					}
+
+					$var['params']['lists']['billState'] = mosHTML::selectList( $statelist, 'billState', 'size="1"', 'value', 'text', '' );
 					$var['params']['billState'] = array( 'list', _AEC_USERFORM_BILLSTATE_NAME );
 					break;
 				case 'zip':
 					$var['params']['billZip'] = array( 'inputC', _AEC_USERFORM_BILLZIP_NAME );
+					break;
+				case 'country_list':
+					$countries = array(  'US', 'AL', 'DZ', 'AD', 'AO', 'AI', 'AG', 'AR', 'AM', 'AW',
+										'AU', 'AT', 'AZ', 'BS', 'BH', 'BB', 'BE', 'BZ', 'BJ', 'BM',
+										'BT', 'BO', 'BA', 'BW', 'BR', 'VG', 'BN', 'BG', 'BF', 'BI',
+										'KH', 'CA', 'CV', 'KY', 'TD', 'CL', 'C2', 'CO', 'KM', 'CK',
+										'CR', 'HR', 'CY', 'CZ', 'CD', 'DK', 'DJ', 'DM', 'DO', 'EC',
+										'SV', 'ER', 'EE', 'ET', 'FK', 'FO', 'FM', 'FJ', 'FI', 'FR',
+										'GF', 'PF', 'GA', 'GM', 'DE', 'GI', 'GR', 'GL', 'GD', 'GP',
+										'GT', 'GN', 'GW', 'GY', 'HN', 'HK', 'HU', 'IS', 'IN', 'ID',
+										'IE', 'IL', 'IT', 'JM', 'JP', 'JO', 'KZ', 'KE', 'KI', 'KW',
+										'KG', 'LA', 'LV', 'LS', 'LI', 'LT', 'LU', 'MG', 'MW', 'MY',
+										'MV', 'ML', 'MT', 'MH', 'MQ', 'MR', 'MU', 'YT', 'MX', 'MN',
+										'MS', 'MA', 'MZ', 'NA', 'NR', 'NP', 'NL', 'AN', 'NC', 'NZ',
+										'NI', 'NE', 'NU', 'NF', 'NO', 'OM', 'PW', 'PA', 'PG', 'PE',
+										'PH', 'PN', 'PL', 'PT', 'QA', 'CG', 'RE', 'RO', 'RU', 'RW',
+										'VC', 'WS', 'SM', 'ST', 'SA', 'SN', 'SC', 'SL', 'SG', 'SK',
+										'SI', 'SB', 'SO', 'ZA', 'KR', 'ES', 'LK', 'SH', 'KN', 'LC',
+										'PM', 'SR', 'SJ', 'SZ', 'SE', 'CH', 'TW', 'TJ', 'TZ', 'TH',
+										'TG', 'TO', 'TT', 'TN', 'TR', 'TM', 'TC', 'TV', 'UG', 'UA',
+										'AE', 'GB', 'UY', 'VU', 'VA', 'VE', 'VN', 'WF', 'YE', 'ZM'
+										);
+
+					$countrylist[] = mosHTML::makeOption( '" disabled="disabled', COUNTRYCODE_SELECT );
+
+					$countrylist = array();
+					foreach ( $countries as $country ) {
+						$countrylist[] = mosHTML::makeOption( $country, constant( 'COUNTRYCODE_' . $country ) );
+					}
+
+					$var['params']['lists']['billCountry'] = mosHTML::selectList( $countrylist, 'billCountry', 'size="1"', 'value', 'text', '' );
+					$var['params']['billCountry'] = array( 'list', _AEC_USERFORM_BILLCOUNTRY_NAME );
 					break;
 				case 'country':
 					$var['params']['billCountry'] = array( 'inputC', _AEC_USERFORM_BILLCOUNTRY_NAME );
