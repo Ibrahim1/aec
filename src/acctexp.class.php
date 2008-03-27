@@ -201,8 +201,12 @@ class metaUser
 				}
 
 				$this->cmsUser->params .= implode( "\n", $array );
-				$this->cmsUser->check();
-				$this->cmsUser->store();
+
+				// Only store if this is a real user object
+				if ( method_exists( $this->cmsUser, 'check' ) ) {
+					$this->cmsUser->check();
+					$this->cmsUser->store();
+				}
 			}
 		}
 		return true;
