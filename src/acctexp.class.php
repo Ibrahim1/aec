@@ -3790,8 +3790,10 @@ class InvoiceFactory
 
 	function loadMetaUser( $passthrough=false, $force=false )
 	{
-		if ( is_object( $this->metaUser ) && !$force ) {
-			return false;
+		if ( isset( $this->metaUser ) ) {
+			if ( is_object( $this->metaUser ) && !$force ) {
+				return false;
+			}
 		}
 
 		if ( empty( $this->userid ) ) {
@@ -5751,18 +5753,27 @@ class Subscription extends paramDBTable
 				// Resolve blocks that we are going to substract from the set expiration date
 				$unit = 60*60*24;
 				switch ( $plan_params['full_periodunit'] ) {
-					case 'D': $periodlength = $plan_params['full_period'] * $unit; break;
-					case 'W': $unit *= 7;	$periodlength = $plan_params['full_period'] * $unit; break;
-					case 'M': $unit *= 31;	$periodlength = $plan_params['full_period'] * $unit; break;
-					case 'Y': $unit *= 356;	$periodlength = $plan_params['full_period'] * $unit; break;
+					case 'D':
+						break;
+					case 'W':
+						$unit *= 7;
+						break;
+					case 'M':
+						$unit *= 31;
+						break;
+					case 'Y':
+						$unit *= 365;
+						break;
 				}
+
+				$periodlength = $plan_params['full_period'] * $unit;
 
 				$newexpiration = strtotime( $this->expiration );
 				$now = time() + $mosConfig_offset_user*3600;
 
 				// ...cut away blocks until we are in the past
-				for ( $i=$newexpiration; $i>=$now; $i-=$unit ) {
-					$newexpiration = $i;
+				while ( $newexpiration >= $now ) {
+					$newexpiration -= $periodlength;
 				}
 
 				// And we get the bare expiration date
