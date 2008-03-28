@@ -3975,6 +3975,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 	$aec_hack_start				= "// AEC HACK %s START" . "\n";
 	$aec_hack_end				= "// AEC HACK %s END" . "\n";
 	$aec_condition_start		= 'if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {' . "\n";
+	$aec_condition_start15		= 'if (file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" )) {' . "\n";
 	$aec_condition_end			= '}' . "\n";
 	$aec_include_class			= 'include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");' . "\n";
 	$aec_verification_check		= "AECToolBox::VerifyUsername( %s );" . "\n";
@@ -3983,14 +3984,15 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 	$aec_userregchange_clause15	= '$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($user, $post, \'%s\');' . "\n";
 	$aec_global_call			= 'global $mosConfig_live_site, $mosConfig_absolute_path;' . "\n";
 	$aec_redirect_notallowed	= 'mosRedirect( sefRelToAbs( "/index.php?option=com_acctexp&task=NotAllowed" ) );' . "\n";
+	$aec_redirect_notallowed15	= 'global $mainframe' . "\n" . '$mainframe->redirect( "/index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
 	$aec_redirect_subscribe		= 'mosRedirect( sefRelToAbs( "/index.php?option=com_acctexp&task=subscribe" ) );' . "\n";
 
 	$aec_normal_hack = $aec_hack_start
-	. $aec_global_call
-	. $aec_condition_start
-	. $aec_redirect_notallowed
-	. $aec_condition_end
-	. $aec_hack_end;
+					. $aec_global_call
+					. $aec_condition_start
+					. $aec_redirect_notallowed
+					. $aec_condition_end
+					. $aec_hack_end;
 
 	$aec_jhack1 = $aec_hack_start
 					. 'function mosNotAuth($override=false) {' . "\n"
@@ -4105,6 +4107,15 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 					. 'break;'. "\n"
 					. $aec_hack_end;
 
+	$aec_j15hack1 =  $aec_hack_start
+					. 'if ( $error->message == JText::_("ALERTNOTAUTH") ) {'
+					. $aec_global_call
+					. $aec_condition_start15
+					. $aec_redirect_notallowed15
+					. $aec_condition_end
+					. $aec_condition_end
+					. $aec_hack_end;
+
 	// menu entry
 	$n = 'menuentry';
 	$hacks[$n]['name'] =	_AEC_HACKS_MENU_ENTRY;
@@ -4143,6 +4154,14 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/includes/' . $cmsname . '.php';
 		$hacks[$n]['read']			=	'function notAllowed( $name ) {';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( $aec_jhack2, $n, $n );
+	} else {
+		$n = 'errorphp';
+		$hacks[$n]['name']			=	'error.php ' . _AEC_HACK_HACK . ' #1';
+		$hacks[$n]['desc']			=	_AEC_HACKS_NOTAUTH;
+		$hacks[$n]['type']			=	'file';
+		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/libraries/joomla/error/error.php';
+		$hacks[$n]['read']			=	'// Initialize variables';
+		$hacks[$n]['insert']		=	sprintf( $aec_j15hack1, $n, $n ) . "\n" . $hacks[$n]['read'];
 	}
 
 	if ( !$v15 ) {
