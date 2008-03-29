@@ -7243,7 +7243,7 @@ class AECToolbox
 		}
 
 		if ( is_object( $subscriptionPlan ) ) {
-			$rewrite['plan_name'] = $subscriptionPlan->name;
+			$rewrite['plan_name'] = $subscriptionPlan->getProperty( 'name' );
 			$rewrite['plan_desc'] = $subscriptionPlan->getProperty( 'desc' );
 		}
 
