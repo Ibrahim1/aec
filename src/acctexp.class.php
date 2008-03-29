@@ -5839,7 +5839,7 @@ class Subscription extends paramDBTable
 				$now = time() + $mosConfig_offset_user*3600;
 
 				// ...cut away blocks until we are in the past
-				while ( $newexpiration >= $now ) {
+				while ( $newexpiration > $now ) {
 					$newexpiration -= $periodlength;
 				}
 
