@@ -470,6 +470,8 @@ define( '_CFG_IPAYMENT_SILENT_FAKE_ACCOUNT_NAME', 'Fake Account');
 define( '_CFG_IPAYMENT_SILENT_FAKE_ACCOUNT_DESC', 'Use a fake account (99999) for testing purposes.');
 define( '_CFG_IPAYMENT_SILENT_USER_ID_NAME', 'User Id');
 define( '_CFG_IPAYMENT_SILENT_USER_ID_DESC', 'The User Id of your iPayment Account.');
+define( '_CFG_IPAYMENT_SILENT_ACCOUNT_ID_NAME', 'Account Id');
+define( '_CFG_IPAYMENT_SILENT_ACCOUNT_ID_DESC', 'The Account Id of your iPayment Account.');
 define( '_CFG_IPAYMENT_SILENT_PASSWORD_NAME', 'Password');
 define( '_CFG_IPAYMENT_SILENT_PASSWORD_DESC', 'The Password of your iPayment Account.');
 define( '_CFG_IPAYMENT_SILENT_PROMPTADDRESS_NAME', 'Prompt for Address');

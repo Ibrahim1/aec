@@ -56,6 +56,7 @@ class processor_ipayment_silent extends XMLprocessor
 		$settings['testmode']		= 0;
 		$settings['fake_account']	= 0;
 		$settings['user_id']		= "user_id";
+		$settings['account_id']		= 'account_id';
 		$settings['password']		= "password";
 		$settings['currency']		= "USD";
 		$settings['promptAddress']	= 0;
@@ -71,6 +72,7 @@ class processor_ipayment_silent extends XMLprocessor
 		$settings['testmode']		= array("list_yesno");
 		$settings['fake_account']	= array("list_yesno");
 		$settings['user_id'] 		= array("inputC");
+		$settings['account_id']		= array("inputC");
 		$settings['password']		= array("inputC");
 		$settings['currency']		= array("list_currency");
 		$settings['promptAddress']	= array("list_yesno");
