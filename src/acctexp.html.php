@@ -192,8 +192,8 @@ class HTML_frontEnd
 			}
 			if ( is_object( $selected_plan ) ) { ?>
 				<h2><?php echo _YOUR_SUBSCRIPTION; ?></h2>
-				<p><strong><?php echo $selected_plan->name; ?></strong></p>
-				<p><?php echo $selected_plan->desc; ?></p>
+				<p><strong><?php echo $selected_plan->getProperty( 'name' ); ?></strong></p>
+				<p><?php echo $selected_plan->getProperty( 'desc' ); ?></p>
 				<?php
 				if ( isset( $selected_plan->proc_actions ) ) { ?>
 					<p><?php echo _PLAN_PROCESSOR_ACTIONS . ' ' . implode( " | ", $selected_plan->proc_actions ); ?></p>
@@ -204,8 +204,8 @@ class HTML_frontEnd
 				<h2><?php echo _YOUR_FURTHER_SUBSCRIPTIONS; ?></h2>
 				<?php
 				foreach ( $subscriptions as $subscription ) { ?>
-					<p><strong><?php echo $subscription->name; ?></strong></p>
-					<p><?php echo $subscription->desc; ?></p>
+					<p><strong><?php echo $subscription->getProperty( 'name' ); ?></strong></p>
+					<p><?php echo $subscription->getProperty( 'desc' ); ?></p>
 					<?php
 					if ( isset( $subscription->proc_actions ) ) { ?>
 						<p><?php echo _PLAN_PROCESSOR_ACTIONS . ' ' . implode( " | ", $subscription->proc_actions ); ?></p>
