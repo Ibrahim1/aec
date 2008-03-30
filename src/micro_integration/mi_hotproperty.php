@@ -74,22 +74,22 @@ class mi_hotproperty
 		return $newparams;
 	}
 
-	function action( $params, $metaUser, $plan, $invoice )
+	function action( $params, $metaUser, $invoice, $plan )
 	{
 		if( $params['create_agent'] ){
 			if ( !empty( $params['agent_fields'] ) ) {
-				return $this->createAgent( $metaUser, $params['agent_fields'], $plan, $invoice );
+				return $this->createAgent( $metaUser, $params['agent_fields'], $invoice, $plan );
 			}
 		}
 
 		if( $params['create_company'] ){
 			if ( !empty( $params['company_fields'] ) ) {
-				return $this->createAgent( $metaUser, $params['company_fields'], $params['assoc_company'], $plan, $invoice );
+				return $this->createCompany( $metaUser, $params['company_fields'], $params['assoc_company'], $invoice, $plan );
 			}
 		}
 	}
 
-	function createAgent( $metaUser, $fields, $plan, $invoice )
+	function createAgent( $metaUser, $fields, $invoice, $plan )
 	{
 		global $database;
 
@@ -129,7 +129,7 @@ class mi_hotproperty
 
 	}
 
-	function createCompany( $metaUser, $fields, $assoc, $plan, $invoice )
+	function createCompany( $metaUser, $fields, $assoc, $invoice, $plan )
 	{
 		global $database;
 

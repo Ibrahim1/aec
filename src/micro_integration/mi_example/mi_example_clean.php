@@ -32,15 +32,15 @@ class mi_example
 		return $settings;
 	}
 
-	function pre_expiration_action( $params, $userid, $plan, $mi_id )
+	function pre_expiration_action( $params, $metaUser, $plan, $mi_id )
 	{
 	}
 
-	function expiration_action( $params, $userid, $plan )
+	function expiration_action( $params, $metaUser, $plan )
 	{
 	}
 
-	function action( $params, $userid, $invoice, $plan )
+	function action( $params, $metaUser, $invoice, $plan )
 	{
 	}
 

@@ -71,17 +71,17 @@ class mi_example
 		return $settings;
 	}
 
-	function pre_expiration_action( $params, $userid, $plan, $mi_id )
+	function pre_expiration_action( $params, $metaUser, $plan, $mi_id )
 	{
 		// Here you can specify whatever you want to happen when the plan runs out.
 	}
 
-	function expiration_action( $params, $userid, $plan )
+	function expiration_action( $params, $metaUser, $plan )
 	{
 		// Here you can specify whatever you want to happen before the plan runs out.
 	}
 
-	function action( $params, $userid, $invoice, $plan )
+	function action( $params, $metaUser, $invoice, $plan )
 	{
 		// And here what should happen when the plan is applied.
 		// Note that both functions always receive the full parameter array
