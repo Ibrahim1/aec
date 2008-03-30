@@ -48,7 +48,7 @@ class processor_ideal_basic extends URLprocessor
 		$i['description'] = _CFG_IDEAL_BASIC_DESCRIPTION;
 		$i['currencies'] = 'EUR';
 		$i['languages'] = 'NL';
-		$i['cc_list'] = 'visa,mastercard,discover,americanexpress,echeck';
+		$i['cc_list'] = 'rabobank,abnamro,ing,postbank,fortis';
 		$info['recurring'] = 0;
 
 		return $i;
