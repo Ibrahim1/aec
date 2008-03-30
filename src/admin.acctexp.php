@@ -3984,7 +3984,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 	$aec_userregchange_clause15	= '$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($user, $post, \'%s\');' . "\n";
 	$aec_global_call			= 'global $mosConfig_live_site, $mosConfig_absolute_path;' . "\n";
 	$aec_redirect_notallowed	= 'mosRedirect( sefRelToAbs( "/index.php?option=com_acctexp&task=NotAllowed" ) );' . "\n";
-	$aec_redirect_notallowed15	= 'global $mainframe' . "\n" . '$mainframe->redirect( "/index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
+	$aec_redirect_notallowed15	= 'global $mainframe;' . "\n" . '$mainframe->redirect( "/index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
 	$aec_redirect_subscribe		= 'mosRedirect( sefRelToAbs( "/index.php?option=com_acctexp&task=subscribe" ) );' . "\n";
 
 	$aec_normal_hack = $aec_hack_start
@@ -4109,7 +4109,6 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 
 	$aec_j15hack1 =  $aec_hack_start
 					. 'if ( $error->message == JText::_("ALERTNOTAUTH") ) {'
-					. $aec_global_call
 					. $aec_condition_start15
 					. $aec_redirect_notallowed15
 					. $aec_condition_end

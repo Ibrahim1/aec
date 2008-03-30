@@ -4997,11 +4997,11 @@ class Invoice extends paramDBTable
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_CANCEL;
 				$tags	.= ',cancel';
 
-				if ( !empty( $this->subscr_id ) ) {
-					$metaUser->moveFocus( $this->subscr_id );
-				}
-
 				if ( $metaUser->hasSubscription ) {
+					if ( !empty( $this->subscr_id ) ) {
+						$metaUser->moveFocus( $this->subscr_id );
+					}
+
 					$metaUser->focusSubscription->cancel( $this );
 					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS;
 				}
@@ -5009,12 +5009,11 @@ class Invoice extends paramDBTable
 				$metaUser = new metaUser( $this->userid );
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_REFUND;
 				$tags	.= ',refund';
-
-				if ( !empty( $this->subscr_id ) ) {
-					$metaUser->moveFocus( $this->subscr_id );
-				}
-
 				if ( $metaUser->hasSubscription ) {
+					if ( !empty( $this->subscr_id ) ) {
+						$metaUser->moveFocus( $this->subscr_id );
+					}
+
 					$metaUser->focusSubscription->expire();
 					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED;
 				}

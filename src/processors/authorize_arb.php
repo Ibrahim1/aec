@@ -309,6 +309,7 @@ class processor_authorize_arb extends XMLprocessor
 			Payment_HTML::error( 'com_acctexp', $metaUser->cmsUser, $invoice, "An error occured while cancelling your subscription. Please contact the system administrator!", true );
 		}
 	}
+
 /*
 	function validateNotification( $response, $post, $cfg, $invoice )
 	{
