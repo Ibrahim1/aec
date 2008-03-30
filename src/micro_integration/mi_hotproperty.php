@@ -109,7 +109,7 @@ class mi_hotproperty
 		$keys = array();
 		$values = array();
 		foreach ( $fieldlist as $content ) {
-			$c = explode( $content );
+			$c = explode( '=', $content );
 
 			if ( !empty( $c[0] ) ) {
 				$keys[] = trim( $c[0] );
@@ -152,7 +152,7 @@ class mi_hotproperty
 		$keys = array();
 		$values = array();
 		foreach ( $fieldlist as $content ) {
-			$c = explode( $content );
+			$c = explode( '=', $content );
 
 			if ( !empty( $c[0] ) ) {
 				$keys[] = trim( $c[0] );
