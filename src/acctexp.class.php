@@ -7776,6 +7776,12 @@ class microIntegration extends paramDBTable
 
 			if ( isset( $this->mi_class->error ) ) {
 				$error .= ' Error: ' . $this->mi_class->error;
+			} else {
+				$err = $this->_db->getErrorMsg();
+
+				if ( !empty( $err ) ) {
+					$error .= ' Last Database Error: ' . $err;
+				}
 			}
 
 			$eventlog = new eventLog( $database );
