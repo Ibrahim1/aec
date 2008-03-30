@@ -7772,8 +7772,14 @@ class microIntegration extends paramDBTable
 		if ( $return === false ) {
 			global $database;
 
+			$error = 'The MI "' . $this->name . '" ('.$this->class_name.') could not be carried out, plan application was halted';
+
+			if ( isset( $this->mi_class->error ) ) {
+				$error .= ' Error: ' . $this->mi_class->error;
+			}
+
 			$eventlog = new eventLog( $database );
-			$eventlog->issue( 'MI application failed', 'mi, failure,'.$this->class_name, 'The MI "' . $this->name . '" ('.$this->class_name.') could not be carried out, plan application was halted', 128 );
+			$eventlog->issue( 'MI application failed', 'mi, failure,'.$this->class_name, $error, 128 );
 		}
 
 		return $return;

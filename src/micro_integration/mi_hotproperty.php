@@ -108,10 +108,12 @@ class mi_hotproperty
 
 		$keys = array();
 		$values = array();
-		foreach ( $fieldlist as $k => $v ) {
-			if ( !empty( $k ) ) {
-				$keys[] = $k;
-				$values[] = $v;
+		foreach ( $fieldlist as $content ) {
+			$c = explode( $content );
+
+			if ( !empty( $c[0] ) ) {
+				$keys[] = trim( $c[0] );
+				$values[] = trim( $c[1] );
 			}
 		}
 
@@ -120,13 +122,14 @@ class mi_hotproperty
 				. ' VALUES (\'' . implode( '\',\'', $values ) . '\')'
 				;
 		$database->setQuery( $query );
+		$result = $database->query();
 
-		if ( $database->query() ) {
+		if ( $result ) {
 			return true;
 		} else {
+			$this->error = $database->getErrorMsg();
 			return false;
 		}
-
 	}
 
 	function createCompany( $metaUser, $fields, $assoc, $invoice, $plan )
@@ -148,10 +151,12 @@ class mi_hotproperty
 
 		$keys = array();
 		$values = array();
-		foreach ( $fieldlist as $k => $v ) {
-			if ( !empty( $k ) ) {
-				$keys[] = $k;
-				$values[] = $v;
+		foreach ( $fieldlist as $content ) {
+			$c = explode( $content );
+
+			if ( !empty( $c[0] ) ) {
+				$keys[] = trim( $c[0] );
+				$values[] = trim( $c[1] );
 			}
 		}
 
@@ -186,6 +191,7 @@ class mi_hotproperty
 			}
 		}
 
+		$this->error = $database->getErrorMsg();
 		return false;
 	}
 
