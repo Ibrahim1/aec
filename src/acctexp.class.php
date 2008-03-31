@@ -5002,7 +5002,13 @@ class Invoice extends paramDBTable
 						$metaUser->moveFocus( $this->subscr_id );
 					}
 
-					$metaUser->focusSubscription->cancel( $this );
+					if ( isset( $response['cancel_expire'] ) ) {
+						$metaUser->focusSubscription->expire();
+						$tags	.= ',expire';
+					} else {
+						$metaUser->focusSubscription->cancel( $this );
+					}
+
 					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS;
 				}
 			} elseif ( isset( $response['delete'] ) ) {
@@ -5819,8 +5825,6 @@ class Subscription extends paramDBTable
 				// Resolve blocks that we are going to substract from the set expiration date
 				$unit = 60*60*24;
 				switch ( $plan_params['full_periodunit'] ) {
-					case 'D':
-						break;
 					case 'W':
 						$unit *= 7;
 						break;
