@@ -137,9 +137,11 @@ class processor_ipayment_silent extends XMLprocessor
 
 		if ( $cfg['fake_account'] ) {
 			$a['trxuser_id']		= '99999';
+			$a['trx_user']			= '99999';
 			$a['trxpassword']		= '0';
 		} else {
 			$a['trxuser_id']		= $cfg['user_id'];
+			$a['trx_user']			= $cfg['user_id'];
 			$a['trxpassword']		= $cfg['password'];
 		}
 
@@ -164,10 +166,7 @@ class processor_ipayment_silent extends XMLprocessor
 							'cc_checkcode'	=>	'',
 							'bank_accountnumber'	=>	'accountNumber',
 							'bank_code'	=>	'bankNumber',
-							'bank_name'	=>	'bankName',
-							'bank_code'	=>	'billAddress',
-							'bank_code'	=>	'billAddress',
-
+							'bank_name'	=>	'bankName'
 						);
 		foreach ( $varray as $n => $p ) {
 			if ( !empty( $int_var['params'][$p] ) ) {
