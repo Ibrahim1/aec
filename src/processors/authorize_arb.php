@@ -293,8 +293,8 @@ class processor_authorize_arb extends XMLprocessor
 
 			$resultCode = $this->substring_between( $response,'<resultCode>','</resultCode>' );
 
-			$code = $this->substring_between($response,'<code>','</code>');
-			$text = $this->substring_between($response,'<text>','</text>');
+			$code = $this->substring_between( $response,'<code>','</code>' );
+			$text = $this->substring_between( $response,'<text>','</text>' );
 
 			if ( strcmp( $resultCode, 'Ok' ) === 0 ) {
 				$return['valid'] = 0;
@@ -310,7 +310,19 @@ class processor_authorize_arb extends XMLprocessor
 		}
 	}
 
-/*
+	function parseNotification( $post, $cfg )
+	{
+		$x_description			= $post['x_description'];
+
+		$x_amount				= $post['x_amount'];
+		$userid					= $post['x_cust_id'];
+
+		$response = array();
+		$response['invoice'] = $post['x_invoice_num'];
+
+		return $response;
+	}
+
 	function validateNotification( $response, $post, $cfg, $invoice )
 	{
 		if ( $post['x_subscription_paynum'] > 1 ) {
@@ -325,7 +337,6 @@ class processor_authorize_arb extends XMLprocessor
 
 		return $response;
 	}
-*/
 
 /**
  * 2008-02-19-17:41:15
