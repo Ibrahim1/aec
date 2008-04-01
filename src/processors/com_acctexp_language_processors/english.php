@@ -558,4 +558,31 @@ define( '_CFG_PAYPAL_WPP_COUNTRY_DESC', 'Choose the country of your business');
 define( '_CFG_PAYPAL_WPP_CANCEL_NOTE_NAME', 'Cancel Note');
 define( '_CFG_PAYPAL_WPP_CANCEL_NOTE_DESC', 'The Cancel Note the user gets displayed when a subscription via PayPal WPP is cancelled');
 
+// Moneybookers
+define( '_CFG_MONEYBOOKERS_LONGNAME', 'Moneybookers');
+define( '_CFG_MONEYBOOKERS_STATEMENT', 'Your wallet for the internet... to shop and send money worldwide');
+define( '_CFG_MONEYBOOKERS_DESCRIPTION', 'Moneybookers enables any business or consumer with an email address to securely and cost-effectively send and receive payments online - in real-time!');
+
+define( '_CFG_MONEYBOOKERS_PAY_TO_EMAIL_NAME', 'Merchant email');
+define( '_CFG_MONEYBOOKERS_PAY_TO_EMAIL_DESC', 'Email address of the merchant\'s moneybookers.com account.');
+define( '_CFG_MONEYBOOKERS_SECRET_WORD_NAME', 'Secret Word');
+define( '_CFG_MONEYBOOKERS_SECRET_WORD_DESC', '<p>The uppercase MD5 value of the secret word submitted in the "Merchant Tools" section of the merchant\'s online Moneybookers account.</p><strong>Note: The secret word MUST be submitted in the "Merchant Tools" section in lowercase before the md5sig can be used. If you insert any uppercase symbols, they will automatically be converted to lower case. The only restriction on your secret word is the length which must not exceed 10 characters. Non-alphanumeric symbols can be used. If the "Merchant Tools" section is not shown in your account, please contact merchantservices@moneybookers.com</strong>');
+define( '_CFG_MONEYBOOKERS_RECIPIENT_DESCRIPTION_NAME', 'Company Name');
+define( '_CFG_MONEYBOOKERS_RECIPIENT_DESCRIPTION_DESC', 'A description of the recipient, which will be shown on the merchant gateway. If no value is submitted, the pay_to_email value will be as the recipient of the payment.');
+define( '_CFG_MONEYBOOKERS_LOGO_URL_NAME', 'Logo URL');
+define( '_CFG_MONEYBOOKERS_LOGO_URL_DESC', 'The URL of the logo which you would like to appear at the top of the merchant gateway. The logo must be accessible via HTTPS otherwise it will not be shown.');
+define( '_CFG_MONEYBOOKERS_HIDE_LOGIN_NAME', 'Hide Login');
+define( '_CFG_MONEYBOOKERS_HIDE_LOGIN_DESC', 'Merchants can show their customers the gateway page without the prominent login');
+define( '_CFG_MONEYBOOKERS_CONFIRMATION_NOTE_NAME', 'Confirmation Note');
+define( '_CFG_MONEYBOOKERS_CONFIRMATION_NOTE_DESC', 'Merchant may show to the customer on the confirmation screen - the end step of the process - a note, confirmation number, PIN or any other message. Line breaks (&lt;br /&gt;) may be used for longer messages.');
+
+// Nochex
+define( '_CFG_NOCHEX_LONGNAME', 'Nochex');
+define( '_CFG_NOCHEX_STATEMENT', 'Nochex Online Payment Services');
+define( '_CFG_NOCHEX_DESCRIPTION', 'Leading independent UK based online payment company, specialising in providing smaller online businesses with simple, accessible, easy to use, online payment services.');
+
+define( '_CFG_NOCHEX_MERCHANT_ID_NAME', 'Merchant ID');
+define( '_CFG_NOCHEX_MERCHANT_ID_DESC', 'Your Merchant ID');
+
+
 ?>

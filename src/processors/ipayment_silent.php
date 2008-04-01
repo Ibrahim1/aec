@@ -145,13 +145,13 @@ class processor_ipayment_silent extends XMLprocessor
 			$a['trxpassword']		= $cfg['password'];
 		}
 
-		$a['order_id']			= AECfetchfromDB::InvoiceIDfromNumber( $int_var['invoice'] );
-		$a['from_ip']			= $ip;
+		$a['order_id']		= AECfetchfromDB::InvoiceIDfromNumber( $int_var['invoice'] );
+		$a['from_ip']		= $ip;
 		$a['trx_currency']	= $cfg['currency'];
-		$a['trx_amount']		= $int_var['amount'];
-		$a['trx_typ']			= 'auth';
+		$a['trx_amount']	= $int_var['amount'];
+		$a['trx_typ']		= 'auth';
 		$a['invoice_text']	= $int_var['invoice'];
-		$a['addr_email']		= $metaUser->cmsUser->email;
+		$a['addr_email']	= $metaUser->cmsUser->email;
 
 		$varray = array(	'addr_name'	=>	'billFirstName',
 							'addr_street'	=>	'billAddress',
@@ -180,9 +180,6 @@ class processor_ipayment_silent extends XMLprocessor
 
 		$stringarray = array();
 		foreach ( $a as $name => $value ) {
-			if ( is_array( $value ) ) {
-				aecDebug( $name );
-			}
 			$stringarray[] = $name . '=' . urlencode( $value );
 		}
 

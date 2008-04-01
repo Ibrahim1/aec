@@ -1,0 +1,85 @@
+<?php
+// Dont allow direct linking
+defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
+
+class processor_nochex extends POSTprocessor
+{
+	function info()
+	{
+		$info = array();
+		$info['name']				= 'nochex';
+		$info['longname']			= _CFG_NOCHEX_LONGNAME;
+		$info['statement']			= _CFG_NOCHEX_STATEMENT;
+		$info['description']		= _CFG_NOCHEX_DESCRIPTION;
+		$info['cc_list']			= 'visa,mastercard'; //,switch,solo,delta,visaelectron,maestro';
+		$info['recurring']			= 0;
+
+		return $info;
+	}
+
+	function settings()
+	{
+		$settings = array();
+		$settings['testmode'] 			= 1;
+		$settings['merchant_id']		= 'nochex@aec.com';
+		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+
+		return $settings;
+	}
+
+	function backend_settings( $cfg )
+	{
+		$settings = array();
+		$settings['testmode']			= array( 'list_yesno');
+		$settings['merchant_id']		= array( 'inputC');
+		$settings['item_name']			= array( 'inputE');
+ 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan');
+		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+
+		return $settings;
+	}
+
+	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	{
+		global $mosConfig_live_site;
+
+		$var['post_url']	= 'https://secure.nochex.com/';
+		if ($cfg['testmode'] == '1') {
+			$var['test_transaction'] = '100';
+			$var['test_success_url'] = AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=nochexnotification' );
+		}
+
+		$var['merchant_id']			= $cfg['merchant_id'];
+		$var['description']			= AECToolbox::rewriteEngine($cfg['item_name'], $metaUser, $new_subscription);
+		$var['order_id']			= $int_var['invoice'];
+		$var['amount']				= $int_var['amount'];
+		$var['success_url']			= $int_var['return_url'];
+		$var['cancel_url']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
+		$var['declined_url']		= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
+		$var['callback_url']		= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=nochexnotification' );
+		$var['billing_fullname']	= $metaUser->cmsUser->name;
+		$var['email_address']		= $metaUser->cmsUser->email;
+
+		return $var;
+	}
+
+	function parseNotification( $post, $cfg )
+	{
+		$response = array();
+		$response['invoice'] = $post['order_id'];
+
+		return $response;
+	}
+
+	function validateNotification( $response, $post, $cfg, $invoice )
+	{
+		$response['valid'] = 0;
+		if($response['invoice'] == $post['order_id'])
+			$response['valid'] = 1;
+
+		return $response;
+	}
+
+}
+
+?>
