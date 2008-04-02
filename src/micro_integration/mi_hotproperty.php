@@ -10,17 +10,8 @@
 
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_hotproperty
+class mi_hotproperty extends MI
 {
-	function Info()
-	{
-		$info = array();
-		$info['name'] = _AEC_MI_NAME_HOTPROPERTY;
-		$info['desc'] = _AEC_MI_DESC_HOTPROPERTY;
-
-		return $info;
-	}
-
 	function Settings( $params )
 	{
 		global $database;
@@ -28,9 +19,16 @@ class mi_hotproperty
         $settings = array();
 		$settings['create_agent']		= array( 'list_yesno' );
 		$settings['agent_fields']		= array( 'inputD' );
+		$settings['update_agent']		= array( 'list_yesno' );
+		$settings['update_afields']		= array( 'inputD' );
 		$settings['create_company']		= array( 'list_yesno' );
 		$settings['company_fields']		= array( 'inputD' );
+		$settings['update_company']		= array( 'list_yesno' );
+		$settings['update_cfields']		= array( 'inputD' );
 		$settings['assoc_company']		= array( 'list_yesno' );
+
+		$settings = $this->autoduplicatesettings( $settings );
+
 		$settings['rebuild']			= array( 'list_yesno' );
 
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
@@ -74,11 +72,11 @@ class mi_hotproperty
 		return $newparams;
 	}
 
-	function action( $params, $metaUser, $invoice, $plan )
+	function relayAction( $params, $metaUser, $invoice, $plan, $stage )
 	{
 		if( $params['create_agent'] ){
 			if ( !empty( $params['agent_fields'] ) ) {
-				return $this->createAgent( $metaUser, $params['agent_fields'], $invoice, $plan );
+				$agentid = $this->createAgent( $metaUser, $params['agent_fields'], $invoice, $plan );
 			}
 		}
 
@@ -97,9 +95,10 @@ class mi_hotproperty
 				. ' WHERE user = \'' . $metaUser->userid . '\''
 				;
 		$database->setQuery( $query );
+		$id = $database->loadResult();
 
-		if ( $database->loadResult() ) {
-			return null;
+		if ( $id ) {
+			return $id;
 		}
 
 		$fields = AECToolbox::rewriteEngine( $fields, $metaUser, $plan, $invoice );
@@ -125,7 +124,7 @@ class mi_hotproperty
 		$result = $database->query();
 
 		if ( $result ) {
-			return true;
+			return $this->createAgent( $metaUser, $fields, $invoice, $plan );
 		} else {
 			$this->error = $database->getErrorMsg();
 			return false;
@@ -140,9 +139,10 @@ class mi_hotproperty
 				. ' WHERE cb_id = \'' . $metaUser->userid . '\''
 				;
 		$database->setQuery( $query );
+		$id = $database->loadResult();
 
-		if ( $database->loadResult() ) {
-			return null;
+		if ( $id ) {
+			return $id;
 		}
 
 		$fields = AECToolbox::rewriteEngine( $fields, $metaUser, $plan, $invoice );
@@ -183,11 +183,11 @@ class mi_hotproperty
 
 					$database->setQuery( $query );
 					if ( $database->query() ) {
-						return true;
+						return $this->createCompany( $metaUser, $fields, $assoc, $invoice, $plan );
 					}
 				}
 			} else {
-				return true;
+				return $this->createCompany( $metaUser, $fields, $assoc, $invoice, $plan );
 			}
 		}
 

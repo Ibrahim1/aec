@@ -7647,7 +7647,7 @@ class MI
 				continue;
 			}
 
-			$new_settings[$name]				= $content;
+			$new_settings[$name]			= $content;
 			$new_settings[$name.'_exp']		= $content;
 			$new_settings[$name.'_pre_exp']	= $content;
 		}
@@ -7658,6 +7658,22 @@ class MI
 
 		return $new_settings;
 	}
+
+	function pre_expiration_action( $params, $metaUser, $plan )
+	{
+		return $this->relayAction( $params, $metaUser, $plan, null, '_pre_exp' );
+	}
+
+	function expiration_action( $params, $metaUser, $plan )
+	{
+		return $this->relayAction( $params, $metaUser, $plan, null, '_exp' );
+	}
+
+	function action( $params, $metaUser, $invoice, $plan )
+	{
+		return $this->relayAction( $params, $metaUser, $plan, $invoice, '' );
+	}
+
 }
 
 class microIntegration extends paramDBTable
@@ -7747,7 +7763,7 @@ class microIntegration extends paramDBTable
 
 			$this->mi_class->id = $this->id;
 
-			$info = $this->mi_class->Info();
+			$info = $this->getInfo();
 
 			if ( is_null( $this->name ) || ( $this->name == '' ) ) {
 				$this->name = $info['name'];
@@ -7879,6 +7895,27 @@ class microIntegration extends paramDBTable
 		} else {
 			return null;
 		}
+	}
+
+	function getInfo()
+	{
+		if ( method_exists( $this->mi_class, 'Info' ) ) {
+			$info = $this->mi_class->Info();
+		} else {
+			$nname = strtoupper( 'aec_' . $this->class_name . '_name' );
+			$ndesc = strtoupper( 'aec_' . $this->class_name . '_desc' );
+
+			$info = array();
+			if ( defined( $nname ) && defined( $ndesc ) ) {
+				$info['name'] = constant( $nname );
+				$info['desc'] = constant( $ndesc );
+			} else {
+				$info['name'] = 'NONAME';
+				$info['desc'] = 'NODESC';
+			}
+		}
+
+		return $info;
 	}
 
 	function getSettings()

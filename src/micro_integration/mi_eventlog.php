@@ -49,22 +49,8 @@ class mi_eventlog extends MI
 		return $settings;
 	}
 
-	function pre_expiration_action( $params, $metaUser, $plan )
-	{
-		return $this->logentry( $params, $metaUser, $plan, null, '' );
-	}
 
-	function expiration_action( $params, $metaUser, $plan )
-	{
-		return $this->logentry( $params, $metaUser, $plan, null, '_exp' );
-	}
-
-	function action( $params, $metaUser, $invoice, $plan )
-	{
-		return $this->logentry( $params, $metaUser, $plan, $invoice, '_pre_exp' );
-	}
-
-	function logentry( $params, $metaUser, $plan, $invoice, $stage )
+	function relayAction( $params, $metaUser, $plan, $invoice, $stage )
 	{
 		global $database;
 

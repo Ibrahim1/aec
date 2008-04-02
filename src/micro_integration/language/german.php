@@ -348,8 +348,8 @@ define('_MI_MI_ACL_SUB_GID_PRE_EXP_NAME', 'Add Subgroups');
 define('_MI_MI_ACL_SUB_GID_PRE_EXP_DESC', 'Add these Subgroups (CTRL+click to select multiple)');
 
 // eventlog
-define( '_AEC_MI_NAME_EVENTLOG', 'Eventlog' );
-define( '_AEC_MI_DESC_EVENTLOG', 'Make entries into the Eventlog' );
+define( '_AEC_MI_EVENTLOG_NAME', 'Eventlog' );
+define( '_AEC_MI_EVENTLOG_DESC', 'Make entries into the Eventlog' );
 define( '_MI_MI_EVENTLOG_SHORT_NAME', 'Short' );
 define( '_MI_MI_EVENTLOG_SHORT_DESC', 'The short explanation or title of the entry.' );
 define( '_MI_MI_EVENTLOG_TAGS_NAME', 'Tags' );
@@ -414,8 +414,8 @@ define( '_MI_MI_APC_REBUILD_NAME',			'Rebuild' );
 define( '_MI_MI_APC_REBUILD_DESC',			'Attempt to rebuild the list of users assigned to the usergroup - >Set APC Group< and >APC Group< have to both be set for this.' );
 
 // Hot Property
-define( '_AEC_MI_NAME_HOTPROPERTY', 'Hot Property' );
-define( '_AEC_MI_DESC_HOTPROPERTY', 'Create Agents and Companies with this MI' );
+define( '_AEC_MI_HOTPROPERTY_NAME', 'Hot Property' );
+define( '_AEC_MI_HOTPROPERTY_DESC', 'Create and change Agents and Companies with this MI' );
 define( '_MI_MI_HOTPROPERTY_CREATE_AGENT_NAME',		'Create Agent' );
 define( '_MI_MI_HOTPROPERTY_CREATE_AGENT_DESC',		'Choose Yes if you want this MI to create an agent on Subscription (if there is none yet for this user).' );
 define( '_MI_MI_HOTPROPERTY_AGENT_FIELDS_NAME',		'Agent Fields' );
@@ -424,8 +424,11 @@ define( '_MI_MI_HOTPROPERTY_CREATE_COMPANY_NAME',	'Create Company' );
 define( '_MI_MI_HOTPROPERTY_CREATE_COMPANY_DESC',	'Choose Yes if you want this MI to create a company on Subscription (if there is none yet for this user).' );
 define( '_MI_MI_HOTPROPERTY_COMPANY_FIELDS_NAME',	'Company Fields' );
 define( '_MI_MI_HOTPROPERTY_COMPANY_FIELDS_DESC',	'Tell the AEC which fields should be associated in setting up the company account. As seen in the example, part individual columns with a newline break and for each column, make it look like this: "fieldname=content". You can use the RewriteEngine as mentioned below.' );
-define( '_MI_MI_HOTPROPERTY_ASSOC_COMPANY_NAME',	'Associate Company' );
+define( '_MI_MI_HOTPROPERTY_ASSOC_COMPANY_NAME',	'Rebuild' );
 define( '_MI_MI_HOTPROPERTY_ASSOC_COMPANY_DESC',	'Automatically associate the new user account with the new company account.' );
+
+define( '_MI_MI_HOTPROPERTY_REBUILD_NAME',	'Rebuild' );
+define( '_MI_MI_HOTPROPERTY_REBUILD_DESC',	'Attempt to rebuild the effect this MI has on the users who are in a plan that has this MI assigned.' );
 
 // Directory
 define( '_AEC_MI_NAME_DIRECTORY', 'Directory' );
@@ -433,14 +436,14 @@ define( '_AEC_MI_DESC_DIRECTORY', 'Create Directories with this MI' );
 define( '_MI_MI_DIRECTORY_MKDIR_NAME',		'Create Directory' );
 define( '_MI_MI_DIRECTORY_MKDIR_DESC',		'Create a directory with this path' );
 define( '_MI_MI_DIRECTORY_MKDIR_MODE_NAME',		'Directory Mode' );
-define( '_MI_MI_DIRECTORY_MKDIR_MODE_DESC',		'The octal mode number (always 4 characters!) for access restriction. Default is 0755.' );
+define( '_MI_MI_DIRECTORY_MKDIR_MODE_DESC',		'The octal mode number (always 4 characters!) for access restriction. Default is 0644.' );
 define( '_MI_MI_DIRECTORY_MKDIR_EXP_NAME',		'Create Directory (Exp)' );
 define( '_MI_MI_DIRECTORY_MKDIR_EXP_DESC',		'Create a directory with this path on Expiration' );
 define( '_MI_MI_DIRECTORY_MKDIR_MODE_EXP_NAME',		'Directory Mode' );
-define( '_MI_MI_DIRECTORY_MKDIR_MODE_EXP_DESC',		'The octal mode number (always 4 characters!) for access restriction on Expiration. Default is 0755.' );
+define( '_MI_MI_DIRECTORY_MKDIR_MODE_EXP_DESC',		'The octal mode number (always 4 characters!) for access restriction on Expiration. Default is 0644.' );
 define( '_MI_MI_DIRECTORY_MKDIR_PRE_EXP_NAME',		'Create Directory (Pre Exp)' );
 define( '_MI_MI_DIRECTORY_MKDIR_PRE_EXP_DESC',		'Create a directory with this path before Expiration' );
 define( '_MI_MI_DIRECTORY_MKDIR_MODE_PRE_EXP_NAME',		'Directory Mode (Pre Exp)' );
-define( '_MI_MI_DIRECTORY_MKDIR_MODE_PRE_EXP_DESC',		'The octal mode number (always 4 characters!) for access restriction before Expiration. Default is 0755.' );
+define( '_MI_MI_DIRECTORY_MKDIR_MODE_PRE_EXP_DESC',		'The octal mode number (always 4 characters!) for access restriction before Expiration. Default is 0644.' );
 
 ?>
