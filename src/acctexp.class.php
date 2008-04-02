@@ -7674,6 +7674,16 @@ class MI
 		return $this->relayAction( $params, $metaUser, $plan, $invoice, '' );
 	}
 
+	function setError( $error )
+	{
+		$this->error = $error;
+	}
+
+	function setWarning( $warning )
+	{
+		$this->warning = $warning;
+	}
+
 }
 
 class microIntegration extends paramDBTable

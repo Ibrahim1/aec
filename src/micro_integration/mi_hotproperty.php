@@ -25,10 +25,10 @@ class mi_hotproperty extends MI
 		$settings['company_fields']		= array( 'inputD' );
 		$settings['update_company']		= array( 'list_yesno' );
 		$settings['update_cfields']		= array( 'inputD' );
-		$settings['assoc_company']		= array( 'list_yesno' );
 
 		$settings = $this->autoduplicatesettings( $settings );
 
+		$settings['assoc_company']		= array( 'list_yesno' );
 		$settings['rebuild']			= array( 'list_yesno' );
 
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
@@ -74,16 +74,59 @@ class mi_hotproperty extends MI
 
 	function relayAction( $params, $metaUser, $invoice, $plan, $stage )
 	{
-		if( $params['create_agent'] ){
-			if ( !empty( $params['agent_fields'] ) ) {
-				$agentid = $this->createAgent( $metaUser, $params['agent_fields'], $invoice, $plan );
+		if ( $params['create_agent'.$stage] ){
+			if ( !empty( $params['agent_fields'.$stage] ) ) {
+				$agent = $this->createAgent( $metaUser, $params['agent_fields'.$stage], $invoice, $plan );
 			}
 		}
 
-		if( $params['create_company'] ){
-			if ( !empty( $params['company_fields'] ) ) {
-				return $this->createCompany( $metaUser, $params['company_fields'], $params['assoc_company'], $invoice, $plan );
+		if ( $params['update_agent'.$stage] ){
+			if ( !empty( $params['update_afields'.$stage] ) ) {
+				if ( empty( $agent ) ) {
+					$agent = $this->agentExists( $metaUser->userid );
+				}
+
+				if ( !empty( $agent ) ) {
+					$agent = $this->update( 'agents', 'user', $metaUser, $params['update_afields'.$stage], $invoice, $plan );
+				}
 			}
+		}
+
+		if ( $params['create_company'.$stage] ){
+			if ( !empty( $params['company_fields'.$stage] ) ) {
+				$company = $this->createCompany( $metaUser, $params['company_fields'.$stage], $params['assoc_company'], $invoice, $plan );
+			}
+		}
+
+		if ( $params['update_company'.$stage] ){
+			if ( !empty( $params['update_cfields'.$stage] ) ) {
+				if ( empty( $company ) ) {
+					$company = $this->companyExists( $metaUser->userid );
+				}
+
+				if ( !empty( $company ) ) {
+					$company = $this->update( 'companies', 'cb_id', $metaUser, $params['update_cfields'.$stage], $invoice, $plan );
+				}
+			}
+		}
+
+		return true;
+	}
+
+	function agentExists( $userid )
+	{
+		global $database;
+
+		$query = 'SELECT user FROM #__hp_agents'
+				. ' WHERE user = \'' . $userid . '\''
+				;
+		$database->setQuery( $query );
+		$id = $database->loadResult();
+
+		if ( $id ) {
+			return $id;
+		} else {
+			return false;
 		}
 	}
 
@@ -91,24 +134,19 @@ class mi_hotproperty extends MI
 	{
 		global $database;
 
-		$query = 'SELECT user FROM #__hp_agents'
-				. ' WHERE user = \'' . $metaUser->userid . '\''
-				;
-		$database->setQuery( $query );
-		$id = $database->loadResult();
-
-		if ( $id ) {
-			return $id;
+		$check = $this->agentExists( $metaUser->userid );
+		if ( empty( $check ) ) {
+			return null;
 		}
 
 		$fields = AECToolbox::rewriteEngine( $fields, $metaUser, $plan, $invoice );
 
-		$fieldlist = explode( "\n", $fields );
+		$fieldlist = explode( "\n", $fields, 2 );
 
 		$keys = array();
 		$values = array();
 		foreach ( $fieldlist as $content ) {
-			$c = explode( '=', $content );
+			$c = explode( '=', $content, 2 );
 
 			if ( !empty( $c[0] ) ) {
 				$keys[] = trim( $c[0] );
@@ -124,14 +162,14 @@ class mi_hotproperty extends MI
 		$result = $database->query();
 
 		if ( $result ) {
-			return $this->createAgent( $metaUser, $fields, $invoice, $plan );
+			return true;
 		} else {
-			$this->error = $database->getErrorMsg();
+			$this->setError( $database->getErrorMsg() );
 			return false;
 		}
 	}
 
-	function createCompany( $metaUser, $fields, $assoc, $invoice, $plan )
+	function companyExists( $userid )
 	{
 		global $database;
 
@@ -143,16 +181,28 @@ class mi_hotproperty extends MI
 
 		if ( $id ) {
 			return $id;
+		} else {
+			return false;
+		}
+	}
+
+	function createCompany( $metaUser, $fields, $assoc, $invoice, $plan )
+	{
+		global $database;
+
+		$check = $this->agentExists( $metaUser->userid );
+		if ( empty( $check ) ) {
+			return null;
 		}
 
 		$fields = AECToolbox::rewriteEngine( $fields, $metaUser, $plan, $invoice );
 
-		$fieldlist = explode( "\n", $fields );
+		$fieldlist = explode( "\n", $fields, 2 );
 
 		$keys = array();
 		$values = array();
 		foreach ( $fieldlist as $content ) {
-			$c = explode( '=', $content );
+			$c = explode( '=', $content, 2 );
 
 			if ( !empty( $c[0] ) ) {
 				$keys[] = trim( $c[0] );
@@ -183,16 +233,47 @@ class mi_hotproperty extends MI
 
 					$database->setQuery( $query );
 					if ( $database->query() ) {
-						return $this->createCompany( $metaUser, $fields, $assoc, $invoice, $plan );
+						return true;
 					}
 				}
 			} else {
-				return $this->createCompany( $metaUser, $fields, $assoc, $invoice, $plan );
+				return true;
 			}
 		}
 
-		$this->error = $database->getErrorMsg();
+		$this->setError( $database->getErrorMsg() );
 		return false;
+	}
+
+	function update( $table, $id, $metaUser, $fields, $invoice, $plan )
+	{
+		global $database;
+
+		$fields = AECToolbox::rewriteEngine( $fields, $metaUser, $plan, $invoice );
+
+		$fieldlist = explode( "\n", $fields, 2 );
+
+		$set = array();
+		foreach ( $fieldlist as $content ) {
+			$c = explode( '=', $content, 2 );
+
+			if ( !empty( $c[0] ) ) {
+				$set[] = '`' . trim( $c[0] ) . '` = \'' . trim( $c[1] ) . '\'';
+			}
+		}
+
+		$query = 'UPDATE #__hp_' . $table
+				. ' SET ' . implode( ', ', $set )
+				. ' WHERE ' . $id . ' = \'' . $metaUser->userid . '\''
+				;
+
+		$database->setQuery( $query );
+		if ( $database->query() ) {
+			return true;
+		} else {
+			$this->setError( $database->getErrorMsg() );
+			return false;
+		}
 	}
 
 }
