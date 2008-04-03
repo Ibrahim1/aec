@@ -40,7 +40,7 @@ class mi_hotproperty extends MI
 	function Defaults()
 	{
 		$defaults = array();
-		$defaults['agent_fields']	= "user=[[user_id]]\nsellertype=\ncb_id=[[user_id]]\nname=[[user_name]]\nemail=[[user_email]]\ncompany=\nneed_approval=1";
+		$defaults['agent_fields']	= "user=[[user_id]]\ncb_id=[[user_id]]\nname=[[user_name]]\nemail=[[user_email]]\ncompany=\nneed_approval=1";
 		$defaults['company_fields']	= "name=[[user_name]]\naddress=\nsuburb=\ncountry=\nstate=\npostcode=\ntelephone=\nfax=\nwebsite=\ncb_id=[[user_id]]\nemail=[[user_email]]";
 
 		return $defaults;
@@ -52,7 +52,7 @@ class mi_hotproperty extends MI
 		$newparams = $params;
 
 		if ( $params['rebuild'] ) {
-			$planlist = MicroIntegrationHandler::getPlansbyMI( $params['MI_ID'] );
+			$planlist = MicroIntegrationHandler::getPlansbyMI( $this->id );
 
 			foreach ( $planlist as $planid ) {
 				$plan = new SubscriptionPlan( $database );
@@ -62,7 +62,7 @@ class mi_hotproperty extends MI
 				foreach ( $userlist as $userid ) {
 					$metaUser = new metaUser( $userid );
 
-					$this->action( $params, $metaUser, $plan );
+					$this->action( $params, $metaUser, null, $plan );
 				}
 			}
 
@@ -74,10 +74,17 @@ class mi_hotproperty extends MI
 
 	function relayAction( $params, $metaUser, $invoice, $plan, $stage )
 	{
+		$agent = null;
+		$company = null;
+
 		if ( $params['create_agent'.$stage] ){
 			if ( !empty( $params['agent_fields'.$stage] ) ) {
 				$agent = $this->createAgent( $metaUser, $params['agent_fields'.$stage], $invoice, $plan );
 			}
+		}
+
+		if ( $agent === false ) {
+			return false;
 		}
 
 		if ( $params['update_agent'.$stage] ){
@@ -92,10 +99,18 @@ class mi_hotproperty extends MI
 			}
 		}
 
+		if ( $agent === false ) {
+			return false;
+		}
+
 		if ( $params['create_company'.$stage] ){
 			if ( !empty( $params['company_fields'.$stage] ) ) {
 				$company = $this->createCompany( $metaUser, $params['company_fields'.$stage], $params['assoc_company'], $invoice, $plan );
 			}
+		}
+
+		if ( $company === false ) {
+			return false;
 		}
 
 		if ( $params['update_company'.$stage] ){
@@ -110,7 +125,11 @@ class mi_hotproperty extends MI
 			}
 		}
 
-		return true;
+		if ( $company === false ) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	function agentExists( $userid )
@@ -135,13 +154,14 @@ class mi_hotproperty extends MI
 		global $database;
 
 		$check = $this->agentExists( $metaUser->userid );
-		if ( empty( $check ) ) {
+
+		if ( !empty( $check ) ) {
 			return null;
 		}
 
 		$fields = AECToolbox::rewriteEngine( $fields, $metaUser, $plan, $invoice );
 
-		$fieldlist = explode( "\n", $fields, 2 );
+		$fieldlist = explode( "\n", $fields );
 
 		$keys = array();
 		$values = array();
@@ -191,13 +211,13 @@ class mi_hotproperty extends MI
 		global $database;
 
 		$check = $this->agentExists( $metaUser->userid );
-		if ( empty( $check ) ) {
+		if ( !empty( $check ) ) {
 			return null;
 		}
 
 		$fields = AECToolbox::rewriteEngine( $fields, $metaUser, $plan, $invoice );
 
-		$fieldlist = explode( "\n", $fields, 2 );
+		$fieldlist = explode( "\n", $fields );
 
 		$keys = array();
 		$values = array();

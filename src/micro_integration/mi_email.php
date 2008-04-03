@@ -79,22 +79,7 @@ class mi_email
 		return $settings;
 	}
 
-	function pre_expiration_action( $params, $metaUser, $plan )
-	{
-		return $this->mailOut( $params, $metaUser, $plan, null, '_pre_exp' );
-	}
-
-	function expiration_action( $params, $metaUser, $plan )
-	{
-		return $this->mailOut( $params, $metaUser, $plan, null, '_exp' );
-	}
-
-	function action( $params, $metaUser, $invoice, $plan )
-	{
-		return $this->mailOut( $params, $metaUser, $plan, $invoice, '' );
-	}
-
-	function mailOut( $params, $metaUser, $plan, $invoice, $area )
+	function relayAction( $params, $metaUser, $plan, $invoice, $area )
 	{
 		if ( $area == '' ) {
 			if ( !empty( $params['text_first'] ) ) {
