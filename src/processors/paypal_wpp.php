@@ -103,7 +103,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$values = array( 'card_type', 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' );
 		$var = $this->getCCform( $var, $values );
 
-		$values = array( 'country_list', 'firstname', 'lastname', 'address', 'address2', 'city', 'state_usca', 'zip' );
+		$values = array( 'firstname', 'lastname', 'address', 'address2', 'city', 'state_usca', 'zip', 'country_list' );
 		$var = $this->getUserform( $var, $values, $metaUser );
 
 		return $var;
