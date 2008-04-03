@@ -144,6 +144,7 @@ define( '_CHECKOUT_INFO', 'Your Registration has been saved now. On this page, y
 define( '_CHECKOUT_INFO_REPEAT', 'Thank you for coming back. On this page, you can complete your payment. <br /> If something goes wrong along the way, you can always come back to this step by logging in to our site with your new details - Our System will give you an option to try your payment again.');
 define( '_BUTTON_CHECKOUT', 'Checkout');
 define( '_BUTTON_APPEND', 'Append');
+define( '_BUTTON_APPLY', 'Apply');
 define( '_CHECKOUT_COUPON_CODE', 'Coupon Code');
 define( '_CHECKOUT_INVOICE_AMOUNT', 'Invoice Amount');
 define( '_CHECKOUT_INVOICE_COUPON', 'Coupon');

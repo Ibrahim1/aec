@@ -762,7 +762,7 @@ class Payment_HTML
 									<input type="hidden" name="option" value="<?php echo $option; ?>" />
 									<input type="hidden" name="task" value="InvoiceAddCoupon" />
 									<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice; ?>" />
-									<input type="submit" class="button" value="<?php echo _BUTTON_APPEND; ?>" />
+									<input type="submit" class="button" value="<?php echo _BUTTON_APPLY; ?>" />
 								</form>
 							</td>
 						</tr>

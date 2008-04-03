@@ -140,6 +140,7 @@ define( '_CHECKOUT_INFO',					'Die Angaben wurden gespeichert, es ist jetzt erfo
 define( '_CHECKOUT_INFO_REPEAT',			'Willkommen zur&uuml;ck! Die Bezahlung ihrer getroffenen Auswahl ist noch ausst&auml;ndig.<br />Sollte es im Folgenden Unklarheiten geben, k&ouml;nnen Sie immer zu dieser Seite zur&uuml;ckkehren, indem Sie sich mit ihren Zugangsdaten einw&auml;hlen.');
 define( '_BUTTON_CHECKOUT',					'Fortfahren');
 define( '_BUTTON_APPEND',					'Hinzuf&uuml;gen');
+define( '_BUTTON_APPLY', 'Anwenden');
 define( '_CHECKOUT_COUPON_CODE',			'Gutscheincode');
 define( '_CHECKOUT_INVOICE_AMOUNT',			'Rechnungsbetrag');
 define( '_CHECKOUT_INVOICE_COUPON',			'Gutschein');
