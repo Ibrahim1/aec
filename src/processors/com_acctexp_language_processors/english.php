@@ -94,6 +94,7 @@ define( '_AEC_USERFORM_BILLADDRESS_NAME', 'Address');
 define( '_AEC_USERFORM_BILLADDRESS2_NAME', 'Address (continued)');
 define( '_AEC_USERFORM_BILLCITY_NAME', 'City');
 define( '_AEC_USERFORM_BILLSTATE_NAME', 'State');
+define( '_AEC_USERFORM_BILLSTATEPROV_NAME', 'State/Prov');
 define( '_AEC_USERFORM_BILLZIP_NAME', 'Zip');
 define( '_AEC_USERFORM_BILLCOUNTRY_NAME', 'Country');
 

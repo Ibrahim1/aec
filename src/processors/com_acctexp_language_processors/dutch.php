@@ -89,6 +89,17 @@ define( '_AEC_SELECT_RECURRING_NO', 'Non-Recurring');
 define( '_AEC_SELECT_RECURRING_YES', 'Recurring');
 define( '_AEC_SELECT_RECURRING_BOTH', 'Both');
 
+// Generic User Account Form
+define( '_AEC_USERFORM_BILLFIRSTNAME_NAME', 'First Name');
+define( '_AEC_USERFORM_BILLLASTNAME_NAME', 'Last Name');
+define( '_AEC_USERFORM_BILLADDRESS_NAME', 'Address');
+define( '_AEC_USERFORM_BILLADDRESS2_NAME', 'Address (continued)');
+define( '_AEC_USERFORM_BILLCITY_NAME', 'City');
+define( '_AEC_USERFORM_BILLSTATE_NAME', 'State');
+define( '_AEC_USERFORM_BILLSTATEPROV_NAME', 'State/Prov');
+define( '_AEC_USERFORM_BILLZIP_NAME', 'Zip');
+define( '_AEC_USERFORM_BILLCOUNTRY_NAME', 'Country');
+
 // Generic Credit Card Form
 define( '_AEC_CCFORM_CARDHOLDER_NAME', 'Card owner Name');
 define( '_AEC_CCFORM_CARDHOLDER_DESC', 'The name of the credit card holder');

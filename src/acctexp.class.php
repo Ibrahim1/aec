@@ -2167,7 +2167,7 @@ class XMLprocessor extends processor
 					}
 
 					$var['params']['lists']['billState'] = mosHTML::selectList( $statelist, 'billState', 'size="1"', 'value', 'text', '' );
-					$var['params']['billState'] = array( 'list', _AEC_USERFORM_BILLSTATE_NAME );
+					$var['params']['billState'] = array( 'list', _AEC_USERFORM_BILLSTATEPROV_NAME );
 					break;
 				case 'zip':
 					$var['params']['billZip'] = array( 'inputC', _AEC_USERFORM_BILLZIP_NAME );
