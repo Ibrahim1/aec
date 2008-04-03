@@ -72,7 +72,7 @@ class mi_hotproperty extends MI
 		return $newparams;
 	}
 
-	function relayAction( $params, $metaUser, $invoice, $plan, $stage )
+	function relayAction( $params, $metaUser, $plan, $invoice, $stage )
 	{
 		$agent = null;
 		$company = null;
