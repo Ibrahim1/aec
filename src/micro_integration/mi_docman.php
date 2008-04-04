@@ -323,19 +323,19 @@ class mi_docman
 
 class docman_restriction extends mosDBTable {
 	/** @var int Primary key */
-	var $id					= null;
+	var $id						= null;
 	/** @var int */
-	var $userid 			= null;
+	var $userid 				= null;
 	/** @var int */
-	var $active				= null;
+	var $active					= null;
 	/** @var int */
-	var $granted_downloads	= null;
+	var $granted_downloads		= null;
 	/** @var int */
 	var $unlimited_downloads	= null;
 	/** @var text */
-	var $used_downloads		= null;
+	var $used_downloads			= null;
 	/** @var text */
-	var $params				= null;
+	var $params					= null;
 
 	function getIDbyUserID( $userid ) {
 		global $database;

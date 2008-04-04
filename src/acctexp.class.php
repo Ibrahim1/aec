@@ -4942,7 +4942,10 @@ class Invoice extends paramDBTable
 		if ( $response['valid'] ) {
 			$break = 0;
 
-			if ( !empty( $pp->settings['testmode'] ) ) {
+			// Only check on the amount on the first transaction to make up for coupon errors
+			// TODO: This is very bad right here and a potential loophole, needs to be replaced with a more thorough check
+			// ...once we have more precise invoices
+			if ( !empty( $pp->settings['testmode'] ) && ( strcmp( $this->transaction_date, '0000-00-00 00:00:00' ) === 0 ) ) {
 				if ( isset( $response['amount_paid'] ) ) {
 					if ( $response['amount_paid'] != $this->amount ) {
 						// Amount Fraud, cancel payment and create error log addition
@@ -4951,6 +4954,7 @@ class Invoice extends paramDBTable
 						$break	= 1;
 					}
 				}
+
 				if ( isset( $response['amount_currency'] ) ) {
 					if ( $response['amount_currency'] != $this->currency ) {
 						// Amount Fraud, cancel payment and create error log addition
@@ -7676,12 +7680,20 @@ class MI
 
 	function setError( $error )
 	{
-		$this->error = $error;
+		if ( !isset( $this->error ) ) {
+			$this->error = array();
+		}
+
+		$this->error[] = $error;
 	}
 
 	function setWarning( $warning )
 	{
-		$this->warning = $warning;
+		if ( !isset( $this->warning ) ) {
+			$this->warning = array();
+		}
+
+		$this->warning[] = $warning;
 	}
 
 }
@@ -7789,36 +7801,9 @@ class microIntegration extends paramDBTable
 		}
 	}
 
-	function action( $metaUser, $exchange=null, $invoice=null, $objplan=null )
+	function action( $metaUser, $exchange=null, $invoice=null, $objplan=null, $stage )
 	{
-		if ( !is_array( $exchange ) ) {
-			$params = $this->getExchangedSettings( $exchange );
-		} else {
-			$params = $this->getParams();
-		}
-
-		$return = $this->mi_class->action( $params, $metaUser, $invoice, $objplan );
-
-		if ( $return === false ) {
-			global $database;
-
-			$error = 'The MI "' . $this->name . '" ('.$this->class_name.') could not be carried out, plan application was halted';
-
-			if ( isset( $this->mi_class->error ) ) {
-				$error .= ' Error: ' . $this->mi_class->error;
-			} else {
-				$err = $this->_db->getErrorMsg();
-
-				if ( !empty( $err ) ) {
-					$error .= ' Last Database Error: ' . $err;
-				}
-			}
-
-			$eventlog = new eventLog( $database );
-			$eventlog->issue( 'MI application failed', 'mi, failure,'.$this->class_name, $error, 128 );
-		}
-
-		return $return;
+		return $this->relayAction( $metaUser, $exchange, $invoice, $objplan, 'action' );
 	}
 
 	function pre_expiration_action( $metaUser, $objplan=null )
@@ -7848,18 +7833,7 @@ class microIntegration extends paramDBTable
 			// Create the new flags
 			$metaUser->focusSubscription->setMIflags( $objplan->id, $this->id, $newflags );
 
-			$params = $this->getParams();
-
-			$return = $this->mi_class->pre_expiration_action( $params, $metaUser, $objplan );
-
-			if ( $return === false ) {
-				global $database;
-
-				$eventlog = new eventLog( $database );
-				$eventlog->issue( 'MI pre-expiration action failed', 'mi, failure,'.$this->class_name, 'The MI "' . $this->name . '" ('.$this->class_name.') Pre-Expiration Action could not be carried out', 128 );
-			}
-
-			return $return;
+			return $this->relayAction( $metaUser, null, null, $objplan, 'pre_expiration_action' );
 		} else {
 			return null;
 		}
@@ -7867,22 +7841,103 @@ class microIntegration extends paramDBTable
 
 	function expiration_action( $metaUser, $objplan=null )
 	{
-		if ( method_exists( $this->mi_class, 'expiration_action' ) ) {
+		return $this->relayAction( $metaUser, null, null, $objplan, 'expiration_action' );
+	}
+
+	function relayAction( $metaUser, $exchange=null, $invoice=null, $objplan=null, $stage='action' )
+	{
+		// Exchange Settings
+		if ( !is_array( $exchange ) ) {
+			$params = $this->getExchangedSettings( $exchange );
+		} else {
 			$params = $this->getParams();
+		}
 
-			$return = $this->mi_class->expiration_action( $params, $metaUser, $objplan );
+		// Call Action
+		if ( method_exists( $this->mi_class, $stage ) ) {
+			$return = $this->mi_class->$stage( $params, $metaUser, $invoice, $objplan );
+		} else {
+			$eventlog = new eventLog( $this->_db );
+			$eventlog->issue( 'MI application problems', 'mi, problems, '.$this->class_name, 'Action not found: '.$stage, 32 );
+			$return = null;
+		}
 
-			if ( $return === false ) {
-				global $database;
+		// Gather Errors and Warnings
+		$errors = $this->getErrors();
+		$warnings = $this->getWarnings();
 
-				$eventlog = new eventLog( $database );
-				$eventlog->issue( 'MI expiration action failed', 'mi, failure,'.$this->class_name, 'The MI "' . $this->name . '" ('.$this->class_name.') Expiration Action could not be carried out', 128 );
+		if ( ( $errors !== false ) || ( $warnings !== false )  ) {
+			$level = 2;
+			$error = 'The MI "' . $this->name . '" ('.$this->class_name.') encountered problems.';
+
+			if ( $warnings !== false ) {
+				$error .= ' ' . $warnings;
+				$level = 32;
 			}
 
-			return $return;
-		} else {
-			return null;
+			if ( $errors !== false ) {
+				$error .= ' ' . $errors;
+				$level = 128;
+			}
+
+			$eventlog = new eventLog( $this->_db );
+			$eventlog->issue( 'MI application problems', 'mi, problems, '.$this->class_name, $error, $level );
 		}
+
+		// If returning fatal error, issue additional entry
+		if ( $return === false ) {
+			global $database;
+
+			$error = 'The MI "' . $this->name . '" ('.$this->class_name.') could not be carried out due to errors, plan application was halted';
+
+			$err = $this->_db->getErrorMsg();
+			if ( !empty( $err ) ) {
+				$error .= ' Last Database Error: ' . $err;
+			}
+
+			$eventlog = new eventLog( $database );
+			$eventlog->issue( 'MI application failed', 'mi, failure, '.$this->class_name, $error, 128 );
+		}
+
+		return $return;
+	}
+
+	function getErrors()
+	{
+		if ( !empty( $this->mi_class->error ) ) {
+			if ( count( $this->mi_class->error ) > 1 ) {
+				$return = 'Error:';
+			} else {
+				$return = 'Errors:';
+			}
+
+			foreach ( $this->mi_class->error as $error ) {
+				$return . ' ' . $error;
+			}
+		} else {
+			return false;
+		}
+
+		return $return;
+	}
+
+	function getWarnings()
+	{
+		if ( !empty( $this->mi_class->warning ) ) {
+			if ( count( $this->mi_class->warning ) > 1 ) {
+				$return = 'Warning:';
+			} else {
+				$return = 'Warnings:';
+			}
+
+			foreach ( $this->mi_class->warning as $warning ) {
+				$return . ' ' . $warning;
+			}
+		} else {
+			return false;
+		}
+
+		return $return;
 	}
 
 	function on_userchange_action( $row, $post, $trace )

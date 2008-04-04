@@ -29,12 +29,15 @@ color: #003b82;
 .todo {
 font-weight: bold;
 background-color: #f62e00 !important;
+padding: 2px;
 }
 .check {
 background-color: #b8f600 !important;
+padding: 2px;
 }
 .finish {
 background-color: #e9f900 !important;
+padding: 2px;
 }
 a {
 color: #333;
@@ -1238,6 +1241,7 @@ color: #333;
 <li>fix for iPayment url</li>
 <li>Payment Processor Info and Settings are now updated on install (except for editable properties)</li>
 <li>NL language for PayPal</li>
+<li>Correct Redirect after Custom Plan Processor Action</li>
 </ul>
 </li>
 <li><strong>Backend</strong>
@@ -1255,37 +1259,43 @@ color: #333;
 <li>Fixing ToS Link in german language file</li>
 </ul>
 </li>
-<li><strong>Minor</strong>
+<li><strong>MicroIntegrations</strong>
 <ul>
 <li>Fixing a lot of MIs that did not pass the invoice object to the RWengine on action</li>
-<li>Better library handling that only calls in stuff that php4 needs to keep up with php5 (for a while!)</li>
 <li>Call MIs according to their sorting</li>
 <li>MI for creating directories</li>
 <li>Moving MI Hacks over to new Plugin for 1.5</li>
 <li class="check">Fix for MI Hacks on user account change (front- and backend in J!1.5)</li>
+<li class="check">Hotproperty MI to feature modifications of companies or agents</li>
+<li>Fixing Eventlog MI switching PRE EXP and ACTION event</li>
+<li class="check">Better Error and Warning Handling for MIs</li>
+</ul>
+</li>
+<li><strong>Minor</strong>
+<ul>
+<li>Better library handling that only calls in stuff that php4 needs to keep up with php5 (for a while!)</li>
 <li class="check">Fix Situation that would turn up a fatal error when skipping confirmation in 1.5</li>
 <li class="check">Fixing coupons and display of invoice costs on checkout</li>
 <li class="check">Bug that will put extra escapes in the email text, description and name of a payment plan</li>
 <li class="check">Applying a payment plan (instead of saving it) sometimes loads a different plan afterwards</li>
-<li class="check">Correct Redirect after Custom Plan Action</li>
 <li>Canceling or Expiring from a subscription is now double checked not to affect the root, but secondary subscription</li>
 <li class="check">MySubscription page now showing processor name instead of short name</li>
 <li class="check">Fixing a warning on registration/subscription hybrid when confirmation is skipped and the signup is new</li>
-<li>Fixing Eventlog MI switching PRE EXP and ACTION event</li>
 <li>Fixing a bug that would prevent NotConfigured members to be assigned a plan through the UserForm</li>
+<li class="check">Better NotAuthorized handling for J!1.5</li>
+<li class="check">Make sure that coupons are applied on rebills (for now done via disabling amount verification on rebills)</li>
+<li class="check">Correct intl language calling on J!1.5</li>
+</ul>
+</li>
+<li class="todo"><strong>Todo</strong>
+<ul>
 <li class="todo">Fixing a bug that would make parse notifications correctly, but not do anything else</li>
 <li class="todo">Checkout screen: Show Trial AND Full period in list</li>
 <li class="todo">Checkout screen: Better Styling</li>
 <li class="todo">Checkout screen: More comprehensive Coupons</li>
-<li class="check">Better NotAuthorized handling for J!1.5</li>
-<li class="todo">Better Error and Warning Handling for MIs</li>
-<li class="todo">Make sure that coupons uses are not incremented for rebills</li>
 <li class="todo">Check on Coupon application (on checkout) whether its a 100% discount (Trial and Full) for recurring billing</li>
-<li class="todo">Option to better show Trial/Full amount on checkout</li>
-<li class="todo">Correct german language calling on J!1.5</li>
 <li class="todo">Make sure "unlimited" docman MI setting works</li>
 <li class="todo">Importing functions</li>
-<li class="todo">Hotproperty MI to feature on-expiration modifications of companies or agents</li>
 <li class="todo"> --- release RC1 --- </li>
 <li class="todo">Fix Mosets Tree MI (is it broken?)</li>
 <li class="todo">HotProperty Integration to support individual listing control</li>
