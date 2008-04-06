@@ -5850,6 +5850,11 @@ class Subscription extends paramDBTable
 					$newexpiration -= $periodlength;
 				}
 
+				// Be extra sure that we did not overachieve
+				if ( $newexpiration < $now ) {
+					$newexpiration += $periodlength;
+				}
+
 				// And we get the bare expiration date
 				$this->expiration = date( 'Y-m-d H:i:s', $newexpiration );
 				$this->check();
