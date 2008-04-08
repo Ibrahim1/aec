@@ -5857,9 +5857,6 @@ class Subscription extends paramDBTable
 
 				// And we get the bare expiration date
 				$this->expiration = date( 'Y-m-d H:i:s', $newexpiration );
-				$this->check();
-				$this->store();
-
 				$this->setStatus( 'Cancelled' );
 
 				return true;

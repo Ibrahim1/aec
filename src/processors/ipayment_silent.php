@@ -137,12 +137,10 @@ class processor_ipayment_silent extends XMLprocessor
 
 		if ( $cfg['fake_account'] ) {
 			$a['trxuser_id']		= '99999';
-			$a['trx_user']			= '99999';
-			$a['trxpassword']		= '0';
+			$a['trx_password']		= '0';
 		} else {
 			$a['trxuser_id']		= $cfg['user_id'];
-			$a['trx_user']			= $cfg['user_id'];
-			$a['trxpassword']		= $cfg['password'];
+			$a['trx_password']		= $cfg['password'];
 		}
 
 		$a['order_id']		= AECfetchfromDB::InvoiceIDfromNumber( $int_var['invoice'] );
