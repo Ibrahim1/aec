@@ -691,6 +691,45 @@ class Payment_HTML
 				<p><?php echo $aecConfig->cfg['customtext_checkout']; ?></p>
 				<?php
 			} ?>
+<?php
+/**
+ * New Checkout Amount display:
+ *
+ * Timeframe
+ * ---------------------------
+ * Title (ex. "Trial")
+ *
+ * Regular Amount window
+ * +Coupons
+ * ---
+ * +Total
+ * ---------------------------
+ *
+ * Next Timeframe
+ * ---------------------------
+ * Titel (ex. Regular Period)
+ *
+ * Regular Amount window
+ * +Coupons
+ * ---
+ * +Total
+ * ---------------------------
+ *
+ * Ideas:
+ * - Point out next Timeframe with an arrow, or special styling
+ * - Mark Recurring periods and how often the recurring happens
+ * - Do not forget Processor-specific hooks (like info fields
+ *   etc.) - people WILL ask about them anyhoo...
+ * - Use only one big table that separates the timeframes and
+ *   one subtable in each row that has the amount "history"
+ * - Make Coupons (...Problems) more understandable
+ * - Make Checkout Button more prominent
+ * - Checkout Button may also be influenced by processors
+ *
+ */
+
+?>
+
 			<div id="amountbox">
 				<table class="amount">
 					<?php
