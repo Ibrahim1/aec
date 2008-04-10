@@ -11,16 +11,6 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-/*
- * This file serves to push up php4 to php5 level where we need it
- *
- * What gets integrated:
- *
- * - JSON encoding&decoding ( Services_JSON - BSD licensed lib that is a PEAR Proposal )
- * - CSV handling
- *
- */
-
 // If we haven't got native JSON, we must include it
 if ( !function_exists( 'json_decode' ) ) {
 	// Make sure no other service has loaded this library somewhere else
@@ -42,6 +32,21 @@ if ( !function_exists( 'json_decode' ) ) {
 		return $JSONdec->decode( $value );
 	}
 
+}
+
+if ( !function_exists( 'str_split' ) ) {
+	function str_split( $text, $split = 1 ) {
+		// place each character of the string into and array
+		$array = array();
+		for ( $i=0; $i < strlen( $text ); ){
+			$key = NULL;
+			for ( $j = 0; $j < $split; $j++, $i++ ) {
+				$key .= $text[$i];
+			}
+			array_push( $array, $key );
+		}
+		return $array;
+	}
 }
 
 ?>

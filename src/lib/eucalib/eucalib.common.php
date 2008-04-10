@@ -19,6 +19,8 @@
 
 defined( '_VALID_MOS' ) or die( 'Restricted access' );
 
+class eucaObject extends JObject {}
+
 /**
 * parameterized Database Table entry
 *

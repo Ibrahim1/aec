@@ -52,12 +52,15 @@ if ( !defined( '_AEC_LANG' ) ) {
 	define( '_AEC_LANG', 1 );
 }
 
+// Make sure we are compatible with php4
+include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/php4/php4.php' );
+
+// Make sure we are compatible with joomla1.0
+include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/j15/j15.php' );
+
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.common.php' );
 }
-
-// Make sure we are compatible with php4
-include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/php4/php4.php' );
 
 // compatibility w/ Mambo
 if ( empty( $mosConfig_offset_user ) ) {
@@ -4444,7 +4447,7 @@ class InvoiceFactory
 			$this->coupons['active'] = 0;
 		}
 
-		if ( ( empty( $amount ) || ( $amount == '0.00') ) && !$this->recurring )	{
+		if ( ( empty( $amount ) || ( $amount == '0.00') ) && !$this->recurring ) {
 			$this->objInvoice->pay();
 			thanks ( $option, $this->renew, 1 );
 			return;
@@ -4982,7 +4985,7 @@ class Invoice extends paramDBTable
 		} else {
 			if ( isset( $response['pending'] ) ) {
 				if ( strcmp( $response['pending_reason'], 'signup' ) === 0 ) {
-					if ( $plan_params['trial_free'] ) {
+					if ( $plan_params['trial_free'] || ( $this->amount == '0.00' ) ) {
 						$renew	= $this->pay( $multiplicator );
 						$this->setParams( array( 'free_trial' => $response['pending_reason'] ) );
 						$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_TRIAL;
@@ -6987,19 +6990,6 @@ class AECToolbox
 		return (int) $vlen;
 	}
 
-	function str_split_php4( $text, $split = 1 ) {
-		// place each character of the string into and array
-		$array = array();
-		for ( $i=0; $i < strlen( $text ); ){
-			$key = NULL;
-			for ( $j = 0; $j < $split; $j++, $i++ ) {
-				$key .= $text[$i];
-			}
-			array_push( $array, $key );
-		}
-		return $array;
-	}
-
 	function rewriteEngineInfo( $switches=array(), $params=null )
 	{
 		if ( !count( $switches ) ) {
@@ -7381,11 +7371,7 @@ class AECToolbox
 				}
 				break;
 			case 'chunk':
-				if ( function_exists( 'str_split' ) ) {
-					$chunks = str_split( $vars[0], (int) $vars[1] );
-				} else {
-					$chunks = AECToolbox::str_split_php4( $vars[0], (int) $vars[1] );
-				}
+				$chunks = str_split( $vars[0], (int) $vars[1] );
 
 				if ( isset( $vars[2] ) ) {
 					$result = implode( $vars[2], $chunks );

@@ -40,8 +40,13 @@
 		<filename>lib/eucalib/eucalib.proxy.php</filename>
 		<filename>lib/export/index.html</filename>
 		<filename>lib/export/csv.php</filename>
+		<filename>lib/j15/index.html</filename>
+		<filename>lib/j15/j15.php</filename>
+		<filename>lib/j15/object.php</filename>
 		<filename>lib/krumo/index.html</filename>
 		<filename>lib/krumo/krumo.tar.gz</filename>
+		<filename>lib/mammontini/index.html</filename>
+		<filename>lib/mammontini/mammontini.php</filename>
 		<filename>lib/mootools/index.html</filename>
 		<filename>lib/mootools/mootools.tar.gz</filename>
 		<filename>lib/json/index.html</filename>

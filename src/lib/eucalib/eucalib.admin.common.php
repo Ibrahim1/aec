@@ -536,7 +536,7 @@ class eucaList
 
 }
 
-class eucaObject
+class eucaObjectHandler
 {
 	function overview( $id=null )
 	{
