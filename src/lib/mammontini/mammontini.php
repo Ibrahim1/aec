@@ -1,7 +1,7 @@
 <?php
 /**
  * @version $Id: mammontini.php
- * @package Mammontini: General purpose Payment-related functionality
+ * @package Mammontini!: General purpose Payment-related functionality
  * @copyright Copyright (C) 2008 David Deutsch, All Rights Reserved
  * @author David Deutsch <skore@skore.de>
  * @license GNU/GPL v.2 or later http://www.gnu.org/copyleft/gpl.html
@@ -13,12 +13,12 @@
  */
 
 /**
- * Terms Object, representing the total of 
+ * Terms Object, collation of a full payment description
  *
- * @author	Louis Landry <louis.landry@joomla.org>
- * @package		Joomla
- * @subpackage	Content
- * @since 1.5
+ * @author	David Deutsch <mails@globalnerd.org>
+ * @package		AEC Component
+ * @subpackage	Library - Mammontini!
+ * @since 1.0
  */
 class mammonTerms extends eucaObject
 {
@@ -27,21 +27,21 @@ class mammonTerms extends eucaObject
 	 *
 	 * @var bool
 	 */
-	var $hasTrial		= null;
+	var $hasTrial	= null;
 
 	/**
-	 * At which point is the application at
+	 * Remember where the application is at
 	 *
 	 * @var int
 	 */
-	var $pointer		= null;
+	var $pointer	= 0;
 
 	/**
 	 * Term array
 	 *
 	 * @var array
 	 */
-	var $terms			= array();
+	var $terms		= array();
 
 	/**
 	 * Read old style parameters into new style terms
@@ -52,22 +52,29 @@ class mammonTerms extends eucaObject
 	 */
 	function readParams( $params )
 	{
+		// Old params only had trial and full
 		$terms	= array( 'trial_', 'full_' );
 		$return	= false;
 
 		foreach ( $terms as $t ) {
+			// Make sure this period is actually of substance
 			if ( !empty( $params[$t.'period'] ) ) {
-				$term = array();
+				$term = new mammonTerm();
 
+				// If we have a trial, we need to mark this
 				if ( $t == 'trial_' ) {
 					$this->set( 'hasTrial', true );
-					$term['type'] = 'trial';
+					$term->set( 'type', 'trial' );
 				} else {
-					$term['type'] = 'term';
+					$term->set( 'type', 'term' );
 				}
 
-				$term['duration']['period']	= $params[$t.'period'];
-				$term['duration']['unit']	= $params[$t.'periodunit'];
+				if ( $t != 'trial_' && !empty( $params ) ) {
+					$term['duration']['lifetime']	= true;
+				} else {
+					$term['duration']['period']	= $params[$t.'period'];
+					$term['duration']['unit']	= $params[$t.'periodunit'];
+				}
 
 				if ( $params[$t.'free'] ) {
 					$term['cost']['free']	= true;
@@ -92,18 +99,20 @@ class mammonTerms extends eucaObject
 	 * @return	boolean	True on success
 	 * @since	1.0
 	 */
-	function addTerm( $terms )
+	function addTerm( $term )
 	{
-		$term = new mammonTerm();
-
-		foreach( $terms as $n => $v ) {
-			$term->set( $n, $v );
-		}
-
 		array_push( $this->terms, $term );
 	}
 }
 
+/**
+ * Term Object, representing one Term in a payment description
+ *
+ * @author	David Deutsch <mails@globalnerd.org>
+ * @package		AEC Component
+ * @subpackage	Library - Mammontini!
+ * @since 1.0
+ */
 class mammonTerm extends eucaObject
 {
 	/**
