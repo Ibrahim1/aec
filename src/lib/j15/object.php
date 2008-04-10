@@ -128,7 +128,7 @@ class JObject
 		}
 
 		// Check if only the string is requested
-		if ( JError::isError($error) && $toString ) {
+		if ( $toString ) {
 			return $error->toString();
 		}
 

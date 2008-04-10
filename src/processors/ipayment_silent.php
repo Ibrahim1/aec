@@ -87,7 +87,7 @@ class processor_ipayment_silent extends XMLprocessor
 	{
 		global $mosConfig_live_site;
 
-		$var['params']['billInfo'] = array( 'p', _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_ELV_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_ELV_DESC );
+		$var['params']['billInfo'] = array( 'p', _CFG_IPAYMENT_SILENT_PARAMS_BILLINFO_ELV_NAME, _CFG_IPAYMENT_SILENT_PARAMS_BILLINFO_ELV_DESC );
 		$var['params']['accountName'] = array( 'inputC', _AEC_WTFORM_ACCOUNTNAME_NAME, _AEC_WTFORM_ACCOUNTNAME_NAME, $metaUser->cmsUser->name );
 		$var['params']['accountNumber'] = array( 'inputC', _AEC_WTFORM_ACCOUNTNUMBER_NAME, _AEC_WTFORM_ACCOUNTNUMBER_NAME, '' );
 		$var['params']['bankNumber'] = array( 'inputC', _AEC_WTFORM_BANKNUMBER_NAME, _AEC_WTFORM_BANKNUMBER_NAME, '' );
@@ -99,7 +99,7 @@ class processor_ipayment_silent extends XMLprocessor
 			$name[1] = "";
 		}
 
-		$var['params']['billInfo2'] = array( 'p', _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_CC_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_CC_DESC );
+		$var['params']['billInfo2'] = array( 'p', _CFG_IPAYMENT_SILENT_PARAMS_BILLINFO_CC_NAME, _CFG_IPAYMENT_SILENT_PARAMS_BILLINFO_CC_DESC );
 
 		$var = $this->getCCform( $var );
 
@@ -135,7 +135,7 @@ class processor_ipayment_silent extends XMLprocessor
 
 		$a['trx_paymenttyp']	= 'elv';
 
-		if ( $cfg['fake_account'] ) {
+		if ( !empty( $cfg['fake_account'] ) ) {
 			$a['trxuser_id']		= '99999';
 			$a['trx_password']		= '0';
 		} else {
@@ -160,7 +160,7 @@ class processor_ipayment_silent extends XMLprocessor
 							'addr_telefon'	=>	'billTelephone',
 							'cc_number'	=>	'cardNumber',
 							'cc_expdate_month'	=>	'expirationMonth',
-							'cc_expdat_year'	=>	'expirationYear',
+							'cc_expdate_year'	=>	'expirationYear',
 							'cc_checkcode'	=>	'',
 							'bank_accountnumber'	=>	'accountNumber',
 							'bank_code'	=>	'bankNumber',
@@ -168,6 +168,10 @@ class processor_ipayment_silent extends XMLprocessor
 						);
 		foreach ( $varray as $n => $p ) {
 			if ( !empty( $int_var['params'][$p] ) ) {
+				if ( ( ( $n == 'cc_expdate_month' ) || ( $n == 'cc_expdate_year' ) ) && empty( $int_var['params']['cc_number'] ) ) {
+					continue;
+				}
+
 				$a[$n] = $int_var['params'][$p];
 			}
 		}
@@ -182,7 +186,7 @@ class processor_ipayment_silent extends XMLprocessor
 		}
 
 		$string = implode( '&', $stringarray );
-
+print_r($string);exit;
 		return $string;
 	}
 
