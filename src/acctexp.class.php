@@ -62,6 +62,8 @@ if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.common.php' );
 }
 
+include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/mammontini/mammontini.php' );
+
 // compatibility w/ Mambo
 if ( empty( $mosConfig_offset_user ) ) {
 	global $mosConfig_offset;
@@ -4325,24 +4327,19 @@ class InvoiceFactory
 
 		$this->puffer( $option );
 
-		if ( empty( $repeat ) ) {
-			$repeat = 0;
-		}
+		$repeat = empty( $repeat ) ? 0 : $repeat;
+
+		$params = $this->objUsage->getParams();
 
 		if ( ( strcmp( strtolower( $this->processor ), 'none' ) === 0 ) || ( strcmp( strtolower( $this->processor ), 'free' ) === 0 ) ) {
-			$params = $this->objUsage->getParams();
-
 		 	if ( !empty( $this->objInvoice->made_free ) || $params['full_free'] || ( $params['trial_free'] &&
 		 	( strcmp( $this->objInvoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) ) ) {
 				if ( $this->objInvoice->pay() !== false ) {
 					thanks ( $option, $this->renew, 1 );
-					return;
-				} else {
-					return;
 				}
-		 	} else {
-		 		return;
 		 	}
+
+			return;
 		} elseif ( strcmp( strtolower( $this->processor ), 'error' ) === 0 ) {
 	 		// Nope, won't work buddy
 		 	notAllowed( $option );
@@ -4354,6 +4351,9 @@ class InvoiceFactory
 		    mosRedirect( AECToolbox::deadsureURL( "/index.php?option=" . $option . "&task=repeatPayment&invoice=" . $this->objInvoice->invoice_number . "&first=" . $first, true, false ) );
 		    exit();
 		};
+
+		$terms = new mammonTerms();
+		$terms->readParams( $params );
 
 		$amount				= $this->objUsage->SubscriptionAmount( $this->recurring, $this->metaUser->objSubscription );
 		$original_amount	= $amount;
@@ -4396,30 +4396,6 @@ class InvoiceFactory
 							$applied_coupons[] = $coupon_code;
 							$global_nomix = array_merge( $global_nomix, $nomix );
 
-							// Set a warning notice that the amount doesn't seem to have changed althout its only for the next amount
-							if ( is_array( $amount ) ) {
-								if ( isset( $amount['amount']['amount1'] ) ) {
-									if ( $amount['amount']['amount1'] == $cph->amount ) {
-										$this->coupons['coupons'][$id]['nodirectaction'] = 1;
-										$warning = 1;
-									}
-								} elseif ( isset( $amount['amount']['amount2'] ) ) {
-									if ( $amount['amount']['amount2'] == $cph->amount ) {
-										$this->coupons['coupons'][$id]['nodirectaction'] = 1;
-										$warning = 1;
-									}
-								} elseif ( isset( $amount['amount']['amount3'] ) ) {
-									if ( $amount['amount']['amount3'] == $cph->amount ) {
-										$this->coupons['coupons'][$id]['nodirectaction'] = 1;
-										$warning = 1;
-									}
-								}
-							} else {
-								if ( $amount == $cph->amount ) {
-									$this->coupons['coupons'][$id]['nodirectaction'] = 1;
-									$warning = 1;
-								}
-							}
 							$amount = AECToolbox::correctAmount( $cph->amount );
 						}
 					}
