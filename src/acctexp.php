@@ -40,6 +40,7 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 
 global $mainframe, $mosConfig_absolute_path, $aecConfig;
 
+require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/j15/j15.php' );
 require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.php' );
 
 define( '_AEC_FRONTEND', 1 );

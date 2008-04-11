@@ -45,6 +45,12 @@ function com_install()
 		include_once( $pathLang . 'english.php' );
 	}
 
+	// Make sure we are compatible with php4
+	include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/php4/php4.php' );
+
+	// Make sure we are compatible with joomla1.0
+	include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/j15/j15.php' );
+
 	require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.php' );
 	require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.install.php' );
 

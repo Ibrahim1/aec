@@ -31,6 +31,7 @@
 		<filename>images/cc_icons/index.html</filename>
 		<filename>images/cc_icons/cc_icons.tar.gz</filename>
 		<filename>lib/eucalib/index.html</filename>
+		<filename>lib/eucalib/eucalib.add.php</filename>
 		<filename>lib/eucalib/eucalib.admin.common.php</filename>
 		<filename>lib/eucalib/eucalib.admin.proxy.php</filename>
 		<filename>lib/eucalib/eucalib.common.php</filename>

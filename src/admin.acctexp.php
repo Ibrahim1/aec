@@ -32,6 +32,7 @@ defined( '_VALID_MOS' ) or die( 'Restricted access' );
 
 global $aecConfig, $database, $mosConfig_absolute_path;
 
+require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/j15/j15.php' );
 require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.php' );
 
 require_once( $mainframe->getPath( 'admin_html' ) );
@@ -574,7 +575,7 @@ switch( strtolower( $task ) ) {
 	case 'quicklookup':
 		$return = quicklookup( $option );
 
-		if ( strpos( $return, '</a>' ) ) {
+		if ( strpos( $return, '</a>' ) || strpos( $return, '</div>' ) ) {
 			aecCentral( $option, $return );
 		} elseif ( !empty( $return ) ) {
 			mosRedirect( 'index2.php?option=' . $option . '&task=edit&userid=' . $return, _AEC_QUICKSEARCH_THANKS );
@@ -3947,6 +3948,17 @@ function quicklookup( $option )
 				return $database->loadResult();
 			}
 		}
+	}
+
+	$maybe = array( '?', '??', '???', '????', 'what to do', 'need strategy', 'help', 'help me', 'huh?', 'AAAAH!' );
+
+	if ( in_array( $search, $maybe ) ) {
+		global $mosConfig_absolute_path;
+		include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.add.php' );
+
+		return '<div class="usernote" style="width:200px; padding-top: 40px; padding-bottom: 40px; float: right;">'
+				. ${'edition_0' . ( rand( 1, 4 ) )}['quote_' . str_pad( rand( 1, ( count( ${'edition_0' . ( rand( 1, 4 ) )} ) + 1 ) ), 2, '0' )]
+				. '</div>';
 	}
 
 	return false;

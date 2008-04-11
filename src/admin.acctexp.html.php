@@ -815,8 +815,10 @@ class HTML_AcctExp
 							<?php
 							if ( !empty( $display ) ) {
 							?>
+								<?php if ( !strpos( $display, '</div>' ) ) { ?>
 								<h2><?php echo _AEC_QUICKSEARCH_MULTIRES; ?></h2>
 								<p><?php echo _AEC_QUICKSEARCH_MULTIRES_DESC; ?></p>
+								<?php } ?>
 								<p><?php echo $display; ?></p>
 							<?php
 							}
