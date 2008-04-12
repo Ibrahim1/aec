@@ -3697,32 +3697,26 @@ class InvoiceFactory
 		}
 
 		if ( !is_null( $this->processor ) && !( $this->processor == '' ) ) {
+			$this->pp					= false;
+			$this->recurring			= 0;
+			$this->payment->method_name = _AEC_PAYM_METHOD_NONE;
+			$this->payment->currency	= '';
+
 			switch ( $this->processor ) {
-				case 'free':
-					$this->payment->method_name = _AEC_PAYM_METHOD_FREE;
-					$this->pp					= false;
-					$this->recurring			= 0;
-					$currency					= '';
-					break;
-
-				case 'none':
-					$this->payment->method_name = _AEC_PAYM_METHOD_NONE;
-					$this->pp					= false;
-					$this->recurring			= 0;
-					$currency					= '';
-					break;
-
+				case 'free': $this->payment->method_name = _AEC_PAYM_METHOD_FREE; break;
+				case 'none': break;
 				default:
 					$this->pp = new PaymentProcessor();
 					if ( $this->pp->loadName( $this->processor ) ) {
 						$this->pp->fullInit();
 						$this->pp->exchangeSettings( $this->objUsage );
+
 						$this->payment->method_name	= $this->pp->info['longname'];
 
 						// Check whether we have a recurring payment
 						// If it has been selected just now, or earlier, check whether that is still permitted
 						if ( isset( $this->recurring ) ) {
-							$this->recurring	= $this->pp->is_recurring( $this->recurring );
+							$this->recurring		= $this->pp->is_recurring( $this->recurring );
 						} else {
 							if ( isset( $_POST['recurring'] ) ) {
 								$this->recurring	= $this->pp->is_recurring( $_POST['recurring'] );
@@ -3731,12 +3725,8 @@ class InvoiceFactory
 							}
 						}
 
-						$currency					= isset( $this->pp->settings['currency'] ) ? $this->pp->settings['currency'] : '';
+						$this->payment->currency	= isset( $this->pp->settings['currency'] ) ? $this->pp->settings['currency'] : '';
 					} else {
-						$this->payment->method_name = _AEC_PAYM_METHOD_NONE;
-						$this->pp					= false;
-						$this->recurring			= 0;
-						$currency					= '';
 						// TODO: Log Error
 					}
 					break;
@@ -3758,6 +3748,9 @@ class InvoiceFactory
 				}
 			}
 		}
+
+		$this->terms = new mammonTerms();
+		$this->terms->readParams( $this->objUsage->getParams() );
 
 		$return = $this->objUsage->SubscriptionAmount( $this->recurring, $user_subscription );
 
@@ -3799,8 +3792,6 @@ class InvoiceFactory
 				$this->payment->freetrial = 1;
 			}
 		}
-
-		$this->payment->currency = $currency;
 
 		return;
 	}
