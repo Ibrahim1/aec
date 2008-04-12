@@ -3961,6 +3961,11 @@ function quicklookup( $option )
 				. '</div>';
 	}
 
+	if ( strpos( $search, 'logthis:' ) === 0 ) {
+		$eventlog = new eventLog( $database );
+		$eventlog->issue( 'debug', 'debug', 'debug entry: '.str_replace( 'logthis:', '', $search ), 128 );
+	}
+
 	return false;
 }
 

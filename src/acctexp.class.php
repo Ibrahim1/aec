@@ -5149,10 +5149,12 @@ class Invoice extends paramDBTable
 	{
 		global $database, $mosConfig_offset_user, $aecConfig;
 
-		$time_passed		= ( strtotime( $this->transaction_date ) - time() + $mosConfig_offset_user*3600 ) / 3600;
+		$tdate = strtotime( $this->transaction_date );
+		$time_passed		= ( ( time() + $mosConfig_offset_user*3600 ) - $tdate ) / 3600;
 		$transaction_date	= gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
 
 		if ( ( strcmp( $this->transaction_date, '0000-00-00 00:00:00' ) === 0 )
+			|| empty( $tdate )
 			|| ( $time_passed > $aecConfig->cfg['invoicecushion'] ) ) {
 			$this->counter = $this->counter + 1;
 			$this->transaction_date	= $transaction_date;
@@ -7802,7 +7804,7 @@ class microIntegration extends paramDBTable
 	function relayAction( $metaUser, $exchange=null, $invoice=null, $objplan=null, $stage='action' )
 	{
 		// Exchange Settings
-		if ( !is_array( $exchange ) ) {
+		if ( is_array( $exchange ) && !empty( $exchange ) ) {
 			$params = $this->getExchangedSettings( $exchange );
 		} else {
 			$params = $this->getParams();
@@ -7984,23 +7986,23 @@ class microIntegration extends paramDBTable
 
 	function getExchangedSettings( $exchange )
 	{
-		$settings = $this->getParams();
+		$params = $this->getParams();
 
-		 foreach ( $settings as $key => $value ) {
-		 	if ( isset( $exchange[$key] ) ) {
+		foreach ( $params as $key => $value ) {
+			if ( isset( $exchange[$key] ) ) {
 				if ( !is_null( $exchange[$key] ) && ( $exchange[$key] != '' ) ) {
-		 			// Exception for NULL case
-		 			// TODO: SET_TO_NULL undocumented!!!
-		 			if ( strcmp( $exchange[$key], '[[SET_TO_NULL]]' ) === 0 ) {
-		 				$settings[$key] = '';
-		 			} else {
-		 				$settings[$key] = $exchange[$key];
-		 			}
+					// Exception for NULL case
+					// TODO: SET_TO_NULL undocumented!!!
+					if ( strcmp( $exchange[$key], '[[SET_TO_NULL]]' ) === 0 ) {
+						$params[$key] = '';
+					} else {
+						$params[$key] = $exchange[$key];
+					}
 				}
-		 	}
-		 }
+			}
+		}
 
-		return $settings;
+		return $params;
 	}
 
 	function savePostParams( $array )
