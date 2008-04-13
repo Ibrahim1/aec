@@ -732,6 +732,7 @@ class Config_General extends paramDBTable
 		$def['skip_confirmation']				= 0;
 		$def['show_fixeddecision']				= 0;
 		$def['confirmation_coupons']			= 1;
+		$def['breakon_mi_error']				= 0;
 
 		// Insert a new entry if there is none yet
 		if ( empty( $this->settings ) ) {
@@ -3035,17 +3036,26 @@ class SubscriptionPlan extends paramDBTable
 		if ( is_array( $micro_integrations ) ) {
 			foreach ( $micro_integrations as $mi_id ) {
 				$mi = new microIntegration( $database );
-				if ( $mi->mi_exists( $mi_id ) ) {
-					$mi->load( $mi_id );
-					if ( $mi->callIntegration() ) {
-						if ( ( ( strcmp( $mi->class_name, 'mi_email' ) === 0 ) && !$silent ) || ( strcmp( $mi->class_name, 'mi_email' ) !== 0 ) ) {
-							if ( $mi->action( $metaUser, null, $invoice, $this ) === false ) {
-								return false;
-							}
+
+				if ( !$mi->mi_exists( $mi_id ) ) {
+					continue;
+				}
+
+				$mi->load( $mi_id );
+
+				if ( !$mi->callIntegration() ) {
+					continue;
+				}
+
+				if ( ( ( strcmp( $mi->class_name, 'mi_email' ) === 0 ) && !$silent ) || ( strcmp( $mi->class_name, 'mi_email' ) !== 0 ) ) {
+					if ( $mi->action( $metaUser, null, $invoice, $this ) === false ) {
+						if ( $aecConfig->cfg['breakon_mi_error'] ) {
+							return false;
 						}
 					}
 				}
-				unset($mi);
+
+				unset( $mi );
 			}
 		}
 
@@ -5017,7 +5027,7 @@ class Invoice extends paramDBTable
 
 	function pay( $multiplicator=1 )
 	{
-		global $database;
+		global $database, $aecConfig;
 
 		$metaUser = false;
 		$new_plan = false;
@@ -5104,25 +5114,38 @@ class Invoice extends paramDBTable
 				$cph = new couponHandler();
 				$cph->load( $coupon_code );
 
-				if ( $cph->coupon->micro_integrations ) {
-					$micro_integrations = explode( ';', $cph->coupon->micro_integrations );
-					foreach ( $micro_integrations as $mi_id ) {
-						$mi = new microIntegration( $database );
-						if ( $mi->mi_exists( $mi_id ) ) {
-							$mi->load( $mi_id );
-							if ( $mi->callIntegration() ) {
-								if ( is_object( $metaUser ) ) {
-									if ( $mi->action( $metaUser->userid, null, $this, $new_plan ) === false ) {
-										return false;
-									} else {
-									}
-								} else {
-									if ( $mi->action( false, null, $this, $new_plan ) === false ) {
-										return false;
-									} else {
-									}
-								}
+				// See whether this coupon has micro integrations
+				if ( empty( $cph->coupon->micro_integrations ) ) {
+					continue;
+				}
+
+				$micro_integrations = explode( ';', $cph->coupon->micro_integrations );
+				foreach ( $micro_integrations as $mi_id ) {
+					$mi = new microIntegration( $database );
+
+					// Only call if it exists
+					if ( !$mi->mi_exists( $mi_id ) ) {
+						continue;
+					}
+
+					$mi->load( $mi_id );
+
+					// Check whether we can really call
+					if ( !$mi->callIntegration() ) {
+						continue;
+					}
+
+					if ( is_object( $metaUser ) ) {
+						if ( $mi->action( $metaUser->userid, null, $this, $new_plan ) === false ) {
+							if ( $aecConfig->cfg['breakon_mi_error'] ) {
+								return false;
 							}
+						}
+					} else {
+						if ( $mi->action( false, null, $this, $new_plan ) === false ) {
+							if ( $aecConfig->cfg['breakon_mi_error'] ) {
+								return false;
+							};
 						}
 					}
 				}
