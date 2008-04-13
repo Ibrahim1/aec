@@ -218,18 +218,19 @@ class processor_paypal_wpp extends XMLprocessor
 
 		// converting NVPResponse to an Associative Array
 		$nvpResArray = $this->deformatNVP( $response );
-		//$nvpReqArray = $this->deformatNVP( $xml );
 
 		if ( $response ) {
 			$return['invoice'] = $invoice->invoice_number;
-			$resultCode = strtoupper( $response["ACK"] );
+			$resultCode = strtoupper( $nvpResArray["ACK"] );
 
 			if ( strcmp( $resultCode, 'SUCCESS' ) === 0) {
 				if ( is_array( $int_var['amount'] ) ) {
-					$subscriptionId = $response['PROFILEID'];
+					$subscriptionId = $nvpResArray['PROFILEID'];
 					$return['invoiceparams'] = array( "subscriptionid" => $subscriptionId );
 
-					if ( strtoupper( $response['STATUS'] ) == 'ACTIVEPROFILE' ) {
+					if ( !isset( $nvpResArray['STATUS'] ) ) {
+						$return['valid'] = 1;
+					} elseif ( strtoupper( $response['STATUS'] ) == 'ACTIVEPROFILE' ) {
 						$return['valid'] = 1;
 					} else {
 						$response['pending_reason'] = 'pending';
@@ -319,20 +320,23 @@ class processor_paypal_wpp extends XMLprocessor
 
 		$response = $this->transmitRequest( $url, $path, $xml, 443, $curlextra );
 
+		// converting NVPResponse to an Associative Array
+		$nvpResArray = $this->deformatNVP( $response );
+
 		if ( !empty( $response ) ) {
-			$responsestring = $response;
+			$return['invoice'] = $invoice->invoice_number;
 
-			$resultCode = $this->substring_between( $response,'<resultCode>','</resultCode>' );
-
-			$code = $this->substring_between($response,'<code>','</code>');
-			$text = $this->substring_between($response,'<text>','</text>');
-
-			if ( strcmp( $resultCode, 'Ok' ) === 0 ) {
+			if ( isset( $nvpResArray['PROFILEID'] ) ) {
+				if ( $nvpResArray['PROFILEID'] == $var['profileid'] ) {
+					$return['valid'] = 0;
+					$return['cancel'] = true;
+				} else {
 				$return['valid'] = 0;
-				$return['cancel'] = true;
+				$return['error'] = 'Could not transmit Cancel Message - Wrong Profile ID returned';
+				}
 			} else {
 				$return['valid'] = 0;
-				$return['error'] = $text;
+				$return['error'] = 'Could not transmit Cancel Message - General Failure';
 			}
 
 			return $return;
