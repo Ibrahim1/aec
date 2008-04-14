@@ -5152,6 +5152,17 @@ class Invoice extends paramDBTable
 			}
 		}
 
+		// We need to at least warn the admin if there is an invoice with nothing to do
+		if ( empty( $this->usage ) && empty( $this->conditions ) && empty( $this->coupons ) ) {
+			$short	= 'Nothing to do';
+			$event	= _AEC_MSG_PROC_INVOICE_ACTION_EV_VALID_APPFAIL;
+			$tags	= 'invoice,application,payment,action_failed';
+			$params = array( 'invoice_number' => $this->invoice_number );
+
+			$eventlog = new eventLog( $database );
+			$eventlog->issue( $short, $tags, $event, 32, $params );
+		}
+
 		$this->setTransactionDate();
 
 		return $application;
