@@ -678,7 +678,7 @@ class Config_General extends paramDBTable
 	function initParams()
 	{
 		$def = array();
-		$def['require_subscription']				= 0;
+		$def['require_subscription']			= 0;
 		$def['alertlevel2']						= 7;
 		$def['alertlevel1']						= 3;
 		$def['expiration_cushion']				= 12;
@@ -687,25 +687,25 @@ class Config_General extends paramDBTable
 		$def['plans_first']						= 0;
 		$def['simpleurls']						= 0;
 		$def['display_date_frontend']			= "%a, %d %b %Y %T %Z";
-		$def['display_date_backend']				= "%a, %d %b %Y %T %Z";
-		$def['enable_mimeta']						= 0;
+		$def['display_date_backend']			= "%a, %d %b %Y %T %Z";
+		$def['enable_mimeta']					= 0;
 		$def['enable_coupons']					= 0;
-		$def['gwlist']								= '';
-		$def['milist']								= "mi_email;mi_htaccess;mi_mysql_query;mi_email;mi_virtuemart";
-		$def['displayccinfo']						= 1;
-		$def['customtext_confirm_keeporiginal']		= 1;
-		$def['customtext_checkout_keeporiginal']		= 1;
+		$def['gwlist']							= '';
+		$def['milist']							= "mi_email;mi_htaccess;mi_mysql_query;mi_email;mi_virtuemart";
+		$def['displayccinfo']					= 1;
+		$def['customtext_confirm_keeporiginal']	= 1;
+		$def['customtext_checkout_keeporiginal']	= 1;
 		$def['customtext_notallowed_keeporiginal']	= 1;
-		$def['customtext_pending_keeporiginal']		= 1;
-		$def['customtext_expired_keeporiginal']		= 1;
+		$def['customtext_pending_keeporiginal']	= 1;
+		$def['customtext_expired_keeporiginal']	= 1;
 		// new 0.12.4
 		$def['bypassintegration']				= '';
 		$def['customintro']						= '';
-		$def['customthanks']						= '';
-		$def['customcancel']						= '';
-		$def['customnotallowed']					= '';
-		$def['tos']									= '';
-		$def['customtext_plans']					= '';
+		$def['customthanks']					= '';
+		$def['customcancel']					= '';
+		$def['customnotallowed']				= '';
+		$def['tos']								= '';
+		$def['customtext_plans']				= '';
 		$def['customtext_confirm']				= '';
 		$def['customtext_checkout']				= '';
 		$def['customtext_notallowed']			= '';
@@ -713,25 +713,25 @@ class Config_General extends paramDBTable
 		$def['customtext_expired']				= '';
 		// new 0.12.4.2
 		$def['adminaccess']						= 1;
-		$def['noemails']							= 0;
+		$def['noemails']						= 0;
 		$def['nojoomlaregemails']				= 0;
 		// new 0.12.4.10
-		$def['debugmode']							= 0;
+		$def['debugmode']						= 0;
 		// new 0.12.4.12
 		$def['override_reqssl']					= 0;
 		// new 0.12.4.16
 		$def['invoicenum_doformat']				= 1;
 		$def['invoicenum_formatting']			= '{aecjson} { "cmd":"concat", "vars": [ { "cmd":"date", "vars": [ "Y", { "cmd":"rw_constant", "vars":"invoice_created_date" } ] },"-",{ "cmd":"rw_constant", "vars":"invoice_id" } ] } {/aecjson}';
-		$def['use_recaptcha']						= 0;
-		$def['recaptcha_privatekey']				= '';
+		$def['use_recaptcha']					= 0;
+		$def['recaptcha_privatekey']			= '';
 		$def['recaptcha_publickey']				= '';
 		$def['ssl_signup']						= 0;
 		$def['error_notification_level']		= 32;
 		$def['email_notification_level']		= 512;
-		$def['temp_auth_exp']						= 60;
+		$def['temp_auth_exp']					= 60;
 		$def['skip_confirmation']				= 0;
 		$def['show_fixeddecision']				= 0;
-		$def['confirmation_coupons']			= 1;
+		$def['confirmation_coupons']			= 0;
 		$def['breakon_mi_error']				= 0;
 
 		// Insert a new entry if there is none yet
