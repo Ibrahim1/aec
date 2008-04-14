@@ -24,7 +24,7 @@ class processor_moneybookers extends POSTprocessor
 		global $mosConfig_sitename;
 
 		$settings = array();
-		$settings['pay_to_email']				= 'jganesh_007@hotmail.com';
+		$settings['pay_to_email']				= '';
 		$settings['secret_word']				= '';
 		$settings['recipient_description']		= $mosConfig_sitename;
 		$settings['logo_url'] 					= AECToolbox::deadsureURL( '/images/logo.png' );
@@ -63,9 +63,11 @@ class processor_moneybookers extends POSTprocessor
 		$var['recipient_description']	= $cfg['recipient_description'];
 		$var['logo_url']				= $cfg['logo_url'];
 		$var['transaction_id']			= $int_var['invoice'];
+
 		$var['return_url']				= $int_var['return_url'];
 		$var['cancel_url']				= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
 		$var['status_url']				= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=moneybookersnotification' );
+
 		$var['language']				= $cfg['language'];
 		$var['hide_login']				= $cfg['hide_login'];
 		$var['pay_from_email']			= $metaUser->cmsUser->email;
@@ -81,25 +83,22 @@ class processor_moneybookers extends POSTprocessor
 	function parseNotification( $post, $cfg )
 	{
 		$response = array();
-		$response['invoice'] = $post['transaction_id'];
+		$response['invoice']			= $post['transaction_id'];
+		$response['amount_paid']		= $post['mb_amount'];
+		$response['amount_currency']	= $post['mb_currency'];
 
 		return $response;
 	}
 
 	function validateNotification( $response, $post, $cfg, $invoice )
 	{
-		$response['valid'] = 0;
-		$merchant_id = $post['merchant_id'];
-		$transaction_id = $post['transaction_id'];
-		$secret_word = $cfg['secret_word'];
-		$mb_amount = $post['mb_amount'];
-		$mb_currency = $post['mb_currency'];
-		$status = $post['status'];
+		$response['valid'] = false;
 
-		$md5sig = md5($merchant_id . $transaction_id . $secret_word . $mb_amount . $mb_currency . $status);
+		$md5sig = md5( $post['merchant_id'] . $post['transaction_id'] . $cfg['secret_word'] . $post['mb_amount'] . $post['mb_currency'] . $post['status'] );
 
-		if(($status == '2') && ($md5sig == $post['md5sig']))
-			$response['valid'] = 1;
+		if ( ( $post['status'] == '2' ) && ( $md5sig == $post['md5sig'] ) ) {
+			$response['valid'] = true;
+		}
 
 		return $response;
 	}
