@@ -133,14 +133,18 @@ class processor_ipayment_silent extends XMLprocessor
 
 		$a = array();
 
-		$a['trx_paymenttyp']	= 'elv';
+		if ( empty( $int_var['params']['cc_number'] ) ) {
+			$a['trx_paymenttyp']	= 'elv';
+		} else {
+			$a['trx_paymenttyp']	= 'cc';
+		}
 
 		if ( !empty( $cfg['fake_account'] ) ) {
 			$a['trxuser_id']		= '99999';
-			$a['trx_password']		= '0';
+			$a['trxpassword']		= '0';
 		} else {
 			$a['trxuser_id']		= $cfg['user_id'];
-			$a['trx_password']		= $cfg['password'];
+			$a['trxpassword']		= $cfg['password'];
 		}
 
 		$a['order_id']		= AECfetchfromDB::InvoiceIDfromNumber( $int_var['invoice'] );
@@ -186,50 +190,79 @@ class processor_ipayment_silent extends XMLprocessor
 		}
 
 		$string = implode( '&', $stringarray );
-print_r($string);exit;
+
 		return $string;
 	}
 
 	function transmitRequestXML( $xml, $int_var, $settings, $metaUser, $new_subscription, $invoice )
 	{
+		$path = '/merchant/';
 		if ( $settings['testmode'] || $settings['fake_account'] ) {
 			if ( $settings['fake_account'] ) {
-				$path = "99999/example.php";
+				$path .= "99999/example.php";
 			} else {
-				$path = $settings['account_id'] . "/example.php";
+				$path .= $settings['account_id'] . "/example.php";
 			}
 		} else {
-			$path = $settings['account_id'] . "/processor.php";
+			$path .= $settings['account_id'] . "/processor.php";
 		}
 
-		$url = "https://ipayment.de/merchant/" . $path;
-
+		$url = "https://ipayment.de" . $path;
+echo "<h1>Variablen:</h1>";
+echo '<p>';
+foreach( $int_var as $key => $value ) { if ( strpos( $key, '_') === false ) { echo $key . ' = ' . $value . '</p><p>'; } }
+echo '</p>';
+echo "<h1>Rechnung:</h1>";
+echo '<p>';
+foreach( $invoice as $key => $value ) { if ( strpos( $key, '_') === false ) { echo $key . ' = ' . $value . '</p><p>'; } }
+echo '</p>';
+echo "<h1>Senden der Daten:</h1>";
+echo '<p>';
+echo $xml;
+echo '</p>';
+echo '<h1>';
+echo "an:";
+echo '</h1>';
+echo '<p>';
+echo $url;
+echo '</p>';
 		$response = $this->transmitRequest( $url, $path, $xml, 443 );
-
+echo '<h1>R&uuml;ckmeldung:</h1>';
+echo '<p>';
+echo $response;
+echo '</p>';
 		$return['valid'] = false;
 		$return['raw'] = $response;
 
 		if ( $response ) {
-			$resp_array = explode( "&", $response );
+			if ( strpos( '&', $response ) ) {
+				$resp_array = explode( "&", $response );
 
-			foreach ( $resp_array as $arr_id => $arr_content ) {
-				$ac = explode( "=", $arr_content );
-				$resp_array[$ac[0]] = $ac[1];
+				foreach ( $resp_array as $arr_id => $arr_content ) {
+					$ac = explode( "=", $arr_content );
+					$resp_array[$ac[0]] = $ac[1];
 
-				unset( $resp_array[$arr_id] );
-			}
+					unset( $resp_array[$arr_id] );
+				}
 
-			$return['invoice'] = $resp_array['invoice_text'];
+				$return['invoice'] = $resp_array['invoice_text'];
 
-			if ( isset( $resp_array['ret_errormsg'] ) ) {
-				$return['error'] = $resp_array['ret_errormsg'];
+				if ( isset( $resp_array['ret_errormsg'] ) ) {
+					$return['error'] = $resp_array['ret_errormsg'];
+				} else {
+					$return['valid'] = 1;
+				}
+
+				$return['invoiceparams'] = array( "subscriptionid" => $resp_array['ret_booknr'] );
 			} else {
-				$return['valid'] = 1;
+				$return['valid'] = 0;
 			}
-
-			$return['invoiceparams'] = array( "subscriptionid" => $resp_array['ret_booknr'] );
 		}
-
+echo '<h1>Resultat:</h1>';
+echo '<p>';
+foreach( $return as $key => $value ) { if ( strpos( $key, '_') === false ) { echo $key . ' = ' . $value . '</p><p>'; } }
+echo '</p>';
+exit;
 		return $return;
 	}
 
