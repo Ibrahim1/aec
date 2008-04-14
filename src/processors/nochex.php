@@ -1,4 +1,17 @@
 <?php
+/**
+ * @version $Id: mammontini.php
+ * @package Mammontini!: General purpose Payment-related functionality
+ * @copyright Copyright (C) 2008 David Deutsch, All Rights Reserved
+ * @author David Deutsch <skore@skore.de>
+ * @license GNU/GPL v.2 or later http://www.gnu.org/copyleft/gpl.html
+ *
+ *          _  _ ____ _  _ _  _ ____ __ _ ___ _ __ _ _  /
+ *          |\/| |--| |\/| |\/| [__] | \|  |  | | \| | .  v1.0
+ *
+ * The lean library for the big money processing named after squirrels.
+ */
+
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
@@ -11,7 +24,7 @@ class processor_nochex extends POSTprocessor
 		$info['longname']			= _CFG_NOCHEX_LONGNAME;
 		$info['statement']			= _CFG_NOCHEX_STATEMENT;
 		$info['description']		= _CFG_NOCHEX_DESCRIPTION;
-		$info['cc_list']			= 'visa,mastercard'; //,switch,solo,delta,visaelectron,maestro';
+		$info['cc_list']			= 'visa,mastercard';
 		$info['recurring']			= 0;
 
 		return $info;
@@ -44,7 +57,7 @@ class processor_nochex extends POSTprocessor
 		global $mosConfig_live_site;
 
 		$var['post_url']	= 'https://secure.nochex.com/';
-		if ($cfg['testmode'] == '1') {
+		if ( $cfg['testmode'] == '1' ) {
 			$var['test_transaction'] = '100';
 			$var['test_success_url'] = AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=nochexnotification' );
 		}
@@ -74,8 +87,9 @@ class processor_nochex extends POSTprocessor
 	function validateNotification( $response, $post, $cfg, $invoice )
 	{
 		$response['valid'] = 0;
-		if($response['invoice'] == $post['order_id'])
+		if ( $response['invoice'] == $post['order_id'] ) {
 			$response['valid'] = 1;
+		}
 
 		return $response;
 	}
