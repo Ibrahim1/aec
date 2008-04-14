@@ -3823,7 +3823,7 @@ class InvoiceFactory
 		$this->objInvoice = new Invoice( $database );
 
 		if ( $this->invoice ) {
-			$this->objInvoice->loadInvoiceNumber($this->invoice);
+			$this->objInvoice->loadInvoiceNumber( $this->invoice );
 			$this->objInvoice->computeAmount();
 
 			$this->processor = $this->objInvoice->method;
@@ -4310,9 +4310,12 @@ class InvoiceFactory
 		$this->touchInvoice( $option );
 
 		if ( !empty( $coupon ) ) {
-			$this->objInvoice->addCoupon( $_POST['coupon_code'] );
+			$this->objInvoice->addCoupon( $coupon );
 			$this->objInvoice->check();
 			$this->objInvoice->store();
+
+			// Make sure we have the correct amount loaded
+			$this->touchInvoice( $option );
 		}
 
 		$this->checkout( $option );
