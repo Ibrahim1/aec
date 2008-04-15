@@ -82,7 +82,7 @@ class processor_allopass extends POSTprocessor
 		$var['params']['CODE0'] = array("inputC", "Allopass Code", "Please [FIXME]");
 	}
 
-	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription, $invoice )
 	{
 		global $mosConfig_live_site;
 
@@ -111,6 +111,20 @@ class processor_allopass extends POSTprocessor
 
 		$var['ssl_customer_code']	= $metaUser->cmsUser->id;
 		$var['ssl_description']		= AECToolbox::rewriteEngine($cfg['item_name'], $metaUser, $new_subscription);
+
+		if ( !empty( $cfg['customparams'] ) ) {
+			$rw_params = AECToolbox::rewriteEngine( $cfg['customparams'], $metaUser, $new_subscription );
+
+			$cps = explode( "\n", $rw_params );
+
+			foreach ( $cps as $cp ) {
+				$cpa = explode( '=', $cp );
+
+				if ( !empty( $cpa[0] ) && isset( $cp[1] ) ) {
+					$var[$cpa[0]] = $cpa[1];
+				}
+			}
+		}
 
 		return $var;
 	}

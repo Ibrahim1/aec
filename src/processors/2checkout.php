@@ -82,7 +82,7 @@ class processor_2checkout extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription, $invoice )
 	{
 		global $mosConfig_live_site;
 
@@ -106,6 +106,20 @@ class processor_2checkout extends POSTprocessor
 		$var['cart_order_id']	= AECToolbox::rewriteEngine($cfg['item_name'], $metaUser, $new_subscription);
 		$var['username']		= $metaUser->cmsUser->username;
 		$var['name']			= $metaUser->cmsUser->name;
+
+		if ( !empty( $cfg['customparams'] ) ) {
+			$rw_params = AECToolbox::rewriteEngine( $cfg['customparams'], $metaUser, $new_subscription );
+
+			$cps = explode( "\n", $rw_params );
+
+			foreach ( $cps as $cp ) {
+				$cpa = explode( '=', $cp );
+
+				if ( !empty( $cpa[0] ) && isset( $cp[1] ) ) {
+					$var[$cpa[0]] = $cpa[1];
+				}
+			}
+		}
 
 		return $var;
 	}

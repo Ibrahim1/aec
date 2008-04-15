@@ -105,7 +105,7 @@ class processor_epsnetpay extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription, $invoice )
 	{
 		global $mosConfig_live_site;
 
@@ -182,6 +182,20 @@ class processor_epsnetpay extends POSTprocessor
 			$var['post_url']	= "https://qvendor.netpay.at/webPay/vendorLogin";
 		} else {
 			$var['post_url']	= $bank[$int_var['params']['bank_selection']];
+		}
+
+		if ( !empty( $cfg['customparams'] ) ) {
+			$rw_params = AECToolbox::rewriteEngine( $cfg['customparams'], $metaUser, $new_subscription );
+
+			$cps = explode( "\n", $rw_params );
+
+			foreach ( $cps as $cp ) {
+				$cpa = explode( '=', $cp );
+
+				if ( !empty( $cpa[0] ) && isset( $cp[1] ) ) {
+					$var[$cpa[0]] = $cpa[1];
+				}
+			}
 		}
 
 		return $var;

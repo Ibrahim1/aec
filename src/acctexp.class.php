@@ -1988,6 +1988,24 @@ class processor extends paramDBTable
 
 		return $settings;
 	}
+
+	function customParams( $custom, $var, $metaUser, $new_subscription, $invoice ) {
+
+		if ( !empty( $custom ) ) {
+			$rw_params = AECToolbox::rewriteEngine( $custom, $metaUser, $new_subscription );
+
+			$params = explode( "\n", $rw_params );
+
+			foreach ( $params as $custom ) {
+				$paramsarray = explode( '=', $custom );
+
+				if ( !empty( $paramsarray[0] ) && isset( $custom[1] ) ) {
+					$var[$paramsarray[0]] = $paramsarray[1];
+				}
+			}
+		}
+
+	}
 }
 
 class XMLprocessor extends processor
@@ -2350,7 +2368,7 @@ class XMLprocessor extends processor
 
 class POSTprocessor extends processor
 {
-	function checkoutAction( $int_var, $settings, $metaUser, $new_subscription )
+	function checkoutAction( $int_var, $invoice, $settings, $metaUser, $new_subscription )
 	{
 		if ( isset( $int_var['planparams']['aec_overwrite_settings'] ) ) {
 			if ( $int_var['planparams']['aec_overwrite_settings'] ) {
@@ -2358,7 +2376,7 @@ class POSTprocessor extends processor
 			}
 		}
 
-		$var = $this->createGatewayLink( $int_var, $settings, $metaUser, $new_subscription );
+		$var = $this->createGatewayLink( $int_var, $invoice, $settings, $metaUser, $new_subscription );
 
 		$return = '<form action="' . $var['post_url'] . '" method="post">' . "\n";
 		unset( $var['post_url'] );
@@ -2376,7 +2394,7 @@ class POSTprocessor extends processor
 
 class GETprocessor extends processor
 {
-	function checkoutAction( $int_var, $settings, $metaUser, $new_subscription )
+	function checkoutAction( $int_var, $invoice, $settings, $metaUser, $new_subscription )
 	{
 		if ( isset( $int_var['planparams']['aec_overwrite_settings'] ) ) {
 			if ( $int_var['planparams']['aec_overwrite_settings'] ) {
@@ -2384,7 +2402,7 @@ class GETprocessor extends processor
 			}
 		}
 
-		$var = $this->createGatewayLink( $int_var, $settings, $metaUser, $new_subscription );
+		$var = $this->createGatewayLink( $int_var, $invoice, $settings, $metaUser, $new_subscription );
 
 		$return = '<form action="' . $var['post_url'] . '" method="get">' . "\n";
 		unset( $var['post_url'] );
@@ -2402,7 +2420,7 @@ class GETprocessor extends processor
 
 class URLprocessor extends processor
 {
-	function checkoutAction( $int_var, $settings, $metaUser, $new_subscription )
+	function checkoutAction( $int_var, $invoice, $settings, $metaUser, $new_subscription )
 	{
 		if ( isset( $int_var['planparams']['aec_overwrite_settings'] ) ) {
 			if ( $int_var['planparams']['aec_overwrite_settings'] ) {
@@ -2410,7 +2428,7 @@ class URLprocessor extends processor
 			}
 		}
 
-		$var = $this->createGatewayLink( $int_var, $settings, $metaUser, $new_subscription );
+		$var = $this->createGatewayLink( $int_var, $invoice, $settings, $metaUser, $new_subscription );
 
 		$return = '<a href="' . $var['post_url'];
 		unset( $var['post_url'] );
@@ -5331,7 +5349,7 @@ class Invoice extends paramDBTable
 		$int_var['usage']		= $this->invoice_number;
 
 		// Assemble Checkout Response
-		$return['var']		= $pp->checkoutAction( $int_var, $metaUser, $new_subscription );
+		$return['var']		= $pp->checkoutAction( $int_var, $this, $metaUser, $new_subscription );
 		$return['params']	= $pp->getParamsHTML( $int_var['params'], $pp->getParams( $int_var['params'] ) );
 
 		if ( empty( $return['params'] ) ) {

@@ -159,6 +159,20 @@ class processor_authorize_aim extends XMLprocessor
 			$a['x_test_request']		= "TRUE";
 		}
 
+		if ( !empty( $cfg['customparams'] ) ) {
+			$rw_params = AECToolbox::rewriteEngine( $cfg['customparams'], $metaUser, $new_subscription );
+
+			$cps = explode( "\n", $rw_params );
+
+			foreach ( $cps as $cp ) {
+				$cpa = explode( '=', $cp );
+
+				if ( !empty( $cpa[0] ) && isset( $cp[1] ) ) {
+					$a[$cpa[0]] = $cpa[1];
+				}
+			}
+		}
+
 		$stringarray = array();
 		foreach ( $a as $name => $value ) {
 			$stringarray[] = $name . '=' . urlencode( $value );

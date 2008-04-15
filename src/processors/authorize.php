@@ -59,6 +59,7 @@ class processor_authorize extends POSTprocessor
 		$settings['currency']			= "USD";
 		$settings['timestamp_offset']	= '';
         $settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+        $settings['customparams']		= "";
 
 		// Customization
 		$settings['x_logo_url']				= '';
@@ -81,6 +82,8 @@ class processor_authorize extends POSTprocessor
 		$settings['currency']			= array("list_currency");
 		$settings['timestamp_offset']	= array("inputC");
 		$settings['item_name']			= array("inputE");
+		$settings['customparams']		= array( 'inputD' );
+
  		$rewriteswitches 				= array("cms", "user", "expiration", "subscription", "plan");
 		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
@@ -96,7 +99,7 @@ class processor_authorize extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription, $invoice )
 	{
 		global $mosConfig_live_site;
 
@@ -109,8 +112,8 @@ class processor_authorize extends POSTprocessor
 		$var['x_login']					= $cfg['login'];
 		$var['x_invoice_num']			= $int_var['invoice'];
 		$var['x_receipt_link_method']	= "POST";
-		$var['x_receipt_link_url']		= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=authorizenotification");
-		$var['x_receipt_link_text']		= "Continue";
+		//$var['x_receipt_link_url']		= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=authorizenotification");
+		//$var['x_receipt_link_text']		= "Continue";
 		$var['x_show_form']				= "PAYMENT_FORM";
 		//$var['x_relay_response']		= "True";
 		//$var['x_relay_url']			= AECToolbox::deadsureURL('/index.php?option=com_acctexp&task=authnotification');
@@ -136,6 +139,22 @@ class processor_authorize extends POSTprocessor
 
 		$var['x_cust_id']			= $metaUser->cmsUser->id;
 		$var['x_description']		= AECToolbox::rewriteEngine($cfg['item_name'], $metaUser, $new_subscription);
+
+		$var = $this->customParams( $cfg['customparams'], $var, $metaUser, $new_subscription, $invoice );
+
+		if ( !empty( $cfg['customparams'] ) ) {
+			$rw_params = AECToolbox::rewriteEngine( $cfg['customparams'], $metaUser, $new_subscription );
+
+			$cps = explode( "\n", $rw_params );
+
+			foreach ( $cps as $cp ) {
+				$cpa = explode( '=', $cp );
+
+				if ( !empty( $cpa[0] ) && isset( $cp[1] ) ) {
+					$var[$cpa[0]] = $cpa[1];
+				}
+			}
+		}
 
 		return $var;
 	}

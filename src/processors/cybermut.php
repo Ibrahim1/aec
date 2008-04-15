@@ -100,7 +100,7 @@ class processor_cybermut extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription, $invoice )
 	{
 		global $mosConfig_live_site;
 
@@ -132,6 +132,20 @@ class processor_cybermut extends POSTprocessor
 		$var['url_retour']		= $mosConfig_live_site . '/index.php';
 		$var['url_retour_ok']	= $mosConfig_live_site . '/index.php?option=com_acctexp&task=thanks';
 		$var['url_retour_err']	= $mosConfig_live_site . '/index.php?option=com_acctexp&task=cancel';
+
+		if ( !empty( $cfg['customparams'] ) ) {
+			$rw_params = AECToolbox::rewriteEngine( $cfg['customparams'], $metaUser, $new_subscription );
+
+			$cps = explode( "\n", $rw_params );
+
+			foreach ( $cps as $cp ) {
+				$cpa = explode( '=', $cp );
+
+				if ( !empty( $cpa[0] ) && isset( $cp[1] ) ) {
+					$var[$cpa[0]] = $cpa[1];
+				}
+			}
+		}
 
 		foreach ( $var as $k => $v ) {
 			$var[$k] = $this->HtmlEncode( $v );
