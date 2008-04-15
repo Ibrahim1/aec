@@ -150,7 +150,7 @@ class processor_ipayment_silent extends XMLprocessor
 		$a['order_id']		= AECfetchfromDB::InvoiceIDfromNumber( $int_var['invoice'] );
 		$a['from_ip']		= $ip;
 		$a['trx_currency']	= $cfg['currency'];
-		$a['trx_amount']	= $int_var['amount'];
+		$a['trx_amount']	= (int) ( $int_var['amount'] * 100 );
 		$a['trx_typ']		= 'auth';
 		$a['invoice_text']	= $int_var['invoice'];
 		$a['addr_email']	= $metaUser->cmsUser->email;
@@ -207,7 +207,7 @@ class processor_ipayment_silent extends XMLprocessor
 			$path .= $settings['account_id'] . "/processor.php";
 		}
 
-		$url = "https://ipayment.de" . $path;
+		$url = "https://ipayment.de" . $path . '?' . $xml;
 echo "<h1>Variablen:</h1>";
 echo '<p>';
 foreach( $int_var as $key => $value ) { if ( strpos( $key, '_') === false ) { echo $key . ' = ' . $value . '</p><p>'; } }
@@ -262,6 +262,17 @@ echo '<h1>Resultat:</h1>';
 echo '<p>';
 foreach( $return as $key => $value ) { if ( strpos( $key, '_') === false ) { echo $key . ' = ' . $value . '</p><p>'; } }
 echo '</p>';
+echo '<h1>Formular:</h1>';
+echo '<form action="' . "https://ipayment.de" . $path . '" method="post" >Formular:</h1>';
+
+$p = explode( '&', $xml );
+
+foreach ( $p as $c ) {
+	$cc = explode( '=', $c );
+	echo '<input type="hidden" name="' . $cc[0] . '" value="' . $cc[1] . '" />';
+}
+echo '<input type="submit">';
+echo '</form>';
 exit;
 		return $return;
 	}
