@@ -1989,10 +1989,10 @@ class processor extends paramDBTable
 		return $settings;
 	}
 
-	function customParams( $custom, $var, $metaUser, $new_subscription, $invoice ) {
-
+	function customParams( $custom, $var, $metaUser=null, $new_subscription=null, $invoice=null )
+	{
 		if ( !empty( $custom ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $custom, $metaUser, $new_subscription );
+			$rw_params = AECToolbox::rewriteEngine( $custom, $metaUser, $new_subscription, $invoice );
 
 			$params = explode( "\n", $rw_params );
 
@@ -2005,6 +2005,7 @@ class processor extends paramDBTable
 			}
 		}
 
+		return $var;
 	}
 }
 
