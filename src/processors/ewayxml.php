@@ -59,7 +59,7 @@ class processor_ewayXML extends XMLprocessor
 		return $settings;
 	}
 
-	function createRequestXML( $int_var, $settings, $metaUser, $new_subscription, $invoice )
+	function createRequestXML( $request )
 	{
 
 		$order_total = $int_var['amount'] * 100;
@@ -94,7 +94,7 @@ class processor_ewayXML extends XMLprocessor
 		return $xml;
 	}
 
-	function transmitRequestXML( $xml, $int_var, $settings, $metaUser, $new_subscription )
+	function transmitRequestXML( $xml, $request )
 	{
 		if($settings['testmode']){
 			$url = 'https://www.eway.com.au/gateway/xmltest/testpage.asp';

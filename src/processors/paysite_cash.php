@@ -74,7 +74,7 @@ class processor_paysite_cash extends URLprocessor
 		return $s;
 	}
 
-	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	function createGatewayLink( $request )
 	{
 		if ( $cfg['testmode'] ) {
 			$var['test'] = 1;

@@ -1668,6 +1668,8 @@ class PaymentProcessor
 				$this->info[$name] = $var;
 			}
 		}
+
+		$this->processor->info &= $this->info;
 	}
 
 	function getSettings()
@@ -1684,6 +1686,19 @@ class PaymentProcessor
 				$this->settings[$name] = $var;
 			}
 		}
+
+		$this->processor->settings &= $this->settings;
+	}
+
+	function exchangeSettings( $settings )
+	{
+		 foreach ( $settings as $key => $value ) {
+			if ( strcmp( $value, '[[SET_TO_NULL]]' ) === 0 ) {
+				$this->settings[$key] = null;
+			} else {
+				$this->settings[$key] = $value;
+			}
+		 }
 	}
 
 	function setSettings()
@@ -1767,19 +1782,54 @@ class PaymentProcessor
 		}
 
 		if ( is_int( $this->is_recurring() ) ) {
-			return array_merge( array( 'recurring' => array( 'list_recurring' ) ), $this->processor->backend_settings( $this->settings ) );
+			return array_merge( array( 'recurring' => array( 'list_recurring' ) ), $this->processor->backend_settings() );
 		} else {
-			return $this->processor->backend_settings( $this->settings );
+			return $this->processor->backend_settings();
 		}
 	}
 
-	function checkoutAction( $int_var, $metaUser, $new_subscription )
+	function checkoutAction( $int_var=null, $metaUser=null, $new_subscription=null, $invoice=null )
 	{
 		if ( !isset( $this->settings ) ) {
 			$this->getSettings();
 		}
 
-		return $this->processor->checkoutAction( $int_var, $this->settings, $metaUser, $new_subscription );
+		if ( isset( $int_var['planparams']['aec_overwrite_settings'] ) ) {
+			if ( $int_var['planparams']['aec_overwrite_settings'] ) {
+				$settings = $this->exchangeSettings( $settings, $int_var['planparams']);
+			}
+		}
+
+		$request = new stdObject();
+		$request->parent			&= $this;
+		$request->int_var			&= $int_var;
+		$request->metaUser			&= $metaUser;
+		$request->new_subscription	&= $new_subscription;
+		$request->invoice			&= $invoice;
+
+		return $this->processor->checkoutAction( $request );
+	}
+
+	function checkoutProcess( $int_var=null, $metaUser=null, $new_subscription=null, $invoice=null )
+	{
+		if ( !isset( $this->settings ) ) {
+			$this->getSettings();
+		}
+
+		if ( isset( $int_var['planparams']['aec_overwrite_settings'] ) ) {
+			if ( $int_var['planparams']['aec_overwrite_settings'] ) {
+				$settings = $this->exchangeSettings( $settings, $int_var['planparams']);
+			}
+		}
+
+		$request = new stdObject();
+		$request->parent			&= $this;
+		$request->int_var			&= $int_var;
+		$request->metaUser			&= $metaUser;
+		$request->new_subscription	&= $new_subscription;
+		$request->invoice			&= $invoice;
+
+		return $this->processor->checkoutProcess( $request );
 	}
 
 	function customAction( $action, $invoice, $metaUser )
@@ -1791,7 +1841,12 @@ class PaymentProcessor
 		$method = 'customaction_' . $action;
 
 		if ( method_exists( $this->processor, $method ) ) {
-			return $this->processor->$method( $this, $this->settings, $invoice, $metaUser );
+			$request = new stdObject();
+			$request->parent			&= $this;
+			$request->metaUser			&= $metaUser;
+			$request->invoice			&= $invoice;
+
+			return $this->processor->$method( $request );
 		} else {
 			return false;
 		}
@@ -1838,7 +1893,7 @@ class PaymentProcessor
 		}
 
 		if ( method_exists( $this->processor, 'Params' ) ) {
-			return $this->processor->Params( $this->settings, $params );
+			return $this->processor->Params( $params );
 		} else {
 			return false;
 		}
@@ -1851,7 +1906,7 @@ class PaymentProcessor
 		}
 
 		if ( method_exists( $this->processor, 'CustomPlanParams' ) ) {
-			return $this->processor->CustomPlanParams( $this->settings );
+			return $this->processor->CustomPlanParams();
 		} else {
 			return false;
 		}
@@ -1864,7 +1919,7 @@ class PaymentProcessor
 		}
 
 		if ( method_exists( $this->processor, 'invoiceCreationAction' ) ) {
-			$this->processor->invoiceCreationAction( $this->settings, $objinvoice );
+			$this->processor->invoiceCreationAction( $objinvoice );
 		} else {
 			return false;
 		}
@@ -1876,13 +1931,13 @@ class PaymentProcessor
 			$this->getSettings();
 		}
 
-		return $this->processor->parseNotification( $post, $this->settings );
+		return $this->processor->parseNotification( $post );
 	}
 
 	function validateNotification( $response, $post, $invoice )
 	{
 		if ( method_exists( $this->processor, 'validateNotification' ) ) {
-			$response = $this->processor->validateNotification( $response, $post, $this->settings, $invoice );
+			$response = $this->processor->validateNotification( $response, $post, $invoice );
 		}
 
 		return $response;
@@ -1895,7 +1950,7 @@ class PaymentProcessor
 		}
 
 		if ( method_exists( $this->processor, 'prepareValidation' ) ) {
-			$response = $this->processor->prepareValidation( $this->settings, $subscription_list );
+			$response = $this->processor->prepareValidation( $subscription_list );
 		} else {
 			$response = null;
 		}
@@ -1910,7 +1965,7 @@ class PaymentProcessor
 		}
 
 		if ( method_exists( $this->processor, 'validateSubscription' ) ) {
-			$response = $this->processor->validateSubscription( $this->settings, $subscription_id );
+			$response = $this->processor->validateSubscription( $subscription_id );
 		} else {
 			$response = false;
 		}
@@ -2077,7 +2132,7 @@ class XMLprocessor extends processor
 					$options[] = mosHTML::makeOption( 'discover', 'Discover' );
 					$options[] = mosHTML::makeOption( 'amex', 'American Express' );
 
-					$var['params']['lists']['cardType'] = mosHTML::selectList($options, 'cardType', 'size="1" style="width:70px;"', 'value', 'text', 'visa' );
+					$var['params']['lists']['cardType'] = mosHTML::selectList( $options, 'cardType', 'size="1" style="width:70px;"', 'value', 'text', 'visa' );
 					$var['params']['cardType'] = array( 'list', _AEC_CCFORM_CARDTYPE_NAME, _AEC_CCFORM_CARDTYPE_DESC, '' );
 					break;
 				case 'card_number':
@@ -2092,7 +2147,7 @@ class XMLprocessor extends processor
 						$months[] = mosHTML::makeOption( $month, $month );
 					}
 
-					$var['params']['lists']['expirationMonth'] = mosHTML::selectList($months, 'expirationMonth', 'size="1" style="width:50px;"', 'value', 'text', 0 );
+					$var['params']['lists']['expirationMonth'] = mosHTML::selectList( $months, 'expirationMonth', 'size="1" style="width:50px;"', 'value', 'text', 0 );
 					$var['params']['expirationMonth'] = array( 'list', _AEC_CCFORM_EXPIRATIONMONTH_NAME, _AEC_CCFORM_EXPIRATIONMONTH_DESC );
 					break;
 				case 'card_exp_year':
@@ -2103,7 +2158,7 @@ class XMLprocessor extends processor
 						$years[] = mosHTML::makeOption( $i, $i );
 					}
 
-					$var['params']['lists']['expirationYear'] = mosHTML::selectList($years, 'expirationYear', 'size="1" style="width:70px;"', 'value', 'text', 0 );
+					$var['params']['lists']['expirationYear'] = mosHTML::selectList( $years, 'expirationYear', 'size="1" style="width:70px;"', 'value', 'text', 0 );
 					$var['params']['expirationYear'] = array( 'list', _AEC_CCFORM_EXPIRATIONYEAR_NAME, _AEC_CCFORM_EXPIRATIONYEAR_DESC );
 					break;
 				case 'card_cvv2':
@@ -2243,18 +2298,10 @@ class XMLprocessor extends processor
 		global $database;
 
 		// Create the xml string
-		if ( isset( $int_var['planparams']['aec_overwrite_settings'] ) ) {
-			if ( $int_var['planparams']['aec_overwrite_settings'] ) {
-				$settings = $this->exchangeSettings( $pp->settings, $int_var['planparams']);
-			}
-		} else {
-			$settings = $pp->settings;
-		}
-
-		$xml = $this->createRequestXML( $int_var, $settings, $metaUser, $new_subscription, $invoice );
+		$xml = $this->createRequestXML( $int_var, $metaUser, $new_subscription, $invoice );
 
 		// Transmit xml to server
-		$response = $this->transmitRequestXML( $xml, $int_var, $settings, $metaUser, $new_subscription, $invoice );
+		$response = $this->transmitRequestXML( $xml, $int_var, $metaUser, $new_subscription, $invoice );
 
 		if ( empty( $response['invoice'] ) ) {
 			$response['invoice'] = $invoice->invoice_number;
@@ -2369,15 +2416,9 @@ class XMLprocessor extends processor
 
 class POSTprocessor extends processor
 {
-	function checkoutAction( $int_var, $invoice, $settings, $metaUser, $new_subscription )
+	function checkoutAction( $request )
 	{
-		if ( isset( $int_var['planparams']['aec_overwrite_settings'] ) ) {
-			if ( $int_var['planparams']['aec_overwrite_settings'] ) {
-				$settings = $this->exchangeSettings( $settings, $int_var['planparams']);
-			}
-		}
-
-		$var = $this->createGatewayLink( $int_var, $invoice, $settings, $metaUser, $new_subscription );
+		$var = $this->createGatewayLink( $request );
 
 		$return = '<form action="' . $var['post_url'] . '" method="post">' . "\n";
 		unset( $var['post_url'] );
@@ -2395,15 +2436,10 @@ class POSTprocessor extends processor
 
 class GETprocessor extends processor
 {
-	function checkoutAction( $int_var, $invoice, $settings, $metaUser, $new_subscription )
+	function checkoutAction( $request )
 	{
-		if ( isset( $int_var['planparams']['aec_overwrite_settings'] ) ) {
-			if ( $int_var['planparams']['aec_overwrite_settings'] ) {
-				$settings = $this->exchangeSettings( $settings, $int_var['planparams']);
-			}
-		}
 
-		$var = $this->createGatewayLink( $int_var, $invoice, $settings, $metaUser, $new_subscription );
+		$var = $this->createGatewayLink( $request );
 
 		$return = '<form action="' . $var['post_url'] . '" method="get">' . "\n";
 		unset( $var['post_url'] );
@@ -2421,15 +2457,9 @@ class GETprocessor extends processor
 
 class URLprocessor extends processor
 {
-	function checkoutAction( $int_var, $invoice, $settings, $metaUser, $new_subscription )
+	function checkoutAction( $request )
 	{
-		if ( isset( $int_var['planparams']['aec_overwrite_settings'] ) ) {
-			if ( $int_var['planparams']['aec_overwrite_settings'] ) {
-				$settings = $this->exchangeSettings( $settings, $int_var['planparams']);
-			}
-		}
-
-		$var = $this->createGatewayLink( $int_var, $invoice, $settings, $metaUser, $new_subscription );
+		$var = $this->createGatewayLink( $request );
 
 		$return = '<a href="' . $var['post_url'];
 		unset( $var['post_url'] );

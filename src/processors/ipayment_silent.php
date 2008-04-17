@@ -119,7 +119,7 @@ class processor_ipayment_silent extends XMLprocessor
 		return $var;
 	}
 
-	function createRequestXML( $int_var, $cfg, $metaUser, $new_subscription, $invoice )
+	function createRequestXML( $request )
 	{
 		global $mosConfig_live_site, $database;
 
@@ -194,7 +194,7 @@ class processor_ipayment_silent extends XMLprocessor
 		return $string;
 	}
 
-	function transmitRequestXML( $xml, $int_var, $settings, $metaUser, $new_subscription, $invoice )
+	function transmitRequestXML( $xml, $request )
 	{
 		$path = '/merchant/';
 		if ( $settings['testmode'] || $settings['fake_account'] ) {

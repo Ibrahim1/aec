@@ -93,12 +93,12 @@ class processor_airtoy extends XMLprocessor
 		return $var;
 	}
 
-	function createRequestXML( $int_var, $cfg, $metaUser, $new_subscription, $invoice )
+	function createRequestXML( $request )
 	{
 		return true;
 	}
 
-	function transmitRequestXML( $xml, $int_var, $settings, $metaUser, $new_subscription, $invoice )
+	function transmitRequestXML( $xml, $request )
 	{
 		$return['valid'] = false;
 

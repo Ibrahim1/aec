@@ -84,7 +84,7 @@ class processor_ideal_basic extends URLprocessor
 		return $s;
 	}
 
-	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	function createGatewayLink( $request )
 	{
 		if ( $cfg['testmode'] ) {
 			$var['post_url']		= "https://ideal.secure-ing.com";

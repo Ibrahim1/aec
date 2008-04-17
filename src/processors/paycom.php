@@ -87,7 +87,7 @@ class processor_paycom extends POSTprocessor
 		return $p;
 	}
 
-	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	function createGatewayLink( $request )
 	{
 		global $mosConfig_live_site;
 

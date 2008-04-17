@@ -51,7 +51,7 @@ class processor_moneyproxy extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $int_var, $metaUser, $cfg, $new_subscription )
+	function createGatewayLink( $request )
 	{
 		global $mosConfig_live_site;
 

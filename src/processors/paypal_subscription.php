@@ -109,7 +109,7 @@ class processor_paypal_subscription extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	function createGatewayLink( $request )
 	{
 		global $mosConfig_live_site;
 

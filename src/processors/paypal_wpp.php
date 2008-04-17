@@ -109,7 +109,7 @@ class processor_paypal_wpp extends XMLprocessor
 		return $var;
 	}
 
-	function createRequestXML( $int_var, $cfg, $metaUser, $new_subscription, $invoice )
+	function createRequestXML( $request )
 	{
 		global $mosConfig_live_site, $mosConfig_offset_user;
 
@@ -190,7 +190,7 @@ class processor_paypal_wpp extends XMLprocessor
 		return implode( '&', $content );
 	}
 
-	function transmitRequestXML( $xml, $int_var, $settings, $metaUser, $new_subscription, $invoice )
+	function transmitRequestXML( $xml, $request )
 	{
 		$path = "/nvp";
 

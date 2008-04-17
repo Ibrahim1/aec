@@ -100,7 +100,7 @@ class processor_cybermut extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription, $invoice )
+	function createGatewayLink( $request )
 	{
 		global $mosConfig_live_site;
 

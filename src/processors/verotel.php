@@ -89,7 +89,7 @@ class processor_verotel extends URLprocessor
 		return $p;
 	}
 
-	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	function createGatewayLink( $request )
 	{
 		// Payment Plans are required to have a productid assigned
 		if ( empty( $int_var['planparams']['verotel_product'] ) ) {

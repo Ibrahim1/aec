@@ -101,7 +101,7 @@ class processor_ccbill extends POSTprocessor
 		return $p;
 	}
 
-	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription, $invoice )
+	function createGatewayLink( $request )
 	{
 		global $mosConfig_live_site;
 

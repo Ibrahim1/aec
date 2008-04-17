@@ -116,7 +116,7 @@ class processor_ideal_advanced extends XMLprocessor
 		return $var;
 	}
 
-	function createRequestXML( $int_var, $cfg, $metaUser, $new_subscription, $invoice )
+	function createRequestXML( $request )
 	{
 		require_once( dirname(__FILE__) . "/ideal_advanced/ThinMPI.php" );
 		require_once( dirname(__FILE__) . "/ideal_advanced/AcquirerTrxRequest.php" );
@@ -134,7 +134,7 @@ class processor_ideal_advanced extends XMLprocessor
 		return $data;
 	}
 
-	function transmitRequestXML( $xml, $int_var, $cfg, $metaUser, $new_subscription, $invoice )
+	function transmitRequestXML( $xml, $request )
 	{
 
 		$idealcfg = array();

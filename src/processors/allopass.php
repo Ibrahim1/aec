@@ -82,7 +82,7 @@ class processor_allopass extends POSTprocessor
 		$var['params']['CODE0'] = array("inputC", "Allopass Code", "Please [FIXME]");
 	}
 
-	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription, $invoice )
+	function createGatewayLink( $request )
 	{
 		global $mosConfig_live_site;
 

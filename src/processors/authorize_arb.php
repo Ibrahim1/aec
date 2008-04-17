@@ -112,7 +112,7 @@ class processor_authorize_arb extends XMLprocessor
 		return $var;
 	}
 
-	function createRequestXML( $int_var, $cfg, $metaUser, $new_subscription, $invoice )
+	function createRequestXML( $request )
 	{
 		global $mosConfig_live_site;
 
@@ -181,7 +181,7 @@ class processor_authorize_arb extends XMLprocessor
 		return $content;
 	}
 
-	function transmitRequestXML( $xml, $int_var, $settings, $metaUser, $new_subscription, $invoice )
+	function transmitRequestXML( $xml, $request )
 	{
 		$path = "/xml/v1/request.api";
 		if ( $settings['testmode'] ) {
