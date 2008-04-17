@@ -34,13 +34,13 @@ class processor_virtualmerchant extends POSTprocessor
 	function info()
 	{
 		$info = array();
-		$info['name'] = "virtualmerchant";
-		$info['longname'] = "VirtualMerchant";
-		$info['statement'] = "Make payments with VirtualMerchant!";
-		$info['description'] = _DESCRIPTION_VIRTUALMERCHANT;
-		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck,giropay";
-		$info['recurring'] = 0;
-		$info['notify_trail_thanks'] = 1;
+		$info['name']					= "virtualmerchant";
+		$info['longname']				= "VirtualMerchant";
+		$info['statement']				= "Make payments with VirtualMerchant!";
+		$info['description']			= _DESCRIPTION_VIRTUALMERCHANT;
+		$info['cc_list']				= "visa,mastercard,discover,americanexpress,echeck,giropay";
+		$info['recurring']				= 0;
+		$info['notify_trail_thanks']	= 1;
 
 		return $info;
 	}
@@ -48,11 +48,12 @@ class processor_virtualmerchant extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['accountid'] = "your account id";
-		$settings['userid'] = "your user id";
-		$settings['pin'] = "your pin";
-		$settings['testmode'] = 0;
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+
+		$settings['accountid']	= "your account id";
+		$settings['userid']		= "your user id";
+		$settings['pin']		= "your pin";
+		$settings['testmode']	= 0;
+		$settings['item_name']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 
 		return $settings;
 	}
@@ -60,13 +61,14 @@ class processor_virtualmerchant extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode'] = array("list_yesno");
-		$settings['accountid'] = array("inputC");
-		$settings['userid'] = array("inputC");
-		$settings['pin'] = array("inputC");
-		$settings['item_name'] = array("inputE");
- 		$rewriteswitches = array("cms", "user", "expiration", "subscription", "plan");
-		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+
+		$settings['testmode']	= array( "list_yesno" );
+		$settings['accountid']	= array( "inputC" );
+		$settings['userid']		= array( "inputC" );
+		$settings['pin']		= array( "inputC" );
+		$settings['item_name']	= array( "inputE" );
+
+		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
 	}
@@ -75,25 +77,25 @@ class processor_virtualmerchant extends POSTprocessor
 	{
 		global $mosConfig_live_site;
 
-		$var['post_url']	= "https://www.myvirtualmerchant.com/VirtualMerchant/process.do";
-		$var['ssl_test_mode'] = $this->settings['testmode'] ? "true" : "false";
-        $var['ssl_transaction_type'] = "ccsale";
+		$var['post_url']				= "https://www.myvirtualmerchant.com/VirtualMerchant/process.do";
+		$var['ssl_test_mode']			= $this->settings['testmode'] ? "true" : "false";
+        $var['ssl_transaction_type']	= "ccsale";
 		$var['ssl_merchant_id']			= $this->settings['accountid'];
 		$var['ssl_user_id']				= $this->settings['userid'];
 		$var['ssl_pin']					= $this->settings['pin'];
 		$var['ssl_invoice_number']		= $request->int_var['invoice'];
-        $var['ssl_customer_code']		= $metaUser->cmsUser->username;
+        $var['ssl_customer_code']		= $request->metaUser->cmsUser->username;
 		$var['ssl_salestax']			= "0";
 		$var['ssl_result_format']		= "HTML";
 		$var['ssl_receipt_link_method']	= "POST";
 		$var['ssl_receipt_link_url']	= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=virtualmerchantnotification");
 		$var['ssl_receipt_link_text']	= "Continue";
-		$var['ssl_amount'] = $request->int_var['amount'];
+		$var['ssl_amount']				= $request->int_var['amount'];
 		$var['currency_code']			= $this->settings['currency_code'];
 
-		$var['item_number']		= $row->id;
-		$var['item_name']		= AECToolbox::rewriteEngine($this->settings['item_name'], $metaUser, $new_subscription);
-		$var['custom']			= $request->int_var['usage'];
+		$var['item_number']				= $row->id;
+		$var['item_name']				= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
+		$var['custom']					= $request->int_var['usage'];
 
 		return $var;
 	}
@@ -114,7 +116,7 @@ class processor_virtualmerchant extends POSTprocessor
 		$ssl_customer_code		= $post['ssl_customer_code'];
 
 		$response = array();
-		$response['invoice'] = $post['ssl_invoice_number'];
+		$response['invoice']	= $post['ssl_invoice_number'];
 
 		return $response;
 	}

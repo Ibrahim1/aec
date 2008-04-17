@@ -42,15 +42,13 @@ class processor_eway extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
-
 		$settings['testmode']		= array( 'list_yesno' );
 		$settings['custId']			= array( 'inputC' );
 		$settings['autoRedirect']	= array( 'list_yesno' ) ;
 		$settings['SiteTitle']		= array( 'inputC' );
 		$settings['item_name']		= array( 'inputE' );
 
-		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
 	}
@@ -70,11 +68,11 @@ class processor_eway extends POSTprocessor
 		$var = array(	"post_url" => "https://www.eWAY.com.au/gateway/payment.asp",
 						"ewayCustomerID" => $this->settings['custId'],
 						"ewayTotalAmount" => $order_total,
-						"ewayCustomerFirstName" => $metaUser->cmsUser->username,
-						"ewayCustomerLastName" => $metaUser->cmsUser->name,
-						"ewayCustomerInvoiceDescription" => AECToolbox::rewriteEngine( $this->settings['item_name'], $metaUser, $new_subscription ),
+						"ewayCustomerFirstName" => $request->metaUser->cmsUser->username,
+						"ewayCustomerLastName" => $request->metaUser->cmsUser->name,
+						"ewayCustomerInvoiceDescription" => AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice ),
 						"ewayCustomerInvoiceRef" => $request->int_var['invoice'],
-						"ewayOption1" => $metaUser->cmsUser->id, //Send in option1, the id of the user
+						"ewayOption1" => $request->metaUser->cmsUser->id, //Send in option1, the id of the user
 						"ewayOption2" => $request->int_var['invoice'], //Send in option2, the invoice number
 						"eWAYTrxnNumber" => $my_trxn_number,
 						"eWAYAutoRedirect" => $this->settings['autoRedirect'],
@@ -87,13 +85,13 @@ class processor_eway extends POSTprocessor
 
 	function parseNotification( $post )
 	{
-		$eWAYResponseText = $post['eWAYresponseText'];
-		$eWAYTrxnNumber = $post['ewayTrxnNumber'];
-		$eWAYResponseCode = $post['eWAYresponseCode'];
-		$ewayTrxnReference = $post['ewayTrxnReference'];
-		$eWAYAuthCode = $post['eWAYAuthCode'];
-		$total = $post['eWAYReturnAmount'];
-		$userid = $post['eWAYoption1'];
+		$eWAYResponseText	= $post['eWAYresponseText'];
+		$eWAYTrxnNumber		= $post['ewayTrxnNumber'];
+		$eWAYResponseCode	= $post['eWAYresponseCode'];
+		$ewayTrxnReference	= $post['ewayTrxnReference'];
+		$eWAYAuthCode		= $post['eWAYAuthCode'];
+		$total				= $post['eWAYReturnAmount'];
+		$userid				= $post['eWAYoption1'];
 
 		$response = array();
 		$response['invoice'] = $post['eWAYoption2'];

@@ -37,7 +37,6 @@ class processor_moneyproxy extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
 
 		$settings['merchant_id']			= array( 'inputC' );
 		$settings['secret_key']				= array( 'inputC' );
@@ -46,7 +45,7 @@ class processor_moneyproxy extends POSTprocessor
 		$settings['language']				= array( 'list_language' );
 		$settings['item_name']				= array( 'inputE' );
 
-        $settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+        $settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
 	}
@@ -62,7 +61,7 @@ class processor_moneyproxy extends POSTprocessor
 		$var['return_success_method']	= 'LINK';
 		$var['return_failure_url']		= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
 		$var['return_failure_method']	= 'LINK';
-		$var['payment_id']				= substr( AECToolbox::rewriteEngine( $this->settings['payment_id'], $metaUser, $new_subscription ), 0, 10 );
+		$var['payment_id']				= substr( AECToolbox::rewriteEngine( $this->settings['payment_id'], $request->metaUser, $request->new_subscription, $request->invoice ), 0, 10 );
 		$var['force_client_receipt']	= $this->settings['force_client_receipt'];
 		$var['suggested_memo']			= substr( $this->settings['suggested_memo'], 0, 40 );
 		$var['language']				= strtolower( $this->settings['language'] );

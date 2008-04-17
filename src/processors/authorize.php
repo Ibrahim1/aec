@@ -84,8 +84,7 @@ class processor_authorize extends POSTprocessor
 		$settings['item_name']			= array("inputE");
 		$settings['customparams']		= array( 'inputD' );
 
- 		$rewriteswitches 				= array("cms", "user", "expiration", "subscription", "plan");
-		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		// Customization
 		$settings['x_logo_url']				= array( 'inputE' );
@@ -137,13 +136,13 @@ class processor_authorize extends POSTprocessor
 		$var['x_fp_timestamp']	= $tstamp;
 		$var['x_fp_hash']		= $fingerprint;
 
-		$var['x_cust_id']			= $metaUser->cmsUser->id;
-		$var['x_description']		= AECToolbox::rewriteEngine($this->settings['item_name'], $metaUser, $new_subscription);
+		$var['x_cust_id']			= $request->metaUser->cmsUser->id;
+		$var['x_description']		= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
 
-		$var = $this->customParams( $this->settings['customparams'], $var, $metaUser, $new_subscription, $invoice );
+		$var = $this->customParams( $this->settings['customparams'], $var, $request->metaUser, $request->new_subscription, $request->invoice );
 
 		if ( !empty( $this->settings['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $metaUser, $new_subscription );
+			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $request->metaUser, $request->new_subscription, $request->invoice );
 
 			$cps = explode( "\n", $rw_params );
 

@@ -79,19 +79,17 @@ class processor_paypal_subscription extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
-
-		$settings['business']		= array( 'inputC' );
-		$settings['testmode']		= array( 'list_yesno' );
-		$settings['tax']			= array( 'inputA' );
-		$settings['currency']		= array( 'list_currency' );
-		$settings['checkbusiness']	= array( 'list_yesno' );
+		$settings['business']				= array( 'inputC' );
+		$settings['testmode']				= array( 'list_yesno' );
+		$settings['tax']					= array( 'inputA' );
+		$settings['currency']				= array( 'list_currency' );
+		$settings['checkbusiness']			= array( 'list_yesno' );
 		$settings['acceptpendingecheck']	= array( 'list_yesno' );
-		$settings['srt']			= array( 'inputA' );
-		$settings['lc']				= array( 'list_language' );
-		$settings['no_shipping']	= array( 'list_yesno' );
-		$settings['altipnurl']		= array( 'inputC' );
-		$settings['item_name']		= array( 'inputE' );
+		$settings['srt']					= array( 'inputA' );
+		$settings['lc']						= array( 'list_language' );
+		$settings['no_shipping']			= array( 'list_yesno' );
+		$settings['altipnurl']				= array( 'inputC' );
+		$settings['item_name']				= array( 'inputE' );
 
 		// Customization Options
 		$settings['cbt']					= array( 'inputE' );
@@ -104,7 +102,7 @@ class processor_paypal_subscription extends POSTprocessor
 		$settings['image_url']				= array( 'inputE' );
 		$settings['page_style']				= array( 'inputE' );
 
-        $settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+        $settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
 	}
@@ -155,8 +153,8 @@ class processor_paypal_subscription extends POSTprocessor
 			$var['notify_url']	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=paypal_subscriptionnotification' );
 		}
 
-		$var['item_number']		= $metaUser->cmsUser->id;
-		$var['item_name']		= AECToolbox::rewriteEngine( $this->settings['item_name'], $metaUser, $new_subscription );
+		$var['item_number']		= $request->metaUser->cmsUser->id;
+		$var['item_name']		= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
 
 		$var['no_shipping']		= $this->settings['no_shipping'];
 		$var['no_note']			= '1';
@@ -299,7 +297,7 @@ class processor_paypal_subscription extends POSTprocessor
 
 		return $response;
 	}
-
+	// TODO: Replace with stock function call
 	function doTheCurl( $url, $req )
 	{
 		$ch = curl_init();

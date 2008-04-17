@@ -43,13 +43,13 @@ class processor_verotel extends URLprocessor
 	function info()
 	{
 		$i = array();
-		$i['longname'] = _CFG_VEROTEL_LONGNAME;
-		$i['statement'] = _CFG_VEROTEL_STATEMENT;
-		$i['description'] = _CFG_VEROTEL_DESCRIPTION;
-		$i['currencies'] = 'USD';
-		$i['languages'] = 'AU,DE,FR,IT,GB,ES,US';
-		$i['cc_list'] = 'visa,mastercard,discover,americanexpress,echeck';
-		$i['notify_trail_thanks'] = 1;
+		$i['longname']				= _CFG_VEROTEL_LONGNAME;
+		$i['statement']				= _CFG_VEROTEL_STATEMENT;
+		$i['description']			= _CFG_VEROTEL_DESCRIPTION;
+		$i['currencies']			= 'USD';
+		$i['languages']				= 'AU,DE,FR,IT,GB,ES,US';
+		$i['cc_list']				= 'visa,mastercard,discover,americanexpress,echeck';
+		$i['notify_trail_thanks']	= 1;
 
 		return $i;
 	}
@@ -57,10 +57,10 @@ class processor_verotel extends URLprocessor
 	function settings()
 	{
 		$s = array();
-		$s['merchantid']	= "merchantid";
-		$s['resellerid']	= "resellerid";
-		$s['siteid']		= "siteid";
-		$s['secretcode']	= "secretcode";
+		$s['merchantid']		= "merchantid";
+		$s['resellerid']		= "resellerid";
+		$s['siteid']			= "siteid";
+		$s['secretcode']		= "secretcode";
 		$s['use_ticketsclub']	= 1;
 
 		return $s;
@@ -69,22 +69,22 @@ class processor_verotel extends URLprocessor
 	function backend_settings()
 	{
 		$s = array();
+
 		$s['merchantid']		= array( 'inputC' );
 		$s['resellerid']		= array( 'inputC' );
 		$s['siteid']			= array( 'inputC' );
 		$s['secretcode']		= array( 'inputC' );
 		$s['use_ticketsclub']	= array( 'list_yesno' );
 
-		$rewriteswitches	= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
-		$s = AECToolbox::rewriteEngineInfo( $rewriteswitches, $s );
 		return $s;
 	}
 
 	function CustomPlanParams()
 	{
 		$p = array();
+
 		$p['verotel_product']	= array( 'inputC' );
-		$p['recurring']		= array( 'list_yesno' );
+		$p['recurring']			= array( 'list_yesno' );
 
 		return $p;
 	}
@@ -99,21 +99,21 @@ class processor_verotel extends URLprocessor
 		}
 
 		if ( $this->settings['use_ticketsclub'] ) {
-			$var['post_url'] = "https://secure.ticketsclub.com/cgi-bin/boxoffice-one.tc?";
-			$var['fldcustomerid'] = $this->settings['merchantid'];
-			$var['fldwebsitenr'] = $this->settings['siteid'];
-			$var['tc_usercode'] = $metaUser->cmsUser->username;
-			$var['tc_passcode'] = "xxxxxxxx";
-			$var['tc_custom1'] = $request->int_var['invoice'];
-			$var['tc_custom2'] = $metaUser->cmsUser->username;
+			$var['post_url']			= "https://secure.ticketsclub.com/cgi-bin/boxoffice-one.tc?";
+			$var['fldcustomerid']		= $this->settings['merchantid'];
+			$var['fldwebsitenr']		= $this->settings['siteid'];
+			$var['tc_usercode']			= $request->metaUser->cmsUser->username;
+			$var['tc_passcode']			= "xxxxxxxx";
+			$var['tc_custom1']			= $request->int_var['invoice'];
+			$var['tc_custom2']			= $request->metaUser->cmsUser->username;
 		} else {
-			$var['post_url'] = "https://secure.verotel.com/cgi-bin/vtjp.pl?";
-			$var['verotel_id'] = $this->settings['merchantid'];
-			$var['verotel_product'] = $product;
-			$var['verotel_website'] = $this->settings['siteid'];
-			$var['verotel_usercode'] = $metaUser->cmsUser->username;
-			$var['verotel_passcode'] = "xxxxxxxx";
-			$var['verotel_custom1'] = $request->int_var['invoice'];
+			$var['post_url']			= "https://secure.verotel.com/cgi-bin/vtjp.pl?";
+			$var['verotel_id']			= $this->settings['merchantid'];
+			$var['verotel_product']		= $product;
+			$var['verotel_website']		= $this->settings['siteid'];
+			$var['verotel_usercode']	= $request->metaUser->cmsUser->username;
+			$var['verotel_passcode']	= "xxxxxxxx";
+			$var['verotel_custom1']		= $request->int_var['invoice'];
 		}
 
 		return $var;

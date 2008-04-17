@@ -70,14 +70,15 @@ class processor_worldpay_futurepay extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
+
 		$settings['testmode']		= array( 'list_yesno');
 		$settings['instId']			= array( 'inputC');
 		$settings['currency']		= array( 'list_currency');
 		$settings['info']			= array( 'fieldset' );
 		$settings['item_name']		= array( 'inputE');
  		$settings['callbackPW']		= array( 'inputC');
- 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan');
-		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+
+		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
 	}
@@ -87,14 +88,14 @@ class processor_worldpay_futurepay extends POSTprocessor
 		global $mosConfig_live_site;
 
 		$var['post_url']	= 'https://select.worldpay.com/wcc/purchase';
-		if ($this->settings->testmode) {
+		if ( $this->settings->testmode ) {
 			$var['testMode'] = '100';
 		}
 
 		$var['instId']		= $this->settings['instId'];
 		$var['currency']	= $this->settings['currency'];
 		$var['cartId']		= $request->int_var['invoice'];
-		$var['desc']	= AECToolbox::rewriteEngine($this->settings['item_name'], $metaUser, $new_subscription);
+		$var['desc']		= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
 
 		$var['futurePayType']		= 'regular';
 		$var['option']		= '0';
@@ -157,9 +158,9 @@ class processor_worldpay_futurepay extends POSTprocessor
 	function parseNotification( $post )
 	{
 		$response = array();
-		$response['invoice'] = $post['cartId'];
-		$response['amount_paid'] = $post['authAmount'];
-		$response['amount_currency'] = $post['authCurrency'];
+		$response['invoice']			= $post['cartId'];
+		$response['amount_paid']		= $post['authAmount'];
+		$response['amount_currency']	= $post['authCurrency'];
 
 		return $response;
 	}

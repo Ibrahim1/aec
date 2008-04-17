@@ -86,8 +86,8 @@ class processor_epsnetpay extends POSTprocessor
 		$settings['acceptvok'] = array("list_yesno");
 
 		$vars = $this->settings();
-		foreach ($vars as $name => $var) {
-			if (strpos($name, "id")) {
+		foreach ( $vars as $name => $var ) {
+			if ( strpos( $name, "id" ) ) {
 				$id = str_replace("merchantid_", "", $name);
 
 				$bankname = $vars["merchantname_" . $id];
@@ -133,7 +133,7 @@ class processor_epsnetpay extends POSTprocessor
 		$var['sapPopNokUrl']	= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=cancel");
 		$sapUgawwhg				= "EUR"; // HAS TO BE EUR !!
 		$var['sapUgawwhg']		= $sapUgawwhg;
-		$sapUkddaten			= $metaUser->cmsUser->id;
+		$sapUkddaten			= $request->metaUser->cmsUser->id;
 		$var['sapUkddaten']		= $sapUkddaten;
 		$sapUvwzweck			= $request->int_var['invoice'];
 		$var['sapUvwzweck']		= $sapUvwzweck;
@@ -185,7 +185,7 @@ class processor_epsnetpay extends POSTprocessor
 		}
 
 		if ( !empty( $this->settings['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $metaUser, $new_subscription );
+			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $request->metaUser, $request->new_subscription );
 
 			$cps = explode( "\n", $rw_params );
 
@@ -218,8 +218,8 @@ class processor_epsnetpay extends POSTprocessor
 			$selected = $params['bank_selection'];
 		}
 
-		$var['params']['lists']['bank_selection'] = mosHTML::selectList($bank_selection, 'bank_selection', 'size="5"', 'value', 'text', $selected);
-		$var['params']['bank_selection'] = array("list", "Bank Auswahl", "Bitte w&auml;hlen Sie die gew&uuml;nschte Bank aus.");
+		$var['params']['lists']['bank_selection']	= mosHTML::selectList( $bank_selection, 'bank_selection', 'size="5"', 'value', 'text', $selected );
+		$var['params']['bank_selection']			= array( "list", "Bank Auswahl", "Bitte w&auml;hlen Sie die gew&uuml;nschte Bank aus." );
 
 		return $var;
 	}

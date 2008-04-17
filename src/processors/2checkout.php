@@ -42,13 +42,13 @@ class processor_2checkout extends POSTprocessor
 	function info()
 	{
 		$info = array();
-		$info['name']				= '2checkout';
-		$info['longname'] 			= _AEC_PROC_INFO_2CO_LNAME;
-		$info['statement'] 			= _AEC_PROC_INFO_2CO_STMNT;
-		$info['description'] 		= _DESCRIPTION_2CHECKOUT;
-		$info['cc_list'] 			= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
-		$info['recurring'] 			= 0;
-		$info['notify_trail_thanks'] = 1;
+		$info['name']					= '2checkout';
+		$info['longname'] 				= _AEC_PROC_INFO_2CO_LNAME;
+		$info['statement'] 				= _AEC_PROC_INFO_2CO_STMNT;
+		$info['description'] 			= _DESCRIPTION_2CHECKOUT;
+		$info['cc_list'] 				= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
+		$info['recurring'] 				= 0;
+		$info['notify_trail_thanks']	= 1;
 
 		return $info;
 	}
@@ -76,8 +76,7 @@ class processor_2checkout extends POSTprocessor
 		$settings['alt2courl']		= array( 'list_yesno' );
 		$settings['item_name']		= array( 'inputE' );
 
-		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
-		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
 	}
@@ -100,15 +99,15 @@ class processor_2checkout extends POSTprocessor
 		$var['sid']					= $this->settings['sid'];
 		$var['invoice_number']		= $request->int_var['invoice'];
 		$var['fixed']				= 'Y';
-		$var['total'] = $request->int_var['amount'];
+		$var['total']				= $request->int_var['amount'];
 
-		$var['cust_id']			= $metaUser->cmsUser->id;
-		$var['cart_order_id']	= AECToolbox::rewriteEngine($this->settings['item_name'], $metaUser, $new_subscription);
-		$var['username']		= $metaUser->cmsUser->username;
-		$var['name']			= $metaUser->cmsUser->name;
+		$var['cust_id']				= $request->metaUser->cmsUser->id;
+		$var['cart_order_id']		= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
+		$var['username']			= $request->metaUser->cmsUser->username;
+		$var['name']				= $request->metaUser->cmsUser->name;
 
 		if ( !empty( $this->settings['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $metaUser, $new_subscription );
+			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $request->metaUser, $request->new_subscription, $request->invoice );
 
 			$cps = explode( "\n", $rw_params );
 
@@ -151,7 +150,7 @@ class processor_2checkout extends POSTprocessor
 			$string_to_hash	= $this->settings['secret_word'].$this->settings['sid'].$post['order_number'].$post['total'];
 		}
 
-		$check_key		= strtoupper(md5($string_to_hash));
+		$check_key = strtoupper(md5($string_to_hash));
 
 		$response['valid'] = (strcmp($check_key, $post['key']) == 0);
 

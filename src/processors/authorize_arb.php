@@ -80,8 +80,8 @@ class processor_authorize_arb extends XMLprocessor
 		$settings['useSilentPostResponse']		= array("list_yesno");
 		$settings['SilentPost_info']			= array( 'fieldset' );
 		$settings['item_name']			= array("inputE");
- 		$rewriteswitches 				= array("cms", "user", "subscription", "plan", "invoice");
-		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+
+		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
 	}
@@ -92,7 +92,7 @@ class processor_authorize_arb extends XMLprocessor
 
 		$var = $this->getCCform();
 
-		$name = explode( ' ', $metaUser->cmsUser->name );
+		$name = explode( ' ', $request->metaUser->cmsUser->name );
 
 		if ( empty( $name[1] ) ) {
 			$name[1] = "";
@@ -129,7 +129,7 @@ class processor_authorize_arb extends XMLprocessor
 
 		// Add Payment information
 		$content .=	'<subscription>'
-					. '<name>' . trim( substr( AECToolbox::rewriteEngine( $this->settings['item_name'], $metaUser, $new_subscription, $invoice ), 0, 20 ) ) . '</name>'
+					. '<name>' . trim( substr( AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice ), 0, 20 ) ) . '</name>'
 					. '<paymentSchedule>'
 					. '<interval>'
 					. '<length>' . trim( $full['period'] ) . '</length>'
@@ -184,7 +184,7 @@ class processor_authorize_arb extends XMLprocessor
 	function transmitRequestXML( $xml, $request )
 	{
 		$path = "/xml/v1/request.api";
-		if ( $settings['testmode'] ) {
+		if ( $this->settings['testmode'] ) {
 			$url = "https://apitest.authorize.net" . $path;
 		} else {
 			$url = "https://api.authorize.net" . $path;
@@ -208,8 +208,8 @@ class processor_authorize_arb extends XMLprocessor
 				$return['error'] = $text;
 			}
 
-			if ( ( $settings['totalOccurrences'] > 1 ) && !$settings['useSilentPostResponse'] ) {
-				$return['multiplicator'] = $settings['totalOccurrences'];
+			if ( ( $this->settings['totalOccurrences'] > 1 ) && !$this->settings['useSilentPostResponse'] ) {
+				$return['multiplicator'] = $this->settings['totalOccurrences'];
 			}
 
 			$subscriptionId = $this->substring_between($response,'<subscriptionId>','</subscriptionId>');
@@ -269,9 +269,9 @@ class processor_authorize_arb extends XMLprocessor
 					. '<name>' . trim( substr( $this->settings['login'], 0, 25 ) ) . '</name>'
 					. '<transactionKey>' . trim( substr( $this->settings['transaction_key'], 0, 16 ) ) . '</transactionKey>'
 					. '</merchantAuthentication>'
-					. '<refId>' . $invoice->invoice_number . '</refId>';
+					. '<refId>' . $request->invoice->invoice_number . '</refId>';
 
-		$invoiceparams = $invoice->getParams();
+		$invoiceparams = $request->invoice->getParams();
 
 		// Add Payment information
 		$content .=	'<subscriptionId>' . $invoiceparams['subscriptionid'] . '</subscriptionId>';
@@ -306,7 +306,7 @@ class processor_authorize_arb extends XMLprocessor
 
 			return $return;
 		} else {
-			Payment_HTML::error( 'com_acctexp', $metaUser->cmsUser, $invoice, "An error occured while cancelling your subscription. Please contact the system administrator!", true );
+			Payment_HTML::error( 'com_acctexp', $request->metaUser->cmsUser, $request->invoice, "An error occured while cancelling your subscription. Please contact the system administrator!", true );
 		}
 	}
 

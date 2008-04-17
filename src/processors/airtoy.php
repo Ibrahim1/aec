@@ -56,16 +56,14 @@ class processor_airtoy extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings( $this->settings )
+	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']			= array("list_yesno");
-		$settings['phone_number']		= array("inputC");
+		$settings['testmode']		= array("list_yesno");
+		$settings['phone_number']	= array("inputC");
 
-		$settings['response']			= array("inputE");
-		$settings['secret']		= array("inputC");
- 		$rewriteswitches 				= array("cms", "user", "subscription", "plan", "invoice");
-		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+		$settings['response']		= array("inputE");
+		$settings['secret']			= array("inputC");
 
 		return $settings;
 	}
@@ -82,10 +80,7 @@ class processor_airtoy extends XMLprocessor
 	{
 		global $mosConfig_live_site, $database;
 
-		$invoice = new Invoice( $database );
-		$invoice->loadInvoiceNumber( $request->int_var['invoice'] );
-
-		$code = $request->int_var['planparams']['smscode_prefix'] . ' ' . $invoice->id;
+		$code = $request->int_var['planparams']['smscode_prefix'] . ' ' . $request->invoice->id;
 
 		$var['params']['explain'] = array( 'p', _AEC_AIRTOY_PARAMS_EXPLAIN_NAME, sprintf( _AEC_AIRTOY_PARAMS_EXPLAIN_DESC, $code, $this->settings['phone_number'] ) );
 		$var['params']['smscode'] = array( 'inputC', _AEC_AIRTOY_PARAMS_SMSCODE_NAME, _AEC_AIRTOY_PARAMS_SMSCODE_DESC);
@@ -107,13 +102,13 @@ class processor_airtoy extends XMLprocessor
 			return $return;
 		}
 
-		$invoiceparams = $invoice->getParams();
+		$invoiceparams = $request->invoice->getParams();
 
 		$compare = ( strcmp( $request->int_var['params']['smscode'], $invoiceparams['airtoy_smscode'] ) === 0 );
 
 		if ( $compare ) {
 			$return['valid'] = true;
-			$return['invoice'] = $invoice->invoice_number;
+			$return['invoice'] = $request->invoice->invoice_number;
 		} else {
 			$return['error'] = _AEC_AIRTOY_CODE_WRONG;
 		}
@@ -126,7 +121,7 @@ class processor_airtoy extends XMLprocessor
 		}
 
 		if ( $return['valid'] ) {
-			$resp = "OK;" . AECToolbox::rewriteEngine( $settings['response'], $metaUser, $new_subscription, $invoice ) . ";1;;";
+			$resp = "OK;" . AECToolbox::rewriteEngine( $settings['response'], $request->metaUser, $request->new_subscription, $request->invoice ) . ";1;;";
 			$response = $this->transmitRequest( $url, '', $resp, 443 );
 		}
 */

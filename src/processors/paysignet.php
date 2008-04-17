@@ -34,13 +34,13 @@ class processor_paysignet extends POSTprocessor
 	function info()
 	{
 		$info = array();
-		$info['name'] = "paysignet";
-		$info['longname'] = "Paysignet";
-		$info['statement'] = "Make payments with Paysignet!";
-		$info['description'] = _DESCRIPTION_PAYSIGNET;
-		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck";
-		$info['recurring'] = 0;
-		$info['notify_trail_thanks'] = 1;
+		$info['name']					= "paysignet";
+		$info['longname']				= "Paysignet";
+		$info['statement']				= "Make payments with Paysignet!";
+		$info['description']			= _DESCRIPTION_PAYSIGNET;
+		$info['cc_list']				= "visa,mastercard,discover,americanexpress,echeck";
+		$info['recurring']				= 0;
+		$info['notify_trail_thanks']	= 1;
 
 		return $info;
 	}
@@ -57,8 +57,8 @@ class processor_paysignet extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode'] = array("list_yesno");
-		$settings['merchant'] = array("inputC");
+		$settings['testmode'] = array( "list_yesno" );
+		$settings['merchant'] = array( "inputC" );
 
 		return $settings;
 	}
@@ -67,13 +67,13 @@ class processor_paysignet extends POSTprocessor
 	{
 		global $mosConfig_live_site;
 
-		$var['post_url']	= "https://www.paysignet.com/validate/paysign_getdetails.asp";
+		$var['post_url']			= "https://www.paysignet.com/validate/paysign_getdetails.asp";
 
 		$var['epq_MMerchantOId']	= $request->int_var['invoice'];
 		$var['epq_AAmountA1']		= $request->int_var['amount'];
 		$var['epq_MMerchantB2']		= $this->settings['merchant'];
 
-		$var['epqb_NNameA1']		= $metaUser->cmsUser->name;
+		$var['epqb_NNameA1']		= $request->metaUser->cmsUser->name;
 
 		return $var;
 	}

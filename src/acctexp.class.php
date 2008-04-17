@@ -2022,9 +2022,9 @@ class processor extends paramDBTable
 		$this->store();
 	}
 
-	function checkoutAction( $int_var, $settings, $metaUser, $new_subscription )
+	function checkoutAction( $request )
 	{
-		return '<p>' . $settings['info'] . '</p>';
+		return '<p>' . $this->settings['info'] . '</p>';
 	}
 
 	function exchangeSettings( $settings, $planvars )
@@ -2066,16 +2066,16 @@ class processor extends paramDBTable
 
 class XMLprocessor extends processor
 {
-	function checkoutAction( $int_var, $settings, $metaUser, $new_subscription )
+	function checkoutAction( $request )
 	{
 		global $aecConfig;
 
-		$var = $this->checkoutform( $int_var, $settings, $metaUser, $new_subscription );
+		$var = $this->checkoutform( $request );
 
 		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=checkout', true ) . '" method="post">' . "\n";
 		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
-		$return .= '<input type="hidden" name="invoice" value="' . $int_var['invoice'] . '" />' . "\n";
-		$return .= '<input type="hidden" name="userid" value="' . $metaUser->userid . '" />' . "\n";
+		$return .= '<input type="hidden" name="invoice" value="' . $request->int_var['invoice'] . '" />' . "\n";
+		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
 		$return .= '<input type="hidden" name="task" value="checkout" />' . "\n";
 		$return .= '<input type="submit" class="button" value="' . _BUTTON_CHECKOUT . '" /><br /><br />' . "\n";
 		$return .= '</form>' . "\n";
@@ -7047,8 +7047,10 @@ class AECToolbox
 
 	function rewriteEngineInfo( $switches=array(), $params=null )
 	{
-		if ( !count( $switches ) ) {
-			$switches = array( 'cms', 'user', 'subscription', 'invoice', 'plan', 'system' );
+		if ( is_array( $switches ) ) {
+			if ( !count( $switches ) ) {
+				$switches = array( 'cms', 'user', 'subscription', 'invoice', 'plan', 'system' );
+			}
 		}
 
 		$rewrite = array();

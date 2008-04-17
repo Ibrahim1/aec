@@ -32,13 +32,13 @@ class processor_ewayXML extends XMLprocessor
 	{
 		$this->settings = array();
 		$this->settings['testmode']		= "1";
-		$this->settings['custId']			= "87654321";
+		$this->settings['custId']		= "87654321";
 		$this->settings['tax']			= "10";
 		$this->settings['autoRedirect']	= 1;
-		$this->settings['testAmount']		= "00";
-		$this->settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$this->settings['testAmount']	= "00";
+		$this->settings['item_name']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$this->settings['rewriteInfo']	= ''; // added mic
-		$this->settings['SiteTitle']		= '';
+		$this->settings['SiteTitle']	= '';
 
 		return $this->settings;
 	}
@@ -46,15 +46,13 @@ class processor_ewayXML extends XMLprocessor
 	function backend_settings()
 	{
 		$this->settings = array();
-		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
-
 		$this->settings['testmode']		= array( 'list_yesno' );
-		$this->settings['custId']			= array( 'inputC' );
+		$this->settings['custId']		= array( 'inputC' );
 		$this->settings['autoRedirect']	= array( 'list_yesno' ) ;
-		$this->settings['SiteTitle']		= array( 'inputC' );
-		$this->settings['item_name']		= array( 'inputE' );
+		$this->settings['SiteTitle']	= array( 'inputC' );
+		$this->settings['item_name']	= array( 'inputE' );
 
-        $this->settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $this->settings );
+        $this->settings = AECToolbox::rewriteEngineInfo( null, $this->settings );
 
 		return $this->settings;
 	}
@@ -67,11 +65,11 @@ class processor_ewayXML extends XMLprocessor
 
 		$nodes = array(	"ewayCustomerID" => $this->settings['custId'],
 					"ewayTotalAmount" => $order_total,
-					"ewayCustomerFirstName" => $metaUser->cmsUser->username,
-					"ewayCustomerLastName" => $metaUser->cmsUser->name,
-					"ewayCustomerInvoiceDescription" => AECToolbox::rewriteEngine( $this->settings['item_name'], $metaUser, $new_subscription ),
+					"ewayCustomerFirstName" => $request->metaUser->cmsUser->username,
+					"ewayCustomerLastName" => $request->metaUser->cmsUser->name,
+					"ewayCustomerInvoiceDescription" => AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice ),
 					"ewayCustomerInvoiceRef" => $request->int_var['invoice'],
-					"ewayOption1" => $metaUser->cmsUser->id, //Send in option1, the id of the user
+					"ewayOption1" => $request->metaUser->cmsUser->id, //Send in option1, the id of the user
 					"ewayOption2" => $request->int_var['invoice'], //Send in option2, the invoice number
 					"ewayTrxnNumber" => $my_trxn_number,
 					"ewaySiteTitle" => $this->settings['SiteTitle'],
@@ -79,7 +77,7 @@ class processor_ewayXML extends XMLprocessor
 					"ewayCardNumber" => $request->int_var['params']['cardNumber'],
 					"ewayCardExpiryMonth" => $request->int_var['params']['expirationMonth'],
 					"ewayCardExpiryYear" => $request->int_var['params']['expirationYear'],
-					"ewayCustomerEmail" => $metaUser->cmsUser->email,
+					"ewayCustomerEmail" => $request->metaUser->cmsUser->email,
 					"ewayCustomerAddress" => '',
 					"ewayCustomerPostcode" => '',
 					"ewayOption3" => ''
@@ -96,9 +94,9 @@ class processor_ewayXML extends XMLprocessor
 
 	function transmitRequestXML( $xml, $request )
 	{
-		if($this->settings['testmode']){
+		if ( $this->settings['testmode'] ) {
 			$url = 'https://www.eway.com.au/gateway/xmltest/testpage.asp';
-		}else{
+		} else {
 			$url = 'https://www.eway.com.au/gateway/xmlpayment.asp';
 		}
 		$response = array();

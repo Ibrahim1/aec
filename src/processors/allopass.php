@@ -54,11 +54,11 @@ class processor_allopass extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['siteid'] = "siteid";
-		$settings['docid'] = "docid";
-		$settings['auth'] = "auth";
-		$settings['testmode'] = 0;
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['siteid']		= "siteid";
+		$settings['docid']		= "docid";
+		$settings['auth']		= "auth";
+		$settings['testmode']	= 0;
+		$settings['item_name']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 
 		return $settings;
 	}
@@ -66,13 +66,13 @@ class processor_allopass extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode'] = array("list_yesno");
-		$settings['siteid'] = array("inputC");
-		$settings['docid'] = array("inputC");
-		$settings['auth'] = array("inputC");
-		$settings['item_name'] = array("inputE");
- 		$rewriteswitches = array("cms", "user", "expiration", "subscription", "plan");
-		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+		$settings['testmode']	= array("list_yesno");
+		$settings['siteid']		= array("inputC");
+		$settings['docid']		= array("inputC");
+		$settings['auth']		= array("inputC");
+		$settings['item_name']	= array("inputE");
+
+		$settings				= AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
 	}
@@ -86,8 +86,8 @@ class processor_allopass extends POSTprocessor
 	{
 		global $mosConfig_live_site;
 
-		$var['post_url']       = AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=allopassnotification");
-		$var['ssl_test_mode'] = $this->settings['testmode'] ? "true" : "false";
+		$var['post_url']      			= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=allopassnotification");
+		$var['ssl_test_mode']			= $this->settings['testmode'] ? "true" : "false";
 
 		$var['params_array']['CODE0']	= array("inputA", "CODE0", "Code", $request->int_var['params']['CODE0']);
 
@@ -107,13 +107,13 @@ class processor_allopass extends POSTprocessor
 		$var['ssl_receipt_link_method']	= "POST";
 		$var['ssl_receipt_link_url']	= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=allopassnotification");
 		$var['ssl_receipt_link_text']	= "Continue";
-		$var['ssl_amount'] = $request->int_var['amount'];
+		$var['ssl_amount']				= $request->int_var['amount'];
 
-		$var['ssl_customer_code']	= $metaUser->cmsUser->id;
-		$var['ssl_description']		= AECToolbox::rewriteEngine($this->settings['item_name'], $metaUser, $new_subscription);
+		$var['ssl_customer_code']		= $request->metaUser->cmsUser->id;
+		$var['ssl_description']			= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
 
 		if ( !empty( $this->settings['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $metaUser, $new_subscription );
+			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $request->metaUser, $request->new_subscription, $request->invoice );
 
 			$cps = explode( "\n", $rw_params );
 

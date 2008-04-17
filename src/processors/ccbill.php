@@ -77,17 +77,17 @@ class processor_ccbill extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
 
 		$settings = array();
-		$settings['clientAccnum']	= array( 'inputC' );
-		$settings['clientSubacc']	= array( 'inputC' );
-		$settings['formName']		= array( 'inputC' );
-		$settings['secretWord']		= array( 'inputC' );
-		$settings['info']			= array( 'fieldset' );
+		$settings['clientAccnum']			= array( 'inputC' );
+		$settings['clientSubacc']			= array( 'inputC' );
+		$settings['formName']				= array( 'inputC' );
+		$settings['secretWord']				= array( 'inputC' );
+		$settings['info']					= array( 'fieldset' );
 		$settings['datalink_username']		= array( 'inputC' );
-		$settings['customparams']	= array( 'inputD' );
-		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+		$settings['customparams']			= array( 'inputD' );
+
+		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
 	}
@@ -113,17 +113,17 @@ class processor_ccbill extends POSTprocessor
 		$var['formName']		= $this->settings['formName'];
 
 		$var['invoice']			= $request->int_var['invoice'];
-		$var['username']		= $metaUser->cmsUser->username;
+		$var['username']		= $request->metaUser->cmsUser->username;
 		$var['password']		= "xxxxxx"; // hard coded because the CCBILL system can't deal with an empty password - despite having an option to ignore it...
-		$var['email']			= $metaUser->cmsUser->email;
-		$var['checksum']		= md5($this->settings['secretWord'] . $metaUser->cmsUser->username);
+		$var['email']			= $request->metaUser->cmsUser->email;
+		$var['checksum']		= md5($this->settings['secretWord'] . $request->metaUser->cmsUser->username);
 
 		if ( !empty( $request->int_var['planparams']['Allowedtypes'] ) ) {
 			$var['allowedTypes'] = $request->int_var['planparams']['Allowedtypes'];
 		}
 
 		if ( !empty( $this->settings['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $metaUser, $new_subscription );
+			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $request->metaUser, $request->new_subscription, $request->invoice );
 
 			$cps = explode( "\n", $rw_params );
 

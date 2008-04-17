@@ -20,12 +20,12 @@ class processor_nochex extends POSTprocessor
 	function info()
 	{
 		$info = array();
-		$info['name']				= 'nochex';
-		$info['longname']			= _CFG_NOCHEX_LONGNAME;
-		$info['statement']			= _CFG_NOCHEX_STATEMENT;
-		$info['description']		= _CFG_NOCHEX_DESCRIPTION;
-		$info['cc_list']			= 'visa,mastercard';
-		$info['recurring']			= 0;
+		$info['name']			= 'nochex';
+		$info['longname']		= _CFG_NOCHEX_LONGNAME;
+		$info['statement']		= _CFG_NOCHEX_STATEMENT;
+		$info['description']	= _CFG_NOCHEX_DESCRIPTION;
+		$info['cc_list']		= 'visa,mastercard';
+		$info['recurring']		= 0;
 
 		return $info;
 	}
@@ -33,9 +33,9 @@ class processor_nochex extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['testmode'] 			= 1;
-		$settings['merchant_id']		= 'nochex@aec.com';
-		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['testmode'] 		= 1;
+		$settings['merchant_id']	= 'nochex@aec.com';
+		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 
 		return $settings;
 	}
@@ -43,11 +43,11 @@ class processor_nochex extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']			= array( 'list_yesno');
-		$settings['merchant_id']		= array( 'inputC');
-		$settings['item_name']			= array( 'inputE');
- 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan');
-		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+		$settings['testmode']		= array( 'list_yesno');
+		$settings['merchant_id']	= array( 'inputC');
+		$settings['item_name']		= array( 'inputE');
+
+		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
 	}
@@ -63,15 +63,15 @@ class processor_nochex extends POSTprocessor
 		}
 
 		$var['merchant_id']			= $this->settings['merchant_id'];
-		$var['description']			= AECToolbox::rewriteEngine($this->settings['item_name'], $metaUser, $new_subscription);
+		$var['description']			= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
 		$var['order_id']			= $request->int_var['invoice'];
 		$var['amount']				= $request->int_var['amount'];
 		$var['success_url']			= $request->int_var['return_url'];
 		$var['cancel_url']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
 		$var['declined_url']		= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
 		$var['callback_url']		= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=nochexnotification' );
-		$var['billing_fullname']	= $metaUser->cmsUser->name;
-		$var['email_address']		= $metaUser->cmsUser->email;
+		$var['billing_fullname']	= $request->metaUser->cmsUser->name;
+		$var['email_address']		= $request->metaUser->cmsUser->email;
 
 		return $var;
 	}

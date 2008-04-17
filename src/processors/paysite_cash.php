@@ -69,8 +69,6 @@ class processor_paysite_cash extends URLprocessor
 		$s['siteid']		= array( 'inputC' );
 		$s['secret']		= array( 'inputC' );
 
-		$rewriteswitches	= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
-		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 		return $s;
 	}
 
@@ -118,8 +116,8 @@ class processor_paysite_cash extends URLprocessor
 					$response['valid'] = false;
 				}
 
-				$response['amount_paid'] = $post['montant_sent'];
-				$response['amount_currency'] = $post['devise_sent'];
+				$response['amount_paid']		= $post['montant_sent'];
+				$response['amount_currency']	= $post['devise_sent'];
 				break;
 			case 'ko':
 				$response['valid'] = false;

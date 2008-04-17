@@ -69,16 +69,14 @@ class processor_ipayment_silent extends XMLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']		= array("list_yesno");
-		$settings['fake_account']	= array("list_yesno");
-		$settings['user_id'] 		= array("inputC");
-		$settings['account_id']		= array("inputC");
-		$settings['password']		= array("inputC");
-		$settings['currency']		= array("list_currency");
-		$settings['promptAddress']	= array("list_yesno");
-		$settings['item_name']		= array("inputE");
- 		$rewriteswitches 			= array("cms", "user", "expiration", "subscription", "plan");
-		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+		$settings['testmode']		= array( "list_yesno" );
+		$settings['fake_account']	= array( "list_yesno" );
+		$settings['user_id'] 		= array( "inputC" );
+		$settings['account_id']		= array( "inputC" );
+		$settings['password']		= array( "inputC" );
+		$settings['currency']		= array( "list_currency" );
+		$settings['promptAddress']	= array( "list_yesno" );
+		$settings['item_name']		= array( "inputE" );
 
 		return $settings;
 	}
@@ -87,33 +85,33 @@ class processor_ipayment_silent extends XMLprocessor
 	{
 		global $mosConfig_live_site;
 
-		$var['params']['billInfo'] = array( 'p', _CFG_IPAYMENT_SILENT_PARAMS_BILLINFO_ELV_NAME, _CFG_IPAYMENT_SILENT_PARAMS_BILLINFO_ELV_DESC );
-		$var['params']['accountName'] = array( 'inputC', _AEC_WTFORM_ACCOUNTNAME_NAME, _AEC_WTFORM_ACCOUNTNAME_NAME, $metaUser->cmsUser->name );
-		$var['params']['accountNumber'] = array( 'inputC', _AEC_WTFORM_ACCOUNTNUMBER_NAME, _AEC_WTFORM_ACCOUNTNUMBER_NAME, '' );
-		$var['params']['bankNumber'] = array( 'inputC', _AEC_WTFORM_BANKNUMBER_NAME, _AEC_WTFORM_BANKNUMBER_NAME, '' );
-		$var['params']['bankName'] = array( 'inputC', _AEC_WTFORM_BANKNAME_NAME, _AEC_WTFORM_BANKNAME_NAME, '' );
+		$var['params']['billInfo']			= array( 'p', _CFG_IPAYMENT_SILENT_PARAMS_BILLINFO_ELV_NAME, _CFG_IPAYMENT_SILENT_PARAMS_BILLINFO_ELV_DESC );
+		$var['params']['accountName']		= array( 'inputC', _AEC_WTFORM_ACCOUNTNAME_NAME, _AEC_WTFORM_ACCOUNTNAME_NAME, $request->metaUser->cmsUser->name );
+		$var['params']['accountNumber']		= array( 'inputC', _AEC_WTFORM_ACCOUNTNUMBER_NAME, _AEC_WTFORM_ACCOUNTNUMBER_NAME, '' );
+		$var['params']['bankNumber']		= array( 'inputC', _AEC_WTFORM_BANKNUMBER_NAME, _AEC_WTFORM_BANKNUMBER_NAME, '' );
+		$var['params']['bankName']			= array( 'inputC', _AEC_WTFORM_BANKNAME_NAME, _AEC_WTFORM_BANKNAME_NAME, '' );
 
-		$name = explode( ' ', $metaUser->cmsUser->name );
+		$name = explode( ' ', $request->metaUser->cmsUser->name );
 
 		if ( empty( $name[1] ) ) {
 			$name[1] = "";
 		}
 
-		$var['params']['billInfo2'] = array( 'p', _CFG_IPAYMENT_SILENT_PARAMS_BILLINFO_CC_NAME, _CFG_IPAYMENT_SILENT_PARAMS_BILLINFO_CC_DESC );
+		$var['params']['billInfo2']			= array( 'p', _CFG_IPAYMENT_SILENT_PARAMS_BILLINFO_CC_NAME, _CFG_IPAYMENT_SILENT_PARAMS_BILLINFO_CC_DESC );
 
 		$var = $this->getCCform( $var );
 
-		$var['params']['billInfo'] = array( 'p', _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_DESC );
-		$var['params']['billFirstName'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_DESC, $name[0] );
-		$var['params']['billLastName'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_DESC, $name[1] );
+		$var['params']['billInfo']			= array( 'p', _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_DESC );
+		$var['params']['billFirstName']		= array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_DESC, $name[0] );
+		$var['params']['billLastName']		= array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_DESC, $name[1] );
 
 		if ( !empty( $this->settings['promptAddress'] ) ) {
-			$var['params']['billAddress'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLADDRESS_NAME );
-			$var['params']['billCity'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLCITY_NAME );
-			$var['params']['billState'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLSTATE_NAME );
-			$var['params']['billZip'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLZIP_NAME );
-			$var['params']['billCountry'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLCOUNTRY_NAME );
-			$var['params']['billTelephone'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLTELEPHONE_NAME );
+			$var['params']['billAddress']	= array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLADDRESS_NAME );
+			$var['params']['billCity']		= array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLCITY_NAME );
+			$var['params']['billState']		= array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLSTATE_NAME );
+			$var['params']['billZip']		= array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLZIP_NAME );
+			$var['params']['billCountry']	= array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLCOUNTRY_NAME );
+			$var['params']['billTelephone']	= array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLTELEPHONE_NAME );
 		}
 
 		return $var;
@@ -123,7 +121,7 @@ class processor_ipayment_silent extends XMLprocessor
 	{
 		global $mosConfig_live_site, $database;
 
-		$invoice_params = $invoice->getParams();
+		$invoice_params = $request->invoice->getParams();
 
 		if ( isset( $invoice_params['creator_ip'] ) ) {
 			$ip = $invoice_params['creator_ip'];
@@ -153,7 +151,7 @@ class processor_ipayment_silent extends XMLprocessor
 		$a['trx_amount']	= (int) ( $request->int_var['amount'] * 100 );
 		$a['trx_typ']		= 'auth';
 		$a['invoice_text']	= $request->int_var['invoice'];
-		$a['addr_email']	= $metaUser->cmsUser->email;
+		$a['addr_email']	= $request->metaUser->cmsUser->email;
 
 		$varray = array(	'addr_name'	=>	'billFirstName',
 							'addr_street'	=>	'billAddress',
@@ -197,14 +195,14 @@ class processor_ipayment_silent extends XMLprocessor
 	function transmitRequestXML( $xml, $request )
 	{
 		$path = '/merchant/';
-		if ( $settings['testmode'] || $settings['fake_account'] ) {
-			if ( $settings['fake_account'] ) {
+		if ( $this->settings['testmode'] || $this->settings['fake_account'] ) {
+			if ( $this->settings['fake_account'] ) {
 				$path .= "99999/example.php";
 			} else {
-				$path .= $settings['account_id'] . "/example.php";
+				$path .= $this->settings['account_id'] . "/example.php";
 			}
 		} else {
-			$path .= $settings['account_id'] . "/processor.php";
+			$path .= $this->settings['account_id'] . "/processor.php";
 		}
 
 		$url = "https://ipayment.de" . $path . '?' . $xml;
@@ -214,7 +212,7 @@ foreach( $request->int_var as $key => $value ) { if ( strpos( $key, '_') === fal
 echo '</p>';
 echo "<h1>Rechnung:</h1>";
 echo '<p>';
-foreach( $invoice as $key => $value ) { if ( strpos( $key, '_') === false ) { echo $key . ' = ' . $value . '</p><p>'; } }
+foreach( $request->invoice as $key => $value ) { if ( strpos( $key, '_') === false ) { echo $key . ' = ' . $value . '</p><p>'; } }
 echo '</p>';
 echo "<h1>Senden der Daten:</h1>";
 echo '<p>';

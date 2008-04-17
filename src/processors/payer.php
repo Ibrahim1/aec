@@ -44,9 +44,8 @@ class processor_payer extends POSTprocessor
 		$settings['lc']				= array( 'list_language' );
 		$settings['payment_method']	= array( 'inputA' );
 		$settings['debugmode']		= array( 'inputA' );
-		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
 
-        $settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+        $settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
 	}
@@ -55,17 +54,17 @@ class processor_payer extends POSTprocessor
 	{
 		global $mosConfig_live_site, $mosConfig_absolute_path, $my;
 
-		$Auth_url = $mosConfig_live_site . "/components/com_acctexp/processors/payer/authenticate.php";
-		$Settle_url = $mosConfig_live_site . "/components/com_acctexp/processors/payer/settle.php";
-		$Success_url = $mosConfig_live_site . "/index.php?option=com_acctexp&task=payernotification&Invoice=" . $request->int_var['invoice'];
-		$Shop_url = $mosConfig_live_site . "/index.php";
+		$Auth_url		= $mosConfig_live_site . "/components/com_acctexp/processors/payer/authenticate.php";
+		$Settle_url		= $mosConfig_live_site . "/components/com_acctexp/processors/payer/settle.php";
+		$Success_url	= $mosConfig_live_site . "/index.php?option=com_acctexp&task=payernotification&Invoice=" . $request->int_var['invoice'];
+		$Shop_url		= $mosConfig_live_site . "/index.php";
 
 		require_once($mosConfig_absolute_path . "/components/com_acctexp/processors/payer/payread_post_api.php");
 
 		$thePayreadApi = new payread_post_api;
 		$thePayreadApi->add_buyer_info("firstname", "lastname", "address_1", "address_2", "postalcode", "city", "se", "phone_home", "phone_work", "phone_mobile", "email");
 
-		$thePayreadApi->add_freeform_purchase(1, AECToolbox::rewriteEngine( $this->settings['item_name'], $metaUser, $new_subscription ), $request->int_var['amount'], $this->settings['tax'], 1);
+		$thePayreadApi->add_freeform_purchase(1, AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice ), $request->int_var['amount'], $this->settings['tax'], 1);
 
 		$thePayreadApi->add_payment_method($this->settings["payment_method"]);
 

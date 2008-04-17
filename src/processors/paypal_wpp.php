@@ -88,8 +88,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 		$settings['lists']['country'] = mosHTML::selectList( $country_sel, 'country', 'size="2"', 'value', 'text', $this->settings['country'] );
 
- 		$rewriteswitches 					= array("cms", "user", "expiration", "subscription", "plan");
-		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
 	}
@@ -104,7 +103,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$var = $this->getCCform( $var, $values );
 
 		$values = array( 'firstname', 'lastname', 'address', 'address2', 'city', 'state_usca', 'zip', 'country_list' );
-		$var = $this->getUserform( $var, $values, $metaUser );
+		$var = $this->getUserform( $var, $values, $request->metaUser );
 
 		return $var;
 	}
@@ -116,15 +115,15 @@ class processor_paypal_wpp extends XMLprocessor
 		$var = array();
 
 		if ( is_array( $request->int_var['amount'] ) ) {
-			$var['Method']				= 'CreateRecurringPaymentsProfile';
+			$var['Method']			= 'CreateRecurringPaymentsProfile';
 		} else {
-			$var['Method']				= 'DoDirectPayment';
+			$var['Method']			= 'DoDirectPayment';
 		}
 
 		if ( is_array( $request->int_var['amount'] ) ) {
-			$var['Version']				= '50.0';
+			$var['Version']			= '50.0';
 		} else {
-			$var['Version']				= '3.2';
+			$var['Version']			= '3.2';
 		}
 
 		$var['user']				= $this->settings['api_user'];
@@ -135,12 +134,12 @@ class processor_paypal_wpp extends XMLprocessor
 		$var['IPaddress']			= $_SERVER['REMOTE_ADDR'];
 		$var['firstName']			= trim( $request->int_var['params']['billFirstName'] );
 		$var['lastName']			= trim( $request->int_var['params']['billLastName'] );
-		$var['creditCardType']	= $request->int_var['params']['cardType'];
+		$var['creditCardType']		= $request->int_var['params']['cardType'];
 		$var['acct']				= $request->int_var['params']['cardNumber'];
-		$var['expDate']			= str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ).$request->int_var['params']['expirationYear'];
+		$var['expDate']				= str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ).$request->int_var['params']['expirationYear'];
 
 		$var['CardVerificationValue'] = $request->int_var['params']['cardVV2'];
-		$var['cvv2']			= $request->int_var['params']['cardVV2'];
+		$var['cvv2']				= $request->int_var['params']['cardVV2'];
 
 		$var['street1']				= $request->int_var['params']['billAddress'];
 
@@ -151,9 +150,9 @@ class processor_paypal_wpp extends XMLprocessor
 		$var['city']				= $request->int_var['params']['billCity'];
 		$var['state']				= $request->int_var['params']['billState'];
 		$var['zip']					= $request->int_var['params']['billZip'];
-		$var['country']		= $this->settings['country'];
+		$var['country']				= $this->settings['country'];
 		$var['NotifyUrl']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=paypal_wppnotification' );
-		$var['desc']				= AECToolbox::rewriteEngine( $this->settings['item_name'], $metaUser, $new_subscription );
+		$var['desc']				= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
 		$var['InvNum']				= $request->int_var['invoice'];;
 
 		if ( is_array( $request->int_var['amount'] ) ) {
@@ -220,7 +219,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$nvpResArray = $this->deformatNVP( $response );
 
 		if ( $response ) {
-			$return['invoice'] = $invoice->invoice_number;
+			$return['invoice'] = $request->invoice->invoice_number;
 			$resultCode = strtoupper( $nvpResArray["ACK"] );
 
 			if ( strcmp( $resultCode, 'SUCCESS' ) === 0) {
@@ -275,12 +274,12 @@ class processor_paypal_wpp extends XMLprocessor
 		return $return;
 	}
 
-	function customaction_cancel( $pp, $invoice, $metaUser )
+	function customaction_cancel( $request )
 	{
-		return $this->ManageRecurringPaymentsProfileStatus( $pp, $this->settings, $invoice, $metaUser, 'Cancel', $this->settings['cancel_note'] );
+		return $this->ManageRecurringPaymentsProfileStatus( $request, 'Cancel', $this->settings['cancel_note'] );
 	}
 
-	function ManageRecurringPaymentsProfileStatus( $pp, $invoice, $metaUser, $command, $note )
+	function ManageRecurringPaymentsProfileStatus( $request, $command, $note )
 	{
 		$var['Method']				= 'ManageRecurringPaymentsProfileStatus';
 		$var['Version']			= '3.0';
@@ -288,7 +287,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$var['pwd']					= $this->settings['api_password'];
 		$var['signature']			= $this->settings['signature'];
 
-		$invoiceparams = $invoice->getParams();
+		$invoiceparams = $request->invoice->getParams();
 
 		// Add Payment information
 		$var['profileid'] = $invoiceparams['subscriptionid'];
@@ -324,7 +323,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$nvpResArray = $this->deformatNVP( $response );
 
 		if ( !empty( $response ) ) {
-			$return['invoice'] = $invoice->invoice_number;
+			$return['invoice'] = $request->invoice->invoice_number;
 
 			if ( isset( $nvpResArray['PROFILEID'] ) ) {
 				if ( $nvpResArray['PROFILEID'] == $var['profileid'] ) {
@@ -341,7 +340,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 			return $return;
 		} else {
-			Payment_HTML::error( 'com_acctexp', $metaUser->cmsUser, $invoice, "An error occured while cancelling your subscription. Please contact the system administrator!", true );
+			Payment_HTML::error( 'com_acctexp', $request->metaUser->cmsUser, $request->invoice, "An error occured while cancelling your subscription. Please contact the system administrator!", true );
 		}
 	}
 

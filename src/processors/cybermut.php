@@ -67,8 +67,7 @@ class processor_cybermut extends POSTprocessor
 		$settings['server']		= 0;
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 
-		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
-		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
 	}
@@ -83,7 +82,7 @@ class processor_cybermut extends POSTprocessor
 		$settings['soc']		= array( 'inputC' );
 		$settings['pass']		= array( 'inputC' );
 		$settings['key']		= array( 'inputC' );
-		$settings['currency']		= array( 'list_currency' );
+		$settings['currency']	= array( 'list_currency' );
 		$settings['server']		= array( 'list' );
 		$settings['language']	= array( 'list_language' );
 		$settings['item_name']	= array( 'inputE' );
@@ -116,7 +115,7 @@ class processor_cybermut extends POSTprocessor
 		$var['TPE']				= $this->settings['tpe'];
 		$var['date']			= date( "d/m/Y:H:i:s" );
 		$var['montant']			= $request->int_var['amount'] . $this->settings['currency'];
-		$var['reference']		= $metaUser->userid;
+		$var['reference']		= $request->metaUser->userid;
 		$var['texte-libre']		= $request->int_var['invoice'];
 		$var['lgue']			= $this->settings['language'];
 		$var['societe']			= $this->settings['soc'];
@@ -134,7 +133,7 @@ class processor_cybermut extends POSTprocessor
 		$var['url_retour_err']	= $mosConfig_live_site . '/index.php?option=com_acctexp&task=cancel';
 
 		if ( !empty( $this->settings['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $metaUser, $new_subscription );
+			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $request->metaUser, $request->new_subscription, $request->invoice );
 
 			$cps = explode( "\n", $rw_params );
 
@@ -166,14 +165,14 @@ class processor_cybermut extends POSTprocessor
 	{
 		switch( $post['retour'] ) {
 			case 'payetest':
-				$response['valid'] = $this->settings['testmode'] ? true : false;
+				$response['valid']	= $this->settings['testmode'] ? true : false;
 				break;
 			case 'paiement':
-				$response['valid'] = true;
+				$response['valid']	= true;
 				break;
 			case 'annulation':
-				$response['valid'] = false;
-				$response['cancel'] = 1;
+				$response['valid']	= false;
+				$response['cancel']	= 1;
 				break;
 		}
 

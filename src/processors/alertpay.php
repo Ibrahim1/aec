@@ -67,8 +67,8 @@ class processor_alertpay extends POSTprocessor
 		$settings['securitycode']	= array( 'inputC' );
 		$settings['currency']		= array( 'list_currency' );
 		$settings['item_name']		= array( 'inputE' );
- 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
-		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+
+		$settings					= AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
 	}
@@ -92,7 +92,7 @@ class processor_alertpay extends POSTprocessor
 		$var['ap_returnurl']	= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=thanks");
 		$var['ap_quantity']		= '';
 		$var['ap_description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, $mosConfig_live_site,
-									$metaUser->cmsUser->name, $metaUser->cmsUser->username );
+									$request->metaUser->cmsUser->name, $request->metaUser->cmsUser->username );
 		if ( isset( $this->settings['tax'] ) && @$this->settings['tax'] > 0) {
 			$tax = $request->int_var['amount']/(100+$this->settings['tax'])*100;
 			$var['ap_amount'] 	= round($tax, 2);
@@ -101,12 +101,12 @@ class processor_alertpay extends POSTprocessor
 		}
 		$var['ap_cancelurl']	= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=cancel");
 
-		$var['apc_1']			= $metaUser->cmsUser->id;
-		$var['apc_2']			= AECToolbox::rewriteEngine( $this->settings['item_name'], $metaUser, $new_subscription );
+		$var['apc_1']			= $request->metaUser->cmsUser->id;
+		$var['apc_2']			= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
 		$var['apc_3']			= $request->int_var['usage'];
 
 		if ( !empty( $this->settings['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $metaUser, $new_subscription );
+			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $request->metaUser, $request->new_subscription, $request->invoice );
 
 			$cps = explode( "\n", $rw_params );
 

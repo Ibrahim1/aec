@@ -79,8 +79,8 @@ class processor_authorize_aim extends XMLprocessor
 		$settings['totalOccurrences']	= array("inputA");
 		$settings['trialOccurrences']	= array("inputA");
 		$settings['item_name']			= array("inputE");
- 		$rewriteswitches 				= array("cms", "user", "expiration", "subscription", "plan");
-		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+
+		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
 	}
@@ -91,7 +91,7 @@ class processor_authorize_aim extends XMLprocessor
 
 		$var = $this->getCCform();
 
-		$name = explode( ' ', $metaUser->cmsUser->name );
+		$name = explode( ' ', $request->metaUser->cmsUser->name );
 
 		if ( empty( $name[1] ) ) {
 			$name[1] = "";
@@ -135,7 +135,7 @@ class processor_authorize_aim extends XMLprocessor
 		$a['x_relay_response']	= "FALSE";
 		$a['x_card_num']		= trim( $request->int_var['params']['cardNumber'] );
 		$a['x_exp_date']		= str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ) . $request->int_var['params']['expirationYear'];
-		$a['x_description']		= trim( substr( AECToolbox::rewriteEngine( $this->settings['item_name'], $metaUser, $new_subscription ), 0, 20 ) );
+		$a['x_description']		= trim( substr( AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice ), 0, 20 ) );
 		$a['x_invoice_num']		= $request->int_var['invoice'];
 		$a['x_amount']			= $request->int_var['amount'];
 		$a['x_first_name']		= trim( $request->int_var['params']['billFirstName'] );
@@ -160,7 +160,7 @@ class processor_authorize_aim extends XMLprocessor
 		}
 
 		if ( !empty( $this->settings['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $metaUser, $new_subscription );
+			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $request->metaUser, $request->new_subscription, $request->invoice );
 
 			$cps = explode( "\n", $rw_params );
 
@@ -186,7 +186,7 @@ class processor_authorize_aim extends XMLprocessor
 	function transmitRequestXML( $xml, $request )
 	{
 		$path = "/gateway/transact.dll";
-		if ( $settings['testmode'] ) {
+		if ( $this->settings['testmode'] ) {
 			$url = "https://test.authorize.net" . $path;
 		} else {
 			$url = "https://secure.authorize.net" . $path;

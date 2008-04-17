@@ -81,9 +81,9 @@ class processor_psigate extends POSTprocessor
 	{
 		$settings = array();
 
-		$settings['testmode'] = array("list_yesno", "Test Mode", "Operate in PSIGate TEST mode");
-		$settings['StoreKey']		= array("inputC","Store Key","Your Alphanumeric ID assigned by PSIGate");
-		$settings['secretWord']		= array("inputC","Secret Word","Used to encrypt and protect transactions");
+		$settings['testmode']		= array( "list_yesno", "Test Mode", "Operate in PSIGate TEST mode" );
+		$settings['StoreKey']		= array( "inputC","Store Key","Your Alphanumeric ID assigned by PSIGate" );
+		$settings['secretWord']		= array( "inputC","Secret Word","Used to encrypt and protect transactions" );
 		return $settings;
 	}
 
@@ -98,11 +98,11 @@ class processor_psigate extends POSTprocessor
 
 		$var['StoreKey']		= $this->settings['StoreKey'];
 		$var['CustomerRefNo']	= $request->int_var['invoice'];
-		//		$var['OrderID']			= md5($this->settings['secretWord'] . $request->int_var['amount']);
+		//$var['OrderID']			= md5($this->settings['secretWord'] . $request->int_var['amount']);
 		$var['SubTotal']		= $request->int_var['amount'];
 		$var['PaymentType']		= "CC";
-		$var['ThanksURL']		= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=psigatenotification");
-		$var['NoThanksURL']		= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=psigatenotification");
+		$var['ThanksURL']		= AECToolbox::deadsureURL( "/index.php?option=com_acctexp&amp;task=psigatenotification" );
+		$var['NoThanksURL']		= AECToolbox::deadsureURL( "/index.php?option=com_acctexp&amp;task=psigatenotification" );
 		$var['CardAction']		= "0";
 		$var['test123']			= "tester123";
 		return $var;
@@ -155,16 +155,16 @@ class processor_psigate extends POSTprocessor
 		$checksum = md5($OrderID . $FullTotal);
 
 		$response = array();
-		$response['TransRefNumber'] = $TransRefNumber;
-		$response['Approved'] = $Approved;
-		$response['FullTotal'] = $FullTotal;
-		$response['CardNumber'] = $CardNumber;
-		$response['OrderID'] = $OrderID;
-		$response['invoice'] = $CustomerRefNo;
+		$response['TransRefNumber']	= $TransRefNumber;
+		$response['Approved']		= $Approved;
+		$response['FullTotal']		= $FullTotal;
+		$response['CardNumber']		= $CardNumber;
+		$response['OrderID']		= $OrderID;
+		$response['invoice']		= $CustomerRefNo;
 
 
 		$validate			= md5($this->settings['secretWord'] . $FullTotal);
-		$response['valid'] = (strcmp($validate, $checksum) == 0);
+		$response['valid']	= (strcmp($validate, $checksum) == 0);
 
 		if ( $response['valid'] = 1 ){
 			if ( substr( $ReturnCode, 0, 1 ) == "Y" ) {
@@ -174,9 +174,9 @@ class processor_psigate extends POSTprocessor
 				print_r("<b>Total Charged:</b>". $FullTotal . "<br/>");
 				print_r("<br/>");
 			} else {
-				$response['valid'] = 0;
-				$response['pending']=1;
-				$response['pending_reason']=$ErrMsg;
+				$response['valid']			= 0;
+				$response['pending']		= 1;
+				$response['pending_reason']	= $ErrMsg;
 				print_r("<b>Transaction Declined <br/>Reason: </b>" .$ErrMsg . "<br/>");
 			}
 		} else  {

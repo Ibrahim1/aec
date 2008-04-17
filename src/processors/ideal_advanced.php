@@ -43,13 +43,13 @@ class processor_ideal_advanced extends XMLprocessor
 	function info()
 	{
 		$i = array();
-		$i['longname'] = _CFG_IDEAL_ADVANCED_LONGNAME;
-		$i['statement'] = _CFG_IDEAL_ADVANCED_STATEMENT;
-		$i['description'] = _CFG_IDEAL_ADVANCED_DESCRIPTION;
-		$i['currencies'] = 'EUR';
-		$i['languages'] = 'NL';
-		$i['cc_list'] = 'rabobank,abnamro,ing,postbank,fortis';
-		$info['recurring'] = 0;
+		$i['longname']		= _CFG_IDEAL_ADVANCED_LONGNAME;
+		$i['statement']		= _CFG_IDEAL_ADVANCED_STATEMENT;
+		$i['description']	= _CFG_IDEAL_ADVANCED_DESCRIPTION;
+		$i['currencies']	= 'EUR';
+		$i['languages']		= 'NL';
+		$i['cc_list']		= 'rabobank,abnamro,ing,postbank,fortis';
+		$info['recurring']	= 0;
 
 		return $i;
 	}
@@ -82,10 +82,7 @@ class processor_ideal_advanced extends XMLprocessor
 			$bank_selection[] = mosHTML::makeOption( $name, $name );
 		}
 
-		$s['lists']['bank'] = mosHTML::selectList($bank_selection, 'bank', 'size="5"', 'value', 'text', $this->settings['bank'] );
-
-		$rewriteswitches	= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
-		$s = AECToolbox::rewriteEngineInfo( $rewriteswitches, $s );
+		$s['lists']['bank']	= mosHTML::selectList($bank_selection, 'bank', 'size="5"', 'value', 'text', $this->settings['bank'] );
 
 		return $s;
 	}
@@ -96,21 +93,21 @@ class processor_ideal_advanced extends XMLprocessor
 
 		$var = $this->getCCform();
 
-		$name = explode( ' ', $metaUser->cmsUser->name );
+		$name = explode( ' ', $request->metaUser->cmsUser->name );
 
 		if ( empty( $name[1] ) ) {
 			$name[1] = "";
 		}
 
-		$var['params']['billFirstName'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLFIRSTNAME_NAME, _AEC_AUTHORIZE_ARB_PARAMS_BILLFIRSTNAME_DESC, $name[0]);
-		$var['params']['billLastName'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLLASTNAME_NAME, _AEC_AUTHORIZE_ARB_PARAMS_BILLLASTNAME_DESC, $name[1]);
+		$var['params']['billFirstName']		= array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLFIRSTNAME_NAME, _AEC_AUTHORIZE_ARB_PARAMS_BILLFIRSTNAME_DESC, $name[0]);
+		$var['params']['billLastName']		= array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLLASTNAME_NAME, _AEC_AUTHORIZE_ARB_PARAMS_BILLLASTNAME_DESC, $name[1]);
 
 		if ( !empty( $this->settings['promptAddress'] ) ) {
-			$var['params']['billAddress'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLADDRESS_NAME );
-			$var['params']['billCity'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLCITY_NAME );
-			$var['params']['billState'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLSTATE_NAME );
-			$var['params']['billZip'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLZIP_NAME );
-			$var['params']['billCountry'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLCOUNTRY_NAME );
+			$var['params']['billAddress']	= array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLADDRESS_NAME );
+			$var['params']['billCity']		= array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLCITY_NAME );
+			$var['params']['billState']		= array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLSTATE_NAME );
+			$var['params']['billZip']		= array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLZIP_NAME );
+			$var['params']['billCountry']	= array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLCOUNTRY_NAME );
 		}
 
 		return $var;
@@ -124,7 +121,7 @@ class processor_ideal_advanced extends XMLprocessor
 		$data = & new AcquirerTrxRequest();
 
 		//Set parameters for TransactionRequest
-		$data->setIssuerID( $metaUser->userid );
+		$data->setIssuerID( $request->metaUser->userid );
 		$data->setPurchaseID( $request->int_var['invoice'] );
 		$data->setAmount( $request->int_var['amount']*100 );
 		$data->setCurrency( $request->int_var['currency'] );

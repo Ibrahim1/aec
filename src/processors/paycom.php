@@ -97,13 +97,13 @@ class processor_paycom extends POSTprocessor
 		$var['reseller']		= "a"; //hardcoded as per Paycom Interface documentation - required
 		$var['x_invoice']		= $request->int_var['invoice'];
 		$var['zip']				= "";  //if you have this available through CB then use it ;)
-		$var['email']			= $metaUser->cmsUser->email;
+		$var['email']			= $request->metaUser->cmsUser->email;
 		$var['country']			= "";  //if you have this available through CB then use it ;) NOTE Paycom want a ISO 2 char country code.
-		$var['x_checksum']		= md5($this->settings['secretWord'] . $metaUser->cmsUser->username);
+		$var['x_checksum']		= md5($this->settings['secretWord'] . $request->metaUser->cmsUser->username);
 		$var['handle_response']	= "true"; //instructs Paycom to handle the accept/deny process
 		$var['response_post']	= "Y"; //tells Paycom - 'YES' we would like an answer please
 		$var['no_userpass']		= "true"; //tells Paycom - we are handling the username and password
-		$var['x_username']		= $metaUser->cmsUser->username;
+		$var['x_username']		= $request->metaUser->cmsUser->username;
 		//		$var['bgcolor']			= $this->settings['bgcolor'];
 
 		return $var;
@@ -129,10 +129,10 @@ class processor_paycom extends POSTprocessor
 
 
 		$response = array();
-		$response['invoice'] = $invoice;
-		$response['valid'] = 1;
-		$response['ans'] = $ans;
-		$response['checksum'] = $checksum;
+		$response['invoice']	= $invoice;
+		$response['valid']		= 1;
+		$response['ans']		= $ans;
+		$response['checksum']	= $checksum;
 
 
 		return $response;

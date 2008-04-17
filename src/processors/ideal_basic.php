@@ -43,13 +43,13 @@ class processor_ideal_basic extends URLprocessor
 	function info()
 	{
 		$i = array();
-		$i['longname'] = _CFG_IDEAL_BASIC_LONGNAME;
-		$i['statement'] = _CFG_IDEAL_BASIC_STATEMENT;
-		$i['description'] = _CFG_IDEAL_BASIC_DESCRIPTION;
-		$i['currencies'] = 'EUR';
-		$i['languages'] = 'NL';
-		$i['cc_list'] = 'rabobank,abnamro,ing,postbank,fortis';
-		$info['recurring'] = 0;
+		$i['longname']		= _CFG_IDEAL_BASIC_LONGNAME;
+		$i['statement']		= _CFG_IDEAL_BASIC_STATEMENT;
+		$i['description']	= _CFG_IDEAL_BASIC_DESCRIPTION;
+		$i['currencies']	= 'EUR';
+		$i['languages']		= 'NL';
+		$i['cc_list']		= 'rabobank,abnamro,ing,postbank,fortis';
+		$info['recurring']	= 0;
 
 		return $i;
 	}
@@ -79,8 +79,6 @@ class processor_ideal_basic extends URLprocessor
 		$s['key']			= array( 'inputC' );
 		$s['description']	= array( 'inputE' );
 
-		$rewriteswitches	= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
-		$s = AECToolbox::rewriteEngineInfo( $rewriteswitches, $s );
 		return $s;
 	}
 
@@ -106,7 +104,7 @@ class processor_ideal_basic extends URLprocessor
 		$var['currency']			= $this->settings['currency'];
 		$var['language']			= strtolower( $this->settings['language'] );
 		$var['description']			= substr( $this->settings['description'], 0, 32);
-		$var['itemNumber1']			= $metaUser->userid;
+		$var['itemNumber1']			= $request->metaUser->userid;
 		$var['itemDescription1']	= substr( $this->settings['description'], 0, 32);
 		$var['itemQuantity1']		= 1;
 		$var['itemPrice1']			= $request->int_var['amount'];

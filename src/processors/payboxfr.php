@@ -118,40 +118,40 @@ class processor_payboxfr extends POSTprocessor
 			}
 
 			$svars = array();
-			$svars['IBS_2MONT'] = '0000000000';
-			$svars['IBS_NBPAIE'] = '00';
-			$svars['IBS_FREQ'] = str_pad( $period, 2, '0', STR_PAD_LEFT );
-			$svars['IBS_QUAND'] = '00';
-			$svars['IBS_DELAIS'] = '000';
+			$svars['IBS_2MONT']		= '0000000000';
+			$svars['IBS_NBPAIE']	= '00';
+			$svars['IBS_FREQ']		= str_pad( $period, 2, '0', STR_PAD_LEFT );
+			$svars['IBS_QUAND']		= '00';
+			$svars['IBS_DELAIS']	= '000';
 
 			foreach ( $svars as $svname => $svvar ) {
 				$append .= $svname . $svvar;
 			}
 
-			$var['PBX_TOTAL']		= $request->int_var['amount']['amount3'] * 100;
+			$var['PBX_TOTAL']	= $request->int_var['amount']['amount3'] * 100;
 
-			$var['PBX_CMD']			= $request->int_var['invoice'] . $append;
+			$var['PBX_CMD']		= $request->int_var['invoice'] . $append;
 		} else {
-			$var['PBX_TOTAL']		= $request->int_var['amount'] * 100;
-			$var['PBX_CMD']			= $request->int_var['invoice'];
+			$var['PBX_TOTAL']	= $request->int_var['amount'] * 100;
+			$var['PBX_CMD']		= $request->int_var['invoice'];
 		}
 
 		$iso4217num = array( 'EUR' => 978, 'USD' => 840, 'GBP' => 826, 'AUD' => 036, 'CAD' => 124, 'JPY' => 392, 'NZD' => 554 );
 
 		if ( isset( $iso4217num[$this->settings['currency']] ) ) {
-			$var['PBX_DEVISE']		= $iso4217num[$this->settings['currency']];
+			$var['PBX_DEVISE']	= $iso4217num[$this->settings['currency']];
 		} else {
-			$var['PBX_DEVISE']		= '978';
+			$var['PBX_DEVISE']	= '978';
 		}
 
-		$var['PBX_PORTEUR']		= $metaUser->cmsUser->email;
+		$var['PBX_PORTEUR']		= $request->metaUser->cmsUser->email;
 
 		$iso639_2to3 = array( 'GB' => 'GBR', 'DE' => 'DEU', 'FR' => 'FRA', 'IT' => 'ITA', 'ES' => 'ESP', 'SW' => 'SWE', 'NL' => 'NLD' );
 
 		$var['PBX_LANGUE']		= $iso639_2to3[$this->settings['language']];
 
-		$var['PBX_EFFECTUE']		= $request->int_var['return_url'];
-		$var['PBX_ANNULE']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
+		$var['PBX_EFFECTUE']	= $request->int_var['return_url'];
+		$var['PBX_ANNULE']		= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
 
 		$var['PBX_RETOUR']		= 'option:com_acctexp;task:payboxfrnotification;amount:M;invoice:R;authorization:A;transaction:T;subscriptionid:B;error:E;check:K';
 
