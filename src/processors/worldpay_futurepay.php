@@ -62,6 +62,7 @@ class processor_worldpay_futurepay extends POSTprocessor
 		$settings['testmode'] 		= 0;
 		$settings['currency'] 		= 'USD';
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['customparams']	= "";
 		$settings['callbackPW'] 	= '';
 
 		return $settings;
@@ -71,12 +72,13 @@ class processor_worldpay_futurepay extends POSTprocessor
 	{
 		$settings = array();
 
-		$settings['testmode']		= array( 'list_yesno');
-		$settings['instId']			= array( 'inputC');
-		$settings['currency']		= array( 'list_currency');
+		$settings['testmode']		= array( 'list_yesno' );
+		$settings['instId']			= array( 'inputC' );
+		$settings['currency']		= array( 'list_currency' );
 		$settings['info']			= array( 'fieldset' );
-		$settings['item_name']		= array( 'inputE');
- 		$settings['callbackPW']		= array( 'inputC');
+		$settings['item_name']		= array( 'inputE' );
+		$settings['customparams']	= array( 'inputD' );
+ 		$settings['callbackPW']		= array( 'inputC' );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 

@@ -76,12 +76,12 @@ class processor_authorize extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']			= array("list_yesno");
-		$settings['login'] 				= array("inputC");
-		$settings['transaction_key']	= array("inputC");
-		$settings['currency']			= array("list_currency");
-		$settings['timestamp_offset']	= array("inputC");
-		$settings['item_name']			= array("inputE");
+		$settings['testmode']			= array( "list_yesno" );
+		$settings['login'] 				= array( "inputC" );
+		$settings['transaction_key']	= array( "inputC" );
+		$settings['currency']			= array( "list_currency" );
+		$settings['timestamp_offset']	= array( "inputC" );
+		$settings['item_name']			= array( "inputE" );
 		$settings['customparams']		= array( 'inputD' );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
@@ -138,22 +138,6 @@ class processor_authorize extends POSTprocessor
 
 		$var['x_cust_id']			= $request->metaUser->cmsUser->id;
 		$var['x_description']		= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
-
-		$var = $this->customParams( $this->settings['customparams'], $var, $request->metaUser, $request->new_subscription, $request->invoice );
-
-		if ( !empty( $this->settings['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $request->metaUser, $request->new_subscription, $request->invoice );
-
-			$cps = explode( "\n", $rw_params );
-
-			foreach ( $cps as $cp ) {
-				$cpa = explode( '=', $cp );
-
-				if ( !empty( $cpa[0] ) && isset( $cp[1] ) ) {
-					$var[$cpa[0]] = $cpa[1];
-				}
-			}
-		}
 
 		return $var;
 	}

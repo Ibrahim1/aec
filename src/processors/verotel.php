@@ -62,6 +62,7 @@ class processor_verotel extends URLprocessor
 		$s['siteid']			= "siteid";
 		$s['secretcode']		= "secretcode";
 		$s['use_ticketsclub']	= 1;
+		$s['customparams']		= "";
 
 		return $s;
 	}
@@ -75,6 +76,7 @@ class processor_verotel extends URLprocessor
 		$s['siteid']			= array( 'inputC' );
 		$s['secretcode']		= array( 'inputC' );
 		$s['use_ticketsclub']	= array( 'list_yesno' );
+		$s['customparams']		= array( 'inputD' );
 
 		return $s;
 	}

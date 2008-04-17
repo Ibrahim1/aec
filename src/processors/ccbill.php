@@ -49,14 +49,14 @@ class processor_ccbill extends POSTprocessor
 	function info()
 	{
 		$info = array();
-		$info['name'] = 'ccbill';
-		$info['longname'] = _CFG_CCBILL_LONGNAME;
-		$info['statement'] = _CFG_CCBILL_STATEMENT;
-		$info['description'] = _CFG_CCBILL_DESCRIPTION;
-		$info['cc_list'] = "visa,mastercard,discover,echeck,jcb";
-		$info['currencies'] = "USD";
-		$info['recurring'] = 0;
-		$info['notify_trail_thanks'] = 1;
+		$info['name']					= 'ccbill';
+		$info['longname']				= _CFG_CCBILL_LONGNAME;
+		$info['statement']				= _CFG_CCBILL_STATEMENT;
+		$info['description']			= _CFG_CCBILL_DESCRIPTION;
+		$info['cc_list']				= "visa,mastercard,discover,echeck,jcb";
+		$info['currencies']				= "USD";
+		$info['recurring']				= 0;
+		$info['notify_trail_thanks']	= 1;
 
 		return $info;
 	}
@@ -64,11 +64,11 @@ class processor_ccbill extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['clientAccnum']	= "Account Number";
-		$settings['clientSubacc']	= "Sub Account";
-		$settings['formName']		= "Form Name";
-		$settings['secretWord']		= "Secret Word";
-		$settings['datalink_username']		= "Secret Word";
+		$settings['clientAccnum']		= "Account Number";
+		$settings['clientSubacc']		= "Sub Account";
+		$settings['formName']			= "Form Name";
+		$settings['secretWord']			= "Secret Word";
+		$settings['datalink_username']	= "Secret Word";
 		$settings['customparams']		= "";
 
 		return $settings;
@@ -120,20 +120,6 @@ class processor_ccbill extends POSTprocessor
 
 		if ( !empty( $request->int_var['planparams']['Allowedtypes'] ) ) {
 			$var['allowedTypes'] = $request->int_var['planparams']['Allowedtypes'];
-		}
-
-		if ( !empty( $this->settings['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $request->metaUser, $request->new_subscription, $request->invoice );
-
-			$cps = explode( "\n", $rw_params );
-
-			foreach ( $cps as $cp ) {
-				$cpa = explode( '=', $cp );
-
-				if ( !empty( $cpa[0] ) && isset( $cp[1] ) ) {
-					$var[$cpa[0]] = $cpa[1];
-				}
-			}
 		}
 
 		return $var;

@@ -56,16 +56,17 @@ class processor_cybermut extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['testmode']	= 0;
-		$settings['tpe']		= '7654321';
-		$settings['ver']		= '1.2open';
-		$settings['soc']		= 'societe';
-		$settings['pass']		= 'passphrase';
-		$settings['key']		= '000102030405060708090A0B0C0D0E0F10111213';
-		$settings['currency']	= 'EUR';
-		$settings['language']	= 'FR';
-		$settings['server']		= 0;
+		$settings['testmode']		= 0;
+		$settings['tpe']			= '7654321';
+		$settings['ver']			= '1.2open';
+		$settings['soc']			= 'societe';
+		$settings['pass']			= 'passphrase';
+		$settings['key']			= '000102030405060708090A0B0C0D0E0F10111213';
+		$settings['currency']		= 'EUR';
+		$settings['language']		= 'FR';
+		$settings['server']			= 0;
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['customparams']	= "";
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
@@ -76,16 +77,17 @@ class processor_cybermut extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']	= array( 'list_yesno' );
-		$settings['tpe']		= array( 'inputC' );
-		$settings['ver']		= array( 'inputC' );
-		$settings['soc']		= array( 'inputC' );
-		$settings['pass']		= array( 'inputC' );
-		$settings['key']		= array( 'inputC' );
-		$settings['currency']	= array( 'list_currency' );
-		$settings['server']		= array( 'list' );
-		$settings['language']	= array( 'list_language' );
-		$settings['item_name']	= array( 'inputE' );
+		$settings['testmode']		= array( 'list_yesno' );
+		$settings['tpe']			= array( 'inputC' );
+		$settings['ver']			= array( 'inputC' );
+		$settings['soc']			= array( 'inputC' );
+		$settings['pass']			= array( 'inputC' );
+		$settings['key']			= array( 'inputC' );
+		$settings['currency']		= array( 'list_currency' );
+		$settings['server']			= array( 'list' );
+		$settings['language']		= array( 'list_language' );
+		$settings['item_name']		= array( 'inputE' );
+		$settings['customparams']	= array( 'inputD' );
 
 		$servers = array( 'paiement.creditmutuel.fr', 'ssl.paiement.cic-banques.fr', 'ssl.paiement.banque-obc.fr', 'paiement.caixanet.fr', 'creditmutuel.fr/telepaiement' );
 
@@ -131,20 +133,6 @@ class processor_cybermut extends POSTprocessor
 		$var['url_retour']		= $mosConfig_live_site . '/index.php';
 		$var['url_retour_ok']	= $mosConfig_live_site . '/index.php?option=com_acctexp&task=thanks';
 		$var['url_retour_err']	= $mosConfig_live_site . '/index.php?option=com_acctexp&task=cancel';
-
-		if ( !empty( $this->settings['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $request->metaUser, $request->new_subscription, $request->invoice );
-
-			$cps = explode( "\n", $rw_params );
-
-			foreach ( $cps as $cp ) {
-				$cpa = explode( '=', $cp );
-
-				if ( !empty( $cpa[0] ) && isset( $cp[1] ) ) {
-					$var[$cpa[0]] = $cpa[1];
-				}
-			}
-		}
 
 		foreach ( $var as $k => $v ) {
 			$var[$k] = $this->HtmlEncode( $v );

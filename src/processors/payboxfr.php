@@ -66,6 +66,7 @@ class processor_payboxfr extends POSTprocessor
 		$settings['path']			= '/cgi-bin/modulev2.cgi';
 		$settings['currency']		= 'EUR';
 		$settings['language']		= 'FR';
+		$settings['customparams']	= "";
 
 		return $settings;
 	}
@@ -82,6 +83,7 @@ class processor_payboxfr extends POSTprocessor
 		$settings['info']			= array( 'fieldset' );
 		$settings['currency']		= array( 'list_currency' );
 		$settings['language']		= array( 'list_language' );
+		$settings['customparams']	= array( 'inputD' );
 
 		return $settings;
 	}

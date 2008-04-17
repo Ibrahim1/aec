@@ -2044,10 +2044,10 @@ class processor extends paramDBTable
 		return $settings;
 	}
 
-	function customParams( $custom, $var, $metaUser=null, $new_subscription=null, $invoice=null )
+	function customParams( $custom, $var, $request )
 	{
 		if ( !empty( $custom ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $custom, $metaUser, $new_subscription, $invoice );
+			$rw_params = AECToolbox::rewriteEngine( $custom, $request->metaUser, $request->new_subscription, $request->invoice );
 
 			$params = explode( "\n", $rw_params );
 
@@ -2420,6 +2420,10 @@ class POSTprocessor extends processor
 	{
 		$var = $this->createGatewayLink( $request );
 
+		if ( !empty( $this->settings['customparams'] ) ) {
+			$var = $this->customParams( $this->settings['customparams'], $var, $request );
+		}
+
 		$return = '<form action="' . $var['post_url'] . '" method="post">' . "\n";
 		unset( $var['post_url'] );
 
@@ -2438,8 +2442,11 @@ class GETprocessor extends processor
 {
 	function checkoutAction( $request )
 	{
-
 		$var = $this->createGatewayLink( $request );
+
+		if ( !empty( $this->settings['customparams'] ) ) {
+			$var = $this->customParams( $this->settings['customparams'], $var, $request );
+		}
 
 		$return = '<form action="' . $var['post_url'] . '" method="get">' . "\n";
 		unset( $var['post_url'] );
@@ -2460,6 +2467,10 @@ class URLprocessor extends processor
 	function checkoutAction( $request )
 	{
 		$var = $this->createGatewayLink( $request );
+
+		if ( !empty( $this->settings['customparams'] ) ) {
+			$var = $this->customParams( $this->settings['customparams'], $var, $request );
+		}
 
 		$return = '<a href="' . $var['post_url'];
 		unset( $var['post_url'] );

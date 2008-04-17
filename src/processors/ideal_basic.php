@@ -64,6 +64,7 @@ class processor_ideal_basic extends URLprocessor
 		$s['language']		= "NL";
 		$s['key']			= "key";
 		$s['description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$s['customparams']		= "";
 
 		return $s;
 	}
@@ -78,6 +79,7 @@ class processor_ideal_basic extends URLprocessor
 		$s['language']		= array( 'list_language' );
 		$s['key']			= array( 'inputC' );
 		$s['description']	= array( 'inputE' );
+		$s['customparams']	= array( 'inputD' );
 
 		return $s;
 	}

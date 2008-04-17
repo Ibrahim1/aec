@@ -71,8 +71,10 @@ class processor_psigate extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['StoreKey']	= "StoreKey";
+		$settings['testmode']		= 0;
+		$settings['StoreKey']		= "StoreKey";
 		$settings['secretWord']		= "Secret Word";
+		$settings['customparams']	= "";
 
 		return $settings;
 	}
@@ -84,6 +86,7 @@ class processor_psigate extends POSTprocessor
 		$settings['testmode']		= array( "list_yesno", "Test Mode", "Operate in PSIGate TEST mode" );
 		$settings['StoreKey']		= array( "inputC","Store Key","Your Alphanumeric ID assigned by PSIGate" );
 		$settings['secretWord']		= array( "inputC","Secret Word","Used to encrypt and protect transactions" );
+		$settings['customparams']	= array( 'inputD' );
 		return $settings;
 	}
 

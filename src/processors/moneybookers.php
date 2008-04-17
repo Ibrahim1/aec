@@ -34,6 +34,7 @@ class processor_moneybookers extends POSTprocessor
 		$settings['currency'] 				= 'USD';
 		$settings['confirmation_note']		= "Thank you for subscribing on $mosConfig_sitename!";
 		$settings['item_name']				= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['customparams']			= "";
 
 		return $settings;
 	}
@@ -51,6 +52,7 @@ class processor_moneybookers extends POSTprocessor
 		$settings['currency'] 				= array( 'list_currency' );
 		$settings['confirmation_note']		= array( 'inputE');
 		$settings['item_name']				= array( 'inputE');
+		$settings['customparams']			= array( 'inputD' );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 

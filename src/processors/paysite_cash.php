@@ -57,8 +57,9 @@ class processor_paysite_cash extends URLprocessor
 	function settings()
 	{
 		$s = array();
-		$s['siteid']	= "siteid";
-		$s['secret']	= "secret";
+		$s['siteid']		= "siteid";
+		$s['secret']		= "secret";
+		$s['customparams']	= "";
 
 		return $s;
 	}
@@ -68,6 +69,7 @@ class processor_paysite_cash extends URLprocessor
 		$s = array();
 		$s['siteid']		= array( 'inputC' );
 		$s['secret']		= array( 'inputC' );
+		$s['customparams']	= array( 'inputD' );
 
 		return $s;
 	}

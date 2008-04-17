@@ -48,8 +48,9 @@ class processor_paysignet extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['merchant'] = "merchant";
-		$settings['testmode'] = 0;
+		$settings['merchant']		= "merchant";
+		$settings['testmode']		= 0;
+		$settings['customparams']	= "";
 
 		return $settings;
 	}
@@ -57,8 +58,9 @@ class processor_paysignet extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode'] = array( "list_yesno" );
-		$settings['merchant'] = array( "inputC" );
+		$settings['testmode']		= array( "list_yesno" );
+		$settings['merchant'] 		= array( "inputC" );
+		$settings['customparams']	= array( 'inputD' );
 
 		return $settings;
 	}

@@ -63,9 +63,10 @@ class processor_paycom extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['co_code']	= "Company Code";
-		$settings['product_id']	= "Product Code";
+		$settings['co_code']		= "Company Code";
+		$settings['product_id']		= "Product Code";
 		$settings['secretWord']		= "Secret Word";
+		$settings['customparams']	= "";
 
 		return $settings;
 	}
@@ -73,9 +74,11 @@ class processor_paycom extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['co_code']	= array("inputC","Company Code","Three (3) alphanumeric ID assigned by Paycom.net");
-		$settings['product_id']	= array("inputC","Product Code","Alphanumeric product code assigned by Paycom.net");
-		$settings['secretWord']		= array("inputC","Secret Word","Used to encrypt and protect transactions");
+		$settings['co_code']		= array( "inputC","Company Code","Three (3) alphanumeric ID assigned by Paycom.net" );
+		$settings['product_id']		= array( "inputC","Product Code","Alphanumeric product code assigned by Paycom.net" );
+		$settings['secretWord']		= array( "inputC","Secret Word","Used to encrypt and protect transactions" );
+		$settings['customparams']	= array( 'inputD' );
+
 		return $settings;
 	}
 

@@ -62,6 +62,7 @@ class processor_worldpay extends POSTprocessor
 		$settings['testmode'] 		= 0;
 		$settings['currency'] 		= 'USD';
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['customparams']	= "";
 		$settings['callbackPW'] 	= '';
 		$settings['rewriteInfo']	= '';
 
@@ -76,6 +77,7 @@ class processor_worldpay extends POSTprocessor
 		$settings['currency']		= array( 'list_currency');
 		$settings['info']			= array( 'fieldset' );
 		$settings['item_name']		= array( 'inputE');
+		$settings['customparams']	= array( 'inputD' );
  		$settings['callbackPW']		= array( 'inputC');
  		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan');
 		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );

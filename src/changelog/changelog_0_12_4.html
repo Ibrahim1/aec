@@ -1229,6 +1229,19 @@ color: #333;
 <li class="todo">Reminder: Graphics!</li>
 </ul>
 </li>
+<li><strong>Change in the Processor API</strong>
+<ul>
+<li>No longer passing $cfg, but making it a property of the processor object - $this->settings</li>
+<li>converting passing $int_var, $metaUser, $new_subscription, $invoice to one metaobject called $request, which holds the former stuff as properties</li>
+</ul>
+</li>
+<li><strong>Change to Authorize.net integration</strong>
+<ul>
+<li>No longer automatically transmits postback url (is not supported anymore as of late)</li>
+<li><strong>You have to set "/index.php?option=com_acctexp&amp;task=authorizenotification" as a notification url in your authorize.net settings yourself!</strong></li>
+<li>Keep in mind that Authorize.net have stated that the SIM method is soon to be abolished to make way for AIM, ARB and alike</li>
+</ul>
+</li>
 <li>Fixing a bug with Authorize.net ARB that prevented invoices from clearing (alledging them to be duplicates)</li>
 <li>Fixing a rare installer bug that would lead to processors being assigned to plans multiple times (when upgrading from an ancient version)</li>
 <li>Fixing some payment plan processor settings (when using inputA, a div was missing)</li>
@@ -1244,13 +1257,7 @@ color: #333;
 <li>NL language for PayPal</li>
 <li>Correct Redirect after Custom Plan Processor Action</li>
 <li class="todo">Authorize.net AIM&amp;ARB -> CVV2</li>
-<li><strong>Change to Authorize.net integration:</strong>
-<ul>
-<li>No longer automatically transmits postback url (is not supported anymore as of late)</li>
-<li><strong>You have to set "/index.php?option=com_acctexp&amp;task=authorizenotification" as a notification url in your authorize.net settings yourself!</strong></li>
-<li>Keep in mind that Authorize.net have stated that the SIM method is soon to be abolished to make way for AIM, ARB and alike</li>
-</ul>
-</li>
+<li>All POST based processors now have custom variables</li>
 </ul>
 </li>
 <li><strong>Backend</strong>

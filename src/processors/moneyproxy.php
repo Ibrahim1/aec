@@ -27,9 +27,9 @@ class processor_moneyproxy extends POSTprocessor
 		$settings['secret_key']				= "secret_key";
 		$settings['suggested_memo']			= "";
 		$settings['language']				= 'EN';
-		$settings['payment_id']				= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]',
+		$settings['item_name']				= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]',
 											'[[user_name]]', '[[user_username]]' );
-		$settings['rewriteInfo']			= '';
+		$settings['customparams']			= "";
 
 		return $settings;
 	}
@@ -44,6 +44,7 @@ class processor_moneyproxy extends POSTprocessor
 		$settings['suggested_memo']			= array( 'inputD' );
 		$settings['language']				= array( 'list_language' );
 		$settings['item_name']				= array( 'inputE' );
+		$settings['customparams']			= array( 'inputD' );
 
         $settings = AECToolbox::rewriteEngineInfo( null, $settings );
 

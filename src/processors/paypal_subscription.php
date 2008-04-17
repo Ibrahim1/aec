@@ -61,6 +61,7 @@ class processor_paypal_subscription extends POSTprocessor
 		$settings['no_shipping']	= 1;
 		$settings['altipnurl']		= '';
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['customparams']	= "";
 
 		// Customization Options
 		$settings['cbt']					= '';
@@ -90,6 +91,7 @@ class processor_paypal_subscription extends POSTprocessor
 		$settings['no_shipping']			= array( 'list_yesno' );
 		$settings['altipnurl']				= array( 'inputC' );
 		$settings['item_name']				= array( 'inputE' );
+		$settings['customparams']			= array( 'inputD' );
 
 		// Customization Options
 		$settings['cbt']					= array( 'inputE' );

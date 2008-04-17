@@ -54,11 +54,12 @@ class processor_allopass extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['siteid']		= "siteid";
-		$settings['docid']		= "docid";
-		$settings['auth']		= "auth";
-		$settings['testmode']	= 0;
-		$settings['item_name']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['siteid']			= "siteid";
+		$settings['docid']			= "docid";
+		$settings['auth']			= "auth";
+		$settings['testmode']		= 0;
+		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['customparams']	= "";
 
 		return $settings;
 	}
@@ -66,11 +67,12 @@ class processor_allopass extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']	= array("list_yesno");
-		$settings['siteid']		= array("inputC");
-		$settings['docid']		= array("inputC");
-		$settings['auth']		= array("inputC");
-		$settings['item_name']	= array("inputE");
+		$settings['testmode']		= array( "list_yesno" );
+		$settings['siteid']			= array( "inputC" );
+		$settings['docid']			= array( "inputC" );
+		$settings['auth']			= array( "inputC" );
+		$settings['item_name']		= array( "inputE" );
+		$settings['customparams']	= array( 'inputD' );
 
 		$settings				= AECToolbox::rewriteEngineInfo( null, $settings );
 
@@ -111,20 +113,6 @@ class processor_allopass extends POSTprocessor
 
 		$var['ssl_customer_code']		= $request->metaUser->cmsUser->id;
 		$var['ssl_description']			= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
-
-		if ( !empty( $this->settings['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $request->metaUser, $request->new_subscription, $request->invoice );
-
-			$cps = explode( "\n", $rw_params );
-
-			foreach ( $cps as $cp ) {
-				$cpa = explode( '=', $cp );
-
-				if ( !empty( $cpa[0] ) && isset( $cp[1] ) ) {
-					$var[$cpa[0]] = $cpa[1];
-				}
-			}
-		}
 
 		return $var;
 	}

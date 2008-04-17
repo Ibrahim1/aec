@@ -36,6 +36,7 @@ class processor_nochex extends POSTprocessor
 		$settings['testmode'] 		= 1;
 		$settings['merchant_id']	= 'nochex@aec.com';
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['customparams']		= "";
 
 		return $settings;
 	}
@@ -46,6 +47,7 @@ class processor_nochex extends POSTprocessor
 		$settings['testmode']		= array( 'list_yesno');
 		$settings['merchant_id']	= array( 'inputC');
 		$settings['item_name']		= array( 'inputE');
+		$settings['customparams']	= array( 'inputD' );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 

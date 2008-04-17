@@ -101,9 +101,7 @@ class processor_ewayXML extends XMLprocessor
 		}
 		$response = array();
 
-		if($objResponse = simplexml_load_string($this->transmitRequest($url,'',$xml))){
-
-
+		if ( $objResponse = simplexml_load_string( $this->transmitRequest( $url, '', $xml ) ) ) {
 			$response['amount_paid'] = $objResponse->ewayReturnAmount / 100;
 			$response['invoice'] = $objResponse->ewayTrxnOption2;
 			//$response['raw'] = $objResponse->ewayTrxnError;

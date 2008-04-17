@@ -73,8 +73,9 @@ class processor_epsnetpay extends POSTprocessor
 			$n++;
 		}
 
-		$settings['testmode'] = 0;
-		$settings['acceptvok'] = 0;
+		$settings['testmode']		= 0;
+		$settings['acceptvok']		= 0;
+		$settings['customparams']	= "";
 
 		return $settings;
 	}
@@ -82,8 +83,9 @@ class processor_epsnetpay extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode'] = array("list_yesno");
-		$settings['acceptvok'] = array("list_yesno");
+		$settings['testmode']		= array("list_yesno");
+		$settings['acceptvok']		= array("list_yesno");
+		$settings['customparams']	= array( 'inputD' );
 
 		$vars = $this->settings();
 		foreach ( $vars as $name => $var ) {
@@ -182,20 +184,6 @@ class processor_epsnetpay extends POSTprocessor
 			$var['post_url']	= "https://qvendor.netpay.at/webPay/vendorLogin";
 		} else {
 			$var['post_url']	= $bank[$request->int_var['params']['bank_selection']];
-		}
-
-		if ( !empty( $this->settings['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $request->metaUser, $request->new_subscription );
-
-			$cps = explode( "\n", $rw_params );
-
-			foreach ( $cps as $cp ) {
-				$cpa = explode( '=', $cp );
-
-				if ( !empty( $cpa[0] ) && isset( $cp[1] ) ) {
-					$var[$cpa[0]] = $cpa[1];
-				}
-			}
 		}
 
 		return $var;

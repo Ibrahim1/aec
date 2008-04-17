@@ -48,12 +48,12 @@ class processor_virtualmerchant extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
-
-		$settings['accountid']	= "your account id";
-		$settings['userid']		= "your user id";
-		$settings['pin']		= "your pin";
-		$settings['testmode']	= 0;
-		$settings['item_name']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['accountid']		= "your account id";
+		$settings['userid']			= "your user id";
+		$settings['pin']			= "your pin";
+		$settings['testmode']		= 0;
+		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['customparams']	= "";
 
 		return $settings;
 	}
@@ -61,12 +61,12 @@ class processor_virtualmerchant extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-
-		$settings['testmode']	= array( "list_yesno" );
-		$settings['accountid']	= array( "inputC" );
-		$settings['userid']		= array( "inputC" );
-		$settings['pin']		= array( "inputC" );
-		$settings['item_name']	= array( "inputE" );
+		$settings['testmode']		= array( "list_yesno" );
+		$settings['accountid']		= array( "inputC" );
+		$settings['userid']			= array( "inputC" );
+		$settings['pin']			= array( "inputC" );
+		$settings['item_name']		= array( "inputE" );
+		$settings['customparams']	= array( 'inputD' );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 

@@ -62,6 +62,7 @@ class processor_2checkout extends POSTprocessor
 		$settings['alt2courl']		= '';
 		$settings['info']			= ''; // new mic
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['customparams']		= "";
 
 		return $settings;
 	}
@@ -75,6 +76,7 @@ class processor_2checkout extends POSTprocessor
 		$settings['info']			= array( 'fieldset' );
 		$settings['alt2courl']		= array( 'list_yesno' );
 		$settings['item_name']		= array( 'inputE' );
+		$settings['customparams']	= array( 'inputD' );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
@@ -105,20 +107,6 @@ class processor_2checkout extends POSTprocessor
 		$var['cart_order_id']		= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
 		$var['username']			= $request->metaUser->cmsUser->username;
 		$var['name']				= $request->metaUser->cmsUser->name;
-
-		if ( !empty( $this->settings['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $request->metaUser, $request->new_subscription, $request->invoice );
-
-			$cps = explode( "\n", $rw_params );
-
-			foreach ( $cps as $cp ) {
-				$cpa = explode( '=', $cp );
-
-				if ( !empty( $cpa[0] ) && isset( $cp[1] ) ) {
-					$var[$cpa[0]] = $cpa[1];
-				}
-			}
-		}
 
 		return $var;
 	}

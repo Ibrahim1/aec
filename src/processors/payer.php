@@ -29,7 +29,7 @@ class processor_payer extends POSTprocessor
 		$settings['lc']				= 'sv';
 		$settings['payment_method']	= 'card';
 		$settings['debugmode']		= 'silent';
-		$settings['rewriteInfo']	= '';
+		$settings['customparams']	= "";
 
 		return $settings;
 	}
@@ -44,6 +44,7 @@ class processor_payer extends POSTprocessor
 		$settings['lc']				= array( 'list_language' );
 		$settings['payment_method']	= array( 'inputA' );
 		$settings['debugmode']		= array( 'inputA' );
+		$settings['customparams']	= array( 'inputD' );
 
         $settings = AECToolbox::rewriteEngineInfo( null, $settings );
 

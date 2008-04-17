@@ -63,6 +63,7 @@ class processor_authorize_aim extends XMLprocessor
 		$settings['totalOccurrences']	= 12;
 		$settings['trialOccurrences']	= 1;
 		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['customparams']		= '';
 
 		return $settings;
 	}
@@ -70,15 +71,16 @@ class processor_authorize_aim extends XMLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']			= array("list_yesno");
-		$settings['login'] 				= array("inputC");
-		$settings['transaction_key']	= array("inputC");
-		$settings['currency']			= array("list_currency");
-		$settings['promptAddress']		= array("list_yesno");
-		$settings['promptZipOnly']		= array("list_yesno");
-		$settings['totalOccurrences']	= array("inputA");
-		$settings['trialOccurrences']	= array("inputA");
-		$settings['item_name']			= array("inputE");
+		$settings['testmode']			= array( "list_yesno" );
+		$settings['login'] 				= array( "inputC" );
+		$settings['transaction_key']	= array( "inputC" );
+		$settings['currency']			= array( "list_currency" );
+		$settings['promptAddress']		= array( "list_yesno" );
+		$settings['promptZipOnly']		= array( "list_yesno" );
+		$settings['totalOccurrences']	= array( "inputA" );
+		$settings['trialOccurrences']	= array( "inputA" );
+		$settings['item_name']			= array( "inputE" );
+		$settings['customparams']		= array( 'inputD' );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
@@ -159,19 +161,7 @@ class processor_authorize_aim extends XMLprocessor
 			$a['x_test_request']		= "TRUE";
 		}
 
-		if ( !empty( $this->settings['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $request->metaUser, $request->new_subscription, $request->invoice );
-
-			$cps = explode( "\n", $rw_params );
-
-			foreach ( $cps as $cp ) {
-				$cpa = explode( '=', $cp );
-
-				if ( !empty( $cpa[0] ) && isset( $cp[1] ) ) {
-					$a[$cpa[0]] = $cpa[1];
-				}
-			}
-		}
+		$var = $this->customParams( $this->settings['customparams'], $var, $request );
 
 		$stringarray = array();
 		foreach ( $a as $name => $value ) {

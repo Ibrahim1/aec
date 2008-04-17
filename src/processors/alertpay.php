@@ -55,6 +55,7 @@ class processor_alertpay extends POSTprocessor
 		$settings['currency']		= 'EUR';
 		$settings['testmode']		= 0;
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['customparams']	= "";
 
 		return $settings;
 	}
@@ -67,6 +68,7 @@ class processor_alertpay extends POSTprocessor
 		$settings['securitycode']	= array( 'inputC' );
 		$settings['currency']		= array( 'list_currency' );
 		$settings['item_name']		= array( 'inputE' );
+		$settings['customparams']	= array( 'inputD' );
 
 		$settings					= AECToolbox::rewriteEngineInfo( null, $settings );
 
@@ -104,20 +106,6 @@ class processor_alertpay extends POSTprocessor
 		$var['apc_1']			= $request->metaUser->cmsUser->id;
 		$var['apc_2']			= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
 		$var['apc_3']			= $request->int_var['usage'];
-
-		if ( !empty( $this->settings['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $request->metaUser, $request->new_subscription, $request->invoice );
-
-			$cps = explode( "\n", $rw_params );
-
-			foreach ( $cps as $cp ) {
-				$cpa = explode( '=', $cp );
-
-				if ( !empty( $cpa[0] ) && isset( $cp[1] ) ) {
-					$var[$cpa[0]] = $cpa[1];
-				}
-			}
-		}
 
 		return $var;
 	}
