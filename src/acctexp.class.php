@@ -2293,15 +2293,15 @@ class XMLprocessor extends processor
 		return $var;
 	}
 
-	function checkoutProcess( $int_var, $pp, $metaUser, $new_subscription, $invoice )
+	function checkoutProcess( $request )
 	{
 		global $database;
 
 		// Create the xml string
-		$xml = $this->createRequestXML( $int_var, $metaUser, $new_subscription, $invoice );
+		$xml = $this->createRequestXML( $request );
 
 		// Transmit xml to server
-		$response = $this->transmitRequestXML( $xml, $int_var, $metaUser, $new_subscription, $invoice );
+		$response = $this->transmitRequestXML( $xml, $request );
 
 		if ( empty( $response['invoice'] ) ) {
 			$response['invoice'] = $invoice->invoice_number;
@@ -2323,7 +2323,7 @@ class XMLprocessor extends processor
 				$responsestring = '';
 			}
 
-			$invoice->processorResponse( $pp, $response, $responsestring );
+			$invoice->processorResponse( $request->parent, $response, $responsestring );
 		} else {
 			return false;
 		}

@@ -57,7 +57,7 @@ class processor_payer extends POSTprocessor
 
 		$Auth_url = $mosConfig_live_site . "/components/com_acctexp/processors/payer/authenticate.php";
 		$Settle_url = $mosConfig_live_site . "/components/com_acctexp/processors/payer/settle.php";
-		$Success_url = $mosConfig_live_site . "/index.php?option=com_acctexp&task=payernotification&Invoice=" . $int_var['invoice'];
+		$Success_url = $mosConfig_live_site . "/index.php?option=com_acctexp&task=payernotification&Invoice=" . $request->int_var['invoice'];
 		$Shop_url = $mosConfig_live_site . "/index.php";
 
 		require_once($mosConfig_absolute_path . "/components/com_acctexp/processors/payer/payread_post_api.php");
@@ -65,22 +65,22 @@ class processor_payer extends POSTprocessor
 		$thePayreadApi = new payread_post_api;
 		$thePayreadApi->add_buyer_info("firstname", "lastname", "address_1", "address_2", "postalcode", "city", "se", "phone_home", "phone_work", "phone_mobile", "email");
 
-		$thePayreadApi->add_freeform_purchase(1, AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription ), $int_var['amount'], $cfg['tax'], 1);
+		$thePayreadApi->add_freeform_purchase(1, AECToolbox::rewriteEngine( $this->settings['item_name'], $metaUser, $new_subscription ), $request->int_var['amount'], $this->settings['tax'], 1);
 
-		$thePayreadApi->add_payment_method($cfg["payment_method"]);
+		$thePayreadApi->add_payment_method($this->settings["payment_method"]);
 
 		$thePayreadApi->set_authorize_notification_url($Auth_url);
 		$thePayreadApi->set_settle_notification_url($Settle_url);
 		$thePayreadApi->set_success_redirect_url($Success_url);
 		$thePayreadApi->set_redirect_back_to_shop_url($Shop_url);
 
-		$thePayreadApi->set_language($cfg['lc']);
+		$thePayreadApi->set_language($this->settings['lc']);
 
-		$thePayreadApi->set_currency($cfg['currency']);
+		$thePayreadApi->set_currency($this->settings['currency']);
 
-		$thePayreadApi->set_debug_mode($cfg["debugmode"]);
+		$thePayreadApi->set_debug_mode($this->settings["debugmode"]);
 
-		if ( $cfg['testmode'] )
+		if ( $this->settings['testmode'] )
 			$thePayreadApi->set_test_mode(true);
 		else
 			$thePayreadApi->set_test_mode(false);
@@ -94,7 +94,7 @@ class processor_payer extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post, $cfg )
+	function parseNotification( $post )
 	{
 		global $database;
 		$response = array();

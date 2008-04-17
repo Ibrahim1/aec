@@ -68,7 +68,7 @@ class processor_ideal_basic extends URLprocessor
 		return $s;
 	}
 
-	function backend_settings( $cfg )
+	function backend_settings()
 	{
 		$s = array();
 		$s['merchantid']	= array( 'inputC' );
@@ -86,34 +86,34 @@ class processor_ideal_basic extends URLprocessor
 
 	function createGatewayLink( $request )
 	{
-		if ( $cfg['testmode'] ) {
+		if ( $this->settings['testmode'] ) {
 			$var['post_url']		= "https://ideal.secure-ing.com";
 		} else {
 			$var['post_url']		= "https://ideal.secure-ing.com";
 		}
 
-		$var['merchantID']			= $cfg['merchantid'];
-		$var['subID']				= $cfg['subid'];
-		$var['purchaseID']			= substr( $int_var['invoice'], 1 );
+		$var['merchantID']			= $this->settings['merchantid'];
+		$var['subID']				= $this->settings['subid'];
+		$var['purchaseID']			= substr( $request->int_var['invoice'], 1 );
 
-		if ( $cfg['testmode'] ) {
-			$var['amount']			= max( 1, min( 7, (int) $cfg['testmodestage'] ) ) . '.00';
+		if ( $this->settings['testmode'] ) {
+			$var['amount']			= max( 1, min( 7, (int) $this->settings['testmodestage'] ) ) . '.00';
 		} else {
-			$var['amount']			= $int_var['amount'];
+			$var['amount']			= $request->int_var['amount'];
 		}
 
 
-		$var['currency']			= $cfg['currency'];
-		$var['language']			= strtolower( $cfg['language'] );
-		$var['description']			= substr( $cfg['description'], 0, 32);
+		$var['currency']			= $this->settings['currency'];
+		$var['language']			= strtolower( $this->settings['language'] );
+		$var['description']			= substr( $this->settings['description'], 0, 32);
 		$var['itemNumber1']			= $metaUser->userid;
-		$var['itemDescription1']	= substr( $cfg['description'], 0, 32);
+		$var['itemDescription1']	= substr( $this->settings['description'], 0, 32);
 		$var['itemQuantity1']		= 1;
-		$var['itemPrice1']			= $int_var['amount'];
+		$var['itemPrice1']			= $request->int_var['amount'];
 		$var['paymentType']			= 'ideal';
-		$var['validUntil']			= $cfg['merchantid'];
+		$var['validUntil']			= $this->settings['merchantid'];
 
-		$shastring = $cfg['key'].$var['merchantID'].$var['subID'].$var['amount'].$var['purchaseID'].$var['paymentType'].$var['validUntil']
+		$shastring = $this->settings['key'].$var['merchantID'].$var['subID'].$var['amount'].$var['purchaseID'].$var['paymentType'].$var['validUntil']
 						.$var['itemNumber1'].$var['itemDescription1'].$var['itemQuantity1'].$var['itemPrice1'];
 
 		$shastring = str_replace( " ", "", $shastring );
@@ -135,7 +135,7 @@ class processor_ideal_basic extends URLprocessor
 		return $var;
 	}
 
-	function parseNotification( $post, $cfg )
+	function parseNotification( $post )
 	{
 
 		$response = array();
@@ -144,7 +144,7 @@ class processor_ideal_basic extends URLprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $cfg, $invoice )
+	function validateNotification( $response, $post, $invoice )
 	{
 		return $response;
 	}

@@ -66,7 +66,7 @@ class processor_paypal_wpp extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings( $cfg )
+	function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']				= array( 'list_yesno' );
@@ -86,7 +86,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$country_sel[] = mosHTML::makeOption( 'US', 'US' );
 		$country_sel[] = mosHTML::makeOption( 'UK', 'UK' );
 
-		$settings['lists']['country'] = mosHTML::selectList( $country_sel, 'country', 'size="2"', 'value', 'text', $cfg['country'] );
+		$settings['lists']['country'] = mosHTML::selectList( $country_sel, 'country', 'size="2"', 'value', 'text', $this->settings['country'] );
 
  		$rewriteswitches 					= array("cms", "user", "expiration", "subscription", "plan");
 		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
@@ -94,7 +94,7 @@ class processor_paypal_wpp extends XMLprocessor
 		return $settings;
 	}
 
-	function checkoutform( $int_var, $cfg, $metaUser, $new_subscription )
+	function checkoutform( $request )
 	{
 		global $mosConfig_live_site;
 
@@ -115,72 +115,72 @@ class processor_paypal_wpp extends XMLprocessor
 
 		$var = array();
 
-		if ( is_array( $int_var['amount'] ) ) {
+		if ( is_array( $request->int_var['amount'] ) ) {
 			$var['Method']				= 'CreateRecurringPaymentsProfile';
 		} else {
 			$var['Method']				= 'DoDirectPayment';
 		}
 
-		if ( is_array( $int_var['amount'] ) ) {
+		if ( is_array( $request->int_var['amount'] ) ) {
 			$var['Version']				= '50.0';
 		} else {
 			$var['Version']				= '3.2';
 		}
 
-		$var['user']				= $cfg['api_user'];
-		$var['pwd']					= $cfg['api_password'];
-		$var['signature']			= $cfg['signature'];
+		$var['user']				= $this->settings['api_user'];
+		$var['pwd']					= $this->settings['api_password'];
+		$var['signature']			= $this->settings['signature'];
 
 		$var['paymentAction']		= 'Sale';
 		$var['IPaddress']			= $_SERVER['REMOTE_ADDR'];
-		$var['firstName']			= trim( $int_var['params']['billFirstName'] );
-		$var['lastName']			= trim( $int_var['params']['billLastName'] );
-		$var['creditCardType']	= $int_var['params']['cardType'];
-		$var['acct']				= $int_var['params']['cardNumber'];
-		$var['expDate']			= str_pad( $int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ).$int_var['params']['expirationYear'];
+		$var['firstName']			= trim( $request->int_var['params']['billFirstName'] );
+		$var['lastName']			= trim( $request->int_var['params']['billLastName'] );
+		$var['creditCardType']	= $request->int_var['params']['cardType'];
+		$var['acct']				= $request->int_var['params']['cardNumber'];
+		$var['expDate']			= str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ).$request->int_var['params']['expirationYear'];
 
-		$var['CardVerificationValue'] = $int_var['params']['cardVV2'];
-		$var['cvv2']			= $int_var['params']['cardVV2'];
+		$var['CardVerificationValue'] = $request->int_var['params']['cardVV2'];
+		$var['cvv2']			= $request->int_var['params']['cardVV2'];
 
-		$var['street1']				= $int_var['params']['billAddress'];
+		$var['street1']				= $request->int_var['params']['billAddress'];
 
-		if ( !empty( $int_var['params']['billAddress2'] ) ) {
-			$var['street2']			= $int_var['params']['billAddress2'];
+		if ( !empty( $request->int_var['params']['billAddress2'] ) ) {
+			$var['street2']			= $request->int_var['params']['billAddress2'];
 		}
 
-		$var['city']				= $int_var['params']['billCity'];
-		$var['state']				= $int_var['params']['billState'];
-		$var['zip']					= $int_var['params']['billZip'];
-		$var['country']		= $cfg['country'];
+		$var['city']				= $request->int_var['params']['billCity'];
+		$var['state']				= $request->int_var['params']['billState'];
+		$var['zip']					= $request->int_var['params']['billZip'];
+		$var['country']		= $this->settings['country'];
 		$var['NotifyUrl']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=paypal_wppnotification' );
-		$var['desc']				= AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription );
-		$var['InvNum']				= $int_var['invoice'];;
+		$var['desc']				= AECToolbox::rewriteEngine( $this->settings['item_name'], $metaUser, $new_subscription );
+		$var['InvNum']				= $request->int_var['invoice'];;
 
-		if ( is_array( $int_var['amount'] ) ) {
+		if ( is_array( $request->int_var['amount'] ) ) {
 			// $var['InitAmt'] = 'Initial Amount'; // Not Supported Yet
 			// $var['FailedInitAmtAction'] = 'ContinueOnFailure'; // Not Supported Yet (optional)
 
-			if ( isset( $int_var['amount']['amount1'] ) ) {
-				$trial = $this->convertPeriodUnit( $int_var['amount']['period1'], $int_var['amount']['unit1'] );
+			if ( isset( $request->int_var['amount']['amount1'] ) ) {
+				$trial = $this->convertPeriodUnit( $request->int_var['amount']['period1'], $request->int_var['amount']['unit1'] );
 
 				$var['TrialBillingPeriod']		= $trial['unit'];
 				$var['TrialBillingFrequency']	= $trial['period'];
-				$var['TrialAmt']				= $int_var['amount']['amount1'];
+				$var['TrialAmt']				= $request->int_var['amount']['amount1'];
 				$var['TrialTotalBillingCycles'] = 1; // Not Fully Supported Yet
 			}
 
-			$full = $this->convertPeriodUnit( $int_var['amount']['period3'], $int_var['amount']['unit3'] );
+			$full = $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
 
 			$timestamp = time() - $mosConfig_offset_user*3600;
 			$var['ProfileStartDate']	= date( 'Y-m-d', $timestamp ) . 'T' . date( 'H:i:s', $timestamp ) . 'Z';
 			$var['BillingPeriod']			= $full['unit'];
 			$var['BillingFrequency']		= $full['period'];
-			$var['amt']						= $int_var['amount']['amount3'];
+			$var['amt']						= $request->int_var['amount']['amount3'];
 		} else {
-			$var['amt']						= $int_var['amount'];
+			$var['amt']						= $request->int_var['amount'];
 		}
 
-		$var['currencyCode']		= $cfg['currency'];
+		$var['currencyCode']		= $this->settings['currency'];
 
 		$content = array();
 		foreach ( $var as $name => $value ) {
@@ -194,14 +194,14 @@ class processor_paypal_wpp extends XMLprocessor
 	{
 		$path = "/nvp";
 
-		if ( $settings['testmode'] ) {
-			if ( $settings['use_certificate'] ) {
+		if ( $this->settings['testmode'] ) {
+			if ( $this->settings['use_certificate'] ) {
 				$url = "https://api.sandbox.paypal.com" . $path;
 			} else {
 				$url = "https://api-3t.sandbox.paypal.com" . $path;
 			}
 		} else {
-			if ( $settings['use_certificate'] ) {
+			if ( $this->settings['use_certificate'] ) {
 				$url = "https://api.paypal.com" . $path;
 			} else {
 				$url = "https://api-3t.paypal.com" . $path;
@@ -224,7 +224,7 @@ class processor_paypal_wpp extends XMLprocessor
 			$resultCode = strtoupper( $nvpResArray["ACK"] );
 
 			if ( strcmp( $resultCode, 'SUCCESS' ) === 0) {
-				if ( is_array( $int_var['amount'] ) ) {
+				if ( is_array( $request->int_var['amount'] ) ) {
 					$subscriptionId = $nvpResArray['PROFILEID'];
 					$return['invoiceparams'] = array( "subscriptionid" => $subscriptionId );
 
@@ -275,18 +275,18 @@ class processor_paypal_wpp extends XMLprocessor
 		return $return;
 	}
 
-	function customaction_cancel( $pp, $cfg, $invoice, $metaUser )
+	function customaction_cancel( $pp, $invoice, $metaUser )
 	{
-		return $this->ManageRecurringPaymentsProfileStatus( $pp, $cfg, $invoice, $metaUser, 'Cancel', $cfg['cancel_note'] );
+		return $this->ManageRecurringPaymentsProfileStatus( $pp, $this->settings, $invoice, $metaUser, 'Cancel', $this->settings['cancel_note'] );
 	}
 
-	function ManageRecurringPaymentsProfileStatus( $pp, $cfg, $invoice, $metaUser, $command, $note )
+	function ManageRecurringPaymentsProfileStatus( $pp, $invoice, $metaUser, $command, $note )
 	{
 		$var['Method']				= 'ManageRecurringPaymentsProfileStatus';
 		$var['Version']			= '3.0';
-		$var['user']				= $cfg['api_user'];
-		$var['pwd']					= $cfg['api_password'];
-		$var['signature']			= $cfg['signature'];
+		$var['user']				= $this->settings['api_user'];
+		$var['pwd']					= $this->settings['api_password'];
+		$var['signature']			= $this->settings['signature'];
 
 		$invoiceparams = $invoice->getParams();
 
@@ -305,10 +305,10 @@ class processor_paypal_wpp extends XMLprocessor
 
 		$path = "/nvp";
 
-		if ( $cfg['testmode'] ) {
+		if ( $this->settings['testmode'] ) {
 			$url = "https://api.sandbox.paypal.com" . $path;
 		} else {
-			if ( $cfg['use_certificate'] ) {
+			if ( $this->settings['use_certificate'] ) {
 				$url = "https://api-3t.sandbox.paypal.com" . $path;
 			} else {
 				$url = "https://api.paypal.com" . $path;

@@ -82,33 +82,33 @@ class processor_2checkout extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription, $invoice )
+	function createGatewayLink( $request )
 	{
 		global $mosConfig_live_site;
 
-		if ( $cfg['alt2courl'] ) {
+		if ( $this->settings['alt2courl'] ) {
 			$var['post_url']		= 'https://www2.2checkout.com/2co/buyer/purchase';
 		} else {
 			$var['post_url']		= 'https://www.2checkout.com/2co/buyer/purchase';
 		}
 
-		if ( $cfg['testmode'] ) {
+		if ( $this->settings['testmode'] ) {
 			$var['testmode']		= 1;
 			$var['demo']			= 'Y';
 		}
 
-		$var['sid']					= $cfg['sid'];
-		$var['invoice_number']		= $int_var['invoice'];
+		$var['sid']					= $this->settings['sid'];
+		$var['invoice_number']		= $request->int_var['invoice'];
 		$var['fixed']				= 'Y';
-		$var['total'] = $int_var['amount'];
+		$var['total'] = $request->int_var['amount'];
 
 		$var['cust_id']			= $metaUser->cmsUser->id;
-		$var['cart_order_id']	= AECToolbox::rewriteEngine($cfg['item_name'], $metaUser, $new_subscription);
+		$var['cart_order_id']	= AECToolbox::rewriteEngine($this->settings['item_name'], $metaUser, $new_subscription);
 		$var['username']		= $metaUser->cmsUser->username;
 		$var['name']			= $metaUser->cmsUser->name;
 
-		if ( !empty( $cfg['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $cfg['customparams'], $metaUser, $new_subscription );
+		if ( !empty( $this->settings['customparams'] ) ) {
+			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $metaUser, $new_subscription );
 
 			$cps = explode( "\n", $rw_params );
 
@@ -124,7 +124,7 @@ class processor_2checkout extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post, $cfg )
+	function parseNotification( $post )
 	{
 		$description	= $post['cart_order_id'];
 		$key			= $post['key'];
@@ -143,12 +143,12 @@ class processor_2checkout extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $cfg, $invoice )
+	function validateNotification( $response, $post, $invoice )
 	{
-		if ($cfg['testmode']) {
-			$string_to_hash	= $cfg['secret_word'].$cfg['sid']."1".$post['total'];
+		if ($this->settings['testmode']) {
+			$string_to_hash	= $this->settings['secret_word'].$this->settings['sid']."1".$post['total'];
 		} else {
-			$string_to_hash	= $cfg['secret_word'].$cfg['sid'].$post['order_number'].$post['total'];
+			$string_to_hash	= $this->settings['secret_word'].$this->settings['sid'].$post['order_number'].$post['total'];
 		}
 
 		$check_key		= strtoupper(md5($string_to_hash));

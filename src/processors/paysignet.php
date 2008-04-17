@@ -54,7 +54,7 @@ class processor_paysignet extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings( $cfg )
+	function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode'] = array("list_yesno");
@@ -69,16 +69,16 @@ class processor_paysignet extends POSTprocessor
 
 		$var['post_url']	= "https://www.paysignet.com/validate/paysign_getdetails.asp";
 
-		$var['epq_MMerchantOId']	= $int_var['invoice'];
-		$var['epq_AAmountA1']		= $int_var['amount'];
-		$var['epq_MMerchantB2']		= $cfg['merchant'];
+		$var['epq_MMerchantOId']	= $request->int_var['invoice'];
+		$var['epq_AAmountA1']		= $request->int_var['amount'];
+		$var['epq_MMerchantB2']		= $this->settings['merchant'];
 
 		$var['epqb_NNameA1']		= $metaUser->cmsUser->name;
 
 		return $var;
 	}
 
-	function parseNotification( $post, $cfg )
+	function parseNotification( $post )
 	{
 		$order_id		= $post['order_id'];
 		$bank_name		= $post['bank_name'];

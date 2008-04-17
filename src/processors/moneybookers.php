@@ -36,7 +36,7 @@ class processor_moneybookers extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings( $cfg )
+	function backend_settings()
 	{
 		$settings = array();
 		$settings['pay_to_email']				= array( 'inputC');
@@ -59,28 +59,28 @@ class processor_moneybookers extends POSTprocessor
 		global $mosConfig_live_site;
 
 		$var['post_url']				= 'https://www.moneybookers.com/app/payment.pl';
-		$var['pay_to_email']			= $cfg['pay_to_email'];
-		$var['recipient_description']	= $cfg['recipient_description'];
-		$var['logo_url']				= $cfg['logo_url'];
-		$var['transaction_id']			= $int_var['invoice'];
+		$var['pay_to_email']			= $this->settings['pay_to_email'];
+		$var['recipient_description']	= $this->settings['recipient_description'];
+		$var['logo_url']				= $this->settings['logo_url'];
+		$var['transaction_id']			= $request->int_var['invoice'];
 
-		$var['return_url']				= $int_var['return_url'];
+		$var['return_url']				= $request->int_var['return_url'];
 		$var['cancel_url']				= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
 		$var['status_url']				= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=moneybookersnotification' );
 
-		$var['language']				= $cfg['language'];
-		$var['hide_login']				= $cfg['hide_login'];
+		$var['language']				= $this->settings['language'];
+		$var['hide_login']				= $this->settings['hide_login'];
 		$var['pay_from_email']			= $metaUser->cmsUser->email;
-		$var['amount']					= $int_var['amount'];
-		$var['detail1_description']		= AECToolbox::rewriteEngine($cfg['item_name'], $metaUser, $new_subscription);
+		$var['amount']					= $request->int_var['amount'];
+		$var['detail1_description']		= AECToolbox::rewriteEngine($this->settings['item_name'], $metaUser, $new_subscription);
 		$var['detail1_text']			= $metaUser->cmsUser->id;
-		$var['currency']				= $cfg['currency'];
-		$var['confirmation_note']		= $cfg['confirmation_note'];
+		$var['currency']				= $this->settings['currency'];
+		$var['confirmation_note']		= $this->settings['confirmation_note'];
 
 		return $var;
 	}
 
-	function parseNotification( $post, $cfg )
+	function parseNotification( $post )
 	{
 		$response = array();
 		$response['invoice']			= $post['transaction_id'];
@@ -90,11 +90,11 @@ class processor_moneybookers extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $cfg, $invoice )
+	function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = false;
 
-		$md5sig = md5( $post['merchant_id'] . $post['transaction_id'] . $cfg['secret_word'] . $post['mb_amount'] . $post['mb_currency'] . $post['status'] );
+		$md5sig = md5( $post['merchant_id'] . $post['transaction_id'] . $this->settings['secret_word'] . $post['mb_amount'] . $post['mb_currency'] . $post['status'] );
 
 		if ( ( $post['status'] == '2' ) && ( $md5sig == $post['md5sig'] ) ) {
 			$response['valid'] = true;

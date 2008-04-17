@@ -66,7 +66,7 @@ class processor_verotel extends URLprocessor
 		return $s;
 	}
 
-	function backend_settings( $cfg )
+	function backend_settings()
 	{
 		$s = array();
 		$s['merchantid']		= array( 'inputC' );
@@ -92,34 +92,34 @@ class processor_verotel extends URLprocessor
 	function createGatewayLink( $request )
 	{
 		// Payment Plans are required to have a productid assigned
-		if ( empty( $int_var['planparams']['verotel_product'] ) ) {
-			$product = $cfg['siteid'];
+		if ( empty( $request->int_var['planparams']['verotel_product'] ) ) {
+			$product = $this->settings['siteid'];
 		} else {
-			$product = $int_var['planparams']['verotel_product'];
+			$product = $request->int_var['planparams']['verotel_product'];
 		}
 
-		if ( $cfg['use_ticketsclub'] ) {
+		if ( $this->settings['use_ticketsclub'] ) {
 			$var['post_url'] = "https://secure.ticketsclub.com/cgi-bin/boxoffice-one.tc?";
-			$var['fldcustomerid'] = $cfg['merchantid'];
-			$var['fldwebsitenr'] = $cfg['siteid'];
+			$var['fldcustomerid'] = $this->settings['merchantid'];
+			$var['fldwebsitenr'] = $this->settings['siteid'];
 			$var['tc_usercode'] = $metaUser->cmsUser->username;
 			$var['tc_passcode'] = "xxxxxxxx";
-			$var['tc_custom1'] = $int_var['invoice'];
+			$var['tc_custom1'] = $request->int_var['invoice'];
 			$var['tc_custom2'] = $metaUser->cmsUser->username;
 		} else {
 			$var['post_url'] = "https://secure.verotel.com/cgi-bin/vtjp.pl?";
-			$var['verotel_id'] = $cfg['merchantid'];
+			$var['verotel_id'] = $this->settings['merchantid'];
 			$var['verotel_product'] = $product;
-			$var['verotel_website'] = $cfg['siteid'];
+			$var['verotel_website'] = $this->settings['siteid'];
 			$var['verotel_usercode'] = $metaUser->cmsUser->username;
 			$var['verotel_passcode'] = "xxxxxxxx";
-			$var['verotel_custom1'] = $int_var['invoice'];
+			$var['verotel_custom1'] = $request->int_var['invoice'];
 		}
 
 		return $var;
 	}
 
-	function parseNotification( $post, $cfg )
+	function parseNotification( $post )
 	{
 		$res = explode(":", $_GET['vercode']);
 
@@ -135,11 +135,11 @@ class processor_verotel extends URLprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $cfg, $invoice )
+	function validateNotification( $response, $post, $invoice )
 	{
 		$res = explode(":", $_GET['vercode']);
 
-		if( $cfg['secretcode'] == $res[2] ) {
+		if( $this->settings['secretcode'] == $res[2] ) {
 			$response['valid'] = 1;
 		} else {
 			$response['valid'] = 0;

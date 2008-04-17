@@ -56,7 +56,7 @@ class processor_airtoy extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings( $cfg )
+	function backend_settings( $this->settings )
 	{
 		$settings = array();
 		$settings['testmode']			= array("list_yesno");
@@ -78,16 +78,16 @@ class processor_airtoy extends XMLprocessor
 		return $p;
 	}
 
-	function checkoutform( $int_var, $cfg, $metaUser, $new_subscription )
+	function checkoutform( $request )
 	{
 		global $mosConfig_live_site, $database;
 
 		$invoice = new Invoice( $database );
-		$invoice->loadInvoiceNumber( $int_var['invoice'] );
+		$invoice->loadInvoiceNumber( $request->int_var['invoice'] );
 
-		$code = $int_var['planparams']['smscode_prefix'] . ' ' . $invoice->id;
+		$code = $request->int_var['planparams']['smscode_prefix'] . ' ' . $invoice->id;
 
-		$var['params']['explain'] = array( 'p', _AEC_AIRTOY_PARAMS_EXPLAIN_NAME, sprintf( _AEC_AIRTOY_PARAMS_EXPLAIN_DESC, $code, $cfg['phone_number'] ) );
+		$var['params']['explain'] = array( 'p', _AEC_AIRTOY_PARAMS_EXPLAIN_NAME, sprintf( _AEC_AIRTOY_PARAMS_EXPLAIN_DESC, $code, $this->settings['phone_number'] ) );
 		$var['params']['smscode'] = array( 'inputC', _AEC_AIRTOY_PARAMS_SMSCODE_NAME, _AEC_AIRTOY_PARAMS_SMSCODE_DESC);
 
 		return $var;
@@ -102,14 +102,14 @@ class processor_airtoy extends XMLprocessor
 	{
 		$return['valid'] = false;
 
-		if ( empty( $int_var['params']['smscode'] ) ) {
+		if ( empty( $request->int_var['params']['smscode'] ) ) {
 			$return['error'] = _AEC_AIRTOY_ERROR_NOCODE;
 			return $return;
 		}
 
 		$invoiceparams = $invoice->getParams();
 
-		$compare = ( strcmp( $int_var['params']['smscode'], $invoiceparams['airtoy_smscode'] ) === 0 );
+		$compare = ( strcmp( $request->int_var['params']['smscode'], $invoiceparams['airtoy_smscode'] ) === 0 );
 
 		if ( $compare ) {
 			$return['valid'] = true;
@@ -134,7 +134,7 @@ class processor_airtoy extends XMLprocessor
 	}
 
 
-	function parseNotification( $post, $cfg )
+	function parseNotification( $post )
 	{
 		global $database;
 
@@ -156,14 +156,14 @@ class processor_airtoy extends XMLprocessor
 			$invoice->check();
 			$invoice->store();
 
-			if ( !empty( $cfg['secret'] ) && isset( $_GET['secret'] ) ) {
-				if ( $cfg['secret'] != $_GET['secret'] ) {
+			if ( !empty( $this->settings['secret'] ) && isset( $_GET['secret'] ) ) {
+				if ( $this->settings['secret'] != $_GET['secret'] ) {
 					exit;
 				}
 
 			}
 /*
-			if ( $cfg['testmode'] ) {
+			if ( $this->settings['testmode'] ) {
 				$url = "http://82.113.44.50/";
 			} else {
 				$url = "http://195.47.87.164/";

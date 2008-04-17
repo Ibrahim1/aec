@@ -66,7 +66,7 @@ class processor_ipayment_silent extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings( $cfg )
+	function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']		= array("list_yesno");
@@ -83,7 +83,7 @@ class processor_ipayment_silent extends XMLprocessor
 		return $settings;
 	}
 
-	function checkoutform( $int_var, $cfg, $metaUser, $new_subscription )
+	function checkoutform( $request )
 	{
 		global $mosConfig_live_site;
 
@@ -107,7 +107,7 @@ class processor_ipayment_silent extends XMLprocessor
 		$var['params']['billFirstName'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_DESC, $name[0] );
 		$var['params']['billLastName'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_DESC, $name[1] );
 
-		if ( !empty( $cfg['promptAddress'] ) ) {
+		if ( !empty( $this->settings['promptAddress'] ) ) {
 			$var['params']['billAddress'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLADDRESS_NAME );
 			$var['params']['billCity'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLCITY_NAME );
 			$var['params']['billState'] = array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLSTATE_NAME );
@@ -133,26 +133,26 @@ class processor_ipayment_silent extends XMLprocessor
 
 		$a = array();
 
-		if ( empty( $int_var['params']['cc_number'] ) ) {
+		if ( empty( $request->int_var['params']['cc_number'] ) ) {
 			$a['trx_paymenttyp']	= 'elv';
 		} else {
 			$a['trx_paymenttyp']	= 'cc';
 		}
 
-		if ( !empty( $cfg['fake_account'] ) ) {
+		if ( !empty( $this->settings['fake_account'] ) ) {
 			$a['trxuser_id']		= '99999';
 			$a['trxpassword']		= '0';
 		} else {
-			$a['trxuser_id']		= $cfg['user_id'];
-			$a['trxpassword']		= $cfg['password'];
+			$a['trxuser_id']		= $this->settings['user_id'];
+			$a['trxpassword']		= $this->settings['password'];
 		}
 
-		$a['order_id']		= AECfetchfromDB::InvoiceIDfromNumber( $int_var['invoice'] );
+		$a['order_id']		= AECfetchfromDB::InvoiceIDfromNumber( $request->int_var['invoice'] );
 		$a['from_ip']		= $ip;
-		$a['trx_currency']	= $cfg['currency'];
-		$a['trx_amount']	= (int) ( $int_var['amount'] * 100 );
+		$a['trx_currency']	= $this->settings['currency'];
+		$a['trx_amount']	= (int) ( $request->int_var['amount'] * 100 );
 		$a['trx_typ']		= 'auth';
-		$a['invoice_text']	= $int_var['invoice'];
+		$a['invoice_text']	= $request->int_var['invoice'];
 		$a['addr_email']	= $metaUser->cmsUser->email;
 
 		$varray = array(	'addr_name'	=>	'billFirstName',
@@ -171,12 +171,12 @@ class processor_ipayment_silent extends XMLprocessor
 							'bank_name'	=>	'bankName'
 						);
 		foreach ( $varray as $n => $p ) {
-			if ( !empty( $int_var['params'][$p] ) ) {
-				if ( ( ( $n == 'cc_expdate_month' ) || ( $n == 'cc_expdate_year' ) ) && empty( $int_var['params']['cc_number'] ) ) {
+			if ( !empty( $request->int_var['params'][$p] ) ) {
+				if ( ( ( $n == 'cc_expdate_month' ) || ( $n == 'cc_expdate_year' ) ) && empty( $request->int_var['params']['cc_number'] ) ) {
 					continue;
 				}
 
-				$a[$n] = $int_var['params'][$p];
+				$a[$n] = $request->int_var['params'][$p];
 			}
 		}
 
@@ -210,7 +210,7 @@ class processor_ipayment_silent extends XMLprocessor
 		$url = "https://ipayment.de" . $path . '?' . $xml;
 echo "<h1>Variablen:</h1>";
 echo '<p>';
-foreach( $int_var as $key => $value ) { if ( strpos( $key, '_') === false ) { echo $key . ' = ' . $value . '</p><p>'; } }
+foreach( $request->int_var as $key => $value ) { if ( strpos( $key, '_') === false ) { echo $key . ' = ' . $value . '</p><p>'; } }
 echo '</p>';
 echo "<h1>Rechnung:</h1>";
 echo '<p>';

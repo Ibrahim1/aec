@@ -70,7 +70,7 @@ class processor_paycom extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings( $cfg )
+	function backend_settings()
 	{
 		$settings = array();
 		$settings['co_code']	= array("inputC","Company Code","Three (3) alphanumeric ID assigned by Paycom.net");
@@ -92,25 +92,25 @@ class processor_paycom extends POSTprocessor
 		global $mosConfig_live_site;
 
 		$var['post_url']		= "https://wnu.com/secure/fpost.cgi";
-		$var['co_code']			= $cfg['co_code'];
-		$var['product_id']		= $cfg['product_id'];
+		$var['co_code']			= $this->settings['co_code'];
+		$var['product_id']		= $this->settings['product_id'];
 		$var['reseller']		= "a"; //hardcoded as per Paycom Interface documentation - required
-		$var['x_invoice']		= $int_var['invoice'];
+		$var['x_invoice']		= $request->int_var['invoice'];
 		$var['zip']				= "";  //if you have this available through CB then use it ;)
 		$var['email']			= $metaUser->cmsUser->email;
 		$var['country']			= "";  //if you have this available through CB then use it ;) NOTE Paycom want a ISO 2 char country code.
-		$var['x_checksum']		= md5($cfg['secretWord'] . $metaUser->cmsUser->username);
+		$var['x_checksum']		= md5($this->settings['secretWord'] . $metaUser->cmsUser->username);
 		$var['handle_response']	= "true"; //instructs Paycom to handle the accept/deny process
 		$var['response_post']	= "Y"; //tells Paycom - 'YES' we would like an answer please
 		$var['no_userpass']		= "true"; //tells Paycom - we are handling the username and password
 		$var['x_username']		= $metaUser->cmsUser->username;
-		//		$var['bgcolor']			= $cfg['bgcolor'];
+		//		$var['bgcolor']			= $this->settings['bgcolor'];
 
 		return $var;
 	}
 
 
-	function parseNotification( $post, $cfg )
+	function parseNotification( $post )
 	{
 		$invoice			= $post['x_invoice'];
 		$name				= $post['name'];
@@ -138,9 +138,9 @@ class processor_paycom extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $cfg, $invoice )
+	function validateNotification( $response, $post, $invoice )
 	{
-		$validate			= md5( $cfg['secretWord'] . $post['x_username'] );
+		$validate			= md5( $this->settings['secretWord'] . $post['x_username'] );
 
 		if ( substr( $post['ans'], 0, 1 ) == "Y" ) {
 			$response['valid'] = 1;

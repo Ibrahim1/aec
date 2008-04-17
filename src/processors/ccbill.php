@@ -74,7 +74,7 @@ class processor_ccbill extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings( $cfg )
+	function backend_settings()
 	{
 		$settings = array();
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
@@ -106,24 +106,24 @@ class processor_ccbill extends POSTprocessor
 		global $mosConfig_live_site;
 
 		$var['post_url']		= "https://bill.ccbill.com/jpost/signup.cgi";
-		$var['clientAccnum']	= $cfg['clientAccnum'];
-		if ( !empty( $cfg['clientSubacc'] ) ) {
-			$var['clientSubacc']	= $cfg['clientSubacc'];
+		$var['clientAccnum']	= $this->settings['clientAccnum'];
+		if ( !empty( $this->settings['clientSubacc'] ) ) {
+			$var['clientSubacc']	= $this->settings['clientSubacc'];
 		}
-		$var['formName']		= $cfg['formName'];
+		$var['formName']		= $this->settings['formName'];
 
-		$var['invoice']			= $int_var['invoice'];
+		$var['invoice']			= $request->int_var['invoice'];
 		$var['username']		= $metaUser->cmsUser->username;
 		$var['password']		= "xxxxxx"; // hard coded because the CCBILL system can't deal with an empty password - despite having an option to ignore it...
 		$var['email']			= $metaUser->cmsUser->email;
-		$var['checksum']		= md5($cfg['secretWord'] . $metaUser->cmsUser->username);
+		$var['checksum']		= md5($this->settings['secretWord'] . $metaUser->cmsUser->username);
 
-		if ( !empty( $int_var['planparams']['Allowedtypes'] ) ) {
-			$var['allowedTypes'] = $int_var['planparams']['Allowedtypes'];
+		if ( !empty( $request->int_var['planparams']['Allowedtypes'] ) ) {
+			$var['allowedTypes'] = $request->int_var['planparams']['Allowedtypes'];
 		}
 
-		if ( !empty( $cfg['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $cfg['customparams'], $metaUser, $new_subscription );
+		if ( !empty( $this->settings['customparams'] ) ) {
+			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $metaUser, $new_subscription );
 
 			$cps = explode( "\n", $rw_params );
 
@@ -171,7 +171,7 @@ class processor_ccbill extends POSTprocessor
 	ip_address			Customer�s IP address , such as: 64.38.194.13
 	*/
 
-	function parseNotification( $post, $cfg )
+	function parseNotification( $post )
 	{
 		global $database;
 
@@ -276,7 +276,7 @@ class processor_ccbill extends POSTprocessor
 
 	}
 
-	function validateNotification( $response, $post, $cfg, $invoice )
+	function validateNotification( $response, $post, $invoice )
 	{
 		if ( isset( $response['pending_reason'] ) ){
 			$response['valid'] = 0;
@@ -285,7 +285,7 @@ class processor_ccbill extends POSTprocessor
 
 		if ( isset( $response['checksum'] ) ) {
 			$username = $post['username'];
-			$validate = md5( $cfg['secretWord'] . $username );
+			$validate = md5( $this->settings['secretWord'] . $username );
 
 			$checkvalid = ( strcmp( $validate, $response['checksum'] ) == 0 );
 
@@ -306,24 +306,24 @@ class processor_ccbill extends POSTprocessor
 		return $response;
 	}
 
-	function prepareValidation( $cfg, $subscription_list )
+	function prepareValidation( $subscription_list )
 	{
 		global $database;
 
-		if ( !empty( $cfg['datalink_username'] ) ) {
+		if ( !empty( $this->settings['datalink_username'] ) ) {
 			if ( empty( $this->datalink_temp ) ) {
 				$get = array();
 				$get['startTime'] = date( 'YmdHis', ( time() - 24*60*60 - 1 ) );
 				$get['endTime'] = date( 'YmdHis' );
 				$get['transactionTypes'] = 'EXPIRE';
-				$get['clientAccnum'] = $cfg['clientAccnum'];
+				$get['clientAccnum'] = $this->settings['clientAccnum'];
 
-				if ( !empty( $cfg['clientSubacc'] ) ) {
-					$get['clientSubacc'] = $cfg['clientSubacc'];
+				if ( !empty( $this->settings['clientSubacc'] ) ) {
+					$get['clientSubacc'] = $this->settings['clientSubacc'];
 				}
 
-				$get['username'] = $cfg['datalink_username'];
-				$get['password'] = $cfg['secretWord'];
+				$get['username'] = $this->settings['datalink_username'];
+				$get['password'] = $this->settings['secretWord'];
 
 				$fullget = array();
 				foreach ( $get as $name => $value ) {
@@ -387,7 +387,7 @@ class processor_ccbill extends POSTprocessor
 		}
 	}
 
-	function validateSubscription( $cfg, $subscription_id )
+	function validateSubscription( $subscription_id )
 	{
 		global $database;
 

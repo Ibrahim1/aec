@@ -67,7 +67,7 @@ class processor_worldpay_futurepay extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings( $cfg )
+	function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'list_yesno');
@@ -87,28 +87,28 @@ class processor_worldpay_futurepay extends POSTprocessor
 		global $mosConfig_live_site;
 
 		$var['post_url']	= 'https://select.worldpay.com/wcc/purchase';
-		if ($cfg->testmode) {
+		if ($this->settings->testmode) {
 			$var['testMode'] = '100';
 		}
 
-		$var['instId']		= $cfg['instId'];
-		$var['currency']	= $cfg['currency'];
-		$var['cartId']		= $int_var['invoice'];
-		$var['desc']	= AECToolbox::rewriteEngine($cfg['item_name'], $metaUser, $new_subscription);
+		$var['instId']		= $this->settings['instId'];
+		$var['currency']	= $this->settings['currency'];
+		$var['cartId']		= $request->int_var['invoice'];
+		$var['desc']	= AECToolbox::rewriteEngine($this->settings['item_name'], $metaUser, $new_subscription);
 
 		$var['futurePayType']		= 'regular';
 		$var['option']		= '0';
 
 		$units = array( 'D' => '1', 'W' => '2', 'M' => '3', 'Y' => '4' );
 
-		$var['intervalUnit'] = $units[$int_var['amount']['unit3']];
-		$var['intervalMult'] = $int_var['amount']['period3'];
+		$var['intervalUnit'] = $units[$request->int_var['amount']['unit3']];
+		$var['intervalMult'] = $request->int_var['amount']['period3'];
 
-		if ( isset( $int_var['amount']['amount1'] ) ) {
-			$var['initialAmount'] = $int_var['amount']['amount1'];
+		if ( isset( $request->int_var['amount']['amount1'] ) ) {
+			$var['initialAmount'] = $request->int_var['amount']['amount1'];
 		}
 
-		$var['normalAmount'] = $int_var['amount']['amount1'];
+		$var['normalAmount'] = $request->int_var['amount']['amount1'];
 
 		return $var;
 	}
@@ -154,7 +154,7 @@ class processor_worldpay_futurepay extends POSTprocessor
  * name=WorldPay+Test
  */
 
-	function parseNotification( $post, $cfg )
+	function parseNotification( $post )
 	{
 		$response = array();
 		$response['invoice'] = $post['cartId'];
@@ -164,15 +164,15 @@ class processor_worldpay_futurepay extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $cfg, $invoice )
+	function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
 		$response['valid'] = ( strcmp( $post['transStatus'], 'Y') === 0 );
 
 		if ( $response['valid'] ) {
-			if ( !empty( $cfg['callbackPW'] ) ) {
+			if ( !empty( $this->settings['callbackPW'] ) ) {
 				if ( isset( $post['callbackPW'] ) ) {
-					if ( $cfg['callbackPW'] != $post['callbackPW'] ) {
+					if ( $this->settings['callbackPW'] != $post['callbackPW'] ) {
 						$response['valid'] = 0;
 						$response['pending_reason'] = 'callback Password set wrong at either Worldpay or within the AEC';
 					}

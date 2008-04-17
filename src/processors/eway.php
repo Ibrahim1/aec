@@ -65,27 +65,27 @@ class processor_eway extends POSTprocessor
 		//Genere un identifiant unique pour la transaction
 		$my_trxn_number = uniqid( "eway_" );
 
-		$order_total = $int_var['amount'] * 100;
+		$order_total = $request->int_var['amount'] * 100;
 
 		$var = array(	"post_url" => "https://www.eWAY.com.au/gateway/payment.asp",
-						"ewayCustomerID" => $cfg['custId'],
+						"ewayCustomerID" => $this->settings['custId'],
 						"ewayTotalAmount" => $order_total,
 						"ewayCustomerFirstName" => $metaUser->cmsUser->username,
 						"ewayCustomerLastName" => $metaUser->cmsUser->name,
-						"ewayCustomerInvoiceDescription" => AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription ),
-						"ewayCustomerInvoiceRef" => $int_var['invoice'],
+						"ewayCustomerInvoiceDescription" => AECToolbox::rewriteEngine( $this->settings['item_name'], $metaUser, $new_subscription ),
+						"ewayCustomerInvoiceRef" => $request->int_var['invoice'],
 						"ewayOption1" => $metaUser->cmsUser->id, //Send in option1, the id of the user
-						"ewayOption2" => $int_var['invoice'], //Send in option2, the invoice number
+						"ewayOption2" => $request->int_var['invoice'], //Send in option2, the invoice number
 						"eWAYTrxnNumber" => $my_trxn_number,
-						"eWAYAutoRedirect" => $cfg['autoRedirect'],
-						"eWAYSiteTitle" => $cfg['SiteTitle'],
+						"eWAYAutoRedirect" => $this->settings['autoRedirect'],
+						"eWAYSiteTitle" => $this->settings['SiteTitle'],
 						"eWAYURL" => $return_url
 					);
 
 		return $var;
 	}
 
-	function parseNotification( $post, $cfg )
+	function parseNotification( $post )
 	{
 		$eWAYResponseText = $post['eWAYresponseText'];
 		$eWAYTrxnNumber = $post['ewayTrxnNumber'];
@@ -101,7 +101,7 @@ class processor_eway extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $cfg, $invoice )
+	function validateNotification( $response, $post, $invoice )
 	{
 		if ( $post['ewayTrxnStatus'] == "True" && isset( $post['eWAYAuthCode'] ) ) {
 			$response['valid'] = 1;

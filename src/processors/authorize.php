@@ -73,7 +73,7 @@ class processor_authorize extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings( $cfg )
+	function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']			= array("list_yesno");
@@ -103,14 +103,14 @@ class processor_authorize extends POSTprocessor
 	{
 		global $mosConfig_live_site;
 
-		if ( $cfg['testmode'] ) {
+		if ( $this->settings['testmode'] ) {
 			$var['post_url']	= "https://test.authorize.net/gateway/transact.dll";
 		} else {
 			$var['post_url']	= "https://secure.authorize.net/gateway/transact.dll";
 		}
 
-		$var['x_login']					= $cfg['login'];
-		$var['x_invoice_num']			= $int_var['invoice'];
+		$var['x_login']					= $this->settings['login'];
+		$var['x_invoice_num']			= $request->int_var['invoice'];
 		$var['x_receipt_link_method']	= "POST";
 		//$var['x_receipt_link_url']		= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=authorizenotification");
 		//$var['x_receipt_link_text']		= "Continue";
@@ -118,19 +118,19 @@ class processor_authorize extends POSTprocessor
 		//$var['x_relay_response']		= "True";
 		//$var['x_relay_url']			= AECToolbox::deadsureURL('/index.php?option=com_acctexp&task=authnotification');
 
-		$var['x_amount'] = $int_var['amount'];
+		$var['x_amount'] = $request->int_var['amount'];
 		srand(time());
 		$sequence = rand(1, 1000);
 
-		if ( !empty( $cfg['timestamp_offset'] ) ) {
-			$tstamp = time() + $cfg['timestamp_offset'];
+		if ( !empty( $this->settings['timestamp_offset'] ) ) {
+			$tstamp = time() + $this->settings['timestamp_offset'];
 		} else {
 			$tstamp = time();
 		}
 
 		// Calculate fingerprint
-		$data = $cfg['login'] . "^" . $sequence . "^" . $tstamp . "^" . $int_var['amount'] . "^" . "";
-		$fingerprint = $this->hmac($cfg['transaction_key'], $data);
+		$data = $this->settings['login'] . "^" . $sequence . "^" . $tstamp . "^" . $request->int_var['amount'] . "^" . "";
+		$fingerprint = $this->hmac($this->settings['transaction_key'], $data);
 		// Insert the form elements required for SIM
 		$var['x_fp_sequence']	= $sequence;
 
@@ -138,12 +138,12 @@ class processor_authorize extends POSTprocessor
 		$var['x_fp_hash']		= $fingerprint;
 
 		$var['x_cust_id']			= $metaUser->cmsUser->id;
-		$var['x_description']		= AECToolbox::rewriteEngine($cfg['item_name'], $metaUser, $new_subscription);
+		$var['x_description']		= AECToolbox::rewriteEngine($this->settings['item_name'], $metaUser, $new_subscription);
 
-		$var = $this->customParams( $cfg['customparams'], $var, $metaUser, $new_subscription, $invoice );
+		$var = $this->customParams( $this->settings['customparams'], $var, $metaUser, $new_subscription, $invoice );
 
-		if ( !empty( $cfg['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $cfg['customparams'], $metaUser, $new_subscription );
+		if ( !empty( $this->settings['customparams'] ) ) {
+			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $metaUser, $new_subscription );
 
 			$cps = explode( "\n", $rw_params );
 
@@ -159,7 +159,7 @@ class processor_authorize extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post, $cfg )
+	function parseNotification( $post )
 	{
 		$x_description			= $post['x_description'];
 
@@ -172,7 +172,7 @@ class processor_authorize extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $cfg, $invoice )
+	function validateNotification( $response, $post, $invoice )
 	{
 		$x_response_code		= $post['x_response_code'];
 		$x_response_reason_text	= $post['x_response_reason_text'];

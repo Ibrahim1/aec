@@ -83,7 +83,7 @@ class processor_paypal extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings( $cfg )
+	function backend_settings()
 	{
 		$settings = array();
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
@@ -119,7 +119,7 @@ class processor_paypal extends POSTprocessor
 	{
 		global $mosConfig_live_site;
 
-		if ( $cfg['testmode'] ) {
+		if ( $this->settings['testmode'] ) {
 			$var['post_url']	= 'https://www.sandbox.paypal.com/cgi-bin/webscr';
 		} else {
 			$var['post_url']	= 'https://www.paypal.com/cgi-bin/webscr';
@@ -127,54 +127,54 @@ class processor_paypal extends POSTprocessor
 
 		$var['cmd']				= '_xclick';
 
-		if ( !empty( $cfg['tax'] ) && $cfg['tax'] > 0 ) {
-			$tax				= $int_var['amount'] / ( 100 + $cfg['tax'] ) * 100;
-			$var['tax']			= round( ( $int_var['amount'] - $tax ), 2 );
+		if ( !empty( $this->settings['tax'] ) && $this->settings['tax'] > 0 ) {
+			$tax				= $request->int_var['amount'] / ( 100 + $this->settings['tax'] ) * 100;
+			$var['tax']			= round( ( $request->int_var['amount'] - $tax ), 2 );
 			$var['amount']		= round( $tax, 2 );
 		} else {
-			$var['amount']		= $int_var['amount'];
+			$var['amount']		= $request->int_var['amount'];
 		}
 
-		$var['business']		= $cfg['business'];
-		$var['invoice']			= $int_var['invoice'];
+		$var['business']		= $this->settings['business'];
+		$var['invoice']			= $request->int_var['invoice'];
 		$var['cancel']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
 
-		if ( strpos( $cfg['altipnurl'], 'http://' ) === 0 ) {
-			$var['notify_url']	= $cfg['altipnurl'] . '/index.php?option=com_acctexp&amp;task=paypalnotification';
+		if ( strpos( $this->settings['altipnurl'], 'http://' ) === 0 ) {
+			$var['notify_url']	= $this->settings['altipnurl'] . '/index.php?option=com_acctexp&amp;task=paypalnotification';
 		} else {
 			$var['notify_url']	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=paypalnotification' );
 		}
 
 		$var['item_number']		= $metaUser->cmsUser->id;
-		$var['item_name']		= AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription );
+		$var['item_name']		= AECToolbox::rewriteEngine( $this->settings['item_name'], $metaUser, $new_subscription );
 
-		$var['no_shipping']		= $cfg['no_shipping'];
+		$var['no_shipping']		= $this->settings['no_shipping'];
 		$var['no_note']			= '1';
 		$var['rm']				= '2';
 
-		$var['return']			= $int_var['return_url'];
-		$var['currency_code']	= $cfg['currency'];
-		$var['lc']				= $cfg['lc'];
+		$var['return']			= $request->int_var['return_url'];
+		$var['currency_code']	= $this->settings['currency'];
+		$var['lc']				= $this->settings['lc'];
 
 		// Customizations
 		$customizations = array( 'cbt', 'cn', 'cpp_header_image', 'cpp_headerback_color', 'cpp_headerborder_color', 'cpp_payflow_color', 'image_url', 'page_style' );
 
 		foreach ( $customizations as $cust ) {
-			if ( !empty( $cfg[$cust] ) ) {
-					$var[$cust] = $cfg[$cust];
+			if ( !empty( $this->settings[$cust] ) ) {
+					$var[$cust] = $this->settings[$cust];
 			}
 		}
 
-		if ( isset( $cfg['cs'] ) ) {
-			if ( $cfg['cs'] != 0 ) {
-				$var['cs'] = $cfg['cs'];
+		if ( isset( $this->settings['cs'] ) ) {
+			if ( $this->settings['cs'] != 0 ) {
+				$var['cs'] = $this->settings['cs'];
 			}
 		}
 
 		return $var;
 	}
 
-	function parseNotification( $post, $cfg )
+	function parseNotification( $post )
 	{
 		global $database;
 
@@ -192,9 +192,9 @@ class processor_paypal extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $cfg, $invoice )
+	function validateNotification( $response, $post, $invoice )
 	{
-		if ($cfg['testmode']) {
+		if ($this->settings['testmode']) {
 			$ppurl = 'www.sandbox.paypal.com';
 		} else {
 			$ppurl = 'www.paypal.com';
@@ -226,7 +226,7 @@ class processor_paypal extends POSTprocessor
 
 		$response['valid'] = 0;
 
-		if ( strcmp( $receiver_email, $cfg['business'] ) != 0 && $cfg['checkbusiness'] ) {
+		if ( strcmp( $receiver_email, $this->settings['business'] ) != 0 && $this->settings['checkbusiness'] ) {
 			$response['pending_reason'] = 'checkbusiness error';
 		} elseif ( strcmp( $res, 'VERIFIED' ) == 0 ) {
 			// Process payment: Paypal Subscription & Buy Now
@@ -239,7 +239,7 @@ class processor_paypal extends POSTprocessor
 				} elseif ( strcmp( $payment_type, 'instant' ) == 0 && strcmp( $payment_status, 'Completed' ) == 0 ) {
 					$response['valid']			= 1;
 				} elseif ( strcmp( $payment_type, 'echeck' ) == 0 && strcmp( $payment_status, 'Pending' ) == 0 ) {
-					if ( $cfg['acceptpendingecheck'] ) {
+					if ( $this->settings['acceptpendingecheck'] ) {
 						if ( is_object( $invoice ) ) {
 							$invoice->setParams( array( 'acceptedpendingecheck' => 1 ) );
 							$invoice->check();
@@ -253,7 +253,7 @@ class processor_paypal extends POSTprocessor
 						$response['pending_reason'] = 'echeck';
 					}
 				} elseif ( strcmp( $payment_type, 'echeck' ) == 0 && strcmp( $payment_status, 'Completed' ) == 0 ) {
-					if ( $cfg['acceptpendingecheck'] ) {
+					if ( $this->settings['acceptpendingecheck'] ) {
 						if ( is_object( $invoice ) ) {
 							$invoiceparams = $invoice->getParams();
 

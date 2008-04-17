@@ -62,7 +62,7 @@ class processor_offline_payment extends processor
 		return $settings;
 	}
 
-	function backend_settings( $cfg )
+	function backend_settings()
 	{
 		$settings = array();
 		$settings['waitingplan'] = array( 'list_plan' );
@@ -72,15 +72,15 @@ class processor_offline_payment extends processor
 		return $settings;
 	}
 
-	function invoiceCreationAction( $cfg, $objInvoice )
+	function invoiceCreationAction( $objInvoice )
 	{
-		if ( $cfg['waitingplan'] ) {
+		if ( $this->settings['waitingplan'] ) {
 			global $database;
 
 			$metaUser = new metaUser( $objInvoice->userid );
 
 			if ( $metaUser->hasSubscription ) {
-				$metaUser->objSubscription->applyUsage( $cfg['waitingplan'], 'none', 1 );
+				$metaUser->objSubscription->applyUsage( $this->settings['waitingplan'], 'none', 1 );
 
 				$short	= 'waiting plan';
 				$event	= 'Offline Payment waiting plan assigned for ' . $objInvoice->invoice_number;

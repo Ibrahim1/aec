@@ -67,7 +67,7 @@ class processor_authorize_aim extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings( $cfg )
+	function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']			= array("list_yesno");
@@ -85,7 +85,7 @@ class processor_authorize_aim extends XMLprocessor
 		return $settings;
 	}
 
-	function checkoutform( $int_var, $cfg, $metaUser, $new_subscription )
+	function checkoutform( $request )
 	{
 		global $mosConfig_live_site;
 
@@ -100,8 +100,8 @@ class processor_authorize_aim extends XMLprocessor
 		$var['params']['billFirstName'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLFIRSTNAME_NAME, _AEC_AUTHORIZE_AIM_PARAMS_BILLFIRSTNAME_DESC, $name[0]);
 		$var['params']['billLastName'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLLASTNAME_NAME, _AEC_AUTHORIZE_AIM_PARAMS_BILLLASTNAME_DESC, $name[1]);
 
-		if ( !empty( $cfg['promptAddress'] ) || !empty( $cfg['promptZipOnly'] ) ) {
-			if ( empty( $cfg['promptZipOnly'] ) ) {
+		if ( !empty( $this->settings['promptAddress'] ) || !empty( $this->settings['promptZipOnly'] ) ) {
+			if ( empty( $this->settings['promptZipOnly'] ) ) {
 				$var['params']['billAddress'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLADDRESS_NAME );
 				$var['params']['billCity'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLCITY_NAME );
 				$var['params']['billState'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLSTATE_NAME );
@@ -109,7 +109,7 @@ class processor_authorize_aim extends XMLprocessor
 
 			$var['params']['billZip'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLZIP_NAME );
 
-			if ( empty( $cfg['promptZipOnly'] ) ) {
+			if ( empty( $this->settings['promptZipOnly'] ) ) {
 				$var['params']['billCountry'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLCOUNTRY_NAME );
 			}
 		}
@@ -123,44 +123,44 @@ class processor_authorize_aim extends XMLprocessor
 
 		$a = array();
 
-		$a['x_login']			= trim( substr( $cfg['login'], 0, 25 ) );
+		$a['x_login']			= trim( substr( $this->settings['login'], 0, 25 ) );
 		$a['x_version']			= "3.1";
 		$a['x_delim_char']		= "|";
 		$a['x_delim_data']		= "TRUE";
 		$a['x_url']				= "FALSE";
 		$a['x_type']			= "AUTH_CAPTURE";
 		$a['x_method']			= "CC";
-		$a['x_tran_key']		= $cfg['transaction_key'];
-		$a['x_currency_code']	= $cfg['currency'];
+		$a['x_tran_key']		= $this->settings['transaction_key'];
+		$a['x_currency_code']	= $this->settings['currency'];
 		$a['x_relay_response']	= "FALSE";
-		$a['x_card_num']		= trim( $int_var['params']['cardNumber'] );
-		$a['x_exp_date']		= str_pad( $int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ) . $int_var['params']['expirationYear'];
-		$a['x_description']		= trim( substr( AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription ), 0, 20 ) );
-		$a['x_invoice_num']		= $int_var['invoice'];
-		$a['x_amount']			= $int_var['amount'];
-		$a['x_first_name']		= trim( $int_var['params']['billFirstName'] );
-		$a['x_last_name']		= trim( $int_var['params']['billLastName'] );
+		$a['x_card_num']		= trim( $request->int_var['params']['cardNumber'] );
+		$a['x_exp_date']		= str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ) . $request->int_var['params']['expirationYear'];
+		$a['x_description']		= trim( substr( AECToolbox::rewriteEngine( $this->settings['item_name'], $metaUser, $new_subscription ), 0, 20 ) );
+		$a['x_invoice_num']		= $request->int_var['invoice'];
+		$a['x_amount']			= $request->int_var['amount'];
+		$a['x_first_name']		= trim( $request->int_var['params']['billFirstName'] );
+		$a['x_last_name']		= trim( $request->int_var['params']['billLastName'] );
 
-		if ( isset( $int_var['params']['billZip'] ) ) {
-			if ( isset( $int_var['params']['billAddress'] ) ) {
-				$a['x_address']		= trim( $int_var['params']['billAddress'] );
-				$a['x_city']		= trim( $int_var['params']['billCity'] );
-				$a['x_state']		= trim( $int_var['params']['billState'] );
+		if ( isset( $request->int_var['params']['billZip'] ) ) {
+			if ( isset( $request->int_var['params']['billAddress'] ) ) {
+				$a['x_address']		= trim( $request->int_var['params']['billAddress'] );
+				$a['x_city']		= trim( $request->int_var['params']['billCity'] );
+				$a['x_state']		= trim( $request->int_var['params']['billState'] );
 			}
 
-			$a['x_zip']			= trim( $int_var['params']['billZip'] );
+			$a['x_zip']			= trim( $request->int_var['params']['billZip'] );
 
-			if ( isset( $int_var['params']['billAddress'] ) ) {
-				$a['x_country']			= trim( $int_var['params']['billCountry'] );
+			if ( isset( $request->int_var['params']['billAddress'] ) ) {
+				$a['x_country']			= trim( $request->int_var['params']['billCountry'] );
 			}
 		}
 
-		if ( $cfg['testmode'] ) {
+		if ( $this->settings['testmode'] ) {
 			$a['x_test_request']		= "TRUE";
 		}
 
-		if ( !empty( $cfg['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $cfg['customparams'], $metaUser, $new_subscription );
+		if ( !empty( $this->settings['customparams'] ) ) {
+			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $metaUser, $new_subscription );
 
 			$cps = explode( "\n", $rw_params );
 

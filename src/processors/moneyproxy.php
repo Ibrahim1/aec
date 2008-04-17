@@ -34,7 +34,7 @@ class processor_moneyproxy extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings( $cfg )
+	function backend_settings()
 	{
 		$settings = array();
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
@@ -55,25 +55,25 @@ class processor_moneyproxy extends POSTprocessor
 	{
 		global $mosConfig_live_site;
 
-		$var['merchant_id']				= $cfg['merchant_id'];
-		$var['amount']					= $int_var['amount'];
+		$var['merchant_id']				= $this->settings['merchant_id'];
+		$var['amount']					= $request->int_var['amount'];
 		$var['status_url']				= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=moneyproxynotification' );
-		$var['return_success_url']		= $int_var['return_url'];
+		$var['return_success_url']		= $request->int_var['return_url'];
 		$var['return_success_method']	= 'LINK';
 		$var['return_failure_url']		= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
 		$var['return_failure_method']	= 'LINK';
-		$var['payment_id']				= substr( AECToolbox::rewriteEngine( $cfg['payment_id'], $metaUser, $new_subscription ), 0, 10 );
-		$var['force_client_receipt']	= $cfg['force_client_receipt'];
-		$var['suggested_memo']			= substr( $cfg['suggested_memo'], 0, 40 );
-		$var['language']				= strtolower( $cfg['language'] );
-		$var['custom1']					= $int_var['invoice'];
+		$var['payment_id']				= substr( AECToolbox::rewriteEngine( $this->settings['payment_id'], $metaUser, $new_subscription ), 0, 10 );
+		$var['force_client_receipt']	= $this->settings['force_client_receipt'];
+		$var['suggested_memo']			= substr( $this->settings['suggested_memo'], 0, 40 );
+		$var['language']				= strtolower( $this->settings['language'] );
+		$var['custom1']					= $request->int_var['invoice'];
 
-		$var['input_hash']				= md5( implode( ':', $var ) . ':' . $cfg['secret_key'] );
+		$var['input_hash']				= md5( implode( ':', $var ) . ':' . $this->settings['secret_key'] );
 
 		return $var;
 	}
 
-	function parseNotification( $post, $cfg )
+	function parseNotification( $post )
 	{
 		$response = array();
 		$response['invoice'] = $post['CUSTOM1'];
@@ -83,9 +83,9 @@ class processor_moneyproxy extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $cfg, $invoice )
+	function validateNotification( $response, $post, $invoice )
 	{
-		$checkhash = implode( ':', array( $post['MERCHANT_ID'], $post['REFERENCE_NO'], $post['PAYMENT_ID'], $post['AMOUNT'], $post['CURRENCY'], $post['AMOUNT_GAU'], $post['EXRATE'], $post['MONEYPROXY_FEES_GAU'], $post['SYSTEM_FEES_GAU'], $post['PAYMENT_SYSTEM'], $post['CUSTOM1'], $cfg['secret_key'] ) );
+		$checkhash = implode( ':', array( $post['MERCHANT_ID'], $post['REFERENCE_NO'], $post['PAYMENT_ID'], $post['AMOUNT'], $post['CURRENCY'], $post['AMOUNT_GAU'], $post['EXRATE'], $post['MONEYPROXY_FEES_GAU'], $post['SYSTEM_FEES_GAU'], $post['PAYMENT_SYSTEM'], $post['CUSTOM1'], $this->settings['secret_key'] ) );
 
 		if ( $post['HASH'] == $checkhash ) {
 			$response['valid'] = true;

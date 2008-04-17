@@ -57,7 +57,7 @@ class processor_viaklix extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings( $cfg )
+	function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode'] = array("list_yesno");
@@ -76,28 +76,28 @@ class processor_viaklix extends POSTprocessor
 		global $mosConfig_live_site;
 
 		$var['post_url']	= "https://www.viaKLIX.com/process.asp";
-		$var['ssl_test_mode'] = $cfg['testmode'] ? "true" : "false";
+		$var['ssl_test_mode'] = $this->settings['testmode'] ? "true" : "false";
 
-		$var['ssl_merchant_id']			= $cfg['accountid'];
-		$var['ssl_user_id']				= $cfg['userid'];
-		$var['ssl_pin']					= $cfg['pin'];
-		$var['ssl_invoice_number']		= $int_var['invoice'];
+		$var['ssl_merchant_id']			= $this->settings['accountid'];
+		$var['ssl_user_id']				= $this->settings['userid'];
+		$var['ssl_pin']					= $this->settings['pin'];
+		$var['ssl_invoice_number']		= $request->int_var['invoice'];
 		$var['ssl_salestax']			= "0";
 		$var['ssl_result_format']		= "HTML";
 		$var['ssl_receipt_link_method']	= "POST";
 		$var['ssl_receipt_link_url']	= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=viaklixnotification");
 		$var['ssl_receipt_link_text']	= "Continue";
-		$var['ssl_amount'] = $int_var['amount'];
-		$var['currency_code']			= $cfg['currency_code'];
+		$var['ssl_amount'] = $request->int_var['amount'];
+		$var['currency_code']			= $this->settings['currency_code'];
 
 		$var['item_number']		= $row->id;
-		$var['item_name']		= AECToolbox::rewriteEngine($cfg['item_name'], $metaUser, $new_subscription);
-		$var['custom']			= $int_var['usage'];
+		$var['item_name']		= AECToolbox::rewriteEngine($this->settings['item_name'], $metaUser, $new_subscription);
+		$var['custom']			= $request->int_var['usage'];
 
 		return $var;
 	}
 
-	function parseNotification( $post, $cfg )
+	function parseNotification( $post )
 	{
 		$ssl_result				= $post['ssl_result'];
 		$ssl_result_message		= $post['ssl_result_message'];
@@ -118,7 +118,7 @@ class processor_viaklix extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $cfg, $invoice )
+	function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = ( $post['ssl_result'] == 0 ) && ( strcmp ( $post['ssl_result_message'], "APPROVED") == 0 );
 

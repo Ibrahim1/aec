@@ -67,7 +67,7 @@ class processor_authorize_arb extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings( $cfg )
+	function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']			= array("list_yesno");
@@ -86,7 +86,7 @@ class processor_authorize_arb extends XMLprocessor
 		return $settings;
 	}
 
-	function checkoutform( $int_var, $cfg, $metaUser, $new_subscription )
+	function checkoutform( $request )
 	{
 		global $mosConfig_live_site;
 
@@ -101,7 +101,7 @@ class processor_authorize_arb extends XMLprocessor
 		$var['params']['billFirstName'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLFIRSTNAME_NAME, _AEC_AUTHORIZE_ARB_PARAMS_BILLFIRSTNAME_DESC, $name[0]);
 		$var['params']['billLastName'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLLASTNAME_NAME, _AEC_AUTHORIZE_ARB_PARAMS_BILLLASTNAME_DESC, $name[1]);
 
-		if ( !empty( $cfg['promptAddress'] ) ) {
+		if ( !empty( $this->settings['promptAddress'] ) ) {
 			$var['params']['billAddress'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLADDRESS_NAME );
 			$var['params']['billCity'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLCITY_NAME );
 			$var['params']['billState'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLSTATE_NAME );
@@ -120,55 +120,55 @@ class processor_authorize_arb extends XMLprocessor
 		$content =	'<?xml version="1.0" encoding="utf-8"?>'
 					. '<ARBCreateSubscriptionRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">'
 					. '<merchantAuthentication>'
-					. '<name>' . trim( substr( $cfg['login'], 0, 25 ) ) . '</name>'
-					. '<transactionKey>' . trim( substr( $cfg['transaction_key'], 0, 16 ) ) . '</transactionKey>'
+					. '<name>' . trim( substr( $this->settings['login'], 0, 25 ) ) . '</name>'
+					. '<transactionKey>' . trim( substr( $this->settings['transaction_key'], 0, 16 ) ) . '</transactionKey>'
 					. '</merchantAuthentication>'
-					. '<refId>' . $int_var['invoice'] . '</refId>';
+					. '<refId>' . $request->int_var['invoice'] . '</refId>';
 
-		$full = $this->convertPeriodUnit( $int_var['amount']['period3'], $int_var['amount']['unit3'] );
+		$full = $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
 
 		// Add Payment information
 		$content .=	'<subscription>'
-					. '<name>' . trim( substr( AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription, $invoice ), 0, 20 ) ) . '</name>'
+					. '<name>' . trim( substr( AECToolbox::rewriteEngine( $this->settings['item_name'], $metaUser, $new_subscription, $invoice ), 0, 20 ) ) . '</name>'
 					. '<paymentSchedule>'
 					. '<interval>'
 					. '<length>' . trim( $full['period'] ) . '</length>'
 					. '<unit>' . trim( $full['unit'] ) . '</unit>'
 					. '</interval>'
 					. '<startDate>' . trim( date( 'Y-m-d' ) ) . '</startDate>'
-					. '<totalOccurrences>' . trim( $cfg['totalOccurrences'] ) . '</totalOccurrences>';
+					. '<totalOccurrences>' . trim( $this->settings['totalOccurrences'] ) . '</totalOccurrences>';
 
-		if ( isset( $int_var['amount']['amount1'] ) ) {
-			$content .=	'<trialOccurrences>' . trim( $cfg['trialOccurrences'] ) . '</trialOccurrences>';
+		if ( isset( $request->int_var['amount']['amount1'] ) ) {
+			$content .=	'<trialOccurrences>' . trim( $this->settings['trialOccurrences'] ) . '</trialOccurrences>';
 		}
 
 		$content .=	 '</paymentSchedule>'
-					. '<amount>' . trim( $int_var['amount']['amount3'] ) .'</amount>';
+					. '<amount>' . trim( $request->int_var['amount']['amount3'] ) .'</amount>';
 
-		if ( isset( $int_var['amount']['amount1'] ) ) {
-			$content .=	 '<trialAmount>' . trim( $int_var['amount']['amount1'] ) . '</trialAmount>';
+		if ( isset( $request->int_var['amount']['amount1'] ) ) {
+			$content .=	 '<trialAmount>' . trim( $request->int_var['amount']['amount1'] ) . '</trialAmount>';
 		}
 
-		$expirationDate =  $int_var['params']['expirationYear'] . '-' . str_pad( $int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT );
+		$expirationDate =  $request->int_var['params']['expirationYear'] . '-' . str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT );
 
 		$content .=	'<payment>'
 					. '<creditCard>'
-					. '<cardNumber>' . trim( $int_var['params']['cardNumber'] ) . '</cardNumber>'
+					. '<cardNumber>' . trim( $request->int_var['params']['cardNumber'] ) . '</cardNumber>'
 					. '<expirationDate>' . trim( $expirationDate ) . '</expirationDate>'
 					. '</creditCard>'
 					. '</payment>'
 					;
 		$content .=	 '<billTo>'
-					. '<firstName>'. trim( $int_var['params']['billFirstName'] ) . '</firstName>'
-					. '<lastName>' . trim( $int_var['params']['billLastName'] ) . '</lastName>'
+					. '<firstName>'. trim( $request->int_var['params']['billFirstName'] ) . '</firstName>'
+					. '<lastName>' . trim( $request->int_var['params']['billLastName'] ) . '</lastName>'
 					;
 
-		if ( isset( $int_var['params']['billAddress'] ) ) {
-		$content .=	 '<address>'. trim( $int_var['params']['billAddress'] ) . '</address>'
-					. '<city>' . trim( $int_var['params']['billCity'] ) . '</city>'
-					. '<state>'. trim( $int_var['params']['billState'] ) . '</state>'
-					. '<zip>' . trim( $int_var['params']['billZip'] ) . '</zip>'
-					. '<country>'. trim( $int_var['params']['billCountry'] ) . '</country>'
+		if ( isset( $request->int_var['params']['billAddress'] ) ) {
+		$content .=	 '<address>'. trim( $request->int_var['params']['billAddress'] ) . '</address>'
+					. '<city>' . trim( $request->int_var['params']['billCity'] ) . '</city>'
+					. '<state>'. trim( $request->int_var['params']['billState'] ) . '</state>'
+					. '<zip>' . trim( $request->int_var['params']['billZip'] ) . '</zip>'
+					. '<country>'. trim( $request->int_var['params']['billCountry'] ) . '</country>'
 					;
 		}
 
@@ -261,13 +261,13 @@ class processor_authorize_arb extends XMLprocessor
 		return $return;
 	}
 
-	function customaction_cancel( $pp, $cfg, $invoice, $metaUser )
+	function customaction_cancel( $request )
 	{
 		$content =	'<?xml version="1.0" encoding="utf-8"?>'
 					. '<ARBCancelSubscriptionRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">'
 					. '<merchantAuthentication>'
-					. '<name>' . trim( substr( $cfg['login'], 0, 25 ) ) . '</name>'
-					. '<transactionKey>' . trim( substr( $cfg['transaction_key'], 0, 16 ) ) . '</transactionKey>'
+					. '<name>' . trim( substr( $this->settings['login'], 0, 25 ) ) . '</name>'
+					. '<transactionKey>' . trim( substr( $this->settings['transaction_key'], 0, 16 ) ) . '</transactionKey>'
 					. '</merchantAuthentication>'
 					. '<refId>' . $invoice->invoice_number . '</refId>';
 
@@ -280,7 +280,7 @@ class processor_authorize_arb extends XMLprocessor
 		$content .=	'</ARBCancelSubscriptionRequest>';
 
 		$path = "/xml/v1/request.api";
-		if ( $cfg['testmode'] ) {
+		if ( $this->settings['testmode'] ) {
 			$url = "https://apitest.authorize.net" . $path;
 		} else {
 			$url = "https://api.authorize.net" . $path;
@@ -310,7 +310,7 @@ class processor_authorize_arb extends XMLprocessor
 		}
 	}
 
-	function parseNotification( $post, $cfg )
+	function parseNotification( $post )
 	{
 		$x_description			= $post['x_description'];
 
@@ -323,7 +323,7 @@ class processor_authorize_arb extends XMLprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $cfg, $invoice )
+	function validateNotification( $response, $post, $invoice )
 	{
 		if ( $post['x_subscription_paynum'] > 1 ) {
 			$x_response_code		= $post['x_response_code'];

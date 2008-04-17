@@ -40,7 +40,7 @@ class processor_nochex extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings( $cfg )
+	function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']			= array( 'list_yesno');
@@ -57,16 +57,16 @@ class processor_nochex extends POSTprocessor
 		global $mosConfig_live_site;
 
 		$var['post_url']	= 'https://secure.nochex.com/';
-		if ( $cfg['testmode'] == '1' ) {
+		if ( $this->settings['testmode'] == '1' ) {
 			$var['test_transaction'] = '100';
 			$var['test_success_url'] = AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=nochexnotification' );
 		}
 
-		$var['merchant_id']			= $cfg['merchant_id'];
-		$var['description']			= AECToolbox::rewriteEngine($cfg['item_name'], $metaUser, $new_subscription);
-		$var['order_id']			= $int_var['invoice'];
-		$var['amount']				= $int_var['amount'];
-		$var['success_url']			= $int_var['return_url'];
+		$var['merchant_id']			= $this->settings['merchant_id'];
+		$var['description']			= AECToolbox::rewriteEngine($this->settings['item_name'], $metaUser, $new_subscription);
+		$var['order_id']			= $request->int_var['invoice'];
+		$var['amount']				= $request->int_var['amount'];
+		$var['success_url']			= $request->int_var['return_url'];
 		$var['cancel_url']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
 		$var['declined_url']		= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
 		$var['callback_url']		= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=nochexnotification' );
@@ -76,7 +76,7 @@ class processor_nochex extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post, $cfg )
+	function parseNotification( $post )
 	{
 		$response = array();
 		$response['invoice'] = $post['order_id'];
@@ -84,7 +84,7 @@ class processor_nochex extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $cfg, $invoice )
+	function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
 		if ( $response['invoice'] == $post['order_id'] ) {

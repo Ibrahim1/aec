@@ -63,7 +63,7 @@ class processor_paysite_cash extends URLprocessor
 		return $s;
 	}
 
-	function backend_settings( $cfg )
+	function backend_settings()
 	{
 		$s = array();
 		$s['siteid']		= array( 'inputC' );
@@ -76,18 +76,18 @@ class processor_paysite_cash extends URLprocessor
 
 	function createGatewayLink( $request )
 	{
-		if ( $cfg['testmode'] ) {
+		if ( $this->settings['testmode'] ) {
 			$var['test'] = 1;
 		}
 
 		$var['post_url'] = " https://billing.paysite-cash.biz/?";
-		$var['site'] = $cfg['siteid'];
-		$var['montant'] = $int_var['amount'];
-		$var['devise'] = $cfg['currency'];
+		$var['site'] = $this->settings['siteid'];
+		$var['montant'] = $request->int_var['amount'];
+		$var['devise'] = $this->settings['currency'];
 
-		$var['divers'] = base64_encode( md5( $cfg['secret'] . $int_var['invoice'] . $int_var['amount'] . $cfg['currency'] ) );
+		$var['divers'] = base64_encode( md5( $this->settings['secret'] . $request->int_var['invoice'] . $request->int_var['amount'] . $this->settings['currency'] ) );
 
-		$var['ref'] = $int_var['invoice'];
+		$var['ref'] = $request->int_var['invoice'];
 
 		foreach ( $var as $key => $value ) {
 			if ( $key != 'post_url' ) {
@@ -98,7 +98,7 @@ class processor_paysite_cash extends URLprocessor
 		return $var;
 	}
 
-	function parseNotification( $post, $cfg )
+	function parseNotification( $post )
 	{
 		$response = array();
 		$response['invoice'] = $post['ref'];
@@ -106,11 +106,11 @@ class processor_paysite_cash extends URLprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $cfg, $invoice )
+	function validateNotification( $response, $post, $invoice )
 	{
 		switch ( $post['res'] ) {
 			case 'ok':
-				$misc = base64_encode( md5( $cfg['secret'] . $post['ref'] . $post['montant_org'] . $post['devise_org'] ) );
+				$misc = base64_encode( md5( $this->settings['secret'] . $post['ref'] . $post['montant_org'] . $post['devise_org'] ) );
 
 				if ( $misc == $post['divers'] ) {
 					$response['valid'] = true;

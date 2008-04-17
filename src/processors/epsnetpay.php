@@ -79,7 +79,7 @@ class processor_epsnetpay extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings( $cfg )
+	function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode'] = array("list_yesno");
@@ -112,7 +112,7 @@ class processor_epsnetpay extends POSTprocessor
 		$sapPopStsURL			= $mosConfig_live_site . "/index.php";
 		$var['sapInfoVersion']	= "3"; //Current Version
 		$var['language']		= "DE"; // Must be german
-		$var['sapPopRequestor']	= $cfg['merchantid_' . $int_var['params']['bank_selection']]; // Marchant ID
+		$var['sapPopRequestor']	= $this->settings['merchantid_' . $request->int_var['params']['bank_selection']]; // Marchant ID
 		$var['sapPopServer']	= "yes"; // Server-to-Server notification
 		$var['sapPopStsURL']	= $sapPopStsURL;
 
@@ -135,18 +135,18 @@ class processor_epsnetpay extends POSTprocessor
 		$var['sapUgawwhg']		= $sapUgawwhg;
 		$sapUkddaten			= $metaUser->cmsUser->id;
 		$var['sapUkddaten']		= $sapUkddaten;
-		$sapUvwzweck			= $int_var['invoice'];
+		$sapUvwzweck			= $request->int_var['invoice'];
 		$var['sapUvwzweck']		= $sapUvwzweck;
-		$sapUzusatz				= $int_var['invoice'];
+		$sapUzusatz				= $request->int_var['invoice'];
 		$var['sapUzusatz']		= $sapUzusatz;
-		$value					= preg_split("/[\.,]/", $int_var['amount']);
+		$value					= preg_split("/[\.,]/", $request->int_var['amount']);
 
 		$sapUgawVK = $value[0]; // (only the stuff before the comma)
 		$sapUgawNK = $value[1]; // (only the stuff AFTER the comma)
 		$var['sapUgawVK']	= $sapUgawVK;
 		$var['sapUgawNK']	= $sapUgawNK;
 
-		$fingerprint = $cfg['merchantpin_' . $int_var['params']['bank_selection']].$cfg['merchantid_' . $int_var['params']['bank_selection']].$sapUgawVK.$sapUgawNK.$sapUgawwhg.$sapUvwzweck.$sapUkddaten.$sapUzusatz.$sapPopStsURL.$epsparams;
+		$fingerprint = $this->settings['merchantpin_' . $request->int_var['params']['bank_selection']].$this->settings['merchantid_' . $request->int_var['params']['bank_selection']].$sapUgawVK.$sapUgawNK.$sapUgawwhg.$sapUvwzweck.$sapUkddaten.$sapUzusatz.$sapPopStsURL.$epsparams;
 
 		$var['sapPopFingerPrint'] = md5($fingerprint); // Fingerprint
 
@@ -178,14 +178,14 @@ class processor_epsnetpay extends POSTprocessor
 		// Bank für &Auml;rzte und Freie Berufe
 		$bank[] = "https://www.banking.co.at/appl/ebp/eps/transinit.html?resource=093";
 
-		if ($cfg['testmode']) {
+		if ($this->settings['testmode']) {
 			$var['post_url']	= "https://qvendor.netpay.at/webPay/vendorLogin";
 		} else {
-			$var['post_url']	= $bank[$int_var['params']['bank_selection']];
+			$var['post_url']	= $bank[$request->int_var['params']['bank_selection']];
 		}
 
-		if ( !empty( $cfg['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $cfg['customparams'], $metaUser, $new_subscription );
+		if ( !empty( $this->settings['customparams'] ) ) {
+			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $metaUser, $new_subscription );
 
 			$cps = explode( "\n", $rw_params );
 
@@ -201,13 +201,13 @@ class processor_epsnetpay extends POSTprocessor
 		return $var;
 	}
 
-	function Params( $cfg, $params )
+	function Params( $params )
 	{
 		$merchantnumber = 0;
 		$bank_selection = array();
-		while ( isset( $cfg['merchantactive_' . $merchantnumber] ) ) {
-			if ($cfg['merchantactive_' . $merchantnumber]) {
-				$bank_selection[] = mosHTML::makeOption( $merchantnumber, $cfg['merchantname_' . $merchantnumber] );
+		while ( isset( $this->settings['merchantactive_' . $merchantnumber] ) ) {
+			if ($this->settings['merchantactive_' . $merchantnumber]) {
+				$bank_selection[] = mosHTML::makeOption( $merchantnumber, $this->settings['merchantname_' . $merchantnumber] );
 			}
 			$merchantnumber++;
 		}
@@ -224,7 +224,7 @@ class processor_epsnetpay extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post, $cfg )
+	function parseNotification( $post )
 	{
 		$invoiceID				= $post['sapPopStsVwzweck'];
 		$userid					= $post['sapPopStsRechnr'];
@@ -238,14 +238,14 @@ class processor_epsnetpay extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $cfg, $invoice )
+	function validateNotification( $response, $post, $invoice )
 	{
 		global $mosConfig_live_site;
 
 		$params = $invoice->getParams("params");
 
-		$merchantid = $cfg['merchantid_' . $params['bank_selection']];
-		$merchantpin = $cfg['merchantpin_' . $params['bank_selection']];
+		$merchantid = $this->settings['merchantid_' . $params['bank_selection']];
+		$merchantpin = $this->settings['merchantpin_' . $params['bank_selection']];
 		$sapPopStsReturnStatus	= $post['sapPopStsReturnStatus']; // Statuscode (OK/NOK/VOK)
 
 
@@ -269,7 +269,7 @@ class processor_epsnetpay extends POSTprocessor
 
 		// Check Fingerprint
 		if (($fingerprint = md5($post['sapPopStsReturnStatus'].$merchantpin.$merchantid.$post['sapPopStsEmpfname'].$post['sapPopStsEmpfnr'].$post['sapPopStsEmpfblz'].$post['sapPopStsGawVK'].$post['sapPopStsGawNK'].$post['sapPopStsGawWhg'].$post['sapPopStsVwzweck'].$post['sapPopStsRechnr'].$post['sapPopStsZusatz'].$sapPopStsDurchfDatum.$sapPopStsURL.$epsparams)) == $post['sapPopStsReturnFingerPrint']) {
-			if ($cfg['acceptvok']) {
+			if ($this->settings['acceptvok']) {
 				$response['valid'] = ( ($sapPopStsReturnStatus == 'OK') || ($sapPopStsReturnStatus == 'VOK'));
 			} else {
 	    		$response['valid'] = ($sapPopStsReturnStatus == 'OK');

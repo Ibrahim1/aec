@@ -59,7 +59,7 @@ class processor_alertpay extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings( $cfg )
+	function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'list_yesno' );
@@ -78,7 +78,7 @@ class processor_alertpay extends POSTprocessor
 		global $mosConfig_live_site;
 
 		$var['post_url']	= "http://www.alertpay.com/PayProcess.aspx";
-		if ( $cfg->testmode ) {
+		if ( $this->settings->testmode ) {
 			$var['ap_test'] = '1';
 		}
 
@@ -86,27 +86,27 @@ class processor_alertpay extends POSTprocessor
 
 		//$var['ap_purchasetype']	= 'Subscription'; //Item and Subscription - Right now no subscription but it will be built into system
 
-		$var['ap_merchant']		= $cfg['merchant'];
-		$var['ap_itemname']		= $int_var['invoice'];
-		$var['ap_currency']		= $cfg['currency_code'];
+		$var['ap_merchant']		= $this->settings['merchant'];
+		$var['ap_itemname']		= $request->int_var['invoice'];
+		$var['ap_currency']		= $this->settings['currency_code'];
 		$var['ap_returnurl']	= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=thanks");
 		$var['ap_quantity']		= '';
 		$var['ap_description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, $mosConfig_live_site,
 									$metaUser->cmsUser->name, $metaUser->cmsUser->username );
-		if ( isset( $cfg['tax'] ) && @$cfg['tax'] > 0) {
-			$tax = $int_var['amount']/(100+$cfg['tax'])*100;
+		if ( isset( $this->settings['tax'] ) && @$this->settings['tax'] > 0) {
+			$tax = $request->int_var['amount']/(100+$this->settings['tax'])*100;
 			$var['ap_amount'] 	= round($tax, 2);
 		} else {
-			$var['ap_amount'] 	= $int_var['amount'];
+			$var['ap_amount'] 	= $request->int_var['amount'];
 		}
 		$var['ap_cancelurl']	= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=cancel");
 
 		$var['apc_1']			= $metaUser->cmsUser->id;
-		$var['apc_2']			= AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription );
-		$var['apc_3']			= $int_var['usage'];
+		$var['apc_2']			= AECToolbox::rewriteEngine( $this->settings['item_name'], $metaUser, $new_subscription );
+		$var['apc_3']			= $request->int_var['usage'];
 
-		if ( !empty( $cfg['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $cfg['customparams'], $metaUser, $new_subscription );
+		if ( !empty( $this->settings['customparams'] ) ) {
+			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $metaUser, $new_subscription );
 
 			$cps = explode( "\n", $rw_params );
 
@@ -122,7 +122,7 @@ class processor_alertpay extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post, $cfg )
+	function parseNotification( $post )
 	{
 		$security_code			= $post['ap_securitycode'];
 		$description			= $post['ap_description'];
@@ -137,9 +137,9 @@ class processor_alertpay extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $cfg, $invoice )
+	function validateNotification( $response, $post, $invoice )
 	{
-		$response['valid'] = ( ( strcmp( $post['ap_status'], "Success" ) === 0 ) && ( strcmp( $post['ap_securitycode'], $cfg->ap_securitycode ) === 0 ) );
+		$response['valid'] = ( ( strcmp( $post['ap_status'], "Success" ) === 0 ) && ( strcmp( $post['ap_securitycode'], $this->settings->ap_securitycode ) === 0 ) );
 
 		return $response;
 	}

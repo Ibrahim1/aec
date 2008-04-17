@@ -70,7 +70,7 @@ class processor_payboxfr extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings( $cfg )
+	function backend_settings()
 	{
 		$settings = array();
 		$settings['site']			= array( 'inputC' );
@@ -90,30 +90,30 @@ class processor_payboxfr extends POSTprocessor
 	{
 		global $mosConfig_live_site;
 
-		$var['post_url']	= $cfg['path'];
+		$var['post_url']	= $this->settings['path'];
 
-		if ( $cfg['testmode'] ) {
+		if ( $this->settings['testmode'] ) {
 			$var['PBX_AUTOSEULE'] = 'O';
 		}
 
 		$var['PBX_MODE']		= '1';
 		$var['PBX_RUF1']		= 'POST';
-		$var['PBX_SITE']		= $cfg['site'];
-		$var['PBX_RANG']		= $cfg['rank'];
+		$var['PBX_SITE']		= $this->settings['site'];
+		$var['PBX_RANG']		= $this->settings['rank'];
 
-		if ( is_array( $int_var['amount'] ) ) {
-			switch ( $int_var['amount']['unit3'] ) {
+		if ( is_array( $request->int_var['amount'] ) ) {
+			switch ( $request->int_var['amount']['unit3'] ) {
 				case 'D':
-					$period = max( 1, ( (int) ( $int_var['amount']['period3'] / 30 ) ) );
+					$period = max( 1, ( (int) ( $request->int_var['amount']['period3'] / 30 ) ) );
 					break;
 				case 'W':
-					$period = max( 1, ( (int) ( $int_var['amount']['period3'] / 4 ) ) );
+					$period = max( 1, ( (int) ( $request->int_var['amount']['period3'] / 4 ) ) );
 					break;
 				case 'M':
-					$period = $int_var['amount']['period3'];
+					$period = $request->int_var['amount']['period3'];
 					break;
 				case 'Y':
-					$period = ( $int_var['amount']['period3'] * 12 );
+					$period = ( $request->int_var['amount']['period3'] * 12 );
 					break;
 			}
 
@@ -128,18 +128,18 @@ class processor_payboxfr extends POSTprocessor
 				$append .= $svname . $svvar;
 			}
 
-			$var['PBX_TOTAL']		= $int_var['amount']['amount3'] * 100;
+			$var['PBX_TOTAL']		= $request->int_var['amount']['amount3'] * 100;
 
-			$var['PBX_CMD']			= $int_var['invoice'] . $append;
+			$var['PBX_CMD']			= $request->int_var['invoice'] . $append;
 		} else {
-			$var['PBX_TOTAL']		= $int_var['amount'] * 100;
-			$var['PBX_CMD']			= $int_var['invoice'];
+			$var['PBX_TOTAL']		= $request->int_var['amount'] * 100;
+			$var['PBX_CMD']			= $request->int_var['invoice'];
 		}
 
 		$iso4217num = array( 'EUR' => 978, 'USD' => 840, 'GBP' => 826, 'AUD' => 036, 'CAD' => 124, 'JPY' => 392, 'NZD' => 554 );
 
-		if ( isset( $iso4217num[$cfg['currency']] ) ) {
-			$var['PBX_DEVISE']		= $iso4217num[$cfg['currency']];
+		if ( isset( $iso4217num[$this->settings['currency']] ) ) {
+			$var['PBX_DEVISE']		= $iso4217num[$this->settings['currency']];
 		} else {
 			$var['PBX_DEVISE']		= '978';
 		}
@@ -148,9 +148,9 @@ class processor_payboxfr extends POSTprocessor
 
 		$iso639_2to3 = array( 'GB' => 'GBR', 'DE' => 'DEU', 'FR' => 'FRA', 'IT' => 'ITA', 'ES' => 'ESP', 'SW' => 'SWE', 'NL' => 'NLD' );
 
-		$var['PBX_LANGUE']		= $iso639_2to3[$cfg['language']];
+		$var['PBX_LANGUE']		= $iso639_2to3[$this->settings['language']];
 
-		$var['PBX_EFFECTUE']		= $int_var['return_url'];
+		$var['PBX_EFFECTUE']		= $request->int_var['return_url'];
 		$var['PBX_ANNULE']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
 
 		$var['PBX_RETOUR']		= 'option:com_acctexp;task:payboxfrnotification;amount:M;invoice:R;authorization:A;transaction:T;subscriptionid:B;error:E;check:K';
@@ -158,7 +158,7 @@ class processor_payboxfr extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post, $cfg )
+	function parseNotification( $post )
 	{
 		global $database;
 
@@ -178,7 +178,7 @@ class processor_payboxfr extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $cfg, $invoice )
+	function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
 
@@ -194,7 +194,7 @@ class processor_payboxfr extends POSTprocessor
 		if ( !isset( $return['check'] ) ) {
 			$response['pending_reason']			= 'error: No checking string provided';
 			return $response;
-		} elseif ( !isset( $cfg['publickey'] ) ) {
+		} elseif ( !isset( $this->settings['publickey'] ) ) {
 			$response['pending_reason']			= 'error: No Public Key provided';
 			return $response;
 		}
@@ -210,7 +210,7 @@ class processor_payboxfr extends POSTprocessor
 
 		$cstring = implode( '&', $carr );
 
-		if ( crypt( sha1( $cstring ), $cfg['publickey'] ) == $check ) {
+		if ( crypt( sha1( $cstring ), $this->settings['publickey'] ) == $check ) {
 			$response['valid'] = 1;
 		}
 

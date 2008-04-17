@@ -77,7 +77,7 @@ class processor_psigate extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings( $cfg )
+	function backend_settings()
 	{
 		$settings = array();
 
@@ -90,16 +90,16 @@ class processor_psigate extends POSTprocessor
 	function createGatewayLink( $request )
 	{
 		global $mosConfig_live_site;
-		if ( $cfg['testmode'] ) {
+		if ( $this->settings['testmode'] ) {
 			$var['post_url']	= "https://dev.psigate.com/HTMLPost/HTMLMessenger";
 		} else {
 			$var['post_url']	= "https://checkout.psigate.com/HTMLPost/HTMLMessenger";
 		}
 
-		$var['StoreKey']		= $cfg['StoreKey'];
-		$var['CustomerRefNo']	= $int_var['invoice'];
-		//		$var['OrderID']			= md5($cfg['secretWord'] . $int_var['amount']);
-		$var['SubTotal']		= $int_var['amount'];
+		$var['StoreKey']		= $this->settings['StoreKey'];
+		$var['CustomerRefNo']	= $request->int_var['invoice'];
+		//		$var['OrderID']			= md5($this->settings['secretWord'] . $request->int_var['amount']);
+		$var['SubTotal']		= $request->int_var['amount'];
 		$var['PaymentType']		= "CC";
 		$var['ThanksURL']		= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=psigatenotification");
 		$var['NoThanksURL']		= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=psigatenotification");
@@ -109,7 +109,7 @@ class processor_psigate extends POSTprocessor
 	}
 
 
-	function parseNotification ( $post, $cfg )
+	function parseNotification ( $post )
 	{
 		if (isset($_GET['ReturnCode']) && $_GET['ReturnCode'] != "") {
 			$ReturnCode = $_GET['ReturnCode'];
@@ -163,7 +163,7 @@ class processor_psigate extends POSTprocessor
 		$response['invoice'] = $CustomerRefNo;
 
 
-		$validate			= md5($cfg['secretWord'] . $FullTotal);
+		$validate			= md5($this->settings['secretWord'] . $FullTotal);
 		$response['valid'] = (strcmp($validate, $checksum) == 0);
 
 		if ( $response['valid'] = 1 ){

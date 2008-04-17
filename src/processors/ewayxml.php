@@ -30,55 +30,55 @@ class processor_ewayXML extends XMLprocessor
 
 	function settings()
 	{
-		$settings = array();
-		$settings['testmode']		= "1";
-		$settings['custId']			= "87654321";
-		$settings['tax']			= "10";
-		$settings['autoRedirect']	= 1;
-		$settings['testAmount']		= "00";
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
-		$settings['rewriteInfo']	= ''; // added mic
-		$settings['SiteTitle']		= '';
+		$this->settings = array();
+		$this->settings['testmode']		= "1";
+		$this->settings['custId']			= "87654321";
+		$this->settings['tax']			= "10";
+		$this->settings['autoRedirect']	= 1;
+		$this->settings['testAmount']		= "00";
+		$this->settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$this->settings['rewriteInfo']	= ''; // added mic
+		$this->settings['SiteTitle']		= '';
 
-		return $settings;
+		return $this->settings;
 	}
 
-	function backend_settings( $cfg )
+	function backend_settings()
 	{
-		$settings = array();
+		$this->settings = array();
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
 
-		$settings['testmode']		= array( 'list_yesno' );
-		$settings['custId']			= array( 'inputC' );
-		$settings['autoRedirect']	= array( 'list_yesno' ) ;
-		$settings['SiteTitle']		= array( 'inputC' );
-		$settings['item_name']		= array( 'inputE' );
+		$this->settings['testmode']		= array( 'list_yesno' );
+		$this->settings['custId']			= array( 'inputC' );
+		$this->settings['autoRedirect']	= array( 'list_yesno' ) ;
+		$this->settings['SiteTitle']		= array( 'inputC' );
+		$this->settings['item_name']		= array( 'inputE' );
 
-        $settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+        $this->settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $this->settings );
 
-		return $settings;
+		return $this->settings;
 	}
 
 	function createRequestXML( $request )
 	{
 
-		$order_total = $int_var['amount'] * 100;
+		$order_total = $request->int_var['amount'] * 100;
 		$my_trxn_number = uniqid( "eway_" );
 
-		$nodes = array(	"ewayCustomerID" => $settings['custId'],
+		$nodes = array(	"ewayCustomerID" => $this->settings['custId'],
 					"ewayTotalAmount" => $order_total,
 					"ewayCustomerFirstName" => $metaUser->cmsUser->username,
 					"ewayCustomerLastName" => $metaUser->cmsUser->name,
-					"ewayCustomerInvoiceDescription" => AECToolbox::rewriteEngine( $settings['item_name'], $metaUser, $new_subscription ),
-					"ewayCustomerInvoiceRef" => $int_var['invoice'],
+					"ewayCustomerInvoiceDescription" => AECToolbox::rewriteEngine( $this->settings['item_name'], $metaUser, $new_subscription ),
+					"ewayCustomerInvoiceRef" => $request->int_var['invoice'],
 					"ewayOption1" => $metaUser->cmsUser->id, //Send in option1, the id of the user
-					"ewayOption2" => $int_var['invoice'], //Send in option2, the invoice number
+					"ewayOption2" => $request->int_var['invoice'], //Send in option2, the invoice number
 					"ewayTrxnNumber" => $my_trxn_number,
-					"ewaySiteTitle" => $settings['SiteTitle'],
-					"ewayCardHoldersName" => $int_var['params']['cardHolder'],
-					"ewayCardNumber" => $int_var['params']['cardNumber'],
-					"ewayCardExpiryMonth" => $int_var['params']['expirationMonth'],
-					"ewayCardExpiryYear" => $int_var['params']['expirationYear'],
+					"ewaySiteTitle" => $this->settings['SiteTitle'],
+					"ewayCardHoldersName" => $request->int_var['params']['cardHolder'],
+					"ewayCardNumber" => $request->int_var['params']['cardNumber'],
+					"ewayCardExpiryMonth" => $request->int_var['params']['expirationMonth'],
+					"ewayCardExpiryYear" => $request->int_var['params']['expirationYear'],
 					"ewayCustomerEmail" => $metaUser->cmsUser->email,
 					"ewayCustomerAddress" => '',
 					"ewayCustomerPostcode" => '',
@@ -96,7 +96,7 @@ class processor_ewayXML extends XMLprocessor
 
 	function transmitRequestXML( $xml, $request )
 	{
-		if($settings['testmode']){
+		if($this->settings['testmode']){
 			$url = 'https://www.eway.com.au/gateway/xmltest/testpage.asp';
 		}else{
 			$url = 'https://www.eway.com.au/gateway/xmlpayment.asp';

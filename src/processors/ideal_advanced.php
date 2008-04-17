@@ -66,7 +66,7 @@ class processor_ideal_advanced extends XMLprocessor
 		return $s;
 	}
 
-	function backend_settings( $cfg )
+	function backend_settings()
 	{
 		$s = array();
 		$s['merchantid']	= array( 'inputC' );
@@ -82,7 +82,7 @@ class processor_ideal_advanced extends XMLprocessor
 			$bank_selection[] = mosHTML::makeOption( $name, $name );
 		}
 
-		$s['lists']['bank'] = mosHTML::selectList($bank_selection, 'bank', 'size="5"', 'value', 'text', $cfg['bank'] );
+		$s['lists']['bank'] = mosHTML::selectList($bank_selection, 'bank', 'size="5"', 'value', 'text', $this->settings['bank'] );
 
 		$rewriteswitches	= array( 'cms', 'user', 'expiration', 'subscription', 'plan' );
 		$s = AECToolbox::rewriteEngineInfo( $rewriteswitches, $s );
@@ -90,7 +90,7 @@ class processor_ideal_advanced extends XMLprocessor
 		return $s;
 	}
 
-	function checkoutform( $int_var, $cfg, $metaUser, $new_subscription )
+	function checkoutform( $request )
 	{
 		global $mosConfig_live_site;
 
@@ -105,7 +105,7 @@ class processor_ideal_advanced extends XMLprocessor
 		$var['params']['billFirstName'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLFIRSTNAME_NAME, _AEC_AUTHORIZE_ARB_PARAMS_BILLFIRSTNAME_DESC, $name[0]);
 		$var['params']['billLastName'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLLASTNAME_NAME, _AEC_AUTHORIZE_ARB_PARAMS_BILLLASTNAME_DESC, $name[1]);
 
-		if ( !empty( $cfg['promptAddress'] ) ) {
+		if ( !empty( $this->settings['promptAddress'] ) ) {
 			$var['params']['billAddress'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLADDRESS_NAME );
 			$var['params']['billCity'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLCITY_NAME );
 			$var['params']['billState'] = array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLSTATE_NAME );
@@ -125,10 +125,10 @@ class processor_ideal_advanced extends XMLprocessor
 
 		//Set parameters for TransactionRequest
 		$data->setIssuerID( $metaUser->userid );
-		$data->setPurchaseID( $int_var['invoice'] );
-		$data->setAmount( $int_var['amount']*100 );
-		$data->setCurrency( $int_var['currency'] );
-		$data->setEntranceCode( $cfg['entrance_code'] );
+		$data->setPurchaseID( $request->int_var['invoice'] );
+		$data->setAmount( $request->int_var['amount']*100 );
+		$data->setCurrency( $request->int_var['currency'] );
+		$data->setEntranceCode( $this->settings['entrance_code'] );
 		$data->setMerchantReturnURL( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=ideal_advancednotification' ) );
 
 		return $data;
@@ -147,9 +147,9 @@ class processor_ideal_advanced extends XMLprocessor
 		$idealcfg['IDEAL_AcquirerTransFile']	= '';
 		$idealcfg['IDEAL_AcquirerStatFile']		= '';
 
-		switch( $cfg['bank'] ) {
+		switch( $this->settings['bank'] ) {
 			case 'ING':
-				if ( $cfg['testmode'] ) {
+				if ( $this->settings['testmode'] ) {
 					$idealcfg['IDEAL_AcquirerURL']		= 'ssl://idealtest.secure-ing.com';
 					$idealcfg['IDEAL_Certificate0']		= 'test_ing_ideal.cer';
 				} else {
@@ -158,7 +158,7 @@ class processor_ideal_advanced extends XMLprocessor
 				}
 				break;
 			case 'POSTBANK':
-				if ( $cfg['testmode'] ) {
+				if ( $this->settings['testmode'] ) {
 					$idealcfg['IDEAL_AcquirerURL']		= 'ssl://idealtest.secure-ing.com';
 					$idealcfg['IDEAL_Certificate0']		= 'test_postbank_ideal.cer';
 				} else {
@@ -167,7 +167,7 @@ class processor_ideal_advanced extends XMLprocessor
 				}
 				break;
 			case 'RABOBANK':
-				if ( $cfg['testmode'] ) {
+				if ( $this->settings['testmode'] ) {
 					$idealcfg['IDEAL_AcquirerURL']		= 'ssl://idealtest.rabobank.nl';
 					$idealcfg['IDEAL_Certificate0']		= 'test_rabobank_ideal.cer';
 				} else {
@@ -176,7 +176,7 @@ class processor_ideal_advanced extends XMLprocessor
 				}
 				break;
 			case 'ABNAMRO':
-				if ( $cfg['testmode'] ) {
+				if ( $this->settings['testmode'] ) {
 					$idealcfg['IDEAL_AcquirerURL']		= 'ssl://idealm-et.abnamro.nl';
 					$idealcfg['IDEAL_Certificate0']		= 'test_abnamro_ideal.cer';
 				} else {
@@ -216,7 +216,7 @@ class processor_ideal_advanced extends XMLprocessor
 		return $return;
 	}
 
-	function parseNotification( $post, $cfg )
+	function parseNotification( $post )
 	{
 
 		$response = array();
@@ -225,7 +225,7 @@ class processor_ideal_advanced extends XMLprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $cfg, $invoice )
+	function validateNotification( $response, $post, $invoice )
 	{
 		return $response;
 	}

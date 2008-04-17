@@ -74,7 +74,7 @@ class processor_cybermut extends POSTprocessor
 	}
 
 
-	function backend_settings( $cfg )
+	function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']	= array( 'list_yesno' );
@@ -95,7 +95,7 @@ class processor_cybermut extends POSTprocessor
 			$server_selection[] = mosHTML::makeOption( $i, $server );
 		}
 
-		$settings['lists']['cybermut_server'] = mosHTML::selectList( $server_selection, 'cybermut_server', 'size="5"', 'value', 'text', $cfg['server'] );
+		$settings['lists']['cybermut_server'] = mosHTML::selectList( $server_selection, 'cybermut_server', 'size="5"', 'value', 'text', $this->settings['server'] );
 
 		return $settings;
 	}
@@ -106,35 +106,35 @@ class processor_cybermut extends POSTprocessor
 
 		$servers = array( 'paiement.creditmutuel.fr', 'ssl.paiement.cic-banques.fr', 'ssl.paiement.banque-obc.fr', 'paiement.caixanet.fr', 'creditmutuel.fr/telepaiement' );
 
-		if ( $cfg['testmode'] ) {
-			$var['post_url'] = "https://" . $servers[$cfg['server']] . "/test/paiement.cgi";
+		if ( $this->settings['testmode'] ) {
+			$var['post_url'] = "https://" . $servers[$this->settings['server']] . "/test/paiement.cgi";
 		} else {
-			$var['post_url'] = "https://" . $servers[$cfg['server']] . "/paiement.cgi";
+			$var['post_url'] = "https://" . $servers[$this->settings['server']] . "/paiement.cgi";
 		}
 
-		$var['version']			= $cfg['ver'];
-		$var['TPE']				= $cfg['tpe'];
+		$var['version']			= $this->settings['ver'];
+		$var['TPE']				= $this->settings['tpe'];
 		$var['date']			= date( "d/m/Y:H:i:s" );
-		$var['montant']			= $int_var['amount'] . $cfg['currency'];
+		$var['montant']			= $request->int_var['amount'] . $this->settings['currency'];
 		$var['reference']		= $metaUser->userid;
-		$var['texte-libre']		= $int_var['invoice'];
-		$var['lgue']			= $cfg['language'];
-		$var['societe']			= $cfg['soc'];
-//print_r($var);print_r($int_var);exit();
+		$var['texte-libre']		= $request->int_var['invoice'];
+		$var['lgue']			= $this->settings['language'];
+		$var['societe']			= $this->settings['soc'];
+//print_r($var);print_r($request->int_var);exit();
 		$HMAC = $var['TPE']."*".$var['date']."*".$var['montant']."*".$var['reference']."*".$var['texte-libre']."*".$var['version']."*".$var['lgue']."*".$var['societe']."*";
 
-		//$var['MAC']				= "V1.03.sha1.php4--CtlHmac-" . $cfg['ver'] . "-[" . $cfg['tpe'] . "]-" . $this->CMCIC_hmac( $cfg, $HMAC );
-		$var['MAC']				= $this->CMCIC_hmac( $cfg, $HMAC );
+		//$var['MAC']				= "V1.03.sha1.php4--CtlHmac-" . $this->settings['ver'] . "-[" . $this->settings['tpe'] . "]-" . $this->CMCIC_hmac( $this->settings, $HMAC );
+		$var['MAC']				= $this->CMCIC_hmac( $this->settings, $HMAC );
 
-		/*$var['retourPLUS']		= $int_var['return_url'];
-		$var['societe']			= $cfg['key'];*/
+		/*$var['retourPLUS']		= $request->int_var['return_url'];
+		$var['societe']			= $this->settings['key'];*/
 
 		$var['url_retour']		= $mosConfig_live_site . '/index.php';
 		$var['url_retour_ok']	= $mosConfig_live_site . '/index.php?option=com_acctexp&task=thanks';
 		$var['url_retour_err']	= $mosConfig_live_site . '/index.php?option=com_acctexp&task=cancel';
 
-		if ( !empty( $cfg['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $cfg['customparams'], $metaUser, $new_subscription );
+		if ( !empty( $this->settings['customparams'] ) ) {
+			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $metaUser, $new_subscription );
 
 			$cps = explode( "\n", $rw_params );
 
@@ -154,7 +154,7 @@ class processor_cybermut extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post, $cfg )
+	function parseNotification( $post )
 	{
 		$response = array();
 		$response['invoice'] = $post['texte-libre'];
@@ -162,11 +162,11 @@ class processor_cybermut extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $cfg, $invoice )
+	function validateNotification( $response, $post, $invoice )
 	{
 		switch( $post['retour'] ) {
 			case 'payetest':
-				$response['valid'] = $cfg['testmode'] ? true : false;
+				$response['valid'] = $this->settings['testmode'] ? true : false;
 				break;
 			case 'paiement':
 				$response['valid'] = true;
@@ -177,9 +177,9 @@ class processor_cybermut extends POSTprocessor
 				break;
 		}
 
-		$HMAC = $post['retourPLUS']."+".$cfg['tpe']."+".$post['date']."+".$post['montant']."+".$post['reference']."+".$post['texte-libre']."+".$cfg['version']."+".$post['retour']."+";
+		$HMAC = $post['retourPLUS']."+".$this->settings['tpe']."+".$post['date']."+".$post['montant']."+".$post['reference']."+".$post['texte-libre']."+".$this->settings['version']."+".$post['retour']."+";
 
-		if ( $post['MAC'] !== $this->CMIC_hmac( $cfg, $HMAC ) ) {
+		if ( $post['MAC'] !== $this->CMIC_hmac( $this->settings, $HMAC ) ) {
 			$response['pending_reason'] = 'invalid HMAC';
 			$response['valid'] = false;
 		}
@@ -207,11 +207,11 @@ class processor_cybermut extends POSTprocessor
 		return $result;
 	}
 
-	function CMCIC_hmac( $cfg, $data="")
+	function CMCIC_hmac( $data="")
 	{
-		$k1 = pack( "H*", sha1( $cfg['pass'] ) );
+		$k1 = pack( "H*", sha1( $this->settings['pass'] ) );
 		$l1 = strlen( $k1 );
-		$k2 = pack( "H*", $cfg['key'] );
+		$k2 = pack( "H*", $this->settings['key'] );
 		$l2 = strlen( $k2 );
 
 		if ( $l1 > $l2 ) {
@@ -221,7 +221,7 @@ class processor_cybermut extends POSTprocessor
 		}
 
 		if ( $data == "" ) {
-			$d = "CtlHmac" . $cfg['ver'] . $cfg['tpe'];
+			$d = "CtlHmac" . $this->settings['ver'] . $this->settings['tpe'];
 		} else {
 			$d = $data;
 		}
