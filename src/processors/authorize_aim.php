@@ -91,7 +91,7 @@ class processor_authorize_aim extends XMLprocessor
 	{
 		global $mosConfig_live_site;
 
-		$var = $this->getCCform();
+		$var = $this->getCCform( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' );
 
 		$name = explode( ' ', $request->metaUser->cmsUser->name );
 
@@ -137,6 +137,7 @@ class processor_authorize_aim extends XMLprocessor
 		$a['x_relay_response']	= "FALSE";
 		$a['x_card_num']		= trim( $request->int_var['params']['cardNumber'] );
 		$a['x_exp_date']		= str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ) . $request->int_var['params']['expirationYear'];
+		$a['x_card_code']		= trim( $request->int_var['params']['cardVV2'] );
 		$a['x_description']		= trim( substr( AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice ), 0, 20 ) );
 		$a['x_invoice_num']		= $request->int_var['invoice'];
 		$a['x_amount']			= $request->int_var['amount'];
