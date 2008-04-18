@@ -7233,12 +7233,11 @@ class AECToolbox
 
 			// Explode Name
 			$namearray		= explode( " ", $metaUser->cmsUser->name );
+			$firstfirstname	= $namearray[0];
 			$maxname		= count($namearray) - 1;
 			$lastname		= $namearray[$maxname];
-			for ( $i=0; $i<$maxname; $i++ ) {
-				$firstname .= $namearray[$i];
-			}
-			$firstfirstname	= $namearray[0];
+			unset( $namearray[$maxname] );
+			$firstname = implode( ' ', $namearray );
 
 			$rewrite['user_id']					= $metaUser->cmsUser->id;
 			$rewrite['user_username']			= $metaUser->cmsUser->username;

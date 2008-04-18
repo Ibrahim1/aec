@@ -7,9 +7,9 @@ class processor_payer extends POSTprocessor
 	{
 		$info = array();
 		$info['name']				= 'payer';
-		$info['longname']			= "Payer";
-		$info['statement']			= "Make payments with Payer!";
-		$info['description'] 		= "Payer payment provider description";
+		$info['longname']			= _CFG_PAYER_LONGNAME;
+		$info['statement']			= _CFG_PAYER_STATEMENT;
+		$info['description'] 		= _CFG_PAYER_DESCRIPTION;
 		$info['currencies']			= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK';
 		$info['languages']			= 'GB,DE,FR,IT,ES,US,SV';
 		$info['cc_list']			= 'visa,mastercard';
@@ -22,17 +22,18 @@ class processor_payer extends POSTprocessor
 	{
 		$settings = array();
 
+		$settings['testmode']		= 0;
+		$settings['debugmode']		= 'silent';
+
 		$settings['agentid']		= '';
 		$settings['key1']			= '';
 		$settings['key2']			= '';
-		$settings['tax']			= '';
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
-		$settings['testmode']		= 0;
 		$settings['tax']			= '0';
+
 		$settings['currency']		= 'SEK';
-		$settings['lc']				= 'sv';
+		$settings['language']		= 'sv';
 		$settings['payment_method']	= 'card';
-		$settings['debugmode']		= 'silent';
+		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 
 		return $settings;
 	}
@@ -40,13 +41,25 @@ class processor_payer extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['item_name']		= array( 'inputE' );
 		$settings['testmode']		= array( 'list_yesno' );
+		$settings['debugmode']		= array( 'list' );
+
+		$settings['agentid']		= array( 'inputC' );
+		$settings['key1']			= array( 'inputE' );
+		$settings['key2']			= array( 'inputE' );
+
 		$settings['tax']			= array( 'inputA' );
 		$settings['currency']		= array( 'list_currency' );
-		$settings['lc']				= array( 'list_language' );
+		$settings['language']		= array( 'list_language' );
 		$settings['payment_method']	= array( 'list' );
-		$settings['debugmode']		= array( 'inputA' );
+		$settings['item_name']		= array( 'inputE' );
+
+ 		$debugmode = array();
+		$debugmode[] = mosHTML::makeOption ( "silent", "silent" );
+		$debugmode[] = mosHTML::makeOption ( "brief", "brief" );
+		$debugmode[] = mosHTML::makeOption ( "verbose", "verbose" );
+
+		$settings['lists']['debugmode'] = mosHTML::selectList( $debugmode, 'debugmode', 'size="3"', 'value', 'text', $this->settings['debugmode'] );
 
  		$payment_method = array();
 		$payment_method[] = mosHTML::makeOption ( "sms", "sms" );
@@ -55,8 +68,8 @@ class processor_payer extends POSTprocessor
 		$payment_method[] = mosHTML::makeOption ( "phone", "phone" );
 		$payment_method[] = mosHTML::makeOption ( "invoice", "invoice" );
 
-		$pm = explode( ';', $this->settings['$payment_method'] );
-		foreach ($this->settings['$payment_method'] as $name ) {
+		$pm = explode( ';', $this->settings['payment_method'] );
+		foreach ($this->settings['payment_method'] as $name ) {
 			$selected_methods[] = mosHTML::makeOption( $name, $name );
 		}
 
@@ -77,7 +90,13 @@ class processor_payer extends POSTprocessor
 		$Success_url	= $request->int_var['return_url'];
 		$Shop_url		= $mosConfig_live_site . "/index.php";
 
-		require_once($mosConfig_absolute_path . "/components/com_acctexp/processors/payer/payread_post_api.php");
+			// Explode Name
+			$namearray		= explode( " ", $metaUser->cmsUser->name );
+			$firstfirstname	= $namearray[0];
+			$maxname		= count($namearray) - 1;
+			$lastname		= $namearray[$maxname];
+			unset( $namearray[$maxname] );
+			$firstname = implode( ' ', $namearray );
 
 		// Header
 		$xml  = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>";
@@ -91,17 +110,17 @@ class processor_payer extends POSTprocessor
 				"</seller_details>";
 		// Buyer details
 		$xml .= "<buyer_details>" .
-					"<first_name>"		. htmlspecialchars($this->myBuyerInfo["FirstName"])		. "</first_name>" .
-					"<last_name>"		. htmlspecialchars($this->myBuyerInfo["LastName"])		. "</last_name>" .
-					"<address_line_1>"	. htmlspecialchars($this->myBuyerInfo["AddressLine1"])	. "</address_line_1>" .
-					"<address_line_2>"	. htmlspecialchars($this->myBuyerInfo["AddressLine2"])	. "</address_line_2>" .
-					"<postal_code>"		. htmlspecialchars($this->myBuyerInfo["Postalcode"])	. "</postal_code>" .
-					"<city>"			. htmlspecialchars($this->myBuyerInfo["City"])			. "</city>" .
-					"<country_code>"	. htmlspecialchars($this->myBuyerInfo["CountryCode"])	. "</country_code>" .
-					"<phone_home>"		. htmlspecialchars($this->myBuyerInfo["PhoneHome"])		. "</phone_home>" .
-					"<phone_work>"		. htmlspecialchars($this->myBuyerInfo["PhoneWork"])		. "</phone_work>" .
-					"<phone_mobile>"	. htmlspecialchars($this->myBuyerInfo["PhoneMobile"])	. "</phone_mobile>" .
-					"<email>"			. $this->myBuyerInfo["Email"]							. "</email>" .
+					"<first_name>"		. htmlspecialchars($firstname)			. "</first_name>" .
+					"<last_name>"		. htmlspecialchars($lastname)			. "</last_name>" .
+					"<address_line_1>"	. htmlspecialchars("AddressLine1")		. "</address_line_1>" .
+					"<address_line_2>"	. htmlspecialchars("AddressLine2")		. "</address_line_2>" .
+					"<postal_code>"		. htmlspecialchars("Postalcode")		. "</postal_code>" .
+					"<city>"			. htmlspecialchars("City")				. "</city>" .
+					"<country_code>"	. htmlspecialchars("CountryCode")		. "</country_code>" .
+					"<phone_home>"		. htmlspecialchars("PhoneHome")			. "</phone_home>" .
+					"<phone_work>"		. htmlspecialchars("PhoneWork")			. "</phone_work>" .
+					"<phone_mobile>"	. htmlspecialchars("PhoneMobile")		. "</phone_mobile>" .
+					"<email>"			. $request->metaUser->cmsUser->email	. "</email>" .
 				"</buyer_details>";
 		// Purchase
 		$xml .= "<purchase>" .
@@ -144,11 +163,11 @@ class processor_payer extends POSTprocessor
 		$xml .= 	"</accepted_payment_methods>";
 
 		// Debug mode
-		$xml .= 	"<debug_mode>"		. 'silent'	. "</debug_mode>";
+		$xml .= 	"<debug_mode>"		. $this->settings['debugmode']	. "</debug_mode>";
 		// Test mode
 		$xml .=		"<test_mode>"		. $this->settings['testmode']		. "</test_mode>";
 		// Language
-		$xml .=		"<language>"		. $this->settings['lc']		. "</language>";
+		$xml .=		"<language>"		. $this->settings['language']		. "</language>";
 		$xml .=		"</database_overrides>";
 
 		// Footer

@@ -82,6 +82,8 @@ define( '_CFG_PROCESSOR_LANGUAGE_NAME', 'Language');
 define( '_CFG_PROCESSOR_LANGUAGE_DESC', 'Select one of the possible language settings for site that your user will see when issuing a payment.');
 define( '_CFG_PROCESSOR_RECURRING_NAME', 'Recurring Payment');
 define( '_CFG_PROCESSOR_RECURRING_DESC', 'Choose what type of billing to use for this.');
+define( '_CFG_PROCESSOR_TAX_NAME', 'Tax:');
+define( '_CFG_PROCESSOR_TAX_DESC', 'Set the percentage that should be split to taxes. For example if you want 10% of 10$ to be tax - put in a 10. This will result in an amount of 9.09 and a tax amount of additional 0.91.');
 
 define( '_AEC_SELECT_RECURRING_NO', 'Non-Recurring');
 define( '_AEC_SELECT_RECURRING_YES', 'Recurring');
@@ -585,5 +587,20 @@ define( '_CFG_NOCHEX_DESCRIPTION', 'Leading independent UK based online payment 
 define( '_CFG_NOCHEX_MERCHANT_ID_NAME', 'Merchant ID');
 define( '_CFG_NOCHEX_MERCHANT_ID_DESC', 'Your Merchant ID');
 
+// Payer.se
+define( '_CFG_PAYER_LONGNAME', 'Payer');
+define( '_CFG_PAYER_STATEMENT', 'Make payments with Payer!');
+define( '_CFG_PAYER_DESCRIPTION', 'Payer payment provider.');
+
+define( '_CFG_PAYER_DEBUGMODE_NAME', 'Debugmode');
+define( '_CFG_PAYER_DEBUGMODE_DESC', 'Specify the Debug mode. Choose "silent" for no debugging information.');
+define( '_CFG_PAYER_AGENTID_NAME', 'Agent ID');
+define( '_CFG_PAYER_AGENTID_DESC', 'Your Agent ID');
+define( '_CFG_PAYER_KEY1_NAME', 'Key 1 (A)');
+define( '_CFG_PAYER_KEY1_DESC', 'Your First Key (Key A)');
+define( '_CFG_PAYER_KEY2_NAME', 'Key 2 (B)');
+define( '_CFG_PAYER_KEY2_DESC', 'Your Second Key (Key B)');
+define( '_CFG_PAYER_PAYMENT_METHOD_NAME', 'Payment Methods');
+define( '_CFG_PAYER_PAYMENT_METHOD_DESC', 'Choose which payment methods you want to allow for the transaction');
 
 ?>
