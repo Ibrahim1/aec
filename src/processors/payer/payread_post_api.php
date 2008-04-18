@@ -26,15 +26,13 @@
 		 *
 		 * You will never have to call this method
 		 */
-	 	function payread_post_api()
+	 	function payread_post_api( $cfg )
 		{
-			require("PayReadConf.php");
-
 			// Set defaults
 			$this->myPostApiVersion   = "payread_php_0_2";
-			$this->myAgentId          = $PayRead_AgentId;
-			$this->myKeys["A"]        = $PayRead_Key1;
-			$this->myKeys["B"]        = $PayRead_Key2;
+			$this->myAgentId          = $cfg['agentid'];
+			$this->myKeys["A"]        = $cfg['key1'];
+			$this->myKeys["B"]        = $cfg['key2'];
 			$this->myPayReadServerUrl = "https://secure.pay-read.se/PostAPI_V1/InitPayFlow";
 			$this->myCurrency         = "SEK";
 			$this->myLanguage         = "sv";
@@ -50,7 +48,7 @@
          * 	<input type="hidden" name="payread_xml_writer" value="get_api_version()">
          * 	<input type="hidden" name="payread_data" value="get_xml_data()">
          * 	<input type="hidden" name="payread_checksum" value="get_checksum()">
-		 * @return   nothing
+		 * @return ï¿½ nothing
    		 */
 		function generate_form()
 		{
@@ -116,7 +114,7 @@
 		/**
 		 * This method will set the url that later the get_server_url will return - for testpurposes only
 		 * @param string $url the URL
-		 * @return nothing 
+		 * @return nothing
 		 */
 		function set_server_url($url)
 		{
@@ -126,7 +124,7 @@
 		/**
 		 * This method will set which currency the transaction is in. Use 3 letters in uppercase.
 		 * @param string $theCurrency 3 letter uppercase currency (ie "SEK") (required)
-		 * @return   nothing
+		 * @return ï¿½ nothing
 		 */
 		function set_currency($theCurrency)
 		{
@@ -142,7 +140,7 @@
 		 * this description may be truncated depending on where it is presented, the maximum length
 		 * that will be stored by Pay&read is 255 characters, but try to keep it below 32
 		 * characters
-		 * @return   nothing
+		 * @return ï¿½ nothing
 		 */
 		function set_description($theDescription)
 		{
@@ -153,7 +151,7 @@
 		 * This method will set a reference Id for the purchase.
 		 * @param string $theReferenceId is the reference Id. It is possible that this
 		 * string might be presented to the buyer.
-		 * @return   nothing
+		 * @return ï¿½ nothing
 		 */
 		function set_reference_id($theReferenceId)
 		{
@@ -163,7 +161,7 @@
 		/**
 		 * This method is not yet used
 		 * @access private
-		 * @return   nothing
+		 * @return ï¿½ nothing
 		 */
 		function add_catalog_purchase($theLineNumber, $theId, $theQuantity)
 		{
@@ -179,7 +177,7 @@
 		 * @param int $thePrice price of the product buyed. (required)
 		 * @param int $theVat vat of the product buyed. (required)
 		 * @param int $theQuantity quantity of the product buyed. (required)
-		 * @return   nothing
+		 * @return ï¿½ nothing
 		 */
 		function add_freeform_purchase($theLineNumber, $theDescription, $thePrice, $theVat, $theQuantity)
 		{
@@ -192,7 +190,7 @@
 		 * This method will add additional information static text that the buyer will see when he goes to PAYER website. Use this method multiple times per each information line.
 		 * @param string $theLineNumber which product you want additional information for. (required)
 		 * @param string $theText the additional decription of the product buyed. (required)
-		 * @return   nothing
+		 * @return ï¿½ nothing
 		 */
 		function add_info_line($theLineNumber, $theText)
 		{
@@ -214,7 +212,7 @@
 		 * @param string $thePhoneWork buyers phonenumber work (optional)
 		 * @param string $thePhoneMobile buyers phonenumber mobile (optional)
 		 * @param string $theEmail buyers email (optional)
-		 * @return   nothing
+		 * @return ï¿½ nothing
 		 */
 		function add_buyer_info($theFirstName, $theLastName, $theAddressLine1, $theAddressLine2, $thePostalcode, $theCity, $theCountryCode, $thePhoneHome, $thePhoneWork, $thePhoneMobile, $theEmail)
 		{
@@ -236,13 +234,13 @@
 		 *
 		 * This method will set the payment method the buyer can use to pay with.
 		 * @param string $theMethod
-		 * @return   nothing
+		 * @return ï¿½ nothing
 		 */
 		function add_payment_method($theMethod)
 		{
 			if($theMethod == "sms"    ||
 			   $theMethod == "card"   ||
-			   $theMethod == "bank"  ||			   
+			   $theMethod == "bank"  ||
 			   $theMethod == "phone"  ||
 			   $theMethod == "invoice" )
 				$this->myPaymentMethods[] = $theMethod;
@@ -253,7 +251,7 @@
 		 *
 		 * If you want the recipt to be handled by your shop, this method will set the URL where the buyer will be redirected. If you don't use this method the buyer will get a recipt on PAYER server.
 		 * @param string $theUrl URL to your recipt if handled by shop.	(required)
-		 * @return   nothing
+		 * @return ï¿½ nothing
 		 */
 		function set_success_redirect_url($theUrl)
 		{
@@ -266,7 +264,7 @@
 		 *
 		 * This method will set the URL where your Authorize webpage is located, remember that you will need to respond "TRUE" if everything is ok, or "FALSE" if something goes wrong, on your page.
 		 * @param string $theUrl URL to your authorize notification page. (required)
-		 * @return   nothing
+		 * @return ï¿½ nothing
 		 */
 		function set_authorize_notification_url($theUrl)
 		{
@@ -278,7 +276,7 @@
 		 *
 		 * This method will set the URL where your Settle webpage is located, remember that you will need to respond "TRUE" if everything is ok, or "FALSE" if something goes wrong, on your page.
 		 * @param string $theUrl URL to your settle notification page. (required)
-		 * @return   nothing
+		 * @return ï¿½ nothing
 		 */
 		function set_settle_notification_url($theUrl)
 		{
@@ -290,7 +288,7 @@
 		 *
 		 * This method will set the URL where your frontpage of the shop is located.
 		 * @param string $theUrl URL to your frontpage of the shop. (required)
-		 * @return   nothing
+		 * @return ï¿½ nothing
 		 */
 		function set_redirect_back_to_shop_url($theUrl)
 		{
@@ -302,7 +300,7 @@
 		 *
 		 * This method will set the debug mode, if set to verbose you will be able to see the parameters posted at the page where you enter bankcard information
 		 * @param string $theDebugMode debug mode, set as "silent"/"brief"/"verbose" (required)
-		 * @return   nothing
+		 * @return ï¿½ nothing
 		 */
 		function set_debug_mode($theDebugMode)
 		{
@@ -317,7 +315,7 @@
 		 *
 		 * This method will set the testmode, if set to true, PAYER will not contact the bank and no money will be taken from the bank account connected to the bankcard, otherwise everything will act like a real transaction.
 		 * @param boolean $theDebugMode test mode, set as true/false (required)
-		 * @return   nothing
+		 * @return ï¿½ nothing
 		 */
 		function set_test_mode($theTestMode)
 		{
@@ -332,7 +330,7 @@
 		 *
 		 * This method will set which language the buyer will see when he enters bankcard information. The input should be in lowercase and you should enter language code (2 letters) not countrycode ie "sv" not "se".
 		 * @param string $theLanguageCode 2 letter uppercase language (ie "sv") (required)
-		 * @return   nothing
+		 * @return ï¿½ nothing
 		 */
 		function set_language($theLanguageCode)
 		{
@@ -421,7 +419,7 @@
 		}
 
 		/**
-		 * This method will generate the xml data that you need to post på the Post-API.
+		 * This method will generate the xml data that you need to post pï¿½ the Post-API.
 		 * @access private
 		 */
 		function generate_purchase_xml()
@@ -460,12 +458,12 @@
 			if (!empty($this->myDescription)) {
 				$this->myXmlData .= "<description>" . $this->myDescription		. "</description>";
 			}
-			
+
 			// Add RefId if used
 			if (!empty($this->myReferenceId)) {
 				$this->myXmlData .= "<reference_id>" . $this->myReferenceId		. "</reference_id>";
 			}
-			// Start the Purchase list					
+			// Start the Purchase list
 			$this->myXmlData .=	"<purchase_list>";
 
 			// Purchase list (catalog purchases)

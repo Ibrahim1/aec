@@ -2127,7 +2127,11 @@ function saveSettings( $option, $return=0 )
 						}
 					}
 
-					$pp->settings[$name] = $_POST[$postname];
+					if ( is_array( $_POST[$postname] ) ) {
+						$pp->settings[$name] = implode( ';', $_POST[$postname] );
+					} else {
+						$pp->settings[$name] = $_POST[$postname];
+					}
 					unset( $_POST[$postname] );
 				}
 			}

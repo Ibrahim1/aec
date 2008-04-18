@@ -22,6 +22,10 @@ class processor_payer extends POSTprocessor
 	{
 		$settings = array();
 
+		$settings['agentid']		= '';
+		$settings['key1']			= '';
+		$settings['key2']			= '';
+		$settings['tax']			= '';
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['testmode']		= 0;
 		$settings['tax']			= '0';
@@ -29,7 +33,6 @@ class processor_payer extends POSTprocessor
 		$settings['lc']				= 'sv';
 		$settings['payment_method']	= 'card';
 		$settings['debugmode']		= 'silent';
-		$settings['customparams']	= "";
 
 		return $settings;
 	}
@@ -42,9 +45,22 @@ class processor_payer extends POSTprocessor
 		$settings['tax']			= array( 'inputA' );
 		$settings['currency']		= array( 'list_currency' );
 		$settings['lc']				= array( 'list_language' );
-		$settings['payment_method']	= array( 'inputA' );
+		$settings['payment_method']	= array( 'list' );
 		$settings['debugmode']		= array( 'inputA' );
-		$settings['customparams']	= array( 'inputD' );
+
+ 		$payment_method = array();
+		$payment_method[] = mosHTML::makeOption ( "sms", "sms" );
+		$payment_method[] = mosHTML::makeOption ( "card", "card" );
+		$payment_method[] = mosHTML::makeOption ( "bank", "bank" );
+		$payment_method[] = mosHTML::makeOption ( "phone", "phone" );
+		$payment_method[] = mosHTML::makeOption ( "invoice", "invoice" );
+
+		$pm = explode( ';', $this->settings['$payment_method'] );
+		foreach ($this->settings['$payment_method'] as $name ) {
+			$selected_methods[] = mosHTML::makeOption( $name, $name );
+		}
+
+		$settings['lists']['payment_method'] = mosHTML::selectList( $payment_method, 'payment_method', 'size="5" multiple="multiple"', 'value', 'text', $selected_methods );
 
         $settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
@@ -55,41 +71,94 @@ class processor_payer extends POSTprocessor
 	{
 		global $mosConfig_live_site, $mosConfig_absolute_path, $my;
 
-		$Auth_url		= $mosConfig_live_site . "/components/com_acctexp/processors/payer/authenticate.php";
-		$Settle_url		= $mosConfig_live_site . "/components/com_acctexp/processors/payer/settle.php";
-		$Success_url	= $mosConfig_live_site . "/index.php?option=com_acctexp&task=payernotification&Invoice=" . $request->int_var['invoice'];
+		$baseurl		= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=payernotification', false, true );
+		$Auth_url		= $baseurl . '&action=authenticate';
+		$Settle_url		= $baseurl . '&action=settle';
+		$Success_url	= $request->int_var['return_url'];
 		$Shop_url		= $mosConfig_live_site . "/index.php";
 
 		require_once($mosConfig_absolute_path . "/components/com_acctexp/processors/payer/payread_post_api.php");
 
-		$thePayreadApi = new payread_post_api;
-		$thePayreadApi->add_buyer_info("firstname", "lastname", "address_1", "address_2", "postalcode", "city", "se", "phone_home", "phone_work", "phone_mobile", "email");
+		// Header
+		$xml  = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>";
+		$xml .= "<payread_post_api_0_2 ".
+				"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ".
+				"xsi:noNamespaceSchemaLocation=\"payread_post_api_0_2.xsd\"".
+				">";
+		// Seller details
+		$xml .= "<seller_details>" .
+					"<agent_id>"		. htmlspecialchars( $this->settings['agentid'] )		. "</agent_id>" .
+				"</seller_details>";
+		// Buyer details
+		$xml .= "<buyer_details>" .
+					"<first_name>"		. htmlspecialchars($this->myBuyerInfo["FirstName"])		. "</first_name>" .
+					"<last_name>"		. htmlspecialchars($this->myBuyerInfo["LastName"])		. "</last_name>" .
+					"<address_line_1>"	. htmlspecialchars($this->myBuyerInfo["AddressLine1"])	. "</address_line_1>" .
+					"<address_line_2>"	. htmlspecialchars($this->myBuyerInfo["AddressLine2"])	. "</address_line_2>" .
+					"<postal_code>"		. htmlspecialchars($this->myBuyerInfo["Postalcode"])	. "</postal_code>" .
+					"<city>"			. htmlspecialchars($this->myBuyerInfo["City"])			. "</city>" .
+					"<country_code>"	. htmlspecialchars($this->myBuyerInfo["CountryCode"])	. "</country_code>" .
+					"<phone_home>"		. htmlspecialchars($this->myBuyerInfo["PhoneHome"])		. "</phone_home>" .
+					"<phone_work>"		. htmlspecialchars($this->myBuyerInfo["PhoneWork"])		. "</phone_work>" .
+					"<phone_mobile>"	. htmlspecialchars($this->myBuyerInfo["PhoneMobile"])	. "</phone_mobile>" .
+					"<email>"			. $this->myBuyerInfo["Email"]							. "</email>" .
+				"</buyer_details>";
+		// Purchase
+		$xml .= "<purchase>" .
+					"<currency>"		. $this->settings['currency']		. "</currency>";
+		// Add RefId if used
+		$xml .=		"<reference_id>" . $request->int_var['invoice']		. "</reference_id>";
+		// Start the Purchase list
+		$xml .=		"<purchase_list>";
 
-		$thePayreadApi->add_freeform_purchase(1, AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice ), $request->int_var['amount'], $this->settings['tax'], 1);
+		$desc = AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
 
-		$thePayreadApi->add_payment_method($this->settings["payment_method"]);
+		// Purchase list (freeform purchases)
+		$xml .= 		"<freeform_purchase>" .
+							"<line_number>"			.  htmlspecialchars(1)								. "</line_number>" .
+							"<description>"			.  htmlspecialchars($desc)							. "</description>" .
+							"<price_including_vat>"	.  htmlspecialchars($request->int_var['amount'])	. "</price_including_vat>" .
+							"<vat_percentage>"		.  htmlspecialchars($this->settings['tax'])			. "</vat_percentage>" .
+							"<quantity>"			.  htmlspecialchars(1)								. "</quantity>" .
+						"</freeform_purchase>";
 
-		$thePayreadApi->set_authorize_notification_url($Auth_url);
-		$thePayreadApi->set_settle_notification_url($Settle_url);
-		$thePayreadApi->set_success_redirect_url($Success_url);
-		$thePayreadApi->set_redirect_back_to_shop_url($Shop_url);
+		$xml .= 	"</purchase_list>" .
+				"</purchase>";
+		//Processing control
+		$xml .=	"<processing_control>" .
+					"<success_redirect_url>"		. htmlspecialchars($this->mySuccessRedirectUrl)			. "</success_redirect_url>";
+					"<authorize_notification_url>"	.  htmlspecialchars($this->myAuthorizeNotificationUrl)	. "</authorize_notification_url>" .
+					"<settle_notification_url>"		.  htmlspecialchars($this->mySettleNotificationUrl)		. "</settle_notification_url>" .
+					"<redirect_back_to_shop_url>" 	.  htmlspecialchars($this->myRedirectBackToShopUrl)		. "</redirect_back_to_shop_url>" .
+				"</processing_control>";
 
-		$thePayreadApi->set_language($this->settings['lc']);
+		// Database overrides
+		$xml .= "<database_overrides>";
 
-		$thePayreadApi->set_currency($this->settings['currency']);
+		// Payment methods
+		$xml .= 	"<accepted_payment_methods>";
+		$methods = explode( ';', $this->settings["payment_method"] );
+		foreach ( $methods as $method )	{
+			$xml .=		"<payment_method>"		. $method		. "</payment_method>";
+		}
+		$xml .= 	"</accepted_payment_methods>";
 
-		$thePayreadApi->set_debug_mode($this->settings["debugmode"]);
+		// Debug mode
+		$xml .= 	"<debug_mode>"		. 'silent'	. "</debug_mode>";
+		// Test mode
+		$xml .=		"<test_mode>"		. $this->settings['testmode']		. "</test_mode>";
+		// Language
+		$xml .=		"<language>"		. $this->settings['lc']		. "</language>";
+		$xml .=		"</database_overrides>";
 
-		if ( $this->settings['testmode'] )
-			$thePayreadApi->set_test_mode(true);
-		else
-			$thePayreadApi->set_test_mode(false);
+		// Footer
+		$xml .= "</payread_post_api_0_2>";
 
-		$var['post_url'] = $thePayreadApi->get_server_url();
-		$var['payread_agentid'] = $thePayreadApi->get_agentid();
-		$var['payread_xml_writer'] = $thePayreadApi->get_api_version();
-		$var['payread_data'] = $thePayreadApi->get_xml_data();
-		$var['payread_checksum'] = $thePayreadApi->get_checksum();
+		$var['post_url']			= "https://secure.pay-read.se/PostAPI_V1/InitPayFlow";
+		$var['payread_agentid']		= $this->settings['agentid'];
+		$var['payread_xml_writer']	= "payread_php_0_2";
+		$var['payread_data']		= base64_encode( $xml );
+		$var['payread_checksum']	= md5( $this->settings['key1'] . $xml . $this->settings['key2'] );
 
 		return $var;
 	}
@@ -97,11 +166,37 @@ class processor_payer extends POSTprocessor
 	function parseNotification( $post )
 	{
 		global $database;
+
 		$response = array();
-		$response['invoice'] = $_GET['Invoice'];
-		$response['valid'] = 1;
+		$response['valid']		= false;
+		$response['invoice']	= $_GET['Invoice'];
+
+		$allowed = array( '83.241.130.100', '83.241.130.101', '10.4.49.11', '192.168.100.222', '127.0.0.1', '217.151.207.84', '83.241.130.102' );
+
+		if ( in_array( $_SERVER["REMOTE_ADDR"], $allowed ) ) {
+			global $mosConfig_absolute_path;
+
+			require_once( $mosConfig_absolute_path . "/components/com_acctexp/processors/payer/payread_post_api.php" );
+
+			$postAPI = new payread_post_api( $this->settings );
+
+			$requesturl = ( ( $_SERVER["SERVER_PORT"] == "80" ) ? "http://" : "https://" ) . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+
+			$strippedUrl = substr( $requesturl, 0, strpos( $requesturl, "&md5sum" ) );
+			$md5 = strtolower( md5( $this->settings['key1'] . $strippedUrl . $this->settings['key2'] ) );
+
+			if ( strpos( strtolower( $requesturl ), $md5 ) >= 7 ) {
+				if ( $_GET['action'] == 'authenticate' ) {
+					$response['pending']		= 1;
+					$response['pending_reason']	= 'authentication';
+				} elseif ( $_GET['action'] == 'settle' ) {
+					$response['valid']			= 1;
+				}
+			}
+		}
 
 		return $response;
 	}
+
 }
 ?>

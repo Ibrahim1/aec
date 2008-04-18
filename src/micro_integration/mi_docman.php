@@ -82,20 +82,25 @@ class mi_docman
 		$del_opts[2] = mosHTML::makeOption ( "Set", "Delete Group Set on Application, then apply group below." );
 
         $settings = array();
-		$settings['add_downloads']	= array( 'inputA' );
-		$settings['set_downloads']	= array( 'inputA' );
-		$settings['set_unlimited']	= array( 'list_yesno' );
+		$settings['add_downloads']			= array( 'inputA' );
+		$settings['set_downloads']			= array( 'inputA' );
+		$settings['set_unlimited']			= array( 'list_yesno' );
 
-		$settings['set_group']			= array( 'list_yesno' );
-		$settings['group']				= array( 'list' );
-		$settings['set_group_exp']	= array( 'list_yesno' );
-		$settings['group_exp']			= array( 'list' );
-		$settings['delete_on_exp'] 	= array( 'list' );
-		$settings['rebuild']			= array( 'list_yesno' );
+		$settings['set_group']				= array( 'list_yesno' );
+		$settings['group']					= array( 'list' );
+		$settings['set_group_exp']			= array( 'list_yesno' );
+		$settings['group_exp']				= array( 'list' );
+		$settings['delete_on_exp'] 			= array( 'list' );
+		$settings['rebuild']				= array( 'list_yesno' );
 
-		$settings['lists']['group']		= mosHTML::selectList( $sg, 'group', 'size="4" multiple="multiple"', 'value', 'text', $params['group'] );
-		$settings['lists']['group_exp'] = mosHTML::selectList( $sg, 'group_exp', 'size="4" multiple="multiple"', 'value', 'text', $params['group_exp'] );
-		$settings['lists']['delete_on_exp'] = mosHTML::selectList( $del_opts, 'delete_on_exp', 'size="3"', 'value', 'text', $params['delete_on_exp'] );
+		$sel_groups = array();
+		foreach ($groups as $name ) {
+			$selected_groups[] = mosHTML::makeOption( $name, $name );
+		}
+
+		$settings['lists']['group']			= mosHTML::selectList( $sg, 'group', 'size="4" multiple="multiple"', 'value', 'text', $params['group'] );
+		$settings['lists']['group_exp'] 	= mosHTML::selectList( $sg, 'group_exp', 'size="4" multiple="multiple"', 'value', 'text', $params['group_exp'] );
+		$settings['lists']['delete_on_exp']	= mosHTML::selectList( $del_opts, 'delete_on_exp', 'size="3"', 'value', 'text', $params['delete_on_exp'] );
 
 		return $settings;
 	}
