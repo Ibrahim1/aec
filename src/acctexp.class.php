@@ -2379,6 +2379,7 @@ class XMLprocessor extends processor
 
 		$ch = curl_init();
 
+		// Preparing CURL variables as array, to possibly overwrite them with custom settings by the processor
 		$curl_calls = array();
 		$curl_calls[CURLOPT_URL]			= $url;
 		$curl_calls[CURLOPT_RETURNTRANSFER]	= 1;

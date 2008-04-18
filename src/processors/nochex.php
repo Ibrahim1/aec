@@ -88,6 +88,7 @@ class processor_nochex extends POSTprocessor
 
 	function validateNotification( $response, $post, $invoice )
 	{
+		// TODO: There needs to be some way to verify this!!!
 		$response['valid'] = 0;
 		if ( $response['invoice'] == $post['order_id'] ) {
 			$response['valid'] = 1;

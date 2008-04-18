@@ -560,4 +560,12 @@ define( '_CFG_PAYPAL_WPP_COUNTRY_DESC', 'Choose the country of your business');
 define( '_CFG_PAYPAL_WPP_CANCEL_NOTE_NAME', 'Cancel Note');
 define( '_CFG_PAYPAL_WPP_CANCEL_NOTE_DESC', 'The Cancel Note the user gets displayed when a subscription via PayPal WPP is cancelled');
 
+// Nochex
+define( '_CFG_NOCHEX_LONGNAME', 'Nochex');
+define( '_CFG_NOCHEX_STATEMENT', 'Nochex Online Payment Services');
+define( '_CFG_NOCHEX_DESCRIPTION', 'Leading independent UK based online payment company, specialising in providing smaller online businesses with simple, accessible, easy to use, online payment services.');
+
+define( '_CFG_NOCHEX_MERCHANT_ID_NAME', 'Merchant ID');
+define( '_CFG_NOCHEX_MERCHANT_ID_DESC', 'Your Merchant ID');
+
 ?>
