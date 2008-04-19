@@ -7064,8 +7064,12 @@ class AECToolbox
 				$switches = array( 'cms', 'user', 'subscription', 'invoice', 'plan', 'system' );
 			}
 		} else {
-			$temp = $switches;
-			$switches = array( $temp );
+			if ( empty( $switches ) ) {
+				$switches = array( 'cms', 'user', 'subscription', 'invoice', 'plan', 'system' );
+			} else {
+				$temp = $switches;
+				$switches = array( $temp );
+			}
 		}
 
 		$rewrite = array();

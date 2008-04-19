@@ -1118,10 +1118,10 @@ define( '_REWRITE_KEY_CMS_ABSOLUTE_PATH',	'Absoluter Pfad zum CMS-Hauptverzeichn
 define( '_REWRITE_KEY_CMS_LIVE_SITE',		'Relativer Pfad zur Webseite (z.B. http://www.meineseite.com)' );
 
 define( '_REWRITE_AREA_SYSTEM', 'System Related');
-define( '_REWRITE_KEY_SYSTEM_TIMESTAMP_NAME', 'Zeitstempel (Frontend Formatting)');
-define( '_REWRITE_KEY_SYSTEM_TIMESTAMP_BACKEND_NAME', 'Zeitstempel (Backend Formatting)');
-define( '_REWRITE_KEY_SYSTEM_SERVER_TIMESTAMP_NAME', 'Server Zeitstempel (Frontend Formatting)');
-define( '_REWRITE_KEY_SYSTEM_SERVER_TIMESTAMP_BACKEND_NAME', 'Server Zeitstempel (Backend Formatting)');
+define( '_REWRITE_KEY_SYSTEM_TIMESTAMP', 'Zeitstempel (Frontend Formatting)');
+define( '_REWRITE_KEY_SYSTEM_TIMESTAMP_BACKEND', 'Zeitstempel (Backend Formatting)');
+define( '_REWRITE_KEY_SYSTEM_SERVER_TIMESTAMP', 'Server Zeitstempel (Frontend Formatting)');
+define( '_REWRITE_KEY_SYSTEM_SERVER_TIMESTAMP_BACKEND', 'Server Zeitstempel (Backend Formatting)');
 
 define( '_REWRITE_AREA_INVOICE', 'Rechnungs Bezogen');
 define( '_REWRITE_KEY_INVOICE_ID', 'Rechnungs ID');
