@@ -4417,75 +4417,72 @@ class InvoiceFactory
 		    exit();
 		};
 
-		$terms = new mammonTerms();
-		$terms->readParams( $params );
+		$this->terms = new mammonTerms();
+		$this->terms->readParams( $params );
 
 		$amount				= $this->objUsage->SubscriptionAmount( $this->recurring, $this->metaUser->objSubscription );
 		$original_amount	= $amount;
 		$warning			= 0;
 
-		if ( !empty( $aecConfig->cfg['enable_coupons'] ) ) {
-			$this->coupons['active'] = 1;
+		if ( !empty( $aecConfig->cfg['enable_coupons'] ) && !empty( $this->objInvoice->coupons ) ) {
+			$coupons = explode( ';', $this->objInvoice->coupons );
 
-			if ( $this->objInvoice->coupons ) {
-				$coupons = explode( ';', $this->objInvoice->coupons );
+			$cpsh = new couponsHandler();
 
-				$this->coupons['coupons'] = array();
+			$this->terms = $cpsh->applyCouponsToTerms( $this->terms, $coupons, $this->metaUser );
 
-				$applied_coupons = array();
-				$global_nomix = array();
-				foreach ( $coupons as $id => $coupon_code ) {
-					$cph = new couponHandler();
-					$cph->load( $coupon_code );
+			if ( count( $cpsh->getErrors() ) ) {
+				$this->terms->errors = $cpsh->getErrors();
+			}
 
-					if ( $cph->restrictions['restrict_combination'] ) {
-						$nomix = explode( ';', $cph->restrictions['bad_combinations'] );
-					} else {
-						$nomix = array();
-					}
+			$this->coupons['coupons'] = array();
 
-					if ( count( array_intersect( $applied_coupons, $nomix ) ) || in_array( $coupon_code, $global_nomix ) ) {
-						// This coupon either interferes with one of the coupons already applied, or the other way round
-						$cph->setError( _COUPON_ERROR_COMBINATION );
-					} else {
-						$cph->getInfo( $amount );
-						$cph->checkRestrictions( $this->metaUser, $original_amount, $this );
+			$applied_coupons = array();
+			$global_nomix = array();
+			foreach ( $coupons as $id => $coupon_code ) {
+				$cph = new couponHandler();
+				$cph->load( $coupon_code );
 
-						if ( $cph->status ) {
-							$this->coupons['coupons'][$id]['code']		= $cph->code;
-							$this->coupons['coupons'][$id]['name']		= $cph->name;
-							$this->coupons['coupons'][$id]['discount']	= AECToolbox::correctAmount( $cph->discount_amount );
-							$this->coupons['coupons'][$id]['action']	= $cph->action;
-							$this->coupons['coupons'][$id]['nodirectaction'] = 0;
+				if ( $cph->restrictions['restrict_combination'] ) {
+					$nomix = explode( ';', $cph->restrictions['bad_combinations'] );
+				} else {
+					$nomix = array();
+				}
 
-							$applied_coupons[] = $coupon_code;
-							$global_nomix = array_merge( $global_nomix, $nomix );
+				if ( count( array_intersect( $applied_coupons, $nomix ) ) || in_array( $coupon_code, $global_nomix ) ) {
+					// This coupon either interferes with one of the coupons already applied, or the other way round
+					$cph->setError( _COUPON_ERROR_COMBINATION );
+				} else {
+					$cph->getInfo( $amount );
+					$cph->checkRestrictions( $this->metaUser, $original_amount, $this );
 
-							$amount = AECToolbox::correctAmount( $cph->amount );
-						}
-					}
+					if ( $cph->status ) {
+						$this->coupons['coupons'][$id]['code']		= $cph->code;
+						$this->coupons['coupons'][$id]['name']		= $cph->name;
+						$this->coupons['coupons'][$id]['discount']	= AECToolbox::correctAmount( $cph->discount_amount );
+						$this->coupons['coupons'][$id]['action']	= $cph->action;
+						$this->coupons['coupons'][$id]['nodirectaction'] = 0;
 
-					if ( !$cph->status ) {
-						// Set Error
-						$this->coupons['error']		= 1;
-						$this->coupons['errormsg']	= $cph->error;
-						// Remove Coupon
-						$this->objInvoice->removeCoupon( $coupon_code );
-						// Recalculate Amount
-						$this->objInvoice->computeAmount();
-						// Check and store
-						$this->objInvoice->check();
-						$this->objInvoice->store();
+						$applied_coupons[] = $coupon_code;
+						$global_nomix = array_merge( $global_nomix, $nomix );
+
+						$amount = AECToolbox::correctAmount( $cph->amount );
 					}
 				}
-			}
 
-			if ( $warning ) {
-				$this->coupons['warning'] = 1;
-				$this->coupons['warningmsg'] = html_entity_decode( _COUPON_WARNING_AMOUNT );
+				if ( !$cph->status ) {
+					// Set Error
+					$this->coupons['error']		= 1;
+					$this->coupons['errormsg']	= $cph->error;
+					// Remove Coupon
+					$this->objInvoice->removeCoupon( $coupon_code );
+					// Recalculate Amount
+					$this->objInvoice->computeAmount();
+					// Check and store
+					$this->objInvoice->check();
+					$this->objInvoice->store();
+				}
 			}
-		} else {
-			$this->coupons['active'] = 0;
 		}
 
 		if ( ( empty( $amount ) || ( $amount == '0.00') ) && !$this->recurring ) {
@@ -8187,9 +8184,55 @@ class microIntegration extends paramDBTable
 	}
 }
 
-class couponsHandler
+class couponsHandler extends eucaObject
 {
 	function applyCoupons( $amount, $coupons, $metaUser )
+	{
+		$applied_coupons = array();
+		$global_nomix = array();
+		foreach ( $coupons as $arrayid => $coupon_code ) {
+			$cph = new couponHandler();
+			$cph->load( $coupon_code );
+
+			// Get the coupons that this one cannot be mixed with
+			if ( $cph->restrictions['restrict_combination'] ) {
+				$nomix = explode( ';', $cph->restrictions['bad_combinations'] );
+			} else {
+				$nomix = array();
+			}
+
+			if ( count( array_intersect( $applied_coupons, $nomix ) ) || in_array( $coupon_code, $global_nomix ) ) {
+				// This coupon either interferes with one of the coupons already applied, or the other way round
+			} else {
+				if ( $cph->status ) {
+					// Coupon approved, checking restrictions
+					$cph->checkRestrictions( $metaUser );
+					if ( $cph->status ) {
+						$amount = $cph->applyCoupon( $amount );
+						$applied_coupons[] = $coupon_code;
+						$global_nomix = array_merge( $global_nomix, $nomix );
+					} else {
+						// Coupon restricted for this user, thus it needs to be deleted later on
+					}
+				} else {
+					// Coupon not approved, thus it needs to be deleted later on
+					// Set Error
+					$this->setError( $cph->error );
+					// Remove Coupon
+					$this->objInvoice->removeCoupon( $coupon_code );
+					// Recalculate Amount
+					$this->objInvoice->computeAmount();
+					// Check and store
+					$this->objInvoice->check();
+					$this->objInvoice->store();
+				}
+			}
+		}
+
+		return $amount;
+	}
+
+	function applyCouponsToTerms( $terms, $coupons, $metaUser )
 	{
 		$applied_coupons = array();
 		$global_nomix = array();
@@ -8523,9 +8566,9 @@ class couponHandler
 						case 'trial_only':		$this->setError( _COUPON_ERROR_TRIAL_ONLY );			break;
 						// Plan History or Status Errors
 						case 'plan_previous':	$this->setError( _COUPON_ERROR_WRONG_PLAN_PREVIOUS );	break;
-						case 'plan_present':	$this->setError( _COUPON_ERROR_WRONG_PLAN );	break;
+						case 'plan_present':	$this->setError( _COUPON_ERROR_WRONG_PLAN );			break;
 						case 'plan_overall':	$this->setError( _COUPON_ERROR_WRONG_PLANS_OVERALL );	break;
-						case 'plan_amount_min': $this->setError( _COUPON_ERROR_WRONG_PLAN );	break;
+						case 'plan_amount_min': $this->setError( _COUPON_ERROR_WRONG_PLAN );			break;
 						case 'plan_amount_max': $this->setError( _COUPON_ERROR_WRONG_PLANS_OVERALL );	break;
 					}
 					return false;

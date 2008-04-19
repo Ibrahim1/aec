@@ -728,22 +728,62 @@ class Payment_HTML
  *
  */
 
+/**
+ * _AEC_TERMTYPE_TRIAL
+ * _AEC_TERMTYPE_TERM
+ * _AEC_CHECKOUT_TERM
+ * _AEC_CHECKOUT_COST
+ * _AEC_CHECKOUT_DISCOUNT
+ * _AEC_CHECKOUT_TOTAL
+ */
+
 ?>
+
+			<table id="aec_checkout">
+			<?php
+				foreach ( $invoiceFactory->terms as $term ) {
+					$ttype = 'aec_termtype_' . $term;
+
+					// Headline - What type is this term
+					echo '<tr><th colspan="2" class="' . $ttype . '">' . constant( strtoupper( $ttype ) ) . '</th></tr>';
+					// Subheadline - specify the details of this term
+					echo '<tr><td colspan="2">' . _AEC_CHECKOUT_DURATION . ': ' . $term->renderDuration() . '</td></tr>';
+
+					// Price - the (original) price of thi
+					$cost = $term->renderCost();
+
+					if ( is_array( $cost ) ) {
+						foreach ( $cost as $i => $co ) {
+							if ( $i = count( $cost ) ) {
+								$t = _AEC_CHECKOUT_TOTAL;
+								$c = $co['total'];
+							} elseif ( $i > 0 ) {
+								$t = _AEC_CHECKOUT_DISCOUNT;
+								$t .= '&nbsp;[<a href="'
+									. AECToolbox::deadsureURL( '/index.php?option=' . $option
+									. '&amp;task=InvoiceRemoveCoupon&amp;invoice=' . $InvoiceFactory->invoice
+									. '&amp;coupon_code=' . $co['coupon'] )
+									. '" title="' . _CHECKOUT_INVOICE_COUPON_REMOVE . '">'
+									. _CHECKOUT_INVOICE_COUPON_REMOVE . '</a>]';
+								$c = $co['discount'];
+							} else {
+								$t = _AEC_CHECKOUT_COST;
+								$c = $co['cost'];
+							}
+
+							echo '<tr><td>' . $t . ':' . '</td><td>' . $c . '</td></tr>';
+						}
+					} else {
+						echo '<tr><td>' . _AEC_CHECKOUT_COST . ': ' . '</td><td>' . $cost . ' ' . $InvoiceFactory->payment->currency . '</td></tr>';
+					}
+				}
+			?>
+			</table>
+
 
 			<div id="amountbox">
 				<table class="amount">
 					<?php
-					if ( isset( $InvoiceFactory->payment ) ) {
-					?>
-					<tr>
-						<td class="item"><?php echo _CHECKOUT_INVOICE_AMOUNT; ?> (<?php echo $InvoiceFactory->objInvoice->invoice_number; ?>)</td>
-						<td class="amount">
-							<?php echo $InvoiceFactory->payment->amount . '&nbsp;' . $InvoiceFactory->payment->currency; ?>
-						</td>
-					</tr>
-					<?php
-					}
-
 					if ( $InvoiceFactory->coupons['active'] ) {
 						if ( isset( $InvoiceFactory->coupons['coupons'] ) ) {
 							foreach ( $InvoiceFactory->coupons['coupons'] as $id => $coupon ) { ?>
@@ -765,7 +805,7 @@ class Payment_HTML
 					</tr>
 				</table>
 				<?php
-				if ( $InvoiceFactory->coupons['active'] ) { ?>
+				if ( !empty( $aecConfig->cfg['enable_coupons'] ) ) { ?>
 					<p><?php echo _CHECKOUT_COUPON_INFO; ?></p>
 					<table width="100%" id="couponsbox">
 						<tr>
@@ -776,21 +816,13 @@ class Payment_HTML
 						<tr>
 							<td class="coupondetails">
 								<?php
-								if ( isset( $InvoiceFactory->coupons['warning'] ) ) {
-									if ( $InvoiceFactory->coupons['warning'] ) { ?>
-										<div class="couponwarning">
-											<p><strong><?php echo $InvoiceFactory->coupons['warningmsg']; ?></strong></p>
-										</div>
-										<?php
-									}
-								}
-								if ( isset( $InvoiceFactory->coupons['error'] ) ) {
-									if ( $InvoiceFactory->coupons['error'] ) { ?>
+								if ( isset( $InvoiceFactory->terms->errors ) ) {
+									foreach ( $InvoiceFactory->terms->errors as $error ) { ?>
 										<div class="couponerror">
 											<p>
 												<strong><?php echo _COUPON_ERROR_PRETEXT; ?></strong>
 												&nbsp;
-												<?php echo $InvoiceFactory->coupons['errormsg']; ?>
+												<?php echo $error; ?>
 											</p>
 										</div>
 										<?php

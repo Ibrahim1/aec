@@ -93,7 +93,7 @@ class mammonTerms extends eucaObject
 	}
 
 	/**
-	 * add Term to Terms
+	 * add Term to Terms Array
 	 *
 	 * @access	public
 	 * @return	boolean	True on success
@@ -145,6 +145,29 @@ class mammonTerm extends eucaObject
 	 */
 	var $cost			= array();
 
+	/**
+	 * Human Readable form of term duration
+	 *
+	 * @access	public
+	 * @return	string
+	 * @since	1.0
+	 */
+	function renderDuration()
+	{
+		echo $this->duration;
+	}
+
+	/**
+	 * Human Readable form of term cost
+	 *
+	 * @access	public
+	 * @return	string
+	 * @since	1.0
+	 */
+	function renderCost()
+	{
+		echo $this->cost;
+	}
 }
 
 
