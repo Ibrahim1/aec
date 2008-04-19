@@ -627,6 +627,7 @@ define( '_CFG_GENERAL_PLANS_FIRST_NAME', 'Plans First:');
 define( '_CFG_GENERAL_PLANS_FIRST_DESC', 'If you have commited all three hacks to have an integrated Registration with direct Subscription, this switch will activate this behavior. Don\'t use it if you don\'t want that behavior or only commited the first hack (which means that the plans come after the user has put in his or her details) .');
 
 define( '_CFG_TAB_CUSTOMIZATION_TITLE', 'Customize');
+define( '_CFG_TAB_CUSTOMIZATION_SUBTITLE', 'Customization');
 define( '_CFG_GENERAL_CUSTOMINTRO_NAME', 'Custom intro page link:');
 define( '_CFG_GENERAL_CUSTOMINTRO_DESC', 'Provide a full link (including http://) that leads to your custom intro page. That page has to contain a link like this: http://www.yourdomain.com/index.php?option=com_acctexp&task=subscribe&intro=1 which bypasses the intro and correctly forwards the user to the payment plans or registration details page. Leave this field blank if you don\'t want this at all.');
 define( '_CFG_GENERAL_CUSTOMTHANKS_NAME', 'Custom thanks page link:');
@@ -712,9 +713,12 @@ define( '_CFG_GENERAL_SHOW_FIXEDDECISION_NAME', 'Show Fixed Decisions');
 define( '_CFG_GENERAL_SHOW_FIXEDDECISION_DESC', 'The AEC normally skips the payment plans page if there is no decision to be made (one payment plan with only one processor). With this option, you can force it to display the page.');
 define( '_CFG_GENERAL_CONFIRMATION_COUPONS_NAME', 'Coupons on Confirmation');
 define( '_CFG_GENERAL_CONFIRMATION_COUPONS_DESC', 'Offer to provide coupon codes when clicking the Confirm Button on the Confirmation page');
+define( '_CFG_GENERAL_BREAKON_MI_ERROR_NAME', 'Break on MI Error');
+define( '_CFG_GENERAL_BREAKON_MI_ERROR_DESC', 'Stop plan application if one of its attached MIs encounters an error (there will be trace in the eventlog either way)');
 
 // Global Micro Integration Settings
 define( '_CFG_TAB_MICROINTEGRATION_TITLE', 'MicroIntegr');
+define( '_CFG_TAB_MICROINTEGRATION_SUBTITLE', 'Micro Integrations');
 define( '_CFG_MI_MILIST_NAME', 'Active MicroIntegrations');
 define( '_CFG_MI_MILIST_DESC', 'Select which MicroIntegrations you want to use');
 

@@ -625,6 +625,7 @@ define( '_CFG_GENERAL_PLANS_FIRST_NAME',			'Plan Zuerst:' );
 define( '_CFG_GENERAL_PLANS_FIRST_DESC',			'Wenn alle o.a. Zusatzkomponenten mit einer Aboaktion verbunden sind, aktiviert diese Option diese M&ouml;glichkeit. Falls das nicht gew&uuml;nscht ist oder nur die erste Integrationsm&ouml;glichkeit zur Auswahl stehen soll, dann hier nicht aktivieren - die Aboauswahl kommt dann <strong>nach</strong> der Anmeldung/Registrierung.' );
 
 define( '_CFG_TAB_CUSTOMIZATION_TITLE',	'Anpassen' );
+define( '_CFG_TAB_CUSTOMIZATION_SUBTITLE', 'Anpassungen');
 define( '_CFG_GENERAL_CUSTOMINTRO_NAME',			'Individuelle Einstiegsseite:' );
 define( '_CFG_GENERAL_CUSTOMINTRO_DESC',			'Hier den kompletten Link (inkl. http://) angeben der zur Einstiegsseite f&uuml;hren soll. Diese Seite sollte einen Link wie z.B. http://www.yourdomain.com/index.php?option=com_acctexp&amp;task=subscribe&amp;intro=1 beinhalten welcher die Einf&uuml;hrung &uuml;bergeht und den Benutzer direkt zur Aboseite oder Registrierungsseite f&uuml;hrt.<br />Wenn diese Option nicht gew&uuml;nscht wird, dann dieses Feld leer lassen.' );
 define( '_CFG_GENERAL_CUSTOMTHANKS_NAME',			'Link zu individueller Dankeseite:' );
@@ -709,9 +710,12 @@ define( '_CFG_GENERAL_SHOW_FIXEDDECISION_NAME', 'Show Fixed Decisions');
 define( '_CFG_GENERAL_SHOW_FIXEDDECISION_DESC', 'The AEC normally skips the payment plans page if there is no decision to be made (one payment plan with only one processor). With this option, you can force it to display the page.');
 define( '_CFG_GENERAL_CONFIRMATION_COUPONS_NAME', 'Coupons on Confirmation');
 define( '_CFG_GENERAL_CONFIRMATION_COUPONS_DESC', 'Offer to provide coupon codes when clicking the Confirm Button on the Confirmation page');
+define( '_CFG_GENERAL_BREAKON_MI_ERROR_NAME', 'Break on MI Error');
+define( '_CFG_GENERAL_BREAKON_MI_ERROR_DESC', 'Stop plan application if one of its attached MIs encounters an error (there will be trace in the eventlog either way)');
 
 // Global Micro Integration Settings
-define( '_CFG_TAB_MICROINTEGRATION_TITLE',				'MicroIntegration' );
+define( '_CFG_TAB_MICROINTEGRATION_TITLE',				'MicroIntegr' );
+define( '_CFG_TAB_MICROINTEGRATION_SUBTITLE', 'Micro Integrationen');
 define( '_CFG_MI_MILIST_NAME',						'Aktive MicroIntegrationen' );
 define( '_CFG_MI_MILIST_DESC',						'W&auml;hlen welche MicroIntegrationen aktiv sein sollen' );
 

@@ -531,6 +531,8 @@ define( '_CFG_AIRTOY_PHONE_NUMBER_NAME', 'Phone Number');
 define( '_CFG_AIRTOY_PHONE_NUMBER_DESC', 'The phone number which the customer should send the SMS to.');
 define( '_CFG_AIRTOY_RESPONSE_NAME', 'Response');
 define( '_CFG_AIRTOY_RESPONSE_DESC', 'The response SMS the customer will receive (use ReWrite Engine as specified below)');
+define( '_CFG_AIRTOY_SECRET_NAME', 'Secret Word');
+define( '_CFG_AIRTOY_SECRET_DESC', 'Choose a secret word to make notifications a tad more secure against fraud.');
 define( '_CFG_AIRTOY_PLAN_PARAMS_SMSCODE_PREFIX_NAME', 'SMS Code Prefix');
 define( '_CFG_AIRTOY_PLAN_PARAMS_SMSCODE_PREFIX_DESC', 'The Prefix for the SMS code the user has to send to Airtoy. The Code will always come out as "Prefix-XXX", where XXX is the invoice id');
 define( '_AEC_AIRTOY_PARAMS_EXPLAIN_NAME', 'Send SMS');

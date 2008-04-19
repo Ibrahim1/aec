@@ -1711,7 +1711,7 @@ class PaymentProcessor
 		}
 	}
 
-	function exchangeSettings( $plan, $plan_params=null )
+	function exchangeSettingsByPlan( $plan, $plan_params=null )
 	{
 		if ( !isset( $this->settings ) ) {
 			$this->getSettings();
@@ -1723,7 +1723,7 @@ class PaymentProcessor
 
 		if ( isset( $planparams['aec_overwrite_settings'] ) ) {
 			if ( $planparams['aec_overwrite_settings'] ) {
-				$this->settings = $this->processor->exchangeSettings( $this->settings, $planparams );
+				$this->settings = $this->exchangeSettings( $planparams );
 			}
 		}
 	}
@@ -1796,7 +1796,7 @@ class PaymentProcessor
 
 		if ( isset( $int_var['planparams']['aec_overwrite_settings'] ) ) {
 			if ( $int_var['planparams']['aec_overwrite_settings'] ) {
-				$settings = $this->exchangeSettings( $settings, $int_var['planparams']);
+				$settings = $this->exchangeSettingsByPlan( $settings, $int_var['planparams']);
 			}
 		}
 
@@ -1818,7 +1818,7 @@ class PaymentProcessor
 
 		if ( isset( $int_var['planparams']['aec_overwrite_settings'] ) ) {
 			if ( $int_var['planparams']['aec_overwrite_settings'] ) {
-				$settings = $this->exchangeSettings( $settings, $int_var['planparams']);
+				$settings = $this->exchangeSettingsByPlan( $settings, $int_var['planparams']);
 			}
 		}
 
@@ -3780,7 +3780,7 @@ class InvoiceFactory
 					$this->pp = new PaymentProcessor();
 					if ( $this->pp->loadName( $this->processor ) ) {
 						$this->pp->fullInit();
-						$this->pp->exchangeSettings( $this->objUsage );
+						$this->pp->exchangeSettingsByPlan( $this->objUsage );
 
 						$this->payment->method_name	= $this->pp->info['longname'];
 
@@ -4122,7 +4122,7 @@ class InvoiceFactory
 								if ( $loadproc ) {
 									$pp->init();
 									$pp->getInfo();
-									$pp->exchangeSettings( $row );
+									$pp->exchangeSettingsByPlan( $row );
 									if ( isset( $this->recurring ) ) {
 										$recurring = $pp->is_recurring( $this->recurring );
 									} else {
@@ -4788,7 +4788,7 @@ class Invoice extends paramDBTable
 					$pp = new PaymentProcessor();
 					if ( $pp->loadName( $this->method ) ) {
 						$pp->fullInit();
-						$pp->exchangeSettings( $plan );
+						$pp->exchangeSettingsByPlan( $plan );
 
 						if ( $pp->is_recurring() ) {
 							$recurring = $pp->is_recurring();
@@ -4944,7 +4944,7 @@ class Invoice extends paramDBTable
 		$post = $_POST;
 		$post['planparams'] = $plan->getProcessorParameters( $pp->id );
 
-		$pp->exchangeSettings( $plan, $plan_params );
+		$pp->exchangeSettingsByPlan( $plan, $plan_params );
 		$response = $pp->validateNotification( $response, $_POST, $this );
 
 		if ( isset( $response['invoiceparams'] ) ) {
@@ -7063,6 +7063,9 @@ class AECToolbox
 			if ( !count( $switches ) ) {
 				$switches = array( 'cms', 'user', 'subscription', 'invoice', 'plan', 'system' );
 			}
+		} else {
+			$temp = $switches;
+			$switches = array( $temp );
 		}
 
 		$rewrite = array();

@@ -1138,22 +1138,28 @@ class HTML_AcctExp
 
 		$i = 0;
 
-		$tabs->startTab( $tab_data[$i][0], $tab_data[$i][0]);
-		echo '<table width="100%" class="adminform"><tr><td>';
+		foreach( $tab_data as $tab ) {
+			$tabs->startTab( $tab[0], $tab[0] );
 
-		foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
-			echo $aecHTML->createSettingsParticle( $rowname );
+			if ( isset( $tab[2] ) ) {
+				echo '<div class="aec_tabheading">' . $tab[2] . '</div';
+			}
 
-			// Skip to next tab if last item in this one reached
-			if ( strcmp( $rowname, $tab_data[$i][1]) === 0 ) {
-				echo '</td></tr></table>';
-				$tabs->endTab();
-				$i++;
-				if ( isset( $tab_data[$i] ) ) {
-					$tabs->startTab( $tab_data[$i][0], $tab_data[$i][0]);
-					echo '<table width="100%" class="adminform"><tr><td>';
+			echo '<table width="100%" class="adminform"><tr><td>';
+
+			foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
+				echo $aecHTML->createSettingsParticle( $rowname );
+				unset( $aecHTML->rows[$rowname] );
+				// Skip to next tab if last item in this one reached
+				if ( strcmp( $rowname, $tab[1] ) === 0 ) {
+					echo '</td></tr></table>';
+					$tabs->endTab();
+					continue 2;
 				}
 			}
+
+			echo '</td></tr></table>';
+			$tabs->endTab();
 		}
 		?>
 		<input type="hidden" name="id" value="1" />

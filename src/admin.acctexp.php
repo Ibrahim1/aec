@@ -1688,7 +1688,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 function editSettings( $option )
 {
-	global $database, $acl, $my, $aecConfig;
+	global $database, $acl, $my, $aecConfig, $mosConfig_live_site;
 
 	// See whether we have a duplication
 	if ( $aecConfig->RowDuplicationCheck() ) {
@@ -1791,7 +1791,7 @@ function editSettings( $option )
 	$params[] = array( '2div_end', 0 );
 
 	@end( $params );
-	$tab_data[] = array( _CFG_TAB1_TITLE, key( $params ) );
+	$tab_data[] = array( _CFG_TAB1_TITLE, key( $params ), '<h2>' . _CFG_TAB1_SUBTITLE . '</h2>' );
 
 	$params[] = array( 'userinfobox', 45 );
 	$params['customintro']					= array( 'inputC', '' );
@@ -1842,13 +1842,13 @@ function editSettings( $option )
 	$params[] = array( 'div_end', '' );
 
 	@end( $params );
-	$tab_data[] = array( _CFG_TAB_CUSTOMIZATION_TITLE, key( $params ) );
+	$tab_data[] = array( _CFG_TAB_CUSTOMIZATION_TITLE, key( $params ), '<h2>' . _CFG_TAB_CUSTOMIZATION_SUBTITLE . '</h2>' );
 
 	$params['mi_remap']					= array( 'subarea_change', 'mi' );
 	$params['milist']						= array( 'list', '' );
 
 	@end( $params );
-	$tab_data[] = array( _CFG_TAB_MICROINTEGRATION_TITLE, key( $params ) );
+	$tab_data[] = array( _CFG_TAB_MICROINTEGRATION_TITLE, key( $params ), '<h2>' . _CFG_TAB_MICROINTEGRATION_SUBTITLE . '</h2>' );
 
 	$error_reporting_notices[] = mosHTML::makeOption( 512, _AEC_NOTICE_NUMBER_512 );
 	$error_reporting_notices[] = mosHTML::makeOption( 128, _AEC_NOTICE_NUMBER_128 );
@@ -1996,8 +1996,11 @@ function editSettings( $option )
 					$params[$longname] = array( 'inputC', _CFG_PROCESSOR_NAME_NAME, _CFG_PROCESSOR_NAME_DESC, $pp->info['longname'], $longname);
 					$params[$description] = array( 'editor', _CFG_PROCESSOR_DESC_NAME, _CFG_PROCESSOR_DESC_DESC, $pp->info['description'], $description);
 
+					$pphead = '<h2>' . $pp->info['longname'] . '</h2>';
+					$pphead .= '<img src="' . $mosConfig_live_site . '/components/' . $option . '/images/gwlogo_' . $pp->processor_name . '.png" alt="' . $pp->processor_name . '" title="' . $pp->processor_name .'" />';
+
 					@end( $params );
-					$tab_data[] = array( $readgwname, key( $params ) );
+					$tab_data[] = array( $readgwname, key( $params ), $pphead );
 
 					// Add to Active List
 					$gw_list_enabled[]->value = $gwname;
