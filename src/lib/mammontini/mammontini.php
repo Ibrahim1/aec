@@ -70,19 +70,23 @@ class mammonTerms extends eucaObject
 				}
 
 				if ( $t != 'trial_' && !empty( $params ) ) {
-					$term['duration']['lifetime']	= true;
+					$duration['lifetime']	= true;
 				} else {
-					$term['duration']['period']	= $params[$t.'period'];
-					$term['duration']['unit']	= $params[$t.'periodunit'];
+					$duration['period']		= $params[$t.'period'];
+					$duration['unit']		= $params[$t.'periodunit'];
 				}
 
+				$term->set( 'duration', $duration );
+
 				if ( $params[$t.'free'] ) {
-					$term['cost']['free']	= true;
-					$term['cost']['amount']	= '0.00';
+					$cost['free']	= true;
+					$cost['amount']	= '0.00';
 				} else {
-					$term['cost']['free']	= false;
-					$term['cost']['amount']	= $params[$t.'amount'];
+					$cost['free']	= false;
+					$cost['amount']	= $params[$t.'amount'];
 				}
+
+				$term->set( 'cost', $cost );
 
 				$this->addTerm( $term );
 				$return = true;
@@ -102,6 +106,18 @@ class mammonTerms extends eucaObject
 	function addTerm( $term )
 	{
 		array_push( $this->terms, $term );
+	}
+
+	/**
+	 * get Terms Array
+	 *
+	 * @access	public
+	 * @return	boolean	True on success
+	 * @since	1.0
+	 */
+	function getTerms()
+	{
+		return $this->terms;
 	}
 }
 
@@ -146,7 +162,7 @@ class mammonTerm extends eucaObject
 	var $cost			= array();
 
 	/**
-	 * Human Readable form of term duration
+	 * "Human Readable" form of term duration
 	 *
 	 * @access	public
 	 * @return	string
@@ -154,8 +170,83 @@ class mammonTerm extends eucaObject
 	 */
 	function renderDuration()
 	{
-		echo $this->duration;
+		return $this->duration;
 	}
+
+	/**
+	 * "Human Readable" form of term cost
+	 *
+	 * @access	public
+	 * @return	string
+	 * @since	1.0
+	 */
+	function renderCost()
+	{
+		return $this->cost;
+	}
+
+	/**
+	 * add Discount
+	 *
+	 * @access	public
+	 * @return	string
+	 * @since	1.0
+	 */
+	function discount( $amount, $percent  )
+	{
+		if ( $this->discount['percent_first'] ) {
+			if ( $this->discount['amount_percent_use'] ) {
+				$amount -= ( ( $amount / 100 ) * $this->discount['amount_percent'] );
+			}
+			if ( $this->discount['amount_use'] ) {
+				$amount -= $this->discount['amount'];
+			}
+		} else {
+			if ( $this->discount['amount_use'] ) {
+				$amount -= $this->discount['amount'];
+			}
+			if ( $this->discount['amount_percent_use'] ) {
+				$amount -= ( ( $amount / 100 ) * $this->discount['amount_percent'] );
+			}
+		}
+
+		return $this->duration;
+	}
+
+}
+
+/**
+ * Cost Object, representing cost of one term
+ *
+ * @author	David Deutsch <mails@globalnerd.org>
+ * @package		AEC Component
+ * @subpackage	Library - Mammontini!
+ * @since 1.0
+ */
+class mammonCost extends eucaObject
+{
+	/**
+	 * Cost type
+	 *
+	 * Regular values: cost, discount, total
+	 *
+	 * @var string
+	 */
+	var $type			= null;
+
+	/**
+	 * Costs
+	 *
+	 * @var array
+	 */
+	var $cost			= array();
+
+	/**
+	 * Is it free?
+	 *
+	 * @var bool
+	 */
+	var $free			= null;
 
 	/**
 	 * Human Readable form of term cost
@@ -166,9 +257,8 @@ class mammonTerm extends eucaObject
 	 */
 	function renderCost()
 	{
-		echo $this->cost;
+		return $this->cost;
 	}
 }
-
 
 ?>

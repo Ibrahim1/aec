@@ -741,7 +741,7 @@ class Payment_HTML
 
 			<table id="aec_checkout">
 			<?php
-				foreach ( $invoiceFactory->terms as $term ) {
+				foreach ( $invoiceFactory->terms->getTerms() as $term ) {
 					$ttype = 'aec_termtype_' . $term;
 
 					// Headline - What type is this term
