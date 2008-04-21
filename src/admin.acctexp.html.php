@@ -897,7 +897,7 @@ class HTML_AcctExp
 					<p>Calum 'polc1410' Polwart, Aleksey Pikulik</p>
 					<h1>Contributors</h1>
 					<p>People who have helped on our code at one place or another:</p>
-					<p>Rasmus Dahl-Sorensen</p>
+					<p>Kirk Lampert (who found lots and lots of rather embarrassing bugs), Rasmus Dahl-Sorensen</p>
 				</td>
 				<td width="45%" valign="top">
 					<br />

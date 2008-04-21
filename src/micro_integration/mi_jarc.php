@@ -94,7 +94,7 @@ class mi_jarc
 		global $mosConfig_offset_user;
 
 		$query = 'INSERT INTO #__jarc_payments' .
-				' SET `date` = \'' . gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 ) . '\','
+				' SET `date` = \'' . date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 ) . '\','
 				. ' `user_id` = \'' . $invoice->userid . '\','
 				. ' `payment_type` = \''.$invoice->method.'\','
 				. ' `payment_status` = \'2\','

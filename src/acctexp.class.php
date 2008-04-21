@@ -1266,9 +1266,9 @@ class displayPipeline extends paramDBTable
 		$this->userid			= $userid;
 		$this->only_user		= $only_user;
 		$this->once_per_user	= $once_per_user;
-		$this->timestamp		= gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
+		$this->timestamp		= date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 );
 		$this->expire			= $expire;
-		$this->expstamp			= gmstrftime ( '%Y-%m-%d %H:%M:%S', strtotime( $expiration ) );
+		$this->expstamp			= date( 'Y-m-d H:i:s', strtotime( $expiration ) + $mosConfig_offset_user*3600 );
 		$this->displaycount		= 0;
 		$this->displaymax		= $displaymax;
 
@@ -1330,7 +1330,7 @@ class eventLog extends paramDBTable
 			$level = $legal_levels[0];
 		}
 
-		$this->datetime	= gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
+		$this->datetime	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 );
 		$this->short	= $short;
 		$this->tags		= $tags;
 		$this->event	= $text;
@@ -3044,7 +3044,7 @@ class SubscriptionPlan extends paramDBTable
 
 			if ( $is_pending ) {
 				// Is new = set signup date
-				$metaUser->focusSubscription->signup_date = gmstrftime( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
+				$metaUser->focusSubscription->signup_date = date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 );
 				if ( $params['trial_period'] > 0 && !$is_trial ) {
 					$status = 'Trial';
 				} else {
@@ -3072,7 +3072,7 @@ class SubscriptionPlan extends paramDBTable
 			$metaUser->focusSubscription->status = $status;
 			$metaUser->focusSubscription->setPlanID( $this->id );
 
-			$metaUser->focusSubscription->lastpay_date	= gmstrftime( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
+			$metaUser->focusSubscription->lastpay_date = date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 );
 			$metaUser->focusSubscription->type = $processor;
 
 			// Clear parameters
@@ -3646,7 +3646,7 @@ class logHistory extends mosDBTable
 		$this->user_name		= $user->username;
 		$this->plan_id			= $plan->id;
 		$this->plan_name		= $plan->name;
-	    $this->transaction_date	= gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
+	    $this->transaction_date	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 );
 	    $this->amount			= $objInvoice->amount;
 	    $this->invoice_number	= $objInvoice->invoice_number;
 	    $this->response			= $response;
@@ -4882,7 +4882,7 @@ class Invoice extends paramDBTable
 
 		$this->active			= 1;
 		$this->fixed			= 0;
-		$this->created_date		= gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
+		$this->created_date		= date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 );
 		$this->transaction_date	= '0000-00-00 00:00:00';
 		$this->userid			= $userid;
 		$this->method			= $processor;
@@ -5246,7 +5246,7 @@ class Invoice extends paramDBTable
 
 		$tdate = strtotime( $this->transaction_date );
 		$time_passed		= ( ( time() + $mosConfig_offset_user*3600 ) - $tdate ) / 3600;
-		$transaction_date	= gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + $mosConfig_offset_user*3600 );
+		$transaction_date	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 );
 
 		if ( ( strcmp( $this->transaction_date, '0000-00-00 00:00:00' ) === 0 )
 			|| empty( $tdate )

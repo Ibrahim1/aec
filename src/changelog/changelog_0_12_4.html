@@ -1317,6 +1317,8 @@ color: #333;
 <li>Fixing a bug that would make parse notifications correctly, but not do anything else</li>
 <li>Now warns the admin if an invoice has no actions attached</li>
 <li>No longer using hard "exits" on problems on the MySubscription page</li>
+<li>Fixing action links on the MySubscription page (Thanks Kirk Lampert!)</li>
+<li>Converting usage of gmstrftime() to date() - Somebody really could have told me this messes things up. Oh wait, Kirk Lampert did! Thanks a zillion!</li>
 </ul>
 </li>
 <li class="todo"><strong>Todo</strong>
@@ -1327,7 +1329,7 @@ color: #333;
 <li class="todo">Fix Mosets Tree MI (is it broken?)</li>
 <li class="todo">HotProperty Integration to support individual listing control</li>
 <li class="todo">Listing Control for several MIs that support (un)publishing listings</li>
-<li class="todo">Find out why expiration is sometimes 12 hours off</li>
+<li class="check">Find out why expiration is sometimes 12 hours off</li>
 <li class="todo">Port all parameter fields over to JSON (uh yes its awesome)</li>
 <li class="todo"> --- release RC2 --- </li>
 <li class="todo">Express Checkout and PreAuth for PayPal Pro</li>

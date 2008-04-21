@@ -511,7 +511,7 @@ function subscriptionDetails( $option )
 
 				$selected_plan->proc_actions = array();
 				foreach ( $actions as $action ) {
-					$selected_plan->proc_actions[] = '<a href="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action . '">' . $action . '</a>' );
+					$selected_plan->proc_actions[] = '<a href="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action ) . '">' . $action . '</a>';
 				}
 			}
 
