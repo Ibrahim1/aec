@@ -752,29 +752,27 @@ class Payment_HTML
 					// Price - the (original) price of thi
 					$cost = $term->renderCost();
 
-					if ( is_array( $cost ) ) {
-						foreach ( $cost as $i => $co ) {
-							if ( $i = count( $cost ) ) {
-								$t = _AEC_CHECKOUT_TOTAL;
-								$c = $co['total'];
-							} elseif ( $i > 0 ) {
-								$t = _AEC_CHECKOUT_DISCOUNT;
-								$t .= '&nbsp;[<a href="'
+					foreach ( $cost as $citem ) {
+						$t = constant( strtoupper( 'aec_checkout_' . $citem->type ) );
+						$c = $citem->cost['amount'];
+
+						switch ( $citem->type ) {
+							case 'discount':
+								$ta .= '&nbsp;[<a href="'
 									. AECToolbox::deadsureURL( '/index.php?option=' . $option
 									. '&amp;task=InvoiceRemoveCoupon&amp;invoice=' . $InvoiceFactory->invoice
-									. '&amp;coupon_code=' . $co['coupon'] )
+									. '&amp;coupon_code=' . $citem->cost['coupon'] )
 									. '" title="' . _CHECKOUT_INVOICE_COUPON_REMOVE . '">'
 									. _CHECKOUT_INVOICE_COUPON_REMOVE . '</a>]';
-								$c = $co['discount'];
-							} else {
-								$t = _AEC_CHECKOUT_COST;
-								$c = $co['cost'];
-							}
 
-							echo '<tr><td>' . $t . ':' . '</td><td>' . $c . '</td></tr>';
+								$t = $ta;
+								break;
+							case 'cost': break;
+							case 'total': break;
+							default: break;
 						}
-					} else {
-						echo '<tr><td>' . _AEC_CHECKOUT_COST . ': ' . '</td><td>' . $cost . ' ' . $InvoiceFactory->payment->currency . '</td></tr>';
+
+						echo '<tr><td>' . $t . ':' . '</td><td>' . $c . '</td></tr>';
 					}
 				}
 			?>

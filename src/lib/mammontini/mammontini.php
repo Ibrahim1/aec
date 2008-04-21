@@ -162,7 +162,7 @@ class mammonTerm extends eucaObject
 	var $cost			= array();
 
 	/**
-	 * "Human Readable" form of term duration
+	 * Digestible form of term duration
 	 *
 	 * @access	public
 	 * @return	string
@@ -174,7 +174,7 @@ class mammonTerm extends eucaObject
 	}
 
 	/**
-	 * "Human Readable" form of term cost
+	 * Digestible form of term cost
 	 *
 	 * @access	public
 	 * @return	string
@@ -182,7 +182,11 @@ class mammonTerm extends eucaObject
 	 */
 	function renderCost()
 	{
-		return $this->cost;
+		if ( count( $this->cost ) <= 2 ) {
+			return array( $this->cost[0] );
+		} else {
+			return $this->cost;
+		}
 	}
 
 	/**

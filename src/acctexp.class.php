@@ -4980,6 +4980,7 @@ class Invoice extends paramDBTable
 
 		$event .= ' ';
 
+		$nothanks = 1;
 		if ( $response['valid'] ) {
 			$break = 0;
 
@@ -5014,7 +5015,7 @@ class Invoice extends paramDBTable
 					$tags	.= ',payment,action_failed';
 				} else {
 					if ( !empty( $pp->info['notify_trail_thanks'] ) ) {
-						thanks( 'com_acctexp', $renew, ($pp === 0) );
+						$nothanks = 0;
 					}
 					$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_VALID;
 					$tags	.= ',payment,action';
@@ -5084,6 +5085,10 @@ class Invoice extends paramDBTable
 
 		$eventlog = new eventLog( $database );
 		$eventlog->issue( $short, $tags, $event, 2, $params );
+
+		if ( !$nothanks ) {
+			thanks( 'com_acctexp', $renew, ($pp === 0) );
+		}
 	}
 
 	function pay( $multiplicator=1 )
