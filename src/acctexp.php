@@ -455,7 +455,7 @@ function subscriptionDetails( $option )
 
 		if ( !$metaUser->hasSubscription ) {
 			subscribe( $option );
-			exit();
+			return;
 		}
 
 		switch ( strtolower( $metaUser->objSubscription->type ) ) {
@@ -940,7 +940,7 @@ function processNotification( $option, $processor )
 		$pp->init();
 		$response = $pp->parseNotification( $_POST );
 	} else {
-		exit();
+		return;
 		// TODO: Log error
 	}
 
@@ -956,7 +956,7 @@ function processNotification( $option, $processor )
 
 		$eventlog = new eventLog($database);
 		$eventlog->issue( $short, $tags, $event, 128, $params );
-		exit();
+		return;
 	}
 
 	$response['responsestring'] = $responsestring;
