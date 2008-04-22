@@ -116,6 +116,19 @@ class processor_authorize_arb extends XMLprocessor
 	{
 		global $mosConfig_live_site;
 
+		// ARB doesn't validate the transactions until the batch processing occurs.  They only do
+		// an initial algorithm check, which the test credit cards pass.  So we have to catch them
+		// here until Authorize.net decides it's a good idea too. See this page for the test cards:
+		// http://developer.authorize.net/faqs/#7429 [KML]
+		$cc_testnumbers = array("370000000000002", "6011000000000012", "5424000000000015", "4007000000027",
+								"4012888818888", "3088000000000017", "38000000000006", "4222222222222" );
+
+		if ( !$this->settings['testmode'] && in_array( trim( $request->int_var['params']['cardNumber'] ), $cc_testnumbers)) {
+			$response['valid'] = false;
+			$response['error'] = "Credit Card Number is invalid";
+			return $response;
+		}
+
 		// Start xml, add login and transaction key, as well as invoice number
 		$content =	'<?xml version="1.0" encoding="utf-8"?>'
 					. '<ARBCreateSubscriptionRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">'
@@ -224,7 +237,7 @@ class processor_authorize_arb extends XMLprocessor
 	{
 		if ( strpos( $haystack, $start ) === false || strpos( $haystack, $end ) === false ) {
 			return false;
-	   } else {
+		 } else {
 			$start_position = strpos( $haystack, $start ) + strlen( $start );
 			$end_position = strpos( $haystack, $end );
 			return substr( $haystack, $start_position, $end_position - $start_position );
@@ -342,48 +355,48 @@ class processor_authorize_arb extends XMLprocessor
  * 2008-02-19-17:41:15
 Array
 (
-    [x_response_code] => 1
-    [x_response_subcode] => 1
-    [x_response_reason_code] => 1
-    [x_response_reason_text] => This transaction has been approved.
-    [x_auth_code] =>
-    [x_avs_code] => P
-    [x_trans_id] => 1736352859
-    [x_invoice_num] => IMGNkYjJjMTFlOWRm
-    [x_description] => Account Cancellation
-    [x_amount] => 299.00
-    [x_method] => CC
-    [x_type] => credit
-    [x_cust_id] =>
-    [x_first_name] => Fay
-    [x_last_name] => Jozoff
-    [x_company] =>
-    [x_address] => 430 E. 56th Street
-    [x_city] => New York
-    [x_state] => NY
-    [x_zip] => 10022
-    [x_country] => U.S.A.
-    [x_phone] => 347-678-5711
-    [x_fax] => 212-230-1225
-    [x_email] => fayannlee@gmail.com
-    [x_ship_to_first_name] => Fay
-    [x_ship_to_last_name] => Jozoff
-    [x_ship_to_company] =>
-    [x_ship_to_address] => 430 E. 56th Street
-    [x_ship_to_city] => New York
-    [x_ship_to_state] => NY
-    [x_ship_to_zip] => 10022
-    [x_ship_to_country] => U.S.A.
-    [x_tax] => 0.0000
-    [x_duty] => 0.0000
-    [x_freight] => 0.0000
-    [x_tax_exempt] => FALSE
-    [x_po_num] =>
-    [x_MD5_Hash] => DB9B84B6D350D7B8259AA807FBF6C229
-    [x_cvv2_resp_code] =>
-    [x_cavv_response] =>
-    [x_test_request] => false
-    [x_customer_id] =>
+		[x_response_code] => 1
+		[x_response_subcode] => 1
+		[x_response_reason_code] => 1
+		[x_response_reason_text] => This transaction has been approved.
+		[x_auth_code] =>
+		[x_avs_code] => P
+		[x_trans_id] => 1736352859
+		[x_invoice_num] => IMGNkYjJjMTFlOWRm
+		[x_description] => Account Cancellation
+		[x_amount] => 299.00
+		[x_method] => CC
+		[x_type] => credit
+		[x_cust_id] =>
+		[x_first_name] => Fay
+		[x_last_name] => Jozoff
+		[x_company] =>
+		[x_address] => 430 E. 56th Street
+		[x_city] => New York
+		[x_state] => NY
+		[x_zip] => 10022
+		[x_country] => U.S.A.
+		[x_phone] => 347-678-5711
+		[x_fax] => 212-230-1225
+		[x_email] => fayannlee@gmail.com
+		[x_ship_to_first_name] => Fay
+		[x_ship_to_last_name] => Jozoff
+		[x_ship_to_company] =>
+		[x_ship_to_address] => 430 E. 56th Street
+		[x_ship_to_city] => New York
+		[x_ship_to_state] => NY
+		[x_ship_to_zip] => 10022
+		[x_ship_to_country] => U.S.A.
+		[x_tax] => 0.0000
+		[x_duty] => 0.0000
+		[x_freight] => 0.0000
+		[x_tax_exempt] => FALSE
+		[x_po_num] =>
+		[x_MD5_Hash] => DB9B84B6D350D7B8259AA807FBF6C229
+		[x_cvv2_resp_code] =>
+		[x_cavv_response] =>
+		[x_test_request] => false
+		[x_customer_id] =>
 )
  */
 
