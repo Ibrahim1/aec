@@ -747,12 +747,10 @@ class Payment_HTML
 					// Headline - What type is this term
 					echo '<tr><th colspan="2" class="' . $ttype . '">' . constant( strtoupper( $ttype ) ) . '</th></tr>';
 					// Subheadline - specify the details of this term
-					echo '<tr><td colspan="2">' . _AEC_CHECKOUT_DURATION . ': ' . $term->renderDuration() . '</td></tr>';
+					echo '<tr><td colspan="2" class="aec_term_duration">' . _AEC_CHECKOUT_DURATION . ': ' . $term->renderDuration() . '</td></tr>';
 
-					// Price - the (original) price of thi
-					$cost = $term->renderCost();
-
-					foreach ( $cost as $citem ) {
+					// Iterate through costs
+					foreach ( $term->renderCost() as $citem ) {
 						$t = constant( strtoupper( 'aec_checkout_' . $citem->type ) );
 						$c = $citem->cost['amount'];
 
@@ -772,7 +770,7 @@ class Payment_HTML
 							default: break;
 						}
 
-						echo '<tr><td>' . $t . ':' . '</td><td>' . $c . '</td></tr>';
+						echo '<tr><td class="aec_term_costtitle">' . $t . ':' . '</td><td class="aec_term_costamount">' . $c . '</td></tr>';
 					}
 				}
 			?>

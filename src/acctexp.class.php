@@ -8559,23 +8559,24 @@ class couponHandler
 
 		// Plot out error messages
 		if ( count( $permissions ) ) {
-			foreach ( $permissions as $name => $value ) {
-				if ( !$permissions[$name] ) {
-					switch ( $name ) {
-						// ACL Permission Errors
-						case 'mingid':			$this->setError( _COUPON_ERROR_PERMISSION );			break;
-						case 'maxgid':			$this->setError( _COUPON_ERROR_PERMISSION );			break;
-						case 'setgid':			$this->setError( _COUPON_ERROR_PERMISSION );			break;
-						// Plan Permission Errors
-						case 'usage':			$this->setError( _COUPON_ERROR_WRONG_USAGE );			break;
-						case 'trial_only':		$this->setError( _COUPON_ERROR_TRIAL_ONLY );			break;
-						// Plan History or Status Errors
-						case 'plan_previous':	$this->setError( _COUPON_ERROR_WRONG_PLAN_PREVIOUS );	break;
-						case 'plan_present':	$this->setError( _COUPON_ERROR_WRONG_PLAN );			break;
-						case 'plan_overall':	$this->setError( _COUPON_ERROR_WRONG_PLANS_OVERALL );	break;
-						case 'plan_amount_min': $this->setError( _COUPON_ERROR_WRONG_PLAN );			break;
-						case 'plan_amount_max': $this->setError( _COUPON_ERROR_WRONG_PLANS_OVERALL );	break;
+			foreach ( $permissions as $name => $status ) {
+				if ( !$status ) {
+					$errors = array(	'mingid'			=> 'permission',
+										'maxgid'			=> 'permission',
+										'setgid'			=> 'permission',
+										'usage'				=> 'wrong_usage',
+										'trial_only'		=> 'trial_only',
+										'plan_previous'		=> 'wrong_plan_previous',
+										'plan_present'		=> 'wrong_plan',
+										'plan_overall'		=> 'wrong_plan_overall',
+										'plan_amount_min'	=> 'wrong_plan',
+										'plan_amount_max'	=> 'wrong_plan_overall'
+									);
+
+					if ( in_array( $name, $errors ) ) {
+						$this->setError( constant( strtoupper( '_coupon_error_' . $errors[$name] ) ) );
 					}
+
 					return false;
 				}
 			}

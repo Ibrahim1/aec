@@ -190,14 +190,34 @@ class mammonTerm extends eucaObject
 	}
 
 	/**
+	 * Adding a cost item, either the root amount, or a discount, will automatically compute the total
+	 *
+	 * @access	public
+	 * @return	string
+	 * @since	1.0
+	 */
+	function addCost( $amount )
+	{
+		if ( count( $this->cost ) <= 2 ) {
+			return array( $this->cost[0] );
+		} else {
+			return $this->cost;
+		}
+	}
+
+	/**
 	 * add Discount
 	 *
 	 * @access	public
 	 * @return	string
 	 * @since	1.0
 	 */
-	function discount( $amount, $percent  )
+	function discount( $amount, $percent=null  )
 	{
+		if ( !empty( $amount ) ) {
+			$this->addCost();
+		}
+
 		if ( $this->discount['percent_first'] ) {
 			if ( $this->discount['amount_percent_use'] ) {
 				$amount -= ( ( $amount / 100 ) * $this->discount['amount_percent'] );
