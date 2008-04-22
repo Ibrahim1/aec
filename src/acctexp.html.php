@@ -776,99 +776,74 @@ class Payment_HTML
 			?>
 			</table>
 
-
-			<div id="amountbox">
-				<table class="amount">
-					<?php
-					if ( $InvoiceFactory->coupons['active'] ) {
-						if ( isset( $InvoiceFactory->coupons['coupons'] ) ) {
-							foreach ( $InvoiceFactory->coupons['coupons'] as $id => $coupon ) { ?>
-								<tr>
-									<td class="item<?php echo $coupon['nodirectaction'] ? 'later' : ''; ?>">
-										<?php echo _CHECKOUT_INVOICE_COUPON; ?> (<?php echo $coupon['action']; ?>)&nbsp;[<a href="<?php echo AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=InvoiceRemoveCoupon&amp;invoice=' . $InvoiceFactory->invoice . '&amp;coupon_code=' . $coupon['code'] ); ?>" title="<?php echo _CHECKOUT_INVOICE_COUPON_REMOVE; ?>"><?php echo _CHECKOUT_INVOICE_COUPON_REMOVE; ?></a>]
-									</td>
-									<td class="<?php echo $coupon['nodirectaction'] ? 'amount_later' : 'amount'; ?>">-<?php echo $coupon['discount'] . ' ' . $InvoiceFactory->payment->currency; ?></td>
-								</tr>
-								<?php
-							}
-						}
-					} ?>
-					<tr class="total">
-						<td class="item"><?php echo _CHECKOUT_INVOICE_TOTAL_AMOUNT; ?></td>
-						<td class="amount">
-							<?php echo $InvoiceFactory->objInvoice->amount . '&nbsp;' . $InvoiceFactory->payment->currency; ?>
+			<?php
+			if ( !empty( $aecConfig->cfg['enable_coupons'] ) ) { ?>
+				<p><?php echo _CHECKOUT_COUPON_INFO; ?></p>
+				<table width="100%" id="couponsbox">
+					<tr>
+						<td class="couponinfo">
+							<strong><?php echo _CHECKOUT_COUPON_CODE; ?></strong>
+						</td>
+					</tr>
+					<tr>
+						<td class="coupondetails">
+							<?php
+							if ( isset( $InvoiceFactory->terms->errors ) ) {
+								foreach ( $InvoiceFactory->terms->errors as $error ) { ?>
+									<div class="couponerror">
+										<p>
+											<strong><?php echo _COUPON_ERROR_PRETEXT; ?></strong>
+											&nbsp;
+											<?php echo $error; ?>
+										</p>
+									</div>
+									<?php
+								}
+							} ?>
+							<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=InvoiceAddCoupon', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+								<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
+								<input type="hidden" name="option" value="<?php echo $option; ?>" />
+								<input type="hidden" name="task" value="InvoiceAddCoupon" />
+								<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice; ?>" />
+								<input type="submit" class="button" value="<?php echo _BUTTON_APPLY; ?>" />
+							</form>
 						</td>
 					</tr>
 				</table>
 				<?php
-				if ( !empty( $aecConfig->cfg['enable_coupons'] ) ) { ?>
-					<p><?php echo _CHECKOUT_COUPON_INFO; ?></p>
-					<table width="100%" id="couponsbox">
-						<tr>
-							<td class="couponinfo">
-								<strong><?php echo _CHECKOUT_COUPON_CODE; ?></strong>
-							</td>
-						</tr>
-						<tr>
-							<td class="coupondetails">
-								<?php
-								if ( isset( $InvoiceFactory->terms->errors ) ) {
-									foreach ( $InvoiceFactory->terms->errors as $error ) { ?>
-										<div class="couponerror">
-											<p>
-												<strong><?php echo _COUPON_ERROR_PRETEXT; ?></strong>
-												&nbsp;
-												<?php echo $error; ?>
-											</p>
-										</div>
-										<?php
-									}
-								} ?>
-								<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=InvoiceAddCoupon', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
-									<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
-									<input type="hidden" name="option" value="<?php echo $option; ?>" />
-									<input type="hidden" name="task" value="InvoiceAddCoupon" />
-									<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice; ?>" />
-									<input type="submit" class="button" value="<?php echo _BUTTON_APPLY; ?>" />
-								</form>
-							</td>
-						</tr>
-					</table>
-					<?php
-				}
-				if ( !empty( $params ) ) { ?>
-					<table width="100%" id="paramsbox">
-						<tr>
-							<td class="append_button">
-								<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=InvoiceAddParams', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
-									<?php echo $params; ?>
-									<input type="hidden" name="option" value="<?php echo $option; ?>" />
-									<input type="hidden" name="task" value="InvoiceAddParams" />
-									<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice; ?>" />
-									<input type="submit" class="button" value="<?php echo _BUTTON_APPEND; ?>" />
-								</form>
-							</td>
-						</tr>
-					</table>
-					<?php
-				} ?>
-			</div>
-			<table width="100%" id="checkoutbox">
-				<tr>
-					<td class="checkout_action">
-						<?php
-						print $var;
-						?>
-					</td>
-				</tr>
-			</table>
-			<table width="100%">
+			}
+			if ( !empty( $params ) ) { ?>
+				<table width="100%" id="paramsbox">
+					<tr>
+						<td class="append_button">
+							<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=InvoiceAddParams', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+								<?php echo $params; ?>
+								<input type="hidden" name="option" value="<?php echo $option; ?>" />
+								<input type="hidden" name="task" value="InvoiceAddParams" />
+								<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice; ?>" />
+								<input type="submit" class="button" value="<?php echo _BUTTON_APPEND; ?>" />
+							</form>
+						</td>
+					</tr>
+				</table>
 				<?php
-				if ( is_object( $InvoiceFactory->pp ) ) {
-					HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $aecConfig->cfg['displayccinfo'] );
-				} ?>
-			</table>
+			} ?>
 		</div>
+		<table width="100%" id="checkoutbox">
+			<tr>
+				<td class="checkout_action">
+					<?php
+					print $var;
+					?>
+				</td>
+			</tr>
+		</table>
+		<table width="100%">
+			<?php
+			if ( is_object( $InvoiceFactory->pp ) ) {
+				HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $aecConfig->cfg['displayccinfo'] );
+			} ?>
+		</table>
 		<?php
 	}
 

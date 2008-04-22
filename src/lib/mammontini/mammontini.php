@@ -30,6 +30,13 @@ class mammonTerms extends eucaObject
 	var $hasTrial	= null;
 
 	/**
+	 * Is it free?
+	 *
+	 * @var bool
+	 */
+	var $free			= null;
+
+	/**
 	 * Remember where the application is at
 	 *
 	 * @var int
@@ -79,14 +86,10 @@ class mammonTerms extends eucaObject
 				$term->set( 'duration', $duration );
 
 				if ( $params[$t.'free'] ) {
-					$cost['free']	= true;
-					$cost['amount']	= '0.00';
+					$term->addCost( '0.00' );
 				} else {
-					$cost['free']	= false;
-					$cost['amount']	= $params[$t.'amount'];
+					$term->addCost( $params[$t.'amount'] );
 				}
-
-				$term->set( 'cost', $cost );
 
 				$this->addTerm( $term );
 				$return = true;
@@ -159,7 +162,14 @@ class mammonTerm extends eucaObject
 	 *
 	 * @var array
 	 */
-	var $cost			= array();
+	var $cost			= null;
+
+	/**
+	 * Is it free?
+	 *
+	 * @var bool
+	 */
+	var $free			= null;
 
 	/**
 	 * Digestible form of term duration
@@ -190,18 +200,58 @@ class mammonTerm extends eucaObject
 	}
 
 	/**
-	 * Adding a cost item, either the root amount, or a discount, will automatically compute the total
+	 * Adding a cost item, either the root amount, or a discount.
+	 * Will automatically compute the total.
 	 *
 	 * @access	public
 	 * @return	string
 	 * @since	1.0
 	 */
-	function addCost( $amount )
+	function addCost( $amount, $info=null )
 	{
-		if ( count( $this->cost ) <= 2 ) {
-			return array( $this->cost[0] );
+		$type = 'cost';
+
+		if ( !empty( $this->cost ) ) {
+			// Delete current total, if exists
+			$cam = count( $this->cost );
+			if ( $cam > 1 ) {
+				unset( $this->cost[$cam] );
+			}
+
+			// Switch this to discount if its negative
+			if ( $amount < 0 ) {
+				$type = 'discount';
+			}
+		}
+
+		$cost = new mammonCost();
+		$cost->set( 'type', $type );
+
+		if ( !empty( $info ) && is_array( $info ) ) {
+			$content = array_merge( array( 'amount' => $amount ), $info );
+
+			$cost->set( 'cost', $content );
 		} else {
-			return $this->cost;
+			$cost->set( 'cost', array( 'amount' => $amount ) );
+		}
+
+		array_push( $this->cost, $cost );
+
+		// Compute value of total cost
+		$total = 0;
+		foreach ( $this->cost as $citem ) {
+			$total += $citem->renderCost();
+		}
+
+		// Set total cost object
+		$cost = new mammonCost();
+		$cost->set( 'type', 'total' );
+		$cost->set( 'cost', array( 'amount' => $total ) );
+
+		array_push( $this->cost, $cost );
+
+		if ( $cost->isFree() ) {
+			$this->free = true;
 		}
 	}
 
@@ -212,29 +262,24 @@ class mammonTerm extends eucaObject
 	 * @return	string
 	 * @since	1.0
 	 */
-	function discount( $amount, $percent=null  )
+	function discount( $amount, $percent=null, $info=null  )
 	{
-		if ( !empty( $amount ) ) {
-			$this->addCost();
-		}
+		// Only apply if its not already free
+		if ( !$this->cost->isFree() ) {
+			// discount amount
+			if ( !empty( $amount ) ) {
+				$am = 0 - $amount;
+				$this->addCost( $am, $info );
+			}
 
-		if ( $this->discount['percent_first'] ) {
-			if ( $this->discount['amount_percent_use'] ) {
-				$amount -= ( ( $amount / 100 ) * $this->discount['amount_percent'] );
-			}
-			if ( $this->discount['amount_use'] ) {
-				$amount -= $this->discount['amount'];
-			}
-		} else {
-			if ( $this->discount['amount_use'] ) {
-				$amount -= $this->discount['amount'];
-			}
-			if ( $this->discount['amount_percent_use'] ) {
-				$amount -= ( ( $amount / 100 ) * $this->discount['amount_percent'] );
+			// discount percentage
+			if ( !empty( $percent ) ) {
+				$total = $this->cost->renderTotal();
+
+				$am = 0 - ( ( $total / 100 ) * $percent );
+				$this->addCost( $am, $info );
 			}
 		}
-
-		return $this->duration;
 	}
 
 }
@@ -266,14 +311,7 @@ class mammonCost extends eucaObject
 	var $cost			= array();
 
 	/**
-	 * Is it free?
-	 *
-	 * @var bool
-	 */
-	var $free			= null;
-
-	/**
-	 * Human Readable form of term cost
+	 * Simple amount return
 	 *
 	 * @access	public
 	 * @return	string
@@ -281,7 +319,35 @@ class mammonCost extends eucaObject
 	 */
 	function renderCost()
 	{
-		return $this->cost;
+		return $this->cost['amount'];
+	}
+
+	/**
+	 * Simple total return
+	 *
+	 * @access	public
+	 * @return	string
+	 * @since	1.0
+	 */
+	function renderTotal()
+	{
+		return $this->cost[count($this->cost)]->renderCost();
+	}
+
+	/**
+	 * Returns true if this costs nothing
+	 *
+	 * @access	public
+	 * @return	string
+	 * @since	1.0
+	 */
+	function isFree()
+	{
+		if ( $this->renderCost() <= 0 ) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
 

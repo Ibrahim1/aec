@@ -8213,6 +8213,27 @@ class couponsHandler extends eucaObject
 					// Coupon approved, checking restrictions
 					$cph->checkRestrictions( $metaUser );
 					if ( $cph->status ) {
+						if ( $cph->discount['useon_trial'] && $terms->hasTrial ) {
+							$current = 0;
+						}
+
+		if ( $cph->discount['percent_first'] ) {
+			if ( $cph->discount['amount_percent_use'] ) {
+				$amount -= ( ( $amount / 100 ) * $cph->discount['amount_percent'] );
+			}
+			if ( $cph->discount['amount_use'] ) {
+				$amount -= $cph->discount['amount'];
+			}
+		} else {
+			if ( $cph->discount['amount_use'] ) {
+				$amount -= $cph->discount['amount'];
+			}
+			if ( $cph->discount['amount_percent_use'] ) {
+				$amount -= ( ( $amount / 100 ) * $cph->discount['amount_percent'] );
+				$terms->terms[$current]
+			}
+		}
+
 						$amount = $cph->applyCoupon( $amount );
 						$applied_coupons[] = $coupon_code;
 						$global_nomix = array_merge( $global_nomix, $nomix );
