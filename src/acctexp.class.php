@@ -2097,7 +2097,7 @@ class XMLprocessor extends processor
 
 				if ( count( $params['params'] ) > 2 ) {
 					$table = 1;
-					$return .= '<table>';
+					$return .= '<table id="aec_checkout_params">';
 				} else {
 					$table = 0;
 				}
@@ -4449,7 +4449,8 @@ class InvoiceFactory
 			}
 		}
 
-		if ( ( empty( $amount ) || ( $amount == '0.00') ) && !$this->recurring ) {
+		// Either this is fully free, or the next term is free and this is non recurring
+		if ( ( $this->terms->free ) || $this->terms->terms[$this->terms->pointer]->cost->isFree() && !$this->recurring ) {
 			$this->objInvoice->pay();
 			thanks ( $option, $this->renew, 1 );
 			return;

@@ -428,14 +428,18 @@ width: 100%;
 td.couponinfo {
 text-align: center;
 background-color: #eee;
+border-bottom: 2px solid #aaa;
+padding: 2px !important;
 }
 
 td.coupondetails {
 text-align: center;
+padding: 4px !important;
 }
 
 table#couponsbox {
 background-color: #ddd;
+border-collapse: collapse;
 }
 
 table#paramsbox {
@@ -446,6 +450,15 @@ background-color: #ddd;
 table#checkoutbox {
 margin-top: 24px;
 background-color: #ded;
+border-collapse: collapse;
+}
+
+table#checkoutbox th {
+text-align: center;
+background-color: #eee;
+border-bottom: 2px solid #aaa;
+padding: 2px !important;
+font-weight: bold;
 }
 
 td.checkout_action {
@@ -491,6 +504,7 @@ background-color: #ddd;
 	clear: both;
 	display:block;
 	float:right;
+	margin: 6px;
 }
 
 table#aec_checkout {
@@ -509,7 +523,15 @@ padding: 2px !important;
 }
 
 tr.aec_term_typerow {
-background-color: #fee;
+background-color: #eef;
+text-indent: 12px;
+border-bottom: 2px solid #aad;
+}
+
+tr.aec_term_typerow th {
+padding: 3px !important;
+padding-top: 5px !important;
+font-size: 110%;
 }
 
 tr.aec_term_costrow {
@@ -547,6 +569,15 @@ padding-right: 4px !important;
 text-align: right;
 font-weight: bold;
 text-decoration: underline;
+}
+
+
+table#aec_checkout_params {
+width: 90%;
+padding: 8px 4px;
+margin: 8px 5% 4px 5%;
+background-color: #fff;
+border: 1px solid #aaa;
 }
 
 

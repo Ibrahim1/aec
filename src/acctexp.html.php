@@ -746,10 +746,13 @@ class Payment_HTML
 				foreach ( $terms as $tid => $term ) {
 					$ttype = 'aec_termtype_' . $term->type;
 
-					$current = ( $tid == $terms->pointer ) ? ' current_period' : '';
+					//$future = ( $tid > $InvoiceFactory->terms->pointer ) ? '&nbsp;('._AEC_CHECKOUT_FUTURETERM.')' : '';
+					$applicable = ( $tid >= $InvoiceFactory->terms->pointer ) ? '' : '&nbsp;('._AEC_CHECKOUT_NOTAPPLICABLE.')';
+
+					$current = ( $tid == $InvoiceFactory->terms->pointer ) ? ' current_period' : '';
 
 					// Headline - What type is this term
-					echo '<tr class="aec_term_typerow' . $current . '"><th colspan="2" class="' . $ttype . '">' . constant( strtoupper( '_' . $ttype ) ) . '</th></tr>';
+					echo '<tr class="aec_term_typerow' . $current . '"><th colspan="2" class="' . $ttype . '">' . constant( strtoupper( '_' . $ttype ) ) . $applicable . '</th></tr>';
 					// Subheadline - specify the details of this term
 					echo '<tr class="aec_term_durationrow' . $current . '"><td colspan="2" class="aec_term_duration">' . _AEC_CHECKOUT_DURATION . ': ' . $term->renderDuration() . '</td></tr>';
 
@@ -837,6 +840,7 @@ class Payment_HTML
 				<?php
 			} ?>
 		<table width="100%" id="checkoutbox">
+			<tr><th><?php echo _CHECKOUT_TITLE; ?></th></tr>
 			<tr>
 				<td class="checkout_action">
 					<?php

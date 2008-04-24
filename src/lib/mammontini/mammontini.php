@@ -273,7 +273,7 @@ class mammonTerm extends eucaObject
 			$cost->set( 'cost', array( 'amount' => $amount ) );
 		}
 
-		array_push( $this->cost, $cost );
+		$this->cost[count($this->cost)] = $cost;
 
 		// Compute value of total cost
 		$total = 0;
@@ -290,7 +290,7 @@ class mammonTerm extends eucaObject
 			$this->free = true;
 		}
 
-		array_push( $this->cost, $cost );
+		$this->cost[count($this->cost)] = $cost;
 	}
 
 	/**
@@ -331,7 +331,7 @@ class mammonTerm extends eucaObject
 	 */
 	function renderTotal()
 	{
-		$max = count($this->cost) - 1;
+		$max = count( $this->cost ) - 1;
 		return $this->cost[$max]->renderCost();
 	}
 
