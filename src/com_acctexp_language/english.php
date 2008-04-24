@@ -148,6 +148,25 @@ define( '_CHECKOUT_INVOICE_COUPON_REMOVE', 'remove');
 define( '_CHECKOUT_INVOICE_TOTAL_AMOUNT', 'Total Amount');
 define( '_CHECKOUT_COUPON_INFO', 'If you have a coupon code, you can enter it here to get a discount on your payment');
 
+define( '_AEC_TERMTYPE_TRIAL', 'Trial');
+define( '_AEC_TERMTYPE_TERM', 'Regular Billing Term');
+define( '_AEC_CHECKOUT_TERM', 'Billing Term');
+define( '_AEC_CHECKOUT_COST', 'Cost');
+define( '_AEC_CHECKOUT_DISCOUNT', 'Discount');
+define( '_AEC_CHECKOUT_TOTAL', 'Total');
+define( '_AEC_CHECKOUT_DURATION', 'Duration');
+
+define( '_AEC_CHECKOUT_DUR_LIFETIME', 'Lifetime');
+
+define( '_AEC_CHECKOUT_DUR_DAY', 'Day');
+define( '_AEC_CHECKOUT_DUR_DAYS', 'Days');
+define( '_AEC_CHECKOUT_DUR_WEEK', 'Week');
+define( '_AEC_CHECKOUT_DUR_WEEKS', 'Weeks');
+define( '_AEC_CHECKOUT_DUR_MONTH', 'Month');
+define( '_AEC_CHECKOUT_DUR_MONTHS', 'Months');
+define( '_AEC_CHECKOUT_DUR_YEAR', 'Year');
+define( '_AEC_CHECKOUT_DUR_YEARS', 'Years');
+
 // --== ALLOPASS SPECIFIC ==--
 define( '_REGTITLE','INSCRIPTION');
 define( '_ERRORCODE','Erreur de code Allopass');

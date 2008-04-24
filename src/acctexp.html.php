@@ -677,6 +677,8 @@ class Payment_HTML
 
 		HTML_frontend::aec_styling( $option );
 
+		$terms = $InvoiceFactory->terms->getTerms();
+
 		$introtext = '_CHECKOUT_INFO' . ( $repeat ? '_REPEAT' : '' );
 		?>
 
@@ -741,21 +743,24 @@ class Payment_HTML
 
 			<table id="aec_checkout">
 			<?php
-				foreach ( $invoiceFactory->terms->getTerms() as $term ) {
-					$ttype = 'aec_termtype_' . $term;
+				foreach ( $terms as $tid => $term ) {
+					$ttype = 'aec_termtype_' . $term->type;
+
+					$current = ( $tid == $terms->pointer ) ? ' current_period' : '';
 
 					// Headline - What type is this term
-					echo '<tr><th colspan="2" class="' . $ttype . '">' . constant( strtoupper( $ttype ) ) . '</th></tr>';
+					echo '<tr class="aec_term_typerow' . $current . '"><th colspan="2" class="' . $ttype . '">' . constant( strtoupper( '_' . $ttype ) ) . '</th></tr>';
 					// Subheadline - specify the details of this term
-					echo '<tr><td colspan="2" class="aec_term_duration">' . _AEC_CHECKOUT_DURATION . ': ' . $term->renderDuration() . '</td></tr>';
+					echo '<tr class="aec_term_durationrow' . $current . '"><td colspan="2" class="aec_term_duration">' . _AEC_CHECKOUT_DURATION . ': ' . $term->renderDuration() . '</td></tr>';
 
 					// Iterate through costs
 					foreach ( $term->renderCost() as $citem ) {
-						$t = constant( strtoupper( 'aec_checkout_' . $citem->type ) );
+						$t = constant( strtoupper( '_aec_checkout_' . $citem->type ) );
 						$c = $citem->cost['amount'];
 
 						switch ( $citem->type ) {
 							case 'discount':
+								$ta = $t . '&nbsp;(' . $citem->cost['details'] . ')';
 								$ta .= '&nbsp;[<a href="'
 									. AECToolbox::deadsureURL( '/index.php?option=' . $option
 									. '&amp;task=InvoiceRemoveCoupon&amp;invoice=' . $InvoiceFactory->invoice
@@ -770,8 +775,11 @@ class Payment_HTML
 							default: break;
 						}
 
-						echo '<tr><td class="aec_term_costtitle">' . $t . ':' . '</td><td class="aec_term_costamount">' . $c . '</td></tr>';
+						echo '<tr class="aec_term_' . $citem->type . 'row' . $current . '"><td class="aec_term_' . $citem->type . 'title">' . $t . ':' . '</td><td class="aec_term_' . $citem->type . 'amount">' . $c . '</td></tr>';
 					}
+
+					// Draw Separator Line
+					echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
 				}
 			?>
 			</table>
@@ -788,8 +796,8 @@ class Payment_HTML
 					<tr>
 						<td class="coupondetails">
 							<?php
-							if ( isset( $InvoiceFactory->terms->errors ) ) {
-								foreach ( $InvoiceFactory->terms->errors as $error ) { ?>
+							if ( isset( $terms->errors ) ) {
+								foreach ( $terms->errors as $error ) { ?>
 									<div class="couponerror">
 										<p>
 											<strong><?php echo _COUPON_ERROR_PRETEXT; ?></strong>
@@ -828,7 +836,6 @@ class Payment_HTML
 				</table>
 				<?php
 			} ?>
-		</div>
 		<table width="100%" id="checkoutbox">
 			<tr>
 				<td class="checkout_action">
@@ -844,6 +851,7 @@ class Payment_HTML
 				HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $aecConfig->cfg['displayccinfo'] );
 			} ?>
 		</table>
+		</div>
 		<?php
 	}
 

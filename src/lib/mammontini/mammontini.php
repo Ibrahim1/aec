@@ -34,7 +34,7 @@ class mammonTerms extends eucaObject
 	 *
 	 * @var bool
 	 */
-	var $free			= null;
+	var $free		= null;
 
 	/**
 	 * Remember where the application is at
@@ -106,6 +106,20 @@ class mammonTerms extends eucaObject
 	 * @return	boolean	True on success
 	 * @since	1.0
 	 */
+	function incrementPointer()
+	{
+		if ( $this->pointer < ( count( $this->terms ) - 1 ) ) {
+			$this->pointer++;
+		}
+	}
+
+	/**
+	 * add Term to Terms Array
+	 *
+	 * @access	public
+	 * @return	boolean	True on success
+	 * @since	1.0
+	 */
 	function addTerm( $term )
 	{
 		array_push( $this->terms, $term );
@@ -162,14 +176,14 @@ class mammonTerm extends eucaObject
 	 *
 	 * @var array
 	 */
-	var $cost			= null;
+	var $cost			= array();
 
 	/**
 	 * Is it free?
 	 *
 	 * @var bool
 	 */
-	var $free			= null;
+	var $free			= false;
 
 	/**
 	 * Digestible form of term duration
@@ -180,7 +194,30 @@ class mammonTerm extends eucaObject
 	 */
 	function renderDuration()
 	{
-		return $this->duration;
+		if ( isset( $this->duration['lifetime'] ) ) {
+			return _AEC_CHECKOUT_DUR_LIFETIME;
+		} else {
+			switch ( $this->duration['unit'] ) {
+				case 'D':
+					$unit = 'day';
+					break;
+				case 'W':
+					$unit = 'week';
+					break;
+				case 'M':
+					$unit = 'month';
+					break;
+				case 'Y':
+					$unit = 'year';
+					break;
+			}
+
+			if ( $this->duration['period'] > 1 ) {
+				$unit .= 's';
+			}
+
+			return $this->duration['period'] . ' ' . constant( strtoupper( '_aec_checkout_dur_' . $unit ) );
+		}
 	}
 
 	/**
@@ -209,19 +246,20 @@ class mammonTerm extends eucaObject
 	 */
 	function addCost( $amount, $info=null )
 	{
-		$type = 'cost';
-
 		if ( !empty( $this->cost ) ) {
 			// Delete current total, if exists
-			$cam = count( $this->cost );
-			if ( $cam > 1 ) {
-				unset( $this->cost[$cam] );
+			foreach( $this->cost as $cid => $cost ) {
+				if ( $cost->type == 'total' ) {
+					unset( $this->cost[$cid] );
+				}
 			}
+		}
 
-			// Switch this to discount if its negative
-			if ( $amount < 0 ) {
-				$type = 'discount';
-			}
+		// Switch this to discount if its negative
+		if ( $amount < 0 ) {
+			$type = 'discount';
+		} else {
+			$type = 'cost';
 		}
 
 		$cost = new mammonCost();
@@ -248,11 +286,11 @@ class mammonTerm extends eucaObject
 		$cost->set( 'type', 'total' );
 		$cost->set( 'cost', array( 'amount' => $total ) );
 
-		array_push( $this->cost, $cost );
-
 		if ( $cost->isFree() ) {
 			$this->free = true;
 		}
+
+		array_push( $this->cost, $cost );
 	}
 
 	/**
@@ -265,21 +303,36 @@ class mammonTerm extends eucaObject
 	function discount( $amount, $percent=null, $info=null  )
 	{
 		// Only apply if its not already free
-		if ( !$this->cost->isFree() ) {
+		if ( !$this->free ) {
 			// discount amount
 			if ( !empty( $amount ) ) {
 				$am = 0 - $amount;
+				$am = AECToolbox::correctAmount( $am );
 				$this->addCost( $am, $info );
 			}
 
 			// discount percentage
 			if ( !empty( $percent ) ) {
-				$total = $this->cost->renderTotal();
+				$total = $this->renderTotal();
 
 				$am = 0 - ( ( $total / 100 ) * $percent );
+				$am = AECToolbox::correctAmount( $am );
 				$this->addCost( $am, $info );
 			}
 		}
+	}
+
+	/**
+	 * Simple total return
+	 *
+	 * @access	public
+	 * @return	string
+	 * @since	1.0
+	 */
+	function renderTotal()
+	{
+		$max = count($this->cost) - 1;
+		return $this->cost[$max]->renderCost();
 	}
 
 }
@@ -320,18 +373,6 @@ class mammonCost extends eucaObject
 	function renderCost()
 	{
 		return $this->cost['amount'];
-	}
-
-	/**
-	 * Simple total return
-	 *
-	 * @access	public
-	 * @return	string
-	 * @since	1.0
-	 */
-	function renderTotal()
-	{
-		return $this->cost[count($this->cost)]->renderCost();
 	}
 
 	/**

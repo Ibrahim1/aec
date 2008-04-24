@@ -1800,7 +1800,7 @@ class PaymentProcessor
 			}
 		}
 
-		$request = new stdObject();
+		$request = new stdClass();
 		$request->parent			&= $this;
 		$request->int_var			&= $int_var;
 		$request->metaUser			&= $metaUser;
@@ -1822,7 +1822,7 @@ class PaymentProcessor
 			}
 		}
 
-		$request = new stdObject();
+		$request = new stdClass();
 		$request->parent			&= $this;
 		$request->int_var			&= $int_var;
 		$request->metaUser			&= $metaUser;
@@ -1841,7 +1841,7 @@ class PaymentProcessor
 		$method = 'customaction_' . $action;
 
 		if ( method_exists( $this->processor, $method ) ) {
-			$request = new stdObject();
+			$request = new stdClass();
 			$request->parent			&= $this;
 			$request->metaUser			&= $metaUser;
 			$request->invoice			&= $invoice;
@@ -4396,9 +4396,17 @@ class InvoiceFactory
 
 		$params = $this->objUsage->getParams();
 
-		if ( ( strcmp( strtolower( $this->processor ), 'none' ) === 0 ) || ( strcmp( strtolower( $this->processor ), 'free' ) === 0 ) ) {
-		 	if ( !empty( $this->objInvoice->made_free ) || $params['full_free'] || ( $params['trial_free'] &&
-		 	( strcmp( $this->objInvoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) ) ) {
+		$exceptproc = array( 'none', 'free' );
+
+		// If this is marked as supposedly free
+		if ( in_array( strtolower( $this->processor ), $exceptproc ) ) {
+		 	// And if it is either made free through coupons
+		 	if ( !empty( $this->objInvoice->made_free )
+		 		// Or a free full period that the user CAN use
+		 		|| ( $params['full_free'] && $this->objInvoice->counter )
+		 		// Or a free trial that the user CAN use
+		 		|| ( $params['trial_free'] && empty( $this->objInvoice->counter ) ) ) {
+				// Then mark payed
 				if ( $this->objInvoice->pay() !== false ) {
 					thanks ( $option, $this->renew, 1 );
 				}
@@ -4410,26 +4418,22 @@ class InvoiceFactory
 		 	notAllowed( $option );
 		}
 
-		$first = $repeat ? 0 : 1;
-
 		if ( !empty( $this->pp->info['secure'] ) && !( $_SERVER['HTTPS'] == 'on' ) && !$aecConfig->cfg['override_reqssl'] ) {
-		    mosRedirect( AECToolbox::deadsureURL( "/index.php?option=" . $option . "&task=repeatPayment&invoice=" . $this->objInvoice->invoice_number . "&first=" . $first, true, false ) );
+		    mosRedirect( AECToolbox::deadsureURL( "/index.php?option=" . $option . "&task=repeatPayment&invoice=" . $this->objInvoice->invoice_number . "&first=" . ( $repeat ? 0 : 1 ), true, false ) );
 		    exit();
 		};
 
 		$this->terms = new mammonTerms();
 		$this->terms->readParams( $params );
 
-		$c = $this->doPlanComparison( $this->metaUser->objSubscription );
+		$c = $this->objUsage->doPlanComparison( $this->metaUser->objSubscription );
 
 		// Do not allow a Trial if the user has used this or a similar plan
-		if ( $this->terms->hasTrial && ( ( $c['comparison'] === false ) && ( $c['total_comparison'] === false ) ) ) {
-
+		if ( $this->terms->hasTrial && !( ( $c['comparison'] === false ) && ( $c['total_comparison'] === false ) ) ) {
+			$this->terms->incrementPointer();
 		}
 
-		$amount				= $this->objUsage->SubscriptionAmount( $this->recurring, $this->metaUser->objSubscription );
-		$original_amount	= $amount;
-		$warning			= 0;
+		$amount = $this->objUsage->SubscriptionAmount( $this->recurring, $this->metaUser->objSubscription );
 
 		if ( !empty( $aecConfig->cfg['enable_coupons'] ) && !empty( $this->objInvoice->coupons ) ) {
 			$coupons = explode( ';', $this->objInvoice->coupons );
@@ -4438,57 +4442,10 @@ class InvoiceFactory
 
 			$this->terms = $cpsh->applyCouponsToTerms( $this->terms, $coupons, $this->metaUser );
 
-			if ( count( $cpsh->getErrors() ) ) {
-				$this->terms->errors = $cpsh->getErrors();
-			}
+			$cpsh_err = $cpsh->getErrors();
 
-			$this->coupons['coupons'] = array();
-
-			$applied_coupons = array();
-			$global_nomix = array();
-			foreach ( $coupons as $id => $coupon_code ) {
-				$cph = new couponHandler();
-				$cph->load( $coupon_code );
-
-				if ( $cph->restrictions['restrict_combination'] ) {
-					$nomix = explode( ';', $cph->restrictions['bad_combinations'] );
-				} else {
-					$nomix = array();
-				}
-
-				if ( count( array_intersect( $applied_coupons, $nomix ) ) || in_array( $coupon_code, $global_nomix ) ) {
-					// This coupon either interferes with one of the coupons already applied, or the other way round
-					$cph->setError( _COUPON_ERROR_COMBINATION );
-				} else {
-					$cph->getInfo( $amount );
-					$cph->checkRestrictions( $this->metaUser, $original_amount, $this );
-
-					if ( $cph->status ) {
-						$this->coupons['coupons'][$id]['code']		= $cph->code;
-						$this->coupons['coupons'][$id]['name']		= $cph->name;
-						$this->coupons['coupons'][$id]['discount']	= AECToolbox::correctAmount( $cph->discount_amount );
-						$this->coupons['coupons'][$id]['action']	= $cph->action;
-						$this->coupons['coupons'][$id]['nodirectaction'] = 0;
-
-						$applied_coupons[] = $coupon_code;
-						$global_nomix = array_merge( $global_nomix, $nomix );
-
-						$amount = AECToolbox::correctAmount( $cph->amount );
-					}
-				}
-
-				if ( !$cph->status ) {
-					// Set Error
-					$this->coupons['error']		= 1;
-					$this->coupons['errormsg']	= $cph->error;
-					// Remove Coupon
-					$this->objInvoice->removeCoupon( $coupon_code );
-					// Recalculate Amount
-					$this->objInvoice->computeAmount();
-					// Check and store
-					$this->objInvoice->check();
-					$this->objInvoice->store();
-				}
+			if ( count( $cpsh_err ) ) {
+				$this->terms->errors = $cpsh_err;
 			}
 		}
 
@@ -4679,6 +4636,10 @@ class Invoice extends paramDBTable
 	function Invoice(&$db)
 	{
 		$this->mosDBTable( '#__acctexp_invoices', 'id', $db );
+
+		if ( empty( $this->counter ) && ( $this->transaction_date != '0000-00-00 00:00:00' ) ) {
+			$this->counter = 1;
+		}
 	}
 
 	function check()
@@ -5263,7 +5224,7 @@ class Invoice extends paramDBTable
 		if ( ( strcmp( $this->transaction_date, '0000-00-00 00:00:00' ) === 0 )
 			|| empty( $tdate )
 			|| ( $time_passed > $aecConfig->cfg['invoicecushion'] ) ) {
-			$this->counter = $this->counter + 1;
+			$this->counter += 1;
 			$this->transaction_date	= $transaction_date;
 
 			$transactions = $this->getParams( 'transactions' );
@@ -7873,7 +7834,7 @@ class microIntegration extends paramDBTable
 		}
 	}
 
-	function action( $metaUser, $exchange=null, $invoice=null, $objplan=null, $stage )
+	function action( $metaUser, $exchange=null, $invoice=null, $objplan=null )
 	{
 		return $this->relayAction( $metaUser, $exchange, $invoice, $objplan, 'action' );
 	}
@@ -8230,13 +8191,6 @@ class couponsHandler extends eucaObject
 					// Coupon not approved, thus it needs to be deleted later on
 					// Set Error
 					$this->setError( $cph->error );
-					// Remove Coupon
-					$this->objInvoice->removeCoupon( $coupon_code );
-					// Recalculate Amount
-					$this->objInvoice->computeAmount();
-					// Check and store
-					$this->objInvoice->check();
-					$this->objInvoice->store();
 				}
 			}
 		}
@@ -8261,33 +8215,43 @@ class couponsHandler extends eucaObject
 
 			if ( count( array_intersect( $applied_coupons, $nomix ) ) || in_array( $coupon_code, $global_nomix ) ) {
 				// This coupon either interferes with one of the coupons already applied, or the other way round
+				$this->setError( _COUPON_ERROR_COMBINATION );
 			} else {
 				if ( $cph->status ) {
 					// Coupon approved, checking restrictions
 					$cph->checkRestrictions( $metaUser );
 					if ( $cph->status ) {
 						if ( $cph->discount['useon_trial'] && $terms->hasTrial && ( $terms->pointer == 0 ) ) {
-							$current = 0;
+							$start = 0;
+						} else {
+							$start = 1;
 						}
 
-		if ( $cph->discount['percent_first'] ) {
-			if ( $cph->discount['amount_percent_use'] ) {
-				$amount -= ( ( $amount / 100 ) * $cph->discount['amount_percent'] );
-			}
-			if ( $cph->discount['amount_use'] ) {
-				$amount -= $cph->discount['amount'];
-			}
-		} else {
-			if ( $cph->discount['amount_use'] ) {
-				$amount -= $cph->discount['amount'];
-			}
-			if ( $cph->discount['amount_percent_use'] ) {
-				$amount -= ( ( $amount / 100 ) * $cph->discount['amount_percent'] );
-				$terms->terms[$current]
-			}
-		}
+						$info = array();
+						$info['coupon'] = $coupon_code;
 
-						$amount = $cph->applyCoupon( $amount );
+						for ( $i = $start; $i < count( $terms->terms ); $i++ ) {
+							if ( $cph->discount['percent_first'] ) {
+								if ( $cph->discount['amount_percent_use'] ) {
+									$info['details'] = '-' . $cph->discount['amount_percent'] . '%';
+									$terms->terms[$i]->discount( null, $cph->discount['amount_percent'], $info );
+								}
+								if ( $cph->discount['amount_use'] ) {
+									$info['details'] = '-' . $cph->discount['amount'];
+									$terms->terms[$i]->discount( $cph->discount['amount'], null, $info );
+								}
+							} else {
+								if ( $cph->discount['amount_use'] ) {
+									$info['details'] = '-' . $cph->discount['amount'];
+									$terms->terms[$i]->discount( $cph->discount['amount'], null, $info );
+								}
+								if ( $cph->discount['amount_percent_use'] ) {
+									$info['details'] = '-' . $cph->discount['amount_percent'] . '%';
+									$terms->terms[$i]->discount( null, $cph->discount['amount_percent'], $info );
+								}
+							}
+						}
+
 						$applied_coupons[] = $coupon_code;
 						$global_nomix = array_merge( $global_nomix, $nomix );
 					} else {
@@ -8295,11 +8259,12 @@ class couponsHandler extends eucaObject
 					}
 				} else {
 					// Coupon not approved, thus it needs to be deleted later on
+					$this->setError( $cph->error );
 				}
 			}
 		}
 
-		return $amount;
+		return $terms;
 	}
 }
 

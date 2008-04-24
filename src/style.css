@@ -349,7 +349,7 @@ width: 90%;
 /* == Styling for the Checkout Page == */
 
 #checkout {
-width: 97%;
+padding: 6px;
 }
 
 #checkout table {
@@ -445,7 +445,7 @@ background-color: #ddd;
 
 table#checkoutbox {
 margin-top: 24px;
-background-color: #ddd;
+background-color: #ded;
 }
 
 td.checkout_action {
@@ -492,6 +492,63 @@ background-color: #ddd;
 	display:block;
 	float:right;
 }
+
+table#aec_checkout {
+width: 80%;
+margin: 10px 10%;
+border-collapse: collapse;
+color: #777;
+}
+
+.current_period {
+color: #000;
+}
+
+table#aec_checkout td {
+padding: 2px !important;
+}
+
+tr.aec_term_typerow {
+background-color: #fee;
+}
+
+tr.aec_term_costrow {
+background-color: #eee;
+}
+
+tr.aec_term_discountrow {
+background-color: #f5f5f5;
+}
+
+tr.aec_term_totalrow {
+background-color: #ddd;
+}
+
+tr.aec_term_row_sep {
+height: 20px;
+}
+
+td.aec_term_costtitle {
+}
+
+td.aec_term_costamount {
+padding-right: 4px !important;
+text-align: right;
+font-weight: bold;
+}
+
+td.aec_term_discountamount {
+padding-right: 4px !important;
+text-align: right;
+}
+
+td.aec_term_totalamount {
+padding-right: 4px !important;
+text-align: right;
+font-weight: bold;
+text-decoration: underline;
+}
+
 
 /* == Styling for the Subscription Details Page == */
 
