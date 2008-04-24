@@ -596,7 +596,7 @@ class Payment_HTML
 					<td><p>
 						<?php
 						if ( ( !empty( $InvoiceFactory->payment->amount ) && ( $InvoiceFactory->payment->amount != '0.00' ) ) && !$InvoiceFactory->payment->freetrial ) {
-							echo $InvoiceFactory->payment->amount . ' ' . $InvoiceFactory->payment->currency; ?>&nbsp;-&nbsp;
+							echo AECToolbox::formatAmount( $InvoiceFactory->payment->amount, $InvoiceFactory->payment->currency); ?>&nbsp;-&nbsp;
 							<?php
 						} elseif ( $InvoiceFactory->payment->freetrial ) {
 							echo _CONFIRM_FREETRIAL . '&nbsp;-&nbsp;';
@@ -759,7 +759,7 @@ class Payment_HTML
 					// Iterate through costs
 					foreach ( $term->renderCost() as $citem ) {
 						$t = constant( strtoupper( '_aec_checkout_' . $citem->type ) );
-						$c = $citem->cost['amount'];
+						$c = AECToolbox::formatAmount( $citem->cost['amount'], $InvoiceFactory->payment->currency );
 
 						switch ( $citem->type ) {
 							case 'discount':
@@ -772,6 +772,19 @@ class Payment_HTML
 									. _CHECKOUT_INVOICE_COUPON_REMOVE . '</a>]';
 
 								$t = $ta;
+
+								// Strip out currency symbol and replace with blanks
+								if ( !$aecConfig['amount_currency_symbolfirst'] ) {
+									if ( $aecConfig['amount_use_comma'] ) {
+										$stripcurr = str_replace( str_replace( ',', '.', $citem->cost['amount'] ), '', $c );
+									} else {
+										$stripcurr = str_replace( $citem->cost['amount'], '', $c );
+									}
+
+									for( $i=0; $i<=strlen($stripcurr);$i++ ) {
+										$c = $c . '&nbsp;';
+									}
+								}
 								break;
 							case 'cost': break;
 							case 'total': break;

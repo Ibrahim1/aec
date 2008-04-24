@@ -1801,6 +1801,9 @@ function editSettings( $option )
 	$params['tos']							= array( 'inputC', '' );
 	$params['display_date_frontend']		= array( 'inputC', '%a, %d %b %Y %T %Z' );
 	$params['display_date_backend']			= array( 'inputC', '%a, %d %b %Y %T %Z' );
+	$params['amount_currency_symbol']		= array( 'list_yesno', 0 );
+	$params['amount_currency_symbolfirst']	= array( 'list_yesno', 0 );
+	$params['amount_use_comma']				= array( 'list_yesno', 0 );
 	$params[] = array( '2div_end', 0 );
 
 	$params[] = array( 'userinfobox', 45 );

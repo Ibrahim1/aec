@@ -733,6 +733,9 @@ class Config_General extends paramDBTable
 		$def['show_fixeddecision']				= 0;
 		$def['confirmation_coupons']			= 0;
 		$def['breakon_mi_error']				= 0;
+		$def['amount_currency_symbol']			= 0;
+		$def['amount_currency_symbolfirst']		= 0;
+		$def['amount_use_comma']				= 0;
 
 		// Insert a new entry if there is none yet
 		if ( empty( $this->settings ) ) {
@@ -4440,7 +4443,7 @@ class InvoiceFactory
 
 			$cpsh = new couponsHandler();
 
-			$this->terms = $cpsh->applyCouponsToTerms( $this->terms, $coupons, $this->metaUser );
+			$this->terms = $cpsh->applyCouponsToTerms( $this->terms, $coupons, $this->metaUser, $amount, $this );
 
 			$cpsh_err = $cpsh->getErrors();
 
@@ -4450,7 +4453,7 @@ class InvoiceFactory
 		}
 
 		// Either this is fully free, or the next term is free and this is non recurring
-		if ( ( $this->terms->free ) || $this->terms->terms[$this->terms->pointer]->cost->isFree() && !$this->recurring ) {
+		if ( $this->terms->free || ( $this->nextterm->free && !$this->recurring ) ) {
 			$this->objInvoice->pay();
 			thanks ( $option, $this->renew, 1 );
 			return;
@@ -6918,6 +6921,38 @@ class AECToolbox
 		}
 	}
 
+	function formatAmount( $amount, $currency ) {
+		global $aecConfig;
+
+		if ( $aecConfig['amount_currency_symbol'] ) {
+			switch ( $currency ) {
+				case 'USD':
+					$currency = '&#036;';
+					break;
+				case 'GBP':
+					$currency = '&pound;';
+					break;
+				case 'EUR':
+					$currency = '&euro;';
+					break;
+				case 'CNY':
+				case 'JPY':
+					$currency = '&yen;';
+					break;
+			}
+		}
+
+		if ( $aecConfig['amount_use_comma'] ) {
+			$amount = str_replace( '.', ',', $amount );
+		}
+
+		if ( $aecConfig['amount_currency_symbolfirst'] ) {
+			return $currency . '&nbsp;' . $amount;
+		} else {
+			return $currency . '&nbsp;' . $amount;
+		}
+	}
+
 	function correctAmount( $amount )
 	{
 		if ( strpos( $amount, '.' ) === 0 ) {
@@ -8180,8 +8215,7 @@ class couponsHandler extends eucaObject
 			} else {
 				if ( $cph->status ) {
 					// Coupon approved, checking restrictions
-					$cph->checkRestrictions( $metaUser );
-					if ( $cph->status ) {
+					if ( $cph->checkRestrictions( $metaUser ) ) {
 						$amount = $cph->applyCoupon( $amount );
 						$applied_coupons[] = $coupon_code;
 						$global_nomix = array_merge( $global_nomix, $nomix );
@@ -8199,7 +8233,7 @@ class couponsHandler extends eucaObject
 		return $amount;
 	}
 
-	function applyCouponsToTerms( $terms, $coupons, $metaUser )
+	function applyCouponsToTerms( $terms, $coupons, $metaUser, $original_amount, $invoiceFactory )
 	{
 		$applied_coupons = array();
 		$global_nomix = array();
@@ -8218,10 +8252,9 @@ class couponsHandler extends eucaObject
 				// This coupon either interferes with one of the coupons already applied, or the other way round
 				$this->setError( _COUPON_ERROR_COMBINATION );
 			} else {
-				if ( $cph->status ) {
+				if ( $cph->status ) {print_r($cph);print_r($original_amount);print_r($invoiceFactory);exit;
 					// Coupon approved, checking restrictions
-					$cph->checkRestrictions( $metaUser );
-					if ( $cph->status ) {
+					if ( $cph->checkRestrictions( $metaUser, $original_amount, $invoiceFactory ) ) {
 						if ( $cph->discount['useon_trial'] && $terms->hasTrial && ( $terms->pointer == 0 ) ) {
 							$start = 0;
 						} else {
@@ -8257,6 +8290,7 @@ class couponsHandler extends eucaObject
 						$global_nomix = array_merge( $global_nomix, $nomix );
 					} else {
 						// Coupon restricted for this user, thus it needs to be deleted later on
+						$this->setError( $cph->error );
 					}
 				} else {
 					// Coupon not approved, thus it needs to be deleted later on

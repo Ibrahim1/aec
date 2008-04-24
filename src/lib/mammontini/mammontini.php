@@ -76,7 +76,7 @@ class mammonTerms extends eucaObject
 					$term->set( 'type', 'term' );
 				}
 
-				if ( $t != 'trial_' && !empty( $params ) ) {
+				if ( $t != 'trial_' && !empty( $params['lifetime'] ) ) {
 					$duration['lifetime']	= true;
 				} else {
 					$duration['period']		= $params[$t.'period'];
@@ -96,6 +96,15 @@ class mammonTerms extends eucaObject
 			}
 		}
 
+		$free = true;
+		foreach ( $this->terms as $term ) {
+			if ( !$term->free ) {
+				$free = false;
+			}
+		}
+
+		$this->free = $free;
+
 		return $return;
 	}
 
@@ -111,6 +120,8 @@ class mammonTerms extends eucaObject
 		if ( $this->pointer < ( count( $this->terms ) - 1 ) ) {
 			$this->pointer++;
 		}
+
+		$this->nextterm &= $this->terms[$this->pointer];
 	}
 
 	/**
