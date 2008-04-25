@@ -1788,6 +1788,7 @@ function editSettings( $option )
 	$params['skip_confirmation']			= array( 'list_yesno', 0 );
 	$params['show_fixeddecision']			= array( 'list_yesno', 0 );
 	$params['confirmation_coupons']			= array( 'list_yesno', 0 );
+	$params['curl_default']					= array( 'list_yesno', 0 );
 	$params[] = array( '2div_end', 0 );
 
 	@end( $params );

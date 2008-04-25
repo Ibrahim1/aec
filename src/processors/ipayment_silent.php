@@ -208,118 +208,13 @@ class processor_ipayment_silent extends XMLprocessor
 			$path .= $this->settings['account_id'] . "/processor.php";
 		}
 
-		$url = "https://ipayment.de" . $path . '?' . $xml;
-echo "<h1>Variablen:</h1>";
-echo '<p>';
-foreach( $request->int_var as $key => $value ) { if ( strpos( $key, '_') === false ) { echo $key . ' = ' . $value . '</p><p>'; } }
-echo '</p>';
-echo "<h1>Rechnung:</h1>";
-echo '<p>';
-foreach( $request->invoice as $key => $value ) { if ( strpos( $key, '_') === false ) { echo $key . ' = ' . $value . '</p><p>'; } }
-echo '</p>';
-echo "<h1>Senden der Daten:</h1>";
-echo '<p>';
-echo $xml;
-echo '</p>';
-echo '<h1>';
-echo "an:";
-echo '</h1>';
-echo '<p>';
-echo $url;
-echo '</p>';
-		$response = $this->transmitRequest( $url, $path, $xml, 443 );
+		$url = "https://ipayment.de" . $path;
 
-/**
- * 	function transmitRequest( $url, $path, $content, $port=443, $curlextra=null )
-	{
-		$response = null;
+		$curl_calls[CURLOPT_HEADER]		= false;
+		$curl_calls[CURLOPT_HTTPHEADER]	= '[[unset]]';
 
-		$response = $this->doTheCurl( $url, $content, $curlextra );
-		if ( !$response ) {
-			// If curl doesn't work try using fsockopen
-			$response = $this->doTheHttp( $url, $path, $content, $port );
-		}
+		$response = $this->transmitRequest( $url, $path, $xml, 443, $curl_calls );
 
-		return $response;
-	}
-
-		function doTheHttp( $url, $path, $content, $port=443 )
-	{
-		$header  =	"Host: " . $url  . "\r\n"
-					. "User-Agent: PHP Script\r\n"
-					. "Content-Type: text/xml\r\n"
-					. "Content-Length: " . strlen($content) . "\r\n\r\n"
-					. "Connection: close\r\n\r\n";
-					;
-		$connection = fsockopen( $url, $port, $errno, $errstr, 30 );
-
-		if ( !$connection ) {
-			return false;
-		} else {
-			fwrite( $connection, "POST " . $path . " HTTP/1.1\r\n" );
-			fwrite( $connection, $header . $content );
-
-			while ( !feof( $connection ) ) {
-				$res = fgets( $connection, 1024 );
-				if ( strcmp( $res, 'VERIFIED' ) == 0 ) {
-					return true;
-				} elseif ( strcmp( $res, 'INVALID' ) == 0 ) {
-					return false;
-				}
-			}
-			fclose( $connection );
-		}
-		return false;
-	}
-
-	function doTheCurl( $url, $content, $curlextra )
-	{
-		if ( empty( $curlextra ) ) {
-			$curlextra = array();
-		}
-
-		$ch = curl_init();
-
-		// Preparing CURL variables as array, to possibly overwrite them with custom settings by the processor
-		$curl_calls = array();
-		$curl_calls[CURLOPT_URL]			= $url;
-		$curl_calls[CURLOPT_RETURNTRANSFER]	= 1;
-		$curl_calls[CURLOPT_HTTPHEADER]		= array( 'Content-Type: text/xml' );
-		$curl_calls[CURLOPT_HEADER]			= 1;
-		$curl_calls[CURLOPT_POST]			= 1;
-		$curl_calls[CURLOPT_POSTFIELDS]		= $content;
-		$curl_calls[CURLOPT_SSL_VERIFYPEER]	= false;
-		$curl_calls[CURLOPT_SSL_VERIFYHOST]	= false;
-
-		// Set Curl params, replacing them with extra values
-		foreach( $curl_calls as $name => $value ) {
-			if ( isset( $curlextra[$name] ) ) {
-				curl_setopt( $ch, $name, $curlextra[$name] );
-				unset( $curlextra[$name] );
-			} else {
-				curl_setopt( $ch, $name, $value );
-			}
-		}
-
-		// Add Curl params that were not set yet
-		if ( !empty( $curlextra ) ) {
-			foreach( $curlextra as $name => $value ) {
-				curl_setopt( $ch, $name, $value );
-			}
-		}
-
-		$response = curl_exec( $ch );
-		curl_close( $ch );
-
-		return $response;
-	}
-
- */
-
-echo '<h1>R&uuml;ckmeldung:</h1>';
-echo '<p>';
-echo $response;
-echo '</p>';
 		$return['valid'] = false;
 		$return['raw'] = $response;
 
@@ -347,22 +242,7 @@ echo '</p>';
 				$return['valid'] = 0;
 			}
 		}
-echo '<h1>Resultat:</h1>';
-echo '<p>';
-foreach( $return as $key => $value ) { if ( strpos( $key, '_') === false ) { echo $key . ' = ' . $value . '</p><p>'; } }
-echo '</p>';
-echo '<h1>Formular:</h1>';
-echo '<form action="' . "https://ipayment.de" . $path . '" method="post" >Formular:</h1>';
 
-$p = explode( '&', $xml );
-
-foreach ( $p as $c ) {
-	$cc = explode( '=', $c );
-	echo '<input type="hidden" name="' . $cc[0] . '" value="' . $cc[1] . '" />';
-}
-echo '<input type="submit">';
-echo '</form>';
-exit;
 		return $return;
 	}
 
