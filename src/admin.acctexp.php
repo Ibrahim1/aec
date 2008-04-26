@@ -446,7 +446,7 @@ switch( strtolower( $task ) ) {
 		saveCoupon( $option, 1 );
 		break;
 
-	case 'appplycouponstatic':
+	case 'applycouponstatic':
 		saveCoupon( $option, 1, 1 );
 		break;
 
