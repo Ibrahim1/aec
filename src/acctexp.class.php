@@ -6946,10 +6946,10 @@ class AECToolbox
 	function formatAmount( $amount, $currency ) {
 		global $aecConfig;
 
-		if ( $aecConfig['amount_currency_symbol'] ) {
+		if ( !empty( $aecConfig->cfg['amount_currency_symbol'] ) ) {
 			switch ( $currency ) {
 				case 'USD':
-					$currency = '&#036;';
+					$currency = '$';
 					break;
 				case 'GBP':
 					$currency = '&pound;';
@@ -6964,11 +6964,11 @@ class AECToolbox
 			}
 		}
 
-		if ( $aecConfig['amount_use_comma'] ) {
+		if ( $aecConfig->cfg['amount_use_comma'] ) {
 			$amount = str_replace( '.', ',', $amount );
 		}
 
-		if ( $aecConfig['amount_currency_symbolfirst'] ) {
+		if ( $aecConfig->cfg['amount_currency_symbolfirst'] ) {
 			return $currency . '&nbsp;' . $amount;
 		} else {
 			return $currency . '&nbsp;' . $amount;
@@ -8274,7 +8274,7 @@ class couponsHandler extends eucaObject
 				// This coupon either interferes with one of the coupons already applied, or the other way round
 				$this->setError( _COUPON_ERROR_COMBINATION );
 			} else {
-				if ( $cph->status ) {print_r($cph);print_r($original_amount);print_r($invoiceFactory);exit;
+				if ( $cph->status ) {//print_r($cph);print_r($original_amount);print_r($invoiceFactory);exit;
 					// Coupon approved, checking restrictions
 					if ( $cph->checkRestrictions( $metaUser, $original_amount, $invoiceFactory ) ) {
 						if ( $cph->discount['useon_trial'] && $terms->hasTrial && ( $terms->pointer == 0 ) ) {

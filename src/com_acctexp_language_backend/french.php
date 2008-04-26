@@ -714,6 +714,15 @@ define( '_CFG_GENERAL_CONFIRMATION_COUPONS_DESC', 'Offer to provide coupon codes
 define( '_CFG_GENERAL_BREAKON_MI_ERROR_NAME', 'Break on MI Error');
 define( '_CFG_GENERAL_BREAKON_MI_ERROR_DESC', 'Stop plan application if one of its attached MIs encounters an error (there will be trace in the eventlog either way)');
 
+define( '_CFG_GENERAL_CURL_DEFAULT_NAME', 'Use cURL');
+define( '_CFG_GENERAL_CURL_DEFAULT_DESC', 'Use cURL instead of fsockopen as default (will fall back to the other one if the first choice fails)');
+define( '_CFG_GENERAL_AMOUNT_CURRENCY_SYMBOL_NAME', 'Currency Symbol');
+define( '_CFG_GENERAL_AMOUNT_CURRENCY_SYMBOL_DESC', 'Display a currency symbol (if one exists) instead of the ISO abbreviation');
+define( '_CFG_GENERAL_AMOUNT_CURRENCY_SYMBOLFIRST_NAME', 'Currency first');
+define( '_CFG_GENERAL_AMOUNT_CURRENCY_SYMBOLFIRST_DESC', 'Display the currency in front of the amount');
+define( '_CFG_GENERAL_AMOUNT_USE_COMMA_NAME', 'Use Comma');
+define( '_CFG_GENERAL_AMOUNT_USE_COMMA_DESC', 'Use a comma instead of a dot in amounts');
+
 // Global Micro Integration Settings
 define( '_CFG_TAB_MICROINTEGRATION_TITLE', 'MicroIntegr');
 define( '_CFG_TAB_MICROINTEGRATION_SUBTITLE', 'Micro Integrations');

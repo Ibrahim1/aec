@@ -1325,7 +1325,7 @@ color: #333;
 <li>Better library handling that only calls in stuff that php4 needs to keep up with php5 (for a while!)</li>
 <li class="check">Fix Situation that would turn up a fatal error when skipping confirmation in 1.5</li>
 <li>Bug that will put extra escapes in the email text, description and name of a payment plan</li>
-<li class="check">Applying a payment plan (instead of saving it) sometimes loads a different plan afterwards</li>
+<li>Applying a payment plan (instead of saving it) sometimes loads a different plan afterwards</li>
 <li>Canceling or Expiring from a subscription is now double checked not to affect the root, but secondary subscription</li>
 <li>MySubscription page now showing processor name instead of short name</li>
 <li class="check">Fixing a warning on registration/subscription hybrid when confirmation is skipped and the signup is new</li>
@@ -1334,7 +1334,7 @@ color: #333;
 <li class="check">Make sure that coupons are applied on rebills (for now done via disabling amount verification on rebills)</li>
 <li class="check">Correct intl language calling on J!1.5</li>
 <li class="check">Cancel function no longer sets expiration date in the past</li>
-<li class="check">Fixing a problem where Free (by coupon) Trial was not acknowledged on PayPal Signup</li>
+<li>Fixing a problem where Free (by coupon) Trial was not acknowledged on PayPal Signup</li>
 <li>"Append" has been renamed to "Apply" (Coupon Button on Checkout)</li>
 <li>Switch to decide whether the AEC should break on an MI error</li>
 <li>Fixing a bug that would make parse notifications correctly, but not do anything else</li>
@@ -1342,9 +1342,9 @@ color: #333;
 <li>No longer using hard "exits" on problems on the MySubscription page</li>
 <li>Fixing action links on the MySubscription page (Thanks Kirk Lampert!)</li>
 <li>Converting usage of gmstrftime() to date() - Somebody really could have told me this messes things up. Oh wait, Kirk Lampert did! Thanks a zillion!</li>
+<li>Find out why expiration is sometimes 12 hours off, wait what?</li>
 <li>Fixes for cURL transmission, verbose eventlog entries for transmission problems, setting for fixed usage of either cURL or fsockopen</li>
-<li class="check">Find out why expiration is sometimes 12 hours off, wait what?</li>
-<li class="check">Option to display currency symbol instead of shorthand, also some formatting options here</li>
+<li>Option to display currency symbol instead of shorthand, also some formatting options here (comma instead of dot, currency before amount)</li>
 </ul>
 </li>
 <li class="todo"><strong>Todo</strong>

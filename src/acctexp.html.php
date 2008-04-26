@@ -774,8 +774,8 @@ class Payment_HTML
 								$t = $ta;
 
 								// Strip out currency symbol and replace with blanks
-								if ( !$aecConfig['amount_currency_symbolfirst'] ) {
-									if ( $aecConfig['amount_use_comma'] ) {
+								if ( !$aecConfig->cfg['amount_currency_symbolfirst'] ) {
+									if ( $aecConfig->cfg['amount_use_comma'] ) {
 										$stripcurr = str_replace( str_replace( ',', '.', $citem->cost['amount'] ), '', $c );
 									} else {
 										$stripcurr = str_replace( $citem->cost['amount'], '', $c );
