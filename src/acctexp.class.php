@@ -1369,6 +1369,17 @@ class eventLog extends paramDBTable
 				$adminEmail2 	= $rows[0]->email;
 			}
 
+			if ( !defined( "_AEC_NOTICE_NUMBER_" . $this->level ) ) {
+				global $mosConfig_absolute_path;
+
+				$langPath = $mosConfig_absolute_path . '/administrator/components/com_acctexp/com_acctexp_language_backend/';
+				if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
+					include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
+				} else {
+					include_once( $langPath. 'english.php' );
+				}
+			}
+
 			// Send notification to all administrators
 			$subject2	= sprintf( _AEC_ASEND_NOTICE, constant( "_AEC_NOTICE_NUMBER_" . $this->level ), $this->short, $mainframe->getCfg( 'sitename' ) );
 			$message2	= sprintf( _AEC_ASEND_NOTICE_MSG, $this->event  );
@@ -1673,7 +1684,7 @@ class PaymentProcessor
 			}
 		}
 
-		$this->processor->info &= $this->info;
+		$this->processor->info =& $this->info;
 	}
 
 	function getSettings()
@@ -1691,7 +1702,7 @@ class PaymentProcessor
 			}
 		}
 
-		$this->processor->settings &= $this->settings;
+		$this->processor->settings =& $this->settings;
 	}
 
 	function exchangeSettings( $settings )
@@ -1805,11 +1816,11 @@ class PaymentProcessor
 		}
 
 		$request = new stdClass();
-		$request->parent			&= $this;
-		$request->int_var			&= $int_var;
-		$request->metaUser			&= $metaUser;
-		$request->new_subscription	&= $new_subscription;
-		$request->invoice			&= $invoice;
+		$request->parent			=& $this;
+		$request->int_var			=& $int_var;
+		$request->metaUser			=& $metaUser;
+		$request->new_subscription	=& $new_subscription;
+		$request->invoice			=& $invoice;
 
 		return $this->processor->checkoutAction( $request );
 	}
@@ -1827,11 +1838,11 @@ class PaymentProcessor
 		}
 
 		$request = new stdClass();
-		$request->parent			&= $this;
-		$request->int_var			&= $int_var;
-		$request->metaUser			&= $metaUser;
-		$request->new_subscription	&= $new_subscription;
-		$request->invoice			&= $invoice;
+		$request->parent			=& $this;
+		$request->int_var			=& $int_var;
+		$request->metaUser			=& $metaUser;
+		$request->new_subscription	=& $new_subscription;
+		$request->invoice			=& $invoice;
 
 		return $this->processor->checkoutProcess( $request );
 	}
@@ -1846,9 +1857,9 @@ class PaymentProcessor
 
 		if ( method_exists( $this->processor, $method ) ) {
 			$request = new stdClass();
-			$request->parent			&= $this;
-			$request->metaUser			&= $metaUser;
-			$request->invoice			&= $invoice;
+			$request->parent			=& $this;
+			$request->metaUser			=& $metaUser;
+			$request->invoice			=& $invoice;
 
 			return $this->processor->$method( $request );
 		} else {
@@ -4487,7 +4498,7 @@ class InvoiceFactory
 		}
 
 		// Either this is fully free, or the next term is free and this is non recurring
-		if ( $this->terms->free || ( $this->nextterm->free && !$this->recurring ) ) {
+		if ( $this->terms->checkFree() || ( $this->nextterm->free && !$this->recurring ) ) {
 			$this->objInvoice->pay();
 			thanks ( $option, $this->renew, 1 );
 			return;
@@ -4498,7 +4509,7 @@ class InvoiceFactory
 
 	function InvoiceToCheckout( $option, $repeat=0 )
 	{
-		$var = $this->objInvoice->prepareProcessorLink();
+		$var = $this->objInvoice->prepareProcessorLink( $this );
 
 		$this->objInvoice->formatInvoiceNumber();
 
@@ -5331,7 +5342,7 @@ class Invoice extends paramDBTable
 		return $int_var;
 	}
 
-	function prepareProcessorLink()
+	function prepareProcessorLink( $InvoiceFactory=null )
 	{
 		global $database, $mosConfig_live_site;
 
@@ -5386,7 +5397,7 @@ class Invoice extends paramDBTable
 
 			$cph = new couponsHandler();
 
-			$amount['amount'] = $cph->applyCoupons( $amount['amount'], $coupons, $metaUser );
+			$amount['amount'] = $cph->applyCoupons( $amount['amount'], $coupons, $metaUser, $InvoiceFactory );
 		}
 
 		$int_var['amount']		= $amount['amount'];
@@ -5401,7 +5412,7 @@ class Invoice extends paramDBTable
 		$int_var['usage']		= $this->invoice_number;
 
 		// Assemble Checkout Response
-		$return['var']		= $pp->checkoutAction( $int_var, $this, $metaUser, $new_subscription );
+		$return['var']		= $pp->checkoutAction( $int_var, $metaUser, $new_subscription, $this );
 		$return['params']	= $pp->getParamsHTML( $int_var['params'], $pp->getParams( $int_var['params'] ) );
 
 		if ( empty( $return['params'] ) ) {
@@ -6982,6 +6993,8 @@ class AECToolbox
 				}
 			}
 
+			$amount = AECToolbox::correctAmount( $amount );
+
 			if ( $aecConfig->cfg['amount_currency_symbolfirst'] ) {
 				return $currency . '&nbsp;' . $amount;
 			} else {
@@ -8234,7 +8247,7 @@ class microIntegration extends paramDBTable
 
 class couponsHandler extends eucaObject
 {
-	function applyCoupons( $amount, $coupons, $metaUser )
+	function applyCoupons( $amount, &$coupons, $metaUser, $original_amount=null, $invoiceFactory=null )
 	{
 		$applied_coupons = array();
 		$global_nomix = array();
@@ -8251,20 +8264,26 @@ class couponsHandler extends eucaObject
 
 			if ( count( array_intersect( $applied_coupons, $nomix ) ) || in_array( $coupon_code, $global_nomix ) ) {
 				// This coupon either interferes with one of the coupons already applied, or the other way round
+				$this->setError( _COUPON_ERROR_COMBINATION );
+				unset( $coupons[$arrayid] );
 			} else {
 				if ( $cph->status ) {
 					// Coupon approved, checking restrictions
-					if ( $cph->checkRestrictions( $metaUser, $amount ) ) {
+					$cph->checkRestrictions( $metaUser, $amount, $original_amount, $invoiceFactory );
+					if ( $cph->status ) {
 						$amount = $cph->applyCoupon( $amount );
 						$applied_coupons[] = $coupon_code;
 						$global_nomix = array_merge( $global_nomix, $nomix );
 					} else {
 						// Coupon restricted for this user, thus it needs to be deleted later on
+						$this->setError( $cph->error );
+						unset( $coupons[$arrayid] );
 					}
 				} else {
 					// Coupon not approved, thus it needs to be deleted later on
 					// Set Error
 					$this->setError( $cph->error );
+					unset( $coupons[$arrayid] );
 				}
 			}
 		}
@@ -8306,6 +8325,10 @@ class couponsHandler extends eucaObject
 						$info['coupon'] = $coupon_code;
 
 						for ( $i = $start; $i < count( $terms->terms ); $i++ ) {
+							if ( !$cph->discount['useon_full'] && ( $i > 0 ) ) {
+								continue;
+							}
+
 							if ( $cph->discount['percent_first'] ) {
 								if ( $cph->discount['amount_percent_use'] ) {
 									$info['details'] = '-' . $cph->discount['amount_percent'] . '%';
@@ -8600,7 +8623,7 @@ class couponHandler
 		if ( $this->discount['useon_trial'] && !$this->discount['useon_full'] && !is_null( $original_amount ) ) {
 			if ( !is_null( $original_amount ) ) {
 				if ( is_array( $original_amount ) ) {
-					if ( isset( $original_amount['amount']['amount1'] ) ) {
+					if ( isset( $original_amount['amount']['amount1'] ) || isset( $original_amount['amount1'] ) ) {
 						$permissions['trial_only'] = true;
 					} else {
 						$permissions['trial_only'] = false;

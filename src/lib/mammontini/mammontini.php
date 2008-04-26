@@ -98,7 +98,7 @@ class mammonTerms extends eucaObject
 
 		$free = true;
 		foreach ( $this->terms as $term ) {
-			if ( !$term->free ) {
+			if ( empty( $term->free ) ) {
 				$free = false;
 			}
 		}
@@ -146,6 +146,27 @@ class mammonTerms extends eucaObject
 	function getTerms()
 	{
 		return $this->terms;
+	}
+
+	/**
+	 * check whether this costs nothing
+	 *
+	 * @access	public
+	 * @return	string
+	 * @since	1.0
+	 */
+	function checkFree()
+	{
+		$free = true;
+		foreach ( $this->terms as $term ) {
+			if ( empty( $term->free ) ) {
+				$free = false;
+			}
+		}
+
+		$this->free = $free;
+
+		return $this->free;
 	}
 }
 

@@ -111,7 +111,6 @@
 		<filename>processors/ipayment_silent.php</filename>
 		<filename>processors/moneybookers.php</filename>
 		<filename>processors/moneyproxy.php</filename>
-		<filename>processors/nochex.php</filename>
 		<filename>processors/offline_payment.php</filename>
 		<filename>processors/payboxfr.php</filename>
 		<filename>processors/paycom.php</filename>
