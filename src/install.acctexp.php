@@ -1151,7 +1151,12 @@ function com_install()
 	} ?>
 	<table border="0">
 		<tr>
-			<td width="60%" valign="top">
+			<td width="60%" valign="top" style="background-color: #eee;">
+				<div style="background-color: #949494; margin: 2px; padding: 6px;">
+				<div style="width: 100%; background-color: #000;">
+				<center><img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_dist_gfx.png" border="0" alt="" /></center>
+				</div>
+				</div>
 				<div class="usernote" style="width:350px;margin:8px;">
 					<h1 style="color: #FF0000;"><?php echo _AEC_INST_NOTE_IMPORTANT; ?>:</h1>
 					<img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/backend_gfx/hacks_scribble.png" border="0" alt="" style="position:relative;float:left;padding:4px;" />
@@ -1160,18 +1165,14 @@ function com_install()
 					<p><?php echo _AEC_INST_NOTE_UPGRADE; ?></p>
 				</div>
 				<div class="usernote" style="width:350px;margin:8px;">
-					<h1><?php echo _AEC_INST_NOTE_IMPORTANT; ?>:</h1>
-					<img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/backend_gfx/help_scribble.png" border="0" alt="" style="position:relative;float:left;padding:4px;" />
-					<p><?php printf( _AEC_INST_NOTE_HELP, AECToolbox::backendTaskLink( 'help', _AEC_INST_NOTE_HELP_LTEXT ) ); ?></p>
-				</div>
-				<div class="usernote" style="width:350px;margin:8px;">
 					<h1><?php echo _AEC_INST_HINTS; ?></h1>
 					<p><?php echo sprintf( _AEC_INST_HINT1, 'https://globalnerd.org/index.php?option=com_fireboard&Itemid=88' ); ?></p>
 					<p><?php echo _AEC_INST_HINT2; ?></p>
 				</div>
 				<div class="usernote" style="width:350px;margin:8px;">
-					<h1><?php echo _AEC_INST_ATTENTION; ?></h1>
-					<p><?php echo _AEC_INST_ATTENTION1; ?></p>
+					<h1><?php echo _AEC_INST_NOTE_IMPORTANT; ?>:</h1>
+					<img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/backend_gfx/help_scribble.png" border="0" alt="" style="position:relative;float:left;padding:4px;" />
+					<p><?php printf( _AEC_INST_NOTE_HELP, AECToolbox::backendTaskLink( 'help', _AEC_INST_NOTE_HELP_LTEXT ) ); ?></p>
 				</div>
 			</td>
 			<td width="30%" valign="top">

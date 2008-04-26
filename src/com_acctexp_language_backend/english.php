@@ -209,7 +209,7 @@ define( '_AEC_INST_NOTE_HELP',					'To help you along with frequently encountere
 define( '_AEC_INST_NOTE_HELP_LTEXT',			'help function' );
 define( '_AEC_INST_HINTS',						'Hints' );
 define( '_AEC_INST_HINT1',						'We encourage you to visit the <a href="%s" target="_blank">globalnerd.org forums</a> and to <strong>participate in the discussion there</strong>. Chances are, that other users have found the same bugs and it is equally likely that there is at least a fix to hack in or even a new version.' );
-define( '_AEC_INST_HINT2',						'In any case (and especially if you use this on a live site): go through your settings and make a test subscription to see whether everything is working to your satisfaction! Although we try our best to make upgrading as flawless as possible, some fundamental changes to our program may not be possible to cushion for all users.' );
+define( '_AEC_INST_HINT2',						'In any case (and especially if you use this on a live site): <strong>go through your settings and make a test subscription</strong> to see whether everything is working to your satisfaction! Although we try our best to make upgrading as flawless as possible, some fundamental changes to our program may not be possible to cushion for all users.</p><p><strong>Thank you choosing the AEC Component!</strong></p>' );
 define( '_AEC_INST_ATTENTION',					'No need to use the old logins!' );
 define( '_AEC_INST_ATTENTION1',					'If you still have the old AEC login modules installed, please uninstall it (no matter which one, regular or CB) and use the normal joomla or CB login module. There is no need to use these old modules anymore.' );
 define( '_AEC_INST_MAIN_COMP_ENTRY',			'AEC Subscription Manager' );
