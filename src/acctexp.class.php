@@ -4462,10 +4462,22 @@ class InvoiceFactory
 
 		if ( !empty( $aecConfig->cfg['enable_coupons'] ) && !empty( $this->objInvoice->coupons ) ) {
 			$coupons = explode( ';', $this->objInvoice->coupons );
+			$orcoupn = $coupons;
 
 			$cpsh = new couponsHandler();
 
 			$this->terms = $cpsh->applyCouponsToTerms( $this->terms, $coupons, $this->metaUser, $amount, $this );
+
+			if ( count( $orcoupn ) != count( $coupons ) ) {
+				foreach ( $orcoupn as $couponcode ) {
+					if ( !in_array( $couponcode, $coupons ) ) {
+						$this->objInvoice->removeCoupon( $couponcode );
+					}
+				}
+
+				$this->objInvoice->check();
+				$this->objInvoice->store();
+			}
 
 			$cpsh_err = $cpsh->getErrors();
 
@@ -4749,14 +4761,15 @@ class Invoice extends paramDBTable
 
 	function hasDuplicate( $userid, $invoiceNum )
 	{
-		$db2 = $this->get( "_db" );
+		global $database;
+
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_invoices'
 				. ' WHERE `userid` = ' . (int) $userid
 				. ' AND `invoice_number` = \'' . $invoiceNum . '\''
 				;
-		$db2->setQuery( $query );
-		return $db2->loadResult();
+		$database->setQuery( $query );
+		return $database->loadResult();
 	}
 
 	function computeAmount()
@@ -6943,35 +6956,39 @@ class AECToolbox
 		}
 	}
 
-	function formatAmount( $amount, $currency ) {
+	function formatAmount( $amount, $currency=null ) {
 		global $aecConfig;
-
-		if ( !empty( $aecConfig->cfg['amount_currency_symbol'] ) ) {
-			switch ( $currency ) {
-				case 'USD':
-					$currency = '$';
-					break;
-				case 'GBP':
-					$currency = '&pound;';
-					break;
-				case 'EUR':
-					$currency = '&euro;';
-					break;
-				case 'CNY':
-				case 'JPY':
-					$currency = '&yen;';
-					break;
-			}
-		}
 
 		if ( $aecConfig->cfg['amount_use_comma'] ) {
 			$amount = str_replace( '.', ',', $amount );
 		}
 
-		if ( $aecConfig->cfg['amount_currency_symbolfirst'] ) {
-			return $currency . '&nbsp;' . $amount;
+		if ( !empty( $currency ) ) {
+			if ( !empty( $aecConfig->cfg['amount_currency_symbol'] ) ) {
+				switch ( $currency ) {
+					case 'USD':
+						$currency = '$';
+						break;
+					case 'GBP':
+						$currency = '&pound;';
+						break;
+					case 'EUR':
+						$currency = '&euro;';
+						break;
+					case 'CNY':
+					case 'JPY':
+						$currency = '&yen;';
+						break;
+				}
+			}
+
+			if ( $aecConfig->cfg['amount_currency_symbolfirst'] ) {
+				return $currency . '&nbsp;' . $amount;
+			} else {
+				return $amount . '&nbsp;' . $currency;
+			}
 		} else {
-			return $currency . '&nbsp;' . $amount;
+			return $amount;
 		}
 	}
 
@@ -8237,7 +8254,7 @@ class couponsHandler extends eucaObject
 			} else {
 				if ( $cph->status ) {
 					// Coupon approved, checking restrictions
-					if ( $cph->checkRestrictions( $metaUser ) ) {
+					if ( $cph->checkRestrictions( $metaUser, $amount ) ) {
 						$amount = $cph->applyCoupon( $amount );
 						$applied_coupons[] = $coupon_code;
 						$global_nomix = array_merge( $global_nomix, $nomix );
@@ -8255,7 +8272,7 @@ class couponsHandler extends eucaObject
 		return $amount;
 	}
 
-	function applyCouponsToTerms( $terms, $coupons, $metaUser, $original_amount, $invoiceFactory )
+	function applyCouponsToTerms( $terms, &$coupons, $metaUser, $original_amount, $invoiceFactory )
 	{
 		$applied_coupons = array();
 		$global_nomix = array();
@@ -8273,10 +8290,12 @@ class couponsHandler extends eucaObject
 			if ( count( array_intersect( $applied_coupons, $nomix ) ) || in_array( $coupon_code, $global_nomix ) ) {
 				// This coupon either interferes with one of the coupons already applied, or the other way round
 				$this->setError( _COUPON_ERROR_COMBINATION );
+				unset( $coupons[$arrayid] );
 			} else {
-				if ( $cph->status ) {//print_r($cph);print_r($original_amount);print_r($invoiceFactory);exit;
+				if ( $cph->status ) {
 					// Coupon approved, checking restrictions
-					if ( $cph->checkRestrictions( $metaUser, $original_amount, $invoiceFactory ) ) {
+					$cph->checkRestrictions( $metaUser, $original_amount, $invoiceFactory );
+					if ( $cph->status ) {
 						if ( $cph->discount['useon_trial'] && $terms->hasTrial && ( $terms->pointer == 0 ) ) {
 							$start = 0;
 						} else {
@@ -8313,10 +8332,12 @@ class couponsHandler extends eucaObject
 					} else {
 						// Coupon restricted for this user, thus it needs to be deleted later on
 						$this->setError( $cph->error );
+						unset( $coupons[$arrayid] );
 					}
 				} else {
 					// Coupon not approved, thus it needs to be deleted later on
 					$this->setError( $cph->error );
+					unset( $coupons[$arrayid] );
 				}
 			}
 		}
@@ -8563,23 +8584,14 @@ class couponHandler
 
 		// Check for a set usage
 		if ( !empty( $this->restrictions['usage_plans_enabled'] ) && !is_null( $invoiceFactory ) ) {
-			if ( $this->restrictions['usage_plans'] ) {
+			if ( !empty( $this->restrictions['usage_plans'] ) ) {
 				// Check whether this usage is restricted
-				// TODO: Make this convert to an array (I think something went wrong when I last tried it)
-				if ( strpos( $this->restrictions['usage_plans'], ';' ) !== false ) {
-					$plans = explode( ';', $this->restrictions['usage_plans'] );
+				$plans = explode( ';', $this->restrictions['usage_plans'] );
 
-					if ( in_array( $invoiceFactory->usage, $plans ) ) {
-						$permissions['usage'] = true;
-					} else {
-						$permissions['usage'] = false;
-					}
+				if ( in_array( $invoiceFactory->usage, $plans ) ) {
+					$permissions['usage'] = true;
 				} else {
-					if ( ( (int) $invoiceFactory->usage ) === ( (int) $this->restrictions['usage_plans'] ) ) {
-						$permissions['usage'] = true;
-					} else {
-						$permissions['usage'] = false;
-					}
+					$permissions['usage'] = false;
 				}
 			}
 		}
@@ -8599,10 +8611,11 @@ class couponHandler
 
 		// Check for max reuse per user
 		if ( $this->restrictions['has_max_peruser_reuse'] ) {
-			if ( $this->restrictions['has_max_reuse'] ) {
-				if ( (int) $metaUser->usedCoupon( $this->coupon->id, $this->type ) > (int) $this->restrictions['has_max_reuse'] ) {
-					$this->setError( _COUPON_ERROR_MAX_REUSE );
-					return;
+			if ( $this->restrictions['max_peruser_reuse'] ) {
+				if ( (int) $metaUser->usedCoupon( $this->coupon->id, $this->type ) > (int) $this->restrictions['max_peruser_reuse'] ) {
+					$permissions['max_reuse'] = true;
+				} else {
+					$permissions['max_reuse'] = false;
 				}
 			}
 		}
@@ -8620,10 +8633,11 @@ class couponHandler
 										'plan_present'		=> 'wrong_plan',
 										'plan_overall'		=> 'wrong_plan_overall',
 										'plan_amount_min'	=> 'wrong_plan',
-										'plan_amount_max'	=> 'wrong_plan_overall'
+										'plan_amount_max'	=> 'wrong_plan_overall',
+										'max_reuse'			=> 'max_reuse'
 									);
 
-					if ( in_array( $name, $errors ) ) {
+					if ( isset( $errors[$name] ) ) {
 						$this->setError( constant( strtoupper( '_coupon_error_' . $errors[$name] ) ) );
 					}
 
@@ -9436,3 +9450,4 @@ class tokenGroup extends mosDBTable
 	}
 }
 ?>
+

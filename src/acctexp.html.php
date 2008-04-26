@@ -773,15 +773,17 @@ class Payment_HTML
 
 								$t = $ta;
 
+								$c = AECToolbox::formatAmount( $citem->cost['amount'] );
+
 								// Strip out currency symbol and replace with blanks
 								if ( !$aecConfig->cfg['amount_currency_symbolfirst'] ) {
-									if ( $aecConfig->cfg['amount_use_comma'] ) {
-										$stripcurr = str_replace( str_replace( ',', '.', $citem->cost['amount'] ), '', $c );
-									} else {
-										$stripcurr = str_replace( $citem->cost['amount'], '', $c );
+									$strlen = 2;
+
+									if ( !$aecConfig->cfg['amount_currency_symbol'] ) {
+										$strlen += strlen( str_replace( str_replace( ',', '.', $citem->cost['amount'] ), '', $c ) );
 									}
 
-									for( $i=0; $i<=strlen($stripcurr);$i++ ) {
+									for( $i=0; $i<=$strlen;$i++ ) {
 										$c = $c . '&nbsp;';
 									}
 								}
@@ -812,8 +814,8 @@ class Payment_HTML
 					<tr>
 						<td class="coupondetails">
 							<?php
-							if ( isset( $terms->errors ) ) {
-								foreach ( $terms->errors as $error ) { ?>
+							if ( isset( $InvoiceFactory->terms->errors ) ) {
+								foreach ( $InvoiceFactory->terms->errors as $error ) { ?>
 									<div class="couponerror">
 										<p>
 											<strong><?php echo _COUPON_ERROR_PRETEXT; ?></strong>

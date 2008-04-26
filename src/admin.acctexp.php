@@ -2415,8 +2415,8 @@ function editSubscriptionPlan( $id, $option )
 	$perunit[] = mosHTML::makeOption( 'M', _PAYPLAN_PERUNIT3 );
 	$perunit[] = mosHTML::makeOption( 'Y', _PAYPLAN_PERUNIT4 );
 
-	$lists['trial_periodunit'] = mosHTML::selectList($perunit, 'trial_periodunit', 'size="4"', 'value', 'text', arrayValueDefault($params_values, 'trial_periodunit', "D"));
-	$lists['full_periodunit'] = mosHTML::selectList($perunit, 'full_periodunit', 'size="4"', 'value', 'text', arrayValueDefault($params_values, 'full_periodunit', "D"));
+	$lists['trial_periodunit'] = mosHTML::selectList( $perunit, 'trial_periodunit', 'size="4"', 'value', 'text', arrayValueDefault($params_values, 'trial_periodunit', "D") );
+	$lists['full_periodunit'] = mosHTML::selectList( $perunit, 'full_periodunit', 'size="4"', 'value', 'text', arrayValueDefault($params_values, 'full_periodunit', "D") );
 
 	$params['processors_remap'] = array("subarea_change", "plan_params");
 
