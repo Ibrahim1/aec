@@ -40,9 +40,6 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 
 global $mainframe, $mosConfig_absolute_path, $aecConfig;
 
-require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/j15/j15.php' );
-require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.php' );
-
 define( '_AEC_FRONTEND', 1 );
 
 if ( !defined( '_AEC_LANG' ) ) {
@@ -57,8 +54,8 @@ if ( !defined( '_AEC_LANG' ) ) {
 
 include_once( $mosConfig_absolute_path . '/administrator/components/com_acctexp/com_acctexp_language_backend/general.php' );
 
-require_once( $mainframe->getPath( 'front_html',	'com_acctexp' ) );
 require_once( $mainframe->getPath( 'class',			'com_acctexp' ) );
+require_once( $mainframe->getPath( 'front_html',	'com_acctexp' ) );
 
 if ( !defined( '_EUCA_DEBUGMODE' ) ) {
 	define( '_EUCA_DEBUGMODE', $aecConfig->cfg['debugmode'] );

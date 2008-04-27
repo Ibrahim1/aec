@@ -14,6 +14,7 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 // Check whether we are on 1.5, otherwise load in some classes
 if ( !defined( 'JPATH_BASE' ) ) {
 	if ( !class_exists( 'JObject' ) ) {
+		//require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/j15/general.php' );
 		require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/j15/object.php' );
 	}
 }

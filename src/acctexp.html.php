@@ -358,7 +358,6 @@ class HTML_frontEnd
 		if ( $SQLDate == '' ) {
 			return _AEC_EXPIRE_NOT_SET;
 		} else {
-			global $mosConfig_offset_user;
 			global $database;
 
 			$retVal = strftime( $aecConfig->cfg['display_date_frontend'], strtotime( $SQLDate ) );

@@ -32,11 +32,8 @@ defined( '_VALID_MOS' ) or die( 'Restricted access' );
 
 global $aecConfig, $database, $mosConfig_absolute_path;
 
-require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/j15/j15.php' );
-require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.php' );
-
-require_once( $mainframe->getPath( 'admin_html' ) );
 require_once( $mainframe->getPath( 'class' ) );
+require_once( $mainframe->getPath( 'admin_html' ) );
 
 if ( !defined( '_EUCA_DEBUGMODE' ) ) {
 	define( '_EUCA_DEBUGMODE', $aecConfig->cfg['debugmode'] );
@@ -3149,7 +3146,7 @@ function listCoupons( $option, $type )
 
 function editCoupon( $id, $option, $new, $type )
 {
-	global $database, $my, $acl, $mosConfig_offset_user;
+	global $database, $my, $acl, $mosConfig_offset;
 
 	$lists					= array();
 	$params_values			= array();
@@ -3201,9 +3198,9 @@ function editCoupon( $id, $option, $new, $type )
 	$params['useon_full_all']				= array( 'list_yesno',		'' );
 
 	$params['has_start_date']				= array( 'list_yesno',		1 );
-	$params['start_date']					= array( 'list_date',		date( 'Y-m-d', time() + $mosConfig_offset_user*3600 ) );
+	$params['start_date']					= array( 'list_date',		date( 'Y-m-d', time() + $mosConfig_offset*3600 ) );
 	$params['has_expiration']				= array( 'list_yesno',		0);
-	$params['expiration']					= array( 'list_date',		date( 'Y-m-d', time() + $mosConfig_offset_user*3600 ) );
+	$params['expiration']					= array( 'list_date',		date( 'Y-m-d', time() + $mosConfig_offset*3600 ) );
 	$params['has_max_reuse']				= array( 'list_yesno',		1 );
 	$params['max_reuse']					= array( 'inputB',			1 );
 	$params['has_max_peruser_reuse']		= array( 'list_yesno',		1 );
