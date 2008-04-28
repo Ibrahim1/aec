@@ -185,6 +185,15 @@ class processor_ipayment_silent extends XMLprocessor
 		$a['client_version']	= '0.12';
 		$a['silent']			= 1;
 
+		$a['redirect_url']		= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=paypalnotification&amp;event=success' );
+		$a['silent_error_url']	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=paypalnotification&amp;event=error' );
+
+		$a['tempsecret'] = substr( base64_encode( md5( rand() ) ), 0, 12 );
+
+		$request->invoice->addParams( array( 'tempsecret' => $a['tempsecret'] ) );
+		$request->invoice->check();
+		$request->invoice->store();
+
 		$stringarray = array();
 		foreach ( $a as $name => $value ) {
 			$stringarray[] = $name . '=' . urlencode( $value );
@@ -213,37 +222,71 @@ class processor_ipayment_silent extends XMLprocessor
 		$curl_calls[CURLOPT_HEADER]		= false;
 		$curl_calls[CURLOPT_HTTPHEADER]	= '[[unset]]';
 
+		// This will not turn up a response (why, that would be, like, logial and all)
 		$response = $this->transmitRequest( $url, $path, $xml, 443, $curl_calls );
 
+		// Instead we wait a short moment
+		sleep( 8 );
+
+		// And check whether we have been notified of a payment
 		$return['valid'] = false;
 		$return['raw'] = $response;
 
-		if ( $response ) {
-			if ( strpos( '&', $response ) ) {
-				$resp_array = explode( "&", $response );
+		// Reload Invoice
+		$invoiceid = $request->invoice->id;
+		$request->invoice->load( $invoiceid );
 
-				foreach ( $resp_array as $arr_id => $arr_content ) {
-					$ac = explode( "=", $arr_content );
-					$resp_array[$ac[0]] = $ac[1];
-
-					unset( $resp_array[$arr_id] );
-				}
-
-				$return['invoice'] = $resp_array['invoice_text'];
-
-				if ( isset( $resp_array['ret_errormsg'] ) ) {
-					$return['error'] = $resp_array['ret_errormsg'];
-				} else {
-					$return['valid'] = 1;
-				}
-
-				$return['invoiceparams'] = array( "subscriptionid" => $resp_array['ret_booknr'] );
-			} else {
-				$return['valid'] = 0;
-			}
+		if ( ( strcmp( $request->invoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) ) {
+			// Ok, no transaction yet, tell the user to wait
+			$return['pending']		= true;
+			$return['pending_reason']	= 'waiting_response';
+		} else {
+			// Transaction finished
+			$return['valid']			= 0;
+			$return['duplicate']		= true;
 		}
 
 		return $return;
+	}
+
+	function parseNotification( $post )
+	{
+		$response = array();
+		$response['invoice']			= $_GET['invoice_text'];
+		$response['amount_paid']		= ( $_GET['trx_amount'] / 100 );
+		$response['amount_currency']	= $_GET['trx_currency'];
+
+		return $response;
+	}
+
+	function validateNotification( $response, $post, $invoice )
+	{
+		$response['valid'] = 0;
+
+		$tempsecret = $_GET['tempsecret'];
+
+		if ( empty( $tempsecret ) ) {
+			$response['error']		= true;
+			$response['errormsg']	= 'No temp secret given';
+		}
+
+		$invoice->loadInvoiceNumber( $response['invoice'] );
+
+		$invoiceparams = $invoice->getParams();
+
+		if ( !isset( $invoiceparams['tempsecret'] ) ) {
+			$response['error']		= true;
+			$response['errormsg']	= 'No temp secret stored';
+		}
+
+		if ( $invoiceparams['tempsecret'] != $tempsecret ) {
+			$response['error']		= true;
+			$response['errormsg']	= 'Wrong temp secret given';
+		} else {
+			$response['valid'] = true;
+		}
+
+		return $response;
 	}
 
 }

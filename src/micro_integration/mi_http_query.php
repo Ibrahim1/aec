@@ -36,19 +36,9 @@ class mi_http_query
 		return $settings;
 	}
 
-	function pre_expiration_action( $params, $metaUser, $plan )
+	function relayAction( $params, $metaUser, $plan, $invoice, $area )
 	{
-		return $this->fetchURL( AECToolbox::rewriteEngine( $this->createURL( $params['url_pre_exp'], $params['query_pre_exp'] ), $metaUser, $plan ) );
-	}
-
-	function expiration_action( $params, $metaUser, $plan )
-	{
-		return $this->fetchURL( AECToolbox::rewriteEngine( $this->createURL( $params['url_exp'], $params['query_exp'] ), $metaUser, $plan ) );
-	}
-
-	function action( $params, $metaUser, $invoice, $plan )
-	{
-		return $this->fetchURL( AECToolbox::rewriteEngine( $this->createURL( $params['url'], $params['query'] ), $metaUser, $plan, $invoice ) );
+		return $this->fetchURL( AECToolbox::rewriteEngine( $this->createURL( $params['url'.$area], $params['query'.$area] ), $metaUser, $plan, $invoice ) );
 	}
 
 	function createURL( $url, $params ) {

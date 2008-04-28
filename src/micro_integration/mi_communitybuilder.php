@@ -58,7 +58,7 @@ class mi_communitybuilder
 		return $settings;
 	}
 
-	function action( $params, $metaUser, $invoice, $plan )
+	function action( $params, $metaUser, $plan, $invoice )
 	{
 		global $database;
 
@@ -108,7 +108,7 @@ class mi_communitybuilder
 		}
 	}
 
-	function expiration_action( $params, $metaUser, $plan )
+	function expiration_action( $params, $metaUser, $plan, $invoice )
 	{
 		global $database;
 

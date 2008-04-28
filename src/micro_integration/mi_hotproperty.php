@@ -72,14 +72,14 @@ class mi_hotproperty extends MI
 		return $newparams;
 	}
 
-	function relayAction( $params, $metaUser, $plan, $invoice, $stage )
+	function relayAction( $params, $metaUser, $plan, $invoice, $area )
 	{
 		$agent = null;
 		$company = null;
 
-		if ( $params['create_agent'.$stage] ){
-			if ( !empty( $params['agent_fields'.$stage] ) ) {
-				$agent = $this->createAgent( $metaUser, $params['agent_fields'.$stage], $invoice, $plan );
+		if ( $params['create_agent'.$area] ){
+			if ( !empty( $params['agent_fields'.$area] ) ) {
+				$agent = $this->createAgent( $metaUser, $params['agent_fields'.$area], $invoice, $plan );
 			}
 		}
 
@@ -87,14 +87,14 @@ class mi_hotproperty extends MI
 			return false;
 		}
 
-		if ( $params['update_agent'.$stage] ){
-			if ( !empty( $params['update_afields'.$stage] ) ) {
+		if ( $params['update_agent'.$area] ){
+			if ( !empty( $params['update_afields'.$area] ) ) {
 				if ( empty( $agent ) ) {
 					$agent = $this->agentExists( $metaUser->userid );
 				}
 
 				if ( !empty( $agent ) ) {
-					$agent = $this->update( 'agents', 'user', $metaUser, $params['update_afields'.$stage], $invoice, $plan );
+					$agent = $this->update( 'agents', 'user', $metaUser, $params['update_afields'.$area], $invoice, $plan );
 				}
 			}
 		}
@@ -103,9 +103,9 @@ class mi_hotproperty extends MI
 			return false;
 		}
 
-		if ( $params['create_company'.$stage] ){
-			if ( !empty( $params['company_fields'.$stage] ) ) {
-				$company = $this->createCompany( $metaUser, $params['company_fields'.$stage], $params['assoc_company'], $invoice, $plan );
+		if ( $params['create_company'.$area] ){
+			if ( !empty( $params['company_fields'.$area] ) ) {
+				$company = $this->createCompany( $metaUser, $params['company_fields'.$area], $params['assoc_company'], $invoice, $plan );
 			}
 		}
 
@@ -113,14 +113,14 @@ class mi_hotproperty extends MI
 			return false;
 		}
 
-		if ( $params['update_company'.$stage] ){
-			if ( !empty( $params['update_cfields'.$stage] ) ) {
+		if ( $params['update_company'.$area] ){
+			if ( !empty( $params['update_cfields'.$area] ) ) {
 				if ( empty( $company ) ) {
 					$company = $this->companyExists( $metaUser->userid );
 				}
 
 				if ( !empty( $company ) ) {
-					$company = $this->update( 'companies', 'cb_id', $metaUser, $params['update_cfields'.$stage], $invoice, $plan );
+					$company = $this->update( 'companies', 'cb_id', $metaUser, $params['update_cfields'.$area], $invoice, $plan );
 				}
 			}
 		}

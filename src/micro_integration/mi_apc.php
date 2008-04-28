@@ -72,7 +72,7 @@ class mi_apc
 		return $newparams;
 	}
 
-	function expiration_action( $params, $metaUser, $plan )
+	function expiration_action( $params, $metaUser, $plan, $invoice )
 	{
 		global $database;
 
@@ -83,7 +83,7 @@ class mi_apc
 		}
 	}
 
-	function action( $params, $metaUser, $invoice, $plan )
+	function action( $params, $metaUser, $plan, $invoice )
 	{
 		if( $this->integrationActive() ){
 			if ( $params['set_group'] ) {

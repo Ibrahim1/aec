@@ -50,18 +50,18 @@ class mi_eventlog extends MI
 	}
 
 
-	function relayAction( $params, $metaUser, $plan, $invoice, $stage )
+	function relayAction( $params, $metaUser, $plan, $invoice, $area )
 	{
 		global $database;
 
 		$rewriting = array( 'short', 'tags', 'text', 'params' );
 
 		foreach ( $rewriting as $rw_name ) {
-			$params[$rw_name.$stage] = AECToolbox::rewriteEngine( $params[$rw_name.$stage], $metaUser, $plan, $invoice );
+			$params[$rw_name.$area] = AECToolbox::rewriteEngine( $params[$rw_name.$area], $metaUser, $plan, $invoice );
 		}
 
 		$log_entry = new EventLog( $database );
-		$log_entry->issue( $params['short'.$stage], $params['tags'.$stage], $params['text'.$stage], $params['level'.$stage], $params['params'.$stage], $params['force_notify'.$stage], $params['force_email'.$stage] );
+		$log_entry->issue( $params['short'.$area], $params['tags'.$area], $params['text'.$area], $params['level'.$area], $params['params'.$area], $params['force_notify'.$area], $params['force_email'.$area] );
 	}
 }
 ?>

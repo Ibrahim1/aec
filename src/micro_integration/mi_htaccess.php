@@ -160,7 +160,7 @@ class mi_htaccess
 		$ht->delUser( $metaUser->cmsUser->username );
 	}
 
-	function action( $params, $metaUser, $invoice, $plan )
+	function action( $params, $metaUser, $plan, $invoice )
 	{
 		global $database;
 

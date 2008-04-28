@@ -46,19 +46,9 @@ class mi_directory
 		return $defaults;
 	}
 
-	function pre_expiration_action( $params, $metaUser, $plan )
+	function relayAction( $params, $metaUser, $plan, $invoice, $area )
 	{
-		return $this->makedir( $params['mkdir_pre_exp'], $params['mkdir_mode_pre_exp'], $metaUser, $plan );
-	}
-
-	function expiration_action( $params, $metaUser, $plan )
-	{
-		return $this->makedir( $params['mkdir_exp'], $params['mkdir_mode_exp'], $metaUser, $plan );
-	}
-
-	function action( $params, $metaUser, $invoice, $plan )
-	{
-		return $this->makedir( $params['mkdir'], $params['mkdir_mode'], $metaUser, $plan, $invoice );
+		return $this->makedir( $params['mkdir'.$area], $params['mkdir_mode'.$area], $metaUser, $plan, $invoice );
 	}
 
 	function makedir( $path, $mode, $metaUser, $plan, $invoice=null )

@@ -1237,9 +1237,9 @@ class displayPipeline extends paramDBTable
 	var $timestamp		= null;
 	/** @var int */
 	var $expire			= null;
- 	/** @var datetime */
+	/** @var datetime */
 	var $expstamp 		= null;
- 	/** @var int */
+	/** @var int */
 	var $displaycount	= null;
 	/** @var int */
 	var $displaymax		= null;
@@ -2037,17 +2037,17 @@ class processor extends paramDBTable
 
 	function exchangeSettings( $settings, $planvars )
 	{
-		 foreach ( $settings as $key => $value ) {
-		 	if ( isset( $planvars[$key] ) ) {
+		foreach ( $settings as $key => $value ) {
+			if ( isset( $planvars[$key] ) ) {
 				if ( !is_null( $planvars[$key] ) && ( $planvars[$key] != '' ) ) {
-		 			if ( strcmp( $planvars[$key], '[[SET_TO_NULL]]' ) === 0 ) {
-		 				$settings[$key] = '';
-		 			} else {
-		 				$settings[$key] = $planvars[$key];
-		 			}
+					if ( strcmp( $planvars[$key], '[[SET_TO_NULL]]' ) === 0 ) {
+						$settings[$key] = '';
+					} else {
+						$settings[$key] = $planvars[$key];
+					}
 				}
-		 	}
-		 }
+			}
+		}
 
 		return $settings;
 	}
@@ -3675,10 +3675,10 @@ class logHistory extends mosDBTable
 		$this->user_name		= $user->username;
 		$this->plan_id			= $plan->id;
 		$this->plan_name		= $plan->name;
-	    $this->transaction_date	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
-	    $this->amount			= $objInvoice->amount;
-	    $this->invoice_number	= $objInvoice->invoice_number;
-	    $this->response			= $response;
+		$this->transaction_date	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
+		$this->amount			= $objInvoice->amount;
+		$this->invoice_number	= $objInvoice->invoice_number;
+		$this->response			= $response;
 
 		$short	= 'history entry';
 		$event	= 'Processor (' . $pp->processor_name . ') notification for ' . $objInvoice->invoice_number;
@@ -4076,18 +4076,18 @@ class InvoiceFactory
 				. ( count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
 				. ' ORDER BY `ordering`'
 				;
-	 	$database->setQuery( $query );
+		$database->setQuery( $query );
 		$rows = $database->loadResultArray();
-	 	if ( $database->getErrorNum() ) {
-	 		echo $database->stderr();
-	 		return false;
-	 	}
+		if ( $database->getErrorNum() ) {
+			echo $database->stderr();
+			return false;
+		}
 
-	 	// There are no plans to begin with, so we need to punch out an error here
+		// There are no plans to begin with, so we need to punch out an error here
 		if ( count( $rows ) == 0 ) {
 			mosRedirect( AECToolbox::deadsureURL( '/index.php?mosmsg=' . _NOPLANS_ERROR ), false, true );
-	 		return;
-	 	}
+			return;
+		}
 
 		$plans	= array();
 		$i		= 0;
@@ -4197,13 +4197,13 @@ class InvoiceFactory
 			unset( $row );
 		}
 
-	 	// After filtering out the processors, no plan can be used, so we have to again issue an error
+		// After filtering out the processors, no plan can be used, so we have to again issue an error
 		 if ( count( $plans ) == 0 ) {
 			mosRedirect( AECToolbox::deadsureURL( '/index.php?mosmsg=' . _NOPLANS_ERROR ), false, true );
-	 		return;
-	 	}
+			return;
+		}
 
-	 	$nochoice = ( count( $plans ) === 1 ) && ( count( $plans[0]['gw'] ) === 1 );
+		$nochoice = ( count( $plans ) === 1 ) && ( count( $plans[0]['gw'] ) === 1 );
 
 		// If we have only one processor on one plan, there is no need for a decision
 		if ( $nochoice && !( $aecConfig->cfg['show_fixeddecision'] && empty( $processor ) ) ) {
@@ -4429,27 +4429,27 @@ class InvoiceFactory
 
 		// If this is marked as supposedly free
 		if ( in_array( strtolower( $this->processor ), $exceptproc ) ) {
-		 	// And if it is either made free through coupons
-		 	if ( !empty( $this->objInvoice->made_free )
-		 		// Or a free full period that the user CAN use
-		 		|| ( $params['full_free'] && $this->objInvoice->counter )
-		 		// Or a free trial that the user CAN use
-		 		|| ( $params['trial_free'] && empty( $this->objInvoice->counter ) ) ) {
+			// And if it is either made free through coupons
+			if ( !empty( $this->objInvoice->made_free )
+				// Or a free full period that the user CAN use
+				|| ( $params['full_free'] && $this->objInvoice->counter )
+				// Or a free trial that the user CAN use
+				|| ( $params['trial_free'] && empty( $this->objInvoice->counter ) ) ) {
 				// Then mark payed
 				if ( $this->objInvoice->pay() !== false ) {
 					thanks ( $option, $this->renew, 1 );
 				}
-		 	}
+			}
 
 			return;
 		} elseif ( strcmp( strtolower( $this->processor ), 'error' ) === 0 ) {
-	 		// Nope, won't work buddy
-		 	notAllowed( $option );
+			// Nope, won't work buddy
+			notAllowed( $option );
 		}
 
 		if ( !empty( $this->pp->info['secure'] ) && !( $_SERVER['HTTPS'] == 'on' ) && !$aecConfig->cfg['override_reqssl'] ) {
-		    mosRedirect( AECToolbox::deadsureURL( "/index.php?option=" . $option . "&task=repeatPayment&invoice=" . $this->objInvoice->invoice_number . "&first=" . ( $repeat ? 0 : 1 ), true, false ) );
-		    exit();
+			mosRedirect( AECToolbox::deadsureURL( "/index.php?option=" . $option . "&task=repeatPayment&invoice=" . $this->objInvoice->invoice_number . "&first=" . ( $repeat ? 0 : 1 ), true, false ) );
+			exit();
 		};
 
 		$this->terms = new mammonTerms();
@@ -4987,6 +4987,7 @@ class Invoice extends paramDBTable
 
 		$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_STATUS;
 		$tags	= 'invoice,processor';
+		$level	= 2;
 		$params = array( 'invoice_number' => $this->invoice_number );
 
 		$event .= ' ';
@@ -5088,14 +5089,19 @@ class Invoice extends paramDBTable
 				$metaUser = new metaUser( $this->userid );
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_DUPLICATE;
 				$tags	.= ',duplicate';
+			} elseif ( isset( $response['error'] ) && isset( $response['errormsg'] ) ) {
+				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR . ' Error:' . $response['errormsg'] ;
+				$tags	.= ',error';
+				$level = 128;
 			} else {
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR;
 				$tags	.= ',general_error';
+				$level = 128;
 			}
 		}
 
 		$eventlog = new eventLog( $database );
-		$eventlog->issue( $short, $tags, $event, 2, $params );
+		$eventlog->issue( $short, $tags, $event, $level, $params );
 
 		if ( !$nothanks ) {
 			thanks( 'com_acctexp', $renew, ($pp === 0) );
@@ -5249,7 +5255,7 @@ class Invoice extends paramDBTable
 	{
 		if ( strpos( $haystack, $start ) === false || strpos( $haystack, $end ) === false ) {
 			return false;
-	   } else {
+		} else {
 			$start_position = strpos( $haystack, $start ) + strlen( $start );
 			$end_position = strpos( $haystack, $end );
 			return substr( $haystack, $start_position, $end_position - $start_position );
@@ -5354,8 +5360,8 @@ class Invoice extends paramDBTable
 
 		$pp = new PaymentProcessor();
 		if ( !$pp->loadName( strtolower( $this->method ) ) ) {
-	 		// Nope, won't work buddy
-		 	notAllowed( 'com_acctexp' );
+			// Nope, won't work buddy
+			notAllowed( 'com_acctexp' );
 		}
 
 		$pp->init();
@@ -6277,13 +6283,13 @@ class GeneralInfoRequester
 				return in_array( $mainframe->getCfg( 'dbprefix' ) . 'jaclplus', $tables );
 				break;
 
-         	case 'UHP2':
-            	return file_exists( $mainframe->getCfg( 'absolute_path' ) . '/modules/mod_uhp2_manage.php' );
-            	break;
+			case 'UHP2':
+				return file_exists( $mainframe->getCfg( 'absolute_path' ) . '/modules/mod_uhp2_manage.php' );
+				break;
 
-         	case 'JUSER':
-            	return file_exists( $mainframe->getCfg( 'absolute_path' ) . '/components/com_juser/juser.php' );
-            	break;
+			case 'JUSER':
+				return file_exists( $mainframe->getCfg( 'absolute_path' ) . '/components/com_juser/juser.php' );
+				break;
 		}
 	}
 
@@ -6310,8 +6316,8 @@ class GeneralInfoRequester
 		$rows = $database->loadObjectList();
 
 		for( $i = 0, $n = count( $rows ); $i < $n; $i++ ) {
-		    $row = &$rows[$i];
-		    $group_list[$i] = $row->group_id;
+			$row = &$rows[$i];
+			$group_list[$i] = $row->group_id;
 		}
 
 		if ( count( $group_list ) > 0 ) {
@@ -6741,10 +6747,10 @@ class AECToolbox
 					' FROM #__juser_integration' .
 					' WHERE `published` = \'1\'' .
 					' AND `export_status` = \'1\'';
-    		$database->setQuery( $query );
-    		$components = $database->loadObjectList();
-    		if ( !empty( $components ) ) {
-	    		foreach ( $components as $component ) {
+			$database->setQuery( $query );
+			$components = $database->loadObjectList();
+			if ( !empty( $components ) ) {
+				foreach ( $components as $component ) {
 					$synchronize = require_integration( $component->id );
 					$synchronize->synchronizeFrom( $uid );
 				}
@@ -6946,7 +6952,7 @@ class AECToolbox
 				. ' WHERE `userid` = \'' . (int) $userid . '\''
 				. ' AND `primary` = \'1\''
 				;
-	 	$database->setQuery( $query );
+		$database->setQuery( $query );
 		$aecstatus = $database->loadResult();
 
 		if ( $aecstatus ) {
@@ -7076,10 +7082,10 @@ class AECToolbox
 				}
 
 				array_push( $dirArray, basename( $file ) );
-       		}
-   		}
-   		$handle->close();
-   		return $dirArray;
+				}
+		}
+		$handle->close();
+		return $dirArray;
 	}
 
 	function visualstrlen( $string )
@@ -7968,8 +7974,22 @@ class microIntegration extends paramDBTable
 		}
 
 		// Call Action
-		if ( method_exists( $this->mi_class, $stage ) ) {
-			$return = $this->mi_class->$stage( $params, $metaUser, $invoice, $objplan );
+		if ( method_exists( $this->mi_class, 'relayAction' ) ) {
+			switch ( $stage ) {
+				case 'action':
+					$area = '';
+					break;
+				case 'pre_expiration_action':
+					$area = '_pre_exp';
+					break;
+				case 'expiration_action':
+					$area = '_exp';
+					break;
+			}
+
+			$return = $this->mi_class->relayAction( $params, $metaUser, $objplan, $invoice, $area );
+		} elseif ( method_exists( $this->mi_class, $stage ) ) {
+			$return = $this->mi_class->$stage( $params, $metaUser, $objplan, $invoice );
 		} else {
 			$eventlog = new eventLog( $this->_db );
 			$eventlog->issue( 'MI application problems', 'mi, problems, '.$this->class_name, 'Action not found: '.$stage, 32 );

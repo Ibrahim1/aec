@@ -32,7 +32,7 @@ class mi_jarc
 		return $settings;
 	}
 
-	function action( $params, $metaUser, $invoice, $plan )
+	function action( $params, $metaUser, $plan, $invoice )
 	{
 		return $this->logpayment( $invoice );
 	}

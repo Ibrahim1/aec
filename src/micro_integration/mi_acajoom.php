@@ -47,7 +47,7 @@ class mi_acajoom
 		return $settings;
 	}
 
-	function expiration_action( $params, $metaUser, $plan )
+	function expiration_action( $params, $metaUser, $plan, $invoice )
 	{
 		$acauser = $this->getSubscriberID( $metaUser->userid );
 
@@ -61,7 +61,7 @@ class mi_acajoom
 		}
 	}
 
-	function action( $params, $metaUser, $invoice, $plan )
+	function action( $params, $metaUser, $plan, $invoice )
 	{
 		$acauser = $this->getSubscriberID( $metaUser->userid );
 

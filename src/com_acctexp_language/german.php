@@ -201,7 +201,8 @@ define( '_GOTO_CHECKOUT',					'Noch einmal zum Bezahlen gehen');
 define( '_GOTO_CHECKOUT_CANCEL',			'Sie k&ouml;nnen die Rechnungserstellung auch abbrechen (Sie werden dann zu einer neuen Auswahl umgeleitet):');
 define( '_PENDING_NOINVOICE',				'Es scheint, Sie haben die letzte offene Rechnung nicht beglichen. Bitte benutzen Sie diesen Button um erneut zur Auswahl eines Abos zu gelangen:');
 define( '_PENDING_NOINVOICE_BUTTON',		'Aboauswahl');
-define( '_PENDING_REASON_ECHECK',			'(Desweiteren haben wir jedoch auch die Information, dass Sie sich entschieden haben, mit Echeck zu bezahlen. M&ouml;glicherweise m&uuml;ssen Sie also nur warten bis dieser verarbeitet wurde - dies dauert gew&ouml;hnlich 1-4 Tage.)');
+define( '_PENDING_REASON_ECHECK',			'(Desweiteren haben wir jedoch auch die Information, dass Sie sich entschieden haben, mit Echeck (oder ähnliche Methode) zu bezahlen. M&ouml;glicherweise m&uuml;ssen Sie also nur warten bis dieser verarbeitet wurde - dies dauert gew&ouml;hnlich 1-4 Tage.)');
+define( '_PENDING_REASON_WAITING_RESPONSE', '(According to our information however, we are just waiting for a response from the payment processor. You will be notified once that has happened. Sorry for the delay.)');
 define( '_PENDING_REASON_TRANSFER',			'(Desweiteren haben wir jedoch auch die Information, dass Sie sich entschieden haben, die Rechnung auf herk&ouml;mmlichem Weg zu bezahlen. Die Verarbeitung einer solchen Zahlung kann einige Tage dauern.)');
 
 // --== THANK YOU PAGE ==--

@@ -33,7 +33,7 @@ class mi_mysql_query
 		return $settings;
 	}
 
-	function pre_expiration_action( $params, $metaUser, $plan )
+	function pre_expiration_action( $params, $metaUser, $plan, $invoice )
 	{
 		$query = AECToolbox::rewriteEngine( $params['query_pre_exp'], $metaUser, $plan );
 
@@ -43,7 +43,7 @@ class mi_mysql_query
 		return true;
 	}
 
-	function expiration_action( $params, $metaUser, $plan )
+	function expiration_action( $params, $metaUser, $plan, $invoice )
 	{
 		global $database;
 
@@ -55,7 +55,7 @@ class mi_mysql_query
 		return true;
 	}
 
-	function action( $params, $metaUser, $invoice, $plan )
+	function action( $params, $metaUser, $plan, $invoice )
 	{
 		global $database;
 

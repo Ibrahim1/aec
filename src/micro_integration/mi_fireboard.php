@@ -91,7 +91,7 @@ class mi_fireboard
 		return $newparams;
 	}
 
-	function expiration_action( $params, $metaUser, $plan )
+	function expiration_action( $params, $metaUser, $plan, $invoice )
 	{
 		global $database;
 
@@ -107,7 +107,7 @@ class mi_fireboard
 		return true;
 	}
 
-	function action( $params, $metaUser, $plan )
+	function action( $params, $metaUser, $plan, $invoice )
 	{
 		global $database;
 

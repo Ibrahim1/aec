@@ -21,7 +21,7 @@ class mi_joomlauser
 		return $settings;
 	}
 
-	function action( $params, $metaUser, $invoice, $plan )
+	function action( $params, $metaUser, $plan, $invoice )
 	{
 		global $database;
 

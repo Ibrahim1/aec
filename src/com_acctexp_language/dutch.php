@@ -207,6 +207,7 @@ define( '_GOTO_CHECKOUT_CANCEL', 'U kunt uw betaling annuleren (U heeft altijd d
 define( '_PENDING_NOINVOICE', 'U heeft uw enige factuur voor uw account geannuleerd. Gebruik de onderstaande button om terug te gaan naar de pagina met abonnementsvormen:');
 define( '_PENDING_NOINVOICE_BUTTON', 'Abonnement Selectie');
 define( '_PENDING_REASON_ECHECK', '(Volgens onze informatie wilt u betalen met een echeck, het kan enkele dagen duren voordat deze betaling wordt verwerkt - gebruikelijk duurt dit 1-4 werkdagen.)');
+define( '_PENDING_REASON_WAITING_RESPONSE', '(According to our information however, we are just waiting for a response from the payment processor. You will be notified once that has happened. Sorry for the delay.)');
 define( '_PENDING_REASON_TRANSFER', '(Volgens onze informatie heeft u besloten te betalen via een offline methode (bankoverschrijving), Nadat deze betaling is verwerkt kunt u gegevens benaderen - waarschijnlijk binnen enkele werkdagen.)');
 
 // --== THANK YOU PAGE ==--

@@ -47,7 +47,7 @@ class mi_coupon
 		return $settings;
 	}
 
-	function action( $params, $metaUser, $invoice, $plan )
+	function action( $params, $metaUser, $plan, $invoice )
 	{
 		global $database, $mosConfig_live_site;
 

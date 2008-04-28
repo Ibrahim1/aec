@@ -178,7 +178,7 @@ class mi_docman
 		return $hacks;
 	}
 
-	function expiration_action( $params, $metaUser, $plan )
+	function expiration_action( $params, $metaUser, $plan, $invoice )
 	{
 		global $database;
 
@@ -211,7 +211,7 @@ class mi_docman
 		return true;
 	}
 
-	function action( $params, $metaUser, $invoice, $plan )
+	function action( $params, $metaUser, $plan, $invoice )
 	{
 		global $database;
 

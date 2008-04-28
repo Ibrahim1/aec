@@ -81,7 +81,7 @@ class mi_virtuemart
 		return $newparams;
 	}
 
-	function expiration_action( $params, $metaUser, $plan )
+	function expiration_action( $params, $metaUser, $plan, $invoice )
 	{
 		if ( $params['set_shopper_group_exp'] ) {
 			if ( $this->checkVMuserexists( $metaUser->userid ) ) {
@@ -96,7 +96,7 @@ class mi_virtuemart
 		}
 	}
 
-	function action( $params, $metaUser, $invoice, $plan )
+	function action( $params, $metaUser, $plan, $invoice )
 	{
 		global $database;
 
