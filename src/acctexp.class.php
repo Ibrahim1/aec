@@ -4037,6 +4037,11 @@ class InvoiceFactory
 			}
 		}
 
+		// Add in task in case this has no passthrough
+		if ( !isset( $var['task'] ) ) {
+			$passthrough[] = array( 'task', 'subscribe' );
+		}
+
 		Payment_HTML::promptpassword( $option, $passthrough, $wrong );
 	}
 

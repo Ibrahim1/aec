@@ -238,7 +238,7 @@ class processor_ipayment_silent extends XMLprocessor
 
 		if ( ( strcmp( $request->invoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) ) {
 			// Ok, no transaction yet, tell the user to wait
-			$return['pending']		= true;
+			$return['pending']			= true;
 			$return['pending_reason']	= 'waiting_response';
 		} else {
 			// Transaction finished
@@ -263,27 +263,31 @@ class processor_ipayment_silent extends XMLprocessor
 	{
 		$response['valid'] = 0;
 
-		$tempsecret = $_GET['tempsecret'];
+		if ( $_GET['event'] == 'error' ) {
+			return $response;
+		} elseif ( $_GET['event'] == 'success' ) {
+			$tempsecret = $_GET['tempsecret'];
 
-		if ( empty( $tempsecret ) ) {
-			$response['error']		= true;
-			$response['errormsg']	= 'No temp secret given';
-		}
+			if ( empty( $tempsecret ) ) {
+				$response['error']		= true;
+				$response['errormsg']	= 'No temp secret given';
+			}
 
-		$invoice->loadInvoiceNumber( $response['invoice'] );
+			$invoice->loadInvoiceNumber( $response['invoice'] );
 
-		$invoiceparams = $invoice->getParams();
+			$invoiceparams = $invoice->getParams();
 
-		if ( !isset( $invoiceparams['tempsecret'] ) ) {
-			$response['error']		= true;
-			$response['errormsg']	= 'No temp secret stored';
-		}
+			if ( !isset( $invoiceparams['tempsecret'] ) ) {
+				$response['error']		= true;
+				$response['errormsg']	= 'No temp secret stored';
+			}
 
-		if ( $invoiceparams['tempsecret'] != $tempsecret ) {
-			$response['error']		= true;
-			$response['errormsg']	= 'Wrong temp secret given';
-		} else {
-			$response['valid'] = true;
+			if ( $invoiceparams['tempsecret'] != $tempsecret ) {
+				$response['error']		= true;
+				$response['errormsg']	= 'Wrong temp secret given';
+			} else {
+				$response['valid'] = true;
+			}
 		}
 
 		return $response;
