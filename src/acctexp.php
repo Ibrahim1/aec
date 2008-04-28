@@ -86,7 +86,7 @@ if ( !empty( $task ) ) {
 		// Catch hybrid CMS registration
 		case 'saveregistration':
 		case 'subscribe':
-			subscribe($option);
+			subscribe( $option );
 			break;
 
 		case 'confirm':
@@ -117,6 +117,7 @@ if ( !empty( $task ) ) {
 		case 'thanks':
 			$renew = aecGetParam( 'renew', 0 );
 			$free = aecGetParam( 'free', 0 );
+
 			thanks( $option, $renew, $free );
 			break;
 
@@ -130,6 +131,7 @@ if ( !empty( $task ) ) {
 			$username       = aecGetParam( 'username' );
 			$name           = aecGetParam( 'name' );
 			$recurring      = aecGetParam( 'recurring', 0 );
+
 			errorAP( $option, $usage, $userid, $username, $name, $recurring);
 			break;
 
@@ -208,7 +210,12 @@ if ( !empty( $task ) ) {
 			} else {
 				$userid		= aecGetParam( 'userid' );
 				$expiration = aecGetParam( 'expiration' );
-				expired( $option, $userid, $expiration );
+
+				if ( !empty( $userid ) && !empty( $userid ) ) {
+					expired( $option, $userid, $expiration );
+				} else {
+					subscribe( $option );
+				}
 			}
 			break;
 	}

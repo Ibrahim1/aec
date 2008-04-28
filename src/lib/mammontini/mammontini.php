@@ -65,7 +65,7 @@ class mammonTerms extends eucaObject
 
 		foreach ( $terms as $t ) {
 			// Make sure this period is actually of substance
-			if ( !empty( $params[$t.'period'] ) ) {
+			if ( !empty( $params[$t.'period'] ) || ( !empty( $params['lifetime'] ) && ( $t == 'full_' ) ) ) {
 				$term = new mammonTerm();
 
 				// If we have a trial, we need to mark this

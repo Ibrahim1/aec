@@ -195,7 +195,20 @@ class metaUser
 			if ( is_object( $this->cmsUser ) ) {
 				$array = explode( "\n", $this->cmsUser->params );
 
+				$farray = array();
+				foreach ( $array as $item ) {
+					$i = explode( '=', $item, 2 );
+
+					$farray[$i[0]] = $i[1];
+				}
+
+				unset( $array );
+
 				foreach ( $params as $name => $value ) {
+					$farray[$name] = $value;
+				}
+
+				foreach ( $farray as $name => $value ) {
 					$array[] = $name . "=" . $value;
 				}
 
@@ -4006,6 +4019,16 @@ class InvoiceFactory
 
 		$this->loadMetaUser();
 
+		// Add in task in case this is not set in passthrough
+		if ( !isset( $var['task'] ) ) {
+			$var['task'] = 'subscribe';
+		}
+
+		// Add in userid in case this is not set in passthrough
+		if ( !isset( $var['userid'] ) ) {
+			$var['userid'] = $this->userid;
+		}
+
 		if ( empty( $this->authed ) ) {
 			if ( !$this->metaUser->getTempAuth() ) {
 				if ( isset( $var['password'] ) ) {
@@ -4035,11 +4058,6 @@ class InvoiceFactory
 			} else {
 				$passthrough[] = array( $ke, $va );
 			}
-		}
-
-		// Add in task in case this has no passthrough
-		if ( !isset( $var['task'] ) ) {
-			$passthrough[] = array( 'task', 'subscribe' );
 		}
 
 		Payment_HTML::promptpassword( $option, $passthrough, $wrong );
@@ -4276,7 +4294,12 @@ class InvoiceFactory
 					$this->invoice	= $invoice;
 				}
 
-				$this->confirm ( $option, array(), $passthrough );
+				$var = array();
+				if ( isset( $_POST['password'] ) ) {
+					$var['password'] = $_POST['password'];
+				}
+
+				$this->confirm ( $option, $var, $passthrough );
 			}
 		} else {
 			// Reset $register if we seem to have all data
@@ -4296,7 +4319,7 @@ class InvoiceFactory
 	{
 		global $database, $my, $aecConfig, $mosConfig_absolute_path;
 
-		if ( !$passthrough ) {
+		if ( empty( $passthrough ) ) {
 			if ( !$this->checkAuth( $option, $var ) ) {
 				return false;
 			}
