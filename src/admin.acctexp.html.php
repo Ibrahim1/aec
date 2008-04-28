@@ -1915,7 +1915,7 @@ class HTML_AcctExp
  		echo $pageNav->getListFooter();
 		HTML_myCommon::ContentLegend(); ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
-		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="task" value="showCoupons<?php echo $type ? 'Static' : ''; ?>" />
 		<input type="hidden" name="returnTask" value="showCoupons<?php echo $type ? 'Static' : ''; ?>" />
 		<input type="hidden" name="boxchecked" value="0" />
 		</form>
