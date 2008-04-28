@@ -4562,7 +4562,7 @@ class InvoiceFactory
 			$var['params'][$varname] = $varvalue;
 		}
 
-		$response = $this->pp->processor->checkoutProcess( $var, $this->pp, $this->metaUser, $new_subscription, $this->objInvoice );
+		$response = $this->pp->checkoutProcess( $var, $this->pp, $this->metaUser, $new_subscription, $this->objInvoice );
 
 		if ( isset( $response['error'] ) ) {
 			$this->error( $option, $this->metaUser->cmsUser, $this->objInvoice->invoice_number, $response['error'] );

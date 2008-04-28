@@ -123,7 +123,7 @@ class processor_ipayment_silent extends XMLprocessor
 	function createRequestXML( $request )
 	{
 		global $mosConfig_live_site, $database;
-
+print_r($request);exit;
 		$invoice_params = $request->invoice->getParams();
 
 		if ( isset( $invoice_params['creator_ip'] ) ) {
