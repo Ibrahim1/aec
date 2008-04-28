@@ -57,10 +57,10 @@ class mi_directory
 			return null;
 		}
 
-		$fullpath = AECToolbox::rewriteEngine( $path, $metaUser, $plan, $invoice, $mode );
+		$fullpath = AECToolbox::rewriteEngine( $path, $metaUser, $plan, $invoice );
 
 		if ( !file_exists( $fullpath ) ) {
-			return mkdir( $fullpath );
+			return mkdir( $fullpath, $mode );
 		} else {
 			return true;
 		}

@@ -137,7 +137,7 @@ class mi_coupon
 		$recipients = explode( ',', $params['recipient'] );
 
 		foreach ( $recipients as $current => $email ) {
-			$recipients[$current] = AECToolbox::rewriteEngine( trim( $email ), $metaUser, $plan );
+			$recipients[$current] = AECToolbox::rewriteEngine( trim( $email ), $metaUser, $plan, $invoice );
 		}
 
 		mosMail( $params['sender'], $params['sender_name'], $recipients, $subject, $message, $params['text_html'] );

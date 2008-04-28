@@ -35,7 +35,7 @@ class mi_mysql_query
 
 	function pre_expiration_action( $params, $metaUser, $plan, $invoice )
 	{
-		$query = AECToolbox::rewriteEngine( $params['query_pre_exp'], $metaUser, $plan );
+		$query = AECToolbox::rewriteEngine( $params['query_pre_exp'], $metaUser, $plan, $invoice );
 
 		$database->setQuery( $query );
 		$database->query();
@@ -47,7 +47,7 @@ class mi_mysql_query
 	{
 		global $database;
 
-		$query = AECToolbox::rewriteEngine( $params['query_exp'], $metaUser, $plan );
+		$query = AECToolbox::rewriteEngine( $params['query_exp'], $metaUser, $plan, $invoice );
 
 		$database->setQuery( $query );
 		$database->query();
