@@ -116,18 +116,6 @@ class processor_authorize_arb extends XMLprocessor
 	{
 		global $mosConfig_live_site;
 
-		// ARB doesn't validate the transactions until the batch processing occurs.  They only do
-		// an initial algorithm check, which the test credit cards pass.  So we have to catch them
-		// here until Authorize.net decides it's a good idea too. See this page for the test cards:
-		// http://developer.authorize.net/faqs/#7429 [KML]
-		$cc_testnumbers = array("370000000000002", "6011000000000012", "5424000000000015", "4007000000027",
-								"4012888818888", "3088000000000017", "38000000000006", "4222222222222" );
-
-		if ( !$this->settings['testmode'] && in_array( trim( $request->int_var['params']['cardNumber'] ), $cc_testnumbers)) {
-			$response['valid'] = false;
-			$response['error'] = "Credit Card Number is invalid";
-			return $response;
-		}
 
 		// Start xml, add login and transaction key, as well as invoice number
 		$content =	'<?xml version="1.0" encoding="utf-8"?>'
@@ -140,9 +128,11 @@ class processor_authorize_arb extends XMLprocessor
 
 		$full = $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
 
+		$name = AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
+
 		// Add Payment information
 		$content .=	'<subscription>'
-					. '<name>' . trim( substr( AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice ), 0, 20 ) ) . '</name>'
+					. '<name>' . trim( substr( $name, 0, 20 ) ) . '</name>'
 					. '<paymentSchedule>'
 					. '<interval>'
 					. '<length>' . trim( $full['period'] ) . '</length>'
@@ -196,6 +186,19 @@ class processor_authorize_arb extends XMLprocessor
 
 	function transmitRequestXML( $xml, $request )
 	{
+		// ARB doesn't validate the transactions until the batch processing occurs.  They only do
+		// an initial algorithm check, which the test credit cards pass.  So we have to catch them
+		// here until Authorize.net decides it's a good idea too. See this page for the test cards:
+		// http://developer.authorize.net/faqs/#7429 [KML]
+		$cc_testnumbers = array("370000000000002", "6011000000000012", "5424000000000015", "4007000000027",
+								"4012888818888", "3088000000000017", "38000000000006", "4222222222222" );
+
+		if ( !$this->settings['testmode'] && in_array( trim( $request->int_var['params']['cardNumber'] ), $cc_testnumbers)) {
+			$response['valid'] = false;
+			$response['error'] = "Credit Card Number is invalid";
+			return $response;
+		}
+
 		$path = "/xml/v1/request.api";
 		if ( $this->settings['testmode'] ) {
 			$url = "https://apitest.authorize.net" . $path;

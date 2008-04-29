@@ -694,50 +694,13 @@ class Payment_HTML
 			} ?>
 <?php
 /**
- * New Checkout Amount display:
- *
- * Timeframe
- * ---------------------------
- * Title (ex. "Trial")
- *
- * Regular Amount window
- * +Coupons
- * ---
- * +Total
- * ---------------------------
- *
- * Next Timeframe
- * ---------------------------
- * Titel (ex. Regular Period)
- *
- * Regular Amount window
- * +Coupons
- * ---
- * +Total
- * ---------------------------
- *
  * Ideas:
- * - Point out next Timeframe with an arrow, or special styling
  * - Mark Recurring periods and how often the recurring happens
  * - Do not forget Processor-specific hooks (like info fields
  *   etc.) - people WILL ask about them anyhoo...
- * - Use only one big table that separates the timeframes and
- *   one subtable in each row that has the amount "history"
- * - Make Coupons (...Problems) more understandable
- * - Make Checkout Button more prominent
  * - Checkout Button may also be influenced by processors
  *
  */
-
-/**
- * _AEC_TERMTYPE_TRIAL
- * _AEC_TERMTYPE_TERM
- * _AEC_CHECKOUT_TERM
- * _AEC_CHECKOUT_COST
- * _AEC_CHECKOUT_DISCOUNT
- * _AEC_CHECKOUT_TOTAL
- */
-
 ?>
 
 			<table id="aec_checkout">
@@ -762,7 +725,10 @@ class Payment_HTML
 
 						switch ( $citem->type ) {
 							case 'discount':
-								$ta = $t . '&nbsp;(' . $citem->cost['details'] . ')';
+								$ta = $t;
+								if ( !empty( $citem->cost['details'] ) ) {
+									$ta .= '&nbsp;(' . $citem->cost['details'] . ')';
+								}
 								$ta .= '&nbsp;[<a href="'
 									. AECToolbox::deadsureURL( '/index.php?option=' . $option
 									. '&amp;task=InvoiceRemoveCoupon&amp;invoice=' . $InvoiceFactory->invoice
@@ -779,7 +745,7 @@ class Payment_HTML
 									$strlen = 2;
 
 									if ( !$aecConfig->cfg['amount_currency_symbol'] ) {
-										$strlen += strlen( str_replace( str_replace( ',', '.', $citem->cost['amount'] ), '', $c ) );
+										$strlen = 1 + strlen( $InvoiceFactory->payment->currency ) * 2;
 									}
 
 									for( $i=0; $i<=$strlen;$i++ ) {

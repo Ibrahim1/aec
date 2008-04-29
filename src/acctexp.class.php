@@ -647,7 +647,7 @@ class metaUser
 				. ' FROM #__acctexp_couponsxuser'
 				. ' WHERE `userid` = \'' . $this->userid . '\''
 				. ' AND `coupon_id` = \'' . $couponid . '\''
-				. ' AND `type` = \'' . $type . '\''
+				. ' AND `coupon_type` = \'' . $type . '\''
 				;
 		$database->setQuery( $query );
 		$usecount = $database->loadResult();
@@ -4562,7 +4562,7 @@ class InvoiceFactory
 			$var['params'][$varname] = $varvalue;
 		}
 
-		$response = $this->pp->checkoutProcess( $var, $this->pp, $this->metaUser, $new_subscription, $this->objInvoice );
+		$response = $this->pp->checkoutProcess( $var, $this->metaUser, $new_subscription, $this->objInvoice );
 
 		if ( isset( $response['error'] ) ) {
 			$this->error( $option, $this->metaUser->cmsUser, $this->objInvoice->invoice_number, $response['error'] );
@@ -5484,9 +5484,7 @@ class Invoice extends paramDBTable
 
 			$cph = new couponHandler();
 			$cph->load( $couponcode );
-			if ($cph->status) {
-				$cph->coupon->decrementCount();
-			}
+			$cph->decrementCount( $this );
 		}
 
 		$this->coupons = implode( ';', $oldcoupons );
@@ -8356,9 +8354,11 @@ class couponsHandler extends eucaObject
 					// Coupon approved, checking restrictions
 					$cph->checkRestrictions( $metaUser, $original_amount, $invoiceFactory );
 					if ( $cph->status ) {
+						$start = 0;
+
 						if ( $cph->discount['useon_trial'] && $terms->hasTrial && ( $terms->pointer == 0 ) ) {
 							$start = 0;
-						} else {
+						} elseif( $terms->hasTrial ) {
 							$start = 1;
 						}
 
@@ -8376,12 +8376,12 @@ class couponsHandler extends eucaObject
 									$terms->terms[$i]->discount( null, $cph->discount['amount_percent'], $info );
 								}
 								if ( $cph->discount['amount_use'] ) {
-									$info['details'] = '-' . $cph->discount['amount'];
+									$info['details'] = null;
 									$terms->terms[$i]->discount( $cph->discount['amount'], null, $info );
 								}
 							} else {
 								if ( $cph->discount['amount_use'] ) {
-									$info['details'] = '-' . $cph->discount['amount'];
+									$info['details'] = null;
 									$terms->terms[$i]->discount( $cph->discount['amount'], null, $info );
 								}
 								if ( $cph->discount['amount_percent_use'] ) {
@@ -8500,7 +8500,6 @@ class couponHandler
 			// Check for max reuse
 			if ( $this->restrictions['has_max_reuse'] ) {
 				if ( $this->restrictions['max_reuse'] ) {
-
 					// Error: Max Reuse of this coupon is exceeded
 					if ( (int) $this->coupon->usecount > (int) $this->restrictions['max_reuse'] ) {
 						$this->setError( _COUPON_ERROR_MAX_REUSE );
@@ -8571,7 +8570,7 @@ class couponHandler
 				. ' FROM #__acctexp_couponsxuser'
 				. ' WHERE `userid` = \'' . $invoice->userid . '\''
 				. ' AND `coupon_id` = \'' . $this->coupon->id . '\''
-				. ' AND `type` = \'' . $this->type . '\''
+				. ' AND `coupon_type` = \'' . $this->type . '\''
 				;
 
 		$database->setQuery( $query );
@@ -8579,7 +8578,7 @@ class couponHandler
 
 		$couponxuser = new couponXuser( $database );
 
-		if ( $id ) {
+		if ( !empty( $id ) ) {
 			// Relation exists, update count
 			global $mosConfig_offset;
 
@@ -8609,7 +8608,7 @@ class couponHandler
 				. ' FROM #__acctexp_couponsxuser'
 				. ' WHERE `userid` = \'' . $invoice->userid . '\''
 				. ' AND `coupon_id` = \'' . $this->coupon->id . '\''
-				. ' AND `type` = \'' . $this->type . '\''
+				. ' AND `coupon_type` = \'' . $this->type . '\''
 				;
 
 		$database->setQuery( $query );
@@ -8676,7 +8675,11 @@ class couponHandler
 		// Check for max reuse per user
 		if ( $this->restrictions['has_max_peruser_reuse'] ) {
 			if ( $this->restrictions['max_peruser_reuse'] ) {
-				if ( (int) $metaUser->usedCoupon( $this->coupon->id, $this->type ) > (int) $this->restrictions['max_peruser_reuse'] ) {
+				$used = $metaUser->usedCoupon( $this->coupon->id, $this->type );
+
+				if ( $used == false ) {
+					$permissions['max_reuse'] = true;
+				} elseif ( (int) $used  <= (int) $this->restrictions['max_peruser_reuse'] ) {
 					$permissions['max_reuse'] = true;
 				} else {
 					$permissions['max_reuse'] = false;
@@ -9110,7 +9113,7 @@ class couponXuser extends paramDBTable
 			$this->setParams( $params );
 		}
 
-		$this->usercount = 1;
+		$this->usecount = 1;
 
 		$this->check();
 		$this->store();
