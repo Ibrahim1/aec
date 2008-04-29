@@ -2352,12 +2352,22 @@ class XMLprocessor extends processor
 
 	function transmitRequest( $url, $path, $content, $port=443, $curlextra=null )
 	{
+		global $aecConfig;
+
 		$response = null;
 
-		$response = $this->doTheCurl( $url, $content, $curlextra );
-		if ( $response === false ) {
-			// If curl doesn't work try using fsockopen
+		if ( $aecConfig->cfg['curl_default'] ) {
+			$response = $this->doTheCurl( $url, $content, $curlextra );
+			if ( $response === false ) {
+				// If curl doesn't work try using fsockopen
+				$response = $this->doTheHttp( $url, $path, $content, $port );
+			}
+		} else {
 			$response = $this->doTheHttp( $url, $path, $content, $port );
+			if ( $response === false ) {
+				// If fsockopen doesn't work try using curl
+				$response = $this->doTheCurl( $url, $content, $curlextra );
+			}
 		}
 
 		return $response;
