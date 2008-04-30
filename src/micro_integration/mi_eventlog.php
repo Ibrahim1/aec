@@ -15,8 +15,8 @@ class mi_eventlog extends MI
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_EVENTLOG;
-		$info['desc'] = _AEC_MI_DESC_EVENTLOG;
+		$info['name'] = _AEC_MI_EVENTLOG_NAME;
+		$info['desc'] = _AEC_MI_EVENTLOG_DESC;
 
 		return $info;
 	}

@@ -199,7 +199,11 @@ class metaUser
 				foreach ( $array as $item ) {
 					$i = explode( '=', $item, 2 );
 
-					$farray[$i[0]] = $i[1];
+					if ( !empty( $i[1] ) ) {
+						$farray[$i[0]] = $i[1];
+					} else {
+						$farray[$i[0]] = null;
+					}
 				}
 
 				unset( $array );
@@ -2754,7 +2758,11 @@ class aecHTML
 				$return .= '</div>';
 				break;
 			case 'accordion_start':
-				$this->accordions++;
+				if ( !isset( $this->accordions ) ) {
+					$this->accordions = 1;
+				} else {
+					$this->accordions++;
+				}
 
 				// small accordion code
 				$this->js[] = "window.addEvent('domready',function(){ var accordion" . $this->accordions . " = new Accordion('#accordion" . $this->accordions . " h3.atStart', '#accordion" . $this->accordions . " div.atStart', {
@@ -4529,7 +4537,7 @@ class InvoiceFactory
 		}
 
 		// Either this is fully free, or the next term is free and this is non recurring
-		if ( $this->terms->checkFree() || ( $this->nextterm->free && !$this->recurring ) ) {
+		if ( $this->terms->checkFree() || ( $this->terms->nextterm->free && !$this->recurring ) ) {
 			$this->objInvoice->pay();
 			thanks ( $option, $this->renew, 1 );
 			return;

@@ -958,12 +958,12 @@ class HTML_AcctExp
 				foreach ( $hacks as $handle => $content ) {
 					if ( !$content['status'] ) {
 						if ( isset($content['uncondition'] ) ) {
-							if ( $hacks[$content['uncondition']]['status'] ) {
+							if ( !empty( $hacks[$content['uncondition']]['status'] ) ) {
 								continue ;
 							}
 						}
 						if ( isset($content['condition'] ) ) {
-							if ( !$hacks[$content['condition']]['status'] ) {
+							if ( empty( $hacks[$content['condition']]['status'] ) ) {
 								continue ;
 							}
 						}

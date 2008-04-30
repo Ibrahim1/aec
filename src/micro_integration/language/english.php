@@ -50,7 +50,7 @@ define( '_MI_MI_DOCMAN_SET_DOWNLOADS_DESC',			'SET this amount of downloads gran
 define( '_MI_MI_DOCMAN_ADD_DOWNLOADS_NAME',			'Add Downloads' );
 define( '_MI_MI_DOCMAN_ADD_DOWNLOADS_DESC',			'Add this amount of downloads to the total granted amount of downloads for this user. Will be overridden by SET if you put a value for that as well!.' );
 define( '_MI_MI_DOCMAN_SET_UNLIMITED_NAME',			'Set Unlimited' );
-define( '_MI_MI_DOCMAN_SET_DOWNLOADS_DESC',			'Grant the user unlimited downloads.' );
+define( '_MI_MI_DOCMAN_SET_UNLIMITED_DESC',			'Grant the user unlimited downloads.' );
 define( '_MI_MI_DOCMAN_SET_GROUP_NAME',				'Set DocMan Group' );
 define( '_MI_MI_DOCMAN_SET_GROUP_DESC',				'Choose Yes if you want this MI to set the DocMan Group when it is called.' );
 define( '_MI_MI_DOCMAN_GROUP_NAME',					'DocMan Group' );

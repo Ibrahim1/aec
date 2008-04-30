@@ -50,7 +50,7 @@ define( '_MI_MI_DOCMAN_SET_DOWNLOADS_DESC',			'Die Anzahl der Downloads auf die 
 define( '_MI_MI_DOCMAN_ADD_DOWNLOADS_NAME',			'Downloads anf&uuml;gen' );
 define( '_MI_MI_DOCMAN_ADD_DOWNLOADS_DESC',			'Anzahl der Downloads, die dem Benutzerkonto hinzugef&uuml;gt werden.' );
 define( '_MI_MI_DOCMAN_SET_UNLIMITED_NAME',			'Set Unlimited' );
-define( '_MI_MI_DOCMAN_SET_DOWNLOADS_DESC',			'Grant the user unlimited downloads.' );
+define( '_MI_MI_DOCMAN_SET_UNLIMITED_DESC',			'Grant the user unlimited downloads.' );
 define( '_MI_MI_DOCMAN_SET_GROUP_NAME',				'Verwende DocMan Gruppe' );
 define( '_MI_MI_DOCMAN_SET_GROUP_DESC',				'Auf "Ja" setzen wenn die DocMan-Benutzergruppe f&uuml;r diese Integration verwendet werden soll' );
 define( '_MI_MI_DOCMAN_GROUP_NAME',					'DocMan Gruppe' );

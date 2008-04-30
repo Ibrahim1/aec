@@ -805,7 +805,9 @@ function help( $option )
 	}
 
 	// generic CMS changes
-	$diagnose[]	= array( _AEC_HELP_DIAG_CMN1, $diagnostic['hack_joomlaphp4'], 3, _AEC_HELP_DIAG_CMN1_DESC, _AEC_HELP_DIAG_CMN1_DESC2, 0 );
+	if ( !defined( 'JPATH_BASE' ) ) {
+		$diagnose[]	= array( _AEC_HELP_DIAG_CMN1, $diagnostic['hack_joomlaphp4'], 3, _AEC_HELP_DIAG_CMN1_DESC, _AEC_HELP_DIAG_CMN1_DESC2, 0 );
+	}
 
 	// menu entry
 	$diagnose[]	= array( _AEC_HELP_DIAG_CMN2, $diagnostic['hack_menuentry'], 2, _AEC_HELP_DIAG_CMN2_DESC, _AEC_HELP_DIAG_CMN2_DESC2, 0 );
@@ -822,11 +824,13 @@ function help( $option )
 	// site offline
 	$diagnose[]	= array( _AEC_HELP_DIAG_SITE_OFFLINE, $diagnostic['offline'], 3, _AEC_HELP_DIAG_SITE_OFFLINE_DESC, 0, 1 );
 
-	// disabled registration
-	$diagnose[]	= array( _AEC_HELP_DIAG_REG_DISABLED, !$diagnostic['user_registration'], 2, _AEC_HELP_DIAG_REG_DISABLED_DESC, 0, 1 );
+	if ( !defined( 'JPATH_BASE' ) ) {
+		// disabled registration
+		$diagnose[]	= array( _AEC_HELP_DIAG_REG_DISABLED, !$diagnostic['user_registration'], 2, _AEC_HELP_DIAG_REG_DISABLED_DESC, 0, 1 );
 
-	// login disabled
-	$diagnose[]	= array( _AEC_HELP_DIAG_LOGIN_DISABLED, !$diagnostic['login_possible'], 2, _AEC_HELP_DIAG_LOGIN_DISABLED_DESC, 0, 1 );
+		// login disabled
+		$diagnose[]	= array( _AEC_HELP_DIAG_LOGIN_DISABLED, !$diagnostic['login_possible'], 2, _AEC_HELP_DIAG_LOGIN_DISABLED_DESC, 0, 1 );
+	}
 
 	// check JACL
 	$diagnose[]	= array( _AEC_HELP_DIAG_CMN3, !$diagnostic['jacl'], 1, _AEC_HELP_DIAG_CMN3_DESC, 0, 1 );
@@ -4771,14 +4775,14 @@ function exportData( $option, $cmd=null )
 	}
 
 	// Always store the last ten calls, but only if something is happening
-	if ( $cmd_save || $cmd_apply || $cmd_export ) {
+	if ( ( $cmd_save || $cmd_apply || $cmd_export ) && isset( $row ) ) {
 		$autorow = new aecExport( $database );
 		$autorow->load(0);
 		$autorow->save( 'Autosave', $filter_values, $options_values, $params_values, true );
-	}
 
-	if ( ( $autorow->filter == $row->filter ) && ( $autorow->options == $row->options ) && ( $autorow->params == $row->params ) ) {
-		$use_original = 1;
+		if ( ( $autorow->filter == $row->filter ) && ( $autorow->options == $row->options ) && ( $autorow->params == $row->params ) ) {
+			$use_original = 1;
+		}
 	}
 
 	// Create Parameters
