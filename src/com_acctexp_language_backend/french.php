@@ -601,8 +601,8 @@ define( '_CFG_GENERAL_ALERTLEVEL2_NAME', 'Alerte Niveau 2:');
 define( '_CFG_GENERAL_ALERTLEVEL2_DESC', 'Dans jours. C&acute;est le premier seuil pour informer l&acute;utilisateur que son inscription est sur le point d&acute;expirer.');
 define( '_CFG_GENERAL_ALERTLEVEL1_NAME', 'Alerte Niveau 1:');
 define( '_CFG_GENERAL_ALERTLEVEL1_DESC', 'Dans jours. C&acute;est le seuil final pour informer l&acute;utilisateur que son inscription est sur le point d&acute;expirer. Cela doit &ecirc;tre l&acute;intervalle le plus pr&egrave;s de l&acute;expiration.');
-define( '_CFG_GENERAL_ENTRY_PLAN_NAME', 'Entry Plan:');
-define( '_CFG_GENERAL_ENTRY_PLAN_DESC', 'Every user will be subscribed to this plan (no payment!) when the user has no subscription yet');
+define( '_CFG_GENERAL_ENTRY_PLAN_NAME', 'Plan de D&eacute;part par d&eacute;faut');
+define( '_CFG_GENERAL_ENTRY_PLAN_DESC', 'Plan d&acute;essai gratuit par d&eacute;faut..');
 define( '_CFG_GENERAL_REQUIRE_SUBSCRIPTION_NAME', 'Require Subscription:');
 define( '_CFG_GENERAL_REQUIRE_SUBSCRIPTION_DESC', 'When enabled, a user MUST have a subscription. If disabled, users will be able to log in without one.');
 
@@ -610,8 +610,6 @@ define( '_CFG_GENERAL_GWLIST_NAME', 'Description de la Passerelle:');
 define( '_CFG_GENERAL_GWLIST_DESC', 'Liste des Passerelles que vous d&eacute;sirez expliquer sur les pages interdites (page que les utilisateurs voient lorsqu&acute;ils essaient d&acute;acc&eacute;der une page qui n&acute;est pas autoris&eacute;e par leur mode de plan).');
 define( '_CFG_GENERAL_GWLIST_ENABLED_NAME', 'Activated Gateways:');
 define( '_CFG_GENERAL_GWLIST_ENABLED_DESC', 'Select the gateways you want to be activated (use the CTRL key to select more than one). After saving, the settings tabs for these gateways will show up. Deactivating a gateway will not erase its settings.');
-define( '_CFG_GENERAL_ENTRY_PLAN_NAME', 'Plan de D&eacute;part par d&eacute;faut');
-define( '_CFG_GENERAL_ENTRY_PLAN_DESC', 'Plan d&acute;essai gratuit par d&eacute;faut..');
 
 define( '_CFG_GENERAL_BYPASSINTEGRATION_NAME', 'D&eacute;sactiver Int&eacute;gration:');
 define( '_CFG_GENERAL_BYPASSINTEGRATION_DESC', 'Entrer un nom ou une liste de noms (s&eacute;par&eacute;e par un espace) de l&acute;int&eacute;gration que vous voulez d&eacute;sactiver. Actuellement sont support&eacute;s: <strong>CB,CBE,CBM,JACL,SMF,UE,UHP2,VM</strong>. Cela peut &ecirc;tre utile quand vous avez d&eacute;sinstall&eacute; CB mais n&acute;avez pas supprim&eacute; les tables de la BD (dans le cas o&ugrave; AEC pourrait encore reconna&icirc;tre ce qui a d&eacute;j&agrave; &eacute;t&eacute; install&eacute;).');

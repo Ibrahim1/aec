@@ -601,7 +601,7 @@ define( '_CFG_GENERAL_ALERTLEVEL2_DESC',			'In Tagen. Dies ist die erste Grenze 
 define( '_CFG_GENERAL_ALERTLEVEL1_NAME',			'Alarmebene 1:' );
 define( '_CFG_GENERAL_ALERTLEVEL1_DESC',			'In Tagen. Dies ist die letzte Grenze die beginnt den Benutzer auf den Auslauf seines Abonnements hinzuweisen.' );
 define( '_CFG_GENERAL_ENTRY_PLAN_NAME',			'Einstiegsplan:' );
-define( '_CFG_GENERAL_ENTRY_PLAN_DESC',			'Jeder Benutzer wird - wenn keine Abonnement - ohne Bezahlung diesem Plan zugewiesen' );
+define( '_CFG_GENERAL_ENTRY_PLAN_DESC',			'Jeder Benutzer wird - wenn bisher kein Abonnement besteht - ohne Bezahlung diesem Plan zugewiesen' );
 define( '_CFG_GENERAL_REQUIRE_SUBSCRIPTION_NAME',			'Erfordert Einschreibung:' );
 define( '_CFG_GENERAL_REQUIRE_SUBSCRIPTION_DESC',			'Wenn aktiviert, <strong>muss</strong> der Benutzer ein g&uuml;ltiges Abonnement besitzen. Nicht aktiviert, Benutzer k&ouml;nnen ohne Abo einloggen.' );
 
@@ -609,8 +609,6 @@ define( '_CFG_GENERAL_GWLIST_NAME',			'Gateway Erkl&auml;rungen:' );
 define( '_CFG_GENERAL_GWLIST_DESC',			'Hier Bezahlm&ouml;glichkeiten markieren welche auf der Nichterlaubt-Seite angezeigt werden sollen (diese Liste sehen die Benutzer, wenn sie versuchen eine Seite anzusehen f&uuml;r die sie keine Berechtigung haben).<br /><strong>Hinweis: es werden nur die oben, zur Zeit Aktiven angezeigt</strong>' );
 define( '_CFG_GENERAL_GWLIST_ENABLED_NAME',			'Aktivierte Zahlungsgateways:' );
 define( '_CFG_GENERAL_GWLIST_ENABLED_DESC',			'Alle Gateways markieren welche aktiv sein sollen (STRG-Taste dr&uuml;cken f&uuml;r mehrere).<br /><strong>Um die ge&auml;nderten Einstellungen anzuzeigen, den Button Speichern anklicken</strong><br />Deaktivieren eines Gateways l&ouml;scht nicht die bisherigen Einstellungen.' );
-define( '_CFG_GENERAL_ENTRY_PLAN_NAME',			'Standard Probeplan' );
-define( '_CFG_GENERAL_ENTRY_PLAN_DESC',			'Der Standard-Plan f&uuml;r die freie Probezeit.' );
 
 define( '_CFG_GENERAL_BYPASSINTEGRATION_NAME',			'Komponenten abschalten:' );
 define( '_CFG_GENERAL_BYPASSINTEGRATION_DESC',			'Alle zu deaktivierenden Zusatzkomponenten angeben (mit Komma trennen!). Zur werden unterst&uuml;tzt: <strong>CB,CBE,CBM,JACL,SMF,UE,UHP2,VM</strong>.<br />Sollte z.B. CB (CommunityBuilder) deinstalliert werden aber dessen Datenbanktabellen noch vorhanden sein, jedoch hier <strong>kein</strong> Eintrag vermerkt sein, wird AEC dann weiterhin CB als installiert ansehen!.' );

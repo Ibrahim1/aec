@@ -610,8 +610,6 @@ define( '_CFG_GENERAL_GWLIST_NAME', 'Gateway Descriptions:');
 define( '_CFG_GENERAL_GWLIST_DESC', 'List the Gateways you want to explain on the NotAllowed page (which your customers see when trying to access a page that they are not allowed to by their payment plan).');
 define( '_CFG_GENERAL_GWLIST_ENABLED_NAME', 'Activated Gateways:');
 define( '_CFG_GENERAL_GWLIST_ENABLED_DESC', 'Select the gateways you want to be activated (use the CTRL key to select more than one). After saving, the settings tabs for these gateways will show up. Deactivating a gateway will not erase its settings.');
-define( '_CFG_GENERAL_ENTRY_PLAN_NAME', 'Default Entry Plan');
-define( '_CFG_GENERAL_ENTRY_PLAN_DESC', 'Free trial default plan.');
 
 define( '_CFG_GENERAL_BYPASSINTEGRATION_NAME', 'Disable Integration:');
 define( '_CFG_GENERAL_BYPASSINTEGRATION_DESC', 'Provide one name or a list of names (seperated by a whitespace) of integrations that you want to have disabled. Currently supporting the strings: <strong>CB,CBE,CBM,JACL,SMF,UE,UHP2,VM</strong>. This can be helpful when you have uninstalled CB but not deleted its tables (in which case the AEC would still recognize it as being installed).');

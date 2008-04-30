@@ -2183,11 +2183,7 @@ class HTML_AcctExp
 		mosCommonHTML::loadOverlib();
 		HTML_myCommon::addBackendCSS();
 
-		$keys = array(
-		'ssl_test_mode', 'CODE0', 'SITE_ID', 'DOC_ID', 'AUTH', 'RECALL', 'currency_code', 'ssl_merchant_id',
-		'ssl_user_id', 'ssl_pin', 'ssl_invoice_number', 'ssl_salestax', 'ssl_result_format', 'ssl_receipt_link_method',
-		'ssl_receipt_link_url', 'ssl_receipt_link_text', 'ssl_amount', 'ssl_customer_code', 'ssl_description'
-		); ?>
+		?>
 		<form action="index2.php" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
@@ -2222,12 +2218,7 @@ class HTML_AcctExp
 				<td align="center"><?php echo $row->proc_name; ?></td>
 				<td align="center"><?php echo $row->amount; ?></td>
 				<td align="left">
-					<?php
-					$response = str_replace( "\n", '<br />', $row->response );
-					foreach ( $keys as $key ) {
-						$response = HTML_AcctExp::change( $response, $key );
-					}
-					echo $response; ?>
+					<?php echo str_replace( "\n", '<br />', $row->response ); ?>
 				</td>
 			</tr>
 			<?php
@@ -2352,33 +2343,6 @@ class HTML_AcctExp
 		}
 
  		HTML_myCommon::GlobalNerd();
-	}
-
-	/**
-	 * Builds a html string
-	 *
-	 * @param string $x
-	 * @param text $var
-	 * @return html.string
-	 */
-	function change( $x, $var )
-	{
-   		if ( $var != '' ) {
-       		$xtemp	= '';
-       		$i		= 0;
-
-       		while ( $i<strlen( $x ) ) {
-           		if ( ( ( $i + strlen( $var )) <= strlen( $x ) ) && ( strcasecmp( $var, substr( $x, $i, strlen( $var ) ) ) == 0 ) ) {
-                   $xtemp .= '<span style="font-weight:bold;text-transform:uppercase;">' . substr( $x, $i , strlen( $var ) ) . '</span>';
-                   $i += strlen( $var );
-           		} else {
-               		$xtemp .= $x{$i};
-               		$i++;
-           		}
-       		}
-       		$x = $xtemp;
-   		}
-   		return $x;
 	}
 
 	/**

@@ -601,8 +601,8 @@ define( '_CFG_GENERAL_ALERTLEVEL2_NAME', '警告级别2:');
 define( '_CFG_GENERAL_ALERTLEVEL2_DESC', '几天�?�,将第一次开始通知用户他的订阅将失效.');
 define( '_CFG_GENERAL_ALERTLEVEL1_NAME', '警告级别1:');
 define( '_CFG_GENERAL_ALERTLEVEL1_DESC', 'In days. This is the final threshold to alert user that his subscription is about to expire. This should be the closest interval to expiration.');
-define( '_CFG_GENERAL_ENTRY_PLAN_NAME', 'Entry Plan:');
-define( '_CFG_GENERAL_ENTRY_PLAN_DESC', 'Every user will be subscribed to this plan (no payment!) when the user has no subscription yet');
+define( '_CFG_GENERAL_ENTRY_PLAN_NAME', '默认方案');
+define( '_CFG_GENERAL_ENTRY_PLAN_DESC', '�?费试用默认的方案.');
 define( '_CFG_GENERAL_REQUIRE_SUBSCRIPTION_NAME', 'Require Subscription:');
 define( '_CFG_GENERAL_REQUIRE_SUBSCRIPTION_DESC', 'When enabled, a user MUST have a subscription. If disabled, users will be able to log in without one.');
 
@@ -610,8 +610,6 @@ define( '_CFG_GENERAL_GWLIST_NAME', '网关�??述:');
 define( '_CFG_GENERAL_GWLIST_DESC', '你想说明的�?容许网关列表页�?�(你的�?一个客户�?试去访问一个页�?�时,他们的支付方案将�?被容许).');
 define( '_CFG_GENERAL_GWLIST_ENABLED_NAME', 'Activated Gateways:');
 define( '_CFG_GENERAL_GWLIST_ENABLED_DESC', 'Select the gateways you want to be activated (use the CTRL key to select more than one). After saving, the settings tabs for these gateways will show up. Deactivating a gateway will not erase its settings.');
-define( '_CFG_GENERAL_ENTRY_PLAN_NAME', '默认方案');
-define( '_CFG_GENERAL_ENTRY_PLAN_DESC', '�?费试用默认的方案.');
 
 define( '_CFG_GENERAL_BYPASSINTEGRATION_NAME', 'Disable Integration:');
 define( '_CFG_GENERAL_BYPASSINTEGRATION_DESC', 'Provide one name or a list of names (seperated by a whitespace) of integrations that you want to have disabled. Currently supporting the strings: <strong>CB,CBE,CBM,JACL,SMF,UE,UHP2,VM</strong>. This can be helpful when you have uninstalled CB but not deleted its tables (in which case the AEC would still recognize it as being installed).');

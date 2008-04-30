@@ -128,8 +128,8 @@ class paramDBTable extends mosDBTable
 		$params = $this->getParams( $field );
 		foreach ( $array as $key => $value ) {
 			if ( isset( $params[$key] ) ) {
-				if( !( ( $value === $params[$key] ) || ( addslashes( $value ) === $params[$key] ) ) ) {
-					$diff[$key] = array( $params[$key], $value );
+				if( !( ( $value === $params[$key] ) || ( stripslashes( $value ) === $params[$key] ) ) ) {
+					$diff[$key] = array( $params[$key], stripslashes( $value ) );
 				}
 			}
 		}

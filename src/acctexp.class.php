@@ -869,7 +869,7 @@ class aecHeartbeat extends mosDBTable
 			global $aecConfig;
 
 			$query = 'INSERT INTO #__acctexp_heartbeat'
-			. ' VALUES( \'1\', \'' . ( strtotime( $this->last_beat ) - $aecConfig->cfg['heartbeat_cycle'] * 3600 ) . '\' )'
+			. ' VALUES( \'1\', \'' . date( 'Y-m-d H:i:s', ( time() - $aecConfig->cfg['heartbeat_cycle'] * 3600 ) ) . '\' )'
 			;
 			$this->_db->setQuery( $query );
 			$this->_db->query() or die( $this->_db->stderr() );
