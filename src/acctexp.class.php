@@ -2379,6 +2379,23 @@ class XMLprocessor extends processor
 
 	function doTheHttp( $url, $path, $content, $port=443 )
 	{
+        if ( !$url_info = parse_url( $url ) ) {
+            return false;
+        }
+
+        switch ( $url_info['scheme'] ) {
+            case 'https':
+                $scheme = 'ssl://';
+                $port = 443;
+                break;
+            case 'http':
+            default:
+                $scheme = '';
+                $port = 80;
+        }
+
+		$url = $scheme . $url_info['host'];
+
 		$header  =	"Host: " . $url  . "\r\n"
 					. "User-Agent: PHP Script\r\n"
 					. "Content-Type: text/xml\r\n"
