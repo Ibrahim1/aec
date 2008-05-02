@@ -69,7 +69,7 @@ class processor_payer extends POSTprocessor
 		$payment_method[] = mosHTML::makeOption ( "invoice", "invoice" );
 
 		$pm = explode( ';', $this->settings['payment_method'] );
-		foreach ($this->settings['payment_method'] as $name ) {
+		foreach ( $pm as $name ) {
 			$selected_methods[] = mosHTML::makeOption( $name, $name );
 		}
 
