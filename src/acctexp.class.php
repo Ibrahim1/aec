@@ -1755,7 +1755,7 @@ class PaymentProcessor
 
 	function is_recurring( $choice=null, $test=false )
 	{
-		if ( isset( $this->is_recurring ) ) {
+		if ( isset( $this->is_recurring ) && !$test ) {
 			return $this->is_recurring;
 		}
 
@@ -1766,7 +1766,9 @@ class PaymentProcessor
 			$this->getInfo();
 		}
 
-		if ( $this->info['recurring'] > 1 ) {
+		if ( !isset( $this->info['recurring'] ) ) {
+			// Keep false
+		} elseif ( $this->info['recurring'] > 1 ) {
 			if ( !isset( $this->settings ) ) {
 				$this->getSettings();
 			}
