@@ -37,7 +37,7 @@ class processor_virtualmerchant extends POSTprocessor
 		$info['name']					= "virtualmerchant";
 		$info['longname']				= "VirtualMerchant";
 		$info['statement']				= "Make payments with VirtualMerchant!";
-		$info['description']			= _DESCRIPTION_VIRTUALMERCHANT;
+		$info['description']			= 'Virtual Merchant is your global source for innovative payment solutions - the one company that clients and partners everywhere trust to securely and reliably manage their payments business.';
 		$info['cc_list']				= "visa,mastercard,discover,americanexpress,echeck,giropay";
 		$info['recurring']				= 0;
 		$info['notify_trail_thanks']	= 1;

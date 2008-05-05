@@ -225,6 +225,14 @@ define( '_CFG_VIAKLIX_USERID_DESC',				'Die User ID bei viaKLIX.' );
 define( '_CFG_VIAKLIX_PIN_NAME',				'PIN' );
 define( '_CFG_VIAKLIX_PIN_DESC',				'PIN des Terminals.' );
 
+// VirtualMerchant (successor of Viaklix) Settings
+define( '_CFG_VIRTUALMERCHANT_ACCOUNTID_NAME', 'Account ID');
+define( '_CFG_VIRTUALMERCHANT_ACCOUNTID_DESC', 'Your Account ID on viaKLIX.');
+define( '_CFG_VIRTUALMERCHANT_USERID_NAME', 'User ID');
+define( '_CFG_VIRTUALMERCHANT_USERID_DESC', 'Your User ID on viaKLIX.');
+define( '_CFG_VIRTUALMERCHANT_PIN_NAME', 'PIN');
+define( '_CFG_VIRTUALMERCHANT_PIN_DESC', 'PIN of the terminal.');
+
 // Authorize.net Settings
 define( '_CFG_AUTHORIZE_LOGIN_NAME',			'Login ID' );
 define( '_CFG_AUTHORIZE_LOGIN_DESC',			'Die Login ID bei Authorize.net.' );

@@ -482,26 +482,6 @@ class eucaDebug
 {
 	function eucaDebug()
 	{
-		if ( phpversion() >= "5.0.0") {
-			include_once( _EUCA_APP_PEAR );
-			include_once( _EUCA_APP_LIBDIR . '/php_debug/php_debug_2/PHP/Debug.php' );
-
-			// Options array for Debug object
-			$options = array(
-				'HTML_DIV_images_path' => 'images',
-				'HTML_DIV_css_path' => 'css',
-				'HTML_DIV_js_path' => 'js',
-			);
-
-			$this->Dbgv = 2;
-			$this->Dbg = new PHP_Debug( $options );
-		} else {
-			include_once( _EUCA_APP_LIBDIR . '/php_debug/php_debug_1/sources/debug.php' );
-
-			$this->Dbgv = 1;
-			$this->Dbg = new Debug();
-		}
-
 		include_once( _EUCA_APP_LIBDIR . '/krumo/class.krumo.php' );
 	}
 

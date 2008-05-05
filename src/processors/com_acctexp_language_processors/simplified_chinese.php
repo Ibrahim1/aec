@@ -212,6 +212,14 @@ define( '_CFG_VIAKLIX_USERID_DESC', '你在viaKLIX的用户ID.');
 define( '_CFG_VIAKLIX_PIN_NAME', 'PIN�?');
 define( '_CFG_VIAKLIX_PIN_DESC', '终端的PIN�?.');
 
+// VirtualMerchant (successor of Viaklix) Settings
+define( '_CFG_VIRTUALMERCHANT_ACCOUNTID_NAME', 'Account ID');
+define( '_CFG_VIRTUALMERCHANT_ACCOUNTID_DESC', 'Your Account ID on viaKLIX.');
+define( '_CFG_VIRTUALMERCHANT_USERID_NAME', 'User ID');
+define( '_CFG_VIRTUALMERCHANT_USERID_DESC', 'Your User ID on viaKLIX.');
+define( '_CFG_VIRTUALMERCHANT_PIN_NAME', 'PIN');
+define( '_CFG_VIRTUALMERCHANT_PIN_DESC', 'PIN of the terminal.');
+
 // Authorize.net Settings
 define( '_CFG_AUTHORIZE_LOGIN_NAME', 'API登陆ID');
 define( '_CFG_AUTHORIZE_LOGIN_DESC', '你在Authorize.net的API登陆ID.');

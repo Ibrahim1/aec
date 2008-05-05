@@ -529,6 +529,7 @@ class HTML_AcctExp
 						</div>
 						<div class="userinfobox">
 							<h3><?php echo _AEC_USER_SUBSCRIPTION; ?></h3>
+								<?php if ( $metaUser->hasSubscription ) { ?>
 								<table>
 									<tr>
 										<td width="120"><?php echo _AEC_USER_STATUS; ?>:</td>
@@ -601,11 +602,12 @@ class HTML_AcctExp
 										</td>
 									</tr>
 								</table>
+								<?php } ?>
 								<p>
 									<span style="vertical-align:top;"><?php echo _AEC_USER_ASSIGN_TO_PLAN; ?>:</span>&nbsp;
 									<?php echo $lists['assignto_plan']; ?>
 								</p>
-								<?php if ( !empty( $metaUser->allSubscriptions ) ) { ?>
+								<?php if ( $metaUser->hasSubscription && !empty( $metaUser->allSubscriptions ) ) { ?>
 									<br />
 									<p><strong><?php echo _AEC_USER_ALL_SUBSCRIPTIONS;?>:</strong></p>
 									<table>

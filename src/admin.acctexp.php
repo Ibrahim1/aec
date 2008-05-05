@@ -846,19 +846,24 @@ function editUser(  $option, $userid, $subscriptionid, $task )
 {
 	global $database, $mainframe;
 
+	$sid = $subscriptionid[0];
 	$lists = array();
 
 	$metaUser = new metaUser( $userid[0] );
 
-	if ( !empty( $subscriptionid[0] ) ) {
-		$metaUser->moveFocus( $subscriptionid[0] );
+	if ( !empty( $sid ) ) {
+		$metaUser->moveFocus( $sid );
 	} else {
-		$subscriptionid[0] = $metaUser->focusSubscription->id;
+		if ( $metaUser->hasSubscription ) {
+			$sid = $metaUser->focusSubscription->id;
+		} else {
+			$sid = 0;
+		}
 	}
 
-	if ( $metaUser->loadSubscriptions() && !empty( $subscriptionid[0] ) ) {
+	if ( $metaUser->loadSubscriptions() && !empty( $sid ) ) {
 		foreach ( $metaUser->allSubscriptions as $s_id => $s_c ) {
-			if ( $s_c->id == $subscriptionid[0] ) {
+			if ( $s_c->id == $sid ) {
 				$metaUser->allSubscriptions[$s_id]->current_focus = true;
 				continue;
 			}
@@ -1699,7 +1704,6 @@ function editSettings( $option )
 	}
 
 	$lists = array();
-	$ppsettings = array();
 
 	$currency_code_list	= AECToolbox::_aecCurrencyField( true, true, true );
 	$lists['currency_code_general'] = mosHTML::selectList( $currency_code_list, ( 'currency_code_general' ), 'size="10"', 'value', 'text', ( !empty( $aecConfig->cfg['currency_code_general'] ) ? $aecConfig->cfg['currency_code_general'] : '' ) );
@@ -1882,6 +1886,7 @@ function editSettings( $option )
 	$gwlist_selected = array();
 
 	asort($gwlist);
+	$ppsettings = array();
 
 	foreach ( $gwlist as $gwname ) {
 		$readgwname = ucwords( str_replace( '_', ' ', strtolower( $gwname ) ) );
@@ -1892,6 +1897,7 @@ function editSettings( $option )
 			if ( $pp->id ) {
 				// Init Info and Settings
 				$pp->fullInit();
+
 
 				foreach ( $pp->settings as $pname => $pvalue ) {
 					$ppsettings[$pp->processor_name . '_' . $pname] = $pvalue;

@@ -28,7 +28,7 @@ if ( !defined( '_EUCA_CFG_LOADED' ) ){
 
 	$require_file = dirname( __FILE__ ).'/eucalib.common.php';
 
-	if( file_exists( $require_file ) && !class_exists( 'paramDBTable') ) {
+	if( !class_exists( 'paramDBTable') ) {
 		require_once( $require_file );
 	}
 }

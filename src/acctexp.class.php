@@ -59,7 +59,7 @@ include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/php4/php4.
 include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/j15/j15.php' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
-	include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.common.php' );
+	include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.php' );
 }
 
 include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/mammontini/mammontini.php' );
@@ -8673,7 +8673,7 @@ class couponHandler
 			}
 		}
 
-		$this->coupon->decrementcount();
+		$this->coupon->decrementCount();
 	}
 
 	function checkRestrictions( $metaUser, $original_amount=null, $invoiceFactory=null )
@@ -9554,4 +9554,3 @@ class tokenGroup extends mosDBTable
 	}
 }
 ?>
-
