@@ -73,8 +73,13 @@ class paramDBTable extends mosDBTable
 		$params = array();
 		foreach ( $array as $key => $value ) {
 			if ( !is_null( $key ) ) {
+				if ( is_array( $value ) ) {
+					$temp = implode( ';', $value );
+					$value = $temp;
+				}
+
 				if ( get_magic_quotes_gpc() ) {
-					$value = stripslashes($value);
+					$value = stripslashes( $value );
 				}
 				$value = $this->_db->getEscaped( $value );
 

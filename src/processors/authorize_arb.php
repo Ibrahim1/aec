@@ -312,6 +312,8 @@ class processor_authorize_arb extends XMLprocessor
 			$code = $this->substring_between( $response,'<code>','</code>' );
 			$text = $this->substring_between( $response,'<text>','</text>' );
 
+			$return['invoice'] = $this->substring_between( $response,'<refId>','</refId>' );
+
 			if ( strcmp( $resultCode, 'Ok' ) === 0 ) {
 				$return['valid'] = 0;
 				$return['cancel'] = true;

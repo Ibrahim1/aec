@@ -150,7 +150,7 @@ define( '_MI_MI_REMOSITORY_ADD_DOWNLOADS_DESC',		'Anzahl der Downloads die dem B
 define( '_MI_MI_REMOSITORY_SET_DOWNLOADS_NAME',		'Downloads Setzen' );
 define( '_MI_MI_REMOSITORY_SET_DOWNLOADS_DESC',		'Anzahl der Downloads die dem Benutzer insgesamt gestattet werden sollen - &uuml;berschreibt den bisherigen Wert!' );
 define( '_MI_MI_REMOSITORY_SET_UNLIMITED_NAME',		'Set Unlimited' );
-define( '_MI_MI_REMOSITORY_SET_DOWNLOADS_DESC',		'Grant the user unlimited downloads.' );
+define( '_MI_MI_REMOSITORY_SET_UNLIMITED_DESC',		'Grant the user unlimited downloads.' );
 define( '_MI_MI_REMOSITORY_SET_GROUP_NAME',			'Gruppe' );
 define( '_MI_MI_REMOSITORY_SET_GROUP_DESC',			'Mit "Ja" best&auml;tigen wenn die reMOSitory-Gruppe bei Aboablauf verwendet werden soll' );
 define( '_MI_MI_REMOSITORY_GROUP_NAME',				'Gruppe' );

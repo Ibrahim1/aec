@@ -150,7 +150,7 @@ define( '_MI_MI_REMOSITORY_ADD_DOWNLOADS_DESC',		'Input the amount of downloads 
 define( '_MI_MI_REMOSITORY_SET_DOWNLOADS_NAME',		'Set Downloads' );
 define( '_MI_MI_REMOSITORY_SET_DOWNLOADS_DESC',		'Input the amount of listings you want as a overwriting set for this call' );
 define( '_MI_MI_REMOSITORY_SET_UNLIMITED_NAME',		'Set Unlimited' );
-define( '_MI_MI_REMOSITORY_SET_DOWNLOADS_DESC',		'Grant the user unlimited downloads.' );
+define( '_MI_MI_REMOSITORY_SET_UNLIMITED_DESC',		'Grant the user unlimited downloads.' );
 define( '_MI_MI_REMOSITORY_SET_GROUP_NAME',			'Set group' );
 define( '_MI_MI_REMOSITORY_SET_GROUP_DESC',			'Choose Yes if you want this MI to set the ReMOSitory Group when the calling payment plan expires' );
 define( '_MI_MI_REMOSITORY_GROUP_NAME',				'Group' );

@@ -75,10 +75,10 @@ function aecDebug( $text, $level = 128 )
 
 function aecGetParam( $name, $default='' )
 {
-	$return = trim( mosGetParam( $_REQUEST, $name, $default ) );
+	$return = mosGetParam( $_REQUEST, $name, $default );
 
-	if ( empty( $return ) && !empty( $_POST[$name] ) ) {
-		$return = $_POST[$name];
+	if ( !is_array( $return ) ) {
+		$return = trim( $return );
 	}
 
 	if ( !empty( $_POST[$name] ) ) {

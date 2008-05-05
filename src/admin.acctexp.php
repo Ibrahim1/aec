@@ -846,7 +846,12 @@ function editUser(  $option, $userid, $subscriptionid, $task )
 {
 	global $database, $mainframe;
 
-	$sid = $subscriptionid[0];
+	if ( !empty( $subscriptionid[0] ) ) {
+		$sid = $subscriptionid[0];
+	} else {
+		$sid = 0;
+	}
+
 	$lists = array();
 
 	$metaUser = new metaUser( $userid[0] );
@@ -856,8 +861,6 @@ function editUser(  $option, $userid, $subscriptionid, $task )
 	} else {
 		if ( $metaUser->hasSubscription ) {
 			$sid = $metaUser->focusSubscription->id;
-		} else {
-			$sid = 0;
 		}
 	}
 
@@ -1905,7 +1908,8 @@ function editSettings( $option )
 
 				if ( $pp->processor->active ) {
 					// Get Backend Settings
-					$settings_array = $pp->getBackendSettings();
+					$settings_array		= $pp->getBackendSettings();
+					$original_settings	= $pp->processor->settings();
 
 					if ( isset( $settings_array['lists'] ) ) {
 						foreach ( $settings_array['lists'] as $lname => $lvalue ) {
@@ -1988,14 +1992,18 @@ function editSettings( $option )
 						}
 
 						// It might be that the processor has got some new properties, so we need to double check here
-						$new_settings = $pp->processor->settings();
-
 						if ( isset( $pp->settings[$name] ) ) {
-							$settings_array[$setting_name] = array_merge( (array) $settings_array[$name], array( $pp->settings[$name] ) );
+							$content = $pp->settings[$name];
+						} elseif ( isset( $original_settings[$name] ) ) {
+							$content = $original_settings[$name];
 						} else {
-							$settings_array[$setting_name] = array_merge( (array) $settings_array[$name], array( $new_settings[$name] ) );
+							$content = null;
 						}
 
+						// Set the settings value
+						$settings_array[$setting_name] = array_merge( (array) $settings_array[$name], array( $content ) );
+
+						// unload the original value
 						unset( $settings_array[$name] );
 					}
 
