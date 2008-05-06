@@ -4503,7 +4503,7 @@ class InvoiceFactory
 				// Or a free trial that the user CAN use
 				|| ( $params['trial_free'] && empty( $this->objInvoice->counter ) ) ) {
 				// Then mark payed
-				if ( $this->objInvoice->pay() !== false ) {
+				if ( $this->objInvoice->pay() !== false ) {print_r("0");print_r($this);exit;
 					thanks ( $option, $this->renew, 1 );
 				}
 			}
@@ -4558,7 +4558,7 @@ class InvoiceFactory
 		}
 
 		// Either this is fully free, or the next term is free and this is non recurring
-		if ( $this->terms->checkFree() || ( $this->terms->nextterm->free && !$this->recurring ) ) {
+		if ( $this->terms->checkFree() || ( $this->terms->nextterm->free && !$this->recurring ) ) {print_r($this);exit;
 			$this->objInvoice->pay();
 			thanks ( $option, $this->renew, 1 );
 			return;
@@ -5523,7 +5523,9 @@ class Invoice extends paramDBTable
 
 			$cph = new couponHandler();
 			$cph->load( $couponcode );
-			$cph->decrementCount( $this );
+			if ( $cph->id ) {
+				$cph->decrementCount( $this );
+			}
 		}
 
 		$this->coupons = implode( ';', $oldcoupons );
@@ -8336,7 +8338,7 @@ class couponsHandler extends eucaObject
 			if ( !$cph->status ) {
 				$this->setError( $cph->error );
 				unset( $coupons[$arrayid] );
-				return false;
+				continue;
 			}
 
 			// Get the coupons that this one cannot be mixed with
@@ -8382,6 +8384,12 @@ class couponsHandler extends eucaObject
 		foreach ( $coupons as $arrayid => $coupon_code ) {
 			$cph = new couponHandler();
 			$cph->load( $coupon_code );
+
+			if ( !$cph->status ) {
+				$this->setError( $cph->error );
+				unset( $coupons[$arrayid] );
+				continue;
+			}
 
 			// Get the coupons that this one cannot be mixed with
 			if ( !empty( $cph->restrictions['restrict_combination'] ) && !empty( $cph->restrictions['bad_combinations'] ) ) {
