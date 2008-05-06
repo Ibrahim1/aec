@@ -104,9 +104,9 @@ define( '_RENEW_OFFLINE', 'Renouveler');
 define( '_RENEW_BUTTON_UPGRADE', 'Mettre &agrave; jour');
 define( '_PAYMENT_PENDING_REASON_ECHECK', '&eacute;chec non r&eacute;solu (1-4 jours ouvr&eacute;s)');
 define( '_PAYMENT_PENDING_REASON_TRANSFER', 'en attente de transfert du paiement');
-define( '_YOUR_SUBSCRIPTION', 'Your Subscription');
-define( '_YOUR_FURTHER_SUBSCRIPTIONS', 'Further Subscriptions');
-define( '_PLAN_PROCESSOR_ACTIONS', 'For this, you have the following options:');
+define( '_YOUR_SUBSCRIPTION', 'Votre souscription');
+define( '_YOUR_FURTHER_SUBSCRIPTIONS', 'Souscriptions suppl&eacute;mentaires');
+define( '_PLAN_PROCESSOR_ACTIONS', 'Pour cela, vous disposez des options suivantes:');
 
 // --== PAGE EXPIRATION ==--
 define( '_EXPIRE_INFO', 'Votre compte est actif jusqu\'au');
@@ -132,19 +132,19 @@ define( '_CONFIRM_TOS', "J'ai lu et j\'accepte les <a href=\"%s\" target=\"_blan
 define( '_CONFIRM_TOS_ERROR', 'Veuillez lire et accepter nos conditions d\'utilisation');
 define( '_CONFIRM_COUPON_INFO', 'Si vous avez un code de bon de réduction, vous pourrez le saisir sur la page du r&egrave;glement pour qu\'il soit pris en compte.');
 define( '_CONFIRM_COUPON_INFO_BOTH', 'If you have a coupon code, you can enter it here, or on the Checkout Page to get a discount on your payment');
-define( '_CONFIRM_FREETRIAL', 'Free Trial');
+define( '_CONFIRM_FREETRIAL', 'P&eacute;riode d\'essai gratuite');
 
 // --== PROMPT PASSWORD FORM ==--
-define( '_AEC_PROMPT_PASSWORD', 'For security reasons, you need to put in your password to continue.');
-define( '_AEC_PROMPT_PASSWORD_WRONG', 'The Password you have entered does not match with the one we have registered for you in our database. Please try again.');
-define( '_AEC_PROMPT_PASSWORD_BUTTON', 'Continue');
+define( '_AEC_PROMPT_PASSWORD', 'Pour des raisons de s&eacute;curit&eacute;, vous devez entrer votre mot de passe pour continuer.');
+define( '_AEC_PROMPT_PASSWORD_WRONG', 'Le mot de passe que vous avez entr&eacute; ne correspond pas &agrave celui enregistr&eacute; dans notre base. Veuillez r&eacute;essayer s\'il vous plait.');
+define( '_AEC_PROMPT_PASSWORD_BUTTON', 'Continuer');
 
 // --== FORMULAIRE DE PAIEMENT ==--
 define( '_CHECKOUT_TITLE', 'Effectuer votre r&egrave;glement');
-define( '_CHECKOUT_INFO', 'Your Registration has been saved now. On this page, you can complete your payment. <br /> If something goes wrong along the way, you can always come back to this step by logging in to our site with your username and password - Our System will give you an option to try your payment again.');
-define( '_CHECKOUT_INFO_REPEAT', 'Thank you for coming back. On this page, you can complete your payment. <br /> If something goes wrong along the way, you can always come back to this step by logging in to our site with your username and password - Our System will give you an option to try your payment again.');
+define( '_CHECKOUT_INFO', 'Votre enregistrement a &eacute;t&eacute; pris en compte. Sur cette page, vous pouvez terminer votre r&egrave;glement. <br /> Si vous rencontrez des probl&egrave;mes en cours de route, vous pouvez revenir &agrave cette &eacute;tape en vous authentifiant avec vos nouveaux nom d\'utilisateur et mot de passe - Notre syst&egrave;me vous autorisera une nouvelle tentative de r&egrave;glement.');
+define( '_CHECKOUT_INFO_REPEAT', 'Merci de votre fid&eacute;lit&eacute;. Sur cette page, vous pouvez terminer votre r&egrave;glement. <br /> Si vous rencontrez des probl&egrave;mes en cours de route, vous pouvez revenir &agrave cette &eacute;tape en vous authentifiant avec vos nouveaux nom d\'utilisateur et mot de passe - Notre syst&egrave;me vous autorisera une nouvelle tentative de r&egrave;glement.');
 define( '_BUTTON_CHECKOUT', 'Effectuer votre r&egrave;glement');
-define( '_BUTTON_APPEND', 'Append');
+define( '_BUTTON_APPEND', 'Ajouter');
 define( '_BUTTON_APPLY', 'Apply');
 define( '_CHECKOUT_COUPON_CODE', 'Code du bon de r&eacute;duction');
 define( '_CHECKOUT_INVOICE_AMOUNT', 'Montant de la facture');
@@ -205,9 +205,9 @@ define( '_GOTO_CHECKOUT', 'Retourner &agrave; la page de paiement &agrave; nouve
 define( '_GOTO_CHECKOUT_CANCEL', 'vous avez &eacute;galement la possibilibt&eacute; d\'annuler votre r&egrave;glement (vous pourrez alors retourner à l\'&eacute;cran de s&eacute;lection du plan) :');
 define( '_PENDING_NOINVOICE', 'Il apparait que vous avez annul&eacute; la seule facture restante de votre compte. Veuillez cliquer sur le bouton ci-dessous pour retourner à l\'&eacute;cran de s&eacute;lection du plan :');
 define( '_PENDING_NOINVOICE_BUTTON', 'S&eacute;lection du plan');
-define( '_PENDING_REASON_ECHECK', '(According to our information however, you decided to pay by echeck (or similar), so you it might be that you just have to wait until this payment is cleared - which usually takes 1-4 days.)');
-define( '_PENDING_REASON_WAITING_RESPONSE', '(According to our information however, we are just waiting for a response from the payment processor. You will be notified once that has happened. Sorry for the delay.)');
-define( '_PENDING_REASON_TRANSFER', '(According to our information however, you decided to pay by an offline payment means, so you it might be that you just have to wait until this payment is cleared - which can take a couple of days.)');
+define( '_PENDING_NOINVOICE_BUTTON', 'S&eacute;lection du plan');
+define( '_PENDING_REASON_ECHECK', 'Il apparait que vous avez d&eacute;cid&eacute; de payer par ch&egrave;que electronique, veuillez patienter jusqu\'&agrave; la validation du paiement - cela peut prendre entre 1 et 4 jours.)');
+define( '_PENDING_REASON_TRANSFER', 'Il apparait que vous avez d&eacute;cid&eacute; de payer par courrier postale, veuillez patienter jusqu\'&agrave; la validation du paiement - cela peut prendre plusieurs jours.)');
 
 // --== PAGE REMERCIEMENT ==--
 define( '_THANKYOU_TITLE', 'Merci !');
@@ -222,9 +222,9 @@ define( '_SUB_FEPARTICLE_ACTMAIL', 'Vous allez recevoir un message par mail qui 
 define( '_SUB_FEPARTICLE_MAIL', 'Vous allez recevoir un mail une fois que notre syst&egrave;me. ');
 
 // --== CHECKOUT ERROR PAGE ==--
-define( '_CHECKOUT_ERROR_TITLE', 'Error while processing the payment!');
-define( '_CHECKOUT_ERROR_EXPLANATION', 'An error occured while processing your payment');
-define( '_CHECKOUT_ERROR_OPENINVOICE', 'This leaves your invoice uncleared. To retry the payment, you can go to the checkout page once again to try again:');
+define( '_CHECKOUT_ERROR_TITLE', 'Erreur pendant le traitement de votre paiement!');
+define( '_CHECKOUT_ERROR_EXPLANATION', 'Une erreur est survenu pendant le traitement de votre paiement');
+define( '_CHECKOUT_ERROR_OPENINVOICE', 'Votre facture reste invalid&eacute;. Pour refaire une tentative de paiement, vous pouvez retourner sur la page de validation:');
 
 // --== COUPON ERROR MESSAGES ==--
 define( '_COUPON_WARNING_AMOUNT', 'Un des bons de r&eacute;duction que vous avez ajout&eacute; &agrave; cette facture ne modifie pas le montant du prochain paiement. Bien qu\'il semble ne pas affecter cette facture, il modifie en r&eacute;alit&eacute; un paiement ult&eacute;rieur.');
@@ -239,8 +239,8 @@ define( '_COUPON_ERROR_WRONG_PLAN', 'Vous n\'&ecirc;tes pas dans le bon plan d\'
 define( '_COUPON_ERROR_WRONG_PLAN_PREVIOUS', 'Pour pouvoir utiliser ce bon de r&eacute;duction, votre dernier plan d\'abonnement doit &ecirc;tre diff&eacute;rent.');
 define( '_COUPON_ERROR_WRONG_PLANS_OVERALL', 'Vous n\'avez pas dans le bon plan d\'abonnement dans votre historique pour ce bon de r&eacute;duction.');
 define( '_COUPON_ERROR_TRIAL_ONLY', 'Vous ne pouvez utiliser ce bon de r&eacute;duction que pour une p&eacute;riode d\'essai.');
-define( '_COUPON_ERROR_COMBINATION', 'You cannot use this coupon with one of the other coupons.');
-define( '_COUPON_ERROR_SPONSORSHIP_ENDED', 'Sponsorship for this Coupon has ended or is currently inactive.');
+define( '_COUPON_ERROR_COMBINATION', 'Ce bon n\'est pas cumulable avec d\'autres bons.');
+define( '_COUPON_ERROR_SPONSORSHIP_ENDED', 'Ce bon n\'est plus valide ou bien inactif.');
 
 // ----======== TEXTE POUR MESSAGES mailS ========----
 
@@ -257,7 +257,7 @@ define( '_ACCTEXP_ASEND_MSG',				"Bonjour %s,\n\nun nouvel utilisateur a cr&eacu
 define( '_ACCTEXP_ASEND_MSG_RENEW',			"Bonjour %s,\n\nun abonn&eacte;bonn&eacute; a renouvell&eacute; son abonnement &agrave; [ %s ].\n\nLes informations pour cet utilisateur sont:\n\nNom..............: %s\nmail.........: %s\nNom d\'utilisateur.: %s\nSubscr.-ID.......: %s\nAbonnement.....: %s\nIP...............: %s\nISP..............: %s\n\nNe pas r&eacute;pondre &agrave; ce message, il a &eacute;t&eacute; g&eacute;n&eacute;r&eacute; automatiquement et seulement pour votre information." );
 define( '_AEC_ASEND_MSG_NEW_REG',			"Bonjour %s,\n\nvoici un nouvel inscrit &agrave; [ %s ].\n\nVoici les d&eacute;tails :\n\nNom.....: %s\nNom d\'utilisateur: %s\nEmail....: %s\nIP.......: %s\nFAI......: %s\n\nNe pas r&eacute;pondre &agrave; ce message, il a &eacute;t&eacute; g&eacute;n&eacute;r&eacute; automatiquement et seulement pour votre information." );
 define( '_AEC_ASEND_NOTICE',				"AEC %s: %s at %s" );
-define( '_AEC_ASEND_NOTICE_MSG',		"According to the E-Mail reporting level you have selected, this is an automatic notification about an EventLog entry.\n\nThe details of this message are:\n\n--- --- --- ---\n\n%s\n\n--- --- --- ---\n\nPlease do not respond to this message as it is automatically generated and is for information purposes only. You can change the level of reported entries in your AEC Settings." );
+define( '_AEC_ASEND_NOTICE_MSG',		"Suivant le niveau de reporting par courrier electronique que vous avez choisi, voici une notification automatique &agrave; propos du rapport d\'&eacute;v&egrave;nements .\n\nLes d&eacute;tails du message sont:\n\n--- --- --- ---\n\n%s\n\n--- --- --- ---\n\nNe pas r&eacute;pondre &agrave; ce message, il a &eacute;t&eacute; g&eacute;n&eacute;r&eacute; automatiquement et seulement pour votre information. Vous pouvez changer le niveau de reporting dans vos param&egrave;tres de configuration AEC." );
 
 // ----======== COUNTRY CODES ========----
 
