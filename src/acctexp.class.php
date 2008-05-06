@@ -4503,7 +4503,7 @@ class InvoiceFactory
 				// Or a free trial that the user CAN use
 				|| ( $params['trial_free'] && empty( $this->objInvoice->counter ) ) ) {
 				// Then mark payed
-				if ( $this->objInvoice->pay() !== false ) {print_r("0");print_r($this);exit;
+				if ( $this->objInvoice->pay() !== false ) {
 					thanks ( $option, $this->renew, 1 );
 				}
 			}
@@ -4558,7 +4558,7 @@ class InvoiceFactory
 		}
 
 		// Either this is fully free, or the next term is free and this is non recurring
-		if ( $this->terms->checkFree() || ( $this->terms->nextterm->free && !$this->recurring ) ) {print_r($this);exit;
+		if ( $this->terms->checkFree() || ( $this->terms->nextterm->free && !$this->recurring ) ) {
 			$this->objInvoice->pay();
 			thanks ( $option, $this->renew, 1 );
 			return;
