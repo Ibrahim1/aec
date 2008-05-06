@@ -29,7 +29,7 @@
 
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
-
+//error_reporting(E_ALL);
 global $mosConfig_absolute_path, $mosConfig_offset, $aecConfig;
 
 if ( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
@@ -1282,8 +1282,10 @@ class displayPipeline extends paramDBTable
 		$this->only_user		= $only_user;
 		$this->once_per_user	= $once_per_user;
 		$this->timestamp		= date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
-		$this->expire			= $expire;
-		$this->expstamp			= date( 'Y-m-d H:i:s', strtotime( $expiration ) + $mosConfig_offset*3600 );
+		$this->expire			= $expire ? 1 : 0;
+		if ( $expire ) {
+			$this->expstamp			= date( 'Y-m-d H:i:s', strtotime( $expiration ) + $mosConfig_offset*3600 );
+		}
 		$this->displaycount		= 0;
 		$this->displaymax		= $displaymax;
 
@@ -4512,7 +4514,7 @@ class InvoiceFactory
 			notAllowed( $option );
 		}
 
-		if ( !empty( $this->pp->info['secure'] ) && !( $_SERVER['HTTPS'] == 'on' ) && !$aecConfig->cfg['override_reqssl'] ) {
+		if ( !empty( $this->pp->info['secure'] ) && !empty( $_SERVER['HTTPS'] ) && !$aecConfig->cfg['override_reqssl'] ) {
 			mosRedirect( AECToolbox::deadsureURL( "/index.php?option=" . $option . "&task=repeatPayment&invoice=" . $this->objInvoice->invoice_number . "&first=" . ( $repeat ? 0 : 1 ), true, false ) );
 			exit();
 		};
@@ -8331,8 +8333,14 @@ class couponsHandler extends eucaObject
 			$cph = new couponHandler();
 			$cph->load( $coupon_code );
 
+			if ( !$cph->status ) {
+				$this->setError( $cph->error );
+				unset( $coupons[$arrayid] );
+				return false;
+			}
+
 			// Get the coupons that this one cannot be mixed with
-			if ( $cph->restrictions['restrict_combination'] ) {
+			if ( !empty( $cph->restrictions['restrict_combination'] ) && !empty( $cph->restrictions['bad_combinations'] ) ) {
 				$nomix = explode( ';', $cph->restrictions['bad_combinations'] );
 			} else {
 				$nomix = array();
@@ -8376,7 +8384,7 @@ class couponsHandler extends eucaObject
 			$cph->load( $coupon_code );
 
 			// Get the coupons that this one cannot be mixed with
-			if ( $cph->restrictions['restrict_combination'] ) {
+			if ( !empty( $cph->restrictions['restrict_combination'] ) && !empty( $cph->restrictions['bad_combinations'] ) ) {
 				$nomix = explode( ';', $cph->restrictions['bad_combinations'] );
 			} else {
 				$nomix = array();
@@ -8514,7 +8522,7 @@ class couponHandler
 			$this->restrictions = $this->coupon->getParams( 'restrictions' );
 
 			// Check whether coupon can be used yet
-			if ( $this->restrictions['has_start_date'] ) {
+			if ( $this->restrictions['has_start_date'] && !empty( $this->restrictions['start_date'] ) ) {
 				$expstamp = strtotime( $this->restrictions['start_date'] );
 
 				// Error: Use of this coupon has not started yet
@@ -8710,17 +8718,15 @@ class couponHandler
 		}
 
 		// Check for max reuse per user
-		if ( $this->restrictions['has_max_peruser_reuse'] ) {
-			if ( $this->restrictions['max_peruser_reuse'] ) {
-				$used = $metaUser->usedCoupon( $this->coupon->id, $this->type );
+		if ( !empty( $this->restrictions['has_max_peruser_reuse'] ) && !empty( $this->restrictions['max_peruser_reuse'] ) ) {
+			$used = $metaUser->usedCoupon( $this->coupon->id, $this->type );
 
-				if ( $used == false ) {
-					$permissions['max_reuse'] = true;
-				} elseif ( (int) $used  <= (int) $this->restrictions['max_peruser_reuse'] ) {
-					$permissions['max_reuse'] = true;
-				} else {
-					$permissions['max_reuse'] = false;
-				}
+			if ( $used == false ) {
+				$permissions['max_reuse'] = true;
+			} elseif ( (int) $used  <= (int) $this->restrictions['max_peruser_reuse'] ) {
+				$permissions['max_reuse'] = true;
+			} else {
+				$permissions['max_reuse'] = false;
 			}
 		}
 

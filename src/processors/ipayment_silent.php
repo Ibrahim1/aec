@@ -85,7 +85,7 @@ class processor_ipayment_silent extends XMLprocessor
 	{
 		global $mosConfig_live_site;
 
-		$var['params']['billInfo']			= array( 'p', _CFG_IPAYMENT_SILENT_PARAMS_BILLINFO_ELV_NAME, _CFG_IPAYMENT_SILENT_PARAMS_BILLINFO_ELV_DESC );
+		$var['params']['billInfo']			= array( 'p', _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_ELV_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_ELV_DESC );
 		$var['params']['accountName']		= array( 'inputC', _AEC_WTFORM_ACCOUNTNAME_NAME, _AEC_WTFORM_ACCOUNTNAME_NAME, $request->metaUser->cmsUser->name );
 		$var['params']['accountNumber']		= array( 'inputC', _AEC_WTFORM_ACCOUNTNUMBER_NAME, _AEC_WTFORM_ACCOUNTNUMBER_NAME, '' );
 		$var['params']['bankNumber']		= array( 'inputC', _AEC_WTFORM_BANKNUMBER_NAME, _AEC_WTFORM_BANKNUMBER_NAME, '' );
@@ -104,8 +104,8 @@ class processor_ipayment_silent extends XMLprocessor
 		$var = $this->getCCform( $var, $values );
 
 		$var['params']['billInfo']			= array( 'p', _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_DESC );
-		$var['params']['billFirstName']		= array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_DESC, $name[0] );
-		$var['params']['billLastName']		= array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_DESC, $name[1] );
+		$var['params']['billFirstName']		= array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_NAME, $name[0] );
+		$var['params']['billLastName']		= array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_NAME, $name[1] );
 
 		$var['params']['billInfo']			= array( 'p', _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_DESC );
 

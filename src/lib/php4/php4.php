@@ -36,12 +36,14 @@ if ( !function_exists( 'json_decode' ) ) {
 
 if ( !function_exists( 'str_split' ) ) {
 	function str_split( $text, $split = 1 ) {
-		// place each character of the string into and array
+		// place each character of the string into an array
 		$array = array();
-		for ( $i=0; $i < strlen( $text ); ){
+		for ( $i = 0; $i < strlen( $text ); ){
 			$key = NULL;
 			for ( $j = 0; $j < $split; $j++, $i++ ) {
-				$key .= $text[$i];
+				if ( isset( $text[$i] ) ) {
+					$key .= $text[$i];
+				}
 			}
 			array_push( $array, $key );
 		}

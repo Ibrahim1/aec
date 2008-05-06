@@ -105,6 +105,8 @@ class mammonTerms extends eucaObject
 
 		$this->free = $free;
 
+		$this->nextterm =& $this->terms[$this->pointer];
+
 		return $return;
 	}
 
@@ -121,7 +123,7 @@ class mammonTerms extends eucaObject
 			$this->pointer++;
 		}
 
-		$this->nextterm &= $this->terms[$this->pointer];
+		$this->nextterm =& $this->terms[$this->pointer];
 	}
 
 	/**
