@@ -544,6 +544,7 @@ background-color: #f5f5f5;
 
 tr.aec_term_totalrow {
 background-color: #ddd;
+border-top: 2px solid #555;
 }
 
 tr.aec_term_row_sep {
