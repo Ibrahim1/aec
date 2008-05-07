@@ -25,6 +25,8 @@ class mi_hotproperty extends MI
 		$settings['company_fields']		= array( 'inputD' );
 		$settings['update_company']		= array( 'list_yesno' );
 		$settings['update_cfields']		= array( 'inputD' );
+		$settings['publish_all']		= array( 'list_yesno' );
+		$settings['unpublish_all']		= array( 'list_yesno' );
 
 		$settings = $this->autoduplicatesettings( $settings );
 
@@ -123,6 +125,14 @@ class mi_hotproperty extends MI
 					$company = $this->update( 'companies', 'cb_id', $metaUser, $params['update_cfields'.$area], $invoice, $plan );
 				}
 			}
+		}
+
+		if ( $params['unpublish_all'.$area] ) {
+			$this->unpublishProperties( $params, $agent );
+		}
+
+		if ( $params['publish_all'.$area] ) {
+			$this->publishProperties( $params, $agent );
 		}
 
 		if ( $company === false ) {
@@ -294,6 +304,32 @@ class mi_hotproperty extends MI
 			$this->setError( $database->getErrorMsg() );
 			return false;
 		}
+	}
+
+	function publishProperties( $params, $agentid )
+	{
+		global $database;
+
+		$query = 'UPDATE #__mt_links'
+				. ' SET `published` = \'1\''
+				. ' WHERE `user_id` = \'' . $metaUser->userid . '\''
+				;
+		$database->setQuery( $query );
+
+		return $database->query();
+	}
+
+	function unpublishProperties( $params, $agentid )
+	{
+		global $database;
+
+		$query = 'UPDATE #__hp_properties'
+				. ' SET `published` = \'0\''
+				. ' WHERE `user_id` = \'' . $metaUser->userid . '\''
+				;
+		$database->setQuery( $query );
+
+		return $database->query();
 	}
 
 }
