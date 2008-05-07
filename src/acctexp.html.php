@@ -769,7 +769,6 @@ class Payment_HTML
 
 			<?php
 			if ( !empty( $aecConfig->cfg['enable_coupons'] ) ) { ?>
-				<p><?php echo _CHECKOUT_COUPON_INFO; ?></p>
 				<table width="100%" id="couponsbox">
 					<tr>
 						<td class="couponinfo">
@@ -791,6 +790,7 @@ class Payment_HTML
 									<?php
 								}
 							} ?>
+							<p><?php echo _CHECKOUT_COUPON_INFO; ?></p>
 							<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=InvoiceAddCoupon', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 								<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
 								<input type="hidden" name="option" value="<?php echo $option; ?>" />

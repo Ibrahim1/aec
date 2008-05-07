@@ -32,6 +32,6 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 
 // ----======== FUNCTIONAL TEXT ========----
 
-define( '_AEC_VERSION','0.12.6RC1f');
+define( '_AEC_VERSION','0.12.6RC2');
 
 ?>
