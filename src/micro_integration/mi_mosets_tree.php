@@ -55,8 +55,10 @@ class mi_mosets_tree
 		// field type; name; variable value, description, extra (variable name)
 
 		$settings = array();
-		$settings['add_listings'] = array( 'inputA' );
-		$settings['set_listings'] = array( 'inputA' );
+		$settings['add_listings']	= array( 'inputA' );
+		$settings['set_listings']	= array( 'inputA' );
+		$settings['publish_all']	= array( 'list_yesno' );
+		$settings['unpublish_all']	= array( 'list_yesno' );
 
 		return $settings;
 	}
@@ -73,6 +75,10 @@ class mi_mosets_tree
 
 		$mi_mosetshandler->check();
 		$mi_mosetshandler->store();
+
+		if ( $params['unpublish_all'] ) {
+			$this->unpublishListings( $params, $metaUser );
+		}
 
 		return true;
 	}
@@ -99,6 +105,10 @@ class mi_mosets_tree
 
 		$mi_mosetshandler->check();
 		$mi_mosetshandler->store();
+
+		if ( $params['publish_all'] ) {
+			$this->publishListings( $params, $metaUser );
+		}
 
 		return true;
 	}
@@ -211,6 +221,32 @@ class mi_mosets_tree
 		}else{
 			return '';
 		}
+	}
+
+	function publishListings( $params, $metaUser )
+	{
+		global $database;
+
+		$query = 'UPDATE #__mt_links'
+				. ' SET `link_published` = \'1\''
+				. ' WHERE `user_id` = \'' . $metaUser->userid . '\''
+				;
+		$database->setQuery( $query );
+
+		return $database->query();
+	}
+
+	function unpublishListings( $params, $metaUser )
+	{
+		global $database;
+
+		$query = 'UPDATE #__mt_links'
+				. ' SET `link_published` = \'0\''
+				. ' WHERE `user_id` = \'' . $metaUser->userid . '\''
+				;
+		$database->setQuery( $query );
+
+		return $database->query();
 	}
 
 }

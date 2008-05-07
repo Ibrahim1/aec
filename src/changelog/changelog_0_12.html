@@ -1247,6 +1247,7 @@ color: #333;
 <li class="finish">Paybox France</li>
 <li class="check">iPayment Integration</li>
 <li class="todo">iDeal Advanced Integration</li>
+<li class="check">Nochex</li>
 </ul>
 </li>
 <li><strong>Change in the Processor API</strong>
@@ -1289,6 +1290,8 @@ color: #333;
 <li>Refactor Settings into new aecSettings Object routine</li>
 <li>Exporting functions</li>
 <li>Made Settings a lot more pleasant</li>
+<li>Fixed pagination on Coupons List</li>
+<li>Eventlog no longer displays a change on settings store if only slashes were added for the database</li>
 </ul>
 </li>
 <li><strong>Frontend</strong>
@@ -1303,6 +1306,7 @@ color: #333;
 </li>
 <li>Additional Coupon field on Confirmation</li>
 <li>Fixing ToS Link in german language file</li>
+<li>Fixed link to nowhere from prompting password screen if user was already existing</li>
 </ul>
 </li>
 <li><strong>MicroIntegrations</strong>
@@ -1317,6 +1321,7 @@ color: #333;
 <li class="check">Better Error and Warning Handling for MIs</li>
 <li class="check">Make sure "unlimited" docman MI setting works</li>
 <li class="check">Fix multiple groups for docman</li>
+<li>Changes to how MIs are called up (or rather its actions or the central RelayAction)</li>
 </ul>
 </li>
 <li><strong>Minor</strong>
@@ -1345,21 +1350,19 @@ color: #333;
 <li>Option to display currency symbol instead of shorthand, also some formatting options here (comma instead of dot, currency before amount)</li>
 <li>Applying Static Coupons in the backend now works</li>
 <li>Fixing Coupons Max Per User reuse</li>
+<li>moving from mosConfig_offset_user to mosConfig_offset</li>
+<li>Installer down to 2MB (a common hosting php upload limit)</li>
 </ul>
 </li>
 <li class="todo"><strong>Todo</strong>
 <ul>
-<li>moving from mosConfig_offset_user to mosConfig_offset</li>
-<li>Changes to how MIs are called up (or rather its actions or the central RelayAction)</li>
-<li>Fixed pagination on Coupons List</li>
-<li>Fixed link to nowhere from prompting password screen if user was already existing</li>
-<li class="check">Eventlog no longer displays a change on settings store if only slashes were added for the database</li>
-<li>Installer down to 2MB (a common hosting php upload limit)</li>
 <li class="todo">G2 MI</li>
-<li class="todo">Nochex</li>
 <li class="todo">Fix Mosets Tree MI (is it broken?)</li>
 <li class="todo">HotProperty Integration to support individual listing control</li>
-<li class="todo">Listing Control for several MIs that support (un)publishing listings</li>
+<li class="check">Publish/Unpublish users listings for Mosets Tree</li>
+<li class="todo">Publish/Unpublish users listings for HotProperty</li>
+<li class="todo">SOBI MI</li>
+<li class="todo">Publish/Unpublish users listings for SOBI</li>
 <li class="todo"> --- release RC2 --- </li>
 <li class="todo">Authorize.net CIM</li>
 <li class="todo">Port all parameter fields over to JSON (uh yes its awesome)</li>
