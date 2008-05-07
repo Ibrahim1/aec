@@ -2,7 +2,7 @@
 /**
  * @version $Id: mi_hotproperty.php
  * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
- * @subpackage Micro Integrations - Advanced Profile Control
+ * @subpackage Micro Integrations - Mosets Hot Property
  * @copyright 2006/2007 Copyright (C) David Deutsch
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
  * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
@@ -310,13 +310,17 @@ class mi_hotproperty extends MI
 	{
 		global $database;
 
-		$query = 'UPDATE #__mt_links'
+		$query = 'UPDATE #__hp_properties'
 				. ' SET `published` = \'1\''
-				. ' WHERE `user_id` = \'' . $metaUser->userid . '\''
+				. ' WHERE `agent` = \'' . $agentid . '\''
 				;
 		$database->setQuery( $query );
-
-		return $database->query();
+		if ( $database->query() ) {
+			return true;
+		} else {
+			$this->setError( $database->getErrorMsg() );
+			return false;
+		}
 	}
 
 	function unpublishProperties( $params, $agentid )
@@ -325,11 +329,15 @@ class mi_hotproperty extends MI
 
 		$query = 'UPDATE #__hp_properties'
 				. ' SET `published` = \'0\''
-				. ' WHERE `user_id` = \'' . $metaUser->userid . '\''
+				. ' WHERE `agent` = \'' . $agentid . '\''
 				;
 		$database->setQuery( $query );
-
-		return $database->query();
+		if ( $database->query() ) {
+			return true;
+		} else {
+			$this->setError( $database->getErrorMsg() );
+			return false;
+		}
 	}
 
 }

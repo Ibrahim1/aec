@@ -232,8 +232,12 @@ class mi_mosets_tree
 				. ' WHERE `user_id` = \'' . $metaUser->userid . '\''
 				;
 		$database->setQuery( $query );
-
-		return $database->query();
+		if ( $database->query() ) {
+			return true;
+		} else {
+			$this->setError( $database->getErrorMsg() );
+			return false;
+		}
 	}
 
 	function unpublishListings( $params, $metaUser )
@@ -245,8 +249,12 @@ class mi_mosets_tree
 				. ' WHERE `user_id` = \'' . $metaUser->userid . '\''
 				;
 		$database->setQuery( $query );
-
-		return $database->query();
+		if ( $database->query() ) {
+			return true;
+		} else {
+			$this->setError( $database->getErrorMsg() );
+			return false;
+		}
 	}
 
 }
