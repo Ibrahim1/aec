@@ -2333,7 +2333,7 @@ class XMLprocessor extends processor
 		$response = $this->transmitRequestXML( $xml, $request );
 
 		if ( empty( $response['invoice'] ) ) {
-			$response['invoice'] = $invoice->invoice_number;
+			$response['invoice'] = $request->invoice->invoice_number;
 		}
 
 		if ( !empty( $response['error'] ) ) {
@@ -4514,7 +4514,7 @@ class InvoiceFactory
 			notAllowed( $option );
 		}
 
-		if ( !empty( $this->pp->info['secure'] ) && !empty( $_SERVER['HTTPS'] ) && !$aecConfig->cfg['override_reqssl'] ) {
+		if ( !empty( $this->pp->info['secure'] ) && empty( $_SERVER['HTTPS'] ) && !$aecConfig->cfg['override_reqssl'] ) {
 			mosRedirect( AECToolbox::deadsureURL( "/index.php?option=" . $option . "&task=repeatPayment&invoice=" . $this->objInvoice->invoice_number . "&first=" . ( $repeat ? 0 : 1 ), true, false ) );
 			exit();
 		};
@@ -4648,7 +4648,7 @@ class InvoiceFactory
 
 	function thanks( $option, $renew, $free )
 	{
-		global $database, $mosConfig_useractivation, $ueConfig, $mosConfig_dbprefix;
+		global $database, $mosConfig_useractivation, $aecConfig, $mosConfig_dbprefix;
 
 		if ( isset( $this->renew ) ) {
 			$renew = $this->renew;
@@ -5935,9 +5935,11 @@ class Subscription extends paramDBTable
 		$metaUser->moveFocus( $this->id );
 
 		// Recognize the fallback plan, if not overridden
-		if ( $plan_params['fallback'] && !$overridefallback ) {
-			$mih = new microIntegrationHandler();
-			$mih->userPlanExpireActions( $metaUser, $subscription_plan );
+		if ( !empty( $plan_params['fallback'] ) && !$overridefallback ) {
+			if ( $subscription_plan !== false ) {
+				$mih = new microIntegrationHandler();
+				$mih->userPlanExpireActions( $metaUser, $subscription_plan );
+			}
 
 			$this->applyUsage( $plan_params['fallback'], 'none', 1 );
 			return false;
@@ -5960,8 +5962,10 @@ class Subscription extends paramDBTable
 			}
 
 			// Call Expiration MIs
-			$mih = new microIntegrationHandler();
-			$mih->userPlanExpireActions( $metaUser, $subscription_plan );
+			if ( $subscription_plan !== false ) {
+				$mih = new microIntegrationHandler();
+				$mih->userPlanExpireActions( $metaUser, $subscription_plan );
+			}
 
 			return true;
 		}
@@ -9291,18 +9295,22 @@ class aecExport extends jsonDBTable
 			$where[] = '`plan` IN (' . implode( ',', $filter_values->planid ) . ')';
 		}
 
-		if ( !empty( $filter_values->status ) ) {
-			foreach ( $filter_values->status as $status ) {
-				$where[] = '`status` = \'' . $status . '\'';
-			}
-		}
-
 		$query = 'SELECT a.id, a.userid'
 				. ' FROM #__acctexp_subscr AS a'
 				. ' INNER JOIN #__users AS b ON a.userid = b.id';
 
 		if ( !empty( $where ) ) {
-			$query .= ' WHERE ' . implode( ' OR ', $where );
+			$query .= ' WHERE ( ' . implode( ' OR ', $where ) . ' )';
+		}
+
+		if ( !empty( $filter_values->status ) ) {
+			foreach ( $filter_values->status as $status ) {
+				if ( !empty( $where ) ) {
+					$query .= ' AND `status` = \'' . $status . '\'';
+				} else {
+					$query .= ' WHERE `status` = \'' . $status . '\'';
+				}
+			}
 		}
 
 		if ( !empty( $filter_values->orderby ) ) {
