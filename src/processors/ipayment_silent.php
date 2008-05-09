@@ -123,7 +123,7 @@ class processor_ipayment_silent extends XMLprocessor
 	function createRequestXML( $request )
 	{
 		global $mosConfig_live_site, $database;
-print_r($request);exit;
+
 		$invoice_params = $request->invoice->getParams();
 
 		if ( isset( $invoice_params['creator_ip'] ) ) {
@@ -185,8 +185,13 @@ print_r($request);exit;
 		$a['client_version']	= '0.12';
 		$a['silent']			= 1;
 
-		$a['redirect_url']		= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=paypalnotification&amp;event=success' );
-		$a['silent_error_url']	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=paypalnotification&amp;event=error' );
+		$a['redirect_action']	= 'POST';
+		$a['redirect_url']		= str_replace( '&amp;', '&', $request->int_var['return_url'] );
+		$a['silent_error_url']	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=cancel', false, true );
+
+		$a['hidden_trigger_url']		= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=ipayment_silentnotification', false, true );
+		$a['noparams_on_redirect_url']	= 1;
+		$a['noparams_on_error_url']		= 1;
 
 		$a['tempsecret'] = substr( base64_encode( md5( rand() ) ), 0, 12 );
 
@@ -200,7 +205,7 @@ print_r($request);exit;
 		}
 
 		$string = implode( '&', $stringarray );
-
+aecDebug( $string );
 		return $string;
 	}
 
@@ -226,7 +231,7 @@ print_r($request);exit;
 		$response = $this->transmitRequest( $url, $path, $xml, 443, $curl_calls );
 
 		// Instead we wait a short moment
-		sleep( 8 );
+		sleep( 10 );
 
 		// And check whether we have been notified of a payment
 		$return['valid'] = false;
@@ -245,12 +250,12 @@ print_r($request);exit;
 			$return['valid']			= 0;
 			$return['duplicate']		= true;
 		}
-
+aecDebug( "ResponseFunction:transmitRequestXML" . "\n" . "GET:".json_encode( $_GET ) . "\n" . "POST:".json_encode( $_POST ) . "\n" . "Return:".json_encode( $return ) );
 		return $return;
 	}
 
 	function parseNotification( $post )
-	{
+	{aecDebug( "ResponseFunction:parseNotification" . "\n" . "GET:".json_encode( $_GET ) . "\n" . "POST:".json_encode( $_POST ) );
 		$response = array();
 		$response['invoice']			= $_GET['invoice_text'];
 		$response['amount_paid']		= ( $_GET['trx_amount'] / 100 );
@@ -263,6 +268,14 @@ print_r($request);exit;
 	{
 		$response['valid'] = 0;
 
+		$allowed_ips= array( "212.227.34.218", 	"212.227.34.219", "212.227.34.220", "195.20.224.139" );
+		if ( !in_array( $_SERVER["REMOTE_ADDR"], $allowed_ips ) ) {
+			$response['error']		= true;
+			$response['errormsg']	= 'Wrong calling IP - possible fraud attempt';
+
+			return $response;
+		}
+aecDebug( "ResponseFunction:validateNotification" . "\n" . "GET:".json_encode( $_GET ) . "\n" . "POST:".json_encode( $_POST ) . "\n" . "Response:".json_encode( $response ) . "\n" . "Invoice:".json_encode( $invoice ) );
 		if ( $_GET['event'] == 'error' ) {
 			return $response;
 		} elseif ( $_GET['event'] == 'success' ) {

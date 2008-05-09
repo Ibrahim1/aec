@@ -528,7 +528,7 @@ function com_install()
 	}
 
 	$database->setQuery("SELECT count(*) FROM  #__acctexp_config_processors");
-	$oldplans = ( $database->loadResult() == 0 || in_array( $mosConfig_dbprefix . '_acctexp_processors_plans', $database->getTableList() ) );
+	$oldplans = ( $database->loadResult() == 0 && in_array( $mosConfig_dbprefix . '_acctexp_processors_plans', $tables ) );
 
 	if ( $oldplans ) {
 
