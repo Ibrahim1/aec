@@ -7040,10 +7040,6 @@ class AECToolbox
 	function formatAmount( $amount, $currency=null ) {
 		global $aecConfig;
 
-		if ( $aecConfig->cfg['amount_use_comma'] ) {
-			$amount = str_replace( '.', ',', $amount );
-		}
-
 		if ( !empty( $currency ) ) {
 			if ( !empty( $aecConfig->cfg['amount_currency_symbol'] ) ) {
 				switch ( $currency ) {
@@ -7065,12 +7061,20 @@ class AECToolbox
 
 			$amount = AECToolbox::correctAmount( $amount );
 
+			if ( $aecConfig->cfg['amount_use_comma'] ) {
+				$amount = str_replace( '.', ',', $amount );
+			}
+
 			if ( $aecConfig->cfg['amount_currency_symbolfirst'] ) {
 				return $currency . '&nbsp;' . $amount;
 			} else {
 				return $amount . '&nbsp;' . $currency;
 			}
 		} else {
+			if ( $aecConfig->cfg['amount_use_comma'] ) {
+				$amount = str_replace( '.', ',', $amount );
+			}
+
 			return $amount;
 		}
 	}
@@ -7087,9 +7091,7 @@ class AECToolbox
 			}
 		}
 
-		if ( strpos( $amount, '-') ) {
-			$amount = '0.00';
-		}
+		$amount = round( $amount, 2 );
 
 		$a		= explode( '.', $amount );
 		$amount = $a[0] . '.' . substr( str_pad( $a[1], 2, '0' ), 0, 2 );
@@ -8950,6 +8952,8 @@ class couponHandler
 				$amount -= ( ( $amount / 100 ) * $this->discount['amount_percent'] );
 			}
 		}
+
+		$amount = round( $amount, 2 );
 
 		// Fix Amount if broken and return
 		return AECToolbox::correctAmount( $amount );

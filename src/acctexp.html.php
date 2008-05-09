@@ -749,7 +749,7 @@ class Payment_HTML
 									}
 
 									for( $i=0; $i<=$strlen;$i++ ) {
-										$c = $c . '&nbsp;';
+										$c .= '&nbsp;';
 									}
 								}
 								break;
