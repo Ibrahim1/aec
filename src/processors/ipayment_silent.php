@@ -205,7 +205,7 @@ class processor_ipayment_silent extends XMLprocessor
 		}
 
 		$string = implode( '&', $stringarray );
-aecDebug( $string );
+//aecDebug( $string );
 		return $string;
 	}
 
@@ -250,12 +250,12 @@ aecDebug( $string );
 			$return['valid']			= 0;
 			$return['duplicate']		= true;
 		}
-aecDebug( "ResponseFunction:transmitRequestXML" . "\n" . "GET:".json_encode( $_GET ) . "\n" . "POST:".json_encode( $_POST ) . "\n" . "Return:".json_encode( $return ) );
+//aecDebug( "ResponseFunction:transmitRequestXML" . "\n" . "GET:".json_encode( $_GET ) . "\n" . "POST:".json_encode( $_POST ) . "\n" . "Return:".json_encode( $return ) );
 		return $return;
 	}
 
 	function parseNotification( $post )
-	{aecDebug( "ResponseFunction:parseNotification" . "\n" . "GET:".json_encode( $_GET ) . "\n" . "POST:".json_encode( $_POST ) );
+	{//aecDebug( "ResponseFunction:parseNotification" . "\n" . "GET:".json_encode( $_GET ) . "\n" . "POST:".json_encode( $_POST ) );
 		$response = array();
 		$response['invoice']			= $_GET['invoice_text'];
 		$response['amount_paid']		= ( $_GET['trx_amount'] / 100 );
@@ -275,7 +275,7 @@ aecDebug( "ResponseFunction:transmitRequestXML" . "\n" . "GET:".json_encode( $_G
 
 			return $response;
 		}
-aecDebug( "ResponseFunction:validateNotification" . "\n" . "GET:".json_encode( $_GET ) . "\n" . "POST:".json_encode( $_POST ) . "\n" . "Response:".json_encode( $response ) . "\n" . "Invoice:".json_encode( $invoice ) );
+//aecDebug( "ResponseFunction:validateNotification" . "\n" . "GET:".json_encode( $_GET ) . "\n" . "POST:".json_encode( $_POST ) . "\n" . "Response:".json_encode( $response ) . "\n" . "Invoice:".json_encode( $invoice ) );
 		if ( $_GET['event'] == 'error' ) {
 			return $response;
 		} elseif ( $_GET['event'] == 'success' ) {

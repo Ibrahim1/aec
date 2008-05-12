@@ -937,7 +937,7 @@ function processNotification( $option, $processor )
 		$value = urlencode( stripslashes( $value ) );
 		$responsestring .= $key . '=' . $value . "\n";
 	}
-aecDebug( "ResponseFunction:processNotification" );aecDebug( "GET:".json_encode( $_GET ) );aecDebug( "POST:".json_encode( $_POST ) );
+//aecDebug( "ResponseFunction:processNotification" );aecDebug( "GET:".json_encode( $_GET ) );aecDebug( "POST:".json_encode( $_POST ) );
 	// parse processor notification
 	$pp = new PaymentProcessor( $processor );
 	if ( $pp->loadName( $processor ) ) {
