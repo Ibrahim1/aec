@@ -91,9 +91,10 @@ class processor_authorize_cim extends XMLprocessor
 
 	function checkoutform( $request ) {
 		$var = array();
-		$cim = new AuthNetCim($this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode']);
 
-		$cim->setParameter('customerProfileId', $this->getCustomerProfileID($request->metaUser->cmsUser->id));
+		$cim = new AuthNetCim( $this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode'] );
+
+		$cim->setParameter( 'customerProfileId', $this->getCustomerProfileID( $request->metaUser->cmsUser->id ) );
 		$cim->getCustomerProfileRequest();
 
 		/*
@@ -108,22 +109,22 @@ class processor_authorize_cim extends XMLprocessor
 
 		$var = $this->getCCform( $var, array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ) );
 
-		$billFirstName = $cim->substring_between($cim->response,'<firstName>','</firstName>');
-		$billLastName = $cim->substring_between($cim->response,'<lastName>','</lastName>');
+		$billFirstName	= $cim->substring_between( $cim->response,'<firstName>','</firstName>' );
+		$billLastName	= $cim->substring_between( $cim->response,'<lastName>','</lastName>' );
 
 		$var['params']['billFirstName'] = array( 'inputC', _AEC_AUTHORIZE_CIM_PARAMS_BILLFIRSTNAME_NAME, _AEC_AUTHORIZE_CIM_PARAMS_BILLFIRSTNAME_DESC, $billFirstName);
 		$var['params']['billLastName'] = array( 'inputC', _AEC_AUTHORIZE_CIM_PARAMS_BILLLASTNAME_NAME, _AEC_AUTHORIZE_CIM_PARAMS_BILLLASTNAME_DESC, $billLastName);
 
 		if ( !empty( $this->settings['promptAddress'] ) ) {
 
-			$billCompany = $cim->substring_between($cim->response,'<company>','</company>');
-			$billAddress = $cim->substring_between($cim->response,'<address>','</address>');
-			$billCity = $cim->substring_between($cim->response,'<city>','</city>');
-			$billState = $cim->substring_between($cim->response,'<state>','</state>');
-			$billZip = $cim->substring_between($cim->response,'<zip>','</zip>');
-			$billCountry = $cim->substring_between($cim->response,'<country>','</country>');
-			$billPhone = $cim->substring_between($cim->response,'<phoneNumber>','</phoneNumber>');
-			$billFax = $cim->substring_between($cim->response,'<faxNumber>','</faxNumber>');
+			$billCompany	= $cim->substring_between( $cim->response,'<company>','</company>' );
+			$billAddress	= $cim->substring_between( $cim->response,'<address>','</address>' );
+			$billCity		= $cim->substring_between( $cim->response,'<city>','</city>' );
+			$billState		= $cim->substring_between( $cim->response,'<state>','</state>' );
+			$billZip		= $cim->substring_between( $cim->response,'<zip>','</zip>' );
+			$billCountry	= $cim->substring_between( $cim->response,'<country>','</country>' );
+			$billPhone		= $cim->substring_between( $cim->response,'<phoneNumber>','</phoneNumber>' );
+			$billFax		= $cim->substring_between( $cim->response,'<faxNumber>','</faxNumber>' );
 
 			$var['params']['billCompany'] = array( 'inputC', _AEC_AUTHORIZE_CIM_PARAMS_BILLCOMPANY_NAME, _AEC_AUTHORIZE_CIM_PARAMS_BILLCOMPANY_DESC, $billCompany );
 			$var['params']['billAddress'] = array( 'inputC', _AEC_AUTHORIZE_CIM_PARAMS_BILLADDRESS_NAME, _AEC_AUTHORIZE_CIM_PARAMS_BILLADDRESS_DESC, $billAddress );
