@@ -183,7 +183,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 		$content = array();
 		foreach ( $var as $name => $value ) {
-			$content[] .= strtoupper( $name ) . '=' . urlencode( $value );
+			$content[] .= strtoupper( $name ) . '=' . urlencode( stripslashes( $value ) );
 		}
 
 		return implode( '&', $content );

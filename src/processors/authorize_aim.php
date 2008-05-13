@@ -166,7 +166,7 @@ class processor_authorize_aim extends XMLprocessor
 
 		$stringarray = array();
 		foreach ( $a as $name => $value ) {
-			$stringarray[] = $name . '=' . urlencode( $value );
+			$stringarray[] = $name . '=' . urlencode( stripslashes( $value ) );
 		}
 
 		$string = implode( '&', $stringarray );
@@ -272,7 +272,7 @@ class processor_authorize_aim extends XMLprocessor
 
 			$stringarray = array();
 			foreach ( $responsearray as $name => $value ) {
-				$stringarray[] = $name . '=' . urlencode( $value );
+				$stringarray[] = $name . '=' . urlencode( stripslashes( $value ) );
 			}
 
 			$return['raw'] = implode( "\n", $stringarray );

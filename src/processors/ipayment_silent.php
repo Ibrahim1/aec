@@ -201,7 +201,7 @@ class processor_ipayment_silent extends XMLprocessor
 
 		$stringarray = array();
 		foreach ( $a as $name => $value ) {
-			$stringarray[] = $name . '=' . urlencode( $value );
+			$stringarray[] = $name . '=' . urlencode( stripslashes( $value ) );
 		}
 
 		$string = implode( '&', $stringarray );

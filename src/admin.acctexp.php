@@ -2695,12 +2695,16 @@ function editSubscriptionPlan( $id, $option )
 	$database->setQuery( $query );
 	$mi_list = $database->loadObjectList();
 
-	$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
-			. ' FROM #__acctexp_microintegrations'
-			. ' WHERE `id` IN (' . implode( ',', explode( ';', $row->micro_integrations ) ) . ')'
-			;
- 	$database->setQuery( $query );
-	$selected_mi = $database->loadObjectList();
+	if ( strlen( $row->micro_integrations ) > 0 ) {
+		$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
+				. ' FROM #__acctexp_microintegrations'
+				. ' WHERE `id` IN (' . implode( ',', explode( ';', $row->micro_integrations ) ) . ')'
+				;
+	 	$database->setQuery( $query );
+		$selected_mi = $database->loadObjectList();
+	} else {
+		$selected_mi = array();
+	}
 
 	$lists['micro_integrations'] = mosHTML::selectList($mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $selected_mi);
 

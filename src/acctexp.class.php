@@ -9280,7 +9280,7 @@ class aecExport extends jsonDBTable
 
 		$exphandler = new $classname();
 
-		$fname = 'aecexport_' . urlencode( $this->name ) . '_' . date( 'Y_m_d', time() + $mosConfig_offset*3600 );
+		$fname = 'aecexport_' . urlencode( stripslashes( $this->name ) ) . '_' . date( 'Y_m_d', time() + $mosConfig_offset*3600 );
 
 		// Send download header
 		header("Pragma: public");
