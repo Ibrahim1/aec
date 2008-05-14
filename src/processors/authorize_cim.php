@@ -29,26 +29,26 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-require('authorizenet_cim/authorizenet.cim.class.php');
+require( 'authorizenet_cim/authorizenet.cim.class.php' );
 
 class processor_authorize_cim extends XMLprocessor
 {
 	function info()
 	{
 		$info = array();
-		$info['name'] = 'authorize_cim';
-		$info['longname'] = _CFG_AUTHORIZE_CIM_LONGNAME;
-		$info['statement'] = _CFG_AUTHORIZE_CIM_STATEMENT;
-		$info['description'] = _CFG_AUTHORIZE_CIM_DESCRIPTION;
-		$info['currencies'] = 'AFA,DZD,ADP,ARS,AMD,AWG,AUD,AZM,BSD,BHD,THB,PAB,BBD,BYB,BEF,BZD,BMD,VEB,BOB,BRL,BND,BGN,BIF,CAD,CVE,KYD,GHC,XOF,XAF,XPF,CLP,COP,KMF,BAM,NIO,CRC,CUP,CYP,CZK,GMD,'.
+		$info['name']			= 'authorize_cim';
+		$info['longname']		= _CFG_AUTHORIZE_CIM_LONGNAME;
+		$info['statement']		= _CFG_AUTHORIZE_CIM_STATEMENT;
+		$info['description']	= _CFG_AUTHORIZE_CIM_DESCRIPTION;
+		$info['currencies']		= 'AFA,DZD,ADP,ARS,AMD,AWG,AUD,AZM,BSD,BHD,THB,PAB,BBD,BYB,BEF,BZD,BMD,VEB,BOB,BRL,BND,BGN,BIF,CAD,CVE,KYD,GHC,XOF,XAF,XPF,CLP,COP,KMF,BAM,NIO,CRC,CUP,CYP,CZK,GMD,'.
 								'DKK,MKD,DEM,AED,DJF,STD,DOP,VND,GRD,XCD,EGP,SVC,ETB,EUR,FKP,FJD,HUF,CDF,FRF,GIP,XAU,HTG,PYG,GNF,GWP,GYD,HKD,UAH,ISK,INR,IRR,IQD,IEP,ITL,JMD,JOD,KES,PGK,LAK,EEK,'.
 								'HRK,KWD,MWK,ZMK,AOR,MMK,GEL,LVL,LBP,ALL,HNL,SLL,ROL,BGL,LRD,LYD,SZL,LTL,LSL,LUF,MGF,MYR,MTL,TMM,FIM,MUR,MZM,MXN,MXV,MDL,MAD,BOV,NGN,ERN,NAD,NPR,ANG,NLG,YUM,ILS,'.
 								'AON,TWD,ZRN,NZD,BTN,KPW,NOK,PEN,MRO,TOP,PKR,XPD,MOP,UYU,PHP,XPT,PTE,GBP,BWP,QAR,GTQ,ZAL,ZAR,OMR,KHR,MVR,IDR,RUB,RUR,RWF,SAR,ATS,SCR,XAG,SGD,SKK,SBD,KGS,SOS,ESP,'.
 								'LKR,SHP,ECS,SDD,SRG,SEK,CHF,SYP,TJR,BDT,WST,TZS,KZT,TPE,SIT,TTD,MNT,TND,TRL,UGX,ECV,CLF,USN,USS,USD,UZS,VUV,KRW,YER,JPY,CNY,ZWD,PLN';
-		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
-		$info['recurring'] = 0;
-		$info['actions'] = 'cancel';
-		$info['secure'] = 1;
+		$info['cc_list']		= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
+		$info['recurring']		= 0;
+		$info['actions']		= 'cancel';
+		$info['secure']			= 1;
 
 		return $info;
 	}
@@ -89,7 +89,8 @@ class processor_authorize_cim extends XMLprocessor
 		return $settings;
 	}
 
-	function checkoutform( $request ) {
+	function checkoutform( $request )
+	{
 		$var = array();
 
 		$cim = new AuthNetCim( $this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode'] );
@@ -112,11 +113,10 @@ class processor_authorize_cim extends XMLprocessor
 		$billFirstName	= $cim->substring_between( $cim->response,'<firstName>','</firstName>' );
 		$billLastName	= $cim->substring_between( $cim->response,'<lastName>','</lastName>' );
 
-		$var['params']['billFirstName'] = array( 'inputC', _AEC_AUTHORIZE_CIM_PARAMS_BILLFIRSTNAME_NAME, _AEC_AUTHORIZE_CIM_PARAMS_BILLFIRSTNAME_DESC, $billFirstName);
-		$var['params']['billLastName'] = array( 'inputC', _AEC_AUTHORIZE_CIM_PARAMS_BILLLASTNAME_NAME, _AEC_AUTHORIZE_CIM_PARAMS_BILLLASTNAME_DESC, $billLastName);
+		$var['params']['billFirstName'] = array( 'inputC', _AEC_USERFORM_BILLFIRSTNAME_NAME, _AEC_USERFORM_BILLFIRSTNAME_NAME, $billFirstName);
+		$var['params']['billLastName'] = array( 'inputC', _AEC_USERFORM_BILLLASTNAME_NAME, _AEC_USERFORM_BILLLASTNAME_NAME, $billLastName);
 
 		if ( !empty( $this->settings['promptAddress'] ) ) {
-
 			$billCompany	= $cim->substring_between( $cim->response,'<company>','</company>' );
 			$billAddress	= $cim->substring_between( $cim->response,'<address>','</address>' );
 			$billCity		= $cim->substring_between( $cim->response,'<city>','</city>' );
@@ -126,24 +126,26 @@ class processor_authorize_cim extends XMLprocessor
 			$billPhone		= $cim->substring_between( $cim->response,'<phoneNumber>','</phoneNumber>' );
 			$billFax		= $cim->substring_between( $cim->response,'<faxNumber>','</faxNumber>' );
 
-			$var['params']['billCompany'] = array( 'inputC', _AEC_AUTHORIZE_CIM_PARAMS_BILLCOMPANY_NAME, _AEC_AUTHORIZE_CIM_PARAMS_BILLCOMPANY_DESC, $billCompany );
-			$var['params']['billAddress'] = array( 'inputC', _AEC_AUTHORIZE_CIM_PARAMS_BILLADDRESS_NAME, _AEC_AUTHORIZE_CIM_PARAMS_BILLADDRESS_DESC, $billAddress );
-			$var['params']['billCity'] = array( 'inputC', _AEC_AUTHORIZE_CIM_PARAMS_BILLCITY_NAME, _AEC_AUTHORIZE_CIM_PARAMS_BILLCITY_DESC, $billCity );
-			$var['params']['billState'] = array( 'inputC', _AEC_AUTHORIZE_CIM_PARAMS_BILLSTATE_NAME, _AEC_AUTHORIZE_CIM_PARAMS_BILLSTATE_DESC, $billState );
-			$var['params']['billZip'] = array( 'inputC', _AEC_AUTHORIZE_CIM_PARAMS_BILLZIP_NAME, _AEC_AUTHORIZE_CIM_PARAMS_BILLZIP_DESC, $billZip );
-			$var['params']['billCountry'] = array( 'inputC', _AEC_AUTHORIZE_CIM_PARAMS_BILLCOUNTRY_NAME, _AEC_AUTHORIZE_CIM_PARAMS_BILLCOUNTRY_DESC, $billCountry );
-			$var['params']['billPhone'] = array( 'inputC', _AEC_AUTHORIZE_CIM_PARAMS_BILLPHONE_NAME, _AEC_AUTHORIZE_CIM_PARAMS_BILLPHONE_DESC, $billPhone );
-			$var['params']['billFax'] = array( 'inputC', _AEC_AUTHORIZE_CIM_PARAMS_BILLFAX_NAME, _AEC_AUTHORIZE_CIM_PARAMS_BILLFAX_DESC, $billFax );
+			$var['params']['billCompany'] = array( 'inputC', _AEC_USERFORM_BILLCOMPANY_NAME, _AEC_USERFORM_BILLCOMPANY_NAME, $billCompany );
+			$var['params']['billAddress'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS_NAME, _AEC_USERFORM_BILLADDRESS_NAME, $billAddress );
+			$var['params']['billCity'] = array( 'inputC', _AEC_USERFORM_BILLCITY_NAME, _AEC_USERFORM_BILLCITY_NAME, $billCity );
+			$var['params']['billState'] = array( 'inputC', _AEC_USERFORM_BILLSTATE_NAME, _AEC_USERFORM_BILLSTATE_NAME, $billState );
+			$var['params']['billZip'] = array( 'inputC', _AEC_USERFORM_BILLZIP_NAME, _AEC_USERFORM_BILLZIP_NAME, $billZip );
+			$var['params']['billCountry'] = array( 'inputC', _AEC_USERFORM_BILLCOUNTRY_NAME, _AEC_USERFORM_BILLCOUNTRY_NAME, $billCountry );
+			$var['params']['billPhone'] = array( 'inputC', _AEC_USERFORM_BILLPHONE_NAME, _AEC_USERFORM_BILLPHONE_NAME, $billPhone );
+			$var['params']['billFax'] = array( 'inputC', _AEC_USERFORM_BILLFAX_NAME, _AEC_USERFORM_BILLFAX_NAME, $billFax );
 		}
 
 		return $var;
 	}
 
-	function createRequestXML( $request ){
+	function createRequestXML( $request )
+	{
 		return "";
 	}
 
-	function transmitRequestXML( $xml, $request ) {
+	function transmitRequestXML( $xml, $request )
+	{
 		$return['valid'] = false;
 
 		$cim = new AuthNetCim($this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode']);
@@ -151,43 +153,29 @@ class processor_authorize_cim extends XMLprocessor
 		$customerProfileID = $this->getCustomerProfileID($request->metaUser->cmsUser->id);
 
 		$cim->setParameter('refId', $request->int_var['invoice']);
-
 		$cim->setParameter('merchantCustomerId', $request->metaUser->cmsUser->id);
-
 		$cim->setParameter('description', $request->metaUser->cmsUser->name);
-
 		$cim->setParameter('email', $request->metaUser->cmsUser->email);
 
 		$cim->setParameter('paymentType', 'creditcard');
 		$cim->setParameter('cardNumber', trim( $request->int_var['params']['cardNumber'] ));
 		$cim->setParameter('expirationDate', $request->int_var['params']['expirationYear'] . '-' . $request->int_var['params']['expirationMonth']);
 
-		$cim->setParameter('billTo_firstName', trim( $request->int_var['params']['billFirstName'] ));
-		$cim->setParameter('billTo_lastName', trim( $request->int_var['params']['billLastName'] ));
-		$cim->setParameter('billTo_company', trim( $request->int_var['params']['billCompany'] ));
-		$cim->setParameter('billTo_address', trim( $request->int_var['params']['billAddress'] ));
-		$cim->setParameter('billTo_city', trim( $request->int_var['params']['billCity'] ));
-		$cim->setParameter('billTo_state', trim( $request->int_var['params']['billState'] ));
-		$cim->setParameter('billTo_zip', trim( $request->int_var['params']['billZip'] ));
-		$cim->setParameter('billTo_country', trim( $request->int_var['params']['billCountry'] ));
-		$cim->setParameter('billTo_phoneNumber', trim( $request->int_var['params']['billPhone'] ));
-		$cim->setParameter('billTo_faxNumber', trim( $request->int_var['params']['billFax'] ));
+		$udata = array( 'billTo_firstName' => 'billFirstName', 'billTo_lastName' => 'billLastName', 'billTo_company' => 'billCompany', 'billTo_address' => 'billAddress',
+						'billTo_city' => 'billCity', 'billTo_state' => 'billState', 'billTo_zip' => 'billZip', 'billTo_country' => 'billCountry',
+						'billTo_phoneNumber' => 'billPhone', 'billTo_faxNumber' => 'billFax', 'shipTo_firstName' => 'billFirstName', 'shipTo_lastName' => 'billLastName',
+						'shipTo_company' => 'billCompany', 'shipTo_address' => 'billAddress', 'shipTo_city' => 'shipTo_city', 'shipTo_state' => 'billState',
+						'shipTo_zip' => 'billZip', 'shipTo_country' => 'billCountry', 'shipTo_phoneNumber' => 'billPhone', 'shipTo_faxNumber' => 'billFax'
+						);
 
-		$cim->setParameter('shipTo_firstName', trim( $request->int_var['params']['billFirstName'] ));
-		$cim->setParameter('shipTo_lastName', trim( $request->int_var['params']['billLastName'] ));
-		$cim->setParameter('shipTo_company', trim( $request->int_var['params']['billCompany'] ));
-		$cim->setParameter('shipTo_address', trim( $request->int_var['params']['billAddress'] ));
-		$cim->setParameter('shipTo_city', trim( $request->int_var['params']['billCity'] ));
-		$cim->setParameter('shipTo_state', trim( $request->int_var['params']['billState'] ));
-		$cim->setParameter('shipTo_zip', trim( $request->int_var['params']['billZip'] ));
-		$cim->setParameter('shipTo_country', trim( $request->int_var['params']['billCountry'] ));
-		$cim->setParameter('shipTo_phoneNumber', trim( $request->int_var['params']['billPhone'] ));
-		$cim->setParameter('shipTo_faxNumber', trim( $request->int_var['params']['billFax'] ));
+		foreach ( $udata as $authvar => $aecvar ) {
+			$cim->setParameter( $authvar, trim( $request->int_var['params'][$aecvar] ) );
+		}
 
 		$cim->setParameter('customerProfileId', $customerProfileID);
 		$cim->getCustomerProfileRequest();
 
-		if ($cim->isSuccessful()) {
+		if ( $cim->isSuccessful() ) {
 			$cim->setParameter('customerProfileId', $cim->customerProfileId);
 			$cim->setParameter('customerPaymentProfileId', $cim->customerPaymentProfileId);
 			$cim->setParameter('customerAddressId', $cim->customerAddressId);
@@ -198,45 +186,44 @@ class processor_authorize_cim extends XMLprocessor
 			$cim->createCustomerProfileRequest();
 		}
 
-		if ($cim->isSuccessful()) {
-			$cim->setParameter('transaction_amount', $request->int_var['amount']);
-			$LineItem = array();
-			$i = 1;
-			$LineItem[$i]['itemId'] = $request->int_var['invoice'];
-			$LineItem[$i]['name'] = trim( substr( AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice ), 0, 30 ) );
-			$LineItem[$i]['description'] = trim( AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice ));
-			$LineItem[$i]['quantity'] = '1';
-			$LineItem[$i]['unitPrice'] = $request->int_var['amount'];
-			$LineItem[$i]['taxable'] = 'false';
+		if ( $cim->isSuccessful() ) {
+			$cim->setParameter( 'transaction_amount', $request->int_var['amount'] );
 
-			$cim->LineItems = $LineItem;
+			$li['itemId']		= $request->int_var['invoice'];
+			$li['name']			= trim( substr( AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice ), 0, 30 ) );
+			$li['description']	= trim( AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice ));
+			$li['quantity']		= '1';
+			$li['unitPrice']	= $request->int_var['amount'];
+			$li['taxable']		= 'false';
+
+			$cim->LineItems = array( $li );
 
 			$cim->setParameter('transactionType', 'profileTransAuthCapture');
-
 			$cim->setParameter('transactionCardCode', trim( $request->int_var['params']['cardVV2'] ));
 
 			$cim->createCustomerProfileTransactionRequest();
 
-			if ($cim->isSuccessful()) {
-				$return['valid'] = true;
-				$return['invoice'] =$cim->refId;
+			if ( $cim->isSuccessful() ) {
+				$return['valid']	= true;
+				$return['invoice']	= $cim->refId;
 			} else {
-				$return['error'] = $cim->code . ": " . $cim->text;
+				$return['error']	= $cim->code . ": " . $cim->text;
 			}
 		} else {
-			$return['error'] = $cim->code . ": " . $cim->text;
+			$return['error']		= $cim->code . ": " . $cim->text;
 		}
 
 		return $return;
 	}
 
-	function getCustomerProfileID($userID){
+	function getCustomerProfileID( $userID )
+	{
 		global $database;
 		$row = new mosUser( $database );
-		$row->load( (int)$userID );
-		$userParams = & new mosParameters( $row->params );
+		$row->load( (int) $userID );
+		$userParams =& new mosParameters( $row->params );
 
-		return (int)$userParams->get('customerProfileId');
+		return (int) $userParams->get( 'customerProfileId' );
 	}
 }
 ?>

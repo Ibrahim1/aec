@@ -19,12 +19,10 @@
 
 defined( '_VALID_MOS' ) or die( 'Restricted access' );
 
-class eucaInstall
+class eucaInstall extends eucaObject
 {
 	function eucaInstall()
-	{
-		$this->errors = array();
-	}
+	{}
 
 	function unpackFileArray( $array )
 	{
@@ -41,15 +39,12 @@ class eucaInstall
 		foreach ( $array as $file ) {
 			if ( $file[2] ) {
 				$basepath = $mosConfig_absolute_path . '/administrator/components/' . _EUCA_APP_COMPNAME . '/';
-
-				$fullpath	= $basepath . $file[0];
-				$deploypath = $basepath . $file[1];
 			} else {
 				$basepath = $mosConfig_absolute_path . '/components/' . _EUCA_APP_COMPNAME . '/';
-
-				$fullpath	= $basepath . $file[0];
-				$deploypath = $basepath . $file[1];
 			}
+
+			$fullpath	= $basepath . $file[0];
+			$deploypath = $basepath . $file[1];
 
 			if ( !@is_dir( $deploypath ) ) {
 				// Borrowed from php.net page on mkdir. Created by V-Tec (vojtech.vitek at seznam dot cz)
@@ -70,12 +65,16 @@ class eucaInstall
 			if (  defined( 'JPATH_BASE' ) ) {
 				if ( PclTarExtract( $fullpath, $deploypath) !== 0 ) {
 					@unlink( $fullpath );
+				} else {
+					$this->setError( array( 'Extraction Error', 'the file ' . $file . ' could not be extracted to ' . $deploypath . '. You can try to unpack the files yourself.' ) );
 				}
 			} else {
 				$archive = new Archive_Tar( $fullpath, 'gz' );
 
 				if ( $archive->extract( $deploypath ) ) {
 					@unlink( $fullpath );
+				} else {
+					$this->setError( array( 'Extraction Error', 'the file ' . $file . ' could not be extracted to ' . $deploypath . '. You can try to unpack the files yourself.' ) );
 				}
 			}
 		}
@@ -92,7 +91,7 @@ class eucaInstall
 		$database->setQuery( $query );
 
 		if ( !$database->query() ) {
-	    	$this->errors[] = array( $database->getErrorMsg(), $query );
+	    	$this->setError( array( $database->getErrorMsg(), $query ) );
 		}
 	}
 
@@ -174,7 +173,7 @@ class eucaInstall
 		$database->setQuery( $query );
 
 		if ( !$database->query() ) {
-	    	$this->errors[] = array( $database->getErrorMsg(), $query );
+	    	$this->setError( array( $database->getErrorMsg(), $query ) );
 	    	return false;
 		} else {
 			return true;
@@ -182,11 +181,19 @@ class eucaInstall
 	}
 }
 
-class eucaInstallDB
+class eucaInstallDB extends eucaObject
 {
 	function eucaInstallDB()
+	{}
+
+	function multiQueryExec( $queri )
 	{
-		$this->errors = array();
+		foreach ( $queri as $query ) {
+			$database->setQuery( $query );
+		    if ( !$database->query() ) {
+		        $this->setError( array( $database->getErrorMsg(), $query ) );
+		    }
+		}
 	}
 
 	function ColumninTable( $column=null, $table=null, $prefix=true )
@@ -252,7 +259,7 @@ class eucaInstallDB
 		$result = $database->query();
 
 		if ( !$result ) {
-	    	$this->errors[] = array( $database->getErrorMsg(), $query );
+	    	$this->setError( array( $database->getErrorMsg(), $query ) );
 	    	return false;
 		} else {
 			return true;
@@ -279,7 +286,7 @@ class eucaInstallDB
 		$result = $database->query();
 
 		if ( !$result ) {
-	    	$this->errors[] = array( $database->getErrorMsg(), $query );
+	    	$this->setError( array( $database->getErrorMsg(), $query ) );
 	    	return false;
 		} else {
 			return true;
@@ -299,7 +306,7 @@ class eucaInstallDB
 		$result = $database->query();
 
 		if ( !$result ) {
-	    	$this->errors[] = array( $database->getErrorMsg(), $query );
+	    	$this->setError( array( $database->getErrorMsg(), $query ) );
 	    	return false;
 		} else {
 			return true;
@@ -308,12 +315,10 @@ class eucaInstallDB
 
 }
 
-class eucaInstalleditfile
+class eucaInstalleditfile extends eucaObject
 {
 	function eucaInstalleditfile()
-	{
-		$this->errors = array();
-	}
+	{}
 
 	function fileEdit( $path, $search, $replace, $throwerror )
 	{
@@ -338,7 +343,7 @@ class eucaInstalleditfile
 		    }
 		}
 
-		$this->error[] = $throwerror;
+		$this->setError( $throwerror );
 		return false;
 	}
 
