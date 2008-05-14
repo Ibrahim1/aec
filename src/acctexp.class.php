@@ -2316,6 +2316,15 @@ class XMLprocessor extends processor
 				case 'country':
 					$var['params']['billCountry'] = array( 'inputC', _AEC_USERFORM_BILLCOUNTRY_NAME );
 					break;
+				case 'phone':
+					$var['params']['billPhone'] = array( 'inputC', _AEC_USERFORM_BILLPHONE_NAME );
+					break;
+				case 'fax':
+					$var['params']['billFax'] = array( 'inputC', _AEC_USERFORM_BILLFAX_NAME );
+					break;
+				case 'company':
+					$var['params']['billCompany'] = array( 'inputC', _AEC_USERFORM_BILLCOMPANY_NAME );
+					break;
 			}
 		}
 

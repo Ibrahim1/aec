@@ -127,6 +127,8 @@
 		<filename>processors/cybermut/cybermutnotification.php</filename>
 		<filename>processors/ideal_advanced/index.html</filename>
 		<filename>processors/ideal_advanced/ideal_advanced.tar.gz</filename>
+		<filename>processors/authorizenet_cim/index.html</filename>
+		<filename>processors/authorizenet_cim/authorizenet.cim.class.php</filename>
 		<filename>processors/com_acctexp_language_processors/index.html</filename>
 		<filename>processors/com_acctexp_language_processors/dutch.php</filename>
 		<filename>processors/com_acctexp_language_processors/english.php</filename>

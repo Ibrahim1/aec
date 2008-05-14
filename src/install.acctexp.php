@@ -35,7 +35,7 @@ function com_install()
 {
 	global $database, $mainframe, $mosConfig_absolute_path, $mosConfig_live_site, $mosConfig_dbprefix, $my, $aecConfig;
 
-	$queri		= NULL;
+	$queri		= array();
 	$errors		= array();
 
 	$pathLang = $mainframe->getCfg( 'absolute_path' ) . '/administrator/components/com_acctexp/com_acctexp_language_backend/';
@@ -279,12 +279,7 @@ function com_install()
 	. ') TYPE=MyISAM;'
 	;
 
-	foreach ( $queri AS $query ) {
-		$database->setQuery( $query );
-	    if ( !$database->query() ) {
-	        $errors[] = array( $database->getErrorMsg(), $query );
-	    }
-	}
+	$eucaInstalldb->multiQueryExec( $queri );
 
 	require_once( $mainframe->getPath( 'class', 'com_acctexp' ) );
 
@@ -310,7 +305,7 @@ function com_install()
 	}
 
 	// Update routine 0.6.0 -> 0.8.0
-	$queri	= null;
+	$queri	= array();
 	$result = null;
 
 	$database->setQuery("SHOW COLUMNS FROM #__acctexp_config LIKE 'alertlevel1'");
@@ -335,10 +330,6 @@ function com_install()
 				}
 			}
 
-			// a1 -> amount1 || p1 -> period1 || t1 -> perunit1
-			// a2 -> amount2 || p2 -> period2 || t2 -> perunit2
-			// a3 -> amount3 || p3 -> period3 || t3 -> perunit3
-
 			if ( in_array( $mosConfig_dbprefix . '_acctexp_payplans', $tables ) ) {
 				$queri = null;
 				// Drop new table __acctexp_plans. We going to recreate it from old __acctexp_payplans
@@ -357,7 +348,10 @@ function com_install()
 				$queri[] = "ALTER TABLE #__acctexp_plans DROP `modify`";
 				$queri[] = "ALTER TABLE #__acctexp_plans DROP `lc`";
 				$queri[] = "ALTER TABLE #__acctexp_plans DROP `page_style`";
-				// And rename fields that shoudl remain, but with generic names.
+				// And rename fields that should remain, but with generic names:
+				// a1 -> amount1 || p1 -> period1 || t1 -> perunit1
+				// a2 -> amount2 || p2 -> period2 || t2 -> perunit2
+				// a3 -> amount3 || p3 -> period3 || t3 -> perunit3
 				$queri[] = "ALTER TABLE #__acctexp_plans CHANGE `a1` `amount1` varchar(40) NULL";
 				$queri[] = "ALTER TABLE #__acctexp_plans CHANGE `a2` `amount2` varchar(40) NULL";
 				$queri[] = "ALTER TABLE #__acctexp_plans CHANGE `a3` `amount3` varchar(40) NULL";
@@ -402,7 +396,7 @@ function com_install()
 		}
 	}
 
-	$queri = null;
+	$queri = array();
 
 	$queri[] = "DROP TABLE IF EXISTS #__acctexp_log_paypal";
 	$queri[] = "DROP TABLE IF EXISTS #__acctexp_log_2checkout";
@@ -410,12 +404,7 @@ function com_install()
 	$queri[] = "DROP TABLE IF EXISTS #__acctexp_log_authorize";
 	$queri[] = "DROP TABLE IF EXISTS #__acctexp_log_vklix";
 
-	foreach ( $queri as $query ) {
-		$database->setQuery( $query );
-	    if ( !$database->query() ) {
-	        $errors[] = array( $database->getErrorMsg(), $query );
-	    }
-	}
+	$eucaInstalldb->multiQueryExec( $queri );
 
 	// Update routine 0.8.0x -> 1.0.0 RC1
 
@@ -512,18 +501,14 @@ function com_install()
 	if ( is_object( $result ) ) {
 		if (strcmp($result->Field, 'extra01') === 0) {
 
-			$queri = null;
+			$queri = array();
 			$queri[] = "ALTER TABLE #__acctexp_subscr CHANGE `extra01` `recurring` int(1) NOT NULL default '0'";
 			$queri[] = "ALTER TABLE #__acctexp_subscr DROP `extra02`";
 			$queri[] = "ALTER TABLE #__acctexp_subscr DROP `extra03`";
 			$queri[] = "ALTER TABLE #__acctexp_subscr DROP `extra04`";
 
-			foreach ( $queri as $query ) {
-				$database->setQuery( $query );
-			    if ( !$database->query() ) {
-			        $errors[] = array( $database->getErrorMsg(), $query );
-			    }
-			}
+
+			$eucaInstalldb->multiQueryExec( $queri );
 		}
 	}
 
@@ -672,12 +657,8 @@ function com_install()
 		$queri[] = "DROP TABLE IF EXISTS #__acctexp_config_worldpay";
 		$queri[] = "DROP TABLE IF EXISTS #__acctexp_config_alertpay";
 
-		foreach ( $queri as $query ) {
-			$database->setQuery( $query );
-		    if ( !$database->query() ) {
-		        $errors[] = array( $database->getErrorMsg(), $query );
-		    }
-		}
+
+		$eucaInstalldb->multiQueryExec( $queri );
 	}
 
 	// first delete old menu entries
@@ -1122,7 +1103,7 @@ function com_install()
 	$params		= array( 'userid' => $my->id );
 	$eventlog->issue( $short, $tags, $event, 2, $params, 1 );
 
-	$errors = array_merge( $errors, $eucaInstalldb->errors );
+	$errors = array_merge( $errors, $eucaInstall->getErrors(), $eucaInstalldb->getErrors(), $eucaInstallef->getErrors() );
 
 	?>
 
@@ -1143,7 +1124,12 @@ function com_install()
 		. _AEC_INST_ERRORS
 		. '<ul>' . "\n";
 		foreach ( $errors AS $error ) {
-			echo '<li>' . $error[0] . ' - ' . $error[1] . '</li>';
+			if ( is_array( $error ) ) {
+				echo '<li>' . $error . '</li>';
+			} else {
+				echo '<li>' . $error[0] . ' - ' . $error[1] . '</li>';
+			}
+
 		}
 		echo '</ul>' . "\n"
 		. '</div>' . "\n";
@@ -1152,9 +1138,9 @@ function com_install()
 		<tr>
 			<td width="60%" valign="top" style="background-color: #eee;">
 				<div style="background-color: #949494; margin: 2px; padding: 6px;">
-				<div style="width: 100%; background-color: #000;">
-				<center><img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_dist_gfx.png" border="0" alt="" /></center>
-				</div>
+					<div style="width: 100%; background-color: #000;">
+						<center><img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_dist_gfx.png" border="0" alt="" /></center>
+					</div>
 				</div>
 				<div class="usernote" style="width:350px;margin:8px;">
 					<h1 style="color: #FF0000;"><?php echo _AEC_INST_NOTE_IMPORTANT; ?>:</h1>

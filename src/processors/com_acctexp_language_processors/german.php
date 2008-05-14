@@ -111,6 +111,10 @@ define( '_AEC_USERFORM_BILLSTATE_NAME', 'State');
 define( '_AEC_USERFORM_BILLSTATEPROV_NAME', 'State/Prov');
 define( '_AEC_USERFORM_BILLZIP_NAME', 'Zip');
 define( '_AEC_USERFORM_BILLCOUNTRY_NAME', 'Country');
+define( '_AEC_USERFORM_BILLPHONE_NAME', 'Phone');
+define( '_AEC_USERFORM_BILLFAX_NAME', 'Fax');
+define( '_AEC_USERFORM_BILLCOMPANY_NAME', 'Company');
+
 
 // Generic Credit Card Form
 define( '_AEC_CCFORM_CARDHOLDER_NAME', 'Card owner Name');
