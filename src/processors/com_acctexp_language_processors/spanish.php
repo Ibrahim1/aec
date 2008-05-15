@@ -617,4 +617,17 @@ define( '_CFG_PAYER_KEY2_DESC', 'Your Second Key (Key B)');
 define( '_CFG_PAYER_PAYMENT_METHOD_NAME', 'Payment Methods');
 define( '_CFG_PAYER_PAYMENT_METHOD_DESC', 'Choose which payment methods you want to allow for the transaction');
 
+// Authorize.net CIM
+define( '_CFG_AUTHORIZE_CIM_LONGNAME', 'Authorize.net CIM');
+define( '_CFG_AUTHORIZE_CIM_STATEMENT', 'Make payments with Authorize.net');
+define( '_CFG_AUTHORIZE_CIM_DESCRIPTION', 'Make payments with Authorize.net');
+define( '_CFG_AUTHORIZE_CIM_LOGIN_NAME', 'API Login ID');
+define( '_CFG_AUTHORIZE_CIM_LOGIN_DESC', 'Your API Login ID on Authorize.net.');
+define( '_CFG_AUTHORIZE_CIM_TRANSACTION_KEY_NAME', 'Transaction Key');
+define( '_CFG_AUTHORIZE_CIM_TRANSACTION_KEY_DESC', 'Your Transaction Key on Authorize.net.');
+define( '_CFG_AUTHORIZE_CIM_PROMPTADDRESS_NAME', 'Prompt for Address');
+define( '_CFG_AUTHORIZE_CIM_PROMPTADDRESS_DESC', 'Ask the user to put in an Address with the Billing Name.');
+define( '_CFG_AUTHORIZE_CIM_PROMPTZIPONLY_NAME', 'Prompt for Zip only');
+define( '_CFG_AUTHORIZE_CIM_PROMPTZIPONLY_DESC', 'Ask the user to put in a Zip code only.');
+
 ?>

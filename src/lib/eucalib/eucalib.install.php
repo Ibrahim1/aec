@@ -188,6 +188,8 @@ class eucaInstallDB extends eucaObject
 
 	function multiQueryExec( $queri )
 	{
+		global $database;
+
 		foreach ( $queri as $query ) {
 			$database->setQuery( $query );
 		    if ( !$database->query() ) {

@@ -491,13 +491,7 @@ class eucaDebug
 	}
 
 	function displayDebug()
-	{
-		if ( $this->Dbgv == 2 ) {
-			$this->Dbg->display();
-		} else {
-			$this->Dbg->DebugDisplay();
-		}
-	}
+	{}
 }
 
 ?>
