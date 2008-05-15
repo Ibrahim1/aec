@@ -4002,7 +4002,7 @@ function quicklookup( $option )
 
 function hackcorefile( $option, $filename, $check_hack, $undohack )
 {
-	global $mosConfig_absolute_path, $database;
+	global $mosConfig_absolute_path, $mosConfig_live_site, $database;
 	global $mosConfig_debug;
 
 	if ( !defined( '_AEC_LANG_INCLUDED_MI' ) ) {
@@ -4617,7 +4617,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 					$count = 0;
 					$query = 'SELECT COUNT(*)'
 							. ' FROM #__menu'
-							. ' WHERE `link` = \'index.php?option=com_acctexp&task=subscriptionDetails\''
+							. ' WHERE `link` = \'' . $mosConfig_live_site  . '/index.php?option=com_acctexp&task=subscriptionDetails\''
 							;
 					$database->setQuery( $query );
 					$count = $database->loadResult();
