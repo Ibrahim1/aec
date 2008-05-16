@@ -397,12 +397,27 @@ class metaUser
 		}
 
 		// Get ARO ID for user
-		$query = 'SELECT `aro_id`'
+		$query = 'SELECT `' . ( defined( 'JPATH_BASE' ) ? 'id' : 'aro_id' )  . '`'
 				. ' FROM #__core_acl_aro'
 				. ' WHERE `value` = \'' . (int) $this->userid . '\''
 				;
 		$database->setQuery( $query );
 		$aro_id = $database->loadResult();
+
+		// If we have no aro id, something went wrong and we need to create it
+		if ( empty( $aro_id ) ) {
+			$query2 = 'INSERT INTO #__core_acl_aro'
+					. ' (`section_value`, `value`, `order_value`, `name`, `hidden` )'
+					. ' VALUES ( \'users\', \'' . $this->userid . '\', \'0\', \'' . $this->cmsUser->name . '\', \'0\' )'
+					;
+			$database->setQuery( $query2 );
+			$database->query();
+
+			$database->setQuery( $query );
+			$aro_id = $database->loadResult();
+		}
+
+		// TODO: Fallback case if groups_aro_map is broken
 
 		// Carry out ARO ID -> ACL group mapping
 		$query = 'UPDATE #__core_acl_groups_aro_map'
