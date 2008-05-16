@@ -437,10 +437,8 @@ function confirmSubscription( $option )
 
 			registerForm( $option, $mosConfig_emailpass, null );
 		} else {
-			// This is a joomla registration, borrowing their code to register the user
-			include_once( $mosConfig_absolute_path . '/components/com_registration/registration.php' );
-
-			registerForm( $option, $mosConfig_useractivation );
+			// This is a joomla registration
+			joomlaregisterForm( $option, $mainframe->getCfg( 'useractivation' ) );
 		}
 	} else {
 		$invoicefact = new InvoiceFactory( $userid, $usage, $processor );
