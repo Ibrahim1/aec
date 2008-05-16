@@ -150,7 +150,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$var['city']				= $request->int_var['params']['billCity'];
 		$var['state']				= $request->int_var['params']['billState'];
 		$var['zip']					= $request->int_var['params']['billZip'];
-		$var['country']				= $this->settings['country'];
+		$var['countrycode']			= $request->int_var['params']['billCountry'];
 		$var['NotifyUrl']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=paypal_wppnotification' );
 		$var['desc']				= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
 		$var['InvNum']				= $request->int_var['invoice'];;
