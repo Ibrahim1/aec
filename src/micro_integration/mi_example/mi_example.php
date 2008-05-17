@@ -71,7 +71,7 @@ class mi_example
 		return $settings;
 	}
 
-	function pre_expiration_action( $params, $metaUser, $plan, $mi_id )
+	function pre_expiration_action( $params, $metaUser, $plan )
 	{
 		// Here you can specify whatever you want to happen when the plan runs out.
 	}

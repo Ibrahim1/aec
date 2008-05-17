@@ -631,6 +631,9 @@ class Payment_HTML
 							<strong><?php echo _CHECKOUT_COUPON_CODE; ?></strong>
 							<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
 						<?php } ?>
+						<?php if ( !empty( $InvoiceFactory->miInfo ) ) {
+							echo $InvoiceFactory->miInfo;
+						} ?>
 						<input type="hidden" name="option" value="<?php echo $option; ?>" />
 						<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0; ?>" />
 						<input type="hidden" name="task" value="saveSubscription" />

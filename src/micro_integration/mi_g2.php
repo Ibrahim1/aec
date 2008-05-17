@@ -1,8 +1,17 @@
 <?php
+/**
+ * @version $Id: mi_g2.php 16 2007-07-02 13:29:29Z mic $
+ * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
+ * @subpackage Micro Integrations - G2
+ * @copyright 2008 Copyright (C) David Deutsch
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
+ * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
+ */
+
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_example
+class mi_g2
 {
 	function Info()
 	{

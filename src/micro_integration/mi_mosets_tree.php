@@ -2,8 +2,8 @@
 /**
  * @version $Id: mi_idevaffiliate.php 16 2007-07-02 13:29:29Z mic $
  * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
- * @subpackage Micro Integrations - Email
- * @copyright 2006/2007 Copyright (C) David Deutsch
+ * @subpackage Micro Integrations - Mosets Tree
+ * @copyright 2006-2008 Copyright (C) David Deutsch
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
  * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
  */
@@ -207,7 +207,6 @@ class mi_mosets_tree
 		return $hacks;
 	}
 
-
 	function profile_info( $params, $userid )
 	{
 		global $database;
@@ -215,10 +214,10 @@ class mi_mosets_tree
 		$mi_mosetshandler = new mosetstree( $database );
 		$id = $mi_mosetshandler->getIDbyUserID( $userid );
 
-		if( $id ) {
+		if ( $id ) {
 			$mi_mosetshandler->load( $id );
 			return '<p>' . sprintf( _AEC_MI_DIV1_MOSETS, $mi_mosetshandler->getListingsLeft() ) . '</p>';
-		}else{
+		} else {
 			return '';
 		}
 	}
@@ -279,9 +278,9 @@ class mosetstree extends mosDBTable
 		global $mainframe;
 
 		$langPathMI = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/micro_integration/language/';
-		if( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
+		if ( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
 			include_once( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' );
-		}else{
+		} else {
 			include_once( $langPathMI . 'english.php' );
 		}
 
