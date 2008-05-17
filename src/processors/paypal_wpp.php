@@ -141,7 +141,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$var['CardVerificationValue'] = $request->int_var['params']['cardVV2'];
 		$var['cvv2']				= $request->int_var['params']['cardVV2'];
 
-		$var['street1']				= $request->int_var['params']['billAddress'];
+		$var['street']				= $request->int_var['params']['billAddress'];
 
 		if ( !empty( $request->int_var['params']['billAddress2'] ) ) {
 			$var['street2']			= $request->int_var['params']['billAddress2'];
