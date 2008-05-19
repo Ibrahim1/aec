@@ -78,8 +78,8 @@ class mi_docman
 		$settings['rebuild']				= array( 'list_yesno' );
 
 		$query = 'SELECT groups_id, groups_name, groups_description'
-	 	. ' FROM #__docman_groups'
-	 	;
+			 	. ' FROM #__docman_groups'
+			 	;
 	 	$database->setQuery( $query );
 	 	$groups = $database->loadObjectList();
 
@@ -102,15 +102,15 @@ class mi_docman
 			}
 		}
 
- 		$del_opts = array();
-		$del_opts[0] = mosHTML::makeOption ( "No", "Just apply group below." ); // Should probably be langauge file defined?
-		$del_opts[1] = mosHTML::makeOption ( "All", "Delete ALL, then apply group below." );
-		$del_opts[2] = mosHTML::makeOption ( "Set", "Delete Group Set on Application, then apply group below." );
-
 		$sel_groups = array();
 		foreach ($groups as $name ) {
 			$selected_groups[] = mosHTML::makeOption( $name, $name );
 		}
+
+ 		$del_opts = array();
+		$del_opts[0] = mosHTML::makeOption ( "No", "Just apply group below." ); // Should probably be langauge file defined?
+		$del_opts[1] = mosHTML::makeOption ( "All", "Delete ALL, then apply group below." );
+		$del_opts[2] = mosHTML::makeOption ( "Set", "Delete Group Set on Application, then apply group below." );
 
 		$settings['lists']['group']			= mosHTML::selectList( $gr, 'group', 'size="4" multiple="multiple"', 'value', 'text', $sg );
 		$settings['lists']['group_exp'] 	= mosHTML::selectList( $gr, 'group_exp', 'size="4" multiple="multiple"', 'value', 'text', $sge );

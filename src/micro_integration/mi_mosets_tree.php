@@ -10,7 +10,7 @@
 
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_mosets_tree
+class mi_mosets_tree extends MI
 {
 	function Info()
 	{
