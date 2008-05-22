@@ -136,7 +136,9 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'subscriptiondetails':
-			subscriptionDetails( $option );
+			$sub			= aecGetParam( 'sub', '' );
+
+			subscriptionDetails( $option, $sub );
 			break;
 
 		case 'renewsubscription':
@@ -446,7 +448,7 @@ function confirmSubscription( $option )
 	}
 }
 
-function subscriptionDetails( $option )
+function subscriptionDetails( $option, $sub )
 {
 	global $database, $my, $mainframe;
 
@@ -458,6 +460,19 @@ function subscriptionDetails( $option )
 		if ( !$metaUser->hasSubscription ) {
 			subscribe( $option );
 			return;
+		}
+
+		$sf = array( 'overview', 'invoices', 'details' );
+
+		$subfields = array();
+		foreach ( $sf as $fname ) {
+			$subfields[$fname] = constant( strtoupper( '_aec_subdetails_tab_' . $fname ) );
+		}
+
+		if ( empty( $sub ) ) {
+			$sub = 'overview';
+		} elseif ( !in_array( $sub, $sf ) ) {
+
 		}
 
 		switch ( strtolower( $metaUser->objSubscription->type ) ) {
@@ -473,6 +488,16 @@ function subscriptionDetails( $option )
 				if ( $pp->loadName( $metaUser->objSubscription->type ) ) {
 					$pp->init();
 					$pp->getInfo();
+
+					$addtabs = $pp->registerProfileTabs();
+
+					if ( !empty( $addtabs ) ) {
+						foreach ( $addtabs as $atk => $atv ) {
+							if ( !isset( $subfields[$pp->processor_name . $atk] ) ) {
+								$subfields[$pp->processor_name . $atk] = $atv;
+							}
+						}
+					}
 				} else {
 					$pp = false;
 				}
@@ -487,6 +512,8 @@ function subscriptionDetails( $option )
 
 		$mi_info = '';
 
+		$subscriptions = array();
+
 		if ( $metaUser->objSubscription->plan ) {
 			$selected_plan = new SubscriptionPlan( $database );
 			$selected_plan->load( $metaUser->objSubscription->plan );
@@ -498,11 +525,14 @@ function subscriptionDetails( $option )
 					if ( $mi_id ) {
 						$mi = new MicroIntegration( $database );
 						$mi->load( $mi_id );
-						if ( $mi->callIntegration() ) {
-							$info = $mi->profile_info( $my->id );
-							if ( $info !== false ) {
-								$mi_info .= $info;
-							}
+
+						if ( !$mi->callIntegration() ) {
+							continue;
+						}
+
+						$info = $mi->profile_info( $my->id );
+						if ( $info !== false ) {
+							$mi_info .= $info;
 						}
 					}
 				}
@@ -517,16 +547,18 @@ function subscriptionDetails( $option )
 				}
 			}
 
-		} else {
-			$selected_plan	= false;
-			$mi				= false;
+			$subscriptions[] = $selected_plan;
+		}
+
+		if ( empty( $mi_info ) ) {
+			unset( $subfields['details'] );
 		}
 
 		$alert = array();
 		if ( strcmp( $metaUser->objSubscription->status, 'Excluded' ) === 0 ) {
 			$alert['level']		= 3;
 			$alert['daysleft']	= 'excluded';
-		} elseif ( $metaUser->objSubscription->lifetime ) {
+		} elseif ( !empty( $metaUser->objSubscription->lifetime ) ) {
 			$alert['level']		= 3;
 			$alert['daysleft']	= 'infinite';
 		} else {
@@ -538,7 +570,6 @@ function subscriptionDetails( $option )
 		$processors = array();
 
 		if ( !empty( $user_subscriptions ) ) {
-			$subscriptions = array();
 			foreach( $user_subscriptions as $subscription ) {
 				if ( empty( $subscription->id ) || empty( $subscription->plan ) ) {
 					continue;
@@ -552,6 +583,16 @@ function subscriptionDetails( $option )
 					if ( $spp->loadName( $subscription->type ) ) {
 						$spp->init();
 						$spp->getInfo();
+
+						$addtabs = $pp->registerProfileTabs();
+
+						if ( !empty( $addtabs ) ) {
+							foreach ( $addtabs as $atk => $atv ) {
+								if ( !isset( $subfields[$pp->processor_name . $atk] ) ) {
+									$subfields[$pp->processor_name . $atk] = $atv;
+								}
+							}
+						}
 					} else {
 						$spp = false;
 					}
@@ -573,12 +614,6 @@ function subscriptionDetails( $option )
 
 				$subscriptions[] = $secondary_plan;
 			}
-
-			if ( empty( $subscriptions ) ) {
-				$subscriptions = null;
-			}
-		} else {
-			$subscriptions = null;
 		}
 
 		// count number of payments from user
@@ -590,7 +625,7 @@ function subscriptionDetails( $option )
 		$database->setQuery( $query );
 		$rows_total	= $database->loadResult();
 
-		$rows_limit	= 10;	// Returns last 10 payments
+		$rows_limit	= 20;	// Returns last 10 payments
 		$min_limit	= ( $rows_total > $rows_limit ) ? ( $rows_total - $rows_limit ) : 0;
 
 		// get payments from user
@@ -614,6 +649,8 @@ function subscriptionDetails( $option )
 			$row->load( $rowid );
 
 			if ( strcmp( $row->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
+				$transactiondate = 'uncleared';
+
 				if ( strpos( $row->params, 'pending_reason' ) ) {
 					$params = explode( "\n", $row->params );
 
@@ -629,11 +666,7 @@ function subscriptionDetails( $option )
 						} else {
 							$transactiondate = $array['pending_reason'];
 						}
-					} else {
-						$transactiondate = 'uncleared';
 					}
-				} else {
-					$transactiondate = 'uncleared';
 				}
 
 				$actions = '<a href="'
@@ -668,6 +701,7 @@ function subscriptionDetails( $option )
 			}
 
 			$row->formatInvoiceNumber();
+
 			$invoices[$rowid]['invoice_number']	= $row->invoice_number;
 			$invoices[$rowid]['amount']			= $row->amount;
 			$invoices[$rowid]['currency_code']	= $row->currency;
@@ -678,7 +712,7 @@ function subscriptionDetails( $option )
 		}
 
 		$html = new HTML_frontEnd();
-		$html->subscriptionDetails( $option, $invoices, $metaUser, $recurring, $pp, $mi_info, $alert, $selected_plan, $subscriptions );
+		$html->subscriptionDetails( $option, $subfields, $sub, $invoices, $metaUser, $recurring, $pp, $mi_info, $alert, $subscriptions );
 	}
 }
 

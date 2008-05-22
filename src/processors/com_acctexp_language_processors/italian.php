@@ -89,6 +89,7 @@ define( '_AEC_SELECT_RECURRING_YES', 'Recurring');
 define( '_AEC_SELECT_RECURRING_BOTH', 'Both');
 
 // Generic User Account Form
+define( '_AEC_USERFORM_BILLING_DETAILS_NAME', 'Billing Details');
 define( '_AEC_USERFORM_BILLFIRSTNAME_NAME', 'First Name');
 define( '_AEC_USERFORM_BILLLASTNAME_NAME', 'Last Name');
 define( '_AEC_USERFORM_BILLADDRESS_NAME', 'Address');
@@ -101,7 +102,6 @@ define( '_AEC_USERFORM_BILLCOUNTRY_NAME', 'Country');
 define( '_AEC_USERFORM_BILLPHONE_NAME', 'Phone');
 define( '_AEC_USERFORM_BILLFAX_NAME', 'Fax');
 define( '_AEC_USERFORM_BILLCOMPANY_NAME', 'Company');
-
 
 // Generic Credit Card Form
 define( '_AEC_CCFORM_CARDHOLDER_NAME', 'Card owner Name');

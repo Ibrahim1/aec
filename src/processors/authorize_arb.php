@@ -256,7 +256,7 @@ class processor_authorize_arb extends XMLprocessor
 				$return['period'] = $period;
 				break;
 			case 'W':
-				if ( $period%4 == 0 ) {
+				if ( $period % 4 == 0 ) {
 					$return['unit'] = 'months';
 					$return['period'] = $period/4;
 				} else {
@@ -336,7 +336,7 @@ class processor_authorize_arb extends XMLprocessor
 		$userid					= $post['x_cust_id'];
 
 		$response = array();
-		$response['invoice'] = $post['x_invoice_num'];
+		$response['invoice']	= $post['x_invoice_num'];
 
 		return $response;
 	}
@@ -347,7 +347,7 @@ class processor_authorize_arb extends XMLprocessor
 			$x_response_code		= $post['x_response_code'];
 			$x_response_reason_text	= $post['x_response_reason_text'];
 
-			$response['valid'] = ($x_response_code == '1');
+			$response['valid'] = ( $x_response_code == '1' );
 		} else {
 			$response['valid'] = 0;
 			$response['duplicate'] = true;

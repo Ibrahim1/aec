@@ -102,6 +102,9 @@ define( '_PAYMENT_PENDING_REASON_TRANSFER', 'Zahlungsanweisung wird erwartet');
 define( '_YOUR_SUBSCRIPTION', 'Ihre Mitgliedschaft');
 define( '_YOUR_FURTHER_SUBSCRIPTIONS', 'Weitere Mitgliedschaften');
 define( '_PLAN_PROCESSOR_ACTIONS', 'Hierzu k&ouml;nnen sie folgende Anweisungen ausf&uuml;hren:');
+define( '_AEC_SUBDETAILS_TAB_OVERVIEW', '&Uuml;berblick');
+define( '_AEC_SUBDETAILS_TAB_INVOICES', 'Rechnungen');
+define( '_AEC_SUBDETAILS_TAB_DETAILS', 'Details');
 
 // --== EXPIRATION PAGE ==--
 define( '_EXPIRE_INFO',						'Ihr Konto ist aktiv bis');

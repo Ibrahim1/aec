@@ -107,6 +107,9 @@ define( '_PAYMENT_PENDING_REASON_TRANSFER', 'en attente de transfert du paiement
 define( '_YOUR_SUBSCRIPTION', 'Votre souscription');
 define( '_YOUR_FURTHER_SUBSCRIPTIONS', 'Souscriptions suppl&eacute;mentaires');
 define( '_PLAN_PROCESSOR_ACTIONS', 'Pour cela, vous disposez des options suivantes:');
+define( '_AEC_SUBDETAILS_TAB_OVERVIEW', 'Overview');
+define( '_AEC_SUBDETAILS_TAB_INVOICES', 'Invoices');
+define( '_AEC_SUBDETAILS_TAB_DETAILS', 'Details');
 
 // --== PAGE EXPIRATION ==--
 define( '_EXPIRE_INFO', 'Votre compte est actif jusqu\'au');

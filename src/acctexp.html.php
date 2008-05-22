@@ -155,118 +155,135 @@ class HTML_frontEnd
 		<?php
 	}
 
-	function subscriptionDetails( $option, $invoices, $metaUser, $recurring, $pp, $mi, $alert, $selected_plan = false, $subscriptions = null )
+	function subscriptionDetails( $option, $subfields, $sub, $invoices, $metaUser, $recurring, $pp, $mi, $alert, $subscriptions = null, $custom )
 	{
 		global $database, $aecConfig;
 		?>
 
 		<div class="componentheading"><?php echo _HISTORY_TITLE;?></div>
 		<div id="subscription_details">
+			<ul id="aec_navlist_profile">
+			<?php
+			foreach ( $subfields as $fieldlink => $fieldname ) {
+				if ( $fieldlink == $sub ) {
+					$id = ' id="aec_nav_selected"';
+				} else {
+					$id = '';
+				}
+				echo '<li'.$id.'><a href="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=subscriptiondetails&amp;sub=' . $fieldlink ) . '">' . $fieldname . '</a></li>';
+			}
+			?>
+			</ul>
 			<h2>
 				<?php echo _HISTORY_SUBTITLE . '&nbsp;'
 				. HTML_frontend::DisplayDateInLocalTime( $metaUser->objSubscription->signup_date ); ?>
 			</h2>
-			<table>
-				<tr>
-					<th><?php echo _HISTORY_COL1_TITLE;?></th>
-					<th><?php echo _HISTORY_COL2_TITLE;?></th>
-					<th><?php echo _HISTORY_COL3_TITLE;?></th>
-					<th><?php echo _HISTORY_COL4_TITLE;?></th>
-					<th><?php echo _HISTORY_COL5_TITLE;?></th>
-				</tr>
-				<?php
-				foreach ( $invoices as $invoice ) { ?>
-					<tr<?php echo $invoice['rowstyle'] ?>>
-						<td><?php echo $invoice['invoice_number']; ?></td>
-						<td><?php echo $invoice['amount'] . '&nbsp;' . $invoice['currency_code']; ?></td>
-						<td><?php echo $invoice['transactiondate']; ?></td>
-						<td><?php echo $invoice['processor']; ?></td>
-						<td><?php echo $invoice['actions']; ?></td>
-					</tr>
-					<?php
-				} ?>
-			</table>
 			<?php
-			if ( $mi ) {
-				echo $mi;
-			}
-			if ( is_object( $selected_plan ) ) { ?>
-				<h2><?php echo _YOUR_SUBSCRIPTION; ?></h2>
-				<p><strong><?php echo $selected_plan->getProperty( 'name' ); ?></strong></p>
-				<p><?php echo $selected_plan->getProperty( 'desc' ); ?></p>
-				<?php
-				if ( isset( $selected_plan->proc_actions ) ) { ?>
-					<p><?php echo _PLAN_PROCESSOR_ACTIONS . ' ' . implode( " | ", $selected_plan->proc_actions ); ?></p>
-					<?php
-				}
-			}
-			if ( is_array( $subscriptions ) ) { ?>
-				<h2><?php echo _YOUR_FURTHER_SUBSCRIPTIONS; ?></h2>
-				<?php
-				foreach ( $subscriptions as $subscription ) { ?>
-					<p><strong><?php echo $subscription->getProperty( 'name' ); ?></strong></p>
-					<p><?php echo $subscription->getProperty( 'desc' ); ?></p>
-					<?php
-					if ( isset( $subscription->proc_actions ) ) { ?>
-						<p><?php echo _PLAN_PROCESSOR_ACTIONS . ' ' . implode( " | ", $subscription->proc_actions ); ?></p>
-						<?php
+			switch ( $sub ) {
+				case 'overview':
+					foreach ( $subscriptions as $sid => $subscription ) {
+						switch ( $sid ) {
+							case 0:
+								echo '<h2>' . _YOUR_SUBSCRIPTION . '</h2>';
+								break;
+							case 1:
+								echo '<h2>' . _YOUR_FURTHER_SUBSCRIPTIONS . '</h2>';
+								break;
+						}
+
+						echo '<p><strong>' . $subscription->getProperty( 'name' ) . '</strong></p>';
+						echo '<p>' . $subscription->getProperty( 'desc' ) . '</p>';
+						if ( !empty( $subscription->proc_actions ) ) {
+							echo '<p>' . _PLAN_PROCESSOR_ACTIONS . ' ' . implode( " | ", $subscription->proc_actions ) . '</p>';
+						}
 					}
-				}
+					?>
+					<div id="box_expired">
+					<div id="alert_level_<?php echo $alert['level']; ?>">
+						<div id="expired_greeting"><?php
+							if ( $metaUser->objSubscription->lifetime == 1 ) { ?>
+								<p><strong><?php echo _RENEW_LIFETIME; ?></strong></p><?php
+							} else { ?>
+								<p>
+									<?php echo HTML_frontend::DisplayDateInLocalTime( $metaUser->focusSubscription->expiration, true, true ); ?>
+								</p>
+								<?php
+							} ?>
+						</div>
+						<div id="days_left">
+							<?php
+							if ( strcmp( $alert['daysleft'], 'infinite' ) === 0 ) {
+								$daysleft			= _RENEW_DAYSLEFT_INFINITE;
+								$daysleft_append	= _RENEW_DAYSLEFT;
+							} elseif ( strcmp( $alert['daysleft'], 'excluded' ) === 0 ) {
+								$daysleft			= _RENEW_DAYSLEFT_EXCLUDED;
+								$daysleft_append	= '';
+							} else {
+								if ( $alert['daysleft'] >= 0 ) {
+									$daysleft			= $alert['daysleft'];
+									$daysleft_append	= _RENEW_DAYSLEFT;
+								} else {
+									$daysleft			= $alert['daysleft'];
+									$daysleft_append	= _AEC_DAYS_ELAPSED;
+								}
+							} ?>
+							<p><strong><?php echo $daysleft; ?></strong>&nbsp;&nbsp;<?php echo $daysleft_append; ?></p>
+						</div>
+						<?php
+						if ( $recurring == 0 ) { ?>
+							<div id="upgrade_button">
+								<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=renewsubscription', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+									<input type="hidden" name="option" value="<?php echo $option; ?>" />
+									<input type="hidden" name="task" value="renewsubscription" />
+									<input type="hidden" name="userid" value="<?php echo $metaUser->cmsUser->id; ?>" />
+									<input type="submit" class="button" value="<?php echo _RENEW_BUTTON_UPGRADE;?>" />
+								</form>
+							</div>
+							<?php
+						} else { ?>
+							<p><strong><?php echo _RENEW_INFO; ?></strong></p>
+							<?php
+							if ( is_object( $pp ) ) {
+								if ( isset( $pp->info['cancel_info'] ) ) { ?>
+									<p><?php echo $pp->info['cancel_info'];?></p>
+									<?php
+								}
+							}
+						} ?>
+						</div>
+					<?php
+					break;
+				case 'invoices':
+					?>
+					<table>
+						<tr>
+							<th><?php echo _HISTORY_COL1_TITLE;?></th>
+							<th><?php echo _HISTORY_COL2_TITLE;?></th>
+							<th><?php echo _HISTORY_COL3_TITLE;?></th>
+							<th><?php echo _HISTORY_COL4_TITLE;?></th>
+							<th><?php echo _HISTORY_COL5_TITLE;?></th>
+						</tr>
+						<?php
+						foreach ( $invoices as $invoice ) { ?>
+							<tr<?php echo $invoice['rowstyle'] ?>>
+								<td><?php echo $invoice['invoice_number']; ?></td>
+								<td><?php echo $invoice['amount'] . '&nbsp;' . $invoice['currency_code']; ?></td>
+								<td><?php echo $invoice['transactiondate']; ?></td>
+								<td><?php echo $invoice['processor']; ?></td>
+								<td><?php echo $invoice['actions']; ?></td>
+							</tr>
+							<?php
+						} ?>
+					</table>
+					<?php
+					break;
+				case 'details':
+					if ( $mi ) {
+						echo $mi;
+					}
+					break;
 			}
 			?>
-			<div id="box_expired">
-			<div id="alert_level_<?php echo $alert['level']; ?>">
-				<div id="expired_greeting"><?php
-					if ( $metaUser->objSubscription->lifetime == 1 ) { ?>
-						<p><strong><?php echo _RENEW_LIFETIME; ?></strong></p><?php
-					} else { ?>
-						<p>
-							<?php echo HTML_frontend::DisplayDateInLocalTime( $metaUser->focusSubscription->expiration, true, true ); ?>
-						</p>
-						<?php
-					} ?>
-				</div>
-				<div id="days_left">
-					<?php
-					if ( strcmp( $alert['daysleft'], 'infinite' ) === 0 ) {
-						$daysleft			= _RENEW_DAYSLEFT_INFINITE;
-						$daysleft_append	= _RENEW_DAYSLEFT;
-					} elseif ( strcmp( $alert['daysleft'], 'excluded' ) === 0 ) {
-						$daysleft			= _RENEW_DAYSLEFT_EXCLUDED;
-						$daysleft_append	= '';
-					} else {
-						if ( $alert['daysleft'] >= 0 ) {
-							$daysleft			= $alert['daysleft'];
-							$daysleft_append	= _RENEW_DAYSLEFT;
-						} else {
-							$daysleft			= $alert['daysleft'];
-							$daysleft_append	= _AEC_DAYS_ELAPSED;
-						}
-					} ?>
-					<p><strong><?php echo $daysleft; ?></strong>&nbsp;&nbsp;<?php echo $daysleft_append; ?></p>
-				</div>
-				<?php
-				if ( $recurring == 0 ) { ?>
-					<div id="upgrade_button">
-						<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=renewsubscription', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
-							<input type="hidden" name="option" value="<?php echo $option; ?>" />
-							<input type="hidden" name="task" value="renewsubscription" />
-							<input type="hidden" name="userid" value="<?php echo $metaUser->cmsUser->id; ?>" />
-							<input type="submit" class="button" value="<?php echo _RENEW_BUTTON_UPGRADE;?>" />
-						</form>
-					</div>
-					<?php
-				} else { ?>
-					<p><strong><?php echo _RENEW_INFO; ?></strong></p>
-					<?php
-					if ( is_object( $pp ) ) {
-						if ( isset( $pp->info['cancel_info'] ) ) { ?>
-							<p><?php echo $pp->info['cancel_info'];?></p>
-							<?php
-						}
-					}
-				} ?>
-				</div>
 			</div>
 		</div>
 		<?php

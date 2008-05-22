@@ -213,6 +213,32 @@ text-align: right;
 margin: 0px;
 }
 
+/* == Styling for the MySubscription Page == */
+
+ul#aec_navlist_profile {
+margin: 20px;
+}
+
+ul#aec_navlist_profile li {
+display: inline;
+list-style-type: none;
+padding: 5px 10px 5px 10px;
+margin-left: 4px;
+background: none;
+background-color: #ddd;
+font-weight: bold;
+}
+
+ul#aec_navlist_profile li#aec_nav_selected {
+display: inline;
+list-style-type: none;
+padding: 5px 10px 5px 10px;
+margin-left: 4px;
+background: none;
+background-color: none;
+font-weight: normal;
+}
+
 /* == Styling for the Expired Page == */
 
 #box_expired {

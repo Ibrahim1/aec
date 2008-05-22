@@ -1987,6 +1987,15 @@ class PaymentProcessor
 		return $response;
 	}
 
+	function instantvalidateNotification( $response, $post, $invoice )
+	{
+		if ( method_exists( $this->processor, 'instantvalidateNotification' ) ) {
+			$response = $this->processor->instantvalidateNotification( $response, $post, $invoice );
+		}
+
+		return $response;
+	}
+
 	function prepareValidation( $subscription_list )
 	{
 		if ( !isset( $this->settings ) ) {
@@ -2012,6 +2021,17 @@ class PaymentProcessor
 			$response = $this->processor->validateSubscription( $subscription_id );
 		} else {
 			$response = false;
+		}
+
+		return $response;
+	}
+
+	function registerProfileTabs()
+	{
+		if ( method_exists( $this->processor, 'registerProfileTabs' ) ) {
+			$response = $this->processor->registerProfileTabs();
+		} else {
+			$response = null;
 		}
 
 		return $response;
@@ -2376,7 +2396,7 @@ class XMLprocessor extends processor
 				$responsestring = '';
 			}
 
-			$invoice->processorResponse( $request->parent, $response, $responsestring );
+			$invoice->processorResponse( $request->parent, $response, $responsestring, true );
 		} else {
 			return false;
 		}
@@ -2464,8 +2484,6 @@ class XMLprocessor extends processor
 			$curlextra = array();
 		}
 
-		$ch = curl_init();
-
 		// Preparing cURL variables as array, to possibly overwrite them with custom settings by the processor
 		$curl_calls = array();
 		$curl_calls[CURLOPT_URL]			= $url;
@@ -2491,6 +2509,7 @@ class XMLprocessor extends processor
 		}
 
 		// Set cURL params
+		$ch = curl_init();
 		foreach ( $curl_calls as $name => $value ) {
 			curl_setopt( $ch, $name, $value );
 		}
@@ -5030,7 +5049,7 @@ class Invoice extends paramDBTable
 		return $inum;
 	}
 
-	function processorResponse( $pp, $response, $responsestring='' )
+	function processorResponse( $pp, $response, $responsestring='', $altvalidation=false )
 	{
 		global $database;
 
@@ -5044,7 +5063,11 @@ class Invoice extends paramDBTable
 		$post['planparams'] = $plan->getProcessorParameters( $pp->id );
 
 		$pp->exchangeSettingsByPlan( $plan, $plan_params );
-		$response = $pp->validateNotification( $response, $_POST, $this );
+		if ( $altvalidation ) {
+			$response = $pp->instantvalidateNotification( $response, $_POST, $this );
+		} else {
+			$response = $pp->validateNotification( $response, $_POST, $this );
+		}
 
 		if ( isset( $response['invoiceparams'] ) ) {
 			$this->addParams( $response['invoiceparams'] );
