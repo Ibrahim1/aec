@@ -1896,6 +1896,25 @@ class PaymentProcessor
 		}
 	}
 
+	function customProfileTab( $action, $metaUser )
+	{
+		if ( !isset( $this->settings ) ) {
+			$this->getSettings();
+		}
+
+		$method = 'customtab_' . $action;
+
+		if ( method_exists( $this->processor, $method ) ) {
+			$request = new stdClass();
+			$request->parent			=& $this;
+			$request->metaUser			=& $metaUser;
+
+			return $this->processor->$method( $request );
+		} else {
+			return false;
+		}
+	}
+
 	function getParamsHTML( $params, $values )
 	{
 		$return = false;

@@ -84,8 +84,8 @@ define( '_CHK_USERNAME_AVAIL', "Username %s is available");
 define( '_CHK_USERNAME_NOTAVAIL', "Username %s is already taken!");
 
 // --== MY SUBSCRIPTION PAGE ==--
-define( '_HISTORY_TITLE', 'Subscription History - Last 10 payments');
-define( '_HISTORY_SUBTITLE', 'Member since ');
+define( '_MYSUBSCRIPTION_TITLE', 'My Membership');
+define( '_MEMBER_SINCE', 'Member since');
 define( '_HISTORY_COL1_TITLE', 'Invoice');
 define( '_HISTORY_COL2_TITLE', 'Amount');
 define( '_HISTORY_COL3_TITLE', 'Payment Date');

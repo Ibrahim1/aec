@@ -155,32 +155,31 @@ class HTML_frontEnd
 		<?php
 	}
 
-	function subscriptionDetails( $option, $subfields, $sub, $invoices, $metaUser, $recurring, $pp, $mi, $alert, $subscriptions = null, $custom )
+	function subscriptionDetails( $option, $subfields, $sub, $invoices, $metaUser, $recurring, $pp, $mi, $alert, $subscriptions = null, $custom = null )
 	{
 		global $database, $aecConfig;
 		?>
-
-		<div class="componentheading"><?php echo _HISTORY_TITLE;?></div>
+		<div class="componentheading"><?php echo _MYSUBSCRIPTION_TITLE;?></div>
 		<div id="subscription_details">
-			<ul id="aec_navlist_profile">
-			<?php
-			foreach ( $subfields as $fieldlink => $fieldname ) {
-				if ( $fieldlink == $sub ) {
-					$id = ' id="aec_nav_selected"';
-				} else {
-					$id = '';
+			<div id="aec_navlist_profile">
+				<ul id="aec_navlist_profile">
+				<?php
+				foreach ( $subfields as $fieldlink => $fieldname ) {
+					if ( $fieldlink == $sub ) {
+						$id = ' id="current"';
+					} else {
+						$id = '';
+					}
+					echo '<li><a href="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=subscriptiondetails&amp;sub=' . $fieldlink ) . '"'.$id.'>' . $fieldname . '</a></li>';
 				}
-				echo '<li'.$id.'><a href="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=subscriptiondetails&amp;sub=' . $fieldlink ) . '">' . $fieldname . '</a></li>';
-			}
-			?>
-			</ul>
-			<h2>
-				<?php echo _HISTORY_SUBTITLE . '&nbsp;'
-				. HTML_frontend::DisplayDateInLocalTime( $metaUser->objSubscription->signup_date ); ?>
-			</h2>
+				?>
+				</ul>
+			</div>
 			<?php
 			switch ( $sub ) {
 				case 'overview':
+					echo '<p>' . _MEMBER_SINCE . '&nbsp;' . HTML_frontend::DisplayDateInLocalTime( $metaUser->objSubscription->signup_date ) .'</p>';
+
 					foreach ( $subscriptions as $sid => $subscription ) {
 						switch ( $sid ) {
 							case 0:
@@ -191,11 +190,14 @@ class HTML_frontEnd
 								break;
 						}
 
+						?><div class="subscription_info"><?php
+
 						echo '<p><strong>' . $subscription->getProperty( 'name' ) . '</strong></p>';
 						echo '<p>' . $subscription->getProperty( 'desc' ) . '</p>';
 						if ( !empty( $subscription->proc_actions ) ) {
 							echo '<p>' . _PLAN_PROCESSOR_ACTIONS . ' ' . implode( " | ", $subscription->proc_actions ) . '</p>';
 						}
+						?></div><?php
 					}
 					?>
 					<div id="box_expired">
@@ -281,6 +283,9 @@ class HTML_frontEnd
 					if ( $mi ) {
 						echo $mi;
 					}
+					break;
+				default:
+					echo $custom;
 					break;
 			}
 			?>

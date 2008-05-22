@@ -84,8 +84,8 @@ define( '_CHK_USERNAME_AVAIL', "用户�?? %s �?�用");
 define( '_CHK_USERNAME_NOTAVAIL', "用户�?? %s 已�?存在!");
 
 // --== MY SUBSCRIPTION PAGE ==--
-define( '_HISTORY_TITLE', '支付记录-最�?�10笔');
-define( '_HISTORY_SUBTITLE', '会员之�?�');
+define( '_MYSUBSCRIPTION_TITLE', 'My Membership');
+define( '_MEMBER_SINCE', 'Member since');
 define( '_HISTORY_COL1_TITLE', '�?�票');
 define( '_HISTORY_COL2_TITLE', '数�?');
 define( '_HISTORY_COL3_TITLE', '支付日期');

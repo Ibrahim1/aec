@@ -471,9 +471,9 @@ function subscriptionDetails( $option, $sub )
 
 		if ( empty( $sub ) ) {
 			$sub = 'overview';
-		} elseif ( !in_array( $sub, $sf ) ) {
-
 		}
+
+		$custom = null;
 
 		switch ( strtolower( $metaUser->objSubscription->type ) ) {
 			case 'free':
@@ -493,8 +493,13 @@ function subscriptionDetails( $option, $sub )
 
 					if ( !empty( $addtabs ) ) {
 						foreach ( $addtabs as $atk => $atv ) {
-							if ( !isset( $subfields[$pp->processor_name . $atk] ) ) {
-								$subfields[$pp->processor_name . $atk] = $atv;
+							$action = $pp->processor_name . '_' . $atk;
+							if ( !isset( $subfields[$action] ) ) {
+								$subfields[$action] = $atv;
+
+								if ( $action == $sub ) {
+									$custom = $pp->customProfileTab( $atk, $metaUser );
+								}
 							}
 						}
 					}
@@ -584,12 +589,17 @@ function subscriptionDetails( $option, $sub )
 						$spp->init();
 						$spp->getInfo();
 
-						$addtabs = $pp->registerProfileTabs();
+						$addtabs = $spp->registerProfileTabs();
 
 						if ( !empty( $addtabs ) ) {
 							foreach ( $addtabs as $atk => $atv ) {
-								if ( !isset( $subfields[$pp->processor_name . $atk] ) ) {
-									$subfields[$pp->processor_name . $atk] = $atv;
+								$action = $spp->processor_name . '_' . $atk;
+								if ( !isset( $subfields[$action] ) ) {
+									$subfields[$action] = $atv;
+
+									if ( $action == $sub ) {
+										$custom = $spp->customProfileTab( $atk, $metaUser );
+									}
 								}
 							}
 						}
@@ -712,7 +722,7 @@ function subscriptionDetails( $option, $sub )
 		}
 
 		$html = new HTML_frontEnd();
-		$html->subscriptionDetails( $option, $subfields, $sub, $invoices, $metaUser, $recurring, $pp, $mi_info, $alert, $subscriptions );
+		$html->subscriptionDetails( $option, $subfields, $sub, $invoices, $metaUser, $recurring, $pp, $mi_info, $alert, $subscriptions, $custom );
 	}
 }
 

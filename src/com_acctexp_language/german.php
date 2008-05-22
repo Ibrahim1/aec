@@ -80,8 +80,8 @@ define( '_CHK_USERNAME_AVAIL',				'Benutzername %s ist verf&uuml;gbar' );
 define( '_CHK_USERNAME_NOTAVAIL',			'Leider ist dieser Benutzername %s bereits vergeben!');
 
 // --== MY SUBSCRIPTION PAGE ==--
-define( '_HISTORY_TITLE',					'Abonnementverlauf - die letzten 10 Vorg&auml;nge');
-define( '_HISTORY_SUBTITLE',				'Abonnent seit ');
+define( '_MYSUBSCRIPTION_TITLE', 'Meine Mitgliedschaft');
+define( '_MEMBER_SINCE', 'Mitglied seit');
 define( '_HISTORY_COL1_TITLE',				'Rechnung');
 define( '_HISTORY_COL2_TITLE',				'Wert');
 define( '_HISTORY_COL3_TITLE',				'Zahlungsdatum');

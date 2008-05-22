@@ -213,32 +213,6 @@ text-align: right;
 margin: 0px;
 }
 
-/* == Styling for the MySubscription Page == */
-
-ul#aec_navlist_profile {
-margin: 20px;
-}
-
-ul#aec_navlist_profile li {
-display: inline;
-list-style-type: none;
-padding: 5px 10px 5px 10px;
-margin-left: 4px;
-background: none;
-background-color: #ddd;
-font-weight: bold;
-}
-
-ul#aec_navlist_profile li#aec_nav_selected {
-display: inline;
-list-style-type: none;
-padding: 5px 10px 5px 10px;
-margin-left: 4px;
-background: none;
-background-color: none;
-font-weight: normal;
-}
-
 /* == Styling for the Expired Page == */
 
 #box_expired {
@@ -612,6 +586,68 @@ border: 1px solid #aaa;
 /* == Styling for the Subscription Details Page == */
 
 #subscription_details {
+padding: 8px;
+}
+
+div#aec_navlist_profile
+{
+margin: 10px;
+padding: 0;
+height: 22px;
+font: 11px Verdana, sans-serif;
+width: 97%;
+border-bottom: 1px solid #bbb;
+list-style-type: none;
+background: #fff;
+}
+
+ul#aec_navlist_profile li
+{
+float: left;
+margin: 0;
+padding: 0;
+width: auto;
+display: block;
+}
+
+ul#aec_navlist_profile li a, ul#aec_navlist_profile li a:link
+{
+background: #eee;
+color: #555;
+text-decoration: none;
+padding: 3px 5px 3px 5px;
+display: block;
+border-bottom: 1px solid #eee;
+margin-right: 4px;
+}
+
+ul#aec_navlist_profile li a:hover
+{
+color: #039;
+border-bottom: 3px solid #bbb;
+cursor: pointer;
+background: #eee;
+}
+
+ul#aec_navlist_profile li a#current, ul#aec_navlist_profile li a#current:link
+{
+color: #000;
+background: #fff;
+cursor: default;
+font-weight: bold;
+border-bottom: 3px solid #999;
+}
+
+ul#aec_navlist_profile li a#current:hover
+{
+border-bottom: 3px solid #f90;
+background: #eee;
+}
+
+div.subscription_info {
+border:3px solid #bbb;
+margin: 2px;
+padding: 4px;
 }
 
 #subscription_details h2 {

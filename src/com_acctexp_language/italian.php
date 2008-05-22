@@ -84,8 +84,8 @@ define( '_CHK_USERNAME_AVAIL', "Username %s &egrave; utilizzabile");
 define( '_CHK_USERNAME_NOTAVAIL', "Username %s &egrave; gi&agrave; stata usata!");
 
 // --== MY SUBSCRIPTION PAGE ==--
-define( '_HISTORY_TITLE', 'Storico Iscrizioni - Ultimi 10 pagamenti');
-define( '_HISTORY_SUBTITLE', 'Membro da ');
+define( '_MYSUBSCRIPTION_TITLE', 'My Membership');
+define( '_MEMBER_SINCE', 'Membro da');
 define( '_HISTORY_COL1_TITLE', 'Contratto');
 define( '_HISTORY_COL2_TITLE', 'Ammontare');
 define( '_HISTORY_COL3_TITLE', 'Data Pagamento');

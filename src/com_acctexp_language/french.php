@@ -85,8 +85,8 @@ define( '_CHK_USERNAME_AVAIL', "Le nom d\'utilisateur %s est disponible");
 define( '_CHK_USERNAME_NOTAVAIL', "Le nom d\'utilisateur %s est d&eacute;j&agrave; pris!");
 
 // --== PAGE ABONNEMENT ==--
-define( '_HISTORY_TITLE', 'Historique des abonnements - 10 Derniers paiements');
-define( '_HISTORY_SUBTITLE', 'Membre depuis ');
+define( '_MYSUBSCRIPTION_TITLE', 'My Membership');
+define( '_MEMBER_SINCE', 'Membre depuis');
 define( '_HISTORY_COL1_TITLE', 'Facture');
 define( '_HISTORY_COL2_TITLE', 'Montant');
 define( '_HISTORY_COL3_TITLE', 'Date de Paiement');

@@ -80,8 +80,8 @@ define( '_CHK_USERNAME_AVAIL', "Username %s is available");
 define( '_CHK_USERNAME_NOTAVAIL', "Username %s is already taken!");
 
 // --== MY SUBSCRIPTION PAGE ==--
-define( '_HISTORY_TITLE', 'Subscription History - Last 10 payments');
-define( '_HISTORY_SUBTITLE', 'Member since ');
+define( '_MYSUBSCRIPTION_TITLE', 'My Membership');
+define( '_MEMBER_SINCE', 'Member since');
 define( '_HISTORY_COL1_TITLE', 'Invoice');
 define( '_HISTORY_COL2_TITLE', 'Amount');
 define( '_HISTORY_COL3_TITLE', 'Payment Date');
@@ -99,8 +99,8 @@ define( '_RENEW_OFFLINE', 'Renew');
 define( '_RENEW_BUTTON_UPGRADE', 'Upgrade/Renew');
 define( '_PAYMENT_PENDING_REASON_ECHECK', 'echeck uncleared (1-4 business days)');
 define( '_PAYMENT_PENDING_REASON_TRANSFER', 'awaiting transfer payment');
-define( '_YOUR_SUBSCRIPTION', 'Your Subscription');
-define( '_YOUR_FURTHER_SUBSCRIPTIONS', 'Further Subscriptions');
+define( '_YOUR_SUBSCRIPTION', 'Your Membership');
+define( '_YOUR_FURTHER_SUBSCRIPTIONS', 'Further Memberships');
 define( '_PLAN_PROCESSOR_ACTIONS', 'For this, you have the following options:');
 define( '_AEC_SUBDETAILS_TAB_OVERVIEW', 'Overview');
 define( '_AEC_SUBDETAILS_TAB_INVOICES', 'Invoices');

@@ -93,14 +93,59 @@ class processor_authorize_cim extends XMLprocessor
 		return $tab;
 	}
 
-	function checkoutform( $request )
+	function customtab_details( $request )
+	{
+		if ( isset( $_POST['billFirstName'] ) ) {
+			$cim = new AuthNetCim( $this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode'] );
+
+			$cim->setParameter( 'customerProfileId', $this->getCustomerProfileID( $request->metaUser->userid ) );
+			$cim->getCustomerProfileRequest();
+
+			$udata = array( 'billTo_firstName' => 'billFirstName', 'billTo_lastName' => 'billLastName', 'billTo_company' => 'billCompany', 'billTo_address' => 'billAddress',
+							'billTo_city' => 'billCity', 'billTo_state' => 'billState', 'billTo_zip' => 'billZip', 'billTo_country' => 'billCountry',
+							'billTo_phoneNumber' => 'billPhone', 'billTo_faxNumber' => 'billFax',
+							'shipTo_firstName' => 'billFirstName', 'shipTo_lastName' => 'billLastName', 'shipTo_company' => 'billCompany', 'shipTo_address' => 'billAddress',
+							'shipTo_city' => 'shipTo_city', 'shipTo_state' => 'billState', 'shipTo_zip' => 'billZip', 'shipTo_country' => 'billCountry',
+							'shipTo_phoneNumber' => 'billPhone', 'shipTo_faxNumber' => 'billFax'
+							);
+
+			foreach ( $udata as $authvar => $aecvar ) {
+				$cim->setParameter( $authvar, trim( $_POST[$aecvar] ) );
+			}
+
+			$cim->setParameter( 'customerProfileId',		$cim->customerProfileId );
+			$cim->setParameter( 'customerPaymentProfileId',	$cim->customerPaymentProfileId );
+			$cim->setParameter( 'customerAddressId',		$cim->customerAddressId );
+
+			$cim->updateCustomerPaymentProfileRequest();
+			$cim->updateCustomerShippingAddressRequest();
+		} else {
+			$cim = null;
+		}
+
+		$var = $this->checkoutform( $request, $cim );
+
+		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=checkout', true ) . '" method="post">' . "\n";
+		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
+		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
+		$return .= '<input type="hidden" name="task" value="checkout" />' . "\n";
+		$return .= '<input type="hidden" name="sub" value="authorize_cim_details" />' . "\n";
+		$return .= '<input type="submit" class="button" value="' . _BUTTON_CHECKOUT . '" /><br /><br />' . "\n";
+		$return .= '</form>' . "\n";
+
+		return $return;
+	}
+
+	function checkoutform( $request, $cim=null )
 	{
 		$var = array();
 
-		$cim = new AuthNetCim( $this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode'] );
+		if ( empty( $cim ) ) {
+			$cim = new AuthNetCim( $this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode'] );
 
-		$cim->setParameter( 'customerProfileId', $this->getCustomerProfileID( $request->metaUser->userid ) );
-		$cim->getCustomerProfileRequest();
+			$cim->setParameter( 'customerProfileId', $this->getCustomerProfileID( $request->metaUser->userid ) );
+			$cim->getCustomerProfileRequest();
+		}
 
 		/*
 		if ($cim->isSuccessful()) {
