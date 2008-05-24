@@ -264,7 +264,7 @@ class processor_ipayment_silent extends XMLprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	function instantvalidateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
 

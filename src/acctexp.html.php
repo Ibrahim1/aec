@@ -705,7 +705,6 @@ class Payment_HTML
 
 		$introtext = '_CHECKOUT_INFO' . ( $repeat ? '_REPEAT' : '' );
 		?>
-
 		<div class="componentheading"><?php echo _CHECKOUT_TITLE; ?></div>
 		<div id="checkout">
 			<?php
@@ -717,17 +716,6 @@ class Payment_HTML
 				<p><?php echo $aecConfig->cfg['customtext_checkout']; ?></p>
 				<?php
 			} ?>
-<?php
-/**
- * Ideas:
- * - Mark Recurring periods and how often the recurring happens
- * - Do not forget Processor-specific hooks (like info fields
- *   etc.) - people WILL ask about them anyhoo...
- * - Checkout Button may also be influenced by processors
- *
- */
-?>
-
 			<table id="aec_checkout">
 			<?php
 				foreach ( $terms as $tid => $term ) {

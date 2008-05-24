@@ -34,14 +34,14 @@ class processor_alertpay extends POSTprocessor
 	function info()
 	{
 		$info = array();
-		$info['name']				= 'alertpay';
-		$info['longname']			= _AEC_PROC_INFO_AP_LNAME;
-		$info['statement']			= _AEC_PROC_INFO_AP_STMNT;
-		$info['description']		= _DESCRIPTION_ALERTPAY;
-		$info['currencies']			= 'USD';
-		$info['cc_list']			= 'visa,mastercard,discover,americanexpress,echeck';
-		$info['recurring']			= 0;
-		$info['notify_trail_thanks'] = 1;
+		$info['name']					= 'alertpay';
+		$info['longname']				= _AEC_PROC_INFO_AP_LNAME;
+		$info['statement']				= _AEC_PROC_INFO_AP_STMNT;
+		$info['description']			= _DESCRIPTION_ALERTPAY;
+		$info['currencies']				= 'USD';
+		$info['cc_list']				= 'visa,mastercard,discover,americanexpress,echeck';
+		$info['recurring']				= 0;
+		$info['notify_trail_thanks']	= 1;
 
 		return $info;
 	}
@@ -91,17 +91,18 @@ class processor_alertpay extends POSTprocessor
 		$var['ap_merchant']		= $this->settings['merchant'];
 		$var['ap_itemname']		= $request->int_var['invoice'];
 		$var['ap_currency']		= $this->settings['currency_code'];
-		$var['ap_returnurl']	= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=thanks");
+		$var['ap_returnurl']	= AECToolbox::deadsureURL( "/index.php?option=com_acctexp&amp;task=thanks" );
 		$var['ap_quantity']		= '';
-		$var['ap_description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, $mosConfig_live_site,
-									$request->metaUser->cmsUser->name, $request->metaUser->cmsUser->username );
-		if ( isset( $this->settings['tax'] ) && @$this->settings['tax'] > 0) {
-			$tax = $request->int_var['amount']/(100+$this->settings['tax'])*100;
-			$var['ap_amount'] 	= round($tax, 2);
+		$var['ap_description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, $mosConfig_live_site, $request->metaUser->cmsUser->name, $request->metaUser->cmsUser->username );
+
+		if ( !empty( $this->settings['tax'] ) ) {
+			$tax = $request->int_var['amount'] / ( 100 + $this->settings['tax'] ) * 100;
+			$var['ap_amount'] 	= round( $tax, 2 );
 		} else {
 			$var['ap_amount'] 	= $request->int_var['amount'];
 		}
-		$var['ap_cancelurl']	= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=cancel");
+
+		$var['ap_cancelurl']	= AECToolbox::deadsureURL( "/index.php?option=com_acctexp&amp;task=cancel" );
 
 		$var['apc_1']			= $request->metaUser->cmsUser->id;
 		$var['apc_2']			= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
