@@ -128,7 +128,15 @@ class processor_alertpay extends POSTprocessor
 
 	function validateNotification( $response, $post, $invoice )
 	{
-		$response['valid'] = ( ( strcmp( $post['ap_status'], "Success" ) === 0 ) && ( strcmp( $post['ap_securitycode'], $this->settings->ap_securitycode ) === 0 ) );
+		$response['valid'] = false;
+
+		if ( !( strcmp( $post['ap_status'], "Success" ) === 0 ) ) {
+			$response['error'] = 'ap_status: ' . $post['ap_status'];
+		} elseif( $post['ap_securitycode'] != $this->settings->ap_securitycode ) {
+			$response['error'] = 'Security Code Mismatch: ' . $post['ap_securitycode'] . ' != ' . $this->settings->ap_securitycode;
+		} else {
+			$response['valid'] = true;
+		}
 
 		return $response;
 	}
