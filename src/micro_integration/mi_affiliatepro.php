@@ -58,7 +58,7 @@ class mi_affiliatepro
 		return $info;
 	}
 
-	function Settings( $params )
+	function Settings()
 	{
 		$settings = array();
 		$settings['url']		= array( 'inputC' );
@@ -66,7 +66,7 @@ class mi_affiliatepro
 		return $settings;
 	}
 
-	function action( $params, $metaUser, $plan, $invoice )
+	function action( $request )
 	{
 		global $database, $mosConfig_live_site, $mosConfig_sitename;
 

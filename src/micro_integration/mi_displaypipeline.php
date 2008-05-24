@@ -23,7 +23,7 @@ class mi_displaypipeline
 		return $info;
 	}
 
-	function Settings( $params )
+	function Settings()
 	{
 		$settings = array();
 		$settings['only_user']			= array( 'list_yesno' );
@@ -42,7 +42,7 @@ class mi_displaypipeline
 		return $settings;
 	}
 
-	function action( $params, $metaUser, $plan, $invoice )
+	function action( $request )
 	{
 		global $database;
 

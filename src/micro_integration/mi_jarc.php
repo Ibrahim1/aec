@@ -21,7 +21,7 @@ class mi_jarc
 		return $info;
 	}
 
-	function Settings( $params )
+	function Settings()
 	{
 		global $mosConfig_absolute_path;
 
@@ -32,7 +32,7 @@ class mi_jarc
 		return $settings;
 	}
 
-	function action( $params, $metaUser, $plan, $invoice )
+	function action( $request )
 	{
 		return $this->logpayment( $invoice );
 	}

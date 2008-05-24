@@ -21,7 +21,7 @@ class mi_coupon
 		return $info;
 	}
 
-	function Settings( $params )
+	function Settings()
 	{
 		$settings = array();
 		$settings['master_coupon'] = array( 'inputC' );
@@ -47,7 +47,7 @@ class mi_coupon
 		return $settings;
 	}
 
-	function action( $params, $metaUser, $plan, $invoice )
+	function action( $request )
 	{
 		global $database, $mosConfig_live_site;
 
@@ -108,7 +108,7 @@ class mi_coupon
 					}
 
 					if ( !empty( $settings['mail_out_coupons'] ) ) {
-						$this->mailOut( $params, $metaUser, $plan, $invoice, $newcodes );
+						$this->mailOut( $request, $newcodes );
 					}
 				}
 			}
@@ -123,7 +123,7 @@ class mi_coupon
 		return true;
 	}
 
-	function mailOut( $params, $metaUser, $plan, $invoice, $newcodes )
+	function mailOut( $request, $newcodes )
 	{
 		$message	= sprintf( $message, implode( "\n", $newcodes ) );
 

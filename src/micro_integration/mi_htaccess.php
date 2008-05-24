@@ -54,7 +54,7 @@ class mi_htaccess
 		return;
 	}
 
-	function Settings( $params )
+	function Settings()
 	{
 		global $mosConfig_absolute_path;
 
@@ -151,7 +151,7 @@ class mi_htaccess
 		return $newparams;
 	}
 
-	function expiration_action( $params, $metaUser, $plan )
+	function expiration_action( $request )
 	{
 		global $database;
 
@@ -160,7 +160,7 @@ class mi_htaccess
 		$ht->delUser( $metaUser->cmsUser->username );
 	}
 
-	function action( $params, $metaUser, $plan, $invoice )
+	function action( $request )
 	{
 		global $database;
 

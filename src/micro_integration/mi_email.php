@@ -49,7 +49,7 @@ class mi_email
 		return $info;
 	}
 
-	function Settings( $params )
+	function Settings()
 	{
 		$settings = array();
 		$settings['sender']				= array( 'inputE' );
@@ -79,7 +79,7 @@ class mi_email
 		return $settings;
 	}
 
-	function relayAction( $params, $metaUser, $plan, $invoice, $area )
+	function relayAction( $request, $area )
 	{
 		if ( $area == '' ) {
 			if ( !empty( $params['text_first'] ) ) {

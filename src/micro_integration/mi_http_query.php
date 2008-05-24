@@ -21,7 +21,7 @@ class mi_http_query
 		return $info;
 	}
 
-	function Settings( $params )
+	function Settings()
 	{
         $settings = array();
         $settings['url']			= array( 'inputE' );
@@ -36,7 +36,7 @@ class mi_http_query
 		return $settings;
 	}
 
-	function relayAction( $params, $metaUser, $plan, $invoice, $area )
+	function relayAction( $request, $area )
 	{
 		return $this->fetchURL( AECToolbox::rewriteEngine( $this->createURL( $params['url'.$area], $params['query'.$area] ), $metaUser, $plan, $invoice ) );
 	}

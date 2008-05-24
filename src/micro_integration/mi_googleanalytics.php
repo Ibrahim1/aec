@@ -35,14 +35,14 @@ class mi_googleanalytics
 		return true;
 	}
 
-	function Settings( $params )
+	function Settings()
 	{
 		$settings = array();
 		$settings['account_id']		= array( 'inputB' );
 		return $settings;
 	}
 
-	function action( $params, $metaUser, $plan, $invoice )
+	function action( $request )
 	{
 		global $database, $mosConfig_live_site, $mosConfig_sitename;
 

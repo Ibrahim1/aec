@@ -21,7 +21,7 @@ class mi_eventlog extends MI
 		return $info;
 	}
 
-	function Settings( $params )
+	function Settings()
 	{
 		$settings = array();
 		$settings['short']			= array( 'inputE' );
@@ -50,7 +50,7 @@ class mi_eventlog extends MI
 	}
 
 
-	function relayAction( $params, $metaUser, $plan, $invoice, $area )
+	function relayAction( $request, $area )
 	{
 		global $database;
 

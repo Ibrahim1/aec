@@ -21,7 +21,7 @@ class mi_virtuemart
 		return $info;
 	}
 
-	function Settings( $params )
+	function Settings()
 	{
 		global $database;
 
@@ -38,9 +38,9 @@ class mi_virtuemart
 
 		$settings = array();
 		$settings['lists']['shopper_group']		= mosHTML::selectList( $sg, 'shopper_group', 'size="4"', 'value', 'text',
-												$params['shopper_group'] );
+												$this->settings['shopper_group'] );
 		$settings['lists']['shopper_group_exp'] = mosHTML::selectList( $sg, 'shopper_group_exp', 'size="4"', 'value', 'text',
-												$params['shopper_group_exp'] );
+												$this->settings['shopper_group_exp'] );
 
 		$settings['set_shopper_group']		= array( 'list_yesno' );
 		$settings['shopper_group']			= array( 'list' );
@@ -81,13 +81,13 @@ class mi_virtuemart
 		return $newparams;
 	}
 
-	function expiration_action( $params, $metaUser, $plan, $invoice )
+	function expiration_action( $request )
 	{
-		if ( $params['set_shopper_group_exp'] ) {
+		if ( $this->settings['set_shopper_group_exp'] ) {
 			if ( $this->checkVMuserexists( $metaUser->userid ) ) {
-				$this->updateVMuserSgroup( $metaUser->userid, $params['shopper_group_exp'] );
-			} elseif ( $params['create_account'] ) {
-				$this->createVMuser( $metaUser->userid, $params['shopper_group_exp'] );
+				$this->updateVMuserSgroup( $metaUser->userid, $this->settings['shopper_group_exp'] );
+			} elseif ( $this->settings['create_account'] ) {
+				$this->createVMuser( $metaUser->userid, $this->settings['shopper_group_exp'] );
 			}
 
 			return true;
@@ -96,15 +96,15 @@ class mi_virtuemart
 		}
 	}
 
-	function action( $params, $metaUser, $plan, $invoice )
+	function action( $request )
 	{
 		global $database;
 
-		if ( $params['set_shopper_group'] ) {
+		if ( $this->settings['set_shopper_group'] ) {
 			if ( $this->checkVMuserexists( $metaUser->userid ) ) {
-				$this->updateVMuserSgroup( $metaUser->userid, $params['shopper_group'] );
-			} elseif ( $params['create_account'] ) {
-				$this->createVMuser( $metaUser->userid, $params['shopper_group'] );
+				$this->updateVMuserSgroup( $metaUser->userid, $this->settings['shopper_group'] );
+			} elseif ( $this->settings['create_account'] ) {
+				$this->createVMuser( $metaUser->userid, $this->settings['shopper_group'] );
 			}
 
 			return true;

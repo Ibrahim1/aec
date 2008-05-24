@@ -12,7 +12,7 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 
 class mi_sobi extends MI
 {
-	function Settings( $params )
+	function Settings()
 	{
 		global $database;
 
@@ -65,17 +65,17 @@ class mi_sobi extends MI
 		return $newparams;
 	}
 
-	function relayAction( $params, $metaUser, $plan, $invoice, $area )
+	function relayAction( $request, $area )
 	{
 		$agent = null;
 		$company = null;
 
-		if ( $params['unpublish_all'.$area] ) {
-			$this->unpublishProperties( $params, $agent );
+		if ( $this->settings['unpublish_all'.$area] ) {
+			$this->unpublishItems( $request->metaUser );
 		}
 
-		if ( $params['publish_all'.$area] ) {
-			$this->publishProperties( $params, $agent );
+		if ( $this->settings['publish_all'.$area] ) {
+			$this->publishItems( $request->metaUser );
 		}
 
 		if ( $company === false ) {
@@ -85,7 +85,7 @@ class mi_sobi extends MI
 		}
 	}
 
-	function publishItems( $params, $metaUser )
+	function publishItems( $metaUser )
 	{
 		global $database;
 
@@ -102,7 +102,7 @@ class mi_sobi extends MI
 		}
 	}
 
-	function unpublishItems( $params, $metaUser )
+	function unpublishItems( $metaUser )
 	{
 		global $database;
 

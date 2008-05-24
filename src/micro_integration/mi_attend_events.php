@@ -21,13 +21,13 @@ class mi_attend_events
 		return $info;
 	}
 
-	function Settings( $params )
+	function Settings()
 	{
 		$settings = array();
 		return $settings;
 	}
 
-	function action( $params, $metaUser, $invoice, $plan )
+	function action( $request )
 	{
 		global $database, $mosConfig_live_site, $mosConfig_absolute_path;
 

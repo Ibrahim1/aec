@@ -49,7 +49,7 @@ class mi_acl
 		return $info;
 	}
 
-	function Settings( $params )
+	function Settings()
 	{
 		global $my, $acl;
 
@@ -132,7 +132,7 @@ class mi_acl
 		return $params;
 	}
 
-	function pre_expiration_action( $params, $metaUser, $plan, $invoice )
+	function pre_expiration_action( $request )
 	{
 		if ( $params['set_gid_pre_exp'] ) {
 			$this->instantGIDchange( $metaUser, $params, 'gid_pre_exp' );
@@ -145,7 +145,7 @@ class mi_acl
 		return true;
 	}
 
-	function expiration_action( $params, $metaUser, $plan, $invoice )
+	function expiration_action( $request )
 	{
 		if ( $params['set_gid_pre'] ) {
 			$this->instantGIDchange( $metaUser, $params, 'gid_exp' );
@@ -158,7 +158,7 @@ class mi_acl
 		return true;
 	}
 
-	function action( $params, $metaUser, $plan, $invoice )
+	function action( $request )
 	{
 		if ( $params['set_gid'] ) {
 			$this->instantGIDchange( $metaUser, $params, 'gid' );

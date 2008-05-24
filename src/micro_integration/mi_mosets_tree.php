@@ -50,7 +50,7 @@ class mi_mosets_tree extends MI
 		return;
 	}
 
-	function Settings( $params )
+	function Settings()
 	{
 		// field type; name; variable value, description, extra (variable name)
 
@@ -63,7 +63,7 @@ class mi_mosets_tree extends MI
 		return $settings;
 	}
 
-	function expiration_action( $params, $metaUser, $plan, $invoice )
+	function expiration_action( $request )
 	{
 		global $database;
 
@@ -77,13 +77,13 @@ class mi_mosets_tree extends MI
 		$mi_mosetshandler->store();
 
 		if ( $params['unpublish_all'] ) {
-			$this->unpublishListings( $params, $metaUser );
+			$this->unpublishListings( $metaUser );
 		}
 
 		return true;
 	}
 
-	function action( $params, $metaUser, $plan, $invoice )
+	function action( $request )
 	{
 		global $database;
 
@@ -107,7 +107,7 @@ class mi_mosets_tree extends MI
 		$mi_mosetshandler->store();
 
 		if ( $params['publish_all'] ) {
-			$this->publishListings( $params, $metaUser );
+			$this->publishListings( $metaUser );
 		}
 
 		return true;
@@ -207,7 +207,7 @@ class mi_mosets_tree extends MI
 		return $hacks;
 	}
 
-	function profile_info( $params, $userid )
+	function profile_info( $userid )
 	{
 		global $database;
 
@@ -222,7 +222,7 @@ class mi_mosets_tree extends MI
 		}
 	}
 
-	function publishListings( $params, $metaUser )
+	function publishListings( $metaUser )
 	{
 		global $database;
 
@@ -239,7 +239,7 @@ class mi_mosets_tree extends MI
 		}
 	}
 
-	function unpublishListings( $params, $metaUser )
+	function unpublishListings( $metaUser )
 	{
 		global $database;
 

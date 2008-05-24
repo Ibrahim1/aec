@@ -51,7 +51,7 @@ class mi_remository
 		return;
 	}
 
-	function Settings( $params )
+	function Settings()
 	{
 		global $database;
 
@@ -77,12 +77,12 @@ class mi_remository
 		$settings['set_downloads']		= array( 'inputA' );
 		$settings['set_unlimited']		= array( 'list_yesno' );
 
-		$settings['lists']['group']		= mosHTML::selectList($sg, 'group', 'size="4" multiple="multiple"', 'value', 'text', $params['group']);
-		$settings['lists']['group_exp']	= mosHTML::selectList($sg, 'group_exp', 'size="4" multiple="multiple"', 'value', 'text', $params['group_exp']);
+		$settings['lists']['group']		= mosHTML::selectList($sg, 'group', 'size="4" multiple="multiple"', 'value', 'text', $this->settings['group']);
+		$settings['lists']['group_exp']	= mosHTML::selectList($sg, 'group_exp', 'size="4" multiple="multiple"', 'value', 'text', $this->settings['group_exp']);
 
 		$settings['set_group']				= array( 'list_yesno' );
 		$settings['group']					= array( 'list' );
-		$settings['lists']['delete_on_exp'] = mosHTML::selectList( $del_opts, 'delete_on_exp', 'size="3"', 'value', 'text', $params['delete_on_exp'] );
+		$settings['lists']['delete_on_exp'] = mosHTML::selectList( $del_opts, 'delete_on_exp', 'size="3"', 'value', 'text', $this->settings['delete_on_exp'] );
 		$settings['delete_on_exp']		= array( 'list' );
 		$settings['set_group_exp']		= array( 'list_yesno' );
 		$settings['group_exp']				= array( 'list' );
@@ -141,26 +141,26 @@ class mi_remository
 		return $hacks;
 	}
 
-	function expiration_action( $params, $metaUser, $plan, $invoice )
+	function expiration_action( $request )
 	{
 		global $database;
 
- 		if ( $params['delete_on_exp']=="Set" ) {
+ 		if ( $this->settings['delete_on_exp']=="Set" ) {
  			$query = 'DELETE FROM #__mbt_group_member'
 		 			. ' WHERE `member_id` = \'' . $metaUser->userid.'\''
-		 			. ' AND `group_id` = \'' .$params['group'].'\''
+		 			. ' AND `group_id` = \'' .$this->settings['group'].'\''
 		 			;
  			$database->setQuery( $query );
 		}
 
-		if ( $params['delete_on_exp']=="All" ) {
+		if ( $this->settings['delete_on_exp']=="All" ) {
  			$query = 'DELETE FROM #__mbt_group_member'
 		 			. ' WHERE `member_id` = \'' . $metaUser->userid.'\''
 		 			;
  			$database->setQuery( $query );
 		}
 
-		if ($params['set_group_exp']) {
+		if ($this->settings['set_group_exp']) {
 			// Check if exists
 			$query = 'SELECT `group_id`'
 					. ' FROM #__mbt_group_member'
@@ -172,10 +172,10 @@ class mi_remository
 			$groups = is_array( $groups ) ? $groups : array();
 
 			// If already an entry exists -> update, if not -> create
-			if ( !in_array( $params['group_exp'], $groups ) ) {
+			if ( !in_array( $this->settings['group_exp'], $groups ) ) {
 				$query = 'INSERT INTO #__mbt_group_member'
 				. ' ( `group_id` , `member_id` )'
-				. ' VALUES (\'' . $params['group_exp'] . '\', \'' . $metaUser->userid . '\')'
+				. ' VALUES (\'' . $this->settings['group_exp'] . '\', \'' . $metaUser->userid . '\')'
 				;
 				$database->setQuery( $query );
 				$database->query();
@@ -197,11 +197,11 @@ class mi_remository
 		return true;
 	}
 
-	function action( $params, $metaUser, $plan, $invoice )
+	function action( $request )
 	{
 		global $database;
 
-		if ( $params['set_group'] ) {
+		if ( $this->settings['set_group'] ) {
 			// Check if exists
 			$query = 'SELECT `group_id`'
 					. ' FROM #__mbt_group_member'
@@ -213,10 +213,10 @@ class mi_remository
 			$groups = is_array( $groups ) ? $groups : array();
 
 			// If already an entry exists -> update, if not -> create
-			if ( !in_array( $params['group'], $groups ) ) {
+			if ( !in_array( $this->settings['group'], $groups ) ) {
 				$query = 'INSERT INTO #__mbt_group_member'
 						. ' ( `group_id` , `member_id` )'
-						. ' VALUES (\'' . $params['group'] . '\', \'' . $metaUser->userid . '\')'
+						. ' VALUES (\'' . $this->settings['group'] . '\', \'' . $metaUser->userid . '\')'
 						;
 				$database->setQuery( $query );
 				$database->query();
@@ -233,10 +233,10 @@ class mi_remository
 			$mi_remositoryhandler->active = 1;
 		}
 
-		if ( $params['set_downloads'] ) {
-			$mi_remositoryhandler->setDownloads( $params['set_downloads'] );
-		} elseif ( $params['add_downloads'] ) {
-			$mi_remositoryhandler->addDownloads( $params['add_downloads'] );
+		if ( $this->settings['set_downloads'] ) {
+			$mi_remositoryhandler->setDownloads( $this->settings['set_downloads'] );
+		} elseif ( $this->settings['add_downloads'] ) {
+			$mi_remositoryhandler->addDownloads( $this->settings['add_downloads'] );
 		}
 
 		$mi_remositoryhandler->check();

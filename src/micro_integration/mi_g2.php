@@ -32,7 +32,7 @@ class mi_g2 extends MI
 		return;
 	}
 
-	function Settings( $params )
+	function Settings()
 	{
 		$settings = array();
 		$settings['param1'] = array( 'inputA' );
@@ -71,13 +71,13 @@ class mi_g2 extends MI
 		return $settings;
 	}
 
-	function pre_expiration_action( $params, $metaUser, $plan )
+	function pre_expiration_action( $request )
 	{}
 
-	function expiration_action( $params, $metaUser, $plan )
+	function expiration_action( $request )
 	{}
 
-	function action( $params, $metaUser, $invoice, $plan )
+	function action( $request )
 	{}
 
 	function on_userchange_action( $params, $row, $post, $trace )

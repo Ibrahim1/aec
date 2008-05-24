@@ -21,7 +21,7 @@ class mi_directory
 		return $info;
 	}
 
-	function Settings( $params )
+	function Settings()
 	{
         $settings = array();
         $settings['mkdir']			= array( 'inputD' );
@@ -46,7 +46,7 @@ class mi_directory
 		return $defaults;
 	}
 
-	function relayAction( $params, $metaUser, $plan, $invoice, $area )
+	function relayAction( $request, $area )
 	{
 		return $this->makedir( $params['mkdir'.$area], $params['mkdir_mode'.$area], $metaUser, $plan, $invoice );
 	}

@@ -1636,7 +1636,6 @@ class HTML_AcctExp
 	        	</th>
 			</tr>
 		</table>
-		<!--<form action="index2.php" method="post" name="adminForm" enctype="multipart/form-data" onLoad="swap();" >-->
 		<form action="index2.php" method="post" name="adminForm" enctype="multipart/form-data">
 			<table cellspacing="0" cellpadding="0" width="100%">
 				<tr>

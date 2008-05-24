@@ -12,7 +12,7 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 
 class mi_hotproperty extends MI
 {
-	function Settings( $params )
+	function Settings()
 	{
 		global $database;
 
@@ -74,7 +74,7 @@ class mi_hotproperty extends MI
 		return $newparams;
 	}
 
-	function relayAction( $params, $metaUser, $plan, $invoice, $area )
+	function relayAction( $request, $area )
 	{
 		$agent = null;
 		$company = null;

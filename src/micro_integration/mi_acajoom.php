@@ -22,7 +22,7 @@ class mi_acajoom
 		return $info;
 	}
 
-	function Settings( $params )
+	function Settings()
 	{
 		global $database;
 
@@ -47,7 +47,7 @@ class mi_acajoom
 		return $settings;
 	}
 
-	function expiration_action( $params, $metaUser, $plan, $invoice )
+	function expiration_action( $request )
 	{
 		$acauser = $this->getSubscriberID( $metaUser->userid );
 
@@ -61,7 +61,7 @@ class mi_acajoom
 		}
 	}
 
-	function action( $params, $metaUser, $plan, $invoice )
+	function action( $request )
 	{
 		$acauser = $this->getSubscriberID( $metaUser->userid );
 

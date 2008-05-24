@@ -13,7 +13,7 @@ class mi_joomlauser
 		return $info;
 	}
 
-	function Settings( $params )
+	function Settings()
 	{
 		$settings = array();
 		$settings['activate'] = array( 'list_yesno' );
@@ -21,7 +21,7 @@ class mi_joomlauser
 		return $settings;
 	}
 
-	function action( $params, $metaUser, $plan, $invoice )
+	function action( $request )
 	{
 		global $database;
 

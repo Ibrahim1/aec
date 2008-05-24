@@ -24,7 +24,7 @@ class mi_fireboard
 		return $info;
 	}
 
-	function Settings( $params )
+	function Settings()
 	{
 		global $database;
 
@@ -91,7 +91,7 @@ class mi_fireboard
 		return $newparams;
 	}
 
-	function expiration_action( $params, $metaUser, $plan, $invoice )
+	function expiration_action( $request )
 	{
 		global $database;
 
@@ -107,7 +107,7 @@ class mi_fireboard
 		return true;
 	}
 
-	function action( $params, $metaUser, $plan, $invoice )
+	function action( $request )
 	{
 		global $database;
 

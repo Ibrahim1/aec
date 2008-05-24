@@ -8042,6 +8042,7 @@ class microIntegration extends paramDBTable
 
 			$this->mi_class = new $class();
 
+			// TODO: Needs to be deprecated in favor of $request->parent->id
 			$this->mi_class->id = $this->id;
 
 			$info = $this->getInfo();
@@ -8112,6 +8113,12 @@ class microIntegration extends paramDBTable
 			$params = $this->getParams();
 		}
 
+		$request = new stdClass();
+		$request->parent			=& $this;
+		$request->metaUser			=& $metaUser;
+		$request->invoice			=& $invoice;
+		$request->plan				=& $objplan;
+
 		// Call Action
 		if ( method_exists( $this->mi_class, 'relayAction' ) ) {
 			switch ( $stage ) {
@@ -8126,9 +8133,9 @@ class microIntegration extends paramDBTable
 					break;
 			}
 
-			$return = $this->mi_class->relayAction( $params, $metaUser, $objplan, $invoice, $area );
+			$return = $this->mi_class->relayAction( $request, $area );
 		} elseif ( method_exists( $this->mi_class, $stage ) ) {
-			$return = $this->mi_class->$stage( $params, $metaUser, $objplan, $invoice );
+			$return = $this->mi_class->$stage( $request );
 		} else {
 			$eventlog = new eventLog( $this->_db );
 			$eventlog->issue( 'MI application problems', 'mi, problems, '.$this->class_name, 'Action not found: '.$stage, 32 );
@@ -8294,6 +8301,10 @@ class microIntegration extends paramDBTable
 				}
 			}
 
+			$this->settings				=& $settings;
+			$this->mi_class->settings	=& $settings;
+
+			// TODO: DELETE
 			return $settings;
 		} else {
 			return false;
@@ -8326,19 +8337,12 @@ class microIntegration extends paramDBTable
 		// Strip out params that we don't need
 		$params = $this->stripNonParams($array);
 
-		// Add variables that should be common to all calls
-		// TODO: Replace this with setting properties of the object
-		$params = $this->addCommonParamInfo($params);
-
 		// Check whether there is a custom function for saving params
 		if ( method_exists( $this->mi_class, 'saveparams' ) ) {
 			$new_params = $this->mi_class->saveparams( $params );
 		} else {
 			$new_params = $params;
 		}
-
-		// Strip out common variables
-		$new_params = $this->stripcommonParamInfo( $new_params );
 
 		$this->setParams( $new_params );
 
@@ -8357,32 +8361,6 @@ class microIntegration extends paramDBTable
 		}
 
 		return $array;
-	}
-
-	function addCommonParamInfo( $params=array() )
-	{
-		$params['MI_ID'] = $this->id;
-
-		return $params;
-	}
-
-	function stripcommonParamInfo( $params )
-	{
-		// Borrowing the original array for this
-		$commonparams = $this->addCommonParamInfo();
-
-		foreach ($commonparams as $key) {
-			if (isset($params[$key])) {
-				unset($params[$key]);
-			}
-		}
-
-		return $params;
-	}
-
-	function getSettingsDescriptions()
-	{
-		// TODO: Find out what this was about!
 	}
 
 	function delete ()

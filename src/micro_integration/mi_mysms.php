@@ -37,7 +37,7 @@ class mi_mysms
 		return $info;
 	}
 
-	function Settings( $params )
+	function Settings()
 	{
 		$settings = array();
 		$settings['add_credits']		= array( 'inputA' );
@@ -45,11 +45,11 @@ class mi_mysms
 		return $settings;
 	}
 
-	function expiration_action( $params, $metaUser, $plan, $invoice )
+	function expiration_action( $request )
 	{
 		global $database;
 
-		if ( !empty( $params['disable_exp'] ) ) {
+		if ( !empty( $this->settings['disable_exp'] ) ) {
 			// unpublish the user
 			$query = 'UPDATE #__mysms_joomlauser' .
 					' SET `status` = \'0\'' .
@@ -62,12 +62,12 @@ class mi_mysms
 		return true;
 	}
 
-	function action( $params, $metaUser, $plan, $invoice )
+	function action( $request )
 	{
 		global $database;
 
-		if ( !empty( $params['add_credits'] ) ) {
-			$credits = (int) $params['add_credits'];
+		if ( !empty( $this->settings['add_credits'] ) ) {
+			$credits = (int) $this->settings['add_credits'];
 
 			//set the user active and the new credits
 			$query = 'UPDATE #__mysms_joomlauser' .
