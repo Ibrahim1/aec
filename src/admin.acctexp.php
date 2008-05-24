@@ -586,7 +586,7 @@ switch( strtolower( $task ) ) {
 
 		$query = 'UPDATE #__acctexp_eventlog'
 				. ' SET `notify` = \'0\''
-				. ' WHERE `id` = \'' . $id . '\''
+				. ' WHERE `id` = \'' . $id[0] . '\''
 				;
 		$database->setQuery( $query	);
 		$database->query();
