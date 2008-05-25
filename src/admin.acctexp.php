@@ -2959,7 +2959,7 @@ function editMicroIntegration ( $id, $option )
 			$mi_settings = $mi->getSettings();
 
 			// Get lists supplied by the MI
-			if ( @is_array($mi_settings['lists']) ) {
+			if ( @is_array( $mi_settings['lists'] ) ) {
 				$lists = array_merge( $lists, $mi_settings['lists'] );
 				unset( $mi_settings['lists'] );
 			}

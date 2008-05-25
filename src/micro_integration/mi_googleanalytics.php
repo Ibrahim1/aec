@@ -53,15 +53,15 @@ class mi_googleanalytics
 				. '  urchinTracker();'
 				. '</script>'
 				. '<form style="display:none;" name="utmform">'
-				. '<textarea id="utmtrans">UTM:T|' . $invoice->invoice_number . '|' . $mosConfig_sitename . '|' . $invoice->amount . '|0.00|0.00|||'
-				. 'UTM:I|' . $invoice->invoice_number . '|' . $plan->id . '|' . $plan->name . '|subscription|' . $invoice->amount . '|1 </textarea>'
+				. '<textarea id="utmtrans">UTM:T|' . $request->invoice->invoice_number . '|' . $mosConfig_sitename . '|' . $request->invoice->amount . '|0.00|0.00|||'
+				. 'UTM:I|' . $request->invoice->invoice_number . '|' . $request->plan->id . '|' . $request->plan->name . '|subscription|' . $request->invoice->amount . '|1 </textarea>'
 				. '</form>'
 				. '<script type="text/javascript">'
 				. '__utmSetTrans();'
 				. '</script>';
 
 		$displaypipeline = new displayPipeline($database);
-		$displaypipeline->create( $metaUser->userid, 1, 0, 0, null, 1, $text );
+		$displaypipeline->create( $request->metaUser->userid, 1, 0, 0, null, 1, $text );
 
 		return true;
 	}

@@ -57,7 +57,7 @@ class mi_eventlog extends MI
 		$rewriting = array( 'short', 'tags', 'text', 'params' );
 
 		foreach ( $rewriting as $rw_name ) {
-			$this->settings[$rw_name.$area] = AECToolbox::rewriteEngine( $this->settings[$rw_name.$area], $metaUser, $plan, $invoice );
+			$this->settings[$rw_name.$area] = AECToolbox::rewriteEngineRQ( $this->settings[$rw_name.$area], $request );
 		}
 
 		$log_entry = new EventLog( $database );

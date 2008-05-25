@@ -70,20 +70,15 @@ class mi_affiliatepro
 	{
 		global $database, $mosConfig_live_site, $mosConfig_sitename;
 
-		$lastinvoice = AECfetchfromDB::lastClearedInvoiceIDbyUserID( $metaUser->userid, $plan->id );
-
-		$invoice = new Invoice($database);
-		$invoice->load($lastinvoice);
-
 		$text = '<script id="pap_x2s6df8d" src="' . $this->settings['url'] . '" type="text/javascript"></script>'
 				. '<script type="text/javascript"><!--'
-				. 'var TotalCost="' . $invoice->amount . ';'
-				. 'var OrderID="' . $invoice->invoice_number . '";'
-				. 'var ProductID="' . $plan->id . '";'
+				. 'var TotalCost="' . $request->invoice->amount . ';'
+				. 'var OrderID="' . $request->invoice->invoice_number . '";'
+				. 'var ProductID="' . $request->plan->id . '";'
 				. 'papSale();'
 				. '--></script>';
 
-		$displaypipeline = new displayPipeline($database);
+		$displaypipeline = new displayPipeline( $database );
 		$displaypipeline->create( $metaUser->userid, 1, 0, 0, null, 1, $text );
 
 		return true;

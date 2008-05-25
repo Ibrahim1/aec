@@ -49,6 +49,7 @@ class mi_fireboard
 		$settings['set_group_exp']		= array( 'list_yesno' );
 		$settings['group_exp']			= array( 'list' );
 		$settings['rebuild']			= array( 'list_yesno' );
+		$settings['remove']				= array( 'list_yesno' );
 
 		return $settings;
 	}
@@ -60,37 +61,6 @@ class mi_fireboard
 		return is_dir( $mosConfig_absolute_path . '/components/com_fireboard' );
 	}
 
-	function saveparams( $params )
-	{
-		global $database;
-		$newparams = $params;
-
-		if ( $params['rebuild'] && $params['set_group'] && $params['group'] ) {
-			$planlist = MicroIntegrationHandler::getPlansbyMI( $params['MI_ID'] );
-
-			foreach ( $planlist as $planid ) {
-				$userlist = SubscriptionPlanHandler::getPlanUserlist( $planid );
-				foreach ( $userlist as $userid ) {
-					if ( $database->loadResult() ) {
-						$query = 'UPDATE #__fb_users'
-								. ' SET `group_id` = \'' . $params['group'] . '\''
-								. ' WHERE `userid` = \'' . $userid . '\''
-								;
-					} else {
-						$query = 'INSERT INTO #__fb_users'
-								. ' ( `group_id` , `userid` )'
-								. ' VALUES (\'' . $params['group'] . '\', \'' . $userid . '\')'
-								;
-					}
-				}
-			}
-
-			$newparams['rebuild'] = 0;
-		}
-
-		return $newparams;
-	}
-
 	function expiration_action( $request )
 	{
 		global $database;
@@ -98,7 +68,7 @@ class mi_fireboard
 		if ( $this->settings['set_group_exp'] ) {
 			$query = 'UPDATE #__fb_users'
 				. ' SET `group_id` = \'' . $this->settings['group_exp'] . '\''
-				. ' WHERE `userid` = \'' . $metaUser->userid . '\''
+				. ' WHERE `userid` = \'' . $request->metaUser->userid . '\''
 				;
 			$database->setQuery( $query );
 			$database->query();
@@ -115,7 +85,7 @@ class mi_fireboard
 			// Check if exists - users only appear in FB users table normally when they have posted
 			$query = 'SELECT `group_id`'
 					. ' FROM #__fb_users'
-					. ' WHERE `userid` = \'' . $metaUser->userid . '\''
+					. ' WHERE `userid` = \'' . $request->metaUser->userid . '\''
 					;
 			$database->setQuery( $query );
 
@@ -123,12 +93,12 @@ class mi_fireboard
 			if ( $database->loadResult() ) {
 				$query = 'UPDATE #__fb_users'
 						. ' SET `group_id` = \'' . $this->settings['group'] . '\''
-						. ' WHERE `userid` = \'' . $metaUser->userid . '\''
+						. ' WHERE `userid` = \'' . $request->metaUser->userid . '\''
 						;
 			} else {
 				$query = 'INSERT INTO #__fb_users'
 						. ' ( `group_id` , `userid` )'
-						. ' VALUES (\'' . $this->settings['group'] . '\', \'' . $metaUser->userid . '\')'
+						. ' VALUES (\'' . $this->settings['group'] . '\', \'' . $request->metaUser->userid . '\')'
 						;
 			}
 

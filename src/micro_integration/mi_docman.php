@@ -76,6 +76,7 @@ class mi_docman
 		$settings['group_exp']				= array( 'list' );
 		$settings['delete_on_exp'] 			= array( 'list' );
 		$settings['rebuild']				= array( 'list_yesno' );
+		$settings['remove']				= array( 'list_yesno' );
 
 		$query = 'SELECT groups_id, groups_name, groups_description'
 			 	. ' FROM #__docman_groups'
@@ -124,19 +125,6 @@ class mi_docman
 		global $mosConfig_absolute_path, $database;
 		$newparams = $params;
 
-		if ( $params['rebuild'] && $params['set_group'] ) {
-			$planlist = MicroIntegrationHandler::getPlansbyMI( $params['MI_ID'] );
-
-			foreach ( $planlist as $planid ) {
-				$userlist = SubscriptionPlanHandler::getPlanUserlist( $planid );
-				foreach ( $userlist as $userid ) {
-					$this->AddUserToGroup( $userid, $params['group'] );
-				}
-			}
-
-			$newparams['rebuild'] = 0;
-		}
-
 		$subgroups = array( 'group', 'group_exp' );
 
 		foreach ( $subgroups as $groupname ) {
@@ -183,22 +171,22 @@ class mi_docman
 		global $database;
 
  		if ( $this->settings['delete_on_exp']=="Set" ) {
-			$this->DeleteUserFromGroup( $metaUser->userid, $this->settings['group'] );
+			$this->DeleteUserFromGroup( $request->metaUser->userid, $this->settings['group'] );
 		}
 
 		if ( $this->settings['delete_on_exp']=="All" ) {
-			$groups = $this->GetUserGroups( $metaUser->userid );
+			$groups = $this->GetUserGroups( $request->metaUser->userid );
 			foreach ($groups as $group) {
-				$this->DeleteUserFromGroup( $metaUser->userid, $group );
+				$this->DeleteUserFromGroup( $request->metaUser->userid, $group );
 			}
 		}
 
 		if ( $this->settings['set_group_exp'] ) {
-			$this->AddUserToGroup( $metaUser->userid, $this->settings['group_exp'] );
+			$this->AddUserToGroup( $request->metaUser->userid, $this->settings['group_exp'] );
 		}
 
 		$mi_docmanhandler = new docman_restriction( $database );
-		$id = $mi_docmanhandler->getIDbyUserID( $metaUser->userid );
+		$id = $mi_docmanhandler->getIDbyUserID( $request->metaUser->userid );
 		$mi_id = $id ? $id : 0;
 		$mi_docmanhandler->load( $mi_id );
 
@@ -216,16 +204,16 @@ class mi_docman
 		global $database;
 
 		if ( $this->settings['set_group'] ) {
-			$this->AddUserToGroup( $metaUser->userid, $this->settings['group'] );
+			$this->AddUserToGroup( $request->metaUser->userid, $this->settings['group'] );
 		}
 
 		$mi_docmanhandler = new docman_restriction( $database );
-		$id = $mi_docmanhandler->getIDbyUserID( $metaUser->userid );
+		$id = $mi_docmanhandler->getIDbyUserID( $request->metaUser->userid );
 		$mi_id = $id ? $id : 0;
 		$mi_docmanhandler->load( $mi_id );
 
 		if ( !$mi_id ) {
-			$mi_docmanhandler->userid = $metaUser->userid;
+			$mi_docmanhandler->userid = $request->metaUser->userid;
 			$mi_docmanhandler->active = 1;
 		}
 

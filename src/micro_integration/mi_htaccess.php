@@ -65,6 +65,7 @@ class mi_htaccess
 		$settings['mi_name']			= array( 'inputC' );
 		$settings['use_md5']			= array( 'list_yesno' );
 		$settings['rebuild']			= array( 'list_yesno' );
+		$settings['remove']				= array( 'list_yesno' );
 
 		return $settings;
 	}
@@ -97,56 +98,6 @@ class mi_htaccess
 				$ht->setAuthName( $newparams['mi_name'] );
 			}
 			$ht->addLogin();
-		}
-
-		if ( $params['rebuild'] ) {
-			$ht = new htaccess();
-			$ht->setFPasswd( $newparams['mi_folder_user_fullpath'] );
-			$ht->setFHtaccess( $newparams['mi_folder_fullpath'] );
-			if( isset( $newparams['mi_name'] ) ) {
-				$ht->setAuthName( $newparams['mi_name'] );
-			}
-
-			unlink($ht->fPasswd);
-
-			$planlist = MicroIntegrationHandler::getPlansbyMI( $params['MI_ID'] );
-
-			foreach ( $planlist as $planid ) {
-				$userlist = SubscriptionPlanHandler::getPlanUserlist( $planid );
-				foreach ( $userlist as $userid ) {
-					$user = new mosUser( $database );
-					$user->load( $userid );
-					if ( $user->id ) {
-						$username = $user->username;
-						$password = null;
-
-						if ( $params['use_md5'] ) {
-							$password = $user->password;
-						} else {
-							$apachepw = new apachepw( $database );
-							$apwid = $apachepw->getIDbyUserID( $userid );
-
-							if ( $apwid > 0 ) {
-								$apachepw->load( $apwid );
-								$password = $apachepw->apachepw;
-							} else {
-								continue;
-							}
-						}
-
-						if ( empty($username) || is_null($username) || ($username == "") ) {
-							continue;
-						} elseif ( empty($password) || is_null($password) || ($password == "") ) {
-							continue;
-						} else {
-							$ht->addUser( $username, $password );
-						}
-					}
-				}
-			}
-
-			$ht->addLogin();
-			$newparams['rebuild'] = 0;
 		}
 
 		return $newparams;

@@ -44,9 +44,9 @@ class mi_g2 extends MI
 	 	$database->setQuery( $query );
 	 	$groups = $database->loadObjectList();
 
-		$g = explode( ';', $params['group'] );
+		$g = explode( ';', $this->settings['group'] );
 		$sg = array();
-		$ge = explode( ';', $params['group_exp'] );
+		$ge = explode( ';', $this->settings['group_exp'] );
 		$sge = array();
 
 		$gr = array();
@@ -83,7 +83,7 @@ class mi_g2 extends MI
 	function on_userchange_action( $request )
 	{}
 
-	function delete( $params )
+	function delete()
 	{}
 
 	function profile_info( $userid )

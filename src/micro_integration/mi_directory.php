@@ -48,16 +48,16 @@ class mi_directory
 
 	function relayAction( $request, $area )
 	{
-		return $this->makedir( $this->settings['mkdir'.$area], $this->settings['mkdir_mode'.$area], $metaUser, $plan, $invoice );
+		return $this->makedir( $this->settings['mkdir'.$area], $this->settings['mkdir_mode'.$area], $request );
 	}
 
-	function makedir( $path, $mode, $metaUser, $plan, $invoice=null )
+	function makedir( $path, $mode, $request )
 	{
 		if ( empty( $path ) || empty( $mode ) ) {
 			return null;
 		}
 
-		$fullpath = AECToolbox::rewriteEngine( $path, $metaUser, $plan, $invoice );
+		$fullpath = AECToolbox::rewriteEngineRQ( $path, $request );
 
 		if ( !file_exists( $fullpath ) ) {
 			return mkdir( $fullpath, $mode );

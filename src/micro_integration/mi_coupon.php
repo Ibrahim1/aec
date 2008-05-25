@@ -51,7 +51,7 @@ class mi_coupon
 	{
 		global $database, $mosConfig_live_site;
 
-		$userflags = $metaUser->focusSubscription->getMIflags( $plan->id, $this->id );
+		$userflags = $request->metaUser->focusSubscription->getMIflags( $plan->id, $this->id );
 
 		$total_coupons = array();
 
@@ -99,7 +99,7 @@ class mi_coupon
 
 						if ( !empty( $settings['bind_subscription'] ) ) {
 							$cph->restrictions['depend_on_subscr_id'] = 1;
-							$cph->restrictions['subscr_id_dependency'] = $metaUser->focusSubscription->id;
+							$cph->restrictions['subscr_id_dependency'] = $request->metaUser->focusSubscription->id;
 							$cph->coupon->setParams( $cph->restrictions, 'restrictions' );
 						}
 
@@ -118,7 +118,7 @@ class mi_coupon
 
 		$newflags['coupons'] = implode( ',', $total_coupons );
 
-		$metaUser->objSubscription->setMIflags( $plan->id, $this->id, $newflags );
+		$request->metaUser->objSubscription->setMIflags( $plan->id, $this->id, $newflags );
 
 		return true;
 	}
@@ -127,8 +127,8 @@ class mi_coupon
 	{
 		$message	= sprintf( $message, implode( "\n", $newcodes ) );
 
-		$message	= AECToolbox::rewriteEngine( $this->settings['text'], $metaUser, $plan, $invoice );
-		$subject	= AECToolbox::rewriteEngine( $this->settings['subject'], $metaUser, $plan, $invoice );
+		$message	= AECToolbox::rewriteEngineRQ( $this->settings['text'], $request );
+		$subject	= AECToolbox::rewriteEngineRQ( $this->settings['subject'], $request );
 
 		if ( empty( $message ) ) {
 			return false;
@@ -137,7 +137,7 @@ class mi_coupon
 		$recipients = explode( ',', $this->settings['recipient'] );
 
 		foreach ( $recipients as $current => $email ) {
-			$recipients[$current] = AECToolbox::rewriteEngine( trim( $email ), $metaUser, $plan, $invoice );
+			$recipients[$current] = AECToolbox::rewriteEngineRQ( trim( $email ), $request );
 		}
 
 		mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'] );

@@ -73,6 +73,7 @@ class mi_juga
 		$settings['set_enroll_group_exp']		= array( 'list_yesno' );
 		$settings['enroll_group_exp']			= array( 'list' );
 		$settings['rebuild']					= array( 'list_yesno' );
+		$settings['remove']				= array( 'list_yesno' );
 
 		return $settings;
 	}
@@ -92,23 +93,6 @@ class mi_juga
 		// Arrays -> semicolon separated fields
 		$newparams['enroll_group'] = implode( ';', $params['enroll_group']);
 		$newparams['enroll_group_exp'] = implode( ';', $params['enroll_group_exp']);
-
-		if ( $params['rebuild'] ) {
-			$planlist = MicroIntegrationHandler::getPlansbyMI( $params['MI_ID'] );
-
-			foreach ( $planlist as $planid ) {
-				$userlist = SubscriptionPlanHandler::getPlanUserlist( $planid );
-				foreach ( $userlist as $userid ) {
-					if ( $params['set_enroll_group'] ) {
-						foreach ( $params['enroll_group'] as $groupid ) {
-							$this->AddUserToGroup( $userid, $groupid );
-						}
-					}
-				}
-			}
-
-			$newparams['rebuild'] = 0;
-		}
 
 		return $newparams;
 	}

@@ -23,6 +23,7 @@ class mi_sobi extends MI
 		$settings = $this->autoduplicatesettings( $settings );
 
 		$settings['rebuild']			= array( 'list_yesno' );
+		$settings['remove']				= array( 'list_yesno' );
 
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
@@ -37,32 +38,6 @@ class mi_sobi extends MI
 		$defaults['company_fields']	= "name=[[user_name]]\naddress=\nsuburb=\ncountry=\nstate=\npostcode=\ntelephone=\nfax=\nwebsite=\ncb_id=[[user_id]]\nemail=[[user_email]]";
 
 		return $defaults;
-	}
-
-	function saveparams( $params )
-	{
-		global $mosConfig_absolute_path, $database;
-		$newparams = $params;
-
-		if ( $params['rebuild'] ) {
-			$planlist = MicroIntegrationHandler::getPlansbyMI( $this->id );
-
-			foreach ( $planlist as $planid ) {
-				$plan = new SubscriptionPlan( $database );
-				$plan->load( $planid );
-
-				$userlist = SubscriptionPlanHandler::getPlanUserlist( $planid );
-				foreach ( $userlist as $userid ) {
-					$metaUser = new metaUser( $userid );
-
-					$this->action( $params, $metaUser, null, $plan );
-				}
-			}
-
-			$newparams['rebuild'] = 0;
-		}
-
-		return $newparams;
 	}
 
 	function relayAction( $request, $area )

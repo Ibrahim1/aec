@@ -167,7 +167,7 @@ class metaUser
 		global $aecConfig;
 
 		// Make sure we catch traditional and new joomla passwords
-		if ( $password !== false ) {
+		if ( $password !== false) {
 			if ( strpos( $this->cmsUser->password, ':') === false ) {
 				if ( $this->cmsUser->password != md5( $password ) ) {
 					return false;
@@ -492,7 +492,7 @@ class metaUser
 		if ( is_array( $restrictions ) ) {
 			$return = array();
 			foreach ( $restrictions as $name => $value ) {
-				// TODO: Tautological && ?
+				// TODO: Tautological && ? Use empty instead?
 				if ( !is_null( $value ) && !( $value === "" ) ) {
 					// Switch flag for inverted call
 					if ( strpos( $name, '_excluded' ) !== false ) {
@@ -800,7 +800,7 @@ class Config_General extends paramDBTable
 	function saveSettings()
 	{
 		// Extra check for duplicated rows
-		// TODO: Sometime in the future, this can be abandoned
+		// TODO: Sometime in the future, this can be abandoned, but not without a check!
 		if ( $this->RowDuplicationCheck() ) {
 			$this->CleanDuplicatedRows();
 			$this->load(1);
@@ -3593,11 +3593,7 @@ class SubscriptionPlan extends paramDBTable
 		if ( !empty( $post['id'] ) ) {
 			$planid = $post['id'];
 		} else {
-			$query = 'SELECT MAX(id)'
-					. ' FROM #__acctexp_plans'
-					;
-			$database->setQuery( $query );
-			$planid = $database->loadResult() + 1;
+			$planid = $this->getMax() + 1;
 		}
 
 		if ( isset( $post['id'] ) ) {
@@ -4516,10 +4512,7 @@ class InvoiceFactory
 
 		$this->confirmed = 1;
 
-		if ( $this->userid ) {
-			$user = new mosUser( $database );
-			$user->load( $this->userid );
-		} else {
+		if ( empty( $this->userid ) ) {
 			$this->userid = AECToolbox::saveUserRegistration( $option, $var );
 
 			$this->loadMetaUser( false, false );
@@ -6773,10 +6766,12 @@ class AECToolbox
 						$invoice = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $metaUser->userid );
 
 						if ( $invoice ) {
+							$metaUser->setTempAuth();
 							mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=pending&userid=' . $id ), false, true );
 						}
 					}
 
+					$metaUser->setTempAuth();
 					mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=subscribe&userid=' . $id . '&intro=1' ), false, true );
 					return null;
 				}
@@ -7410,6 +7405,11 @@ class AECToolbox
 		}
 	}
 
+	function rewriteEngineRQ( $content, $request )
+	{
+		return AECToolbox::rewriteEngine( $content, $request->metaUser, $request->plan, $request->invoice );
+	}
+
 	function rewriteEngine( $subject, $metaUser=null, $subscriptionPlan=null, $invoice=null )
 	{
 		global $aecConfig, $database, $mosConfig_absolute_path, $mosConfig_live_site, $mosConfig_offset;
@@ -8020,9 +8020,6 @@ class microIntegration extends paramDBTable
 		global $mosConfig_absolute_path;
 
 		$this->class_name = $mi_name;
-
-		$filename = $mosConfig_absolute_path . '/components/com_acctexp/micro_integration/' . $this->class_name . '.php';
-
 		$this->callIntegration( true );
 	}
 
@@ -8032,10 +8029,12 @@ class microIntegration extends paramDBTable
 
 		$filename = $mosConfig_absolute_path . '/components/com_acctexp/micro_integration/' . $this->class_name . '.php';
 
-		if ( ( ( !$this->active && $this->id ) || !file_exists( $filename ) ) && !$override ) {
+		$file_exists = file_exists( $filename );
+
+		if ( ( ( !$this->active && $this->id ) || !$file_exists ) && !$override ) {
 			// MI does not exist or is deactivated
 			return false;
-		} elseif ( file_exists( $filename ) ) {
+		} elseif ( $file_exists ) {
 			include_once $filename;
 
 			$class = $this->class_name;
@@ -8043,15 +8042,18 @@ class microIntegration extends paramDBTable
 			$this->mi_class = new $class();
 			$this->mi_class->id = $this->id;
 
-			$info = $this->getInfo();
+			$this->getInfo();
 
 			if ( is_null( $this->name ) || ( $this->name == '' ) ) {
-				$this->name = $info['name'];
+				$this->name = $this->info['name'];
 			}
 
 			if ( is_null( $this->desc ) || ( $this->desc == '' ) ) {
-				$this->desc = $info['desc'];
+				$this->desc = $this->info['desc'];
 			}
+
+			$this->settings				=& $this->getParams();
+			$this->mi_class->settings	=& $this->settings;
 
 			return true;
 		} else {
@@ -8106,9 +8108,7 @@ class microIntegration extends paramDBTable
 	{
 		// Exchange Settings
 		if ( is_array( $exchange ) && !empty( $exchange ) ) {
-			$params = $this->getExchangedSettings( $exchange );
-		} else {
-			$params = $this->getParams();
+			$this->exchangeSettings( $exchange );
 		}
 
 		$request = new stdClass();
@@ -8190,7 +8190,7 @@ class microIntegration extends paramDBTable
 			}
 
 			foreach ( $this->mi_class->error as $error ) {
-				$return . ' ' . $error;
+				$return .= ' ' . $error;
 			}
 		} else {
 			return false;
@@ -8209,7 +8209,7 @@ class microIntegration extends paramDBTable
 			}
 
 			foreach ( $this->mi_class->warning as $warning ) {
-				$return . ' ' . $warning;
+				$return .= ' ' . $warning;
 			}
 		} else {
 			return false;
@@ -8249,22 +8249,20 @@ class microIntegration extends paramDBTable
 	function getInfo()
 	{
 		if ( method_exists( $this->mi_class, 'Info' ) ) {
-			$info = $this->mi_class->Info();
+			$this->info = $this->mi_class->Info();
 		} else {
 			$nname = strtoupper( 'aec_' . $this->class_name . '_name' );
 			$ndesc = strtoupper( 'aec_' . $this->class_name . '_desc' );
 
-			$info = array();
+			$this->info = array();
 			if ( defined( $nname ) && defined( $ndesc ) ) {
-				$info['name'] = constant( $nname );
-				$info['desc'] = constant( $ndesc );
+				$this->info['name'] = constant( $nname );
+				$this->info['desc'] = constant( $ndesc );
 			} else {
-				$info['name'] = 'NONAME';
-				$info['desc'] = 'NODESC';
+				$this->info['name'] = 'NONAME';
+				$this->info['desc'] = 'NODESC';
 			}
 		}
-
-		return $info;
 	}
 
 	function getSettings()
@@ -8276,76 +8274,108 @@ class microIntegration extends paramDBTable
 			}
 		}
 
-		$params = $this->getParams();
-
 		if ( method_exists( $this->mi_class, 'Settings' ) ) {
-			if ( method_exists( $this->mi_class, 'Defaults' ) && empty( $params ) ) {
+			if ( method_exists( $this->mi_class, 'Defaults' ) && empty( $this->settings ) ) {
 				$defaults = $this->mi_class->Defaults();
 			} else {
 				$defaults = array();
 			}
 
-			$settings = $this->mi_class->Settings( $params );
+			$settings = $this->mi_class->Settings();
 
 			// Autoload Params if they have not been called in by the MI
 			foreach ( $settings as $name => $setting ) {
 				// Do we have a parameter at first position?
 				if ( isset( $setting[1] ) && !isset( $setting[3] ) ) {
-					if ( isset( $params[$name] ) ) {
-						$settings[$name][3] = $params[$name];
+					if ( isset( $this->settings[$name] ) ) {
+						$settings[$name][3] = $this->settings[$name];
 					} elseif( isset( $defaults[$name] ) ) {
 						$settings[$name][3] = $defaults[$name];
 					}
 				} else {
-					if ( isset( $params[$name] ) ) {
-						$settings[$name][1] = $params[$name];
+					if ( isset( $this->settings[$name] ) ) {
+						$settings[$name][1] = $this->settings[$name];
 					} elseif( isset( $defaults[$name] ) ) {
 						$settings[$name][1] = $defaults[$name];
 					}
 				}
 			}
 
-			$this->settings				=& $settings;
-			$this->mi_class->settings	=& $settings;
-
-			// TODO: DELETE
 			return $settings;
 		} else {
 			return false;
 		}
 	}
 
-	function getExchangedSettings( $exchange )
+	function exchangeSettings( $exchange )
 	{
-		$params = $this->getParams();
+		foreach ( $this->settings as $key => $value ) {
+			if ( !isset( $exchange[$key] ) ) {
+				continue;
+			}
 
-		foreach ( $params as $key => $value ) {
-			if ( isset( $exchange[$key] ) ) {
-				if ( !is_null( $exchange[$key] ) && ( $exchange[$key] != '' ) ) {
-					// Exception for NULL case
-					// TODO: SET_TO_NULL undocumented!!!
-					if ( strcmp( $exchange[$key], '[[SET_TO_NULL]]' ) === 0 ) {
-						$params[$key] = '';
-					} else {
-						$params[$key] = $exchange[$key];
-					}
+			if ( !empty( $exchange[$key] ) ) {
+				// Exception for NULL case
+				// TODO: SET_TO_NULL undocumented!!!
+				if ( strcmp( $exchange[$key], '[[SET_TO_NULL]]' ) === 0 ) {
+					$this->settings[$key] = '';
+				} else {
+					$this->settings[$key] = $exchange[$key];
 				}
 			}
 		}
-
-		return $params;
 	}
 
 	function savePostParams( $array )
 	{
 		// Strip out params that we don't need
-		$params = $this->stripNonParams($array);
+		$params = $this->stripNonParams( $array );
 
 		// Check whether there is a custom function for saving params
 		if ( method_exists( $this->mi_class, 'saveparams' ) ) {
 			$new_params = $this->mi_class->saveparams( $params );
 		} else {
 			$new_params = $params;
+		}
+
+		if ( !empty( $new_params['rebuild'] ) ) {
+			global $database;
+
+			$planlist = MicroIntegrationHandler::getPlansbyMI( $this->id );
+
+			foreach ( $planlist as $planid ) {
+				$plan = new SubscriptionPlan( $database );
+				$plan->load( $planid );
+
+				$userlist = SubscriptionPlanHandler::getPlanUserlist( $planid );
+				foreach ( $userlist as $userid ) {
+					$metaUser = new metaUser( $userid );
+
+					$this->action( $params, $metaUser, null, $plan );
+				}
+			}
+
+			$newparams['rebuild'] = 0;
+		}
+
+		if ( !empty( $new_params['remove'] ) ) {
+			global $database;
+
+			$planlist = MicroIntegrationHandler::getPlansbyMI( $this->id );
+
+			foreach ( $planlist as $planid ) {
+				$plan = new SubscriptionPlan( $database );
+				$plan->load( $planid );
+
+				$userlist = SubscriptionPlanHandler::getPlanUserlist( $planid );
+				foreach ( $userlist as $userid ) {
+					$metaUser = new metaUser( $userid );
+
+					$this->expiration_action( $params, $metaUser, null, $plan );
+				}
+			}
+
+			$newparams['remove'] = 0;
 		}
 
 		$this->setParams( $new_params );

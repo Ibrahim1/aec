@@ -32,6 +32,7 @@ class mi_hotproperty extends MI
 
 		$settings['assoc_company']		= array( 'list_yesno' );
 		$settings['rebuild']			= array( 'list_yesno' );
+		$settings['remove']				= array( 'list_yesno' );
 
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
@@ -48,32 +49,6 @@ class mi_hotproperty extends MI
 		return $defaults;
 	}
 
-	function saveparams( $params )
-	{
-		global $mosConfig_absolute_path, $database;
-		$newparams = $params;
-
-		if ( $params['rebuild'] ) {
-			$planlist = MicroIntegrationHandler::getPlansbyMI( $this->id );
-
-			foreach ( $planlist as $planid ) {
-				$plan = new SubscriptionPlan( $database );
-				$plan->load( $planid );
-
-				$userlist = SubscriptionPlanHandler::getPlanUserlist( $planid );
-				foreach ( $userlist as $userid ) {
-					$metaUser = new metaUser( $userid );
-
-					$this->action( $params, $metaUser, null, $plan );
-				}
-			}
-
-			$newparams['rebuild'] = 0;
-		}
-
-		return $newparams;
-	}
-
 	function relayAction( $request, $area )
 	{
 		$agent = null;
@@ -81,7 +56,7 @@ class mi_hotproperty extends MI
 
 		if ( $this->settings['create_agent'.$area] ){
 			if ( !empty( $this->settings['agent_fields'.$area] ) ) {
-				$agent = $this->createAgent( $metaUser, $this->settings['agent_fields'.$area], $invoice, $plan );
+				$agent = $this->createAgent( $this->settings['agent_fields'.$area], $request );
 			}
 		}
 
@@ -96,7 +71,7 @@ class mi_hotproperty extends MI
 				}
 
 				if ( !empty( $agent ) ) {
-					$agent = $this->update( 'agents', 'user', $metaUser, $this->settings['update_afields'.$area], $invoice, $plan );
+					$agent = $this->update( 'agents', 'user', $this->settings['update_afields'.$area], $request );
 				}
 			}
 		}
@@ -107,7 +82,7 @@ class mi_hotproperty extends MI
 
 		if ( $this->settings['create_company'.$area] ){
 			if ( !empty( $this->settings['company_fields'.$area] ) ) {
-				$company = $this->createCompany( $metaUser, $this->settings['company_fields'.$area], $this->settings['assoc_company'], $invoice, $plan );
+				$company = $this->createCompany( $this->settings['company_fields'.$area], $this->settings['assoc_company'], $request );
 			}
 		}
 
@@ -122,7 +97,7 @@ class mi_hotproperty extends MI
 				}
 
 				if ( !empty( $company ) ) {
-					$company = $this->update( 'companies', 'cb_id', $metaUser, $this->settings['update_cfields'.$area], $invoice, $plan );
+					$company = $this->update( 'companies', 'cb_id', $this->settings['update_cfields'.$area], $request );
 				}
 			}
 		}
@@ -159,17 +134,17 @@ class mi_hotproperty extends MI
 		}
 	}
 
-	function createAgent( $metaUser, $fields, $invoice, $plan )
+	function createAgent( $fields, $request )
 	{
 		global $database;
 
-		$check = $this->agentExists( $metaUser->userid );
+		$check = $this->agentExists( $request->metaUser->userid );
 
 		if ( !empty( $check ) ) {
 			return null;
 		}
 
-		$fields = AECToolbox::rewriteEngine( $fields, $metaUser, $plan, $invoice );
+		$fields = AECToolbox::rewriteEngineRQ( $fields, $request );
 
 		$fieldlist = explode( "\n", $fields );
 
@@ -204,7 +179,7 @@ class mi_hotproperty extends MI
 		global $database;
 
 		$query = 'SELECT user FROM #__hp_companies'
-				. ' WHERE cb_id = \'' . $metaUser->userid . '\''
+				. ' WHERE cb_id = \'' . $userid . '\''
 				;
 		$database->setQuery( $query );
 		$id = $database->loadResult();
@@ -216,16 +191,16 @@ class mi_hotproperty extends MI
 		}
 	}
 
-	function createCompany( $metaUser, $fields, $assoc, $invoice, $plan )
+	function createCompany( $fields, $assoc, $request )
 	{
 		global $database;
 
-		$check = $this->agentExists( $metaUser->userid );
+		$check = $this->agentExists( $request->metaUser->userid );
 		if ( !empty( $check ) ) {
 			return null;
 		}
 
-		$fields = AECToolbox::rewriteEngine( $fields, $metaUser, $plan, $invoice );
+		$fields = AECToolbox::rewriteEngineRQ( $fields, $request );
 
 		$fieldlist = explode( "\n", $fields );
 
@@ -258,7 +233,7 @@ class mi_hotproperty extends MI
 				if ( $result ) {
 					$query = 'UPDATE #__hp_agents'
 							. ' SET company = \'' . $result . '\''
-							. ' WHERE cb_id = \'' . $metaUser->userid . '\''
+							. ' WHERE cb_id = \'' . $request->metaUser->userid . '\''
 							;
 
 					$database->setQuery( $query );
@@ -275,11 +250,11 @@ class mi_hotproperty extends MI
 		return false;
 	}
 
-	function update( $table, $id, $metaUser, $fields, $invoice, $plan )
+	function update( $table, $id, $fields, $request )
 	{
 		global $database;
 
-		$fields = AECToolbox::rewriteEngine( $fields, $metaUser, $plan, $invoice );
+		$fields = AECToolbox::rewriteEngineRQ( $fields, $request );
 
 		$fieldlist = explode( "\n", $fields, 2 );
 
@@ -294,7 +269,7 @@ class mi_hotproperty extends MI
 
 		$query = 'UPDATE #__hp_' . $table
 				. ' SET ' . implode( ', ', $set )
-				. ' WHERE ' . $id . ' = \'' . $metaUser->userid . '\''
+				. ' WHERE ' . $id . ' = \'' . $request->metaUser->userid . '\''
 				;
 
 		$database->setQuery( $query );

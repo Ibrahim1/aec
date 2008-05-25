@@ -89,14 +89,14 @@ class mi_email
 			}
 		}
 
-		$message	= AECToolbox::rewriteEngine( $this->settings['text' . $area], $metaUser, $plan, $invoice );
-		$subject	= AECToolbox::rewriteEngine( $this->settings['subject' . $area], $metaUser, $plan, $invoice );
+		$message	= AECToolbox::rewriteEngineRQ( $this->settings['text' . $area], $request );
+		$subject	= AECToolbox::rewriteEngineRQ( $this->settings['subject' . $area], $request );
 
 		if ( empty( $message ) ) {
 			return null;
 		}
 
-		$recipients = AECToolbox::rewriteEngine( $this->settings['recipient'], $metaUser, $plan, $invoice );
+		$recipients = AECToolbox::rewriteEngineRQ( $this->settings['recipient'], $request );
 		$recips = explode( ',', $recipients );
 
 		foreach ( $recips as $current => $email ) {

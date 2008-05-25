@@ -44,6 +44,7 @@ class mi_apc
 		$settings['set_default_exp']	= array( 'list_yesno' );
 		$settings['group_exp']			= array( 'list' );
 		$settings['rebuild']			= array( 'list_yesno' );
+		$settings['remove']				= array( 'list_yesno' );
 
 		$settings['lists']['group']		= mosHTML::selectList( $sg, 'group', 'size="4"', 'value', 'text', $this->settings['group'] );
 		$settings['lists']['group_exp'] = mosHTML::selectList( $sg, 'group_exp', 'size="4"', 'value', 'text', $this->settings['group_exp'] );
@@ -51,44 +52,19 @@ class mi_apc
 		return $settings;
 	}
 
-	function saveparams( $params )
-	{
-		global $mosConfig_absolute_path, $database;
-		$newparams = $params;
-
-		if ( $params['rebuild'] && $params['set_group'] ) {
-			$planlist = MicroIntegrationHandler::getPlansbyMI( $this->id );
-
-			foreach ( $planlist as $planid ) {
-				$userlist = SubscriptionPlanHandler::getPlanUserlist( $planid );
-				foreach ( $userlist as $userid ) {
-					$this->setGroupId( $userid, $params['group'], $params['set_default'] );
-				}
-			}
-
-			$newparams['rebuild'] = 0;
-		}
-
-		return $newparams;
-	}
-
 	function expiration_action( $request )
 	{
 		global $database;
 
-		if( $this->integrationActive() ){
-			if ( $this->settings['set_group_exp'] ) {
-				return $this->setGroupId( $metaUser->userid, $this->settings['group_exp'], $this->settings['set_default_exp'] );
-			}
+		if ( $this->settings['set_group_exp'] ) {
+			return $this->setGroupId( $request->metaUser->userid, $this->settings['group_exp'], $this->settings['set_default_exp'] );
 		}
 	}
 
 	function action( $request )
 	{
-		if( $this->integrationActive() ){
-			if ( $this->settings['set_group'] ) {
-				return $this->setGroupId( $metaUser->userid, $this->settings['group'], $this->settings['set_default'] );
-			}
+		if ( $this->settings['set_group'] ) {
+			return $this->setGroupId( $request->metaUser->userid, $this->settings['group'], $this->settings['set_default'] );
 		}
 	}
 
@@ -121,19 +97,6 @@ class mi_apc
 		} else {
 			return false;
 		}
-	}
-
-	function integrationActive()
-	{
-		// I don't really think its necessary to check the integration every time, but the original integration had this
-		global $database;
-
-		$query = 'SELECT `value`'
-				. ' FROM #__comprofiler_accesscontrol_settings'
-				. ' WHERE `key` = \'integrateSubscription\''
-				;
-		$database->setQuery( $query );
-		return ( $database->loadResult() == 'AEC' );
 	}
 }
 

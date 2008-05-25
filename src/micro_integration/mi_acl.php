@@ -135,11 +135,11 @@ class mi_acl
 	function pre_expiration_action( $request )
 	{
 		if ( $this->settings['set_gid_pre_exp'] ) {
-			$this->instantGIDchange( $metaUser, 'gid_pre_exp' );
+			$this->instantGIDchange( $request->metaUser, 'gid_pre_exp' );
 		}
 
 		if ( $this->settings['sub_set_gid_pre_exp'] ) {
-			$this->jaclplusGIDchange( $metaUser, 'sub_gid_pre_exp' );
+			$this->jaclplusGIDchange( $request->metaUser, 'sub_gid_pre_exp' );
 		}
 
 		return true;
@@ -148,11 +148,11 @@ class mi_acl
 	function expiration_action( $request )
 	{
 		if ( $this->settings['set_gid_pre'] ) {
-			$this->instantGIDchange( $metaUser, 'gid_exp' );
+			$this->instantGIDchange( $request->metaUser, 'gid_exp' );
 		}
 
 		if ( $this->settings['sub_set_gid_exp'] ) {
-			$this->jaclplusGIDchange( $metaUser, 'sub_gid_exp' );
+			$this->jaclplusGIDchange( $request->metaUser, 'sub_gid_exp' );
 		}
 
 		return true;
@@ -161,11 +161,11 @@ class mi_acl
 	function action( $request )
 	{
 		if ( $this->settings['set_gid'] ) {
-			$this->instantGIDchange( $metaUser, 'gid' );
+			$this->instantGIDchange( $request->metaUser, 'gid' );
 		}
 
 		if ( $this->settings['sub_set_gid'] ) {
-			$this->jaclplusGIDchange( $metaUser, 'sub_gid' );
+			$this->jaclplusGIDchange( $request->metaUser, 'sub_gid' );
 		}
 
 		return true;

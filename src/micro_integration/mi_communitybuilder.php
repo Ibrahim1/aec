@@ -65,14 +65,14 @@ class mi_communitybuilder
 		if( $this->settings['approve'] ) {
 			$query = 'UPDATE #__comprofiler'
 					.' SET `approved` = \'1\''
-					.' WHERE `user_id` = \'' . (int) $metaUser->userid . '\''
+					.' WHERE `user_id` = \'' . (int) $request->metaUser->userid . '\''
 					;
 			$database->setQuery( $query );
 			$database->query() or die( $database->stderr() );
 		}
 
 		if ( $this->settings['set_fields'] ) {
-			$metaUser = new metaUser( $metaUser->userid );
+			$request->metaUser = new metaUser( $request->metaUser->userid );
 
 			$query = 'SELECT `name`, `title`'
 					. ' FROM #__comprofiler_fields'
@@ -94,13 +94,13 @@ class mi_communitybuilder
 					if ( strcmp( $value, 'NULL' ) === 0 ) {
 						$alterstring[] = $name . ' = NULL';
 					} else {
-						$alterstring[] = $name . ' = \'' . AECToolbox::rewriteEngine( $value, $metaUser, $plan, $invoice ) . '\'';
+						$alterstring[] = $name . ' = \'' . AECToolbox::rewriteEngineRQ( $value, $request ) . '\'';
 					}
 				}
 
 				$query = 'UPDATE #__comprofiler'
 						. ' SET ' . implode( ', ', $alterstring )
-						. ' WHERE `user_id` = \'' . (int) $metaUser->userid . '\''
+						. ' WHERE `user_id` = \'' . (int) $request->metaUser->userid . '\''
 						;
 				$database->setQuery( $query );
 				$database->query() or die( $database->stderr() );
@@ -115,14 +115,14 @@ class mi_communitybuilder
 		if( $this->settings['unapprove_exp'] ) {
 			$query = 'UPDATE #__comprofiler'
 					.' SET `approved` = \'0\''
-					.' WHERE `user_id` = \'' . (int) $metaUser->userid . '\''
+					.' WHERE `user_id` = \'' . (int) $request->metaUser->userid . '\''
 					;
 			$database->setQuery( $query );
 			$database->query() or die( $database->stderr() );
 		}
 
 		if ( $this->settings['set_fields_exp'] ) {
-			$metaUser = new metaUser( $metaUser->userid );
+			$request->metaUser = new metaUser( $request->metaUser->userid );
 
 			$query = 'SELECT `name`, `title`'
 					. ' FROM #__comprofiler_fields'
@@ -144,13 +144,13 @@ class mi_communitybuilder
 					if ( strcmp( $value, 'NULL' ) === 0 ) {
 						$alterstring[] = '`' . $name . '`' . ' = NULL';
 					} else {
-						$alterstring[] = '`' . $name . '`' . ' = \'' . AECToolbox::rewriteEngine( $value, $metaUser, $plan, $invoice ) . '\'';
+						$alterstring[] = '`' . $name . '`' . ' = \'' . AECToolbox::rewriteEngineRQ( $value, $request ) . '\'';
 					}
 				}
 
 				$query = 'UPDATE #__comprofiler'
 						. ' SET ' . implode( ', ', $alterstring )
-						. ' WHERE `user_id` = \'' . (int) $metaUser->userid . '\''
+						. ' WHERE `user_id` = \'' . (int) $request->metaUser->userid . '\''
 						;
 				$database->setQuery( $query );
 				$database->query() or die( $database->stderr() );

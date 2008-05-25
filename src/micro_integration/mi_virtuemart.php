@@ -47,38 +47,10 @@ class mi_virtuemart
 		$settings['set_shopper_group_exp']	= array( 'list_yesno' );
 		$settings['shopper_group_exp']		= array( 'list' );
 		$settings['create_account']			= array( 'list_yesno' );
-		$settings['rebuild']			= array( 'list_yesno' );
+		$settings['rebuild']				= array( 'list_yesno' );
+		$settings['remove']					= array( 'list_yesno' );
 
 		return $settings;
-	}
-
-	function saveparams( $params )
-	{
-		global $mosConfig_absolute_path, $database;
-		$newparams = $params;
-
-		if ( $params['rebuild'] ) {
-			$planlist = MicroIntegrationHandler::getPlansbyMI( $params['MI_ID'] );
-
-			foreach ( $planlist as $planid ) {
-				$userlist = SubscriptionPlanHandler::getPlanUserlist( $planid );
-				foreach ( $userlist as $userid ) {
-					if ( $params['set_shopper_group'] ) {
-						if ( $this->checkVMuserexists( $userid ) ) {
-							$this->updateVMuserSgroup( $userid, $params['shopper_group'] );
-						} elseif ( $params['create_account'] ) {
-							$this->createVMuser( $userid, $params['shopper_group'] );
-						}
-
-						return true;
-					}
-				}
-			}
-
-			$newparams['rebuild'] = 0;
-		}
-
-		return $newparams;
 	}
 
 	function expiration_action( $request )
