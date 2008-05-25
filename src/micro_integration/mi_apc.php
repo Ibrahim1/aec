@@ -45,8 +45,8 @@ class mi_apc
 		$settings['group_exp']			= array( 'list' );
 		$settings['rebuild']			= array( 'list_yesno' );
 
-		$settings['lists']['group']		= mosHTML::selectList( $sg, 'group', 'size="4"', 'value', 'text', $params['group'] );
-		$settings['lists']['group_exp'] = mosHTML::selectList( $sg, 'group_exp', 'size="4"', 'value', 'text', $params['group_exp'] );
+		$settings['lists']['group']		= mosHTML::selectList( $sg, 'group', 'size="4"', 'value', 'text', $this->settings['group'] );
+		$settings['lists']['group_exp'] = mosHTML::selectList( $sg, 'group_exp', 'size="4"', 'value', 'text', $this->settings['group_exp'] );
 
 		return $settings;
 	}
@@ -57,7 +57,7 @@ class mi_apc
 		$newparams = $params;
 
 		if ( $params['rebuild'] && $params['set_group'] ) {
-			$planlist = MicroIntegrationHandler::getPlansbyMI( $params['MI_ID'] );
+			$planlist = MicroIntegrationHandler::getPlansbyMI( $this->id );
 
 			foreach ( $planlist as $planid ) {
 				$userlist = SubscriptionPlanHandler::getPlanUserlist( $planid );
@@ -77,8 +77,8 @@ class mi_apc
 		global $database;
 
 		if( $this->integrationActive() ){
-			if ( $params['set_group_exp'] ) {
-				return $this->setGroupId( $metaUser->userid, $params['group_exp'], $params['set_default_exp'] );
+			if ( $this->settings['set_group_exp'] ) {
+				return $this->setGroupId( $metaUser->userid, $this->settings['group_exp'], $this->settings['set_default_exp'] );
 			}
 		}
 	}
@@ -86,8 +86,8 @@ class mi_apc
 	function action( $request )
 	{
 		if( $this->integrationActive() ){
-			if ( $params['set_group'] ) {
-				return $this->setGroupId( $metaUser->userid, $params['group'], $params['set_default'] );
+			if ( $this->settings['set_group'] ) {
+				return $this->setGroupId( $metaUser->userid, $this->settings['group'], $this->settings['set_default'] );
 			}
 		}
 	}

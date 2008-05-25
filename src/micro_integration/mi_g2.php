@@ -80,13 +80,13 @@ class mi_g2 extends MI
 	function action( $request )
 	{}
 
-	function on_userchange_action( $params, $row, $post, $trace )
+	function on_userchange_action( $request )
 	{}
 
 	function delete( $params )
 	{}
 
-	function profile_info( $params, $userid )
+	function profile_info( $userid )
 	{}
 
 	function G2userid( $metaUser )

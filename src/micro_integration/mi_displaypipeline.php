@@ -46,10 +46,10 @@ class mi_displaypipeline
 	{
 		global $database;
 
-		$text = AECToolbox::rewriteEngine( $params['text'], $metaUser, $plan, $invoice );
+		$text = AECToolbox::rewriteEngine( $this->settings['text'], $metaUser, $plan, $invoice );
 
 		$displaypipeline = new displayPipeline($database);
-		$displaypipeline->create( $metaUser->userid, $params['only_user'], $params['once_per_user'], $params['expire'], $params['expiration'], $params['displaymax'], $text );
+		$displaypipeline->create( $metaUser->userid, $this->settings['only_user'], $this->settings['once_per_user'], $this->settings['expire'], $this->settings['expiration'], $this->settings['displaymax'], $text );
 		return true;
 	}
 

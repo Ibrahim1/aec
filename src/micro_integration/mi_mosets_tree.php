@@ -76,7 +76,7 @@ class mi_mosets_tree extends MI
 		$mi_mosetshandler->check();
 		$mi_mosetshandler->store();
 
-		if ( $params['unpublish_all'] ) {
+		if ( $this->settings['unpublish_all'] ) {
 			$this->unpublishListings( $metaUser );
 		}
 
@@ -97,16 +97,16 @@ class mi_mosets_tree extends MI
 			$mi_mosetshandler->active = 1;
 		}
 
-		if ( $params['set_listings'] ) {
-			$mi_mosetshandler->setListings( $params['set_listings'] );
-		} elseif ( $params['add_listings'] ) {
-			$mi_mosetshandler->addListings( $params['add_listings'] );
+		if ( $this->settings['set_listings'] ) {
+			$mi_mosetshandler->setListings( $this->settings['set_listings'] );
+		} elseif ( $this->settings['add_listings'] ) {
+			$mi_mosetshandler->addListings( $this->settings['add_listings'] );
 		}
 
 		$mi_mosetshandler->check();
 		$mi_mosetshandler->store();
 
-		if ( $params['publish_all'] ) {
+		if ( $this->settings['publish_all'] ) {
 			$this->publishListings( $metaUser );
 		}
 

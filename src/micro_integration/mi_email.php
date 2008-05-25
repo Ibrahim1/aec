@@ -59,19 +59,19 @@ class mi_email
 
 		$settings['subject']			= array( 'inputE' );
 		$settings['text_html']			= array( 'list_yesno' );
-		$settings['text']				= array( !empty( $params['text_html'] ) ? 'editor' : 'inputD' );
+		$settings['text']				= array( !empty( $this->settings['text_html'] ) ? 'editor' : 'inputD' );
 
 		$settings['subject_first']		= array( 'inputE' );
 		$settings['text_first_html']	= array( 'list_yesno' );
-		$settings['text_first']			= array( !empty( $params['text_first_html'] ) ? 'editor' : 'inputD' );
+		$settings['text_first']			= array( !empty( $this->settings['text_first_html'] ) ? 'editor' : 'inputD' );
 
 		$settings['subject_exp']		= array( 'inputE' );
 		$settings['text_exp_html']		= array( 'list_yesno' );
-		$settings['text_exp']			= array( !empty( $params['text_exp_html'] ) ? 'editor' : 'inputD' );
+		$settings['text_exp']			= array( !empty( $this->settings['text_exp_html'] ) ? 'editor' : 'inputD' );
 
 		$settings['subject_pre_exp']	= array( 'inputE' );
 		$settings['text_pre_exp_html']	= array( 'list_yesno' );
-		$settings['text_pre_exp']		= array( !empty( $params['text_pre_exp_html'] ) ? 'editor' : 'inputD' );
+		$settings['text_pre_exp']		= array( !empty( $this->settings['text_pre_exp_html'] ) ? 'editor' : 'inputD' );
 
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
@@ -82,28 +82,28 @@ class mi_email
 	function relayAction( $request, $area )
 	{
 		if ( $area == '' ) {
-			if ( !empty( $params['text_first'] ) ) {
+			if ( !empty( $this->settings['text_first'] ) ) {
 				if ( empty( $metaUser->objSubscription->previous_plan ) ) {
 					$area = '_first';
 				}
 			}
 		}
 
-		$message	= AECToolbox::rewriteEngine( $params['text' . $area], $metaUser, $plan, $invoice );
-		$subject	= AECToolbox::rewriteEngine( $params['subject' . $area], $metaUser, $plan, $invoice );
+		$message	= AECToolbox::rewriteEngine( $this->settings['text' . $area], $metaUser, $plan, $invoice );
+		$subject	= AECToolbox::rewriteEngine( $this->settings['subject' . $area], $metaUser, $plan, $invoice );
 
 		if ( empty( $message ) ) {
 			return null;
 		}
 
-		$recipients = AECToolbox::rewriteEngine( $params['recipient'], $metaUser, $plan, $invoice );
+		$recipients = AECToolbox::rewriteEngine( $this->settings['recipient'], $metaUser, $plan, $invoice );
 		$recips = explode( ',', $recipients );
 
 		foreach ( $recips as $current => $email ) {
 			$recipients[$current] = trim( $email );
 		}
 
-		mosMail( $params['sender'], $params['sender_name'], $recipients, $subject, $message, $params['text' . $area . '_html'] );
+		mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text' . $area . '_html'] );
 
 		return true;
 	}

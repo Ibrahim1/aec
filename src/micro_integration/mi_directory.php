@@ -48,7 +48,7 @@ class mi_directory
 
 	function relayAction( $request, $area )
 	{
-		return $this->makedir( $params['mkdir'.$area], $params['mkdir_mode'.$area], $metaUser, $plan, $invoice );
+		return $this->makedir( $this->settings['mkdir'.$area], $this->settings['mkdir_mode'.$area], $metaUser, $plan, $invoice );
 	}
 
 	function makedir( $path, $mode, $metaUser, $plan, $invoice=null )

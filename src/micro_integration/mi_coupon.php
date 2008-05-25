@@ -39,7 +39,7 @@ class mi_coupon
 
 		$settings['subject']			= array( 'inputE' );
 		$settings['text_html']			= array( 'list_yesno' );
-		$settings['text']				= array( $params['text_html'] ? 'editor' : 'inputD' );
+		$settings['text']				= array( $this->settings['text_html'] ? 'editor' : 'inputD' );
 
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
@@ -61,12 +61,12 @@ class mi_coupon
 				$existing_coupons = explode( ',', $userflags['COUPONS'] );
 				$total_coupons = array_merge( $total_coupons, $existing_coupons );
 
-				if ( !empty( $params['inc_old_coupons'] ) ) {
+				if ( !empty( $this->settings['inc_old_coupons'] ) ) {
 					foreach ( $existing_coupons as $cid ) {
 						$ocph = new couponHandler();
 						$ocph->load( $cid );
 						$ocph->coupon->active = 1;
-						$ocph->restrictions['max_reuse'] + $params['inc_old_coupons'];
+						$ocph->restrictions['max_reuse'] + $this->settings['inc_old_coupons'];
 						$ocph->coupon->setParams( $ocph->restrictions, 'restrictions' );
 						$ocph->coupon->check();
 						$ocph->coupon->store();
@@ -127,20 +127,20 @@ class mi_coupon
 	{
 		$message	= sprintf( $message, implode( "\n", $newcodes ) );
 
-		$message	= AECToolbox::rewriteEngine( $params['text'], $metaUser, $plan, $invoice );
-		$subject	= AECToolbox::rewriteEngine( $params['subject'], $metaUser, $plan, $invoice );
+		$message	= AECToolbox::rewriteEngine( $this->settings['text'], $metaUser, $plan, $invoice );
+		$subject	= AECToolbox::rewriteEngine( $this->settings['subject'], $metaUser, $plan, $invoice );
 
 		if ( empty( $message ) ) {
 			return false;
 		}
 
-		$recipients = explode( ',', $params['recipient'] );
+		$recipients = explode( ',', $this->settings['recipient'] );
 
 		foreach ( $recipients as $current => $email ) {
 			$recipients[$current] = AECToolbox::rewriteEngine( trim( $email ), $metaUser, $plan, $invoice );
 		}
 
-		mosMail( $params['sender'], $params['sender_name'], $recipients, $subject, $message, $params['text_html'] );
+		mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'] );
 
 		return true;
 	}

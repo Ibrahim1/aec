@@ -62,7 +62,7 @@ class mi_communitybuilder
 	{
 		global $database;
 
-		if( $params['approve'] ) {
+		if( $this->settings['approve'] ) {
 			$query = 'UPDATE #__comprofiler'
 					.' SET `approved` = \'1\''
 					.' WHERE `user_id` = \'' . (int) $metaUser->userid . '\''
@@ -71,7 +71,7 @@ class mi_communitybuilder
 			$database->query() or die( $database->stderr() );
 		}
 
-		if ( $params['set_fields'] ) {
+		if ( $this->settings['set_fields'] ) {
 			$metaUser = new metaUser( $metaUser->userid );
 
 			$query = 'SELECT `name`, `title`'
@@ -83,8 +83,8 @@ class mi_communitybuilder
 			$objects = $database->loadObjectList();
 
 			foreach ( $objects as $object ) {
-				if ( $params['cbfield_' . $object->name] !== '' ) {
-					$changes[$object->name] = $params['cbfield_' . $object->name];
+				if ( $this->settings['cbfield_' . $object->name] !== '' ) {
+					$changes[$object->name] = $this->settings['cbfield_' . $object->name];
 				}
 			}
 
@@ -112,7 +112,7 @@ class mi_communitybuilder
 	{
 		global $database;
 
-		if( $params['unapprove_exp'] ) {
+		if( $this->settings['unapprove_exp'] ) {
 			$query = 'UPDATE #__comprofiler'
 					.' SET `approved` = \'0\''
 					.' WHERE `user_id` = \'' . (int) $metaUser->userid . '\''
@@ -121,7 +121,7 @@ class mi_communitybuilder
 			$database->query() or die( $database->stderr() );
 		}
 
-		if ( $params['set_fields_exp'] ) {
+		if ( $this->settings['set_fields_exp'] ) {
 			$metaUser = new metaUser( $metaUser->userid );
 
 			$query = 'SELECT `name`, `title`'
@@ -133,8 +133,8 @@ class mi_communitybuilder
 			$objects = $database->loadObjectList();
 
 			foreach ( $objects as $object ) {
-				if ( !empty( $params['cbfield_' . $object->name . '_exp' ] ) ) {
-					$changes[$object->name] = $params['cbfield_' . $object->name . '_exp' ];
+				if ( !empty( $this->settings['cbfield_' . $object->name . '_exp' ] ) ) {
+					$changes[$object->name] = $this->settings['cbfield_' . $object->name . '_exp' ];
 				}
 			}
 

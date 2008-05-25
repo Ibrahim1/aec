@@ -33,13 +33,13 @@ class mi_attend_events
 
 		include_once( $mosConfig_absolute_path . '/components/com_attend_events/attend_events.class.php' );
 
-		$database->setQuery("SELECT transaction_id FROM #__events_transactions WHERE ( registration_id = '" . $params['registration_id'] . "' )");
+		$database->setQuery("SELECT transaction_id FROM #__events_transactions WHERE ( registration_id = '" . $this->settings['registration_id'] . "' )");
 		$transaction_id = $database->loadResult();
 
 		// mark ae invoice as cleared
 		$transaction = new comAETransaction( $database );
 		$transaction->load( $transaction_id );
-		$transaction->bind($_POST);
+		$transaction->bind( $_POST );
 		$transaction->gateway = 'Cybermut';
 		$transaction->check();
 		$transaction->store();

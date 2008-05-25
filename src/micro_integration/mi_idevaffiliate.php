@@ -40,18 +40,18 @@ class mi_idevaffiliate
 	{
 		global $database, $mosConfig_live_site;
 
-		$rooturl = $this->getPath( $params );
+		$rooturl = $this->getPath();
 
 		$getparams = array();
 
-		if ( !empty( $params['profile'] ) ) {
-			$getparams[] = 'profile=' . $params['profile'];
+		if ( !empty( $this->settings['profile'] ) ) {
+			$getparams[] = 'profile=' . $this->settings['profile'];
 		}
 
 		$getparams[] = 'idev_saleamt=' . $invoice->amount;
 		$getparams[] = 'idev_ordernum=' . $invoice->invoice_number;
 
-		if ( !empty( $params['onlycustomparams'] ) && !empty( $params['customparams'] ) ) {
+		if ( !empty( $this->settings['onlycustomparams'] ) && !empty( $this->settings['customparams'] ) ) {
 			$getparams = array();
 		}
 
@@ -74,8 +74,8 @@ class mi_idevaffiliate
 
 		$getparams[] = 'ip_address=' . $ip;
 
-		if ( !empty( $params['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $params['customparams'], $metaUser, $plan, $invoice );
+		if ( !empty( $this->settings['customparams'] ) ) {
+			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $request->metaUser, $request->plan, $request->invoice );
 
 			$cps = explode( "\n", $rw_params );
 
@@ -84,7 +84,7 @@ class mi_idevaffiliate
 			}
 		}
 
-		if ( !empty( $params['use_curl'] ) ) {
+		if ( !empty( $this->settings['use_curl'] ) ) {
 			$ch = curl_init();
 			$curl_url = $rooturl . "/sale.php?" . implode( '&', $getparams );
 			curl_setopt($ch, CURLOPT_URL, $curl_url );
@@ -103,20 +103,20 @@ class mi_idevaffiliate
 		return true;
 	}
 
-	function getPath( $params )
+	function getPath()
 	{
 		global $mosConfig_live_site;
 
-		if ( !empty( $params['directory'] ) ) {
-			if ( ( strpos( $params['directory'], 'http://' ) === 0 ) || ( strpos( $params['directory'], 'https://' ) === 0 ) ) {
-				$rooturl = $params['directory'];
+		if ( !empty( $this->settings['directory'] ) ) {
+			if ( ( strpos( $this->settings['directory'], 'http://' ) === 0 ) || ( strpos( $this->settings['directory'], 'https://' ) === 0 ) ) {
+				$rooturl = $this->settings['directory'];
 			} else {
-				if ( ( strpos( $params['directory'], 'www.' ) === 0 ) ) {
-					$rooturl = "http://" . $params['directory'];
-				} elseif ( strpos( "/", $params['directory'] ) !== 0 ) {
-					$rooturl = $mosConfig_live_site . "/" . $params['directory'];
+				if ( ( strpos( $this->settings['directory'], 'www.' ) === 0 ) ) {
+					$rooturl = "http://" . $this->settings['directory'];
+				} elseif ( strpos( "/", $this->settings['directory'] ) !== 0 ) {
+					$rooturl = $mosConfig_live_site . "/" . $this->settings['directory'];
 				} else {
-					$rooturl = $mosConfig_live_site . $params['directory'];
+					$rooturl = $mosConfig_live_site . $this->settings['directory'];
 				}
 			}
 		} else {

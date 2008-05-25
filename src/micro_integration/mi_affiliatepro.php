@@ -75,7 +75,7 @@ class mi_affiliatepro
 		$invoice = new Invoice($database);
 		$invoice->load($lastinvoice);
 
-		$text = '<script id="pap_x2s6df8d" src="' . $params['url'] . '" type="text/javascript"></script>'
+		$text = '<script id="pap_x2s6df8d" src="' . $this->settings['url'] . '" type="text/javascript"></script>'
 				. '<script type="text/javascript"><!--'
 				. 'var TotalCost="' . $invoice->amount . ';'
 				. 'var OrderID="' . $invoice->invoice_number . '";'

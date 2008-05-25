@@ -41,8 +41,8 @@ class mi_fireboard
 
         $settings = array();
 
-		$settings['lists']['group']		= mosHTML::selectList($sg, 'group', 'size="4"', 'value', 'text', $params['group']);
-		$settings['lists']['group_exp'] = mosHTML::selectList($sg, 'group_exp', 'size="4"', 'value', 'text', $params['group_exp']);
+		$settings['lists']['group']		= mosHTML::selectList($sg, 'group', 'size="4"', 'value', 'text', $this->settings['group']);
+		$settings['lists']['group_exp'] = mosHTML::selectList($sg, 'group_exp', 'size="4"', 'value', 'text', $this->settings['group_exp']);
 
 		$settings['set_group']			= array( 'list_yesno' );
 		$settings['group']				= array( 'list' );
@@ -95,9 +95,9 @@ class mi_fireboard
 	{
 		global $database;
 
-		if ($params['set_group_exp']) {
+		if ( $this->settings['set_group_exp'] ) {
 			$query = 'UPDATE #__fb_users'
-				. ' SET `group_id` = \'' . $params['group_exp'] . '\''
+				. ' SET `group_id` = \'' . $this->settings['group_exp'] . '\''
 				. ' WHERE `userid` = \'' . $metaUser->userid . '\''
 				;
 			$database->setQuery( $query );
@@ -111,7 +111,7 @@ class mi_fireboard
 	{
 		global $database;
 
-		if ( $params['set_group'] ) {
+		if ( $this->settings['set_group'] ) {
 			// Check if exists - users only appear in FB users table normally when they have posted
 			$query = 'SELECT `group_id`'
 					. ' FROM #__fb_users'
@@ -122,13 +122,13 @@ class mi_fireboard
 			// If already an entry exists -> update, if not -> create
 			if ( $database->loadResult() ) {
 				$query = 'UPDATE #__fb_users'
-						. ' SET `group_id` = \'' . $params['group'] . '\''
+						. ' SET `group_id` = \'' . $this->settings['group'] . '\''
 						. ' WHERE `userid` = \'' . $metaUser->userid . '\''
 						;
 			} else {
 				$query = 'INSERT INTO #__fb_users'
 						. ' ( `group_id` , `userid` )'
-						. ' VALUES (\'' . $params['group'] . '\', \'' . $metaUser->userid . '\')'
+						. ' VALUES (\'' . $this->settings['group'] . '\', \'' . $metaUser->userid . '\')'
 						;
 			}
 

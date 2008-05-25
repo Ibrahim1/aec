@@ -83,9 +83,9 @@ class mi_docman
 	 	$database->setQuery( $query );
 	 	$groups = $database->loadObjectList();
 
-		$g = explode( ';', $params['group'] );
+		$g = explode( ';', $this->settings['group'] );
 		$sg = array();
-		$ge = explode( ';', $params['group_exp'] );
+		$ge = explode( ';', $this->settings['group_exp'] );
 		$sge = array();
 
 		$gr = array();
@@ -114,7 +114,7 @@ class mi_docman
 
 		$settings['lists']['group']			= mosHTML::selectList( $gr, 'group', 'size="4" multiple="multiple"', 'value', 'text', $sg );
 		$settings['lists']['group_exp'] 	= mosHTML::selectList( $gr, 'group_exp', 'size="4" multiple="multiple"', 'value', 'text', $sge );
-		$settings['lists']['delete_on_exp']	= mosHTML::selectList( $del_opts, 'delete_on_exp', 'size="3"', 'value', 'text', $params['delete_on_exp'] );
+		$settings['lists']['delete_on_exp']	= mosHTML::selectList( $del_opts, 'delete_on_exp', 'size="3"', 'value', 'text', $this->settings['delete_on_exp'] );
 
 		return $settings;
 	}
@@ -182,19 +182,19 @@ class mi_docman
 	{
 		global $database;
 
- 		if ( $params['delete_on_exp']=="Set" ) {
-			$this->DeleteUserFromGroup( $metaUser->userid, $params['group'] );
+ 		if ( $this->settings['delete_on_exp']=="Set" ) {
+			$this->DeleteUserFromGroup( $metaUser->userid, $this->settings['group'] );
 		}
 
-		if ( $params['delete_on_exp']=="All" ) {
+		if ( $this->settings['delete_on_exp']=="All" ) {
 			$groups = $this->GetUserGroups( $metaUser->userid );
 			foreach ($groups as $group) {
 				$this->DeleteUserFromGroup( $metaUser->userid, $group );
 			}
 		}
 
-		if ( $params['set_group_exp'] ) {
-			$this->AddUserToGroup( $metaUser->userid, $params['group_exp'] );
+		if ( $this->settings['set_group_exp'] ) {
+			$this->AddUserToGroup( $metaUser->userid, $this->settings['group_exp'] );
 		}
 
 		$mi_docmanhandler = new docman_restriction( $database );
@@ -215,8 +215,8 @@ class mi_docman
 	{
 		global $database;
 
-		if ( $params['set_group'] ) {
-			$this->AddUserToGroup( $metaUser->userid, $params['group'] );
+		if ( $this->settings['set_group'] ) {
+			$this->AddUserToGroup( $metaUser->userid, $this->settings['group'] );
 		}
 
 		$mi_docmanhandler = new docman_restriction( $database );
@@ -229,10 +229,10 @@ class mi_docman
 			$mi_docmanhandler->active = 1;
 		}
 
-		if ( $params['set_downloads'] ) {
-			$mi_docmanhandler->setDownloads( $params['set_downloads'] );
-		} elseif ( $params['add_downloads'] ) {
-			$mi_docmanhandler->addDownloads( $params['add_downloads'] );
+		if ( $this->settings['set_downloads'] ) {
+			$mi_docmanhandler->setDownloads( $this->settings['set_downloads'] );
+		} elseif ( $this->settings['add_downloads'] ) {
+			$mi_docmanhandler->addDownloads( $this->settings['add_downloads'] );
 		}
 
 		$mi_docmanhandler->check();

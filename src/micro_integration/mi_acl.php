@@ -100,14 +100,14 @@ class mi_acl
 			}
 		}
 
-		$settings['lists']['gid'] 			= mosHTML::selectList( $gtree, 'gid', 'size="6"', 'value', 'text', ( empty( $params['gid'] ) ? 18 : $params['gid'] ) );
-		$settings['lists']['gid_exp'] 		= mosHTML::selectList( $gtree, 'gid_exp', 'size="6"', 'value', 'text', ( empty( $params['gid_exp'] ) ? 18 : $params['gid_exp'] ) );
-		$settings['lists']['gid_pre_exp'] 	= mosHTML::selectList( $gtree, 'gid_pre_exp', 'size="6"', 'value', 'text', ( empty( $params['gid_pre_exp'] ) ? 18 : $params['gid_pre_exp'] ) );
+		$settings['lists']['gid'] 			= mosHTML::selectList( $gtree, 'gid', 'size="6"', 'value', 'text', ( empty( $this->settings['gid'] ) ? 18 : $this->settings['gid'] ) );
+		$settings['lists']['gid_exp'] 		= mosHTML::selectList( $gtree, 'gid_exp', 'size="6"', 'value', 'text', ( empty( $this->settings['gid_exp'] ) ? 18 : $this->settings['gid_exp'] ) );
+		$settings['lists']['gid_pre_exp'] 	= mosHTML::selectList( $gtree, 'gid_pre_exp', 'size="6"', 'value', 'text', ( empty( $this->settings['gid_pre_exp'] ) ? 18 : $this->settings['gid_pre_exp'] ) );
 
 		$subgroups = array( 'sub_gid_del', 'sub_gid', 'sub_gid_exp_del', 'sub_gid_exp', 'sub_gid_pre_exp_del', 'sub_gid_pre_exp' );
 
 		foreach ( $subgroups as $groupname ) {
-			$list = explode( ';', $params[$groupname] );
+			$list = explode( ';', $this->settings[$groupname] );
 
 			$selected = array();
 			foreach ( $list as $value ) {
@@ -134,12 +134,12 @@ class mi_acl
 
 	function pre_expiration_action( $request )
 	{
-		if ( $params['set_gid_pre_exp'] ) {
-			$this->instantGIDchange( $metaUser, $params, 'gid_pre_exp' );
+		if ( $this->settings['set_gid_pre_exp'] ) {
+			$this->instantGIDchange( $metaUser, 'gid_pre_exp' );
 		}
 
-		if ( $params['sub_set_gid_pre_exp'] ) {
-			$this->jaclplusGIDchange( $metaUser, $params, 'sub_gid_pre_exp' );
+		if ( $this->settings['sub_set_gid_pre_exp'] ) {
+			$this->jaclplusGIDchange( $metaUser, 'sub_gid_pre_exp' );
 		}
 
 		return true;
@@ -147,12 +147,12 @@ class mi_acl
 
 	function expiration_action( $request )
 	{
-		if ( $params['set_gid_pre'] ) {
-			$this->instantGIDchange( $metaUser, $params, 'gid_exp' );
+		if ( $this->settings['set_gid_pre'] ) {
+			$this->instantGIDchange( $metaUser, 'gid_exp' );
 		}
 
-		if ( $params['sub_set_gid_exp'] ) {
-			$this->jaclplusGIDchange( $metaUser, $params, 'sub_gid_exp' );
+		if ( $this->settings['sub_set_gid_exp'] ) {
+			$this->jaclplusGIDchange( $metaUser, 'sub_gid_exp' );
 		}
 
 		return true;
@@ -160,18 +160,18 @@ class mi_acl
 
 	function action( $request )
 	{
-		if ( $params['set_gid'] ) {
-			$this->instantGIDchange( $metaUser, $params, 'gid' );
+		if ( $this->settings['set_gid'] ) {
+			$this->instantGIDchange( $metaUser, 'gid' );
 		}
 
-		if ( $params['sub_set_gid'] ) {
-			$this->jaclplusGIDchange( $metaUser, $params, 'sub_gid' );
+		if ( $this->settings['sub_set_gid'] ) {
+			$this->jaclplusGIDchange( $metaUser, 'sub_gid' );
 		}
 
 		return true;
 	}
 
-	function instantGIDchange( $metaUser, $params, $section )
+	function instantGIDchange( $metaUser, $section )
 	{
 		global $database, $acl;
 
@@ -188,7 +188,7 @@ class mi_acl
 		}
 
 		// Get ARO ID for user
-		$query = 'SELECT `aro_id`'
+		$query = 'SELECT `' . ( defined( 'JPATH_BASE' ) ? 'id' : 'aro_id' )  . '`'
 		. ' FROM #__core_acl_aro'
 		. ' WHERE `value` = \'' . (int) $metaUser->userid . '\''
 		;
@@ -197,23 +197,23 @@ class mi_acl
 
 		// Carry out ARO ID -> ACL group mapping
 		$query = 'UPDATE #__core_acl_groups_aro_map'
-				. ' SET `group_id` = \'' . (int) $params[$section] . '\''
+				. ' SET `group_id` = \'' . (int) $this->settings[$section] . '\''
 				. ' WHERE `aro_id` = \'' . $aro_id . '\''
 				;
 		$database->setQuery( $query );
 		$database->query() or die( $database->stderr() );
 
 		// Moxie Mod - updated to add usertype to users table and update session table for immediate access to usertype features
-		$gid_name = $acl->get_group_name( $params[$section], 'ARO' );
+		$gid_name = $acl->get_group_name( $this->settings[$section], 'ARO' );
 
 		$query = 'UPDATE #__users'
-				. ' SET `gid` = \'' .  (int) $params[$section] . '\', `usertype` = \'' . $gid_name . '\''
+				. ' SET `gid` = \'' .  (int) $this->settings[$section] . '\', `usertype` = \'' . $gid_name . '\''
 				. ' WHERE `id` = \''  . (int) $metaUser->userid . '\''
 				;
 		$database->setQuery( $query );
 		$database->query() or die( $database->stderr() );
 
-		if ( $params['change_session'] ) {
+		if ( $this->settings['change_session'] ) {
 			$query = 'UPDATE #__session'
 			. ' SET `usertype` = \'' . $gid_name . '\''
 			. ' WHERE `userid` = \'' . (int) $metaUser->userid . '\''
@@ -222,7 +222,7 @@ class mi_acl
 			$database->query() or die( $database->stderr() );
 		}
 
-		if ( $params['jaclpluspro'] ) {
+		if ( $this->settings['jaclpluspro'] ) {
 			// Check for main entry
 			$query = 'SELECT `group_id`'
 					. ' FROM #__jaclplus_user_group'
@@ -234,7 +234,7 @@ class mi_acl
 
 			if ( !empty( $groupid ) ) {
 				$query = 'UPDATE #__jaclplus_user_group'
-						. ' SET `group_id` = \'' . (int)$params[$section] . '\''
+						. ' SET `group_id` = \'' . (int)$this->settings[$section] . '\''
 						. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
 						. ' AND `group_type` = \'main\''
 						;
@@ -242,7 +242,7 @@ class mi_acl
 				$database->query() or die( $database->stderr() );
 			} else {
 				$query = 'INSERT INTO #__jaclplus_user_group'
-						. ' VALUES( \'' . (int) $metaUser->userid . '\', \'main\', \'' . (int) $params[$section] . '\' )'
+						. ' VALUES( \'' . (int) $metaUser->userid . '\', \'main\', \'' . (int) $this->settings[$section] . '\' )'
 						;
 				$database->setQuery( $query );
 				$database->query() or die( $database->stderr() );
@@ -252,11 +252,11 @@ class mi_acl
 		return true;
 	}
 
-	function jaclplusGIDchange( $metaUser, $params, $section )
+	function jaclplusGIDchange( $metaUser, $section )
 	{
 		global $database, $acl;
 
-		if ( $params['delete_subgroups'] ) {
+		if ( $this->settings['delete_subgroups'] ) {
 			// Delete sub entries
 			$query = 'DELETE FROM #__jaclplus_user_group'
 					. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
@@ -277,8 +277,8 @@ class mi_acl
 			$groups = $database->loadResultArray();
 		}
 
-		if ( !empty( $params[$section.'_del'] ) ) {
-			foreach ( $params[$section.'_del'] as $gid ) {
+		if ( !empty( $this->settings[$section.'_del'] ) ) {
+			foreach ( $this->settings[$section.'_del'] as $gid ) {
 				if ( in_array( $gid, $groups ) ) {
 					$query = 'DELETE FROM #__jaclplus_user_group'
 							. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
@@ -291,8 +291,8 @@ class mi_acl
 			}
 		}
 
-		if ( !empty( $params[$section] ) ) {
-			foreach ( $params[$section] as $gid ) {
+		if ( !empty( $this->settings[$section] ) ) {
+			foreach ( $this->settings[$section] as $gid ) {
 				if ( !in_array( $gid, $groups ) ) {
 					$query = 'INSERT INTO #__jaclplus_user_group'
 							. ' VALUES( \'' . (int) $metaUser->userid . '\', \'sub\', \'' . $gid . '\' )'

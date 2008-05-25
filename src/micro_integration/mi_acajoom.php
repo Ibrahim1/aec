@@ -38,8 +38,8 @@ class mi_acajoom
 		}
 
 		$settings = array();
-		$settings['lists']['list']		= mosHTML::selectList($li, 'list', 'size="4"', 'value', 'text', $params['list']);
-		$settings['lists']['list_exp']	= mosHTML::selectList($li, 'list_exp', 'size="4"', 'value', 'text', $params['list_exp']);
+		$settings['lists']['list']		= mosHTML::selectList($li, 'list', 'size="4"', 'value', 'text', $this->settings['list']);
+		$settings['lists']['list_exp']	= mosHTML::selectList($li, 'list_exp', 'size="4"', 'value', 'text', $this->settings['list_exp']);
 
 		$settings['list'] = array( 'list' );
 		$settings['list_exp'] = array( 'list' );
@@ -56,8 +56,8 @@ class mi_acajoom
 			$acauser = $this->getSubscriberID( $metaUser->userid );
 		}
 
-		if ( $this->hasList( $acauser, $params['list'] ) ) {
-			$this->deleteFromList( $acauser, $params['list'] );
+		if ( $this->hasList( $acauser, $this->settings['list'] ) ) {
+			$this->deleteFromList( $acauser, $this->settings['list'] );
 		}
 	}
 
@@ -70,8 +70,8 @@ class mi_acajoom
 			$acauser = $this->getSubscriberID( $metaUser->userid );
 		}
 
-		if ( !$this->hasList( $acauser, $params['list'] ) ) {
-			$this->addToList( $acauser, $params['list'] );
+		if ( !$this->hasList( $acauser, $this->settings['list'] ) ) {
+			$this->addToList( $acauser, $this->settings['list'] );
 		}
 	}
 

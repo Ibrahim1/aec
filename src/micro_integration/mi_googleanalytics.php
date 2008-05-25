@@ -49,7 +49,7 @@ class mi_googleanalytics
 		$text = '<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">'
 				. '</script>'
 				. '<script type="text/javascript">'
-				. '  _uacct="' . $params['account_id'] . '";'
+				. '  _uacct="' . $this->settings['account_id'] . '";'
 				. '  urchinTracker();'
 				. '</script>'
 				. '<form style="display:none;" name="utmform">'

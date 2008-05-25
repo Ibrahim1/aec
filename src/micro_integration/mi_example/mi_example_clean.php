@@ -23,7 +23,7 @@ class mi_example
 		return;
 	}
 
-	function Settings( $params )
+	function Settings()
 	{
 		$settings = array();
 		$settings['param1'] = array( 'inputA' );
@@ -32,22 +32,22 @@ class mi_example
 		return $settings;
 	}
 
-	function pre_expiration_action( $params, $metaUser, $plan )
+	function pre_expiration_action( $request )
 	{}
 
-	function expiration_action( $params, $metaUser, $plan )
+	function expiration_action( $request )
 	{}
 
-	function action( $params, $metaUser, $invoice, $plan )
+	function action( $request )
 	{}
 
-	function on_userchange_action( $params, $row, $post, $trace )
+	function on_userchange_action( $row, $post, $trace )
 	{}
 
-	function delete( $params )
+	function delete()
 	{}
 
-	function profile_info( $params, $userid )
+	function profile_info( $userid )
 	{}
 
 }

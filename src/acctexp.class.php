@@ -8041,8 +8041,6 @@ class microIntegration extends paramDBTable
 			$class = $this->class_name;
 
 			$this->mi_class = new $class();
-
-			// TODO: Needs to be deprecated in favor of $request->parent->id
 			$this->mi_class->id = $this->id;
 
 			$info = $this->getInfo();
@@ -8222,10 +8220,16 @@ class microIntegration extends paramDBTable
 
 	function on_userchange_action( $row, $post, $trace )
 	{
+		$request = new stdClass();
+		$request->parent			=& $this;
+		$request->row				=& $row;
+		$request->post				=& $post;
+		$request->trace				=& $trace;
+
 		if ( method_exists( $this->mi_class, 'on_userchange_action' ) ) {
 			$params = $this->getParams();
 
-			return $this->mi_class->on_userchange_action( $params, $row, $post, $trace );
+			return $this->mi_class->on_userchange_action( $request );
 		} else {
 			return null;
 		}
@@ -8236,7 +8240,7 @@ class microIntegration extends paramDBTable
 		$params = $this->getParams();
 
 		if ( method_exists( $this->mi_class, 'profile_info' ) ) {
-			return $this->mi_class->profile_info( $params, $userid );
+			return $this->mi_class->profile_info( $userid );
 		} else {
 			return null;
 		}

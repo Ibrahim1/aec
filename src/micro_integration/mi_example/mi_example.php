@@ -51,7 +51,7 @@ class mi_example
 		return;
 	}
 
-	function Settings( $params )
+	function Settings()
 	{
 		// Here you create an array of standard variables for your integration.
 		// I didn't want to go through the trouble to have you create your own
@@ -71,17 +71,17 @@ class mi_example
 		return $settings;
 	}
 
-	function pre_expiration_action( $params, $metaUser, $plan )
+	function pre_expiration_action( $request )
 	{
 		// Here you can specify whatever you want to happen when the plan runs out.
 	}
 
-	function expiration_action( $params, $metaUser, $plan )
+	function expiration_action( $request )
 	{
 		// Here you can specify whatever you want to happen before the plan runs out.
 	}
 
-	function action( $params, $metaUser, $invoice, $plan )
+	function action( $request )
 	{
 		// And here what should happen when the plan is applied.
 		// Note that both functions always receive the full parameter array
@@ -90,7 +90,7 @@ class mi_example
 		// that you applied to them in the Settings function.
 	}
 
-	function on_userchange_action( $params, $row, $post, $trace )
+	function on_userchange_action( $request )
 	{
 		// If your integration relies on knowing the username and password,
 		// you can change what you saved with this function when the user is changed
@@ -99,12 +99,12 @@ class mi_example
 		// 'adminuser' for a change by the admin in the backend
 	}
 
-	function delete( $params )
+	function delete()
 	{
 		// Trigger an action here in case the MI is deleted.
 	}
 
-	function profile_info( $params, $userid )
+	function profile_info( $userid )
 	{
 		// Return Info to the MySubscription page of this user
 	}

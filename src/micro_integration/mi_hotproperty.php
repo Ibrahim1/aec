@@ -79,9 +79,9 @@ class mi_hotproperty extends MI
 		$agent = null;
 		$company = null;
 
-		if ( $params['create_agent'.$area] ){
-			if ( !empty( $params['agent_fields'.$area] ) ) {
-				$agent = $this->createAgent( $metaUser, $params['agent_fields'.$area], $invoice, $plan );
+		if ( $this->settings['create_agent'.$area] ){
+			if ( !empty( $this->settings['agent_fields'.$area] ) ) {
+				$agent = $this->createAgent( $metaUser, $this->settings['agent_fields'.$area], $invoice, $plan );
 			}
 		}
 
@@ -89,14 +89,14 @@ class mi_hotproperty extends MI
 			return false;
 		}
 
-		if ( $params['update_agent'.$area] ){
-			if ( !empty( $params['update_afields'.$area] ) ) {
+		if ( $this->settings['update_agent'.$area] ){
+			if ( !empty( $this->settings['update_afields'.$area] ) ) {
 				if ( empty( $agent ) ) {
 					$agent = $this->agentExists( $metaUser->userid );
 				}
 
 				if ( !empty( $agent ) ) {
-					$agent = $this->update( 'agents', 'user', $metaUser, $params['update_afields'.$area], $invoice, $plan );
+					$agent = $this->update( 'agents', 'user', $metaUser, $this->settings['update_afields'.$area], $invoice, $plan );
 				}
 			}
 		}
@@ -105,9 +105,9 @@ class mi_hotproperty extends MI
 			return false;
 		}
 
-		if ( $params['create_company'.$area] ){
-			if ( !empty( $params['company_fields'.$area] ) ) {
-				$company = $this->createCompany( $metaUser, $params['company_fields'.$area], $params['assoc_company'], $invoice, $plan );
+		if ( $this->settings['create_company'.$area] ){
+			if ( !empty( $this->settings['company_fields'.$area] ) ) {
+				$company = $this->createCompany( $metaUser, $this->settings['company_fields'.$area], $this->settings['assoc_company'], $invoice, $plan );
 			}
 		}
 
@@ -115,24 +115,24 @@ class mi_hotproperty extends MI
 			return false;
 		}
 
-		if ( $params['update_company'.$area] ){
-			if ( !empty( $params['update_cfields'.$area] ) ) {
+		if ( $this->settings['update_company'.$area] ){
+			if ( !empty( $this->settings['update_cfields'.$area] ) ) {
 				if ( empty( $company ) ) {
 					$company = $this->companyExists( $metaUser->userid );
 				}
 
 				if ( !empty( $company ) ) {
-					$company = $this->update( 'companies', 'cb_id', $metaUser, $params['update_cfields'.$area], $invoice, $plan );
+					$company = $this->update( 'companies', 'cb_id', $metaUser, $this->settings['update_cfields'.$area], $invoice, $plan );
 				}
 			}
 		}
 
-		if ( $params['unpublish_all'.$area] ) {
-			$this->unpublishProperties( $params, $agent );
+		if ( $this->settings['unpublish_all'.$area] ) {
+			$this->unpublishProperties( $agent );
 		}
 
-		if ( $params['publish_all'.$area] ) {
-			$this->publishProperties( $params, $agent );
+		if ( $this->settings['publish_all'.$area] ) {
+			$this->publishProperties( $agent );
 		}
 
 		if ( $company === false ) {
@@ -306,7 +306,7 @@ class mi_hotproperty extends MI
 		}
 	}
 
-	function publishProperties( $params, $agentid )
+	function publishProperties( $agentid )
 	{
 		global $database;
 
@@ -323,7 +323,7 @@ class mi_hotproperty extends MI
 		}
 	}
 
-	function unpublishProperties( $params, $agentid )
+	function unpublishProperties( $agentid )
 	{
 		global $database;
 

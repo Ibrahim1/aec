@@ -27,26 +27,34 @@ class mi_jarc
 
 		$settings = array();
 		$settings['create_affiliates']	= array( 'list_yesno' );
-		$settings['log_payments']			= array( 'list_yesno' );
+		$settings['log_payments']		= array( 'list_yesno' );
 
 		return $settings;
 	}
 
 	function action( $request )
 	{
-		return $this->logpayment( $invoice );
+		if ( $this->settings['log_payments'] ) {
+			return $this->logpayment( $invoice );
+		} else {
+			return null;
+		}
 	}
 
-	function on_userchange_action( $params, $row, $post, $trace )
+	function on_userchange_action( $request )
 	{
 		global $database;
 
+		if ( !$this->settings['create_affiliates'] ) {
+			return null;
+		}
+
 		// Only do something on registration
-		if ( strcmp( $trace, 'registration' ) === 0 ) {
+		if ( strcmp( $request->trace, 'registration' ) === 0 ) {
 			// Make sure that we do not create a double entry
-			if ( !$this->checkaffiliate( $row->id ) ) {
+			if ( !$this->checkaffiliate( $request->row->id ) ) {
 				// Create the affiliate
-				return $this->createaffiliate( $row->id );
+				return $this->createaffiliate( $request->row->id );
 			} else {
 				return null;
 			}

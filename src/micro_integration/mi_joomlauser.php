@@ -25,7 +25,7 @@ class mi_joomlauser
 	{
 		global $database;
 
-		if ( $params['activate'] ) {
+		if ( $this->settings['activate'] ) {
 			$query = 'UPDATE #__users'
 					.' SET `block` = \'0\', `activation` = \'\''
 					.' WHERE `id` = \'' . (int) $metaUser->userid . '\''

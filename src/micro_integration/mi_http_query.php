@@ -38,13 +38,13 @@ class mi_http_query
 
 	function relayAction( $request, $area )
 	{
-		return $this->fetchURL( AECToolbox::rewriteEngine( $this->createURL( $params['url'.$area], $params['query'.$area] ), $metaUser, $plan, $invoice ) );
+		return $this->fetchURL( AECToolbox::rewriteEngine( $this->createURL( $this->settings['url'.$area], $this->settings['query'.$area] ), $metaUser, $plan, $invoice ) );
 	}
 
-	function createURL( $url, $params ) {
+	function createURL( $url, $query ) {
 		$urlsplit = explode( '?', $url );
 
-		$p = explode( "\n", $params );
+		$p = explode( "\n", $query );
 
 		if ( !empty( $urlsplit[1] ) ) {
 			$p2 = explode( '&', $urlsplit[1] );

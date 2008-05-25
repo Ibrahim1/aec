@@ -76,17 +76,18 @@ class mi_htaccess
 		$mosConfig_absolute_path_above = substr( $mosConfig_absolute_path, 0, strrpos($mosConfig_absolute_path, "/") );
 
 		$newparams = $params;
+
 		// Rewrite foldername to include cmsroot directory
-		if (strpos("[cmsroot]", $params['mi_folder'])) {
+		if ( strpos("[cmsroot]", $params['mi_folder'] ) ) {
 			$newparams['mi_folder'] = str_replace("[cmsroot]", $mosConfig_absolute_path, $params['mi_folder']);
 		}
-		if (strpos("[abovecmsroot]", $params['mi_passwordfolder'])) {
+
+		if ( strpos("[abovecmsroot]", $params['mi_passwordfolder'] ) ) {
 			$newparams['mi_passwordfolder'] = str_replace("[abovecmsroot]", $mosConfig_absolute_path_above, $params['mi_passwordfolder']);
 		}
 
-		$newparams['mi_folder_fullpath'] = $newparams['mi_folder'] . "/.htaccess";
-
-		$newparams['mi_folder_user_fullpath'] = $newparams['mi_passwordfolder'] .  "/.htuser" . str_replace("/", "_", str_replace(".", "/", $newparams['mi_folder']));
+		$newparams['mi_folder_fullpath']		= $newparams['mi_folder'] . "/.htaccess";
+		$newparams['mi_folder_user_fullpath']	= $newparams['mi_passwordfolder'] . "/.htuser" . str_replace( "/", "_", str_replace( ".", "/", $newparams['mi_folder'] ) );
 
 		if ( !file_exists( $newparams['mi_folder_fullpath'] ) && !$params['rebuild'] ) {
 			$ht = new htaccess();
@@ -98,7 +99,7 @@ class mi_htaccess
 			$ht->addLogin();
 		}
 
-		if ($params['rebuild']) {
+		if ( $params['rebuild'] ) {
 			$ht = new htaccess();
 			$ht->setFPasswd( $newparams['mi_folder_user_fullpath'] );
 			$ht->setFHtaccess( $newparams['mi_folder_fullpath'] );
@@ -156,7 +157,7 @@ class mi_htaccess
 		global $database;
 
 		$ht = new htaccess();
-		$ht->setFPasswd( $params['mi_folder_user_fullpath'] );
+		$ht->setFPasswd( $this->settings['mi_folder_user_fullpath'] );
 		$ht->delUser( $metaUser->cmsUser->username );
 	}
 
@@ -165,13 +166,13 @@ class mi_htaccess
 		global $database;
 
 		$ht = new htaccess();
-		$ht->setFPasswd( $params['mi_folder_user_fullpath'] );
-		$ht->setFHtaccess( $params['mi_folder_fullpath'] );
-		if( isset( $params['mi_name'] ) ) {
-			$ht->setAuthName( $params['mi_name'] );
+		$ht->setFPasswd( $this->settings['mi_folder_user_fullpath'] );
+		$ht->setFHtaccess( $this->settings['mi_folder_fullpath'] );
+		if( isset( $this->settings['mi_name'] ) ) {
+			$ht->setAuthName( $this->settings['mi_name'] );
 		}
 
-		if( $params['use_md5'] ) {
+		if( $this->settings['use_md5'] ) {
 			$ht->addUser( $metaUser->cmsUser->username, $metaUser->cmsUser->password );
 		} else {
 			$apachepw = new apachepw( $database );
@@ -190,26 +191,26 @@ class mi_htaccess
 		return true;
 	}
 
-	function on_userchange_action( $params, $row, $post, $trace )
+	function on_userchange_action( $request )
 	{
 		global $database;
 
 		$apachepw = new apachepw( $database );
-		$apwid = $apachepw->getIDbyUserID( $row->id );
+		$apwid = $apachepw->getIDbyUserID( $request->row->id );
 
 		if ( $apwid ) {
 			$apachepw->load( $apwid );
 		} else {
 			$apachepw->load(0);
-			$apachepw->userid = $row->id;
+			$apachepw->userid = $request->row->id;
 		}
 
-		if ( isset( $post['password_clear'] ) ) {
-			$apachepw->apachepw = crypt( $post['password_clear'] );
+		if ( isset( $request->post['password_clear'] ) ) {
+			$apachepw->apachepw = crypt( $request->post['password_clear'] );
 			$apachepw->check();
 			$apachepw->store();
-		} elseif ( ( isset( $post['password'] ) && $post['password'] != '' ) || ( isset( $post['password2'] ) && $post['password2'] != '' )) {
-			$apachepw->apachepw = crypt( isset( $post['password2'] ) ? $post['password2'] : $post['password'] );
+		} elseif ( ( isset( $request->post['password'] ) && $request->post['password'] != '' ) || ( isset( $request->post['password2'] ) && $request->post['password2'] != '' )) {
+			$apachepw->apachepw = crypt( isset( $request->post['password2'] ) ? $request->post['password2'] : $request->post['password'] );
 			$apachepw->check();
 			$apachepw->store();
 		} elseif ( !$apwid ) {
@@ -217,22 +218,22 @@ class mi_htaccess
 			return;
 		}
 
-		if ( !( strcmp( $trace, 'registration' ) === 0 ) ) {
+		if ( !( strcmp( $request->trace, 'registration' ) === 0 ) ) {
 			$ht = new htaccess();
-			$ht->setFPasswd( $params['mi_folder_user_fullpath'] );
-			$ht->setFHtaccess( $params['mi_folder_fullpath'] );
-			if ( isset( $params['mi_name'] ) ) {
-				$ht->setAuthName( $params['mi_name'] );
+			$ht->setFPasswd( $this->settings['mi_folder_user_fullpath'] );
+			$ht->setFHtaccess( $this->settings['mi_folder_fullpath'] );
+			if ( isset( $this->settings['mi_name'] ) ) {
+				$ht->setAuthName( $this->settings['mi_name'] );
 			}
 
 			$userlist = $ht->getUsers();
 
-			if ( in_array( $row->username, $userlist ) ) {
-				$ht->delUser( $row->username );
-				if ( $params['use_md5'] ) {
-					$ht->addUser( $row->username, $row->password );
+			if ( in_array( $request->row->username, $userlist ) ) {
+				$ht->delUser( $request->row->username );
+				if ( $this->settings['use_md5'] ) {
+					$ht->addUser( $request->row->username, $request->row->password );
 				} else {
-					$ht->addUser( $row->username, $apachepw->apachepw );
+					$ht->addUser( $request->row->username, $apachepw->apachepw );
 				}
 				$ht->addLogin();
 			}
@@ -240,12 +241,12 @@ class mi_htaccess
 		return true;
 	}
 
-	function delete( $params )
+	function delete()
 	{
-		if (!file_exists($params['mi_folder_fullpath'])) {
+		if ( !file_exists( $this->settings['mi_folder_fullpath'] ) ) {
 			$ht = new htaccess();
-			$ht->setFPasswd( $params['mi_folder_user_fullpath']);
-			$ht->setFHtaccess( $params['mi_folder_fullpath']);
+			$ht->setFPasswd( $this->settings['mi_folder_user_fullpath'] );
+			$ht->setFHtaccess( $this->settings['mi_folder_fullpath'] );
 
 			$ht->delLogin();
 			return true;

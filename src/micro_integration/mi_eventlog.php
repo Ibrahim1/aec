@@ -42,9 +42,9 @@ class mi_eventlog extends MI
 		$levels[] = mosHTML::makeOption( 32, _AEC_NOTICE_NUMBER_32 );
 		$levels[] = mosHTML::makeOption( 128, _AEC_NOTICE_NUMBER_128 );
 
-		$settings['lists']['level'] = mosHTML::selectList($levels, 'level', 'size="5"', 'value', 'text', $params['level'] );
-		$settings['lists']['level_exp'] = mosHTML::selectList($levels, 'level_exp', 'size="5"', 'value', 'text', $params['level_exp'] );
-		$settings['lists']['level_pre_exp'] = mosHTML::selectList($levels, 'level_pre_exp', 'size="5"', 'value', 'text', $params['level_pre_exp'] );
+		$settings['lists']['level'] = mosHTML::selectList($levels, 'level', 'size="5"', 'value', 'text', $this->settings['level'] );
+		$settings['lists']['level_exp'] = mosHTML::selectList($levels, 'level_exp', 'size="5"', 'value', 'text', $this->settings['level_exp'] );
+		$settings['lists']['level_pre_exp'] = mosHTML::selectList($levels, 'level_pre_exp', 'size="5"', 'value', 'text', $this->settings['level_pre_exp'] );
 
 		return $settings;
 	}
@@ -57,11 +57,11 @@ class mi_eventlog extends MI
 		$rewriting = array( 'short', 'tags', 'text', 'params' );
 
 		foreach ( $rewriting as $rw_name ) {
-			$params[$rw_name.$area] = AECToolbox::rewriteEngine( $params[$rw_name.$area], $metaUser, $plan, $invoice );
+			$this->settings[$rw_name.$area] = AECToolbox::rewriteEngine( $this->settings[$rw_name.$area], $metaUser, $plan, $invoice );
 		}
 
 		$log_entry = new EventLog( $database );
-		$log_entry->issue( $params['short'.$area], $params['tags'.$area], $params['text'.$area], $params['level'.$area], $params['params'.$area], $params['force_notify'.$area], $params['force_email'.$area] );
+		$log_entry->issue( $this->settings['short'.$area], $this->settings['tags'.$area], $this->settings['text'.$area], $this->settings['level'.$area], $this->settings['params'.$area], $this->settings['force_notify'.$area], $this->settings['force_email'.$area] );
 	}
 }
 ?>
