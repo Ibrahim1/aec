@@ -1808,6 +1808,7 @@ function editSettings( $option )
 	$params['customcancel']					= array( 'inputC', '' );
 	$params['customnotallowed']				= array( 'inputC', '' );
 	$params['tos']							= array( 'inputC', '' );
+	$params['tos_iframe']					= array( 'list_yesno', '' );
 	$params['display_date_frontend']		= array( 'inputC', '%a, %d %b %Y %T %Z' );
 	$params['display_date_backend']			= array( 'inputC', '%a, %d %b %Y %T %Z' );
 	$params['amount_currency_symbol']		= array( 'list_yesno', 0 );

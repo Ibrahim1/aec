@@ -632,6 +632,8 @@ define( '_CFG_GENERAL_CUSTOMCANCEL_NAME',			'Link zu individueller Abbruchseite:
 define( '_CFG_GENERAL_CUSTOMCANCEL_DESC',			'Kompletten Link (inkl. http://) angeben welchen die Besucher - wenn Abbruch - zu dieser  Seite f&uuml;hrt. Wenn nicht gew&uuml;nscht dann leer lassen.' );
 define( '_CFG_GENERAL_TOS_NAME',			'Link zu den AGBs:' );
 define( '_CFG_GENERAL_TOS_DESC',			'Hier den Link zu den AGBS angeben. Die Benutzer m&uuml;ssen dann dort zum Einverst&auml;ndnis eine Checkbox aktivieren. Leer lassen wenn nicht gew&uuml;nscht' );
+define( '_CFG_GENERAL_TOS_IFRAME_NAME', 'ToS Iframe:');
+define( '_CFG_GENERAL_TOS_IFRAME_DESC', 'Display the Terms of Service (as specified above) in an iframe on confirmation');
 define( '_CFG_GENERAL_CUSTOMNOTALLOWED_DESC',	'Hier den kompletten Link (inkl. http://) angeben welche die Besucher zur Nichterlaubtseite f&uuml;hrt. Leer lassen wenn nicht gew&uuml;nscht.' );
 
 define( '_CFG_GENERAL_DISPLAY_DATE_FRONTEND_NAME',	'Frontend Datumsformat' );

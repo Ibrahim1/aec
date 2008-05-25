@@ -131,6 +131,7 @@ define( '_CONFIRM_ROW_EMAIL', 'E-mail:');
 define( '_CONFIRM_INFO', 'Please use the Continue-Button to complete your registration.');
 define( '_BUTTON_CONFIRM', 'Continue');
 define( '_CONFIRM_TOS', "I have read and agree to the <a href=\"%s\" target=\"_blank\" title=\"ToS\">Terms of Service</a>");
+define( '_CONFIRM_TOS_IFRAME', "I have read and agree to the Terms of Service (above)");
 define( '_CONFIRM_TOS_ERROR', 'Please read and agree to our Terms of Service');
 define( '_CONFIRM_COUPON_INFO', 'If you have a coupon code, you can enter it on the Checkout Page to get a rebate on your payment');
 define( '_CONFIRM_COUPON_INFO_BOTH', 'If you have a coupon code, you can enter it here, or on the Checkout Page to get a discount on your payment');

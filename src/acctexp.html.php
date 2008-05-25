@@ -663,9 +663,13 @@ class Payment_HTML
 						<input type="hidden" name="processor" value="<?php echo $InvoiceFactory->processor; ?>" />
 						<?php if ( isset( $InvoiceFactory->recurring ) ) { ?>
 						<input type="hidden" name="recurring" value="<?php echo $InvoiceFactory->recurring;?>" />
-						<?php } ?>
-						<?php
-						if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
+						<?php }
+						if ( !empty( $aecConfig->cfg['tos_iframe'] ) && !empty( $aecConfig->cfg['tos'] ) ) { ?>
+							<iframe src="<?php echo $aecConfig->cfg['tos']; ?>" width="100%" height="150px"></iframe>
+							<p><input name="tos" type="checkbox" /><?php echo _CONFIRM_TOS_IFRAME; ?></p>
+							<input type="button" onclick="javascript:submitPayment()" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
+							<?php
+						} elseif ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
 							<p><input name="tos" type="checkbox" /><?php echo sprintf( _CONFIRM_TOS, $aecConfig->cfg['tos'] ); ?></p>
 							<input type="button" onclick="javascript:submitPayment()" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
 							<?php

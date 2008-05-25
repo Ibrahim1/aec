@@ -1654,7 +1654,7 @@ class HTML_AcctExp
 											<div style="position:relative;float:left;width:100%;">
 												<?php
 												echo $aecHTML->createSettingsParticle( 'name' );
-												if ($row->id) { ?>
+												if ( $row->id ) { ?>
 													<p><a href="<?php echo $mosConfig_live_site; ?>/index.php?option=com_acctexp&amp;task=subscribe&amp;usage=<?php echo $row->id; ?>" title="<?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?></a></p>
 													<?php
 												} ?>

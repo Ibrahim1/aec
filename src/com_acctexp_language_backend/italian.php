@@ -633,6 +633,8 @@ define( '_CFG_GENERAL_CUSTOMCANCEL_NAME', 'Custom cancel page link:');
 define( '_CFG_GENERAL_CUSTOMCANCEL_DESC', 'Provide a full link (including http://) that leads to your custom cancel page. Leave this field blank if you don\'t want this at all.');
 define( '_CFG_GENERAL_TOS_NAME', 'Terms of Service:');
 define( '_CFG_GENERAL_TOS_DESC', 'Enter a URL to your Terms of Service. The user will have to select a checkbox when confirming his account. If left blank, nothing will show up.');
+define( '_CFG_GENERAL_TOS_IFRAME_NAME', 'ToS Iframe:');
+define( '_CFG_GENERAL_TOS_IFRAME_DESC', 'Display the Terms of Service (as specified above) in an iframe on confirmation');
 define( '_CFG_GENERAL_CUSTOMNOTALLOWED_NAME', 'Custom NotAllowed link:');
 define( '_CFG_GENERAL_CUSTOMNOTALLOWED_DESC', 'Provide a full link (including http://) that leads to your custom NotAllowed page. Leave this field blank if you don\'t want this at all.');
 
