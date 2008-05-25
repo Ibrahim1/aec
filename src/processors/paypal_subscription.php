@@ -165,6 +165,7 @@ class processor_paypal_subscription extends POSTprocessor
 		$var['return']			= $request->int_var['return_url'];
 		$var['currency_code']	= $this->settings['currency'];
 		$var['lc']				= $this->settings['lc'];
+
 		if ( !empty( $this->settings['srt'] ) ) {
 			$var['srt']			=  $this->settings['srt'];
 		}
@@ -207,10 +208,11 @@ class processor_paypal_subscription extends POSTprocessor
 
 	function validateNotification( $response, $post, $invoice )
 	{
+		$path = '/cgi-bin/webscr';
 		if ($this->settings['testmode']) {
-			$ppurl = 'www.sandbox.paypal.com';
+			$ppurl = 'www.sandbox.paypal.com' . $path;
 		} else {
-			$ppurl = 'www.paypal.com';
+			$ppurl = 'www.paypal.com' . $path;
 		}
 
 		$req = 'cmd=_notify-validate';
@@ -222,7 +224,7 @@ class processor_paypal_subscription extends POSTprocessor
 
 		$fp = null;
 		// try to use fsockopen. some hosting systems disable fsockopen (godaddy.com)
-		$fp = $this->doTheHttp( $ppurl, $req );
+		$fp = $this->doTheHttp( $ppurl, $path, $req );
 		if (!$fp) {
 			// If fsockopen doesn't work try using curl
 			$fp = $this->doTheCurl( $ppurl, $req );
@@ -299,58 +301,6 @@ class processor_paypal_subscription extends POSTprocessor
 
 		return $response;
 	}
-	// TODO: Replace with stock function call
-	function doTheCurl( $url, $req )
-	{
-		$ch = curl_init();
-		curl_setopt( $ch, CURLOPT_VERBOSE, 1 );
-		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, FALSE );
-		curl_setopt( $ch, CURLOPT_URL, $url );
-		curl_setopt( $ch, CURLOPT_POST, 1 );
-		curl_setopt( $ch, CURLOPT_POSTFIELDS, $req );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-		curl_setopt( $ch, CURLOPT_TIMEOUT, 120 );
-		$fp = curl_exec ($ch);
-		curl_close($ch);
 
-		if ( !$fp ) {
-			return 'ERROR';
-		} else {
-			if ( strcmp( $fp, 'VERIFIED' ) == 0 ) {
-				return 'VERIFIED';
-			} elseif ( strcmp( $fp, 'INVALID' ) == 0 ) {
-				return 'INVALID';
-			}
-		}
-		return 'ERROR';
-	}
-
-	function doTheHttp( $url, $req )
-	{
-		$header  = ""
-		. "POST /cgi-bin/webscr HTTP/1.0\r\n"
-		. "Host: " . $url  . ":80\r\n"
-		. "Content-Type: application/x-www-form-urlencoded\r\n"
-		. "Content-Length: " . strlen($req) . "\r\n\r\n"
-		;
-		$fp = fsockopen( $url, 80, $errno, $errstr, 30 );
-
-		if ( !$fp ) {
-			return 'ERROR';
-		} else {
-			fwrite( $fp, $header . $req );
-
-			while ( !feof( $fp ) ) {
-				$res = fgets( $fp, 1024 );
-				if ( strcmp( $res, 'VERIFIED' ) == 0 ) {
-					return 'VERIFIED';
-				} elseif ( strcmp( $res, 'INVALID' ) == 0 ) {
-					return 'INVALID';
-				}
-			}
-			fclose( $fp );
-		}
-		return 'ERROR';
-	}
 }
 ?>

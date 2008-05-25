@@ -2150,6 +2150,140 @@ class processor extends paramDBTable
 
 		return $var;
 	}
+
+	function doTheHttp( $url, $path, $content, $port=443 )
+	{
+		global $aecConfig;
+
+		$url_info = parse_url( $url );
+
+        if ( empty( $url_info) ) {
+            return false;
+        }
+
+        switch ( $url_info['scheme'] ) {
+            case 'https':
+                $scheme = 'ssl://';
+                $port = 443;
+                break;
+            case 'http':
+            default:
+                $scheme = '';
+                $port = 80;
+                break;
+        }
+
+		$url = $scheme . $url_info['host'];
+
+		if ( !empty( $aecConfig->cfg['use_proxy'] ) && !empty( $aecConfig->cfg['proxy'] ) ) {
+			if ( !empty( $aecConfig->cfg['proxy_port'] ) ) {
+				$port = $aecConfig->cfg['proxy_port'];
+			}
+
+			$connection = fsockopen( $aecConfig->cfg['proxy'], $port, $errno, $errstr, 30 );
+		} else {
+			$connection = fsockopen( $url, $port, $errno, $errstr, 30 );
+		}
+
+		if ( !$connection ) {
+			global $database;
+
+			$short	= 'fsockopen failure';
+			$event	= 'Trying to establish connection with ' . $url . ' failed with Error #' . $errno . ' ( "' . $errstr . '" ) - will try cURL instead. If Error persists and cURL works, please permanently switch to using that!';
+			$tags	= 'processor,payment,phperror';
+			$params = array();
+
+			$eventlog = new eventLog( $database );
+			$eventlog->issue( $short, $tags, $event, 128, $params );
+
+			return false;
+		} else {
+			$header  =	"Host: " . $url  . "\r\n"
+						. "User-Agent: PHP Script\r\n"
+						. "Content-Type: text/xml\r\n"
+						. "Content-Length: " . strlen( $content ) . "\r\n\r\n"
+						. "Connection: close\r\n\r\n";
+						;
+
+			fwrite( $connection, "POST " . $path . " HTTP/1.1\r\n" );
+			fwrite( $connection, $header . $content );
+
+			while ( !feof( $connection ) ) {
+				$res = fgets( $connection, 1024 );
+			}
+
+			fclose( $connection );
+
+			return $res;
+		}
+	}
+
+	function doTheCurl( $url, $content, $curlextra )
+	{
+		global $aecConfig;
+
+		if ( empty( $curlextra ) ) {
+			$curlextra = array();
+		}
+
+		// Preparing cURL variables as array, to possibly overwrite them with custom settings by the processor
+		$curl_calls = array();
+		$curl_calls[CURLOPT_URL]			= $url;
+		$curl_calls[CURLOPT_RETURNTRANSFER]	= true;
+		$curl_calls[CURLOPT_HTTPHEADER]		= array( 'Content-Type: text/xml' );
+		$curl_calls[CURLOPT_HEADER]			= false;
+		$curl_calls[CURLOPT_POST]			= true;
+		$curl_calls[CURLOPT_POSTFIELDS]		= $content;
+		$curl_calls[CURLOPT_SSL_VERIFYPEER]	= false;
+		$curl_calls[CURLOPT_SSL_VERIFYHOST]	= false;
+
+		if ( !empty( $aecConfig->cfg['use_proxy'] ) && !empty( $aecConfig->cfg['proxy'] ) ) {
+			$curl_calls[CURLOPT_HTTPPROXYTUNNEL]	= true;
+			$curl_calls[CURLOPT_PROXY]				= $aecConfig->cfg['proxy'];
+
+			if ( !empty( $aecConfig->cfg['use_proxy'] ) ) {
+				$curl_calls[CURLOPT_PROXYPORT]	= $aecConfig->cfg['proxy_port'];
+			}
+		}
+
+		// Set or replace cURL params
+		if ( !empty( $curlextra ) ) {
+			foreach( $curlextra as $name => $value ) {
+				if ( $value == '[[unset]]' ) {
+					if ( isset( $curl_calls[$name] ) ) {
+						unset( $curl_calls[$name] );
+					}
+				} else {
+					$curl_calls[$name] = $value;
+				}
+			}
+		}
+
+		// Set cURL params
+		$ch = curl_init();
+		foreach ( $curl_calls as $name => $value ) {
+			curl_setopt( $ch, $name, $value );
+		}
+
+		$response = curl_exec( $ch );
+
+		if ( $response === false ) {
+			global $database;
+
+			$short	= 'cURL failure';
+			$event	= 'Trying to establish connection with ' . $url . ' failed with Error #' . curl_errno( $ch ) . ' ( "' . curl_error( $ch ) . '" ) - will try fsockopen instead. If Error persists and fsockopen works, please permanently switch to using that!';
+			$tags	= 'processor,payment,phperror';
+			$params = array();
+
+			$eventlog = new eventLog( $database );
+			$eventlog->issue( $short, $tags, $event, 128, $params );
+		}
+
+		curl_close( $ch );
+
+		return $response;
+	}
+
 }
 
 class XMLprocessor extends processor
@@ -2445,139 +2579,6 @@ class XMLprocessor extends processor
 				$response = $this->doTheCurl( $url, $content, $curlextra );
 			}
 		}
-
-		return $response;
-	}
-
-	function doTheHttp( $url, $path, $content, $port=443 )
-	{
-		global $aecConfig;
-
-		$url_info = parse_url( $url );
-
-        if ( empty( $url_info) ) {
-            return false;
-        }
-
-        switch ( $url_info['scheme'] ) {
-            case 'https':
-                $scheme = 'ssl://';
-                $port = 443;
-                break;
-            case 'http':
-            default:
-                $scheme = '';
-                $port = 80;
-                break;
-        }
-
-		$url = $scheme . $url_info['host'];
-
-		if ( !empty( $aecConfig->cfg['use_proxy'] ) && !empty( $aecConfig->cfg['proxy'] ) ) {
-			if ( !empty( $aecConfig->cfg['proxy_port'] ) ) {
-				$port = $aecConfig->cfg['proxy_port'];
-			}
-
-			$connection = fsockopen( $aecConfig->cfg['proxy'], $port, $errno, $errstr, 30 );
-		} else {
-			$connection = fsockopen( $url, $port, $errno, $errstr, 30 );
-		}
-
-		if ( !$connection ) {
-			global $database;
-
-			$short	= 'fsockopen failure';
-			$event	= 'Trying to establish connection with ' . $url . ' failed with Error #' . $errno . ' ( "' . $errstr . '" ) - will try cURL instead. If Error persists and cURL works, please permanently switch to using that!';
-			$tags	= 'processor,payment,phperror';
-			$params = array();
-
-			$eventlog = new eventLog( $database );
-			$eventlog->issue( $short, $tags, $event, 128, $params );
-
-			return false;
-		} else {
-			$header  =	"Host: " . $url  . "\r\n"
-						. "User-Agent: PHP Script\r\n"
-						. "Content-Type: text/xml\r\n"
-						. "Content-Length: " . strlen( $content ) . "\r\n\r\n"
-						. "Connection: close\r\n\r\n";
-						;
-
-			fwrite( $connection, "POST " . $path . " HTTP/1.1\r\n" );
-			fwrite( $connection, $header . $content );
-
-			while ( !feof( $connection ) ) {
-				$res = fgets( $connection, 1024 );
-			}
-
-			fclose( $connection );
-
-			return $res;
-		}
-	}
-
-	function doTheCurl( $url, $content, $curlextra )
-	{
-		global $aecConfig;
-
-		if ( empty( $curlextra ) ) {
-			$curlextra = array();
-		}
-
-		// Preparing cURL variables as array, to possibly overwrite them with custom settings by the processor
-		$curl_calls = array();
-		$curl_calls[CURLOPT_URL]			= $url;
-		$curl_calls[CURLOPT_RETURNTRANSFER]	= true;
-		$curl_calls[CURLOPT_HTTPHEADER]		= array( 'Content-Type: text/xml' );
-		$curl_calls[CURLOPT_HEADER]			= false;
-		$curl_calls[CURLOPT_POST]			= true;
-		$curl_calls[CURLOPT_POSTFIELDS]		= $content;
-		$curl_calls[CURLOPT_SSL_VERIFYPEER]	= false;
-		$curl_calls[CURLOPT_SSL_VERIFYHOST]	= false;
-
-		if ( !empty( $aecConfig->cfg['use_proxy'] ) && !empty( $aecConfig->cfg['proxy'] ) ) {
-			$curl_calls[CURLOPT_HTTPPROXYTUNNEL]	= true;
-			$curl_calls[CURLOPT_PROXY]				= $aecConfig->cfg['proxy'];
-
-			if ( !empty( $aecConfig->cfg['use_proxy'] ) ) {
-				$curl_calls[CURLOPT_PROXYPORT]	= $aecConfig->cfg['proxy_port'];
-			}
-		}
-
-		// Set or replace cURL params
-		if ( !empty( $curlextra ) ) {
-			foreach( $curlextra as $name => $value ) {
-				if ( $value == '[[unset]]' ) {
-					if ( isset( $curl_calls[$name] ) ) {
-						unset( $curl_calls[$name] );
-					}
-				} else {
-					$curl_calls[$name] = $value;
-				}
-			}
-		}
-
-		// Set cURL params
-		$ch = curl_init();
-		foreach ( $curl_calls as $name => $value ) {
-			curl_setopt( $ch, $name, $value );
-		}
-
-		$response = curl_exec( $ch );
-
-		if ( $response === false ) {
-			global $database;
-
-			$short	= 'cURL failure';
-			$event	= 'Trying to establish connection with ' . $url . ' failed with Error #' . curl_errno( $ch ) . ' ( "' . curl_error( $ch ) . '" ) - will try fsockopen instead. If Error persists and fsockopen works, please permanently switch to using that!';
-			$tags	= 'processor,payment,phperror';
-			$params = array();
-
-			$eventlog = new eventLog( $database );
-			$eventlog->issue( $short, $tags, $event, 128, $params );
-		}
-
-		curl_close( $ch );
 
 		return $response;
 	}
