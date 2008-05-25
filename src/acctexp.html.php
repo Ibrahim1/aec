@@ -158,6 +158,9 @@ class HTML_frontEnd
 	function subscriptionDetails( $option, $subfields, $sub, $invoices, $metaUser, $recurring, $pp, $mi, $alert, $subscriptions = null, $custom = null )
 	{
 		global $database, $aecConfig;
+
+		$securelinks = !empty( $aecConfig->cfg['ssl_profile'] )
+
 		?>
 		<div class="componentheading"><?php echo _MYSUBSCRIPTION_TITLE;?></div>
 		<div id="subscription_details">
@@ -170,7 +173,7 @@ class HTML_frontEnd
 					} else {
 						$id = '';
 					}
-					echo '<li><a href="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=subscriptiondetails&amp;sub=' . $fieldlink ) . '"'.$id.'>' . $fieldname . '</a></li>';
+					echo '<li><a href="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=subscriptiondetails&amp;sub=' . $fieldlink, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '"'.$id.'>' . $fieldname . '</a></li>';
 				}
 				?>
 				</ul>
@@ -234,7 +237,7 @@ class HTML_frontEnd
 						<?php
 						if ( $recurring == 0 ) { ?>
 							<div id="upgrade_button">
-								<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=renewsubscription', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+								<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=renewsubscription', !empty( $aecConfig->cfg['ssl_signup'] ) ); ?>" method="post">
 									<input type="hidden" name="option" value="<?php echo $option; ?>" />
 									<input type="hidden" name="task" value="renewsubscription" />
 									<input type="hidden" name="userid" value="<?php echo $metaUser->cmsUser->id; ?>" />

@@ -701,6 +701,14 @@ define( '_CFG_GENERAL_OVERRIDE_REQSSL_NAME', 'Override SSL Requirement');
 define( '_CFG_GENERAL_OVERRIDE_REQSSL_DESC', 'Some payment processors require an SSL secured connection to the user - for example when sensitive information (like CreditCard data) is required on the frontend.');
 define( '_CFG_GENERAL_SSL_SIGNUP_NAME', 'SSL Signup');
 define( '_CFG_GENERAL_SSL_SIGNUP_DESC', 'Use SSL Encryption on all links that have to do with the user singing up within the AEC.');
+define( '_CFG_GENERAL_SSL_PROFILE_NAME', 'SSL Profile');
+define( '_CFG_GENERAL_SSL_PROFILE_DESC', 'Use SSL Encryption on all links that have to do with the user accessing the profile (MySubscription page).');
+define( '_CFG_GENERAL_USE_PROXY_NAME', 'Use Proxy');
+define( '_CFG_GENERAL_USE_PROXY_DESC', 'Use a proxy server for all outgoing requests.');
+define( '_CFG_GENERAL_PROXY_NAME', 'Proxy Address');
+define( '_CFG_GENERAL_PROXY_DESC', 'Specify the proxy server that you want to connect to.');
+define( '_CFG_GENERAL_PROXY_PORT_NAME', 'Proxy Port');
+define( '_CFG_GENERAL_PROXY_PORT_DESC', 'Specify the port of the proxy server that you want to connect to.');
 
 define( '_CFG_GENERAL_ERROR_NOTIFICATION_LEVEL_NAME', 'Notification Level');
 define( '_CFG_GENERAL_ERROR_NOTIFICATION_LEVEL_DESC', 'Select which level of entries to the EventLog is required to make it appear on the central page for your convenience.');

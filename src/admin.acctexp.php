@@ -1792,6 +1792,7 @@ function editSettings( $option )
 	$params['displayccinfo']				= array( 'list_yesno', 0 );
 	$params['enable_coupons']				= array( 'list_yesno', 0 );
 	$params['ssl_signup']					= array( 'list_yesno', 0 );
+	$params['ssl_profile']					= array( 'list_yesno', 0 );
 	$params['override_reqssl']				= array( 'list_yesno', 0 );
 	$params['skip_confirmation']			= array( 'list_yesno', 0 );
 	$params['show_fixeddecision']			= array( 'list_yesno', 0 );
@@ -1809,6 +1810,9 @@ function editSettings( $option )
 	$params['customnotallowed']				= array( 'inputC', '' );
 	$params['tos']							= array( 'inputC', '' );
 	$params['tos_iframe']					= array( 'list_yesno', '' );
+	$params['use_proxy']					= array( 'list_yesno', '' );
+	$params['proxy']						= array( 'inputC', '' );
+	$params['proxy_port']					= array( 'inputC', '' );
 	$params['display_date_frontend']		= array( 'inputC', '%a, %d %b %Y %T %Z' );
 	$params['display_date_backend']			= array( 'inputC', '%a, %d %b %Y %T %Z' );
 	$params['amount_currency_symbol']		= array( 'list_yesno', 0 );

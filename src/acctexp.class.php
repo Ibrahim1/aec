@@ -763,6 +763,11 @@ class Config_General extends paramDBTable
 		$def['amount_currency_symbol']			= 0;
 		$def['amount_currency_symbolfirst']		= 0;
 		$def['amount_use_comma']				= 0;
+		$def['tos_iframe']						= 0;
+		$def['use_proxy']						= 0;
+		$def['proxy']							= '';
+		$def['proxy_port']						= '';
+		$def['ssl_profile']						= 0;
 
 		// Insert a new entry if there is none yet
 		if ( empty( $this->settings ) ) {
@@ -2446,7 +2451,11 @@ class XMLprocessor extends processor
 
 	function doTheHttp( $url, $path, $content, $port=443 )
 	{
-        if ( !$url_info = parse_url( $url ) ) {
+		global $aecConfig;
+
+		$url_info = parse_url( $url );
+
+        if ( empty( $url_info) ) {
             return false;
         }
 
@@ -2459,17 +2468,20 @@ class XMLprocessor extends processor
             default:
                 $scheme = '';
                 $port = 80;
+                break;
         }
 
 		$url = $scheme . $url_info['host'];
 
-		$header  =	"Host: " . $url  . "\r\n"
-					. "User-Agent: PHP Script\r\n"
-					. "Content-Type: text/xml\r\n"
-					. "Content-Length: " . strlen( $content ) . "\r\n\r\n"
-					. "Connection: close\r\n\r\n";
-					;
-		$connection = fsockopen( $url, $port, $errno, $errstr, 30 );
+		if ( !empty( $aecConfig->cfg['use_proxy'] ) && !empty( $aecConfig->cfg['proxy'] ) ) {
+			if ( !empty( $aecConfig->cfg['proxy_port'] ) ) {
+				$port = $aecConfig->cfg['proxy_port'];
+			}
+
+			$connection = fsockopen( $aecConfig->cfg['proxy'], $port, $errno, $errstr, 30 );
+		} else {
+			$connection = fsockopen( $url, $port, $errno, $errstr, 30 );
+		}
 
 		if ( !$connection ) {
 			global $database;
@@ -2484,6 +2496,13 @@ class XMLprocessor extends processor
 
 			return false;
 		} else {
+			$header  =	"Host: " . $url  . "\r\n"
+						. "User-Agent: PHP Script\r\n"
+						. "Content-Type: text/xml\r\n"
+						. "Content-Length: " . strlen( $content ) . "\r\n\r\n"
+						. "Connection: close\r\n\r\n";
+						;
+
 			fwrite( $connection, "POST " . $path . " HTTP/1.1\r\n" );
 			fwrite( $connection, $header . $content );
 
@@ -2499,6 +2518,8 @@ class XMLprocessor extends processor
 
 	function doTheCurl( $url, $content, $curlextra )
 	{
+		global $aecConfig;
+
 		if ( empty( $curlextra ) ) {
 			$curlextra = array();
 		}
@@ -2513,6 +2534,15 @@ class XMLprocessor extends processor
 		$curl_calls[CURLOPT_POSTFIELDS]		= $content;
 		$curl_calls[CURLOPT_SSL_VERIFYPEER]	= false;
 		$curl_calls[CURLOPT_SSL_VERIFYHOST]	= false;
+
+		if ( !empty( $aecConfig->cfg['use_proxy'] ) && !empty( $aecConfig->cfg['proxy'] ) ) {
+			$curl_calls[CURLOPT_HTTPPROXYTUNNEL]	= true;
+			$curl_calls[CURLOPT_PROXY]				= $aecConfig->cfg['proxy'];
+
+			if ( !empty( $aecConfig->cfg['use_proxy'] ) ) {
+				$curl_calls[CURLOPT_PROXYPORT]	= $aecConfig->cfg['proxy_port'];
+			}
+		}
 
 		// Set or replace cURL params
 		if ( !empty( $curlextra ) ) {

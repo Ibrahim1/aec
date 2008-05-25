@@ -450,11 +450,16 @@ function confirmSubscription( $option )
 
 function subscriptionDetails( $option, $sub )
 {
-	global $database, $my, $mainframe;
+	global $database, $my, $mainframe, $aecConfig;
 
 	if ( !$my->id ) {
 		notAllowed( $option );
 	} else {
+		if ( !empty( $aecConfig->cfg['ssl_profile'] ) && empty( $_SERVER['HTTPS'] ) && !$aecConfig->cfg['override_reqssl'] ) {
+			mosRedirect( AECToolbox::deadsureURL( "/index.php?option=" . $option . "&task=subscriptiondetails", true, false ) );
+			exit();
+		};
+
 		$metaUser = new metaUser( $my->id );
 
 		if ( !$metaUser->hasSubscription ) {
@@ -548,7 +553,7 @@ function subscriptionDetails( $option, $sub )
 
 				$selected_plan->proc_actions = array();
 				foreach ( $actions as $action ) {
-					$selected_plan->proc_actions[] = '<a href="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action ) . '">' . $action . '</a>';
+					$selected_plan->proc_actions[] = '<a href="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '">' . $action . '</a>';
 				}
 			}
 
@@ -618,7 +623,7 @@ function subscriptionDetails( $option, $sub )
 
 					$secondary_plan->proc_actions = array();
 					foreach ( $actions as $action ) {
-						$secondary_plan->proc_actions[] = '<a href="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action . '&amp;subscr=' . $subscription->id . '">' . $action . '</a>' );
+						$secondary_plan->proc_actions[] = '<a href="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action . '&amp;subscr=' . $subscription->id, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '">' . $action . '</a>';
 					}
 				}
 
@@ -681,14 +686,14 @@ function subscriptionDetails( $option, $sub )
 
 				$actions = '<a href="'
 				.  AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice='
-				. $row->invoice_number ) . '">' . _HISTORY_ACTION_REPEAT
+				. $row->invoice_number, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '">' . _HISTORY_ACTION_REPEAT
 				. '</a>';
 
 				if ( is_null( $row->fixed ) || !$row->fixed ) {
 					$actions .= ' | '
 					. '<a href="'
 					. AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=cancelPayment&amp;invoice='
-					. $row->invoice_number) . '">' . _HISTORY_ACTION_CANCEL
+					. $row->invoice_number, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '">' . _HISTORY_ACTION_CANCEL
 					. '</a>';
 				}
 				$rowstyle = ' style="background-color:#fee;"';
