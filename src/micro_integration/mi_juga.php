@@ -73,7 +73,7 @@ class mi_juga
 		$settings['set_enroll_group_exp']		= array( 'list_yesno' );
 		$settings['enroll_group_exp']			= array( 'list' );
 		$settings['rebuild']					= array( 'list_yesno' );
-		$settings['remove']				= array( 'list_yesno' );
+		$settings['remove']						= array( 'list_yesno' );
 
 		return $settings;
 	}
@@ -104,7 +104,7 @@ class mi_juga
 		if ( $this->settings['set_remove_group_exp'] ) {
 			$groups = explode( ';', $this->settings['enroll_group'] );
 			foreach ( $groups as $groupid ) {
-				$this->DeleteUserFromGroup( $metaUser->userid, $groupid );
+				$this->DeleteUserFromGroup( $request->metaUser->userid, $groupid );
 			}
 		}
 
@@ -112,7 +112,7 @@ class mi_juga
 			if ( !empty( $this->settings['enroll_group_exp'] ) ) {
 				$gplist = explode( ';', $this->settings['enroll_group_exp'] );
 				foreach ( $gplist as $enroll_group_exp) {
-					$this->AddUserToGroup( $metaUser->userid, $enroll_group_exp );
+					$this->AddUserToGroup( $request->metaUser->userid, $enroll_group_exp );
 				}
 			}
 		}
@@ -125,14 +125,14 @@ class mi_juga
 		global $database;
 
 		if ( $this->settings['set_remove_group'] ) {
-			$this->DeleteUserFromGroup( $metaUser->userid );
+			$this->DeleteUserFromGroup( $request->metaUser->userid );
 		}
 
 		if ( $this->settings['set_enroll_group'] ) {
 			if( !empty( $this->settings['enroll_group'] ) ) {
 				$gplist = explode( ';', $this->settings['enroll_group'] );
 				foreach( $gplist as $enroll_group) {
-					$this->AddUserToGroup( $metaUser->userid, $enroll_group );
+					$this->AddUserToGroup( $request->metaUser->userid, $enroll_group );
 				}
 			}
 		}

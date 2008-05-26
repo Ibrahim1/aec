@@ -66,17 +66,17 @@ class mi_docman
 		global $database;
 
         $settings = array();
-		$settings['add_downloads']			= array( 'inputA' );
-		$settings['set_downloads']			= array( 'inputA' );
-		$settings['set_unlimited']			= array( 'list_yesno' );
+		$settings['add_downloads']	= array( 'inputA' );
+		$settings['set_downloads']	= array( 'inputA' );
+		$settings['set_unlimited']	= array( 'list_yesno' );
 
-		$settings['set_group']				= array( 'list_yesno' );
-		$settings['group']					= array( 'list' );
-		$settings['set_group_exp']			= array( 'list_yesno' );
-		$settings['group_exp']				= array( 'list' );
-		$settings['delete_on_exp'] 			= array( 'list' );
-		$settings['rebuild']				= array( 'list_yesno' );
-		$settings['remove']				= array( 'list_yesno' );
+		$settings['set_group']		= array( 'list_yesno' );
+		$settings['group']			= array( 'list' );
+		$settings['set_group_exp']	= array( 'list_yesno' );
+		$settings['group_exp']		= array( 'list' );
+		$settings['delete_on_exp'] 	= array( 'list' );
+		$settings['rebuild']		= array( 'list_yesno' );
+		$settings['remove']			= array( 'list_yesno' );
 
 		$query = 'SELECT groups_id, groups_name, groups_description'
 			 	. ' FROM #__docman_groups'

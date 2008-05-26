@@ -109,7 +109,7 @@ class mi_htaccess
 
 		$ht = new htaccess();
 		$ht->setFPasswd( $this->settings['mi_folder_user_fullpath'] );
-		$ht->delUser( $metaUser->cmsUser->username );
+		$ht->delUser( $request->metaUser->cmsUser->username );
 	}
 
 	function action( $request )
@@ -124,10 +124,10 @@ class mi_htaccess
 		}
 
 		if( $this->settings['use_md5'] ) {
-			$ht->addUser( $metaUser->cmsUser->username, $metaUser->cmsUser->password );
+			$ht->addUser( $request->metaUser->cmsUser->username, $request->metaUser->cmsUser->password );
 		} else {
 			$apachepw = new apachepw( $database );
-			$apwid = $apachepw->getIDbyUserID( $metaUser->userid );
+			$apwid = $apachepw->getIDbyUserID( $request->metaUser->userid );
 
 			if ( $apwid ) {
 				$apachepw->load( $apwid );
@@ -136,7 +136,7 @@ class mi_htaccess
 				return false;
 			}
 
-			$ht->addUser( $metaUser->cmsUser->username, $apachepw->apachepw );
+			$ht->addUser( $request->metaUser->cmsUser->username, $apachepw->apachepw );
 		}
 		$ht->addLogin();
 		return true;

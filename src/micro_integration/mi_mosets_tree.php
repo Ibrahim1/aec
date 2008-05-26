@@ -68,7 +68,7 @@ class mi_mosets_tree extends MI
 		global $database;
 
 		$mi_mosetshandler = new mosetstree( $database );
-		$id = $mi_mosetshandler->getIDbyUserID( $metaUser->userid );
+		$id = $mi_mosetshandler->getIDbyUserID( $request->metaUser->userid );
 
 		$mi_mosetshandler->load( $id );
 		$mi_mosetshandler->active = 0;
@@ -77,7 +77,7 @@ class mi_mosets_tree extends MI
 		$mi_mosetshandler->store();
 
 		if ( $this->settings['unpublish_all'] ) {
-			$this->unpublishListings( $metaUser );
+			$this->unpublishListings( $request->metaUser );
 		}
 
 		return true;
@@ -88,12 +88,12 @@ class mi_mosets_tree extends MI
 		global $database;
 
 		$mi_mosetshandler = new mosetstree( $database );
-		$id = $mi_mosetshandler->getIDbyUserID( $metaUser->userid );
+		$id = $mi_mosetshandler->getIDbyUserID( $request->metaUser->userid );
 		$mi_id = $id ? $id : 0;
 		$mi_mosetshandler->load( $mi_id );
 
 		if ( !$mi_id ){
-			$mi_mosetshandler->userid = $metaUser->userid;
+			$mi_mosetshandler->userid = $request->metaUser->userid;
 			$mi_mosetshandler->active = 1;
 		}
 
@@ -107,7 +107,7 @@ class mi_mosets_tree extends MI
 		$mi_mosetshandler->store();
 
 		if ( $this->settings['publish_all'] ) {
-			$this->publishListings( $metaUser );
+			$this->publishListings( $request->metaUser );
 		}
 
 		return true;

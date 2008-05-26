@@ -56,10 +56,10 @@ class mi_virtuemart
 	function expiration_action( $request )
 	{
 		if ( $this->settings['set_shopper_group_exp'] ) {
-			if ( $this->checkVMuserexists( $metaUser->userid ) ) {
-				$this->updateVMuserSgroup( $metaUser->userid, $this->settings['shopper_group_exp'] );
+			if ( $this->checkVMuserexists( $request->metaUser->userid ) ) {
+				$this->updateVMuserSgroup( $request->metaUser->userid, $this->settings['shopper_group_exp'] );
 			} elseif ( $this->settings['create_account'] ) {
-				$this->createVMuser( $metaUser->userid, $this->settings['shopper_group_exp'] );
+				$this->createVMuser( $request->metaUser, $this->settings['shopper_group_exp'] );
 			}
 
 			return true;
@@ -73,10 +73,10 @@ class mi_virtuemart
 		global $database;
 
 		if ( $this->settings['set_shopper_group'] ) {
-			if ( $this->checkVMuserexists( $metaUser->userid ) ) {
-				$this->updateVMuserSgroup( $metaUser->userid, $this->settings['shopper_group'] );
+			if ( $this->checkVMuserexists( $request->metaUser->userid ) ) {
+				$this->updateVMuserSgroup( $request->metaUser->userid, $this->settings['shopper_group'] );
 			} elseif ( $this->settings['create_account'] ) {
-				$this->createVMuser( $metaUser->userid, $this->settings['shopper_group'] );
+				$this->createVMuser( $request->metaUser, $this->settings['shopper_group'] );
 			}
 
 			return true;
@@ -109,12 +109,11 @@ class mi_virtuemart
 		$database->query();
 	}
 
-	function createVMuser( $userid, $shoppergroup )
+	function createVMuser( $metaUser, $shoppergroup )
 	{
 		global $database;
 
-		$metaUser = new metaUser( $database );
-
+		// TODO: Replace with RWEngine call
 		$name = explode( ' ', $metaUser->cmsUser->name );
 		$namount = count( $name );
 		if ( $namount >= 3 ) {
@@ -152,7 +151,7 @@ class mi_virtuemart
 		// Create Useraccount
 		$query  = 'INSERT INTO #__vm_user_info'
 				. ' (user_info_id, user_id, address_type, last_name, first_name, middle_name, user_email, cdate, mdate, perms, bank_account_type)'
-				. ' VALUES(\'' . $inum . '\', \'' . $userid . '\', \'BT\', \'' . $lastname . '\', \'' . $firstname . '\', \'' . $middlename . '\', \'' . $metaUser->cmsUser->email . '\', \'' . time() . '\', \'' . time() . '\', \'shopper\', \'Checking\')'
+				. ' VALUES(\'' . $inum . '\', \'' . $metaUser->userid . '\', \'BT\', \'' . $lastname . '\', \'' . $firstname . '\', \'' . $middlename . '\', \'' . $metaUser->cmsUser->email . '\', \'' . time() . '\', \'' . time() . '\', \'shopper\', \'Checking\')'
 				;
 		$database->setQuery( $query );
 		$database->query();
@@ -160,7 +159,7 @@ class mi_virtuemart
 		// Create Shopper -ShopperGroup - Relationship
 		$query  = 'INSERT INTO #__vm_shopper_vendor_xref'
 				. ' (user_id, shopper_group_id)'
-				. ' VALUES(\'' . $userid . '\', \'' . $shoppergroup . '\')'
+				. ' VALUES(\'' . $metaUser->userid . '\', \'' . $shoppergroup . '\')'
 				;
 		$database->setQuery( $query );
 		$database->query();

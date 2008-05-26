@@ -35,7 +35,7 @@ class mi_jarc
 	function action( $request )
 	{
 		if ( $this->settings['log_payments'] ) {
-			return $this->logpayment( $invoice );
+			return $this->logpayment( $request->invoice );
 		} else {
 			return null;
 		}

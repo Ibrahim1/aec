@@ -48,19 +48,19 @@ class mi_idevaffiliate
 			$getparams[] = 'profile=' . $this->settings['profile'];
 		}
 
-		$getparams[] = 'idev_saleamt=' . $invoice->amount;
-		$getparams[] = 'idev_ordernum=' . $invoice->invoice_number;
+		$getparams[] = 'idev_saleamt=' . $request->invoice->amount;
+		$getparams[] = 'idev_ordernum=' . $request->invoice->invoice_number;
 
 		if ( !empty( $this->settings['onlycustomparams'] ) && !empty( $this->settings['customparams'] ) ) {
 			$getparams = array();
 		}
 
-		$userflags = $metaUser->focusSubscription->getMIflags( $plan->id, $this->id );
+		$userflags = $request->metaUser->focusSubscription->getMIflags( $request->plan->id, $this->id );
 
 		if ( !empty( $userflags['IDEV_IP_ADDRESS'] ) ) {
 			$ip = $userflags['IDEV_IP_ADDRESS'];
 		} else {
-			$subscr_params = $metaUser->focusSubscription->getParams();
+			$subscr_params = $request->metaUser->focusSubscription->getParams();
 
 			if ( isset( $subscr_params['creator_ip'] ) ) {
 				$ip = $subscr_params['creator_ip'];
@@ -69,13 +69,13 @@ class mi_idevaffiliate
 			}
 
 			$newflags['idev_ip_address'] = $ip;
-			$metaUser->objSubscription->setMIflags( $plan->id, $this->id, $newflags );
+			$request->metaUser->objSubscription->setMIflags( $request->plan->id, $this->id, $newflags );
 		}
 
 		$getparams[] = 'ip_address=' . $ip;
 
 		if ( !empty( $this->settings['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $this->settings['customparams'], $request->metaUser, $request->plan, $request->invoice );
+			$rw_params = AECToolbox::rewriteEngineRQ( $this->settings['customparams'], $request );
 
 			$cps = explode( "\n", $rw_params );
 
@@ -97,7 +97,7 @@ class mi_idevaffiliate
 					.'width="1" height="1" />';
 
 			$displaypipeline = new displayPipeline($database);
-			$displaypipeline->create( $metaUser->userid, 1, 0, 0, null, 1, $text );
+			$displaypipeline->create( $request->metaUser->userid, 1, 0, 0, null, 1, $text );
 		}
 
 		return true;

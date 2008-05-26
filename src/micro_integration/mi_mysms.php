@@ -53,7 +53,7 @@ class mi_mysms
 			// unpublish the user
 			$query = 'UPDATE #__mysms_joomlauser' .
 					' SET `status` = \'0\'' .
-					' WHERE `userid` = \'' . $metaUser->userid . '\'' .
+					' WHERE `userid` = \'' . $request->metaUser->userid . '\'' .
 					' LIMIT 1';
 			$database->setQuery( $query );
 			$database->query();
@@ -73,7 +73,7 @@ class mi_mysms
 			$query = 'UPDATE #__mysms_joomlauser' .
 					' SET `state` = \'1\',' .
 					' `credits` = credits+' . $credits .
-					' WHERE `userid` = \'' . $metaUser->userid . '\'' .
+					' WHERE `userid` = \'' . $request->metaUser->userid . '\'' .
 					' LIMIT 1';
 			$database->setQuery( $query );
 			$database->query();

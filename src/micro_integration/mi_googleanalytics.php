@@ -54,7 +54,7 @@ class mi_googleanalytics
 				. '</script>'
 				. '<form style="display:none;" name="utmform">'
 				. '<textarea id="utmtrans">UTM:T|' . $request->invoice->invoice_number . '|' . $mosConfig_sitename . '|' . $request->invoice->amount . '|0.00|0.00|||'
-				. 'UTM:I|' . $request->invoice->invoice_number . '|' . $request->plan->id . '|' . $request->plan->name . '|subscription|' . $request->invoice->amount . '|1 </textarea>'
+				. 'UTM:I|' . $request->invoice->invoice_number . '|' . $request->plan->id . '|' . $request->plan->name . '|subscription|' . $request->invoice->amount . '|1</textarea>'
 				. '</form>'
 				. '<script type="text/javascript">'
 				. '__utmSetTrans();'

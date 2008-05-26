@@ -49,11 +49,11 @@ class mi_acajoom
 
 	function expiration_action( $request )
 	{
-		$acauser = $this->getSubscriberID( $metaUser->userid );
+		$acauser = $this->getSubscriberID( $request->metaUser->userid );
 
 		if ( !$acauser ) {
-			$this->createSubscriber( $metaUser->userid );
-			$acauser = $this->getSubscriberID( $metaUser->userid );
+			$this->createSubscriber( $request->metaUser->userid );
+			$acauser = $this->getSubscriberID( $request->metaUser->userid );
 		}
 
 		if ( $this->hasList( $acauser, $this->settings['list'] ) ) {
@@ -63,11 +63,11 @@ class mi_acajoom
 
 	function action( $request )
 	{
-		$acauser = $this->getSubscriberID( $metaUser->userid );
+		$acauser = $this->getSubscriberID( $request->metaUser->userid );
 
 		if ( !$acauser ) {
-			$this->createSubscriber( $metaUser->userid );
-			$acauser = $this->getSubscriberID( $metaUser->userid );
+			$this->createSubscriber( $request->metaUser->userid );
+			$acauser = $this->getSubscriberID( $request->metaUser->userid );
 		}
 
 		if ( !$this->hasList( $acauser, $this->settings['list'] ) ) {

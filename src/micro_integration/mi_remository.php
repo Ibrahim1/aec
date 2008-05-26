@@ -147,7 +147,7 @@ class mi_remository
 
  		if ( $this->settings['delete_on_exp']=="Set" ) {
  			$query = 'DELETE FROM #__mbt_group_member'
-		 			. ' WHERE `member_id` = \'' . $metaUser->userid.'\''
+		 			. ' WHERE `member_id` = \'' . $request->metaUser->userid.'\''
 		 			. ' AND `group_id` = \'' .$this->settings['group'].'\''
 		 			;
  			$database->setQuery( $query );
@@ -155,7 +155,7 @@ class mi_remository
 
 		if ( $this->settings['delete_on_exp']=="All" ) {
  			$query = 'DELETE FROM #__mbt_group_member'
-		 			. ' WHERE `member_id` = \'' . $metaUser->userid.'\''
+		 			. ' WHERE `member_id` = \'' . $request->metaUser->userid.'\''
 		 			;
  			$database->setQuery( $query );
 		}
@@ -164,7 +164,7 @@ class mi_remository
 			// Check if exists
 			$query = 'SELECT `group_id`'
 					. ' FROM #__mbt_group_member'
-					. ' WHERE `member_id` = \'' . $metaUser->userid . '\''
+					. ' WHERE `member_id` = \'' . $request->metaUser->userid . '\''
 					;
 			$database->setQuery( $query );
 
@@ -175,7 +175,7 @@ class mi_remository
 			if ( !in_array( $this->settings['group_exp'], $groups ) ) {
 				$query = 'INSERT INTO #__mbt_group_member'
 				. ' ( `group_id` , `member_id` )'
-				. ' VALUES (\'' . $this->settings['group_exp'] . '\', \'' . $metaUser->userid . '\')'
+				. ' VALUES (\'' . $this->settings['group_exp'] . '\', \'' . $request->metaUser->userid . '\')'
 				;
 				$database->setQuery( $query );
 				$database->query();
@@ -184,7 +184,7 @@ class mi_remository
 		}
 
 		$mi_remositoryhandler = new remository_restriction( $database );
-		$id = $mi_remositoryhandler->getIDbyUserID( $metaUser->userid );
+		$id = $mi_remositoryhandler->getIDbyUserID( $request->metaUser->userid );
 		$mi_id = $id ? $id : 0;
 		$mi_remositoryhandler->load( $mi_id );
 
@@ -205,7 +205,7 @@ class mi_remository
 			// Check if exists
 			$query = 'SELECT `group_id`'
 					. ' FROM #__mbt_group_member'
-					. ' WHERE `member_id` = \'' . $metaUser->userid . '\''
+					. ' WHERE `member_id` = \'' . $request->metaUser->userid . '\''
 					;
 			$database->setQuery( $query );
 
@@ -216,7 +216,7 @@ class mi_remository
 			if ( !in_array( $this->settings['group'], $groups ) ) {
 				$query = 'INSERT INTO #__mbt_group_member'
 						. ' ( `group_id` , `member_id` )'
-						. ' VALUES (\'' . $this->settings['group'] . '\', \'' . $metaUser->userid . '\')'
+						. ' VALUES (\'' . $this->settings['group'] . '\', \'' . $request->metaUser->userid . '\')'
 						;
 				$database->setQuery( $query );
 				$database->query();
@@ -224,12 +224,12 @@ class mi_remository
 		}
 
 		$mi_remositoryhandler = new remository_restriction( $database );
-		$id = $mi_remositoryhandler->getIDbyUserID( $metaUser->userid );
+		$id = $mi_remositoryhandler->getIDbyUserID( $request->metaUser->userid );
 		$mi_id = $id ? $id : 0;
 		$mi_remositoryhandler->load( $mi_id );
 
 		if ( !$mi_id ) {
-			$mi_remositoryhandler->userid = $metaUser->userid;
+			$mi_remositoryhandler->userid = $request->metaUser->userid;
 			$mi_remositoryhandler->active = 1;
 		}
 

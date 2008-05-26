@@ -33,21 +33,11 @@ class mi_mysql_query
 		return $settings;
 	}
 
-	function pre_expiration_action( $request )
-	{
-		$query = AECToolbox::rewriteEngine( $this->settings['query_pre_exp'], $request->metaUser, $request->plan, $request->invoice );
-
-		$database->setQuery( $query );
-		$database->query();
-
-		return true;
-	}
-
-	function expiration_action( $request )
+	function relayAction( $request, $area )
 	{
 		global $database;
 
-		$query = AECToolbox::rewriteEngine( $this->settings['query_exp'], $request->metaUser, $request->plan, $request->invoice );
+		$query = AECToolbox::rewriteEngineRQ( $this->settings['query'.$area], $request );
 
 		$database->setQuery( $query );
 		$database->query();
@@ -55,16 +45,5 @@ class mi_mysql_query
 		return true;
 	}
 
-	function action( $request )
-	{
-		global $database;
-
-		$query = AECToolbox::rewriteEngine( $this->settings['query'], $request->metaUser, $request->plan, $request->invoice );
-
-		$database->setQuery( $query );
-		$database->query();
-
-		return true;
-	}
 }
 ?>

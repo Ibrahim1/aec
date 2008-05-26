@@ -38,7 +38,7 @@ class mi_http_query
 
 	function relayAction( $request, $area )
 	{
-		return $this->fetchURL( AECToolbox::rewriteEngine( $this->createURL( $this->settings['url'.$area], $this->settings['query'.$area] ), $metaUser, $plan, $invoice ) );
+		return $this->fetchURL( AECToolbox::rewriteEngineRQ( $this->createURL( $this->settings['url'.$area], $this->settings['query'.$area] ), $request ) );
 	}
 
 	function createURL( $url, $query ) {
