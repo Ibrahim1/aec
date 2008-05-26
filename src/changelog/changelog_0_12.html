@@ -1248,6 +1248,8 @@ color: #333;
 <li class="check">iPayment Integration</li>
 <li class="todo">iDeal Advanced Integration</li>
 <li class="check">Nochex</li>
+<li class="check">Authorize.net CIM</li>
+<li class="check">Profile editing for Authorize.net CIM</li>
 </ul>
 </li>
 <li><strong>Change in the Processor API</strong>
@@ -1292,6 +1294,10 @@ color: #333;
 <li>Made Settings a lot more pleasant</li>
 <li>Fixed pagination on Coupons List</li>
 <li>Eventlog no longer displays a change on settings store if only slashes were added for the database</li>
+<li class="check">fixing mark notice read</li>
+<li class="check">Option to make MySubscription SSL</li>
+<li class="check">Option to display TOS in iframe</li>
+<li class="check">Global Proxy Setting</li>
 </ul>
 </li>
 <li><strong>Frontend</strong>
@@ -1307,6 +1313,10 @@ color: #333;
 <li>Additional Coupon field on Confirmation</li>
 <li>Fixing ToS Link in german language file</li>
 <li>Fixed link to nowhere from prompting password screen if user was already existing</li>
+<li class="check">New and fancy MySubscription page (with tabs! extensible tabs!)</li>
+<li class="check">fixing cc display listening to global setting on confirmation screen</li>
+<li class="check">Correct error popup on wrong or not matching passwords in copied registration routines</li>
+<li class="check">Listen to Joomla Login to automatically set time-pass for expired users</li>
 </ul>
 </li>
 <li><strong>MicroIntegrations</strong>
@@ -1329,6 +1339,12 @@ color: #333;
 <li>Changes to how MIs are called up (or rather its actions or the central RelayAction)</li>
 <li class="check">MI rebuild standardized, this fixes Rebuild for some MIs (like Fireboard, JUGA and others) - This means that by adding the setting 'rebuild', the AEC will do everything else automatically!</li>
 <li class="check">Complementary "remove" option to "rebuild" - will carry out the MI expiration action for every user related to a plan that has the MI</li>
+<li class="todo">G2 MI</li>
+<li class="todo">Fix Mosets Tree MI (is it broken?)</li>
+<li class="check">Publish/Unpublish users listings for Mosets Tree</li>
+<li class="todo">HotProperty Integration to support individual listing control</li>
+<li class="check">Publish/Unpublish users listings for HotProperty</li>
+<li class="check">Publish/Unpublish users listings for SOBI</li>
 </ul>
 </li>
 <li><strong>Minor</strong>
@@ -1367,36 +1383,20 @@ color: #333;
 </li>
 <li class="todo"><strong>Todo</strong>
 <ul>
-<li class="todo">G2 MI</li>
-<li class="todo">Fix Mosets Tree MI (is it broken?)</li>
-<li class="finish">SOBI MI</li>
-<li class="check">Publish/Unpublish users listings for Mosets Tree</li>
-<li class="todo">HotProperty Integration to support individual listing control</li>
-<li class="check">Publish/Unpublish users listings for HotProperty</li>
-<li class="check">Publish/Unpublish users listings for SOBI</li>
-<li class="check">Authorize.net CIM</li>
-<li class="check">Profile editing for Authorize.net CIM</li>
-<li class="check">New and fancy MySubscription page (with tabs! extensible tabs!)</li>
-<li class="check">fixing cc display listening to global setting on confirmation screen</li>
-<li class="check">fixing mark notice read</li>
-<li class="check">Correct error popup on wrong or not matching passwords in copied registration routines</li>
-<li class="check">Listen to Joomla Login to automatically set time-pass for expired users</li>
-<li class="check">Option to make MySubscription SSL</li>
-<li class="check">Option to display TOS in iframe</li>
-<li class="check">Global Proxy Setting</li>
-<li class="todo">Make sure that coupons are applied on rebills (for now done via disabling amount verification on rebills)</li>
+<li class="todo">Prevent user from assigning the same coupon code to two coupons</li>
 <li class="todo">Setting to use generic processor buttons</li>
+<li class="todo">Coupon Percentage to be used on last or total amount</li>
+<li class="todo">Port all parameter fields over to JSON (uh yes its awesome)</li>
+<li class="todo">Make sure that coupons are applied on rebills (for now done via disabling amount verification on rebills)</li>
 <li class="todo">Come up with a good solution to the "A user might pick a secondary plan as his/her first" dilemma (Entry plan maybe?)</li>
 <li class="todo">Come up with a good solution to the "A user might want to continue paying into a subscription by one-time payments" thing</li>
 <li class="todo">Proper Page Titles</li>
 <li class="todo">Importing functions</li>
-<li class="todo">Restrictions Plan Setting: "or similar" and "or equal" plans</li>
-<li class="todo">Prevent user from assigning the same coupon code to two coupons</li>
-<li class="todo">Coupon Percentage to be used on last or total amount</li>
-<li class="todo">Port all parameter fields over to JSON (uh yes its awesome)</li>
 <li class="todo">Express Checkout and PreAuth for PayPal Pro</li>
 <li class="todo">Part bare data upload install and actual install stuff to reduce memory and time usage</li>
 <li class="todo">Break down install into .inc's</li>
+<li class="todo">Restrictions Plan Setting: "or similar" and "or equal" plans</li>
+<li class="finish">SOBI MI</li>
 </ul>
 </li>
 </ul>
