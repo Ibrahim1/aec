@@ -3479,6 +3479,33 @@ class SubscriptionPlan extends paramDBTable
 		}
 	}
 
+	function getMIforms()
+	{
+		$mis = $this->getMicroIntegrations();
+
+		if ( !empty( $mis ) ) {
+			global $database;
+
+			$mi_forms = '';
+			foreach ( $mis as $mi_id ) {
+				$mi = new MicroIntegration( $database );
+				$mi->load( $mi_id );
+
+				$mi_form = $mi->getMIform();
+
+				if ( !empty( $mi_form ) ) {
+					$mi_forms .= $mi_form;
+				}
+			}
+		}
+
+		if ( empty( $mi_forms ) ) {
+			return false;
+		} else {
+			return $mi_forms;
+		}
+	}
+
 	function getMicroIntegrations()
 	{
 		if ( !empty( $this->micro_integrations ) ) {
@@ -4519,6 +4546,8 @@ class InvoiceFactory
 
 			$this->save( $option, $var );
 		} else {
+			$this->mi_form = $this->objUsage->getMIforms();
+
 			Payment_HTML::confirmForm( $option, $this, $user, $passthrough );
 		}
 	}
