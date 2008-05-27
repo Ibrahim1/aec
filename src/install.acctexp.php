@@ -286,6 +286,7 @@ function com_install()
 	// Update routine 0.3.0 -> 0.6.0
 	$tables	= array();
 	$tables	= $database->getTableList();
+
 	if ( in_array( $mosConfig_dbprefix . "acctexp_payplans", $tables ) ) {
 		// Update routine 0.3.0 -> 0.6.0
 		// Check for existence of 'gid' column on table #__acctexp_payplans
@@ -330,7 +331,7 @@ function com_install()
 				}
 			}
 
-			if ( in_array( $mosConfig_dbprefix . '_acctexp_payplans', $tables ) ) {
+			if ( in_array( $mosConfig_dbprefix . 'acctexp_payplans', $tables ) ) {
 				$queri = null;
 				// Drop new table __acctexp_plans. We going to recreate it from old __acctexp_payplans
 				$queri[] = "DROP TABLE  #__acctexp_plans";
@@ -507,16 +508,14 @@ function com_install()
 			$queri[] = "ALTER TABLE #__acctexp_subscr DROP `extra03`";
 			$queri[] = "ALTER TABLE #__acctexp_subscr DROP `extra04`";
 
-
 			$eucaInstalldb->multiQueryExec( $queri );
 		}
 	}
 
 	$database->setQuery("SELECT count(*) FROM  #__acctexp_config_processors");
-	$oldplans = ( $database->loadResult() == 0 && in_array( $mosConfig_dbprefix . '_acctexp_processors_plans', $tables ) );
+	$oldplans = ( $database->loadResult() == 0 && in_array( $mosConfig_dbprefix . 'acctexp_processors_plans', $tables ) );
 
-	if ( $oldplans ) {
-
+	if ( $oldplans || in_array( $mosConfig_dbprefix . 'acctexp_config_paypal', $tables ) ) {
 		$database->setQuery( "SELECT proc_id FROM #__acctexp_processors_plans" );
 		$db_processors = $database->loadResultArray();
 
@@ -608,7 +607,7 @@ function com_install()
 			$database->setQuery( "SELECT * FROM #__acctexp_processors_plans" );
 			$procplans = $database->loadObjectList();
 
-			foreach ($procplans as $planentry) {
+			foreach ( $procplans as $planentry ) {
 				$database->setQuery( "SELECT processors FROM #__acctexp_plans WHERE id='" . $planentry->plan_id . "'" );
 				$plan_procs = explode(";", $database->loadResult());
 
@@ -766,17 +765,6 @@ function com_install()
 
 	$aecConfig->saveSettings();
 
-	$eucaInstalldb->dropColifExists( 'mingid', 'plans' );
-	$eucaInstalldb->dropColifExists( 'similarpg', 'plans' );
-	$eucaInstalldb->dropColifExists( 'equalpg', 'plans' );
-	$eucaInstalldb->dropColifExists( 'maxgid', 'plans' );
-	$eucaInstalldb->dropColifExists( 'email_desc_exp', 'plans' );
-	$eucaInstalldb->dropColifExists( 'send_exp_mail', 'plans' );
-	$eucaInstalldb->dropColifExists( 'desc_email', 'plans' );
-	$eucaInstalldb->dropColifExists( 'email_desc_exp', 'plans' );
-	$eucaInstalldb->dropColifExists( 'send_exp_mail', 'plans' );
-	$eucaInstalldb->dropColifExists( 'fallback', 'plans' );
-
 	// check for old values and update (if happen) old tables
 	$result = null;
 	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'params'");
@@ -887,6 +875,17 @@ function com_install()
 
 		}
 	}
+
+	$eucaInstalldb->dropColifExists( 'mingid', 'plans' );
+	$eucaInstalldb->dropColifExists( 'similarpg', 'plans' );
+	$eucaInstalldb->dropColifExists( 'equalpg', 'plans' );
+	$eucaInstalldb->dropColifExists( 'maxgid', 'plans' );
+	$eucaInstalldb->dropColifExists( 'email_desc_exp', 'plans' );
+	$eucaInstalldb->dropColifExists( 'send_exp_mail', 'plans' );
+	$eucaInstalldb->dropColifExists( 'desc_email', 'plans' );
+	$eucaInstalldb->dropColifExists( 'email_desc_exp', 'plans' );
+	$eucaInstalldb->dropColifExists( 'send_exp_mail', 'plans' );
+	$eucaInstalldb->dropColifExists( 'fallback', 'plans' );
 
 	if ( $eucaInstalldb->ColumninTable( 'customparams', 'plans' ) ) {
 		$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'custom_params'");
@@ -1099,11 +1098,18 @@ function com_install()
 	$event		= sprintf( _AEC_LOG_LO_INST, _AEC_VERSION );
 	$tags		= 'install,system';
 
-	$eventlog	= new eventLog($database);
+	$eventlog	= new eventLog( $database );
 	$params		= array( 'userid' => $my->id );
 	$eventlog->issue( $short, $tags, $event, 2, $params, 1 );
 
 	$errors = array_merge( $errors, $eucaInstall->getErrors(), $eucaInstalldb->getErrors(), $eucaInstallef->getErrors() );
+
+	if ( !empty( $errors ) ) {
+		foreach ( $errors as $error ) {
+			$eventlog	= new eventLog( $database );
+			$eventlog->issue( '', $tags, $error );
+		}
+	}
 
 	?>
 

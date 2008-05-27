@@ -30,6 +30,16 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
+if( defined( '_AEC_LANG' ) ) {
+	return;
+}
+
+// new 2007.07.10
+define( '_AEC_EXPIRE_TODAY',				'Das Konto ist bis heute aktiv' );
+define( '_AEC_EXPIRE_FUTURE',				'Das Konto ist aktiv bis' );
+define( '_AEC_EXPIRE_PAST',					'Das Konto war aktiv bis' );
+define( '_AEC_DAYS_ELAPSED',				'Tag(e) abgelaufen' );
+
 // new 0.12.4 (mic)
 define( '_AEC_EXPIRE_NOT_SET',				'Nicht definiert' );
 define( '_AEC_GEN_ERROR',					'<h1>FEHLER!</h1><p>Leider trat w&auml;hrend der Bearbeitung ein Fehler auf - bitte informieren Sie auch den Administrator. Danke.</p>' );
@@ -48,20 +58,20 @@ define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_STATUS',	'Rechnungsstatus:' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_FRAUD',	'Betrags&uuml;berpr&uuml;fung fehlerhaft, gezahlt: %s, lt. Rechnung: %s - Zahlung abgebrochen' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CURR',		'Falsche W&auml;hrung, gezahlt in %s, lt. Rechnung %s, Zahlung abgebrochen' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_VALID',	'G&uuml;ltige Zahlung' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_VALID_APPFAIL',	'Payment valid, Application failed!' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_TRIAL',	'G&uuml;ltige Zahlung - Gratiszeitraum' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_PEND',		'G&uuml;ltige Zahlung - Status Wartend, Grund: %s' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CANCEL',	'Keine Zahlung - Storno' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS',	', Benutzerstatus wurde auf \'Storno\' gesetzt' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EOT',		'Keine Zahlung - Abo ist abgelaufen' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_DUPLICATE','Keine Zahlung - Duplikat' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR',	'Unbekannter Fehler' );
-
-// --== COUPON INFO ==--
-DEFINE ('_COUPON_INFO',						'Gutscheine:');
-DEFINE ('_COUPON_INFO_CONFIRM',				'Falls Du einen Gutschein f&uuml;r die Bezahlung verwenden m&ouml;chtest gib diesen bitte auf der Rechnungsseite an.');
-DEFINE ('_COUPON_INFO_CHECKOUT',			'Bitte gib jetzt den Gutschein an und best&auml;tige durch dr&uuml;cken des Buttons');
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_REFUND',	'No Payment - Subscription Deleted (refund)' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED',	', User has been expired' );
 // end mic ########################################################
 
 // --== PAYMENT PLANS PAGE ==--
+define( '_PAYPLANS_HEADER',					'Bezahlungspl&auml;ne' );
 DEFINE ('_NOPLANS_ERROR',					'Es trat in interner Fehler auf, dadurch sind momentan keine Abonnements vorhanden, bitte den Administrator informieren - danke!');
 
 // --== ACCOUNT DETAILS PAGE ==--
@@ -69,8 +79,8 @@ DEFINE ('_CHK_USERNAME_AVAIL', "Benutzername %s ist verf&uuml;gbar");
 DEFINE ('_CHK_USERNAME_NOTAVAIL', "Benutzername %s ist leider bereits vergeben!");
 
 // --== MY SUBSCRIPTION PAGE ==--
-DEFINE ('_HISTORY_TITLE', 'Abonnements-Verlauf - die letzten Vorg&auml;nge');
-DEFINE ('_HISTORY_SUBTITLE', 'Abonnent seit ');
+define( '_MYSUBSCRIPTION_TITLE', 'Meine Mitgliedschaft');
+define( '_MEMBER_SINCE', 'Mitglied seit');
 DEFINE ('_HISTORY_COL1_TITLE', 'Rechnung');
 DEFINE ('_HISTORY_COL2_TITLE', 'Wert');
 DEFINE ('_HISTORY_COL3_TITLE', 'Zahlungsdatum');
@@ -88,6 +98,12 @@ DEFINE ('_RENEW_OFFLINE', 'Erneuern');
 DEFINE ('_RENEW_BUTTON_UPGRADE', 'Ver&auml;ndern');
 DEFINE ('_PAYMENT_PENDING_REASON_ECHECK', 'echeck uncleared (1-4 business days)');
 DEFINE ('_PAYMENT_PENDING_REASON_TRANSFER', 'awaiting transfer payment');
+define( '_YOUR_SUBSCRIPTION', 'Ihre Mitgliedschaft');
+define( '_YOUR_FURTHER_SUBSCRIPTIONS', 'Weitere Mitgliedschaften');
+define( '_PLAN_PROCESSOR_ACTIONS', 'Hierzu k&ouml;nnen sie folgende Anweisungen ausf&uuml;hren:');
+define( '_AEC_SUBDETAILS_TAB_OVERVIEW', '&Uuml;berblick');
+define( '_AEC_SUBDETAILS_TAB_INVOICES', 'Rechnungen');
+define( '_AEC_SUBDETAILS_TAB_DETAILS', 'Details');
 
 // --== EXPIRATION PAGE ==--
 DEFINE ('_EXPIRE_INFO', 'Ihr Konto ist aktiv bis');
@@ -110,23 +126,51 @@ DEFINE ('_CONFIRM_ROW_EMAIL', 'E-mail:');
 DEFINE ('_CONFIRM_INFO', 'Benutzen Sie bitte den Best&auml;tigen-Button um Ihre Bestellung abzuschlie&szlig;en.');
 DEFINE ('_BUTTON_CONFIRM', 'Best&auml;tigen');
 DEFINE ('_CONFIRM_TOS', "Ich habe die <a href=\"%s\" target=\"_BLANK\">AGB</a> gelesen und akzeptiert.");
+define( '_CONFIRM_TOS_IFRAME', "Ich habe die Allgemeinen Gesch&auml;ftsbedigungen (s.o.) gelesen und bin einverstanden.");
 DEFINE ('_CONFIRM_TOS_ERROR', 'Sie m&uuml;ssen unsere AGB lesen und akzeptieren');
 DEFINE ('_CONFIRM_COUPON_INFO', 'If you have a coupon code, you can enter it on the Checkout Page to get a rebate on your payment');
+define( '_CONFIRM_COUPON_INFO_BOTH', 'If you have a coupon code, you can enter it here, or on the Checkout Page to get a discount on your payment');
+define( '_CONFIRM_FREETRIAL', 'Kostenlose Testphase');
+
+// --== PROMPT PASSWORD FORM ==--
+define( '_AEC_PROMPT_PASSWORD', 'Aus Sicherheitsgr&uuml;nden m&uuml;ssen Sie ihr Passwort eingeben.');
+define( '_AEC_PROMPT_PASSWORD_WRONG', 'Das Passwort stimmt nicht mit dem &uuml;berein, welches wir in unserer Datenbank f&uuml;r dieses Konto registriert haben. Bitte versuchen Sie es noch einmal.');
+define( '_AEC_PROMPT_PASSWORD_BUTTON', 'Weiter');
 
 // --== CHECKOUT FORM ==--
 DEFINE ('_CHECKOUT_TITLE', 'Auschecken');
 DEFINE ('_CHECKOUT_INFO', 'Ihr Eintrag wurde nun gespeichert. Es ist erforderlich, dass Sie mit der Bezahlung ihrer Auswahl fortfahren.<br />Falls dabei etwas schief l&auml;uft, k&ouml;nnen Sie immer zu dieser Seite zur&uuml;ckkehren, indem Sie sich mit ihrem Konto einw&auml;hlen.');
-DEFINE ('_CHECKOUT_INFO_REPEAT', 'Willkommen zur&uuml;ck! Es ist erforderlich, dass Sie mit der Bezahlung ihrer Auswahl fortfahren .<br />Falls dabei etwas schief l&auml;uft, k&ouml;nnen Sie immer zu dieser Seite zur&uuml;ckkehren, indem Sie sich mit ihrem Konto einw&auml;hlen.');
-DEFINE ('_CHECKOUT_INFO_TRANSFER', 'Ihr Eintrag wurde nun gespeichert. Es ist erforderlich, dass Sie mit der Bezahlung ihrer Auswahl fortfahren indem sie die unten beschriebenen Schritte befolgen.<br />Falls dabei etwas schief l&auml;uft, k&ouml;nnen Sie immer zu dieser Seite zur&uuml;ckkehren, indem Sie sich mit ihrem Konto einw&auml;hlen.');
-DEFINE ('_CHECKOUT_INFO_TRANSFER_REPEAT', 'Willkommen zur&uuml;ck! Es ist erforderlich, dass Sie mit der Bezahlung ihrer Auswahl fortfahren indem sie die unten beschriebenen Schritte befolgen.<br />Falls dabei etwas schief l&auml;uft, k&ouml;nnen Sie immer zu dieser Seite zur&uuml;ckkehren, indem Sie sich mit ihrem Konto einw&auml;hlen.');
+define( '_CHECKOUT_INFO_REPEAT',			'Willkommen zur&uuml;ck! Die Bezahlung ihrer getroffenen Auswahl ist noch ausst&auml;ndig.<br />Sollte es im Folgenden Unklarheiten geben, k&ouml;nnen Sie immer zu dieser Seite zur&uuml;ckkehren, indem Sie sich mit ihren Zugangsdaten einw&auml;hlen.');
 DEFINE ('_BUTTON_CHECKOUT', 'Fortfahren');
 DEFINE ('_BUTTON_APPEND', 'Anf&uuml;gen');
+define( '_BUTTON_APPLY', 'Anwenden');
 DEFINE ('_CHECKOUT_COUPON_CODE', 'Coupon Code');
 DEFINE ('_CHECKOUT_INVOICE_AMOUNT', 'Rechnungsbetrag');
 DEFINE ('_CHECKOUT_INVOICE_COUPON', 'Coupon');
 DEFINE ('_CHECKOUT_INVOICE_COUPON_REMOVE', 'entfernen');
 DEFINE ('_CHECKOUT_INVOICE_TOTAL_AMOUNT', 'Summe');
 DEFINE ('_CHECKOUT_COUPON_INFO', 'Falls Sie einen Coupon-Code haben, k&ouml;nnen Sie diesen hier eingeben.');
+
+define( '_AEC_TERMTYPE_TRIAL', 'Initial Billing');
+define( '_AEC_TERMTYPE_TERM', 'Regular Billing Term');
+define( '_AEC_CHECKOUT_TERM', 'Billing Term');
+define( '_AEC_CHECKOUT_NOTAPPLICABLE', 'not applicable');
+define( '_AEC_CHECKOUT_FUTURETERM', 'future term');
+define( '_AEC_CHECKOUT_COST', 'Cost');
+define( '_AEC_CHECKOUT_DISCOUNT', 'Discount');
+define( '_AEC_CHECKOUT_TOTAL', 'Total');
+define( '_AEC_CHECKOUT_DURATION', 'Duration');
+
+define( '_AEC_CHECKOUT_DUR_LIFETIME', 'Lifetime');
+
+define( '_AEC_CHECKOUT_DUR_DAY', 'Day');
+define( '_AEC_CHECKOUT_DUR_DAYS', 'Days');
+define( '_AEC_CHECKOUT_DUR_WEEK', 'Week');
+define( '_AEC_CHECKOUT_DUR_WEEKS', 'Weeks');
+define( '_AEC_CHECKOUT_DUR_MONTH', 'Month');
+define( '_AEC_CHECKOUT_DUR_MONTHS', 'Months');
+define( '_AEC_CHECKOUT_DUR_YEAR', 'Year');
+define( '_AEC_CHECKOUT_DUR_YEARS', 'Years');
 
 // --== ALLOPASS SPECIFIC ==--
 DEFINE ('_REGTITLE','INSCRIPTION');
@@ -153,6 +197,7 @@ DEFINE ('_CANCEL_TITLE', 'Ergebnis der Registrierung: Abgebrochen!');
 DEFINE ('_CANCEL_MSG', 'Unsere Datenverarbeitung hat die R&uuml;ckmeldung erhalten, dass Sie sich entschieden haben, die Registrierung abzubrechen. Falls Sie die Registrierung aufgrund von Problemen mit dieser Internetseite abgebrochen haben, z&ouml;gern Sie nicht, uns von ihren Problemen in Kenntnis zu setzen!');
 
 // --== PENDING PAGE ==--
+define( '_PENDING_TITLE',					'Account Schwebend!');
 DEFINE ('_WARN_PENDING', 'Ihr Konto ist noch immer nicht vollst&auml;ndig. Sollte dies f&uuml;r l&auml;ngere Zeit so bleiben obwohl Ihre Zahlung durchgef&uuml;hrt wurde, kontaktieren sie bitte den Administrator dieser Internetseite.');
 DEFINE ('_PENDING_OPENINVOICE', 'Es scheint, Sie haben eine unbezahlte Rechnung in unserer Datenbank - Falls mit der Bezahlung etwas schief gelaufen ist, k&ouml;nnen Sie diese gerne erneut in Auftrag geben:');
 DEFINE ('_GOTO_CHECKOUT', 'Noch einmal zum Auschecken gehen');
@@ -160,10 +205,10 @@ DEFINE ('_GOTO_CHECKOUT_CANCEL', 'Sie k&ouml;nnen die Rechnung auch abbrechen (S
 DEFINE ('_PENDING_NOINVOICE', 'Es scheint, Sie haben die letzte offene Rechnung in unserer Datenbank abgebrochen. Bitte benutzen Sie diesen Button um erneut zur Auswahl eines Plans zu gelangen:');
 DEFINE ('_PENDING_NOINVOICE_BUTTON', 'Plan Auswahl');
 DEFINE ('_PENDING_REASON_ECHECK', '(Desweiteren haben wir jedoch auch die Information, dass Sie sich entschieden haben, mit einem echeck zu bezahlen. M&ouml;glicherweise m&uuml;ssen Sie also nur warten bis dieser verarbeitet wurde - dies dauert gew&ouml;hnlich 1-4 Tage.)');
+define( '_PENDING_REASON_WAITING_RESPONSE', '(According to our information however, we are just waiting for a response from the payment processor. You will be notified once that has happened. Sorry for the delay.)');
 DEFINE ('_PENDING_REASON_TRANSFER', '(Desweiteren haben wir jedoch auch die Information, dass Sie sich entschieden haben, die Rechnung auf herk&ouml;mmlichem Wege zu bezahlen bezahlen. Die Verarbeitung einer solchen Zahlung kann einige Tage dauern.)');
 
 // --== THANK YOU PAGE ==--
-DEFINE ('_PENDING_TITLE', 'Account Schwebend!');
 DEFINE ('_THANKYOU_TITLE', 'Vielen Dank!');
 DEFINE ('_SUB_FEPARTICLE_HEAD', 'Abonnement Abgeschlossen!');
 DEFINE ('_SUB_FEPARTICLE_HEAD_RENEW', 'Erneuerung ihres Abonnements Abgeschlossen!');
@@ -175,55 +220,241 @@ DEFINE ('_SUB_FEPARTICLE_PROCESSPAY', 'Wir werden nun ihre Bezahlung abwarten. '
 DEFINE ('_SUB_FEPARTICLE_ACTMAIL', 'Sie werden eine E-Mail mit einem Aktivierungscode erhalten sobald wir ihre Anfrage verarbeitet haben. ');
 DEFINE ('_SUB_FEPARTICLE_MAIL', 'Sie werden eine E-Mail erhalten sobald wir ihre Anfrage verarbeitet haben. ');
 
+// --== CHECKOUT ERROR PAGE ==--
+define( '_CHECKOUT_ERROR_TITLE', 'Error while processing the payment!');
+define( '_CHECKOUT_ERROR_EXPLANATION', 'An error occured while processing your payment');
+define( '_CHECKOUT_ERROR_OPENINVOICE', 'This leaves your invoice uncleared. To retry the payment, you can go to the checkout page once again to try again:');
+
+// --== COUPON INFO ==--
+define( '_COUPON_INFO',						'Gutscheine:');
+define( '_COUPON_INFO_CONFIRM',				'Falls Sie einen Gutschein f&uuml;r die Bezahlung verwenden m&ouml;chten, geben Sie diesen bitte auf der Rechnungsseite an.');
+define( '_COUPON_INFO_CHECKOUT',			'Bitte geben Sie jetzt den Gutschein an und best&auml;tigen durch dr&uuml;cken des Buttons');
+
 // --== COUPON ERROR MESSAGES ==--
-DEFINE ('_COUPON_WARNING_AMOUNT', 'One Coupon that you have added to this invoice does not affect the next payment, so although it seems that it does not affect this invoice, it will affect a subsequent payment.');
-DEFINE ('_COUPON_ERROR_PRETEXT', 'We are terribly sorry:');
-DEFINE ('_COUPON_ERROR_EXPIRED', 'This coupon has expired.');
-DEFINE ('_COUPON_ERROR_NOTSTARTED', 'Using this coupon is not permitted yet.');
-DEFINE ('_COUPON_ERROR_NOTFOUND', 'This coupon code could not be found.');
-DEFINE ('_COUPON_ERROR_MAX_REUSE', 'This coupon has exceeded the maximum uses.');
-DEFINE ('_COUPON_ERROR_PERMISSION', 'You don\'t have the permission to use this coupon.');
-DEFINE ('_COUPON_ERROR_WRONG_USAGE', 'You can not use this coupon for this.');
-DEFINE ('_COUPON_ERROR_WRONG_PLAN', 'You are not in the correct Subscription Plan for this coupon.');
-DEFINE ('_COUPON_ERROR_WRONG_PLAN_PREVIOUS', 'To use this coupon, your last Subscription Plan must be different.');
-DEFINE ('_COUPON_ERROR_WRONG_PLANS_OVERALL', 'You don\'t have the right Subscription Plans in your usage history to be allowed to use this coupon.');
-DEFINE ('_COUPON_ERROR_TRIAL_ONLY', 'You may only use this coupon for a Trial Period.');
+define( '_COUPON_WARNING_AMOUNT',			'Die angegebene Gutscheinnummer hat keinen Einflu&szlig; auf die Rechnungssumme.');
+define( '_COUPON_ERROR_PRETEXT',			'Wir bedauern sehr:');
+define( '_COUPON_ERROR_EXPIRED',			'Dieser Gutschein ist bereits abgelaufen.');
+define( '_COUPON_ERROR_NOTSTARTED',			'Die Verwendung dieses Gutscheins ist momentan nicht erlaubt.');
+define( '_COUPON_ERROR_NOTFOUND',			'Der Gutscheincode konnte nicht gefunden werden.');
+define( '_COUPON_ERROR_MAX_REUSE',			'Dieser Gutschein wurde bereits von anderen Besuchern verwendet und hat das Maximum erreicht.');
+define( '_COUPON_ERROR_PERMISSION',			'Sie haben nicht die erforderliche Berechtigung zur Verwendung dieses Gutscheins.');
+define( '_COUPON_ERROR_WRONG_USAGE',		'Diese Gutschein kann daf&uuml;r nicht verwendet werden.');
+define( '_COUPON_ERROR_WRONG_PLAN',			'Dieser Gutschein gilt nicht f&uuml;r dieses Abonnement.');
+define( '_COUPON_ERROR_WRONG_PLAN_PREVIOUS',	'Um diesen Gutschein zu verwenden mu&szlig; ein anderes Abonnement gew&auml;hlt werden.');
+define( '_COUPON_ERROR_WRONG_PLANS_OVERALL',	'Sie haben leider nicht das richtige Abonnement in den bisherigen Abos um diesen Gutschein zu verwenden.');
+define( '_COUPON_ERROR_TRIAL_ONLY',			'Dieser Gutschein gilt nur f&uuml;r ein Probezeit-/Gratisabo.');
+define( '_COUPON_ERROR_COMBINATION', 'Dieser Gutschein kann nicht mit einem der zuvor eingegebenen Gutscheine verwendet werden.');
+define( '_COUPON_ERROR_SPONSORSHIP_ENDED', 'Die Patenschaft f&uuml;r diesen Coupon ist entweder abgelaufen oder zur Zeit nicht aktiv.');
 
 // ----======== EMAIL TEXT ========----
 
 DEFINE ('_ACCTEXP_SEND_MSG','Abonnement: %s bei %s');
 DEFINE ('_ACCTEXP_SEND_MSG_RENEW','Erneuerung eines Abonnements: %s bei %s');
-DEFINE ('_ACCTEXP_MAILPARTICLE_GREETING', "Hallo %s,
+define( '_ACCTEXP_MAILPARTICLE_GREETING',	"Hallo %s,\n\n");
+define( '_ACCTEXP_MAILPARTICLE_THANKSREG',	'Vielen Dank f&uuml;r ihr Abonnement auf %s.');
+define( '_ACCTEXP_MAILPARTICLE_THANKSREN',	'Vielen Dank f&uuml;r die Erneuerung ihres Abonnements auf %s.' );
+define( '_ACCTEXP_MAILPARTICLE_PAYREC',		'Ihre Bezahlung wurde dankend entgegengenommen.' );
+define( '_ACCTEXP_MAILPARTICLE_LOGIN',		'Sie k&ouml;nnen sich nun auf %s mit dem gew&auml;hlten Benutzernamen und Passwort einw&auml;hlen.');
+define( '_ACCTEXP_MAILPARTICLE_FOOTER',		"\n\nBitte nicht auf dieses Email antworten, es wurde automatisch generiert und dient nur der Information." );
+define( '_ACCTEXP_ASEND_MSG',				"Hallo %s,\n\nein neues Abonnement wurde auf [ %s ] abgeschlossen.\n\nHier die Details:\n\nName.........: %s\nEmail........: %s\nBenutzername : %s\nAbo-ID.......: %s\nAbonnement...: %s\nIP...........: %s\nISP..........: %s\n\nDas ist eine automatische Benachrichtigung, bitte nicht antworten." );
+define( '_ACCTEXP_ASEND_MSG_RENEW',			"Hallo %s,\n\neine Aboverl&auml;ngerung auf %s.\n\nHier die Benutzerdetails:\n\nName.........: %s\nEmail........: %s\nBenutzername : %s\nAbo-ID.......: %s\nAbonnement...: %s\nIP...........: %s\nISP..........: %s\n\nDas ist eine automatische Benachrichtigung, bitte nicht antworten." );
+define( '_AEC_ASEND_MSG_NEW_REG',			"Hallo %s,\n\nEin neuer Benutzer wurde auf [ %s ] registriert.\n\nHier die Details:\n\nName . . . . : %s\nEmail : %s\nBenutzername  . . . : %s\nIP . . . . . : %s\nISP	 . . . . : %s\n\nDas ist eine automatische Benachrichtigung, bitte nicht antworten." );
+define( '_AEC_ASEND_NOTICE',				"AEC %s: %s at %s" );
+define( '_AEC_ASEND_NOTICE_MSG',		"According to the E-Mail reporting level you have selected, this is an automatic notification about an EventLog entry.\n\nThe details of this message are:\n\n--- --- --- ---\n\n%s\n\n--- --- --- ---\n\nPlease do not respond to this message as it is automatically generated and is for information purposes only. You can change the level of reported entries in your AEC Settings." );
 
-");
-DEFINE ('_ACCTEXP_MAILPARTICLE_THANKSREG', "Vielen Dank für ihr Abonnement bei %s. ");
-DEFINE ('_ACCTEXP_MAILPARTICLE_THANKSREN', "Vielen Dank für die Erneuerung ihres Abonnements bei %s. ");
-DEFINE ('_ACCTEXP_MAILPARTICLE_PAYREC', "Ihre Bezahlung wurde dankend entgegengenommen. ");
-DEFINE ('_ACCTEXP_MAILPARTICLE_LOGIN', "Sie k&ouml;nnen sich nun auf %s mit ihrem Benutzernamen und Passwort einw&auml;hlen. ");
-DEFINE ('_ACCTEXP_MAILPARTICLE_FOOTER',"
 
-Bitte antworten Sie nicht auf diese E-Mail da sie automatisch generiert wurde und nur der Information dient.");
+// ----======== COUNTRY CODES ========----
 
-DEFINE ('_ACCTEXP_ASEND_MSG',"Hello %s,
+define( 'COUNTRYCODE_SELECT', 'Select Country' );
+define( 'COUNTRYCODE_US', 'United States' );
+define( 'COUNTRYCODE_AL', 'Albania' );
+define( 'COUNTRYCODE_DZ', 'Algeria' );
+define( 'COUNTRYCODE_AD', 'Andorra' );
+define( 'COUNTRYCODE_AO', 'Angola' );
+define( 'COUNTRYCODE_AI', 'Anguilla' );
+define( 'COUNTRYCODE_AG', 'Antigua and Barbuda' );
+define( 'COUNTRYCODE_AR', 'Argentina' );
+define( 'COUNTRYCODE_AM', 'Armenia' );
+define( 'COUNTRYCODE_AW', 'Aruba' );
+define( 'COUNTRYCODE_AU', 'Australia' );
+define( 'COUNTRYCODE_AT', 'Austria' );
+define( 'COUNTRYCODE_AZ', 'Azerbaijan Republic' );
+define( 'COUNTRYCODE_BS', 'Bahamas' );
+define( 'COUNTRYCODE_BH', 'Bahrain' );
+define( 'COUNTRYCODE_BB', 'Barbados' );
+define( 'COUNTRYCODE_BE', 'Belgium' );
+define( 'COUNTRYCODE_BZ', 'Belize' );
+define( 'COUNTRYCODE_BJ', 'Benin' );
+define( 'COUNTRYCODE_BM', 'Bermuda' );
+define( 'COUNTRYCODE_BT', 'Bhutan' );
+define( 'COUNTRYCODE_BO', 'Bolivia' );
+define( 'COUNTRYCODE_BA', 'Bosnia and Herzegovina' );
+define( 'COUNTRYCODE_BW', 'Botswana' );
+define( 'COUNTRYCODE_BR', 'Brazil' );
+define( 'COUNTRYCODE_VG', 'British Virgin Islands' );
+define( 'COUNTRYCODE_BN', 'Brunei' );
+define( 'COUNTRYCODE_BG', 'Bulgaria' );
+define( 'COUNTRYCODE_BF', 'Burkina Faso' );
+define( 'COUNTRYCODE_BI', 'Burundi' );
+define( 'COUNTRYCODE_KH', 'Cambodia' );
+define( 'COUNTRYCODE_CA', 'Canada' );
+define( 'COUNTRYCODE_CV', 'Cape Verde' );
+define( 'COUNTRYCODE_KY', 'Cayman Islands' );
+define( 'COUNTRYCODE_TD', 'Chad' );
+define( 'COUNTRYCODE_CL', 'Chile' );
+define( 'COUNTRYCODE_C2', 'China' );
+define( 'COUNTRYCODE_CO', 'Colombia' );
+define( 'COUNTRYCODE_KM', 'Comoros' );
+define( 'COUNTRYCODE_CK', 'Cook Islands' );
+define( 'COUNTRYCODE_CR', 'Costa Rica' );
+define( 'COUNTRYCODE_HR', 'Croatia' );
+define( 'COUNTRYCODE_CY', 'Cyprus' );
+define( 'COUNTRYCODE_CZ', 'Czech Republic' );
+define( 'COUNTRYCODE_CD', 'Democratic Republic of the Congo' );
+define( 'COUNTRYCODE_DK', 'Denmark' );
+define( 'COUNTRYCODE_DJ', 'Djibouti' );
+define( 'COUNTRYCODE_DM', 'Dominica' );
+define( 'COUNTRYCODE_DO', 'Dominican Republic' );
+define( 'COUNTRYCODE_EC', 'Ecuador' );
+define( 'COUNTRYCODE_SV', 'El Salvador' );
+define( 'COUNTRYCODE_ER', 'Eritrea' );
+define( 'COUNTRYCODE_EE', 'Estonia' );
+define( 'COUNTRYCODE_ET', 'Ethiopia' );
+define( 'COUNTRYCODE_FK', 'Falkland Islands' );
+define( 'COUNTRYCODE_FO', 'Faroe Islands' );
+define( 'COUNTRYCODE_FM', 'Federated States of Micronesia' );
+define( 'COUNTRYCODE_FJ', 'Fiji' );
+define( 'COUNTRYCODE_FI', 'Finland' );
+define( 'COUNTRYCODE_FR', 'France' );
+define( 'COUNTRYCODE_GF', 'French Guiana' );
+define( 'COUNTRYCODE_PF', 'French Polynesia' );
+define( 'COUNTRYCODE_GA', 'Gabon Republic' );
+define( 'COUNTRYCODE_GM', 'Gambia' );
+define( 'COUNTRYCODE_DE', 'Germany' );
+define( 'COUNTRYCODE_GI', 'Gibraltar' );
+define( 'COUNTRYCODE_GR', 'Greece' );
+define( 'COUNTRYCODE_GL', 'Greenland' );
+define( 'COUNTRYCODE_GD', 'Grenada' );
+define( 'COUNTRYCODE_GP', 'Guadeloupe' );
+define( 'COUNTRYCODE_GT', 'Guatemala' );
+define( 'COUNTRYCODE_GN', 'Guinea' );
+define( 'COUNTRYCODE_GW', 'Guinea Bissau' );
+define( 'COUNTRYCODE_GY', 'Guyana' );
+define( 'COUNTRYCODE_HN', 'Honduras' );
+define( 'COUNTRYCODE_HK', 'Hong Kong' );
+define( 'COUNTRYCODE_HU', 'Hungary' );
+define( 'COUNTRYCODE_IS', 'Iceland' );
+define( 'COUNTRYCODE_IN', 'India' );
+define( 'COUNTRYCODE_ID', 'Indonesia' );
+define( 'COUNTRYCODE_IE', 'Ireland' );
+define( 'COUNTRYCODE_IL', 'Israel' );
+define( 'COUNTRYCODE_IT', 'Italy' );
+define( 'COUNTRYCODE_JM', 'Jamaica' );
+define( 'COUNTRYCODE_JP', 'Japan' );
+define( 'COUNTRYCODE_JO', 'Jordan' );
+define( 'COUNTRYCODE_KZ', 'Kazakhstan' );
+define( 'COUNTRYCODE_KE', 'Kenya' );
+define( 'COUNTRYCODE_KI', 'Kiribati' );
+define( 'COUNTRYCODE_KW', 'Kuwait' );
+define( 'COUNTRYCODE_KG', 'Kyrgyzstan' );
+define( 'COUNTRYCODE_LA', 'Laos' );
+define( 'COUNTRYCODE_LV', 'Latvia' );
+define( 'COUNTRYCODE_LS', 'Lesotho' );
+define( 'COUNTRYCODE_LI', 'Liechtenstein' );
+define( 'COUNTRYCODE_LT', 'Lithuania' );
+define( 'COUNTRYCODE_LU', 'Luxembourg' );
+define( 'COUNTRYCODE_MG', 'Madagascar' );
+define( 'COUNTRYCODE_MW', 'Malawi' );
+define( 'COUNTRYCODE_MY', 'Malaysia' );
+define( 'COUNTRYCODE_MV', 'Maldives' );
+define( 'COUNTRYCODE_ML', 'Mali' );
+define( 'COUNTRYCODE_MT', 'Malta' );
+define( 'COUNTRYCODE_MH', 'Marshall Islands' );
+define( 'COUNTRYCODE_MQ', 'Martinique' );
+define( 'COUNTRYCODE_MR', 'Mauritania' );
+define( 'COUNTRYCODE_MU', 'Mauritius' );
+define( 'COUNTRYCODE_YT', 'Mayotte' );
+define( 'COUNTRYCODE_MX', 'Mexico' );
+define( 'COUNTRYCODE_MN', 'Mongolia' );
+define( 'COUNTRYCODE_MS', 'Montserrat' );
+define( 'COUNTRYCODE_MA', 'Morocco' );
+define( 'COUNTRYCODE_MZ', 'Mozambique' );
+define( 'COUNTRYCODE_NA', 'Namibia' );
+define( 'COUNTRYCODE_NR', 'Nauru' );
+define( 'COUNTRYCODE_NP', 'Nepal' );
+define( 'COUNTRYCODE_NL', 'Netherlands' );
+define( 'COUNTRYCODE_AN', 'Netherlands Antilles' );
+define( 'COUNTRYCODE_NC', 'New Caledonia' );
+define( 'COUNTRYCODE_NZ', 'New Zealand' );
+define( 'COUNTRYCODE_NI', 'Nicaragua' );
+define( 'COUNTRYCODE_NE', 'Niger' );
+define( 'COUNTRYCODE_NU', 'Niue' );
+define( 'COUNTRYCODE_NF', 'Norfolk Island' );
+define( 'COUNTRYCODE_NO', 'Norway' );
+define( 'COUNTRYCODE_OM', 'Oman' );
+define( 'COUNTRYCODE_PW', 'Palau' );
+define( 'COUNTRYCODE_PA', 'Panama' );
+define( 'COUNTRYCODE_PG', 'Papua New Guinea' );
+define( 'COUNTRYCODE_PE', 'Peru' );
+define( 'COUNTRYCODE_PH', 'Philippines' );
+define( 'COUNTRYCODE_PN', 'Pitcairn Islands' );
+define( 'COUNTRYCODE_PL', 'Poland' );
+define( 'COUNTRYCODE_PT', 'Portugal' );
+define( 'COUNTRYCODE_QA', 'Qatar' );
+define( 'COUNTRYCODE_CG', 'Republic of the Congo' );
+define( 'COUNTRYCODE_RE', 'Reunion' );
+define( 'COUNTRYCODE_RO', 'Romania' );
+define( 'COUNTRYCODE_RU', 'Russia' );
+define( 'COUNTRYCODE_RW', 'Rwanda' );
+define( 'COUNTRYCODE_VC', 'Saint Vincent and the Grenadines' );
+define( 'COUNTRYCODE_WS', 'Samoa' );
+define( 'COUNTRYCODE_SM', 'San Marino' );
+define( 'COUNTRYCODE_ST', 'S&atilde;o Tom&eacute; and Pr&iacute;ncipe' );
+define( 'COUNTRYCODE_SA', 'Saudi Arabia' );
+define( 'COUNTRYCODE_SN', 'Senegal' );
+define( 'COUNTRYCODE_SC', 'Seychelles' );
+define( 'COUNTRYCODE_SL', 'Sierra Leone' );
+define( 'COUNTRYCODE_SG', 'Singapore' );
+define( 'COUNTRYCODE_SK', 'Slovakia' );
+define( 'COUNTRYCODE_SI', 'Slovenia' );
+define( 'COUNTRYCODE_SB', 'Solomon Islands' );
+define( 'COUNTRYCODE_SO', 'Somalia' );
+define( 'COUNTRYCODE_ZA', 'South Africa' );
+define( 'COUNTRYCODE_KR', 'South Korea' );
+define( 'COUNTRYCODE_ES', 'Spain' );
+define( 'COUNTRYCODE_LK', 'Sri Lanka' );
+define( 'COUNTRYCODE_SH', 'St. Helena' );
+define( 'COUNTRYCODE_KN', 'St. Kitts and Nevis' );
+define( 'COUNTRYCODE_LC', 'St. Lucia' );
+define( 'COUNTRYCODE_PM', 'St. Pierre and Miquelon' );
+define( 'COUNTRYCODE_SR', 'Suriname' );
+define( 'COUNTRYCODE_SJ', 'Svalbard and Jan Mayen Islands' );
+define( 'COUNTRYCODE_SZ', 'Swaziland' );
+define( 'COUNTRYCODE_SE', 'Sweden' );
+define( 'COUNTRYCODE_CH', 'Switzerland' );
+define( 'COUNTRYCODE_TW', 'Taiwan' );
+define( 'COUNTRYCODE_TJ', 'Tajikistan' );
+define( 'COUNTRYCODE_TZ', 'Tanzania' );
+define( 'COUNTRYCODE_TH', 'Thailand' );
+define( 'COUNTRYCODE_TG', 'Togo' );
+define( 'COUNTRYCODE_TO', 'Tonga' );
+define( 'COUNTRYCODE_TT', 'Trinidad and Tobago' );
+define( 'COUNTRYCODE_TN', 'Tunisia' );
+define( 'COUNTRYCODE_TR', 'Turkey' );
+define( 'COUNTRYCODE_TM', 'Turkmenistan' );
+define( 'COUNTRYCODE_TC', 'Turks and Caicos Islands' );
+define( 'COUNTRYCODE_TV', 'Tuvalu' );
+define( 'COUNTRYCODE_UG', 'Uganda' );
+define( 'COUNTRYCODE_UA', 'Ukraine' );
+define( 'COUNTRYCODE_AE', 'United Arab Emirates' );
+define( 'COUNTRYCODE_GB', 'United Kingdom' );
+define( 'COUNTRYCODE_UY', 'Uruguay' );
+define( 'COUNTRYCODE_VU', 'Vanuatu' );
+define( 'COUNTRYCODE_VA', 'Vatican City State' );
+define( 'COUNTRYCODE_VE', 'Venezuela' );
+define( 'COUNTRYCODE_VN', 'Vietnam' );
+define( 'COUNTRYCODE_WF', 'Wallis and Futuna Islands' );
+define( 'COUNTRYCODE_YE', 'Yemen' );
+define( 'COUNTRYCODE_ZM', 'Zambia' );
 
-A new user has created a subscription at %s.
-
-The details for this user are:
-
-Name - %s
-e-mail - %s
-Username - %s
-
-Please do not respond to this message as it is automatically generated and is for information purposes only.");
-DEFINE ('_ACCTEXP_ASEND_MSG_RENEW',"Hello %s,
-
-A user has renewed his subscription at %s.
-
-The details for this user are:
-
-Name - %s
-e-mail - %s
-Username - %s
-
-Please do not respond to this message as it is automatically generated and is for information purposes only.");
 ?>

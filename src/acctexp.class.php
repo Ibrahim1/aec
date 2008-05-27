@@ -8287,8 +8287,6 @@ class microIntegration extends paramDBTable
 		$request->trace				=& $trace;
 
 		if ( method_exists( $this->mi_class, 'on_userchange_action' ) ) {
-			$params = $this->getParams();
-
 			return $this->mi_class->on_userchange_action( $request );
 		} else {
 			return null;
@@ -8297,8 +8295,6 @@ class microIntegration extends paramDBTable
 
 	function profile_info( $userid )
 	{
-		$params = $this->getParams();
-
 		if ( method_exists( $this->mi_class, 'profile_info' ) ) {
 			return $this->mi_class->profile_info( $userid );
 		} else {
@@ -8459,12 +8455,10 @@ class microIntegration extends paramDBTable
 
 	function delete ()
 	{
-		$params = $this->getParams();
-
 		// Maybe this function needs special actions on delete?
 		// TODO: There should be a way to manage complete deletion of use of an MI type
 		if ( method_exists( $this->mi_class, 'delete' ) ){
-			$this->mi_class->delete( $params );
+			$this->mi_class->delete();
 		}
 	}
 }
