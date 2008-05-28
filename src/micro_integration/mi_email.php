@@ -99,6 +99,7 @@ class mi_email
 		$recipients = AECToolbox::rewriteEngineRQ( $this->settings['recipient'], $request );
 		$recips = explode( ',', $recipients );
 
+		$recipients = array();
 		foreach ( $recips as $current => $email ) {
 			$recipients[$current] = trim( $email );
 		}

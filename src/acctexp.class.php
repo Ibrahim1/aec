@@ -29,7 +29,9 @@
 
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
+
 //error_reporting(E_ALL);
+
 global $mosConfig_absolute_path, $mosConfig_offset, $aecConfig;
 
 if ( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
@@ -110,6 +112,7 @@ class metaUser
 		global $database;
 
 		$this->cmsUser = false;
+		$this->hasCBprofile = false;
 		$this->userid = 0;
 
 		$this->hasSubscription = 0;
@@ -466,8 +469,6 @@ class metaUser
 
 		if ( is_object( $this->cbUser ) ) {
 			$this->hasCBprofile = true;
-		} else {
-			$this->hasCBprofile = false;
 		}
 	}
 
@@ -8868,11 +8869,11 @@ class couponHandler
 			$used = $metaUser->usedCoupon( $this->coupon->id, $this->type );
 
 			if ( $used == false ) {
-				$permissions['max_reuse'] = true;
+				$permissions['max_peruser_reuse'] = true;
 			} elseif ( (int) $used  <= (int) $this->restrictions['max_peruser_reuse'] ) {
-				$permissions['max_reuse'] = true;
+				$permissions['max_peruser_reuse'] = true;
 			} else {
-				$permissions['max_reuse'] = false;
+				$permissions['max_peruser_reuse'] = false;
 			}
 		}
 
