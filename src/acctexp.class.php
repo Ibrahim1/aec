@@ -8052,6 +8052,23 @@ class microIntegration extends paramDBTable
 		}
 	}
 
+	function check()
+	{
+		if ( isset( $this->settings ) ) {
+			unset( $this->settings );
+		}
+
+		if ( isset( $this->mi_class ) ) {
+			unset( $this->mi_class );
+		}
+
+		if ( isset( $this->info ) ) {
+			unset( $this->info );
+		}
+
+		return true;
+	}
+
 	function _callMILanguage()
 	{
 		global $mainframe;

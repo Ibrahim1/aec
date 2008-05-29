@@ -62,7 +62,7 @@
 		</copy>
 	</target>
 	<target name="dist.generate">
-		<zip destfile="${distribution.dir}/com_acctexp_0_12_6RC2b.zip"
+		<zip destfile="${distribution.dir}/com_acctexp_0_12_6RC2c.zip"
 			update="true">
 			<fileset dir="${source.dir}" />
 			<exclude name="build.xml" />
