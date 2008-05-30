@@ -62,9 +62,10 @@ class mi_remository
 	 	$groups = $database->loadObjectList();
 
 		$sg = array();
-		foreach ( $groups as $group ) {
-			$sg[] = mosHTML::makeOption( $group->group_id, $group->group_name . ' - '
-			. substr( strip_tags( $group->group_name ), 0, 30 ) );
+		if ( !empty( $groups ) ) {
+			foreach ( $groups as $group ) {
+				$sg[] = mosHTML::makeOption( $group->group_id, $group->group_name . ' - ' . substr( strip_tags( $group->group_name ), 0, 30 ) );
+			}
 		}
 
  		$del_opts = array();

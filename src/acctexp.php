@@ -312,7 +312,8 @@ function subscribe( $option )
 	$username	= aecGetParam( 'username', '' );
 
 	if ( !empty( $username ) && $usage ) {
-		if ( defined( 'JPATH_BASE' ) ) {
+		$CB = ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) );
+		if ( defined( 'JPATH_BASE' ) && !$CB ) {
 			// Joomla 1.5 Sanity Check
 
 			// Get required system objects
@@ -322,7 +323,7 @@ function subscribe( $option )
 			if (!$user->bind( JRequest::get('post'), 'usertype' )) {
 				JError::raiseError( 500, $user->getError());
 			}
-		} else {
+		} elseif ( !defined( 'JPATH_BASE' ) ) {
 			// Joomla 1.0 Sanity Check
 			$row = new mosUser( $database );
 
@@ -340,6 +341,37 @@ function subscribe( $option )
 			if (!$row->check()) {
 				echo "<script> alert('".html_entity_decode($row->getError())."'); window.history.go(-1); </script>\n";
 				exit();
+			}
+		} else {
+			$query = 'SELECT `id`'
+					. ' FROM #__users'
+					. ' WHERE `username` = \'' . $_POST['username'] . '\''
+					;
+			$database->setQuery( $query );
+			if ( $database->loadResult() ) {
+				if ( !defined( 'JPATH_BASE' ) ) {
+					mosErrorAlert( _REGWARN_EMAIL_INUSE );
+				} else {
+					mosErrorAlert( JText::_( 'WARNREG_INUSE' ) );
+				}
+			}
+
+			if ( !empty( $_POST['email'] ) ) {
+				if ( $mosConfig_uniquemail || ( defined( 'JPATH_BASE' )) ) { // J1.5 forces unique email
+					// check for existing email
+					$query = 'SELECT `id`'
+							. ' FROM #__users'
+							. ' WHERE `email` = \'' . $_POST['email'] . '\''
+							;
+					$database->setQuery( $query );
+					if ( $database->loadResult() ) {
+						if ( !defined( 'JPATH_BASE' ) ) {
+							mosErrorAlert( _REGWARN_EMAIL_INUSE );
+						} else {
+							mosErrorAlert( JText::_( 'WARNREG_EMAIL_INUSE' ) );
+						}
+					}
+				}
 			}
 		}
 
