@@ -128,6 +128,8 @@ class mi_mosets_tree extends MI
 
 		$edithack = '// AEC HACK mtree1 START' . "\n"
 		. 'if (!$link_id) {' . "\n"
+		. 'global $mosConfig_absolute_path;' . "\n"
+		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_mosets_tree.php\' );' . "\n"
 		. '$mi_mosetshandler = new mosetstree( $database );' . "\n"
 		. '$mi_mosetshandler->loadUserID( $my->id );' . "\n"
@@ -146,6 +148,8 @@ class mi_mosets_tree extends MI
 
 		$edithack2 = '// AEC HACK mtree2 START' . "\n"
 		. 'if ($row->link_approved == 1) {' . "\n"
+		. 'global $mosConfig_absolute_path;' . "\n"
+		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_mosets_tree.php\' );' . "\n"
 		. '$mi_mosetshandler = new mosetstree( $database );' . "\n"
 		. '$mi_mosetshandler->loadUserID( $my->id );' . "\n"
@@ -165,6 +169,8 @@ class mi_mosets_tree extends MI
 		;
 
 		$edithack3 = '// AEC HACK adminmtree3 START' . "\n"
+		. 'global $mosConfig_absolute_path;' . "\n"
+		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_mosets_tree.php\' );' . "\n"
 		. '$mi_mosetshandler = new mosetstree( $database );' . "\n"
 		. '$mi_mosetshandler->loadUserID( $mtLinks->user_id );' . "\n"

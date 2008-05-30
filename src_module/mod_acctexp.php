@@ -97,7 +97,7 @@ if ( $my->id ) {
 		$database->setQuery($query);
 		$expiration = $database->loadResult();
 
-		if ( $expiration == NULL ) {
+		if ( empty( $expiration ) ) {
 			$query = 'SELECT expiration'
 					. ' FROM #__acctexp_subscr'
 					. ' WHERE userid = \'' . $my->id . '\''
@@ -106,7 +106,7 @@ if ( $my->id ) {
 			$expiration = $database->loadResult();
 		}
 
-		if ( $expiration == NULL ) {
+		if ( empty( $expiration ) ) {
 			?>
 			<p><?php echo _ACCOUNT_UNLIMIT; ?></p>
 			<?php

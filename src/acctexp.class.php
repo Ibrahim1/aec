@@ -3492,7 +3492,7 @@ class SubscriptionPlan extends paramDBTable
 				$mi = new MicroIntegration( $database );
 				$mi->load( $mi_id );
 
-				$mi_form = $mi->getMIform();
+				$mi_form = $mi->getMIform( $this );
 
 				if ( !empty( $mi_form ) ) {
 					$mi_forms .= $mi_form;
@@ -8256,6 +8256,15 @@ class microIntegration extends paramDBTable
 		}
 
 		return $return;
+	}
+
+	function getMIform( $plan )
+	{
+		if ( method_exists( $this->mi_class, 'getMIform' ) ) {
+			return $this->mi_class->getMIform( $plan );
+		} else {
+			return null;
+		}
 	}
 
 	function getErrors()
