@@ -2399,7 +2399,6 @@ function editSubscriptionPlan( $id, $option )
 	$rewriteswitches					= array( 'cms', 'user' );
 	$params['rewriteInfo']				= array( 'fieldset', '', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
-
 	// ensure user can't add group higher than themselves
 	$my_groups = $acl->get_object_groups( 'users', $my->id, 'ARO' );
 	if ( is_array( $my_groups ) && count( $my_groups ) > 0) {
@@ -2408,9 +2407,10 @@ function editSubscriptionPlan( $id, $option )
 		$ex_groups = array();
 	}
 
-	$gtree = $acl->get_group_children_tree( null, 'USERS', false );
+	$gtree = $acl->get_group_children_tree( null, 'USERS', true );
 
 	// mic: exclude public front- & backend
+	$ex_groups[] = 28;
 	$ex_groups[] = 29;
 	$ex_groups[] = 30;
 
