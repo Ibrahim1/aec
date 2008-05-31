@@ -1769,11 +1769,11 @@ class PaymentProcessor
 			$planparams = $plan->getProcessorParameters( $this->id );
 		}
 
-		if ( isset( $planparams['aec_overwrite_settings'] ) ) {
-			if ( $planparams['aec_overwrite_settings'] ) {
-				$this->settings = $this->exchangeSettings( $planparams );
-			}
+		if ( isset( $plan_params['aec_overwrite_settings'] ) ) {
+			unset( $plan_params['aec_overwrite_settings'] );
 		}
+
+		$this->exchangeSettings( $plan_params );
 	}
 
 	function is_recurring( $choice=null, $test=false )
@@ -1845,8 +1845,8 @@ class PaymentProcessor
 		}
 
 		if ( isset( $int_var['planparams']['aec_overwrite_settings'] ) ) {
-			if ( $int_var['planparams']['aec_overwrite_settings'] ) {
-				$settings = $this->exchangeSettingsByPlan( $settings, $int_var['planparams']);
+			if ( !empty( $int_var['planparams']['aec_overwrite_settings'] ) ) {
+				$this->exchangeSettingsByPlan( null, $int_var['planparams'] );
 			}
 		}
 
@@ -1867,8 +1867,8 @@ class PaymentProcessor
 		}
 
 		if ( isset( $int_var['planparams']['aec_overwrite_settings'] ) ) {
-			if ( $int_var['planparams']['aec_overwrite_settings'] ) {
-				$settings = $this->exchangeSettingsByPlan( $settings, $int_var['planparams']);
+			if ( !empty( $int_var['planparams']['aec_overwrite_settings'] ) ) {
+				$this->exchangeSettingsByPlan( null, $int_var['planparams'] );
 			}
 		}
 
@@ -7303,7 +7303,6 @@ class AECToolbox
 
 	function visualstrlen( $string )
 	{
-
 		// Visually Short Chars
 		$srt = array( 'i', 'j', 'l', ',', '.' );
 		// Visually Long Chars
