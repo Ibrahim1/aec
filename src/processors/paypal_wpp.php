@@ -38,12 +38,12 @@ class processor_paypal_wpp extends XMLprocessor
 		$info['longname']		= _CFG_PAYPAL_WPP_LONGNAME;
 		$info['statement']		= _CFG_PAYPAL_WPP_STATEMENT;
 		$info['description']	= _CFG_PAYPAL_WPP_DESCRIPTION;
-		$info['currencies']	= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK';
+		$info['currencies']		= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK';
 		$info['languages']		= 'GB,DE,FR,IT,ES,US,NL';
 		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck,giropay';
 		$info['recurring']		= 2;
 		$info['actions']		= 'cancel';
-		$info['secure']		= 1;
+		$info['secure']			= 1;
 
 		return $info;
 	}
@@ -166,20 +166,32 @@ class processor_paypal_wpp extends XMLprocessor
 				$var['TrialBillingFrequency']	= $trial['period'];
 				$var['TrialAmt']				= $request->int_var['amount']['amount1'];
 				$var['TrialTotalBillingCycles'] = 1; // Not Fully Supported Yet
+
+				switch ( $request->int_var['amount']['unit1'] ) {
+					case 'D': $offset = $request->int_var['amount']['period1'] * 3600 * 24; break;
+					case 'W': $offset = $request->int_var['amount']['period1'] * 3600 * 24 * 7; break;
+					case 'M': $offset = $request->int_var['amount']['period1'] * 3600 * 24 * 31; break;
+					case 'Y': $offset = $request->int_var['amount']['period1'] * 3600 * 24 * 356; break;
+				}
+
+				$timestamp = time() - ($mosConfig_offset_user*3600) + $offset;
+			} else {
+				$timestamp = time() - $mosConfig_offset_user*3600;
 			}
+
+			$var['ProfileStartDate']    = date( 'Y-m-d', $timestamp ) . 'T' . date( 'H:i:s', $timestamp ) . 'Z';
 
 			$full = $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
 
-			$timestamp = time() - $mosConfig_offset_user*3600;
-			$var['ProfileStartDate']	= date( 'Y-m-d', $timestamp ) . 'T' . date( 'H:i:s', $timestamp ) . 'Z';
-			$var['BillingPeriod']			= $full['unit'];
-			$var['BillingFrequency']		= $full['period'];
-			$var['amt']						= $request->int_var['amount']['amount3'];
+			$var['BillingPeriod']		= $full['unit'];
+			$var['BillingFrequency']	= $full['period'];
+			$var['amt']					= $request->int_var['amount']['amount3'];
+			$var['ProfileReference']	= $request->int_var['invoice'];
 		} else {
-			$var['amt']						= $request->int_var['amount'];
+			$var['amt']					= $request->int_var['amount'];
 		}
 
-		$var['currencyCode']		= $this->settings['currency'];
+		$var['currencyCode']			= $this->settings['currency'];
 
 		$content = array();
 		foreach ( $var as $name => $value ) {

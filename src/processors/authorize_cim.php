@@ -247,7 +247,7 @@ class processor_authorize_cim extends XMLprocessor
 			$cim->updateCustomerPaymentProfileRequest();
 			$cim->updateCustomerShippingAddressRequest();
 		} else {aecDebug('profileid NOT found');
-			$cim->createCustomerProfileRequest();
+			$cim->createCustomerProfileRequest();aecDebug(json_encode($cim));
 		}
 
 		if ( $cim->isSuccessful() ) {aecDebug('call instantly works');
