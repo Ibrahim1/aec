@@ -3487,22 +3487,40 @@ class SubscriptionPlan extends paramDBTable
 		if ( !empty( $mis ) ) {
 			global $database;
 
-			$mi_forms = '';
+			$settings = array();
+			$lists = array();
 			foreach ( $mis as $mi_id ) {
+
 				$mi = new MicroIntegration( $database );
 				$mi->load( $mi_id );
 
 				$mi_form = $mi->getMIform( $this );
 
 				if ( !empty( $mi_form ) ) {
-					$mi_forms .= $mi_form;
+					if ( !empty( $mi_form['lists'] ) ) {
+						$lists = array_merge( $lists, $mi_form['lists'] );
+						unset( $mi_form['lists'] );
+					}
+
+					$settings['mi_'.$mi->id.'_remap_area'] = array( 'subarea_change', $mi->class_name );
+
+					foreach ( $mi_form as $fname => $fcontent ) {
+						$settings['mi_'.$mi->id.'_'.$fname] = $fcontent;
+					}
 				}
 			}
+
+
 		}
 
 		if ( empty( $mi_forms ) ) {
 			return false;
 		} else {
+			$settings = new aecSettings ( 'mi', 'frontend_forms' );
+			$settingsparams = array_merge( $aecConfig->cfg, $ppsettings );
+			$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
+
+			$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 			return $mi_forms;
 		}
 	}
