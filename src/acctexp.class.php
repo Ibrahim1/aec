@@ -7411,6 +7411,7 @@ class AECToolbox
 		if ( in_array( 'invoice', $switches ) ) {
 			$rewrite['invoice'][] = 'id';
 			$rewrite['invoice'][] = 'number';
+			$rewrite['invoice'][] = 'number_format';
 			$rewrite['invoice'][] = 'created_date';
 			$rewrite['invoice'][] = 'transaction_date';
 			$rewrite['invoice'][] = 'method';
@@ -7588,6 +7589,10 @@ class AECToolbox
 			$rewrite['invoice_amount']				= $invoice->amount;
 			$rewrite['invoice_currency']			= $invoice->currency;
 			$rewrite['invoice_coupons']				= $invoice->coupons;
+
+			$invoice->formatInvoiceNumber();
+
+			$rewrite['invoice_number_format']		= $invoice->invoice_number;
 		}
 
 		if ( is_object( $subscriptionPlan ) ) {

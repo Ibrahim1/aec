@@ -1161,6 +1161,7 @@ define( '_REWRITE_KEY_SYSTEM_SERVER_TIMESTAMP_BACKEND', 'Server Timestamp (Backe
 define( '_REWRITE_AREA_INVOICE', 'Invoice Related');
 define( '_REWRITE_KEY_INVOICE_ID', 'Invoice ID');
 define( '_REWRITE_KEY_INVOICE_NUMBER', 'Invoice Number');
+define( '_REWRITE_KEY_INVOICE_NUMBER_FORMAT', 'Invoice Number (formatted)');
 define( '_REWRITE_KEY_INVOICE_CREATED_DATE', 'Date of Creation');
 define( '_REWRITE_KEY_INVOICE_TRANSACTION_DATE', 'Date of Transaction');
 define( '_REWRITE_KEY_INVOICE_METHOD', 'Payment Method');

@@ -1143,6 +1143,7 @@ define( '_REWRITE_KEY_SYSTEM_SERVER_TIMESTAMP_BACKEND', 'Server Zeitstempel (Bac
 define( '_REWRITE_AREA_INVOICE', 'Rechnungs Bezogen');
 define( '_REWRITE_KEY_INVOICE_ID', 'Rechnungs ID');
 define( '_REWRITE_KEY_INVOICE_NUMBER', 'Rechnungs Nummer');
+define( '_REWRITE_KEY_INVOICE_NUMBER_FORMAT', 'Rechnungs Nummer (formattierd)');
 define( '_REWRITE_KEY_INVOICE_CREATED_DATE', 'Datum der Erstellung');
 define( '_REWRITE_KEY_INVOICE_TRANSACTION_DATE', 'Datum der Bezahlung');
 define( '_REWRITE_KEY_INVOICE_METHOD', 'Bezahlungsmethode');
