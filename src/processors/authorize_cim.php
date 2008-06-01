@@ -98,7 +98,9 @@ class processor_authorize_cim extends XMLprocessor
 		if ( isset( $_POST['billFirstName'] ) ) {
 			$cim = new AuthNetCim( $this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode'] );
 
-			$cim->setParameter( 'customerProfileId', $this->getCustomerProfileID( $request->metaUser->userid ) );
+			$profileid = $this->getCustomerProfileID( $request->metaUser->userid );
+
+			$cim->setParameter( 'customerProfileId', $profileid );
 			$cim->getCustomerProfileRequest();
 
 			$udata = array( 'billTo_firstName' => 'billFirstName', 'billTo_lastName' => 'billLastName', 'billTo_company' => 'billCompany', 'billTo_address' => 'billAddress',
@@ -110,67 +112,96 @@ class processor_authorize_cim extends XMLprocessor
 							);
 
 			foreach ( $udata as $authvar => $aecvar ) {
-				$cim->setParameter( $authvar, trim( $_POST[$aecvar] ) );
+				if ( !empty( $_POST[$aecvar] ) ) {
+					$cim->setParameter( $authvar, trim( $_POST[$aecvar] ) );
+				}
 			}
 
 			$cim->setParameter( 'customerProfileId',		$cim->customerProfileId );
 			$cim->setParameter( 'customerPaymentProfileId',	$cim->customerPaymentProfileId );
 			$cim->setParameter( 'customerAddressId',		$cim->customerAddressId );
 
-			$cim->updateCustomerPaymentProfileRequest();
+			if ( !empty( $_POST['cardNumber'] ) ) {
+				$basicdata = array(	'paymentType'			=> 'creditcard',
+									'cardNumber'			=> trim( $_POST['cardNumber'] ),
+									'expirationDate'		=> $_POST['expirationYear'] . '-' . $_POST['expirationMonth']
+									);
+
+				foreach ( $basicdata as $key => $value ) {
+					$cim->setParameter( $key, $value );
+				}
+
+				$cim->updateCustomerPaymentProfileRequest();
+
+				$cim->setParameter( 'customerProfileId',		$cim->customerProfileId );
+				$cim->setParameter( 'customerPaymentProfileId',	$cim->customerPaymentProfileId );
+				$cim->setParameter( 'customerAddressId',		$cim->customerAddressId );
+
+				foreach ( $udata as $authvar => $aecvar ) {
+					if ( !empty( $_POST[$aecvar] ) ) {
+						$cim->setParameter( $authvar, trim( $_POST[$aecvar] ) );
+					}
+				}
+			}
+
 			$cim->updateCustomerShippingAddressRequest();
+
+			$cim = null;
+			$cim = new AuthNetCim( $this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode'] );
+			$cim->setParameter( 'customerProfileId', $profileid );
+			$cim->getCustomerProfileRequest();
 		} else {
 			$cim = null;
+			$profileid = null;
 		}
 
-		$var = $this->checkoutform( $request, $cim );
+		$var = $this->checkoutform( $request, $cim, $profileid );
 
-		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=checkout', true ) . '" method="post">' . "\n";
+		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=authorize_cim_details', true ) . '" method="post">' . "\n";
 		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
 		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
-		$return .= '<input type="hidden" name="task" value="checkout" />' . "\n";
+		$return .= '<input type="hidden" name="task" value="subscriptiondetails" />' . "\n";
 		$return .= '<input type="hidden" name="sub" value="authorize_cim_details" />' . "\n";
-		$return .= '<input type="submit" class="button" value="' . _BUTTON_CHECKOUT . '" /><br /><br />' . "\n";
+		$return .= '<input type="submit" class="button" value="' . _BUTTON_APPLY . '" /><br /><br />' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
 	}
 
-	function checkoutform( $request, $cim=null )
+	function checkoutform( $request, $cim=null, $profileid=null )
 	{
 		$var = array();
 		$hascim = false;
 
-		$profileid = $this->getCustomerProfileID( $request->metaUser->userid );
+		if ( empty( $profileid ) ) {
+			$profileid = $this->getCustomerProfileID( $request->metaUser->userid );
+		}
 
 		if ( empty( $cim ) && !empty( $profileid ) ) {
 			$cim = new AuthNetCim( $this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode'] );
 
-			if ( empty( $profileid ) ) {
-				$cim->getCustomerProfileRequest();
-			}
 			$cim->setParameter( 'customerProfileId', $profileid );
 			$cim->getCustomerProfileRequest();
 
 			if ( $cim->isSuccessful() ) {
 				$hascim = true;
 			}
+		} elseif ( !empty( $cim ) && !empty( $profileid ) ) {
+			$hascim = true;
 		}
 
 		if ( $hascim ) {
-			/*$cardNumber = $cim->substring_between($cim->response,'<cardNumber>','</cardNumber>');
-			$cardExpiry = $cim->substring_between($cim->response,'<expirationDate>','</expirationDate>');
-			$var['params']['cardNumberStatic'] = array( 'strong', _AEC_CCFORM_CARDNUMBER_NAME, strtolower( "XXXXXXXX" . $cardNumber ));
-			$var['params']['cardExpiryStatic'] = array( 'strong', _AEC_CCFORM_CARDNUMBER_NAME, strtolower( $cardExpiry ));*/
+			$vcontent['card_number'] = $cim->substring_between($cim->response,'<cardNumber>','</cardNumber>');
 
 			$firstname = $cim->substring_between( $cim->response,'<firstName>','</firstName>' );
 			$lastname = $cim->substring_between( $cim->response,'<lastName>','</lastName>' );
 		} else {
 			$firstname = '';
 			$lastname = '';
+			$vcontent = '';
 		}
 
-		$var = $this->getCCform( $var, array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ) );
+		$var = $this->getCCform( $var, array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), $vcontent );
 
 		$var['params']['billFirstName'] = array( 'inputC', _AEC_USERFORM_BILLFIRSTNAME_NAME, _AEC_USERFORM_BILLFIRSTNAME_NAME, $firstname );
 		$var['params']['billLastName'] = array( 'inputC', _AEC_USERFORM_BILLLASTNAME_NAME, _AEC_USERFORM_BILLLASTNAME_NAME, $lastname );
@@ -238,7 +269,7 @@ class processor_authorize_cim extends XMLprocessor
 
 		$profileid = $this->getCustomerProfileID( $request->metaUser->userid );
 
-		if ( $profileid ) {aecDebug('profileid found');
+		if ( $profileid ) {
 			$cim->setParameter( 'customerProfileId', $profileid );
 			$cim->getCustomerProfileRequest();
 
@@ -248,15 +279,19 @@ class processor_authorize_cim extends XMLprocessor
 
 			$cim->updateCustomerPaymentProfileRequest();
 			$cim->updateCustomerShippingAddressRequest();
-		} else {aecDebug('profileid NOT found');
-			$cim->createCustomerProfileRequest();aecDebug(json_encode($cim));
+		} else {
+			$cim->createCustomerProfileRequest();
 
 			if ( $cim->isSuccessful() ) {
 				$this->setCustomerProfileID( $request->metaUser->userid, $cim->customerProfileId );
 			}
+
+			$cim->setParameter( 'customerProfileId',		$cim->customerProfileId );
+			$cim->setParameter( 'customerPaymentProfileId',	$cim->customerPaymentProfileId );
+			$cim->setParameter( 'customerAddressId',		$cim->customerAddressId );
 		}
 
-		if ( $cim->isSuccessful() ) {aecDebug('call instantly works');
+		if ( $cim->isSuccessful() ) {
 			/*$li['itemId']		= $request->int_var['invoice'];
 			$li['name']			= trim( substr( AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice ), 0, 30 ) );
 			$li['description']	= trim( AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice ));
@@ -267,8 +302,9 @@ class processor_authorize_cim extends XMLprocessor
 			$cim->LineItems = array( $li );*/
 
 			if ( is_array( $request->int_var['amount'] ) ) {
-				$cim->setParameter( 'transactionRecurringBilling',	'true' );
-				$cim->setParameter( 'transaction_amount',	$request->int_var['amount'] );
+				//$cim->setParameter( 'transactionRecurringBilling',	'true' );
+				$cim->setParameter( 'transaction_amount',	$request->int_var['amount']['amount3'] );
+				// Need a system to do the rebills internally
 			} else {
 				$cim->setParameter( 'transaction_amount',	$request->int_var['amount'] );
 			}
@@ -278,13 +314,13 @@ class processor_authorize_cim extends XMLprocessor
 
 			$cim->createCustomerProfileTransactionRequest();aecDebug(json_encode($cim));
 
-			if ( $cim->isSuccessful() ) {aecDebug('Transaction call instantly works');
+			if ( $cim->isSuccessful() ) {
 				$return['valid']	= true;
 				$return['invoice']	= $cim->refId;
-			} else {aecDebug('Transaction call instantly fails');
+			} else {
 				$return['error']	= $cim->code . ": " . $cim->text;
 			}
-		} else {aecDebug('call instantly fails');
+		} else {
 			$return['error']		= $cim->code . ": " . $cim->text;
 		}
 

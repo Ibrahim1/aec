@@ -2340,13 +2340,19 @@ class XMLprocessor extends processor
 		return $return;
 	}
 
-	function getCCform( $var=array(), $values=null )
+	function getCCform( $var=array(), $values=null, $content=null )
 	{
 		if ( empty( $values ) ) {
 			$values = array( 'card_number', 'card_exp_month', 'card_exp_year' );
 		}
 
 		foreach ( $values as $value ) {
+			if ( isset( $content[$value] ) ) {
+				$vcontent = $content[$value];
+			} else {
+				$vcontent = '';
+			}
+
 			switch ( $value ) {
 				case 'card_type':
 					$options = array();
@@ -2356,11 +2362,11 @@ class XMLprocessor extends processor
 					$options[] = mosHTML::makeOption( 'amex', 'American Express' );
 
 					$var['params']['lists']['cardType'] = mosHTML::selectList( $options, 'cardType', 'size="1" style="width:70px;"', 'value', 'text', 'visa' );
-					$var['params']['cardType'] = array( 'list', _AEC_CCFORM_CARDTYPE_NAME, _AEC_CCFORM_CARDTYPE_DESC, '' );
+					$var['params']['cardType'] = array( 'list', _AEC_CCFORM_CARDTYPE_NAME, _AEC_CCFORM_CARDTYPE_DESC, $vcontent );
 					break;
 				case 'card_number':
 					// Request the Card number
-					$var['params']['cardNumber'] = array( 'inputC', _AEC_CCFORM_CARDNUMBER_NAME, _AEC_CCFORM_CARDNUMBER_DESC, '' );
+					$var['params']['cardNumber'] = array( 'inputC', _AEC_CCFORM_CARDNUMBER_NAME, _AEC_CCFORM_CARDNUMBER_DESC, $vcontent );
 					break;
 				case 'card_exp_month':
 					// Create a selection box with 12 months
@@ -2370,7 +2376,7 @@ class XMLprocessor extends processor
 						$months[] = mosHTML::makeOption( $month, $month );
 					}
 
-					$var['params']['lists']['expirationMonth'] = mosHTML::selectList( $months, 'expirationMonth', 'size="1" style="width:50px;"', 'value', 'text', 0 );
+					$var['params']['lists']['expirationMonth'] = mosHTML::selectList( $months, 'expirationMonth', 'size="1" style="width:50px;"', 'value', 'text', $vcontent );
 					$var['params']['expirationMonth'] = array( 'list', _AEC_CCFORM_EXPIRATIONMONTH_NAME, _AEC_CCFORM_EXPIRATIONMONTH_DESC );
 					break;
 				case 'card_exp_year':
@@ -2381,11 +2387,11 @@ class XMLprocessor extends processor
 						$years[] = mosHTML::makeOption( $i, $i );
 					}
 
-					$var['params']['lists']['expirationYear'] = mosHTML::selectList( $years, 'expirationYear', 'size="1" style="width:70px;"', 'value', 'text', 0 );
+					$var['params']['lists']['expirationYear'] = mosHTML::selectList( $years, 'expirationYear', 'size="1" style="width:70px;"', 'value', 'text', $vcontent );
 					$var['params']['expirationYear'] = array( 'list', _AEC_CCFORM_EXPIRATIONYEAR_NAME, _AEC_CCFORM_EXPIRATIONYEAR_DESC );
 					break;
 				case 'card_cvv2':
-					$var['params']['cardVV2'] = array( 'inputC', _AEC_CCFORM_CARDVV2_NAME, _AEC_CCFORM_CARDVV2_DESC, '' );
+					$var['params']['cardVV2'] = array( 'inputC', _AEC_CCFORM_CARDVV2_NAME, _AEC_CCFORM_CARDVV2_DESC, $vcontent );
 					break;
 			}
 		}

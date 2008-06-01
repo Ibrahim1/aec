@@ -160,12 +160,14 @@ class processor_paypal_wpp extends XMLprocessor
 			// $var['FailedInitAmtAction'] = 'ContinueOnFailure'; // Not Supported Yet (optional)
 
 			if ( isset( $request->int_var['amount']['amount1'] ) ) {
+				/* For now, this is not working, we have to wait until PayPal fixes this
 				$trial = $this->convertPeriodUnit( $request->int_var['amount']['period1'], $request->int_var['amount']['unit1'] );
 
 				$var['TrialBillingPeriod']		= $trial['unit'];
 				$var['TrialBillingFrequency']	= $trial['period'];
 				$var['TrialAmt']				= $request->int_var['amount']['amount1'];
 				$var['TrialTotalBillingCycles'] = 1; // Not Fully Supported Yet
+				*/
 
 				switch ( $request->int_var['amount']['unit1'] ) {
 					case 'D': $offset = $request->int_var['amount']['period1'] * 3600 * 24; break;
