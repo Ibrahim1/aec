@@ -359,10 +359,16 @@ margin: 0 auto;
 }
 
 td.cleft {
+padding: 2px;
+margin: 0px;
+width: 50%;
 text-align: right;
 }
 
 td.cright {
+padding: 2px;
+margin: 0px;
+width: 50%;
 text-align: left;
 }
 

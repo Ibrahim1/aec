@@ -226,12 +226,14 @@ class processor_authorize_cim extends XMLprocessor
 						'billTo_city' => 'billCity', 'billTo_state' => 'billState', 'billTo_zip' => 'billZip', 'billTo_country' => 'billCountry',
 						'billTo_phoneNumber' => 'billPhone', 'billTo_faxNumber' => 'billFax',
 						'shipTo_firstName' => 'billFirstName', 'shipTo_lastName' => 'billLastName', 'shipTo_company' => 'billCompany', 'shipTo_address' => 'billAddress',
-						'shipTo_city' => 'shipTo_city', 'shipTo_state' => 'billState', 'shipTo_zip' => 'billZip', 'shipTo_country' => 'billCountry',
+						'shipTo_city' => 'billCity', 'shipTo_state' => 'billState', 'shipTo_zip' => 'billZip', 'shipTo_country' => 'billCountry',
 						'shipTo_phoneNumber' => 'billPhone', 'shipTo_faxNumber' => 'billFax'
 						);
 
 		foreach ( $udata as $authvar => $aecvar ) {
-			$cim->setParameter( $authvar, trim( $request->int_var['params'][$aecvar] ) );
+			if ( !empty( $request->int_var['params'][$aecvar] ) ) {
+				$cim->setParameter( $authvar, trim( $request->int_var['params'][$aecvar] ) );
+			}
 		}
 
 		$profileid = $this->getCustomerProfileID( $request->metaUser->userid );
@@ -248,6 +250,10 @@ class processor_authorize_cim extends XMLprocessor
 			$cim->updateCustomerShippingAddressRequest();
 		} else {aecDebug('profileid NOT found');
 			$cim->createCustomerProfileRequest();aecDebug(json_encode($cim));
+
+			if ( $cim->isSuccessful() ) {
+				$this->setCustomerProfileID( $request->metaUser->userid, $cim->customerProfileId );
+			}
 		}
 
 		if ( $cim->isSuccessful() ) {aecDebug('call instantly works');
@@ -260,11 +266,17 @@ class processor_authorize_cim extends XMLprocessor
 
 			$cim->LineItems = array( $li );*/
 
-			$cim->setParameter( 'transaction_amount',	$request->int_var['amount'] );
+			if ( is_array( $request->int_var['amount'] ) ) {
+				$cim->setParameter( 'transactionRecurringBilling',	'true' );
+				$cim->setParameter( 'transaction_amount',	$request->int_var['amount'] );
+			} else {
+				$cim->setParameter( 'transaction_amount',	$request->int_var['amount'] );
+			}
+
 			$cim->setParameter( 'transactionType',		'profileTransAuthCapture' );
 			$cim->setParameter( 'transactionCardCode',	trim( $request->int_var['params']['cardVV2'] ) );
 
-			$cim->createCustomerProfileTransactionRequest();
+			$cim->createCustomerProfileTransactionRequest();aecDebug(json_encode($cim));
 
 			if ( $cim->isSuccessful() ) {aecDebug('Transaction call instantly works');
 				$return['valid']	= true;
@@ -288,6 +300,49 @@ class processor_authorize_cim extends XMLprocessor
 		$userParams =& new mosParameters( $row->params );
 
 		return (int) $userParams->get( 'customerProfileId' );
+	}
+
+	function setCustomerProfileID( $userID, $profileID )
+	{
+		global $database;
+		$row = new mosUser( $database );
+		$row->load( (int) $userID );
+
+		$params = explode( "\n", $row->params );
+
+		$array = array();
+		foreach ( $params as $chunk ) {
+			$k = explode( '=', $chunk, 2 );
+			if ( !empty( $k[0] ) ) {
+				// Strip slashes, but preserve special characters
+				$array[$k[0]] = stripslashes( str_replace( array( '\n', '\t', '\r' ), array( "\n", "\t", "\r" ), $k[1] ) );
+			}
+			unset( $k );
+		}
+
+		$array['customerProfileId'] = $profileID;
+
+		$params = array();
+		foreach ( $array as $key => $value ) {
+			if ( !is_null( $key ) ) {
+				if ( is_array( $value ) ) {
+					$temp = implode( ';', $value );
+					$value = $temp;
+				}
+
+				if ( get_magic_quotes_gpc() ) {
+					$value = stripslashes( $value );
+				}
+				$value = $database->getEscaped( $value );
+
+				$params[] = $key . '=' . $value;
+			}
+		}
+
+		$row->params = implode( "\n", $params );
+
+		$row->check();
+		return $row->store();
 	}
 }
 ?>

@@ -323,7 +323,7 @@ function subscribe( $option )
 			if (!$user->bind( JRequest::get('post'), 'usertype' )) {
 				JError::raiseError( 500, $user->getError());
 			}
-		} elseif ( !defined( 'JPATH_BASE' ) ) {
+		} elseif ( !defined( 'JPATH_BASE' ) && !$CB ) {
 			// Joomla 1.0 Sanity Check
 			$row = new mosUser( $database );
 
