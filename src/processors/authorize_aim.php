@@ -91,7 +91,7 @@ class processor_authorize_aim extends XMLprocessor
 	{
 		global $mosConfig_live_site;
 
-		$var = $this->getCCform( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' );
+		$var = $this->getCCform( array(), array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ) );
 
 		$name = explode( ' ', $request->metaUser->cmsUser->name );
 
