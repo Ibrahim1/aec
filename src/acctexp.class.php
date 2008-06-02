@@ -3310,7 +3310,7 @@ class SubscriptionPlan extends paramDBTable
 			$metaUser->focusSubscription->store();
 		}
 
-		if ( !( $silent && $aecConfig->cfg['noemails'] ) ) {
+		if ( !( $silent || $aecConfig->cfg['noemails'] ) ) {
 			if ( ( $this->id !== $aecConfig->cfg['entry_plan'] ) ) {
 				$metaUser->focusSubscription->sendEmailRegistered( $renew );
 			}
@@ -4760,7 +4760,7 @@ class InvoiceFactory
 
 		if ( !empty( $subscr ) ) {
 			if ( $this->metaUser->moveFocus( $subscr ) ) {
-				$invoice->loadbySubscription( $this->metaUser->focusSubscription->id, $this->metaUser->userid );
+				$invoice->loadbySubscriptionId( $this->metaUser->focusSubscription->id, $this->metaUser->userid );
 			}
 		}
 
