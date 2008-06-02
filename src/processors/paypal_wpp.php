@@ -296,7 +296,7 @@ class processor_paypal_wpp extends XMLprocessor
 	function ManageRecurringPaymentsProfileStatus( $request, $command, $note )
 	{
 		$var['Method']				= 'ManageRecurringPaymentsProfileStatus';
-		$var['Version']			= '3.0';
+		$var['Version']			= '50.0';
 		$var['user']				= $this->settings['api_user'];
 		$var['pwd']					= $this->settings['api_password'];
 		$var['signature']			= $this->settings['signature'];
@@ -304,7 +304,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$invoiceparams = $request->invoice->getParams();
 
 		// Add Payment information
-		$var['profileid'] = $invoiceparams['subscriptionid'];
+		$var['profileid']			= $invoiceparams['subscriptionid'];
 
 		$var['action']				= $command;
 		$var['note']				= $note;
@@ -319,12 +319,16 @@ class processor_paypal_wpp extends XMLprocessor
 		$path = "/nvp";
 
 		if ( $this->settings['testmode'] ) {
-			$url = "https://api.sandbox.paypal.com" . $path;
+			if ( $this->settings['use_certificate'] ) {
+				$url = "https://api.sandbox.paypal.com" . $path;
+			} else {
+				$url = "https://api-3t.sandbox.paypal.com" . $path;
+			}
 		} else {
 			if ( $this->settings['use_certificate'] ) {
-				$url = "https://api-3t.sandbox.paypal.com" . $path;
-			} else {
 				$url = "https://api.paypal.com" . $path;
+			} else {
+				$url = "https://api-3t.paypal.com" . $path;
 			}
 		}
 

@@ -346,7 +346,7 @@ class processor_authorize_cim extends XMLprocessor
 		if ( $invoice->id ) {
 			$profileid = $this->getCustomerProfileID( $request->metaUser->userid );
 
-			$cim->setParameter( 'customerProfileId', $profileid );
+			$cim->setParameter( 'customerProfileId',		 $profileid );
 			$cim->getCustomerProfileRequest();
 
 			$cim->setParameter( 'customerProfileId',		$cim->customerProfileId );
@@ -355,10 +355,13 @@ class processor_authorize_cim extends XMLprocessor
 
 			$invoice->computeAmount();
 
-			$cim->setParameter( 'transaction_amount',	$invoice->amount );
+			$cim->setParameter( 'transaction_amount',		$invoice->amount );
 
-			$cim->setParameter( 'transactionType',		'profileTransAuthCapture' );
-			$cim->setParameter( 'transactionCardCode',	trim( $request->int_var['params']['cardVV2'] ) );
+			$cim->setParameter( 'refId',					$invoice->invoice_number );
+			$cim->setParameter( 'merchantCustomerId',		$invoice->userid );
+
+			$cim->setParameter( 'transactionType',			'profileTransAuthCapture' );
+			$cim->setParameter( 'transactionCardCode',		trim( $request->int_var['params']['cardVV2'] ) );
 
 			$cim->createCustomerProfileTransactionRequest();
 

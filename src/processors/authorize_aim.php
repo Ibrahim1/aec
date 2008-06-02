@@ -93,14 +93,14 @@ class processor_authorize_aim extends XMLprocessor
 
 		$var = $this->getCCform( array(), array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ) );
 
-		$name = explode( ' ', $request->metaUser->cmsUser->name );
+		// Explode Name
+		$namearray		= explode( " ", $request->metaUser->cmsUser->name );
+		$firstfirstname	= $namearray[0];
+		$maxname		= count($namearray) - 1;
+		$lastname		= $namearray[$maxname];
 
-		if ( empty( $name[1] ) ) {
-			$name[1] = "";
-		}
-
-		$var['params']['billFirstName'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLFIRSTNAME_NAME, _AEC_AUTHORIZE_AIM_PARAMS_BILLFIRSTNAME_DESC, $name[0]);
-		$var['params']['billLastName'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLLASTNAME_NAME, _AEC_AUTHORIZE_AIM_PARAMS_BILLLASTNAME_DESC, $name[1]);
+		$var['params']['billFirstName'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLFIRSTNAME_NAME, _AEC_AUTHORIZE_AIM_PARAMS_BILLFIRSTNAME_NAME, $firstfirstname );
+		$var['params']['billLastName'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLLASTNAME_NAME, _AEC_AUTHORIZE_AIM_PARAMS_BILLLASTNAME_NAME, $lastname );
 
 		if ( !empty( $this->settings['promptAddress'] ) || !empty( $this->settings['promptZipOnly'] ) ) {
 			if ( empty( $this->settings['promptZipOnly'] ) ) {
