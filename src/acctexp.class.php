@@ -1740,12 +1740,14 @@ class PaymentProcessor
 
 	function exchangeSettings( $settings )
 	{
-		 foreach ( $settings as $key => $value ) {
-			if ( strcmp( $value, '[[SET_TO_NULL]]' ) === 0 ) {
-				$this->settings[$key] = null;
-			} else {
-				$this->settings[$key] = $value;
-			}
+		 if ( !empty( $settings ) ) {
+			 foreach ( $settings as $key => $value ) {
+				if ( strcmp( $value, '[[SET_TO_NULL]]' ) === 0 ) {
+					$this->settings[$key] = null;
+				} else {
+					$this->settings[$key] = $value;
+				}
+			 }
 		 }
 	}
 
