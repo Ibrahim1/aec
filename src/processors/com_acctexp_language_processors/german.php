@@ -116,7 +116,6 @@ define( '_AEC_USERFORM_BILLPHONE_NAME', 'Phone');
 define( '_AEC_USERFORM_BILLFAX_NAME', 'Fax');
 define( '_AEC_USERFORM_BILLCOMPANY_NAME', 'Company');
 
-
 // Generic Credit Card Form
 define( '_AEC_CCFORM_CARDHOLDER_NAME', 'Card owner Name');
 define( '_AEC_CCFORM_CARDHOLDER_DESC', 'The name of the credit card holder');
@@ -130,6 +129,8 @@ define( '_AEC_CCFORM_CARDTYPE_NAME', 'Card Type');
 define( '_AEC_CCFORM_CARDTYPE_DESC', 'The type of the credit card');
 define( '_AEC_CCFORM_CARDVV2_NAME', 'Card Verification Number');
 define( '_AEC_CCFORM_CARDVV2_DESC', 'The Verification Number of the Credit Card');
+define( '_AEC_CCFORM_UPDATE_NAME', 'Update Notice');
+define( '_AEC_CCFORM_UPDATE_DESC', 'To update your billing details, we need you to enter your CreditCard details again.<br />Leave fields as they are if you want to use all your previous details.');
 
 // Generic Wire Transfer Form
 define( '_AEC_WTFORM_ACCOUNTNAME_NAME', 'Konto Besitzer');

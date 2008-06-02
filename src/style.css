@@ -309,6 +309,12 @@ text-align: center;
 display: block;
 }
 
+#renew_info {
+padding: 5px;
+text-align: center;
+border: 2px solid #fff;
+}
+
 /* == Styling for the Confirmation Page == */
 
 #confirmation {

@@ -95,7 +95,7 @@ class processor_authorize_cim extends XMLprocessor
 
 	function customtab_details( $request )
 	{
-		if ( isset( $_POST['billFirstName'] ) ) {
+		if ( isset( $_POST['billFirstName'] ) && ( strpos( $request->int_var['params']['cardNumber'], 'X' ) === false ) ) {
 			$cim = new AuthNetCim( $this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode'] );
 
 			$profileid = $this->getCustomerProfileID( $request->metaUser->userid );
@@ -191,6 +191,8 @@ class processor_authorize_cim extends XMLprocessor
 		}
 
 		if ( $hascim ) {
+			$var['params']['billUpdateInfo'] = array( 'p', _AEC_CCFORM_UPDATE_NAME, _AEC_CCFORM_UPDATE_DESC, '' );
+
 			$vcontent['card_number'] = $cim->substring_between($cim->response,'<cardNumber>','</cardNumber>');
 
 			$firstname = $cim->substring_between( $cim->response,'<firstName>','</firstName>' );
@@ -277,8 +279,10 @@ class processor_authorize_cim extends XMLprocessor
 			$cim->setParameter( 'customerPaymentProfileId',	$cim->customerPaymentProfileId );
 			$cim->setParameter( 'customerAddressId',		$cim->customerAddressId );
 
-			$cim->updateCustomerPaymentProfileRequest();
-			$cim->updateCustomerShippingAddressRequest();
+			if ( strpos( $request->int_var['params']['cardNumber'], 'X' ) === false ) {
+				$cim->updateCustomerPaymentProfileRequest();
+				$cim->updateCustomerShippingAddressRequest();
+			}
 		} else {
 			$cim->createCustomerProfileRequest();
 

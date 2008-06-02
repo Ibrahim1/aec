@@ -580,12 +580,12 @@ function subscriptionDetails( $option, $sub )
 				}
 			}
 
-			if ( isset( $pp->info['actions'] ) && ( strcmp( $metaUser->objSubscription->status, 'Active' ) === 0 ) ) {
+			if ( !empty( $pp->info['actions'] ) && ( ( strcmp( $metaUser->objSubscription->status, 'Active' ) === 0 ) || ( strcmp( $metaUser->objSubscription->status, 'Trial' ) === 0 )) ) {
 				$actions = explode( ';', $pp->info['actions'] );
 
 				$selected_plan->proc_actions = array();
 				foreach ( $actions as $action ) {
-					$selected_plan->proc_actions[] = '<a href="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '">' . $action . '</a>';
+					$selected_plan->proc_actions[] = '<a href="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action . '&amp;subscr=' . $metaUser->objSubscription->id, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '">' . $action . '</a>';
 				}
 			}
 
@@ -650,7 +650,7 @@ function subscriptionDetails( $option, $sub )
 				}
 
 
-				if ( isset( $spp->info['actions'] ) && ( strcmp( $metaUser->objSubscription->status, 'Active' ) === 0 ) ) {
+				if ( !empty( $spp->info['actions'] ) && ( ( strcmp( $metaUser->objSubscription->status, 'Active' ) === 0 ) || ( strcmp( $metaUser->objSubscription->status, 'Trial' ) === 0 )) ) {
 					$actions = explode( ';', $spp->info['actions'] );
 
 					$secondary_plan->proc_actions = array();

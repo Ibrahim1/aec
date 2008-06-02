@@ -246,7 +246,9 @@ class HTML_frontEnd
 							</div>
 							<?php
 						} else { ?>
-							<p><strong><?php echo _RENEW_INFO; ?></strong></p>
+							<div id="renew_info">
+								<p><strong><?php echo _RENEW_INFO; ?></strong></p>
+							</div>
 							<?php
 							if ( is_object( $pp ) ) {
 								if ( isset( $pp->info['cancel_info'] ) ) { ?>

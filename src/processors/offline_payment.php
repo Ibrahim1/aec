@@ -80,7 +80,7 @@ class processor_offline_payment extends processor
 			$metaUser = new metaUser( $objInvoice->userid );
 
 			if ( $metaUser->hasSubscription ) {
-				$metaUser->objSubscription->applyUsage( $this->settings['waitingplan'], 'none', 1 );
+				$metaUser->objSubscription->applyUsage( $this->settings['waitingplan'], 'none', 0 );
 
 				$short	= 'waiting plan';
 				$event	= 'Offline Payment waiting plan assigned for ' . $objInvoice->invoice_number;

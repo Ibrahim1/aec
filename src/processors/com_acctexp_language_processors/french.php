@@ -113,6 +113,12 @@ define( '_AEC_CCFORM_EXPIRATIONYEAR_NAME', 'Expiration Year');
 define( '_AEC_CCFORM_EXPIRATIONYEAR_DESC', 'The Year your card will expire');
 define( '_AEC_CCFORM_EXPIRATIONMONTH_NAME', 'Expiration Month');
 define( '_AEC_CCFORM_EXPIRATIONMONTH_DESC', 'The Month your card will expire');
+define( '_AEC_CCFORM_CARDTYPE_NAME', 'Card Type');
+define( '_AEC_CCFORM_CARDTYPE_DESC', 'The type of the credit card');
+define( '_AEC_CCFORM_CARDVV2_NAME', 'Card Verification Number');
+define( '_AEC_CCFORM_CARDVV2_DESC', 'The Verification Number of the Credit Card');
+define( '_AEC_CCFORM_UPDATE_NAME', 'Update Notice');
+define( '_AEC_CCFORM_UPDATE_DESC', 'To update your billing details, we need you to enter your CreditCard details again.<br />Leave fields as they are if you want to use all your previous details.');
 
 // Generic Wire Transfer Form
 define( '_AEC_WTFORM_ACCOUNTNAME_NAME', 'Account owner Name');
@@ -123,10 +129,6 @@ define( '_AEC_WTFORM_BANKNUMBER_NAME', 'Bank Number');
 define( '_AEC_WTFORM_BANKNUMBER_DESC', 'The Bank Number');
 define( '_AEC_WTFORM_BANKNAME_NAME', 'Bank Name');
 define( '_AEC_WTFORM_BANKNAME_DESC', 'The Name of the Bank');
-define( '_AEC_CCFORM_CARDTYPE_NAME', 'Card Type');
-define( '_AEC_CCFORM_CARDTYPE_DESC', 'The type of the credit card');
-define( '_AEC_CCFORM_CARDVV2_NAME', 'Card Verification Number');
-define( '_AEC_CCFORM_CARDVV2_DESC', 'The Verification Number of the Credit Card');
 
 // Parametres pour Paypal
 define( '_CFG_PAYPAL_BUSINESS_NAME', 'Identifiant marchand :');
