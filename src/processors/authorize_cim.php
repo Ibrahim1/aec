@@ -316,7 +316,7 @@ class processor_authorize_cim extends XMLprocessor
 			$cim->setParameter( 'transactionType',		'profileTransAuthCapture' );
 			$cim->setParameter( 'transactionCardCode',	trim( $request->int_var['params']['cardVV2'] ) );
 
-			$cim->createCustomerProfileTransactionRequest();aecDebug(json_encode($cim));
+			$cim->createCustomerProfileTransactionRequest();
 
 			if ( $cim->isSuccessful() ) {
 				$return['valid']	= true;
@@ -329,6 +329,46 @@ class processor_authorize_cim extends XMLprocessor
 		}
 
 		return $return;
+	}
+
+	function prepareValidation( $subscription_list )
+	{
+		return true;
+	}
+
+	function validateSubscription( $subscription_id )
+	{
+		global $database;
+
+		$invoice = new Invoice( $database );
+		$invoice->loadbySubscriptionId( $subscription_id );
+
+		if ( $invoice->id ) {
+			$profileid = $this->getCustomerProfileID( $request->metaUser->userid );
+
+			$cim->setParameter( 'customerProfileId', $profileid );
+			$cim->getCustomerProfileRequest();
+
+			$cim->setParameter( 'customerProfileId',		$cim->customerProfileId );
+			$cim->setParameter( 'customerPaymentProfileId',	$cim->customerPaymentProfileId );
+			$cim->setParameter( 'customerAddressId',		$cim->customerAddressId );
+
+			$invoice->computeAmount();
+
+			$cim->setParameter( 'transaction_amount',	$invoice->amount );
+
+			$cim->setParameter( 'transactionType',		'profileTransAuthCapture' );
+			$cim->setParameter( 'transactionCardCode',	trim( $request->int_var['params']['cardVV2'] ) );
+
+			$cim->createCustomerProfileTransactionRequest();
+
+			if ( $cim->isSuccessful() ) {
+				$invoice->pay();
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	function getCustomerProfileID( $userID )
