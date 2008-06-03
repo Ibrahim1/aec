@@ -156,7 +156,7 @@ class processor_paypal_subscription extends POSTprocessor
 		}
 
 		$var['item_number']		= $request->metaUser->cmsUser->id;
-		$var['item_name']		= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
+		$var['item_name']		= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 
 		$var['no_shipping']		= $this->settings['no_shipping'];
 		$var['no_note']			= '1';

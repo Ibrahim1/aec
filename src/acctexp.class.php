@@ -2597,7 +2597,7 @@ class XMLprocessor extends processor
 class POSTprocessor extends processor
 {
 	function checkoutAction( $request )
-	{//print_r($request);print_r($this);
+	{
 		$var = $this->createGatewayLink( $request );
 
 		if ( !empty( $this->settings['customparams'] ) ) {
@@ -7591,9 +7591,10 @@ class AECToolbox
 			$rewrite['invoice_currency']			= $invoice->currency;
 			$rewrite['invoice_coupons']				= $invoice->coupons;
 
-			$invoice->formatInvoiceNumber();
-
-			$rewrite['invoice_number_format']		= $invoice->invoice_number;
+			if ( !is_null( $metaUser ) && !is_null( $subscriptionPlan ) ) {
+				$invoice->formatInvoiceNumber();
+				$rewrite['invoice_number_format']	= $invoice->invoice_number;
+			}
 		}
 
 		if ( is_object( $subscriptionPlan ) ) {
