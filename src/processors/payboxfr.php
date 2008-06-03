@@ -188,9 +188,7 @@ class processor_payboxfr extends POSTprocessor
 
 		$return = array();
 		foreach ( $gets as $get ) {
-			if ( isset( aecGetParam($get) ) ) {
-				$return[$get] = aecGetParam($get);
-			}
+			$return[$get] = aecGetParam($get);
 		}
 
 		if ( !isset( $return['check'] ) ) {
