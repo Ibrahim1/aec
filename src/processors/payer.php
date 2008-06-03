@@ -188,7 +188,7 @@ class processor_payer extends POSTprocessor
 
 		$response = array();
 		$response['valid']		= false;
-		$response['invoice']	= $_GET['Invoice'];
+		$response['invoice']	= aecGetParam('Invoice');
 
 		$allowed = array( '83.241.130.100', '83.241.130.101', '10.4.49.11', '192.168.100.222', '127.0.0.1', '217.151.207.84', '83.241.130.102' );
 
@@ -205,10 +205,10 @@ class processor_payer extends POSTprocessor
 			$md5 = strtolower( md5( $this->settings['key1'] . $strippedUrl . $this->settings['key2'] ) );
 
 			if ( strpos( strtolower( $requesturl ), $md5 ) >= 7 ) {
-				if ( $_GET['action'] == 'authenticate' ) {
+				if ( aecGetParam('action') == 'authenticate' ) {
 					$response['pending']		= 1;
 					$response['pending_reason']	= 'authentication';
-				} elseif ( $_GET['action'] == 'settle' ) {
+				} elseif ( aecGetParam('action') == 'settle' ) {
 					$response['valid']			= 1;
 				}
 			}

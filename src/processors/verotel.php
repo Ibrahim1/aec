@@ -123,7 +123,7 @@ class processor_verotel extends URLprocessor
 
 	function parseNotification( $post )
 	{
-		$res = explode(":", $_GET['vercode']);
+		$res = explode(":", aecGetParam('vercode'));
 
 		$secret		= $res[2];
 		$action     = $res[3];
@@ -139,7 +139,7 @@ class processor_verotel extends URLprocessor
 
 	function validateNotification( $response, $post, $invoice )
 	{
-		$res = explode(":", $_GET['vercode']);
+		$res = explode(":", aecGetParam('vercode'));
 
 		if( $this->settings['secretcode'] == $res[2] ) {
 			$response['valid'] = 1;

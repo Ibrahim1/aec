@@ -257,9 +257,9 @@ class processor_ipayment_silent extends XMLprocessor
 	function parseNotification( $post )
 	{//aecDebug( "ResponseFunction:parseNotification" . "\n" . "GET:".json_encode( $_GET ) . "\n" . "POST:".json_encode( $_POST ) );
 		$response = array();
-		$response['invoice']			= $_GET['invoice_text'];
-		$response['amount_paid']		= ( $_GET['trx_amount'] / 100 );
-		$response['amount_currency']	= $_GET['trx_currency'];
+		$response['invoice']			= aecGetParam('invoice_text');
+		$response['amount_paid']		= ( aecGetParam('trx_currency') / 100 );
+		$response['amount_currency']	= aecGetParam('trx_currency');
 
 		return $response;
 	}
@@ -276,10 +276,10 @@ class processor_ipayment_silent extends XMLprocessor
 			return $response;
 		}
 //aecDebug( "ResponseFunction:validateNotification" . "\n" . "GET:".json_encode( $_GET ) . "\n" . "POST:".json_encode( $_POST ) . "\n" . "Response:".json_encode( $response ) . "\n" . "Invoice:".json_encode( $invoice ) );
-		if ( $_GET['event'] == 'error' ) {
+		if ( aecGetParam('event') == 'error' ) {
 			return $response;
-		} elseif ( $_GET['event'] == 'success' ) {
-			$tempsecret = $_GET['tempsecret'];
+		} elseif ( aecGetParam('event') == 'success' ) {
+			$tempsecret = aecGetParam('tempsecret');
 
 			if ( empty( $tempsecret ) ) {
 				$response['error']		= true;

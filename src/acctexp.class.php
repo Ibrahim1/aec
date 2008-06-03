@@ -2597,7 +2597,7 @@ class XMLprocessor extends processor
 class POSTprocessor extends processor
 {
 	function checkoutAction( $request )
-	{
+	{//print_r($request);print_r($this);
 		$var = $this->createGatewayLink( $request );
 
 		if ( !empty( $this->settings['customparams'] ) ) {
@@ -3519,8 +3519,8 @@ class SubscriptionPlan extends paramDBTable
 			}
 
 
-		}
-
+		}return false;
+/*
 		if ( empty( $mi_forms ) ) {
 			return false;
 		} else {
@@ -3530,7 +3530,7 @@ class SubscriptionPlan extends paramDBTable
 
 			$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 			return $mi_forms;
-		}
+		}*/
 	}
 
 	function getMicroIntegrations()
@@ -5569,27 +5569,16 @@ class Invoice extends paramDBTable
 			}
 		}
 
-		$metaUser = new metaUser( $this->userid );
-
-		$pp = new PaymentProcessor();
-		if ( !$pp->loadName( strtolower( $this->method ) ) ) {
-			// Nope, won't work buddy
-			notAllowed( 'com_acctexp' );
-		}
-
-		$pp->init();
-		$pp->getInfo();
-
 		if ( $this->usage ) {
 			$new_subscription = new SubscriptionPlan( $database );
 			$new_subscription->load( $this->usage );
 
-			$int_var['planparams'] = $new_subscription->getProcessorParameters( $pp->id );
+			$int_var['planparams'] = $new_subscription->getProcessorParameters( $InvoiceFactory->pp->id );
 
 			if ( isset( $int_var['params']['userselect_recurring'] ) ) {
-				$recurring = $pp->is_recurring( $int_var['params']['userselect_recurring'], true );
+				$recurring = $InvoiceFactory->pp->is_recurring( $int_var['params']['userselect_recurring'], true );
 			} else {
-				$recurring = $pp->is_recurring();
+				$recurring = $InvoiceFactory->pp->is_recurring();
 			}
 
 			if ( $recurring ) {
@@ -5598,7 +5587,11 @@ class Invoice extends paramDBTable
 				$int_var['recurring'] = 0;
 			}
 
-			$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], $metaUser->objSubscription );
+			if ( $InvoiceFactory->metaUser->hasSubscription ) {
+				$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], $InvoiceFactory->metaUser->objSubscription );
+			} else {
+				$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], false );
+			}
 		} else {
 			$amount['amount'] = $this->amount;
 			$int_var['recurring'] = 0;
@@ -5609,7 +5602,7 @@ class Invoice extends paramDBTable
 
 			$cph = new couponsHandler();
 
-			$amount['amount'] = $cph->applyCoupons( $amount['amount'], $coupons, $metaUser, $InvoiceFactory );
+			$amount['amount'] = $cph->applyCoupons( $amount['amount'], $coupons, $InvoiceFactory->metaUser, $InvoiceFactory );
 		}
 
 		$int_var['amount']		= $amount['amount'];
@@ -5624,8 +5617,8 @@ class Invoice extends paramDBTable
 		$int_var['usage']		= $this->invoice_number;
 
 		// Assemble Checkout Response
-		$return['var']		= $pp->checkoutAction( $int_var, $metaUser, $new_subscription, $this );
-		$return['params']	= $pp->getParamsHTML( $int_var['params'], $pp->getParams( $int_var['params'] ) );
+		$return['var']		= $InvoiceFactory->pp->checkoutAction( $int_var, $InvoiceFactory->metaUser, $new_subscription, $this );
+		$return['params']	= $InvoiceFactory->pp->getParamsHTML( $int_var['params'], $InvoiceFactory->pp->getParams( $int_var['params'] ) );
 
 		if ( empty( $return['params'] ) ) {
 			$return['params'] = null;

@@ -114,43 +114,43 @@ class processor_psigate extends POSTprocessor
 
 	function parseNotification ( $post )
 	{
-		if (isset($_GET['ReturnCode']) && $_GET['ReturnCode'] != "") {
-			$ReturnCode = $_GET['ReturnCode'];
+		if (isset(aecGetParam('ReturnCode')) && aecGetParam('ReturnCode') != "") {
+			$ReturnCode = aecGetParam('ReturnCode');
 		} else {
 			$ReturnCode = "NA";
 		}
-		if (isset($_GET['CustomerRefNo']) && $_GET['CustomerRefNo'] != "") {
-			$CustomerRefNo = $_GET['CustomerRefNo'];
+		if (isset(aecGetParam('CustomerRefNo')) && aecGetParam('CustomerRefNo') != "") {
+			$CustomerRefNo = aecGetParam('CustomerRefNo');
 		} else {
 			$CustomerRefNo = "NA";
 		}
-		if (isset($_GET['TransRefNumber']) && $_GET['TransRefNumber'] != "") {
-			$TransRefNumber = $_GET['TransRefNumber'];
+		if (isset(aecGetParam('TransRefNumber')) && aecGetParam('TransRefNumber') != "") {
+			$TransRefNumber = aecGetParam('TransRefNumber');
 		} else {
 			$TransRefNumber = "NA";
 		}
-		if (isset($_GET['Approved']) && $_GET['Approved'] != "") {
-			$Approved = $_GET['Approved'];
+		if (isset(aecGetParam('Approved')) && aecGetParam('Approved') != "") {
+			$Approved = aecGetParam('Approved');
 		} else {
 			$Approved = "NA";
 		}
-		if (isset($_GET['ErrMsg']) && $_GET['ErrMsg'] != "") {
-			$ErrMsg = $_GET['ErrMsg'];
+		if (isset(aecGetParam('ErrMsg')) && aecGetParam('CustomerRefNo') != "") {
+			$ErrMsg = aecGetParam('ErrMsg');
 		} else {
 			$ErrMsg = "NA";
 		}
-		if (isset($_GET['FullTotal']) && $_GET['FullTotal'] != "") {
-			$FullTotal = $_GET['FullTotal'];
+		if (isset(aecGetParam('FullTotal')) && aecGetParam('FullTotal') != "") {
+			$FullTotal = aecGetParam('FullTotal');
 		} else {
 			$FullTotal = "NA";
 		}
-		if (isset($_GET['CardNumber']) && $_GET['CardNumber'] != "") {
-			$CardNumber = $_GET['CardNumber'];
+		if (isset(aecGetParam('CardNumber')) && aecGetParam('CardNumber') != "") {
+			$CardNumber = aecGetParam('CardNumber');
 		} else {
 			$CardNumber = "NA";
 		}
-		if (isset($_GET['OrderID']) && $_GET['OrderID'] != "") {
-			$OrderID = $_GET['OrderID'];
+		if (isset(aecGetParam('OrderID')) && aecGetParam('OrderID') != "") {
+			$OrderID = aecGetParam('OrderID');
 		} else {
 			$OrderID = "NA";
 		}

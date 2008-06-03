@@ -78,7 +78,7 @@ class processor_payboxfr extends POSTprocessor
 		$settings['testmode']		= array( 'list_yesno' );
 		$settings['rank']			= array( 'inputC' );
 		$settings['identifiant']	= array( 'inputC' );
-		$settings['publickey']		= array( 'inputC' );
+		$settings['publickey']		= array( 'inputD' );
 		$settings['path']			= array( 'inputC' );
 		$settings['info']			= array( 'fieldset' );
 		$settings['currency']		= array( 'list_currency' );
@@ -166,7 +166,7 @@ class processor_payboxfr extends POSTprocessor
 
 		$response = array();
 
-		$returnstring = $_GET['invoice'];
+		$returnstring = aecGetParam('invoice');
 		$checkpos = strpos( 'IBS_2MONT', $returnstring );
 
 		if ( $checkpos ) {
@@ -175,7 +175,7 @@ class processor_payboxfr extends POSTprocessor
 			$response['invoice'] = $returnstring;
 		}
 
-		$response['amount_paid'] = $_GET['amount'] / 100;
+		$response['amount_paid'] = aecGetParam('amount') / 100;
 
 		return $response;
 	}
@@ -188,8 +188,8 @@ class processor_payboxfr extends POSTprocessor
 
 		$return = array();
 		foreach ( $gets as $get ) {
-			if ( isset( $_GET[$get] ) ) {
-				$return[$get] = $_GET[$get];
+			if ( isset( aecGetParam($get) ) ) {
+				$return[$get] = aecGetParam($get);
 			}
 		}
 

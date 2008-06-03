@@ -133,7 +133,7 @@ class processor_airtoy extends XMLprocessor
 	{
 		global $database;
 
-		$smscode = $_GET['smscode'];
+		$smscode = aecGetParam('smscode');
 
 		$sms = explode( ' ', $smscode );
 
@@ -151,8 +151,8 @@ class processor_airtoy extends XMLprocessor
 			$invoice->check();
 			$invoice->store();
 
-			if ( !empty( $this->settings['secret'] ) && isset( $_GET['secret'] ) ) {
-				if ( $this->settings['secret'] != $_GET['secret'] ) {
+			if ( !empty( $this->settings['secret'] ) && !empty( aecGetParam('secret') ) ) {
+				if ( $this->settings['secret'] != aecGetParam('secret') ) {
 					exit;
 				}
 
