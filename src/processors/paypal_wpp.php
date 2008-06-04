@@ -380,6 +380,102 @@ class processor_paypal_wpp extends XMLprocessor
 		return $nvpArray;
 	}
 
+	function validateNotification( $response, $post, $invoice )
+	{
+		$path = '/cgi-bin/webscr';
+		if ($this->settings['testmode']) {
+			$ppurl = 'www.sandbox.paypal.com' . $path;
+		} else {
+			$ppurl = 'www.paypal.com' . $path;
+		}
+
+		$req = 'cmd=_notify-validate';
+
+		foreach ( $post as $key => $value ) {
+			$value = urlencode( stripslashes( $value ) );
+			$req .= "&$key=$value";
+		}
+
+		$fp = null;
+		// try to use fsockopen. some hosting systems disable fsockopen (godaddy.com)
+		$fp = $this->doTheHttp( $ppurl, $path, $req );
+		if (!$fp) {
+			// If fsockopen doesn't work try using curl
+			$fp = $this->doTheCurl( $ppurl, $req );
+		}
+
+		$res = $fp;
+
+		$response['responsestring'] = 'paypal_verification=' . $res . "\n" . $response['responsestring'];
+
+		$txn_type			= $post['txn_type'];
+		$receiver_email		= $post['receiver_email'];
+		$payment_status		= $post['payment_status'];
+		$payment_type		= $post['payment_type'];
+
+		$response['valid'] = 0;
+
+		if ( strcmp( $receiver_email, $this->settings['business'] ) != 0 && $this->settings['checkbusiness'] ) {
+			$response['pending_reason'] = 'checkbusiness error';
+		} elseif ( strcmp( $res, 'VERIFIED' ) == 0 ) {
+			// Process payment: Paypal Subscription & Buy Now
+			if ( strcmp( $txn_type, 'web_accept' ) == 0 || strcmp( $txn_type, 'subscr_payment' ) == 0 ) {
+
+				$recurring = ( strcmp( $txn_type, 'subscr_payment' ) == 0 );
+
+				if ( ( strcmp( $payment_type, 'instant' ) == 0 ) && ( strcmp( $payment_status, 'Pending' ) == 0 ) ) {
+					$response['pending_reason'] = $post['pending_reason'];
+				} elseif ( strcmp( $payment_type, 'instant' ) == 0 && strcmp( $payment_status, 'Completed' ) == 0 ) {
+					$response['valid']			= 1;
+				} elseif ( strcmp( $payment_type, 'echeck' ) == 0 && strcmp( $payment_status, 'Pending' ) == 0 ) {
+					if ( $this->settings['acceptpendingecheck'] ) {
+						if ( is_object( $invoice ) ) {
+							$invoice->setParams( array( 'acceptedpendingecheck' => 1 ) );
+							$invoice->check();
+							$invoice->store();
+						}
+
+						$response['valid']			= 1;
+						$response['pending_reason'] = 'echeck';
+					} else {
+						$response['pending']		= 1;
+						$response['pending_reason'] = 'echeck';
+					}
+				} elseif ( strcmp( $payment_type, 'echeck' ) == 0 && strcmp( $payment_status, 'Completed' ) == 0 ) {
+					if ( $this->settings['acceptpendingecheck'] ) {
+						if ( is_object( $invoice ) ) {
+							$invoiceparams = $invoice->getParams();
+
+							if ( isset( $invoiceparams['acceptedpendingecheck'] ) ) {
+								$response['valid']		= 0;
+								$response['duplicate']	= 1;
+
+								$invoice->delParams( array( 'acceptedpendingecheck' ) );
+								$invoice->check();
+								$invoice->store();
+							}
+						} else {
+							$response['valid']			= 1;
+						}
+					} else {
+						$response['valid']			= 1;
+					}
+				}
+			} elseif ( strcmp( $txn_type, 'subscr_signup' ) == 0 ) {
+				$response['pending']		= 1;
+				$response['pending_reason'] = 'signup';
+			} elseif ( strcmp( $txn_type, 'subscr_eot' ) == 0 ) {
+				$response['eot']				= 1;
+			} elseif ( strcmp( $txn_type, 'subscr_cancel' ) == 0 ) {
+				$response['cancel']				= 1;
+			}
+		} else {
+			$response['pending_reason']			= 'error: ' . $res;
+		}
+
+		return $response;
+	}
+
 }
 
 ?>
