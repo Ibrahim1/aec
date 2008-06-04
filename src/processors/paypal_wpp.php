@@ -380,6 +380,24 @@ class processor_paypal_wpp extends XMLprocessor
 		return $nvpArray;
 	}
 
+	function parseNotification( $post )
+	{
+		global $database;
+
+		$mc_gross			= $post['mc_gross'];
+		if ( $mc_gross == '' ) {
+			$mc_gross 		= $post['mc_amount1'];
+		}
+		$mc_currency		= $post['mc_currency'];
+
+		$response = array();
+		$response['invoice'] = $post['invoice'];
+		$response['amount_paid'] = $mc_gross;
+		$response['amount_currency'] = $mc_currency;
+
+		return $response;
+	}
+
 	function validateNotification( $response, $post, $invoice )
 	{
 		$path = '/cgi-bin/webscr';
