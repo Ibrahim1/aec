@@ -508,4 +508,20 @@ define( '_MI_MI_DIRECTORY_MKDIR_PRE_EXP_DESC',		'Create a directory with this pa
 define( '_MI_MI_DIRECTORY_MKDIR_MODE_PRE_EXP_NAME',		'Directory Mode (Pre Exp)' );
 define( '_MI_MI_DIRECTORY_MKDIR_MODE_PRE_EXP_DESC',		'The octal mode number (always 4 characters!) for access restriction before Expiration. Default is 0644.' );
 
+// Gallery2
+define( '_AEC_MI_NAME_G2', 'Gallery2' );
+define( '_AEC_MI_DESC_G2', 'Manage Gallery2 users and their permissions' );
+define( '_MI_MI_G2_SET_GROUPS_NAME',		'Set Groups' );
+define( '_MI_MI_G2_SET_GROUPS_DESC',		'Global Setting - add the user to groups' );
+define( '_MI_MI_G2_GROUPS_NAME',			'Groups' );
+define( '_MI_MI_G2_GROUPS_DESC',			'Which groups should the user be added to?' );
+define( '_MI_MI_G2_SET_GROUPS_USER_NAME',		'Set Groups (User Selection)' );
+define( '_MI_MI_G2_SET_GROUPS_USER_DESC',		'Allow the user to select groups.' );
+define( '_MI_MI_G2_GROUPS_SEL_AMT_NAME',		'Group Amount' );
+define( '_MI_MI_G2_GROUPS_SEL_AMT_DESC',		'How many groups can the user select' );
+define( '_MI_MI_G2_GROUPS_SEL_SCOPE_NAME',		'Group Scope' );
+define( '_MI_MI_G2_GROUPS_SEL_SCOPE_DESC',		'From which groups can the user choose?' );
+define( '_MI_MI_G2_DEL_GROUPS_EXP_NAME',		'Delete Groups (Expiration)' );
+define( '_MI_MI_G2_DEL_GROUPS_EXP_DESC',		'Remove the user from the previously assigned groups on expiration' );
+
 ?>

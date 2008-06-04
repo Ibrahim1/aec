@@ -96,6 +96,16 @@ function aecGetParam( $name, $default='' )
 	return $return;
 }
 
+function aecPostParamClear( $array )
+{
+	$cleararray = array();
+	foreach ( $array as $key => $value ) {
+		$cleararray[$key] = aecGetParam( $key );
+	}
+
+	return $cleararray;
+}
+
 class metaUser
 {
 	/** @var int */
@@ -4140,10 +4150,12 @@ class InvoiceFactory
 
 		$invoiceparams = $this->objInvoice->getParams();
 
+		$recurring = aecGetParam( 'recurring', null );
+
 		if ( isset( $invoiceparams['userselect_recurring'] ) ) {
 			$this->recurring = $invoiceparams['userselect_recurring'];
-		} elseif ( isset( $_POST['recurring'] ) ) {
-			$this->objInvoice->addParams( array( 'userselect_recurring' => $_POST['recurring'] ) );
+		} elseif ( !is_null( $recurring ) ) {
+			$this->objInvoice->addParams( array( 'userselect_recurring' => $recurring ) );
 			$this->objInvoice->check();
 			$this->objInvoice->store();
 		}
@@ -4273,8 +4285,10 @@ class InvoiceFactory
 			}
 		}
 
-		if ( isset( $_POST['recurring'] ) ) {
-			$this->recurring	= $_POST['recurring'];
+		$recurring = aecGetParam( 'recurring', null );
+
+		if ( !is_null( $recurring ) ) {
+			$this->recurring	= $recurring;
 		}
 
 		$where[] = '`active` = \'1\'';
@@ -4485,9 +4499,11 @@ class InvoiceFactory
 					$this->invoice	= $invoice;
 				}
 
+				$password = aecGetParam( 'password', null );
+
 				$var = array();
-				if ( isset( $_POST['password'] ) ) {
-					$var['password'] = $_POST['password'];
+				if ( !is_null( $password ) ) {
+					$var['password'] = $password;
 				}
 
 				$this->confirm ( $option, $var, $passthrough );
@@ -4648,7 +4664,7 @@ class InvoiceFactory
 	{
 		global $database, $aecConfig;
 
-		if ( !$this->checkAuth( $option, $_POST ) ) {
+		if ( !$this->checkAuth( $option, aecPostParamClear( $_POST ) ) ) {
 			return false;
 		}
 
@@ -4762,10 +4778,7 @@ class InvoiceFactory
 			}
 		}
 
-		$var['params'] = array();
-		foreach ( $_POST as $varname => $varvalue ) {
-			$var['params'][$varname] = $varvalue;
-		}
+		$var['params'] = aecPostParamClear( $_POST );
 
 		$response = $this->pp->checkoutProcess( $var, $this->metaUser, $new_subscription, $this->objInvoice );
 
@@ -5182,14 +5195,14 @@ class Invoice extends paramDBTable
 		$plan->load( $this->usage );
 		$plan_params = $plan->getParams( 'params' );
 
-		$post = $_POST;
+		$post = aecPostParamClear( $_POST );
 		$post['planparams'] = $plan->getProcessorParameters( $pp->id );
 
 		$pp->exchangeSettingsByPlan( $plan, $plan_params );
 		if ( $altvalidation ) {
-			$response = $pp->instantvalidateNotification( $response, $_POST, $this );
+			$response = $pp->instantvalidateNotification( $response, $post, $this );
 		} else {
-			$response = $pp->validateNotification( $response, $_POST, $this );
+			$response = $pp->validateNotification( $response, $post, $this );
 		}
 
 		if ( isset( $response['invoiceparams'] ) ) {

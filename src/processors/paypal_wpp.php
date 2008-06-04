@@ -391,7 +391,13 @@ class processor_paypal_wpp extends XMLprocessor
 		$mc_currency		= $post['mc_currency'];
 
 		$response = array();
-		$response['invoice'] = $post['invoice'];
+
+		if ( !empty( $post['invoice'] ) ) {
+			$response['invoice'] = $post['invoice'];
+		} elseif ( !empty( $post['rp_invoice_id'] ) ) {
+			$response['invoice'] = $post['rp_invoice_id'];
+		}
+
 		$response['amount_paid'] = $mc_gross;
 		$response['amount_currency'] = $mc_currency;
 
@@ -479,7 +485,7 @@ class processor_paypal_wpp extends XMLprocessor
 						$response['valid']			= 1;
 					}
 				}
-			} elseif ( strcmp( $txn_type, 'subscr_signup' ) == 0 ) {
+			} elseif ( ( strcmp( $txn_type, 'subscr_signup' ) == 0 ) || ( strcmp( $txn_type, 'recurring_payment_profile_created' ) == 0 ) ) {
 				$response['pending']		= 1;
 				$response['pending_reason'] = 'signup';
 			} elseif ( strcmp( $txn_type, 'subscr_eot' ) == 0 ) {

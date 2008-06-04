@@ -25,10 +25,12 @@ class mi_g2 extends MI
 	function Settings()
 	{
 		$settings = array();
-		$settings['set_groups']		= array( 'list_yesno' );
-		$settings['groups']			= array( 'inputA' );
-		$settings['groups_scope']	= array( 'list' );
-		$settings['del_groups_exp']	= array( 'list_yesno' );
+		$settings['set_groups']			= array( 'list_yesno' );
+		$settings['groups']				= array( 'list' );
+		$settings['set_groups_user']	= array( 'list_yesno' );
+		$settings['groups_sel_amt']		= array( 'inputA' );
+		$settings['groups_sel_scope']	= array( 'list' );
+		$settings['del_groups_exp']		= array( 'list_yesno' );
 
 		$query = 'SELECT `g_id`, `g_groupType`, `g_groupName`'
 			 	. ' FROM g2_Group'
@@ -56,6 +58,21 @@ class mi_g2 extends MI
 		}
 
 		return $settings;
+	}
+
+	function saveparams( $params )
+	{
+		global $mosConfig_absolute_path, $database;
+		$newparams = $params;
+
+		$subgroups = array( 'groups', 'groups_sel_scope' );
+
+		foreach ( $subgroups as $groupname ) {
+			$temp = implode( ';', $params[$groupname] );
+			$params[$groupname] = $temp;
+		}
+
+		return $newparams;
 	}
 
 	function pre_expiration_action( $request )
