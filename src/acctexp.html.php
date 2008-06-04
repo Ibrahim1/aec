@@ -658,8 +658,8 @@ class Payment_HTML
 							<strong><?php echo _CHECKOUT_COUPON_CODE; ?></strong>
 							<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
 						<?php } ?>
-						<?php if ( !empty( $InvoiceFactory->miInfo ) ) {
-							echo $InvoiceFactory->miInfo;
+						<?php if ( !empty( $InvoiceFactory->mi_form ) ) {
+							echo $InvoiceFactory->mi_form;
 						} ?>
 						<input type="hidden" name="option" value="<?php echo $option; ?>" />
 						<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0; ?>" />

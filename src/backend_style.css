@@ -360,6 +360,7 @@ background-color: #D5D5D5;
 color: #FFFFFF;
 height: 36px;
 margin: 0px;
+margin-left: -1px;
 }
 
 .aec_tabheading h2 {

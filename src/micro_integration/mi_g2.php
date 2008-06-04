@@ -16,27 +16,19 @@ class mi_g2 extends MI
 	function Info()
 	{
 		$info = array();
-		$info['name'] = '';
-		$info['desc'] = '';
+		$info['name'] = _AEC_MI_NAME_G2;
+		$info['desc'] = _AEC_MI_DESC_G2;
 
 		return $info;
-	}
-
-	function checkInstallation()
-	{
-		return true;
-	}
-
-	function install()
-	{
-		return;
 	}
 
 	function Settings()
 	{
 		$settings = array();
-		$settings['param1'] = array( 'inputA' );
-		$settings['param2'] = array( 'inputD' );
+		$settings['set_groups']		= array( 'list_yesno' );
+		$settings['groups']			= array( 'inputA' );
+		$settings['groups_scope']	= array( 'list' );
+		$settings['del_groups_exp']	= array( 'list_yesno' );
 
 		$query = 'SELECT `g_id`, `g_groupType`, `g_groupName`'
 			 	. ' FROM g2_Group'
@@ -44,22 +36,17 @@ class mi_g2 extends MI
 	 	$database->setQuery( $query );
 	 	$groups = $database->loadObjectList();
 
-		$g = explode( ';', $this->settings['group'] );
+		$g = explode( ';', $this->settings['group_scope'] );
 		$sg = array();
-		$ge = explode( ';', $this->settings['group_exp'] );
-		$sge = array();
 
 		$gr = array();
 		foreach( $groups as $group ) {
-			$desc = $group->groups_name . ' - ' . substr( strip_tags( $group->groups_description ), 0, 30 );
+			$desc = $group->g_groupName . '' . substr( strip_tags( "" ), 0, 30 );
 
-			$gr[] = mosHTML::makeOption( $group->groups_id, $desc );
+			$gr[] = mosHTML::makeOption( $group->g_id, $desc );
 
-			if ( in_array( $group->groups_id, $ge ) ) {
-				$sg[] = mosHTML::makeOption( $group->groups_id, $desc );
-			}
-			if ( in_array( $group->groups_id, $g ) ) {
-				$sge[] = mosHTML::makeOption( $group->groups_id, $desc );
+			if ( in_array( $group->g_id, $g ) ) {
+				$sg[] = mosHTML::makeOption( $group->g_id, $desc );
 			}
 		}
 
@@ -78,16 +65,56 @@ class mi_g2 extends MI
 	{}
 
 	function action( $request )
-	{}
+	{
+		$g2userid = $this->G2userid( $request->metaUser );
+
+		if ( $this->settings['set_groups'] ) {
+			for ( $i=0; $i<$this->settings['groups']; $i++ ) {
+				if ( isset( $request->params['g2group_'.$i] ) ) {
+					$this->mapUserToGroup( $g2userid, $request->params['g2group_'.$i] );
+				}
+			}
+		}
+	}
 
 	function on_userchange_action( $request )
 	{}
 
-	function delete()
-	{}
-
 	function profile_info( $userid )
 	{}
+
+	function mapUserToGroup( $g2userid, $groupid )
+	{
+		global $database;
+
+		$query = 'SELECT g_userId'
+				. ' FROM g2_UserGroupMap'
+				. ' WHERE `g_userId` = \'' . $g2userid . '\' AND `g_groupId` = \'' . $groupid . '\''
+				;
+		$database->setQuery( $query );
+
+		if ( !$database->loadResult() ) {
+			$query = 'INSERT INTO g2_UserGroupMap'
+					. ' ( `g_userId`, `g_groupId` )'
+					. ' VALUES ( \'' . $g2userid . '\', \'' . $groupid . '\' )'
+					;
+			$database->setQuery( $query );
+			return $database->query();
+		} else {
+			return null;
+		}
+	}
+
+	function deleteUserFromGroup( $g2userid, $groupid )
+	{
+		global $database;
+
+		$query = 'DELETE FROM g2_UserGroupMap'
+				. ' WHERE `g_userId` = \'' . $g2userid . '\' AND `g_groupId` = \'' . $groupid . '\''
+				;
+		$database->setQuery( $query );
+		return $database->query();
+	}
 
 	function G2userid( $metaUser )
 	{

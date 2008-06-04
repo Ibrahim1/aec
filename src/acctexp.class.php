@@ -2953,6 +2953,16 @@ class aecHTML
 		return $return;
 	}
 
+	function returnFull()
+	{
+		$return = '';
+		foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
+			$return .= $aecHTML->createSettingsParticle( $rowname );
+		}
+
+		return $return;
+	}
+
 	function printFull()
 	{
 		foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
@@ -3495,7 +3505,7 @@ class SubscriptionPlan extends paramDBTable
 		if ( !empty( $mis ) ) {
 			global $database;
 
-			$settings = array();
+			$params = array();
 			$lists = array();
 			foreach ( $mis as $mi_id ) {
 
@@ -3510,27 +3520,24 @@ class SubscriptionPlan extends paramDBTable
 						unset( $mi_form['lists'] );
 					}
 
-					$settings['mi_'.$mi->id.'_remap_area'] = array( 'subarea_change', $mi->class_name );
+					$params['mi_'.$mi->id.'_remap_area'] = array( 'subarea_change', $mi->class_name );
 
 					foreach ( $mi_form as $fname => $fcontent ) {
-						$settings['mi_'.$mi->id.'_'.$fname] = $fcontent;
+						$params['mi_'.$mi->id.'_'.$fname] = $fcontent;
 					}
 				}
 			}
+		}
 
-
-		}return false;
-/*
 		if ( empty( $mi_forms ) ) {
 			return false;
 		} else {
 			$settings = new aecSettings ( 'mi', 'frontend_forms' );
-			$settingsparams = array_merge( $aecConfig->cfg, $ppsettings );
-			$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
+			$settings->fullSettingsArray( $params, array(), $lists ) ;
 
 			$aecHTML = new aecHTML( $settings->settings, $settings->lists );
-			return $mi_forms;
-		}*/
+			return $aecHTML->returnFull();
+		}
 	}
 
 	function getMicroIntegrations()
@@ -8213,11 +8220,26 @@ class microIntegration extends paramDBTable
 			$this->exchangeSettings( $exchange );
 		}
 
+		if ( !empty( $metaUser->focusSubscription->params ) ) {
+			$miparams = $metaUser->focusSubscription->getParams();
+
+			$miprefix = 'mi_' . $this->id;
+
+			$params = array();
+			foreach ( $miparams as $pkey => $pval ) {
+				if ( strpos( $pkey, $miprefix ) === 0 ) {
+					$pkey = str_replace( $miprefix, '', $pkey );
+
+					$params[$pkey] = $pval;
+				}
+			}
+		}
 		$request = new stdClass();
 		$request->parent			=& $this;
 		$request->metaUser			=& $metaUser;
 		$request->invoice			=& $invoice;
 		$request->plan				=& $objplan;
+		$request->params			=& $params;
 
 		// Call Action
 		if ( method_exists( $this->mi_class, 'relayAction' ) ) {
