@@ -233,13 +233,9 @@ class processor_paypal_wpp extends XMLprocessor
 		$nvpResArray = $this->deformatNVP( $response );
 
 		if ( $response ) {
-			$return['invoice'] = $request->invoice->invoice_number;
-			$resultCode = strtoupper( $nvpResArray["ACK"] );
-
-			if ( strcmp( $resultCode, 'SUCCESS' ) === 0) {
+			if ( strcmp( strtoupper( $nvpResArray['ACK'] ), 'SUCCESS' ) === 0 ) {
 				if ( is_array( $request->int_var['amount'] ) ) {
-					$subscriptionId = $nvpResArray['PROFILEID'];
-					$return['invoiceparams'] = array( "subscriptionid" => $subscriptionId );
+					$return['invoiceparams'] = array( "subscriptionid" => $nvpResArray['PROFILEID'] );
 
 					if ( !isset( $nvpResArray['STATUS'] ) ) {
 						$return['valid'] = 1;
@@ -255,7 +251,7 @@ class processor_paypal_wpp extends XMLprocessor
 				$count = 0;
 				while ( isset( $nvpResArray["L_SHORTMESSAGE".$count] ) ) {
 						$return['error'] .= 'Error ' . $nvpResArray["L_ERRORCODE".$count] . ' = ' . $nvpResArray["L_SHORTMESSAGE".$count] . ' (' . $nvpResArray["L_LONGMESSAGE".$count] . ')' . "\n";
-						$count=$count+1;
+						$count++;
 				}
 			}
 		}
@@ -296,7 +292,7 @@ class processor_paypal_wpp extends XMLprocessor
 	function ManageRecurringPaymentsProfileStatus( $request, $command, $note )
 	{
 		$var['Method']				= 'ManageRecurringPaymentsProfileStatus';
-		$var['Version']			= '50.0';
+		$var['Version']				= '50.0';
 		$var['user']				= $this->settings['api_user'];
 		$var['pwd']					= $this->settings['api_password'];
 		$var['signature']			= $this->settings['signature'];

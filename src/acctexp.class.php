@@ -2547,14 +2547,16 @@ class XMLprocessor extends processor
 			$response['invoice'] = $request->invoice->invoice_number;
 		}
 
+		if ( $request->invoice->invoice_number != $response['invoice'] ) {
+			$request->invoice = new Invoice( $database );
+			$request->invoice->loadInvoiceNumber( $response['invoice'] );
+		}
+
 		if ( !empty( $response['error'] ) ) {
 			return $response;
 		}
 
 		if ( $response != false ) {
-
-			$invoice = new Invoice( $database );
-			$invoice->loadInvoiceNumber( $response['invoice'] );
 
 			if ( isset( $response['raw'] ) ) {
 				$responsestring = $response['raw'];
@@ -2563,7 +2565,7 @@ class XMLprocessor extends processor
 				$responsestring = '';
 			}
 
-			$invoice->processorResponse( $request->parent, $response, $responsestring, true );
+			$request->invoice->processorResponse( $request->parent, $response, $responsestring, true );
 		} else {
 			return false;
 		}
