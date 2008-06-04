@@ -4626,6 +4626,21 @@ class InvoiceFactory
 			$this->touchInvoice( $option );
 		}
 
+		$this->mi_form = $this->objUsage->getMIforms();
+
+		if ( !empty( $this->mi_form ) ) {
+			$params = array();
+			foreach ( $this->mi_form as $key => $value ) {
+				$val = aecGetParam( $key );
+
+				if ( !empty( $val ) ) {
+					$params[$key] = $val;
+				}
+			}
+
+			$this->metaUser->focusSubscription->addParams( $params );
+		}
+
 		$this->checkout( $option );
 	}
 
