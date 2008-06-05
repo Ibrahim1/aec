@@ -71,8 +71,14 @@ function aecDebug( $text, $level = 128 )
 {
 	global $database;
 
+	if ( is_object( $text ) || is_array( $text ) ) {
+		$msg = json_encode( $text );
+	} else {
+		$msg = $text;
+	}
+
 	$eventlog = new eventLog( $database );
-	$eventlog->issue( 'debug', 'debug', 'debug entry: '.$text, $level );
+	$eventlog->issue( 'debug', 'debug', $msg, $level );
 }
 
 function aecGetParam( $name, $default='' )
@@ -4642,19 +4648,21 @@ class InvoiceFactory
 			$this->touchInvoice( $option );
 		}
 
-		$this->mi_form = $this->objUsage->getMIforms();
+		if ( is_object( $this->objUsage ) ) {
+			$this->mi_form = $this->objUsage->getMIforms();
 
-		if ( !empty( $this->mi_form ) ) {
-			$params = array();
-			foreach ( $this->mi_form as $key => $value ) {
-				$val = aecGetParam( $key );
+			if ( !empty( $this->mi_form ) ) {
+				$params = array();
+				foreach ( $this->mi_form as $key => $value ) {
+					$val = aecGetParam( $key );
 
-				if ( !empty( $val ) ) {
-					$params[$key] = $val;
+					if ( !empty( $val ) ) {
+						$params[$key] = $val;
+					}
 				}
-			}
 
-			$this->metaUser->focusSubscription->addParams( $params );
+				$this->metaUser->focusSubscription->addParams( $params );
+			}
 		}
 
 		$this->checkout( $option );
@@ -4993,7 +5001,7 @@ class Invoice extends paramDBTable
 
 	function deformatInvoiceNumber()
 	{
-		global $aecConfig;
+		global $database, $aecConfig;
 
 		$query = 'SELECT invoice_number'
 		. ' FROM #__acctexp_invoices'

@@ -83,7 +83,7 @@ class mi_email
 	{
 		if ( $area == '' ) {
 			if ( !empty( $this->settings['text_first'] ) ) {
-				if ( empty( $metaUser->objSubscription->previous_plan ) ) {
+				if ( empty( $request->metaUser->objSubscription->previous_plan ) && ( $request->metaUser->objSubscription->status == 'Pending' ) ) {
 					$area = '_first';
 				}
 			}
