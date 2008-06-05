@@ -4991,6 +4991,20 @@ class Invoice extends paramDBTable
 
 	}
 
+	function deformatInvoiceNumber()
+	{
+		global $aecConfig;
+
+		$query = 'SELECT invoice_number'
+		. ' FROM #__acctexp_invoices'
+		. ' WHERE id = \'' . $this->id . '\''
+		. ' OR secondary_ident = \'' . $this->invoice_number . '\''
+		;
+		$database->setQuery( $query );
+
+		$this->invoice_number = $database->loadResult();
+	}
+
 	function loadbySubscriptionId( $subscrid, $userid=null )
 	{
 		global $database;
@@ -7631,6 +7645,7 @@ class AECToolbox
 			if ( !is_null( $metaUser ) && !is_null( $subscriptionPlan ) ) {
 				$invoice->formatInvoiceNumber();
 				$rewrite['invoice_number_format']	= $invoice->invoice_number;
+				$invoice->deformatInvoiceNumber();
 			}
 		}
 
