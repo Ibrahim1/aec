@@ -777,6 +777,10 @@ function subscriptionDetails( $option, $sub )
 			$invoices[$rowid]['transactiondate'] = $transactiondate;
 		}
 
+		if ( empty( $invoices ) ) {
+			unset( $sf[array_search( 'invoices', $sf )] );
+		}
+
 		$html = new HTML_frontEnd();
 		$html->subscriptionDetails( $option, $subfields, $sub, $invoices, $metaUser, $recurring, $pp, $mi_info, $alert, $subscriptions, $custom );
 	}
