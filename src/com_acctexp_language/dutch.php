@@ -40,6 +40,9 @@ define( '_AEC_EXPIRE_TODAY',				'Dit account is geldig tot vandaag' );
 define( '_AEC_EXPIRE_FUTURE',				'Dit account is geldig tot' );
 define( '_AEC_EXPIRE_PAST',					'Dit account was geldig tot' );
 define( '_AEC_DAYS_ELAPSED',				'dag(en) verstreken');
+define( '_AEC_EXPIRE_TRIAL_TODAY',			'This trial is active until today' );
+define( '_AEC_EXPIRE_TRIAL_FUTURE',			'This trial is active until' );
+define( '_AEC_EXPIRE_TRIAL_PAST',			'This trial was valid until' );
 
 define( '_AEC_EXPIRE_NOT_SET',				'Not Set' );
 define( '_AEC_GEN_ERROR',					'<h1>Algemene foutmelding</h1><p>Er zijn problemen met het uitvoeren van je aanvraag. Neem contact op met de webmaster.</p>' );
@@ -97,6 +100,7 @@ define( '_HISTORY_ACTION_REPEAT', 'Betaal');
 define( '_HISTORY_ACTION_CANCEL', 'Annuleer');
 define( '_RENEW_LIFETIME', 'Je hebt een abonnement voor het leven.');
 define( '_RENEW_DAYSLEFT', 'Resterende dagen');
+define( '_RENEW_DAYSLEFT_TRIAL', 'Days left in Trial');
 define( '_RENEW_DAYSLEFT_EXCLUDED', 'Afloop abonnement is niet van toepassing');
 define( '_RENEW_DAYSLEFT_INFINITE', '&#8734');
 define( '_RENEW_INFO', 'Je maakt gebruik van automatische betalingen.');

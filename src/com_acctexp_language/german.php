@@ -39,6 +39,9 @@ define( '_AEC_EXPIRE_TODAY',				'Das Konto ist bis heute aktiv' );
 define( '_AEC_EXPIRE_FUTURE',				'Das Konto ist aktiv bis' );
 define( '_AEC_EXPIRE_PAST',					'Das Konto war aktiv bis' );
 define( '_AEC_DAYS_ELAPSED',				'Tag(e) abgelaufen' );
+define( '_AEC_EXPIRE_TRIAL_TODAY',			'This trial is active until today' );
+define( '_AEC_EXPIRE_TRIAL_FUTURE',			'This trial is active until' );
+define( '_AEC_EXPIRE_TRIAL_PAST',			'This trial was valid until' );
 
 // new 0.12.4 (mic)
 define( '_AEC_EXPIRE_NOT_SET',				'Nicht definiert' );
@@ -92,6 +95,7 @@ define( '_HISTORY_ACTION_REPEAT', 			'bezahlen');
 define( '_HISTORY_ACTION_CANCEL', 			'l&ouml;schen');
 define( '_RENEW_LIFETIME', 					'Sie haben ein permanentes Benutzerkonto.');
 define( '_RENEW_DAYSLEFT', 					'Tag(e) &uuml;brig');
+define( '_RENEW_DAYSLEFT_TRIAL', 'Days left in Trial');
 define( '_RENEW_DAYSLEFT_EXCLUDED', 		'Ihr Konto unterliegt keinem Ablauf.');
 define( '_RENEW_DAYSLEFT_INFINITE', 		'&#8734');
 define( '_RENEW_INFO', 						'Sie verwenden automatisch wiederkehrende Zahlungen.');

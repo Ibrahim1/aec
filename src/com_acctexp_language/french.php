@@ -40,6 +40,9 @@ define( '_AEC_EXPIRE_TODAY',				'Ce compte est actif jusqu\'&agrave; aujourd\'hu
 define( '_AEC_EXPIRE_FUTURE',				'Ce compte est actif jusqu\'au' );
 define( '_AEC_EXPIRE_PAST',					'Ce compte &eacute;tait actif jusqu\'au' );
 define( '_AEC_DAYS_ELAPSED',				'jour(s) &eacute;coul&eacute;s');
+define( '_AEC_EXPIRE_TRIAL_TODAY',			'This trial is active until today' );
+define( '_AEC_EXPIRE_TRIAL_FUTURE',			'This trial is active until' );
+define( '_AEC_EXPIRE_TRIAL_PAST',			'This trial was valid until' );
 
 define( '_AEC_EXPIRE_NOT_SET',				'Non d&eacute;termin&eacute;' );
 define( '_AEC_GEN_ERROR',					'<h1>Erreur g&eacute;n&eacute;rale</h1><p>Nous avons rencontr&eacute; des probl&egrave;mes pour traiter votre demande. Veuillez contacter l\'administrateur du site Web.</p>' );
@@ -97,6 +100,7 @@ define( '_HISTORY_ACTION_REPEAT', 'pay');
 define( '_HISTORY_ACTION_CANCEL', 'cancel');
 define( '_RENEW_LIFETIME', 'Vous avez un abonnement &agrave; vie.');
 define( '_RENEW_DAYSLEFT', 'jours restants');
+define( '_RENEW_DAYSLEFT_TRIAL', 'Days left in Trial');
 define( '_RENEW_DAYSLEFT_EXCLUDED', 'Vous n\'êtes pas concerné par l\'expiration');
 define( '_RENEW_DAYSLEFT_INFINITE', '&#8734');
 define( '_RENEW_INFO', 'Vous utilisez les paiements r&eacute;currents.');

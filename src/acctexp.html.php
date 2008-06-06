@@ -159,7 +159,9 @@ class HTML_frontEnd
 	{
 		global $database, $aecConfig;
 
-		$securelinks = !empty( $aecConfig->cfg['ssl_profile'] )
+		$securelinks = !empty( $aecConfig->cfg['ssl_profile'] );
+
+		$trial =$metaUser->objSubscription->status == 'Trial';
 
 		?>
 		<div class="componentheading"><?php echo _MYSUBSCRIPTION_TITLE;?></div>
@@ -205,33 +207,36 @@ class HTML_frontEnd
 					?>
 					<div id="box_expired">
 					<div id="alert_level_<?php echo $alert['level']; ?>">
-						<div id="expired_greeting"><?php
+						<div id="expired_greeting">
+							<?php
 							if ( $metaUser->objSubscription->lifetime == 1 ) { ?>
 								<p><strong><?php echo _RENEW_LIFETIME; ?></strong></p><?php
 							} else { ?>
 								<p>
-									<?php echo HTML_frontend::DisplayDateInLocalTime( $metaUser->focusSubscription->expiration, true, true ); ?>
+									<?php echo HTML_frontend::DisplayDateInLocalTime( $metaUser->focusSubscription->expiration, true, true, $trial ); ?>
 								</p>
 								<?php
-							} ?>
+							}
+							?>
 						</div>
 						<div id="days_left">
 							<?php
 							if ( strcmp( $alert['daysleft'], 'infinite' ) === 0 ) {
 								$daysleft			= _RENEW_DAYSLEFT_INFINITE;
-								$daysleft_append	= _RENEW_DAYSLEFT;
+								$daysleft_append	= $trial ? _RENEW_DAYSLEFT_TRIAL : _RENEW_DAYSLEFT;
 							} elseif ( strcmp( $alert['daysleft'], 'excluded' ) === 0 ) {
 								$daysleft			= _RENEW_DAYSLEFT_EXCLUDED;
 								$daysleft_append	= '';
 							} else {
 								if ( $alert['daysleft'] >= 0 ) {
 									$daysleft			= $alert['daysleft'];
-									$daysleft_append	= _RENEW_DAYSLEFT;
+									$daysleft_append	= $trial ? _RENEW_DAYSLEFT_TRIAL : _RENEW_DAYSLEFT;
 								} else {
 									$daysleft			= $alert['daysleft'];
 									$daysleft_append	= _AEC_DAYS_ELAPSED;
 								}
-							} ?>
+							}
+							?>
 							<p><strong><?php echo $daysleft; ?></strong>&nbsp;&nbsp;<?php echo $daysleft_append; ?></p>
 						</div>
 						<?php
@@ -378,7 +383,7 @@ class HTML_frontEnd
 	 * @param bool		$display	out with text (only in combination with $check)
 	 * @return formatted date
 	 */
-	function DisplayDateInLocalTime( $SQLDate, $check = false, $display = false )
+	function DisplayDateInLocalTime( $SQLDate, $check = false, $display = false, $trial = false )
 	{
 		global $aecConfig;
 
@@ -392,11 +397,11 @@ class HTML_frontEnd
 			if ( $check ) {
 				$timeDif = strtotime( $SQLDate ) - time();
 				if ( $timeDif < 0 ) {
-					$retVal = _AEC_EXPIRE_PAST . ':&nbsp;<strong>' . $retVal . '</strong>';
+					$retVal = ( $trial ? _AEC_EXPIRE_TRIAL_PAST : _AEC_EXPIRE_PAST ) . ':&nbsp;<strong>' . $retVal . '</strong>';
 				} elseif ( ( $timeDif >= 0 ) && ( $timeDif < 86400 ) ) {
-					$retVal = _AEC_EXPIRE_TODAY;
+					$retVal = ( $trial ? _AEC_EXPIRE_TRIAL_TODAY : _AEC_EXPIRE_TODAY );
 				} else {
-					$retVal = _AEC_EXPIRE_FUTURE . ': ' . $retVal;
+					$retVal = ( $trial ? _AEC_EXPIRE_TRIAL_FUTURE : _AEC_EXPIRE_FUTURE ) . ': ' . $retVal;
 				}
 			}
 

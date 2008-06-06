@@ -39,6 +39,9 @@ define( '_AEC_EXPIRE_TODAY',				'This account is active until today' );
 define( '_AEC_EXPIRE_FUTURE',				'This account is active until' );
 define( '_AEC_EXPIRE_PAST',					'This account was valid until' );
 define( '_AEC_DAYS_ELAPSED',				'day(s) elapsed');
+define( '_AEC_EXPIRE_TRIAL_TODAY',			'This trial is active until today' );
+define( '_AEC_EXPIRE_TRIAL_FUTURE',			'This trial is active until' );
+define( '_AEC_EXPIRE_TRIAL_PAST',			'This trial was valid until' );
 
 define( '_AEC_EXPIRE_NOT_SET',				'Not Set' );
 define( '_AEC_GEN_ERROR',					'<h1>General Error</h1><p>We had problems processing your request. Please contact the web site administrator.</p>' );
@@ -96,6 +99,7 @@ define( '_HISTORY_ACTION_REPEAT', 'pay');
 define( '_HISTORY_ACTION_CANCEL', 'cancel');
 define( '_RENEW_LIFETIME', 'Hai un\' inscrizione a vita.');
 define( '_RENEW_DAYSLEFT', 'Giorni mancanti');
+define( '_RENEW_DAYSLEFT_TRIAL', 'Days left in Trial');
 define( '_RENEW_DAYSLEFT_EXCLUDED', 'You are excluded from expiration');
 define( '_RENEW_DAYSLEFT_INFINITE', '&#8734');
 define( '_RENEW_BUTTON', 'Rinnova Ora');

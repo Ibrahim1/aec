@@ -728,22 +728,29 @@ function subscriptionDetails( $option, $sub )
 					}
 				}
 
-				$actions = '<a href="'
+				$actionsarray = array();
+
+				if ( $row->transaction_date == '0000-00-00 00:00:00' ) {
+				$actionsarray[] = '<a href="'
 				.  AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice='
 				. $row->invoice_number, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '">' . _HISTORY_ACTION_REPEAT
 				. '</a>';
+				} else {
+					$transactiondate = HTML_frontend::DisplayDateInLocalTime( $row->transaction_date );
+				}
 
 				if ( is_null( $row->fixed ) || !$row->fixed ) {
-					$actions .= ' | '
-					. '<a href="'
+					$actionsarray[] = '<a href="'
 					. AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=cancelPayment&amp;invoice='
 					. $row->invoice_number, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '">' . _HISTORY_ACTION_CANCEL
 					. '</a>';
 				}
 
-				if ( $hassubstuff ) {
-					$actions .= ' | ' . implode( ' | ', $subscriptions[$row->subscr_id]->proc_actions );
+				if ( $hassubstuff && !empty( $subscriptions[$row->subscr_id]->proc_actions ) && is_array( $subscriptions[$row->subscr_id]->proc_actions ) ) {
+					$actionsarray = array_merge( $subscriptions[$row->subscr_id]->proc_actions, $actionsarray );
 				}
+
+				$actions = implode( ' | ', $actionsarray );
 
 				$rowstyle = ' style="background-color:#fee;"';
 			} else {
