@@ -556,6 +556,8 @@ function subscriptionDetails( $option, $sub )
 
 		$subscriptions = array();
 
+		$actionprocs = array();
+
 		if ( $metaUser->objSubscription->plan ) {
 			$selected_plan = new SubscriptionPlan( $database );
 			$selected_plan->load( $metaUser->objSubscription->plan );
@@ -590,6 +592,10 @@ function subscriptionDetails( $option, $sub )
 			}
 
 			$subscriptions[] = $selected_plan;
+
+			if ( !empty( $selected_plan->proc_actions ) ) {
+				$actionprocs[$metaUser->objSubscription->id] = count( $subscriptions ) - 1;
+			}
 		}
 
 		if ( empty( $mi_info ) ) {
@@ -660,6 +666,10 @@ function subscriptionDetails( $option, $sub )
 				}
 
 				$subscriptions[] = $secondary_plan;
+
+				if ( !empty( $secondary_plan->proc_actions ) ) {
+					$actionprocs[$subscription->id] = count( $subscriptions ) - 1;
+				}
 			}
 		}
 
@@ -695,7 +705,9 @@ function subscriptionDetails( $option, $sub )
 			$row = new Invoice( $database );
 			$row->load( $rowid );
 
-			if ( strcmp( $row->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
+			$hassubstuff = array_key_exists( $row->subscr_id, $actionprocs );
+
+			if ( ( $row->transaction_date == '0000-00-00 00:00:00' ) || ( $row->subscr_id  ) || $hassubstuff ) {
 				$transactiondate = 'uncleared';
 
 				if ( strpos( $row->params, 'pending_reason' ) ) {
@@ -728,6 +740,11 @@ function subscriptionDetails( $option, $sub )
 					. $row->invoice_number, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '">' . _HISTORY_ACTION_CANCEL
 					. '</a>';
 				}
+
+				if ( $hassubstuff ) {
+					$actions .= ' | ' . implode( ' | ', $subscriptions[$row->subscr_id]->proc_actions );
+				}
+
 				$rowstyle = ' style="background-color:#fee;"';
 			} else {
 				$transactiondate	= HTML_frontend::DisplayDateInLocalTime( $row->transaction_date );
@@ -738,12 +755,14 @@ function subscriptionDetails( $option, $sub )
 			if ( !isset( $processors[$row->method] ) ) {
 				$processors[$row->method] = new PaymentProcessor();
 				if ( $processors[$row->method]->loadName( $row->method ) ) {
+					$processors[$row->method]->init();
+					$processors[$row->method]->getInfo();
+
 					$processor = $processors[$row->method]->info['longname'];
 				} else {
 					$processor = $row->method;
 				}
 			} else {
-				$spp = $processors[$row->method];
 				$processor = $processors[$row->method]->info['longname'];
 			}
 
