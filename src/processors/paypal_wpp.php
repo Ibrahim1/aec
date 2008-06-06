@@ -443,9 +443,9 @@ class processor_paypal_wpp extends XMLprocessor
 			$response['pending_reason'] = 'checkbusiness error';
 		} elseif ( strcmp( $res, 'VERIFIED' ) == 0 ) {
 			// Process payment: Paypal Subscription & Buy Now
-			if ( strcmp( $txn_type, 'web_accept' ) == 0 || strcmp( $txn_type, 'subscr_payment' ) == 0 ) {
+			if ( ( $txn_type == 'web_accept' ) || ( $txn_type == 'subscr_payment' ) || ( $txn_type == 'recurring_payment' ) ) {
 
-				$recurring = ( strcmp( $txn_type, 'subscr_payment' ) == 0 );
+				$recurring = ( ( $txn_type == 'subscr_payment' ) || ( $txn_type == 'recurring_payment' ) );
 
 				if ( ( strcmp( $payment_type, 'instant' ) == 0 ) && ( strcmp( $payment_status, 'Pending' ) == 0 ) ) {
 					$response['pending_reason'] = $post['pending_reason'];
