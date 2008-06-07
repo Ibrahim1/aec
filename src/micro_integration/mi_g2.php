@@ -24,6 +24,8 @@ class mi_g2 extends MI
 
 	function Settings()
 	{
+		global $database;
+
 		$settings = array();
 		$settings['set_groups']			= array( 'list_yesno' );
 		$settings['groups']				= array( 'list' );
@@ -38,8 +40,10 @@ class mi_g2 extends MI
 	 	$database->setQuery( $query );
 	 	$groups = $database->loadObjectList();
 
-		$g = explode( ';', $this->settings['group_scope'] );
+		$g = explode( ';', $this->settings['groups'] );
+		$gs = explode( ';', $this->settings['groups_sel_scope'] );
 		$sg = array();
+		$sgs = array();
 
 		$gr = array();
 		foreach( $groups as $group ) {
@@ -50,12 +54,16 @@ class mi_g2 extends MI
 			if ( in_array( $group->g_id, $g ) ) {
 				$sg[] = mosHTML::makeOption( $group->g_id, $desc );
 			}
+
+			if ( in_array( $group->g_id, $gs ) ) {
+				$sgs[] = mosHTML::makeOption( $group->g_id, $desc );
+			}
 		}
 
-		$sel_groups = array();
-		foreach ($groups as $name ) {
-			$selected_groups[] = mosHTML::makeOption( $name, $name );
-		}
+		$settings['groups']				= array( 'list' );
+		$settings['lists']['groups']	= mosHTML::selectList( $gr, 'groups[]', 'size="6" multiple="multiple"', 'value', 'text', $sg );
+		$settings['groups_sel_scope']			= array( 'list' );
+		$settings['lists']['groups_sel_scope']	= mosHTML::selectList( $gr, 'groups_sel_scope[]', 'size="6" multiple="multiple"', 'value', 'text', $sgs );
 
 		return $settings;
 	}
@@ -63,7 +71,6 @@ class mi_g2 extends MI
 	function saveparams( $params )
 	{
 		global $mosConfig_absolute_path, $database;
-		$newparams = $params;
 
 		$subgroups = array( 'groups', 'groups_sel_scope' );
 
@@ -72,7 +79,41 @@ class mi_g2 extends MI
 			$params[$groupname] = $temp;
 		}
 
-		return $newparams;
+		return $params;
+	}
+
+	function getMIform()
+	{
+		global $database;
+
+		$settings = array();
+
+		if ( $this->settings['set_groups_user'] ) {
+			$gs = explode( ';', $this->settings['groups_sel_scope'] );
+
+			$query = 'SELECT `g_id`, `g_groupType`, `g_groupName`'
+				 	. ' FROM g2_Group'
+				 	. ' WHERE `g_id` IN (' . implode( ',', $gs ) . ')'
+				 	;
+		 	$database->setQuery( $query );
+		 	$groups = $database->loadObjectList();
+
+			$gr = array();
+			foreach ( $groups as $group ) {
+				$desc = $group->g_groupName . '' . substr( strip_tags( "" ), 0, 30 );
+
+				$gr[] = mosHTML::makeOption( $group->g_id, $desc );
+			}
+
+			for ( $i=0; $i<$this->settings['groups_sel_amt']; $i++ ) {
+				$settings['g2group_'.$i]			= array( 'list', _MI_MI_G2_USERSELECT_GROUP_NAME, _MI_MI_G2_USERSELECT_GROUP_DESC );
+				$settings['lists']['g2group_'.$i]	= mosHTML::selectList( $gr, 'g2group_'.$i, 'size="6"', 'value', 'text', '' );
+			}
+		} else {
+			return false;
+		}
+
+		return $settings;
 	}
 
 	function pre_expiration_action( $request )

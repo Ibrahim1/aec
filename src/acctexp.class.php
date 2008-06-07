@@ -30,7 +30,7 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-//error_reporting(E_ALL);
+error_reporting(E_ALL);
 
 global $mosConfig_absolute_path, $mosConfig_offset, $aecConfig;
 
@@ -2974,8 +2974,8 @@ class aecHTML
 	function returnFull()
 	{
 		$return = '';
-		foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
-			$return .= $aecHTML->createSettingsParticle( $rowname );
+		foreach ( $this->rows as $rowname => $rowcontent ) {
+			$return .= $this->createSettingsParticle( $rowname );
 		}
 
 		return $return;
@@ -2983,8 +2983,8 @@ class aecHTML
 
 	function printFull()
 	{
-		foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
-			echo $aecHTML->createSettingsParticle( $rowname );
+		foreach ( $this->rows as $rowname => $rowcontent ) {
+			echo $this->createSettingsParticle( $rowname );
 		}
 	}
 
@@ -3176,7 +3176,7 @@ class SubscriptionPlan extends paramDBTable
 		}
 	}
 
-	function applyPlan( $userid, $processor = 'none', $silent = 0, $multiplicator = 1, $invoice = null )
+	function applyPlan( $userid, $processor = 'none', $silent = 0, $multiplicator = 1, $invoice = null, $tempparams = null )
 	{
 		global $database, $mainframe, $mosConfig_offset, $aecConfig;
 
@@ -3191,6 +3191,19 @@ class SubscriptionPlan extends paramDBTable
 
 			if ( is_object( $invoice ) ) {
 				$invoice_params	= $invoice->getParams();
+
+				if ( !empty( $invoice_params ) ) {
+					$tempparam = array();
+					foreach ( $invoice_params as $key => $value ) {
+						if ( strpos( $key, 'tempsubstore_' ) === 0 ) {
+							$tempparam[str_replace( 'tempsubstore_', '', $key )] = $value;
+						}
+					}
+
+					if ( !empty( $tempparam ) ) {
+						$metaUser->focusSubscription->addParams( $tempparam );
+					}
+				}
 			} else {
 				$invoice_params	= array();
 			}
@@ -3516,7 +3529,7 @@ class SubscriptionPlan extends paramDBTable
 		}
 	}
 
-	function getMIforms()
+	function getMIformParams()
 	{
 		$mis = $this->getMicroIntegrations();
 
@@ -3530,11 +3543,19 @@ class SubscriptionPlan extends paramDBTable
 				$mi = new MicroIntegration( $database );
 				$mi->load( $mi_id );
 
+				if ( !$mi->callIntegration() ) {
+					continue;
+				}
+
 				$mi_form = $mi->getMIform( $this );
 
 				if ( !empty( $mi_form ) ) {
 					if ( !empty( $mi_form['lists'] ) ) {
-						$lists = array_merge( $lists, $mi_form['lists'] );
+						foreach ( $mi_form['lists'] as $lname => $lcontent ) {
+							$tempname = 'mi_'.$mi->id.'_'.$lname;
+							$lists[$tempname] = str_replace( $lname, $tempname, $lcontent );
+						}
+
 						unset( $mi_form['lists'] );
 					}
 
@@ -3545,11 +3566,25 @@ class SubscriptionPlan extends paramDBTable
 					}
 				}
 			}
-		}
 
-		if ( empty( $mi_forms ) ) {
+			$params['lists'] = $lists;
+
+			return $params;
+		} else {
+			return false;
+		}
+	}
+
+	function getMIforms()
+	{
+		$params = $this->getMIformParams();
+
+		if ( empty( $params ) ) {
 			return false;
 		} else {
+			$lists = $params['lists'];
+			unset( $params['lists'] );
+
 			$settings = new aecSettings ( 'mi', 'frontend_forms' );
 			$settings->fullSettingsArray( $params, array(), $lists ) ;
 
@@ -4648,20 +4683,30 @@ class InvoiceFactory
 			$this->touchInvoice( $option );
 		}
 
-		if ( is_object( $this->objUsage ) ) {
-			$this->mi_form = $this->objUsage->getMIforms();
+		if ( !empty( $this->usage ) ) {
+			// get the payment plan
+			$this->objUsage = new SubscriptionPlan( $database );
+			$this->objUsage->load( $this->usage );
+		}
 
-			if ( !empty( $this->mi_form ) ) {
-				$params = array();
-				foreach ( $this->mi_form as $key => $value ) {
-					$val = aecGetParam( $key );
+		if ( !empty( $this->objUsage ) ) {
+			if ( is_object( $this->objUsage ) ) {
+				$mi_form = $this->objUsage->getMIformParams();
 
-					if ( !empty( $val ) ) {
-						$params[$key] = $val;
+				if ( !empty( $mi_form ) ) {
+					$params = array();
+					foreach ( $mi_form as $key => $value ) {
+						$val = aecGetParam( $key );
+
+						if ( !empty( $val ) ) {
+							$params['tempsubstore_'.$key] = $val;
+						}
 					}
-				}
 
-				$this->metaUser->focusSubscription->addParams( $params );
+					$this->objInvoice->addParams( $params );
+					$this->objInvoice->check();
+					$this->objInvoice->store();
+				}
 			}
 		}
 
@@ -5386,6 +5431,7 @@ class Invoice extends paramDBTable
 
 		$metaUser = false;
 		$new_plan = false;
+		$params = $this->getParams();
 
 		if ( !empty( $this->userid ) ) {
 			$metaUser = new metaUser( $this->userid );
@@ -7294,7 +7340,11 @@ class AECToolbox
 		$amount = round( $amount, 2 );
 
 		$a		= explode( '.', $amount );
-		$amount = $a[0] . '.' . substr( str_pad( $a[1], 2, '0' ), 0, 2 );
+		if ( empty( $a[1] ) ) {
+			$amount = $a[0] . '.00';
+		} else {
+			$amount = $a[0] . '.' . substr( str_pad( $a[1], 2, '0' ), 0, 2 );
+		}
 
 		return $amount;
 	}

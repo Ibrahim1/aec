@@ -519,5 +519,7 @@ define( '_MI_MI_G2_GROUPS_SEL_SCOPE_NAME',		'Group Scope' );
 define( '_MI_MI_G2_GROUPS_SEL_SCOPE_DESC',		'From which groups can the user choose?' );
 define( '_MI_MI_G2_DEL_GROUPS_EXP_NAME',		'Delete Groups (Expiration)' );
 define( '_MI_MI_G2_DEL_GROUPS_EXP_DESC',		'Remove the user from the previously assigned groups on expiration' );
+define( '_MI_MI_G2_USERSELECT_GROUP_NAME',		'Select Gallery' );
+define( '_MI_MI_G2_USERSELECT_GROUP_DESC',		'Please select a Gallery' );
 
 ?>

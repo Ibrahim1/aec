@@ -3002,7 +3002,7 @@ function saveMicroIntegration( $option, $apply=0 )
 	$mi->name			= $_POST['name'];
 	$mi->desc			= $_POST['desc'];
 	$mi->active			= $_POST['active'];
-	if ($_POST['class_name']) {
+	if ( !empty( $_POST['class_name'] ) ) {
 		$mi->class_name	= $_POST['class_name'];
 	}
 	$mi->auto_check		= $_POST['auto_check'];

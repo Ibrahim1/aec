@@ -113,8 +113,8 @@ class mi_docman
 		$del_opts[1] = mosHTML::makeOption ( "All", "Delete ALL, then apply group below." );
 		$del_opts[2] = mosHTML::makeOption ( "Set", "Delete Group Set on Application, then apply group below." );
 
-		$settings['lists']['group']			= mosHTML::selectList( $gr, 'group', 'size="4" multiple="multiple"', 'value', 'text', $sg );
-		$settings['lists']['group_exp'] 	= mosHTML::selectList( $gr, 'group_exp', 'size="4" multiple="multiple"', 'value', 'text', $sge );
+		$settings['lists']['group']			= mosHTML::selectList( $gr, 'group[]', 'size="4" multiple="multiple"', 'value', 'text', $sg );
+		$settings['lists']['group_exp'] 	= mosHTML::selectList( $gr, 'group_exp[]', 'size="4" multiple="multiple"', 'value', 'text', $sge );
 		$settings['lists']['delete_on_exp']	= mosHTML::selectList( $del_opts, 'delete_on_exp', 'size="3"', 'value', 'text', $this->settings['delete_on_exp'] );
 
 		return $settings;
@@ -123,7 +123,6 @@ class mi_docman
 	function saveparams( $params )
 	{
 		global $mosConfig_absolute_path, $database;
-		$newparams = $params;
 
 		$subgroups = array( 'group', 'group_exp' );
 
@@ -132,7 +131,7 @@ class mi_docman
 			$params[$groupname] = $temp;
 		}
 
-		return $newparams;
+		return $params;
 	}
 
 	function hacks()
