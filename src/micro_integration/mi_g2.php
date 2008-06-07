@@ -132,7 +132,11 @@ class mi_g2 extends MI
 					$this->mapUserToGroup( $g2userid, $request->params['g2group_'.$i] );
 				}
 			}
+
+			return true;
 		}
+
+		return null;
 	}
 
 	function on_userchange_action( $request )
@@ -157,7 +161,13 @@ class mi_g2 extends MI
 					. ' VALUES ( \'' . $g2userid . '\', \'' . $groupid . '\' )'
 					;
 			$database->setQuery( $query );
-			return $database->query();
+
+			if ( $database->query() ) {
+				return true;
+			} else {
+				$this->setError( $database->getErrorMsg() );
+				return false;
+			}
 		} else {
 			return null;
 		}
@@ -171,7 +181,13 @@ class mi_g2 extends MI
 				. ' WHERE `g_userId` = \'' . $g2userid . '\' AND `g_groupId` = \'' . $groupid . '\''
 				;
 		$database->setQuery( $query );
-		return $database->query();
+
+		if ( $database->query() ) {
+			return true;
+		} else {
+			$this->setError( $database->getErrorMsg() );
+			return false;
+		}
 	}
 
 	function G2userid( $metaUser )
@@ -180,7 +196,7 @@ class mi_g2 extends MI
 
 		$query = 'SELECT g_id'
 				. ' FROM g2_User'
-				. ' WHERE `g_username` = \'' . $metaUser->username . '\''
+				. ' WHERE `g_userName` = \'' . $metaUser->cmsUser->username . '\''
 				;
 		$database->setQuery( $query );
 
@@ -192,7 +208,7 @@ class mi_g2 extends MI
 		} else {
 			// User not found, create user, then recurse
 			$this->createG2User( $metaUser );
-			$this->G2userid( $metaUser);
+			$this->G2userid( $metaUser );
 		}
 	}
 
@@ -200,9 +216,16 @@ class mi_g2 extends MI
 	{
 		global $database;
 
+		$query = 'SELECT max(g_id)'
+				. ' FROM g2_User'
+				;
+		$database->setQuery( $query );
+
+		$g2id = $database->loadResult() + 1;
+
 		$query = 'INSERT INTO g2_User'
-				. ' ( `g_userName`, `g_fullName`, `g_hashedPassword`, `g_email` )'
-				. ' VALUES ( \'' . $metaUser->username . '\', \'' . $metaUser->name . '\', \'' . $metaUser->password . '\', \'' . $metaUser->email . '\' )'
+				. ' ( `g_id`, `g_userName`, `g_fullName`, `g_hashedPassword`, `g_email`, `g_language`, `g_locked` )'
+				. ' VALUES ( \'' . $g2id . '\', \'' . $metaUser->cmsUser->username . '\', \'' . $metaUser->cmsUser->name . '\', \'' . $metaUser->cmsUser->password . '\', \'' . $metaUser->cmsUser->email . '\', NULL , \'0\' )'
 				;
 		$database->setQuery( $query );
 

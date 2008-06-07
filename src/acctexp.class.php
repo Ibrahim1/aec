@@ -3189,25 +3189,6 @@ class SubscriptionPlan extends paramDBTable
 
 			$params			= $this->getParams();
 
-			if ( is_object( $invoice ) ) {
-				$invoice_params	= $invoice->getParams();
-
-				if ( !empty( $invoice_params ) ) {
-					$tempparam = array();
-					foreach ( $invoice_params as $key => $value ) {
-						if ( strpos( $key, 'tempsubstore_' ) === 0 ) {
-							$tempparam[str_replace( 'tempsubstore_', '', $key )] = $value;
-						}
-					}
-
-					if ( !empty( $tempparam ) ) {
-						$metaUser->focusSubscription->addParams( $tempparam );
-					}
-				}
-			} else {
-				$invoice_params	= array();
-			}
-
 			if ( !isset( $params['make_primary'] ) ) {
 				$params['make_primary'] = 1;
 			}
@@ -3302,8 +3283,25 @@ class SubscriptionPlan extends paramDBTable
 			// Clear parameters
 			$metaUser->focusSubscription->params = '';
 
-			if ( !empty( $invoice_params['creator_ip'] ) ) {
-				$metaUser->focusSubscription->addParams( array( 'creator_ip' => $invoice_params['creator_ip'] ), 'params', false );
+			if ( is_object( $invoice ) ) {
+				$invoice_params	= $invoice->getParams();
+
+				if ( !empty( $invoice_params ) ) {
+					$tempparam = array();
+					foreach ( $invoice_params as $key => $value ) {
+						if ( strpos( $key, 'tempsubstore_' ) === 0 ) {
+							$tempparam[str_replace( 'tempsubstore_', '', $key )] = $value;
+						}
+					}
+
+					if ( !empty( $invoice_params['creator_ip'] ) ) {
+						$tempparam['creator_ip'] = $invoice_params['creator_ip'];
+					}
+
+					if ( !empty( $tempparam ) ) {
+						$metaUser->focusSubscription->addParams( $tempparam, 'params', false );
+					}
+				}
 			}
 
 			$pp = new PaymentProcessor();
