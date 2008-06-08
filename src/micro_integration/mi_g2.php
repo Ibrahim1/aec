@@ -124,7 +124,7 @@ class mi_g2 extends MI
 
 	function action( $request )
 	{
-		$g2userid = $this->G2userid( $request->metaUser );
+		$g2userid = $this->catchG2userid( $request->metaUser );
 
 		if ( $this->settings['set_groups'] ) {
 			$groups = explode( ';', $this->settings['groups'] );
@@ -195,7 +195,21 @@ class mi_g2 extends MI
 		}
 	}
 
-	function G2userid( $metaUser )
+	function catchG2userid( $metaUser )
+	{
+		$g2id = $this->hasG2userid( $metaUser );
+
+		if ( $g2id ) {
+			// User found, return id
+			return $g2id;
+		} else {
+			// User not found, create user, then recurse
+			$this->createG2User( $metaUser );
+			$this->catchG2userid( $metaUser );
+		}
+	}
+
+	function hasG2userid( $metaUser )
 	{
 		global $database;
 
@@ -206,15 +220,6 @@ class mi_g2 extends MI
 		$database->setQuery( $query );
 
 		$g2id = $database->loadResult();
-
-		if ( $g2id ) {
-			// User found, return id
-			return $g2id;
-		} else {
-			// User not found, create user, then recurse
-			$this->createG2User( $metaUser );
-			$this->G2userid( $metaUser );
-		}
 	}
 
 	function createG2User( $metaUser )
@@ -270,6 +275,11 @@ class mi_g2 extends MI
 			$this->setError( $database->getErrorMsg() );
 			return false;
 		}
+	}
+
+	function createEntity()
+	{
+
 	}
 }
 
