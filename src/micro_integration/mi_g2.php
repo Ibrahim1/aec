@@ -127,13 +127,18 @@ class mi_g2 extends MI
 		$g2userid = $this->G2userid( $request->metaUser );
 
 		if ( $this->settings['set_groups'] ) {
-			for ( $i=0; $i<$this->settings['groups']; $i++ ) {
+			$groups = explode( ';', $this->settings['groups'] );
+			foreach ( $groups as $groupid ) {
+				$this->mapUserToGroup( $g2userid, $groupid );
+			}
+		}
+
+		if ( $this->settings['set_groups_user'] ) {
+			for ( $i=0; $i<$this->settings['groups_sel_amt']; $i++ ) {
 				if ( isset( $request->params['g2group_'.$i] ) ) {
 					$this->mapUserToGroup( $g2userid, $request->params['g2group_'.$i] );
 				}
 			}
-
-			return true;
 		}
 
 		return null;
@@ -216,18 +221,48 @@ class mi_g2 extends MI
 	{
 		global $database;
 
+		// Create Entity
 		$query = 'SELECT max(g_id)'
 				. ' FROM g2_User'
 				;
 		$database->setQuery( $query );
 
-		$g2id = $database->loadResult() + 1;
+		$entityid = $database->loadResult() + 1;
+
+		$query = 'SELECT max(g_serialNumber)'
+				. ' FROM g2_Entity'
+				. ' WHERE `g_entityType` = \'GalleryUser\''
+				;
+		$database->setQuery( $query );
+
+		$serial = $database->loadResult() + 1;
+
+		$query = 'INSERT INTO g2_Entity'
+				. ' ( `g_id`, `g_creationTimestamp`, `g_isLinkable`, `g_linkId`, `g_modificationTimestamp`, `g_serialNumber`, `g_entityType`, `g_onLoadHandlers` )'
+				. ' VALUES ( \'' . $entityid . '\', \'' . time() . '\', \'0\', NULL, \'' . time() . '\', \'' . $serial . '\', \'GalleryUser\', NULL )'
+				;
+		$database->setQuery( $query );
+		$database->query();
+
+		$g2id = $entityid;
 
 		$query = 'INSERT INTO g2_User'
 				. ' ( `g_id`, `g_userName`, `g_fullName`, `g_hashedPassword`, `g_email`, `g_language`, `g_locked` )'
-				. ' VALUES ( \'' . $g2id . '\', \'' . $metaUser->cmsUser->username . '\', \'' . $metaUser->cmsUser->name . '\', \'' . $metaUser->cmsUser->password . '\', \'' . $metaUser->cmsUser->email . '\', NULL , \'0\' )'
+				. ' VALUES ( \'' . $g2id . '\', \'' . $metaUser->cmsUser->username . '\', \'' . $metaUser->cmsUser->name . '\', \'' . $metaUser->cmsUser->password . '\', \'' . $metaUser->cmsUser->email . '\', NULL, \'0\' )'
 				;
 		$database->setQuery( $query );
+		$database->query();
+
+		$query = 'INSERT INTO g2_ExternalIdMap'
+				. ' ( `g_externalId`, `g_entityType`, `g_entityId` )'
+				. ' VALUES ( \'' . $metaUser->cmsUser->id . '\', \'GalleryUser\', \'' . $g2id . '\' )'
+				;
+		$database->setQuery( $query );
+		$database->query();
+
+		// Add to standard groups
+		$this->mapUserToGroup( $g2id, 2 );
+		$this->mapUserToGroup( $g2id, 4 );
 
 		if ( $database->query() ) {
 			return true;

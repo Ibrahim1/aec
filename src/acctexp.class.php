@@ -30,7 +30,7 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
 
 global $mosConfig_absolute_path, $mosConfig_offset, $aecConfig;
 
@@ -8324,7 +8324,7 @@ class microIntegration extends paramDBTable
 		if ( !empty( $metaUser->focusSubscription->params ) ) {
 			$miparams = $metaUser->focusSubscription->getParams();
 
-			$miprefix = 'mi_' . $this->id;
+			$miprefix = 'mi_' . $this->id . '_';
 
 			$params = array();
 			foreach ( $miparams as $pkey => $pval ) {
