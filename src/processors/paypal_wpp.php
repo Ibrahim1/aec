@@ -84,7 +84,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 		$country_sel = array();
 		$country_sel[] = mosHTML::makeOption( 'US', 'US' );
-		$country_sel[] = mosHTML::makeOption( 'UK', 'UK' );
+		//$country_sel[] = mosHTML::makeOption( 'UK', 'UK' );
 
 		$settings['lists']['country'] = mosHTML::selectList( $country_sel, 'country', 'size="2"', 'value', 'text', $this->settings['country'] );
 
@@ -105,27 +105,29 @@ class processor_paypal_wpp extends XMLprocessor
 	{
 		$profileid = $metaUser->getCMSparams( 'paypal_wpp_customerProfileId' );
 
-		if ( isset( $_POST['billFirstName'] ) && ( strpos( $request->int_var['params']['cardNumber'], 'X' ) === false ) ) {
-			$profileid = $metaUser->getCMSparams( 'paypal_wpp_customerProfileId' );
+		$billfirstname	= aecGetParam( 'billFirstName', null );
+		$billcardnumber	= aecGetParam( 'cardNumber', null );
 
-			$var['Method']				= 'GetRecurringPaymentsProfileDetails';
-			$var['Profileid']			= $profileid;
+		if ( !is_null( $billfirstname ) && ( strpos( $billcardnumber, 'X' ) === false ) ) {
+			$var['Method']					= 'UpdateRecurringPaymentsProfile';
+			$var['Profileid']				= $profileid;
 
-			$vars = $this->ProfileRequest( $request, $profileid, $var );
+			$var['card_type']				= aecGetParam( 'cardType' );
+			$var['card_number']				= aecGetParam( 'cardNumber' );
+			$var['expDate']					= str_pad( aecGetParam( 'expirationMonth' ), 2, '0', STR_PAD_LEFT ) . aecGetParam( 'expirationYear' );
+			$var['CardVerificationValue']	= aecGetParam( 'cardVV2' );
 
-			$vcontent = array();
-			$vcontent['card_type']		= $vars['CREDITCARDTYPE'];
-			$vcontent['card_number']	= 'XXXX' . $vars['ACCT'];
-			$vcontent['card_exp_month']	= substr( $vars['EXPDATE'], 0, 2 );
-			$vcontent['card_exp_year']	= substr( $vars['EXPDATE'], 2, 4 );
-			$vcontent['firstname']		= $vars['FIRSTNAME'];
-			$vcontent['lastname']		= $vars['LASTNAME'];
-			$vcontent['address']		= $vars['STREET1'];
-			$vcontent['address2']		= $vars['STREET2'];
-			$vcontent['city']			= $vars['CITY'];
-			$vcontent['state_usca']		= $vars['STATE'];
-			$vcontent['zip']			= $vars['ZIP'];
-			$vcontent['country_list']	= $vars['COUNTRY'];
+			$udata = array( 'firstname' => 'billFirstName', 'lastname' => 'billLastName', 'address' => 'billAddress', 'address2' => 'billAddress2',
+							'city' => 'billCity', 'state' => 'billState', 'zip' => 'billZip', 'country' => 'billCountry'
+							);
+
+			foreach ( $udata as $authvar => $aecvar ) {
+				if ( !empty( $request->int_var['params'][$aecvar] ) ) {
+					$var[$authvar] = trim( $request->int_var['params'][$aecvar] );
+				}
+			}
+
+			$result = $this->ProfileRequest( $request, $profileid, $var );
 		}
 
 		if ( $profileid ) {
