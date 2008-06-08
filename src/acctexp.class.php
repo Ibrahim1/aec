@@ -152,6 +152,65 @@ class metaUser
 		}
 	}
 
+	function getCMSparams( $name )
+	{
+		$userParams =& new mosParameters( $this->cmsUser->params );
+
+		if ( is_array( $name ) ) {
+			$array = array();
+
+			foreach ( $name as $n ) {
+				$array[$n] = $userParams->get( $n );
+			}
+
+			return $array;
+		} else {
+			return (int) $userParams->get( $name );
+		}
+	}
+
+	function setCMSparams( $array )
+	{
+		global $database;
+
+		$params = explode( "\n", $this->cmsUser->params );
+
+		$oldarray = array();
+		foreach ( $params as $chunk ) {
+			$k = explode( '=', $chunk, 2 );
+			if ( !empty( $k[0] ) ) {
+				// Strip slashes, but preserve special characters
+				$oldarray[$k[0]] = stripslashes( str_replace( array( '\n', '\t', '\r' ), array( "\n", "\t", "\r" ), $k[1] ) );
+			}
+			unset( $k );
+		}
+
+		foreach ( $array as $n => $v  ) {
+			$oldarray[$n] = $v;
+		}
+
+		$params = array();
+		foreach ( $array as $key => $value ) {
+			if ( !is_null( $key ) ) {
+				if ( is_array( $value ) ) {
+					$temp = implode( ';', $value );
+					$value = $temp;
+				}
+
+				if ( get_magic_quotes_gpc() ) {
+					$value = stripslashes( $value );
+				}
+				$value = $database->getEscaped( $value );
+
+				$params[] = $key . '=' . $value;
+			}
+		}
+
+		$this->cmsUser->params = implode( "\n", $params );
+
+		$this->cmsUser->check();
+		return $this->cmsUser->store();
+	}
 	function getTempAuth()
 	{
 		$return = false;
@@ -2417,7 +2476,7 @@ class XMLprocessor extends processor
 		return $var;
 	}
 
-	function getUserform( $var=array(), $values=null, $metaUser=null )
+	function getUserform( $var=array(), $values=null, $metaUser=null, $content=array() )
 	{
 		if ( empty( $values ) ) {
 			$values = array( 'firstname', 'lastname' );
@@ -2426,32 +2485,42 @@ class XMLprocessor extends processor
 		if ( is_object( $metaUser ) ) {
 			$name = explode( ' ', $metaUser->cmsUser->name );
 
-			if ( empty( $name[1] ) ) {
-				$name[1] = "";
+			if ( empty( $vcontent['firstname'] ) ) {
+				$vcontent['firstname'] = $name[0];
+			}
+
+			if ( empty( $vcontent['lastname'] ) && isset( $name[1] ) ) {
+				$vcontent['lastname'] = $name[1];
 			}
 		} else {
 			$name = array( '', '' );
 		}
 
 		foreach ( $values as $value ) {
+			if ( isset( $content[$value] ) ) {
+				$vcontent = $content[$value];
+			} else {
+				$vcontent = '';
+			}
+
 			switch ( $value ) {
 				case 'firstname':
-					$var['params']['billFirstName'] = array( 'inputC', _AEC_USERFORM_BILLFIRSTNAME_NAME, _AEC_USERFORM_BILLFIRSTNAME_NAME, $name[0] );
+					$var['params']['billFirstName'] = array( 'inputC', _AEC_USERFORM_BILLFIRSTNAME_NAME, _AEC_USERFORM_BILLFIRSTNAME_NAME, $vcontent );
 					break;
 				case 'lastname':
-					$var['params']['billLastName'] = array( 'inputC', _AEC_USERFORM_BILLLASTNAME_NAME, _AEC_USERFORM_BILLLASTNAME_NAME, $name[1] );
+					$var['params']['billLastName'] = array( 'inputC', _AEC_USERFORM_BILLLASTNAME_NAME, _AEC_USERFORM_BILLLASTNAME_NAME, $vcontent );
 					break;
 				case 'address':
-					$var['params']['billAddress'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS_NAME );
+					$var['params']['billAddress'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS_NAME, $vcontent );
 					break;
 				case 'address2':
-					$var['params']['billAddress2'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS2_NAME );
+					$var['params']['billAddress2'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS2_NAME, $vcontent );
 					break;
 				case 'city':
-					$var['params']['billCity'] = array( 'inputC', _AEC_USERFORM_BILLCITY_NAME );
+					$var['params']['billCity'] = array( 'inputC', _AEC_USERFORM_BILLCITY_NAME, $vcontent );
 					break;
 				case 'state':
-					$var['params']['billState'] = array( 'inputC', _AEC_USERFORM_BILLSTATE_NAME );
+					$var['params']['billState'] = array( 'inputC', _AEC_USERFORM_BILLSTATE_NAME, $vcontent );
 					break;
 				case 'state_us':
 					$states = array( '', '--- United States ---', 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI',
@@ -2472,7 +2541,7 @@ class XMLprocessor extends processor
 					}
 
 					$var['params']['lists']['billState'] = mosHTML::selectList( $statelist, 'billState', 'size="1"', 'value', 'text', '' );
-					$var['params']['billState'] = array( 'list', _AEC_USERFORM_BILLSTATE_NAME );
+					$var['params']['billState'] = array( 'list', _AEC_USERFORM_BILLSTATE_NAME, $vcontent );
 					break;
 				case 'state_usca':
 					$states = array( '', '--- United States ---', 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI',
@@ -2494,10 +2563,10 @@ class XMLprocessor extends processor
 					}
 
 					$var['params']['lists']['billState'] = mosHTML::selectList( $statelist, 'billState', 'size="1"', 'value', 'text', '' );
-					$var['params']['billState'] = array( 'list', _AEC_USERFORM_BILLSTATEPROV_NAME );
+					$var['params']['billState'] = array( 'list', _AEC_USERFORM_BILLSTATEPROV_NAME, $vcontent );
 					break;
 				case 'zip':
-					$var['params']['billZip'] = array( 'inputC', _AEC_USERFORM_BILLZIP_NAME );
+					$var['params']['billZip'] = array( 'inputC', _AEC_USERFORM_BILLZIP_NAME, $vcontent );
 					break;
 				case 'country_list':
 					$countries = array(  'US', 'AL', 'DZ', 'AD', 'AO', 'AI', 'AG', 'AR', 'AM', 'AW',
@@ -2529,19 +2598,19 @@ class XMLprocessor extends processor
 					}
 
 					$var['params']['lists']['billCountry'] = mosHTML::selectList( $countrylist, 'billCountry', 'size="1"', 'value', 'text', '' );
-					$var['params']['billCountry'] = array( 'list', _AEC_USERFORM_BILLCOUNTRY_NAME );
+					$var['params']['billCountry'] = array( 'list', _AEC_USERFORM_BILLCOUNTRY_NAME, $vcontent );
 					break;
 				case 'country':
-					$var['params']['billCountry'] = array( 'inputC', _AEC_USERFORM_BILLCOUNTRY_NAME );
+					$var['params']['billCountry'] = array( 'inputC', _AEC_USERFORM_BILLCOUNTRY_NAME, $vcontent );
 					break;
 				case 'phone':
-					$var['params']['billPhone'] = array( 'inputC', _AEC_USERFORM_BILLPHONE_NAME );
+					$var['params']['billPhone'] = array( 'inputC', _AEC_USERFORM_BILLPHONE_NAME, $vcontent );
 					break;
 				case 'fax':
-					$var['params']['billFax'] = array( 'inputC', _AEC_USERFORM_BILLFAX_NAME );
+					$var['params']['billFax'] = array( 'inputC', _AEC_USERFORM_BILLFAX_NAME, $vcontent );
 					break;
 				case 'company':
-					$var['params']['billCompany'] = array( 'inputC', _AEC_USERFORM_BILLCOMPANY_NAME );
+					$var['params']['billCompany'] = array( 'inputC', _AEC_USERFORM_BILLCOMPANY_NAME, $vcontent );
 					break;
 			}
 		}

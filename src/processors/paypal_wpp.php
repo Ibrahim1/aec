@@ -75,8 +75,8 @@ class processor_paypal_wpp extends XMLprocessor
 		$settings['api_user']				= array( 'inputC' );
 		$settings['api_password']			= array( 'inputC' );
 		$settings['use_certificate']		= array( 'list_yesno' );
-		$settings['certificate_path']	= array( 'inputC' );
-		$settings['signature'] 			= array( 'inputC' );
+		$settings['certificate_path']		= array( 'inputC' );
+		$settings['signature'] 				= array( 'inputC' );
 		$settings['country'] 				= array( 'list' );
 
 		$settings['cancel_note']			= array( 'inputE' );
@@ -93,11 +93,86 @@ class processor_paypal_wpp extends XMLprocessor
 		return $settings;
 	}
 
-	function checkoutform( $request )
+	function registerProfileTabs()
+	{
+		$tab				= array();
+		$tab['wpp_details']	= _AEC_USERFORM_BILLING_DETAILS_NAME;
+
+		return $tab;
+	}
+
+	function customtab_details( $request )
+	{
+		$profileid = $metaUser->getCMSparams( 'paypal_wpp_customerProfileId' );
+
+		if ( isset( $_POST['billFirstName'] ) && ( strpos( $request->int_var['params']['cardNumber'], 'X' ) === false ) ) {
+			$profileid = $metaUser->getCMSparams( 'paypal_wpp_customerProfileId' );
+
+			$var['Method']				= 'GetRecurringPaymentsProfileDetails';
+			$var['Profileid']			= $profileid;
+
+			$vars = $this->ProfileRequest( $request, $profileid, $var );
+
+			$vcontent = array();
+			$vcontent['card_type']		= $vars['CREDITCARDTYPE'];
+			$vcontent['card_number']	= 'XXXX' . $vars['ACCT'];
+			$vcontent['card_exp_month']	= substr( $vars['EXPDATE'], 0, 2 );
+			$vcontent['card_exp_year']	= substr( $vars['EXPDATE'], 2, 4 );
+			$vcontent['firstname']		= $vars['FIRSTNAME'];
+			$vcontent['lastname']		= $vars['LASTNAME'];
+			$vcontent['address']		= $vars['STREET1'];
+			$vcontent['address2']		= $vars['STREET2'];
+			$vcontent['city']			= $vars['CITY'];
+			$vcontent['state_usca']		= $vars['STATE'];
+			$vcontent['zip']			= $vars['ZIP'];
+			$vcontent['country_list']	= $vars['COUNTRY'];
+		}
+
+		if ( $profileid ) {
+			$var['Method']				= 'GetRecurringPaymentsProfileDetails';
+			$var['Profileid']			= $profileid;
+
+			$vars = $this->ProfileRequest( $request, $profileid, $var );
+
+			$vcontent = array();
+			$vcontent['card_type']		= $vars['CREDITCARDTYPE'];
+			$vcontent['card_number']	= 'XXXX' . $vars['ACCT'];
+			$vcontent['card_exp_month']	= substr( $vars['EXPDATE'], 0, 2 );
+			$vcontent['card_exp_year']	= substr( $vars['EXPDATE'], 2, 4 );
+			$vcontent['firstname']		= $vars['FIRSTNAME'];
+			$vcontent['lastname']		= $vars['LASTNAME'];
+			$vcontent['address']		= $vars['STREET1'];
+			$vcontent['address2']		= $vars['STREET2'];
+			$vcontent['city']			= $vars['CITY'];
+			$vcontent['state_usca']		= $vars['STATE'];
+			$vcontent['zip']			= $vars['ZIP'];
+			$vcontent['country_list']	= $vars['COUNTRY'];
+		} else {
+			$vcontent = array();
+		}
+
+		$var = $this->checkoutform( $request, $vcontent );
+
+		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=authorize_cim_details', true ) . '" method="post">' . "\n";
+		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
+		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
+		$return .= '<input type="hidden" name="task" value="subscriptiondetails" />' . "\n";
+		$return .= '<input type="hidden" name="sub" value="authorize_cim_details" />' . "\n";
+		$return .= '<input type="submit" class="button" value="' . _BUTTON_APPLY . '" /><br /><br />' . "\n";
+		$return .= '</form>' . "\n";
+
+		return $return;
+	}
+
+	function checkoutform( $request, $vcontent=null )
 	{
 		global $mosConfig_live_site;
 
 		$var = array();
+
+		if ( !empty( $vcontent ) ) {
+			$var['params']['billUpdateInfo'] = array( 'p', _AEC_CCFORM_UPDATE_NAME, _AEC_CCFORM_UPDATE_DESC, '' );
+		}
 
 		$values = array( 'card_type', 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' );
 		$var = $this->getCCform( $var, $values );
@@ -203,7 +278,7 @@ class processor_paypal_wpp extends XMLprocessor
 		return implode( '&', $content );
 	}
 
-	function transmitRequestXML( $xml, $request )
+	function transmitToPayPal( $xml, $request )
 	{
 		$path = "/nvp";
 
@@ -225,6 +300,11 @@ class processor_paypal_wpp extends XMLprocessor
 		$curlextra[CURLOPT_VERBOSE] = 1;
 
 		$response = $this->transmitRequest( $url, $path, $xml, 443, $curlextra );
+	}
+
+	function transmitRequestXML( $xml, $request )
+	{
+		$response = $this->transmitToPayPal( $xml, $request );
 
 		$return['valid'] = false;
 		$return['raw'] = $response;
@@ -247,6 +327,8 @@ class processor_paypal_wpp extends XMLprocessor
 				} else {
 					$return['valid'] = 1;
 				}
+
+				$request->metaUser->setCMSparams( array( 'customerProfileId' => $cim->customerProfileId ) );
 			} else {
 				$count = 0;
 				while ( isset( $nvpResArray["L_SHORTMESSAGE".$count] ) ) {
@@ -286,55 +368,13 @@ class processor_paypal_wpp extends XMLprocessor
 
 	function customaction_cancel( $request )
 	{
-		return $this->ManageRecurringPaymentsProfileStatus( $request, 'Cancel', $this->settings['cancel_note'] );
-	}
-
-	function ManageRecurringPaymentsProfileStatus( $request, $command, $note )
-	{
 		$var['Method']				= 'ManageRecurringPaymentsProfileStatus';
-		$var['Version']				= '50.0';
-		$var['user']				= $this->settings['api_user'];
-		$var['pwd']					= $this->settings['api_password'];
-		$var['signature']			= $this->settings['signature'];
+		$var['action']				= 'Cancel';
+		$var['note']				= $this->settings['cancel_note'];
 
-		$invoiceparams = $request->invoice->getParams();
+		$profileid = $metaUser->getCMSparams( 'paypal_wpp_customerProfileId' );
 
-		// Add Payment information
-		$var['profileid']			= $invoiceparams['subscriptionid'];
-
-		$var['action']				= $command;
-		$var['note']				= $note;
-
-		$content = array();
-		foreach ( $var as $name => $value ) {
-			$content[] .= strtoupper( $name ) . '=' . urlencode( $value );
-		}
-
-		$xml =  implode( '&', $content );
-
-		$path = "/nvp";
-
-		if ( $this->settings['testmode'] ) {
-			if ( $this->settings['use_certificate'] ) {
-				$url = "https://api.sandbox.paypal.com" . $path;
-			} else {
-				$url = "https://api-3t.sandbox.paypal.com" . $path;
-			}
-		} else {
-			if ( $this->settings['use_certificate'] ) {
-				$url = "https://api.paypal.com" . $path;
-			} else {
-				$url = "https://api-3t.paypal.com" . $path;
-			}
-		}
-
-		$curlextra = array();
-		$curlextra[CURLOPT_VERBOSE] = 1;
-
-		$response = $this->transmitRequest( $url, $path, $xml, 443, $curlextra );
-
-		// converting NVPResponse to an Associative Array
-		$nvpResArray = $this->deformatNVP( $response );
+		$response = $this->ProfileRequest( $request, $profileid, $var );
 
 		if ( !empty( $response ) ) {
 			$return['invoice'] = $request->invoice->invoice_number;
@@ -344,8 +384,8 @@ class processor_paypal_wpp extends XMLprocessor
 					$return['valid'] = 0;
 					$return['cancel'] = true;
 				} else {
-				$return['valid'] = 0;
-				$return['error'] = 'Could not transmit Cancel Message - Wrong Profile ID returned';
+					$return['valid'] = 0;
+					$return['error'] = 'Could not transmit Cancel Message - Wrong Profile ID returned';
 				}
 			} else {
 				$return['valid'] = 0;
@@ -356,6 +396,27 @@ class processor_paypal_wpp extends XMLprocessor
 		} else {
 			Payment_HTML::error( 'com_acctexp', $request->metaUser->cmsUser, $request->invoice, "An error occured while cancelling your subscription. Please contact the system administrator!", true );
 		}
+	}
+
+	function ProfileRequest( $request, $profileid, $var )
+	{
+		$var['Version']				= '50.0';
+		$var['user']				= $this->settings['api_user'];
+		$var['pwd']					= $this->settings['api_password'];
+		$var['signature']			= $this->settings['signature'];
+
+		$var['profileid']			= $profileid;
+
+		$content = array();
+		foreach ( $var as $name => $value ) {
+			$content[] .= strtoupper( $name ) . '=' . urlencode( $value );
+		}
+
+		$xml = implode( '&', $content );
+
+		$response = $this->transmitToPayPal( $xml, $request );
+
+		return $this->deformatNVP( $response );
 	}
 
 	function deformatNVP( $nvpstr )

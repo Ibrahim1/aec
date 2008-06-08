@@ -87,8 +87,8 @@ class processor_authorize_cim extends XMLprocessor
 
 	function registerProfileTabs()
 	{
-		$tab			= array();
-		$tab['details']	= _AEC_USERFORM_BILLING_DETAILS_NAME;
+		$tab				= array();
+		$tab['cim_details']	= _AEC_USERFORM_BILLING_DETAILS_NAME;
 
 		return $tab;
 	}
@@ -98,7 +98,7 @@ class processor_authorize_cim extends XMLprocessor
 		if ( isset( $_POST['billFirstName'] ) && ( strpos( $request->int_var['params']['cardNumber'], 'X' ) === false ) ) {
 			$cim = new AuthNetCim( $this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode'] );
 
-			$profileid = $this->getCustomerProfileID( $request->metaUser->userid );
+			$profileid = $metaUser->getCMSparams( 'customerProfileId' );
 
 			$cim->setParameter( 'customerProfileId', $profileid );
 			$cim->getCustomerProfileRequest();
@@ -174,7 +174,7 @@ class processor_authorize_cim extends XMLprocessor
 		$hascim = false;
 
 		if ( empty( $profileid ) ) {
-			$profileid = $this->getCustomerProfileID( $request->metaUser->userid );
+			$profileid = $metaUser->getCMSparams( 'customerProfileId' );
 		}
 
 		if ( empty( $cim ) && !empty( $profileid ) ) {
@@ -193,7 +193,7 @@ class processor_authorize_cim extends XMLprocessor
 		if ( $hascim ) {
 			$var['params']['billUpdateInfo'] = array( 'p', _AEC_CCFORM_UPDATE_NAME, _AEC_CCFORM_UPDATE_DESC, '' );
 
-			$vcontent['card_number'] = $cim->substring_between($cim->response,'<cardNumber>','</cardNumber>');
+			$vcontent['card_number'] = $cim->substring_between( $cim->response,'<cardNumber>','</cardNumber>' );
 
 			$firstname = $cim->substring_between( $cim->response,'<firstName>','</firstName>' );
 			$lastname = $cim->substring_between( $cim->response,'<lastName>','</lastName>' );
@@ -269,7 +269,7 @@ class processor_authorize_cim extends XMLprocessor
 			}
 		}
 
-		$profileid = $this->getCustomerProfileID( $request->metaUser->userid );
+		$profileid = $metaUser->getCMSparams( 'customerProfileId' );
 
 		if ( $profileid ) {
 			$cim->setParameter( 'customerProfileId', $profileid );
@@ -287,7 +287,7 @@ class processor_authorize_cim extends XMLprocessor
 			$cim->createCustomerProfileRequest();
 
 			if ( $cim->isSuccessful() ) {
-				$this->setCustomerProfileID( $request->metaUser->userid, $cim->customerProfileId );
+				$request->metaUser->setCMSparams( array( 'customerProfileId' => $cim->customerProfileId ) );
 			}
 
 			$cim->setParameter( 'customerProfileId',		$cim->customerProfileId );
@@ -344,7 +344,7 @@ class processor_authorize_cim extends XMLprocessor
 		$invoice->loadbySubscriptionId( $subscription_id );
 
 		if ( $invoice->id ) {
-			$profileid = $this->getCustomerProfileID( $request->metaUser->userid );
+			$profileid = $metaUser->getCMSparams( 'customerProfileId' );
 
 			$cim->setParameter( 'customerProfileId',		 $profileid );
 			$cim->getCustomerProfileRequest();
@@ -374,58 +374,5 @@ class processor_authorize_cim extends XMLprocessor
 		return false;
 	}
 
-	function getCustomerProfileID( $userID )
-	{
-		global $database;
-		$row = new mosUser( $database );
-		$row->load( (int) $userID );
-
-		$userParams =& new mosParameters( $row->params );
-
-		return (int) $userParams->get( 'customerProfileId' );
-	}
-
-	function setCustomerProfileID( $userID, $profileID )
-	{
-		global $database;
-		$row = new mosUser( $database );
-		$row->load( (int) $userID );
-
-		$params = explode( "\n", $row->params );
-
-		$array = array();
-		foreach ( $params as $chunk ) {
-			$k = explode( '=', $chunk, 2 );
-			if ( !empty( $k[0] ) ) {
-				// Strip slashes, but preserve special characters
-				$array[$k[0]] = stripslashes( str_replace( array( '\n', '\t', '\r' ), array( "\n", "\t", "\r" ), $k[1] ) );
-			}
-			unset( $k );
-		}
-
-		$array['customerProfileId'] = $profileID;
-
-		$params = array();
-		foreach ( $array as $key => $value ) {
-			if ( !is_null( $key ) ) {
-				if ( is_array( $value ) ) {
-					$temp = implode( ';', $value );
-					$value = $temp;
-				}
-
-				if ( get_magic_quotes_gpc() ) {
-					$value = stripslashes( $value );
-				}
-				$value = $database->getEscaped( $value );
-
-				$params[] = $key . '=' . $value;
-			}
-		}
-
-		$row->params = implode( "\n", $params );
-
-		$row->check();
-		return $row->store();
-	}
 }
 ?>
