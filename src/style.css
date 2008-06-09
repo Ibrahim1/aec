@@ -255,12 +255,11 @@ background-color: #ffb;
 }
 
 #expired_greeting {
-padding: 3px;
+padding-top: 14px;
 border: 2px solid #fff;
 }
 
 #box_expired p {
-padding: 3px;
 text-align: center;
 }
 
@@ -269,7 +268,7 @@ font-weight: bold;
 }
 
 #days_left{
-padding: 3px;
+padding-top: 14px;
 border: 2px solid #fff;
 }
 

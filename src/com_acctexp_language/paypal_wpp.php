@@ -357,7 +357,7 @@ aecDebug($nvpResArray);
 				}
 			}
 		}
-aecDebug($return);
+
 		return $return;
 	}
 

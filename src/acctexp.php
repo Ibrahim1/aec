@@ -656,7 +656,7 @@ function subscriptionDetails( $option, $sub )
 				}
 
 
-				if ( !empty( $spp->info['actions'] ) && ( ( strcmp( $metaUser->objSubscription->status, 'Active' ) === 0 ) || ( strcmp( $metaUser->objSubscription->status, 'Trial' ) === 0 )) ) {
+				if ( !empty( $spp->info['actions'] ) && ( ( strcmp( $metaUser->objSubscription->status, 'Active' ) === 0 ) || ( strcmp( $metaUser->objSubscription->status, 'Trial' ) === 0 ) ) ) {
 					$actions = explode( ';', $spp->info['actions'] );
 
 					$secondary_plan->proc_actions = array();
@@ -682,7 +682,7 @@ function subscriptionDetails( $option, $sub )
 		$database->setQuery( $query );
 		$rows_total	= $database->loadResult();
 
-		$rows_limit	= 20;	// Returns last 10 payments
+		$rows_limit	= 20;
 		$min_limit	= ( $rows_total > $rows_limit ) ? ( $rows_total - $rows_limit ) : 0;
 
 		// get payments from user
@@ -746,7 +746,7 @@ function subscriptionDetails( $option, $sub )
 					$transactiondate = HTML_frontend::DisplayDateInLocalTime( $row->transaction_date );
 				}
 
-				if ( $hassubstuff && !empty( $subscriptions[$row->subscr_id]->proc_actions ) && is_array( $subscriptions[$row->subscr_id]->proc_actions ) ) {
+				if ( $hassubstuff && !empty( $subscriptions[$actionprocs[$row->subscr_id]]->proc_actions ) && is_array( $subscriptions[$actionprocs[$row->subscr_id]]->proc_actions ) ) {
 					$actionsarray = array_merge( $subscriptions[$actionprocs[$row->subscr_id]]->proc_actions, $actionsarray );
 				}
 

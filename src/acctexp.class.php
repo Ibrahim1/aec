@@ -1988,9 +1988,17 @@ class PaymentProcessor
 		$method = 'customtab_' . $action;
 
 		if ( method_exists( $this->processor, $method ) ) {
+			global $database;
+
 			$request = new stdClass();
 			$request->parent			=& $this;
 			$request->metaUser			=& $metaUser;
+
+			$invoice = new Invoice( $database );
+			$invoice->loadbySubscriptionId( $metaUser->objSubscription->id );
+
+			$request->invoice			=& $invoice;
+
 
 			return $this->processor->$method( $request );
 		} else {
@@ -2432,14 +2440,19 @@ class XMLprocessor extends processor
 
 			switch ( $value ) {
 				case 'card_type':
-					$options = array();
-					$options[] = mosHTML::makeOption( 'visa', 'Visa' );
-					$options[] = mosHTML::makeOption( 'mastercard', 'MasterCard' );
-					$options[] = mosHTML::makeOption( 'discover', 'Discover' );
-					$options[] = mosHTML::makeOption( 'amex', 'American Express' );
+					$cctlist = array(	'visa' => 'Visa',
+										'mastercard' => 'MasterCard',
+										'discover' => 'Discover',
+										'amex' => 'American Express'
+										);
 
-					$var['params']['lists']['cardType'] = mosHTML::selectList( $options, 'cardType', 'size="1" style="width:70px;"', 'value', 'text', 'visa' );
-					$var['params']['cardType'] = array( 'list', _AEC_CCFORM_CARDTYPE_NAME, _AEC_CCFORM_CARDTYPE_DESC, $vcontent );
+					$options = array();
+					foreach ( $cctlist as $ccname => $cclongname ) {
+						$options[] = mosHTML::makeOption( $ccname, $cclongname );
+					}
+
+					$var['params']['lists']['cardType'] = mosHTML::selectList( $options, 'cardType', 'size="1" style="width:120px;"', 'value', 'text', $vcontent );
+					$var['params']['cardType'] = array( 'list', _AEC_CCFORM_CARDTYPE_NAME, $vcontent );
 					break;
 				case 'card_number':
 					// Request the Card number
@@ -2454,7 +2467,7 @@ class XMLprocessor extends processor
 					}
 
 					$var['params']['lists']['expirationMonth'] = mosHTML::selectList( $months, 'expirationMonth', 'size="1" style="width:50px;"', 'value', 'text', $vcontent );
-					$var['params']['expirationMonth'] = array( 'list', _AEC_CCFORM_EXPIRATIONMONTH_NAME, _AEC_CCFORM_EXPIRATIONMONTH_DESC );
+					$var['params']['expirationMonth'] = array( 'list', _AEC_CCFORM_EXPIRATIONMONTH_NAME, _AEC_CCFORM_EXPIRATIONMONTH_DESC, $vcontent );
 					break;
 				case 'card_exp_year':
 					// Create a selection box with the next 10 years
@@ -2465,7 +2478,7 @@ class XMLprocessor extends processor
 					}
 
 					$var['params']['lists']['expirationYear'] = mosHTML::selectList( $years, 'expirationYear', 'size="1" style="width:70px;"', 'value', 'text', $vcontent );
-					$var['params']['expirationYear'] = array( 'list', _AEC_CCFORM_EXPIRATIONYEAR_NAME, _AEC_CCFORM_EXPIRATIONYEAR_DESC );
+					$var['params']['expirationYear'] = array( 'list', _AEC_CCFORM_EXPIRATIONYEAR_NAME, _AEC_CCFORM_EXPIRATIONYEAR_DESC, $vcontent );
 					break;
 				case 'card_cvv2':
 					$var['params']['cardVV2'] = array( 'inputC', _AEC_CCFORM_CARDVV2_NAME, _AEC_CCFORM_CARDVV2_DESC, $vcontent );
@@ -2511,16 +2524,16 @@ class XMLprocessor extends processor
 					$var['params']['billLastName'] = array( 'inputC', _AEC_USERFORM_BILLLASTNAME_NAME, _AEC_USERFORM_BILLLASTNAME_NAME, $vcontent );
 					break;
 				case 'address':
-					$var['params']['billAddress'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS_NAME, $vcontent );
+					$var['params']['billAddress'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS_NAME, _AEC_USERFORM_BILLCOMPANY_NAME, $vcontent );
 					break;
 				case 'address2':
-					$var['params']['billAddress2'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS2_NAME, $vcontent );
+					$var['params']['billAddress2'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS2_NAME, _AEC_USERFORM_BILLADDRESS2_NAME, $vcontent );
 					break;
 				case 'city':
-					$var['params']['billCity'] = array( 'inputC', _AEC_USERFORM_BILLCITY_NAME, $vcontent );
+					$var['params']['billCity'] = array( 'inputC', _AEC_USERFORM_BILLCITY_NAME, _AEC_USERFORM_BILLCITY_NAME, $vcontent );
 					break;
 				case 'state':
-					$var['params']['billState'] = array( 'inputC', _AEC_USERFORM_BILLSTATE_NAME, $vcontent );
+					$var['params']['billState'] = array( 'inputC', _AEC_USERFORM_BILLSTATE_NAME, _AEC_USERFORM_BILLSTATE_NAME, $vcontent );
 					break;
 				case 'state_us':
 					$states = array( '', '--- United States ---', 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI',
@@ -2540,7 +2553,7 @@ class XMLprocessor extends processor
 						}
 					}
 
-					$var['params']['lists']['billState'] = mosHTML::selectList( $statelist, 'billState', 'size="1"', 'value', 'text', '' );
+					$var['params']['lists']['billState'] = mosHTML::selectList( $statelist, 'billState', 'size="1"', 'value', 'text', $vcontent );
 					$var['params']['billState'] = array( 'list', _AEC_USERFORM_BILLSTATE_NAME, $vcontent );
 					break;
 				case 'state_usca':
@@ -2562,11 +2575,11 @@ class XMLprocessor extends processor
 						}
 					}
 
-					$var['params']['lists']['billState'] = mosHTML::selectList( $statelist, 'billState', 'size="1"', 'value', 'text', '' );
+					$var['params']['lists']['billState'] = mosHTML::selectList( $statelist, 'billState', 'size="1"', 'value', 'text', $vcontent );
 					$var['params']['billState'] = array( 'list', _AEC_USERFORM_BILLSTATEPROV_NAME, $vcontent );
 					break;
 				case 'zip':
-					$var['params']['billZip'] = array( 'inputC', _AEC_USERFORM_BILLZIP_NAME, $vcontent );
+					$var['params']['billZip'] = array( 'inputC', _AEC_USERFORM_BILLZIP_NAME, _AEC_USERFORM_BILLZIP_NAME, $vcontent );
 					break;
 				case 'country_list':
 					$countries = array(  'US', 'AL', 'DZ', 'AD', 'AO', 'AI', 'AG', 'AR', 'AM', 'AW',
@@ -2594,23 +2607,29 @@ class XMLprocessor extends processor
 
 					$countrylist = array();
 					foreach ( $countries as $country ) {
-						$countrylist[] = mosHTML::makeOption( $country, constant( 'COUNTRYCODE_' . $country ) );
+						$cname = constant( 'COUNTRYCODE_' . $country );
+
+						if ( $vcontent == $cname ) {
+							$vcontent = $country;
+						}
+
+						$countrylist[] = mosHTML::makeOption( $country, $cname );
 					}
 
-					$var['params']['lists']['billCountry'] = mosHTML::selectList( $countrylist, 'billCountry', 'size="1"', 'value', 'text', '' );
+					$var['params']['lists']['billCountry'] = mosHTML::selectList( $countrylist, 'billCountry', 'size="1"', 'value', 'text', $vcontent );
 					$var['params']['billCountry'] = array( 'list', _AEC_USERFORM_BILLCOUNTRY_NAME, $vcontent );
 					break;
 				case 'country':
-					$var['params']['billCountry'] = array( 'inputC', _AEC_USERFORM_BILLCOUNTRY_NAME, $vcontent );
+					$var['params']['billCountry'] = array( 'inputC', _AEC_USERFORM_BILLCOUNTRY_NAME, _AEC_USERFORM_BILLCOUNTRY_NAME, $vcontent );
 					break;
 				case 'phone':
-					$var['params']['billPhone'] = array( 'inputC', _AEC_USERFORM_BILLPHONE_NAME, $vcontent );
+					$var['params']['billPhone'] = array( 'inputC', _AEC_USERFORM_BILLPHONE_NAME, _AEC_USERFORM_BILLPHONE_NAME, $vcontent );
 					break;
 				case 'fax':
-					$var['params']['billFax'] = array( 'inputC', _AEC_USERFORM_BILLFAX_NAME, $vcontent );
+					$var['params']['billFax'] = array( 'inputC', _AEC_USERFORM_BILLFAX_NAME, _AEC_USERFORM_BILLPHONE_NAME, $vcontent );
 					break;
 				case 'company':
-					$var['params']['billCompany'] = array( 'inputC', _AEC_USERFORM_BILLCOMPANY_NAME, $vcontent );
+					$var['params']['billCompany'] = array( 'inputC', _AEC_USERFORM_BILLCOMPANY_NAME, _AEC_USERFORM_BILLCOMPANY_NAME, $vcontent );
 					break;
 			}
 		}

@@ -120,6 +120,7 @@ define( '_AEC_CCFORM_CARDVV2_NAME', 'Card Verification Number');
 define( '_AEC_CCFORM_CARDVV2_DESC', 'The Verification Number of the Credit Card');
 define( '_AEC_CCFORM_UPDATE_NAME', 'Update Notice');
 define( '_AEC_CCFORM_UPDATE_DESC', 'To update your billing details, we need you to enter your CreditCard details again.<br />Leave fields as they are if you want to use all your previous details.');
+define( '_AEC_CCFORM_UPDATE2_DESC', 'Updated! Thank you for keeping us up to date.');
 
 // Generic Wire Transfer Form
 define( '_AEC_WTFORM_ACCOUNTNAME_NAME', 'Account owner Name');

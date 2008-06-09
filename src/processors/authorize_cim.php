@@ -87,8 +87,8 @@ class processor_authorize_cim extends XMLprocessor
 
 	function registerProfileTabs()
 	{
-		$tab				= array();
-		$tab['cim_details']	= _AEC_USERFORM_BILLING_DETAILS_NAME;
+		$tab			= array();
+		$tab['details']	= _AEC_USERFORM_BILLING_DETAILS_NAME;
 
 		return $tab;
 	}
