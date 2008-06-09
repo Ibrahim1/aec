@@ -2661,7 +2661,6 @@ class XMLprocessor extends processor
 		}
 
 		if ( $response != false ) {
-
 			if ( isset( $response['raw'] ) ) {
 				$responsestring = $response['raw'];
 				unset( $response['raw'] );
@@ -5360,6 +5359,8 @@ class Invoice extends paramDBTable
 
 		if ( isset( $response['invoiceparams'] ) ) {
 			$this->addParams( $response['invoiceparams'] );
+			$this->check();
+			$this->store();
 			unset( $response['invoiceparams'] );
 		}
 
@@ -5441,12 +5442,12 @@ class Invoice extends paramDBTable
 				if ( strcmp( $response['pending_reason'], 'signup' ) === 0 ) {
 					if ( $plan_params['trial_free'] || ( $this->amount == '0.00' ) ) {
 						$renew	= $this->pay( $multiplicator );
-						$this->setParams( array( 'free_trial' => $response['pending_reason'] ) );
+						$this->addParams( array( 'free_trial' => $response['pending_reason'] ), 'params', true );
 						$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_TRIAL;
 						$tags	.= ',payment,action,trial';
 					}
 				} else {
-					$this->setParams( array( 'pending_reason' => $response['pending_reason'] ) );
+					$this->addParams( array( 'pending_reason' => $response['pending_reason'] ), 'params', true );
 					$event	.= sprintf( _AEC_MSG_PROC_INVOICE_ACTION_EV_PEND, $response['pending_reason'] );
 					$tags	.= ',payment,pending' . $response['pending_reason'];
 				}

@@ -331,7 +331,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 		// converting NVPResponse to an Associative Array
 		$nvpResArray = $this->deformatNVP( $response );
-aecDebug($nvpResArray);
+
 		if ( $response ) {
 			if ( isset( $nvpResArray['PROFILEID'] ) ) {
 				$return['invoiceparams'] = array( "paypal_wpp_customerProfileId" => $nvpResArray['PROFILEID'] );
@@ -357,7 +357,7 @@ aecDebug($nvpResArray);
 				}
 			}
 		}
-aecDebug($return);
+
 		return $return;
 	}
 
@@ -401,7 +401,7 @@ aecDebug($return);
 			$return['invoice'] = $request->invoice->invoice_number;
 
 			if ( isset( $response['PROFILEID'] ) ) {
-				if ( $response['PROFILEID'] == $var['profileid'] ) {
+				if ( $response['PROFILEID'] == $profileid ) {
 					$return['valid'] = 0;
 					$return['cancel'] = true;
 				} else {
