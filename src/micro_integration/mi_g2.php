@@ -277,10 +277,6 @@ class mi_g2 extends MI
 		}
 	}
 
-	function createEntity()
-	{
-
-	}
 }
 
 ?>
