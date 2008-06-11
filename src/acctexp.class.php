@@ -7420,7 +7420,7 @@ class AECToolbox
 			}
 		}
 
-		return $post;
+		return aecPostParamClear( $post );
 	}
 
 
@@ -9372,6 +9372,27 @@ class coupon extends paramDBTable
 
 	function savePOSTsettings( $post )
 	{
+		if ( !empty( $post['coupon_code'] ) ) {
+			$query = 'SELECT `id`'
+					. ' FROM #__acctexp_coupons_static'
+					. ' WHERE `coupon_code` = \'' . $post['coupon_code'] . '\''
+					;
+			$this->_db->setQuery( $query );
+			$couponid = $this->_db->loadResult();
+
+			if ( empty( $couponid ) ) {
+				$query = 'SELECT `id`'
+						. ' FROM #__acctexp_coupons'
+						. ' WHERE `coupon_code` = \'' . $post['coupon_code'] . '\''
+						;
+				$this->_db->setQuery( $query );
+				$couponid = $this->_db->loadResult();
+			}
+
+			if ( !empty( $couponid ) ) {
+				$post['coupon_code'] = $this->generateCouponCode();
+			}
+		}
 
 		// Filter out fixed variables
 		$fixed = array( 'active', 'name', 'desc', 'coupon_code', 'usecount', 'micro_integrations' );
