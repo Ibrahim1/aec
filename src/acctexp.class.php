@@ -823,7 +823,7 @@ class Config_General extends paramDBTable
 		$def['override_reqssl']					= 0;
 		// new 0.12.4.16
 		$def['invoicenum_doformat']				= 1;
-		$def['invoicenum_formatting']			= '{aecjson} { "cmd":"concat", "vars": [ { "cmd":"date", "vars": [ "Y", { "cmd":"rw_constant", "vars":"invoice_created_date" } ] },"-",{ "cmd":"rw_constant", "vars":"invoice_id" } ] } {/aecjson}';
+		$def['invoicenum_formatting']			= '{aecjson}{"cmd":"concat","vars":[{"cmd":"date","vars":["Y",{"cmd":"rw_constant","vars":"invoice_created_date"}]},"-",{"cmd":"rw_constant","vars":"invoice_id"}]}{/aecjson}';
 		$def['use_recaptcha']					= 0;
 		$def['recaptcha_privatekey']			= '';
 		$def['recaptcha_publickey']				= '';
@@ -848,6 +848,8 @@ class Config_General extends paramDBTable
 		$def['customtext_thanks']				= '';
 		$def['customtext_cancel_keeporiginal']	= 1;
 		$def['customtext_cancel']				= '';
+		$def['renew_button_never']				= 0;
+		$def['renew_button_nolifetimerecurring']	= 1;
 
 		// Insert a new entry if there is none yet
 		if ( empty( $this->settings ) ) {

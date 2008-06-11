@@ -1804,32 +1804,34 @@ function editSettings( $option )
 	$tab_data[] = array( _CFG_TAB1_TITLE, key( $params ), '<h2>' . _CFG_TAB1_SUBTITLE . '</h2>' );
 
 	$params[] = array( 'userinfobox', 45 );
-	$params['customintro']					= array( 'inputC', '' );
-	$params['customthanks']					= array( 'inputC', '' );
-	$params['customcancel']					= array( 'inputC', '' );
-	$params['customnotallowed']				= array( 'inputC', '' );
-	$params['tos']							= array( 'inputC', '' );
-	$params['tos_iframe']					= array( 'list_yesno', '' );
-	$params['use_proxy']					= array( 'list_yesno', '' );
-	$params['proxy']						= array( 'inputC', '' );
-	$params['proxy_port']					= array( 'inputC', '' );
-	$params['display_date_frontend']		= array( 'inputC', '%a, %d %b %Y %T %Z' );
-	$params['display_date_backend']			= array( 'inputC', '%a, %d %b %Y %T %Z' );
-	$params['amount_currency_symbol']		= array( 'list_yesno', 0 );
-	$params['amount_currency_symbolfirst']	= array( 'list_yesno', 0 );
-	$params['amount_use_comma']				= array( 'list_yesno', 0 );
+	$params['customintro']						= array( 'inputC', '' );
+	$params['customthanks']						= array( 'inputC', '' );
+	$params['customcancel']						= array( 'inputC', '' );
+	$params['customnotallowed']					= array( 'inputC', '' );
+	$params['tos']								= array( 'inputC', '' );
+	$params['tos_iframe']						= array( 'list_yesno', '' );
+	$params['use_proxy']						= array( 'list_yesno', '' );
+	$params['proxy']							= array( 'inputC', '' );
+	$params['proxy_port']						= array( 'inputC', '' );
+	$params['display_date_frontend']			= array( 'inputC', '%a, %d %b %Y %T %Z' );
+	$params['display_date_backend']				= array( 'inputC', '%a, %d %b %Y %T %Z' );
+	$params['renew_button_never']				= array( 'list_yesno', '' );
+	$params['renew_button_nolifetimerecurring']	= array( 'list_yesno', '' );
+	$params['amount_currency_symbol']			= array( 'list_yesno', 0 );
+	$params['amount_currency_symbolfirst']		= array( 'list_yesno', 0 );
+	$params['amount_use_comma']					= array( 'list_yesno', 0 );
 	$params[] = array( '2div_end', 0 );
 
 	$params[] = array( 'userinfobox', 45 );
-	$params['invoicenum_doformat']			= array( 'list_yesno', '' );
-	$params['invoicenum_formatting']		= array( 'inputD', '' );
-	$params['use_recaptcha']				= array( 'list_yesno', '' );
-	$params['recaptcha_privatekey']			= array( 'inputC', '' );
-	$params['recaptcha_publickey']			= array( 'inputC', '' );
-	$params['temp_auth_exp']				= array( 'inputC', '' );
+	$params['invoicenum_doformat']				= array( 'list_yesno', '' );
+	$params['invoicenum_formatting']			= array( 'inputD', '' );
+	$params['use_recaptcha']					= array( 'list_yesno', '' );
+	$params['recaptcha_privatekey']				= array( 'inputC', '' );
+	$params['recaptcha_publickey']				= array( 'inputC', '' );
+	$params['temp_auth_exp']					= array( 'inputC', '' );
 	$params[] = array( '2div_end', 0 );
 
-	$rewriteswitches						= array( 'cms', 'invoice' );
+	$rewriteswitches							= array( 'cms', 'invoice' );
 	$params = AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
 
 	$params[] = array( 'accordion_start', '' );

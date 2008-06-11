@@ -601,8 +601,10 @@ define( '_CFG_GENERAL_USE_PROXY_NAME', 'Use Proxy');
 define( '_CFG_GENERAL_USE_PROXY_DESC', 'Use a proxy server for all outgoing requests.');
 define( '_CFG_GENERAL_PROXY_NAME', 'Proxy Address');
 define( '_CFG_GENERAL_PROXY_DESC', 'Specify the proxy server that you want to connect to.');
-define( '_CFG_GENERAL_PROXY_PORT_NAME', 'Proxy Port');
-define( '_CFG_GENERAL_PROXY_PORT_DESC', 'Specify the port of the proxy server that you want to connect to.');
+define( '_CFG_GENERAL_RENEW_BUTTON_NEVER_NAME', 'No Renew Button');
+define( '_CFG_GENERAL_RENEW_BUTTON_NEVER_DESC', 'Select "Yes" to never show the renew/upgrade button on the MySubscription page.');
+define( '_CFG_GENERAL_RENEW_BUTTON_NOLIFETIMERECURRING_NAME', 'Restricted Renew Button');
+define( '_CFG_GENERAL_RENEW_BUTTON_NOLIFETIMERECURRING_DESC', 'Only show the renew button if it makes sense in a one-subscription setup (recurring payments or a lifetime make the button disappear).');
 
 define( '_CFG_GENERAL_ERROR_NOTIFICATION_LEVEL_NAME', 'Notification Level');
 define( '_CFG_GENERAL_ERROR_NOTIFICATION_LEVEL_DESC', 'Select which level of entries to the EventLog is required to make it appear on the central page for your convenience.');

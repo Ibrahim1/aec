@@ -155,7 +155,7 @@ class HTML_frontEnd
 		<?php
 	}
 
-	function subscriptionDetails( $option, $subfields, $sub, $invoices, $metaUser, $recurring, $pp, $mi, $alert, $subscriptions = null, $custom = null )
+	function subscriptionDetails( $option, $subfields, $sub, $invoices, $metaUser, $upgrade_button, $pp, $mi, $alert, $subscriptions = null, $custom = null )
 	{
 		global $database, $aecConfig;
 
@@ -240,7 +240,7 @@ class HTML_frontEnd
 							<p><strong><?php echo $daysleft; ?></strong>&nbsp;&nbsp;<?php echo $daysleft_append; ?></p>
 						</div>
 						<?php
-						if ( $recurring == 0 ) { ?>
+						if ( !empty( $upgrade_button ) ) { ?>
 							<div id="upgrade_button">
 								<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=renewsubscription', !empty( $aecConfig->cfg['ssl_signup'] ) ); ?>" method="post">
 									<input type="hidden" name="option" value="<?php echo $option; ?>" />
@@ -250,18 +250,14 @@ class HTML_frontEnd
 								</form>
 							</div>
 							<?php
-						} else { ?>
-							<div id="renew_info">
-								<p><strong><?php echo _RENEW_INFO; ?></strong></p>
-							</div>
-							<?php
-							if ( is_object( $pp ) ) {
-								if ( isset( $pp->info['cancel_info'] ) ) { ?>
-									<p><?php echo $pp->info['cancel_info'];?></p>
-									<?php
-								}
+						}
+						if ( is_object( $pp ) ) {
+							if ( isset( $pp->info['cancel_info'] ) ) { ?>
+								<p><?php echo $pp->info['cancel_info'];?></p>
+								<?php
 							}
-						} ?>
+						}
+						?>
 						</div>
 					<?php
 					break;

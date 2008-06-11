@@ -552,6 +552,18 @@ function subscriptionDetails( $option, $sub )
 			$recurring = $metaUser->objSubscription->recurring;
 		}
 
+		if ( $aecConfig->cfg['renew_button_never'] ) {
+			$upgrade_button = false;
+		} elseif ( $aecConfig->cfg['renew_button_nolifetimerecurring'] ) {
+			if ( $recurring || $metaUser->objSubscription->lifetime ) {
+				$upgrade_button = false;
+			} else {
+				$upgrade_button = true;
+			}
+		} else {
+			$upgrade_button = true;
+		}
+
 		$mi_info = '';
 
 		$subscriptions = array();
@@ -791,7 +803,7 @@ function subscriptionDetails( $option, $sub )
 		$mainframe->SetPageTitle( _MYSUBSCRIPTION_TITLE . ' - ' . $subfields[$sub] );
 
 		$html = new HTML_frontEnd();
-		$html->subscriptionDetails( $option, $subfields, $sub, $invoices, $metaUser, $recurring, $pp, $mi_info, $alert, $subscriptions, $custom );
+		$html->subscriptionDetails( $option, $subfields, $sub, $invoices, $metaUser, $upgrade_button, $pp, $mi_info, $alert, $subscriptions, $custom );
 	}
 }
 
