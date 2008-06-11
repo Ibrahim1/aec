@@ -18,9 +18,6 @@
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
 global $mainframe;
-require_once($mainframe->getCfg('absolute_path').'/components/com_remository/remository.interface.php');
-require_once($mainframe->getCfg('absolute_path').'/components/com_remository/remository.class.php');
-require_once($mainframe->getCfg('absolute_path').'/components/com_remository/p-classes/remositoryAuthoriser.php');
 
 class mi_remository
 {
@@ -65,6 +62,8 @@ class mi_remository
 
 	function Settings( $params )
 	{
+		$this->includeRemCore();
+
 		$authoriser =& aliroAuthorisationAdmin::getInstance();
 		foreach ($authoriser->getAllRoles() as $role) {
 			$sg[] = mosHTML::makeOption( $role, $role);
@@ -116,6 +115,8 @@ class mi_remository
 	{
 		global $database;
 
+		$this->includeRemCore();
+
 		$authoriser =& aliroAuthorisationAdmin::getInstance();
  		if ( $params['delete_on_exp']=="Set" ) {
 			$authoriser->unassign($params['group']. 'aUser', $metaUser->userid);
@@ -147,6 +148,8 @@ class mi_remository
 	{
 		global $database;
 
+		$this->includeRemCore();
+
 		$authoriser =& aliroAuthorisationAdmin::getInstance();
 		if ( $params['set_group'] ) {
 			$authoriser->assign($params['group'], 'aUser', $metaUser->userid);
@@ -172,6 +175,13 @@ class mi_remository
 		$mi_remositoryhandler->store();
 
 		return true;
+	}
+
+	function includeRemCore()
+	{
+		require_once($mainframe->getCfg('absolute_path').'/components/com_remository/remository.interface.php');
+		require_once($mainframe->getCfg('absolute_path').'/components/com_remository/remository.class.php');
+		require_once($mainframe->getCfg('absolute_path').'/components/com_remository/p-classes/remositoryAuthoriser.php');
 	}
 }
 

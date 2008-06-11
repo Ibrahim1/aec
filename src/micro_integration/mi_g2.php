@@ -33,6 +33,8 @@ class mi_g2 extends MI
 		$settings['groups_sel_amt']		= array( 'inputA' );
 		$settings['groups_sel_scope']	= array( 'list' );
 		$settings['del_groups_exp']		= array( 'list_yesno' );
+		$settings['create_albums']		= array( 'list_yesno' );
+		$settings['albums_name']		= array( 'inputC' );
 
 		$query = 'SELECT `g_id`, `g_groupType`, `g_groupName`'
 			 	. ' FROM g2_Group'
@@ -126,10 +128,13 @@ class mi_g2 extends MI
 	{
 		$g2userid = $this->catchG2userid( $request->metaUser );
 
+		$groups = array();
+
 		if ( $this->settings['set_groups'] ) {
 			$groups = explode( ';', $this->settings['groups'] );
 			foreach ( $groups as $groupid ) {
 				$this->mapUserToGroup( $g2userid, $groupid );
+				$groups[] = $groupid;
 			}
 		}
 
@@ -137,7 +142,16 @@ class mi_g2 extends MI
 			for ( $i=0; $i<$this->settings['groups_sel_amt']; $i++ ) {
 				if ( isset( $request->params['g2group_'.$i] ) ) {
 					$this->mapUserToGroup( $g2userid, $request->params['g2group_'.$i] );
+					$groups[] = $groupid;
 				}
+			}
+		}
+
+		if ( !empty( $groups ) && !empty( $this->settings['create_albums'] ) && !empty( $this->settings['albums_name'] ) ) {
+			array_unique( $groups );
+
+			foreach ( $groups as $groupid ) {
+				$this->createAlbumInGroup( $g2userid, $groupid, AECToolbox::rewriteEngineRQ( $this->settings['albums_name'], $request ) );
 			}
 		}
 
@@ -175,6 +189,49 @@ class mi_g2 extends MI
 			}
 		} else {
 			return null;
+		}
+	}
+
+	function createAlbumInGroup( $g2userid, $groupid, $albumname )
+	{
+		global $database;
+
+		// Create Entity
+		$query = 'SELECT max(g_id)'
+				. ' FROM g2_Entity'
+				;
+		$database->setQuery( $query );
+
+		$entityid = $database->loadResult() + 1;
+
+		$query = 'SELECT max(g_serialNumber)'
+				. ' FROM g2_Entity'
+				. ' WHERE `g_entityType` = \'GalleryUser\''
+				;
+		$database->setQuery( $query );
+
+		$serial = $database->loadResult() + 1;
+
+		$query = 'INSERT INTO g2_Entity'
+				. ' ( `g_id`, `g_creationTimestamp`, `g_isLinkable`, `g_linkId`, `g_modificationTimestamp`, `g_serialNumber`, `g_entityType`, `g_onLoadHandlers` )'
+				. ' VALUES ( \'' . $entityid . '\', \'' . time() . '\', \'0\', NULL, \'' . time() . '\', \'' . $serial . '\', \'GalleryAlbumItem\', NULL )'
+				;
+		$database->setQuery( $query );
+
+		if ( !$database->query() ) {
+			$this->setError( $database->getErrorMsg() );
+			return false;
+		}
+
+		$query = 'INSERT INTO g2_Item'
+				. ' ( `g_id`, `g_canContainChildren`, `g_description`, `g_keywords`, `g_ownerId`, `g_renderer`, `g_summary`, `g_title`, `g_viewedSinceTimestamp`, `g_originationTimestamp` )'
+				. ' VALUES ( \'' . $entityid . '\', \'1\', \'\', NULL, \'' . $entityid . '\', NULL, \'' . $albumname . '\', \'' . $albumname . '\', \'' . time() . '\', \'' . time() . '\' )'
+				;
+		$database->setQuery( $query );
+
+		if ( !$database->query() ) {
+			$this->setError( $database->getErrorMsg() );
+			return false;
 		}
 	}
 
