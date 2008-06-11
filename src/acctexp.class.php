@@ -844,6 +844,10 @@ class Config_General extends paramDBTable
 		$def['proxy']							= '';
 		$def['proxy_port']						= '';
 		$def['ssl_profile']						= 0;
+		$def['customtext_thanks_keeporiginal']	= 1;
+		$def['customtext_thanks']				= '';
+		$def['customtext_cancel_keeporiginal']	= 1;
+		$def['customtext_cancel']				= '';
 
 		// Insert a new entry if there is none yet
 		if ( empty( $this->settings ) ) {
@@ -4965,7 +4969,7 @@ class InvoiceFactory
 
 	function thanks( $option, $renew, $free )
 	{
-		global $database, $mosConfig_useractivation, $aecConfig, $mosConfig_dbprefix;
+		global $database, $mosConfig_useractivation, $aecConfig, $mosConfig_dbprefix, $mainframe;
 
 		if ( isset( $this->renew ) ) {
 			$renew = $this->renew;
@@ -5008,6 +5012,8 @@ class InvoiceFactory
 		if ( $aecConfig->cfg['customthanks'] ) {
 			mosRedirect( $aecConfig->cfg['customthanks'] );
 		} else {
+			$mainframe->SetPageTitle( _THANKYOU_TITLE );
+
 			HTML_Results::thanks( $option, $msg );
 		}
 	}

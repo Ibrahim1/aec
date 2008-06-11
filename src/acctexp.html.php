@@ -415,23 +415,42 @@ class HTML_Results
 {
 	function thanks( $option, $msg )
 	{
+		global $aecConfig;
+
 		HTML_frontend::aec_styling( $option );
+
 		?>
 		<div class="componentheading"><?php echo _THANKYOU_TITLE; ?></div>
-		<div id="thankyou_page">
-			<p><?php echo $msg; ?></p>
-		</div>
 		<?php
+		if ( $aecConfig->cfg['customtext_thanks'] ) { ?>
+			<p><?php echo $aecConfig->cfg['customtext_thanks']; ?></p>
+			<?php
+		}
+		if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) { ?>
+			<div id="thankyou_page">
+			<p><?php echo $msg; ?></p>
+			</div>
+			<?php
+		}
 	}
 
 	function cancel( $option )
 	{
-		HTML_frontend::aec_styling( $option ); ?>
+		HTML_frontend::aec_styling( $option );
+
+		?>
 		<div class="componentheading"><?php echo _CANCEL_TITLE; ?></div>
-		<div id="cancel_page">
-			<p><?php echo _CANCEL_MSG; ?></p>
-		</div>
 		<?php
+		if ( $aecConfig->cfg['customtext_cancel'] ) { ?>
+			<p><?php echo $aecConfig->cfg['customtext_cancel']; ?></p>
+			<?php
+		}
+		if ( $aecConfig->cfg['customtext_cancel_keeporiginal'] ) { ?>
+			<div id="cancel_page">
+			<p><?php echo _CANCEL_MSG; ?></p>
+			</div>
+			<?php
+		}
 	}
 }
 

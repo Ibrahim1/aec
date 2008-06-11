@@ -788,7 +788,7 @@ function subscriptionDetails( $option, $sub )
 			unset( $sf[array_search( 'invoices', $sf )] );
 		}
 
-		$mainframe->SetPageTitle( _MYSUBSCRIPTION_TITLE . ' - ' . $subfields[$sub]  );
+		$mainframe->SetPageTitle( _MYSUBSCRIPTION_TITLE . ' - ' . $subfields[$sub] );
 
 		$html = new HTML_frontEnd();
 		$html->subscriptionDetails( $option, $subfields, $sub, $invoices, $metaUser, $recurring, $pp, $mi_info, $alert, $subscriptions, $custom );
@@ -1137,7 +1137,7 @@ function thanks( $option, $renew, $free )
 
 function cancelPayment( $option )
 {
-	global $database, $aecConfig;
+	global $database, $aecConfig, $mainframe;
 
 	$userid = aecGetParam( 'itemnumber' );
 	// The user cancel the payment operation
@@ -1157,6 +1157,8 @@ function cancelPayment( $option )
 	if ( $aecConfig->cfg['customcancel'] ) {
 		mosRedirect( $cfg->cfg['customcancel'] );
 	} else {
+		$mainframe->SetPageTitle( _CANCEL_TITLE );
+
 		HTML_Results::cancel( $option );
 	}
 }
