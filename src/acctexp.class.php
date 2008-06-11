@@ -1594,63 +1594,6 @@ class PaymentProcessorHandler
 
 		return $database->loadResultArray();
 	}
-
-	function processorReply( $url, $reply, $get = 0 )
-	{
-		$fp = null;
-		// try to use fsockopen. some hosting systems disable fsockopen (godaddy.com)
-		$fp = $this->doTheHttp( $url, $reply, $get );
-		if ( !$fp ) {
-			// If fsockopen doesn't work try using curl
-			$fp = $this->doTheCurl( $url, $reply );
-		}
-
-		return $fp;
-	}
-
-	function doTheCurl( $url, $req )
-	{
-		$ch = curl_init();
-		curl_setopt( $ch, CURLOPT_VERBOSE, 1 );
-		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER,	FALSE );
-		curl_setopt( $ch, CURLOPT_URL,				$url );
-		curl_setopt( $ch, CURLOPT_POST,				1 );
-		curl_setopt( $ch, CURLOPT_POSTFIELDS,		$req );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER,	1 );
-		curl_setopt( $ch, CURLOPT_TIMEOUT,			120 );
-		$fp = curl_exec( $ch );
-		curl_close( $ch );
-
-		return $fp;
-	}
-
-	function doTheHttp( $url, $req, $get)
-	{
-		$header  = ''
-		. 'POST https://' . $url . '/cgi-bin/webscr HTTP/1.0' . "\r\n"
-		. 'Host: ' . $url  . ':80' . "\r\n"
-		. 'Content-Type: application/x-www-form-urlencoded' . "\r\n"
-		. 'Content-Length: ' . strlen($req) . "\r\n\r\n"
-		;
-		$fp = fsockopen( $url, 80, $errno, $errstr, 30 );
-
-		if ( !$fp ) {
-			return 'ERROR';
-		} else {
-			fputs( $fp, $header . $req );
-			while ( !feof( $fp ) ) {
-				$res = fgets( $fp, 1024 );
-				if ( strcmp( $res, 'VERIFIED' ) == 0 ) {
-					return 'VERIFIED';
-				} elseif ( strcmp( $res, 'INVALID' ) == 0 ) {
-					return 'INVALID';
-				}
-			}
-			fclose( $fp );
-		}
-		return 'ERROR';
-	}
-
 }
 
 class PaymentProcessor
@@ -2308,7 +2251,7 @@ class processor extends paramDBTable
 		}
 	}
 
-	function doTheCurl( $url, $content, $curlextra )
+	function doTheCurl( $url, $content, $curlextra=null )
 	{
 		global $aecConfig;
 

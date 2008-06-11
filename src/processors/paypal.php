@@ -211,11 +211,7 @@ class processor_paypal extends POSTprocessor
 
 		$fp = null;
 		// try to use fsockopen. some hosting systems disable fsockopen (godaddy.com)
-		$fp = $this->doTheHttp( $ppurl, $path, $req );
-		if (!$fp) {
-			// If fsockopen doesn't work try using curl
-			$fp = $this->doTheCurl( $ppurl, $req );
-		}
+		$fp = transmitRequest( $ppurl, $path, $req );
 
 		$res = $fp;
 
