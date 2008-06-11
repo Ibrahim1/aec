@@ -884,7 +884,13 @@ class HTML_AcctExp
 		?>
 		<table class="adminform">
 			<tr>
-				<td width="55%" valign="top">
+				<td width="55%" valign="top" style="background-color: #eee;">
+					<div style="background-color: #949494; margin: 2px; padding: 6px;">
+						<div style="width: 100%; background-color: #000;">
+							<center><img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_dist_gfx.png" border="0" alt="" /></center>
+						</div>
+					</div>
+					<div style="margin: 12px;">
 					<h1>Leading Programmers</h1>
 					<p>Helder 'hlblog' Garcia, David 'skOre' Deutsch</p>
 					<h1>Contributing Programmers</h1>
@@ -900,6 +906,7 @@ class HTML_AcctExp
 					<h1>Contributors</h1>
 					<p>People who have helped on our code at one place or another:</p>
 					<p>Kirk Lampert (who found lots and lots of rather embarrassing bugs), Rasmus Dahl-Sorensen</p>
+					</div>
 				</td>
 				<td width="45%" valign="top">
 					<br />
