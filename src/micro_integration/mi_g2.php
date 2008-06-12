@@ -233,6 +233,17 @@ class mi_g2 extends MI
 			$this->setError( $database->getErrorMsg() );
 			return false;
 		}
+
+		$query = 'INSERT INTO g2_Item'
+				. ' ( `g_id`, `g_theme`, `g_orderBy`, `g_orderDirection` )'
+				. ' VALUES ( \'' . $entityid . '\', \'\', \'\', \'asc\' )'
+				;
+		$database->setQuery( $query );
+
+		if ( !$database->query() ) {
+			$this->setError( $database->getErrorMsg() );
+			return false;
+		}
 	}
 
 	function deleteUserFromGroup( $g2userid, $groupid )
