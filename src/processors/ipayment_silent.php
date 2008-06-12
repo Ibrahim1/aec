@@ -223,15 +223,33 @@ aecDebug( $string );
 		}
 
 		$url = "https://ipayment.de" . $path;
-
+echo "<p><strong>&Uuml;betragung - " . date('Y-m-d H:i:s') . " (Serverzeit)- " . date('Y-m-d H:i:s', time()+(60*60*6)) . " (tats&auml;chliche Zeit)</strong></p>";
+echo "<h1>Senden der Daten:</h1>";
+echo '<p>';
+echo $xml;
+echo '</p>';
+echo '<p><strong>oder:</strong><br /><br />';
+echo str_replace( '&', '<br />&', $xml );
+echo '</p>';
+echo '<h1>';
+echo "an:";
+echo '</h1>';
+echo '<p>';
+echo $url;
+echo '</p>';
 		$curl_calls[CURLOPT_HEADER]		= false;
 		$curl_calls[CURLOPT_HTTPHEADER]	= '[[unset]]';
 
 		// This will not turn up a response (why, that would be, like, logial and all)
 		$response = $this->transmitRequest( $url, $path, $xml, 443, $curl_calls );
-
+echo '<h1>R&uuml;ckmeldung:</h1>';
+echo '<div style="margin:12px;padding:24px;background-color:#bbb;color:#555;">';
+echo '<p>';
+echo $response;
+echo '</p>';
+echo '</div>';
 		// Instead we wait a short moment
-		sleep( 10 );
+		//sleep( 10 );
 
 		// And check whether we have been notified of a payment
 		$return['valid'] = false;
@@ -251,6 +269,19 @@ aecDebug( $string );
 			$return['duplicate']		= true;
 		}
 aecDebug( "ResponseFunction:transmitRequestXML" . "\n" . "GET:".json_encode( $_GET ) . "\n" . "POST:".json_encode( $_POST ) . "\n" . "Return:".json_encode( $return ) );
+
+echo '<h1>Formular:</h1>';
+echo '<form action="' . "https://ipayment.de" . $path . '" method="post" >Formular:</h1>';
+
+$p = explode( '&', $xml );
+
+foreach ( $p as $c ) {
+	$cc = explode( '=', $c );
+	echo '<input type="hidden" name="' . $cc[0] . '" value="' . $cc[1] . '" />';
+}
+echo '<input type="submit">';
+echo '</form>';
+exit;
 		return $return;
 	}
 
