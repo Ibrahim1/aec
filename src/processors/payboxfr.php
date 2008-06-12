@@ -119,6 +119,7 @@ class processor_payboxfr extends POSTprocessor
 					break;
 			}
 
+			$append = '';
 			$svars = array();
 			$svars['IBS_2MONT']		= '0000000000';
 			$svars['IBS_NBPAIE']	= '00';
@@ -130,7 +131,7 @@ class processor_payboxfr extends POSTprocessor
 				$append .= $svname . $svvar;
 			}
 
-			$var['PBX_TOTAL']	= $request->int_var['amount']['amount3'] * 100;
+			$var['PBX_TOTAL']	= round( $request->int_var['amount']['amount3'] * 100 );
 
 			$var['PBX_CMD']		= $request->int_var['invoice'] . $append;
 		} else {

@@ -205,7 +205,7 @@ class processor_ipayment_silent extends XMLprocessor
 		}
 
 		$string = implode( '&', $stringarray );
-//aecDebug( $string );
+aecDebug( $string );
 		return $string;
 	}
 
@@ -250,12 +250,20 @@ class processor_ipayment_silent extends XMLprocessor
 			$return['valid']			= 0;
 			$return['duplicate']		= true;
 		}
-//aecDebug( "ResponseFunction:transmitRequestXML" . "\n" . "GET:".json_encode( $_GET ) . "\n" . "POST:".json_encode( $_POST ) . "\n" . "Return:".json_encode( $return ) );
+aecDebug( "ResponseFunction:transmitRequestXML" . "\n" . "GET:".json_encode( $_GET ) . "\n" . "POST:".json_encode( $_POST ) . "\n" . "Return:".json_encode( $return ) );
 		return $return;
 	}
 
 	function parseNotification( $post )
-	{//aecDebug( "ResponseFunction:parseNotification" . "\n" . "GET:".json_encode( $_GET ) . "\n" . "POST:".json_encode( $_POST ) );
+	{aecDebug( "ResponseFunction:parseNotification" . "\n" . "GET:".json_encode( $_GET ) . "\n" . "POST:".json_encode( $_POST ) );
+		$allowed_ips= array( "212.227.34.218", 	"212.227.34.219", "212.227.34.220", "195.20.224.139" );
+		if ( !in_array( $_SERVER["REMOTE_ADDR"], $allowed_ips ) ) {
+			$response['error']		= true;
+			$response['errormsg']	= 'Wrong calling IP - ' . $_SERVER["REMOTE_ADDR"] . ' - possible fraud attempt';
+
+			return $response;
+		}
+
 		$response = array();
 		$response['invoice']			= aecGetParam('invoice_text');
 		$response['amount_paid']		= ( aecGetParam('trx_currency') / 100 );
@@ -267,15 +275,7 @@ class processor_ipayment_silent extends XMLprocessor
 	function instantvalidateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
-
-		$allowed_ips= array( "212.227.34.218", 	"212.227.34.219", "212.227.34.220", "195.20.224.139" );
-		if ( !in_array( $_SERVER["REMOTE_ADDR"], $allowed_ips ) ) {
-			$response['error']		= true;
-			$response['errormsg']	= 'Wrong calling IP - possible fraud attempt';
-
-			return $response;
-		}
-//aecDebug( "ResponseFunction:validateNotification" . "\n" . "GET:".json_encode( $_GET ) . "\n" . "POST:".json_encode( $_POST ) . "\n" . "Response:".json_encode( $response ) . "\n" . "Invoice:".json_encode( $invoice ) );
+aecDebug( "ResponseFunction:instantvalidateNotification" . "\n" . "GET:".json_encode( $_GET ) . "\n" . "POST:".json_encode( $_POST ) . "\n" . "Response:".json_encode( $response ) . "\n" . "Invoice:".json_encode( $invoice ) );
 		if ( aecGetParam('event') == 'error' ) {
 			return $response;
 		} elseif ( aecGetParam('event') == 'success' ) {

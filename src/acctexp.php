@@ -68,7 +68,7 @@ if ( _EUCA_DEBUGMODE ) {
 }
 
 $task = trim( mosGetParam( $_REQUEST, 'task', '' ) );
-
+//aecDebug( $task );
 if ( !empty( $task ) ) {
 	switch ( strtolower( $task ) ) {
 		case 'register':
