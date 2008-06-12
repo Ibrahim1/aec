@@ -174,7 +174,7 @@ class processor_authorize_cim extends XMLprocessor
 		$hascim = false;
 
 		if ( empty( $profileid ) ) {
-			$profileid = $metaUser->getCMSparams( 'customerProfileId' );
+			$profileid = $request->metaUser->getCMSparams( 'customerProfileId' );
 		}
 
 		if ( empty( $cim ) && !empty( $profileid ) ) {
