@@ -200,6 +200,7 @@ class metaUser
 				if ( get_magic_quotes_gpc() ) {
 					$value = stripslashes( $value );
 				}
+
 				$value = $database->getEscaped( $value );
 
 				$params[] = $key . '=' . $value;
@@ -2942,7 +2943,7 @@ class aecHTML
 				}
 
 				// small accordion code
-				$this->js[] = "window.addEvent('domready',function(){ var accordion" . $this->accordions . " = new Accordion('#accordion" . $this->accordions . " h3.atStart', '#accordion" . $this->accordions . " div.atStart', {
+				$this->js[] = "window.addEvent('domready',function(){ var accordion" . $this->accordions . " = new Accordion($('accordion" . $this->accordions . "'), '#accordion" . $this->accordions . " h3.atStart', '#accordion" . $this->accordions . " div.atStart', {
 					duration: 200, alwaysHide: true,
 					onActive: function(toggler, element){
 						var activeFX = new Fx.Styles(toggler, {duration: 300, transition: Fx.Transitions.Expo.easeOut});
@@ -2953,8 +2954,16 @@ class aecHTML
 						var backFX = new Fx.Styles(toggler, {duration: 300, transition: Fx.Transitions.Expo.easeOut});
 						backFX.start({ 'color':'#444', 'paddingLeft':'10px' });
 						toggler.setStyle('font-weight', 'normal');
-					} }, $('accordion" . $this->accordions . "')); });";
-
+					} } ); });";
+/*var myAccordion = new Accordion($('accordion'), 'h3.toggler', 'div.element', {
+opacity: false,
+onActive: function(toggler, element){
+toggler.setStyle('color', '#41464D');
+},
+onBackground: function(toggler, element){
+toggler.setStyle('color', '#528CE0');
+}
+});*/
 				$return = '<div id="accordion' . $this->accordions . '"' . ( !empty( $value ) ? ('class="'.$value.'"') : 'accordion') . '>';
 				break;
 			case 'accordion_itemstart':
@@ -8521,8 +8530,8 @@ class microIntegration extends paramDBTable
 		if ( method_exists( $this->mi_class, 'Info' ) ) {
 			$this->info = $this->mi_class->Info();
 		} else {
-			$nname = strtoupper( 'aec_' . $this->class_name . '_name' );
-			$ndesc = strtoupper( 'aec_' . $this->class_name . '_desc' );
+			$nname = strtoupper( '_aec_' . $this->class_name . '_name' );
+			$ndesc = strtoupper( '_aec_' . $this->class_name . '_desc' );
 
 			$this->info = array();
 			if ( defined( $nname ) && defined( $ndesc ) ) {

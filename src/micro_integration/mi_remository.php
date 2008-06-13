@@ -17,8 +17,6 @@
 
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-global $mainframe;
-
 class mi_remository
 {
 	function Info()
@@ -60,7 +58,7 @@ class mi_remository
 		return;
 	}
 
-	function Settings( $params )
+	function Settings()
 	{
 		$this->includeRemCore();
 
@@ -75,19 +73,19 @@ class mi_remository
 		$del_opts[2] = mosHTML::makeOption ( "Set", "Delete Group Set on Application, then apply group(s) below." );
 
         	$settings = array();
-		$settings['add_downloads']		= array( 'inputA' );
-		$settings['set_downloads']		= array( 'inputA' );
-		$settings['set_unlimited']		= array( 'list_yesno' );
-
-		$settings['lists']['group']		= mosHTML::selectList($sg, 'group', 'size="4" multiple="multiple"', 'value', 'text', $params['group']);
-		$settings['lists']['group_exp']	= mosHTML::selectList($sg, 'group_exp', 'size="4" multiple="multiple"', 'value', 'text', $params['group_exp']);
+		$settings['add_downloads']			= array( 'inputA' );
+		$settings['set_downloads']			= array( 'inputA' );
+		$settings['set_unlimited']			= array( 'list_yesno' );
 
 		$settings['set_group']				= array( 'list_yesno' );
 		$settings['group']					= array( 'list' );
-		$settings['lists']['delete_on_exp'] = mosHTML::selectList( $del_opts, 'delete_on_exp', 'size="3"', 'value', 'text', $params['delete_on_exp'] );
-		$settings['delete_on_exp']		= array( 'list' );
-		$settings['set_group_exp']		= array( 'list_yesno' );
+		$settings['delete_on_exp']			= array( 'list' );
+		$settings['set_group_exp']			= array( 'list_yesno' );
 		$settings['group_exp']				= array( 'list' );
+
+		$settings['lists']['group']			= mosHTML::selectList( $sg, 'group', 'size="4" multiple="multiple"', 'value', 'text', $this->settings['group'] );
+		$settings['lists']['group_exp']		= mosHTML::selectList( $sg, 'group_exp', 'size="4" multiple="multiple"', 'value', 'text', $this->settings['group_exp'] );
+		$settings['lists']['delete_on_exp'] = mosHTML::selectList( $del_opts, 'delete_on_exp', 'size="3"', 'value', 'text', $this->settings['delete_on_exp'] );
 
 		return $settings;
 	}
@@ -111,27 +109,28 @@ class mi_remository
 		return is_dir( $mosConfig_absolute_path . '/components/com_remository/c-classes' );
 	}
 
-	function expiration_action( $params, $metaUser, $plan )
+	function expiration_action( $request )
 	{
 		global $database;
 
 		$this->includeRemCore();
 
 		$authoriser =& aliroAuthorisationAdmin::getInstance();
- 		if ( $params['delete_on_exp']=="Set" ) {
-			$authoriser->unassign($params['group']. 'aUser', $metaUser->userid);
+
+ 		if ( $this->settings['delete_on_exp'] == "Set" ) {
+			$authoriser->unassign( $this->settings['group']. 'aUser', $request->metaUser->userid );
 		}
 
-		if ( $params['delete_on_exp']=="All" ) {
-			$authoriser->dropAccess('aUser', $metaUser->userid);
+		if ( $this->settings['delete_on_exp'] == "All" ) {
+			$authoriser->dropAccess( 'aUser', $request->metaUser->userid );
 		}
 
-		if ($params['set_group_exp']) {
-			$authoriser->assign($params['group_exp'], 'aUser', $metaUser->userid);
+		if ( $this->settings['set_group_exp'] ) {
+			$authoriser->assign( $this->settings['group_exp'], 'aUser', $request->metaUser->userid );
 		}
 
 		$mi_remositoryhandler = new remository_restriction( $database );
-		$id = $mi_remositoryhandler->getIDbyUserID( $metaUser->userid );
+		$id = $mi_remositoryhandler->getIDbyUserID( $request->metaUser->userid );
 		$mi_id = $id ? $id : 0;
 		$mi_remositoryhandler->load( $mi_id );
 
@@ -144,31 +143,31 @@ class mi_remository
 		return true;
 	}
 
-	function action( $params, $metaUser, $invoice, $plan )
+	function action( $request )
 	{
 		global $database;
 
 		$this->includeRemCore();
 
 		$authoriser =& aliroAuthorisationAdmin::getInstance();
-		if ( $params['set_group'] ) {
-			$authoriser->assign($params['group'], 'aUser', $metaUser->userid);
+		if ( !empty( $this->settings['set_group'] ) ) {
+			$authoriser->assign( $this->settings['group'], 'aUser', $request->metaUser->userid );
 		}
 
 		$mi_remositoryhandler = new remository_restriction( $database );
-		$id = $mi_remositoryhandler->getIDbyUserID( $metaUser->userid );
+		$id = $mi_remositoryhandler->getIDbyUserID( $request->metaUser->userid );
 		$mi_id = $id ? $id : 0;
 		$mi_remositoryhandler->load( $mi_id );
 
 		if ( !$mi_id ) {
-			$mi_remositoryhandler->userid = $metaUser->userid;
+			$mi_remositoryhandler->userid = $request->metaUser->userid;
 			$mi_remositoryhandler->active = 1;
 		}
 
-		if ( $params['set_downloads'] ) {
-			$mi_remositoryhandler->setDownloads( $params['set_downloads'] );
-		} elseif ( $params['add_downloads'] ) {
-			$mi_remositoryhandler->addDownloads( $params['add_downloads'] );
+		if ( $this->settings['set_downloads'] ) {
+			$mi_remositoryhandler->setDownloads( $this->settings['set_downloads'] );
+		} elseif ( $this->settings['add_downloads'] ) {
+			$mi_remositoryhandler->addDownloads( $this->settings['add_downloads'] );
 		}
 
 		$mi_remositoryhandler->check();
@@ -179,27 +178,29 @@ class mi_remository
 
 	function includeRemCore()
 	{
-		require_once($mainframe->getCfg('absolute_path').'/components/com_remository/remository.interface.php');
-		require_once($mainframe->getCfg('absolute_path').'/components/com_remository/remository.class.php');
-		require_once($mainframe->getCfg('absolute_path').'/components/com_remository/p-classes/remositoryAuthoriser.php');
+		global $mainframe;
+
+		require_once( $mainframe->getCfg('absolute_path').'/components/com_remository/remository.interface.php' );
+		require_once( $mainframe->getCfg('absolute_path').'/components/com_remository/remository.class.php' );
+		require_once( $mainframe->getCfg('absolute_path').'/components/com_remository/p-classes/remositoryAuthoriser.php' );
 	}
 }
 
 class remository_restriction extends mosDBTable {
 	/** @var int Primary key */
-	var $id					= null;
+	var $id						= null;
 	/** @var int */
-	var $userid 			= null;
+	var $userid 				= null;
 	/** @var int */
-	var $active				= null;
+	var $active					= null;
 	/** @var int */
-	var $granted_downloads	= null;
+	var $granted_downloads		= null;
 	/** @var int */
 	var $unlimited_downloads	= null;
 	/** @var text */
-	var $used_downloads		= null;
+	var $used_downloads			= null;
 	/** @var text */
-	var $params				= null;
+	var $params					= null;
 
 	function getIDbyUserID( $userid )
 	{

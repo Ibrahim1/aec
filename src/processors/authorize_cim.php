@@ -98,7 +98,7 @@ class processor_authorize_cim extends XMLprocessor
 		if ( isset( $_POST['billFirstName'] ) && ( strpos( $request->int_var['params']['cardNumber'], 'X' ) === false ) ) {
 			$cim = new AuthNetCim( $this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode'] );
 
-			$profileid = $metaUser->getCMSparams( 'customerProfileId' );
+			$profileid = $request->metaUser->getCMSparams( 'customerProfileId' );
 
 			$cim->setParameter( 'customerProfileId', $profileid );
 			$cim->getCustomerProfileRequest();
@@ -269,7 +269,7 @@ class processor_authorize_cim extends XMLprocessor
 			}
 		}
 
-		$profileid = $metaUser->getCMSparams( 'customerProfileId' );
+		$profileid = $request->metaUser->getCMSparams( 'customerProfileId' );
 
 		if ( $profileid ) {
 			$cim->setParameter( 'customerProfileId', $profileid );
@@ -344,7 +344,7 @@ class processor_authorize_cim extends XMLprocessor
 		$invoice->loadbySubscriptionId( $subscription_id );
 
 		if ( $invoice->id ) {
-			$profileid = $metaUser->getCMSparams( 'customerProfileId' );
+			$profileid = $request->metaUser->getCMSparams( 'customerProfileId' );
 
 			$cim->setParameter( 'customerProfileId',		 $profileid );
 			$cim->getCustomerProfileRequest();
