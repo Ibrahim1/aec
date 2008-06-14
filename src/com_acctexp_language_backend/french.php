@@ -1,4 +1,4 @@
-&lt;?php
+<?php
 /**
 * @version $Id: french.php 16 2007-06-25 09:04:04Z mic $
 * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
@@ -658,6 +658,13 @@ define( '_PAYPLAN_GENERAL_ACTIVE_DESC', 'Un Plan publi&eacute; sera accessible a
 define( '_PAYPLAN_GENERAL_VISIBLE_NAME', 'Visible:');
 define( '_PAYPLAN_GENERAL_VISIBLE_DESC', 'Seuls les Plans Visibles seront montr&eacute;s sur le frontend. Les plans invisibles ne seront pas montr&eacute;s et seront seulement accessibles par les applications automatiques (like Fallbacks or Entry Plans).');
 
+define( '_PAYPLAN_GENERAL_CUSTOMTHANKS_NAME', 'Custom thanks page link:');
+define( '_PAYPLAN_GENERAL_CUSTOMTHANKS_DESC', 'Provide a full link (including http://) that leads to your custom thanks page. Leave this field blank if you don\'t want this at all.');
+define( '_PAYPLAN_GENERAL_CUSTOMTEXT_THANKS_KEEPORIGINAL_NAME', 'Keep Original Text');
+define( '_PAYPLAN_GENERAL_CUSTOMTEXT_THANKS_KEEPORIGINAL_DESC', 'Select this option if you want to keep the original text on the ThankYou Page');
+define( '_PAYPLAN_GENERAL_CUSTOMTEXT_THANKS_NAME', 'Custom Text ThankYou Page');
+define( '_PAYPLAN_GENERAL_CUSTOMTEXT_THANKS_DESC', 'Text that will be displayed on the ThankYou Page');
+
 define( '_PAYPLAN_PARAMS_GID_ENABLED_NAME', 'Activer les groupes');
 define( '_PAYPLAN_PARAMS_GID_ENABLED_DESC', 'Positionnez &agrave;  Yes si vous voulez affecter les utilisateurs au groupe choisi.');
 define( '_PAYPLAN_PARAMS_GID_NAME', 'Ajouter au groupe:');
@@ -1251,4 +1258,4 @@ define( '_EXPORT_PARAMS_SAVE_NAME_DESC', 'Save new preset under this name');
 define( '_EXPORT_PARAMS_EXPORT_METHOD_NAME', 'Exporting Method');
 define( '_EXPORT_PARAMS_EXPORT_METHOD_DESC', 'The filetype you want to export to');
 
-?&gt;
+?>

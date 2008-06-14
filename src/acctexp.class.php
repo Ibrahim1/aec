@@ -4784,7 +4784,7 @@ class InvoiceFactory
 				|| ( $params['trial_free'] && empty( $this->objInvoice->counter ) ) ) {
 				// Then mark payed
 				if ( $this->objInvoice->pay() !== false ) {
-					thanks ( $option, $this->renew, 1 );
+					thanks( $option, $this->renew, 1 );
 				}
 			}
 
@@ -4932,34 +4932,25 @@ class InvoiceFactory
 		}
 
 		if ( $renew ) {
-			$msg = _SUB_FEPARTICLE_HEAD_RENEW
-			. '</p><p>'
-			. _SUB_FEPARTICLE_THANKSRENEW;
+			$msg = _SUB_FEPARTICLE_HEAD_RENEW . '</p><p>' . _SUB_FEPARTICLE_THANKSRENEW;
 			if ( $free ) {
 				$msg .= _SUB_FEPARTICLE_LOGIN;
 			} else {
-				$msg .= _SUB_FEPARTICLE_PROCESSPAY
-				. _SUB_FEPARTICLE_MAIL;
+				$msg .= _SUB_FEPARTICLE_PROCESSPAY . _SUB_FEPARTICLE_MAIL;
 			}
 		} else {
-			$msg = _SUB_FEPARTICLE_HEAD
-			. '</p><p>'
-			. _SUB_FEPARTICLE_THANKS;
+			$msg = _SUB_FEPARTICLE_HEAD . '</p><p>' . _SUB_FEPARTICLE_THANKS;
 			if ( $free ) {
 				if ( $mosConfig_useractivation ) {
-					$msg .= _SUB_FEPARTICLE_PROCESS
-					. _SUB_FEPARTICLE_ACTMAIL;
+					$msg .= _SUB_FEPARTICLE_PROCESS . _SUB_FEPARTICLE_ACTMAIL;
 				} else {
-					$msg .= _SUB_FEPARTICLE_PROCESS
-					. _SUB_FEPARTICLE_MAIL;
+					$msg .= _SUB_FEPARTICLE_PROCESS . _SUB_FEPARTICLE_MAIL;
 				}
 			} else {
 				if ( $mosConfig_useractivation ) {
-					$msg .= _SUB_FEPARTICLE_PROCESSPAY
-					. _SUB_FEPARTICLE_ACTMAIL;
+					$msg .= _SUB_FEPARTICLE_PROCESSPAY . _SUB_FEPARTICLE_ACTMAIL;
 				} else {
-					$msg .= _SUB_FEPARTICLE_PROCESSPAY
-					. _SUB_FEPARTICLE_MAIL;
+					$msg .= _SUB_FEPARTICLE_PROCESSPAY . _SUB_FEPARTICLE_MAIL;
 				}
 			}
 		}

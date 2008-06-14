@@ -1734,6 +1734,9 @@ class HTML_AcctExp
 							<div class="userinfobox">
 								<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
 								<?php echo $aecHTML->createSettingsParticle( 'email_desc' ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'customthanks' ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'customtext_thanks_keeporiginal' ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'customtext_thanks' ); ?>
 							</div>
 						</td></tr></table>
 						<?php
