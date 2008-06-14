@@ -1859,10 +1859,15 @@ class PaymentProcessor
 		}
 
 		if ( is_int( $this->is_recurring() ) ) {
-			return array_merge( array( 'recurring' => array( 'list_recurring' ) ), $this->processor->backend_settings() );
+			$settings = array_merge( array( 'recurring' => array( 'list_recurring' ) ), $this->processor->backend_settings() );
 		} else {
-			return $this->processor->backend_settings();
+			$settings = $this->processor->backend_settings();
 		}
+
+		$default_settings = array();
+		$default_settings['testmode']	= array( 'generic_buttons' );
+
+		$settings = array_merge( $settings, $default_settings );
 	}
 
 	function checkoutAction( $int_var=null, $metaUser=null, $new_subscription=null, $invoice=null )
@@ -4471,23 +4476,20 @@ class InvoiceFactory
 									}
 
 									if ( $recurring > 1 ) {
-										$plan_gw[$k]['name']		= $pp->processor_name;
-										$plan_gw[$k]['statement']	= $pp->info['statement'];
-										$plan_gw[$k]['recurring']	= 0;
+										$pp->recurring = 0;
+										$plan_gw[$k] = $pp;
 										$k++;
 
 										if ( !$plan_params['lifetime'] ) {
-											$plan_gw[$k]['name']		= $pp->processor_name;
-											$plan_gw[$k]['statement']	= $pp->info['statement'];
-											$plan_gw[$k]['recurring']	= 1;
+											$pp->recurring = 1;
+											$plan_gw[$k] = $pp;
 											$k++;
 										}
 									} elseif ( !( $plan_params['lifetime'] && $recurring ) ) {
-										$plan_gw[$k]['name']		= $pp->processor_name;
-										$plan_gw[$k]['statement']	= $pp->info['statement'];
 										if ( is_int( $recurring ) ) {
-											$plan_gw[$k]['recurring']	= $recurring;
+											$pp->recurring	= $recurring;
 										}
+										$plan_gw[$k] = $pp;
 										$k++;
 									}
 								}

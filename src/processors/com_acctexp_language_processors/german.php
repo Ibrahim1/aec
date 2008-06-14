@@ -96,6 +96,10 @@ define( '_CFG_PROCESSOR_LANGUAGE_NAME', 'Language');
 define( '_CFG_PROCESSOR_LANGUAGE_DESC', 'Select one of the possible language settings for site that your user will see when issuing a payment.');
 define( '_CFG_PROCESSOR_RECURRING_NAME', 'Recurring Payment');
 define( '_CFG_PROCESSOR_RECURRING_DESC', 'Choose what type of billing to use for this.');
+define( '_CFG_PROCESSOR_TAX_NAME', 'Tax:');
+define( '_CFG_PROCESSOR_TAX_DESC', 'Set the percentage that should be split to taxes. For example if you want 10% of 10$ to be tax - put in a 10. This will result in an amount of 9.09 and a tax amount of additional 0.91.');
+define( '_CFG_PROCESSOR_GENERIC_BUTTONS_NAME', 'Generic Buttons:');
+define( '_CFG_PROCESSOR_GENERIC_BUTTONS_DESC', 'Do not show buttons with the processor logo, but plan "Buy Now" and "Subscribe" buttons instead.');
 
 define( '_AEC_SELECT_RECURRING_NO', 'Non-Recurring');
 define( '_AEC_SELECT_RECURRING_YES', 'Recurring');

@@ -484,14 +484,14 @@ class Payment_HTML
 		<?php
 	}
 
-	function getPayButtonHTML( $gw, $planid, $userid, $passthrough = false, $register = false )
+	function getPayButtonHTML( $pps, $planid, $userid, $passthrough = false, $register = false )
 	{
 		global $mosConfig_live_site, $database, $my, $aecConfig;
 
 		$html_code = '';
 
-		foreach ( $gw as $processor ) {
-			$gw_current = strtolower( $processor['name'] );
+		foreach ( $pps as $pp ) {
+			$gw_current = strtolower( $pp->processor_name );
 			$hidden = array();
 
 			if ( $register ) {
@@ -507,30 +507,36 @@ class Payment_HTML
 				$task		= 'confirm';
 			}
 
-			$urlbutton = $mosConfig_live_site . '/components/com_acctexp/images/gw_button_' . $processor['name'] . '.png';
+			if ( !empty( $pp->settings['generic_buttons'] ) ) {
+				if ( !empty( $pp->recurring ) ) {
+					$urlbutton = $mosConfig_live_site . '/components/com_acctexp/images/gw_button_generic_subscribe.png';
+				} else {
+					$urlbutton = $mosConfig_live_site . '/components/com_acctexp/images/gw_button_generic_buy_now.png';
+				}
+			} else {
+				$urlbutton = $mosConfig_live_site . '/components/com_acctexp/images/gw_button_' . $pp->processor_name . '.png';
+			}
 
 			$html_code .= '<div class="gateway_button">' . "\n"
 			. '<form action="' . AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=' . $task, $aecConfig->cfg['ssl_signup'] ) . '"'
 			. ' method="post">' . "\n"
 			. '<input type="image" src="' . $urlbutton;
-			if ( !empty( $processor['statement'] ) ) {
-				$html_code .= '" border="0" name="submit" alt="' . $processor['statement'] . '" />' . "\n";
+			if ( !empty( $pp['statement'] ) ) {
+				$html_code .= '" border="0" name="submit" alt="' . $pp->info['statement'] . '" />' . "\n";
 			} else {
-				$html_code .= '" border="0" name="submit" alt="' . $processor['name'] . '" />' . "\n";
+				$html_code .= '" border="0" name="submit" alt="' . $pp->processor_name . '" />' . "\n";
 			}
 
 			$hidden['option']		= $option;
 			$hidden['task']			= $task;
-			$hidden['processor']	= strtolower( $processor['name'] );
+			$hidden['processor']	= strtolower( $pp->processor_name );
 			$hidden['usage']		= $planid;
 			$hidden['userid']		= $userid ? $userid : 0;
 
-			if ( isset( $processor['recurring'] ) ) {
-				if ( $processor['recurring'] ) {
-					$hidden['recurring'] = 1;
-				} else {
-					$hidden['recurring'] = 0;
-				}
+			if ( !empty( $pp->recurring ) ) {
+				$hidden['recurring'] = 1;
+			} else {
+				$hidden['recurring'] = 0;
 			}
 
 			// Rewrite Passthrough
