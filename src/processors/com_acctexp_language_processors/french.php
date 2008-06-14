@@ -42,52 +42,54 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 define( '_AEC_LANG_PROCESSOR', 1 );
 
 // ################## new 0.12.4
-	// paypal
-define( '_AEC_PROC_INFO_PP_LNAME',			'PayPal' );
-define( '_AEC_PROC_INFO_PP_STMNT',			'Make payments with PayPal - it\'s fast, free and secure!' );
-	// paypal subscription
-define( '_AEC_PROC_INFO_PPS_LNAME',			'PayPal Subscription' );
-define( '_AEC_PROC_INFO_PPS_STMNT',			'Make payments with PayPal - it\'s fast, free and secure!' );
-	// 2CheckOut
-define( '_AEC_PROC_INFO_2CO_LNAME',			'2CheckOut' );
-define( '_AEC_PROC_INFO_2CO_STMNT',			'Make payments with 2Checkout!' );
-	// alertpay
-define( '_AEC_PROC_INFO_AP_LNAME',			'AlertPay' );
-define( '_AEC_PROC_INFO_AP_STMNT',			'Payments with AlertPay' );
+    // paypal
+define( '_AEC_PROC_INFO_PP_LNAME',            'PayPal' );
+define( '_AEC_PROC_INFO_PP_STMNT',            'Faites vos paiements avec Paypal - C\'est facile, gratuit et s&ucirc;r!' );
+    // paypal subscription
+define( '_AEC_PROC_INFO_PPS_LNAME',            ' Abonnement PayPal ' );
+define( '_AEC_PROC_INFO_PPS_STMNT',            'Faites vos paiements avec Paypal - C\'est facile, gratuit et s&ucirc;r!' );
+    // 2CheckOut
+define( '_AEC_PROC_INFO_2CO_LNAME',            '2CheckOut' );
+define( '_AEC_PROC_INFO_2CO_STMNT',            'Faites vos paiements avec 2Checkout!' );
+    // alertpay
+define( '_AEC_PROC_INFO_AP_LNAME',            'AlertPay' );
+define( '_AEC_PROC_INFO_AP_STMNT',            ' Paiements avec AlertPay' );
 
-define( '_DESCRIPTION_PAYPAL', 'PayPal permet d&acute;envoyer de l&acute;argent via courriel. PayPal est gratuit pour les consommateurs et fonctionne avec votre carte de cr&eacute;dit et compte ch&egrave;que.');
-define( '_DESCRIPTION_PAYPAL_SUBSCRIPTION', 'PayPal Subscription is the Subscription Service that will <strong>automatically bill your account each subscription period</strong>. You can cancel a subscription any time you want from your PayPal account. PayPal is free for consumers and works seamlessly with your existing credit card and checking account.');
-define( '_DESCRIPTION_AUTHORIZE', 'La passerelle de paiement permet aux entreprises sur Internet d&acute;accepter des paiements en ligne via carte de cr&eacute;dit et e-ch&egrave;que.');
+define( '_DESCRIPTION_PAYPAL', 'PayPal permet d&amp;acute;envoyer de l&amp;acute;argent via courriel. PayPal est gratuit pour les consommateurs et fonctionne avec votre carte de cr&eacute;dit et compte ch&egrave;que.');
+define( '_DESCRIPTION_PAYPAL_SUBSCRIPTION', 'PayPal Abonnement est le service d\'abonnement qui vous &lt;strong&gt;d&eacute;bitera votre compte de mani&egrave;re r&eacute;currente &agrave; chaque &eacute;ch&eacute;ance&lt;/strong&gt;. Vous pourrez annuler un abonnement &agrave; tout moment dans votre compte PayPal. PayPal est gratuit pour l\'acheteur et est adoss&eacute; &agrave; votre carte de cr&eacute;dit valide et &agrave; votre compte bancaire.');
+define( '_DESCRIPTION_AUTHORIZE', 'La passerelle de paiement permet aux entreprises sur Internet d&amp;acute;accepter des paiements en ligne via carte de cr&eacute;dit et e-ch&egrave;que.');
 define( '_DESCRIPTION_VIAKLIX', 'Procure un mode de paiement int&eacute;gr&eacute; via carte de cr&eacute;dit et carte de d&eacute;bit, conversion de ch&egrave;que &eacute;lectronique et applications reli&eacute;es..');
 define( '_DESCRIPTION_ALLOPASS', 'AlloPass, est un leader Europ&eacute;en dans son domaine le syst&egrave;me de micropaiement et permet la facturation par t&eacute;l&eacute;phone, SMS et carte de cr&eacute;dit.');
 define( '_DESCRIPTION_2CHECKOUT', 'Services instantan&eacute;s de traitement de carte de cr&eacute;dit pour les comptes marchand qui ont un commerce &eacute;lectronique.');
 define( '_DESCRIPTION_EPSNETPAY', 'Les syst&egrave;mes de paiement eps est simple et s&eacute;curitaire.');
-define( '_DESCRIPTION_ALERTPAY', 'Your money is safe with AlertPay\'s account safety policy. AlertPay is open to all businesses.');
+define( '_DESCRIPTION_ALERTPAY', 'Votre argent est prot&eacute;g&eacute; avec la politique de s&eacute;curit&eacute; des comptes AlertPay. AlertPay est ouvert &agrave; tous les commerces.');
 
-// Generic Processor Names&Descs
-define( '_CFG_PROCESSOR_TESTMODE_NAME', 'Test Mode?');
-define( '_CFG_PROCESSOR_TESTMODE_DESC', 'Select Yes if you want to run this processor in test mode. Transactions will not be forwarded to the real processor, but will be either redirected to a testing environment or always return an approved result. If you do not know what this is, just leave it No.');
-define( '_CFG_PROCESSOR_CURRENCY_NAME', 'Currency Selection');
-define( '_CFG_PROCESSOR_CURRENCY_DESC', 'Select the currency that you want to use for this processor.');
-define( '_CFG_PROCESSOR_NAME_NAME', 'Displayed Name');
-define( '_CFG_PROCESSOR_NAME_DESC', 'Change how this Processor is called.');
-define( '_CFG_PROCESSOR_DESC_NAME', 'Displayed Description');
-define( '_CFG_PROCESSOR_DESC_DESC', 'Change the description of this Processor, which is for example shown on the NotAllowed page, Confirmation and Checkout.');
-define( '_CFG_PROCESSOR_ITEM_NAME_NAME', 'Item Description');
-define( '_CFG_PROCESSOR_ITEM_NAME_DESC', 'The Item Description transmitted to the processor.');
-define( '_CFG_PROCESSOR_ITEM_NAME_DEFAULT',	'Subscription at %s - User: %s (%s)' );
-define( '_CFG_PROCESSOR_CUSTOMPARAMS_NAME', 'Custom Parameters');
-define( '_CFG_PROCESSOR_CUSTOMPARAMS_DESC', 'Custom Parameters that the AEC should transmit to the Payment Processor on Checkout. Separated by linebreaks in the form of "parameter_name=parameter_value". The RewriteEngine works as specified below.');
-define( '_CFG_PROCESSOR_PLAN_PARAMS_RECURRING_NAME', 'Recurring Payment');
-define( '_CFG_PROCESSOR_PLAN_PARAMS_RECURRING_DESC', 'Choose what type of billing to use for this.');
-define( '_CFG_PROCESSOR_LANGUAGE_NAME', 'Language');
-define( '_CFG_PROCESSOR_LANGUAGE_DESC', 'Select one of the possible language settings for site that your user will see when issuing a payment.');
-define( '_CFG_PROCESSOR_RECURRING_NAME', 'Recurring Payment');
-define( '_CFG_PROCESSOR_RECURRING_DESC', 'Choose what type of billing to use for this.');
+// Generic Processor Names&amp;Descs
+define( '_CFG_PROCESSOR_TESTMODE_NAME', ' Mode Test ?');
+define( '_CFG_PROCESSOR_TESTMODE_DESC', 'Choisissez Oui si vous voulez fonctionner en mode test. Les transactions ne seront pas envoy&eacute;es au processeur r&eacute;el, mais seront redirig&eacute;es vers un environnement de test ou bien seront toujours approuv&eacute;es. Si vous ne comprenez pas, laissez Non.');
+define( '_CFG_PROCESSOR_CURRENCY_NAME', 'Choix de la devise');
+define( '_CFG_PROCESSOR_CURRENCY_DESC', 'Choisissez la devise que vous voulez utiliser pour ce Processeur.');
+define( '_CFG_PROCESSOR_NAME_NAME', 'Nom affich&eacute;');
+define( '_CFG_PROCESSOR_NAME_DESC', 'Change la fa&ccedil;on de nommer ce Processeur.');
+define( '_CFG_PROCESSOR_DESC_NAME', 'Description affich&eacute;e ');
+define( '_CFG_PROCESSOR_DESC_DESC', 'Change la description du processeur qui est par exemple montr&eacute;e sur NotAllowed page, Confirmation and Checkout.');
+define( '_CFG_PROCESSOR_ITEM_NAME_NAME', 'Description de l\'article');
+define( '_CFG_PROCESSOR_ITEM_NAME_DESC', 'Description de l\'article transmise au processeur.');
+define( '_CFG_PROCESSOR_ITEM_NAME_DEFAULT',    'Abonnement &agrave; %s - Utilisateur: %s (%s)' );
+define( '_CFG_PROCESSOR_CUSTOMPARAMS_NAME', 'Param&egrave;tres de personnalisation');
+define( '_CFG_PROCESSOR_CUSTOMPARAMS_DESC', 'Param&egrave;tres de personnelisation qu\'AEC devra transmettre au Processeur de paiement au Checkout. S&eacute;par&eacute;s par un saut de ligne de la forme &quot;parameter_name=parameter_value&quot;. Le RewriteEngine travaille comme sp&eacute;cifi&eacute; ci-dessous.');
+define( '_CFG_PROCESSOR_PLAN_PARAMS_RECURRING_NAME', ' Paiement r&eacute;current');
+define( '_CFG_PROCESSOR_PLAN_PARAMS_RECURRING_DESC', 'Choisissez quel type de facturation &agrave; utiliser.');
+define( '_CFG_PROCESSOR_LANGUAGE_NAME', 'Langue');
+define( '_CFG_PROCESSOR_LANGUAGE_DESC', 'S&eacute;lectionner une des langues possibles pour votre site, visible par votre utilisateur lorsqu\'il effectuera un paiement.');
+define( '_CFG_PROCESSOR_RECURRING_NAME', 'Paiement r&eacute;current');
+define( '_CFG_PROCESSOR_RECURRING_DESC', 'Choisissez le type de facturation &agrave; utiliser.');
+define( '_CFG_PROCESSOR_TAX_NAME', 'Tax:');
+define( '_CFG_PROCESSOR_TAX_DESC', 'Set the percentage that should be split to taxes. For example if you want 10% of 10$ to be tax - put in a 10. This will result in an amount of 9.09 and a tax amount of additional 0.91.');
 
-define( '_AEC_SELECT_RECURRING_NO', 'Non-Recurring');
-define( '_AEC_SELECT_RECURRING_YES', 'Recurring');
-define( '_AEC_SELECT_RECURRING_BOTH', 'Both');
+define( '_AEC_SELECT_RECURRING_NO', 'Non-R&eacute;current');
+define( '_AEC_SELECT_RECURRING_YES', 'R&eacute;current');
+define( '_AEC_SELECT_RECURRING_BOTH', 'Les deux');
 
 // Generic User Account Form
 define( '_AEC_USERFORM_BILLING_DETAILS_NAME', 'Billing Details');
@@ -105,66 +107,66 @@ define( '_AEC_USERFORM_BILLFAX_NAME', 'Fax');
 define( '_AEC_USERFORM_BILLCOMPANY_NAME', 'Company');
 
 // Generic Credit Card Form
-define( '_AEC_CCFORM_CARDHOLDER_NAME', 'Card owner Name');
-define( '_AEC_CCFORM_CARDHOLDER_DESC', 'The name of the credit card holder');
-define( '_AEC_CCFORM_CARDNUMBER_NAME', 'Card Number');
-define( '_AEC_CCFORM_CARDNUMBER_DESC', 'The number of your credit card');
-define( '_AEC_CCFORM_EXPIRATIONYEAR_NAME', 'Expiration Year');
-define( '_AEC_CCFORM_EXPIRATIONYEAR_DESC', 'The Year your card will expire');
-define( '_AEC_CCFORM_EXPIRATIONMONTH_NAME', 'Expiration Month');
-define( '_AEC_CCFORM_EXPIRATIONMONTH_DESC', 'The Month your card will expire');
-define( '_AEC_CCFORM_CARDTYPE_NAME', 'Card Type');
-define( '_AEC_CCFORM_CARDTYPE_DESC', 'The type of the credit card');
-define( '_AEC_CCFORM_CARDVV2_NAME', 'Card Verification Number');
-define( '_AEC_CCFORM_CARDVV2_DESC', 'The Verification Number of the Credit Card');
+define( '_AEC_CCFORM_CARDHOLDER_NAME', 'Propri&eacute;taire de la carte');
+define( '_AEC_CCFORM_CARDHOLDER_DESC', 'Le nom du propri&eacute;taire de la carte de cr&eacute;dit');
+define( '_AEC_CCFORM_CARDNUMBER_NAME', 'Num&eacute;ro de la carte');
+define( '_AEC_CCFORM_CARDNUMBER_DESC', 'Le num&eacute;ro de la carte de cr&eacute;dit');
+define( '_AEC_CCFORM_EXPIRATIONYEAR_NAME', 'Ann&eacute;e d&amp;acute;expiration');
+define( '_AEC_CCFORM_EXPIRATIONYEAR_DESC', 'L&amp;acute;ann&eacute;e lors de laquelle votre carte de cr&eacute;dit va expirer');
+define( '_AEC_CCFORM_EXPIRATIONMONTH_NAME', 'Mois d&amp;acute;expiration');
+define( '_AEC_CCFORM_EXPIRATIONMONTH_DESC', 'Le mois lors duquel votre carte de cr&eacute;dit va expirer');
+define( '_AEC_CCFORM_CARDTYPE_NAME', 'Type de carte');
+define( '_AEC_CCFORM_CARDTYPE_DESC', 'Le type de carte de cr&eacute;dit');
+define( '_AEC_CCFORM_CARDVV2_NAME', 'Cryptogramme visuel de la carte');
+define( '_AEC_CCFORM_CARDVV2_DESC', 'Cryptogramme visuel de la carte');
 define( '_AEC_CCFORM_UPDATE_NAME', 'Update Notice');
 define( '_AEC_CCFORM_UPDATE_DESC', 'To update your billing details, we need you to enter your CreditCard details again.<br />Leave fields as they are if you want to use all your previous details.');
 define( '_AEC_CCFORM_UPDATE2_DESC', 'Updated! Thank you for keeping us up to date.');
 
 // Generic Wire Transfer Form
-define( '_AEC_WTFORM_ACCOUNTNAME_NAME', 'Account owner Name');
-define( '_AEC_WTFORM_ACCOUNTNAME_DESC', 'The name of the person holding this account');
-define( '_AEC_WTFORM_ACCOUNTNUMBER_NAME', 'Account Number');
-define( '_AEC_WTFORM_ACCOUNTNUMBER_DESC', 'The number of the account');
-define( '_AEC_WTFORM_BANKNUMBER_NAME', 'Bank Number');
-define( '_AEC_WTFORM_BANKNUMBER_DESC', 'The Bank Number');
-define( '_AEC_WTFORM_BANKNAME_NAME', 'Bank Name');
-define( '_AEC_WTFORM_BANKNAME_DESC', 'The Name of the Bank');
+define( '_AEC_WTFORM_ACCOUNTNAME_NAME', 'Nom du titulaire du compte');
+define( '_AEC_WTFORM_ACCOUNTNAME_DESC', 'Le nom de la personne qui tient ce compte');
+define( '_AEC_WTFORM_ACCOUNTNUMBER_NAME', 'Num&eacute;ro de compte');
+define( '_AEC_WTFORM_ACCOUNTNUMBER_DESC', 'Le num&eacute;ro du compte');
+define( '_AEC_WTFORM_BANKNUMBER_NAME', 'Code banque');
+define( '_AEC_WTFORM_BANKNUMBER_DESC', 'Le code banque');
+define( '_AEC_WTFORM_BANKNAME_NAME', 'Nom de la banque');
+define( '_AEC_WTFORM_BANKNAME_DESC', 'Le nom de la banque');
 
 // Parametres pour Paypal
 define( '_CFG_PAYPAL_BUSINESS_NAME', 'Identifiant marchand :');
 define( '_CFG_PAYPAL_BUSINESS_DESC', 'Votre identifiant marchand (courriel) sur PayPal.');
 define( '_CFG_PAYPAL_CHECKBUSINESS_NAME', 'V&eacute;rifier ID Marchand:');
 define( '_CFG_PAYPAL_CHECKBUSINESS_DESC', 'S&eacute;lectionner Oui pour activer la proc&eacute;dure de v&eacute;rification de s&eacute;curit&eacute; lors de la r&eacute;ception de la confirmation de paiement. Le champ ID receveur doit &ecirc;tre &eacute;gal &agrave; ID marchand de PayPal pour que le paiement soit accept&eacute;, si la v&eacute;rification est activ&eacute;e.');
-define( '_CFG_PAYPAL_NO_SHIPPING_NAME', 'No Shipping Required:');
-define( '_CFG_PAYPAL_NO_SHIPPING_DESC', 'Set this to NO if you want your customers to specify a shipping address - in case you offer a product that needs to be physically distributed');
-define( '_CFG_PAYPAL_ALTIPNURL_NAME', 'Domaine Alernatif pour l&acute;avis IPN:');
-define( '_CFG_PAYPAL_ALTIPNURL_DESC', 'Si vous utilisez un &eacute;quilibre de charge sur le serveur (changement entre les adresses IP), il se peut que que Paypal n&acute;aime pas cela et coupe la connexion lors de l&acute;envoi de l&acute;IPN. Pour contourner ce probl&egrave;me, vous pouvez par exemple cr&eacute;er un nouveau sousdomaine sur ce serveur et d&eacute;sactiver l&acute;&eacute;quilibre de charge. Entrer l&acute;adresse ici (Dans ce format "http://sousdomaine.domaine.com" - sans barre oblique &agrave; la fin) pour &ecirc;tre certain que Paypal envoi seulement le IPN &agrave; cette adresse. <strong>Si vous n&acute;&ecirc;tes pas certain de ce que cela signifie, laisser ce champ vide!</strong>');
+define( '_CFG_PAYPAL_NO_SHIPPING_NAME', 'Sans livraison:');
+define( '_CFG_PAYPAL_NO_SHIPPING_DESC', 'Positionnez &agrave; NON si vous voulez que vos clients indiquent une adresse de livraison - dans le cas ou il s\'agit d\'un produit qui doit &ecirc;tre physiquement livr&eacute;');
+define( '_CFG_PAYPAL_ALTIPNURL_NAME', 'Domaine Alernatif pour l&amp;acute;avis IPN:');
+define( '_CFG_PAYPAL_ALTIPNURL_DESC', 'Si vous utilisez un &eacute;quilibre de charge sur le serveur (changement entre les adresses IP), il se peut que Paypal n&amp;acute;aime pas cela et coupe la connexion lors de l&amp;acute;envoi de l&amp;acute;IPN. Pour contourner ce probl&egrave;me, vous pouvez par exemple cr&eacute;er un nouveau sousdomaine sur ce serveur et d&eacute;sactiver l&amp;acute;&eacute;quilibre de charge. Entrer l&amp;acute;adresse ici (Dans ce format &quot;http://sousdomaine.domaine.com&quot; - sans barre oblique &agrave; la fin) pour &ecirc;tre certain que Paypal envoie seulement le IPN &agrave; cette adresse. &lt;strong&gt;Si vous n&amp;acute;&ecirc;tes pas certain de ce que cela signifie, laisser ce champ vide!&lt;/strong&gt;');
 define( '_CFG_PAYPAL_LC_NAME', 'Langue:');
 define( '_CFG_PAYPAL_LC_DESC', 'S&eacute;lectionner une des langues disponibles pour le site de Paypal que les utilisateurs vont voir lors de leur paiement.');
-define( '_CFG_PAYPAL_TAX_NAME', 'Tax:');
-define( '_CFG_PAYPAL_TAX_DESC', 'Set the percentage that should be split to taxes. For example if you want 10% of 10$ to be tax - put in a 10. This will result in an amount of 9.09 and a tax amount of additional 0.91.');
-define( '_CFG_PAYPAL_ACCEPTPENDINGECHECK_NAME', 'Accept Pending eCheck:');
-define( '_CFG_PAYPAL_ACCEPTPENDINGECHECK_DESC', 'Accept Pending eChecks which usually take 4 days to clear. Set this to No to prevent eCheck fraud.');
+define( '_CFG_PAYPAL_TAX_NAME', 'Taxe:');
+define( '_CFG_PAYPAL_TAX_DESC', 'Fixez le taux qui doit &ecirc;tre appliqu&eacute; pour les taxes. Par exemple si vous voulez 10% de 10 comme taxe - mettez 10. Le r&eacute;sultat sera un montant hors taxe de 9,09 et un montant de taxe &agrave; additionner de 0,91.');
+define( '_CFG_PAYPAL_ACCEPTPENDINGECHECK_NAME', 'Acceptation de eCheck en attente:');
+define( '_CFG_PAYPAL_ACCEPTPENDINGECHECK_DESC', 'Acceptation de eChecks en attente prend habituellement 4 jours pour s\'&eacute;xecuter. Positionnez &agrave; Non pour &eacute;viter la fraude aux eCheck.');
 
-define( '_CFG_PAYPAL_CBT_NAME', 'Continue Button');
-define( '_CFG_PAYPAL_CBT_DESC', 'Sets the text for the Continue button on the PayPal "Payment Complete" page.');
+define( '_CFG_PAYPAL_CBT_NAME', 'Bouton suite');
+define( '_CFG_PAYPAL_CBT_DESC', 'Fixe le texte du bouton Suite sur la page PayPal &quot;Payment Complete&quot; .');
 define( '_CFG_PAYPAL_CN_NAME', 'Note Label');
-define( '_CFG_PAYPAL_CN_DESC', 'The label above the note field.');
-define( '_CFG_PAYPAL_CPP_HEADER_IMAGE_NAME', 'Header Image');
-define( '_CFG_PAYPAL_CPP_HEADER_IMAGE_DESC', 'URL for the image at the top left of the payment page (the maximum image size being 750x90 pixels)');
-define( '_CFG_PAYPAL_CPP_HEADERBACK_COLOR_NAME', 'Headerback Color');
-define( '_CFG_PAYPAL_CPP_HEADERBACK_COLOR_DESC', 'Background color for the payment page header (6 character HTML hexadecimal color code in ASCII)');
+define( '_CFG_PAYPAL_CN_DESC', 'Le libell&eacute; au dessus du champ note.');
+define( '_CFG_PAYPAL_CPP_HEADER_IMAGE_NAME', 'Image d\'ent&ecirc;te');
+define( '_CFG_PAYPAL_CPP_HEADER_IMAGE_DESC', 'URL pour l\'image en haut &agrave; gauche de la page paiement (la taille maximum de l\'image est 750x90 pixels)');
+define( '_CFG_PAYPAL_CPP_HEADERBACK_COLOR_NAME', 'Couleur de fond de l\'ent&ecirc;te');
+define( '_CFG_PAYPAL_CPP_HEADERBACK_COLOR_DESC', 'Couleur de fond pour l\'ent&ecirc;te de la page de paiement (6 caract&egrave;res HTML hexadecimal code couleur ASCII)');
 define( '_CFG_PAYPAL_CPP_HEADERBORDER_COLOR_NAME', 'Headerborder Color');
-define( '_CFG_PAYPAL_CPP_HEADERBORDER_COLOR_DESC', 'Border color for the payment page header (6 character HTML hexadecimal color code in ASCII)');
-define( '_CFG_PAYPAL_CPP_PAYFLOW_COLOR_NAME', 'Payflow Color');
-define( '_CFG_PAYPAL_CPP_PAYFLOW_COLOR_DESC', 'Background color for the payment page below the header (6 character HTML hexadecimal color code in ASCII)');
-define( '_CFG_PAYPAL_CS_NAME', 'Background Tint');
-define( '_CFG_PAYPAL_CS_DESC', 'The default - "No" - leaves the overall background color at white, setting it to "Yes" will change it to black');
+define( '_CFG_PAYPAL_CPP_HEADERBORDER_COLOR_DESC', 'Couleur des bordures de l\'ent&ecirc;te de la page de paiement (6 caract&egrave;res HTML hexadecimal code couleur ASCII)');
+define( '_CFG_PAYPAL_CPP_PAYFLOW_COLOR_NAME', 'Couleur du Payflow ');
+define( '_CFG_PAYPAL_CPP_PAYFLOW_COLOR_DESC', 'Couleur de fond de la page de paiement sous l\'en t&ecirc;te (6 caract&egrave;res HTML hexadecimal code couleur ASCII)');
+define( '_CFG_PAYPAL_CS_NAME', 'Nuance du fond');
+define( '_CFG_PAYPAL_CS_DESC', 'Par d&eacute;faut  - &quot;Non&quot; - laisse la couleur de fond &agrave; blanc, si vous mettez &quot;Oui&quot; la couleur de fond passe &agrave; noir');
 define( '_CFG_PAYPAL_IMAGE_URL_NAME', 'Logo');
-define( '_CFG_PAYPAL_IMAGE_URL_DESC', 'URL of the image displayed as your logo in the upperleft corner of PayPals pages (150x50 pixels)');
-define( '_CFG_PAYPAL_PAGE_STYLE_NAME', 'Page Style');
-define( '_CFG_PAYPAL_PAGE_STYLE_DESC', 'Sets the custom payment page style for payment pages. Reserved: "primary" - Always use the page style set as primary, "paypal" - Use the default PayPal style. Any other name has to refer to the page style you have defined in the PayPal Backend (alphanumeric ASCII lower 7-bit characters only, no underscore nor spaces)');
+define( '_CFG_PAYPAL_IMAGE_URL_DESC', 'URL de l\'image affich&amp;ecute;e comme votre logo dans le coin en haut &agrave; gauche des pages PayPal (150x50 pixels)');
+define( '_CFG_PAYPAL_PAGE_STYLE_NAME', 'Style de la page');
+define( '_CFG_PAYPAL_PAGE_STYLE_DESC', 'Fixe le style de la page de paiement en personnalisation des pages de paiement. R&eacute;serv&eacute;: &quot;primary&quot; - Toujours utiliser le style de la page fix&eacute; en premier, &quot;paypal&quot; - Utilisez le style par d&eacute;faut PayPal. Tout autre nom doit se r&eacute;f&eacute;rer au style de la page que vous avez d&eacute;fini dans le PayPal Backend (alphanum&eacute;rique ASCII lower 7-bit caract&egrave;res seulement, ni soulignement ni espace)');
 
 // Parametres pour Paypal Subscriptions
 define( '_CFG_PAYPAL_SUBSCRIPTION_BUSINESS_NAME', _CFG_PAYPAL_BUSINESS_NAME);
@@ -179,10 +181,10 @@ define( '_CFG_PAYPAL_SUBSCRIPTION_LC_NAME', _CFG_PAYPAL_LC_NAME);
 define( '_CFG_PAYPAL_SUBSCRIPTION_LC_DESC', _CFG_PAYPAL_LC_DESC);
 define( '_CFG_PAYPAL_SUBSCRIPTION_TAX_NAME', _CFG_PAYPAL_TAX_NAME);
 define( '_CFG_PAYPAL_SUBSCRIPTION_TAX_DESC', _CFG_PAYPAL_TAX_DESC);
-define( '_PAYPAL_SUBSCRIPTION_CANCEL_INFO', 'If you want to change your subscription, you first have to cancel your current subscription in your PayPal account!');
+define( '_PAYPAL_SUBSCRIPTION_CANCEL_INFO', 'Si vous voulez changer votre abonnement, vous devez d\'abord annuler votre abonnement actuel dans votre compte PayPal!');
 define( '_CFG_PAYPAL_SUBSCRIPTION_ACCEPTPENDINGECHECK_NAME', _CFG_PAYPAL_ACCEPTPENDINGECHECK_NAME);
 define( '_CFG_PAYPAL_SUBSCRIPTION_ACCEPTPENDINGECHECK_DESC', _CFG_PAYPAL_ACCEPTPENDINGECHECK_DESC);
-define( '_CFG_PAYPAL_SUBSCRIPTION_SRT_NAME', 'Total Occurances');
+define( '_CFG_PAYPAL_SUBSCRIPTION_SRT_NAME', 'Nombre total d\'occurences');
 define( '_CFG_PAYPAL_SUBSCRIPTION_SRT_DESC', 'If you want to limit the number of total subscription payments, you can do so with this field.');
 
 define( '_CFG_PAYPAL_SUBSCRIPTION_CBT_NAME', _CFG_PAYPAL_CBT_NAME);
@@ -205,16 +207,16 @@ define( '_CFG_PAYPAL_SUBSCRIPTION_PAGE_STYLE_NAME', _CFG_PAYPAL_PAGE_STYLE_NAME)
 define( '_CFG_PAYPAL_SUBSCRIPTION_PAGE_STYLE_DESC', _CFG_PAYPAL_PAGE_STYLE_DESC);
 
 // Parametres de Transfert
-define( '_CFG_TRANSFER_TITLE', 'Transfer');
-define( '_CFG_TRANSFER_SUBTITLE', 'Non-Automatic Payments.');
+define( '_CFG_TRANSFER_TITLE', 'Transfert');
+define( '_CFG_TRANSFER_SUBTITLE', 'Paiements Non-Automatiques.');
 define( '_CFG_TRANSFER_ENABLE_NAME', 'Autoriser les paiements non automatique?');
-define( '_CFG_TRANSFER_ENABLE_DESC', 'S&eacute;lectionner Oui si vous voulez fournir une option pour le paiement non automatique, comme un virement bancaire par exemple. Les utilisateurs qui s&acute;inscriront verront les instructions fournies par vous (champ ci-contre) leur expliquant comment payer leur abonnement. Cette option requiert une gestion non automatique, vous aurez donc &agrave; configurer la date d&acute;expiration manuellement depuis l&acute;interface d&acute;administration.');
+define( '_CFG_TRANSFER_ENABLE_DESC', 'S&eacute;lectionner Oui si vous voulez fournir une option pour le paiement non automatique, comme un virement bancaire par exemple. Les utilisateurs qui s&amp;acute;inscriront verront les instructions fournies par vous (champ ci-contre) leur expliquant comment payer leur abonnement. Cette option requiert une gestion non automatique, vous aurez donc &agrave; configurer la date d&amp;acute;expiration manuellement depuis l&amp;acute;interface d&amp;acute;administration.');
 define( '_CFG_TRANSFER_INFO_NAME', 'Information pour le paiement manuel :');
-define( '_CFG_TRANSFER_INFO_DESC', 'Texte pr&eacute;sent&eacute; &agrave; l&acute;utilisateur apr&egrave;s son inscription initiale (utiliser les marqueurs HTML). Apr&egrave;s l&acute;inscription et &agrave; sa premire connexion, une expiration automatique est mise en place sur son compte (premier onglet Configuration). L&acute;utilisateur doit suivre vos instructions pour payer son abonnement. Vous devrez confirmer vous-m&ecirc;me son paiement et la nouvelle date d&acute;expiration de son compte.');
+define( '_CFG_TRANSFER_INFO_DESC', 'Texte pr&eacute;sent&eacute; &agrave; l&amp;acute;utilisateur apr&egrave;s son inscription initiale (utiliser les marqueurs HTML). Apr&egrave;s l&amp;acute;inscription et &agrave; sa premi&egrave;re connexion, une expiration automatique est mise en place sur son compte (premier onglet Configuration). L\'utilisateur doit suivre vos instructions pour payer son abonnement. Vous devrez confirmer vous-m&ecirc;me son paiement et la nouvelle date d&amp;acute;expiration de son compte.');
 
 // Parametres Viaklix
 define( '_CFG_VIAKLIX_ACCOUNTID_NAME', 'ID du Compte');
-define( '_CFG_VIAKLIX_ACCOUNTID_DESC', 'Votre ID deu compte chez viaKLIX.');
+define( '_CFG_VIAKLIX_ACCOUNTID_DESC', 'Votre ID de compte chez viaKLIX.');
 define( '_CFG_VIAKLIX_USERID_NAME', 'ID Utilisateur');
 define( '_CFG_VIAKLIX_USERID_DESC', 'Votre ID Utilisateur chez viaKLIX.');
 define( '_CFG_VIAKLIX_PIN_NAME', 'NIP');
@@ -233,22 +235,22 @@ define( '_CFG_AUTHORIZE_LOGIN_NAME', 'API ID de connexion');
 define( '_CFG_AUTHORIZE_LOGIN_DESC', 'Votre API ID de connexion sur Authorize.net.');
 define( '_CFG_AUTHORIZE_TRANSACTION_KEY_NAME', 'Cl&eacute; de transaction');
 define( '_CFG_AUTHORIZE_TRANSACTION_KEY_DESC', 'Votre cl&eacute; de transaction sur Authorize.net.');
-define( '_CFG_AUTHORIZE_TIMESTAMP_OFFSET_NAME', 'Timestamp offest');
-define( '_CFG_AUTHORIZE_TIMESTAMP_OFFSET_DESC', 'If you get an Error 97 when trying to create a transaction, please <a href="http://developer.authorize.net/tools/responsecode97/">take a look at this</a>. It might be that you need to set a timestamp offset here.');
+define( '_CFG_AUTHORIZE_TIMESTAMP_OFFSET_NAME', 'Horodatage');
+define( '_CFG_AUTHORIZE_TIMESTAMP_OFFSET_DESC', 'Si vous obtenez une erreur 97 en cr&eacute;ant une transaction svp &lt;a href=&quot;http://developer.authorize.net/tools/responsecode97/&quot;&gt;regardez ceci&lt;/a&gt;. Vous avez peut &ecirc;tre besoin de poser un horodatage ici.');
 define( '_CFG_AUTHORIZE_X_LOGO_URL_NAME', 'Logo URL');
-define( '_CFG_AUTHORIZE_X_LOGO_URL_DESC', 'This field is ideal for displaying a merchant logo on a page. The target of this URL will be displayed on the header of the Payment Form and Receipt Page.');
+define( '_CFG_AUTHORIZE_X_LOGO_URL_DESC', 'Ce champ sert &agrave; afficher un logo marchand sur la page. La cible de cet URL sera affich&eacute;e sur l\'en t&ecirc;te de la Payment Form et de la Receipt Page.');
 define( '_CFG_AUTHORIZE_X_BACKGROUND_URL_NAME', 'Background URL');
-define( '_CFG_AUTHORIZE_X_BACKGROUND_URL_DESC', 'This field will allow the merchant to customize the background image of the Payment Form and Receipt Page. The target of the specified URL will be displayed as the background.');
-define( '_CFG_AUTHORIZE_X_COLOR_BACKGROUND_NAME', 'Background Color');
-define( '_CFG_AUTHORIZE_X_COLOR_BACKGROUND_DESC', 'Value in this field will set the background color for the Payment Form and Receipt Page.');
-define( '_CFG_AUTHORIZE_X_COLOR_LINK_NAME', 'Color Link');
-define( '_CFG_AUTHORIZE_X_COLOR_LINK_DESC', 'This field allows the color of the HTML links for the Payment Form and Receipt Page to be set to the value submitted in this field.');
-define( '_CFG_AUTHORIZE_X_COLOR_TEXT_NAME', 'Color Text');
-define( '_CFG_AUTHORIZE_X_COLOR_TEXT_DESC', 'This field allows the color of the text on the Payment Form and the Receipt Page to be set to the value submitted in this field.');
-define( '_CFG_AUTHORIZE_X_HEADER_HTML_RECEIPT_NAME', 'Header Receipt Page');
-define( '_CFG_AUTHORIZE_X_HEADER_HTML_RECEIPT_DESC', 'The text contained in this field will be displayed at the top of the Receipt Page.');
-define( '_CFG_AUTHORIZE_X_FOOTER_HTML_RECEIPT_NAME', 'Footer Receipt Page');
-define( '_CFG_AUTHORIZE_X_FOOTER_HTML_RECEIPT_DESC', 'The text contained in this field will be displayed at the bottom of the Receipt Page.');
+define( '_CFG_AUTHORIZE_X_BACKGROUND_URL_DESC', 'Ce champ permet au marchand de personnaliser l\'image de fond de la Payment Form et de la Receipt Page. La cible de l\'URL sp&eacute;cifi&eacute;e sera affich&eacute;e en arri&egrave;re plan.');
+define( '_CFG_AUTHORIZE_X_COLOR_BACKGROUND_NAME', 'Couleur de fond');
+define( '_CFG_AUTHORIZE_X_COLOR_BACKGROUND_DESC', 'La valeur dans ce champ fixera la couleur de fond pour la Payment Form et la Receipt Page.');
+define( '_CFG_AUTHORIZE_X_COLOR_LINK_NAME', 'Lien couleur');
+define( '_CFG_AUTHORIZE_X_COLOR_LINK_DESC', ' Ce champ permet de fixer la couleur des liens HTML pour la  Payment Form et la Receipt Page .');
+define( '_CFG_AUTHORIZE_X_COLOR_TEXT_NAME', 'Couleur du texte');
+define( '_CFG_AUTHORIZE_X_COLOR_TEXT_DESC', 'Ce champ permet de fixer la couleur du texte sur la Payment Form et la Receipt Page.');
+define( '_CFG_AUTHORIZE_X_HEADER_HTML_RECEIPT_NAME', 'En t&ecirc;te Receipt Page');
+define( '_CFG_AUTHORIZE_X_HEADER_HTML_RECEIPT_DESC', 'Le texte contenu dans ce champ sera affich&eacute; en haut de la Receipt Page.');
+define( '_CFG_AUTHORIZE_X_FOOTER_HTML_RECEIPT_NAME', 'Pied de la Receipt Page');
+define( '_CFG_AUTHORIZE_X_FOOTER_HTML_RECEIPT_DESC', 'Le texte contenu dans ce champ sera affich&eacute; en bas de la Receipt Page.');
 
 // Parametres Allopass
 define( '_CFG_ALLOPASS_SITEID_NAME', 'SITE_ID');
@@ -264,41 +266,41 @@ define( '_CFG_2CHECKOUT_SID_DESC', 'Votre num&eacute;ro de compte 2checkout.');
 define( '_CFG_2CHECKOUT_SECRET_WORD_NAME', 'Mot Secret');
 define( '_CFG_2CHECKOUT_SECRET_WORD_DESC', 'M&ecirc;me mot secret configur&eacute; par vous m&ecirc;me sur la page Look and Feel.');
 define( '_CFG_2CHECKOUT_INFO_NAME', 'NOTE IMPORTANTE!');
-define( '_CFG_2CHECKOUT_INFO_DESC', 'Sur la page d&acute;accueil de votre compte 2Checkout, trouver la section "Helpful Links", cliquer sur le lien "Look and Feel". Configurer le champ "Approved URL" avec l&acute;URL "http://votresite.com/index.php?option=com_acctexp&task=2conotification". ' . 'Remplacer "votresite.com" avec votre propre nom de domaine.');
+define( '_CFG_2CHECKOUT_INFO_DESC', 'Sur la page d&amp;acute;accueil de votre compte 2Checkout, trouver la section &quot;Helpful Links&quot;, cliquer sur le lien &quot;Look and Feel&quot;. Configurer le champ &quot;Approved URL&quot; avec l&amp;acute;URL &quot;http://votresite.com/index.php?option=com_acctexp&amp;task=2conotification&quot;. ' . 'Remplacer &quot;votresite.com&quot; avec votre propre nom de domaine.');
 define( '_CFG_2CHECKOUT_ALT2COURL_NAME', 'Url Alternative');
-define( '_CFG_2CHECKOUT_ALT2COURL_DESC', '&Agrave; essayer si vous rencontrer des erreurs de param&egrave;tres.');
+define( '_CFG_2CHECKOUT_ALT2COURL_DESC', '&Agrave; essayer si vous rencontrez des erreurs de param&egrave;tres.');
 
 // WorldPay Settings
-define( '_CFG_WORLDPAY_LONGNAME',		'WorldPay' );
-define( '_CFG_WORLDPAY_STATEMENT',		'Payments with WorldPay' );
-define( '_CFG_WORLDPAY_DESCRIPTION',	'Accept payments on the internet, by phone, fax or mail. Credit and debit cards, bank transfers and instalments. In any language and most currencies' );
-define( '_CFG_WORLDPAY_INSTID_NAME', 	'instId');
-define( '_CFG_WORLDPAY_INSTID_DESC', 	'Your WorldPay Installation Id.');
-define( '_CFG_WORLDPAY_INFO_NAME', 	'Postback URL');
-define( '_CFG_WORLDPAY_INFO_DESC', 	'You need to set the Callback URL in the Configuration Options of your installation on the Customer Management System in your Worldpay Account... the url is:<br />http://[YOUR JOOMLA LOCATION]/index.php?option=com_acctexp&task=worldpaynotification<br />Thats it. More detailed information <a href="http://support.worldpay.com/kb/integration_guides/junior/integration/help/payment_response/sjig_5127.html">here</a>');
-define( '_CFG_WORLDPAY_CALLBACKPW_NAME', 	'Callback Password');
-define( '_CFG_WORLDPAY_CALLBACKPW_DESC', 	'Please set a Callback Password in your Worldpay Account and enter it here once again. With this, the payment notifications can .');
+define( '_CFG_WORLDPAY_LONGNAME',        'WorldPay' );
+define( '_CFG_WORLDPAY_STATEMENT',        'Paiements avec WorldPay' );
+define( '_CFG_WORLDPAY_DESCRIPTION',    'Accepte les paiements sur internet, par t&eacute;l&eacute;phone, fax ou mail. Cartes de Cr&eacute;dit et de D&eacute;bit, transferts bancaires et acomptes. Dans n\'importe quelle langue et la plupart des devises' );
+define( '_CFG_WORLDPAY_INSTID_NAME',     'instId');
+define( '_CFG_WORLDPAY_INSTID_DESC',     'Your WorldPay Installation Id.');
+define( '_CFG_WORLDPAY_INFO_NAME',     'Postback URL');
+define( '_CFG_WORLDPAY_INFO_DESC',     'Vous devez fixer la Callback URL  dans Configuration Options de votre installation de Customer Management System in your Worldpay Account... the url is:&lt;br /&gt;http://[YOUR JOOMLA LOCATION]/index.php?option=com_acctexp&amp;task=worldpaynotification&lt;br /&gt;Thats it. More detailed information &lt;a href=&quot;http://support.worldpay.com/kb/integration_guides/junior/integration/help/payment_response/sjig_5127.html&quot;&gt;here&lt;/a&gt;');
+define( '_CFG_WORLDPAY_CALLBACKPW_NAME',     'Callback Password');
+define( '_CFG_WORLDPAY_CALLBACKPW_DESC',     'Svp choisissez un Callback Password pour Worldpay Account et entrez le ici une seconde fois. Vous aurez ainsi vos notifications de paiement.');
 
 // WorldPay Futurepay Settings
-define( '_CFG_WORLDPAY_FUTUREPAY_LONGNAME',		'WorldPay Futurepay' );
-define( '_CFG_WORLDPAY_FUTUREPAY_STATEMENT',	'Recurring Payments with WorldPay' );
-define( '_CFG_WORLDPAY_FUTUREPAY_DESCRIPTION',	'Accepts payments on the internet, by phone, fax or mail. Credit and debit cards, bank transfers and instalments. In any language and most currencies' );
-define( '_CFG_WORLDPAY_FUTUREPAY_INSTID_NAME', 	'instId');
-define( '_CFG_WORLDPAY_FUTUREPAY_INSTID_DESC', 	'Your WorldPay Installation Id.');
-define( '_CFG_WORLDPAY_FUTUREPAY_INFO_NAME', 	'Callback URL');
-define( '_CFG_WORLDPAY_FUTUREPAY_INFO_DESC', 	'You need to set the Callback URL in the Configuration Options of your installation on the Customer Management System in your Worldpay Account... the url is:<br />http://[YOUR JOOMLA LOCATION]/index.php?option=com_acctexp&task=worldpay_futurepaynotification<br />Thats it. More detailed information <a href="http://support.worldpay.com/kb/integration_guides/junior/integration/help/payment_response/sjig_5127.html">here</a>');
-define( '_CFG_WORLDPAY_FUTUREPAY_CALLBACKPW_NAME', 	'Callback Password');
-define( '_CFG_WORLDPAY_FUTUREPAY_CALLBACKPW_DESC', 	'Please set a Callback Password in your Worldpay Account and enter it here once again. With this, the payment notifications can .');
+define( '_CFG_WORLDPAY_FUTUREPAY_LONGNAME',        'WorldPay Futurepay' );
+define( '_CFG_WORLDPAY_FUTUREPAY_STATEMENT',    'Paiements r&eacute;currents avec WorldPay' );
+define( '_CFG_WORLDPAY_FUTUREPAY_DESCRIPTION',    'Accepte les paiements sur internet, par t&eacute;l&eacute;phone, fax ou mail. Cartes de cr&eacute;dit et de d&eacute;bit, transferts bancaires et acomptes. Dans n\'importe quelle langue et la plupart des devises' );
+define( '_CFG_WORLDPAY_FUTUREPAY_INSTID_NAME',     'instId');
+define( '_CFG_WORLDPAY_FUTUREPAY_INSTID_DESC',     'Your WorldPay Installation Id.');
+define( '_CFG_WORLDPAY_FUTUREPAY_INFO_NAME',     'Callback URL');
+define( '_CFG_WORLDPAY_FUTUREPAY_INFO_DESC',     'You need to set the Callback URL in the Configuration Options of your installation on the Customer Management System in your Worldpay Account... the url is:&lt;br /&gt;http://[YOUR JOOMLA LOCATION]/index.php?option=com_acctexp&amp;task=worldpay_futurepaynotification&lt;br /&gt;Thats it. More detailed information &lt;a href=&quot;http://support.worldpay.com/kb/integration_guides/junior/integration/help/payment_response/sjig_5127.html&quot;&gt;here&lt;/a&gt;');
+define( '_CFG_WORLDPAY_FUTUREPAY_CALLBACKPW_NAME',     'Callback Password');
+define( '_CFG_WORLDPAY_FUTUREPAY_CALLBACKPW_DESC',     'Svp choisissez un Callback Password pour Worldpay Account et entrez le ici une seconde fois. Vous aurez ainsi vos notifications de paiement.');
 
 // Parametres epsNetpay
 define( '_CFG_EPSNETPAY_MERCHANTID_NAME', 'ID Marchand');
 define( '_CFG_EPSNETPAY_MERCHANTID_DESC', 'Votre num&eacute;ro de compte epsNetpay.');
 define( '_CFG_EPSNETPAY_MERCHANTPIN_NAME', 'NIP Marchand');
 define( '_CFG_EPSNETPAY_MERCHANTPIN_DESC', 'Votre NIP Marchand.');
-define( '_CFG_EPSNETPAY_ACTIVATE_NAME', 'Activate');
-define( '_CFG_EPSNETPAY_ACTIVATE_DESC', 'Offer this Bank.');
+define( '_CFG_EPSNETPAY_ACTIVATE_NAME', 'Activez');
+define( '_CFG_EPSNETPAY_ACTIVATE_DESC', 'Proposez cette banque.');
 define( '_CFG_EPSNETPAY_ACCEPTVOK_NAME', 'Accept VOK');
-define( '_CFG_EPSNETPAY_ACCEPTVOK_DESC', 'It might be that due to the account type you have, you will never get an "OK" response, but always "VOK". If that is the case, please switch this on.');
+define( '_CFG_EPSNETPAY_ACCEPTVOK_DESC', 'Il est possible que d&ucirc; au type de compte que vous avez, vous n\'obteniez jamais une r&eacute;ponse  &quot;OK&quot;, mais toujours &quot;VOK&quot;. Dans ce cas positionnez sur On');
 
 // Parametre Paysignet
 define( '_CFG_PAYSIGNET_MERCHANT_NAME', 'Marchand');
@@ -312,85 +314,85 @@ define( '_CFG_ALERTPAY_SECURITYCODE_DESC', 'Your Security Code.');
 
 // eWay Settings
 define( '_CFG_EWAY_LONGNAME', 'eWay');
-define( '_CFG_EWAY_STATEMENT', 'Make payments with eWAY Shared Payment Solution!');
-define( '_CFG_EWAY_DESCRIPTION', 'eWAY is the easiest and most affordable payment gateway in Australia. Process credit card payments via eWAY\'s own secure Shared Payment Page in real-time.');
-define( '_CFG_EWAY_CUSTID_NAME', 'Customer ID');
-define( '_CFG_EWAY_CUSTID_DESC', 'Your Customer ID.');
+define( '_CFG_EWAY_STATEMENT', 'R&eacute;glez vos paiements avec eWAY Shared Payment Solution!');
+define( '_CFG_EWAY_DESCRIPTION', 'eWAY est la passerelle de paiement la plus facile d\'utilisation et la moins ch&egrave;re d\'Australie. Process credit card payments via eWAY\'s own secure Shared Payment Page in real-time.');
+define( '_CFG_EWAY_CUSTID_NAME', 'Client ID');
+define( '_CFG_EWAY_CUSTID_DESC', 'Votre code client.');
 define( '_CFG_EWAY_AUTOREDIRECT_NAME', 'Autoredirect');
 define( '_CFG_EWAY_AUTOREDIRECT_DESC', 'Automatic Redirect for eWay Transaction');
-define( '_CFG_EWAY_SITETITLE_NAME', 'Site Title');
-define( '_CFG_EWAY_SITETITLE_DESC', 'The Site Title of the eWay Transaction');
+define( '_CFG_EWAY_SITETITLE_NAME', 'Titre du site');
+define( '_CFG_EWAY_SITETITLE_DESC', 'Le titre du site de la transaction eWay ');
 
 // eWayXML Settings
 define( '_CFG_EWAYXML_LONGNAME', 'eWayXML');
-define( '_CFG_EWAYXML_STATEMENT', 'Make payments with eWAY Shared Payment Solution!');
-define( '_CFG_EWAYXML_DESCRIPTION', 'eWAY is the easiest and most affordable payment gateway in Australia. Process credit card payments via eWAY\'s own secure Shared Payment Page in real-time.');
-define( '_CFG_EWAYXML_CUSTID_NAME', 'Customer ID');
-define( '_CFG_EWAYXML_CUSTID_DESC', 'Your Customer ID.');
+define( '_CFG_EWAYXML_STATEMENT', 'R&eacute;glez vos paiements avec eWAY Shared Payment Solution!');
+define( '_CFG_EWAYXML_DESCRIPTION', 'eWAY est la passerelle de paiement la plus facile d\'utilisation et la moins ch&egrave;re d\'Australie. Process credit card payments via eWAY\'s own secure Shared Payment Page in real-time.');
+define( '_CFG_EWAYXML_CUSTID_NAME', 'Client ID');
+define( '_CFG_EWAYXML_CUSTID_DESC', 'Votre code client.');
 define( '_CFG_EWAYXML_AUTOREDIRECT_NAME', 'Autoredirect');
 define( '_CFG_EWAYXML_AUTOREDIRECT_DESC', 'Automatic Redirect for eWay Transaction');
-define( '_CFG_EWAYXML_SITETITLE_NAME', 'Site Title');
-define( '_CFG_EWAYXML_SITETITLE_DESC', 'The Site Title of the eWay Transaction');
+define( '_CFG_EWAYXML_SITETITLE_NAME', 'Titre du site');
+define( '_CFG_EWAYXML_SITETITLE_DESC', 'Le titre du site de la transaction eWay ');
 
 // MoneyProxy Settings
 define( '_CFG_MONEYPROXY_LONGNAME', 'MoneyProxy');
-define( '_CFG_MONEYPROXY_STATEMENT', 'Make Payments in different digital currencies with Money Proxy!');
-define( '_CFG_MONEYPROXY_DESCRIPTION', 'Accept payments on a website in different digital currencies with a single merchant account.');
-define( '_CFG_MONEYPROXY_MERCHANT_ID_NAME', 'Merchant ID');
-define( '_CFG_MONEYPROXY_MERCHANT_ID_DESC', 'Your merchant identifier at MoneyProxy.');
-define( '_CFG_MONEYPROXY_FORCE_CLIENT_RECEIPT_NAME', 'Force Receipt');
-define( '_CFG_MONEYPROXY_FORCE_CLIENT_RECEIPT_DESC', 'By setting this parameter to "Yes", it forces Money Proxy to ask an e-mail address where to send a receipt of the payment. By default, the customer can skip the receipt without entering any e-mail address.');
-define( '_CFG_MONEYPROXY_SECRET_KEY_NAME', 'Site Title');
-define( '_CFG_MONEYPROXY_SECRET_KEY_DESC', 'Your secret key at MoneyProxy.');
+define( '_CFG_MONEYPROXY_STATEMENT', 'R&eacute;glez vos paiements en diff&eacute;rentes devises &eacute;lectroniques avec Money Proxy!');
+define( '_CFG_MONEYPROXY_DESCRIPTION', 'Acceptez des paiements sur un site Web en plusieurs devises &eacute;lectroniques avec un seul compte marchand.');
+define( '_CFG_MONEYPROXY_MERCHANT_ID_NAME', 'Identifiant Marchand');
+define( '_CFG_MONEYPROXY_MERCHANT_ID_DESC', 'Votre identifiant marchand chez MoneyProxy.');
+define( '_CFG_MONEYPROXY_FORCE_CLIENT_RECEIPT_NAME', 'For&ccedil;age du re&ccedil;u');
+define( '_CFG_MONEYPROXY_FORCE_CLIENT_RECEIPT_DESC', 'En positionnant ce param&egrave;tre &agrave; &quot;Oui&quot;, vous forcez Money Proxy &agrave; demander une adresse email o&ugrave; envoyer le re&ccedil;u de paiement. Par d&eacute;faut, le client peut sauter cette &eacute;tape de re&ccedil;u en laissant l\'adresse email &agrave; blanc.');
+define( '_CFG_MONEYPROXY_SECRET_KEY_NAME', 'Titre du site');
+define( '_CFG_MONEYPROXY_SECRET_KEY_DESC', 'Votre cl&eacute; secr&egrave;te chez MoneyProxy.');
 define( '_CFG_MONEYPROXY_SUGGESTEDMEMO_NAME', 'Suggested Memo');
-define( '_CFG_MONEYPROXY_SUGGESTEDMEMO_DESC', 'This parameter is used to pre-fill the memo field for many payment system. Unfortunately, it is possible that some payment systems do not support this feature. Maximum of 40 characters.');
-define( '_CFG_MONEYPROXY_PAYMENT_ID_NAME', 'Payment ID');
-define( '_CFG_MONEYPROXY_PAYMENT_ID_DESC', 'The merchant can use this field to track the payment when the status URL is called. It can be up to 10 digits with only letters and numbers (0-9a-zA-Z). You can use Rewrite tags here.');
+define( '_CFG_MONEYPROXY_SUGGESTEDMEMO_DESC', 'Ce param&egrave;tre est utilis&eacute; pour pr&eacute;-remplir le champ m&eacute;mo pour de nombreux syst&egrave;mes de paiement. Malheureusement il est possible que certains syst&egrave;mes depaiement ne supportent pas cette fonctionnalit&eacute;. Maximum de 40 caract&egrave;res.');
+define( '_CFG_MONEYPROXY_PAYMENT_ID_NAME', 'Identifiant de paiement ID');
+define( '_CFG_MONEYPROXY_PAYMENT_ID_DESC', 'Le marchand peut utiliser ce champ pour suivre le paiement quand l\'&eacute;tat de l\'URL est appel&eacute;. On peut aller jusqu\'&agrave; 10 positions avec seulement des lettres et des chiffres (0-9a-zA-Z). You can use Rewrite tags here.');
 
 // Offline Payment
-define( '_CFG_OFFLINE_PAYMENT_LONGNAME', 'Offline Payment');
-define( '_CFG_OFFLINE_PAYMENT_STATEMENT', 'You can use this option to not pay through the Internet');
-define( '_CFG_OFFLINE_PAYMENT_DESCRIPTION', 'You can use this option to not pay through the Internet');
+define( '_CFG_OFFLINE_PAYMENT_LONGNAME', 'Paiement manuel');
+define( '_CFG_OFFLINE_PAYMENT_STATEMENT', 'Vous pouvez utiliser cette option si vous ne voulez pas payer par Internet');
+define( '_CFG_OFFLINE_PAYMENT_DESCRIPTION', 'Vous pouvez utiliser cette option si vous ne voulez pas payer par Internet');
 define( '_CFG_OFFLINE_PAYMENT_INFO_NAME', 'Info');
-define( '_CFG_OFFLINE_PAYMENT_INFO_DESC', 'The Info that will be displayed to the user on checkout');
-define( '_CFG_OFFLINE_PAYMENT_WAITINGPLAN_NAME', 'Waiting Plan');
-define( '_CFG_OFFLINE_PAYMENT_WAITINGPLAN_DESC', 'You can assign a user to this plan while he or she waits for the payment to arrive');
+define( '_CFG_OFFLINE_PAYMENT_INFO_DESC', 'L\'information qui sera affich&eacute;e &agrave; l\'utilisateur au checkout');
+define( '_CFG_OFFLINE_PAYMENT_WAITINGPLAN_NAME', 'Plan d\'attente');
+define( '_CFG_OFFLINE_PAYMENT_WAITINGPLAN_DESC', 'Vous pouvez assigner ce plan &agrave; un utilisateur pendant qu\'il attend son paiement');
 
 // Verotel
 define( '_CFG_VEROTEL_LONGNAME', 'Verotel');
-define( '_CFG_VEROTEL_STATEMENT', 'Use Verotel: Putting Trust in Global Payments');
-define( '_CFG_VEROTEL_DESCRIPTION', 'Verotel offers a range of billing methods for your website, including VISA/MasterCard/JCB, Chinese debit, Direct Debit in European countries, pay per phonecall, pay per minute, SMS billing and more!');
-define( '_CFG_VEROTEL_MERCHANTID_NAME', 'Merchant ID');
-define( '_CFG_VEROTEL_MERCHANTID_DESC', 'Your merchant identifier at Verotel.');
-define( '_CFG_VEROTEL_SITEID_NAME', 'Site ID');
-define( '_CFG_VEROTEL_SITEID_DESC', 'Your site identifier for this website.');
-define( '_CFG_VEROTEL_RESELLERID_NAME', 'Reseller ID');
-define( '_CFG_VEROTEL_RESELLERID_DESC', 'Your Reseller ID (if any).');
-define( '_CFG_VEROTEL_SECRETCODE_NAME', 'Secret Code');
-define( '_CFG_VEROTEL_SECRETCODE_DESC', 'Your secret Verotel code.');
+define( '_CFG_VEROTEL_STATEMENT', 'Utilisez Verotel: Ayez confiance dans Global Payments');
+define( '_CFG_VEROTEL_DESCRIPTION', 'Verotel propose un ensemble de m&eacute;thodes de facturation pour votre site Web incluant VISA/MasterCard/JCB, debit chinois, d&eacute;bit direct dans les pays europ&eacute;ens, paiement t&eacute;l&eacute;phonique, paiement &agrave; la minute, facturation SMS et bien plus encore!');
+define( '_CFG_VEROTEL_MERCHANTID_NAME', 'ID marchand');
+define( '_CFG_VEROTEL_MERCHANTID_DESC', 'Votre identifiant marchand chez Verotel.');
+define( '_CFG_VEROTEL_SITEID_NAME', 'ID Site');
+define( '_CFG_VEROTEL_SITEID_DESC', 'Identifiant de votre site pour ce site web.');
+define( '_CFG_VEROTEL_RESELLERID_NAME', 'Identifiant revendeur ID');
+define( '_CFG_VEROTEL_RESELLERID_DESC', 'Votre identifiant revendeur (s\'il existe).');
+define( '_CFG_VEROTEL_SECRETCODE_NAME', 'Code Secret');
+define( '_CFG_VEROTEL_SECRETCODE_DESC', 'Votre code secret Verotel.');
 define( '_CFG_VEROTEL_USE_TICKETSCLUB_NAME', 'Tickets Club');
-define( '_CFG_VEROTEL_USE_TICKETSCLUB_DESC', 'Use Tickets Club?');
-define( '_CFG_VEROTEL_PLAN_PARAMS_VEROTEL_PRODUCT_NAME', 'Product Name');
-define( '_CFG_VEROTEL_PLAN_PARAMS_VEROTEL_PRODUCT_DESC', 'The Product Name identifying this plan to Verotel');
+define( '_CFG_VEROTEL_USE_TICKETSCLUB_DESC', 'Utilisez vous des Tickets Club?');
+define( '_CFG_VEROTEL_PLAN_PARAMS_VEROTEL_PRODUCT_NAME', 'Nom du produit');
+define( '_CFG_VEROTEL_PLAN_PARAMS_VEROTEL_PRODUCT_DESC', 'Nom du produit identifiant le plan chez Verotel');
 
 // Cybermut
 define( '_CFG_CYBERMUT_LONGNAME', 'Cybermut');
 define( '_CFG_CYBERMUT_STATEMENT', 'Cybermut - Le groupe Cr&eacute;dit Mutuel');
 define( '_CFG_CYBERMUT_DESCRIPTION', 'Cybermut - Le groupe Cr&eacute;dit Mutuel');
 define( '_CFG_CYBERMUT_TPE_NAME', 'TPE');
-define( '_CFG_CYBERMUT_TPE_DESC', 'No TPE &racute; 7 chiffres, fourni par la banque');
+define( '_CFG_CYBERMUT_TPE_DESC', 'Pas de TPE &amp;racute; 7 chiffres, fourni par la banque');
 define( '_CFG_CYBERMUT_VER_NAME', 'Version');
-define( '_CFG_CYBERMUT_VER_DESC', 'The Protocol Version - leave at "1.2open" if you don\'t know what this is');
+define( '_CFG_CYBERMUT_VER_DESC', 'The Protocol Version - leave at &quot;1.2open&quot; if you don\'t know what this is');
 define( '_CFG_CYBERMUT_SOC_NAME', 'Code Soci&eacute;t&eacute;');
 define( '_CFG_CYBERMUT_SOC_DESC', 'Code Soci&eacute;t&eacute;, fourni par la banque');
 define( '_CFG_CYBERMUT_PASS_NAME', 'pass');
 define( '_CFG_CYBERMUT_PASS_DESC', 'Valeur de la variable pass');
 define( '_CFG_CYBERMUT_KEY_NAME', 'Cl&eacute;');
 define( '_CFG_CYBERMUT_KEY_DESC', 'cl&eacute; info');
-define( '_CFG_CYBERMUT_SERVER_NAME', 'Serveur bancair');
+define( '_CFG_CYBERMUT_SERVER_NAME', 'Serveur bancaire');
 define( '_CFG_CYBERMUT_SERVER_DESC', 'Choissisez votre banque');
-define( '_CFG_CYBERMUT_LANGUAGE_NAME', 'Language:');
-define( '_CFG_CYBERMUT_LANGUAGE_DESC', 'Select one of the possible language settings for the paypal site that your user will see when issuing a payment.');
+define( '_CFG_CYBERMUT_LANGUAGE_NAME', 'Langue:');
+define( '_CFG_CYBERMUT_LANGUAGE_DESC', 'Choisissez la langue que votre utilisateur verra lorsqu\'il fera son r&eacute;glement.');
 
 // Authorize.net ARB
 define( '_CFG_AUTHORIZE_ARB_LONGNAME', 'Authorize.net ARB');
@@ -406,23 +408,23 @@ define( '_CFG_AUTHORIZE_ARB_TOTALOCCURRENCES_NAME', 'Total Occurances');
 define( '_CFG_AUTHORIZE_ARB_TOTALOCCURRENCES_DESC', 'Authorize.net requires that you set the total amount of occurances of a payment. Make sure the total lifespan of a subscription does not exceed three years');
 define( '_CFG_AUTHORIZE_ARB_TRIALOCCURRENCES_NAME', 'Trial Occurances');
 define( '_CFG_AUTHORIZE_ARB_TRIALOCCURRENCES_DESC', 'Specify the amount of trial periods that are granted to the user. This amount will be substracted from the total occurances.');
-define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLFIRSTNAME_NAME', 'First Name');
-define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLLASTNAME_NAME', 'Last Name');
-define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLADDRESS_NAME', 'Address');
-define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLCITY_NAME', 'City');
-define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLSTATE_NAME', 'State');
-define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLZIP_NAME', 'Zip');
-define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLCOUNTRY_NAME', 'Country');
+define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLFIRSTNAME_NAME', 'Pr&eacute;nom');
+define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLLASTNAME_NAME', 'Nom de famille');
+define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLADDRESS_NAME', 'Adresse');
+define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLCITY_NAME', 'Ville');
+define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLSTATE_NAME', 'Etat');
+define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLZIP_NAME', 'Code Postal');
+define( '_AEC_AUTHORIZE_ARB_PARAMS_BILLCOUNTRY_NAME', 'Pays');
 define( '_CFG_AUTHORIZE_ARB_USESILENTPOSTRESPONSE_NAME', 'Use Silent Post Response');
 define( '_CFG_AUTHORIZE_ARB_USESILENTPOSTRESPONSE_DESC', 'Please read explanation below');
 define( '_CFG_AUTHORIZE_ARB_SILENTPOST_INFO_NAME', 'Silent Postback');
-define( '_CFG_AUTHORIZE_ARB_SILENTPOST_INFO_DESC', 'When a recurring payment is set up with ARB, the AEC normally applies a multiplicated subscription period accordig to the Total Occurances. This way, the user will stay active throughout the subscription until it runs out or is cancelled. However, this also means that you would have to check for unpaid bills and manually deactivate the subscriptions if such a thing occurs. The other option is to use the Silent Postback which sends notifications for each subsequent payment that was successful. This in turn triggers the AEC to activate the user for another term. Please consult <a href="http://www.authorize.net/support/Merchant/Integration_Settings/Receipt_Page_Options.htm">this page</a> to find out how to set up the Silent Post Url. Enter http://[YOUR JOOMLA LOCATION]/index.php?option=com_acctexp&task=authorize_arbnotification as the Url.');
+define( '_CFG_AUTHORIZE_ARB_SILENTPOST_INFO_DESC', 'When a recurring payment is set up with ARB, the AEC normally applies a multiplicated subscription period accordig to the Total Occurances. This way, the user will stay active throughout the subscription until it runs out or is cancelled. However, this also means that you would have to check for unpaid bills and manually deactivate the subscriptions if such a thing occurs. The other option is to use the Silent Postback which sends notifications for each subsequent payment that was successful. This in turn triggers the AEC to activate the user for another term. Please consult &lt;a href=&quot;http://www.authorize.net/support/Merchant/Integration_Settings/Receipt_Page_Options.htm&quot;&gt;this page&lt;/a&gt; to find out how to set up the Silent Post Url. Enter http://[YOUR JOOMLA LOCATION]/index.php?option=com_acctexp&amp;task=authorize_arbnotification as the Url.');
 
 // CCBill
 define( '_CFG_CCBILL_LONGNAME', 'CCBill');
 define( '_CFG_CCBILL_STATEMENT', 'Make payments with CCBill!');
 define( '_CFG_CCBILL_DESCRIPTION', 'CCBill');
-define( '_CFG_CCBILL_CLIENTACCNUM_NAME', 'Client Account');
+define( '_CFG_CCBILL_CLIENTACCNUM_NAME', 'Compte client');
 define( '_CFG_CCBILL_CLIENTACCNUM_DESC', 'Your CCBill Client Account Number');
 define( '_CFG_CCBILL_CLIENTSUBACC_NAME', 'Client SubAccount');
 define( '_CFG_CCBILL_CLIENTSUBACC_DESC', 'Your CCBill Client Sub Account Number');
@@ -431,11 +433,11 @@ define( '_CFG_CCBILL_SECRETWORD_DESC', 'Your secret word used to encrypt and pro
 define( '_CFG_CCBILL_FORMNAME_NAME', 'Form ID');
 define( '_CFG_CCBILL_FORMNAME_DESC', 'The CCBill layout you wish to use (look at the HTML form downloaded from CCBILL)');
 define( '_CFG_CCBILL_INFO_NAME', 'Postback URL');
-define( '_CFG_CCBILL_INFO_DESC', 'You need to remember to set the \'postback\' url in the CCBILL control panel... for both approves and declines this should be...<br />http://[YOUR JOOMLA LOCATION]/index.php?option=com_acctexp&task=ccbillnotification<br />Thats it.');
+define( '_CFG_CCBILL_INFO_DESC', 'You need to remember to set the \'postback\' url in the CCBILL control panel... for both approves and declines this should be...&lt;br /&gt;http://[YOUR JOOMLA LOCATION]/index.php?option=com_acctexp&amp;task=ccbillnotification&lt;br /&gt;Thats it.');
 define( '_CFG_CCBILL_PLAN_PARAMS_ALLOWEDTYPES_NAME', 'Allowed types');
 define( '_CFG_CCBILL_PLAN_PARAMS_ALLOWEDTYPES_DESC', 'insert the payment options that the user is supposed to have after being led on to CCBill (refer to your CCBill account for the product IDs you have set up)');
 define( '_CFG_CCBILL_DATALINK_USERNAME_NAME', 'Datalink Username');
-define( '_CFG_CCBILL_DATALINK_USERNAME_DESC', 'If you want to use Recurring Billing, you need to supply a Datalink Username here. Also remember to set the "recurring" switch in the payment plans that are supposed to have this functionality.');
+define( '_CFG_CCBILL_DATALINK_USERNAME_DESC', 'If you want to use Recurring Billing, you need to supply a Datalink Username here. Also remember to set the &quot;recurring&quot; switch in the payment plans that are supposed to have this functionality.');
 
 // iDeal Basic
 define( '_CFG_IDEAL_BASIC_LONGNAME', 'iDeal');
@@ -503,7 +505,12 @@ define( '_CFG_IPAYMENT_SILENT_PASSWORD_NAME', 'Password');
 define( '_CFG_IPAYMENT_SILENT_PASSWORD_DESC', 'The Password of your iPayment Account.');
 define( '_CFG_IPAYMENT_SILENT_PROMPTADDRESS_NAME', 'Prompt for Address');
 define( '_CFG_IPAYMENT_SILENT_PROMPTADDRESS_DESC', 'Ask the user to put in an Address with the Billing Name.');
-define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLINFO', 'Billing Details');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_NAME', 'Billing Details');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_DESC', '');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_ELV_NAME', 'Wire Transfer');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_ELV_DESC', 'Your Account details for wire transfer');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_CC_NAME', 'Credit Card');
+define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_CC_DESC', 'Your Credit Card details');
 define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_NAME', 'First Name');
 define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_NAME', 'Last Name');
 define( '_AEC_IPAYMENT_SILENT_PARAMS_BILLADDRESS_NAME', 'Address');
@@ -529,7 +536,7 @@ define( '_CFG_PAYBOXFR_DESCRIPTION', 'Paybox Services: solutions de paiement sur
 define( '_CFG_PAYBOXFR_SITE_NAME', 'Site number');
 define( '_CFG_PAYBOXFR_SITE_DESC', 'Site number (TPE) given by the bank.');
 define( '_CFG_PAYBOXFR_RANK_NAME', 'Rank number');
-define( '_CFG_PAYBOXFR_RANK_DESC', 'Rank number ("machine") given by the bank.');
+define( '_CFG_PAYBOXFR_RANK_DESC', 'Rank number (&quot;machine&quot;) given by the bank.');
 define( '_CFG_PAYBOXFR_IDENTIFIANT_NAME', 'Paybox Identifiant');
 define( '_CFG_PAYBOXFR_IDENTIFIANT_DESC', 'PAYBOX identifier, supplied by PAYBOX SERVICES at the time of registration.');
 define( '_CFG_PAYBOXFR_PUBLICKEY_NAME', 'Public Key');
@@ -537,7 +544,7 @@ define( '_CFG_PAYBOXFR_PUBLICKEY_DESC', 'The public key to verify Paybox notific
 define( '_CFG_PAYBOXFR_PATH_NAME', 'Paybox Script Path');
 define( '_CFG_PAYBOXFR_PATH_DESC', 'The path where your paybox script is located.');
 define( '_CFG_PAYBOXFR_INFO_NAME', 'url http');
-define( '_CFG_PAYBOXFR_INFO_DESC', 'You need to set the "url http" in your Paybox settings. This is required so that Paybox will notify the AEC about transactions. The URL you have to put in there is: "http://yoursite.com/index.php"');
+define( '_CFG_PAYBOXFR_INFO_DESC', 'You need to set the &quot;url http&quot; in your Paybox settings. This is required so that Paybox will notify the AEC about transactions. The URL you have to put in there is: &quot;http://yoursite.com/index.php&quot;');
 
 // Airtoy
 define( '_CFG_AIRTOY_LONGNAME', 'Airtoy');
@@ -550,9 +557,9 @@ define( '_CFG_AIRTOY_RESPONSE_DESC', 'The response SMS the customer will receive
 define( '_CFG_AIRTOY_SECRET_NAME', 'Secret Word');
 define( '_CFG_AIRTOY_SECRET_DESC', 'Choose a secret word to make notifications a tad more secure against fraud.');
 define( '_CFG_AIRTOY_PLAN_PARAMS_SMSCODE_PREFIX_NAME', 'SMS Code Prefix');
-define( '_CFG_AIRTOY_PLAN_PARAMS_SMSCODE_PREFIX_DESC', 'The Prefix for the SMS code the user has to send to Airtoy. The Code will always come out as "Prefix-XXX", where XXX is the invoice id');
+define( '_CFG_AIRTOY_PLAN_PARAMS_SMSCODE_PREFIX_DESC', 'The Prefix for the SMS code the user has to send to Airtoy. The Code will always come out as &quot;Prefix-XXX&quot;, where XXX is the invoice id');
 define( '_AEC_AIRTOY_PARAMS_EXPLAIN_NAME', 'Send SMS');
-define( '_AEC_AIRTOY_PARAMS_EXPLAIN_DESC', "Send an SMS with the text \"%s\" (no quotation marks) to %s. You will then receive a code that you can enter below to clear the payment.");
+define( '_AEC_AIRTOY_PARAMS_EXPLAIN_DESC', 'Send an SMS with the text \&quot;%s\&quot; (no quotation marks) to %s. You will then receive a code that you can enter below to clear the payment.');
 define( '_AEC_AIRTOY_PARAMS_SMSCODE_NAME', 'SMS Code');
 define( '_AEC_AIRTOY_PARAMS_SMSCODE_DESC', 'Enter the SMS Code you have received after sending the above message.');
 define( '_AEC_AIRTOY_ERROR_NOCODE', 'You did not put in any code!');
@@ -586,7 +593,7 @@ define( '_CFG_MONEYBOOKERS_DESCRIPTION', 'Moneybookers enables any business or c
 define( '_CFG_MONEYBOOKERS_PAY_TO_EMAIL_NAME', 'Merchant email');
 define( '_CFG_MONEYBOOKERS_PAY_TO_EMAIL_DESC', 'Email address of the merchant\'s moneybookers.com account.');
 define( '_CFG_MONEYBOOKERS_SECRET_WORD_NAME', 'Secret Word');
-define( '_CFG_MONEYBOOKERS_SECRET_WORD_DESC', '<p>The uppercase MD5 value of the secret word submitted in the "Merchant Tools" section of the merchant\'s online Moneybookers account.</p><strong>Note: The secret word MUST be submitted in the "Merchant Tools" section in lowercase before the md5sig can be used. If you insert any uppercase symbols, they will automatically be converted to lower case. The only restriction on your secret word is the length which must not exceed 10 characters. Non-alphanumeric symbols can be used. If the "Merchant Tools" section is not shown in your account, please contact merchantservices@moneybookers.com</strong>');
+define( '_CFG_MONEYBOOKERS_SECRET_WORD_DESC', '&lt;p&gt;The uppercase MD5 value of the secret word submitted in the &quot;Merchant Tools&quot; section of the merchant\'s online Moneybookers account.&lt;/p&gt;&lt;strong&gt;Note: The secret word MUST be submitted in the &quot;Merchant Tools&quot; section in lowercase before the md5sig can be used. If you insert any uppercase symbols, they will automatically be converted to lower case. The only restriction on your secret word is the length which must not exceed 10 characters. Non-alphanumeric symbols can be used. If the &quot;Merchant Tools&quot; section is not shown in your account, please contact merchantservices@moneybookers.com&lt;/strong&gt;');
 define( '_CFG_MONEYBOOKERS_RECIPIENT_DESCRIPTION_NAME', 'Company Name');
 define( '_CFG_MONEYBOOKERS_RECIPIENT_DESCRIPTION_DESC', 'A description of the recipient, which will be shown on the merchant gateway. If no value is submitted, the pay_to_email value will be as the recipient of the payment.');
 define( '_CFG_MONEYBOOKERS_LOGO_URL_NAME', 'Logo URL');
@@ -610,7 +617,7 @@ define( '_CFG_PAYER_STATEMENT', 'Make payments with Payer!');
 define( '_CFG_PAYER_DESCRIPTION', 'Payer payment provider.');
 
 define( '_CFG_PAYER_DEBUGMODE_NAME', 'Debugmode');
-define( '_CFG_PAYER_DEBUGMODE_DESC', 'Specify the Debug mode. Choose "silent" for no debugging information.');
+define( '_CFG_PAYER_DEBUGMODE_DESC', 'Specify the Debug mode. Choose &quot;silent&quot; for no debugging information.');
 define( '_CFG_PAYER_AGENTID_NAME', 'Agent ID');
 define( '_CFG_PAYER_AGENTID_DESC', 'Your Agent ID');
 define( '_CFG_PAYER_KEY1_NAME', 'Key 1 (A)');

@@ -1,4 +1,4 @@
-<?php
+&lt;?php
 /**
 * @version $Id: french.php 16 2007-06-25 09:04:04Z mic $
 * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
@@ -31,480 +31,365 @@
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
 // mic: NEW 0.12.4
-define( '_AEC_LANGUAGE',						'fr' ); // DO NOT CHANGE!!
-define( '_CFG_GENERAL_ACTIVATE_PAID_NAME',		'Activate Paid Subscriptions' );
-define( '_CFG_GENERAL_ACTIVATE_PAID_DESC',		'Always activate Subscriptions that are paid for automatically instead of requiring an activation code' );
+define( '_AEC_LANGUAGE',                        'fr' ); // DO NOT CHANGE!!
+define( '_CFG_GENERAL_ACTIVATE_PAID_NAME',        'Souscription payante activ&eacute;' );
+define( '_CFG_GENERAL_ACTIVATE_PAID_DESC',        'Toujours activer les souscriptions qui sont pay&eacute;es au lieu d&amp;acute;exiger un code d&amp;acute;activation automatique' );
 
-// hacks/install >> ATTENTION: MUST BE HERE AT THIS POSITION, needed later!
-define( '_AEC_SPEC_MENU_ENTRY',					'My Subscription' );
+// hacks/install &gt;&gt; ATTENTION: MUST BE HERE AT THIS POSITION, needed later!
+define( '_AEC_SPEC_MENU_ENTRY',                    'Mes souscriptions' );
 
 // common
-define( '_DESCRIPTION_PAYSIGNET',				'mic: Description Paysignnet - CHECK! -');
-define( '_AEC_CONFIG_SAVED',					'Configuration saved' );
-define( '_AEC_CONFIG_CANCELLED',				'Configuration cancelled' );
-define( '_AEC_TIP_NO_GROUP_PF_PB',				'Public Frontend" is NOT a usergroup - and neither is "Public Backend' );
-define( '_AEC_CGF_LINK_ABO_FRONTEND',			'Direct Frontend link' );
-define( '_AEC_NOT_SET',							'Not set' );
-define( '_AEC_COUPON',							'Coupon' );
-define( '_AEC_CMN_NEW',							'New' );
-define( '_AEC_CMN_CLICK_TO_EDIT',				'Click to edit' );
-define( '_AEC_CMN_LIFETIME',					'Lifetime' );
-define( '_AEC_CMN_UNKOWN',						'Unknown' );
-define( '_AEC_CMN_EDIT_CANCELLED',				'Changes cancelled' );
-define( '_AEC_CMN_PUBLISHED',					'Published' );
-define( '_AEC_CMN_NOT_PUBLISHED',				'Not Published' );
-define( '_AEC_CMN_CLICK_TO_CHANGE',				'Click on icon to toggle state' );
-define( '_AEC_CMN_NONE_SELECTED',				'None Selected' );
-define( '_AEC_CMN_MADE_VISIBLE',				'made visible' );
-define( '_AEC_CMN_MADE_INVISIBLE',				'made invisible' );
-define( '_AEC_CMN_TOPUBLISH',					'publish' ); // to ...
-define( '_AEC_CMN_TOUNPUBLISH',					'unpublish' ); // to ...
-define( '_AEC_CMN_FILE_SAVED',					'File saved' );
-define( '_AEC_CMN_ID',							'ID' );
-define( '_AEC_CMN_DATE',						'Date' );
-define( '_AEC_CMN_EVENT',						'Event' );
-define( '_AEC_CMN_TAGS',						'Tags' );
-define( '_AEC_CMN_ACTION',						'Action' );
-define( '_AEC_CMN_PARAMETER',					'Parameter' );
-define( '_AEC_CMN_NONE',						'None' );
-define( '_AEC_CMN_WRITEABLE',					'Writeable' );
-define( '_AEC_CMN_UNWRITEABLE',					'Unwriteable!' );
-define( '_AEC_CMN_UNWRITE_AFTER_SAVE',			'Make unwriteable after saving' );
-define( '_AEC_CMN_OVERRIDE_WRITE_PROT',			'Override write protection while saving' );
-define( '_AEC_CMN_NOT_SET',						'Not set' );
-define( '_AEC_CMN_SEARCH',						'Search' );
-define( '_AEC_CMN_APPLY',						'Apply' );
-define( '_AEC_CMN_STATUS',						'Status' );
-define( '_AEC_FEATURE_NOT_ACTIVE',				'This feature is not active yet' );
-define( '_AEC_CMN_YES',							'Yes' );
-define( '_AEC_CMN_NO',							'No' );
-define( '_AEC_CMN_LANG_CONSTANT_IS_MISSING',	'Language constant <strong>%s</strong> is missing' );
-define( '_AEC_CMN_INVISIBLE',					'Invisible' );
-define( '_AEC_CMN_EXCLUDED',					'Excluded' );
-define( '_AEC_CMN_PENDING',						'Pending' );
-define( '_AEC_CMN_ACTIVE',						'Active' );
-define( '_AEC_CMN_TRIAL',						'Trial' );
-define( '_AEC_CMN_CANCEL',						'Cancelled' );
-define( '_AEC_CMN_EXPIRED',						'Expired' );
-define( '_AEC_CMN_CLOSED',						'Closed' );
+define( '_DESCRIPTION_PAYSIGNET',                'mic: Description Paysignnet - CHECK! -');
+define( '_AEC_CONFIG_SAVED',                    'Configuration enregistr&eacute;e' );
+define( '_AEC_CONFIG_CANCELLED',                'Configuration annul&eacute;e' );
+define( '_AEC_TIP_NO_GROUP_PF_PB',                'Public Frontend &quot;n\'est PAS un groupe d\'utilisateurs - et non plus&quot; Public Backend' );
+define( '_AEC_CGF_LINK_ABO_FRONTEND',            'Lien direct avec l\'application' );
+define( '_AEC_NOT_SET',                            'Non d&eacute;fini' );
+define( '_AEC_COUPON',                            'Coupon' );
+define( '_AEC_CMN_NEW',                            'Nouveau' );
+define( '_AEC_CMN_CLICK_TO_EDIT',                'Cliquer pour modifier' );
+define( '_AEC_CMN_LIFETIME',                    'Illimit&eacute;' );
+define( '_AEC_CMN_UNKOWN',                        'Inconnu' );
+define( '_AEC_CMN_EDIT_CANCELLED',                'Modification annul&eacute;e' );
+define( '_AEC_CMN_PUBLISHED',                    'Publi&eacute;' );
+define( '_AEC_CMN_NOT_PUBLISHED',                'Non Publi&eacute;' );
+define( '_AEC_CMN_CLICK_TO_CHANGE',                'Cliquez sur l\'icone pour activer / d&eacute;sactiver l\'&eacute;tat' );
+define( '_AEC_CMN_NONE_SELECTED',                'Aucun s&eacute;lectionn&eacute;' );
+define( '_AEC_CMN_MADE_VISIBLE',                'rendre visible' );
+define( '_AEC_CMN_MADE_INVISIBLE',                'rendre invisible' );
+define( '_AEC_CMN_TOPUBLISH',                    'publier' ); // to ...
+define( '_AEC_CMN_TOUNPUBLISH',                    'ne pas publier' ); // to ...
+define( '_AEC_CMN_FILE_SAVED',                    'Fichier enregistr&eacute;' );
+define( '_AEC_CMN_ID',                            'ID' );
+define( '_AEC_CMN_DATE',                        'Date' );
+define( '_AEC_CMN_EVENT',                        'Ev&eacute;nement' );
+define( '_AEC_CMN_TAGS',                        'Tags' );
+define( '_AEC_CMN_ACTION',                        'Action' );
+define( '_AEC_CMN_PARAMETER',                    'Param&egrave;tre' );
+define( '_AEC_CMN_NONE',                        'Aucun' );
+define( '_AEC_CMN_WRITEABLE',                    'Modifiable' );
+define( '_AEC_CMN_UNWRITEABLE',                 'Non-modifiable!' );
+define( '_AEC_CMN_UNWRITE_AFTER_SAVE',            'Rendre non-modifiable apr&egrave;s la sauvegarde' );
+define( '_AEC_CMN_OVERRIDE_WRITE_PROT',            'Red&eacute;finir la protection en &eacute;criture en sauvant' );
+define( '_AEC_CMN_NOT_SET',                        'Non d&eacute;fini' );
+define( '_AEC_CMN_SEARCH',                        'Recherche' );
+define( '_AEC_CMN_APPLY',                      'Appliquer' );
+define( '_AEC_CMN_STATUS',                        'Etat' );
+define( '_AEC_FEATURE_NOT_ACTIVE',                'Cette fonctionnalit&eacute; n\'est pas encore active' );
+define( '_AEC_CMN_YES',                            'Oui' );
+define( '_AEC_CMN_NO',                            'Non' );
+define( '_AEC_CMN_LANG_CONSTANT_IS_MISSING',    'Langue constante &lt;strong&gt;%s&lt;/strong&gt; est manquante' );
+define( '_AEC_CMN_INVISIBLE',                    'Invisible' );
+define( '_AEC_CMN_EXCLUDED',                    'Exclus' );
+define( '_AEC_CMN_PENDING',                        'En attente' );
+define( '_AEC_CMN_ACTIVE',                        'Actif' );
+define( '_AEC_CMN_TRIAL',                        'P&eacute;riode d\'essai' );
+define( '_AEC_CMN_CANCEL',                        'Annul&eacute;' );
+define( '_AEC_CMN_EXPIRED',                        'Expir&eacute;' );
+define( '_AEC_CMN_CLOSED',                        'Ferm&eacute;' );
 
 // user(info)
-define( '_AEC_USER_USER_INFO',					'User Info' );
-define( '_AEC_USER_USERID',						'UserID' );
-define( '_AEC_USER_STATUS',						'Status' );
-define( '_AEC_USER_ACTIVE',						'Active' );
-define( '_AEC_USER_BLOCKED',					'Blocked' );
-define( '_AEC_USER_ACTIVE_LINK',				'Activation Link' );
-define( '_AEC_USER_PROFILE',					'Profile' );
-define( '_AEC_USER_PROFILE_LINK',				'View Profile' );
-define( '_AEC_USER_USERNAME',					'Username' );
-define( '_AEC_USER_NAME',						'Name' );
-define( '_AEC_USER_EMAIL',						'E-Mail' );
-define( '_AEC_USER_SEND_MAIL',					'send email' );
-define( '_AEC_USER_TYPE',						'Usertype' );
-define( '_AEC_USER_REGISTERED',					'Registered' );
-define( '_AEC_USER_LAST_VISIT',					'Last Visit' );
-define( '_AEC_USER_EXPIRATION',					'Expiration' );
-define( '_AEC_USER_CURR_EXPIRE_DATE',			'Current Expiration Date' );
-define( '_AEC_USER_LIFETIME',					'Lifetime' );
-define( '_AEC_USER_RESET_EXP_DATE',				'Reset Expiration Date' );
-define( '_AEC_USER_RESET_STATUS',				'Reset Status' );
-define( '_AEC_USER_SUBSCRIPTION',				'Subscription' );
-define( '_AEC_USER_PAYMENT_PROC',				'Payment Processor' );
-define( '_AEC_USER_CURR_SUBSCR_PLAN',			'Current Subscription Plan' );
-define( '_AEC_USER_PREV_SUBSCR_PLAN',			'Previous Subscription Plan' );
-define( '_AEC_USER_USED_PLANS',					'Used Subscription Plans' );
-define( '_AEC_USER_NO_PREV_PLANS',				'No Subscriptions till yet' );
-define( '_AEC_USER_ASSIGN_TO_PLAN',				'Assign to Plan' );
-define( '_AEC_USER_TIME',						'time' );
-define( '_AEC_USER_TIMES',						'times' );
-define( '_AEC_USER_INVOICES',					'Invoices' );
-define( '_AEC_USER_NO_INVOICES',				'No invoices till yet' );
-define( '_AEC_USER_INVOICE_FACTORY',			'Invoice Factory' );
-define( '_AEC_USER_ALL_SUBSCRIPTIONS',			'All Subscriptions by this User' );
-define( '_AEC_USER_ALL_SUBSCRIPTIONS_NOPE',	'This is the only subscription this user currently holds.' );
-define( '_AEC_USER_SUBSCRIPTIONS_ID',			'ID' );
-define( '_AEC_USER_SUBSCRIPTIONS_STATUS',		'Status' );
-define( '_AEC_USER_SUBSCRIPTIONS_PROCESSOR',	'Processor' );
-define( '_AEC_USER_SUBSCRIPTIONS_SINGUP',		'Signup' );
-define( '_AEC_USER_SUBSCRIPTIONS_EXPIRATION',	'Expiration' );
-define( '_AEC_USER_SUBSCRIPTIONS_PRIMARY',		'primary' );
-define( '_AEC_USER_CURR_SUBSCR_PLAN_PRIMARY',	'Primary' );
+define( '_AEC_USER_USER_INFO',                    'Info utilisateur' );
+define( '_AEC_USER_USERID',                        'ID utilisateur' );
+define( '_AEC_USER_STATUS',                        'Etat' );
+define( '_AEC_USER_ACTIVE',                        'Active' );
+define( '_AEC_USER_BLOCKED',                    'Bloqu&eacute;' );
+define( '_AEC_USER_ACTIVE_LINK',                'Lien d\'activation' );
+define( '_AEC_USER_PROFILE',                    'Profile' );
+define( '_AEC_USER_PROFILE_LINK',                'Voir le profile' );
+define( '_AEC_USER_USERNAME',                    'Nom d\'utilisateur' );
+define( '_AEC_USER_NAME',                        'Nom' );
+define( '_AEC_USER_EMAIL',                        'E-Mail' );
+define( '_AEC_USER_SEND_MAIL',                    'Envoie email' );
+define( '_AEC_USER_TYPE',                        'Type utilisateur' );
+define( '_AEC_USER_REGISTERED',                    'Enregistr&eacute;' );
+define( '_AEC_USER_LAST_VISIT',                    'Derni&egrave;re visite' );
+define( '_AEC_USER_EXPIRATION',                    'Expiration' );
+define( '_AEC_USER_CURR_EXPIRE_DATE',            'Date d\'expiration courante' );
+define( '_AEC_USER_LIFETIME',                    'Illimit&eacute;' );
+define( '_AEC_USER_RESET_EXP_DATE',                'R&eacute;initialisez la date d\'expiration' );
+define( '_AEC_USER_RESET_STATUS',                'R&eacute;initialisez le status' );
+define( '_AEC_USER_SUBSCRIPTION',                'Souscription' );
+define( '_AEC_USER_PAYMENT_PROC',                'Processus de paiement' );
+define( '_AEC_USER_CURR_SUBSCR_PLAN',            'Plan de souscription courant' );
+define( '_AEC_USER_PREV_SUBSCR_PLAN',            'Plan de souscription ant&eacute;rieur' );
+define( '_AEC_USER_USED_PLANS',                    'Plans de souscription expir&eacute;' );
+define( '_AEC_USER_NO_PREV_PLANS',                'Actuellement aucunes souscriptions' );
+define( '_AEC_USER_ASSIGN_TO_PLAN',              'Attribuer au Plan' );
+define( '_AEC_USER_TIME',                        'temps' );
+define( '_AEC_USER_TIMES',                        'temps' );
+define( '_AEC_USER_INVOICES',                    'Factures' );
+define( '_AEC_USER_NO_INVOICES',                'Actuellement aucune facture' );
+define( '_AEC_USER_INVOICE_FACTORY',            'Facturez &agrave; l\'entreprise' );
+define( '_AEC_USER_ALL_SUBSCRIPTIONS',            'Tous les abonnements de cet utilisateur' );
+define( '_AEC_USER_ALL_SUBSCRIPTIONS_NOPE',    'C\'est le seul abonnement de cet utilisateur actuellement.' );
+define( '_AEC_USER_SUBSCRIPTIONS_ID',            'ID' );
+define( '_AEC_USER_SUBSCRIPTIONS_STATUS',        'Etat' );
+define( '_AEC_USER_SUBSCRIPTIONS_PROCESSOR',    'Processeur' );
+define( '_AEC_USER_SUBSCRIPTIONS_SINGUP',        'Inscription' );
+define( '_AEC_USER_SUBSCRIPTIONS_EXPIRATION',    'Expiration' );
+define( '_AEC_USER_SUBSCRIPTIONS_PRIMARY',     'primaire' );
+define( '_AEC_USER_CURR_SUBSCR_PLAN_PRIMARY',    'Primaire' );
 
 // new (additional)
-define( '_AEC_MSG_MIS_NOT_DEFINED',				'You have not defined any integrations till now - see config' );
+define( '_AEC_MSG_MIS_NOT_DEFINED',                'Aucune int&eacute;grations n\'a &eacute;t&eacute; d&eacute;fini jusqu\'&agrave; pr&eacute;sent - voir config' );
 
 // headers
-define( '_AEC_HEAD_SETTINGS',					'Settings' );
-define( '_AEC_HEAD_HACKS',						'Hacks' );
-define( '_AEC_HEAD_PLAN_INFO',					'Subscriptions' );
-define( '_AEC_HEAD_LOG',						'Events Log' );
-define( '_AEC_HEAD_CSS_EDITOR',					'CSS Editor' );
-define( '_AEC_HEAD_MICRO_INTEGRATION',			'Micro Integration Info' );
-define( '_AEC_HEAD_ACTIVE_SUBS',				'Active Subscriber' );
-define( '_AEC_HEAD_EXCLUDED_SUBS',				'Excluded Subscriber' );
-define( '_AEC_HEAD_EXPIRED_SUBS',				'Expired Subscriber' );
-define( '_AEC_HEAD_PENDING_SUBS',				'Pending Subscriber' );
-define( '_AEC_HEAD_CANCELLED_SUBS',				'Cancelled Subscriber' );
-define( '_AEC_HEAD_CLOSED_SUBS',				'Closed Subscriber' );
-define( '_AEC_HEAD_MANUAL_SUBS',				'Manual Subscriber' );
-define( '_AEC_HEAD_SUBCRIBER',					'Subscriber' );
+define( '_AEC_HEAD_SETTINGS',                    'Param&egrave;tres' );
+define( '_AEC_HEAD_HACKS',                        'Hacks' );
+define( '_AEC_HEAD_PLAN_INFO',                    'Abonnements' );
+define( '_AEC_HEAD_LOG',                        'Journal des &eacute;v&eacute;nements' );
+define( '_AEC_HEAD_CSS_EDITOR',                    'Editeur CSS' );
+define( '_AEC_HEAD_MICRO_INTEGRATION',            'Info micro int&eacute;gration' );
+define( '_AEC_HEAD_ACTIVE_SUBS',                'Abonn&eacute; actif' );
+define( '_AEC_HEAD_EXCLUDED_SUBS',                'Abonn&eacute; exclu' );
+define( '_AEC_HEAD_EXPIRED_SUBS',                'Abonn&eacute; expir&eacute;' );
+define( '_AEC_HEAD_PENDING_SUBS',                'Abonn&eacute; en attente' );
+define( '_AEC_HEAD_CANCELLED_SUBS',                'Abonn&eacute; annul&eacute;' );
+define( '_AEC_HEAD_CLOSED_SUBS',                'Abonn&eacute; ferm&eacute;' );
+define( '_AEC_HEAD_MANUAL_SUBS',                'Abonn&eacute; manuel' );
+define( '_AEC_HEAD_SUBCRIBER',                    'Abonn&eacute;' );
 
 // hacks (special)
-define( '_AEC_HACK_HACK',						'Hack' );
-define( '_AEC_HACKS_ISHACKED',					'is hacked' );
-define( '_AEC_HACKS_NOTHACKED',					'is not hacked!' );
-define( '_AEC_HACKS_UNDO',						'undo now' );
-define( '_AEC_HACKS_COMMIT',					'commit' );
-define( '_AEC_HACKS_FILE',						'File' );
-define( '_AEC_HACKS_LOOKS_FOR',					'The Hack will look for this' );
-define( '_AEC_HACKS_REPLACE_WITH',				'... and replace it with this' );
+define( '_AEC_HACK_HACK',                        'Hack' );
+define( '_AEC_HACKS_ISHACKED',                    'est hack&eacute;' );
+define( '_AEC_HACKS_NOTHACKED',                    'n\'est pas hack&eacute;!' );
+define( '_AEC_HACKS_UNDO',                        'annul&eacute; maintenant' );
+define( '_AEC_HACKS_COMMIT',                    'fusionner' );
+define( '_AEC_HACKS_FILE',                        'Fichier' );
+define( '_AEC_HACKS_LOOKS_FOR',                    'Le hack va rechercher cet' );
+define( '_AEC_HACKS_REPLACE_WITH',                '... et le remplace par' );
 
-define( '_AEC_HACKS_NOTICE',					'IMPORTANT NOTICE' );
-define( '_AEC_HACKS_NOTICE_DESC',				'For security reason you need apply hacks to joomla core files. To do so, please click the "hack file now" links for these files. You may also Add a link to your User Menu so that your Users can have a look at their Subscription Record.' );
-define( '_AEC_HACKS_NOTICE_DESC2',				'<strong>All functionally important hacks are marked with an arrow and an exclamation mark.</strong>' );
-define( '_AEC_HACKS_NOTICE_DESC3',				'These hacks are <strong>not necessarily in a correct numerical order</strong> - so don\'t wonder if they go #1, #3, #6 - the missing numbers are most likely legacy hacks that you would only see if you had them (incorrectly) applied.' );
-define( '_AEC_HACKS_NOTICE_JACL',				'JACL NOTICE' );
-define( '_AEC_HACKS_NOTICE_JACL_DESC',			'In case you plan to install the JACLplus component, please make sure that the hacks are <strong>not commited</strong> when installing it. JACL also commits hacks to the core files and it is important that our hacks are committed after the JACL ones.' );
+define( '_AEC_HACKS_NOTICE',                    'AVIS IMPORTANT' );
+define( '_AEC_HACKS_NOTICE_DESC',                'Pour des raisons de s&eacute;curit&eacute;, vous devez appliquer les hacks aux fichiers core de Joomla. Pour ce faire, il suffit de cliquer sur le lien &quot;hacker le fichier maintenant&quot; correspondant aux fichiers. Vous pouvez aussi ajouter un lien &agrave; votre menu utilisateur, afin qu&amp;acute;ils puissent afficher l&amp;acute;&eacute;tat de leur abonnement.' );
+define( '_AEC_HACKS_NOTICE_DESC2',                '&lt;strong&gt;Tous les hacks fonctionnellement importants sont marqu&eacute;s d&amp;acute;une fl&egrave;che et d&amp;acute;un point d&amp;acute;exclamation.&lt;/strong&gt;' );
+define( '_AEC_HACKS_NOTICE_DESC3',                '&lt;strong&gt;Il n&amp;acute;est pas n&eacute;cessaire&lt;/strong&gt; d&amp;acute;appliquer les hacks dans l&amp;acute;ordre - Il ne faut donc pas s&amp;acute;&eacute;tonner si elles vont #1, #3, #6 - les nombres manquants sont des hacks h&eacute;rit&eacute;s que vous verriez seulement tr&egrave;s probablement si vous les aviez (incorrectement) appliqu&eacute;es.' );
+define( '_AEC_HACKS_NOTICE_JACL',                'JACL NOTICE' );
+define( '_AEC_HACKS_NOTICE_JACL_DESC',            'Dans le cas o&ugrave; vous pr&eacute;voyez d&amp;acute;installer le composant JACLplus, s&amp;acute;il vous pla&#238;t assurez-vous que les hacks &lt;strong&gt;ne sont pas fusionn&eacute;s&lt;/strong&gt; lors de l&amp;acute;installation. Des hacks JACL fusionnent &eacute;galement aux fichiers de bases de Joomla et il est important que nos hacks soit fusionn&eacute;s apr&egrave;s ceux de JACL.' );
 
-define( '_AEC_HACKS_MENU_ENTRY',				'Menu Entry' );
-define( '_AEC_HACKS_MENU_ENTRY_DESC',			'Adds a <strong>' . _AEC_SPEC_MENU_ENTRY . '</strong> menu entry to the Usermenu. With this, a user can manage his invoices and upgrade/renew his or her subscription.' );
-define( '_AEC_HACKS_LEGACY',					'<strong>This is a Legacy Hack, please undo!</strong>' );
-define( '_AEC_HACKS_LEGACY_PLUGIN',				'<strong>This is a Legacy Hack which is superceded by the Joomla 1.5 Plugin, please undo and use the Plugin instead!</strong>' );
-define( '_AEC_HACKS_NOTAUTH',					'This will correctly link your users to the NotAllowed page with information about your subscriptions' );
-define( '_AEC_HACKS_SUB_REQUIRED',				'This will make sure a user has a subscription in order to log in.<br /><strong>Remember to also set [ Require Subscription ] in the AEC Settings!</strong>' );
-define( '_AEC_HACKS_REG2',						'This will redirect a registering user to the payment plans after filling out the registration form. Leave this alone to have plan selection only on login (if \'Require Subscription\' is active), or completely voluntary (without requiring a subscription). <strong>Please note that there are two hacks following this, once you have committed it! If you want to have the plans before the user details, these are required as well.</strong>' );
-define( '_AEC_HACKS_REG3',						'This will redirect the user to the payment plans page when he or she has not made that selection yet.' );
-define( '_AEC_HACKS_REG4',						'This Hack will transmit the AEC variables from the user details form.' );
-define( '_AEC_HACKS_REG5',						'This Hack will make the Plans First feature possible - you need to set the switch for this in the settings as well!' );
-define( '_AEC_HACKS_MI1',						'Some Micro Integrations rely on receiving a cleartext password for each user. This hack will make sure that the Micro Integrations will be notified when a user changes his/her account.' );
-define( '_AEC_HACKS_MI2',						'Some Micro Integrations rely on receiving a cleartext password for each user. This hack will make sure that the Micro Integrations will be notified when a user registers an account.' );
-define( '_AEC_HACKS_MI3',						'Some Micro Integrations rely on receiving a cleartext password for each user. This hack will make sure that the Micro Integrations will be notified when an admin changes a user-account.' );
-define( '_AEC_HACKS_CB2',						'This will redirect a registering user to the payment plans after filling out the registration form in CB. Leave this alone to have plan selection only on login (if \'Require Subscription\' is active), or completely voluntary (without requiring a subscription). <strong>Please note that there are two hacks following this, once you have committed it! If you want to have the plans before the user details, these are required as well.</strong>' );
-define( '_AEC_HACKS_CB6',						'This will redirect the user to the payment plans page when he or she has not made that selection yet.' );
-define( '_AEC_HACKS_CB_HTML2',					'This Hack will transmit the AEC variables from the user details form. <strong>In order to make this work, set \'Plans First\' in the AEC Settings.</strong>' );
-define( '_AEC_HACKS_UHP2',						'UHP2 Menu Entry' );
-define( '_AEC_HACKS_UHP2_DESC',					'Adds a <strong>' . _AEC_SPEC_MENU_ENTRY . '</strong> menu entry to the UHP2 Usermenu. With this, a user can manage his invoices and upgrade/renew his or her subscription.' );
-define( '_AEC_HACKS_CBM',						'If you are using the Comprofiler Moderator Module, you have to hack it in order to prevent an infinite loops issue.' );
+define( '_AEC_HACKS_MENU_ENTRY',         'Entr&eacute;e menu' );
+define( '_AEC_HACKS_MENU_ENTRY_DESC',            'Ajoute un &lt;strong&gt;' . _AEC_SPEC_MENU_ENTRY . '&lt;/strong&gt; &agrave; l&amp;acute;entr&eacute;e du menu utilisateur. De cette fa&ccedil;on, un utilisateur peut g&eacute;rer ses factures et la mise &agrave; niveau ou renouveler son abonnement.' );
+define( '_AEC_HACKS_LEGACY',                    '&lt;strong&gt;Il s\'agit d\'un hack h&eacute;rit&eacute;, annuler s\'il vous pla&#238;t!&lt;/strong&gt;' );
+define( '_AEC_HACKS_LEGACY_PLUGIN',                '&lt;strong&gt;Il s\'agit d\'un hack h&eacute;rit&eacute; qui est remplac&eacute; par le Plugin Joomla 1,5, annuler et utiliser le plugin!&lt;/strong&gt;' );
+define( '_AEC_HACKS_NOTAUTH',                    'Cela redirigera vos utilisateurs &agrave; la page [Acc&egrave;s non autoris&eacute;] avec les informations sur vos abonnements' );
+define( '_AEC_HACKS_SUB_REQUIRED',                'Cela fera en sorte qu\'un utilisateur dispose d\'un abonnement afin de ce connecter.&lt;br /&gt;&lt;strong&gt;N\'oubliez pas de fixer aussi [Exigent Abonnement] dans les param&egrave;tres AEC!&lt;/strong&gt;' );
+define( '_AEC_HACKS_REG2',                        'Cela va rediriger un utilisateur &agrave; l\'enregistrement des plans de paiement apr&egrave;s avoir rempli le formulaire d\'inscription. Laissez uniquement ce plan en s&eacute;lection pour la connexion (si \'Exiger un abonnement\' est actif), ou compl&egrave;tement volontaire (sans exiger d\'abonnement). &lt;strong&gt;Noter qu\'il existe deux hacks suivant, une fois que vous avez les avez fusionn&eacute;! ceux-ci sont requis, si vous voulez avoir les plans avant les d&eacute;tails utilisateur.&lt;/strong&gt;' );
+define( '_AEC_HACKS_REG3',                        'Ceci redirige l\'utilisateur vers la page des plans de paiement s\'il n\'a pas fait n\'a pas d&eacute;j&agrave; de s&eacute;l&eacute;ction.' );
+define( '_AEC_HACKS_REG4',                        'Ce Hack transmet les variables &agrave; AEC de l\'utilisateur depuis ces d&eacute;tails.' );
+define( '_AEC_HACKS_REG5',                        'Ce Hack rendra le premier plans accessible - Dans les param&egrave;tres, vous devez configurer le commutateur &agrave; cet effet.!' );
+define( '_AEC_HACKS_MI1',                        'Certaines micro int&eacute;grations on besoin que le mot passe de chaque utilisateur soit en texte clair. Ce hack veille &agrave; ce que la micro int&eacute;grations soit averti lorsqu\'un utilisateur modifie son compte.' );
+define( '_AEC_HACKS_MI2',                        'Certaines micro int&eacute;grations on besoin que le mot passe de chaque utilisateur soit en texte clair Ce hack veille &agrave; ce que la micro int&eacute;grations soit averti lorsque l\'utilisateur enregistre un compte.' );
+define( '_AEC_HACKS_MI3',                        'Certaines micro int&eacute;grations on besoin que le mot passe de chaque utilisateur soit en texte clair. Ce hack veille &agrave; ce que la micro int&eacute;grations soit notifi&eacute;e lorsque qu\'un admin change un compte utilisateur.' );
+define( '_AEC_HACKS_CB2',                        'Cela va rediriger un utilisateur qui s\'enregistre aux plans de paiement apr&egrave;s avoir rempli le formulaire d\'inscription de CB. Laissez uniquement ce plan &agrave; la s&eacute;lection pour connexion (si \'Exiger Abonnement\' est actif), ou compl&egrave;ter volontairement (Sans n&eacute;cessiter un abonnement). &lt;strong&gt;Attention aux deux hacks suivent, une fois vous l\'avez fusionner! Ils sont exig&eacute;s, si vous voulez avoir les plans avant le d&eacute;tail de l\'utilisateur.&lt;/strong&gt;' );
+define( '_AEC_HACKS_CB6',                        'Ceci redirige l\'utilisateur vers la page des plans de paiement quand il ou elle n\'a pas encore fait de s&eacute;lection.' );
+define( '_AEC_HACKS_CB_HTML2',                    'Ce Hack transmet les variables &agrave; AEC de l\'utilisateur depuis le formulaire de d&eacute;tails. &lt;strong&gt;Pour faire ce travail, d&eacute;finir le &quot;Premier Plans&quot; dans les param&egrave;tres d\'AEC.&lt;/strong&gt;' );
+define( '_AEC_HACKS_UHP2',                        'UHP2 Entr&eacute; menu' );
+define( '_AEC_HACKS_UHP2_DESC',                    'Ajoute un &lt;strong&gt;' . _AEC_SPEC_MENU_ENTRY . '&lt;/strong&gt; &agrave; l&amp;acute;entr&eacute;e du menu utilisateur UHP2. De cette fa&ccedil;on, un utilisateur peut g&eacute;rer ses factures et la mise &agrave; niveau ou renouveler son abonnement.' );
+define( '_AEC_HACKS_CBM',                        'Si vous utilisez le Comprofiler Moderator Module, vous devez le hacker pour &eacute;viter le probl&egrave;me de la boucle sans fin.' );
 
 // log
-	// settings
-define( '_AEC_LOG_SH_SETT_SAVED',				'settings change' );
-define( '_AEC_LOG_LO_SETT_SAVED',				'The Settings for AEC have been saved' );
-	// heartbeat
-define( '_AEC_LOG_SH_HEARTBEAT',				'Heartbeat' );
-define( '_AEC_LOG_LO_HEARTBEAT',				'Heartbeat carried out:' );
-define( '_AEC_LOG_AD_HEARTBEAT_DO_NOTHING',		'does nothing' );
-	// install
-define( '_AEC_LOG_SH_INST',						'AEC install' );
-define( '_AEC_LOG_LO_INST',						'The AEC Version %s has been installed' );
+		// settings
+define( '_AEC_LOG_SH_SETT_SAVED',                'Changement param&egrave;tres' );
+define( '_AEC_LOG_LO_SETT_SAVED',                'Param&egrave;tres AEC sauvegard&eacute;s' );
+		// heartbeat
+define( '_AEC_LOG_SH_HEARTBEAT',                'Fr&eacute;quence d\'ex&eacute;cution' );
+define( '_AEC_LOG_LO_HEARTBEAT',                'Ex&eacute;cution r&eacute;alis&eacute;e:' );
+define( '_AEC_LOG_AD_HEARTBEAT_DO_NOTHING',        'Ne rien faire' );
+		// install
+define( '_AEC_LOG_SH_INST',                        'Installation AEC' );
+define( '_AEC_LOG_LO_INST',                        'La version %s de AEC est intall&eacute;e' );
 
 // install texts
-define( '_AEC_INST_NOTE_IMPORTANT',				'Important Notice' );
-define( '_AEC_INST_NOTE_SECURITY',				'For <strong>your system security</strong> you need apply hacks to joomla core files. For your convenience, we have included an autohacking feature that does just that with the click of a link' );
-define( '_AEC_INST_APPLY_HACKS',				'In order to commit these hacks right now, go to the %s. (You can also access this page later on from the AEC central view or menu)' );
-define( '_AEC_INST_APPLY_HACKS_LTEXT',			'hacks page' );
-define( '_AEC_INST_NOTE_UPGRADE',				'<strong>If you are upgrading, make sure to check the hacks page anyways, since there are changes from time to time!!!</strong>' );
-define( '_AEC_INST_NOTE_HELP',					'To help you along with frequently encountered problems, we have created a %s that will help you ship around the most common setup problems (access is also avaliable from the AEC central.' );
-define( '_AEC_INST_NOTE_HELP_LTEXT',			'help function' );
-define( '_AEC_INST_HINTS',						'Hints' );
-define( '_AEC_INST_HINT1',						'We encourage you to visit the <a href="%s" target="_blank">globalnerd.org forums</a> and to <strong>participate in the discussion there</strong>. Chances are, that other users have found the same bugs and it is equally likely that there is at least a fix to hack in or even a new version.' );
-define( '_AEC_INST_HINT2',						'In any case (and especially if you use this on a live site): <strong>go through your settings and make a test subscription</strong> to see whether everything is working to your satisfaction! Although we try our best to make upgrading as flawless as possible, some fundamental changes to our program may not be possible to cushion for all users.</p><p><strong>Thank you choosing the AEC Component!</strong></p>' );
-define( '_AEC_INST_ATTENTION',					'No need to use the old logins!' );
-define( '_AEC_INST_ATTENTION1',					'If you still have the old AEC login modules installed, please uninstall it (no matter which one, regular or CB) and use the normal joomla or CB login module. There is no need to use these old modules anymore.' );
-define( '_AEC_INST_MAIN_COMP_ENTRY',			'AEC Subscription Mgmnt' );
-define( '_AEC_INST_ERRORS',						'<strong>Attention</strong><br />AEC could not be installed completely, following errors occured during the install process:<br />' );
+define( '_AEC_INST_NOTE_IMPORTANT',                'Avis important' );
+define( '_AEC_INST_NOTE_SECURITY',                'Pour &lt;strong&gt;la s&eacute;curit&eacute; de votre syst&egrave;me&lt;/strong&gt; vous devez appliquer des hacks sur les fichiers du noyau Joomla. Pour votre confort, nous avons inclus un dispositif de autohacking qui r&eacute;alise l\'op&eacute;ration d\'un simple click sur le lien' );
+define( '_AEC_INST_APPLY_HACKS',                'Afin de valider ces hacks d&egrave;s maintenant allez &agrave; %s. (Vous pourrez aussi acc&egrave;der &agrave; cette page plus tard &agrave; partir de la vue AEC Central ou du menu)' );
+define( '_AEC_INST_APPLY_HACKS_LTEXT',            'Page des hacks' );
+define( '_AEC_INST_NOTE_UPGRADE',                '&lt;strong&gt;S\'il s\'agit d\'un changement de version, verifiez la page de hacks, car il peut y avoir des changements de temps en temps!!!&lt;/strong&gt;' );
+define( '_AEC_INST_NOTE_HELP',                    'Pour vous aider &agrave; r&eacute;soudre les probl&egrave;mes fr&eacute;quemment rencontr&eacute;s, nous avons cr&eacute;&eacute; un %s qui vous assistera (l\'acc&egrave;s est aussi possible depuis AEC Central.' );
+define( '_AEC_INST_NOTE_HELP_LTEXT',            'Fonction d\'aide' );
+define( '_AEC_INST_HINTS',                        'Indices' );
+define( '_AEC_INST_HINT1',                        'Nous vous recommandons de visiter les &lt;a href=&quot;%s&quot; target=&quot;_blank&quot;&gt;globalnerd.org forums&lt;/a&gt; et de &lt;strong&gt; participer aux discussions&lt;/strong&gt;. Il est probable que d\'autres utilisateurs aient trouv&eacute; les m&ecirc;mes bugs et aussi les solutions imm&eacute;diates ou &agrave; venir dans une nouvelle version.' );
+define( '_AEC_INST_HINT2',                        'Dans tous les cas (et sp&eacute;cialement si vous utilisez AEC sur un site de production): allez sur la page de param&eacute;trage et faite un test de souscription pour v&eacute;rifer que tout fonctionne de fa&ccedil;on satisfaisante! Although we try our best to make upgrading as flawless as possible, some fundamental changes to our program may not be possible to cushion for all users.' );
+define( '_AEC_INST_ATTENTION',                    'Pas besoin d\'utiliser les vieux logins!' );
+define( '_AEC_INST_ATTENTION1',                    'Si vous avez encore les vieux modules de login d\'AEC, d&eacute;sinstallez les (peu importe qu\'il s\'agisse de CB ou Joomla) et utilisez les modules de Joomla ou CB actuels. Il n\'y a plus besoin d\'utiliser ces vieux modules.' );
+define( '_AEC_INST_MAIN_COMP_ENTRY',            'Abonnements AEC' );
+define( '_AEC_INST_ERRORS',                        '&lt;strong&gt;Attention&lt;/strong&gt;&lt;br /&gt;AEC n\'a pas pu &ecirc;tre compl&egrave;tement install&eacute;, &agrave; la suite d\'erreurs commises lors du processus d\'installation:&lt;br /&gt;' );
 
 // help
-define( '_AEC_CMN_HELP',						'Help' );
-define( '_AEC_HELP_DESC',						'On this page, the AEC takes a look at its own configuration and tells you whenever it finds errors that need to be adressed.' );
-define( '_AEC_HELP_GREEN',						'Green</strong> items indicate trivial problems or notifications, or problems that have already been solved.' );
-define( '_AEC_HELP_YELLOW',						'Yellow</strong> items are mostly of cosmetical importance (like additions to the user frontend), but also issues that are most likely a deliberate choice of the administrator.' );
-define( '_AEC_HELP_RED',						'Red</strong> items are of high importance to either the way the AEC works or the security of your System.' );
-define( '_AEC_HELP_GEN',						'Please note that even though we try to cover as many errors and problems as possible, this page can only point at the most obvious ones and is by far not completed yet (beta&trade;)' );
-define( '_AEC_HELP_QS_HEADER',					'AEC Quickstart Manual' );
-define( '_AEC_HELP_QS_DESC',					'Before doing anything about the below issues, please read our %s!' );
-define( '_AEC_HELP_QS_DESC_LTEXT',				'Quickstart Manual' );
-define( '_AEC_HELP_SER_SW_DIAG1',				'File Permissions Problems' );
-define( '_AEC_HELP_SER_SW_DIAG1_DESC',			'AEC has detected that you are using an Apache Webserver - To be able to hack files on such a server, those files have to be owned by the webserver user, which apparently is not so for at least one of the neccessary files.' );
-define( '_AEC_HELP_SER_SW_DIAG1_DESC2',			'We recommend that you temporarily change the file permissions to 777, then commit the hacks and change it back after that. <strong>Contact your server host or administrator for the possibly quickest response when experiencing problems.</strong> This is the same for the file permission related suggestion(s) below.' );
-define( '_AEC_HELP_SER_SW_DIAG2',				'joomla.php/mambo.php File Permissions' );
-define( '_AEC_HELP_SER_SW_DIAG2_DESC',			'The AEC has detected that your joomla.php is not owned by the webserver.' );
-define( '_AEC_HELP_SER_SW_DIAG2_DESC2',			'Access your webserver via ssh and go to the directory \"<yoursiteroot>/includes\". There, type in this command: \"chown wwwrun joomla.php\" (or \"chown wwwrun mambo.php\" in case you are using mambo).' );
-define( '_AEC_HELP_SER_SW_DIAG3',				'Legacy Hacks Detected!' );
-define( '_AEC_HELP_SER_SW_DIAG3_DESC',			'You appear to have old Hacks commited to your System.' );
-define( '_AEC_HELP_SER_SW_DIAG3_DESC2',			'In Order for the AEC to function correctly, please review the Hacks page and follow the steps presented there.' );
-define( '_AEC_HELP_SER_SW_DIAG4',				'File Permissions Problems' );
-define( '_AEC_HELP_SER_SW_DIAG4_DESC',			'AEC can not detect the write permission status of the files it wants to hack as it appears that your installation of php has been compiled with the option \"--disable-posix\". <strong>You can still try to commit the hacks - if it does not work, its most likely a file permission problem</strong>.' );
-define( '_AEC_HELP_SER_SW_DIAG4_DESC2',			'We recommend that you either recompile your php version with the said option left out or contact your webserver administrator on this matter.' );
-define( '_AEC_HELP_DIAG_CMN1',					'joomla.php/mambo.php Hack' );
-define( '_AEC_HELP_DIAG_CMN1_DESC',				'In order for the AEC to function, this hack is required to redirect users to the AEC Verification Routines on Login.' );
-define( '_AEC_HELP_DIAG_CMN1_DESC2',			'Go to the Hacks page and commit the hack' );
-define( '_AEC_HELP_DIAG_CMN2',					'"My Subscription" Menu Entry' );
-define( '_AEC_HELP_DIAG_CMN2_DESC',				'A link to a MySubscription page for your users makes it easy for them to track their subscription.' );
-define( '_AEC_HELP_DIAG_CMN2_DESC2',			'Go to the Hacks page and create the link.' );
-define( '_AEC_HELP_DIAG_CMN3',					'JACL not installed' );
-define( '_AEC_HELP_DIAG_CMN3_DESC',				'If you plan to install JACLplus in your joomla!/mambo system, please make sure that the AEC hacks are not committed when doing so. If you have already committed them, you can easily undo them in our hacks page.' );
-define( '_AEC_HELP_DIAG_NO_PAY_PLAN',			'No Active Payment Plan!' );
-define( '_AEC_HELP_DIAG_NO_PAY_PLAN_DESC',		'There seems to be no Payment Plan published yet - The AEC needs at least one active plan to function' );
-define( '_AEC_HELP_DIAG_GLOBAL_PLAN',			'Global Entry Plan' );
-define( '_AEC_HELP_DIAG_GLOBAL_PLAN_DESC',		'There is a Global Entry Plan active in your configuration. If you are not sure what this is, you should probably disable it - Its an entry plan that each new user will be assigned to without having a choice.' );
-define( '_AEC_HELP_DIAG_SERVER_NOT_REACHABLE',	'Server Apparantly Not Reachable' );
-define( '_AEC_HELP_DIAG_SERVER_NOT_REACHABLE_DESC',	'It seems that you have installed the AEC on a local machine. In order to retrieve notifications (and thus to have the component work correctly), you need to install it on a server that is reachable by a fixed IP or Domain!' );
-define( '_AEC_HELP_DIAG_SITE_OFFLINE',			'Site Offline' );
-define( '_AEC_HELP_DIAG_SITE_OFFLINE_DESC',		'You have decided to take your site offline - please note that this can have an effect on notification processes and thus on your payment workflow.' );
-define( '_AEC_HELP_DIAG_REG_DISABLED',			'User Registration Disabled' );
-define( '_AEC_HELP_DIAG_REG_DISABLED_DESC',		'Your User Registration is disabled. This way, no new customer can subscribe to your website.' );
-define( '_AEC_HELP_DIAG_LOGIN_DISABLED',		'User Login Disabled' );
-define( '_AEC_HELP_DIAG_LOGIN_DISABLED_DESC',	'Your have disabled the Frontend Login functionality. Because of this, none of your customers can use your website.' );
-define( '_AEC_HELP_DIAG_PAYPAL_BUSS_ID',		'Paypal Check Business ID' );
-define( '_AEC_HELP_DIAG_PAYPAL_BUSS_ID_DESC',	'This routine checks for a matching paypal business ID to enhance security with Paypal Transactions.' );
-define( '_AEC_HELP_DIAG_PAYPAL_BUSS_ID_DESC1',	'Please disable this setting in case you encounter problems where you receive payments correctly, but without users being enabled. Disable the Setting in general in case you are using multiple e-mail adresses with your Paypal account.' );
+define( '_AEC_CMN_HELP',                        'Aide' );
+define( '_AEC_HELP_DESC',                        'Sur cette page, AEC se penche sur sa propre configuration et vous indique chaque fois qu&amp;acute;il trouve des erreurs qui doivent &ecirc;tre trait&eacute;es.' );
+define( '_AEC_HELP_GREEN',                        'Vert&lt;/strong&gt; &Eacute;l&eacute;ments indiquant des probl&egrave;mes insignifiants ou des notifications, ou des probl&egrave;mes qui ont d&eacute;j&agrave; &eacute;t&eacute; r&eacute;solus.' );
+define( '_AEC_HELP_YELLOW',                        'Jaune&lt;/strong&gt; Sont pour la plupart des &eacute;l&eacute;ments de cosm&eacute;tique important (comme ajouts &agrave; l\'utilisateur frontend), mais aussi des questions qui sont le plus susceptibles un choix d&eacute;lib&eacute;r&eacute; de l\'administrateur.' );
+define( '_AEC_HELP_RED',                        'Rouge&lt;/strong&gt; &Eacute;l&eacute;ments d\'une grande importance par rapport &agrave; la mani&egrave;re dont AEC travaille ou par rapport &agrave; la s&eacute;curit&eacute; de votre syst&egrave;me.' );
+define( '_AEC_HELP_GEN',                        'S\'il vous pla&#238;t notez que, m&ecirc;me si nous essayons de couvrir le plus grand nombre d\'erreurs et de probl&egrave;mes possibles, cette page peut uniquement pointer les plus &eacute;vidents et tout n\'est pas trait&eacute; (beta&amp;trade;)' );
+define( '_AEC_HELP_QS_HEADER',                    'AEC prise en main rapide' );
+define( '_AEC_HELP_QS_DESC',                    'Avant de faire quoi que ce soit sur les questions ci-dessous, s\il vous pla&#238;t, lisez notre  %s!' );
+define( '_AEC_HELP_QS_DESC_LTEXT',                'Prise en main rapide' );
+define( '_AEC_HELP_SER_SW_DIAG1',                'Probl&egrave;me de droits sur les fichiers' );
+define( '_AEC_HELP_SER_SW_DIAG1_DESC',            'AEC a d&eacute;tect&eacute; que vous utilisez un serveur Web Apache - Pour &ecirc;tre en mesure de ne pas pirater des fichiers sur ce type de serveur, les fichiers doivent &ecirc;tre propri&eacute;t&eacute; d&amp;acute;un utilisateur du serveur Web, ce qui apparemment n&amp;acute;est pas le cas pour au moins un des fichiers n&eacute;cessaires.' );
+define( '_AEC_HELP_SER_SW_DIAG1_DESC2',            'Nous vous recommandons de modifier temporairement les permissions du fichier &agrave; 777, puis fusionner les hacks et remettre les permission apr&egrave;s. &lt;strong&gt;Si vous constatez le probl&egrave;me, contactez votre h&eacute;bergeur ou, &eacute;ventuellement, l&amp;acute;administrateur pour une r&eacute;ponse rapide.&lt;/strong&gt; C&amp;acute;est la m&ecirc;me chose pour les autorisations d&amp;acute;acc&egrave;s aux fichiers li&eacute;s suggestion (s) ci-dessous.' );
+define( '_AEC_HELP_SER_SW_DIAG2',                'joomla.php/mambo.php permissions de fichiers' );
+define( '_AEC_HELP_SER_SW_DIAG2_DESC',            'AEC a d&eacute;tect&eacute; que le serveur Web n&amp;acute;est pas propri&eacute;taire de votre fichier joomla.php.' );
+define( '_AEC_HELP_SER_SW_DIAG2_DESC2',            'Acc&eacute;der &agrave; votre serveur web via SSH et aller dans le r&eacute;pertoire \&quot;&lt;racine de votre site&gt;/includes\&quot;. L&agrave;, tapez cette commande: \&quot;chown wwwrun joomla.php\&quot; (ou \&quot;chown wwwrun mambo.php\&quot; dans le cas o&ugrave; vous utilisez mambo).' );
+define( '_AEC_HELP_SER_SW_DIAG3',                'Legacy Hacks Detected!' );
+define( '_AEC_HELP_SER_SW_DIAG3_DESC',            'Il semblerait qu&amp;acute;il y est des anciens hacks fusionn&eacute;s &agrave; votre syst&egrave;me.' );
+define( '_AEC_HELP_SER_SW_DIAG3_DESC2',            'Pour AEC tout est correct et pr&ecirc;t &agrave; fonctionner, s&amp;acute;il vous pla&#238;t r&eacute;examiner la page des hacks et suivez y les &eacute;tapes.' );
+define( '_AEC_HELP_SER_SW_DIAG4',                'Probl&egrave;me de droits sur les fichiers' );
+define( '_AEC_HELP_SER_SW_DIAG4_DESC',            'AEC AEC ne d&eacute;tecte pas l&amp;acute;&eacute;tat des droits sur le fichier dont il veut hack&eacute;, car il semble que votre installation de PHP a &eacute;t&eacute; compil&eacute; avec l&amp;acute;option \&quot;--disable-posix\&quot;. &lt;strong&gt;Vous pouvez toujours tenter de fusionner les hacks - Si cela ne fonctionne pas, c&amp;acute;est probablement d&ucirc; &agrave; un probl&egrave;me de permission de fichier&lt;/strong&gt;.' );
+define( '_AEC_HELP_SER_SW_DIAG4_DESC2',            'Nous vous recommandons de recompiler votre version de php avec l&amp;acute;option dit &amp;acute;left&amp;acute; ou contactez votre administrateur de votre serveur Web sur la question.' );
+define( '_AEC_HELP_DIAG_CMN1',                    'joomla.php/mambo.php Hack' );
+define( '_AEC_HELP_DIAG_CMN1_DESC',                'Pour qu&amp;acute;AEC fonctionne, Ce hack est n&eacute;cessaire pour rediriger les utilisateurs AEC vers les routines de v&eacute;rification sur Login.' );
+define( '_AEC_HELP_DIAG_CMN1_DESC2',            'Allez &agrave; la page des hacks et fusionnez le hack' );
+define( '_AEC_HELP_DIAG_CMN2',                    '&quot;Mes abonnements&quot; Ent&eacute;e menu' );
+define( '_AEC_HELP_DIAG_CMN2_DESC',                'Un lien vers une page les abonnements de l&amp;acute;utilisateur, ainsi, il lui sera plus facile de suivre ces abonnements.' );
+define( '_AEC_HELP_DIAG_CMN2_DESC2',            'Allez &agrave; la page Hacks et cr&eacute;er le lien.' );
+define( '_AEC_HELP_DIAG_CMN3',                    'JACL n&amp;acute;est pas install&eacute;' );
+define( '_AEC_HELP_DIAG_CMN3_DESC',                'Si vous pr&eacute;voyez d&amp;acute;installer JACLplus sur votre syst&egrave;me joomla!/mambo, assurez-vous que les hacks AEC ne sont pas encore fusionn&eacute;. Si vous l&amp;acute;avez d&eacute;j&agrave; fait, Il vous faudra les enlever. C&amp;acute;est facile depuis la page des hacks AEC.' );
+define( '_AEC_HELP_DIAG_NO_PAY_PLAN',            'Aucun plan de paiement actif!' );
+define( '_AEC_HELP_DIAG_NO_PAY_PLAN_DESC',        'Il semble qu&amp;acute;aucun Plan de Paiement ne soit encore publi&eacute; - AEC requiert au moins un plan pour fonctionner.' );
+define( '_AEC_HELP_DIAG_GLOBAL_PLAN',            'Entr&eacute;e du plan global' );
+define( '_AEC_HELP_DIAG_GLOBAL_PLAN_DESC',        'Il ya une entr&eacute;e de plan global actif dans votre configuration. Si vous ne savez pas de quoi il s&amp;acute;agit, vous devriez probablement le d&eacute;sactiver - C&amp;acute;est un plan global qui sera affect&eacute; &agrave; chaque nouvel utilisateur sans avoir fait de choix.' );
+define( '_AEC_HELP_DIAG_SERVER_NOT_REACHABLE',    'Serveur apparemment pas joignable' );
+define( '_AEC_HELP_DIAG_SERVER_NOT_REACHABLE_DESC',    'C&amp;acute;est la m&ecirc;me chose que si vous avez install&eacute; AEC en local. Pour r&eacute;cup&eacute;rer les notifications (Et donc d&amp;acute;avoir les composants fonctionnent correctement), Vous devez l&amp;acute;installer sur un serveur qui est accessible par une adresse IP fixe ou domaine!' );
+define( '_AEC_HELP_DIAG_SITE_OFFLINE',            'Site hors ligne' );
+define( '_AEC_HELP_DIAG_SITE_OFFLINE_DESC',        'Vous avez d&eacute;cid&eacute; de mettre votre site hors ligne - please note that this can have an effect on notification processes and thus on your payment workflow.' );
+define( '_AEC_HELP_DIAG_REG_DISABLED',            'Enregistrement d\'utilisateur d&eacute;sactiv&eacute;' );
+define( '_AEC_HELP_DIAG_REG_DISABLED_DESC',        'L&amp;acute;enregistrement des utilisateurs est d&eacute;sactiv&eacute;. Aucun utilisateur ne peut s&amp;acute;abonner &agrave; votre site.' );
+define( '_AEC_HELP_DIAG_LOGIN_DISABLED',        'Identification d\'utilisateur d&eacute;sactiv&eacute;' );
+define( '_AEC_HELP_DIAG_LOGIN_DISABLED_DESC',    'Vous avez d&eacute;sactiv&eacute; la fonctionnelit&eacute; de login via le front end. Aucun de vos abonn&eacute;s ne pourra utiliser votre site Web.' );
+define( '_AEC_HELP_DIAG_PAYPAL_BUSS_ID',        'Paypal Check Business ID' );
+define( '_AEC_HELP_DIAG_PAYPAL_BUSS_ID_DESC',    'Cette routine teste l&amp;acute;existence d&amp;acute;un Paypal Business ID pour am&eacute;liorer la s&eacute;curit&eacute; des transactions Paypal. ' );
+define( '_AEC_HELP_DIAG_PAYPAL_BUSS_ID_DESC1',    'Retirez ce r&eacute;glage si vous rencontrez des difficult&eacute;s dans la r&eacute;ception des payements, but without users being enabled. Disable the Setting in general in case you are using multiple e-mail adresses with your Paypal account.' );
 
 // micro integration
-	// general
-define( '_AEC_MI_REWRITING_INFO',				'Rewriting Info' );
-define( '_AEC_MI_SET1_INAME',					'Subscription at %s - User: %s (%s)' );
-	// htaccess
-define( '_AEC_MI_HTACCESS_INFO_DESC',			'Protect a folder with a .htaccess file and only allow users of this subscription to access it with their joomla account details.' );
-	// email
-define( '_AEC_MI_EMAIL_INFO_DESC',				'Send an Email to one or more adresses on application or expiration of the subscription' );
-	// idev
-define( '_AEC_MI_IDEV_DESC',					'Connect your sales to iDevAffiliate' );
-	// mosetstree
-define( '_AEC_MI_MOSETSTREE_DESC',				'Restrict the amount of listings a user can publish' );
-	// mysql-query
-define( '_AEC_MI_MYSQL_DESC',					'Specify a mySQL query that should be carried out with this subscription or on its expiration' );
-	// remository
-define( '_AEC_MI_REMOSITORY_DESC',				'Choose the amount of files a user can download and what reMOSitory group should be assigned to the user account' );
-	// VirtueMart
-define( '_AEC_MI_VIRTUEMART_DESC',				'Choose the VirtueMart usergroup this user should be applied to' );
+		// general
+define( '_AEC_MI_REWRITING_INFO',                'Info Rewriting' );
+define( '_AEC_MI_SET1_INAME',                    'Abonnement &agrave; %s - Utilisateur: %s (%s)' );
+		// htaccess
+define( '_AEC_MI_HTACCESS_INFO_DESC',            'Prot&eacute;ger un dossier avec un .htaccess file et autorisez seulement les utilisateurs de cet abonnement &agrave; y acc&eacute;der avec leur compte Joomla .' );
+		// email
+define( '_AEC_MI_EMAIL_INFO_DESC',                'Envoyez un mail &agrave; une ou plusieurs adresses &agrave; l&amp;acute;expiration de l&amp;acute;abonnement' );
+		// idev
+define( '_AEC_MI_IDEV_DESC',                    'Connect your sales to iDevAffiliate' );
+		// mosetstree
+define( '_AEC_MI_MOSETSTREE_DESC',                'Restrict the amount of listings a user can publish' );
+		// mysql-query
+define( '_AEC_MI_MYSQL_DESC',                    'Specify a mySQL query that should be carried out with this subscription or on its expiration' );
+		// remository
+define( '_AEC_MI_REMOSITORY_DESC',                'Choose the amount of files a user can download and what reMOSitory group should be assigned to the user account' );
+		// VirtueMart
+define( '_AEC_MI_VIRTUEMART_DESC',                'Choisissez le groupe utilisateur VirtueMart auquel cet utilisateur doit appartenir' );
 
 // central
-define( '_AEC_CENTR_CENTRAL',					'AEC Central' );
-define( '_AEC_CENTR_EXCLUDED',					'Excluded' );
-define( '_AEC_CENTR_PLANS',						'Plans' );
-define( '_AEC_CENTR_PENDING',					'Pending' );
-define( '_AEC_CENTR_ACTIVE',					'Active' );
-define( '_AEC_CENTR_EXPIRED',					'Expired' );
-define( '_AEC_CENTR_CANCELLED',					'Cancelled' );
-define( '_AEC_CENTR_CLOSED',					'Closed' );
-define( '_AEC_CENTR_SETTINGS',					'Settings' );
-define( '_AEC_CENTR_EDIT_CSS',					'Edit CSS' );
-define( '_AEC_CENTR_V_INVOICES',				'View Invoices' );
-define( '_AEC_CENTR_COUPONS',					'Coupons' );
-define( '_AEC_CENTR_COUPONS_STATIC',			'Coupons Static' );
-define( '_AEC_CENTR_VIEW_HISTORY',				'View History' );
-define( '_AEC_CENTR_HACKS',						'Hacks' );
-define( '_AEC_CENTR_M_INTEGRATION',				'Micro Integr.' );
-define( '_AEC_CENTR_HELP',						'Help' );
-define( '_AEC_CENTR_LOG',						'EventLog' );
-define( '_AEC_CENTR_MANUAL',					'Manual' );
-define( '_AEC_CENTR_EXPORT',						'Export' );
-define( '_AEC_CENTR_IMPORT',						'Import' );
-define( '_AEC_QUICKSEARCH',						'Quick Search' );
-define( '_AEC_QUICKSEARCH_DESC',				'Put in a users name, username, userid or an invoice number to get directly linke to the users profile. If there are more than one result, they will be shown below.' );
-define( '_AEC_QUICKSEARCH_MULTIRES',			'Multiple Results!' );
-define( '_AEC_QUICKSEARCH_MULTIRES_DESC',		'Please pick one of the following users:' );
-define( '_AEC_QUICKSEARCH_THANKS',				'Thank you for making a simple function very happy.' );
-define( '_AEC_QUICKSEARCH_NOTFOUND',			'User not found' );
+define( '_AEC_CENTR_CENTRAL',                    'Centrale AEC' );
+define( '_AEC_CENTR_EXCLUDED',                    'Exclus' );
+define( '_AEC_CENTR_PLANS',                        'Plans' );
+define( '_AEC_CENTR_PENDING',                    'En attente' );
+define( '_AEC_CENTR_ACTIVE',                    'Active' );
+define( '_AEC_CENTR_EXPIRED',                    'Expir&eacute;' );
+define( '_AEC_CENTR_CANCELLED',                    'Annul&eacute;' );
+define( '_AEC_CENTR_CLOSED',                    'Ferm&eacute;' );
+define( '_AEC_CENTR_SETTINGS',                    'Param&egrave;tres' );
+define( '_AEC_CENTR_EDIT_CSS',                    'Editeur CSS' );
+define( '_AEC_CENTR_V_INVOICES',                'Voir factures' );
+define( '_AEC_CENTR_COUPONS',                    'Coupons' );
+define( '_AEC_CENTR_COUPONS_STATIC',            'Coupons statique' );
+define( '_AEC_CENTR_VIEW_HISTORY',                'Afficher historique' );
+define( '_AEC_CENTR_HACKS',                        'Hacks' );
+define( '_AEC_CENTR_M_INTEGRATION',                'Micro Integr.' );
+define( '_AEC_CENTR_HELP',                        'Aide' );
+define( '_AEC_CENTR_LOG',                        'Journal' );
+define( '_AEC_CENTR_MANUAL',                    'Manuel' );
+define( '_AEC_CENTR_EXPORT',                        'Export' );
+define( '_AEC_CENTR_IMPORT',                        'Import' );
+define( '_AEC_QUICKSEARCH',                        'Recherche rapide' );
+define( '_AEC_QUICKSEARCH_DESC',                'Saisissez un nom d&amp;acute;utilisateur, un ID utilisateur ou num&eacute;ro de facture pour acc&egrave;der directement a l&amp;acute;enregistrement souhait&eacute;. Si il y a plusieurs r&eacute;sultats, ils seront tous affich&eacute;s.' );
+define( '_AEC_QUICKSEARCH_MULTIRES',            'R&eacute;sultat multiple!' );
+define( '_AEC_QUICKSEARCH_MULTIRES_DESC',        'S&eacute;lectionnez l&amp;acute;un des utilisateurs suivants :' );
+define( '_AEC_QUICKSEARCH_THANKS',                'Thank you for making a simple function very happy.' );
+define( '_AEC_QUICKSEARCH_NOTFOUND',            'Utilisateur n\'a pas &eacute;t&eacute; trouv&eacute;' );
 
-define( '_AEC_NOTICES_FOUND',					'Eventlog Notices' );
-define( '_AEC_NOTICES_FOUND_DESC',				'The following entries in the Eventlog deserve your attention. You can mark them read if you want them to disappear. You can also change the types of notices that show up here in the Settings.' );
-define( '_AEC_NOTICE_MARK_READ',				'mark read' );
-define( '_AEC_NOTICE_MARK_ALL_READ',			'Mark all Notices read' );
-define( '_AEC_NOTICE_NUMBER_1',					'Event' );
-define( '_AEC_NOTICE_NUMBER_2',					'Event' );
-define( '_AEC_NOTICE_NUMBER_8',					'Notice' );
-define( '_AEC_NOTICE_NUMBER_32',				'Warning' );
-define( '_AEC_NOTICE_NUMBER_128',				'Error' );
-define( '_AEC_NOTICE_NUMBER_512',				'None' );
+define( '_AEC_NOTICES_FOUND',                    'Eventlog Notices' );
+define( '_AEC_NOTICES_FOUND_DESC',                'Les entr&eacute;es suivantes de l&amp;acute;Eventlog sont ici pour attirer votre attention. Pour ne plus les voir marquez les comme lues. Vous pouvez aussi changer les informations &agrave; afficher dans Settings.' );
+define( '_AEC_NOTICE_MARK_READ',                'Marqu&eacute; lu' );
+define( '_AEC_NOTICE_MARK_ALL_READ',            'Marquer tous avis lu' );
+define( '_AEC_NOTICE_NUMBER_1',                    'Ev&eacute;nement' );
+define( '_AEC_NOTICE_NUMBER_2',                    'Ev&eacute;nement' );
+define( '_AEC_NOTICE_NUMBER_8',                    'Notice' );
+define( '_AEC_NOTICE_NUMBER_32',                'Attention' );
+define( '_AEC_NOTICE_NUMBER_128',                'Erreur' );
+define( '_AEC_NOTICE_NUMBER_512',                'Aucun' );
 
 // select lists
-define( '_AEC_SEL_EXCLUDED',					'Excluded' );
-define( '_AEC_SEL_PENDING',						'Pending' );
-define( '_AEC_SEL_ACTIVE',						'Active' );
-define( '_AEC_SEL_EXPIRED',						'Expired' );
-define( '_AEC_SEL_CLOSED',						'Closed' );
-define( '_AEC_SEL_CANCELLED',					'Storno' );
-define( '_AEC_SEL_NOT_CONFIGURED',				'Not Configured' );
+define( '_AEC_SEL_EXCLUDED',                    'Exclus' );
+define( '_AEC_SEL_PENDING',                        'En attente' );
+define( '_AEC_SEL_ACTIVE',                      'Active' );
+define( '_AEC_SEL_EXPIRED',                        'Expir&eacute;' );
+define( '_AEC_SEL_CLOSED',                        'Ferm&eacute;' );
+define( '_AEC_SEL_CANCELLED',                    'Annul&eacute;' );
+define( '_AEC_SEL_NOT_CONFIGURED',                'Non configurer' );
 
 // footer
-define( '_AEC_FOOT_TX_CHOOSING',				'Thank you for choosing the Account Expiration Control Component!' );
-define( '_AEC_FOOT_TX_GPL',						'This Joomla/Mambo component was developed and released under the <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU/GPL</a> license by Helder Garcia and David Deutsch from <a href="http://www.globalnerd.org" target="_blank">globalnerd.org</a>' );
-define( '_AEC_FOOT_TX_SUBSCRIBE',				'If you want more features, professional service, updates, manuals and online help for this component, you can subscribe to our services at the above link. It helps us a lot in our development!' );
-define( '_AEC_FOOT_CREDIT',						'Please read our %s' );
-define( '_AEC_FOOT_CREDIT_LTEXT',				'full credits' );
-define( '_AEC_FOOT_VERSION_CHECK',				'Check for latest Version' );
-define( '_AEC_FOOT_MEMBERSHIP',					'Get a membership with documentation and support' );
+define( '_AEC_FOOT_TX_CHOOSING',                'Merci d\'avoir choisi le composant AEC de contr&ocirc;le d\'expiration des comptes!' );
+define( '_AEC_FOOT_TX_GPL',                        'Ce composant Joomla/Mambo a &eacute;t&eacute; &eacute;labor&eacute; et publi&eacute; sous licence &lt;a href=&quot;http://www.gnu.org/copyleft/gpl.html&quot; target=&quot;_blank&quot;&gt;GNU/GPL&lt;/a&gt; par Helder Garcia et David Deutsch de &lt;a href=&quot;http://www.globalnerd.org&quot; target=&quot;_blank&quot;&gt;globalnerd.org&lt;/a&gt;&lt;br /&gt;Traduction fran&ccedil;aise par Garstud, Johnpoulain, Cobayes, cb75ter, Sharky' );
+define( '_AEC_FOOT_TX_SUBSCRIBE',                'Si vous voulez plus de fonctionnalit&eacute;s, services professionnels, mises &agrave; jour, les manuels et l\'aide en ligne pour ce composant, vous pouvez vous abonner &agrave; nos services sur le lien ci-dessus. Il nous aide beaucoup dans notre d&eacute;veloppement!' );
+define( '_AEC_FOOT_CREDIT',                        'S\'il vous pla&#238;t lisez notre %s' );
+define( '_AEC_FOOT_CREDIT_LTEXT',                'liste de remerciements' );
+define( '_AEC_FOOT_VERSION_CHECK',                'Contr&ocirc;le de version' );
+define( '_AEC_FOOT_MEMBERSHIP',                    'Devenez membre avec documentation et support' );
 
 // alerts
-define( '_AEC_ALERT_SELECT_FIRST',				'Select an item to configure' );
-define( '_AEC_ALERT_SELECT_FIRST_TO',			'Please select first an item to' );
+define( '_AEC_ALERT_SELECT_FIRST',                'S&eacute;lectionnez un &eacute;l&eacute;ment &agrave; configurer' );
+define( '_AEC_ALERT_SELECT_FIRST_TO',            'S\'il vous pla&#238;t s&eacute;lectionnez d\'abord un &eacute;l&eacute;ment pour' );
 
 // messages
-define( '_AEC_MSG_NODELETE_SUPERADMIN',			'You cannot delete a Super Administrator' );
-define( '_AEC_MSG_NODELETE_YOURSELF',			'You cannot delete Yourself!' );
-define( '_AEC_MSG_NODELETE_EXCEPT_SUPERADMIN',	'Only Superadmins can perform this action!' );
-define( '_AEC_MSG_SUBS_RENEWED',				'subscription(s) renewed' );
-define( '_AEC_MSG_SUBS_ACTIVATED',				'subscription(s) activated' );
-define( '_AEC_MSG_NO_ITEMS_TO_DELETE',			'No item found to delete' );
-define( '_AEC_MSG_NO_DEL_W_ACTIVE_SUBSCRIBER',	'You cannot delete plans with active subscribers' );
-define( '_AEC_MSG_ITEMS_DELETED',				'Item(s) deleted' );
-define( '_AEC_MSG_ITEMS_SUCESSFULLY',			'%s Item(s) successfully' );
-define( '_AEC_MSG_SUCESSFULLY_SAVED',			'Changes successfully saved' );
-define( '_AEC_MSG_ITEMS_SUCC_PUBLISHED',		'Item(s) successfully Published' );
-define( '_AEC_MSG_ITEMS_SUCC_UNPUBLISHED',		'Item(s) successfully Unpublished' );
-define( '_AEC_MSG_NO_COUPON_CODE',				'You must specify a coupon code!' );
-define( '_AEC_MSG_OP_FAILED',					'Operation Failed: Could not open %s' );
-define( '_AEC_MSG_OP_FAILED_EMPTY',				'Operation failed: Content empty' );
-define( '_AEC_MSG_OP_FAILED_NOT_WRITEABLE',		'Operation failed: The file is not writable.' );
-define( '_AEC_MSG_OP_FAILED_NO_WRITE',			'Operation failed: Failed to open file for writing' );
-define( '_AEC_MSG_INVOICE_CLEARED',				'Invoice cleared' );
+define( '_AEC_MSG_NODELETE_SUPERADMIN',            'Vous ne pouvez pas supprimer un Super Administrateur' );
+define( '_AEC_MSG_NODELETE_YOURSELF',            'Vous ne pouvez pas supprimer votre propre compte !' );
+define( '_AEC_MSG_NODELETE_EXCEPT_SUPERADMIN',    'Seul les  Super Administrateur peuvent ex&eacute;cuter cette action !' );
+define( '_AEC_MSG_SUBS_RENEWED',                'abonnement(s) renouvel&eacute;(s)' );
+define( '_AEC_MSG_SUBS_ACTIVATED',                'abonnement(s) activ&eacute;(s)' );
+define( '_AEC_MSG_NO_ITEMS_TO_DELETE',            'Aucuns &eacute;l&eacute;ment trouv&eacute; a effacer' );
+define( '_AEC_MSG_NO_DEL_W_ACTIVE_SUBSCRIBER',    'Vous ne pouvez pas supprimer des plans contenant des souscripteurs actifs' );
+define( '_AEC_MSG_ITEMS_DELETED',                'El&eacute;ment(s) effac&eacute;(s)' );
+define( '_AEC_MSG_ITEMS_SUCESSFULLY',            '%s &eacute;l&eacute;ment(s) avec succ&egrave;s' );
+define( '_AEC_MSG_SUCESSFULLY_SAVED',            'Modifications enregistr&eacute;es avec succ&eacute;s' );
+define( '_AEC_MSG_ITEMS_SUCC_PUBLISHED',        'El&eacute;ment(s) publi&eacute;(s) avec succ&egrave;s' );
+define( '_AEC_MSG_ITEMS_SUCC_UNPUBLISHED',        'El&eacute;ment(s) d&eacute;publi&eacute;(s) avec succ&egrave;s' );
+define( '_AEC_MSG_NO_COUPON_CODE',                'Vous devez sp&eacute;cifier un code de coupon!' );
+define( '_AEC_MSG_OP_FAILED',                    'Op&eacute;ration en &eacute;chec: Ne peux pas ouvrir %s' );
+define( '_AEC_MSG_OP_FAILED_EMPTY',                'Op&eacute;ration en &eacute;chec: Contenu vide' );
+define( '_AEC_MSG_OP_FAILED_NOT_WRITEABLE',        'Op&eacute;ration en &eacute;chec: le fichier n\'est pas modifiable.' );
+define( '_AEC_MSG_OP_FAILED_NO_WRITE',            'Op&eacute;ration en &eacute;chec: Impossible d\'ouvrir le fichier en &eacute;criture' );
+define( '_AEC_MSG_INVOICE_CLEARED',                'Facture termin&eacute;e' );
 
 // languages (e.g. PayPal) - must be ISO 3166 Two-Character Country Codes
-define( '_AEC_LANG_DE',							'German' );
-define( '_AEC_LANG_GB',							'English' );
-define( '_AEC_LANG_FR',							'French' );
-define( '_AEC_LANG_IT',							'Italian' );
-define( '_AEC_LANG_ES',							'Spanish' );
-define( '_AEC_LANG_US',							'English US' );
+define( '_AEC_LANG_DE',                            'German' );
+define( '_AEC_LANG_GB',                            'English' );
+define( '_AEC_LANG_FR',                            'French' );
+define( '_AEC_LANG_IT',                            'Italian' );
+define( '_AEC_LANG_ES',                            'Spanish' );
+define( '_AEC_LANG_US',                            'English US' );
 
 // currencies
-define( '_CURRENCY_RSD',						'Serbian Dinar' );
-
-// --== COUPON EDIT ==--
-define( '_COUPON_DETAIL_TITLE', 'Coupon');
-define( '_COUPON_RESTRICTIONS_TITLE', 'Restrict.');
-define( '_COUPON_RESTRICTIONS_TITLE_FULL', 'Restrictions');
-define( '_COUPON_MI', 'Micro Int.');
-define( '_COUPON_MI_FULL', 'Micro Integrations');
-
-define( '_COUPON_GENERAL_NAME_NAME', 'Name');
-define( '_COUPON_GENERAL_NAME_DESC', 'Enter the (internal&amp;external) name for this coupon');
-define( '_COUPON_GENERAL_COUPON_CODE_NAME', 'Coupon Code');
-define( '_COUPON_GENERAL_COUPON_CODE_DESC', 'Enter the Coupon Code for this coupon - the randomly generated coupon code is checked to be unique within the system');
-define( '_COUPON_GENERAL_DESC_NAME', 'Description');
-define( '_COUPON_GENERAL_DESC_DESC', 'Enter the (internal) description for this coupon');
-define( '_COUPON_GENERAL_ACTIVE_NAME', 'Active');
-define( '_COUPON_GENERAL_ACTIVE_DESC', 'Set whether this coupon is active (can be used)');
-define( '_COUPON_GENERAL_TYPE_NAME', 'Static');
-define( '_COUPON_GENERAL_TYPE_DESC', 'Select whether you want this to be a static coupon. These are stored in a separate table for quicker access, the general distinction being that static coupons are coupons that are used by a lot of users while non-static coupons are for one user.');
-
-define( '_COUPON_GENERAL_MICRO_INTEGRATIONS_NAME', 'Micro Integrations');
-define( '_COUPON_GENERAL_MICRO_INTEGRATIONS_DESC', 'Select the Micro Integration(s) which you want to be called when this coupon is used');
-
-define( '_COUPON_PARAMS_AMOUNT_USE_NAME', 'Use Amount');
-define( '_COUPON_PARAMS_AMOUNT_USE_DESC', 'Select whether you want to use a direct discount amount');
-define( '_COUPON_PARAMS_AMOUNT_NAME', 'Discount Amount');
-define( '_COUPON_PARAMS_AMOUNT_DESC', 'Enter the Amount that you want to deduct from the next amount');
-define( '_COUPON_PARAMS_AMOUNT_PERCENT_USE_NAME', 'Use Percentage');
-define( '_COUPON_PARAMS_AMOUNT_PERCENT_USE_DESC', 'Select whether you want a percentage deducted from the actual amount');
-define( '_COUPON_PARAMS_AMOUNT_PERCENT_NAME', 'Discount Percentage');
-define( '_COUPON_PARAMS_AMOUNT_PERCENT_DESC', 'Enter the percentage that you want deducted from the amount');
-define( '_COUPON_PARAMS_PERCENT_FIRST_NAME', 'Percent First');
-define( '_COUPON_PARAMS_PERCENT_FIRST_DESC', 'If you combine percentage and amount, do you want the percentage to be deducted first?');
-define( '_COUPON_PARAMS_USEON_TRIAL_NAME', 'Use On Trial?');
-define( '_COUPON_PARAMS_USEON_TRIAL_DESC', 'Do you want to let the user apply this discount to a trial amount?');
-define( '_COUPON_PARAMS_USEON_FULL_NAME', 'Use On Full?');
-define( '_COUPON_PARAMS_USEON_FULL_DESC', 'Do you want to let the user apply this discount to the actual amount? (With recurring billing: to the first regular payment)');
-define( '_COUPON_PARAMS_USEON_FULL_ALL_NAME', 'Every Full?');
-define( '_COUPON_PARAMS_USEON_FULL_ALL_DESC', 'If the user is using recurring payments, do you want to grant this discount for each subsequent payment? (Or just for the first, if that applies - then select no)');
-
-define( '_COUPON_PARAMS_HAS_START_DATE_NAME', 'Use Start Date');
-define( '_COUPON_PARAMS_HAS_START_DATE_DESC', 'Do you want to allow your users to use this coupon from a certain date on?');
-define( '_COUPON_PARAMS_START_DATE_NAME', 'Start Date');
-define( '_COUPON_PARAMS_START_DATE_DESC', 'Select the date at which you want to start allowing the usage of this coupon');
-define( '_COUPON_PARAMS_HAS_EXPIRATION_NAME', 'Use Expiration Date');
-define( '_COUPON_PARAMS_HAS_EXPIRATION_DESC', 'Do you want to restrict the usage of this coupon to a certain date?');
-define( '_COUPON_PARAMS_EXPIRATION_NAME', 'Expiration Date');
-define( '_COUPON_PARAMS_EXPIRATION_DESC', 'Select the date at which you want to stop allowing the usage of this coupon');
-define( '_COUPON_PARAMS_HAS_MAX_REUSE_NAME', 'Restrict Reuse?');
-define( '_COUPON_PARAMS_HAS_MAX_REUSE_DESC', 'Do you want to restrict the number of times this coupon may be used?');
-define( '_COUPON_PARAMS_MAX_REUSE_NAME', 'Max Uses');
-define( '_COUPON_PARAMS_MAX_REUSE_DESC', 'Choose the number of times this coupon can be used');
-define( '_COUPON_PARAMS_HAS_MAX_PERUSER_REUSE_NAME', 'Restrict Reuse per User?');
-define( '_COUPON_PARAMS_HAS_MAX_PERUSER_REUSE_DESC', 'Do you want to restrict the number of times every user is allowed to use this coupon?');
-define( '_COUPON_PARAMS_MAX_PERUSER_REUSE_NAME', 'Max Uses per User');
-define( '_COUPON_PARAMS_MAX_PERUSER_REUSE_DESC', 'Choose the number of times this coupon can be used by each user');
-
-define( '_COUPON_PARAMS_USECOUNT_NAME', 'Use Count');
-define( '_COUPON_PARAMS_USECOUNT_DESC', 'Reset the number of times this Coupon has been used');
-
-define( '_COUPON_PARAMS_USAGE_PLANS_ENABLED_NAME', 'Set Plan');
-define( '_COUPON_PARAMS_USAGE_PLANS_ENABLED_DESC', 'Do you want to allow this coupon only for certain plans?');
-define( '_COUPON_PARAMS_USAGE_PLANS_NAME', 'Plans');
-define( '_COUPON_PARAMS_USAGE_PLANS_DESC', 'Choose which plans this coupon can be used for');
-
-define( '_COUPON_RESTRICTIONS_MINGID_ENABLED_NAME', 'Enable Min GID:');
-define( '_COUPON_RESTRICTIONS_MINGID_ENABLED_DESC', 'Enable this setting if you want to restrict whether a user can use this coupon by a minimum usergroup.');
-define( '_COUPON_RESTRICTIONS_MINGID_NAME', 'Visibility Group:');
-define( '_COUPON_RESTRICTIONS_MINGID_DESC', 'The minimum user level required to use this coupon.');
-define( '_COUPON_RESTRICTIONS_FIXGID_ENABLED_NAME', 'Enable Fixed GID:');
-define( '_COUPON_RESTRICTIONS_FIXGID_ENABLED_DESC', 'Enable this setting if you want to restrict this coupon to one usergroup.');
-define( '_COUPON_RESTRICTIONS_FIXGID_NAME', 'Set Group:');
-define( '_COUPON_RESTRICTIONS_FIXGID_DESC', 'Only users with this usergroup can use this coupon.');
-define( '_COUPON_RESTRICTIONS_MAXGID_ENABLED_NAME', 'Enable Max GID:');
-define( '_COUPON_RESTRICTIONS_MAXGID_ENABLED_DESC', 'Enable this setting if you want to restrict whether a user use this coupon by a maximum usergroup.');
-define( '_COUPON_RESTRICTIONS_MAXGID_NAME', 'Maximum Group:');
-define( '_COUPON_RESTRICTIONS_MAXGID_DESC', 'The maximum user level a user can have to use this coupon.');
-
-define( '_COUPON_RESTRICTIONS_PREVIOUSPLAN_REQ_ENABLED_NAME', 'Required Prev. Plan:');
-define( '_COUPON_RESTRICTIONS_PREVIOUSPLAN_REQ_ENABLED_DESC', 'Enable checking for previous payment plan');
-define( '_COUPON_RESTRICTIONS_PREVIOUSPLAN_REQ_NAME', 'Plan:');
-define( '_COUPON_RESTRICTIONS_PREVIOUSPLAN_REQ_DESC', 'A user will only be able to use this coupon if he or she used the selected plan before the one currently in use');
-define( '_COUPON_RESTRICTIONS_CURRENTPLAN_REQ_ENABLED_NAME', 'Required Curr. Plan:');
-define( '_COUPON_RESTRICTIONS_CURRENTPLAN_REQ_ENABLED_DESC', 'Enable checking for currently present payment plan');
-define( '_COUPON_RESTRICTIONS_CURRENTPLAN_REQ_NAME', 'Plan:');
-define( '_COUPON_RESTRICTIONS_CURRENTPLAN_REQ_DESC', 'A user will only be able to use this coupon if he or she is currently assigned to, or has expired from the plan selected here');
-define( '_COUPON_RESTRICTIONS_OVERALLPLAN_REQ_ENABLED_NAME', 'Required Used Plan:');
-define( '_COUPON_RESTRICTIONS_OVERALLPLAN_REQ_ENABLED_DESC', 'Enable checking for overall used payment plan');
-define( '_COUPON_RESTRICTIONS_OVERALLPLAN_REQ_NAME', 'Plan:');
-define( '_COUPON_RESTRICTIONS_OVERALLPLAN_REQ_DESC', 'A user will only be able to use this coupon if he or she has used the selected plan once, no matter when');
-
-define( '_COUPON_RESTRICTIONS_USED_PLAN_MIN_ENABLED_NAME', 'Min Used Plan:');
-define( '_COUPON_RESTRICTIONS_USED_PLAN_MIN_ENABLED_DESC', 'Enable checking for the minimum number of times your consumers have subscribed to a specified payment plan in order to be able to use this coupon');
-define( '_COUPON_RESTRICTIONS_USED_PLAN_MIN_AMOUNT_NAME', 'Used Amount:');
-define( '_COUPON_RESTRICTIONS_USED_PLAN_MIN_AMOUNT_DESC', 'The minimum amount a user has to have used the selected plan');
-define( '_COUPON_RESTRICTIONS_USED_PLAN_MIN_NAME', 'Plan:');
-define( '_COUPON_RESTRICTIONS_USED_PLAN_MIN_DESC', 'The payment plan that the user has to have used the specified number of times at least');
-define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_ENABLED_NAME', 'Max Used Plan:');
-define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_ENABLED_DESC', 'Enable checking for the maximum number of times your consumers have subscribed to a specified payment plan in order to be able to use this coupon');
-define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_AMOUNT_NAME', 'Used Amount:');
-define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_AMOUNT_DESC', 'The maximum amount a user can have used the selected plan');
-define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_NAME', 'Plan:');
-define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_DESC', 'The payment plan that the user has to have used the specified number of times at most');
-
-define( '_COUPON_RESTRICTIONS_RESTRICT_COMBINATION_NAME', 'Restrict Combination:');
-define( '_COUPON_RESTRICTIONS_RESTRICT_COMBINATION_DESC', 'Choose to not let your users combine this coupon with one of the following');
-define( '_COUPON_RESTRICTIONS_BAD_COMBINATIONS_NAME', 'Coupons:');
-define( '_COUPON_RESTRICTIONS_BAD_COMBINATIONS_DESC', 'Make a selection which coupons this one is not to be used with');
-define( '_COUPON_RESTRICTIONS_DEPEND_ON_SUBSCR_ID_NAME', 'Depend on Subscription:');
-define( '_COUPON_RESTRICTIONS_DEPEND_ON_SUBSCR_ID_DESC', 'Make the coupon depend on a certain subscription to be functional.');
-define( '_COUPON_RESTRICTIONS_SUBSCR_ID_DEPENDENCY_NAME', 'Subscription ID');
-define( '_COUPON_RESTRICTIONS_SUBSCR_ID_DEPENDENCY_DESC', 'The Subscription ID that the coupon will depend on.');
-define( '_COUPON_RESTRICTIONS_ALLOW_TRIAL_DEPEND_SUBSCR_NAME', 'Allow Trial Subscriptions:');
-define( '_COUPON_RESTRICTIONS_ALLOW_TRIAL_DEPEND_SUBSCR_DESC', 'Allow the use of the coupon when depending on a subscription that is still a trial.');
-
-// end new 0.12.4 (mic)
+define( '_CURRENCY_RSD',                        'Serbian Dinar' );
 
 // --== BARRE OUTIL BACKEND ==--
-define( '_EXPIRE_SET','Set Expiration:');
+define( '_EXPIRE_SET','D&eacute;finir Expiration:');
 define( '_EXPIRE_NOW','Expire');
-define( '_EXPIRE_EXCLUDE','Exclude');
-define( '_EXPIRE_INCLUDE','Include');
-define( '_EXPIRE_CLOSE','Close');
-define( '_EXPIRE_01MONTH','set 1 Month');
-define( '_EXPIRE_03MONTH','set 3 Months');
-define( '_EXPIRE_12MONTH','set 12 Months');
-define( '_EXPIRE_ADD01MONTH','add 1 Month');
-define( '_EXPIRE_ADD03MONTH','add 3 Months');
-define( '_EXPIRE_ADD12MONTH','add 12 Months');
+define( '_EXPIRE_EXCLUDE','Exclure');
+define( '_EXPIRE_INCLUDE','Inclure');
+define( '_EXPIRE_CLOSE','Ferm&eacute;');
+define( '_EXPIRE_01MONTH','D&eacute;finir 1 mois');
+define( '_EXPIRE_03MONTH','D&eacute;finir 3 mois');
+define( '_EXPIRE_12MONTH','D&eacute;finir 12 mois');
+define( '_EXPIRE_ADD01MONTH','Ajouter 1 mois');
+define( '_EXPIRE_ADD03MONTH','Ajouter 3 mois');
+define( '_EXPIRE_ADD12MONTH','Ajouter 12 mois');
 define( '_CONFIGURE','Configurer');
-define( '_REMOVE','D&eacute;placer vers la liste d&acute;exclusion');
+define( '_REMOVE','D&eacute;placer vers la liste d&amp;acute;exclusion');
 define( '_CNAME','Nom');
-define( '_USERLOGIN','Nom d&acute;utilisateur');
-define( '_EXPIRATION','Date d&acute;expiration');
+define( '_USERLOGIN','Nom d&amp;acute;utilisateur');
+define( '_EXPIRATION','Date d&amp;acute;expiration');
 define( '_USERS','Utilisateurs');
 define( '_DISPLAY','Afficher');
 define( '_NOTSET','Exclu');
@@ -516,41 +401,41 @@ define( '_NAME_ASC','Nom ordre Croissant');
 define( '_NAME_DESC','Nom ordre D&eacute;croissant');
 define( '_LOGIN_ASC','Utilisateur ordre Croissant');
 define( '_LOGIN_DESC','Utilisateur ordre D&eacute;croissant');
-define( '_SIGNUP_ASC','Signup Date Asc');
-define( '_SIGNUP_DESC','Signup Date Desc');
-define( '_LASTPAY_ASC','Last Payment Asc');
-define( '_LASTPAY_DESC','Last Payment Desc');
-define( '_PLAN_ASC','Plan Asc');
-define( '_PLAN_DESC','Plan Desc');
-define( '_STATUS_ASC','Status Asc');
-define( '_STATUS_DESC','Status Desc');
-define( '_TYPE_ASC','Payment Type Asc');
-define( '_TYPE_DESC','Payment Type Desc');
+define( '_SIGNUP_ASC','Inscription date asc.');
+define( '_SIGNUP_DESC','Inscription date desc.');
+define( '_LASTPAY_ASC','Dernier payement asc');
+define( '_LASTPAY_DESC','Dernier payement desc');
+define( '_PLAN_ASC','Plan asc.');
+define( '_PLAN_DESC','Plan desc.');
+define( '_STATUS_ASC','Etat asc.');
+define( '_STATUS_DESC','Etat desc.');
+define( '_TYPE_ASC','Type de payement asc.');
+define( '_TYPE_DESC','Type de payement desc.');
 define( '_ORDER_BY','Class&eacute; par :');
 define( '_SAVED', 'Enregistr&eacute;');
 define( '_CANCELED', 'Annul&eacute;');
 define( '_CONFIGURED', 'Objet configur&eacute;');
 define( '_REMOVED', 'Objet retir&eacute; de la liste.');
 define( '_EOT_TITLE', 'Comptes ferm&eacute;s');
-define( '_EOT_DESC', 'Cette liste n&acute;inclut pas les comptes g&eacute;r&eacute;s manuellement, mais uniquement ceux g&eacute;r&eacute;s avec PayPal. Quand vous effacez une entr&eacute;e, l&acute;utilisateur est retir&eacute; de la base de donn&eacute;es et tous les mouvements li&eacute;s &agrave; son activit&eacute; sont retir&eacute;s de la table locale historique Paypal.');
+define( '_EOT_DESC', 'Cette liste n&amp;acute;inclut pas les comptes g&eacute;r&eacute;s manuellement, mais uniquement ceux g&eacute;r&eacute;s avec PayPal. Quand vous effacez une entr&eacute;e, l&amp;acute;utilisateur est retir&eacute; de la base de donn&eacute;es et tous les mouvements li&eacute;s &agrave; son activit&eacute; sont retir&eacute;s de la table locale historique Paypal.');
 define( '_EOT_DATE', 'Date de fin de terme');
 define( '_EOT_CAUSE', 'Cause');
 define( '_EOT_CAUSE_FAIL', '&Eacute;chec de paiement');
-define( '_EOT_CAUSE_BUYER', 'Annul&eacute; par l&acute;utilisateur');
-define( '_EOT_CAUSE_FORCED', 'Annul&eacute; par l&acute;administrateur');
-define( '_REMOVE_CLOSED', 'Effacer l&acute;utilisateur');
+define( '_EOT_CAUSE_BUYER', 'Annul&eacute; par l&amp;acute;utilisateur');
+define( '_EOT_CAUSE_FORCED', 'Annul&eacute; par l&amp;acute;administrateur');
+define( '_REMOVE_CLOSED', 'Effacer l&amp;acute;utilisateur');
 define( '_FORCE_CLOSE', 'Forcer la fermeture');
 define( '_PUBLISH_PAYPLAN', 'Publier');
 define( '_UNPUBLISH_PAYPLAN', 'D&eacute;publier');
 define( '_NEW_PAYPLAN', 'Nouveau');
-define( '_COPY_PAYPLAN', 'Copy');
-define( '_APPLY_PAYPLAN', 'Apply');
+define( '_COPY_PAYPLAN', 'Copie');
+define( '_APPLY_PAYPLAN', 'Appliquer');
 define( '_EDIT_PAYPLAN', '&Eacute;diter');
 define( '_REMOVE_PAYPLAN', 'Effacer');
 define( '_SAVE_PAYPLAN', 'Enregistrer');
 define( '_CANCEL_PAYPLAN', 'Annuler');
-define( '_PAYPLANS_TITLE', 'Gestionnaire des Plans');
-define( '_PAYPLANS_MAINDESC', 'Les Plans Publi&eacute;s seront des options pour l&acute;utilisateur sur le frontend du site. Ces plans sont valides uniquement pour les paiements Paypal.');
+define( '_PAYPLANS_TITLE', 'Gestionnaire des plans');
+define( '_PAYPLANS_MAINDESC', 'Les plans Publi&eacute;s seront des options pour l&amp;acute;utilisateur sur le frontend du site. Ces plans sont valides uniquement pour les paiements Paypal.');
 define( '_PAYPLAN_NAME', 'Nom');
 define( '_PAYPLAN_DESC', 'Description (premiers 50 caract&egrave;res)');
 define( '_PAYPLAN_ACTIVE', 'Publi&eacute;');
@@ -559,19 +444,19 @@ define( '_PAYPLAN_A3', 'Taux');
 define( '_PAYPLAN_P3', 'P&eacute;riode');
 define( '_PAYPLAN_T3', 'Unit&eacute; de temps');
 define( '_PAYPLAN_USERCOUNT', 'Abonn&eacute;');
-define( '_PAYPLAN_EXPIREDCOUNT', 'Expired');
+define( '_PAYPLAN_EXPIREDCOUNT', 'Expir&eacute;');
 define( '_PAYPLAN_TOTALCOUNT', 'Total');
 define( '_PAYPLAN_REORDER', 'R&eacute;ordonner');
 define( '_PAYPLAN_DETAIL', 'R&eacute;gulier');
 define( '_ALTERNATIVE_PAYMENT', 'Virement bancaire');
-define( '_SUBSCR_DATE', 'Date d&acute;abonnement');
+define( '_SUBSCR_DATE', 'Date d&amp;acute;abonnement');
 define( '_ACTIVE_TITLE', 'Abonnements Activ&eacute;s');
-define( '_ACTIVE_DESC', 'Cette liste n&acute;inclut pas les comptes g&eacute;r&eacute;s manuellement, mais uniquement ceux g&eacute;r&eacute;s avec PayPal.');
+define( '_ACTIVE_DESC', 'Cette liste n&amp;acute;inclut pas les comptes g&eacute;r&eacute;s manuellement, mais uniquement ceux g&eacute;r&eacute;s avec PayPal.');
 define( '_LASTPAY_DATE', 'Date du dernier paiement');
 define( '_USERPLAN', 'Plan');
 define( '_CANCELLED_TITLE', 'Abonnements annul&eacute;s');
-define( '_CANCELLED_DESC', 'Cette liste n&acute;inclut pas les comptes g&eacute;r&eacute;s manuellement, mais uniquement ceux g&eacute;r&eacute;s avec PayPal. Ce sont les abonnements annul&eacute;s par l&acute;utilisateur et n&acute;ayant pas atteint leurs termes.');
-define( '_CANCEL_DATE', 'Date d&acute;annulation');
+define( '_CANCELLED_DESC', 'Cette liste n&amp;acute;inclut pas les comptes g&eacute;r&eacute;s manuellement, mais uniquement ceux g&eacute;r&eacute;s avec PayPal. Ce sont les abonnements annul&eacute;s par l&amp;acute;utilisateur et n&amp;acute;ayant pas atteint leurs termes.');
+define( '_CANCEL_DATE', 'Date d&amp;acute;annulation');
 define( '_MANUAL_DESC', 'Lorsque vous effacez un utilisateur, il sera compl&egrave;tement effac&eacute; de la base de donn&eacute;es.');
 define( '_REPEND_ACTIVE', 'En attente de nouveau');
 define( '_FILTER_PLAN', '- S&eacute;lectionner le Plan -');
@@ -580,96 +465,95 @@ define( '_PLAN_FILTER','Filtre Plan:');
 define( '_CENTRAL_PAGE','Central');
 
 // --== USER FORM ==--
-define( '_USERINVOICE_ACTION_REPEAT','repeat&nbsp;Link');
-define( '_USERINVOICE_ACTION_CANCEL','cancel');
-define( '_USERINVOICE_ACTION_CLEAR','mark&nbsp;cleared');
-define( '_USERINVOICE_ACTION_CLEAR_APPLY','clear&nbsp;&amp;&nbsp;apply&nbsp;Plan');
+define( '_HISTORY_COL_INVOICE', 'Facture');
+define( '_HISTORY_COL_AMOUNT', 'Montant');
+define( '_HISTORY_COL_DATE', 'Date de payement');
+define( '_HISTORY_COL_METHOD', 'M&eacute;thode');
+define( '_HISTORY_COL_ACTION', 'Action');
+define( '_HISTORY_COL_PLAN', 'Plan');
+define( '_USERINVOICE_ACTION_REPEAT','Lien r&eacute;p&egrave;te');
+define( '_USERINVOICE_ACTION_CANCEL','Annuler');
+define( '_USERINVOICE_ACTION_CLEAR','marqu&eacute; OK');
+define( '_USERINVOICE_ACTION_CLEAR_APPLY','OK &amp; applique Plan');
 
 // --== PARAMETRES BACKEND ==--
 
-// TAB 1 - Param�tres de AEC
-define( '_HISTORY_COL_INVOICE', 'Invoice');
-define( '_HISTORY_COL_AMOUNT', 'Amount');
-define( '_HISTORY_COL_DATE', 'Payment Date');
-define( '_HISTORY_COL_METHOD', 'Method');
-define( '_HISTORY_COL_ACTION', 'Action');
-define( '_HISTORY_COL_PLAN', 'Plan');
+// TAB 1 - Parametres de AEC
 define( '_CFG_TAB1_TITLE', ' Configuration');
 define( '_CFG_TAB1_SUBTITLE', 'Options utilisateur');
 
-define( '_CFG_GENERAL_ALERTLEVEL2_NAME', 'Alerte Niveau 2:');
-define( '_CFG_GENERAL_ALERTLEVEL2_DESC', 'Dans jours. C&acute;est le premier seuil pour informer l&acute;utilisateur que son inscription est sur le point d&acute;expirer.');
-define( '_CFG_GENERAL_ALERTLEVEL1_NAME', 'Alerte Niveau 1:');
-define( '_CFG_GENERAL_ALERTLEVEL1_DESC', 'Dans jours. C&acute;est le seuil final pour informer l&acute;utilisateur que son inscription est sur le point d&acute;expirer. Cela doit &ecirc;tre l&acute;intervalle le plus pr&egrave;s de l&acute;expiration.');
-define( '_CFG_GENERAL_ENTRY_PLAN_NAME', 'Plan de D&eacute;part par d&eacute;faut');
-define( '_CFG_GENERAL_ENTRY_PLAN_DESC', 'Plan d&acute;essai gratuit par d&eacute;faut..');
-define( '_CFG_GENERAL_REQUIRE_SUBSCRIPTION_NAME', 'Require Subscription:');
-define( '_CFG_GENERAL_REQUIRE_SUBSCRIPTION_DESC', 'When enabled, a user MUST have a subscription. If disabled, users will be able to log in without one.');
+define( '_CFG_GENERAL_ALERTLEVEL2_NAME', 'Alerte niveau 2:');
+define( '_CFG_GENERAL_ALERTLEVEL2_DESC', 'En jours. C&amp;acute;est le premier seuil pour informer l&amp;acute;utilisateur que son inscription est sur le point d&amp;acute;expirer. &lt;strong&gt;Pas d&amp;acute;email envoy&eacute; !&lt;/strong&gt;');
+define( '_CFG_GENERAL_ALERTLEVEL1_NAME', 'Alerte niveau 1:');
+define( '_CFG_GENERAL_ALERTLEVEL1_DESC', 'En jours. C&amp;acute;est le seuil final pour informer l&amp;acute;utilisateur que son inscription est sur le point d&amp;acute;expirer. Cela doit &ecirc;tre l&amp;acute;intervalle le plus pr&egrave;s de l&amp;acute;expiration. &lt;strong&gt;Pas d&amp;acute;email envoy&eacute; !&lt;/strong&gt;');
+define( '_CFG_GENERAL_ENTRY_PLAN_NAME', 'Plan initial:');
+define( '_CFG_GENERAL_ENTRY_PLAN_DESC', 'Chaque utilisateur sera inscrit a ce plan (pas de paiement!) Lorsque l&amp;acute;utilisateur ne dispose pas encore d abonnement');
+define( '_CFG_GENERAL_REQUIRE_SUBSCRIPTION_NAME', 'Abonnement exig&eacute;:');
+define( '_CFG_GENERAL_REQUIRE_SUBSCRIPTION_DESC', 'Lorsque cette option est activ&eacute;e, l&amp;acute;utilisateur DOIT avoir un abonnement. Si d&eacute;sactiv&eacute;e, les utilisateurs pourront se connecter sans en avoir un.');
 
 define( '_CFG_GENERAL_GWLIST_NAME', 'Description de la Passerelle:');
-define( '_CFG_GENERAL_GWLIST_DESC', 'Liste des Passerelles que vous d&eacute;sirez expliquer sur les pages interdites (page que les utilisateurs voient lorsqu&acute;ils essaient d&acute;acc&eacute;der une page qui n&acute;est pas autoris&eacute;e par leur mode de plan).');
-define( '_CFG_GENERAL_GWLIST_ENABLED_NAME', 'Activated Gateways:');
-define( '_CFG_GENERAL_GWLIST_ENABLED_DESC', 'Select the gateways you want to be activated (use the CTRL key to select more than one). After saving, the settings tabs for these gateways will show up. Deactivating a gateway will not erase its settings.');
+define( '_CFG_GENERAL_GWLIST_DESC', 'Liste des Passerelles que vous d&eacute;sirez expliquer sur les pages interdites (page que les utilisateurs voient lorsqu&amp;acute;ils essaient d&amp;acute;acc&eacute;der une page qui n&amp;acute;est pas autoris&eacute;e par leur abonnement).');
+define( '_CFG_GENERAL_GWLIST_ENABLED_NAME', 'Passerelles de paiement activ&eacute;es:');
+define( '_CFG_GENERAL_GWLIST_ENABLED_DESC', 'Choisissez les passerelles de paiement que vous souhaitez activer (utilisez la touche CTRL pour en s&eacute;lectionner plusieurs). Apr&egrave;s sauvegarde, les onglets pour ces passerelles seront affich&eacute;s. D&eacute;sactiver une passerelle n&amp;acute;&eacute;crase pas ses param&egrave;tres.');
 
 define( '_CFG_GENERAL_BYPASSINTEGRATION_NAME', 'D&eacute;sactiver Int&eacute;gration:');
-define( '_CFG_GENERAL_BYPASSINTEGRATION_DESC', 'Entrer un nom ou une liste de noms (s&eacute;par&eacute;e par un espace) de l&acute;int&eacute;gration que vous voulez d&eacute;sactiver. Actuellement sont support&eacute;s: <strong>CB,CBE,CBM,JACL,SMF,UE,UHP2,VM</strong>. Cela peut &ecirc;tre utile quand vous avez d&eacute;sinstall&eacute; CB mais n&acute;avez pas supprim&eacute; les tables de la BD (dans le cas o&ugrave; AEC pourrait encore reconna&icirc;tre ce qui a d&eacute;j&agrave; &eacute;t&eacute; install&eacute;).');
+define( '_CFG_GENERAL_BYPASSINTEGRATION_DESC', 'Entrer un nom ou une liste de noms (s&eacute;par&eacute;e par un espace) de l&amp;acute;int&eacute;gration que vous voulez d&eacute;sactiver. Actuellement sont support&eacute;s: &lt;strong&gt;CB,CBE,CBM,JACL,SMF,UE,UHP2,VM&lt;/strong&gt;. Cela peut &ecirc;tre utile quand vous avez d&eacute;sinstall&eacute; CB mais n&amp;acute;avez pas supprim&eacute; les tables de la BD (dans le cas o&ugrave; AEC pourrait encore reconna&amp;icirc;tre ce qui a d&eacute;j&agrave; &eacute;t&eacute; install&eacute;).');
 define( '_CFG_GENERAL_SIMPLEURLS_NAME', 'URLs simples:');
-define( '_CFG_GENERAL_SIMPLEURLS_DESC', 'D&eacute;sactiver l&acute;utilisation des routines SEF de Joomla/Mambo pour les Urls. Avec certaines installations utiliser cette option va donner un message d&acute;erreur 404 &agrave; cause d&acute;une mauvaise r&eacute;&eacute;criture. Essayer cette option si vous rencontrez des probl&egrave;mes avec les redirections.');
-define( '_CFG_GENERAL_EXPIRATION_CUSHION_NAME', 'Coussin d&acute;Expiration:');
-define( '_CFG_GENERAL_EXPIRATION_CUSHION_DESC', 'Entrer une valeur de coussin pour d&eacute;terminer l&acute;expiration. Utiliser une valeur assez grande, car les paiements arrivent plus tard que l&acute;expiration (avec Paypal environ 6-8 heures plus tard).');
-define( '_CFG_GENERAL_HEARTBEAT_CYCLE_NAME', 'Heartbeat Cycle:');
-define( '_CFG_GENERAL_HEARTBEAT_CYCLE_DESC', 'Number of hours that the AEC waits until understanding a login as a trigger for sending out Emails or doing other actions that you chose to be performed periodically.');
-define( '_CFG_GENERAL_PLANS_FIRST_NAME', 'Plans First:');
-define( '_CFG_GENERAL_PLANS_FIRST_DESC', 'If you have commited all three hacks to have an integrated Registration with direct Subscription, this switch will activate this behavior. Don\'t use it if you don\'t want that behavior or only commited the first hack (which means that the plans come after the user has put in his or her details) .');
+define( '_CFG_GENERAL_SIMPLEURLS_DESC', 'D&eacute;sactiver l&amp;acute;utilisation des routines SEF de Joomla/Mambo pour les Urls. Avec certaines installations utiliser cette option va donner un message d&amp;acute;erreur 404 &agrave; cause d&amp;acute;une mauvaise r&eacute;&eacute;criture. Essayer cette option si vous rencontrez des probl&egrave;mes avec les redirections.');
+define( '_CFG_GENERAL_EXPIRATION_CUSHION_NAME', 'Coussin d&amp;acute;Expiration:');
+define( '_CFG_GENERAL_EXPIRATION_CUSHION_DESC', 'Entrer une valeur de coussin pour d&eacute;terminer l&amp;acute;expiration. Utiliser une valeur assez grande, car les paiements arrivent plus tard que l&amp;acute;expiration (avec Paypal environ 6-8 heures plus tard).');
+define( '_CFG_GENERAL_HEARTBEAT_CYCLE_NAME', 'Fr&eacute;quence d&amp;acute;ex&eacute;cution Front:');
+define( '_CFG_GENERAL_HEARTBEAT_CYCLE_DESC', 'Nombre d&amp;acute;heures que la AEC attend jusqu&amp;acute;a ce qu&amp;acute;un login soit compris comme un d&eacute;clencheur pour envoyer des e-mails ou &agrave; faire d&amp;acute;autres actions que vous avez choisi d&amp;acute;etre effectu&eacute; p&eacute;riodiquement.');
+define( '_CFG_GENERAL_PLANS_FIRST_NAME', 'Premier plan:');
+define( '_CFG_GENERAL_PLANS_FIRST_DESC', 'If you have commited all three hacks to have an integrated Registration with direct Subscription, this switch will activate this behavior. Don&amp;acute;t use it if you don&amp;acute;t want that behavior or only commited the first hack (which means that the plans come after the user has put in his or her details) .');
 
-define( '_CFG_TAB_CUSTOMIZATION_TITLE', 'Customize');
-define( '_CFG_TAB_CUSTOMIZATION_SUBTITLE', 'Customization');
+define( '_CFG_TAB_CUSTOMIZATION_TITLE', 'Personnaliser');
+define( '_CFG_TAB_CUSTOMIZATION_SUBTITLE', 'Personnalisation');
+define( '_CFG_GENERAL_CUSTOMINTRO_NAME', 'Lien personnalis&eacute; de la page d\'introduction:');
 define( '_CFG_GENERAL_CUSTOMINTRO_NAME', 'Custom intro page link:');
-define( '_CFG_GENERAL_CUSTOMINTRO_DESC', 'Provide a full link (including http://) that leads to your custom intro page. That page has to contain a link like this: http://www.yourdomain.com/index.php?option=com_acctexp&task=subscribe&intro=1 which bypasses the intro and correctly forwards the user to the payment plans or registration details page. Leave this field blank if you don\'t want this at all.');
-define( '_CFG_GENERAL_CUSTOMTHANKS_NAME', 'Custom thanks page link:');
-define( '_CFG_GENERAL_CUSTOMTHANKS_DESC', 'Provide a full link (including http://) that leads to your custom thanks page. Leave this field blank if you don\'t want this at all.');
-define( '_CFG_GENERAL_CUSTOMCANCEL_NAME', 'Custom cancel page link:');
-define( '_CFG_GENERAL_CUSTOMCANCEL_DESC', 'Provide a full link (including http://) that leads to your custom cancel page. Leave this field blank if you don\'t want this at all.');
-define( '_CFG_GENERAL_TOS_NAME', 'Terms of Service:');
-define( '_CFG_GENERAL_TOS_DESC', 'Enter a URL to your Terms of Service. The user will have to select a checkbox when confirming his account. If left blank, nothing will show up.');
-define( '_CFG_GENERAL_TOS_IFRAME_NAME', 'ToS Iframe:');
-define( '_CFG_GENERAL_TOS_IFRAME_DESC', 'Display the Terms of Service (as specified above) in an iframe on confirmation');
-define( '_CFG_GENERAL_CUSTOMNOTALLOWED_NAME', 'Custom NotAllowed link:');
-define( '_CFG_GENERAL_CUSTOMNOTALLOWED_DESC', 'Provide a full link (including http://) that leads to your custom NotAllowed page. Leave this field blank if you don\'t want this at all.');
+define( '_CFG_GENERAL_CUSTOMINTRO_DESC', 'Provide a full link (including http://) that leads to your custom intro page. That page has to contain a link like this: http://www.yourdomain.com/index.php?option=com_acctexp&amp;task=subscribe&amp;intro=1 which bypasses the intro and correctly forwards the user to the payment plans or registration details page. Leave this field blank if you don&amp;acute;t want this at all.');
+define( '_CFG_GENERAL_CUSTOMTHANKS_NAME', 'Lien personnalis&eacute; de la page de remerciement:');
+define( '_CFG_GENERAL_CUSTOMTHANKS_DESC', 'Fournir un lien complet (avec http://) qui dirige &agrave; votre page de remerciement personnalis&eacute;e. Laissez ce champ vide si vous n&amp;acute;en voulez.');
+define( '_CFG_GENERAL_CUSTOMCANCEL_NAME', 'Lien personnalis&eacute; de la page d\'annulation:');
+define( '_CFG_GENERAL_CUSTOMCANCEL_DESC', 'Fournir un lien complet (avec http://) qui dirige &agrave; votre page d&amp;acute;annulation personnalis&eacute;e. Laissez ce champ vide si vous n&amp;acute;en voulez.');
+define( '_CFG_GENERAL_TOS_NAME', 'Conditions d\'utilisation:');
+define( '_CFG_GENERAL_TOS_DESC', 'Entrez l&amp;acute;URL de conditions d&amp;acute;utilisation. L&amp;acute;utilisateur devra s&eacute;lectionner une case &agrave; cocher lors de la confirmation de son compte. Si laiss&eacute; vide, rien ne sera affich&eacute;.');
+define( '_CFG_GENERAL_CUSTOMNOTALLOWED_NAME', 'Lien personnalis&eacute; de la page Non-autoris&eacute;:');
+define( '_CFG_GENERAL_CUSTOMNOTALLOWED_DESC', 'Fournir un lien complet (avec http://) qui dirige &agrave; votre page de non autoris&eacute;s personnalis&eacute;e. Laissez ce champ vide si vous n&amp;acute;en voulez.');
 
-define( '_CFG_GENERAL_DISPLAY_DATE_FRONTEND_NAME', 'Frontend Date Format');
-define( '_CFG_GENERAL_DISPLAY_DATE_FRONTEND_DESC', 'Specify the way a date is displayed on the frontend. Refer to <a href="http://www.php.net/manual/en/function.strftime.php">the php manual</a> for the correct syntax.');
-define( '_CFG_GENERAL_DISPLAY_DATE_BACKEND_NAME', 'Backend Date Format');
-define( '_CFG_GENERAL_DISPLAY_DATE_BACKEND_DESC', 'Specify the way a date is displayed on the backend. Refer to <a href="http://www.php.net/manual/en/function.strftime.php">the php manual</a> for the correct syntax.');
+define( '_CFG_GENERAL_DISPLAY_DATE_FRONTEND_NAME', 'Format de date frontend');
+define( '_CFG_GENERAL_DISPLAY_DATE_FRONTEND_DESC', 'Pr&eacute;ciser la fa&ccedil;on dont la date est affich&eacute;e sur le frontend. Reportez-vous au &lt;a href=&quot;http://www.php.net/manual/en/function.strftime.php&quot;&gt;manuel PHP&lt;/a&gt; pour une syntax correct.');
+define( '_CFG_GENERAL_DISPLAY_DATE_BACKEND_NAME', 'Format de date Backend');
+define( '_CFG_GENERAL_DISPLAY_DATE_BACKEND_DESC', 'Pr&eacute;ciser la fa&ccedil;on dont la date est affich&eacute;e sur le frontend. Reportez-vous au &lt;a href=&quot;http://www.php.net/manual/en/function.strftime.php&quot;&gt;manuel PHP&lt;/a&gt; pour une syntax correct.');
 
-define( '_CFG_GENERAL_INVOICENUM_DOFORMAT_NAME', 'Format Invoice Number');
+define( '_CFG_GENERAL_INVOICENUM_DOFORMAT_NAME', 'Format du num&eacute;ro de facture');
 define( '_CFG_GENERAL_INVOICENUM_DOFORMAT_DESC', 'Display a formatted string instead of the original InvoiceNumber to the user. Must provide a formatting rule below.');
 define( '_CFG_GENERAL_INVOICENUM_FORMATTING_NAME', 'Formatting');
 define( '_CFG_GENERAL_INVOICENUM_FORMATTING_DESC', 'The Formatting - You can use the RewriteEngine as specified below');
 
-define( '_CFG_GENERAL_CUSTOMTEXT_PLANS_NAME', 'Custom Text Plans Page');
-define( '_CFG_GENERAL_CUSTOMTEXT_PLANS_DESC', 'Text that will be displayed on the Plans Page');
-define( '_CFG_GENERAL_CUSTOMTEXT_CONFIRM_NAME', 'Custom Text Confirm Page');
-define( '_CFG_GENERAL_CUSTOMTEXT_CONFIRM_DESC', 'Text that will be displayed on the Confirmation Page');
-define( '_CFG_GENERAL_CUSTOMTEXT_CHECKOUT_NAME', 'Custom Text Checkout Page');
-define( '_CFG_GENERAL_CUSTOMTEXT_CHECKOUT_DESC', 'Text that will be displayed on the Checkout Page');
-define( '_CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_NAME', 'Custom Text NotAllowed Page');
-define( '_CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_DESC', 'Text that will be displayed on the NotAllowed Page');
-define( '_CFG_GENERAL_CUSTOMTEXT_PENDING_NAME', 'Custom Text Pending Page');
-define( '_CFG_GENERAL_CUSTOMTEXT_PENDING_DESC', 'Text that will be displayed on the Pending Page');
-define( '_CFG_GENERAL_CUSTOMTEXT_EXPIRED_NAME', 'Custom Text Expired Page');
-define( '_CFG_GENERAL_CUSTOMTEXT_EXPIRED_DESC', 'Text that will be displayed on the Expired Page');
+define( '_CFG_GENERAL_CUSTOMTEXT_PLANS_NAME', 'Page de personnalisation des libell&eacute;s de Plan');
+define( '_CFG_GENERAL_CUSTOMTEXT_PLANS_DESC', 'Ce texte sera affich&eacute; sur la page du Plan');
+define( '_CFG_GENERAL_CUSTOMTEXT_CONFIRM_NAME', 'Texte personnalis&eacute; de la page de confirmation');
+define( '_CFG_GENERAL_CUSTOMTEXT_CONFIRM_DESC', 'Texte qui sera affich&eacute; sur la page de confirmation');
+define( '_CFG_GENERAL_CUSTOMTEXT_CHECKOUT_NAME', 'Texte personnalis&eacute; pour la page de Checkout');
+define( '_CFG_GENERAL_CUSTOMTEXT_CHECKOUT_DESC', 'Texte qui sera affich&eacute; sur la page de Checkout ');
+define( '_CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_NAME', 'Texte personnalis&eacute; de la page NotAllowed');
+define( '_CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_DESC', 'Texte qui sera affich&eacute; sur la page NotAllowed ');
+define( '_CFG_GENERAL_CUSTOMTEXT_PENDING_NAME', 'Texte personnalis&eacute; de la page Pending (en attente) ');
+define( '_CFG_GENERAL_CUSTOMTEXT_PENDING_DESC', 'Texte qui sera affich&eacute; sur la page Pending');
+define( '_CFG_GENERAL_CUSTOMTEXT_EXPIRED_NAME', 'Texte personnalis&eacute; de la page Expired');
+define( '_CFG_GENERAL_CUSTOMTEXT_EXPIRED_DESC', 'Texte qui sera affich&eacute; sur la page Expired ');
 
 define( '_CFG_GENERAL_CUSTOMTEXT_CONFIRM_KEEPORIGINAL_NAME', 'Keep Original Text');
-define( '_CFG_GENERAL_CUSTOMTEXT_CONFIRM_KEEPORIGINAL_DESC', 'Select this option if you want to keep the original text on the Confirmation Page');
+define( '_CFG_GENERAL_CUSTOMTEXT_CONFIRM_KEEPORIGINAL_DESC', 'Choisissez cette option si vous souhaitez conserver le texte original de la page de Confirmation');
 define( '_CFG_GENERAL_CUSTOMTEXT_CHECKOUT_KEEPORIGINAL_NAME', 'Keep Original Text');
-define( '_CFG_GENERAL_CUSTOMTEXT_CHECKOUT_KEEPORIGINAL_DESC', 'Select this option if you want to keep the original text on the Checkout Page');
+define( '_CFG_GENERAL_CUSTOMTEXT_CHECKOUT_KEEPORIGINAL_DESC', 'Choisissez cette option si vous souhaitez conserver le texte original de la page Checkout');
 define( '_CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_KEEPORIGINAL_NAME', 'Keep Original Text');
-define( '_CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_KEEPORIGINAL_DESC', 'Select this option if you want to keep the original text on the NotAllowed Page');
+define( '_CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_KEEPORIGINAL_DESC', 'Choisissez cette option si vous souhaitez conserver le texte original de la page NotAllowed');
 define( '_CFG_GENERAL_CUSTOMTEXT_PENDING_KEEPORIGINAL_NAME', 'Keep Original Text');
-define( '_CFG_GENERAL_CUSTOMTEXT_PENDING_KEEPORIGINAL_DESC', 'Select this option if you want to keep the original text on the Pending Page');
+define( '_CFG_GENERAL_CUSTOMTEXT_PENDING_KEEPORIGINAL_DESC', 'Choisissez cette option si vous souhaitez conserver le texte original de la page Pending ');
 define( '_CFG_GENERAL_CUSTOMTEXT_EXPIRED_KEEPORIGINAL_NAME', 'Keep Original Text');
-define( '_CFG_GENERAL_CUSTOMTEXT_EXPIRED_KEEPORIGINAL_DESC', 'Select this option if you want to keep the original text on the Expired Page');
+define( '_CFG_GENERAL_CUSTOMTEXT_EXPIRED_KEEPORIGINAL_DESC', 'Choisissez cette option si vous souhaitez conserver le texte original de la page Expired');
 
 define( '_CFG_GENERAL_CUSTOMTEXT_THANKS_KEEPORIGINAL_NAME', 'Keep Original Text');
 define( '_CFG_GENERAL_CUSTOMTEXT_THANKS_KEEPORIGINAL_DESC', 'Select this option if you want to keep the original text on the ThankYou Page');
@@ -680,29 +564,29 @@ define( '_CFG_GENERAL_CUSTOMTEXT_CANCEL_KEEPORIGINAL_DESC', 'Select this option 
 define( '_CFG_GENERAL_CUSTOMTEXT_CANCEL_NAME', 'Custom Text Cancel Page');
 define( '_CFG_GENERAL_CUSTOMTEXT_CANCEL_DESC', 'Text that will be displayed on the Cancel Page');
 
-define( '_CFG_GENERAL_USE_RECAPTCHA_NAME', 'Use ReCAPTCHA');
-define( '_CFG_GENERAL_USE_RECAPTCHA_DESC', 'If you have an account for <a href="http://recaptcha.net/">ReCAPTCHA</a>, you can activate this option. Do NOT forget to put in the keys below.');
-define( '_CFG_GENERAL_RECAPTCHA_PRIVATEKEY_NAME', 'Private ReCAPTCHA Key');
-define( '_CFG_GENERAL_RECAPTCHA_PRIVATEKEY_DESC', 'Your Private ReCAPTCHA Key.');
-define( '_CFG_GENERAL_RECAPTCHA_PUBLICKEY_NAME', 'Public ReCAPTCHA Key');
-define( '_CFG_GENERAL_RECAPTCHA_PUBLICKEY_DESC', 'Your Public ReCAPTCHA Key.');
+define( '_CFG_GENERAL_USE_RECAPTCHA_NAME', 'Utilisation de ReCAPTCHA');
+define( '_CFG_GENERAL_USE_RECAPTCHA_DESC', 'Si vous avez un compte pour &lt;a href=&quot;http://recaptcha.net/&quot;&gt;ReCAPTCHA&lt;/a&gt;, vous pouvez activer cette option. N&amp;acute;oubliez pas de mettre la cl&eacute; en dessous.');
+define( '_CFG_GENERAL_RECAPTCHA_PRIVATEKEY_NAME', 'Cl&eacute; priv&eacute;e ReCAPTCHA');
+define( '_CFG_GENERAL_RECAPTCHA_PRIVATEKEY_DESC', 'Votre cl&eacute; priv&eacute;e ReCAPTCHA .');
+define( '_CFG_GENERAL_RECAPTCHA_PUBLICKEY_NAME', 'Cl&eacute; Publique ReCAPTCHA');
+define( '_CFG_GENERAL_RECAPTCHA_PUBLICKEY_DESC', 'Votre cl&eacute; publique ReCAPTCHA.');
 
 define( '_CFG_GENERAL_TEMP_AUTH_EXP_NAME', 'Logged-out Invoice Access');
-define( '_CFG_GENERAL_TEMP_AUTH_EXP_DESC', 'The time (in minutes) that a user is able to access an invoice only by referencing the userid. When that period expires, a password is prompted before allowing access for the same period again.');
+define( '_CFG_GENERAL_TEMP_AUTH_EXP_DESC', 'La dur&eacute;e en minutes pendant laquelle un utilisateur est en mesure d&amp;acute;acc&eacute;der &agrave; une facture en utilisant seulement son userid. A la fin de cette dur&eacute;e, un mot de passe sera demand&eacute; pour acc&eacute;der pendant la m&ecirc;me dur&eacute;e.');
 
-define( '_CFG_GENERAL_HEARTBEAT_CYCLE_BACKEND_NAME', 'Heartbeat Cycle Backend:');
-define( '_CFG_GENERAL_HEARTBEAT_CYCLE_BACKEND_DESC', 'Number of hours that the AEC waits until understanding a backend access as heartbeat trigger.');
+define( '_CFG_GENERAL_HEARTBEAT_CYCLE_BACKEND_NAME', 'Fr&eacute;quence d&amp;acute;ex&eacute;cution Back:');
+define( '_CFG_GENERAL_HEARTBEAT_CYCLE_BACKEND_DESC', 'Nombre d&amp;acute;heures que la AEC attend jusqu&amp;acute;a ce qu&amp;acute;un Backend login soit compris comme un d&eacute;clencheur pour envoyer des e-mails ou &agrave; faire d&amp;acute;autres actions que vous avez choisi d&amp;acute;etre effectu&eacute; p&eacute;riodiquement.');
 define( '_CFG_GENERAL_ENABLE_COUPONS_NAME', 'Enable Coupons:');
 define( '_CFG_GENERAL_ENABLE_COUPONS_DESC', 'Enable the usage of coupons for your subscriptions.');
 define( '_CFG_GENERAL_DISPLAYCCINFO_NAME', 'Enable CC Display:');
 define( '_CFG_GENERAL_DISPLAYCCINFO_DESC', 'Enable the display of CreditCard icons for each payment processor.');
-define( '_CFG_GENERAL_ADMINACCESS_NAME', 'Administrator Access:');
+define( '_CFG_GENERAL_ADMINACCESS_NAME', 'Acc&egrave;s aux Administrateurs:');
 define( '_CFG_GENERAL_ADMINACCESS_DESC', 'Grant Access to the AEC not only to Super Administrators, but regular Administrators as well.');
-define( '_CFG_GENERAL_NOEMAILS_NAME', 'No Emails');
-define( '_CFG_GENERAL_NOEMAILS_DESC', 'Set this to prevent AEC System Emails (to the user in events of invoices paid or alike) from being sent out. This does not affect emails being sent from MicroIntegrations.');
-define( '_CFG_GENERAL_NOJOOMLAREGEMAILS_NAME', 'No Joomla Emails');
-define( '_CFG_GENERAL_NOJOOMLAREGEMAILS_DESC', 'Set this to prevent Joomla Registration Confirmation emails from being sent out.');
-define( '_CFG_GENERAL_DEBUGMODE_NAME', 'Debug Mode');
+define( '_CFG_GENERAL_NOEMAILS_NAME', 'Pas d&amp;acute;e-mails');
+define( '_CFG_GENERAL_NOEMAILS_DESC', 'Activez pour empecher le systeme d&amp;acute;envoi d&amp;acute;email par AEC (to the user in events of invoices paid or alike). Ceci n&amp;acute;affecte pas les emails envoy&eacute;s depuis les MicroIntegrations.');
+define( '_CFG_GENERAL_NOJOOMLAREGEMAILS_NAME', 'Pas d&amp;acute;e-mails Joomla');
+define( '_CFG_GENERAL_NOJOOMLAREGEMAILS_DESC', 'Ceci empeche l&amp;acute;envoi des emails de confirmation d&amp;acute;enregistrement par Joomla.');
+define( '_CFG_GENERAL_DEBUGMODE_NAME', 'Mode Debug');
 define( '_CFG_GENERAL_DEBUGMODE_DESC', 'Activates the display of debug information.');
 define( '_CFG_GENERAL_OVERRIDE_REQSSL_NAME', 'Override SSL Requirement');
 define( '_CFG_GENERAL_OVERRIDE_REQSSL_DESC', 'Some payment processors require an SSL secured connection to the user - for example when sensitive information (like CreditCard data) is required on the frontend.');
@@ -714,16 +598,14 @@ define( '_CFG_GENERAL_USE_PROXY_NAME', 'Use Proxy');
 define( '_CFG_GENERAL_USE_PROXY_DESC', 'Use a proxy server for all outgoing requests.');
 define( '_CFG_GENERAL_PROXY_NAME', 'Proxy Address');
 define( '_CFG_GENERAL_PROXY_DESC', 'Specify the proxy server that you want to connect to.');
-define( '_CFG_GENERAL_PROXY_PORT_NAME', 'Proxy Port');
-define( '_CFG_GENERAL_PROXY_PORT_DESC', 'Specify the port of the proxy server that you want to connect to.');
 define( '_CFG_GENERAL_RENEW_BUTTON_NEVER_NAME', 'No Renew Button');
 define( '_CFG_GENERAL_RENEW_BUTTON_NEVER_DESC', 'Select "Yes" to never show the renew/upgrade button on the MySubscription page.');
 define( '_CFG_GENERAL_RENEW_BUTTON_NOLIFETIMERECURRING_NAME', 'Restricted Renew Button');
 define( '_CFG_GENERAL_RENEW_BUTTON_NOLIFETIMERECURRING_DESC', 'Only show the renew button if it makes sense in a one-subscription setup (recurring payments or a lifetime make the button disappear).');
 
-define( '_CFG_GENERAL_ERROR_NOTIFICATION_LEVEL_NAME', 'Notification Level');
+define( '_CFG_GENERAL_ERROR_NOTIFICATION_LEVEL_NAME', 'Niveau de Log');
 define( '_CFG_GENERAL_ERROR_NOTIFICATION_LEVEL_DESC', 'Select which level of entries to the EventLog is required to make it appear on the central page for your convenience.');
-define( '_CFG_GENERAL_EMAIL_NOTIFICATION_LEVEL_NAME', 'Email Notification Level');
+define( '_CFG_GENERAL_EMAIL_NOTIFICATION_LEVEL_NAME', 'Niveau alerte e-mail');
 define( '_CFG_GENERAL_EMAIL_NOTIFICATION_LEVEL_DESC', 'Select which level of entries to the EventLog is required to make the AEC send them as an E-Mail to all Administrators.');
 
 define( '_CFG_GENERAL_SKIP_CONFIRMATION_NAME', 'Skip Confirmation');
@@ -759,98 +641,99 @@ define( '_CFG_GENERAL_INVOICETMPL_DESC', 'Template for invoices/purchase orders'
 // --== PAYMENT PLAN PAGE ==--
 // Additions of variables for free trial periods by Michael Spredemann (scubaguy)
 
-define( '_PAYPLAN_PERUNIT1', 'Days');
-define( '_PAYPLAN_PERUNIT2', 'Weeks');
-define( '_PAYPLAN_PERUNIT3', 'Months');
-define( '_PAYPLAN_PERUNIT4', 'Years');
+define( '_PAYPLAN_PERUNIT1', 'Jours');
+define( '_PAYPLAN_PERUNIT2', 'Semaines');
+define( '_PAYPLAN_PERUNIT3', 'Mois');
+define( '_PAYPLAN_PERUNIT4', 'Ann&eacute;es');
 
 // General Params
 
 define( '_PAYPLAN_DETAIL_TITLE', 'Plan');
-define( '_PAYPLAN_GENERAL_NAME_NAME', 'Name:');
-define( '_PAYPLAN_GENERAL_NAME_DESC', 'Name or title for this plan. Max.: 40 characters.');
+define( '_PAYPLAN_GENERAL_NAME_NAME', 'Nom:');
+define( '_PAYPLAN_GENERAL_NAME_DESC', 'Nom ou titre pour ce Plan. Max.: 40 caracteres.');
 define( '_PAYPLAN_GENERAL_DESC_NAME', 'Description:');
 define( '_PAYPLAN_GENERAL_DESC_DESC', 'Full description of plan as you want to be presented to user. Max.: 255 characters.');
-define( '_PAYPLAN_GENERAL_ACTIVE_NAME', 'Published:');
-define( '_PAYPLAN_GENERAL_ACTIVE_DESC', 'A published plan will be available to the user on frontend.');
+define( '_PAYPLAN_GENERAL_ACTIVE_NAME', 'Publi&eacute;:');
+define( '_PAYPLAN_GENERAL_ACTIVE_DESC', 'Un Plan publi&eacute; sera accessible aux utilisateurs sur le Frontend.');
 define( '_PAYPLAN_GENERAL_VISIBLE_NAME', 'Visible:');
-define( '_PAYPLAN_GENERAL_VISIBLE_DESC', 'Visible Plans will show on the frontend. Invisible plans will not show and thus only be available to automatic application (like Fallbacks or Entry Plans).');
+define( '_PAYPLAN_GENERAL_VISIBLE_DESC', 'Seuls les Plans Visibles seront montr&eacute;s sur le frontend. Les plans invisibles ne seront pas montr&eacute;s et seront seulement accessibles par les applications automatiques (like Fallbacks or Entry Plans).');
 
-define( '_PAYPLAN_PARAMS_GID_ENABLED_NAME', 'Enable usergroup');
-define( '_PAYPLAN_PARAMS_GID_ENABLED_DESC', 'Switch this to Yes if you want users to be assigned the selected usergroup.');
-define( '_PAYPLAN_PARAMS_GID_NAME', 'Add User to Group:');
-define( '_PAYPLAN_PARAMS_GID_DESC', 'Users will be associated to this usergroup when the plan is applied.');
-define( '_PAYPLAN_PARAMS_MAKE_ACTIVE_NAME', 'Make Active:');
-define( '_PAYPLAN_PARAMS_MAKE_ACTIVE_DESC', 'Set this to >No< if you want to manually activate a user after he or she has paid.');
-define( '_PAYPLAN_PARAMS_MAKE_PRIMARY_NAME', 'Primary:');
-define( '_PAYPLAN_PARAMS_MAKE_PRIMARY_DESC', 'Set this to "yes" to make this the primary subscription plan for the user. The primary subscription is the one which governs overal site expiration.');
-define( '_PAYPLAN_PARAMS_UPDATE_EXISTING_NAME', 'Update Existing:');
+define( '_PAYPLAN_PARAMS_GID_ENABLED_NAME', 'Activer les groupes');
+define( '_PAYPLAN_PARAMS_GID_ENABLED_DESC', 'Positionnez &agrave;  Yes si vous voulez affecter les utilisateurs au groupe choisi.');
+define( '_PAYPLAN_PARAMS_GID_NAME', 'Ajouter au groupe:');
+define( '_PAYPLAN_PARAMS_GID_DESC', 'Les utilisateurs seront affect&eacute;s au groupe correspondant quand le plan sera appliqu&eacute;.');
+define( '_PAYPLAN_PARAMS_MAKE_ACTIVE_NAME', 'Activation auto:');
+define( '_PAYPLAN_PARAMS_MAKE_ACTIVE_DESC', 'Positionnez &agrave; &gt;No&lt; si vous voulez activer manuellement un utilisateur apr&egrave;s son paiement.');
+define( '_PAYPLAN_PARAMS_MAKE_PRIMARY_NAME', 'Plan initial:');
+define( '_PAYPLAN_PARAMS_MAKE_PRIMARY_DESC', 'Positionnez &agrave;  &quot;Yes&quot; pour que ce plan soit le plan primaire de l&amp;acute;utilisateur. Le plan primaire est celui qui pilote le processus d&amp;acute;expiration.');
+define( '_PAYPLAN_PARAMS_UPDATE_EXISTING_NAME', 'Modifie les Plans existants:');
 define( '_PAYPLAN_PARAMS_UPDATE_EXISTING_DESC', 'If not a primary plan, should this plan update other existing non-primary subscriptions of the user? This can be helpful for secondary subscriptions of which the user should have only one at a time.');
 
 define( '_PAYPLAN_TEXT_TITLE', 'Plan Text');
 define( '_PAYPLAN_GENERAL_EMAIL_DESC_NAME', 'Email Description:');
-define( '_PAYPLAN_GENERAL_EMAIL_DESC_DESC', 'Text that should be added into the email that the user receives when a plan is activated for him');
-define( '_PAYPLAN_GENERAL_FALLBACK_NAME', 'Plan Fallback:');
-define( '_PAYPLAN_GENERAL_FALLBACK_DESC', 'When a user subscription expires - make them a member of the following plan');
+define( '_PAYPLAN_GENERAL_EMAIL_DESC_DESC', 'Texte qui sera ajout&eacute; dans l&amp;acute;email que l&amp;acute;utilisateur recevra pour l&amp;acute;activation de son plan');
+define( '_PAYPLAN_GENERAL_FALLBACK_NAME', 'Plan d&amp;acute;expiration:');
+define( '_PAYPLAN_GENERAL_FALLBACK_DESC', 'Quand l&amp;acute;abonnement d&amp;acute;un utilisateur se termine - l&amp;acute;affecter a ce plan');
 
 define( '_PAYPLAN_GENERAL_PROCESSORS_NAME', 'Payment Gateways:');
-define( '_PAYPLAN_NOPLAN', 'No Plan');
+define( '_PAYPLAN_NOPLAN', 'Pas de Plan');
 define( '_PAYPLAN_NOGW', 'No Gateway');
 define( '_PAYPLAN_GENERAL_PROCESSORS_DESC', 'Select the payment gateways you want to be available to this plan. Hold Control or Shift key to select multiple options. Selecting ' . _PAYPLAN_NOPLAN . ' all other selected options will be ignored. If you see only ' . _PAYPLAN_NOPLAN . ' here this means you have no payment processor enabled on your config settings.');
-define( '_PAYPLAN_PARAMS_LIFETIME_NAME', 'Lifetime:');
-define( '_PAYPLAN_PARAMS_LIFETIME_DESC', 'Make this a lifetime subscription which never expires.');
+define( '_PAYPLAN_PARAMS_LIFETIME_NAME', 'Illimit&eacute;:');
+define( '_PAYPLAN_PARAMS_LIFETIME_DESC', 'Rend cet abonnement illimit&eacute; dans le temps. Il n&amp;acute;expirera jamais.');
 
 define( '_PAYPLAN_AMOUNT_NOTICE', 'Notice on Periods');
-define( '_PAYPLAN_AMOUNT_NOTICE_TEXT', 'For Paypal Subscriptions, there is a limit on the maximum amount of that you can enter for the period. If you want to use Paypal Subscriptions, <strong>please limit days to 90, weeks to 52, months to 24 and years to 5 at maximum</strong>.');
+define( '_PAYPLAN_AMOUNT_NOTICE_TEXT', 'Pour les souscriptions Paypal, il y a une limite sur le montant maximum pour une p&eacute;riode donn&eacute;e. Si vous souhaitez utiliser Paypal, &lt;strong&gt;limitez le nombre de jours &agrave; 90, de semaines &agrave; 52, de mois &agrave; 24 et d\'ann&eacute;es &agrave; 5 au maximum&lt;/strong&gt;.');
 define( '_PAYPLAN_AMOUNT_EDITABLE_NOTICE', 'There is one or more users using recurring payments for this plan, so it would be wise not to change the terms until these are cancelled.');
 
-define( '_PAYPLAN_REGULAR_TITLE', 'Normal Subscription');
-define( '_PAYPLAN_PARAMS_FULL_FREE_NAME', 'Free:');
-define( '_PAYPLAN_PARAMS_FULL_FREE_DESC', 'Set this to yes if you want to offer this plan for free');
-define( '_PAYPLAN_PARAMS_FULL_AMOUNT_NAME', 'Regular Rate:');
-define( '_PAYPLAN_PARAMS_FULL_AMOUNT_DESC', 'The price of the subscription. If there are subscribers to this plan this field can not be changed. If you want to replace this plan, unpublish it and create a new one.');
-define( '_PAYPLAN_PARAMS_FULL_PERIOD_NAME', 'Period:');
-define( '_PAYPLAN_PARAMS_FULL_PERIOD_DESC', 'This is the length of the billing cycle. The number is modified by the regular billing cycle unit (below).  If there are subscribers to this plan this field can not be changed. If you want to replace this plan, unpublish it and create a new one.');
-define( '_PAYPLAN_PARAMS_FULL_PERIODUNIT_NAME', 'Period Unit:');
-define( '_PAYPLAN_PARAMS_FULL_PERIODUNIT_DESC', 'This is the units of the regular billing cycle (above). If there are subscribers to this plan this field can not be changed. If you want to replace this plan, unpublish it and create a new one.');
+define( '_PAYPLAN_REGULAR_TITLE', 'Abonnement normal');
+define( '_PAYPLAN_PARAMS_FULL_FREE_NAME', 'Gratuit:');
+define( '_PAYPLAN_PARAMS_FULL_FREE_DESC', 'S&eacute;lectionnez OUI si vous souhaitez offrir ce plan gratuitement');
+define( '_PAYPLAN_PARAMS_FULL_AMOUNT_NAME', 'Taux normal:');
+define( '_PAYPLAN_PARAMS_FULL_AMOUNT_DESC', 'Le prix de l&amp;acute;abonnement. S&amp;acute;il y a deja des souscripteurs &agrave; ce Plan, alors ce champ ne pourra &ecirc;tre chang&eacute;. Si vous souhaitez remplacer ce Plan, d&eacute;publiez-le et cr&eacute;ez en un nouveau.');
+define( '_PAYPLAN_PARAMS_FULL_PERIOD_NAME', 'Periodicit&eacute;:');
+define( '_PAYPLAN_PARAMS_FULL_PERIOD_DESC', 'La dur&eacute;e du cycle de paiement. En liaison avec l&amp;acute;Unit&eacute; (ci-apr&egrave;s).  S&amp;acute;il y a deja des souscripteurs &agrave; ce Plan, alors ce champ ne pourra &ecirc;tre chang&eacute;. Si vous souhaitez remplacer ce Plan, d&eacute;publiez-le et cr&eacute;ez en un nouveau.');
+define( '_PAYPLAN_PARAMS_FULL_PERIODUNIT_NAME', 'Unit&eacute;:');
+define( '_PAYPLAN_PARAMS_FULL_PERIODUNIT_DESC', 'Unit&eacute; du cycle de paiement r&eacute;gulier. S&amp;acute;il y a deja des souscripteurs &agrave; ce Plan, alors ce champ ne pourra &ecirc;tre chang&eacute;. Si vous souhaitez remplacer ce Plan, d&eacute;publiez-le et cr&eacute;ez en un nouveau.');
 
-define( '_PAYPLAN_TRIAL_TITLE', 'Trial Period');
-define( '_PAYPLAN_TRIAL', '(Optional)');
-define( '_PAYPLAN_TRIAL_DESC', 'Skip this section if you do not want to offer Trial periods with your subscriptions. <strong>Trials only work automatically with PayPal Subscriptions!</strong>');
-define( '_PAYPLAN_PARAMS_TRIAL_FREE_NAME', 'Free:');
-define( '_PAYPLAN_PARAMS_TRIAL_FREE_DESC', 'Set this to yes if you want to offer this trial for free');
-define( '_PAYPLAN_PARAMS_TRIAL_AMOUNT_NAME', 'Trial Rate:');
-define( '_PAYPLAN_PARAMS_TRIAL_AMOUNT_DESC', 'Enter the amount to immediately bill the subscriber.');
-define( '_PAYPLAN_PARAMS_TRIAL_PERIOD_NAME', 'Trial Period:');
-define( '_PAYPLAN_PARAMS_TRIAL_PERIOD_DESC', 'This is the length of the trial period. The number is modified by the relugar billing cycle unit (below).  If there are subscribers to this plan this field can not be changed. If you want to replace this plan, unpublish it and create a new one.');
-define( '_PAYPLAN_PARAMS_TRIAL_PERIODUNIT_NAME', 'Trial Period Unit:');
-define( '_PAYPLAN_PARAMS_TRIAL_PERIODUNIT_DESC', 'This is the units of the trial period (above). If there are subscribers to this plan this field can not be changed. If you want to replace this plan, unpublish it and create a new one.');
+define( '_PAYPLAN_TRIAL_TITLE', 'Periode d\'essai');
+define( '_PAYPLAN_TRIAL', '(Optionnel)');
+define( '_PAYPLAN_TRIAL_DESC', 'Sautez cette section si vous ne voulez pas d&amp;acute;offre avec des p&eacute;riodes d&amp;acute;essai avec vos abonnements. &lt;strong&gt;Les essais fonctionnent uniquement automatiquement avec abonnements PayPal!&lt;/strong&gt;');
+define( '_PAYPLAN_PARAMS_TRIAL_FREE_NAME', 'Gratuit:');
+define( '_PAYPLAN_PARAMS_TRIAL_FREE_DESC', 'S&eacute;lectionnez OUI si vous souhaitez offrir ce plan d&amp;acute;essai gratuitement');
+define( '_PAYPLAN_PARAMS_TRIAL_AMOUNT_NAME', 'Montant d&amp;acute;essai:');
+define( '_PAYPLAN_PARAMS_TRIAL_AMOUNT_DESC', 'Indiquez le montant a facturer directement a l&amp;acute;abonn&eacute;.');
+define( '_PAYPLAN_PARAMS_TRIAL_PERIOD_NAME', 'P&eacute;riode:');
+define( '_PAYPLAN_PARAMS_TRIAL_PERIOD_DESC', 'C&amp;acute;est la dur&eacute;e de la p&eacute;riode d&amp;acute;essai. Le nombre est modifi&eacute; par le cycle r&eacute;gulier d&amp;acute;unit&eacute; de facturation (en dessous).  S&amp;acute;il y a des abonn&eacute;s &agrave; ce plan, ce champ ne peut pas &ecirc;tre chang&eacute;. Si vous souhaitez remplacer ce plan, d&eacute;publiez-le et cr&eacute;ez un nouveau.');
+define( '_PAYPLAN_PARAMS_TRIAL_PERIODUNIT_NAME', 'Unit&eacute;:');
+define( '_PAYPLAN_PARAMS_TRIAL_PERIODUNIT_DESC', 'Il s&amp;acute;agit d&amp;acute;unit&eacute;s de la p&eacute;riode d&amp;acute;essai (au-dessus). S&amp;acute;il y a des abonn&eacute;s &agrave; ce plan ce champ ne peut pas &ecirc;tre chang&eacute;. Si vous souhaitez remplacer ce plan, d&eacute;publiez-le et cr&eacute;ez un nouveau.');
 
 // Payplan Relations
 
 define( '_PAYPLAN_RELATIONS_TITLE', 'Relations');
-define( '_PAYPLAN_PARAMS_SIMILARPLANS_NAME', 'Similar Plans:');
-define( '_PAYPLAN_PARAMS_SIMILARPLANS_DESC', 'Select which plans are similar to this one. A user is not allowed to use a Trial period when buying a plan that he or she has purchased before and this will also be the same for similar plans.');
-define( '_PAYPLAN_PARAMS_EQUALPLANS_NAME', 'Equal Plans:');
-define( '_PAYPLAN_PARAMS_EQUALPLANS_DESC', 'Select which plans are equal to this one. A user switching between equal plans will have his or her period extended instead of reset. Trials are also not permitted (see similar plans info).');
+define( '_PAYPLAN_PARAMS_SIMILARPLANS_NAME', 'Plans similaires:');
+define( '_PAYPLAN_PARAMS_SIMILARPLANS_DESC', 'S&eacute;lectionnez les plans qui sont similaires &agrave; celui-ci. Un utilisateur n est pas autoris&eacute; &agrave; utiliser une p&eacute;riode d essai lors de l achat d un plan qu il ou elle a d&eacute;j&agrave; achet&eacute; et ce sera &eacute;galement le m&ecirc;me pour des plans similaires.');
+define( '_PAYPLAN_PARAMS_EQUALPLANS_NAME', 'Plans identiques:');
+define( '_PAYPLAN_PARAMS_EQUALPLANS_DESC', 'S&eacute;lectionnez les plans identique &agrave; celui-ci. Un utilisateur qui change entre plans identiques dispose de sa p&eacute;riode prolong&eacute;e au lieu de r&eacute;initialisation. Les essais ne sont &eacute;galement pas autoris&eacute;s (voir les informations des plans similaires).');
 
 // Payplan Restrictions
 
 define( '_PAYPLAN_RESTRICTIONS_TITLE', 'Restrictions');
-define( '_PAYPLAN_RESTRICTIONS_MINGID_ENABLED_NAME', 'Enable Min GID:');
-define( '_PAYPLAN_RESTRICTIONS_MINGID_ENABLED_DESC', 'Enable this setting if you want to restrict whether a user is shown this plan by a minimum usergroup.');
-define( '_PAYPLAN_RESTRICTIONS_MINGID_NAME', 'Visibility Group:');
-define( '_PAYPLAN_RESTRICTIONS_MINGID_DESC', 'The minimum user level required to see this plan when building the payment plans page. New users will always see the plans with the lowest gid available.');
-define( '_PAYPLAN_RESTRICTIONS_FIXGID_ENABLED_NAME', 'Enable Fixed GID:');
-define( '_PAYPLAN_RESTRICTIONS_FIXGID_ENABLED_DESC', 'Enable this setting if you want to restrict this plan to one usergroup.');
-define( '_PAYPLAN_RESTRICTIONS_FIXGID_NAME', 'Set Group:');
-define( '_PAYPLAN_RESTRICTIONS_FIXGID_DESC', 'Only users with this usergroup can view this plan.');
-define( '_PAYPLAN_RESTRICTIONS_MAXGID_ENABLED_NAME', 'Enable Max GID:');
-define( '_PAYPLAN_RESTRICTIONS_MAXGID_ENABLED_DESC', 'Enable this setting if you want to restrict whether a user is shown this plan by a maximum usergroup.');
-define( '_PAYPLAN_RESTRICTIONS_MAXGID_NAME', 'Maximum Group:');
-define( '_PAYPLAN_RESTRICTIONS_MAXGID_DESC', 'The maximum user level a user can have to see this plan when building the payment plans page.');
 
-define( '_PAYPLAN_RESTRICTIONS_PREVIOUSPLAN_REQ_ENABLED_NAME', 'Required Prev. Plan:');
+define( '_PAYPLAN_RESTRICTIONS_MINGID_ENABLED_NAME', 'Activer Min GID:');
+define( '_PAYPLAN_RESTRICTIONS_MINGID_ENABLED_DESC', 'Activez ce param&egrave;tre si vous souhaitez restreindre l affichage de ce plan &agrave; des utilisateurs en utilisant un groupe d utilisateur minimum.');
+define( '_PAYPLAN_RESTRICTIONS_MINGID_NAME', 'Visible au groupe:');
+define( '_PAYPLAN_RESTRICTIONS_MINGID_DESC', 'Le niveau minimum requis de l utilisateur pour voir ce plan lors de l affichage des plans de paiement. Les nouveaux utilisateurs verront toujours les plans avec le plus bas GID disponible.');
+define( '_PAYPLAN_RESTRICTIONS_FIXGID_ENABLED_NAME', 'Activer fixe GID:');
+define( '_PAYPLAN_RESTRICTIONS_FIXGID_ENABLED_DESC', 'Activez ce param&egrave;tre si vous souhaitez restreindre ce plan &agrave; un groupe d utilisateur.');
+define( '_PAYPLAN_RESTRICTIONS_FIXGID_NAME', 'D&eacute;finir le groupe:');
+define( '_PAYPLAN_RESTRICTIONS_FIXGID_DESC', 'Seuls les utilisateurs de ce groupe peuvent consulter ce plan.');
+define( '_PAYPLAN_RESTRICTIONS_MAXGID_ENABLED_NAME', 'Activer Max GID:');
+define( '_PAYPLAN_RESTRICTIONS_MAXGID_ENABLED_DESC', 'Activez ce param&egrave;tre si vous souhaitez restreindre l affichage de ce plan &agrave; des utilisateurs en utilisant un groupe d utilisateur maximum.');
+define( '_PAYPLAN_RESTRICTIONS_MAXGID_NAME', 'Maximum groupe:');
+define( '_PAYPLAN_RESTRICTIONS_MAXGID_DESC', 'Le niveau maximum requis de l utilisateur pour voir ce plan lors de l affichage des plans de paiement.');
+
+define( '_PAYPLAN_RESTRICTIONS_PREVIOUSPLAN_REQ_ENABLED_NAME', 'Plan pr&eacute;c. requis:');
 define( '_PAYPLAN_RESTRICTIONS_PREVIOUSPLAN_REQ_ENABLED_DESC', 'Enable checking for previous payment plan');
 define( '_PAYPLAN_RESTRICTIONS_PREVIOUSPLAN_REQ_NAME', 'Plan:');
 define( '_PAYPLAN_RESTRICTIONS_PREVIOUSPLAN_REQ_DESC', 'A user will only see this plan if he or she used the selected plan before the one currently in use');
@@ -891,19 +774,19 @@ define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MAX_DESC', 'The payment plan that the u
 define( '_PAYPLAN_RESTRICTIONS_CUSTOM_RESTRICTIONS_ENABLED_NAME', 'Use Custom Restrictions:');
 define( '_PAYPLAN_RESTRICTIONS_CUSTOM_RESTRICTIONS_ENABLED_DESC', 'Enable the use of the below specified restrictions');
 define( '_PAYPLAN_RESTRICTIONS_CUSTOM_RESTRICTIONS_NAME', 'Custom Restrictions:');
-define( '_PAYPLAN_RESTRICTIONS_CUSTOM_RESTRICTIONS_DESC', 'Use RewriteEngine fields to check for specific strings in this form:<br />[[user_id]] >= 1500<br />[[parametername]] = value<br />(Create separate rules by entering a new line).<br />You can use =, <=, >=, <, >, <> as comparing elements. You MUST use spaces between parameters, values and comparators!');
+define( '_PAYPLAN_RESTRICTIONS_CUSTOM_RESTRICTIONS_DESC', 'Use RewriteEngine fields to check for specific strings in this form:&lt;br /&gt;[[user_id]] &gt;= 1500&lt;br /&gt;[[parametername]] = value&lt;br /&gt;(Create separate rules by entering a new line).&lt;br /&gt;You can use =, &lt;=, &gt;=, &lt;, &gt;, &lt;&gt; as comparing elements. You MUST use spaces between parameters, values and comparators!');
 
-define( '_PAYPLAN_PROCESSORS_TITLE', 'Processors');
-define( '_PAYPLAN_PROCESSORS_TITLE_LONG', 'Payment Processors');
+define( '_PAYPLAN_PROCESSORS_TITLE', 'Processus');
+define( '_PAYPLAN_PROCESSORS_TITLE_LONG', 'Processus de Payment');
 
-define( '_PAYPLAN_PROCESSORS_ACTIVATE_NAME', 'Active');
-define( '_PAYPLAN_PROCESSORS_ACTIVATE_DESC', 'Offer this Payment Processor for this Payment Plan.');
-define( '_PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_NAME', 'Overwrite Global Settings');
-define( '_PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_DESC', 'If you want to, you can check this box and after saving the plan edit every setting from the global configuration to be different for this plan individually.');
+define( '_PAYPLAN_PROCESSORS_ACTIVATE_NAME', 'Actif');
+define( '_PAYPLAN_PROCESSORS_ACTIVATE_DESC', 'Proposer ce processus de paiement pour ce plan de paiement.');
+define( '_PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_NAME', 'Ecraser param&egrave;tres globaux');
+define( '_PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_DESC', 'Si vous voulez, vous pouvez cocher la case et apr&egrave;s avoir sauvegard&eacute; le plan, modifier tous les param&egrave;tres dans la configuration globale &agrave; l&amp;acute;exception pour ce plan.');
 
 define( '_PAYPLAN_MI', 'Micro Integr.');
-define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_NAME', 'Micro Integrations:');
-define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_DESC', 'Select the Micro Integrations that you want to apply to the user with the plan.');
+define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_NAME', 'Micro Int&eacute;grations:');
+define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_DESC', 'S&eacute;lectionner les Micro Int&eacute;grations que vous voulez appliquer &agrave; l&amp;acute;utilisateur avec le plan.');
 
 define( '_PAYPLAN_CURRENCY', 'Devises');
 
@@ -1106,32 +989,32 @@ define( '_CURRENCY_USN', 'US Dollar (Next day)');
 define( '_CURRENCY_USS', 'US Dollar (Same day)');
 
 // --== MICRO INTEGRATION OVERVIEW ==--
-define( '_MI_TITLE', 'Micro Integrations');
-define( '_MI_NAME', 'Name');
+define( '_MI_TITLE', 'Micro int&eacute;grations');
+define( '_MI_NAME', 'Nom');
 define( '_MI_DESC', 'Description');
 define( '_MI_ACTIVE', 'Active');
-define( '_MI_REORDER', 'Order');
-define( '_MI_FUNCTION', 'Function Name');
+define( '_MI_REORDER', 'Ordre');
+define( '_MI_FUNCTION', 'Nom de la fonction');
 
 // --== MICRO INTEGRATION EDIT ==--
 define( '_MI_E_TITLE', 'MI');
-define( '_MI_E_TITLE_LONG', 'Micro Integration');
-define( '_MI_E_SETTINGS', 'Settings');
-define( '_MI_E_NAME_NAME', 'Name');
-define( '_MI_E_NAME_DESC', 'Choose a name for this Micro Integration');
+define( '_MI_E_TITLE_LONG', 'Micro int&eacute;gration');
+define( '_MI_E_SETTINGS', 'Param&egrave;tre');
+define( '_MI_E_NAME_NAME', 'Nom');
+define( '_MI_E_NAME_DESC', 'D&eacute;finir un nom pour cette Micro int&eacute;gration');
 define( '_MI_E_DESC_NAME', 'Description');
-define( '_MI_E_DESC_DESC', 'Briefly Describe the Integration');
+define( '_MI_E_DESC_DESC', 'Br&egrave;ve description de l&amp;acute;int&eacute;gration');
 define( '_MI_E_ACTIVE_NAME', 'Active');
-define( '_MI_E_ACTIVE_DESC', 'Set the Integration to active');
-define( '_MI_E_ACTIVE_AUTO_NAME', 'Expiration Action');
-define( '_MI_E_ACTIVE_AUTO_DESC', 'If the function allows this, you can enable expiration features: actions that have to be carried out when a user expires (if supported by the MI).');
-define( '_MI_E_ACTIVE_USERUPDATE_NAME', 'User Account Update Action');
-define( '_MI_E_ACTIVE_USERUPDATE_DESC', 'If the function allows this, you can enable actions that happen when a user account is being changed (if supported by the MI).');
-define( '_MI_E_PRE_EXP_NAME', 'Pre Expiration');
-define( '_MI_E_PRE_EXP_DESC', 'Set the amount of days before expiration when a pre-expiration action should be triggered (if supported by the MI).');
-define( '_MI_E_FUNCTION_NAME', 'Function Name');
-define( '_MI_E_FUNCTION_DESC', 'Please choose which of these integrations should be used');
-define( '_MI_E_FUNCTION_EXPLANATION', 'Before you can setup the Micro Integration, you have to select which of the integration files we should use for this. Make a selection and save the Micro Integration. When you edit it again, you will be able to set the parameters. Note also, that the function name cannot be changed once its set.');
+define( '_MI_E_ACTIVE_DESC', 'Rendre disponible ou pas cette micro int&eacute;gration');
+define( '_MI_E_ACTIVE_AUTO_NAME', 'Expiration actions');
+define( '_MI_E_ACTIVE_AUTO_DESC', 'Si la fonction est active, vous pouvez activer les fonctionnalit&eacute;s d&amp;acute;expiration: actions qui devront &ecirc;tre men&eacute;es &agrave; terme jusqu&amp;acute;&agrave; ce que l&amp;acute;utilisateur expire (Si elle est supporter par la MI).');
+define( '_MI_E_ACTIVE_USERUPDATE_NAME', 'Action de mise &agrave; jour du compte utilisateur');
+define( '_MI_E_ACTIVE_USERUPDATE_DESC', 'Si la fonction est active, vous pouvez activer des actions qui se produisent quand un compte d&amp;acute;utilisateur est mis &agrave; jour (Si elle est support&eacute;e par la MI).');
+define( '_MI_E_PRE_EXP_NAME', 'Pr&eacute;-expiration');
+define( '_MI_E_PRE_EXP_DESC', 'R&eacute;glez le volume de jours avant l&amp;acute;expiration quand une pr&eacute;-expiration action devrait &ecirc;tre d&eacute;clench&eacute; (Si elle est support&eacute;e par la MI).');
+define( '_MI_E_FUNCTION_NAME', 'Nom de la fonction');
+define( '_MI_E_FUNCTION_DESC', 'S&amp;acute;il vous pla&#238;t d&eacute;finissez laquelle de ces int&eacute;grations doit &ecirc;tre utilis&eacute;e');
+define( '_MI_E_FUNCTION_EXPLANATION', 'Avant de pouvoir configurer la Micro int&eacute;gration, vous devez s&eacute;lectionner la MI de fichier qui sera utilis&eacute;. Faites une s&eacute;lection et enregistr&eacute; la micro int&eacute;gration. Lorsque vous modifiez &agrave; nouveau, vous serez en mesure d&amp;acute;&eacute;tablir les param&egrave;tres. Notez &eacute;galement que le nom de la fonction ne peut pas &ecirc;tre chang&eacute; une fois int&eacute;gr&eacute;.');
 
 // --== REWRITE EXPLANATION ==--
 define( '_REWRITE_AREA_USER', 'User Account Related');
@@ -1185,16 +1068,132 @@ define( '_REWRITE_KEY_INVOICE_COUPONS', 'List of Coupons');
 define( '_REWRITE_ENGINE_TITLE', 'Rewrite Engine');
 define( '_REWRITE_ENGINE_DESC', 'To create dynamic text, you can add these wiki-style tags in RWengine-enabled fields. Flick through the togglers below to see which tags are available');
 define( '_REWRITE_ENGINE_AECJSON_TITLE', 'aecJSON');
-define( '_REWRITE_ENGINE_AECJSON_DESC', 'You can also use functions encoded in JSON markup, like this:<br />{aecjson} { "cmd":"date", "vars": [ "Y", { "cmd":"rw_constant", "vars":"invoice_created_date" } ] } {/aecjson}<br />It returns only the Year of a date. Refer to the manual and forums for further instructions!');
+define( '_REWRITE_ENGINE_AECJSON_DESC', 'You can also use functions encoded in JSON markup, like this:&lt;br /&gt;{aecjson} { &quot;cmd&quot;:&quot;date&quot;, &quot;vars&quot;: [ &quot;Y&quot;, { &quot;cmd&quot;:&quot;rw_constant&quot;, &quot;vars&quot;:&quot;invoice_created_date&quot; } ] } {/aecjson}&lt;br /&gt;It returns only the Year of a date. Refer to the manual and forums for further instructions!');
 
 // --== COUPONS OVERVIEW ==--
 define( '_COUPON_TITLE', 'Coupons');
 define( '_COUPON_TITLE_STATIC', 'Static Coupons');
 define( '_COUPON_NAME', 'Name');
 define( '_COUPON_DESC', 'Description (first 50 chars)');
+define( '_COUPON_CODE', 'Code Coupon');
 define( '_COUPON_ACTIVE', 'Published');
 define( '_COUPON_REORDER', 'Reorder');
 define( '_COUPON_USECOUNT', 'Use Count');
+
+// --== COUPON EDIT ==--
+define( '_COUPON_DETAIL_TITLE', 'Coupon');
+define( '_COUPON_RESTRICTIONS_TITLE', 'Restrict.');
+define( '_COUPON_RESTRICTIONS_TITLE_FULL', 'Restrictions');
+define( '_COUPON_MI', 'Micro Int.');
+define( '_COUPON_MI_FULL', 'Micro int&eacute;grations');
+
+define( '_COUPON_GENERAL_NAME_NAME', 'Nom');
+define( '_COUPON_GENERAL_NAME_DESC', 'Enter the (internal&amp;external) name for this coupon');
+define( '_COUPON_GENERAL_COUPON_CODE_NAME', 'Coupon Code');
+define( '_COUPON_GENERAL_COUPON_CODE_DESC', 'Enter the Coupon Code for this coupon - the randomly generated coupon code is checked to be unique within the system');
+define( '_COUPON_GENERAL_DESC_NAME', 'Description');
+define( '_COUPON_GENERAL_DESC_DESC', 'Enter the (internal) description for this coupon');
+define( '_COUPON_GENERAL_ACTIVE_NAME', 'Active');
+define( '_COUPON_GENERAL_ACTIVE_DESC', 'Set whether this coupon is active (can be used)');
+define( '_COUPON_GENERAL_TYPE_NAME', 'Static');
+define( '_COUPON_GENERAL_TYPE_DESC', 'Select whether you want this to be a static coupon. These are stored in a separate table for quicker access, the general distinction being that static coupons are coupons that are used by a lot of users while non-static coupons are for one user.');
+
+define( '_COUPON_GENERAL_MICRO_INTEGRATIONS_NAME', 'Micro int&eacute;grations');
+define( '_COUPON_GENERAL_MICRO_INTEGRATIONS_DESC', 'Choisissez la microint&eacute;gration que vous voulez appeler quand vous utilisez ce coupon');
+
+define( '_COUPON_PARAMS_AMOUNT_USE_NAME', 'Use Amount');
+define( '_COUPON_PARAMS_AMOUNT_USE_DESC', 'Select whether you want to use a direct discount amount');
+define( '_COUPON_PARAMS_AMOUNT_NAME', 'Discount Amount');
+define( '_COUPON_PARAMS_AMOUNT_DESC', 'Enter the Amount that you want to deduct from the next amount');
+define( '_COUPON_PARAMS_AMOUNT_PERCENT_USE_NAME', 'Use Percentage');
+define( '_COUPON_PARAMS_AMOUNT_PERCENT_USE_DESC', 'Select whether you want a percentage deducted from the actual amount');
+define( '_COUPON_PARAMS_AMOUNT_PERCENT_NAME', 'Discount Percentage');
+define( '_COUPON_PARAMS_AMOUNT_PERCENT_DESC', 'Enter the percentage that you want deducted from the amount');
+define( '_COUPON_PARAMS_PERCENT_FIRST_NAME', 'Percent First');
+define( '_COUPON_PARAMS_PERCENT_FIRST_DESC', 'If you combine percentage and amount, do you want the percentage to be deducted first?');
+define( '_COUPON_PARAMS_USEON_TRIAL_NAME', 'Use On Trial?');
+define( '_COUPON_PARAMS_USEON_TRIAL_DESC', 'Do you want to let the user apply this discount to a trial amount?');
+define( '_COUPON_PARAMS_USEON_FULL_NAME', 'Use On Full?');
+define( '_COUPON_PARAMS_USEON_FULL_DESC', 'Do you want to let the user apply this discount to the actual amount? (With recurring billing: to the first regular payment)');
+define( '_COUPON_PARAMS_USEON_FULL_ALL_NAME', 'Every Full?');
+define( '_COUPON_PARAMS_USEON_FULL_ALL_DESC', 'If the user is using recurring payments, do you want to grant this discount for each subsequent payment? (Or just for the first, if that applies - then select no)');
+
+define( '_COUPON_PARAMS_HAS_START_DATE_NAME', 'Use Start Date');
+define( '_COUPON_PARAMS_HAS_START_DATE_DESC', 'Do you want to allow your users to use this coupon from a certain date on?');
+define( '_COUPON_PARAMS_START_DATE_NAME', 'Start Date');
+define( '_COUPON_PARAMS_START_DATE_DESC', 'Select the date at which you want to start allowing the usage of this coupon');
+define( '_COUPON_PARAMS_HAS_EXPIRATION_NAME', 'Use Expiration Date');
+define( '_COUPON_PARAMS_HAS_EXPIRATION_DESC', 'Souhaitez vous restreindre l&amp;acute;utilisation de ce coupon a une certaine date ?');
+define( '_COUPON_PARAMS_EXPIRATION_NAME', 'Date d\'expiration');
+define( '_COUPON_PARAMS_EXPIRATION_DESC', 'Select the date at which you want to stop allowing the usage of this coupon');
+define( '_COUPON_PARAMS_HAS_MAX_REUSE_NAME', 'Restreindre la r&eacute;utilisation ?');
+define( '_COUPON_PARAMS_HAS_MAX_REUSE_DESC', 'Souhaitez vous restreindre le nombre d&amp;acute;utilisation de ce coupon ?');
+define( '_COUPON_PARAMS_MAX_REUSE_NAME', 'Max Uses');
+define( '_COUPON_PARAMS_MAX_REUSE_DESC', 'Choose the number of times this coupon can be used');
+define( '_COUPON_PARAMS_HAS_MAX_PERUSER_REUSE_NAME', 'Restrict Reuse per User?');
+define( '_COUPON_PARAMS_HAS_MAX_PERUSER_REUSE_DESC', 'Do you want to restrict the number of times every user is allowed to use this coupon?');
+define( '_COUPON_PARAMS_MAX_PERUSER_REUSE_NAME', 'Max Uses per User');
+define( '_COUPON_PARAMS_MAX_PERUSER_REUSE_DESC', 'Choose the number of times this coupon can be used by each user');
+
+define( '_COUPON_PARAMS_USECOUNT_NAME', 'Use Count');
+define( '_COUPON_PARAMS_USECOUNT_DESC', 'Reset the number of times this Coupon has been used');
+
+define( '_COUPON_PARAMS_USAGE_PLANS_ENABLED_NAME', 'Set Plan');
+define( '_COUPON_PARAMS_USAGE_PLANS_ENABLED_DESC', 'Do you want to allow this coupon only for certain plans?');
+define( '_COUPON_PARAMS_USAGE_PLANS_NAME', 'Plans');
+define( '_COUPON_PARAMS_USAGE_PLANS_DESC', 'Choose which plans this coupon can be used for');
+
+define( '_COUPON_RESTRICTIONS_MINGID_ENABLED_NAME', 'Enable Min GID:');
+define( '_COUPON_RESTRICTIONS_MINGID_ENABLED_DESC', 'Enable this setting if you want to restrict whether a user can use this coupon by a minimum usergroup.');
+define( '_COUPON_RESTRICTIONS_MINGID_NAME', 'Visibility Group:');
+define( '_COUPON_RESTRICTIONS_MINGID_DESC', 'The minimum user level required to use this coupon.');
+define( '_COUPON_RESTRICTIONS_FIXGID_ENABLED_NAME', 'Enable Fixed GID:');
+define( '_COUPON_RESTRICTIONS_FIXGID_ENABLED_DESC', 'Enable this setting if you want to restrict this coupon to one usergroup.');
+define( '_COUPON_RESTRICTIONS_FIXGID_NAME', 'Set Group:');
+define( '_COUPON_RESTRICTIONS_FIXGID_DESC', 'Only users with this usergroup can use this coupon.');
+define( '_COUPON_RESTRICTIONS_MAXGID_ENABLED_NAME', 'Enable Max GID:');
+define( '_COUPON_RESTRICTIONS_MAXGID_ENABLED_DESC', 'Enable this setting if you want to restrict whether a user use this coupon by a maximum usergroup.');
+define( '_COUPON_RESTRICTIONS_MAXGID_NAME', 'Maximum Group:');
+define( '_COUPON_RESTRICTIONS_MAXGID_DESC', 'The maximum user level a user can have to use this coupon.');
+
+define( '_COUPON_RESTRICTIONS_PREVIOUSPLAN_REQ_ENABLED_NAME', 'Required Prev. Plan:');
+define( '_COUPON_RESTRICTIONS_PREVIOUSPLAN_REQ_ENABLED_DESC', 'Enable checking for previous payment plan');
+define( '_COUPON_RESTRICTIONS_PREVIOUSPLAN_REQ_NAME', 'Plan:');
+define( '_COUPON_RESTRICTIONS_PREVIOUSPLAN_REQ_DESC', 'A user will only be able to use this coupon if he or she used the selected plan before the one currently in use');
+define( '_COUPON_RESTRICTIONS_CURRENTPLAN_REQ_ENABLED_NAME', 'Required Curr. Plan:');
+define( '_COUPON_RESTRICTIONS_CURRENTPLAN_REQ_ENABLED_DESC', 'Enable checking for currently present payment plan');
+define( '_COUPON_RESTRICTIONS_CURRENTPLAN_REQ_NAME', 'Plan:');
+define( '_COUPON_RESTRICTIONS_CURRENTPLAN_REQ_DESC', 'A user will only be able to use this coupon if he or she is currently assigned to, or has expired from the plan selected here');
+define( '_COUPON_RESTRICTIONS_OVERALLPLAN_REQ_ENABLED_NAME', 'Required Used Plan:');
+define( '_COUPON_RESTRICTIONS_OVERALLPLAN_REQ_ENABLED_DESC', 'Enable checking for overall used payment plan');
+define( '_COUPON_RESTRICTIONS_OVERALLPLAN_REQ_NAME', 'Plan:');
+define( '_COUPON_RESTRICTIONS_OVERALLPLAN_REQ_DESC', 'A user will only be able to use this coupon if he or she has used the selected plan once, no matter when');
+
+define( '_COUPON_RESTRICTIONS_USED_PLAN_MIN_ENABLED_NAME', 'Min Used Plan:');
+define( '_COUPON_RESTRICTIONS_USED_PLAN_MIN_ENABLED_DESC', 'Enable checking for the minimum number of times your consumers have subscribed to a specified payment plan in order to be able to use this coupon');
+define( '_COUPON_RESTRICTIONS_USED_PLAN_MIN_AMOUNT_NAME', 'Used Amount:');
+define( '_COUPON_RESTRICTIONS_USED_PLAN_MIN_AMOUNT_DESC', 'The minimum amount a user has to have used the selected plan');
+define( '_COUPON_RESTRICTIONS_USED_PLAN_MIN_NAME', 'Plan:');
+define( '_COUPON_RESTRICTIONS_USED_PLAN_MIN_DESC', 'The payment plan that the user has to have used the specified number of times at least');
+define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_ENABLED_NAME', 'Max Used Plan:');
+define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_ENABLED_DESC', 'Enable checking for the maximum number of times your consumers have subscribed to a specified payment plan in order to be able to use this coupon');
+define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_AMOUNT_NAME', 'Used Amount:');
+define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_AMOUNT_DESC', 'The maximum amount a user can have used the selected plan');
+define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_NAME', 'Plan:');
+define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_DESC', 'The payment plan that the user has to have used the specified number of times at most');
+
+define( '_COUPON_RESTRICTIONS_RESTRICT_COMBINATION_NAME', 'Restrict Combination:');
+define( '_COUPON_RESTRICTIONS_RESTRICT_COMBINATION_DESC', 'Choose to not let your users combine this coupon with one of the following');
+define( '_COUPON_RESTRICTIONS_BAD_COMBINATIONS_NAME', 'Coupons:');
+define( '_COUPON_RESTRICTIONS_BAD_COMBINATIONS_DESC', 'Make a selection which coupons this one is not to be used with');
+define( '_COUPON_RESTRICTIONS_DEPEND_ON_SUBSCR_ID_NAME', 'Depend on Subscription:');
+define( '_COUPON_RESTRICTIONS_DEPEND_ON_SUBSCR_ID_DESC', 'Make the coupon depend on a certain subscription to be functional.');
+define( '_COUPON_RESTRICTIONS_SUBSCR_ID_DEPENDENCY_NAME', 'Subscription ID');
+define( '_COUPON_RESTRICTIONS_SUBSCR_ID_DEPENDENCY_DESC', 'The Subscription ID that the coupon will depend on.');
+define( '_COUPON_RESTRICTIONS_ALLOW_TRIAL_DEPEND_SUBSCR_NAME', 'Allow Trial Subscriptions:');
+define( '_COUPON_RESTRICTIONS_ALLOW_TRIAL_DEPEND_SUBSCR_DESC', 'Allow the use of the coupon when depending on a subscription that is still a trial.');
+
+// end new 0.12.4 (mic)
 
 // --== FACTURATION ==--
 define( '_INVOICE_TITLE', 'Factures');
@@ -1203,6 +1202,7 @@ define( '_INVOICE_USERID', 'Nom Utilisateur');
 define( '_INVOICE_INVOICE_NUMBER', 'Num&eacute;ro de Facture');
 define( '_INVOICE_SECONDARY_IDENT', 'Secondary Identification');
 define( '_INVOICE_TRANSACTION_DATE', 'Date de Transaction');
+define( '_INVOICE_CREATED_DATE', 'Date de cr&eacute;tion');
 define( '_INVOICE_METHOD', 'M&eacute;thode de Facturation');
 define( '_INVOICE_AMOUNT', 'Montant de la Facture');
 define( '_INVOICE_CURRENCY', 'Devise de la Facture');
@@ -1214,7 +1214,6 @@ define( '_HISTORY_USERID', 'Nom Utilisateur');
 define( '_HISTORY_INVOICE_NUMBER', 'Num&eacute;ro de Facture');
 define( '_HISTORY_PLAN_NAME', 'Plan abonn&eacute; &agrave;');
 define( '_HISTORY_TRANSACTION_DATE', 'Date de Transaction');
-define( '_INVOICE_CREATED_DATE', 'Created Date');
 define( '_HISTORY_METHOD', 'M&eacute;thode de Facturation');
 define( '_HISTORY_AMOUNT', 'Montant de la Facture');
 define( '_HISTORY_RESPONSE', 'R&eacute;ponse du serveur');
@@ -1231,10 +1230,10 @@ define( '_ACTIVATED', 'Utilisateur activ&eacute;.');
 
 // --== EXPORT ==--
 define( '_EXPORT', 'Export');
-define( '_EXPORT_LOAD', 'Load');
-define( '_EXPORT_APPLY', 'Apply');
-define( '_EXPORT_GENERAL_SELECTED_EXPORT_NAME', 'Export Preset');
-define( '_EXPORT_GENERAL_SELECTED_EXPORT_DESC', 'Select a preset (or an automatically saved previous export) instead of making the selections below. You can also click apply on the upper right and preview the preset.');
+define( '_EXPORT_LOAD', 'Charger');
+define( '_EXPORT_APPLY', 'Appliquer');
+define( '_EXPORT_GENERAL_SELECTED_EXPORT_NAME', 'Pr&eacute;r&eacute;glage d\'export');
+define( '_EXPORT_GENERAL_SELECTED_EXPORT_DESC', 'S&eacute;lectionnez un pr&eacute;r&eacute;glage (ou une exportation pr&eacute;c&eacute;dente automatiquement sauv&eacute;e) au lieu de faire les s&eacute;lections ci-dessous. Vous pouvez &eacute;galement cliquer sur appliquer dans le coin sup&eacute;rieur droit et de pr&eacute;visualiser le pr&eacute;r&eacute;glage.');
 define( '_EXPORT_GENERAL_DELETE_NAME', 'Delete');
 define( '_EXPORT_GENERAL_DELETE_DESC', 'Delete this Preset (on apply)');
 define( '_EXPORT_PARAMS_PLANID_NAME', 'Payment Plan');
@@ -1252,4 +1251,4 @@ define( '_EXPORT_PARAMS_SAVE_NAME_DESC', 'Save new preset under this name');
 define( '_EXPORT_PARAMS_EXPORT_METHOD_NAME', 'Exporting Method');
 define( '_EXPORT_PARAMS_EXPORT_METHOD_DESC', 'The filetype you want to export to');
 
-?>
+?&gt;

@@ -58,6 +58,7 @@
 		<filename>lib/recaptcha/recaptchalib.php</filename>
 		<filename>micro_integration/language/index.html</filename>
 		<filename>micro_integration/language/english.php</filename>
+		<filename>micro_integration/language/french.php</filename>
 		<filename>micro_integration/language/german.php</filename>
 		<filename>micro_integration/language/germanf.php</filename>
 		<filename>micro_integration/language/germani.php</filename>
