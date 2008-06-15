@@ -1139,11 +1139,35 @@ function thanks( $option, $renew, $free )
 		}
 	}
 
-	// Look whether we have a custom ThankYou page
-	if ( $aecConfig->cfg['customthanks'] ) {
-		mosRedirect( $aecConfig->cfg['customthanks'] );
+	$usage = aecGetParam( 'u' );
+
+	if ( !empty( $usage ) ) {
+		$new_subscription = new SubscriptionPlan( $database );
+		$new_subscription->load( $usage );
+		$sub_params = $new_subscription->getParams();
+
+		if ( !empty( $sub_params['customthanks'] ) ) {
+			mosRedirect( $sub_params['customthanks'] );
+		} else {
+			if ( !empty( $sub_params['customtext_thanks'] ) ) {
+				if ( isset( $sub_params['customtext_thanks_keeporiginal'] ) ) {
+					if ( empty( $sub_params['customtext_thanks_keeporiginal'] ) ) {
+						$msg = $sub_params['customtext_thanks'];
+					} else {
+						$msg = $msg . $sub_params['customtext_thanks'];
+					}
+				} else {
+					$msg = $sub_params['customtext_thanks'];
+				}
+			}
+		}
 	} else {
-		HTML_Results::thanks( $option, $msg );
+		// Look whether we have a custom ThankYou page
+		if ( $aecConfig->cfg['customthanks'] ) {
+			mosRedirect( $aecConfig->cfg['customthanks'] );
+		} else {
+			HTML_Results::thanks( $option, $msg );
+		}
 	}
 }
 

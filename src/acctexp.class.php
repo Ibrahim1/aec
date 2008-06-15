@@ -1865,7 +1865,7 @@ class PaymentProcessor
 		}
 
 		$default_settings = array();
-		$default_settings['testmode']	= array( 'generic_buttons' );
+		$default_settings['generic_buttons']	= array( 'list_yesno' );
 
 		$settings = array_merge( $settings, $default_settings );
 	}
@@ -4955,6 +4955,33 @@ class InvoiceFactory
 			}
 		}
 
+		if ( is_object( $this->objUsage ) ) {
+			$sub_params = $this->objUsage->getParams();
+
+			if ( !empty( $sub_params['customthanks'] ) ) {
+				mosRedirect( $sub_params['customthanks'] );
+			} else {
+				if ( !empty( $sub_params['customtext_thanks'] ) ) {
+					if ( isset( $sub_params['customtext_thanks_keeporiginal'] ) ) {
+						if ( empty( $sub_params['customtext_thanks_keeporiginal'] ) ) {
+							$msg = $sub_params['customtext_thanks'];
+						} else {
+							$msg = $msg . $sub_params['customtext_thanks'];
+						}
+					} else {
+						$msg = $sub_params['customtext_thanks'];
+					}
+				}
+			}
+		} else {
+			// Look whether we have a custom ThankYou page
+			if ( $aecConfig->cfg['customthanks'] ) {
+				mosRedirect( $aecConfig->cfg['customthanks'] );
+			} else {
+				HTML_Results::thanks( $option, $msg );
+			}
+		}
+
 		// Look whether we have a custom ThankYou page
 		if ( $aecConfig->cfg['customthanks'] ) {
 			mosRedirect( $aecConfig->cfg['customthanks'] );
@@ -5714,9 +5741,11 @@ class Invoice extends paramDBTable
 			}
 		}
 
+		$urladd = '';
 		if ( $this->usage ) {
 			$new_subscription = new SubscriptionPlan( $database );
 			$new_subscription->load( $this->usage );
+			$sub_params = $new_subscription->getParams();
 
 			$int_var['planparams'] = $new_subscription->getProcessorParameters( $InvoiceFactory->pp->id );
 
@@ -5737,6 +5766,10 @@ class Invoice extends paramDBTable
 			} else {
 				$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], false );
 			}
+
+			if ( !empty( $sub_params['customthanks'] ) || !empty( $sub_params['customtext_thanks'] ) ) {
+				$urladd .= '&amp;u=' . $this->usage;
+			}
 		} else {
 			$amount['amount'] = $this->amount;
 			$int_var['recurring'] = 0;
@@ -5753,9 +5786,9 @@ class Invoice extends paramDBTable
 		$int_var['amount']		= $amount['amount'];
 
 		if ( !empty( $amount['return_url'] ) ) {
-			$int_var['return_url'] = $amount['return_url'];
+			$int_var['return_url'] = $amount['return_url'] . $urladd;
 		} else {
-			$int_var['return_url'] = AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=thanks&amp;renew=0' );
+			$int_var['return_url'] = AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=thanks&amp;renew=0' . $urladd );
 		}
 
 		$int_var['invoice']		= $this->invoice_number;
