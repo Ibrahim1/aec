@@ -30,7 +30,7 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-//error_reporting(E_ALL);
+error_reporting(E_ALL);
 
 global $mosConfig_absolute_path, $mosConfig_offset, $aecConfig;
 
@@ -4341,6 +4341,8 @@ class InvoiceFactory
 
 	function promptpassword( $option, $var, $wrong=false )
 	{
+		global $mainframe;
+
 		$passthrough = array();
 		foreach ( $var as $ke => $va ) {
 			if ( is_array( $va ) ) {
@@ -4351,6 +4353,8 @@ class InvoiceFactory
 				$passthrough[] = array( $ke, $va );
 			}
 		}
+
+		$mainframe->SetPageTitle( _AEC_PROMPT_PASSWORD );
 
 		Payment_HTML::promptpassword( $option, $passthrough, $wrong );
 	}
@@ -4442,10 +4446,10 @@ class InvoiceFactory
 			$plans[$i]['gw']		= array();
 
 			if ( $plan_params['full_free'] ) {
-				$plans[$i]['gw'][0]					= array();
-				$plans[$i]['gw'][0]['name']		= 'free';
-				$plans[$i]['gw'][0]['recurring']	= 0;
-				$plans[$i]['gw'][0]['statement']	= '';
+				$plans[$i]['gw'][0]						= new stdClass();
+				$plans[$i]['gw'][0]->processor_name		= 'free';
+				$plans[$i]['gw'][0]->info['statement']	= '';
+				$plans[$i]['gw'][0]->recurring			= 0;
 				$i++;
 			} else {
 				if ( ( $plan_params['processors'] != '' ) && !is_null( $plan_params['processors'] ) ) {
@@ -4526,9 +4530,9 @@ class InvoiceFactory
 				// The plans are supposed to be first, so the details form should hold the values
 				if ( $aecConfig->cfg['plans_first'] && !empty( $plans[0]['id'] ) ) {
 					$_POST['usage']		= $plans[0]['id'];
-					$_POST['processor']	= $plans[0]['gw'][0]['name'];
-					if ( isset( $plans[0]['gw'][0]['recurring'] ) ) {
-						$_POST['recurring']	= $plans[0]['gw'][0]['recurring'];
+					$_POST['processor']	= $plans[0]['gw'][0]->processor_name;
+					if ( isset( $plans[0]['gw'][0]->recurring ) ) {
+						$_POST['recurring']	= $plans[0]['gw'][0]->recurring;
 					}
 				}
 
@@ -4574,12 +4578,12 @@ class InvoiceFactory
 				// The user is already existing, so we need to move on to the confirmation page with the details
 
 				$this->usage		= $plans[0]['id'];
-				if ( isset( $plans[0]['gw'][0]['recurring'] ) ) {
-					$this->recurring	= $plans[0]['gw'][0]['recurring'];
+				if ( isset( $plans[0]['gw'][0]->recurring ) ) {
+					$this->recurring	= $plans[0]['gw'][0]->recurring;
 				} else {
 					$this->recurring	= 0;
 				}
-				$this->processor	= $plans[0]['gw'][0]['name'];
+				$this->processor	= $plans[0]['gw'][0]->processor_name;
 
 				if ( ( $invoice != 0 ) && !is_null( $invoice ) ) {
 					$this->invoice	= $invoice;
@@ -4602,6 +4606,8 @@ class InvoiceFactory
 			} else {
 
 			}
+
+			$mainframe->SetPageTitle( _PAYPLANS_HEADER );
 
 			// Of to the Subscription Plan Selection Page!
 			Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $plans, $subscriptionClosed, $passthrough, $register );
@@ -4684,7 +4690,11 @@ class InvoiceFactory
 
 			$this->save( $option, $var );
 		} else {
+			global $mainframe;
+
 			$this->mi_form = $this->objUsage->getMIforms();
+
+			$mainframe->SetPageTitle( _CONFIRM_TITLE );
 
 			Payment_HTML::confirmForm( $option, $this, $user, $passthrough );
 		}
@@ -4849,9 +4859,13 @@ class InvoiceFactory
 
 	function InvoiceToCheckout( $option, $repeat=0 )
 	{
+		global $mainframe;
+
 		$var = $this->objInvoice->prepareProcessorLink( $this );
 
 		$this->objInvoice->formatInvoiceNumber();
+
+		$mainframe->SetPageTitle( _CHECKOUT_TITLE );
 
 		Payment_HTML::checkoutForm( $option, $var['var'], $var['params'], $this, $repeat );
 	}
@@ -4994,6 +5008,10 @@ class InvoiceFactory
 
 	function error( $option, $objUser, $invoice, $error )
 	{
+		global $mainframe;
+
+		$mainframe->SetPageTitle( _CHECKOUT_ERROR_TITLE );
+
 		Payment_HTML::error( $option, $objUser, $invoice, $error );
 	}
 }

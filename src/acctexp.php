@@ -256,6 +256,8 @@ function expired( $option, $userid, $expiration )
 		$name		= $metaUser->cmsUser->name;
 		$username	= $metaUser->cmsUser->username;
 
+		$mainframe->SetPageTitle( _EXPIRED_TITLE );
+
 		$frontend = new HTML_frontEnd ();
 		$frontend->expired( $option, $metaUser->cmsUser->id, $expiration, $name, $username, $invoice, $trial );
 	} else {
@@ -265,7 +267,7 @@ function expired( $option, $userid, $expiration )
 
 function pending( $option, $userid )
 {
-	global $database;
+	global $database, $mainframe;
 
 	if ( $userid > 0 ) {
 		$objUser = new mosUser( $database );
@@ -293,6 +295,8 @@ function pending( $option, $userid )
 		} else {
 			$invoice = 'none';
 		}
+
+		$mainframe->SetPageTitle( _PENDING_TITLE );
 
 		$frontend = new HTML_frontEnd ();
 		$frontend->pending( $option, $objUser, $invoice, $reason );
@@ -967,7 +971,7 @@ function InvoiceRemoveCoupon( $option )
 
 function notAllowed( $option )
 {
-	global $database, $aecConfig, $my;
+	global $database, $mainframe, $aecConfig, $my;
 
 	if ( ( $aecConfig->cfg['customnotallowed'] != '' ) && !is_null( $aecConfig->cfg['customnotallowed'] ) ) {
 		mosRedirect( $aecConfig->cfg['customnotallowed'] );
@@ -1005,6 +1009,8 @@ function notAllowed( $option )
 			$registerlink = AECToolbox::deadsureURL( '/index.php?option=com_registration&amp;task=register' );
 		}
 	}
+
+	$mainframe->SetPageTitle( _NOT_ALLOWED_HEADLINE );
 
 	$frontend = new HTML_frontEnd ();
 	$frontend->notAllowed( $option, $processors, $registerlink, $loggedin );
