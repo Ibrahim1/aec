@@ -928,13 +928,13 @@ function InvoiceAddParams( $option )
 
 	$invoice = aecGetParam( 'invoice', 0 );
 
-	$invoice = new Invoice( $database );
-	$invoice->loadInvoiceNumber( $invoice );
-	$invoice->savePostParams( $_POST );
-	$invoice->check();
-	$invoice->store();
+	$objinvoice = new Invoice( $database );
+	$objinvoice->loadInvoiceNumber( $invoice );
+	$objinvoice->savePostParams( $_POST );
+	$objinvoice->check();
+	$objinvoice->store();
 
-	repeatInvoice( $option, $_POST['invoice'], $invoice->userid );
+	repeatInvoice( $option, $invoice, $objinvoice->userid );
 }
 
 function InvoiceAddCoupon( $option )
@@ -944,13 +944,13 @@ function InvoiceAddCoupon( $option )
 	$invoice		= aecGetParam( 'invoice', 0 );
 	$coupon_code	= aecGetParam( 'coupon_code', 0 );
 
-	$invoice = new Invoice( $database );
-	$invoice->loadInvoiceNumber( $invoice );
-	$invoice->addCoupon( $coupon_code );
-	$invoice->check();
-	$invoice->store();
+	$objinvoice = new Invoice( $database );
+	$objinvoice->loadInvoiceNumber( $invoice );
+	$objinvoice->addCoupon( $coupon_code );
+	$objinvoice->check();
+	$objinvoice->store();
 
-	repeatInvoice( $option, $_POST['invoice'], $invoice->userid );
+	repeatInvoice( $option, $invoice, $objinvoice->userid );
 }
 
 function InvoiceRemoveCoupon( $option )
@@ -960,13 +960,13 @@ function InvoiceRemoveCoupon( $option )
 	$invoice		= aecGetParam( 'invoice', 0 );
 	$coupon_code	= aecGetParam( 'coupon_code', 0 );
 
-	$invoice = new Invoice( $database );
-	$invoice->loadInvoiceNumber( $invoice );
-	$invoice->removeCoupon( $coupon_code );
-	$invoice->check();
-	$invoice->store();
+	$objinvoice = new Invoice( $database );
+	$objinvoice->loadInvoiceNumber( $invoice );
+	$objinvoice->removeCoupon( $coupon_code );
+	$objinvoice->check();
+	$objinvoice->store();
 
-	repeatInvoice( $option, $invoice, $invoice->userid );
+	repeatInvoice( $option, $invoice, $objinvoice->userid );
 }
 
 function notAllowed( $option )

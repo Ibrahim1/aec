@@ -235,11 +235,6 @@ define( '_CHECKOUT_ERROR_TITLE', 'Erreur pendant le traitement de votre paiement
 define( '_CHECKOUT_ERROR_EXPLANATION', 'Une erreur est survenu pendant le traitement de votre paiement');
 define( '_CHECKOUT_ERROR_OPENINVOICE', 'Votre facture reste invalid&eacute;. Pour refaire une tentative de paiement, vous pouvez retourner sur la page de validation:');
 
-// --== COUPON INFO ==--
-define( '_COUPON_INFO', 'Coupons:');
-define( '_COUPON_INFO_CONFIRM', 'If you want to use one or more coupons for this payment, you can do so on the checkout page.');
-define( '_COUPON_INFO_CHECKOUT', 'Please enter your coupon code here and click the button to append it to this payment.');
-
 // --== COUPON ERROR MESSAGES ==--
 define( '_COUPON_WARNING_AMOUNT', 'Un des bons de r&eacute;duction que vous avez ajout&eacute; &agrave; cette facture ne modifie pas le montant du prochain paiement. Bien qu\'il semble ne pas affecter cette facture, il modifie en r&eacute;alit&eacute; un paiement ult&eacute;rieur.');
 define( '_COUPON_ERROR_PRETEXT', 'Nous sommes d&eacute;sol&eacute;s :');
