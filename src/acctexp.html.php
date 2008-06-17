@@ -637,7 +637,7 @@ class Payment_HTML
 				<tr>
 					<td>
 						<?php
-						if ( $user->name ) { ?>
+						if ( !empty( $user->name ) ) { ?>
 							<p><?php echo _CONFIRM_ROW_NAME; ?> <?php echo $user->name; ?></p>
 							<?php
 						} ?>

@@ -4647,7 +4647,9 @@ class InvoiceFactory
 				$user->email	= $passthrough['email'];
 			} else {
 				$user = new mosUser( $database );
-				$user->name		= $var['name'];
+				if ( isset( $var['name'] ) ) {
+					$user->name		= $var['name'];
+				}
 				$user->username = $var['username'];
 				$user->email	= $var['email'];
 
@@ -7167,7 +7169,6 @@ class AECToolbox
 			// This is a joomla registration, borrowing their code to save the user
 			global $mosConfig_useractivation, $mosConfig_sitename, $mosConfig_live_site;
 
-
 			if ( defined( 'JPATH_BASE' ) ) {
 				global $mainframe;
 
@@ -7276,11 +7277,15 @@ class AECToolbox
 			$email 		= $row->email;
 			$username 	= $row->username;
 
-			$v15 = defined( 'JPATH_BASE' );
-
-			$send_sub =  $v15 ? JText::_( 'ACCOUNT DETAILS FOR' ) : _SEND_SUB;
-			$usend_msg = $v15 ? JText::_( 'SEND_MSG' ) : _USEND_MSG;
-			$usend_msg_act = $v15 ? JText::_( 'SEND_MSG_ACTIVATE' ) : _USEND_MSG_ACTIVATE;
+			if ( defined( 'JPATH_BASE' ) ) {
+				$send_sub		= JText::_( 'ACCOUNT DETAILS FOR' );
+				$usend_msg		= JText::_( 'SEND_MSG' );
+				$usend_msg_act	= JText::_( 'SEND_MSG_ACTIVATE' );
+			} else {
+				$send_sub		= _SEND_SUB;
+				$usend_msg		= _USEND_MSG;
+				$usend_msg_act	= _USEND_MSG_ACTIVATE;
+			}
 
 			$subject 	= sprintf ($send_sub, $name, $mainframe->getCfg( 'sitename' ) );
 			$subject 	= html_entity_decode( $subject, ENT_QUOTES );
@@ -7320,7 +7325,7 @@ class AECToolbox
 			// Send notification to all administrators
 			$aecUser	= AECToolbox::_aecIP();
 
-			$subject2	= sprintf( _SEND_SUB, $name, $mainframe->getCfg( 'sitename' ) );
+			$subject2	= sprintf( $send_sub, $name, $mainframe->getCfg( 'sitename' ) );
 			$message2	= sprintf( _AEC_ASEND_MSG_NEW_REG, $adminName2, $mainframe->getCfg( 'sitename' ), $row->name, $email, $username, $aecUser['ip'], $aecUser['isp'] );
 
 			$subject2	= html_entity_decode( $subject2, ENT_QUOTES );
@@ -8157,7 +8162,12 @@ class microIntegrationHandler
 
 		$mi_list = $this->getUserChangeIntegrations();
 
-		if ( !is_object( $row ) ) {
+		if ( is_array( $row ) ) {
+			$userid = $row['id'];
+
+			$row = new mosUser( $database );
+			$row->load( $userid );
+		} elseif ( !is_object( $row ) ) {
 			$userid = $row;
 
 			$row = new mosUser( $database );
@@ -8165,7 +8175,7 @@ class microIntegrationHandler
 		}
 
 		if ( !empty( $mi_list ) ) {
-			foreach ( $mi_list as $mi_id ) {
+			foreach ( $mi_list as $mi_id ) {;
 				if ( !is_null( $mi_id ) && ( $mi_id != '' ) && $mi_id ) {
 					$mi = new microIntegration($database);
 					$mi->load( $mi_id );
