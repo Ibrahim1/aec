@@ -383,7 +383,7 @@ class metaUser
 		}
 
 		// To be failsafe, a new subscription may have to be added in here
-		if ( !$this->hasSubscription || !$plan_params['make_primary'] ) {
+		if ( empty( $this->hasSubscription ) || !$plan_params['make_primary'] ) {
 			if ( $existing_record && ( $plan_params['update_existing'] || $plan_params['make_primary'] ) ) {
 				// Update existing non-primary subscription
 				$this->focusSubscription = new Subscription( $database );
@@ -8355,7 +8355,9 @@ class microIntegration extends paramDBTable
 				$this->desc = $this->info['desc'];
 			}
 
-			$this->settings				=& $this->getParams();
+			$params = $this->getParams();
+
+			$this->settings				=& $params;
 			$this->mi_class->settings	=& $this->settings;
 
 			return true;
