@@ -1933,6 +1933,10 @@ function editSettings( $option )
 						unset( $settings_array['lists'] );
 					}
 
+					if ( empty( $settings_array ) ) {
+						continue;
+					}
+
 					// Iterate through settings form assigning the db settings
 					foreach ( $settings_array as $name => $values ) {
 						$setting_name = $pp->processor_name . '_' . $name;

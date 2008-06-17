@@ -1867,7 +1867,7 @@ class PaymentProcessor
 		$default_settings = array();
 		$default_settings['generic_buttons']	= array( 'list_yesno' );
 
-		$settings = array_merge( $settings, $default_settings );
+		return array_merge( $settings, $default_settings );
 	}
 
 	function checkoutAction( $int_var=null, $metaUser=null, $new_subscription=null, $invoice=null )
