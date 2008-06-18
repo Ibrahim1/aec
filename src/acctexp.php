@@ -225,7 +225,7 @@ if ( !empty( $task ) ) {
 
 function expired( $option, $userid, $expiration )
 {
-	global $mosConfig_live_site, $database, $aecConfig;
+	global $mosConfig_live_site, $database, $mainframe, $aecConfig;
 
 	if ( $userid > 0 ) {
 		$metaUser = new metaUser( $userid );

@@ -103,11 +103,6 @@ class mi_docman
 			}
 		}
 
-		$sel_groups = array();
-		foreach ($groups as $name ) {
-			$selected_groups[] = mosHTML::makeOption( $name, $name );
-		}
-
  		$del_opts = array();
 		$del_opts[0] = mosHTML::makeOption ( "No", "Just apply group below." ); // Should probably be langauge file defined?
 		$del_opts[1] = mosHTML::makeOption ( "All", "Delete ALL, then apply group below." );

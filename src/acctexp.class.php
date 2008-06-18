@@ -7690,9 +7690,21 @@ class AECToolbox
 		}
 	}
 
-	function rewriteEngineRQ( $content, $request )
+	function rewriteEngineRQ( $content, $request, $metaUser=null, $subscriptionPlan=null, $invoice=null )
 	{
-		return AECToolbox::rewriteEngine( $content, $request->metaUser, $request->plan, $request->invoice );
+		if ( isset( $request->metaUser ) ) {
+			$metaUser = $request->metaUser;
+		}
+
+		if ( isset( $request->plan ) ) {
+			$subscriptionPlan = $request->plan;
+		}
+
+		if ( isset( $request->invoice ) ) {
+			$invoice = $request->invoice;
+		}
+
+		return AECToolbox::rewriteEngine( $content, $metaUser, $subscriptionPlan, $invoice );
 	}
 
 	function rewriteEngine( $subject, $metaUser=null, $subscriptionPlan=null, $invoice=null )

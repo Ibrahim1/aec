@@ -99,15 +99,15 @@ class processor_ideal_advanced extends XMLprocessor
 			$name[1] = "";
 		}
 
-		$var['params']['billFirstName']		= array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLFIRSTNAME_NAME, _AEC_AUTHORIZE_ARB_PARAMS_BILLFIRSTNAME_DESC, $name[0]);
-		$var['params']['billLastName']		= array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLLASTNAME_NAME, _AEC_AUTHORIZE_ARB_PARAMS_BILLLASTNAME_DESC, $name[1]);
+		$var['params']['billFirstName']		= array( 'inputC', _AEC_USERFORM_BILLFIRSTNAME_NAME, _AEC_USERFORM_BILLFIRSTNAME_NAME, $name[0]);
+		$var['params']['billLastName']		= array( 'inputC', _AEC_USERFORM_BILLLASTNAME_NAME, _AEC_USERFORM_BILLLASTNAME_NAME, $name[1]);
 
 		if ( !empty( $this->settings['promptAddress'] ) ) {
-			$var['params']['billAddress']	= array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLADDRESS_NAME );
-			$var['params']['billCity']		= array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLCITY_NAME );
-			$var['params']['billState']		= array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLSTATE_NAME );
-			$var['params']['billZip']		= array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLZIP_NAME );
-			$var['params']['billCountry']	= array( 'inputC', _AEC_AUTHORIZE_ARB_PARAMS_BILLCOUNTRY_NAME );
+			$var['params']['billAddress'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS_NAME );
+			$var['params']['billCity'] = array( 'inputC', _AEC_USERFORM_BILLCITY_NAME );
+			$var['params']['billState'] = array( 'inputC', _AEC_USERFORM_BILLSTATE_NAME );
+			$var['params']['billZip'] = array( 'inputC', _AEC_USERFORM_BILLZIP_NAME );
+			$var['params']['billCountry'] = array( 'inputC', _AEC_USERFORM_BILLCOUNTRY_NAME );
 		}
 
 		return $var;
