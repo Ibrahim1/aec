@@ -1556,7 +1556,7 @@ class PaymentProcessorHandler
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_config_processors'
-				. ' WHERE `name` = \'' . $name . '\'';
+				. ' WHERE `name` = \'' . $database->getEscaped( $name ) . '\'';
 		$database->setQuery( $query );
 
 		return $database->loadResult();
@@ -1723,7 +1723,7 @@ class PaymentProcessor
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_config_processors'
-				. ' WHERE `name` = \'' . $this->processor_name . '\''
+				. ' WHERE `name` = \'' . $database->getEscaped( $this->processor_name ) . '\''
 				;
 		$database->setQuery( $query );
 		$result = $database->loadResult();
@@ -2133,7 +2133,7 @@ class processor extends paramDBTable
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_config_processors'
-				. ' WHERE `name` = \'' . $name . '\''
+				. ' WHERE `name` = \'' . $database->getEscaped( $name ) . '\''
 				;
 		$database->setQuery( $query );
 		$this->load( $database->loadResult() );
@@ -3149,7 +3149,7 @@ class SubscriptionPlanHandler
 
 		$query = 'SELECT `userid`'
 				. ' FROM #__acctexp_subscr'
-				. ' WHERE `plan` = \'' . $planid . '\' AND ( `status` = \'Active\' OR `status` = \'Trial\' ) '
+				. ' WHERE `plan` = \'' . $database->getEscaped( $planid ) . '\' AND ( `status` = \'Active\' OR `status` = \'Trial\' ) '
 				;
 		$database->setQuery( $query );
 
@@ -3648,7 +3648,7 @@ class SubscriptionPlan extends paramDBTable
 
 			$query = 'SELECT `id`'
 					. ' FROM #__acctexp_microintegrations'
-					. ' WHERE `id` IN (' . implode( ',', $mis ) . ')'
+					. ' WHERE `id` IN (' . $database->getEscaped( implode( ',', $mis ) ) . ')'
 					. ' ORDER BY `ordering` ASC'
 					;
 			$this->_db->setQuery( $query );
@@ -4052,7 +4052,7 @@ class InvoiceFactory
 		if ( !is_null( $this->userid ) ) {
 			$query = 'SELECT `id`'
 					. ' FROM #__users'
-					. ' WHERE `id` = \'' . $this->userid . '\'';
+					. ' WHERE `id` = \'' . $database->getEscaped( $this->userid ) . '\'';
 			$database->setQuery( $query );
 
 			if ( !$database->loadResult() ) {
@@ -4387,7 +4387,7 @@ class InvoiceFactory
 		$where[] = '`active` = \'1\'';
 
 		if ( $usage ) {
-			$where[] = '`id` = ' . $usage;
+			$where[] = '`id` = ' . $database->getEscaped( $usage );
 		} else {
 			$where[] = '`visible` != \'0\'';
 		}
@@ -5087,8 +5087,8 @@ class Invoice extends paramDBTable
 
 		$query = 'SELECT id'
 		. ' FROM #__acctexp_invoices'
-		. ' WHERE invoice_number = \'' . $invoiceNum . '\''
-		. ' OR secondary_ident = \'' . $invoiceNum . '\''
+		. ' WHERE invoice_number = \'' . $database->getEscaped( $invoiceNum ) . '\''
+		. ' OR secondary_ident = \'' . $database->getEscaped( $invoiceNum ) . '\''
 		;
 		$database->setQuery( $query );
 		$this->load($database->loadResult());
@@ -5135,8 +5135,8 @@ class Invoice extends paramDBTable
 
 		$query = 'SELECT invoice_number'
 		. ' FROM #__acctexp_invoices'
-		. ' WHERE id = \'' . $this->id . '\''
-		. ' OR secondary_ident = \'' . $this->invoice_number . '\''
+		. ' WHERE id = \'' . $database->getEscaped( $this->id ) . '\''
+		. ' OR secondary_ident = \'' . $database->getEscaped( $this->invoice_number ) . '\''
 		;
 		$database->setQuery( $query );
 
@@ -5149,12 +5149,12 @@ class Invoice extends paramDBTable
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_invoices'
-				. ' WHERE `subscr_id` = \'' . $subscrid . '\''
+				. ' WHERE `subscr_id` = \'' . $database->getEscaped( $subscrid ) . '\''
 				. ' ORDER BY `transaction_date` DESC'
 				;
 
 		if ( !empty( $userid ) ) {
-			$query .= ' AND `userid` = \'' . $userid . '\'';
+			$query .= ' AND `userid` = \'' . $database->getEscaped( $userid ) . '\'';
 		}
 
 		$database->setQuery( $query );
@@ -5168,7 +5168,7 @@ class Invoice extends paramDBTable
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_invoices'
 				. ' WHERE `userid` = ' . (int) $userid
-				. ' AND `invoice_number` = \'' . $invoiceNum . '\''
+				. ' AND `invoice_number` = \'' . $database->getEscaped( $invoiceNum ) . '\''
 				;
 		$database->setQuery( $query );
 		return $database->loadResult();
@@ -6005,7 +6005,7 @@ class Subscription extends paramDBTable
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_subscr'
-				. ' WHERE `userid` = \'' . $userid . '\''
+				. ' WHERE `userid` = \'' . $database->getEscaped( $userid ) . '\''
 				;
 
 		if ( !empty( $usage ) ) {
@@ -6025,12 +6025,12 @@ class Subscription extends paramDBTable
 				}
 
 				foreach ( $allplans as $apid => $pid ) {
-					$allplans[$apid] = '`plan` = \'' . $pid . '\'';
+					$allplans[$apid] = '`plan` = \'' . $database->getEscaped( $pid ) . '\'';
 				}
 
 				$query .= ' AND ' . implode( ' OR ', $allplans );
 			} else {
-				$query .= ' AND ' . '`plan` = \'' . $usage . '\'';
+				$query .= ' AND ' . '`plan` = \'' . $database->getEscaped( $usage ) . '\'';
 			}
 		}
 
@@ -6057,7 +6057,7 @@ class Subscription extends paramDBTable
 
 		$query = 'UPDATE #__acctexp_subscr'
 				. ' SET `primary` = \'0\''
-				. ' WHERE `userid` = \'' . $this->userid . '\''
+				. ' WHERE `userid` = \'' . $database->getEscaped( $this->userid ) . '\''
 				;
 		$database->setQuery( $query );
 		$database->query();
@@ -6549,7 +6549,7 @@ class Subscription extends paramDBTable
 		foreach ( $admins['users'] AS $id ) {
 			$query = 'SELECT `email`, `sendEmail`'
 					. ' FROM #__users'
-					. ' WHERE `id` = \'' . $id . '\''
+					. ' WHERE `id` = \'' . $database->getEscaped( $id ) . '\''
 					;
 			$database->setQuery( $query );
 			$rows = $database->loadObjectList();
@@ -6716,7 +6716,7 @@ class GeneralInfoRequester
 		$query = 'SELECT g2.group_id'
 				. ' FROM #__core_acl_aro_groups AS g1'
 				. ' INNER JOIN #__core_acl_aro_groups AS g2 ON g1.lft >= g2.lft AND g1.lft <= g2.rgt'
-				. ' WHERE g1.group_id = ' . $group_id
+				. ' WHERE g1.group_id = ' . $database->getEscaped( $group_id )
 				. ' GROUP BY g2.group_id'
 				. ' ORDER BY g2.lft'
 				;
@@ -6744,7 +6744,7 @@ class AECfetchfromDB
 
 		$query = 'SELECT `userid`'
 				. ' FROM #__acctexp_invoices'
-				. ' WHERE `invoice_number` = \'' . $invoice_number . '\''
+				. ' WHERE `invoice_number` = \'' . $database->getEscaped( $invoice_number ) . '\''
 				;
 		$database->setQuery( $query );
 		return $database->loadResult();
@@ -6764,12 +6764,12 @@ class AECfetchfromDB
 			$query .= ' WHERE `active` = \'1\' AND';
 		}
 
-		$query .= ' ( `invoice_number` LIKE \'' . $invoice_number . '\''
-				. ' OR `secondary_ident` LIKE \'' . $invoice_number . '\' )'
+		$query .= ' ( `invoice_number` LIKE \'' . $database->getEscaped( $invoice_number ) . '\''
+				. ' OR `secondary_ident` LIKE \'' . $database->getEscaped( $invoice_number ) . '\' )'
 				;
 
 		if ( $userid ) {
-			$query .= ' AND `userid` = \'' . $userid . '\'';
+			$query .= ' AND `userid` = \'' . $database->getEscaped( $userid ) . '\'';
 		}
 
 		$database->setQuery( $query );
@@ -7018,7 +7018,7 @@ class AECToolbox
 
 		$query = 'SELECT id'
 		. ' FROM #__users'
-		. ' WHERE username = \'' . $username . '\''
+		. ' WHERE username = \'' . $database->getEscaped( $username ) . '\''
 		;
 		$database->setQuery( $query );
 		$id = $database->loadResult();
@@ -7067,7 +7067,7 @@ class AECToolbox
 
 		$query = 'SELECT id'
 		. ' FROM #__users'
-		. ' WHERE username = \'' . $username . '\''
+		. ' WHERE username = \'' . $database->getEscaped( $username ) . '\''
 		;
 		$database->setQuery( $query );
 		$id = $database->loadResult();
@@ -7147,7 +7147,7 @@ class AECToolbox
 
 			$query = 'SELECT `id`'
 					. ' FROM #__users'
-					. ' WHERE `username` = \'' . $var['username'] . '\''
+					. ' WHERE `username` = \'' . $database->getEscaped( $var['username'] ) . '\''
 					;
 			$database->setQuery( $query );
 			$uid = $database->loadResult();
@@ -7350,7 +7350,7 @@ class AECToolbox
 		// We need the new userid, so we're fetching it from the newly created entry here
 		$query = 'SELECT `id`'
 				. ' FROM #__users'
-				. ' WHERE `username` = \'' . $var['username'] . '\''
+				. ' WHERE `username` = \'' . $database->getEscaped( $var['username'] ) . '\''
 				;
 		$database->setQuery( $query );
 		return $database->loadResult();
@@ -8920,7 +8920,7 @@ class couponHandler
 		// Get this coupons id from the static table
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_coupons_static'
-				. ' WHERE `coupon_code` = \'' . $coupon_code . '\''
+				. ' WHERE `coupon_code` = \'' . $database->getEscaped( $coupon_code ) . '\''
 				;
 		$database->setQuery( $query );
 		$couponid = $database->loadResult();
@@ -8932,7 +8932,7 @@ class couponHandler
 			// Coupon not found, take the regular table
 			$query = 'SELECT `id`'
 					. ' FROM #__acctexp_coupons'
-					. ' WHERE `coupon_code` = \'' . $coupon_code . '\''
+					. ' WHERE `coupon_code` = \'' . $database->getEscaped( $coupon_code ) . '\''
 					;
 			$database->setQuery( $query );
 			$couponid = $database->loadResult();

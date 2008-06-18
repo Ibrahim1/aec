@@ -349,7 +349,7 @@ function subscribe( $option )
 		} else {
 			$query = 'SELECT `id`'
 					. ' FROM #__users'
-					. ' WHERE `username` = \'' . $_POST['username'] . '\''
+					. ' WHERE `username` = \'' . $database->getEscaped( $_POST['username'] ) . '\''
 					;
 			$database->setQuery( $query );
 			if ( $database->loadResult() ) {
@@ -365,7 +365,7 @@ function subscribe( $option )
 					// check for existing email
 					$query = 'SELECT `id`'
 							. ' FROM #__users'
-							. ' WHERE `email` = \'' . $_POST['email'] . '\''
+							. ' WHERE `email` = \'' . $database->getEscaped( $_POST['email'] ) . '\''
 							;
 					$database->setQuery( $query );
 					if ( $database->loadResult() ) {
@@ -391,7 +391,7 @@ function subscribe( $option )
 			if ( isset( $_POST['username'] ) ) {
 				$query = 'SELECT `id`'
 						. ' FROM #__users'
-						. ' WHERE `username` = \'' . $_POST['username'] . '\''
+						. ' WHERE `username` = \'' . $database->getEscaped( $_POST['username'] ) . '\''
 						;
 				$database->setQuery( $query );
 				if ( $database->loadResult() ) {
@@ -408,7 +408,7 @@ function subscribe( $option )
 					// check for existing email
 					$query = 'SELECT `id`'
 							. ' FROM #__users'
-							. ' WHERE `email` = \'' . $_POST['email'] . '\''
+							. ' WHERE `email` = \'' . database->getEscaped( $_POST['email'] ) . '\''
 							;
 					$database->setQuery( $query );
 					if ( $database->loadResult() ) {
