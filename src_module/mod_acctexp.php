@@ -70,12 +70,6 @@ $displaypipeline		= $params->get( 'displaypipeline', 0 );
 if ( $my->id ) {
 // Logout output
 // ie HTML when already logged in and trying to logout
-	if ( $name ) {
-		$name = $my->name;
-	} else {
-		$name = $my->username;
-	}
-
 	if ( $pretext ) {
 		echo $pretext;
 	}

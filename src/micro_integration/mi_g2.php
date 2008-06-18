@@ -283,11 +283,11 @@ class mi_g2 extends MI
 
 		$query = 'SELECT g_id'
 				. ' FROM g2_User'
-				. ' WHERE `g_userName` = \'' . $metaUser->cmsUser->username . '\''
+				. ' WHERE `g_userName` LIKE \'%' . $metaUser->cmsUser->username . '%\''
 				;
 		$database->setQuery( $query );
 
-		$g2id = $database->loadResult();
+		return $database->loadResult();
 	}
 
 	function createG2User( $metaUser )

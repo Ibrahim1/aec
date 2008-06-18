@@ -24,13 +24,13 @@ class mi_coupon
 	function Settings()
 	{
 		$settings = array();
-		$settings['master_coupon'] = array( 'inputC' );
-		$settings['bind_subscription'] = array( 'list_yesno' );
-		$settings['create_new_coupons'] = array( 'inputC' );
-		$settings['max_reuse'] = array( 'inputC' );
-		$settings['mail_out_coupons'] = array( 'list_yesno' );
-		$settings['always_new_coupons'] = array( 'list_yesno' );
-		$settings['inc_old_coupons'] = array( 'inputC' );
+		$settings['master_coupon']		= array( 'inputC' );
+		$settings['bind_subscription']	= array( 'list_yesno' );
+		$settings['create_new_coupons']	= array( 'inputC' );
+		$settings['max_reuse']			= array( 'inputC' );
+		$settings['mail_out_coupons']	= array( 'list_yesno' );
+		$settings['always_new_coupons']	= array( 'list_yesno' );
+		$settings['inc_old_coupons']	= array( 'inputC' );
 
 		$settings['sender']				= array( 'inputE' );
 		$settings['sender_name']		= array( 'inputE' );
