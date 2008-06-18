@@ -117,6 +117,7 @@ define( '_AEC_SUBDETAILS_TAB_DETAILS', 'Details');
 // --== EXPIRATION PAGE ==--
 define( '_EXPIRE_INFO', 'Your account is active until');
 define( '_RENEW_BUTTON', 'Renew Now');
+define( '_RENEW_BUTTON_CONTINUE', 'Extend Previous Membership');
 define( '_ACCT_DATE_FORMAT', '%m-%d-%Y');
 define( '_EXPIRED', 'Tu cuenta a caducado. Por favor contactanos para renovar tu suscripcion. Fecha de caducidad: ');
 define( '_EXPIRED_TRIAL', 'Your trial period has expired on: ');

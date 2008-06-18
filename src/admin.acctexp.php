@@ -1817,6 +1817,7 @@ function editSettings( $option )
 	$params['display_date_backend']				= array( 'inputC', '%a, %d %b %Y %T %Z' );
 	$params['renew_button_never']				= array( 'list_yesno', '' );
 	$params['renew_button_nolifetimerecurring']	= array( 'list_yesno', '' );
+	$params['continue_button']					= array( 'list_yesno', '' );
 	$params['amount_currency_symbol']			= array( 'list_yesno', 0 );
 	$params['amount_currency_symbolfirst']		= array( 'list_yesno', 0 );
 	$params['amount_use_comma']					= array( 'list_yesno', 0 );
@@ -2377,6 +2378,7 @@ function editSubscriptionPlan( $id, $option )
 	$params['gid']						= array( 'list', 18 );
 	$params['lifetime']					= array( 'list_yesno', 0 );
 	$params['processors']				= array( 'list', '' );
+	$params['standard_parent']			= array( 'list', '' );
 	$params['fallback']					= array( 'list', '' );
 	$params['make_active']				= array( 'list_yesno', 1 );
 	$params['make_primary']				= array( 'list_yesno', 1 );
@@ -2642,6 +2644,7 @@ function editSubscriptionPlan( $id, $option )
 	$total_plans	= min( max( (count( $active_plans ) + 1 ), 4 ), 20 );
 
 	$lists['fallback'] = mosHTML::selectList($active_plans, 'fallback', 'size="' . $total_plans . '"', 'value', 'text', arrayValueDefault($params_values, 'fallback', 0));
+	$lists['standard_parent'] = mosHTML::selectList($active_plans, 'standard_parent', 'size="' . $total_plans . '"', 'value', 'text', arrayValueDefault($params_values, 'standard_parent', 0));
 
 	// get similar plans
 	if ( !empty( $params_values['similarplans'] ) ) {

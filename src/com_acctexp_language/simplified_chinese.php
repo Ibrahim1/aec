@@ -117,6 +117,7 @@ define( '_AEC_SUBDETAILS_TAB_DETAILS', 'Details');
 // --== EXPIRATION PAGE ==--
 define( '_EXPIRE_INFO', '你的�?�?�一直是�?�用的');
 define( '_RENEW_BUTTON', '立刻更新');
+define( '_RENEW_BUTTON_CONTINUE', 'Extend Previous Membership');
 define( '_ACCT_DATE_FORMAT', '%m-%d-%Y');
 define( '_EXPIRED', '你的�?�?�已�?过期: ');
 define( '_EXPIRED_TRIAL', 'Your trial period has expired on: ');

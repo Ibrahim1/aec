@@ -118,6 +118,7 @@ define( '_AEC_SUBDETAILS_TAB_DETAILS', 'Details');
 // --== PAGE EXPIRATION ==--
 define( '_EXPIRE_INFO', 'Votre compte est actif jusqu\'au');
 define( '_RENEW_BUTTON', 'Renouveler Maintenant');
+define( '_RENEW_BUTTON_CONTINUE', 'Extend Previous Membership');
 define( '_ACCT_DATE_FORMAT', '%d-%m-%Y');
 define( '_EXPIRED', 'Votre compte est d&eacute;sactiv&eacute;&lt;br&gt; Merci de nous contacter pour renouveler votre inscription.&lt;br&gt;Date d\'expiration :');
 define( '_EXPIRED_TRIAL', 'Votre p&eacute;riode d\'essai a expir&eacute; le : ');

@@ -118,6 +118,7 @@ define( '_AEC_SUBDETAILS_TAB_DETAILS', 'Details');
 // --== EXPIRATION PAGE ==--
 define( '_EXPIRE_INFO', 'Je abonnement is geldig tot ');
 define( '_RENEW_BUTTON', 'Nu vernieuwen');
+define( '_RENEW_BUTTON_CONTINUE', 'Extend Previous Membership');
 define( '_ACCT_DATE_FORMAT', '%d-%m-%Y');
 define( '_EXPIRED', 'Je abonnement is verlopen op: ');
 define( '_EXPIRED_TRIAL', 'Je proefabonnement is verlopen op: ');

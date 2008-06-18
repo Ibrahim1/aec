@@ -212,6 +212,7 @@ class metaUser
 		$this->cmsUser->check();
 		return $this->cmsUser->store();
 	}
+
 	function getTempAuth()
 	{
 		$return = false;
@@ -389,6 +390,16 @@ class metaUser
 				$this->focusSubscription = new Subscription( $database );
 				$this->focusSubscription->load( $existing_record );
 			} else {
+				// Create a root new subscription
+				if ( !$plan_params['make_primary'] && !empty( $plan_params['standard_parent'] ) ) {
+					$this->focusSubscription = new Subscription( $database );
+					$this->focusSubscription->load( 0 );
+					$this->focusSubscription->createNew( $this->userid, 'none', 1, 1 );
+					$this->focusSubscription->applyUsage( $plan_params['standard_parent'], 'none', 1, 0 );
+
+					$this->objSubscription = $this->focusSubscription;
+				}
+
 				// Create new subscription
 				$this->focusSubscription = new Subscription( $database );
 				$this->focusSubscription->load( 0 );
@@ -851,6 +862,7 @@ class Config_General extends paramDBTable
 		$def['customtext_cancel']				= '';
 		$def['renew_button_never']				= 0;
 		$def['renew_button_nolifetimerecurring']	= 1;
+		$def['continue_button']					= 1;
 
 		// Insert a new entry if there is none yet
 		if ( empty( $this->settings ) ) {
@@ -3154,6 +3166,19 @@ class SubscriptionPlanHandler
 		$database->setQuery( $query );
 
 		return $database->loadResultArray();
+	}
+
+	function PlanStatus( $planid )
+	{
+		global $database;
+
+		$query = 'SELECT `active`'
+				. ' FROM #__acctexp_plans'
+				. ' WHERE `id` = \'' . $database->getEscaped( $planid ) . '\''
+				;
+		$database->setQuery( $query );
+
+		return $database->loadResult();
 	}
 }
 

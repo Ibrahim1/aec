@@ -253,13 +253,18 @@ function expired( $option, $userid, $expiration )
 		}
 
 		$expiration	= strftime( $aecConfig->cfg['display_date_frontend'], $expired);
-		$name		= $metaUser->cmsUser->name;
-		$username	= $metaUser->cmsUser->username;
 
 		$mainframe->SetPageTitle( _EXPIRED_TITLE );
 
+		$continue = false;
+		if ( $aecConfig->cfg['continue_button'] ) {
+			if ( !empty( SubscriptionPlanHandler::PlanStatus( $metaUser->focusSubscription->plan ) ) ) {
+				$continue = true;
+			}
+		}
+
 		$frontend = new HTML_frontEnd ();
-		$frontend->expired( $option, $metaUser->cmsUser->id, $expiration, $name, $username, $invoice, $trial );
+		$frontend->expired( $option, $metaUser, $expiration, $invoice, $trial, $continue );
 	} else {
 		mosRedirect( sefRelToAbs( 'index.php' ) );
 	}

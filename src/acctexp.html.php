@@ -57,14 +57,14 @@ class HTML_frontEnd
     	$mainframe->appendMetaTag( 'keywords', 'AEC Account Expiration Control' );
 	}
 
-	function expired($option, $userid, $expiration, $name, $username, $invoice, $trial)
+	function expired( $option, $metaUser, $expiration, $invoice, $trial, $continue=0 )
 	{
 		global $database, $aecConfig;
 
 		if ($aecConfig->cfg['customtext_expired_keeporiginal']) {?>
 			<div class="componentheading"><?php echo _EXPIRED_TITLE; ?></div>
 			<div id="expired_greeting">
-				<p><?php echo sprintf( _DEAR, $name ); ?></p><p><?php
+				<p><?php echo sprintf( _DEAR, $metaUser->cmsUser->name ); ?></p><p><?php
 					if ( $trial ) {
 						echo _EXPIRED_TRIAL;
 					} else {
@@ -82,17 +82,32 @@ class HTML_frontEnd
 		<div id="box_expired">
 			<div id="alert_level_1">
 				<?php
-				if ($invoice) { ?>
+				if ( $invoice ) {
+					?>
 					<p>
 						<?php echo _PENDING_OPENINVOICE; ?>&nbsp;
-						<a href="<?php echo AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice=' . $invoice . '&amp;userid=' . $userid ); ?>" title="<?php echo _GOTO_CHECKOUT; ?>"><?php echo _GOTO_CHECKOUT; ?></a>
+						<a href="<?php echo AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice=' . $invoice . '&amp;userid=' . $metaUser->userid ); ?>" title="<?php echo _GOTO_CHECKOUT; ?>"><?php echo _GOTO_CHECKOUT; ?></a>
 					</p>
+					<?php
+				} ?>
+				<?php
+				if ( $continue ) {
+					?>
+					<div id="renew_button">
+						<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=renewSubscription', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+						<input type="hidden" name="option" value="<?php echo $option; ?>" />
+						<input type="hidden" name="userid" value="<?php echo $metaUser->userid; ?>" />
+						<input type="hidden" name="usage" value="<?php echo $metaUser->focusSubscription->plan; ?>" />
+						<input type="hidden" name="task" value="renewSubscription" />
+						<input type="submit" class="button" value="<?php echo _RENEW_BUTTON_CONTINUE;?>" />
+						</form>
+					</div>
 					<?php
 				} ?>
 				<div id="renew_button">
 					<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=renewSubscription', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 					<input type="hidden" name="option" value="<?php echo $option; ?>" />
-					<input type="hidden" name="userid" value="<?php echo $userid; ?>" />
+					<input type="hidden" name="userid" value="<?php echo $metaUser->userid; ?>" />
 					<input type="hidden" name="task" value="renewSubscription" />
 					<input type="submit" class="button" value="<?php echo _RENEW_BUTTON;?>" />
 					</form>

@@ -798,6 +798,8 @@ define( '_PAYPLAN_GENERAL_EMAIL_DESC_NAME',				'Emailtext:' );
 define( '_PAYPLAN_GENERAL_EMAIL_DESC_DESC',				'Text welcher im Email an den Benutzer angezeigt wird wenn das Abo best&auml;tigt wurde' );
 define( '_PAYPLAN_GENERAL_FALLBACK_NAME',				'Abo Ersatz:' );
 define( '_PAYPLAN_GENERAL_FALLBACK_DESC',				'Wenn ein Abo endet, aktiviere dieses Abo f&uuml;r diesen Benutzer' );
+define( '_PAYPLAN_GENERAL_STANDARD_PARENT_NAME', 'Standard Parent Plan');
+define( '_PAYPLAN_GENERAL_STANDARD_PARENT_DESC', 'Currently assigns this plan as the users root membership in case he or she signs up only for a secondary plan.');
 
 define( '_PAYPLAN_GENERAL_PROCESSORS_NAME',				'Gateways:' );
 define( '_PAYPLAN_NOPLAN',								'Kein Abo' );

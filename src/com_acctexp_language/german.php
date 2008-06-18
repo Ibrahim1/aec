@@ -113,6 +113,7 @@ define( '_AEC_SUBDETAILS_TAB_DETAILS', 'Details');
 // --== EXPIRATION PAGE ==--
 define( '_EXPIRE_INFO',						'Ihr Konto ist aktiv bis');
 define( '_RENEW_BUTTON',					'Erneuern');
+define( '_RENEW_BUTTON_CONTINUE', 'Extend Previous Membership');
 define( '_ACCT_DATE_FORMAT',				'%m-%d-%Y');
 define( '_EXPIRED',							'Ihr Abonnement ist abgelaufen, Ende des letzten Abonnements: ');
 define( '_EXPIRED_TRIAL', 					'Ihre Testphase ist ausgelaufen, Ende der Testphase: ');
