@@ -258,7 +258,8 @@ function expired( $option, $userid, $expiration )
 
 		$continue = false;
 		if ( $aecConfig->cfg['continue_button'] ) {
-			if ( !empty( SubscriptionPlanHandler::PlanStatus( $metaUser->focusSubscription->plan ) ) ) {
+			$status = SubscriptionPlanHandler::PlanStatus( $metaUser->focusSubscription->plan );
+			if ( !empty( $status ) ) {
 				$continue = true;
 			}
 		}
@@ -413,7 +414,7 @@ function subscribe( $option )
 					// check for existing email
 					$query = 'SELECT `id`'
 							. ' FROM #__users'
-							. ' WHERE `email` = \'' . database->getEscaped( $_POST['email'] ) . '\''
+							. ' WHERE `email` = \'' . $database->getEscaped( $_POST['email'] ) . '\''
 							;
 					$database->setQuery( $query );
 					if ( $database->loadResult() ) {
@@ -1117,7 +1118,7 @@ function errorAP( $option, $usage, $userid, $username, $name, $recurring )
 	Payment_HTML::errorAP( $option, $usage, $userid, $username, $name, $recurring );
 }
 
-function thanks( $option, $renew, $free )
+function thanks( $option, $renew, $free, $usage=null )
 {
 	global $database, $aecConfig, $mosConfig_useractivation, $ueConfig, $mosConfig_dbprefix;
 
@@ -1150,7 +1151,9 @@ function thanks( $option, $renew, $free )
 		}
 	}
 
-	$usage = aecGetParam( 'u' );
+	if ( empty( $usage ) ) {
+		$usage = aecGetParam( 'u' );
+	}
 
 	if ( !empty( $usage ) ) {
 		$new_subscription = new SubscriptionPlan( $database );

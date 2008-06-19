@@ -71,7 +71,7 @@ function aecDebug( $text, $level = 128 )
 {
 	global $database;
 
-	if ( is_object( $text ) || is_array( $text ) ) {
+	if ( !is_string( $text ) ) {
 		$msg = json_encode( $text );
 	} else {
 		$msg = $text;
@@ -3304,7 +3304,7 @@ class SubscriptionPlan extends paramDBTable
 				$value		= $params['full_period'];
 				$perunit	= $params['full_periodunit'];
 			} else {
-				return;
+				return false;
 			}
 
 			if ( $params['lifetime'] || ( strcmp( $multiplicator, 'lifetime' ) === 0 ) ) {
@@ -3673,7 +3673,7 @@ class SubscriptionPlan extends paramDBTable
 
 			$query = 'SELECT `id`'
 					. ' FROM #__acctexp_microintegrations'
-					. ' WHERE `id` IN (' . $database->getEscaped( implode( ',', $mis ) ) . ')'
+					. ' WHERE `id` IN (' . $this->_db->getEscaped( implode( ',', $mis ) ) . ')'
 					. ' ORDER BY `ordering` ASC'
 					;
 			$this->_db->setQuery( $query );
@@ -4817,18 +4817,22 @@ class InvoiceFactory
 			if ( !empty( $this->objInvoice->made_free )
 				// Or a free full period that the user CAN use
 				|| ( $params['full_free'] && $this->objInvoice->counter )
+				|| ( $params['full_free'] && empty( $this->objInvoice->counter ) && empty( $params['trial_period'] ) )
 				// Or a free trial that the user CAN use
 				|| ( $params['trial_free'] && empty( $this->objInvoice->counter ) ) ) {
 				// Then mark payed
 				if ( $this->objInvoice->pay() !== false ) {
-					thanks( $option, $this->renew, 1 );
+					thanks ( $option, $this->renew, 1, $this->usage );
+					return;
 				}
 			}
 
+			notAllowed( $option );
 			return;
 		} elseif ( strcmp( strtolower( $this->processor ), 'error' ) === 0 ) {
 			// Nope, won't work buddy
 			notAllowed( $option );
+			return;
 		}
 
 		if ( !empty( $this->pp->info['secure'] ) && empty( $_SERVER['HTTPS'] ) && !$aecConfig->cfg['override_reqssl'] ) {
@@ -4877,7 +4881,7 @@ class InvoiceFactory
 		// Either this is fully free, or the next term is free and this is non recurring
 		if ( $this->terms->checkFree() || ( $this->terms->nextterm->free && !$this->recurring ) ) {
 			$this->objInvoice->pay();
-			thanks ( $option, $this->renew, 1 );
+			thanks ( $option, $this->renew, 1, $this->usage );
 			return;
 		}
 
@@ -5428,7 +5432,7 @@ class Invoice extends paramDBTable
 			// Only check on the amount on the first transaction to make up for coupon errors
 			// TODO: This is very bad right here and a potential loophole, needs to be replaced with a more thorough check
 			// ...once we have more precise invoices
-			if ( !empty( $pp->settings['testmode'] ) && ( strcmp( $this->transaction_date, '0000-00-00 00:00:00' ) === 0 ) ) {
+			if ( !empty( $pp->settings['testmode'] ) ) {
 				if ( isset( $response['amount_paid'] ) ) {
 					if ( $response['amount_paid'] != $this->amount ) {
 						// Amount Fraud, cancel payment and create error log addition
