@@ -4392,10 +4392,10 @@ class InvoiceFactory
 
 		$where = array();
 
+		$subscriptionClosed = false;
 		if ( $this->metaUser->hasSubscription ) {
 			$subscriptionClosed = ( strcmp( $this->metaUser->objSubscription->status, 'Closed' ) === 0 );
 		} elseif ( empty( $this->usage ) ) {
-			$subscriptionClosed = false;
 			// TODO: Check if the user has already subscribed once, if not - link to intro
 			// TODO: Make sure a registration hybrid wont get lost here
 			if ( !$intro && !empty( $aecConfig->cfg['customintro'] ) ) {
