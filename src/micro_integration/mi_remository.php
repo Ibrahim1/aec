@@ -180,9 +180,9 @@ class mi_remository
 	{
 		global $mainframe;
 
-		require_once( $mainframe->getCfg('absolute_path').'/components/com_remository/remository.interface.php' );
-		require_once( $mainframe->getCfg('absolute_path').'/components/com_remository/remository.class.php' );
-		require_once( $mainframe->getCfg('absolute_path').'/components/com_remository/p-classes/remositoryAuthoriser.php' );
+		include_once( $mainframe->getCfg('absolute_path').'/components/com_remository/remository.interface.php' );
+		include_once( $mainframe->getCfg('absolute_path').'/components/com_remository/remository.class.php' );
+		include_once( $mainframe->getCfg('absolute_path').'/components/com_remository/p-classes/remositoryAuthoriser.php' );
 	}
 }
 
