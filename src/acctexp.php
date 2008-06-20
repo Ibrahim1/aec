@@ -323,15 +323,28 @@ function subscribe( $option )
 
 	if ( !empty( $username ) && $usage ) {
 		$CB = ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) );
+
 		if ( defined( 'JPATH_BASE' ) && !$CB ) {
 			// Joomla 1.5 Sanity Check
 
 			// Get required system objects
 			$user 		= clone(JFactory::getUser());
 
+			$duplicationcheck = checkDuplicateUsernameEmail( $_POST['username'], $_POST['email'] );
+
 			// Bind the post array to the user object
-			if (!$user->bind( JRequest::get('post'), 'usertype' )) {
-				JError::raiseError( 500, $user->getError());
+			if ( !$user->bind( JRequest::get('post'), 'usertype' ) || ( $duplicationcheck !== true ) ) {
+				$binderror = $user->getError();
+
+				if ( !empty( $binderror ) ) {
+					JError::raiseError( 500, $user->getError() );
+				} else {
+					JError::raiseError( 500, $duplicationcheck );
+				}
+
+				unset($_POST);
+				subscribe();
+				return false;
 			}
 		} elseif ( !defined( 'JPATH_BASE' ) && !$CB ) {
 			// Joomla 1.0 Sanity Check
@@ -353,35 +366,8 @@ function subscribe( $option )
 				exit();
 			}
 		} else {
-			$query = 'SELECT `id`'
-					. ' FROM #__users'
-					. ' WHERE `username` = \'' . $database->getEscaped( $_POST['username'] ) . '\''
-					;
-			$database->setQuery( $query );
-			if ( $database->loadResult() ) {
-				if ( !defined( 'JPATH_BASE' ) ) {
-					mosErrorAlert( _REGWARN_EMAIL_INUSE );
-				} else {
-					mosErrorAlert( JText::_( 'WARNREG_INUSE' ) );
-				}
-			}
-
-			if ( !empty( $_POST['email'] ) ) {
-				if ( $mosConfig_uniquemail || ( defined( 'JPATH_BASE' )) ) { // J1.5 forces unique email
-					// check for existing email
-					$query = 'SELECT `id`'
-							. ' FROM #__users'
-							. ' WHERE `email` = \'' . $database->getEscaped( $_POST['email'] ) . '\''
-							;
-					$database->setQuery( $query );
-					if ( $database->loadResult() ) {
-						if ( !defined( 'JPATH_BASE' ) ) {
-							mosErrorAlert( _REGWARN_EMAIL_INUSE );
-						} else {
-							mosErrorAlert( JText::_( 'WARNREG_EMAIL_INUSE' ) );
-						}
-					}
-				}
+			if ( checkDuplicateUsernameEmail( $_POST['username'], $_POST['email'] ) !== true ) {
+				return false;
 			}
 		}
 
@@ -394,37 +380,8 @@ function subscribe( $option )
 		} elseif ( !empty( $userid ) && !isset( $_POST['username'] ) ) {
 			$passthrough	= false;
 		} elseif ( !$userid ) {
-			if ( isset( $_POST['username'] ) ) {
-				$query = 'SELECT `id`'
-						. ' FROM #__users'
-						. ' WHERE `username` = \'' . $database->getEscaped( $_POST['username'] ) . '\''
-						;
-				$database->setQuery( $query );
-				if ( $database->loadResult() ) {
-					if ( !defined( 'JPATH_BASE' ) ) {
-						mosErrorAlert( _REGWARN_INUSE );
-					} else {
-						mosErrorAlert( JText::_( 'WARNREG_INUSE' ) );
-					}
-				}
-			}
-
-			if ( isset( $_POST['email'] ) ) {
-				if ( $mosConfig_uniquemail ) {
-					// check for existing email
-					$query = 'SELECT `id`'
-							. ' FROM #__users'
-							. ' WHERE `email` = \'' . $database->getEscaped( $_POST['email'] ) . '\''
-							;
-					$database->setQuery( $query );
-					if ( $database->loadResult() ) {
-						if ( !defined( 'JPATH_BASE' ) ) {
-							mosErrorAlert( _REGWARN_EMAIL_INUSE );
-						} else {
-							mosErrorAlert( JText::_( 'WARNREG_EMAIL_INUSE' ) );
-						}
-					}
-				}
+			if ( checkDuplicateUsernameEmail( $_POST['username'], $_POST['email'] ) !== true ) {
+				return false;
 			}
 
 			$nopass = array( 'option', 'task', 'intro', 'usage', 'processor', 'recurring', 'Itemid', 'submit_x', 'submit_y', 'userid' );
@@ -462,6 +419,48 @@ function subscribe( $option )
 		$invoicefact = new InvoiceFactory( $userid, $usage, $processor );
 		$invoicefact->create( $option, $intro, $usage, $processor, 0, $passthrough );
 	}
+}
+
+function checkDuplicateUsernameEmail( $username, $email )
+{
+	global $database, $mosConfig_uniquemail;
+
+	$query = 'SELECT `id`'
+			. ' FROM #__users'
+			. ' WHERE `username` = \'' . $database->getEscaped( $username ) . '\''
+			;
+	$database->setQuery( $query );
+	if ( $database->loadResult() ) {
+		if ( !defined( 'JPATH_BASE' ) ) {
+			mosErrorAlert( _REGWARN_EMAIL_INUSE );
+			return false;
+		} else {
+			mosErrorAlert( JText::_( 'WARNREG_INUSE' ) );
+			return JText::_( 'WARNREG_INUSE' );
+		}
+	}
+
+	if ( !empty( $email ) ) {
+		if ( $mosConfig_uniquemail || ( defined( 'JPATH_BASE' )) ) { // J1.5 forces unique email
+			// check for existing email
+			$query = 'SELECT `id`'
+					. ' FROM #__users'
+					. ' WHERE `email` = \'' . $database->getEscaped( $email ) . '\''
+					;
+			$database->setQuery( $query );
+			if ( $database->loadResult() ) {
+				if ( !defined( 'JPATH_BASE' ) ) {
+					mosErrorAlert( _REGWARN_EMAIL_INUSE );
+					return _REGWARN_EMAIL_INUSE;
+				} else {
+					mosErrorAlert( JText::_( 'WARNREG_EMAIL_INUSE' ) );
+					return JText::_( 'WARNREG_EMAIL_INUSE' );
+				}
+			}
+		}
+	}
+
+	return true;
 }
 
 function confirmSubscription( $option )

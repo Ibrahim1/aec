@@ -7245,6 +7245,10 @@ class AECToolbox
 				// Bind the post array to the user object
 				if (!$user->bind( JRequest::get('post'), 'usertype' )) {
 					JError::raiseError( 500, $user->getError());
+
+					unset($_POST);
+					subscribe();
+					return false;
 				}
 
 				// Set some initial user values
