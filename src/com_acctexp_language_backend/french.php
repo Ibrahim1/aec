@@ -331,7 +331,7 @@ define( '_AEC_SEL_NOT_CONFIGURED',                'Non configurer' );
 
 // footer
 define( '_AEC_FOOT_TX_CHOOSING',                'Merci d\'avoir choisi le composant AEC de contr&ocirc;le d\'expiration des comptes!' );
-define( '_AEC_FOOT_TX_GPL',                        'Ce composant Joomla/Mambo a &eacute;t&eacute; &eacute;labor&eacute; et publi&eacute; sous licence &lt;a href=&quot;http://www.gnu.org/copyleft/gpl.html&quot; target=&quot;_blank&quot;&gt;GNU/GPL&lt;/a&gt; par Helder Garcia et David Deutsch de &lt;a href=&quot;http://www.globalnerd.org&quot; target=&quot;_blank&quot;&gt;globalnerd.org&lt;/a&gt;&lt;br /&gt;Traduction fran&ccedil;aise par Garstud, Johnpoulain, Cobayes, cb75ter, Sharky' );
+define( '_AEC_FOOT_TX_GPL',                        'Ce composant Joomla/Mambo a &eacute;t&eacute; &eacute;labor&eacute; et publi&eacute; sous licence <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU/GPL</a>; par Helder Garcia et David Deutsch de <a href="http://www.globalnerd.org"; target="_blank">globalnerd.org</a><br />Traduction fran&ccedil;aise par Garstud, Johnpoulain, Cobayes, cb75ter, Sharky' );
 define( '_AEC_FOOT_TX_SUBSCRIBE',                'Si vous voulez plus de fonctionnalit&eacute;s, services professionnels, mises &agrave; jour, les manuels et l\'aide en ligne pour ce composant, vous pouvez vous abonner &agrave; nos services sur le lien ci-dessus. Il nous aide beaucoup dans notre d&eacute;veloppement!' );
 define( '_AEC_FOOT_CREDIT',                        'S\'il vous pla&#238;t lisez notre %s' );
 define( '_AEC_FOOT_CREDIT_LTEXT',                'liste de remerciements' );

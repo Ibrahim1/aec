@@ -214,7 +214,6 @@ define( '_GOTO_CHECKOUT', 'Retourner &agrave; la page de paiement &agrave; nouve
 define( '_GOTO_CHECKOUT_CANCEL', 'vous avez &eacute;galement la possibilibt&eacute; d\'annuler votre r&egrave;glement (vous pourrez alors retourner &agrave; l\'&eacute;cran de s&eacute;lection du plan) :');
 define( '_PENDING_NOINVOICE', 'Il apparait que vous avez annul&eacute; la seule facture restante de votre compte. Veuillez cliquer sur le bouton ci-dessous pour retourner &agrave; l\'&eacute;cran de s&eacute;lection du plan :');
 define( '_PENDING_NOINVOICE_BUTTON', 'S&eacute;lection du plan');
-define( '_PENDING_NOINVOICE_BUTTON', 'S&eacute;lection du plan');
 define( '_PENDING_REASON_ECHECK', 'Il apparait que vous avez d&eacute;cid&eacute; de payer par ch&egrave;que electronique, veuillez patienter jusqu\'&agrave; la validation du paiement - cela peut prendre entre 1 et 4 jours.)');
 define( '_PENDING_REASON_WAITING_RESPONSE', '(According to our information however, we are just waiting for a response from the payment processor. You will be notified once that has happened. Sorry for the delay.)');
 define( '_PENDING_REASON_TRANSFER', 'Il apparait que vous avez d&eacute;cid&eacute; de payer par courrier postale, veuillez patienter jusqu\'&agrave; la validation du paiement - cela peut prendre plusieurs jours.)');

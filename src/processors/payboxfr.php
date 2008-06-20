@@ -102,6 +102,7 @@ class processor_payboxfr extends POSTprocessor
 		$var['PBX_RUF1']		= 'POST';
 		$var['PBX_SITE']		= $this->settings['site'];
 		$var['PBX_RANG']		= $this->settings['rank'];
+		$var['PBX_IDENTIFIANT']	= $this->settings['identifiant'];
 
 		if ( is_array( $request->int_var['amount'] ) ) {
 			switch ( $request->int_var['amount']['unit3'] ) {

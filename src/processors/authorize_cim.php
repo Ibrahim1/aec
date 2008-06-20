@@ -77,6 +77,7 @@ class processor_authorize_cim extends XMLprocessor
 		$settings['currency']			= array( 'list_currency' );
 		$settings['promptAddress']		= array( 'list_yesno' );
 		$settings['promptZipOnly']		= array( 'list_yesno' );
+		$settings['dedicatedShipping']	= array( 'list_yesno' );
 		$settings['item_name']			= array( 'inputE' );
 		$settings['customparams']		= array( 'inputD' );
 
@@ -89,6 +90,10 @@ class processor_authorize_cim extends XMLprocessor
 	{
 		$tab			= array();
 		$tab['details']	= _AEC_USERFORM_BILLING_DETAILS_NAME;
+
+		if ( $this->settings['dedicatedShipping'] ) {
+			$tab['shipping_details']	= _AEC_USERFORM_SHIPPING_DETAILS_NAME;
+		}
 
 		return $tab;
 	}
@@ -103,23 +108,36 @@ class processor_authorize_cim extends XMLprocessor
 			$cim->setParameter( 'customerProfileId', $profileid );
 			$cim->getCustomerProfileRequest();
 
-			$udata = array( 'billTo_firstName' => 'billFirstName', 'billTo_lastName' => 'billLastName', 'billTo_company' => 'billCompany', 'billTo_address' => 'billAddress',
-							'billTo_city' => 'billCity', 'billTo_state' => 'billState', 'billTo_zip' => 'billZip', 'billTo_country' => 'billCountry',
-							'billTo_phoneNumber' => 'billPhone', 'billTo_faxNumber' => 'billFax',
-							'shipTo_firstName' => 'billFirstName', 'shipTo_lastName' => 'billLastName', 'shipTo_company' => 'billCompany', 'shipTo_address' => 'billAddress',
-							'shipTo_city' => 'shipTo_city', 'shipTo_state' => 'billState', 'shipTo_zip' => 'billZip', 'shipTo_country' => 'billCountry',
-							'shipTo_phoneNumber' => 'billPhone', 'shipTo_faxNumber' => 'billFax'
-							);
-
-			foreach ( $udata as $authvar => $aecvar ) {
-				if ( !empty( $_POST[$aecvar] ) ) {
-					$cim->setParameter( $authvar, trim( $_POST[$aecvar] ) );
-				}
-			}
-
 			$cim->setParameter( 'customerProfileId',		$cim->customerProfileId );
 			$cim->setParameter( 'customerPaymentProfileId',	$cim->customerPaymentProfileId );
 			$cim->setParameter( 'customerAddressId',		$cim->customerAddressId );
+
+			if ( $this->settings['dedicatedShipping'] ) {
+				$udata = array( 'billTo_firstName' => 'billFirstName', 'billTo_lastName' => 'billLastName', 'billTo_company' => 'billCompany', 'billTo_address' => 'billAddress',
+								'billTo_city' => 'billCity', 'billTo_state' => 'billState', 'billTo_zip' => 'billZip', 'billTo_country' => 'billCountry',
+								'billTo_phoneNumber' => 'billPhone', 'billTo_faxNumber' => 'billFax'
+								);
+
+				foreach ( $udata as $authvar => $aecvar ) {
+					if ( !empty( $_POST[$aecvar] ) ) {
+						$cim->setParameter( $authvar, trim( $_POST[$aecvar] ) );
+					}
+				}
+			} else {
+				$udata = array( 'billTo_firstName' => 'billFirstName', 'billTo_lastName' => 'billLastName', 'billTo_company' => 'billCompany', 'billTo_address' => 'billAddress',
+								'billTo_city' => 'billCity', 'billTo_state' => 'billState', 'billTo_zip' => 'billZip', 'billTo_country' => 'billCountry',
+								'billTo_phoneNumber' => 'billPhone', 'billTo_faxNumber' => 'billFax',
+								'shipTo_firstName' => 'billFirstName', 'shipTo_lastName' => 'billLastName', 'shipTo_company' => 'billCompany', 'shipTo_address' => 'billAddress',
+								'shipTo_city' => 'shipTo_city', 'shipTo_state' => 'billState', 'shipTo_zip' => 'billZip', 'shipTo_country' => 'billCountry',
+								'shipTo_phoneNumber' => 'billPhone', 'shipTo_faxNumber' => 'billFax'
+								);
+
+				foreach ( $udata as $authvar => $aecvar ) {
+					if ( !empty( $_POST[$aecvar] ) ) {
+						$cim->setParameter( $authvar, trim( $_POST[$aecvar] ) );
+					}
+				}
+			}
 
 			if ( !empty( $_POST['cardNumber'] ) ) {
 				$basicdata = array(	'paymentType'			=> 'creditcard',

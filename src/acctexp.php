@@ -983,7 +983,7 @@ function notAllowed( $option )
 		mosRedirect( $aecConfig->cfg['customnotallowed'] );
 	}
 
-	$gwnames = explode( ';', $aecConfig->cfg['gwlist'] );
+	$gwnames = PaymentProcessorHandler::getInstalledNameList( true );
 
 	if ( count( $gwnames ) && $gwnames[0] ) {
 		$processors = array();

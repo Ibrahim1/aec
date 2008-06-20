@@ -30,7 +30,7 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
 
 global $mosConfig_absolute_path, $mosConfig_offset, $aecConfig;
 
@@ -4972,6 +4972,12 @@ class InvoiceFactory
 	{
 		global $database, $mosConfig_useractivation, $aecConfig, $mosConfig_dbprefix, $mainframe;
 
+		$sub_params = $this->objUsage->getParams();
+
+		if ( !empty( $sub_params['customthanks'] ) ) {
+			mosRedirect( $sub_params['customthanks'] );
+		}
+
 		if ( isset( $this->renew ) ) {
 			$renew = $this->renew;
 		}
@@ -5024,6 +5030,18 @@ class InvoiceFactory
 				mosRedirect( $aecConfig->cfg['customthanks'] );
 			} else {
 				HTML_Results::thanks( $option, $msg );
+			}
+		}
+
+		if ( !empty( $sub_params['customtext_thanks'] ) ) {
+			if ( isset( $sub_params['customtext_thanks_keeporiginal'] ) ) {
+				if ( empty( $sub_params['customtext_thanks_keeporiginal'] ) ) {
+					$msg = $sub_params['customtext_thanks'];
+				} else {
+					$msg = $msg . $sub_params['customtext_thanks'];
+				}
+			} else {
+				$msg = $sub_params['customtext_thanks'];
 			}
 		}
 

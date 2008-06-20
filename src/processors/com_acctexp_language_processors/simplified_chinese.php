@@ -94,6 +94,7 @@ define( '_AEC_SELECT_RECURRING_BOTH', 'Both');
 
 // Generic User Account Form
 define( '_AEC_USERFORM_BILLING_DETAILS_NAME', 'Billing Details');
+define( '_AEC_USERFORM_SHIPPING_DETAILS_NAME', 'Shipping Details');
 define( '_AEC_USERFORM_BILLFIRSTNAME_NAME', 'First Name');
 define( '_AEC_USERFORM_BILLLASTNAME_NAME', 'Last Name');
 define( '_AEC_USERFORM_BILLADDRESS_NAME', 'Address');
