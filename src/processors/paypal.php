@@ -58,7 +58,7 @@ class processor_paypal extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['business']		= 'your@business.com';
+		$settings['business']		= 'your@paypal@account.com';
 		$settings['testmode']		= 0;
 		$settings['tax']			= '';
 		$settings['currency']		= 'USD';
