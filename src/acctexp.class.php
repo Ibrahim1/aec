@@ -30,7 +30,7 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-//error_reporting(E_ALL);
+error_reporting(E_ALL);
 
 global $mosConfig_absolute_path, $mosConfig_offset, $aecConfig;
 
@@ -801,7 +801,7 @@ class metaUserDB extends jsonDBTable
 
 	function declareJSONfields()
 	{
-		return array( 'plan_history', 'processor_params', 'plan_params', 'params', 'custom_param' );
+		return array( 'plan_history', 'processor_params', 'plan_params', 'params', 'custom_params' );
 	}
 
 	/**
@@ -848,8 +848,8 @@ class metaUserDB extends jsonDBTable
 
 	function getProcessorParams( $processorid )
 	{
-		if ( isset( $this->processor_params[$processorid] ) ) {
-			return $this->processor_params[$processorid];
+		if ( isset( $this->processor_params->$processorid ) ) {
+			return $this->processor_params->$processorid;
 		} else {
 			return false;
 		}
@@ -857,7 +857,7 @@ class metaUserDB extends jsonDBTable
 
 	function setProcessorParams( $processorid, $params )
 	{
-		$this->processor_params[$processorid] = $params;
+		$this->processor_params->$processorid = $params;
 	}
 
 }
@@ -3154,13 +3154,16 @@ toggler.setStyle('color', '#528CE0');
 
 		$return .= $table ? '<tr><td class="cleft">' : '<p>';
 
-		$return .= '<strong>' . $row[1] . ':</strong>';
+		if ( !empty( $row[1] ) ) {
+			$return .= '<strong>' . $row[1] . ':</strong>';
+		}
 
 		$return .= $table ? '</td><td class="cright">' : ' ';
 
+		$noappend = false;
 		switch ( $row[0] ) {
 			case 'submit':
-				$return = '<input type="submit" class="button" name="' . $name . '" value="' . $value . '" />' . "\n";
+				$return .= '<input type="submit" class="button" name="' . $name . '" value="' . $value . '" />' . "\n";
 				break;
 			case "inputA":
 				$return .= '<input name="' . $name . '" type="text" size="4" maxlength="5" value="' . $value . '"/>';
@@ -3175,7 +3178,9 @@ toggler.setStyle('color', '#528CE0');
 				$return .= '<textarea align="left" cols="60" rows="5" name="' . $name . '" />' . $value . '</textarea>';
 				break;
 			case 'radio':
-				$return = '<input type="radio" name="' . $row[1] . '" ' . ( $value ? 'checked="checked" ' : '' ) . ' value="' . $row[2] . '" />' . $row[4];
+				$return = '<tr><td class="cleft">';
+				$return .= '<input type="radio" name="' . $row[1] . '" ' . ( $value ? 'checked="checked"' : '' ) . ' value="' . $row[2] . '" />';
+				$return .= '</td><td class="cright">' . $row[4];
 				break;
 			case "list":
 				$return .= $lists[$value ? $value : $name];

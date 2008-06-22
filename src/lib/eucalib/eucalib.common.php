@@ -274,7 +274,9 @@ class jsonDBTable extends paramDBTable
 	 */
 	function setParams( $array, $field = 'params' )
 	{
-		$this->$field = $this->_db->getEscaped( json_encode( $array ) );
+		if ( !empty( $field ) ) {
+			$this->$field = $this->_db->getEscaped( json_encode( $array ) );
+		}
 		return true;
 	}
 
@@ -312,7 +314,8 @@ class jsonDBTable extends paramDBTable
 
 		if ( !empty( $jsonfields ) ) {
 			foreach ( $jsonfields as $fieldname ) {
-				$this->$fieldname = $this->getParams( $fieldname );
+				$temp = $this->getParams( $fieldname );
+				$this->$fieldname = $temp;
 			}
 		}
 
