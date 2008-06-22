@@ -127,6 +127,9 @@ class metaUser
 	{
 		global $database;
 
+		$this->meta = new metaUserDB( $database );
+		$this->meta->loadUserid( $userid );
+
 		$this->cmsUser = false;
 		$this->hasCBprofile = false;
 		$this->userid = 0;

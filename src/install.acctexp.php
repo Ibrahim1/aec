@@ -82,6 +82,20 @@ function com_install()
 	. ') TYPE=MyISAM AUTO_INCREMENT=1;'
 	;
 
+	$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_metauser` ('
+	. '`id` int(11) NOT NULL auto_increment,'
+	. '`userid` int(11) NOT NULL default \'0\','
+    . '`created_date` datetime NULL default \'0000-00-00 00:00:00\','
+    . '`modified_date` datetime NULL default \'0000-00-00 00:00:00\','
+	. '`plan_history` text NULL,'
+	. '`processor_params` text NULL,'
+	. '`plan_params` text NULL,'
+	. '`params` text NULL,'
+	. '`custom_params` text NULL,'
+	. ' PRIMARY KEY (`id`)'
+	. ') TYPE=MyISAM AUTO_INCREMENT=1;'
+	;
+
 	$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_displaypipeline` ('
 	. '`id` int(11) NOT NULL auto_increment,'
 	. '`userid` int(11) NOT NULL default \'0\','
