@@ -154,6 +154,8 @@ define( '_CHECKOUT_INFO_REPEAT', 'Thank you for coming back. On this page, you c
 define( '_BUTTON_CHECKOUT', 'Checkout');
 define( '_BUTTON_APPEND', 'Append');
 define( '_BUTTON_APPLY', 'Apply');
+define( '_BUTTON_EDIT', 'Edit');
+define( '_BUTTON_SELECT', 'Select');
 define( '_CHECKOUT_COUPON_CODE', 'Coupon Code');
 define( '_CHECKOUT_INVOICE_AMOUNT', 'Invoice Amount');
 define( '_CHECKOUT_INVOICE_COUPON', 'Coupon');

@@ -155,6 +155,8 @@ define( '_CHECKOUT_INFO_REPEAT', 'Merci de votre fid&eacute;lit&eacute;. Sur cet
 define( '_BUTTON_CHECKOUT', 'Effectuer votre r&egrave;glement');
 define( '_BUTTON_APPEND', 'Ajouter');
 define( '_BUTTON_APPLY', 'Appliquer');
+define( '_BUTTON_EDIT', 'Edit');
+define( '_BUTTON_SELECT', 'Select');
 define( '_CHECKOUT_COUPON_CODE', 'Code du bon de r&eacute;duction');
 define( '_CHECKOUT_INVOICE_AMOUNT', 'Montant de la facture');
 define( '_CHECKOUT_INVOICE_COUPON', 'Bon de r&amp;eactue;duction');

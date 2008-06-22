@@ -29,7 +29,7 @@ class eucaInstall extends eucaObject
 		global $mosConfig_absolute_path;
 
 		if ( !class_exists( 'Archive_Tar' ) || function_exists( 'PclTarExtract' ) ) {
-			if (  defined( 'JPATH_BASE' ) ) {
+			if ( defined( 'JPATH_BASE' ) ) {
 				require_once( $mosConfig_absolute_path . '/administrator/includes/pcl/pcltar.lib.php' );
 			} else {
 				require_once( $mosConfig_absolute_path . '/includes/Archive/Tar.php' );

@@ -2027,7 +2027,9 @@ function editSettings( $option )
 						unset( $settings_array[$name] );
 					}
 
-					$params = array_merge( $params, $settings_array );
+					if ( is_array( $settings_array ) && !empty( $settings_array ) ) {
+						$params = array_merge( $params, $settings_array );
+					}
 
 					$longname = $gwname . '_info_longname';
 					$description = $gwname . '_info_description';

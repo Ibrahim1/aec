@@ -150,6 +150,8 @@ define( '_CHECKOUT_INFO_REPEAT',			'Willkommen zur&uuml;ck! Die Bezahlung ihrer 
 define( '_BUTTON_CHECKOUT',					'Fortfahren');
 define( '_BUTTON_APPEND',					'Hinzuf&uuml;gen');
 define( '_BUTTON_APPLY', 'Anwenden');
+define( '_BUTTON_EDIT', 'Edit');
+define( '_BUTTON_SELECT', 'Select');
 define( '_CHECKOUT_COUPON_CODE',			'Gutscheincode');
 define( '_CHECKOUT_INVOICE_AMOUNT',			'Rechnungsbetrag');
 define( '_CHECKOUT_INVOICE_COUPON',			'Gutschein');

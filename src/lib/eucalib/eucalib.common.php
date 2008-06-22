@@ -267,18 +267,6 @@ class jsonDBTable extends paramDBTable
 		}
 
 		return json_decode( stripslashes( $this->$field ) );
-/*
-		$array = array();
-		foreach ( $params as $chunk ) {
-			$k = explode( '=', $chunk, 2 );
-			if ( !empty( $k[0] ) ) {
-				// Strip slashes, but preserve special characters
-				$array[$k[0]] = stripslashes( str_replace( array( '\n', '\t', '\r' ), array( "\n", "\t", "\r" ), $k[1] ) );
-			}
-			unset( $k );
-		}
-		return $array;
-*/
 	}
 
 	/**
@@ -312,6 +300,38 @@ class jsonDBTable extends paramDBTable
 	function diffParams( $array, $field = 'params' )
 	{
 
+	}
+
+	function load( $id, $jsonfields=array() )
+	{
+		if ( method_exists( $this, 'declareJSONfields' ) ) {
+			$jsonfields = array_merge( $jsonfields, $this->declareJSONfields() );
+		}
+
+		parent::load( $id );
+
+		if ( !empty( $jsonfields ) ) {
+			foreach ( $jsonfields as $fieldname ) {
+				$this->$fieldname = $this->getParams( $fieldname );
+			}
+		}
+
+		return true;
+	}
+
+	function check( $jsonfields=array() )
+	{
+		if ( method_exists( $this, 'declareJSONfields' ) ) {
+			$jsonfields = array_merge( $jsonfields, $this->declareJSONfields() );
+		}
+
+		if ( !empty( $jsonfields ) ) {
+			foreach ( $jsonfields as $fieldname ) {
+				$this->setParams( $fieldname, $this->$fieldname );
+			}
+		}
+
+		return true;
 	}
 
 }

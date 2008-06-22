@@ -224,7 +224,7 @@ class processor_paypal_subscription extends POSTprocessor
 
 		$fp = null;
 		// try to use fsockopen. some hosting systems disable fsockopen (godaddy.com)
-		$fp = transmitRequest( $ppurl, $path, $req );
+		$fp = $this->transmitRequest( $ppurl, $path, $req );
 
 		$res = $fp;
 

@@ -767,6 +767,98 @@ class metaUser
 	}
 }
 
+class metaUserDB extends jsonDBTable
+{
+	/** @var int Primary key */
+	var $id					= null;
+	/** @var int */
+	var $userid				= null;
+	/** @var datetime */
+	var $created_date		= null;
+	/** @var datetime */
+	var $modified_date		= null;
+	/** @var jsonized object */
+	var $plan_history		= null;
+	/** @var jsonized object */
+	var $processor_params	= null;
+	/** @var jsonized object */
+	var $plan_params		= null;
+	/** @var jsonized object */
+	var $params 			= null;
+	/** @var jsonized object */
+	var $custom_params		= null;
+
+	/**
+	* @param database A database connector object
+	*/
+	function metaUserDB( &$db )
+	{
+		$this->mosDBTable( '#__acctexp_metauser', 'id', $db );
+	}
+
+	function declareJSONfields()
+	{
+		return array( 'plan_history', 'processor_params', 'plan_params', 'params', 'custom_param' );
+	}
+
+	/**
+	 * loads specified user
+	 *
+	 * @param int $userid
+	 */
+	function loadUserid( $userid )
+	{
+		$id = $this->getIDbyUserid( $userid );
+
+		if ( $id ) {
+			$this->load( $id );
+		} else {
+			$this->createNew( $userid );
+		}
+	}
+
+	function getIDbyUserid( $userid )
+	{
+		global $database;
+
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_metauser'
+				. ' WHERE `userid` = \'' . $database->getEscaped( $userid ) . '\''
+				;
+		$database->setQuery( $query );
+
+		return $database->loadResult();
+	}
+
+	function createNew( $userid )
+	{
+		global $mosConfig_offset;
+
+		$this->userid			= $userid;
+		$this->created_date		= date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
+		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
+
+		$this->check();
+		$this->store();
+		$this->id = $this->getMax();
+	}
+
+	function getProcessorParams( $processorid )
+	{
+		if ( isset( $this->processor_params[$processorid] ) ) {
+			return $this->processor_params[$processorid];
+		} else {
+			return false;
+		}
+	}
+
+	function setProcessorParams( $processorid, $params )
+	{
+		$this->processor_params[$processorid] = $params;
+	}
+
+}
+
 class Config_General extends paramDBTable
 {
 	/** @var int Primary key */
@@ -2204,6 +2296,29 @@ class processor extends paramDBTable
 		return $var;
 	}
 
+	function transmitRequest( $url, $path, $content, $port=443, $curlextra=null )
+	{
+		global $aecConfig;
+
+		$response = null;
+
+		if ( $aecConfig->cfg['curl_default'] ) {
+			$response = $this->doTheCurl( $url, $content, $curlextra );
+			if ( $response === false ) {
+				// If curl doesn't work try using fsockopen
+				$response = $this->doTheHttp( $url, $path, $content, $port );
+			}
+		} else {
+			$response = $this->doTheHttp( $url, $path, $content, $port );
+			if ( $response === false ) {
+				// If fsockopen doesn't work try using curl
+				$response = $this->doTheCurl( $url, $content, $curlextra );
+			}
+		}
+
+		return $response;
+	}
+
 	function doTheHttp( $url, $path, $content, $port=443 )
 	{
 		global $aecConfig;
@@ -2343,8 +2458,6 @@ class XMLprocessor extends processor
 {
 	function checkoutAction( $request )
 	{
-		global $aecConfig;
-
 		$var = $this->checkoutform( $request );
 
 		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=checkout', true ) . '" method="post">' . "\n";
@@ -2639,29 +2752,6 @@ class XMLprocessor extends processor
 		} else {
 			return false;
 		}
-	}
-
-	function transmitRequest( $url, $path, $content, $port=443, $curlextra=null )
-	{
-		global $aecConfig;
-
-		$response = null;
-
-		if ( $aecConfig->cfg['curl_default'] ) {
-			$response = $this->doTheCurl( $url, $content, $curlextra );
-			if ( $response === false ) {
-				// If curl doesn't work try using fsockopen
-				$response = $this->doTheHttp( $url, $path, $content, $port );
-			}
-		} else {
-			$response = $this->doTheHttp( $url, $path, $content, $port );
-			if ( $response === false ) {
-				// If fsockopen doesn't work try using curl
-				$response = $this->doTheCurl( $url, $content, $curlextra );
-			}
-		}
-
-		return $response;
 	}
 
 }
@@ -3066,6 +3156,9 @@ toggler.setStyle('color', '#528CE0');
 		$return .= $table ? '</td><td class="cright">' : ' ';
 
 		switch ( $row[0] ) {
+			case 'submit':
+				$return = '<input type="submit" class="button" name="' . $name . '" value="' . $value . '" />' . "\n";
+				break;
 			case "inputA":
 				$return .= '<input name="' . $name . '" type="text" size="4" maxlength="5" value="' . $value . '"/>';
 				break;
@@ -3078,11 +3171,18 @@ toggler.setStyle('color', '#528CE0');
 			case "inputD":
 				$return .= '<textarea align="left" cols="60" rows="5" name="' . $name . '" />' . $value . '</textarea>';
 				break;
+			case 'radio':
+				$return = '<input type="radio" name="' . $row[1] . '" ' . ( $value ? 'checked="checked" ' : '' ) . ' value="' . $row[2] . '" />' . $row[4];
+				break;
 			case "list":
 				$return .= $lists[$value ? $value : $name];
 				break;
 			default:
-				$return .= '<' . $row[0] . '>' . $row[2] . '</' . $row[0] . '>';
+				if ( !empty( $row[0] ) ) {
+					$return .= '<' . $row[0] . '>' . $row[2] . '</' . $row[0] . '>';
+				} else {
+					$return .= $row[2];
+				}
 				break;
 		}
 
@@ -5985,10 +6085,6 @@ class Invoice extends paramDBTable
 	}
 }
 
-/**
- * User management
- *
- */
 class Subscription extends paramDBTable
 {
 	/** @var int Primary key */
@@ -6124,7 +6220,6 @@ class Subscription extends paramDBTable
 		}
 	}
 
-
 	function createNew( $userid, $processor, $pending, $primary=1 )
 	{
 		global $mosConfig_offset;
@@ -6140,7 +6235,6 @@ class Subscription extends paramDBTable
 		$this->store();
 		$this->id = $this->getMax();
 	}
-
 
 	function is_expired( $offset=false )
 	{
