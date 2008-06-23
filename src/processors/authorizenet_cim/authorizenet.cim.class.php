@@ -497,7 +497,7 @@ class AuthNetCim {
 
 	}
 
-	function substring_between($haystack,$start,$end)
+	function substring_between($haystack,$start,$end,$skip=false)
 	{
 		if (strpos($haystack,$start) === false || strpos($haystack,$end) === false)
 		{
@@ -505,8 +505,16 @@ class AuthNetCim {
 		}
 		else
 		{
-			$start_position = strpos($haystack,$start)+strlen($start);
-			$end_position = strpos($haystack,$end);
+			$offset = 0;
+
+			if ( $skip !== false ) {
+				for ( $i=0; $i<$skip; $i++ ) {
+					$offset += strpos($haystack,$start) + strlen( $start );
+				}
+			}
+
+			$start_position = strpos($haystack,$start,$offset)+strlen($start);
+			$end_position = strpos($haystack,$end,$offset);
 			return substr($haystack,$start_position,$end_position-$start_position);
 		}
 	}

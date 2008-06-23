@@ -367,14 +367,14 @@ td.cleft {
 padding: 2px;
 margin: 0px;
 width: 50%;
-text-align: right;
+text-align: right !important;
 }
 
 td.cright {
 padding: 2px;
 margin: 0px;
 width: 50%;
-text-align: left;
+text-align: left !important;
 }
 
 table.amount {

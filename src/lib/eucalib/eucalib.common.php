@@ -330,7 +330,7 @@ class jsonDBTable extends paramDBTable
 
 		if ( !empty( $jsonfields ) ) {
 			foreach ( $jsonfields as $fieldname ) {
-				$this->setParams( $fieldname, $this->$fieldname );
+				$this->setParams( $this->$fieldname, $fieldname );
 			}
 		}
 

@@ -101,9 +101,9 @@ class processor_authorize_cim extends XMLprocessor
 
 	function customtab_details( $request )
 	{
-		if ( isset( $_POST['billFirstName'] ) && ( strpos( $request->int_var['params']['cardNumber'], 'X' ) === false ) ) {
-			$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
+		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
 
+		if ( isset( $_POST['billFirstName'] ) && ( strpos( $_POST['cardNumber'], 'X' ) === false ) ) {
 			$cim = $this->loadCIM( $ppParams );
 
 			$stored_ppid = $ppParams->paymentProfiles->{$ppParams->paymentprofileid}->profileid;
@@ -193,11 +193,12 @@ class processor_authorize_cim extends XMLprocessor
 			$cim = null;
 		}
 
-		$var = $this->ppProfileSelect( $var, $ppParams );
-		$var = $this->checkoutform( $request, $cim );
+		$var = $this->ppProfileSelect( array(), $ppParams, true, $ppParams );
+		$var2 = $this->checkoutform( $request, $cim );
 
 		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=authorize_cim_details', true ) . '" method="post">' . "\n";
 		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
+		$return .= $this->getParamsHTML( $var2 ) . '<br /><br />';
 		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
 		$return .= '<input type="hidden" name="task" value="subscriptiondetails" />' . "\n";
 		$return .= '<input type="hidden" name="sub" value="authorize_cim_details" />' . "\n";
@@ -209,91 +210,55 @@ class processor_authorize_cim extends XMLprocessor
 
 	function customtab_shipping_details( $request )
 	{
-		if ( isset( $_POST['billFirstName'] ) && ( strpos( $request->int_var['params']['cardNumber'], 'X' ) === false ) ) {
-			$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
+		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
 
+		$post = aecPostParamClear( $_POST );
+
+		if ( !empty( $post['edit_shipprofile'] ) ) {
+			$ppParams->shippingprofileid = $ppParams->shippingProfiles->{$post['shipprofileselect']}->profileid;
+		}
+
+		if ( isset( $post['billFirstName'] ) && empty( $post['edit_shipprofile'] ) ) {
 			$cim = $this->loadCIM( $ppParams );
 
-			$stored_ppid = $ppParams->paymentProfiles->{$ppParams->paymentprofileid}->profileid;
+			$cim->setParameter( 'customerProfileId',	$ppParams->profileid );
 
-			if ( $cim->customerPaymentProfileId != $stored_ppid ) {
-				$cim->setParameter( 'customerPaymentProfileId',	$stored_ppid );
+			$udata = array( 'shipTo_firstName' => 'billFirstName',
+							'shipTo_lastName' => 'billLastName',
+							'shipTo_company' => 'billCompany',
+							'shipTo_address' => 'billAddress',
+							'shipTo_city' => 'billCity',
+							'shipTo_state' => 'billState',
+							'shipTo_zip' => 'billZip',
+							'shipTo_country' => 'billCountry',
+							'shipTo_phoneNumber' => 'billPhone',
+							'shipTo_faxNumber' => 'billFax'
+							);
+
+			foreach ( $udata as $authvar => $aecvar ) {
+				if ( !empty( $post[$aecvar] ) ) {
+					$cim->setParameter( $authvar, trim( $post[$aecvar] ) );
+				}
 			}
 
-			$cim->setParameter( 'customerAddressId',		$cim->customerAddressId );
-
-			if ( $this->settings['dedicatedShipping'] ) {
-				$udata = array( 'billTo_firstName' => 'billFirstName',
-								'billTo_lastName' => 'billLastName',
-								'billTo_company' => 'billCompany',
-								'billTo_address' => 'billAddress',
-								'billTo_city' => 'billCity',
-								'billTo_state' => 'billState',
-								'billTo_zip' => 'billZip',
-								'billTo_country' => 'billCountry',
-								'billTo_phoneNumber' => 'billPhone',
-								'billTo_faxNumber' => 'billFax'
-								);
-
-				foreach ( $udata as $authvar => $aecvar ) {
-					if ( !empty( $_POST[$aecvar] ) ) {
-						$cim->setParameter( $authvar, trim( $_POST[$aecvar] ) );
-					}
-				}
+			if ( $post['shipprofileselect'] == "new" ) {
+				$cim->createCustomerShippingAddressRequest();
 			} else {
-				$udata = array( 'billTo_firstName' => 'billFirstName',
-								'billTo_lastName' => 'billLastName',
-								'billTo_company' => 'billCompany',
-								'billTo_address' => 'billAddress',
-								'billTo_city' => 'billCity',
-								'billTo_state' => 'billState',
-								'billTo_zip' => 'billZip',
-								'billTo_country' => 'billCountry',
-								'billTo_phoneNumber' => 'billPhone',
-								'billTo_faxNumber' => 'billFax',
-								'shipTo_firstName' => 'billFirstName',
-								'shipTo_lastName' => 'billLastName',
-								'shipTo_company' => 'billCompany',
-								'shipTo_address' => 'billAddress',
-								'shipTo_city' => 'billCity',
-								'shipTo_state' => 'billState',
-								'shipTo_zip' => 'billZip',
-								'shipTo_country' => 'billCountry',
-								'shipTo_phoneNumber' => 'billPhone',
-								'shipTo_faxNumber' => 'billFax'
-								);
+				if ( isset( $ppParams->shippingProfiles->{$post['shipprofileselect']} ) ) {
+					$stored_spid = $ppParams->shippingProfiles->{$post['shipprofileselect']}->profileid;
+					$cim->setParameter( 'customerAddressId', $stored_spid );
+					$cim->updateCustomerShippingAddressRequest();
 
-				foreach ( $udata as $authvar => $aecvar ) {
-					if ( !empty( $_POST[$aecvar] ) ) {
-						$cim->setParameter( $authvar, trim( $_POST[$aecvar] ) );
-					}
+					$this->shipProfileUpdate( $request, $post['shipprofileselect'], $post, $ppParams );
 				}
 			}
 
-			if ( !empty( $_POST['cardNumber'] ) ) {
-				$basicdata = array(	'paymentType'		=> 'creditcard',
-									'cardNumber'		=> trim( $_POST['cardNumber'] ),
-									'expirationDate'	=> $_POST['expirationYear'] . '-' . $_POST['expirationMonth']
-									);
-
-				foreach ( $basicdata as $key => $value ) {
-					$cim->setParameter( $key, $value );
-				}
-
-				$cim->updateCustomerPaymentProfileRequest();
-
-				$cim->setParameter( 'customerProfileId',		$cim->customerProfileId );
-				$cim->setParameter( 'customerPaymentProfileId',	$cim->customerPaymentProfileId );
-				$cim->setParameter( 'customerAddressId',		$cim->customerAddressId );
-
-				foreach ( $udata as $authvar => $aecvar ) {
-					if ( !empty( $_POST[$aecvar] ) ) {
-						$cim->setParameter( $authvar, trim( $_POST[$aecvar] ) );
-					}
+			if ( $cim->isSuccessful() ) {
+				$profileid = $cim->substring_between( $cim->response,'<customerAddressId>','</customerAddressId>' );
+				if ( !empty( $profileid ) ) {
+					$ppParams = $this->shipProfileAdd( $request, $profileid, $post, $ppParams );
 				}
 			}
-
-			$cim->updateCustomerShippingAddressRequest();
 
 			$cim = null;
 			$cim = $this->loadCIM( $ppParams );
@@ -301,29 +266,37 @@ class processor_authorize_cim extends XMLprocessor
 			$cim = null;
 		}
 
-		$var = $this->shipProfileSelect( $var, $ppParams );
-		$var = $this->checkoutform( $request, $cim );
+		$var = $this->shipProfileSelect( array(), $ppParams, true );
+		$var2 = $this->checkoutform( $request, $cim, true, $ppParams );
 
-		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=authorize_cim_details', true ) . '" method="post">' . "\n";
+		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=authorize_cim_shipping_details', true ) . '" method="post">' . "\n";
 		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
+		$return .= $this->getParamsHTML( $var2 ) . '<br /><br />';
 		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
 		$return .= '<input type="hidden" name="task" value="subscriptiondetails" />' . "\n";
-		$return .= '<input type="hidden" name="sub" value="authorize_cim_details" />' . "\n";
+		$return .= '<input type="hidden" name="sub" value="authorize_cim_shipping_details" />' . "\n";
 		$return .= '<input type="submit" class="button" value="' . _BUTTON_APPLY . '" /><br /><br />' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
 	}
 
-	function checkoutform( $request, $cim=null )
+	function checkoutform( $request, $cim=null, $nobill=false, $ppParams=false )
 	{
 		$var = array();
 		$hascim = false;
+		$vcontent = array();
 
-		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
+		if ( $ppParams === false ) {
+			$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
+		}
 
 		if ( empty( $cim ) ) {
-			$cim = $this->loadCIM( $ppParams );
+			if ( $nobill ) {
+				$cim = $this->loadCIMship( $ppParams );
+			} else {
+				$cim = $this->loadCIM( $ppParams );
+			}
 
 			if ( $cim->isSuccessful() ) {
 				$hascim = true;
@@ -332,23 +305,20 @@ class processor_authorize_cim extends XMLprocessor
 			$hascim = true;
 		}
 
-		if ( $hascim ) {
-			$var['params']['billUpdateInfo'] = array( 'p', _AEC_CCFORM_UPDATE_NAME, _AEC_CCFORM_UPDATE_DESC, '' );
+		if ( !$nobill ) {
+			if ( $hascim ) {
+				$var['params']['billUpdateInfo'] = array( 'p', _AEC_CCFORM_UPDATE_NAME, _AEC_CCFORM_UPDATE_DESC, '' );
 
-			$vcontent['card_number'] = $cim->substring_between( $cim->response,'<cardNumber>','</cardNumber>' );
+				$vcontent['card_number'] = $cim->substring_between( $cim->response,'<cardNumber>','</cardNumber>' );
+			} else {
+				$vcontent = '';
+			}
 
-			$firstname = $cim->substring_between( $cim->response,'<firstName>','</firstName>' );
-			$lastname = $cim->substring_between( $cim->response,'<lastName>','</lastName>' );
-		} else {
-			$firstname = '';
-			$lastname = '';
-			$vcontent = '';
+			$var = $this->getCCform( $var, array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), $vcontent );
 		}
 
-		$var = $this->getCCform( $var, array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), $vcontent );
-
 		if ( !empty( $this->settings['promptAddress'] ) ) {
-			$uservalues = array( 'firstname', 'lastname', 'company', 'address', 'city', 'state', 'zip', 'country', 'phone', 'fax' );
+			$uservalues = array( 'firstName', 'lastName', 'company', 'address', 'city', 'state', 'zip', 'country', 'phone', 'fax' );
 
 			$content = array();
 			if ( $hascim ) {
@@ -356,7 +326,11 @@ class processor_authorize_cim extends XMLprocessor
 					if ( in_array( $uv, array( 'phone', 'fax' ) ) ) {
 						$content[$uv] = $cim->substring_between( $cim->response,'<' . $uv . 'Number>','</' . $uv . 'Number>' );
 					} else {
-						$content[$uv] = $cim->substring_between( $cim->response,'<' . $uv . '>','</' . $uv . '>' );
+						if ( $nobill && ( $uv == 'address' ) ) {
+							$content[$uv] = $cim->substring_between( $cim->response,'<' . $uv . '>','</' . $uv . '>', 1 );
+						} else {
+							$content[$uv] = $cim->substring_between( $cim->response,'<' . $uv . '>','</' . $uv . '>' );
+						}
 					}
 				}
 			}
@@ -379,7 +353,7 @@ class processor_authorize_cim extends XMLprocessor
 		 * 				paymentProfiles		-> Object
 		 * 										-> 0	-> Object
 		 * 													-> profileid	-> Authorize.net CIM Payment ProfileID
-		 * 													-> profilehash	-> Array
+		 * 													-> profilehash	-> Object
 		 * 																		->	name	-> First & Last name
 		 * 																		->	address	-> Address
 		 * 																		->	zipcity	-> Zip & City
@@ -389,7 +363,7 @@ class processor_authorize_cim extends XMLprocessor
 		 * 				shippingProfiles	-> Object
 		 * 										-> 0	-> Object
 		 * 													-> profileid	-> Authorize.net CIM Payment ProfileID
-		 * 													-> profilehash	-> Array
+		 * 													-> profilehash	-> Object
 		 * 																		->	name	-> First & Last name
 		 * 																		->	address	-> Address
 		 * 																		->	zipcity	-> Zip & City
@@ -404,9 +378,7 @@ class processor_authorize_cim extends XMLprocessor
 			$cim = $this->loadCIM( $ppParams );
 
 			$var = array();
-			$var['params'][] = array( 'p', _AEC_USERFORM_BILLING_DETAILS_NAME, '' );
 			$var = $this->ppProfileSelect( $var, $ppParams );
-			$var['params'][] = array( 'p', _AEC_USERFORM_SHIPPING_DETAILS_NAME, '' );
 			$var = $this->shipProfileSelect( $var, $ppParams );
 		}
 
@@ -547,9 +519,11 @@ class processor_authorize_cim extends XMLprocessor
 		return $return;
 	}
 
-	function ppProfileSelect( $var, $ppParams )
+	function ppProfileSelect( $var, $ppParams, $select=false )
 	{
 		$profiles = get_object_vars( $ppParams->paymentProfiles );
+
+		$var['params'][] = array( 'p', _AEC_USERFORM_BILLING_DETAILS_NAME, '' );
 
 		if ( !empty( $profiles ) ) {
 			// Single-Select Payment Option
@@ -564,22 +538,30 @@ class processor_authorize_cim extends XMLprocessor
 					}
 				}
 
-				$var['params'][] = array( 'radio', 'payprofileselect', $pid, $ppParams->paymentprofileid, implode( '<br />', $info ) );
+				if ( $ppParams->paymentprofileid == $pid ) {
+					$text = '<strong>' . implode( '<br />', $info ) . '</strong>';
+				} else {
+					$text = implode( '<br />', $info );
+				}
+
+				$var['params'][] = array( 'radio', 'payprofileselect', $pid, $ppParams->paymentprofileid, $text );
 			}
 
 			if ( count( $profiles ) < 10 ) {
-				$var['params'][] = array( 'radio', 'payprofileselect', "0", $ppParams->paymentprofileid, 'new' );
+				$var['params'][] = array( 'radio', 'payprofileselect', "new", $ppParams->paymentprofileid, 'create new profile' );
 			}
 
-			$var['params']['edit_payprofile'] = array( 'submit', '', '', _BUTTON_EDIT );
+			$var['params']['edit_payprofile'] = array( 'submit', '', '', ( $select ? _BUTTON_SELECT : _BUTTON_EDIT ) );
 		}
 
 		return $var;
 	}
 
-	function shipProfileSelect( $var, $ppParams )
+	function shipProfileSelect( $var, $ppParams, $select=false )
 	{
 		$profiles = get_object_vars( $ppParams->shippingProfiles );
+
+		$var['params'][] = array( 'p', _AEC_USERFORM_SHIPPING_DETAILS_NAME, '' );
 
 		if ( !empty( $profiles ) ) {
 			// Single-Select Shipment Data
@@ -594,17 +576,62 @@ class processor_authorize_cim extends XMLprocessor
 					}
 				}
 
-				$var['params'][] = array( 'radio', 'shipprofileselect', $pid, $ppParams->shippingprofileid, implode( '<br />', $info ) );
+				if ( $ppParams->shippingprofileid == $pid ) {
+					$text = '<strong>' . implode( '<br />', $info ) . '</strong>';
+				} else {
+					$text = implode( '<br />', $info );
+				}
+
+				$var['params'][] = array( 'radio', 'shipprofileselect', $pid, $ppParams->shippingprofileid, $text );
 			}
 
 			if ( count( $profiles ) < 10 ) {
-				$var['params'][] = array( 'radio', 'shipprofileselect', "0", $ppParams->shippingprofileid, 'new' );
+				$var['params'][] = array( 'radio', 'shipprofileselect', "new", $ppParams->shippingprofileid, 'create new profile' );
 			}
 
-			$var['params']['edit_shipprofile'] = array( 'submit', '', '', _BUTTON_EDIT );
+			$var['params']['edit_shipprofile'] = array( 'submit', '', '', ( $select ? _BUTTON_SELECT : _BUTTON_EDIT ) );
 		}
 
 		return $var;
+	}
+
+	function shipProfileAdd( $request, $profileid, $post, $ppParams )
+	{
+		$profiles = get_object_vars( $ppParams->shippingProfiles );
+
+		$pointer = count( $profiles );
+
+		$ppParams->shippingProfiles->$pointer = new stdClass();
+		$ppParams->shippingProfiles->$pointer->profileid = $profileid;
+
+		$hash = new stdClass();
+		$hash->name		= $post['billFirstName'] . ' ' . $post['billLastName'];
+		$hash->address	= $post['billAddress'];
+		$hash->zipcity	= $post['billZip'] . ' ' . $post['billCity'];
+
+		$ppParams->shippingProfiles->$pointer->profilehash = $hash;
+
+		$ppParams->paymentprofileid = $pointer;
+
+		$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
+
+		return $ppParams;
+	}
+
+	function shipProfileUpdate( $request, $profileid, $post, $ppParams )
+	{
+		$hash = new stdClass();
+		$hash->name		= $post['billFirstName'] . ' ' . $post['billLastName'];
+		$hash->address	= $post['billAddress'];
+		$hash->zipcity	= $post['billZip'] . ' ' . $post['billCity'];
+
+		$ppParams->shippingProfiles->$profileid->profilehash = $hash;
+
+		$ppParams->paymentprofileid = $profileid;
+
+		$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
+
+		return $ppParams;
 	}
 
 	function loadCIM( $ppParams )
@@ -613,6 +640,21 @@ class processor_authorize_cim extends XMLprocessor
 
 		$cim->setParameter( 'customerProfileId', $ppParams->profileid );
 		$cim->getCustomerProfileRequest();
+
+		if ( $cim->isSuccessful() ) {
+			return $cim;
+		} else {
+			return $cim;
+		}
+	}
+
+	function loadCIMship( $ppParams )
+	{
+		$cim = new AuthNetCim( $this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode'] );
+
+		$cim->setParameter( 'customerProfileId', $ppParams->profileid );
+		$cim->setParameter( 'customerAddressId', $ppParams->shippingprofileid );
+		$cim->getCustomerShippingAddressRequest();
 
 		if ( $cim->isSuccessful() ) {
 			return $cim;

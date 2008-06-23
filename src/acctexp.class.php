@@ -858,6 +858,10 @@ class metaUserDB extends jsonDBTable
 	function setProcessorParams( $processorid, $params )
 	{
 		$this->processor_params->$processorid = $params;
+
+		$this->check();
+		$this->store();
+		$this->load( $this->id );
 	}
 
 }
@@ -2356,7 +2360,7 @@ class processor extends paramDBTable
 			$connection = fsockopen( $url, $port, $errno, $errstr, 30 );
 		}
 
-		if ( !$connection ) {
+		if ( $connection === false ) {
 			global $database;
 
 			$short	= 'fsockopen failure';
@@ -2494,7 +2498,7 @@ class XMLprocessor extends processor
 				}
 
 				foreach ( $params['params'] as $name => $entry ) {
-					if ( !is_null( $name ) && !( $name == '' ) ) {
+					if ( !empty( $name ) || ( $name === 0 ) ) {
 						$return .= aecHTML::createFormParticle( $name, $entry, $lists, $table ) . "\n";
 					}
 				}
@@ -2521,7 +2525,7 @@ class XMLprocessor extends processor
 				$vcontent = '';
 			}
 
-			switch ( $value ) {
+			switch ( strtolower( $value ) ) {
 				case 'card_type':
 					$cctlist = array(	'visa' => 'Visa',
 										'mastercard' => 'MasterCard',
@@ -2599,7 +2603,7 @@ class XMLprocessor extends processor
 				$vcontent = '';
 			}
 
-			switch ( $value ) {
+			switch ( strtolower( $value ) ) {
 				case 'firstname':
 					$var['params']['billFirstName'] = array( 'inputC', _AEC_USERFORM_BILLFIRSTNAME_NAME, _AEC_USERFORM_BILLFIRSTNAME_NAME, $vcontent );
 					break;
@@ -3179,7 +3183,7 @@ toggler.setStyle('color', '#528CE0');
 				break;
 			case 'radio':
 				$return = '<tr><td class="cleft">';
-				$return .= '<input type="radio" name="' . $row[1] . '" ' . ( $value ? 'checked="checked"' : '' ) . ' value="' . $row[2] . '" />';
+				$return .= '<input type="radio" name="' . $row[1] . '"' . ( ( $row[3] == $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" />';
 				$return .= '</td><td class="cright">' . $row[4];
 				break;
 			case "list":
