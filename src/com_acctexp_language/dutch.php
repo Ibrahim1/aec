@@ -256,6 +256,9 @@ define( '_COUPON_ERROR_SPONSORSHIP_ENDED', 'Sponsorship for this Coupon has ende
 
 // ----======== EMAIL TEXT ========----
 
+define( '_AEC_SEND_SUB',				"Account details for %s at %s" );
+define( '_AEC_USEND_MSG',				"Hello %s,\n\nThank you for registering at %s.\n\nYou may now login to %s using the username and password you registered with." );
+define( '_AEC_USEND_MSG_ACTIVATE',				"Hello %s,\n\nThank you for registering at %s. Your account is created and must be activated before you can use it.\nTo activate the account click on the following link or copy-paste it in your browser:\n%s\n\nAfter activation you may login to %s using the following username and password:\n\nUsername - %s\nPassword - %s'" );
 define( '_ACCTEXP_SEND_MSG','Abonnement voor %s op %s');
 define( '_ACCTEXP_SEND_MSG_RENEW','Vernieuwing abonnement voor %s op %s');
 define( '_ACCTEXP_MAILPARTICLE_GREETING', "Beste %s,\n\n");

@@ -7450,23 +7450,13 @@ class AECToolbox
 			$email 		= $row->email;
 			$username 	= $row->username;
 
-			if ( defined( 'JPATH_BASE' ) ) {
-				$send_sub		= JText::_( 'ACCOUNT DETAILS FOR' );
-				$usend_msg		= JText::_( 'SEND_MSG' );
-				$usend_msg_act	= JText::_( 'SEND_MSG_ACTIVATE' );
-			} else {
-				$send_sub		= _SEND_SUB;
-				$usend_msg		= _USEND_MSG;
-				$usend_msg_act	= _USEND_MSG_ACTIVATE;
-			}
-
-			$subject 	= sprintf ($send_sub, $name, $mainframe->getCfg( 'sitename' ) );
+			$subject 	= sprintf ( _AEC_SEND_SUB, $name, $mainframe->getCfg( 'sitename' ) );
 			$subject 	= html_entity_decode( $subject, ENT_QUOTES );
 
 			if ( $mosConfig_useractivation == 1 ) {
-				$message = sprintf ($usend_msg_act, $name, $mosConfig_sitename, $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=".$row->activation, $mosConfig_live_site, $username, $pwd);
+				$message = sprintf( _AEC_USEND_MSG_ACTIVATE, $name, $mosConfig_sitename, $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=".$row->activation, $mosConfig_live_site, $username, $pwd );
 			} else {
-				$message = sprintf ($usend_msg, $name, $mosConfig_sitename, $mosConfig_live_site);
+				$message = sprintf( _AEC_USEND_MSG, $name, $mosConfig_sitename, $mosConfig_live_site );
 			}
 
 			$message = html_entity_decode( $message, ENT_QUOTES );
@@ -7498,7 +7488,7 @@ class AECToolbox
 			// Send notification to all administrators
 			$aecUser	= AECToolbox::_aecIP();
 
-			$subject2	= sprintf( $send_sub, $name, $mainframe->getCfg( 'sitename' ) );
+			$subject2	= sprintf( _AEC_SEND_SUB, $name, $mainframe->getCfg( 'sitename' ) );
 			$message2	= sprintf( _AEC_ASEND_MSG_NEW_REG, $adminName2, $mainframe->getCfg( 'sitename' ), $row->name, $email, $username, $aecUser['ip'], $aecUser['isp'] );
 
 			$subject2	= html_entity_decode( $subject2, ENT_QUOTES );
