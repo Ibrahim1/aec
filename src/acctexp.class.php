@@ -5080,11 +5080,15 @@ class InvoiceFactory
 		}
 	}
 
-	function thanks( $option, $renew, $free )
+	function thanks( $option, $renew, $free, $usage=false )
 	{
 		global $database, $mosConfig_useractivation, $aecConfig, $mosConfig_dbprefix, $mainframe;
 
-		$sub_params = $this->objUsage->getParams();
+		if ( is_object( $usage ) ) {
+			$sub_params = $usage->getParams();
+		} else {
+			$sub_params = '';
+		}
 
 		if ( !empty( $sub_params['customthanks'] ) ) {
 			mosRedirect( $sub_params['customthanks'] );
