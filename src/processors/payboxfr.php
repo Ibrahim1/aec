@@ -169,7 +169,7 @@ class processor_payboxfr extends POSTprocessor
 		$response = array();
 
 		$returnstring = aecGetParam('invoice');
-		$checkpos = strpos( 'IBS_2MONT', $returnstring );
+		$checkpos = strpos( 'IBS_2MO', $returnstring );
 
 		if ( $checkpos ) {
 			$response['invoice'] = substr( $returnstring, 0, $checkpos );

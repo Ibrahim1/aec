@@ -6817,17 +6817,26 @@ class GeneralInfoRequester
 			return false;
 		}
 
-		$pathCB		= $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/';
-		$pathSMF	= $mainframe->getCfg( 'absolute_path' ) . '/administrator/components/com_smf/';
+		$pathCB		= $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler';
+		$pathSMF	= $mainframe->getCfg( 'absolute_path' ) . '/administrator/components/com_smf';
 		switch ( $component ) {
+			case 'CB1.2': // Community Builder 1.2
+				$is_cbe	= ( is_dir( $pathCB. '/enhanced' ) || is_dir( $pathCB . '/enhanced_admin' ) );
+				$is_cb	= ( is_dir( $pathCB ) && !$is_cbe );
+
+				$is12 = file_exists( $pathCB . '/router.php' );
+
+				return ( $is_cb && $is12 );
+				break;
+
 			case 'CB': // Community Builder
-				$is_cbe	= ( is_dir( $pathCB. 'enhanced' ) || is_dir( $pathCB . 'enhanced_admin' ) );
+				$is_cbe	= ( is_dir( $pathCB. '/enhanced' ) || is_dir( $pathCB . '/enhanced_admin' ) );
 				$is_cb	= ( is_dir( $pathCB ) && !$is_cbe );
 				return $is_cb;
 				break;
 
 			case 'CBE': // Community Builder Enhanced
-				$is_cbe = ( is_dir( $pathCB . 'enhanced' ) || is_dir( $pathCB . 'enhanced_admin' ) );
+				$is_cbe = ( is_dir( $pathCB . '/enhanced' ) || is_dir( $pathCB . '/enhanced_admin' ) );
 				return $is_cbe;
 				break;
 
@@ -6840,7 +6849,7 @@ class GeneralInfoRequester
 				break;
 
 			case 'SMF': // Simple Machines Forum
-				return file_exists( $pathSMF . 'config.smf.php') || file_exists( $pathSMF . 'smf.php' );
+				return file_exists( $pathSMF . '/config.smf.php') || file_exists( $pathSMF . '/smf.php' );
 				break;
 
 			case 'VM': // VirtueMart

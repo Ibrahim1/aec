@@ -510,7 +510,6 @@ define( '_CFG_GENERAL_PLANS_FIRST_DESC', 'If you have commited all three hacks t
 define( '_CFG_TAB_CUSTOMIZATION_TITLE', 'Personnaliser');
 define( '_CFG_TAB_CUSTOMIZATION_SUBTITLE', 'Personnalisation');
 define( '_CFG_GENERAL_CUSTOMINTRO_NAME', 'Lien personnalis&eacute; de la page d\'introduction:');
-define( '_CFG_GENERAL_CUSTOMINTRO_NAME', 'Custom intro page link:');
 define( '_CFG_GENERAL_CUSTOMINTRO_DESC', 'Provide a full link (including http://) that leads to your custom intro page. That page has to contain a link like this: http://www.yourdomain.com/index.php?option=com_acctexp&amp;task=subscribe&amp;intro=1 which bypasses the intro and correctly forwards the user to the payment plans or registration details page. Leave this field blank if you don&amp;acute;t want this at all.');
 define( '_CFG_GENERAL_CUSTOMTHANKS_NAME', 'Lien personnalis&eacute; de la page de remerciement:');
 define( '_CFG_GENERAL_CUSTOMTHANKS_DESC', 'Fournir un lien complet (avec http://) qui dirige &agrave; votre page de remerciement personnalis&eacute;e. Laissez ce champ vide si vous n&amp;acute;en voulez.');
