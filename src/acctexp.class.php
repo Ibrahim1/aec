@@ -3959,11 +3959,16 @@ class SubscriptionPlan extends paramDBTable
 		// Filter out params
 		$fixed = array( 'full_free', 'full_amount', 'full_period', 'full_periodunit',
 						'trial_free', 'trial_amount', 'trial_period', 'trial_periodunit',
-						'gid_enabled', 'gid', 'lifetime', 'fallback',
-						'similarplans', 'equalplans', 'make_active', 'make_primary', 'update_existing' );
+						'gid_enabled', 'gid', 'lifetime', 'standard_parent', 'fallback',
+						'similarplans', 'equalplans', 'make_active', 'make_primary', 'update_existing',
+						'customthanks', 'customtext_thanks_keeporiginal', 'customtext_thanks' );
 
 		$params = array();
 		foreach ( $fixed as $varname ) {
+			if ( !isset( $post[$varname] ) ) {
+				continue;
+			}
+
 			if ( is_array( $post[$varname] ) ) {
 				$params[$varname] = implode( ';', $post[$varname] );
 			} elseif ( empty( $post[$varname] ) ) {
@@ -3989,6 +3994,10 @@ class SubscriptionPlan extends paramDBTable
 
 		$restrictions = array();
 		foreach ( $fixed as $varname ) {
+			if ( !isset( $post[$varname] ) ) {
+				continue;
+			}
+
 			if ( is_array( $post[$varname] ) ) {
 				$restrictions[$varname] = implode( ';', $post[$varname] );
 			} elseif ( empty( $post[$varname] ) ) {
@@ -4934,7 +4943,7 @@ class InvoiceFactory
 				|| ( $params['trial_free'] && empty( $this->objInvoice->counter ) ) ) {
 				// Then mark payed
 				if ( $this->objInvoice->pay() !== false ) {
-					thanks ( $option, $this->renew, 1, $this->usage );
+					$this->thanks( $option, $this->renew, 1 );
 					return;
 				}
 			}
@@ -4993,7 +5002,7 @@ class InvoiceFactory
 		// Either this is fully free, or the next term is free and this is non recurring
 		if ( $this->terms->checkFree() || ( $this->terms->nextterm->free && !$this->recurring ) ) {
 			$this->objInvoice->pay();
-			thanks ( $option, $this->renew, 1, $this->usage );
+			$this->thanks( $option, $this->renew, 1 );
 			return;
 		}
 
@@ -5080,15 +5089,9 @@ class InvoiceFactory
 		}
 	}
 
-	function thanks( $option, $renew, $free, $usage=false )
+	function thanks( $option, $renew, $free )
 	{
 		global $database, $mosConfig_useractivation, $aecConfig, $mosConfig_dbprefix, $mainframe;
-
-		if ( is_object( $usage ) ) {
-			$sub_params = $usage->getParams();
-		} else {
-			$sub_params = '';
-		}
 
 		if ( !empty( $sub_params['customthanks'] ) ) {
 			mosRedirect( $sub_params['customthanks'] );
@@ -9649,6 +9652,10 @@ class coupon extends paramDBTable
 
 		$params = array();
 		foreach ( $fixed as $varname ) {
+			if ( !isset( $post[$varname] ) ) {
+				continue;
+			}
+
 			if ( is_array( $post[$varname] ) ) {
 				$params[$varname] = implode( ';', $post[$varname] );
 			} else {
