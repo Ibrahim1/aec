@@ -366,8 +366,10 @@ function subscribe( $option )
 				exit();
 			}
 		} else {
-			if ( checkDuplicateUsernameEmail( $_POST['username'], $_POST['email'] ) !== true ) {
-				return false;
+			if ( isset( $_POST['username'] ) && isset($_POST['email'] ) ) {
+				if ( checkDuplicateUsernameEmail( $_POST['username'], $_POST['email'] ) !== true ) {
+					return false;
+				}
 			}
 		}
 
@@ -380,8 +382,10 @@ function subscribe( $option )
 		} elseif ( !empty( $userid ) && !isset( $_POST['username'] ) ) {
 			$passthrough	= false;
 		} elseif ( !$userid ) {
-			if ( checkDuplicateUsernameEmail( $_POST['username'], $_POST['email'] ) !== true ) {
-				return false;
+			if ( isset( $_POST['username'] ) && isset($_POST['email'] ) ) {
+				if ( checkDuplicateUsernameEmail( $_POST['username'], $_POST['email'] ) !== true ) {
+					return false;
+				}
 			}
 
 			$nopass = array( 'option', 'task', 'intro', 'usage', 'processor', 'recurring', 'Itemid', 'submit_x', 'submit_y', 'userid' );
