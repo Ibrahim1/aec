@@ -4323,7 +4323,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['desc']			=	_AEC_HACKS_CB2;
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.php';
-		$hacks[$n]['read']			=	'function registerForm( $option, $emailpass,$regErrorMSG=null ) {';
+		$hacks[$n]['read']			=	'function registerForm( $option, $emailpass,$regErrorMSG = null ) {';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_optionhack, $n, $n);
 
 		$n = 'comprofilerphp6';
@@ -4552,7 +4552,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 			$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #8';
 			$hacks[$n]['desc']			=	_AEC_HACKS_MI1;
 			$hacks[$n]['type']			=	'file';
-			$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/library/cb/cb.tables.php';
+			$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/administrator/components/com_comprofiler/library/cb/cb.tables.php';
 			$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserUpdate\', array( &$this, &$this, true ) );';
 			$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( $aec_uchangehackCB12x, $n, 'user', $n );
 		} else {
