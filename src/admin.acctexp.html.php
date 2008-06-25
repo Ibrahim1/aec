@@ -1692,9 +1692,9 @@ class HTML_AcctExp
 											<?php echo $aecHTML->createSettingsParticle( 'gid_enabled' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'gid' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'fallback' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'standard_parent' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'make_active' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'make_primary' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'standard_parent' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'update_existing' ); ?>
 										</div>
 									</div>

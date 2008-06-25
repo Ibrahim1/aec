@@ -866,12 +866,17 @@ class metaUserDB extends jsonDBTable
 
 }
 
-class Config_General extends paramDBTable
+class Config_General extends jsonDBTable
 {
 	/** @var int Primary key */
 	var $id 				= null;
 	/** @var text */
 	var $settings 			= null;
+
+	function declareJSONfields()
+	{
+		return array( 'settings' );
+	}
 
 	function Config_General( &$db )
 	{
@@ -882,9 +887,8 @@ class Config_General extends paramDBTable
 		// If we have no settings, init them
 		if ( empty( $this->settings ) ) {
 			$this->initParams();
-			$this->cfg = $this->getParams( 'settings' );
 		} else {
-			$this->cfg = $this->getParams( 'settings' );
+			$this->cfg = $this->settings;
 		}
 	}
 
@@ -1548,6 +1552,11 @@ class eventLog extends paramDBTable
 	function eventLog( &$db )
 	{
 	 	$this->mosDBTable( '#__acctexp_eventlog', 'id', $db );
+	}
+
+	function declareJSONfields()
+	{
+		return array( 'params' );
 	}
 
 	function issue( $short, $tags, $text, $level = 2, $params = null, $force_notify = 0, $force_email = 0 )
@@ -2215,7 +2224,7 @@ class PaymentProcessor
 
 }
 
-class processor extends paramDBTable
+class processor extends jsonDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -2236,6 +2245,11 @@ class processor extends paramDBTable
 	function processor( &$db )
 	{
 		$this->mosDBTable( '#__acctexp_config_processors', 'id', $db );
+	}
+
+	function declareJSONfields()
+	{
+		return array( 'info', 'settings', 'params' );
 	}
 
 	function loadName( $name )
@@ -3294,7 +3308,7 @@ class SubscriptionPlanHandler
 	}
 }
 
-class PlanGroup extends paramDBTable
+class PlanGroup extends jsonDBTable
 {
 	/** @var int Primary key */
 	var $id 				= null;
@@ -3322,9 +3336,14 @@ class PlanGroup extends paramDBTable
 		$this->mosDBTable( '#__acctexp_plangroups', 'id', $db );
 	}
 
+	function declareJSONfields()
+	{
+		return array( 'params', 'custom_params', 'restrictions' );
+	}
+
 }
 
-class SubscriptionPlan extends paramDBTable
+class SubscriptionPlan extends jsonDBTable
 {
 	/** @var int Primary key */
 	var $id 				= null;
@@ -3352,6 +3371,11 @@ class SubscriptionPlan extends paramDBTable
 	function SubscriptionPlan( &$db )
 	{
 		$this->mosDBTable( '#__acctexp_plans', 'id', $db );
+	}
+
+	function declareJSONfields()
+	{
+		return array( 'params', 'custom_params', 'restrictions', 'micro_integrations' );
 	}
 
 	function getProperty( $name )
@@ -5184,7 +5208,7 @@ class InvoiceFactory
 	}
 }
 
-class Invoice extends paramDBTable
+class Invoice extends jsonDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -5232,6 +5256,11 @@ class Invoice extends paramDBTable
 		if ( empty( $this->counter ) && ( $this->transaction_date != '0000-00-00 00:00:00' ) ) {
 			$this->counter = 1;
 		}
+	}
+
+	function declareJSONfields()
+	{
+		return array( 'coupons', 'transactions', 'params', 'conditions' );
 	}
 
 	function check()
@@ -6104,7 +6133,7 @@ class Invoice extends paramDBTable
 	}
 }
 
-class Subscription extends paramDBTable
+class Subscription extends jsonDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -6149,6 +6178,11 @@ class Subscription extends paramDBTable
 	function Subscription( &$db )
 	{
 		$this->mosDBTable( '#__acctexp_subscr', 'id', $db );
+	}
+
+	function declareJSONfields()
+	{
+		return array( 'used_plans', 'params', 'custom_params' );
 	}
 
 	/**
@@ -8138,10 +8172,21 @@ class AECToolbox
 				}
 				break;
 			case 'php_method':
-				if ( isset( $vars[2] ) ) {
-					$result = call_user_method_array( $vars[0], $vars[1], $vars[2] );
+				if ( function_exists( 'call_user_method_array' ) ) {
+					if ( isset( $vars[2] ) ) {
+						$result = call_user_method_array( $vars[0], $vars[1], $vars[2] );
+					} else {
+						$result = call_user_method_array( $vars[0], $vars[1] );
+					}
 				} else {
-					$result = call_user_method_array( $vars[0], $vars[1] );
+					// TODO: Check whether this is right
+					$callback = array( $vars[0], $vars[1] );
+
+					if ( isset( $vars[2] ) ) {
+						$result = call_user_func_array( $callback, $vars[2] );
+					} else {
+						$result = call_user_func_array( $callback );
+					}
 				}
 				break;
 			default:
@@ -8428,7 +8473,7 @@ class MI
 
 }
 
-class microIntegration extends paramDBTable
+class microIntegration extends jsonDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -8462,6 +8507,11 @@ class microIntegration extends paramDBTable
 		}
 	}
 
+	function declareJSONfields()
+	{
+		return array( 'params' );
+	}
+
 	function check()
 	{
 		if ( isset( $this->settings ) ) {
@@ -8476,7 +8526,7 @@ class microIntegration extends paramDBTable
 			unset( $this->info );
 		}
 
-		return true;
+		return parent::check();
 	}
 
 	function _callMILanguage()
@@ -9580,6 +9630,11 @@ class coupon extends paramDBTable
 		} else {
 			$this->mosDBTable( '#__acctexp_coupons', 'id', $db );
 		}
+	}
+
+	function declareJSONfields()
+	{
+		return array( 'discount', 'restrictions', 'params', 'micro_integrations'  );
 	}
 
 	function deactivate()

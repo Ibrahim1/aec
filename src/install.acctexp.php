@@ -294,6 +294,18 @@ function com_install()
 
 	$eucaInstalldb->multiQueryExec( $queri );
 
+	// Check whether the config is on 0.12.6 status
+	$query = 'SELECT `settings` FROM #__acctexp_config'
+	. ' WHERE `id` = \'1\''
+	;
+	$database->setQuery( $query );
+	$set = $database->loadResult();
+
+	$jsonupdate = false;
+	if ( strpos( $set, '{' ) !== 0 ) {
+		$jsonupdate = true;
+	}
+
 	require_once( $mainframe->getPath( 'class', 'com_acctexp' ) );
 
 	// Update routine 0.3.0 -> 0.6.0
@@ -1052,6 +1064,55 @@ function com_install()
 
 		$pp->setSettings();
 		$pp->setInfo();
+	}
+
+	// Update database fields to JSONized fields
+	if ( $jsonupdate ) {
+		$updates = array(
+							'eventLog' => 'eventlog',
+							'processor' => 'processor',
+							'SubscriptionPlan' => 'plans',
+							'Invoice' => 'Invoice',
+							'Subscription' => 'subscr',
+							'microIntegration' => 'microintegrations',
+							'coupon' => 'coupons',
+							'coupon' => 'coupons_static'
+							);
+
+		foreach ( $updates as $classname => $dbtable ) {
+			$function = $classname.'::declareJSONfields()';
+
+			$jsondeclare = $function();
+
+			$query = 'SELECT `' . implode( '`, `', $jsondeclare ) . '` FROM #__acctexp_config'
+			. ' WHERE `id` = \'1\''
+			;
+			$database->setQuery( $query );
+			$object = $database->loadObject();
+
+			$del = count( $jsondeclare );
+			foreach ( $jsondeclare as $fieldname ) {
+				if ( empty( $object->$fieldname ) ) {
+					unset( $object->$fieldname );
+					$del--;
+				}
+			}
+
+			if ( $del < 1 ) {
+				continue;
+			}
+
+			$newobject = new stdClass();
+			foreach ( $jsondeclare as $fieldname ) {
+				$newobject->$fieldname = parameterHandler::decode( $object->$fieldname );
+			}
+
+			$query = 'UPDATE #__acctexp_config'
+			. ' WHERE `id` = \'1\''
+			;
+			$database->setQuery( $query );
+			$object = $database->loadObject();
+		}
 	}
 
 	// --- [ END OF STANDARD UPGRADE ACTIONS ] ---

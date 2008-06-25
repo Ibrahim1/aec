@@ -266,16 +266,16 @@ class jsonDBTable extends paramDBTable
 			return false;
 		}
 
-		return json_decode( stripslashes( $this->$field ) );
+		return jsoonHandler::decode( stripslashes( $this->$field ) );
 	}
 
 	/**
 	 * Encode array and set Parameter field
 	 */
-	function setParams( $array, $field = 'params' )
+	function setParams( $input, $field = 'params' )
 	{
 		if ( !empty( $field ) ) {
-			$this->$field = $this->_db->getEscaped( json_encode( $array ) );
+			$this->$field = $this->_db->getEscaped( jsoonHandler::encode( $input ) );
 		}
 		return true;
 	}
@@ -335,6 +335,142 @@ class jsonDBTable extends paramDBTable
 		}
 
 		return true;
+	}
+
+}
+
+class jsoonHandler
+{
+	function decode( $input )
+	{
+		if ( strpos( $input, '_jsoon' ) !== false ) {
+			return json_decode( jsoonHandler::decode( $input ) );
+		} else {
+			return json_decode( $input );
+		}
+	}
+
+	/**
+	 * Encode
+	 */
+	function encode( $input )
+	{
+		return json_encode( jsoonHandler::encoder( $input ) );
+	}
+
+	/**
+	 * Explode JSON parsed string into appropriate JSOON
+	 * @return object
+	 */
+	function decoder( $input )
+	{
+		$output = $input;
+		if ( is_object( $input ) ) {
+			$properties = get_object_vars( $input );
+
+			if ( isset( $input->_jsoon ) ) {
+				if ( isset( $input->_jsoon->classname ) ) {
+					if ( isset( $input->_jsoon->parameter ) ) {
+						switch ( $input->_jsoon->parameter ) {
+							default:
+								global ${$input->_jsoon->parameter};
+								$output = new {$input->_jsoon->classname}( ${$input->_jsoon->parameter} );
+								break;
+						}
+					} else {
+						$output = new {$input->_jsoon->classname}();
+					}
+				} elseif ( isset( $input->_jsoon->relational_array ) ) {
+					$output = new stdClass();
+				} else {
+					$output = new stdClass();
+				}
+
+				unset( $input->_jsoon );
+			} else {
+				$output = new stdClass();
+			}
+
+			foreach ( $properties as $pname => $pcontent ) {
+				$output->$properties = jsoonHandler::resolve( $properties->$pname );
+			}
+		} elseif ( is_array( $input ) ) {
+			$output = array();
+			foreach ( $input as $name => $value ) {
+				$output[$name] = jsoonHandler::resolve( $input[$name] );
+			}
+		}
+
+		return $output;
+	}
+
+	function encoder( $input )
+	{
+		$output = $input;
+		if ( is_object( $input ) ) {
+			$classname = get_class( $input );
+
+			if ( $classname != 'stdClass' ) {
+				$output->_jsoon = stdClass();
+				$output->_jsoon->classname = $classname;
+			}
+		} elseif ( is_array( $input ) ) {
+			if ( !( array_keys( $input ) !== range( 0, sizeof( $input ) - 1 ) ) ) {
+
+			}
+		}
+
+		return $output;
+	}
+}
+
+class parameterHandler
+{
+
+	/**
+	 * Decode Parameters into an array
+	 * @return array
+	 */
+	function decode( $params )
+	{
+		$array = array();
+		foreach ( $params as $chunk ) {
+			$k = explode( '=', $chunk, 2 );
+			if ( !empty( $k[0] ) ) {
+				// Strip slashes, but preserve special characters
+				$array[$k[0]] = stripslashes( str_replace( array( '\n', '\t', '\r' ), array( "\n", "\t", "\r" ), $k[1] ) );
+			}
+			unset( $k );
+		}
+		return $array;
+	}
+
+	/**
+	 * Encode array to newline separated string
+	 * @return string
+	 */
+	function encode( $array )
+	{
+		global $database;
+
+		$params = array();
+		foreach ( $array as $key => $value ) {
+			if ( !is_null( $key ) ) {
+				if ( is_array( $value ) ) {
+					$temp = implode( ';', $value );
+					$value = $temp;
+				}
+
+				if ( get_magic_quotes_gpc() ) {
+					$value = stripslashes( $value );
+				}
+				$value = $database->getEscaped( $value );
+
+				$params[] = $key . '=' . $value;
+			}
+		}
+
+		return implode( "\n", $params );
 	}
 
 }
