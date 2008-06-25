@@ -303,6 +303,15 @@ function com_install()
 
 	$jsonupdate = false;
 	if ( strpos( $set, '{' ) !== 0 ) {
+		$settings = parameterHandler::decode( $set );
+
+		$query = 'UPDATE #__acctexp_config'
+		. ' SET `settings` = \'' . jsoonHandler::encode( $settings ) . '\''
+		. ' WHERE `id` = \'1\''
+		;
+		$database->setQuery( $query );
+		$database->query();
+
 		$jsonupdate = true;
 	}
 
@@ -1084,34 +1093,61 @@ function com_install()
 
 			$jsondeclare = $function();
 
-			$query = 'SELECT `' . implode( '`, `', $jsondeclare ) . '` FROM #__acctexp_config'
-			. ' WHERE `id` = \'1\''
-			;
-			$database->setQuery( $query );
-			$object = $database->loadObject();
+			if ( $dbtable == 'subscr' ) {
+				$jsondeclare[] = 'id';
+			}
 
-			$del = count( $jsondeclare );
-			foreach ( $jsondeclare as $fieldname ) {
-				if ( empty( $object->$fieldname ) ) {
-					unset( $object->$fieldname );
-					$del--;
+			$query = 'SELECT `id`'
+					. ' FROM #__acctexp_' . $dbtable
+					;
+			$database->setQuery( $query );
+			$entries = $database->loadResultArray();
+
+			foreach ( $entries as $id ) {
+				$query = 'SELECT `' . implode( '`, `', $jsondeclare ) . '` FROM #__acctexp_' . $dbtable
+				. ' WHERE `id` = \'' . $id . '\''
+				;
+				$database->setQuery( $query );
+				$object = $database->loadObject();
+
+				$dec = $jsondeclare;
+				foreach ( $jsondeclare as $fieldname ) {
+					// No need to update what is empty
+					if ( empty( $object->$fieldname ) ) {
+						unset( $object->$fieldname );
+						unset( $dec[$fieldname] );
+					}
+				}
+
+				if ( count( $dec ) < 1 ) {
+					continue;
+				}
+
+				$sets = array();
+				foreach ( $dec as $fieldname ) {
+					// Decode from newline separated variables
+					$temp = parameterHandler::decode( $object->$fieldname );
+
+					// Make sure to capture exceptions
+					if ( $dbtable == 'subscr' ) {
+						// Filter to metaUserDB
+					}
+
+					// ...To JSOON based notation
+					$sets[] = '`' . $fieldname . '` = \'' . jsoonHandler::encode( $temp ) . '\'';
+				}
+
+				unset( $object );
+
+				$query = 'UPDATE #__acctexp_' . $dbtable
+				. ' SET ' . implode( ' AND ', $sets ) . ''
+				. ' WHERE `id` = \'' . $id . '\''
+				;
+				$database->setQuery( $query );
+				if ( !$database->query() ) {
+			    	$errors[] = array( $database->getErrorMsg(), $query );
 				}
 			}
-
-			if ( $del < 1 ) {
-				continue;
-			}
-
-			$newobject = new stdClass();
-			foreach ( $jsondeclare as $fieldname ) {
-				$newobject->$fieldname = parameterHandler::decode( $object->$fieldname );
-			}
-
-			$query = 'UPDATE #__acctexp_config'
-			. ' WHERE `id` = \'1\''
-			;
-			$database->setQuery( $query );
-			$object = $database->loadObject();
 		}
 	}
 

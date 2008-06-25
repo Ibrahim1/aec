@@ -255,6 +255,14 @@ class paramDBTable extends mosDBTable
 */
 class jsonDBTable extends paramDBTable
 {
+	function storeload()
+	{
+		$this->check();
+		$this->store();
+
+		return $this->load( $this->id );
+	}
+
 
 	/**
 	 * Receive Parameters and decode them into an array
@@ -285,7 +293,27 @@ class jsonDBTable extends paramDBTable
 	 */
 	function addParams( $array, $field = 'params', $overwrite = true )
 	{
+		if ( gettype( $this->$field ) == gettype( $array ) ) {
+			if ( is_object( $this->$field ) ) {
+				$properties = get_object_vars( $array );
 
+				foreach ( $properties as $pname => $pvalue ) {
+					if ( !isset( $this->$field->$pname ) || ( isset( $this->$field->$pname ) && $overwrite ) ) {
+						$this->$field->$pname = $pvalue;
+					}
+				}
+			} elseif ( is_array( $this->$field ) ) {
+				foreach ( $array as $pname => $pvalue ) {
+					if ( !isset( $this->$field[$pname] ) || ( isset( $this->$field[$pname] ) && $overwrite ) ) {
+						$this->$field[$pname] = $pvalue;
+					}
+				}
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -368,31 +396,45 @@ class jsoonHandler
 		if ( is_object( $input ) ) {
 			$properties = get_object_vars( $input );
 
+			if ( isset( $properties['_jsoon'] ) ) {
+				unset( $properties['_jsoon'] );
+			}
+
 			if ( isset( $input->_jsoon ) ) {
-				if ( isset( $input->_jsoon->classname ) ) {
-					if ( isset( $input->_jsoon->parameter ) ) {
-						switch ( $input->_jsoon->parameter ) {
+				$jsoon =& $input->_jsoon;
+
+				if ( isset( $jsoon->classname ) ) {
+					$classname = $jsoon->classname;
+
+					if ( isset( $jsoon->parameter ) ) {
+						$parameter = $jsoon->parameter;
+
+						switch ( $parameter ) {
 							default:
-								global ${$input->_jsoon->parameter};
-								$output = new {$input->_jsoon->classname}( ${$input->_jsoon->parameter} );
+								global ${$parameter};
+								$output = new $classname( ${$parameter} );
 								break;
 						}
 					} else {
-						$output = new {$input->_jsoon->classname}();
+						$output = new $classname();
 					}
-				} elseif ( isset( $input->_jsoon->relational_array ) ) {
-					$output = new stdClass();
+				} elseif ( isset( $jsoon->relational_array ) ) {
+					$output = array();
+
+					foreach ( $properties as $pkey => $pvalue ) {
+						$output[$pkey] = jsoonHandler::resolve( $pvalue );
+					}
+
+					return $output;
 				} else {
 					$output = new stdClass();
 				}
-
-				unset( $input->_jsoon );
 			} else {
 				$output = new stdClass();
 			}
 
-			foreach ( $properties as $pname => $pcontent ) {
-				$output->$properties = jsoonHandler::resolve( $properties->$pname );
+			foreach ( $properties as $pkey => $pvalue ) {
+				$output->$pkey = jsoonHandler::resolve( $pvalue );
 			}
 		} elseif ( is_array( $input ) ) {
 			$output = array();
@@ -410,13 +452,43 @@ class jsoonHandler
 		if ( is_object( $input ) ) {
 			$classname = get_class( $input );
 
+			// Preserve Class information
 			if ( $classname != 'stdClass' ) {
-				$output->_jsoon = stdClass();
+				$output->_jsoon = new stdClass();
 				$output->_jsoon->classname = $classname;
+
+				// If parameters are advertised by the Class, cache them
+				$function = $classname.'::declareJSONcalltimeparams()';
+				if ( is_callable( $function ) ) {
+					$calltimeparams = $function();
+
+					if ( isset( $calltimeparams['parameters'] ) ) {
+						$output->_jsoon->parameter = $calltimeparams['parameters'];
+					}
+				}
+			}
+
+			$properties = get_object_vars( $input );
+
+			foreach ( $properties as $pkey => $pvalue ) {
+				$output->$pkey = jsoonHandler::encoder( $pvalue );
 			}
 		} elseif ( is_array( $input ) ) {
-			if ( !( array_keys( $input ) !== range( 0, sizeof( $input ) - 1 ) ) ) {
+			// Check for relational array
+			if ( !( array_keys( $input ) !== range( 0, count( $input ) - 1 ) ) ) {
+				$output = new stdClass();
 
+				$output->_jsoon = new stdClass();
+				$output->_jsoon->relational_array = true;
+
+				foreach ( $input as $key => $value ) {
+					$output->$key = jsoonHandler::encoder( $value );
+				}
+			} else {
+				$output = array();
+				foreach ( $input as $key => $value ) {
+					$output[$key] = jsoonHandler::encoder( $value );
+				}
 			}
 		}
 

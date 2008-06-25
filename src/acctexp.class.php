@@ -864,6 +864,24 @@ class metaUserDB extends jsonDBTable
 		$this->load( $this->id );
 	}
 
+	function getMIParams( $miid )
+	{
+		if ( isset( $this->processor_params->$processorid ) ) {
+			return $this->processor_params->$processorid;
+		} else {
+			return false;
+		}
+	}
+
+	function setProcessorParams( $processorid, $params )
+	{
+		$this->processor_params->$processorid = $params;
+
+		$this->check();
+		$this->store();
+		$this->load( $this->id );
+	}
+
 }
 
 class Config_General extends jsonDBTable
@@ -872,11 +890,6 @@ class Config_General extends jsonDBTable
 	var $id 				= null;
 	/** @var text */
 	var $settings 			= null;
-
-	function declareJSONfields()
-	{
-		return array( 'settings' );
-	}
 
 	function Config_General( &$db )
 	{
@@ -888,8 +901,13 @@ class Config_General extends jsonDBTable
 		if ( empty( $this->settings ) ) {
 			$this->initParams();
 		} else {
-			$this->cfg = $this->settings;
+			$this->cfg =& $this->settings;
 		}
+	}
+
+	function declareJSONfields()
+	{
+		return array( 'settings' );
 	}
 
 	function initParams()
