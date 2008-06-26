@@ -844,6 +844,7 @@ class metaUserDB extends jsonDBTable
 		$this->check();
 		$this->store();
 		$this->id = $this->getMax();
+
 	}
 
 	function getProcessorParams( $processorid )
@@ -858,28 +859,43 @@ class metaUserDB extends jsonDBTable
 	function setProcessorParams( $processorid, $params )
 	{
 		$this->processor_params->$processorid = $params;
-
-		$this->check();
-		$this->store();
-		$this->load( $this->id );
+		$this->storeload();
 	}
 
-	function getMIParams( $miid )
+	function getMIParams( $miid, $usageid=false )
 	{
-		if ( isset( $this->processor_params->$processorid ) ) {
-			return $this->processor_params->$processorid;
+		if ( $usageid ) {
+			if ( isset( $this->plan_params->$usageid ) ) {
+				if ( isset( $this->plan_params->$usageid->$miid ) ) {
+					return $this->plan_params->$usageid->$miid;
+				}
+			}
 		} else {
-			return false;
+			if ( isset( $this->params->mi->$miid ) ) {
+				return $this->params->mi->$miid;
+			}
 		}
+
+		return false;
 	}
 
-	function setProcessorParams( $processorid, $params )
+	function addPreparedMIParams( $plan_mi, $mi=false )
 	{
-		$this->processor_params->$processorid = $params;
+		$this->addParams( $plan_mi, 'plan_params' );
 
-		$this->check();
-		$this->store();
-		$this->load( $this->id );
+		if ( $mi === false ) {
+			// TODO: Write function that recreates pure MI data from plan_mi construct
+		}
+
+		if ( $mi !== false ) {
+			if ( isset( $this->params->mi ) ) {
+				$this->params->mi = $this->mergeParams( $this->params->mi, $mi );
+			} else {
+				$this->params->mi = $mi;
+			}
+		}
+
+		$this->storeload();
 	}
 
 }
@@ -3740,6 +3756,22 @@ class SubscriptionPlan extends jsonDBTable
 	{
 		$thisparams = $this->getParams();
 		$planparams = $plan->getParams();
+
+		if ( !isset( $thisparams['similarplans'] ) ) {
+			$thisparams['similarplans'] = '';
+		}
+
+		if ( !isset( $planparams['similarplans'] ) ) {
+			$planparams['similarplans'] = '';
+		}
+
+		if ( !isset( $thisparams['equalplans'] ) ) {
+			$thisparams['equalplans'] = '';
+		}
+
+		if ( !isset( $planparams['equalplans'] ) ) {
+			$planparams['equalplans'] = '';
+		}
 
 		$spg1		= explode( ';', $thisparams['similarplans'] );
 		$spg2		= explode( ';', $planparams['similarplans'] );

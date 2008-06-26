@@ -263,7 +263,6 @@ class jsonDBTable extends paramDBTable
 		return $this->load( $this->id );
 	}
 
-
 	/**
 	 * Receive Parameters and decode them into an array
 	 * @return array
@@ -291,29 +290,42 @@ class jsonDBTable extends paramDBTable
 	/**
 	 * Add an array of Parameters to an existing parameter field
 	 */
-	function addParams( $array, $field = 'params', $overwrite = true )
+	function addParams( $params, $field = 'params', $overwrite = true )
 	{
-		if ( gettype( $this->$field ) == gettype( $array ) ) {
-			if ( is_object( $this->$field ) ) {
-				$properties = get_object_vars( $array );
-
-				foreach ( $properties as $pname => $pvalue ) {
-					if ( !isset( $this->$field->$pname ) || ( isset( $this->$field->$pname ) && $overwrite ) ) {
-						$this->$field->$pname = $pvalue;
-					}
-				}
-			} elseif ( is_array( $this->$field ) ) {
-				foreach ( $array as $pname => $pvalue ) {
-					if ( !isset( $this->$field[$pname] ) || ( isset( $this->$field[$pname] ) && $overwrite ) ) {
-						$this->$field[$pname] = $pvalue;
-					}
-				}
-			} else {
-				return false;
-			}
+		if ( gettype( $this->$field ) == gettype( $params ) ) {
+			$this->$field = jsonDBTable::mergeParams( $this->$field, $params, $overwrite );
+			return true;
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * Recursive Merging of two Entities, regardless of type
+	 */
+	function mergeParams( $subject, $subject2, $overwrite )
+	{
+		if ( is_object( $subject ) ) {
+			$properties = get_object_vars( $subject2 );
+
+			foreach ( $properties as $pname => $pvalue ) {
+				if ( !isset( $subject->$pname ) || ( isset( $subject->$pname ) && $overwrite ) ) {
+					$subject->$pname = jsonDBTable::mergeParams( $subject->$pname, $pvalue, $overwrite );
+				}
+			}
+		} elseif ( is_array( $subject ) ) {
+			foreach ( $subject2 as $pname => $pvalue ) {
+				if ( !isset( $subject[$pname] ) || ( isset( $subject[$pname] ) && $overwrite ) ) {
+					$subject[$pname] = jsonDBTable::mergeParams( $subject[$pname], $pvalue, $overwrite );
+				}
+			}
+		} else {
+			if ( $overwrite ) {
+				$subject = $subject2;
+			}
+		}
+
+		return $subject;
 	}
 
 	/**

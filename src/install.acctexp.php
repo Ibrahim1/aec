@@ -1077,8 +1077,7 @@ function com_install()
 
 	// Update database fields to JSONized fields
 	if ( $jsonupdate ) {
-		$updates = array(
-							'eventLog' => 'eventlog',
+		$updates = array(	'eventLog' => 'eventlog',
 							'processor' => 'processor',
 							'SubscriptionPlan' => 'plans',
 							'Invoice' => 'Invoice',
@@ -1089,12 +1088,13 @@ function com_install()
 							);
 
 		foreach ( $updates as $classname => $dbtable ) {
-			$function = $classname.'::declareJSONfields()';
+			$function = $classname . '::declareJSONfields()';
 
 			$jsondeclare = $function();
 
 			if ( $dbtable == 'subscr' ) {
-				$jsondeclare[] = 'id';
+				$jsondeclare[] = 'userid';
+				$jsondeclare[] = 'used_plans';
 			}
 
 			$query = 'SELECT `id`'
@@ -1123,18 +1123,81 @@ function com_install()
 					continue;
 				}
 
+				if ( $dbtable == 'subscr' ) {
+					$metaUserDB = new metaUserDB( $database );
+					$metaUserDB->loadUserid( $object->userid );
+				}
+
 				$sets = array();
 				foreach ( $dec as $fieldname ) {
 					// Decode from newline separated variables
 					$temp = parameterHandler::decode( $object->$fieldname );
 
 					// Make sure to capture exceptions
-					if ( $dbtable == 'subscr' ) {
-						// Filter to metaUserDB
-					}
+					if ( ( $dbtable == 'subscr' ) && ( $fieldname == 'userid' ) ) {
+						$vs		= new stdClass();
+						$vsmi	= new stdClass();
 
-					// ...To JSOON based notation
-					$sets[] = '`' . $fieldname . '` = \'' . jsoonHandler::encode( $temp ) . '\'';
+						foreach ( $temp as $key => $value ) {
+							if ( strpos( 'MI_FLAG', $key ) !== false ) {
+								$ks = explode( '_', $key );
+
+								$vname = array();
+
+								foreach ( $ks as $n => $k ) {
+									if ( in_array( $n, array( 0,1,2,4 ) ) ) {
+										// And nothing of value was lost
+									} elseif( $n == 3 ) {
+										// Set usage
+										$usage = $k;
+									} elseif( $n == 5 ) {
+										// Set MI
+										$mi = $k;
+									} elseif( $n == 5 ) {
+										// Set MI Variable name
+										$vname[] = $k;
+									}
+								}
+
+								$temp = implode( '_', $vname );
+								$vname = $temp;
+
+								$vs->$usage->$mi[$vname] = $value;
+								$vsmi->$mi[$vname] = $value;
+							}
+						}
+
+						if ( !empty( $vs ) || !empty( $vsmi ) ) {
+							$metaUserDB->addPreparedMIParams( $vs, $vsmi );
+						}
+
+						unset( $object->userid );
+					} elseif ( ( $dbtable == 'subscr' ) && ( $fieldname == 'used_plans' ) ) {
+						$plans = new stdClass();
+						$i = 0;
+						foreach ( $object->used_plans as $plan ) {
+							$p = explode( ',', $plan );
+
+							if ( !empty( $p[1] ) ) {
+								$plans->$p[0] = $p[1];
+							} else {
+								$plans->$p[0] = 1;
+							}
+
+							$i++;
+						}
+
+						$up = new stdClass();
+						$up->plan_history	= $plans;
+						$up->used_plans		= $plans;
+
+						$metaUserDB->mergeParams( $up, 'plan_history' );
+
+						unset( $object->used_plans );
+					} else {
+						// ...To JSOON based notation
+						$sets[] = '`' . $fieldname . '` = \'' . jsoonHandler::encode( $temp ) . '\'';
+					}
 				}
 
 				unset( $object );
