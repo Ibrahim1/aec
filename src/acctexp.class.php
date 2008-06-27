@@ -8006,7 +8006,7 @@ class AECToolbox
 
 		if ( strpos( $subject, '{aecjson}' ) !== false ) {
 			// We have at least one JSON object, switching to JSON mode
-			return AECToolbox::decodeTags( $subject, $rewrite );
+			return AECToolbox::decodeTags( $subject, $rewrite, $metaUser );
 		} else {
 			// No JSON found, do traditional parsing
 			$search = array();
@@ -8020,7 +8020,7 @@ class AECToolbox
 		}
 	}
 
-	function decodeTags( $subject, $rewrite )
+	function decodeTags( $subject, $rewrite, $metaUser )
 	{
 		global $mosConfig_absolute_path;
 
@@ -8041,7 +8041,7 @@ class AECToolbox
 		foreach ( $matches as $match ) {
 			$json = json_decode( $match[1] );
 
-			$result = AECToolbox::resolveJSONitem( $json, $rewrite );
+			$result = AECToolbox::resolveJSONitem( $json, $rewrite, $metaUser );
 
 			$subject =  str_replace( $match, $result, $subject );
 		}
@@ -8049,7 +8049,7 @@ class AECToolbox
 		return $result;
 	}
 
-	function resolveJSONitem( $current, $rewrite )
+	function resolveJSONitem( $current, $rewrite, $metaUser )
 	{
 		if ( is_object( $current ) ) {
 			if ( !isset( $current->cmd ) || !isset( $current->vars ) ) {
@@ -8062,7 +8062,7 @@ class AECToolbox
 
 			$variables = AECToolbox::resolveJSONitem( $variables, $rewrite );
 
-			$current = AECToolbox::executeCommand( $command, $variables, $rewrite );
+			$current = AECToolbox::executeCommand( $command, $variables, $rewrite, $metaUser );
 
 		} elseif ( is_array( $current ) ) {
 			foreach( $current as $id => $item ) {
@@ -8073,7 +8073,7 @@ class AECToolbox
 		return $current;
 	}
 
-	function executeCommand( $command, $vars, $rewrite )
+	function executeCommand( $command, $vars, $rewrite, $metaUser )
 	{
 		$result = '';
 		switch( $command ) {
@@ -8082,9 +8082,29 @@ class AECToolbox
 					$result = $rewrite[$vars];
 				}
 				break;
-			case 'meta':
-				if ( isset( $vars[3] ) ) {
-					$metaUser->meta->$vars[0]->$vars[1]->$vars[2]
+			case 'metaUser':
+				if ( !is_object( $metaUser ) ) {
+					return false;
+				}
+
+				// We also support dot notation for the vars,
+				// so explode if that is what the admin wants here
+				if ( !is_array( $vars ) && ( strpos( '.', $vars ) !== false ) ) {
+					$temp = explode( '.', $vars );
+				}
+
+				// Start with the metaUser
+				$result = $metaUser;
+
+				// Iterate through the metaUser Object until we run out of stages
+				foreach ( $vars as $i => $var ) {
+					if ( is_object( $result ) ) {
+						$temp = $result->$var;
+						$result = $temp;
+					} elseif ( is_array( $result ) ) {
+						$temp = $result[$var];
+						$result = $temp;
+					}
 				}
 				break;
 			case 'constant':
