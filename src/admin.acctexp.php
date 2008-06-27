@@ -918,7 +918,7 @@ function editUser(  $option, $userid, $subscriptionid, $task )
 
 		$status = 'uncleared';
 
-		$params = $invoice->getParams();
+		$params = $invoice->params;
 		if ( isset( $params['deactivated'] ) ) {
 			$status = 'deactivated';
 		} elseif ( isset( $params['pending_reason'] ) ) {
@@ -1749,7 +1749,7 @@ function editSettings( $option )
 	}
 
 	if ( !empty( $aecConfig->cfg['milist'] ) ) {
-		$milist = explode( ';', $aecConfig->cfg['milist'] );
+		$milist = $aecConfig->cfg['milist'];
 		$selected_mis = array();
 		foreach ( $milist as $mi_name ) {
 			$selected_mis[]->value = $mi_name;
@@ -1897,6 +1897,7 @@ function editSettings( $option )
 	$gw_list_html[]			= mosHTML::makeOption( 'none', _AEC_CMN_NONE_SELECTED );
 	$gw_list_enabled_html[] = mosHTML::makeOption( 'none', _AEC_CMN_NONE_SELECTED );
 
+	// TODO: Deprecated key: gwlist
 	if ( !empty( $aecConfig->cfg['gwlist'] ) ) {
 		$desc_list = explode( ';', $aecConfig->cfg['gwlist'] );
 	} else {
@@ -2171,11 +2172,7 @@ function saveSettings( $option, $return=0 )
 						}
 					}
 
-					if ( is_array( $_POST[$postname] ) ) {
-						$pp->settings[$name] = implode( ';', $_POST[$postname] );
-					} else {
-						$pp->settings[$name] = $_POST[$postname];
-					}
+					$pp->settings[$name] = $_POST[$postname];
 					unset( $_POST[$postname] );
 				}
 			}
@@ -2194,11 +2191,7 @@ function saveSettings( $option, $return=0 )
 	$general_settings = array();
 
 	foreach ( $_POST as $name => $value ) {
-		if ( is_array( $value ) ) {
-			$general_settings[$name] = implode( ';', $value );
-		} else {
-			$general_settings[$name] = $value;
-		}
+		$general_settings[$name] = $value;
 	}
 
 	$diff = $aecConfig->diffParams($general_settings, 'settings');
@@ -2329,9 +2322,9 @@ function editSubscriptionPlan( $id, $option )
 		$restrictions_values['gid_enabled']	= 1;
 		$restrictions_values['gid']			= 18;
 	} else {
-		$params_values = $row->getParams( 'params' );
-		$restrictions_values = $row->getParams( 'restrictions' );
-		$customparams_values = $row->getParams( 'custom_params' );
+		$params_values = $row->params;
+		$restrictions_values = $row->restrictions;
+		$customparams_values = $row->custom_params;
 
 		// We need to convert the values that are set as object properties
 		$params_values['active']				= $row->active;
@@ -2463,7 +2456,7 @@ function editSubscriptionPlan( $id, $option )
 
 	$pps = PaymentProcessorHandler::getInstalledObjectList( 1 );
 
-	$plan_procs = explode(";", $params_values['processors']);
+	$plan_procs = $params_values['processors'];
 
 	$firstarray = array();
 	$secndarray = array();
@@ -2652,7 +2645,7 @@ function editSubscriptionPlan( $id, $option )
 	if ( !empty( $params_values['similarplans'] ) ) {
 		$query = 'SELECT `id` AS value, `name` As text'
 				. ' FROM #__acctexp_plans'
-				. ' WHERE `id` IN (' . implode( ',', explode( ';', $params_values['similarplans'] ) ) .')'
+				. ' WHERE `id` IN (' . implode( ',', $params_values['similarplans'] ) .')'
 				;
 		$database->setQuery( $query );
 
@@ -2667,7 +2660,7 @@ function editSubscriptionPlan( $id, $option )
 	if ( !empty( $params_values['equalplans'] ) ) {
 		$query = 'SELECT `id` AS value, `name` AS text'
 				. ' FROM #__acctexp_plans'
-				. ' WHERE `id` IN (' . implode( ',', explode( ';', $params_values['equalplans'] ) ) .')'
+				. ' WHERE `id` IN (' . implode( ',', $params_values['equalplans'] ) .')'
 				;
 		$database->setQuery( $query );
 
@@ -2725,7 +2718,7 @@ function editSubscriptionPlan( $id, $option )
 	if ( strlen( $row->micro_integrations ) > 0 ) {
 		$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
 				. ' FROM #__acctexp_microintegrations'
-				. ' WHERE `id` IN (' . implode( ',', explode( ';', $row->micro_integrations ) ) . ')'
+				. ' WHERE `id` IN (' . implode( ',', json_decode( $row->micro_integrations ) ) . ')'
 				;
 	 	$database->setQuery( $query );
 		$selected_mi = $database->loadObjectList();
@@ -2960,7 +2953,7 @@ function editMicroIntegration ( $id, $option )
 		$mi_htmllist	= array();
 
 		if ( $aecConfig->cfg['milist'] ) {
-			$mi_list = explode( ';', $aecConfig->cfg['milist'] );
+			$mi_list = $aecConfig->cfg['milist'];
 		}
 
 		if ( count( $mi_list ) > 0 ) {
@@ -3207,9 +3200,9 @@ function editCoupon( $id, $option, $new, $type )
 		$cph->coupon = new Coupon($database, $type);
 		$cph->coupon->load( $id );
 
-		$params_values			= $cph->coupon->getParams( 'params' );
-		$discount_values		= $cph->coupon->getParams( 'discount' );
-		$restrictions_values	= $cph->coupon->getParams( 'restrictions' );
+		$params_values			= $cph->coupon->params;
+		$discount_values		= $cph->coupon->discount;
+		$restrictions_values	= $cph->coupon->restrictions;
 	} else {
 		$cph->coupon = new coupon($database, 1);
 		$cph->coupon->createNew();
@@ -3348,7 +3341,7 @@ function editCoupon( $id, $option, $new, $type )
 	if ( !empty( $restrictions_values['usage_plans'] ) ) {
 		$query = 'SELECT `id` AS value, `name` as text'
 				. ' FROM #__acctexp_plans'
-				. ' WHERE `id` IN (' . implode( ',', explode( ';', $restrictions_values['usage_plans'] ) ) . ')'
+				. ' WHERE `id` IN (' . implode( ',', $restrictions_values['usage_plans'] ) . ')'
 				;
 		$database->setQuery( $query );
 
@@ -3398,14 +3391,14 @@ function editCoupon( $id, $option, $new, $type )
 	if ( !empty( $restrictions_values['bad_combinations'] ) ) {
 		$query = 'SELECT `coupon_codev` as value, `coupon_code` as text'
 				. ' FROM #__acctexp_coupons'
-				. ' WHERE `coupon_code` IN (\'' . implode( '\',\'', explode( ';', $restrictions_values['bad_combinations'] ) ) . '\')'
+				. ' WHERE `coupon_code` IN (\'' . implode( '\',\'', $restrictions_values['bad_combinations'] ) . '\')'
 				;
 		$database->setQuery( $query );
 		$sel_coupons = $database->loadObjectList();
 
 		$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
 				. ' FROM #__acctexp_coupons_static'
-				. ' WHERE `coupon_code` IN (\'' . implode( '\',\'', explode( ';', $restrictions_values['bad_combinations'] ) ) . '\')'
+				. ' WHERE `coupon_code` IN (\'' . implode( '\',\'', $restrictions_values['bad_combinations'] ) . '\')'
 				;
 		$database->setQuery( $query );
 		$sel_coupons = array_merge( $database->loadObjectList(), $sel_coupons );
@@ -4865,9 +4858,9 @@ function exportData( $option, $cmd=null )
 			$row->save( $system_values->save_name, $filter_values, $options_values, $params_values );
 		}  elseif ( $cmd_load || ( ( $postfields <= 5 ) && $cmd_export )  ) {
 			// User wants to load an entry
-			$filter_values = $row->getParams( 'filter' );
-			$options_values = $row->getParams( 'options' );
-			$params_values = $row->getParams();
+			$filter_values = $row->filter;
+			$options_values = $row->options;
+			$params_values = $row->params;
 			$pname = $row->name;
 			$use_original = 1;
 		}

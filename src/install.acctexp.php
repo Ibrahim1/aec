@@ -302,11 +302,14 @@ function com_install()
 	$set = $database->loadResult();
 
 	$jsonupdate = false;
-	if ( strpos( $set, '{' ) !== 0 ) {
+	if ( ( strpos( $set, '{' ) !== 0 ) && !empty( $set ) ) {
 		$settings = parameterHandler::decode( $set );
 
+		$temp = explode( ';', $settings['milist'] );
+		$settings['milist'] = $temp;
+
 		$query = 'UPDATE #__acctexp_config'
-		. ' SET `settings` = \'' . jsoonHandler::encode( $settings ) . '\''
+		. ' SET `settings` = \'' . $database->getEscaped( jsoonHandler::encode( $settings ) ) . '\''
 		. ' WHERE `id` = \'1\''
 		;
 		$database->setQuery( $query );
@@ -316,7 +319,7 @@ function com_install()
 	}
 
 	require_once( $mainframe->getPath( 'class', 'com_acctexp' ) );
-
+print_r($mainframe);exit;
 	// Update routine 0.3.0 -> 0.6.0
 	$tables	= array();
 	$tables	= $database->getTableList();
@@ -1074,21 +1077,23 @@ function com_install()
 		$pp->setSettings();
 		$pp->setInfo();
 	}
-
+$jsonupdate = true;
 	// Update database fields to JSONized fields
 	if ( $jsonupdate ) {
-		$updates = array(	'eventLog' => 'eventlog',
-							'processor' => 'processor',
-							'SubscriptionPlan' => 'plans',
-							'Invoice' => 'Invoice',
-							'Subscription' => 'subscr',
-							'microIntegration' => 'microintegrations',
-							'coupon' => 'coupons',
-							'coupon' => 'coupons_static'
+		$updates = array(	'displayPipeline' => array( 'displaypipeline', array( 'params' => array('displayedto') ) ),
+							'eventLog' => array( 'eventlog', array( 'info' => array('actions') ) ),
+							'processor' => array( 'processor', array() ),
+							'SubscriptionPlan' => array( 'plans', array( 'params' => array('similarplans','equalplans','processors'), 'micro_integrations' => array('_self') ) ),
+							'Invoice' => array( 'Invoice', array( 'coupons' => array('_self'), 'micro_integrations' => array('_self') ) ),
+							'Subscription' => array( 'subscr', array() ),
+							'microIntegration' => array( 'microintegrations', array() ),
+							'coupon' => array( 'coupons', array( 'restrictions' => array('bad_combinations','usage_plans') ) ),
+							'coupon' => array( 'coupons_static', array( 'restrictions' => array('bad_combinations','usage_plans') ) )
 							);
 
-		foreach ( $updates as $classname => $dbtable ) {
+		foreach ( $updates as $classname => $ucontent ) {
 			$function = $classname . '::declareJSONfields()';
+			$dbtable = $ucontent[0];
 
 			$jsondeclare = $function();
 
@@ -1132,6 +1137,21 @@ function com_install()
 				foreach ( $dec as $fieldname ) {
 					// Decode from newline separated variables
 					$temp = parameterHandler::decode( $object->$fieldname );
+
+					if ( !empty( $ucontent[1] ) ) {
+						if ( isset( $ucontent[1][$fieldname] ) ) {
+							if ( isset( $ucontent[1][$fieldname]['_self'] ) ) {
+								$temp2 = explode( ';', $temp );
+								$temp = $temp2;
+							} else {
+								foreach ( $temp as $key => $value ) {
+									if ( in_array( $key, $ucontent[1][$fieldname] ) ) {
+										$temp[$key] = explode( ';', $value );
+									}
+								}
+							}
+						}
+					}
 
 					// Make sure to capture exceptions
 					if ( ( $dbtable == 'subscr' ) && ( $fieldname == 'userid' ) ) {
@@ -1196,7 +1216,7 @@ function com_install()
 						unset( $object->used_plans );
 					} else {
 						// ...To JSOON based notation
-						$sets[] = '`' . $fieldname . '` = \'' . jsoonHandler::encode( $temp ) . '\'';
+						$sets[] = '`' . $fieldname . '` = \'' . $database->getEscaped( jsoonHandler::encode( $temp ) ) . '\'';
 					}
 				}
 
@@ -1205,7 +1225,7 @@ function com_install()
 				$query = 'UPDATE #__acctexp_' . $dbtable
 				. ' SET ' . implode( ' AND ', $sets ) . ''
 				. ' WHERE `id` = \'' . $id . '\''
-				;
+				;print_r($query);exit;
 				$database->setQuery( $query );
 				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );

@@ -219,25 +219,22 @@ class metaUser
 	function getTempAuth()
 	{
 		$return = false;
-		$params = array();
 
 		// Get params either from the subscription or from the _user entry
-		if ( $this->hasSubscription ) {
-			$params = $this->objSubscription->getParams();
-		} else {
+		if ( !$this->hasSubscription ) {
 			if ( is_object( $this->cmsUser ) ) {
 				$par = explode( "\n", $this->cmsUser->params );
 
 				foreach ( $par as $chunk ) {
 					$k = explode( '=', $chunk, 2 );
-					$params[$k[0]] = isset( $k[1] ) ? trim( $k[1] ) : '';
+					$this->objSubscription->params[$k[0]] = isset( $k[1] ) ? trim( $k[1] ) : '';
 				}
 			}
 		}
 
 		// Only authorize if user IP is matching and the grant is not expired
-		if ( isset( $params['tempauth_exptime'] ) && isset( $params['tempauth_ip'] ) ) {
-			if ( ( $params['tempauth_ip'] == $_SERVER['REMOTE_ADDR'] ) && ( $params['tempauth_exptime'] >= time() ) ) {
+		if ( isset( $this->objSubscription->params['tempauth_exptime'] ) && isset( $this->objSubscription->params['tempauth_ip'] ) ) {
+			if ( ( $this->objSubscription->params['tempauth_ip'] == $_SERVER['REMOTE_ADDR'] ) && ( $this->objSubscription->params['tempauth_exptime'] >= time() ) ) {
 				return true;
 			}
 		}
@@ -373,7 +370,7 @@ class metaUser
 	{
 		global $database;
 
-		$plan_params = $payment_plan->getParams();
+		$plan_params = $payment_plan->params;
 
 		// Check whether a record exists
 		if ( $this->hasSubscription ) {
@@ -1025,11 +1022,10 @@ class Config_General extends jsonDBTable
 		// Temporarily unset this array as there is no database field called cfg
 		unset( $this->cfg );
 
-		$this->check();
-		$this->store();
+		$this->storeload();
 
 		// Reload Settings
-		$this->cfg = $this->getParams( 'settings' );
+		$this->cfg = $this->settings;
 
 		return true;
 	}
@@ -1043,15 +1039,13 @@ class Config_General extends jsonDBTable
 			$this->load(1);
 		}
 
-		$this->setParams( $this->cfg, 'settings' );
-
 		unset( $this->cfg );
 
 		$this->check();
 		$this->store();
 
 		// Reload Settings
-		$this->cfg = $this->getParams( 'settings' );
+		$this->cfg =& $this->settings;
 	}
 
 	function RowDuplicationCheck()
@@ -1311,7 +1305,7 @@ class aecHeartbeat extends mosDBTable
 							. ' WHERE `id` = \'' . $plan_id . '\''
 							;
 					$database->setQuery( $query );
-					$plan_mis = explode( ';', $database->loadResult() );
+					$plan_mis = json_decode( $database->loadResult() );
 					$pexp_mis = array_intersect( $plan_mis, $mi_pexp );
 
 					if ( count( $pexp_mis ) ) {
@@ -1338,7 +1332,7 @@ class aecHeartbeat extends mosDBTable
 							// Its ok - load the plan
 							$subscription_plan = new SubscriptionPlan( $database );
 							$subscription_plan->load( $metaUser->focusSubscription->plan );
-							$userplan_mis = explode( ';', $subscription_plan->micro_integrations );
+							$userplan_mis = json_decode( $subscription_plan->micro_integrations );
 
 							// Get the right MIs
 							$user_pexpmis = array_intersect( $userplan_mis, $mi_pexp );
@@ -1459,16 +1453,15 @@ class displayPipelineHandler
 
 				// If this can only be displayed once per user, prevent it from being displayed again
 				if ( $displayPipeline->once_per_user ) {
-					$params = $displayPipeline->getParams();
+					$params = $displayPipeline->params;
 
-					if ( isset( $params['displayedto'] ) ) {
-						$users = explode( ';', $params['displayedto'] );
+					if ( isset( $displayPipeline->params['displayedto'] ) ) {
+						$users = $displayPipeline->params['displayedto'];
 						if ( in_array( $userid, $users ) ) {
 							continue;
 						} else {
 							$users[] = $userid;
-							$params['displayedto'] = implode( ';', $users );
-							$displayPipeline->setParams( $params );
+							$displayPipeline->params['displayedto'] = $users;
 						}
 					}
 				}
@@ -1492,7 +1485,7 @@ class displayPipelineHandler
 	}
 }
 
-class displayPipeline extends paramDBTable
+class displayPipeline extends jsonDBTable
 {
 	/** @var int Primary key */
 	var $id				= null;
@@ -1525,6 +1518,11 @@ class displayPipeline extends paramDBTable
 	 	$this->mosDBTable( '#__acctexp_displaypipeline', 'id', $db );
 	}
 
+	function declareJSONfields()
+	{
+		return array( 'params' );
+	}
+
 	function create( $userid, $only_user, $once_per_user, $expire, $expiration, $displaymax, $displaytext, $params=null )
 	{
 		global $mosConfig_offset;
@@ -1548,7 +1546,7 @@ class displayPipeline extends paramDBTable
 		}
 
 		if ( is_array( $params ) ) {
-			$this->setParams( $params );
+			$this->params = $params;
 		}
 
 		$this->check();
@@ -1673,7 +1671,7 @@ class eventLog extends paramDBTable
 		}
 
 		if ( !empty( $params ) && is_array( $params ) ) {
-			$this->setParams( $params );
+			$this->params = $params;
 		}
 
 		$this->check();
@@ -1870,8 +1868,8 @@ class PaymentProcessor
 		$this->processor->active	= 1;
 
 		// Set values from defaults and store
-		$this->processor->setParams( $this->info, 'info' );
-		$this->processor->setParams( $this->settings, 'settings' );
+		$this->processor->info = $this->info;
+		$this->processor->settings = $this->settings;
 		$this->processor->check();
 		$this->processor->store();
 
@@ -1887,7 +1885,7 @@ class PaymentProcessor
 
 	function getInfo()
 	{
-		$this->info	= $this->processor->getParams( 'info' );
+		$this->info	= $this->processor->info;
 		$original	= $this->processor->info();
 
 		foreach ( $original as $name => $var ) {
@@ -1901,7 +1899,7 @@ class PaymentProcessor
 
 	function getSettings()
 	{
-		$this->settings	= $this->processor->getParams( 'settings' );
+		$this->settings	= $this->processor->settings;
 		$original		= $this->processor->settings();
 
 		if ( !isset( $this->settings['recurring'] ) && is_int( $this->is_recurring() ) ) {
@@ -1934,9 +1932,8 @@ class PaymentProcessor
 	{
 		// Test if values really are an array and write them to db
 		if ( is_array( $this->settings ) ) {
-			$this->processor->setParams( $this->settings, 'settings' );
-			$this->processor->check();
-			$this->processor->store();
+			$this->processor->settings = $this->settings;
+			$this->processor->storeload();
 		}
 	}
 
@@ -2000,9 +1997,8 @@ class PaymentProcessor
 	{
 		// Test if values really are an array and write them to db
 		if ( is_array( $this->info ) ) {
-			$this->processor->setParams( $this->info, 'info' );
-			$this->processor->check();
-			$this->processor->store();
+			$this->processor->info = $this->info;
+			$this->processor->storeload();
 		}
 	}
 
@@ -3432,13 +3428,11 @@ class SubscriptionPlan extends jsonDBTable
 		if ( $userid ) {
 			$metaUser = new metaUser( $userid );
 
-			$params			= $this->getParams();
-
-			if ( !isset( $params['make_primary'] ) ) {
-				$params['make_primary'] = 1;
+			if ( !isset( $this->params['make_primary'] ) ) {
+				$this->params['make_primary'] = 1;
 			}
 
-			if ( !$metaUser->hasSubscription || empty( $params['make_primary'] ) ) {
+			if ( !$metaUser->hasSubscription || empty( $this->params['make_primary'] ) ) {
 				$metaUser->establishFocus( $this, $processor );
 
 				$is_pending		= true;
@@ -3459,25 +3453,25 @@ class SubscriptionPlan extends jsonDBTable
 
 			if ( ( $comparison['total_comparison'] === false ) || $is_pending ) {
 				// If user is using global trial period he still can use the trial period of a plan
-				if ( ( $params['trial_period'] > 0 ) && !$is_trial ) {
+				if ( ( $this->params['trial_period'] > 0 ) && !$is_trial ) {
 					$trial		= true;
-					$value		= $params['trial_period'];
-					$perunit	= $params['trial_periodunit'];
-					$params['lifetime']	= 0; // We are entering the trial period. The lifetime will come at the renew.
+					$value		= $this->params['trial_period'];
+					$perunit	= $this->params['trial_periodunit'];
+					$this->params['lifetime']	= 0; // We are entering the trial period. The lifetime will come at the renew.
 				} else {
 					$trial		= false;
-					$value		= $params['full_period'];
-					$perunit	= $params['full_periodunit'];
+					$value		= $this->params['full_period'];
+					$perunit	= $this->params['full_periodunit'];
 				}
 			} elseif ( !$is_pending ) {
 				$trial		= false;
-				$value		= $params['full_period'];
-				$perunit	= $params['full_periodunit'];
+				$value		= $this->params['full_period'];
+				$perunit	= $this->params['full_periodunit'];
 			} else {
 				return false;
 			}
 
-			if ( $params['lifetime'] || ( strcmp( $multiplicator, 'lifetime' ) === 0 ) ) {
+			if ( $this->params['lifetime'] || ( strcmp( $multiplicator, 'lifetime' ) === 0 ) ) {
 				$metaUser->focusSubscription->expiration = '9999-12-31 00:00:00';
 				$metaUser->focusSubscription->lifetime = 1;
 			} else {
@@ -3495,14 +3489,14 @@ class SubscriptionPlan extends jsonDBTable
 			if ( $is_pending ) {
 				// Is new = set signup date
 				$metaUser->focusSubscription->signup_date = date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
-				if ( $params['trial_period'] > 0 && !$is_trial ) {
+				if ( $this->params['trial_period'] > 0 && !$is_trial ) {
 					$status = 'Trial';
 				} else {
-					if ( $params['full_period'] || $params['lifetime'] ) {
-						if ( !isset( $params['make_active'] ) ) {
+					if ( $this->params['full_period'] || $this->params['lifetime'] ) {
+						if ( !isset( $this->params['make_active'] ) ) {
 							$status = 'Active';
 						} else {
-							$status = ( $params['make_active'] ? 'Active' : 'Pending' );
+							$status = ( $this->params['make_active'] ? 'Active' : 'Pending' );
 						}
 					} else {
 						// This should not happen
@@ -3511,10 +3505,10 @@ class SubscriptionPlan extends jsonDBTable
 				}
 			} else {
 				// Renew subscription - Do NOT set signup_date
-				if ( !isset( $params['make_active'] ) ) {
+				if ( !isset( $this->params['make_active'] ) ) {
 					$status = $trial ? 'Trial' : 'Active';
 				} else {
-					$status = ( $params['make_active'] ? ( $trial ? 'Trial' : 'Active' ) : 'Pending' );
+					$status = ( $this->params['make_active'] ? ( $trial ? 'Trial' : 'Active' ) : 'Pending' );
 				}
 				$renew = 1;
 			}
@@ -3529,11 +3523,9 @@ class SubscriptionPlan extends jsonDBTable
 			$metaUser->focusSubscription->params = '';
 
 			if ( is_object( $invoice ) ) {
-				$invoice_params	= $invoice->getParams();
-
-				if ( !empty( $invoice_params ) ) {
+				if ( !empty( $invoice->params ) ) {
 					$tempparam = array();
-					foreach ( $invoice_params as $key => $value ) {
+					foreach ( $invoice->params as $key => $value ) {
 						if ( strpos( $key, 'tempsubstore_' ) === 0 ) {
 							$tempparam[str_replace( 'tempsubstore_', '', $key )] = $value;
 						}
@@ -3588,8 +3580,8 @@ class SubscriptionPlan extends jsonDBTable
 		}
 
 		if ( $userid ) {
-			if ( $params['gid_enabled'] ) {
-				$metaUser->instantGIDchange($params['gid']);
+			if ( $this->params['gid_enabled'] ) {
+				$metaUser->instantGIDchange($this->params['gid']);
 			}
 
 			$metaUser->focusSubscription->check();
@@ -3624,55 +3616,54 @@ class SubscriptionPlan extends jsonDBTable
 
 		$var		= null;
 		$free_trial = 0;
-		$params		= $this->getParams();
 
 		if ( !empty( $recurring ) ) {
 			$amount = array();
 
 			// Only Allow a Trial when the User is coming from a different PlanGroup or is new
-			if ( ( $plans_comparison === false ) && ( $plans_comparison_total === false ) && !empty( $params['trial_period'] ) ) {
-				if ( $params['trial_free'] ) {
+			if ( ( $plans_comparison === false ) && ( $plans_comparison_total === false ) && !empty( $this->params['trial_period'] ) ) {
+				if ( $this->params['trial_free'] ) {
 					$amount['amount1'] = '0.00';
 					$free_trial = 1;
 				} else {
-					$amount['amount1']	= $params['trial_amount'];
+					$amount['amount1']	= $this->params['trial_amount'];
 				}
-				$amount['period1']	= $params['trial_period'];
-				$amount['unit1']	= $params['trial_periodunit'];
+				$amount['period1']	= $this->params['trial_period'];
+				$amount['unit1']	= $this->params['trial_periodunit'];
 			}
 
-			if ( $params['full_free'] ) {
+			if ( $this->params['full_free'] ) {
 				$amount['amount3'] = '0.00';
 			} else {
-				$amount['amount3']	= $params['full_amount'];
+				$amount['amount3']	= $this->params['full_amount'];
 			}
 
-			$amount['period3']		= $params['full_period'];
-			$amount['unit3']		= $params['full_periodunit'];
+			$amount['period3']		= $this->params['full_period'];
+			$amount['unit3']		= $this->params['full_periodunit'];
 		} else {
-			if ( !$params['trial_period'] && $params['full_free'] && $params['trial_free'] ) {
+			if ( !$this->params['trial_period'] && $this->params['full_free'] && $this->params['trial_free'] ) {
 				$amount = '0.00';
 			} else {
 				if ( ( $plans_comparison === false ) && ( $plans_comparison_total === false ) ) {
-					if ( !$is_trial && !empty($params['trial_period']) ) {
-						if ( $params['trial_free'] ) {
+					if ( !$is_trial && !empty($this->params['trial_period']) ) {
+						if ( $this->params['trial_free'] ) {
 							$amount = '0.00';
 							$free_trial = 1;
 						} else {
-							$amount = $params['trial_amount'];
+							$amount = $this->params['trial_amount'];
 						}
 					} else {
-						if ( $params['full_free'] ) {
+						if ( $this->params['full_free'] ) {
 							$amount = '0.00';
 						} else {
-							$amount = $params['full_amount'];
+							$amount = $this->params['full_amount'];
 						}
 					}
 				} else {
-					if ( $params['full_free'] ) {
+					if ( $this->params['full_free'] ) {
 						$amount = '0.00';
 					} else {
-						$amount = $params['full_amount'];
+						$amount = $this->params['full_amount'];
 					}
 				}
 			}
@@ -3701,7 +3692,6 @@ class SubscriptionPlan extends jsonDBTable
 			if ( $user_subscription->used_plans ) {
 				$used_plans			= explode( ';', $user_subscription->used_plans );
 				$plans_comparison	= false;
-				$thisparams			= $this->getParams();
 
 				if ( is_array( $used_plans ) ) {
 					foreach ( $used_plans as $used_plan_id ) {
@@ -3723,7 +3713,7 @@ class SubscriptionPlan extends jsonDBTable
 
 							if ( $this->id === $used_subscription->id ) {
 								$used_comparison = 2;
-							} elseif ( empty( $thisparams['similarplans'] ) && empty( $thisparams['equalplans'] ) ) {
+							} elseif ( empty( $this->params['similarplans'] ) && empty( $this->params['equalplans'] ) ) {
 								$used_comparison = false;
 							} else {
 								$used_comparison = $this->compareToPlan( $used_subscription );
@@ -3754,30 +3744,27 @@ class SubscriptionPlan extends jsonDBTable
 
 	function compareToPlan( $plan )
 	{
-		$thisparams = $this->getParams();
-		$planparams = $plan->getParams();
-
-		if ( !isset( $thisparams['similarplans'] ) ) {
-			$thisparams['similarplans'] = '';
+		if ( !isset( $this->params['similarplans'] ) ) {
+			$this->params['similarplans'] = '';
 		}
 
-		if ( !isset( $planparams['similarplans'] ) ) {
-			$planparams['similarplans'] = '';
+		if ( !isset( $plan->params['similarplans'] ) ) {
+			$plan->params['similarplans'] = '';
 		}
 
-		if ( !isset( $thisparams['equalplans'] ) ) {
-			$thisparams['equalplans'] = '';
+		if ( !isset( $this->params['equalplans'] ) ) {
+			$this->params['equalplans'] = '';
 		}
 
-		if ( !isset( $planparams['equalplans'] ) ) {
-			$planparams['equalplans'] = '';
+		if ( !isset( $plan->params['equalplans'] ) ) {
+			$plan->params['equalplans'] = '';
 		}
 
-		$spg1		= explode( ';', $thisparams['similarplans'] );
-		$spg2		= explode( ';', $planparams['similarplans'] );
+		$spg1	= $this->params['similarplans'];
+		$spg2	= $plan->params['similarplans'];
 
-		$epg1		= explode( ';', $thisparams['equalplans'] );
-		$epg2		= explode( ';', $planparams['equalplans'] );
+		$epg1	= $this->params['equalplans'];
+		$epg2	= $plan->params['equalplans'];
 
 		if ( in_array( $this->id, $epg2 ) || in_array( $plan->id, $epg1 ) ) {
 			return 2;
@@ -3855,7 +3842,7 @@ class SubscriptionPlan extends jsonDBTable
 	function getMicroIntegrations()
 	{
 		if ( !empty( $this->micro_integrations ) ) {
-			$mis = explode( ';', $this->micro_integrations );
+			$mis = json_decode( $this->micro_integrations );
 
 			$query = 'SELECT `id`'
 					. ' FROM #__acctexp_microintegrations'
@@ -3873,11 +3860,9 @@ class SubscriptionPlan extends jsonDBTable
 
 	function getProcessorParameters( $processorid )
 	{
-		$params = $this->getParams( 'custom_params' );
-
 		$procparams = array();
-		if ( !empty( $params ) ) {
-			foreach ( $params as $name => $value ) {
+		if ( !empty( $this->custom_params ) ) {
+			foreach ( $this->custom_params as $name => $value ) {
 				$realname = explode( '_', $name, 2 );
 
 				if ( $realname[0] == $processorid ) {
@@ -3891,86 +3876,84 @@ class SubscriptionPlan extends jsonDBTable
 
 	function getRestrictionsArray()
 	{
-		$restrictions = $this->getParams( 'restrictions' );
-
 		$planrestrictions = array();
 
 		// Check for a fixed GID - this certainly overrides the others
-		if ( !empty( $restrictions['fixgid_enabled'] ) ) {
-			$planrestrictions['fixgid'] = (int) $restrictions['fixgid'];
+		if ( !empty( $this->restrictions['fixgid_enabled'] ) ) {
+			$planrestrictions['fixgid'] = (int) $this->restrictions['fixgid'];
 		} else {
 			// No fixed GID, check for min GID
-			if ( !empty( $restrictions['mingid_enabled'] ) ) {
-				$planrestrictions['mingid'] = (int) $restrictions['mingid'];
+			if ( !empty( $this->restrictions['mingid_enabled'] ) ) {
+				$planrestrictions['mingid'] = (int) $this->restrictions['mingid'];
 			}
 			// Check for max GID
-			if ( !empty( $restrictions['maxgid_enabled'] ) ) {
-				$planrestrictions['maxgid'] = (int) $restrictions['maxgid'];
+			if ( !empty( $this->restrictions['maxgid_enabled'] ) ) {
+				$planrestrictions['maxgid'] = (int) $this->restrictions['maxgid'];
 			}
 		}
 
 		// Check for a directly previously used plan
-		if ( !empty( $restrictions['previousplan_req_enabled'] ) ) {
-			if ( isset( $restrictions['previousplan_req'] ) ) {
-				$planrestrictions['plan_previous'] = $restrictions['previousplan_req'];
+		if ( !empty( $this->restrictions['previousplan_req_enabled'] ) ) {
+			if ( isset( $this->restrictions['previousplan_req'] ) ) {
+				$planrestrictions['plan_previous'] = $this->restrictions['previousplan_req'];
 			}
 		}
 
 		// Check for a currently used plan
-		if ( !empty( $restrictions['currentplan_req_enabled'] ) ) {
-			if ( isset( $restrictions['currentplan_req'] ) ) {
-				$planrestrictions['plan_present'] = $restrictions['currentplan_req'];
+		if ( !empty( $this->restrictions['currentplan_req_enabled'] ) ) {
+			if ( isset( $this->restrictions['currentplan_req'] ) ) {
+				$planrestrictions['plan_present'] = $this->restrictions['currentplan_req'];
 			}
 		}
 
 		// Check for a overall used plan
-		if ( !empty( $restrictions['overallplan_req_enabled'] ) ) {
-			if ( isset( $restrictions['overallplan_req'] ) ) {
-				$planrestrictions['plan_overall'] = $restrictions['overallplan_req'];
+		if ( !empty( $this->restrictions['overallplan_req_enabled'] ) ) {
+			if ( isset( $this->restrictions['overallplan_req'] ) ) {
+				$planrestrictions['plan_overall'] = $this->restrictions['overallplan_req'];
 			}
 		}
 
 		// Check for a directly previously used plan
-		if ( !empty( $restrictions['previousplan_req_enabled_excluded'] ) ) {
-			if ( isset( $restrictions['previousplan_req_excluded'] ) ) {
-				$planrestrictions['plan_previous_excluded'] = $restrictions['previousplan_req_excluded'];
+		if ( !empty( $this->restrictions['previousplan_req_enabled_excluded'] ) ) {
+			if ( isset( $this->restrictions['previousplan_req_excluded'] ) ) {
+				$planrestrictions['plan_previous_excluded'] = $this->restrictions['previousplan_req_excluded'];
 			}
 		}
 
 		// Check for a currently used plan
-		if ( !empty( $restrictions['currentplan_req_enabled_excluded'] ) ) {
-			if ( isset( $restrictions['currentplan_req_excluded'] ) ) {
-				$planrestrictions['plan_present_excluded'] = $restrictions['currentplan_req_excluded'];
+		if ( !empty( $this->restrictions['currentplan_req_enabled_excluded'] ) ) {
+			if ( isset( $this->restrictions['currentplan_req_excluded'] ) ) {
+				$planrestrictions['plan_present_excluded'] = $this->restrictions['currentplan_req_excluded'];
 			}
 		}
 
 		// Check for a overall used plan
-		if ( !empty( $restrictions['overallplan_req_enabled_excluded'] ) ) {
-			if ( isset( $restrictions['overallplan_req_excluded'] ) ) {
-				$planrestrictions['plan_overall_excluded'] = $restrictions['overallplan_req_excluded'];
+		if ( !empty( $this->restrictions['overallplan_req_enabled_excluded'] ) ) {
+			if ( isset( $this->restrictions['overallplan_req_excluded'] ) ) {
+				$planrestrictions['plan_overall_excluded'] = $this->restrictions['overallplan_req_excluded'];
 			}
 		}
 
 		// Check for a overall used plan with amount minimum
-		if ( !empty( $restrictions['used_plan_min_enabled'] ) ) {
-			if ( isset( $restrictions['used_plan_min_amount'] ) && isset( $restrictions['used_plan_min'] ) ) {
-				$planrestrictions['plan_amount_min'] = ( (int) $restrictions['used_plan_min'] )
-				. ',' . ( (int) $restrictions['used_plan_min_amount'] );
+		if ( !empty( $this->restrictions['used_plan_min_enabled'] ) ) {
+			if ( isset( $this->restrictions['used_plan_min_amount'] ) && isset( $this->restrictions['used_plan_min'] ) ) {
+				$planrestrictions['plan_amount_min'] = ( (int) $this->restrictions['used_plan_min'] )
+				. ',' . ( (int) $this->restrictions['used_plan_min_amount'] );
 			}
 		}
 
 		// Check for a overall used plan with amount maximum
-		if ( !empty( $restrictions['used_plan_max_enabled'] ) ) {
-			if ( isset( $restrictions['used_plan_max_amount'] ) && isset( $restrictions['used_plan_max'] ) ) {
-				$planrestrictions['plan_amount_max'] = ( (int) $restrictions['used_plan_max'] )
-				. ',' . ( (int) $restrictions['used_plan_max_amount'] );
+		if ( !empty( $this->restrictions['used_plan_max_enabled'] ) ) {
+			if ( isset( $this->restrictions['used_plan_max_amount'] ) && isset( $this->restrictions['used_plan_max'] ) ) {
+				$planrestrictions['plan_amount_max'] = ( (int) $this->restrictions['used_plan_max'] )
+				. ',' . ( (int) $this->restrictions['used_plan_max_amount'] );
 			}
 		}
 
 		// Check for a directly previously used plan
-		if ( !empty( $restrictions['custom_restrictions_enabled'] ) ) {
-			if ( isset( $restrictions['custom_restrictions'] ) ) {
-				$planrestrictions['custom_restrictions'] = $this->transformCustomRestrictions( $restrictions['custom_restrictions'] );
+		if ( !empty( $this->restrictions['custom_restrictions_enabled'] ) ) {
+			if ( isset( $this->restrictions['custom_restrictions'] ) ) {
+				$planrestrictions['custom_restrictions'] = $this->transformCustomRestrictions( $this->restrictions['custom_restrictions'] );
 			}
 		}
 
@@ -4009,7 +3992,15 @@ class SubscriptionPlan extends jsonDBTable
 
 		foreach ( $fixed as $varname ) {
 			if ( is_array( $post[$varname] ) ) {
-				$this->$varname = implode( ';', $post[$varname] );
+				if ( !get_magic_quotes_gpc() ) {
+					$arr = array();
+					foreach ( $post[$varname] as $vname => $vcontent ) {
+						$arr[$vname] = addslashes( $vcontent );
+					}
+					$this->$varname = $arr;
+				} else {
+					$this->$varname = $post[$varname];
+				}
 			} else {
 				if ( !get_magic_quotes_gpc() ) {
 					$this->$varname = addslashes( $post[$varname] );
@@ -4043,9 +4034,7 @@ class SubscriptionPlan extends jsonDBTable
 				continue;
 			}
 
-			if ( is_array( $post[$varname] ) ) {
-				$params[$varname] = implode( ';', $post[$varname] );
-			} elseif ( empty( $post[$varname] ) ) {
+			if ( empty( $post[$varname] ) ) {
 				$params[$varname] = 0;
 			} else {
 				$params[$varname] = $post[$varname];
@@ -4053,7 +4042,7 @@ class SubscriptionPlan extends jsonDBTable
 			unset( $post[$varname] );
 		}
 
-		$params['processors'] = implode( ';', $processors );
+		$params['processors'] = $processors;
 
 		$this->saveParams( $params );
 
@@ -4072,9 +4061,7 @@ class SubscriptionPlan extends jsonDBTable
 				continue;
 			}
 
-			if ( is_array( $post[$varname] ) ) {
-				$restrictions[$varname] = implode( ';', $post[$varname] );
-			} elseif ( empty( $post[$varname] ) ) {
+			if ( empty( $post[$varname] ) ) {
 				$restrictions[$varname] = 0;
 			} else {
 				$restrictions[$varname] = $post[$varname];
@@ -4082,22 +4069,18 @@ class SubscriptionPlan extends jsonDBTable
 			unset( $post[$varname] );
 		}
 
-		$this->saveRestrictions($restrictions);
+		$this->restrictions = $restrictions;
 
 		// The rest of the vars are custom params
 		$custom_params = array();
 		foreach ( $post as $varname => $content ) {
 			if ( substr( $varname, 0, 4 ) != 'mce_' ) {
-				if ( is_array( $content ) ) {
-					$custom_params[$varname] = implode( ';', $content );
-				} else {
-					$custom_params[$varname] = $content;
-				}
+				$custom_params[$varname] = $content;
 			}
 			unset( $post[$varname] );
 		}
 
-		$this->saveCustomParams($custom_params);
+		$this->custom_params = $custom_params;
 	}
 
 	function saveParams( $params )
@@ -4134,17 +4117,7 @@ class SubscriptionPlan extends jsonDBTable
 
 		// TODO: Check for Similarity/Equality relations on other plans
 
-		$this->setParams( $params );
-	}
-
-	function saveRestrictions( $restrictions )
-	{
-		$this->setParams( $restrictions, 'restrictions' );
-	}
-
-	function saveCustomParams( $custom_params )
-	{
-		$this->setParams( $custom_params, 'custom_params' );
+		$this->params = $params;
 	}
 }
 
@@ -4373,7 +4346,7 @@ class InvoiceFactory
 		}
 
 		$this->terms = new mammonTerms();
-		$this->terms->readParams( $this->objUsage->getParams() );
+		$this->terms->readParams( $this->objUsage->params );
 
 		$return = $this->objUsage->SubscriptionAmount( $this->recurring, $user_subscription );
 
@@ -4457,12 +4430,10 @@ class InvoiceFactory
 			$this->invoice		= $this->objInvoice->invoice_number;
 		}
 
-		$invoiceparams = $this->objInvoice->getParams();
-
 		$recurring = aecGetParam( 'recurring', null );
 
-		if ( isset( $invoiceparams['userselect_recurring'] ) ) {
-			$this->recurring = $invoiceparams['userselect_recurring'];
+		if ( isset( $this->objInvoice->params['userselect_recurring'] ) ) {
+			$this->recurring = $this->objInvoice->params['userselect_recurring'];
 		} elseif ( !is_null( $recurring ) ) {
 			$this->objInvoice->addParams( array( 'userselect_recurring' => $recurring ) );
 			$this->objInvoice->check();
@@ -4656,24 +4627,22 @@ class InvoiceFactory
 				}
 			}
 
-			$plan_params = $row->getParams();
-
 			$plans[$i]['name']		= $row->getProperty( 'name' );
 			$plans[$i]['desc']		= $row->getProperty( 'desc' );
 			$plans[$i]['id']		= $row->id;
 			$plans[$i]['ordering']	= $row->ordering;
-			$plans[$i]['lifetime']	= $plan_params['lifetime'];
+			$plans[$i]['lifetime']	= $row->params['lifetime'];
 			$plans[$i]['gw']		= array();
 
-			if ( $plan_params['full_free'] ) {
+			if ( $row->params['full_free'] ) {
 				$plans[$i]['gw'][0]						= new stdClass();
 				$plans[$i]['gw'][0]->processor_name		= 'free';
 				$plans[$i]['gw'][0]->info['statement']	= '';
 				$plans[$i]['gw'][0]->recurring			= 0;
 				$i++;
 			} else {
-				if ( ( $plan_params['processors'] != '' ) && !is_null( $plan_params['processors'] ) ) {
-					$processors = explode( ';', $plan_params['processors'] );
+				if ( ( $row->params['processors'] != '' ) && !is_null( $row->params['processors'] ) ) {
+					$processors = $row->params['processors'];
 
 					if ( !empty( $this->processor ) ) {
 						$processorid = PaymentProcessorHandler::getProcessorIdfromName( $this->processor );
@@ -4704,12 +4673,12 @@ class InvoiceFactory
 										$plan_gw[$k] = $pp;
 										$k++;
 
-										if ( !$plan_params['lifetime'] ) {
+										if ( !$row->params['lifetime'] ) {
 											$pp->recurring = 1;
 											$plan_gw[$k] = $pp;
 											$k++;
 										}
-									} elseif ( !( $plan_params['lifetime'] && $recurring ) ) {
+									} elseif ( !( $row->params['lifetime'] && $recurring ) ) {
 										if ( is_int( $recurring ) ) {
 											$pp->recurring	= $recurring;
 										}
@@ -5002,8 +4971,6 @@ class InvoiceFactory
 
 		$repeat = empty( $repeat ) ? 0 : $repeat;
 
-		$params = $this->objUsage->getParams();
-
 		$exceptproc = array( 'none', 'free' );
 
 		// If this is marked as supposedly free
@@ -5011,10 +4978,10 @@ class InvoiceFactory
 			// And if it is either made free through coupons
 			if ( !empty( $this->objInvoice->made_free )
 				// Or a free full period that the user CAN use
-				|| ( $params['full_free'] && $this->objInvoice->counter )
-				|| ( $params['full_free'] && empty( $this->objInvoice->counter ) && empty( $params['trial_period'] ) )
+				|| ( $this->objUsage->params['full_free'] && $this->objInvoice->counter )
+				|| ( $this->objUsage->params['full_free'] && empty( $this->objInvoice->counter ) && empty( $this->objUsage->params['trial_period'] ) )
 				// Or a free trial that the user CAN use
-				|| ( $params['trial_free'] && empty( $this->objInvoice->counter ) ) ) {
+				|| ( $this->objUsage->params['trial_free'] && empty( $this->objInvoice->counter ) ) ) {
 				// Then mark payed
 				if ( $this->objInvoice->pay() !== false ) {
 					$this->thanks( $option, $this->renew, 1 );
@@ -5036,7 +5003,7 @@ class InvoiceFactory
 		};
 
 		$this->terms = new mammonTerms();
-		$this->terms->readParams( $params );
+		$this->terms->readParams( $this->objUsage->params );
 
 		$c = $this->objUsage->doPlanComparison( $this->metaUser->objSubscription );
 
@@ -5048,7 +5015,7 @@ class InvoiceFactory
 		$amount = $this->objUsage->SubscriptionAmount( $this->recurring, $this->metaUser->objSubscription );
 
 		if ( !empty( $aecConfig->cfg['enable_coupons'] ) && !empty( $this->objInvoice->coupons ) ) {
-			$coupons = explode( ';', $this->objInvoice->coupons );
+			$coupons = $this->objInvoice->coupons;
 			$orcoupn = $coupons;
 
 			$cpsh = new couponsHandler();
@@ -5200,20 +5167,19 @@ class InvoiceFactory
 		}
 
 		if ( is_object( $this->objUsage ) ) {
-			$sub_params = $this->objUsage->getParams();
 
-			if ( !empty( $sub_params['customthanks'] ) ) {
-				mosRedirect( $sub_params['customthanks'] );
+			if ( !empty( $this->objUsage->params['customthanks'] ) ) {
+				mosRedirect( $this->objUsage->params['customthanks'] );
 			} else {
-				if ( !empty( $sub_params['customtext_thanks'] ) ) {
-					if ( isset( $sub_params['customtext_thanks_keeporiginal'] ) ) {
-						if ( empty( $sub_params['customtext_thanks_keeporiginal'] ) ) {
-							$msg = $sub_params['customtext_thanks'];
+				if ( !empty( $this->objUsage->params['customtext_thanks'] ) ) {
+					if ( isset( $this->objUsage->params['customtext_thanks_keeporiginal'] ) ) {
+						if ( empty( $this->objUsage->params['customtext_thanks_keeporiginal'] ) ) {
+							$msg = $this->objUsage->params['customtext_thanks'];
 						} else {
-							$msg = $msg . $sub_params['customtext_thanks'];
+							$msg = $msg . $this->objUsage->params['customtext_thanks'];
 						}
 					} else {
-						$msg = $sub_params['customtext_thanks'];
+						$msg = $this->objUsage->params['customtext_thanks'];
 					}
 				}
 			}
@@ -5226,15 +5192,15 @@ class InvoiceFactory
 			}
 		}
 
-		if ( !empty( $sub_params['customtext_thanks'] ) ) {
-			if ( isset( $sub_params['customtext_thanks_keeporiginal'] ) ) {
-				if ( empty( $sub_params['customtext_thanks_keeporiginal'] ) ) {
-					$msg = $sub_params['customtext_thanks'];
+		if ( !empty( $this->objUsage->params['customtext_thanks'] ) ) {
+			if ( isset( $this->objUsage->params['customtext_thanks_keeporiginal'] ) ) {
+				if ( empty( $this->objUsage->params['customtext_thanks_keeporiginal'] ) ) {
+					$msg = $this->objUsage->params['customtext_thanks'];
 				} else {
-					$msg = $msg . $sub_params['customtext_thanks'];
+					$msg = $msg . $this->objUsage->params['customtext_thanks'];
 				}
 			} else {
-				$msg = $sub_params['customtext_thanks'];
+				$msg = $this->objUsage->params['customtext_thanks'];
 			}
 		}
 
@@ -5463,11 +5429,9 @@ class Invoice extends jsonDBTable
 			}
 
 			if ( $this->coupons ) {
-				$coupons = explode( ';', $this->coupons );
-
 				$cpsh = new couponsHandler();
 
-				$return['amount'] = $cpsh->applyCoupons( $return['amount'], $coupons, $metaUser );
+				$return['amount'] = $cpsh->applyCoupons( $return['amount'], $this->coupons, $metaUser );
 			}
 
 			if ( is_array( $return['amount'] ) ) {
@@ -5590,12 +5554,11 @@ class Invoice extends jsonDBTable
 
 		$plan = new SubscriptionPlan( $database );
 		$plan->load( $this->usage );
-		$plan_params = $plan->getParams( 'params' );
 
 		$post = aecPostParamClear( $_POST );
 		$post['planparams'] = $plan->getProcessorParameters( $pp->id );
 
-		$pp->exchangeSettingsByPlan( $plan, $plan_params );
+		$pp->exchangeSettingsByPlan( $plan, $plan->params );
 		if ( $altvalidation ) {
 			$response = $pp->instantvalidateNotification( $response, $post, $this );
 		} else {
@@ -5685,7 +5648,7 @@ class Invoice extends jsonDBTable
 		} else {
 			if ( isset( $response['pending'] ) ) {
 				if ( strcmp( $response['pending_reason'], 'signup' ) === 0 ) {
-					if ( $plan_params['trial_free'] || ( $this->amount == '0.00' ) ) {
+					if ( $plan->params['trial_free'] || ( $this->amount == '0.00' ) ) {
 						$renew	= $this->pay( $multiplicator );
 						$this->addParams( array( 'free_trial' => $response['pending_reason'] ), 'params', true );
 						$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_TRIAL;
@@ -5763,7 +5726,6 @@ class Invoice extends jsonDBTable
 
 		$metaUser = false;
 		$new_plan = false;
-		$params = $this->getParams();
 
 		if ( !empty( $this->userid ) ) {
 			$metaUser = new metaUser( $this->userid );
@@ -5842,8 +5804,7 @@ class Invoice extends jsonDBTable
 		}
 
 		if ( $this->coupons ) {
-			$coupons = explode( ';', $this->coupons );
-			foreach ( $coupons as $coupon_code ) {
+			foreach ( $this->coupons as $coupon_code ) {
 				$cph = new couponHandler();
 				$cph->load( $coupon_code );
 
@@ -5852,8 +5813,7 @@ class Invoice extends jsonDBTable
 					continue;
 				}
 
-				$micro_integrations = explode( ';', $cph->coupon->micro_integrations );
-				foreach ( $micro_integrations as $mi_id ) {
+				foreach ( $cph->coupon->micro_integrations as $mi_id ) {
 					$mi = new microIntegration( $database );
 
 					// Only call if it exists
@@ -5926,9 +5886,7 @@ class Invoice extends jsonDBTable
 			$this->counter += 1;
 			$this->transaction_date	= $transaction_date;
 
-			$transactions = $this->getParams( 'transactions' );
-			$transactions[] = $transaction_date . ";" . $this->amount . ";" . $this->currency . ";" . $this->method;
-			$transactions = $this->setParams( $transactions, 'transactions' );
+			$this->transactions[] = $transaction_date . ";" . $this->amount . ";" . $this->currency . ";" . $this->method;
 
 			$this->check();
 			$this->store();
@@ -5941,7 +5899,7 @@ class Invoice extends jsonDBTable
 	{
 		global $database, $mosConfig_live_site;
 
-		$int_var['params'] = $this->getParams();
+		$int_var['params'] = $this->params;
 
 		// Filter non-processor params
 		$nonproc = array( 'pending_reason', 'deactivated' );
@@ -5976,11 +5934,9 @@ class Invoice extends jsonDBTable
 		$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], $metaUser->objSubscription );
 
 		if ( !empty( $this->coupons ) ) {
-			$coupons = explode( ';', $this->coupons);
-
 			$cph = new couponsHandler();
 
-			$amount['amount'] = $cph->applyCoupons( $amount['amount'], $coupons, $metaUser );
+			$amount['amount'] = $cph->applyCoupons( $amount['amount'], $this->coupons, $metaUser );
 		}
 
 		$int_var['amount']		= $amount['amount'];
@@ -5996,7 +5952,7 @@ class Invoice extends jsonDBTable
 		global $database, $mosConfig_live_site;
 
 		$int_var = array();
-		$int_var['params'] = $this->getParams();
+		$int_var['params'] = $this->params;
 
 		// Filter non-processor params
 		$nonproc = array( 'pending_reason', 'deactivated' );
@@ -6010,7 +5966,6 @@ class Invoice extends jsonDBTable
 		if ( $this->usage ) {
 			$new_subscription = new SubscriptionPlan( $database );
 			$new_subscription->load( $this->usage );
-			$sub_params = $new_subscription->getParams();
 
 			$int_var['planparams'] = $new_subscription->getProcessorParameters( $InvoiceFactory->pp->id );
 
@@ -6032,7 +5987,7 @@ class Invoice extends jsonDBTable
 				$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], false );
 			}
 
-			if ( !empty( $sub_params['customthanks'] ) || !empty( $sub_params['customtext_thanks'] ) ) {
+			if ( !empty( $new_subscription->params['customthanks'] ) || !empty( $new_subscription->params['customtext_thanks'] ) ) {
 				$urladd .= '&amp;u=' . $this->usage;
 			}
 		} else {
@@ -6041,11 +5996,9 @@ class Invoice extends jsonDBTable
 		}
 
 		if ( !empty( $this->coupons ) ) {
-			$coupons = explode( ';', $this->coupons);
-
 			$cph = new couponsHandler();
 
-			$amount['amount'] = $cph->applyCoupons( $amount['amount'], $coupons, $InvoiceFactory->metaUser, $InvoiceFactory );
+			$amount['amount'] = $cph->applyCoupons( $amount['amount'], $this->coupons, $InvoiceFactory->metaUser, $InvoiceFactory );
 		}
 
 		$int_var['amount']		= $amount['amount'];
@@ -6073,7 +6026,7 @@ class Invoice extends jsonDBTable
 	function addCoupon( $couponcode )
 	{
 		if ( $this->coupons ) {
-			$oldcoupons = explode( ';', $this->coupons );
+			$oldcoupons = $this->coupons;
 		} else {
 			$oldcoupons = array();
 		}
@@ -6089,12 +6042,12 @@ class Invoice extends jsonDBTable
 			}
 		}
 
-		$this->coupons = implode( ';', $oldcoupons );
+		$this->coupons = $oldcoupons;
 	}
 
 	function removeCoupon( $couponcode )
 	{
-		$oldcoupons = explode( ';', $this->coupons );
+		$oldcoupons = $this->coupons;
 
 		if ( in_array( $couponcode, $oldcoupons ) ) {
 			foreach ( $oldcoupons as $id => $cc ) {
@@ -6110,7 +6063,7 @@ class Invoice extends jsonDBTable
 			}
 		}
 
-		$this->coupons = implode( ';', $oldcoupons );
+		$this->coupons = $oldcoupons;
 	}
 
 	function savePostParams( $array )
@@ -6259,11 +6212,9 @@ class Subscription extends jsonDBTable
 				$plan = new SubscriptionPlan( $database );
 				$plan->load( $usage );
 
-				$pparams = $plan->getParams();
-
-				if ( !empty( $pparams['similarplans'] ) && !empty( $pparams['equalplans'] ) ) {
-					$similar = explode( ';', $pparams['similarplans'] );
-					$equalpl = explode( ';', $pparams['equalplans'] );
+				if ( !empty( $plan->params['similarplans'] ) && !empty( $plan->params['equalplans'] ) ) {
+					$similar = $plan->params['similarplans'];
+					$equalpl = $plan->params['equalplans'];
 
 					$allplans = array_merge( $similar, $equalpl, array( $usage ) );
 				} else {
@@ -6503,33 +6454,29 @@ class Subscription extends jsonDBTable
 		if ( $this->plan ) {
 			$subscription_plan = new SubscriptionPlan( $database );
 			$subscription_plan->load( $this->plan );
-			$plan_params = $subscription_plan->getParams();
 		} else {
-			$plan_params = array();
 			$subscription_plan = false;
 		}
-
-		$this_params = $this->getParams();
 
 		// Move the focus Subscription
 		$metaUser = new metaUser( $this->userid );
 		$metaUser->moveFocus( $this->id );
 
 		// Recognize the fallback plan, if not overridden
-		if ( !empty( $plan_params['fallback'] ) && !$overridefallback ) {
+		if ( !empty( $subscription_plan->params['fallback'] ) && !$overridefallback ) {
 			if ( $subscription_plan !== false ) {
 				$mih = new microIntegrationHandler();
 				$mih->userPlanExpireActions( $metaUser, $subscription_plan );
 			}
 
-			$this->applyUsage( $plan_params['fallback'], 'none', 1 );
+			$this->applyUsage( $subscription_plan->params['fallback'], 'none', 1 );
 			return false;
 		} else {
 			// Set a Trial flag if this is an expired Trial for further reference
 			if ( strcmp( $this->status, 'Trial' ) === 0 ) {
 				$this->addParams( array( 'trialflag' => 1 ) );
-			} elseif ( is_array( $this_params ) ) {
-				if ( in_array( 'trialflag', $this_params ) ) {
+			} elseif ( is_array( $this->params ) ) {
+				if ( in_array( 'trialflag', $this->params ) ) {
 					$this->delParams( array( 'trialflag' ) );
 				}
 			}
@@ -6565,11 +6512,10 @@ class Subscription extends jsonDBTable
 
 				$subscription_plan = new SubscriptionPlan( $database );
 				$subscription_plan->load( $this->plan );
-				$plan_params = $subscription_plan->getParams();
 
 				// Resolve blocks that we are going to substract from the set expiration date
 				$unit = 60*60*24;
-				switch ( $plan_params['full_periodunit'] ) {
+				switch ( $subscription_plan->params['full_periodunit'] ) {
 					case 'W':
 						$unit *= 7;
 						break;
@@ -6581,7 +6527,7 @@ class Subscription extends jsonDBTable
 						break;
 				}
 
-				$periodlength = $plan_params['full_period'] * $unit;
+				$periodlength = $subscription_plan->params['full_period'] * $unit;
 
 				$newexpiration = strtotime( $this->expiration );
 				$now = time() + $mosConfig_offset*3600;
@@ -6808,16 +6754,13 @@ class Subscription extends jsonDBTable
 
 	function getMIflags( $usage, $mi )
 	{
-		// Get Params
-		$params = $this->getParams();
-
 		// Create the Params Prefix
 		$flag_name = 'MI_FLAG_USAGE_' . strtoupper( $usage ) . '_MI_' . strtoupper( $mi );
 
 		// Filter out the params for this usage and MI
 		$mi_params = array();
-		if ( $params ) {
-			foreach ( $params as $name => $value ) {
+		if ( $this->params ) {
+			foreach ( $this->params as $name => $value ) {
 				if ( strpos( $name, $flag_name ) == 0 ) {
 					$paramname = substr( strtoupper( $name ), strlen( $flag_name ) + 1 );
 					$mi_params[$paramname] = $value;
@@ -6835,22 +6778,16 @@ class Subscription extends jsonDBTable
 
 	function setMIflags( $usage, $mi, $flags )
 	{
-		// Get Params
-		$params = $this->getParams();
-
 		// Create the Params Prefix
 		$flag_name = 'MI_FLAG_USAGE_' . strtoupper( $usage ) . '_MI_' . $mi;
 
 		// Write to $params array
 		foreach ( $flags as $name => $value ) {
 			$param_name = $flag_name . '_' . strtoupper( $name );
-			$params[$param_name] = $value;
+			$this->params[$param_name] = $value;
 		}
 
-		// Set Params
-		$this->setParams( $params );
-		$this->check();
-		$this->store();
+		$this->storeload();
 	}
 }
 
@@ -8145,6 +8082,11 @@ class AECToolbox
 					$result = $rewrite[$vars];
 				}
 				break;
+			case 'meta':
+				if ( isset( $vars[3] ) ) {
+					$metaUser->meta->$vars[0]->$vars[1]->$vars[2]
+				}
+				break;
 			case 'constant':
 				if ( defined( $vars ) ) {
 					$result = constant( $vars );
@@ -8356,9 +8298,7 @@ class microIntegrationHandler
 		$mi_autointegrations = $this->getAutoIntegrations();
 
 		if ( is_array( $mi_autointegrations ) || ( $subscription_plan !== false ) ) {
-
-			$user_integrations		= explode( ';', $subscription_plan->micro_integrations );
-			$user_auto_integrations = array_intersect( $user_integrations, $mi_autointegrations );
+			$user_auto_integrations = array_intersect( $subscription_plan->micro_integrations, $mi_autointegrations );
 
 			if ( count( $user_auto_integrations ) ) {
 				foreach ( $user_auto_integrations as $mi_id ) {
@@ -8640,9 +8580,7 @@ class microIntegration extends jsonDBTable
 				$this->desc = $this->info['desc'];
 			}
 
-			$params = $this->getParams();
-
-			$this->settings				=& $params;
+			$this->settings				=& $this->params;
 			$this->mi_class->settings	=& $this->settings;
 
 			return true;
@@ -8702,12 +8640,10 @@ class microIntegration extends jsonDBTable
 		}
 
 		if ( !empty( $metaUser->focusSubscription->params ) ) {
-			$miparams = $metaUser->focusSubscription->getParams();
-
 			$miprefix = 'mi_' . $this->id . '_';
 
 			$params = array();
-			foreach ( $miparams as $pkey => $pval ) {
+			foreach ( $metaUser->focusSubscription->params as $pkey => $pval ) {
 				if ( strpos( $pkey, $miprefix ) === 0 ) {
 					$pkey = str_replace( $miprefix, '', $pkey );
 
@@ -8988,7 +8924,7 @@ class microIntegration extends jsonDBTable
 			$newparams['remove'] = 0;
 		}
 
-		$this->setParams( $new_params );
+		$this->params = $new_params;
 
 		return true;
 	}
@@ -9035,7 +8971,7 @@ class couponsHandler extends eucaObject
 
 			// Get the coupons that this one cannot be mixed with
 			if ( !empty( $cph->restrictions['restrict_combination'] ) && !empty( $cph->restrictions['bad_combinations'] ) ) {
-				$nomix = explode( ';', $cph->restrictions['bad_combinations'] );
+				$nomix = $cph->restrictions['bad_combinations'];
 			} else {
 				$nomix = array();
 			}
@@ -9085,7 +9021,7 @@ class couponsHandler extends eucaObject
 
 			// Get the coupons that this one cannot be mixed with
 			if ( !empty( $cph->restrictions['restrict_combination'] ) && !empty( $cph->restrictions['bad_combinations'] ) ) {
-				$nomix = explode( ';', $cph->restrictions['bad_combinations'] );
+				$nomix = $cph->restrictions['bad_combinations'];
 			} else {
 				$nomix = array();
 			}
@@ -9218,8 +9154,8 @@ class couponHandler
 			}
 
 			// load parameters into local array
-			$this->discount		= $this->coupon->getParams( 'discount' );
-			$this->restrictions = $this->coupon->getParams( 'restrictions' );
+			$this->discount		= $this->coupon->discount;
+			$this->restrictions = $this->coupon->restrictions;
 
 			// Check whether coupon can be used yet
 			if ( $this->restrictions['has_start_date'] && !empty( $this->restrictions['start_date'] ) ) {
@@ -9394,7 +9330,7 @@ class couponHandler
 		if ( !empty( $this->restrictions['usage_plans_enabled'] ) && !is_null( $invoiceFactory ) ) {
 			if ( !empty( $this->restrictions['usage_plans'] ) ) {
 				// Check whether this usage is restricted
-				$plans = explode( ';', $this->restrictions['usage_plans'] );
+				$plans = $this->restrictions['usage_plans'];
 
 				if ( in_array( $invoiceFactory->usage, $plans ) ) {
 					$permissions['usage'] = true;
@@ -9743,11 +9679,7 @@ class coupon extends paramDBTable
 		$fixed = array( 'active', 'name', 'desc', 'coupon_code', 'usecount', 'micro_integrations' );
 
 		foreach ( $fixed as $varname ) {
-			if ( is_array( $post[$varname] ) ) {
-				$this->$varname = implode( ';', $post[$varname] );
-			} else {
-				$this->$varname = $post[$varname];
-			}
+			$this->$varname = $post[$varname];
 			unset( $post[$varname] );
 		}
 
@@ -9760,11 +9692,7 @@ class coupon extends paramDBTable
 				continue;
 			}
 
-			if ( is_array( $post[$varname] ) ) {
-				$params[$varname] = implode( ';', $post[$varname] );
-			} else {
-				$params[$varname] = $post[$varname];
-			}
+			$params[$varname] = $post[$varname];
 			unset( $post[$varname] );
 		}
 
@@ -9774,11 +9702,7 @@ class coupon extends paramDBTable
 		$restrictions = array();
 
 		foreach ( $post as $varname => $content ) {
-			if ( is_array( $content ) ) {
-				$restrictions[$varname] = implode( ';', $content );
-			} else {
-				$restrictions[$varname] = $content;
-			}
+			$restrictions[$varname] = $content;
 			unset( $post[$varname] );
 		}
 
@@ -9794,12 +9718,12 @@ class coupon extends paramDBTable
 			$params['amount'] = AECToolbox::correctAmount( $params['amount'] );
 		}
 
-		$this->setParams( $params, 'discount' );
+		$this->discount = $params;
 	}
 
 	function saveRestrictions( $restrictions )
 	{
-		$this->setParams( $restrictions, 'restrictions' );
+		$this->restrictions = $restrictions;
 	}
 
 	function incrementCount()
@@ -9885,7 +9809,7 @@ class couponXuser extends paramDBTable
 		$this->last_updated = date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
 
 		if ( is_array( $params ) ) {
-			$this->setParams( $params );
+			$this->params = $params;
 		}
 
 		$this->usecount = 1;
@@ -9899,8 +9823,8 @@ class couponXuser extends paramDBTable
 		$params = $this->getParams();
 
 		$invoicelist = array();
-		if ( isset( $params['invoices'] ) ) {
-			$invoices = explode( ';', $params['invoices'] );
+		if ( isset( $this->params['invoices'] ) ) {
+			$invoices = explode( ';', $this->params['invoices'] );
 
 			foreach ( $invoices as $invoice ) {
 				$inv = explode( ',', $invoice );
@@ -9983,14 +9907,9 @@ class aecExport extends jsonDBTable
 	{
 		global $mosConfig_offset, $mosConfig_absolute_path;
 
-		// Load Export Parameters
-		$filter_values = $this->getParams( 'filter' );
-		$options_values = $this->getParams( 'options' );
-		$params_values = $this->getParams();
-
 		// Load Exporting Class
-		$filename = $mosConfig_absolute_path . '/components/com_acctexp/lib/export/' . $params_values->export_method . '.php';
-		$classname = 'AECexport_' . $params_values->export_method;
+		$filename = $mosConfig_absolute_path . '/components/com_acctexp/lib/export/' . $this->params->export_method . '.php';
+		$classname = 'AECexport_' . $this->params->export_method;
 
 		include_once( $filename );
 
@@ -10011,8 +9930,8 @@ class aecExport extends jsonDBTable
 
 		// Assemble Database call
 		$where = array();
-		if ( !empty( $filter_values->planid ) ) {
-			$where[] = '`plan` IN (' . implode( ',', $filter_values->planid ) . ')';
+		if ( !empty( $this->filter->planid ) ) {
+			$where[] = '`plan` IN (' . implode( ',', $this->filter->planid ) . ')';
 		}
 
 		$query = 'SELECT a.id, a.userid'
@@ -10023,8 +9942,8 @@ class aecExport extends jsonDBTable
 			$query .= ' WHERE ( ' . implode( ' OR ', $where ) . ' )';
 		}
 
-		if ( !empty( $filter_values->status ) ) {
-			foreach ( $filter_values->status as $status ) {
+		if ( !empty( $this->filter->status ) ) {
+			foreach ( $this->filter->status as $status ) {
 				if ( !empty( $where ) ) {
 					$query .= ' AND `status` = \'' . $status . '\'';
 				} else {
@@ -10033,8 +9952,8 @@ class aecExport extends jsonDBTable
 			}
 		}
 
-		if ( !empty( $filter_values->orderby ) ) {
-			$query .= ' ORDER BY ' . $filter_values->orderby . '';
+		if ( !empty( $this->filter->orderby ) ) {
+			$query .= ' ORDER BY ' . $this->filter->orderby . '';
 		}
 
 		$this->_db->setQuery( $query );
@@ -10058,7 +9977,7 @@ class aecExport extends jsonDBTable
 					$plans[$planid]->load( $planid );
 				}
 
-				$line = AECToolbox::rewriteEngine( $options_values->rewrite_rule, $metaUser, $plans[$planid] );
+				$line = AECToolbox::rewriteEngine( $this->options->rewrite_rule, $metaUser, $plans[$planid] );
 				$larray = explode( ';', $line );
 
 				// Remove whitespaces and newlines
@@ -10110,9 +10029,9 @@ class aecExport extends jsonDBTable
 
 		$this->name = $name;
 		$this->system = $system ? 1 : 0;
-		$this->setParams( $filter, 'filter' );
-		$this->setParams( $options, 'options' );
-		$this->setParams( $params );
+		$this->filter = $filter;
+		$this->options = $options;
+		$this->params = $params;
 
 		if ( ( strcmp( $this->created_date, '0000-00-00 00:00:00' ) === 0 ) || empty( $this->created_date ) ) {
 			$this->created_date = date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );

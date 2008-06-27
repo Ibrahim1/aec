@@ -235,7 +235,7 @@ function expired( $option, $userid, $expiration )
 		if ( $metaUser->hasSubscription ) {
 			$trial = (strcmp($metaUser->objSubscription->status, 'Trial' ) === 0 );
 			if (!$trial) {
-				$params = $metaUser->objSubscription->getParams();
+				$params = $metaUser->objSubscription->params;
 				if ( isset( $params['trialflag'])) {
 					$trial = 1;
 				}
@@ -285,7 +285,7 @@ function pending( $option, $userid )
 			$invoice = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $userid );
 			$objInvoice = new Invoice( $database );
 			$objInvoice->loadInvoiceNumber( $invoice );
-			$params = $objInvoice->getParams( 'params' );
+			$params = $objInvoice->params;
 
 			if ( isset( $params['pending_reason'] ) ) {
 				if ( defined( '_PENDING_REASON_' . strtoupper( $params['pending_reason'] ) ) ) {
@@ -587,7 +587,7 @@ function subscriptionDetails( $option, $sub )
 			$selected_plan = new SubscriptionPlan( $database );
 			$selected_plan->load( $metaUser->objSubscription->plan );
 
-			$mis = explode( ';', $selected_plan->micro_integrations );
+			$mis = $selected_plan->micro_integrations;
 
 			if ( count( $mis ) ) {
 				foreach ( $mis as $mi_id ) {
@@ -608,7 +608,7 @@ function subscriptionDetails( $option, $sub )
 			}
 
 			if ( !empty( $pp->info['actions'] ) && ( ( strcmp( $metaUser->objSubscription->status, 'Active' ) === 0 ) || ( strcmp( $metaUser->objSubscription->status, 'Trial' ) === 0 )) ) {
-				$actions = explode( ';', $pp->info['actions'] );
+				$actions = $pp->info['actions'];
 
 				$selected_plan->proc_actions = array();
 				foreach ( $actions as $action ) {
@@ -682,7 +682,7 @@ function subscriptionDetails( $option, $sub )
 
 
 				if ( !empty( $spp->info['actions'] ) && ( ( strcmp( $metaUser->objSubscription->status, 'Active' ) === 0 ) || ( strcmp( $metaUser->objSubscription->status, 'Trial' ) === 0 ) ) ) {
-					$actions = explode( ';', $spp->info['actions'] );
+					$actions = $spp->info['actions'];
 
 					$secondary_plan->proc_actions = array();
 					foreach ( $actions as $action ) {
@@ -898,7 +898,7 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid )
 
 		if ( !$objInvoice->fixed ) {
 			$objInvoice->active = 0;
-			$objInvoice->setParams( array( 'deactivated' => 'cancel' ) );
+			$objInvoice->params = array( 'deactivated' => 'cancel' );
 			$objInvoice->check();
 			$objInvoice->store();
 		}
@@ -1161,7 +1161,7 @@ function thanks( $option, $renew, $free, $usage=null )
 	if ( !empty( $usage ) ) {
 		$new_subscription = new SubscriptionPlan( $database );
 		$new_subscription->load( $usage );
-		$sub_params = $new_subscription->getParams();
+		$sub_params = $new_subscription->params;
 
 		if ( !empty( $sub_params['customthanks'] ) ) {
 			mosRedirect( $sub_params['customthanks'] );

@@ -273,7 +273,7 @@ class jsonDBTable extends paramDBTable
 			return false;
 		}
 
-		return jsoonHandler::decode( stripslashes( $this->$field ) );
+		return jsoonHandler::decode( $this->$field );
 	}
 
 	/**
@@ -354,8 +354,7 @@ class jsonDBTable extends paramDBTable
 
 		if ( !empty( $jsonfields ) ) {
 			foreach ( $jsonfields as $fieldname ) {
-				$temp = $this->getParams( $fieldname );
-				$this->$fieldname = $temp;
+				$this->$fieldname = $this->getParams( $fieldname );
 			}
 		}
 
@@ -487,7 +486,7 @@ class jsoonHandler
 			}
 		} elseif ( is_array( $input ) ) {
 			// Check for relational array
-			if ( !( array_keys( $input ) !== range( 0, count( $input ) - 1 ) ) ) {
+			if ( array_keys( $input ) !== range( 0, count( $input ) - 1 ) ) {
 				$output = new stdClass();
 
 				$output->_jsoon = new stdClass();
@@ -517,8 +516,10 @@ class parameterHandler
 	 */
 	function decode( $params )
 	{
+		$par = explode( "\n", $params );
+
 		$array = array();
-		foreach ( $params as $chunk ) {
+		foreach ( $par as $chunk ) {
 			$k = explode( '=', $chunk, 2 );
 			if ( !empty( $k[0] ) ) {
 				// Strip slashes, but preserve special characters

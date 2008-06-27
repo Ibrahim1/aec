@@ -42,7 +42,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$info['languages']		= 'GB,DE,FR,IT,ES,US,NL';
 		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck,giropay';
 		$info['recurring']		= 2;
-		$info['actions']		= 'cancel';
+		$info['actions']		= array('cancel');
 		$info['secure']			= 1;
 
 		return $info;
