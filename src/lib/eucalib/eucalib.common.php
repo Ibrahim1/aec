@@ -385,7 +385,7 @@ class jsoonHandler
 	function decode( $input )
 	{
 		if ( strpos( $input, '_jsoon' ) !== false ) {
-			return json_decode( jsoonHandler::decoder( $input ) );
+			return jsoonHandler::decoder( json_decode( $input ) );
 		} else {
 			return json_decode( $input );
 		}

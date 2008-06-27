@@ -5,7 +5,7 @@
  * @subpackage Micro Integrations - Mosets Hot Property
  * @copyright 2006/2007 Copyright (C) David Deutsch
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
- * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
+ * @license GNU/GPL v.2 or later - http://www.gnu.org/copyleft/gpl.html
  */
 
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
@@ -156,7 +156,7 @@ class mi_hotproperty extends MI
 
 		$n = 'hotproperty1';
 		$hacks[$n]['name']				=	'hotproperty.php #1';
-		$hacks[$n]['desc']				=	_AEC_MI_HACK3_MOSETS;
+		$hacks[$n]['desc']				=	_AEC_MI_HACK3_HOTPROPERTY;
 		$hacks[$n]['type']				=	'file';
 		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_hotproperty/mtree.php';
 		$hacks[$n]['read']				=	'# OK, you can edit';
@@ -164,7 +164,7 @@ class mi_hotproperty extends MI
 
 		$n = 'hotproperty2';
 		$hacks[$n]['name']				=	'hotproperty.php #2';
-		$hacks[$n]['desc']				=	_AEC_MI_HACK4_MOSETS;
+		$hacks[$n]['desc']				=	_AEC_MI_HACK4_HOTPROPERTY;
 		$hacks[$n]['type']				=	'file';
 		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_hotproperty/mtree.php';
 		$hacks[$n]['read']				=	'$row->updateLinkCount( 1 );';
@@ -172,7 +172,7 @@ class mi_hotproperty extends MI
 
 		$n = 'adminhotproperty3';
 		$hacks[$n]['name']				=	'admin.hotproperty.php #3';
-		$hacks[$n]['desc']				=	_AEC_MI_HACK5_MOSETS;
+		$hacks[$n]['desc']				=	_AEC_MI_HACK5_HOTPROPERTY;
 		$hacks[$n]['type']				=	'file';
 		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/administrator/components/com_hotproperty/admin.mtree.php';
 		$hacks[$n]['read']				=	'if ( $mtLinks->link_approved == 0 ) {';
@@ -185,12 +185,12 @@ class mi_hotproperty extends MI
 	{
 		global $database;
 
-		$mi_mosetshandler = new mosetstree( $database );
-		$id = $mi_mosetshandler->getIDbyUserID( $userid );
+		$mi_hphandler = new aec_hotproperty( $database );
+		$id = $mi_hphandler->getIDbyUserID( $userid );
 
 		if ( $id ) {
-			$mi_mosetshandler->load( $id );
-			return '<p>' . sprintf( _AEC_MI_DIV1_MOSETS, $mi_mosetshandler->getListingsLeft() ) . '</p>';
+			$mi_hphandler->load( $id );
+			return '<p>' . sprintf( _AEC_MI_DIV1_HOTPROPERTY, $mi_hphandler->getListingsLeft() ) . '</p>';
 		} else {
 			return '';
 		}

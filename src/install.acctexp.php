@@ -1062,7 +1062,7 @@ function com_install()
 		$pp->loadName( $ppname );
 
 		$pp->fullInit();
-print_r($aecConfig);exit;
+
 		// Infos often change, so we protect the name and description and so on, but replace everything else
 		$original	= $pp->processor->info();
 
@@ -1074,8 +1074,7 @@ print_r($aecConfig);exit;
 			}
 		}
 
-		$pp->setSettings();
-		$pp->setInfo();
+		$pp->processor->storeload();
 	}
 $jsonupdate = true;
 	// Update database fields to JSONized fields
@@ -1094,7 +1093,7 @@ $jsonupdate = true;
 		foreach ( $updates as $classname => $ucontent ) {
 			$function = $classname . '::declareJSONfields()';
 			$dbtable = $ucontent[0];
-
+print_r($function);exit;
 			$jsondeclare = $function();
 
 			if ( $dbtable == 'subscr' ) {

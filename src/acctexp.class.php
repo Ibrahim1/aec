@@ -1906,8 +1906,8 @@ class PaymentProcessor
 	}
 
 	function getInfo()
-	{print_r($this);
-		$this->info	= $this->processor->info;
+	{
+		$this->info	=& $this->processor->info;
 		$original	= $this->processor->info();
 
 		foreach ( $original as $name => $var ) {
@@ -1915,13 +1915,11 @@ class PaymentProcessor
 				$this->info[$name] = $var;
 			}
 		}
-
-		$this->processor->info =& $this->info;
 	}
 
 	function getSettings()
 	{
-		$this->settings	= $this->processor->settings;
+		$this->settings	=& $this->processor->settings;
 		$original		= $this->processor->settings();
 
 		if ( !isset( $this->settings['recurring'] ) && is_int( $this->is_recurring() ) ) {
@@ -1933,8 +1931,6 @@ class PaymentProcessor
 				$this->settings[$name] = $var;
 			}
 		}
-
-		$this->processor->settings =& $this->settings;
 	}
 
 	function exchangeSettings( $settings )
@@ -1952,11 +1948,8 @@ class PaymentProcessor
 
 	function setSettings()
 	{
-		// Test if values really are an array and write them to db
-		if ( is_array( $this->settings ) ) {
-			$this->processor->settings = $this->settings;
-			$this->processor->storeload();
-		}
+		$this->processor->settings = $this->settings;
+		$this->processor->storeload();
 	}
 
 	function exchangeSettingsByPlan( $plan, $plan_params=null )
@@ -2017,11 +2010,8 @@ class PaymentProcessor
 
 	function setInfo()
 	{
-		// Test if values really are an array and write them to db
-		if ( is_array( $this->info ) ) {
-			$this->processor->info = $this->info;
-			$this->processor->storeload();
-		}
+		$this->processor->info = $this->info;
+		$this->processor->storeload();
 	}
 
 	function getBackendSettings()
