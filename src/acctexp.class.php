@@ -897,6 +897,21 @@ class metaUserDB extends jsonDBTable
 
 }
 
+class aecInfo extends jsonDBTable
+{
+	/** @var int Primary key */
+	var $id 			= null;
+	/** @var text */
+	var $info 			= null;
+
+	function aecInfo( &$db )
+	{
+		$this->mosDBTable( '#__acctexp_info', 'id', $db );
+
+		$this->load(1);
+	}
+}
+
 class Config_General extends jsonDBTable
 {
 	/** @var int Primary key */
@@ -913,14 +928,30 @@ class Config_General extends jsonDBTable
 		// If we have no settings, init them
 		if ( empty( $this->settings ) ) {
 			$this->initParams();
-		} else {
-			$this->cfg =& $this->settings;
 		}
 	}
 
 	function declareJSONfields()
 	{
 		return array( 'settings' );
+	}
+
+	function load( $id, $jsonfields=array() )
+	{
+		parent::load( $id );
+
+		$this->cfg =& $this->settings;
+
+		return true;
+	}
+
+	function check( $jsonfields=array() )
+	{
+		unset( $this->cfg );
+
+		parent::check();
+
+		return true;
 	}
 
 	function initParams()
@@ -939,7 +970,7 @@ class Config_General extends jsonDBTable
 		$def['enable_mimeta']					= 0;
 		$def['enable_coupons']					= 0;
 		$def['gwlist']							= '';
-		$def['milist']							= "mi_email;mi_htaccess;mi_mysql_query;mi_email;mi_virtuemart";
+		$def['milist']							= array( 'mi_email','mi_htaccess','mi_mysql_query','mi_email','mi_virtuemart' );
 		$def['displayccinfo']					= 1;
 		$def['customtext_confirm_keeporiginal']	= 1;
 		$def['customtext_checkout_keeporiginal']	= 1;
@@ -968,14 +999,14 @@ class Config_General extends jsonDBTable
 		// new 0.12.4.12
 		$def['override_reqssl']					= 0;
 		// new 0.12.4.16
-		$def['invoicenum_doformat']				= 1;
+		$def['invoicenum_doformat']				= 0;
 		$def['invoicenum_formatting']			= '{aecjson}{"cmd":"concat","vars":[{"cmd":"date","vars":["Y",{"cmd":"rw_constant","vars":"invoice_created_date"}]},"-",{"cmd":"rw_constant","vars":"invoice_id"}]}{/aecjson}';
 		$def['use_recaptcha']					= 0;
 		$def['recaptcha_privatekey']			= '';
 		$def['recaptcha_publickey']				= '';
 		$def['ssl_signup']						= 0;
-		$def['error_notification_level']		= 32;
-		$def['email_notification_level']		= 512;
+		$def['error_notification_level']		= 8;
+		$def['email_notification_level']		= 8;
 		$def['temp_auth_exp']					= 60;
 		$def['skip_confirmation']				= 0;
 		$def['show_fixeddecision']				= 0;
@@ -1014,18 +1045,15 @@ class Config_General extends jsonDBTable
 				$database->setQuery( $query );
 				$database->query() or die( $database->stderr() );
 			}
+
+			$this->id = 1;
+			$this->settings = '';
 		}
 
 		// Write to Params, do not overwrite existing data
 		$this->addParams( $def, 'settings', false );
 
-		// Temporarily unset this array as there is no database field called cfg
-		unset( $this->cfg );
-
 		$this->storeload();
-
-		// Reload Settings
-		$this->cfg = $this->settings;
 
 		return true;
 	}
@@ -1039,13 +1067,7 @@ class Config_General extends jsonDBTable
 			$this->load(1);
 		}
 
-		unset( $this->cfg );
-
-		$this->check();
-		$this->store();
-
-		// Reload Settings
-		$this->cfg =& $this->settings;
+		$this->storeload();
 	}
 
 	function RowDuplicationCheck()
@@ -1884,7 +1906,7 @@ class PaymentProcessor
 	}
 
 	function getInfo()
-	{
+	{print_r($this);
 		$this->info	= $this->processor->info;
 		$original	= $this->processor->info();
 

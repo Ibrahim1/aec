@@ -319,7 +319,7 @@ function com_install()
 	}
 
 	require_once( $mainframe->getPath( 'class', 'com_acctexp' ) );
-print_r($mainframe);exit;
+
 	// Update routine 0.3.0 -> 0.6.0
 	$tables	= array();
 	$tables	= $database->getTableList();
@@ -1062,7 +1062,7 @@ print_r($mainframe);exit;
 		$pp->loadName( $ppname );
 
 		$pp->fullInit();
-
+print_r($aecConfig);exit;
 		// Infos often change, so we protect the name and description and so on, but replace everything else
 		$original	= $pp->processor->info();
 
@@ -1107,6 +1107,10 @@ $jsonupdate = true;
 					;
 			$database->setQuery( $query );
 			$entries = $database->loadResultArray();
+print_r($entries);
+			if ( empty( $entries ) ) {
+				continue;
+			}
 
 			foreach ( $entries as $id ) {
 				$query = 'SELECT `' . implode( '`, `', $jsondeclare ) . '` FROM #__acctexp_' . $dbtable
@@ -1114,7 +1118,7 @@ $jsonupdate = true;
 				;
 				$database->setQuery( $query );
 				$object = $database->loadObject();
-
+print_r($object);
 				$dec = $jsondeclare;
 				foreach ( $jsondeclare as $fieldname ) {
 					// No need to update what is empty
@@ -1215,6 +1219,17 @@ $jsonupdate = true;
 
 						unset( $object->used_plans );
 					} else {
+						if ( ( $dbtable == 'plans' ) && ( $fieldname == 'custom_params' ) ) {
+							$newtemp = array();
+							foreach ( $temp as $locator => $content ) {
+								$p = explode( '_', $locator, 2 );
+
+								$newtemp[$p[0]][$p[1]] = $content;
+							}
+
+							$temp = $newtemp;
+						}
+
 						// ...To JSOON based notation
 						$sets[] = '`' . $fieldname . '` = \'' . $database->getEscaped( jsoonHandler::encode( $temp ) ) . '\'';
 					}
@@ -1233,7 +1248,7 @@ $jsonupdate = true;
 			}
 		}
 	}
-
+print_r($updates);exit;
 	// --- [ END OF STANDARD UPGRADE ACTIONS ] ---
 
 	// Make all Superadmins excluded by default

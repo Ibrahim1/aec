@@ -273,7 +273,7 @@ class jsonDBTable extends paramDBTable
 			return false;
 		}
 
-		return jsoonHandler::decode( $this->$field );
+		return jsoonHandler::decode( stripslashes( $this->$field ) );
 	}
 
 	/**
@@ -295,6 +295,8 @@ class jsonDBTable extends paramDBTable
 		if ( gettype( $this->$field ) == gettype( $params ) ) {
 			$this->$field = jsonDBTable::mergeParams( $this->$field, $params, $overwrite );
 			return true;
+		} elseif ( empty( $this->$field ) ) {
+			$this->$field = $params;
 		} else {
 			return false;
 		}
@@ -383,7 +385,7 @@ class jsoonHandler
 	function decode( $input )
 	{
 		if ( strpos( $input, '_jsoon' ) !== false ) {
-			return json_decode( jsoonHandler::decode( $input ) );
+			return json_decode( jsoonHandler::decoder( $input ) );
 		} else {
 			return json_decode( $input );
 		}
@@ -403,17 +405,17 @@ class jsoonHandler
 	 */
 	function decoder( $input )
 	{
-		$output = $input;
 		if ( is_object( $input ) ) {
-			$properties = get_object_vars( $input );
-
-			if ( isset( $properties['_jsoon'] ) ) {
-				unset( $properties['_jsoon'] );
+			if ( isset( $input->_jsoon ) ) {
+				$jsoon = $input->_jsoon;
+				unset( $input->_jsoon );
+			} else {
+				$jsoon = false;
 			}
 
-			if ( isset( $input->_jsoon ) ) {
-				$jsoon =& $input->_jsoon;
+			$properties = get_object_vars( $input );
 
+			if ( is_object( $jsoon ) ) {
 				if ( isset( $jsoon->classname ) ) {
 					$classname = $jsoon->classname;
 
@@ -433,7 +435,7 @@ class jsoonHandler
 					$output = array();
 
 					foreach ( $properties as $pkey => $pvalue ) {
-						$output[$pkey] = jsoonHandler::resolve( $pvalue );
+						$output[$pkey] = jsoonHandler::decoder( $input->$pkey );
 					}
 
 					return $output;
@@ -445,13 +447,15 @@ class jsoonHandler
 			}
 
 			foreach ( $properties as $pkey => $pvalue ) {
-				$output->$pkey = jsoonHandler::resolve( $pvalue );
+				$output->$pkey = jsoonHandler::decoder( $input->$pkey );
 			}
 		} elseif ( is_array( $input ) ) {
 			$output = array();
 			foreach ( $input as $name => $value ) {
-				$output[$name] = jsoonHandler::resolve( $input[$name] );
+				$output[$name] = jsoonHandler::decoder( $input[$name] );
 			}
+		} else {
+			$output = $input;
 		}
 
 		return $output;
@@ -521,9 +525,11 @@ class parameterHandler
 		$array = array();
 		foreach ( $par as $chunk ) {
 			$k = explode( '=', $chunk, 2 );
-			if ( !empty( $k[0] ) ) {
+			if ( !empty( $k[0] ) && isset( $k[1] ) ) {
 				// Strip slashes, but preserve special characters
 				$array[$k[0]] = stripslashes( str_replace( array( '\n', '\t', '\r' ), array( "\n", "\t", "\r" ), $k[1] ) );
+			} elseif ( !empty( $k[0] ) ) {
+				$array[$k[0]] = null;
 			}
 			unset( $k );
 		}
