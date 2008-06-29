@@ -1048,53 +1048,24 @@ function com_install()
 
 	$eucaInstalldb->addColifNotExists( 'level', "int(4) NOT NULL default '2'", 'eventlog' );
 	$eucaInstalldb->addColifNotExists( 'notify', "int(1) NOT NULL default '0'", 'eventlog' );
-
-	// --- [ END OF DATABASE UPGRADE ACTIONS ] ---
-
-	// Make sure settings & info = updated
-	$pp = null;
-	$pph = new PaymentProcessorHandler();
-
-	$pplist = $pph->getInstalledNameList();
-
-	foreach ( $pplist as $ppname ) {
-		$pp = new PaymentProcessor();
-		$pp->loadName( $ppname );
-
-		$pp->fullInit();
-
-		// Infos often change, so we protect the name and description and so on, but replace everything else
-		$original	= $pp->processor->info();
-
-		$protect = array( 'name', 'longname', 'statement', 'description' );
-
-		foreach ( $original as $name => $var ) {
-			if ( !in_array( $name, $protect ) ) {
-				$pp->info[$name] = $var;
-			}
-		}
-
-		$pp->processor->storeload();
-	}
 $jsonupdate = true;
 	// Update database fields to JSONized fields
 	if ( $jsonupdate ) {
 		$updates = array(	'displayPipeline' => array( 'displaypipeline', array( 'params' => array('displayedto') ) ),
 							'eventLog' => array( 'eventlog', array( 'info' => array('actions') ) ),
 							'processor' => array( 'processor', array() ),
-							'SubscriptionPlan' => array( 'plans', array( 'params' => array('similarplans','equalplans','processors'), 'micro_integrations' => array('_self') ) ),
+							'SubscriptionPlan' => array( 'plans', array( 'params' => array('similarplans','equalplans','processors'), 'micro_integrations' => array('_self'), 'restrictions' => array('previousplan_req','currentplan_req','overallplan_req','previousplan_req_excluded','currentplan_req_excluded','overallplan_req_excluded') ) ),
 							'Invoice' => array( 'Invoice', array( 'coupons' => array('_self'), 'micro_integrations' => array('_self') ) ),
 							'Subscription' => array( 'subscr', array() ),
 							'microIntegration' => array( 'microintegrations', array() ),
 							'coupon' => array( 'coupons', array( 'restrictions' => array('bad_combinations','usage_plans') ) ),
 							'coupon' => array( 'coupons_static', array( 'restrictions' => array('bad_combinations','usage_plans') ) )
-							);
-
+							);print_r($updates);
+$qua = array();
 		foreach ( $updates as $classname => $ucontent ) {
-			$function = $classname . '::declareJSONfields()';
 			$dbtable = $ucontent[0];
-print_r($function);exit;
-			$jsondeclare = $function();
+
+			$jsondeclare = call_user_func( array( $classname, 'declareJSONfields' ) );
 
 			if ( $dbtable == 'subscr' ) {
 				$jsondeclare[] = 'userid';
@@ -1106,7 +1077,7 @@ print_r($function);exit;
 					;
 			$database->setQuery( $query );
 			$entries = $database->loadResultArray();
-print_r($entries);
+
 			if ( empty( $entries ) ) {
 				continue;
 			}
@@ -1116,14 +1087,14 @@ print_r($entries);
 				. ' WHERE `id` = \'' . $id . '\''
 				;
 				$database->setQuery( $query );
-				$object = $database->loadObject();
-print_r($object);
+				$database->loadObject( $object );
+
 				$dec = $jsondeclare;
 				foreach ( $jsondeclare as $fieldname ) {
 					// No need to update what is empty
-					if ( empty( $object->$fieldname ) ) {
+					if ( empty( $object->$fieldname ) || ( strpos( $object->$fieldname, '{' ) === 0 ) || ( strpos( $object->$fieldname, '[' ) === 0 ) ) {
 						unset( $object->$fieldname );
-						unset( $dec[$fieldname] );
+						unset( $dec[array_search( $fieldname, $dec )] );
 					}
 				}
 
@@ -1140,12 +1111,16 @@ print_r($object);
 				foreach ( $dec as $fieldname ) {
 					// Decode from newline separated variables
 					$temp = parameterHandler::decode( $object->$fieldname );
-
+if ( $fieldname == 'micro_integrations' ) {
+	print_r($fieldname);
+	print_r($ucontent);
+	print_r($ucontent[1]);
+	print_r($ucontent[1][$fieldname]);exit;
+}
 					if ( !empty( $ucontent[1] ) ) {
 						if ( isset( $ucontent[1][$fieldname] ) ) {
-							if ( isset( $ucontent[1][$fieldname]['_self'] ) ) {
-								$temp2 = explode( ';', $temp );
-								$temp = $temp2;
+							if ( isset( $ucontent[1][$fieldname]['_self'] ) ) {print_r(" -- ISREL - ".$object->$fieldname."  - /ISREL -- ");
+								$temp = explode( ';', $object->$fieldname );
 							} else {
 								foreach ( $temp as $key => $value ) {
 									if ( in_array( $key, $ucontent[1][$fieldname] ) ) {
@@ -1223,7 +1198,11 @@ print_r($object);
 							foreach ( $temp as $locator => $content ) {
 								$p = explode( '_', $locator, 2 );
 
-								$newtemp[$p[0]][$p[1]] = $content;
+								if ( isset( $p[1] ) ) {
+									$newtemp[$p[0]][$p[1]] = $content;
+								} else {
+									$newtemp[$locator] = $content;
+								}
 							}
 
 							$temp = $newtemp;
@@ -1239,7 +1218,7 @@ print_r($object);
 				$query = 'UPDATE #__acctexp_' . $dbtable
 				. ' SET ' . implode( ' AND ', $sets ) . ''
 				. ' WHERE `id` = \'' . $id . '\''
-				;print_r($query);exit;
+				;$qua[] = $query;
 				$database->setQuery( $query );
 				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
@@ -1247,7 +1226,35 @@ print_r($object);
 			}
 		}
 	}
-print_r($updates);exit;
+print_r($updates);print_r($qua);exit;
+	// --- [ END OF DATABASE UPGRADE ACTIONS ] ---
+
+	// Make sure settings & info = updated
+	$pp = null;
+	$pph = new PaymentProcessorHandler();
+
+	$pplist = $pph->getInstalledNameList();
+
+	foreach ( $pplist as $ppname ) {
+		$pp = new PaymentProcessor();
+		$pp->loadName( $ppname );
+
+		$pp->fullInit();
+
+		// Infos often change, so we protect the name and description and so on, but replace everything else
+		$original	= $pp->processor->info();
+
+		$protect = array( 'name', 'longname', 'statement', 'description' );
+
+		foreach ( $original as $name => $var ) {
+			if ( !in_array( $name, $protect ) ) {
+				$pp->info[$name] = $var;
+			}
+		}
+
+		$pp->processor->storeload();aecDebug( $ppname );
+	}
+
 	// --- [ END OF STANDARD UPGRADE ACTIONS ] ---
 
 	// Make all Superadmins excluded by default
