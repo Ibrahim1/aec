@@ -84,9 +84,7 @@ class mi_docman
 	 	$database->setQuery( $query );
 	 	$groups = $database->loadObjectList();
 
-		$g = explode( ';', $this->settings['group'] );
 		$sg = array();
-		$ge = explode( ';', $this->settings['group_exp'] );
 		$sge = array();
 
 		$gr = array();
@@ -95,10 +93,10 @@ class mi_docman
 
 			$gr[] = mosHTML::makeOption( $group->groups_id, $desc );
 
-			if ( in_array( $group->groups_id, $ge ) ) {
+			if ( in_array( $group->groups_id, $g ) ) {
 				$sg[] = mosHTML::makeOption( $group->groups_id, $desc );
 			}
-			if ( in_array( $group->groups_id, $g ) ) {
+			if ( in_array( $group->groups_id, $this->settings['group'] ) ) {
 				$sge[] = mosHTML::makeOption( $group->groups_id, $desc );
 			}
 		}
@@ -113,20 +111,6 @@ class mi_docman
 		$settings['lists']['delete_on_exp']	= mosHTML::selectList( $del_opts, 'delete_on_exp', 'size="3"', 'value', 'text', $this->settings['delete_on_exp'] );
 
 		return $settings;
-	}
-
-	function saveparams( $params )
-	{
-		global $mosConfig_absolute_path, $database;
-
-		$subgroups = array( 'group', 'group_exp' );
-
-		foreach ( $subgroups as $groupname ) {
-			$temp = implode( ';', $params[$groupname] );
-			$params[$groupname] = $temp;
-		}
-
-		return $params;
 	}
 
 	function hacks()

@@ -90,18 +90,6 @@ class mi_remository
 		return $settings;
 	}
 
-	function saveparams( $params )
-	{
-		$subgroups = array( 'group', 'group_exp' );
-
-		foreach ( $subgroups as $groupname ) {
-			$temp = implode( ';', $params[$groupname] );
-			$params[$groupname] = $temp;
-		}
-
-		return $params;
-	}
-
 	function detect_application()
 	{
 		global $mosConfig_absolute_path;

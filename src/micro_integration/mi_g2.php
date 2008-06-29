@@ -42,8 +42,6 @@ class mi_g2 extends MI
 	 	$database->setQuery( $query );
 	 	$groups = $database->loadObjectList();
 
-		$g = explode( ';', $this->settings['groups'] );
-		$gs = explode( ';', $this->settings['groups_sel_scope'] );
 		$sg = array();
 		$sgs = array();
 
@@ -53,11 +51,11 @@ class mi_g2 extends MI
 
 			$gr[] = mosHTML::makeOption( $group->g_id, $desc );
 
-			if ( in_array( $group->g_id, $g ) ) {
+			if ( in_array( $group->g_id, $this->settings['groups'] ) ) {
 				$sg[] = mosHTML::makeOption( $group->g_id, $desc );
 			}
 
-			if ( in_array( $group->g_id, $gs ) ) {
+			if ( in_array( $group->g_id, $this->settings['groups_sel_scope'] ) ) {
 				$sgs[] = mosHTML::makeOption( $group->g_id, $desc );
 			}
 		}
@@ -70,20 +68,6 @@ class mi_g2 extends MI
 		return $settings;
 	}
 
-	function saveparams( $params )
-	{
-		global $mosConfig_absolute_path, $database;
-
-		$subgroups = array( 'groups', 'groups_sel_scope' );
-
-		foreach ( $subgroups as $groupname ) {
-			$temp = implode( ';', $params[$groupname] );
-			$params[$groupname] = $temp;
-		}
-
-		return $params;
-	}
-
 	function getMIform()
 	{
 		global $database;
@@ -91,11 +75,9 @@ class mi_g2 extends MI
 		$settings = array();
 
 		if ( $this->settings['set_groups_user'] ) {
-			$gs = explode( ';', $this->settings['groups_sel_scope'] );
-
 			$query = 'SELECT `g_id`, `g_groupType`, `g_groupName`'
 				 	. ' FROM g2_Group'
-				 	. ' WHERE `g_id` IN (' . implode( ',', $gs ) . ')'
+				 	. ' WHERE `g_id` IN (' . implode( ',', $this->settings['groups_sel_scope'] ) . ')'
 				 	;
 		 	$database->setQuery( $query );
 		 	$groups = $database->loadObjectList();
@@ -131,7 +113,7 @@ class mi_g2 extends MI
 		$groups = array();
 
 		if ( $this->settings['set_groups'] ) {
-			$groups = explode( ';', $this->settings['groups'] );
+			$groups = $this->settings['groups'];
 			foreach ( $groups as $groupid ) {
 				$this->mapUserToGroup( $g2userid, $groupid );
 				$groups[] = $groupid;

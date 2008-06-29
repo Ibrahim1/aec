@@ -1048,7 +1048,7 @@ function com_install()
 
 	$eucaInstalldb->addColifNotExists( 'level', "int(4) NOT NULL default '2'", 'eventlog' );
 	$eucaInstalldb->addColifNotExists( 'notify', "int(1) NOT NULL default '0'", 'eventlog' );
-$jsonupdate = true;
+
 	// Update database fields to JSONized fields
 	if ( $jsonupdate ) {
 		$updates = array(	'displayPipeline' => array( 'displaypipeline', array( 'params' => array('displayedto') ) ),
@@ -1060,8 +1060,15 @@ $jsonupdate = true;
 							'microIntegration' => array( 'microintegrations', array() ),
 							'coupon' => array( 'coupons', array( 'restrictions' => array('bad_combinations','usage_plans') ) ),
 							'coupon' => array( 'coupons_static', array( 'restrictions' => array('bad_combinations','usage_plans') ) )
-							);print_r($updates);
+							);
 $qua = array();
+		$miupdate = array(	'mi_acl' => array( 'sub_gid_del', 'sub_gid', 'sub_gid_exp_del', 'sub_gid_exp', 'sub_gid_pre_exp_del', 'sub_gid_pre_exp' ),
+							'mi_docman' => array( 'group', 'group_exp' ),
+							'mi_g2' => array( 'groups', 'groups_sel_scope' ),
+							'mi_juga' => array( 'enroll_group', 'enroll_group_exp' ),
+							'mi_remository' => array( 'group', 'group_exp' )
+							);
+
 		foreach ( $updates as $classname => $ucontent ) {
 			$dbtable = $ucontent[0];
 
@@ -1070,6 +1077,8 @@ $qua = array();
 			if ( $dbtable == 'subscr' ) {
 				$jsondeclare[] = 'userid';
 				$jsondeclare[] = 'used_plans';
+			} elseif ( $dbtable == 'microintegrations' ) {
+				$jsondeclare[] = 'class_name';
 			}
 
 			$query = 'SELECT `id`'
@@ -1098,6 +1107,13 @@ $qua = array();
 					}
 				}
 
+				if ( $dbtable == 'subscr' ) {
+					unset( $jsondeclare['userid'] );
+					unset( $jsondeclare['used_plans'] );
+				} elseif ( $dbtable == 'microintegrations' ) {
+					unset( $jsondeclare['class_name'] );
+				}
+
 				if ( count( $dec ) < 1 ) {
 					continue;
 				}
@@ -1111,15 +1127,10 @@ $qua = array();
 				foreach ( $dec as $fieldname ) {
 					// Decode from newline separated variables
 					$temp = parameterHandler::decode( $object->$fieldname );
-if ( $fieldname == 'micro_integrations' ) {
-	print_r($fieldname);
-	print_r($ucontent);
-	print_r($ucontent[1]);
-	print_r($ucontent[1][$fieldname]);exit;
-}
+
 					if ( !empty( $ucontent[1] ) ) {
 						if ( isset( $ucontent[1][$fieldname] ) ) {
-							if ( isset( $ucontent[1][$fieldname]['_self'] ) ) {print_r(" -- ISREL - ".$object->$fieldname."  - /ISREL -- ");
+							if ( in_array( '_self', $ucontent[1][$fieldname] ) ) {
 								$temp = explode( ';', $object->$fieldname );
 							} else {
 								foreach ( $temp as $key => $value ) {
@@ -1168,8 +1179,6 @@ if ( $fieldname == 'micro_integrations' ) {
 						if ( !empty( $vs ) || !empty( $vsmi ) ) {
 							$metaUserDB->addPreparedMIParams( $vs, $vsmi );
 						}
-
-						unset( $object->userid );
 					} elseif ( ( $dbtable == 'subscr' ) && ( $fieldname == 'used_plans' ) ) {
 						$plans = new stdClass();
 						$i = 0;
@@ -1190,8 +1199,6 @@ if ( $fieldname == 'micro_integrations' ) {
 						$up->used_plans		= $plans;
 
 						$metaUserDB->mergeParams( $up, 'plan_history' );
-
-						unset( $object->used_plans );
 					} else {
 						if ( ( $dbtable == 'plans' ) && ( $fieldname == 'custom_params' ) ) {
 							$newtemp = array();
@@ -1206,6 +1213,17 @@ if ( $fieldname == 'micro_integrations' ) {
 							}
 
 							$temp = $newtemp;
+						} elseif ( ( $dbtable == 'microIntegration' ) && ( $fieldname == 'params' ) ) {
+							if ( isset( $miupdate[$object->class_name] ) ) {
+								$newtemp = array();
+								foreach ( $temp as $locator => $content ) {
+									if ( in_array( $locator, $miupdate[$object->class_name] ) ) {
+										$newtemp[$locator] = explode( ';', $content );
+									}
+								}
+
+								$temp = $newtemp;
+							}
 						}
 
 						// ...To JSOON based notation

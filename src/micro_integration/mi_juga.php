@@ -44,9 +44,8 @@ class mi_juga
 
 		// Explode the selected groups
 		if ( !empty( $this->settings['enroll_group'] ) ) {
-			$gplist = explode( ';', $this->settings['enroll_group'] );
 			$selected_enroll_gps = array();
-			foreach ( $gplist as $enroll_group) {
+			foreach ( $this->settings['enroll_group'] as $enroll_group ) {
 				$selected_enroll_gps[]->value = $enroll_group;
 			}
 		} else {
@@ -54,9 +53,8 @@ class mi_juga
 		}
 
 		if ( !empty( $this->settings['enroll_group_exp'] ) ) {
-			$gplist = explode( ';', $this->settings['enroll_group_exp'] );
 			$selected_enroll_gps_exp = array();
-			foreach ( $gplist as $enroll_group_exp) {
+			foreach ( $this->settings['enroll_group_exp'] as $enroll_group_exp) {
 				$selected_enroll_gps_exp[]->value = $enroll_group_exp;
 			}
 		} else {
@@ -85,33 +83,19 @@ class mi_juga
 		return is_dir( $mosConfig_absolute_path . '/components/com_juga' );
 	}
 
-	function saveparams( $params )
-	{
-		global $mosConfig_absolute_path, $database;
-		$newparams = $params;
-
-		// Arrays -> semicolon separated fields
-		$newparams['enroll_group'] = implode( ';', $params['enroll_group']);
-		$newparams['enroll_group_exp'] = implode( ';', $params['enroll_group_exp']);
-
-		return $newparams;
-	}
-
 	function expiration_action( $request )
 	{
 		global $database;
 
 		if ( $this->settings['set_remove_group_exp'] ) {
-			$groups = explode( ';', $this->settings['enroll_group'] );
-			foreach ( $groups as $groupid ) {
+			foreach ( $this->settings['enroll_group'] as $groupid ) {
 				$this->DeleteUserFromGroup( $request->metaUser->userid, $groupid );
 			}
 		}
 
 		if ( $this->settings['set_enroll_group_exp'] ) {
 			if ( !empty( $this->settings['enroll_group_exp'] ) ) {
-				$gplist = explode( ';', $this->settings['enroll_group_exp'] );
-				foreach ( $gplist as $enroll_group_exp) {
+				foreach ( $this->settings['enroll_group_exp'] as $enroll_group_exp) {
 					$this->AddUserToGroup( $request->metaUser->userid, $enroll_group_exp );
 				}
 			}
@@ -130,8 +114,7 @@ class mi_juga
 
 		if ( $this->settings['set_enroll_group'] ) {
 			if( !empty( $this->settings['enroll_group'] ) ) {
-				$gplist = explode( ';', $this->settings['enroll_group'] );
-				foreach( $gplist as $enroll_group) {
+				foreach( $this->settings['enroll_group'] as $enroll_group) {
 					$this->AddUserToGroup( $request->metaUser->userid, $enroll_group );
 				}
 			}

@@ -8,10 +8,6 @@
  * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
  */
 
-/**
- * TODO (mic): check variable variables!
- */
-
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
 class mi_googleanalytics
@@ -23,16 +19,6 @@ class mi_googleanalytics
 		$info['desc'] = _AEC_MI_DESC_GOOGLEANALYTICS;
 
 		return $info;
-	}
-
-	function checkInstallation()
-	{
-		return true;
-	}
-
-	function install()
-	{
-		return true;
 	}
 
 	function Settings()

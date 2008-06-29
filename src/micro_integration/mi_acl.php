@@ -107,10 +107,8 @@ class mi_acl
 		$subgroups = array( 'sub_gid_del', 'sub_gid', 'sub_gid_exp_del', 'sub_gid_exp', 'sub_gid_pre_exp_del', 'sub_gid_pre_exp' );
 
 		foreach ( $subgroups as $groupname ) {
-			$list = explode( ';', $this->settings[$groupname] );
-
 			$selected = array();
-			foreach ( $list as $value ) {
+			foreach ( $this->settings[$groupname] as $value ) {
 				$selected[]->value = $value;
 			}
 
@@ -118,18 +116,6 @@ class mi_acl
 		}
 
 		return $settings;
-	}
-
-	function saveparams( $params )
-	{
-		$subgroups = array( 'sub_gid_del', 'sub_gid', 'sub_gid_exp_del', 'sub_gid_exp', 'sub_gid_pre_exp_del', 'sub_gid_pre_exp' );
-
-		foreach ( $subgroups as $groupname ) {
-			$temp = implode( ';', $params[$groupname] );
-			$params[$groupname] = $temp;
-		}
-
-		return $params;
 	}
 
 	function pre_expiration_action( $request )
