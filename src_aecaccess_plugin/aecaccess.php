@@ -166,10 +166,10 @@ class plgAuthenticationAECaccess extends JPlugin
 		switch( AEC_AUTH_ERROR_MSG ) {
 			case 'pending':
 			case 'open_invoice':
-				$redirect = '/index.php?option=com_acctexp&task=pending&userid=' . $id;
+				$redirect = JPATH_SITE . '/index.php?option=com_acctexp&task=pending&userid=' . $id;
 				break;
 			case 'expired':
-				$redirect = '/index.php?option=com_acctexp&task=expired&userid=' . $id ;
+				$redirect = JPATH_SITE . '/index.php?option=com_acctexp&task=expired&userid=' . $id ;
 				break;
 		}
 
