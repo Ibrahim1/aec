@@ -6185,7 +6185,7 @@ class Subscription extends jsonDBTable
 	/** @var text */
 	var $params 			= null;
 	/** @var text */
-	var $custom_params		= null;
+	var $customparams		= null;
 
 	/**
 	* @param database A database connector object
@@ -6197,7 +6197,7 @@ class Subscription extends jsonDBTable
 
 	function declareJSONfields()
 	{
-		return array( 'used_plans', 'params', 'custom_params' );
+		return array( 'used_plans', 'params', 'customparams' );
 	}
 
 	/**

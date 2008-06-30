@@ -1077,6 +1077,7 @@ function com_install()
 			if ( $dbtable == 'subscr' ) {
 				$unsetdec[] = 'userid';
 				$unsetdec[] = 'used_plans';
+				$unsetdec[] = 'previous_plan';
 			} elseif ( $dbtable == 'microintegrations' ) {
 				$unsetdec[] = 'class_name';
 			}
@@ -1094,7 +1095,6 @@ function com_install()
 			}
 
 			foreach ( $entries as $id ) {
-				$object = new stdClass();
 				$query = 'SELECT `' . implode( '`, `', $jsondeclare ) . '` FROM #__acctexp_' . $dbtable
 				. ' WHERE `id` = \'' . $id . '\''
 				;
@@ -1114,13 +1114,12 @@ function com_install()
 					}
 				}
 
-				if ( count( $dec ) < 1 ) {
-					continue;
+				if ( ( $dbtable == 'subscr' ) && empty( $object->params ) ) {
+					$dec[] = 'params';
 				}
 
-				if ( $dbtable == 'subscr' ) {
-					$metaUserDB = new metaUserDB( $database );
-					$metaUserDB->loadUserid( $object->userid );
+				if ( count( $dec ) < 1 ) {
+					continue;
 				}
 
 				$sets = array();
@@ -1145,62 +1144,79 @@ function com_install()
 					}
 
 					// Make sure to capture exceptions
-					if ( ( $dbtable == 'subscr' ) && ( $fieldname == 'userid' ) ) {
-						$vs		= new stdClass();
-						$vsmi	= new stdClass();
+					if ( ( $dbtable == 'subscr' ) && ( $fieldname == 'params' ) ) {
+						$metaUserDB = new metaUserDB( $database );
+						$metaUserDB->loadUserid( $object->userid );
 
-						foreach ( $temp as $key => $value ) {
-							if ( strpos( 'MI_FLAG', $key ) !== false ) {
-								$ks = explode( '_', $key );
+						if ( !empty( $temp ) ) {
+							$vs		= new stdClass();
+							$vsmi	= new stdClass();
 
-								$vname = array();
+							foreach ( $temp as $key => $value ) {
+								if ( strpos( 'MI_FLAG', $key ) !== false ) {
+									$ks = explode( '_', $key );
 
-								foreach ( $ks as $n => $k ) {
-									if ( in_array( $n, array( 0,1,2,4 ) ) ) {
-										// And nothing of value was lost
-									} elseif( $n == 3 ) {
-										// Set usage
-										$usage = $k;
-									} elseif( $n == 5 ) {
-										// Set MI
-										$mi = $k;
-									} elseif( $n == 5 ) {
-										// Set MI Variable name
-										$vname[] = $k;
+									$vname = array();
+
+									foreach ( $ks as $n => $k ) {
+										if ( in_array( $n, array( 0,1,2,4 ) ) ) {
+											// And nothing of value was lost
+										} elseif( $n == 3 ) {
+											// Set usage
+											$usage = $k;
+										} elseif( $n == 5 ) {
+											// Set MI
+											$mi = $k;
+										} elseif( $n == 5 ) {
+											// Set MI Variable name
+											$vname[] = $k;
+										}
 									}
+
+									$temp = implode( '_', $vname );
+									$vname = $temp;
+
+									$vs->$usage->$mi[$vname] = $value;
+									$vsmi->$mi[$vname] = $value;
 								}
+							}
 
-								$temp = implode( '_', $vname );
-								$vname = $temp;
-
-								$vs->$usage->$mi[$vname] = $value;
-								$vsmi->$mi[$vname] = $value;
+							if ( !empty( $vs ) || !empty( $vsmi ) ) {
+								$metaUserDB->addPreparedMIParams( $vs, $vsmi );
 							}
 						}
 
-						if ( !empty( $vs ) || !empty( $vsmi ) ) {
-							$metaUserDB->addPreparedMIParams( $vs, $vsmi );
-						}
-					} elseif ( ( $dbtable == 'subscr' ) && ( $fieldname == 'used_plans' ) ) {
-						$plans = new stdClass();
-						$i = 0;
-						foreach ( $object->used_plans as $plan ) {
+						$plans = array();
+
+						$used_plans = explode( ";", $object->used_plans );
+
+						foreach ( $used_plans as $plan ) {
 							$p = explode( ',', $plan );
 
-							if ( !empty( $p[1] ) ) {
-								$plans->$p[0] = $p[1];
+							if ( $p[0] == $object->previous_plan ) {
+								$end = $p;
 							} else {
-								$plans->$p[0] = 1;
+								if ( !empty( $p[1] ) ) {
+									$plans[$p[0]] = $p[1];
+								} else {
+									$plans[$p[0]] = 1;
+								}
 							}
+						}
 
-							$i++;
+						if ( isset( $end ) ) {
+							if ( !empty( $end[1] ) ) {
+								$plans[$end[0]] = $end[1];
+							} else {
+								$plans[$end[0]] = 1;
+							}
 						}
 
 						$up = new stdClass();
 						$up->plan_history	= $plans;
 						$up->used_plans		= $plans;
-
-						$metaUserDB->mergeParams( $up, 'plan_history' );
+print_r($metaUserDB);print_r($up);exit;
+						$metaUserDB->addParams( $up, 'plan_history' );
 					} else {
 						if ( ( $dbtable == 'plans' ) && ( $fieldname == 'custom_params' ) ) {
 							$newtemp = array();
@@ -1236,17 +1252,22 @@ function com_install()
 
 				unset( $object );
 
-				$query = 'UPDATE #__acctexp_' . $dbtable
-				. ' SET ' . implode( ', ', $sets ) . ''
-				. ' WHERE `id` = \'' . $id . '\''
-				;
-				$database->setQuery( $query );
-				if ( !$database->query() ) {
-			    	$errors[] = array( $database->getErrorMsg(), $query );
+				if ( !empty( $sets ) ) {
+					$query = 'UPDATE #__acctexp_' . $dbtable
+					. ' SET ' . implode( ', ', $sets ) . ''
+					. ' WHERE `id` = \'' . $id . '\''
+					;
+					$database->setQuery( $query );
+					if ( !$database->query() ) {
+				    	$errors[] = array( $database->getErrorMsg(), $query );
+					}
 				}
 			}
 		}
 	}
+
+	$eucaInstalldb->dropColifExists( 'used_plans', 'subscr' );
+	$eucaInstalldb->dropColifExists( 'previous_plan', 'subscr' );
 
 	// --- [ END OF DATABASE UPGRADE ACTIONS ] ---
 
