@@ -29,7 +29,7 @@
 
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
 function com_install()
 {
 	global $database, $mainframe, $mosConfig_absolute_path, $mosConfig_live_site, $mosConfig_dbprefix, $my, $aecConfig;
@@ -840,7 +840,6 @@ function com_install()
 			$remap_params["equalpg"]	= "equalpg";
 			$remap_params["gid"]		= "gid";
 			$remap_params["mingid"]		= "mingid";
-			$remap_params["processors"] = "processors";
 
 			$database->setQuery("SELECT * FROM  #__acctexp_plans");
 			$plans = $database->loadObjectList();
@@ -1053,7 +1052,7 @@ function com_install()
 	if ( $jsonupdate ) {
 		$updates = array(	'displayPipeline' => array( 'displaypipeline', array( 'params' => array('displayedto') ) ),
 							'eventLog' => array( 'eventlog', array( 'info' => array('actions') ) ),
-							'processor' => array( 'processor', array() ),
+							'processor' => array( 'config_processors', array() ),
 							'SubscriptionPlan' => array( 'plans', array( 'params' => array('similarplans','equalplans','processors'), 'micro_integrations' => array('_self'), 'restrictions' => array('previousplan_req','currentplan_req','overallplan_req','previousplan_req_excluded','currentplan_req_excluded','overallplan_req_excluded') ) ),
 							'Invoice' => array( 'Invoice', array( 'coupons' => array('_self'), 'micro_integrations' => array('_self') ) ),
 							'Subscription' => array( 'subscr', array() ),
@@ -1238,7 +1237,7 @@ function com_install()
 				unset( $object );
 
 				$query = 'UPDATE #__acctexp_' . $dbtable
-				. ' SET ' . implode( ' AND ', $sets ) . ''
+				. ' SET ' . implode( ', ', $sets ) . ''
 				. ' WHERE `id` = \'' . $id . '\''
 				;
 				$database->setQuery( $query );
@@ -1367,9 +1366,9 @@ function com_install()
 		. '<ul>' . "\n";
 		foreach ( $errors AS $error ) {
 			if ( is_array( $error ) ) {
-				echo '<li>' . $error . '</li>';
-			} else {
 				echo '<li>' . $error[0] . ' - ' . $error[1] . '</li>';
+			} else {
+				echo '<li>' . $error . '</li>';
 			}
 
 		}

@@ -3821,8 +3821,7 @@ function eventlog( $option )
 		$events[$id]->notify	= $row->notify;
 
 		$params = array();
-
-		if ( $row->params ) {
+		if ( !empty( $row->params ) && is_array( $row->params ) ) {
 			foreach ( $row->params as $key => $value ) {
 				$params[] = $key . '(' . $value . ')';
 			}
