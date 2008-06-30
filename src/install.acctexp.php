@@ -1061,7 +1061,7 @@ function com_install()
 							'coupon' => array( 'coupons', array( 'restrictions' => array('bad_combinations','usage_plans') ) ),
 							'coupon' => array( 'coupons_static', array( 'restrictions' => array('bad_combinations','usage_plans') ) )
 							);
-$qua = array();
+
 		$miupdate = array(	'mi_acl' => array( 'sub_gid_del', 'sub_gid', 'sub_gid_exp_del', 'sub_gid_exp', 'sub_gid_pre_exp_del', 'sub_gid_pre_exp' ),
 							'mi_docman' => array( 'group', 'group_exp' ),
 							'mi_g2' => array( 'groups', 'groups_sel_scope' ),
@@ -1074,12 +1074,15 @@ $qua = array();
 
 			$jsondeclare = call_user_func( array( $classname, 'declareJSONfields' ) );
 
+			$unsetdec = array();
 			if ( $dbtable == 'subscr' ) {
-				$jsondeclare[] = 'userid';
-				$jsondeclare[] = 'used_plans';
+				$unsetdec[] = 'userid';
+				$unsetdec[] = 'used_plans';
 			} elseif ( $dbtable == 'microintegrations' ) {
-				$jsondeclare[] = 'class_name';
+				$unsetdec[] = 'class_name';
 			}
+
+			$jsondeclare = array_merge( $jsondeclare, $unsetdec );
 
 			$query = 'SELECT `id`'
 					. ' FROM #__acctexp_' . $dbtable
@@ -1092,6 +1095,7 @@ $qua = array();
 			}
 
 			foreach ( $entries as $id ) {
+				$object = new stdClass();
 				$query = 'SELECT `' . implode( '`, `', $jsondeclare ) . '` FROM #__acctexp_' . $dbtable
 				. ' WHERE `id` = \'' . $id . '\''
 				;
@@ -1100,18 +1104,15 @@ $qua = array();
 
 				$dec = $jsondeclare;
 				foreach ( $jsondeclare as $fieldname ) {
+					if ( in_array( $fieldname, $unsetdec ) ) {
+						unset( $dec[array_search( $fieldname, $dec )] );
+						continue;
+					}
+
 					// No need to update what is empty
 					if ( empty( $object->$fieldname ) || ( strpos( $object->$fieldname, '{' ) === 0 ) || ( strpos( $object->$fieldname, '[' ) === 0 ) ) {
-						unset( $object->$fieldname );
 						unset( $dec[array_search( $fieldname, $dec )] );
 					}
-				}
-
-				if ( $dbtable == 'subscr' ) {
-					unset( $jsondeclare['userid'] );
-					unset( $jsondeclare['used_plans'] );
-				} elseif ( $dbtable == 'microintegrations' ) {
-					unset( $jsondeclare['class_name'] );
 				}
 
 				if ( count( $dec ) < 1 ) {
@@ -1132,10 +1133,12 @@ $qua = array();
 						if ( isset( $ucontent[1][$fieldname] ) ) {
 							if ( in_array( '_self', $ucontent[1][$fieldname] ) ) {
 								$temp = explode( ';', $object->$fieldname );
+								array_walk( $temp, 'trim' );
 							} else {
 								foreach ( $temp as $key => $value ) {
 									if ( in_array( $key, $ucontent[1][$fieldname] ) ) {
 										$temp[$key] = explode( ';', $value );
+										array_walk( $temp[$key], 'trim' );
 									}
 								}
 							}
@@ -1213,12 +1216,13 @@ $qua = array();
 							}
 
 							$temp = $newtemp;
-						} elseif ( ( $dbtable == 'microIntegration' ) && ( $fieldname == 'params' ) ) {
+						} elseif ( ( $dbtable == 'microintegrations' ) && ( $fieldname == 'params' ) ) {
 							if ( isset( $miupdate[$object->class_name] ) ) {
 								$newtemp = array();
 								foreach ( $temp as $locator => $content ) {
 									if ( in_array( $locator, $miupdate[$object->class_name] ) ) {
 										$newtemp[$locator] = explode( ';', $content );
+										array_walk( $newtemp[$locator], 'trim' );
 									}
 								}
 
@@ -1236,7 +1240,7 @@ $qua = array();
 				$query = 'UPDATE #__acctexp_' . $dbtable
 				. ' SET ' . implode( ' AND ', $sets ) . ''
 				. ' WHERE `id` = \'' . $id . '\''
-				;$qua[] = $query;
+				;
 				$database->setQuery( $query );
 				if ( !$database->query() ) {
 			    	$errors[] = array( $database->getErrorMsg(), $query );
@@ -1244,7 +1248,7 @@ $qua = array();
 			}
 		}
 	}
-print_r($updates);print_r($qua);exit;
+
 	// --- [ END OF DATABASE UPGRADE ACTIONS ] ---
 
 	// Make sure settings & info = updated
@@ -1255,22 +1259,22 @@ print_r($updates);print_r($qua);exit;
 
 	foreach ( $pplist as $ppname ) {
 		$pp = new PaymentProcessor();
-		$pp->loadName( $ppname );
+		if ( $pp->loadName( $ppname ) ) {
+			$pp->fullInit();
 
-		$pp->fullInit();
+			// Infos often change, so we protect the name and description and so on, but replace everything else
+			$original	= $pp->processor->info();
 
-		// Infos often change, so we protect the name and description and so on, but replace everything else
-		$original	= $pp->processor->info();
+			$protect = array( 'name', 'longname', 'statement', 'description' );
 
-		$protect = array( 'name', 'longname', 'statement', 'description' );
-
-		foreach ( $original as $name => $var ) {
-			if ( !in_array( $name, $protect ) ) {
-				$pp->info[$name] = $var;
+			foreach ( $original as $name => $var ) {
+				if ( !in_array( $name, $protect ) ) {
+					$pp->info[$name] = $var;
+				}
 			}
-		}
 
-		$pp->processor->storeload();aecDebug( $ppname );
+			$pp->processor->storeload();
+		}
 	}
 
 	// --- [ END OF STANDARD UPGRADE ACTIONS ] ---

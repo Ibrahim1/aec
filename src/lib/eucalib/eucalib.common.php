@@ -532,11 +532,15 @@ class parameterHandler
 			if ( !empty( $k[0] ) && isset( $k[1] ) ) {
 				// Strip slashes, but preserve special characters
 				$array[$k[0]] = stripslashes( str_replace( array( '\n', '\t', '\r' ), array( "\n", "\t", "\r" ), $k[1] ) );
+				// Extra fix for rogue chars
+				$array[$k[0]] = str_replace( array( '\n', '\t', '\r' ), array( "", "", "" ), $array[$k[0]] );
 			} elseif ( !empty( $k[0] ) ) {
 				$array[$k[0]] = null;
 			}
 			unset( $k );
 		}
+
+
 		return $array;
 	}
 

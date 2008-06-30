@@ -918,14 +918,13 @@ function editUser(  $option, $userid, $subscriptionid, $task )
 
 		$status = 'uncleared';
 
-		$params = $invoice->params;
-		if ( isset( $params['deactivated'] ) ) {
+		if ( isset( $invoice->params['deactivated'] ) ) {
 			$status = 'deactivated';
-		} elseif ( isset( $params['pending_reason'] ) ) {
-			if (  defined( '_PAYMENT_PENDING_REASON_' . strtoupper( $params['pending_reason'] ) ) ) {
-				$status = constant( '_PAYMENT_PENDING_REASON_' . strtoupper($params['pending_reason'] ) );
+		} elseif ( isset( $invoice->params['pending_reason'] ) ) {
+			if (  defined( '_PAYMENT_PENDING_REASON_' . strtoupper( $invoice->params['pending_reason'] ) ) ) {
+				$status = constant( '_PAYMENT_PENDING_REASON_' . strtoupper($invoice->params['pending_reason'] ) );
 			} else {
-				$status = $params['pending_reason'];
+				$status = $invoice->params['pending_reason'];
 			}
 		}
 
@@ -3824,11 +3823,8 @@ function eventlog( $option )
 		$params = array();
 
 		if ( $row->params ) {
-			foreach ( explode( "\n", $row->params ) as $param ) {
-				$p = explode( '=', $param);
-				if ( !($p[0] == '' ) ) {
-					$params[] = $p[0] . '(' . $p[1] . ')';
-				}
+			foreach ( $row->params as $key => $value ) {
+				$params[] = $key . '(' . $value . ')';
 			}
 		}
 		$events[$id]->params = implode( ', ', $params );

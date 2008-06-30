@@ -8072,13 +8072,13 @@ class AECToolbox
 			$command = $current->cmd;
 			$variables = $current->vars;
 
-			$variables = AECToolbox::resolveJSONitem( $variables, $rewrite );
+			$variables = AECToolbox::resolveJSONitem( $variables, $rewrite, $metaUser );
 
 			$current = AECToolbox::executeCommand( $command, $variables, $rewrite, $metaUser );
 
 		} elseif ( is_array( $current ) ) {
 			foreach( $current as $id => $item ) {
-				$current[$id] = AECToolbox::resolveJSONitem( $item, $rewrite );
+				$current[$id] = AECToolbox::resolveJSONitem( $item, $rewrite, $metaUser );
 			}
 		}
 
