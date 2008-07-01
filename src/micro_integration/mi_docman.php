@@ -93,10 +93,10 @@ class mi_docman
 
 			$gr[] = mosHTML::makeOption( $group->groups_id, $desc );
 
-			if ( in_array( $group->groups_id, $g ) ) {
+			if ( in_array( $group->groups_id, $this->settings['group'] ) ) {
 				$sg[] = mosHTML::makeOption( $group->groups_id, $desc );
 			}
-			if ( in_array( $group->groups_id, $this->settings['group'] ) ) {
+			if ( in_array( $group->groups_id, $this->settings['group_exp'] ) ) {
 				$sge[] = mosHTML::makeOption( $group->groups_id, $desc );
 			}
 		}

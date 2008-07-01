@@ -4042,8 +4042,13 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 
 	$aec_hack_start				= "// AEC HACK %s START" . "\n";
 	$aec_hack_end				= "// AEC HACK %s END" . "\n";
-	$aec_condition_start		= 'if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {' . "\n";
-	$aec_condition_start15		= 'if (file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" )) {' . "\n";
+
+	if ( $v15 ) {
+		$aec_condition_start		= 'if (file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" )) {' . "\n";
+	} else {
+		$aec_condition_start		= 'if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {' . "\n";
+	}
+
 	$aec_condition_end			= '}' . "\n";
 	$aec_include_class			= 'include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");' . "\n";
 	$aec_verification_check		= "AECToolBox::VerifyUsername( %s );" . "\n";
@@ -4054,7 +4059,12 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 	$aec_global_call			= 'global $mosConfig_live_site, $mosConfig_absolute_path;' . "\n";
 	$aec_redirect_notallowed	= 'mosRedirect( sefRelToAbs( "/index.php?option=com_acctexp&task=NotAllowed" ) );' . "\n";
 	$aec_redirect_notallowed15	= 'global $mainframe;' . "\n" . '$mainframe->redirect( "/index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
-	$aec_redirect_subscribe		= 'mosRedirect( sefRelToAbs( "/index.php?option=com_acctexp&task=subscribe" ) );' . "\n";
+
+	if ( $v15 ) {
+		$aec_redirect_subscribe		= 'mosRedirect( JURI::base( true ) . \'/index.php?option=com_acctexp&task=subscribe\' );' . "\n";
+	} else {
+		$aec_redirect_subscribe		= 'mosRedirect( sefRelToAbs( "/index.php?option=com_acctexp&task=subscribe" ) );' . "\n";
+	}
 
 	$aec_normal_hack = $aec_hack_start
 					. $aec_global_call
@@ -4189,7 +4199,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 
 	$aec_j15hack1 =  $aec_hack_start
 					. 'if ( $error->message == JText::_("ALERTNOTAUTH") ) {'
-					. $aec_condition_start15
+					. $aec_condition_start
 					. $aec_redirect_notallowed15
 					. $aec_condition_end
 					. $aec_condition_end

@@ -1372,6 +1372,8 @@ color: #333;
 <li>Fixing calling of registration form in rare case</li>
 <li>now redirects if username or email in use!</li>
 <li>fixing broken language calling</li>
+<li>AECaccess plugin: fix for subdirectories</li>
+<li>Fixing registration Hack #6</li>
 </ul>
 </li>
 <li><strong>Minor</strong>
@@ -1415,7 +1417,6 @@ color: #333;
 <li class="check">"Standard Parent Plan" which is assigned as primary plan if a user chooses a secondary plan as first plan</li>
 <li class="check">"Extend previous Membership" button on expired</li>
 <li>CB 1.2 integration</li>
-<li>AECaccess plugin: fix for subdirectories</li>
 </ul>
 </li>
 <li class="todo"><strong>Todo</strong>
@@ -1424,11 +1425,11 @@ color: #333;
 <li class="check">Port all parameter fields over to JSON (uh yes its awesome)</li>
 <li class="check">JSOON Notation for completely lossless (even class preserving) mapping between PHP Objects (and associative arrays) and JSON</li>
 <li class="check">move most parameter fields of subscriptions to the new meta db entry</li>
-<li class="finish">Transfer subscription history to new metaUser table</li>
+<li class="check">Transfer subscription history to new metaUser table</li>
 <li class="check">Let RWengine access full metaUser Object</li>
 <li class="check">HotProperty Integration to support individual listing control</li>
-<li class="todo">MIs to have a function that modifies $Request</li>
-<li class="todo">The HP MI will be the first to use that - modifying the cost of the plan by the amount of listings a user chose</li>
+<li class="check">MIs to have a function that modifies the price of a checkout</li>
+<li class="check">The HP MI will be the first to use that - modifying the cost of the plan by the amount of listings a user chose</li>
 <li class="todo">eCheck for CIM</li>
 <li class="todo">Versioning support in install to easier select necessary updates</li>
 <li class="todo">Express Checkout and PreAuth for PayPal Pro</li>

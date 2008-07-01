@@ -158,13 +158,22 @@ class metaUser
 
 	function temporaryRFIX()
 	{
-		if ( !empty( $this->meta->plan_history->used_plans ) ) {
-			$this->focusSubscription->used_plans = $this->meta->plan_history->used_plans;
-			$this->objSubscription->used_plans = $this->meta->plan_history->used_plans;
+		if ( !empty( $this->meta->plan_params->used_plans ) ) {
+			$used_plans= $this->meta->plan_params->used_plans;
 		} else {
-			$this->focusSubscription->used_plans = array();
-			$this->objSubscription->used_plans = array();
+			$used_plans = array();
 		}
+
+		if ( !empty( $this->meta->plan_params->plan_history ) && is_array( $this->meta->plan_params->plan_history ) ) {
+			$previous_plan = end( $this->meta->plan_params->plan_history );
+		} else {
+			$previous_plan = 0;
+		}
+
+		$this->focusSubscription->used_plans = $used_plans;
+		$this->focusSubscription->previous_plan = $previous_plan;
+		$this->objSubscription->used_plans = $used_plans;
+		$this->objSubscription->previous_plan = $previous_plan;
 	}
 
 	function getCMSparams( $name )
@@ -906,6 +915,21 @@ class metaUserDB extends jsonDBTable
 		}
 
 		$this->storeload();
+	}
+
+	function addPlanID( $id )
+	{
+		$this->plan_history[] = $id;
+
+		if ( isset( $this->plan_params->used_plans[$id] ) ) {
+			$this->plan_params->used_plans[$id]++;
+		} else {
+			$this->plan_params->used_plans[$id] = 1;
+		}
+
+		$this->storeload();
+
+		return true;
 	}
 
 }
@@ -3261,6 +3285,8 @@ toggler.setStyle('color', '#528CE0');
 			default:
 				if ( !empty( $row[0] ) ) {
 					$return .= '<' . $row[0] . '>' . $row[2] . '</' . $row[0] . '>';
+				} elseif ( empty( $row[0] ) && empty( $row[2] ) ) {
+					$return .= '<' . $row[1] . ' />';
 				} else {
 					$return .= $row[2];
 				}
@@ -3539,7 +3565,9 @@ class SubscriptionPlan extends jsonDBTable
 			}
 
 			$metaUser->focusSubscription->status = $status;
-			$metaUser->focusSubscription->setPlanID( $this->id );
+			$metaUser->focusSubscription->plan = $this->id;
+
+			$metaUser->addPlanID( $this->id );
 
 			$metaUser->focusSubscription->lastpay_date = date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
 			$metaUser->focusSubscription->type = $processor;
@@ -5032,7 +5060,34 @@ class InvoiceFactory
 			$this->terms->incrementPointer();
 		}
 
-		$amount = $this->objUsage->SubscriptionAmount( $this->recurring, $this->metaUser->objSubscription );
+		$this->amount = $this->objUsage->SubscriptionAmount( $this->recurring, $this->metaUser->objSubscription );
+
+		$micro_integrations = $this->objUsage->getMicroIntegrations();
+
+		if ( is_array( $micro_integrations ) ) {
+			$add = new stdClass();
+			$add->price =& $this->amount;
+
+			foreach ( $micro_integrations as $mi_id ) {
+				$mi = new microIntegration( $database );
+
+				if ( !$mi->mi_exists( $mi_id ) ) {
+					continue;
+				}
+
+				$mi->load( $mi_id );
+
+				if ( !$mi->callIntegration() ) {
+					continue;
+				}
+
+				if ( method_exists( $mi->mi_class, 'modifyPrice' )  ) {
+					$mi->relayAction( $this->metaUser, null, $this->objInvoice, $this->objUsage, 'modifyPrice', $add );
+				}
+
+				unset( $mi );
+			}
+		}
 
 		if ( !empty( $aecConfig->cfg['enable_coupons'] ) && !empty( $this->objInvoice->coupons ) ) {
 			$coupons = $this->objInvoice->coupons;
@@ -5040,7 +5095,7 @@ class InvoiceFactory
 
 			$cpsh = new couponsHandler();
 
-			$this->terms = $cpsh->applyCouponsToTerms( $this->terms, $coupons, $this->metaUser, $amount, $this );
+			$this->terms = $cpsh->applyCouponsToTerms( $this->terms, $coupons, $this->metaUser, $this->payment->amount, $this );
 
 			if ( count( $orcoupn ) != count( $coupons ) ) {
 				foreach ( $orcoupn as $couponcode ) {
@@ -5446,6 +5501,12 @@ class Invoice extends jsonDBTable
 				$return = $plan->SubscriptionAmount( $recurring, $metaUser->objSubscription );
 			} else {
 				$return = $plan->SubscriptionAmount( $recurring, false );
+			}
+
+			if ( !empty( $plan->micro_integrations ) ) {
+				$mih = new microIntegrationHandler();
+
+				$amount['amount'] = $mih->applyMIs( $amount['amount'], $plan, $metaUser );
 			}
 
 			if ( $this->coupons ) {
@@ -5953,6 +6014,12 @@ class Invoice extends jsonDBTable
 
 		$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], $metaUser->objSubscription );
 
+		if ( !empty( $new_subscription->micro_integrations ) ) {
+			$mih = new microIntegrationHandler();
+
+			$amount['amount'] = $mih->applyMIs( $amount['amount'], $new_subscription, $metaUser );
+		}
+
 		if ( !empty( $this->coupons ) ) {
 			$cph = new couponsHandler();
 
@@ -6013,6 +6080,14 @@ class Invoice extends jsonDBTable
 		} else {
 			$amount['amount'] = $this->amount;
 			$int_var['recurring'] = 0;
+		}
+
+		if ( !empty( $new_subscription->micro_integrations ) ) {
+			$mih = new microIntegrationHandler();
+
+			$metaUser = new metaUser( $this->userid );
+
+			$amount['amount'] = $mih->applyMIs( $amount['amount'], $new_subscription, $metaUser );
 		}
 
 		if ( !empty( $this->coupons ) ) {
@@ -6605,52 +6680,6 @@ class Subscription extends jsonDBTable
 		} else {
 			return false;
 		}
-	}
-
-	function setPlanID( $id )
-	{
-		if ( $this->plan ) {
-			$this->previous_plan = $this->plan;
-			$this->setUsedPlan( $this->plan );
-		}
-		$this->plan	= $id;
-	}
-
-	function setUsedPlan( $id )
-	{
-		if ( isset( $this->used_plans[$id] ) ) {
-			$this->used_plans[$id]++;
-		} else {
-			$this->used_plans[$id] = 1;
-		}
-
-		return true;
-	}
-
-	function getUsedPlans()
-	{
-		$used_plans = explode( ';', $this->used_plans );
-
-		$array = array();
-		foreach ( $used_plans as $entry ) {
-			$entryarray = explode( ',', $entry );
-
-			if ( !empty( $entryarray[0] ) ) {
-				if ( !empty( $entryarray[1] ) ) {
-					$amount = $entryarray[1];
-				} else {
-					$amount = 1;
-				}
-
-				if ( isset( $array[$entryarray[0]] ) ) {
-					$array[$entryarray[0]] += $amount;
-				} else {
-					$array[$entryarray[0]] = $amount;
-				}
-			}
-		}
-
-		return $array;
 	}
 
 	function sendEmailRegistered( $renew )
@@ -8438,6 +8467,38 @@ class microIntegrationHandler
 			}
 		}
 	}
+
+	function applyMIs( $amount, $subscription, $metaUser )
+	{
+		global $database;
+
+		$add = new stdClass();
+		$add->price =& $amount;
+
+		if ( !empty( $subscription->micro_integrations ) ) {
+			foreach ( $subscription->micro_integrations as $mi_id ) {
+				$mi = new microIntegration( $database );
+
+				if ( !$mi->mi_exists( $mi_id ) ) {
+					continue;
+				}
+
+				$mi->load( $mi_id );
+
+				if ( !$mi->callIntegration() ) {
+					continue;
+				}
+
+				if ( method_exists( $mi->mi_class, 'modifyPrice' )  ) {
+					$amount = $mi->relayAction( $metaUser, null, null, $subscription, 'modifyPrice', $add );
+				}
+
+				unset( $mi );
+			}
+		}
+
+		return $amount;
+	}
 }
 
 class MI
@@ -8472,17 +8533,17 @@ class MI
 
 	function pre_expiration_action( $params, $metaUser, $plan )
 	{
-		return $this->relayAction( $params, $metaUser, $plan, null, '_pre_exp' );
+		return $this->relayAction( $params, $metaUser, $plan, null, '_pre_exp', false );
 	}
 
 	function expiration_action( $params, $metaUser, $plan )
 	{
-		return $this->relayAction( $params, $metaUser, $plan, null, '_exp' );
+		return $this->relayAction( $params, $metaUser, $plan, null, '_exp', false );
 	}
 
 	function action( $params, $metaUser, $invoice, $plan )
 	{
-		return $this->relayAction( $params, $metaUser, $plan, $invoice, '' );
+		return $this->relayAction( $params, $metaUser, $plan, $invoice, '', false );
 	}
 
 	function setError( $error )
@@ -8633,7 +8694,7 @@ class microIntegration extends jsonDBTable
 
 	function action( $metaUser, $exchange=null, $invoice=null, $objplan=null )
 	{
-		return $this->relayAction( $metaUser, $exchange, $invoice, $objplan, 'action' );
+		return $this->relayAction( $metaUser, $exchange, $invoice, $objplan, 'action', false );
 	}
 
 	function pre_expiration_action( $metaUser, $objplan=null )
@@ -8663,7 +8724,7 @@ class microIntegration extends jsonDBTable
 			// Create the new flags
 			$metaUser->focusSubscription->setMIflags( $objplan->id, $this->id, $newflags );
 
-			return $this->relayAction( $metaUser, null, null, $objplan, 'pre_expiration_action' );
+			return $this->relayAction( $metaUser, null, null, $objplan, 'pre_expiration_action', false );
 		} else {
 			return null;
 		}
@@ -8671,10 +8732,10 @@ class microIntegration extends jsonDBTable
 
 	function expiration_action( $metaUser, $objplan=null )
 	{
-		return $this->relayAction( $metaUser, null, null, $objplan, 'expiration_action' );
+		return $this->relayAction( $metaUser, null, null, $objplan, 'expiration_action', false );
 	}
 
-	function relayAction( $metaUser, $exchange=null, $invoice=null, $objplan=null, $stage='action' )
+	function relayAction( $metaUser, $exchange=null, $invoice=null, $objplan=null, $stage='action', &$add )
 	{
 		// Exchange Settings
 		if ( is_array( $exchange ) && !empty( $exchange ) ) {
@@ -8693,12 +8754,17 @@ class microIntegration extends jsonDBTable
 				}
 			}
 		}
+
 		$request = new stdClass();
 		$request->parent			=& $this;
 		$request->metaUser			=& $metaUser;
 		$request->invoice			=& $invoice;
 		$request->plan				=& $objplan;
 		$request->params			=& $params;
+
+		if ( $add !== false ) {
+			$request->add			=& $add;
+		}
 
 		// Call Action
 		if ( method_exists( $this->mi_class, 'relayAction' ) ) {
@@ -8711,6 +8777,9 @@ class microIntegration extends jsonDBTable
 					break;
 				case 'expiration_action':
 					$area = '_exp';
+					break;
+				default:
+					$area = $stage;
 					break;
 			}
 
@@ -9256,6 +9325,47 @@ class couponHandler
 		}
 	}
 
+	function forceload( $coupon_code )
+	{
+		global $database;
+
+		// Get this coupons id from the static table
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_coupons_static'
+				. ' WHERE `coupon_code` = \'' . $database->getEscaped( $coupon_code ) . '\''
+				;
+		$database->setQuery( $query );
+		$couponid = $database->loadResult();
+
+		if ( $couponid ) {
+			// Its static, so set type to 1
+			$this->type = 1;
+		} else {
+			// Coupon not found, take the regular table
+			$query = 'SELECT `id`'
+					. ' FROM #__acctexp_coupons'
+					. ' WHERE `coupon_code` = \'' . $database->getEscaped( $coupon_code ) . '\''
+					;
+			$database->setQuery( $query );
+			$couponid = $database->loadResult();
+
+			// Its not static, so set type to 0
+			$this->type = 0;
+		}
+
+		if ( $couponid ) {
+			// Status = OK
+			$this->status = true;
+
+			// establish coupon object
+			$this->coupon = new coupon( $database, $this->type );
+			$this->coupon->load( $couponid );
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	function switchType()
 	{
 		global $database;
@@ -9577,14 +9687,14 @@ class couponHandler
 			if ( isset( $amount['amount3'] ) ) {
 				if ( $this->discount['useon_full'] ) {
 					if ( $this->discount['useon_full_all'] ) {
-						$amount['amount3']	= $this->applyDiscount($amount['amount3']);
+						$amount['amount3']	= $this->applyDiscount( $amount['amount3'] );
 					} else {
 						if ( $amount['amount1'] > 0 ) {
-							$amount['amount2']	= $this->applyDiscount($amount['amount3']);
+							$amount['amount2']	= $this->applyDiscount( $amount['amount3'] );
 							$amount['period2']	= $amount['period3'];
 							$amount['unit2']	= $amount['unit3'];
 						} else {
-							$amount['amount1']	= $this->applyDiscount($amount['amount3']);
+							$amount['amount1']	= $this->applyDiscount( $amount['amount3'] );
 							$amount['period1']	= $amount['period3'];
 							$amount['unit1']	= $amount['unit3'];
 						}

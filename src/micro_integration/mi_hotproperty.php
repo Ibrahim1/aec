@@ -66,6 +66,27 @@ class mi_hotproperty extends MI
 		$settings['add_list_userchoice_amt']	= array( 'inputD' );
 		$settings['add_list_customprice']		= array( 'inputD' );
 
+		$settings['easy_list_userchoice']		= array( 'list_yesno' );
+		$settings['easy_list_userchoice_n']		= array( 'inputA' );
+
+		if ( !empty( $this->settings['easy_list_userchoice_n'] ) ) {
+	 		$opts = array();
+			$opts[0] = mosHTML::makeOption ( "EQ", "Equal to" ); // Should probably be langauge file defined?
+			$opts[1] = mosHTML::makeOption ( "LT", "Lesser than" );
+			$opts[2] = mosHTML::makeOption ( "GT", "Greater than" );
+
+			for( $i=0; $i<$this->settings['easy_list_userchoice_n']; $i++ ) {
+				$settings['lists']['elu_'.$i.'_op']	= mosHTML::selectList( $opts, 'elu_'.$i.'_op', 'size="1"', 'value', 'text', $this->settings['elu_'.$i.'_op'] );
+
+				$settings[] = array( '', 'hr', '' );
+				$settings['elu_'.$i.'_op'] = array( 'list', _AEC_MI_HOTPROPERTY_EASYLIST_OP_NAME, _AEC_MI_HOTPROPERTY_EASYLIST_OP_DESC );
+				$settings['elu_'.$i.'_no'] = array( 'inputA', _AEC_MI_HOTPROPERTY_EASYLIST_NO_NAME, _AEC_MI_HOTPROPERTY_EASYLIST_NO_DESC );
+				$settings['elu_'.$i.'_ch'] = array( 'inputA', _AEC_MI_HOTPROPERTY_EASYLIST_CH_NAME, _AEC_MI_HOTPROPERTY_EASYLIST_CH_DESC );
+			}
+
+			$settings[] = array( '', 'hr', '' );
+		}
+
 		$settings['assoc_company']	= array( 'list_yesno' );
 		$settings['rebuild']		= array( 'list_yesno' );
 		$settings['remove']			= array( 'list_yesno' );
@@ -103,21 +124,67 @@ class mi_hotproperty extends MI
 		return $settings;
 	}
 
-	function modifyRequest( $request )
+	function modifyPrice( $request )
 	{
-		if ( isset( $request->params['hpamt'] ) ) {
-			$groups = explode( ';', $this->settings['add_list_userchoice_amt'] );
-
-			foreach ( $groups as $group ) {
-				if ( strpos( $group, ',' ) ) {
-					$gg = explode( ',', $group );
-					
-				} else {
-					return $request;
+		if ( !empty( $request->params['hpamt'] ) ) {
+			if ( !empty( $this->settings['easy_list_userchoice'] ) && !empty( $this->settings['easy_list_userchoice_n'] ) ) {
+				for( $i=0; $i<$this->settings['easy_list_userchoice_n']; $i++ ) {
+					switch ( $this->settings['elu_'.$i.'_op'] ) {
+						case 'EQ':
+							if ( $request->params['hpamt'] == $this->settings['elu_'.$i.'_no'] ) {
+								$request->add->price = $this->settings['elu_'.$i.'_ch'];
+							}
+							break;
+						case 'GT':
+							if ( $request->params['hpamt'] > $this->settings['elu_'.$i.'_no'] ) {
+								$request->add->price = $this->settings['elu_'.$i.'_ch'];
+							}
+							break;
+						case 'LT':
+							if ( $request->params['hpamt'] < $this->settings['elu_'.$i.'_no'] ) {
+								$request->add->price = $this->settings['elu_'.$i.'_ch'];
+							}
+							break;
+					}
 				}
-			}
+			} else {
+				$groups = explode( ';', $this->settings['add_list_userchoice_amt'] );
 
-			$request->payment->amount;
+				$discount = 0;
+				foreach ( $groups as $group ) {
+					if ( strpos( $group, ',' ) ) {
+						$gg = explode( ',', $group );
+
+						if ( strpos( '<', $gg[0] ) !== false ) {
+							$s = str_replace( '<', '', $gg[0] );
+							if ( $request->params['hpamt'] < $s ) {
+								$discount = $gg[1];
+								continue;
+							}
+						} elseif ( strpos( '>', $group ) !== false ) {
+							$s = str_replace( '>', '', $gg[0] );
+							if ( $request->params['hpamt'] > $s ) {
+								$discount = $gg[1];
+								continue;
+							}
+						} else {
+							if ( $request->params['hpamt'] == $gg[0] ) {
+								$discount = $gg[1];
+								continue;
+							}
+						}
+					} else {
+						return null;
+					}
+				}
+
+				$cph = new couponHandler();
+				if ( $cph->forceload( $discount ) ) {
+					$cph->applyCoupon( $request->add->price );
+				}
+
+				return true;
+			}
 		}
 	}
 
@@ -246,6 +313,10 @@ class mi_hotproperty extends MI
 		$agent = null;
 		$company = null;
 
+		if ( $area == 'modifyPrice' ) {
+			return $this->modifyPrice( $request );
+		}
+
 		if ( $this->settings['create_agent'.$area] ){
 			if ( !empty( $this->settings['agent_fields'.$area] ) ) {
 				$agent = $this->createAgent( $this->settings['agent_fields'.$area], $request );
@@ -302,7 +373,7 @@ class mi_hotproperty extends MI
 			$this->publishProperties( $agent );
 		}
 
-		if ( !empty( $this->settings['set_listings'.$area] ) || !empty( $this->settings['set_listings'.$area] ) ) {
+		if ( !empty( $this->settings['set_listings'.$area] ) || !empty( $this->settings['set_listings'.$area] ) || ( !empty( $this->settings['add_list_userchoice'] ) && !empty( $request->params['hpamt']  ) )  ) {
 			global $database;
 
 			$mi_hphandler = new mosetstree( $database );
@@ -317,7 +388,13 @@ class mi_hotproperty extends MI
 
 			if ( $this->settings['set_listings'] ) {
 				$mi_hphandler->setListings( $this->settings['set_listings'] );
-			} elseif ( $this->settings['add_listings'] ) {
+			}
+
+			if ( $this->settings['add_listings'] ) {
+				$mi_hphandler->addListings( $this->settings['add_listings'] );
+			}
+
+			if ( $this->settings['add_list_userchoice'] ) {
 				$mi_hphandler->addListings( $this->settings['add_listings'] );
 			}
 
@@ -584,7 +661,7 @@ class aec_hotproperty extends mosDBTable
 	{
 		if( $this->active ) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
@@ -606,12 +683,12 @@ class aec_hotproperty extends mosDBTable
 
 	function useListing()
 	{
-		if( $this->hasListingsLeft() && $this->is_active() ) {
+		if ( $this->hasListingsLeft() && $this->is_active() ) {
 			$this->used_listings++;
 			$this->check();
 			$this->store();
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}

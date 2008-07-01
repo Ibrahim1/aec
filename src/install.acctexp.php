@@ -1173,11 +1173,12 @@ function com_install()
 										}
 									}
 
-									$temp = implode( '_', $vname );
-									$vname = $temp;
+									$t = implode( '_', $vname );
+									$vname = $t;
 
 									$vs->$usage->$mi[$vname] = $value;
 									$vsmi->$mi[$vname] = $value;
+									unset( $temp[$key] );
 								}
 							}
 
@@ -1185,38 +1186,48 @@ function com_install()
 								$metaUserDB->addPreparedMIParams( $vs, $vsmi );
 							}
 						}
-/*
+
 						$plans = array();
 
-						$used_plans = explode( ";", $object->used_plans );
+						if ( !empty( $object->used_plans ) ) {
+							$used_plans = explode( ";", $object->used_plans );
 
-						foreach ( $used_plans as $plan ) {
-							$p = explode( ',', $plan );
+							foreach ( $used_plans as $plan ) {
+								$p = explode( ',', $plan );
 
-							if ( $p[0] == $object->previous_plan ) {
-								$end = $p;
-							} else {
-								if ( !empty( $p[1] ) ) {
-									$plans[$p[0]] = $p[1];
+								if ( $p[0] == $object->previous_plan ) {
+									$end = $p;
 								} else {
-									$plans[$p[0]] = 1;
+									if ( !empty( $p[1] ) ) {
+										$plans[$p[0]] = $p[1];
+									} else {
+										$plans[$p[0]] = 1;
+									}
 								}
 							}
-						}
 
-						if ( isset( $end ) ) {
-							if ( !empty( $end[1] ) ) {
-								$plans[$end[0]] = $end[1];
-							} else {
-								$plans[$end[0]] = 1;
+							if ( isset( $end ) ) {
+								if ( !empty( $end[1] ) ) {
+									$plans[$end[0]] = $end[1];
+								} else {
+									$plans[$end[0]] = 1;
+								}
 							}
+
+							$history = array();
+							foreach ( $plans as $pid => $poc ) {
+								for( $i=0; $i<$poc; $i++ ) {
+									$history[] = $pid;
+								}
+							}
+
+							$up = new stdClass();
+							$up->plan_history	= $history;
+							$up->used_plans		= $plans;
+
+							$metaUserDB->addParams( $up, 'plan_params' );aecDebug($database);aecDebug('addParams');
+							$metaUserDB->storeload();aecDebug($database);aecDebug('storeload');
 						}
-
-						$up = new stdClass();
-						$up->plan_history	= $plans;
-						$up->used_plans		= $plans;
-
-						$metaUserDB->addParams( $up, 'plan_history' );*/
 					} else {
 						if ( ( $dbtable == 'plans' ) && ( $fieldname == 'custom_params' ) ) {
 							$newtemp = array();

@@ -270,7 +270,7 @@ class jsonDBTable extends paramDBTable
 	function getParams( $field = 'params' )
 	{
 		if ( empty( $this->$field ) ) {
-			return false;
+			return null;
 		}
 
 		return jsoonHandler::decode( stripslashes( $this->$field ) );
