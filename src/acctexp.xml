@@ -187,6 +187,14 @@
 			<filename>install/index.html</filename>
 			<filename>install/jf_content_elements_aec.de.tar.gz</filename>
 			<filename>install/jf_content_elements_aec.en.tar.gz</filename>
+			<filename>install/inc/index.html</filename>
+			<filename>install/inc/dbtables.inc.php</filename>
+			<filename>install/inc/menusetup.inc.php</filename>
+			<filename>install/inc/upgrade_0_6_0.inc.php</filename>
+			<filename>install/inc/upgrade_0_8_0.inc.php</filename>
+			<filename>install/inc/upgrade_0_10_0.inc.php</filename>
+			<filename>install/inc/upgrade_0_12_0.inc.php</filename>
+			<filename>install/inc/upgrade_0_12_6i.inc.php</filename>
 		</files>
 		<images>
 		</images>
