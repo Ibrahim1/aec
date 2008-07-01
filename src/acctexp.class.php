@@ -151,7 +151,19 @@ class metaUser
 				$this->focusSubscription = new Subscription( $database );
 				$this->focusSubscription->load( $aecid );
 				$this->hasSubscription = 1;
+				$this->temporaryRFIX();
 			}
+		}
+	}
+
+	function temporaryRFIX()
+	{
+		if ( !empty( $this->meta->plan_history->used_plans ) ) {
+			$this->focusSubscription->used_plans = $this->meta->plan_history->used_plans;
+			$this->objSubscription->used_plans = $this->meta->plan_history->used_plans;
+		} else {
+			$this->focusSubscription->used_plans = array();
+			$this->objSubscription->used_plans = array();
 		}
 	}
 
@@ -420,6 +432,7 @@ class metaUser
 		if ( $subscription->id ) {
 			if ( $subscription->userid == $this->userid ) {
 				$this->focusSubscription = $subscription;
+				$this->temporaryRFIX();
 				return true;
 			} else {
 				// This subscription does not belong to the user!
@@ -658,7 +671,7 @@ class metaUser
 						case 'plan_previous':
 							if ( $this->hasSubscription ) {
 								if (
-									( in_array( (int) $this->focusSubscription->previous_plan, $check ) )
+									( in_array( (int) $this->meta->getPreviousPlan, $check ) )
 									|| ( ( in_array( 0, $check ) ) && is_null( $this->focusSubscription->previous_plan ) )
 									) {
 									$status = true;
@@ -673,7 +686,7 @@ class metaUser
 						// Check whether the user has used the right plan before
 						case 'plan_overall':
 							if ( $this->hasSubscription ) {
-								$array = $this->focusSubscription->getUsedPlans();
+								$array = $this->meta->getUsedPlans();
 								foreach ( $check as $v ) {
 									if ( ( !empty( $array[(int) $v] ) || ( $this->focusSubscription->plan == $v ) ) ) {
 										$status = true;
@@ -689,7 +702,7 @@ class metaUser
 						// Check whether the user has used the plan at least a certain number of times
 						case 'plan_amount_min':
 							if ( $this->hasSubscription ) {
-								$usage = $this->focusSubscription->getUsedPlans();
+								$usage = $this->meta->getUsedPlans();
 								$check = explode( ',', $value );
 								if ( isset( $usage[(int) $check[0]] ) ) {
 									// We have to add one here if the user is currently in the plan
@@ -708,7 +721,7 @@ class metaUser
 						// Check whether the user has used the plan at max a certain number of times
 						case 'plan_amount_max':
 							if ( $this->hasSubscription ) {
-								$usage = $this->focusSubscription->getUsedPlans();
+								$usage = $this->meta->getUsedPlans();
 								$check = explode( ',', $value );
 								if ( isset( $usage[(int) $check[0]] ) ) {
 									// We have to add one here if the user is currently in the plan
@@ -3702,26 +3715,23 @@ class SubscriptionPlan extends jsonDBTable
 			$return['renew'] = 1;
 
 			if ( $user_subscription->used_plans ) {
-				$used_plans			= explode( ';', $user_subscription->used_plans );
 				$plans_comparison	= false;
 
-				if ( is_array( $used_plans ) ) {
-					foreach ( $used_plans as $used_plan_id ) {
-						if ( $used_plan_id ) {
-							$planid = explode( ',', $used_plan_id);
-
+				if ( is_array( $user_subscription->used_plans ) ) {
+					foreach ( $user_subscription->used_plans as $planid ) {
+						if ( $planid ) {
 							if ( isset( $planid[0] ) ){
 								if ( empty( $planid[0] ) ) {
 									continue;
 								} else {
-									$planid = $planid[0];
+									$pid = $planid[0];
 								}
 							} else {
 								continue;
 							}
 
 							$used_subscription = new SubscriptionPlan( $database );
-							$used_subscription->load( $planid );
+							$used_subscription->load( $pid );
 
 							if ( $this->id === $used_subscription->id ) {
 								$used_comparison = 2;
@@ -3854,11 +3864,9 @@ class SubscriptionPlan extends jsonDBTable
 	function getMicroIntegrations()
 	{
 		if ( !empty( $this->micro_integrations ) ) {
-			$mis = json_decode( $this->micro_integrations );
-
 			$query = 'SELECT `id`'
 					. ' FROM #__acctexp_microintegrations'
-					. ' WHERE `id` IN (' . $this->_db->getEscaped( implode( ',', $mis ) ) . ')'
+					. ' WHERE `id` IN (' . $this->_db->getEscaped( implode( ',', $this->micro_integrations ) ) . ')'
 					. ' ORDER BY `ordering` ASC'
 					;
 			$this->_db->setQuery( $query );
@@ -5841,7 +5849,7 @@ class Invoice extends jsonDBTable
 					}
 
 					if ( is_object( $metaUser ) ) {
-						if ( $mi->action( $metaUser->userid, null, $this, $new_plan ) === false ) {
+						if ( $mi->action( $metaUser, null, $this, $new_plan ) === false ) {
 							if ( $aecConfig->cfg['breakon_mi_error'] ) {
 								return false;
 							}
@@ -6172,10 +6180,6 @@ class Subscription extends jsonDBTable
 	var $eot_cause			= null;
 	/** @var int */
 	var $plan				= null;
-	/** @var int */
-	var $previous_plan		= null;
-	/** @var string */
-	var $used_plans			= null;
 	/** @var string */
 	var $recurring			= null;
 	/** @var int */
@@ -6198,6 +6202,19 @@ class Subscription extends jsonDBTable
 	function declareJSONfields()
 	{
 		return array( 'used_plans', 'params', 'customparams' );
+	}
+
+	function check()
+	{
+		if ( isset( $this->used_plans ) ) {
+			unset( $this->used_plans );
+		}
+
+		if ( isset( $this->previous_plan ) ) {
+			unset( $this->previous_plan );
+		}
+
+		return parent::check();
 	}
 
 	/**
@@ -6601,20 +6618,13 @@ class Subscription extends jsonDBTable
 
 	function setUsedPlan( $id )
 	{
-		$used_plans = $this->getUsedPlans();
-
-		if ( isset( $used_plans[$id] ) ) {
-			$used_plans[$id]++;
+		if ( isset( $this->used_plans[$id] ) ) {
+			$this->used_plans[$id]++;
 		} else {
-			$used_plans[$id] = 1;
+			$this->used_plans[$id] = 1;
 		}
 
-		$new_used_plans = array();
-		foreach ( $used_plans as $planid => $n ) {
-			$new_used_plans[] = $planid . ',' . $n;
-		}
-
-		$this->used_plans = implode( ';', $new_used_plans );
+		return true;
 	}
 
 	function getUsedPlans()

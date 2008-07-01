@@ -62,6 +62,10 @@ class mi_hotproperty extends MI
 
 		$settings = $this->autoduplicatesettings( $settings );
 
+		$settings['add_list_userchoice']		= array( 'list_yesno' );
+		$settings['add_list_userchoice_amt']	= array( 'inputD' );
+		$settings['add_list_customprice']		= array( 'inputD' );
+
 		$settings['assoc_company']	= array( 'list_yesno' );
 		$settings['rebuild']		= array( 'list_yesno' );
 		$settings['remove']			= array( 'list_yesno' );
@@ -70,6 +74,51 @@ class mi_hotproperty extends MI
 		$settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_SET11_EMAIL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
 		return $settings;
+	}
+
+	function getMIform()
+	{
+		global $database;
+
+		$settings = array();
+
+		if ( !empty( $this->settings['add_list_userchoice'] ) && !empty( $this->settings['add_list_userchoice_amt'] ) ) {
+			$groups = explode( ';', $this->settings['add_list_userchoice_amt'] );
+			$gr = array();
+			foreach ( $groups as $group ) {
+				if ( strpos( $group, ',' ) ) {
+					$gg = explode( ',', $group );
+					$gr[] = mosHTML::makeOption( $gg[0], $gg[1] );
+				} else {
+					$gr[] = mosHTML::makeOption( $group, $group.' Listings' );
+				}
+			}
+
+			$settings['hpamt']			= array( 'list', _MI_MI_HOTPROPERTY_USERSELECT_ADDAMOUNT_NAME, _MI_MI_HOTPROPERTY_USERSELECT_ADDAMOUNT_DESC );
+			$settings['lists']['hpamt']	= mosHTML::selectList( $gr, 'hpamt', 'size="6"', 'value', 'text', '' );
+		} else {
+			return false;
+		}
+
+		return $settings;
+	}
+
+	function modifyRequest( $request )
+	{
+		if ( isset( $request->params['hpamt'] ) ) {
+			$groups = explode( ';', $this->settings['add_list_userchoice_amt'] );
+
+			foreach ( $groups as $group ) {
+				if ( strpos( $group, ',' ) ) {
+					$gg = explode( ',', $group );
+					
+				} else {
+					return $request;
+				}
+			}
+
+			$request->payment->amount;
+		}
 	}
 
 	function Defaults()
@@ -85,7 +134,7 @@ class mi_hotproperty extends MI
 	{
 		global $mosConfig_absolute_path;
 
-		return is_dir( $mosConfig_absolute_path . '/components/com_mtree' );
+		return is_dir( $mosConfig_absolute_path . '/components/com_hotproperty' );
 	}
 
 	function hacks()
@@ -95,43 +144,39 @@ class mi_hotproperty extends MI
 		$hacks = array();
 
 		$edithack = '// AEC HACK hotproperty1 START' . "\n"
-		. 'if (!$link_id) {' . "\n"
 		. 'global $mosConfig_absolute_path;' . "\n"
 		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
-		. '$mi_mosetshandler = new aec_hotproperty( $database );' . "\n"
-		. '$mi_mosetshandler->loadUserID( $my->id );' . "\n"
-		. 'if( $mi_mosetshandler->id ) {' . "\n"
-		. 'if( !$mi_mosetshandler->hasListingsLeft() ) {' . "\n"
-		. 'echo "' . _AEC_MI_HACK1_MOSETS . '";' . "\n"
+		. '$mi_hphandler = new aec_hotproperty( $database );' . "\n"
+		. '$mi_hphandler->loadUserID( $my->id );' . "\n"
+		. 'if( $mi_hphandler->id ) {' . "\n"
+		. 'if( !$mi_hphandler->hasListingsLeft() ) {' . "\n"
+		. 'echo "' . _AEC_MI_HACK1_HOTPROPERTY . '";' . "\n"
 		. 'return;' . "\n"
 		. '}' . "\n"
 		. '} else {' . "\n"
-		. 'echo "' . _AEC_MI_HACK2_MOSETS . '";' . "\n"
+		. 'echo "' . _AEC_MI_HACK2_HOTPROPERTY . '";' . "\n"
 		. 'return;' . "\n"
-		. '}' . "\n"
 		. '}' . "\n"
 		. '// AEC HACK hotproperty1 END' . "\n"
 		;
 
 		$edithack2 = '// AEC HACK hotproperty2 START' . "\n"
-		. 'if ($row->link_approved == 1) {' . "\n"
 		. 'global $mosConfig_absolute_path;' . "\n"
 		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
-		. '$mi_mosetshandler = new aec_hotproperty( $database );' . "\n"
-		. '$mi_mosetshandler->loadUserID( $my->id );' . "\n"
-		. 'if( $mi_mosetshandler->id ) {' . "\n"
-		. 'if( !$mi_mosetshandler->hasListingsLeft() ) {' . "\n"
-		. '$mi_mosetshandler->useListing();' . "\n"
+		. '$mi_hphandler = new aec_hotproperty( $database );' . "\n"
+		. '$mi_hphandler->loadUserID( $my->id );' . "\n"
+		. 'if( $mi_hphandler->id ) {' . "\n"
+		. 'if( !$mi_hphandler->hasListingsLeft() ) {' . "\n"
+		. '$mi_hphandler->useListing();' . "\n"
 		. '} else {' . "\n"
-		. 'echo "' . _AEC_MI_HACK1_MOSETS . '";' . "\n"
+		. 'echo "' . _AEC_MI_HACK1_HOTPROPERTY . '";' . "\n"
 		. 'return;' . "\n"
 		. '}' . "\n"
 		. '} else {' . "\n"
-		. 'echo "' . _AEC_MI_HACK2_MOSETS . '";' . "\n"
+		. 'echo "' . _AEC_MI_HACK2_HOTPROPERTY . '";' . "\n"
 		. 'return;' . "\n"
-		. '}' . "\n"
 		. '}' . "\n"
 		. '// AEC HACK hotproperty2 END' . "\n"
 		;
@@ -140,11 +185,11 @@ class mi_hotproperty extends MI
 		. 'global $mosConfig_absolute_path;' . "\n"
 		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
-		. '$mi_mosetshandler = new aec_hotproperty( $database );' . "\n"
-		. '$mi_mosetshandler->loadUserID( $mtLinks->user_id );' . "\n"
-		. 'if( $mi_mosetshandler->id ) {' . "\n"
-		. 'if( !$mi_mosetshandler->hasListingsLeft() ) {' . "\n"
-		. '$mi_mosetshandler->useListing();' . "\n"
+		. '$mi_hphandler = new aec_hotproperty( $database );' . "\n"
+		. '$mi_hphandler->loadUserID( $mtLinks->user_id );' . "\n"
+		. 'if( $mi_hphandler->id ) {' . "\n"
+		. 'if( !$mi_hphandler->hasListingsLeft() ) {' . "\n"
+		. '$mi_hphandler->useListing();' . "\n"
 		. '} else {' . "\n"
 		. 'continue;' . "\n"
 		. '}' . "\n"
@@ -158,18 +203,18 @@ class mi_hotproperty extends MI
 		$hacks[$n]['name']				=	'hotproperty.php #1';
 		$hacks[$n]['desc']				=	_AEC_MI_HACK3_HOTPROPERTY;
 		$hacks[$n]['type']				=	'file';
-		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_hotproperty/mtree.php';
-		$hacks[$n]['read']				=	'# OK, you can edit';
+		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_hotproperty/property.php';
+		$hacks[$n]['read']				=	'# Assign default value for new data';
 		$hacks[$n]['insert']			=	$edithack . "\n"  . $hacks[$n]['read'];
 
 		$n = 'hotproperty2';
 		$hacks[$n]['name']				=	'hotproperty.php #2';
 		$hacks[$n]['desc']				=	_AEC_MI_HACK4_HOTPROPERTY;
 		$hacks[$n]['type']				=	'file';
-		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_hotproperty/mtree.php';
-		$hacks[$n]['read']				=	'$row->updateLinkCount( 1 );';
+		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_hotproperty/property.php';
+		$hacks[$n]['read']				=	'# Assign current logon user to Agent field';
 		$hacks[$n]['insert']			=	$edithack2 . "\n"  . $hacks[$n]['read'];
-
+/*
 		$n = 'adminhotproperty3';
 		$hacks[$n]['name']				=	'admin.hotproperty.php #3';
 		$hacks[$n]['desc']				=	_AEC_MI_HACK5_HOTPROPERTY;
@@ -177,7 +222,7 @@ class mi_hotproperty extends MI
 		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/administrator/components/com_hotproperty/admin.mtree.php';
 		$hacks[$n]['read']				=	'if ( $mtLinks->link_approved == 0 ) {';
 		$hacks[$n]['insert']			=	$hacks[$n]['read'] . "\n" . $edithack3;
-
+*/
 		return $hacks;
 	}
 

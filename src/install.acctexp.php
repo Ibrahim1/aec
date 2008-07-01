@@ -1185,7 +1185,7 @@ function com_install()
 								$metaUserDB->addPreparedMIParams( $vs, $vsmi );
 							}
 						}
-
+/*
 						$plans = array();
 
 						$used_plans = explode( ";", $object->used_plans );
@@ -1215,8 +1215,8 @@ function com_install()
 						$up = new stdClass();
 						$up->plan_history	= $plans;
 						$up->used_plans		= $plans;
-print_r($metaUserDB);print_r($up);exit;
-						$metaUserDB->addParams( $up, 'plan_history' );
+
+						$metaUserDB->addParams( $up, 'plan_history' );*/
 					} else {
 						if ( ( $dbtable == 'plans' ) && ( $fieldname == 'custom_params' ) ) {
 							$newtemp = array();
