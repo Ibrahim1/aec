@@ -27,6 +27,7 @@ if ( $jsonupdate ) {
 		$unsetdec = array();
 		if ( $dbtable == 'subscr' ) {
 			$unsetdec[] = 'userid';
+			$unsetdec[] = 'plan';
 			$unsetdec[] = 'used_plans';
 			$unsetdec[] = 'previous_plan';
 		} elseif ( $dbtable == 'microintegrations' ) {
@@ -146,14 +147,24 @@ if ( $jsonupdate ) {
 						foreach ( $used_plans as $plan ) {
 							$p = explode( ',', $plan );
 
-							if ( $p[0] == $object->previous_plan ) {
+							if ( $p[0] == $object->plan ) {
 								$end = $p;
+							} elseif ( $p[0] == $object->previous_plan ) {
+								$bend = $p;
 							} else {
 								if ( !empty( $p[1] ) ) {
 									$plans[$p[0]] = $p[1];
 								} else {
 									$plans[$p[0]] = 1;
 								}
+							}
+						}
+
+						if ( isset( $bend ) ) {
+							if ( !empty( $bend[1] ) ) {
+								$plans[$bend[0]] = $bend[1];
+							} else {
+								$plans[$bend[0]] = 1;
 							}
 						}
 
@@ -176,8 +187,8 @@ if ( $jsonupdate ) {
 						$up->plan_history	= $history;
 						$up->used_plans		= $plans;
 
-						$metaUserDB->addParams( $up, 'plan_params' );aecDebug($database);aecDebug('addParams');
-						$metaUserDB->storeload();aecDebug($database);aecDebug('storeload');
+						$metaUserDB->addParams( $up, 'plan_history' );
+						$metaUserDB->storeload();
 					}
 				} else {
 					if ( ( $dbtable == 'plans' ) && ( $fieldname == 'custom_params' ) ) {

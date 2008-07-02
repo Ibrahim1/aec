@@ -34,6 +34,8 @@ function com_install()
 {
 	global $database, $mainframe, $mosConfig_absolute_path, $mosConfig_live_site, $mosConfig_dbprefix, $my, $aecConfig;
 
+	$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" media="all" href="' . $mainframe->getCfg( 'live_site' ) . '/administrator/components/com_acctexp/backend_style.css" />' );
+
 	// Tracking arrays
 	$queri		= array();
 	$errors		= array();
@@ -240,23 +242,6 @@ function com_install()
 			color: #000;
 		}
 	</style>
-
-	<?php
-	if ( $errors ) {
-		echo '<div style="color: #FF0000; text-align: left; border: 1px solid #FF0000;">' . "\n"
-		. _AEC_INST_ERRORS
-		. '<ul>' . "\n";
-		foreach ( $errors AS $error ) {
-			if ( is_array( $error ) ) {
-				echo '<li>' . $error[0] . ' - ' . $error[1] . '</li>';
-			} else {
-				echo '<li>' . $error . '</li>';
-			}
-
-		}
-		echo '</ul>' . "\n"
-		. '</div>' . "\n";
-	} ?>
 	<table border="0">
 		<tr>
 			<td width="60%" valign="top" style="background-color: #eee;">
@@ -265,6 +250,22 @@ function com_install()
 						<center><img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_dist_gfx.png" border="0" alt="" /></center>
 					</div>
 				</div>
+				<?php
+				if ( $errors ) {
+					echo '<div style="color: #FF0000; text-align: left; border: 1px solid #FF0000;">' . "\n"
+					. _AEC_INST_ERRORS
+					. '<ul>' . "\n";
+					foreach ( $errors AS $error ) {
+						if ( is_array( $error ) ) {
+							echo '<li>' . $error[0] . ' - ' . $error[1] . '</li>';
+						} else {
+							echo '<li>' . $error . '</li>';
+						}
+
+					}
+					echo '</ul>' . "\n"
+					. '</div>' . "\n";
+				} ?>
 				<div class="usernote" style="width:350px;margin:8px;">
 					<h1 style="color: #FF0000;"><?php echo _AEC_INST_NOTE_IMPORTANT; ?>:</h1>
 					<img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/backend_gfx/hacks_scribble.png" border="0" alt="" style="position:relative;float:left;padding:4px;" />

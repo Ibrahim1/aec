@@ -66,7 +66,7 @@ class eucaInstall extends eucaObject
 				if ( PclTarExtract( $fullpath, $deploypath) !== 0 ) {
 					@unlink( $fullpath );
 				} else {
-					$this->setError( array( 'Extraction Error', 'the file ' . $file . ' could not be extracted to ' . $deploypath . '. You can try to unpack the files yourself.' ) );
+					$this->setError( array( 'Extraction Error', 'the file ' . $file[0] . ' could not be extracted to ' . $deploypath . '. You can try to unpack the files yourself.' ) );
 				}
 			} else {
 				$archive = new Archive_Tar( $fullpath, 'gz' );
@@ -74,7 +74,7 @@ class eucaInstall extends eucaObject
 				if ( $archive->extract( $deploypath ) ) {
 					@unlink( $fullpath );
 				} else {
-					$this->setError( array( 'Extraction Error', 'the file ' . $file . ' could not be extracted to ' . $deploypath . '. You can try to unpack the files yourself.' ) );
+					$this->setError( array( 'Extraction Error', 'the file ' . $file[0] . ' could not be extracted to ' . $deploypath . '. You can try to unpack the files yourself.' ) );
 				}
 			}
 		}

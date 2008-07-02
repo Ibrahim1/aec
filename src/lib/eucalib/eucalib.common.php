@@ -270,7 +270,7 @@ class jsonDBTable extends paramDBTable
 	function getParams( $field = 'params' )
 	{
 		if ( empty( $this->$field ) ) {
-			return null;
+			return '';
 		}
 
 		return jsoonHandler::decode( stripslashes( $this->$field ) );
@@ -292,11 +292,11 @@ class jsonDBTable extends paramDBTable
 	 */
 	function addParams( $params, $field = 'params', $overwrite = true )
 	{
-		if ( gettype( $this->$field ) == gettype( $params ) ) {
+		if ( empty( $this->$field ) ) {if($field == 'plan_history'){aecDebug( $params );}
+			$this->$field = $params;
+		} elseif ( gettype( $this->$field ) == gettype( $params ) ) {
 			$this->$field = jsonDBTable::mergeParams( $this->$field, $params, $overwrite );
 			return true;
-		} elseif ( empty( $this->$field ) ) {
-			$this->$field = $params;
 		} else {
 			return false;
 		}

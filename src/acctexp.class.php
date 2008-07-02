@@ -71,7 +71,7 @@ function aecDebug( $text, $level = 128 )
 {
 	global $database;
 
-	if ( !is_string( $text ) ) {
+	if ( is_object( $text ) || is_array( $text ) ) {
 		$msg = json_encode( $text );
 	} else {
 		$msg = $text;
@@ -158,14 +158,14 @@ class metaUser
 
 	function temporaryRFIX()
 	{
-		if ( !empty( $this->meta->plan_params->used_plans ) ) {
-			$used_plans= $this->meta->plan_params->used_plans;
+		if ( !empty( $this->meta->plan_history->used_plans ) ) {
+			$used_plans= $this->meta->plan_history->used_plans;
 		} else {
 			$used_plans = array();
 		}
 
-		if ( !empty( $this->meta->plan_params->plan_history ) && is_array( $this->meta->plan_params->plan_history ) ) {
-			$previous_plan = end( $this->meta->plan_params->plan_history );
+		if ( !empty( $this->meta->plan_history->plan_history ) && is_array( $this->meta->plan_history->plan_history ) ) {
+			$previous_plan = end( $this->meta->plan_history->plan_history );
 		} else {
 			$previous_plan = 0;
 		}
@@ -428,6 +428,8 @@ class metaUser
 				$this->hasSubscription = 1;
 			}
 		}
+
+		$this->temporaryRFIX();
 	}
 
 	function moveFocus( $subscrid )
@@ -921,10 +923,10 @@ class metaUserDB extends jsonDBTable
 	{
 		$this->plan_history[] = $id;
 
-		if ( isset( $this->plan_params->used_plans[$id] ) ) {
-			$this->plan_params->used_plans[$id]++;
+		if ( isset( $this->plan_history->used_plans[$id] ) ) {
+			$this->plan_history->used_plans[$id]++;
 		} else {
-			$this->plan_params->used_plans[$id] = 1;
+			$this->plan_history->used_plans[$id] = 1;
 		}
 
 		$this->storeload();
