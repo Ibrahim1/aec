@@ -165,7 +165,7 @@ class metaUser
 		}
 
 		if ( !empty( $this->meta->plan_history->plan_history ) && is_array( $this->meta->plan_history->plan_history ) ) {
-			$previous_plan = end( $this->meta->plan_history->plan_history );
+			$previous_plan = $this->meta->plan_history->plan_history[(count($this->meta->plan_history->plan_history)-2)];
 		} else {
 			$previous_plan = 0;
 		}
@@ -900,6 +900,28 @@ class metaUserDB extends jsonDBTable
 		return false;
 	}
 
+	function setMIParams( $miid, $usageid=false, $params )
+	{
+		if ( $usageid ) {
+			if ( isset( $this->plan_params->$usageid ) ) {
+				if ( isset( $this->plan_params->$usageid->$miid ) ) {
+					$this->plan_params->$usageid->$miid = $this->mergeParams( $this->plan_params->$usageid->$miid, $params );
+				} else {
+					$this->plan_params->$usageid->$miid = $params;
+				}
+			}
+		} else {
+			if ( isset( $this->params->mi->$miid ) ) {
+				$this->params->mi->$miid = $this->mergeParams( $this->params->mi->$miid, $params );
+			} else {
+				$this->params->mi->$miid = $params;
+			}
+		}
+
+		return false;
+	}
+
+
 	function addPreparedMIParams( $plan_mi, $mi=false )
 	{
 		$this->addParams( $plan_mi, 'plan_params' );
@@ -908,7 +930,7 @@ class metaUserDB extends jsonDBTable
 			// TODO: Write function that recreates pure MI data from plan_mi construct
 		}
 
-		if ( $mi !== false ) {
+		if ( !empty( $mi ) ) {
 			if ( isset( $this->params->mi ) ) {
 				$this->params->mi = $this->mergeParams( $this->params->mi, $mi );
 			} else {
@@ -921,7 +943,7 @@ class metaUserDB extends jsonDBTable
 
 	function addPlanID( $id )
 	{
-		$this->plan_history[] = $id;
+		$this->plan_history->plan_history[] = $id;
 
 		if ( isset( $this->plan_history->used_plans[$id] ) ) {
 			$this->plan_history->used_plans[$id]++;
@@ -988,9 +1010,7 @@ class Config_General extends jsonDBTable
 	{
 		unset( $this->cfg );
 
-		parent::check();
-
-		return true;
+		return parent::check();
 	}
 
 	function initParams()
@@ -1987,7 +2007,6 @@ class PaymentProcessor
 
 	function setSettings()
 	{
-		$this->processor->settings = $this->settings;
 		$this->processor->storeload();
 	}
 
@@ -2049,8 +2068,17 @@ class PaymentProcessor
 
 	function setInfo()
 	{
-		$this->processor->info = $this->info;
 		$this->processor->storeload();
+	}
+
+	function storeload()
+	{
+		if ( $this->id ) {
+			$this->processor->storeload();
+		} else {
+			$this->id = $this->getMax();
+			$this->processor->storeload();
+		}
 	}
 
 	function getBackendSettings()
@@ -3580,12 +3608,6 @@ class SubscriptionPlan extends jsonDBTable
 			if ( is_object( $invoice ) ) {
 				if ( !empty( $invoice->params ) ) {
 					$tempparam = array();
-					foreach ( $invoice->params as $key => $value ) {
-						if ( strpos( $key, 'tempsubstore_' ) === 0 ) {
-							$tempparam[str_replace( 'tempsubstore_', '', $key )] = $value;
-						}
-					}
-
 					if ( !empty( $invoice_params['creator_ip'] ) ) {
 						$tempparam['creator_ip'] = $invoice_params['creator_ip'];
 					}
@@ -4041,23 +4063,7 @@ class SubscriptionPlan extends jsonDBTable
 		$fixed = array( 'active', 'visible', 'name', 'desc', 'email_desc', 'micro_integrations' );
 
 		foreach ( $fixed as $varname ) {
-			if ( is_array( $post[$varname] ) ) {
-				if ( !get_magic_quotes_gpc() ) {
-					$arr = array();
-					foreach ( $post[$varname] as $vname => $vcontent ) {
-						$arr[$vname] = addslashes( $vcontent );
-					}
-					$this->$varname = $arr;
-				} else {
-					$this->$varname = $post[$varname];
-				}
-			} else {
-				if ( !get_magic_quotes_gpc() ) {
-					$this->$varname = addslashes( $post[$varname] );
-				} else {
-					$this->$varname = $post[$varname];
-				}
-			}
+			$this->$varname = $post[$varname];
 			unset( $post[$varname] );
 		}
 
@@ -4995,7 +5001,7 @@ class InvoiceFactory
 						$val = aecGetParam( $key );
 
 						if ( !empty( $val ) ) {
-							$params['tempsubstore_'.$key] = $val;
+							$params[$key] = $val;
 						}
 					}
 
@@ -8702,7 +8708,7 @@ class microIntegration extends jsonDBTable
 	function pre_expiration_action( $metaUser, $objplan=null )
 	{
 		if ( method_exists( $this->mi_class, 'pre_expiration_action' ) ) {
-			$userflags = $metaUser->focusSubscription->getMIflags( $objplan->id, $this->id );
+			$userflags = $metaUser->meta->getMIParams( $this->id, $objplan->id );
 
 			// We need the standard variables and their uppercase pendants
 			// System MI vars have to be stored and will automatically converted to uppercase
@@ -8724,7 +8730,7 @@ class microIntegration extends jsonDBTable
 			$newflags[$spca]	= time();
 
 			// Create the new flags
-			$metaUser->focusSubscription->setMIflags( $objplan->id, $this->id, $newflags );
+			$metaUser->meta->setMIParams( $this->id, $objplan->id, $newflags );
 
 			return $this->relayAction( $metaUser, null, null, $objplan, 'pre_expiration_action', false );
 		} else {
@@ -8744,18 +8750,7 @@ class microIntegration extends jsonDBTable
 			$this->exchangeSettings( $exchange );
 		}
 
-		if ( !empty( $metaUser->focusSubscription->params ) ) {
-			$miprefix = 'mi_' . $this->id . '_';
-
-			$params = array();
-			foreach ( $metaUser->focusSubscription->params as $pkey => $pval ) {
-				if ( strpos( $pkey, $miprefix ) === 0 ) {
-					$pkey = str_replace( $miprefix, '', $pkey );
-
-					$params[$pkey] = $pval;
-				}
-			}
-		}
+		$params = $metaUser->meta->getMIParams( $this->id, $objplan->id );
 
 		$request = new stdClass();
 		$request->parent			=& $this;

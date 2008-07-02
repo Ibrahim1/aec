@@ -105,7 +105,7 @@ if ( $jsonupdate ) {
 						$vsmi	= new stdClass();
 
 						foreach ( $temp as $key => $value ) {
-							if ( strpos( 'MI_FLAG', $key ) !== false ) {
+							if ( strpos( $key, 'MI_FLAG' ) !== false ) {
 								$ks = explode( '_', $key );
 
 								$vname = array();
@@ -119,17 +119,30 @@ if ( $jsonupdate ) {
 									} elseif( $n == 5 ) {
 										// Set MI
 										$mi = $k;
-									} elseif( $n == 5 ) {
+									} elseif( $n > 5 ) {
 										// Set MI Variable name
 										$vname[] = $k;
 									}
 								}
 
-								$t = implode( '_', $vname );
-								$vname = $t;
+								// Well, the cool stuff doesnt happen without some lameness
+								if ( !isset( $vs->$usage ) ) {
+									$vs->$usage = new stdClass();
+								}
 
-								$vs->$usage->$mi[$vname] = $value;
-								$vsmi->$mi[$vname] = $value;
+								if ( !isset( $vs->$usage->$mi ) ) {
+									$vs->$usage->$mi = array();
+								}
+
+								if ( !isset( $vsmi->$mi ) ) {
+									$vsmi->$mi = array();
+								}
+
+								$vnam = implode( '_', $vname );
+								$var = array( $vnam => $value );
+
+								$vs->$usage->$mi = array_merge( $vs->$usage->$mi, $var );
+								$vsmi->$mi = array_merge( $vsmi->$mi, $var );
 								unset( $temp[$key] );
 							}
 						}
@@ -147,6 +160,10 @@ if ( $jsonupdate ) {
 						foreach ( $used_plans as $plan ) {
 							$p = explode( ',', $plan );
 
+							if ( empty( $p[0] ) ) {
+								continue;
+							}
+
 							if ( $p[0] == $object->plan ) {
 								$end = $p;
 							} elseif ( $p[0] == $object->previous_plan ) {
@@ -160,6 +177,7 @@ if ( $jsonupdate ) {
 							}
 						}
 
+						// Preserve previous plan with this
 						if ( isset( $bend ) ) {
 							if ( !empty( $bend[1] ) ) {
 								$plans[$bend[0]] = $bend[1];
@@ -168,6 +186,7 @@ if ( $jsonupdate ) {
 							}
 						}
 
+						// Preserve current plan with this
 						if ( isset( $end ) ) {
 							if ( !empty( $end[1] ) ) {
 								$plans[$end[0]] = $end[1];

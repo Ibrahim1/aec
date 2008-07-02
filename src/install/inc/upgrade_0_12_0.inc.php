@@ -1,12 +1,6 @@
 <?php
 // Update routine 0.10.0x -> 0.12.0
 
-
-
-// Force Init Params
-$aecConfig = new Config_General( $database );
-$aecConfig->initParams();
-
 // load settings (creates settings parameters that got added in this version)
 $result = null;
 

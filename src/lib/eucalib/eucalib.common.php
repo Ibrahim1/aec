@@ -258,7 +258,7 @@ class jsonDBTable extends paramDBTable
 	function storeload()
 	{
 		$this->check();
-		$this->store();
+		$this->store( true );
 
 		return $this->load( $this->id );
 	}
@@ -270,7 +270,7 @@ class jsonDBTable extends paramDBTable
 	function getParams( $field = 'params' )
 	{
 		if ( empty( $this->$field ) ) {
-			return '';
+			return NULL;
 		}
 
 		return jsoonHandler::decode( stripslashes( $this->$field ) );
@@ -281,8 +281,10 @@ class jsonDBTable extends paramDBTable
 	 */
 	function setParams( $input, $field = 'params' )
 	{
-		if ( !empty( $field ) ) {
+		if ( !empty( $field ) && ( $this->$field != 'null' ) ) {
 			$this->$field = $this->_db->getEscaped( jsoonHandler::encode( $input ) );
+		} else {
+			$this->$field = NULL;
 		}
 		return true;
 	}
@@ -292,7 +294,7 @@ class jsonDBTable extends paramDBTable
 	 */
 	function addParams( $params, $field = 'params', $overwrite = true )
 	{
-		if ( empty( $this->$field ) ) {if($field == 'plan_history'){aecDebug( $params );}
+		if ( empty( $this->$field ) || ( $this->$field == 'null' ) ) {
 			$this->$field = $params;
 		} elseif ( gettype( $this->$field ) == gettype( $params ) ) {
 			$this->$field = jsonDBTable::mergeParams( $this->$field, $params, $overwrite );
@@ -375,7 +377,11 @@ class jsonDBTable extends paramDBTable
 
 		if ( !empty( $jsonfields ) ) {
 			foreach ( $jsonfields as $fieldname ) {
-				$this->setParams( $this->$fieldname, $fieldname );
+				if ( !empty( $this->$fieldname ) && ( $this->$fieldname != 'null' ) ) {
+					$this->setParams( $this->$fieldname, $fieldname );
+				} else {
+					unset( $this->$fieldname );
+				}
 			}
 		}
 

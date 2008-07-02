@@ -29,7 +29,7 @@
 
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
-//error_reporting(E_ALL);
+error_reporting(E_ALL);
 function com_install()
 {
 	global $database, $mainframe, $mosConfig_absolute_path, $mosConfig_live_site, $mosConfig_dbprefix, $my, $aecConfig;
@@ -107,15 +107,15 @@ function com_install()
 	// Load Class (and thus Config)
 	require_once( $mainframe->getPath( 'class', 'com_acctexp' ) );
 
-	if ( isset( $aecConfig['aec_version'] ) ) {
-		version_compare( $aecConfig['aec_version'], _AEC_VERSION );
+	if ( isset( $aecConfig->cfg['aec_version'] ) ) {
+		version_compare( $aecConfig->cfg['aec_version'], _AEC_VERSION );
 	}
 
 	if ( !$newinstall ) {
 		$oldupdates = array( '0_6_0', '0_8_0', '0_10_0', '0_12_0', '0_12_6i' );
 
 		// Check if we are upgrading from before 0.12.6RC2j - then we need to check everything before that
-		if ( !isset( $aecConfig['aec_version'] ) ) {
+		if ( !isset( $aecConfig->cfg['aec_version'] ) ) {
 			foreach ( $oldupdates as $upd ) {
 				require_once( $incpath . '/upgrade_' . $upd . '.inc.php' );
 			}
@@ -155,6 +155,10 @@ function com_install()
 			$pp->processor->storeload();
 		}
 	}
+
+	// Force Init Params
+	$aecConfig = new Config_General( $database );
+	$aecConfig->initParams();
 
 	// --- [ END OF STANDARD UPGRADE ACTIONS ] ---
 

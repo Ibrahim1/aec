@@ -103,7 +103,7 @@ class mi_hotproperty extends MI
 
 		$settings = array();
 
-		if ( !empty( $this->settings['add_list_userchoice'] ) && !empty( $this->settings['add_list_userchoice_amt'] ) ) {
+		if ( ( !empty( $this->settings['add_list_userchoice'] ) && !empty( $this->settings['add_list_userchoice_amt'] ) ) || !empty( $this->settings['easy_list_userchoice'] ) ) {
 			$groups = explode( ';', $this->settings['add_list_userchoice_amt'] );
 			$gr = array();
 			foreach ( $groups as $group ) {
@@ -132,17 +132,17 @@ class mi_hotproperty extends MI
 					switch ( $this->settings['elu_'.$i.'_op'] ) {
 						case 'EQ':
 							if ( $request->params['hpamt'] == $this->settings['elu_'.$i.'_no'] ) {
-								$request->add->price = $this->settings['elu_'.$i.'_ch'];
+								$request->add->price = $this->parseEasyPrice( $request->params['hpamt'], $this->settings['elu_'.$i.'_ch'] );
 							}
 							break;
 						case 'GT':
 							if ( $request->params['hpamt'] > $this->settings['elu_'.$i.'_no'] ) {
-								$request->add->price = $this->settings['elu_'.$i.'_ch'];
+								$request->add->price = $this->parseEasyPrice( $request->params['hpamt'], $this->settings['elu_'.$i.'_ch'] );
 							}
 							break;
 						case 'LT':
 							if ( $request->params['hpamt'] < $this->settings['elu_'.$i.'_no'] ) {
-								$request->add->price = $this->settings['elu_'.$i.'_ch'];
+								$request->add->price = $this->parseEasyPrice( $request->params['hpamt'], $this->settings['elu_'.$i.'_ch'] );
 							}
 							break;
 					}
@@ -185,6 +185,33 @@ class mi_hotproperty extends MI
 
 				return true;
 			}
+		}
+	}
+
+	function parseEasyPrice( $p, $parse )
+	{
+		if ( strpos( 'p', $parse ) !== false ) {
+			$parse = str_replace( 'p', $p, $parse );
+		}
+
+		if ( strpos( '*', $parse ) ) {
+			$pp = explode( '*', $parse );
+
+			return $pp[0] * $pp[1];
+		} elseif ( strpos( '+', $parse ) ) {
+			$pp = explode( '+', $parse );
+
+			return $pp[0] + $pp[1];
+		} elseif ( strpos( '-', $parse ) ) {
+			$pp = explode( '-', $parse );
+
+			return $pp[0] - $pp[1];
+		} elseif ( strpos( '/', $parse ) ) {
+			$pp = explode( '/', $parse );
+
+			return $pp[0] / $pp[1];
+		} else {
+			return $parse;
 		}
 	}
 

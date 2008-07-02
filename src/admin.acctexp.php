@@ -607,6 +607,11 @@ switch( strtolower( $task ) ) {
 		aecCentral( $option );
 		break;
 
+	case 'recallinstall':
+		include_once( $mosConfig_absolute_path . '/administrator/components/com_acctexp/install.acctexp.php' );
+		com_install();
+		break;
+
 	case 'add': editUser( null, $userid, $option, 'notconfig' ); break;
 
 	default:
@@ -2132,8 +2137,7 @@ function saveSettings( $option, $return=0 )
 			$pp->fullInit();
 			$pp->processor->active = in_array( $procname, $pplist_enabled );
 
-			$pp->processor->check();
-			$pp->processor->store();
+			$pp->storeload();
 
 			$longname		= $procname . '_info_longname';
 			$description	= $procname . '_info_description';
@@ -2142,12 +2146,11 @@ function saveSettings( $option, $return=0 )
 				$pp->info['longname'] = $_POST[$longname];
 				unset( $_POST[$longname] );
 			}
+
 			if ( isset( $_POST[$description] ) ) {
 				$pp->info['description'] = $_POST[$description];
 				unset( $_POST[$description] );
 			}
-
-			$pp->setInfo();
 
 			$settings = $pp->processor->settings();
 
@@ -2176,7 +2179,7 @@ function saveSettings( $option, $return=0 )
 				}
 			}
 
-			$pp->setSettings();
+			$pp->storeload();
 		} else {
 			// TODO: Log error
 		}
@@ -2716,10 +2719,10 @@ function editSubscriptionPlan( $id, $option )
 	$database->setQuery( $query );
 	$mi_list = $database->loadObjectList();
 
-	if ( strlen( $row->micro_integrations ) > 0 ) {
+	if ( !empty( $row->micro_integrations ) ) {
 		$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
 				. ' FROM #__acctexp_microintegrations'
-				. ' WHERE `id` IN (' . implode( ',', json_decode( $row->micro_integrations ) ) . ')'
+				. ' WHERE `id` IN (' . implode( ',', $row->micro_integrations ) . ')'
 				;
 	 	$database->setQuery( $query );
 		$selected_mi = $database->loadObjectList();
@@ -2757,7 +2760,14 @@ function arrayValueDefault( $array, $name, $default )
 	}
 
 	if ( isset( $array[$name] ) ) {
-		if ( strpos( $array[$name], ';' ) !== false ) {
+		if ( is_array( $array[$name] ) ) {
+			$selected = array();
+			foreach ( $array[$name] as $value ) {
+				$selected[]->value = $value;
+			}
+
+			return $selected;
+		} elseif ( strpos( $array[$name], ';' ) !== false ) {
 			$list = explode( ';', $array[$name] );
 
 			$selected = array();
