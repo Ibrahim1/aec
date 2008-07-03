@@ -147,6 +147,8 @@ class mi_hotproperty extends MI
 							break;
 					}
 				}
+
+				return true;
 			} else {
 				$groups = explode( ';', $this->settings['add_list_userchoice_amt'] );
 
@@ -186,27 +188,29 @@ class mi_hotproperty extends MI
 				return true;
 			}
 		}
+
+		return null;
 	}
 
 	function parseEasyPrice( $p, $parse )
 	{
-		if ( strpos( 'p', $parse ) !== false ) {
+		if ( strpos( $parse, 'p' ) !== false ) {
 			$parse = str_replace( 'p', $p, $parse );
 		}
 
-		if ( strpos( '*', $parse ) ) {
+		if ( strpos( $parse, '*' ) !== false ) {
 			$pp = explode( '*', $parse );
 
 			return $pp[0] * $pp[1];
-		} elseif ( strpos( '+', $parse ) ) {
+		} elseif ( strpos( $parse, '+' )  !== false) {
 			$pp = explode( '+', $parse );
 
 			return $pp[0] + $pp[1];
-		} elseif ( strpos( '-', $parse ) ) {
+		} elseif ( strpos( $parse, '-' ) !== false ) {
 			$pp = explode( '-', $parse );
 
 			return $pp[0] - $pp[1];
-		} elseif ( strpos( '/', $parse ) ) {
+		} elseif ( strpos( $parse, '/' ) !== false ) {
 			$pp = explode( '/', $parse );
 
 			return $pp[0] / $pp[1];

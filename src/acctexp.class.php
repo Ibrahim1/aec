@@ -914,13 +914,15 @@ class metaUserDB extends jsonDBTable
 				} else {
 					$this->plan_params->$usageid->$miid = $params;
 				}
-			}
-		} else {
-			if ( isset( $this->params->mi->$miid ) ) {
-				$this->params->mi->$miid = $this->mergeParams( $this->params->mi->$miid, $params );
 			} else {
-				$this->params->mi->$miid = $params;
+				$this->plan_params->$usageid->$miid = $params;
 			}
+		}
+
+		if ( isset( $this->params->mi->$miid ) ) {
+			$this->params->mi->$miid = $this->mergeParams( $this->params->mi->$miid, $params );
+		} else {
+			$this->params->mi->$miid = $params;
 		}
 
 		return false;
@@ -3681,8 +3683,6 @@ class SubscriptionPlan extends jsonDBTable
 
 	function SubscriptionAmount( $recurring, $user_subscription )
 	{
-		global $database;
-
 		if ( is_object( $user_subscription ) ) {
 			$comparison				= $this->doPlanComparison( $user_subscription );
 			$plans_comparison		= $comparison['comparison'];
@@ -3751,6 +3751,14 @@ class SubscriptionPlan extends jsonDBTable
 			}
 		}
 
+		if ( !empty( $this->micro_integrations ) ) {
+			$mih = new microIntegrationHandler();
+
+			$metaUser = new metaUser( $user_subscription->userid );
+
+			$mih->applyMIs( $amount, $this, $metaUser );
+		}
+
 		$return_url	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=thanks&amp;renew=' . $renew );
 
 		$return['return_url']	= $return_url;
@@ -3758,6 +3766,66 @@ class SubscriptionPlan extends jsonDBTable
 		$return['free_trial']	= $free_trial;
 
 		return $return;
+	}
+
+	function termsParamsRequest( $recurring, $metaUser )
+	{
+		if ( !empty( $this->micro_integrations ) ) {
+			$mih = new microIntegrationHandler();
+
+			if ( is_object( $metaUser->objSubscription ) ) {
+				$comparison				= $this->doPlanComparison( $metaUser->objSubscription );
+				$plans_comparison		= $comparison['comparison'];
+				$plans_comparison_total	= $comparison['total_comparison'];
+				$renew					= $comparison['renew'] ? 1 : 0;
+				$is_trial				= (strcmp($user_subscription->status, 'Trial') === 0);
+			} else {
+				$plans_comparison		= false;
+				$plans_comparison_total	= false;
+				$renew					= 0;
+				$is_trial				= 0;
+			}
+
+			$var		= null;
+			$free_trial = 0;
+
+			if ( !empty( $recurring ) ) {
+				$amount = array();
+
+				// Only Allow a Trial when the User is coming from a different PlanGroup or is new
+				if ( ( $plans_comparison === false ) && ( $plans_comparison_total === false ) && !empty( $this->params['trial_period'] ) ) {
+					if ( !$this->params['trial_free'] ) {
+						$mih->applyMIs( $this->params['trial_amount'], $this, $metaUser );
+					}
+				}
+
+				if ( !$this->params['full_free'] ) {
+					$mih->applyMIs( $this->params['full_amount'], $this, $metaUser );
+				}
+			} else {
+				if ( !$this->params['trial_period'] && $this->params['full_free'] && $this->params['trial_free'] ) {
+					// Huh?
+				} else {
+					if ( ( $plans_comparison === false ) && ( $plans_comparison_total === false ) ) {
+						if ( !$is_trial && !empty($this->params['trial_period']) ) {
+							if ( !$this->params['trial_free'] ) {
+								$mih->applyMIs( $this->params['trial_amount'], $this, $metaUser );
+							}
+						} else {
+							if ( !$this->params['full_free'] ) {
+								$mih->applyMIs( $this->params['full_amount'], $this, $metaUser );
+							}
+						}
+					} else {
+						if ( !$this->params['full_free'] ) {
+							$mih->applyMIs( $this->params['full_amount'], $this, $metaUser );
+						}
+					}
+				}
+			}
+		}
+
+		return $this->params;
 	}
 
 	function doPlanComparison( $user_subscription )
@@ -4974,10 +5042,10 @@ class InvoiceFactory
 
 		if ( empty( $this->userid ) ) {
 			$this->userid = AECToolbox::saveUserRegistration( $option, $var );
-
-			$this->loadMetaUser( false, false );
-			$this->metaUser->setTempAuth();
 		}
+
+		$this->loadMetaUser( false, false );
+		$this->metaUser->setTempAuth();
 
 		$this->touchInvoice( $option );
 
@@ -5005,15 +5073,23 @@ class InvoiceFactory
 					foreach ( $mi_form as $key => $value ) {
 						$val = aecGetParam( $key );
 
+						$k = explode( '_', $key, 3 );
+
 						if ( !empty( $val ) ) {
-							$params[$key] = $val;
+							$params[$k[1]][$k[2]] = $val;
 						}
 					}
 
-					$this->objInvoice->addParams( $params );
-					$this->objInvoice->check();
-					$this->objInvoice->store();
+					if ( !empty( $params ) ) {
+						foreach ( $params as $mi_id => $content ) {
+							$this->metaUser->meta->setMIParams( $mi_id, $this->objUsage->id, $content );
+						}
+
+						$this->metaUser->meta->storeload();
+					}
 				}
+
+				$this->touchInvoice( $option );
 			}
 		}
 
@@ -5064,7 +5140,7 @@ class InvoiceFactory
 		};
 
 		$this->terms = new mammonTerms();
-		$this->terms->readParams( $this->objUsage->params );
+		$this->terms->readParams( $this->objUsage->termsParamsRequest( $this->recurring, $this->metaUser ) );
 
 		$c = $this->objUsage->doPlanComparison( $this->metaUser->objSubscription );
 
@@ -5519,7 +5595,7 @@ class Invoice extends jsonDBTable
 			if ( !empty( $plan->micro_integrations ) ) {
 				$mih = new microIntegrationHandler();
 
-				$return['amount'] = $mih->applyMIs( $return['amount'], $plan, $metaUser );
+				$mih->applyMIs( $return['amount'], $plan, $metaUser );
 			}
 
 			if ( $this->coupons ) {
@@ -6100,7 +6176,7 @@ class Invoice extends jsonDBTable
 
 			$metaUser = new metaUser( $this->userid );
 
-			$amount['amount'] = $mih->applyMIs( $amount['amount'], $new_subscription, $metaUser );
+			$mih->applyMIs( $amount['amount'], $new_subscription, $metaUser );
 		}
 
 		if ( !empty( $this->coupons ) ) {
@@ -6109,7 +6185,7 @@ class Invoice extends jsonDBTable
 			$amount['amount'] = $cph->applyCoupons( $amount['amount'], $this->coupons, $InvoiceFactory->metaUser, $InvoiceFactory );
 		}
 
-		$int_var['amount']		= $amount['amount'];
+		$int_var['amount'] = AECToolbox::correctAmount( $amount['amount'] );
 
 		if ( !empty( $amount['return_url'] ) ) {
 			$int_var['return_url'] = $amount['return_url'] . $urladd;
@@ -8484,7 +8560,7 @@ class microIntegrationHandler
 		}
 	}
 
-	function applyMIs( $amount, $subscription, $metaUser )
+	function applyMIs( &$amount, $subscription, $metaUser )
 	{
 		global $database;
 
@@ -8506,14 +8582,12 @@ class microIntegrationHandler
 				}
 
 				if ( method_exists( $mi->mi_class, 'modifyPrice' )  ) {
-					$amount = $mi->relayAction( $metaUser, null, null, $subscription, 'modifyPrice', $add );
+					$mi->relayAction( $metaUser, null, null, $subscription, 'modifyPrice', $add );
 				}
 
 				unset( $mi );
 			}
 		}
-
-		return $amount;
 	}
 }
 
