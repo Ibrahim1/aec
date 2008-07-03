@@ -590,9 +590,8 @@ class HTML_AcctExp
 										<td><?php echo _AEC_USER_USED_PLANS; ?>:</td>
 										<td>
 											<?php
-											if ( isset( $metaUser->focusSubscription->used_plans ) ) {
-												$used_plans = $metaUser->focusSubscription->getUsedPlans();
-												foreach ($used_plans as $used => $amount) { ?>
+											if ( !empty( $metaUser->meta->plan_history->used_plans ) ) {
+												foreach ( $metaUser->meta->plan_history->used_plans as $used => $amount ) { ?>
 													<strong>#<?php echo $used; ?></strong> - "<?php echo HTML_AcctExp::SubscriptionName( $used ); ?>" (<?php echo $amount . " " . ( ( $amount > 1 ) ? _AEC_USER_TIMES : _AEC_USER_TIME ); ?>)
 													<?php
 												}

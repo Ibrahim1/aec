@@ -165,7 +165,12 @@ class metaUser
 		}
 
 		if ( !empty( $this->meta->plan_history->plan_history ) && is_array( $this->meta->plan_history->plan_history ) ) {
-			$previous_plan = $this->meta->plan_history->plan_history[(count($this->meta->plan_history->plan_history)-2)];
+			$prev = count( $this->meta->plan_history->plan_history ) - 2;
+			if ( isset( $this->meta->plan_history->plan_history[$prev] ) ) {
+				$previous_plan = $this->meta->plan_history->plan_history[$prev];
+			} else {
+				$previous_plan = 0;
+			}
 		} else {
 			$previous_plan = 0;
 		}
@@ -1640,7 +1645,7 @@ class displayPipeline extends jsonDBTable
 	}
 }
 
-class eventLog extends paramDBTable
+class eventLog extends jsonDBTable
 {
 	/** @var int Primary key */
 	var $id			= null;
@@ -3597,7 +3602,7 @@ class SubscriptionPlan extends jsonDBTable
 			$metaUser->focusSubscription->status = $status;
 			$metaUser->focusSubscription->plan = $this->id;
 
-			$metaUser->addPlanID( $this->id );
+			$metaUser->meta->addPlanID( $this->id );
 
 			$metaUser->focusSubscription->lastpay_date = date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
 			$metaUser->focusSubscription->type = $processor;
@@ -5514,7 +5519,7 @@ class Invoice extends jsonDBTable
 			if ( !empty( $plan->micro_integrations ) ) {
 				$mih = new microIntegrationHandler();
 
-				$amount['amount'] = $mih->applyMIs( $amount['amount'], $plan, $metaUser );
+				$return['amount'] = $mih->applyMIs( $return['amount'], $plan, $metaUser );
 			}
 
 			if ( $this->coupons ) {
@@ -8102,7 +8107,7 @@ class AECToolbox
 
 			$result = AECToolbox::resolveJSONitem( $json, $rewrite, $metaUser );
 
-			$subject =  str_replace( $match, $result, $subject );
+			$subject = str_replace( $match, $result, $subject );
 		}
 
 		return $result;
@@ -8150,6 +8155,9 @@ class AECToolbox
 				// so explode if that is what the admin wants here
 				if ( !is_array( $vars ) && ( strpos( '.', $vars ) !== false ) ) {
 					$temp = explode( '.', $vars );
+					$vars = $temp;
+				} elseif ( !is_array( $vars ) ) {
+					return false;
 				}
 
 				// Start with the metaUser
@@ -8541,17 +8549,17 @@ class MI
 
 	function pre_expiration_action( $params, $metaUser, $plan )
 	{
-		return $this->relayAction( $params, $metaUser, $plan, null, '_pre_exp', false );
+		return $this->relayAction( $params, $metaUser, $plan, null, '_pre_exp', $add=false );
 	}
 
 	function expiration_action( $params, $metaUser, $plan )
 	{
-		return $this->relayAction( $params, $metaUser, $plan, null, '_exp', false );
+		return $this->relayAction( $params, $metaUser, $plan, null, '_exp', $add=false );
 	}
 
 	function action( $params, $metaUser, $invoice, $plan )
 	{
-		return $this->relayAction( $params, $metaUser, $plan, $invoice, '', false );
+		return $this->relayAction( $params, $metaUser, $plan, $invoice, '', $add=false );
 	}
 
 	function setError( $error )
@@ -8702,7 +8710,7 @@ class microIntegration extends jsonDBTable
 
 	function action( $metaUser, $exchange=null, $invoice=null, $objplan=null )
 	{
-		return $this->relayAction( $metaUser, $exchange, $invoice, $objplan, 'action', false );
+		return $this->relayAction( $metaUser, $exchange, $invoice, $objplan, 'action', $add=false );
 	}
 
 	function pre_expiration_action( $metaUser, $objplan=null )
@@ -8732,7 +8740,7 @@ class microIntegration extends jsonDBTable
 			// Create the new flags
 			$metaUser->meta->setMIParams( $this->id, $objplan->id, $newflags );
 
-			return $this->relayAction( $metaUser, null, null, $objplan, 'pre_expiration_action', false );
+			return $this->relayAction( $metaUser, null, null, $objplan, 'pre_expiration_action', $add=false );
 		} else {
 			return null;
 		}
@@ -8740,7 +8748,7 @@ class microIntegration extends jsonDBTable
 
 	function expiration_action( $metaUser, $objplan=null )
 	{
-		return $this->relayAction( $metaUser, null, null, $objplan, 'expiration_action', false );
+		return $this->relayAction( $metaUser, null, null, $objplan, 'expiration_action', $add=false );
 	}
 
 	function relayAction( $metaUser, $exchange=null, $invoice=null, $objplan=null, $stage='action', &$add )
@@ -9731,7 +9739,7 @@ class couponHandler
 	}
 }
 
-class coupon extends paramDBTable
+class coupon extends jsonDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -9819,7 +9827,7 @@ class coupon extends paramDBTable
 				$couponid = $this->_db->loadResult();
 			}
 
-			if ( !empty( $couponid ) ) {
+			if ( !empty( $couponid ) && ( $couponid !== $this->id ) ) {
 				$post['coupon_code'] = $this->generateCouponCode();
 			}
 		}

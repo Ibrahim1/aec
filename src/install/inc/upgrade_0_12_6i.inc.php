@@ -1,15 +1,15 @@
 <?php
 // Update database fields to JSONized fields
 if ( $jsonupdate ) {
-	$updates = array(	'displayPipeline' => array( 'displaypipeline', array( 'params' => array('displayedto') ) ),
-						'eventLog' => array( 'eventlog', array( 'info' => array('actions') ) ),
-						'processor' => array( 'config_processors', array() ),
-						'SubscriptionPlan' => array( 'plans', array( 'params' => array('similarplans','equalplans','processors'), 'micro_integrations' => array('_self'), 'restrictions' => array('previousplan_req','currentplan_req','overallplan_req','previousplan_req_excluded','currentplan_req_excluded','overallplan_req_excluded') ) ),
-						'Invoice' => array( 'Invoice', array( 'coupons' => array('_self'), 'micro_integrations' => array('_self') ) ),
-						'Subscription' => array( 'subscr', array() ),
-						'microIntegration' => array( 'microintegrations', array() ),
-						'coupon' => array( 'coupons', array( 'restrictions' => array('bad_combinations','usage_plans') ) ),
-						'coupon' => array( 'coupons_static', array( 'restrictions' => array('bad_combinations','usage_plans') ) )
+	$updates = array(	'displayPipeline'	=> array( 'displaypipeline', array( 'params' => array('displayedto') ) ),
+						'eventLog'			=> array( 'eventlog', array( 'info' => array('actions') ) ),
+						'processor'			=> array( 'config_processors', array() ),
+						'SubscriptionPlan'	=> array( 'plans', array( 'params' => array('similarplans','equalplans','processors'), 'micro_integrations' => array('_self'), 'restrictions' => array('previousplan_req','currentplan_req','overallplan_req','previousplan_req_excluded','currentplan_req_excluded','overallplan_req_excluded') ) ),
+						'Invoice'			=> array( 'Invoice', array( 'coupons' => array('_self'), 'micro_integrations' => array('_self') ) ),
+						'Subscription'		=> array( 'subscr', array() ),
+						'microIntegration'	=> array( 'microintegrations', array() ),
+						'coupon'			=> array( 'coupons', array( 'restrictions' => array('bad_combinations','usage_plans') ) ),
+						'coupon'			=> array( 'coupons_static', array( 'restrictions' => array('bad_combinations','usage_plans') ) )
 						);
 
 	$miupdate = array(	'mi_acl' => array( 'sub_gid_del', 'sub_gid', 'sub_gid_exp_del', 'sub_gid_exp', 'sub_gid_pre_exp_del', 'sub_gid_pre_exp' ),

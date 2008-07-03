@@ -1903,7 +1903,7 @@ function editSettings( $option )
 
 	// TODO: Deprecated key: gwlist
 	if ( !empty( $aecConfig->cfg['gwlist'] ) ) {
-		$desc_list = explode( ';', $aecConfig->cfg['gwlist'] );
+		$desc_list = $aecConfig->cfg['gwlist'];
 	} else {
 		$desc_list = array();
 	}
@@ -3375,13 +3375,25 @@ function editCoupon( $id, $option, $new, $type )
 	$database->setQuery( $query );
 	$mi_list = $database->loadObjectList();
 
- 	// mic: fix for wrong select
- 	$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
-		 	. ' FROM #__acctexp_microintegrations'
-		 	. ( $mi_list ? ' WHERE `id` IN (' . implode( ',', explode( ',', $mi_list->value ) ) . ')' : '' )
-		 	;
- 	$database->setQuery( $query );
-	$selected_mi = $database->loadObjectList();
+	$mis = array();
+	if ( !empty( $mi_list ) ) {
+		foreach ( $mi_list as $mi_item ) {
+			if ( in_array( $mi_item->value, $params_values['micro_integrations'] ) ) {
+				$mis[] = $mi_item->value;
+			}
+		}
+	}
+
+ 	if ( !empty( $mis ) ) {
+	 	$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
+			 	. ' FROM #__acctexp_microintegrations'
+			 	. ( !empty( $mis ) ? ' WHERE `id` IN (' . implode( ',', $mis ) . ')' : '' )
+			 	;
+	 	$database->setQuery( $query );
+		$selected_mi = $database->loadObjectList();
+ 	} else {
+ 		$selected_mi = array();
+ 	}
 
 	$lists['micro_integrations'] = mosHTML::selectList( $mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple', 'value', 'text', $selected_mi );
 
@@ -3490,8 +3502,8 @@ function saveCoupon( $option, $type, $apply=0 )
 
 		$cph->coupon->updateOrder();
 
-		if ( $_POST['id'] ) {
-			$id = $_POST['id'];
+		if ( $cph->coupon->id ) {
+			$id = $cph->coupon->id;
 		} else {
 			$id = $cph->coupon->getMax();
 		}
@@ -3808,14 +3820,14 @@ function eventlog( $option )
 	$pageNav = new mosPageNav( $total, $limitstart, $limit );
 
 	// Lets grab the data and fill it in.
-	$query = 'SELECT *'
+	$query = 'SELECT id'
 			. ' FROM #__acctexp_eventlog'
 			. ( count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
 			. ' ORDER BY `id` DESC'
 			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
 			;
 	$database->setQuery( $query );
-	$rows = $database->loadObjectList();
+	$rows = $database->loadResultArray();
 
 	if ( $database->getErrorNum() ) {
 		echo $database->stderr();
@@ -3823,7 +3835,10 @@ function eventlog( $option )
 	}
 
 	$events = array();
-	foreach ( $rows as $id => $row ) {
+	foreach ( $rows as $id ) {
+		$row = new EventLog( $database );
+		$row->load( $id );
+
 		$events[$id]->id		= $row->id;
 		$events[$id]->datetime	= $row->datetime;
 		$events[$id]->short		= $row->short;

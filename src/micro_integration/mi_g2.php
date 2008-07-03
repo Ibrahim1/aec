@@ -51,12 +51,16 @@ class mi_g2 extends MI
 
 			$gr[] = mosHTML::makeOption( $group->g_id, $desc );
 
-			if ( in_array( $group->g_id, $this->settings['groups'] ) ) {
-				$sg[] = mosHTML::makeOption( $group->g_id, $desc );
+			if ( !empty( $this->settings['groups'] ) ) {
+				if ( in_array( $group->g_id, $this->settings['groups'] ) ) {
+					$sg[] = mosHTML::makeOption( $group->g_id, $desc );
+				}
 			}
 
-			if ( in_array( $group->g_id, $this->settings['groups_sel_scope'] ) ) {
-				$sgs[] = mosHTML::makeOption( $group->g_id, $desc );
+			if ( !empty( $this->settings['groups_sel_scope'] ) ) {
+				if ( in_array( $group->g_id, $this->settings['groups_sel_scope'] ) ) {
+					$sgs[] = mosHTML::makeOption( $group->g_id, $desc );
+				}
 			}
 		}
 

@@ -128,6 +128,9 @@ function com_install()
 		}
 	}
 
+	// Set Version
+	//$aecConfig->cfg['aec_version'] = _AEC_VERSION;
+
 	// --- [ END OF DATABASE UPGRADE ACTIONS ] ---
 
 	// Make sure settings & info = updated
