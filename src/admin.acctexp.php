@@ -2196,8 +2196,6 @@ function saveSettings( $option, $return=0 )
 		$general_settings[$name] = $value;
 	}
 
-	$general_settings['aec_version'] = _AEC_VERSION;
-
 	$diff = $aecConfig->diffParams($general_settings, 'settings');
 	$difference = '';
 
@@ -2210,6 +2208,8 @@ function saveSettings( $option, $return=0 )
 	} else {
 		$difference = 'none';
 	}
+
+	$general_settings['aec_version'] = _AEC_VERSION;
 
 	$aecConfig->cfg = $general_settings;
 	$aecConfig->saveSettings();

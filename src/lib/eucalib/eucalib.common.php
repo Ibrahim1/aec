@@ -282,7 +282,12 @@ class jsonDBTable extends paramDBTable
 	function setParams( $input, $field = 'params' )
 	{
 		if ( !empty( $field ) && ( $this->$field != 'null' ) ) {
-			$this->$field = $this->_db->getEscaped( jsoonHandler::encode( $input ) );
+			if ( get_magic_quotes_gpc() ) {
+				$store = stripslashes( jsoonHandler::encode( $input ) );
+			} else {
+				$store = jsoonHandler::encode( $input );
+			}
+			$this->$field = $this->_db->getEscaped( $store );
 		} else {
 			$this->$field = NULL;
 		}
