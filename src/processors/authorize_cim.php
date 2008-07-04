@@ -134,11 +134,20 @@ class processor_authorize_cim extends XMLprocessor
 				}
 			}
 
-			if ( !empty( $post['cardNumber'] ) ) {
-				$basicdata = array(	'paymentType'		=> 'creditcard',
-									'cardNumber'		=> trim( $post['cardNumber'] ),
-									'expirationDate'	=> $post['expirationYear'] . '-' . $post['expirationMonth']
-									);
+			if ( !empty( $post['cardNumber'] ) || !empty( $post['account_no'] ) ) {
+				if( !empty( $post['account_no'] ) ) {
+					$basicdata['paymentType']		= 'echeck';
+					$basicdata['accountType']		= 'checking';
+					$basicdata['routingNumber']		= $post['routing_no'];
+					$basicdata['accountNumber']		= $post['account_no'];
+					$basicdata['nameOnAccount']		= $post['account_name'];
+					$basicdata['echeckType']		= 'CCD';
+					$basicdata['bankName']			= $post['bank_name'];
+				} else {
+					$basicdata['paymentType']		= 'creditcard';
+					$basicdata['cardNumber']		= trim( $post['cardNumber'] );
+					$basicdata['expirationDate']	= $post['expirationYear'] . '-' . $post['expirationMonth'];
+				}
 
 				foreach ( $basicdata as $key => $value ) {
 					$cim->setParameter( $key, $value );
@@ -330,6 +339,8 @@ class processor_authorize_cim extends XMLprocessor
 				$var['params']['billUpdateInfo'] = array( 'p', _AEC_CCFORM_UPDATE_NAME, _AEC_CCFORM_UPDATE_DESC, '' );
 
 				$vcontent['card_number'] = $cim->substring_between( $cim->response,'<cardNumber>','</cardNumber>' );
+				$vcontent['account_no'] = $cim->substring_between( $cim->response,'<accountNumber>','</accountNumber>' );
+				$vcontent['routing_no'] = $cim->substring_between( $cim->response,'<routingNumber>','</routingNumber>' );
 			} else {
 				$vcontent = '';
 			}
@@ -444,6 +455,20 @@ class processor_authorize_cim extends XMLprocessor
 							'cardNumber'			=> trim( $request->int_var['params']['cardNumber'] ),
 							'expirationDate'		=> $request->int_var['params']['expirationYear'] . '-' . $request->int_var['params']['expirationMonth']
 							);
+
+		if( !empty( $request->int_var['params']['account_no'] ) ) {
+			$basicdata['paymentType']		= 'echeck';
+			$basicdata['accountType']		= 'checking';
+			$basicdata['routingNumber']		= $request->int_var['params']['routing_no'];
+			$basicdata['accountNumber']		= $request->int_var['params']['account_no'];
+			$basicdata['nameOnAccount']		= $request->int_var['params']['account_name'];
+			$basicdata['echeckType']		= 'CCD';
+			$basicdata['bankName']			= $request->int_var['params']['bank_name'];
+		} else {
+			$basicdata['paymentType']		= 'creditcard';
+			$basicdata['cardNumber']		= trim( $request->int_var['params']['cardNumber'] );
+			$basicdata['expirationDate']	= $request->int_var['params']['expirationYear'] . '-' . $request->int_var['params']['expirationMonth'];
+		}
 
 		foreach ( $basicdata as $key => $value ) {
 			$cim->setParameter( $key, $value );
@@ -722,7 +747,12 @@ class processor_authorize_cim extends XMLprocessor
 		$hash->name		= $post['billFirstName'] . ' ' . $post['billLastName'];
 		$hash->address	= $post['billAddress'];
 		$hash->zipcity	= $post['billZip'] . ' ' . $post['billCity'];
-		$hash->cc		= 'XXXX' . substr( $post['cardNumber'], -4 );
+
+		if ( !empty( $post['account_no'] ) ) {
+			$hash->cc		= 'XXXX' . substr( $post['account_no'], -4 );
+		} else {
+			$hash->cc		= 'XXXX' . substr( $post['cardNumber'], -4 );
+		}
 
 		$ppParams->paymentProfiles->$pointer->profilehash = $hash;
 
@@ -739,7 +769,12 @@ class processor_authorize_cim extends XMLprocessor
 		$hash->name		= $post['billFirstName'] . ' ' . $post['billLastName'];
 		$hash->address	= $post['billAddress'];
 		$hash->zipcity	= $post['billZip'] . ' ' . $post['billCity'];
-		$hash->cc		= 'XXXX' . substr( $post['cardNumber'], -4 );
+
+		if ( !empty( $post['account_no'] ) ) {
+			$hash->cc		= 'XXXX' . substr( $post['account_no'], -4 );
+		} else {
+			$hash->cc		= 'XXXX' . substr( $post['cardNumber'], -4 );
+		}
 
 		$ppParams->paymentProfiles->$profileid->profilehash = $hash;
 
