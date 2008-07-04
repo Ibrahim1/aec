@@ -735,11 +735,9 @@ function subscriptionDetails( $option, $sub )
 			if ( ( $row->transaction_date == '0000-00-00 00:00:00' ) || ( $row->subscr_id  ) || $hassubstuff ) {
 				$transactiondate = 'uncleared';
 
-				if ( strpos( $row->params, 'pending_reason' ) ) {
-					$params = explode( "\n", $row->params );
-
+				if ( in_array( 'pending_reason', $row->params ) ) {
 					$array = array();
-					foreach ( $params as $chunk ) {
+					foreach ( $row->params as $chunk ) {
 						$k = explode( '=', $chunk );
 						$array[$k[0]] = stripslashes( $k[1] );
 					}

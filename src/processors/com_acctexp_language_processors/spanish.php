@@ -126,6 +126,16 @@ define( '_AEC_CCFORM_UPDATE_NAME', 'Update Notice');
 define( '_AEC_CCFORM_UPDATE_DESC', 'To update your billing details, we need you to enter your CreditCard details again.<br />Leave fields as they are if you want to use all your previous details.');
 define( '_AEC_CCFORM_UPDATE2_DESC', 'Updated! Thank you for keeping us up to date.');
 
+// Generic eCheck Form
+define( '_AEC_ECHECKFORM_ROUTING_NO_NAME', 'Routing Number');
+define( '_AEC_ECHECKFORM_ROUTING_NO_DESC', 'Your Routing Number');
+define( '_AEC_ECHECKFORM_ACCOUNT_NO_NAME', 'Account Number');
+define( '_AEC_ECHECKFORM_ACCOUNT_NO_DESC', 'Your Account Number');
+define( '_AEC_ECHECKFORM_ACCOUNT_NAME_NAME', 'Account Name');
+define( '_AEC_ECHECKFORM_ACCOUNT_NAME_DESC', 'Your Name for this Account');
+define( '_AEC_ECHECKFORM_BANK_NAME_NAME', 'Bank Name');
+define( '_AEC_ECHECKFORM_BANK_NAME_DESC', 'The Bank Name');
+
 // Generic Wire Transfer Form
 define( '_AEC_WTFORM_ACCOUNTNAME_NAME', 'Account owner Name');
 define( '_AEC_WTFORM_ACCOUNTNAME_DESC', 'The name of the person holding this account');

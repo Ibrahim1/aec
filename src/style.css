@@ -478,7 +478,7 @@ td.checkout_action {
 text-align: center;
 }
 
-#checkoutbox a {
+#checkoutbox a.linkbutton {
 display: block;
 padding: 4px;
 width: 10em;
@@ -689,4 +689,51 @@ text-align: center;
 }
 
 #cancel_page {
+}
+
+#myTabs{
+margin: 6px auto;
+padding: 2px;
+}
+
+.mootabs_title {
+list-style-image: none;
+list-style-type: none;
+margin: 0px;
+padding: 0px;
+height: 24px;
+}
+
+.mootabs_title li {
+float: left;
+background-color: #ddd;
+padding: 2px 8px 2px 8px;
+margin-right: 2px;
+cursor: pointer;
+height: 24px;
+list-style-type: none !important;
+}
+
+.mootabs_title li.active {
+background-color: #e6e6e6;
+}
+
+.mootabs_panel {
+display: none;
+background-color: #ddd;
+position: relative;
+width: 100%;
+top: -1px;
+clear: both;
+overflow: hidden;
+padding: 2px;
+}
+
+.mootabs_panel.active {
+background-color: #e6e6e6;
+display: block;
+}
+
+.mootabs_panel.active {
+display: block;
 }

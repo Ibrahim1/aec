@@ -426,7 +426,7 @@ class mi_hotproperty extends MI
 			}
 
 			if ( $this->settings['add_list_userchoice'] ) {
-				$mi_hphandler->addListings( $this->settings['add_listings'] );
+				$mi_hphandler->addListings( $request->params['hpamt'] );
 			}
 
 			$mi_hphandler->check();

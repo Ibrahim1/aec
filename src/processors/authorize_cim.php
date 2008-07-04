@@ -334,7 +334,27 @@ class processor_authorize_cim extends XMLprocessor
 				$vcontent = '';
 			}
 
+			global $mainframe;
+
+			$mainframe->addCustomHeadTag( '<script type="text/javascript" src="' . $mainframe->getCfg( 'live_site' ) . '/components/com_acctexp/lib/mootools/mootools.js"></script>' );
+			$mainframe->addCustomHeadTag( '<script type="text/javascript" src="' . $mainframe->getCfg( 'live_site' ) . '/components/com_acctexp/lib/mootools/mootabs.js"></script>' );
+			$mainframe->addCustomHeadTag( '<script type="text/javascript" charset="utf-8">window.addEvent(\'domready\', init);function init() {myTabs1 = new mootabs(\'myTabs\');}</script>' );
+
+			$var['params'][] = array( 'tabberstart', '', '', '' );
+			$var['params'][] = array( 'tabregisterstart', '', '', '' );
+			$var['params'][] = array( 'tabregister', 'ccdetails', 'Credit Card', true );
+			$var['params'][] = array( 'tabregister', 'echeckdetails', 'eCheck', false );
+			$var['params'][] = array( 'tabregisterend', '', '', '' );
+
+			$var['params'][] = array( 'tabstart', 'ccdetails', true, '' );
 			$var = $this->getCCform( $var, array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), $vcontent );
+			$var['params'][] = array( 'tabend', '', '', '' );
+
+			$var['params'][] = array( 'tabstart', 'echeckdetails', true, '' );
+			$var = $this->getECHECKform( $var );
+			$var['params'][] = array( 'tabend', '', '', '' );
+
+			$var['params'][] = array( 'tabberend', '', '', '' );
 		}
 
 		if ( !empty( $this->settings['promptAddress'] ) ) {
@@ -367,19 +387,19 @@ class processor_authorize_cim extends XMLprocessor
 
 		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
 
+		// Actual form, with ProfileID reference numbers as options
+
+		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=checkout', true ) . '" method="post">' . "\n";
+
 		if ( !empty( $ppParams ) ) {
 			$cim = $this->loadCIM( $ppParams );
 
 			$var = array();
 			$var = $this->ppProfileSelect( $var, $ppParams, false, false );
 			$var = $this->shipProfileSelect( $var, $ppParams, false, false, false );
+
+			$return .= $this->getParamsHTML( $var ) . '<br /><br />';
 		}
-
-		// Actual form, with ProfileID reference numbers as options
-
-		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=checkout', true ) . '" method="post">' . "\n";
-
-		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
 
 		$return .= $this->getParamsHTML( $this->checkoutform( $request, $cim ) ) . '<br /><br />';
 		$return .= '<input type="hidden" name="invoice" value="' . $request->int_var['invoice'] . '" />' . "\n";

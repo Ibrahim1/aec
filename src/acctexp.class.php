@@ -2706,6 +2706,38 @@ class XMLprocessor extends processor
 		return $var;
 	}
 
+	function getECHECKform( $var=array(), $values=null, $content=null )
+	{
+		if ( empty( $values ) ) {
+			$values = array( 'routing_no', 'account_no', 'account_name', 'bank_name' );
+		}
+
+		foreach ( $values as $value ) {
+			if ( isset( $content[$value] ) ) {
+				$vcontent = $content[$value];
+			} else {
+				$vcontent = '';
+			}
+
+			switch ( strtolower( $value ) ) {
+				case 'routing_no':
+					$var['params']['routing_no'] = array( 'inputC', _AEC_ECHECKFORM_ROUTING_NO_NAME, _AEC_ECHECKFORM_ROUTING_NO_DESC, $vcontent );
+					break;
+				case 'account_no':
+					$var['params']['account_no'] = array( 'inputC', _AEC_ECHECKFORM_ACCOUNT_NO_NAME, _AEC_ECHECKFORM_ACCOUNT_NO_DESC, $vcontent );
+					break;
+				case 'account_name':
+					$var['params']['account_name'] = array( 'inputC', _AEC_ECHECKFORM_ACCOUNT_NAME_NAME, _AEC_ECHECKFORM_ACCOUNT_NAME_DESC, $vcontent );
+					break;
+				case 'bank_name':
+					$var['params']['bank_name'] = array( 'inputC', _AEC_ECHECKFORM_BANK_NAME_NAME, _AEC_ECHECKFORM_BANK_NAME_DESC, $vcontent );
+					break;
+			}
+		}
+
+		return $var;
+	}
+
 	function getUserform( $var=array(), $values=null, $metaUser=null, $content=array() )
 	{
 		if ( empty( $values ) ) {
@@ -2960,7 +2992,7 @@ class URLprocessor extends processor
 		}
 
 		$return .= implode( '&amp;', $vars );
-		$return .= '" >' . _BUTTON_CHECKOUT . '</a>' . "\n";
+		$return .= '" class="linkbutton" >' . _BUTTON_CHECKOUT . '</a>' . "\n";
 
 		return $return;
 	}
@@ -3199,15 +3231,6 @@ class aecHTML
 						backFX.start({ 'color':'#444', 'paddingLeft':'10px' });
 						toggler.setStyle('font-weight', 'normal');
 					} } ); });";
-/*var myAccordion = new Accordion($('accordion'), 'h3.toggler', 'div.element', {
-opacity: false,
-onActive: function(toggler, element){
-toggler.setStyle('color', '#41464D');
-},
-onBackground: function(toggler, element){
-toggler.setStyle('color', '#528CE0');
-}
-});*/
 				$return = '<div id="accordion' . $this->accordions . '"' . ( !empty( $value ) ? ('class="'.$value.'"') : 'accordion') . '>';
 				break;
 			case 'accordion_itemstart':
@@ -3319,6 +3342,27 @@ toggler.setStyle('color', '#528CE0');
 			case "list":
 				$return .= $lists[$value ? $value : $name];
 				break;
+			case 'tabberstart':
+				$return = '<tr><td colspan="2"><div id="myTabs">';
+				break;
+			case 'tabregisterstart':
+				$return = '<ul class="mootabs_title">';
+				break;
+			case 'tabregister':
+				$return = '<li title="' . $row[1] . '">' . $row[2] . '</li> ';
+				break;
+			case 'tabregisterend':
+				$return = '</ul>';
+				break;
+			case 'tabstart':
+				$return = '<div id="' . $row[1] . '" class="mootabs_panel"><table>';
+				break;
+			case 'tabend':
+				$return = '</table></div>';
+				break;
+			case 'tabberend':
+				$return = '</div></td></tr>';
+				break;
 			default:
 				if ( !empty( $row[0] ) ) {
 					$return .= '<' . $row[0] . '>' . $row[2] . '</' . $row[0] . '>';
@@ -3330,7 +3374,9 @@ toggler.setStyle('color', '#528CE0');
 				break;
 		}
 
-		$return .= $table ? '</td></tr>' : '</p>';
+		if ( strpos( $return, ($table ? '<tr><td class="cleft">' : '<p>') ) ) {
+			$return .= $table ? '</td></tr>' : '</p>';
+		}
 
 		return $return;
 	}
@@ -4010,7 +4056,7 @@ class SubscriptionPlan extends jsonDBTable
 			foreach ( $this->custom_params as $name => $value ) {
 				$realname = explode( '_', $name, 2 );
 
-				if ( $realname[0] == $processorid ) {
+				if ( ( $realname[0] == $processorid ) && isset( $realname[1] ) ) {
 					$procparams[$realname[1]] = $value;
 				}
 			}
@@ -6056,7 +6102,14 @@ class Invoice extends jsonDBTable
 			$this->counter += 1;
 			$this->transaction_date	= $transaction_date;
 
-			$this->transactions[] = $transaction_date . ";" . $this->amount . ";" . $this->currency . ";" . $this->method;
+			$c = new stdClass();
+
+			$c->timestamp	= $transaction_date;
+			$c->amount		= $this->amount;
+			$c->currency	= $this->currency;
+			$c->processor	= $this->method;
+
+			$this->transactions[] = $c;
 
 			$this->check();
 			$this->store();
@@ -6185,7 +6238,7 @@ class Invoice extends jsonDBTable
 			$amount['amount'] = $cph->applyCoupons( $amount['amount'], $this->coupons, $InvoiceFactory->metaUser, $InvoiceFactory );
 		}
 
-		$int_var['amount'] = AECToolbox::correctAmount( $amount['amount'] );
+		$int_var['amount'] = $amount['amount'];
 
 		if ( !empty( $amount['return_url'] ) ) {
 			$int_var['return_url'] = $amount['return_url'] . $urladd;
