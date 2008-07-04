@@ -106,7 +106,7 @@ class mi_remository
 		$authoriser =& aliroAuthorisationAdmin::getInstance();
 
  		if ( $this->settings['delete_on_exp'] == "Set" ) {
-			$authoriser->unassign( $this->settings['group']. 'aUser', $request->metaUser->userid );
+			$authoriser->unassign( $this->settings['group'], 'aUser', $request->metaUser->userid );
 		}
 
 		if ( $this->settings['delete_on_exp'] == "All" ) {
