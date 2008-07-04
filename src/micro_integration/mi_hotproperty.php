@@ -57,6 +57,7 @@ class mi_hotproperty extends MI
 		$settings['update_cfields']	= array( 'inputD' );
 		$settings['add_listings']	= array( 'inputA' );
 		$settings['set_listings']	= array( 'inputA' );
+		$settings['set_unlimited']	= array( 'list_yesno' );
 		$settings['publish_all']	= array( 'list_yesno' );
 		$settings['unpublish_all']	= array( 'list_yesno' );
 
@@ -132,17 +133,17 @@ class mi_hotproperty extends MI
 					switch ( $this->settings['elu_'.$i.'_op'] ) {
 						case 'EQ':
 							if ( $request->params['hpamt'] == $this->settings['elu_'.$i.'_no'] ) {
-								$request->add->price = $this->parseEasyPrice( $request->params['hpamt'], $this->settings['elu_'.$i.'_ch'] );
+								$request->add->price = $this->parseEasyPrice( $request->add->price, $request->params['hpamt'], $this->settings['elu_'.$i.'_ch'] );
 							}
 							break;
 						case 'GT':
 							if ( $request->params['hpamt'] > $this->settings['elu_'.$i.'_no'] ) {
-								$request->add->price = $this->parseEasyPrice( $request->params['hpamt'], $this->settings['elu_'.$i.'_ch'] );
+								$request->add->price = $this->parseEasyPrice( $request->add->price, $request->params['hpamt'], $this->settings['elu_'.$i.'_ch'] );
 							}
 							break;
 						case 'LT':
 							if ( $request->params['hpamt'] < $this->settings['elu_'.$i.'_no'] ) {
-								$request->add->price = $this->parseEasyPrice( $request->params['hpamt'], $this->settings['elu_'.$i.'_ch'] );
+								$request->add->price = $this->parseEasyPrice( $request->add->price, $request->params['hpamt'], $this->settings['elu_'.$i.'_ch'] );
 							}
 							break;
 					}
@@ -192,10 +193,14 @@ class mi_hotproperty extends MI
 		return null;
 	}
 
-	function parseEasyPrice( $p, $parse )
+	function parseEasyPrice( $p, $a, $parse )
 	{
 		if ( strpos( $parse, 'p' ) !== false ) {
 			$parse = str_replace( 'p', $p, $parse );
+		}
+
+		if ( strpos( $parse, 'a' ) !== false ) {
+			$parse = str_replace( 'a', $a, $parse );
 		}
 
 		if ( strpos( $parse, '*' ) !== false ) {
@@ -426,7 +431,11 @@ class mi_hotproperty extends MI
 			}
 
 			if ( $this->settings['add_list_userchoice'] ) {
-				$mi_hphandler->addListings( $request->params['hpamt'] );
+				if ( strpos( $request->params['hpamt'], '>' ) ) {
+					$mi_hphandler->unlimitedListings();
+				} else {
+					$mi_hphandler->addListings( $request->params['hpamt'] );
+				}
 			}
 
 			$mi_hphandler->check();
@@ -641,7 +650,7 @@ class mi_hotproperty extends MI
 
 }
 
-class aec_hotproperty extends mosDBTable
+class aec_hotproperty extends jsonDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -655,6 +664,8 @@ class aec_hotproperty extends mosDBTable
 	var $used_listings		= null;
 	/** @var text */
 	var $params				= null;
+
+	function declareJSONfields(){ return array( 'params' ); }
 
 	function aec_hotproperty( &$db )
 	{
@@ -705,9 +716,11 @@ class aec_hotproperty extends mosDBTable
 
 	function hasListingsLeft()
 	{
-		if( $this->getListingsLeft() > 0 ) {
+		if ( !empty( $this->params['unlimited'] ) ) {
 			return true;
-		}else{
+		} elseif( $this->getListingsLeft() > 0 ) {
+			return true;
+		} else {
 			return false;
 		}
 	}
@@ -727,6 +740,11 @@ class aec_hotproperty extends mosDBTable
 	function setListings( $set )
 	{
 		$this->granted_listings = $set;
+	}
+
+	function unlimitedListings()
+	{
+		$this->addParams( array( 'unlimited' => true ) );
 	}
 
 	function addListings( $add )

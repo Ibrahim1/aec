@@ -5698,6 +5698,9 @@ class Invoice extends jsonDBTable
 				$this->method = 'error';
 				// TODO: Log Error
 			}
+
+			$temp = $this->amount;
+			$this->amount = AECToolbox::correctAmount( $this->amount );
 		}
 	}
 
