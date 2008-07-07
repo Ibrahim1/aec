@@ -993,6 +993,8 @@ class Config_General extends jsonDBTable
 
 		$this->load(1);
 
+		$this->cfg =& $this->settings;
+
 		// If we have no settings, init them
 		if ( empty( $this->settings ) ) {
 			$this->initParams();
@@ -1002,15 +1004,6 @@ class Config_General extends jsonDBTable
 	function declareJSONfields()
 	{
 		return array( 'settings' );
-	}
-
-	function load( $id, $jsonfields=array() )
-	{
-		parent::load( $id );
-
-		$this->cfg =& $this->settings;
-
-		return true;
 	}
 
 	function check( $jsonfields=array() )
@@ -2018,7 +2011,7 @@ class PaymentProcessor
 
 	function exchangeSettingsByPlan( $plan, $plan_params=null )
 	{
-		if ( !isset( $this->settings ) ) {
+		if ( empty( $this->settings ) ) {
 			$this->getSettings();
 		}
 
@@ -2049,7 +2042,7 @@ class PaymentProcessor
 		if ( !isset( $this->info['recurring'] ) ) {
 			// Keep false
 		} elseif ( $this->info['recurring'] > 1 ) {
-			if ( !isset( $this->settings ) ) {
+			if ( empty( $this->settings ) ) {
 				$this->getSettings();
 			}
 
@@ -2089,7 +2082,7 @@ class PaymentProcessor
 
 	function getBackendSettings()
 	{
-		if ( !isset( $this->settings ) ) {
+		if ( empty( $this->settings ) ) {
 			$this->getSettings();
 		}
 
@@ -2107,7 +2100,7 @@ class PaymentProcessor
 
 	function checkoutAction( $int_var=null, $metaUser=null, $new_subscription=null, $invoice=null )
 	{
-		if ( !isset( $this->settings ) ) {
+		if ( empty( $this->settings ) ) {
 			$this->getSettings();
 		}
 
@@ -2129,7 +2122,7 @@ class PaymentProcessor
 
 	function checkoutProcess( $int_var=null, $metaUser=null, $new_subscription=null, $invoice=null )
 	{
-		if ( !isset( $this->settings ) ) {
+		if ( empty( $this->settings ) ) {
 			$this->getSettings();
 		}
 
@@ -2151,7 +2144,7 @@ class PaymentProcessor
 
 	function customAction( $action, $invoice, $metaUser )
 	{
-		if ( !isset( $this->settings ) ) {
+		if ( empty( $this->settings ) ) {
 			$this->getSettings();
 		}
 
@@ -2171,7 +2164,7 @@ class PaymentProcessor
 
 	function customProfileTab( $action, $metaUser )
 	{
-		if ( !isset( $this->settings ) ) {
+		if ( empty( $this->settings ) ) {
 			$this->getSettings();
 		}
 
@@ -2232,7 +2225,7 @@ class PaymentProcessor
 
 	function getParams( $params )
 	{
-		if ( !isset( $this->settings ) ) {
+		if ( empty( $this->settings ) ) {
 			$this->getSettings();
 		}
 
@@ -2245,7 +2238,7 @@ class PaymentProcessor
 
 	function getCustomPlanParams()
 	{
-		if ( !isset( $this->settings ) ) {
+		if ( empty( $this->settings ) ) {
 			$this->getSettings();
 		}
 
@@ -2258,7 +2251,7 @@ class PaymentProcessor
 
 	function invoiceCreationAction( $objinvoice )
 	{
-		if ( !isset( $this->settings ) ) {
+		if ( empty( $this->settings ) ) {
 			$this->getSettings();
 		}
 
@@ -2271,7 +2264,7 @@ class PaymentProcessor
 
 	function parseNotification( $post )
 	{
-		if ( !isset( $this->settings ) ) {
+		if ( empty( $this->settings ) ) {
 			$this->getSettings();
 		}
 
@@ -2298,7 +2291,7 @@ class PaymentProcessor
 
 	function prepareValidation( $subscription_list )
 	{
-		if ( !isset( $this->settings ) ) {
+		if ( empty( $this->settings ) ) {
 			$this->getSettings();
 		}
 
@@ -2313,7 +2306,7 @@ class PaymentProcessor
 
 	function validateSubscription( $subscription_id )
 	{
-		if ( !isset( $this->settings ) ) {
+		if ( empty( $this->settings ) ) {
 			$this->getSettings();
 		}
 

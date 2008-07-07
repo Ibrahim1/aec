@@ -601,6 +601,8 @@ define( '_CFG_GENERAL_USE_PROXY_NAME', 'Use Proxy');
 define( '_CFG_GENERAL_USE_PROXY_DESC', 'Use a proxy server for all outgoing requests.');
 define( '_CFG_GENERAL_PROXY_NAME', 'Proxy Address');
 define( '_CFG_GENERAL_PROXY_DESC', 'Specify the proxy server that you want to connect to.');
+define( '_CFG_GENERAL_PROXY_NAME', 'Proxy Port');
+define( '_CFG_GENERAL_PROXY_DESC', 'Specify the proxy server port that you want to connect to.');
 define( '_CFG_GENERAL_RENEW_BUTTON_NEVER_NAME', 'No Renew Button');
 define( '_CFG_GENERAL_RENEW_BUTTON_NEVER_DESC', 'Select "Yes" to never show the renew/upgrade button on the MySubscription page.');
 define( '_CFG_GENERAL_RENEW_BUTTON_NOLIFETIMERECURRING_NAME', 'Restricted Renew Button');

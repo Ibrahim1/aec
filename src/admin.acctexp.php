@@ -2337,7 +2337,7 @@ function editSubscriptionPlan( $id, $option )
 		$params_values['name']					= $row->getProperty( 'name' );
 		$params_values['desc']					= $row->getProperty( 'desc' );
 		$params_values['micro_integrations']	= $row->micro_integrations;
-		$params_values['processors']			= $row->params->processors;
+		$params_values['processors']			= $row->params['processors'];
 
 		// Checking if there is already a user, which disables certain actions
 		$query  = 'SELECT count(*)'
@@ -2467,7 +2467,6 @@ function editSubscriptionPlan( $id, $option )
 		$plan_procs = $params_values['processors'];
 	}
 
-
 	$firstarray = array();
 	$secndarray = array();
 	foreach ( $pps as $ppo ) {
@@ -2485,16 +2484,18 @@ function editSubscriptionPlan( $id, $option )
 	foreach ( $pps as $ppobj ) {
 		if ( !$ppobj->active ) {
 			continue;
-		}aecDebug($ppobj->name);
-aecDebug('0');
+		}
+
+		$pp = null;
 		$pp = new PaymentProcessor();
-aecDebug('1');
+
 		if ( !$pp->loadName( $ppobj->name ) ) {
 			continue;
 		}
-aecDebug('2');
+
+		$pp->init();
 		$pp->getInfo();
-aecDebug('3');
+
 		$customparamsarray[$pp->id] = array();
 		$customparamsarray[$pp->id]['handle'] = $ppobj->name;
 		$customparamsarray[$pp->id]['name'] = $pp->info['longname'];
@@ -2502,12 +2503,12 @@ aecDebug('3');
 
 		$params['processor_' . $pp->id] = array( 'checkbox', _PAYPLAN_PROCESSORS_ACTIVATE_NAME, _PAYPLAN_PROCESSORS_ACTIVATE_DESC  );
 		$customparamsarray[$pp->id]['params'][] = 'processor_' . $pp->id;
-aecDebug('4');
+
 		$params[$pp->id . '_aec_overwrite_settings'] = array( 'checkbox', _PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_NAME, _PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_DESC );
 		$customparamsarray[$pp->id]['params'][] = $pp->id . '_aec_overwrite_settings';
-$mlist = get_class_methods( $pp->processor );aecDebug($mlist);
+
 		$customparams = $pp->getCustomPlanParams();
-aecDebug('5');
+
 		if ( is_array( $customparams ) ) {
 			foreach ( $customparams as $customparam => $cpcontent ) {
 				// Write the params field
@@ -2518,7 +2519,7 @@ aecDebug('5');
 					$cp_name = constant( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_name" ) );
 					$cp_desc = constant( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_desc" ) );
 				}
-aecDebug('6');
+
 				$shortname = $pp->id . "_" . $customparam;
 				$params[$shortname] = array_merge( $cpcontent, array( $cp_name, $cp_desc ) );
 				$customparamsarray[$pp->id]['params'][] = $shortname;
