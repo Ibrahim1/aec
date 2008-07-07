@@ -1880,7 +1880,6 @@ class PaymentProcessor
 
 		// Check whether processor exists
 		if ( file_exists( $file ) ) {
-
 			if ( !defined( '_AEC_LANG_PROCESSOR' ) ) {
 				$langPath = $this->pph->pp_dir . '/com_acctexp_language_processors/';
 				// Include language files for processors
@@ -3824,7 +3823,7 @@ class SubscriptionPlan extends jsonDBTable
 				$plans_comparison		= $comparison['comparison'];
 				$plans_comparison_total	= $comparison['total_comparison'];
 				$renew					= $comparison['renew'] ? 1 : 0;
-				$is_trial				= (strcmp($user_subscription->status, 'Trial') === 0);
+				$is_trial				= ( strcmp( $metaUser->objSubscription->status, 'Trial' ) === 0 );
 			} else {
 				$plans_comparison		= false;
 				$plans_comparison_total	= false;

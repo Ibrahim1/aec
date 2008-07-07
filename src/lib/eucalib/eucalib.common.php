@@ -312,7 +312,7 @@ class jsonDBTable extends paramDBTable
 	/**
 	 * Recursive Merging of two Entities, regardless of type
 	 */
-	function mergeParams( $subject, $subject2, $overwrite )
+	function mergeParams( $subject, $subject2, $overwrite=true )
 	{
 		if ( is_object( $subject ) ) {
 			$properties = get_object_vars( $subject2 );

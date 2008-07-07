@@ -2337,6 +2337,7 @@ function editSubscriptionPlan( $id, $option )
 		$params_values['name']					= $row->getProperty( 'name' );
 		$params_values['desc']					= $row->getProperty( 'desc' );
 		$params_values['micro_integrations']	= $row->micro_integrations;
+		$params_values['processors']			= $row->params->processors;
 
 		// Checking if there is already a user, which disables certain actions
 		$query  = 'SELECT count(*)'
@@ -2388,34 +2389,34 @@ function editSubscriptionPlan( $id, $option )
 
 	$params['restr_remap']				= array( 'subarea_change', 'restrictions' );
 
-	$params['mingid_enabled']			= array( 'list_yesno', 0 );
-	$params['mingid']					= array( 'list', 18 );
-	$params['fixgid_enabled']			= array( 'list_yesno', 0 );
-	$params['fixgid']					= array( 'list', 19 );
-	$params['maxgid_enabled']			= array( 'list_yesno', 0 );
-	$params['maxgid']					= array( 'list', 21 );
-	$params['previousplan_req_enabled'] = array( 'list_yesno', 0 );
-	$params['previousplan_req']			= array( 'list', 0 );
+	$params['mingid_enabled']					= array( 'list_yesno', 0 );
+	$params['mingid']							= array( 'list', 18 );
+	$params['fixgid_enabled']					= array( 'list_yesno', 0 );
+	$params['fixgid']							= array( 'list', 19 );
+	$params['maxgid_enabled']					= array( 'list_yesno', 0 );
+	$params['maxgid']							= array( 'list', 21 );
+	$params['previousplan_req_enabled'] 		= array( 'list_yesno', 0 );
+	$params['previousplan_req']					= array( 'list', 0 );
 	$params['previousplan_req_enabled_excluded']	= array( 'list_yesno', 0 );
 	$params['previousplan_req_excluded']			= array( 'list', 0 );
-	$params['currentplan_req_enabled']	= array( 'list_yesno', 0 );
-	$params['currentplan_req']			= array( 'list', 0 );
+	$params['currentplan_req_enabled']			= array( 'list_yesno', 0 );
+	$params['currentplan_req']					= array( 'list', 0 );
 	$params['currentplan_req_enabled_excluded']	= array( 'list_yesno', 0 );
 	$params['currentplan_req_excluded']			= array( 'list', 0 );
-	$params['overallplan_req_enabled']	= array( 'list_yesno', 0 );
-	$params['overallplan_req']			= array( 'list', 0 );
+	$params['overallplan_req_enabled']			= array( 'list_yesno', 0 );
+	$params['overallplan_req']					= array( 'list', 0 );
 	$params['overallplan_req_enabled_excluded']	= array( 'list_yesno', 0 );
 	$params['overallplan_req_excluded']			= array( 'list', 0 );
-	$params['used_plan_min_enabled']	= array( 'list_yesno', 0 );
-	$params['used_plan_min_amount']		= array( 'inputB', 0 );
-	$params['used_plan_min']			= array( 'list', 0 );
-	$params['used_plan_max_enabled']	= array( 'list_yesno', 0 );
-	$params['used_plan_max_amount']		= array( 'inputB', 0 );
-	$params['used_plan_max']			= array( 'list', 0 );
+	$params['used_plan_min_enabled']			= array( 'list_yesno', 0 );
+	$params['used_plan_min_amount']				= array( 'inputB', 0 );
+	$params['used_plan_min']					= array( 'list', 0 );
+	$params['used_plan_max_enabled']			= array( 'list_yesno', 0 );
+	$params['used_plan_max_amount']				= array( 'inputB', 0 );
+	$params['used_plan_max']					= array( 'list', 0 );
 	$params['custom_restrictions_enabled']		= array( 'list_yesno', '' );
-	$params['custom_restrictions']		= array( 'inputD', '' );
-	$rewriteswitches					= array( 'cms', 'user' );
-	$params['rewriteInfo']				= array( 'fieldset', '', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+	$params['custom_restrictions']				= array( 'inputD', '' );
+	$rewriteswitches							= array( 'cms', 'user' );
+	$params['rewriteInfo']						= array( 'fieldset', '', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
 	// ensure user can't add group higher than themselves
 	$my_groups = $acl->get_object_groups( 'users', $my->id, 'ARO' );
@@ -2460,7 +2461,12 @@ function editSubscriptionPlan( $id, $option )
 
 	$pps = PaymentProcessorHandler::getInstalledObjectList( 1 );
 
-	$plan_procs = $params_values['processors'];
+	if ( empty( $params_values['processors'] ) ) {
+		$plan_procs = array();
+	} else {
+		$plan_procs = $params_values['processors'];
+	}
+
 
 	$firstarray = array();
 	$secndarray = array();
@@ -2477,151 +2483,160 @@ function editSubscriptionPlan( $id, $option )
 	$selected_gw = array();
 	$customparamsarray = array();
 	foreach ( $pps as $ppobj ) {
-		if ( $ppobj->active ) {
-			$pp = new PaymentProcessor();
+		if ( !$ppobj->active ) {
+			continue;
+		}aecDebug($ppobj->name);
+aecDebug('0');
+		$pp = new PaymentProcessor();
+aecDebug('1');
+		if ( !$pp->loadName( $ppobj->name ) ) {
+			continue;
+		}
+aecDebug('2');
+		$pp->getInfo();
+aecDebug('3');
+		$customparamsarray[$pp->id] = array();
+		$customparamsarray[$pp->id]['handle'] = $ppobj->name;
+		$customparamsarray[$pp->id]['name'] = $pp->info['longname'];
+		$customparamsarray[$pp->id]['params'] = array();
 
-			if ( $pp->loadName( $ppobj->name ) ) {
-				$pp->getInfo();
-
-				$customparamsarray[$pp->id] = array();
-				$customparamsarray[$pp->id]['handle'] = $ppobj->name;
-				$customparamsarray[$pp->id]['name'] = $pp->info['longname'];
-				$customparamsarray[$pp->id]['params'] = array();
-
-				$params['processor_' . $pp->id] = array( 'checkbox', _PAYPLAN_PROCESSORS_ACTIVATE_NAME, _PAYPLAN_PROCESSORS_ACTIVATE_DESC  );
-				$customparamsarray[$pp->id]['params'][] = 'processor_' . $pp->id;
-
-				$params[$pp->id . '_aec_overwrite_settings'] = array( 'checkbox', _PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_NAME, _PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_DESC );
-				$customparamsarray[$pp->id]['params'][] = $pp->id . '_aec_overwrite_settings';
-
-				$customparams = $pp->getCustomPlanParams();
-				if ( is_array( $customparams ) ) {
-					foreach ( $customparams as $customparam => $cpcontent ) {
-						// Write the params field
-						if ( defined( strtoupper( "_CFG_processor_plan_params_" . $customparam . "_name" ) ) ) {
-							$cp_name = constant( strtoupper( "_CFG_processor_plan_params_" . $customparam . "_name" ) );
-							$cp_desc = constant( strtoupper( "_CFG_processor_plan_params_" . $customparam . "_desc" ) );
-						} else {
-							$cp_name = constant( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_name" ) );
-							$cp_desc = constant( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_desc" ) );
-						}
-
-						$shortname = $pp->id . "_" . $customparam;
-						$params[$shortname] = array_merge( $cpcontent, array( $cp_name, $cp_desc ) );
-						$customparamsarray[$pp->id]['params'][] = $shortname;
-					}
+		$params['processor_' . $pp->id] = array( 'checkbox', _PAYPLAN_PROCESSORS_ACTIVATE_NAME, _PAYPLAN_PROCESSORS_ACTIVATE_DESC  );
+		$customparamsarray[$pp->id]['params'][] = 'processor_' . $pp->id;
+aecDebug('4');
+		$params[$pp->id . '_aec_overwrite_settings'] = array( 'checkbox', _PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_NAME, _PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_DESC );
+		$customparamsarray[$pp->id]['params'][] = $pp->id . '_aec_overwrite_settings';
+$mlist = get_class_methods( $pp->processor );aecDebug($mlist);
+		$customparams = $pp->getCustomPlanParams();
+aecDebug('5');
+		if ( is_array( $customparams ) ) {
+			foreach ( $customparams as $customparam => $cpcontent ) {
+				// Write the params field
+				if ( defined( strtoupper( "_CFG_processor_plan_params_" . $customparam . "_name" ) ) ) {
+					$cp_name = constant( strtoupper( "_CFG_processor_plan_params_" . $customparam . "_name" ) );
+					$cp_desc = constant( strtoupper( "_CFG_processor_plan_params_" . $customparam . "_desc" ) );
+				} else {
+					$cp_name = constant( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_name" ) );
+					$cp_desc = constant( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_desc" ) );
 				}
-
-				if ( in_array( $pp->id, $plan_procs ) ) {
-					$params_values['processor_' . $pp->id] = 1;
-
-					if ( isset( $customparams_values[$pp->id . '_aec_overwrite_settings'] ) ) {
-						if ( !$customparams_values[$pp->id . '_aec_overwrite_settings'] ) {
-							continue;
-						}
-					} else {
-						continue;
-					}
-
-					$settings_array = $pp->getBackendSettings();
-
-					if ( isset( $settings_array['lists'] ) ) {
-						foreach ( $settings_array['lists'] as $listname => $listcontent ) {
-							$lists[$pp->id . '_' . $listname] = $listcontent;
-						}
-
-						unset( $settings_array['lists'] );
-					}
-
-					// Iterate through settings form to...
-					foreach ( $settings_array as $name => $values ) {
-						$setting_name = $pp->id . '_' . $name;
-
-						// ...assign new list fields
-						switch( $settings_array[$name][0] ) {
-							case 'list_yesno':
-								$lists[$setting_name] = mosHTML::yesnoSelectList( $setting_name, '', $pp->settings[$name] );
-
-								$settings_array[$name][0] = 'list';
-								break;
-
-							case 'list_currency':
-								// Get currency list
-								$currency_array	= explode( ',', $pp->info['currencies'] );
-
-								// Transform currencies into OptionArray
-								$currency_code_list = array();
-								foreach ( $currency_array as $currency ) {
-									if ( defined( '_CURRENCY_' . $currency )) {
-										$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
-									}
-								}
-
-								// Create list
-								$lists[$setting_name] = mosHTML::selectList( $currency_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
-								$settings_array[$name][0] = 'list';
-								break;
-
-							case 'list_language':
-								// Get language list
-								$language_array	= explode( ',', $pp->info['languages'] );
-
-								// Transform languages into OptionArray
-								$language_code_list = array();
-								foreach ( $language_array as $language ) {
-									$language_code_list[] = mosHTML::makeOption( $language, ( defined( '_AEC_LANG_' . $language  ) ? constant( '_AEC_LANG_' . $language ) : $language ) );
-								}
-								// Create list
-								$lists[$setting_name] = mosHTML::selectList( $language_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
-								$settings_array[$name][0] = 'list';
-								break;
-
-							case 'list_plan':
-								unset( $settings_array[$name] );
-								break;
-
-							default:
-								break;
-						}
-
-						// ...put in missing language fields
-						if ( !isset( $settings_array[$name][1] ) ) {
-							// Create constant names
-							$constantname = '_CFG_' . strtoupper( $ppobj->name ) . '_' . strtoupper($name) . '_NAME';
-							$constantdesc = '_CFG_' . strtoupper( $ppobj->name ) . '_' . strtoupper($name) . '_DESC';
-
-							// If the constantname does not exists, try a generic name or insert an error
-							if ( defined( $constantname ) ) {
-								$settings_array[$name][1] = constant( $constantname );
-							} else {
-								$genericname = '_CFG_PROCESSOR_' . strtoupper($name) . '_NAME';
-								if ( defined( $genericname ) ) {
-									$settings_array[$name][1] = constant( $genericname );
-								} else {
-									$settings_array[$name][1] = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantname );
-								}
-							}
-
-							// If the constantname does not exists, try a generic name or insert an error
-							if ( defined( $constantdesc ) ) {
-								$settings_array[$name][2] = constant( $constantdesc );
-							} else {
-								$genericdesc = '_CFG_PROCESSOR_' . strtoupper($name) . '_DESC';
-								if ( defined( $genericname ) ) {
-									$settings_array[$name][2] = constant( $genericdesc );
-								} else {
-									$settings_array[$name][2] = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantdesc );
-								}
-							}
-						}
-
-						$params[$pp->id . '_' . $name] = $settings_array[$name];
-						$customparamsarray[$pp->id]['params'][] = $pp->id . '_' . $name;
-					}
-
-				}
-
+aecDebug('6');
+				$shortname = $pp->id . "_" . $customparam;
+				$params[$shortname] = array_merge( $cpcontent, array( $cp_name, $cp_desc ) );
+				$customparamsarray[$pp->id]['params'][] = $shortname;
 			}
+		}
+
+		if ( empty( $plan_procs ) ) {
+			continue;
+		}
+
+		if ( !in_array( $pp->id, $plan_procs ) ) {
+			continue;
+		}
+
+		$params_values['processor_' . $pp->id] = 1;
+
+		if ( isset( $customparams_values[$pp->id . '_aec_overwrite_settings'] ) ) {
+			if ( !$customparams_values[$pp->id . '_aec_overwrite_settings'] ) {
+				continue;
+			}
+		} else {
+			continue;
+		}
+
+		$settings_array = $pp->getBackendSettings();
+
+		if ( isset( $settings_array['lists'] ) ) {
+			foreach ( $settings_array['lists'] as $listname => $listcontent ) {
+				$lists[$pp->id . '_' . $listname] = $listcontent;
+			}
+
+			unset( $settings_array['lists'] );
+		}
+
+		// Iterate through settings form to...
+		foreach ( $settings_array as $name => $values ) {
+			$setting_name = $pp->id . '_' . $name;
+
+			// ...assign new list fields
+			switch( $settings_array[$name][0] ) {
+				case 'list_yesno':
+					$lists[$setting_name] = mosHTML::yesnoSelectList( $setting_name, '', $pp->settings[$name] );
+
+					$settings_array[$name][0] = 'list';
+					break;
+
+				case 'list_currency':
+					// Get currency list
+					$currency_array	= explode( ',', $pp->info['currencies'] );
+
+					// Transform currencies into OptionArray
+					$currency_code_list = array();
+					foreach ( $currency_array as $currency ) {
+						if ( defined( '_CURRENCY_' . $currency )) {
+							$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
+						}
+					}
+
+					// Create list
+					$lists[$setting_name] = mosHTML::selectList( $currency_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
+					$settings_array[$name][0] = 'list';
+					break;
+
+				case 'list_language':
+					// Get language list
+					$language_array	= explode( ',', $pp->info['languages'] );
+
+					// Transform languages into OptionArray
+					$language_code_list = array();
+					foreach ( $language_array as $language ) {
+						$language_code_list[] = mosHTML::makeOption( $language, ( defined( '_AEC_LANG_' . $language  ) ? constant( '_AEC_LANG_' . $language ) : $language ) );
+					}
+					// Create list
+					$lists[$setting_name] = mosHTML::selectList( $language_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
+					$settings_array[$name][0] = 'list';
+					break;
+
+				case 'list_plan':
+					unset( $settings_array[$name] );
+					break;
+
+				default:
+					break;
+			}
+
+			// ...put in missing language fields
+			if ( !isset( $settings_array[$name][1] ) ) {
+				// Create constant names
+				$constantname = '_CFG_' . strtoupper( $ppobj->name ) . '_' . strtoupper($name) . '_NAME';
+				$constantdesc = '_CFG_' . strtoupper( $ppobj->name ) . '_' . strtoupper($name) . '_DESC';
+
+				// If the constantname does not exists, try a generic name or insert an error
+				if ( defined( $constantname ) ) {
+					$settings_array[$name][1] = constant( $constantname );
+				} else {
+					$genericname = '_CFG_PROCESSOR_' . strtoupper($name) . '_NAME';
+					if ( defined( $genericname ) ) {
+						$settings_array[$name][1] = constant( $genericname );
+					} else {
+						$settings_array[$name][1] = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantname );
+					}
+				}
+
+				// If the constantname does not exists, try a generic name or insert an error
+				if ( defined( $constantdesc ) ) {
+					$settings_array[$name][2] = constant( $constantdesc );
+				} else {
+					$genericdesc = '_CFG_PROCESSOR_' . strtoupper($name) . '_DESC';
+					if ( defined( $genericname ) ) {
+						$settings_array[$name][2] = constant( $genericdesc );
+					} else {
+						$settings_array[$name][2] = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantdesc );
+					}
+				}
+			}
+
+			$params[$pp->id . '_' . $name] = $settings_array[$name];
+			$customparamsarray[$pp->id]['params'][] = $pp->id . '_' . $name;
 		}
 	}
 
