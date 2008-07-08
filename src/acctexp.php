@@ -734,7 +734,7 @@ function subscriptionDetails( $option, $sub )
 
 			if ( ( $row->transaction_date == '0000-00-00 00:00:00' ) || ( $row->subscr_id  ) || $hassubstuff ) {
 				$transactiondate = 'uncleared';
-aecDebug($row);
+
 				if ( !empty( $row->params ) ) {
 					if ( in_array( 'pending_reason', $row->params ) ) {
 						$array = array();

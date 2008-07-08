@@ -599,7 +599,7 @@ class processor_authorize_cim extends XMLprocessor
 			$cim->setParameter( 'transactionCardCode',	trim( $request->int_var['params']['cardVV2'] ) );
 
 			$cim->createCustomerProfileTransactionRequest();
-//aecDebug($cim);
+
 			if ( $cim->isSuccessful() ) {
 				$return['valid']	= true;
 				$return['invoice']	= $cim->refId;

@@ -132,7 +132,7 @@ class processor_paypal_wpp extends XMLprocessor
 				}
 			}
 
-			$result = $this->ProfileRequest( $request, $profileid, $var );aecDebug($var);aecDebug($result);
+			$result = $this->ProfileRequest( $request, $profileid, $var );
 
 			$updated = true;
 		}
