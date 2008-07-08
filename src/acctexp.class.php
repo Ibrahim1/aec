@@ -415,7 +415,7 @@ class metaUser
 				// Update existing non-primary subscription
 				$this->focusSubscription = new Subscription( $database );
 				$this->focusSubscription->load( $existing_record );
-			} else {aecDebug('5d');
+			} else {
 				// Create a root new subscription
 				if ( !$plan_params['make_primary'] && !empty( $plan_params['standard_parent'] ) ) {
 					$this->focusSubscription = new Subscription( $database );
@@ -429,7 +429,7 @@ class metaUser
 				// Create new subscription
 				$this->focusSubscription = new Subscription( $database );
 				$this->focusSubscription->load( 0 );
-				$this->focusSubscription->createNew( $this->userid, $processor, 1, $plan_params['make_primary'] );aecDebug('5f');
+				$this->focusSubscription->createNew( $this->userid, $processor, 1, $plan_params['make_primary'] );
 				$this->hasSubscription = 1;
 			}
 		}

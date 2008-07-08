@@ -349,7 +349,7 @@ class jsonDBTable extends paramDBTable
 				if ( !isset( $subject[$pname] ) ) {
 					$subject[$pname] = $pvalue;
 				} elseif ( isset( $subject[$pname] ) && $overwrite ) {
-					$subject[$pname] = jsonDBTable::mergeParams( $subject->$pname, $pvalue, $overwrite );
+					$subject[$pname] = jsonDBTable::mergeParams( $subject[$pname], $pvalue, $overwrite );
 				}
 			}
 		} else {
