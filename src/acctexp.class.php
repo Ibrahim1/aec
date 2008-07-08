@@ -415,7 +415,7 @@ class metaUser
 				// Update existing non-primary subscription
 				$this->focusSubscription = new Subscription( $database );
 				$this->focusSubscription->load( $existing_record );
-			} else {
+			} else {aecDebug('5d');
 				// Create a root new subscription
 				if ( !$plan_params['make_primary'] && !empty( $plan_params['standard_parent'] ) ) {
 					$this->focusSubscription = new Subscription( $database );
@@ -429,7 +429,7 @@ class metaUser
 				// Create new subscription
 				$this->focusSubscription = new Subscription( $database );
 				$this->focusSubscription->load( 0 );
-				$this->focusSubscription->createNew( $this->userid, $processor, 1, $plan_params['make_primary'] );
+				$this->focusSubscription->createNew( $this->userid, $processor, 1, $plan_params['make_primary'] );aecDebug('5f');
 				$this->hasSubscription = 1;
 			}
 		}
@@ -1176,7 +1176,7 @@ class Config_General extends jsonDBTable
 }
 
 if ( !is_object( $aecConfig ) ) {
-	global $database;
+	global $database, $aecConfig;
 
 	$aecConfig = new Config_General( $database );
 }
@@ -4326,7 +4326,7 @@ class logHistory extends mosDBTable
 	{
 		global $database, $mosConfig_offset;
 
-		$user = new mosUser($database);
+		$user = new mosUser( $database );
 		$user->load( $objInvoice->userid );
 
 		$plan = new SubscriptionPlan( $database );
@@ -5843,7 +5843,7 @@ class Invoice extends jsonDBTable
 			}
 
 			if ( !$break ) {
-				$renew	= $this->pay( $multiplicator );
+				$renew = $this->pay( $multiplicator );
 				if ( $renew === false ) {
 					// Something went wrong
 					$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_VALID_APPFAIL;

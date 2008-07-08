@@ -734,19 +734,21 @@ function subscriptionDetails( $option, $sub )
 
 			if ( ( $row->transaction_date == '0000-00-00 00:00:00' ) || ( $row->subscr_id  ) || $hassubstuff ) {
 				$transactiondate = 'uncleared';
+aecDebug($row);
+				if ( !empty( $row->params ) ) {
+					if ( in_array( 'pending_reason', $row->params ) ) {
+						$array = array();
+						foreach ( $row->params as $chunk ) {
+							$k = explode( '=', $chunk );
+							$array[$k[0]] = stripslashes( $k[1] );
+						}
 
-				if ( in_array( 'pending_reason', $row->params ) ) {
-					$array = array();
-					foreach ( $row->params as $chunk ) {
-						$k = explode( '=', $chunk );
-						$array[$k[0]] = stripslashes( $k[1] );
-					}
-
-					if ( isset( $array['pending_reason'] ) ) {
-						if ( defined( '_PAYMENT_PENDING_REASON_' . strtoupper( $array['pending_reason'] ) ) ) {
-							$transactiondate = constant( '_PAYMENT_PENDING_REASON_' . strtoupper( $array['pending_reason'] ) );
-						} else {
-							$transactiondate = $array['pending_reason'];
+						if ( isset( $array['pending_reason'] ) ) {
+							if ( defined( '_PAYMENT_PENDING_REASON_' . strtoupper( $array['pending_reason'] ) ) ) {
+								$transactiondate = constant( '_PAYMENT_PENDING_REASON_' . strtoupper( $array['pending_reason'] ) );
+							} else {
+								$transactiondate = $array['pending_reason'];
+							}
 						}
 					}
 				}

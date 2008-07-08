@@ -227,8 +227,8 @@ class mi_hotproperty extends MI
 	function Defaults()
 	{
 		$defaults = array();
-		$defaults['agent_fields']	= "user=[[user_id]]\ncb_id=[[user_id]]\nname=[[user_name]]\nemail=[[user_email]]\ncompany=\nneed_approval=1";
-		$defaults['company_fields']	= "name=[[user_name]]\naddress=\nsuburb=\ncountry=\nstate=\npostcode=\ntelephone=\nfax=\nwebsite=\ncb_id=[[user_id]]\nemail=[[user_email]]";
+		$defaults['agent_fields']	= "user=[[user_id]]\n\nname=[[user_name]]\nemail=[[user_email]]\ncompany=\nneed_approval=1";
+		$defaults['company_fields']	= "name=[[user_name]]\naddress=\nsuburb=\ncountry=\nstate=\npostcode=\ntelephone=\nfax=\nwebsite=\nemail=[[user_email]]";
 
 		return $defaults;
 	}
@@ -365,10 +365,6 @@ class mi_hotproperty extends MI
 
 		if ( $this->settings['update_agent'.$area] ){
 			if ( !empty( $this->settings['update_afields'.$area] ) ) {
-				if ( empty( $agent ) ) {
-					$agent = $this->agentExists( $metaUser->userid );
-				}
-
 				if ( !empty( $agent ) ) {
 					$agent = $this->update( 'agents', 'user', $this->settings['update_afields'.$area], $request );
 				}
@@ -383,10 +379,10 @@ class mi_hotproperty extends MI
 			if ( !empty( $this->settings['company_fields'.$area] ) ) {
 				$company = $this->createCompany( $this->settings['company_fields'.$area], $this->settings['assoc_company'], $request );
 			}
-		}
 
-		if ( $company === false ) {
-			return false;
+			if ( $company === false ) {
+				return false;
+			}
 		}
 
 		if ( $this->settings['update_company'.$area] ){
@@ -396,7 +392,11 @@ class mi_hotproperty extends MI
 				}
 
 				if ( !empty( $company ) ) {
-					$company = $this->update( 'companies', 'cb_id', $this->settings['update_cfields'.$area], $request );
+					$company = $this->update( 'companies', 'id', $this->settings['update_cfields'.$area], $request, $company );
+				}
+
+				if ( $company === false ) {
+					return false;
 				}
 			}
 		}
@@ -412,7 +412,7 @@ class mi_hotproperty extends MI
 		if ( !empty( $this->settings['set_listings'.$area] ) || !empty( $this->settings['set_listings'.$area] ) || ( !empty( $this->settings['add_list_userchoice'] ) && !empty( $request->params['hpamt']  ) )  ) {
 			global $database;
 
-			$mi_hphandler = new mosetstree( $database );
+			$mi_hphandler = new aec_hotproperty( $database );
 			$id = $mi_hphandler->getIDbyUserID( $request->metaUser->userid );
 			$mi_id = $id ? $id : 0;
 			$mi_hphandler->load( $mi_id );
@@ -441,7 +441,6 @@ class mi_hotproperty extends MI
 			$mi_hphandler->check();
 			$mi_hphandler->store();
 		}
-
 
 		if ( $company === false ) {
 			return false;
@@ -474,7 +473,7 @@ class mi_hotproperty extends MI
 		$check = $this->agentExists( $request->metaUser->userid );
 
 		if ( !empty( $check ) ) {
-			return null;
+			return $check;
 		}
 
 		$fields = AECToolbox::rewriteEngineRQ( $fields, $request );
@@ -500,7 +499,7 @@ class mi_hotproperty extends MI
 		$result = $database->query();
 
 		if ( $result ) {
-			return true;
+			return $check;
 		} else {
 			$this->setError( $database->getErrorMsg() );
 			return false;
@@ -511,8 +510,8 @@ class mi_hotproperty extends MI
 	{
 		global $database;
 
-		$query = 'SELECT user FROM #__hp_companies'
-				. ' WHERE cb_id = \'' . $userid . '\''
+		$query = 'SELECT company FROM #__hp_agents'
+				. ' WHERE user = \'' . $userid . '\''
 				;
 		$database->setQuery( $query );
 		$id = $database->loadResult();
@@ -528,9 +527,9 @@ class mi_hotproperty extends MI
 	{
 		global $database;
 
-		$check = $this->agentExists( $request->metaUser->userid );
+		$check = $this->companyExists( $request->metaUser->userid );
 		if ( !empty( $check ) ) {
-			return null;
+			return $check;
 		}
 
 		$fields = AECToolbox::rewriteEngineRQ( $fields, $request );
@@ -561,12 +560,12 @@ class mi_hotproperty extends MI
 						. ' FROM #__hp_companies'
 						;
 				$database->setQuery( $query );
-				$result = $database->query();
+				$result = $database->loadResult();
 
 				if ( $result ) {
 					$query = 'UPDATE #__hp_agents'
 							. ' SET company = \'' . $result . '\''
-							. ' WHERE cb_id = \'' . $request->metaUser->userid . '\''
+							. ' WHERE user = \'' . $request->metaUser->userid . '\''
 							;
 
 					$database->setQuery( $query );
@@ -583,7 +582,7 @@ class mi_hotproperty extends MI
 		return false;
 	}
 
-	function update( $table, $id, $fields, $request )
+	function update( $table, $id, $fields, $request, $sid=false )
 	{
 		global $database;
 
@@ -602,7 +601,7 @@ class mi_hotproperty extends MI
 
 		$query = 'UPDATE #__hp_' . $table
 				. ' SET ' . implode( ', ', $set )
-				. ' WHERE ' . $id . ' = \'' . $request->metaUser->userid . '\''
+				. ' WHERE ' . $id . ' = \'' . ( $sid ? $sid : $request->metaUser->userid ) . '\''
 				;
 
 		$database->setQuery( $query );

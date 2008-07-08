@@ -164,7 +164,7 @@ class processor_authorize_cim extends XMLprocessor
 						}
 					}
 				} else {
-					if ( isset( $ppParams->paymentProfiles->{$post['payrofileselect']} ) ) {
+					if ( isset( $ppParams->paymentProfiles->{$post['payprofileselect']} ) ) {
 						$stored_spid = $ppParams->paymentProfiles->{$post['payprofileselect']}->profileid;
 						$cim->setParameter( 'customerPaymentProfileId', $stored_spid );
 						$cim->updateCustomerPaymentProfileRequest();
@@ -527,7 +527,7 @@ class processor_authorize_cim extends XMLprocessor
 							$ppParams = $this->payProfileAdd( $request, $profileid, $request->int_var['params'], $ppParams );
 						}
 					}
-				} else {
+				} else {aecDebug($ppParams);aecDebug($request->int_var['params']);
 					$stored_spid = $ppParams->paymentProfiles->{$request->int_var['params']['payprofileselect']}->profileid;
 					$cim->setParameter( 'customerPaymentProfileId', $stored_spid );
 					$cim->updateCustomerPaymentProfileRequest();
@@ -554,7 +554,7 @@ class processor_authorize_cim extends XMLprocessor
 			if ( $cim->isSuccessful() ) {
 				$ppParams = $this->ProfileAdd( $request, $cim->customerProfileId );
 
-				$cim = $this->getCIM( $ppParams );
+				$cim = $this->loadCIM( $ppParams );
 
 				$profileid = $cim->substring_between( $cim->response,'<customerPaymentProfileId>','</customerPaymentProfileId>' );
 				if ( !empty( $profileid ) ) {
@@ -740,8 +740,8 @@ class processor_authorize_cim extends XMLprocessor
 
 		$pointer = count( $profiles );
 
-		$ppParams->paymentProfiles->$pointer = new stdClass();
-		$ppParams->paymentProfiles->$pointer->profileid = $profileid;
+		$data = new stdClass();
+		$data->profileid = $profileid;
 
 		$hash = new stdClass();
 		$hash->name		= $post['billFirstName'] . ' ' . $post['billLastName'];
@@ -754,7 +754,9 @@ class processor_authorize_cim extends XMLprocessor
 			$hash->cc		= 'XXXX' . substr( $post['cardNumber'], -4 );
 		}
 
-		$ppParams->paymentProfiles->$pointer->profilehash = $hash;
+		$data->profilehash = $hash;
+
+		$ppParams->paymentProfiles->$pointer = $data;
 
 		$ppParams->paymentprofileid = $pointer;
 
@@ -807,7 +809,7 @@ class processor_authorize_cim extends XMLprocessor
 	{
 		$cim = new AuthNetCim( $this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode'] );
 
-		$cim->setParameter( 'customerProfileId', $ppParams->profileid );
+		$cim->setParameter( 'customerProfileId', $ppParams->paymentProfiles->{$ppParams->profileid}->profileid );
 		$cim->setParameter( 'customerAddressId', $ppParams->shippingProfiles->{$ppParams->shippingprofileid}->profileid );
 		$cim->getCustomerShippingAddressRequest();
 
