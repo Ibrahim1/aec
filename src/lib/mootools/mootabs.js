@@ -2,8 +2,8 @@ var mootabs = new Class({
 
 	initialize: function(element, options) {
 		this.options = Object.extend({
-			width:				'100%',
-			height:				'',
+			width:				'96%',
+			height:				'130px',
 			changeTransition:	Fx.Transitions.Quint.easeOut,
 			duration:			500,
 			mouseOverClass:		'active',
@@ -79,11 +79,11 @@ var mootabs = new Class({
 		if($type(tab) == 'element')
 		{
 			var newTab = tab.getProperty('title');
-			this.panels.removeClass('active');
+			this.panels.removeClass('selected');
 
 			this.activePanel = this.panels.filterById(newTab)[0];
 
-			this.activePanel.addClass('active');
+			this.activePanel.addClass('selected');
 
 			if(this.options.changeTransition != 'none' && skipAnim==false)
 			{
@@ -96,9 +96,9 @@ var mootabs = new Class({
 				});
 			}
 
-			this.titles.removeClass('active');
+			this.titles.removeClass('selected');
 
-			tab.addClass('active');
+			tab.addClass('selected');
 
 			this.activeTitle = tab;
 

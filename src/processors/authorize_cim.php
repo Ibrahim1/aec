@@ -789,6 +789,10 @@ class processor_authorize_cim extends XMLprocessor
 	{
 		$cim = new AuthNetCim( $this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode'] );
 
+		if ( empty( $ppParams->profileid ) ) {
+			return $cim;
+		}
+
 		$cim->setParameter( 'customerProfileId', $ppParams->profileid );
 		$cim->getCustomerProfileRequest();
 

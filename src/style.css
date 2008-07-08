@@ -716,6 +716,12 @@ list-style-type: none !important;
 
 .mootabs_title li.active {
 background-color: #e6e6e6;
+text-decoration: underline;
+}
+
+.mootabs_title li.selected {
+background-color: #e6e6e6;
+font-weight: bold;
 }
 
 .mootabs_panel {
@@ -725,7 +731,7 @@ position: relative;
 width: 100%;
 top: -1px;
 clear: both;
-overflow: hidden;
+overflow: visible;
 padding: 2px;
 }
 
@@ -734,6 +740,7 @@ background-color: #e6e6e6;
 display: block;
 }
 
-.mootabs_panel.active {
+.mootabs_panel.selected {
+background-color: #e6e6e6;
 display: block;
 }

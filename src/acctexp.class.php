@@ -30,7 +30,7 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
 
 global $mosConfig_absolute_path, $mosConfig_offset, $aecConfig;
 
@@ -3789,7 +3789,7 @@ class SubscriptionPlan extends jsonDBTable
 			}
 		}
 
-		if ( !empty( $this->micro_integrations ) ) {
+		if ( !empty( $this->micro_integrations ) && is_object( $user_subscription ) ) {
 			$mih = new microIntegrationHandler();
 
 			$metaUser = new metaUser( $user_subscription->userid );

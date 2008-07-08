@@ -81,6 +81,7 @@ class paramDBTable extends mosDBTable
 				if ( get_magic_quotes_gpc() ) {
 					$value = stripslashes( $value );
 				}
+
 				$value = $this->_db->getEscaped( $value );
 
 				$params[] = $key . '=' . $value;
@@ -281,17 +282,36 @@ class jsonDBTable extends paramDBTable
 	 */
 	function setParams( $input, $field = 'params' )
 	{
-		if ( !empty( $field ) && ( $this->$field != 'null' ) ) {
+		if ( !empty( $field ) && ( $input != 'null' ) ) {
 			if ( get_magic_quotes_gpc() ) {
-				$store = stripslashes( jsoonHandler::encode( $input ) );
+				$store = jsonDBTable::multistripslashes( $input );
 			} else {
-				$store = jsoonHandler::encode( $input );
+				$store = $input;
 			}
-			$this->$field = $this->_db->getEscaped( $store );
+			$this->$field = $this->_db->getEscaped( jsoonHandler::encode( $store ) );
 		} else {
 			$this->$field = NULL;
 		}
 		return true;
+	}
+
+	function multistripslashes( $input )
+	{
+		if ( is_object( $input ) ) {
+			$properties = get_object_vars( $input );
+
+			foreach ( $properties as $pname => $pvalue ) {
+				$input->$pname = jsonDBTable::multistripslashes( $pvalue );
+			}
+		} elseif ( is_array( $input ) ) {
+			foreach ( $input as $pname => $pvalue ) {
+				$input[$pname] = jsonDBTable::multistripslashes( $pvalue );
+			}
+		} else {
+			$input = stripslashes( $input );
+		}
+
+		return $input;
 	}
 
 	/**
@@ -329,7 +349,7 @@ class jsonDBTable extends paramDBTable
 				if ( !isset( $subject[$pname] ) ) {
 					$subject[$pname] = $pvalue;
 				} elseif ( isset( $subject[$pname] ) && $overwrite ) {
-					$subject->$pname = jsonDBTable::mergeParams( $subject->$pname, $pvalue, $overwrite );
+					$subject[$pname] = jsonDBTable::mergeParams( $subject->$pname, $pvalue, $overwrite );
 				}
 			}
 		} else {
