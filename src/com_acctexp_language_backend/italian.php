@@ -187,6 +187,10 @@ define( '_AEC_HACKS_UHP2',						'UHP2 Menu Entry' );
 define( '_AEC_HACKS_UHP2_DESC',					'Adds a <strong>' . _AEC_SPEC_MENU_ENTRY . '</strong> menu entry to the UHP2 Usermenu. With this, a user can manage his invoices and upgrade/renew his or her subscription.' );
 define( '_AEC_HACKS_CBM',						'If you are using the Comprofiler Moderator Module, you have to hack it in order to prevent an infinite loops issue.' );
 
+define( '_AEC_HACKS_JUSER_HTML1',				'This will redirect a registering user to the payment plans after filling out the registration form in JUser. Leave this alone to have plan selection only on login (if \'Require Subscription\' is active), or completely voluntary (without requiring a subscription). <strong>Please note that there are two hacks following this, once you have committed it! If you want to have the plans before the user details, these are required as well.</strong>' );
+define( '_AEC_HACKS_JUSER_PHP1',				'This will redirect the user to the payment plans page when he or she has not made that selection yet.' );
+define( '_AEC_HACKS_JUSER_PHP2',				'This is a bugfix which allows the AEC to load the JUser functions without forcing it to react to the POST data.' );
+
 // log
 	// settings
 define( '_AEC_LOG_SH_SETT_SAVED',				'settings change' );

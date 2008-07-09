@@ -159,6 +159,18 @@ class processor_payboxfr extends POSTprocessor
 
 		$var['PBX_RETOUR']		= 'option:com_acctexp;task:payboxfrnotification;amount:M;invoice:R;authorization:A;transaction:T;subscriptionid:B;error:E;check:K';
 
+		if ( !empty( $this->settings['customparams'] ) ) {
+			$custom = explode( "\n", $this->settings['customparams'] );
+
+			foreach ( $custom as $c ) {
+				$l = explode( '=', $c );
+
+				if ( !empty( $l[0] ) && !empty( $l[1] ) ) {
+					$var[trim($l[0])] = trim($l[1]);
+				}
+			}
+		}
+
 		return $var;
 	}
 

@@ -164,11 +164,11 @@ define( '_CHECKOUT_INVOICE_COUPON_REMOVE', 'supprimer');
 define( '_CHECKOUT_INVOICE_TOTAL_AMOUNT', 'Montant total');
 define( '_CHECKOUT_COUPON_INFO', 'Si vous avez un code de bon de r&eacute;duction, vous pouvez le saisir ici pour qu\'il soit pris en compte.');
 
-define( '_AEC_TERMTYPE_TRIAL', 'Initial Billing');
-define( '_AEC_TERMTYPE_TERM', 'Regular Billing Term');
-define( '_AEC_CHECKOUT_TERM', 'Billing Term');
-define( '_AEC_CHECKOUT_NOTAPPLICABLE', 'not applicable');
-define( '_AEC_CHECKOUT_FUTURETERM', 'future term');
+define( '_AEC_TERMTYPE_TRIAL', 'Facturation initiale');
+define( '_AEC_TERMTYPE_TERM', 'Mode de facturation');
+define( '_AEC_CHECKOUT_TERM', 'Mode de facturation');
+define( '_AEC_CHECKOUT_NOTAPPLICABLE', 'non applicable');
+define( '_AEC_CHECKOUT_FUTURETERM', 'future limite');
 define( '_AEC_CHECKOUT_COST', 'Cout');
 define( '_AEC_CHECKOUT_DISCOUNT', 'Discount');
 define( '_AEC_CHECKOUT_TOTAL', 'Total');
