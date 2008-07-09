@@ -3745,7 +3745,7 @@ class SubscriptionPlan extends jsonDBTable
 			$amount['period3']		= $this->params['full_period'];
 			$amount['unit3']		= $this->params['full_periodunit'];
 		} else {
-			if ( !$this->params['trial_period'] && $this->params['full_free'] && $this->params['trial_free'] ) {
+			if ( empty( $this->params['trial_period'] ) && $this->params['full_free'] && $this->params['trial_free'] ) {
 				$amount = '0.00';
 			} else {
 				if ( ( $plans_comparison === false ) && ( $plans_comparison_total === false ) ) {
@@ -6139,12 +6139,6 @@ class Invoice extends jsonDBTable
 
 		$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], $metaUser->objSubscription );
 
-		if ( !empty( $new_subscription->micro_integrations ) ) {
-			$mih = new microIntegrationHandler();
-
-			$amount['amount'] = $mih->applyMIs( $amount['amount'], $new_subscription, $metaUser );
-		}
-
 		if ( !empty( $this->coupons ) ) {
 			$cph = new couponsHandler();
 
@@ -6205,14 +6199,6 @@ class Invoice extends jsonDBTable
 		} else {
 			$amount['amount'] = $this->amount;
 			$int_var['recurring'] = 0;
-		}
-
-		if ( !empty( $new_subscription->micro_integrations ) ) {
-			$mih = new microIntegrationHandler();
-
-			$metaUser = new metaUser( $this->userid );
-
-			$mih->applyMIs( $amount['amount'], $new_subscription, $metaUser );
 		}
 
 		if ( !empty( $this->coupons ) ) {
