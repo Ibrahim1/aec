@@ -959,21 +959,6 @@ class metaUserDB extends jsonDBTable
 
 }
 
-class aecInfo extends jsonDBTable
-{
-	/** @var int Primary key */
-	var $id 			= null;
-	/** @var text */
-	var $info 			= null;
-
-	function aecInfo( &$db )
-	{
-		$this->mosDBTable( '#__acctexp_info', 'id', $db );
-
-		$this->load(1);
-	}
-}
-
 class Config_General extends jsonDBTable
 {
 	/** @var int Primary key */
@@ -987,8 +972,6 @@ class Config_General extends jsonDBTable
 
 		$this->load(1);
 
-		$this->cfg =& $this->settings;
-
 		// If we have no settings, init them
 		if ( empty( $this->settings ) ) {
 			$this->initParams();
@@ -998,6 +981,13 @@ class Config_General extends jsonDBTable
 	function declareJSONfields()
 	{
 		return array( 'settings' );
+	}
+
+	function load( $id )
+	{
+		parent::load( $id );
+
+		$this->cfg =& $this->settings;
 	}
 
 	function check( $jsonfields=array() )

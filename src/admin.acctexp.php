@@ -4813,7 +4813,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 				} else { // Remove menu entry
 					$query = 'DELETE'
 							. ' FROM #__menu'
-							. ' WHERE `link` LIKE \'index.php?option=com_acctexp&task=subscriptionDetails%\''
+							. ' WHERE `link` LIKE \'%/index.php?option=com_acctexp&task=subscriptionDetails%\''
 							;
 				}
 

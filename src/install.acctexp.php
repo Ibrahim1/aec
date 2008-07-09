@@ -29,10 +29,10 @@
 
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
 function com_install()
 {
-	global $database, $mainframe, $mosConfig_absolute_path, $mosConfig_live_site, $mosConfig_dbprefix, $my, $aecConfig;
+	global $database, $mainframe, $mosConfig_absolute_path, $mosConfig_live_site, $mosConfig_dbprefix, $my;
 
 	$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" media="all" href="' . $mainframe->getCfg( 'live_site' ) . '/administrator/components/com_acctexp/backend_style.css" />' );
 
@@ -106,6 +106,8 @@ function com_install()
 
 	// Load Class (and thus Config)
 	require_once( $mainframe->getPath( 'class', 'com_acctexp' ) );
+
+	global $aecConfig;
 
 	if ( isset( $aecConfig->cfg['aec_version'] ) ) {
 		version_compare( $aecConfig->cfg['aec_version'], _AEC_VERSION );
