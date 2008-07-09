@@ -54,7 +54,16 @@ class mi_http_query
 			}
 		}
 
-		return $urlsplit[0] . '?' . urlencode( implode( '&', $p ) );
+		$fullp = array();
+		foreach ( $p as $entry ) {
+			$e = explode( '=', $entry );
+
+			if ( !empty( $e[0] ) && !empty( $e[1] ) ) {
+				$fullp[] = urlencode( $e[0] ) . '=' . urlencode( $e[1] );
+			}
+		}
+
+		return $urlsplit[0] . '?' . urlencode( implode( '&', $fullp ) );
 	}
 
 	function fetchURL( $url ) {
