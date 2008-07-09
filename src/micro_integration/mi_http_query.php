@@ -54,7 +54,7 @@ class mi_http_query
 			}
 		}
 
-		return $urlsplit[0] . '?' . implode( '&', $p );
+		return $urlsplit[0] . '?' . urlencode( implode( '&', $p ) );
 	}
 
 	function fetchURL( $url ) {

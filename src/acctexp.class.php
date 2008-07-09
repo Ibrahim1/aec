@@ -71,14 +71,8 @@ function aecDebug( $text, $level = 128 )
 {
 	global $database;
 
-	if ( is_object( $text ) || is_array( $text ) ) {
-		$msg = json_encode( $text );
-	} else {
-		$msg = $text;
-	}
-
 	$eventlog = new eventLog( $database );
-	$eventlog->issue( 'debug', 'debug', $msg, $level );
+	$eventlog->issue( 'debug', 'debug', json_encode( $text ), $level );
 }
 
 function aecGetParam( $name, $default='' )
@@ -3930,19 +3924,19 @@ class SubscriptionPlan extends jsonDBTable
 	function compareToPlan( $plan )
 	{
 		if ( !isset( $this->params['similarplans'] ) ) {
-			$this->params['similarplans'] = '';
+			$this->params['similarplans'] = array();
 		}
 
 		if ( !isset( $plan->params['similarplans'] ) ) {
-			$plan->params['similarplans'] = '';
+			$plan->params['similarplans'] = array();
 		}
 
 		if ( !isset( $this->params['equalplans'] ) ) {
-			$this->params['equalplans'] = '';
+			$this->params['equalplans'] = array();
 		}
 
 		if ( !isset( $plan->params['equalplans'] ) ) {
-			$plan->params['equalplans'] = '';
+			$plan->params['equalplans'] = array();
 		}
 
 		$spg1	= $this->params['similarplans'];
@@ -3950,6 +3944,10 @@ class SubscriptionPlan extends jsonDBTable
 
 		$epg1	= $this->params['equalplans'];
 		$epg2	= $plan->params['equalplans'];
+
+		if ( empty( $spg1 ) && empty( $spg2 ) && empty( $epg1 ) && empty( $epg2 ) ) {
+			return false;
+		}
 
 		if ( in_array( $this->id, $epg2 ) || in_array( $plan->id, $epg1 ) ) {
 			return 2;

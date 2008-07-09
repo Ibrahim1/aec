@@ -99,10 +99,11 @@ class mi_email
 		$recipients = AECToolbox::rewriteEngineRQ( $this->settings['recipient'], $request );
 		$recips = explode( ',', $recipients );
 
-		$recipients = array();
-		foreach ( $recips as $current => $email ) {
-			$recipients[$current] = trim( $email );
-		}
+        $recipients2 = array();
+        foreach ( $recips as $k => $email ) {
+            $recipients2[$k] = trim( $email );
+        }
+        $recipients = $recipients2;
 
 		mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text' . $area . '_html'] );
 
