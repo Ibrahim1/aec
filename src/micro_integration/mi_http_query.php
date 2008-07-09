@@ -38,7 +38,10 @@ class mi_http_query
 
 	function relayAction( $request, $area )
 	{
-		return $this->fetchURL( AECToolbox::rewriteEngineRQ( $this->createURL( $this->settings['url'.$area], $this->settings['query'.$area] ), $request ) );
+		$url = AECToolbox::rewriteEngineRQ( $this->settings['url'.$area], $request );
+		$query = AECToolbox::rewriteEngineRQ( $this->settings['query'.$area], $request );
+
+		return $this->fetchURL( $this->createURL( $url, $query ) );
 	}
 
 	function createURL( $url, $query ) {
@@ -63,7 +66,7 @@ class mi_http_query
 			}
 		}
 
-		return $urlsplit[0] . '?' . urlencode( implode( '&', $fullp ) );
+		return $urlsplit[0] . '?' . implode( '&', $fullp );
 	}
 
 	function fetchURL( $url ) {
