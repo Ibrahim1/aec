@@ -956,8 +956,7 @@ function InvoiceAddCoupon( $option )
 	$objinvoice = new Invoice( $database );
 	$objinvoice->loadInvoiceNumber( $invoice );
 	$objinvoice->addCoupon( $coupon_code );
-	$objinvoice->check();
-	$objinvoice->store();
+	$objinvoice->storeload();
 
 	repeatInvoice( $option, $invoice, $objinvoice->userid );
 }
@@ -972,8 +971,7 @@ function InvoiceRemoveCoupon( $option )
 	$objinvoice = new Invoice( $database );
 	$objinvoice->loadInvoiceNumber( $invoice );
 	$objinvoice->removeCoupon( $coupon_code );
-	$objinvoice->check();
-	$objinvoice->store();
+	$objinvoice->storeload();
 
 	repeatInvoice( $option, $invoice, $objinvoice->userid );
 }

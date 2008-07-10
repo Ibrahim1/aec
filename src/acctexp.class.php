@@ -5136,6 +5136,32 @@ class InvoiceFactory
 
 		$this->amount = $this->objUsage->SubscriptionAmount( $this->recurring, $this->metaUser->objSubscription, $this->metaUser );
 
+		if ( !empty( $aecConfig->cfg['enable_coupons'] ) && !empty( $this->objInvoice->coupons ) ) {
+			$coupons = $this->objInvoice->coupons;
+			$orcoupn = $coupons;
+
+			$cpsh = new couponsHandler();
+
+			$this->terms = $cpsh->applyCouponsToTerms( $this->terms, $coupons, $this->metaUser, $this->amount, $this );
+
+			if ( count( $orcoupn ) != count( $coupons ) ) {
+				foreach ( $orcoupn as $couponcode ) {
+					if ( !in_array( $couponcode, $coupons ) ) {
+						$this->objInvoice->removeCoupon( $couponcode );
+					}
+				}
+
+				$this->objInvoice->check();
+				$this->objInvoice->store();
+			}
+
+			$cpsh_err = $cpsh->getErrors();
+
+			if ( count( $cpsh_err ) ) {
+				$this->terms->errors = $cpsh_err;
+			}
+		}
+
 		// Either this is fully free, or the next term is free and this is non recurring
 		if ( $this->terms->checkFree() || ( $this->terms->nextterm->free && !$this->recurring ) ) {
 			$this->objInvoice->pay();
@@ -5384,6 +5410,8 @@ class Invoice extends jsonDBTable
 				unset( $this->$varname );
 			}
 		}
+
+		parent::check();
 
 		return true;
 	}
@@ -6131,7 +6159,7 @@ class Invoice extends jsonDBTable
 
 	function addCoupon( $couponcode )
 	{
-		if ( $this->coupons ) {
+		if ( !empty( $this->coupons ) ) {
 			$oldcoupons = $this->coupons;
 		} else {
 			$oldcoupons = array();
@@ -6164,7 +6192,7 @@ class Invoice extends jsonDBTable
 
 			$cph = new couponHandler();
 			$cph->load( $couponcode );
-			if ( $cph->id ) {
+			if ( $cph->coupon->id ) {
 				$cph->decrementCount( $this );
 			}
 		}
@@ -7978,7 +8006,11 @@ class AECToolbox
 			}
 
 			// Explode Name
-			$namearray		= explode( " ", $metaUser->cmsUser->name );
+			if ( is_array( $metaUser->cmsUser->name ) ) {
+				$namearray	= $metaUser->cmsUser->name;
+			} else {
+				$namearray	= explode( " ", $metaUser->cmsUser->name );
+			}
 			$firstfirstname	= $namearray[0];
 			$maxname		= count($namearray) - 1;
 			$lastname		= $namearray[$maxname];
