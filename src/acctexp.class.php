@@ -240,21 +240,9 @@ class metaUser
 	{
 		$return = false;
 
-		// Get params either from the subscription or from the _user entry
-		if ( !$this->hasSubscription ) {
-			if ( is_object( $this->cmsUser ) ) {
-				$par = explode( "\n", $this->cmsUser->params );
-
-				foreach ( $par as $chunk ) {
-					$k = explode( '=', $chunk, 2 );
-					$this->objSubscription->params[$k[0]] = isset( $k[1] ) ? trim( $k[1] ) : '';
-				}
-			}
-		}
-
 		// Only authorize if user IP is matching and the grant is not expired
-		if ( isset( $this->objSubscription->params['tempauth_exptime'] ) && isset( $this->objSubscription->params['tempauth_ip'] ) ) {
-			if ( ( $this->objSubscription->params['tempauth_ip'] == $_SERVER['REMOTE_ADDR'] ) && ( $this->objSubscription->params['tempauth_exptime'] >= time() ) ) {
+		if ( isset( $this->meta->custom_params['tempauth_exptime'] ) && isset( $this->meta->custom_params['tempauth_ip'] ) ) {
+			if ( ( $this->meta->custom_params['tempauth_ip'] == $_SERVER['REMOTE_ADDR'] ) && ( $this->meta->custom_params['tempauth_exptime'] >= time() ) ) {
 				return true;
 			}
 		}
@@ -287,44 +275,9 @@ class metaUser
 		$params['tempauth_exptime'] = strtotime( '+' . max( 10, $aecConfig->cfg['temp_auth_exp'] ) . ' minutes', time() );
 
 		// Save params either to subscription or to _user entry
-		if ( $this->hasSubscription ) {
-			$this->objSubscription->addParams( $params );
-			$this->objSubscription->check();
-			$this->objSubscription->store();
-		} else {
-			if ( is_object( $this->cmsUser ) ) {
-				$array = explode( "\n", $this->cmsUser->params );
+		$this->meta->addCustomParams( $params );
+		$this->meta->storeload();
 
-				$farray = array();
-				foreach ( $array as $item ) {
-					$i = explode( '=', $item, 2 );
-
-					if ( !empty( $i[1] ) ) {
-						$farray[$i[0]] = $i[1];
-					} else {
-						$farray[$i[0]] = null;
-					}
-				}
-
-				unset( $array );
-
-				foreach ( $params as $name => $value ) {
-					$farray[$name] = $value;
-				}
-
-				foreach ( $farray as $name => $value ) {
-					$array[] = $name . "=" . $value;
-				}
-
-				$this->cmsUser->params .= implode( "\n", $array );
-
-				// Only store if this is a real user object
-				if ( method_exists( $this->cmsUser, 'check' ) ) {
-					$this->cmsUser->check();
-					$this->cmsUser->store();
-				}
-			}
-		}
 		return true;
 	}
 
@@ -922,6 +875,10 @@ class metaUserDB extends jsonDBTable
 		return false;
 	}
 
+	function addCustomParams( $params )
+	{
+		$this->addParams( $params, 'custom_params' );
+	}
 
 	function addPreparedMIParams( $plan_mi, $mi=false )
 	{
@@ -3703,7 +3660,7 @@ class SubscriptionPlan extends jsonDBTable
 		return $renew;
 	}
 
-	function SubscriptionAmount( $recurring, $user_subscription )
+	function SubscriptionAmount( $recurring, $user_subscription, $metaUser=false )
 	{
 		if ( is_object( $user_subscription ) ) {
 			$comparison				= $this->doPlanComparison( $user_subscription );
@@ -3773,10 +3730,12 @@ class SubscriptionPlan extends jsonDBTable
 			}
 		}
 
-		if ( !empty( $this->micro_integrations ) && is_object( $user_subscription ) ) {
+		if ( !empty( $this->micro_integrations ) && ( is_object( $user_subscription ) || is_object( $metaUser ) ) ) {
 			$mih = new microIntegrationHandler();
 
-			$metaUser = new metaUser( $user_subscription->userid );
+			if ( !is_object( $metaUser ) ) {
+				$metaUser = new metaUser( $user_subscription->userid );
+			}
 
 			$mih->applyMIs( $amount, $this, $metaUser );
 		}
@@ -3861,7 +3820,7 @@ class SubscriptionPlan extends jsonDBTable
 		if ( !empty( $user_subscription->plan ) ) {
 			$return['renew'] = 1;
 
-			if ( $user_subscription->used_plans ) {
+			if ( !empty( $user_subscription->used_plans ) ) {
 				$plans_comparison	= false;
 
 				if ( is_array( $user_subscription->used_plans ) ) {
@@ -5175,60 +5134,7 @@ class InvoiceFactory
 			$this->terms->incrementPointer();
 		}
 
-		$this->amount = $this->objUsage->SubscriptionAmount( $this->recurring, $this->metaUser->objSubscription );
-
-		$micro_integrations = $this->objUsage->getMicroIntegrations();
-
-		if ( is_array( $micro_integrations ) ) {
-			$add = new stdClass();
-			$add->price =& $this->amount;
-
-			foreach ( $micro_integrations as $mi_id ) {
-				$mi = new microIntegration( $database );
-
-				if ( !$mi->mi_exists( $mi_id ) ) {
-					continue;
-				}
-
-				$mi->load( $mi_id );
-
-				if ( !$mi->callIntegration() ) {
-					continue;
-				}
-
-				if ( method_exists( $mi->mi_class, 'modifyPrice' )  ) {
-					$mi->relayAction( $this->metaUser, null, $this->objInvoice, $this->objUsage, 'modifyPrice', $add );
-				}
-
-				unset( $mi );
-			}
-		}
-
-		if ( !empty( $aecConfig->cfg['enable_coupons'] ) && !empty( $this->objInvoice->coupons ) ) {
-			$coupons = $this->objInvoice->coupons;
-			$orcoupn = $coupons;
-
-			$cpsh = new couponsHandler();
-
-			$this->terms = $cpsh->applyCouponsToTerms( $this->terms, $coupons, $this->metaUser, $this->payment->amount, $this );
-
-			if ( count( $orcoupn ) != count( $coupons ) ) {
-				foreach ( $orcoupn as $couponcode ) {
-					if ( !in_array( $couponcode, $coupons ) ) {
-						$this->objInvoice->removeCoupon( $couponcode );
-					}
-				}
-
-				$this->objInvoice->check();
-				$this->objInvoice->store();
-			}
-
-			$cpsh_err = $cpsh->getErrors();
-
-			if ( count( $cpsh_err ) ) {
-				$this->terms->errors = $cpsh_err;
-			}
-		}
+		$this->amount = $this->objUsage->SubscriptionAmount( $this->recurring, $this->metaUser->objSubscription, $this->metaUser );
 
 		// Either this is fully free, or the next term is free and this is non recurring
 		if ( $this->terms->checkFree() || ( $this->terms->nextterm->free && !$this->recurring ) ) {
@@ -5616,12 +5522,6 @@ class Invoice extends jsonDBTable
 				$return = $plan->SubscriptionAmount( $recurring, $metaUser->objSubscription );
 			} else {
 				$return = $plan->SubscriptionAmount( $recurring, false );
-			}
-
-			if ( !empty( $plan->micro_integrations ) ) {
-				$mih = new microIntegrationHandler();
-
-				$mih->applyMIs( $return['amount'], $plan, $metaUser );
 			}
 
 			if ( $this->coupons ) {
@@ -6137,7 +6037,7 @@ class Invoice extends jsonDBTable
 			$int_var['recurring'] = 0;
 		}
 
-		$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], $metaUser->objSubscription );
+		$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], $metaUser->objSubscription, $metaUser );
 
 		if ( !empty( $this->coupons ) ) {
 			$cph = new couponsHandler();
@@ -6188,9 +6088,9 @@ class Invoice extends jsonDBTable
 			}
 
 			if ( $InvoiceFactory->metaUser->hasSubscription ) {
-				$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], $InvoiceFactory->metaUser->objSubscription );
+				$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], $InvoiceFactory->metaUser->objSubscription, $InvoiceFactory->metaUser );
 			} else {
-				$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], false );
+				$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], false, $InvoiceFactory->metaUser );
 			}
 
 			if ( !empty( $new_subscription->params['customthanks'] ) || !empty( $new_subscription->params['customtext_thanks'] ) ) {
@@ -10082,7 +9982,11 @@ class couponXuser extends paramDBTable
 			foreach ( $invoices as $invoice ) {
 				$inv = explode( ',', $invoice );
 
-				$invoicelist[$invoice[0]] = $invoice[1];
+				if ( isset( $invoice[1] ) ) {
+					$invoicelist[$invoice[0]] = $invoice[1];
+				} else {
+					$invoicelist[$invoice[0]] = 1;
+				}
 			}
 		}
 

@@ -227,7 +227,7 @@ class mi_hotproperty extends MI
 	function Defaults()
 	{
 		$defaults = array();
-		$defaults['agent_fields']	= "user=[[user_id]]\n\nname=[[user_name]]\nemail=[[user_email]]\ncompany=\nneed_approval=1";
+		$defaults['agent_fields']	= "user=[[user_id]]\nname=[[user_name]]\nemail=[[user_email]]\nneed_approval=0";
 		$defaults['company_fields']	= "name=[[user_name]]\naddress=\nsuburb=\ncountry=\nstate=\npostcode=\ntelephone=\nfax=\nwebsite=\nemail=[[user_email]]";
 
 		return $defaults;
@@ -453,7 +453,7 @@ class mi_hotproperty extends MI
 	{
 		global $database;
 
-		$query = 'SELECT user FROM #__hp_agents'
+		$query = 'SELECT id FROM #__hp_agents'
 				. ' WHERE user = \'' . $userid . '\''
 				;
 		$database->setQuery( $query );
@@ -554,14 +554,14 @@ class mi_hotproperty extends MI
 		$database->setQuery( $query );
 		$result = $database->query();
 
+		$query = 'SELECT max(id)'
+				. ' FROM #__hp_companies'
+				;
+		$database->setQuery( $query );
+		$result = $database->loadResult();
+
 		if ( $result ) {
 			if ( $assoc ) {
-				$query = 'SELECT count(*)'
-						. ' FROM #__hp_companies'
-						;
-				$database->setQuery( $query );
-				$result = $database->loadResult();
-
 				if ( $result ) {
 					$query = 'UPDATE #__hp_agents'
 							. ' SET company = \'' . $result . '\''
@@ -570,11 +570,11 @@ class mi_hotproperty extends MI
 
 					$database->setQuery( $query );
 					if ( $database->query() ) {
-						return true;
+						return $result;
 					}
 				}
 			} else {
-				return true;
+				return $result;
 			}
 		}
 
