@@ -872,7 +872,7 @@ class metaUserDB extends jsonDBTable
 			$this->params->mi->$miid = $params;
 		}
 
-		return false;
+		return true;
 	}
 
 	function addCustomParams( $params )
@@ -3600,6 +3600,7 @@ class SubscriptionPlan extends jsonDBTable
 
 					if ( !empty( $tempparam ) ) {
 						$metaUser->focusSubscription->addParams( $tempparam, 'params', false );
+						$metaUser->focusSubscription->storeload();
 					}
 				}
 			}
@@ -5425,7 +5426,7 @@ class Invoice extends jsonDBTable
 		. ' WHERE invoice_number = \'' . $database->getEscaped( $invoiceNum ) . '\''
 		. ' OR secondary_ident = \'' . $database->getEscaped( $invoiceNum ) . '\''
 		;
-		$database->setQuery( $query );
+		$database->setQuery( $query )print_r($this);exit;;
 		$this->load($database->loadResult());
 	}
 
@@ -5443,7 +5444,7 @@ class Invoice extends jsonDBTable
 
 		if ( empty( $subject->invoice_number_format ) && $aecConfig->cfg['invoicenum_doformat'] ) {
 			$invoice_number = AECToolbox::rewriteEngine( $aecConfig->cfg['invoicenum_formatting'], null, null, $subject );
-		} else {
+		} elseif ( !empty( $subject->invoice_number_format ) ) {
 			$invoice_number = $subject->invoice_number_format;
 		}
 
@@ -5547,9 +5548,9 @@ class Invoice extends jsonDBTable
 			}
 
 			if ( $metaUser->hasSubscription ) {
-				$return = $plan->SubscriptionAmount( $recurring, $metaUser->objSubscription );
+				$return = $plan->SubscriptionAmount( $recurring, $metaUser->objSubscription, $metaUser );
 			} else {
-				$return = $plan->SubscriptionAmount( $recurring, false );
+				$return = $plan->SubscriptionAmount( $recurring, false, $metaUser );
 			}
 
 			if ( $this->coupons ) {
@@ -5643,15 +5644,7 @@ class Invoice extends jsonDBTable
 
 		$this->addParams( array( 'creator_ip' => $_SERVER['REMOTE_ADDR'] ), 'params', false );
 
-		if ( !$this->check() ) {
-			echo "<script> alert('problem with storing an invoice: ".$this->getError()."'); window.history.go(-1); </script>\n";
-			exit();
-		}
-
-		if ( !$this->store() ) {
-			echo "<script> alert('problem with storing an invoice: ".$this->getError()."'); window.history.go(-1); </script>\n";
-			exit();
-		}
+		$this->storeload();
 	}
 
 	function generateInvoiceNumber( $maxlength = 16 )
@@ -6935,7 +6928,7 @@ class GeneralInfoRequester
 				$is_cbe	= ( is_dir( $pathCB. '/enhanced' ) || is_dir( $pathCB . '/enhanced_admin' ) );
 				$is_cb	= ( is_dir( $pathCB ) && !$is_cbe );
 
-				$is12 = file_exists( $pathCB . '/router.php' );
+				$is12 = file_exists( $pathCB . '/js/cb12.js' );
 
 				return ( $is_cb && $is12 );
 				break;
@@ -8144,7 +8137,7 @@ class AECToolbox
 	}
 
 	function resolveJSONitem( $current, $rewrite, $metaUser )
-	{
+	{var_dump($current);
 		if ( is_object( $current ) ) {
 			if ( !isset( $current->cmd ) || !isset( $current->vars ) ) {
 				// Malformed String
@@ -8163,7 +8156,7 @@ class AECToolbox
 				$current[$id] = AECToolbox::resolveJSONitem( $item, $rewrite, $metaUser );
 			}
 		}
-
+var_dump($current);exit;
 		return $current;
 	}
 

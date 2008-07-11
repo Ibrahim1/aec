@@ -430,9 +430,10 @@ class HTML_Results
 
 		HTML_frontend::aec_styling( $option );
 
-		?>
-		<div class="componentheading"><?php echo _THANKYOU_TITLE; ?></div>
+		if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) { ?>
+			<div class="componentheading"><?php echo _THANKYOU_TITLE; ?></div>
 		<?php
+		}
 		if ( $aecConfig->cfg['customtext_thanks'] ) { ?>
 			<p><?php echo $aecConfig->cfg['customtext_thanks']; ?></p>
 			<?php

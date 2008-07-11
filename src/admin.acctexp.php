@@ -4364,7 +4364,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['desc']			=	_AEC_HACKS_CB2;
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.php';
-		$hacks[$n]['read']			=	'function registerForm( $option, $emailpass,$regErrorMSG = null ) {';
+		$hacks[$n]['read']			=	'function registerForm( $option, $emailpass, $regErrorMSG = null ) {';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_optionhack, $n, $n);
 
 		$n = 'comprofilerphp6';
