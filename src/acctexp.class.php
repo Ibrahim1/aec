@@ -5426,7 +5426,7 @@ class Invoice extends jsonDBTable
 		. ' WHERE invoice_number = \'' . $database->getEscaped( $invoiceNum ) . '\''
 		. ' OR secondary_ident = \'' . $database->getEscaped( $invoiceNum ) . '\''
 		;
-		$database->setQuery( $query )print_r($this);exit;;
+		$database->setQuery( $query );
 		$this->load($database->loadResult());
 	}
 
