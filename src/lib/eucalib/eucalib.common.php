@@ -567,6 +567,7 @@ class parameterHandler
 			} elseif ( !empty( $k[0] ) ) {
 				$array[$k[0]] = null;
 			}
+
 			unset( $k );
 		}
 
@@ -592,6 +593,7 @@ class parameterHandler
 				if ( get_magic_quotes_gpc() ) {
 					$value = stripslashes( $value );
 				}
+
 				$value = $database->getEscaped( $value );
 
 				$params[] = $key . '=' . $value;

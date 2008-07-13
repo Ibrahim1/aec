@@ -78,6 +78,46 @@ function com_install()
 
 	$eucaInstalldb->multiQueryExec( $queri );
 
+	// load settings (creates settings parameters that got added in this version)
+	$result = null;
+	$database->setQuery( "SHOW COLUMNS FROM #__acctexp_config LIKE 'settings'" );
+	$database->loadObject($result);
+
+	if ( strcmp( $result->Field, 'settings' ) !== 0 ) {
+		$columns = array(	"transferinfo", "initialexp", "alertlevel1", "alertlevel2",
+							"alertlevel3", "gwlist", "customintro", "customthanks",
+							"customcancel", "bypassintegration", "simpleurls", "expiration_cushion",
+							"currency_code", "heartbeat_cycle", "tos", "require_subscription",
+							"entry_plan", "plans_first", "transfer", "checkusername", "activate_paid"
+						);
+
+		$settings = array();
+		foreach ($columns as $column) {
+			$result = null;
+			$database->setQuery("SHOW COLUMNS FROM #__acctexp_config LIKE '" . $column . "'");
+			$database->loadObject($result);
+			if (strcmp($result->Field, $column) === 0) {
+				$database->setQuery( "SELECT " . $column . " FROM #__acctexp_config WHERE id='1'" );
+				$settings[$column] = $database->loadResult();
+
+				$database->setQuery("ALTER TABLE #__acctexp_config DROP COLUMN " . $column);
+				if ( !$database->query() ) {
+			    	$errors[] = array( $database->getErrorMsg(), $query );
+				}
+			}
+		}
+
+		$database->setQuery("ALTER TABLE #__acctexp_config ADD `settings` text");
+		if ( !$database->query() ) {
+	    	$errors[] = array( $database->getErrorMsg(), $query );
+		}
+
+		$database->setQuery("UPDATE #__acctexp_config SET `settings` = '" . parameterHandler::encode( $settings ) . "' WHERE id = '1'");
+		if ( !$database->query() ) {
+	    	$errors[] = array( $database->getErrorMsg(), $query );
+		}
+	}
+
 	// Check whether the config is on 0.12.6 status
 	$query = 'SELECT `settings` FROM #__acctexp_config'
 	. ' WHERE `id` = \'1\''
@@ -89,8 +129,10 @@ function com_install()
 	if ( ( strpos( $set, '{' ) !== 0 ) && !empty( $set ) ) {
 		$settings = parameterHandler::decode( $set );
 
-		$temp = explode( ';', $settings['milist'] );
-		$settings['milist'] = $temp;
+		if ( isset( $settings['milist'] ) ) {
+			$temp = explode( ';', $settings['milist'] );
+			$settings['milist'] = $temp;
+		}
 
 		$query = 'UPDATE #__acctexp_config'
 		. ' SET `settings` = \'' . $database->getEscaped( jsoonHandler::encode( $settings ) ) . '\''

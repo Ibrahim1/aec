@@ -4694,13 +4694,15 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 	}
 
 	if ( GeneralInfoRequester::detect_component( 'CBM' ) ) {
-		$n = 'comprofilermoderator';
-		$hacks[$n]['name']			=	'comprofilermoderator.php';
-		$hacks[$n]['desc']			=	_AEC_HACKS_CBM;
-		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/modules/mod_comprofilermoderator.php';
-		$hacks[$n]['read']			=	'mosNotAuth();';
-		$hacks[$n]['insert']		=	sprintf( $aec_cbmhack, $n, $n );
+		if ( !GeneralInfoRequester::detect_component( 'CB1.2' ) ) {
+			$n = 'comprofilermoderator';
+			$hacks[$n]['name']			=	'comprofilermoderator.php';
+			$hacks[$n]['desc']			=	_AEC_HACKS_CBM;
+			$hacks[$n]['type']			=	'file';
+			$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/modules/mod_comprofilermoderator.php';
+			$hacks[$n]['read']			=	'mosNotAuth();';
+			$hacks[$n]['insert']		=	sprintf( $aec_cbmhack, $n, $n );
+		}
 	}
 
 	$mih = new microIntegrationHandler();
