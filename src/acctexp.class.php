@@ -5556,7 +5556,11 @@ class Invoice extends jsonDBTable
 			if ( $this->coupons ) {
 				$cpsh = new couponsHandler();
 
+				$sc = $this->coupons;
+
 				$return['amount'] = $cpsh->applyCoupons( $return['amount'], $this->coupons, $metaUser );
+
+				$this->coupons = $sc;
 			}
 
 			if ( is_array( $return['amount'] ) ) {
@@ -8077,7 +8081,11 @@ class AECToolbox
 			$rewrite['invoice_method']				= $invoice->method;
 			$rewrite['invoice_amount']				= $invoice->amount;
 			$rewrite['invoice_currency']			= $invoice->currency;
-			$rewrite['invoice_coupons']				= $invoice->coupons;
+			if ( !empty( $invoice->coupons ) && is_array( $invoice->coupons ) ) {
+				$rewrite['invoice_coupons']			=  implode( ';', $invoice->coupons );
+			} else {
+				$rewrite['invoice_coupons']			=  '';
+			}
 
 			if ( !is_null( $metaUser ) && !is_null( $subscriptionPlan ) ) {
 				$invoice->formatInvoiceNumber();
@@ -9096,6 +9104,11 @@ class couponsHandler extends eucaObject
 	{
 		$applied_coupons = array();
 		$global_nomix = array();
+
+		if ( empty( $coupons ) || !is_array( $coupons ) ) {
+			return $amount;
+		}
+
 		foreach ( $coupons as $arrayid => $coupon_code ) {
 			$cph = new couponHandler();
 			$cph->load( $coupon_code );
@@ -10048,12 +10061,12 @@ class couponXuser extends paramDBTable
 	{
 		$invoicelist = $this->getInvoiceList();
 
-		if ( !isset( $invoicelist[$invoicenumber] ) ) {
+		if ( isset( $invoicelist[$invoicenumber] ) ) {
 			$invoicelist[$invoicenumber] -= 1;
-		}
 
-		if ( $invoicelist[$invoicenumber] === 0 ) {
-			unset( $invoicelist[$invoicenumber] );
+			if ( $invoicelist[$invoicenumber] === 0 ) {
+				unset( $invoicelist[$invoicenumber] );
+			}
 		}
 
 		$this->setInvoiceList( $invoicelist );

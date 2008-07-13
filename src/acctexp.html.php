@@ -839,21 +839,23 @@ class Payment_HTML
 							<strong><?php echo _CHECKOUT_COUPON_CODE; ?></strong>
 						</td>
 					</tr>
+					<?php
+					if ( isset( $InvoiceFactory->terms->errors ) ) {
+						foreach ( $InvoiceFactory->terms->errors as $error ) { ?>
+						<tr>
+							<td class="couponerror">
+								<p>
+									<strong><?php echo _COUPON_ERROR_PRETEXT; ?></strong>
+									&nbsp;
+									<?php echo $error; ?>
+								</p>
+							</td>
+						</tr>
+						<?php
+						}
+					} ?>
 					<tr>
 						<td class="coupondetails">
-							<?php
-							if ( isset( $InvoiceFactory->terms->errors ) ) {
-								foreach ( $InvoiceFactory->terms->errors as $error ) { ?>
-									<div class="couponerror">
-										<p>
-											<strong><?php echo _COUPON_ERROR_PRETEXT; ?></strong>
-											&nbsp;
-											<?php echo $error; ?>
-										</p>
-									</div>
-									<?php
-								}
-							} ?>
 							<p><?php echo _CHECKOUT_COUPON_INFO; ?></p>
 							<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=InvoiceAddCoupon', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 								<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
