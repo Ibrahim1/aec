@@ -174,7 +174,7 @@ class mi_acl
 		}
 
 		// Get ARO ID for user
-		$query = 'SELECT `' . ( defined( 'JPATH_BASE' ) ? 'id' : 'aro_id' )  . '`'
+		$query = 'SELECT `' . ( aecJoomla15check() ? 'id' : 'aro_id' )  . '`'
 		. ' FROM #__core_acl_aro'
 		. ' WHERE `value` = \'' . (int) $metaUser->userid . '\''
 		;

@@ -75,6 +75,19 @@ function aecDebug( $text, $level = 128 )
 	$eventlog->issue( 'debug', 'debug', json_encode( $text ), $level );
 }
 
+if ( !function_exists( 'aecJoomla15check' ) ) {
+	function aecJoomla15check()
+	{
+		global $aecConfig;
+
+		if ( !empty( $aecConfig->cfg['overrideJ15'] ) ) {
+			return false;
+		} else {
+			return defined( 'JPATH_BASE' );
+		}
+	}
+}
+
 function aecGetParam( $name, $default='' )
 {
 	$return = mosGetParam( $_REQUEST, $name, $default );
@@ -463,7 +476,7 @@ class metaUser
 		}
 
 		// Get ARO ID for user
-		$query = 'SELECT `' . ( defined( 'JPATH_BASE' ) ? 'id' : 'aro_id' )  . '`'
+		$query = 'SELECT `' . ( aecJoomla15check() ? 'id' : 'aro_id' )  . '`'
 				. ' FROM #__core_acl_aro'
 				. ' WHERE `value` = \'' . (int) $this->userid . '\''
 				;
@@ -1026,8 +1039,10 @@ class Config_General extends jsonDBTable
 		$def['customtext_cancel_keeporiginal']	= 1;
 		$def['customtext_cancel']				= '';
 		$def['renew_button_never']				= 0;
-		$def['renew_button_nolifetimerecurring']	= 1;
+		$def['renew_button_nolifetimerecurring']= 1;
 		$def['continue_button']					= 1;
+		// new 0.12.6
+		$def['overrideJ15']						= 0;
 
 		// Insert a new entry if there is none yet
 		if ( empty( $this->settings ) ) {
@@ -3085,7 +3100,7 @@ class aecHTML
 			}
 
 			if ( !empty( $row[1] ) && !empty( $row[2] ) ) {
-				if (  defined( 'JPATH_BASE' ) ) {
+				if (  aecJoomla15check() ) {
 					$return = '<div class="setting_desc">';
 					$return .= '<span class="editlinktip hasTip" title="';
 					$return .= htmlentities( $row[1] ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . ':' . htmlentities( $row[2] );
@@ -6903,7 +6918,7 @@ class GeneralInfoRequester
 			} else {
 				return 'UNKNOWN'; // mic: DO NOT CHANGE THIS VALUE!! (used later)
 			}
-		} elseif (  defined( 'JPATH_BASE' ) ) {
+		} elseif (  aecJoomla15check() ) {
 			return 'Joomla15';
 		}
 	}
@@ -7446,7 +7461,7 @@ class AECToolbox
 			// This is a joomla registration, borrowing their code to save the user
 			global $mosConfig_useractivation, $mosConfig_sitename, $mosConfig_live_site;
 
-			if ( defined( 'JPATH_BASE' ) ) {
+			if ( aecJoomla15check() ) {
 				global $mainframe;
 
 				// Check for request forgeries
@@ -8145,7 +8160,7 @@ class AECToolbox
 	}
 
 	function resolveJSONitem( $current, $rewrite, $metaUser )
-	{var_dump($current);
+	{
 		if ( is_object( $current ) ) {
 			if ( !isset( $current->cmd ) || !isset( $current->vars ) ) {
 				// Malformed String
@@ -8164,7 +8179,7 @@ class AECToolbox
 				$current[$id] = AECToolbox::resolveJSONitem( $item, $rewrite, $metaUser );
 			}
 		}
-var_dump($current);exit;
+
 		return $current;
 	}
 

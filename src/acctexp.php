@@ -324,7 +324,7 @@ function subscribe( $option )
 	if ( !empty( $username ) && $usage ) {
 		$CB = ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) );
 
-		if ( defined( 'JPATH_BASE' ) && !$CB ) {
+		if ( aecJoomla15check() && !$CB ) {
 			// Joomla 1.5 Sanity Check
 
 			// Get required system objects
@@ -346,7 +346,7 @@ function subscribe( $option )
 				subscribe();
 				return false;
 			}
-		} elseif ( !defined( 'JPATH_BASE' ) && !$CB ) {
+		} elseif ( !aecJoomla15check() && !$CB ) {
 			// Joomla 1.0 Sanity Check
 			$row = new mosUser( $database );
 
@@ -435,7 +435,7 @@ function checkDuplicateUsernameEmail( $username, $email )
 			;
 	$database->setQuery( $query );
 	if ( $database->loadResult() ) {
-		if ( !defined( 'JPATH_BASE' ) ) {
+		if ( !aecJoomla15check() ) {
 			mosErrorAlert( _REGWARN_EMAIL_INUSE );
 			return false;
 		} else {
@@ -445,7 +445,7 @@ function checkDuplicateUsernameEmail( $username, $email )
 	}
 
 	if ( !empty( $email ) ) {
-		if ( $mosConfig_uniquemail || ( defined( 'JPATH_BASE' )) ) { // J1.5 forces unique email
+		if ( $mosConfig_uniquemail || ( aecJoomla15check()) ) { // J1.5 forces unique email
 			// check for existing email
 			$query = 'SELECT `id`'
 					. ' FROM #__users'
@@ -453,7 +453,7 @@ function checkDuplicateUsernameEmail( $username, $email )
 					;
 			$database->setQuery( $query );
 			if ( $database->loadResult() ) {
-				if ( !defined( 'JPATH_BASE' ) ) {
+				if ( !aecJoomla15check() ) {
 					mosErrorAlert( _REGWARN_EMAIL_INUSE );
 					return _REGWARN_EMAIL_INUSE;
 				} else {

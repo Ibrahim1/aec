@@ -810,7 +810,7 @@ function help( $option )
 	}
 
 	// generic CMS changes
-	if ( !defined( 'JPATH_BASE' ) ) {
+	if ( !aecJoomla15check() ) {
 		$diagnose[]	= array( _AEC_HELP_DIAG_CMN1, $diagnostic['hack_joomlaphp4'], 3, _AEC_HELP_DIAG_CMN1_DESC, _AEC_HELP_DIAG_CMN1_DESC2, 0 );
 	}
 
@@ -829,7 +829,7 @@ function help( $option )
 	// site offline
 	$diagnose[]	= array( _AEC_HELP_DIAG_SITE_OFFLINE, $diagnostic['offline'], 3, _AEC_HELP_DIAG_SITE_OFFLINE_DESC, 0, 1 );
 
-	if ( !defined( 'JPATH_BASE' ) ) {
+	if ( !aecJoomla15check() ) {
 		// disabled registration
 		$diagnose[]	= array( _AEC_HELP_DIAG_REG_DISABLED, !$diagnostic['user_registration'], 2, _AEC_HELP_DIAG_REG_DISABLED_DESC, 0, 1 );
 
@@ -1798,6 +1798,7 @@ function editSettings( $option )
 	$params['ssl_signup']					= array( 'list_yesno', 0 );
 	$params['ssl_profile']					= array( 'list_yesno', 0 );
 	$params['override_reqssl']				= array( 'list_yesno', 0 );
+	$params['overrideJ15']					= array( 'list_yesno', 0 );
 	$params['skip_confirmation']			= array( 'list_yesno', 0 );
 	$params['show_fixeddecision']			= array( 'list_yesno', 0 );
 	$params['confirmation_coupons']			= array( 'list_yesno', 0 );
@@ -4803,7 +4804,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 
 			case 'menuentry':
 				if ( !$undohack ) { // Create menu entry
-					if ( defined( 'JPATH_BASE' ) ) {
+					if ( aecJoomla15check() ) {
 						$query = 'INSERT INTO #__menu'
 								. ' VALUES (\'\', \'usermenu\', \'' . _AEC_SPEC_MENU_ENTRY . '\', \'' . strtolower( _AEC_SPEC_MENU_ENTRY ) . '\', \'' . $mosConfig_live_site  . '/index.php?option=com_acctexp&task=subscriptionDetails\', \'url\', 1, 0, 0, 6, 0, 0, \'0000-00-00 00:00:00\', 0, 0, 1, 0, \'menu_image=-1\', 0, 0, 0)'
 								;

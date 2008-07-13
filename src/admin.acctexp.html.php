@@ -222,7 +222,7 @@ class HTML_myCommon
 	{
 		global $mainframe; ?>
 		<link rel="stylesheet" type="text/css" media="all" href="<?php echo $mainframe->getCfg( 'live_site' ); ?>/administrator/components/com_acctexp/backend_style.css" />
-		<?php if ( !defined( 'JPATH_BASE' ) ) { ?>
+		<?php if ( !aecJoomla15check() ) { ?>
 		<script type="text/javascript" src="<?php echo $mainframe->getCfg( 'live_site' ); ?>/components/com_acctexp/lib/mootools/mootools.js"></script>
 		<?php } ?>
 		<?php

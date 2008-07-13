@@ -30,6 +30,20 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 //error_reporting(E_ALL);
+
+if ( !function_exists( 'aecJoomla15check' ) ) {
+	function aecJoomla15check()
+	{
+		global $aecConfig;
+
+		if ( !empty( $aecConfig->cfg['overrideJ15'] ) ) {
+			return false;
+		} else {
+			return defined( 'JPATH_BASE' );
+		}
+	}
+}
+
 function com_install()
 {
 	global $database, $mainframe, $mosConfig_absolute_path, $mosConfig_live_site, $mosConfig_dbprefix, $my;

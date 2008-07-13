@@ -29,7 +29,7 @@ class eucaInstall extends eucaObject
 		global $mosConfig_absolute_path;
 
 		if ( !class_exists( 'Archive_Tar' ) || function_exists( 'PclTarExtract' ) ) {
-			if ( defined( 'JPATH_BASE' ) ) {
+			if ( aecJoomla15check() ) {
 				require_once( $mosConfig_absolute_path . '/administrator/includes/pcl/pcltar.lib.php' );
 			} else {
 				require_once( $mosConfig_absolute_path . '/includes/Archive/Tar.php' );
@@ -62,7 +62,7 @@ class eucaInstall extends eucaObject
 				}
 			}
 
-			if (  defined( 'JPATH_BASE' ) ) {
+			if (  aecJoomla15check() ) {
 				if ( PclTarExtract( $fullpath, $deploypath) !== 0 ) {
 					@unlink( $fullpath );
 				} else {
@@ -160,7 +160,7 @@ class eucaInstall extends eucaObject
 		$fields[] = 'params';
 		$values[] = '';
 
-		if ( defined( 'JPATH_BASE' ) ) {
+		if ( aecJoomla15check() ) {
 			$fields[] = 'enabled';
 			$values[] = 1;
 		}

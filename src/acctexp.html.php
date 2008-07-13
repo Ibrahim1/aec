@@ -1053,7 +1053,7 @@ function joomlaregisterForm($option, $useractivation)
 {
 	global $aecConfig, $mosConfig_absolute_path;
 
-	if (  defined( 'JPATH_BASE' ) ) {
+	if ( aecJoomla15check() ) {
 	?>
 	<script type="text/javascript">
 	<!--
