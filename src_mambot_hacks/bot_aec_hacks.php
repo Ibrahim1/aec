@@ -24,7 +24,7 @@ function checkUserSubscription()
 			include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");
 			$username = mosGetParam($_POST,'username', '');
 			$verification = AECToolbox::VerifyUser( $username );
-die($verification);
+
 			if ( $verification === true ) {
 				$status = JAUTHENTICATE_STATUS_SUCCESS;
 			} else {
