@@ -302,6 +302,18 @@ class mi_hotproperty extends MI
 		. '// AEC HACK adminhotproperty3 END' . "\n"
 		;
 
+		$edithack4 = '// AEC HACK adminhotproperty4 START' . "\n"
+		. 'global $mosConfig_absolute_path;' . "\n"
+		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
+		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
+		. '$mi_hphandler = new aec_hotproperty( $database );' . "\n"
+		. '$mi_hphandler->loadLinkID( $id[$i] );' . "\n"
+		. 'if( $mi_hphandler->id ) {' . "\n"
+		. '$mi_hphandler->removeListing();' . "\n"
+		. '}' . "\n"
+		. '// AEC HACK adminhotproperty4 END' . "\n"
+		;
+
 		$n = 'hotproperty1';
 		$hacks[$n]['name']				=	'hotproperty.php #1';
 		$hacks[$n]['desc']				=	_AEC_MI_HACK3_HOTPROPERTY;
@@ -317,6 +329,7 @@ class mi_hotproperty extends MI
 		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_hotproperty/property.php';
 		$hacks[$n]['read']				=	'# Assign current logon user to Agent field';
 		$hacks[$n]['insert']			=	$edithack2 . "\n"  . $hacks[$n]['read'];
+
 /*
 		$n = 'adminhotproperty3';
 		$hacks[$n]['name']				=	'admin.hotproperty.php #3';
@@ -326,6 +339,15 @@ class mi_hotproperty extends MI
 		$hacks[$n]['read']				=	'if ( $mtLinks->link_approved == 0 ) {';
 		$hacks[$n]['insert']			=	$hacks[$n]['read'] . "\n" . $edithack3;
 */
+
+		$n = 'adminhotproperty4';
+		$hacks[$n]['name']				=	'admin.hotproperty.php #4';
+		$hacks[$n]['desc']				=	_AEC_MI_HACK5_HOTPROPERTY;
+		$hacks[$n]['type']				=	'file';
+		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/administrator/components/com_hotproperty/admin.hotproperty.php';
+		$hacks[$n]['read']				=	'# Remove property from database';
+		$hacks[$n]['insert']			=	$hacks[$n]['read'] . "\n" . $edithack4;
+
 		return $hacks;
 	}
 
@@ -698,6 +720,41 @@ class aec_hotproperty extends jsonDBTable
 		$this->load( $id );
 	}
 
+	function getIDbyLinkID( $linkid )
+	{
+		global $database;
+
+		$query = 'SELECT `agent`'
+				. ' FROM #__hp_properties'
+				. ' WHERE `id` = \'' . $linkid . '\''
+				;
+		$database->setQuery( $query );
+		$agent = $database->loadResult();
+
+		if ( empty( $agent ) ) {
+			return $agent;
+		}
+
+		$query = 'SELECT `user`'
+				. ' FROM #__hp_agents'
+				. ' WHERE `id` = \'' . $agent . '\''
+				;
+		$database->setQuery( $query );
+		$userid = $database->loadResult();
+
+		if ( empty( $userid ) ) {
+			return $userid;
+		}
+
+		return $this->getIDbyUserID( $userid );
+	}
+
+	function loadLinkID( $linkid )
+	{
+		$id = $this->getIDbyLinkID( $linkid );
+		$this->load( $id );
+	}
+
 	function is_active()
 	{
 		if( $this->active ) {
@@ -728,6 +785,18 @@ class aec_hotproperty extends jsonDBTable
 	{
 		if ( $this->hasListingsLeft() && $this->is_active() ) {
 			$this->used_listings++;
+			$this->check();
+			$this->store();
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function removeListing()
+	{
+		if ( $this->is_active() ) {
+			$this->used_listings--;
 			$this->check();
 			$this->store();
 			return true;
