@@ -14,14 +14,17 @@ $_MAMBOTS->registerFunction( 'onAfterStart', 'checkUserSubscription' );
 //This will make sure a user has a subscription in order to log in.
 function checkUserSubscription()
 {
-	global $mosConfig_live_site, $mosConfig_absolute_path, $mainframe;
-	$my = $mainframe->getUser();
-	if($my->id){
+	global $mosConfig_live_site, $mosConfig_absolute_path, $option, $mainframe;
+	
+	$submit = mosGetParam($_POST,'submit', '');
+	if ($option == 'login' ||
+         ($option == 'com_comprofiler' && $task == 'login') &&
+         ($submit == 'Login')) { 
 		if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {
 			include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");
-			$username = $my->username;
+			$username = mosGetParam($_POST,'username', '');
 			$verification = AECToolbox::VerifyUser( $username );
-
+die($verification);
 			if ( $verification === true ) {
 				$status = JAUTHENTICATE_STATUS_SUCCESS;
 			} else {
@@ -38,13 +41,15 @@ function onLoginFailure()
 {
 	global $database, $mainframe;
 	
-	$my = $mainframe->getUser();
-	$id = $my->id;
+	$query = 'SELECT id'
+	. ' FROM #__users'
+	. ' WHERE username = \'' . AEC_AUTH_ERROR_UNAME . '\''
+	;
+	$database->setQuery( $query );
+	$id = $database->loadResult();
 
 	$redirect = false;
 	
-	$mainframe->logout($id);
-
 	switch( AEC_AUTH_ERROR_MSG ) {
 		case 'open_invoice':
 			$redirect = 'pending';
@@ -55,7 +60,8 @@ function onLoginFailure()
 	}
 	
 	if ( $redirect ) {
-		mosRedirect( sefRelToAbs( "index.php?option=com_acctexp&task=$redirect&userid=$id" ) );
+		$url = "index.php?option=com_acctexp&task=$redirect&userid=$id";
+		mosRedirect( sefRelToAbs( $url ) );
 	}
 }
 
