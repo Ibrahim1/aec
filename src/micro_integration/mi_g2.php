@@ -192,7 +192,7 @@ class mi_g2 extends MI
 
 		$query = 'SELECT max(g_serialNumber)'
 				. ' FROM g2_Entity'
-				. ' WHERE `g_entityType` = \'GalleryUser\''
+				. ' WHERE `g_entityType` = \'GalleryAlbumItem\''
 				;
 		$database->setQuery( $query );
 
@@ -211,7 +211,7 @@ class mi_g2 extends MI
 
 		$query = 'INSERT INTO g2_Item'
 				. ' ( `g_id`, `g_canContainChildren`, `g_description`, `g_keywords`, `g_ownerId`, `g_renderer`, `g_summary`, `g_title`, `g_viewedSinceTimestamp`, `g_originationTimestamp` )'
-				. ' VALUES ( \'' . $entityid . '\', \'1\', \'\', NULL, \'' . $entityid . '\', NULL, \'' . $albumname . '\', \'' . $albumname . '\', \'' . time() . '\', \'' . time() . '\' )'
+				. ' VALUES ( \'' . $entityid . '\', \'1\', \'\', NULL, NULL, NULL, \'' . $albumname . '\', \'' . $albumname . '\', \'' . time() . '\', \'' . time() . '\' )'
 				;
 		$database->setQuery( $query );
 
@@ -220,7 +220,7 @@ class mi_g2 extends MI
 			return false;
 		}
 
-		$query = 'INSERT INTO g2_Item'
+		$query = 'INSERT INTO g2_AlbumItem'
 				. ' ( `g_id`, `g_theme`, `g_orderBy`, `g_orderDirection` )'
 				. ' VALUES ( \'' . $entityid . '\', \'\', \'\', \'asc\' )'
 				;
@@ -258,8 +258,7 @@ class mi_g2 extends MI
 			return $g2id;
 		} else {
 			// User not found, create user, then recurse
-			$this->createG2User( $metaUser );
-			$this->catchG2userid( $metaUser );
+			return $this->createG2User( $metaUser );
 		}
 	}
 
@@ -269,7 +268,7 @@ class mi_g2 extends MI
 
 		$query = 'SELECT g_id'
 				. ' FROM g2_User'
-				. ' WHERE `g_userName` LIKE \'%' . $metaUser->cmsUser->username . '%\''
+				. ' WHERE `g_userName` = \'' . $metaUser->cmsUser->username . '\''
 				;
 		$database->setQuery( $query );
 
@@ -333,7 +332,7 @@ class mi_g2 extends MI
 		$this->mapUserToGroup( $g2id, 4 );
 
 		if ( $database->query() ) {
-			return true;
+			return $g2id;
 		} else {
 			$this->setError( $database->getErrorMsg() );
 			return false;
