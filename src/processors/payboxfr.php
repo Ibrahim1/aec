@@ -197,7 +197,7 @@ class processor_payboxfr extends POSTprocessor
 	function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
-
+aecDebug($_GET);aecDebug($_POST);
 		$gets = array( 'option', 'task', 'amount', 'invoice', 'authorization', 'transaction', 'subscriptionid', 'error', 'check' );
 
 		$return = array();

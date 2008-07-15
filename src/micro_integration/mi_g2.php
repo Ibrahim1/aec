@@ -301,7 +301,10 @@ class mi_g2 extends MI
 				. ' VALUES ( \'' . $entityid . '\', \'' . time() . '\', \'0\', NULL, \'' . time() . '\', \'' . $serial . '\', \'GalleryUser\', NULL )'
 				;
 		$database->setQuery( $query );
-		$database->query();
+		if ( !$database->query() ) {
+			$this->setError( $database->getErrorMsg() );
+			return false;
+		}
 
 		$g2id = $entityid;
 
@@ -310,14 +313,20 @@ class mi_g2 extends MI
 				. ' VALUES ( \'' . $g2id . '\', \'' . $metaUser->cmsUser->username . '\', \'' . $metaUser->cmsUser->name . '\', \'' . $metaUser->cmsUser->password . '\', \'' . $metaUser->cmsUser->email . '\', NULL, \'0\' )'
 				;
 		$database->setQuery( $query );
-		$database->query();
+		if ( !$database->query() ) {
+			$this->setError( $database->getErrorMsg() );
+			return false;
+		}
 
 		$query = 'INSERT INTO g2_ExternalIdMap'
 				. ' ( `g_externalId`, `g_entityType`, `g_entityId` )'
 				. ' VALUES ( \'' . $metaUser->cmsUser->id . '\', \'GalleryUser\', \'' . $g2id . '\' )'
 				;
 		$database->setQuery( $query );
-		$database->query();
+		if ( !$database->query() ) {
+			$this->setError( $database->getErrorMsg() );
+			return false;
+		}
 
 		// Add to standard groups
 		$this->mapUserToGroup( $g2id, 2 );

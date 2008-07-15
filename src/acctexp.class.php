@@ -90,7 +90,7 @@ if ( !function_exists( 'aecJoomla15check' ) ) {
 
 function aecGetParam( $name, $default='' )
 {
-	$return = mosGetParam( $_REQUEST, $name, $default );
+	$return = mosGetParam( $_REQUEST, $name, $default, 0x0002 );
 
 	if ( !is_array( $return ) ) {
 		$return = trim( $return );
@@ -4164,11 +4164,8 @@ class SubscriptionPlan extends jsonDBTable
 				continue;
 			}
 
-			if ( empty( $post[$varname] ) ) {
-				$params[$varname] = 0;
-			} else {
-				$params[$varname] = $post[$varname];
-			}
+			$params[$varname] = $post[$varname];
+
 			unset( $post[$varname] );
 		}
 
@@ -4191,11 +4188,8 @@ class SubscriptionPlan extends jsonDBTable
 				continue;
 			}
 
-			if ( empty( $post[$varname] ) ) {
-				$restrictions[$varname] = 0;
-			} else {
-				$restrictions[$varname] = $post[$varname];
-			}
+			$restrictions[$varname] = $post[$varname];
+
 			unset( $post[$varname] );
 		}
 
