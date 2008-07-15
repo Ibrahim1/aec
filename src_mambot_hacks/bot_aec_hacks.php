@@ -9,12 +9,45 @@
  */
 
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
-$_MAMBOTS->registerFunction( 'onAfterStart', 'checkUserSubscription' );
+$_MAMBOTS->registerFunction( 'onAfterStart', 'checkUserSubscription' ); //joomla.php Hack #4
+$_MAMBOTS->registerFunction( 'onAfterStart', 'planFirst' ); //registration.php Hack #6
+$_MAMBOTS->registerFunction( 'onAfterStart', 'planRegistration' ); //registration.php Hack #2
 
-//This will make sure a user has a subscription in order to log in.
+//This will redirect a registering user to the payment plans after filling out the registration form. Leave this alone to have plan selection only on login (if 'Require Subscription' is active), or completely voluntary (without requiring a subscription).
+function planRegistration()
+{
+	global $mosConfig_absolute_path, $option;
+	
+	$task = mosGetParam( $_REQUEST, 'task', '' );
+
+	if ($option == 'com_registration' && $task == 'register'){
+		if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {
+			$option = "com_acctexp";
+		}
+	}
+}
+
+//This will make the Plans First feature possible - you need to set the switch for this in the settings as well! 
+function planFirst()
+{
+	global $mosConfig_absolute_path, $option;
+	
+	$task = mosGetParam( $_REQUEST, 'task', '' );
+	
+	if ($option == 'com_registration' && $task == 'register'){
+		if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {
+			include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");
+			if($aecConfig->cfg['plans_first']){
+				mosRedirect( sefRelToAbs( 'index.php?option=com_acctexp&task=subscribe' ) );
+			}
+		}
+	}
+}
+
+//This will make sure a user has a subscription in order to log in - Joomla hack#4
 function checkUserSubscription()
 {
-	global $mosConfig_live_site, $mosConfig_absolute_path, $option, $mainframe;
+	global $mosConfig_absolute_path, $option;
 	
 	$submit = mosGetParam($_POST,'submit', '');
 	if ($option == 'login' ||
@@ -22,15 +55,13 @@ function checkUserSubscription()
          ($submit == 'Login')) { 
 		if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {
 			include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");
+			
 			$username = mosGetParam($_POST,'username', '');
 			$verification = AECToolbox::VerifyUser( $username );
 
-			if ( $verification === true ) {
-				$status = JAUTHENTICATE_STATUS_SUCCESS;
-			} else {
+			if ( $verification !== true ) {
 				define( 'AEC_AUTH_ERROR_MSG', $verification );
 				define( 'AEC_AUTH_ERROR_UNAME', $username );
-				$status = JAUTHENTICATE_STATUS_FAILURE;
 				onLoginFailure();
 			}
 		}
@@ -39,7 +70,7 @@ function checkUserSubscription()
 
 function onLoginFailure()
 {
-	global $database, $mainframe;
+	global $database;
 	
 	$query = 'SELECT id'
 	. ' FROM #__users'
