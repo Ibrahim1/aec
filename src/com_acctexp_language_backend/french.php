@@ -327,6 +327,7 @@ define( '_AEC_NOTICE_NUMBER_512',                'Aucun' );
 // select lists
 define( '_AEC_SEL_EXCLUDED',                    'Exclus' );
 define( '_AEC_SEL_PENDING',                        'En attente' );
+define( '_AEC_SEL_TRIAL',						'Trial' );
 define( '_AEC_SEL_ACTIVE',                      'Active' );
 define( '_AEC_SEL_EXPIRED',                        'Expir&eacute;' );
 define( '_AEC_SEL_CLOSED',                        'Ferm&eacute;' );

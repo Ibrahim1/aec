@@ -10159,9 +10159,9 @@ class aecExport extends jsonDBTable
 		if ( !empty( $this->filter->status ) ) {
 			foreach ( $this->filter->status as $status ) {
 				if ( !empty( $where ) ) {
-					$query .= ' AND `status` = \'' . $status . '\'';
+					$query .= ' AND LOWER( `status` ) = \'' . strtolower( $status ) . '\'';
 				} else {
-					$query .= ' WHERE `status` = \'' . $status . '\'';
+					$query .= ' WHERE LOWER( `status` ) = \'' . strtolower( $status ) . '\'';
 				}
 			}
 		}

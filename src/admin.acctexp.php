@@ -5023,6 +5023,7 @@ function exportData( $option, $cmd=null )
 	$group_selection = array();
 	$group_selection[] = mosHTML::makeOption( 'excluded',	_AEC_SEL_EXCLUDED );
 	$group_selection[] = mosHTML::makeOption( 'pending',	_AEC_SEL_PENDING );
+	$group_selection[] = mosHTML::makeOption( 'trial',		_AEC_SEL_TRIAL );
 	$group_selection[] = mosHTML::makeOption( 'active',		_AEC_SEL_ACTIVE );
 	$group_selection[] = mosHTML::makeOption( 'expired',	_AEC_SEL_EXPIRED );
 	$group_selection[] = mosHTML::makeOption( 'closed',		_AEC_SEL_CLOSED );
