@@ -1150,7 +1150,7 @@ class HTML_AcctExp
 			$tabs->startTab( $tab[0], $tab[0] );
 
 			if ( isset( $tab[2] ) ) {
-				echo '<div class="aec_tabheading">' . $tab[2] . '</div';
+				echo '<div class="aec_tabheading">' . $tab[2] . '</div>';
 			}
 
 			echo '<table width="100%" class="adminform"><tr><td>';

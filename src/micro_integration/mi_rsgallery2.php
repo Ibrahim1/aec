@@ -232,9 +232,9 @@ class mi_rsgallery2 extends MI
 		$gid = $database->loadResult();
 
 		$query = 'INSERT INTO #__rsgallery2_acl'
-				. ' ( `gallery_id`, `parent_id` )'
+				. ' ( `gallery_id`, `parent_id`, `registered_up_mod_img`, `registered_create_mod_gal` )'
 				//. ' ( `gallery_id`, `parent_id`, `public_view`, `public_up_mod_img`, `public_del_img`, `public_create_mod_gal`, `public_del_gal`, `public_vote_view`, `public_vote_vote`, `registered_view`, `registered_up_mod_img`, `registered_del_img`, `registered_create_mod_gal`, `registered_del_gal`, `registered_vote_view`, `registered_vote_vote` )'
-				. ' VALUES ( \'' . $gid . '\', \'' . $parentid . '\') '
+				. ' VALUES ( \'' . $gid . '\', \'' . $parentid . '\', \'0\', \'0\') '
 				;
 		$database->setQuery( $query );
 
