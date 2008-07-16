@@ -2210,8 +2210,6 @@ function saveSettings( $option, $return=0 )
 		$difference = 'none';
 	}
 
-	$general_settings['aec_version'] = _AEC_VERSION;
-
 	$aecConfig->cfg = $general_settings;
 	$aecConfig->saveSettings();
 

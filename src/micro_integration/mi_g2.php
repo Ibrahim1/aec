@@ -112,6 +112,8 @@ class mi_g2 extends MI
 
 	function action( $request )
 	{
+		global $database;
+
 		$g2userid = $this->catchG2userid( $request->metaUser );
 
 		$groups = array();
@@ -128,7 +130,7 @@ class mi_g2 extends MI
 			for ( $i=0; $i<$this->settings['groups_sel_amt']; $i++ ) {
 				if ( isset( $request->params['g2group_'.$i] ) ) {
 					$this->mapUserToGroup( $g2userid, $request->params['g2group_'.$i] );
-					$groups[] = $groupid;
+					$groups[] = $request->params['g2group_'.$i];
 				}
 			}
 		}
@@ -137,7 +139,29 @@ class mi_g2 extends MI
 			array_unique( $groups );
 
 			foreach ( $groups as $groupid ) {
-				$this->createAlbumInGroup( $g2userid, $groupid, AECToolbox::rewriteEngineRQ( $this->settings['albums_name'], $request ) );
+				$query = 'SELECT `g_groupName`'
+					 	. ' FROM g2_Group'
+					 	. ' WHERE `g_id` = \'' . $groupid . '\''
+					 	;
+			 	$database->setQuery( $query );
+			 	$groupname = $database->loadResult();
+
+				if ( empty( $groupname ) ) {
+					continue;
+				}
+
+				$query = 'SELECT `g_id`'
+					 	. ' FROM g2_Item'
+					 	. ' WHERE `g_title` = \'' . $groupname . '\''
+					 	;
+			 	$database->setQuery( $query );
+			 	$parent = $database->loadResult();
+
+				if ( empty( $parent ) ) {
+					continue;
+				}
+
+				$this->createAlbumInAlbum( $g2userid, $parent, AECToolbox::rewriteEngineRQ( $this->settings['albums_name'], $request ) );
 			}
 		}
 
@@ -178,9 +202,43 @@ class mi_g2 extends MI
 		}
 	}
 
-	function createAlbumInGroup( $g2userid, $groupid, $albumname )
+	function createAlbumInAlbum( $g2userid, $parentid, $albumname )
 	{
 		global $database;
+
+		// Check that we don't create a duplicate
+		$query = 'SELECT g_id'
+				. ' FROM g2_Item'
+				. ' WHERE `g_ownerId` = \'' . $g2userid . '\''
+				. ' AND `g_title` = \'' . $albumname . '\''
+				;
+		$database->setQuery( $query );
+		$eid = $database->loadResult();
+
+		if ( $eid ) {
+			$query = 'SELECT g_parentId'
+					. ' FROM g2_ChildEntity'
+					. ' WHERE `g_id` = \'' . $eid . '\''
+					;
+			$database->setQuery( $query );
+			$pid = $database->loadResult();
+
+			if ( $pid == $parentid ) {
+				return null;
+			}
+		}
+
+		// Fallback sanity check in case the user has renamed the albums
+		$query = 'SELECT count(*)'
+				. ' FROM g2_Item'
+				. ' WHERE `g_ownerId` = \'' . $g2userid . '\''
+				;
+		$database->setQuery( $query );
+		$entries = $database->loadResult();
+
+		if ( $entries >= $this->settings['groups_sel_amt'] ) {
+			return null;
+		}
 
 		// Create Entity
 		$query = 'SELECT max(g_id)'
@@ -200,7 +258,7 @@ class mi_g2 extends MI
 
 		$query = 'INSERT INTO g2_Entity'
 				. ' ( `g_id`, `g_creationTimestamp`, `g_isLinkable`, `g_linkId`, `g_modificationTimestamp`, `g_serialNumber`, `g_entityType`, `g_onLoadHandlers` )'
-				. ' VALUES ( \'' . $entityid . '\', \'' . time() . '\', \'0\', NULL, \'' . time() . '\', \'' . $serial . '\', \'GalleryAlbumItem\', NULL )'
+				. ' VALUES ( \'' . $entityid . '\', \'' . time() . '\', \'0\', NULL, \'' . time() . '\', \'1\', \'GalleryAlbumItem\', NULL )'
 				;
 		$database->setQuery( $query );
 
@@ -211,7 +269,7 @@ class mi_g2 extends MI
 
 		$query = 'INSERT INTO g2_Item'
 				. ' ( `g_id`, `g_canContainChildren`, `g_description`, `g_keywords`, `g_ownerId`, `g_renderer`, `g_summary`, `g_title`, `g_viewedSinceTimestamp`, `g_originationTimestamp` )'
-				. ' VALUES ( \'' . $entityid . '\', \'1\', \'\', NULL, NULL, NULL, \'' . $albumname . '\', \'' . $albumname . '\', \'' . time() . '\', \'' . time() . '\' )'
+				. ' VALUES ( \'' . $entityid . '\', \'1\', \'\', NULL, \'' . $g2userid . '\', NULL, \'' . $albumname . '\', \'' . $albumname . '\', \'' . time() . '\', \'' . time() . '\' )'
 				;
 		$database->setQuery( $query );
 
@@ -223,6 +281,17 @@ class mi_g2 extends MI
 		$query = 'INSERT INTO g2_AlbumItem'
 				. ' ( `g_id`, `g_theme`, `g_orderBy`, `g_orderDirection` )'
 				. ' VALUES ( \'' . $entityid . '\', \'\', \'\', \'asc\' )'
+				;
+		$database->setQuery( $query );
+
+		if ( !$database->query() ) {
+			$this->setError( $database->getErrorMsg() );
+			return false;
+		}
+
+		$query = 'INSERT INTO g2_ChildEntity'
+				. ' ( `g_id`, `g_parentId` )'
+				. ' VALUES ( \'' . $entityid . '\', \'' . $parentid . '\' )'
 				;
 		$database->setQuery( $query );
 
@@ -279,13 +348,12 @@ class mi_g2 extends MI
 	{
 		global $database;
 
-		// Create Entity
 		$query = 'SELECT max(g_id)'
-				. ' FROM g2_User'
+				. ' FROM g2_Entity'
 				;
 		$database->setQuery( $query );
 
-		$entityid = $database->loadResult() + 1;
+		$userid = $database->loadResult() + 1;
 
 		$query = 'SELECT max(g_serialNumber)'
 				. ' FROM g2_Entity'
@@ -297,7 +365,7 @@ class mi_g2 extends MI
 
 		$query = 'INSERT INTO g2_Entity'
 				. ' ( `g_id`, `g_creationTimestamp`, `g_isLinkable`, `g_linkId`, `g_modificationTimestamp`, `g_serialNumber`, `g_entityType`, `g_onLoadHandlers` )'
-				. ' VALUES ( \'' . $entityid . '\', \'' . time() . '\', \'0\', NULL, \'' . time() . '\', \'' . $serial . '\', \'GalleryUser\', NULL )'
+				. ' VALUES ( \'' . $userid . '\', \'' . time() . '\', \'0\', NULL, \'' . time() . '\', \'1\', \'GalleryUser\', NULL )'
 				;
 		$database->setQuery( $query );
 		if ( !$database->query() ) {
@@ -305,11 +373,16 @@ class mi_g2 extends MI
 			return false;
 		}
 
-		$g2id = $entityid;
+		$query = 'SELECT max(g_id)'
+				. ' FROM g2_User'
+				;
+		$database->setQuery( $query );
+
+		$g2id = $database->loadResult() + 1;
 
 		$query = 'INSERT INTO g2_User'
 				. ' ( `g_id`, `g_userName`, `g_fullName`, `g_hashedPassword`, `g_email`, `g_language`, `g_locked` )'
-				. ' VALUES ( \'' . $g2id . '\', \'' . $metaUser->cmsUser->username . '\', \'' . $metaUser->cmsUser->name . '\', \'' . $metaUser->cmsUser->password . '\', \'' . $metaUser->cmsUser->email . '\', NULL, \'0\' )'
+				. ' VALUES ( \'' . $userid . '\', \'' . $metaUser->cmsUser->username . '\', \'' . $metaUser->cmsUser->name . '\', \'' . $metaUser->cmsUser->password . '\', \'' . $metaUser->cmsUser->email . '\', NULL, \'0\' )'
 				;
 		$database->setQuery( $query );
 		if ( !$database->query() ) {
@@ -319,7 +392,7 @@ class mi_g2 extends MI
 
 		$query = 'INSERT INTO g2_ExternalIdMap'
 				. ' ( `g_externalId`, `g_entityType`, `g_entityId` )'
-				. ' VALUES ( \'' . $metaUser->cmsUser->id . '\', \'GalleryUser\', \'' . $g2id . '\' )'
+				. ' VALUES ( \'' . $metaUser->cmsUser->id . '\', \'GalleryUser\', \'' . $userid . '\' )'
 				;
 		$database->setQuery( $query );
 		if ( !$database->query() ) {
@@ -328,11 +401,11 @@ class mi_g2 extends MI
 		}
 
 		// Add to standard groups
-		$this->mapUserToGroup( $g2id, 2 );
-		$this->mapUserToGroup( $g2id, 4 );
+		$this->mapUserToGroup( $userid, 2 );
+		$this->mapUserToGroup( $userid, 4 );
 
 		if ( $database->query() ) {
-			return $g2id;
+			return $userid;
 		} else {
 			$this->setError( $database->getErrorMsg() );
 			return false;

@@ -1018,8 +1018,8 @@ class Config_General extends jsonDBTable
 		$def['recaptcha_privatekey']			= '';
 		$def['recaptcha_publickey']				= '';
 		$def['ssl_signup']						= 0;
-		$def['error_notification_level']		= 8;
-		$def['email_notification_level']		= 8;
+		$def['error_notification_level']		= 32;
+		$def['email_notification_level']		= 128;
 		$def['temp_auth_exp']					= 60;
 		$def['skip_confirmation']				= 0;
 		$def['show_fixeddecision']				= 0;
@@ -1081,6 +1081,8 @@ class Config_General extends jsonDBTable
 			$this->CleanDuplicatedRows();
 			$this->load(1);
 		}
+
+		$this->cfg['aec_version'] = _AEC_VERSION;
 
 		$this->storeload();
 	}

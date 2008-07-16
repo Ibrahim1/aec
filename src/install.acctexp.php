@@ -166,24 +166,26 @@ function com_install()
 	global $aecConfig;
 
 	if ( isset( $aecConfig->cfg['aec_version'] ) ) {
-		version_compare( $aecConfig->cfg['aec_version'], _AEC_VERSION );
+		$oldversion = $aecConfig->cfg['aec_version'];
+	} else {
+		$oldversion = false;
 	}
 
 	if ( !$newinstall ) {
-		$oldupdates = array( '0_6_0', '0_8_0', '0_10_0', '0_12_0', '0_12_6i' );
-
 		// Check if we are upgrading from before 0.12.6RC2j - then we need to check everything before that
-		if ( !isset( $aecConfig->cfg['aec_version'] ) ) {
+		if ( empty( $oldversion ) ) {
+			$oldupdates = array( '0_6_0', '0_8_0', '0_10_0', '0_12_0', '0_12_6i' );
+
 			foreach ( $oldupdates as $upd ) {
 				require_once( $incpath . '/upgrade_' . $upd . '.inc.php' );
 			}
-		} else {
-			$updates = array();
-
-			// Load include files (filter out old updates)
-			// Determine point from which to upgrade
-			// Carry out upgrades
 		}
+
+		$updates = array();
+
+		// Load include files (filter out old updates)
+		// Determine point from which to upgrade
+		// Carry out upgrades
 	}
 
 	// Set Version
