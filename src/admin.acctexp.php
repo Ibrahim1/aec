@@ -2975,6 +2975,7 @@ function editMicroIntegration ( $id, $option )
 	if ( !$mi->id ) {
 		// Set lowest ordering
 		$mi->ordering	= 9999;
+		$mi->active		= 1;
 		$mi_list		= array();
 		$mi_htmllist	= array();
 

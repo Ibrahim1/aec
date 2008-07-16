@@ -27,6 +27,7 @@ class mi_g2 extends MI
 		global $database;
 
 		$settings = array();
+		$settings['gallery2path']		= array( 'inputD' );
 		$settings['set_groups']			= array( 'list_yesno' );
 		$settings['groups']				= array( 'list' );
 		$settings['set_groups_user']	= array( 'list_yesno' );
@@ -114,13 +115,15 @@ class mi_g2 extends MI
 	{
 		global $database;
 
+		$this->loadG2Embed();
+
 		$g2userid = $this->catchG2userid( $request->metaUser );
 
 		$groups = array();
 
 		if ( $this->settings['set_groups'] ) {
-			$groups = $this->settings['groups'];
-			foreach ( $groups as $groupid ) {
+			$g = $this->settings['groups'];
+			foreach ( $g as $groupid ) {
 				$this->mapUserToGroup( $g2userid, $groupid );
 				$groups[] = $groupid;
 			}
@@ -174,6 +177,14 @@ class mi_g2 extends MI
 	function profile_info( $userid )
 	{}
 
+	function loadG2Embed()
+	{
+		if ( !empty( $this->settings['gallery2path'] ) ) {
+			include_once( $this->settings['gallery2path'] . '/embed.php' );
+			include_once( $this->settings['gallery2path'] . '/modules/core/classes/GalleryCoreApi.class' );
+		}
+	}
+
 	function mapUserToGroup( $g2userid, $groupid )
 	{
 		global $database;
@@ -185,16 +196,9 @@ class mi_g2 extends MI
 		$database->setQuery( $query );
 
 		if ( !$database->loadResult() ) {
-			$query = 'INSERT INTO g2_UserGroupMap'
-					. ' ( `g_userId`, `g_groupId` )'
-					. ' VALUES ( \'' . $g2userid . '\', \'' . $groupid . '\' )'
-					;
-			$database->setQuery( $query );
-
-			if ( $database->query() ) {
-				return true;
-			} else {
-				$this->setError( $database->getErrorMsg() );
+			list ($ret, $group) = GalleryCoreApi::addUserToGroup( $g2userid, $groupid );
+			if ($ret) {
+				$this->setError( $ret->_errorMessage );
 				return false;
 			}
 		} else {
@@ -240,65 +244,13 @@ class mi_g2 extends MI
 			return null;
 		}
 
-		// Create Entity
-		$query = 'SELECT max(g_id)'
-				. ' FROM g2_Entity'
-				;
-		$database->setQuery( $query );
-
-		$entityid = $database->loadResult() + 1;
-
-		$query = 'SELECT max(g_serialNumber)'
-				. ' FROM g2_Entity'
-				. ' WHERE `g_entityType` = \'GalleryAlbumItem\''
-				;
-		$database->setQuery( $query );
-
-		$serial = $database->loadResult() + 1;
-
-		$query = 'INSERT INTO g2_Entity'
-				. ' ( `g_id`, `g_creationTimestamp`, `g_isLinkable`, `g_linkId`, `g_modificationTimestamp`, `g_serialNumber`, `g_entityType`, `g_onLoadHandlers` )'
-				. ' VALUES ( \'' . $entityid . '\', \'' . time() . '\', \'0\', NULL, \'' . time() . '\', \'1\', \'GalleryAlbumItem\', NULL )'
-				;
-		$database->setQuery( $query );
-
-		if ( !$database->query() ) {
-			$this->setError( $database->getErrorMsg() );
+		list ($ret, $group) = GalleryCoreApi::createAlbum( $parentid, $albumname, $albumname, '', '', ''  );
+		if ($ret) {
+			$this->setError( $ret->_errorMessage );
 			return false;
 		}
 
-		$query = 'INSERT INTO g2_Item'
-				. ' ( `g_id`, `g_canContainChildren`, `g_description`, `g_keywords`, `g_ownerId`, `g_renderer`, `g_summary`, `g_title`, `g_viewedSinceTimestamp`, `g_originationTimestamp` )'
-				. ' VALUES ( \'' . $entityid . '\', \'1\', \'\', NULL, \'' . $g2userid . '\', NULL, \'' . $albumname . '\', \'' . $albumname . '\', \'' . time() . '\', \'' . time() . '\' )'
-				;
-		$database->setQuery( $query );
-
-		if ( !$database->query() ) {
-			$this->setError( $database->getErrorMsg() );
-			return false;
-		}
-
-		$query = 'INSERT INTO g2_AlbumItem'
-				. ' ( `g_id`, `g_theme`, `g_orderBy`, `g_orderDirection` )'
-				. ' VALUES ( \'' . $entityid . '\', \'\', \'\', \'asc\' )'
-				;
-		$database->setQuery( $query );
-
-		if ( !$database->query() ) {
-			$this->setError( $database->getErrorMsg() );
-			return false;
-		}
-
-		$query = 'INSERT INTO g2_ChildEntity'
-				. ' ( `g_id`, `g_parentId` )'
-				. ' VALUES ( \'' . $entityid . '\', \'' . $parentid . '\' )'
-				;
-		$database->setQuery( $query );
-
-		if ( !$database->query() ) {
-			$this->setError( $database->getErrorMsg() );
-			return false;
-		}
+		return true;
 	}
 
 	function deleteUserFromGroup( $g2userid, $groupid )
@@ -355,48 +307,15 @@ class mi_g2 extends MI
 
 		$userid = $database->loadResult() + 1;
 
-		$query = 'SELECT max(g_serialNumber)'
-				. ' FROM g2_Entity'
-				. ' WHERE `g_entityType` = \'GalleryUser\''
-				;
-		$database->setQuery( $query );
+		$args = array();
+		$args['username']		= $metaUser->cmsUser->username;
+		$args['fullname']		= $metaUser->cmsUser->name;
+		$args['hashedpassword']	= $metaUser->cmsUser->password;
+		$args['email']			= $metaUser->cmsUser->email;
 
-		$serial = $database->loadResult() + 1;
-
-		$query = 'INSERT INTO g2_Entity'
-				. ' ( `g_id`, `g_creationTimestamp`, `g_isLinkable`, `g_linkId`, `g_modificationTimestamp`, `g_serialNumber`, `g_entityType`, `g_onLoadHandlers` )'
-				. ' VALUES ( \'' . $userid . '\', \'' . time() . '\', \'0\', NULL, \'' . time() . '\', \'1\', \'GalleryUser\', NULL )'
-				;
-		$database->setQuery( $query );
-		if ( !$database->query() ) {
-			$this->setError( $database->getErrorMsg() );
-			return false;
-		}
-
-		$query = 'SELECT max(g_id)'
-				. ' FROM g2_User'
-				;
-		$database->setQuery( $query );
-
-		$g2id = $database->loadResult() + 1;
-
-		$query = 'INSERT INTO g2_User'
-				. ' ( `g_id`, `g_userName`, `g_fullName`, `g_hashedPassword`, `g_email`, `g_language`, `g_locked` )'
-				. ' VALUES ( \'' . $userid . '\', \'' . $metaUser->cmsUser->username . '\', \'' . $metaUser->cmsUser->name . '\', \'' . $metaUser->cmsUser->password . '\', \'' . $metaUser->cmsUser->email . '\', NULL, \'0\' )'
-				;
-		$database->setQuery( $query );
-		if ( !$database->query() ) {
-			$this->setError( $database->getErrorMsg() );
-			return false;
-		}
-
-		$query = 'INSERT INTO g2_ExternalIdMap'
-				. ' ( `g_externalId`, `g_entityType`, `g_entityId` )'
-				. ' VALUES ( \'' . $metaUser->cmsUser->id . '\', \'GalleryUser\', \'' . $userid . '\' )'
-				;
-		$database->setQuery( $query );
-		if ( !$database->query() ) {
-			$this->setError( $database->getErrorMsg() );
+		list ($ret, $group) = GalleryEmbed::createUser( $metaUser->cmsUser->id, $args );
+		if ($ret) {
+			$this->setError( $ret->_errorMessage );
 			return false;
 		}
 
