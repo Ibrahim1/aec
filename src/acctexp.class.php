@@ -647,8 +647,8 @@ class metaUser
 						case 'plan_previous':
 							if ( $this->hasSubscription ) {
 								if (
-									( in_array( (int) $this->meta->getPreviousPlan, $check ) )
-									|| ( ( in_array( 0, $check ) ) && is_null( $this->focusSubscription->previous_plan ) )
+									( in_array( (int) $this->meta->getPreviousPlan(), $check ) )
+									|| ( ( in_array( 0, $check ) ) && is_null( $this->meta->getPreviousPlan() ) )
 									) {
 									$status = true;
 								}
@@ -927,6 +927,23 @@ class metaUserDB extends jsonDBTable
 		return true;
 	}
 
+	function getUsedPlans()
+	{
+		return $this->plan_history->used_plans;
+	}
+
+	function getPreviousPlan()
+	{
+		$last = count( $this->plan_history->plan_history ) - 1;
+
+		if ( $last < 0 ) {
+			return null;
+		} elseif ( isset( $this->plan_history->plan_history[$last] ) ) {
+			return $this->plan_history->plan_history[$last];
+		} else {
+			return null;
+		}
+	}
 }
 
 class Config_General extends jsonDBTable
