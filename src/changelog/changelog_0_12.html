@@ -1333,6 +1333,13 @@ color: #333;
 </li>
 <li><strong>MicroIntegrations</strong>
 <ul>
+<li><strong>New Integrations</strong>
+<ul>
+<li class="finish">G2 MI</li>
+<li>RSgallery2 MI</li>
+<li class="check">SOBI MI</li>
+</ul>
+</li>
 <li><strong>Change in the MI API</strong>
 <ul>
 <li>No longer passing $params, but making it a property of the processor object - $this-&gt;settings</li>
@@ -1353,15 +1360,12 @@ color: #333;
 <li>Changes to how MIs are called up (or rather its actions or the central RelayAction)</li>
 <li class="check">MI rebuild standardized, this fixes Rebuild for some MIs (like Fireboard, JUGA and others) - This means that by adding the setting 'rebuild', the AEC will do everything else automatically!</li>
 <li class="check">Complementary "remove" option to "rebuild" - will carry out the MI expiration action for every user related to a plan that has the MI</li>
-<li class="finish">G2 MI</li>
-<li>RSgallery2 MI</li>
-<li>Fix Mosets Tree MI hacks (please redo the hacks)</li>
+<li>Fix Mosets Tree MI hacks (twice! please redo the hacks!)</li>
 <li class="check">Publish/Unpublish users listings for Mosets Tree</li>
 <li class="check">Publish/Unpublish users listings for HotProperty</li>
 <li class="check">Publish/Unpublish users listings for SOBI</li>
 <li>Remository MI official fix by Martin Brampton (thanks!)</li>
 <li>Fix email MI not sending out to multiple addresses (or addressees?)</li>
-<li class="check">SOBI MI</li>
 <li>Fixes for HTTP Query MI</li>
 </ul>
 </li>
@@ -1376,6 +1380,13 @@ color: #333;
 <li>fixing broken language calling</li>
 <li>AECaccess plugin: fix for subdirectories</li>
 <li>Fixing registration Hack #6</li>
+</ul>
+</li>
+<li><strong>Installer Revamping</strong>
+<ul>
+<li>Installer down to 2MB (a common hosting php upload limit)</li>
+<li class="finish">Versioning support in install to easier select necessary updates</li>
+<li>Break down install into .inc's</li>
 </ul>
 </li>
 <li><strong>Minor</strong>
@@ -1402,7 +1413,6 @@ color: #333;
 <li>Applying Static Coupons in the backend now works</li>
 <li>Fixing Coupons Max Per User reuse</li>
 <li>moving from mosConfig_offset_user to mosConfig_offset</li>
-<li>Installer down to 2MB (a common hosting php upload limit)</li>
 <li>Fixing Export</li>
 <li>Fixing a rounding error in Coupon Application (294.95 - 249.94 is apparently 0.0099999...)</li>
 <li>Fixing about 5 bugs that would wreck any upgrade from a version earlier than 0.10</li>
@@ -1438,10 +1448,8 @@ color: #333;
 <li class="check">The HP MI will be the first to use that - modifying the cost of the plan by the amount of listings a user chose</li>
 <li class="check">Tabs on Checkout</li>
 <li class="check">eCheck for CIM</li>
-<li class="check">Versioning support in install to easier select necessary updates</li>
-<li class="check">Break down install into .inc's</li>
 <li class="check">Fixing Settings view for IE7</li>
-<li class="todo">Plan application MI</li>
+<li class="check">Plan application MI</li>
 <li class="todo">Express Checkout and PreAuth for PayPal Pro</li>
 <li class="todo">Restrictions Plan Setting: "or similar" and "or equal" plans</li>
 </ul>

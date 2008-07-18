@@ -8,104 +8,48 @@
  * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
  */
 
-// Copyright (C) 2006-2007 David Deutsch
-// All rights reserved.
-// This source file is part of the Account Expiration Control Component, a  Joomla
-// custom Component By Helder Garcia and David Deutsch - http://www.globalnerd.org
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License (GPL)
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// Please note that the GPL states that any headers in files and
-// Copyright notices as well as credits in headers, source files
-// and output (screens, prints, etc.) can not be removed.
-// You can extend them with your own credits, though...
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-//
-// The "GNU General Public License" (GPL) is available at
-// http://www.gnu.org/copyleft/gpl.html.
-
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_email
+class mi_aecplan
 {
-	function Info()
-	{
-		$info = array();
-		$info['name'] = _AEC_MI_NAME_EMAIL;
-		$info['desc'] = _AEC_MI_DESC_EMAIL;
-
-		return $info;
-	}
-
 	function Settings()
 	{
+		global $database;
+
+		$query = 'SELECT `id` AS value, `name` AS text'
+				. ' FROM #__acctexp_plans'
+				. ' WHERE `active` = 1'
+				;
+		$database->setQuery( $query );
+		$payment_plans = $database->loadObjectList();
+
+		$total_plans = min( max( (count( $payment_plans ) + 1 ), 4 ), 20 );
+
 		$settings = array();
-		$settings['sender']				= array( 'inputE' );
-		$settings['sender_name']		= array( 'inputE' );
 
-		$settings['recipient']			= array( 'inputE' );
+		$settings['plan_apply']						= array( 'list' );
+		$settings['lists']['plan_apply']			= mosHTML::selectList( $payment_plans, 'plan_apply', 'size="' . $total_plans, 'value', 'text', $this->settings['plan_apply'] );
 
-		$settings['subject']			= array( 'inputE' );
-		$settings['text_html']			= array( 'list_yesno' );
-		$settings['text']				= array( !empty( $this->settings['text_html'] ) ? 'editor' : 'inputD' );
+		$settings['plan_apply_exp']					= array( 'list' );
+		$settings['lists']['plan_apply_exp']		= mosHTML::selectList( $payment_plans, 'plan_apply_exp', 'size="' . $total_plans, 'value', 'text', $this->settings['plan_apply_exp'] );
 
-		$settings['subject_first']		= array( 'inputE' );
-		$settings['text_first_html']	= array( 'list_yesno' );
-		$settings['text_first']			= array( !empty( $this->settings['text_first_html'] ) ? 'editor' : 'inputD' );
-
-		$settings['subject_exp']		= array( 'inputE' );
-		$settings['text_exp_html']		= array( 'list_yesno' );
-		$settings['text_exp']			= array( !empty( $this->settings['text_exp_html'] ) ? 'editor' : 'inputD' );
-
-		$settings['subject_pre_exp']	= array( 'inputE' );
-		$settings['text_pre_exp_html']	= array( 'list_yesno' );
-		$settings['text_pre_exp']		= array( !empty( $this->settings['text_pre_exp_html'] ) ? 'editor' : 'inputD' );
-
-		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
-		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+		$settings['plan_apply_pre_exp']				= array( 'list' );
+		$settings['lists']['plan_apply_pre_exp']	= mosHTML::selectList( $payment_plans, 'plan_apply_pre_exp', 'size="' . $total_plans, 'value', 'text', $this->settings['plan_apply_pre_exp'] );
 
 		return $settings;
 	}
 
 	function relayAction( $request, $area )
 	{
-		if ( $area == '' ) {
-			if ( !empty( $this->settings['text_first'] ) ) {
-				if ( empty( $request->metaUser->objSubscription->previous_plan ) && ( $request->metaUser->objSubscription->status == 'Pending' ) ) {
-					$area = '_first';
-				}
-			}
-		}
+		global $database;
 
-		$message	= AECToolbox::rewriteEngineRQ( $this->settings['text' . $area], $request );
-		$subject	= AECToolbox::rewriteEngineRQ( $this->settings['subject' . $area], $request );
+		$new_plan = new SubscriptionPlan( $database );
+		$new_plan->load( $this->settings['plan_apply'.$area] );
 
-		if ( empty( $message ) ) {
-			return null;
-		}
+		$request->metaUser->establishFocus( $new_plan, 'none' );
 
-		$recipients = AECToolbox::rewriteEngineRQ( $this->settings['recipient'], $request );
-		$recips = explode( ',', $recipients );
-
-        $recipients2 = array();
-        foreach ( $recips as $k => $email ) {
-            $recipients2[$k] = trim( $email );
-        }
-        $recipients = $recipients2;
-
-		mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text' . $area . '_html'] );
+		$metaUser->focusSubscription->applyUsage( $this->settings['plan_apply'.$area], 'none', 0, 1 );
 
 		return true;
 	}
