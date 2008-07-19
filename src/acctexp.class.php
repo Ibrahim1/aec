@@ -3536,11 +3536,11 @@ class SubscriptionPlan extends jsonDBTable
 			if ( !$metaUser->hasSubscription || empty( $this->params['make_primary'] ) ) {
 				$metaUser->establishFocus( $this, $processor );
 
-				$is_pending		= true;
-				$is_trial		= false;
+				$is_pending	= true;
+				$is_trial	= false;
 			} else {
-				$is_pending		= ( strcmp( $metaUser->focusSubscription->status, 'Pending' ) === 0 );
-				$is_trial		= ( strcmp( $metaUser->focusSubscription->status, 'Trial' ) === 0 );
+				$is_pending	= ( strcmp( $metaUser->focusSubscription->status, 'Pending' ) === 0 );
+				$is_trial	= ( strcmp( $metaUser->focusSubscription->status, 'Trial' ) === 0 );
 			}
 
 			$comparison		= $this->doPlanComparison( $metaUser->focusSubscription );
@@ -7519,7 +7519,7 @@ class AECToolbox
 
 				// If user activation is turned on, we need to set the activation information
 				$useractivation = $usersConfig->get( 'useractivation' );
-				if ($useractivation == '1')
+				if ( ($useractivation == '1') || $overrideActivation )
 				{
 					jimport('joomla.user.helper');
 					$user->set('activation', md5( JUserHelper::genRandomPassword()) );
@@ -7553,7 +7553,7 @@ class AECToolbox
 				$row->usertype 	= '';
 				$row->gid 		= $acl->get_group_id( 'Registered', 'ARO' );
 
-				if ( $mosConfig_useractivation == 1 ) {
+				if ( ( $mosConfig_useractivation == 1 ) && !$overrideActivation ) {
 					$row->activation = md5( mosMakePassword() );
 					$row->block = '1';
 				}
@@ -7589,7 +7589,7 @@ class AECToolbox
 			$subject 	= sprintf ( _AEC_SEND_SUB, $name, $mainframe->getCfg( 'sitename' ) );
 			$subject 	= html_entity_decode( $subject, ENT_QUOTES );
 
-			if ( $mosConfig_useractivation == 1 ) {
+			if ( ( $mosConfig_useractivation == 1 ) && !$overrideActivation ) {
 				$message = sprintf( _AEC_USEND_MSG_ACTIVATE, $name, $mosConfig_sitename, $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=".$row->activation, $mosConfig_live_site, $username, $pwd );
 			} else {
 				$message = sprintf( _AEC_USEND_MSG, $name, $mosConfig_sitename, $mosConfig_live_site );
