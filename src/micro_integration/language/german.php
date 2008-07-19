@@ -590,4 +590,14 @@ define( '_MI_MI_RSGALLERY2_UNPUBLISH_ALL_DESC',			'Unpublish the user-galleries 
 define( '_MI_MI_RSGALLERY2_GALLERY_USERSELECT_NAME',	'Select Gallery' );
 define( '_MI_MI_RSGALLERY2_GALLERY_USERSELECT_DESC',	'Please select a Gallery' );
 
+// AEC Plan MI
+define( '_AEC_MI_AECPLAN_NAME', 'AEC Plan Application' );
+define( '_AEC_MI_AECPLAN_DESC', 'Apply a payment plan to a user' );
+define( '_MI_MI_AECPLAN_PLAN_APPLY_NAME',		'Apply Plan' );
+define( '_MI_MI_AECPLAN_PLAN_APPLY_DESC',		'Apply this payment plan (for free) when the MI is carried out' );
+define( '_MI_MI_AECPLAN_PLAN_APPLY_EXP_NAME',		'Apply Plan (Expiration)' );
+define( '_MI_MI_AECPLAN_PLAN_APPLY_EXP_DESC',		'Apply this payment plan (for free) when the MI is carried out on expiration' );
+define( '_MI_MI_AECPLAN_PLAN_APPLY_PRE_EXP_NAME',		'Apply Plan (Before Expiration)' );
+define( '_MI_MI_AECPLAN_PLAN_APPLY_PRE_EXP_DESC',		'Apply this payment plan (for free) when the MI is carried out before expiration' );
+
 ?>

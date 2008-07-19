@@ -7409,7 +7409,7 @@ class AECToolbox
 		return true;
 	}
 
-	function saveUserRegistration( $option, $var, $internal=false )
+	function saveUserRegistration( $option, $var, $internal=false, $overrideActivation=false )
 	{
 		global $database, $mainframe, $task, $acl, $aecConfig; // Need to load $acl for Joomla and CBE
 
