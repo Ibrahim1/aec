@@ -625,7 +625,7 @@ define( '_CFG_GENERAL_EXPIRATION_CUSHION_DESC',			'Anzahl der Stunden welche AEC
 define( '_CFG_GENERAL_HEARTBEAT_CYCLE_NAME',			'Cronjob Zyklus:' );
 define( '_CFG_GENERAL_HEARTBEAT_CYCLE_DESC',			'Anzahl der Stunden die AEC als Trigger nimmt um anstehende, wiederkehrende Aktionen (wie z.B. Emailversand) auszuf&uuml;hren.' );
 define( '_CFG_GENERAL_PLANS_FIRST_NAME',			'Plan Zuerst:' );
-define( '_CFG_GENERAL_PLANS_FIRST_DESC',			'Wenn alle o.a. Zusatzkomponenten mit einer Aboaktion verbunden sind, aktiviert diese Option diese M&ouml;glichkeit. Falls das nicht gew&uuml;nscht ist oder nur die erste Integrationsm&ouml;glichkeit zur Auswahl stehen soll, dann hier nicht aktivieren - die Aboauswahl kommt dann <strong>nach</strong> der Anmeldung/Registrierung.' );
+define( '_CFG_GENERAL_PLANS_FIRST_DESC',			'Wenn alle Zusatzkomponenten mit einer Aboaktion verbunden sind, zeigt diese Option die Bezahlpl&auml;ne zuerst. Falls das nicht gew&uuml;nscht ist oder nur die erste Integrationsm&ouml;glichkeit zur Auswahl stehen soll, dann hier nicht aktivieren - die Aboauswahl kommt dann <strong>nach</strong> der Anmeldung/Registrierung.' );
 
 define( '_CFG_TAB_CUSTOMIZATION_TITLE',	'Anpassen' );
 define( '_CFG_TAB_CUSTOMIZATION_SUBTITLE', 'Anpassungen');

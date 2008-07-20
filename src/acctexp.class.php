@@ -754,6 +754,35 @@ class metaUser
 			return false;
 		}
 	}
+
+	function getProperty( $key )
+	{
+		if ( !is_array( $key ) ) {
+			return $this->$key;
+		} else {
+
+			// {\"mi\":{\"6\":{\"_jsoon\":{\"relational_array\":true},\"mi_gallery_0\":\"1\",\"mi_gallery_1\":\"2\"}}}
+	// {aecjson}{"cmd":"metaUser","vars":"meta.params.mi.6.mi_gallery_0"}{/aecjson}
+
+			foreach ( $key as $k ) {
+
+				$var = $key[0];
+				unset( $key[0] );
+
+				if ( is_object( $subject ) ) {
+					$temp = $subject->$var;
+					$result = $temp;
+
+					if ( count( $key ) > 0 ) {
+						return AECToolbox::metaUserDive( $metaUser, $vars );
+					}
+				} elseif ( is_array( $result ) ) {
+					$temp = $result[$var];
+					$result = $temp;
+				}
+			}
+		}
+	}
 }
 
 class metaUserDB extends jsonDBTable
@@ -4173,9 +4202,11 @@ class SubscriptionPlan extends jsonDBTable
 		// Filter out params
 		$fixed = array( 'full_free', 'full_amount', 'full_period', 'full_periodunit',
 						'trial_free', 'trial_amount', 'trial_period', 'trial_periodunit',
-						'gid_enabled', 'gid', 'lifetime', 'standard_parent', 'fallback',
-						'similarplans', 'equalplans', 'make_active', 'make_primary', 'update_existing',
-						'customthanks', 'customtext_thanks_keeporiginal', 'customtext_thanks' );
+						'gid_enabled', 'gid', 'lifetime', 'standard_parent',
+						'fallback', 'similarplans', 'equalplans', 'make_active',
+						'make_primary', 'update_existing', 'customthanks', 'customtext_thanks_keeporiginal',
+						'customtext_thanks', 'override_activation'
+						);
 
 		$params = array();
 		foreach ( $fixed as $varname ) {
@@ -8219,19 +8250,7 @@ class AECToolbox
 					return false;
 				}
 
-				// Start with the metaUser
-				$result = $metaUser;
-
-				// Iterate through the metaUser Object until we run out of stages
-				foreach ( $vars as $i => $var ) {
-					if ( is_object( $result ) ) {
-						$temp = $result->$var;
-						$result = $temp;
-					} elseif ( is_array( $result ) ) {
-						$temp = $result[$var];
-						$result = $temp;
-					}
-				}
+				$result = $metaUser->getProperty( $vars );
 				break;
 			case 'constant':
 				if ( defined( $vars ) ) {

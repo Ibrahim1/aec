@@ -1655,7 +1655,7 @@ class HTML_AcctExp
 						<table class="adminform" style="border-collapse:separate;">
 							<tr>
 								<td style="padding:10px;" valign="top">
-									<div style="position:relative;float:left;width:28%;padding:4px;">
+									<div style="position:relative;float:left;width:32%;padding:4px;">
 										<div class="userinfobox">
 											<div style="position:relative;float:left;width:100%;">
 												<?php
@@ -1668,8 +1668,11 @@ class HTML_AcctExp
 											<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
 										</div>
+										<div class="userinfobox">
+											<?php echo $aecHTML->createSettingsParticle( 'override_activation' ); ?>
+										</div>
 									</div>
-									<div style="position:relative;float:left;width:28%;padding:4px;">
+									<div style="position:relative;float:left;width:32%;padding:4px;">
 										<div class="userinfobox">
 											<?php echo $aecHTML->createSettingsParticle( 'full_free' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'full_amount' ); ?>
@@ -1686,7 +1689,7 @@ class HTML_AcctExp
 											<?php } ?>
 										</div>
 									</div>
-									<div style="position:relative;float:left;width:28%;padding:4px;">
+									<div style="position:relative;float:left;width:32%;padding:4px;">
 										<div class="userinfobox">
 											<?php echo $aecHTML->createSettingsParticle( 'gid_enabled' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'gid' ); ?>
