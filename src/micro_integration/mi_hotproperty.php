@@ -382,6 +382,7 @@ class mi_hotproperty extends MI
 		}
 
 		if ( $agent === false ) {
+			$this->setError( 'Agent was not found and could not be created' );
 			return false;
 		}
 
@@ -394,6 +395,7 @@ class mi_hotproperty extends MI
 		}
 
 		if ( $agent === false ) {
+			$this->setError( 'Agent was not found and could not be updated' );
 			return false;
 		}
 
@@ -403,6 +405,7 @@ class mi_hotproperty extends MI
 			}
 
 			if ( $company === false ) {
+				$this->setError( 'Company was not found and could not be created' );
 				return false;
 			}
 		}
@@ -418,6 +421,7 @@ class mi_hotproperty extends MI
 				}
 
 				if ( $company === false ) {
+					$this->setError( 'Company was not found and could not be updated' );
 					return false;
 				}
 			}
@@ -464,11 +468,7 @@ class mi_hotproperty extends MI
 			$mi_hphandler->store();
 		}
 
-		if ( $company === false ) {
-			return false;
-		} else {
-			return true;
-		}
+		return true;
 	}
 
 	function agentExists( $userid )
@@ -478,8 +478,8 @@ class mi_hotproperty extends MI
 		$query = 'SELECT id FROM #__hp_agents'
 				. ' WHERE user = \'' . $userid . '\''
 				;
-		$database->setQuery( $query );
-		$id = $database->loadResult();
+		$database->setQuery( $query );aecDebug($query);
+		$id = $database->loadResult();aecDebug($id);
 
 		if ( $id ) {
 			return $id;
@@ -521,7 +521,7 @@ class mi_hotproperty extends MI
 		$result = $database->query();
 
 		if ( $result ) {
-			return $check;
+			return $this->createAgent( $fields, $request );
 		} else {
 			$this->setError( $database->getErrorMsg() );
 			return false;
