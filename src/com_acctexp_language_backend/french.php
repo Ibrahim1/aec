@@ -675,6 +675,9 @@ define( '_PAYPLAN_GENERAL_CUSTOMTEXT_THANKS_KEEPORIGINAL_DESC', 'Select this opt
 define( '_PAYPLAN_GENERAL_CUSTOMTEXT_THANKS_NAME', 'Custom Text ThankYou Page');
 define( '_PAYPLAN_GENERAL_CUSTOMTEXT_THANKS_DESC', 'Text that will be displayed on the ThankYou Page');
 
+define( '_PAYPLAN_PARAMS_OVERRIDE_ACTIVATION_NAME', 'Override Activation');
+define( '_PAYPLAN_PARAMS_OVERRIDE_ACTIVATION_DESC', 'Override the requirement for a user to activate the account (via email activation code) in case this payment plan is used with a registration.');
+
 define( '_PAYPLAN_PARAMS_GID_ENABLED_NAME', 'Activer les groupes');
 define( '_PAYPLAN_PARAMS_GID_ENABLED_DESC', 'Positionnez &agrave;  Yes si vous voulez affecter les utilisateurs au groupe choisi.');
 define( '_PAYPLAN_PARAMS_GID_NAME', 'Ajouter au groupe:');

@@ -760,27 +760,46 @@ class metaUser
 		if ( !is_array( $key ) ) {
 			return $this->$key;
 		} else {
-
-			// {\"mi\":{\"6\":{\"_jsoon\":{\"relational_array\":true},\"mi_gallery_0\":\"1\",\"mi_gallery_1\":\"2\"}}}
-	// {aecjson}{"cmd":"metaUser","vars":"meta.params.mi.6.mi_gallery_0"}{/aecjson}
+			$subject = $this;
 
 			foreach ( $key as $k ) {
+					if ( is_object( $subject ) ) {
+						if ( isset( $subject->$k ) ) {
+							$return =& $subject->$k;
+						} else {
+							global $database;
 
-				$var = $key[0];
-				unset( $key[0] );
+							$event = 'Syntax Parser cannot parse next reference: ' . $k . '; does not exist!';
 
-				if ( is_object( $subject ) ) {
-					$temp = $subject->$var;
-					$result = $temp;
+							$eventlog = new eventLog( $database );
+							$eventlog->issue( 'AECjson cmd:metaUser Syntax Error', 'aecjson,metaUser,syntax,error', $event, 128, array() );
+						}
+					} elseif ( is_array( $subject ) ) {
+						if ( isset( $subject[$k] ) ) {
+							$return =& $subject[$k];
+						} else {
+							global $database;
 
-					if ( count( $key ) > 0 ) {
-						return AECToolbox::metaUserDive( $metaUser, $vars );
+							$event = 'Syntax Parser cannot parse next reference: ' . $k . '; does not exist!';
+
+							$eventlog = new eventLog( $database );
+							$eventlog->issue( 'AECjson cmd:metaUser Syntax Error', 'aecjson,metaUser,syntax,error', $event, 128, array() );
+						}
+
+					} else {
+						global $database;
+
+						$event = 'Syntax Parser cannot parse next reference: ' . $k . '; neither property nor array field';
+
+						$eventlog = new eventLog( $database );
+						$eventlog->issue( 'AECjson cmd:metaUser Syntax Error', 'aecjson,metaUser,syntax,error', $event, 128, array() );
+						return false;
 					}
-				} elseif ( is_array( $result ) ) {
-					$temp = $result[$var];
-					$result = $temp;
-				}
+
+				$subject =& $return;
 			}
+
+			return $return;
 		}
 	}
 }
@@ -7446,7 +7465,7 @@ class AECToolbox
 
 		// Let CB/JUSER think that everything is going fine
 		if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
-			if ( GeneralInfoRequester::detect_component( 'CBE' ) ) {
+			if ( GeneralInfoRequester::detect_component( 'CBE' ) || $overrideActivation ) {
 				global $ueConfig;
 			}
 
@@ -7454,6 +7473,10 @@ class AECToolbox
 			$task		= 'done';
 			include_once ( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
 			$task		= $savetask;
+
+			if ( $overrideActivation ) {
+				$ueConfig['reg_confirmation'] = 0;
+			}
 		} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
 			global $mosConfig_absolute_path;
 
@@ -8243,7 +8266,7 @@ class AECToolbox
 
 				// We also support dot notation for the vars,
 				// so explode if that is what the admin wants here
-				if ( !is_array( $vars ) && ( strpos( '.', $vars ) !== false ) ) {
+				if ( !is_array( $vars ) && ( strpos( $vars, '.' ) !== false ) ) {
 					$temp = explode( '.', $vars );
 					$vars = $temp;
 				} elseif ( !is_array( $vars ) ) {

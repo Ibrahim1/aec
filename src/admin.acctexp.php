@@ -2353,7 +2353,6 @@ function editSubscriptionPlan( $id, $option )
 	// params and their type values
 	$params['active']					= array( 'list_yesno', 1 );
 	$params['visible']					= array( 'list_yesno', 0 );
-	$params['override_activation']		= array( 'list_yesno', 0 );
 
 	$params['name']						= array( 'inputC', '' );
 	$params['desc']						= array( 'editor', '' );
@@ -2364,6 +2363,8 @@ function editSubscriptionPlan( $id, $option )
 	$params['micro_integrations']		= array( 'list', '' );
 
 	$params['params_remap']				= array( 'subarea_change', 'params' );
+
+	$params['override_activation']		= array( 'list_yesno', 0 );
 
 	$params['full_free']				= array( 'list_yesno', '' );
 	$params['full_amount']				= array( 'inputB', '' );

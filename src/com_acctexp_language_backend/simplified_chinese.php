@@ -785,6 +785,9 @@ define( '_PAYPLAN_GENERAL_ACTIVE_DESC', 'A published plan will be available to t
 define( '_PAYPLAN_GENERAL_VISIBLE_NAME', 'Visible:');
 define( '_PAYPLAN_GENERAL_VISIBLE_DESC', 'Visible Plans will show on the frontend. Invisible plans will not show and thus only be available to automatic application (like Fallbacks or Entry Plans).');
 
+define( '_PAYPLAN_PARAMS_OVERRIDE_ACTIVATION_NAME', 'Override Activation');
+define( '_PAYPLAN_PARAMS_OVERRIDE_ACTIVATION_DESC', 'Override the requirement for a user to activate the account (via email activation code) in case this payment plan is used with a registration.');
+
 define( '_PAYPLAN_PARAMS_GID_ENABLED_NAME', 'Enable usergroup');
 define( '_PAYPLAN_PARAMS_GID_ENABLED_DESC', 'Switch this to Yes if you want users to be assigned the selected usergroup.');
 define( '_PAYPLAN_PARAMS_GID_NAME', 'Add User to Group:');
