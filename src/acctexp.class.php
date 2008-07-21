@@ -146,10 +146,10 @@ class metaUser
 		$this->focusSubscription = null;
 
 		if ( $userid ) {
-			$this->userid = $userid;
-
 			$this->cmsUser = new mosUser( $database );
 			$this->cmsUser->load( $userid );
+
+			$this->userid = $userid;
 
 			$aecid = AECfetchfromDB::SubscriptionIDfromUserID( $userid );
 			if ( $aecid ) {
@@ -7381,6 +7381,7 @@ class AECToolbox
 		$metaUser = new metaUser( $id );
 
 		if ( $metaUser->hasSubscription ) {
+			$metaUser->setTempAuth();
 			$metaUser->objSubscription->verifyLogin( $metaUser->cmsUser->block );
 		} else {
 			if ( $aecConfig->cfg['require_subscription'] ) {
@@ -7391,7 +7392,7 @@ class AECToolbox
 
 					$metaUser = new metaUser( $id );
 					$metaUser->objSubscription->applyUsage( $aecConfig->cfg['entry_plan'], 'none', 1 );
-					AECToolbox::VerifyUsername( $username );
+					return AECToolbox::VerifyUsername( $username );
 				} else {
 					$invoices = AECfetchfromDB::InvoiceCountbyUserID( $metaUser->userid );
 
@@ -7430,6 +7431,7 @@ class AECToolbox
 		$metaUser = new metaUser( $id );
 
 		if ( $metaUser->hasSubscription ) {
+			$metaUser->setTempAuth();
 			return $metaUser->objSubscription->verify( $metaUser->cmsUser->block );
 		} else {
 			if ( $aecConfig->cfg['require_subscription'] ) {
@@ -7448,10 +7450,12 @@ class AECToolbox
 						$invoice = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $metaUser->userid );
 
 						if ( $invoice ) {
+							$metaUser->setTempAuth();
 							return 'open_invoice';
 						}
 					}
 
+					$metaUser->setTempAuth();
 					return 'subscribe';
 				}
 			}
@@ -9116,7 +9120,9 @@ class microIntegration extends jsonDBTable
 				foreach ( $userlist as $userid ) {
 					$metaUser = new metaUser( $userid );
 
-					$this->action( $params, $metaUser, null, $plan );
+					if ( $metaUser->cmsUser->id ) {
+						$this->action( $params, $metaUser, null, $plan );
+					}
 				}
 			}
 

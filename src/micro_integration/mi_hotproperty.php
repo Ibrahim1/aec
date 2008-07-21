@@ -478,8 +478,8 @@ class mi_hotproperty extends MI
 		$query = 'SELECT id FROM #__hp_agents'
 				. ' WHERE user = \'' . $userid . '\''
 				;
-		$database->setQuery( $query );aecDebug($query);
-		$id = $database->loadResult();aecDebug($id);
+		$database->setQuery( $query );
+		$id = $database->loadResult();
 
 		if ( $id ) {
 			return $id;
@@ -521,7 +521,11 @@ class mi_hotproperty extends MI
 		$result = $database->query();
 
 		if ( $result ) {
-			return $this->createAgent( $fields, $request );
+			$query = 'SELECT max(id)'
+					. ' FROM #__hp_agents'
+					;
+			$database->setQuery( $query );
+			return $database->loadResult();
 		} else {
 			$this->setError( $database->getErrorMsg() );
 			return false;
