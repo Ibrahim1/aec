@@ -90,7 +90,11 @@ if ( !function_exists( 'aecJoomla15check' ) ) {
 
 function aecGetParam( $name, $default='' )
 {
-	$return = mosGetParam( $_REQUEST, $name, $default, 0x0002 );
+	if ( aecJoomla15check() ) {
+		$return = mosGetParam( $_REQUEST, $name, $default, 2 );
+	} else {
+		$return = mosGetParam( $_REQUEST, $name, $default, 0x0002 );
+	}
 
 	if ( !is_array( $return ) ) {
 		$return = trim( $return );
