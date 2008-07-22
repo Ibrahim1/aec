@@ -430,20 +430,7 @@ class HTML_Results
 
 		HTML_frontend::aec_styling( $option );
 
-		if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) { ?>
-			<div class="componentheading"><?php echo _THANKYOU_TITLE; ?></div>
-		<?php
-		}
-		if ( $aecConfig->cfg['customtext_thanks'] ) { ?>
-			<p><?php echo $aecConfig->cfg['customtext_thanks']; ?></p>
-			<?php
-		}
-		if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) { ?>
-			<div id="thankyou_page">
-			<p><?php echo $msg; ?></p>
-			</div>
-			<?php
-		}
+		echo $msg;
 	}
 
 	function cancel( $option )

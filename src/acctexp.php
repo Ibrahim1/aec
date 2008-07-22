@@ -1121,7 +1121,15 @@ function errorAP( $option, $usage, $userid, $username, $name, $recurring )
 
 function thanks( $option, $renew, $free, $usage=null )
 {
-	global $database, $aecConfig, $mosConfig_useractivation, $ueConfig, $mosConfig_dbprefix;
+	global $database, $aecConfig, $mosConfig_useractivation, $ueConfig, $mainframe;
+
+	if ( $aecConfig->cfg['customthanks'] ) {
+		mosRedirect( $aecConfig->cfg['customthanks'] );
+	}
+
+	if ( empty( $usage ) ) {
+		$usage = aecGetParam( 'u' );
+	}
 
 	if ( $mosConfig_useractivation ) {
 		$activation = 1;
@@ -1130,60 +1138,60 @@ function thanks( $option, $renew, $free, $usage=null )
 	}
 
 	if ( $renew ) {
-		$msg = _SUB_FEPARTICLE_HEAD_RENEW
-		. '</p><p>'
-		. _SUB_FEPARTICLE_THANKSRENEW;
+		$msg = _SUB_FEPARTICLE_HEAD_RENEW . '</p><p>' . _SUB_FEPARTICLE_THANKSRENEW;
 		if ( $free ) {
 			$msg .= _SUB_FEPARTICLE_LOGIN;
 		} else {
-			$msg .= _SUB_FEPARTICLE_PROCESSPAY
-			. _SUB_FEPARTICLE_MAIL;
+			$msg .= _SUB_FEPARTICLE_PROCESSPAY . _SUB_FEPARTICLE_MAIL;
 		}
 	} else {
-		$msg = _SUB_FEPARTICLE_HEAD
-		. '</p><p>'
-		. _SUB_FEPARTICLE_THANKS;
-		if ( $free ) {
-			$msg .= _SUB_FEPARTICLE_PROCESS
-			. _SUB_FEPARTICLE_MAIL;
-		} else {
-			$msg .= _SUB_FEPARTICLE_PROCESSPAY
-			. _SUB_FEPARTICLE_MAIL;
-		}
+		$msg = _SUB_FEPARTICLE_HEAD . '</p><p>' . _SUB_FEPARTICLE_THANKS;
+
+		$msg .=  $free ? _SUB_FEPARTICLE_PROCESS : _SUB_FEPARTICLE_PROCESSPAY;
+
+		$msg .= $mosConfig_useractivation ? _SUB_FEPARTICLE_ACTMAIL : _SUB_FEPARTICLE_MAIL;
 	}
 
-	if ( empty( $usage ) ) {
-		$usage = aecGetParam( 'u' );
+	$b = '';
+	if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) {
+		$b .= '<div class="componentheading"' . _THANKYOU_TITLE . '</div>';
+	}
+
+	if ( $aecConfig->cfg['customtext_thanks'] ) {
+		$b .= $aecConfig->cfg['customtext_thanks'];
+	}
+
+	if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) {
+		$b .= '<div id="thankyou_page">' . '<p>' . $msg . '</p>' . '</div>';
 	}
 
 	if ( !empty( $usage ) ) {
 		$new_subscription = new SubscriptionPlan( $database );
 		$new_subscription->load( $usage );
-		$sub_params = $new_subscription->params;
+		$up =& $new_subscription->params;
 
-		if ( !empty( $sub_params['customthanks'] ) ) {
-			mosRedirect( $sub_params['customthanks'] );
+		if ( !empty( $up['customthanks'] ) ) {
+			mosRedirect( $up['customthanks'] );
 		} else {
-			if ( !empty( $sub_params['customtext_thanks'] ) ) {
-				if ( isset( $sub_params['customtext_thanks_keeporiginal'] ) ) {
-					if ( empty( $sub_params['customtext_thanks_keeporiginal'] ) ) {
-						$msg = $sub_params['customtext_thanks'];
+			if ( !empty( $up['customtext_thanks'] ) ) {
+				if ( isset( $up['customtext_thanks_keeporiginal'] ) ) {
+					if ( empty( $up['customtext_thanks_keeporiginal'] ) ) {
+						$msg = $up['customtext_thanks'];
 					} else {
-						$msg = $msg . $sub_params['customtext_thanks'];
+						$msg = $b . $up['customtext_thanks'];
 					}
 				} else {
-					$msg = $sub_params['customtext_thanks'];
+					$msg = $up['customtext_thanks'];
 				}
 			}
 		}
 	} else {
-		// Look whether we have a custom ThankYou page
-		if ( $aecConfig->cfg['customthanks'] ) {
-			mosRedirect( $aecConfig->cfg['customthanks'] );
-		} else {
-			HTML_Results::thanks( $option, $msg );
-		}
+		$msg = $b;
 	}
+
+	$mainframe->SetPageTitle( _THANKYOU_TITLE );
+
+	HTML_Results::thanks( $option, $msg );
 }
 
 function cancelPayment( $option )

@@ -5108,8 +5108,22 @@ class InvoiceFactory
 
 		$this->confirmed = 1;
 
+		if ( !empty( $this->usage ) ) {
+			// get the payment plan
+			$this->objUsage = new SubscriptionPlan( $database );
+			$this->objUsage->load( $this->usage );
+		}
+
 		if ( empty( $this->userid ) ) {
-			$this->userid = AECToolbox::saveUserRegistration( $option, $var );
+			if ( !empty( $this->objUsage ) ) {
+				if ( isset( $this->objUsage->params['override_activation'] ) ) {
+					$this->userid = AECToolbox::saveUserRegistration( $option, $var, false, $this->objUsage->params['override_activation'] );
+				} else {
+					$this->userid = AECToolbox::saveUserRegistration( $option, $var );
+				}
+			} else {
+				$this->userid = AECToolbox::saveUserRegistration( $option, $var );
+			}
 		}
 
 		$this->loadMetaUser( false, false );
@@ -5124,12 +5138,6 @@ class InvoiceFactory
 
 			// Make sure we have the correct amount loaded
 			$this->touchInvoice( $option );
-		}
-
-		if ( !empty( $this->usage ) ) {
-			// get the payment plan
-			$this->objUsage = new SubscriptionPlan( $database );
-			$this->objUsage->load( $this->usage );
 		}
 
 		if ( !empty( $this->objUsage ) ) {
@@ -5337,10 +5345,16 @@ class InvoiceFactory
 
 	function thanks( $option, $renew, $free )
 	{
-		global $database, $mosConfig_useractivation, $aecConfig, $mosConfig_dbprefix, $mainframe;
+		global $mosConfig_useractivation, $aecConfig, $mainframe;
 
-		if ( !empty( $sub_params['customthanks'] ) ) {
-			mosRedirect( $sub_params['customthanks'] );
+		if ( is_object( $this->objUsage ) ) {
+			if ( !empty( $this->objUsage->params['customthanks'] ) ) {
+				mosRedirect( $this->objUsage->params['customthanks'] );
+			} elseif ( $aecConfig->cfg['customthanks'] ) {
+				mosRedirect( $aecConfig->cfg['customthanks'] );
+			}
+		} else {
+			$this->simplethanks( $option, $renew, $free );
 		}
 
 		if ( isset( $this->renew ) ) {
@@ -5356,67 +5370,88 @@ class InvoiceFactory
 			}
 		} else {
 			$msg = _SUB_FEPARTICLE_HEAD . '</p><p>' . _SUB_FEPARTICLE_THANKS;
-			if ( $free ) {
-				if ( $mosConfig_useractivation ) {
-					$msg .= _SUB_FEPARTICLE_PROCESS . _SUB_FEPARTICLE_ACTMAIL;
+
+			$msg .=  $free ? _SUB_FEPARTICLE_PROCESS : _SUB_FEPARTICLE_PROCESSPAY;
+
+			$msg .= $mosConfig_useractivation ? _SUB_FEPARTICLE_ACTMAIL : _SUB_FEPARTICLE_MAIL;
+		}
+
+		$b = '';
+		if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) {
+			$b .= '<div class="componentheading"' . _THANKYOU_TITLE . '</div>';
+		}
+
+		if ( $aecConfig->cfg['customtext_thanks'] ) {
+			$b .= $aecConfig->cfg['customtext_thanks'];
+		}
+
+		if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) {
+			$b .= '<div id="thankyou_page">' . '<p>' . $msg . '</p>' . '</div>';
+		}
+
+		$up =& $this->objUsage->params;
+
+		if ( !empty( $up['customtext_thanks'] ) ) {
+			if ( isset( $up['customtext_thanks_keeporiginal'] ) ) {
+				if ( empty( $up['customtext_thanks_keeporiginal'] ) ) {
+					$msg = $up['customtext_thanks'];
 				} else {
-					$msg .= _SUB_FEPARTICLE_PROCESS . _SUB_FEPARTICLE_MAIL;
+					$msg = $b . $up['customtext_thanks'];
 				}
 			} else {
-				if ( $mosConfig_useractivation ) {
-					$msg .= _SUB_FEPARTICLE_PROCESSPAY . _SUB_FEPARTICLE_ACTMAIL;
-				} else {
-					$msg .= _SUB_FEPARTICLE_PROCESSPAY . _SUB_FEPARTICLE_MAIL;
-				}
+				$msg = $up['customtext_thanks'];
 			}
 		}
 
-		if ( is_object( $this->objUsage ) ) {
+		$mainframe->SetPageTitle( _THANKYOU_TITLE );
 
-			if ( !empty( $this->objUsage->params['customthanks'] ) ) {
-				mosRedirect( $this->objUsage->params['customthanks'] );
-			} else {
-				if ( !empty( $this->objUsage->params['customtext_thanks'] ) ) {
-					if ( isset( $this->objUsage->params['customtext_thanks_keeporiginal'] ) ) {
-						if ( empty( $this->objUsage->params['customtext_thanks_keeporiginal'] ) ) {
-							$msg = $this->objUsage->params['customtext_thanks'];
-						} else {
-							$msg = $msg . $this->objUsage->params['customtext_thanks'];
-						}
-					} else {
-						$msg = $this->objUsage->params['customtext_thanks'];
-					}
-				}
-			}
-		} else {
-			// Look whether we have a custom ThankYou page
-			if ( $aecConfig->cfg['customthanks'] ) {
-				mosRedirect( $aecConfig->cfg['customthanks'] );
-			} else {
-				HTML_Results::thanks( $option, $msg );
-			}
-		}
+		HTML_Results::thanks( $option, $msg );
+	}
 
-		if ( !empty( $this->objUsage->params['customtext_thanks'] ) ) {
-			if ( isset( $this->objUsage->params['customtext_thanks_keeporiginal'] ) ) {
-				if ( empty( $this->objUsage->params['customtext_thanks_keeporiginal'] ) ) {
-					$msg = $this->objUsage->params['customtext_thanks'];
-				} else {
-					$msg = $msg . $this->objUsage->params['customtext_thanks'];
-				}
-			} else {
-				$msg = $this->objUsage->params['customtext_thanks'];
-			}
-		}
+	function simplethanks( $option, $renew, $free )
+	{
+		global $mosConfig_useractivation, $aecConfig, $mainframe;
 
 		// Look whether we have a custom ThankYou page
 		if ( $aecConfig->cfg['customthanks'] ) {
 			mosRedirect( $aecConfig->cfg['customthanks'] );
-		} else {
-			$mainframe->SetPageTitle( _THANKYOU_TITLE );
-
-			HTML_Results::thanks( $option, $msg );
 		}
+
+		if ( isset( $this->renew ) ) {
+			$renew = $this->renew;
+		}
+
+		if ( $renew ) {
+			$msg = _SUB_FEPARTICLE_HEAD_RENEW . '</p><p>' . _SUB_FEPARTICLE_THANKSRENEW;
+			if ( $free ) {
+				$msg .= _SUB_FEPARTICLE_LOGIN;
+			} else {
+				$msg .= _SUB_FEPARTICLE_PROCESSPAY . _SUB_FEPARTICLE_MAIL;
+			}
+		} else {
+			$msg = _SUB_FEPARTICLE_HEAD . '</p><p>' . _SUB_FEPARTICLE_THANKS;
+
+			$msg .=  $free ? _SUB_FEPARTICLE_PROCESS : _SUB_FEPARTICLE_PROCESSPAY;
+
+			$msg .= $mosConfig_useractivation ? _SUB_FEPARTICLE_ACTMAIL : _SUB_FEPARTICLE_MAIL;
+		}
+
+		$b = '';
+		if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) {
+			$b .= '<div class="componentheading"' . _THANKYOU_TITLE . '</div>';
+		}
+
+		if ( $aecConfig->cfg['customtext_thanks'] ) {
+			$b .= $aecConfig->cfg['customtext_thanks'];
+		}
+
+		if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) {
+			$b .= '<div id="thankyou_page">' . '<p>' . $msg . '</p>' . '</div>';
+		}
+
+		$mainframe->SetPageTitle( _THANKYOU_TITLE );
+
+		HTML_Results::thanks( $option, $b );
 	}
 
 	function error( $option, $objUser, $invoice, $error )
