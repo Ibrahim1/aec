@@ -588,7 +588,7 @@ class Payment_HTML
 		<div id="box_pending">
 			<p><?php echo _AEC_PROMPT_PASSWORD; ?></p>
 			<?php
-				if ($wrong ) {
+				if ( $wrong ) {
 					echo '<p><strong>' . _AEC_PROMPT_PASSWORD_WRONG . '</strong></p>';
 				}
 			?>

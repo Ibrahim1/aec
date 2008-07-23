@@ -2365,6 +2365,7 @@ function editSubscriptionPlan( $id, $option )
 	$params['params_remap']				= array( 'subarea_change', 'params' );
 
 	$params['override_activation']		= array( 'list_yesno', 0 );
+	$params['override_regmail']			= array( 'list_yesno', 0 );
 
 	$params['full_free']				= array( 'list_yesno', '' );
 	$params['full_amount']				= array( 'inputB', '' );

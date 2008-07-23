@@ -4228,7 +4228,7 @@ class SubscriptionPlan extends jsonDBTable
 						'gid_enabled', 'gid', 'lifetime', 'standard_parent',
 						'fallback', 'similarplans', 'equalplans', 'make_active',
 						'make_primary', 'update_existing', 'customthanks', 'customtext_thanks_keeporiginal',
-						'customtext_thanks', 'override_activation'
+						'customtext_thanks', 'override_activation', 'override_regmail'
 						);
 
 		$params = array();
@@ -5117,10 +5117,18 @@ class InvoiceFactory
 		if ( empty( $this->userid ) ) {
 			if ( !empty( $this->objUsage ) ) {
 				if ( isset( $this->objUsage->params['override_activation'] ) ) {
-					$this->userid = AECToolbox::saveUserRegistration( $option, $var, false, $this->objUsage->params['override_activation'] );
+					$overrideActivation = $this->objUsage->params['override_activation'];
 				} else {
-					$this->userid = AECToolbox::saveUserRegistration( $option, $var );
+					$overrideActivation = false;
 				}
+
+				if ( isset( $this->objUsage->params['override_regmail'] ) ) {
+					$overrideEmail = $this->objUsage->params['override_regmail'];
+				} else {
+					$overrideEmail = false;
+				}
+
+				$this->userid = AECToolbox::saveUserRegistration( $option, $var, false, $overrideActivation, $overrideEmail );
 			} else {
 				$this->userid = AECToolbox::saveUserRegistration( $option, $var );
 			}
@@ -7502,7 +7510,7 @@ class AECToolbox
 		return true;
 	}
 
-	function saveUserRegistration( $option, $var, $internal=false, $overrideActivation=false )
+	function saveUserRegistration( $option, $var, $internal=false, $overrideActivation=false, $overrideEmails=false )
 	{
 		global $database, $mainframe, $task, $acl, $aecConfig; // Need to load $acl for Joomla and CBE
 
@@ -7519,6 +7527,15 @@ class AECToolbox
 
 			if ( $overrideActivation ) {
 				$ueConfig['reg_confirmation'] = 0;
+			}
+
+			if ( $overrideEmails ) {
+				$ueConfig['reg_welcome_sub'] = '';
+
+				// Only disable "Pending Approval / Confirmation" emails if it makes sense
+				if ( !$ueConfig['reg_confirmation'] || !$ueConfig['reg_admin_approval'] ) {
+					$ueConfig['reg_pend_appr_sub'] = '';
+				}
 			}
 		} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
 			global $mosConfig_absolute_path;
@@ -7714,7 +7731,7 @@ class AECToolbox
 			}
 
 			// Send email to user
-			if ( !$aecConfig->cfg['nojoomlaregemails'] ) {
+			if ( !$aecConfig->cfg['nojoomlaregemails'] || $overrideEmails ) {
 				mosMail( $adminEmail2, $adminName2, $email, $subject, $message );
 			}
 

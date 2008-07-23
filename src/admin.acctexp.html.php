@@ -1670,6 +1670,7 @@ class HTML_AcctExp
 										</div>
 										<div class="userinfobox">
 											<?php echo $aecHTML->createSettingsParticle( 'override_activation' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'override_regmail' ); ?>
 										</div>
 									</div>
 									<div style="position:relative;float:left;width:32%;padding:4px;">
