@@ -594,7 +594,7 @@ class Payment_HTML
 			?>
 			<div id="upgrade_button">
 				<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=com_acctexp', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
-					<input type="password" size="10" class="inputbox" id="password" name="password"/>
+					<input type="password" size="20" class="inputbox" id="password" name="password"/>
 					<?php
 						foreach ( $var as $name => $array ) {
 							echo '<input type="hidden" name="' . $array[0] . '" value="' . $array[1] . '" />';
