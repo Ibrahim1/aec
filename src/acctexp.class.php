@@ -8624,17 +8624,24 @@ class microIntegrationHandler
 
 		$mi_list = $this->getUserChangeIntegrations();
 
-		if ( is_array( $row ) ) {
+		if( is_int( $row ) ) {
+			$userid = $row;
+		}
+		elseif ( is_string( $row ) ){
+			$query = 'SELECT id'
+			. ' FROM #__users'
+			. ' WHERE username = \'' . $row . '\''
+			;
+			$database->setQuery( $query );
+			$userid = $database->loadResult();
+		} elseif ( is_array( $row ) ) {
 			$userid = $row['id'];
-
-			$row = new mosUser( $database );
-			$row->load( $userid );
 		} elseif ( !is_object( $row ) ) {
 			$userid = $row;
-
-			$row = new mosUser( $database );
-			$row->load( $userid );
 		}
+
+		$row = new mosUser( $database );
+		$row->load( $userid );
 
 		if ( !empty( $mi_list ) ) {
 			foreach ( $mi_list as $mi_id ) {;
