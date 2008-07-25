@@ -197,7 +197,7 @@ class processor_payboxfr extends POSTprocessor
 	function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
-aecDebug($_GET);aecDebug($_POST);
+
 		$gets = array( 'option', 'task', 'amount', 'invoice', 'authorization', 'transaction', 'subscriptionid', 'error', 'check' );
 
 		$return = array();
@@ -226,6 +226,9 @@ aecDebug($_GET);aecDebug($_POST);
 
 		if ( crypt( sha1( $cstring ), $this->settings['publickey'] ) == $check ) {
 			$response['valid'] = 1;
+		} else {
+			aecDebug($check);aecDebug(crypt( sha1( $cstring ), $this->settings['publickey'] ));
+			$response['pending_reason']			= 'error: Public Key Mismatch';
 		}
 
 		return $response;
