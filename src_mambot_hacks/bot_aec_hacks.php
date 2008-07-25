@@ -12,19 +12,22 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 $_MAMBOTS->registerFunction( 'onAfterStart', 'checkUserSubscription' ); //joomla.php Hack #4
 $_MAMBOTS->registerFunction( 'onAfterStart', 'planFirst' ); //registration.php Hack #6
 $_MAMBOTS->registerFunction( 'onAfterStart', 'planRegistration' ); //registration.php Hack #2
-$_MAMBOTS->registerFunction( 'onAfterStart', 'notifyMI' ); //registration.php Hack #1
+$_MAMBOTS->registerFunction( 'onAfterStart', 'notifyMI' ); //registration.php Hack #1 + user.php Hack
 
+//Some Micro Integrations rely on receiving a cleartext password for each user. This hack will make sure that the Micro Integrations will be notified
 function notifyMI()
 {
 	global $mosConfig_absolute_path, $option;
 	
 	$task = mosGetParam( $_REQUEST, 'task', '' );
 
-	
-	if ($option == 'com_registration' && $task == 'saveRegistration'){
+	if (($option == 'com_registration' && $task == 'saveRegistration')
+		||
+		($option == 'com_user' && $task == 'saveUserEdit'))
+	{
+		die('OPTION:'.$option.'+TASK:'.$task);
 		if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {
 			$username = mosGetParam($_REQUEST, 'username', '');
-			echo $username;
 			$row = new stdClass();
 			$row->username = $username;
 			$mih = new microIntegrationHandler();
