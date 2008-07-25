@@ -25,8 +25,8 @@ function notifyMI()
 		||
 		($option == 'com_user' && $task == 'saveUserEdit'))
 	{
-		die('OPTION:'.$option.'+TASK:'.$task);
 		if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {
+			include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");
 			$username = mosGetParam($_REQUEST, 'username', '');
 			$row = new stdClass();
 			$row->username = $username;
