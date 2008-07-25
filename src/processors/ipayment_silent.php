@@ -28,7 +28,7 @@
 
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
-
+error_reporting(E_ALL);
 class processor_ipayment_silent extends XMLprocessor
 {
 	function info()
@@ -199,13 +199,18 @@ class processor_ipayment_silent extends XMLprocessor
 		$request->invoice->check();
 		$request->invoice->store();
 
+		if ( false ) {
+			return $a;
+		}
+
 		$stringarray = array();
 		foreach ( $a as $name => $value ) {
 			$stringarray[] = $name . '=' . urlencode( stripslashes( $value ) );
+			//$string[$name] = stripslashes( $value );
 		}
 
 		$string = implode( '&', $stringarray );
-aecDebug( $string );
+
 		return $string;
 	}
 
@@ -223,7 +228,7 @@ aecDebug( $string );
 		}
 
 		$url = "https://ipayment.de" . $path;
-echo "<p><strong>&Uuml;betragung - " . date('Y-m-d H:i:s') . " (Serverzeit)- " . date('Y-m-d H:i:s', time()+(60*60*6)) . " (tats&auml;chliche Zeit)</strong></p>";
+echo "<p><strong>&Uuml;bertragung - " . date('Y-m-d H:i:s') . " (Serverzeit)- " . date('Y-m-d H:i:s', time()+(60*60*6)) . " (tats&auml;chliche Zeit)</strong></p>";
 echo "<h1>Senden der Daten:</h1>";
 echo '<p>';
 echo $xml;
@@ -242,10 +247,17 @@ echo '</p>';
 
 		// This will not turn up a response (why, that would be, like, logial and all)
 		$response = $this->transmitRequest( $url, $path, $xml, 443, $curl_calls );
+		$response2 = $this->transmitRequest( "https://allorca.com/components/com_acctexp/postback.php", $path, $xml, 443, $curl_calls );
 echo '<h1>R&uuml;ckmeldung:</h1>';
 echo '<div style="margin:12px;padding:24px;background-color:#bbb;color:#555;">';
 echo '<p>';
 echo $response;
+echo '</p>';
+echo '</div>';
+echo '<h1>R&uuml;ckmeldung, Gegencheck:</h1>';
+echo '<div style="margin:12px;padding:24px;background-color:#bbb;color:#555;">';
+echo '<p>';
+echo $response2;
 echo '</p>';
 echo '</div>';
 		// Instead we wait a short moment
@@ -268,7 +280,6 @@ echo '</div>';
 			$return['valid']			= 0;
 			$return['duplicate']		= true;
 		}
-aecDebug( "ResponseFunction:transmitRequestXML" . "\n" . "GET:".json_encode( $_GET ) . "\n" . "POST:".json_encode( $_POST ) . "\n" . "Return:".json_encode( $return ) );
 
 echo '<h1>Formular:</h1>';
 echo '<form action="' . "https://ipayment.de" . $path . '" method="post" >Formular:</h1>';

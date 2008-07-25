@@ -157,8 +157,8 @@ class processor_payboxfr extends POSTprocessor
 		$var['PBX_EFFECTUE']	= $request->int_var['return_url'];
 		$var['PBX_ANNULE']		= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
 
-		$var['PBX_RETOUR']		= 'option:com_acctexp;task:payboxfrnotification;amount:M;invoice:R;authorization:A;transaction:T;subscriptionid:B;error:E;check:K';
-
+		$var['PBX_RETOUR']		= 'option:com_acctexp;task:payboxfrnotification;amount:M;invoice:R;authorization:A;transaction:T;subscriptionid:B;error:E;';//check:K';
+//test
 		if ( !empty( $this->settings['customparams'] ) ) {
 			$custom = explode( "\n", $this->settings['customparams'] );
 
