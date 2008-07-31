@@ -105,7 +105,7 @@ class processor_alertpay extends POSTprocessor
 		$var['ap_cancelurl']	= AECToolbox::deadsureURL( "/index.php?option=com_acctexp&amp;task=cancel" );
 
 		$var['apc_1']			= $request->metaUser->cmsUser->id;
-		$var['apc_2']			= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
+		$var['apc_2']			= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 		$var['apc_3']			= $request->int_var['usage'];
 
 		return $var;
@@ -132,8 +132,8 @@ class processor_alertpay extends POSTprocessor
 
 		if ( !( strcmp( $post['ap_status'], "Success" ) === 0 ) ) {
 			$response['error'] = 'ap_status: ' . $post['ap_status'];
-		} elseif( $post['ap_securitycode'] != $this->settings->ap_securitycode ) {
-			$response['error'] = 'Security Code Mismatch: ' . $post['ap_securitycode'] . ' != ' . $this->settings->ap_securitycode;
+		} elseif( $post['ap_securitycode'] != $this->settings['ap_securitycode'] ) {
+			$response['error'] = 'Security Code Mismatch: ' . $post['ap_securitycode'] . ' != ' . $this->settings['ap_securitycode'];
 		} else {
 			$response['valid'] = true;
 		}

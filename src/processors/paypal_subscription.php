@@ -230,10 +230,21 @@ class processor_paypal_subscription extends POSTprocessor
 
 		$response['responsestring'] = 'paypal_verification=' . $res . "\n" . $response['responsestring'];
 
-		$txn_type			= $post['txn_type'];
-		$receiver_email		= $post['receiver_email'];
-		$payment_status		= $post['payment_status'];
-		$payment_type		= $post['payment_type'];
+		$receiver_email	= null;
+		$txn_type		= null;
+		$payment_type	= null;
+		$payment_status	= null;
+		$reason_code	= null;
+
+		$getposts = array( 'txn_type', 'receiver_email', 'payment_status', 'payment_type', 'reason_code' );
+
+		foreach ( $getposts as $n ) {
+			if ( isset( $post[$n] ) ) {
+				$$n = $post[$n];
+			} else {
+				$$n = null;
+			}
+		}
 
 		$response['valid'] = 0;
 
@@ -290,6 +301,8 @@ class processor_paypal_subscription extends POSTprocessor
 				$response['eot']				= 1;
 			} elseif ( strcmp( $txn_type, 'subscr_cancel' ) == 0 ) {
 				$response['cancel']				= 1;
+			} elseif ( strcmp( $reason_code, 'refund' ) == 0 ) {
+				$response['delete']				= 1;
 			}
 		} else {
 			$response['pending_reason']			= 'error: ' . $res;

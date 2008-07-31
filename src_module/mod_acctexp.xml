@@ -6,7 +6,7 @@
 <copyright>This module is released under the GNU/GPL License.  </copyright>
 <authorEmail>mails@globalnerd.org</authorEmail>
 <authorUrl>www.globalnerd.org</authorUrl>
-<version>0.12.4.4</version>
+<version>0.12.4.6</version>
 <description>Module for use with Account Expiration Control Component.</description>
 <files>
 	<filename module="mod_acctexp">mod_acctexp.php</filename>

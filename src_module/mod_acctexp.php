@@ -70,12 +70,12 @@ $displaypipeline		= $params->get( 'displaypipeline', 0 );
 if ( $my->id ) {
 // Logout output
 // ie HTML when already logged in and trying to logout
-	if ( $pretext ) {
+	if ( !empty( $pretext ) ) {
 		echo $pretext;
 	}
 
 	if ( $showExpiration ) {
-		$langPath = $mosConfig_absolute_path . '/modules/' . ( defined( 'JPATH_BASE' ) ? 'mod_acctexp/' : '' ) . 'mod_acctexp_language/';
+		$langPath = $mosConfig_absolute_path . '/modules/' . ( aecJoomla15check() ? 'mod_acctexp/' : '' ) . 'mod_acctexp_language/';
 		if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
 				include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
 		} else {
@@ -117,7 +117,7 @@ if ( $my->id ) {
 		echo $dph->getUserPipelineEvents( $my->id );
 	}
 
-	if ( $posttext ) {
+	if ( !empty( $posttext ) ) {
 		echo $posttext;
 	}
 

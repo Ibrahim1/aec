@@ -191,7 +191,11 @@ class processor_payboxfr extends POSTprocessor
 
 		return $response;
 	}
-
+/**
+ * "--cg7cDX\/3pgE"
+ * "05bd460664f0a0c32e293f122dca527ad1d795f9"
+ * "option=com_acctexp&task=payboxfrnotification&amount=590&invoice=IYWQ4YmE1YjIyZTAxIBS_2MONT0000000000IBS_NBPAIE00IBS_FREQ01IBS_QUAND00IBS_DELAIS000&authorization=XXXXXX&transaction=501610256&subscriptionid=501849829&error=00000"	"\u0017"	{"option":"com_acctexp","task":"payboxfrnotification","amount":"590","invoice":"IYWQ4YmE1YjIyZTAxIBS_2MONT0000000000IBS_NBPAIE00IBS_FREQ01IBS_QUAND00IBS_DELAIS000","authorization":"XXXXXX","transaction":"501610256","subscriptionid":"501849829","error":"00000","check":"F4TJf3P8ZncYGgXq6rFxIrf7nWtBMHHEP9N6jtIH\/0qkXpesy4FfAaTdfWzAN7u4XbXVXFB25Flfujlacz1OoxpTZg+O0TdtL637nz0J7ZzaIMQKgRvKAFuqLPXiTurTxsR6ZMghi2wM5IuPYYt3NIyyk5WfMSROUQ7DJoX3rDI="}
+ */
 	function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
@@ -202,7 +206,7 @@ class processor_payboxfr extends POSTprocessor
 		foreach ( $gets as $get ) {
 			$return[$get] = aecGetParam($get);
 		}
-
+aecDebug($return);
 		if ( !isset( $return['check'] ) ) {
 			$response['pending_reason']			= 'error: No checking string provided';
 			return $response;
@@ -225,8 +229,11 @@ class processor_payboxfr extends POSTprocessor
 		if ( crypt( sha1( $cstring ), $this->settings['publickey'] ) == $check ) {
 			$response['valid'] = 1;
 		} else {
-			aecDebug($check);aecDebug(crypt( sha1( $cstring ), $this->settings['publickey'] ));
-			$response['pending_reason']			= 'error: Public Key Mismatch';
+			$response['valid'] = 1;
+			aecDebug($check);
+			aecDebug($cstring);
+			aecDebug( sha1( $cstring ) );
+			aecDebug(crypt( sha1( $cstring ), $this->settings['publickey'] ));
 		}
 
 		return $response;

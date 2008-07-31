@@ -32,10 +32,13 @@ class mi_remository
 	{
 		global $database, $mosConfig_dbprefix;
 
-		$tables	= array();
 		$tables	= $database->getTableList();
 
-		return in_array( $mosConfig_dbprefix . 'acctexp_mi_remository', $tables );
+		if ( is_array( $tables ) ) {
+			return in_array( $mosConfig_dbprefix . 'acctexp_mi_remository', $tables );
+		} else {
+			return false;
+		}
 	}
 
 	function install()
@@ -62,9 +65,8 @@ class mi_remository
 	{
 		$this->includeRemCore();
 
-		$authoriser =& aliroAuthorisationAdmin::getInstance();
-		foreach ($authoriser->getAllRoles() as $role) {
-			$sg[] = mosHTML::makeOption( $role, $role);
+		foreach ( $this->authoriser->getAllRoles() as $role ) {
+			$sg[] = mosHTML::makeOption( $role, $role );
 		}
 
  		$del_opts = array();
@@ -137,9 +139,10 @@ class mi_remository
 
 		$this->includeRemCore();
 
-		$authoriser =& aliroAuthorisationAdmin::getInstance();
 		if ( !empty( $this->settings['set_group'] ) ) {
-			$authoriser->assign( $this->settings['group'], 'aUser', $request->metaUser->userid );
+			foreach ( $this->settings['group'] as $role ) {
+				$this->authoriser->assign( $role, 'aUser', $request->metaUser->userid );
+			}
 		}
 
 		$mi_remositoryhandler = new remository_restriction( $database );
@@ -168,9 +171,24 @@ class mi_remository
 	{
 		global $mainframe;
 
-		include_once( $mainframe->getCfg('absolute_path').'/components/com_remository/remository.interface.php' );
-		include_once( $mainframe->getCfg('absolute_path').'/components/com_remository/remository.class.php' );
-		include_once( $mainframe->getCfg('absolute_path').'/components/com_remository/p-classes/remositoryAuthoriser.php' );
+		$rempath = $mainframe->getCfg('absolute_path').'/components/com_remository/';
+
+		include_once( $rempath.'remository.interface.php' );
+		include_once( $rempath.'remository.class.php' );
+		include_once( $rempath.'p-classes/remositoryAuthoriser.php' );
+
+		$interface =& remositoryInterface::getInstance();
+		$this->absolute_path = $interface->getCfg('absolute_path');
+
+		$lang = $interface->getCfg('lang');
+
+		if ( file_exists( $rempath.'language/'.$lang.'.php' ) ) {
+			require_once( $rempath.'language/'.$lang.'.php' );
+		}
+
+		require_once( $rempath.'language/english.php' );
+
+		$this->authoriser =& aliroAuthorisationAdmin::getInstance();
 	}
 }
 
@@ -209,9 +227,9 @@ class remository_restriction extends mosDBTable {
 
 	function is_active()
 	{
-		if( $this->active ) {
+		if ( $this->active ) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
@@ -237,12 +255,12 @@ class remository_restriction extends mosDBTable {
 
 	function useDownload()
 	{
-		if( $this->hasDownloadsLeft() && $this->is_active() ) {
+		if ( $this->hasDownloadsLeft() && $this->is_active() ) {
 			$this->used_downloads++;
 			$this->check();
 			$this->store();
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
