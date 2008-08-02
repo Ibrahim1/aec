@@ -462,7 +462,7 @@ class metaUser
 		if ( ( $this->cmsUser->gid == 24 ) || ( $this->cmsUser->gid == 25 ) ) {
 			$query = 'SELECT count(*)'
 					. ' FROM #__core_acl_groups_aro_map'
-					. ' WHERE `group_id` = \'25\''
+					. ' WHERE `' . ( aecJoomla15check() ? 'id' : 'group_id' )  . '` = \'25\''
 					;
 			$database->setQuery( $query );
 			if ( $database->loadResult() <= 1) {
@@ -471,7 +471,7 @@ class metaUser
 
 			$query = 'SELECT count(*)'
 					. ' FROM #__core_acl_groups_aro_map'
-					. ' WHERE `group_id` = \'24\''
+					. ' WHERE `' . ( aecJoomla15check() ? 'id' : 'group_id' )  . '` = \'24\''
 					;
 			$database->setQuery( $query );
 			if ( $database->loadResult() <= 1) {
@@ -504,7 +504,7 @@ class metaUser
 
 		// Carry out ARO ID -> ACL group mapping
 		$query = 'UPDATE #__core_acl_groups_aro_map'
-				. ' SET `group_id` = \'' . (int) $gid . '\''
+				. ' SET `' . ( aecJoomla15check() ? 'id' : 'group_id' )  . '` = \'' . (int) $gid . '\''
 				. ' WHERE `aro_id` = \'' . $aro_id . '\''
 				;
 		$database->setQuery( $query );
@@ -7115,11 +7115,11 @@ class GeneralInfoRequester
 		$group_list	= array();
 		$groups		= '';
 
-		$query = 'SELECT g2.group_id'
+		$query = 'SELECT g2.' . ( aecJoomla15check() ? 'id' : 'group_id' )  . ''
 				. ' FROM #__core_acl_aro_groups AS g1'
 				. ' INNER JOIN #__core_acl_aro_groups AS g2 ON g1.lft >= g2.lft AND g1.lft <= g2.rgt'
-				. ' WHERE g1.group_id = ' . $database->getEscaped( $group_id )
-				. ' GROUP BY g2.group_id'
+				. ' WHERE g1.' . ( aecJoomla15check() ? 'id' : 'group_id' )  . ' = ' . $database->getEscaped( $group_id )
+				. ' GROUP BY g2.' . ( aecJoomla15check() ? 'id' : 'group_id' )  . ''
 				. ' ORDER BY g2.lft'
 				;
 		$database->setQuery( $query );
@@ -7127,7 +7127,11 @@ class GeneralInfoRequester
 
 		for( $i = 0, $n = count( $rows ); $i < $n; $i++ ) {
 			$row = &$rows[$i];
-			$group_list[$i] = $row->group_id;
+			if ( aecJoomla15check() ) {
+				$group_list[$i] = $row->id;
+			} else {
+				$group_list[$i] = $row->group_id;
+			}
 		}
 
 		if ( count( $group_list ) > 0 ) {
