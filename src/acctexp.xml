@@ -193,6 +193,8 @@
 			<filename>install/inc/index.html</filename>
 			<filename>install/inc/dbtables.inc.php</filename>
 			<filename>install/inc/menusetup.inc.php</filename>
+			<filename>install/inc/settings_0_12_6_upgrade.inc.php</filename>
+			<filename>install/inc/settings_oldupgrade.inc.php</filename>
 			<filename>install/inc/upgrade_0_6_0.inc.php</filename>
 			<filename>install/inc/upgrade_0_8_0.inc.php</filename>
 			<filename>install/inc/upgrade_0_10_0.inc.php</filename>

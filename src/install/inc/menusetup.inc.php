@@ -2,7 +2,7 @@
 // first delete old menu entries
 $eucaInstall->deleteAdminMenuEntries();
 
-if (  aecJoomla15check() ) {
+if ( aecJoomla15check() ) {
 	$iconroot = '../administrator/components/com_acctexp/images/icons/';
 } else {
 	$iconroot = '../administrator/components/com_acctexp/images/icons/';
