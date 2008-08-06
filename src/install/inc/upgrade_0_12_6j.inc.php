@@ -1,6 +1,71 @@
 <?php
 // undo jsonized fields (well, that much for great ideas)
 if ( $jsonconversion ) {
+	$updates = array(	'displayPipeline'	=> 'displaypipeline',
+						'eventLog'			=> 'eventlog',
+						'processor'			=> 'config_processors',
+						'SubscriptionPlan'	=> 'plans',
+						'Invoice'			=> 'invoices',
+						'Subscription'		=> 'subscr',
+						'microIntegration'	=> 'microintegrations',
+						'coupon'			=> 'coupons',
+						'coupon'			=> 'coupons_static'
+						);
+
+	foreach ( $updates as $classname => $dbtable ) {
+		$fielddeclare = call_user_func( array( $classname, 'declareParamFields' ) );
+
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_' . $dbtable
+				;
+		$database->setQuery( $query );
+		$entries = $database->loadResultArray();
+
+		if ( empty( $entries ) ) {
+			continue;
+		}
+
+		foreach ( $entries as $id ) {
+			$object = null;
+			$query = 'SELECT `' . implode( '`, `', $fielddeclare ) . '` FROM #__acctexp_' . $dbtable
+			. ' WHERE `id` = \'' . $id . '\''
+			;
+			$database->setQuery( $query );
+			$database->loadObject( $object );
+
+			$dec = $fielddeclare;
+			foreach ( $fielddeclare as $fieldname ) {
+				// No need to update what is empty
+				if ( empty( $object->$fieldname ) || ( strpos( $object->$fieldname, '{' ) === 0 ) || ( strpos( $object->$fieldname, '[' ) === 0 ) ) {
+					unset( $dec[array_search( $fieldname, $dec )] );
+				}
+			}
+
+			if ( count( $dec ) < 1 ) {
+				continue;
+			}
+
+			$sets = array();
+			foreach ( $dec as $fieldname ) {
+				// Decode from jsonized fields
+				$temp = jsoonHandler::decode( $object->$fieldname );
+
+				// ... to serialized
+				$sets[] = '`' . $fieldname . '` = \'' . base64_encode( serialize( $temp ) ) . '\'';
+			}
+
+			if ( !empty( $sets ) ) {
+				$query = 'UPDATE #__acctexp_' . $dbtable
+				. ' SET ' . implode( ', ', $sets ) . ''
+				. ' WHERE `id` = \'' . $id . '\''
+				;
+				$database->setQuery( $query );
+				if ( !$database->query() ) {
+			    	$errors[] = array( $database->getErrorMsg(), $query );
+				}
+			}
+		}
+	}
 
 }
 
@@ -27,7 +92,7 @@ if ( $serialupdate ) {
 	foreach ( $updates as $classname => $ucontent ) {
 		$dbtable = $ucontent[0];
 
-		$jsondeclare = call_user_func( array( $classname, 'declareParamFields' ) );
+		$fielddeclare = call_user_func( array( $classname, 'declareParamFields' ) );
 
 		$unsetdec = array();
 		if ( $dbtable == 'subscr' ) {
@@ -47,7 +112,7 @@ if ( $serialupdate ) {
 			$unsetdec[] = 'class_name';
 		}
 
-		$jsondeclare = array_merge( $jsondeclare, $unsetdec );
+		$fielddeclare = array_merge( $fielddeclare, $unsetdec );
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_' . $dbtable
@@ -61,14 +126,14 @@ if ( $serialupdate ) {
 
 		foreach ( $entries as $id ) {
 			$object = null;
-			$query = 'SELECT `' . implode( '`, `', $jsondeclare ) . '` FROM #__acctexp_' . $dbtable
+			$query = 'SELECT `' . implode( '`, `', $fielddeclare ) . '` FROM #__acctexp_' . $dbtable
 			. ' WHERE `id` = \'' . $id . '\''
 			;
 			$database->setQuery( $query );
 			$database->loadObject( $object );
 
-			$dec = $jsondeclare;
-			foreach ( $jsondeclare as $fieldname ) {
+			$dec = $fielddeclare;
+			foreach ( $fielddeclare as $fieldname ) {
 				if ( in_array( $fieldname, $unsetdec ) ) {
 					unset( $dec[array_search( $fieldname, $dec )] );
 					continue;
@@ -271,8 +336,8 @@ if ( $serialupdate ) {
 					$temp = $newtemp;
 				}
 
-				// ...To JSOON based notation
-				$sets[] = '`' . $fieldname . '` = \'' . base64_encode( serialize( base64_encode( serialize( $store ) ) ) ) . '\'';
+				// ... to serialized
+				$sets[] = '`' . $fieldname . '` = \'' . base64_encode( serialize( $temp ) ) . '\'';
 			}
 
 			unset( $object );

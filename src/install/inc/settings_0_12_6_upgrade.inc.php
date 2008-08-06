@@ -7,8 +7,9 @@ $database->setQuery( $query );
 $set = $database->loadResult();
 
 $serialupdate	= false;
-$jsonconversion	= false;
-if ( ( strpos( $set, '{' ) !== 0 ) && ( ( strpos( $set, '\\' ) !== false ) || ( strpos( $set, "\n" ) !== false ) ) && !empty( $set ) ) {
+$newinstall 	= true;
+
+if ( ( strpos( $set, '{' ) !== 0 ) && !empty( $set ) ) {
 	$settings = parameterHandler::decode( $set );
 
 	if ( isset( $settings['milist'] ) ) {
@@ -16,8 +17,10 @@ if ( ( strpos( $set, '{' ) !== 0 ) && ( ( strpos( $set, '\\' ) !== false ) || ( 
 		$settings['milist'] = $temp;
 	}
 
+	$entry = base64_encode( serialize( $settings ) );
+
 	$query = 'UPDATE #__acctexp_config'
-	. ' SET `settings` = \'' . base64_encode( serialize( $settings ) ) . '\''
+	. ' SET `settings` = \'' . $entry . '\''
 	. ' WHERE `id` = \'1\''
 	;
 	$database->setQuery( $query );

@@ -199,7 +199,7 @@
 			<filename>install/inc/upgrade_0_8_0.inc.php</filename>
 			<filename>install/inc/upgrade_0_10_0.inc.php</filename>
 			<filename>install/inc/upgrade_0_12_0.inc.php</filename>
-			<filename>install/inc/upgrade_0_12_6i.inc.php</filename>
+			<filename>install/inc/upgrade_0_12_6j.inc.php</filename>
 		</files>
 		<images>
 		</images>

@@ -113,7 +113,7 @@ function com_install()
 	if ( !$newinstall ) {
 		// Check if we are upgrading from before 0.12.6RC2j - then we need to check everything before that
 		if ( empty( $oldversion ) ) {
-			$oldupdates = array( '0_6_0', '0_8_0', '0_10_0', '0_12_0', '0_12_6i' );
+			$oldupdates = array( '0_6_0', '0_8_0', '0_10_0', '0_12_0', '0_12_6j' );
 
 			foreach ( $oldupdates as $upd ) {
 				require_once( $incpath . '/upgrade_' . $upd . '.inc.php' );
