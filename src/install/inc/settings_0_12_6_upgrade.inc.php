@@ -6,8 +6,9 @@ $query = 'SELECT `settings` FROM #__acctexp_config'
 $database->setQuery( $query );
 $set = $database->loadResult();
 
-$jsonupdate = false;
-if ( ( strpos( $set, '{' ) !== 0 ) && !empty( $set ) ) {
+$serialupdate	= false;
+$jsonconversion	= false;
+if ( ( strpos( $set, '{' ) !== 0 ) && ( ( strpos( $set, '\\' ) !== false ) || ( strpos( $set, "\n" ) !== false ) ) && !empty( $set ) ) {
 	$settings = parameterHandler::decode( $set );
 
 	if ( isset( $settings['milist'] ) ) {
@@ -16,13 +17,15 @@ if ( ( strpos( $set, '{' ) !== 0 ) && !empty( $set ) ) {
 	}
 
 	$query = 'UPDATE #__acctexp_config'
-	. ' SET `settings` = \'' . $database->getEscaped( jsoonHandler::encode( $settings ) ) . '\''
+	. ' SET `settings` = \'' . base64_encode( serialize( $settings ) ) . '\''
 	. ' WHERE `id` = \'1\''
 	;
 	$database->setQuery( $query );
 	$database->query();
 
-	$jsonupdate = true;
+	$serialupdate = true;
+} elseif ( strpos( $set, '{' ) === 0 ) {
+	$jsonconversion = true;
 } elseif ( empty( $set ) ) {
 	$newinstall = true;
 }

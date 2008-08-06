@@ -39,6 +39,18 @@ padding: 2px;
 background-color: #e9f900 !important;
 padding: 2px;
 }
+.important {
+font-weight: bold;
+background-color: #000 !important;
+padding: 2px;
+color: #f55;
+}
+.important:before {
+content: ' !!! ';
+}
+.important:after {
+content: ' !!! ';
+}
 a {
 color: #333;
 }
@@ -1391,19 +1403,19 @@ color: #333;
 <li><strong>Installer Revamping</strong>
 <ul>
 <li>Installer down to 2MB (a common hosting php upload limit)</li>
-<li class="finish">Versioning support in install to easier select necessary updates</li>
+<li class="important">Versioning support in install to easier select necessary updates</li>
 <li>Break down install into .inc's</li>
 </ul>
 </li>
-<li><strong>Parameters -&gt; JSON/JSOON storage &amp; MetaUser Revamp</strong>
+<li><strong>Parameters -&gt; serialized storage &amp; MetaUser Revamp</strong>
 <ul>
-<li>Port all parameter fields over to JSON (uh yes its awesome)</li>
-<li>JSOON Notation for completely lossless (even class preserving) mapping between PHP Objects (and associative arrays) and JSON</li>
+<li>Port all parameter fields over to serialized fields (uh yes its awesome)</li>
 <li>move most parameter fields of subscriptions to the new meta db entry</li>
 <li>Transfer subscription history to new metaUser table</li>
 <li>Let RWengine access full metaUser Object</li>
 <li class="finish">Adding in metaUser database table that holds general data</li>
 <li>Bug that will put extra escapes in the email text, description and name of a payment plan</li>
+<li>JSOON Notation for completely lossless (even class preserving) mapping between PHP Objects (and associative arrays) and JSON</li>
 </ul>
 </li>
 <li><strong>Minor</strong>
@@ -1456,6 +1468,7 @@ color: #333;
 <li class="check">Fixing Settings view for IE7</li>
 <li class="check">Plan application MI</li>
 <li class="check">Correct Refund Handling in PayPal/Subscriptions</li>
+<li class="todo">QuickSearch function that helps decode database fields (if you need to hack, hack.)</li>
 <li class="todo">Hot Property 1.0</li>
 <li class="todo">Plan MI: Option to make secondary plans listen to duration of primary</li>
 <li class="todo">J!1.5: Correct redirection on not providing a username on registration</li>

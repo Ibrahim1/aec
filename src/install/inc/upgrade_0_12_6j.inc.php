@@ -1,6 +1,11 @@
-<?php $jsonupdate = true;
-// Update database fields to JSONized fields
-if ( $jsonupdate ) {
+<?php
+// undo jsonized fields (well, that much for great ideas)
+if ( $jsonconversion ) {
+
+}
+
+// Update database fields to serialized fields
+if ( $serialupdate ) {
 	$updates = array(	'displayPipeline'	=> array( 'displaypipeline', array( 'params' => array('displayedto') ) ),
 						'eventLog'			=> array( 'eventlog', array( 'info' => array('actions') ) ),
 						'processor'			=> array( 'config_processors', array() ),
@@ -22,7 +27,7 @@ if ( $jsonupdate ) {
 	foreach ( $updates as $classname => $ucontent ) {
 		$dbtable = $ucontent[0];
 
-		$jsondeclare = call_user_func( array( $classname, 'declareJSONfields' ) );
+		$jsondeclare = call_user_func( array( $classname, 'declareParamFields' ) );
 
 		$unsetdec = array();
 		if ( $dbtable == 'subscr' ) {
@@ -267,7 +272,7 @@ if ( $jsonupdate ) {
 				}
 
 				// ...To JSOON based notation
-				$sets[] = '`' . $fieldname . '` = \'' . $database->getEscaped( jsoonHandler::encode( $temp ) ) . '\'';
+				$sets[] = '`' . $fieldname . '` = \'' . base64_encode( serialize( base64_encode( serialize( $store ) ) ) ) . '\'';
 			}
 
 			unset( $object );

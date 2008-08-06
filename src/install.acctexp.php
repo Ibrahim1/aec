@@ -95,21 +95,21 @@ function com_install()
 
 	// Upgrade ancient settings
 	include_once( $incpath . '/settings_oldupgrade.inc.php' );
-//$query = 'SELECT `settings` FROM #__acctexp_config WHERE `id` = \'1\'';$database->setQuery( $query );$t = $database->loadResult();print_r($t);
+
 	// Upgrade Settings to 0.12.6 status
 	include_once( $incpath . '/settings_0_12_6_upgrade.inc.php' );
-//$query = 'SELECT `settings` FROM #__acctexp_config WHERE `id` = \'1\'';$database->setQuery( $query );$t = $database->loadResult();print_r($t);
+
 	// Load Class (and thus aecConfig)
 	require_once( $mainframe->getPath( 'class', 'com_acctexp' ) );
-//$query = 'SELECT `settings` FROM #__acctexp_config WHERE `id` = \'1\'';$database->setQuery( $query );$t = $database->loadResult();print_r($t);
+
 	global $aecConfig;
-//$query = 'SELECT `settings` FROM #__acctexp_config WHERE `id` = \'1\'';$database->setQuery( $query );$t = $database->loadResult();print_r($t);
+
 	if ( isset( $aecConfig->cfg['aec_version'] ) ) {
 		$oldversion = $aecConfig->cfg['aec_version'];
 	} else {
 		$oldversion = false;
 	}
-//$query = 'SELECT `settings` FROM #__acctexp_config WHERE `id` = \'1\'';$database->setQuery( $query );$t = $database->loadResult();print_r($t);
+
 	if ( !$newinstall ) {
 		// Check if we are upgrading from before 0.12.6RC2j - then we need to check everything before that
 		if ( empty( $oldversion ) ) {
@@ -126,7 +126,7 @@ function com_install()
 		// Determine point from which to upgrade
 		// Carry out upgrades
 	}
-//$query = 'SELECT `settings` FROM #__acctexp_config WHERE `id` = \'1\'';$database->setQuery( $query );$t = $database->loadResult();print_r($t);exit;
+
 	// Set Version
 	//$aecConfig->cfg['aec_version'] = _AEC_VERSION;
 

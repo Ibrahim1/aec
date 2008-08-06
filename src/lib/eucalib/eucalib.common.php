@@ -250,6 +250,173 @@ class paramDBTable extends mosDBTable
 }
 
 /**
+* serialized Database Table entry
+*
+* For use with as an abstract class that adds onto table entries
+*/
+class serialParamDBTable extends paramDBTable
+{
+	function storeload()
+	{
+		$this->check();
+		$this->store( true );
+
+		return $this->load( $this->id );
+	}
+
+	/**
+	 * Receive Parameters and decode them into an array
+	 * @return array
+	 */
+	function getParams( $field = 'params' )
+	{
+		if ( empty( $this->$field ) ) {
+			return NULL;
+		}
+
+		return unserialize( base64_decode( $this->$field ) );
+	}
+
+	/**
+	 * Encode array and set Parameter field
+	 */
+	function setParams( $input, $field = 'params' )
+	{
+		if ( !empty( $field ) && ( $input != 'null' ) ) {
+			if ( get_magic_quotes_gpc() ) {
+				$store = serialParamDBTable::multistripslashes( $input );
+			} else {
+				$store = $input;
+			}
+
+			$this->$field = base64_encode( serialize( $store ) );
+		} else {
+			$this->$field = null;
+		}
+		return true;
+	}
+
+	function multistripslashes( $input )
+	{
+		if ( is_object( $input ) ) {
+			$properties = get_object_vars( $input );
+
+			foreach ( $properties as $pname => $pvalue ) {
+				$input->$pname = serialParamDBTable::multistripslashes( $pvalue );
+			}
+		} elseif ( is_array( $input ) ) {
+			foreach ( $input as $pname => $pvalue ) {
+				$input[$pname] = serialParamDBTable::multistripslashes( $pvalue );
+			}
+		} else {
+			$input = stripslashes( $input );
+		}
+
+		return $input;
+	}
+
+	/**
+	 * Add an array of Parameters to an existing parameter field
+	 */
+	function addParams( $params, $field = 'params', $overwrite = true )
+	{
+		if ( empty( $this->$field ) || ( $this->$field == 'null' ) ) {
+			$this->$field = $params;
+		} elseif ( gettype( $this->$field ) == gettype( $params ) ) {
+			$this->$field = serialParamDBTable::mergeParams( $this->$field, $params, $overwrite );
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Recursive Merging of two Entities, regardless of type
+	 */
+	function mergeParams( $subject, $subject2, $overwrite=true )
+	{
+		if ( is_object( $subject ) ) {
+			$properties = get_object_vars( $subject2 );
+
+			foreach ( $properties as $pname => $pvalue ) {
+				if ( !isset( $subject->$pname ) ) {
+					$subject->$pname = $pvalue;
+				} elseif ( isset( $subject->$pname ) && $overwrite ) {
+					$subject->$pname = serialParamDBTable::mergeParams( $subject->$pname, $pvalue, $overwrite );
+				}
+			}
+		} elseif ( is_array( $subject ) ) {
+			foreach ( $subject2 as $pname => $pvalue ) {
+				if ( !isset( $subject[$pname] ) ) {
+					$subject[$pname] = $pvalue;
+				} elseif ( isset( $subject[$pname] ) && $overwrite ) {
+					$subject[$pname] = serialParamDBTable::mergeParams( $subject[$pname], $pvalue, $overwrite );
+				}
+			}
+		} else {
+			if ( $overwrite ) {
+				$subject = $subject2;
+			}
+		}
+
+		return $subject;
+	}
+
+	/**
+	 * Delete a set of Parameters providing an array of key names
+	 */
+	function delParams( $array, $field = 'params' )
+	{
+
+	}
+
+	/**
+	 * Return the differences between a new set of Parameters and the existing one
+	 */
+	function diffParams( $array, $field = 'params' )
+	{
+
+	}
+
+	function load( $id, $fields=array() )
+	{
+		if ( method_exists( $this, 'declareParamFields' ) ) {
+			$fields = array_merge( $fields, $this->declareParamFields() );
+		}
+
+		parent::load( $id );
+
+		if ( !empty( $fields ) ) {
+			foreach ( $fields as $fieldname ) {
+				$this->$fieldname = $this->getParams( $fieldname );
+			}
+		}
+
+		return true;
+	}
+
+	function check( $fields=array() )
+	{
+		if ( method_exists( $this, 'declareParamFields' ) ) {
+			$fields = array_merge( $fields, $this->declareParamFields() );
+		}
+
+		if ( !empty( $fields ) ) {
+			foreach ( $fields as $fieldname ) {
+				if ( !empty( $this->$fieldname ) && ( $this->$fieldname != 'null' ) ) {
+					$this->setParams( $this->$fieldname, $fieldname );
+				} else {
+					unset( $this->$fieldname );
+				}
+			}
+		}
+
+		return true;
+	}
+
+}
+
+/**
 * jsonized Database Table entry
 *
 * For use with as an abstract class that adds onto table entries

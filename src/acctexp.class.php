@@ -808,7 +808,7 @@ class metaUser
 	}
 }
 
-class metaUserDB extends jsonDBTable
+class metaUserDB extends serialParamDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -818,15 +818,15 @@ class metaUserDB extends jsonDBTable
 	var $created_date		= null;
 	/** @var datetime */
 	var $modified_date		= null;
-	/** @var jsonized object */
+	/** @var serialized object */
 	var $plan_history		= null;
-	/** @var jsonized object */
+	/** @var serialized object */
 	var $processor_params	= null;
-	/** @var jsonized object */
+	/** @var serialized object */
 	var $plan_params		= null;
-	/** @var jsonized object */
+	/** @var serialized object */
 	var $params 			= null;
-	/** @var jsonized object */
+	/** @var serialized object */
 	var $custom_params		= null;
 
 	/**
@@ -837,7 +837,7 @@ class metaUserDB extends jsonDBTable
 		$this->mosDBTable( '#__acctexp_metauser', 'id', $db );
 	}
 
-	function declareJSONfields()
+	function declareParamFields()
 	{
 		return array( 'plan_history', 'processor_params', 'plan_params', 'params', 'custom_params' );
 	}
@@ -998,7 +998,7 @@ class metaUserDB extends jsonDBTable
 	}
 }
 
-class Config_General extends jsonDBTable
+class Config_General extends serialParamDBTable
 {
 	/** @var int Primary key */
 	var $id 				= null;
@@ -1017,7 +1017,7 @@ class Config_General extends jsonDBTable
 		}
 	}
 
-	function declareJSONfields()
+	function declareParamFields()
 	{
 		return array( 'settings' );
 	}
@@ -1029,7 +1029,7 @@ class Config_General extends jsonDBTable
 		$this->cfg =& $this->settings;
 	}
 
-	function check( $jsonfields=array() )
+	function check( $fields=array() )
 	{
 		unset( $this->cfg );
 
@@ -1413,7 +1413,7 @@ class aecHeartbeat extends mosDBTable
 							. ' WHERE `id` = \'' . $plan_id . '\''
 							;
 					$database->setQuery( $query );
-					$plan_mis = json_decode( $database->loadResult() );
+					$plan_mis = unserialize( base64_decode( $database->loadResult() ) );
 					$pexp_mis = array_intersect( $plan_mis, $mi_pexp );
 
 					if ( count( $pexp_mis ) ) {
@@ -1440,7 +1440,7 @@ class aecHeartbeat extends mosDBTable
 							// Its ok - load the plan
 							$subscription_plan = new SubscriptionPlan( $database );
 							$subscription_plan->load( $metaUser->focusSubscription->plan );
-							$userplan_mis = json_decode( $subscription_plan->micro_integrations );
+							$userplan_mis = unserialize( base64_decode( $subscription_plan->micro_integrations ) );
 
 							// Get the right MIs
 							$user_pexpmis = array_intersect( $userplan_mis, $mi_pexp );
@@ -1593,7 +1593,7 @@ class displayPipelineHandler
 	}
 }
 
-class displayPipeline extends jsonDBTable
+class displayPipeline extends serialParamDBTable
 {
 	/** @var int Primary key */
 	var $id				= null;
@@ -1626,7 +1626,7 @@ class displayPipeline extends jsonDBTable
 	 	$this->mosDBTable( '#__acctexp_displaypipeline', 'id', $db );
 	}
 
-	function declareJSONfields()
+	function declareParamFields()
 	{
 		return array( 'params' );
 	}
@@ -1667,7 +1667,7 @@ class displayPipeline extends jsonDBTable
 	}
 }
 
-class eventLog extends jsonDBTable
+class eventLog extends serialParamDBTable
 {
 	/** @var int Primary key */
 	var $id			= null;
@@ -1694,7 +1694,7 @@ class eventLog extends jsonDBTable
 	 	$this->mosDBTable( '#__acctexp_eventlog', 'id', $db );
 	}
 
-	function declareJSONfields()
+	function declareParamFields()
 	{
 		return array( 'params' );
 	}
@@ -2359,7 +2359,7 @@ class PaymentProcessor
 
 }
 
-class processor extends jsonDBTable
+class processor extends serialParamDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -2382,7 +2382,7 @@ class processor extends jsonDBTable
 		$this->mosDBTable( '#__acctexp_config_processors', 'id', $db );
 	}
 
-	function declareJSONfields()
+	function declareParamFields()
 	{
 		return array( 'info', 'settings', 'params' );
 	}
@@ -3491,7 +3491,7 @@ class SubscriptionPlanHandler
 	}
 }
 
-class PlanGroup extends jsonDBTable
+class PlanGroup extends serialParamDBTable
 {
 	/** @var int Primary key */
 	var $id 				= null;
@@ -3519,14 +3519,14 @@ class PlanGroup extends jsonDBTable
 		$this->mosDBTable( '#__acctexp_plangroups', 'id', $db );
 	}
 
-	function declareJSONfields()
+	function declareParamFields()
 	{
 		return array( 'params', 'custom_params', 'restrictions' );
 	}
 
 }
 
-class SubscriptionPlan extends jsonDBTable
+class SubscriptionPlan extends serialParamDBTable
 {
 	/** @var int Primary key */
 	var $id 				= null;
@@ -3556,7 +3556,7 @@ class SubscriptionPlan extends jsonDBTable
 		$this->mosDBTable( '#__acctexp_plans', 'id', $db );
 	}
 
-	function declareJSONfields()
+	function declareParamFields()
 	{
 		return array( 'params', 'custom_params', 'restrictions', 'micro_integrations' );
 	}
@@ -5472,7 +5472,7 @@ class InvoiceFactory
 	}
 }
 
-class Invoice extends jsonDBTable
+class Invoice extends serialParamDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -5522,7 +5522,7 @@ class Invoice extends jsonDBTable
 		}
 	}
 
-	function declareJSONfields()
+	function declareParamFields()
 	{
 		return array( 'coupons', 'transactions', 'params', 'conditions' );
 	}
@@ -6155,7 +6155,11 @@ class Invoice extends jsonDBTable
 	{
 		global $database, $mosConfig_live_site;
 
-		$int_var['params'] = $this->params;
+		if ( is_array( $this->params ) ) {
+			$int_var['params'] = $this->params;
+		} else {
+			$int_var['params'] = array();
+		}
 
 		// Filter non-processor params
 		$nonproc = array( 'pending_reason', 'deactivated' );
@@ -6207,8 +6211,11 @@ class Invoice extends jsonDBTable
 	{
 		global $database, $mosConfig_live_site;
 
-		$int_var = array();
-		$int_var['params'] = $this->params;
+		if ( is_array( $this->params ) ) {
+			$int_var['params'] = $this->params;
+		} else {
+			$int_var['params'] = array();
+		}
 
 		// Filter non-processor params
 		$nonproc = array( 'pending_reason', 'deactivated' );
@@ -6392,7 +6399,7 @@ class Invoice extends jsonDBTable
 	}
 }
 
-class Subscription extends jsonDBTable
+class Subscription extends serialParamDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -6435,7 +6442,7 @@ class Subscription extends jsonDBTable
 		$this->mosDBTable( '#__acctexp_subscr', 'id', $db );
 	}
 
-	function declareJSONfields()
+	function declareParamFields()
 	{
 		return array( 'used_plans', 'params', 'customparams' );
 	}
@@ -8280,7 +8287,7 @@ class AECToolbox
 		}
 
 		foreach ( $matches as $match ) {
-			$json = json_decode( $match[1] );
+			$json = jsoonHandler::decode( $match[1] );
 
 			$result = AECToolbox::resolveJSONitem( $json, $rewrite, $metaUser );
 
@@ -8756,7 +8763,7 @@ class MI
 
 }
 
-class microIntegration extends jsonDBTable
+class microIntegration extends serialParamDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -8790,7 +8797,7 @@ class microIntegration extends jsonDBTable
 		}
 	}
 
-	function declareJSONfields()
+	function declareParamFields()
 	{
 		return array( 'params' );
 	}
@@ -9920,7 +9927,7 @@ class couponHandler
 	}
 }
 
-class coupon extends jsonDBTable
+class coupon extends serialParamDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -9956,7 +9963,7 @@ class coupon extends jsonDBTable
 		}
 	}
 
-	function declareJSONfields()
+	function declareParamFields()
 	{
 		return array( 'discount', 'restrictions', 'params', 'micro_integrations'  );
 	}
@@ -10221,7 +10228,7 @@ class couponXuser extends paramDBTable
 }
 
 
-class aecExport extends jsonDBTable
+class aecExport extends serialParamDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
