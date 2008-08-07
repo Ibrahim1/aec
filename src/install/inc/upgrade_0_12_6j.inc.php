@@ -1,18 +1,22 @@
 <?php
-// undo jsonized fields (well, that much for great ideas)
 if ( $jsonconversion ) {
-	$updates = array(	'displayPipeline'	=> 'displaypipeline',
-						'eventLog'			=> 'eventlog',
-						'processor'			=> 'config_processors',
-						'SubscriptionPlan'	=> 'plans',
-						'Invoice'			=> 'invoices',
-						'Subscription'		=> 'subscr',
-						'microIntegration'	=> 'microintegrations',
-						'coupon'			=> 'coupons',
-						'coupon'			=> 'coupons_static'
+	// undo jsonized fields (well, that much for great ideas)
+
+	$updates = array(	0 => array( 'displayPipeline', 'displaypipeline' ),
+						1 => array( 'eventLog', 'eventlog' ),
+						2 => array( 'processor', 'config_processors' ),
+						3 => array( 'SubscriptionPlan', 'plans' ),
+						4 => array( 'Invoice', 'invoices' ),
+						5 => array( 'Subscription', 'subscr' ),
+						6 => array( 'microIntegration', 'microintegrations' ),
+						7 => array( 'coupon', 'coupons' ),
+						8 => array( 'coupon', 'coupons_static' )
 						);
 
-	foreach ( $updates as $classname => $dbtable ) {
+	foreach ( $updates as $uid => $ucontent ) {
+		$classname	= $ucontent[0];
+		$dbtable	= $ucontent[1];
+
 		$fielddeclare = call_user_func( array( $classname, 'declareParamFields' ) );
 
 		$query = 'SELECT `id`'
@@ -48,10 +52,18 @@ if ( $jsonconversion ) {
 			$sets = array();
 			foreach ( $dec as $fieldname ) {
 				// Decode from jsonized fields
-				$temp = jsoonHandler::decode( $object->$fieldname );
+				if ( ( strpos( $object->$fieldname, "{" ) === 0 ) || strpos( $object->$fieldname, "\n" ) === false ) {
+					$temp = jsoonHandler::decode( stripslashes( $object->$fieldname ) );
+				} elseif ( strpos( $object->$fieldname, "\n" ) !== false ) {
+					$temp = parameterHandler::decode( stripslashes( $object->$fieldname ) );
+				} else {
+					continue;
+				}
 
 				// ... to serialized
-				$sets[] = '`' . $fieldname . '` = \'' . base64_encode( serialize( $temp ) ) . '\'';
+				if ( is_array( $temp ) || is_object( $temp ) ) {
+					$sets[] = '`' . $fieldname . '` = \'' . base64_encode( serialize( $temp ) ) . '\'';
+				}
 			}
 
 			if ( !empty( $sets ) ) {
@@ -67,19 +79,18 @@ if ( $jsonconversion ) {
 		}
 	}
 
-}
+} elseif ( $serialupdate ) {
+	// Update database fields to serialized fields
 
-// Update database fields to serialized fields
-if ( $serialupdate ) {
-	$updates = array(	'displayPipeline'	=> array( 'displaypipeline', array( 'params' => array('displayedto') ) ),
-						'eventLog'			=> array( 'eventlog', array( 'info' => array('actions') ) ),
-						'processor'			=> array( 'config_processors', array() ),
-						'SubscriptionPlan'	=> array( 'plans', array( 'params' => array('similarplans','equalplans','processors'), 'micro_integrations' => array('_self'), 'restrictions' => array('previousplan_req','currentplan_req','overallplan_req','previousplan_req_excluded','currentplan_req_excluded','overallplan_req_excluded') ) ),
-						'Invoice'			=> array( 'invoices', array( 'coupons' => array('_self'), 'micro_integrations' => array('_self') ) ),
-						'Subscription'		=> array( 'subscr', array() ),
-						'microIntegration'	=> array( 'microintegrations', array() ),
-						'coupon'			=> array( 'coupons', array( 'restrictions' => array('bad_combinations','usage_plans') ) ),
-						'coupon'			=> array( 'coupons_static', array( 'restrictions' => array('bad_combinations','usage_plans') ) )
+	$updates = array(	0 => array( 'displayPipeline', 'displaypipeline', array( 'params' => array('displayedto') ) ),
+						1 => array( 'eventLog', 'eventlog', array( 'info' => array('actions') ) ),
+						2 => array( 'processor', 'config_processors', array() ),
+						3 => array( 'SubscriptionPlan', 'plans', array( 'params' => array('similarplans','equalplans','processors'), 'micro_integrations' => array('_self'), 'restrictions' => array('previousplan_req','currentplan_req','overallplan_req','previousplan_req_excluded','currentplan_req_excluded','overallplan_req_excluded') ) ),
+						4 => array( 'Invoice', 'invoices', array( 'coupons' => array('_self'), 'micro_integrations' => array('_self') ) ),
+						5 => array( 'Subscription', 'subscr', array() ),
+						6 => array( 'microIntegration', 'microintegrations', array() ),
+						7 => array( 'coupon', 'coupons', array( 'restrictions' => array('bad_combinations','usage_plans') ) ),
+						8 => array( 'coupon', 'coupons_static', array( 'restrictions' => array('bad_combinations','usage_plans') ) )
 						);
 
 	$miupdate = array(	'mi_acl' => array( 'sub_gid_del', 'sub_gid', 'sub_gid_exp_del', 'sub_gid_exp', 'sub_gid_pre_exp_del', 'sub_gid_pre_exp' ),
@@ -89,8 +100,9 @@ if ( $serialupdate ) {
 						'mi_remository' => array( 'group', 'group_exp' )
 						);
 
-	foreach ( $updates as $classname => $ucontent ) {
-		$dbtable = $ucontent[0];
+	foreach ( $updates as $uid => $ucontent ) {
+		$classname	= $ucontent[0];
+		$dbtable	= $ucontent[1];
 
 		$fielddeclare = call_user_func( array( $classname, 'declareParamFields' ) );
 
@@ -156,16 +168,16 @@ if ( $serialupdate ) {
 			$sets = array();
 			foreach ( $dec as $fieldname ) {
 				// Decode from newline separated variables
-				$temp = parameterHandler::decode( $object->$fieldname );
+				$temp = parameterHandler::decode( stripslashes( $object->$fieldname ) );
 
-				if ( !empty( $ucontent[1] ) ) {
-					if ( isset( $ucontent[1][$fieldname] ) ) {
-						if ( in_array( '_self', $ucontent[1][$fieldname] ) ) {
+				if ( !empty( $ucontent[2] ) ) {
+					if ( isset( $ucontent[2][$fieldname] ) ) {
+						if ( in_array( '_self', $ucontent[2][$fieldname] ) ) {
 							$temp = explode( ';', $object->$fieldname );
 							array_walk( $temp, 'trim' );
 						} else {
 							foreach ( $temp as $key => $value ) {
-								if ( in_array( $key, $ucontent[1][$fieldname] ) ) {
+								if ( in_array( $key, $ucontent[2][$fieldname] ) ) {
 									$temp[$key] = explode( ';', $value );
 									array_walk( $temp[$key], 'trim' );
 								}

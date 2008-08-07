@@ -271,7 +271,7 @@ class serialParamDBTable extends paramDBTable
 	function getParams( $field = 'params' )
 	{
 		if ( empty( $this->$field ) ) {
-			return NULL;
+			return null;
 		}
 
 		return unserialize( base64_decode( $this->$field ) );
@@ -438,7 +438,7 @@ class jsonDBTable extends paramDBTable
 	function getParams( $field = 'params' )
 	{
 		if ( empty( $this->$field ) ) {
-			return NULL;
+			return null;
 		}
 
 		return jsoonHandler::decode( stripslashes( $this->$field ) );
@@ -457,7 +457,7 @@ class jsonDBTable extends paramDBTable
 			}
 			$this->$field = $this->_db->getEscaped( jsoonHandler::encode( $store ) );
 		} else {
-			$this->$field = NULL;
+			$this->$field = null;
 		}
 		return true;
 	}

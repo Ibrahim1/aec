@@ -1051,7 +1051,7 @@ class Config_General extends serialParamDBTable
 		$def['display_date_backend']			= "%a, %d %b %Y %T %Z";
 		$def['enable_mimeta']					= 0;
 		$def['enable_coupons']					= 0;
-		$def['gwlist']							= '';
+		$def['gwlist']							= array();
 		$def['milist']							= array( 'mi_email','mi_htaccess','mi_mysql_query','mi_email','mi_virtuemart' );
 		$def['displayccinfo']					= 1;
 		$def['customtext_confirm_keeporiginal']	= 1;
@@ -1440,7 +1440,7 @@ class aecHeartbeat extends mosDBTable
 							// Its ok - load the plan
 							$subscription_plan = new SubscriptionPlan( $database );
 							$subscription_plan->load( $metaUser->focusSubscription->plan );
-							$userplan_mis = unserialize( base64_decode( $subscription_plan->micro_integrations ) );
+							$userplan_mis = $subscription_plan->micro_integrations;
 
 							// Get the right MIs
 							$user_pexpmis = array_intersect( $userplan_mis, $mi_pexp );

@@ -206,8 +206,8 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'applysettings':
-        saveSettings( $option, 1 );
-        break;
+				saveSettings( $option, 1 );
+				break;
 
 	case 'cancelsettings':
 		cancelSettings( $option );
@@ -226,19 +226,19 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'copysubscriptionplan':
-	    global $database;
+			global $database;
 
-	    if ( is_array( $id ) ) {
-		    foreach ( $id as $pid ) {
+			if ( is_array( $id ) ) {
+				foreach ( $id as $pid ) {
 				$row = new SubscriptionPlan( $database );
 				$row->load( $pid );
 				$row->id = 0;
 				$row->check();
 				$row->store();
-		    }
-	    }
+				}
+			}
 
-	    mosRedirect( 'index2.php?option='. $option . '&task=showSubscriptionPlans' );
+			mosRedirect( 'index2.php?option='. $option . '&task=showSubscriptionPlans' );
 		break;
 
 	case 'savesubscriptionplan':
@@ -273,21 +273,21 @@ switch( strtolower( $task ) ) {
 		cancelSubscriptionPlan( $option );
 		break;
 
-    case 'orderplanup':
-	    global $database;
-	    $row = new SubscriptionPlan( $database );
-	    $row->load( $id[0] );
-	    $row->move( -1 );
-	    mosRedirect( 'index2.php?option='. $option . '&task=showSubscriptionPlans' );
-        break;
+		case 'orderplanup':
+			global $database;
+			$row = new SubscriptionPlan( $database );
+			$row->load( $id[0] );
+			$row->move( -1 );
+			mosRedirect( 'index2.php?option='. $option . '&task=showSubscriptionPlans' );
+				break;
 
-    case 'orderplandown':
-	    global $database;
-	    $row = new SubscriptionPlan( $database );
-	    $row->load( $id[0] );
-	    $row->move( 1 );
-	    mosRedirect( 'index2.php?option='. $option . '&task=showSubscriptionPlans' );
-        break;
+		case 'orderplandown':
+			global $database;
+			$row = new SubscriptionPlan( $database );
+			$row->load( $id[0] );
+			$row->move( 1 );
+			mosRedirect( 'index2.php?option='. $option . '&task=showSubscriptionPlans' );
+				break;
 
 	case 'showmicrointegrations':
 		listMicroIntegrations( $option );
@@ -310,19 +310,19 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'copymicrointegration':
-	    global $database;
+			global $database;
 
-	    if ( is_array( $id ) ) {
-		    foreach ( $id as $pid ) {
+			if ( is_array( $id ) ) {
+				foreach ( $id as $pid ) {
 				$row = new microIntegration( $database );
 				$row->load( $pid );
 				$row->id = 0;
 				$row->check();
 				$row->store();
-		    }
-	    }
+				}
+			}
 
-	    mosRedirect( 'index2.php?option='. $option . '&task=showMicroIntegrations' );
+			mosRedirect( 'index2.php?option='. $option . '&task=showMicroIntegrations' );
 		break;
 
 	case 'publishmicrointegration':
@@ -341,41 +341,41 @@ switch( strtolower( $task ) ) {
 		cancelMicroIntegration( $option );
 		break;
 
-    case 'ordermiup':
-	    global $database;
-	    $row = new microIntegration( $database );
-	    $row->load( $id[0] );
-	    $row->move( -1 );
-	    mosRedirect( 'index2.php?option='. $option . '&task=showMicroIntegrations' );
-        break;
+		case 'ordermiup':
+			global $database;
+			$row = new microIntegration( $database );
+			$row->load( $id[0] );
+			$row->move( -1 );
+			mosRedirect( 'index2.php?option='. $option . '&task=showMicroIntegrations' );
+				break;
 
-    case 'ordermidown':
-	    global $database;
-	    $row = new microIntegration( $database );
-	    $row->load( $id[0] );
-	    $row->move( 1 );
-	    mosRedirect( 'index2.php?option='. $option . '&task=showMicroIntegrations' );
-        break;
+		case 'ordermidown':
+			global $database;
+			$row = new microIntegration( $database );
+			$row->load( $id[0] );
+			$row->move( 1 );
+			mosRedirect( 'index2.php?option='. $option . '&task=showMicroIntegrations' );
+				break;
 
 	case 'showcoupons':
 		listCoupons( $option, 0);
 		break;
 
 	case 'copycoupon':
-	    global $database;
+			global $database;
 
-	    if ( is_array( $id ) ) {
-		    foreach ( $id as $pid ) {
+			if ( is_array( $id ) ) {
+				foreach ( $id as $pid ) {
 				$row = new Coupon( $database, 0 );
 				$row->load( $pid );
 				$row->id = 0;
 				$row->coupon_code = $row->generateCouponCode();
 				$row->check();
 				$row->store();
-		    }
-	    }
+				}
+			}
 
-	    mosRedirect( 'index2.php?option='. $option . '&task=showCoupons' );
+			mosRedirect( 'index2.php?option='. $option . '&task=showCoupons' );
 		break;
 
 	case 'newcoupon':
@@ -415,20 +415,20 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'copycouponstatic':
-	    global $database;
+			global $database;
 
-	    if ( is_array( $id ) ) {
-		    foreach ( $id as $pid ) {
+			if ( is_array( $id ) ) {
+				foreach ( $id as $pid ) {
 				$row = new Coupon( $database, 1 );
 				$row->load( $pid );
 				$row->id = 0;
 				$row->coupon_code = $row->generateCouponCode();
 				$row->check();
 				$row->store();
-		    }
-	    }
+				}
+			}
 
-	    mosRedirect( 'index2.php?option='. $option . '&task=showCouponsStatic' );
+			mosRedirect( 'index2.php?option='. $option . '&task=showCouponsStatic' );
 		break;
 
 	case 'newcouponstatic':
@@ -463,37 +463,37 @@ switch( strtolower( $task ) ) {
 		cancelCoupon( $option, 1 );
 		break;
 
-    case 'ordercouponup':
-	    global $database;
-	    $row = new coupon( $database, 0 );
-	    $row->load( $id[0] );
-	    $row->move( -1 );
-	    mosRedirect( 'index2.php?option='. $option . '&task=showCoupons' );
-        break;
+		case 'ordercouponup':
+			global $database;
+			$row = new coupon( $database, 0 );
+			$row->load( $id[0] );
+			$row->move( -1 );
+			mosRedirect( 'index2.php?option='. $option . '&task=showCoupons' );
+				break;
 
-    case 'ordercoupondown':
-	    global $database;
-	    $row = new coupon( $database, 0 );
-	    $row->load( $id[0] );
-	    $row->move( 1 );
-	    mosRedirect( 'index2.php?option='. $option . '&task=showCoupons' );
-        break;
+		case 'ordercoupondown':
+			global $database;
+			$row = new coupon( $database, 0 );
+			$row->load( $id[0] );
+			$row->move( 1 );
+			mosRedirect( 'index2.php?option='. $option . '&task=showCoupons' );
+				break;
 
-    case 'ordercouponstaticup':
-	    global $database;
-	    $row = new coupon( $database, 1 );
-	    $row->load( $id[0] );
-	    $row->move( -1 );
-	    mosRedirect( 'index2.php?option='. $option . '&task=showCouponsStatic' );
-        break;
+		case 'ordercouponstaticup':
+			global $database;
+			$row = new coupon( $database, 1 );
+			$row->load( $id[0] );
+			$row->move( -1 );
+			mosRedirect( 'index2.php?option='. $option . '&task=showCouponsStatic' );
+				break;
 
-    case 'ordercouponstaticdown':
-	    global $database;
-	    $row = new coupon( $database, 1 );
-	    $row->load( $id[0] );
-	    $row->move( 1 );
-	    mosRedirect( 'index2.php?option='. $option . '&task=showCouponsStatic' );
-        break;
+		case 'ordercouponstaticdown':
+			global $database;
+			$row = new coupon( $database, 1 );
+			$row->load( $id[0] );
+			$row->move( 1 );
+			mosRedirect( 'index2.php?option='. $option . '&task=showCouponsStatic' );
+				break;
 
 	case 'editcss':
 		editCSS( $option );
@@ -507,11 +507,11 @@ switch( strtolower( $task ) ) {
 		cancelCSS( $option );
 		break;
 
-    case 'about':
+		case 'about':
 		about( );
 		break;
 
-    case 'hacks':
+		case 'hacks':
 		$undohack	= aecGetParam( 'undohack', 0 );
 		$filename	= aecGetParam( 'filename', 0 );
 		$check_hack	= $filename ? 0 : 1;
@@ -521,7 +521,7 @@ switch( strtolower( $task ) ) {
 		HTML_AcctExp::hacks( $option, hackcorefile( $option, 0, 1, 0 ) );
 		break;
 
-    case 'help':
+		case 'help':
 		help( $option );
 		break;
 
@@ -1099,10 +1099,10 @@ function removeUser( $userid, $option )
 	global $database, $my, $acl;
 
 	// $userid contains values corresponding to id field of #__acctexp table
-    if ( !is_array( $userid ) || count( $userid ) < 1 ) {
-	    echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
-	    exit;
-    }
+		if ( !is_array( $userid ) || count( $userid ) < 1 ) {
+			echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
+			exit;
+		}
 
 	$userids	= implode( ',', $userid );
 	$msg		= _REMOVED;
@@ -1154,10 +1154,10 @@ function removeClosedSubscription( $userid, $option )
 	global $database, $my, $acl, $mosConfig_dbprefix;
 
 	// $userid contains values corresponding to id field of #__acctexp table
-    if ( !is_array( $userid ) || count( $userid ) < 1 ) {
-	    echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
-	    exit;
-    }
+		if ( !is_array( $userid ) || count( $userid ) < 1 ) {
+			echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
+			exit;
+		}
 
 	$userids = implode(',', $userid);
 	$query  = 'DELETE FROM #__acctexp'
@@ -1233,10 +1233,10 @@ function removePendingSubscription( $userid, $option )
 	global $database, $my, $acl, $mosConfig_dbprefix;
 
 	// $userid contains values corresponding to id field of #__acctexp table
-    if ( !is_array( $userid ) || count( $userid ) < 1 ) {
-	    echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
-	    exit;
-    }
+		if ( !is_array( $userid ) || count( $userid ) < 1 ) {
+			echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
+			exit;
+		}
 
 	$userids = implode(',', $userid);
 
@@ -1305,10 +1305,10 @@ function activatePendingSubscription( $userid, $option, $renew )
 {
 	global $database;
 
-    if (!is_array( $userid ) || count( $userid ) < 1) {
-	    echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
-	    exit;
-    }
+		if (!is_array( $userid ) || count( $userid ) < 1) {
+			echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
+			exit;
+		}
 
 	$n = 0;
 
@@ -1585,11 +1585,11 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 		$database->setQuery( $query );
 		$userarray = $database->loadResultArray();
 
-	    foreach ( $userarray as $i => $v ) {
-	        if ( empty( $v ) ){
-	        	unset( $userarray[$i] );
-	        }
-	    }
+			foreach ( $userarray as $i => $v ) {
+					if ( empty( $v ) ){
+						unset( $userarray[$i] );
+					}
+			}
 
 		$query = 'SELECT `id`, `name`, `username`, `usertype`'
 				. ' FROM #__users'
@@ -1902,15 +1902,17 @@ function editSettings( $option )
 	$gw_list_html[]			= mosHTML::makeOption( 'none', _AEC_CMN_NONE_SELECTED );
 	$gw_list_enabled_html[] = mosHTML::makeOption( 'none', _AEC_CMN_NONE_SELECTED );
 
-	// TODO: Deprecated key: gwlist
+	// Display Processor descriptions?
 	if ( !empty( $aecConfig->cfg['gwlist'] ) ) {
 		$desc_list = $aecConfig->cfg['gwlist'];
 	} else {
 		$desc_list = array();
 	}
+
 	$gwlist_selected = array();
 
 	asort($gwlist);
+
 	$ppsettings = array();
 
 	foreach ( $gwlist as $gwname ) {
@@ -2153,7 +2155,7 @@ function saveSettings( $option, $return=0 )
 				unset( $_POST[$description] );
 			}
 
-			$settings = $pp->processor->settings();
+			$settings = $pp->getBackendSettings();
 
 			if ( is_int( $pp->is_recurring() ) ) {
 				$settings['recurring'] = 2;
@@ -4042,6 +4044,16 @@ function quicklookup( $option )
 		}
 	}
 
+	if ( strpos( $search, 'serialdecode' ) === 0 ) {
+		$search = aecGetParam( 'search', '' );
+		$s = trim( substr( $search, 12 ) );
+
+		if ( !empty( $s ) ) {
+			$return = unserialize( base64_decode( $s ) );
+			return '<div style="text-align:left;">' . obsafe_print_r( $return, true, true ) . '</div>';
+		}
+	}
+
 	$maybe = array( '?', '??', '???', '????', 'what to do', 'need strategy', 'help', 'help me', 'huh?', 'AAAAH!' );
 
 	if ( in_array( $search, $maybe ) ) {
@@ -4059,6 +4071,35 @@ function quicklookup( $option )
 	}
 
 	return false;
+}
+
+function obsafe_print_r($var, $return = false, $html = false, $level = 0) {
+    $spaces = "";
+    $space = $html ? "&nbsp;" : " ";
+    $newline = $html ? "<br />\n" : "\n";
+    for ($i = 1; $i <= 6; $i++) {
+        $spaces .= $space;
+    }
+    $tabs = $spaces;
+    for ($i = 1; $i <= $level; $i++) {
+        $tabs .= $spaces;
+    }
+    if (is_array($var)) {
+        $title = "Array";
+    } elseif (is_object($var)) {
+        $title = get_class($var)." Object";
+    }
+    $output = $title . $newline . $newline;
+    foreach($var as $key => $value) {
+        if (is_array($value) || is_object($value)) {
+            $level++;
+            $value = obsafe_print_r($value, true, $html, $level);
+            $level--;
+        }
+        $output .= $tabs . "[" . $key . "] => " . $value . $newline;
+    }
+    if ($return) return $output;
+      else echo $output;
 }
 
 function hackcorefile( $option, $filename, $check_hack, $undohack )
@@ -4776,10 +4817,10 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 					if ( !$undohack ) { // hack
 						$newData			= str_replace( $hacks[$filename]['read'], $hacks[$filename]['insert'], $oldData );
 
-					    //make a backup
-					    if ( !backupFile( $hacks[$filename]['filename'], $hacks[$filename]['filename'] . '.aec-backup' ) ) {
+							//make a backup
+							if ( !backupFile( $hacks[$filename]['filename'], $hacks[$filename]['filename'] . '.aec-backup' ) ) {
 							// Echo error message
-					    }
+							}
 
 					} else { // undo hack
 						if ( strcmp( $hacks[$filename]['status'], 'legacy' ) === 0 ) {
@@ -4793,14 +4834,14 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 						}
 					}
 
-				    $oldperms = fileperms( $hacks[$filename]['filename'] );
-				    chmod( $hacks[$filename]['filename'], $oldperms | 0222 );
+						$oldperms = fileperms( $hacks[$filename]['filename'] );
+						chmod( $hacks[$filename]['filename'], $oldperms | 0222 );
 
-				    if ( $fp = fopen( $hacks[$filename]['filename'], 'wb' ) ) {
-				        fwrite( $fp, $newData, strlen( $newData ) );
-				        fclose( $fp );
-				        chmod( $hacks[$filename]['filename'], $oldperms );
-				    }
+						if ( $fp = fopen( $hacks[$filename]['filename'], 'wb' ) ) {
+								fwrite( $fp, $newData, strlen( $newData ) );
+								fclose( $fp );
+								chmod( $hacks[$filename]['filename'], $oldperms );
+						}
 				}
 				break;
 
@@ -4833,10 +4874,10 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 
 function backupFile( $file, $file_new )
 {
-    if ( !copy( $file, $file_new ) ) {
-        return false;
-    }
-    return true;
+		if ( !copy( $file, $file_new ) ) {
+				return false;
+		}
+		return true;
 }
 
 function importData()

@@ -1,4 +1,9 @@
 <?php
+
+$serialupdate	= false;
+$newinstall 	= false;
+$jsonconversion = false;
+
 // Check whether the config is on 0.12.6 status
 $query = 'SELECT `settings` FROM #__acctexp_config'
 . ' WHERE `id` = \'1\''
@@ -6,11 +11,14 @@ $query = 'SELECT `settings` FROM #__acctexp_config'
 $database->setQuery( $query );
 $set = $database->loadResult();
 
-$serialupdate	= false;
-$newinstall 	= true;
-
-if ( ( strpos( $set, '{' ) !== 0 ) && !empty( $set ) ) {
-	$settings = parameterHandler::decode( $set );
+if ( ( ( strpos( $set, '{' ) === 0 ) || ( strpos( $set, "\n" ) !== false ) ) && !empty( $set ) ) {
+	if ( strpos( $set, '{' ) === 0 ) {
+		$settings = jsoonHandler::decode( $set );
+		$jsonconversion = true;
+	} else {
+		$settings = parameterHandler::decode( $set );
+		$serialupdate = true;
+	}
 
 	if ( isset( $settings['milist'] ) ) {
 		$temp = explode( ';', $settings['milist'] );
@@ -25,10 +33,6 @@ if ( ( strpos( $set, '{' ) !== 0 ) && !empty( $set ) ) {
 	;
 	$database->setQuery( $query );
 	$database->query();
-
-	$serialupdate = true;
-} elseif ( strpos( $set, '{' ) === 0 ) {
-	$jsonconversion = true;
 } elseif ( empty( $set ) ) {
 	$newinstall = true;
 }
