@@ -9,7 +9,8 @@ $query = 'SELECT `settings` FROM #__acctexp_config'
 . ' WHERE `id` = \'1\''
 ;
 $database->setQuery( $query );
-$set = $database->loadResult();
+$res = $database->loadResult();
+$set = stripslashes( $res );
 
 if ( ( ( strpos( $set, '{' ) === 0 ) || ( strpos( $set, "\n" ) !== false ) ) && !empty( $set ) ) {
 	if ( strpos( $set, '{' ) === 0 ) {

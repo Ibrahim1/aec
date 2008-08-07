@@ -1052,7 +1052,7 @@ class Config_General extends serialParamDBTable
 		$def['enable_mimeta']					= 0;
 		$def['enable_coupons']					= 0;
 		$def['gwlist']							= array();
-		$def['milist']							= array( 'mi_email','mi_htaccess','mi_mysql_query','mi_email','mi_virtuemart' );
+		$def['milist']							= array( 'mi_email','mi_htaccess','mi_mysql_query','mi_email','mi_aecplan','mi_joomlauser' );
 		$def['displayccinfo']					= 1;
 		$def['customtext_confirm_keeporiginal']	= 1;
 		$def['customtext_checkout_keeporiginal']	= 1;

@@ -133,13 +133,11 @@ function com_install()
 	// --- [ END OF DATABASE UPGRADE ACTIONS ] ---
 
 	// Make sure settings & info = updated
-	$pp = null;
-	$pph = new PaymentProcessorHandler();
-
-	$pplist = $pph->getInstalledNameList();
+	$pplist = PaymentProcessorHandler::getInstalledNameList();
 
 	foreach ( $pplist as $ppname ) {
 		$pp = new PaymentProcessor();
+
 		if ( $pp->loadName( $ppname ) ) {
 			$pp->fullInit();
 
@@ -156,6 +154,8 @@ function com_install()
 
 			$pp->processor->storeload();
 		}
+
+		$pp = null;
 	}
 
 	// Force Init Params

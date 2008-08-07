@@ -10,7 +10,8 @@ if ( $jsonconversion ) {
 						5 => array( 'Subscription', 'subscr' ),
 						6 => array( 'microIntegration', 'microintegrations' ),
 						7 => array( 'coupon', 'coupons' ),
-						8 => array( 'coupon', 'coupons_static' )
+						8 => array( 'coupon', 'coupons_static' ),
+						9 => array( 'metaUserDB', 'metauser' )
 						);
 
 	foreach ( $updates as $uid => $ucontent ) {
@@ -40,7 +41,7 @@ if ( $jsonconversion ) {
 			$dec = $fielddeclare;
 			foreach ( $fielddeclare as $fieldname ) {
 				// No need to update what is empty
-				if ( empty( $object->$fieldname ) || ( strpos( $object->$fieldname, '{' ) === 0 ) || ( strpos( $object->$fieldname, '[' ) === 0 ) ) {
+				if ( empty( $object->$fieldname ) ) {
 					unset( $dec[array_search( $fieldname, $dec )] );
 				}
 			}
