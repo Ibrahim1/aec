@@ -19,11 +19,16 @@ if ( ( ( strpos( $set, '{' ) === 0 ) || ( strpos( $set, "\n" ) !== false ) ) && 
 	} else {
 		$settings = parameterHandler::decode( $set );
 		$serialupdate = true;
-	}
 
-	if ( isset( $settings['milist'] ) ) {
-		$temp = explode( ';', $settings['milist'] );
-		$settings['milist'] = $temp;
+		if ( isset( $settings['milist'] ) ) {
+			$temp = explode( ';', $settings['milist'] );
+			$settings['milist'] = $temp;
+		}
+
+		if ( isset( $settings['gwlist'] ) ) {
+			$temp = explode( ';', $settings['gwlist'] );
+			$settings['gwlist'] = $temp;
+		}
 	}
 
 	$entry = base64_encode( serialize( $settings ) );
