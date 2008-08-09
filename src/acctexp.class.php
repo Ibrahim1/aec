@@ -462,7 +462,7 @@ class metaUser
 		if ( ( $this->cmsUser->gid == 24 ) || ( $this->cmsUser->gid == 25 ) ) {
 			$query = 'SELECT count(*)'
 					. ' FROM #__core_acl_groups_aro_map'
-					. ' WHERE `' . ( aecJoomla15check() ? 'id' : 'group_id' )  . '` = \'25\''
+					. ' WHERE `group_id` = \'25\''
 					;
 			$database->setQuery( $query );
 			if ( $database->loadResult() <= 1) {
@@ -504,7 +504,7 @@ class metaUser
 
 		// Carry out ARO ID -> ACL group mapping
 		$query = 'UPDATE #__core_acl_groups_aro_map'
-				. ' SET `' . ( aecJoomla15check() ? 'id' : 'group_id' )  . '` = \'' . (int) $gid . '\''
+				. ' SET `group_id` = \'' . (int) $gid . '\''
 				. ' WHERE `aro_id` = \'' . $aro_id . '\''
 				;
 		$database->setQuery( $query );
@@ -3174,8 +3174,8 @@ class aecHTML
 				if (  aecJoomla15check() ) {
 					$return = '<div class="setting_desc">';
 					$return .= '<span class="editlinktip hasTip" title="';
-					$return .= htmlentities( $row[1] ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . ':' . htmlentities( $row[2] );
-					$return .= '">' . $this->Icon( 'help.png') . htmlentities( $row[1] ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . '</span>';
+					$return .= htmlentities( $row[1], ENT_QUOTES ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . ':' . htmlentities( $row[2], ENT_QUOTES );
+					$return .= '">' . $this->Icon( 'help.png') . htmlentities( $row[1], ENT_QUOTES ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . '</span>';
 					$return .= '</div>';
 				} else {
 					$return = '<div class="setting_desc">' . $this->ToolTip( $row[2], $row[1] ) . $row[1] . '</div>';
@@ -3427,7 +3427,7 @@ class aecHTML
 			$href = '#';
 		}
 
-		$mousover = 'return overlib(\''. htmlentities( $tooltip ) .'\''. $title .', BELOW, RIGHT'. $width .');';
+		$mousover = 'return overlib(\''. htmlentities( $tooltip, ENT_QUOTES ) .'\''. $title .', BELOW, RIGHT'. $width .');';
 
 		$tip = '';
 		if ( $link ) {
