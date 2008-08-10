@@ -22,26 +22,35 @@ class mi_raffle
 		$tables	= array();
 		$tables	= $database->getTableList();
 
-		return in_array( $mosConfig_dbprefix . 'acctexp_mi_raffle', $tables );
+		return in_array( $mosConfig_dbprefix . '_acctexp_mi_rafflelist', $tables );
 	}
 
 	function install()
 	{
 		global $database;
 
-		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_raffle` ('
+		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_rafflelist` ('
 		. '`id` int(11) NOT NULL auto_increment,'
-		. '`userid` int(11) NOT NULL,'
-		. '`active` int(4) NOT NULL default \'1\','
-		. '`granted_downloads` int(11) NULL,'
-		. '`unlimited_downloads` int(3) NULL,'
-		. '`used_downloads` int(11) NULL,'
+		. '`group` int(11) NULL,'
 		. '`params` text NULL,'
 		. ' PRIMARY KEY (`id`)'
 		. ')'
 		;
 		$database->setQuery( $query );
 		$database->query();
+
+		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_raffleuser` ('
+		. '`id` int(11) NOT NULL auto_increment,'
+		. '`userid` int(11) NOT NULL,'
+		. '`wins` int(11) NOT NULL default \'0\','
+		. '`runs` int(11) NOT NULL default \'0\','
+		. '`params` text NULL,'
+		. ' PRIMARY KEY (`id`)'
+		. ')'
+		;
+		$database->setQuery( $query );
+		$database->query();
+
 		return;
 	}
 
@@ -50,9 +59,12 @@ class mi_raffle
 		global $database;
 
         $settings = array();
-		$settings['draw_range']		= array( 'inputA' );
-		$settings['set_downloads']	= array( 'inputA' );
-		$settings['set_unlimited']	= array( 'list_yesno' );
+		$settings['list_group']			= array( 'inputA' );
+		$settings['draw_range']			= array( 'inputA' );
+		$settings['max_participations']	= array( 'inputA' );
+		$settings['max_wins']			= array( 'inputA' );
+
+		$settings['col_recipient']		= array( 'inputE' );
 
 		return $settings;
 	}
@@ -61,131 +73,175 @@ class mi_raffle
 	{
 		global $database;
 
-		if ( $this->settings['set_group'] ) {
-			$this->AddUserToGroup( $request->metaUser->userid, $this->settings['group'] );
+		$raffleuser = new AECMI_raffleuser( $database );
+		$raffleuser->loadUserid( $request->metaUser->userid );
+
+		if ( empty( $raffleuser->id ) ) {
+			$raffleuser->userid = $request->metaUser->userid;
+			$raffleuser->storeload();
 		}
 
-		$mi_rafflehandler = new raffle_restriction( $database );
-		$id = $mi_rafflehandler->getIDbyUserID( $request->metaUser->userid );
-		$mi_id = $id ? $id : 0;
-		$mi_rafflehandler->load( $mi_id );
-
-		if ( !$mi_id ) {
-			$mi_rafflehandler->userid = $request->metaUser->userid;
-			$mi_rafflehandler->active = 1;
+		if ( $raffleuser->wins >= $this->settings['max_wins'] ) {
+			return null;
 		}
 
-		if ( $this->settings['set_downloads'] ) {
-			$mi_rafflehandler->setDownloads( $this->settings['set_downloads'] );
-		} elseif ( $this->settings['add_downloads'] ) {
-			$mi_rafflehandler->addDownloads( $this->settings['add_downloads'] );
+		if ( $raffleuser->runs >= !$this->settings['max_participations'] ) {
+			return null;
 		}
 
-		$mi_rafflehandler->check();
-		$mi_rafflehandler->store();
+		$rafflelist = new AECMI_rafflelist( $database );
+		$rafflelist->loadMax( $this->settings['list_group'] );
+
+		if ( empty( $rafflelist->id ) ) {
+			$rafflelist->group = $this->settings['list_group'];
+
+			$rafflelist->params = new stdClass();
+
+			$rafflelist->params->participants = array();
+			$rafflelist->params->settings = array();
+			$rafflelist->params->settings['draw_range'] = $this->settings['draw_range'];
+		}
+
+		if ( in_array( $raffleuser->id, $rafflelist->participants ) ) {
+			continue;
+		}
+
+		$rafflelist->participants[] = $raffleuser->id;
+
+		$this->metaUser->meta->setMIParams( $this->parent->id, $this->objUsage->id, $content );
+
+		if ( count( $rafflelist ) >= $rafflelist->params->settings['draw_range'] ) {
+			$winner = rand( 1, $rafflelist->params->settings['draw_range'] );
+
+			$rafflelist->params->winid = $rafflelist->params->participants[($winner-1)];
+
+			$result = $rafflelist->closeRun( $rafflelist->params->winid );
+
+			// TODO: Multiple winners
+			$winnerMeta = new metaUser( $result['winners'][0] );
+
+			$colET = 'The current draw results are in:' . "\n" . "\n";
+			$cloET .= 'Winner:' . "\n";
+			$cloET .= 'Userid: ' . $winnerMeta->userid . '; Username: ' . $winnerMeta->username . '; Email: ' . $winnerMeta->email . "\n" . "\n";
+			$cloET .= 'Also participated:' . "\n";
+
+			foreach ( $result['participants'] as $userid ) {
+				$u = null;
+
+				$query = 'SELECT `username`, `email`'
+					. ' FROM #__users'
+					. ' WHERE `id` = \'' . $userid . '\'';
+					;
+				$database->setQuery( $query );
+				$database->loadObject( $u );
+
+				$cloET .= $u->userid . ';' . $u->username . ';' . $u->email . "\n";
+			}
+		}
 
 		return true;
 	}
 
 }
 
-class AECMI_raffle extends mosDBTable {
+class AECMI_rafflelist extends serialParamDBTable {
 	/** @var int Primary key */
 	var $id						= null;
 	/** @var int */
-	var $userid 				= null;
-	/** @var int */
-	var $active					= null;
-	/** @var int */
-	var $granted_downloads		= null;
-	/** @var int */
-	var $unlimited_downloads	= null;
-	/** @var text */
-	var $used_downloads			= null;
+	var $group					= null;
 	/** @var text */
 	var $params					= null;
 
-	function getLastEntry( $userid ) {
+	/**
+	* @param database A database connector object
+	*/
+	function AECMI_rafflelist( &$db )
+	{
+		$this->mosDBTable( '#__acctexp_mi_rafflelist', 'id', $db );
+	}
+
+	function declareParamFields()
+	{
+		return array( 'params' );
+	}
+
+	function loadMax( $group=null ) {
+		global $database;
+
+		$query = 'SELECT max(`id`)'
+			. ' FROM #__acctexp_mi_rafflelist'
+			;
+
+		if ( !empty( $group ) ) {
+			$query .= ' WHERE `group` = \'' . $group . '\'';
+		}
+
+		$database->setQuery( $query );
+		return $this->load( $database->loadResult() );
+	}
+
+	function closeRun( $winid )
+	{
+		global $database;
+
+		$participants = array();
+		$winners = array();
+		foreach ( $this->participants as $rid ) {
+			$raffleuser = new AECMI_raffleuser( $database );
+			$raffleuser->load( $rafflelist->params->winid );
+
+			$raffleuser->runs += 1;
+
+			if ( $rid == $winid ) {
+				$raffleuser->wins += 1;
+
+				$winners[] = $raffleuser->userid;
+			} else {
+				$participants[] = $raffleuser->userid;
+			}
+
+			$raffleuser->storeload();
+		}
+
+		return array( 'participants' => $participants, 'winners' => $winners );
+	}
+}
+
+class AECMI_raffleuser extends serialParamDBTable {
+	/** @var int Primary key */
+	var $id						= null;
+	/** @var int */
+	var $userid					= null;
+	/** @var int */
+	var $wins					= null;
+	/** @var int */
+	var $runs					= null;
+	/** @var text */
+	var $params					= null;
+
+	/**
+	* @param database A database connector object
+	*/
+	function AECMI_raffleuser( &$db )
+	{
+		$this->mosDBTable( '#__acctexp_mi_raffleuser', 'id', $db );
+	}
+
+	function declareParamFields()
+	{
+		return array( 'params' );
+	}
+
+	function loadUserid( $userid) {
 		global $database;
 
 		$query = 'SELECT `id`'
-			. ' FROM #__acctexp_mi_raffle'
-			. ' WHERE id = max( 'id' )'
+			. ' FROM #__acctexp_mi_raffleuser'
+			. ' WHERE `userid` = \'' . $userid . '\''
 			;
 		$database->setQuery( $query );
-		return $database->loadResult();
-	}
-
-	function raffle_restriction( &$db ) {
-		$this->mosDBTable( '#__acctexp_mi_raffle', 'id', $db );
-	}
-
-	function is_active()
-	{
-		if ( $this->active ) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	function getDownloadsLeft()
-	{
-		if ( !empty( $this->unlimited_downloads ) ) {
-			return true;
-		} else {
-			$downloads_left = $this->granted_downloads - $this->used_downloads;
-			return $downloads_left;
-		}
-	}
-
-	function hasDownloadsLeft()
-	{
-		$check = $this->getDownloadsLeft();
-
-		if ( !empty( $check ) ) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	function noDownloadsLeft()
-	{
-		if ( !defined( '_AEC_LANG_INCLUDED_MI' ) ) {
-			global $mainframe;
-
-			$langPathMI = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/micro_integration/language/';
-			if ( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
-				include_once( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' );
-			} else {
-				include_once( $langPathMI . 'english.php' );
-			}
-		}
-
-		mosRedirect(  'index.php?option=com_raffle' , _AEC_MI_RAFFLE_NOCREDIT );
-	}
-
-	function useDownload()
-	{
-		if ( $this->hasDownloadsLeft() && $this->is_active() ) {
-			$this->used_downloads++;
-			$this->check();
-			$this->store();
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	function setDownloads( $set )
-	{
-		$this->granted_downloads = $set;
-	}
-
-	function addDownloads( $add )
-	{
-		$this->granted_downloads += $add;
+		return $this->load( $database->loadResult() );
 	}
 }
+
 ?>
