@@ -767,9 +767,12 @@ class metaUser
 			$subject = $this;
 
 			foreach ( $key as $k ) {
+					var_dump( $subject );
+					var_dump( $k );
+
 					if ( is_object( $subject ) ) {
-						if ( isset( $subject->$k ) ) {
-							$return =& $subject->$k;
+						if ( isset( $subject->{$k} ) ) {
+							$return =& $subject->{$k};
 						} else {
 							global $database;
 
