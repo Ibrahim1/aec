@@ -1300,6 +1300,7 @@ class HTML_AcctExp
 			<table class="adminlist">
 				<tr>
 					<th width="20">#</th>
+					<th width="20">id</th>
 					<th width="20"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
 					<th width="15%" align="left" nowrap="nowrap"><?php echo _MI_NAME; ?></th>
 					<th width="20%" align="left" nowrap="nowrap" ><?php echo _MI_DESC; ?></th>
@@ -1314,6 +1315,7 @@ class HTML_AcctExp
 			$row = &$rows[$i]; ?>
 				<tr class="row<?php echo $k; ?>">
 					<td width="20" align="center"><?php echo $pageNav->rowNumber( $i ); ?></td>
+					<td width="20" align="center"><?php echo $row->id; ?></td>
 					<td width="20"><?php echo mosHTML::idBox( $i, $row->id, false, 'id' ); ?></td>
 					<td width="15%">
 						<?php

@@ -51,7 +51,7 @@ class mi_raffle
 		$database->setQuery( $query );
 		$database->query();
 
-		return;
+		return true;
 	}
 
 	function Settings()
@@ -85,15 +85,17 @@ class mi_raffle
 			return null;
 		}
 
-		if ( $raffleuser->runs >= !$this->settings['max_participations'] ) {
+		if ( $raffleuser->runs >= $this->settings['max_participations'] ) {
 			return null;
 		}
 
-		$rafflelist = new AECMI_rafflelist( $database );
-		$rafflelist->loadMax( $this->settings['list_group'] );
+		$list_group = empty( $this->settings['list_group'] ) ? 0 : $this->settings['list_group'];
 
-		if ( empty( $rafflelist->id ) ) {
-			$rafflelist->group = $this->settings['list_group'];
+		$rafflelist = new AECMI_rafflelist( $database );
+
+		if ( $rafflelist->loadMax( $list_group ) === false ) {
+			$rafflelist->id = 0;
+			$rafflelist->group = $list_group;
 
 			$rafflelist->params = new stdClass();
 
@@ -102,15 +104,22 @@ class mi_raffle
 			$rafflelist->params->settings['draw_range'] = $this->settings['draw_range'];
 		}
 
-		if ( in_array( $raffleuser->id, $rafflelist->participants ) ) {
-			continue;
+		if ( in_array( $raffleuser->id, $rafflelist->params->participants ) ) {
+			return null;
 		}
 
-		$rafflelist->participants[] = $raffleuser->id;
+		$rafflelist->params->participants[] = $raffleuser->id;
 
-		$this->metaUser->meta->setMIParams( $this->parent->id, $this->objUsage->id, $content );
+		$miinfo = array();
+		$miinfo['listid']		= $rafflelist->id;
+		$miinfo['sequenceid']	= count( $rafflelist->params->participants );
 
-		if ( count( $rafflelist ) >= $rafflelist->params->settings['draw_range'] ) {
+		$request->metaUser->meta->setMIParams( $request->parent->id, $request->plan->id, $miinfo );
+		$request->metaUser->meta->storeload();
+
+		if ( count( $rafflelist->params->participants ) >= $rafflelist->params->settings['draw_range'] ) {
+			global $mainframe, $mosConfig_sitename;
+
 			$winner = rand( 1, $rafflelist->params->settings['draw_range'] );
 
 			$rafflelist->params->winid = $rafflelist->params->participants[($winner-1)];
@@ -121,9 +130,11 @@ class mi_raffle
 			$winnerMeta = new metaUser( $result['winners'][0] );
 
 			$colET = 'The current draw results are in:' . "\n" . "\n";
-			$cloET .= 'Winner:' . "\n";
-			$cloET .= 'Userid: ' . $winnerMeta->userid . '; Username: ' . $winnerMeta->username . '; Email: ' . $winnerMeta->email . "\n" . "\n";
-			$cloET .= 'Also participated:' . "\n";
+			$colET .= 'List ID: ' . $rafflelist->id . "\n" . "\n";
+			$colET .= 'Winner:' . "\n";
+			$colET .= 'Sequence ID:' . count( $rafflelist->params->participants ) . "\n";
+			$colET .= 'Userid: ' . $winnerMeta->userid . '; Username: ' . $winnerMeta->username . '; Email: ' . $winnerMeta->email . "\n" . "\n";
+			$colET .= 'Further Participants:' . "\n" . "\n";
 
 			foreach ( $result['participants'] as $userid ) {
 				$u = null;
@@ -135,9 +146,40 @@ class mi_raffle
 				$database->setQuery( $query );
 				$database->loadObject( $u );
 
-				$cloET .= $u->userid . ';' . $u->username . ';' . $u->email . "\n";
+				$colET .= $u->userid . ';' . $u->username . ';' . $u->email . "\n";
 			}
+
+			// check if Global Config `mailfrom` and `fromname` values exist
+			if ( $mainframe->getCfg( 'mailfrom' ) != '' && $mainframe->getCfg( 'fromname' ) != '' ) {
+				$adminName2 	= $mainframe->getCfg( 'fromname' );
+				$adminEmail2 	= $mainframe->getCfg( 'mailfrom' );
+			} else {
+				// use email address and name of first superadmin for use in email sent to user
+				$query = 'SELECT `name`, `email`'
+						. ' FROM #__users'
+						. ' WHERE LOWER( usertype ) = \'superadministrator\''
+						. ' OR LOWER( usertype ) = \'super administrator\''
+						;
+				$database->setQuery( $query );
+				$rows = $database->loadObjectList();
+
+				$adminName2 	= $rows[0]->name;
+				$adminEmail2 	= $rows[0]->email;
+			}
+
+			$recipients = explode( ',', $this->settings['col_recipient'] );
+
+			foreach ( $recipients as $current => $email ) {
+				$recipients[$current] = AECToolbox::rewriteEngineRQ( trim( $email ), $request );
+			}
+
+			$subject = 'Raffle Drawing Results for ' . $mosConfig_sitename;
+
+			mosMail( $adminEmail2, $adminName2, $recipients, $subject, $colET );
 		}
+
+		$rafflelist->check();
+		$rafflelist->store();
 
 		return true;
 	}
@@ -177,7 +219,12 @@ class AECMI_rafflelist extends serialParamDBTable {
 		}
 
 		$database->setQuery( $query );
-		return $this->load( $database->loadResult() );
+		$id = $database->loadResult();
+		if ( empty( $id ) ) {
+			return false;
+		} else {
+			return $this->load( $id );
+		}
 	}
 
 	function closeRun( $winid )
@@ -188,7 +235,7 @@ class AECMI_rafflelist extends serialParamDBTable {
 		$winners = array();
 		foreach ( $this->participants as $rid ) {
 			$raffleuser = new AECMI_raffleuser( $database );
-			$raffleuser->load( $rafflelist->params->winid );
+			$raffleuser->load( $rid );
 
 			$raffleuser->runs += 1;
 

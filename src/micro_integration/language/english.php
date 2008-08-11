@@ -604,4 +604,18 @@ define( '_MI_MI_AECPLAN_PLAN_APPLY_EXP_DESC',		'Apply this payment plan (for fre
 define( '_MI_MI_AECPLAN_PLAN_APPLY_PRE_EXP_NAME',		'Apply Plan (Before Expiration)' );
 define( '_MI_MI_AECPLAN_PLAN_APPLY_PRE_EXP_DESC',		'Apply this payment plan (for free) when the MI is carried out before expiration' );
 
+// Raffle MI
+define( '_AEC_MI_RAFFLE_NAME', 'Raffle' );
+define( '_AEC_MI_RAFFLE_DESC', 'A very basic raffle setup' );
+define( '_MI_MI_RAFFLE_LIST_GROUP_NAME',		'List Group' );
+define( '_MI_MI_RAFFLE_LIST_GROUP_DESC',		'If you want to have separate drawing cycles, use a different group number here.' );
+define( '_MI_MI_RAFFLE_DRAW_RANGE_NAME',		'Draw Range' );
+define( '_MI_MI_RAFFLE_DRAW_RANGE_DESC',		'This sets the number of spots in one drawing cycle that have to be handed out before a winner is chosen by random.' );
+define( '_MI_MI_RAFFLE_MAX_PARTICIPATIONS_NAME','Max Participations' );
+define( '_MI_MI_RAFFLE_MAX_PARTICIPATIONS_DESC','Maximum amount of times a user can take part in a raffle.' );
+define( '_MI_MI_RAFFLE_MAX_WINS_NAME',			'Max Wins' );
+define( '_MI_MI_RAFFLE_MAX_WINS_DESC',			'Maximum amount of times a user can win a raffle before being excluded from further raffles.' );
+define( '_MI_MI_RAFFLE_COL_RECIPIENT_NAME',		'Result Recipient Email' );
+define( '_MI_MI_RAFFLE_COL_RECIPIENT_DESC',		'To whom should the results of the raffle be sent? (includes winner and participants with their username and email)' );
+
 ?>

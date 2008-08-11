@@ -261,6 +261,10 @@ class serialParamDBTable extends paramDBTable
 		$this->check();
 		$this->store( true );
 
+		if ( empty( $this->id ) ) {
+			$this->id = $this->getMax();
+		}
+
 		return $this->load( $this->id );
 	}
 
@@ -272,6 +276,25 @@ class serialParamDBTable extends paramDBTable
 	{
 		if ( empty( $this->$field ) ) {
 			return null;
+		}
+
+		// Check for base64 consistency
+		if ( preg_match( '%^[a-zA-Z0-9/+]*={0,2}$%', $this->$field ) ) {
+			return unserialize( base64_decode( $this->$field ) );
+		} else {
+			return null;
+		}
+
+		$return = unserialize( base64_decode( $this->$field ) );
+
+		if ( $return == false ) {
+			echo $field;
+			echo "\n\n";
+			print_r($this);
+			echo "\n\n";
+			echo base64_decode( $this->$field );
+			echo "\n\n";
+			echo unserialize( $this->$field );
 		}
 
 		return unserialize( base64_decode( $this->$field ) );

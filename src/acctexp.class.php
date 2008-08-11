@@ -773,7 +773,9 @@ class metaUser
 						} else {
 							global $database;
 
-							$event = 'Syntax Parser cannot parse next reference: ' . $k . '; does not exist!';
+							$props = get_object_vars( $subject );
+
+							$event = 'Syntax Parser cannot parse next property: ' . $k . '; does not exist! Possible values are: ' . implode( ';', $props );
 
 							$eventlog = new eventLog( $database );
 							$eventlog->issue( 'AECjson cmd:metaUser Syntax Error', 'aecjson,metaUser,syntax,error', $event, 128, array() );
@@ -784,7 +786,9 @@ class metaUser
 						} else {
 							global $database;
 
-							$event = 'Syntax Parser cannot parse next reference: ' . $k . '; does not exist!';
+							$props = array_keys( $subject );
+
+							$event = 'Syntax Parser cannot parse next key: ' . $k . '; does not exist! Possible values are: ' . implode( ';', $props );
 
 							$eventlog = new eventLog( $database );
 							$eventlog->issue( 'AECjson cmd:metaUser Syntax Error', 'aecjson,metaUser,syntax,error', $event, 128, array() );
