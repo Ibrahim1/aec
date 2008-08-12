@@ -4047,9 +4047,9 @@ function quicklookup( $option )
 	if ( strpos( $search, 'serialdecode' ) === 0 ) {
 		$search = aecGetParam( 'search', '' );
 		$s = trim( substr( $search, 12 ) );
-
 		if ( !empty( $s ) ) {
-			$return = unserialize( base64_decode( $s ) );
+			$base64 = unserialize( base64_decode( $s ) );
+			$return = jsoonHandler::encode($base64);
 			return '<div style="text-align:left;">' . obsafe_print_r( $return, true, true ) . '</div>';
 		}
 	}
