@@ -6,7 +6,7 @@
 	<copyright>@Copyright (C) 2004-2008 Helder Garcia, David Deutsch</copyright>
 	<authorEmail>mails@globalnerd.org</authorEmail>
 	<authorUrl>https://globalnerd.org</authorUrl>
-	<version>0.12.6 RC2k</version>
+	<version>0.12.6 RC2m</version>
 	<description>A complete subscription management system. By Helder Garcia (hlbog), David Deutsch (skOre) and the team of AEC at globalnerd.org</description>
 	<files>
 		<filename>index.html</filename>
@@ -200,7 +200,8 @@
 			<filename>install/inc/upgrade_0_8_0.inc.php</filename>
 			<filename>install/inc/upgrade_0_10_0.inc.php</filename>
 			<filename>install/inc/upgrade_0_12_0.inc.php</filename>
-			<filename>install/inc/upgrade_0_12_6j.inc.php</filename>
+			<filename>install/inc/upgrade_0_12_6RC2j.inc.php</filename>
+			<filename>install/inc/upgrade_0_12_6RC2m.inc.php</filename>
 		</files>
 		<images>
 		</images>

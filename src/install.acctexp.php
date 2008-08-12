@@ -114,9 +114,9 @@ function com_install()
 		// Check if we are upgrading from before 0.12.6RC2j - then we need to check everything before that
 		if ( empty( $oldversion ) || ( version_compare( $oldversion, '0.12.6RC2j' ) === 0 ) ) {
 			if ( version_compare( $oldversion, '0.12.6RC2j' ) === 0 ) {
-				$oldupdates = array( '0_12_6j' );
+				$oldupdates = array( '0_12_6RC2j' );
 			} else {
-				$oldupdates = array( '0_6_0', '0_8_0', '0_10_0', '0_12_0', '0_12_6j' );
+				$oldupdates = array( '0_6_0', '0_8_0', '0_10_0', '0_12_0', '0_12_6RC2j' );
 			}
 
 			foreach ( $oldupdates as $upd ) {
@@ -124,11 +124,27 @@ function com_install()
 			}
 		}
 
+		require_once( $incpath . '/upgrade_0_12_6RC2m.inc.php' );
+
+/*
+		$incfiles = AECToolbox::getFileArray( $incpath, 'inc.php', false, true );
+
+		$upgrades = array();
+		foreach ( $incfiles as $filename ) {
+			if ( strpos( $filename, 'upgrade_' ) === false ) {
+				continue;
+			}
+
+			$version = str_replace( array( 'upgrade_', '.inc.php' ), array( '', '' ), $filename );
+
+			if ( version_compare( $version, $oldversion ) ) {
+				require_once( $incpath . '/upgrade_' . $upd . '.inc.php' );
+			}
+		}
+
 		$updates = array();
 
-		// Load include files (filter out old updates)
-		// Determine point from which to upgrade
-		// Carry out upgrades
+*/
 	}
 
 	// Set Version

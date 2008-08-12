@@ -471,7 +471,7 @@ class metaUser
 
 			$query = 'SELECT count(*)'
 					. ' FROM #__core_acl_groups_aro_map'
-					. ' WHERE `' . ( aecJoomla15check() ? 'id' : 'group_id' )  . '` = \'24\''
+					. ' WHERE `group_id` = \'24\''
 					;
 			$database->setQuery( $query );
 			if ( $database->loadResult() <= 1) {
@@ -767,9 +767,6 @@ class metaUser
 			$subject = $this;
 
 			foreach ( $key as $k ) {
-					var_dump( $subject );
-					var_dump( $k );
-
 					if ( is_object( $subject ) ) {
 						if ( isset( $subject->{$k} ) ) {
 							$return =& $subject->{$k};
@@ -910,14 +907,16 @@ class metaUserDB extends serialParamDBTable
 	function getMIParams( $miid, $usageid=false )
 	{
 		if ( $usageid ) {
-			if ( isset( $this->plan_params->$usageid ) ) {
-				if ( isset( $this->plan_params->$usageid->$miid ) ) {
-					return $this->plan_params->$usageid->$miid;
+			if ( isset( $this->plan_params[$usageid] ) ) {
+				if ( isset( $this->plan_params[$usageid][$miid] ) ) {
+					return $this->plan_params[$usageid][$miid];
+				} elseif ( isset( $this->params->mi[$miid] ) ) {
+					return $this->params->mi[$miid];
 				}
 			}
 		} else {
-			if ( isset( $this->params->mi->$miid ) ) {
-				return $this->params->mi->$miid;
+			if ( isset( $this->params->mi[$miid] ) ) {
+				return $this->params->mi[$miid];
 			}
 		}
 
@@ -927,21 +926,21 @@ class metaUserDB extends serialParamDBTable
 	function setMIParams( $miid, $usageid=false, $params )
 	{
 		if ( $usageid ) {
-			if ( isset( $this->plan_params->$usageid ) ) {
-				if ( isset( $this->plan_params->$usageid->$miid ) ) {
-					$this->plan_params->$usageid->$miid = $this->mergeParams( $this->plan_params->$usageid->$miid, $params );
+			if ( isset( $this->plan_params[$usageid] ) ) {
+				if ( isset( $this->plan_params[$usageid][$miid] ) ) {
+					$this->plan_params[$usageid][$miid] = $this->mergeParams( $this->plan_params[$usageid][$miid], $params );
 				} else {
-					$this->plan_params->$usageid->$miid = $params;
+					$this->plan_params[$usageid][$miid] = $params;
 				}
 			} else {
-				$this->plan_params->$usageid->$miid = $params;
+				$this->plan_params[$usageid][$miid] = $params;
 			}
 		}
 
-		if ( isset( $this->params->mi->$miid ) ) {
-			$this->params->mi->$miid = $this->mergeParams( $this->params->mi->$miid, $params );
+		if ( isset( $this->params->mi[$miid] ) ) {
+			$this->params->mi[$miid] = $this->mergeParams( $this->params->mi[$miid], $params );
 		} else {
-			$this->params->mi->$miid = $params;
+			$this->params->mi[$miid] = $params;
 		}
 
 		return true;
