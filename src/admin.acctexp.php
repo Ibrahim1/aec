@@ -4044,12 +4044,29 @@ function quicklookup( $option )
 		}
 	}
 
+	if ( strpos( $search, 'jsonserialencode' ) === 0 ) {
+		$search = aecGetParam( 'search', '' );
+		$s = trim( substr( $search, 12 ) );
+		if ( !empty( $s ) ) {
+			$return = base64_encode( serialize( jsoonHandler::decode( $s ) ) );
+			return '<div style="text-align:left;">' . $return . '</div>';
+		}
+	}
+
+	if ( strpos( $search, 'serialdecodejson' ) === 0 ) {
+		$search = aecGetParam( 'search', '' );
+		$s = trim( substr( $search, 12 ) );
+		if ( !empty( $s ) ) {
+			$return = jsoonHandler::encode( unserialize( base64_decode( $s ) ) );
+			return '<div style="text-align:left;">' . $return . '</div>';
+		}
+	}
+
 	if ( strpos( $search, 'serialdecode' ) === 0 ) {
 		$search = aecGetParam( 'search', '' );
 		$s = trim( substr( $search, 12 ) );
 		if ( !empty( $s ) ) {
-			$base64 = unserialize( base64_decode( $s ) );
-			$return = jsoonHandler::encode($base64);
+			$return = unserialize( base64_decode( $s ) );
 			return '<div style="text-align:left;">' . obsafe_print_r( $return, true, true ) . '</div>';
 		}
 	}
