@@ -13,7 +13,6 @@ $_MAMBOTS->registerFunction( 'onAfterStart', 'checkUserSubscription' ); //joomla
 $_MAMBOTS->registerFunction( 'onAfterStart', 'planFirst' ); //registration.php Hack #6
 $_MAMBOTS->registerFunction( 'onAfterStart', 'planRegistration' ); //registration.php Hack #2 + comprofiler.php Hack #2
 $_MAMBOTS->registerFunction( 'onAfterStart', 'notifyMI' ); //registration.php Hack #1 + user.php Hack + comprofiler.php Hack #7 + comprofiler.php Hack #8
-$_MAMBOTS->registerFunction( 'onAfterStart', 'CBRegistration' ); //comprofiler.php Hack #2
 
 //Some Micro Integrations rely on receiving a cleartext password for each user. This hack will make sure that the Micro Integrations will be notified
 function notifyMI()
@@ -125,7 +124,5 @@ function onLoginFailure()
 		mosRedirect( sefRelToAbs( $url ) );
 	}
 }
-
-
 
 ?>
