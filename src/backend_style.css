@@ -369,10 +369,14 @@ padding: 8px;
 margin: 0px;
 }
 
-.aec_tabheading img {backend_style.css (line 371)
+.aec_tabheading img {
 border-color: #fff;
 border-style: solid;
 border-width: 0px 12px 8px 12px;
 float: right;
 margin-top: -100px;
+}
+
+.icon-32-extensions {
+background-image:url(images/icons/aec_central_toolbal.png);
 }
