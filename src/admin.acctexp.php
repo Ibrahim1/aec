@@ -4046,7 +4046,7 @@ function quicklookup( $option )
 
 	if ( strpos( $search, 'jsonserialencode' ) === 0 ) {
 		$search = aecGetParam( 'search', '' );
-		$s = trim( substr( $search, 12 ) );
+		$s = trim( substr( $search, 16 ) );
 		if ( !empty( $s ) ) {
 			$return = base64_encode( serialize( jsoonHandler::decode( $s ) ) );
 			return '<div style="text-align:left;">' . $return . '</div>';
@@ -4055,7 +4055,7 @@ function quicklookup( $option )
 
 	if ( strpos( $search, 'serialdecodejson' ) === 0 ) {
 		$search = aecGetParam( 'search', '' );
-		$s = trim( substr( $search, 12 ) );
+		$s = trim( substr( $search, 16 ) );
 		if ( !empty( $s ) ) {
 			$return = jsoonHandler::encode( unserialize( base64_decode( $s ) ) );
 			return '<div style="text-align:left;">' . $return . '</div>';
