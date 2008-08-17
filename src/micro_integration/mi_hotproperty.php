@@ -271,7 +271,7 @@ class mi_hotproperty extends MI
 		. '$mi_hphandler = new aec_hotproperty( $database );' . "\n"
 		. '$mi_hphandler->loadUserID( $my->id );' . "\n"
 		. 'if( $mi_hphandler->id ) {' . "\n"
-		. 'if( !$mi_hphandler->hasListingsLeft() ) {' . "\n"
+		. 'if( $mi_hphandler->hasListingsLeft() ) {' . "\n"
 		. '$mi_hphandler->useListing();' . "\n"
 		. '} else {' . "\n"
 		. 'echo "' . _AEC_MI_HACK1_HOTPROPERTY . '";' . "\n"
