@@ -65,6 +65,8 @@ define( '_AEC_MI_HACK1_DOCMAN',                        'Cr&eacute;&eacute; une l
 define( '_AEC_MI_DOCMAN_NOCREDIT',                    'Nous sommes d&eacute;sol&eacute;s: Votre nombre de t&eacute;l&eacute;chargements est &eacute;puis&eacute;.' );
 define( '_MI_MI_DOCMAN_DELETE_ON_EXP_NAME',             'Action pour les groupes existants quand le compte expire');
 define( '_MI_MI_DOCMAN_DELETE_ON_EXP_DESC',            'Choisissez ce qui arrive &agrave; l\'expiration aux groupes DocMan d&eacute;j&agrave; d&eacute;finis.');
+define( '_MI_MI_DOCMAN_REMOVE_NAME', 				'Remove: ' );
+define( '_MI_MI_DOCMAN_REMOVE_NAME_DESC',			'Carry out the expiration action for all users with an active plan attached to this micro-integration' );
 
 // email
 define( '_AEC_MI_NAME_EMAIL',        'Email' );

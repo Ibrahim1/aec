@@ -59,12 +59,14 @@ define( '_MI_MI_DOCMAN_GROUP_EXP_NAME',				'DM-Gruppe bei Ablauf' );
 define( '_MI_MI_DOCMAN_GROUP_EXP_DESC',				'Auf "Ja" setzen, wenn die DocMan-Gruppe nach Abonnementablauf verwendet werden soll' );
 define( '_MI_MI_DOCMAN_SET_GROUP_EXP_NAME',			'DM-Gruppe definieren' );
 define( '_MI_MI_DOCMAN_SET_GROUP_EXP_DESC',			'Diejenige DocMan-Gruppe definieren welche nach Aboablauf g&uuml;ltig sein soll' );
-define( '_MI_MI_DOCMAN_SET_REBUILD_NAME',			'Neu Erstellen' );
-define( '_MI_MI_DOCMAN_SET_REBUILD_DESC',			'Die Gruppenzuweisung aufgrund der Benutzer-Plan-MI Beziehung neu aufbauen.' );
+define( '_MI_MI_DOCMAN_REBUILD_NAME',				'Neu Erstellen' );
+define( '_MI_MI_DOCMAN_REBUILD_DESC',				'Die Gruppenzuweisung aufgrund der Benutzer-Plan-MI Beziehung neu aufbauen.' );
 define( '_AEC_MI_HACK1_DOCMAN',						'Erstellt eine Downloadeinschr&auml;nkung f&uuml;r DocMan' );
 define( '_AEC_MI_DOCMAN_NOCREDIT',					'Es tut uns au&szlig;erordentlich leid, aber Sie haben keine verbleibenden Downloads &uuml;brig.' );
-define( '_MI_MI_DOCMAN_DELETE_ON_EXP_NAME', 			'Action for existing groups when account expires:');
+define( '_MI_MI_DOCMAN_DELETE_ON_EXP_NAME', 		'Action for existing groups when account expires:');
 define( '_MI_MI_DOCMAN_DELETE_ON_EXP_DESC',			'Choose what action you want to happen to already defined DocMan groups when the user expires.');
+define( '_MI_MI_DOCMAN_REMOVE_NAME', 				'Remove: ' );
+define( '_MI_MI_DOCMAN_REMOVE_NAME_DESC',			'Carry out the expiration action for all users with an active plan attached to this micro-integration' );
 
 // email
 define( '_AEC_MI_NAME_EMAIL',		'Email' );
