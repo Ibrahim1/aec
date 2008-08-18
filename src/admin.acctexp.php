@@ -3397,7 +3397,7 @@ function editCoupon( $id, $option, $new, $type )
 	$mi_list = $database->loadObjectList();
 
 	$mis = array();
-	if ( !empty( $mi_list ) ) {
+	if ( !empty( $mi_list ) && !empty( $params_values['micro_integrations'] ) ) {
 		foreach ( $mi_list as $mi_item ) {
 			if ( in_array( $mi_item->value, $params_values['micro_integrations'] ) ) {
 				$mis[] = $mi_item->value;
