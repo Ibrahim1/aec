@@ -38,7 +38,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$info['longname']		= _CFG_PAYPAL_WPP_LONGNAME;
 		$info['statement']		= _CFG_PAYPAL_WPP_STATEMENT;
 		$info['description']	= _CFG_PAYPAL_WPP_DESCRIPTION;
-		$info['currencies']		= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK';
+		$info['currencies']		= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS';
 		$info['languages']		= 'GB,DE,FR,IT,ES,US,NL';
 		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck,giropay';
 		$info['recurring']		= 2;
