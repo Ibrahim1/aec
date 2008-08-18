@@ -498,10 +498,19 @@ define( '_MI_MI_HOTPROPERTY_SET_LISTINGS_PRE_EXP_DESC',		'Input the amount of li
 define( '_MI_MI_HOTPROPERTY_ADD_LISTINGS_PRE_EXP_NAME',		'Add listings (Pre Expiration)' );
 define( '_MI_MI_HOTPROPERTY_ADD_LISTINGS_PRE_EXP_DESC',		'Input the amount of listings you want to add before expiration' );
 
+define( '_MI_MI_HOTPROPERTY_SET_UNLIMITED_NAME',		'Set unlimited' );
+define( '_MI_MI_HOTPROPERTY_SET_UNLIMITED_DESC',		'Grant unlimited downloads on application' );
+define( '_MI_MI_HOTPROPERTY_SET_UNLIMITED_EXP_NAME',		'Set unlimited (Expiration)' );
+define( '_MI_MI_HOTPROPERTY_SET_UNLIMITED_EXP_DESC',		'Grant unlimited downloads on expiration' );
+define( '_MI_MI_HOTPROPERTY_SET_UNLIMITED_PRE_EXP_NAME',		'Set unlimited (Pre Expiration)' );
+define( '_MI_MI_HOTPROPERTY_SET_UNLIMITED_PRE_EXP_DESC',		'Grant unlimited downloads before expiration' );
+
 define( '_MI_MI_HOTPROPERTY_ASSOC_COMPANY_NAME',	'Associate Company' );
 define( '_MI_MI_HOTPROPERTY_ASSOC_COMPANY_DESC',	'Automatically associate the new user account with the new company account.' );
 define( '_MI_MI_HOTPROPERTY_REBUILD_NAME',	'Rebuild' );
 define( '_MI_MI_HOTPROPERTY_REBUILD_DESC',	'Attempt to rebuild the effect this MI has on the users who are in a plan that has this MI assigned.' );
+define( '_MI_MI_HOTPROPERTY_REMOVE_NAME',	'Remove' );
+define( '_MI_MI_HOTPROPERTY_REMOVE_NAME',	'Attempt to remove the effect this MI has on the users who are in a plan that has this MI assigned.' );
 
 define( '_MI_MI_HOTPROPERTY_ADD_LIST_USERCHOICE_NAME',	'Listings Userchoice' );
 define( '_MI_MI_HOTPROPERTY_ADD_LIST_USERCHOICE_DESC',	'Select whether you want the user to select the amount of listings' );

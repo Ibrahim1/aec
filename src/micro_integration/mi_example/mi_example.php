@@ -16,6 +16,8 @@ class mi_example
 
 	function checkInstallation()
 	{
+		// THIS FUNCTION IS NOT OBLIGATORY - IF YOU DON'T NEED IT, DON'T USE IT
+
 		// As explained below this checks whether the installation of this
 		// feature has already taken place. If that is not the case, we call install below
 		// Also check out the below example for a db check for the table that is created
@@ -31,6 +33,8 @@ class mi_example
 
 	function install()
 	{
+		// THIS FUNCTION IS NOT OBLIGATORY - IF YOU DON'T NEED IT, DON'T USE IT
+
 		// In this function, you can specify what has to be done before you
 		// can use this Integration. Common applications could be the creation
 		// of a database table (please prefix with "acctexp_mi_" if you care
@@ -66,18 +70,22 @@ class mi_example
 		// Syntax: ['name'] => Field Type || Field Name || Field Description
 		$settings = array();
 		$settings['param_name1'] = array("inputA", "Name", "description");
-		$settings['param_name2'] = array("inputD", "SET", "description2");
+		$settings['param_name2'] = array("inputD", "Name2", "description2");
 
 		return $settings;
 	}
 
 	function pre_expiration_action( $request )
 	{
+		// THIS FUNCTION IS NOT OBLIGATORY - IF YOU DON'T NEED IT, DON'T USE IT
+
 		// Here you can specify whatever you want to happen when the plan runs out.
 	}
 
 	function expiration_action( $request )
 	{
+		// THIS FUNCTION IS NOT OBLIGATORY - IF YOU DON'T NEED IT, DON'T USE IT
+
 		// Here you can specify whatever you want to happen before the plan runs out.
 	}
 
@@ -92,6 +100,8 @@ class mi_example
 
 	function on_userchange_action( $request )
 	{
+		// THIS FUNCTION IS NOT OBLIGATORY - IF YOU DON'T NEED IT, DON'T USE IT
+
 		// If your integration relies on knowing the username and password,
 		// you can change what you saved with this function when the user is changed
 		// trace can be either 'registration' for a account creation on registration.
@@ -101,11 +111,15 @@ class mi_example
 
 	function delete()
 	{
+		// THIS FUNCTION IS NOT OBLIGATORY - IF YOU DON'T NEED IT, DON'T USE IT
+
 		// Trigger an action here in case the MI is deleted.
 	}
 
 	function profile_info( $userid )
 	{
+		// THIS FUNCTION IS NOT OBLIGATORY - IF YOU DON'T NEED IT, DON'T USE IT
+
 		// Return Info to the MySubscription page of this user
 	}
 
