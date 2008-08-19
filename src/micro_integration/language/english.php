@@ -67,7 +67,9 @@ define( '_MI_MI_DOCMAN_DELETE_ON_EXP_NAME', 		'Action for existing groups when a
 define( '_MI_MI_DOCMAN_DELETE_ON_EXP_DESC',			'Choose what action you want to happen to already defined DocMan groups when the user expires.' );
 define( '_MI_MI_DOCMAN_REMOVE_NAME', 				'Remove: ' );
 define( '_MI_MI_DOCMAN_REMOVE_NAME_DESC',			'Carry out the expiration action for all users with an active plan attached to this micro-integration' );
-
+define( '_AEC_MI_DIV1_DOCMAN_USED',		'You have used <strong>%s</strong> downloads.' );
+define( '_AEC_MI_DIV1_DOCMAN_REMAINING',	'You have <strong>%s</strong> downloads remaining.' );
+define( '_AEC_MI_DIV1_DOCMAN_UNLIMITED', 	'unlimited' );
 // email
 define( '_AEC_MI_NAME_EMAIL',		'Email' );
 define( '_AEC_MI_DESC_EMAIL',		'Send an Email to one or more adresses on application or expiration of the subscription' );

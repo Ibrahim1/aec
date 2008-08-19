@@ -113,6 +113,31 @@ class mi_docman
 		return $settings;
 	}
 
+	function profile_info( $userid )
+	{
+		global $database;
+		$mi_docmanhandler = new docman_restriction( $database );
+		$id = $mi_docmanhandler->getIDbyUserID( $userid );
+
+
+
+		if ( $id ) {
+			$mi_docmanhandler->load( $id );
+			$left = $mi_docmanhandler->getDownloadsLeft();
+			$used = $mi_docmanhandler->used_downloads;
+			$unlimited = $mi_docmanhandler->unlimited_downloads;
+			$message = '<p>'.sprintf(_AEC_MI_DIV1_DOCMAN_USED, $used).'</p>';
+			if ( $unlimited ) {
+				$message .='<p>' . sprintf( _AEC_MI_DIV1_DOCMAN_REMAINING, _AEC_MI_DIV1_DOCMAN_UNLIMITED ) . '</p>';
+			} else {
+				$message .= '<p>' . sprintf( _AEC_MI_DIV1_DOCMAN_REMAINING, $left ) . '</p>';
+			}
+			return $message;
+		} else {
+			return '';
+		}
+	}
+
 	function hacks()
 	{
 		global $mosConfig_absolute_path;
