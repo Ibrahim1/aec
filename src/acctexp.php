@@ -321,10 +321,11 @@ function subscribe( $option )
 	$userid		= aecGetParam( 'userid', 0 );
 	$username	= aecGetParam( 'username', '' );
 
+	$isJoomla15 = aecJoomla15check();
+	
 	if ( !empty( $username ) && $usage ) {
 		$CB = ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) );
-
-		if ( aecJoomla15check() && !$CB ) {
+		if ( $isJoomla15 && !$CB ) {
 			// Joomla 1.5 Sanity Check
 
 			// Get required system objects
@@ -346,7 +347,7 @@ function subscribe( $option )
 				subscribe();
 				return false;
 			}
-		} elseif ( !aecJoomla15check() && !$CB ) {
+		} elseif ( !$isJoomla15 && !$CB ) {
 			// Joomla 1.0 Sanity Check
 			$row = new mosUser( $database );
 
@@ -376,6 +377,11 @@ function subscribe( $option )
 		$invoicefact = new InvoiceFactory( $userid, $usage, $processor );
 		$invoicefact->confirm( $option, $_POST );
 	} else {
+		if ( $isJoomla15 && !$CB ) {
+			//if Joomla15 - add the form validation JS
+			JHTML::_('behavior.formvalidation');
+		}
+		
 		if ( $my->id ) {
 			$userid			= $my->id;
 			$passthrough	= false;
@@ -412,6 +418,7 @@ function subscribe( $option )
 			} else {
 				$passthrough = false;
 			}
+
 
 			if ( !empty( $passafter ) ) {
 				foreach ( $passafter as $varname => $varcontent ) {
@@ -475,7 +482,6 @@ function confirmSubscription( $option )
 	$usage		= aecGetParam( 'usage', 0 );
 	$processor	= aecGetParam( 'processor', '' );
 	$username	= aecGetParam( 'username', 0 );
-
 	if ( ( $usage > 0 ) && !$username && !$userid && !$my->id ) {
 		if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
 			// This is a CB registration, borrowing their code to register the user
