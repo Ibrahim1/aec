@@ -397,8 +397,7 @@ class docman_restriction extends mosDBTable {
 
 	function setDownloads( $set )
 	{
-		$used = $this->used_downloads;
-		$this->granted_downloads = $set + $used;
+		$this->granted_downloads = $set + $this->used_downloads;
 	}
 
 	function addDownloads( $add )
