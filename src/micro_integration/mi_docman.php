@@ -184,8 +184,10 @@ class mi_docman
 			}
 		}
 
-		if ( $this->settings['set_group_exp'] ) {
-			$this->AddUserToGroup( $request->metaUser->userid, $this->settings['group_exp'] );
+		if ( $this->settings['set_group_exp'] && !empty( $this->settings['group_exp'] ) ) {
+			foreach ( $this->settings['group_exp'] as $group ) {
+				$this->AddUserToGroup( $request->metaUser->userid, $group );
+			}
 		}
 
 		$mi_docmanhandler = new docman_restriction( $database );
@@ -206,8 +208,10 @@ class mi_docman
 	{
 		global $database;
 
-		if ( $this->settings['set_group'] ) {
-			$this->AddUserToGroup( $request->metaUser->userid, $this->settings['group'] );
+		if ( $this->settings['set_group'] && !empty( $this->settings['group'] ) ) {
+			foreach ( $this->settings['group'] as $group ) {
+				$this->AddUserToGroup( $request->metaUser->userid, $group );
+			}
 		}
 
 		$mi_docmanhandler = new docman_restriction( $database );
