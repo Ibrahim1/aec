@@ -120,7 +120,9 @@ class mi_raffle
 		if ( count( $rafflelist->params->participants ) >= $rafflelist->params->settings['draw_range'] ) {
 			global $mainframe, $mosConfig_sitename;
 
-			$winner = rand( 1, $rafflelist->params->settings['draw_range'] );
+			$range = (int) $rafflelist->params->settings['draw_range'];
+
+			$winner = rand( 1, $range );
 
 			$rafflelist->params->winid = $rafflelist->params->participants[($winner-1)];
 
