@@ -1436,41 +1436,43 @@ class aecHeartbeat extends mosDBTable
 				$database->setQuery( $query );
 				$sub_list = $database->loadObjectList();
 
-				foreach ( $sub_list as $sl ) {
-					$metaUser = new metaUser( $sl->userid );
-					$metaUser->moveFocus( $sl->id );
+				if ( !empty( $sub_list ) ) {
+					foreach ( $sub_list as $sl ) {
+						$metaUser = new metaUser( $sl->userid );
+						$metaUser->moveFocus( $sl->id );
 
-					// Two double checks here, just to be sure
-					if ( !( strcmp( $metaUser->focusSubscription->status, 'Expired' ) === 0 ) && !$metaUser->focusSubscription->recurring ) {
-						if ( in_array( $metaUser->focusSubscription->plan, $expmi_plans ) ) {
-							// Its ok - load the plan
-							$subscription_plan = new SubscriptionPlan( $database );
-							$subscription_plan->load( $metaUser->focusSubscription->plan );
-							$userplan_mis = $subscription_plan->micro_integrations;
+						// Two double checks here, just to be sure
+						if ( !( strcmp( $metaUser->focusSubscription->status, 'Expired' ) === 0 ) && !$metaUser->focusSubscription->recurring ) {
+							if ( in_array( $metaUser->focusSubscription->plan, $expmi_plans ) ) {
+								// Its ok - load the plan
+								$subscription_plan = new SubscriptionPlan( $database );
+								$subscription_plan->load( $metaUser->focusSubscription->plan );
+								$userplan_mis = $subscription_plan->micro_integrations;
 
-							// Get the right MIs
-							$user_pexpmis = array_intersect( $userplan_mis, $mi_pexp );
+								// Get the right MIs
+								$user_pexpmis = array_intersect( $userplan_mis, $mi_pexp );
 
-							// loop through MIs and apply pre exp action
-							$check_actions = $exp_actions;
+								// loop through MIs and apply pre exp action
+								$check_actions = $exp_actions;
 
-							foreach ( $user_pexpmis as $mi_id ) {
-								$mi = new microIntegration( $database );
-								$mi->load( $mi_id );
+								foreach ( $user_pexpmis as $mi_id ) {
+									$mi = new microIntegration( $database );
+									$mi->load( $mi_id );
 
-								if ( $mi->callIntegration() ) {
-									// Do the actual pre expiration check on this MI
-									if ( $metaUser->focusSubscription->is_expired( $mi->pre_exp_check ) ) {
-										$result = $mi->pre_expiration_action( $metaUser, $subscription_plan );
-										if ( $result ) {
-											$exp_actions++;
+									if ( $mi->callIntegration() ) {
+										// Do the actual pre expiration check on this MI
+										if ( $metaUser->focusSubscription->is_expired( $mi->pre_exp_check ) ) {
+											$result = $mi->pre_expiration_action( $metaUser, $subscription_plan );
+											if ( $result ) {
+												$exp_actions++;
+											}
 										}
 									}
 								}
-							}
 
-							if ( $exp_actions > $check_actions ) {
-								$exp_users++;
+								if ( $exp_actions > $check_actions ) {
+									$exp_users++;
+								}
 							}
 						}
 					}
