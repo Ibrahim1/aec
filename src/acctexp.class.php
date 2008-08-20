@@ -1386,9 +1386,9 @@ class aecHeartbeat extends mosDBTable
 				}
 
 				// If we have found all expired users, put all others into pre expiration
-				if ( !$found_expired && !in_array( $subscription->userid, $pre_expired_users ) ) {
+				if ( !$found_expired && !in_array( $subscription->id, $pre_expired_users ) ) {
 					if ( $pre_expiration ) {
-						$pre_expired_users[] = $subscription->userid;
+						$pre_expired_users[] = $subscription->id;
 					}
 				}
 			}
@@ -1398,7 +1398,7 @@ class aecHeartbeat extends mosDBTable
 				// Get all the MIs which have a pre expiration check
 				$query = 'SELECT `id`'
 						. ' FROM #__acctexp_microintegrations'
-						. ' WHERE `pre_exp_check` > \'0\''
+						. ' WHERE `pre_exp_check` > 0'
 						;
 				$database->setQuery( $query );
 				$mi_pexp = $database->loadResultArray();
@@ -1406,7 +1406,7 @@ class aecHeartbeat extends mosDBTable
 				// Get all the plans which have MIs
 				$query = 'SELECT `id`'
 						. ' FROM #__acctexp_plans'
-						. ' WHERE `micro_integrations` != \'\''
+						. ' WHERE `micro_integrations` != NULL'
 						;
 				$database->setQuery( $query );
 				$plans_mi = $database->loadResultArray();
@@ -1430,15 +1430,15 @@ class aecHeartbeat extends mosDBTable
 				// Filter out the users which dont have the correct plan
 				$query = 'SELECT `id`, `userid`'
 						. ' FROM #__acctexp_subscr'
-						. ' WHERE `userid` IN (' . implode( ',', $pre_expired_users ) . ')'
+						. ' WHERE `id` IN (' . implode( ',', $pre_expired_users ) . ')'
 						. ' AND `plan` IN (' . implode( ',', $expmi_plans) . ')'
 						;
 				$database->setQuery( $query );
-				$user_list = $database->loadObjectList();
+				$sub_list = $database->loadObjectList();
 
-				foreach ( $user_list as $usid ) {
-					$metaUser = new metaUser( $usid->userid );
-					$metaUser->moveFocus( $usid->id );
+				foreach ( $sub_list as $sl ) {
+					$metaUser = new metaUser( $sl->userid );
+					$metaUser->moveFocus( $sl->id );
 
 					// Two double checks here, just to be sure
 					if ( !( strcmp( $metaUser->focusSubscription->status, 'Expired' ) === 0 ) && !$metaUser->focusSubscription->recurring ) {
