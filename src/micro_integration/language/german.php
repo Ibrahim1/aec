@@ -611,4 +611,26 @@ define( '_MI_MI_AECPLAN_PLAN_APPLY_EXP_DESC',		'Apply this payment plan (for fre
 define( '_MI_MI_AECPLAN_PLAN_APPLY_PRE_EXP_NAME',		'Apply Plan (Before Expiration)' );
 define( '_MI_MI_AECPLAN_PLAN_APPLY_PRE_EXP_DESC',		'Apply this payment plan (for free) when the MI is carried out before expiration' );
 
+// SOBI
+define( '_AEC_MI_SOBI_NAME',		'SOBI' );
+define( '_AEC_MI_SOBI_DESC',		'Publish or unpublish listings in Joomla\'s Sigsiu Online Business Index component' );
+define( '_MI_MI_SOBI_PUBLISH_ALL_NAME',			'Publish All: ' );
+define( '_MI_MI_SOBI_PUBLISH_ALL_DESC',			'Choose yes to publish all SOBI listings for this user on activation of the MI' );
+define( '_MI_MI_SOBI_PUBLISH_ALL_EXP_NAME',			'Publish All on Expiration: ' );
+define( '_MI_MI_SOBI_PUBLISH_ALL_EXP_DESC',			'Choose yes to publish all SOBI listings for this user on activation of the MI' );
+define( '_MI_MI_SOBI_PUBLISH_ALL_PRE_EXP_NAME',			'Publish All on Pre-Expiration:' );
+define( '_MI_MI_SOBI_PUBLISH_ALL_PRE_EXP_DESC',			'Choose yes to publish all SOBI listings for this user when a pre-expiration action occurs for this MI' );
+
+define( '_MI_MI_SOBI_UNPUBLISH_ALL_NAME',			'Unpublish All: ' );
+define( '_MI_MI_SOBI_UNPUBLISH_ALL_DESC',			'Choose yes to unpublish all SOBI listings for this user on activation of the MI' );
+define( '_MI_MI_SOBI_UNPUBLISH_ALL_EXP_NAME',			'Unpublish All on Expiration: ' );
+define( '_MI_MI_SOBI_UNPUBLISH_ALL_EXP_DESC',			'Choose yes to unpublish all SOBI listings for this user on activation of the MI' );
+define( '_MI_MI_SOBI_UNPUBLISH_ALL_PRE_EXP_NAME',			'Unpublish All on Pre-Expiration:' );
+define( '_MI_MI_SOBI_UNPUBLISH_ALL_PRE_EXP_DESC',			'Choose yes to unpublish all SOBI listings for this user when a pre-expiration action occurs for this MI' );
+
+define( '_MI_MI_SOBI_REBUILD_NAME',			'Rebuild: ' );
+define( '_MI_MI_SOBI_REBUILD_DESC',			'Choose yes and then save the MI to recreate the actions fo all users with this MI on a currently active plan.' );
+define( '_MI_MI_SOBI_REMOVE_NAME',			'Remove: ' );
+define( '_MI_MI_SOBI_REMOVE_DESC',			'Choose yes and then save the MI to carry out the expiration action for all users with this MI on a currently active plan.' );
+
 ?>

@@ -632,7 +632,6 @@ define( '_MI_MI_RAFFLE_MAX_WINS_DESC',			'Maximum amount of times a user can win
 define( '_MI_MI_RAFFLE_COL_RECIPIENT_NAME',		'Result Recipient Email' );
 define( '_MI_MI_RAFFLE_COL_RECIPIENT_DESC',		'To whom should the results of the raffle be sent? (includes winner and participants with their username and email)' );
 
-
 // SOBI
 define( '_AEC_MI_SOBI_NAME',		'SOBI' );
 define( '_AEC_MI_SOBI_DESC',		'Publish or unpublish listings in Joomla\'s Sigsiu Online Business Index component' );
@@ -654,4 +653,5 @@ define( '_MI_MI_SOBI_REBUILD_NAME',			'Rebuild: ' );
 define( '_MI_MI_SOBI_REBUILD_DESC',			'Choose yes and then save the MI to recreate the actions fo all users with this MI on a currently active plan.' );
 define( '_MI_MI_SOBI_REMOVE_NAME',			'Remove: ' );
 define( '_MI_MI_SOBI_REMOVE_DESC',			'Choose yes and then save the MI to carry out the expiration action for all users with this MI on a currently active plan.' );
+
 ?>
