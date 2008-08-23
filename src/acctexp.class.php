@@ -1406,7 +1406,7 @@ class aecHeartbeat extends mosDBTable
 				// Get all the plans which have MIs
 				$query = 'SELECT `id`'
 						. ' FROM #__acctexp_plans'
-						. ' WHERE `micro_integrations` != NULL'
+						. ' WHERE `micro_integrations` IS NOT NULL'
 						;
 				$database->setQuery( $query );
 				$plans_mi = $database->loadResultArray();
@@ -8904,7 +8904,7 @@ class microIntegration extends serialParamDBTable
 
 	function pre_expiration_action( $metaUser, $objplan=null )
 	{
-		if ( method_exists( $this->mi_class, 'pre_expiration_action' ) ) {
+		if ( method_exists( $this->mi_class, 'pre_expiration_action' ) || method_exists( $this->mi_class, 'relayAction' ) ) {
 			$userflags = $metaUser->meta->getMIParams( $this->id, $objplan->id );
 
 			// We need the standard variables and their uppercase pendants
