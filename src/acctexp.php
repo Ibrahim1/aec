@@ -322,7 +322,7 @@ function subscribe( $option )
 	$username	= aecGetParam( 'username', '' );
 
 	$isJoomla15 = aecJoomla15check();
-	
+
 	if ( !empty( $username ) && $usage ) {
 		$CB = ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) );
 		if ( $isJoomla15 && !$CB ) {
@@ -377,11 +377,12 @@ function subscribe( $option )
 		$invoicefact = new InvoiceFactory( $userid, $usage, $processor );
 		$invoicefact->confirm( $option, $_POST );
 	} else {
+		$CB = ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) );
 		if ( $isJoomla15 && !$CB ) {
 			//if Joomla15 - add the form validation JS
 			JHTML::_('behavior.formvalidation');
 		}
-		
+
 		if ( $my->id ) {
 			$userid			= $my->id;
 			$passthrough	= false;
@@ -741,7 +742,7 @@ function subscriptionDetails( $option, $sub )
 			if ( ( $row->transaction_date == '0000-00-00 00:00:00' ) || ( $row->subscr_id  ) || $hassubstuff ) {
 				$transactiondate = 'uncleared';
 
-				if ( !empty( $row->params ) ) {
+				if ( !empty( $row->params ) && is_array( $row->params ) ) {
 					if ( in_array( 'pending_reason', $row->params ) ) {
 						$array = array();
 						foreach ( $row->params as $chunk ) {
