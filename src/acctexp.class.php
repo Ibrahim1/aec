@@ -6655,7 +6655,7 @@ class Subscription extends serialParamDBTable
 		return $alert;
 	}
 
-	function verifylogin( $block )
+	function verifylogin( $block, $metaUser=false )
 	{
 		global $mosConfig_live_site, $database, $aecConfig;
 
@@ -6681,9 +6681,15 @@ class Subscription extends serialParamDBTable
 			$expire = $this->expire();
 
 			if ( $expire ) {
+				if ( $metaUser !== false ) {
+					$metaUser->setTempAuth();
+				}
 				mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=expired&userid=' . $this->userid ), false, true );
 			}
 		} elseif ( ( strcmp( $this->status, 'Pending' ) === 0 ) || $block ) {
+			if ( $metaUser !== false ) {
+				$metaUser->setTempAuth();
+			}
 			mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=pending&userid=' . $this->userid ), false, true );
 		}
 	}
@@ -7447,8 +7453,7 @@ class AECToolbox
 		$metaUser = new metaUser( $id );
 
 		if ( $metaUser->hasSubscription ) {
-			$metaUser->setTempAuth();
-			$metaUser->objSubscription->verifyLogin( $metaUser->cmsUser->block );
+			$metaUser->objSubscription->verifyLogin( $metaUser->cmsUser->block, $metaUser );
 		} else {
 			if ( $aecConfig->cfg['require_subscription'] ) {
 				if ( $aecConfig->cfg['entry_plan'] ) {
@@ -7497,8 +7502,13 @@ class AECToolbox
 		$metaUser = new metaUser( $id );
 
 		if ( $metaUser->hasSubscription ) {
-			$metaUser->setTempAuth();
-			return $metaUser->objSubscription->verify( $metaUser->cmsUser->block );
+			$result = $metaUser->objSubscription->verify( $metaUser->cmsUser->block );
+
+			if ( ( $result == 'expired' ) || ( $result == 'pending' ) ) {
+				$metaUser->setTempAuth();
+			}
+
+			return $result;
 		} else {
 			if ( $aecConfig->cfg['require_subscription'] ) {
 				if ( $aecConfig->cfg['entry_plan'] ) {
@@ -7512,16 +7522,16 @@ class AECToolbox
 				} else {
 					$invoices = AECfetchfromDB::InvoiceCountbyUserID( $metaUser->userid );
 
+					$metaUser->setTempAuth();
+
 					if ( $invoices ) {
 						$invoice = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $metaUser->userid );
 
 						if ( $invoice ) {
-							$metaUser->setTempAuth();
 							return 'open_invoice';
 						}
 					}
 
-					$metaUser->setTempAuth();
 					return 'subscribe';
 				}
 			}
