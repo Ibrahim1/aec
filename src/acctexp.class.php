@@ -910,8 +910,6 @@ class metaUserDB extends serialParamDBTable
 			if ( isset( $this->plan_params[$usageid] ) ) {
 				if ( isset( $this->plan_params[$usageid][$miid] ) ) {
 					return $this->plan_params[$usageid][$miid];
-				} elseif ( isset( $this->params->mi[$miid] ) ) {
-					return $this->params->mi[$miid];
 				}
 			}
 		} else {
@@ -8920,8 +8918,8 @@ class microIntegration extends serialParamDBTable
 
 			// We need the standard variables and their uppercase pendants
 			// System MI vars have to be stored and will automatically converted to uppercase
-			$spc = strtoupper( 'system_preexp_call' );
-			$spca = $spc . strtoupper( '_abandoncheck' );
+			$spc	= strtoupper( 'system_preexp_call' );
+			$spca	= strtoupper( 'system_preexp_call_abandoncheck' );
 
 			// Check whether we have userflags to work with
 			if ( is_array( $userflags ) && !empty( $userflags ) ) {
