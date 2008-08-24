@@ -444,7 +444,7 @@ function checkDuplicateUsernameEmail( $username, $email )
 	$database->setQuery( $query );
 	if ( $database->loadResult() ) {
 		if ( !aecJoomla15check() ) {
-			mosErrorAlert( _REGWARN_EMAIL_INUSE );
+			mosErrorAlert( _REGWARN_INUSE );
 			return false;
 		} else {
 			mosErrorAlert( JText::_( 'WARNREG_INUSE' ) );
