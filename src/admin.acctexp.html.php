@@ -1236,7 +1236,6 @@ class HTML_AcctExp
 
 					if ( !isset( $row->status ) ) {
 						$row->status		= '-';
-						$row->signup_date	= '-';
 						$row->lastpay_date	= '-';
 						$row->type			= '-';
 						$row->plan_name		= '-';

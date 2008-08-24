@@ -1414,7 +1414,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$filter		= '';
 	$where		= array();
 	$where_or	= array();
-	$notconfig	= 0;
+	$notconfig	= false;
 
 	if ( !empty( $userid ) ) {
 		foreach ( $userid as $uid ) {
@@ -1510,35 +1510,52 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 	if ( is_array(  $groups ) ) {
 		if ( in_array( 'notconfig', $groups ) ) {
- 			$notconfig = 1;
+ 			$notconfig = true;
  			$groups = array( 'notconfig' );
-		}
-		if ( in_array( 'excluded', $groups ) ) {
-			$where_or[] = "a.status = 'Excluded'";
-		}
-		if ( in_array( 'expired', $groups ) ) {
-			$where_or[] = "a.status = 'Expired'";
-		}
-		if ( in_array( 'active', $groups ) ) {
-			$where_or[] = "(a.status = 'Active' || a.status = 'Trial')";
-		}
-		if ( in_array( 'pending', $groups ) ) {
-			$where_or[] = "a.status = 'Pending'";
-		}
-		if ( in_array( 'cancelled', $groups ) ) {
-			$where_or[] = "a.status = 'Cancelled'";
-		}
-		if ( in_array( 'closed', $groups ) ) {
- 			$where_or[] = "a.status = 'Closed'";
+
+			if ( !empty( $orderby ) ) {
+				$forder = array(	'expiration ASC', 'expiration DESC', 'lastpay_date ASC', 'lastpay_date DESC',
+									'plan_name ASC', 'plan_name DESC', 'status ASC', 'status DESC',
+									'type ASC', 'type DESC' );
+
+				if ( in_array( $orderby, $forder ) ) {
+					$orderby = 'name ASC';
+				}
+			}
+		} else {
+			if ( in_array( 'excluded', $groups ) ) {
+				$where_or[] = "a.status = 'Excluded'";
+			}
+			if ( in_array( 'expired', $groups ) ) {
+				$where_or[] = "a.status = 'Expired'";
+			}
+			if ( in_array( 'active', $groups ) ) {
+				$where_or[] = "(a.status = 'Active' || a.status = 'Trial')";
+			}
+			if ( in_array( 'pending', $groups ) ) {
+				$where_or[] = "a.status = 'Pending'";
+			}
+			if ( in_array( 'cancelled', $groups ) ) {
+				$where_or[] = "a.status = 'Cancelled'";
+			}
+			if ( in_array( 'closed', $groups ) ) {
+	 			$where_or[] = "a.status = 'Closed'";
+			}
 		}
 	}
 
 	if ( isset( $search ) && $search!= '' ) {
-		$where[] = "(b.username LIKE '%$search%' OR b.name LIKE '%$search%')";
+		if ( $notconfig ) {
+			$where[] = "(username LIKE '%$search%' OR name LIKE '%$search%')";
+		} else {
+			$where[] = "(b.username LIKE '%$search%' OR b.name LIKE '%$search%')";
+		}
 	}
 
 	if ( isset($filter_planid) && $filter_planid > 0 ) {
-		$where[] = "(a.plan='$filter_planid')";
+		if ( !$notconfig ) {
+			$where[] = "(a.plan='$filter_planid')";
+		}
 	}
 
 	// get the total number of records
@@ -1554,8 +1571,10 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 				. ' FROM #__users'
 				;
 		if ( count( $userarray ) > 0 ) {
-			$query .= ' WHERE id NOT IN (' . implode(',', $userarray) . ')';
+			$where[] = 'id NOT IN (' . implode(',', $userarray) . ')';
 		}
+
+		$query .= (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' );
 	} else {
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_subscr AS a'
@@ -1571,7 +1590,6 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 	$database->setQuery( $query );
 	$total = $database->loadResult();
-	echo $database->getErrorMsg();
 
 	require_once( $mainframe->getCfg( 'absolute_path' ) . '/administrator/includes/pageNavigation.php' );
 	$pageNav = new mosPageNav( $total, $limitstart, $limit );
@@ -1591,13 +1609,24 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 					}
 			}
 
-		$query = 'SELECT `id`, `name`, `username`, `usertype`'
+		$query = 'SELECT `id`, `name`, `username`, `email`, `usertype`, `block`, `gid`, `registerDate` as signup_date, `lastvisitDate`'
 				. ' FROM #__users'
 				;
-		if ( count( $userarray ) > 0) {
-			$query .= ' WHERE `id` NOT IN (' . implode( ',', $userarray ) . ')';
+		if ( count( $userarray ) > 0 ) {
+			$where[] = 'id NOT IN (' . implode(',', $userarray) . ')';
 		}
-			$query .=	' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit;
+
+		$query .= (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' );
+
+ 		if ( $orderby == 'signup_date ASC' ) {
+			$query .= ' ORDER BY ' . 'registerDate ASC';
+		} elseif ( $orderby == 'signup_date DESC' ) {
+			$query .= ' ORDER BY ' . 'registerDate DESC';
+		} else {
+			$query .= ' ORDER BY ' . $orderby;
+		}
+
+		$query .=	' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit;
 	} else {
 		$query = 'SELECT a.*, b.name, b.username, b.email, c.name AS plan_name'
 				. ' FROM #__acctexp_subscr AS a'
