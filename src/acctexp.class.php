@@ -8655,8 +8655,7 @@ class microIntegrationHandler
 
 		if( is_int( $row ) ) {
 			$userid = $row;
-		}
-		elseif ( is_string( $row ) ){
+		} elseif ( is_string( $row ) ){
 			$query = 'SELECT id'
 			. ' FROM #__users'
 			. ' WHERE username = \'' . $row . '\''
@@ -8669,8 +8668,10 @@ class microIntegrationHandler
 			$userid = $row;
 		}
 
-		$row = new mosUser( $database );
-		$row->load( $userid );
+		if ( !is_object( $row ) ) {
+			$row = new mosUser( $database );
+			$row->load( $userid );
+		}
 
 		if ( !empty( $mi_list ) ) {
 			foreach ( $mi_list as $mi_id ) {;
