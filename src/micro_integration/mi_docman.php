@@ -75,6 +75,7 @@ class mi_docman
 		$settings['set_group_exp']	= array( 'list_yesno' );
 		$settings['group_exp']		= array( 'list' );
 		$settings['delete_on_exp'] 	= array( 'list' );
+		$settings['unset_unlimited']	= array( 'list_yesno' );
 		$settings['rebuild']		= array( 'list_yesno' );
 		$settings['remove']			= array( 'list_yesno' );
 
@@ -123,16 +124,18 @@ class mi_docman
 
 		if ( $id ) {
 			$mi_docmanhandler->load( $id );
-			$left = $mi_docmanhandler->getDownloadsLeft();
-			$used = $mi_docmanhandler->used_downloads;
-			$unlimited = $mi_docmanhandler->unlimited_downloads;
-			$message = '<p>'.sprintf(_AEC_MI_DIV1_DOCMAN_USED, $used).'</p>';
-			if ( $unlimited ) {
-				$message .='<p>' . sprintf( _AEC_MI_DIV1_DOCMAN_REMAINING, _AEC_MI_DIV1_DOCMAN_UNLIMITED ) . '</p>';
-			} else {
-				$message .= '<p>' . sprintf( _AEC_MI_DIV1_DOCMAN_REMAINING, $left ) . '</p>';
+			if ( $mi_docmanhandler->active ) {
+				$left = $mi_docmanhandler->getDownloadsLeft();
+				$used = $mi_docmanhandler->used_downloads;
+				$unlimited = $mi_docmanhandler->unlimited_downloads;
+				$message = '<p>'.sprintf(_AEC_MI_DIV1_DOCMAN_USED, $used).'</p>';
+				if ( $unlimited ) {
+					$message .='<p>' . sprintf( _AEC_MI_DIV1_DOCMAN_REMAINING, _AEC_MI_DIV1_DOCMAN_UNLIMITED ) . '</p>';
+				} else {
+					$message .= '<p>' . sprintf( _AEC_MI_DIV1_DOCMAN_REMAINING, $left ) . '</p>';
+				}
+				return $message;
 			}
-			return $message;
 		} else {
 			return '';
 		}
@@ -190,12 +193,17 @@ class mi_docman
 			}
 		}
 
+
 		$mi_docmanhandler = new docman_restriction( $database );
 		$id = $mi_docmanhandler->getIDbyUserID( $request->metaUser->userid );
 		$mi_id = $id ? $id : 0;
 		$mi_docmanhandler->load( $mi_id );
 
+
 		if ( $mi_id ) {
+			if ( $this->settings['unset_unlimited'] ) {
+				$mi_docmanhandler->unlimited_downloads = NULL ;
+			}	
 			$mi_docmanhandler->active = 0;
 			$mi_docmanhandler->check();
 			$mi_docmanhandler->store();
@@ -229,7 +237,9 @@ class mi_docman
 		} elseif ( $this->settings['add_downloads'] ) {
 			$mi_docmanhandler->addDownloads( $this->settings['add_downloads'] );
 		}
-
+		if ( $this->settings['set_unlimited'] ) {
+			$mi_docmanhandler->unlimited_downloads = true ;
+		}
 		$mi_docmanhandler->check();
 		$mi_docmanhandler->store();
 

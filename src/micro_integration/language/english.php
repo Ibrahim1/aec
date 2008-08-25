@@ -70,6 +70,10 @@ define( '_MI_MI_DOCMAN_REMOVE_NAME_DESC',			'Carry out the expiration action for
 define( '_AEC_MI_DIV1_DOCMAN_USED',		'You have used <strong>%s</strong> downloads.' );
 define( '_AEC_MI_DIV1_DOCMAN_REMAINING',	'You have <strong>%s</strong> downloads remaining.' );
 define( '_AEC_MI_DIV1_DOCMAN_UNLIMITED', 	'unlimited' );
+define( '_MI_MI_DOCMAN_UNSET_UNLIMITED_NAME',			'Unset Unlimited on Expiration: ' );
+define( '_MI_MI_DOCMAN_UNSET_UNLIMITED_DESC',			'Remove unlimited downloads when user expires.' );
+
+
 // email
 define( '_AEC_MI_NAME_EMAIL',		'Email' );
 define( '_AEC_MI_DESC_EMAIL',		'Send an Email to one or more adresses on application or expiration of the subscription' );
