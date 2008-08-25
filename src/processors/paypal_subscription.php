@@ -52,13 +52,13 @@ class processor_paypal_subscription extends POSTprocessor
 		$settings = array();
 		$settings['business']		= 'your@paypal@account.com';
 		$settings['testmode']		= 0;
-		$settings['tax']			= '';
+		$settings['tax']			= ''; // PaypalSubscriptions doesn't support tax but leaving in blank for future.
 		$settings['currency']		= 'USD';
 		$settings['checkbusiness']	= 0;
 		$settings['acceptpendingecheck'] = 0;
 		$settings['srt']			= '';
 		$settings['lc']				= 'US';
-		$settings['no_shipping']	= 1;
+		$settings['no_shipping']	= 1;  //PayPalSubs doesn't support Shipping does this matter?
 		$settings['altipnurl']		= '';
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']	= "";
@@ -82,7 +82,7 @@ class processor_paypal_subscription extends POSTprocessor
 		$settings = array();
 		$settings['business']				= array( 'inputC' );
 		$settings['testmode']				= array( 'list_yesno' );
-		$settings['tax']					= array( 'inputA' );
+//		$settings['tax']					= array( 'inputA' );
 		$settings['currency']				= array( 'list_currency' );
 		$settings['checkbusiness']			= array( 'list_yesno' );
 		$settings['acceptpendingecheck']	= array( 'list_yesno' );
@@ -138,13 +138,13 @@ class processor_paypal_subscription extends POSTprocessor
 		$var['a3'] = $request->int_var['amount']['amount3'];
 		$var['p3'] = $request->int_var['amount']['period3'];
 		$var['t3'] = $request->int_var['amount']['unit3'];
-
+/*  Disabling this for now - if a user has an old tax setting set-up AEC would still find it.  If PP adds this feature in future this can be re-enabled.
 		if ( !empty( $this->settings['tax'] ) && $this->settings['tax'] > 0 ) {
 			$tax = $var['a3']/(100+$this->settings['tax'])*100;
 			$var['tax'] = round(($var['a3'] - $tax), 2);
 			$var['a3'] = round($tax, 2);
 		}
-
+*/
 		$var['business']		= $this->settings['business'];
 		$var['invoice']			= $request->int_var['invoice'];
 		$var['cancel']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
