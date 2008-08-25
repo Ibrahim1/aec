@@ -202,7 +202,7 @@ class mi_docman
 
 		if ( $mi_id ) {
 			if ( $this->settings['unset_unlimited'] ) {
-				$mi_docmanhandler->unlimited_downloads = NULL ;
+				$mi_docmanhandler->unlimited_downloads = 0 ;
 			}	
 			$mi_docmanhandler->active = 0;
 			$mi_docmanhandler->check();
