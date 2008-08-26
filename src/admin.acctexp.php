@@ -289,6 +289,82 @@ switch( strtolower( $task ) ) {
 			mosRedirect( 'index2.php?option='. $option . '&task=showSubscriptionPlans' );
 				break;
 
+	case 'showitemgroups':
+		listItemGroups( $option );
+		break;
+
+	case 'newitemgroup':
+		editItemGroup( 0, $option );
+		break;
+
+	case 'edititemgroup':
+		editItemGroup( $id[0], $option );
+		break;
+
+	case 'copyitemgroup':
+			global $database;
+
+			if ( is_array( $id ) ) {
+				foreach ( $id as $pid ) {
+				$row = new ItemGroup( $database );
+				$row->load( $pid );
+				$row->id = 0;
+				$row->check();
+				$row->store();
+				}
+			}
+
+			mosRedirect( 'index2.php?option='. $option . '&task=showItemGroups' );
+		break;
+
+	case 'saveitemgroup':
+		saveItemGroup( $option );
+		break;
+
+	case 'applyitemgroup':
+		saveItemGroup( $option, 1 );
+		break;
+
+	case 'publishitemgroup':
+		changeItemGroup( $id, 1, 'active', $option );
+		break;
+
+	case 'unpublishitemgroup':
+		changeItemGroup( $id, 0, 'active', $option );
+		break;
+
+	case 'visibleitemgroup':
+		changeItemGroup( $id, 1, 'visible', $option );
+		break;
+
+	case 'invisibleitemgroup':
+		changeItemGroup( $id, 0, 'visible', $option );
+		break;
+
+	case 'removeitemgroup':
+		removeItemGroup( $id, $option, $returnTask );
+		break;
+
+	case 'cancelitemgroup':
+		cancelItemGroup( $option );
+		break;
+
+		case 'ordergroupup':
+			global $database;
+			$row = new ItemGroup( $database );
+			$row->load( $id[0] );
+			$row->move( -1 );
+			mosRedirect( 'index2.php?option='. $option . '&task=showItemGroups' );
+				break;
+
+		case 'ordergroupdown':
+			global $database;
+			$row = new ItemGroup( $database );
+			$row->load( $id[0] );
+			$row->move( 1 );
+			mosRedirect( 'index2.php?option='. $option . '&task=showItemGroups' );
+				break;
+
 	case 'showmicrointegrations':
 		listMicroIntegrations( $option );
 		break;
@@ -2798,41 +2874,6 @@ function editSubscriptionPlan( $id, $option )
 	HTML_AcctExp::editSubscriptionPlan( $option, $aecHTML, $row, $hasrecusers );
 }
 
-function arrayValueDefault( $array, $name, $default )
-{
-	if ( is_object( $array ) ) {
-		if ( isset( $array->$name ) ) {
-			return $array->$name;
-		} else {
-			return $default;
-		}
-	}
-
-	if ( isset( $array[$name] ) ) {
-		if ( is_array( $array[$name] ) ) {
-			$selected = array();
-			foreach ( $array[$name] as $value ) {
-				$selected[]->value = $value;
-			}
-
-			return $selected;
-		} elseif ( strpos( $array[$name], ';' ) !== false ) {
-			$list = explode( ';', $array[$name] );
-
-			$selected = array();
-			foreach ( $list as $value ) {
-				$selected[]->value = $value;
-			}
-
-			return $selected;
-		} else {
-			return $array[$name];
-		}
-	} else {
-		return $default;
-	}
-}
-
 function saveSubscriptionPlan( $option, $apply=0 )
 {
 	global $database, $mosConfig_live_site;
@@ -2954,6 +2995,664 @@ function changeSubscriptionPlan( $cid=null, $state=0, $type, $option )
 	$msg = sprintf( _AEC_MSG_ITEMS_SUCESSFULLY, $total ) . ' ' . $msg;
 
 	mosRedirect( 'index2.php?option=' . $option . '&task=showSubscriptionPlans', $msg );
+}
+
+function listItemGroups( $option )
+{
+ 	global $database, $mainframe, $mosConfig_list_limit;
+
+ 	$limit = $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
+	$limitstart = $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
+
+ 	// get the total number of records
+ 	$query = 'SELECT count(*)'
+		 	. ' FROM #__acctexp_itemgroups'
+		 	;
+ 	$database->setQuery( $query );
+ 	$total = $database->loadResult();
+ 	echo $database->getErrorMsg();
+
+ 	if ( $limit > $total ) {
+ 		$limitstart = 0;
+ 	}
+
+ 	require_once( $mainframe->getCfg( 'absolute_path' ) . '/administrator/includes/pageNavigation.php' );
+	$pageNav = new mosPageNav( $total, $limitstart, $limit );
+
+ 	// get the subset (based on limits) of records
+ 	$query = 'SELECT *'
+		 	. ' FROM #__acctexp_itemgroups'
+		 	. ' GROUP BY `id`'
+		 	. ' ORDER BY `ordering`'
+		 	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+		 	;
+	$database->setQuery( $query );
+
+ 	$rows = $database->loadObjectList();
+ 	if ( $database->getErrorNum() ) {
+ 		echo $database->stderr();
+ 		return false;
+ 	}
+
+	foreach ( $rows as $n => $row ) {
+		$query = 'SELECT count(*)'
+				. 'FROM #__users AS a'
+				. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
+				. ' WHERE b.plan = ' . $row->id
+				. ' AND (b.status = \'Active\' OR b.status = \'Trial\')'
+				;
+		$database->setQuery( $query	);
+
+	 	$rows[$n]->usercount = $database->loadResult();
+	 	if ( $database->getErrorNum() ) {
+	 		echo $database->stderr();
+	 		return false;
+	 	}
+
+	 	$query = 'SELECT count(*)'
+				. ' FROM #__users AS a'
+				. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
+				. ' WHERE b.plan = ' . $row->id
+				. ' AND (b.status = \'Expired\')'
+				;
+		$database->setQuery( $query	);
+
+	 	$rows[$n]->expiredcount = $database->loadResult();
+	 	if ( $database->getErrorNum() ) {
+	 		echo $database->stderr();
+	 		return false;
+	 	}
+	}
+
+ 	HTML_AcctExp::listItemGroups( $rows, $pageNav, $option );
+ }
+
+function editItemGroup( $id, $option )
+{
+	global $database, $my, $acl;
+
+	$lists = array();
+	$params_values = array();
+	$restrictions_values = array();
+	$customparams_values = array();
+
+	$row = new ItemGroup( $database );
+	$row->load( $id );
+
+	if ( !$row->id ) {
+		$row->ordering	= 9999;
+		$hasrecusers	= false;
+
+		$params_values['active']	= 1;
+		$params_values['visible']	= 0;
+		$params_values['processors'] = 0;
+
+		$restrictions_values['gid_enabled']	= 1;
+		$restrictions_values['gid']			= 18;
+	} else {
+		$params_values = $row->params;
+		$restrictions_values = $row->restrictions;
+		$customparams_values = $row->custom_params;
+
+		// We need to convert the values that are set as object properties
+		$params_values['active']				= $row->active;
+		$params_values['visible']				= $row->visible;
+		$params_values['email_desc']			= $row->getProperty( 'email_desc' );
+		$params_values['name']					= $row->getProperty( 'name' );
+		$params_values['desc']					= $row->getProperty( 'desc' );
+		$params_values['micro_integrations']	= $row->micro_integrations;
+		$params_values['processors']			= $row->params['processors'];
+
+		// Checking if there is already a user, which disables certain actions
+		$query  = 'SELECT count(*)'
+				. ' FROM #__users AS a'
+				. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
+				. ' WHERE b.plan = ' . $row->id
+				. ' AND (b.status = \'Active\' OR b.status = \'Trial\')'
+				. ' AND b.recurring =\'1\''
+				;
+		$database->setQuery( $query );
+		$hasrecusers = ( $database->loadResult() > 0 ) ? true : false;
+	}
+
+	// params and their type values
+	$params['active']					= array( 'list_yesno', 1 );
+	$params['visible']					= array( 'list_yesno', 0 );
+
+	$params['name']						= array( 'inputC', '' );
+	$params['desc']						= array( 'editor', '' );
+	$params['customthanks']				= array( 'inputC', '' );
+	$params['customtext_thanks_keeporiginal']	= array( 'list_yesno', '' );
+	$params['customtext_thanks']		= array( 'editor', '' );
+	$params['email_desc']				= array( 'inputD', '' );
+	$params['micro_integrations']		= array( 'list', '' );
+
+	$params['params_remap']				= array( 'subarea_change', 'params' );
+
+	$params['override_activation']		= array( 'list_yesno', 0 );
+	$params['override_regmail']			= array( 'list_yesno', 0 );
+
+	$params['full_free']				= array( 'list_yesno', '' );
+	$params['full_amount']				= array( 'inputB', '' );
+	$params['full_period']				= array( 'inputB', '' );
+	$params['full_periodunit']			= array( 'list', 'D' );
+	$params['trial_free']				= array( 'list_yesno', '' );
+	$params['trial_amount']				= array( 'inputB', '' );
+	$params['trial_period']				= array( 'inputB', '' );
+	$params['trial_periodunit']			= array( 'list', 'D' );
+
+	$params['gid_enabled']				= array( 'list_yesno', 1 );
+	$params['gid']						= array( 'list', 18 );
+	$params['lifetime']					= array( 'list_yesno', 0 );
+	$params['processors']				= array( 'list', '' );
+	$params['standard_parent']			= array( 'list', '' );
+	$params['fallback']					= array( 'list', '' );
+	$params['make_active']				= array( 'list_yesno', 1 );
+	$params['make_primary']				= array( 'list_yesno', 1 );
+	$params['update_existing']			= array( 'list_yesno', 1 );
+
+	$params['similarplans']				= array( 'list', '' );
+	$params['equalplans']				= array( 'list', '' );
+
+	$params['restr_remap']				= array( 'subarea_change', 'restrictions' );
+
+	$params['mingid_enabled']					= array( 'list_yesno', 0 );
+	$params['mingid']							= array( 'list', 18 );
+	$params['fixgid_enabled']					= array( 'list_yesno', 0 );
+	$params['fixgid']							= array( 'list', 19 );
+	$params['maxgid_enabled']					= array( 'list_yesno', 0 );
+	$params['maxgid']							= array( 'list', 21 );
+	$params['previousplan_req_enabled'] 		= array( 'list_yesno', 0 );
+	$params['previousplan_req']					= array( 'list', 0 );
+	$params['previousplan_req_enabled_excluded']	= array( 'list_yesno', 0 );
+	$params['previousplan_req_excluded']			= array( 'list', 0 );
+	$params['currentplan_req_enabled']			= array( 'list_yesno', 0 );
+	$params['currentplan_req']					= array( 'list', 0 );
+	$params['currentplan_req_enabled_excluded']	= array( 'list_yesno', 0 );
+	$params['currentplan_req_excluded']			= array( 'list', 0 );
+	$params['overallplan_req_enabled']			= array( 'list_yesno', 0 );
+	$params['overallplan_req']					= array( 'list', 0 );
+	$params['overallplan_req_enabled_excluded']	= array( 'list_yesno', 0 );
+	$params['overallplan_req_excluded']			= array( 'list', 0 );
+	$params['used_plan_min_enabled']			= array( 'list_yesno', 0 );
+	$params['used_plan_min_amount']				= array( 'inputB', 0 );
+	$params['used_plan_min']					= array( 'list', 0 );
+	$params['used_plan_max_enabled']			= array( 'list_yesno', 0 );
+	$params['used_plan_max_amount']				= array( 'inputB', 0 );
+	$params['used_plan_max']					= array( 'list', 0 );
+	$params['custom_restrictions_enabled']		= array( 'list_yesno', '' );
+	$params['custom_restrictions']				= array( 'inputD', '' );
+	$rewriteswitches							= array( 'cms', 'user' );
+	$params['rewriteInfo']						= array( 'fieldset', '', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+
+	// ensure user can't add group higher than themselves
+	$my_groups = $acl->get_object_groups( 'users', $my->id, 'ARO' );
+	if ( is_array( $my_groups ) && count( $my_groups ) > 0) {
+		$ex_groups = $acl->get_group_children( $my_groups[0], 'ARO', 'RECURSE' );
+	} else {
+		$ex_groups = array();
+	}
+
+	$gtree = $acl->get_group_children_tree( null, 'USERS', true );
+
+	// mic: exclude public front- & backend
+	$ex_groups[] = 28;
+	$ex_groups[] = 29;
+	$ex_groups[] = 30;
+
+	// remove users 'above' me
+	$i = 0;
+	while ( $i < count( $gtree ) ) {
+		if ( in_array( $gtree[$i]->value, $ex_groups ) ) {
+			array_splice( $gtree, $i, 1 );
+		} else {
+			$i++;
+		}
+	}
+
+	$lists['gid'] 		= mosHTML::selectList( $gtree, 'gid', 'size="6"', 'value', 'text', arrayValueDefault($params_values, 'gid', 18) );
+	$lists['mingid'] 	= mosHTML::selectList( $gtree, 'mingid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'mingid', 18) );
+	$lists['fixgid'] 	= mosHTML::selectList( $gtree, 'fixgid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'fixgid', 19) );
+	$lists['maxgid'] 	= mosHTML::selectList( $gtree, 'maxgid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'maxgid', 21) );
+
+	// make the select list for first trial period units
+	$perunit[] = mosHTML::makeOption( 'D', _PAYPLAN_PERUNIT1 );
+	$perunit[] = mosHTML::makeOption( 'W', _PAYPLAN_PERUNIT2 );
+	$perunit[] = mosHTML::makeOption( 'M', _PAYPLAN_PERUNIT3 );
+	$perunit[] = mosHTML::makeOption( 'Y', _PAYPLAN_PERUNIT4 );
+
+	$lists['trial_periodunit'] = mosHTML::selectList( $perunit, 'trial_periodunit', 'size="4"', 'value', 'text', arrayValueDefault($params_values, 'trial_periodunit', "D") );
+	$lists['full_periodunit'] = mosHTML::selectList( $perunit, 'full_periodunit', 'size="4"', 'value', 'text', arrayValueDefault($params_values, 'full_periodunit', "D") );
+
+	$params['processors_remap'] = array("subarea_change", "plan_params");
+
+	$pps = PaymentProcessorHandler::getInstalledObjectList( 1 );
+
+	if ( empty( $params_values['processors'] ) ) {
+		$plan_procs = array();
+	} else {
+		$plan_procs = $params_values['processors'];
+	}
+
+	$firstarray = array();
+	$secndarray = array();
+	foreach ( $pps as $ppo ) {
+		if ( in_array( $ppo->id, $plan_procs ) && !empty( $customparams_values[$ppo->id . '_aec_overwrite_settings'] ) ) {
+			$firstarray[] = $ppo;
+		} else {
+			$secndarray[] = $ppo;
+		}
+	}
+
+	$pps = array_merge( $firstarray, $secndarray );
+
+	$selected_gw = array();
+	$customparamsarray = array();
+	foreach ( $pps as $ppobj ) {
+		if ( !$ppobj->active ) {
+			continue;
+		}
+
+		$pp = null;
+		$pp = new PaymentProcessor();
+
+		if ( !$pp->loadName( $ppobj->name ) ) {
+			continue;
+		}
+
+		$pp->init();
+		$pp->getInfo();
+
+		$customparamsarray[$pp->id] = array();
+		$customparamsarray[$pp->id]['handle'] = $ppobj->name;
+		$customparamsarray[$pp->id]['name'] = $pp->info['longname'];
+		$customparamsarray[$pp->id]['params'] = array();
+
+		$params['processor_' . $pp->id] = array( 'checkbox', _PAYPLAN_PROCESSORS_ACTIVATE_NAME, _PAYPLAN_PROCESSORS_ACTIVATE_DESC  );
+		$customparamsarray[$pp->id]['params'][] = 'processor_' . $pp->id;
+
+		$params[$pp->id . '_aec_overwrite_settings'] = array( 'checkbox', _PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_NAME, _PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_DESC );
+		$customparamsarray[$pp->id]['params'][] = $pp->id . '_aec_overwrite_settings';
+
+		$customparams = $pp->getCustomPlanParams();
+
+		if ( is_array( $customparams ) ) {
+			foreach ( $customparams as $customparam => $cpcontent ) {
+				// Write the params field
+				if ( defined( strtoupper( "_CFG_processor_plan_params_" . $customparam . "_name" ) ) ) {
+					$cp_name = constant( strtoupper( "_CFG_processor_plan_params_" . $customparam . "_name" ) );
+					$cp_desc = constant( strtoupper( "_CFG_processor_plan_params_" . $customparam . "_desc" ) );
+				} else {
+					$cp_name = constant( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_name" ) );
+					$cp_desc = constant( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_desc" ) );
+				}
+
+				$shortname = $pp->id . "_" . $customparam;
+				$params[$shortname] = array_merge( $cpcontent, array( $cp_name, $cp_desc ) );
+				$customparamsarray[$pp->id]['params'][] = $shortname;
+			}
+		}
+
+		if ( empty( $plan_procs ) ) {
+			continue;
+		}
+
+		if ( !in_array( $pp->id, $plan_procs ) ) {
+			continue;
+		}
+
+		$params_values['processor_' . $pp->id] = 1;
+
+		if ( isset( $customparams_values[$pp->id . '_aec_overwrite_settings'] ) ) {
+			if ( !$customparams_values[$pp->id . '_aec_overwrite_settings'] ) {
+				continue;
+			}
+		} else {
+			continue;
+		}
+
+		$settings_array = $pp->getBackendSettings();
+
+		if ( isset( $settings_array['lists'] ) ) {
+			foreach ( $settings_array['lists'] as $listname => $listcontent ) {
+				$lists[$pp->id . '_' . $listname] = $listcontent;
+			}
+
+			unset( $settings_array['lists'] );
+		}
+
+		// Iterate through settings form to...
+		foreach ( $settings_array as $name => $values ) {
+			$setting_name = $pp->id . '_' . $name;
+
+			// ...assign new list fields
+			switch( $settings_array[$name][0] ) {
+				case 'list_yesno':
+					$lists[$setting_name] = mosHTML::yesnoSelectList( $setting_name, '', $pp->settings[$name] );
+
+					$settings_array[$name][0] = 'list';
+					break;
+
+				case 'list_currency':
+					// Get currency list
+					$currency_array	= explode( ',', $pp->info['currencies'] );
+
+					// Transform currencies into OptionArray
+					$currency_code_list = array();
+					foreach ( $currency_array as $currency ) {
+						if ( defined( '_CURRENCY_' . $currency )) {
+							$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
+						}
+					}
+
+					// Create list
+					$lists[$setting_name] = mosHTML::selectList( $currency_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
+					$settings_array[$name][0] = 'list';
+					break;
+
+				case 'list_language':
+					// Get language list
+					$language_array	= explode( ',', $pp->info['languages'] );
+
+					// Transform languages into OptionArray
+					$language_code_list = array();
+					foreach ( $language_array as $language ) {
+						$language_code_list[] = mosHTML::makeOption( $language, ( defined( '_AEC_LANG_' . $language  ) ? constant( '_AEC_LANG_' . $language ) : $language ) );
+					}
+					// Create list
+					$lists[$setting_name] = mosHTML::selectList( $language_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
+					$settings_array[$name][0] = 'list';
+					break;
+
+				case 'list_plan':
+					unset( $settings_array[$name] );
+					break;
+
+				default:
+					break;
+			}
+
+			// ...put in missing language fields
+			if ( !isset( $settings_array[$name][1] ) ) {
+				// Create constant names
+				$constantname = '_CFG_' . strtoupper( $ppobj->name ) . '_' . strtoupper($name) . '_NAME';
+				$constantdesc = '_CFG_' . strtoupper( $ppobj->name ) . '_' . strtoupper($name) . '_DESC';
+
+				// If the constantname does not exists, try a generic name or insert an error
+				if ( defined( $constantname ) ) {
+					$settings_array[$name][1] = constant( $constantname );
+				} else {
+					$genericname = '_CFG_PROCESSOR_' . strtoupper($name) . '_NAME';
+					if ( defined( $genericname ) ) {
+						$settings_array[$name][1] = constant( $genericname );
+					} else {
+						$settings_array[$name][1] = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantname );
+					}
+				}
+
+				// If the constantname does not exists, try a generic name or insert an error
+				if ( defined( $constantdesc ) ) {
+					$settings_array[$name][2] = constant( $constantdesc );
+				} else {
+					$genericdesc = '_CFG_PROCESSOR_' . strtoupper($name) . '_DESC';
+					if ( defined( $genericname ) ) {
+						$settings_array[$name][2] = constant( $genericdesc );
+					} else {
+						$settings_array[$name][2] = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantdesc );
+					}
+				}
+			}
+
+			$params[$pp->id . '_' . $name] = $settings_array[$name];
+			$customparamsarray[$pp->id]['params'][] = $pp->id . '_' . $name;
+		}
+	}
+
+	// get available active plans
+	$available_plans = array();
+	$available_plans[] = mosHTML::makeOption( '0', _PAYPLAN_NOPLAN );
+
+	$query = 'SELECT `id` AS value, `name` AS text'
+			. ' FROM #__acctexp_itemgroups'
+			. ' WHERE `active` = 1'
+			. ' AND `id` <> ' . $id
+			;
+	$database->setQuery( $query );
+	$payment_plans = $database->loadObjectList();
+
+ 	if ( is_array( $payment_plans ) ) {
+ 		$active_plans	= array_merge( $available_plans, $payment_plans );
+ 	}
+	$total_plans	= min( max( (count( $active_plans ) + 1 ), 4 ), 20 );
+
+	$lists['fallback'] = mosHTML::selectList($active_plans, 'fallback', 'size="' . $total_plans . '"', 'value', 'text', arrayValueDefault($params_values, 'fallback', 0));
+	$lists['standard_parent'] = mosHTML::selectList($active_plans, 'standard_parent', 'size="' . $total_plans . '"', 'value', 'text', arrayValueDefault($params_values, 'standard_parent', 0));
+
+	// get similar plans
+	if ( !empty( $params_values['similarplans'] ) ) {
+		$query = 'SELECT `id` AS value, `name` As text'
+				. ' FROM #__acctexp_itemgroups'
+				. ' WHERE `id` IN (' . implode( ',', $params_values['similarplans'] ) .')'
+				;
+		$database->setQuery( $query );
+
+	 	$sel_similar_plans = $database->loadObjectList();
+	} else {
+		$sel_similar_plans = 0;
+	}
+
+	$lists['similarplans'] = mosHTML::selectList($payment_plans, 'similarplans[]', 'size="' . $total_plans . '" multiple="multiple"', 'value', 'text', $sel_similar_plans);
+
+	// get equal plans
+	if ( !empty( $params_values['equalplans'] ) ) {
+		$query = 'SELECT `id` AS value, `name` AS text'
+				. ' FROM #__acctexp_itemgroups'
+				. ' WHERE `id` IN (' . implode( ',', $params_values['equalplans'] ) .')'
+				;
+		$database->setQuery( $query );
+
+	 	$sel_equal_plans = $database->loadObjectList();
+	} else {
+		$sel_equal_plans = 0;
+	}
+
+	$lists['equalplans'] = mosHTML::selectList($payment_plans, 'equalplans[]', 'size="' . $total_plans . '" multiple="multiple"', 'value', 'text', $sel_equal_plans);
+
+	// get available plans
+	$available_plans = array();
+	$available_plans[] = mosHTML::makeOption( '0', _PAYPLAN_NOPLAN );
+
+	$query = 'SELECT `id` AS value, `name` AS text'
+			. ' FROM #__acctexp_itemgroups'
+			;
+	$database->setQuery( $query );
+	$plans = $database->loadObjectList();
+
+ 	if ( is_array( $plans ) ) {
+ 		$all_plans	= array_merge( $available_plans, $plans );
+ 	} else {
+ 		$all_plans	= $available_plans;
+ 	}
+	$total_all_plans	= min( max( ( count( $all_plans ) + 1 ), 4 ), 20 );
+
+	$lists['previousplan_req']	= mosHTML::selectList($all_plans, 'previousplan_req[]', 'size="' . $total_all_plans . '" multiple="multiple"',
+									'value', 'text', arrayValueDefault($restrictions_values, 'previousplan_req', 0));
+	$lists['currentplan_req']	= mosHTML::selectList($all_plans, 'currentplan_req[]', 'size="' . $total_all_plans . '" multiple="multiple"',
+									'value', 'text', arrayValueDefault($restrictions_values, 'currentplan_req', 0));
+	$lists['overallplan_req']	= mosHTML::selectList($all_plans, 'overallplan_req[]', 'size="' . $total_all_plans . '" multiple="multiple"',
+									'value', 'text', arrayValueDefault($restrictions_values, 'overallplan_req', 0));
+	$lists['used_plan_min']		= mosHTML::selectList($all_plans, 'used_plan_min', 'size="' . $total_all_plans . '"',
+									'value', 'text', arrayValueDefault($restrictions_values, 'used_plan_min', 0));
+	$lists['used_plan_max']		= mosHTML::selectList($all_plans, 'used_plan_max', 'size="' . $total_all_plans . '"',
+									'value', 'text', arrayValueDefault($restrictions_values, 'used_plan_max', 0));
+
+	$lists['previousplan_req_excluded']	= mosHTML::selectList($all_plans, 'previousplan_req_excluded[]', 'size="' . $total_all_plans . '" multiple="multiple"',
+									'value', 'text', arrayValueDefault($restrictions_values, 'previousplan_req_excluded', 0));
+	$lists['currentplan_req_excluded']	= mosHTML::selectList($all_plans, 'currentplan_req_excluded[]', 'size="' . $total_all_plans . '" multiple="multiple"',
+									'value', 'text', arrayValueDefault($restrictions_values, 'currentplan_req_excluded', 0));
+	$lists['overallplan_req_excluded']	= mosHTML::selectList($all_plans, 'overallplan_req_excluded[]', 'size="' . $total_all_plans . '" multiple="multiple"',
+									'value', 'text', arrayValueDefault($restrictions_values, 'overallplan_req_excluded', 0));
+
+	// get available micro integrations
+	$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
+			. ' FROM #__acctexp_microintegrations'
+			. ' WHERE `active` = 1'
+			. ' ORDER BY ordering'
+			;
+	$database->setQuery( $query );
+	$mi_list = $database->loadObjectList();
+
+	if ( !empty( $row->micro_integrations ) ) {
+		$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
+				. ' FROM #__acctexp_microintegrations'
+				. ' WHERE `id` IN (' . implode( ',', $row->micro_integrations ) . ')'
+				;
+	 	$database->setQuery( $query );
+		$selected_mi = $database->loadObjectList();
+	} else {
+		$selected_mi = array();
+	}
+
+	$lists['micro_integrations'] = mosHTML::selectList($mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $selected_mi);
+
+	$settings = new aecSettings ( 'payplan', 'general' );
+	if ( is_array( $customparams_values ) ) {
+		$settingsparams = array_merge( $params_values, $customparams_values, $restrictions_values );
+	} else {
+		$settingsparams = array_merge( $params_values, $restrictions_values );
+	}
+	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
+
+	// Call HTML Class
+	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+	if ( !empty( $customparamsarray ) ) {
+		$aecHTML->customparams = $customparamsarray;
+	}
+
+	HTML_AcctExp::editItemGroup( $option, $aecHTML, $row, $hasrecusers );
+}
+
+function saveItemGroup( $option, $apply=0 )
+{
+	global $database, $mosConfig_live_site;
+
+	$row = new ItemGroup( $database );
+	$row->load( $_POST['id'] );
+
+	$post = AECToolbox::cleanPOST( $_POST );
+
+	$row->savePOSTsettings( $post );
+
+	if ( !$row->check() ) {
+		echo "<script> alert('".$row->getError()."'); window.history.go(-2); </script>\n";
+		exit();
+	}
+	if ( !$row->store() ) {
+		echo "<script> alert('".$row->getError()."'); window.history.go(-2); </script>\n";
+		exit();
+	}
+
+	$row->updateOrder();
+
+	if ( $_POST['id'] ) {
+		$id = $_POST['id'];
+	} else {
+		$id = $row->getMax();
+	}
+
+	if ( $apply ) {
+		mosRedirect( 'index2.php?option=' . $option . '&task=editItemGroup&id=' . $id, _AEC_MSG_SUCESSFULLY_SAVED );
+	} else {
+		mosRedirect( 'index2.php?option=' . $option . '&task=showItemGroups' );
+	}
+}
+
+function removeItemGroup( $id, $option )
+{
+	global $database, $mosConfig_live_site;
+
+	$ids = implode( ',', $id );
+
+	$query = 'SELECT count(*)'
+			. ' FROM #__acctexp_itemgroups'
+			. ' WHERE `id` IN (' . $ids . ')'
+			;
+	$database->setQuery( $query );
+	$total = $database->loadResult();
+
+	if ( $total == 0 ) {
+		echo "<script> alert('" . html_entity_decode( _AEC_MSG_NO_ITEMS_TO_DELETE ) . "'); window.history.go(-1);</script>\n";
+		exit;
+	}
+
+	// See if we have registered users on this plan.
+	// If we have it, the plan(s) cannot be removed
+	$query = 'SELECT count(*)'
+			. ' FROM #__users AS a'
+			. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
+			. ' WHERE b.plan = ' . $row->id
+			. ' AND (b.status = \'Active\' OR b.status = \'Trial\')'
+			;
+	$database->setQuery( $query );
+	$subscribers = $database->loadResult();
+
+	if ( $subscribers > 0 ) {
+		$msg = _AEC_MSG_NO_DEL_W_ACTIVE_SUBSCRIBER;
+	} else {
+		// Delete plans
+		$query = 'DELETE FROM #__acctexp_itemgroups'
+				. ' WHERE `id` IN (' . $ids . ')'
+				;
+		$database->setQuery( $query );
+		if ( !$database->query() ) {
+			echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
+			exit();
+		}
+
+		$msg = $total . ' ' . _AEC_MSG_ITEMS_DELETED;
+	}
+	mosRedirect( 'index2.php?option=' . $option . '&task=showItemGroups', $msg );
+}
+
+function cancelItemGroup( $option )
+{
+	global $mosConfig_live_site;
+
+	mosRedirect( 'index2.php?option=' . $option . '&task=showItemGroups', _AEC_CMN_EDIT_CANCELLED );
+}
+
+function changeItemGroup( $cid=null, $state=0, $type, $option )
+{
+	global $database, $mosConfig_live_site;
+
+	if ( count( $cid ) < 1 ) {
+		echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
+		exit;
+	}
+
+	$total	= count( $cid );
+	$cids	= implode( ',', $cid );
+
+	$query = 'UPDATE #__acctexp_itemgroups'
+			. ' SET `' . $type . '` = \'' . $state . '\''
+			. ' WHERE `id` IN (' . $cids . ')'
+			;
+	$database->setQuery( $query );
+
+	if ( !$database->query() ) {
+		echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
+		exit();
+	}
+
+	if ( $state == '1' ) {
+		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? _AEC_CMN_PUBLISHED : _AEC_CMN_MADE_VISIBLE );
+	} elseif ( $state == '0' ) {
+		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? _AEC_CMN_NOT_PUBLISHED : _AEC_CMN_MADE_INVISIBLE );
+	}
+
+	$msg = sprintf( _AEC_MSG_ITEMS_SUCESSFULLY, $total ) . ' ' . $msg;
+
+	mosRedirect( 'index2.php?option=' . $option . '&task=showItemGroups', $msg );
 }
 
 function listMicroIntegrations( $option )
@@ -5183,6 +5882,41 @@ function exportData( $option, $cmd=null )
 		mosRedirect( 'index2.php?option=' . $option . '&task=showCentral' );
 	} else {
 		HTML_AcctExp::export( $option, $aecHTML );
+	}
+}
+
+function arrayValueDefault( $array, $name, $default )
+{
+	if ( is_object( $array ) ) {
+		if ( isset( $array->$name ) ) {
+			return $array->$name;
+		} else {
+			return $default;
+		}
+	}
+
+	if ( isset( $array[$name] ) ) {
+		if ( is_array( $array[$name] ) ) {
+			$selected = array();
+			foreach ( $array[$name] as $value ) {
+				$selected[]->value = $value;
+			}
+
+			return $selected;
+		} elseif ( strpos( $array[$name], ';' ) !== false ) {
+			$list = explode( ';', $array[$name] );
+
+			$selected = array();
+			foreach ( $list as $value ) {
+				$selected[]->value = $value;
+			}
+
+			return $selected;
+		} else {
+			return $array[$name];
+		}
+	} else {
+		return $default;
 	}
 }
 

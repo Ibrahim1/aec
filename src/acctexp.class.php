@@ -3468,6 +3468,68 @@ class aecHTML
 
 }
 
+class ItemGroup extends serialParamDBTable
+{
+	/** @var int Primary key */
+	var $id 				= null;
+	/** @var int */
+	var $active				= null;
+	/** @var int */
+	var $visible			= null;
+	/** @var int */
+	var $ordering			= null;
+	/** @var string */
+	var $name				= null;
+	/** @var string */
+	var $desc				= null;
+	/** @var text */
+	var $params 			= null;
+	/** @var text */
+	var $custom_params		= null;
+	/** @var text */
+	var $restrictions		= null;
+
+	function PlanGroup( &$db )
+	{
+		$this->mosDBTable( '#__acctexp_itemgroups', 'id', $db );
+	}
+
+	function declareParamFields()
+	{
+		return array( 'params', 'custom_params', 'restrictions' );
+	}
+
+}
+
+class itemXgroup extends paramDBTable
+{
+	/** @var int Primary key */
+	var $id					= null;
+	/** @var string */
+	var $type				= null;
+	/** @var int */
+	var $item_id			= null;
+	/** @var int */
+	var $group_id			= null;
+
+	function couponXuser( &$db )
+	{
+		$this->mosDBTable( '#__acctexp_itemxgroup', 'id', $db );
+	}
+
+	function createNew( $type, $item_id, $group_id )
+	{
+		$this->id		= 0;
+		$this->type		= $type;
+		$this->item_id	= $item_id;
+		$this->group_id	= $group_id;
+
+		$this->check();
+		$this->store();
+	}
+
+}
+
 class SubscriptionPlanHandler
 {
 	function getPlanUserlist( $planid )
@@ -3495,41 +3557,6 @@ class SubscriptionPlanHandler
 
 		return $database->loadResult();
 	}
-}
-
-class PlanGroup extends serialParamDBTable
-{
-	/** @var int Primary key */
-	var $id 				= null;
-	/** @var int */
-	var $active				= null;
-	/** @var int */
-	var $visible			= null;
-	/** @var int */
-	var $parent				= null;
-	/** @var int */
-	var $ordering			= null;
-	/** @var string */
-	var $name				= null;
-	/** @var string */
-	var $desc				= null;
-	/** @var text */
-	var $params 			= null;
-	/** @var text */
-	var $custom_params		= null;
-	/** @var text */
-	var $restrictions		= null;
-
-	function PlanGroup( &$db )
-	{
-		$this->mosDBTable( '#__acctexp_plangroups', 'id', $db );
-	}
-
-	function declareParamFields()
-	{
-		return array( 'params', 'custom_params', 'restrictions' );
-	}
-
 }
 
 class SubscriptionPlan extends serialParamDBTable
@@ -10243,7 +10270,6 @@ class couponXuser extends paramDBTable
 		$this->setInvoiceList( $invoicelist );
 	}
 }
-
 
 class aecExport extends serialParamDBTable
 {

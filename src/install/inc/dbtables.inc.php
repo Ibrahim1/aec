@@ -123,6 +123,29 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_plans` ('
 . ') TYPE=MyISAM;'
 ;
 
+$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_itemgroups` ('
+. '`id` int(11) NOT NULL auto_increment,'
+. '`active` int(4) NOT NULL default \'1\','
+. '`visible` int(4) NOT NULL default \'1\','
+. '`ordering` int(11) NOT NULL default \'999999\','
+. '`name` varchar(40) NULL,'
+. '`desc` text NULL,'
+. '`params` text NULL,'
+. '`custom_params` text NULL,'
+. '`restrictions` text NULL,'
+. ' PRIMARY KEY (`id`)'
+. ') TYPE=MyISAM;'
+;
+
+$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_itemxgroup` ('
+. '`id` int(11) NOT NULL auto_increment,'
+. '`type` varchar(255) NULL,'
+. '`item_id` int(11) NULL,'
+. '`group_id` int(11) NULL,'
+. ' PRIMARY KEY (`id`)'
+. ') TYPE=MyISAM;'
+;
+
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_microintegrations` ('
 . '`id` int(11) NOT NULL auto_increment,'
 . '`active` int(4) NOT NULL default \'1\','
