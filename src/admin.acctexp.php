@@ -3585,32 +3585,40 @@ function removeItemGroup( $id, $option )
 		exit;
 	}
 
-	// See if we have registered users on this plan.
-	// If we have it, the plan(s) cannot be removed
-	$query = 'SELECT count(*)'
-			. ' FROM #__users AS a'
-			. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
-			. ' WHERE b.plan = ' . $row->id
-			. ' AND (b.status = \'Active\' OR b.status = \'Trial\')'
+	// Delete groups
+	$query = 'DELETE FROM #__acctexp_itemgroups'
+			. ' WHERE `id` IN (' . $ids . ')'
 			;
 	$database->setQuery( $query );
-	$subscribers = $database->loadResult();
-
-	if ( $subscribers > 0 ) {
-		$msg = _AEC_MSG_NO_DEL_W_ACTIVE_SUBSCRIBER;
-	} else {
-		// Delete plans
-		$query = 'DELETE FROM #__acctexp_itemgroups'
-				. ' WHERE `id` IN (' . $ids . ')'
-				;
-		$database->setQuery( $query );
-		if ( !$database->query() ) {
-			echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
-			exit();
-		}
-
-		$msg = $total . ' ' . _AEC_MSG_ITEMS_DELETED;
+	if ( !$database->query() ) {
+		echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
+		exit();
 	}
+
+	// Delete possible item connections
+	$query = 'DELETE FROM #__acctexp_itemxgroup'
+			. ' WHERE `group_id` IN (' . $ids . ')'
+			. ' AND `type` = \'item\''
+			;
+	$database->setQuery( $query );
+	if ( !$database->query() ) {
+		echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
+		exit();
+	}
+
+	// Delete possible group connections
+	$query = 'DELETE FROM #__acctexp_itemxgroup'
+			. ' WHERE `item_id` IN (' . $ids . ')'
+			. ' AND `type` = \'group\''
+			;
+	$database->setQuery( $query );
+	if ( !$database->query() ) {
+		echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
+		exit();
+	}
+
+	$msg = $total . ' ' . _AEC_MSG_ITEMS_DELETED;
+
 	mosRedirect( 'index2.php?option=' . $option . '&task=showItemGroups', $msg );
 }
 

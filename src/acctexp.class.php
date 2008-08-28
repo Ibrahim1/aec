@@ -3468,6 +3468,21 @@ class aecHTML
 
 }
 
+class ItemGroupHandler
+{
+	function getGroups( $type='', $item )
+	{
+		global $database;
+
+		$query = 'SELECT id'
+				. ' FROM #__acctexp_itemgroups'
+				. ' WHERE `type` = \'' . $type . '\''
+				;
+		$database->setQuery( $query );
+		$total = $database->loadResult();
+	}
+}
+
 class ItemGroup extends serialParamDBTable
 {
 	/** @var int Primary key */
@@ -3497,6 +3512,79 @@ class ItemGroup extends serialParamDBTable
 	function declareParamFields()
 	{
 		return array( 'params', 'custom_params', 'restrictions' );
+	}
+
+	function savePOSTsettings( $post )
+	{
+		global $database;
+
+		// Fake knowing the planid if is zero. TODO: This needs to replaced with something better later on!
+		if ( !empty( $post['id'] ) ) {
+			$planid = $post['id'];
+		} else {
+			$planid = $this->getMax() + 1;
+		}
+
+		if ( isset( $post['id'] ) ) {
+			unset( $post['id'] );
+		}
+
+		// Filter out fixed variables
+		$fixed = array( 'active', 'visible', 'name', 'desc' );
+
+		foreach ( $fixed as $varname ) {
+			$this->$varname = $post[$varname];
+			unset( $post[$varname] );
+		}
+
+		// Filter out params
+		$fixed = array( );
+
+		$params = array();
+		foreach ( $fixed as $varname ) {
+			if ( !isset( $post[$varname] ) ) {
+				continue;
+			}
+
+			$params[$varname] = $post[$varname];
+
+			unset( $post[$varname] );
+		}
+
+		$this->saveParams( $params );
+
+		// Filter out restrictions
+		$fixed = array( 'mingid_enabled', 'mingid', 'fixgid_enabled', 'fixgid',
+						'maxgid_enabled', 'maxgid', 'previousplan_req_enabled', 'previousplan_req',
+						'currentplan_req_enabled', 'currentplan_req', 'overallplan_req_enabled', 'overallplan_req',
+						'previousplan_req_enabled_excluded', 'previousplan_req_excluded', 'currentplan_req_enabled_excluded', 'currentplan_req_excluded',
+						'overallplan_req_enabled_excluded', 'overallplan_req_excluded', 'used_plan_min_enabled', 'used_plan_min_amount',
+						'used_plan_min', 'used_plan_max_enabled', 'used_plan_max_amount', 'used_plan_max',
+						'custom_restrictions_enabled', 'custom_restrictions' );
+
+		$restrictions = array();
+		foreach ( $fixed as $varname ) {
+			if ( !isset( $post[$varname] ) ) {
+				continue;
+			}
+
+			$restrictions[$varname] = $post[$varname];
+
+			unset( $post[$varname] );
+		}
+
+		$this->restrictions = $restrictions;
+
+		// The rest of the vars are custom params
+		$custom_params = array();
+		foreach ( $post as $varname => $content ) {
+			if ( substr( $varname, 0, 4 ) != 'mce_' ) {
+				$custom_params[$varname] = $content;
+			}
+			unset( $post[$varname] );
+		}
+
+		$this->custom_params = $custom_params;
 	}
 
 }
