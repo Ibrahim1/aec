@@ -748,6 +748,7 @@ class HTML_AcctExp
 			<tr>
 				<td valign="top">
 					<div id="aec_center">
+						<h3>&raquo;Memberships</h3>
 						<div class="central_group">
 						<?php // Assemble Buttons
 						$link = 'index2.php?option=com_acctexp&amp;task=showExcluded';
@@ -771,7 +772,7 @@ class HTML_AcctExp
 						$link = 'index2.php?option=com_acctexp&amp;task=showManual';
 						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_manual.png', _AEC_CENTR_MANUAL );
 
-						?></div><div class="central_group"><?php
+						?></div><h3>&raquo;Payment Plans &amp; related functionality</h3><div class="central_group"><?php
 
 						$link = 'index2.php?option=com_acctexp&amp;task=showSubscriptionPlans';
 						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_plans.png', _AEC_CENTR_PLANS );
@@ -791,7 +792,7 @@ class HTML_AcctExp
 						$link = 'index2.php?option=com_acctexp&amp;task=showCouponsStatic';
 						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_coupons_static.png', _AEC_CENTR_COUPONS_STATIC );
 
-						?></div><div class="central_group"><?php
+						?></div><h3>&raquo;Settings, Logs &amp; special functionality</h3><div class="central_group"><?php
 
 						$link = 'index2.php?option=com_acctexp&amp;task=showSettings';
 						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_settings.png', _AEC_CENTR_SETTINGS );
