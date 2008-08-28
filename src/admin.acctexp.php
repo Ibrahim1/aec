@@ -3121,38 +3121,13 @@ function editItemGroup( $id, $option )
 
 	$params['name']						= array( 'inputC', '' );
 	$params['desc']						= array( 'editor', '' );
-	$params['customthanks']				= array( 'inputC', '' );
-	$params['customtext_thanks_keeporiginal']	= array( 'list_yesno', '' );
-	$params['customtext_thanks']		= array( 'editor', '' );
-	$params['email_desc']				= array( 'inputD', '' );
-	$params['micro_integrations']		= array( 'list', '' );
 
 	$params['params_remap']				= array( 'subarea_change', 'params' );
 
-	$params['override_activation']		= array( 'list_yesno', 0 );
-	$params['override_regmail']			= array( 'list_yesno', 0 );
-
-	$params['full_free']				= array( 'list_yesno', '' );
-	$params['full_amount']				= array( 'inputB', '' );
-	$params['full_period']				= array( 'inputB', '' );
-	$params['full_periodunit']			= array( 'list', 'D' );
-	$params['trial_free']				= array( 'list_yesno', '' );
-	$params['trial_amount']				= array( 'inputB', '' );
-	$params['trial_period']				= array( 'inputB', '' );
-	$params['trial_periodunit']			= array( 'list', 'D' );
-
-	$params['gid_enabled']				= array( 'list_yesno', 1 );
-	$params['gid']						= array( 'list', 18 );
-	$params['lifetime']					= array( 'list_yesno', 0 );
-	$params['processors']				= array( 'list', '' );
-	$params['standard_parent']			= array( 'list', '' );
-	$params['fallback']					= array( 'list', '' );
-	$params['make_active']				= array( 'list_yesno', 1 );
-	$params['make_primary']				= array( 'list_yesno', 1 );
-	$params['update_existing']			= array( 'list_yesno', 1 );
-
-	$params['similarplans']				= array( 'list', '' );
-	$params['equalplans']				= array( 'list', '' );
+	/**
+	 * - Option for special text on plans page when only group is displayed
+	 * - Declare all child items or groups similar or equal
+	 */
 
 	$params['restr_remap']				= array( 'subarea_change', 'restrictions' );
 

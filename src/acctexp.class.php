@@ -2571,7 +2571,7 @@ class processor extends serialParamDBTable
 			$curl_calls[CURLOPT_HTTPPROXYTUNNEL]	= true;
 			$curl_calls[CURLOPT_PROXY]				= $aecConfig->cfg['proxy'];
 
-			if ( !empty( $aecConfig->cfg['use_proxy'] ) ) {
+			if ( !empty( $aecConfig->cfg['proxy_port'] ) ) {
 				$curl_calls[CURLOPT_PROXYPORT]	= $aecConfig->cfg['proxy_port'];
 			}
 		}
@@ -3470,7 +3470,7 @@ class aecHTML
 
 class ItemGroupHandler
 {
-	function getGroups( $type='', $item )
+	function getGroups( $type='group', $item )
 	{
 		global $database;
 
@@ -3481,6 +3481,15 @@ class ItemGroupHandler
 		$database->setQuery( $query );
 		$total = $database->loadResult();
 	}
+
+	function setGroups( $item_id, $group_id, $type='group' )
+	{
+		global $database;
+
+		$ig = new itemXgroup( $database );
+		$ig->createNew( $type, $item_id, $group_id );
+	}
+
 }
 
 class ItemGroup extends serialParamDBTable

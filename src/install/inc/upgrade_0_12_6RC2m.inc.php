@@ -44,4 +44,7 @@ foreach ( $entries as $eid ) {
 	$meta->check();
 	$meta->store();
 }
+
+// Adding in root group relation for all plans
+
 ?>

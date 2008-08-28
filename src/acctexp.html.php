@@ -274,6 +274,7 @@ class HTML_frontEnd
 						}
 						?>
 						</div>
+					</div>
 					<?php
 					break;
 				case 'invoices':
@@ -310,7 +311,6 @@ class HTML_frontEnd
 					break;
 			}
 			?>
-			</div>
 		</div>
 		<?php
 	}
