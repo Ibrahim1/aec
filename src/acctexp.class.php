@@ -3470,24 +3470,77 @@ class aecHTML
 
 class ItemGroupHandler
 {
-	function getGroups( $type='group', $item )
+	function getGroups()
 	{
 		global $database;
 
 		$query = 'SELECT id'
 				. ' FROM #__acctexp_itemgroups'
-				. ' WHERE `type` = \'' . $type . '\''
 				;
 		$database->setQuery( $query );
-		$total = $database->loadResult();
+		return $database->loadResultArray();
 	}
 
-	function setGroups( $item_id, $group_id, $type='group' )
+	function parentGroups( $item_id, $type='item' )
+	{
+		global $database;
+
+		$query = 'SELECT group_id'
+				. ' FROM #__acctexp_itemxgroup'
+				. ' WHERE `type` = \'' . $type . '\''
+				. ' AND `item_id` = \'' . $item_id . '\''
+				;
+		$database->setQuery( $query );
+		return $database->loadResultArray();
+	}
+
+	function updateChildRelation( $item_id, $groups, $type='item' )
+	{
+		$currentParents	= ItemGroupHandler::parentGroups( $item_id, $type );
+
+		$keepGroups		= array_intersect( $currentParents, $groups );
+
+		$addGroups		= array_diff( $groups, $keepGroups );
+		ItemGroupHandler::setChildren( $item_id, $addGroups, $type );
+
+		$delGroups		= array_diff( $currentParents, $keepGroups, $addGroups );
+		ItemGroupHandler::removeChildren( $item_id, $delGroups, $type );
+	}
+
+	function setChild( $item_id, $group_id, $type='item' )
 	{
 		global $database;
 
 		$ig = new itemXgroup( $database );
-		$ig->createNew( $type, $item_id, $group_id );
+		return $ig->createNew( $type, $item_id, $group_id );
+	}
+
+	function setChildren( $item_id, $groups, $type='item' )
+	{
+		global $database;
+
+		foreach ( $groups as $group_id ) {
+			$ig = new itemXgroup( $database );
+			if ( !$ig->createNew( $type, $item_id, $group_id ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	function removeChildren( $item_id, $groups, $type='item' )
+	{
+		global $database;
+
+		$query = 'DELETE'
+				. ' FROM #__acctexp_itemxgroup'
+				. ' WHERE `type` = \'' . $type . '\''
+				. ' AND `item_id` = \'' . $item_id . '\''
+				. ' AND `group_id` IN (' . implode( ',', $groups ) . ')'
+				;
+		$database->setQuery( $query );
+		return $database->loadResultArray();
 	}
 
 }
@@ -3623,8 +3676,20 @@ class itemXgroup extends paramDBTable
 
 		$this->check();
 		$this->store();
+
+		return true;
 	}
 
+}
+
+class ItemRelationHandler
+{
+	/**
+	 * Well well, we have lots of similar stuff going on
+	 * maybe we need a root relation handler that others can bind to
+	 * in any case, the ItemRelationHandler should do stuff like
+	 * keeping track of similar or equal plans or groups
+	 */
 }
 
 class SubscriptionPlanHandler
@@ -3653,6 +3718,18 @@ class SubscriptionPlanHandler
 		$database->setQuery( $query );
 
 		return $database->loadResult();
+	}
+
+	function listPlans()
+	{
+		global $database;
+
+		$query = 'SELECT id'
+				. ' FROM #__acctexp_plans'
+				;
+		$database->setQuery( $query );
+
+		return $database->loadResultArray();
 	}
 }
 
