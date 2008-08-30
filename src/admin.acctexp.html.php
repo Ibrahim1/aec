@@ -777,8 +777,8 @@ class HTML_AcctExp
 						$link = 'index2.php?option=com_acctexp&amp;task=showSubscriptionPlans';
 						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_plans.png', _AEC_CENTR_PLANS );
 
-						$link = 'index2.php?option=com_acctexp&amp;task=showItemGroups';
-						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_itemgroups.png', _AEC_CENTR_GROUPS );
+						//$link = 'index2.php?option=com_acctexp&amp;task=showItemGroups';
+						//HTML_AcctExp::quickiconButton( $link, 'aec_symbol_itemgroups.png', _AEC_CENTR_GROUPS );
 
 						$link = 'index2.php?option=com_acctexp&amp;task=showMicroIntegrations';
 						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_microintegrations.png', _AEC_CENTR_M_INTEGRATION );
@@ -1355,7 +1355,7 @@ class HTML_AcctExp
  		echo $pageNav->getListFooter();
 		HTML_myCommon::ContentLegend(); ?>
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
-		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="task" value="showMicroIntegrations" />
 		<input type="hidden" name="returnTask" value="showMicroIntegrations" />
 		<input type="hidden" name="boxchecked" value="0" />
 		</form>
@@ -1616,7 +1616,7 @@ class HTML_AcctExp
  		echo $pageNav->getListFooter();
 		HTML_myCommon::ContentLegend(); ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
-		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="task" value="showSubscriptionPlans" />
 		<input type="hidden" name="returnTask" value="showSubscriptionPlans" />
 		<input type="hidden" name="boxchecked" value="0" />
 	</form>
@@ -1987,8 +1987,8 @@ class HTML_AcctExp
  		echo $pageNav->getListFooter();
 		HTML_myCommon::ContentLegend(); ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
-		<input type="hidden" name="task" value="" />
-		<input type="hidden" name="returnTask" value="showSubscriptionPlans" />
+		<input type="hidden" name="task" value="showItemGroups" />
+		<input type="hidden" name="returnTask" value="showItemGroups" />
 		<input type="hidden" name="boxchecked" value="0" />
 	</form>
 
