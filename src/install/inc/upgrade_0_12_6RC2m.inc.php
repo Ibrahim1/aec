@@ -46,8 +46,8 @@ foreach ( $entries as $eid ) {
 }
 
 // Adding in root group relation for all plans
-$planlist = SubscriptionPlanHandler::listPlans();
+//$planlist = SubscriptionPlanHandler::listPlans();
 
-ItemGroupHandler::setChildren( 0, $planlist );
+//ItemGroupHandler::setChildren( 0, $planlist );
 
 ?>

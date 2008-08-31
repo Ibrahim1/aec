@@ -4,7 +4,7 @@
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Core Class
  * @copyright 2006-2008 Copyright (C) David Deutsch
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
@@ -3498,11 +3498,14 @@ class ItemGroupHandler
 	{
 		$currentParents	= ItemGroupHandler::parentGroups( $item_id, $type );
 
+		// Filtering out which groups will stay
 		$keepGroups		= array_intersect( $currentParents, $groups );
 
+		// Which will be newly added
 		$addGroups		= array_diff( $groups, $keepGroups );
 		ItemGroupHandler::setChildren( $item_id, $addGroups, $type );
 
+		// And which removed
 		$delGroups		= array_diff( $currentParents, $keepGroups, $addGroups );
 		ItemGroupHandler::removeChildren( $item_id, $delGroups, $type );
 	}
@@ -3521,7 +3524,8 @@ class ItemGroupHandler
 
 		foreach ( $groups as $group_id ) {
 			$ig = new itemXgroup( $database );
-			if ( !$ig->createNew( $type, $item_id, $group_id ) ) {
+
+			if ( !$ig->createNew( $type, $group_id, $item_id ) ) {
 				return false;
 			}
 		}
@@ -3651,7 +3655,7 @@ class ItemGroup extends serialParamDBTable
 
 }
 
-class itemXgroup extends paramDBTable
+class itemXgroup extends mosDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -3662,7 +3666,7 @@ class itemXgroup extends paramDBTable
 	/** @var int */
 	var $group_id			= null;
 
-	function couponXuser( &$db )
+	function itemXgroup( &$db )
 	{
 		$this->mosDBTable( '#__acctexp_itemxgroup', 'id', $db );
 	}
