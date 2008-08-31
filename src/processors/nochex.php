@@ -1,10 +1,10 @@
 <?php
 /**
  * @version $Id: mammontini.php
- * @package Mammontini!: General purpose Payment-related functionality
- * @copyright Copyright (C) 2008 David Deutsch, All Rights Reserved
- * @author David Deutsch <skore@skore.de>
- * @license GNU/GPL v.2 or later http://www.gnu.org/copyleft/gpl.html
+ * @package AEC - Account Control Expiration - Membership Manager
+ * @copyright 2006-2008 Copyright (C) David Deutsch
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
+ * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  *
  *          _  _ ____ _  _ _  _ ____ __ _ ___ _ __ _ _  /
  *          |\/| |--| |\/| |\/| [__] | \|  |  | | \| | .  v1.0

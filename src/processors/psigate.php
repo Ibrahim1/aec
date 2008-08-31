@@ -3,8 +3,8 @@
 /**
  * PSIGate process interface
  *
- * @copyright 2007 Ben Ingram
- * @license http://www.gnu.org/copyleft/gpl.html. GNU Public License
+ * @copyright 2006-2008 Copyright (C) David Deutsch
+ * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  * @version $Revision: 1.0d $
  *   Revision a  - changed flag to process instead of Auth.
  *   Revision b  - Fixed duplicate order ID problem
@@ -13,7 +13,7 @@
  *   Revision e  - more detail in transaction history
  *   Revision f  - more detail in debug
  *  * *  *
- * @author Ben Ingram <beningram@hotmail.com>
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
  **
  *********************************************************************
  ** If you find this useful, why not make my day and send a donation to me by PayPal

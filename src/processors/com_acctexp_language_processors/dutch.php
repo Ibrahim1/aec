@@ -1,11 +1,11 @@
 <?php
 /**
  * @version $Id: dutch.php 16 2007-06-25 09:04:04Z mic $
- * @package AEC - Account Expiration Control / Subscription management for Joomla
+ * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Processor languages
- * @author AEC - YOUR NAME HERE
- * @copyright 2004-2007 Helder Garcia, David Deutsch
- * @license http://www.gnu.org/copyleft/gpl.html. GNU Public License
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
+ * @copyright 2006-2008 Copyright (C) David Deutsch
+ * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
 //

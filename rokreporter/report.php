@@ -3,7 +3,7 @@
  * @version		$Id: report.php 3 2008-02-09 12:01:48Z Shiny Black Shoe $
  * @package		RokReporter
  * @copyright	(C) 2007, Shiny Black Shoe. Modified from RokReporter inbuilt reports
- * @license		GNU General Public License
+ * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
  //updated for AEC releases > 0.12.4.11 which no longer have #__acctexp table
 

@@ -1,10 +1,10 @@
 <?php
 /**
  * @version		$Id: object.php 9764 2007-12-30 07:48:11Z ircmaxell $
- * @package		Joomla.Framework
+ * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage	Base
- * @copyright	Copyright (C) 2005 - 2008 Open Source Matters. All rights reserved.
- * @license		GNU/GPL, see LICENSE.php
+ * @copyright 2006-2008 Copyright (C) David Deutsch
+ * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  * Joomla! is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
@@ -15,7 +15,7 @@
 /**
  * Object class, allowing __construct in PHP4.
  *
- * @author		Johan Janssens <johan.janssens@joomla.org>
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
  * @package		Joomla.Framework
  * @subpackage	Base
  * @since		1.5

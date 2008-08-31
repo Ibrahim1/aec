@@ -1,11 +1,11 @@
 <?php
 /**
  * @version $Id: mi_aecplan.php
- * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
+ * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Micro Integrations - AEC Plan Application
- * @copyright 2006/2007 Copyright (C) David Deutsch
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
- * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
+ * @copyright 2006-2008 Copyright (C) David Deutsch
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
+ * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
 // Dont allow direct linking

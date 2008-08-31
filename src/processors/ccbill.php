@@ -3,10 +3,10 @@
 /**
 * CCBill process interface BETA 1.0
 *
-* @copyright 2007 Ben Ingram
-* @license http://www.gnu.org/copyleft/gpl.html. GNU Public License
+* @copyright 2006-2008 Copyright (C) David Deutsch
+* @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
 * @version $Revision: 1.0 $
-* @author Ben Ingram <beningram@hotmail.com>, David Deutsch <skore@skore.de>
+* @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
 **
 *********************************************************************
 ** If you find this useful, why not make my day and send a donation to me by PayPal

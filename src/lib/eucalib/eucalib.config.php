@@ -1,11 +1,11 @@
 <?php
 /**
  * @version $Id: eucalib.common.php
- * @package Eucalib: Component library for the Joomla! CMS
+ * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Eucalib Common Files
- * @copyright Copyright (C) 2007 David Deutsch, All Rights Reserved
- * @author David Deutsch <skore@skore.de>
- * @license GNU/GPL v.2 or later http://www.gnu.org/copyleft/gpl.html
+ * @copyright 2006-2008 Copyright (C) David Deutsch
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
+ * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  *
  *                         _ _ _
  *                        | (_) |

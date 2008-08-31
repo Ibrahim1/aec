@@ -1,11 +1,11 @@
 <?php
 /**
  * @version $Id: offline_payment.php
- * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
+ * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Processors - Offline Payment
- * @copyright Copyright (C) 2007 David Deutsch
- * @author Davin Deutsch
- * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
+ * @copyright 2006-2008 Copyright (C) David Deutsch
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
+ * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 // Copyright (C) 2006-2007 David Deutsch
 // All rights reserved.

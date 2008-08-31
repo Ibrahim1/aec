@@ -1,12 +1,12 @@
 <?php
 /**
  * @version $Id: mi_affiliatepro.php 16 2007-07-01 12:07:07Z mic $
- * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
+ * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Micro Integrations - AffiliatePRO
- * @copyright 2007 Calum Polwart / Shiny Black Shoe Systems
- * @author Calum Polwart
- * @author adopted by David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
- * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
+ * @copyright 2006-2008 Copyright (C) David Deutsch
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
+ * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
 /**

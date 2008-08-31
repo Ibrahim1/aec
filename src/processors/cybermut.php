@@ -1,11 +1,11 @@
 <?php
 /**
  * @version $Id: cybermut.php
- * @package AEC - Account Expiration Control / Subscription management for Joomla
+ * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Payment Processors
- * @author David Deutsch <skore@skore.de>
- * @copyright 2004-2007 David Deutsch
- * @license http://www.gnu.org/copyleft/gpl.html. GNU Public License
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
+ * @copyright 2006-2008 Copyright (C) David Deutsch
+ * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
 // Copyright (C) 2006-2007 David Deutsch

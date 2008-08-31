@@ -3,9 +3,9 @@
  * @version $Id: bot_aec.php
  * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
  * @subpackage Mambot
- * @copyright Copyright (C) 2004-2007, All Rights Reserved, David Deutsch
- * @author David Deutsch <skore@skore.de> - http://www.gobalnerd.org
- * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
+ * @copyright 2006-2008 Copyright (C) David Deutsch
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
+ * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );

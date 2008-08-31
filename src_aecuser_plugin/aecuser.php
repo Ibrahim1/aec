@@ -2,8 +2,8 @@
 /**
 * @version		$Id: aecuser.php
 * @package		AEC - Account Expiration Control - User Plugin
-* @copyright	Copyright (C) 2007 David Deutsch. All rights reserved.
-* @license		GNU/GPL Version 2.0 or later - http://www.gnu.org/copyleft/gpl.html
+* @copyright 2006-2008 Copyright (C) David Deutsch
+* @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
 */
 
 /**
@@ -35,7 +35,7 @@ jimport('joomla.plugin.plugin');
 /**
  * AEC User plugin
  *
- * @author David Deutsch <mails@globalnerd.org>
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
  * @package AEC Component
  */
 class plgUserAECuser extends JPlugin

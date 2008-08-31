@@ -1,11 +1,11 @@
 <?php
 /**
 * AcctExp Uninstallation
-* @package AcctExp
-* @copyright 2004-2007 Helder Garcia, David Deutsch
-* @license http://www.gnu.org/copyleft/gpl.html. GNU Public License
+* @package AEC - Account Control Expiration - Membership Manager
+* @copyright 2006-2008 Copyright (C) David Deutsch
+* @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
 * @version $Revision: 1.2 $
-* @author Helder Garcia <helder.garcia@gmail.com>, David Deutsch <skore@skore.de>
+* @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
 **/
 //
 // Copyright (C) 2004-2007 Helder Garcia, David Deutsch

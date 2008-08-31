@@ -2,11 +2,11 @@
 /**
  * Class for handling htaccess of Apache
  * @version $Id: htaccess.class.php 16 2007-06-27 09:04:04Z mic $
- * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
+ * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Micro Integrations - htaccess
- * @copyright Intertribe - Internetservices Germany
- * @author Sven Wagener <sven.wagener@intertribe.de>
- * @license Unknown
+ * @copyright 2006-2008 Copyright (C) David Deutsch
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
+ * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  * @include Function:_include_
  */
 

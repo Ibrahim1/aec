@@ -2,14 +2,14 @@
 /**
  * $Id:$
  *
-* @author Axel Sauerh�fer <axel@willcodejoomlaforfood.de>
-* @copyright Copyright &copy; 2007, Axel Sauerh�fer
+* @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
+* @copyright 2006-2008 Copyright (C) David Deutsch
 * @version 0.8
-* @package MySMS
+* @package AEC - Account Control Expiration - Membership Manager
  *
  * All rights reserved.  MySMS Component for Joomla!
  *
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
+ * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  * MySMS! is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or

@@ -1,11 +1,11 @@
 <?php
 /**
 * @version $Id: germanf.php,v 1.0 2007/06/21 09:22:22 mic Exp $
-* @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
+* @package AEC - Account Control Expiration - Membership Manager
 * @subpackage Language - Backend - German Formal
-* @copyright Copyright (C) 2004-2007 Helder Garcia, David Deutsch
-* @author Team AEC - http://www.gobalnerd.org
-* @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
+* @copyright 2006-2008 Copyright (C) David Deutsch
+* @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
+* @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
 */
 defined( '_VALID_MOS' ) or die( 'Not Really ....' );
 
