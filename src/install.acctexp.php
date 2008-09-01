@@ -4,7 +4,7 @@
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Installation
  * @copyright 2006-2008 Copyright (C) David Deutsch
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
@@ -124,9 +124,9 @@ function com_install()
 			}
 		}
 
-		require_once( $incpath . '/upgrade_0_12_6RC2m.inc.php' );
+		//require_once( $incpath . '/upgrade_0_12_6RC2m.inc.php' );
 
-/*
+
 		$incfiles = AECToolbox::getFileArray( $incpath, 'inc.php', false, true );
 
 		$upgrades = array();
@@ -137,14 +137,14 @@ function com_install()
 
 			$version = str_replace( array( 'upgrade_', '.inc.php' ), array( '', '' ), $filename );
 
-			if ( version_compare( $version, $oldversion ) ) {
+			if ( !(version_compare( $version, $oldversion ) == -1) ) {
 				require_once( $incpath . '/upgrade_' . $upd . '.inc.php' );
 			}
 		}
 
 		$updates = array();
 
-*/
+
 	}
 
 	// Set Version

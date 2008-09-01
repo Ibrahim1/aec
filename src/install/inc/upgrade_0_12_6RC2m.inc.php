@@ -44,10 +44,4 @@ foreach ( $entries as $eid ) {
 	$meta->check();
 	$meta->store();
 }
-
-// Adding in root group relation for all plans
-//$planlist = SubscriptionPlanHandler::listPlans();
-
-//ItemGroupHandler::setChildren( 0, $planlist );
-
 ?>
