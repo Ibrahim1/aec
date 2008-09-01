@@ -4,7 +4,7 @@
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Main Backend
  * @copyright 2006-2008 Copyright (C) David Deutsch
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
@@ -4873,7 +4873,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 	$aec_userregchange_clause15	= '$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($user, $post, \'%s\');' . "\n";
 	$aec_global_call			= 'global $mosConfig_live_site, $mosConfig_absolute_path;' . "\n";
 	$aec_redirect_notallowed	= 'mosRedirect( sefRelToAbs( "/index.php?option=com_acctexp&task=NotAllowed" ) );' . "\n";
-	$aec_redirect_notallowed15	= 'global $mainframe;' . "\n" . '$mainframe->redirect( "/index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
+	$aec_redirect_notallowed15	= 'global $mainframe;' . "\n" . '$mainframe->redirect( "index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
 
 	if ( $v15 ) {
 		$aec_redirect_subscribe		= 'mosRedirect( JURI::base( true ) . \'/index.php?option=com_acctexp&task=subscribe\' );' . "\n";
