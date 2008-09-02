@@ -8856,7 +8856,7 @@ class microIntegrationHandler
 
 		$mi_list = $this->getUserChangeIntegrations();
 
-		if( is_int( $row ) ) {
+		if ( is_int( $row ) ) {
 			$userid = $row;
 		} elseif ( is_string( $row ) ){
 			$query = 'SELECT id'

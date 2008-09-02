@@ -4,8 +4,7 @@
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Micro Integrations - DocMan
  * @copyright 2006-2008 Copyright (C) David Deutsch
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  *
  * based on David Deutsch's reMOSitory MI
@@ -120,8 +119,6 @@ class mi_docman
 		$mi_docmanhandler = new docman_restriction( $database );
 		$id = $mi_docmanhandler->getIDbyUserID( $userid );
 
-
-
 		if ( $id ) {
 			$mi_docmanhandler->load( $id );
 			if ( $mi_docmanhandler->active ) {
@@ -203,7 +200,7 @@ class mi_docman
 		if ( $mi_id ) {
 			if ( $this->settings['unset_unlimited'] ) {
 				$mi_docmanhandler->unlimited_downloads = 0 ;
-			}	
+			}
 			$mi_docmanhandler->active = 0;
 			$mi_docmanhandler->check();
 			$mi_docmanhandler->store();
@@ -229,8 +226,9 @@ class mi_docman
 
 		if ( !$mi_id ) {
 			$mi_docmanhandler->userid = $request->metaUser->userid;
-			$mi_docmanhandler->active = 1;
 		}
+
+		$mi_docmanhandler->active = 1;
 
 		if ( $this->settings['set_downloads'] ) {
 			$mi_docmanhandler->setDownloads( $this->settings['set_downloads'] );
