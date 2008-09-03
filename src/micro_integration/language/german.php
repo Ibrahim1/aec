@@ -1,10 +1,10 @@
 <?php
 /**
- * @version $Id: german.php 16 2007-07-01 21:00:00Z mic $
+ * @version $Id: german.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Language - MicroIntegrations - German Formal
  * @copyright 2006-2008 Copyright (C) David Deutsch
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
@@ -12,7 +12,7 @@
 defined( '_VALID_MOS' ) or die( 'Not really ....' );
 
 // Load Identifier
-define( '_AEC_LANG_INCLUDED_MI', 1);
+define( '_AEC_LANG_INCLUDED_MI', 1 );
 
 // acajoom
 define( '_AEC_MI_NAME_ACAJOOM',		'Acajoom' );

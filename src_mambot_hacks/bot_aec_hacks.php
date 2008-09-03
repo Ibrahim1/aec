@@ -1,12 +1,13 @@
 <?php
 /**
  * @version $Id: bot_aec_hacks.php
- * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
- * @subpackage Mambot
+ * @package AEC - Account Control Expiration - Joomla 1.0 Plugins
+ * @subpackage Hacks Bot
  * @copyright 2006-2008 Copyright (C) David Deutsch
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
+
 
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 $_MAMBOTS->registerFunction( 'onAfterStart', 'checkUserSubscription' ); //joomla.php Hack #4
@@ -18,7 +19,7 @@ $_MAMBOTS->registerFunction( 'onAfterStart', 'notifyMI' ); //registration.php Ha
 function notifyMI()
 {
 	global $mosConfig_absolute_path, $option;
-	
+
 	$task = mosGetParam( $_REQUEST, 'task', '' );
 
 	if (($option == 'com_registration' && $task == 'saveRegistration')
@@ -45,7 +46,7 @@ function notifyMI()
 function planRegistration()
 {
 	global $mosConfig_absolute_path, $option;
-	
+
 	$task = mosGetParam( $_REQUEST, 'task', '' );
 
 	if (($option == 'com_registration' && $task == 'register') || ($option == 'com_comprofiler' && $task == 'registers'))
@@ -56,13 +57,13 @@ function planRegistration()
 	}
 }
 
-//This will make the Plans First feature possible - you need to set the switch for this in the settings as well! 
+//This will make the Plans First feature possible - you need to set the switch for this in the settings as well!
 function planFirst()
 {
 	global $mosConfig_absolute_path, $option;
-	
+
 	$task = mosGetParam( $_REQUEST, 'task', '' );
-	
+
 	if ($option == 'com_registration' && $task == 'register'){
 		if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {
 			include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");
@@ -77,14 +78,14 @@ function planFirst()
 function checkUserSubscription()
 {
 	global $mosConfig_absolute_path, $option;
-	
+
 	$submit = mosGetParam($_POST,'submit', '');
 	if ($option == 'login' ||
          ($option == 'com_comprofiler' && $task == 'login') &&
-         ($submit == 'Login')) { 
+         ($submit == 'Login')) {
 		if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {
 			include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");
-			
+
 			$username = mosGetParam($_POST,'username', '');
 			$verification = AECToolbox::VerifyUser( $username );
 
@@ -100,7 +101,7 @@ function checkUserSubscription()
 function onLoginFailure()
 {
 	global $database;
-	
+
 	$query = 'SELECT id'
 	. ' FROM #__users'
 	. ' WHERE username = \'' . AEC_AUTH_ERROR_UNAME . '\''
@@ -109,7 +110,7 @@ function onLoginFailure()
 	$id = $database->loadResult();
 
 	$redirect = false;
-	
+
 	switch( AEC_AUTH_ERROR_MSG ) {
 		case 'open_invoice':
 			$redirect = 'pending';
@@ -118,7 +119,7 @@ function onLoginFailure()
 			$redirect = AEC_AUTH_ERROR_MSG;
 			break;
 	}
-	
+
 	if ( $redirect ) {
 		$url = "index.php?option=com_acctexp&task=$redirect&userid=$id";
 		mosRedirect( sefRelToAbs( $url ) );

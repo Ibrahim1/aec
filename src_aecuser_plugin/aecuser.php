@@ -1,31 +1,13 @@
 <?php
 /**
-* @version		$Id: aecuser.php
-* @package		AEC - Account Expiration Control - User Plugin
-* @copyright 2006-2008 Copyright (C) David Deutsch
-* @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
-*/
+ * @version $Id: aecuser.php
+ * @package AEC - Account Control Expiration - Joomla 1.5 Plugins
+ * @subpackage User
+ * @copyright 2006-2008 Copyright (C) David Deutsch
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
+ * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
+ */
 
-/**
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License (GPL)
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* Please note that the GPL states that any headers in files and
-* Copyright notices as well as credits in headers, source files
-* and output (screens, prints, etc.) can not be removed.
-* You can extend them with your own credits, though...
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-*/
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
@@ -35,7 +17,7 @@ jimport('joomla.plugin.plugin');
 /**
  * AEC User plugin
  *
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
  * @package AEC Component
  */
 class plgUserAECuser extends JPlugin

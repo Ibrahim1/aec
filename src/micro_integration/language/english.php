@@ -1,10 +1,10 @@
 <?php
 /**
- * @version $Id: english.php 16 2007-06-27 09:04:04Z mic $
+ * @version $Id: english.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Language - MicroIntegrations - English
  * @copyright 2006-2008 Copyright (C) David Deutsch
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
