@@ -1,14 +1,11 @@
 <?php
 /**
- * @version $Id: mi_raffle.php 16 2007-07-01 12:07:07Z mic $
+ * @version $Id: mi_raffle.php
  * @package AEC - Account Control Expiration - Membership Manager
- * @subpackage Micro Integrations - DocMan
+ * @subpackage Micro Integrations - Raffle
  * @copyright 2006-2008 Copyright (C) David Deutsch
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
- *
- * based on David Deutsch's reMOSitory MI
  */
 
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );

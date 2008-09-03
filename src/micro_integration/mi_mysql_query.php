@@ -1,13 +1,14 @@
 <?php
 /**
- * @version $Id: mi_mysql_query.php 16 2007-07-02 13:29:29Z mic $
+ * @version $Id: mi_mysql_query.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Micro Integrations - MySQL Query
  * @copyright 2006-2008 Copyright (C) David Deutsch
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
+// Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
 class mi_mysql_query

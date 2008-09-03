@@ -1,12 +1,11 @@
 <?php
 /**
- * @version $Id: mi_fireboard.php 01 2007-08-11 13:29:29Z SBS $
+ * @version $Id: mi_fireboard.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Micro Integrations - Fireboard
  * @copyright 2006-2008 Copyright (C) David Deutsch
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
- * Based on code from the mi_remository.php file from sk0re.
  */
 
 // Dont allow direct linking
