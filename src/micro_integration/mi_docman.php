@@ -123,10 +123,14 @@ class mi_docman
 			$mi_docmanhandler->load( $id );
 			if ( $mi_docmanhandler->active ) {
 				$left = $mi_docmanhandler->getDownloadsLeft();
-				$used = $mi_docmanhandler->used_downloads;
+				if ( !$mi_docmanhandler->used_downloads) {
+					$used = 0 ;
+				} else {
+					$used = $mi_docmanhandler->used_downloads;
+				}				
 				$unlimited = $mi_docmanhandler->unlimited_downloads;
 				$message = '<p>'.sprintf(_AEC_MI_DIV1_DOCMAN_USED, $used).'</p>';
-				if ( $unlimited ) {
+				if ( $unlimited > 0 ) {
 					$message .='<p>' . sprintf( _AEC_MI_DIV1_DOCMAN_REMAINING, _AEC_MI_DIV1_DOCMAN_UNLIMITED ) . '</p>';
 				} else {
 					$message .= '<p>' . sprintf( _AEC_MI_DIV1_DOCMAN_REMAINING, $left ) . '</p>';
@@ -385,8 +389,8 @@ class docman_restriction extends mosDBTable {
 
 	function getDownloadsLeft()
 	{
-		if ( !empty( $this->unlimited_downloads ) ) {
-			return true;
+		if (  $this->unlimited_downloads > 0 ) {
+			return 'unlimited';
 		} else {
 			$downloads_left = $this->granted_downloads - $this->used_downloads;
 			return $downloads_left;
@@ -395,13 +399,20 @@ class docman_restriction extends mosDBTable {
 
 	function hasDownloadsLeft()
 	{
-		$check = $this->getDownloadsLeft();
+                $check = $this->getDownloadsLeft();
 
-		if ( !empty( $check ) ) {
-			return true;
-		} else {
-			return false;
-		}
+                if ( empty ( $check ) ) {
+                        return false;
+                } elseif  (  is_numeric ($check)  )  {
+                        if ( $check > 0 ) {
+                                return true;
+                        } else {
+                                return false;
+                        }
+                } elseif ( $check == "unlimited" ) {
+                        return true;
+                }
+
 	}
 
 	function noDownloadsLeft()
