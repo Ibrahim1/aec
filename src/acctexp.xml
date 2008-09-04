@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <mosinstall type="component">
-	<name>Account Expiration Control</name>
+	<name>AcctExp</name>
 	<creationDate>2008.06.06</creationDate>
 	<author>David Deutsch, Helder Garcia, Team AEC</author>
 	<copyright>@Copyright (C) 2004-2008 David Deutsch</copyright>
