@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <mosinstall type="component">
-	<name>acctexp</name>
+	<name>Account Expiration Control</name>
 	<creationDate>2008.06.06</creationDate>
-	<author>Helder Garcia, David Deutsch, Team AEC</author>
-	<copyright>@Copyright (C) 2004-2008 Helder Garcia, David Deutsch</copyright>
+	<author>David Deutsch, Helder Garcia, Team AEC</author>
+	<copyright>@Copyright (C) 2004-2008 David Deutsch</copyright>
 	<authorEmail>mails@globalnerd.org</authorEmail>
 	<authorUrl>https://globalnerd.org</authorUrl>
 	<version>0.12.6 RC2m</version>
