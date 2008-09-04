@@ -20,8 +20,8 @@ class processor_iats extends XMLprocessor
 		$info['longname']		= _CFG_IATS_LONGNAME;
 		$info['statement']		= _CFG_IATS_STATEMENT;
 		$info['description']	= _CFG_IATS_DESCRIPTION;
-		$info['currencies']		= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS';
-		$info['languages']		= 'GB,DE,FR,IT,ES,US,NL';
+		$info['currencies']		= 'USD';
+		$info['languages']		= 'GB';
 		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck,giropay';
 		$info['recurring']		= 2;
 		$info['actions']		= array('cancel');
@@ -64,17 +64,11 @@ class processor_iats extends XMLprocessor
 		$settings['cancel_note']			= array( 'inputE' );
 		$settings['item_name']				= array( 'inputE' );
 
-		$country_sel = array();
-		$country_sel[] = mosHTML::makeOption( 'US', 'US' );
-		//$country_sel[] = mosHTML::makeOption( 'UK', 'UK' );
-
-		$settings['lists']['country'] = mosHTML::selectList( $country_sel, 'country', 'size="2"', 'value', 'text', $this->settings['country'] );
-
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
 	}
-
+/*
 	function registerProfileTabs()
 	{
 		$tab			= array();
@@ -158,7 +152,7 @@ class processor_iats extends XMLprocessor
 
 		return $return;
 	}
-
+*/
 	function checkoutform( $request, $vcontent=null, $updated=null )
 	{
 		global $mosConfig_live_site;
@@ -189,18 +183,6 @@ class processor_iats extends XMLprocessor
 		global $mosConfig_live_site, $mosConfig_offset_user;
 
 		$var = array();
-
-		if ( is_array( $request->int_var['amount'] ) ) {
-			$var['Method']			= 'CreateRecurringPaymentsProfile';
-		} else {
-			$var['Method']			= 'DoDirectPayment';
-		}
-
-		if ( is_array( $request->int_var['amount'] ) ) {
-			$var['Version']			= '50.0';
-		} else {
-			$var['Version']			= '3.2';
-		}
 
 		$var['user']				= $this->settings['api_user'];
 		$var['pwd']					= $this->settings['api_password'];
