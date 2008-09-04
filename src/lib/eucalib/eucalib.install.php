@@ -86,7 +86,8 @@ class eucaInstall extends eucaObject
 
 		$query = 'DELETE'
 				. ' FROM #__components'
-				. ' WHERE `option` = \'option=' . _EUCA_APP_COMPNAME . '\''
+				. ' WHERE `option` LIKE "%option=' . _EUCA_APP_COMPNAME . '%"'
+				. ' OR `option`=\'' . _EUCA_APP_COMPNAME . '\''
 				;
 		$database->setQuery( $query );
 
