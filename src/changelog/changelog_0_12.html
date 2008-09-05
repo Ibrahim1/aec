@@ -1316,6 +1316,7 @@ color: #333;
 <li>Prevent admin from assigning the same coupon code to two coupons</li>
 <li>Fixing: applying a payment plan (instead of saving it) sometimes loaded a different plan afterwards</li>
 <li>Fixing a bug that would prevent NotConfigured members to be assigned a plan through the UserForm</li>
+<li>Fixing Settings view for IE7</li>
 </ul>
 </li>
 <li><strong>Frontend</strong>
@@ -1354,6 +1355,8 @@ color: #333;
 <li class="finish">G2 MI</li>
 <li>RSgallery2 MI</li>
 <li class="check">SOBI MI</li>
+<li>Plan application MI</li>
+<li>Raffle MI</li>
 </ul>
 </li>
 <li><strong>Change in the MI API</strong>
@@ -1403,7 +1406,7 @@ color: #333;
 <li><strong>Installer Revamping</strong>
 <ul>
 <li>Installer down to 2MB (a common hosting php upload limit)</li>
-<li class="important">Versioning support in install to easier select necessary updates</li>
+<li>Versioning support in install to easier select necessary updates</li>
 <li>Break down install into .inc's</li>
 </ul>
 </li>
@@ -1413,7 +1416,7 @@ color: #333;
 <li>move most parameter fields of subscriptions to the new meta db entry</li>
 <li>Transfer subscription history to new metaUser table</li>
 <li>Let RWengine access full metaUser Object</li>
-<li class="finish">Adding in metaUser database table that holds general data</li>
+<li>Adding in metaUser database table that holds general data</li>
 <li>Bug that will put extra escapes in the email text, description and name of a payment plan</li>
 <li>JSOON Notation for completely lossless (even class preserving) mapping between PHP Objects (and associative arrays) and JSON</li>
 </ul>
@@ -1453,7 +1456,7 @@ color: #333;
 <li>Fixing max reuse and max per user reuse for coupons</li>
 <li class="check">Make sure that coupons are applied on rebills</li>
 <li>"Standard Parent Plan" which is assigned as primary plan if a user chooses a secondary plan as first plan</li>
-<li class="check">"Extend previous Membership" button on expired</li>
+<li>"Extend previous Membership" button on expired</li>
 <li>CB 1.2 integration</li>
 <li>Fundamental fix for upgrades of 0.10 and earlier versions</li>
 <li>Setting to force Joomla 1.0 mode - Some J! addons apparently fake it into believing it is 1.5... you would not <strong>believe</strong> what some guys come up with</li>
@@ -1465,22 +1468,12 @@ color: #333;
 </li>
 <li class="todo"><strong>Todo</strong>
 <ul>
-<li class="check">Fixing Settings view for IE7</li>
-<li class="check">Plan application MI</li>
 <li class="check">Correct Refund Handling in PayPal/Subscriptions</li>
-<li class="check">QuickSearch function that helps decode database fields (if you need to hack, hack.) - access it with "serialdecode XXXBASE64STRING..."</li>
-<li class="check">Raffle MI</li>
+<li>QuickSearch function that helps decode database fields (if you need to hack, hack.) - access it with "serialdecode XXXBASE64STRING..."</li>
 <li class="todo">Hot Property 1.0</li>
 <li>serialdecodetojason and jsontoserialcode QuickSearch functionality</li>
 <li class="todo">Switch to make secondary plans non-fallback when primary is expired</li>
-<li class="todo">Option to post-select CC icons</li>
-<li class="todo">Plan MI: Option to make secondary plans listen to duration of primary</li>
-<li class="todo">J!1.5: Correct redirection on not providing a username on registration</li>
-<li class="todo">J!1.5: Revisit NotAllowed redirection</li>
-<li class="todo">Express Checkout and PreAuth for PayPal Pro</li>
-<li class="todo">OnInvoiceCreation MI event (for stuff like custom checkout info via email)</li>
 <li class="todo">Restrictions Plan Setting: "or similar" and "or equal" plans</li>
-<li class="todo">Equalize Copyright Headers and GPL Version to 2 or later everywhere</li>
 </ul>
 </li>
 <li class="todo"><strong>Maybe Todo</strong>
