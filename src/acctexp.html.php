@@ -351,7 +351,7 @@ class HTML_frontEnd
 			</td>
 		</tr>
 		<?php
-		if ( $displaycc ) { ?>
+		if ( $displaycc && !empty( $processorObj->info['cc_list'] ) ) { ?>
 			<tr>
 				<td class="cc_gateway"></td>
 				<td class="cc_icons">
