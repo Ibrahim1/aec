@@ -72,7 +72,7 @@ if ( !function_exists( 'aecJoomla15check' ) ) {
 function aecGetParam( $name, $default='' )
 {
 	if ( aecJoomla15check() ) {
-		$return = mosGetParam( $_REQUEST, $name, $default, 2 );
+		$return = JArrayHelper::getValue( $_REQUEST, $name );
 	} else {
 		$return = mosGetParam( $_REQUEST, $name, $default, 0x0002 );
 	}
