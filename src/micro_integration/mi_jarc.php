@@ -29,6 +29,7 @@ class mi_jarc
 		$settings = array();
 		$settings['create_affiliates']	= array( 'list_yesno' );
 		$settings['log_payments']		= array( 'list_yesno' );
+				$settings['log_sales']	= array( 'list_yesno' );
 
 		return $settings;
 	}
@@ -74,7 +75,7 @@ class mi_jarc
 				;
 		$database->setQuery( $query );
 
-		if ( $database->query() )  {
+		if ( $database->loadResult() )  {
 			return true;
 		} else {
 			return false;
@@ -84,10 +85,20 @@ class mi_jarc
 	function createaffiliate( $userid )
 	{
 		global $database;
+				// Get affiliate ID from cookie.
+				$cookie_name   = mosMainframe::sessionCookieName() . '_JARC';
+				$sessioncookie = mosGetParam( $_COOKIE, $cookie_name, null );
 
+				list($cookie_aid, $cookie_count) = split(':',$sessioncookie,2);
+		/*
 		$query = 'INSERT INTO #__jarc_affiliate_network'
 				. ' SET `affiliate_id` = \'' . $userid . '\','
 				. ' `parent_id` = \'' . $_SESSION['affId'] . '\''
+				;
+		*/
+		$query = 'INSERT INTO #__jarc_affiliate_network'
+				. ' SET `affiliate_id` = \'' . $userid . '\','
+				. ' `parent_id` = \'' . $cookie_aid . '\''
 				;
 		$database->setQuery( $query );
 
@@ -100,14 +111,27 @@ class mi_jarc
 
 	function logpayment( $invoice )
 	{
-		global $mosConfig_offset_user;
+		global $mosConfig_offset_user, $mosConfig_absolute_path, $database;
+
+		// Get affiliate ID from cookie.
+		$cookie_name   = mosMainframe::sessionCookieName() . '_JARC';
+		$sessioncookie = mosGetParam( $_COOKIE, $cookie_name, null );
+
+		list( $cookie_aid, $cookie_count ) = split( ':', $sessioncookie, 2 );
+
+		require_once( $mosConfig_absolute_path . '/components/com_jarc/jarc.class.php' );
+
+		$affiliate = new jarc_affiliate( $database );
+		$affiliate->findById( intval( $cookie_aid ) );
 
 		$query = 'INSERT INTO #__jarc_payments' .
 				' SET `date` = \'' . date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 ) . '\','
 				. ' `user_id` = \'' . $invoice->userid . '\','
 				. ' `payment_type` = \''.$invoice->method.'\','
 				. ' `payment_status` = \'2\','
-				. ' `amount` = \'' . $invoice->amount . '\''
+				. ' `amount` = \'' . $invoice->amount . '\','
+				. ' `commission_id` = \'' . $affiliate->commission_id . '\','
+				. ' `affiliate_id` = \'' . intval($cookie_aid) . '\''
 				;
 		$database->setQuery( $query );
 
