@@ -3,8 +3,8 @@
  * @version $Id: clickbank.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Processors - Clickbank
- * @copyright 2007-2008 Copyright (C) David Deutsch, Pasapum Naonan
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
+ * @copyright 2007-2008 Copyright (C) David Deutsch
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org, initial help by Pasapum Naonan
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
@@ -23,6 +23,7 @@ class processor_clickbank extends GETprocessor
 		$info['cc_list'] 				= "visa,mastercard,americanexpress,discover,dinersclub,jcb,paypal";
 		$info['currencies']				= "USD";
 		$info['recurring'] 				= 2;
+		$info['notify_trail_thanks']	= 1;
 
 		return $info;
 	}
@@ -30,9 +31,9 @@ class processor_clickbank extends GETprocessor
 	function settings()
 	{
 		$settings = array();
+		$settings['testmode']			= 0;
 		$settings['publisher']			= 'clickbank';
 		$settings['secret_key']			= 'secret_key';
-		$settings['item_number']		='';
 		$settings['customparams']		= "";
 
 		return $settings;
@@ -41,10 +42,10 @@ class processor_clickbank extends GETprocessor
 	function backend_settings()
 	{
 		$settings = array();
+		$settings['testmode']			= array( 'list_yesno' );
 		$settings['publisher']			= array( 'inputC' );
 		$settings['secret_key']			= array( 'inputC' );
 		$settings['info']				= array( 'fieldset' );
-		$settings['item_number']		= array( 'inputC' );
 		$settings['customparams']		= array( 'inputD' );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
@@ -52,84 +53,101 @@ class processor_clickbank extends GETprocessor
 		return $settings;
 	}
 
+	function CustomPlanParams()
+	{
+		$p = array();
+		$p['item_number']	= array( 'inputC' );
+
+		return $p;
+	}
+
 	function createGatewayLink( $request )
 	{
 		global $mosConfig_live_site;
-		$url['item_number']					= $this->settings['item_number'];
-		$url['publisher']					= $this->settings['publisher'];
 
-		$var['post_url']		= 'http://'.$url['item_number'].'.'.$url['publisher'].'.pay.clickbank.net';
+		$item_number			= $var['allowedTypes'] = $request->int_var['planparams']['item_number'];
 
-		$var['invoice']			= $request->int_var['invoice']; //pass internal invoice to clickbank, so it will pass back to us for internal checking
+		$var['post_url']		= 'http://'.$item_number.'.'.$this->settings['publisher'].'.pay.clickbank.net';
 
-		//$var['total']				= $request->int_var['amount'];
+		// pass internal invoice to clickbank, so it will pass back to us for internal checking
+		$var['invoice']			= $request->int_var['invoice'];
 
-		$var['user_id']				= $request->metaUser->cmsUser->id;
-		$var['cart_order_id']		= AECToolbox::rewriteEngine( $this->settings['item_number'], $request->metaUser, $request->new_subscription, $request->invoice );
-		$var['username']			= $request->metaUser->cmsUser->username;
-		$var['name']				= $request->metaUser->cmsUser->name;
-		$var['email']				= $request->metaUser->cmsUser->email;
+		$var['cart_order_id']	= AECToolbox::rewriteEngine( $this->settings['item_number'], $request->metaUser, $request->new_subscription, $request->invoice );
 
 		return $var;
 	}
 
 	function parseNotification( $request )
 	{
-
-		$cbreceipt		= $request['cbreceipt']; 	//ClickBank receipt number (cbreceipt)
-		//echo $cbreceipt;
-		$time			= $request->int_var['time'];		//Epoch time of the order (time & seconds)
-		$item			= $request->int_var['item'];		//ClickBank item number (item)
-		$cbpop			= $request->int_var['cbpop'];		//ClickBank proof of purchase (cbpop)
-		$cname			= $request->int_var['cname'];		//Customer name, first+last (cname)
-		$cemail			= $request->int_var['cemail'];		//Customer e-mail (cemail)
-		$czip			= $request->int_var['czip'];		//Customer zip (czip) New!
-		$ccountry		= $request->int_var['ccountry'];	//Customer country (ccountry) New!
-		$cbaffi			= $request->int_var['cbaffi'];		//Affiliate nickname (cbaffi)
-		$invoice		= $request->int_var['invoice'];  // AEC invoice_number that we pass through clickbank, now it pass back
-		$userid			= $request->int_var['user_id'];
-		$username		= $request->int_var['username'];
-
-
 		$response = array();
-		$response['invoice'] = $invoice;
-		$response['username'] = $username;
-		//$response['cbreceipt'] = $cbreceipt;
-		//$response['time'] = $time;
-		//$response['item'] = $item;
-		//$response['cbpop'] = $cbpop;
-		//$response['cname'] = $cname;
-		//$response['cemail'] = $cemail;
-		//$response['czip'] = $czip;
-		//$response['ccountry'] = $ccountry;
-		//$response['cbaffi'] = $cbaffi;
-		//$response['Itemid'] = $item;
-		//		$response['userid'] = $userid;
-		//				$response['planid'] = $planid;
-
-						//$var['pay_to_email']= $cfg['pay_to_mail'];
-		//				$response['transaction_id']= $int_var['invoice'];
-		//				$response['return_url']=AECToolbox::deadsureURL('/index.php?option=com_acctexp&amp;task=thanks');
-		//				$response['cancel_url']=AECToolbox::deadsureURL('/index.php?option=com_acctexp&amp;task=cancel');
-		//				$response['status_url']=AECToolbox::deadsureURL('/index.php?option=com_acctexp&amp;task=clickbanknotification');
+		$response['invoice']			= $request['invoice'];
+		$response['amount_paid']		= $request['ctransamount'] / 100;
 
 		return $response;
 	}
 
 	function validateNotification( $response, $request, $invoice )
 	{
-		$key		=	$this->settings['secret_key'];
-		$rcpt		=	$request->int_var['cbreceipt'];
-		$time		=	$request->int_var['time'];
-		$item		=	$request->int_var['item'];
-		$cbpop	=	$request->int_var['cbpop'];
-		$xxpop = sha1("$key|$rcpt|$time|$item");
-		$xxpop = strtoupper(substr($xxpop,0,8));
+		// Standard parameters that Clickbank will send back (leaving out 'cverify')
+		$stdParams = array( 'ccustname', 'ccuststate', 'ccustcc', 'ccustemail',
+							'cproditem', 'cprodtitle', 'cprodtype', 'ctransaction',
+							'ctransaffiliate', 'ctransamount', 'ctranspaymentmethod', 'ctranspublisher',
+							'ctransreceipt', 'caffitid', 'cvendthru', 'ctranstime' );
 
-		if ( $cbpop == $xxpop){
-			$response['valid'] = 1;
+		$params = array();
+		foreach ( $stdParams as $name ) {
+			$params[] = $request[$name];
+		}
+
+		$params[] = $this->settings['secret_key'];
+
+		$verify = strtoupper( substr( implode( '|', $params ), 0, 8 ) );
+
+		$response['valid'] = 0;
+
+		if ( $request['cverify'] == $verify ) {
+			switch ( $request[''] ) {
+				// The purchase of a standard product or the initial purchase of recurring billing product.
+				case 'SALE':
+					$response['valid']	= 1;
+					break;
+				// The purchase of a standard product or the initial purchase of recurring billing product.
+				case 'BILL':
+					$response['valid']	= 1;
+					break;
+				// The refunding of a standard or recurring billing product. Recurring billing products that are refunded also result in a "CANCEL-REBILL" action.
+				case 'RFND':
+					$response['delete']	= 1;
+					break;
+				// A chargeback for a standard or recurring product.
+				case 'CGBK':
+					$response['delete']	= 1;
+					break;
+				// A chargeback for a standard or recurring product.
+				case 'INSF':
+					$response['delete']	= 1;
+					break;
+				// The cancellation of a recurring billing product. Recurring billing products that are canceled do not result in any other action.
+				case 'CANCEL-REBILL':
+					$response['cancel']	= 1;
+					break;
+				// Reversing the cancellation of a recurring billing product.
+				case 'UNCANCEL-REBILL':
+					$response['cancel']	= 1;
+					break;
+				// Triggered by using the test link on the site page.
+				case 'TEST':
+					if ( $this->settings['secret_key'] ) {
+						$response['valid']	= 1;
+					} else {
+						$response['valid'] = 0;
+						$response['pending_reason'] = 'testmode claimed when not activated';
+					}
+					break;
+			}
 		} else {
 			$response['valid'] = 0;
+			$response['pending_reason'] = 'verification error';
 		}
 
 		return $response;
