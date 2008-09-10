@@ -882,11 +882,13 @@ class HTML_AcctExp
 					</div>
 					<div style="margin: 12px;">
 					<h1>Leading Programmers</h1>
-					<p>Helder 'hlblog' Garcia, David 'skOre' Deutsch</p>
+					<p>David 'skOre' Deutsch</p>
 					<h1>Contributing Programmers</h1>
-					<p>Michael 'mic' Pagler, Steven 'corephp' Pignataro, Ethan 'ethanchai' Chai Voon Chong, Ben 'Slinky' Ingram, Charles 'Slydder' Williams, Calum 'polc1410' Polwart</p>
+					<p>Mati 'mtk' Kochen, Calum 'polc1410' Polwart, Ethan 'ethanchai' Chai Voon Chong, Jake Jacobs</p>
+					<h1>Past Contributing Programmers</h1>
+					<p>Helder 'hlblog' Garcia, Michael 'mic' Pagler, Steven 'corephp' Pignataro, Ben 'Slinky' Ingram, Charles 'Slydder' Williams</p>
 					<h1>Graphics</h1>
-					<p>All layout and graphics Design is CC-BY-NC-SA 2006-2007 David 'skOre' Deutsch. Additional icons are the silk icon set by Mark James (<a href="http://www.famfamfam.com/">famfamfam.com</a>).
+					<p>All layout and graphics Design is CC-BY-NC-SA 2006-2008 David 'skOre' Deutsch. Additional icons are the silk icon set by Mark James (<a href="http://www.famfamfam.com/">famfamfam.com</a>).
 					<h1>Eternal Gratitude</h1>
 					<p>These are the people without whom I could not have kept up the pace:</p>
 					<p>William 'Jake' Jacobs, Calum 'polc1410' Polwart</p>
@@ -896,6 +898,7 @@ class HTML_AcctExp
 					<h1>Contributors</h1>
 					<p>People who have helped on our code at one place or another:</p>
 					<p>Kirk Lampert (who found lots and lots of rather embarrassing bugs), Rasmus Dahl-Sorensen</p>
+					<p>Jarno en Mark Baselier from Q5 Grafisch Webdesign (for help on dutch translation)</p>
 					</div>
 				</td>
 				<td width="45%" valign="top">
