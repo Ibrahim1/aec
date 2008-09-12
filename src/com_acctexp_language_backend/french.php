@@ -60,6 +60,7 @@ define( '_AEC_FEATURE_NOT_ACTIVE',                'Cette fonctionnalit&eacute; n
 define( '_AEC_CMN_YES',                            'Oui' );
 define( '_AEC_CMN_NO',                            'Non' );
 define( '_AEC_CMN_LANG_CONSTANT_IS_MISSING',    'Langue constante &lt;strong&gt;%s&lt;/strong&gt; est manquante' );
+define( '_AEC_CMN_VISIBLE',						'Visible' );
 define( '_AEC_CMN_INVISIBLE',                    'Invisible' );
 define( '_AEC_CMN_EXCLUDED',                    'Exclus' );
 define( '_AEC_CMN_PENDING',                        'En attente' );

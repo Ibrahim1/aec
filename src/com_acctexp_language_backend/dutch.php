@@ -60,6 +60,7 @@ define( '_AEC_FEATURE_NOT_ACTIVE',				'Deze optie is niet actief' );
 define( '_AEC_CMN_YES',							'Ja' );
 define( '_AEC_CMN_NO',							'Nee' );
 define( '_AEC_CMN_LANG_CONSTANT_IS_MISSING',	'Taal <strong>%s</strong> is niet aanwezig' );
+define( '_AEC_CMN_VISIBLE',						'Zichtbaar' );
 define( '_AEC_CMN_INVISIBLE',					'Onzichtbaar' );
 define( '_AEC_CMN_EXCLUDED',					'Uitgezonderd' );
 define( '_AEC_CMN_PENDING',						'In de wachtrij' );
