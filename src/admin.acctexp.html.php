@@ -758,8 +758,8 @@ class HTML_AcctExp
 						$link = 'index2.php?option=com_acctexp&amp;task=showSubscriptionPlans';
 						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_plans.png', _AEC_CENTR_PLANS );
 
-						//$link = 'index2.php?option=com_acctexp&amp;task=showItemGroups';
-						//HTML_AcctExp::quickiconButton( $link, 'aec_symbol_itemgroups.png', _AEC_CENTR_GROUPS );
+						$link = 'index2.php?option=com_acctexp&amp;task=showItemGroups';
+						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_itemgroups.png', _AEC_CENTR_GROUPS );
 
 						$link = 'index2.php?option=com_acctexp&amp;task=showMicroIntegrations';
 						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_microintegrations.png', _AEC_CENTR_M_INTEGRATION );
@@ -1875,8 +1875,8 @@ class HTML_AcctExp
 		<form action="index2.php" method="post" name="adminForm">
 			<table class="adminheading">
 				<tr>
-					<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_plans.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
-						<?php echo _PAYPLANS_TITLE; ?>
+					<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_itemgroups.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+						<?php echo _ITEMGROUPS_TITLE; ?>
 					</th>
 				</tr>
 				<tr><td></td></tr>
@@ -1887,14 +1887,11 @@ class HTML_AcctExp
 					<th width="1%">#</th>
 					<th width="1%"><?php echo _AEC_CMN_ID; ?></th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
-					<th width="15%" align="left" nowrap="nowrap"><?php echo _PAYPLAN_NAME; ?></th>
-					<th width="20%" align="left" nowrap="nowrap"><?php echo _PAYPLAN_DESC; ?></th>
-					<th width="3%" nowrap="nowrap"><?php echo _PAYPLAN_ACTIVE; ?></th>
-					<th width="3%" nowrap="nowrap"><?php echo _PAYPLAN_VISIBLE; ?></th>
-					<th width="5%" colspan="2" nowrap="nowrap"><?php echo _PAYPLAN_REORDER; ?></th>
-					<th width="5%" nowrap="nowrap" align="center"><?php echo _PAYPLAN_USERCOUNT; ?></th>
-					<th width="5%" nowrap="nowrap" align="center"><?php echo _PAYPLAN_EXPIREDCOUNT; ?></th>
-					<th width="5%" nowrap="nowrap" align="center"><?php echo _PAYPLAN_TOTALCOUNT; ?></th>
+					<th width="15%" align="left" nowrap="nowrap"><?php echo _ITEMGROUP_NAME; ?></th>
+					<th width="20%" align="left" nowrap="nowrap"><?php echo _ITEMGROUP_DESC; ?></th>
+					<th width="3%" nowrap="nowrap"><?php echo _ITEMGROUP_ACTIVE; ?></th>
+					<th width="3%" nowrap="nowrap"><?php echo _ITEMGROUP_VISIBLE; ?></th>
+					<th width="5%" colspan="2" nowrap="nowrap"><?php echo _ITEMGROUP_REORDER; ?></th>
 				</tr>
 
 		<?php
@@ -1902,13 +1899,13 @@ class HTML_AcctExp
 		for( $i=0, $n=count( $rows ); $i < $n; $i++ ) {
 				switch( $rows[$i]->visible ) {
 					case '1':
-						$vaction	= 'invisibleSubscriptionPlan';
+						$vaction	= 'invisibleItemGroup';
 						$vicon		= 'eye.png';
-						$vtext		= _PAYPLAN_VISIBLE;
+						$vtext		= _AEC_CMN_VISIBLE;
 						break;
 
 					case '0':
-						$vaction	= 'visibleSubscriptionPlan';
+						$vaction	= 'visibleItemGroup';
 						$vicon		= 'cancel.png';
 						$vtext		= _AEC_CMN_INVISIBLE;
 						break;
@@ -1916,13 +1913,13 @@ class HTML_AcctExp
 
 				switch( $rows[$i]->active ) {
 					case '1':
-						$aaction	= 'unpublishSubscriptionPlan';
+						$aaction	= 'unpublishItemGroup';
 						$aicon		= 'accept.png';
 						$atext		= _AEC_CMN_PUBLISHED;
 						break;
 
 					case '0':
-						$aaction	= 'publishSubscriptionPlan';
+						$aaction	= 'publishItemGroup';
 						$aicon		= 'cancel.png';
 						$atext		= _AEC_CMN_NOT_PUBLISHED;
 						break;
@@ -1942,7 +1939,7 @@ class HTML_AcctExp
 					<td align="center"><?php echo $pageNav->rowNumber( $i ); ?></td>
 					<td align="right"><?php echo $rows[$i]->id; ?></td>
 					<td><?php echo mosHTML::idBox( $i, $rows[$i]->id, false, 'id' ); ?></td>
-					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editSubscriptionPlan')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $rows[$i]->name; ?></a></td>
+					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editItemGroup')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $rows[$i]->name; ?></a></td>
 					<td  align="left">
 						<?php
 						echo $description; ?>
@@ -1957,11 +1954,8 @@ class HTML_AcctExp
 							<?php echo aecHTML::Icon( $vicon, $vtext ); ?>
 						</a>
 					</td>
-					<td align="right"><?php echo $pageNav->orderUpIcon( $i, true, 'orderplanup' ); ?></td>
-					<td align="right"><?php echo $pageNav->orderDownIcon( $i, $n, true, 'orderplandown' ); ?></td>
-					<td align="center"><strong><?php echo $rows[$i]->usercount; ?></strong></td>
-					<td align="center"><?php echo $rows[$i]->expiredcount; ?></td>
-					<td align="center"><strong><?php echo $rows[$i]->usercount + $rows[$i]->expiredcount; ?></strong></td>
+					<td align="right"><?php echo $pageNav->orderUpIcon( $i, true, 'ordergroupup' ); ?></td>
+					<td align="right"><?php echo $pageNav->orderDownIcon( $i, $n, true, 'ordergroupdown' ); ?></td>
 				</tr>
 			<?php
 			$k = 1 - $k;
@@ -2014,7 +2008,7 @@ class HTML_AcctExp
 					<td valign="top">
 						<?php
 						$tabs = new mosTabs(0);
-		                $tabs->startPane( 'editSubscriptionPlan' );
+		                $tabs->startPane( 'editItemGroup' );
 		                $tabs->startTab( _PAYPLAN_DETAIL_TITLE, _PAYPLAN_DETAIL_TITLE );
 		                ?>
 		                <h2><?php echo _PAYPLAN_DETAIL_TITLE; ?></h2>

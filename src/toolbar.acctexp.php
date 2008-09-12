@@ -39,6 +39,18 @@ switch ( $task ) {
 		ComponentMenu::EDIT_SUBSCRIPTIONPLAN();
 		break;
 
+	case 'showItemGroups':
+		ComponentMenu::LIST_ITEMGROUPS();
+		break;
+
+	case 'newItemGroup':
+		ComponentMenu::EDIT_ITEMGROUP();
+		break;
+
+	case 'editItemGroup':
+		ComponentMenu::EDIT_ITEMGROUP();
+		break;
+
 	case 'showMicroIntegrations':
 		ComponentMenu::LIST_MICROINTEGRATIONS();
 		break;

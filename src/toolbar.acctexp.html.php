@@ -91,6 +91,28 @@ class ComponentMenu
 		mosMenuBar::endTable();
 	}
 
+	function LIST_ITEMGROUPS()
+	{
+		mosMenuBar::startTable();
+		mosMenuBar::custom( 'publishItemGroup', 'publish.png',  'publish_f2.png', _PUBLISH_ITEMGROUP, true );
+		mosMenuBar::custom( 'unpublishItemGroup', 'unpublish.png',  'unpublish_f2.png', _UNPUBLISH_ITEMGROUP, true );
+		mosMenuBar::custom( 'newItemGroup', 'new.png',  'new_f2.png', _NEW_ITEMGROUP, false );
+		mosMenuBar::custom( 'editItemGroup', 'edit.png',  'edit_f2.png', _EDIT_ITEMGROUP, true );
+		mosMenuBar::custom( 'copyItemGroup', 'copy.png', 'copy_f2.png', _COPY_ITEMGROUP, true );
+		mosMenuBar::custom( 'removeItemGroup', 'delete.png',  'delete_f2.png', _REMOVE_ITEMGROUP, true );
+		mosMenuBar::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
+		mosMenuBar::endTable();
+	}
+
+	function EDIT_ITEMGROUP()
+	{
+		mosMenuBar::startTable();
+		mosMenuBar::custom( 'saveItemGroup', 'save.png',  'save_f2.png', _SAVE_ITEMGROUP, false );
+		mosMenuBar::custom( 'applyItemGroup', 'apply.png',  'apply_f2.png', _APPLY_ITEMGROUP, false );
+		mosMenuBar::custom( 'cancelItemGroup', 'cancel.png',  'cancel_f2.png', _CANCEL_ITEMGROUP, false );
+		mosMenuBar::endTable();
+	}
+
 	function LIST_MICROINTEGRATIONS()
 	{
 		mosMenuBar::startTable();
