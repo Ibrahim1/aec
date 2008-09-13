@@ -898,7 +898,9 @@ class HTML_AcctExp
 					<h1>Contributors</h1>
 					<p>People who have helped on our code at one place or another:</p>
 					<p>Kirk Lampert (who found lots and lots of rather embarrassing bugs), Rasmus Dahl-Sorensen</p>
+					<h1>Translators</h1>
 					<p>Jarno en Mark Baselier from Q5 Grafisch Webdesign (for help on dutch translation)</p>
+					<p>Traduction fran&ccedil;aise par Garstud, Johnpoulain, Cobayes, cb75ter, Sharky</p>
 					</div>
 				</td>
 				<td width="45%" valign="top">
