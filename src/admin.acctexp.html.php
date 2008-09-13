@@ -1746,15 +1746,15 @@ class HTML_AcctExp
 						<table class="adminform" style="border-collapse:separate;">
 							<tr><td>
 								<div class="userinfobox">
-									<div style="position:relative;float:left;width:230px;">
+									<div style="position:relative;float:left;width:260px;">
 										<?php echo $aecHTML->createSettingsParticle( 'mingid_enabled' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'mingid' ); ?>
 									</div>
-									<div style="position:relative;float:left;width:230px;">
+									<div style="position:relative;float:left;width:260px;">
 										<?php echo $aecHTML->createSettingsParticle( 'fixgid_enabled' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'fixgid' ); ?>
 									</div>
-									<div style="position:relative;float:left;width:230px;">
+									<div style="position:relative;float:left;width:260px;">
 										<?php echo $aecHTML->createSettingsParticle( 'maxgid_enabled' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'maxgid' ); ?>
 									</div>
@@ -1978,24 +1978,16 @@ class HTML_AcctExp
  		HTML_myCommon::GlobalNerd();
 	}
 
-	function editItemGroup( $option, $aecHTML, $row, $hasrecusers )
+	function editItemGroup( $option, $aecHTML, $row )
 	{
 		global $my, $mosConfig_live_site;
 
 		mosCommonHTML::loadOverlib();
 		HTML_myCommon::addBackendCSS(); ?>
 
-		<script type="text/javascript">
-		    /* <![CDATA[ */
-			function submitbutton(pressbutton) {
-				<?php getEditorContents( 'desc', 'desc' ) ; ?>;
-				submitform( pressbutton );
-			}
-			/* ]]> */
-		</script>
 		<table class="adminheading">
 			<tr>
-				<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_plans.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+				<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_itemgroups.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
 					<?php echo _AEC_HEAD_PLAN_INFO; ?>:
 					&nbsp;
 					<small><?php echo $row->id ? $row->name : _AEC_CMN_NEW; ?></small>
@@ -2020,6 +2012,7 @@ class HTML_AcctExp
 											<div style="position:relative;float:left;width:100%;">
 												<?php
 												echo $aecHTML->createSettingsParticle( 'name' );
+												echo $aecHTML->createSettingsParticle( 'desc' );
 												if ( $row->id ) { ?>
 													<p><a href="<?php echo $mosConfig_live_site; ?>/index.php?option=com_acctexp&amp;task=subscribe&amp;usage=<?php echo $row->id; ?>" title="<?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?></a></p>
 													<?php
@@ -2027,27 +2020,6 @@ class HTML_AcctExp
 											</div>
 											<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
-										</div>
-										<div class="userinfobox">
-											<?php echo $aecHTML->createSettingsParticle( 'override_activation' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'override_regmail' ); ?>
-										</div>
-									</div>
-									<div style="position:relative;float:left;width:32%;padding:4px;">
-										<div class="userinfobox">
-											<?php echo $aecHTML->createSettingsParticle( 'full_free' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'full_amount' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'lifetime' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'full_period' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'full_periodunit' ); ?>
-											<div class="usernote" style="width:200px;">
-												<?php echo _PAYPLAN_AMOUNT_NOTICE_TEXT; ?>
-											</div>
-											<?php if ( $hasrecusers ) { ?>
-												<div class="usernote" style="width:200px;">
-													<strong><?php echo _PAYPLAN_AMOUNT_EDITABLE_NOTICE; ?></strong>
-												</div>
-											<?php } ?>
 										</div>
 									</div>
 									<div style="position:relative;float:left;width:32%;padding:4px;">
@@ -2066,112 +2038,20 @@ class HTML_AcctExp
 						</table>
 						<?php
 		                $tabs->endTab();
-		                $tabs->startTab( _PAYPLAN_PROCESSORS_TITLE, _PAYPLAN_PROCESSORS_TITLE );
-						?>
-						<h2><?php echo _PAYPLAN_PROCESSORS_TITLE_LONG; ?></h2>
-						<table width="100%" class="adminform"><tr><td>
-							<?php
-								if ( !empty( $aecHTML->customparams ) ) {
-									foreach ( $aecHTML->customparams as $id => $processor ) {
-										?>
-										<div class="userinfobox clear">
-											<h2 style="clear:both;"><?php echo $processor['name']; ?></h2>
-											<p><a href="<?php echo $mosConfig_live_site; ?>/index.php?option=com_acctexp&amp;task=subscribe&amp;usage=<?php echo $row->id; ?>&amp;processor=<?php echo $processor['handle']; ?>" title="<?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?></a></p>
-											<?php
-											$k = 0;
-											foreach ( $processor['params'] as $customparam ) {
-												echo $aecHTML->createSettingsParticle( $customparam );
-											}
-											?>
-										</div>
-										<?php
-									}
-								}
-							?>
-						</td></tr></table>
-						<?php
-		                $tabs->endTab();
-		                $tabs->startTab( _PAYPLAN_TEXT_TITLE, _PAYPLAN_TEXT_TITLE );
-		                ?>
-		                <h2><?php echo _PAYPLAN_TEXT_TITLE; ?></h2>
-		                <table width="100%" class="adminform"><tr><td>
-							<div class="userinfobox">
-								<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'email_desc' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'customthanks' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'customtext_thanks_keeporiginal' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'customtext_thanks' ); ?>
-							</div>
-						</td></tr></table>
-						<?php
-		                $tabs->endTab();
 		                $tabs->startTab( _PAYPLAN_RESTRICTIONS_TITLE, _PAYPLAN_RESTRICTIONS_TITLE );
 		                ?>
 		                <h2><?php echo _PAYPLAN_RESTRICTIONS_TITLE; ?></h2>
 						<table class="adminform" style="border-collapse:separate;">
-							<tr><td>
-								<div class="userinfobox">
-									<div style="position:relative;float:left;width:230px;">
-										<?php echo $aecHTML->createSettingsParticle( 'mingid_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'mingid' ); ?>
-									</div>
-									<div style="position:relative;float:left;width:230px;">
-										<?php echo $aecHTML->createSettingsParticle( 'fixgid_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'fixgid' ); ?>
-									</div>
-									<div style="position:relative;float:left;width:230px;">
-										<?php echo $aecHTML->createSettingsParticle( 'maxgid_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'maxgid' ); ?>
-									</div>
+							<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
+						<tr><td>
+							<div class="userinfobox">
+								<div style="position:relative;float:left;">
+									<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions_enabled' ); ?>
+									<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions' ); ?>
+									<br />
+									<?php echo $aecHTML->createSettingsParticle( 'rewriteInfo' ); ?>
 								</div>
-							</td></tr>
-							<tr><td>
-								<div class="userinfobox">
-									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( 'previousplan_req_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'previousplan_req' ); ?>
-									</div>
-									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( 'previousplan_req_enabled_excluded' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'previousplan_req_excluded' ); ?>
-									</div>
-									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( 'currentplan_req_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'currentplan_req' ); ?>
-									</div>
-									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( 'currentplan_req_enabled_excluded' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'currentplan_req_excluded' ); ?>
-									</div>
-									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( 'overallplan_req_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'overallplan_req' ); ?>
-									</div>
-									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( 'overallplan_req_enabled_excluded' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'overallplan_req_excluded' ); ?>
-									</div>
-								</div>
-								<div class="userinfobox">
-									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( 'used_plan_min_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'used_plan_min_amount' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'used_plan_min' ); ?>
-									</div>
-									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( 'used_plan_max_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'used_plan_max_amount' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'used_plan_max' ); ?>
-									</div>
-								</div>
-								<div class="userinfobox">
-									<div style="position:relative;float:left;">
-										<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions' ); ?>
-										<br />
-										<?php echo $aecHTML->createSettingsParticle( 'rewriteInfo' ); ?>
-									</div>
-								</div>
+							</div>
 						</td></tr>
 						</table>
 						<?php

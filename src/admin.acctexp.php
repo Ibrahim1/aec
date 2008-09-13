@@ -3050,7 +3050,7 @@ function listItemGroups( $option )
 
 function editItemGroup( $id, $option )
 {
-	global $database, $my, $acl;
+	global $database;
 
 	$lists = array();
 	$params_values = array();
@@ -3060,13 +3060,13 @@ function editItemGroup( $id, $option )
 	$row = new ItemGroup( $database );
 	$row->load( $id );
 
+	$restrictionHelper = new aecRestrictionHelper();
+
 	if ( !$row->id ) {
 		$row->ordering	= 9999;
-		$hasrecusers	= false;
 
 		$params_values['active']	= 1;
 		$params_values['visible']	= 0;
-		$params_values['processors'] = 0;
 
 		$restrictions_values['gid_enabled']	= 1;
 		$restrictions_values['gid']			= 18;
@@ -3078,22 +3078,8 @@ function editItemGroup( $id, $option )
 		// We need to convert the values that are set as object properties
 		$params_values['active']				= $row->active;
 		$params_values['visible']				= $row->visible;
-		$params_values['email_desc']			= $row->getProperty( 'email_desc' );
 		$params_values['name']					= $row->getProperty( 'name' );
 		$params_values['desc']					= $row->getProperty( 'desc' );
-		$params_values['micro_integrations']	= $row->micro_integrations;
-		$params_values['processors']			= $row->params['processors'];
-
-		// Checking if there is already a user, which disables certain actions
-		$query  = 'SELECT count(*)'
-				. ' FROM #__users AS a'
-				. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
-				. ' WHERE b.plan = ' . $row->id
-				. ' AND (b.status = \'Active\' OR b.status = \'Trial\')'
-				. ' AND b.recurring =\'1\''
-				;
-		$database->setQuery( $query );
-		$hasrecusers = ( $database->loadResult() > 0 ) ? true : false;
 	}
 
 	// params and their type values
@@ -3101,382 +3087,24 @@ function editItemGroup( $id, $option )
 	$params['visible']					= array( 'list_yesno', 0 );
 
 	$params['name']						= array( 'inputC', '' );
-	$params['desc']						= array( 'editor', '' );
-
-	$params['params_remap']				= array( 'subarea_change', 'params' );
-
-	/**
-	 * - Option for special text on plans page when only group is displayed
-	 * - Declare all child items or groups similar or equal
-	 */
+	$params['desc']						= array( 'inputD', '' );
 
 	$params['restr_remap']				= array( 'subarea_change', 'restrictions' );
 
-	$params['mingid_enabled']					= array( 'list_yesno', 0 );
-	$params['mingid']							= array( 'list', 18 );
-	$params['fixgid_enabled']					= array( 'list_yesno', 0 );
-	$params['fixgid']							= array( 'list', 19 );
-	$params['maxgid_enabled']					= array( 'list_yesno', 0 );
-	$params['maxgid']							= array( 'list', 21 );
-	$params['previousplan_req_enabled'] 		= array( 'list_yesno', 0 );
-	$params['previousplan_req']					= array( 'list', 0 );
-	$params['previousplan_req_enabled_excluded']	= array( 'list_yesno', 0 );
-	$params['previousplan_req_excluded']			= array( 'list', 0 );
-	$params['currentplan_req_enabled']			= array( 'list_yesno', 0 );
-	$params['currentplan_req']					= array( 'list', 0 );
-	$params['currentplan_req_enabled_excluded']	= array( 'list_yesno', 0 );
-	$params['currentplan_req_excluded']			= array( 'list', 0 );
-	$params['overallplan_req_enabled']			= array( 'list_yesno', 0 );
-	$params['overallplan_req']					= array( 'list', 0 );
-	$params['overallplan_req_enabled_excluded']	= array( 'list_yesno', 0 );
-	$params['overallplan_req_excluded']			= array( 'list', 0 );
-	$params['used_plan_min_enabled']			= array( 'list_yesno', 0 );
-	$params['used_plan_min_amount']				= array( 'inputB', 0 );
-	$params['used_plan_min']					= array( 'list', 0 );
-	$params['used_plan_max_enabled']			= array( 'list_yesno', 0 );
-	$params['used_plan_max_amount']				= array( 'inputB', 0 );
-	$params['used_plan_max']					= array( 'list', 0 );
-	$params['custom_restrictions_enabled']		= array( 'list_yesno', '' );
-	$params['custom_restrictions']				= array( 'inputD', '' );
+	$params = array_merge( $params, $restrictionHelper->getParams() );
+
 	$rewriteswitches							= array( 'cms', 'user' );
 	$params['rewriteInfo']						= array( 'fieldset', '', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
-	// ensure user can't add group higher than themselves
-	$my_groups = $acl->get_object_groups( 'users', $my->id, 'ARO' );
-	if ( is_array( $my_groups ) && count( $my_groups ) > 0) {
-		$ex_groups = $acl->get_group_children( $my_groups[0], 'ARO', 'RECURSE' );
-	} else {
-		$ex_groups = array();
-	}
-
-	$gtree = $acl->get_group_children_tree( null, 'USERS', true );
-
-	// mic: exclude public front- & backend
-	$ex_groups[] = 28;
-	$ex_groups[] = 29;
-	$ex_groups[] = 30;
-
-	// remove users 'above' me
-	$i = 0;
-	while ( $i < count( $gtree ) ) {
-		if ( in_array( $gtree[$i]->value, $ex_groups ) ) {
-			array_splice( $gtree, $i, 1 );
-		} else {
-			$i++;
-		}
-	}
-
-	$lists['gid'] 		= mosHTML::selectList( $gtree, 'gid', 'size="6"', 'value', 'text', arrayValueDefault($params_values, 'gid', 18) );
-	$lists['mingid'] 	= mosHTML::selectList( $gtree, 'mingid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'mingid', 18) );
-	$lists['fixgid'] 	= mosHTML::selectList( $gtree, 'fixgid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'fixgid', 19) );
-	$lists['maxgid'] 	= mosHTML::selectList( $gtree, 'maxgid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'maxgid', 21) );
-
-	// make the select list for first trial period units
-	$perunit[] = mosHTML::makeOption( 'D', _PAYPLAN_PERUNIT1 );
-	$perunit[] = mosHTML::makeOption( 'W', _PAYPLAN_PERUNIT2 );
-	$perunit[] = mosHTML::makeOption( 'M', _PAYPLAN_PERUNIT3 );
-	$perunit[] = mosHTML::makeOption( 'Y', _PAYPLAN_PERUNIT4 );
-
-	$lists['trial_periodunit'] = mosHTML::selectList( $perunit, 'trial_periodunit', 'size="4"', 'value', 'text', arrayValueDefault($params_values, 'trial_periodunit', "D") );
-	$lists['full_periodunit'] = mosHTML::selectList( $perunit, 'full_periodunit', 'size="4"', 'value', 'text', arrayValueDefault($params_values, 'full_periodunit', "D") );
-
-	$params['processors_remap'] = array("subarea_change", "plan_params");
-
-	$pps = PaymentProcessorHandler::getInstalledObjectList( 1 );
-
-	if ( empty( $params_values['processors'] ) ) {
-		$plan_procs = array();
-	} else {
-		$plan_procs = $params_values['processors'];
-	}
-
-	$firstarray = array();
-	$secndarray = array();
-	foreach ( $pps as $ppo ) {
-		if ( in_array( $ppo->id, $plan_procs ) && !empty( $customparams_values[$ppo->id . '_aec_overwrite_settings'] ) ) {
-			$firstarray[] = $ppo;
-		} else {
-			$secndarray[] = $ppo;
-		}
-	}
-
-	$pps = array_merge( $firstarray, $secndarray );
-
-	$selected_gw = array();
-	$customparamsarray = array();
-	foreach ( $pps as $ppobj ) {
-		if ( !$ppobj->active ) {
-			continue;
-		}
-
-		$pp = null;
-		$pp = new PaymentProcessor();
-
-		if ( !$pp->loadName( $ppobj->name ) ) {
-			continue;
-		}
-
-		$pp->init();
-		$pp->getInfo();
-
-		$customparamsarray[$pp->id] = array();
-		$customparamsarray[$pp->id]['handle'] = $ppobj->name;
-		$customparamsarray[$pp->id]['name'] = $pp->info['longname'];
-		$customparamsarray[$pp->id]['params'] = array();
-
-		$params['processor_' . $pp->id] = array( 'checkbox', _PAYPLAN_PROCESSORS_ACTIVATE_NAME, _PAYPLAN_PROCESSORS_ACTIVATE_DESC  );
-		$customparamsarray[$pp->id]['params'][] = 'processor_' . $pp->id;
-
-		$params[$pp->id . '_aec_overwrite_settings'] = array( 'checkbox', _PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_NAME, _PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_DESC );
-		$customparamsarray[$pp->id]['params'][] = $pp->id . '_aec_overwrite_settings';
-
-		$customparams = $pp->getCustomPlanParams();
-
-		if ( is_array( $customparams ) ) {
-			foreach ( $customparams as $customparam => $cpcontent ) {
-				// Write the params field
-				if ( defined( strtoupper( "_CFG_processor_plan_params_" . $customparam . "_name" ) ) ) {
-					$cp_name = constant( strtoupper( "_CFG_processor_plan_params_" . $customparam . "_name" ) );
-					$cp_desc = constant( strtoupper( "_CFG_processor_plan_params_" . $customparam . "_desc" ) );
-				} else {
-					$cp_name = constant( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_name" ) );
-					$cp_desc = constant( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_desc" ) );
-				}
-
-				$shortname = $pp->id . "_" . $customparam;
-				$params[$shortname] = array_merge( $cpcontent, array( $cp_name, $cp_desc ) );
-				$customparamsarray[$pp->id]['params'][] = $shortname;
-			}
-		}
-
-		if ( empty( $plan_procs ) ) {
-			continue;
-		}
-
-		if ( !in_array( $pp->id, $plan_procs ) ) {
-			continue;
-		}
-
-		$params_values['processor_' . $pp->id] = 1;
-
-		if ( isset( $customparams_values[$pp->id . '_aec_overwrite_settings'] ) ) {
-			if ( !$customparams_values[$pp->id . '_aec_overwrite_settings'] ) {
-				continue;
-			}
-		} else {
-			continue;
-		}
-
-		$settings_array = $pp->getBackendSettings();
-
-		if ( isset( $settings_array['lists'] ) ) {
-			foreach ( $settings_array['lists'] as $listname => $listcontent ) {
-				$lists[$pp->id . '_' . $listname] = $listcontent;
-			}
-
-			unset( $settings_array['lists'] );
-		}
-
-		// Iterate through settings form to...
-		foreach ( $settings_array as $name => $values ) {
-			$setting_name = $pp->id . '_' . $name;
-
-			// ...assign new list fields
-			switch( $settings_array[$name][0] ) {
-				case 'list_yesno':
-					$lists[$setting_name] = mosHTML::yesnoSelectList( $setting_name, '', $pp->settings[$name] );
-
-					$settings_array[$name][0] = 'list';
-					break;
-
-				case 'list_currency':
-					// Get currency list
-					$currency_array	= explode( ',', $pp->info['currencies'] );
-
-					// Transform currencies into OptionArray
-					$currency_code_list = array();
-					foreach ( $currency_array as $currency ) {
-						if ( defined( '_CURRENCY_' . $currency )) {
-							$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
-						}
-					}
-
-					// Create list
-					$lists[$setting_name] = mosHTML::selectList( $currency_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
-					$settings_array[$name][0] = 'list';
-					break;
-
-				case 'list_language':
-					// Get language list
-					$language_array	= explode( ',', $pp->info['languages'] );
-
-					// Transform languages into OptionArray
-					$language_code_list = array();
-					foreach ( $language_array as $language ) {
-						$language_code_list[] = mosHTML::makeOption( $language, ( defined( '_AEC_LANG_' . $language  ) ? constant( '_AEC_LANG_' . $language ) : $language ) );
-					}
-					// Create list
-					$lists[$setting_name] = mosHTML::selectList( $language_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
-					$settings_array[$name][0] = 'list';
-					break;
-
-				case 'list_plan':
-					unset( $settings_array[$name] );
-					break;
-
-				default:
-					break;
-			}
-
-			// ...put in missing language fields
-			if ( !isset( $settings_array[$name][1] ) ) {
-				// Create constant names
-				$constantname = '_CFG_' . strtoupper( $ppobj->name ) . '_' . strtoupper($name) . '_NAME';
-				$constantdesc = '_CFG_' . strtoupper( $ppobj->name ) . '_' . strtoupper($name) . '_DESC';
-
-				// If the constantname does not exists, try a generic name or insert an error
-				if ( defined( $constantname ) ) {
-					$settings_array[$name][1] = constant( $constantname );
-				} else {
-					$genericname = '_CFG_PROCESSOR_' . strtoupper($name) . '_NAME';
-					if ( defined( $genericname ) ) {
-						$settings_array[$name][1] = constant( $genericname );
-					} else {
-						$settings_array[$name][1] = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantname );
-					}
-				}
-
-				// If the constantname does not exists, try a generic name or insert an error
-				if ( defined( $constantdesc ) ) {
-					$settings_array[$name][2] = constant( $constantdesc );
-				} else {
-					$genericdesc = '_CFG_PROCESSOR_' . strtoupper($name) . '_DESC';
-					if ( defined( $genericname ) ) {
-						$settings_array[$name][2] = constant( $genericdesc );
-					} else {
-						$settings_array[$name][2] = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantdesc );
-					}
-				}
-			}
-
-			$params[$pp->id . '_' . $name] = $settings_array[$name];
-			$customparamsarray[$pp->id]['params'][] = $pp->id . '_' . $name;
-		}
-	}
-
-	// get available active plans
-	$available_plans = array();
-	$available_plans[] = mosHTML::makeOption( '0', _PAYPLAN_NOPLAN );
-
-	$query = 'SELECT `id` AS value, `name` AS text'
-			. ' FROM #__acctexp_itemgroups'
-			. ' WHERE `active` = 1'
-			. ' AND `id` <> ' . $id
-			;
-	$database->setQuery( $query );
-	$payment_plans = $database->loadObjectList();
-
- 	if ( is_array( $payment_plans ) ) {
- 		$active_plans	= array_merge( $available_plans, $payment_plans );
- 	}
-	$total_plans	= min( max( (count( $active_plans ) + 1 ), 4 ), 20 );
-
-	$lists['fallback'] = mosHTML::selectList($active_plans, 'fallback', 'size="' . $total_plans . '"', 'value', 'text', arrayValueDefault($params_values, 'fallback', 0));
-	$lists['standard_parent'] = mosHTML::selectList($active_plans, 'standard_parent', 'size="' . $total_plans . '"', 'value', 'text', arrayValueDefault($params_values, 'standard_parent', 0));
-
-	// get similar plans
-	if ( !empty( $params_values['similarplans'] ) ) {
-		$query = 'SELECT `id` AS value, `name` As text'
-				. ' FROM #__acctexp_itemgroups'
-				. ' WHERE `id` IN (' . implode( ',', $params_values['similarplans'] ) .')'
-				;
-		$database->setQuery( $query );
-
-	 	$sel_similar_plans = $database->loadObjectList();
-	} else {
-		$sel_similar_plans = 0;
-	}
-
-	$lists['similarplans'] = mosHTML::selectList($payment_plans, 'similarplans[]', 'size="' . $total_plans . '" multiple="multiple"', 'value', 'text', $sel_similar_plans);
-
-	// get equal plans
-	if ( !empty( $params_values['equalplans'] ) ) {
-		$query = 'SELECT `id` AS value, `name` AS text'
-				. ' FROM #__acctexp_itemgroups'
-				. ' WHERE `id` IN (' . implode( ',', $params_values['equalplans'] ) .')'
-				;
-		$database->setQuery( $query );
-
-	 	$sel_equal_plans = $database->loadObjectList();
-	} else {
-		$sel_equal_plans = 0;
-	}
-
-	$lists['equalplans'] = mosHTML::selectList($payment_plans, 'equalplans[]', 'size="' . $total_plans . '" multiple="multiple"', 'value', 'text', $sel_equal_plans);
-
-	// get available plans
-	$available_plans = array();
-	$available_plans[] = mosHTML::makeOption( '0', _PAYPLAN_NOPLAN );
-
-	$query = 'SELECT `id` AS value, `name` AS text'
-			. ' FROM #__acctexp_itemgroups'
-			;
-	$database->setQuery( $query );
-	$plans = $database->loadObjectList();
-
- 	if ( is_array( $plans ) ) {
- 		$all_plans	= array_merge( $available_plans, $plans );
- 	} else {
- 		$all_plans	= $available_plans;
- 	}
-	$total_all_plans	= min( max( ( count( $all_plans ) + 1 ), 4 ), 20 );
-
-	$lists['previousplan_req']	= mosHTML::selectList($all_plans, 'previousplan_req[]', 'size="' . $total_all_plans . '" multiple="multiple"',
-									'value', 'text', arrayValueDefault($restrictions_values, 'previousplan_req', 0));
-	$lists['currentplan_req']	= mosHTML::selectList($all_plans, 'currentplan_req[]', 'size="' . $total_all_plans . '" multiple="multiple"',
-									'value', 'text', arrayValueDefault($restrictions_values, 'currentplan_req', 0));
-	$lists['overallplan_req']	= mosHTML::selectList($all_plans, 'overallplan_req[]', 'size="' . $total_all_plans . '" multiple="multiple"',
-									'value', 'text', arrayValueDefault($restrictions_values, 'overallplan_req', 0));
-	$lists['used_plan_min']		= mosHTML::selectList($all_plans, 'used_plan_min', 'size="' . $total_all_plans . '"',
-									'value', 'text', arrayValueDefault($restrictions_values, 'used_plan_min', 0));
-	$lists['used_plan_max']		= mosHTML::selectList($all_plans, 'used_plan_max', 'size="' . $total_all_plans . '"',
-									'value', 'text', arrayValueDefault($restrictions_values, 'used_plan_max', 0));
-
-	$lists['previousplan_req_excluded']	= mosHTML::selectList($all_plans, 'previousplan_req_excluded[]', 'size="' . $total_all_plans . '" multiple="multiple"',
-									'value', 'text', arrayValueDefault($restrictions_values, 'previousplan_req_excluded', 0));
-	$lists['currentplan_req_excluded']	= mosHTML::selectList($all_plans, 'currentplan_req_excluded[]', 'size="' . $total_all_plans . '" multiple="multiple"',
-									'value', 'text', arrayValueDefault($restrictions_values, 'currentplan_req_excluded', 0));
-	$lists['overallplan_req_excluded']	= mosHTML::selectList($all_plans, 'overallplan_req_excluded[]', 'size="' . $total_all_plans . '" multiple="multiple"',
-									'value', 'text', arrayValueDefault($restrictions_values, 'overallplan_req_excluded', 0));
-
-	// get available micro integrations
-	$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
-			. ' FROM #__acctexp_microintegrations'
-			. ' WHERE `active` = 1'
-			. ' ORDER BY ordering'
-			;
-	$database->setQuery( $query );
-	$mi_list = $database->loadObjectList();
-
-	if ( !empty( $row->micro_integrations ) ) {
-		$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
-				. ' FROM #__acctexp_microintegrations'
-				. ' WHERE `id` IN (' . implode( ',', $row->micro_integrations ) . ')'
-				;
-	 	$database->setQuery( $query );
-		$selected_mi = $database->loadObjectList();
-	} else {
-		$selected_mi = array();
-	}
-
-	$lists['micro_integrations'] = mosHTML::selectList($mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $selected_mi);
-
-	$settings = new aecSettings ( 'payplan', 'general' );
+	$settings = new aecSettings ( 'itemgroup', 'general' );
 	if ( is_array( $customparams_values ) ) {
 		$settingsparams = array_merge( $params_values, $customparams_values, $restrictions_values );
 	} else {
 		$settingsparams = array_merge( $params_values, $restrictions_values );
 	}
+
+	$lists = array_merge( $lists, $restrictionHelper->getLists( $params_values, $restrictions_values ) );
+
 	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
 
 	// Call HTML Class
@@ -3485,7 +3113,7 @@ function editItemGroup( $id, $option )
 		$aecHTML->customparams = $customparamsarray;
 	}
 
-	HTML_AcctExp::editItemGroup( $option, $aecHTML, $row, $hasrecusers );
+	HTML_AcctExp::editItemGroup( $option, $aecHTML, $row );
 }
 
 function saveItemGroup( $option, $apply=0 )
@@ -5881,6 +5509,170 @@ function arrayValueDefault( $array, $name, $default )
 		}
 	} else {
 		return $default;
+	}
+}
+
+class aecRestrictionHelper
+{
+	function getParams()
+	{
+		$params = array();
+		$params['mingid_enabled']					= array( 'list_yesno', 0 );
+		$params['mingid']							= array( 'list', 18 );
+		$params['fixgid_enabled']					= array( 'list_yesno', 0 );
+		$params['fixgid']							= array( 'list', 19 );
+		$params['maxgid_enabled']					= array( 'list_yesno', 0 );
+		$params['maxgid']							= array( 'list', 21 );
+		$params['previousplan_req_enabled'] 		= array( 'list_yesno', 0 );
+		$params['previousplan_req']					= array( 'list', 0 );
+		$params['previousplan_req_enabled_excluded']	= array( 'list_yesno', 0 );
+		$params['previousplan_req_excluded']			= array( 'list', 0 );
+		$params['currentplan_req_enabled']			= array( 'list_yesno', 0 );
+		$params['currentplan_req']					= array( 'list', 0 );
+		$params['currentplan_req_enabled_excluded']	= array( 'list_yesno', 0 );
+		$params['currentplan_req_excluded']			= array( 'list', 0 );
+		$params['overallplan_req_enabled']			= array( 'list_yesno', 0 );
+		$params['overallplan_req']					= array( 'list', 0 );
+		$params['overallplan_req_enabled_excluded']	= array( 'list_yesno', 0 );
+		$params['overallplan_req_excluded']			= array( 'list', 0 );
+		$params['used_plan_min_enabled']			= array( 'list_yesno', 0 );
+		$params['used_plan_min_amount']				= array( 'inputB', 0 );
+		$params['used_plan_min']					= array( 'list', 0 );
+		$params['used_plan_max_enabled']			= array( 'list_yesno', 0 );
+		$params['used_plan_max_amount']				= array( 'inputB', 0 );
+		$params['used_plan_max']					= array( 'list', 0 );
+		$params['custom_restrictions_enabled']		= array( 'list_yesno', '' );
+		$params['custom_restrictions']				= array( 'inputD', '' );
+
+		return $params;
+	}
+
+	function getLists( $params_values, $restrictions_values )
+	{
+		global $database, $my, $acl;
+
+		// ensure user can't add group higher than themselves
+		$my_groups = $acl->get_object_groups( 'users', $my->id, 'ARO' );
+		if ( is_array( $my_groups ) && count( $my_groups ) > 0) {
+			$ex_groups = $acl->get_group_children( $my_groups[0], 'ARO', 'RECURSE' );
+		} else {
+			$ex_groups = array();
+		}
+
+		$gtree = $acl->get_group_children_tree( null, 'USERS', true );
+
+		// mic: exclude public front- & backend
+		$ex_groups[] = 28;
+		$ex_groups[] = 29;
+		$ex_groups[] = 30;
+
+		// remove users 'above' me
+		$i = 0;
+		while ( $i < count( $gtree ) ) {
+			if ( in_array( $gtree[$i]->value, $ex_groups ) ) {
+				array_splice( $gtree, $i, 1 );
+			} else {
+				$i++;
+			}
+		}
+
+		// Create GID related Lists
+		$lists['gid'] 		= mosHTML::selectList( $gtree, 'gid', 'size="6"', 'value', 'text', arrayValueDefault($params_values, 'gid', 18) );
+		$lists['mingid'] 	= mosHTML::selectList( $gtree, 'mingid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'mingid', 18) );
+		$lists['fixgid'] 	= mosHTML::selectList( $gtree, 'fixgid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'fixgid', 19) );
+		$lists['maxgid'] 	= mosHTML::selectList( $gtree, 'maxgid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'maxgid', 21) );
+
+		$available_plans = array();
+		$available_plans[] = mosHTML::makeOption( '0', _PAYPLAN_NOPLAN );
+
+		// Fetch Payment Plans
+		$query = 'SELECT `id` AS value, `name` AS text'
+				. ' FROM #__acctexp_plans'
+				;
+		$database->setQuery( $query );
+		$plans = $database->loadObjectList();
+
+	 	if ( is_array( $plans ) ) {
+	 		$all_plans	= array_merge( $available_plans, $plans );
+	 	} else {
+	 		$all_plans	= $available_plans;
+	 	}
+		$total_all_plans	= min( max( ( count( $all_plans ) + 1 ), 4 ), 20 );
+
+		$planrest = array( 'previousplan_req', 'currentplan_req', 'overallplan_req', 'used_plan_min', 'used_plan_max', 'previousplan_req_excluded', 'currentplan_req_excluded', 'overallplan_req_excluded'  );
+
+		foreach ( $planrest as $name ) {
+			$lists[$name] = mosHTML::selectList( $all_plans, $name.'[]', 'size="' . $total_all_plans . '" multiple="multiple"', 'value', 'text', arrayValueDefault($restrictions_values, $name, 0) );
+		}
+
+		$available_groups = array();
+		$available_groups[] = mosHTML::makeOption( '0', _PAYPLAN_NOGROUP );
+
+		// Fetch Item Groups
+		$query = 'SELECT `id` AS value, `name` AS text'
+				. ' FROM #__acctexp_itemgroups'
+				;
+		$database->setQuery( $query );
+		$groups = $database->loadObjectList();
+
+	 	if ( is_array( $groups ) ) {
+	 		$all_groups	= array_merge( $available_groups, $groups );
+	 	} else {
+	 		$all_groups	= $available_groups;
+	 	}
+		$total_all_groups	= min( max( ( count( $all_groups ) + 1 ), 4 ), 20 );
+
+		$grouprest = array( 'previousgroup_req', 'currentgroup_req', 'overallgroup_req', 'used_group_min', 'used_group_max', 'previousgroup_req_excluded', 'currentgroup_req_excluded', 'overallgroup_req_excluded' );
+
+		foreach ( $grouprest as $name ) {
+			$lists[$name] = mosHTML::selectList( $all_groups, $name.'[]', 'size="' . $total_all_groups . '" multiple="multiple"', 'value', 'text', arrayValueDefault($restrictions_values, $name, 0) );
+		}
+
+		return $lists;
+	}
+
+	function echoSettings( $aecHTML )
+	{
+		$width = 1200;
+
+		$stdvars =	array(	array(
+									array( 'mingid_enabled', 'mingid' ),
+									array( 'fixgid_enabled', 'fixgid' ),
+									array( 'maxgid_enabled', 'maxgid' ),
+							),	array(
+									array( 'previous*_req_enabled', 'previous*_req' ),
+									array( 'previous*_req_enabled_excluded', 'previous*_req_excluded' ),
+									array( 'current*_req_enabled', 'current*_req' ),
+									array( 'current*_req_enabled_excluded', 'current*_req_excluded' ),
+									array( 'overall*_req_enabled', 'overall*_req' ),
+									array( 'overall*_req_enabled_excluded', 'overall*_req_excluded' ),
+							), array(
+									array( 'used_*_min_enabled', 'used_*_min_amount', 'used_*_min' ),
+									array( 'used_*_max_enabled', 'used_*_max_amount', 'used_*_max' ),
+							)
+					);
+
+		$types = array( 'plan', 'group' );
+
+		foreach ( $types as $type ) {
+			foreach ( $stdvars as $block ) {
+				// non-* blocks only once
+				if ( ( strpos( $block[0][0], '*' ) === false ) && ( $type != 'plan') ) {
+					continue;
+				}
+
+				echo '<tr><td><div class="userinfobox">';
+				$sblockwidth = $width / count( $block );
+				foreach ( $block as $sblock ) {
+					echo '<div style="position:relative;float:left;width:' . $sblockwidth . 'px;">';
+					foreach ( $sblock as $vname ) {
+						echo $aecHTML->createSettingsParticle( str_replace( '*', $type, $vname ) );
+					}
+					echo '</div>';
+				}
+				echo '</div></td></tr>';
+			}
+		}
 	}
 }
 

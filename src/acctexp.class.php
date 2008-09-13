@@ -3551,7 +3551,7 @@ class ItemGroup extends serialParamDBTable
 	/** @var text */
 	var $restrictions		= null;
 
-	function PlanGroup( &$db )
+	function ItemGroup( &$db )
 	{
 		$this->mosDBTable( '#__acctexp_itemgroups', 'id', $db );
 	}
