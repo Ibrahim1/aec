@@ -52,11 +52,11 @@ define( '_MI_MI_DOCMAN_ADD_DOWNLOADS_DESC',			'Add this amount of downloads to t
 define( '_MI_MI_DOCMAN_SET_UNLIMITED_NAME',			'Set Unlimited' );
 define( '_MI_MI_DOCMAN_SET_UNLIMITED_DESC',			'Grant the user unlimited downloads.' );
 define( '_MI_MI_DOCMAN_SET_GROUP_NAME',				'Set DocMan Group' );
-define( '_MI_MI_DOCMAN_SET_GROUP_DESC',				'Choose Yes if you want this MI to set the DocMan Gallery when it is called.' );
+define( '_MI_MI_DOCMAN_SET_GROUP_DESC',				'Choose Yes if you want this MI to set the DocMan Group when it is called.' );
 define( '_MI_MI_DOCMAN_GROUP_NAME',					'DocMan Group' );
 define( '_MI_MI_DOCMAN_GROUP_DESC',					'The DocMan group that you want the user to be in.' );
 define( '_MI_MI_DOCMAN_GROUP_EXP_NAME',				'Set DocMan Group expiration' );
-define( '_MI_MI_DOCMAN_GROUP_EXP_DESC',				'Choose Yes if you want this MI to set the DocMan Gallery when the calling payment plan expires.' );
+define( '_MI_MI_DOCMAN_GROUP_EXP_DESC',				'Choose Yes if you want this MI to set the DocMan Group when the calling payment plan expires.' );
 define( '_MI_MI_DOCMAN_SET_GROUP_EXP_NAME',			'Expiration group' );
 define( '_MI_MI_DOCMAN_SET_GROUP_EXP_DESC',			'The DocMan group that you want the user to be in when the subscription runs out.' );
 define( '_MI_MI_DOCMAN_REBUILD_NAME',				'Rebuild' );
@@ -164,11 +164,11 @@ define( '_MI_MI_REMOSITORY_SET_DOWNLOADS_DESC',		'Input the amount of listings y
 define( '_MI_MI_REMOSITORY_SET_UNLIMITED_NAME',		'Set Unlimited' );
 define( '_MI_MI_REMOSITORY_SET_UNLIMITED_DESC',		'Grant the user unlimited downloads.' );
 define( '_MI_MI_REMOSITORY_SET_GROUP_NAME',			'Set group' );
-define( '_MI_MI_REMOSITORY_SET_GROUP_DESC',			'Choose Yes if you want this MI to set the ReMOSitory Gallery when the calling payment plan expires' );
-define( '_MI_MI_REMOSITORY_GROUP_NAME',				'Gallery' );
+define( '_MI_MI_REMOSITORY_SET_GROUP_DESC',			'Choose Yes if you want this MI to set the ReMOSitory Group when the calling payment plan expires' );
+define( '_MI_MI_REMOSITORY_GROUP_NAME',				'Group' );
 define( '_MI_MI_REMOSITORY_GROUP_DESC',				'The ReMOSitory group that you want the user to be in.' );
 define( '_MI_MI_REMOSITORY_SET_GROUP_EXP_NAME',		'Set group Expiration' );
-define( '_MI_MI_REMOSITORY_SET_GROUP_EXP_DESC',		'Choose Yes if you want this MI to set the ReMOSitory Gallery when the calling payment plan expires' );
+define( '_MI_MI_REMOSITORY_SET_GROUP_EXP_DESC',		'Choose Yes if you want this MI to set the ReMOSitory Group when the calling payment plan expires' );
 define( '_MI_MI_REMOSITORY_GROUP_EXP_NAME',			'Expiration group' );
 define( '_MI_MI_REMOSITORY_GROUP_EXP_DESC',			'The ReMOSitory group that you want the user to be in when the subscription runs out.' );
 define( '_AEC_MI_HACK1_REMOS',		'No Credits' );
@@ -180,11 +180,11 @@ define( '_MI_MI_REMOSITORY_DELETE_ON_EXP_DESC',			'Choose what action you want t
 define( '_AEC_MI_NAME_VIRTM',		'VirtueMart' );
 define( '_AEC_MI_DESC_VIRTM',		'Choose the VM usergroup this user should be applied to' );
 define( '_MI_MI_VIRTUEMART_SET_SHOPPER_GROUP_NAME',	'Set Shopper group' );
-define( '_MI_MI_VIRTUEMART_SET_SHOPPER_GROUP_DESC',	'Choose Yes if you want this MI to set the Shopper Gallery when it is called.' );
+define( '_MI_MI_VIRTUEMART_SET_SHOPPER_GROUP_DESC',	'Choose Yes if you want this MI to set the Shopper Group when it is called.' );
 define( '_MI_MI_VIRTUEMART_SHOPPER_GROUP_NAME',		'Shopper group' );
 define( '_MI_MI_VIRTUEMART_SHOPPER_GROUP_DESC',		'The VirtueMart Shopper group that you want the user to be in.' );
 define( '_MI_MI_VIRTUEMART_SET_SHOPPER_GROUP_EXP_NAME',		'Set group Expiration' );
-define( '_MI_MI_VIRTUEMART_SET_SHOPPER_GROUP_EXP_DESC',		'Choose Yes if you want this MI to set the Shopper Gallery when the calling payment plan expires.' );
+define( '_MI_MI_VIRTUEMART_SET_SHOPPER_GROUP_EXP_DESC',		'Choose Yes if you want this MI to set the Shopper Group when the calling payment plan expires.' );
 define( '_MI_MI_VIRTUEMART_SHOPPER_GROUP_EXP_NAME',	'Expiration Shopper group' );
 define( '_MI_MI_VIRTUEMART_SHOPPER_GROUP_EXP_DESC',	'The VirtueMart Shopper group that you want the user to be in when the subscription runs out.' );
 define( '_MI_MI_VIRTUEMART_CREATE_ACCOUNT_NAME',	'Auto Create Account' );
@@ -214,17 +214,17 @@ define( '_MI_MI_COMMUNITYBUILDER_EXPMARKER',			'(expiration)' );
 // JUGA
 define( '_AEC_MI_NAME_JUGA',		'JUGA' );
 define( '_AEC_MI_DESC_JUGA',		'Set JUGA groups on application or expiration of a plan' );
-define( '_MI_MI_JUGA_SET_ENROLL_GROUP_NAME',		'Add to Gallery' );
+define( '_MI_MI_JUGA_SET_ENROLL_GROUP_NAME',		'Add to Group' );
 define( '_MI_MI_JUGA_SET_ENROLL_GROUP_DESC',		'Set to yes, and pick groups below to enroll the user in on application of plan? (Multiple select allowed)' );
-define( '_MI_MI_JUGA_ENROLL_GROUP_NAME',			'JUGA Gallery' );
+define( '_MI_MI_JUGA_ENROLL_GROUP_NAME',			'JUGA Group' );
 define( '_MI_MI_JUGA_ENROLL_GROUP_DESC',			'Select a plan to enroll the user in on application of plan:' );
-define( '_MI_MI_JUGA_SET_REMOVE_GROUP_NAME',		'Remove Gallerys' );
+define( '_MI_MI_JUGA_SET_REMOVE_GROUP_NAME',		'Remove Groups' );
 define( '_MI_MI_JUGA_SET_REMOVE_GROUP_DESC',		'Set to yes, to delete all groups for this user before the groups below are applied, otherwise these groups will be added to existing groups.' );
-define( '_MI_MI_JUGA_SET_ENROLL_GROUP_EXP_NAME',	'Add to Gallery Exp' );
+define( '_MI_MI_JUGA_SET_ENROLL_GROUP_EXP_NAME',	'Add to Group Exp' );
 define( '_MI_MI_JUGA_SET_ENROLL_GROUP_EXP_DESC',	'Set to yes, and pick groups below to enroll the user in on expiration of plan? (Multiple select allowed)' );
-define( '_MI_MI_JUGA_ENROLL_GROUP_EXP_NAME',		'JUGA Gallery Exp' );
+define( '_MI_MI_JUGA_ENROLL_GROUP_EXP_NAME',		'JUGA Group Exp' );
 define( '_MI_MI_JUGA_ENROLL_GROUP_EXP_DESC',		'Select a plan to enroll the user in on expiration of plan:' );
-define( '_MI_MI_JUGA_SET_REMOVE_GROUP_EXP_NAME',	'Remove Gallerys Exp' );
+define( '_MI_MI_JUGA_SET_REMOVE_GROUP_EXP_NAME',	'Remove Groups Exp' );
 define( '_MI_MI_JUGA_SET_REMOVE_GROUP_EXP_DESC',	'Set to yes, to delete all groups for this user before the groups below are applied, otherwise these groups will be added to existing groups.' );
 define( '_MI_MI_JUGA_REBUILD_NAME',					'Rebuild' );
 define( '_MI_MI_JUGA_REBUILD_DESC',					'Select YES to rebuild the groups relations after saving this' );
@@ -262,7 +262,7 @@ define( '_MI_MI_FIREBOARD_SET_GROUP_EXP_NAME','Set group on expiration of plan' 
 define( '_MI_MI_FIREBOARD_SET_GROUP_EXP_DESC','Choose Yes if you wish the fireboard group to be changed when the plan expires' );
 define( '_MI_MI_FIREBOARD_GROUP_EXP_NAME','Fireboard group to apply member to on expiration of plan.' );
 define( '_MI_MI_FIREBOARD_GROUP_EXP_DESC','The group you wish to use if the plan expires.  Manually add groups to the table jos_fb_groups' );
-define( '_MI_MI_FIREBOARD_REBUILD_NAME',				'Rebuild Gallerys' );
+define( '_MI_MI_FIREBOARD_REBUILD_NAME',				'Rebuild Groups' );
 define( '_MI_MI_FIREBOARD_REBUILD_DESC',				'This option will rebuild your whole Fireboard group assignment by looking for each plan that has this MI applied and then add each user that uses one of these plans to the file.' );
 
 // Coupon
@@ -415,20 +415,20 @@ define( '_MI_MI_JARC_LOG_PAYMENTS_DESC', 'Log transactions in JARC.' );
 // APC
 define( '_AEC_MI_NAME_APC', 'APC' );
 define( '_AEC_MI_DESC_APC', 'Manage Advanced Profile Control access groups' );
-define( '_MI_MI_APC_SET_GROUP_NAME',		'Set APC Gallery' );
-define( '_MI_MI_APC_SET_GROUP_DESC',		'Choose Yes if you want this MI to set the APC Gallery when it is called.' );
+define( '_MI_MI_APC_SET_GROUP_NAME',		'Set APC Group' );
+define( '_MI_MI_APC_SET_GROUP_DESC',		'Choose Yes if you want this MI to set the APC Group when it is called.' );
 define( '_MI_MI_APC_SET_DEFAULT_NAME',		'Set Default' );
 define( '_MI_MI_APC_SET_DEFAULT_DESC',		'Disregard the group setting below and apply the default group.' );
-define( '_MI_MI_APC_GROUP_NAME',			'APC Gallery' );
+define( '_MI_MI_APC_GROUP_NAME',			'APC Group' );
 define( '_MI_MI_APC_GROUP_DESC',			'The APC group that you want the user to be in.' );
 define( '_MI_MI_APC_SET_GROUP_EXP_NAME',	'Expiration group' );
 define( '_MI_MI_APC_SET_GROUP_EXP_DESC',	'The APC group that you want the user to be in when the subscription runs out.' );
 define( '_MI_MI_APC_SET_DEFAULT_EXP_NAME',	'Set Default (exp)' );
 define( '_MI_MI_APC_SET_DEFAULT_EXP_DESC',	'Disregard the group setting below and apply the default group.' );
-define( '_MI_MI_APC_GROUP_EXP_NAME',		'Set APC Gallery expiration' );
-define( '_MI_MI_APC_GROUP_EXP_DESC',		'Choose Yes if you want this MI to set the APC Gallery when the calling payment plan expires.' );
+define( '_MI_MI_APC_GROUP_EXP_NAME',		'Set APC Group expiration' );
+define( '_MI_MI_APC_GROUP_EXP_DESC',		'Choose Yes if you want this MI to set the APC Group when the calling payment plan expires.' );
 define( '_MI_MI_APC_REBUILD_NAME',			'Rebuild' );
-define( '_MI_MI_APC_REBUILD_DESC',			'Attempt to rebuild the list of users assigned to the usergroup - >Set APC Gallery< and >APC Gallery< have to both be set for this.' );
+define( '_MI_MI_APC_REBUILD_DESC',			'Attempt to rebuild the list of users assigned to the usergroup - >Set APC Group< and >APC Group< have to both be set for this.' );
 
 // Hot Property
 define( '_AEC_MI_HOTPROPERTY_NAME', 'Hot Property' );
