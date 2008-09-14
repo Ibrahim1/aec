@@ -2947,6 +2947,7 @@ class POSTprocessor extends processor
 
 		if ( isset( $var['_aec_checkout_onclick'] ) ) {
 			$onclick = ' onclick="' . $var['_aec_checkout_onclick'] . '"';
+			unset( $var['_aec_checkout_onclick'] );
 		} else {
 			$onclick = '';
 		}
@@ -2977,6 +2978,7 @@ class GETprocessor extends processor
 
 		if ( isset( $var['_aec_checkout_onclick'] ) ) {
 			$onclick = ' onclick="' . $var['_aec_checkout_onclick'] . '"';
+			unset( $var['_aec_checkout_onclick'] );
 		} else {
 			$onclick = '';
 		}
@@ -3007,6 +3009,7 @@ class URLprocessor extends processor
 
 		if ( isset( $var['_aec_checkout_onclick'] ) ) {
 			$onclick = ' onclick="' . $var['_aec_checkout_onclick'] . '"';
+			unset( $var['_aec_checkout_onclick'] );
 		} else {
 			$onclick = '';
 		}
