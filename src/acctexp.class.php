@@ -7957,8 +7957,14 @@ class AECToolbox
 
 			$subject 	= sprintf ( _AEC_SEND_SUB, $name, $mainframe->getCfg( 'sitename' ) );
 			$subject 	= html_entity_decode( $subject, ENT_QUOTES );
+			If (aecJoomla15check()) {
+				$usersConfig = &JComponentHelper::getParams( 'com_users' );
+				$activation = $usersConfig->get('useractivation');
+			} Else {
+				$activation = $mainframe->getCfg( 'useractivation' );
+			}
 
-			if ( ( $mosConfig_useractivation == 1 ) && !$overrideActivation ) {
+			if ( ( $activation == 1 ) && !$overrideActivation ) {
 				$message = sprintf( _AEC_USEND_MSG_ACTIVATE, $name, $mosConfig_sitename, $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=".$row->activation, $mosConfig_live_site, $username, $pwd );
 			} else {
 				$message = sprintf( _AEC_USEND_MSG, $name, $mosConfig_sitename, $mosConfig_live_site );
