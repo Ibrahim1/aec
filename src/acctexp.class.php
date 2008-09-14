@@ -61,11 +61,15 @@ if ( !function_exists( 'aecJoomla15check' ) ) {
 	{
 		global $aecConfig;
 
-		if ( !empty( $aecConfig->cfg['overrideJ15'] ) ) {
-			return false;
-		} else {
-			return defined( 'JPATH_BASE' );
+		if ( !defined( 'AECJOOMLA15CHECK' ) ) {
+			if ( !empty( $aecConfig->cfg['overrideJ15'] ) ) {
+				define( 'AECJOOMLA15CHECK', false );
+			} else {
+				define( 'AECJOOMLA15CHECK', defined( 'JPATH_BASE' ) );
+			}
 		}
+
+		return AECJOOMLA15CHECK;
 	}
 }
 
@@ -5149,8 +5153,15 @@ class InvoiceFactory
 						$_POST['usage'] = $usage;
 					}
 
+					if ( aecJoomla15check() ) {
+						$usersConfig = &JComponentHelper::getParams( 'com_users' );
+						$activation = $usersConfig->get('useractivation');
+					} else {
+						$activation = $mainframe->getCfg( 'useractivation' );
+					}
+
 					//include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/acctexp.html.php' );
-					joomlaregisterForm( $option, $mainframe->getCfg( 'useractivation' ) );
+					joomlaregisterForm( $option, $activation );
 				}
 			} else {
 				// The user is already existing, so we need to move on to the confirmation page with the details
