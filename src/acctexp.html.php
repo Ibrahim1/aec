@@ -718,6 +718,7 @@ class Payment_HTML
 		$terms = $InvoiceFactory->terms->getTerms();
 
 		$introtext = '_CHECKOUT_INFO' . ( $repeat ? '_REPEAT' : '' );
+
 		?>
 		<div class="componentheading"><?php echo _CHECKOUT_TITLE; ?></div>
 		<div id="checkout">

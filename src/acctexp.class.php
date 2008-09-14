@@ -5484,6 +5484,16 @@ class InvoiceFactory
 
 		$mainframe->SetPageTitle( _CHECKOUT_TITLE );
 
+		if ( isset( $var['_aec_html_head'] ) ) {
+			if ( is_array( $var['_aec_html_head'] ) ) {
+				foreach ( $var['_aec_html_head'] as $content ) {
+					$mainframe->addCustomHeadTag( $content );
+				}
+			} else {
+				$mainframe->addCustomHeadTag( $var['_aec_html_head'] );
+			}
+		}
+
 		Payment_HTML::checkoutForm( $option, $var['var'], $var['params'], $this, $repeat );
 	}
 
