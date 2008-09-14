@@ -7958,10 +7958,10 @@ class AECToolbox
 
 			$subject 	= sprintf ( _AEC_SEND_SUB, $name, $mainframe->getCfg( 'sitename' ) );
 			$subject 	= html_entity_decode( $subject, ENT_QUOTES );
-			If (aecJoomla15check()) {
+			if ( aecJoomla15check() ) {
 				$usersConfig = &JComponentHelper::getParams( 'com_users' );
 				$activation = $usersConfig->get('useractivation');
-			} Else {
+			} else {
 				$activation = $mainframe->getCfg( 'useractivation' );
 			}
 
