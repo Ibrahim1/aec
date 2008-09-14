@@ -2945,6 +2945,12 @@ class POSTprocessor extends processor
 			$var = $this->customParams( $this->settings['customparams'], $var, $request );
 		}
 
+		if ( isset( $var['_aec_checkout_onclick'] ) ) {
+			$onclick = ' onclick="' . $var['_aec_checkout_onclick'] . '"';
+		} else {
+			$onclick = '';
+		}
+
 		$return = '<form action="' . $var['post_url'] . '" method="post">' . "\n";
 		unset( $var['post_url'] );
 
@@ -2952,7 +2958,7 @@ class POSTprocessor extends processor
 			$return .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
 		}
 
-		$return .= '<input type="submit" class="button" value="' . _BUTTON_CHECKOUT . '" />' . "\n";
+		$return .= '<input type="submit" class="button"' . $onclick . ' value="' . _BUTTON_CHECKOUT . '" />' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -2969,6 +2975,12 @@ class GETprocessor extends processor
 			$var = $this->customParams( $this->settings['customparams'], $var, $request );
 		}
 
+		if ( isset( $var['_aec_checkout_onclick'] ) ) {
+			$onclick = ' onclick="' . $var['_aec_checkout_onclick'] . '"';
+		} else {
+			$onclick = '';
+		}
+
 		$return = '<form action="' . $var['post_url'] . '" method="get">' . "\n";
 		unset( $var['post_url'] );
 
@@ -2976,7 +2988,7 @@ class GETprocessor extends processor
 			$return .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
 		}
 
-		$return .= '<input type="submit" class="button" value="' . _BUTTON_CHECKOUT . '" />' . "\n";
+		$return .= '<input type="submit" class="button"' . $onclick . ' value="' . _BUTTON_CHECKOUT . '" />' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -2993,6 +3005,12 @@ class URLprocessor extends processor
 			$var = $this->customParams( $this->settings['customparams'], $var, $request );
 		}
 
+		if ( isset( $var['_aec_checkout_onclick'] ) ) {
+			$onclick = ' onclick="' . $var['_aec_checkout_onclick'] . '"';
+		} else {
+			$onclick = '';
+		}
+
 		$return = '<a href="' . $var['post_url'];
 		unset( $var['post_url'] );
 
@@ -3002,7 +3020,7 @@ class URLprocessor extends processor
 		}
 
 		$return .= implode( '&amp;', $vars );
-		$return .= '" class="linkbutton" >' . _BUTTON_CHECKOUT . '</a>' . "\n";
+		$return .= '"' . $onclick . ' class="linkbutton" >' . _BUTTON_CHECKOUT . '</a>' . "\n";
 
 		return $return;
 	}
