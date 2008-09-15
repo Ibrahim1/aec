@@ -2292,11 +2292,11 @@ class PaymentProcessor
 
 		// Check whether this is an ad-hoc notification
 		if ( !empty( $return['_aec_createuser'] ) && empty( $return['invoice'] ) ) {
-			// Create new user account and fetch id
-			$userid = AECToolbox::saveUserRegistration( 'com_acctexp', $return['_aec_createuser'], true, true, false );
-
 			// Identify usage
 			$usage = 1;
+
+			// Create new user account and fetch id
+			$userid = AECToolbox::saveUserRegistration( 'com_acctexp', $return['_aec_createuser'], true, true, false );
 
 			// Create Invoice
 			$invoice = new Invoice( $database );
@@ -2307,7 +2307,7 @@ class PaymentProcessor
 			$return['invoice'] = $invoice->invoice_number;
 
 			unset( $return['_aec_createuser'] );
-		} elseif ( !empty( $return['_aec_createuser'] ) {
+		} elseif ( !empty( $return['_aec_createuser'] ) ) {
 			unset( $return['_aec_createuser'] );
 		}
 
