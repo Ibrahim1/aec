@@ -2282,11 +2282,36 @@ class PaymentProcessor
 
 	function parseNotification( $post )
 	{
+		global $database;
+
 		if ( empty( $this->settings ) ) {
 			$this->getSettings();
 		}
 
-		return $this->processor->parseNotification( $post );
+		$return = $this->processor->parseNotification( $post );
+
+		// Check whether this is an ad-hoc notification
+		if ( !empty( $return['_aec_createuser'] ) && empty( $return['invoice'] ) ) {
+			// Create new user account and fetch id
+			$userid = AECToolbox::saveUserRegistration( 'com_acctexp', $return['_aec_createuser'], true, true, false );
+
+			// Identify usage
+			$usage = 1;
+
+			// Create Invoice
+			$invoice = new Invoice( $database );
+			$invoice->create( $userid, $usage, $this->processor_name );
+			$invoice->computeAmount();
+
+			// Set new return variable - we now know what invoice this is
+			$return['invoice'] = $invoice->invoice_number;
+
+			unset( $return['_aec_createuser'] );
+		} elseif ( !empty( $return['_aec_createuser'] ) {
+			unset( $return['_aec_createuser'] );
+		}
+
+		return $return;
 	}
 
 	function validateNotification( $response, $post, $invoice )

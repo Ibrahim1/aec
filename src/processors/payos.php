@@ -31,13 +31,15 @@ class processor_payos extends URLprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['webmaster_id']		= 'webmaster';
-		$settings['content_id']		= 'content_id';
 		$settings['testmode']		= 0;
 
-		$settings['customparams']	= "";
+		$settings['webmaster_id']	= 'webmaster';
+		$settings['content_id']		= 'content_id';
+		$settings['secret']			= 'secret';
 
-		$settings['javascript_checkout']	= "";
+		$settings['javascript_checkout']	= 0;
+
+		$settings['customparams']	= "";
 
 		return $settings;
 	}
@@ -45,11 +47,15 @@ class processor_payos extends URLprocessor
 	function backend_settings()
 	{
 		$settings = array();
+		$settings['testmode']		= array( 'list_yesno' );
 
-		$settings['business']				= array( 'inputC' );
-		$settings['testmode']				= array( 'list_yesno' );
+		$settings['webmaster_id']	= array( 'inputC' );
+		$settings['content_id']		= array( 'inputC' );
+		$settings['secret']			= array( 'inputC' );
 
-		$settings['customparams']			= array( 'inputD' );
+		$settings['javascript_checkout']	= array( 'list_yesno' );
+
+		$settings['customparams']	= array( 'inputD' );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
@@ -70,7 +76,7 @@ class processor_payos extends URLprocessor
 		$var['currency_code']	= $this->settings['currency'];
 
 		$var1 = $request->int_var['invoice'];
-		$var2 = implode( "|", array() );
+		$var2 = "";//implode( "|", array() );
 		$type = "";
 		$lang = 'de';
 		$coun = 'DE';
@@ -123,6 +129,10 @@ class processor_payos extends URLprocessor
 	function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
+
+		echo 'OK=100';
+
+
 
 		if ( strcmp( $receiver_email, $this->settings['business'] ) != 0 && $this->settings['checkbusiness'] ) {
 			$response['pending_reason'] = 'checkbusiness error';
