@@ -7913,7 +7913,7 @@ class AECToolbox
 
 				// If user activation is turned on, we need to set the activation information
 				$useractivation = $usersConfig->get( 'useractivation' );
-				if ( ($useractivation == '1') || $overrideActivation )
+				if ( ($useractivation == '1') &&  !$overrideActivation )
 				{
 					jimport('joomla.user.helper');
 					$user->set('activation', md5( JUserHelper::genRandomPassword()) );
