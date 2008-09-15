@@ -132,7 +132,28 @@ class processor_payos extends URLprocessor
 
 		echo 'OK=100';
 
+		$allowedips = array( "213.69.111.70", "213.69.111.71", "213.69.234.76", "213.69.234.74", "195.126.100.14", "213.69.111.78" );
 
+		if ( !in_array( $_SERVER["REMOTE_ADDR"], $allowedips ) ) {
+			$response['pending_reason'] = "Wrong IP tried to send notification: " . $_SERVER["REMOTE_ADDR"];
+			return $response;
+		}
+
+		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
+
+		// Check whether we have already recorded a profile
+		if ( empty( $ppParams->customerid ) ) {
+			// None found - create it
+			$ppParams = new stdClass();
+			$ppParams->customerid = $post['customer_id'];
+
+			$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
+		} elseif ( $ppParams->customerid != $post['customer_id'] ) {
+			// Profile found, but does not match, create new relation
+			$ppParams->customerid = $post['customer_id'];
+
+			$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
+		}
 
 		if ( strcmp( $receiver_email, $this->settings['business'] ) != 0 && $this->settings['checkbusiness'] ) {
 			$response['pending_reason'] = 'checkbusiness error';
