@@ -759,7 +759,7 @@ class HTML_AcctExp
 						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_plans.png', _AEC_CENTR_PLANS );
 
 						$link = 'index2.php?option=com_acctexp&amp;task=showItemGroups';
-						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_itemgroups.png', _AEC_CENTR_GROUPS );
+						//HTML_AcctExp::quickiconButton( $link, 'aec_symbol_itemgroups.png', _AEC_CENTR_GROUPS );
 
 						$link = 'index2.php?option=com_acctexp&amp;task=showMicroIntegrations';
 						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_microintegrations.png', _AEC_CENTR_M_INTEGRATION );

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: payos.php
+ * @version $Id: netdebit.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Processors - PayPal Buy Now
  * @copyright 2007-2008 Copyright (C) David Deutsch
@@ -11,15 +11,15 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_payos extends URLprocessor
+class processor_netdebit extends URLprocessor
 {
 	function info()
 	{
 		$info = array();
-		$info['name']				= 'payos';
-		$info['longname']			= _CFG_PAYOS_LONGNAME;
-		$info['statement']			= _CFG_PAYOS_LONGNAME;
-		$info['description'] 		= _CFG_PAYOS_DESCRIPTION;
+		$info['name']				= 'netdebit';
+		$info['longname']			= _CFG_NETDEBIT_LONGNAME;
+		$info['statement']			= _CFG_NETDEBIT_LONGNAME;
+		$info['description'] 		= _CFG_NETDEBIT_DESCRIPTION;
 		$info['currencies']			= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS';
 		$info['languages']			= 'GB,DE,FR,IT,ES,US,NL';
 		$info['cc_list']			= 'visa,mastercard,discover,americanexpress,echeck,giropay';
@@ -81,33 +81,34 @@ class processor_payos extends URLprocessor
 
 		if ( !empty( $ppParams->customerid ) ) {
 			$cust = $ppParams->customerid;
+			$iscust	= 1;
 		} else {
 			$cust = '';
+			$iscust	= 0;
 		}
 
 		if ( $this->settings['javascript_checkout'] ) {
-			$var['post_url'] = "http://www.payos.de/central/public/javascript_disabled";
+			$var['post_url'] = "http://www.netdebit.de/central/public/javascript_disabled";
 
 			// Attach PayOS Javascript
-			$var['_aec_html_head'] = '<!-- PayOS Version 1.0 Start -->
-										<script type="text/javascript" language="JavaScript"
-										src="http://www.payos.de/pay/PY_jsfunk.php?WMID=' . $this->settings['webmaster_id'] . '&CON=' . $this->settings['content_id'] . '">
-										</script>
-										<!-- PayOS Version 1.0 End -->';
+			$var['_aec_html_head'] = '<!-- Beginn NetDebit - Payment V3.0 -->
+										<script LANGUAGE="JavaScript"
+										src="http://www.fixport.de/secuSYS/FUNK.php?F=' . $this->settings['webmaster_id'] . '&PID=' . $this->settings['webmaster_id'] . '&CON=' . $this->settings['webmaster_id'] . '&SID=' . $this->settings['webmaster_id'] . '" type="text/javascript"></script>
+										<!-- Ende   NetDebit - Payment V3.0 -->';
 
 			// Link to PayOS Javascript from Checkout link
-			$var['_aec_checkout_onclick'] = 'PO_pay(\'' . $var1 . '\',\'' . $var2 . '\',\'' . $type . '\',\'' . $cust . '\',\'' . $lang . '\',\'' . $coun . '\');return false;';
+			$var['_aec_checkout_onclick'] = 'GATE_NDV2(\'' . $var1 . '\',\'' . $var2 . '\',\'' . $type . '\',\'' . $cust . '\',\'' . $lang . '\',\'' . $coun . '\');return false;';
 		} else {
-			$var['post_url']	= "http://www.payos.de/pay/index.php?";
+			$var['post_url']	= "https://www.netdebit-payment.de/pay/index.php?";
 
 			$var['CON']			= $this->settings['content_id'];
 			$var['WMID']		= $this->settings['webmaster_id'];
-			$var['VAR1']		= $var1;
-			$var['VAR2']		= $var2;
-			$var['PAY_type']	= $type;
-			$var['Customer']	= $cust;
-			$var['_language']	= $lang;
-			$var['Country']		= $coun;
+			$var['GoVAR1']		= $var1;
+			$var['GoVAR2']		= $var2;
+			$var['GoZAH']		= $type; //1 = Lastschrift, 2 = Kreditkarte
+			$var['GoPOS']		= $type; //ausgewählte Tarifposition
+			$var['GoKUN']		= $iscust;
+			$var['GoKNR']		= $cust;
 		}
 
 		return $var;
