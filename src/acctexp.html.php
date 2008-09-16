@@ -688,7 +688,7 @@ class Payment_HTML
 							<?php
 						}
 						if ( $passthrough != false ) {
-							foreach ( $passthrough as $key => $array ) { ?>
+							foreach ( $passthrough as $id => $array ) { ?>
 								<input type="hidden" name="<?php echo $array[0]; ?>" value="<?php echo $array[1]; ?>" />
 								<?php
 							}

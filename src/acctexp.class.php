@@ -4833,8 +4833,6 @@ class InvoiceFactory
 
 	function touchInvoice( $option, $invoice_number=false )
 	{
-		global $database;
-
 		// Checking whether we are trying to repeat an invoice
 		if ( $invoice_number !== false ) {
 			// Make sure the invoice really exists and that its the correct user carrying out this action
@@ -4845,9 +4843,12 @@ class InvoiceFactory
 			}
 		}
 
-		$this->objInvoice = new Invoice( $database );
+		if ( !empty( $this->invoice ) ) {
+			if ( !is_object( $this->objInvoice ) ) {
+				global $database;
+				$this->objInvoice = new Invoice( $database );
+			}
 
-		if ( $this->invoice ) {
 			$this->objInvoice->loadInvoiceNumber( $this->invoice );
 			$this->objInvoice->computeAmount();
 
@@ -4860,6 +4861,10 @@ class InvoiceFactory
 				$this->create( $option, 0, $this->usage, $this->invoice_number );
 			}
 		} else {
+			global $database;
+
+			$this->objInvoice = new Invoice( $database );
+
 			$this->objInvoice->create( $this->userid, $this->usage, $this->processor );
 			$this->objInvoice->computeAmount();
 
@@ -4906,8 +4911,12 @@ class InvoiceFactory
 
 				// Create dummy CMS user
 				foreach( $cmsfields as $cmsfield ) {
-					$this->metaUser->cmsUser->$cmsfield = $cpass[$cmsfield];
-					unset( $cpass[$cmsfield] );
+					foreach ( $cpass as $id => $array ) {
+						if ( $array[0] == $cmsfield ) {
+							$this->metaUser->cmsUser->$cmsfield = $array[1];
+							unset( $cpass[$id] );
+						}
+					}
 				}
 
 				// Create dummy CB/CBE user
@@ -5156,7 +5165,7 @@ class InvoiceFactory
 			// If the user also needs to register, we need to guide him there after the selection has now been made
 			if ( $register ) {
 				// The plans are supposed to be first, so the details form should hold the values
-				if ( $aecConfig->cfg['plans_first'] && !empty( $plans[0]['id'] ) ) {
+				if ( !empty( $plans[0]['id'] ) ) {
 					$_POST['usage']		= $plans[0]['id'];
 					$_POST['processor']	= $plans[0]['gw'][0]->processor_name;
 					if ( isset( $plans[0]['gw'][0]->recurring ) ) {
@@ -5270,16 +5279,23 @@ class InvoiceFactory
 
 			$passthrough = false;
 		} else {
-			unset( $var['usage'] );
-			unset( $var['processor'] );
-			unset( $var['currency'] );
-			unset( $var['amount'] );
+			if ( isset( $var['usage'] ) ) {
+				unset( $var['usage'] );
+				unset( $var['processor'] );
+				unset( $var['currency'] );
+				unset( $var['amount'] );
+			}
 
 			if ( is_array( $passthrough ) ) {
 				$user = new mosUser( $database );
-				$user->name		= $passthrough['name'];
-				$user->username = $passthrough['username'];
-				$user->email	= $passthrough['email'];
+
+				$details = array( 'name', 'username', 'email' );
+
+				foreach ( $passthrough as $id => $array ) {
+					if ( in_array( $array[0], $details ) ) {
+						$user->{$array[0]} = $array[1];
+					}
+				}
 			} else {
 				$user = new mosUser( $database );
 				if ( isset( $var['name'] ) ) {
@@ -5836,8 +5852,7 @@ class Invoice extends serialParamDBTable
 			if ( $aecConfig->cfg['invoicenum_doformat'] && empty( $this->invoice_number_format ) && !empty( $invoice_number ) && !$nostore ) {
 				if ( $invoice_number != "JSON PARSE ERROR - Malformed String!" ) {
 					$this->invoice_number_format = $invoice_number;
-					$this->check();
-					$this->store();
+					$this->storeload();
 				}
 			}
 
@@ -6075,8 +6090,7 @@ class Invoice extends serialParamDBTable
 
 		if ( isset( $response['invoiceparams'] ) ) {
 			$this->addParams( $response['invoiceparams'] );
-			$this->check();
-			$this->store();
+			$this->storeload();
 			unset( $response['invoiceparams'] );
 		}
 
@@ -6168,8 +6182,7 @@ class Invoice extends serialParamDBTable
 					$tags	.= ',payment,pending' . $response['pending_reason'];
 				}
 
-				$this->check();
-				$this->store();
+				$this->storeload();
 			} elseif ( isset( $response['cancel'] ) ) {
 				$metaUser = new metaUser( $this->userid );
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_CANCEL;
@@ -6403,8 +6416,7 @@ class Invoice extends serialParamDBTable
 
 			$this->transactions[] = $c;
 
-			$this->check();
-			$this->store();
+			$this->storeload();
 		} else {
 			return;
 		}
