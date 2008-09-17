@@ -732,69 +732,39 @@ class HTML_AcctExp
 						<h3>&raquo;<?php echo _AEC_CENTR_AREA_MEMBERSHIPS; ?></h3>
 						<div class="central_group">
 						<?php // Assemble Buttons
-						$link = 'index2.php?option=com_acctexp&amp;task=showExcluded';
-						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_excluded.png', _AEC_CENTR_EXCLUDED );
+						$links = array(	array( 'showExcluded', 'excluded', _AEC_CENTR_EXCLUDED ),
+										array( 'showPending', 'pending', _AEC_CENTR_PENDING ),
+										array( 'showActive', 'active', _AEC_CENTR_ACTIVE ),
+										array( 'showExpired', 'expired', _AEC_CENTR_EXPIRED ),
+										array( 'showCancelled', 'cancelled', _AEC_CENTR_CANCELLED ),
+										array( 'showClosed', 'closed', _AEC_CENTR_CLOSED ),
+										array( 'showManual', 'manual', _AEC_CENTR_MANUAL ),
+										_AEC_CENTR_AREA_PAYMENT,
+										array( 'showSubscriptionPlans', 'plans', _AEC_CENTR_PLANS ),
+										array( 'showItemGroups', 'itemgroups', _AEC_CENTR_GROUPS ),
+										array( 'showMicroIntegrations', 'microintegrations', _AEC_CENTR_M_INTEGRATION ),
+										array( 'invoices', 'invoices', _AEC_CENTR_V_INVOICES ),
+										array( 'showCoupons', 'coupons', _AEC_CENTR_COUPONS ),
+										array( 'showCouponsStatic', 'coupons_static', _AEC_CENTR_COUPONS_STATIC ),
+										_AEC_CENTR_AREA_SETTINGS,
+										array( 'showSettings', 'settings', _AEC_CENTR_SETTINGS ),
+										array( 'editCSS', 'css', _AEC_CENTR_EDIT_CSS ),
+										array( 'history', 'history', _AEC_CENTR_VIEW_HISTORY ),
+										array( 'eventlog', 'eventlog', _AEC_CENTR_LOG ),
+										array( 'hacks', 'hacks', _AEC_CENTR_HACKS ),
+										array( 'help', 'help', _AEC_CENTR_HELP ),
+										array( 'export', 'export', _AEC_CENTR_EXPORT )
+						);
 
-						$link = 'index2.php?option=com_acctexp&amp;task=showPending';
-						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_pending.png', _AEC_CENTR_PENDING );
+						$linkroot = "index2.php?option=com_acctexp&amp;task=";
+						foreach ( $links as $litem ) {
+							if ( is_array( $litem ) ) {
+								HTML_AcctExp::quickiconButton( $linkroot.$litem[0], 'aec_symbol_'.$litem[1].'.png', $litem[2] );
+							} else {
+								?></div><h3>&raquo;<?php echo $litem; ?></h3><div class="central_group"><?php
+							}
+						}
 
-						$link = 'index2.php?option=com_acctexp&amp;task=showActive';
-						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_active.png', _AEC_CENTR_ACTIVE );
-
-						$link = 'index2.php?option=com_acctexp&amp;task=showExpired';
-						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_expired.png', _AEC_CENTR_EXPIRED );
-
-						$link = 'index2.php?option=com_acctexp&amp;task=showCancelled';
-						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_cancelled.png', _AEC_CENTR_CANCELLED );
-
-						$link = 'index2.php?option=com_acctexp&amp;task=showClosed';
-						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_closed.png', _AEC_CENTR_CLOSED );
-
-						$link = 'index2.php?option=com_acctexp&amp;task=showManual';
-						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_manual.png', _AEC_CENTR_MANUAL );
-
-						?></div><h3>&raquo;<?php echo _AEC_CENTR_AREA_PAYMENT; ?></h3><div class="central_group"><?php
-
-						$link = 'index2.php?option=com_acctexp&amp;task=showSubscriptionPlans';
-						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_plans.png', _AEC_CENTR_PLANS );
-
-						$link = 'index2.php?option=com_acctexp&amp;task=showItemGroups';
-						//HTML_AcctExp::quickiconButton( $link, 'aec_symbol_itemgroups.png', _AEC_CENTR_GROUPS );
-
-						$link = 'index2.php?option=com_acctexp&amp;task=showMicroIntegrations';
-						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_microintegrations.png', _AEC_CENTR_M_INTEGRATION );
-
-						$link = 'index2.php?option=com_acctexp&amp;task=invoices';
-						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_invoices.png', _AEC_CENTR_V_INVOICES );
-
-						$link = 'index2.php?option=com_acctexp&amp;task=showCoupons';
-						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_coupons.png', _AEC_CENTR_COUPONS );
-
-						$link = 'index2.php?option=com_acctexp&amp;task=showCouponsStatic';
-						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_coupons_static.png', _AEC_CENTR_COUPONS_STATIC );
-
-						?></div><h3>&raquo;<?php echo _AEC_CENTR_AREA_SETTINGS; ?></h3><div class="central_group"><?php
-
-						$link = 'index2.php?option=com_acctexp&amp;task=showSettings';
-						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_settings.png', _AEC_CENTR_SETTINGS );
-
-						$link = 'index2.php?option=com_acctexp&amp;task=editCSS';
-						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_css.png', _AEC_CENTR_EDIT_CSS, true );
-
-						$link = 'index2.php?option=com_acctexp&amp;task=history';
-						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_history.png', _AEC_CENTR_VIEW_HISTORY );
-
-						$link = 'index2.php?option=com_acctexp&amp;task=eventlog';
-						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_eventlog.png', _AEC_CENTR_LOG );
-
-						$link = 'index2.php?option=com_acctexp&amp;task=hacks';
-						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_hacks.png', _AEC_CENTR_HACKS );
-
-						$link = 'index2.php?option=com_acctexp&amp;task=help';
-						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_help.png', _AEC_CENTR_HELP );
-
-						$link = 'index2.php?option=com_acctexp&amp;task=export';
-						HTML_AcctExp::quickiconButton( $link, 'aec_symbol_export.png', _AEC_CENTR_EXPORT );
 						?>
 						</div>
 						<div class="central_quicksearch">
