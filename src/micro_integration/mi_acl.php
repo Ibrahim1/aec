@@ -81,8 +81,10 @@ class mi_acl
 
 		foreach ( $subgroups as $groupname ) {
 			$selected = array();
-			foreach ( $this->settings[$groupname] as $value ) {
-				$selected[]->value = $value;
+			if ( !empty( $this->settings[$groupname] ) ) {
+				foreach ( $this->settings[$groupname] as $value ) {
+					$selected[]->value = $value;
+				}
 			}
 
 			$settings['lists'][$groupname] = mosHTML::selectList( $gtree, $groupname.'[]', 'size="6" multiple="multiple"', 'value', 'text', $selected );
