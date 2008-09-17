@@ -1968,8 +1968,7 @@ class PaymentProcessor
 		// Set values from defaults and store
 		$this->processor->info = $this->info;
 		$this->processor->settings = $this->settings;
-		$this->processor->check();
-		$this->processor->store();
+		$this->processor->storeload();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_config_processors'
@@ -1997,6 +1996,10 @@ class PaymentProcessor
 	{
 		$this->settings	=& $this->processor->settings;
 		$original		= $this->processor->settings();
+
+		if ( !is_array( $this->settings ) ) {
+			$this->settings = $original;
+		}
 
 		if ( !isset( $this->settings['recurring'] ) && is_int( $this->is_recurring() ) ) {
 			$original['recurring'] = 1;
@@ -2423,8 +2426,7 @@ class processor extends serialParamDBTable
 		$this->info		= $info;
 		$this->settings	= $settings;
 
-		$this->check();
-		$this->store();
+		$this->storeload();
 	}
 
 	function checkoutAction( $request )

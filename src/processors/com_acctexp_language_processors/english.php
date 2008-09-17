@@ -627,6 +627,7 @@ define( '_CFG_AUTHORIZE_CIM_PROMPTZIPONLY_DESC', 'Ask the user to put in a Zip c
 	// ClickBank
 define( '_CFG_CLICKBANK_LONGNAME',			'ClickBank' );
 define( '_CFG_CLICKBANK_STATEMENT',			'Make payments with ClickBank!' );
+define( '_CFG_CLICKBANK_DESCRIPTION', 'Make payments with ClickBank');
 define( '_CFG_CLICKBANK_PUBLISHER_NAME', 'PUBLISHER');
 define( '_CFG_CLICKBANK_PUBLISHER_DESC', 'Your ClickBank PUBLISHER account number.');
 define( '_CFG_CLICKBANK_SECRET_KEY_NAME', 'Secret key');

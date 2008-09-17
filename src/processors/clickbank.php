@@ -11,7 +11,7 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_clickbank extends GETprocessor
+class processor_clickbank extends URLprocessor
 {
 	function info()
 	{
@@ -19,7 +19,7 @@ class processor_clickbank extends GETprocessor
 		$info['name']					= 'clickbank';
 		$info['longname'] 				= _CFG_CLICKBANK_LONGNAME;
 		$info['statement'] 				= _CFG_CLICKBANK_STATEMENT;
-		$info['description'] 			= _DESCRIPTION_CLICKBANK_SUBSCRIPTION;
+		$info['description'] 			= _CFG_CLICKBANK_DESCRIPTION;
 		$info['cc_list'] 				= "visa,mastercard,americanexpress,discover,dinersclub,jcb,paypal";
 		$info['currencies']				= "USD";
 		$info['recurring'] 				= 2;
@@ -34,6 +34,7 @@ class processor_clickbank extends GETprocessor
 		$settings['testmode']			= 0;
 		$settings['publisher']			= 'clickbank';
 		$settings['secret_key']			= 'secret_key';
+		$settings['info']				= "";
 		$settings['customparams']		= "";
 
 		return $settings;
