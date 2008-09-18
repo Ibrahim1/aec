@@ -860,10 +860,12 @@ class Payment_HTML
 			</tr>
 		</table>
 		<table width="100%">
-			<?php
-			if ( is_object( $InvoiceFactory->pp ) ) {
-				HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $aecConfig->cfg['displayccinfo'] );
-			} ?>
+			<tr><td>
+				<?php
+				if ( is_object( $InvoiceFactory->pp ) ) {
+					HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $aecConfig->cfg['displayccinfo'] );
+				} ?>
+			</td></tr>
 		</table>
 		</div>
 		<?php

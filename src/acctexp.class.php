@@ -3176,7 +3176,6 @@ class aecSettings
 
 	function remap_list_date( $name, $value )
 	{
-		// mic: fix wrong name
 		$this->lists[$name] = '<input class="text_area" type="text" name="' . $name . '" id="' . $name . '" size="19" maxlength="19" value="' . $value . '"/>'
 		.'<input type="reset" name="reset" class="button" onClick="return showCalendar(\'' . $name . '\', \'y-mm-dd\');" value="..." />';
 		return 'list';
@@ -3432,7 +3431,7 @@ class aecHTML
 				break;
 		}
 
-		if ( strpos( $return, ($table ? '<tr><td class="cleft">' : '<p>') ) ) {
+		if ( strpos( $return, ($table ? '<tr><td class="cleft">' : '<p>') ) !== false ) {
 			$return .= $table ? '</td></tr>' : '</p>';
 		}
 
