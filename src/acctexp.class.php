@@ -6216,13 +6216,14 @@ class Invoice extends serialParamDBTable
 					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED;
 				}
 			} elseif ( isset( $response['eot'] ) ) {
-				$metaUser = new metaUser( $this->userid );
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_EOT;
 				$tags	.= ',eot';
 			} elseif ( isset( $response['duplicate'] ) ) {
-				$metaUser = new metaUser( $this->userid );
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_DUPLICATE;
 				$tags	.= ',duplicate';
+			} elseif ( isset( $response['null'] ) ) {
+				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_NULL;
+				$tags	.= ',null';
 			} elseif ( isset( $response['error'] ) && isset( $response['errormsg'] ) ) {
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR . ' Error:' . $response['errormsg'] ;
 				$tags	.= ',error';
@@ -6232,6 +6233,10 @@ class Invoice extends serialParamDBTable
 				$tags	.= ',general_error';
 				$level = 128;
 			}
+		}
+
+		if ( isset( $response['explanation'] ) ) {
+			$event .= " (" . $response['explanation'] . ")";
 		}
 
 		$eventlog = new eventLog( $database );

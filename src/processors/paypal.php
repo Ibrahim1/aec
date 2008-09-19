@@ -259,8 +259,11 @@ class processor_paypal extends POSTprocessor
 				$response['pending_reason'] = 'signup';
 			} elseif ( strcmp( $txn_type, 'subscr_eot' ) == 0 ) {
 				$response['eot']				= 1;
-			} elseif ( strcmp( $txn_type, 'subscr_cancel' ) == 0 ) {
-				$response['cancel']				= 1;
+			} elseif ( strcmp( $txn_type, 'subscr_eot' ) == 0 ) {
+				$response['eot']				= 1;
+			} elseif ( strcmp( $txn_type, 'subscr_failed' ) == 0 ) {
+				$response['null']				= 1;
+				$response['explanation']		= 'Subscription Payment Failed';
 			} elseif ( strcmp( $reason_code, 'refund' ) == 0 ) {
 				$response['delete']				= 1;
 			}

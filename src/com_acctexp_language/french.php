@@ -49,6 +49,7 @@ define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CANCEL',	'Pas de paiement - Abonnement 
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS',	', le compte utilisateur a &eacute;t&eacute; mis &agrave; jour &agrave; \'Annul&eacute;\'' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EOT',		'Pas de paiment - Fin de la p&eacute;riode d\'abonnement' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_DUPLICATE','No Payment - Duplicate' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_NULL','No Payment - Null' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR',	'Erreur inconnue' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_REFUND',	'Pas de paiment - Souscription supprim&eacute;e (rembours&eacute;e)' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED',	', L&amp;acute;utilisateur a expir&eacute;' );

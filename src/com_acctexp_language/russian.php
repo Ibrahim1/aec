@@ -89,6 +89,8 @@ define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EOT',		'Платеж не осущес�
 
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_DUPLICATE','Платеж не осуществлен - Повторите' );
 
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_NULL','No Payment - Null' );
+
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR',	'Неизвестная ошибка' );
 
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_REFUND',	'Платеж не осуществлен - Подписка прекращена (refund)' );

@@ -49,6 +49,7 @@ define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CANCEL',	'Geen betaling - Aanmelding ge
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS',	', Gebruikersstatus is geupdate naar \'Cancelled\'' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EOT',		'Geen betaling' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_DUPLICATE','Geen betaling - Dubbele input' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_NULL','No Payment - Null' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR',	'Onbekende fout' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_REFUND',	'No Payment - Subscription Deleted (refund)' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED',	', User has been expired' );
