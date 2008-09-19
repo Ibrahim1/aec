@@ -624,7 +624,7 @@ define( '_CFG_AUTHORIZE_CIM_PROMPTADDRESS_DESC', 'Ask the user to put in an Addr
 define( '_CFG_AUTHORIZE_CIM_PROMPTZIPONLY_NAME', 'Prompt for Zip only');
 define( '_CFG_AUTHORIZE_CIM_PROMPTZIPONLY_DESC', 'Ask the user to put in a Zip code only.');
 
-	// ClickBank
+// ClickBank
 define( '_CFG_CLICKBANK_LONGNAME',			'ClickBank' );
 define( '_CFG_CLICKBANK_STATEMENT',			'Make payments with ClickBank!' );
 define( '_CFG_CLICKBANK_DESCRIPTION', 'Make payments with ClickBank');
@@ -634,7 +634,17 @@ define( '_CFG_CLICKBANK_SECRET_KEY_NAME', 'Secret key');
 define( '_CFG_CLICKBANK_SECRET_KEY_DESC', 'Your secret key is an essential element to the process because it is used for both encryption and decryption and is only known by you and ClickBank');
 define( '_CFG_CLICKBANK_INFO_NAME', 'IMPORTANT NOTE! Thank You Page');
 define( '_CFG_CLICKBANK_INFO_DESC', 'On your ClickBank Account Homepage, >>Accounts Settings<< tab, locate and click the >>My Products<< link. Set up the field >>Thank You Page URL<< with the URL "http://www.yoursite.com/index.php?option=com_acctexp&task=clickbanknotification". Replace "www.yoursite.com" with your own domain.');
-define( '_CFG_CLICKBANK_ITEM_NUMBER_NAME', 'Your Clickbank Item Number');
-define( '_CFG_CLICKBANK_ITEM_NUMBER_DESC', 'Put your item number of product/service you sell here.');
+define( '_CFG_CLICKBANK_PLAN_PARAMS_ITEM_NUMBER_NAME', 'Your Clickbank Item Number');
+define( '_CFG_CLICKBANK_PLAN_PARAMS_ITEM_NUMBER_DESC', 'Put your item number of product/service you sell here.');
+
+// NetDebit
+define( '_CFG_NETDEBIT_LONGNAME',			'NetDebit' );
+define( '_CFG_NETDEBIT_STATEMENT',			'Make payments with NetDebit!' );
+define( '_CFG_NETDEBIT_DESCRIPTION', 'Make payments with NetDebit');
+
+// PayOS
+define( '_CFG_PAYOS_LONGNAME',			'PayOS' );
+define( '_CFG_PAYOS_STATEMENT',			'Make payments with PayOS!' );
+define( '_CFG_PAYOS_DESCRIPTION', 'Make payments with PayOS');
 
 ?>
