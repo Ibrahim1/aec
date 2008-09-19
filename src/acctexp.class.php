@@ -9206,7 +9206,7 @@ class microIntegration extends serialParamDBTable
 			if ( is_array( $userflags ) && !empty( $userflags ) ) {
 				// Check for this specific flag
 				if ( isset( $userflags[$spc] ) && isset( $userflags[$spca] ) ) {
-					if ( !( time() > $userflags[$spc] ) ) {
+					if ( ( time() > $userflags[$spc] ) ) {
 						// This call has already been made
 						return false;
 					}
