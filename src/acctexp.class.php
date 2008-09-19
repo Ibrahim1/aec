@@ -916,6 +916,7 @@ class metaUserDB extends serialParamDBTable
 					$this->plan_params[$usageid][$miid] = $params;
 				}
 			} else {
+
 				$this->plan_params[$usageid][$miid] = $params;
 			}
 		}
@@ -925,6 +926,8 @@ class metaUserDB extends serialParamDBTable
 		} else {
 			$this->params->mi[$miid] = $params;
 		}
+
+		$this->storeload();
 
 		return true;
 	}
