@@ -126,9 +126,9 @@ class mi_coupon
 
 	function mailOut( $request, $newcodes )
 	{
-		$message	= sprintf( $message, implode( "\n", $newcodes ) );
+		$message	= sprintf( $this->settings['text'], implode( "\n", $newcodes ) );
 
-		$message	= AECToolbox::rewriteEngineRQ( $this->settings['text'], $request );
+		$message	= AECToolbox::rewriteEngineRQ( $message, $request );
 		$subject	= AECToolbox::rewriteEngineRQ( $this->settings['subject'], $request );
 
 		if ( empty( $message ) ) {
