@@ -916,7 +916,6 @@ class metaUserDB extends serialParamDBTable
 					$this->plan_params[$usageid][$miid] = $params;
 				}
 			} else {
-
 				$this->plan_params[$usageid][$miid] = $params;
 			}
 		}
@@ -926,8 +925,6 @@ class metaUserDB extends serialParamDBTable
 		} else {
 			$this->params->mi[$miid] = $params;
 		}
-
-		$this->storeload();
 
 		return true;
 	}
@@ -9218,6 +9215,8 @@ class microIntegration extends serialParamDBTable
 
 			// Create the new flags
 			$metaUser->meta->setMIParams( $this->id, $objplan->id, $newflags );
+
+			$metaUser->meta->storeload();
 
 			return $this->relayAction( $metaUser, null, null, $objplan, 'pre_expiration_action', $add=false );
 		} else {

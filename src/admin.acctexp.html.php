@@ -741,7 +741,7 @@ class HTML_AcctExp
 										array( 'showManual', 'manual', _AEC_CENTR_MANUAL ),
 										_AEC_CENTR_AREA_PAYMENT,
 										array( 'showSubscriptionPlans', 'plans', _AEC_CENTR_PLANS ),
-										array( 'showItemGroups', 'itemgroups', _AEC_CENTR_GROUPS ),
+										//array( 'showItemGroups', 'itemgroups', _AEC_CENTR_GROUPS ),
 										array( 'showMicroIntegrations', 'microintegrations', _AEC_CENTR_M_INTEGRATION ),
 										array( 'invoices', 'invoices', _AEC_CENTR_V_INVOICES ),
 										array( 'showCoupons', 'coupons', _AEC_CENTR_COUPONS ),

@@ -79,6 +79,8 @@ function checkUserSubscription()
 {
 	global $mosConfig_absolute_path, $option;
 
+	$task = mosGetParam( $_REQUEST, 'task', '' );
+
 	$submit = mosGetParam($_POST,'submit', '');
 	if ($option == 'login' ||
          ($option == 'com_comprofiler' && $task == 'login') &&

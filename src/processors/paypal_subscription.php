@@ -137,7 +137,7 @@ class processor_paypal_subscription extends POSTprocessor
 			$var['notify_url']	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=paypal_subscriptionnotification' );
 		}
 
-		$var['item_number']		= $request->metaUser->cmsUser->id;
+		$var['item_number']		= $request->metaUser->userid;
 		$var['item_name']		= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 
 		$var['no_shipping']		= $this->settings['no_shipping'];
