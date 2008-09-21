@@ -9539,6 +9539,44 @@ class microIntegration extends serialParamDBTable
 		return $array;
 	}
 
+	function registerProfileTabs()
+	{
+		if ( method_exists( $this->mi_class, 'registerProfileTabs' ) ) {
+			$response = $this->mi_class->registerProfileTabs();
+		} else {
+			$response = null;
+		}
+
+		return $response;
+	}
+
+	function customProfileTab( $action, $metaUser )
+	{
+		if ( empty( $this->settings ) ) {
+			$this->getSettings();
+		}
+
+		$method = 'customtab_' . $action;
+
+		if ( method_exists( $this->mi_class, $method ) ) {
+			global $database;
+
+			$request = new stdClass();
+			$request->parent			=& $this;
+			$request->metaUser			=& $metaUser;
+
+			$invoice = new Invoice( $database );
+			$invoice->loadbySubscriptionId( $metaUser->objSubscription->id );
+
+			$request->invoice			=& $invoice;
+
+
+			return $this->mi_class->$method( $request );
+		} else {
+			return false;
+		}
+	}
+
 	function delete ()
 	{
 		// Maybe this function needs special actions on delete?

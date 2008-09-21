@@ -584,15 +584,32 @@ function subscriptionDetails( $option, $sub='' )
 							$mi_info .= $info;
 						}
 					}
+
+					$addtabs = $mi->registerProfileTabs();
+
+					if ( !empty( $addtabs ) ) {
+						foreach ( $addtabs as $atk => $atv ) {
+							$action = $mi->class_name . '_' . $atk;
+							if ( !isset( $subfields[$action] ) ) {
+								$subfields[$action] = $atv;
+
+								if ( $action == $sub ) {
+									$custom = $mi->customProfileTab( $atk, $metaUser );
+								}
+							}
+						}
+					}
 				}
 			}
 
-			if ( !empty( $pp->info['actions'] ) && ( ( strcmp( $metaUser->objSubscription->status, 'Active' ) === 0 ) || ( strcmp( $metaUser->objSubscription->status, 'Trial' ) === 0 )) ) {
-				$actions = $pp->info['actions'];
+			if ( $pp != false ) {
+				if ( !empty( $pp->info['actions'] ) && ( ( strcmp( $metaUser->objSubscription->status, 'Active' ) === 0 ) || ( strcmp( $metaUser->objSubscription->status, 'Trial' ) === 0 )) ) {
+					$actions = $pp->info['actions'];
 
-				$selected_plan->proc_actions = array();
-				foreach ( $actions as $action ) {
-					$selected_plan->proc_actions[] = '<a href="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action . '&amp;subscr=' . $metaUser->objSubscription->id, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '">' . $action . '</a>';
+					$selected_plan->proc_actions = array();
+					foreach ( $actions as $action ) {
+						$selected_plan->proc_actions[] = '<a href="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action . '&amp;subscr=' . $metaUser->objSubscription->id, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '">' . $action . '</a>';
+					}
 				}
 			}
 

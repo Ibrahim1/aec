@@ -139,7 +139,7 @@ class mi_remository
 
 		$this->includeRemCore();
 
-		if ( !empty( $this->settings['set_group'] ) ) {
+		if ( !empty( $this->settings['set_group'] ) && !empty( $this->settings['group'] ) ) {
 			foreach ( $this->settings['group'] as $role ) {
 				$this->authoriser->assign( $role, 'aUser', $request->metaUser->userid );
 			}
