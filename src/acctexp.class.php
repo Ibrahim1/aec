@@ -3028,7 +3028,21 @@ class URLprocessor extends processor
 {
 	function checkoutAction( $request )
 	{
+		global $mainframe;
+
 		$var = $this->createGatewayLink( $request );
+
+		if ( isset( $var['_aec_html_head'] ) ) {
+			if ( is_array( $var['_aec_html_head'] ) ) {
+				foreach ( $var['_aec_html_head'] as $content ) {
+					$mainframe->addCustomHeadTag( $content );
+				}
+			} else {
+				$mainframe->addCustomHeadTag( $var['_aec_html_head'] );
+			}
+
+			unset( $var['_aec_html_head'] );
+		}
 
 		if ( !empty( $this->settings['customparams'] ) ) {
 			$var = $this->customParams( $this->settings['customparams'], $var, $request );
@@ -3045,11 +3059,14 @@ class URLprocessor extends processor
 		unset( $var['post_url'] );
 
 		$vars = array();
-		foreach ( $var as $key => $value ) {
-			$vars[] .= $key . '=' . $value;
+		if ( !empty( $var ) ) {
+			foreach ( $var as $key => $value ) {
+				$vars[] .= $key . '=' . $value;
+			}
+
+			$return .= implode( '&amp;', $vars );
 		}
 
-		$return .= implode( '&amp;', $vars );
 		$return .= '"' . $onclick . ' class="linkbutton" >' . _BUTTON_CHECKOUT . '</a>' . "\n";
 
 		return $return;
@@ -5547,16 +5564,6 @@ class InvoiceFactory
 
 		$mainframe->SetPageTitle( _CHECKOUT_TITLE );
 
-		if ( isset( $var['_aec_html_head'] ) ) {
-			if ( is_array( $var['_aec_html_head'] ) ) {
-				foreach ( $var['_aec_html_head'] as $content ) {
-					$mainframe->addCustomHeadTag( $content );
-				}
-			} else {
-				$mainframe->addCustomHeadTag( $var['_aec_html_head'] );
-			}
-		}
-
 		Payment_HTML::checkoutForm( $option, $var['var'], $var['params'], $this, $repeat );
 	}
 
@@ -6082,11 +6089,17 @@ class Invoice extends serialParamDBTable
 		$post = aecPostParamClear( $_POST );
 		$post['planparams'] = $plan->getProcessorParameters( $pp->id );
 
+		$response['userid'] = $this->userid;
+
 		$pp->exchangeSettingsByPlan( $plan, $plan->params );
 		if ( $altvalidation ) {
 			$response = $pp->instantvalidateNotification( $response, $post, $this );
 		} else {
 			$response = $pp->validateNotification( $response, $post, $this );
+		}
+
+		if ( isset( $response['userid'] ) ) {
+			unset( $response['userid'] );
 		}
 
 		if ( isset( $response['invoiceparams'] ) ) {
@@ -6244,6 +6257,8 @@ class Invoice extends serialParamDBTable
 
 		if ( !$nothanks ) {
 			thanks( 'com_acctexp', $renew, ($pp === 0) );
+		} else {
+			exit;
 		}
 	}
 
