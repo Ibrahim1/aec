@@ -641,10 +641,30 @@ define( '_CFG_CLICKBANK_PLAN_PARAMS_ITEM_NUMBER_DESC', 'Put your item number of 
 define( '_CFG_NETDEBIT_LONGNAME',			'NetDebit' );
 define( '_CFG_NETDEBIT_STATEMENT',			'Make payments with NetDebit!' );
 define( '_CFG_NETDEBIT_DESCRIPTION', 'Make payments with NetDebit');
+define( '_CFG_NETDEBIT_CONTENT_ID_NAME', 'Content ID');
+define( '_CFG_NETDEBIT_CONTENT_ID_DESC', 'Your NetDebit Content ID.');
+define( '_CFG_NETDEBIT_SID_NAME', 'SID');
+define( '_CFG_NETDEBIT_SID_DESC', 'Your NetDebit SID.');
+define( '_CFG_NETDEBIT_PID_NAME', 'PID');
+define( '_CFG_NETDEBIT_PID_DESC', 'Your NetDebit PID.');
+define( '_CFG_NETDEBIT_SECRET_NAME', 'Secret');
+define( '_CFG_NETDEBIT_SECRET_DESC', 'Your Secret word to make communication with NetDebit secure.');
+define( '_CFG_NETDEBIT_JAVASCRIPT_CHECKOUT_NAME', 'Javascript Checkout');
+define( '_CFG_NETDEBIT_JAVASCRIPT_CHECKOUT_DESC', 'User Javascript Checkout instead of a HTML Button. This somewhat obsfuscates the button but might not have all the features when switched on. Will be automatically overwritten if more features are needed.');
+define( '_CFG_NETDEBIT_PLAN_PARAMS_POSITION_NAME', 'Position');
+define( '_CFG_NETDEBIT_PLAN_PARAMS_POSITION_DESC', 'Tarifposition');
 
 // PayOS
 define( '_CFG_PAYOS_LONGNAME',			'PayOS' );
 define( '_CFG_PAYOS_STATEMENT',			'Make payments with PayOS!' );
 define( '_CFG_PAYOS_DESCRIPTION', 'Make payments with PayOS');
+define( '_CFG_PAYOS_WEBMASTER_ID_NAME', 'Webmaster ID');
+define( '_CFG_PAYOS_WEBMASTER_ID_DESC', 'Your PayOS Webmaster ID.');
+define( '_CFG_PAYOS_CONTENT_ID_NAME', 'Content ID');
+define( '_CFG_PAYOS_CONTENT_ID_DESC', 'Your PayOS Content ID.');
+define( '_CFG_PAYOS_SECRET_NAME', 'Secret');
+define( '_CFG_PAYOS_SECRET_DESC', 'Your Secret word to make communication with PayOS secure.');
+define( '_CFG_PAYOS_JAVASCRIPT_CHECKOUT_NAME', 'Javascript Checkout');
+define( '_CFG_PAYOS_JAVASCRIPT_CHECKOUT_DESC', 'User Javascript Checkout instead of a HTML Button. This somewhat obsfuscates the button but might not have all the features when switched on. Will be automatically overwritten if more features are needed.');
 
 ?>

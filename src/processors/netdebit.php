@@ -23,7 +23,7 @@ class processor_netdebit extends URLprocessor
 		$info['currencies']			= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS';
 		$info['languages']			= 'GB,DE,FR,IT,ES,US,NL';
 		$info['cc_list']			= 'visa,mastercard,discover,americanexpress,echeck,giropay';
-		$info['recurring']			= 0;
+		$info['recurring']			= 2;
 
 		return $info;
 	}
@@ -33,8 +33,10 @@ class processor_netdebit extends URLprocessor
 		$settings = array();
 		$settings['testmode']		= 0;
 
-		$settings['webmaster_id']	= 'webmaster';
 		$settings['content_id']		= 'content_id';
+		$settings['pid']			= 'pid';
+		$settings['sid']			= 'sid';
+
 		$settings['secret']			= 'secret';
 
 		$settings['javascript_checkout']	= 0;
@@ -49,8 +51,10 @@ class processor_netdebit extends URLprocessor
 		$settings = array();
 		$settings['testmode']		= array( 'list_yesno' );
 
-		$settings['webmaster_id']	= array( 'inputC' );
 		$settings['content_id']		= array( 'inputC' );
+		$settings['pid']			= array( 'inputC' );
+		$settings['sid']			= array( 'inputC' );
+
 		$settings['secret']			= array( 'inputC' );
 
 		$settings['javascript_checkout']	= array( 'list_yesno' );
@@ -62,22 +66,21 @@ class processor_netdebit extends URLprocessor
 		return $settings;
 	}
 
+	function CustomPlanParams()
+	{
+		$p = array();
+		$p['position']	= array( 'inputC' );
+
+		return $p;
+	}
+
 	function createGatewayLink( $request )
 	{
 		global $mosConfig_live_site;
 
 		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
 
-		$var['invoice']			= $request->int_var['invoice'];
-
-		$var['item_number']		= $request->metaUser->cmsUser->id;
-		$var['item_name']		= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
-
-		$var1 = $request->int_var['invoice'];
-		$var2 = "";//implode( "|", array() );
-		$type = "";
-		$lang = 'de';
-		$coun = 'DE';
+		//$var['item_number']		= $request->metaUser->cmsUser->id;
 
 		if ( !empty( $ppParams->customerid ) ) {
 			$cust = $ppParams->customerid;
@@ -87,28 +90,84 @@ class processor_netdebit extends URLprocessor
 			$iscust	= 0;
 		}
 
+		if ( $this->settings['testmode'] ) {
+			$this->settings['webmaster_id'] = 9090;
+		}
+
+		$var['F']	= $this->settings['webmaster_id'];
+		$var['PID']		= $this->settings['pid'];
+		$var['CON']		= $this->settings['content_id'];
+		$var['SID']		= $this->settings['sid'];
+
+		$var['VAR1']	= $request->int_var['invoice'];
+		$var['VAR2']	= "";//implode( "|", array() );
+		$var['ZAH']		= 2; //1 = Lastschrift, 2 = Kreditkarte
+
+		if ( !empty( $request->int_var['planparams']['position'] ) ) {
+			$var['POS'] = $request->int_var['planparams']['position'];
+		} else {
+			$var['POS'] = '';
+		}
+
+		$var['KUN']		= $iscust;
+		$var['KNR']		= $cust;
+
+		if ( $this->settings['recurring'] ) {
+			$var['TIM']	= 1;
+
+			switch ( $request->int_var['amount']['unit3'] ) {
+				case 'D':
+					$unit = 3;
+					break;
+				case 'W':
+					$unit = 4;
+					break;
+				case 'M':
+					$unit = 5;
+					break;
+				case 'Y':
+					$unit = 6;
+					break;
+				default:
+					$unit = 3;
+					break;
+			}
+
+			$var['LZS'] = $unit;
+			$var['LZW'] = $request->int_var['amount']['period3'];
+		} else {
+			$var['TIM'] = 0;
+		}
+
+		$var['BET'] = $request->int_var['amount']['amount3'];
+
 		if ( $this->settings['javascript_checkout'] ) {
+			// Link to NetDebit Javascript from Checkout link
+			if ( $this->settings['recurring'] ) {
+				$var['_aec_checkout_onclick'] = 'GATE_NDV2_AMOUNT(\'' . $var['VAR1'] . '\',\'' . $var['VAR2'] . '\',\'' . $var['ZAH'] . '\',\'' . $var['POS'] . '\',\'' . $var['KUN'] . '\',\'' . $var['KNR'] . '\',\'' . $var['TIM'] . '\',\'' . $var['BET'] . '\',\'' . $var['LZS'] . '\',\'' . $var['LZW'] . '\');return false;';
+			} else {
+				$var['_aec_checkout_onclick'] = 'GATE_NDV2_AMOUNT(\'' . $var['VAR1'] . '\',\'' . $var['VAR2'] . '\',\'' . $var['ZAH'] . '\',\'' . $var['POS'] . '\',\'' . $var['KUN'] . '\',\'' . $var['KNR'] . '\',\'' . $var['TIM'] . '\',\'' . $var['BET'] . '\');return false;';
+			}
+
+			foreach ( $var as $name => $val ) {
+				if ( $name != '_aec_checkout_onclick' ) {
+					unset( $var[$name] );
+				}
+			}
+
 			$var['post_url'] = "http://www.netdebit.de/central/public/javascript_disabled";
 
-			// Attach PayOS Javascript
-			$var['_aec_html_head'] = '<!-- Beginn NetDebit - Payment V3.0 -->
-										<script LANGUAGE="JavaScript"
-										src="http://www.fixport.de/secuSYS/FUNK.php?F=' . $this->settings['webmaster_id'] . '&PID=' . $this->settings['webmaster_id'] . '&CON=' . $this->settings['webmaster_id'] . '&SID=' . $this->settings['webmaster_id'] . '" type="text/javascript"></script>
-										<!-- Ende   NetDebit - Payment V3.0 -->';
-
-			// Link to PayOS Javascript from Checkout link
-			$var['_aec_checkout_onclick'] = 'GATE_NDV2(\'' . $var1 . '\',\'' . $var2 . '\',\'' . $type . '\',\'' . $cust . '\',\'' . $lang . '\',\'' . $coun . '\');return false;';
+			// Attach NetDebit Javascript
+			$var['_aec_html_head'] = '<!-- Beginn NetDebit - Payment V3.0 -->'
+										. '<script '
+										. 'src="http://www.fixport.de/secuSYS/FUNK.php?F=' . $this->settings['webmaster_id'] . '&PID=' . $this->settings['pid'] . '&CON=' . $this->settings['content_id'] . '&SID=' . $this->settings['sid'] . '" type="text/javascript"></script> '
+										. '<!-- Ende   NetDebit - Payment V3.0 -->';
 		} else {
-			$var['post_url']	= "https://www.netdebit-payment.de/pay/index.php?";
-
-			$var['CON']			= $this->settings['content_id'];
-			$var['WMID']		= $this->settings['webmaster_id'];
-			$var['GoVAR1']		= $var1;
-			$var['GoVAR2']		= $var2;
-			$var['GoZAH']		= $type; //1 = Lastschrift, 2 = Kreditkarte
-			$var['GoPOS']		= $type; //ausgewählte Tarifposition
-			$var['GoKUN']		= $iscust;
-			$var['GoKNR']		= $cust;
+			if ( $this->settings['testmode'] ) {
+				$var['post_url'] = "https://web.netdebit-test.de/pay/?";
+			} else {
+				$var['post_url'] = "https://www.netdebit-payment.de/pay/index.php?";
+			}
 		}
 
 		return $var;
@@ -120,7 +179,7 @@ class processor_netdebit extends URLprocessor
 
 		$response = array();
 		$response['invoice']		= $post['VAR1'];
-		$response['amount_paid']	= $post['pay_amount'];
+		$response['amount_paid']	= str_replace( ",", ".", $post['pay_amount'] );
 
 		return $response;
 	}
@@ -129,8 +188,6 @@ class processor_netdebit extends URLprocessor
 	{
 		$response['valid'] = 0;
 
-		echo 'OK=100';
-
 		$allowedips = array( "213.69.111.70", "213.69.111.71", "213.69.234.76", "213.69.234.74", "195.126.100.14", "213.69.111.78" );
 
 		if ( !in_array( $_SERVER["REMOTE_ADDR"], $allowedips ) ) {
@@ -138,7 +195,9 @@ class processor_netdebit extends URLprocessor
 			return $response;
 		}
 
-		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
+		$metaUser = new metaUser( $response['userid'] );
+
+		$ppParams = $metaUser->meta->getProcessorParams( $this->id );
 
 		// Check whether we have already recorded a profile
 		if ( empty( $ppParams->customerid ) ) {
@@ -146,16 +205,32 @@ class processor_netdebit extends URLprocessor
 			$ppParams = new stdClass();
 			$ppParams->customerid = $post['customer_id'];
 
-			$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
+			$metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
 		} elseif ( $ppParams->customerid != $post['customer_id'] ) {
 			// Profile found, but does not match, create new relation
 			$ppParams->customerid = $post['customer_id'];
 
-			$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
+			$metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
 		}
 
 		if ( $this->settings['secret'] == $post['password'] ) {
-			$response['valid'] = 1;
+			switch ( $post['method'] ) {
+				case 0:
+				case 1:
+					$response['valid'] = 1;
+					break;
+				case 7:
+					$response['cancel'] = 1;
+					break;
+				case 9:
+					$response['delete'] = 1;
+					break;
+
+			}
+
+			echo 'OK=100';
+		} else {
+			echo 'OK=0 ERROR:PASSWORD MISMATCH';
 		}
 
 		return $response;
