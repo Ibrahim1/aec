@@ -1102,13 +1102,13 @@ function processNotification( $option, $processor )
 		$eventlog = new eventLog($database);
 		$eventlog->issue( $short, $tags, $event, 128, $params );
 		return;
+	} else {
+		$response['responsestring'] = $responsestring;
+
+		$objInvoice = new Invoice( $database );
+		$objInvoice->load( $id );
+		$objInvoice->processorResponse( $pp, $response );
 	}
-
-	$response['responsestring'] = $responsestring;
-
-	$objInvoice = new Invoice( $database );
-	$objInvoice->load( $id );
-	$objInvoice->processorResponse( $pp, $response );
 }
 
 function errorAP( $option, $usage, $userid, $username, $name, $recurring )
