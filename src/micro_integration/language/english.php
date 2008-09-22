@@ -291,7 +291,7 @@ define( '_MI_MI_COUPON_RECIPIENT_DESC',				'Who is to receive this E-Mail? Separ
 define( '_MI_MI_COUPON_SUBJECT_NAME',				'Subject' );
 define( '_MI_MI_COUPON_SUBJECT_DESC',				'Subject of this email (Uses RewriteEngine explained below as well)' );
 define( '_MI_MI_COUPON_TEXT_HTML_NAME',				'HTML Encoding' );
-define( '_MI_MI_COUPON_TEXT_HTML_DESC',				'Do you want this email to be HTML encoded? (Make sure that there are not tags in it if you do not want this)' );
+define( '_MI_MI_COUPON_TEXT_HTML_DESC',				'Do you want this email to be HTML encoded? (Make sure that there are no tags in it if you do not want this)' );
 define( '_MI_MI_COUPON_TEXT_NAME',					'Text' );
 define( '_MI_MI_COUPON_TEXT_DESC',					'Text to be sent when the coupons are created. The rewriting routines explained below will work for this field. Mark the point where the coupon codes are displayed with "%s"!' );
 
