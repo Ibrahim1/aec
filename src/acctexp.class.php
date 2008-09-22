@@ -5400,7 +5400,7 @@ class InvoiceFactory
 			}
 		}
 
-		$this->loadMetaUser( false, false );
+		$this->loadMetaUser( false, true );
 		$this->metaUser->setTempAuth();
 
 		$this->touchInvoice( $option );
