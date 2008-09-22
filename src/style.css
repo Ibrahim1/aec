@@ -477,6 +477,7 @@ font-weight: bold;
 
 td.checkout_action {
 text-align: center;
+padding: 6px !important;
 }
 
 #checkoutbox a.linkbutton {
