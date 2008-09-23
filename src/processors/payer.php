@@ -68,7 +68,7 @@ class processor_payer extends POSTprocessor
 		$debugmode[] = mosHTML::makeOption ( "brief", "brief" );
 		$debugmode[] = mosHTML::makeOption ( "verbose", "verbose" );
 
-		$settings['lists']['debugmode'] = mosHTML::selectList( $debugmode, 'debugmode', 'size="3"', 'value', 'text', $this->settings['debugmode'] );
+		$settings['lists']['debugmode'] = mosHTML::selectList( $debugmode, 'payer_debugmode', 'size="3"', 'value', 'text', $this->settings['debugmode'] );
 
  		$payment_method = array();
 		$payment_method[] = mosHTML::makeOption ( "sms", "sms" );
@@ -82,7 +82,7 @@ class processor_payer extends POSTprocessor
 			$selected_methods[] = mosHTML::makeOption( $name, $name );
 		}
 
-		$settings['lists']['payment_method'] = mosHTML::selectList( $payment_method, 'payment_method', 'size="5" multiple="multiple"', 'value', 'text', $selected_methods );
+		$settings['lists']['payment_method'] = mosHTML::selectList( $payment_method, 'payer_payment_method', 'size="5" multiple="multiple"', 'value', 'text', $selected_methods );
 
         $settings = AECToolbox::rewriteEngineInfo( null, $settings );
 

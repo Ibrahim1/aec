@@ -55,7 +55,7 @@ class processor_ideal_advanced extends XMLprocessor
 			$bank_selection[] = mosHTML::makeOption( $name, $name );
 		}
 
-		$s['lists']['bank']	= mosHTML::selectList($bank_selection, 'bank', 'size="5"', 'value', 'text', $this->settings['bank'] );
+		$s['lists']['bank']	= mosHTML::selectList($bank_selection, 'ideal_advanced_bank', 'size="5"', 'value', 'text', $this->settings['bank'] );
 
 		return $s;
 	}

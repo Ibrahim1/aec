@@ -36,6 +36,7 @@ class processor_netdebit extends URLprocessor
 		$settings['content_id']		= 'content_id';
 		$settings['pid']			= 'pid';
 		$settings['sid']			= 'sid';
+		$settings['type']			= 1;
 
 		$settings['secret']			= 'secret';
 
@@ -54,12 +55,19 @@ class processor_netdebit extends URLprocessor
 		$settings['content_id']		= array( 'inputC' );
 		$settings['pid']			= array( 'inputC' );
 		$settings['sid']			= array( 'inputC' );
+		$settings['type']			= array( 'list' );
 
 		$settings['secret']			= array( 'inputC' );
 
 		$settings['javascript_checkout']	= array( 'list_yesno' );
 
 		$settings['customparams']	= array( 'inputD' );
+
+ 		$typelist = array();
+		$typelist[0] = mosHTML::makeOption ( 1, _CFG_NETDEBIT_TYPE_LISTITEM_ELV );
+		$typelist[1] = mosHTML::makeOption ( 2, _CFG_NETDEBIT_TYPE_LISTITEM_CC );
+
+		$settings['lists']['type']	= mosHTML::selectList( $typelist, 'netdebit_type', 'size="1"', 'value', 'text', $this->settings['type'] );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
@@ -94,14 +102,14 @@ class processor_netdebit extends URLprocessor
 			$this->settings['webmaster_id'] = 9090;
 		}
 
-		$var['F']	= $this->settings['webmaster_id'];
+		$var['F']		= $this->settings['webmaster_id'];
 		$var['PID']		= $this->settings['pid'];
 		$var['CON']		= $this->settings['content_id'];
 		$var['SID']		= $this->settings['sid'];
 
 		$var['VAR1']	= $request->int_var['invoice'];
 		$var['VAR2']	= "";//implode( "|", array() );
-		$var['ZAH']		= 2; //1 = Lastschrift, 2 = Kreditkarte
+		$var['ZAH']		= $this->settings['type']; //1 = Lastschrift, 2 = Kreditkarte
 
 		if ( !empty( $request->int_var['planparams']['position'] ) ) {
 			$var['POS'] = $request->int_var['planparams']['position'];
@@ -135,19 +143,20 @@ class processor_netdebit extends URLprocessor
 
 			$var['LZS'] = $unit;
 			$var['LZW'] = $request->int_var['amount']['period3'];
+
+			$var['BET'] = $request->int_var['amount']['amount3'];
 		} else {
 			$var['TIM'] = 0;
-		}
 
-		$var['BET'] = $request->int_var['amount']['amount3'];
+			$var['LZS'] = 9;
+			$var['LZW'] = 1;
+
+			$var['BET'] = $request->int_var['amount'];
+		}
 
 		if ( $this->settings['javascript_checkout'] ) {
 			// Link to NetDebit Javascript from Checkout link
-			if ( $this->settings['recurring'] ) {
-				$var['_aec_checkout_onclick'] = 'GATE_NDV2_AMOUNT(\'' . $var['VAR1'] . '\',\'' . $var['VAR2'] . '\',\'' . $var['ZAH'] . '\',\'' . $var['POS'] . '\',\'' . $var['KUN'] . '\',\'' . $var['KNR'] . '\',\'' . $var['TIM'] . '\',\'' . $var['BET'] . '\',\'' . $var['LZS'] . '\',\'' . $var['LZW'] . '\');return false;';
-			} else {
-				$var['_aec_checkout_onclick'] = 'GATE_NDV2_AMOUNT(\'' . $var['VAR1'] . '\',\'' . $var['VAR2'] . '\',\'' . $var['ZAH'] . '\',\'' . $var['POS'] . '\',\'' . $var['KUN'] . '\',\'' . $var['KNR'] . '\',\'' . $var['TIM'] . '\',\'' . $var['BET'] . '\');return false;';
-			}
+			$var['_aec_checkout_onclick'] = 'GATE_NDV2_AMOUNT(\'' . $var['VAR1'] . '\',\'' . $var['VAR2'] . '\',\'' . $var['ZAH'] . '\',\'' . $var['POS'] . '\',\'' . $var['KUN'] . '\',\'' . $var['KNR'] . '\',\'' . $var['TIM'] . '\',\'' . $var['BET'] . '\',\'' . $var['LZS'] . '\',\'' . $var['LZW'] . '\');return false;';
 
 			foreach ( $var as $name => $val ) {
 				if ( $name != '_aec_checkout_onclick' ) {
@@ -220,20 +229,28 @@ class processor_netdebit extends URLprocessor
 					$response['valid'] = 1;
 					break;
 				case 7:
-					$response['cancel'] = 1;
+					$response['eot'] = 1;
 					break;
 				case 9:
 					$response['delete'] = 1;
 					break;
-
 			}
-
-			echo 'OK=100';
 		} else {
-			echo 'OK=0 ERROR:PASSWORD MISMATCH';
+			$response['error'] = 1;
+			$response['errormsg'] = 'Password mismatch';
 		}
 
 		return $response;
+	}
+
+	function notificationError( $response, $error )
+	{
+		echo 'OK=0 ERROR: ' . $error;
+	}
+
+	function notificationSuccess( $response )
+	{
+		echo 'OK=100';
 	}
 
 }

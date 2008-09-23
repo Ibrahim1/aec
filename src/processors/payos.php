@@ -35,9 +35,6 @@ class processor_payos extends URLprocessor
 		$settings['content_id']		= 'content_id';
 		$settings['secret']			= 'secret';
 
-		$settings['javascript_checkout']	= 0;
-
-		$settings['customparams']	= "";
 
 		return $settings;
 	}
@@ -48,8 +45,6 @@ class processor_payos extends URLprocessor
 		$settings['webmaster_id']	= array( 'inputC' );
 		$settings['content_id']		= array( 'inputC' );
 		$settings['secret']			= array( 'inputC' );
-
-		$settings['javascript_checkout']	= array( 'list_yesno' );
 
 		$settings['customparams']	= array( 'inputD' );
 
@@ -82,18 +77,16 @@ class processor_payos extends URLprocessor
 		$var['Country']		= 'DE';
 
 		if ( $this->settings['recurring'] ) {
-			// Have to disable javascript checkout as it does not provide all variables we need
-			$this->settings['javascript_checkout'] = 0;
 
 			$var['AboAmount'] = $request->int_var['amount']['amount3'];
 
+			$period = $request->int_var['amount']['period3'];
+
 			switch ( $request->int_var['amount']['unit3'] ) {
 				case 'D':
-					$unit = 3;
-					break;
 				case 'W':
-					$unit = 4;
-					break;
+					// Only allows for Months or Years, so we have to go for the smallest larger amount of time
+					$period = 1;
 				case 'M':
 					$unit = 5;
 					break;
@@ -105,32 +98,16 @@ class processor_payos extends URLprocessor
 					break;
 			}
 
-			$var['AboTermtype'] = $unit;
-			$var['AboTermValue'] = $request->int_var['amount']['period3'];
-		}
-
-		if ( $this->settings['javascript_checkout'] ) {
-			// Link to PayOS Javascript from Checkout link
-			$var['_aec_checkout_onclick'] = 'PO_pay(\'' . $var['VAR1'] . '\',\'' . $var['VAR2'] . '\',\'' . $var['PAY_type'] . '\',\'' . $var['Customer'] . '\',\'' . $var['_language'] . '\',\'' . $var['Country'] . '\');return false;';
-
-			foreach ( $var as $name => $var ) {
-				if ( $name != '_aec_checkout_onclick' ) {
-					unset( $var[$name] );
-				}
-			}
-
-			$var['post_url'] = "http://www.payos.de/central/public/javascript_disabled";
-
-			// Attach PayOS Javascript
-			$var['_aec_html_head'] = '<!-- PayOS Version 1.0 Start -->
-										<script type="text/javascript"
-										src="http://www.payos.de/pay/PY_jsfunk.php?WMID=' . $this->settings['webmaster_id'] . '&CON=' . $this->settings['content_id'] . '">
-										</script>
-										<!-- PayOS Version 1.0 End -->';
+			$var['AboTermType'] = $unit;
+			$var['AboTermValue'] = $period;
 		} else {
-			$var['post_url']	= "http://www.payos.de/pay/index.php?";
-
+			$var['Amount'] = $request->int_var['amount'];
+			$var['TermType'] = 5;
+			$var['TermValue'] = 1;
+			$var['AboTermType'] = 0;
 		}
+
+		$var['post_url']	= "http://www.payos.de/pay/index.php?";
 
 		return $var;
 	}
@@ -153,7 +130,8 @@ class processor_payos extends URLprocessor
 		$allowedips = array( "213.69.111.70", "213.69.111.71", "213.69.234.76", "213.69.234.74", "195.126.100.14", "213.69.111.78" );
 
 		if ( !in_array( $_SERVER["REMOTE_ADDR"], $allowedips ) ) {
-			$response['pending_reason'] = "Wrong IP tried to send notification: " . $_SERVER["REMOTE_ADDR"];
+			$response['error'] = 1;
+			$response['errormsg'] = "Wrong IP tried to send notification: " . $_SERVER["REMOTE_ADDR"];
 			return $response;
 		}
 
@@ -176,14 +154,37 @@ class processor_payos extends URLprocessor
 		}
 
 		if ( $this->settings['secret'] == $post['password'] ) {
-			$response['valid'] = 1;
-
-			echo 'OK=100';
+			switch ( $post['method'] ) {
+				case 'AnnouncePayment':
+					$response['null'] = 1;
+					break;
+				case 'CommitPayment':
+				case 'Settlement':
+					$response['valid'] = 1;
+					break;
+				case 'EndOfTerm':
+					$response['eot'] = 1;
+					break;
+				case 'ChargeBack':
+					$response['delete'] = 1;
+					break;
+			}
 		} else {
-			echo 'OK=0 ERROR:PASSWORD MISMATCH';
+			$response['error'] = 1;
+			$response['errormsg'] = 'Password mismatch';
 		}
 
 		return $response;
+	}
+
+	function notificationError( $response, $error )
+	{
+		echo 'OK=0 ERROR: ' . $error;
+	}
+
+	function notificationSuccess( $response )
+	{
+		echo 'OK=100';
 	}
 
 }
