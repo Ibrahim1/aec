@@ -2317,6 +2317,20 @@ class PaymentProcessor
 		return $return;
 	}
 
+	function notificationError( $response, $error )
+	{
+		if ( method_exists( $this->processor, 'notificationError' ) ) {
+			$this->processor->notificationError( $response, $error );
+		}
+	}
+
+	function notificationSuccess( $response )
+	{
+		if ( method_exists( $this->processor, 'notificationSuccess' ) ) {
+			$this->processor->notificationSuccess( $response );
+		}
+	}
+
 	function validateNotification( $response, $post, $invoice )
 	{
 		if ( method_exists( $this->processor, 'validateNotification' ) ) {
@@ -2461,7 +2475,7 @@ class processor extends serialParamDBTable
 			foreach ( $params as $custom ) {
 				$paramsarray = explode( '=', $custom );
 
-				if ( !empty( $paramsarray[0] ) && isset( $custom[1] ) ) {
+				if ( !empty( $paramsarray[0] ) && isset( $paramsarray[1] ) ) {
 					$var[$paramsarray[0]] = $paramsarray[1];
 				}
 			}
@@ -6140,6 +6154,8 @@ class Invoice extends serialParamDBTable
 
 		$event .= ' ';
 
+		$notificationerror = null;
+
 		$nothanks = 1;
 		if ( $response['valid'] ) {
 			$break = 0;
@@ -6154,6 +6170,8 @@ class Invoice extends serialParamDBTable
 						$event	.= sprintf( _AEC_MSG_PROC_INVOICE_ACTION_EV_FRAUD, $response['amount_paid'], $this->amount );
 						$tags	.= ',fraud_attempt,amount_fraud';
 						$break	= 1;
+
+						$notificationerror = 'Wrong amount for invoice. Amount provided: "' . $response['amount_paid'] . '"';
 					}
 				}
 
@@ -6163,6 +6181,8 @@ class Invoice extends serialParamDBTable
 						$event	.= sprintf( _AEC_MSG_PROC_INVOICE_ACTION_EV_CURR, $response['amount_currency'], $this->currency );
 						$tags	.= ',fraud_attempt,currency_fraud';
 						$break	= 1;
+
+						$notificationerror = 'Wrong currency for invoice. Currency provided: "' . $response['amount_currency'] . '"';
 					}
 				}
 			}
@@ -6170,6 +6190,8 @@ class Invoice extends serialParamDBTable
 			if ( !$break ) {
 				$renew = $this->pay( $multiplicator );
 				if ( $renew === false ) {
+					$notificationerror = 'Item Application failed. Please contact the System Administrator';
+
 					// Something went wrong
 					$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_VALID_APPFAIL;
 					$tags	.= ',payment,action_failed';
@@ -6241,10 +6263,14 @@ class Invoice extends serialParamDBTable
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR . ' Error:' . $response['errormsg'] ;
 				$tags	.= ',error';
 				$level = 128;
+
+				$notificationerror = $response['errormsg'];
 			} else {
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR;
 				$tags	.= ',general_error';
 				$level = 128;
+
+				$notificationerror = 'General Error. Please contact the System Administrator.';
 			}
 		}
 
@@ -6254,6 +6280,12 @@ class Invoice extends serialParamDBTable
 
 		$eventlog = new eventLog( $database );
 		$eventlog->issue( $short, $tags, $event, $level, $params );
+
+		if ( !empty( $notificationerror ) ) {
+			$pp->notificationError( $response, $pp->notificationError( $response, 'General Error. Please contact the System Administrator.' ) );
+		} else {
+			$pp->notificationSuccess( $response );
+		}
 
 		if ( !$nothanks ) {
 			thanks( 'com_acctexp', $renew, ($pp === 0) );

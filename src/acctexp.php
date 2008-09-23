@@ -1101,6 +1101,10 @@ function processNotification( $option, $processor )
 
 		$eventlog = new eventLog($database);
 		$eventlog->issue( $short, $tags, $event, 128, $params );
+
+		$error = 'Invoice Number not found. Invoice number provided: "' . $response['invoice'] . '"';
+
+		$pp->notificationError( $response, $error );
 		return;
 	} else {
 		$response['responsestring'] = $responsestring;
