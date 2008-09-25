@@ -182,36 +182,44 @@ class processor_iats extends XMLprocessor
 	{
 		global $mosConfig_live_site, $mosConfig_offset_user;
 
+		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
+
 		$var = array();
 
-		$var['user']				= $this->settings['api_user'];
-		$var['pwd']					= $this->settings['api_password'];
-		$var['signature']			= $this->settings['signature'];
+		$var['AgentCode']			= $this->settings['agent_code'];
+		$var['Password']			= $this->settings['password'];
+		$var['CustCode']			= $request->int_var['params']['customer_id'];
 
-		$var['paymentAction']		= 'Sale';
-		$var['IPaddress']			= $_SERVER['REMOTE_ADDR'];
-		$var['firstName']			= trim( $request->int_var['params']['billFirstName'] );
-		$var['lastName']			= trim( $request->int_var['params']['billLastName'] );
-		$var['creditCardType']		= $request->int_var['params']['cardType'];
-		$var['acct']				= $request->int_var['params']['cardNumber'];
-		$var['expDate']				= str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ).$request->int_var['params']['expirationYear'];
+		//$var['paymentAction']		= 'Sale';
+		//$var['IPaddress']			= $_SERVER['REMOTE_ADDR'];
+		$var['FirstName']			= trim( $request->int_var['params']['billFirstName'] );
+		$var['LastName']			= trim( $request->int_var['params']['billLastName'] );
 
-		$var['CardVerificationValue'] = $request->int_var['params']['cardVV2'];
-		$var['cvv2']				= $request->int_var['params']['cardVV2'];
+		$var['Address']				= $request->int_var['params']['billAddress'];
+		$var['City']				= $request->int_var['params']['billCity'];
+		$var['State']				= $request->int_var['params']['billState'];
+		$var['ZipCode']				= $request->int_var['params']['billZip'];
 
-		$var['street']				= $request->int_var['params']['billAddress'];
+		$var['MOP1']				= $request->int_var['params']['cardType'];
+		$var['CCNum1']				= $request->int_var['params']['cardNumber'];
+		$var['CCEXPIRY1']			= str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ).$request->int_var['params']['expirationYear'];
 
-		if ( !empty( $request->int_var['params']['billAddress2'] ) ) {
-			$var['street2']			= $request->int_var['params']['billAddress2'];
-		}
+		//$var['CardVerificationValue'] = $request->int_var['params']['cardVV2'];
+		$var['CVV2']				= $request->int_var['params']['cardVV2'];
 
-		$var['city']				= $request->int_var['params']['billCity'];
-		$var['state']				= $request->int_var['params']['billState'];
-		$var['zip']					= $request->int_var['params']['billZip'];
-		$var['countrycode']			= $request->int_var['params']['billCountry'];
-		$var['NotifyUrl']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=iatsnotification' );
-		$var['desc']				= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
-		$var['InvNum']				= $request->int_var['invoice'];;
+		$var['InvoiceNum']				= $request->int_var['invoice'];
+
+
+         $params = $params . "&Amount1="      .  $this->dollarAmount;
+
+         $params = $params . "&BeginDate1="   .  $this->beginDate;
+         $params = $params . "&EndDate1="     .  $this->endDate;
+         $params = $params . "&ScheduleType1="     .  $this->scheduleType;
+         $params = $params . "&ScheduleDate1="     .  $this->scheduleDate;
+         $params = $params . "&Reoccurring1="      .  $this->reoccuringStatus;
+
+         $params = $params . "&Version=" . $this->version;
+
 
 		if ( is_array( $request->int_var['amount'] ) ) {
 			// $var['InitAmt'] = 'Initial Amount'; // Not Supported Yet
@@ -252,6 +260,8 @@ class processor_iats extends XMLprocessor
 		}
 
 		$var['currencyCode']			= $this->settings['currency'];
+
+		$var['Version']				= "1.30";
 
 		$content = array();
 		foreach ( $var as $name => $value ) {
