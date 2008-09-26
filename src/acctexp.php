@@ -128,6 +128,12 @@ if ( !empty( $task ) ) {
 			expired( $option, $userid, $expiration );
 			break;
 
+		case 'hold':
+			$userid		= aecGetParam( 'userid', 0 );
+
+			hold( $option, $userid );
+			break;
+
 		case 'pending':
 			$userid		= aecGetParam( 'userid' );
 
@@ -196,9 +202,25 @@ if ( !empty( $task ) ) {
 	}
 }
 
+function hold( $option, $userid )
+{
+	global $mainframe;
+
+	if ( $userid > 0 ) {
+		$metaUser = new metaUser( $userid );
+
+		$mainframe->SetPageTitle( _HOLD_TITLE );
+
+		$frontend = new HTML_frontEnd ();
+		$frontend->expired( $option, $metaUser );
+	} else {
+		mosRedirect( sefRelToAbs( 'index.php' ) );
+	}
+}
+
 function expired( $option, $userid, $expiration )
 {
-	global $mosConfig_live_site, $database, $mainframe, $aecConfig;
+	global $database, $mainframe, $aecConfig;
 
 	if ( $userid > 0 ) {
 		$metaUser = new metaUser( $userid );

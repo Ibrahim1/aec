@@ -7040,6 +7040,8 @@ class Subscription extends serialParamDBTable
 				$metaUser->setTempAuth();
 			}
 			mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=pending&userid=' . $this->userid ), false, true );
+		} elseif ( ( strcmp( $this->status, 'Hold' ) === 0 ) || $block ) {
+			mosRedirect( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=hold&userid=' . $this->userid ), false, true );
 		}
 	}
 
@@ -7071,6 +7073,8 @@ class Subscription extends serialParamDBTable
 			}
 		} elseif ( ( strcmp( $this->status, 'Pending' ) === 0 ) || $block ) {
 			return 'pending';
+		} elseif ( ( strcmp( $this->status, 'Hold' ) === 0 ) || $block ) {
+			return 'hold';
 		}
 
 		return true;

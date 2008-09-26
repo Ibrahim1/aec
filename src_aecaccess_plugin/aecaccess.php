@@ -152,6 +152,9 @@ class plgAuthenticationAECaccess extends JPlugin
 			case 'expired':
 				$redirect = JURI::base( true ) . '/index.php?option=com_acctexp&task=expired&userid=' . $id ;
 				break;
+			case 'hold':
+				$redirect = JURI::base( true ) . '/index.php?option=com_acctexp&task=hold&userid=' . $id ;
+				break;
 		}
 
 		if ( $redirect ) {

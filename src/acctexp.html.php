@@ -101,7 +101,7 @@ class HTML_frontEnd
 			<div class="componentheading"><?php echo _HOLD_TITLE; ?></div>
 			<div id="expired_greeting">
 				<p><?php echo sprintf( _DEAR, $metaUser->cmsUser->name ); ?></p>
-				<p><?php echo _EXPIRED; ?></p>
+				<p><?php echo _HOLD_EXPLANATION; ?></p>
 			</div>
 			<?php
 		}
