@@ -59,7 +59,7 @@ class plgSystemAECErrorHandler extends JPlugin
 			}
 		}
 
-//		JError::setErrorHandling(E_ALL, 'callback', array($this, 'aecErrorHandler'));
+		JError::setErrorHandling(E_ALL, 'callback', array($this, 'aecErrorHandler'));
 	}
 	
 	function aecErrorHandler(& $error){

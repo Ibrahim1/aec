@@ -7,7 +7,7 @@
 	<license>GNU/GPL v2.0 or later</license>
 	<authorEmail>mails@globalnerd.org</authorEmail>
 	<authorUrl>www.globalnerd.org</authorUrl>
-	<version>0.12.6</version>
+	<version>0.1</version>
 	<description>Removes the need of hacks</description>
 	<files>
 		<filename mambot="bot_aec_hacks">bot_aec_hacks.php</filename>
