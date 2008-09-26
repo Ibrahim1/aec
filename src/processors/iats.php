@@ -22,7 +22,7 @@ class processor_iats extends XMLprocessor
 		$info['description']	= _CFG_IATS_DESCRIPTION;
 		$info['currencies']		= 'USD';
 		$info['languages']		= 'GB';
-		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck,giropay';
+		$info['cc_list']		= 'visa,mastercard,discover,americanexpress';
 		$info['recurring']		= 2;
 		$info['actions']		= array('cancel');
 		$info['secure']			= 1;
@@ -68,7 +68,7 @@ class processor_iats extends XMLprocessor
 
 		return $settings;
 	}
-/*
+
 	function registerProfileTabs()
 	{
 		$tab			= array();
@@ -152,7 +152,7 @@ class processor_iats extends XMLprocessor
 
 		return $return;
 	}
-*/
+
 	function checkoutform( $request, $vcontent=null, $updated=null )
 	{
 		global $mosConfig_live_site;
@@ -190,8 +190,6 @@ class processor_iats extends XMLprocessor
 		$var['Password']			= $this->settings['password'];
 		$var['CustCode']			= $request->int_var['params']['customer_id'];
 
-		//$var['paymentAction']		= 'Sale';
-		//$var['IPaddress']			= $_SERVER['REMOTE_ADDR'];
 		$var['FirstName']			= trim( $request->int_var['params']['billFirstName'] );
 		$var['LastName']			= trim( $request->int_var['params']['billLastName'] );
 
@@ -202,39 +200,27 @@ class processor_iats extends XMLprocessor
 
 		$var['MOP1']				= $request->int_var['params']['cardType'];
 		$var['CCNum1']				= $request->int_var['params']['cardNumber'];
-		$var['CCEXPIRY1']			= str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ).$request->int_var['params']['expirationYear'];
+		$var['CCEXPIRY1']			= str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ).'/'.$request->int_var['params']['expirationYear'];
 
-		//$var['CardVerificationValue'] = $request->int_var['params']['cardVV2'];
 		$var['CVV2']				= $request->int_var['params']['cardVV2'];
 
 		$var['InvoiceNum']				= $request->int_var['invoice'];
 
 
-         $params = $params . "&Amount1="      .  $this->dollarAmount;
+				 $params = $params . "&Amount1="      .  $this->dollarAmount;
 
-         $params = $params . "&BeginDate1="   .  $this->beginDate;
-         $params = $params . "&EndDate1="     .  $this->endDate;
-         $params = $params . "&ScheduleType1="     .  $this->scheduleType;
-         $params = $params . "&ScheduleDate1="     .  $this->scheduleDate;
-         $params = $params . "&Reoccurring1="      .  $this->reoccuringStatus;
+				 $params = $params . "&BeginDate1="   .  $this->beginDate;
+				 $params = $params . "&EndDate1="     .  $this->endDate;
+				 $params = $params . "&ScheduleType1="     .  $this->scheduleType;
+				 $params = $params . "&ScheduleDate1="     .  $this->scheduleDate;
+				 $params = $params . "&Reoccurring1="      .  $this->reoccuringStatus;
 
-         $params = $params . "&Version=" . $this->version;
+				 $params = $params . "&Version=" . $this->version;
 
 
 		if ( is_array( $request->int_var['amount'] ) ) {
-			// $var['InitAmt'] = 'Initial Amount'; // Not Supported Yet
-			// $var['FailedInitAmtAction'] = 'ContinueOnFailure'; // Not Supported Yet (optional)
 
 			if ( isset( $request->int_var['amount']['amount1'] ) ) {
-				/* For now, this is not working, we have to wait until PayPal fixes this
-				$trial = $this->convertPeriodUnit( $request->int_var['amount']['period1'], $request->int_var['amount']['unit1'] );
-
-				$var['TrialBillingPeriod']		= $trial['unit'];
-				$var['TrialBillingFrequency']	= $trial['period'];
-				$var['TrialAmt']				= $request->int_var['amount']['amount1'];
-				$var['TrialTotalBillingCycles'] = 1; // Not Fully Supported Yet
-				*/
-
 				switch ( $request->int_var['amount']['unit1'] ) {
 					case 'D': $offset = $request->int_var['amount']['period1'] * 3600 * 24; break;
 					case 'W': $offset = $request->int_var['amount']['period1'] * 3600 * 24 * 7; break;
@@ -251,7 +237,7 @@ class processor_iats extends XMLprocessor
 
 			$full = $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
 
-			$var['BillingPeriod']		= $full['unit'];
+			$var['ScheduleType1']		= $full['unit'];
 			$var['BillingFrequency']	= $full['period'];
 			$var['amt']					= $request->int_var['amount']['amount3'];
 			$var['ProfileReference']	= $request->int_var['invoice'];
@@ -271,28 +257,40 @@ class processor_iats extends XMLprocessor
 		return implode( '&', $content );
 	}
 
-	function transmitToPayPal( $xml, $request )
+	function transmitToTicketmaster( $xml, $request )
 	{
-		$path = "/nvp";
+		$path = "/itravel/itravel.pro";
 
-		if ( $this->settings['testmode'] ) {
-			if ( $this->settings['use_certificate'] ) {
-				$url = "https://api.sandbox.paypal.com" . $path;
-			} else {
-				$url = "https://api-3t.sandbox.paypal.com" . $path;
-			}
+		if ( $this->settings['server_type'] == 1 ) {
+			$iats = 'iatsuk';
 		} else {
-			if ( $this->settings['use_certificate'] ) {
-				$url = "https://api.paypal.com" . $path;
-			} else {
-				$url = "https://api-3t.paypal.com" . $path;
-			}
+			$iats = 'iats';
 		}
 
-		$curlextra = array();
-		$curlextra[CURLOPT_VERBOSE] = 1;
+		if ( $this->settings['testmode'] ) {
+			$url = "http://www." . $iats . ".ticketmaster.com" . $path;
+			$port = 80;
+		} else {
+			$url = "https://www." . $iats . ".ticketmaster.com" . $path;
+			$port = 443;
+		}
 
-		return $this->transmitRequest( $url, $path, $xml, 443, $curlextra );
+		$user_agent = "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)";
+
+		$curlextra = array();
+		$curlextra[CURLOPT_SSL_VERIFYHOST] = 2;
+		$curlextra[CURLOPT_USERAGENT] = $user_agent;
+		$curlextra[CURLOPT_SSL_VERIFYHOST] = 1;
+
+		$cookieFile = "cookie" .date("his"). ".txt";
+
+		 if ( $this->settings['server_type'] == 1 ) {
+				$curlextra[CURLOPT_COOKIEFILE] = $cookieFile;
+		 } else {
+		 		$curlextra[CURLOPT_USERPWD] = $this->settings['agent_code'] . ":" . $this->settings['password'];
+		 }
+
+		return $this->transmitRequest( $url, $path, $xml, $port, $curlextra );
 	}
 
 	function transmitRequestXML( $xml, $request )
