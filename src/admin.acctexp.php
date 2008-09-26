@@ -170,6 +170,10 @@ switch( strtolower( $task ) ) {
 		listSubscriptions( $option, 'cancelled', $subscriptionid, $userid );
 		break;
 
+	case 'showhold':
+		listSubscriptions( $option, 'hold', $subscriptionid, $userid );
+		break;
+
 	case 'showclosed':
 		listSubscriptions( $option, 'closed', $subscriptionid, $userid );
 		break;
@@ -970,6 +974,7 @@ function editUser(  $option, $userid, $subscriptionid, $task )
 	$group_selection[] = mosHTML::makeOption( 'exclude',	_EXPIRE_EXCLUDE );
 	$group_selection[] = mosHTML::makeOption( 'include',	_EXPIRE_INCLUDE );
 	$group_selection[] = mosHTML::makeOption( 'close',		_EXPIRE_CLOSE );
+	$group_selection[] = mosHTML::makeOption( 'hold',		_EXPIRE_HOLD );
 
 	$lists['set_status'] = mosHTML::selectList( $group_selection, 'set_status', 'class="inputbox" size="1"', 'value', 'text', '' );
 
@@ -1125,6 +1130,8 @@ function saveUser( $option, $apply=0 )
 			$metaUser->focusSubscription->setStatus( 'Closed' );
 		} elseif ( strcmp( $set_status, 'include' ) === 0 ) {
 			$metaUser->focusSubscription->setStatus( 'Active' );
+		} elseif ( strcmp( $set_status, 'hold' ) === 0 ) {
+			$metaUser->focusSubscription->setStatus( 'Hold' );
 		}
 	}
 
@@ -1457,6 +1464,11 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 			$action[1]	= _AEC_HEAD_CANCELLED_SUBS;
 			break;
 
+		case 'hold':
+			$action[0]	= 'hold';
+			$action[1]	= _AEC_HEAD_HOLD_SUBS;
+			break;
+
 		case 'closed':
 			$action[0]	= 'closed';
 			$action[1]	= _AEC_HEAD_CLOSED_SUBS;
@@ -1533,6 +1545,12 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 				if ( !in_array( 'closed', $groups ) ) {
 					$groups[] = 'closed';
 				}
+			} elseif ( strcmp( $expire, 'hold' ) === 0 ) {
+				$subscriptionHandler->setStatus( 'Hold' );
+
+				if ( !in_array( 'hold', $groups ) ) {
+					$groups[] = 'hold';
+				}
 			} elseif ( strcmp( $expire, 'include' ) === 0 ) {
 				$subscriptionHandler->setStatus( 'Active' );
 
@@ -1594,6 +1612,9 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 			}
 			if ( in_array( 'cancelled', $groups ) ) {
 				$where_or[] = "a.status = 'Cancelled'";
+			}
+			if ( in_array( 'hold', $groups ) ) {
+				$where_or[] = "a.status = 'Hold'";
 			}
 			if ( in_array( 'closed', $groups ) ) {
 	 			$where_or[] = "a.status = 'Closed'";
@@ -1756,6 +1777,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$group_selection[] = mosHTML::makeOption( 'expired',	_AEC_SEL_EXPIRED );
 	$group_selection[] = mosHTML::makeOption( 'closed',		_AEC_SEL_CLOSED );
 	$group_selection[] = mosHTML::makeOption( 'cancelled',	_AEC_SEL_CANCELLED );
+	$group_selection[] = mosHTML::makeOption( 'hold',		_AEC_SEL_HOLD );
 	$group_selection[] = mosHTML::makeOption( 'notconfig',	_AEC_SEL_NOT_CONFIGURED );
 
 	$selected_groups = array();
@@ -1773,6 +1795,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$group_selection[] = mosHTML::makeOption( 'exclude',	_EXPIRE_EXCLUDE );
 	$group_selection[] = mosHTML::makeOption( 'include',	_EXPIRE_INCLUDE );
 	$group_selection[] = mosHTML::makeOption( 'close',		_EXPIRE_CLOSE );
+	$group_selection[] = mosHTML::makeOption( 'hold',		_EXPIRE_HOLD );
 	$group_selection[] = mosHTML::makeOption( 'add_1',		_EXPIRE_ADD01MONTH );
 	$group_selection[] = mosHTML::makeOption( 'add_3',		_EXPIRE_ADD03MONTH );
 	$group_selection[] = mosHTML::makeOption( 'add_12',	_EXPIRE_ADD12MONTH );

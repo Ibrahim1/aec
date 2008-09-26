@@ -46,7 +46,11 @@ define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_VALID_APPFAIL',	'Payment valid, Applica
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_TRIAL',	'Betaling geldig - gratis trail actief' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_PEND',		'Betaling niet geldig - Status is nog in de wachtrij, De reden hiervan is: %s' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CANCEL',	'Geen betaling - Aanmelding geannuleerd' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CHARGEBACK',	'No Payment - Chargeback' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CHARGEBACK_SETTLE',	'No Payment - Chargeback Settlement' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS',	', Gebruikersstatus is geupdate naar \'Cancelled\'' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS_HOLD',	', Userstatus has been updated to \'Hold\'' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS_ACTIVE',	', Userstatus has been updated to \'Active\'' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EOT',		'Geen betaling' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_DUPLICATE','Geen betaling - Dubbele input' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_NULL','No Payment - Null' );

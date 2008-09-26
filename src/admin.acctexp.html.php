@@ -536,6 +536,10 @@ class HTML_AcctExp
 												$icon	= 'exclamation.png';
 												$status	= _AEC_CMN_CANCEL;
 												break;
+											case 'Hold':
+												$icon	= 'exclamation.png';
+												$status	= _AEC_CMN_HOLD;
+												break;
 											case 'Expired':
 												$icon	= 'cancel.png';
 												$status	= _AEC_CMN_EXPIRED;
@@ -737,6 +741,7 @@ class HTML_AcctExp
 										array( 'showActive', 'active', _AEC_CENTR_ACTIVE ),
 										array( 'showExpired', 'expired', _AEC_CENTR_EXPIRED ),
 										array( 'showCancelled', 'cancelled', _AEC_CENTR_CANCELLED ),
+										array( 'showHold', 'hold', _AEC_CENTR_HOLD ),
 										array( 'showClosed', 'closed', _AEC_CENTR_CLOSED ),
 										array( 'showManual', 'manual', _AEC_CENTR_MANUAL ),
 										_AEC_CENTR_AREA_PAYMENT,

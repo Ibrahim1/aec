@@ -37,7 +37,7 @@ class HTML_frontEnd
 	{
 		global $database, $aecConfig;
 
-		if ($aecConfig->cfg['customtext_expired_keeporiginal']) {?>
+		if ( $aecConfig->cfg['customtext_expired_keeporiginal'] ) {?>
 			<div class="componentheading"><?php echo _EXPIRED_TITLE; ?></div>
 			<div id="expired_greeting">
 				<p><?php echo sprintf( _DEAR, $metaUser->cmsUser->name ); ?></p><p><?php
@@ -90,6 +90,25 @@ class HTML_frontEnd
 				</div>
 			</div>
 		</div>
+		<?php
+	}
+
+	function hold( $option, $metaUser )
+	{
+		global $database, $aecConfig;
+
+		if ($aecConfig->cfg['customtext_hold_keeporiginal'] ) {?>
+			<div class="componentheading"><?php echo _HOLD_TITLE; ?></div>
+			<div id="expired_greeting">
+				<p><?php echo sprintf( _DEAR, $metaUser->cmsUser->name ); ?></p>
+				<p><?php echo _EXPIRED; ?></p>
+			</div>
+			<?php
+		}
+		if ( $aecConfig->cfg['customtext_hold'] ) { ?>
+			<p><?php echo $aecConfig->cfg['customtext_hold']; ?></p>
+			<?php
+		} ?>
 		<?php
 	}
 

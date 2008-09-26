@@ -83,7 +83,15 @@ define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_PEND',		'Проверка статус�
 
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CANCEL',	'Платеж не осуществлен - Подписка приостановлена' );
 
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CHARGEBACK',	'No Payment - Chargeback' );
+
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CHARGEBACK_SETTLE',	'No Payment - Chargeback Settlement' );
+
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS',	', Статус пользователя изменен \'Cancelled\'' );
+
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS_HOLD',	', Userstatus has been updated to \'Hold\'' );
+
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS_ACTIVE',	', Userstatus has been updated to \'Active\'' );
 
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EOT',		'Платеж не осуществлен - Подписка приостановлена' );
 

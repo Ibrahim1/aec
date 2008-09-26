@@ -6152,6 +6152,8 @@ class Invoice extends serialParamDBTable
 		$level	= 2;
 		$params = array( 'invoice_number' => $this->invoice_number );
 
+		$forcedisplay = false;
+
 		$event .= ' ';
 
 		$notificationerror = null;
@@ -6249,6 +6251,22 @@ class Invoice extends serialParamDBTable
 						$metaUser->moveFocus( $this->subscr_id );
 					}
 
+					$metaUser->focusSubscription->hold_settle( $this );
+
+					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS_ACTIVE;
+				}
+			} elseif ( isset( $response['chargeback_settle'] ) ) {
+				$metaUser = new metaUser( $this->userid );
+				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_CHARGEBACK_SETTLE;
+				$tags	.= ',chargeback_settle';
+				$level = 8;
+				$forcedisplay = true;
+
+				if ( $metaUser->hasSubscription ) {
+					if ( !empty( $this->subscr_id ) ) {
+						$metaUser->moveFocus( $this->subscr_id );
+					}
+
 					$metaUser->focusSubscription->hold( $this );
 
 					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS_HOLD;
@@ -6294,7 +6312,7 @@ class Invoice extends serialParamDBTable
 		}
 
 		$eventlog = new eventLog( $database );
-		$eventlog->issue( $short, $tags, $event, $level, $params );
+		$eventlog->issue( $short, $tags, $event, $level, $params, $forcedisplay );
 
 		if ( !empty( $notificationerror ) ) {
 			$pp->notificationError( $response, $pp->notificationError( $response, 'General Error. Please contact the System Administrator.' ) );
@@ -7170,6 +7188,12 @@ class Subscription extends serialParamDBTable
 	function hold( $invoice=null )
 	{
 		$this->setStatus( 'Hold' );
+		return true;
+	}
+
+	function hold_settle( $invoice=null )
+	{
+		$this->setStatus( 'Active' );
 		return true;
 	}
 

@@ -46,7 +46,11 @@ define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_VALID_APPFAIL',	'Payment valid, Applica
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_TRIAL',	'G&uuml;ltige Zahlung - Gratiszeitraum' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_PEND',		'G&uuml;ltige Zahlung - Status Wartend, Grund: %s' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CANCEL',	'Keine Zahlung - Storno' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CHARGEBACK',	'Keine Zahlung - R&uuml;ckbuchung' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CHARGEBACK_SETTLE',	'Keine Zahlung - R&uuml;ckbuchung gekl&auml;rt' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS',	', Benutzerstatus wurde auf \'Storno\' gesetzt' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS_HOLD',	', Benutzerstatus wurde auf \'Halt\' gesetzt' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS_ACTIVE',	', Benutzerstatus wurde auf \'Aktiv\' gesetzt' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EOT',		'Keine Zahlung - Abo ist abgelaufen' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_DUPLICATE','Keine Zahlung - Duplikat' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR',	'Unbekannter Fehler' );
