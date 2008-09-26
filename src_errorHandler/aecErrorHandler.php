@@ -47,7 +47,7 @@ class plgSystemAECErrorHandler extends JPlugin
 		// Get the message queue
 		$messages = $mainframe->getMessageQueue();
 		
-		// Build the sorted message list
+		// search for the needed message in the queue
 		if (is_array($messages) && count($messages)) {
 			foreach ($messages as $msg)
 			{
@@ -59,9 +59,11 @@ class plgSystemAECErrorHandler extends JPlugin
 			}
 		}
 
+		// set the new ErrorHendler
 		JError::setErrorHandling(E_ALL, 'callback', array($this, 'aecErrorHandler'));
 	}
 	
+	// catch the Error & redirect if needed
 	function aecErrorHandler(& $error){
 		if (file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" )) {
 			global $mainframe;
