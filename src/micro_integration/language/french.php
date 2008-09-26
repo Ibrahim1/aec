@@ -637,4 +637,18 @@ define( '_MI_MI_SOBI_REBUILD_DESC',			'Choose yes and then save the MI to recrea
 define( '_MI_MI_SOBI_REMOVE_NAME',			'Remove: ' );
 define( '_MI_MI_SOBI_REMOVE_DESC',			'Choose yes and then save the MI to carry out the expiration action for all users with this MI on a currently active plan.' );
 
+// phpbb3
+define( '_AEC_MI_NAME_PHPBB3','PHPBB3 Integration' );
+define( '_AEC_MI_DESC_PHPBB3','will set the users group in phpbb on subscription/expiration' );
+define( '_MI_MI_PHPBB3_SET_GROUP_NAME','Set group on plan application' );
+define( '_MI_MI_PHPBB3_SET_GROUP_DESC','Choose Yes if you wish a fireboard group to be applied when the plan is applied' );
+define( '_MI_MI_PHPBB3_GROUP_NAME','Fireboard group to apply member to on application' );
+define( '_MI_MI_PHPBB3_GROUP_DESC','The group you wish applied - if you chose yes. Manually create groups in table jos_fb_groups' );
+define( '_MI_MI_PHPBB3_SET_GROUP_EXP_NAME','Set group on expiration of plan' );
+define( '_MI_MI_PHPBB3_SET_GROUP_EXP_DESC','Choose Yes if you wish the fireboard group to be changed when the plan expires' );
+define( '_MI_MI_PHPBB3_GROUP_EXP_NAME','Fireboard group to apply member to on expiration of plan.' );
+define( '_MI_MI_PHPBB3_GROUP_EXP_DESC','The group you wish to use if the plan expires.  Manually add groups to the table jos_fb_groups' );
+define( '_MI_MI_PHPBB3_REBUILD_NAME',                'Rebuild Gallerys' );
+define( '_MI_MI_PHPBB3_REBUILD_DESC',                'This option will rebuild your whole Fireboard group assignment by looking for each plan that has this MI applied and then add each user that uses one of these plans to the file.' );
+
 ?>
