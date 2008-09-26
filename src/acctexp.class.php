@@ -6238,6 +6238,21 @@ class Invoice extends serialParamDBTable
 
 					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS;
 				}
+			} elseif ( isset( $response['chargeback'] ) ) {
+				$metaUser = new metaUser( $this->userid );
+				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_CHARGEBACK;
+				$tags	.= ',chargeback';
+				$level = 128;
+
+				if ( $metaUser->hasSubscription ) {
+					if ( !empty( $this->subscr_id ) ) {
+						$metaUser->moveFocus( $this->subscr_id );
+					}
+
+					$metaUser->focusSubscription->hold( $this );
+
+					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS_HOLD;
+				}
 			} elseif ( isset( $response['delete'] ) ) {
 				$metaUser = new metaUser( $this->userid );
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_REFUND;
@@ -7101,58 +7116,61 @@ class Subscription extends serialParamDBTable
 		}
 	}
 
-	function cancel( $invoice=null, $overridefallback=false )
+	function cancel( $invoice=null )
 	{
 		global $database;
 
 		// Since some processors do not notify each period, we need to check whether the expiration
 		// lies too far in the future and cut it down to the end of the period the user has paid
 
-		if ( $this->expire( $overridefallback ) ) {
-			if ( $this->plan ) {
-				global $mosConfig_offset;
+		if ( $this->plan ) {
+			global $mosConfig_offset;
 
-				$subscription_plan = new SubscriptionPlan( $database );
-				$subscription_plan->load( $this->plan );
+			$subscription_plan = new SubscriptionPlan( $database );
+			$subscription_plan->load( $this->plan );
 
-				// Resolve blocks that we are going to substract from the set expiration date
-				$unit = 60*60*24;
-				switch ( $subscription_plan->params['full_periodunit'] ) {
-					case 'W':
-						$unit *= 7;
-						break;
-					case 'M':
-						$unit *= 31;
-						break;
-					case 'Y':
-						$unit *= 365;
-						break;
-				}
-
-				$periodlength = $subscription_plan->params['full_period'] * $unit;
-
-				$newexpiration = strtotime( $this->expiration );
-				$now = time() + $mosConfig_offset*3600;
-
-				// ...cut away blocks until we are in the past
-				while ( $newexpiration > $now ) {
-					$newexpiration -= $periodlength;
-				}
-
-				// Be extra sure that we did not overachieve
-				if ( $newexpiration < $now ) {
-					$newexpiration += $periodlength;
-				}
-
-				// And we get the bare expiration date
-				$this->expiration = date( 'Y-m-d H:i:s', $newexpiration );
-				$this->setStatus( 'Cancelled' );
-
-				return true;
+			// Resolve blocks that we are going to substract from the set expiration date
+			$unit = 60*60*24;
+			switch ( $subscription_plan->params['full_periodunit'] ) {
+				case 'W':
+					$unit *= 7;
+					break;
+				case 'M':
+					$unit *= 31;
+					break;
+				case 'Y':
+					$unit *= 365;
+					break;
 			}
+
+			$periodlength = $subscription_plan->params['full_period'] * $unit;
+
+			$newexpiration = strtotime( $this->expiration );
+			$now = time() + $mosConfig_offset*3600;
+
+			// ...cut away blocks until we are in the past
+			while ( $newexpiration > $now ) {
+				$newexpiration -= $periodlength;
+			}
+
+			// Be extra sure that we did not overachieve
+			if ( $newexpiration < $now ) {
+				$newexpiration += $periodlength;
+			}
+
+			// And we get the bare expiration date
+			$this->expiration = date( 'Y-m-d H:i:s', $newexpiration );
 		}
 
-		return false;
+		$this->setStatus( 'Cancelled' );
+
+		return true;
+	}
+
+	function hold( $invoice=null )
+	{
+		$this->setStatus( 'Hold' );
+		return true;
 	}
 
 	function setStatus( $status )
