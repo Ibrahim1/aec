@@ -43,35 +43,55 @@ class plgSystemAECErrorHandler extends JPlugin
 	function onAfterInitialise()
 	{
 		global $mainframe;
-
-		// Get the message queue
-		$messages = $mainframe->getMessageQueue();
 		
-		// search for the needed message in the queue
-		if (is_array($messages) && count($messages)) {
-			foreach ($messages as $msg)
-			{
-				if (isset($msg['type']) && isset($msg['message'])) {
-					if($msg['message'] == JText::_("YOU MUST LOGIN FIRST")) {
-						$mainframe->redirect("index.php?option=com_acctexp&task=NotAllowed" );
-					}					
-				}
+		if (file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" )) {
+		
+			// handle login redirect
+			$this->handleLoginRedirect();
+		
+			// set the new ErrorHendler
+			JError::setErrorHandling(E_ALL, 'callback', array($this, 'aecErrorHandler'));
+			
+		}
+	}
+	
+	/* check if we are at the login page & there is a return URI set.
+	*  if so, check if the return was to com_content (regarless of the view) & redirect to NotAllowed.
+	*/
+	function handleLoginRedirect()
+	{
+		global $mainframe;
+
+		$uri = &JFactory::getURI();
+		$option = $uri->getVar('option');
+		$view = $uri->getVar('view');
+
+		if ($return = JRequest::getVar('return', '', 'method', 'base64')) {
+			$return = base64_decode($return);
+			if (!JURI::isInternal($return)) {
+				$return = '';
 			}
 		}
+		
+		if($option == 'com_user' && $view == 'login' && $return!='')
+		{
+			$uri = new JURI($return);
+			$option = $uri->getVar('option');
 
-		// set the new ErrorHendler
-		JError::setErrorHandling(E_ALL, 'callback', array($this, 'aecErrorHandler'));
+			if($option == 'com_content')
+			{
+				$mainframe->redirect("index.php?option=com_acctexp&task=NotAllowed" );
+			}
+		}
 	}
 	
 	// catch the Error & redirect if needed
-	function aecErrorHandler(& $error){
-		if (file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" )) {
-			global $mainframe;
-			
-			if($error->message == JText::_("ALERTNOTAUTH")) {
-				$mainframe->redirect("index.php?option=com_acctexp&task=NotAllowed" );
-			}
-
+	function aecErrorHandler(& $error)
+	{
+		global $mainframe;
+		
+		if($error->message == JText::_("ALERTNOTAUTH")) {
+			$mainframe->redirect("index.php?option=com_acctexp&task=NotAllowed" );
 		}
 	}
 
