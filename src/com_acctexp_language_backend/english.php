@@ -637,6 +637,12 @@ define( '_CFG_TAB_MICROINTEGRATION_SUBTITLE', 'Micro Integrations');
 define( '_CFG_MI_MILIST_NAME', 'Active MicroIntegrations');
 define( '_CFG_MI_MILIST_DESC', 'Select which MicroIntegrations you want to use');
 
+// Global Authentication Settins
+define( '_CFG_TAB_AUTHENTICATION_TITLE', 'Authentication');
+define( '_CFG_TAB_AUTHENTICATION_SUBTITLE', 'Authentication Plugins');
+define( '_CFG_AUTH_AUTHLIST_NAME', 'Active Authentication Plugins');
+define( '_CFG_AUTH_AUTHLIST_DESC', 'Select which Authentication Plugins will be used. AECaeccss Plugin must be the only Authentication Plugin enabled.');
+
 //Invoice settings
 define( '_CFG_GENERAL_SENDINVOICE_NAME', 'Send an invoice email');
 define( '_CFG_GENERAL_SENDINVOICE_DESC', 'Send and invoice/purchase order email (for tax reasons)');

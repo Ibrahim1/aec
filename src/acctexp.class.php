@@ -1042,6 +1042,7 @@ class Config_General extends serialParamDBTable
 		$def['enable_coupons']					= 0;
 		$def['gwlist']							= array();
 		$def['milist']							= array( 'mi_email','mi_htaccess','mi_mysql_query','mi_email','mi_aecplan','mi_joomlauser' );
+		$def['authlist']						= null;
 		$def['displayccinfo']					= 1;
 		$def['customtext_confirm_keeporiginal']	= 1;
 		$def['customtext_checkout_keeporiginal']	= 1;
@@ -10988,6 +10989,70 @@ class tokenGroup extends mosDBTable
 	function tokenGroup(&$db)
 	{
 		$this->mosDBTable( '#__acctexp_tokengroups', 'id', $db );
+	}
+}
+
+class PluginHandler
+{
+	function PluginHandler() { }
+	
+    function &getPlugin($type, $plugin = null)
+    {
+        $result = array();
+ 
+        $plugins = PluginHandler::_load();
+ 
+        $total = count($plugins);
+        for($i = 0; $i < $total; $i++)
+        {
+            if(is_null($plugin))
+            {
+                if($plugins[$i]->type == $type) {
+                    $result[] = $plugins[$i];
+                }
+            }
+            else
+            {
+                if($plugins[$i]->type == $type && $plugins[$i]->name == $plugin) {
+                    $result = $plugins[$i];
+                    break;
+                }
+            }
+ 
+        }
+ 
+        return $result;
+	}
+	
+	function _load()
+	{
+        $db        =& JFactory::getDBO();
+        $user    =& JFactory::getUser();	
+		
+        if (isset($user))
+        {
+            $aid = $user->get('aid', 0);
+
+            $query = 'SELECT folder AS type, element AS name, params'
+                . ' FROM #__plugins'
+                . ' WHERE access <= ' . (int) $aid
+                . ' ORDER BY ordering';
+        }
+        else
+        {
+            $query = 'SELECT folder AS type, element AS name, params'
+                . ' FROM #__plugins'
+                . ' ORDER BY ordering';
+        }
+ 
+        $db->setQuery( $query );
+ 
+        if (!($plugins = $db->loadObjectList())) {
+            JError::raiseWarning( 'SOME_ERROR_CODE', "Error loading Plugins: " . $db->getErrorMsg());
+            return false;
+        }
+ 
+        return $plugins;		
 	}
 }
 ?>

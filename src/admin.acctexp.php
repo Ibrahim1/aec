@@ -1874,6 +1874,36 @@ function editSettings( $option )
 
 	$lists['milist'] = mosHTML::selectList( $mi_htmllist, 'milist[]', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '" multiple', 'value', 'text', $selected_mis );
 
+	// Create Authentication Plugin Selection List
+	$auth_htmllist = array();
+	$auth_htmllist[]	= mosHTML::makeOption( '', _AEC_CMN_NONE_SELECTED );
+	
+	$auth_counter = 0;
+	$auth_list = PluginHandler::getPlugin('authentication');
+	
+	foreach( $auth_list as $auth ){
+		$auth_name = $auth->name;
+
+		if($auth_name !== 'aecaccess')
+		{
+			$auth_htmllist[]	= mosHTML::makeOption( $auth_name, $auth_name);
+			$auth_counter++;
+		}
+	}
+	
+	if ( !empty( $aecConfig->cfg['authlist'] ) ) {
+		$authlist = $aecConfig->cfg['authlist'];
+		$selected_auths = array();
+		foreach ( $authlist as $auth_name ) {
+			$selected_auths[]->value = $auth_name;
+		}
+	} else {
+		$aecConfig->cfg['authlist'] = null;
+		$selected_auths		= '';
+	}	
+
+	$lists['authlist'] = mosHTML::selectList( $auth_htmllist, 'authlist[]', 'size="' . min( ( $auth_counter + 1 ), 25 ) . '" multiple', 'value', 'text', $selected_auths );
+
 	$tab_data = array();
 
 	$params[] = array( 'userinfobox', 30 );
@@ -1991,6 +2021,12 @@ function editSettings( $option )
 
 	@end( $params );
 	$tab_data[] = array( _CFG_TAB_MICROINTEGRATION_TITLE, key( $params ), '<h2>' . _CFG_TAB_MICROINTEGRATION_SUBTITLE . '</h2>' );
+
+	$params['auth_remap']					= array( 'subarea_change', 'auth' );
+	$params['authlist']						= array( 'list', '' );
+
+	@end( $params );
+	$tab_data[] = array( _CFG_TAB_AUTHENTICATION_TITLE, key( $params ), '<h2>' . _CFG_TAB_AUTHENTICATION_SUBTITLE . '</h2>' );
 
 	$error_reporting_notices[] = mosHTML::makeOption( 512, _AEC_NOTICE_NUMBER_512 );
 	$error_reporting_notices[] = mosHTML::makeOption( 128, _AEC_NOTICE_NUMBER_128 );
@@ -4476,6 +4512,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		} else {
 			include_once( $langPathMI . 'english.php' );
 		}
+
 	}
 
 	$cmsname = strtolower( GeneralInfoRequester::getCMSName() );
@@ -4672,6 +4709,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['important']			=	1;
 	}
 
+/* Hack remove in favor of the errorHandler Plugin
 	if ( ( strcmp($cmsname, "joomla") === 0 ) && !$v15 ) {
 		$n = 'joomlaphp1';
 		$hacks[$n]['name']			=	$cmsname . '.php ' . _AEC_HACK_HACK . ' #1';
@@ -4699,7 +4737,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['read']			=	'// Initialize variables';
 		$hacks[$n]['insert']		=	sprintf( $aec_j15hack1, $n, $n ) . "\n" . $hacks[$n]['read'];
 	}
-
+*/
 	if ( !$v15 ) {
 		$n = 'joomlaphp3';
 		$hacks[$n]['name']				=	$cmsname . '.php ' . _AEC_HACK_HACK . ' #3';
