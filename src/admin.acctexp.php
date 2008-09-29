@@ -1875,34 +1875,35 @@ function editSettings( $option )
 	$lists['milist'] = mosHTML::selectList( $mi_htmllist, 'milist[]', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '" multiple', 'value', 'text', $selected_mis );
 
 	// Create Authentication Plugin Selection List
-	$auth_htmllist = array();
-	$auth_htmllist[]	= mosHTML::makeOption( '', _AEC_CMN_NONE_SELECTED );
-	
-	$auth_counter = 0;
-	$auth_list = PluginHandler::getPlugin('authentication');
-	
-	foreach( $auth_list as $auth ){
-		$auth_name = $auth->name;
+	if ( aecJoomla15check() ) {
+		$auth_htmllist = array();
+		$auth_htmllist[]	= mosHTML::makeOption( '', _AEC_CMN_NONE_SELECTED );
 
-		if($auth_name !== 'aecaccess')
-		{
-			$auth_htmllist[]	= mosHTML::makeOption( $auth_name, $auth_name);
-			$auth_counter++;
+		$auth_counter = 0;
+		$auth_list = PluginHandler::getPlugin('authentication');
+
+		foreach( $auth_list as $auth ){
+			$auth_name = $auth->name;
+
+			if ( $auth_name !== 'aecaccess' ) {
+				$auth_htmllist[]	= mosHTML::makeOption( $auth_name, $auth_name);
+				$auth_counter++;
+			}
 		}
+
+		if ( !empty( $aecConfig->cfg['authlist'] ) ) {
+			$authlist = $aecConfig->cfg['authlist'];
+			$selected_auths = array();
+			foreach ( $authlist as $auth_name ) {
+				$selected_auths[]->value = $auth_name;
+			}
+		} else {
+			$aecConfig->cfg['authlist'] = null;
+			$selected_auths		= '';
+		}
+
+		$lists['authlist'] = mosHTML::selectList( $auth_htmllist, 'authlist[]', 'size="' . min( ( $auth_counter + 1 ), 25 ) . '" multiple', 'value', 'text', $selected_auths );
 	}
-	
-	if ( !empty( $aecConfig->cfg['authlist'] ) ) {
-		$authlist = $aecConfig->cfg['authlist'];
-		$selected_auths = array();
-		foreach ( $authlist as $auth_name ) {
-			$selected_auths[]->value = $auth_name;
-		}
-	} else {
-		$aecConfig->cfg['authlist'] = null;
-		$selected_auths		= '';
-	}	
-
-	$lists['authlist'] = mosHTML::selectList( $auth_htmllist, 'authlist[]', 'size="' . min( ( $auth_counter + 1 ), 25 ) . '" multiple', 'value', 'text', $selected_auths );
 
 	$tab_data = array();
 
@@ -1999,6 +2000,10 @@ function editSettings( $option )
 	$params['customtext_pending_keeporiginal']	= array( 'list_yesno', '' );
 	$params['customtext_pending']				= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
+	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_HOLD_NAME );
+	$params['customtext_hold_keeporiginal']		= array( 'list_yesno', '' );
+	$params['customtext_hold']					= array( 'editor', '' );
+	$params[] = array( 'div_end', '' );
 	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_EXPIRED_NAME );
 	$params['customtext_expired_keeporiginal']	= array( 'list_yesno', '' );
 	$params['customtext_expired']				= array( 'editor', '' );
@@ -2020,12 +2025,14 @@ function editSettings( $option )
 	$params['milist']						= array( 'list', '' );
 
 	@end( $params );
-	$tab_data[] = array( _CFG_TAB_MICROINTEGRATION_TITLE, key( $params ), '<h2>' . _CFG_TAB_MICROINTEGRATION_SUBTITLE . '</h2>' );
+	if ( aecJoomla15check() ) {
+		$tab_data[] = array( _CFG_TAB_MICROINTEGRATION_TITLE, key( $params ), '<h2>' . _CFG_TAB_MICROINTEGRATION_SUBTITLE . '</h2>' );
 
-	$params['auth_remap']					= array( 'subarea_change', 'auth' );
-	$params['authlist']						= array( 'list', '' );
+		$params['auth_remap']					= array( 'subarea_change', 'auth' );
+		$params['authlist']						= array( 'list', '' );
 
-	@end( $params );
+		@end( $params );
+	}
 	$tab_data[] = array( _CFG_TAB_AUTHENTICATION_TITLE, key( $params ), '<h2>' . _CFG_TAB_AUTHENTICATION_SUBTITLE . '</h2>' );
 
 	$error_reporting_notices[] = mosHTML::makeOption( 512, _AEC_NOTICE_NUMBER_512 );

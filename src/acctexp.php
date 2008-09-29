@@ -212,7 +212,7 @@ function hold( $option, $userid )
 		$mainframe->SetPageTitle( _HOLD_TITLE );
 
 		$frontend = new HTML_frontEnd ();
-		$frontend->expired( $option, $metaUser );
+		$frontend->hold( $option, $metaUser );
 	} else {
 		mosRedirect( sefRelToAbs( 'index.php' ) );
 	}

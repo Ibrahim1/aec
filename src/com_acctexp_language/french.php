@@ -206,6 +206,10 @@ define( '_PENDING_REASON_ECHECK', 'Il apparait que vous avez d&eacute;cid&eacute
 define( '_PENDING_REASON_WAITING_RESPONSE', '(According to our information however, we are just waiting for a response from the payment processor. You will be notified once that has happened. Sorry for the delay.)');
 define( '_PENDING_REASON_TRANSFER', 'Il apparait que vous avez d&eacute;cid&eacute; de payer par courrier postale, veuillez patienter jusqu\'&agrave; la validation du paiement - cela peut prendre plusieurs jours.)');
 
+// --== HOLD PAGE ==--
+define( '_HOLD_TITLE', 'Account on Hold');
+define( '_HOLD_EXPLANATION', 'Your account is currently on hold. The most likely cause for this is that there was a problem with a payment you recently made. If you don\'t receive an email within the next 24 hours, please contact the site administrator.');
+
 // --== PAGE REMERCIEMENT ==--
 define( '_THANKYOU_TITLE', 'Merci !');
 define( '_SUB_FEPARTICLE_HEAD', 'Abonnement compl&eacute;t&eacute;!');

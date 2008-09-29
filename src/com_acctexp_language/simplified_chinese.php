@@ -206,6 +206,10 @@ define( '_PENDING_REASON_ECHECK', '(According to our information however, you de
 define( '_PENDING_REASON_WAITING_RESPONSE', '(According to our information however, we are just waiting for a response from the payment processor. You will be notified once that has happened. Sorry for the delay.)');
 define( '_PENDING_REASON_TRANSFER', '(According to our information however, you decided to pay by an offline payment means, so you it might be that you just have to wait until this payment is cleared - which can take a couple of days.)');
 
+// --== HOLD PAGE ==--
+define( '_HOLD_TITLE', 'Account on Hold');
+define( '_HOLD_EXPLANATION', 'Your account is currently on hold. The most likely cause for this is that there was a problem with a payment you recently made. If you don\'t receive an email within the next 24 hours, please contact the site administrator.');
+
 // --== THANK YOU PAGE ==--
 define( '_THANKYOU_TITLE', '预订结果: 谢谢你!');
 define( '_SUB_FEPARTICLE_HEAD', 'Subscription Complete!');

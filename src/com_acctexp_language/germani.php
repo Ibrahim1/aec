@@ -199,6 +199,10 @@ define( '_PENDING_REASON_ECHECK', '(Desweiteren haben wir jedoch auch die Inform
 define( '_PENDING_REASON_WAITING_RESPONSE', '(According to our information however, we are just waiting for a response from the payment processor. You will be notified once that has happened. Sorry for the delay.)');
 define( '_PENDING_REASON_TRANSFER', '(Desweiteren haben wir jedoch auch die Information, dass Sie sich entschieden haben, die Rechnung auf herk&ouml;mmlichem Wege zu bezahlen bezahlen. Die Verarbeitung einer solchen Zahlung kann einige Tage dauern.)');
 
+// --== HOLD PAGE ==--
+define( '_HOLD_TITLE', 'Konto in Wartestellung');
+define( '_HOLD_EXPLANATION', 'Ihr Benutzerkonto ist momentan in Wartestellung. Mit hoher Wahrscheinlichkeit ist der Grund hierf&uuml;r ein Problem mit Ihrer letzten Zahlung. Wir m&ouml;chten Sie bitten uns per E-Mail zu informieren, falls Sie nicht innerhalb der n&auml;chsten 24 Stunden per E-Mail zu diesem Problem kontaktiert werden.');
+
 // --== THANK YOU PAGE ==--
 define( '_THANKYOU_TITLE', 'Vielen Dank!');
 define( '_SUB_FEPARTICLE_HEAD', 'Abonnement Abgeschlossen!');

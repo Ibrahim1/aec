@@ -207,6 +207,10 @@ define( '_PENDING_REASON_ECHECK', '(Volgens onze informatie heeft u besloten om 
 define( '_PENDING_REASON_WAITING_RESPONSE', '(According to our information however, we are just waiting for a response from the payment processor. You will be notified once that has happened. Sorry for the delay.)');
 define( '_PENDING_REASON_TRANSFER', '(Volgens onze informatie heeft u besloten om te betalen d.m.v. een offline betaalmethode. Dit houdt in dat u moet wachten tot deze betaling voltooid is. Dit duurt meestal 3 tot 6 dagen.)');
 
+// --== HOLD PAGE ==--
+define( '_HOLD_TITLE', 'Account on Hold');
+define( '_HOLD_EXPLANATION', 'Your account is currently on hold. The most likely cause for this is that there was a problem with a payment you recently made. If you don\'t receive an email within the next 24 hours, please contact the site administrator.');
+
 // --== DANK U PAGINA ==--
 define( '_THANKYOU_TITLE', 'Dankuwel!');
 define( '_SUB_FEPARTICLE_HEAD', 'Registratie compleet!');

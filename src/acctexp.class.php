@@ -1102,6 +1102,8 @@ class Config_General extends serialParamDBTable
 		// new 0.12.6
 		$def['overrideJ15']						= 0;
 		$def['authlist']						= null;
+		$def['customtext_hold_keeporiginal']	= 1;
+		$def['customtext_hold']					= '';
 
 		// Insert a new entry if there is none yet
 		if ( empty( $this->settings ) ) {

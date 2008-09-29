@@ -359,6 +359,14 @@ define( '_NOT_ALLOWED_SECONDPAR', 'Процесс займет не более �
 
 
 
+// --== HOLD PAGE ==--
+
+define( '_HOLD_TITLE', 'Account on Hold');
+
+define( '_HOLD_EXPLANATION', 'Your account is currently on hold. The most likely cause for this is that there was a problem with a payment you recently made. If you don\'t receive an email within the next 24 hours, please contact the site administrator.');
+
+
+
 // --== CANCELLED PAGE ==--
 
 define( '_CANCEL_TITLE', 'Результат попытки регистрации: Отменена!');
