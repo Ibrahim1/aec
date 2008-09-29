@@ -1042,7 +1042,6 @@ class Config_General extends serialParamDBTable
 		$def['enable_coupons']					= 0;
 		$def['gwlist']							= array();
 		$def['milist']							= array( 'mi_email','mi_htaccess','mi_mysql_query','mi_email','mi_aecplan','mi_joomlauser' );
-		$def['authlist']						= null;
 		$def['displayccinfo']					= 1;
 		$def['customtext_confirm_keeporiginal']	= 1;
 		$def['customtext_checkout_keeporiginal']	= 1;
@@ -1102,6 +1101,7 @@ class Config_General extends serialParamDBTable
 		$def['continue_button']					= 1;
 		// new 0.12.6
 		$def['overrideJ15']						= 0;
+		$def['authlist']						= null;
 
 		// Insert a new entry if there is none yet
 		if ( empty( $this->settings ) ) {
@@ -10995,13 +10995,13 @@ class tokenGroup extends mosDBTable
 class PluginHandler
 {
 	function PluginHandler() { }
-	
+
     function &getPlugin($type, $plugin = null)
     {
         $result = array();
- 
+
         $plugins = PluginHandler::_load();
- 
+
         $total = count($plugins);
         for($i = 0; $i < $total; $i++)
         {
@@ -11018,17 +11018,17 @@ class PluginHandler
                     break;
                 }
             }
- 
+
         }
- 
+
         return $result;
 	}
-	
+
 	function _load()
 	{
         $db        =& JFactory::getDBO();
-        $user    =& JFactory::getUser();	
-		
+        $user    =& JFactory::getUser();
+
         if (isset($user))
         {
             $aid = $user->get('aid', 0);
@@ -11044,15 +11044,15 @@ class PluginHandler
                 . ' FROM #__plugins'
                 . ' ORDER BY ordering';
         }
- 
+
         $db->setQuery( $query );
- 
+
         if (!($plugins = $db->loadObjectList())) {
             JError::raiseWarning( 'SOME_ERROR_CODE', "Error loading Plugins: " . $db->getErrorMsg());
             return false;
         }
- 
-        return $plugins;		
+
+        return $plugins;
 	}
 }
 ?>
