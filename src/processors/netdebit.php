@@ -225,14 +225,16 @@ class processor_netdebit extends URLprocessor
 		if ( $this->settings['secret'] == $post['password'] ) {
 			switch ( $post['method'] ) {
 				case 0:
-				case 1:
 					$response['valid'] = 1;
+					break;
+				case 1:
+					$response['chargeback_settle'] = 1;
 					break;
 				case 7:
 					$response['eot'] = 1;
 					break;
 				case 9:
-					$response['delete'] = 1;
+					$response['chargeback'] = 1;
 					break;
 			}
 		} else {

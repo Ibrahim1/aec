@@ -159,14 +159,16 @@ class processor_payos extends URLprocessor
 					$response['null'] = 1;
 					break;
 				case 'CommitPayment':
-				case 'Settlement':
 					$response['valid'] = 1;
+					break;
+				case 'Settlement':
+					$response['chargeback_settle'] = 1;
 					break;
 				case 'EndOfTerm':
 					$response['eot'] = 1;
 					break;
 				case 'ChargeBack':
-					$response['delete'] = 1;
+					$response['chargeback'] = 1;
 					break;
 			}
 		} else {

@@ -6254,9 +6254,9 @@ class Invoice extends serialParamDBTable
 						$metaUser->moveFocus( $this->subscr_id );
 					}
 
-					$metaUser->focusSubscription->hold_settle( $this );
+					$metaUser->focusSubscription->hold( $this );
 
-					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS_ACTIVE;
+					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS_HOLD;
 				}
 			} elseif ( isset( $response['chargeback_settle'] ) ) {
 				$metaUser = new metaUser( $this->userid );
@@ -6270,9 +6270,9 @@ class Invoice extends serialParamDBTable
 						$metaUser->moveFocus( $this->subscr_id );
 					}
 
-					$metaUser->focusSubscription->hold( $this );
+					$metaUser->focusSubscription->hold_settle( $this );
 
-					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS_HOLD;
+					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS_ACTIVE;
 				}
 			} elseif ( isset( $response['delete'] ) ) {
 				$metaUser = new metaUser( $this->userid );
