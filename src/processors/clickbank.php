@@ -68,7 +68,7 @@ class processor_clickbank extends URLprocessor
 
 		$item_number			= $var['allowedTypes'] = $request->int_var['planparams']['item_number'];
 
-		$var['post_url']		= 'http://'.$item_number.'.'.$this->settings['publisher'].'.pay.clickbank.net';
+		$var['post_url']		= 'http://'.$item_number.'.'.$this->settings['publisher'].'.pay.clickbank.net?';
 
 		// pass internal invoice to clickbank, so it will pass back to us for internal checking
 		$var['invoice']			= $request->int_var['invoice'];
