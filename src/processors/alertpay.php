@@ -114,8 +114,8 @@ class processor_alertpay extends POSTprocessor
 
 		if ( !( strcmp( $post['ap_status'], "Success" ) === 0 ) ) {
 			$response['error'] = 'ap_status: ' . $post['ap_status'];
-		} elseif( $post['ap_securitycode'] != $this->settings['ap_securitycode'] ) {
-			$response['error'] = 'Security Code Mismatch: ' . $post['ap_securitycode'] . ' != ' . $this->settings['ap_securitycode'];
+		} elseif( $post['ap_securitycode'] != $this->settings['securitycode'] ) {
+			$response['error'] = 'Security Code Mismatch: ' . $post['ap_securitycode'] . ' != ' . $this->settings['securitycode'];
 		} else {
 			$response['valid'] = true;
 		}
