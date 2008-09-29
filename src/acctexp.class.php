@@ -1104,6 +1104,8 @@ class Config_General extends serialParamDBTable
 		$def['authlist']						= null;
 		$def['customtext_hold_keeporiginal']	= 1;
 		$def['customtext_hold']					= '';
+		$def['proxy_username']					= '';
+		$def['proxy_password']					= '';
 
 		// Insert a new entry if there is none yet
 		if ( empty( $this->settings ) ) {
@@ -2602,6 +2604,10 @@ class processor extends serialParamDBTable
 
 			if ( !empty( $aecConfig->cfg['proxy_port'] ) ) {
 				$curl_calls[CURLOPT_PROXYPORT]	= $aecConfig->cfg['proxy_port'];
+			}
+
+			if ( !empty( $aecConfig->cfg['proxy_username'] ) && !empty( $aecConfig->cfg['proxy_password'] ) ) {
+				$curl_calls[CURLOPT_PROXYUSERPWD]	= $aecConfig->cfg['proxy_username'].":".$aecConfig->cfg['proxy_password'];
 			}
 		}
 

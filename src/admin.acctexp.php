@@ -1958,6 +1958,8 @@ function editSettings( $option )
 	$params['use_proxy']						= array( 'list_yesno', '' );
 	$params['proxy']							= array( 'inputC', '' );
 	$params['proxy_port']						= array( 'inputC', '' );
+	$params['proxy_username']					= array( 'inputC', '' );
+	$params['proxy_password']					= array( 'inputC', '' );
 	$params['display_date_frontend']			= array( 'inputC', '%a, %d %b %Y %T %Z' );
 	$params['display_date_backend']				= array( 'inputC', '%a, %d %b %Y %T %Z' );
 	$params['renew_button_never']				= array( 'list_yesno', '' );
