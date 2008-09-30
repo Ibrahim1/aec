@@ -49,85 +49,34 @@ class plgAuthenticationAECaccess extends JPlugin
 	 */
 	function onAuthenticate( $credentials, $options, &$response )
 	{
-		jimport('joomla.user.helper');
+		global $database;
+		if (file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" )) {
+			include_once(JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php");
+			
+			$aecConfig = new Config_General( $database );
+			$authlist = $aecConfig->cfg['authlist'];
+			foreach( $authlist as $auth)
+			{
+	            $className = 'plgAuthentication'.$auth;
+				$plugin = JPluginHelper::getPlugin('authentication', $auth);
+				$plugin = new $className(JAuthentication::getInstance(), (array)$plugin);
 
-		// ---- Modified Copy of joomla access plugin until we have authorization layer ----
-		// COPY START
+				// Try to authenticate
+				$plugin->onAuthenticate($credentials, $options, $response);
 
-		// Joomla does not like blank passwords
-		if (empty($credentials['password']))
-		{
-			$response->status = JAUTHENTICATE_STATUS_FAILURE;
-			$response->error_message = 'Empty password not allowed';
-			return false;
-		}
-
-		// Initialize variables
-		$conditions = '';
-
-		// Get a database object
-		$db =& JFactory::getDBO();
-
-		$query = 'SELECT `id`, `password`, `gid`'
-			. ' FROM `#__users`'
-			. ' WHERE username=' . $db->Quote( $credentials['username'] )
-			;
-		$db->setQuery( $query );
-		$result = $db->loadObject();
-
-		if($result)
-		{
-			$parts	= explode( ':', $result->password );
-			$crypt	= $parts[0];
-			$salt	= @$parts[1];
-			$testcrypt = JUserHelper::getCryptedPassword($credentials['password'], $salt);
-
-			if ($crypt == $testcrypt) {
-				$user = JUser::getInstance($result->id); // Bring this in line with the rest of the system
-				$response->email = $user->email;
-				$response->fullname = $user->name;
-				$response->status = JAUTHENTICATE_STATUS_SUCCESS;
-				$response->error_message = '';
-			} else {
-				$response->status = JAUTHENTICATE_STATUS_FAILURE;
-				$response->error_message = 'Invalid password';
-				return false;
+				// If authentication is successfull break the loop
+				if($response->status === JAUTHENTICATE_STATUS_SUCCESS)
+				{
+					break;
+				}
 			}
-		}
-		else
-		{
-			$response->status = JAUTHENTICATE_STATUS_FAILURE;
-			$response->error_message = 'User does not exist';
-			return false;
-		}
 
-		// COPY END
-		// ---- Copy of joomla access plugin until we have authorization layer ----
-
-		if ( strpos( JPATH_BASE, '/administrator' ) ) {
-			$response->status = JAUTHENTICATE_STATUS_SUCCESS;
-			return true;
-		}
-
-		$savetask = '';
-		if ( isset( $_REQUEST['task'] ) ) {
-			$_REQUEST['task'] = '';
-			$savetask = $_REQUEST['task'];
-		}
-
-		include_once( JPATH_ROOT .DS.'components'.DS.'com_acctexp'.DS.'acctexp.php' );
-
-		$_REQUEST['task'] = $savetask;
-
-		$verification = AECToolbox::VerifyUser( $credentials['username'] );
-
-		if ( $verification === true ) {
-			$response->status = JAUTHENTICATE_STATUS_SUCCESS;
-		} else {
-			$this->_error = $verification;
-			define( 'AEC_AUTH_ERROR_MSG', $this->_error );
-			define( 'AEC_AUTH_ERROR_UNAME', $credentials['username'] );
-			$response->status = JAUTHENTICATE_STATUS_FAILURE;
+			// process AEC verifications
+			if($response->status === JAUTHENTICATE_STATUS_SUCCESS)
+			{
+				$this->_AECVerification($credentials, $response);
+			}
+			
 		}
 	}
 
@@ -162,6 +111,35 @@ class plgAuthenticationAECaccess extends JPlugin
 			$app->redirect( $redirect );
 		}
 	}
+	
+	function _AECVerification( $credentials, &$response )
+	{
+		if ( strpos( JPATH_BASE, '/administrator' ) ) {
+			$response->status = JAUTHENTICATE_STATUS_SUCCESS;
+			return true;
+		}
+
+		$savetask = '';
+		if ( isset( $_REQUEST['task'] ) ) {
+			$_REQUEST['task'] = '';
+			$savetask = $_REQUEST['task'];
+		}
+
+		include_once( JPATH_ROOT .DS.'components'.DS.'com_acctexp'.DS.'acctexp.php' );
+
+		$_REQUEST['task'] = $savetask;
+
+		$verification = AECToolbox::VerifyUser( $credentials['username'] );
+
+		if ( $verification === true ) {
+			$response->status = JAUTHENTICATE_STATUS_SUCCESS;
+		} else {
+			$this->_error = $verification;
+			define( 'AEC_AUTH_ERROR_MSG', $this->_error );
+			define( 'AEC_AUTH_ERROR_UNAME', $credentials['username'] );
+			$response->status = JAUTHENTICATE_STATUS_FAILURE;
+		}
+	}	
 }
 
 ?>
