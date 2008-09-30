@@ -29,7 +29,7 @@ class mi_jarc
 		$settings = array();
 		$settings['create_affiliates']	= array( 'list_yesno' );
 		$settings['log_payments']		= array( 'list_yesno' );
-				$settings['log_sales']	= array( 'list_yesno' );
+		$settings['log_sales']			= array( 'list_yesno' );
 
 		return $settings;
 	}
