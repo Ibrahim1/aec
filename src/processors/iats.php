@@ -295,14 +295,14 @@ class processor_iats extends XMLprocessor
 
 	function transmitRequestXML( $xml, $request )
 	{
-		$response = $this->transmitToPayPal( $xml, $request );
+		$response = $this->transmitToTicketmaster( $xml, $request );
 
 		$return = array();
 		$return['valid'] = false;
 		$return['raw'] = $response;
 
-		// converting NVPResponse to an Associative Array
-		$nvpResArray = $this->deformatNVP( $response );
+		$iatsReturn = stristr( $response,"AUTHORIZATION RESULT:" );
+		$iatsReturn = substr( $iatsReturn, strpos( $iatsReturn, ":" ) + 1, strpos( $iatsReturn , "<" ) - strpos( $iatsReturn , ":" ) - 1 );
 
 		if ( $response ) {
 			if ( isset( $nvpResArray['PROFILEID'] ) ) {
