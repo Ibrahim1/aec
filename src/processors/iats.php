@@ -198,34 +198,38 @@ class processor_iats extends XMLprocessor
 		$var['State']				= $request->int_var['params']['billState'];
 		$var['ZipCode']				= $request->int_var['params']['billZip'];
 
-		$var['MOP1']				= $request->int_var['params']['cardType'];
-		$var['CCNum1']				= $request->int_var['params']['cardNumber'];
-		$var['CCEXPIRY1']			= str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ).'/'.$request->int_var['params']['expirationYear'];
-
-		$var['CVV2']				= $request->int_var['params']['cardVV2'];
-
-		$var['InvoiceNum']				= $request->int_var['invoice'];
-
-
-				 $params = $params . "&Amount1="      .  $this->dollarAmount;
-
-				 $params = $params . "&BeginDate1="   .  $this->beginDate;
-				 $params = $params . "&EndDate1="     .  $this->endDate;
-				 $params = $params . "&ScheduleType1="     .  $this->scheduleType;
-				 $params = $params . "&ScheduleDate1="     .  $this->scheduleDate;
-				 $params = $params . "&Reoccurring1="      .  $this->reoccuringStatus;
-
-				 $params = $params . "&Version=" . $this->version;
-
-
 		if ( is_array( $request->int_var['amount'] ) ) {
+         $params = $params . "&Amount1="      .  $this->dollarAmount;
+
+         $params = $params . "&BeginDate1="   .  $this->beginDate;
+         $params = $params . "&EndDate1="     .  $this->endDate;
+         $params = $params . "&ScheduleType1="     .  $this->scheduleType;
+         $params = $params . "&ScheduleDate1="     .  $this->scheduleDate;
+         $params = $params . "&Reoccurring1="      .  $this->reoccuringStatus;
+
+			$var['MOP1']				= $request->int_var['params']['cardType'];
+			$var['CCNum1']				= $request->int_var['params']['cardNumber'];
+			$var['CCEXPIRY1']			= str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ).'/'.$request->int_var['params']['expirationYear'];
+
+			$var['CVV2']				= $request->int_var['params']['cardVV2'];
+
+			$var['Amount1']				= $request->int_var['amount'];
+			$var['Reoccurring1']		= $request->int_var['amount'];
 
 			if ( isset( $request->int_var['amount']['amount1'] ) ) {
-				switch ( $request->int_var['amount']['unit1'] ) {
-					case 'D': $offset = $request->int_var['amount']['period1'] * 3600 * 24; break;
-					case 'W': $offset = $request->int_var['amount']['period1'] * 3600 * 24 * 7; break;
-					case 'M': $offset = $request->int_var['amount']['period1'] * 3600 * 24 * 31; break;
-					case 'Y': $offset = $request->int_var['amount']['period1'] * 3600 * 24 * 356; break;
+
+				switch ( $unit ) {
+					case 'D':
+						$request->int_var['amount']['period1'] = 1;
+					case 'Y':
+					case 'M':
+					case 'W':
+						$unit =  'WEEKLY';
+						break;
+						return 'MONTHLY';
+						break;
+						return 'YEARLY';
+						break;
 				}
 
 				$timestamp = time() - ($mosConfig_offset_user*3600) + $offset;
@@ -242,10 +246,10 @@ class processor_iats extends XMLprocessor
 			$var['amt']					= $request->int_var['amount']['amount3'];
 			$var['ProfileReference']	= $request->int_var['invoice'];
 		} else {
-			$var['amt']					= $request->int_var['amount'];
+			$var['Total']				= $request->int_var['amount'];
 		}
 
-		$var['currencyCode']			= $this->settings['currency'];
+		$var['InvoiceNum']				= $request->int_var['invoice'];
 
 		$var['Version']				= "1.30";
 
@@ -301,7 +305,7 @@ class processor_iats extends XMLprocessor
 		$return['valid'] = false;
 		$return['raw'] = $response;
 
-		$iatsReturn = stristr( $response,"AUTHORIZATION RESULT:" );
+		$iatsReturn = stristr( $response, "AUTHORIZATION RESULT:" );
 		$iatsReturn = substr( $iatsReturn, strpos( $iatsReturn, ":" ) + 1, strpos( $iatsReturn , "<" ) - strpos( $iatsReturn , ":" ) - 1 );
 
 		if ( $response ) {
