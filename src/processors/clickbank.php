@@ -81,8 +81,13 @@ class processor_clickbank extends URLprocessor
 	function parseNotification( $request )
 	{
 		$response = array();
-		$response['invoice']			= $request['invoice'];
-		$response['amount_paid']		= $request['ctransamount'] / 100;
+		$response['invoice']			= aecGetParam( 'invoice' );
+
+		$amount = aecGetParam( 'ctransamount' );
+
+		if ( !empty( $amount ) ) {
+			$response['amount_paid']	= $amount / 100;
+		}
 
 		return $response;
 	}
@@ -97,7 +102,7 @@ class processor_clickbank extends URLprocessor
 
 		$params = array();
 		foreach ( $stdParams as $name ) {
-			$params[] = $request[$name];
+			$params[] = aecGetParam( $name, '' );
 		}
 
 		$params[] = $this->settings['secret_key'];
@@ -106,7 +111,7 @@ class processor_clickbank extends URLprocessor
 
 		$response['valid'] = 0;
 
-		if ( $request['cverify'] == $verify ) {
+		if ( aecGetParam( 'cverify' ) == $verify ) {
 			switch ( $request[''] ) {
 				// The purchase of a standard product or the initial purchase of recurring billing product.
 				case 'SALE':
