@@ -638,6 +638,19 @@ define( '_CFG_AUTHORIZE_CIM_PROMPTADDRESS_DESC', 'Ask the user to put in an Addr
 define( '_CFG_AUTHORIZE_CIM_PROMPTZIPONLY_NAME', 'Prompt for Zip only');
 define( '_CFG_AUTHORIZE_CIM_PROMPTZIPONLY_DESC', 'Ask the user to put in a Zip code only.');
 
+// ClickBank
+define( '_CFG_CLICKBANK_LONGNAME',			'ClickBank' );
+define( '_CFG_CLICKBANK_STATEMENT',			'Make payments with ClickBank!' );
+define( '_CFG_CLICKBANK_DESCRIPTION', 'Make payments with ClickBank');
+define( '_CFG_CLICKBANK_PUBLISHER_NAME', 'PUBLISHER');
+define( '_CFG_CLICKBANK_PUBLISHER_DESC', 'Your ClickBank PUBLISHER account number.');
+define( '_CFG_CLICKBANK_SECRET_KEY_NAME', 'Secret key');
+define( '_CFG_CLICKBANK_SECRET_KEY_DESC', 'Your secret key is an essential element to the process because it is used for both encryption and decryption and is only known by you and ClickBank');
+define( '_CFG_CLICKBANK_INFO_NAME', 'IMPORTANT NOTE! Thank You Page');
+define( '_CFG_CLICKBANK_INFO_DESC', 'On your ClickBank Account Homepage, >>Accounts Settings<< tab, locate and click the >>My Products<< link. Set up the field >>Thank You Page URL<< with the URL "http://www.yoursite.com/index.php?option=com_acctexp&task=clickbanknotification". Replace "www.yoursite.com" with your own domain.');
+define( '_CFG_CLICKBANK_PLAN_PARAMS_ITEM_NUMBER_NAME', 'Your Clickbank Item Number');
+define( '_CFG_CLICKBANK_PLAN_PARAMS_ITEM_NUMBER_DESC', 'Put your item number of product/service you sell here.');
+
 // NetDebit
 define( '_CFG_NETDEBIT_LONGNAME',			'NetDebit' );
 define( '_CFG_NETDEBIT_STATEMENT',			'Bezahlen mit NetDebit!' );
@@ -669,5 +682,14 @@ define( '_CFG_PAYOS_CONTENT_ID_NAME', 'Content ID');
 define( '_CFG_PAYOS_CONTENT_ID_DESC', 'Ihre PayOS Content ID.');
 define( '_CFG_PAYOS_SECRET_NAME', 'Secret');
 define( '_CFG_PAYOS_SECRET_DESC', 'Ihr geheimes Passwort um die Kommunikation mit PayOS zu sichern.');
+
+// iATS
+define( '_CFG_IATS_LONGNAME',			'iATS Ticketmaster' );
+define( '_CFG_IATS_STATEMENT',			'Make payments with Ticketmaster!' );
+define( '_CFG_IATS_DESCRIPTION', 'Make payments with Ticketmaster');
+define( '_CFG_IATS_AGENT_CODE_NAME', 'Agent Code');
+define( '_CFG_IATS_AGENT_CODE_DESC', 'Your Ticketmaster Agent Code.');
+define( '_CFG_IATS_PASSWORD_NAME', 'Password');
+define( '_CFG_IATS_PASSWORD_DESC', 'Your Ticketmaster Password.');
 
 ?>

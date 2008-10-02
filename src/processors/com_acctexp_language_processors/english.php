@@ -669,4 +669,13 @@ define( '_CFG_PAYOS_CONTENT_ID_DESC', 'Your PayOS Content ID.');
 define( '_CFG_PAYOS_SECRET_NAME', 'Secret');
 define( '_CFG_PAYOS_SECRET_DESC', 'Your Secret word to make communication with PayOS secure.');
 
+// iATS
+define( '_CFG_IATS_LONGNAME',			'iATS Ticketmaster' );
+define( '_CFG_IATS_STATEMENT',			'Make payments with Ticketmaster!' );
+define( '_CFG_IATS_DESCRIPTION', 'Make payments with Ticketmaster');
+define( '_CFG_IATS_AGENT_CODE_NAME', 'Agent Code');
+define( '_CFG_IATS_AGENT_CODE_DESC', 'Your Ticketmaster Agent Code.');
+define( '_CFG_IATS_PASSWORD_NAME', 'Password');
+define( '_CFG_IATS_PASSWORD_DESC', 'Your Ticketmaster Password.');
+
 ?>

@@ -483,10 +483,21 @@ class processor_paypal_wpp extends XMLprocessor
 
 		$response['responsestring'] = 'paypal_verification=' . $res . "\n" . $response['responsestring'];
 
-		$txn_type			= $post['txn_type'];
-		$receiver_email		= $post['receiver_email'];
-		$payment_status		= $post['payment_status'];
-		$payment_type		= $post['payment_type'];
+		$receiver_email	= null;
+		$txn_type		= null;
+		$payment_type	= null;
+		$payment_status	= null;
+		$reason_code	= null;
+
+		$getposts = array( 'txn_type', 'receiver_email', 'payment_status', 'payment_type', 'reason_code' );
+
+		foreach ( $getposts as $n ) {
+			if ( isset( $post[$n] ) ) {
+				$$n = $post[$n];
+			} else {
+				$$n = null;
+			}
+		}
 
 		$response['valid'] = 0;
 
