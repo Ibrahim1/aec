@@ -4692,7 +4692,7 @@ class InvoiceFactory
 	{
 		global $database, $mainframe, $my;
 
-		$this->userid = $userid;
+		$this->userid = $database->getEscaped( $userid );
 		$this->authed = false;
 
 		require_once( $mainframe->getPath( 'front_html', 'com_acctexp' ) );
@@ -4708,7 +4708,7 @@ class InvoiceFactory
 					mosNotAuth();
 					return;
 				} else {
-					$this->userid = $userid;
+					$this->userid = $database->getEscaped( $userid );
 				}
 			}
 		} else {
@@ -4718,9 +4718,9 @@ class InvoiceFactory
 		}
 
 		// Init variables
-		$this->usage		= $usage;
-		$this->processor	= $processor;
-		$this->invoice		= $invoice;
+		$this->usage		= $database->getEscaped( $usage );
+		$this->processor	= $database->getEscaped( $processor );
+		$this->invoice		= $database->getEscaped( $invoice );
 
 		if ( !is_null( $this->userid ) ) {
 			$query = 'SELECT `id`'
