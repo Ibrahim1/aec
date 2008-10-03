@@ -885,7 +885,12 @@ class metaUserDB extends serialParamDBTable
 
 	function setProcessorParams( $processorid, $params )
 	{
+		global $mosConfig_offset;
+
 		$this->processor_params->$processorid = $params;
+
+		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
+
 		$this->storeload();
 	}
 
@@ -908,6 +913,8 @@ class metaUserDB extends serialParamDBTable
 
 	function setMIParams( $miid, $usageid=false, $params )
 	{
+		global $mosConfig_offset;
+
 		if ( $usageid ) {
 			if ( isset( $this->plan_params[$usageid] ) ) {
 				if ( isset( $this->plan_params[$usageid][$miid] ) ) {
@@ -926,16 +933,24 @@ class metaUserDB extends serialParamDBTable
 			$this->params->mi[$miid] = $params;
 		}
 
+		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
+
 		return true;
 	}
 
 	function addCustomParams( $params )
 	{
+		global $mosConfig_offset;
+
 		$this->addParams( $params, 'custom_params' );
+
+		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
 	}
 
 	function addPreparedMIParams( $plan_mi, $mi=false )
 	{
+		global $mosConfig_offset;
+
 		$this->addParams( $plan_mi, 'plan_params' );
 
 		if ( $mi === false ) {
@@ -950,11 +965,15 @@ class metaUserDB extends serialParamDBTable
 			}
 		}
 
+		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
+
 		$this->storeload();
 	}
 
 	function addPlanID( $id )
 	{
+		global $mosConfig_offset;
+
 		$this->plan_history->plan_history[] = $id;
 
 		if ( isset( $this->plan_history->used_plans[$id] ) ) {
@@ -962,6 +981,8 @@ class metaUserDB extends serialParamDBTable
 		} else {
 			$this->plan_history->used_plans[$id] = 1;
 		}
+
+		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
 
 		$this->storeload();
 
@@ -9594,7 +9615,7 @@ class microIntegration extends serialParamDBTable
 					$metaUser = new metaUser( $userid );
 
 					if ( $metaUser->cmsUser->id ) {
-						$this->action( $params, $metaUser, null, $plan );
+						$this->action( $metaUser, $params, null, $plan );
 					}
 				}
 			}
