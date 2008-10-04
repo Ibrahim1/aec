@@ -58,8 +58,13 @@ class plgAuthenticationAECaccess extends JPlugin
 			foreach( $authlist as $auth)
 			{
 	            $className = 'plgAuthentication'.$auth;
-				$plugin = JPluginHelper::getPlugin('authentication', $auth);
-				$plugin = new $className(JAuthentication::getInstance(), (array)$plugin);
+				$plugin = PluginHandler::getPlugin('authentication', $auth);
+
+				JLoader::import('authentication.'.$auth, JPATH_ROOT.DS.'plugins', 'plugins');
+				if (class_exists( $className ))
+				{
+					$plugin = new $className( JAuthentication::getInstance(), (array)$plugin );
+				}
 
 				// Try to authenticate
 				$plugin->onAuthenticate($credentials, $options, $response);
@@ -75,8 +80,8 @@ class plgAuthenticationAECaccess extends JPlugin
 			if($response->status === JAUTHENTICATE_STATUS_SUCCESS)
 			{
 				$this->_AECVerification($credentials, $response);
+				return;
 			}
-			
 		}
 	}
 
