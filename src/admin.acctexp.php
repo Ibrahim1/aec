@@ -1102,6 +1102,12 @@ function saveUser( $option, $apply=0 )
 	}
 
 	$ck_lifetime = aecGetParam( 'ck_lifetime', 'off' );
+	
+	if( $metaUser->focusSubscription == NULL )
+	{
+		echo "<script> alert('"._AEC_ERR_NO_SUBSCRIPTION."'); window.history.go(-1); </script>\n";
+		exit();
+	}
 
 	if ( strcmp( $ck_lifetime, 'on' ) == 0 ) {
 		$metaUser->focusSubscription->expiration	= '9999-12-31 00:00:00';
@@ -1152,7 +1158,8 @@ function saveUser( $option, $apply=0 )
 
 	$nexttask	= aecGetParam( 'nexttask', 'config' ) ;
 	if ( $apply ) {
-		mosRedirect( 'index2.php?option=' . $option . '&task=edit&subscriptionid=' . $_POST['id'], _AEC_MSG_SUCESSFULLY_SAVED );
+		$subID = !empty($_POST['id']) ? $_POST['id'] : $metaUser->focusSubscription->id;
+		mosRedirect( 'index2.php?option=' . $option . '&task=edit&subscriptionid=' . $subID, _AEC_MSG_SUCESSFULLY_SAVED );
 	} else {
 		mosRedirect( 'index2.php?option=' . $option . '&task=' . $nexttask, _SAVED );
 	}

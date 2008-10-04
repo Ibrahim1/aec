@@ -1283,4 +1283,6 @@ define( '_EXPORT_PARAMS_SAVE_NAME_DESC', 'Save new preset under this name');
 define( '_EXPORT_PARAMS_EXPORT_METHOD_NAME', 'Exporting Method');
 define( '_EXPORT_PARAMS_EXPORT_METHOD_DESC', 'The filetype you want to export to');
 
+// new for errors
+define( '_AEC_ERR_NO_SUBSCRIPTION', 'The user has no Subscription');
 ?>
