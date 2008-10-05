@@ -2644,7 +2644,7 @@ class processor extends serialParamDBTable
 				}
 			}
 		}
-		if function_exists ( curl_init ) {
+		if ( function_exists ( curl_init )) {
 			// Set cURL params
 			$ch = curl_init();
 			foreach ( $curl_calls as $name => $value ) {
