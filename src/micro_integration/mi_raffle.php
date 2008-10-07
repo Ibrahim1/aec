@@ -232,7 +232,7 @@ class AECMI_rafflelist extends serialParamDBTable {
 
 		$participants = array();
 		$winners = array();
-		foreach ( $this->participants as $rid ) {
+		foreach ( $this->params->participants as $rid ) {
 			$raffleuser = new AECMI_raffleuser( $database );
 			$raffleuser->load( $rid );
 
