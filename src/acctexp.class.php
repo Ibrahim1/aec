@@ -73,7 +73,7 @@ if ( !function_exists( 'aecJoomla15check' ) ) {
 	}
 }
 
-function aecGetParam( $name, $default='' )
+function aecGetParam( $name, $default='', $safe=false, $safe_params=array() )
 {
 	if ( aecJoomla15check() ) {
 		$return = JArrayHelper::getValue( $_REQUEST, $name );
@@ -95,7 +95,65 @@ function aecGetParam( $name, $default='' )
 		$return = $_REQUEST[$name];
 	}
 
+	if ( $safe ) {
+		if ( is_array( $return ) ) {
+			foreach ( $return as $k => $v ) {
+				$return[$k] = aecEscape( $v, $safe_params );
+			}
+		} else {
+			$return = aecEscape( $return, $safe_params );
+		}
+
+	}
+
 	return $return;
+}
+
+function aecEscape( $value, $safe_params )
+{
+	global $database;
+
+	if ( get_magic_quotes_gpc() ) {
+		$return = stripslashes( $return );
+	}
+
+	$return = $database->getEscaped( $value );
+
+	if ( !empty( $safe_params ) ) {
+		foreach ( $safe_params as $param ) {
+			switch ( $param ) {
+				case 'word':
+					$e = strpos( $return, ' ' );
+					if ( $e !== false ) {
+						$r = substr( $return, 0, $e );
+					} else {
+						$r = $return;
+					}
+					break;
+				case 'badchars':
+					for ( $n=0; $n<strlen($return); $n++ ) {
+						if ( eregi( "[\<|\>|\"|\'|\%|\;|\(|\)]", $return[$n] ) ) {
+							 $r = substr( $return, 0, $n );
+							 continue;
+						}
+					}
+					break;
+				case 'int':
+					$r = (int) $return;
+					break;
+				case 'string':
+					$r = (string) $return;
+					break;
+				case 'float':
+					$r = (float) $return;
+					break;
+			}
+
+			$return = $r;
+		}
+
+		return $return;
+	}
 }
 
 function aecPostParamClear( $array )
@@ -853,7 +911,7 @@ class metaUserDB extends serialParamDBTable
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_metauser'
-				. ' WHERE `userid` = \'' . $database->getEscaped( $userid ) . '\''
+				. ' WHERE `userid` = \'' . $userid . '\''
 				;
 		$database->setQuery( $query );
 
@@ -2650,23 +2708,23 @@ class processor extends serialParamDBTable
 			foreach ( $curl_calls as $name => $value ) {
 				curl_setopt( $ch, $name, $value );
 			}
-	
+
 			$response = curl_exec( $ch );
-	
+
 			if ( $response === false ) {
 				global $database;
-	
+
 				$short	= 'cURL failure';
 				$event	= 'Trying to establish connection with ' . $url . ' failed with Error #' . curl_errno( $ch ) . ' ( "' . curl_error( $ch ) . '" ) - will try fsockopen instead. If Error persists and fsockopen works, please permanently switch to using that!';
 				$tags	= 'processor,payment,phperror';
 				$params = array();
-	
+
 				$eventlog = new eventLog( $database );
 				$eventlog->issue( $short, $tags, $event, 128, $params );
 			}
-	
+
 			curl_close( $ch );
-	
+
 			return $response;
 		} else {
 			$response = false ;
@@ -2680,7 +2738,7 @@ class processor extends serialParamDBTable
 			$eventlog->issue( $short, $tags, $event, 128, $params );
 			return $response;
 		}
-		
+
 
 	}
 
@@ -4727,7 +4785,7 @@ class InvoiceFactory
 	{
 		global $database, $mainframe, $my;
 
-		$this->userid = $database->getEscaped( $userid );
+		$this->userid = $userid;
 		$this->authed = false;
 
 		require_once( $mainframe->getPath( 'front_html', 'com_acctexp' ) );
@@ -4753,14 +4811,14 @@ class InvoiceFactory
 		}
 
 		// Init variables
-		$this->usage		= $database->getEscaped( $usage );
-		$this->processor	= $database->getEscaped( $processor );
-		$this->invoice		= $database->getEscaped( $invoice );
+		$this->usage		= $usage;
+		$this->processor	= $processor;
+		$this->invoice		= $invoice;
 
 		if ( !is_null( $this->userid ) ) {
 			$query = 'SELECT `id`'
 					. ' FROM #__users'
-					. ' WHERE `id` = \'' . $database->getEscaped( $this->userid ) . '\'';
+					. ' WHERE `id` = \'' . $this->userid . '\'';
 			$database->setQuery( $query );
 
 			if ( !$database->loadResult() ) {
@@ -5102,7 +5160,7 @@ class InvoiceFactory
 		$where[] = '`active` = \'1\'';
 
 		if ( $usage ) {
-			$where[] = '`id` = ' . $database->getEscaped( $usage );
+			$where[] = '`id` = ' . $usage;
 		} else {
 			$where[] = '`visible` != \'0\'';
 		}
@@ -5889,8 +5947,8 @@ class Invoice extends serialParamDBTable
 
 		$query = 'SELECT id'
 		. ' FROM #__acctexp_invoices'
-		. ' WHERE invoice_number = \'' . $database->getEscaped( $invoiceNum ) . '\''
-		. ' OR secondary_ident = \'' . $database->getEscaped( $invoiceNum ) . '\''
+		. ' WHERE invoice_number = \'' . $invoiceNum . '\''
+		. ' OR secondary_ident = \'' . $invoiceNum . '\''
 		;
 		$database->setQuery( $query );
 		$this->load($database->loadResult());
@@ -5950,12 +6008,12 @@ class Invoice extends serialParamDBTable
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_invoices'
-				. ' WHERE `subscr_id` = \'' . $database->getEscaped( $subscrid ) . '\''
+				. ' WHERE `subscr_id` = \'' . $subscrid . '\''
 				. ' ORDER BY `transaction_date` DESC'
 				;
 
 		if ( !empty( $userid ) ) {
-			$query .= ' AND `userid` = \'' . $database->getEscaped( $userid ) . '\'';
+			$query .= ' AND `userid` = \'' . $userid . '\'';
 		}
 
 		$database->setQuery( $query );
@@ -5969,7 +6027,7 @@ class Invoice extends serialParamDBTable
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_invoices'
 				. ' WHERE `userid` = ' . (int) $userid
-				. ' AND `invoice_number` = \'' . $database->getEscaped( $invoiceNum ) . '\''
+				. ' AND `invoice_number` = \'' . $invoiceNum . '\''
 				;
 		$database->setQuery( $query );
 		return $database->loadResult();
@@ -6877,7 +6935,7 @@ class Subscription extends serialParamDBTable
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_subscr'
-				. ' WHERE `userid` = \'' . $database->getEscaped( $userid ) . '\''
+				. ' WHERE `userid` = \'' . $userid . '\''
 				;
 
 		if ( !empty( $usage ) ) {
@@ -6895,12 +6953,12 @@ class Subscription extends serialParamDBTable
 				}
 
 				foreach ( $allplans as $apid => $pid ) {
-					$allplans[$apid] = '`plan` = \'' . $database->getEscaped( $pid ) . '\'';
+					$allplans[$apid] = '`plan` = \'' . $pid . '\'';
 				}
 
 				$query .= ' AND ' . implode( ' OR ', $allplans );
 			} else {
-				$query .= ' AND ' . '`plan` = \'' . $database->getEscaped( $usage ) . '\'';
+				$query .= ' AND ' . '`plan` = \'' . $usage . '\'';
 			}
 		}
 
@@ -6927,7 +6985,7 @@ class Subscription extends serialParamDBTable
 
 		$query = 'UPDATE #__acctexp_subscr'
 				. ' SET `primary` = \'0\''
-				. ' WHERE `userid` = \'' . $database->getEscaped( $this->userid ) . '\''
+				. ' WHERE `userid` = \'' . $this->userid . '\''
 				;
 		$database->setQuery( $query );
 		$database->query();
@@ -7375,10 +7433,10 @@ class Subscription extends serialParamDBTable
 		// get superadministrators id
 		$admins = $acl->get_group_objects( 25, 'ARO' );
 
-		foreach ( $admins['users'] AS $id ) {
+		foreach ( $admins['users'] as $id ) {
 			$query = 'SELECT `email`, `sendEmail`'
 					. ' FROM #__users'
-					. ' WHERE `id` = \'' . $database->getEscaped( $id ) . '\''
+					. ' WHERE `id` = \'' . $id . '\''
 					;
 			$database->setQuery( $query );
 			$rows = $database->loadObjectList();
@@ -7545,7 +7603,7 @@ class GeneralInfoRequester
 		$query = 'SELECT g2.' . ( aecJoomla15check() ? 'id' : 'group_id' )  . ''
 				. ' FROM #__core_acl_aro_groups AS g1'
 				. ' INNER JOIN #__core_acl_aro_groups AS g2 ON g1.lft >= g2.lft AND g1.lft <= g2.rgt'
-				. ' WHERE g1.' . ( aecJoomla15check() ? 'id' : 'group_id' )  . ' = ' . $database->getEscaped( $group_id )
+				. ' WHERE g1.' . ( aecJoomla15check() ? 'id' : 'group_id' )  . ' = ' . $group_id
 				. ' GROUP BY g2.' . ( aecJoomla15check() ? 'id' : 'group_id' )  . ''
 				. ' ORDER BY g2.lft'
 				;
@@ -7577,7 +7635,7 @@ class AECfetchfromDB
 
 		$query = 'SELECT `userid`'
 				. ' FROM #__acctexp_invoices'
-				. ' WHERE `invoice_number` = \'' . $database->getEscaped( $invoice_number ) . '\''
+				. ' WHERE `invoice_number` = \'' . $invoice_number . '\''
 				;
 		$database->setQuery( $query );
 		return $database->loadResult();
@@ -7597,12 +7655,12 @@ class AECfetchfromDB
 			$query .= ' WHERE `active` = \'1\' AND';
 		}
 
-		$query .= ' ( `invoice_number` LIKE \'' . $database->getEscaped( $invoice_number ) . '\''
-				. ' OR `secondary_ident` LIKE \'' . $database->getEscaped( $invoice_number ) . '\' )'
+		$query .= ' ( `invoice_number` LIKE \'' . $invoice_number . '\''
+				. ' OR `secondary_ident` LIKE \'' . $invoice_number . '\' )'
 				;
 
 		if ( $userid ) {
-			$query .= ' AND `userid` = \'' . $database->getEscaped( $userid ) . '\'';
+			$query .= ' AND `userid` = \'' . $userid . '\'';
 		}
 
 		$database->setQuery( $query );
@@ -7848,7 +7906,7 @@ class AECToolbox
 
 		$query = 'SELECT id'
 		. ' FROM #__users'
-		. ' WHERE username = \'' . $database->getEscaped( $username ) . '\''
+		. ' WHERE username = \'' . aecEscape( $username, array( 'string', 'badchars' ) ) . '\''
 		;
 		$database->setQuery( $query );
 		$id = $database->loadResult();
@@ -7897,7 +7955,7 @@ class AECToolbox
 
 		$query = 'SELECT id'
 		. ' FROM #__users'
-		. ' WHERE username = \'' . $database->getEscaped( $username ) . '\''
+		. ' WHERE username = \'' . aecEscape( $username, array( 'string', 'badchars' ) ) . '\''
 		;
 		$database->setQuery( $query );
 		$id = $database->loadResult();
@@ -7989,6 +8047,8 @@ class AECToolbox
 
 		$_POST = $var;
 
+		$var['username'] = aecEscape( $var['username'], array( 'string', 'badchars' ) );
+
 		if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
 			// This is a CB registration, borrowing their code to save the user
 			@saveRegistration( $option );
@@ -7998,7 +8058,7 @@ class AECToolbox
 
 			$query = 'SELECT `id`'
 					. ' FROM #__users'
-					. ' WHERE `username` = \'' . $database->getEscaped( $var['username'] ) . '\''
+					. ' WHERE `username` = \'' . $var['username'] . '\''
 					;
 			$database->setQuery( $query );
 			$uid = $database->loadResult();
@@ -8202,7 +8262,7 @@ class AECToolbox
 		// We need the new userid, so we're fetching it from the newly created entry here
 		$query = 'SELECT `id`'
 				. ' FROM #__users'
-				. ' WHERE `username` = \'' . $database->getEscaped( $var['username'] ) . '\''
+				. ' WHERE `username` = \'' . $var['username'] . '\''
 				;
 		$database->setQuery( $query );
 		return $database->loadResult();
@@ -9892,7 +9952,7 @@ class couponHandler
 		// Get this coupons id from the static table
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_coupons_static'
-				. ' WHERE `coupon_code` = \'' . $database->getEscaped( $coupon_code ) . '\''
+				. ' WHERE `coupon_code` = \'' . $coupon_code . '\''
 				;
 		$database->setQuery( $query );
 		$couponid = $database->loadResult();
@@ -9904,7 +9964,7 @@ class couponHandler
 			// Coupon not found, take the regular table
 			$query = 'SELECT `id`'
 					. ' FROM #__acctexp_coupons'
-					. ' WHERE `coupon_code` = \'' . $database->getEscaped( $coupon_code ) . '\''
+					. ' WHERE `coupon_code` = \'' . $coupon_code . '\''
 					;
 			$database->setQuery( $query );
 			$couponid = $database->loadResult();
@@ -9994,7 +10054,7 @@ class couponHandler
 		// Get this coupons id from the static table
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_coupons_static'
-				. ' WHERE `coupon_code` = \'' . $database->getEscaped( $coupon_code ) . '\''
+				. ' WHERE `coupon_code` = \'' . $coupon_code . '\''
 				;
 		$database->setQuery( $query );
 		$couponid = $database->loadResult();
@@ -10006,7 +10066,7 @@ class couponHandler
 			// Coupon not found, take the regular table
 			$query = 'SELECT `id`'
 					. ' FROM #__acctexp_coupons'
-					. ' WHERE `coupon_code` = \'' . $database->getEscaped( $coupon_code ) . '\''
+					. ' WHERE `coupon_code` = \'' . $coupon_code . '\''
 					;
 			$database->setQuery( $query );
 			$couponid = $database->loadResult();

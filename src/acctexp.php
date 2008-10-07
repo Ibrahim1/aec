@@ -45,8 +45,8 @@ $task = trim( mosGetParam( $_REQUEST, 'task', '' ) );
 if ( !empty( $task ) ) {
 	switch ( strtolower( $task ) ) {
 		case 'register':
-			$intro = aecGetParam( 'intro', 0 );
-			$usage = aecGetParam( 'usage', 0 );
+			$intro = aecGetParam( 'intro', 0, true, array( 'word', 'int' ) );
+			$usage = aecGetParam( 'usage', 0, true, array( 'word', 'int' ) );
 
 			$invoicefact = new InvoiceFactory(0);
 			$invoicefact->create($option, $intro, $usage);
@@ -67,10 +67,10 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'savesubscription':
-			$userid		= aecGetParam( 'userid', 0 );
-			$usage		= aecGetParam( 'usage', 0 );
-			$processor	= aecGetParam( 'processor', '' );
-			$coupon		= aecGetParam( 'coupon_code', '' );
+			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
+			$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'badchars' ) );
+			$processor	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'badchars' ) );
+			$coupon		= aecGetParam( 'coupon_code', '', true, array( 'word', 'string', 'badchars' ) );
 
 			$invoicefact = new InvoiceFactory( $userid, $usage, $processor );
 			$invoicefact->save( $option, $_POST, $coupon );
@@ -78,7 +78,7 @@ if ( !empty( $task ) ) {
 
 		case 'checkout':
 			$invoice	= aecGetParam( 'invoice', 0 );
-			$userid		= aecGetParam( 'userid', 0 );
+			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 
 			internalcheckout( $option, $invoice, $userid );
 			break;
@@ -88,8 +88,8 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'thanks':
-			$renew = aecGetParam( 'renew', 0 );
-			$free = aecGetParam( 'free', 0 );
+			$renew		= aecGetParam( 'renew', 0, true, array( 'word', 'int' ) );
+			$free		= aecGetParam( 'free', 0, true, array( 'word', 'int' ) );
 
 			thanks( $option, $renew, $free );
 			break;
@@ -99,49 +99,49 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'errap':
-			$usage			= aecGetParam( 'usage' );
-			$userid         = aecGetParam( 'userid' );
-			$username       = aecGetParam( 'username' );
-			$name           = aecGetParam( 'name' );
-			$recurring      = aecGetParam( 'recurring', 0 );
+			$usage		= aecGetParam( 'usage', true, array( 'word', 'string', 'badchars' ) );
+			$userid		= aecGetParam( 'userid', true, array( 'word', 'int' ) );
+			$username	= aecGetParam( 'username', true, array( 'string' ) );
+			$name		= aecGetParam( 'name', true, array( 'string' ) );
+			$recurring	= aecGetParam( 'recurring', 0, true, array( 'word', 'int' ) );
 
 			errorAP( $option, $usage, $userid, $username, $name, $recurring);
 			break;
 
 		case 'subscriptiondetails':
-			$sub			= aecGetParam( 'sub', '' );
+			$sub		= aecGetParam( 'sub', '', true, array( 'word', 'int' ) );
 
 			subscriptionDetails( $option, $sub );
 			break;
 
 		case 'renewsubscription':
-			$userid		= aecGetParam( 'userid', 0 );
+			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 
 			$invoicefact = new InvoiceFactory( $userid );
 			$invoicefact->create( $option );
 			break;
 
 		case 'expired':
-			$userid		= aecGetParam( 'userid', 0 );
-			$expiration = aecGetParam( 'expiration', 0 );
+			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
+			$expiration = aecGetParam( 'expiration', 0, true, array( 'string' ) );
 
 			expired( $option, $userid, $expiration );
 			break;
 
 		case 'hold':
-			$userid		= aecGetParam( 'userid', 0 );
+			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 
 			hold( $option, $userid );
 			break;
 
 		case 'pending':
-			$userid		= aecGetParam( 'userid' );
+			$userid		= aecGetParam( 'userid', true, array( 'word', 'int' ) );
 
 			pending( $option, $userid );
 			break;
 
 		case 'repeatpayment':
-			$invoice	= aecGetParam( 'invoice', 0 );
+			$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'badchars' ) );
 			$userid		= aecGetParam( 'userid', 0 );
 			$first		= aecGetParam( 'first', 0 );
 
@@ -149,7 +149,7 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'cancelpayment':
-			$invoice	= aecGetParam( 'invoice', 0 );
+			$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'badchars' ) );
 			$pending	= aecGetParam( 'pending', 0 );
 			$userid		= aecGetParam( 'userid', 0 );
 
@@ -157,8 +157,8 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'planaction':
-			$action	= aecGetParam( 'action', 0 );
-			$subscr	= aecGetParam( 'subscr' );
+			$action	= aecGetParam( 'action', 0, true, array( 'word', 'int' ) );
+			$subscr	= aecGetParam( 'subscr', '', true, array( 'word', 'int' ) );
 
 			planaction( $option, $action, $subscr );
 			break;
@@ -189,8 +189,8 @@ if ( !empty( $task ) ) {
 
 				processNotification( $option, $processor );
 			} else {
-				$userid		= aecGetParam( 'userid' );
-				$expiration = aecGetParam( 'expiration' );
+				$userid		= aecGetParam( 'userid', true, array( 'word', 'int' ) );
+				$expiration = aecGetParam( 'expiration', true, array( 'word', 'int' ) );
 
 				if ( !empty( $userid ) && !empty( $userid ) ) {
 					expired( $option, $userid, $expiration );
@@ -310,11 +310,12 @@ function subscribe( $option )
 {
 	global $my, $database, $mosConfig_uniquemail, $aecConfig;
 
-	$intro		= aecGetParam( 'intro', 0 );
-	$usage		= aecGetParam( 'usage', 0 );
-	$processor	= aecGetParam( 'processor', '' );
-	$userid		= aecGetParam( 'userid', 0 );
-	$username	= aecGetParam( 'username', '' );
+	$intro		= aecGetParam( 'intro', 0, true, array( 'word', 'int' ) );
+	$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'badchars' ) );
+	$processor	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'badchars' ) );
+	$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
+	$username	= aecGetParam( 'username', '', true, array( 'string' ) );
+	$email		= aecGetParam( 'email', '', true, array( 'string' ) );
 
 	$isJoomla15 = aecJoomla15check();
 
@@ -326,7 +327,7 @@ function subscribe( $option )
 			// Get required system objects
 			$user 		= clone(JFactory::getUser());
 
-			$duplicationcheck = checkDuplicateUsernameEmail( $_POST['username'], $_POST['email'] );
+			$duplicationcheck = checkDuplicateUsernameEmail( $username, $email );
 
 			// Bind the post array to the user object
 			if ( !$user->bind( JRequest::get('post'), 'usertype' ) || ( $duplicationcheck !== true ) ) {
@@ -363,7 +364,7 @@ function subscribe( $option )
 			}
 		} else {
 			if ( isset( $_POST['username'] ) && isset($_POST['email'] ) ) {
-				if ( checkDuplicateUsernameEmail( $_POST['username'], $_POST['email'] ) !== true ) {
+				if ( checkDuplicateUsernameEmail( $username, $email ) !== true ) {
 					return false;
 				}
 			}
@@ -385,7 +386,7 @@ function subscribe( $option )
 			$passthrough	= false;
 		} elseif ( !$userid ) {
 			if ( isset( $_POST['username'] ) && isset($_POST['email'] ) ) {
-				if ( checkDuplicateUsernameEmail( $_POST['username'], $_POST['email'] ) !== true ) {
+				if ( checkDuplicateUsernameEmail( $username, $email ) !== true ) {
 					return false;
 				}
 			}
@@ -434,7 +435,7 @@ function checkDuplicateUsernameEmail( $username, $email )
 
 	$query = 'SELECT `id`'
 			. ' FROM #__users'
-			. ' WHERE `username` = \'' . $database->getEscaped( $username ) . '\''
+			. ' WHERE `username` = \'' . $username . '\''
 			;
 	$database->setQuery( $query );
 	if ( $database->loadResult() ) {
@@ -452,7 +453,7 @@ function checkDuplicateUsernameEmail( $username, $email )
 			// check for existing email
 			$query = 'SELECT `id`'
 					. ' FROM #__users'
-					. ' WHERE `email` = \'' . $database->getEscaped( $email ) . '\''
+					. ' WHERE `email` = \'' . $email . '\''
 					;
 			$database->setQuery( $query );
 			if ( $database->loadResult() ) {
@@ -474,10 +475,11 @@ function confirmSubscription( $option )
 {
 	global $mosConfig_absolute_path, $mosConfig_emailpass, $mosConfig_useractivation, $mainframe, $my;
 
-	$userid		= aecGetParam( 'userid', 0 );
-	$usage		= aecGetParam( 'usage', 0 );
-	$processor	= aecGetParam( 'processor', '' );
-	$username	= aecGetParam( 'username', 0 );
+	$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
+	$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'badchars' ) );
+	$processor	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'badchars' ) );
+	$username	= aecGetParam( 'username', 0, true, array( 'word', 'int' ) );
+
 	if ( ( $usage > 0 ) && !$username && !$userid && !$my->id ) {
 		if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
 			// This is a CB registration, borrowing their code to register the user
@@ -954,7 +956,7 @@ function InvoiceAddParams( $option )
 {
 	global $database;
 
-	$invoice = aecGetParam( 'invoice', 0 );
+	$invoice = aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'badchars' ) );
 
 	$objinvoice = new Invoice( $database );
 	$objinvoice->loadInvoiceNumber( $invoice );
@@ -969,8 +971,8 @@ function InvoiceAddCoupon( $option )
 {
 	global $database;
 
-	$invoice		= aecGetParam( 'invoice', 0 );
-	$coupon_code	= aecGetParam( 'coupon_code', 0 );
+	$invoice		= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'badchars' ) );
+	$coupon_code	= aecGetParam( 'coupon_code', 0, true, array( 'word', 'string', 'badchars' ) );
 
 	$objinvoice = new Invoice( $database );
 	$objinvoice->loadInvoiceNumber( $invoice );
@@ -984,8 +986,8 @@ function InvoiceRemoveCoupon( $option )
 {
 	global $database;
 
-	$invoice		= aecGetParam( 'invoice', 0 );
-	$coupon_code	= aecGetParam( 'coupon_code', 0 );
+	$invoice		= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'badchars' ) );
+	$coupon_code	= aecGetParam( 'coupon_code', 0, true, array( 'word', 'string', 'badchars' ) );
 
 	$objinvoice = new Invoice( $database );
 	$objinvoice->loadInvoiceNumber( $invoice );
@@ -1151,7 +1153,7 @@ function thanks( $option, $renew, $free, $usage=null )
 	}
 
 	if ( empty( $usage ) ) {
-		$usage = aecGetParam( 'u' );
+		$usage = aecGetParam( 'u', true, array( 'word', 'string', 'badchars' ) );
 	}
 
 	if ( $mosConfig_useractivation ) {
@@ -1221,7 +1223,7 @@ function cancelPayment( $option )
 {
 	global $database, $aecConfig, $mainframe;
 
-	$userid = aecGetParam( 'itemnumber' );
+	$userid = aecGetParam( 'itemnumber', true, array( 'word', 'int' ) );
 	// The user cancel the payment operation
 	// But user is already created as blocked on database, so we need to delete it
 	$obj = new mosUser( $database );
