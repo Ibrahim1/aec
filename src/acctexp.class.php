@@ -114,10 +114,10 @@ function aecEscape( $value, $safe_params )
 	global $database;
 
 	if ( get_magic_quotes_gpc() ) {
-		$return = stripslashes( $return );
+		$return = stripslashes( $value );
 	}
 
-	$return = $database->getEscaped( $value );
+	$return = $database->getEscaped( $return );
 
 	if ( !empty( $safe_params ) ) {
 		foreach ( $safe_params as $param ) {
