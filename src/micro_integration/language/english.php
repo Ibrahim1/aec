@@ -673,7 +673,6 @@ define( '_MI_MI_PHPBB3_GROUP_EXP_DESC','The group you wish to use if the plan ex
 define( '_MI_MI_PHPBB3_REBUILD_NAME',                'Rebuild Gallerys' );
 define( '_MI_MI_PHPBB3_REBUILD_DESC',                'This option will rebuild your whole Fireboard group assignment by looking for each plan that has this MI applied and then add each user that uses one of these plans to the file.' );
 
-
 // uddeim
 define( '_AEC_MI_NAME_UDDEIM',		'UddeIM' );
 define( '_AEC_MI_DESC_UDDEIM',		'Choose the amount of PMs a user can send.' );
@@ -692,6 +691,5 @@ define( '_AEC_MI_UDDEIM_NOCREDIT',					'We are terribly sorry: You have no messa
 define( '_AEC_MI_DIV1_UDDEIM_USED',		'You have used <strong>%s</strong> messages.' );
 define( '_AEC_MI_DIV1_UDDEIM_REMAINING',	'You have <strong>%s</strong> messages remaining.' );
 define( '_AEC_MI_DIV1_UDDEIM_UNLIMITED', 	'unlimited' );
-
 
 ?>

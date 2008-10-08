@@ -651,4 +651,23 @@ define( '_MI_MI_PHPBB3_GROUP_EXP_DESC','The group you wish to use if the plan ex
 define( '_MI_MI_PHPBB3_REBUILD_NAME',                'Rebuild Gallerys' );
 define( '_MI_MI_PHPBB3_REBUILD_DESC',                'This option will rebuild your whole Fireboard group assignment by looking for each plan that has this MI applied and then add each user that uses one of these plans to the file.' );
 
+// uddeim
+define( '_AEC_MI_NAME_UDDEIM',		'UddeIM' );
+define( '_AEC_MI_DESC_UDDEIM',		'Choose the amount of PMs a user can send.' );
+define( '_MI_MI_UDDEIM_SET_MESSAGES_NAME',			'Set Messages' );
+define( '_MI_MI_UDDEIM_SET_MESSAGES_DESC',			'SET this amount of download,essages granted to the user - OVERRIDES THE >>ADD<< Setting! (does NOT reset the amount of messages a user has already used!)' );
+define( '_MI_MI_UDDEIM_ADD_MESSAGES_NAME',			'Add Messagess' );
+define( '_MI_MI_UDDEIM_ADD_MESSAGES_DESC',			'Add this amount of messages to the total granted amount of messages for this user. Will be overridden by SET if you put a value for that as well!.' );
+define( '_MI_MI_UDDEIM_SET_UNLIMITED_NAME',			'Set Unlimited' );
+define( '_MI_MI_UDDEIM_SET_UNLIMITED_DESC',			'Grant the user unlimited messages.' );
+define( '_MI_MI_UDDEIM_UNSET_UNLIMITED_NAME',			'Unset Unlimited on Expiration: ' );
+define( '_MI_MI_UDDEIM_UNSET_UNLIMITED_DESC',			'Remove unlimited downloads when user expires.' );
+define( '_MI_MI_UDDEIM_REMOVE_NAME', 				'Remove: ' );
+define( '_MI_MI_UDDEIM_REMOVE_NAME_DESC',			'Carry out the expiration action for all users with an active plan attached to this micro-integration' );
+define( '_AEC_MI_HACK1_UDDEIM',						'Build in a message restriction for UddeIM, to be used with Micro Integrations. <b>Note:</b> This is an optional hack which adds the ability to restrict number of message sent by the user.  It should ONLY be applied if this is desired.' );
+define( '_AEC_MI_UDDEIM_NOCREDIT',					'We are terribly sorry: You have no messages left.' );
+define( '_AEC_MI_DIV1_UDDEIM_USED',		'You have used <strong>%s</strong> messages.' );
+define( '_AEC_MI_DIV1_UDDEIM_REMAINING',	'You have <strong>%s</strong> messages remaining.' );
+define( '_AEC_MI_DIV1_UDDEIM_UNLIMITED', 	'unlimited' );
+
 ?>
