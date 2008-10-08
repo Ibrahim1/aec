@@ -132,7 +132,7 @@ class mi_raffle
 			$colET .= 'List ID: ' . $rafflelist->id . "\n" . "\n";
 			$colET .= 'Winner:' . "\n";
 			$colET .= 'Sequence ID:' . count( $rafflelist->params->participants ) . "\n";
-			$colET .= 'Userid: ' . $winnerMeta->userid . '; Username: ' . $winnerMeta->username . '; Email: ' . $winnerMeta->email . "\n" . "\n";
+			$colET .= 'Userid: ' . $winnerMeta->userid . '; Username: ' . $winnerMeta->cmsUser->username . '; Email: ' . $winnerMeta->cmsUser->email . "\n" . "\n";
 			$colET .= 'Further Participants:' . "\n" . "\n";
 
 			foreach ( $result['participants'] as $userid ) {
@@ -145,7 +145,7 @@ class mi_raffle
 				$database->setQuery( $query );
 				$database->loadObject( $u );
 
-				$colET .= $u->userid . ';' . $u->username . ';' . $u->email . "\n";
+				$colET .= $userid . ';' . $u->username . ';' . $u->email . "\n";
 			}
 
 			// check if Global Config `mailfrom` and `fromname` values exist
