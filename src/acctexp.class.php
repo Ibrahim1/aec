@@ -853,6 +853,37 @@ class metaUser
 			return $return;
 		}
 	}
+	
+	function getUserMIs(){
+		global $database;
+			
+		$return = array();
+		
+		if ( $this->objSubscription->plan ) {
+			$selected_plan = new SubscriptionPlan( $database );
+			$selected_plan->load( $this->objSubscription->plan );
+
+	
+			$mis = $selected_plan->micro_integrations;
+
+			if ( count( $mis ) ) {
+				foreach ( $mis as $mi_id ) {
+					if ( $mi_id ) {
+						$mi = new MicroIntegration( $database );
+						$mi->load( $mi_id );
+
+						if ( !$mi->callIntegration() ) {
+							continue;
+						}
+						
+						$return[] = $mi;
+					}		
+				}
+			}
+		}
+		return $return;
+	}
+	
 }
 
 class metaUserDB extends serialParamDBTable
