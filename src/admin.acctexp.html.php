@@ -431,6 +431,17 @@ class HTML_AcctExp
 	        	</th>
 			</tr>
 		</table>
+
+<?php
+		$tabs = new mosTabs(0);
+		$tabs->startPane( 'settings' );
+
+		$tabs->startTab(_AEC_HEAD_PLAN_INFO, _AEC_HEAD_PLAN_INFO);
+		echo '<div class="aec_tabheading"><h2>' . _AEC_HEAD_PLAN_INFO . '</h2></div>';
+
+		?>
+		
+		
 		<form action="index2.php" method="post" name="adminForm">
 			<table class="adminform">
 				<tr>
@@ -682,6 +693,39 @@ class HTML_AcctExp
 			<input type="hidden" name="task" value="" />
 			<input type="hidden" name="nexttask" value="<?php echo $nexttask;?>" />
 		</form>
+		
+<?php
+		$tabs->endTab();
+
+		$tabs->startTab(_AEC_HEAD_MICRO_INTEGRATION, _AEC_HEAD_MICRO_INTEGRATION);
+		
+		$userMIs = $metaUser->getUserMIs();
+?>
+		<div class="aec_tabheading"><h2><?php echo _AEC_HEAD_MICRO_INTEGRATION; ?></h2></div>
+		<form name="miForm" method="post" action="index2.php">
+		<table class="adminform">
+			<tr>
+				<td valign="top" style="padding: 10px;">
+<?php 
+			$width = 99;
+			if(count($userMIs)>1) $width = 45;
+			foreach($userMIs as $mi){
+?>				
+					<div class="userinfobox" style="width:<?php echo $width; ?>%">
+						<h3><?php echo $mi->info['name'] . ' - ' . $mi->name ?></h3>
+						<p><?php echo $mi->profile_info($metaUser->userid) ?></p>
+					</div>
+<?php } ?>					
+				</td>
+			</tr>
+		</table>
+		</form>
+		
+<?php 
+		$tabs->endTab();
+		
+		$tabs->endPane();
+?>		
 
  		<?php
 		if ( _EUCA_DEBUGMODE ) {
