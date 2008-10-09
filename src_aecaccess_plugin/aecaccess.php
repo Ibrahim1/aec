@@ -33,8 +33,8 @@ class plgAuthenticationAECaccess extends JPlugin
 	 * @param array  $config  An array that holds the plugin configuration
 	 * @since 1.5
 	 */
-	function plgAuthenticationAECaccess(& $subject, $config) {
-		parent::__construct($subject, $config);
+	function plgAuthenticationAECaccess( &$subject, $config ) {
+		parent::__construct( $subject, $config );
 	}
 
 	/**
@@ -50,36 +50,34 @@ class plgAuthenticationAECaccess extends JPlugin
 	function onAuthenticate( $credentials, $options, &$response )
 	{
 		global $database;
-		if (file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" )) {
-			include_once(JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php");
-			
+		if ( file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
+			include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
+
 			$aecConfig = new Config_General( $database );
 			$authlist = $aecConfig->cfg['authlist'];
-			foreach( $authlist as $auth)
-			{
-	            $className = 'plgAuthentication'.$auth;
-				$plugin = PluginHandler::getPlugin('authentication', $auth);
+			foreach( $authlist as $auth ) {
+	            if ( !empty( $auth ) ) {
+		            $className = 'plgAuthentication'.$auth;
+					$plugin = PluginHandler::getPlugin( 'authentication', $auth );
 
-				JLoader::import('authentication.'.$auth, JPATH_ROOT.DS.'plugins', 'plugins');
-				if (class_exists( $className ))
-				{
-					$plugin = new $className( JAuthentication::getInstance(), (array)$plugin );
-				}
+					JLoader::import( 'authentication.'.$auth, JPATH_ROOT.DS.'plugins', 'plugins' );
+					if ( class_exists( $className ) ) {
+						$plugin = new $className( JAuthentication::getInstance(), (array)$plugin );
+					}
 
-				// Try to authenticate
-				$plugin->onAuthenticate($credentials, $options, $response);
+					// Try to authenticate
+					$plugin->onAuthenticate($credentials, $options, $response);
 
-				// If authentication is successfull break the loop
-				if($response->status === JAUTHENTICATE_STATUS_SUCCESS)
-				{
-					break;
-				}
+					// If authentication is successfull break the loop
+					if ( $response->status === JAUTHENTICATE_STATUS_SUCCESS ) {
+						break;
+					}
+	            }
 			}
 
 			// process AEC verifications
-			if($response->status === JAUTHENTICATE_STATUS_SUCCESS)
-			{
-				$this->_AECVerification($credentials, $response);
+			if ( $response->status === JAUTHENTICATE_STATUS_SUCCESS ) {
+				$this->_AECVerification( $credentials, $response );
 				return;
 			}
 		}
@@ -98,7 +96,7 @@ class plgAuthenticationAECaccess extends JPlugin
 
 		$redirect = false;
 
-		switch( AEC_AUTH_ERROR_MSG ) {
+		switch ( AEC_AUTH_ERROR_MSG ) {
 			case 'pending':
 			case 'open_invoice':
 				$redirect = JURI::base( true ) . '/index.php?option=com_acctexp&task=pending&userid=' . $id;
@@ -116,7 +114,7 @@ class plgAuthenticationAECaccess extends JPlugin
 			$app->redirect( $redirect );
 		}
 	}
-	
+
 	function _AECVerification( $credentials, &$response )
 	{
 		if ( strpos( JPATH_BASE, '/administrator' ) ) {
@@ -144,7 +142,7 @@ class plgAuthenticationAECaccess extends JPlugin
 			define( 'AEC_AUTH_ERROR_UNAME', $credentials['username'] );
 			$response->status = JAUTHENTICATE_STATUS_FAILURE;
 		}
-	}	
+	}
 }
 
 ?>

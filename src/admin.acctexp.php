@@ -2521,7 +2521,7 @@ function editSubscriptionPlan( $id, $option )
 	$params['name']						= array( 'inputC', '' );
 	$params['desc']						= array( 'editor', '' );
 	$params['customthanks']				= array( 'inputC', '' );
-	$params['customtext_thanks_keeporiginal']	= array( 'list_yesno', '' );
+	$params['customtext_thanks_keeporiginal']	= array( 'list_yesno', 1 );
 	$params['customtext_thanks']		= array( 'editor', '' );
 	$params['email_desc']				= array( 'inputD', '' );
 	$params['micro_integrations']		= array( 'list', '' );
