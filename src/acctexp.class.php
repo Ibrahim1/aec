@@ -853,17 +853,15 @@ class metaUser
 			return $return;
 		}
 	}
-	
+
 	function getUserMIs(){
 		global $database;
-			
+
 		$return = array();
-		
 		if ( $this->objSubscription->plan ) {
 			$selected_plan = new SubscriptionPlan( $database );
 			$selected_plan->load( $this->objSubscription->plan );
 
-	
 			$mis = $selected_plan->micro_integrations;
 
 			if ( count( $mis ) ) {
@@ -875,15 +873,16 @@ class metaUser
 						if ( !$mi->callIntegration() ) {
 							continue;
 						}
-						
+
 						$return[] = $mi;
-					}		
+					}
 				}
 			}
 		}
+
 		return $return;
 	}
-	
+
 }
 
 class metaUserDB extends serialParamDBTable
@@ -9424,18 +9423,25 @@ class microIntegration extends serialParamDBTable
 			$spc	= strtoupper( 'system_preexp_call' );
 			$spca	= strtoupper( 'system_preexp_call_abandoncheck' );
 
+			$current_expiration = strtotime( $metaUser->focusSubscription->expiration );
+
 			// Check whether we have userflags to work with
 			if ( is_array( $userflags ) && !empty( $userflags ) ) {
-				// Check for this specific flag
-				if ( isset( $userflags[$spc] ) && isset( $userflags[$spca] ) ) {
-					if ( ( time() > $userflags[$spc] ) ) {
-						// This call has already been made
+				// Check whether flags exist
+				if ( isset( $userflags[$spc] ) ) {
+					if ( $current_expiration == $userflags[$spc] ) {
+						// This is a retrigger as expiration dates are equal => break
 						return false;
+					} else {
+						if ( time() > $current_expiration ) {
+							// This trigger comes too late as the expiration already happened => break
+							return false;
+						}
 					}
 				}
 			}
 
-			$newflags[$spc]		= strtotime( $metaUser->focusSubscription->expiration );
+			$newflags[$spc]		= $current_expiration;
 			$newflags[$spca]	= time();
 
 			// Create the new flags

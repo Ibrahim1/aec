@@ -659,7 +659,7 @@ define( '_MI_MI_UDDEIM_SET_UNLIMITED_DESC',			'Grant the user unlimited messages
 define( '_MI_MI_UDDEIM_UNSET_UNLIMITED_NAME',			'Unset Unlimited on Expiration: ' );
 define( '_MI_MI_UDDEIM_UNSET_UNLIMITED_DESC',			'Remove unlimited downloads when user expires.' );
 define( '_MI_MI_UDDEIM_REMOVE_NAME', 				'Remove: ' );
-define( '_MI_MI_UDDEIM_REMOVE_NAME_DESC',			'Carry out the expiration action for all users with an active plan attached to this micro-integration' );
+define( '_MI_MI_UDDEIM_REMOVE_DESC',			'Carry out the expiration action for all users with an active plan attached to this micro-integration' );
 define( '_AEC_MI_HACK1_UDDEIM',						'Build in a message restriction for UddeIM, to be used with Micro Integrations. <b>Note:</b> This is an optional hack which adds the ability to restrict number of message sent by the user.  It should ONLY be applied if this is desired.' );
 define( '_AEC_MI_UDDEIM_NOCREDIT',					'We are terribly sorry: You have no messages left.' );
 define( '_AEC_MI_DIV1_UDDEIM_USED',		'You have used <strong>%s</strong> messages.' );
