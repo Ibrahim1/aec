@@ -2595,9 +2595,9 @@ class processor extends serialParamDBTable
 	{
 		global $aecConfig;
 
-		$url_info = parse_url( $url );
+		$url_info = parse_url( $url, PHP_URL_PATH );
 
-        if ( empty( $url_info) ) {
+        if ( empty( $url_info ) ) {
             return false;
         }
 
