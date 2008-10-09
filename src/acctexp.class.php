@@ -1215,6 +1215,7 @@ class Config_General extends serialParamDBTable
 		$def['customtext_hold']					= '';
 		$def['proxy_username']					= '';
 		$def['proxy_password']					= '';
+		$def['gethostbyaddr']					= 1;
 
 		// Insert a new entry if there is none yet
 		if ( empty( $this->settings ) ) {
@@ -7841,9 +7842,17 @@ class AECToolbox
 	 */
 	function _aecIP()
 	{
-		// userip & hostname
+		global $aecConfig;
+
+		// user IP
 		$aecUser['ip'] 	= $_SERVER['REMOTE_ADDR'];
-		$aecUser['isp'] = gethostbyaddr( $_SERVER['REMOTE_ADDR'] );
+
+		// user Hostname (if not deactivated)
+		if ( $aecConfig->cfg['gethostbyaddr'] ) {
+			$aecUser['isp'] = gethostbyaddr( $_SERVER['REMOTE_ADDR'] );
+		} else {
+			$aecUser['isp'] = 'deactivated';
+		}
 
 		return $aecUser;
 	}

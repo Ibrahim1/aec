@@ -1102,7 +1102,7 @@ function saveUser( $option, $apply=0 )
 	}
 
 	$ck_lifetime = aecGetParam( 'ck_lifetime', 'off' );
-	
+
 	if( $metaUser->focusSubscription == NULL )
 	{
 		echo "<script> alert('"._AEC_ERR_NO_SUBSCRIPTION."'); window.history.go(-1); </script>\n";
@@ -1967,6 +1967,7 @@ function editSettings( $option )
 	$params['proxy_port']						= array( 'inputC', '' );
 	$params['proxy_username']					= array( 'inputC', '' );
 	$params['proxy_password']					= array( 'inputC', '' );
+	$params['gethostbyaddr']					= array( 'list_yesno', '' );
 	$params['display_date_frontend']			= array( 'inputC', '%a, %d %b %Y %T %Z' );
 	$params['display_date_backend']				= array( 'inputC', '%a, %d %b %Y %T %Z' );
 	$params['renew_button_never']				= array( 'list_yesno', '' );
