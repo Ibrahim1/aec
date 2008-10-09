@@ -109,7 +109,7 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'subscriptiondetails':
-			$sub		= aecGetParam( 'sub', '', true, array( 'word', 'int' ) );
+			$sub		= aecGetParam( 'sub', '', true, array( 'word', 'string' ) );
 
 			subscriptionDetails( $option, $sub );
 			break;
