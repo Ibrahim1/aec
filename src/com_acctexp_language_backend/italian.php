@@ -724,6 +724,8 @@ define( '_CFG_GENERAL_PROXY_USERNAME_NAME', 'Proxy Username');
 define( '_CFG_GENERAL_PROXY_USERNAME_DESC', 'If your proxy needs a custom login, put the username here.');
 define( '_CFG_GENERAL_PROXY_PASSWORD_NAME', 'Proxy Password');
 define( '_CFG_GENERAL_PROXY_PASSWORD_DESC', 'If your proxy needs a custom login, put the password here.');
+define( '_CFG_GENERAL_GETHOSTBYADDR_NAME', 'Log Host with IP');
+define( '_CFG_GENERAL_GETHOSTBYADDR_DESC', 'On logging Events that store an IP address, this option will also store the internet host name as well. In some hosting situations, this can take over a minute and thus should be disabled.');
 define( '_CFG_GENERAL_RENEW_BUTTON_NEVER_NAME', 'No Renew Button');
 define( '_CFG_GENERAL_RENEW_BUTTON_NEVER_DESC', 'Select "Yes" to never show the renew/upgrade button on the MySubscription page.');
 define( '_CFG_GENERAL_RENEW_BUTTON_NOLIFETIMERECURRING_NAME', 'Restricted Renew Button');
