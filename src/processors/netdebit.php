@@ -178,7 +178,7 @@ class processor_netdebit extends URLprocessor
 				$var['post_url'] = "https://www.netdebit-payment.de/pay/index.php?";
 			}
 		}
-
+print_r($var);exit;
 		return $var;
 	}
 

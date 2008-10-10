@@ -19,12 +19,12 @@ class mi_raffle
 		$tables	= array();
 		$tables	= $database->getTableList();
 
-		if ( in_array( $mosConfig_dbprefix . '_acctexp_mi_rafflelist', $tables ) ) {
+		if ( in_array( $mosConfig_dbprefix . 'acctexp_mi_rafflelist', $tables ) ) {
 			$result = null;
-			$database->setQuery( "SHOW COLUMNS FROM #_acctexp_mi_rafflelist LIKE 'finished'" );
+			$database->setQuery( "SHOW COLUMNS FROM #__acctexp_mi_rafflelist LIKE 'finished'" );
 			$database->loadObject( $result );
-			if ( strcmp( $result->Field, 'finished' ) === 0 ) {
-				$database->setQuery( "ALTER TABLE #_acctexp_mi_rafflelist ADD `finished` int(11) default \'0\'" );
+			if ( strcmp( $result->Field, 'finished' ) !== 0 ) {
+				$database->setQuery( "ALTER TABLE #__acctexp_mi_rafflelist ADD `finished` int(11) default \'0\'" );
 			}
 
 			return true;
@@ -76,6 +76,26 @@ class mi_raffle
 		$settings['col_recipient']		= array( 'inputE' );
 
 		return $settings;
+	}
+
+	function saveparams( $params )
+	{
+		global $database, $mosConfig_dbprefix;
+
+		$tables	= array();
+		$tables	= $database->getTableList();
+
+		if ( in_array( $mosConfig_dbprefix . 'acctexp_mi_rafflelist', $tables ) ) {
+			$result = null;
+			$database->setQuery( "SHOW COLUMNS FROM #__acctexp_mi_rafflelist LIKE 'finished'" );
+			$database->loadObject( $result );
+			if ( strcmp( $result->Field, 'finished' ) !== 0 ) {
+				$database->setQuery( "ALTER TABLE #__acctexp_mi_rafflelist ADD `finished` int(11) default \'0\'" );
+			}
+
+		}
+
+		return $params;
 	}
 
 	function action( $request )
