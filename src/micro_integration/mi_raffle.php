@@ -19,7 +19,18 @@ class mi_raffle
 		$tables	= array();
 		$tables	= $database->getTableList();
 
-		return in_array( $mosConfig_dbprefix . '_acctexp_mi_rafflelist', $tables );
+		if ( in_array( $mosConfig_dbprefix . '_acctexp_mi_rafflelist', $tables ) ) {
+			$result = null;
+			$database->setQuery( "SHOW COLUMNS FROM #_acctexp_mi_rafflelist LIKE 'finished'" );
+			$database->loadObject( $result );
+			if ( strcmp( $result->Field, 'finished' ) === 0 ) {
+				$database->setQuery( "ALTER TABLE #_acctexp_mi_rafflelist ADD `finished` int(11) default \'0\'" );
+			}
+
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	function install()
@@ -30,6 +41,7 @@ class mi_raffle
 		. '`id` int(11) NOT NULL auto_increment,'
 		. '`group` int(11) NULL,'
 		. '`params` text NULL,'
+		. '`finished` int(11) default \'0\','
 		. ' PRIMARY KEY (`id`)'
 		. ')'
 		;
@@ -192,6 +204,8 @@ class AECMI_rafflelist extends serialParamDBTable {
 	var $group					= null;
 	/** @var text */
 	var $params					= null;
+	/** @var int */
+	var $finished				= null;
 
 	/**
 	* @param database A database connector object
@@ -211,10 +225,11 @@ class AECMI_rafflelist extends serialParamDBTable {
 
 		$query = 'SELECT max(`id`)'
 			. ' FROM #__acctexp_mi_rafflelist'
+			. ' WHERE `finished` = 0'
 			;
 
 		if ( !empty( $group ) ) {
-			$query .= ' WHERE `group` = \'' . $group . '\'';
+			$query .= ' AND `group` = \'' . $group . '\'';
 		}
 
 		$database->setQuery( $query );
@@ -248,6 +263,8 @@ class AECMI_rafflelist extends serialParamDBTable {
 
 			$raffleuser->storeload();
 		}
+
+		$this->finished = 1;
 
 		return array( 'participants' => $participants, 'winners' => $winners );
 	}
