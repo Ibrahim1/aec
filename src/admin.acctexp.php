@@ -4013,7 +4013,7 @@ function saveCSS( $option )
 {
 	global $mosConfig_absolute_path;
 
-	$filecontent = aecGetParam( 'filecontent', '', _MOS_ALLOWHTML );
+	$filecontent = aecGetParam( 'filecontent' );
 
 	if ( !$filecontent ) {
 		mosRedirect( 'index2.php?option='. $option .'&task=editCSS', _AEC_MSG_OP_FAILED_EMPTY );
