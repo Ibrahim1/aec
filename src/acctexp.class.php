@@ -2626,7 +2626,15 @@ class processor extends serialParamDBTable
 	{
 		global $aecConfig;
 
-		$url_info = parse_url( $url, PHP_URL_PATH );
+		if ( strpos( '://', $url ) === false ) {
+			if ( $port == 443 ) {
+				$purl = 'https://' . $url;
+			} else {
+				$purl = 'http://' . $url;
+			}
+		}
+
+		$url_info = parse_url( 'https://' . $purl, PHP_URL_PATH );
 
         if ( empty( $url_info ) ) {
             return false;
