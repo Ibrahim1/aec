@@ -692,5 +692,24 @@ define( '_AEC_MI_DIV1_UDDEIM_USED',		'You have used <strong>%s</strong> messages
 define( '_AEC_MI_DIV1_UDDEIM_REMAINING',	'You have <strong>%s</strong> messages remaining.' );
 define( '_AEC_MI_DIV1_UDDEIM_UNLIMITED', 	'unlimited' );
 
+// PROMA
+define( '_AEC_MI_NAME_PROMA', 'PROMA' );
+define( '_AEC_MI_DESC_PROMA', 'Manage PROMA Profile Manager access groups' );
+define( '_MI_MI_PROMA_SET_GROUP_NAME',		'Set PROMA Group' );
+define( '_MI_MI_PROMA_SET_GROUP_DESC',		'Choose Yes if you want this MI to set the PROMA Group when it is called.' );
+define( '_MI_MI_PROMA_SET_DEFAULT_NAME',		'Set Default' );
+define( '_MI_MI_PROMA_SET_DEFAULT_DESC',		'Disregard the group setting below and apply the default group.' );
+define( '_MI_MI_PROMA_GROUP_NAME',			'PROMA Group' );
+define( '_MI_MI_PROMA_GROUP_DESC',			'The PROMA group that you want the user to be in.' );
+define( '_MI_MI_PROMA_SET_GROUP_EXP_NAME',	'Expiration group' );
+define( '_MI_MI_PROMA_SET_GROUP_EXP_DESC',	'The PROMA group that you want the user to be in when the subscription runs out.' );
+define( '_MI_MI_PROMA_SET_DEFAULT_EXP_NAME',	'Set Default (exp)' );
+define( '_MI_MI_PROMA_SET_DEFAULT_EXP_DESC',	'Disregard the group setting below and apply the default group.' );
+define( '_MI_MI_PROMA_GROUP_EXP_NAME',		'Set PROMA Group expiration' );
+define( '_MI_MI_PROMA_GROUP_EXP_DESC',		'Choose Yes if you want this MI to set the PROMA Group when the calling payment plan expires.' );
+define( '_MI_MI_PROMA_REBUILD_NAME',			'Rebuild' );
+define( '_MI_MI_PROMA_REBUILD_DESC',			'Attempt to rebuild the list of users assigned to the usergroup - >Set PROMA Group< and >PROMA Group< have to both be set for this.' );
+define( '_MI_MI_PROMA_REMOVE_NAME',			'Remove' );
+define( '_MI_MI_PROMA_REMOVE_DESC',			'Attempt to remove the effect of this MI to the users who hold a plan it has been assigned to.' );
 
 ?>
