@@ -19,18 +19,7 @@ class mi_raffle
 		$tables	= array();
 		$tables	= $database->getTableList();
 
-		if ( in_array( $mosConfig_dbprefix . 'acctexp_mi_rafflelist', $tables ) ) {
-			$result = null;
-			$database->setQuery( "SHOW COLUMNS FROM #__acctexp_mi_rafflelist LIKE 'finished'" );
-			$database->loadObject( $result );
-			if ( strcmp( $result->Field, 'finished' ) !== 0 ) {
-				$database->setQuery( "ALTER TABLE #__acctexp_mi_rafflelist ADD `finished` int(11) default \'0\'" );
-			}
-
-			return true;
-		} else {
-			return false;
-		}
+		return in_array( $mosConfig_dbprefix . 'acctexp_mi_rafflelist', $tables );
 	}
 
 	function install()
@@ -87,12 +76,14 @@ class mi_raffle
 
 		if ( in_array( $mosConfig_dbprefix . 'acctexp_mi_rafflelist', $tables ) ) {
 			$result = null;
+
 			$database->setQuery( "SHOW COLUMNS FROM #__acctexp_mi_rafflelist LIKE 'finished'" );
 			$database->loadObject( $result );
-			if ( strcmp( $result->Field, 'finished' ) !== 0 ) {
-				$database->setQuery( "ALTER TABLE #__acctexp_mi_rafflelist ADD `finished` int(11) default \'0\'" );
-			}
 
+			if ( empty( $result->Field ) ) {
+				$database->setQuery( "ALTER TABLE #__acctexp_mi_rafflelist ADD `finished` int(11) default '0'" );
+				$database->query();
+			}
 		}
 
 		return $params;
