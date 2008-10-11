@@ -70,14 +70,25 @@ class mi_http_query
 		return $urlsplit[0] . '?' . implode( '&', $fullp );
 	}
 
-	function fetchURL( $url ) {
-		$url_parsed = parse_url($url);
+	function fetchURL( $url )
+	{
+		global $aecConfig;
+
+		if ( strpos( $url, '://' ) === false ) {
+			$purl = 'http://' . $url;
+		} else {
+			$purl = $url;
+		}
+
+		$url_parsed = parse_url( $purl );
 
 		$host = $url_parsed["host"];
 		$port = $url_parsed["port"];
-		if ( $port == 0 ) {
+
+		if ( empty( $port ) ) {
 			$port = 80;
 		}
+
 		$path = $url_parsed["path"];
 
 		//if url is http://example.com without final "/"
@@ -90,23 +101,21 @@ class mi_http_query
 			$path .= "?".$url_parsed["query"];
 		}
 
-		$out = "GET $path HTTP/1.0\r\nHost: $host\r\n\r\n";
-		$fp = fsockopen( $host, $port, $errno, $errstr, 30 );
-
-		if ( $fp ) {
-			fwrite( $fp, $out );
-
-			$return = '';
-			while ( !feof( $fp ) ) {
-				$return .= fgets($fp, 1024);
+		if ( $aecConfig->cfg['curl_default'] ) {
+			$response = processor::doTheCurl( $url, '' );
+			if ( $response === false ) {
+				// If curl doesn't work try using fsockopen
+				$response = processor::doTheHttp( $url, $path, '', $port );
 			}
-
-			fclose( $fp );
-
-			return $return;
 		} else {
-			return false;
+			$response = processor::doTheHttp( $url, $path, '', $port );
+			if ( $response === false ) {
+				// If fsockopen doesn't work try using curl
+				$response = processor::doTheCurl( $url, '' );
+			}
 		}
+
+		return $response;
 	}
 }
 ?>
