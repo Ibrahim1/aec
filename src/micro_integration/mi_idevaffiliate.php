@@ -78,11 +78,19 @@ class mi_idevaffiliate
 		if ( !empty( $this->settings['customparams'] ) ) {
 			$rw_params = AECToolbox::rewriteEngineRQ( $this->settings['customparams'], $request );
 
-			$cps = explode( "\n", $rw_params );
+			if ( strpos( $rw_params, "\r\n" ) !== false ) {
+				$cps = explode( "\r\n", $rw_params );
+			} else {
+				$cps = explode( "\n", $rw_params );
+			}
 
 			foreach ( $cps as $cp ) {
 				$getparams[] = $cp;
 			}
+		}
+
+		foreach ( $getparams as $p => $v ) {
+			$getparams[$p] = urlencode($v);
 		}
 
 		if ( !empty( $this->settings['use_curl'] ) ) {
