@@ -1099,8 +1099,7 @@ function processNotification( $option, $processor )
 	// Create Response String for History
 	$responsestring = '';
 	foreach ( $_POST as $key => $value ) {
-		$value = urlencode( stripslashes( $value ) );
-		$responsestring .= $key . '=' . $value . "\n";
+		$responsestring .= $key . '=' . urlencode( stripslashes( $value ) ) . "\n";
 	}
 //aecDebug( "ResponseFunction:processNotification" );aecDebug( "GET:".json_encode( $_GET ) );aecDebug( "POST:".json_encode( $_POST ) );
 	// parse processor notification
