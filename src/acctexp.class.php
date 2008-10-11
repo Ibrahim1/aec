@@ -5199,7 +5199,7 @@ class InvoiceFactory
 		$where[] = '`active` = \'1\'';
 
 		if ( $usage ) {
-			$where[] = '`id` = ' . $usage;
+			$where[] = '`id` = \'' . $usage . '\'';
 		} else {
 			$where[] = '`visible` != \'0\'';
 		}

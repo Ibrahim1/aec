@@ -440,8 +440,8 @@ class HTML_AcctExp
 		echo '<div class="aec_tabheading"><h2>' . _AEC_HEAD_PLAN_INFO . '</h2></div>';
 
 		?>
-		
-		
+
+
 		<form action="index2.php" method="post" name="adminForm">
 			<table class="adminform">
 				<tr>
@@ -693,12 +693,12 @@ class HTML_AcctExp
 			<input type="hidden" name="task" value="" />
 			<input type="hidden" name="nexttask" value="<?php echo $nexttask;?>" />
 		</form>
-		
+
 <?php
 		$tabs->endTab();
 
 		$tabs->startTab(_AEC_HEAD_MICRO_INTEGRATION, _AEC_HEAD_MICRO_INTEGRATION);
-		
+
 		$userMIs = $metaUser->getUserMIs();
 ?>
 		<div class="aec_tabheading"><h2><?php echo _AEC_HEAD_MICRO_INTEGRATION; ?></h2></div>
@@ -706,26 +706,26 @@ class HTML_AcctExp
 		<table class="adminform">
 			<tr>
 				<td valign="top" style="padding: 10px;">
-<?php 
+<?php
 			$width = 99;
 			if(count($userMIs)>1) $width = 45;
 			foreach($userMIs as $mi){
-?>				
+?>
 					<div class="userinfobox" style="width:<?php echo $width; ?>%">
 						<h3><?php echo $mi->info['name'] . ' - ' . $mi->name ?></h3>
 						<p><?php echo $mi->profile_info($metaUser->userid) ?></p>
 					</div>
-<?php } ?>					
+<?php } ?>
 				</td>
 			</tr>
 		</table>
 		</form>
-		
-<?php 
+
+<?php
 		$tabs->endTab();
-		
+
 		$tabs->endPane();
-?>		
+?>
 
  		<?php
 		if ( _EUCA_DEBUGMODE ) {
@@ -1376,7 +1376,7 @@ class HTML_AcctExp
 	function editMicroIntegration( $option, $row, $lists, $aecHTML )
 	{
 		global $mosConfig_live_site;
-		//$Returnid = intval( mosGetParam( $_REQUEST, 'Returnid', 0 ) );
+		//$Returnid = intval( aecGetParam( $_REQUEST, 'Returnid', 0 ) );
 
 		$tabs = new mosTabs(0);
 		mosCommonHTML::loadOverlib();

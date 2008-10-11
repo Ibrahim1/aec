@@ -103,7 +103,7 @@ class processor_allopass extends POSTprocessor
 	function parseNotification( $post )
 	{
 
-   		$ssl_amount = mosGetParam( $_REQUEST, 'ssl_amount', '' ) ;
+   		$ssl_amount = aecGetParam( 'ssl_amount' ) ;
 
 		$response = array();
 		$response['invoice'] = $post['ssl_invoice_number'];

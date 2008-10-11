@@ -40,7 +40,7 @@ if ( _EUCA_DEBUGMODE ) {
 	$eucaDebug = new eucaDebug();
 }
 
-$task = trim( mosGetParam( $_REQUEST, 'task', '' ) );
+$task = trim( aecGetParam( 'task' ) );
 //aecDebug( $task );
 if ( !empty( $task ) ) {
 	switch ( strtolower( $task ) ) {
