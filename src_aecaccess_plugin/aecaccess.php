@@ -55,9 +55,14 @@ class plgAuthenticationAECaccess extends JPlugin
 
 			$aecConfig = new Config_General( $database );
 			$authlist = $aecConfig->cfg['authlist'];
+
+			if ( empty( $authlist ) ) {
+				$authlist = array( 'joomla' );
+			}
+
 			foreach( $authlist as $auth ) {
-	            if ( !empty( $auth ) ) {
-		            $className = 'plgAuthentication'.$auth;
+				if ( !empty( $auth ) ) {
+					$className = 'plgAuthentication'.$auth;
 					$plugin = PluginHandler::getPlugin( 'authentication', $auth );
 
 					JLoader::import( 'authentication.'.$auth, JPATH_ROOT.DS.'plugins', 'plugins' );
@@ -72,7 +77,7 @@ class plgAuthenticationAECaccess extends JPlugin
 					if ( $response->status === JAUTHENTICATE_STATUS_SUCCESS ) {
 						break;
 					}
-	            }
+				}
 			}
 
 			// process AEC verifications
