@@ -61,7 +61,7 @@ class mi_idevaffiliate
 		if ( !empty( $userflags['IDEV_IP_ADDRESS'] ) ) {
 			$ip = $userflags['IDEV_IP_ADDRESS'];
 		} else {
-			$subscr_params = $request->metaUser->focusSubscription->getParams();
+			$subscr_params = $request->metaUser->focusSubscription->params;
 
 			if ( isset( $subscr_params['creator_ip'] ) ) {
 				$ip = $subscr_params['creator_ip'];
@@ -89,8 +89,9 @@ class mi_idevaffiliate
 			}
 		}
 
-		foreach ( $getparams as $p => $v ) {
-			$getparams[$p] = urlencode($v);
+		$newget = array();
+		foreach ( $getparams as $v ) {
+			$newget[] = urlencode($v) . '=' . urlencode($v);
 		}
 
 		if ( !empty( $this->settings['use_curl'] ) ) {

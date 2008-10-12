@@ -42,28 +42,21 @@ class mi_phpbb3
 
 		$settings = array();
 
-		$settings['lists']['group']		= mosHTML::selectList($sg, 'group', 'size="4"', 'value', 'text', $this->settings['group']);
-		$settings['lists']['group_exp'] = mosHTML::selectList($sg, 'group_exp', 'size="4"', 'value', 'text', $this->settings['group_exp']);
-		$settings['lists']['group_colour'] = mosHTML::selectList($sg2, 'group_colour', 'size="4"', 'value', 'text', $this->settings['group_colour']);
-		$settings['lists']['group_colour_exp'] = mosHTML::selectList($sg2, 'group_colour_exp', 'size="4"', 'value', 'text', $this->settings['group_colour_exp']);
+		$settings['lists']['group']				= mosHTML::selectList($sg, 'group', 'size="4"', 'value', 'text', $this->settings['group']);
+		$settings['lists']['group_exp']			= mosHTML::selectList($sg, 'group_exp', 'size="4"', 'value', 'text', $this->settings['group_exp']);
+		$settings['lists']['group_colour']		= mosHTML::selectList($sg2, 'group_colour', 'size="4"', 'value', 'text', $this->settings['group_colour']);
+		$settings['lists']['group_colour_exp']	= mosHTML::selectList($sg2, 'group_colour_exp', 'size="4"', 'value', 'text', $this->settings['group_colour_exp']);
 
 		$settings['set_group']			= array( 'list_yesno' );
 		$settings['group']				= array( 'list' );
-		$settings['group_colour']        = array( 'list' );
+		$settings['group_colour']		= array( 'list' );
 		$settings['set_group_exp']		= array( 'list_yesno' );
 		$settings['group_exp']			= array( 'list' );
-		$settings['group_colour_exp']  = array( 'list' );
+		$settings['group_colour_exp']	= array( 'list' );
 		$settings['rebuild']			= array( 'list_yesno' );
 		$settings['remove']				= array( 'list_yesno' );
 
 		return $settings;
-	}
-
-	function detect_application()
-	{
-		global $mosConfig_absolute_path;
-
-		return is_dir( $mosConfig_absolute_path . '/distribution/' );
 	}
 
 	function expiration_action( $request )

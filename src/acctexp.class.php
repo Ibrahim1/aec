@@ -4092,13 +4092,13 @@ class SubscriptionPlan extends serialParamDBTable
 			$metaUser->focusSubscription->type = $processor;
 
 			// Clear parameters
-			$metaUser->focusSubscription->params = '';
+			$metaUser->focusSubscription->params = array();
 
 			if ( is_object( $invoice ) ) {
 				if ( !empty( $invoice->params ) ) {
 					$tempparam = array();
-					if ( !empty( $invoice_params['creator_ip'] ) ) {
-						$tempparam['creator_ip'] = $invoice_params['creator_ip'];
+					if ( !empty( $invoice->params['creator_ip'] ) ) {
+						$tempparam['creator_ip'] = $invoice->params['creator_ip'];
 					}
 
 					if ( !empty( $tempparam ) ) {
@@ -6493,7 +6493,7 @@ class Invoice extends serialParamDBTable
 
 					$this->subscr_id = $metaUser->focusSubscription->id;
 				} else {
-					$metaUser->focusSubscription->load( $this->subscr_id );
+					$metaUser->moveFocus( $this->subscr_id );
 				}
 
 				// Apply the Plan
