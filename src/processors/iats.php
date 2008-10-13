@@ -193,19 +193,17 @@ class processor_iats extends XMLprocessor
 			$tvar = array();
 			$fvar = array();
 
-         $params = $params . "&Amount1="      .  $this->dollarAmount;
-
-         $params = $params . "&BeginDate1="   .  date( 'Y-m-d' );
-         $params = $params . "&EndDate1="     .  $this->endDate;
-         $params = $params . "&ScheduleType1="     .  $this->scheduleType;
-         $params = $params . "&ScheduleDate1="     .  $this->scheduleDate;
-         $params = $params . "&Reoccurring1="      .  $this->reoccuringStatus;
-
 			$hastrial = false;
 
 			if ( isset( $request->int_var['amount']['amount1'] ) ) {
-
 				$t = $this->convertPeriodUnit( $request->int_var['amount']['period1'], $request->int_var['amount']['unit1'] );
+
+				$tvar['ScheduleType']	= $t['unit'];
+				$tvar['ScheduleDate']	= $t['period'];
+
+				$tvar['BeginDate']		= date( 'Y-m-d' );
+				$tvar['EndDate']		= date( 'Y-m-d' );
+
 				$tvar['MOP']			= $request->int_var['params']['cardType'];
 				$tvar['CCNum']			= $request->int_var['params']['cardNumber'];
 				$tvar['CCEXPIRY']		= str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ).'/'.$request->int_var['params']['expirationYear'];
@@ -247,7 +245,7 @@ class processor_iats extends XMLprocessor
 
 		$content = array();
 		foreach ( $var as $name => $value ) {
-			$content[] .= strtoupper( $name ) . '=' . urlencode( stripslashes( $value ) );
+			$content[] .= urlencode( $name ) . '=' . urlencode( stripslashes( $value ) );
 		}
 
 		return implode( '&', $content );
