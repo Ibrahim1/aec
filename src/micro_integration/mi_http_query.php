@@ -63,7 +63,7 @@ class mi_http_query
 			$e = explode( '=', $entry );
 
 			if ( !empty( $e[0] ) && !empty( $e[1] ) ) {
-				$fullp[] = urlencode( $e[0] ) . '=' . urlencode( $e[1] );
+				$fullp[] = urlencode( trim($e[0]) ) . '=' . urlencode( trim($e[1]) );
 			}
 		}
 

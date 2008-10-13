@@ -80,7 +80,7 @@ class mi_phpbb3
 		global $database;
 
 		if ( $this->settings['set_group'] ) {
-			// get the user phpbb user id - as its differnt from joomla
+			// get the user phpbb user id
 			$query = 'SELECT `user_id`'
 					. ' FROM phpbb_users'
 					. ' WHERE `username` = \'' . $request->metaUser->cmsUser->username . '\''
@@ -91,20 +91,19 @@ class mi_phpbb3
 
 			// If already an entry exists -> update, if not -> create
 			if ( $phpbbuser ) {
-								$query = 'UPDATE phpbb_users'
-												. ' SET `group_id` = \'' . $this->settings['group'] . '\', `user_colour` = \'' . $this->settings['group_colour'] . '\''
-												. ' WHERE `user_id` = \'' . $phpbbuser . '\''
-												;
-												// Carry out query
-						$database->setQuery( $query );
-						$database->query();
-						$query = 'UPDATE phpbb_user_group'
-												. ' SET `group_id` = \'' . $this->settings['group'] . '\''
-												. ' WHERE `user_id` = \'' . $phpbbuser . '\''
-												;
-												// Carry out query
-						$database->setQuery( $query );
-						$database->query();
+				$query = 'UPDATE phpbb_users'
+								. ' SET `group_id` = \'' . $this->settings['group'] . '\', `user_colour` = \'' . $this->settings['group_colour'] . '\''
+								. ' WHERE `user_id` = \'' . $phpbbuser . '\''
+								;
+				$database->setQuery( $query );
+				$database->query();
+
+				$query = 'UPDATE phpbb_user_group'
+										. ' SET `group_id` = \'' . $this->settings['group'] . '\''
+										. ' WHERE `user_id` = \'' . $phpbbuser . '\''
+										;
+				$database->setQuery( $query );
+				$database->query();
 			} else {
 				$GLOBALS['TEMP_USER'] = $user_data;
 				global $phpbb_root_path, $phpEx;
@@ -140,30 +139,29 @@ class mi_phpbb3
 	}
 
 
-		/*
-		 * function to get username based on fullname support
-		 */
-		function _getUserId($username, $fullname)
-		{
-				global $db;
+	/*
+	 * function to get username based on fullname support
+	 */
+	function _getUserId($username, $fullname)
+	{
+		global $db;
 
-				// if login_name exists use it
-				if (!empty($fullname)) {
-						$where = "login_name='" . $username . "'";
-				} else {
-						$where = "username_clean='" . utf8_clean_string($username) . "'";
-				}
-
-
-				// Get the user_id of the phpbb user
-				$sql = "SELECT user_id FROM ".USERS_TABLE." WHERE " . $where;
-
-				$result = $db->sql_query($sql);
-				$userid = $db->sql_fetchrow($result);
-				$db->sql_freeresult($result);
-
-				return $userid;
+		// if login_name exists use it
+		if (!empty($fullname)) {
+			$where = "login_name='" . $username . "'";
+		} else {
+			$where = "username_clean='" . utf8_clean_string($username) . "'";
 		}
+
+		// Get the user_id of the phpbb user
+		$sql = "SELECT user_id FROM ".USERS_TABLE." WHERE " . $where;
+
+		$result = $db->sql_query($sql);
+		$userid = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $userid;
+	}
 }
 
 ?>
