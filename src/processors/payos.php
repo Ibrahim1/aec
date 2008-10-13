@@ -34,7 +34,7 @@ class processor_payos extends URLprocessor
 		$settings['webmaster_id']	= 'webmaster';
 		$settings['content_id']		= 'content_id';
 		$settings['secret']			= 'secret';
-
+		$settings['type']			= 1;
 
 		return $settings;
 	}
@@ -47,6 +47,12 @@ class processor_payos extends URLprocessor
 		$settings['secret']			= array( 'inputC' );
 
 		$settings['customparams']	= array( 'inputD' );
+
+ 		$typelist = array();
+		$typelist[0] = mosHTML::makeOption ( 1, _CFG_NETDEBIT_TYPE_LISTITEM_ELV );
+		$typelist[1] = mosHTML::makeOption ( 2, _CFG_NETDEBIT_TYPE_LISTITEM_CC );
+
+		$settings['lists']['type']	= mosHTML::selectList( $typelist, 'payos_type', 'size="1"', 'value', 'text', $this->settings['type'] );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
@@ -71,7 +77,7 @@ class processor_payos extends URLprocessor
 		$var['CON']			= $this->settings['content_id'];
 		$var['VAR1']		= $request->int_var['invoice'];
 		$var['VAR2']		= "";//implode( "|", array() );
-		$var['PAY_type']	= 2;
+		$var['PAY_type']	= $this->settings['type']; //1 = Lastschrift, 2 = Kreditkarte
 		$var['Customer']	= $cust;
 		$var['_language']	= 'de';
 		$var['Country']		= 'DE';
@@ -83,19 +89,11 @@ class processor_payos extends URLprocessor
 			$period = $request->int_var['amount']['period3'];
 
 			switch ( $request->int_var['amount']['unit3'] ) {
-				case 'D':
-				case 'W':
-					// Only allows for Months or Years, so we have to go for the smallest larger amount of time
-					$period = 1;
-				case 'M':
-					$unit = 5;
-					break;
-				case 'Y':
-					$unit = 6;
-					break;
-				default:
-					$unit = 3;
-					break;
+				// Only allows for Months or Years, so we have to go for the smallest larger amount of time
+				case 'D': case 'W': $period = 1; // no break; - Leaps over to months to set the unit
+				case 'M': $unit = 5; break;
+				case 'Y': $unit = 6; break;
+				default: $unit = 3; break;
 			}
 
 			$var['AboTermType'] = $unit;

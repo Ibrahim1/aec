@@ -6458,7 +6458,7 @@ class Invoice extends serialParamDBTable
 		$eventlog->issue( $short, $tags, $event, $level, $params, $forcedisplay );
 
 		if ( !empty( $notificationerror ) ) {
-			$pp->notificationError( $response, $pp->notificationError( $response, 'General Error. Please contact the System Administrator.' ) );
+			$pp->notificationError( $response, $pp->notificationError( $response, $notificationerror ) );
 		} else {
 			$pp->notificationSuccess( $response );
 		}

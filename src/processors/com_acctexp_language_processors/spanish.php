@@ -648,23 +648,27 @@ define( '_CFG_NETDEBIT_SECRET_NAME', 'Secret');
 define( '_CFG_NETDEBIT_SECRET_DESC', 'Your Secret word to make communication with NetDebit secure.');
 define( '_CFG_NETDEBIT_JAVASCRIPT_CHECKOUT_NAME', 'Javascript Checkout');
 define( '_CFG_NETDEBIT_JAVASCRIPT_CHECKOUT_DESC', 'User Javascript Checkout instead of a HTML Button. This somewhat obsfuscates the button but might not have all the features when switched on. Will be automatically overwritten if more features are needed.');
-define( '_CFG_NETDEBIT_TYPE_NAME', 'Payment Type');
+define( '_CFG_NETDEBIT_TYPE_NAME', 'preselect Payment Type');
 define( '_CFG_NETDEBIT_TYPE_DESC', 'Choose the preferrably selected payment option');
 define( '_CFG_NETDEBIT_TYPE_LISTITEM_ELV', 'Debit');
 define( '_CFG_NETDEBIT_TYPE_LISTITEM_CC', 'Credit Card');
 define( '_CFG_NETDEBIT_PLAN_PARAMS_POSITION_NAME', 'Position');
 define( '_CFG_NETDEBIT_PLAN_PARAMS_POSITION_DESC', 'Tarifposition');
 
-// PayOS
-define( '_CFG_PAYOS_LONGNAME',			'PayOS' );
-define( '_CFG_PAYOS_STATEMENT',			'Make payments with PayOS!' );
-define( '_CFG_PAYOS_DESCRIPTION', 'Make payments with PayOS');
+// payOS
+define( '_CFG_PAYOS_LONGNAME',			'payOS' );
+define( '_CFG_PAYOS_STATEMENT',			'Make payments with payOS!' );
+define( '_CFG_PAYOS_DESCRIPTION', 'Make payments with payOS');
 define( '_CFG_PAYOS_WEBMASTER_ID_NAME', 'Webmaster ID');
-define( '_CFG_PAYOS_WEBMASTER_ID_DESC', 'Your PayOS Webmaster ID.');
+define( '_CFG_PAYOS_WEBMASTER_ID_DESC', 'Your payOS Webmaster ID.');
 define( '_CFG_PAYOS_CONTENT_ID_NAME', 'Content ID');
-define( '_CFG_PAYOS_CONTENT_ID_DESC', 'Your PayOS Content ID.');
+define( '_CFG_PAYOS_CONTENT_ID_DESC', 'Your payOS Content ID.');
 define( '_CFG_PAYOS_SECRET_NAME', 'Secret');
-define( '_CFG_PAYOS_SECRET_DESC', 'Your Secret word to make communication with PayOS secure.');
+define( '_CFG_PAYOS_SECRET_DESC', 'Your Secret word to make communication with payOS secure.');
+define( '_CFG_PAYOS_TYPE_NAME', 'preselect Payment Type');
+define( '_CFG_PAYOS_TYPE_DESC', 'Choose the preferrably selected payment option');
+define( '_CFG_PAYOS_TYPE_LISTITEM_ELV', 'Debit');
+define( '_CFG_PAYOS_TYPE_LISTITEM_CC', 'Credit Card');
 
 // iATS
 define( '_CFG_IATS_LONGNAME',			'iATS Ticketmaster' );

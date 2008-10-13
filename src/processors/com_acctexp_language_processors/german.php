@@ -665,23 +665,27 @@ define( '_CFG_NETDEBIT_SECRET_NAME', 'Passwort');
 define( '_CFG_NETDEBIT_SECRET_DESC', 'Ihr geheimes Passwort um die Kommunikation mit NetDebit zu sichern.');
 define( '_CFG_NETDEBIT_JAVASCRIPT_CHECKOUT_NAME', 'Javascript Checkout');
 define( '_CFG_NETDEBIT_JAVASCRIPT_CHECKOUT_DESC', 'F&uuml;rs bezahlen einen Javascript link statt eines HTML buttons verwenden. Dies kann hilfreich sein um &Auml;nderungen durch den Kunden zu verhindern.');
-define( '_CFG_NETDEBIT_TYPE_NAME', 'Bezahlform');
+define( '_CFG_NETDEBIT_TYPE_NAME', 'vorausgew&auml;hlte Bezahlform');
 define( '_CFG_NETDEBIT_TYPE_DESC', 'W&auml;hlen Sie die bevorzugte Bezahlform (kann vom Kunden ge&auml;ndert werden)');
 define( '_CFG_NETDEBIT_TYPE_LISTITEM_ELV', 'Lastschrift');
 define( '_CFG_NETDEBIT_TYPE_LISTITEM_CC', 'Kreditkarte');
 define( '_CFG_NETDEBIT_PLAN_PARAMS_POSITION_NAME', 'Position');
 define( '_CFG_NETDEBIT_PLAN_PARAMS_POSITION_DESC', 'Tarifposition');
 
-// PayOS
-define( '_CFG_PAYOS_LONGNAME',			'PayOS' );
-define( '_CFG_PAYOS_STATEMENT',			'Bezahlen mit PayOS!' );
-define( '_CFG_PAYOS_DESCRIPTION', 'Bezahlen mit PayOS');
+// payOS
+define( '_CFG_PAYOS_LONGNAME',			'payOS' );
+define( '_CFG_PAYOS_STATEMENT',			'Bezahlen mit payOS!' );
+define( '_CFG_PAYOS_DESCRIPTION', 'Bezahlen mit payOS');
 define( '_CFG_PAYOS_WEBMASTER_ID_NAME', 'Webmaster ID');
-define( '_CFG_PAYOS_WEBMASTER_ID_DESC', 'Ihre PayOS Webmaster ID.');
+define( '_CFG_PAYOS_WEBMASTER_ID_DESC', 'Ihre payOS Webmaster ID.');
 define( '_CFG_PAYOS_CONTENT_ID_NAME', 'Content ID');
-define( '_CFG_PAYOS_CONTENT_ID_DESC', 'Ihre PayOS Content ID.');
+define( '_CFG_PAYOS_CONTENT_ID_DESC', 'Ihre payOS Content ID.');
 define( '_CFG_PAYOS_SECRET_NAME', 'Secret');
-define( '_CFG_PAYOS_SECRET_DESC', 'Ihr geheimes Passwort um die Kommunikation mit PayOS zu sichern.');
+define( '_CFG_PAYOS_SECRET_DESC', 'Ihr geheimes Passwort um die Kommunikation mit payOS zu sichern.');
+define( '_CFG_PAYOS_TYPE_NAME', 'vorausgew&auml;hlte Bezahlform');
+define( '_CFG_PAYOS_TYPE_DESC', 'W&auml;hlen Sie die bevorzugte Bezahlform (kann vom Kunden ge&auml;ndert werden)');
+define( '_CFG_PAYOS_TYPE_LISTITEM_ELV', 'Lastschrift');
+define( '_CFG_PAYOS_TYPE_LISTITEM_CC', 'Kreditkarte');
 
 // iATS
 define( '_CFG_IATS_LONGNAME',			'iATS Ticketmaster' );

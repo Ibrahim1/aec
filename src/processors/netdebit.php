@@ -74,14 +74,6 @@ class processor_netdebit extends URLprocessor
 		return $settings;
 	}
 
-	function CustomPlanParams()
-	{
-		$p = array();
-		$p['position']	= array( 'inputC' );
-
-		return $p;
-	}
-
 	function createGatewayLink( $request )
 	{
 		global $mosConfig_live_site;
@@ -111,11 +103,7 @@ class processor_netdebit extends URLprocessor
 		$var['VAR2']	= "";//implode( "|", array() );
 		$var['ZAH']		= $this->settings['type']; //1 = Lastschrift, 2 = Kreditkarte
 
-		if ( !empty( $request->int_var['planparams']['position'] ) ) {
-			$var['POS'] = $request->int_var['planparams']['position'];
-		} else {
-			$var['POS'] = '';
-		}
+		$var['POS'] = '';
 
 		$var['KUN']		= $iscust;
 		$var['KNR']		= $cust;
@@ -124,21 +112,11 @@ class processor_netdebit extends URLprocessor
 			$var['TIM']	= 1;
 
 			switch ( $request->int_var['amount']['unit3'] ) {
-				case 'D':
-					$unit = 3;
-					break;
-				case 'W':
-					$unit = 4;
-					break;
-				case 'M':
-					$unit = 5;
-					break;
-				case 'Y':
-					$unit = 6;
-					break;
-				default:
-					$unit = 3;
-					break;
+				case 'D': $unit = 3; break;
+				case 'W': $unit = 4; break;
+				case 'M': $unit = 5; break;
+				case 'Y': $unit = 6; break;
+				default: $unit = 3; break;
 			}
 
 			$var['LZS'] = $unit;
@@ -178,7 +156,7 @@ class processor_netdebit extends URLprocessor
 				$var['post_url'] = "https://www.netdebit-payment.de/pay/index.php?";
 			}
 		}
-print_r($var);exit;
+
 		return $var;
 	}
 
