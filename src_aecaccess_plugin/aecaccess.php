@@ -60,6 +60,10 @@ class plgAuthenticationAECaccess extends JPlugin
 				$authlist = array( 'joomla' );
 			}
 
+			if ( empty( $authlist[0] ) ) {
+				$authlist = array( 'joomla' );
+			}
+
 			foreach( $authlist as $auth ) {
 				if ( !empty( $auth ) ) {
 					$className = 'plgAuthentication'.$auth;

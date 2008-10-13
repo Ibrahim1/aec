@@ -44,10 +44,18 @@ class processor_iats extends XMLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']	= array( 'list_yesno' );
+		$settings['testmode']		= array( 'list_yesno' );
+		$settings['server_type']	= array( 'list_yesno' );
 
 		$settings['agent_code']	= array( 'inputC' );
 		$settings['password']	= array( 'inputC' );
+
+		$settings['exp_amount']	= array( 'inputC' );
+
+		$perunit[] = mosHTML::makeOption( 'M', _PAYPLAN_PERUNIT3 );
+		$perunit[] = mosHTML::makeOption( 'Y', _PAYPLAN_PERUNIT4 );
+
+		$lists['exp_unit']		= mosHTML::selectList( $perunit, 'exp_unit', 'size="4"', 'value', 'text', ( empty($this->settings['exp_unit']) ? 'Y' : $this->settings['exp_unit'] ) );
 
 		return $settings;
 	}
@@ -187,11 +195,13 @@ class processor_iats extends XMLprocessor
 
          $params = $params . "&Amount1="      .  $this->dollarAmount;
 
-         $params = $params . "&BeginDate1="   .  $this->beginDate;
+         $params = $params . "&BeginDate1="   .  date( 'Y-m-d' );
          $params = $params . "&EndDate1="     .  $this->endDate;
          $params = $params . "&ScheduleType1="     .  $this->scheduleType;
          $params = $params . "&ScheduleDate1="     .  $this->scheduleDate;
          $params = $params . "&Reoccurring1="      .  $this->reoccuringStatus;
+
+			$hastrial = false;
 
 			if ( isset( $request->int_var['amount']['amount1'] ) ) {
 
@@ -202,23 +212,25 @@ class processor_iats extends XMLprocessor
 
 				$tvar['CVV2']			= $request->int_var['params']['cardVV2'];
 
-				$tvar['Amount']			= $request->int_var['amount'];
+				$tvar['Amount']			= $request->int_var['amount']['amount1'];
 				$tvar['Reoccurring']	= "OFF";
 
 
 				$timestamp = time() - ($mosConfig_offset_user*3600) + $offset;
-			} else {
-				$timestamp = time() - $mosConfig_offset_user*3600;
+				$hastrial = true;
 			}
-
-			$var['ProfileStartDate']    = date( 'Y-m-d', $timestamp ) . 'T' . date( 'H:i:s', $timestamp ) . 'Z';
 
 			$full = $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
 
 			$var['ScheduleType1']		= $full['unit'];
 			$var['BillingFrequency']	= $full['period'];
-			$var['amt']					= $request->int_var['amount']['amount3'];
+			$var['Amount1']				= $request->int_var['amount']['amount3'];
 			$var['ProfileReference']	= $request->int_var['invoice'];
+
+			foreach ( $fvar as $n => $v ) {
+				$var[$n.($hastrial ? '2' : '1')] = $v;
+			}
+
 		} else {
 			$tvar['MOP']			= $request->int_var['params']['cardType'];
 			$tvar['CCNum']			= $request->int_var['params']['cardNumber'];
@@ -245,6 +257,10 @@ class processor_iats extends XMLprocessor
 	{
 		$path = "/itravel/itravel.pro";
 
+		if ( !isset( $this->cookieFile ) && ( $this->settings['server_type'] == 1 ) ) {
+			$this->cookieFile = "cookie" .date("his"). ".txt";
+		}
+
 		if ( $this->settings['server_type'] == 1 ) {
 			$iats = 'iatsuk';
 		} else {
@@ -259,17 +275,15 @@ class processor_iats extends XMLprocessor
 			$port = 443;
 		}
 
-		$user_agent = "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)";
-
 		$curlextra = array();
-		$curlextra[CURLOPT_SSL_VERIFYHOST] = 2;
-		$curlextra[CURLOPT_USERAGENT] = $user_agent;
-		$curlextra[CURLOPT_SSL_VERIFYHOST] = 1;
+		$curlextra[CURLOPT_SSL_VERIFYHOST]	= 2;
+		$curlextra[CURLOPT_USERAGENT]		= "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)";
+		$curlextra[CURLOPT_SSL_VERIFYHOST]	= 1;
 
 		$cookieFile = "cookie" .date("his"). ".txt";
 
 		if ( $this->settings['server_type'] == 1 ) {
-			$curlextra[CURLOPT_COOKIEFILE] = $cookieFile;
+			$curlextra[CURLOPT_COOKIEFILE] = $this->cookieFile;
 		} else {
 			$curlextra[CURLOPT_USERPWD] = $this->settings['agent_code'] . ":" . $this->settings['password'];
 		}
