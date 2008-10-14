@@ -115,6 +115,8 @@ function aecEscape( $value, $safe_params )
 
 	if ( get_magic_quotes_gpc() ) {
 		$return = stripslashes( $value );
+	} else {
+		$return = $value;
 	}
 
 	$return = $database->getEscaped( $return );
@@ -2938,18 +2940,20 @@ class XMLprocessor extends processor
 			$values = array( 'firstname', 'lastname' );
 		}
 
+		$name = array( '', '' );
+
 		if ( is_object( $metaUser ) ) {
-			$name = explode( ' ', $metaUser->cmsUser->name );
+			if ( isset( $metaUser->cmsUser->name ) ) {
+				$name = explode( ' ', $metaUser->cmsUser->name );
 
-			if ( empty( $vcontent['firstname'] ) ) {
-				$vcontent['firstname'] = $name[0];
-			}
+				if ( empty( $vcontent['firstname'] ) ) {
+					$vcontent['firstname'] = $name[0];
+				}
 
-			if ( empty( $vcontent['lastname'] ) && isset( $name[1] ) ) {
-				$vcontent['lastname'] = $name[1];
+				if ( empty( $vcontent['lastname'] ) && isset( $name[1] ) ) {
+					$vcontent['lastname'] = $name[1];
+				}
 			}
-		} else {
-			$name = array( '', '' );
 		}
 
 		foreach ( $values as $value ) {
@@ -5019,6 +5023,10 @@ class InvoiceFactory
 		}
 
 		if ( !empty( $this->invoice ) ) {
+			if ( !isset( $this->objInvoice ) ) {
+				$this->objInvoice = null;
+			}
+
 			if ( !is_object( $this->objInvoice ) ) {
 				global $database;
 				$this->objInvoice = new Invoice( $database );
