@@ -201,8 +201,18 @@ class processor_iats extends XMLprocessor
 				$tvar['ScheduleType']	= $t['unit'];
 				$tvar['ScheduleDate']	= $t['period'];
 
+				switch ( $t['unit'] ) {
+					case 'D': $unit = 'days'; break;
+					case 'W': $unit = 'weeks'; break;
+					case 'M': $unit = 'months'; break;
+					case 'Y': $unit = 'years'; break;
+					default: $unit = 'days'; break;
+				}
+
+				$offset = strtotime( '+' . $t['period'] . ' ' . $unit );
+
 				$tvar['BeginDate']		= date( 'Y-m-d' );
-				$tvar['EndDate']		= date( 'Y-m-d' );
+				$tvar['EndDate']		= date( 'Y-m-d', $offset );
 
 				$tvar['MOP']			= $request->int_var['params']['cardType'];
 				$tvar['CCNum']			= $request->int_var['params']['cardNumber'];
@@ -213,15 +223,41 @@ class processor_iats extends XMLprocessor
 				$tvar['Amount']			= $request->int_var['amount']['amount1'];
 				$tvar['Reoccurring']	= "OFF";
 
+				foreach ( $fvar as $n => $v ) {
+					$var[$n.'1'] = $v;
+				}
 
-				$timestamp = time() - ($mosConfig_offset_user*3600) + $offset;
 				$hastrial = true;
 			}
 
-			$full = $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
+			$f = $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
 
-			$var['ScheduleType1']		= $full['unit'];
-			$var['BillingFrequency']	= $full['period'];
+			$fvar['ScheduleType']		= $t['unit'];
+			$fvar['ScheduleDate']		= $t['period'];
+
+			$offset2 = strtotime( '+' . $this->settings['exp_amount'] . ' ' . ( ( $this->settings['exp_unit'] == 'M' ) ? 'months' : 'years' ) );
+
+			if ( $hastrial ) {
+				$offset3 = $offset2 + $offset - time();
+
+				$fvar['BeginDate']		= date( 'Y-m-d' );
+				$fvar['EndDate']		= date( 'Y-m-d', $offset3 );
+			} else {
+				$fvar['BeginDate']		= date( 'Y-m-d' );
+				$fvar['EndDate']		= date( 'Y-m-d', $offset2 );
+			}
+
+			$fvar['MOP']				= $request->int_var['params']['cardType'];
+			$fvar['CCNum']				= $request->int_var['params']['cardNumber'];
+			$fvar['CCEXPIRY']			= str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ).'/'.$request->int_var['params']['expirationYear'];
+
+			$fvar['CVV2']				= $request->int_var['params']['cardVV2'];
+
+			$fvar['Amount']				= $request->int_var['amount']['amount1'];
+			$fvar['Reoccurring']		= "ON";
+
+			$var['ScheduleType1']		= $f['unit'];
+			$var['BillingFrequency']	= $f['period'];
 			$var['Amount1']				= $request->int_var['amount']['amount3'];
 			$var['ProfileReference']	= $request->int_var['invoice'];
 
@@ -230,11 +266,11 @@ class processor_iats extends XMLprocessor
 			}
 
 		} else {
-			$tvar['MOP']			= $request->int_var['params']['cardType'];
-			$tvar['CCNum']			= $request->int_var['params']['cardNumber'];
-			$tvar['CCEXPIRY']		= str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ).'/'.$request->int_var['params']['expirationYear'];
+			$var['MOP']			= $request->int_var['params']['cardType'];
+			$var['CCNum']			= $request->int_var['params']['cardNumber'];
+			$var['CCEXPIRY']		= str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ).'/'.$request->int_var['params']['expirationYear'];
 
-			$tvar['CVV2']			= $request->int_var['params']['cardVV2'];
+			$var['CVV2']			= $request->int_var['params']['cardVV2'];
 
 			$var['Total']			= $request->int_var['amount'];
 		}

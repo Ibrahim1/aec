@@ -682,5 +682,11 @@ define( '_CFG_IATS_AGENT_CODE_NAME', 'Agent Code');
 define( '_CFG_IATS_AGENT_CODE_DESC', 'Your Ticketmaster Agent Code.');
 define( '_CFG_IATS_PASSWORD_NAME', 'Password');
 define( '_CFG_IATS_PASSWORD_DESC', 'Your Ticketmaster Password.');
+define( '_CFG_IATS_EXP_AMOUNT_NAME', 'Term Length - Amount');
+define( '_CFG_IATS_EXP_AMOUNT_DESC', 'Overall length of a billing cycle in which individual billing periods take place. Amount of Units.');
+define( '_CFG_IATS_EXP_UNIT_NAME', 'Term Length - Units');
+define( '_CFG_IATS_EXP_UNIT_DESC', 'Overall length of a billing cycle in which individual billing periods take place. Select Unit.');
+define( '_CFG_IATS_SERVER_TYPE_NAME', 'Server Type');
+define( '_CFG_IATS_SERVER_TYPE_DESC', 'Select which type of iATS Server you want to use - US or UK.');
 
 ?>
