@@ -119,7 +119,9 @@ function aecEscape( $value, $safe_params )
 		$return = $value;
 	}
 
-	$return = $database->getEscaped( $return );
+	if ( in_array( 'clear_nonalnum', $safe_params ) ) {
+		$value = preg_replace( "/[^a-z \d]/i", "", $value );
+	}
 
 	if ( !empty( $safe_params ) ) {
 		foreach ( $safe_params as $param ) {
@@ -154,8 +156,9 @@ function aecEscape( $value, $safe_params )
 			$return = $r;
 		}
 
-		return $return;
 	}
+
+	return $database->getEscaped( $return );
 }
 
 function aecPostParamClear( $array )

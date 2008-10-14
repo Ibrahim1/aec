@@ -68,9 +68,9 @@ if ( !empty( $task ) ) {
 
 		case 'savesubscription':
 			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
-			$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'badchars' ) );
-			$processor	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'badchars' ) );
-			$coupon		= aecGetParam( 'coupon_code', '', true, array( 'word', 'string', 'badchars' ) );
+			$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+			$processor	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
+			$coupon		= aecGetParam( 'coupon_code', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 
 			$invoicefact = new InvoiceFactory( $userid, $usage, $processor );
 			$invoicefact->save( $option, $_POST, $coupon );
@@ -99,10 +99,10 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'errap':
-			$usage		= aecGetParam( 'usage', true, array( 'word', 'string', 'badchars' ) );
+			$usage		= aecGetParam( 'usage', true, array( 'word', 'string', 'clear_nonalnum' ) );
 			$userid		= aecGetParam( 'userid', true, array( 'word', 'int' ) );
-			$username	= aecGetParam( 'username', true, array( 'string' ) );
-			$name		= aecGetParam( 'name', true, array( 'string' ) );
+			$username	= aecGetParam( 'username', true, array( 'string', 'clear_nonalnum' ) );
+			$name		= aecGetParam( 'name', true, array( 'string', 'clear_nonalnum' ) );
 			$recurring	= aecGetParam( 'recurring', 0, true, array( 'word', 'int' ) );
 
 			errorAP( $option, $usage, $userid, $username, $name, $recurring);
@@ -141,7 +141,7 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'repeatpayment':
-			$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'badchars' ) );
+			$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 			$userid		= aecGetParam( 'userid', 0 );
 			$first		= aecGetParam( 'first', 0 );
 
@@ -149,7 +149,7 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'cancelpayment':
-			$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'badchars' ) );
+			$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 			$pending	= aecGetParam( 'pending', 0 );
 			$userid		= aecGetParam( 'userid', 0 );
 
@@ -311,8 +311,8 @@ function subscribe( $option )
 	global $my, $database, $mosConfig_uniquemail, $aecConfig;
 
 	$intro		= aecGetParam( 'intro', 0, true, array( 'word', 'int' ) );
-	$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'badchars' ) );
-	$processor	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'badchars' ) );
+	$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+	$processor	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 	$username	= aecGetParam( 'username', '', true, array( 'string' ) );
 	$email		= aecGetParam( 'email', '', true, array( 'string' ) );
@@ -476,8 +476,8 @@ function confirmSubscription( $option )
 	global $mosConfig_absolute_path, $mosConfig_emailpass, $mosConfig_useractivation, $mainframe, $my;
 
 	$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
-	$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'badchars' ) );
-	$processor	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'badchars' ) );
+	$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+	$processor	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$username	= aecGetParam( 'username', 0, true, array( 'word', 'int' ) );
 
 	if ( ( $usage > 0 ) && !$username && !$userid && !$my->id ) {
@@ -956,7 +956,7 @@ function InvoiceAddParams( $option )
 {
 	global $database;
 
-	$invoice = aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'badchars' ) );
+	$invoice = aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 
 	$objinvoice = new Invoice( $database );
 	$objinvoice->loadInvoiceNumber( $invoice );
@@ -971,8 +971,8 @@ function InvoiceAddCoupon( $option )
 {
 	global $database;
 
-	$invoice		= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'badchars' ) );
-	$coupon_code	= aecGetParam( 'coupon_code', 0, true, array( 'word', 'string', 'badchars' ) );
+	$invoice		= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+	$coupon_code	= aecGetParam( 'coupon_code', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 
 	$objinvoice = new Invoice( $database );
 	$objinvoice->loadInvoiceNumber( $invoice );
@@ -986,8 +986,8 @@ function InvoiceRemoveCoupon( $option )
 {
 	global $database;
 
-	$invoice		= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'badchars' ) );
-	$coupon_code	= aecGetParam( 'coupon_code', 0, true, array( 'word', 'string', 'badchars' ) );
+	$invoice		= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+	$coupon_code	= aecGetParam( 'coupon_code', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 
 	$objinvoice = new Invoice( $database );
 	$objinvoice->loadInvoiceNumber( $invoice );
@@ -1152,7 +1152,7 @@ function thanks( $option, $renew, $free, $usage=null )
 	}
 
 	if ( empty( $usage ) ) {
-		$usage = aecGetParam( 'u', true, array( 'word', 'string', 'badchars' ) );
+		$usage = aecGetParam( 'u', true, array( 'word', 'string', 'clear_nonalnum' ) );
 	}
 
 	if ( $mosConfig_useractivation ) {
