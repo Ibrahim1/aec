@@ -2645,7 +2645,7 @@ class processor extends serialParamDBTable
 			$purl = $url;
 		}
 
-		$url_info = parse_url( 'https://' . $purl, PHP_URL_PATH );
+		$url_info = parse_url( $purl );
 
         if ( empty( $url_info ) ) {
             return false;
