@@ -685,4 +685,9 @@ define( '_CFG_IATS_EXP_UNIT_DESC', 'Overall length of a billing cycle in which i
 define( '_CFG_IATS_SERVER_TYPE_NAME', 'Server Type');
 define( '_CFG_IATS_SERVER_TYPE_DESC', 'Select which type of iATS Server you want to use - US or UK.');
 
+// Chase Paymentech Orbital XML
+define( '_CFG_CHASE_PAYMENTECH_LONGNAME',			'Chase Paymentech' );
+define( '_CFG_CHASE_PAYMENTECH_STATEMENT',			'Make payments with Chase Paymentech!' );
+define( '_CFG_CHASE_PAYMENTECH_DESCRIPTION', 'Make payments with Chase Paymentech');
+
 ?>

@@ -980,7 +980,7 @@ class metaUserDB extends serialParamDBTable
 	{
 		global $mosConfig_offset;
 
-		if ( !is_object( $this->processor_params ) ) {
+		if ( !isset( $this->processor_params ) ) {
 			$this->processor_params = new stdClass();
 		}
 
