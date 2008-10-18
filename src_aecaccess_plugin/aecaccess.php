@@ -54,6 +54,31 @@ class plgAuthenticationAECaccess extends JPlugin
 			include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
 
 			$aecConfig = new Config_General( $database );
+
+			$autholist = $aecConfig->cfg['authorization_list'];
+
+			if ( !empty( $autholist ) ) {
+				foreach( $autholist as $auth ) {
+					if ( !empty( $auth ) ) {
+						$className = 'plgAuthentication'.$auth;
+						$plugin = PluginHandler::getPlugin( 'authentication', $auth );
+
+						JLoader::import( 'authentication.'.$auth, JPATH_ROOT.DS.'plugins', 'plugins' );
+						if ( class_exists( $className ) ) {
+							$plugin = new $className( JAuthentication::getInstance(), (array)$plugin );
+						}
+
+						// Try to authenticate
+						$plugin->onAuthenticate($credentials, $options, $response);
+
+						// If authentication is unsuccessfull break whole authorization
+						if ( $response->status !== JAUTHENTICATE_STATUS_SUCCESS ) {
+							return;
+						}
+					}
+				}
+			}
+
 			$authlist = $aecConfig->cfg['authlist'];
 
 			if ( empty( $authlist ) ) {

@@ -1224,6 +1224,7 @@ class Config_General extends serialParamDBTable
 		// new 0.12.6
 		$def['overrideJ15']						= 0;
 		$def['authlist']						= array( 'joomla' );
+		$def['authorization_list']				= array();
 		$def['customtext_hold_keeporiginal']	= 1;
 		$def['customtext_hold']					= '';
 		$def['proxy_username']					= '';

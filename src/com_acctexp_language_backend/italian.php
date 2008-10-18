@@ -762,6 +762,14 @@ define( '_CFG_TAB_MICROINTEGRATION_SUBTITLE', 'Micro Integrations');
 define( '_CFG_MI_MILIST_NAME', 'Active MicroIntegrations');
 define( '_CFG_MI_MILIST_DESC', 'Select which MicroIntegrations you want to use');
 
+// Global Authentication Settins
+define( '_CFG_TAB_AUTHENTICATION_TITLE', 'Authentication');
+define( '_CFG_TAB_AUTHENTICATION_SUBTITLE', 'Authentication Plugins');
+define( '_CFG_AUTH_AUTHLIST_NAME', 'Active Authentication Plugins');
+define( '_CFG_AUTH_AUTHLIST_DESC', 'Select which Authentication (as in: at least one of them has to be successful for the login to pass) Plugins will be used. AECaeccss Plugin must be the only Authentication Plugin enabled in the Joomla Plugin Manager.');
+define( '_CFG_AUTH_AUTHORIZATION_LIST_NAME', 'Active Authorization Plugins');
+define( '_CFG_AUTH_AUTHORIZATION_LIST_DESC', 'Select which Authorization (as in: all of them have to be successful for the login to pass) Plugins will be used. AECaeccss Plugin must be the only Authentication Plugin enabled in the Joomla Plugin Manager.');
+
 //Invoice settings
 define( '_CFG_GENERAL_SENDINVOICE_NAME', 'Send an invoice email');
 define( '_CFG_GENERAL_SENDINVOICE_DESC', 'Send and invoice/purchase order email (for tax reasons)');

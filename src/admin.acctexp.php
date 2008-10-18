@@ -2031,8 +2031,8 @@ function editSettings( $option )
 	@end( $params );
 	$tab_data[] = array( _CFG_TAB_CUSTOMIZATION_TITLE, key( $params ), '<h2>' . _CFG_TAB_CUSTOMIZATION_SUBTITLE . '</h2>' );
 
-	$params['mi_remap']					= array( 'subarea_change', 'mi' );
-	$params['milist']						= array( 'list', '' );
+	$params['mi_remap']							= array( 'subarea_change', 'mi' );
+	$params['milist']							= array( 'list', '' );
 
 	@end( $params );
 	$tab_data[] = array( _CFG_TAB_MICROINTEGRATION_TITLE, key( $params ), '<h2>' . _CFG_TAB_MICROINTEGRATION_SUBTITLE . '</h2>' );
@@ -2040,6 +2040,7 @@ function editSettings( $option )
 	if ( aecJoomla15check() ) {
 		$params['auth_remap']					= array( 'subarea_change', 'auth' );
 		$params['authlist']						= array( 'list', '' );
+		$params['authorization_list']			= array( 'list', '' );
 
 		@end( $params );
 		$tab_data[] = array( _CFG_TAB_AUTHENTICATION_TITLE, key( $params ), '<h2>' . _CFG_TAB_AUTHENTICATION_SUBTITLE . '</h2>' );
