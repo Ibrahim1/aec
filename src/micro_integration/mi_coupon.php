@@ -67,7 +67,7 @@ class mi_coupon
 						$ocph = new couponHandler();
 						$ocph->load( $cid );
 						$ocph->coupon->active = 1;
-						$ocph->restrictions['max_reuse'] + $this->settings['inc_old_coupons'];
+						$ocph->restrictions['max_reuse'] += $this->settings['inc_old_coupons'];
 						$ocph->coupon->setParams( $ocph->restrictions, 'restrictions' );
 						$ocph->coupon->check();
 						$ocph->coupon->store();
@@ -77,14 +77,14 @@ class mi_coupon
 		}
 
 		$newcodes = array();
-		if ( ( !empty( $existing_coupons ) && !empty( $settings['always_new_coupons'] ) ) || empty( $existing_coupons ) ) {
-			if ( !empty( $settings['create_new_coupons'] ) && !empty( $settings['master_coupon'] ) ) {
+		if ( ( !empty( $existing_coupons ) && !empty( $this->settings['always_new_coupons'] ) ) || empty( $existing_coupons ) ) {
+			if ( !empty( $this->settings['create_new_coupons'] ) && !empty( $this->settings['master_coupon'] ) ) {
 
 				$cph = new CouponHandler(  );
-				$cph->load( $settings['master_coupon'] );
+				$cph->load( $this->settings['master_coupon'] );
 
 				if ( is_object( $cph->coupon ) ) {
-					for ( $i=0; $i<$settings['create_new_coupons']; $i++ ) {
+					for ( $i=0; $i<$this->settings['create_new_coupons']; $i++ ) {
 						$newcode = $cph->coupon->generateCouponCode();
 						$newcodes[] = $newcode;
 
@@ -92,13 +92,13 @@ class mi_coupon
 						$cph->coupon->coupon_code = $newcode;
 						$cph->coupon->active = 1;
 
-						if ( !empty( $settings['create_new_coupons'] ) ) {
-							$ocph->restrictions['max_reuse'] = $settings['max_reuse'];
+						if ( !empty( $this->settings['create_new_coupons'] ) ) {
+							$ocph->restrictions['max_reuse'] = $this->settings['max_reuse'];
 						} else {
 							$ocph->restrictions['max_reuse'] = 1;
 						}
 
-						if ( !empty( $settings['bind_subscription'] ) ) {
+						if ( !empty( $this->settings['bind_subscription'] ) ) {
 							$cph->restrictions['depend_on_subscr_id'] = 1;
 							$cph->restrictions['subscr_id_dependency'] = $request->metaUser->focusSubscription->id;
 							$cph->coupon->setParams( $cph->restrictions, 'restrictions' );
@@ -108,7 +108,7 @@ class mi_coupon
 						$cph->coupon->store();
 					}
 
-					if ( !empty( $settings['mail_out_coupons'] ) ) {
+					if ( !empty( $this->settings['mail_out_coupons'] ) ) {
 						$this->mailOut( $request, $newcodes );
 					}
 				}
@@ -116,7 +116,7 @@ class mi_coupon
 		}
 
 		$total_coupons = array_merge( $total_coupons, $newcodes );
-
+print_r($total_coupons);exit;
 		$newflags['coupons'] = implode( ',', $total_coupons );
 
 		$request->metaUser->objSubscription->setMIflags( $plan->id, $this->id, $newflags );
