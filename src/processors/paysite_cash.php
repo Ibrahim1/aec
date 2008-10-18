@@ -23,6 +23,7 @@ class processor_paysite_cash extends URLprocessor
 		$i['languages'] = 'FR,US';
 		$i['cc_list'] = 'visa,mastercard,discover,americanexpress,echeck';
 		$i['notify_trail_thanks'] = 1;
+		$i['recurring'] = 2;
 
 		return $i;
 	}
@@ -55,12 +56,32 @@ class processor_paysite_cash extends URLprocessor
 
 		$var['post_url'] = " https://billing.paysite-cash.biz/?";
 		$var['site'] = $this->settings['siteid'];
-		$var['montant'] = $request->int_var['amount'];
 		$var['devise'] = $this->settings['currency'];
 
-		$var['divers'] = base64_encode( md5( $this->settings['secret'] . $request->int_var['invoice'] . $request->int_var['amount'] . $this->settings['currency'] ) );
+		if ( is_array( $request->int_var['amount'] ) ) {
+			$suffix = '';
+			if ( isset( $request->int_var['amount']['amount1'] ) ) {
+				$var['periode'] = $request->int_var['amount']['period1'] . strtolower( $request->int_var['amount']['unit1'] );
+				$var['montant'] = $request->int_var['amount']['amount1'];
+				$suffix = '2';
+			}
+
+			$var['periode'.$suffix] = $request->int_var['amount']['period3'] . strtolower( $request->int_var['amount']['unit3'] );
+			$var['montant'.$suffix] = $request->int_var['amount']['amount3'];
+
+			$var['redebit'] = 'x';
+			$var['subscription'] = 1;
+		} else {
+			$var['montant'] = $request->int_var['amount'];
+		}
+
+		$var['divers'] = base64_encode( md5( $this->settings['secret'] . $request->int_var['invoice'] ) );
 
 		$var['ref'] = $request->int_var['invoice'];
+
+		$var['email'] = $request->int_var['invoice'];
+		$var['user'] = $request->metaUser->cmsUser->username;
+		$var['pass'] = 'xxxx';
 
 		foreach ( $var as $key => $value ) {
 			if ( $key != 'post_url' ) {
@@ -81,9 +102,11 @@ class processor_paysite_cash extends URLprocessor
 
 	function validateNotification( $response, $post, $invoice )
 	{
-		switch ( $post['res'] ) {
+		$response['valid'] = false;
+
+		switch ( $post['etat'] ) {
 			case 'ok':
-				$misc = base64_encode( md5( $this->settings['secret'] . $post['ref'] . $post['montant_org'] . $post['devise_org'] ) );
+				$misc = base64_encode( md5( $this->settings['secret'] . $post['ref'] ) );
 
 				if ( $misc == $post['divers'] ) {
 					$response['valid'] = true;
@@ -91,20 +114,20 @@ class processor_paysite_cash extends URLprocessor
 					$response['valid'] = false;
 				}
 
-				$response['amount_paid']		= $post['montant_sent'];
-				$response['amount_currency']	= $post['devise_sent'];
+				/*$response['amount_paid']		= $post['montant_sent'];
+				$response['amount_currency']	= $post['devise_sent'];*/
 				break;
 			case 'ko':
 				$response['valid'] = false;
 				break;
 			case 'end':
-				$response['valid'] = false;
+				$response['eot'] = true;
 				break;
 			case 'refund':
-				$response['valid'] = false;
+				$response['delete'] = true;
 				break;
 			case 'chargeback':
-				$response['valid'] = false;
+				$response['chargeback'] = true;
 				break;
 		}
 
