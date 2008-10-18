@@ -15,7 +15,6 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 // Import library dependencies
 jimport('joomla.event.plugin');
 
-
 /**
  * AEC Error Handler
  *
@@ -68,8 +67,18 @@ class plgSystemAECErrorHandler extends JPlugin
 
 		if ( $return = JRequest::getVar( 'return', '', 'method', 'base64' ) ) {
 			$return = base64_decode( $return );
-			if ( !JURI::isInternal( $return ) ) {
-				$return = '';
+			if ( function_exists( 'JURI::isInternal' ) ) {
+				if ( !JURI::isInternal( $return ) ) {
+					$return = '';
+				}
+			} else {
+				// Copied for pre-1.5.7 compatibility
+				$uri =& JURI::getInstance($return);
+				$base = $uri->toString(array('scheme', 'host', 'port', 'path'));
+				$host = $uri->toString(array('scheme', 'host', 'port'));
+				if(strpos(strtolower($base), strtolower(JURI::base())) !== 0 && !empty($host)) {
+					$return = '';
+				}
 			}
 		}
 
