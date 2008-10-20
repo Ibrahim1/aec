@@ -1898,18 +1898,22 @@ function editSettings( $option )
 			}
 		}
 
+		$selected_authentications = array();
 		if ( !empty( $aecConfig->cfg['authlist'] ) ) {
-			$authlist = $aecConfig->cfg['authlist'];
-			$selected_auths = array();
-			foreach ( $authlist as $auth_name ) {
-				$selected_auths[]->value = $auth_name;
+			foreach ( $aecConfig->cfg['authlist'] as $auth_name ) {
+				$selected_authentications[]->value = $auth_name;
 			}
-		} else {
-			$aecConfig->cfg['authlist'] = null;
-			$selected_auths		= '';
 		}
 
-		$lists['authlist'] = mosHTML::selectList( $auth_htmllist, 'authlist[]', 'size="' . min( ( $auth_counter + 1 ), 25 ) . '" multiple', 'value', 'text', $selected_auths );
+		$selected_authorizations = array();
+		if ( !empty( $aecConfig->cfg['authorization_list'] ) ) {
+			foreach ( $aecConfig->cfg['authorization_list'] as $auth_name ) {
+				$selected_authorizations[]->value = $auth_name;
+			}
+		}
+
+		$lists['authlist'] = mosHTML::selectList( $auth_htmllist, 'authlist[]', 'size="' . min( ( $auth_counter + 1 ), 25 ) . '" multiple', 'value', 'text', $selected_authentications );
+		$lists['authorization_list'] = mosHTML::selectList( $auth_htmllist, 'authorization_list[]', 'size="' . min( ( $auth_counter + 1 ), 25 ) . '" multiple', 'value', 'text', $selected_authorizations );
 	}
 
 	$tab_data = array();
