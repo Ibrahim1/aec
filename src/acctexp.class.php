@@ -2182,6 +2182,11 @@ class PaymentProcessor
 			return $this->is_recurring;
 		}
 
+		// Check for bogus choice
+		if ( empty( $choice ) && ( $choice !== 0 ) ) {
+			$choice = null;
+		}
+
 		$return = false;
 
 		// Load Info if not loaded yet
@@ -2204,7 +2209,7 @@ class PaymentProcessor
 				$return = (int) $this->info['recurring'];
 			}
 
-			if ( !is_null( $choice ) && ( $return > 1 ) ) {
+			if ( ( !is_null( $choice ) ) && ( $return > 1 ) ) {
 				$return = (int) $choice;
 			}
 		} elseif ( !empty( $this->info['recurring'] ) ) {
@@ -2212,6 +2217,7 @@ class PaymentProcessor
 		}
 
 		$this->is_recurring = $return;
+
 		return $return;
 	}
 
