@@ -488,6 +488,8 @@ class Payment_HTML
 
 		$html_code = '';
 
+		$imgroot = $mosConfig_live_site . '/components/com_acctexp/images/';
+
 		foreach ( $pps as $pp ) {
 			$gw_current = strtolower( $pp->processor_name );
 			$hidden = array();
@@ -507,12 +509,20 @@ class Payment_HTML
 
 			if ( !empty( $pp->settings['generic_buttons'] ) ) {
 				if ( !empty( $pp->recurring ) ) {
-					$urlbutton = $mosConfig_live_site . '/components/com_acctexp/images/gw_button_generic_subscribe.png';
+					$urlbutton = $imgroot . 'gw_button_generic_subscribe.png';
 				} else {
-					$urlbutton = $mosConfig_live_site . '/components/com_acctexp/images/gw_button_generic_buy_now.png';
+					$urlbutton = $imgroot . 'gw_button_generic_buy_now.png';
 				}
 			} else {
-				$urlbutton = $mosConfig_live_site . '/components/com_acctexp/images/gw_button_' . $pp->processor_name . '.png';
+				if ( isset( $pp->info['recurring_buttons'] ) ) {
+					if ( $pp->recurring ) {
+						$urlbutton = $imgroot . 'gw_button_' . $pp->processor_name . '_recurring_1' . '.png';
+					} else {
+						$urlbutton = $imgroot . 'gw_button_' . $pp->processor_name . '_recurring_0' . '.png';
+					}
+				} else {
+					$urlbutton = $imgroot . 'gw_button_' . $pp->processor_name . '.png';
+				}
 			}
 
 			$html_code .= '<div class="gateway_button">' . "\n"

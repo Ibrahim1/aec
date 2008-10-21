@@ -24,6 +24,7 @@ class processor_netdebit extends URLprocessor
 		$info['languages']			= 'GB,DE,FR,IT,ES,US,NL';
 		$info['cc_list']			= 'visa,mastercard,discover,americanexpress,echeck,giropay';
 		$info['recurring']			= 2;
+		$info['recurring_buttons']	= 2;
 
 		return $info;
 	}
