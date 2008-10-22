@@ -21,6 +21,11 @@ defined( '_VALID_MOS' ) or die( 'Restricted access' );
 
 class eucaObject extends JObject {}
 
+function eucaInclude( $string )
+{
+	return JLoader::import( $string, _EUCA_APP_COMPDIR, 'lib.');
+}
+
 /**
 * parameterized Database Table entry
 *

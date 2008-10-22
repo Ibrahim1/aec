@@ -22,11 +22,7 @@ class processor_chase_paymentech extends XMLprocessor
 		$info['longname']			= _CFG_CHASE_PAYMENTECH_LONGNAME;
 		$info['statement']			= _CFG_CHASE_PAYMENTECH_STATEMENT;
 		$info['description']		= _CFG_CHASE_PAYMENTECH_DESCRIPTION;
-		$info['currencies']			= 'AFA,DZD,ADP,ARS,AMD,AWG,AUD,AZM,BSD,BHD,THB,PAB,BBD,BYB,BEF,BZD,BMD,VEB,BOB,BRL,BND,BGN,BIF,CAD,CVE,KYD,GHC,XOF,XAF,XPF,CLP,COP,KMF,BAM,NIO,CRC,CUP,CYP,CZK,GMD,'.
-									'DKK,MKD,DEM,AED,DJF,STD,DOP,VND,GRD,XCD,EGP,SVC,ETB,EUR,FKP,FJD,HUF,CDF,FRF,GIP,XAU,HTG,PYG,GNF,GWP,GYD,HKD,UAH,ISK,INR,IRR,IQD,IEP,ITL,JMD,JOD,KES,PGK,LAK,EEK,'.
-									'HRK,KWD,MWK,ZMK,AOR,MMK,GEL,LVL,LBP,ALL,HNL,SLL,ROL,BGL,LRD,LYD,SZL,LTL,LSL,LUF,MGF,MYR,MTL,TMM,FIM,MUR,MZM,MXN,MXV,MDL,MAD,BOV,NGN,ERN,NAD,NPR,ANG,NLG,YUM,ILS,'.
-									'AON,TWD,ZRN,NZD,BTN,KPW,NOK,PEN,MRO,TOP,PKR,XPD,MOP,UYU,PHP,XPT,PTE,GBP,BWP,QAR,GTQ,ZAL,ZAR,OMR,KHR,MVR,IDR,RUB,RUR,RWF,SAR,ATS,SCR,XAG,SGD,SKK,SBD,KGS,SOS,ESP,'.
-									'LKR,SHP,ECS,SDD,SRG,SEK,CHF,SYP,TJR,BDT,WST,TZS,KZT,TPE,SIT,TTD,MNT,TND,TRL,UGX,ECV,CLF,USN,USS,USD,UZS,VUV,KRW,YER,JPY,CNY,ZWD,PLN';
+		$info['currencies']			= AECToolbox::_aecCurrencyField( true, true, true, true );
 		$info['cc_list']			= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring']			= 2;
 		$info['recurring_buttons']	= 2;
@@ -39,9 +35,9 @@ class processor_chase_paymentech extends XMLprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['login']				= 'login';
-		$settings['transaction_key']	= 'transaction_key';
 		$settings['testmode']			= 0;
+		$settings['merchant_id']		= 'login';
+		$settings['terminal_id']		= '001';
 		$settings['currency']			= 'USD';
 		$settings['promptAddress']		= 0;
 		$settings['promptZipOnly']		= 0;
@@ -56,8 +52,8 @@ class processor_chase_paymentech extends XMLprocessor
 	{
 		$settings = array();
 		$settings['testmode']			= array( 'list_yesno' );
-		$settings['login'] 				= array( 'inputC' );
-		$settings['transaction_key']	= array( 'inputC' );
+		$settings['merchant_id'] 		= array( 'inputC' );
+		$settings['terminal_id'] 		= array( 'inputC' );
 		$settings['currency']			= array( 'list_currency' );
 		$settings['promptAddress']		= array( 'list_yesno' );
 		$settings['promptZipOnly']		= array( 'list_yesno' );
@@ -86,7 +82,7 @@ class processor_chase_paymentech extends XMLprocessor
 	{
 		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
 
-		$post = aecPostParamClear( $_POST );
+		$post = aecPostParamClear( $_POST, true );
 
 		if ( !isset( $post['payprofileselect'] ) ) {
 			$post['shipprofileselect'] = null;
@@ -407,7 +403,101 @@ class processor_chase_paymentech extends XMLprocessor
 
 	function createRequestXML( $request )
 	{
-		return "";
+		//  Create a new MiniXMLDoc object
+		eucaInclude( 'minixml.minixml' );
+		$xmlDoc  = new MiniXMLDoc();
+		$xmlRoot =& $xmlDoc->getRoot();
+
+		$R =& $xmlRoot->createChild( 'Request' );
+			$AC =& $R->createChild( 'AC' );
+			$CommonData =& $AC->createChild( 'CommonData' );
+				$CM =& $CommonData->createChild( 'CommonMandatory' );
+				$CM->attribute( 'HcsTcsInd', 'T' );
+				$CM->attribute( 'MessageType', MODULE_PAYMENT_PAYMENTECH_MESSAGETYPE );
+				$CM->attribute( 'LangInd', '00' );
+				$CM->attribute( 'TzCode', MODULE_PAYMENT_PAYMENTECH_TZCODE );
+				$CM->attribute( 'AuthOverrideInd', 'N' );
+				$CM->attribute( 'Version', '2' );
+				$CM->attribute( 'TxCatg', '7' );
+				$CM->attribute( 'CardHolderAttendanceInd', '01' );
+
+				$AccountNum =& $CM->createChild( 'AccountNum' );
+					$AccountNum->attribute( 'AccountTypeInd', '91' );
+					$AccountNum->text( $request->int_var['params']['cardNumber'] ); // $my_card_number
+
+				$POSDetails =& $CM->createChild( 'POSDetails' );
+					$POSDetails->attribute( 'POSEntryMode', '01' );
+
+				$MerchantID =& $CM->createChild( 'MerchantID' );
+					$MerchantID->text( $this->settings['merchant_id'] );
+
+				$TerminalID =& $CM->createChild( 'TerminalID' );
+					$TerminalID->attribute( 'POSConditionCode', '59' );
+					$TerminalID->attribute( 'CardPresentInd', 'N' );
+					$TerminalID->attribute( 'AttendedTermDataInd', '01' );
+					$TerminalID->attribute( 'TermLocInd', '01' );
+					$TerminalID->attribute( 'CATInfoInd', '06' );
+					$TerminalID->attribute( 'TermEntCapInd', '05' );
+					$TerminalID->text( MODULE_PAYMENT_PAYMENTECH_TRACE_ID );
+
+				$BIN =& $CM->createChild( 'BIN' );
+					$BIN->text( '000001' );
+
+				$OrderID =& $CM->createChild( 'OrderID' );
+					$OrderID->text( $request->int_var['invoice'] ); // $my_invoice_description
+
+				$AmountDetails =& $CM->createChild( 'AmountDetails' );
+					$Amount =& $AmountDetails->createChild( 'Amount' );
+						$Amount->text( $request->int_var['amount'] ); // $my_totalamount
+
+				$TxTypeCommon =& $CM->createChild( 'TxTypeCommon' );
+					$TxTypeCommon->attribute( 'TxTypeID', 'G' );
+
+				$Currency =& $CM->createChild( 'Currency' );
+					$Currency->attribute( 'CurrencyCode', AECToolbox::_aecNumCurrency( $this->settings['currency'] ) );
+					$Currency->attribute( 'CurrencyExponent', AECToolbox::_aecNumCurrency( $this->settings['_aecCurrencyExp'] ) );
+
+				$CardPresence =& $CM->createChild( 'CardPresence' );
+					$CardNP =& $CardPresence->createChild( 'CardNP' );
+						$Exp =& $CardNP->createChild( 'Exp' );
+						$Exp->text( $request->int_var['params']['expirationYear'] . $request->int_var['params']['expirationMonth'] );
+
+				$TxDateTime =& $CM->createChild( 'TxDateTime' );
+					$TxDateTime->text( $request->int_var['params'][$aecvar] );
+
+			$CD =& $CommonData->createChild( 'CommonOptional' );
+
+			$CardSecVal =& $CD->createChild( 'CardSecVal' );
+				$CardSecVal->text( $request->int_var['params'][$aecvar] ); // $my_cc_verify
+				$CardSecVal->attribute( 'CardSecInd', '1' );
+
+			$ECommerceData =& $CD->createChild( 'ECommerceData' );
+				$ECommerceData->attribute( 'ECSecurityInd', '07' );
+				$ECOrderNum =& $ECommerceData->createChild( 'ECOrderNum' );
+					$ECOrderNum->text( $request->int_var['invoice'] ); // $my_invoice_description
+
+			$Auth =& $AC->createChild( 'Auth' );
+				$AuthMandatory =& $Auth->createChild( 'AuthMandatory' );
+				 $AuthMandatory->attribute( 'FormatInd', 'H' );
+				$AuthOptional =& $Auth->createChild( 'AuthOptional' );
+					$AVSextended =& $AuthOptional->createChild( 'AVSextended' );
+						$AVSname =& $AVSextended->createChild( 'AVSname' );
+						$AVSname->text( $request->int_var['params']['billFirstName'] );
+						$AVSaddress1 =& $AVSextended->createChild( 'AVSaddress1' );
+						$AVSaddress1->text( $request->int_var['params']['billAddress'] );
+						$AVScity =& $AVSextended->createChild( 'AVScity' );
+						$AVScity->text( $request->int_var['params']['billCity'] );
+						$AVSstate =& $AVSextended->createChild( 'AVSstate' );
+						$AVSstate->text( $request->int_var['params']['billState'] );
+						$AVSzip =& $AVSextended->createChild( 'AVSzip' );
+						$AVSzip->text( $request->int_var['params']['billZip'] );
+			$Cap =& $AC->createChild( 'Cap' );
+				$CapMandatory =& $Cap->createChild( 'CapMandatory' );
+					$EntryDataSrc =& $CapMandatory->createChild( 'EntryDataSrc' );
+						$EntryDataSrc->text( '02' );
+				$CapOptional =& $Cap->createChild( 'CapOptional' );
+
+		return $xmlDoc->toString( 0, '' );
 	}
 
 	function transmitRequestXML( $xml, $request )
