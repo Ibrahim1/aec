@@ -68,7 +68,9 @@ function planFirst()
 		if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {
 			include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");
 			if($aecConfig->cfg['plans_first']){
-				mosRedirect( sefRelToAbs( 'index.php?option=com_acctexp&task=subscribe' ) );
+				$usage = intval(mosGetParam($_POST,'usage','0'));
+				if($usage === 0 || $option != 'com_comprofiler')
+					mosRedirect( sefRelToAbs( 'index.php?option=com_acctexp&task=subscribe' ) );
 			}
 		}
 	}
