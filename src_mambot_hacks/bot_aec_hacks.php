@@ -48,8 +48,9 @@ function planRegistration()
 	global $mosConfig_absolute_path, $option;
 
 	$task = mosGetParam( $_REQUEST, 'task', '' );
+	$usage = intval(mosGetParam( $_POST, 'usage', '0' ));
 
-	if (($option == 'com_registration' && $task == 'register') || ($option == 'com_comprofiler' && $task == 'registers'))
+	if ($usage == 0 && (($option == 'com_registration' && $task == 'register') || ($option == 'com_comprofiler' && $task == 'registers')))
 	{
 		if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {
 			$option = "com_acctexp";
@@ -64,7 +65,8 @@ function planFirst()
 
 	$task = mosGetParam( $_REQUEST, 'task', '' );
 
-	if ($option == 'com_registration' && $task == 'register'){
+	if (($option == 'com_registration' && $task == 'register') || ($option == 'com_comprofiler' && $task == 'registers'))
+	{
 		if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {
 			include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");
 			if($aecConfig->cfg['plans_first']){
