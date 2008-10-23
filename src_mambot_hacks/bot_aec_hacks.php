@@ -10,11 +10,9 @@
 
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-		die('MtK');
 if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {
 	include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");
 	if( aecJoomla15check() ) {
-//		die('MtK');
 		$_MAMBOTS->registerFunction( 'onAfterStart', 'checkUserSubscription' ); //joomla.php Hack #4
 		$_MAMBOTS->registerFunction( 'onAfterStart', 'planFirst' ); //registration.php Hack #6
 		$_MAMBOTS->registerFunction( 'onAfterStart', 'planRegistration' ); //registration.php Hack #2 + comprofiler.php Hack #2
@@ -57,7 +55,7 @@ function planRegistration()
 	$task = mosGetParam( $_REQUEST, 'task', '' );
 	$usage = intval(mosGetParam( $_POST, 'usage', '0' ));
 
-	if ($usage == 0 && (($option == 'com_registration' && $task == 'register') || ($option == 'com_comprofiler' && $task == 'registers')))
+	if ($usage != 0 && (($option == 'com_registration' && $task == 'register') || ($option == 'com_comprofiler' && $task == 'registers')))
 	{
 		if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {
 			$option = "com_acctexp";
