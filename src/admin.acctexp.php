@@ -4835,7 +4835,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #6';
 		$hacks[$n]['desc']			=	_AEC_HACKS_CB6;
 		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['condition']		=	'comprofilerphp2';
+/*		$hacks[$n]['condition']		=	'comprofilerphp2'; removed dependency [#0000161]*/ 
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.php';
 		$hacks[$n]['read']			=	'HTML_comprofiler::registerForm( $option, $emailpass, $userComplete, $regErrorMSG );';
 		$hacks[$n]['insert']		=	sprintf($aec_rhackbefore_fix, $n, $n) . "\n" . $hacks[$n]['read'];

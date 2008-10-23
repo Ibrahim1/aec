@@ -8,7 +8,6 @@
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
-
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 $_MAMBOTS->registerFunction( 'onAfterStart', 'checkUserSubscription' ); //joomla.php Hack #4
 $_MAMBOTS->registerFunction( 'onAfterStart', 'planFirst' ); //registration.php Hack #6
@@ -71,7 +70,7 @@ function planFirst()
 			include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");
 			if($aecConfig->cfg['plans_first']){
 				$usage = intval(mosGetParam($_POST,'usage','0'));
-				if($usage === 0 || $option != 'com_comprofiler')
+				if($usage == 0 || $option != 'com_comprofiler')
 					mosRedirect( sefRelToAbs( 'index.php?option=com_acctexp&task=subscribe' ) );
 			}
 		}
@@ -84,8 +83,8 @@ function checkUserSubscription()
 	global $mosConfig_absolute_path, $option;
 
 	$task = mosGetParam( $_REQUEST, 'task', '' );
-
 	$submit = mosGetParam($_POST,'submit', '');
+	
 	if ($option == 'login' ||
          ($option == 'com_comprofiler' && $task == 'login') &&
          ($submit == 'Login')) {
