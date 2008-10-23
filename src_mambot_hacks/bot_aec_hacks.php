@@ -33,7 +33,7 @@ function notifyMI()
 		||
 		($option == 'com_comprofiler' && $task == 'saveregisters')
 		||
-		($option == 'com_comprofiler' && strcasecmp($task,'saveUserEdit')==0)
+		($option == 'com_comprofiler' && ( strcasecmp($task,'saveUserEdit') == 0 ))
 		)
 	{
 		if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {
@@ -90,7 +90,7 @@ function checkUserSubscription()
 
 	$task = mosGetParam( $_REQUEST, 'task', '' );
 	$submit = mosGetParam($_POST,'submit', '');
-	
+
 	if ($option == 'login' ||
          ($option == 'com_comprofiler' && $task == 'login') &&
          ($submit == 'Login')) {
