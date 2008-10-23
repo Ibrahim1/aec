@@ -706,5 +706,13 @@ define( '_CFG_IATS_SERVER_TYPE_DESC', 'Select which type of iATS Server you want
 define( '_CFG_CHASE_PAYMENTECH_LONGNAME',			'Chase Paymentech' );
 define( '_CFG_CHASE_PAYMENTECH_STATEMENT',			'Make payments with Chase Paymentech!' );
 define( '_CFG_CHASE_PAYMENTECH_DESCRIPTION', 'Make payments with Chase Paymentech');
+define( '_CFG_CHASE_PAYMENTECH_MERCHANT_ID_NAME', 'Merchant ID');
+define( '_CFG_CHASE_PAYMENTECH_MERCHANT_ID_DESC', 'Your Chase Paymentech Merchant ID.');
+define( '_CFG_CHASE_PAYMENTECH_TERMINAL_ID_NAME', 'Terminal ID');
+define( '_CFG_CHASE_PAYMENTECH_TERMINAL_ID_DESC', 'Your Terminal ID.');
+define( '_CFG_CHASE_PAYMENTECH_PROMPTADDRESS_NAME', 'Prompt for Address');
+define( '_CFG_CHASE_PAYMENTECH_PROMPTADDRESS_DESC', 'Ask the user to put in an Address with the Billing Name.');
+define( '_CFG_CHASE_PAYMENTECH_PROMPTZIPONLY_NAME', 'Prompt for Zip only');
+define( '_CFG_CHASE_PAYMENTECH_PROMPTZIPONLY_DESC', 'Ask the user to put in a Zip code only.');
 
 ?>

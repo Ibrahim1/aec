@@ -57,7 +57,6 @@ class processor_chase_paymentech extends XMLprocessor
 		$settings['currency']			= array( 'list_currency' );
 		$settings['promptAddress']		= array( 'list_yesno' );
 		$settings['promptZipOnly']		= array( 'list_yesno' );
-		$settings['dedicatedShipping']	= array( 'list_yesno' );
 		$settings['item_name']			= array( 'inputE' );
 		$settings['customparams']		= array( 'inputD' );
 
@@ -93,7 +92,6 @@ class processor_chase_paymentech extends XMLprocessor
 		}
 
 		if ( isset( $post['billFirstName'] ) && ( strpos( $post['cardNumber'], 'X' ) === false ) ) {
-			$cim = $this->loadCIM( $ppParams );
 
 			$udata = array( 'billTo_firstName' => 'billFirstName',
 							'billTo_lastName' => 'billLastName',
@@ -109,7 +107,7 @@ class processor_chase_paymentech extends XMLprocessor
 
 			foreach ( $udata as $authvar => $aecvar ) {
 				if ( !empty( $post[$aecvar] ) ) {
-					$cim->setParameter( $authvar, trim( $post[$aecvar] ) );
+					//$cim->setParameter( $authvar, trim( $post[$aecvar] ) );
 				}
 			}
 
@@ -129,12 +127,12 @@ class processor_chase_paymentech extends XMLprocessor
 				}
 
 				foreach ( $basicdata as $key => $value ) {
-					$cim->setParameter( $key, $value );
+					//$cim->setParameter( $key, $value );
 				}
 
 
 				if ( $post['payprofileselect'] == "new" ) {
-					$cim->createCustomerPaymentProfileRequest();
+					//$cim->createCustomerPaymentProfileRequest();
 
 					if ( $cim->isSuccessful() ) {
 						$profileid = $cim->substring_between( $cim->response,'<customerPaymentProfileId>','</customerPaymentProfileId>' );
@@ -198,7 +196,7 @@ class processor_chase_paymentech extends XMLprocessor
 		}
 
 		$var = $this->ppProfileSelect( array(), $ppParams, true, $ppParams );
-		$var2 = $this->checkoutform( $request, $cim );
+		$var2 = $this->checkoutform( $request );
 
 		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=subscriptiondetails', true ) . '" method="post">' . "\n";
 		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
@@ -275,7 +273,7 @@ class processor_chase_paymentech extends XMLprocessor
 		}
 
 		$var = $this->shipProfileSelect( array(), $ppParams, true );
-		$var2 = $this->checkoutform( $request, $cim, true, $ppParams );
+		$var2 = $this->checkoutform( $request, true, $ppParams );
 
 		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=chase_paymentech_shipping_details', true ) . '" method="post">' . "\n";
 		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
@@ -289,7 +287,7 @@ class processor_chase_paymentech extends XMLprocessor
 		return $return;
 	}
 
-	function checkoutform( $request, $cim=null, $nobill=false, $ppParams=false )
+	function checkoutform( $request, $nobill=false, $ppParams=false )
 	{
 		$var = array();
 		$hascim = false;
@@ -382,8 +380,6 @@ class processor_chase_paymentech extends XMLprocessor
 		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=checkout', true ) . '" method="post">' . "\n";
 
 		if ( !empty( $ppParams ) ) {
-			$cim = $this->loadCIM( $ppParams );
-
 			$var = array();
 			$var = $this->ppProfileSelect( $var, $ppParams, false, false );
 			$var = $this->shipProfileSelect( $var, $ppParams, false, false, false );
@@ -391,7 +387,7 @@ class processor_chase_paymentech extends XMLprocessor
 			$return .= $this->getParamsHTML( $var ) . '<br /><br />';
 		}
 
-		$return .= $this->getParamsHTML( $this->checkoutform( $request, $cim ) ) . '<br /><br />';
+		$return .= $this->getParamsHTML( $this->checkoutform( $request ) ) . '<br /><br />';
 		$return .= '<input type="hidden" name="invoice" value="' . $request->int_var['invoice'] . '" />' . "\n";
 		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
 		$return .= '<input type="hidden" name="task" value="checkout" />' . "\n";
