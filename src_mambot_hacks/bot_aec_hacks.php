@@ -9,10 +9,18 @@
  */
 
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
-$_MAMBOTS->registerFunction( 'onAfterStart', 'checkUserSubscription' ); //joomla.php Hack #4
-$_MAMBOTS->registerFunction( 'onAfterStart', 'planFirst' ); //registration.php Hack #6
-$_MAMBOTS->registerFunction( 'onAfterStart', 'planRegistration' ); //registration.php Hack #2 + comprofiler.php Hack #2
-$_MAMBOTS->registerFunction( 'onAfterStart', 'notifyMI' ); //registration.php Hack #1 + user.php Hack + comprofiler.php Hack #7 + comprofiler.php Hack #8
+
+		die('MtK');
+if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {
+	include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");
+	if( aecJoomla15check() ) {
+//		die('MtK');
+		$_MAMBOTS->registerFunction( 'onAfterStart', 'checkUserSubscription' ); //joomla.php Hack #4
+		$_MAMBOTS->registerFunction( 'onAfterStart', 'planFirst' ); //registration.php Hack #6
+		$_MAMBOTS->registerFunction( 'onAfterStart', 'planRegistration' ); //registration.php Hack #2 + comprofiler.php Hack #2
+		$_MAMBOTS->registerFunction( 'onAfterStart', 'notifyMI' ); //registration.php Hack #1 + user.php Hack + comprofiler.php Hack #7 + comprofiler.php Hack #8
+	}
+}
 
 //Some Micro Integrations rely on receiving a cleartext password for each user. This hack will make sure that the Micro Integrations will be notified
 function notifyMI()
