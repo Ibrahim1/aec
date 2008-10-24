@@ -105,12 +105,6 @@ class processor_chase_paymentech extends XMLprocessor
 							'billTo_faxNumber' => 'billFax'
 							);
 
-			foreach ( $udata as $authvar => $aecvar ) {
-				if ( !empty( $post[$aecvar] ) ) {
-					//$cim->setParameter( $authvar, trim( $post[$aecvar] ) );
-				}
-			}
-
 			if ( !empty( $post['cardNumber'] ) || !empty( $post['account_no'] ) ) {
 				if( !empty( $post['account_no'] ) ) {
 					$basicdata['paymentType']		= 'echeck';
@@ -126,19 +120,11 @@ class processor_chase_paymentech extends XMLprocessor
 					$basicdata['expirationDate']	= $post['expirationYear'] . '-' . $post['expirationMonth'];
 				}
 
-				foreach ( $basicdata as $key => $value ) {
-					//$cim->setParameter( $key, $value );
-				}
-
-
 				if ( $post['payprofileselect'] == "new" ) {
-					//$cim->createCustomerPaymentProfileRequest();
+					$ppParams = $this->createProfileRequest();
 
-					if ( $cim->isSuccessful() ) {
-						$profileid = $cim->substring_between( $cim->response,'<customerPaymentProfileId>','</customerPaymentProfileId>' );
-						if ( !empty( $profileid ) ) {
-							$ppParams = $this->payProfileAdd( $request, $profileid, $post, $ppParams );
-						}
+					if ( !empty( $profileid ) ) {
+						$ppParams = $this->payProfileAdd( $request, $profileid, $post, $ppParams );
 					}
 				} else {
 					if ( isset( $ppParams->paymentProfiles->{$post['payprofileselect']} ) ) {
@@ -189,10 +175,6 @@ class processor_chase_paymentech extends XMLprocessor
 				}
 			}
 
-			$cim = null;
-			$cim = $this->loadCIM( $ppParams );
-		} else {
-			$cim = null;
 		}
 
 		$var = $this->ppProfileSelect( array(), $ppParams, true, $ppParams );
@@ -225,8 +207,6 @@ class processor_chase_paymentech extends XMLprocessor
 		}
 
 		if ( isset( $post['billFirstName'] ) && empty( $post['edit_shipprofile'] ) ) {
-			$cim = $this->loadCIM( $ppParams );
-
 			$udata = array( 'shipTo_firstName' => 'billFirstName',
 							'shipTo_lastName' => 'billLastName',
 							'shipTo_company' => 'billCompany',
@@ -290,25 +270,10 @@ class processor_chase_paymentech extends XMLprocessor
 	function checkoutform( $request, $nobill=false, $ppParams=false )
 	{
 		$var = array();
-		$hascim = false;
 		$vcontent = array();
 
 		if ( $ppParams === false ) {
 			$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
-		}
-
-		if ( empty( $cim ) ) {
-			if ( $nobill ) {
-				$cim = $this->loadCIMship( $ppParams );
-			} else {
-				$cim = $this->loadCIM( $ppParams );
-			}
-
-			if ( $cim->isSuccessful() ) {
-				$hascim = true;
-			}
-		} else {
-			$hascim = true;
 		}
 
 		if ( !$nobill ) {
@@ -405,8 +370,8 @@ class processor_chase_paymentech extends XMLprocessor
 		$xmlRoot =& $xmlDoc->getRoot();
 
 		$R =& $xmlRoot->createChild( 'Request' );
-			$AC =& $R->createChild( 'AC' );
-			$CommonData =& $AC->createChild( 'CommonData' );
+			$NO =& $R->createChild( 'NewOrder' );
+			$CommonData =& $NO->createChild( 'CommonData' );
 				$CM =& $CommonData->createChild( 'CommonMandatory' );
 				$CM->attribute( 'HcsTcsInd', 'T' );
 				$CM->attribute( 'MessageType', MODULE_PAYMENT_PAYMENTECH_MESSAGETYPE );
@@ -472,7 +437,7 @@ class processor_chase_paymentech extends XMLprocessor
 				$ECOrderNum =& $ECommerceData->createChild( 'ECOrderNum' );
 					$ECOrderNum->text( $request->int_var['invoice'] ); // $my_invoice_description
 
-			$Auth =& $AC->createChild( 'Auth' );
+			$Auth =& $NO->createChild( 'Auth' );
 				$AuthMandatory =& $Auth->createChild( 'AuthMandatory' );
 				 $AuthMandatory->attribute( 'FormatInd', 'H' );
 				$AuthOptional =& $Auth->createChild( 'AuthOptional' );
@@ -487,7 +452,7 @@ class processor_chase_paymentech extends XMLprocessor
 						$AVSstate->text( $request->int_var['params']['billState'] );
 						$AVSzip =& $AVSextended->createChild( 'AVSzip' );
 						$AVSzip->text( $request->int_var['params']['billZip'] );
-			$Cap =& $AC->createChild( 'Cap' );
+			$Cap =& $NO->createChild( 'Cap' );
 				$CapMandatory =& $Cap->createChild( 'CapMandatory' );
 					$EntryDataSrc =& $CapMandatory->createChild( 'EntryDataSrc' );
 						$EntryDataSrc->text( '02' );
@@ -869,39 +834,6 @@ class processor_chase_paymentech extends XMLprocessor
 		$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
 
 		return $ppParams;
-	}
-
-	function loadCIM( $ppParams )
-	{
-		$cim = new AuthNetCim( $this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode'] );
-
-		if ( empty( $ppParams->profileid ) ) {
-			return $cim;
-		}
-
-		$cim->setParameter( 'customerProfileId', $ppParams->profileid );
-		$cim->getCustomerProfileRequest();
-
-		if ( $cim->isSuccessful() ) {
-			return $cim;
-		} else {
-			return $cim;
-		}
-	}
-
-	function loadCIMship( $ppParams )
-	{
-		$cim = new AuthNetCim( $this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode'] );
-
-		$cim->setParameter( 'customerProfileId', $ppParams->paymentProfiles->{$ppParams->profileid}->profileid );
-		$cim->setParameter( 'customerAddressId', $ppParams->shippingProfiles->{$ppParams->shippingprofileid}->profileid );
-		$cim->getCustomerShippingAddressRequest();
-
-		if ( $cim->isSuccessful() ) {
-			return $cim;
-		} else {
-			return $cim;
-		}
 	}
 
 	function prepareValidation( $subscription_list )
