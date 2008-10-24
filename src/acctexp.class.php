@@ -4140,32 +4140,10 @@ class SubscriptionPlan extends serialParamDBTable
 			}
 		}
 
-		$micro_integrations = $this->getMicroIntegrations();
+		$result = $this->triggerMIs( 'action', $metaUser, null, $invoice, false, $silent );
 
-		if ( is_array( $micro_integrations ) ) {
-			foreach ( $micro_integrations as $mi_id ) {
-				$mi = new microIntegration( $database );
-
-				if ( !$mi->mi_exists( $mi_id ) ) {
-					continue;
-				}
-
-				$mi->load( $mi_id );
-
-				if ( !$mi->callIntegration() ) {
-					continue;
-				}
-
-				if ( ( ( strcmp( $mi->class_name, 'mi_email' ) === 0 ) && !$silent ) || ( strcmp( $mi->class_name, 'mi_email' ) !== 0 ) ) {
-					if ( $mi->action( $metaUser, null, $invoice, $this ) === false ) {
-						if ( $aecConfig->cfg['breakon_mi_error'] ) {
-							return false;
-						}
-					}
-				}
-
-				unset( $mi );
-			}
+		if ( $result === false ) {
+			return false;
 		}
 
 		if ( $userid ) {
@@ -4511,6 +4489,52 @@ class SubscriptionPlan extends serialParamDBTable
 			return $mi_list;
 		} else {
 			return false;
+		}
+	}
+
+	function triggerMIs( $action, $metaUser, $exchange, $invoice, $add=false, $silent=false )
+	{
+		global $aecConfig;
+
+		$micro_integrations = $this->getMicroIntegrations();
+
+		if ( is_array( $micro_integrations ) ) {
+			foreach ( $micro_integrations as $mi_id ) {
+				$mi = new microIntegration( $this->_db );
+
+				if ( !$mi->mi_exists( $mi_id ) ) {
+					continue;
+				}
+
+				$mi->load( $mi_id );
+
+				if ( !$mi->callIntegration() ) {
+					continue;
+				}
+
+				$is_email = strcmp( $mi->class_name, 'mi_email' ) === 0;
+
+				// Only trigger if this is not email or made not silent
+				if ( ( $is_email === false ) || ( $is_email && !$silent ) ) {
+					if ( method_exists( $metaUser, $action ) ) {
+						if ( $mi->$action( $metaUser, null, $invoice, $this ) === false ) {
+							if ( $aecConfig->cfg['breakon_mi_error'] ) {
+								return false;
+							}
+						}
+					} else {
+						if ( $mi->relayAction( $metaUser, $exchange, $invoice, $this, $action, $add ) === false ) {
+							if ( $aecConfig->cfg['breakon_mi_error'] ) {
+								return false;
+							}
+						}
+					}
+
+
+				}
+
+				unset( $mi );
+			}
 		}
 	}
 
@@ -5068,6 +5092,14 @@ class InvoiceFactory
 
 			$this->objInvoice->create( $this->userid, $this->usage, $this->processor );
 			$this->objInvoice->computeAmount();
+
+			if ( is_object( $this->pp ) ) {
+				$this->pp->invoiceCreationAction( $this );
+			}
+
+			if ( !empty( $this->objUsage ) ) {
+				$this->objUsage->triggerMIs( '_invoice_creation', $this->metaUser, null, $this->objInvoice );
+			}
 
 			// Reset parameters
 			$this->processor	= $this->objInvoice->method;
@@ -6228,12 +6260,6 @@ class Invoice extends serialParamDBTable
 		$this->method			= $processor;
 		$this->usage			= $usage;
 
-		$pp = new PaymentProcessor();
-		if ( $pp->loadName( $processor ) ) {
-			$pp->init();
-			$pp->invoiceCreationAction( $this );
-		}
-
 		$this->computeAmount();
 
 		$this->addParams( array( 'creator_ip' => $_SERVER['REMOTE_ADDR'] ), 'params', false );
@@ -6302,6 +6328,10 @@ class Invoice extends serialParamDBTable
 			$responsestring = $response['responsestring'];
 			unset( $response['responsestring'] );
 		}
+
+		$metaUser = new metaUser( $this->userid );
+
+		$mi_event = null;
 
 		// Create history entry
 		$history = new logHistory( $database );
@@ -6387,11 +6417,14 @@ class Invoice extends serialParamDBTable
 					$this->addParams( array( 'pending_reason' => $response['pending_reason'] ), 'params', true );
 					$event	.= sprintf( _AEC_MSG_PROC_INVOICE_ACTION_EV_PEND, $response['pending_reason'] );
 					$tags	.= ',payment,pending' . $response['pending_reason'];
+
+					$mi_event = '_payment_pending';
 				}
 
 				$this->storeload();
 			} elseif ( isset( $response['cancel'] ) ) {
-				$metaUser = new metaUser( $this->userid );
+				$mi_event = '_payment_cancel';
+
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_CANCEL;
 				$tags	.= ',cancel';
 
@@ -6401,6 +6434,8 @@ class Invoice extends serialParamDBTable
 					}
 
 					if ( isset( $response['cancel_expire'] ) ) {
+						$mi_event = '_payment_cancel_expire';
+
 						$metaUser->focusSubscription->expire();
 						$tags	.= ',expire';
 					} else {
@@ -6410,7 +6445,8 @@ class Invoice extends serialParamDBTable
 					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS;
 				}
 			} elseif ( isset( $response['chargeback'] ) ) {
-				$metaUser = new metaUser( $this->userid );
+				$mi_event = '_payment_chargeback';
+
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_CHARGEBACK;
 				$tags	.= ',chargeback';
 				$level = 128;
@@ -6425,7 +6461,8 @@ class Invoice extends serialParamDBTable
 					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS_HOLD;
 				}
 			} elseif ( isset( $response['chargeback_settle'] ) ) {
-				$metaUser = new metaUser( $this->userid );
+				$mi_event = '_payment_chargeback_settle';
+
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_CHARGEBACK_SETTLE;
 				$tags	.= ',chargeback_settle';
 				$level = 8;
@@ -6441,7 +6478,8 @@ class Invoice extends serialParamDBTable
 					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS_ACTIVE;
 				}
 			} elseif ( isset( $response['delete'] ) ) {
-				$metaUser = new metaUser( $this->userid );
+				$mi_event = '_payment_refund';
+
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_REFUND;
 				$tags	.= ',refund';
 				if ( $metaUser->hasSubscription ) {
@@ -6453,15 +6491,23 @@ class Invoice extends serialParamDBTable
 					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED;
 				}
 			} elseif ( isset( $response['eot'] ) ) {
+				$mi_event = '_payment_eot';
+
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_EOT;
 				$tags	.= ',eot';
 			} elseif ( isset( $response['duplicate'] ) ) {
+				$mi_event = '_payment_duplicate';
+
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_DUPLICATE;
 				$tags	.= ',duplicate';
 			} elseif ( isset( $response['null'] ) ) {
+				$mi_event = '_payment_null';
+
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_NULL;
 				$tags	.= ',null';
 			} elseif ( isset( $response['error'] ) && isset( $response['errormsg'] ) ) {
+				$mi_event = '_payment_error';
+
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR . ' Error:' . $response['errormsg'] ;
 				$tags	.= ',error';
 				$level = 128;
@@ -6474,6 +6520,13 @@ class Invoice extends serialParamDBTable
 
 				$notificationerror = 'General Error. Please contact the System Administrator.';
 			}
+		}
+
+		if ( !empty( $mi_event ) && !empty( $this->usage ) ) {
+			$objUsage = new SubscriptionPlan( $database );
+			$objUsage->load( $this->usage );
+
+			$objUsage->triggerMIs( $mi_event, $metaUser, null, $this, $response );
 		}
 
 		if ( isset( $response['explanation'] ) ) {

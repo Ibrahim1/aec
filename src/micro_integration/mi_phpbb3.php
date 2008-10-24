@@ -119,6 +119,7 @@ class mi_phpbb3
 
 				//$fullname = $this->_fullNameSupport();
 				$userid   = $this->_getUserId($username, $fullname);
+
 				$login_name        = $user_data['username'];
 				$username          = $request->metaUser->cmsUser->username;
 				$username_clean    = utf8_clean_string($username);
