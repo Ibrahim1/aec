@@ -193,12 +193,12 @@ class processor_netdebit extends URLprocessor
 			$ppParams = new stdClass();
 			$ppParams->customerid = $post['customer_id'];
 
-			$metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
+			$metaUser->meta->setProcessorParams( $this->id, $ppParams );
 		} elseif ( $ppParams->customerid != $post['customer_id'] ) {
 			// Profile found, but does not match, create new relation
 			$ppParams->customerid = $post['customer_id'];
 
-			$metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
+			$metaUser->meta->setProcessorParams( $this->id, $ppParams );
 		}
 
 		if ( $this->settings['secret'] == $post['password'] ) {
