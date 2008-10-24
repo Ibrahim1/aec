@@ -170,7 +170,15 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_microintegrations` ('
 . ' PRIMARY KEY (`id`)'
 . ') TYPE=MyISAM;'
 ;
-
+/*
+$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_scope` ('
+. '`id` int(11) NOT NULL auto_increment,'
+. '`mi_id` int(11) NULL,'
+. '`scope` varchar(64) NULL,'
+. ' PRIMARY KEY (`id`)'
+. ') TYPE=MyISAM;'
+;
+*/
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_subscr` ('
 . '`id` int(11) NOT NULL auto_increment,'
 . '`userid` int(11) NULL,'

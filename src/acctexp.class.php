@@ -988,7 +988,7 @@ class metaUserDB extends serialParamDBTable
 			$this->processor_params = new stdClass();
 		}
 
-		$this->processor_params->{$processorid} = $params;
+		$this->processor_params->$processorid = $params;
 
 		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
 
