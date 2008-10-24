@@ -118,8 +118,8 @@ function com_install()
 
 			$version = str_replace( array( 'upgrade_', '.inc.php' ), array( '', '' ), $filename );
 
-			if ( !(version_compare( $version, $oldversion ) == -1) ) {
-				require_once( $incpath . '/upgrade_' . $upd . '.inc.php' );
+			if ( version_compare( $version, $oldversion, '>=' ) ) {
+				require_once( $incpath . '/upgrade_' . $version . '.inc.php' );
 			}
 		}
 
