@@ -632,7 +632,7 @@ function subscriptionDetails( $option, $sub='' )
 
 					$selected_plan->proc_actions = array();
 					foreach ( $actions as $action ) {
-						$selected_plan->proc_actions[] = '<a href="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action . '&amp;subscr=' . $metaUser->objSubscription->id, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '">' . $action . '</a>';
+						$selected_plan->proc_actions[] = '<a href="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action . '&amp;subscr=' . $metaUser->objSubscription->id, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '">' . $action . '</a>';
 					}
 				}
 			}
@@ -707,7 +707,7 @@ function subscriptionDetails( $option, $sub='' )
 
 					$secondary_plan->proc_actions = array();
 					foreach ( $actions as $action ) {
-						$secondary_plan->proc_actions[] = '<a href="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action . '&amp;subscr=' . $subscription->id, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '">' . $action . '</a>';
+						$secondary_plan->proc_actions[] = '<a href="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action . '&amp;subscr=' . $subscription->id, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '">' . $action . '</a>';
 					}
 				}
 
@@ -778,13 +778,13 @@ function subscriptionDetails( $option, $sub='' )
 
 				if ( $row->transaction_date == '0000-00-00 00:00:00' ) {
 					$actionsarray[] = '<a href="'
-					.  AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice='
+					.  AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice='
 					. $row->invoice_number, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '">' . _HISTORY_ACTION_REPEAT
 					. '</a>';
 
 					if ( is_null( $row->fixed ) || !$row->fixed ) {
 						$actionsarray[] = '<a href="'
-						. AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=cancelPayment&amp;invoice='
+						. AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=cancelPayment&amp;invoice='
 						. $row->invoice_number, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '">' . _HISTORY_ACTION_CANCEL
 						. '</a>';
 					}
@@ -1027,14 +1027,14 @@ function notAllowed( $option )
 	$CB = ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) );
 
 	if ( $my->id ) {
-		$registerlink = AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=renewsubscription' );
+		$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=renewsubscription' );
 		$loggedin = 1;
 	} else {
 		$loggedin = 0;
 		if ( $CB ) {
-			$registerlink = AECToolbox::deadsureURL( '/index.php?option=com_comprofiler&amp;task=registers' );
+			$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_comprofiler&amp;task=registers' );
 		} else {
-			$registerlink = AECToolbox::deadsureURL( '/index.php?option=com_registration&amp;task=register' );
+			$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_registration&amp;task=register' );
 		}
 	}
 
