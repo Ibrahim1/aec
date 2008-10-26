@@ -82,6 +82,7 @@ define( '_AEC_USERFORM_BILLFAX_NAME', 'Fax');
 define( '_AEC_USERFORM_BILLCOMPANY_NAME', 'Company');
 
 // Generic Credit Card Form
+define( '_AEC_CCFORM_TABNAME', 'Credit Card');
 define( '_AEC_CCFORM_CARDHOLDER_NAME', 'Propri&eacute;taire de la carte');
 define( '_AEC_CCFORM_CARDHOLDER_DESC', 'Le nom du propri&eacute;taire de la carte de cr&eacute;dit');
 define( '_AEC_CCFORM_CARDNUMBER_NAME', 'Num&eacute;ro de la carte');
@@ -99,6 +100,7 @@ define( '_AEC_CCFORM_UPDATE_DESC', 'To update your billing details, we need you 
 define( '_AEC_CCFORM_UPDATE2_DESC', 'Updated! Thank you for keeping us up to date.');
 
 // Generic eCheck Form
+define( '_AEC_ECHECKFORM_TABNAME', 'eCheck');
 define( '_AEC_ECHECKFORM_ROUTING_NO_NAME', 'Routing Number');
 define( '_AEC_ECHECKFORM_ROUTING_NO_DESC', 'Your Routing Number');
 define( '_AEC_ECHECKFORM_ACCOUNT_NO_NAME', 'Account Number');

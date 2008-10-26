@@ -38,7 +38,9 @@ class processor_chase_paymentech extends XMLprocessor
 		$settings['testmode']			= 0;
 		$settings['merchant_id']		= 'login';
 		$settings['terminal_id']		= '001';
+		$settings['BIN']				= '000002';
 		$settings['currency']			= 'USD';
+		$settings['pay_types']			= array( 'cc' );
 		$settings['promptAddress']		= 0;
 		$settings['promptZipOnly']		= 0;
 		$settings['dedicatedShipping']	= 0;
@@ -54,11 +56,28 @@ class processor_chase_paymentech extends XMLprocessor
 		$settings['testmode']			= array( 'list_yesno' );
 		$settings['merchant_id'] 		= array( 'inputC' );
 		$settings['terminal_id'] 		= array( 'inputC' );
+		$settings['BIN']		 		= array( 'inputC' );
 		$settings['currency']			= array( 'list_currency' );
+		$settings['pay_types']			= array( 'list' );
 		$settings['promptAddress']		= array( 'list_yesno' );
 		$settings['promptZipOnly']		= array( 'list_yesno' );
 		$settings['item_name']			= array( 'inputE' );
 		$settings['customparams']		= array( 'inputD' );
+
+		$paytypes = array( 'cc', 'echeck', 'eudd', 'gc', 'debit' );
+
+		$paytypes = array();
+		foreach ( $paytypes as $name ) {
+			$desc = constant( '_AEC_'.strtoupper($name).'FORM_TABNAME' );
+
+			$paytypes_selection[] = mosHTML::makeOption( $name, $desc );
+
+			if ( in_array( $name, $this->settings['pay_types'] ) ) {
+				$pt[] = mosHTML::makeOption( $name, $desc );
+			}
+		}
+
+		$s['lists']['bank']	= mosHTML::selectList( $paytypes_selection, 'chase_paymentech_pay_types', 'size="5"', 'value', 'text', $pt );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
@@ -287,11 +306,14 @@ class processor_chase_paymentech extends XMLprocessor
 				$vcontent = '';
 			}
 
-			global $mainframe;
+			$array = array(	'cc'		=> array( 'values' => array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ),
+											'vcontent' => $vcontent ),
+							'echeck'	=> array( 'values' => array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ),
+											'vcontent' => $vcontent ),
+			);
 
-			$mainframe->addCustomHeadTag( '<script type="text/javascript" src="' . $mainframe->getCfg( 'live_site' ) . '/components/com_acctexp/lib/mootools/mootools.js"></script>' );
-			$mainframe->addCustomHeadTag( '<script type="text/javascript" src="' . $mainframe->getCfg( 'live_site' ) . '/components/com_acctexp/lib/mootools/mootabs.js"></script>' );
-			$mainframe->addCustomHeadTag( '<script type="text/javascript" charset="utf-8">window.addEvent(\'domready\', init);function init() {myTabs1 = new mootabs(\'myTabs\');}</script>' );
+
+			$this->getMULTIPAYform( $var, $array );
 
 			$var['params'][] = array( 'tabberstart', '', '', '' );
 			$var['params'][] = array( 'tabregisterstart', '', '', '' );
@@ -364,45 +386,67 @@ class processor_chase_paymentech extends XMLprocessor
 
 	function createRequestXML( $request )
 	{
-		//  Create a new MiniXMLDoc object
-		eucaInclude( 'minixml.minixml' );
-		$xmlDoc  = new MiniXMLDoc();
-		$xmlRoot =& $xmlDoc->getRoot();
+		$dom = new DOMDocument( '1.0', 'utf-8' );
 
-		$R =& $xmlRoot->createChild( 'Request' );
-			$NO =& $R->createChild( 'NewOrder' );
-			$CommonData =& $NO->createChild( 'CommonData' );
-				$CM =& $CommonData->createChild( 'CommonMandatory' );
-				$CM->attribute( 'HcsTcsInd', 'T' );
-				$CM->attribute( 'MessageType', MODULE_PAYMENT_PAYMENTECH_MESSAGETYPE );
-				$CM->attribute( 'LangInd', '00' );
-				$CM->attribute( 'TzCode', MODULE_PAYMENT_PAYMENTECH_TZCODE );
-				$CM->attribute( 'AuthOverrideInd', 'N' );
-				$CM->attribute( 'Version', '2' );
-				$CM->attribute( 'TxCatg', '7' );
-				$CM->attribute( 'CardHolderAttendanceInd', '01' );
+		$R = $dom->appendChild( new DOMElement( 'Request' ) );
+		$NO = $R->appendChild( new DOMElement( 'NewOrder' ) );
 
-				$AccountNum =& $CM->createChild( 'AccountNum' );
-					$AccountNum->attribute( 'AccountTypeInd', '91' );
-					$AccountNum->text( $request->int_var['params']['cardNumber'] ); // $my_card_number
+		$var = array();
 
-				$POSDetails =& $CM->createChild( 'POSDetails' );
-					$POSDetails->attribute( 'POSEntryMode', '01' );
+		if ( is_array( $request->int_var['amount'] ) ) {
+			$var['IndustryType']	= 'RC';
+		} else {
+			$var['IndustryType']	= 'EC';
+		}
 
-				$MerchantID =& $CM->createChild( 'MerchantID' );
-					$MerchantID->text( $this->settings['merchant_id'] );
+		$var['MessageType']			= 'A';
 
-				$TerminalID =& $CM->createChild( 'TerminalID' );
-					$TerminalID->attribute( 'POSConditionCode', '59' );
-					$TerminalID->attribute( 'CardPresentInd', 'N' );
-					$TerminalID->attribute( 'AttendedTermDataInd', '01' );
-					$TerminalID->attribute( 'TermLocInd', '01' );
-					$TerminalID->attribute( 'CATInfoInd', '06' );
-					$TerminalID->attribute( 'TermEntCapInd', '05' );
-					$TerminalID->text( MODULE_PAYMENT_PAYMENTECH_TRACE_ID );
+		$this->appendAccountData( $var );
 
-				$BIN =& $CM->createChild( 'BIN' );
-					$BIN->text( '000001' );
+		foreach ( $var as $k => $v ) {
+			$NO->appendChild( new DOMElement( $k, $v ) );
+		}
+
+
+		return $xmlDoc->toString( 0, '' );
+	}
+
+	function appendAccountData( &$var )
+	{
+		$var['BIN']			= $this->settings['BIN'];
+		$var['MerchantID']	= $this->settings['merchant_id'];
+		$var['TerminalID']	= $this->settings['terminal_id'];
+	}
+
+	function appendCCData( &$var, $request )
+	{
+		if( !empty( $request->int_var['params']['account_no'] ) ) {
+			$basicdata['routingNumber']		= $request->int_var['params']['routing_no'];
+			$basicdata['accountNumber']		= $request->int_var['params']['account_no'];
+			$basicdata['nameOnAccount']		= $request->int_var['params']['account_name'];
+			$basicdata['bankName']			= $request->int_var['params']['bank_name'];
+		} else {
+			$var['AccountNum']	= $request->int_var['params']['cardNumber'];
+			$var['Exp']			= $request->int_var['params']['expirationYear'] . $request->int_var['params']['expirationMonth'];
+
+			if ( !empty( $request->int_var['params']['cvv2'] ) ) {
+				$var['CardSecValInd']	= '1';
+				$var['CardSecVal']	= $request->int_var['params']['cvv2'];
+			}
+		}
+	}
+			<xs:element name="DebitCardIssueNum" type="xs:string" minOccurs="0"/>
+			<xs:element name="DebitCardStartDate" type="xs:string" minOccurs="0"/>
+			<xs:element name="BCRtNum" type="xs:string" minOccurs="0"/>
+			<xs:element name="CheckDDA" type="xs:string" minOccurs="0"/>
+			<xs:element name="BankAccountType" type="xs:string" minOccurs="0"/>
+			<xs:element name="ECPAuthMethod" type="xs:string" minOccurs="0"/>
+			<xs:element name="BankPmtDelv" type="xs:string" minOccurs="0"/>
+	function appendCurrencyData( &$var, $request )
+	{
+		$var['CurrencyCode']		= AECToolbox::_aecNumCurrency( $this->settings['currency'] );
+		$var['CurrencyExponent']	= AECToolbox::_aecCurrencyExp( $this->settings['currency'] );
+	}
 
 				$OrderID =& $CM->createChild( 'OrderID' );
 					$OrderID->text( $request->int_var['invoice'] ); // $my_invoice_description
@@ -414,28 +458,6 @@ class processor_chase_paymentech extends XMLprocessor
 				$TxTypeCommon =& $CM->createChild( 'TxTypeCommon' );
 					$TxTypeCommon->attribute( 'TxTypeID', 'G' );
 
-				$Currency =& $CM->createChild( 'Currency' );
-					$Currency->attribute( 'CurrencyCode', AECToolbox::_aecNumCurrency( $this->settings['currency'] ) );
-					$Currency->attribute( 'CurrencyExponent', AECToolbox::_aecNumCurrency( $this->settings['_aecCurrencyExp'] ) );
-
-				$CardPresence =& $CM->createChild( 'CardPresence' );
-					$CardNP =& $CardPresence->createChild( 'CardNP' );
-						$Exp =& $CardNP->createChild( 'Exp' );
-						$Exp->text( $request->int_var['params']['expirationYear'] . $request->int_var['params']['expirationMonth'] );
-
-				$TxDateTime =& $CM->createChild( 'TxDateTime' );
-					$TxDateTime->text( $request->int_var['params'][$aecvar] );
-
-			$CD =& $CommonData->createChild( 'CommonOptional' );
-
-			$CardSecVal =& $CD->createChild( 'CardSecVal' );
-				$CardSecVal->text( $request->int_var['params'][$aecvar] ); // $my_cc_verify
-				$CardSecVal->attribute( 'CardSecInd', '1' );
-
-			$ECommerceData =& $CD->createChild( 'ECommerceData' );
-				$ECommerceData->attribute( 'ECSecurityInd', '07' );
-				$ECOrderNum =& $ECommerceData->createChild( 'ECOrderNum' );
-					$ECOrderNum->text( $request->int_var['invoice'] ); // $my_invoice_description
 
 			$Auth =& $NO->createChild( 'Auth' );
 				$AuthMandatory =& $Auth->createChild( 'AuthMandatory' );
@@ -457,9 +479,6 @@ class processor_chase_paymentech extends XMLprocessor
 					$EntryDataSrc =& $CapMandatory->createChild( 'EntryDataSrc' );
 						$EntryDataSrc->text( '02' );
 				$CapOptional =& $Cap->createChild( 'CapOptional' );
-
-		return $xmlDoc->toString( 0, '' );
-	}
 
 	function transmitRequestXML( $xml, $request )
 	{

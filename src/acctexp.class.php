@@ -2856,6 +2856,52 @@ class XMLprocessor extends processor
 		return $return;
 	}
 
+	function getMULTIPAYform( $var, $array )
+	{
+		global $mainframe;
+
+		// Include Mootools tabber
+		$mainframe->addCustomHeadTag( '<script type="text/javascript" src="' . $mainframe->getCfg( 'live_site' ) . '/components/com_acctexp/lib/mootools/mootools.js"></script>' );
+		$mainframe->addCustomHeadTag( '<script type="text/javascript" src="' . $mainframe->getCfg( 'live_site' ) . '/components/com_acctexp/lib/mootools/mootabs.js"></script>' );
+		$mainframe->addCustomHeadTag( '<script type="text/javascript" charset="utf-8">window.addEvent(\'domready\', init);function init() {myTabs1 = new mootabs(\'myTabs\');}</script>' );
+
+		$nlist	= array();
+		$prefix	= array();
+		$main	= array();
+
+		// We need to separate two blocks - prefix tabberstart generation and put the content inside
+		$prefix[] = array( 'tabberstart', '', '', '' );
+		$prefix[] = array( 'tabregisterstart', '', '', '' );
+
+		foreach ( $array as $name => $content ) {
+			$nu = strtoupper( $name );
+
+			$fname = 'get'.$nu.'form';
+
+			// Only allow to pass if std function exists
+			if ( function_exists( 'XMLprocessor::'.$fname ) ) {
+				$nl = strtolower( $name );
+
+				// Register tab in prefix
+				$prefix[] = array( 'tabregister', $nl.'details', constant( '_AEC_'.$nu.'FORM_TABNAME' ), true );
+
+				// Actual tab code
+				$main[] = array( 'tabstart', $nl.'details', true, '' );
+				$main = $this->$fname( $main, $content['values'], $content['vcontent'] );
+				$main[] = array( 'tabend', '', '', '' );
+			}
+		}
+
+		$prefix[] = array( 'tabregisterend', '', '', '' );
+
+		$var['params'] = array_merge( $var['params'], $prefix );
+		$var['params'] = array_merge( $var['params'], $main );
+
+		$var['params'][] = array( 'tabberend', '', '', '' );
+
+		return $var;
+	}
+
 	function getCCform( $var=array(), $values=null, $content=null )
 	{
 		if ( empty( $values ) ) {
