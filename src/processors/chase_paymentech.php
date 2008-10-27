@@ -2,7 +2,7 @@
 /**
  * @version $Id: chase_paymentech.php
  * @package AEC - Account Control Expiration - Membership Manager
- * @subpackage Processors - Authorize CIM
+ * @subpackage Processors - Chase Paymentech Orbital
  * @copyright 2008 Copyright (C) David Deutsch
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
@@ -10,8 +10,6 @@
 
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
-
-require( 'authorizenet_cim/authorizenet.cim.class.php' );
 
 class processor_chase_paymentech extends XMLprocessor
 {
@@ -43,7 +41,6 @@ class processor_chase_paymentech extends XMLprocessor
 		$settings['pay_types']			= array( 'cc' );
 		$settings['promptAddress']		= 0;
 		$settings['promptZipOnly']		= 0;
-		$settings['dedicatedShipping']	= 0;
 		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']		= '';
 
@@ -89,10 +86,6 @@ class processor_chase_paymentech extends XMLprocessor
 		$tab			= array();
 		$tab['details']	= _AEC_USERFORM_BILLING_DETAILS_NAME;
 
-		if ( $this->settings['dedicatedShipping'] ) {
-			$tab['shipping_details'] = _AEC_USERFORM_SHIPPING_DETAILS_NAME;
-		}
-
 		return $tab;
 	}
 
@@ -102,27 +95,11 @@ class processor_chase_paymentech extends XMLprocessor
 
 		$post = aecPostParamClear( $_POST, true );
 
-		if ( !isset( $post['payprofileselect'] ) ) {
-			$post['shipprofileselect'] = null;
-		}
-
 		if ( !empty( $post['edit_payprofile'] ) && ( $post['payprofileselect'] != "new" ) ) {
 			$ppParams->paymentprofileid = $post['payprofileselect'];
 		}
 
 		if ( isset( $post['billFirstName'] ) && ( strpos( $post['cardNumber'], 'X' ) === false ) ) {
-
-			$udata = array( 'billTo_firstName' => 'billFirstName',
-							'billTo_lastName' => 'billLastName',
-							'billTo_company' => 'billCompany',
-							'billTo_address' => 'billAddress',
-							'billTo_city' => 'billCity',
-							'billTo_state' => 'billState',
-							'billTo_zip' => 'billZip',
-							'billTo_country' => 'billCountry',
-							'billTo_phoneNumber' => 'billPhone',
-							'billTo_faxNumber' => 'billFax'
-							);
 
 			if ( !empty( $post['cardNumber'] ) || !empty( $post['account_no'] ) ) {
 				if( !empty( $post['account_no'] ) ) {
@@ -163,37 +140,6 @@ class processor_chase_paymentech extends XMLprocessor
 				$cim->setParameter( 'customerPaymentProfileId',	$cim->customerPaymentProfileId );
 			}
 
-			if ( !$this->settings['dedicatedShipping'] ) {
-				$udata = array( 'shipTo_firstName' => 'billFirstName',
-								'shipTo_lastName' => 'billLastName',
-								'shipTo_company' => 'billCompany',
-								'shipTo_address' => 'billAddress',
-								'shipTo_city' => 'billCity',
-								'shipTo_state' => 'billState',
-								'shipTo_zip' => 'billZip',
-								'shipTo_country' => 'billCountry',
-								'shipTo_phoneNumber' => 'billPhone',
-								'shipTo_faxNumber' => 'billFax'
-								);
-
-				foreach ( $udata as $authvar => $aecvar ) {
-					if ( !empty( $post[$aecvar] ) ) {
-						$cim->setParameter( $authvar, trim( $post[$aecvar] ) );
-					}
-				}
-
-				if ( isset( $ppParams->shippingProfiles->{$ppParams->shippingprofileid} ) ) {
-					$stored_spid = $ppParams->shippingProfiles->{$ppParams->shippingprofileid}->profileid;
-
-					$cim->setParameter( 'customerAddressId', $stored_spid );
-					$cim->updateCustomerShippingAddressRequest();
-
-					if ( $cim->isSuccessful() ) {
-						$this->shipProfileUpdate( $request, $post['shipprofileselect'], $post, $ppParams );
-					}
-				}
-			}
-
 		}
 
 		$var = $this->ppProfileSelect( array(), $ppParams, true, $ppParams );
@@ -205,81 +151,6 @@ class processor_chase_paymentech extends XMLprocessor
 		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
 		$return .= '<input type="hidden" name="task" value="subscriptiondetails" />' . "\n";
 		$return .= '<input type="hidden" name="sub" value="chase_paymentech_details" />' . "\n";
-		$return .= '<input type="submit" class="button" value="' . _BUTTON_APPLY . '" /><br /><br />' . "\n";
-		$return .= '</form>' . "\n";
-
-		return $return;
-	}
-
-	function customtab_shipping_details( $request )
-	{
-		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
-
-		$post = aecPostParamClear( $_POST );
-
-		if ( !isset( $post['shipprofileselect'] ) ) {
-			$post['shipprofileselect'] = null;
-		}
-
-		if ( !empty( $post['edit_shipprofile'] ) && ( $post['shipprofileselect'] != "new" ) ) {
-			$ppParams->shippingprofileid = $post['shipprofileselect'];
-		}
-
-		if ( isset( $post['billFirstName'] ) && empty( $post['edit_shipprofile'] ) ) {
-			$udata = array( 'shipTo_firstName' => 'billFirstName',
-							'shipTo_lastName' => 'billLastName',
-							'shipTo_company' => 'billCompany',
-							'shipTo_address' => 'billAddress',
-							'shipTo_city' => 'billCity',
-							'shipTo_state' => 'billState',
-							'shipTo_zip' => 'billZip',
-							'shipTo_country' => 'billCountry',
-							'shipTo_phoneNumber' => 'billPhone',
-							'shipTo_faxNumber' => 'billFax'
-							);
-
-			foreach ( $udata as $authvar => $aecvar ) {
-				if ( !empty( $post[$aecvar] ) ) {
-					$cim->setParameter( $authvar, trim( $post[$aecvar] ) );
-				}
-			}
-
-			if ( $post['shipprofileselect'] == "new" ) {
-				$cim->createCustomerShippingAddressRequest();
-
-				if ( $cim->isSuccessful() ) {
-					$profileid = $cim->substring_between( $cim->response,'<customerAddressId>','</customerAddressId>' );
-					if ( !empty( $profileid ) ) {
-						$ppParams = $this->shipProfileAdd( $request, $profileid, $post, $ppParams );
-					}
-				}
-			} else {
-				if ( isset( $ppParams->shippingProfiles->{$post['shipprofileselect']} ) ) {
-					$stored_spid = $ppParams->shippingProfiles->{$post['shipprofileselect']}->profileid;
-					$cim->setParameter( 'customerAddressId', $stored_spid );
-					$cim->updateCustomerShippingAddressRequest();
-
-					if ( $cim->isSuccessful() ) {
-						$this->shipProfileUpdate( $request, $post['shipprofileselect'], $post, $ppParams );
-					}
-				}
-			}
-
-			$cim = null;
-			$cim = $this->loadCIM( $ppParams );
-		} else {
-			$cim = null;
-		}
-
-		$var = $this->shipProfileSelect( array(), $ppParams, true );
-		$var2 = $this->checkoutform( $request, true, $ppParams );
-
-		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=chase_paymentech_shipping_details', true ) . '" method="post">' . "\n";
-		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
-		$return .= $this->getParamsHTML( $var2 ) . '<br /><br />';
-		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
-		$return .= '<input type="hidden" name="task" value="subscriptiondetails" />' . "\n";
-		$return .= '<input type="hidden" name="sub" value="chase_paymentech_shipping_details" />' . "\n";
 		$return .= '<input type="submit" class="button" value="' . _BUTTON_APPLY . '" /><br /><br />' . "\n";
 		$return .= '</form>' . "\n";
 
@@ -306,34 +177,35 @@ class processor_chase_paymentech extends XMLprocessor
 				$vcontent = '';
 			}
 
-			$array = array(	'cc'		=> array( 'values' => array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ),
-											'vcontent' => $vcontent ),
-							'echeck'	=> array( 'values' => array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ),
-											'vcontent' => $vcontent ),
-			);
+			if ( empty( $this->settings['pay_types'] ) ) {
+				$this->settings['pay_types'] = array( 'cc' );
+			}
 
+			foreach ( $this->settings['pay_types'] as $type ) {
+				switch ( $type ) {
+					case 'cc':
+						$array[$type] = array( 'values' => array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), 'vcontent' => $vcontent );
+						break;
+					case 'echeck':
+						$array[$type] = array( 'values' => array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), 'vcontent' => $vcontent );
+						break;
+					case 'eudd':
+						$array[$type] = array( 'values' => array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), 'vcontent' => $vcontent );
+						break;
+					case 'gc':
+						$array[$type] = array( 'values' => array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), 'vcontent' => $vcontent );
+						break;
+					case 'debit':
+						$array[$type] = array( 'values' => array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), 'vcontent' => $vcontent );
+						break;
+			}
 
 			$this->getMULTIPAYform( $var, $array );
 
-			$var['params'][] = array( 'tabberstart', '', '', '' );
-			$var['params'][] = array( 'tabregisterstart', '', '', '' );
-			$var['params'][] = array( 'tabregister', 'ccdetails', 'Credit Card', true );
-			$var['params'][] = array( 'tabregister', 'echeckdetails', 'eCheck', false );
-			$var['params'][] = array( 'tabregisterend', '', '', '' );
-
-			$var['params'][] = array( 'tabstart', 'ccdetails', true, '' );
-			$var = $this->getCCform( $var, array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), $vcontent );
-			$var['params'][] = array( 'tabend', '', '', '' );
-
-			$var['params'][] = array( 'tabstart', 'echeckdetails', true, '' );
-			$var = $this->getECHECKform( $var );
-			$var['params'][] = array( 'tabend', '', '', '' );
-
-			$var['params'][] = array( 'tabberend', '', '', '' );
 		}
 
 		if ( !empty( $this->settings['promptAddress'] ) ) {
-			$uservalues = array( 'firstName', 'lastName', 'company', 'address', 'city', 'state', 'zip', 'country', 'phone', 'fax' );
+			$uservalues = array( 'firstName', 'lastName', 'company', 'address', 'address2', 'city', 'state', 'zip', 'country', 'phone', 'fax' );
 
 			$content = array();
 			if ( $hascim ) {
@@ -369,7 +241,6 @@ class processor_chase_paymentech extends XMLprocessor
 		if ( !empty( $ppParams ) ) {
 			$var = array();
 			$var = $this->ppProfileSelect( $var, $ppParams, false, false );
-			$var = $this->shipProfileSelect( $var, $ppParams, false, false, false );
 
 			$return .= $this->getParamsHTML( $var ) . '<br /><br />';
 		}
@@ -402,6 +273,9 @@ class processor_chase_paymentech extends XMLprocessor
 		$var['MessageType']			= 'A';
 
 		$this->appendAccountData( $var );
+		$this->appendCurrencyData( $var );
+
+		$this->appendPayData( $var, $request );
 
 		foreach ( $var as $k => $v ) {
 			$NO->appendChild( new DOMElement( $k, $v ) );
@@ -418,13 +292,16 @@ class processor_chase_paymentech extends XMLprocessor
 		$var['TerminalID']	= $this->settings['terminal_id'];
 	}
 
-	function appendCCData( &$var, $request )
+	function appendCurrencyData( &$var )
+	{
+		$var['CurrencyCode']		= AECToolbox::_aecNumCurrency( $this->settings['currency'] );
+		$var['CurrencyExponent']	= AECToolbox::_aecCurrencyExp( $this->settings['currency'] );
+	}
+
+	function appendPayData( &$var, $request )
 	{
 		if( !empty( $request->int_var['params']['account_no'] ) ) {
-			$basicdata['routingNumber']		= $request->int_var['params']['routing_no'];
-			$basicdata['accountNumber']		= $request->int_var['params']['account_no'];
-			$basicdata['nameOnAccount']		= $request->int_var['params']['account_name'];
-			$basicdata['bankName']			= $request->int_var['params']['bank_name'];
+			$basicdata['CheckDDA']		= $request->int_var['params']['account_no'];
 		} else {
 			$var['AccountNum']	= $request->int_var['params']['cardNumber'];
 			$var['Exp']			= $request->int_var['params']['expirationYear'] . $request->int_var['params']['expirationMonth'];
@@ -435,50 +312,6 @@ class processor_chase_paymentech extends XMLprocessor
 			}
 		}
 	}
-			<xs:element name="DebitCardIssueNum" type="xs:string" minOccurs="0"/>
-			<xs:element name="DebitCardStartDate" type="xs:string" minOccurs="0"/>
-			<xs:element name="BCRtNum" type="xs:string" minOccurs="0"/>
-			<xs:element name="CheckDDA" type="xs:string" minOccurs="0"/>
-			<xs:element name="BankAccountType" type="xs:string" minOccurs="0"/>
-			<xs:element name="ECPAuthMethod" type="xs:string" minOccurs="0"/>
-			<xs:element name="BankPmtDelv" type="xs:string" minOccurs="0"/>
-	function appendCurrencyData( &$var, $request )
-	{
-		$var['CurrencyCode']		= AECToolbox::_aecNumCurrency( $this->settings['currency'] );
-		$var['CurrencyExponent']	= AECToolbox::_aecCurrencyExp( $this->settings['currency'] );
-	}
-
-				$OrderID =& $CM->createChild( 'OrderID' );
-					$OrderID->text( $request->int_var['invoice'] ); // $my_invoice_description
-
-				$AmountDetails =& $CM->createChild( 'AmountDetails' );
-					$Amount =& $AmountDetails->createChild( 'Amount' );
-						$Amount->text( $request->int_var['amount'] ); // $my_totalamount
-
-				$TxTypeCommon =& $CM->createChild( 'TxTypeCommon' );
-					$TxTypeCommon->attribute( 'TxTypeID', 'G' );
-
-
-			$Auth =& $NO->createChild( 'Auth' );
-				$AuthMandatory =& $Auth->createChild( 'AuthMandatory' );
-				 $AuthMandatory->attribute( 'FormatInd', 'H' );
-				$AuthOptional =& $Auth->createChild( 'AuthOptional' );
-					$AVSextended =& $AuthOptional->createChild( 'AVSextended' );
-						$AVSname =& $AVSextended->createChild( 'AVSname' );
-						$AVSname->text( $request->int_var['params']['billFirstName'] );
-						$AVSaddress1 =& $AVSextended->createChild( 'AVSaddress1' );
-						$AVSaddress1->text( $request->int_var['params']['billAddress'] );
-						$AVScity =& $AVSextended->createChild( 'AVScity' );
-						$AVScity->text( $request->int_var['params']['billCity'] );
-						$AVSstate =& $AVSextended->createChild( 'AVSstate' );
-						$AVSstate->text( $request->int_var['params']['billState'] );
-						$AVSzip =& $AVSextended->createChild( 'AVSzip' );
-						$AVSzip->text( $request->int_var['params']['billZip'] );
-			$Cap =& $NO->createChild( 'Cap' );
-				$CapMandatory =& $Cap->createChild( 'CapMandatory' );
-					$EntryDataSrc =& $CapMandatory->createChild( 'EntryDataSrc' );
-						$EntryDataSrc->text( '02' );
-				$CapOptional =& $Cap->createChild( 'CapOptional' );
 
 	function transmitRequestXML( $xml, $request )
 	{
@@ -491,81 +324,22 @@ class processor_chase_paymentech extends XMLprocessor
 				$ppParams->paymentprofileid = $request->int_var['params']['payprofileselect'];
 			}
 
-			if ( $request->int_var['params']['shipprofileselect'] != "new" ) {
-				$ppParams->shippingprofileid = $request->int_var['params']['shipprofileselect'];
-			}
-
-			$cim = $this->loadCIM( $ppParams );
-		} else {
-			$cim = new AuthNetCim( $this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode'] );
 		}
 
-		$basicdata = array(	'refId'					=> $request->int_var['invoice'],
-							'merchantCustomerId'	=> $request->metaUser->cmsUser->id,
-							'description'			=> $request->metaUser->cmsUser->name,
-							'email'					=> $request->metaUser->cmsUser->email,
-							'paymentType'			=> 'creditcard',
-							'cardNumber'			=> trim( $request->int_var['params']['cardNumber'] ),
-							'expirationDate'		=> $request->int_var['params']['expirationYear'] . '-' . $request->int_var['params']['expirationMonth']
-							);
+		$udata = array( 'AVSzip' => 'billZip',
+						'AVSaddress1' => 'billAddress',
+						'AVSaddress2' => 'billAddress',
+						'AVScity' => 'billCity',
+						'AVSstate' => 'billState',
 
-		if( !empty( $request->int_var['params']['account_no'] ) ) {
-			$basicdata['paymentType']		= 'echeck';
-			$basicdata['accountType']		= 'checking';
-			$basicdata['routingNumber']		= $request->int_var['params']['routing_no'];
-			$basicdata['accountNumber']		= $request->int_var['params']['account_no'];
-			$basicdata['nameOnAccount']		= $request->int_var['params']['account_name'];
-			$basicdata['echeckType']		= 'CCD';
-			$basicdata['bankName']			= $request->int_var['params']['bank_name'];
-		} else {
-			$basicdata['paymentType']		= 'creditcard';
-			$basicdata['cardNumber']		= trim( $request->int_var['params']['cardNumber'] );
-			$basicdata['expirationDate']	= $request->int_var['params']['expirationYear'] . '-' . $request->int_var['params']['expirationMonth'];
-		}
-
-		foreach ( $basicdata as $key => $value ) {
-			$cim->setParameter( $key, $value );
-		}
-
-		if ( !$this->settings['dedicatedShipping'] || empty( $ppParams ) ) {
-			$udata = array( 'billTo_firstName' => 'billFirstName',
-							'billTo_lastName' => 'billLastName',
-							'billTo_company' => 'billCompany',
-							'billTo_address' => 'billAddress',
-							'billTo_city' => 'billCity',
-							'billTo_state' => 'billState',
-							'billTo_zip' => 'billZip',
-							'billTo_country' => 'billCountry',
-							'billTo_phoneNumber' => 'billPhone',
-							'billTo_faxNumber' => 'billFax',
-							'shipTo_firstName' => 'billFirstName',
-							'shipTo_lastName' => 'billLastName',
-							'shipTo_company' => 'billCompany',
-							'shipTo_address' => 'billAddress',
-							'shipTo_city' => 'billCity',
-							'shipTo_state' => 'billState',
-							'shipTo_zip' => 'billZip',
-							'shipTo_country' => 'billCountry',
-							'shipTo_phoneNumber' => 'billPhone',
-							'shipTo_faxNumber' => 'billFax'
-							);
-		} else {
-			$udata = array( 'billTo_firstName' => 'billFirstName',
-							'billTo_lastName' => 'billLastName',
-							'billTo_company' => 'billCompany',
-							'billTo_address' => 'billAddress',
-							'billTo_city' => 'billCity',
-							'billTo_state' => 'billState',
-							'billTo_zip' => 'billZip',
-							'billTo_country' => 'billCountry',
-							'billTo_phoneNumber' => 'billPhone',
-							'billTo_faxNumber' => 'billFax'
-							);
-		}
+						'billTo_country' => 'billCountry',
+						'billTo_phoneNumber' => 'billPhone',
+						'billTo_faxNumber' => 'billFax'
+						);
 
 		foreach ( $udata as $authvar => $aecvar ) {
 			if ( !empty( $request->int_var['params'][$aecvar] ) ) {
-				$cim->setParameter( $authvar, trim( $request->int_var['params'][$aecvar] ) );
+				$var[$authvar] = trim( $request->int_var['params'][$aecvar] );
 			}
 		}
 
@@ -763,45 +537,6 @@ class processor_chase_paymentech extends XMLprocessor
 		return $ppParams;
 	}
 
-	function shipProfileAdd( $request, $profileid, $post, $ppParams )
-	{
-		$profiles = get_object_vars( $ppParams->shippingProfiles );
-
-		$pointer = count( $profiles );
-
-		$ppParams->shippingProfiles->$pointer = new stdClass();
-		$ppParams->shippingProfiles->$pointer->profileid = $profileid;
-
-		$hash = new stdClass();
-		$hash->name		= $post['billFirstName'] . ' ' . $post['billLastName'];
-		$hash->address	= $post['billAddress'];
-		$hash->zipcity	= $post['billZip'] . ' ' . $post['billCity'];
-
-		$ppParams->shippingProfiles->$pointer->profilehash = $hash;
-
-		$ppParams->shippingprofileid = $pointer;
-
-		$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
-
-		return $ppParams;
-	}
-
-	function shipProfileUpdate( $request, $profileid, $post, $ppParams )
-	{
-		$hash = new stdClass();
-		$hash->name		= $post['billFirstName'] . ' ' . $post['billLastName'];
-		$hash->address	= $post['billAddress'];
-		$hash->zipcity	= $post['billZip'] . ' ' . $post['billCity'];
-
-		$ppParams->shippingProfiles->$profileid->profilehash = $hash;
-
-		$ppParams->shippingprofileid = $profileid;
-
-		$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
-
-		return $ppParams;
-	}
-
 	function payProfileAdd( $request, $profileid, $post, $ppParams )
 	{
 		$profiles = get_object_vars( $ppParams->paymentProfiles );
@@ -871,27 +606,8 @@ class processor_chase_paymentech extends XMLprocessor
 		$ppParams = $metaUser->meta->getProcessorParams( $request->parent->id );
 
 		if ( !empty( $ppParams->profileid ) ) {
-			$cim = $this->loadCIM( $ppParams );
 
-			$cim->setParameter( 'customerProfileId',		$ppParams->paymentProfiles->{$ppParams->profileid}->profileid );
-			$cim->getCustomerProfileRequest();
-
-			$cim->setParameter( 'customerProfileId',		$cim->customerProfileId );
-			$cim->setParameter( 'customerPaymentProfileId',	$cim->customerPaymentProfileId );
-			$cim->setParameter( 'customerAddressId',		$cim->customerAddressId );
-
-			$invoice->computeAmount();
-
-			$cim->setParameter( 'transaction_amount',		$invoice->amount );
-
-			$cim->setParameter( 'refId',					$invoice->invoice_number );
-			$cim->setParameter( 'merchantCustomerId',		$invoice->userid );
-
-			$cim->setParameter( 'transactionType',			'profileTransAuthCapture' );
-
-			$cim->createCustomerProfileTransactionRequest();
-
-			if ( $cim->isSuccessful() ) {
+			if ( true ) {
 				$invoice->pay();
 				return true;
 			}
