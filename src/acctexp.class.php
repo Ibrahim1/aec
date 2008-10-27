@@ -2178,12 +2178,14 @@ class PaymentProcessor
 
 	function is_recurring( $choice=null, $test=false )
 	{
+		// Warning: Here be Voodoo
+
 		if ( isset( $this->is_recurring ) && !$test ) {
 			return $this->is_recurring;
 		}
 
 		// Check for bogus choice
-		if ( empty( $choice ) && ( $choice !== 0 ) ) {
+		if ( empty( $choice ) && ( $choice !== 0 ) && ( $choice !== '0' ) ) {
 			$choice = null;
 		}
 
