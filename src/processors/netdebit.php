@@ -120,6 +120,10 @@ class processor_netdebit extends URLprocessor
 				default: $unit = 3; break;
 			}
 
+			if ( $this->settings['testmode'] ) {
+				$unit += 10;
+			}
+
 			$var['LZS'] = $unit;
 			$var['LZW'] = $request->int_var['amount']['period3'];
 
