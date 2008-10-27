@@ -154,7 +154,11 @@ define( '_AEC_HACKS_NOTICE_JACL_DESC',			'In case you plan to install the JACLpl
 define( '_AEC_HACKS_MENU_ENTRY',				'Menu Entry' );
 define( '_AEC_HACKS_MENU_ENTRY_DESC',			'Adds a <strong>' . _AEC_SPEC_MENU_ENTRY . '</strong> menu entry to the Usermenu. With this, a user can manage his invoices and upgrade/renew his or her subscription.' );
 define( '_AEC_HACKS_LEGACY',					'<strong>This is a Legacy Hack, please undo!</strong>' );
+define( '_AEC_HACKS_LEGACY_MAMBOT',				'<strong>This is a Legacy Hack which is superceded by the Joomla 1.0 Mambot, please undo and use the "Hacks Mambot" instead!</strong>' );
 define( '_AEC_HACKS_LEGACY_PLUGIN',				'<strong>This is a Legacy Hack which is superceded by the Joomla 1.5 Plugin, please undo and use the Plugin instead!</strong>' );
+define( '_AEC_HACKS_LEGACY_PLUGIN_ERROR',		'<strong>This is a Legacy Hack which is superceded by the Joomla 1.5 Error Plugin, please undo and use the AEC Error Plugin instead!</strong>' );
+define( '_AEC_HACKS_LEGACY_PLUGIN_USER',		'<strong>This is a Legacy Hack which is superceded by the Joomla 1.5 User Plugin, please undo and use the AEC User Plugin instead!</strong>' );
+define( '_AEC_HACKS_LEGACY_PLUGIN_ACCESS',		'<strong>This is a Legacy Hack which is superceded by the Joomla 1.5 Access Plugin, please undo and use the AEC Access Plugin instead!</strong>' );
 define( '_AEC_HACKS_NOTAUTH',					'This will correctly link your users to the NotAllowed page with information about your subscriptions' );
 define( '_AEC_HACKS_SUB_REQUIRED',				'This will make sure a user has a subscription in order to log in.<br /><strong>Remember to also set [ Require Subscription ] in the AEC Settings!</strong>' );
 define( '_AEC_HACKS_REG2',						'This will redirect a registering user to the payment plans after filling out the registration form. Leave this alone to have plan selection only on login (if \'Require Subscription\' is active), or completely voluntary (without requiring a subscription).' );

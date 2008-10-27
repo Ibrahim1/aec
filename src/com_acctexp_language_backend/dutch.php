@@ -154,7 +154,11 @@ define( '_AEC_HACKS_NOTICE_JACL_DESC',			'Als u het JACLplus component wilt inst
 define( '_AEC_HACKS_MENU_ENTRY',				'Menu Item' );
 define( '_AEC_HACKS_MENU_ENTRY_DESC',			'Voegt een <strong>' . _AEC_SPEC_MENU_ENTRY . '</strong> menu item toe aan het user menu, Hier kan de gebruiker zijn of haar facturen managen.' );
 define( '_AEC_HACKS_LEGACY',					'<strong>Dit is een lagacy hack, Undo deze s.v.p.</strong>' );
+define( '_AEC_HACKS_LEGACY_MAMBOT',				'<strong>This is a Legacy Hack which is superceded by the Joomla 1.0 Mambot, please undo and use the "Hacks Mambot" instead!</strong>' );
 define( '_AEC_HACKS_LEGACY_PLUGIN',				'<strong>This is a Legacy Hack which is superceded by the Joomla 1.5 Plugin, please undo and use the Plugin instead!</strong>' );
+define( '_AEC_HACKS_LEGACY_PLUGIN_ERROR',		'<strong>This is a Legacy Hack which is superceded by the Joomla 1.5 Error Plugin, please undo and use the AEC Error Plugin instead!</strong>' );
+define( '_AEC_HACKS_LEGACY_PLUGIN_USER',		'<strong>This is a Legacy Hack which is superceded by the Joomla 1.5 User Plugin, please undo and use the AEC User Plugin instead!</strong>' );
+define( '_AEC_HACKS_LEGACY_PLUGIN_ACCESS',		'<strong>This is a Legacy Hack which is superceded by the Joomla 1.5 Access Plugin, please undo and use the AEC Access Plugin instead!</strong>' );
 define( '_AEC_HACKS_NOTAUTH',					'Dit zal uw gebruikers linken naar de juiste NotAllowed page' );
 define( '_AEC_HACKS_SUB_REQUIRED',				'Deze zorgt ervoor dat de gebruiker een abonnement moet hebben om in te loggen.<br /><strong>U moet niet vergeten om [ Require Subscription ] in te stellen in de AEC instellingen!</strong>' );
 define( '_AEC_HACKS_REG2',						'Deze hack zan een geregistreerde gebruiker redirecten naar de betaalplannen pagina na het invullen van een nieuw registratieformulier. Deze hack niet toepassen om betaalplanselectie te regelen alleen tijdens het inloggen (als \'Require Subscription\' actief is). <strong>LET OP: Er zijn 2 hacks die toegepast moeten worden na het toepassen van deze hack. Als je van plan bent om de betaalplannen te laten zien voor de gebruikersgegevens moet u deze hack ook toepassen.</strong>' );

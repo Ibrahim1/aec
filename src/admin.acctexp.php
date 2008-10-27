@@ -4731,7 +4731,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['important']			=	1;
 	}
 
-/* Hack remove in favor of the errorHandler Plugin
+
 	if ( ( strcmp($cmsname, "joomla") === 0 ) && !$v15 ) {
 		$n = 'joomlaphp1';
 		$hacks[$n]['name']			=	$cmsname . '.php ' . _AEC_HACK_HACK . ' #1';
@@ -4741,6 +4741,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/includes/' . $cmsname . '.php';
 		$hacks[$n]['read']			=	"function mosNotAuth() {";
 		$hacks[$n]['insert']		=	sprintf( $aec_jhack1, $n, $n );
+		$hacks[$n]['legacy']			=	1;
 
 		$n = 'joomlaphp2';
 		$hacks[$n]['name']			=	$cmsname . '.php ' . _AEC_HACK_HACK . ' #2';
@@ -4750,6 +4751,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/includes/' . $cmsname . '.php';
 		$hacks[$n]['read']			=	'function notAllowed( $name ) {';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( $aec_jhack2, $n, $n );
+		$hacks[$n]['legacy']			=	1;
 	} else {
 		$n = 'errorphp';
 		$hacks[$n]['name']			=	'error.php ' . _AEC_HACK_HACK . ' #1';
@@ -4758,8 +4760,9 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/libraries/joomla/error/error.php';
 		$hacks[$n]['read']			=	'// Initialize variables';
 		$hacks[$n]['insert']		=	sprintf( $aec_j15hack1, $n, $n ) . "\n" . $hacks[$n]['read'];
+		$hacks[$n]['legacy']			=	1;
 	}
-*/
+
 	if ( !$v15 ) {
 		$n = 'joomlaphp3';
 		$hacks[$n]['name']				=	$cmsname . '.php ' . _AEC_HACK_HACK . ' #3';
@@ -4835,7 +4838,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #6';
 		$hacks[$n]['desc']			=	_AEC_HACKS_CB6;
 		$hacks[$n]['type']			=	'file';
-/*		$hacks[$n]['condition']		=	'comprofilerphp2'; removed dependency [#0000161]*/ 
+/*		$hacks[$n]['condition']		=	'comprofilerphp2'; removed dependency [#0000161]*/
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.php';
 		$hacks[$n]['read']			=	'HTML_comprofiler::registerForm( $option, $emailpass, $userComplete, $regErrorMSG );';
 		$hacks[$n]['insert']		=	sprintf($aec_rhackbefore_fix, $n, $n) . "\n" . $hacks[$n]['read'];

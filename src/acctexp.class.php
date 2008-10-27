@@ -5299,7 +5299,9 @@ class InvoiceFactory
 		$recurring = aecGetParam( 'recurring', null );
 
 		if ( !is_null( $recurring ) ) {
-			$this->recurring	= $recurring;
+			$this->recurring = $recurring;
+		} else {
+			$this->recurring = null;
 		}
 
 		$where[] = '`active` = \'1\'';
@@ -5389,11 +5391,8 @@ class InvoiceFactory
 									$pp->init();
 									$pp->getInfo();
 									$pp->exchangeSettingsByPlan( $row );
-									if ( isset( $this->recurring ) ) {
-										$recurring = $pp->is_recurring( $this->recurring );
-									} else {
-										$recurring = $pp->is_recurring();
-									}
+
+									$recurring = $pp->is_recurring( $this->recurring );
 
 									if ( $recurring > 1 ) {
 										$pp->recurring = 0;
