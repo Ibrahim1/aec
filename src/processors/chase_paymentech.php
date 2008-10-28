@@ -198,6 +198,7 @@ class processor_chase_paymentech extends XMLprocessor
 					case 'debit':
 						$array[$type] = array( 'values' => array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), 'vcontent' => $vcontent );
 						break;
+				}
 			}
 
 			$this->getMULTIPAYform( $var, $array );
