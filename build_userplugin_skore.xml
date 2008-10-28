@@ -35,7 +35,7 @@
                </copy>
        </target>
        <target name="dist.generate">
-       <zip destfile="${distribution.dir}/aecuser_plugin_0_3.zip" update="true">
+       <zip destfile="${distribution.dir}/aecuser_plugin_0_3.zip" update="false">
        <fileset dir="${source.dir}"/>
     	<exclude name="build.xml"/>
     	<exclude name=".project"/>

@@ -116,7 +116,7 @@ class processor_allopass extends POSTprocessor
 		if (trim($post['RECALL'])=="") {
 			$response['valid'] = false;
 		} else {
-			$r=@file("http://www.allopass.com/check/vf.php4?CODE=" . $post['CODE0'] . "&AUTH=" . $this->settings['auth'] )  ;
+			$r=@file("http://www.allopass.com/check/vf.php4?CODE=" . urlencode( $post['CODE0'] ) . "&AUTH=" . $this->settings['auth'] )  ;
 
 			$test_ap = substr($r[0],0,2);
 			if ( $test_ap != "OK") {

@@ -35,7 +35,7 @@
                </copy>
        </target>
        <target name="dist.generate">
-       <zip destfile="${distribution.dir}/aechacks_mambot_0_1.zip" update="true">
+       <zip destfile="${distribution.dir}/aechacks_mambot_0_1.zip" update="false">
        <fileset dir="${source.dir}"/>
     	<exclude name="build.xml"/>
     	<exclude name=".project"/>
