@@ -2745,7 +2745,7 @@ class processor extends serialParamDBTable
 			$curl_calls[CURLOPT_PROXY]				= $aecConfig->cfg['proxy'];
 
 			if ( !empty( $aecConfig->cfg['proxy_port'] ) ) {
-				$curl_calls[CURLOPT_PROXYPORT]	= $aecConfig->cfg['proxy_port'];
+				$curl_calls[CURLOPT_PROXYPORT]		= $aecConfig->cfg['proxy_port'];
 			}
 
 			if ( !empty( $aecConfig->cfg['proxy_username'] ) && !empty( $aecConfig->cfg['proxy_password'] ) ) {
@@ -9712,9 +9712,10 @@ class microIntegration extends serialParamDBTable
 		} elseif ( method_exists( $this->mi_class, $stage ) ) {
 			$return = $this->mi_class->$stage( $request );
 		} else {
-			$eventlog = new eventLog( $this->_db );
+			return null;
+			/*$eventlog = new eventLog( $this->_db );
 			$eventlog->issue( 'MI application problems', 'mi, problems, '.$this->class_name, 'Action not found: '.$stage, 32 );
-			$return = null;
+			$return = null;*/
 		}
 
 		// Gather Errors and Warnings
