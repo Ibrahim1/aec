@@ -698,6 +698,8 @@ define( '_CFG_CHASE_PAYMENTECH_MERCHANT_ID_NAME', 'Merchant ID');
 define( '_CFG_CHASE_PAYMENTECH_MERCHANT_ID_DESC', 'Your Chase Paymentech Merchant ID.');
 define( '_CFG_CHASE_PAYMENTECH_TERMINAL_ID_NAME', 'Terminal ID');
 define( '_CFG_CHASE_PAYMENTECH_TERMINAL_ID_DESC', 'Your Terminal ID.');
+define( '_CFG_CHASE_PAYMENTECH_BIN_NAME', 'BIN');
+define( '_CFG_CHASE_PAYMENTECH_BIN_DESC', 'Transaction Routing Definition - Assigned by Chase Paymentech: 000001 - Salem | 000002 - PNS');
 define( '_CFG_CHASE_PAYMENTECH_PROMPTADDRESS_NAME', 'Prompt for Address');
 define( '_CFG_CHASE_PAYMENTECH_PROMPTADDRESS_DESC', 'Ask the user to put in an Address with the Billing Name.');
 define( '_CFG_CHASE_PAYMENTECH_PROMPTZIPONLY_NAME', 'Prompt for Zip only');
