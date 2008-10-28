@@ -853,7 +853,7 @@ function help( $option )
 	}
 
 	$diagnose	= array();
-	$diagnose[]	= array( _AEC_HELP_QS_HEADER, 1, 1, aecHTML::Icon( 'page_white_acrobat.png' ) . sprintf( _AEC_HELP_QS_DESC, '<a href="' . $pdfHelp . '" target="_blank" title="' . _AEC_HELP_QS_DESC_LTEXT . '">' . _AEC_HELP_QS_DESC_LTEXT . '</a>' ), '', 0 );
+	//$diagnose[]	= array( _AEC_HELP_QS_HEADER, 1, 1, aecHTML::Icon( 'page_white_acrobat.png' ) . sprintf( _AEC_HELP_QS_DESC, '<a href="' . $pdfHelp . '" target="_blank" title="' . _AEC_HELP_QS_DESC_LTEXT . '">' . _AEC_HELP_QS_DESC_LTEXT . '</a>' ), '', 0 );
 
 /*
 	$diagnose[]	= array("AEC Version", $diagnostic['AEC_stable'], 1, "You are running the most recent stable Version of the AEC", 0, 1);
@@ -4995,7 +4995,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 
 			$n = 'registrationphp3';
 			$hacks[$n]['name']			=	'registration.php ' . _AEC_HACK_HACK . ' #3';
-			$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY;
+			$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY_MAMBOT;
 			$hacks[$n]['type']			=	'file';
 			$hacks[$n]['condition']		=	'registrationphp3';
 			$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_registration/registration.php';
@@ -5005,7 +5005,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 
 			$n = 'registrationhtml';
 			$hacks[$n]['name']			=	'registration.html.php ' . _AEC_HACK_HACK . ' #1';
-			$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY;
+			$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY_MAMBOT;
 			$hacks[$n]['type']			=	'file';
 			$hacks[$n]['condition']		=	'registrationhtml';
 			$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_registration/registration.html.php';
@@ -5014,16 +5014,17 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 			$hacks[$n]['legacy']		=	1;
 		}
 
-		/*$n = 'registrationhtml2';
+		$n = 'registrationhtml2';
 		$hacks[$n]['name']			=	'registration.html.php ' . _AEC_HACK_HACK . ' #2';
-		$hacks[$n]['desc']			=	_AEC_HACKS_REG4;
+		$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY;
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['uncondition']	=	'registrationhtml';
 		$hacks[$n]['condition']		=	'registrationphp2';
 		$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/components/com_user/views/register/tmpl/default.php' ) : ( $mosConfig_absolute_path . '/components/com_registration/registration.html.php' );
 		$hacks[$n]['read']			=	$v15 ? ( '<input type="hidden" name="task" value="register_save" />' ) : ( '<input type="hidden" name="task" value="saveRegistration" />' );
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
-		$hacks[$n]['important']		=	1;*/
+		$hacks[$n]['important']		=	1;
+		$hacks[$n]['legacy']		=	1;
 
 		if ( !$v15 ) {
 			$n = 'registrationphp5';
