@@ -58,13 +58,14 @@ function planRegistration()
 	{
 		if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {
 			$getPlans = false;
+
 			$usage = intval(mosGetParam( $_POST, 'usage', '0' ));
-			
 			$planFirst = $aecConfig->cfg['plans_first'];
-			if($planFirst & $usage != 0) $getPlans = true;
-			if(!$planFirst & $usage == 0) $getPlans = true;
+
+			if($planFirst && $usage != 0) $getPlans = true;
+			if(!$planFirst && $usage == 0) $getPlans = true;
 			
-			if($getPlans) $option = "com_acctexp";
+			if($getPlans) $_REQUEST['option'] = "com_acctexp";
 		}
 	}
 }
