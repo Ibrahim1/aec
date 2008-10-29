@@ -3187,6 +3187,129 @@ class XMLprocessor extends processor
 		}
 	}
 
+	function XMLtoArray( $xml )
+	{
+		if (!($xml->children())) {
+			return (string) $xml;
+		}
+
+		foreach ( $xml->children() as $child ) {
+			$name = $child->getName();
+
+			if ( count( $xml->$name ) == 1 ) {
+				$element[$name] = $this->XMLtoArray( $child );
+			} else {
+				$element[][$name] = $this->XMLtoArray( $child );
+			}
+		}
+
+		return $element;
+	}
+
+}
+
+class PROFILEprocessor extends XMLprocessor
+{
+
+	function ppProfileSelect( $var, $ppParams, $select=false, $btn=true )
+	{
+		$profiles = get_object_vars( $ppParams->paymentProfiles );
+
+		$var['params'][] = array( 'p', _AEC_USERFORM_BILLING_DETAILS_NAME, '' );
+
+		if ( !empty( $profiles ) ) {
+			// Single-Select Payment Option
+			foreach ( $profiles as $pid => $pobj ) {
+				$info = array();
+
+				$info_array = get_object_vars( $pobj->profilehash );
+
+				foreach ( $info_array as $iak => $iav ) {
+					if ( !empty( $iav ) ) {
+						$info[] = $iav;
+					}
+				}
+
+				if ( $ppParams->paymentprofileid == $pid ) {
+					$text = '<strong>' . implode( '<br />', $info ) . '</strong>';
+				} else {
+					$text = implode( '<br />', $info );
+				}
+
+				$var['params'][] = array( 'radio', 'payprofileselect', $pid, $ppParams->paymentprofileid, $text );
+			}
+
+			if ( count( $profiles ) < 10 ) {
+				$var['params'][] = array( 'radio', 'payprofileselect', "new", $ppParams->paymentprofileid, 'create new profile' );
+			}
+
+			if ( $btn ) {
+				$var['params']['edit_payprofile'] = array( 'submit', '', '', ( $select ? _BUTTON_SELECT : _BUTTON_EDIT ) );
+			}
+		}
+
+		return $var;
+	}
+
+	function ProfileAdd( $request, $profileid )
+	{
+		$ppParams = new stdClass();
+
+		$ppParams->profileid			= $profileid;
+
+		$ppParams->paymentprofileid		= '';
+		$ppParams->paymentProfiles		= new stdClass();
+
+		$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
+
+		return $ppParams;
+	}
+
+	function payProfileAdd( $request, $profileid, $details, $ppParams )
+	{
+		$profiles = get_object_vars( $ppParams->paymentProfiles );
+		$pointer = count( $profiles );
+
+		$data = new stdClass();
+		$data->profileid = $profileid;
+		$data->profilehash = $this->payProfileHash( $details );
+
+		$ppParams->paymentProfiles->$pointer = $data;
+
+		$ppParams->paymentprofileid = $pointer;
+
+		$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
+
+		return $ppParams;
+	}
+
+	function payProfileUpdate( $request, $profileid, $details, $ppParams )
+	{
+		$ppParams->paymentProfiles->$profileid->profilehash = $this->payProfileHash( $details );
+
+		$ppParams->paymentprofileid = $profileid;
+
+		$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
+
+		return $ppParams;
+	}
+
+	function payProfileHash( $post )
+	{
+		$hash = new stdClass();
+		$hash->name		= $post['billFirstName'] . ' ' . $post['billLastName'];
+		$hash->address	= $post['billAddress'];
+		$hash->zipcity	= $post['billZip'] . ' ' . $post['billCity'];
+
+		if ( !empty( $post['account_no'] ) ) {
+			$hash->cc		= 'XXXX' . substr( $post['account_no'], -4 );
+		} else {
+			$hash->cc		= 'XXXX' . substr( $post['cardNumber'], -4 );
+		}
+
+		return $hash;
+	}
+
 }
 
 class POSTprocessor extends processor

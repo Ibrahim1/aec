@@ -117,6 +117,7 @@
 		<filename>processors/authorize_arb.php</filename>
 		<filename>processors/authorize_cim.php</filename>
 		<filename>processors/ccbill.php</filename>
+		<filename>processors/chase_paymentech.php</filename>
 		<filename>processors/clickbank.php</filename>
 		<filename>processors/cybermut.php</filename>
 		<filename>processors/epsnetpay.php</filename>

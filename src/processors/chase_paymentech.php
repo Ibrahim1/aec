@@ -11,7 +11,7 @@
 // Dont allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_chase_paymentech extends XMLprocessor
+class processor_chase_paymentech extends PROFILEprocessor
 {
 	function info()
 	{
@@ -169,10 +169,15 @@ class processor_chase_paymentech extends XMLprocessor
 		if ( !$nobill ) {
 
 			$vcontent = array();
+			$cccontent = array();
 
-			$cccontent['card_number'] = $cim->substring_between( $cim->response,'<cardNumber>','</cardNumber>' );
-			$cccontent['account_no'] = $cim->substring_between( $cim->response,'<accountNumber>','</accountNumber>' );
-			$cccontent['routing_no'] = $cim->substring_between( $cim->response,'<routingNumber>','</routingNumber>' );
+			if ( $this->settings['recurring'] ) {
+				$profile = $this->fetchProfile( $ppParams );
+
+				$cccontent['card_number'] = $profile[''];
+				$cccontent['account_no'] = $profile[''];
+				$cccontent['routing_no'] = $profile[''];
+			}
 
 			if ( empty( $this->settings['pay_types'] ) ) {
 				$this->settings['pay_types'] = array( 'cc' );
@@ -203,18 +208,19 @@ class processor_chase_paymentech extends XMLprocessor
 		}
 
 		if ( !empty( $this->settings['promptAddress'] ) ) {
-			$uservalues = array( 'firstName', 'lastName', 'company', 'address', 'address2', 'city', 'state', 'zip', 'country', 'phone', 'fax' );
+			if ( isset( $profile ) ) {
+				$uservalues = array( 'firstName', 'lastName', 'company', 'address', 'address2', 'city', 'state', 'zip', 'country', 'phone', 'fax' );
 
-			$content = array();
-
-			foreach ( $uservalues as $uv ) {
-				if ( in_array( $uv, array( 'phone', 'fax' ) ) ) {
-					$content[$uv] = $cim->substring_between( $cim->response,'<' . $uv . 'Number>','</' . $uv . 'Number>' );
-				} else {
-					if ( $nobill && ( $uv == 'address' ) ) {
-						$content[$uv] = $cim->substring_between( $cim->response,'<' . $uv . '>','</' . $uv . '>', 1 );
+				$content = array();
+				foreach ( $uservalues as $uv ) {
+					if ( in_array( $uv, array( 'phone', 'fax' ) ) ) {
+						$content[$uv] = $profile[$uv];
 					} else {
-						$content[$uv] = $cim->substring_between( $cim->response,'<' . $uv . '>','</' . $uv . '>' );
+						if ( $nobill && ( $uv == 'address' ) ) {
+							$content[$uv] = $profile[$uv];
+						} else {
+							$content[$uv] = $profile[$uv];
+						}
 					}
 				}
 			}
@@ -229,17 +235,17 @@ class processor_chase_paymentech extends XMLprocessor
 	{
 		global $aecConfig;
 
-		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
-
-		// Actual form, with ProfileID reference numbers as options
-
 		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=checkout', true ) . '" method="post">' . "\n";
 
-		if ( !empty( $ppParams ) ) {
-			$var = array();
-			$var = $this->ppProfileSelect( $var, $ppParams, false, false );
+		if ( $this->settings['recurring'] ) {
+			$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
 
-			$return .= $this->getParamsHTML( $var ) . '<br /><br />';
+			if ( !empty( $ppParams ) ) {
+				$var = array();
+				$var = $this->ppProfileSelect( $var, $ppParams, false, false );
+
+				$return .= $this->getParamsHTML( $var ) . '<br /><br />';
+			}
 		}
 
 		$return .= $this->getParamsHTML( $this->checkoutform( $request ) ) . '<br /><br />';
@@ -250,6 +256,32 @@ class processor_chase_paymentech extends XMLprocessor
 		$return .= '</form>' . "\n";
 
 		return $return;
+	}
+
+	function createProfile( $ppParams )
+	{
+		$dom = new DOMDocument( '1.0', 'utf-8' );
+
+		$R = $dom->appendChild( new DOMElement( 'Request' ) );
+		$P = $R->appendChild( new DOMElement( 'Profile' ) );
+
+		$var = array();
+
+		$var['CustomerBin']			= $this->settings['BIN'];
+		$var['CustomerMerchantID']	= $this->settings['merchant_id'];
+
+		foreach ( $var as $k => $v ) {
+			$P->appendChild( new DOMElement( $k, $v ) );
+		}
+
+		$xml = $this->transmitChase( $dom->saveXML() );
+
+		if ( isset( $xml['Response']['profileResp'] ) ) {
+			return $xml['Response']['profileResp'];
+		} else {
+aecDebug( $xml );
+			return array();
+		}
 	}
 
 	function fetchProfile( $ppParams )
@@ -268,7 +300,7 @@ class processor_chase_paymentech extends XMLprocessor
 			$P->appendChild( new DOMElement( $k, $v ) );
 		}
 
-		$xml = $this->extractXML( $this->transmitChase( $dom->saveXML() ) );
+		$xml = $this->transmitChase( $dom->saveXML() );
 
 		if ( isset( $xml['Response']['profileResp'] ) ) {
 			return $xml['Response']['profileResp'];
@@ -355,26 +387,7 @@ aecDebug( $xml );
 
 		$response = $this->transmitRequest( $url, $path, $xml, 443, $curlextra );
 
-		return $this->extractXML( simplexml_load_string( $response ) );
-	}
-
-	function extractXML( $xml )
-	{
-		if (!($xml->children())) {
-			return (string) $xml;
-		}
-
-		foreach ( $xml->children() as $child ) {
-			$name = $child->getName();
-
-			if ( count( $xml->$name ) == 1 ) {
-				$element[$name] = $this->extractXML( $child );
-			} else {
-				$element[][$name] = $this->extractXML( $child );
-			}
-		}
-
-		return $element;
+		return $this->XMLtoArray( simplexml_load_string( $response ) );
 	}
 
 	function transmitRequestXML( $xml, $request )
@@ -390,136 +403,15 @@ aecDebug( $xml );
 aecDebug( $response );
 		}
 
-		if ( $cim->isSuccessful() ) {
-			if ( is_array( $request->int_var['amount'] ) ) {
-				$cim->setParameter( 'transactionRecurringBilling',	'true' );
-				if ( isset( $request->int_var['amount']['amount1'] ) ) {
-					$cim->setParameter( 'transaction_amount',	$request->int_var['amount']['amount1'] );
-				} else {
-					$cim->setParameter( 'transaction_amount',	$request->int_var['amount']['amount3'] );
-				}
-			} else {
-				$cim->setParameter( 'transaction_amount',	$request->int_var['amount'] );
-			}
+		if ( $r['ProcStatus'] == 0 ) {
 
-			$cim->setParameter( 'transactionType',		'profileTransAuthCapture' );
-			$cim->setParameter( 'transactionCardCode',	trim( $request->int_var['params']['cardVV2'] ) );
-
-			$cim->createCustomerProfileTransactionRequest();
-
-			if ( $cim->isSuccessful() ) {
-				$return['valid']	= true;
-				$return['invoice']	= $cim->refId;
-			} else {
-				$return['error']	= $cim->code . ": " . $cim->text;
-			}
+			$return['valid']	= true;
+			$return['invoice']	= $r['ProcStatus'];
 		} else {
-			$return['error']		= $cim->code . ": " . $cim->text;
+			$return['error']		= $r['ProcStatus'] . ": " . $r['StatusMsg'];
 		}
 
 		return $return;
-	}
-
-	function ppProfileSelect( $var, $ppParams, $select=false, $btn=true )
-	{
-		$profiles = get_object_vars( $ppParams->paymentProfiles );
-
-		$var['params'][] = array( 'p', _AEC_USERFORM_BILLING_DETAILS_NAME, '' );
-
-		if ( !empty( $profiles ) ) {
-			// Single-Select Payment Option
-			foreach ( $profiles as $pid => $pobj ) {
-				$info = array();
-
-				$info_array = get_object_vars( $pobj->profilehash );
-
-				foreach ( $info_array as $iak => $iav ) {
-					if ( !empty( $iav ) ) {
-						$info[] = $iav;
-					}
-				}
-
-				if ( $ppParams->paymentprofileid == $pid ) {
-					$text = '<strong>' . implode( '<br />', $info ) . '</strong>';
-				} else {
-					$text = implode( '<br />', $info );
-				}
-
-				$var['params'][] = array( 'radio', 'payprofileselect', $pid, $ppParams->paymentprofileid, $text );
-			}
-
-			if ( count( $profiles ) < 10 ) {
-				$var['params'][] = array( 'radio', 'payprofileselect', "new", $ppParams->paymentprofileid, 'create new profile' );
-			}
-
-			if ( $btn ) {
-				$var['params']['edit_payprofile'] = array( 'submit', '', '', ( $select ? _BUTTON_SELECT : _BUTTON_EDIT ) );
-			}
-		}
-
-		return $var;
-	}
-
-	function ProfileAdd( $request, $profileid )
-	{
-		$ppParams = new stdClass();
-
-		$ppParams->profileid			= $profileid;
-
-		$ppParams->paymentprofileid		= '';
-		$ppParams->paymentProfiles		= new stdClass();
-
-		$ppParams->shippingprofileid	= '';
-		$ppParams->shippingProfiles		= new stdClass();
-
-		$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
-
-		return $ppParams;
-	}
-
-	function payProfileAdd( $request, $profileid, $post, $ppParams )
-	{
-		$profiles = get_object_vars( $ppParams->paymentProfiles );
-		$pointer = count( $profiles );
-
-		$data = new stdClass();
-		$data->profileid = $profileid;
-		$data->profilehash = $this->payProfileHashFromPost( $post );
-
-		$ppParams->paymentProfiles->$pointer = $data;
-
-		$ppParams->paymentprofileid = $pointer;
-
-		$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
-
-		return $ppParams;
-	}
-
-	function payProfileUpdate( $request, $profileid, $post, $ppParams )
-	{
-		$ppParams->paymentProfiles->$profileid->profilehash = $this->payProfileHashFromPost( $post );
-
-		$ppParams->paymentprofileid = $profileid;
-
-		$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
-
-		return $ppParams;
-	}
-
-	function payProfileHashFromPost( $post )
-	{
-		$hash = new stdClass();
-		$hash->name		= $post['billFirstName'] . ' ' . $post['billLastName'];
-		$hash->address	= $post['billAddress'];
-		$hash->zipcity	= $post['billZip'] . ' ' . $post['billCity'];
-
-		if ( !empty( $post['account_no'] ) ) {
-			$hash->cc		= 'XXXX' . substr( $post['account_no'], -4 );
-		} else {
-			$hash->cc		= 'XXXX' . substr( $post['cardNumber'], -4 );
-		}
-
-		return $hash;
 	}
 
 	function prepareValidation( $subscription_list )
