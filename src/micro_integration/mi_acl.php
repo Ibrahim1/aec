@@ -108,7 +108,7 @@ class mi_acl
 
 	function expiration_action( $request )
 	{
-		if ( $this->settings['set_gid_pre'] ) {
+		if ( $this->settings['set_gid_exp'] ) {
 			$this->instantGIDchange( $request->metaUser, 'gid_exp' );
 		}
 
