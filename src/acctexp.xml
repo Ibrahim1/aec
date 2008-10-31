@@ -99,6 +99,7 @@
 		<filename>micro_integration/mi_mosets_tree.php</filename>
 		<filename>micro_integration/mi_mysms.php</filename>
 		<filename>micro_integration/mi_mysql_query.php</filename>
+		<filename>micro_integration/mi_proma.php</filename>
 		<filename>micro_integration/mi_raffle.php</filename>
 		<filename>micro_integration/mi_remository.php</filename>
 		<filename>micro_integration/mi_rsgallery2.php</filename>
