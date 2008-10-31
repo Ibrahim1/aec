@@ -9951,6 +9951,15 @@ class microIntegration extends serialParamDBTable
 			return null;
 		}
 	}
+	
+	function admin_info ( $userid )
+	{
+		if ( method_exists( $this->mi_class, 'admin_info' ) ) {
+			return $this->mi_class->admin_info( $userid );
+		} else {
+			return $this->profile_info( $userid );
+		}
+	}
 
 	function getInfo()
 	{

@@ -713,7 +713,7 @@ class HTML_AcctExp
 ?>
 					<div class="userinfobox" style="width:<?php echo $width; ?>%">
 						<h3><?php echo $mi->info['name'] . ' - ' . $mi->name ?></h3>
-						<p><?php echo $mi->profile_info($metaUser->userid) ?></p>
+						<p><?php echo $mi->admin_info( $metaUser->userid ) ?></p>
 					</div>
 <?php } ?>
 				</td>
