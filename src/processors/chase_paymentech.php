@@ -189,16 +189,16 @@ class processor_chase_paymentech extends PROFILEprocessor
 						$array[$type] = array( 'values' => array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), 'vcontent' => $cccontent );
 						break;
 					case 'echeck':
-						$array[$type] = array( 'values' => array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), 'vcontent' => $vcontent );
+						//$array[$type] = array( 'values' => array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), 'vcontent' => $vcontent );
 						break;
 					case 'eudd':
-						$array[$type] = array( 'values' => array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), 'vcontent' => $vcontent );
+						//$array[$type] = array( 'values' => array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), 'vcontent' => $vcontent );
 						break;
 					case 'gc':
-						$array[$type] = array( 'values' => array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), 'vcontent' => $vcontent );
+						//$array[$type] = array( 'values' => array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), 'vcontent' => $vcontent );
 						break;
 					case 'debit':
-						$array[$type] = array( 'values' => array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), 'vcontent' => $vcontent );
+						//$array[$type] = array( 'values' => array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), 'vcontent' => $vcontent );
 						break;
 				}
 			}
