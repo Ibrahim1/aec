@@ -129,7 +129,7 @@ class processor_paypal_subscription extends POSTprocessor
 */
 		$var['business']		= $this->settings['business'];
 		$var['invoice']			= $request->int_var['invoice'];
-		$var['cancel']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
+		$var['cancel_return']	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
 
 		if ( strpos( $this->settings['altipnurl'], 'http://' ) === 0 ) {
 			$var['notify_url']	= $this->settings['altipnurl'] . '/index.php?option=com_acctexp&amp;task=paypal_subscriptionnotification';
@@ -174,16 +174,31 @@ class processor_paypal_subscription extends POSTprocessor
 	{
 		global $database;
 
-		$mc_gross			= $post['mc_gross'];
-		if ( $mc_gross == '' ) {
-			$mc_gross 		= $post['mc_amount1'];
-		}
-		$mc_currency		= $post['mc_currency'];
-
 		$response = array();
 		$response['invoice'] = $post['invoice'];
-		$response['amount_paid'] = $mc_gross;
-		$response['amount_currency'] = $mc_currency;
+		$response['amount_currency'] = $post['mc_currency'];
+
+		switch ( $post['txn_type'] ) {
+			case "subscr_payment":
+				$response['amount_paid'] = $post['mc_gross'];
+				break;
+			case "subscr_signup":
+			case "subscr_cancel":
+			case "subscr_modify":
+				// Docs suggest mc_amount1 is set with signup, cancel or modify
+				// Testing shows otherwise
+				$response['amount_paid'] = isset($post['mc_amount1']) ? $post['mc_amount1'] : null;
+			break;
+			case "subscr_failed":
+			case "subscr_eot":
+				// May create a problem somewhere donw the line, but NULL
+				// is a more representative value
+				$reponse['amount_paid'] = null;
+			break;
+			default:
+			// Either a fraud attempt, or PayPal has changed its API
+			// TODO: Raise Error
+		}
 
 		return $response;
 	}
