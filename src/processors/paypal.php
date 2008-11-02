@@ -111,7 +111,7 @@ class processor_paypal extends POSTprocessor
 
 		$var['business']		= $this->settings['business'];
 		$var['invoice']			= $request->int_var['invoice'];
-		$var['cancel']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
+		$var['cancel_return']	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
 
 		if ( strpos( $this->settings['altipnurl'], 'http://' ) === 0 ) {
 			$var['notify_url']	= $this->settings['altipnurl'] . '/index.php?option=com_acctexp&amp;task=paypalnotification';
