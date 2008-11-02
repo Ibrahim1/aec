@@ -694,40 +694,36 @@ class HTML_AcctExp
 			<input type="hidden" name="nexttask" value="<?php echo $nexttask;?>" />
 		</form>
 
-<?php
+		<?php
 		$tabs->endTab();
 
 		$tabs->startTab(_AEC_HEAD_MICRO_INTEGRATION, _AEC_HEAD_MICRO_INTEGRATION);
 
 		$userMIs = $metaUser->getUserMIs();
-?>
+		?>
 		<div class="aec_tabheading"><h2><?php echo _AEC_HEAD_MICRO_INTEGRATION; ?></h2></div>
 		<form name="miForm" method="post" action="index2.php">
 		<table class="adminform">
 			<tr>
 				<td valign="top" style="padding: 10px;">
-<?php
-			$width = 99;
-			if(count($userMIs)>1) $width = 45;
-			foreach($userMIs as $mi){
-?>
-					<div class="userinfobox" style="width:<?php echo $width; ?>%">
-						<h3><?php echo $mi->info['name'] . ' - ' . $mi->name ?></h3>
-						<p><?php echo $mi->admin_info( $metaUser->userid ) ?></p>
-					</div>
-<?php } ?>
+					<?php
+					$width = ( count( $userMIs ) > 1 ) ? 45 : 99;
+					foreach ( $userMIs as $mi ) {
+					?>
+						<div class="userinfobox" style="width:<?php echo $width; ?>%">
+							<h3><?php echo $mi->info['name'] . ' - ' . $mi->name; ?></h3>
+							<p><?php echo $mi->admin_info( $metaUser->userid ); ?></p>
+						</div>
+					<?php } ?>
 				</td>
 			</tr>
 		</table>
 		</form>
 
-<?php
+		<?php
 		$tabs->endTab();
-
 		$tabs->endPane();
-?>
 
- 		<?php
 		if ( _EUCA_DEBUGMODE ) {
 			krumo( $option, $metaUser, $invoices, $lists, $nexttask );
 		}
@@ -2102,7 +2098,7 @@ class HTML_AcctExp
 
 		<?php
 		if ( _EUCA_DEBUGMODE ) {
-			krumo( $option, $aecHTML, $row, $hasrecusers );
+			krumo( $option, $aecHTML, $row );
 		}
 
  		HTML_myCommon::GlobalNerd();
