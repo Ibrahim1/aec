@@ -595,6 +595,14 @@ class processor_authorize_cim extends XMLprocessor
 		return $return;
 	}
 
+	function customaction_cancel( $request )
+	{
+		$return['valid']	= 0;
+		$return['cancel']	= true;
+
+		return $return;
+	}
+
 	function ppProfileSelect( $var, $ppParams, $select=false, $btn=true )
 	{
 		$profiles = get_object_vars( $ppParams->paymentProfiles );
@@ -825,6 +833,15 @@ class processor_authorize_cim extends XMLprocessor
 	function validateSubscription( $subscription_id )
 	{
 		global $database;
+
+		$subscription = new Subscription( $database );
+		$subscription->load( $subscription_id );
+
+		$allowed = array( "Trial", "Active" );
+
+		if ( !in_array( $subscription->status, $allowed ) ) {
+			return false;
+		}
 
 		$invoice = new Invoice( $database );
 		$invoice->loadbySubscriptionId( $subscription_id );
