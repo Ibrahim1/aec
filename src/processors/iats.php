@@ -60,90 +60,6 @@ class processor_iats extends XMLprocessor
 		return $settings;
 	}
 
-	function registerProfileTabs()
-	{
-		$tab			= array();
-		$tab['details']	= _AEC_USERFORM_BILLING_DETAILS_NAME;
-
-		return $tab;
-	}
-
-	function customtab_details( $request )
-	{
-		$invoiceparams = $request->invoice->getParams();
-		$profileid = $invoiceparams['iats_customerProfileId'];
-
-		$billfirstname	= aecGetParam( 'billFirstName', null );
-		$billcardnumber	= aecGetParam( 'cardNumber', null );
-
-		$updated = null;
-
-		if ( !empty( $billfirstname ) && !empty( $billcardnumber ) && ( strpos( $billcardnumber, 'X' ) === false ) ) {
-			$var['Method']					= 'UpdateRecurringPaymentsProfile';
-			$var['Profileid']				= $profileid;
-
-			$var['card_type']				= aecGetParam( 'cardType' );
-			$var['card_number']				= aecGetParam( 'cardNumber' );
-			$var['expDate']					= str_pad( aecGetParam( 'expirationMonth' ), 2, '0', STR_PAD_LEFT ) . aecGetParam( 'expirationYear' );
-			$var['CardVerificationValue']	= aecGetParam( 'cardVV2' );
-
-			$udata = array( 'firstname' => 'billFirstName', 'lastname' => 'billLastName', 'street' => 'billAddress', 'street2' => 'billAddress2',
-							'city' => 'billCity', 'state' => 'billState', 'zip' => 'billZip', 'country' => 'billCountry'
-							);
-
-			foreach ( $udata as $authvar => $aecvar ) {
-				$value = trim( aecGetParam( $aecvar ) );
-
-				if ( !empty( $value ) ) {
-					$var[$authvar] = $value;
-				}
-			}
-
-			$result = $this->ProfileRequest( $request, $profileid, $var );
-
-			$updated = true;
-		}
-
-		if ( $profileid ) {
-			$var['Method']				= 'GetRecurringPaymentsProfileDetails';
-			$var['Profileid']			= $profileid;
-
-			$vars = $this->ProfileRequest( $request, $profileid, $var );
-
-			$vcontent = array();
-			$vcontent['card_type']		= strtolower( $vars['CREDITCARDTYPE'] );
-			$vcontent['card_number']	= 'XXXX' . $vars['ACCT'];
-			$vcontent['firstname']		= $vars['FIRSTNAME'];
-			$vcontent['lastname']		= $vars['LASTNAME'];
-
-			if ( isset( $vars['STREET1'] ) ) {
-				$vcontent['address']		= $vars['STREET1'];
-				$vcontent['address2']		= $vars['STREET2'];
-			} else {
-				$vcontent['address']		= $vars['STREET'];
-			}
-
-			$vcontent['city']			= $vars['CITY'];
-			$vcontent['state_usca']		= $vars['STATE'];
-			$vcontent['zip']			= $vars['ZIP'];
-			$vcontent['country_list']	= $vars['COUNTRY'];
-		} else {
-			$vcontent = array();
-		}
-
-		$var = $this->checkoutform( $request, $vcontent, $updated );
-
-		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=iats_details', true ) . '" method="post">' . "\n";
-		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
-		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
-		$return .= '<input type="hidden" name="task" value="subscriptiondetails" />' . "\n";
-		$return .= '<input type="hidden" name="sub" value="iats_details" />' . "\n";
-		$return .= '<input type="submit" class="button" value="' . _BUTTON_APPLY . '" /><br /><br />' . "\n";
-		$return .= '</form>' . "\n";
-
-		return $return;
-	}
-
 	function checkoutform( $request, $vcontent=null, $updated=null )
 	{
 		global $mosConfig_live_site;
@@ -179,7 +95,12 @@ class processor_iats extends XMLprocessor
 
 		$var['AgentCode']			= $this->settings['agent_code'];
 		$var['Password']			= $this->settings['password'];
-		$var['CustCode']			= $request->int_var['params']['customer_id'];
+
+		if ( !empty( $ppParams['customer_id'] ) ) {
+			$var['CustCode']			= $ppParams['customer_id'];
+		} else {
+			$var['CustCode']			= '';
+		}
 
 		$var['FirstName']			= trim( $request->int_var['params']['billFirstName'] );
 		$var['LastName']			= trim( $request->int_var['params']['billLastName'] );
@@ -265,6 +186,7 @@ class processor_iats extends XMLprocessor
 				$var[$n.($hastrial ? '2' : '1')] = $v;
 			}
 
+			$this->path = "/itravel/Customer_Create.pro";
 		} else {
 			$var['MOP']			= $request->int_var['params']['cardType'];
 			$var['CCNum']			= $request->int_var['params']['cardNumber'];
@@ -287,9 +209,15 @@ class processor_iats extends XMLprocessor
 		return implode( '&', $content );
 	}
 
-	function transmitToTicketmaster( $xml, $request )
+	function transmitToTicketmaster( $xml, $request, $path=null )
 	{
-		$path = "/itravel/itravel.pro";
+		if ( empty( $path ) ) {
+			if ( !empty( $this->path ) ) {
+				$path = $this->path;
+			} else {
+				$path = "/itravel/itravel.pro";
+			}
+		}
 
 		if ( !isset( $this->cookieFile ) && ( $this->settings['server_type'] == 1 ) ) {
 			$this->cookieFile = "cookie" .date("his"). ".txt";
@@ -325,9 +253,22 @@ class processor_iats extends XMLprocessor
 		return $this->transmitRequest( $url, $path, $xml, $port, $curlextra );
 	}
 
-	function transmitRequestXML( $xml, $request )
+	function transmitRequestXML( $xml, $request, $path=null )
 	{
-		$response = $this->transmitToTicketmaster( $xml, $request );
+		$response = $this->transmitToTicketmaster( $xml, $request, $path=null );
+
+		$cccheck	= stristr( $response, "CustCode " );
+		$cccheck	= stristr( $cccheck, "value=" );
+		$ipos2		= strpos( $cccheck, ">" );
+		$customer	= substr( $cccheck, 7, $ipos2 - 8 );
+
+		if ( !empty( $customer ) ) {
+			$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
+
+			$ppParams['customer_id'] = $customer;
+
+			$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
+		}
 
 		$return = array();
 		$return['valid'] = false;
@@ -343,8 +284,49 @@ class processor_iats extends XMLprocessor
 			$return['valid'] = true;
 		}
 
-
 		return $return;
+	}
+
+	function customaction_cancel( $request )
+	{
+		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
+
+		if ( empty( $ppParams['customer_id'] ) ) {
+			Payment_HTML::error( 'com_acctexp', $request->metaUser->cmsUser, $request->invoice, "An error occured while cancelling your subscription. Please contact the system administrator!", true );
+		}
+
+		$var = array();
+
+		$var['AgentCode']			= $this->settings['agent_code'];
+		$var['Password']			= $this->settings['password'];
+
+		$var['CustCode']			= $ppParams['customer_id'];
+
+		$var['Version']				= "1.30";
+
+		$content = array();
+		foreach ( $var as $name => $value ) {
+			$content[] .= urlencode( $name ) . '=' . urlencode( stripslashes( $value ) );
+		}
+
+		$xml = implode( '&', $content );
+
+		$path = "/itravel/Customer_Delete.pro";
+
+		$r = $this->transmitToTicketmaster( $xml, $request, $path );
+
+		if ( $r['valid'] ) {
+			unset( $ppParams['customer_id'] );
+
+			$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
+
+			$return['valid'] = 0;
+			$return['cancel'] = true;
+
+			return $return;
+		} else {
+			Payment_HTML::error( 'com_acctexp', $request->metaUser->cmsUser, $request->invoice, "An error occured while cancelling your subscription. Please contact the system administrator!", true );
+		}
 	}
 
 	function convertPeriodUnit( $period, $unit )
