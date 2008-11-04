@@ -4741,7 +4741,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/includes/' . $cmsname . '.php';
 		$hacks[$n]['read']			=	"function mosNotAuth() {";
 		$hacks[$n]['insert']		=	sprintf( $aec_jhack1, $n, $n );
-		$hacks[$n]['legacy']			=	1;
+		$hacks[$n]['legacy']		=	1;
 
 		$n = 'joomlaphp2';
 		$hacks[$n]['name']			=	$cmsname . '.php ' . _AEC_HACK_HACK . ' #2';
@@ -4751,7 +4751,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/includes/' . $cmsname . '.php';
 		$hacks[$n]['read']			=	'function notAllowed( $name ) {';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( $aec_jhack2, $n, $n );
-		$hacks[$n]['legacy']			=	1;
+		$hacks[$n]['legacy']		=	1;
 	} else {
 		$n = 'errorphp';
 		$hacks[$n]['name']			=	'error.php ' . _AEC_HACK_HACK . ' #1';
@@ -4760,7 +4760,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/libraries/joomla/error/error.php';
 		$hacks[$n]['read']			=	'// Initialize variables';
 		$hacks[$n]['insert']		=	sprintf( $aec_j15hack1, $n, $n ) . "\n" . $hacks[$n]['read'];
-		$hacks[$n]['legacy']			=	1;
+		$hacks[$n]['legacy']		=	1;
 	}
 
 	if ( !$v15 ) {
