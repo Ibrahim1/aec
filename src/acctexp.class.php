@@ -7501,6 +7501,7 @@ class Subscription extends serialParamDBTable
 			}
 
 			$this->applyUsage( $subscription_plan->params['fallback'], 'none', 1 );
+			$this->load( $this->id );
 			return false;
 		} else {
 			// Set a Trial flag if this is an expired Trial for further reference
@@ -9951,7 +9952,7 @@ class microIntegration extends serialParamDBTable
 			return null;
 		}
 	}
-	
+
 	function admin_info ( $userid )
 	{
 		if ( method_exists( $this->mi_class, 'admin_info' ) ) {
