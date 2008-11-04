@@ -1414,7 +1414,7 @@ class HTML_AcctExp
 		                $tabs->startTab( _MI_E_TITLE, _MI_E_TITLE ); ?>
 		                <table width="100%" class="adminform">
 							<tr>
-								<td colspan="2"><h2><?php echo _PAYPLAN_DETAIL_TITLE; ?></h2></td>
+								<td colspan="2"><h2><?php echo _MI_E_TITLE_LONG; ?></h2></td>
 							</tr>
 							<tr>
 								<td width="120">
