@@ -3880,6 +3880,26 @@ class ItemGroupHandler
 		return $database->loadResultArray();
 	}
 
+	function groupColor( $groupid )
+	{
+		global $database;
+
+		$group = new ItemGroup( $database );
+		$group->load( $groupid );
+
+		return $group->params['color'];
+	}
+
+	function groupIcon( $groupid )
+	{
+		global $database;
+
+		$group = new ItemGroup( $database );
+		$group->load( $groupid );
+
+		return $group->params['icon'];
+	}
+
 	function parentGroups( $item_id, $type='item' )
 	{
 		global $database;
@@ -4052,6 +4072,14 @@ class ItemGroup extends serialParamDBTable
 		$this->custom_params = $custom_params;
 	}
 
+	function delete()
+	{
+		if ( $this->id == 1 ) {
+			return false;
+		}
+
+		return parent::delete();
+	}
 }
 
 class itemXgroup extends mosDBTable

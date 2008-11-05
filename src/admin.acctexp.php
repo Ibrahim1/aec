@@ -2438,6 +2438,8 @@ function listSubscriptionPlans( $option )
  		return false;
  	}
 
+	$gcolors = array();
+
 	foreach ( $rows as $n => $row ) {
 		$query = 'SELECT count(*)'
 				. 'FROM #__users AS a'
@@ -2466,6 +2468,25 @@ function listSubscriptionPlans( $option )
 	 		echo $database->stderr();
 	 		return false;
 	 	}
+
+	 	$query = 'SELECT group_id'
+				. ' FROM #__acctexp_itemxgroup'
+				. ' WHERE type = \'item\''
+				. ' AND item_id = \'' . $rows[$n]->id . '\''
+				;
+		$database->setQuery( $query	);
+		$g = (int) $database->loadResult();
+
+		$group = empty( $g ) ? 0 : $g;
+
+		if ( !isset( $gcolors[$group] ) ) {
+			$gcolors[$group] = array();
+			$gcolors[$group]['color'] = ItemGroupHandler::groupColor( $group );
+			$gcolors[$group]['icon'] = ItemGroupHandler::groupIcon( $group ) . '.png';
+		}
+
+		$rows[$n]->group = aecHTML::Icon( $gcolors[$group]['icon'], $group ) . '<strong>' . $group . '</strong>';
+		$rows[$n]->color = $gcolors[$group]['color'];
 	}
 
  	HTML_AcctExp::listSubscriptionPlans( $rows, $pageNav, $option );
@@ -3096,6 +3117,8 @@ function listItemGroups( $option )
  		return false;
  	}
 
+	$gcolors = array();
+
 	foreach ( $rows as $n => $row ) {
 		$query = 'SELECT count(*)'
 				. 'FROM #__users AS a'
@@ -3124,6 +3147,17 @@ function listItemGroups( $option )
 	 		echo $database->stderr();
 	 		return false;
 	 	}
+
+		$group = $rows[$n]->id;
+
+		if ( !isset( $gcolors[$group] ) ) {
+			$gcolors[$group] = array();
+			$gcolors[$group]['color'] = ItemGroupHandler::groupColor( $group );
+			$gcolors[$group]['icon'] = ItemGroupHandler::groupIcon( $group ) . '.png';
+		}
+
+		$rows[$n]->group = aecHTML::Icon( $gcolors[$group]['icon'], $group );
+		$rows[$n]->color = $gcolors[$group]['color'];
 	}
 
  	HTML_AcctExp::listItemGroups( $rows, $pageNav, $option );

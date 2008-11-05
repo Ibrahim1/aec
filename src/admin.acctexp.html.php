@@ -786,7 +786,7 @@ class HTML_AcctExp
 										array( 'showManual', 'manual', _AEC_CENTR_MANUAL ),
 										_AEC_CENTR_AREA_PAYMENT,
 										array( 'showSubscriptionPlans', 'plans', _AEC_CENTR_PLANS ),
-										//array( 'showItemGroups', 'itemgroups', _AEC_CENTR_GROUPS ),
+										array( 'showItemGroups', 'itemgroups', _AEC_CENTR_GROUPS ),
 										array( 'showMicroIntegrations', 'microintegrations', _AEC_CENTR_M_INTEGRATION ),
 										array( 'invoices', 'invoices', _AEC_CENTR_V_INVOICES ),
 										array( 'showCoupons', 'coupons', _AEC_CENTR_COUPONS ),
@@ -1533,6 +1533,7 @@ class HTML_AcctExp
 					<th width="1%">#</th>
 					<th width="1%"><?php echo _AEC_CMN_ID; ?></th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
+					<th width="2%" align="left" nowrap="nowrap"><?php echo _PAYPLAN_GROUP; ?></th>
 					<th width="15%" align="left" nowrap="nowrap"><?php echo _PAYPLAN_NAME; ?></th>
 					<th width="20%" align="left" nowrap="nowrap"><?php echo _PAYPLAN_DESC; ?></th>
 					<th width="3%" nowrap="nowrap"><?php echo _PAYPLAN_ACTIVE; ?></th>
@@ -1588,6 +1589,7 @@ class HTML_AcctExp
 					<td align="center"><?php echo $pageNav->rowNumber( $i ); ?></td>
 					<td align="right"><?php echo $rows[$i]->id; ?></td>
 					<td><?php echo mosHTML::idBox( $i, $rows[$i]->id, false, 'id' ); ?></td>
+					<td align="right" style="background: #<?php echo $rows[$i]->color; ?>;"><?php echo $rows[$i]->group; ?></td>
 					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editSubscriptionPlan')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $rows[$i]->name; ?></a></td>
 					<td  align="left">
 						<?php
@@ -1904,6 +1906,7 @@ class HTML_AcctExp
 					<th width="1%">#</th>
 					<th width="1%"><?php echo _AEC_CMN_ID; ?></th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
+					<th width="5%"></th>
 					<th width="15%" align="left" nowrap="nowrap"><?php echo _ITEMGROUP_NAME; ?></th>
 					<th width="20%" align="left" nowrap="nowrap"><?php echo _ITEMGROUP_DESC; ?></th>
 					<th width="3%" nowrap="nowrap"><?php echo _ITEMGROUP_ACTIVE; ?></th>
@@ -1956,6 +1959,7 @@ class HTML_AcctExp
 					<td align="center"><?php echo $pageNav->rowNumber( $i ); ?></td>
 					<td align="right"><?php echo $rows[$i]->id; ?></td>
 					<td><?php echo mosHTML::idBox( $i, $rows[$i]->id, false, 'id' ); ?></td>
+					<td align="right" style="background: #<?php echo $rows[$i]->color; ?>;"><?php echo $rows[$i]->group; ?></td>
 					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editItemGroup')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $rows[$i]->name; ?></a></td>
 					<td  align="left">
 						<?php
