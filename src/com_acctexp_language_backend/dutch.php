@@ -207,6 +207,9 @@ define( '_AEC_INST_ATTENTION1',					'Als u nog steeds oude AEC modules geinstall
 define( '_AEC_INST_MAIN_COMP_ENTRY',			'AEC Abonnementen Manager' );
 define( '_AEC_INST_ERRORS',						'<strong>Belangrijk</strong><br />AEC is niet volledig geinstalleerd. De volgende fouten zijn gegenereerd tijdens de installatie:<br />' );
 
+define( '_AEC_INST_ROOT_GROUP_NAME',			'Root' );
+define( '_AEC_INST_ROOT_GROUP_DESC',			'Root Group. This entry cannot be deleted, modification is limited.' );
+
 // help
 define( '_AEC_CMN_HELP',						'Help' );
 define( '_AEC_HELP_DESC',						'Op deze pagina controleert AEC zijn eigen instellingen en geeft fouten weer wanneer dit het geval is, en deze opgelost moeten worden.' );
@@ -439,6 +442,7 @@ define( '_SAVE_PAYPLAN', 'Opslaan');
 define( '_CANCEL_PAYPLAN', 'Annuleren');
 define( '_PAYPLANS_TITLE', 'Betalingsplannen manager');
 define( '_PAYPLANS_MAINDESC', 'Gepubliceerde plannen zijn plan opties in de gebruikers front-end. Deze plannen zijn alleen geldig op gateway betalingen (dus niet handmatige aanmeldingen).');
+define( '_PAYPLAN_GROUP', 'Group');
 define( '_PAYPLAN_NAME', 'Naam');
 define( '_PAYPLAN_DESC', 'Omschrijving (eerste 50 caracters)');
 define( '_PAYPLAN_ACTIVE', 'Gepubliceerd');

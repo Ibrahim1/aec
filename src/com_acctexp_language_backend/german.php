@@ -207,6 +207,9 @@ define( '_AEC_INST_ATTENTION1',					'Falls noch &auml;ltere AEC-Loginmodule in V
 define( '_AEC_INST_MAIN_COMP_ENTRY',			'AEC Abo Verwaltung' );
 define( '_AEC_INST_ERRORS',						'<strong>Achtung</strong><br />leider traten w&auml;hrend der Installation folgende Fehler auf - AEC konnte <strong>nicht</strong>vollst&auml;ndig installiert werden:<br />' );
 
+define( '_AEC_INST_ROOT_GROUP_NAME',			'Root' );
+define( '_AEC_INST_ROOT_GROUP_DESC',			'Root Group. This entry cannot be deleted, modification is limited.' );
+
 // help
 define( '_AEC_CMN_HELP',						'Hilfe' );
 define( '_AEC_HELP_DESC',						'Auf dieser Seite &uuml;berpr&uuml;ft AEC die bestehende Konfiguration und zeigt eventuelle Fehler an welche bereinigt werden sollten' );
@@ -549,6 +552,7 @@ define( '_SAVE_PAYPLAN', 'Speichern' );
 define( '_CANCEL_PAYPLAN', 'Abbrechen' );
 define( '_PAYPLANS_TITLE', 			'Abonnement Verwaltung' );
 define( '_PAYPLANS_MAINDESC',		'Ver&ouml;ffentlichte Abos werden den Benutzern angezeigt' );
+define( '_PAYPLAN_GROUP', 'Group');
 define( '_PAYPLAN_NAME', 'Name' );
 define( '_PAYPLAN_DESC', 'Beschreibung (ersten 50 Zeichen)' );
 define( '_PAYPLAN_ACTIVE', 'Aktiv' );

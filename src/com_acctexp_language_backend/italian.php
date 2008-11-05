@@ -208,6 +208,9 @@ define( '_AEC_INST_MAIN_COMP_ENTRY',			'AEC Subscription Mgmnt' );
 define( '_AEC_INST_ERRORS',						'<strong>Attention</strong><br />AEC could not be installed completely, following errors occured during the install process:<br />' );
 
 
+define( '_AEC_INST_ROOT_GROUP_NAME',			'Root' );
+define( '_AEC_INST_ROOT_GROUP_DESC',			'Root Group. This entry cannot be deleted, modification is limited.' );
+
 // help
 define( '_AEC_CMN_HELP',						'Help' );
 define( '_AEC_HELP_DESC',						'On this page, the AEC takes a look at its own configuration and tells you whenever it finds errors that need to be adressed.' );
@@ -552,6 +555,7 @@ define( '_SAVE_PAYPLAN', 'Salva');
 define( '_CANCEL_PAYPLAN', 'Cancella');
 define( '_PAYPLANS_TITLE', 'Gestione Piano Pagamento');
 define( '_PAYPLANS_MAINDESC', 'Questa lista non include le iscrizioni effettuate manualmente, solo quelle processate tramite Gateway.');
+define( '_PAYPLAN_GROUP', 'Group');
 define( '_PAYPLAN_NAME', 'Nome');
 define( '_PAYPLAN_DESC', 'Descrizione (primi 50 caratteri)');
 define( '_PAYPLAN_ACTIVE', 'Pubblicato');

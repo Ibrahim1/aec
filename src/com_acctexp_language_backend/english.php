@@ -207,6 +207,9 @@ define( '_AEC_INST_ATTENTION1',					'If you still have the old AEC login modules
 define( '_AEC_INST_MAIN_COMP_ENTRY',			'AEC Subscription Manager' );
 define( '_AEC_INST_ERRORS',						'<strong>Attention</strong><br />AEC could not be installed completely, following errors occured during the install process:<br />' );
 
+define( '_AEC_INST_ROOT_GROUP_NAME',			'Root' );
+define( '_AEC_INST_ROOT_GROUP_DESC',			'Root Group. This entry cannot be deleted, modification is limited.' );
+
 // help
 define( '_AEC_CMN_HELP',						'Help' );
 define( '_AEC_HELP_DESC',						'On this page, the AEC takes a look at its own configuration and tells you whenever it finds errors that need to be adressed.' );
@@ -438,6 +441,7 @@ define( '_SAVE_PAYPLAN', 'Save');
 define( '_CANCEL_PAYPLAN', 'Cancel');
 define( '_PAYPLANS_TITLE', 'Payment Plans Manager');
 define( '_PAYPLANS_MAINDESC', 'Published plans will be options for the user on frontend. These plans are only valid for Gateway payments.');
+define( '_PAYPLAN_GROUP', 'Group');
 define( '_PAYPLAN_NAME', 'Name');
 define( '_PAYPLAN_DESC', 'Description (first 50 chars)');
 define( '_PAYPLAN_ACTIVE', 'Published');
@@ -667,7 +671,6 @@ define( '_CFG_GENERAL_INVOICETMPL_NAME', 'Invoice Template');
 define( '_CFG_GENERAL_INVOICETMPL_DESC', 'Template for invoices/purchase orders');
 
 // --== PAYMENT PLAN PAGE ==--
-// Additions of variables for free trial periods by Michael Spredemann (scubaguy)
 
 define( '_PAYPLAN_PERUNIT1', 'Days');
 define( '_PAYPLAN_PERUNIT2', 'Weeks');
@@ -829,6 +832,25 @@ define( '_PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_DESC', 'If you want to, you can 
 define( '_PAYPLAN_MI', 'Micro Integr.');
 define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_NAME', 'Micro Integrations:');
 define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_DESC', 'Select the Micro Integrations that you want to apply to the user with the plan.');
+
+// --== Group PAGE ==--
+
+define( '_ITEMGROUPS_TITLE ', 'Groups');
+define( '_ITEMGROUP_NAME', 'Name');
+define( '_ITEMGROUP_DESC', 'Description (first 50 chars)');
+define( '_ITEMGROUP_ACTIVE', 'Published');
+define( '_ITEMGROUP_VISIBLE', 'Visible');
+define( '_ITEMGROUP_REORDER', 'Reorder');
+
+define( '_PUBLISH_ITEMGROUP', 'Publish');
+define( '_UNPUBLISH_ITEMGROUP', 'Unpublish');
+define( '_NEW_ITEMGROUP', 'New');
+define( '_COPY_ITEMGROUP', 'Copy');
+define( '_APPLY_ITEMGROUP', 'Apply');
+define( '_EDIT_ITEMGROUP', 'Edit');
+define( '_REMOVE_ITEMGROUP', 'Delete');
+define( '_SAVE_ITEMGROUP', 'Save');
+define( '_CANCEL_ITEMGROUP', 'Cancel');
 
 define( '_PAYPLAN_CURRENCY', 'Currency');
 

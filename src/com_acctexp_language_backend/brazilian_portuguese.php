@@ -207,6 +207,9 @@ define( '_AEC_INST_ATTENTION1',					'If you still have the old AEC login modules
 define( '_AEC_INST_MAIN_COMP_ENTRY',			'AEC Subscription Mgmnt' );
 define( '_AEC_INST_ERRORS',						'<strong>Attention</strong><br />AEC could not be installed completely, following errors occured during the install process:<br />' );
 
+define( '_AEC_INST_ROOT_GROUP_NAME',			'Root' );
+define( '_AEC_INST_ROOT_GROUP_DESC',			'Root Group. This entry cannot be deleted, modification is limited.' );
+
 // help
 define( '_AEC_CMN_HELP',						'Help' );
 define( '_AEC_HELP_DESC',						'On this page, the AEC takes a look at its own configuration and tells you whenever it finds errors that need to be adressed.' );
@@ -551,6 +554,7 @@ define( '_SAVE_PAYPLAN', 'Salvar');
 define( '_CANCEL_PAYPLAN', 'Cancelar');
 define( '_PAYPLANS_TITLE', 'Gerenciador de Planos de Pagamento');
 define( '_PAYPLANS_MAINDESC', 'Os planos publicados aparecem como opces para o usurio. Estes planos so vlidos apenas para pagamento via PayPal.');
+define( '_PAYPLAN_GROUP', 'Group');
 define( '_PAYPLAN_NAME', 'Nome');
 define( '_PAYPLAN_DESC', 'Descrico (primeiros 50 caracteres)');
 define( '_PAYPLAN_ACTIVE', 'Publicado');

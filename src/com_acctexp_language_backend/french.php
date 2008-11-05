@@ -207,6 +207,9 @@ define( '_AEC_INST_ATTENTION1',                    'Si vous avez encore les vieu
 define( '_AEC_INST_MAIN_COMP_ENTRY',            'Abonnements AEC' );
 define( '_AEC_INST_ERRORS',                        '&lt;strong&gt;Attention&lt;/strong&gt;&lt;br /&gt;AEC n\'a pas pu &ecirc;tre compl&egrave;tement install&eacute;, &agrave; la suite d\'erreurs commises lors du processus d\'installation:&lt;br /&gt;' );
 
+define( '_AEC_INST_ROOT_GROUP_NAME',			'Root' );
+define( '_AEC_INST_ROOT_GROUP_DESC',			'Root Group. This entry cannot be deleted, modification is limited.' );
+
 // help
 define( '_AEC_CMN_HELP',                        'Aide' );
 define( '_AEC_HELP_DESC',                        'Sur cette page, AEC se penche sur sa propre configuration et vous indique chaque fois qu&amp;acute;il trouve des erreurs qui doivent &ecirc;tre trait&eacute;es.' );
@@ -436,6 +439,7 @@ define( '_SAVE_PAYPLAN', 'Enregistrer');
 define( '_CANCEL_PAYPLAN', 'Annuler');
 define( '_PAYPLANS_TITLE', 'Gestionnaire des plans');
 define( '_PAYPLANS_MAINDESC', 'Les plans Publi&eacute;s seront des options pour l&amp;acute;utilisateur sur le frontend du site. Ces plans sont valides uniquement pour les paiements Paypal.');
+define( '_PAYPLAN_GROUP', 'Group');
 define( '_PAYPLAN_NAME', 'Nom');
 define( '_PAYPLAN_DESC', 'Description (premiers 50 caract&egrave;res)');
 define( '_PAYPLAN_ACTIVE', 'Publi&eacute;');
