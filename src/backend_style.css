@@ -407,3 +407,21 @@ margin-top: -100px;
 .icon-32-extensions {
 background-image:url(/administrator/components/com_acctexp/images/icons/aec_central_icon.png);
 }
+
+#aec_iconlist_flag_blue { background: url(http://sandbox2.globalnerd.org/administrator/components/com_acctexp/images/icons/flag_blue.png) no-repeat; text-indent: 14px; }
+#aec_iconlist_flag_green { background: url(http://sandbox2.globalnerd.org/administrator/components/com_acctexp/images/icons/flag_green.png) no-repeat; text-indent: 14px; }
+#aec_iconlist_flag_orange { background: url(http://sandbox2.globalnerd.org/administrator/components/com_acctexp/images/icons/flag_orange.png) no-repeat; text-indent: 14px; }
+#aec_iconlist_flag_purple { background: url(http://sandbox2.globalnerd.org/administrator/components/com_acctexp/images/icons/flag_purple.png) no-repeat; text-indent: 14px; }
+#aec_iconlist_flag_pink { background: url(http://sandbox2.globalnerd.org/administrator/components/com_acctexp/images/icons/flag_pink.png) no-repeat; text-indent: 14px; }
+#aec_iconlist_flag_red { background: url(http://sandbox2.globalnerd.org/administrator/components/com_acctexp/images/icons/flag_red.png) no-repeat; text-indent: 14px; }
+#aec_iconlist_flag_yellow { background: url(http://sandbox2.globalnerd.org/administrator/components/com_acctexp/images/icons/flag_yellow.png) no-repeat; text-indent: 14px; }
+
+#aec_colorlist_BBDDFF { background: #BBDDFF; }
+#aec_colorlist_5F8BC4 { background: #5F8BC4; }
+#aec_colorlist_766D5B { background: #766D5B; }
+#aec_colorlist_A2BE72 { background: #A2BE72; }
+#aec_colorlist_DDFF99 { background: #DDFF99; }
+#aec_colorlist_887878 { background: #887878; }
+#aec_colorlist_BAAC2F { background: #BAAC2F; }
+#aec_colorlist_AA89BB { background: #AA89BB; }
+#aec_colorlist_C43C42 { background: #C43C42; }

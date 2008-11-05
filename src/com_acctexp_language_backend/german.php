@@ -59,6 +59,7 @@ define( '_AEC_CMN_STATUS',						'Status' );
 define( '_AEC_FEATURE_NOT_ACTIVE',				'Dieses Feature ist noch nicht aktiv' );
 define( '_AEC_CMN_YES',							'Ja' );
 define( '_AEC_CMN_NO',							'Nein' );
+define( '_AEC_CMN_INHERIT',						'Inherit' );
 define( '_AEC_CMN_LANG_CONSTANT_IS_MISSING',	'Sprachenkonstante <strong>%s</strong> fehlt' );
 define( '_AEC_CMN_VISIBLE',						'Sichtbar' );
 define( '_AEC_CMN_INVISIBLE',					'Unsichtbar' );

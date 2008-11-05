@@ -3202,7 +3202,13 @@ function editItemGroup( $id, $option )
 	$params['visible']					= array( 'list_yesno', 0 );
 
 	$params['name']						= array( 'inputC', '' );
-	$params['desc']						= array( 'inputD', '' );
+	$params['desc']						= array( 'editor', '' );
+
+	$params['color']					= array( 'list', '' );
+	$params['icon']						= array( 'list', '' );
+
+	$params['reveal_plans']				= array( 'list_yesnoinherit', 1 );
+	$params['reveal_plans']				= array( 'list_yesnoinherit', 1 );
 
 	$params['restr_remap']				= array( 'subarea_change', 'restrictions' );
 
@@ -3210,6 +3216,36 @@ function editItemGroup( $id, $option )
 
 	$rewriteswitches							= array( 'cms', 'user' );
 	$params['rewriteInfo']						= array( 'fieldset', '', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+
+
+	// light blue, another blue, brown, green, another green, reddish gray, yellowish, purpleish, red
+	$colors = array( 'BBDDFF', '5F8BC4', '766D5B', 'A2BE72', 'DDFF99', '887878', 'BAAC2F', 'AA89BB', 'C43C42' );
+
+	$colorlist = array();
+	foreach ( $colors as $color ) {
+		$obj = new stdClass;
+		$obj->value = $color;
+		$obj->text = '- - ' . $color . ' - -';
+		$obj->id = 'aec_colorlist_'.$color;
+
+		$colorlist[] = $obj;
+	}
+
+	$lists['color'] = mosHTML::selectList($colorlist, 'color', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'color', 'BBDDFF'));
+
+	$icons = array( 'blue', 'green', 'orange', 'pink', 'purple', 'red', 'yellow' );
+
+	$iconlist = array();
+	foreach ( $icons as $iconname ) {
+		$obj = new stdClass;
+		$obj->value = $iconname.'_flag';
+		$obj->text = $iconname.' '.'flag';
+		$obj->id = 'aec_iconlist_flag_'.$iconname;
+
+		$iconlist[] = $obj;
+	}
+
+	$lists['icon'] = mosHTML::selectList($iconlist, 'icon', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'icon', 'blue'));
 
 	$settings = new aecSettings ( 'itemgroup', 'general' );
 	if ( is_array( $customparams_values ) ) {

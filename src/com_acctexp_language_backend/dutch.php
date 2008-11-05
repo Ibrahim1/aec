@@ -59,6 +59,7 @@ define( '_AEC_CMN_STATUS',						'Status' );
 define( '_AEC_FEATURE_NOT_ACTIVE',				'Deze optie is niet actief' );
 define( '_AEC_CMN_YES',							'Ja' );
 define( '_AEC_CMN_NO',							'Nee' );
+define( '_AEC_CMN_INHERIT',						'Inherit' );
 define( '_AEC_CMN_LANG_CONSTANT_IS_MISSING',	'Taal <strong>%s</strong> is niet aanwezig' );
 define( '_AEC_CMN_VISIBLE',						'Zichtbaar' );
 define( '_AEC_CMN_INVISIBLE',					'Onzichtbaar' );

@@ -3530,6 +3530,20 @@ class aecSettings
 		return 'list';
 	}
 
+	function remap_list_yesnoinherit( $name, $value )
+	{
+		$this->lists[$name] = mosHTML::yesnoSelectList( $name, '', $value );
+
+		$arr = array(
+		mosHTML::makeOption( '0', _AEC_CMN_NO ),
+		mosHTML::makeOption( '1', _AEC_CMN_YES ),
+		mosHTML::makeOption( '1', _AEC_CMN_INHERIT ),
+		);
+
+		$this->lists[$name] = mosHTML::selectList( $arr, $name, '', 'value', 'text', $value );
+		return 'list';
+	}
+
 	function remap_list_recurring( $name, $value )
 	{
 		$recurring[] = mosHTML::makeOption( 0, _AEC_SELECT_RECURRING_NO );
@@ -3994,6 +4008,15 @@ class ItemGroup extends serialParamDBTable
 		$this->mosDBTable( '#__acctexp_itemgroups', 'id', $db );
 	}
 
+	function getProperty( $name )
+	{
+		if ( isset( $this->$name ) ) {
+			return stripslashes( $this->$name );
+		} else {
+			return null;
+		}
+	}
+
 	function declareParamFields()
 	{
 		return array( 'params', 'custom_params', 'restrictions' );
@@ -4023,7 +4046,7 @@ class ItemGroup extends serialParamDBTable
 		}
 
 		// Filter out params
-		$fixed = array( );
+		$fixed = array( 'color', 'icon', '' );
 
 		$params = array();
 		foreach ( $fixed as $varname ) {

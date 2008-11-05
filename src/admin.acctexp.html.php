@@ -2009,7 +2009,7 @@ class HTML_AcctExp
 		<table class="adminheading">
 			<tr>
 				<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_itemgroups.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
-					<?php echo _AEC_HEAD_PLAN_INFO; ?>:
+					<?php echo _AEC_HEAD_ITEMGROUP_INFO; ?>:
 					&nbsp;
 					<small><?php echo $row->id ? $row->name : _AEC_CMN_NEW; ?></small>
 	        	</th>
@@ -2022,9 +2022,9 @@ class HTML_AcctExp
 						<?php
 						$tabs = new mosTabs(0);
 		                $tabs->startPane( 'editItemGroup' );
-		                $tabs->startTab( _PAYPLAN_DETAIL_TITLE, _PAYPLAN_DETAIL_TITLE );
+		                $tabs->startTab( _ITEMGROUP_DETAIL_TITLE, _ITEMGROUP_DETAIL_TITLE );
 		                ?>
-		                <h2><?php echo _PAYPLAN_DETAIL_TITLE; ?></h2>
+		                <h2><?php echo _ITEMGROUP_DETAIL_TITLE; ?></h2>
 						<table class="adminform" style="border-collapse:separate;">
 							<tr>
 								<td style="padding:10px;" valign="top">
@@ -2045,13 +2045,8 @@ class HTML_AcctExp
 									</div>
 									<div style="position:relative;float:left;width:32%;padding:4px;">
 										<div class="userinfobox">
-											<?php echo $aecHTML->createSettingsParticle( 'gid_enabled' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'gid' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'fallback' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'make_active' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'make_primary' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'standard_parent' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'update_existing' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'color' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'icon' ); ?>
 										</div>
 									</div>
 								</td>
@@ -2059,9 +2054,9 @@ class HTML_AcctExp
 						</table>
 						<?php
 		                $tabs->endTab();
-		                $tabs->startTab( _PAYPLAN_RESTRICTIONS_TITLE, _PAYPLAN_RESTRICTIONS_TITLE );
+		                $tabs->startTab( _ITEMGROUP_RESTRICTIONS_TITLE, _ITEMGROUP_RESTRICTIONS_TITLE );
 		                ?>
-		                <h2><?php echo _PAYPLAN_RESTRICTIONS_TITLE; ?></h2>
+		                <h2><?php echo _ITEMGROUP_RESTRICTIONS_TITLE; ?></h2>
 						<table class="adminform" style="border-collapse:separate;">
 							<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 						<tr><td>
@@ -2077,13 +2072,13 @@ class HTML_AcctExp
 						</table>
 						<?php
 		                $tabs->endTab();
-		                $tabs->startTab( _PAYPLAN_RELATIONS_TITLE, _PAYPLAN_RELATIONS_TITLE );
+		                $tabs->startTab( _ITEMGROUP_RELATIONS_TITLE, _ITEMGROUP_RELATIONS_TITLE );
 						?>
-						<h2><?php echo _PAYPLAN_RELATIONS_TITLE; ?></h2>
+						<h2><?php echo _ITEMGROUP_RELATIONS_TITLE; ?></h2>
 						<table width="100%" class="adminform"><tr><td>
 							<div class="userinfobox">
-								<?php echo $aecHTML->createSettingsParticle( 'similarplans' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'equalplans' ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'similargroups' ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'equalgroups' ); ?>
 							</div>
 						</td></tr></table>
 						<?php
