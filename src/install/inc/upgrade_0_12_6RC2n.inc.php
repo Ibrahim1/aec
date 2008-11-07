@@ -16,7 +16,7 @@ $database->query();
 $database->setQuery("SELECT id FROM  #__acctexp_itemgroups WHERE id='1'");
 
 // Create root group completely out of thin air (tadaa!)
-if ( $database->loadResult() !== 1 ) {
+if ( $database->loadResult() != 1 ) {
 	$rootgroup = new ItemGroup( $database );
 
 	$rootgroup->id = 0;
@@ -24,7 +24,7 @@ if ( $database->loadResult() !== 1 ) {
 	$rootgroup->visible = 1;
 	$rootgroup->name = _AEC_INST_ROOT_GROUP_NAME;
 	$rootgroup->desc = _AEC_INST_ROOT_GROUP_DESC;
-	$rootgroup->params = array( 'color' => 'bdf', 'icon' => 'flag_blue' );
+	$rootgroup->params = array( 'color' => 'bbddff', 'icon' => 'flag_blue', 'reveal_plans' => 1 );
 
 	$rootgroup->storeload();
 

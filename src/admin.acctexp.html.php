@@ -2033,7 +2033,6 @@ class HTML_AcctExp
 											<div style="position:relative;float:left;width:100%;">
 												<?php
 												echo $aecHTML->createSettingsParticle( 'name' );
-												echo $aecHTML->createSettingsParticle( 'desc' );
 												if ( $row->id ) { ?>
 													<p><a href="<?php echo $mosConfig_live_site; ?>/index.php?option=com_acctexp&amp;task=subscribe&amp;usage=<?php echo $row->id; ?>" title="<?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?></a></p>
 													<?php
@@ -2047,6 +2046,12 @@ class HTML_AcctExp
 										<div class="userinfobox">
 											<?php echo $aecHTML->createSettingsParticle( 'color' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'icon' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'reveal_plans' ); ?>
+										</div>
+									</div>
+									<div style="position:relative;float:left;width:98%;padding:4px;">
+										<div class="userinfobox">
+											<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
 										</div>
 									</div>
 								</td>
