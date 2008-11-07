@@ -225,7 +225,7 @@ margin: 5px;
 padding: 12px 3px 12px 6px;
 border-bottom: solid 3px #998;
 width: 95%;
-margin: 0;
+margin: 2px;
 }
 
 #accordion .userinfobox {
@@ -396,7 +396,7 @@ padding: 8px;
 margin: 0px;
 }
 
-.aec_tabheading img {
+.aec_tabheading img.plogo {
 border-color: #fff;
 border-style: solid;
 border-width: 0px 12px 8px 12px;

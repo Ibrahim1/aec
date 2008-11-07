@@ -1665,26 +1665,39 @@ class HTML_AcctExp
 		                $tabs->startPane( 'editSubscriptionPlan' );
 		                $tabs->startTab( _PAYPLAN_DETAIL_TITLE, _PAYPLAN_DETAIL_TITLE );
 		                ?>
-		                <h2><?php echo _PAYPLAN_DETAIL_TITLE; ?></h2>
-						<table class="adminform" style="border-collapse:separate;">
+		                <div class="aec_tabheading"><h2><?php echo _PAYPLAN_DETAIL_TITLE; ?></h2></div>
+						<table class="adminform">
 							<tr>
 								<td style="padding:10px;" valign="top">
 									<div style="position:relative;float:left;width:32%;padding:4px;">
 										<div class="userinfobox">
 											<div style="position:relative;float:left;width:100%;">
 												<?php
-												echo $aecHTML->createSettingsParticle( 'name' );
 												if ( $row->id ) { ?>
-													<p><a href="<?php echo $mosConfig_live_site; ?>/index.php?option=com_acctexp&amp;task=subscribe&amp;usage=<?php echo $row->id; ?>" title="<?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?></a></p>
+													<p style="float:right;padding:2px;"><a href="<?php echo $mosConfig_live_site; ?>/index.php?option=com_acctexp&amp;task=subscribe&amp;usage=<?php echo $row->id; ?>" title="<?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?></a></p>
 													<?php
-												} ?>
+												}
+												echo $aecHTML->createSettingsParticle( 'name' );
+												?>
 											</div>
 											<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
 										</div>
 										<div class="userinfobox">
+											<p>Group Relation info goes here</p>
+										</div>
+									</div>
+									<div style="position:relative;float:left;width:32%;padding:4px;">
+										<div class="userinfobox">
+											<?php echo $aecHTML->createSettingsParticle( 'gid_enabled' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'gid' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'make_active' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'make_primary' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'update_existing' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'override_activation' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'override_regmail' ); ?>
+											<div style="width:180px;float:left;"><?php echo $aecHTML->createSettingsParticle( 'fallback' ); ?></div>
+											<div style="width:180px;float:left;"><?php echo $aecHTML->createSettingsParticle( 'standard_parent' ); ?></div>
 										</div>
 									</div>
 									<div style="position:relative;float:left;width:32%;padding:4px;">
@@ -1704,17 +1717,6 @@ class HTML_AcctExp
 											<?php } ?>
 										</div>
 									</div>
-									<div style="position:relative;float:left;width:32%;padding:4px;">
-										<div class="userinfobox">
-											<?php echo $aecHTML->createSettingsParticle( 'gid_enabled' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'gid' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'fallback' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'make_active' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'make_primary' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'standard_parent' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'update_existing' ); ?>
-										</div>
-									</div>
 								</td>
 							</tr>
 						</table>
@@ -1722,7 +1724,7 @@ class HTML_AcctExp
 		                $tabs->endTab();
 		                $tabs->startTab( _PAYPLAN_PROCESSORS_TITLE, _PAYPLAN_PROCESSORS_TITLE );
 						?>
-						<h2><?php echo _PAYPLAN_PROCESSORS_TITLE_LONG; ?></h2>
+						<div class="aec_tabheading"><h2><?php echo _PAYPLAN_PROCESSORS_TITLE_LONG; ?></h2></div>
 						<table width="100%" class="adminform"><tr><td>
 							<?php
 								if ( !empty( $aecHTML->customparams ) ) {
@@ -1747,7 +1749,7 @@ class HTML_AcctExp
 		                $tabs->endTab();
 		                $tabs->startTab( _PAYPLAN_TEXT_TITLE, _PAYPLAN_TEXT_TITLE );
 		                ?>
-		                <h2><?php echo _PAYPLAN_TEXT_TITLE; ?></h2>
+		                <div class="aec_tabheading"><h2><?php echo _PAYPLAN_TEXT_TITLE; ?></h2></div>
 		                <table width="100%" class="adminform"><tr><td>
 							<div class="userinfobox">
 								<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
@@ -1761,8 +1763,8 @@ class HTML_AcctExp
 		                $tabs->endTab();
 		                $tabs->startTab( _PAYPLAN_RESTRICTIONS_TITLE, _PAYPLAN_RESTRICTIONS_TITLE );
 		                ?>
-		                <h2><?php echo _PAYPLAN_RESTRICTIONS_TITLE; ?></h2>
-						<table class="adminform" style="border-collapse:separate;">
+		                <div class="aec_tabheading"><h2><?php echo _PAYPLAN_RESTRICTIONS_TITLE; ?></h2></div>
+						<table class="adminform">
 							<tr><td>
 								<div class="userinfobox">
 									<div style="position:relative;float:left;width:260px;">
@@ -1832,7 +1834,7 @@ class HTML_AcctExp
 		                $tabs->endTab();
 		                $tabs->startTab( _PAYPLAN_TRIAL_TITLE, _PAYPLAN_TRIAL_TITLE );
 						?>
-						<h2><?php echo _PAYPLAN_TRIAL_TITLE; ?><?php echo $aecHTML->ToolTip( _PAYPLAN_TRIAL_DESC, _PAYPLAN_TRIAL ); ?></h2>
+						<div class="aec_tabheading"><h2><?php echo _PAYPLAN_TRIAL_TITLE; ?><?php echo $aecHTML->ToolTip( _PAYPLAN_TRIAL_DESC, _PAYPLAN_TRIAL ); ?></h2></div>
 						<table width="100%" class="adminform"><tr><td>
 							<div class="userinfobox">
 								<?php echo $aecHTML->createSettingsParticle( 'trial_free' ); ?>
@@ -1848,7 +1850,7 @@ class HTML_AcctExp
 		                $tabs->endTab();
 		                $tabs->startTab( _PAYPLAN_RELATIONS_TITLE, _PAYPLAN_RELATIONS_TITLE );
 						?>
-						<h2><?php echo _PAYPLAN_RELATIONS_TITLE; ?></h2>
+						<div class="aec_tabheading"><h2><?php echo _PAYPLAN_RELATIONS_TITLE; ?></h2></div>
 						<table width="100%" class="adminform"><tr><td>
 							<div class="userinfobox">
 								<?php echo $aecHTML->createSettingsParticle( 'similarplans' ); ?>
@@ -1859,7 +1861,7 @@ class HTML_AcctExp
 		                $tabs->endTab();
 		                $tabs->startTab( _PAYPLAN_MI, _PAYPLAN_MI );
 		                ?>
-		                <h2><?php echo _PAYPLAN_MI; ?></h2>
+		                <div class="aec_tabheading"><h2><?php echo _PAYPLAN_MI; ?></h2></div>
 		                <table width="100%" class="adminform"><tr><td>
 							<div class="userinfobox">
 								<?php echo $aecHTML->createSettingsParticle( 'micro_integrations' ); ?>
@@ -2025,7 +2027,7 @@ class HTML_AcctExp
 		                $tabs->startTab( _ITEMGROUP_DETAIL_TITLE, _ITEMGROUP_DETAIL_TITLE );
 		                ?>
 		                <h2><?php echo _ITEMGROUP_DETAIL_TITLE; ?></h2>
-						<table class="adminform" style="border-collapse:separate;">
+						<table class="adminform">
 							<tr>
 								<td style="padding:10px;" valign="top">
 									<div style="position:relative;float:left;width:32%;padding:4px;">
@@ -2046,7 +2048,7 @@ class HTML_AcctExp
 										<div class="userinfobox">
 											<?php echo $aecHTML->createSettingsParticle( 'color' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'icon' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'reveal_plans' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'reveal_child_items' ); ?>
 										</div>
 									</div>
 									<div style="position:relative;float:left;width:98%;padding:4px;">
@@ -2062,7 +2064,7 @@ class HTML_AcctExp
 		                $tabs->startTab( _ITEMGROUP_RESTRICTIONS_TITLE, _ITEMGROUP_RESTRICTIONS_TITLE );
 		                ?>
 		                <h2><?php echo _ITEMGROUP_RESTRICTIONS_TITLE; ?></h2>
-						<table class="adminform" style="border-collapse:separate;">
+						<table class="adminform">
 							<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 						<tr><td>
 							<div class="userinfobox">
@@ -2202,7 +2204,7 @@ class HTML_AcctExp
 		                $tabs->startPane( 'editSubscriptionPlan' );
 		                $tabs->startTab( _COUPON_DETAIL_TITLE, _COUPON_DETAIL_TITLE ); ?>
 		                <h2><?php echo _COUPON_DETAIL_TITLE; ?></h2>
-						<table class="adminform" style="border-collapse:separate;">
+						<table class="adminform">
 							<tr>
 								<td style="padding:10px;" valign="top">
 									<div style="position:relative;float:left;width:48%;padding:4px;">
@@ -2271,7 +2273,7 @@ class HTML_AcctExp
 		                $tabs->startTab( _COUPON_RESTRICTIONS_TITLE, _COUPON_RESTRICTIONS_TITLE );
 		                ?>
 		                <h2><?php echo _COUPON_RESTRICTIONS_TITLE_FULL; ?></h2>
-						<table class="adminform" style="border-collapse:separate;">
+						<table class="adminform">
 							<tr><td>
 								<div class="userinfobox">
 									<div style="position:relative;float:left;width:200px;">

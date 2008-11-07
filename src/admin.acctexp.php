@@ -2213,7 +2213,7 @@ function editSettings( $option )
 					$params[$description] = array( 'editor', _CFG_PROCESSOR_DESC_NAME, _CFG_PROCESSOR_DESC_DESC, $pp->info['description'], $description);
 
 					$pphead = '<h2>' . $pp->info['longname'] . '</h2>';
-					$pphead .= '<img src="' . $mosConfig_live_site . '/components/' . $option . '/images/gwlogo_' . $pp->processor_name . '.png" alt="' . $pp->processor_name . '" title="' . $pp->processor_name .'" />';
+					$pphead .= '<img src="' . $mosConfig_live_site . '/components/' . $option . '/images/gwlogo_' . $pp->processor_name . '.png" alt="' . $pp->processor_name . '" title="' . $pp->processor_name .'" class="plogo" />';
 
 					@end( $params );
 					$tab_data[] = array( $readgwname, key( $params ), $pphead );
@@ -3207,7 +3207,7 @@ function editItemGroup( $id, $option )
 	$params['color']					= array( 'list', '' );
 	$params['icon']						= array( 'list', '' );
 
-	$params['reveal_plans']				= array( 'list_yesno', 1 );
+	$params['reveal_child_items']		= array( 'list_yesno', 1 );
 
 	$params['restr_remap']				= array( 'subarea_change', 'restrictions' );
 
@@ -3237,7 +3237,7 @@ function editItemGroup( $id, $option )
 	$iconlist = array();
 	foreach ( $icons as $iconname ) {
 		$obj = new stdClass;
-		$obj->value = $iconname.'_flag';
+		$obj->value = 'flag_'.$iconname;
 		$obj->text = $iconname.' '.'flag';
 		$obj->id = 'aec_iconlist_flag_'.$iconname;
 

@@ -42,8 +42,6 @@ class processor_authorize_aim extends XMLprocessor
 		$settings['currency']			= "USD";
 		$settings['promptAddress']		= 0;
 		$settings['promptZipOnly']		= 0;
-		$settings['totalOccurrences']	= 12;
-		$settings['trialOccurrences']	= 1;
 		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']		= '';
 
@@ -59,8 +57,6 @@ class processor_authorize_aim extends XMLprocessor
 		$settings['currency']			= array( "list_currency" );
 		$settings['promptAddress']		= array( "list_yesno" );
 		$settings['promptZipOnly']		= array( "list_yesno" );
-		$settings['totalOccurrences']	= array( "inputA" );
-		$settings['trialOccurrences']	= array( "inputA" );
 		$settings['item_name']			= array( "inputE" );
 		$settings['customparams']		= array( 'inputD' );
 

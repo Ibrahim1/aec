@@ -4038,10 +4038,11 @@ class ItemGroup extends serialParamDBTable
 		}
 
 		if ( $this->id == 1 ) {
-			$post['active']		= 1;
-			$post['visible']	= 1;
-			$post['name']		= _AEC_INST_ROOT_GROUP_NAME;
-			$post['desc']		= _AEC_INST_ROOT_GROUP_DESC;
+			$post['active']				= 1;
+			$post['visible']			= 1;
+			$post['name']				= _AEC_INST_ROOT_GROUP_NAME;
+			$post['desc']				= _AEC_INST_ROOT_GROUP_DESC;
+			$post['reveal_child_items']	= 1;
 		}
 
 		// Filter out fixed variables
