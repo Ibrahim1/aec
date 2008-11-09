@@ -3966,6 +3966,34 @@ class ItemGroupHandler
 		return true;
 	}
 
+	function getChildren( $item_id, $groups, $type )
+	{
+		global $database;
+
+		$where = array();
+
+		if ( is_array( $groups ) ) {
+			$where[] = '`group_id` IN (' . implode( ',', $groups ) . ')';
+		} else {
+			$where[] = '`group_id` = ' . $groups . '';
+		}
+
+		if ( !empty( $type ) ) {
+			$where[] = '`type` = \'' . $type . '\'';
+		}
+
+		$query = 'SELECT id'
+				. ' FROM #__acctexp_itemxgroup'
+				;
+
+		if ( !empty( $where ) ) {
+			$query .= ' WHERE ( ' . implode( ' AND ', $where ) . ' )';
+		}
+
+		$database->setQuery( $query );
+		return $database->loadResultArray();
+	}
+
 	function removeChildren( $item_id, $groups, $type='item' )
 	{
 		global $database;
