@@ -1943,6 +1943,7 @@ function editSettings( $option )
 	$params[] = array( '2div_end', 0 );
 
 	$params[] = array( 'userinfobox', 30 );
+	$params['root_group']					= array( 'list', 0 );
 	$params['plans_first']					= array( 'list_yesno', 0 );
 	$params['displayccinfo']				= array( 'list_yesno', 0 );
 	$params['enable_coupons']				= array( 'list_yesno', 0 );
@@ -2251,6 +2252,17 @@ function editSettings( $option )
 	$lists['gwlist_enabled']	= mosHTML::selectList($gw_list_html, 'gwlist_enabled[]', 'size="' . max(min(count($gwlist), 12), 2) . '" multiple', 'value', 'text', $gw_list_enabled);
 	$lists['gwlist']			= mosHTML::selectList($gw_list_enabled_html, 'gwlist[]', 'size="' . max(min(count($gw_list_enabled), 12), 3) . '" multiple', 'value', 'text', $gwlist_selected);
 
+	$grouplist = ItemGroupHandler::getTree();
+
+	$glist = array();
+
+	$glist[] = mosHTML::makeOption( 0, '- - - - - -' );
+	foreach ( $grouplist as $id => $glisti ) {
+		$glist[] = mosHTML::makeOption( $glisti[0], $glisti[1] );
+	}
+
+	$lists['root_group'] 		= mosHTML::selectList( $glist, 'root_group', 'size="' . min(6,count($glist)+1) . '"', 'value', 'text', $aecConfig->cfg['root_group'] );
+
 	$editors = array();
 	foreach ( $tab_data as $tab ) {
 		foreach ( $tab as $st_content ) {
@@ -2501,6 +2513,8 @@ function editSubscriptionPlan( $id, $option )
 	$restrictions_values = array();
 	$customparams_values = array();
 
+	$customparamsarray = new stdClass();
+
 	$row = new SubscriptionPlan( $database );
 	$row->load( $id );
 
@@ -2551,6 +2565,47 @@ function editSubscriptionPlan( $id, $option )
 	$params['customtext_thanks']		= array( 'editor', '' );
 	$params['email_desc']				= array( 'inputD', '' );
 	$params['micro_integrations']		= array( 'list', '' );
+
+	$params['params_remap']				= array( 'subarea_change', 'groups' );
+
+	$groups = ItemGroupHandler::parentGroups( $row->id, 'item' );
+
+	if ( !empty( $groups ) ) {
+		$gs = array();
+		foreach ( $groups as $groupid ) {
+			$params['group_delete_'.$groupid] = array( 'checkbox', '', '', '' );
+
+			$group = new ItemGroup( $database );
+			$group->load( $groupid );
+
+			$g = array();
+			$g['name']	= $group->getProperty('name');
+			$g['color']	= $group->params['color'];
+			$g['icon']	= $group->params['icon'].'.png';
+
+			$g['group']	= aecHTML::Icon( $g['icon'], $groupid ) . '<strong>' . $groupid . '</strong>';
+
+			$gs[$groupid] = $g;
+		}
+
+
+		$customparamsarray->groups = $gs;
+	} else {
+		$customparamsarray->groups = null;
+	}
+
+	$grouplist = ItemGroupHandler::getTree();
+
+	$glist = array();
+
+	$glist[] = mosHTML::makeOption( 0, '- - - - - -' );
+	foreach ( $grouplist as $id => $glisti ) {
+		$glist[] = mosHTML::makeOption( $glisti[0], $glisti[1] );
+	}
+
+	$lists['add_group'] 		= mosHTML::selectList( $glist, 'add_group', 'size="' . min(6,count($glist)+1) . '"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
+
+	$params['add_group']				= array( 'list', '', '', ( ( $row->id ) ? 0 : 1 ) );
 
 	$params['params_remap']				= array( 'subarea_change', 'params' );
 
@@ -2672,7 +2727,7 @@ function editSubscriptionPlan( $id, $option )
 	$pps = array_merge( $firstarray, $secndarray );
 
 	$selected_gw = array();
-	$customparamsarray = array();
+	$custompar = array();
 	foreach ( $pps as $ppobj ) {
 		if ( !$ppobj->active ) {
 			continue;
@@ -2688,16 +2743,16 @@ function editSubscriptionPlan( $id, $option )
 		$pp->init();
 		$pp->getInfo();
 
-		$customparamsarray[$pp->id] = array();
-		$customparamsarray[$pp->id]['handle'] = $ppobj->name;
-		$customparamsarray[$pp->id]['name'] = $pp->info['longname'];
-		$customparamsarray[$pp->id]['params'] = array();
+		$custompar[$pp->id] = array();
+		$custompar[$pp->id]['handle'] = $ppobj->name;
+		$custompar[$pp->id]['name'] = $pp->info['longname'];
+		$custompar[$pp->id]['params'] = array();
 
 		$params['processor_' . $pp->id] = array( 'checkbox', _PAYPLAN_PROCESSORS_ACTIVATE_NAME, _PAYPLAN_PROCESSORS_ACTIVATE_DESC  );
-		$customparamsarray[$pp->id]['params'][] = 'processor_' . $pp->id;
+		$custompar[$pp->id]['params'][] = 'processor_' . $pp->id;
 
 		$params[$pp->id . '_aec_overwrite_settings'] = array( 'checkbox', _PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_NAME, _PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_DESC );
-		$customparamsarray[$pp->id]['params'][] = $pp->id . '_aec_overwrite_settings';
+		$custompar[$pp->id]['params'][] = $pp->id . '_aec_overwrite_settings';
 
 		$customparams = $pp->getCustomPlanParams();
 
@@ -2714,7 +2769,7 @@ function editSubscriptionPlan( $id, $option )
 
 				$shortname = $pp->id . "_" . $customparam;
 				$params[$shortname] = array_merge( $cpcontent, array( $cp_name, $cp_desc ) );
-				$customparamsarray[$pp->id]['params'][] = $shortname;
+				$custompar[$pp->id]['params'][] = $shortname;
 			}
 		}
 
@@ -2829,9 +2884,11 @@ function editSubscriptionPlan( $id, $option )
 			}
 
 			$params[$pp->id . '_' . $name] = $settings_array[$name];
-			$customparamsarray[$pp->id]['params'][] = $pp->id . '_' . $name;
+			$custompar[$pp->id]['params'][] = $pp->id . '_' . $name;
 		}
 	}
+
+	$customparamsarray->pp = $custompar;
 
 	// get available active plans
 	$available_plans = array();
@@ -3207,7 +3264,48 @@ function editItemGroup( $id, $option )
 	$params['color']					= array( 'list', '' );
 	$params['icon']						= array( 'list', '' );
 
-	$params['reveal_child_items']		= array( 'list_yesno', 1 );
+	$params['reveal_child_items']		= array( 'list_yesno', 0 );
+
+	$params['params_remap']				= array( 'subarea_change', 'groups' );
+
+	$groups = ItemGroupHandler::parentGroups( $row->id, 'group' );
+
+	if ( !empty( $groups ) ) {
+		$gs = array();
+		foreach ( $groups as $groupid ) {
+			$params['group_delete_'.$groupid] = array( 'checkbox', '', '', '' );
+
+			$group = new ItemGroup( $database );
+			$group->load( $groupid );
+
+			$g = array();
+			$g['name']	= $group->getProperty('name');
+			$g['color']	= $group->params['color'];
+			$g['icon']	= $group->params['icon'].'.png';
+
+			$g['group']	= aecHTML::Icon( $g['icon'], $groupid ) . '<strong>' . $groupid . '</strong>';
+
+			$gs[$groupid] = $g;
+		}
+
+
+		$customparamsarray->groups = $gs;
+	} else {
+		$customparamsarray->groups = null;
+	}
+
+	$grouplist = ItemGroupHandler::getTree();
+
+	$glist = array();
+
+	$glist[] = mosHTML::makeOption( 0, '- - - - - -' );
+	foreach ( $grouplist as $id => $glisti ) {
+		$glist[] = mosHTML::makeOption( $glisti[0], $glisti[1] );
+	}
+
+	$lists['add_group'] 		= mosHTML::selectList( $glist, 'add_group', 'size="' . min(6,count($glist)+1) . '"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
+
+	$params['add_group']				= array( 'list', '', '', ( ( $row->id ) ? 0 : 1 ) );
 
 	$params['restr_remap']				= array( 'subarea_change', 'restrictions' );
 

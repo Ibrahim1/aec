@@ -1230,6 +1230,7 @@ class Config_General extends serialParamDBTable
 		$def['proxy_username']					= '';
 		$def['proxy_password']					= '';
 		$def['gethostbyaddr']					= 1;
+		$def['root_group']						= 1;
 
 		// Insert a new entry if there is none yet
 		if ( empty( $this->settings ) ) {
@@ -3475,7 +3476,7 @@ class aecSettings
 				continue;
 			}
 
-			if ( !isset( $content[2] ) || !$content[2] ) {
+			if ( !isset( $content[2] ) || ( !$content[2] && ( $content[2] !== '' ) ) ) {
 				// Create constant names
 				$constant_generic	= '_' . strtoupper($this->area)
 										. '_' . strtoupper( $this->original_subarea )
@@ -3894,6 +3895,58 @@ class ItemGroupHandler
 		return $database->loadResultArray();
 	}
 
+	function getTree()
+	{
+		$tree = ItemGroupHandler::resolveTreeItem( 1 );
+
+		$list = array();
+		return ItemGroupHandler::indentList( $tree, $list );
+	}
+
+	function indentList( $tree, &$list, $indent=0 )
+	{
+		$list[] = array( $tree['id'], str_repeat( '&nbsp;', $indent ) . ( ( $indent > 0 ) ? '-' : '' ) . $tree['name'] . ' (#' . $tree['id'] . ')' );
+
+		if ( isset( $tree['children'] ) ) {
+			foreach ( $tree['children'] as $id => $co ) {
+				ItemGroupHandler::indentList( $co, $list, $indent+1 );
+			}
+		}
+
+		return $list;
+	}
+
+	function resolveTreeItem( $id )
+	{
+		$tree = array();
+		$tree['id']		= $id;
+		$tree['name']	= ItemGroupHandler::groupName( $id );
+
+		$groups = ItemGroupHandler::getChildren( $id, 'group' );
+
+		if ( !empty( $groups ) ) {
+			// Has children, append them
+			$tree['children'] = array();
+			foreach ( $groups as $child_id ) {
+				$tree['children'][] = ItemGroupHandler::resolveTreeItem( $child_id );
+			}
+		}
+
+		return $tree;
+	}
+
+	function groupName( $groupid )
+	{
+		global $database;
+
+		$query = 'SELECT name'
+				. ' FROM #__acctexp_itemgroups'
+				. ' WHERE `id` = \'' . $groupid . '\''
+				;
+		$database->setQuery( $query );
+		return $database->loadResult();
+	}
+
 	function groupColor( $groupid )
 	{
 		global $database;
@@ -3956,6 +4009,11 @@ class ItemGroupHandler
 		global $database;
 
 		foreach ( $groups as $group_id ) {
+			if ( ( $group_id == $item_id ) && ( $type == 'group' ) ) {
+				// Cannot assign a group to itself
+				continue;
+			}
+
 			$ig = new itemXgroup( $database );
 
 			if ( !$ig->createNew( $type, $group_id, $item_id ) ) {
@@ -3966,7 +4024,7 @@ class ItemGroupHandler
 		return true;
 	}
 
-	function getChildren( $item_id, $groups, $type )
+	function getChildren( $groups, $type )
 	{
 		global $database;
 
@@ -3982,7 +4040,7 @@ class ItemGroupHandler
 			$where[] = '`type` = \'' . $type . '\'';
 		}
 
-		$query = 'SELECT id'
+		$query = 'SELECT item_id'
 				. ' FROM #__acctexp_itemxgroup'
 				;
 
@@ -3992,6 +4050,35 @@ class ItemGroupHandler
 
 		$database->setQuery( $query );
 		return $database->loadResultArray();
+	}
+
+	function getTotalChildItems( $groups, $list=array() )
+	{
+		global $database;
+
+		$groups = ItemGroupHandler::getChildren( $groups, 'group' );
+
+		$grouplist = array();
+		foreach ( $groups as $groupid ) {
+			$group = new ItemGroup( $database );
+			$group->load( $groupid );
+
+			if ( $group->params['reveal_child_items'] ) {
+				$list = ItemGroupHandler::getTotalChildItems( $groups, $list );
+			} else {
+				$grouplist[] = $groupid;
+			}
+		}
+
+		$items = ItemGroupHandler::getChildren( $groups, 'item' );
+
+		foreach( $items as $item ) {
+			$list['items'][] = $item;
+		}
+
+		foreach( $items as $item ) {
+			$list['groups'][] = $item;
+		}
 	}
 
 	function removeChildren( $item_id, $groups, $type='item' )
@@ -4056,13 +4143,17 @@ class ItemGroup extends serialParamDBTable
 
 		// Fake knowing the planid if is zero. TODO: This needs to replaced with something better later on!
 		if ( !empty( $post['id'] ) ) {
-			$planid = $post['id'];
+			$groupid = $post['id'];
 		} else {
-			$planid = $this->getMax() + 1;
+			$groupid = $this->getMax() + 1;
 		}
 
 		if ( isset( $post['id'] ) ) {
 			unset( $post['id'] );
+		}
+
+		if ( !empty( $post['add_group'] ) ) {
+			ItemGroupHandler::setChildren( $post['add_group'], array( $groupid ), 'group' );
 		}
 
 		if ( $this->id == 1 ) {
@@ -4112,6 +4203,17 @@ class ItemGroup extends serialParamDBTable
 		}
 
 		$this->restrictions = $restrictions;
+
+		// There might be deletions set for groups
+		foreach ( $post as $varname => $content ) {
+			if ( strpos( $varname, 'group_delete_' ) !== false ) {
+				$parentid = (int) str_replace( 'group_delete_', '', $varname );
+
+				ItemGroupHandler::removeChildren( $groupid, array( $parentid ), 'group' );
+
+				unset( $post[$varname] );
+			}
+		}
 
 		// The rest of the vars are custom params
 		$custom_params = array();
@@ -4837,100 +4939,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 	function getRestrictionsArray()
 	{
-		$planrestrictions = array();
-
-		// Check for a fixed GID - this certainly overrides the others
-		if ( !empty( $this->restrictions['fixgid_enabled'] ) ) {
-			$planrestrictions['fixgid'] = (int) $this->restrictions['fixgid'];
-		} else {
-			// No fixed GID, check for min GID
-			if ( !empty( $this->restrictions['mingid_enabled'] ) ) {
-				$planrestrictions['mingid'] = (int) $this->restrictions['mingid'];
-			}
-			// Check for max GID
-			if ( !empty( $this->restrictions['maxgid_enabled'] ) ) {
-				$planrestrictions['maxgid'] = (int) $this->restrictions['maxgid'];
-			}
-		}
-
-		// Check for a directly previously used plan
-		if ( !empty( $this->restrictions['previousplan_req_enabled'] ) ) {
-			if ( isset( $this->restrictions['previousplan_req'] ) ) {
-				$planrestrictions['plan_previous'] = $this->restrictions['previousplan_req'];
-			}
-		}
-
-		// Check for a currently used plan
-		if ( !empty( $this->restrictions['currentplan_req_enabled'] ) ) {
-			if ( isset( $this->restrictions['currentplan_req'] ) ) {
-				$planrestrictions['plan_present'] = $this->restrictions['currentplan_req'];
-			}
-		}
-
-		// Check for a overall used plan
-		if ( !empty( $this->restrictions['overallplan_req_enabled'] ) ) {
-			if ( isset( $this->restrictions['overallplan_req'] ) ) {
-				$planrestrictions['plan_overall'] = $this->restrictions['overallplan_req'];
-			}
-		}
-
-		// Check for a directly previously used plan
-		if ( !empty( $this->restrictions['previousplan_req_enabled_excluded'] ) ) {
-			if ( isset( $this->restrictions['previousplan_req_excluded'] ) ) {
-				$planrestrictions['plan_previous_excluded'] = $this->restrictions['previousplan_req_excluded'];
-			}
-		}
-
-		// Check for a currently used plan
-		if ( !empty( $this->restrictions['currentplan_req_enabled_excluded'] ) ) {
-			if ( isset( $this->restrictions['currentplan_req_excluded'] ) ) {
-				$planrestrictions['plan_present_excluded'] = $this->restrictions['currentplan_req_excluded'];
-			}
-		}
-
-		// Check for a overall used plan
-		if ( !empty( $this->restrictions['overallplan_req_enabled_excluded'] ) ) {
-			if ( isset( $this->restrictions['overallplan_req_excluded'] ) ) {
-				$planrestrictions['plan_overall_excluded'] = $this->restrictions['overallplan_req_excluded'];
-			}
-		}
-
-		// Check for a overall used plan with amount minimum
-		if ( !empty( $this->restrictions['used_plan_min_enabled'] ) ) {
-			if ( isset( $this->restrictions['used_plan_min_amount'] ) && isset( $this->restrictions['used_plan_min'] ) ) {
-				$planrestrictions['plan_amount_min'] = ( (int) $this->restrictions['used_plan_min'] )
-				. ',' . ( (int) $this->restrictions['used_plan_min_amount'] );
-			}
-		}
-
-		// Check for a overall used plan with amount maximum
-		if ( !empty( $this->restrictions['used_plan_max_enabled'] ) ) {
-			if ( isset( $this->restrictions['used_plan_max_amount'] ) && isset( $this->restrictions['used_plan_max'] ) ) {
-				$planrestrictions['plan_amount_max'] = ( (int) $this->restrictions['used_plan_max'] )
-				. ',' . ( (int) $this->restrictions['used_plan_max_amount'] );
-			}
-		}
-
-		// Check for a directly previously used plan
-		if ( !empty( $this->restrictions['custom_restrictions_enabled'] ) ) {
-			if ( isset( $this->restrictions['custom_restrictions'] ) ) {
-				$planrestrictions['custom_restrictions'] = $this->transformCustomRestrictions( $this->restrictions['custom_restrictions'] );
-			}
-		}
-
-		return $planrestrictions;
-	}
-
-	function transformCustomRestrictions( $customrestrictions )
-	{
-		$cr = explode( "\n", $customrestrictions);
-
-		$custom = array();
-		foreach ( $cr as $field ) {
-			$custom[] = explode( ' ', $field );
-		}
-
-		return $custom;
+		return aecRestrictionHelper::getRestrictionsArray( $this->restrictions );
 	}
 
 	function savePOSTsettings( $post )
@@ -4946,6 +4955,10 @@ class SubscriptionPlan extends serialParamDBTable
 
 		if ( isset( $post['id'] ) ) {
 			unset( $post['id'] );
+		}
+
+		if ( !empty( $post['add_group'] ) ) {
+			ItemGroupHandler::setChildren( $post['add_group'], array( $planid ) );
 		}
 
 		// Filter out fixed variables
@@ -5005,6 +5018,17 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 
 		$this->restrictions = $restrictions;
+
+		// There might be deletions set for groups
+		foreach ( $post as $varname => $content ) {
+			if ( strpos( $varname, 'group_delete_' ) !== false ) {
+				$parentid = (int) str_replace( 'group_delete_', '', $varname );
+
+				ItemGroupHandler::removeChildren( $planid, array( $parentid ) );
+
+				unset( $post[$varname] );
+			}
+		}
 
 		// The rest of the vars are custom params
 		$custom_params = array();
@@ -5533,24 +5557,30 @@ class InvoiceFactory
 			$this->recurring = null;
 		}
 
-		$where[] = '`active` = \'1\'';
+		if ( !empty( $usage ) ) {
+			$where[] = '`active` = \'1\'';
 
-		if ( $usage ) {
-			$where[] = '`id` = \'' . $usage . '\'';
+			if ( $usage ) {
+				$where[] = '`id` = \'' . $usage . '\'';
+			} else {
+				$where[] = '`visible` != \'0\'';
+			}
+
+			$query = 'SELECT `id`'
+					. ' FROM #__acctexp_plans'
+					. ( count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
+					. ' ORDER BY `ordering`'
+					;
+			$database->setQuery( $query );
+			$rows = $database->loadResultArray();
+			if ( $database->getErrorNum() ) {
+				echo $database->stderr();
+				return false;
+			}
+		} elseif ( !empty( $group ) ) {
+			$searchres = ItemGroupHandler::getTotalChildItems( array( $group ) );
 		} else {
-			$where[] = '`visible` != \'0\'';
-		}
-
-		$query = 'SELECT `id`'
-				. ' FROM #__acctexp_plans'
-				. ( count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
-				. ' ORDER BY `ordering`'
-				;
-		$database->setQuery( $query );
-		$rows = $database->loadResultArray();
-		if ( $database->getErrorNum() ) {
-			echo $database->stderr();
-			return false;
+			$searchres = ItemGroupHandler::getTotalChildItems( array( $aecConfig->cfg['root_group'] ) );
 		}
 
 		// There are no plans to begin with, so we need to punch out an error here
@@ -5567,6 +5597,10 @@ class InvoiceFactory
 			$row->load($planid);
 
 			$restrictions = $row->getRestrictionsArray();
+
+			if ( aecRestrictionHelper::checkRestriction( $restrictions, $this->metaUser ) === false ) {
+				continue 2;
+			}
 
 			if ( count( $restrictions ) ) {
 				$status = array();
@@ -11409,6 +11443,126 @@ class aecExport extends serialParamDBTable
 
 class aecRestrictionHelper
 {
+	function checkRestriction( $restrictions, $metaUser )
+	{
+		if ( count( $restrictions ) ) {
+			$status = array();
+
+			if ( isset( $restrictions['custom_restrictions'] ) ) {
+				$status = array_merge( $status, $metaUser->CustomRestrictionResponse( $restrictions['custom_restrictions'] ) );
+				unset( $restrictions['custom_restrictions'] );
+			}
+
+			$status = array_merge( $status, $metaUser->permissionResponse( $restrictions ) );
+
+			foreach ( $status as $stname => $ststatus ) {
+				if ( !$ststatus ) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	function getRestrictionsArray( $restrictions )
+	{
+		$newrest = array();
+
+		// Check for a fixed GID - this certainly overrides the others
+		if ( !empty( $restrictions['fixgid_enabled'] ) ) {
+			$newrest['fixgid'] = (int) $restrictions['fixgid'];
+		} else {
+			// No fixed GID, check for min GID
+			if ( !empty( $restrictions['mingid_enabled'] ) ) {
+				$newrest['mingid'] = (int) $restrictions['mingid'];
+			}
+			// Check for max GID
+			if ( !empty( $restrictions['maxgid_enabled'] ) ) {
+				$newrest['maxgid'] = (int) $restrictions['maxgid'];
+			}
+		}
+
+		// Check for a directly previously used plan
+		if ( !empty( $restrictions['previousplan_req_enabled'] ) ) {
+			if ( isset( $restrictions['previousplan_req'] ) ) {
+				$newrest['plan_previous'] = $restrictions['previousplan_req'];
+			}
+		}
+
+		// Check for a currently used plan
+		if ( !empty( $restrictions['currentplan_req_enabled'] ) ) {
+			if ( isset( $restrictions['currentplan_req'] ) ) {
+				$newrest['plan_present'] = $restrictions['currentplan_req'];
+			}
+		}
+
+		// Check for a overall used plan
+		if ( !empty( $restrictions['overallplan_req_enabled'] ) ) {
+			if ( isset( $restrictions['overallplan_req'] ) ) {
+				$newrest['plan_overall'] = $restrictions['overallplan_req'];
+			}
+		}
+
+		// Check for a directly previously used plan
+		if ( !empty( $restrictions['previousplan_req_enabled_excluded'] ) ) {
+			if ( isset( $restrictions['previousplan_req_excluded'] ) ) {
+				$newrest['plan_previous_excluded'] = $restrictions['previousplan_req_excluded'];
+			}
+		}
+
+		// Check for a currently used plan
+		if ( !empty( $restrictions['currentplan_req_enabled_excluded'] ) ) {
+			if ( isset( $restrictions['currentplan_req_excluded'] ) ) {
+				$newrest['plan_present_excluded'] = $restrictions['currentplan_req_excluded'];
+			}
+		}
+
+		// Check for a overall used plan
+		if ( !empty( $restrictions['overallplan_req_enabled_excluded'] ) ) {
+			if ( isset( $restrictions['overallplan_req_excluded'] ) ) {
+				$newrest['plan_overall_excluded'] = $restrictions['overallplan_req_excluded'];
+			}
+		}
+
+		// Check for a overall used plan with amount minimum
+		if ( !empty( $restrictions['used_plan_min_enabled'] ) ) {
+			if ( isset( $restrictions['used_plan_min_amount'] ) && isset( $restrictions['used_plan_min'] ) ) {
+				$newrest['plan_amount_min'] = ( (int) $restrictions['used_plan_min'] )
+				. ',' . ( (int) $restrictions['used_plan_min_amount'] );
+			}
+		}
+
+		// Check for a overall used plan with amount maximum
+		if ( !empty( $restrictions['used_plan_max_enabled'] ) ) {
+			if ( isset( $restrictions['used_plan_max_amount'] ) && isset( $restrictions['used_plan_max'] ) ) {
+				$newrest['plan_amount_max'] = ( (int) $restrictions['used_plan_max'] )
+				. ',' . ( (int) $restrictions['used_plan_max_amount'] );
+			}
+		}
+
+		// Check for a directly previously used plan
+		if ( !empty( $restrictions['custom_restrictions_enabled'] ) ) {
+			if ( isset( $restrictions['custom_restrictions'] ) ) {
+				$newrest['custom_restrictions'] = aecRestrictionHelper::transformCustomRestrictions( $restrictions['custom_restrictions'] );
+			}
+		}
+
+		return $newrest;
+	}
+
+	function transformCustomRestrictions( $customrestrictions )
+	{
+		$cr = explode( "\n", $customrestrictions);
+
+		$custom = array();
+		foreach ( $cr as $field ) {
+			$custom[] = explode( ' ', $field );
+		}
+
+		return $custom;
+	}
+
 	function paramList()
 	{
 		$list = array( 'mingid_enabled', 'mingid', 'fixgid_enabled', 'fixgid',

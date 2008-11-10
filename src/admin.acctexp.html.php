@@ -1684,7 +1684,31 @@ class HTML_AcctExp
 											<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
 										</div>
 										<div class="userinfobox">
-											<p>Group Relation info goes here</p>
+											<h2 style="clear:both;"><?php echo _ITEMGROUPS_TITLE; ?></h2>
+											<table style="width:100%;">
+												<tr>
+													<th>ID</td>
+													<th>Name</td>
+													<th>delete</td>
+												</tr>
+												<?php
+												if ( !empty( $aecHTML->customparams->groups ) ) {
+													foreach ( $aecHTML->customparams->groups as $id => $group ) {
+														?>
+														<tr>
+															<td align="right" style="background: #<?php echo $group['color']; ?>;"><?php echo $group['group']; ?></td>
+															<td><?php echo $group['name']; ?></td>
+															<td><?php echo $aecHTML->createSettingsParticle( 'group_delete_'.$id ); ?></td>
+														</tr>
+														<?php
+													}
+												}
+												?>
+												<tr>
+													<td><?php echo _NEW_ITEMGROUP; ?>:</td>
+													<td colspan="2"><?php echo $aecHTML->createSettingsParticle( 'add_group' ); ?></td>
+												</tr>
+											</table>
 										</div>
 									</div>
 									<div style="position:relative;float:left;width:32%;padding:4px;">
@@ -1727,22 +1751,22 @@ class HTML_AcctExp
 						<div class="aec_tabheading"><h2><?php echo _PAYPLAN_PROCESSORS_TITLE_LONG; ?></h2></div>
 						<table width="100%" class="adminform"><tr><td>
 							<?php
-								if ( !empty( $aecHTML->customparams ) ) {
-									foreach ( $aecHTML->customparams as $id => $processor ) {
-										?>
-										<div class="userinfobox clear">
-											<h2 style="clear:both;"><?php echo $processor['name']; ?></h2>
-											<p><a href="<?php echo $mosConfig_live_site; ?>/index.php?option=com_acctexp&amp;task=subscribe&amp;usage=<?php echo $row->id; ?>&amp;processor=<?php echo $processor['handle']; ?>" title="<?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?></a></p>
-											<?php
-											$k = 0;
-											foreach ( $processor['params'] as $customparam ) {
-												echo $aecHTML->createSettingsParticle( $customparam );
-											}
-											?>
-										</div>
+							if ( !empty( $aecHTML->customparams->pp ) ) {
+								foreach ( $aecHTML->customparams->pp as $id => $processor ) {
+									?>
+									<div class="userinfobox clear">
+										<h2 style="clear:both;"><?php echo $processor['name']; ?></h2>
+										<p><a href="<?php echo $mosConfig_live_site; ?>/index.php?option=com_acctexp&amp;task=subscribe&amp;usage=<?php echo $row->id; ?>&amp;processor=<?php echo $processor['handle']; ?>" title="<?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?></a></p>
 										<?php
-									}
+										$k = 0;
+										foreach ( $processor['params'] as $customparam ) {
+											echo $aecHTML->createSettingsParticle( $customparam );
+										}
+										?>
+									</div>
+									<?php
 								}
+							}
 							?>
 						</td></tr></table>
 						<?php
@@ -2042,13 +2066,38 @@ class HTML_AcctExp
 											</div>
 											<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'color' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'icon' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'reveal_child_items' ); ?>
 										</div>
 									</div>
 									<div style="position:relative;float:left;width:32%;padding:4px;">
 										<div class="userinfobox">
-											<?php echo $aecHTML->createSettingsParticle( 'color' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'icon' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'reveal_child_items' ); ?>
+											<h2 style="clear:both;"><?php echo _ITEMGROUPS_TITLE; ?></h2>
+											<table style="width:100%;">
+												<tr>
+													<th>ID</td>
+													<th>Name</td>
+													<th>delete</td>
+												</tr>
+												<?php
+												if ( !empty( $aecHTML->customparams->groups ) ) {
+													foreach ( $aecHTML->customparams->groups as $id => $group ) {
+														?>
+														<tr>
+															<td align="right" style="background: #<?php echo $group['color']; ?>;"><?php echo $group['group']; ?></td>
+															<td><?php echo $group['name']; ?></td>
+															<td><?php echo $aecHTML->createSettingsParticle( 'group_delete_'.$id ); ?></td>
+														</tr>
+														<?php
+													}
+												}
+												?>
+												<tr>
+													<td><?php echo _NEW_ITEMGROUP; ?>:</td>
+													<td colspan="2"><?php echo $aecHTML->createSettingsParticle( 'add_group' ); ?></td>
+												</tr>
+											</table>
 										</div>
 									</div>
 									<div style="position:relative;float:left;width:98%;padding:4px;">
