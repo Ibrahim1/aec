@@ -4052,33 +4052,74 @@ class ItemGroupHandler
 		return $database->loadResultArray();
 	}
 
-	function getTotalChildItems( $groups, $list=array() )
+	function getTotalAllowedChildItems( $gids, $metaUser, $list=array() )
 	{
 		global $database;
 
-		$groups = ItemGroupHandler::getChildren( $groups, 'group' );
+		$groups = ItemGroupHandler::getChildren( $gids, 'group' );
 
-		$grouplist = array();
 		foreach ( $groups as $groupid ) {
 			$group = new ItemGroup( $database );
 			$group->load( $groupid );
 
+			if ( !$group->visible || !$group->active ) {
+				continue;
+			}
+
+			$restrictions = $group->getRestrictionsArray();
+
+			if ( aecRestrictionHelper::checkRestriction( $restrictions, $metaUser ) === false ) {
+				continue;
+			}
+
 			if ( $group->params['reveal_child_items'] ) {
-				$list = ItemGroupHandler::getTotalChildItems( $groups, $list );
+				$list = ItemGroupHandler::getTotalChildItems( $groupid, $list );
 			} else {
-				$grouplist[] = $groupid;
+				$list[] = ItemGroupHandler::getGroupListItem( $group );
 			}
 		}
 
-		$items = ItemGroupHandler::getChildren( $groups, 'item' );
+		$items = ItemGroupHandler::getChildren( $gids, 'item' );
 
-		foreach( $items as $item ) {
-			$list['items'][] = $item;
+		foreach( $items as $itemid ) {
+			$plan = new SubscriptionPlan( $database );
+			$plan->load( $itemid );
+
+			if ( !$plan->visible || !$plan->active ) {
+				continue;
+			}
+
+			$restrictions = $plan->getRestrictionsArray();
+
+			if ( aecRestrictionHelper::checkRestriction( $restrictions, $metaUser ) === false ) {
+				continue;
+			}
+
+			$list[] = ItemGroupHandler::getItemListItem( $plan );
 		}
 
-		foreach( $items as $item ) {
-			$list['groups'][] = $item;
-		}
+		return $list;
+	}
+
+	function getGroupListItem( $group )
+	{
+		return array(	'type'	=> 'group',
+						'id'	=> $group->id,
+						'name'	=> $group->getProperty( 'name' ),
+						'desc'	=> $group->getProperty( 'desc' )
+						);
+	}
+
+	function getItemListItem( $plan )
+	{
+		return array(	'type'		=> 'item',
+						'id'		=> $plan->id,
+						'plan'		=> $plan,
+						'name'		=> $plan->getProperty( 'name' ),
+						'desc'		=> $plan->getProperty( 'desc' ),
+						'ordering'	=> $plan->ordering,
+						'lifetime'	=> $plan->params['lifetime']
+						);
 	}
 
 	function removeChildren( $item_id, $groups, $type='item' )
@@ -4135,6 +4176,11 @@ class ItemGroup extends serialParamDBTable
 	function declareParamFields()
 	{
 		return array( 'params', 'custom_params', 'restrictions' );
+	}
+
+	function getRestrictionsArray()
+	{
+		return aecRestrictionHelper::getRestrictionsArray( $this->restrictions );
 	}
 
 	function savePOSTsettings( $post )
@@ -5167,7 +5213,7 @@ class InvoiceFactory
 	/** @var int */
 	var $confirmed		= null;
 
-	function InvoiceFactory( $userid=null, $usage=null, $processor=null, $invoice=null )
+	function InvoiceFactory( $userid=null, $usage=null, $group=null, $processor=null, $invoice=null )
 	{
 		global $database, $mainframe, $my;
 
@@ -5198,6 +5244,7 @@ class InvoiceFactory
 
 		// Init variables
 		$this->usage		= $usage;
+		$this->group		= $group;
 		$this->processor	= $processor;
 		$this->invoice		= $invoice;
 
@@ -5530,13 +5577,11 @@ class InvoiceFactory
 		Payment_HTML::promptpassword( $option, $passthrough, $wrong );
 	}
 
-	function create( $option, $intro=0, $usage=0, $processor=null, $invoice=0, $passthrough=false )
+	function create( $option, $intro=0, $usage=0, $group=0, $processor=null, $invoice=0, $passthrough=false )
 	{
 		global $database, $mainframe, $my, $aecConfig;
 
 		$register = $this->loadMetaUser( $passthrough );
-
-		$where = array();
 
 		$subscriptionClosed = false;
 		if ( $this->metaUser->hasSubscription ) {
@@ -5557,85 +5602,67 @@ class InvoiceFactory
 			$this->recurring = null;
 		}
 
+		$list = array();
+
 		if ( !empty( $usage ) ) {
-			$where[] = '`active` = \'1\'';
-
-			if ( $usage ) {
-				$where[] = '`id` = \'' . $usage . '\'';
-			} else {
-				$where[] = '`visible` != \'0\'';
-			}
-
 			$query = 'SELECT `id`'
 					. ' FROM #__acctexp_plans'
-					. ( count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
-					. ' ORDER BY `ordering`'
+					. ' WHERE `id` = \'' . $usage . '\' AND `active` = \'1\''
 					;
 			$database->setQuery( $query );
-			$rows = $database->loadResultArray();
+			$id = $database->loadResult();
+
 			if ( $database->getErrorNum() ) {
 				echo $database->stderr();
 				return false;
 			}
+
+			if ( $id ) {
+				$plan = new SubscriptionPlan( $database );
+				$plan->load( $id );
+
+				$restrictions = $plan->getRestrictionsArray();
+
+				if ( aecRestrictionHelper::checkRestriction( $restrictions, $this->metaUser ) === false ) {
+					continue;
+				}
+
+				$list[] = ItemGroupHandler::getItemListItem( $plan );
+			}
 		} elseif ( !empty( $group ) ) {
-			$searchres = ItemGroupHandler::getTotalChildItems( array( $group ) );
+			$list = ItemGroupHandler::getTotalAllowedChildItems( array( $group ), $this->metaUser );
 		} else {
-			$searchres = ItemGroupHandler::getTotalChildItems( array( $aecConfig->cfg['root_group'] ) );
+			$list = ItemGroupHandler::getTotalAllowedChildItems( array( $aecConfig->cfg['root_group'] ), $this->metaUser );
 		}
 
 		// There are no plans to begin with, so we need to punch out an error here
-		if ( count( $rows ) == 0 ) {
+		if ( count( $list ) == 0 ) {
 			mosRedirect( AECToolbox::deadsureURL( '/index.php?mosmsg=' . _NOPLANS_ERROR ), false, true );
 			return;
 		}
 
+		$groups	= array();
 		$plans	= array();
-		$i		= 0;
 
-		foreach ( $rows as $planid ) {
-			$row = new SubscriptionPlan($database);
-			$row->load($planid);
-
-			$restrictions = $row->getRestrictionsArray();
-
-			if ( aecRestrictionHelper::checkRestriction( $restrictions, $this->metaUser ) === false ) {
-				continue 2;
-			}
-
-			if ( count( $restrictions ) ) {
-				$status = array();
-
-				if ( isset( $restrictions['custom_restrictions'] ) ) {
-					$status = array_merge( $status, $this->metaUser->CustomRestrictionResponse( $restrictions['custom_restrictions'] ) );
-					unset( $restrictions['custom_restrictions'] );
-				}
-
-				$status = array_merge( $status, $this->metaUser->permissionResponse( $restrictions ) );
-
-				foreach ( $status as $stname => $ststatus ) {
-					if ( !$ststatus ) {
-						continue 2;
-					}
-				}
-			}
-
-			$plans[$i]['name']		= $row->getProperty( 'name' );
-			$plans[$i]['desc']		= $row->getProperty( 'desc' );
-			$plans[$i]['id']		= $row->id;
-			$plans[$i]['ordering']	= $row->ordering;
-			$plans[$i]['lifetime']	= $row->params['lifetime'];
-			$plans[$i]['gw']		= array();
-
-			if ( $row->params['full_free'] ) {
-				$plans[$i]['gw'][0]						= new stdClass();
-				$plans[$i]['gw'][0]->processor_name		= 'free';
-				$plans[$i]['gw'][0]->info['statement']	= '';
-				$plans[$i]['gw'][0]->recurring			= 0;
-				$i++;
+		foreach ( $list as $litem ) {
+			if ( $litem['type'] == 'group' ) {
+				$groups[] = $litem;
 			} else {
-				if ( ( $row->params['processors'] != '' ) && !is_null( $row->params['processors'] ) ) {
-					$processors = $row->params['processors'];
+				$plans[] = $litem;
+			}
+		}
 
+		foreach ( $plans as $pid => $plan ) {
+			if ( $plan['plan']->params['full_free'] ) {
+				$plans[$pid]['gw'][0]						= new stdClass();
+				$plans[$pid]['gw'][0]->processor_name		= 'free';
+				$plans[$pid]['gw'][0]->info['statement']	= '';
+				$plans[$pid]['gw'][0]->recurring			= 0;
+			} else {
+				if ( ( $plan['plan']->params['processors'] != '' ) && !is_null( $plan['plan']->params['processors'] ) ) {
+					$processors = $plan['plan']->params['processors'];
+
+					// Restrict to pre-chosen processor (if set)
 					if ( !empty( $this->processor ) ) {
 						$processorid = PaymentProcessorHandler::getProcessorIdfromName( $this->processor );
 						if ( in_array( $processorid, $processors ) ) {
@@ -5647,59 +5674,71 @@ class InvoiceFactory
 					if ( count( $processors ) ) {
 						$k = 0;
 						foreach ( $processors as $n ) {
-							if ( $n ) {
-								$pp = new PaymentProcessor();
-								$loadproc = $pp->loadId( $n );
-								if ( $loadproc ) {
-									$pp->init();
-									$pp->getInfo();
-									$pp->exchangeSettingsByPlan( $row );
+							if ( empty( $n ) ) {
+								continue;
+							}
 
-									$recurring = $pp->is_recurring( $this->recurring );
+							$pp = new PaymentProcessor();
 
-									if ( $recurring > 1 ) {
-										$pp->recurring = 0;
-										$plan_gw[$k] = $pp;
-										$k++;
+							if ( !$pp->loadId( $n ) ) {
+								continue;
+							}
 
-										if ( !$row->params['lifetime'] ) {
-											$pp->recurring = 1;
-											$plan_gw[$k] = $pp;
-											$k++;
-										}
-									} elseif ( !( $row->params['lifetime'] && $recurring ) ) {
-										if ( is_int( $recurring ) ) {
-											$pp->recurring	= $recurring;
-										}
-										$plan_gw[$k] = $pp;
-										$k++;
-									}
+							$pp->init();
+							$pp->getInfo();
+							$pp->exchangeSettingsByPlan( $plan['plan'] );
+
+							$recurring = $pp->is_recurring( $this->recurring );
+
+							if ( $recurring > 1 ) {
+								$pp->recurring = 0;
+								$plan_gw[$k] = $pp;
+								$k++;
+
+								if ( !$plan['plan']->params['lifetime'] ) {
+									$pp->recurring = 1;
+									$plan_gw[$k] = $pp;
+									$k++;
 								}
+							} elseif ( !( $plan['plan']->params['lifetime'] && $recurring ) ) {
+								if ( is_int( $recurring ) ) {
+									$pp->recurring	= $recurring;
+								}
+								$plan_gw[$k] = $pp;
+								$k++;
 							}
 						}
 					}
 
 					if ( !empty( $plan_gw ) ) {
-						$plans[$i]['gw'] = $plan_gw;
+						$plans[$pid]['gw'] = $plan_gw;
 					} else {
-						unset( $plans[$i] );
+						unset( $plans[$pid] );
 					}
-					unset( $plan_gw );
-					$i++;
-				} else {
-					unset( $plans[$i] );
 				}
 			}
-			unset( $row );
 		}
 
+		$list = array_merge( $groups, $plans );
+
 		// After filtering out the processors, no plan can be used, so we have to again issue an error
-		 if ( count( $plans ) == 0 ) {
+		 if ( count( $list ) == 0 ) {
 			mosRedirect( AECToolbox::deadsureURL( '/index.php?mosmsg=' . _NOPLANS_ERROR ), false, true );
 			return;
 		}
 
-		$nochoice = ( count( $plans ) === 1 ) && ( count( $plans[0]['gw'] ) === 1 );
+		$nochoice = false;
+
+		// There is no choice if we have only one group or only one item with one payment option
+		if ( count( $list ) === 1 ) {
+			if ( $list[0]['type'] == 'item' ) {
+				if ( count( $plans[0]['gw'] ) === 1 ) {
+					$nochoice = true;
+				}
+			} else {
+				$nochoice = true;
+			}
+		}
 
 		// If we have only one processor on one plan, there is no need for a decision
 		if ( $nochoice && !( $aecConfig->cfg['show_fixeddecision'] && empty( $processor ) ) ) {
@@ -5763,11 +5802,13 @@ class InvoiceFactory
 				// The user is already existing, so we need to move on to the confirmation page with the details
 
 				$this->usage		= $plans[0]['id'];
+
 				if ( isset( $plans[0]['gw'][0]->recurring ) ) {
 					$this->recurring	= $plans[0]['gw'][0]->recurring;
 				} else {
 					$this->recurring	= 0;
 				}
+
 				$this->processor	= $plans[0]['gw'][0]->processor_name;
 
 				if ( ( $invoice != 0 ) && !is_null( $invoice ) ) {
@@ -5781,7 +5822,7 @@ class InvoiceFactory
 					$var['password'] = $password;
 				}
 
-				$this->confirm ( $option, $var, $passthrough );
+				$this->confirm( $option, $var, $passthrough );
 			}
 		} else {
 			// Reset $register if we seem to have all data
@@ -5795,7 +5836,7 @@ class InvoiceFactory
 			$mainframe->SetPageTitle( _PAYPLANS_HEADER );
 
 			// Of to the Subscription Plan Selection Page!
-			Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $plans, $subscriptionClosed, $passthrough, $register );
+			Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $list, $subscriptionClosed, $passthrough, $register );
 		}
 	}
 

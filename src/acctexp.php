@@ -46,10 +46,11 @@ if ( !empty( $task ) ) {
 	switch ( strtolower( $task ) ) {
 		case 'register':
 			$intro = aecGetParam( 'intro', 0, true, array( 'word', 'int' ) );
-			$usage = aecGetParam( 'usage', 0, true, array( 'word', 'int' ) );
+			$usage = aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+			$group = aecGetParam( 'group', 0, true, array( 'word', 'int' ) );
 
-			$invoicefact = new InvoiceFactory(0);
-			$invoicefact->create($option, $intro, $usage);
+			$invoicefact = new InvoiceFactory();
+			$invoicefact->create( $option, $intro, $usage, $group );
 			break;
 
 		// Catch hybrid CB registration
@@ -69,10 +70,11 @@ if ( !empty( $task ) ) {
 		case 'savesubscription':
 			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 			$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+			$group		= aecGetParam( 'group', 0, true, array( 'word', 'int' ) );
 			$processor	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 			$coupon		= aecGetParam( 'coupon_code', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 
-			$invoicefact = new InvoiceFactory( $userid, $usage, $processor );
+			$invoicefact = new InvoiceFactory( $userid, $usage, $group, $processor );
 			$invoicefact->save( $option, $_POST, $coupon );
 			break;
 
@@ -312,6 +314,7 @@ function subscribe( $option )
 
 	$intro		= aecGetParam( 'intro', 0, true, array( 'word', 'int' ) );
 	$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+	$group		= aecGetParam( 'group', 0, true, array( 'word', 'int' ) );
 	$processor	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 	$username	= aecGetParam( 'username', '', true, array( 'string' ) );
@@ -370,7 +373,7 @@ function subscribe( $option )
 			}
 		}
 
-		$invoicefact = new InvoiceFactory( $userid, $usage, $processor );
+		$invoicefact = new InvoiceFactory( $userid, $usage, $group, $processor );
 		$invoicefact->confirm( $option, $_POST );
 	} else {
 		$CB = ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) );
@@ -424,8 +427,8 @@ function subscribe( $option )
 			}
 		}
 
-		$invoicefact = new InvoiceFactory( $userid, $usage, $processor );
-		$invoicefact->create( $option, $intro, $usage, $processor, 0, $passthrough );
+		$invoicefact = new InvoiceFactory( $userid, $usage, $group, $processor );
+		$invoicefact->create( $option, $intro, $usage, $group, $processor, 0, $passthrough );
 	}
 }
 
@@ -477,6 +480,7 @@ function confirmSubscription( $option )
 
 	$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 	$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+	$group		= aecGetParam( 'group', 0, true, array( 'word', 'int' ) );
 	$processor	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$username	= aecGetParam( 'username', 0, true, array( 'word', 'int' ) );
 
@@ -492,7 +496,7 @@ function confirmSubscription( $option )
 			joomlaregisterForm( $option, $mainframe->getCfg( 'useractivation' ) );
 		}
 	} else {
-		$invoicefact = new InvoiceFactory( $userid, $usage, $processor );
+		$invoicefact = new InvoiceFactory( $userid, $usage, $group, $processor );
 		$invoicefact->confirm( $option, $_POST );
 	}
 }

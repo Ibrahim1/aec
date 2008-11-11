@@ -450,7 +450,7 @@ class HTML_Results
 
 class Payment_HTML
 {
-	function selectSubscriptionPlanForm( $option, $userid, $plans, $expired, $passthrough = false, $register = false )
+	function selectSubscriptionPlanForm( $option, $userid, $list, $expired, $passthrough = false, $register = false )
 	{
 		global $mosConfig_live_site, $database, $aecConfig;
 
@@ -465,17 +465,32 @@ class Payment_HTML
 		} ?>
 		<div class="subscriptions">
 			<?php
-			foreach ( $plans as $plan ) { ?>
-				<table>
-					<th><?php echo $plan['name']; ?></th>
-					<tr><td><?php echo $plan['desc']; ?></td></tr>
-					<tr>
-						<td class="buttons">
-							<?php echo Payment_HTML::getPayButtonHTML( $plan['gw'], $plan['id'], $userid, $passthrough, $register ); ?>
-						</td>
-					</tr>
-				</table>
-				<?php
+			foreach ( $list as $litem ) {
+				?><div class="aec_ilist_<?php echo $litem['type']; ?> aec_ilist_<?php echo $litem['type'] . '_' . $litem['id']; ?>"><?php
+				if ( $litem['type'] == 'group' ) {
+					?>
+						<h2><?php echo $litem['name']; ?></h2>
+						<p><?php echo $litem['desc']; ?></p>
+						<div class="aec_groupbutton">
+							<div class="gateway_button">
+								<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=subscribe', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+								<input type="image" src="http://sandbox2.globalnerd.org/components/com_acctexp/images/gw_button_free.png" border="0" name="submit" alt="free" />
+								<input type="hidden" name="option" value="com_acctexp" />
+								<input type="hidden" name="task" value="subscribe" />
+								<input type="hidden" name="group" value="<?php echo $litem['id']; ?>" />
+							</div>
+						</div>
+					<?php
+				} else {
+					?>
+						<h2><?php echo $litem['name']; ?></h2>
+						<p><?php echo $litem['desc']; ?></p>
+						<div class="aec_procbuttons">
+							<?php echo Payment_HTML::getPayButtonHTML( $litem['gw'], $litem['id'], $userid, $passthrough, $register ); ?>
+						</div>
+					<?php
+				}
+				?></div><?php
 			}
 			?>
 		</div>
