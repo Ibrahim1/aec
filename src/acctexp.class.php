@@ -1231,6 +1231,8 @@ class Config_General extends serialParamDBTable
 		$def['proxy_password']					= '';
 		$def['gethostbyaddr']					= 1;
 		$def['root_group']						= 1;
+		// TODO: $def['show_groups_first']						= 1;
+		// TODO: $def['show_empty_groups']						= 1;
 
 		// Insert a new entry if there is none yet
 		if ( empty( $this->settings ) ) {
@@ -5672,7 +5674,6 @@ class InvoiceFactory
 
 					$plan_gw = array();
 					if ( count( $processors ) ) {
-						$k = 0;
 						foreach ( $processors as $n ) {
 							if ( empty( $n ) ) {
 								continue;
@@ -5692,20 +5693,17 @@ class InvoiceFactory
 
 							if ( $recurring > 1 ) {
 								$pp->recurring = 0;
-								$plan_gw[$k] = $pp;
-								$k++;
+								$plan_gw[] = $pp;
 
 								if ( !$plan['plan']->params['lifetime'] ) {
 									$pp->recurring = 1;
-									$plan_gw[$k] = $pp;
-									$k++;
+									$plan_gw[] = $pp;
 								}
 							} elseif ( !( $plan['plan']->params['lifetime'] && $recurring ) ) {
 								if ( is_int( $recurring ) ) {
 									$pp->recurring	= $recurring;
 								}
-								$plan_gw[$k] = $pp;
-								$k++;
+								$plan_gw[] = $pp;
 							}
 						}
 					}
@@ -5721,7 +5719,7 @@ class InvoiceFactory
 
 		$list = array_merge( $groups, $plans );
 
-		// After filtering out the processors, no plan can be used, so we have to again issue an error
+		// After filtering out the processors, no plan or group can be used, so we have to again issue an error
 		 if ( count( $list ) == 0 ) {
 			mosRedirect( AECToolbox::deadsureURL( '/index.php?mosmsg=' . _NOPLANS_ERROR ), false, true );
 			return;

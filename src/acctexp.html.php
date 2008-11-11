@@ -478,6 +478,7 @@ class Payment_HTML
 								<input type="hidden" name="option" value="com_acctexp" />
 								<input type="hidden" name="task" value="subscribe" />
 								<input type="hidden" name="group" value="<?php echo $litem['id']; ?>" />
+								</form>
 							</div>
 						</div>
 					<?php
