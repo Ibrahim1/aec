@@ -458,28 +458,32 @@ class Payment_HTML
 		?>
 
 		<div class="componentheading"><?php echo _PAYPLANS_HEADER; ?></div>
-		<?php
-		if ( $aecConfig->cfg['customtext_plans'] ) { ?>
-			<p><?php echo $aecConfig->cfg['customtext_plans']; ?></p>
-			<?php
-		} ?>
-		<?php
-		if ( isset( $list['group'] ) ) { ?>
-			<div class="aec_group_backlink">
-				<?php
-				$urlbutton = $mosConfig_live_site . '/components/com_acctexp/images/back_button.png';
-				echo Payment_HTML::planpageButton( $option, 'subscribe', $urlbutton, array(), $userid, $passthrough, 'func_button' );
-				?>
-			</div>
-			<h2><?php echo $list['group']['name']; ?></h2>
-			<p><?php echo $list['group']['desc']; ?></p>
-			<?php
-			unset( $list['group'] );
-		} ?>
 		<div class="subscriptions">
 			<?php
+			if ( $aecConfig->cfg['customtext_plans'] ) { ?>
+				<p><?php echo $aecConfig->cfg['customtext_plans']; ?></p>
+				<?php
+			} ?>
+			<?php
+			if ( isset( $list['group'] ) ) { ?>
+				<div class="aec_group_backlink">
+					<?php
+					$urlbutton = $mosConfig_live_site . '/components/com_acctexp/images/back_button.png';
+					echo Payment_HTML::planpageButton( $option, 'subscribe', $urlbutton, array(), $userid, $passthrough, 'func_button' );
+					?>
+				</div>
+				<h2><?php echo $list['group']['name']; ?></h2>
+				<p><?php echo $list['group']['desc']; ?></p>
+				<?php
+				unset( $list['group'] );
+			} ?>
+			<table class="aec_items">
+			<?php
 			foreach ( $list as $litem ) {
-				?><div class="aec_ilist_<?php echo $litem['type']; ?> aec_ilist_<?php echo $litem['type'] . '_' . $litem['id']; ?>"><?php
+				?>
+				<tr><td>
+				<div class="aec_ilist_<?php echo $litem['type']; ?> aec_ilist_<?php echo $litem['type'] . '_' . $litem['id']; ?>">
+				<?php
 				if ( $litem['type'] == 'group' ) {
 					?>
 						<h2><?php echo $litem['name']; ?></h2>
@@ -501,9 +505,13 @@ class Payment_HTML
 						</div>
 					<?php
 				}
-				?></div><?php
+				?>
+				</div>
+				</td></tr>
+				<?php
 			}
 			?>
+			</table>
 		</div>
 		<?php
 	}
