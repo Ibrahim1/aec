@@ -3316,7 +3316,7 @@ function editItemGroup( $id, $option )
 
 
 	// light blue, another blue, brown, green, another green, reddish gray, yellowish, purpleish, red
-	$colors = array( 'BBDDFF', '5F8BC4', '766D5B', 'A2BE72', 'DDFF99', '887878', 'BAAC2F', 'AA89BB', 'C43C42' );
+	$colors = array( 'BBDDFF', '5F8BC4', 'A2BE72', 'DDFF99', 'D07C30', 'C43C42', 'AA89BB', 'B7B7B7', '808080' );
 
 	$colorlist = array();
 	foreach ( $colors as $color ) {

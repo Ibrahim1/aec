@@ -117,6 +117,8 @@ define( '_PAYPLANS_HEADER', 'Планы подписки');
 
 define( '_NOPLANS_ERROR', 'No payment plans available. Please contact administrator.');
 
+define( '_PLANGROUP_BACK', '&lt; Go back');
+
 
 
 // --== ACCOUNT DETAILS PAGE ==--

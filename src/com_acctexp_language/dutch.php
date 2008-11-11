@@ -68,6 +68,7 @@ define( '_COUPON_INFO_CHECKOUT',			'Voer hier je couponcode in en selecteer de b
 // --== BETAAL PLANNEN PAGINA ==--
 define( '_PAYPLANS_HEADER', 'Betalingsplannen');
 define( '_NOPLANS_ERROR', 'Geen betalingsplan beschikbaar. Neem contact op met de administrator.');
+define( '_PLANGROUP_BACK', '&lt; Go back');
 
 // --== ACCOUNT DETAILS PAGINA ==--
 define( '_CHK_USERNAME_AVAIL', "Gebruikersnaam %s is nog beschikbaar");

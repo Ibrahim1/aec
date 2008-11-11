@@ -68,6 +68,7 @@ define( '_COUPON_INFO_CHECKOUT',			'Veuillez saisir ici le code de votre bon de 
 // --== PAGE PLANS ==--
 define( '_PAYPLANS_HEADER', ' Plans');
 define( '_NOPLANS_ERROR', 'Aucun plan disponible pour le moment.');
+define( '_PLANGROUP_BACK', '&lt; Go back');
 
 // --== PAGE INFORMATIONS DU COMPTE ==--
 define( '_CHK_USERNAME_AVAIL', 'Le nom d\'utilisateur %s est disponible');

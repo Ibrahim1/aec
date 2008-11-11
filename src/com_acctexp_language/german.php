@@ -63,6 +63,7 @@ define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED',	', User has been expired' );
 // --== PAYMENT PLANS PAGE ==--
 define( '_PAYPLANS_HEADER',					'Bezahlungspl&auml;ne' );
 define( '_NOPLANS_ERROR',					'Es trat ein interner Fehler auf, dadurch sind momentan keine Abonnements vorhanden, bitte den Administrator informieren - danke!');
+define( '_PLANGROUP_BACK', '&lt; Zur&uuml;ck');
 
 // --== ACCOUNT DETAILS PAGE ==--
 define( '_CHK_USERNAME_AVAIL',				'Benutzername %s ist verf&uuml;gbar' );

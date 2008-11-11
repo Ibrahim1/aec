@@ -4011,9 +4011,19 @@ class ItemGroupHandler
 		global $database;
 
 		foreach ( $groups as $group_id ) {
-			if ( ( $group_id == $item_id ) && ( $type == 'group' ) ) {
-				// Cannot assign a group to itself
-				continue;
+			// Check bogus assignments
+			if ( $type == 'group' ) {
+				// Don't let a group be assigned to itself
+				if ( ( $group_id == $item_id ) ) {
+					continue;
+				}
+
+				$children = ItemGroupHandler::getChildren( $group_id, 'group' );
+
+				// Don't allow circular assignment
+				if ( in_array( $item_id, $children ) ) {
+					continue;
+				}
 			}
 
 			$ig = new itemXgroup( $database );
@@ -4054,6 +4064,63 @@ class ItemGroupHandler
 		return $database->loadResultArray();
 	}
 
+	function checkParentRestrictions( $item, $type, $metaUser )
+	{
+		$parents = ItemGroupHandler::parentGroups( $item->id, $type );
+
+		if ( !empty( $parents ) ) {
+			foreach ( $parents as $parent ) {
+				$g = new ItemGroup( $item->_db );
+				$g->load( $parent );
+
+				// Only check for permission, visibility might be overridden
+				if ( !$g->checkPermission( $metaUser ) ) {
+					continue;
+				}
+
+				if ( !ItemGroupHandler::checkParentRestrictions( $g, 'group', $metaUser ) ) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	function hasVisibleChildren( $group, $metaUser )
+	{
+		$children = ItemGroupHandler::getChildren( $group->id, 'item' );
+		if ( !empty( $children ) ) {
+			$i = 0;
+			foreach( $children as $itemid ) {
+				$plan = new SubscriptionPlan( $group->_db );
+				$plan->load( $itemid );
+
+				if ( $plan->checkVisibility( $metaUser ) ) {
+					return true;
+				}
+			}
+		}
+
+		$groups = ItemGroupHandler::getChildren( $group->id, 'group' );
+		if ( !empty( $groups ) ) {
+			foreach ( $groups as $groupid ) {
+				$g = new ItemGroup( $group->_db );
+				$g->load( $groupid );
+
+				if ( !$g->checkVisibility( $metaUser ) ) {
+					continue;
+				}
+
+				if ( ItemGroupHandler::hasVisibleChildren( $g, $metaUser ) ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
 	function getTotalAllowedChildItems( $gids, $metaUser, $list=array() )
 	{
 		global $database;
@@ -4064,40 +4131,34 @@ class ItemGroupHandler
 			$group = new ItemGroup( $database );
 			$group->load( $groupid );
 
-			if ( !$group->visible || !$group->active ) {
-				continue;
-			}
-
-			$restrictions = $group->getRestrictionsArray();
-
-			if ( aecRestrictionHelper::checkRestriction( $restrictions, $metaUser ) === false ) {
+			if ( !$group->checkVisibility( $metaUser ) ) {
 				continue;
 			}
 
 			if ( $group->params['reveal_child_items'] ) {
 				$list = ItemGroupHandler::getTotalChildItems( $groupid, $list );
 			} else {
-				$list[] = ItemGroupHandler::getGroupListItem( $group );
-			}
+					if ( ItemGroupHandler::hasVisibleChildren( $group, $metaUser ) ) {
+						$list[] = ItemGroupHandler::getGroupListItem( $group );
+					}
+				}
 		}
 
 		$items = ItemGroupHandler::getChildren( $gids, 'item' );
 
+		$check = count($list);
+
+		$i = 0;
 		foreach( $items as $itemid ) {
 			$plan = new SubscriptionPlan( $database );
 			$plan->load( $itemid );
 
-			if ( !$plan->visible || !$plan->active ) {
-				continue;
-			}
-
-			$restrictions = $plan->getRestrictionsArray();
-
-			if ( aecRestrictionHelper::checkRestriction( $restrictions, $metaUser ) === false ) {
+			if ( !$plan->checkVisibility( $metaUser ) ) {
 				continue;
 			}
 
 			$list[] = ItemGroupHandler::getItemListItem( $plan );
+			$i++;
 		}
 
 		return $list;
@@ -4178,6 +4239,26 @@ class ItemGroup extends serialParamDBTable
 	function declareParamFields()
 	{
 		return array( 'params', 'custom_params', 'restrictions' );
+	}
+
+	function checkVisibility( $metaUser )
+	{
+		if ( !$this->visible ) {
+			return false;
+		} else {
+			return $this->checkPermission( $metaUser );
+		}
+	}
+
+	function checkPermission( $metaUser )
+	{
+		if ( !$this->active ) {
+			return false;
+		}
+
+		$restrictions = $this->getRestrictionsArray();
+
+		return aecRestrictionHelper::checkRestriction( $restrictions, $metaUser );
 	}
 
 	function getRestrictionsArray()
@@ -4438,6 +4519,26 @@ class SubscriptionPlan extends serialParamDBTable
 		} else {
 			return null;
 		}
+	}
+
+	function checkVisibility( $metaUser )
+	{
+		if ( !$this->visible ) {
+			return false;
+		} else {
+			return $this->checkPermission( $metaUser );
+		}
+	}
+
+	function checkPermission( $metaUser )
+	{
+		if ( !$this->active ) {
+			return false;
+		}
+
+		$restrictions = $this->getRestrictionsArray();
+
+		return aecRestrictionHelper::checkRestriction( $restrictions, $metaUser );
 	}
 
 	function applyPlan( $userid, $processor = 'none', $silent = 0, $multiplicator = 1, $invoice = null, $tempparams = null )
@@ -5277,7 +5378,15 @@ class InvoiceFactory
 
 		$restrictions = $row->getRestrictionsArray();
 
-		if ( count( $restrictions ) ) {
+		if ( !aecRestrictionHelper::checkRestriction( $restrictions, $this->metaUser ) ) {
+			mosNotAuth();
+		}
+
+		if ( !ItemGroupHandler::checkParentRestrictions( $row, 'item', $this->metaUser ) ) {
+			mosNotAuth();
+		}
+
+		/*if ( count( $restrictions ) ) {
 			$status = $this->metaUser->permissionResponse( $restrictions );
 
 			foreach ( $status as $stname => $ststatus ) {
@@ -5285,7 +5394,7 @@ class InvoiceFactory
 					mosNotAuth();
 				}
 			}
-		}
+		}*/
 	}
 
 	function puffer( $option )
@@ -5629,7 +5738,9 @@ class InvoiceFactory
 					continue;
 				}
 
-				$list[] = ItemGroupHandler::getItemListItem( $plan );
+				if ( ItemGroupHandler::checkParentRestrictions( $plan, 'item', $this->metaUser ) ) {
+					$list[] = ItemGroupHandler::getItemListItem( $plan );
+				}
 			}
 		} elseif ( !empty( $group ) ) {
 			$list = ItemGroupHandler::getTotalAllowedChildItems( array( $group ), $this->metaUser );
@@ -5832,6 +5943,13 @@ class InvoiceFactory
 			}
 
 			$mainframe->SetPageTitle( _PAYPLANS_HEADER );
+
+			if ( $group ) {
+				$g = new ItemGroup( $database );
+				$g->load( $group );
+
+				$list['group'] = ItemGroupHandler::getGroupListItem( $g );
+			}
 
 			// Of to the Subscription Plan Selection Page!
 			Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $list, $subscriptionClosed, $passthrough, $register );

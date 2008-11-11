@@ -452,7 +452,7 @@ class Payment_HTML
 {
 	function selectSubscriptionPlanForm( $option, $userid, $list, $expired, $passthrough = false, $register = false )
 	{
-		global $mosConfig_live_site, $database, $aecConfig;
+		global $mosConfig_live_site, $aecConfig;
 
 		HTML_frontend::aec_styling( $option );
 		?>
@@ -463,6 +463,19 @@ class Payment_HTML
 			<p><?php echo $aecConfig->cfg['customtext_plans']; ?></p>
 			<?php
 		} ?>
+		<?php
+		if ( isset( $list['group'] ) ) { ?>
+			<div class="aec_group_backlink">
+				<?php
+				$urlbutton = $mosConfig_live_site . '/components/com_acctexp/images/back_button.png';
+				echo Payment_HTML::planpageButton( $option, 'subscribe', $urlbutton, array(), $userid, $passthrough, 'func_button' );
+				?>
+			</div>
+			<h2><?php echo $list['group']['name']; ?></h2>
+			<p><?php echo $list['group']['desc']; ?></p>
+			<?php
+			unset( $list['group'] );
+		} ?>
 		<div class="subscriptions">
 			<?php
 			foreach ( $list as $litem ) {
@@ -472,14 +485,11 @@ class Payment_HTML
 						<h2><?php echo $litem['name']; ?></h2>
 						<p><?php echo $litem['desc']; ?></p>
 						<div class="aec_groupbutton">
-							<div class="gateway_button">
-								<form action="<?php echo AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=subscribe', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
-								<input type="image" src="http://sandbox2.globalnerd.org/components/com_acctexp/images/gw_button_free.png" border="0" name="submit" alt="free" />
-								<input type="hidden" name="option" value="com_acctexp" />
-								<input type="hidden" name="task" value="subscribe" />
-								<input type="hidden" name="group" value="<?php echo $litem['id']; ?>" />
-								</form>
-							</div>
+							<?php
+							$urlbutton = $mosConfig_live_site . '/components/com_acctexp/images/select_button.png';
+							$hidden = array( 'group' => $litem['id'] );
+							echo Payment_HTML::planpageButton( $option, 'subscribe', $urlbutton, $hidden, $userid, $passthrough );
+							?>
 						</div>
 					<?php
 				} else {
@@ -500,7 +510,7 @@ class Payment_HTML
 
 	function getPayButtonHTML( $pps, $planid, $userid, $passthrough = false, $register = false )
 	{
-		global $mosConfig_live_site, $database, $my, $aecConfig;
+		global $mosConfig_live_site;
 
 		$html_code = '';
 
@@ -508,7 +518,6 @@ class Payment_HTML
 
 		foreach ( $pps as $pp ) {
 			$gw_current = strtolower( $pp->processor_name );
-			$hidden = array();
 
 			if ( $register ) {
 				if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
@@ -541,21 +550,7 @@ class Payment_HTML
 				}
 			}
 
-			$html_code .= '<div class="gateway_button">' . "\n"
-			. '<form action="' . AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=' . $task, $aecConfig->cfg['ssl_signup'] ) . '"'
-			. ' method="post">' . "\n"
-			. '<input type="image" src="' . $urlbutton;
-			if ( !empty( $pp->info['statement'] ) ) {
-				$html_code .= '" border="0" name="submit" alt="' . $pp->info['statement'] . '" />' . "\n";
-			} else {
-				$html_code .= '" border="0" name="submit" alt="' . $pp->processor_name . '" />' . "\n";
-			}
-
-			$hidden['option']		= $option;
-			$hidden['task']			= $task;
-			$hidden['processor']	= strtolower( $pp->processor_name );
-			$hidden['usage']		= $planid;
-			$hidden['userid']		= $userid ? $userid : 0;
+			$hidden = array();
 
 			if ( !empty( $pp->recurring ) ) {
 				$hidden['recurring'] = 1;
@@ -563,20 +558,51 @@ class Payment_HTML
 				$hidden['recurring'] = 0;
 			}
 
-			// Rewrite Passthrough
-			if ( $passthrough != false ) {
-				foreach ( $passthrough as $key => $array ) {
-					$hidden[$array[0]] = $array[1];
-				}
+			$hidden['processor']	= strtolower( $pp->processor_name );
+
+			if ( !empty( $planid ) ) {
+				$hidden['usage']		= $planid;
 			}
 
-			// Assemble hidden fields
-			foreach ( $hidden as $key => $value ) {
-				$html_code .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
-			}
-
-			$html_code .= '</form></div>' . "\n";
+			$html_code .= Payment_HTML::planpageButton( $option, $task, $urlbutton, $hidden, $userid, $passthrough );
 		}
+
+		return $html_code;
+	}
+
+	function planpageButton( $option, $task, $urlbutton, $hidden, $userid, $passthrough, $class="gateway_button" )
+	{
+		global $aecConfig;
+
+		$html_code .= '<div class="' . $class . '">' . "\n"
+		. '<form action="' . AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=' . $task, $aecConfig->cfg['ssl_signup'] ) . '"'
+		. ' method="post">' . "\n"
+		. '<input type="image" src="' . $urlbutton;
+
+		if ( !empty( $pp->info['statement'] ) ) {
+			$html_code .= '" border="0" name="submit" alt="' . $pp->info['statement'] . '" />' . "\n";
+		} else {
+			$html_code .= '" border="0" name="submit" alt="' . $pp->processor_name . '" />' . "\n";
+		}
+
+		$hidden['option']		= $option;
+		$hidden['task']			= $task;
+
+		$hidden['userid']		= $userid ? $userid : 0;
+
+		// Rewrite Passthrough
+		if ( $passthrough != false ) {
+			foreach ( $passthrough as $key => $array ) {
+				$hidden[$array[0]] = $array[1];
+			}
+		}
+
+		// Assemble hidden fields
+		foreach ( $hidden as $key => $value ) {
+			$html_code .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
+		}
+
+		$html_code .= '</form></div>' . "\n";
 
 		return $html_code;
 	}

@@ -74,6 +74,14 @@ padding: 0px 4px;
 margin: 0px 4px;
 }
 
+.func_button {
+position: relative;
+float: left;
+background: #fff;
+padding: 0px 4px;
+margin: 0px 4px;
+}
+
 div.aec_ilist_group {
 float: left;
 width: 100%;
@@ -93,6 +101,17 @@ text-align: right;
 text-indent: 0px;
 float: left;
 clear: both;
+}
+
+div.aec_group_backlink {
+width: 90%;
+padding: 0px 12px;
+border: none;
+background: #bbb;
+text-indent: 0px;
+float: left !important;
+clear: both;
+margin: 0 4px 16px 4px;
 }
 
 div.aec_procbuttons {
