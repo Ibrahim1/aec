@@ -8615,12 +8615,11 @@ class AECToolbox
 		} else {
 			if ( $aecConfig->cfg['require_subscription'] ) {
 				if ( $aecConfig->cfg['entry_plan'] ) {
-					$user_subscription = new Subscription( $database );
-					$user_subscription->load(0);
-					$user_subscription->createNew( $id, 'Free', 1 );
+					$payment_plan = new SubscriptionPlan( $database );
+					$payment_plan->load( $aecConfig->cfg['entry_plan'] );
 
-					$metaUser = new metaUser( $id );
-					$metaUser->objSubscription->applyUsage( $aecConfig->cfg['entry_plan'], 'none', 1 );
+					$metaUser->establishFocus( $payment_plan, 'Free' );
+
 					return AECToolbox::VerifyUsername( $username );
 				} else {
 					$invoices = AECfetchfromDB::InvoiceCountbyUserID( $metaUser->userid );
@@ -8670,12 +8669,11 @@ class AECToolbox
 		} else {
 			if ( $aecConfig->cfg['require_subscription'] ) {
 				if ( $aecConfig->cfg['entry_plan'] ) {
-					$user_subscription = new Subscription( $database );
-					$user_subscription->load(0);
-					$user_subscription->createNew( $id, 'Free', 1 );
+					$payment_plan = new SubscriptionPlan( $database );
+					$payment_plan->load( $aecConfig->cfg['entry_plan'] );
 
-					$metaUser = new metaUser( $id );
-					$metaUser->objSubscription->applyUsage( $aecConfig->cfg['entry_plan'], 'none', 1 );
+					$metaUser->establishFocus( $payment_plan, 'Free' );
+
 					return AECToolbox::VerifyUser( $username );
 				} else {
 					$invoices = AECfetchfromDB::InvoiceCountbyUserID( $metaUser->userid );
