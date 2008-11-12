@@ -443,6 +443,10 @@ class metaUser
 				$this->focusSubscription->load( 0 );
 				$this->focusSubscription->createNew( $this->userid, $processor, 1, $plan_params['make_primary'] );
 				$this->hasSubscription = 1;
+
+				if ( $plan_params['make_primary'] ) {
+					$this->objSubscription = $this->focusSubscription;
+				}
 			}
 		}
 
@@ -1231,6 +1235,7 @@ class Config_General extends serialParamDBTable
 		$def['proxy_password']					= '';
 		$def['gethostbyaddr']					= 1;
 		$def['root_group']						= 1;
+		$def['root_group_rw']					= '';
 		// TODO: $def['show_groups_first']						= 1;
 		// TODO: $def['show_empty_groups']						= 1;
 
@@ -4545,7 +4550,13 @@ class SubscriptionPlan extends serialParamDBTable
 	{
 		global $database, $mainframe, $mosConfig_offset, $aecConfig;
 
-		if ( is_int( $multiplicator ) && ( $multiplicator < 1 ) ) {
+		$forcelifetime = false;
+
+		if ( is_string( $multiplicator ) ) {
+			if ( strcmp( $multiplicator, 'lifetime' ) === 0 ) {
+				$forcelifetime = true;
+			}
+		} elseif ( is_int( $multiplicator ) && ( $multiplicator < 1 ) ) {
 			$multiplicator = 1;
 		}
 
@@ -4595,7 +4606,7 @@ class SubscriptionPlan extends serialParamDBTable
 				return false;
 			}
 
-			if ( $this->params['lifetime'] || ( strcmp( $multiplicator, 'lifetime' ) === 0 ) ) {
+			if ( $this->params['lifetime'] || $forcelifetime ) {
 				$metaUser->focusSubscription->expiration = '9999-12-31 00:00:00';
 				$metaUser->focusSubscription->lifetime = 1;
 			} else {
@@ -4683,8 +4694,7 @@ class SubscriptionPlan extends serialParamDBTable
 				$metaUser->instantGIDchange($this->params['gid']);
 			}
 
-			$metaUser->focusSubscription->check();
-			$metaUser->focusSubscription->store();
+			$metaUser->focusSubscription->storeload();
 		}
 
 		if ( !( $silent || $aecConfig->cfg['noemails'] ) ) {
@@ -6124,6 +6134,8 @@ class InvoiceFactory
 
 		$this->loadMetaUser( false, true );
 		$this->metaUser->setTempAuth();
+
+		$this->puffer( $option );
 
 		$this->touchInvoice( $option );
 

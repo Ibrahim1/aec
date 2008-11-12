@@ -54,6 +54,13 @@ class processor_offline_payment extends processor
 			$metaUser = new metaUser( $objInvoice->userid );
 
 			if ( !$metaUser->hasSubscription || in_array( $metaUser->objSubscription->status, array( 'Expired', 'Closed' ) ) ) {
+				if ( !$metaUser->hasSubscription ) {
+					$payment_plan = new SubscriptionPlan( $database );
+					$payment_plan->load( $this->settings['waitingplan'] );
+
+					$metaUser->establishFocus( $payment_plan, 'offline_payment' );
+				}
+
 				$metaUser->objSubscription->applyUsage( $this->settings['waitingplan'], 'none', 0 );
 
 				$short	= 'waiting plan';
