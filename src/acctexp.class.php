@@ -9524,6 +9524,27 @@ class AECToolbox
 					$result = constant( $vars );
 				}
 				break;
+			case 'global':
+				if ( is_array( $vars ) ) {
+					if ( isset( $vars[0] ) && isset( $vars[1] ) ) {
+						$call = strtoupper( $vars[0] );
+
+						$allowed = array( 'SERVER', 'GET', 'POST', 'FILES', 'COOKIE', 'SESSION', 'REQUEST', 'ENV' );
+
+						if ( in_array( $vars[0], $allowed ) ) {
+							$v = '_' . $vars[0];
+
+							if ( isset( $$v[$vars[1]] ) ) {
+								$result = $$v[$vars[1]];
+							}
+						}
+					}
+				} else {
+					if ( isset( $GLOBALS[$vars] ) ) {
+						$result = $GLOBALS[$vars];
+					}
+				}
+				break;
 			case 'condition':
 				if ( empty( $vars[0] ) || !isset( $vars[1] ) ) {
 					if ( isset( $vars[2] ) && !isset( $vars[1] ) ) {
