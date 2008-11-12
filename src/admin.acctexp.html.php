@@ -2069,6 +2069,7 @@ class HTML_AcctExp
 											<?php echo $aecHTML->createSettingsParticle( 'color' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'icon' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'reveal_child_items' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'symlink' ); ?>
 										</div>
 									</div>
 									<div style="position:relative;float:left;width:32%;padding:4px;">

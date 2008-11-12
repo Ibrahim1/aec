@@ -4075,7 +4075,7 @@ class ItemGroupHandler
 
 				// Only check for permission, visibility might be overridden
 				if ( !$g->checkPermission( $metaUser ) ) {
-					continue;
+					return false;
 				}
 
 				if ( !ItemGroupHandler::checkParentRestrictions( $g, 'group', $metaUser ) ) {
@@ -4135,8 +4135,8 @@ class ItemGroupHandler
 				continue;
 			}
 
-			if ( $group->params['reveal_child_items'] ) {
-				$list = ItemGroupHandler::getTotalChildItems( $groupid, $list );
+			if ( $group->params['reveal_child_items'] && empty( $group->params['symlink'] ) ) {
+				$list = ItemGroupHandler::getTotalAllowedChildItems( $groupid, $metaUser, $list );
 			} else {
 					if ( ItemGroupHandler::hasVisibleChildren( $group, $metaUser ) ) {
 						$list[] = ItemGroupHandler::getGroupListItem( $group );
@@ -4302,7 +4302,7 @@ class ItemGroup extends serialParamDBTable
 		}
 
 		// Filter out params
-		$fixed = array( 'color', 'icon', '' );
+		$fixed = array( 'color', 'icon', 'reveal_child_items', 'symlink' );
 
 		$params = array();
 		foreach ( $fixed as $varname ) {
@@ -5362,7 +5362,7 @@ class InvoiceFactory
 			}
 		}
 
-		if ( $this->usage && $this->userid ) {
+		if ( $this->usage ) {
 			$this->verifyUsage();
 		}
 	}
@@ -5385,16 +5385,6 @@ class InvoiceFactory
 		if ( !ItemGroupHandler::checkParentRestrictions( $row, 'item', $this->metaUser ) ) {
 			mosNotAuth();
 		}
-
-		/*if ( count( $restrictions ) ) {
-			$status = $this->metaUser->permissionResponse( $restrictions );
-
-			foreach ( $status as $stname => $ststatus ) {
-				if ( !( $ststatus === true ) ) {
-					mosNotAuth();
-				}
-			}
-		}*/
 	}
 
 	function puffer( $option )
@@ -5692,7 +5682,7 @@ class InvoiceFactory
 	{
 		global $database, $mainframe, $my, $aecConfig;
 
-		$register = $this->loadMetaUser( $passthrough );
+		$register = $this->loadMetaUser( $passthrough, true );
 
 		$subscriptionClosed = false;
 		if ( $this->metaUser->hasSubscription ) {
@@ -5743,9 +5733,35 @@ class InvoiceFactory
 				}
 			}
 		} elseif ( !empty( $group ) ) {
-			$list = ItemGroupHandler::getTotalAllowedChildItems( array( $group ), $this->metaUser );
+			$g = new ItemGroup( $database );
+			$g->load( $group );
+
+			if ( $g->checkVisibility( $this->metaUser ) ) {
+				if ( !empty( $g->params['symlink'] ) ) {
+					mosRedirect( $g->params['symlink'] );
+				}
+
+				$list = ItemGroupHandler::getTotalAllowedChildItems( array( $group ), $this->metaUser );
+			}
 		} else {
-			$list = ItemGroupHandler::getTotalAllowedChildItems( array( $aecConfig->cfg['root_group'] ), $this->metaUser );
+			if ( !empty( $aecConfig->cfg['root_group_rw'] ) ) {
+				$x = AECToolbox::rewriteEngine( $this->metaUser, $this->metaUser );
+			} else {
+				$x = array( $aecConfig->cfg['root_group'] );
+			}
+
+			if ( !is_array( $x ) && !empty( $x ) ) {
+				$x = array( $x );
+			} else {
+				$x = array( $aecConfig->cfg['root_group'] );
+			}
+
+			$list = ItemGroupHandler::getTotalAllowedChildItems( $x, $this->metaUser );
+
+			// Retry in case a RWengine call didn't work out
+			if ( empty( $list ) && !empty( $aecConfig->cfg['root_group_rw'] ) ) {
+				$list = ItemGroupHandler::getTotalAllowedChildItems( $aecConfig->cfg['root_group'], $this->metaUser );
+			}
 		}
 
 		// There are no plans to begin with, so we need to punch out an error here
@@ -5757,11 +5773,20 @@ class InvoiceFactory
 		$groups	= array();
 		$plans	= array();
 
+		$gs = array();
+		$ps = array();
+		// Break apart groups and items, make sure we have no duplicates
 		foreach ( $list as $litem ) {
 			if ( $litem['type'] == 'group' ) {
-				$groups[] = $litem;
+				if ( !in_array( $litem['id'], $gs ) ) {
+					$gs[] = $litem['id'];
+					$groups[] = $litem;
+				}
 			} else {
-				$plans[] = $litem;
+				if ( !in_array( $litem['id'], $ps ) ) {
+					$ps[] = $litem['id'];
+					$plans[] = $litem;
+				}
 			}
 		}
 

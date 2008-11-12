@@ -511,6 +511,10 @@ define( '_CFG_GENERAL_EXPIRATION_CUSHION_NAME', 'Expiration Cushion:');
 define( '_CFG_GENERAL_EXPIRATION_CUSHION_DESC', 'Number of hours that the AEC takes as cushion when determining expiration. Take a generous amount since payments arive later than the actual expiration (with Paypal about 6-8 hours later).');
 define( '_CFG_GENERAL_HEARTBEAT_CYCLE_NAME', 'Heartbeat Cycle:');
 define( '_CFG_GENERAL_HEARTBEAT_CYCLE_DESC', 'Number of hours that the AEC waits until understanding a login as a trigger for sending out Emails or doing other actions that you chose to be performed periodically.');
+define( '_CFG_GENERAL_ROOT_GROUP_NAME', 'Root Group:');
+define( '_CFG_GENERAL_ROOT_GROUP_DESC', 'Choose the Root Group that the user is displayed when accessing the plans page without any preset variable.');
+define( '_CFG_GENERAL_ROOT_GROUP_RW_NAME', 'Root Group ReWrite:');
+define( '_CFG_GENERAL_ROOT_GROUP_RW_DESC', 'Choose the Root Group that the user is displayed when accessing the plans page by returning a group number or an array of groups with the ReWriteEngine functionality. This will fall back to the general option (above) if the results are empty.');
 define( '_CFG_GENERAL_PLANS_FIRST_NAME', 'Plans First:');
 define( '_CFG_GENERAL_PLANS_FIRST_DESC', 'If you have commited all three hacks to have an integrated Registration with direct Subscription, this switch will activate this behavior. Don\'t use it if you don\'t want that behavior or only commited the first hack (which means that the plans come after the user has put in his or her details) .');
 
@@ -870,6 +874,11 @@ define( '_ITEMGROUP_GENERAL_COLOR_DESC', 'The color marking of this group.');
 define( '_ITEMGROUP_GENERAL_ICON_NAME', 'Icon:');
 define( '_ITEMGROUP_GENERAL_ICON_DESC', 'The icon marking of this group.');
 
+define( '_ITEMGROUP_GENERAL_REVEAL_CHILD_ITEMS_NAME ', 'Reveal Child Items');
+define( '_ITEMGROUP_GENERAL_REVEAL_CHILD_ITEMS_DESC ', 'If you set this switch to "yes", the AEC will not show a group button (linking the user on to this contents of the group), but directly display the contents of this group in any parent group.');
+define( '_ITEMGROUP_GENERAL_SYMLINK_NAME ', 'Group Symlink');
+define( '_ITEMGROUP_GENERAL_SYMLINK_DESC ', 'Entering a link here will redirect a user to this link when selecting this group in the plans selection page. Overrides any linking to contents of this group!');
+
 // Group Restrictions
 
 define( '_ITEMGROUP_RESTRICTIONS_TITLE', 'Restrictions');
@@ -937,6 +946,8 @@ define( '_ITEMGROUP_PARAMS_SIMILARITEMGROUPS_NAME', 'Similar Groups:');
 define( '_ITEMGROUP_PARAMS_SIMILARITEMGROUPS_DESC', 'Select which groups are similar to this one. A user is not allowed to use a Trial period when buying a plan that he or she has purchased before and this will also be the same for similar plans (or plans in similar groups).');
 define( '_ITEMGROUP_PARAMS_EQUALITEMGROUPS_NAME', 'Equal Groups:');
 define( '_ITEMGROUP_PARAMS_EQUALITEMGROUPS_DESC', 'Select which groups are equal to this one. A user switching between equal plans (or plans in equal groups) will have his or her period extended instead of reset. Trials are also not permitted (see similar groups info).');
+
+// Currencies
 
 define( '_CURRENCY_AFA', 'Afghani');
 define( '_CURRENCY_ALL', 'Lek');

@@ -1944,6 +1944,7 @@ function editSettings( $option )
 
 	$params[] = array( 'userinfobox', 30 );
 	$params['root_group']					= array( 'list', 0 );
+	$params['root_group_rw']				= array( 'inputD', 0 );
 	$params['plans_first']					= array( 'list_yesno', 0 );
 	$params['displayccinfo']				= array( 'list_yesno', 0 );
 	$params['enable_coupons']				= array( 'list_yesno', 0 );
@@ -2256,7 +2257,6 @@ function editSettings( $option )
 
 	$glist = array();
 
-	$glist[] = mosHTML::makeOption( 0, '- - - - - -' );
 	foreach ( $grouplist as $id => $glisti ) {
 		$glist[] = mosHTML::makeOption( $glisti[0], $glisti[1] );
 	}
@@ -3265,6 +3265,7 @@ function editItemGroup( $id, $option )
 	$params['icon']						= array( 'list', '' );
 
 	$params['reveal_child_items']		= array( 'list_yesno', 0 );
+	$params['symlink']					= array( 'inputC', '' );
 
 	$params['params_remap']				= array( 'subarea_change', 'groups' );
 
