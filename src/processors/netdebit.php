@@ -22,7 +22,7 @@ class processor_netdebit extends URLprocessor
 		$info['description'] 		= _CFG_NETDEBIT_DESCRIPTION;
 		$info['currencies']			= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS';
 		$info['languages']			= 'GB,DE,FR,IT,ES,US,NL';
-		$info['cc_list']			= 'visa,mastercard,discover,americanexpress,echeck,giropay';
+		$info['cc_list']			= 'visa,mastercard,eurocard';
 		$info['recurring']			= 2;
 		$info['recurring_buttons']	= 2;
 
