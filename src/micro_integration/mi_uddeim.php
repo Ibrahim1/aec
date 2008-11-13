@@ -114,11 +114,13 @@ class mi_uddeim
 		. 'include( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_uddeim.php\');' . "\n\n"
 		. '$restrictionhandler = new uddeim_restriction( $database );' . "\n"
 		. '$restrict_id = $restrictionhandler->getIDbyUserID( $my->id );' . "\n"
+		. 'if($restrictionhandler->active){'. "\n\n"
 		. '$restrictionhandler->load( $restrict_id );' . "\n\n"
-		. 'if (!$restrictionhandler->hasMessagessLeft()) {' . "\n"
-		. "\t" . '$restrictionhandler->noMessagesLeft();' . "\n"
-		. '}else{' . "\n"
-		. "\t" . '$restrictionhandler->useMessage();' . "\n"
+		. '\tif (!$restrictionhandler->hasMessagesLeft()) {' . "\n"
+		. "\t\t" . '$restrictionhandler->noMessagesLeft();' . "\n"
+		. '\t}else{' . "\n"
+		. "\t\t" . '$restrictionhandler->useMessage();' . "\n"
+		. '\t}' . "\n"
 		. '}' . "\n"
 		. '// AEC HACK uddeimmessagephp END' . "\n"
 		;
@@ -129,6 +131,15 @@ class mi_uddeim
 		$hacks[$n]['type']				=	'file';
 		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_uddeim/uddeim.php';
 		$hacks[$n]['read']				=	'// I could have modified this function to process mails to public users but instead of adding';
+		$hacks[$n]['insert']			=	$messagehack . "\n"  . $hacks[$n]['read'];
+
+		$n = 'pmsuddeimphp';
+		$hacks[$n]['name']				=	'pms.uddeim.php';
+		$hacks[$n]['desc']				=	_AEC_MI_HACK2_UDDEIM;
+		$hacks[$n]['type']				=	'file';
+		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/comprofiler/plugin/user/plug_pmsuddeim/pms.uddeim.php';
+		$hacks[$n]['read']				=	'$adminpath = $this->absolute_path."/administrator/components/com_uddeim";
+';
 		$hacks[$n]['insert']			=	$messagehack . "\n"  . $hacks[$n]['read'];
 
 		return $hacks;
@@ -156,32 +167,32 @@ class mi_uddeim
 		return true;
 	}
 
-	function action( $request )
+	function action( $params, $userid, $plan )
 	{
 		global $database;
 
 		$mi_uddeimhandler = new uddeim_restriction( $database );
-		$id = $mi_uddeimhandler->getIDbyUserID( $request->metaUser->userid );
+		$id = $mi_uddeimhandler->getIDbyUserID( $userid );
 		$mi_id = $id ? $id : 0;
 		$mi_uddeimhandler->load( $mi_id );
 
 		if ( !$mi_id ) {
-			$mi_uddeimhandler->userid = $request->metaUser->userid;
+			$mi_uddeimhandler->userid = $userid;
+			$mi_uddeimhandler->active = 1;
 		}
 
-		$mi_uddeimhandler->active = 1;
-
-		if ( $this->settings['set_messages'] ) {
-			$mi_uddeimhandler->setMessages( $this->settings['set_messages'] );
-		} elseif ( $this->settings['add_messages'] ) {
-			$mi_uddeimhandler->addMessages( $this->settings['add_messages'] );
+		if ( $params['set_messages'] ) {
+			$mi_uddeimhandler->setMessages( $params['set_messages'] );
+		} elseif ( $params['add_messages'] ) {
+			$mi_uddeimhandler->addMessages( $params['add_messages'] );
 		}
-		if ( $this->settings['set_unlimited'] ) {
+		if ( $params['set_unlimited'] ) {
 			$mi_uddeimhandler->unlimited_messages = true ;
 		}
+		
 		$mi_uddeimhandler->check();
 		$mi_uddeimhandler->store();
-
+		
 		return true;
 	}
 }
@@ -238,20 +249,19 @@ class uddeim_restriction extends mosDBTable {
 
 	function hasMessagesLeft()
 	{
-                $check = $this->getMessagesLeft();
+		$check = $this->getMessagesLeft();
 
-                if ( empty ( $check ) ) {
-                        return false;
-                } elseif  (  is_numeric ($check)  )  {
-                        if ( $check > 0 ) {
-                                return true;
-                        } else {
-                                return false;
-                        }
-                } elseif ( $check == "unlimited" ) {
-                        return true;
-                }
-
+		if ( empty ( $check ) ) {
+				return false;
+		} elseif  (  is_numeric ($check)  )  {
+				if ( $check > 0 ) {
+						return true;
+				} else {
+						return false;
+				}
+		} elseif ( $check == "unlimited" ) {
+				return true;
+		}
 	}
 
 	function noMessagesLeft()
@@ -267,7 +277,7 @@ class uddeim_restriction extends mosDBTable {
 			}
 		}
 
-		mosRedirect(  'index.php?option=com_uddeim' , _AEC_MI_UDDEIM_NOCREDIT );
+		mosErrorAlert( _AEC_MI_UDDEIM_NOCREDIT );
 	}
 
 	function useMessage()

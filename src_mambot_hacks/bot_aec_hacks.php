@@ -13,7 +13,7 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {
 	include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");
 	if( aecJoomla15check() ) {
-		$_MAMBOTS->registerFunction( 'onAfterStart', 'checkUserSubscription' ); //joomla.php Hack #4
+//		$_MAMBOTS->registerFunction( 'onAfterStart', 'checkUserSubscription' ); //joomla.php Hack #4
 		$_MAMBOTS->registerFunction( 'onAfterStart', 'planFirst' ); //registration.php Hack #6
 		$_MAMBOTS->registerFunction( 'onAfterStart', 'planRegistration' ); //registration.php Hack #2 + comprofiler.php Hack #2
 		$_MAMBOTS->registerFunction( 'onAfterStart', 'notifyMI' ); //registration.php Hack #1 + user.php Hack + comprofiler.php Hack #7 + comprofiler.php Hack #8

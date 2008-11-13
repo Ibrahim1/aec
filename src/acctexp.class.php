@@ -8706,7 +8706,7 @@ class AECToolbox
 			}
 
 			$savetask	= $task;
-			$task		= 'done';
+			$_REQUEST['task']	= 'done';
 			include_once ( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
 			$task		= $savetask;
 
@@ -10977,7 +10977,8 @@ class couponHandler
 		if ( count( $permissions ) ) {
 			foreach ( $permissions as $name => $status ) {
 				if ( !$status ) {
-					$errors = array(	'mingid'			=> 'permission',
+					$errors = array(	'fixgid'			=> 'permission',
+										'mingid'			=> 'permission',
 										'maxgid'			=> 'permission',
 										'setgid'			=> 'permission',
 										'usage'				=> 'wrong_usage',
