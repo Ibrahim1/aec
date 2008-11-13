@@ -116,7 +116,7 @@ class mi_coupon
 		}
 
 		$total_coupons = array_merge( $total_coupons, $newcodes );
-print_r($total_coupons);exit;
+
 		$newflags['coupons'] = implode( ',', $total_coupons );
 
 		$request->metaUser->objSubscription->setMIflags( $plan->id, $this->id, $newflags );
