@@ -94,6 +94,18 @@ class processor_clickbank extends URLprocessor
 
 	function validateNotification( $response, $request, $invoice )
 	{
+		/**
+		 * 	function cbValid() {
+		 *	$key='YOUR SECRET KEY';
+		 *	$rcpt=$_REQUEST['cbreceipt'];
+		 *	$time=$_REQUEST['time'];
+		 *	$item=$_REQUEST['item'];
+		 *	$cbpop=$_REQUEST['cbpop'];
+		 *	$xxpop=sha1("$key|$rcpt|$time|$item");
+		 *	$xxpop=strtoupper(substr($xxpop,0,8));
+		 *	if ($cbpop==$xxpop) return 1; else return 0; }
+		 */
+
 		// Standard parameters that Clickbank will send back (leaving out 'cverify')
 		$stdParams = array( 'ccustname', 'ccuststate', 'ccustcc', 'ccustemail',
 							'cproditem', 'cprodtitle', 'cprodtype', 'ctransaction',
