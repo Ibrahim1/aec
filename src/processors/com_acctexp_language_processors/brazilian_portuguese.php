@@ -37,18 +37,18 @@ define( '_DESCRIPTION_ALERTPAY', 'Your money is safe with AlertPay\'s account sa
 define( '_DESCRIPTION_LOCAWEB_PGCERTO', 'Brazilian payment gateway, Pagamento Certo Locaweb allows you to easily receive money from your subscribers.');
 
 // Generic Processor Names&Descs
-define( '_CFG_PROCESSOR_TESTMODE_NAME', 'Test Mode?');
-define( '_CFG_PROCESSOR_TESTMODE_DESC', 'Select Yes if you want to run this processor in test mode. Transactions will not be forwarded to the real processor, but will be either redirected to a testing environment or always return an approved result. If you do not know what this is, just leave it No.');
-define( '_CFG_PROCESSOR_CURRENCY_NAME', 'Currency Selection');
-define( '_CFG_PROCESSOR_CURRENCY_DESC', 'Select the currency that you want to use for this processor.');
-define( '_CFG_PROCESSOR_NAME_NAME', 'Displayed Name');
-define( '_CFG_PROCESSOR_NAME_DESC', 'Change what this Processor is called.');
-define( '_CFG_PROCESSOR_DESC_NAME', 'Displayed Description');
-define( '_CFG_PROCESSOR_DESC_DESC', 'Change the description of this Processor, which is for example shown on the NotAllowed page, Confirmation and Checkout.');
-define( '_CFG_PROCESSOR_ITEM_NAME_NAME', 'Item Description');
-define( '_CFG_PROCESSOR_ITEM_NAME_DESC', 'The Item Description transmitted to the processor.');
+define( '_CFG_PROCESSOR_TESTMODE_NAME', 'Modo Teste?');
+define( '_CFG_PROCESSOR_TESTMODE_DESC', 'Selecione se você quiser rodar em modo de Teste. Transações não serão enviadas para o gateway de pagamento, mas sim para um ambiente de teste ou sempre retornarão um resultado de sucesso. Se você não sabe o que é isso, simplesmente selecione que não.');
+define( '_CFG_PROCESSOR_CURRENCY_NAME', 'Seleção de Moeda');
+define( '_CFG_PROCESSOR_CURRENCY_DESC', 'Selecione a moeda que quer usar para este gateway.');
+define( '_CFG_PROCESSOR_NAME_NAME', 'Nome mostrado');
+define( '_CFG_PROCESSOR_NAME_DESC', 'Altere como este gateway é chamado.');
+define( '_CFG_PROCESSOR_DESC_NAME', 'Descrição mostrada');
+define( '_CFG_PROCESSOR_DESC_DESC', 'Altere a descrição deste gateway, a qual aparece por exemplo na página NotAllowed (Não Permitido), de Confirmação e de Checkout.');
+define( '_CFG_PROCESSOR_ITEM_NAME_NAME', 'Descrição do Item');
+define( '_CFG_PROCESSOR_ITEM_NAME_DESC', 'A descrição do Item enviada ao gateway.');
 define( '_CFG_PROCESSOR_ITEM_NAME_DEFAULT',	'Assinatura em %s - Usuario: %s (%s)' );
-define( '_CFG_PROCESSOR_CUSTOMPARAMS_NAME', 'Custom Parameters');
+define( '_CFG_PROCESSOR_CUSTOMPARAMS_NAME', 'Parâmetros customizados');
 define( '_CFG_PROCESSOR_CUSTOMPARAMS_DESC', 'Custom Parameters that the AEC should transmit to the Payment Processor on Checkout. Separated by linebreaks in the form of "parameter_name=parameter_value". The RewriteEngine works as specified below.');
 define( '_CFG_PROCESSOR_PLAN_PARAMS_RECURRING_NAME', 'Recurring Payment');
 define( '_CFG_PROCESSOR_PLAN_PARAMS_RECURRING_DESC', 'Choose what type of billing to use for this.');
@@ -58,7 +58,7 @@ define( '_CFG_PROCESSOR_RECURRING_NAME', 'Recurring Payment');
 define( '_CFG_PROCESSOR_RECURRING_DESC', 'Choose what type of billing to use for this.');
 define( '_CFG_PROCESSOR_TAX_NAME', 'Tax:');
 define( '_CFG_PROCESSOR_TAX_DESC', 'Set the percentage that should be split to taxes. For example if you want 10% of 10$ to be tax - put in a 10. This will result in an amount of 9.09 and a tax amount of additional 0.91.');
-define( '_CFG_PROCESSOR_GENERIC_BUTTONS_NAME', 'Generic Buttons:');
+define( '_CFG_PROCESSOR_GENERIC_BUTTONS_NAME', 'Botões Genéricos:');
 define( '_CFG_PROCESSOR_GENERIC_BUTTONS_DESC', 'Do not show buttons with the processor logo, but plan "Buy Now" and "Subscribe" buttons instead.');
 
 define( '_AEC_SELECT_RECURRING_NO', 'Non-Recurring');
@@ -725,16 +725,4 @@ define( '_CFG_LOCAWEB_PGCERTO_RAZAOSOCIAL_NAME', 			'Razão Social (se Comprador
 define( '_CFG_LOCAWEB_PGCERTO_RAZAOSOCIAL_DESC', 			'Razão Social.');
 define( '_CFG_LOCAWEB_PGCERTO_EMAIL_NAME', 						'Email de Comprador Locaweb se já possuir');
 define( '_CFG_LOCAWEB_PGCERTO_EMAIL_DESC', 							'Email de cadastro na Locaweb se houver.');
-define( '_CFG_LOCAWEB_PGCERTO_MERCHANT_ID_NAME',			 'Merchant ID');
-define( '_CFG_LOCAWEB_PGCERTO_MERCHANT_ID_DESC', 			'Your Chase Paymentech Merchant ID.');
-define( '_CFG_LOCAWEB_PGCERTO_TERMINAL_ID_NAME', 				'Terminal ID');
-define( '_CFG_LOCAWEB_PGCERTOH_TERMINAL_ID_DESC', 			'Your Terminal ID.');
-define( '_CFG_LOCAWEB_PGCERTO_BIN_NAME', 							'BIN');
-define( '_CFG_LOCAWEB_PGCERTO_BIN_DESC', 								'Transaction Routing Definition - Assigned by Chase Paymentech: 000001 - Salem | 000002 - PNS');
-define( '_CFG_LOCAWEB_PGCERTO_PAY_TYPES_NAME', 					'Payment Types');
-define( '_CFG_LOCAWEB_PGCERTO_PAY_TYPES_DESC', 					'Allowed Payment Types for your customers.');
-define( '_CFG_LOCAWEB_PGCERTO_PROMPTADDRESS_NAME', 		'Prompt for Address');
-define( '_CFG_LOCAWEB_PGCERTO_PROMPTADDRESS_DESC', 		'Ask the user to put in an Address with the Billing Name.');
-define( '_CFG_LOCAWEB_PGCERTO_PROMPTZIPONLY_NAME', 		'Prompt for Zip only');
-define( '_CFG_LOCAWEB_PGCERTO_PROMPTZIPONLY_DESC', 		'Ask the user to put in a Zip code only.');
 ?>
