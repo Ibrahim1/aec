@@ -213,16 +213,16 @@ define( '_HOLD_TITLE', 'Account on Hold');
 define( '_HOLD_EXPLANATION', 'Your account is currently on hold. The most likely cause for this is that there was a problem with a payment you recently made. If you don\'t receive an email within the next 24 hours, please contact the site administrator.');
 
 // --== THANK YOU PAGE ==--
-define( '_THANKYOU_TITLE', 'Thank You!');
-define( '_SUB_FEPARTICLE_HEAD', 'Subscription Complete!');
-define( '_SUB_FEPARTICLE_HEAD_RENEW', 'Subscription Renew Complete!');
-define( '_SUB_FEPARTICLE_LOGIN', 'You may login now.');
-define( '_SUB_FEPARTICLE_THANKS', 'Thank you for your registration. ');
-define( '_SUB_FEPARTICLE_THANKSRENEW', 'Thank you for renewing your subscription. ');
-define( '_SUB_FEPARTICLE_PROCESS', 'Our system will now work on your request. ');
-define( '_SUB_FEPARTICLE_PROCESSPAY', 'Our system will now await your payment. ');
+define( '_THANKYOU_TITLE', 'Obrigado!');
+define( '_SUB_FEPARTICLE_HEAD', 'Assinatura Registrada!');
+define( '_SUB_FEPARTICLE_HEAD_RENEW', 'Renovação de Assinatura Efetuada!');
+define( '_SUB_FEPARTICLE_LOGIN', 'Você pode logar agora no sistema.');
+define( '_SUB_FEPARTICLE_THANKS', 'Obrigado pela sua assinatura. ');
+define( '_SUB_FEPARTICLE_THANKSRENEW', 'Obrigado por renovar a sua assinatura. ');
+define( '_SUB_FEPARTICLE_PROCESS', 'Trabalharemos na sua requisição. ');
+define( '_SUB_FEPARTICLE_PROCESSPAY', 'Devemos receber uma confirmação do seu pagamento em breve. ');
 define( '_SUB_FEPARTICLE_ACTMAIL', 'You will receive an e-mail with an activation link once our system has processed your request. ');
-define( '_SUB_FEPARTICLE_MAIL', 'You will receive an e-mail once our system has processed your request. ');
+define( '_SUB_FEPARTICLE_MAIL', 'Você receberá um email assim que sua requisição for processada. ');
 
 // --== CHECKOUT ERROR PAGE ==--
 define( '_CHECKOUT_ERROR_TITLE', 'Error while processing the payment!');
