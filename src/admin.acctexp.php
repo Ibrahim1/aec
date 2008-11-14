@@ -4893,7 +4893,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/includes/' . $cmsname . '.php';
 		$hacks[$n]['read']			=	"function mosNotAuth() {";
 		$hacks[$n]['insert']		=	sprintf( $aec_jhack1, $n, $n );
-		$hacks[$n]['legacy']		=	1;
+//		$hacks[$n]['legacy']		=	1;
 
 		$n = 'joomlaphp2';
 		$hacks[$n]['name']			=	$cmsname . '.php ' . _AEC_HACK_HACK . ' #2';
@@ -4903,7 +4903,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/includes/' . $cmsname . '.php';
 		$hacks[$n]['read']			=	'function notAllowed( $name ) {';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( $aec_jhack2, $n, $n );
-		$hacks[$n]['legacy']		=	1;
+//		$hacks[$n]['legacy']		=	1;
 	} else {
 		$n = 'errorphp';
 		$hacks[$n]['name']			=	'error.php ' . _AEC_HACK_HACK . ' #1';
@@ -4946,7 +4946,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 	}
 
 	$hacks[$n]['insert']			=	sprintf($aec_jhack3, $n, $n) . "\n" . $hacks[$n]['read'];
-	$hacks[$n]['important']		=	$v15 ? 0 : 1;
+	$hacks[$n]['important']			=	$v15 ? 0 : 1;
 	$hacks[$n]['legacy']			=	$v15 ? 1 : 0;
 
 	// registration.php
@@ -4985,6 +4985,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.php';
 		$hacks[$n]['read']			=	'function registerForm( $option, $emailpass, $regErrorMSG = null ) {';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_optionhack, $n, $n);
+		$hacks[$n]['legacy']		=	1;
 
 		$n = 'comprofilerphp6';
 		$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #6';
@@ -5144,6 +5145,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 			$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/components/com_user/controller.php' ) : ( $mosConfig_absolute_path . '/components/com_registration/registration.php' );
 			$hacks[$n]['read']			=	$v15 ? ( 'JRequest::setVar(\'view\', \'register\');' ) : ( '$mainframe->SetPageTitle(_REGISTER_TITLE);' );
 			$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( $aec_optionhack, $n, $n );
+			$hacks[$n]['legacy']		=	1;
 
 			$n = 'registrationphp3';
 			$hacks[$n]['name']			=	'registration.php ' . _AEC_HACK_HACK . ' #3';
@@ -5197,6 +5199,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/components/com_user/controller.php' ) : ( $mosConfig_absolute_path . '/components/com_registration/registration.php' );
 		$hacks[$n]['read']			=	$v15 ? ( 'JRequest::setVar(\'view\', \'register\');' ) : ( 'case \'register\':' );
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regredirect, $n, $n);
+		$hacks[$n]['legacy']		=	1;
 	}
 
 	if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
@@ -5208,6 +5211,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 			$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.php';
 			$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserRegistrationMailsSent\',';
 			$hacks[$n]['insert']		=	sprintf( $aec_uchangehackCB12, $n, 'registration', $n ) . "\n" . $hacks[$n]['read'];
+			$hacks[$n]['legacy']		=	1;
 
 			$n = 'comprofilerphp8';
 			$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #8';
@@ -5272,9 +5276,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/components/com_user/controller.php' ) : ( $mosConfig_absolute_path . '/components/com_user/user.php' );
 		$hacks[$n]['read']			=	$v15 ? ( 'if ($model->store($post)) {' ) : ( '// check if username has been changed' );
 		$hacks[$n]['insert']		=	sprintf( ( $v15 ? $aec_uchangehack15 : $aec_uchangehack ), $n, "user", $n ) . "\n" . $hacks[$n]['read'];
-		if ( $v15 ) {
-			$hacks[$n]['legacy']	=	1;
-		}
+		$hacks[$n]['legacy']		=	1;
 
 		$n = 'registrationphp1';
 		$hacks[$n]['name']			=	'registration.php ' . _AEC_HACK_HACK . ' #1';
@@ -5283,9 +5285,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/components/com_user/controller.php' ) : ( $mosConfig_absolute_path . '/components/com_registration/registration.php' );
 		$hacks[$n]['read']			=	$v15 ? 'UserController::_sendMail($user, $password);' : '$row->checkin();';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( ( $v15 ? $aec_uchangereghack15 : $aec_uchangehack ), $n, "registration", $n );
-		if ( $v15 ) {
-			$hacks[$n]['legacy']	=	1;
-		}
+		$hacks[$n]['legacy']		=	1;
 	}
 
 	$n = 'adminuserphp';

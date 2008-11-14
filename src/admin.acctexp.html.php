@@ -1008,7 +1008,7 @@ class HTML_AcctExp
 						<p style="width:60%; padding:3px;">
 							<?php
 							if ( !empty( $content['legacy'] ) ) { ?>
-								<img src="<?php echo $mosConfig_live_site;?>/administrator/components/com_acctexp/images/icons/aec_symbol_importance_3.png" />
+								<img src="<?php echo $mosConfig_live_site;?>/administrator/components/com_acctexp/images/icons/aec_symbol_importance_3.png" title="<?php echo _AEC_HACKS_LEGACY; ?>" alt="<?php echo _AEC_HACKS_LEGACY; ?>" />
 								<?php
 							} ?>
 							<?php echo $content['desc']; ?>

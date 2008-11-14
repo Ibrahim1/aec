@@ -144,6 +144,7 @@ define( '_AEC_HACKS_COMMIT',					'toepassen' );
 define( '_AEC_HACKS_FILE',						'Bestand' );
 define( '_AEC_HACKS_LOOKS_FOR',					'De hack zal zoeken naar' );
 define( '_AEC_HACKS_REPLACE_WITH',				'... en het vervangen met dit' );
+define( '_AEC_HACKS_LEGACY',					'Legacy Hack' );
 
 define( '_AEC_HACKS_NOTICE',					'BELANGRIJKE MELDING' );
 define( '_AEC_HACKS_NOTICE_DESC',				'Voor veiligheidsreden moet u de hacks toepassen op de Joomla core files. Om dit te doen kunt u klikken op "hack bestand nu" links voor deze bestanden. U kunt ook een link toevoegen aan uw gebruikers menu zodat uw gebruikers de persoonlijke registratie info kunnen bekijken.' );

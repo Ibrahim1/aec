@@ -144,6 +144,7 @@ define( '_AEC_HACKS_COMMIT',					'commit' );
 define( '_AEC_HACKS_FILE',						'File' );
 define( '_AEC_HACKS_LOOKS_FOR',					'The Hack will look for this' );
 define( '_AEC_HACKS_REPLACE_WITH',				'... and replace it with this' );
+define( '_AEC_HACKS_LEGACY',					'Legacy Hack' );
 
 define( '_AEC_HACKS_NOTICE',					'IMPORTANT NOTICE' );
 define( '_AEC_HACKS_NOTICE_DESC',				'For security reason you need apply hacks to joomla core files. To do so, please click the "hack file now" links for these files. You may also Add a link to your User Menu so that your Users can have a look at their Subscription Record.' );
