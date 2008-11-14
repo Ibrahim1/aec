@@ -127,6 +127,7 @@
 		<filename>processors/ideal_basic.php</filename>
 		<filename>processors/ideal_advanced.php</filename>
 		<filename>processors/ipayment_silent.php</filename>
+		<filename>processors/locaweb_pgcerto.php</filename>
 		<filename>processors/moneybookers.php</filename>
 		<filename>processors/moneyproxy.php</filename>
 		<filename>processors/netdebit.php</filename>
@@ -154,6 +155,7 @@
 		<filename>processors/authorizenet_cim/index.html</filename>
 		<filename>processors/authorizenet_cim/authorizenet.cim.class.php</filename>
 		<filename>processors/com_acctexp_language_processors/index.html</filename>
+		<filename>processors/com_acctexp_language_processors/brazilian_portuguese.php</filename>
 		<filename>processors/com_acctexp_language_processors/dutch.php</filename>
 		<filename>processors/com_acctexp_language_processors/english.php</filename>
 		<filename>processors/com_acctexp_language_processors/french.php</filename>
