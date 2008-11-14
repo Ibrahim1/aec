@@ -698,5 +698,22 @@ define( '_CFG_CHASE_PAYMENTECH_PROMPTADDRESS_NAME', 'Prompt for Address');
 define( '_CFG_CHASE_PAYMENTECH_PROMPTADDRESS_DESC', 'Ask the user to put in an Address with the Billing Name.');
 define( '_CFG_CHASE_PAYMENTECH_PROMPTZIPONLY_NAME', 'Prompt for Zip only');
 define( '_CFG_CHASE_PAYMENTECH_PROMPTZIPONLY_DESC', 'Ask the user to put in a Zip code only.');
-
+// Locaweb - Pagamento Certo
+define( '_CFG_LOCAWEB_PGCERTO_LONGNAME',							'Pagamento Certo Locaweb');
+define( '_CFG_LOCAWEB_PGCERTO_STATEMENT',							'Pague de forma segura pelo Pagamento Certo Locaweb!');
+define( '_CFG_LOCAWEB_PGCERTO_DESCRIPTION',							'Pague de forma segura pelo Pagamento Certo Locaweb!');
+define( '_CFG_LOCAWEB_PGCERTO_CHAVEVENDEDOR_NAME',		'Chave de Vendedor');
+define( '_CFG_LOCAWEB_PGCERTO_CHAVEVENDEDOR_DESC',		'Fornecida pela Locaweb depois do registro no PagamentoCerto');
+define( '_CFG_LOCAWEB_PGCERTO_MODULE_NAME', 					'Forma de Pagamento');
+define( '_CFG_LOCAWEB_PGCERTO_MODULO_DESC', 					'Cartão de Crédito VISA ou Boleto Bancário.');
+define( '_CFG_LOCAWEB_PGCERTO_TIPOPESSOA_NAME', 				'Tipo de Comprador cadastrado na LocaWeb');
+define( '_CFG_LOCAWEB_PGCERTO_TIPOPESSOA_DESC', 				'Tipo de Comprador.');
+define( '_CFG_LOCAWEB_PGCERTO_CPF_NAME', 							'CPF');
+define( '_CFG_LOCAWEB_PGCERTO_CPF_DESC', 							'Número do CPF.');
+define( '_CFG_LOCAWEB_PGCERTO_CNPJ_NAME', 							'CNPJ (se Comprador Empresa na LocaWeb)');
+define( '_CFG_LOCAWEB_PGCERTO_CNPJ_DESC', 							'Número do CNPJ.');
+define( '_CFG_LOCAWEB_PGCERTO_RAZAOSOCIAL_NAME', 			'Razão Social (se Comprador Empresa na LocaWeb)');
+define( '_CFG_LOCAWEB_PGCERTO_RAZAOSOCIAL_DESC', 			'Razão Social.');
+define( '_CFG_LOCAWEB_PGCERTO_EMAIL_NAME', 						'Email de Comprador Locaweb se já possuir');
+define( '_CFG_LOCAWEB_PGCERTO_EMAIL_DESC', 							'Email de cadastro na Locaweb se houver.');
 ?>
