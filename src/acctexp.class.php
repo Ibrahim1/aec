@@ -5452,11 +5452,13 @@ class InvoiceFactory
 		$this->renew = 0;
 
 		if ( !empty( $this->userid ) ) {
-			if ( AECfetchfromDB::SubscriptionIDfromUserID( $this->userid ) ) {
+			if ( !empty( $this->metaUser ) ) {
+				$this->renew = count( $this->metaUser->meta->plan_history ) ? 1 : 0;
+			} elseif ( AECfetchfromDB::SubscriptionIDfromUserID( $this->userid ) ) {
 				$user_subscription = new Subscription( $database );
 				$user_subscription->loadUserID( $this->userid );
 
-				if ( !( strcmp( $user_subscription->lastpay_date, '0000-00-00 00:00:00' ) === 0 ) ) {
+				if ( ( strcmp( $user_subscription->lastpay_date, '0000-00-00 00:00:00' ) !== 0 ) ) {
 					$this->renew = 1;
 				}
 			}
