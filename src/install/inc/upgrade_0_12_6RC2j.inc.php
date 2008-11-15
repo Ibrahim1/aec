@@ -255,7 +255,7 @@ if ( $jsonconversion ) {
 						}
 
 						$plans = array();
-
+$has_history = false;
 						if ( !empty( $object->used_plans ) ) {
 							$used_plans = explode( ";", $object->used_plans );
 
@@ -263,6 +263,7 @@ if ( $jsonconversion ) {
 								$p = explode( ',', $plan );
 
 								if ( empty( $p[0] ) ) {
+									$has_history = true;
 									continue;
 								}
 
@@ -290,6 +291,8 @@ if ( $jsonconversion ) {
 							} else {
 								$plans[$bend[0]] = 1;
 							}
+						} elseif( !empty( $object->previous_plan ) ) {
+							$plans[$object->previous_plan] = 1;
 						}
 
 						// Preserve current plan with this
@@ -299,6 +302,8 @@ if ( $jsonconversion ) {
 							} else {
 								$plans[$end[0]] = 1;
 							}
+						} elseif( !empty( $object->plan ) ) {
+							$plans[$object->plan] = 1;
 						}
 
 						$history = array();
