@@ -99,6 +99,38 @@ class mi_remository
 		return is_dir( $mosConfig_absolute_path . '/components/com_remository/c-classes' );
 	}
 
+	function hacks()
+	{
+		global $mosConfig_absolute_path;
+
+		$hacks = array();
+
+		$downloadhack =	'// AEC HACK remositorystartdown START' . "\n"
+		. 'global $my, $mosConfig_absolute_path;' . "\n"
+		. 'include( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_remository.php\' );' . "\n\n"
+		. '$restrictionhandler = new remository_restriction( $database );' . "\n"
+		. '$restrict_id = $restrictionhandler->getIDbyUserID( $my->id );' . "\n"
+		. '$restrictionhandler->load( $restrict_id );' . "\n\n"
+		. 'if( !$restrictionhandler->hasDownloadsLeft() ) {' . "\n"
+		. '	mosRedirect( \'index.php?option=com_remository\', \'' . _AEC_MI_HACK1_REMOS . '\' );' . "\n"
+		. '}else{' . "\n"
+		. '	$restrictionhandler->useDownload();' . "\n"
+		. '}' . "\n"
+		. '// AEC HACK remositorystartdown END' . "\n"
+		;
+
+		$n = 'remositorystartdown';
+		$hacks[$n]['name']				=	'com_remository_startdown.php';
+		$hacks[$n]['desc']				=	_AEC_MI_HACK2_REMOS;
+		$hacks[$n]['type']				=	'file';
+		$hacks[$n]['filename']			=	$mosConfig_absolute_path
+											. '/components/com_remository/c-classes/remository_download_Controller.php';
+		$hacks[$n]['read']				=	'$this->writeHeaders($ctype, $displayname, $len);';
+		$hacks[$n]['insert']			=	$downloadhack . "\n"  . $hacks[$n]['read'];
+
+		return $hacks;
+	}
+
 	function expiration_action( $request )
 	{
 		global $database;
