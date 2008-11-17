@@ -5361,6 +5361,7 @@ class InvoiceFactory
 		$this->processor	= $processor;
 		$this->invoice		= $invoice;
 
+		// Delete set userid if it doesn't exist
 		if ( !is_null( $this->userid ) ) {
 			$query = 'SELECT `id`'
 					. ' FROM #__users'
