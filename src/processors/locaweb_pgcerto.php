@@ -339,15 +339,14 @@ class processor_locaweb_pgcerto extends XMLprocessor
 				$response['invoice']										= utf8_decode($Numero);
 
 				if (strcmp($Modulo, 'CartaoCredito') == 0 && strcmp($Processado, 'true') == 0) {
-						$response['valid']								= 1;
+						$response['valid']								= true;
 						$response['responsestring']				= 'Processado: ' . utf8_decode($Processado) .  'Mensagem de retorno: ' . utf8_decode($MensagemRetornoPagamento);
 						$response['amount_paid'] 					= $ValorTotal;
-				}
-				// Se foi boleto devemos esperar a compensacao
-				if (strcmp($Modulo, 'Boleto') == 0 && strcmp($Processado, 'true') == 0 && strcmp($MensagemRetornoPagamento, 'Boleto emitido.') == 0) {
+				} elseif (strcmp($Modulo, 'Boleto') == 0 && strcmp($Processado, 'true') == 0 && strcmp($MensagemRetornoPagamento, 'Boleto emitido.') == 0) {
+						// Se foi boleto devemos esperar a compensacao
 						$response['responsestring']				= 	'Warning: (' . utf8_decode($CodRetornoConsulta) . ') ' . utf8_decode($MensagemRetornoPagamento);
-						$response['valid']								= 0;
-						$response['pending']							= 1;
+						$response['valid']								= false;
+						$response['pending']							= true;
 						$response['pending_reason']				= utf8_decode(_PENDING_REASON_WAITING_RESPONSE);
 						/* Troubleshooting purpose
 						$myFile = "/var/www/hlbog/desenvolvimento/logs/consulta.xml";
@@ -355,16 +354,21 @@ class processor_locaweb_pgcerto extends XMLprocessor
 						fwrite($fh, $XMLresposta);
 						fclose($fh);
 						*/
+				} elseif (strcmp($Modulo, 'Boleto') == 0 && strcmp($Processado, 'true') == 0 && strcmp($MensagemRetornoPagamento, 'Boleto emitido.') != 0) {
+						// Boleto compensado - cleared
+						$response['valid']								= true;
+						$response['responsestring']				= 'Processado: ' . utf8_decode($Processado) .  'Mensagem de retorno: ' . utf8_decode($MensagemRetornoPagamento);
+						$response['amount_paid'] 					= $ValorTotal;
 				}
-			} else {		
-				$response['valid']										= true;
-				$response['responsestring']						= 'Processado: ' . utf8_decode($Processado) .  'Mensagem de retorno: ' . utf8_decode($MensagemRetorno);
-				$response['amount_paid'] 							= $ValorTotal;
+				// We will need this info later to provide the option to reissue boleto
+				$request->invoice->addParams( array( 'IdTransacao' => $IdTransacao ) );
+				$request->invoice->check();
+				$request->invoice->store();
 			} else {
 				// Monta os dados de resposta para o componente AEC
 				$response['responsestring']								= 	'Erro: (' . utf8_decode($CodRetornoConsulta) . ') ' . utf8_decode($MensagemRetornoConsulta);
-				$response['valid']												= 0;
-				$response['pending']											= 1;
+				$response['valid']												= false;
+				$response['pending']											= true;
 				if ($CodRetornoConsulta == '12' || $CodRetornoConsulta == '13') {
 						// 12 -> Transacao ainda nao processada
 						// 13 -> Transacao em processamento
@@ -374,8 +378,8 @@ class processor_locaweb_pgcerto extends XMLprocessor
 		} else {
 		    // Monta os dados de resposta para o componente AEC
 		    $response['responsestring']							= 	'Erro: ID da transação não informado.';
-			$response['valid']											= 0	;
-			$response['pending']										= 1;
+			$response['valid']											= false;
+			$response['pending']										= true;
 			$response['pending_reason']							= $response['responsestring'];
 		}
 		return $response;
