@@ -158,6 +158,7 @@ class processor_locaweb_pgcerto extends XMLprocessor
 	function transmitRequestXML( $xmlTransacao, $request )
 	{
 
+		//$this->addParams( array( 'free_trial' => $response['pending_reason'] ), 'params', true );
 		// ############# Inicio do registro da transação #############
 		$wsPagamentoCertoLocaweb								= 'https://www.pagamentocerto.com.br/vendedor/vendedor.asmx?WSDL';			// Web Service para registro da transação
 		$urlPagamentoCertoLocaweb								= 'https://www.pagamentocerto.com.br/pagamento/pagamento.aspx';					// URL para inicio da transação
@@ -193,25 +194,21 @@ class processor_locaweb_pgcerto extends XMLprocessor
 		$objDom																= new DomDocument();
 		$loadDom															= $objDom->loadXML($XMLresposta);
 
-			/**
-			 * Lo Helder. Please check whether your code makes php4 cry... or die. Find some solution for this please.
-			 */
-
 		// Resgata os dados iniciais do retorno da transação
-		//## nodeCodRetornoInicio										= $objDom->getElementsByTagName('CodRetorno')->item(0);
+		$nodeCodRetornoInicio										= $objDom->getElementsByTagName('CodRetorno')->item(0);
 		$CodRetornoInicio												= $nodeCodRetornoInicio->nodeValue;
 
-		//## nodeMensagemRetornoInicio							= $objDom->getElementsByTagName('MensagemRetorno')->item(0);
+		$nodeMensagemRetornoInicio							= $objDom->getElementsByTagName('MensagemRetorno')->item(0);
 		$MensagemRetorno											= $nodeMensagemRetornoInicio->nodeValue;
 
 		// Verifica se o registro da transação foi feito com sucesso
 		if ($CodRetornoInicio == '0') {
 
 			// Resgata o id e a mensagem da transação
-			//## nodeIdTransacao											= $objDom->getElementsByTagName('IdTransacao')->item(0);
+			$nodeIdTransacao											= $objDom->getElementsByTagName('IdTransacao')->item(0);
 			$IdTransacao													= $nodeIdTransacao->nodeValue;
 
-			//## nodeCodigoRef												= $objDom->getElementsByTagName('Codigo')->item(0);
+			$nodeCodigoRef												= $objDom->getElementsByTagName('Codigo')->item(0);
 			$Codigo															= $nodeCodigoRef->nodeValue;
 
 			// Inicia a transação
@@ -263,102 +260,135 @@ class processor_locaweb_pgcerto extends XMLprocessor
 			$parms->idTransacao 									= utf8_encode($idTransacao);
 
 			// Resgata o XML de retorno do processo
-			$XMLresposta = $soap->ConsultaTransacao($parms);
-			$XMLresposta = $XMLresposta->ConsultaTransacaoResult;
+
+			$XMLresposta													= $soap->ConsultaTransacao($parms);
+			$XMLresposta													= $XMLresposta->ConsultaTransacaoResult;
+
+			$XMLresposta													= $soap->ConsultaTransacao($parms);
+			$XMLresposta													= $XMLresposta->ConsultaTransacaoResult;
 
 			// Carrega o XML
 			$objDom 															= new DomDocument();
 			$loadDom 														= $objDom->loadXML($XMLresposta);
 
 			// Resgata os dados iniciais do retorno da transação
-			//## nodeCodRetornoConsulta								= $objDom->getElementsByTagName('CodRetorno')->item(0);
+			$nodeCodRetornoConsulta								= $objDom->getElementsByTagName('CodRetorno')->item(0);
 			$CodRetornoConsulta										= $nodeCodRetornoConsulta->nodeValue;
 
-			//## nodeMensagemRetornoConsulta					= $objDom->getElementsByTagName('MensagemRetorno')->item(0);
-			$MensagemRetornoConsulta = $nodeMensagemRetornoConsulta->nodeValue;
+			$nodeMensagemRetornoConsulta					= $objDom->getElementsByTagName('MensagemRetorno')->item(0);
+			$MensagemRetornoConsulta							= $nodeMensagemRetornoConsulta->nodeValue;
 
 			if ($CodRetornoConsulta == '15') {
-
+				// 15 -> Transacao processada
 				// Resgata os dados da transação
-				//## nodeIdTransacao										= $objDom->getElementsByTagName('IdTransacao')->item(0);
+				$nodeIdTransacao										= $objDom->getElementsByTagName('IdTransacao')->item(0);
 				$IdTransacao												= $nodeIdTransacao->nodeValue;
 
-				//## nodeCodigoTransacao								= $objDom->getElementsByTagName('Codigo')->item(0);
+				$nodeCodigoTransacao								= $objDom->getElementsByTagName('Codigo')->item(0);
 				$Codigo														= $nodeCodigoTransacao->nodeValue;
 
-				//## nodeDataTransacao									= $objDom->getElementsByTagName('Data')->item(0);
+				/$nodeDataTransacao									= $objDom->getElementsByTagName('Data')->item(0);
 				$Data															= $nodeDataTransacao->nodeValue;
 
 				// Resgata os dados do comprador no Pagamento Certo
-				//## nodeCompradorNome								= $objDom->getElementsByTagName('Nome')->item(0);
+				$nodeCompradorNome								= $objDom->getElementsByTagName('Nome')->item(0);
 				$Nome															= $nodeCompradorNome->nodeValue;
 
-				//## nodeCompradorEmail								= $objDom->getElementsByTagName('Email')->item(0);
+				$nodeCompradorEmail								= $objDom->getElementsByTagName('Email')->item(0);
 				$Email															= $nodeCompradorEmail->nodeValue;
 
-				//## nodeCompradorCpf									= $objDom->getElementsByTagName('Cpf')->item(0);
+				$nodeCompradorCpf									= $objDom->getElementsByTagName('Cpf')->item(0);
 				$Cpf																= $nodeCompradorCpf->nodeValue;
 
-				//## nodeCompradorTipoPessoa						= $objDom->getElementsByTagName('TipoPessoa')->item(0);
+				$nodeCompradorTipoPessoa						= $objDom->getElementsByTagName('TipoPessoa')->item(0);
 				$TipoPessoa												= $nodeCompradorTipoPessoa->nodeValue;
 
-				//## nodeCompradorRazaoSocial						= $objDom->getElementsByTagName('RazaoSocial')->item(0);
+				$nodeCompradorRazaoSocial						= $objDom->getElementsByTagName('RazaoSocial')->item(0);
 				$RazaoSocial												= $nodeCompradorRazaoSocial->nodeValue;
 
-				//## nodeCompradorCNPJ									= $objDom->getElementsByTagName('Cnpj')->item(0);
+				$nodeCompradorCNPJ									= $objDom->getElementsByTagName('Cnpj')->item(0);
 				$Cnpj															= $nodeCompradorCNPJ->nodeValue;
 
 
 				// Resgata os dados do pagamento
-				//## nodeMensagemModuloPagamento			= $objDom->getElementsByTagName('Modulo')->item(0);
+				$nodeMensagemModuloPagamento			= $objDom->getElementsByTagName('Modulo')->item(0);
 				$Modulo														= $nodeMensagemModuloPagamento->nodeValue;
 
-				//## nodeMensagemTipoModuloPagamento	= $objDom->getElementsByTagName('Tipo')->item(0);
+				$nodeMensagemTipoModuloPagamento	= $objDom->getElementsByTagName('Tipo')->item(0);
 				$Tipo															= $nodeMensagemTipoModuloPagamento->nodeValue;
 
-				//## nodeProcessadoPagamento						= $objDom->getElementsByTagName('Processado')->item(0);
+				$nodeProcessadoPagamento						= $objDom->getElementsByTagName('Processado')->item(0);
 				$Processado												= $nodeProcessadoPagamento->nodeValue;
 
-				//## nodeMensagemRetornoPagamento			= $objDom->getElementsByTagName('MensagemRetorno')->item(0);
+				$nodeMensagemRetornoPagamento			= $objDom->getElementsByTagName('MensagemRetorno')->item(1);
+				$MensagemRetornoPagamento					= $nodeMensagemRetornoPagamento->nodeValue;
+
+				$nodeMensagemRetornoPagamento			= $objDom->getElementsByTagName('MensagemRetorno')->item(0);
 				$MensagemRetorno									= $nodeMensagemRetornoPagamento->nodeValue;
 
-
 				// Resgata os dados do pedido
-				//## nodeCodigoPedido										= $objDom->getElementsByTagName('Numero')->item(0);
+				$nodeCodigoPedido										= $objDom->getElementsByTagName('Numero')->item(0);
 				$Numero														= $nodeCodigoPedido->nodeValue;
 
-				//## nodeValorTotal 											= $objDom->getElementsByTagName('ValorTotal')->item(0);
+				$nodeValorTotal 											= $objDom->getElementsByTagName('ValorTotal')->item(0);
 				$ValorTotal													= $nodeValorTotal->nodeValue;
 
 				// Monta os dados de resposta para o componente AEC
+				// Se foi usado cartao de credito a resposta eh definitiva
 				$response													= array();
 				$response['invoice']										= utf8_decode($Numero);
+
+				if (strcmp($Modulo, 'CartaoCredito') == 0 && strcmp($Processado, 'true') == 0) {
+						$response['valid']								= 1;
+						$response['responsestring']				= 'Processado: ' . utf8_decode($Processado) .  'Mensagem de retorno: ' . utf8_decode($MensagemRetornoPagamento);
+						$response['amount_paid'] 					= $ValorTotal;
+				}
+				// Se foi boleto devemos esperar a compensacao
+				if (strcmp($Modulo, 'Boleto') == 0 && strcmp($Processado, 'true') == 0 && strcmp($MensagemRetornoPagamento, 'Boleto emitido.') == 0) {
+						$response['responsestring']				= 	'Warning: (' . utf8_decode($CodRetornoConsulta) . ') ' . utf8_decode($MensagemRetornoPagamento);
+						$response['valid']								= 0;
+						$response['pending']							= 1;
+						$response['pending_reason']				= utf8_decode(_PENDING_REASON_WAITING_RESPONSE);
+						/* Troubleshooting purpose
+						$myFile = "/var/www/hlbog/desenvolvimento/logs/consulta.xml";
+						$fh = fopen($myFile, 'w') or die("can't open file");
+						fwrite($fh, $XMLresposta);
+						fclose($fh);
+						*/
+				}
+			} else {		
 				$response['valid']										= true;
 				$response['responsestring']						= 'Processado: ' . utf8_decode($Processado) .  'Mensagem de retorno: ' . utf8_decode($MensagemRetorno);
 				$response['amount_paid'] 							= $ValorTotal;
 			} else {
-
 				// Monta os dados de resposta para o componente AEC
-				$response['responsestring']						= 	'Erro: (' . utf8_decode($CodRetornoConsulta) . ') ' . utf8_decode($MensagemRetornoConsulta);
-				$response['valid']										= false;
-				$response['pending']									= true;
+				$response['responsestring']								= 	'Erro: (' . utf8_decode($CodRetornoConsulta) . ') ' . utf8_decode($MensagemRetornoConsulta);
+				$response['valid']												= 0;
+				$response['pending']											= 1;
 				if ($CodRetornoConsulta == '12' || $CodRetornoConsulta == '13') {
-						$response['pending_reason']				= utf8_decode($MensagemRetornoConsulta);
+						// 12 -> Transacao ainda nao processada
+						// 13 -> Transacao em processamento
+						$response['pending_reason']						= utf8_decode(_PENDING_REASON_WAITING_RESPONSE);
 				}
 			}
-
 		} else {
-
 		    // Monta os dados de resposta para o componente AEC
 		    $response['responsestring']							= 	'Erro: ID da transação não informado.';
-			$response['valid']											= false;
-			$response['pending']										= true;
+			$response['valid']											= 0	;
+			$response['pending']										= 1;
 			$response['pending_reason']							= $response['responsestring'];
 		}
-
 		return $response;
 	}
 
+	function invoiceCreationAction( $objInvoice )
+	{
+	/* para usar depois
+		$this->addParams( array( 'creator_ip' => $_SERVER['REMOTE_ADDR'] ), 'params', false );
+
+		$this->storeload();
+	*/
+	}
 }
 
 ?>
