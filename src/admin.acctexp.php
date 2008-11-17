@@ -1066,7 +1066,18 @@ function editUser(  $option, $userid, $subscriptionid, $task )
 
 	$lists['assignto_plan'] = mosHTML::selectList( $available_plans, 'assignto_plan', 'size="5"', 'value', 'text', 0 );
 
-	HTML_AcctExp::userForm( $option, $metaUser, $invoices, $lists, $task );
+	$mi = array();
+
+	$userMIs = $metaUser->getUserMIs();
+
+	$mi['user'] = array();
+	foreach ( $userMIs as $m ) {
+		$mi['user'][] = array( 'name' => $mi->info['name'] . ' - ' . $mi->name,
+								'info' => $mi->admin_info( $metaUser->userid )
+							);
+	}
+
+	HTML_AcctExp::userForm( $option, $metaUser, $invoices, $mi, $lists, $task );
 }
 
 function saveUser( $option, $apply=0 )

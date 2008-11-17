@@ -299,8 +299,8 @@ class processor_ccbill extends POSTprocessor
 
 						$query = 'SELECT subscr_id'
 						. ' FROM #__acctexp_invoices'
-						. ' WHERE invoice_number = \'' . $info[4] . '\''
-						. ' OR secondary_ident = \'' . $info[4] . '\''
+						. ' WHERE invoice_number = \'' . $info[2] . '\''
+						. ' OR secondary_ident = \'' . $info[2] . '\''
 						;
 						$database->setQuery( $query );
 						$subscription_id = $database->loadResult();
