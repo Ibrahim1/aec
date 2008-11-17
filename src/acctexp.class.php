@@ -5797,8 +5797,11 @@ class InvoiceFactory
 				}
 			} else {
 				if ( !in_array( $litem['id'], $ps ) ) {
-					$ps[] = $litem['id'];
-					$plans[] = $litem;
+
+					if ( ItemGroupHandler::checkParentRestrictions( $litem['plan'], 'item', $this->metaUser ) ) {
+						$ps[] = $litem['id'];
+						$plans[] = $litem;
+					}
 				}
 			}
 		}
