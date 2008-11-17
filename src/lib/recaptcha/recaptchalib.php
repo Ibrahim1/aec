@@ -78,7 +78,6 @@ function _recaptcha_http_post($host, $path, $data, $port = 80) {
 
         $response = '';
 
-        /*
         if( false == ( $fs = @fsockopen($host, $port, $errno, $errstr, 10) ) ) {
                 die ('Could not open socket');
         }
@@ -88,10 +87,6 @@ function _recaptcha_http_post($host, $path, $data, $port = 80) {
         while ( !feof($fs) )
                 $response .= fgets($fs, 1160); // One TCP-IP packet
         fclose($fs);
-
-		*/
-
-		$response = CAPTCHAdoTheHttp($host, $path, $port, $req);
 
         if( false == $response ) {
         	$response = CAPTCHAdoTheCurl( $host.$path, $port, $req);
@@ -107,47 +102,45 @@ function _recaptcha_http_post($host, $path, $data, $port = 80) {
 }
 
 
-	function CAPTCHAdoTheCurl( $url, $port, $req )
-	{
-		$ch = curl_init();
-		curl_setopt( $ch, CURLOPT_VERBOSE, 1 );
-		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER,	FALSE );
-		curl_setopt( $ch, CURLOPT_URL,				$url );
-		curl_setopt( $ch, CURLOPT_POST,				1 );
-		curl_setopt( $ch, CURLOPT_POSTFIELDS,		$req );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER,	1 );
-		curl_setopt( $ch, CURLOPT_TIMEOUT,			120 );
-		$fp = curl_exec( $ch );
-		curl_close( $ch );
+function CAPTCHAdoTheCurl( $url, $port, $req )
+{
+	$ch = curl_init();
+	curl_setopt( $ch, CURLOPT_VERBOSE, 1 );
+	curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER,	FALSE );
+	curl_setopt( $ch, CURLOPT_URL,				$url );
+	curl_setopt( $ch, CURLOPT_POST,				1 );
+	curl_setopt( $ch, CURLOPT_POSTFIELDS,		$req );
+	curl_setopt( $ch, CURLOPT_RETURNTRANSFER,	1 );
+	curl_setopt( $ch, CURLOPT_TIMEOUT,			120 );
+	$fp = curl_exec( $ch );
+	curl_close( $ch );
 
-		return $fp;
-	}
+	return $fp;
+}
 
-	function CAPTCHAdoTheHttp( $host, $path, $port, $req )
-	{
-		$header  = ''
-		. 'POST ' . $path . ' HTTP/1.0' . "\r\n"
-		. 'Host: ' . $host  . '' . "\r\n"
-		. 'Content-Type: application/x-www-form-urlencoded;' . "\r\n"
-		. 'Content-Length: ' . strlen($req) . "\r\n"
-		. 'User-Agent: reCAPTCHA/PHP' . "\r\n"
-		. "\r\n"
-		;
-		$fp = fsockopen( $host, $port, $errno, $errstr, 10 );
+function CAPTCHAdoTheHttp( $host, $path, $port, $req )
+{
+	$header  = ''
+	. 'POST ' . $path . ' HTTP/1.0' . "\r\n"
+	. 'Host: ' . $host  . '' . "\r\n"
+	. 'Content-Type: application/x-www-form-urlencoded;' . "\r\n"
+	. 'Content-Length: ' . strlen($req) . "\r\n"
+	. 'User-Agent: reCAPTCHA/PHP' . "\r\n"
+	. "\r\n"
+	;
+	$fp = fsockopen( $host, $port, $errno, $errstr, 10 );
 
-		if ( !$fp ) {
-			$res = false;
-		} else {
-			fwrite( $fp, $header . $req );
-			while ( !feof( $fp ) ) {
-				$res = fgets( $fp, 1160 );
-			}
-			fclose( $fp );
+	if ( !$fp ) {
+		$res = false;
+	} else {
+		fwrite( $fp, $header . $req );
+		while ( !feof( $fp ) ) {
+			$res = fgets( $fp, 1160 );
 		}
-		return $res;
+		fclose( $fp );
 	}
-
-
+	return $res;
+}
 
 /**
  * Gets the challenge HTML (javascript and non-javascript version).
@@ -178,9 +171,9 @@ function recaptcha_get_html ($pubkey, $error = null, $use_ssl = false)
         return '<script type="text/javascript" src="'. $server . '/challenge?k=' . $pubkey . $errorpart . '"></script>
 
 	<noscript>
-  		<iframe src="'. $server . '/noscript?k=' . $pubkey . $errorpart . '" height="300" width="500" frameborder="0"></iframe><br>
+  		<iframe src="'. $server . '/noscript?k=' . $pubkey . $errorpart . '" height="300" width="500" frameborder="0"></iframe><br/>
   		<textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
-  		<input type="hidden" name="recaptcha_response_field" value="manual_challenge">
+  		<input type="hidden" name="recaptcha_response_field" value="manual_challenge"/>
 	</noscript>';
 }
 
@@ -202,9 +195,10 @@ class ReCaptchaResponse {
   * @param string $remoteip
   * @param string $challenge
   * @param string $response
+  * @param array $extra_params an array of extra variables to post to the server
   * @return ReCaptchaResponse
   */
-function recaptcha_check_answer ($privkey, $remoteip, $challenge, $response)
+function recaptcha_check_answer ($privkey, $remoteip, $challenge, $response, $extra_params = array())
 {
 	if ($privkey == null || $privkey == '') {
 		die ("To use reCAPTCHA you must get an API key from <a href='http://recaptcha.net/api/getkey'>http://recaptcha.net/api/getkey</a>");
@@ -230,7 +224,7 @@ function recaptcha_check_answer ($privkey, $remoteip, $challenge, $response)
                                                  'remoteip' => $remoteip,
                                                  'challenge' => $challenge,
                                                  'response' => $response
-                                                 )
+                                                 ) + $extra_params
                                           );
 
         $answers = explode ("\n", $response [1]);
