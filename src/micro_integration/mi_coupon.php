@@ -93,15 +93,14 @@ class mi_coupon
 						$cph->coupon->active = 1;
 
 						if ( !empty( $this->settings['create_new_coupons'] ) ) {
-							$ocph->restrictions['max_reuse'] = $this->settings['max_reuse'];
+							$cph->restrictions['max_reuse'] = $this->settings['max_reuse'];
 						} else {
-							$ocph->restrictions['max_reuse'] = 1;
+							$cph->restrictions['max_reuse'] = 1;
 						}
 
 						if ( !empty( $this->settings['bind_subscription'] ) ) {
 							$cph->restrictions['depend_on_subscr_id'] = 1;
 							$cph->restrictions['subscr_id_dependency'] = $request->metaUser->focusSubscription->id;
-							$cph->coupon->setParams( $cph->restrictions, 'restrictions' );
 						}
 
 						$cph->coupon->check();
