@@ -5912,7 +5912,7 @@ class InvoiceFactory
 					global $task;
 
 					$savetask	= $task;
-					$task = 'done';
+					$_REQUEST['task'] = 'done';
 
 					include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.html.php' );
 					include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
