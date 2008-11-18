@@ -59,7 +59,7 @@ class mi_uddeim
 		return;
 	}
 
-	function Settings()
+	function Settings( $params )
 	{
 		global $database;
 
@@ -145,12 +145,12 @@ class mi_uddeim
 		return $hacks;
 	}
 
-	function expiration_action( $request )
+	function expiration_action( $params, $userid, $plan )
 	{
 		global $database;
 
 		$mi_uddeimhandler = new uddeim_restriction( $database );
-		$id = $mi_uddeimhandler->getIDbyUserID( $request->metaUser->userid );
+		$id = $mi_uddeimhandler->getIDbyUserID( $userid );
 		$mi_id = $id ? $id : 0;
 		$mi_uddeimhandler->load( $mi_id );
 
@@ -167,12 +167,12 @@ class mi_uddeim
 		return true;
 	}
 
-	function action( $params, $userid, $plan )
+	function action( $request )
 	{
 		global $database;
 
 		$mi_uddeimhandler = new uddeim_restriction( $database );
-		$id = $mi_uddeimhandler->getIDbyUserID( $userid );
+		$id = $mi_uddeimhandler->getIDbyUserID( $request->metaUser->userid );
 		$mi_id = $id ? $id : 0;
 		$mi_uddeimhandler->load( $mi_id );
 
@@ -181,6 +181,7 @@ class mi_uddeim
 			$mi_uddeimhandler->active = 1;
 		}
 
+		$params = $request->params;
 		if ( $params['set_messages'] ) {
 			$mi_uddeimhandler->setMessages( $params['set_messages'] );
 		} elseif ( $params['add_messages'] ) {
