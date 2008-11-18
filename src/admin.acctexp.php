@@ -1072,8 +1072,8 @@ function editUser(  $option, $userid, $subscriptionid, $task )
 
 	$mi['user'] = array();
 	foreach ( $userMIs as $m ) {
-		$mi['user'][] = array( 'name' => $mi->info['name'] . ' - ' . $mi->name,
-								'info' => $mi->admin_info( $metaUser->userid )
+		$mi['user'][] = array( 'name' => $m->info['name'] . ' - ' . $m->name,
+								'info' => $m->admin_info( $metaUser->userid )
 							);
 	}
 

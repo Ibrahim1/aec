@@ -61,6 +61,37 @@ $eucaInstalldb->dropColifExists( 'auto_check', 'microintegrations' );
 $eucaInstalldb->dropColifExists( 'on_userchange', 'microintegrations' );
 $eucaInstalldb->dropColifExists( 'pre_exp_check', 'microintegrations' );
 
-
 */
+
+// Fixing secondary invoice numbers for CCBill
+$query = 'SELECT id FROM #__acctexp_config_processors WHERE name = \'ccbill\'';
+$database->setQuery( $query );
+
+$ccid = $database->loadResult();
+
+// Checking whether CCBill is installed at all
+if ( $ccid ) {
+	// Get all history entries for CCBill
+	$query = 'SELECT id FROM #__acctexp_log_history WHERE proc_id = \'' . $ccid . '\'';
+	$database->setQuery( $query );
+
+	$list = $database->loadResultArray();
+
+	if ( !empty( $list ) ) {
+		foreach ( $list as $hid ) {
+			$history = new logHistory( $database );
+			$history->load( $hid );
+
+			$params = parameterHandler::decode( stripslashes( $history->response ) );
+
+			// Check for the parameters we need
+			if ( isset( $params['subscription_id'] ) && isset( $params['invoice'] ) ) {
+				$query = 'UPDATE #__acctexp_invoices SET `secondary_ident` = \'' . $params['subscription_id'] . '\' WHERE invoice_number = \'' . $params['invoice'] . '\'';
+				$database->setQuery( $query );
+				$database->query();
+			}
+		}
+	}
+}
+
 ?>

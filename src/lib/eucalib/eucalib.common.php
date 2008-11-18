@@ -740,6 +740,10 @@ class parameterHandler
 
 		$array = array();
 		foreach ( $par as $chunk ) {
+			if ( strpos( $chunk, '=' ) === false ) {
+				continue;
+			}
+
 			$k = explode( '=', $chunk, 2 );
 
 			if ( !empty( $k[0] ) && isset( $k[1] ) ) {
