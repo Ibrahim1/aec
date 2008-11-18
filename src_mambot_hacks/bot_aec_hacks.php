@@ -8,7 +8,7 @@
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
-defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
 if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {
 	include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");
@@ -53,7 +53,7 @@ function planRegistration()
 	global $mosConfig_absolute_path, $option;
 
 	$task = mosGetParam( $_REQUEST, 'task', '' );
-		
+
 	if (($option == 'com_registration' && $task == 'register') || ($option == 'com_comprofiler' && $task == 'registers'))
 	{
 		if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {
@@ -64,7 +64,7 @@ function planRegistration()
 
 			if($planFirst && $usage != 0) $getPlans = true;
 			if(!$planFirst && $usage == 0) $getPlans = true;
-			
+
 			if($getPlans) $_REQUEST['option'] = "com_acctexp";
 		}
 	}
