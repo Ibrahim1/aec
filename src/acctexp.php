@@ -522,7 +522,7 @@ function subscriptionDetails( $option, $sub='' )
 		notAllowed( $option );
 	} else {
 		if ( !empty( $aecConfig->cfg['ssl_profile'] ) && empty( $_SERVER['HTTPS'] ) && !$aecConfig->cfg['override_reqssl'] ) {
-			mosRedirect( AECToolbox::deadsureURL( "index?option=" . $option . "&task=subscriptiondetails", true, false ) );
+			mosRedirect( AECToolbox::deadsureURL( "index.php?option=" . $option . "&task=subscriptiondetails", true, false ) );
 			exit();
 		};
 
