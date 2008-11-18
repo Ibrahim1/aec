@@ -9,7 +9,7 @@
  */
 
 // no direct access
-defined( '_VALID_MOS' ) or die( 'Restricted access' );
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Restricted access' );
 
 global $aecConfig, $database, $mosConfig_absolute_path;
 

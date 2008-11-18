@@ -9,7 +9,7 @@
  */
 
 // Dont allow direct linking
-defined( '_VALID_MOS' ) or die( 'Accesso diretto non acconsentito a questo file.' );
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Accesso diretto non acconsentito a questo file.' );
 
 if( defined( '_AEC_LANG' ) ) {
 	return;

@@ -9,7 +9,7 @@
  */
 
 // Dont allow direct linking
-defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
 class mi_docman
 {
@@ -126,7 +126,7 @@ class mi_docman
 					$used = 0 ;
 				} else {
 					$used = $mi_docmanhandler->used_downloads;
-				}				
+				}
 				$unlimited = $mi_docmanhandler->unlimited_downloads;
 				$message = '<p>'.sprintf(_AEC_MI_DIV1_DOCMAN_USED, $used).'</p>';
 				if ( $unlimited > 0 ) {

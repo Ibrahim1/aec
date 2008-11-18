@@ -1,6 +1,6 @@
 <?php
 // Dont allow direct linking
-defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
 class mi_qmacd {
 
@@ -13,7 +13,7 @@ class mi_qmacd {
 		// field type; name; variable value, description, extra (variable name)
 		if(!isset($params['plans'])) $params['plans']="";
 		if(!isset($params['quotas'])) $params['quotas']="";
-		
+
 		$settings = array();
 		$settings[] = array("inputC", "QMACD DB Host", $params['qmacd_dbhost'], "Enter the DB Server name and port where the QMACD DB is located. ie. 186.43.56.23:2709", "qmacd_dbhost");
 		$settings[] = array("inputC", "QMACD DB User", $params['qmacd_dbuser'], "Enter the Username needed to access the QMACD DB.", "qmacd_dbuser");
@@ -41,7 +41,7 @@ class mi_qmacd {
 			}
 		}
 		$qmacddatabase->debug( $mosConfig_debug );
-	
+
    		$qmacddatabase->setQuery("update users set action='suspend' where uid='".$userid."'");
         $qmacddatabase->query();
    		$qmacddatabase->setQuery("insert into tags (tag) values ('scan users:now ".$userid."')");
@@ -62,10 +62,10 @@ class mi_qmacd {
 			else $plans[$tplans[$pcounter]] = $wq[0];
 			++$pcounter;
 		}
-		
+
 		$database->setQuery("select plan from #__acctexp_subscr where userid='".$userid."'");
 		$newplan=$database->loadResult();
-		
+
 		if(isset($plans[$newplan])){
 			//global $database, $qmacddatabase;
 			if(!method_exists($qmacddatabase,"setQuery")){
@@ -77,7 +77,7 @@ class mi_qmacd {
 				}
 			}
 			$qmacddatabase->debug( $mosConfig_debug );
-		
+
      		$qmacddatabase->setQuery("update users set type='email', hd='".$plans[$newplan]."',level='4', action='create' where uid='".$userid."'");
 	        $qmacddatabase->query();
     		$qmacddatabase->setQuery("insert into tags (tag) values ('scan users:now ".$userid."')");

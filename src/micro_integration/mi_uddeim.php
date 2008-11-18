@@ -9,7 +9,7 @@
  */
 
 // Dont allow direct linking
-defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
 class mi_uddeim
 {
@@ -88,7 +88,7 @@ class mi_uddeim
 					$used = 0 ;
 				} else {
 					$used = $mi_uddeimhandler->used_messages;
-				}				
+				}
 				$unlimited = $mi_uddeimhandler->unlimited_messages;
 				$message = '<p>'.sprintf(_AEC_MI_DIV1_UDDEIM_USED, $used).'</p>';
 				if ( $unlimited > 0 ) {
@@ -189,10 +189,10 @@ class mi_uddeim
 		if ( $params['set_unlimited'] ) {
 			$mi_uddeimhandler->unlimited_messages = true ;
 		}
-		
+
 		$mi_uddeimhandler->check();
 		$mi_uddeimhandler->store();
-		
+
 		return true;
 	}
 }

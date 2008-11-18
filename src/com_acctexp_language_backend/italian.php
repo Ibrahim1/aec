@@ -9,7 +9,7 @@
 */
 
 // Dont allow direct linking
-defined( '_VALID_MOS' ) or die( 'Accesso diretto non acconsentito a questo file.' );
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Accesso diretto non acconsentito a questo file.' );
 
 // mic: NEW 0.12.4
 define( '_AEC_LANGUAGE',						'it' ); // DO NOT CHANGE!!

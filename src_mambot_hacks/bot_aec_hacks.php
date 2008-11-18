@@ -8,10 +8,16 @@
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
+//( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
+
+global $mosConfig_absolute_path;
+
+if ( defined( 'JPATH_SITE' ) ) {
+	$mosConfig_absolute_path = JPATH_SITE;
+}
 
 if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {
-	include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");
+	include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");global $aecConfig;print_r($aecConfig);exit;
 	if( aecJoomla15check() ) {
 //		$_MAMBOTS->registerFunction( 'onAfterStart', 'checkUserSubscription' ); //joomla.php Hack #4
 		$_MAMBOTS->registerFunction( 'onAfterStart', 'planFirst' ); //registration.php Hack #6
@@ -23,7 +29,7 @@ if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.cla
 //Some Micro Integrations rely on receiving a cleartext password for each user. This hack will make sure that the Micro Integrations will be notified
 function notifyMI()
 {
-	global $mosConfig_absolute_path, $option;
+	global $option;
 
 	$task = mosGetParam( $_REQUEST, 'task', '' );
 
@@ -36,56 +42,48 @@ function notifyMI()
 		($option == 'com_comprofiler' && ( strcasecmp($task,'saveUserEdit') == 0 ))
 		)
 	{
-		if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {
-			include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");
-			$username = mosGetParam($_REQUEST, 'username', '');
-			$row = new stdClass();
-			$row->username = $username;
-			$mih = new microIntegrationHandler();
-			$mih->userchange($row, $_POST, 'registration');
-		}
+		$username = mosGetParam($_REQUEST, 'username', '');
+		$row = new stdClass();
+		$row->username = $username;
+		$mih = new microIntegrationHandler();
+		$mih->userchange($row, $_POST, 'registration');
 	}
 }
 
 //This will redirect a registering user to the payment plans after filling out the registration form (and in CB).
 function planRegistration()
 {
-	global $mosConfig_absolute_path, $option;
+	global $option, $aecConfig;
 
 	$task = mosGetParam( $_REQUEST, 'task', '' );
 
 	if (($option == 'com_registration' && $task == 'register') || ($option == 'com_comprofiler' && $task == 'registers'))
 	{
-		if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {
-			$getPlans = false;
+		$getPlans = false;
 
-			$usage = intval(mosGetParam( $_POST, 'usage', '0' ));
-			$planFirst = $aecConfig->cfg['plans_first'];
+		$usage = intval(mosGetParam( $_POST, 'usage', '0' ));
+		$planFirst = $aecConfig->cfg['plans_first'];
 
-			if($planFirst && $usage != 0) $getPlans = true;
-			if(!$planFirst && $usage == 0) $getPlans = true;
+		if($planFirst && $usage != 0) $getPlans = true;
+		if(!$planFirst && $usage == 0) $getPlans = true;
 
-			if($getPlans) $_REQUEST['option'] = "com_acctexp";
-		}
+		if($getPlans) $_REQUEST['option'] = "com_acctexp";
 	}
 }
 
 //This will make the Plans First feature possible - you need to set the switch for this in the settings as well!
 function planFirst()
 {
-	global $mosConfig_absolute_path, $option;
-
+	global $option, $aecConfig;
+print_r($aecConfig);exit;
 	$task = mosGetParam( $_REQUEST, 'task', '' );
 
 	if (($option == 'com_registration' && $task == 'register') || ($option == 'com_comprofiler' && $task == 'registers'))
 	{
-		if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {
-			include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");
-			if($aecConfig->cfg['plans_first']){
-				$usage = intval(mosGetParam($_POST,'usage','0'));
-				if($usage == 0 || $option != 'com_comprofiler')
-					mosRedirect( sefRelToAbs( 'index.php?option=com_acctexp&task=subscribe' ) );
-			}
+		if($aecConfig->cfg['plans_first']){
+			$usage = intval(mosGetParam($_POST,'usage','0'));
+			if($usage == 0 || $option != 'com_comprofiler')
+				mosRedirect( sefRelToAbs( 'index.php?option=com_acctexp&task=subscribe' ) );
 		}
 	}
 }
@@ -93,25 +91,22 @@ function planFirst()
 //This will make sure a user has a subscription in order to log in - Joomla hack#4
 function checkUserSubscription()
 {
-	global $mosConfig_absolute_path, $option;
+	global $option;
 
 	$task = mosGetParam( $_REQUEST, 'task', '' );
 	$submit = mosGetParam($_POST,'submit', '');
 
 	if ($option == 'login' ||
          ($option == 'com_comprofiler' && $task == 'login') &&
-         ($submit == 'Login')) {
-		if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {
-			include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");
+         ($submit == 'Login'))
+	{
+		$username = mosGetParam($_POST,'username', '');
+		$verification = AECToolbox::VerifyUser( $username );
 
-			$username = mosGetParam($_POST,'username', '');
-			$verification = AECToolbox::VerifyUser( $username );
-
-			if ( $verification !== true ) {
-				define( 'AEC_AUTH_ERROR_MSG', $verification );
-				define( 'AEC_AUTH_ERROR_UNAME', $username );
-				onLoginFailure();
-			}
+		if ( $verification !== true ) {
+			define( 'AEC_AUTH_ERROR_MSG', $verification );
+			define( 'AEC_AUTH_ERROR_UNAME', $username );
+			onLoginFailure();
 		}
 	}
 }

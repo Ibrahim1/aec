@@ -9,7 +9,7 @@
  */
 
 // Dont allow direct linking
-defined( '_VALID_MOS' ) or die( 'Not Really ....' );
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Not Really ....' );
 
 define( '_AEC_LANG_PROCESSOR', 1 );
 

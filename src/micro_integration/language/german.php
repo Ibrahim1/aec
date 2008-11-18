@@ -9,7 +9,7 @@
  */
 
 // Dont allow direct linking
-defined( '_VALID_MOS' ) or die( 'Not really ....' );
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Not really ....' );
 
 // Load Identifier
 define( '_AEC_LANG_INCLUDED_MI', 1 );

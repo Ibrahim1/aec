@@ -9,7 +9,7 @@
 */
 
 // Dont allow direct linking
-defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
 // mic: NEW 0.12.4
 define( '_AEC_LANGUAGE',						'br' ); // DO NOT CHANGE!!
