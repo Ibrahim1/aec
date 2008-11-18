@@ -582,16 +582,11 @@ class Payment_HTML
 	{
 		global $aecConfig;
 
+		$html_code = '';
 		$html_code .= '<div class="' . $class . '">' . "\n"
 		. '<form action="' . AECToolbox::deadsureURL( '/index.php?option=' . $option . '&amp;task=' . $task, $aecConfig->cfg['ssl_signup'] ) . '"'
 		. ' method="post">' . "\n"
-		. '<input type="image" src="' . $urlbutton;
-
-		if ( !empty( $pp->info['statement'] ) ) {
-			$html_code .= '" border="0" name="submit" alt="' . $pp->info['statement'] . '" />' . "\n";
-		} else {
-			$html_code .= '" border="0" name="submit" alt="' . $pp->processor_name . '" />' . "\n";
-		}
+		. '<input type="image" src="' . $urlbutton . '" border="0" name="submit" alt="submit" />';
 
 		$hidden['option']		= $option;
 		$hidden['task']			= $task;

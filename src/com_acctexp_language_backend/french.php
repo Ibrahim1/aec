@@ -144,7 +144,6 @@ define( '_AEC_HACKS_COMMIT',                    'fusionner' );
 define( '_AEC_HACKS_FILE',                        'Fichier' );
 define( '_AEC_HACKS_LOOKS_FOR',                    'Le hack va rechercher cet' );
 define( '_AEC_HACKS_REPLACE_WITH',                '... et le remplace par' );
-define( '_AEC_HACKS_LEGACY',					'Legacy Hack' );
 
 define( '_AEC_HACKS_NOTICE',                    'AVIS IMPORTANT' );
 define( '_AEC_HACKS_NOTICE_DESC',                'Pour des raisons de s&eacute;curit&eacute;, vous devez appliquer les hacks aux fichiers core de Joomla. Pour ce faire, il suffit de cliquer sur le lien &quot;hacker le fichier maintenant&quot; correspondant aux fichiers. Vous pouvez aussi ajouter un lien &agrave; votre menu utilisateur, afin qu&amp;acute;ils puissent afficher l&amp;acute;&eacute;tat de leur abonnement.' );

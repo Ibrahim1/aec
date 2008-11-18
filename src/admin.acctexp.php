@@ -2567,7 +2567,7 @@ function editSubscriptionPlan( $id, $option )
 
 	// params and their type values
 	$params['active']					= array( 'list_yesno', 1 );
-	$params['visible']					= array( 'list_yesno', 0 );
+	$params['visible']					= array( 'list_yesno', 1 );
 
 	$params['name']						= array( 'inputC', '' );
 	$params['desc']						= array( 'editor', '' );

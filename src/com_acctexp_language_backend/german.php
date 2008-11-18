@@ -144,7 +144,6 @@ define( '_AEC_HACKS_COMMIT',					'Jetzt durchf&uuml;hren' );
 define( '_AEC_HACKS_FILE',						'Datei' );
 define( '_AEC_HACKS_LOOKS_FOR',					'Diese &Auml;nderung sucht nach' );
 define( '_AEC_HACKS_REPLACE_WITH',				'... und ersetzt es mit' );
-define( '_AEC_HACKS_LEGACY',					'Legacy Hack' );
 
 define( '_AEC_HACKS_NOTICE',					'Wichtiger Hinweis' );
 define( '_AEC_HACKS_NOTICE_DESC',				'Aus Sicherheitsgr&uuml;nden und damit AEC funktionieren kann, sind nachfolgende &Auml;nderungen notwendig.<br />Diese k&ouml;nnen entweder automatisch durchgef&uuml;hrt werden (auf den Best&auml;tigungslink klicken) oder manuell (bearbeiten der php.Dateien).<br />Damit die Benutzer zu pers&ouml;nlichen Abo&uuml;bericht kommen, muss auch die Benutzerlink&auml;nderung durchgef&uuml;hrt werden.' );

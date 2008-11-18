@@ -3590,6 +3590,8 @@ class aecHTML
 		$row	= $this->rows[$name];
 		$type	= $row[0];
 
+		$return = '';
+
 		if ( isset( $row[2] ) ) {
 			if ( isset( $row[3] ) ) {
 				$value = $row[3];
@@ -8892,7 +8894,6 @@ class AECToolbox
 			$name 		= $row->name;
 			$email 		= $row->email;
 			$username 	= $row->username;
-			$pst 		= print_r($_POST , result);
 
 			$subject 	= sprintf ( _AEC_SEND_SUB, $name, $mainframe->getCfg( 'sitename' ) );
 			$subject 	= html_entity_decode( $subject, ENT_QUOTES );
