@@ -2668,21 +2668,21 @@ class processor extends serialParamDBTable
 
 		$url_info = parse_url( $purl );
 
-        if ( empty( $url_info ) ) {
-            return false;
-        }
+				if ( empty( $url_info ) ) {
+						return false;
+				}
 
-        switch ( $url_info['scheme'] ) {
-            case 'https':
-                $scheme = 'ssl://';
-                $port = 443;
-                break;
-            case 'http':
-            default:
-                $scheme = '';
-                $port = 80;
-                break;
-        }
+				switch ( $url_info['scheme'] ) {
+						case 'https':
+								$scheme = 'ssl://';
+								$port = 443;
+								break;
+						case 'http':
+						default:
+								$scheme = '';
+								$port = 80;
+								break;
+				}
 
 		$url = $scheme . $url_info['host'];
 
@@ -8523,6 +8523,24 @@ class AECToolbox
 		return $aecUser;
 	}
 
+	function in_ip_range( $ip_one, $ip_two=false )
+	{
+		if ( $ip_two === false ) {
+			if ( $ip_one == $_SERVER['REMOTE_ADDR'] ) {
+				$ip = true;
+			} else {
+				$ip = false;
+			}
+		} else {
+			if ( ( ip2long( $ip_one ) <= ip2long( $_SERVER['REMOTE_ADDR'] ) ) && ( ip2long( $ip_two ) >= ip2long( $_SERVER['REMOTE_ADDR'] ) ) ) {
+				$ip = true;
+			} else {
+				$ip = false;
+			}
+		}
+		return $ip;
+	}
+
 	/**
 	 * Return a URL based on the sef and user settings
 	 * @parameter url
@@ -12135,63 +12153,63 @@ class PluginHandler
 {
 	function PluginHandler() { }
 
-    function &getPlugin($type, $plugin = null)
-    {
-        $result = array();
+		function &getPlugin($type, $plugin = null)
+		{
+				$result = array();
 
-        $plugins = PluginHandler::_load();
+				$plugins = PluginHandler::_load();
 
-        $total = count($plugins);
-        for($i = 0; $i < $total; $i++)
-        {
-            if(is_null($plugin))
-            {
-                if($plugins[$i]->type == $type) {
-                    $result[] = $plugins[$i];
-                }
-            }
-            else
-            {
-                if($plugins[$i]->type == $type && $plugins[$i]->name == $plugin) {
-                    $result = $plugins[$i];
-                    break;
-                }
-            }
+				$total = count($plugins);
+				for($i = 0; $i < $total; $i++)
+				{
+						if(is_null($plugin))
+						{
+								if($plugins[$i]->type == $type) {
+										$result[] = $plugins[$i];
+								}
+						}
+						else
+						{
+								if($plugins[$i]->type == $type && $plugins[$i]->name == $plugin) {
+										$result = $plugins[$i];
+										break;
+								}
+						}
 
-        }
+				}
 
-        return $result;
+				return $result;
 	}
 
 	function _load()
 	{
-        $db        =& JFactory::getDBO();
-        $user    =& JFactory::getUser();
+				$db        =& JFactory::getDBO();
+				$user    =& JFactory::getUser();
 
-        if (isset($user))
-        {
-            $aid = $user->get('aid', 0);
+				if (isset($user))
+				{
+						$aid = $user->get('aid', 0);
 
-            $query = 'SELECT folder AS type, element AS name, params'
-                . ' FROM #__plugins'
-                . ' WHERE access <= ' . (int) $aid
-                . ' ORDER BY ordering';
-        }
-        else
-        {
-            $query = 'SELECT folder AS type, element AS name, params'
-                . ' FROM #__plugins'
-                . ' ORDER BY ordering';
-        }
+						$query = 'SELECT folder AS type, element AS name, params'
+								. ' FROM #__plugins'
+								. ' WHERE access <= ' . (int) $aid
+								. ' ORDER BY ordering';
+				}
+				else
+				{
+						$query = 'SELECT folder AS type, element AS name, params'
+								. ' FROM #__plugins'
+								. ' ORDER BY ordering';
+				}
 
-        $db->setQuery( $query );
+				$db->setQuery( $query );
 
-        if (!($plugins = $db->loadObjectList())) {
-            JError::raiseWarning( 'SOME_ERROR_CODE', "Error loading Plugins: " . $db->getErrorMsg());
-            return false;
-        }
+				if (!($plugins = $db->loadObjectList())) {
+						JError::raiseWarning( 'SOME_ERROR_CODE', "Error loading Plugins: " . $db->getErrorMsg());
+						return false;
+				}
 
-        return $plugins;
+				return $plugins;
 	}
 }
 ?>

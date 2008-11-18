@@ -112,6 +112,12 @@ class processor_verotel extends URLprocessor
 
 	function validateNotification( $response, $post, $invoice )
 	{
+		if ( !AECToolbox::in_ip_range( '195.20.32.0', '﻿195.20.32.128' ) ) {
+			$response['error'] = 1;
+			$response['errormsg'] = "Wrong IP tried to send notification: " . $_SERVER["REMOTE_ADDR"];
+			return $response;
+		}
+
 		$res = explode(":", aecGetParam('vercode'));
 
 		if( $this->settings['secretcode'] == $res[2] ) {
