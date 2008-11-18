@@ -203,7 +203,7 @@ class processor_authorize_cim extends XMLprocessor
 		$var = $this->ppProfileSelect( array(), $ppParams, true, $ppParams );
 		$var2 = $this->checkoutform( $request, $cim );
 
-		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=subscriptiondetails', true ) . '" method="post">' . "\n";
+		$return = '<form action="' . AECToolbox::deadsureURL( 'index?option=com_acctexp&amp;task=subscriptiondetails', true ) . '" method="post">' . "\n";
 		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
 		$return .= $this->getParamsHTML( $var2 ) . '<br /><br />';
 		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
@@ -280,7 +280,7 @@ class processor_authorize_cim extends XMLprocessor
 		$var = $this->shipProfileSelect( array(), $ppParams, true );
 		$var2 = $this->checkoutform( $request, $cim, true, $ppParams );
 
-		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=authorize_cim_shipping_details', true ) . '" method="post">' . "\n";
+		$return = '<form action="' . AECToolbox::deadsureURL( 'index?option=com_acctexp&amp;task=authorize_cim_shipping_details', true ) . '" method="post">' . "\n";
 		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
 		$return .= $this->getParamsHTML( $var2 ) . '<br /><br />';
 		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
@@ -382,7 +382,7 @@ class processor_authorize_cim extends XMLprocessor
 
 		// Actual form, with ProfileID reference numbers as options
 
-		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=checkout', true ) . '" method="post">' . "\n";
+		$return = '<form action="' . AECToolbox::deadsureURL( 'index?option=com_acctexp&amp;task=checkout', true ) . '" method="post">' . "\n";
 
 		if ( !empty( $ppParams ) ) {
 			$cim = $this->loadCIM( $ppParams );

@@ -93,7 +93,7 @@ class processor_epsnetpay extends POSTprocessor
 	{
 		global $mosConfig_live_site;
 
-		$sapPopStsURL			= $mosConfig_live_site . "/index.php";
+		$sapPopStsURL			= $mosConfig_live_site . "index";
 		$var['sapInfoVersion']	= "3"; //Current Version
 		$var['language']		= "DE"; // Must be german
 		$var['sapPopRequestor']	= $this->settings['merchantid_' . $request->int_var['params']['bank_selection']]; // Marchant ID
@@ -113,8 +113,8 @@ class processor_epsnetpay extends POSTprocessor
 			$epsparams .= $StsPar[$i][0] . $StsPar[$i][1];
 		}
 
-		$var['sapPopOkUrl']		= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=thanks");
-		$var['sapPopNokUrl']	= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=cancel");
+		$var['sapPopOkUrl']		= AECToolbox::deadsureURL("index?option=com_acctexp&amp;task=thanks");
+		$var['sapPopNokUrl']	= AECToolbox::deadsureURL("index?option=com_acctexp&amp;task=cancel");
 		$sapUgawwhg				= "EUR"; // HAS TO BE EUR !!
 		$var['sapUgawwhg']		= $sapUgawwhg;
 		$sapUkddaten			= $request->metaUser->cmsUser->id;
@@ -232,7 +232,7 @@ class processor_epsnetpay extends POSTprocessor
 			$epsparams .= $StsPar[$i][0] . $StsPar[$i][1];
 		}
 
-		$sapPopStsURL = $mosConfig_live_site . "/index.php";
+		$sapPopStsURL = $mosConfig_live_site . "index";
 
 		$sapPopStsDurchfDatum = isset($post['sapPopStsDurchfDatum']) ? @$post['sapPopStsDurchfDatum'] : "";
 

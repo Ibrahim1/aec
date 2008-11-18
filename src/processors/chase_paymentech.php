@@ -145,7 +145,7 @@ class processor_chase_paymentech extends PROFILEprocessor
 		$var = $this->ppProfileSelect( array(), $ppParams, true, $ppParams );
 		$var2 = $this->checkoutform( $request );
 
-		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=subscriptiondetails', true ) . '" method="post">' . "\n";
+		$return = '<form action="' . AECToolbox::deadsureURL( 'index?option=com_acctexp&amp;task=subscriptiondetails', true ) . '" method="post">' . "\n";
 		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
 		$return .= $this->getParamsHTML( $var2 ) . '<br /><br />';
 		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
@@ -235,7 +235,7 @@ class processor_chase_paymentech extends PROFILEprocessor
 	{
 		global $aecConfig;
 
-		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=checkout', true ) . '" method="post">' . "\n";
+		$return = '<form action="' . AECToolbox::deadsureURL( 'index?option=com_acctexp&amp;task=checkout', true ) . '" method="post">' . "\n";
 
 		if ( $this->settings['recurring'] ) {
 			$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );

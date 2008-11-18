@@ -100,10 +100,10 @@ class processor_ideal_basic extends URLprocessor
 		$shasign = sha1($shastring);
 
 		$var['hash']				= $shasign;
-		$var['urlSuccess']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=thanks' );
-		$var['urlCancel']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
-		$var['urlError']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
-		$var['urlService']			= AECToolbox::deadsureURL( '/index.php' );
+		$var['urlSuccess']			= AECToolbox::deadsureURL( 'index?option=com_acctexp&amp;task=thanks' );
+		$var['urlCancel']			= AECToolbox::deadsureURL( 'index?option=com_acctexp&amp;task=cancel' );
+		$var['urlError']			= AECToolbox::deadsureURL( 'index?option=com_acctexp&amp;task=cancel' );
+		$var['urlService']			= AECToolbox::deadsureURL( 'index' );
 
 		return $var;
 	}

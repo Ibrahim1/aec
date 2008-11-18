@@ -169,9 +169,9 @@ class processor_ipayment_silent extends XMLprocessor
 
 		$a['redirect_action']	= 'POST';
 		$a['redirect_url']		= str_replace( '&amp;', '&', $request->int_var['return_url'] );
-		$a['silent_error_url']	= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=cancel', false, true );
+		$a['silent_error_url']	= AECToolbox::deadsureURL( 'index?option=com_acctexp&task=cancel', false, true );
 
-		$a['hidden_trigger_url']		= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&task=ipayment_silentnotification', false, true );
+		$a['hidden_trigger_url']		= AECToolbox::deadsureURL( 'index?option=com_acctexp&task=ipayment_silentnotification', false, true );
 		$a['noparams_on_redirect_url']	= 1;
 		$a['noparams_on_error_url']		= 1;
 

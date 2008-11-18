@@ -140,7 +140,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 		$var = $this->checkoutform( $request, $vcontent, $updated );
 
-		$return = '<form action="' . AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=paypal_wpp_details', true ) . '" method="post">' . "\n";
+		$return = '<form action="' . AECToolbox::deadsureURL( 'index?option=com_acctexp&amp;task=paypal_wpp_details', true ) . '" method="post">' . "\n";
 		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
 		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
 		$return .= '<input type="hidden" name="task" value="subscriptiondetails" />' . "\n";
@@ -219,7 +219,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$var['state']				= $request->int_var['params']['billState'];
 		$var['zip']					= $request->int_var['params']['billZip'];
 		$var['countrycode']			= $request->int_var['params']['billCountry'];
-		$var['NotifyUrl']			= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=paypal_wppnotification' );
+		$var['NotifyUrl']			= AECToolbox::deadsureURL( 'index?option=com_acctexp&amp;task=paypal_wppnotification' );
 		$var['desc']				= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
 		$var['InvNum']				= $request->int_var['invoice'];;
 

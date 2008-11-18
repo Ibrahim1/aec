@@ -61,7 +61,7 @@ class processor_netpay extends POSTprocessor
 		global $mosConfig_live_site;
 
 		//URL returned by eWay
-	//	$return_url = AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=ewaynotification");
+	//	$return_url = AECToolbox::deadsureURL("index?option=com_acctexp&amp;task=ewaynotification");
 
 		$var = array(	"post_url" => "https://www.onlinepayment.com.my/NBepay/pay/test438/?",
 						"orderid" => $int_var['invoice'], //The invoice number

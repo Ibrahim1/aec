@@ -71,7 +71,7 @@ class processor_allopass extends POSTprocessor
 	{
 		global $mosConfig_live_site;
 
-		$var['post_url']      			= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=allopassnotification");
+		$var['post_url']      			= AECToolbox::deadsureURL("index?option=com_acctexp&amp;task=allopassnotification");
 		$var['ssl_test_mode']			= $this->settings['testmode'] ? "true" : "false";
 
 		$var['params_array']['CODE0']	= array("inputA", "CODE0", "Code", $request->int_var['params']['CODE0']);
@@ -90,7 +90,7 @@ class processor_allopass extends POSTprocessor
 		$var['ssl_salestax']			= "0";
 		$var['ssl_result_format']		= "HTML";
 		$var['ssl_receipt_link_method']	= "POST";
-		$var['ssl_receipt_link_url']	= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=allopassnotification");
+		$var['ssl_receipt_link_url']	= AECToolbox::deadsureURL("index?option=com_acctexp&amp;task=allopassnotification");
 		$var['ssl_receipt_link_text']	= "Continue";
 		$var['ssl_amount']				= $request->int_var['amount'];
 

@@ -93,7 +93,7 @@ class processor_payer extends POSTprocessor
 	{
 		global $mosConfig_live_site, $mosConfig_absolute_path, $my;
 
-		$baseurl		= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=payernotification', false, true );
+		$baseurl		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=payernotification', false, true );
 		$Auth_url		= $baseurl . '&action=authenticate';
 		$Settle_url		= $baseurl . '&action=settle';
 		$Success_url	= $request->int_var['return_url'];

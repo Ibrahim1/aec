@@ -73,7 +73,7 @@ class processor_alertpay extends POSTprocessor
 		$var['ap_merchant']		= $this->settings['merchant'];
 		$var['ap_itemname']		= $request->int_var['invoice'];
 		$var['ap_currency']		= $this->settings['currency'];
-		$var['ap_returnurl']	= AECToolbox::deadsureURL( "/index.php?option=com_acctexp&amp;task=thanks" );
+		$var['ap_returnurl']	= AECToolbox::deadsureURL( "index?option=com_acctexp&amp;task=thanks" );
 		$var['ap_quantity']		= '';
 		$var['ap_description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, $mosConfig_live_site, $request->metaUser->cmsUser->name, $request->metaUser->cmsUser->username );
 
@@ -84,7 +84,7 @@ class processor_alertpay extends POSTprocessor
 			$var['ap_amount'] 	= $request->int_var['amount'];
 		}
 
-		$var['ap_cancelurl']	= AECToolbox::deadsureURL( "/index.php?option=com_acctexp&amp;task=cancel" );
+		$var['ap_cancelurl']	= AECToolbox::deadsureURL( "index?option=com_acctexp&amp;task=cancel" );
 
 		$var['apc_1']			= $request->metaUser->cmsUser->id;
 		$var['apc_2']			= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );

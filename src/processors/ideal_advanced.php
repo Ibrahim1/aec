@@ -99,7 +99,7 @@ class processor_ideal_advanced extends XMLprocessor
 		$data->setAmount( $request->int_var['amount']*100 );
 		$data->setCurrency( $request->int_var['currency'] );
 		$data->setEntranceCode( $this->settings['entrance_code'] );
-		$data->setMerchantReturnURL( AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=ideal_advancednotification' ) );
+		$data->setMerchantReturnURL( AECToolbox::deadsureURL( 'index?option=com_acctexp&amp;task=ideal_advancednotification' ) );
 
 		return $data;
 	}

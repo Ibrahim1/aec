@@ -66,10 +66,10 @@ class processor_moneyproxy extends POSTprocessor
 
 		$var['merchant_id']				= $this->settings['merchant_id'];
 		$var['amount']					= $request->int_var['amount'];
-		$var['status_url']				= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=moneyproxynotification' );
+		$var['status_url']				= AECToolbox::deadsureURL( 'index?option=com_acctexp&amp;task=moneyproxynotification' );
 		$var['return_success_url']		= $request->int_var['return_url'];
 		$var['return_success_method']	= 'LINK';
-		$var['return_failure_url']		= AECToolbox::deadsureURL( '/index.php?option=com_acctexp&amp;task=cancel' );
+		$var['return_failure_url']		= AECToolbox::deadsureURL( 'index?option=com_acctexp&amp;task=cancel' );
 		$var['return_failure_method']	= 'LINK';
 		$var['payment_id']				= substr( AECToolbox::rewriteEngine( $this->settings['payment_id'], $request->metaUser, $request->new_subscription, $request->invoice ), 0, 10 );
 		$var['force_client_receipt']	= $this->settings['force_client_receipt'];

@@ -70,7 +70,7 @@ class processor_virtualmerchant extends POSTprocessor
 		$var['ssl_salestax']			= "0";
 		$var['ssl_result_format']		= "HTML";
 		$var['ssl_receipt_link_method']	= "POST";
-		$var['ssl_receipt_link_url']	= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=virtualmerchantnotification");
+		$var['ssl_receipt_link_url']	= AECToolbox::deadsureURL("index.php?option=com_acctexp&amp;task=virtualmerchantnotification");
 		$var['ssl_receipt_link_text']	= "Continue";
 		$var['ssl_amount']				= $request->int_var['amount'];
 		$var['currency_code']			= $this->settings['currency_code'];
