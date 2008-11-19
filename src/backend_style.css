@@ -404,6 +404,10 @@ float: right;
 margin-top: -100px;
 }
 
+td.aec_bigcell {
+overflow-x: auto;
+}
+
 .icon-32-extensions {
 background-image:url(/administrator/components/com_acctexp/images/icons/aec_central_icon.png);
 }

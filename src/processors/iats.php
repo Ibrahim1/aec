@@ -24,6 +24,7 @@ class processor_iats extends XMLprocessor
 		$info['languages']		= 'GB';
 		$info['cc_list']		= 'visa,mastercard,discover,americanexpress';
 		$info['recurring']		= 2;
+		// TODO: $info['recurring_buttons']	= 2;
 		$info['actions']		= array('cancel');
 		$info['secure']			= 1;
 
@@ -195,6 +196,8 @@ class processor_iats extends XMLprocessor
 			$var['CVV2']			= $request->int_var['params']['cardVV2'];
 
 			$var['Total']			= $request->int_var['amount'];
+
+			$this->path = "/trams/authresult.pro";
 		}
 
 		$var['InvoiceNum']			= $request->int_var['invoice'];
@@ -205,7 +208,7 @@ class processor_iats extends XMLprocessor
 		foreach ( $var as $name => $value ) {
 			$content[] .= urlencode( $name ) . '=' . urlencode( stripslashes( $value ) );
 		}
-
+aecDebug($content);
 		return implode( '&', $content );
 	}
 
@@ -249,14 +252,14 @@ class processor_iats extends XMLprocessor
 		} else {
 			$curlextra[CURLOPT_USERPWD] = $this->settings['agent_code'] . ":" . $this->settings['password'];
 		}
-
+aecDebug($url);aecDebug($path);aecDebug($port);aecDebug($curlextra);aecDebug($xml);
 		return $this->transmitRequest( $url, $path, $xml, $port, $curlextra );
 	}
 
 	function transmitRequestXML( $xml, $request, $path=null )
 	{
 		$response = $this->transmitToTicketmaster( $xml, $request, $path=null );
-
+aecDebug($response);
 		$cccheck	= stristr( $response, "CustCode " );
 		$cccheck	= stristr( $cccheck, "value=" );
 		$ipos2		= strpos( $cccheck, ">" );
@@ -276,10 +279,10 @@ class processor_iats extends XMLprocessor
 
 		$iatsReturn = stristr( $response, "AUTHORIZATION RESULT:" );
 		$iatsReturn = substr( $iatsReturn, strpos( $iatsReturn, ":" ) + 1, strpos( $iatsReturn , "<" ) - strpos( $iatsReturn , ":" ) - 1 );
-
+aecDebug($iatsReturn);
 		if ( $iatsReturn == "" ) {
-			$response['error'] = 1;
-			$response['errormsg'] = 'Rejected: Error Page';
+			$return['error'] = 1;
+			$return['errormsg'] = 'Rejected: Error Page';
 		} else {
 			$return['valid'] = true;
 		}

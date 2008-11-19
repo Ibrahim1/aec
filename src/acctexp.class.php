@@ -2153,6 +2153,10 @@ class PaymentProcessor
 	{
 		 if ( !empty( $settings ) ) {
 			 foreach ( $settings as $key => $value ) {
+				if ( is_array( $value ) ) {
+					continue;
+				}
+
 				if ( strcmp( $value, '[[SET_TO_NULL]]' ) === 0 ) {
 					$this->settings[$key] = null;
 				} else {
@@ -2733,6 +2737,19 @@ class processor extends serialParamDBTable
 	{
 		global $aecConfig;
 
+		if ( function_exists ( curl_init )) {
+			$response = false ;
+			global $database ;
+			$short	= 'cURL failure';
+			$event	= 'Trying to establish connection with ' . $url . ' failed - curl_init is not available - will try fsockopen instead. If Error persists and fsockopen works, please permanently switch to using that!';
+			$tags	= 'processor,payment,phperror';
+			$params = array();
+
+			$eventlog = new eventLog( $database );
+			$eventlog->issue( $short, $tags, $event, 128, $params );
+			return false;
+		}
+
 		if ( empty( $curlextra ) ) {
 			$curlextra = array();
 		}
@@ -2773,44 +2790,30 @@ class processor extends serialParamDBTable
 				}
 			}
 		}
-		if ( function_exists ( curl_init )) {
-			// Set cURL params
-			$ch = curl_init();
-			foreach ( $curl_calls as $name => $value ) {
-				curl_setopt( $ch, $name, $value );
-			}
 
-			$response = curl_exec( $ch );
+		// Set cURL params
+		$ch = curl_init();
+		foreach ( $curl_calls as $name => $value ) {
+			curl_setopt( $ch, $name, $value );
+		}
 
-			if ( $response === false ) {
-				global $database;
+		$response = curl_exec( $ch );
 
-				$short	= 'cURL failure';
-				$event	= 'Trying to establish connection with ' . $url . ' failed with Error #' . curl_errno( $ch ) . ' ( "' . curl_error( $ch ) . '" ) - will try fsockopen instead. If Error persists and fsockopen works, please permanently switch to using that!';
-				$tags	= 'processor,payment,phperror';
-				$params = array();
+		if ( $response === false ) {
+			global $database;
 
-				$eventlog = new eventLog( $database );
-				$eventlog->issue( $short, $tags, $event, 128, $params );
-			}
-
-			curl_close( $ch );
-
-			return $response;
-		} else {
-			$response = false ;
-			global $database ;
 			$short	= 'cURL failure';
-			$event	= 'Trying to establish connection with ' . $url . ' failed - curl_init is not available - will try fsockopen instead. If Error persists and fsockopen works, please permanently switch to using that!';
+			$event	= 'Trying to establish connection with ' . $url . ' failed with Error #' . curl_errno( $ch ) . ' ( "' . curl_error( $ch ) . '" ) - will try fsockopen instead. If Error persists and fsockopen works, please permanently switch to using that!';
 			$tags	= 'processor,payment,phperror';
 			$params = array();
 
 			$eventlog = new eventLog( $database );
 			$eventlog->issue( $short, $tags, $event, 128, $params );
-			return $response;
 		}
 
+		curl_close( $ch );
 
+		return $response;
 	}
 
 }
