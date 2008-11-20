@@ -8,7 +8,7 @@
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
-//( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
 global $mosConfig_absolute_path;
 
@@ -16,14 +16,78 @@ if ( defined( 'JPATH_SITE' ) ) {
 	$mosConfig_absolute_path = JPATH_SITE;
 }
 
-if ( file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php" ) ) {
-	include_once( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php" );
+if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {
+	include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");
 
-//	$_MAMBOTS->registerFunction( 'onAfterStart', 'checkUserSubscription' ); //joomla.php Hack #4
-	$_MAMBOTS->registerFunction( 'onAfterStart', 'planFirst' ); //registration.php Hack #6
-	$_MAMBOTS->registerFunction( 'onAfterStart', 'planRegistration' ); //registration.php Hack #2 + comprofiler.php Hack #2
-	$_MAMBOTS->registerFunction( 'onAfterStart', 'notifyMI' ); //registration.php Hack #1 + user.php Hack + comprofiler.php Hack #7 + comprofiler.php Hack #8
+	$_MAMBOTS->registerFunction( 'onAfterStart', 'aecBotRouting' );
+}
 
+function aecBotRouting()
+{
+	global $option, $aecConfig;
+
+	$task = mosGetParam( $_REQUEST, 'task', '' );
+
+	if (
+		($option == 'com_registration' && $task == 'register')
+		|| ($option == 'com_comprofiler' && $task == 'registers')
+		)
+	{
+		$getPlans = false;
+
+		$usage = intval(mosGetParam( $_POST, 'usage', '0' ));
+		$planFirst = $aecConfig->cfg['plans_first'];
+
+		if (
+			( $aecConfig->cfg['plans_first'] && ( $usage != 0 ) )
+			|| ( !$aecConfig->cfg['plans_first'] && ( $usage == 0 ) )
+			)
+		{
+			$_REQUEST['option'] = "com_acctexp";
+		}
+	} elseif
+		(
+		($option == 'com_registration' && $task == 'saveRegistration')
+		||
+		($option == 'com_user' && $task == 'saveUserEdit')
+		||
+		($option == 'com_comprofiler' && $task == 'saveregisters')
+		||
+		($option == 'com_comprofiler' && ( strcasecmp($task,'saveUserEdit') == 0 ))
+		)
+	{
+		$username = mosGetParam($_REQUEST, 'username', '');
+		$row = new stdClass();
+		$row->username = $username;
+		$mih = new microIntegrationHandler();
+		$mih->userchange($row, $_POST, 'registration');
+	} elseif
+		(
+		($option == 'com_registration' && $task == 'register')
+		|| ($option == 'com_comprofiler' && $task == 'registers')
+		)
+	{
+		$getPlans = false;
+
+		$usage = intval(mosGetParam( $_POST, 'usage', '0' ));
+		$planFirst = $aecConfig->cfg['plans_first'];
+
+		if($planFirst && $usage != 0) $getPlans = true;
+		if(!$planFirst && $usage == 0) $getPlans = true;
+
+		if($getPlans) $_REQUEST['option'] = "com_acctexp";
+	} elseif
+		(
+		($option == 'com_registration' && $task == 'register')
+		|| ($option == 'com_comprofiler' && $task == 'registers')
+		)
+	{
+		if($aecConfig->cfg['plans_first']){
+			$usage = intval(mosGetParam($_POST,'usage','0'));
+			if($usage == 0 || $option != 'com_comprofiler')
+				mosRedirect( sefRelToAbs( 'index.php?option=com_acctexp&task=subscribe' ) );
+		}
+	}
 }
 
 //Some Micro Integrations rely on receiving a cleartext password for each user. This hack will make sure that the Micro Integrations will be notified
