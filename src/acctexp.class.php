@@ -2461,6 +2461,13 @@ class PaymentProcessor
 			unset( $return['_aec_createuser'] );
 		} elseif ( !empty( $return['_aec_createuser'] ) ) {
 			unset( $return['_aec_createuser'] );
+		} elseif ( !empty( $return['secondary_ident'] )&& !empty( $return['invoice'] ) ) {
+			unset( $return['_aec_createuser'] );
+
+			$invoice = new Invoice( $database );
+			$invoice->loadInvoiceNumber( $return['invoice'] );
+			$invoice->secondary_ident = $return['secondary_ident'];
+			$invoice->storeload();
 		}
 
 		return $return;

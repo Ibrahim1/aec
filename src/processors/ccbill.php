@@ -217,6 +217,7 @@ class processor_ccbill extends POSTprocessor
 
 		$response = array();
 		$response['invoice'] = $invoice;
+		$response['secondary_ident'] = $subscription_id;
 		$response['valid'] = 1;
 
 		if ( !empty( $reasonForDecline ) ) {
@@ -268,7 +269,7 @@ class processor_ccbill extends POSTprocessor
 				$get = array();
 				$get['startTime'] = date( 'YmdHis', ( time() - 24*60*60 - 1 ) );
 				$get['endTime'] = date( 'YmdHis' );
-				$get['transactionTypes'] = 'EXPIRE';
+				$get['transactionTypes'] = 'REBILL,EXPIRE';
 				$get['clientAccnum'] = $this->settings['clientAccnum'];
 
 				if ( !empty( $this->settings['clientSubacc'] ) ) {
