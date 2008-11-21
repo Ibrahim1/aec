@@ -16,10 +16,9 @@ if ( defined( 'JPATH_SITE' ) ) {
 	$mosConfig_absolute_path = JPATH_SITE;
 }
 
-include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");
+include_once( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php" );
 
 $_MAMBOTS->registerFunction( 'onAfterStart', 'aecBotRouting' );
-$_MAMBOTS->registerFunction( 'onAfterStart', 'checkUserSubscription' );
 
 function aecBotRouting()
 {
@@ -27,18 +26,23 @@ function aecBotRouting()
 
 	$task	= mosGetParam( $_REQUEST, 'task', '' );
 	$usage	= intval( mosGetParam( $_POST, 'usage', '0' ) );
+	$submit	= mosGetParam( $_POST, 'submit', '' );
+
+	$username = aecGetParam( 'username', true, array( 'string', 'clear_nonalnum' ) );
 
 	$nu		= $usage == 0;
 
 	$creg	= $option == 'com_registration';
 	$ccb	= $option == 'com_comprofiler';
 	$cu		= $option == 'com_user';
+	$olo	= $option == 'login';
 
 	$treg	= $task == 'register';
 	$tregs	= $task == 'registers';
 	$tcregs	= $task == 'saveregisters';
 	$tsregs	= $task == 'saveRegistration';
 	$tsue	= $task == 'saveUserEdit';
+	$tlo	= $task == 'login';
 
 	$joomreg	= ( $creg && $treg );
 	$cbreg		= ( $ccb && ( $tcregs || $tsue ) );
@@ -51,6 +55,8 @@ function aecBotRouting()
 			// Plans First and selected or not first and not selected
 			// Both cases = redirect to AEC on the next page
 			$_REQUEST['option'] = "com_acctexp";
+			// Just to be sure
+			$option = "com_acctexp";
 		} elseif ( $pfirst && $nu ) {
 			// Plans first and not yet selected
 			// Immediately redirect to plan selection
@@ -58,7 +64,6 @@ function aecBotRouting()
 		}
 	} elseif ( ( $creg && $tsregs ) || ( $cu && $tsue ) || $cbreg ) {
 		// Any kind of user profile edit = trigger MIs
-		$username = mosGetParam( $_REQUEST, 'username', '' );
 
 		$row = new stdClass();
 		$row->username = $username;
@@ -66,118 +71,14 @@ function aecBotRouting()
 		$mih = new microIntegrationHandler();
 		$mih->userchange( $row, $_POST, 'registration' );
 	}
-}
 
-//Some Micro Integrations rely on receiving a cleartext password for each user. This hack will make sure that the Micro Integrations will be notified
-function notifyMI()
-{
-	global $option;
+	if ( $olo || ( $ccb && $tlo ) ) {
+		$verification = AECToolbox::VerifyUsername( $username );
 
-	$task = mosGetParam( $_REQUEST, 'task', '' );
-
-	if (($option == 'com_registration' && $task == 'saveRegistration')
-		||
-		($option == 'com_user' && $task == 'saveUserEdit')
-		||
-		($option == 'com_comprofiler' && $task == 'saveregisters')
-		||
-		($option == 'com_comprofiler' && ( strcasecmp($task,'saveUserEdit') == 0 ))
-		)
-	{
-		$username = mosGetParam($_REQUEST, 'username', '');
-		$row = new stdClass();
-		$row->username = $username;
-		$mih = new microIntegrationHandler();
-		$mih->userchange($row, $_POST, 'registration');
-	}
-}
-
-//This will redirect a registering user to the payment plans after filling out the registration form (and in CB).
-function planRegistration()
-{
-	global $option, $aecConfig;
-
-	$task = mosGetParam( $_REQUEST, 'task', '' );
-
-	if (($option == 'com_registration' && $task == 'register') || ($option == 'com_comprofiler' && $task == 'registers'))
-	{
-		$getPlans = false;
-
-		$usage = intval(mosGetParam( $_POST, 'usage', '0' ));
-		$planFirst = $aecConfig->cfg['plans_first'];
-
-		if($planFirst && $usage != 0) $getPlans = true;
-		if(!$planFirst && $usage == 0) $getPlans = true;
-
-		if($getPlans) $_REQUEST['option'] = "com_acctexp";
-	}
-}
-
-//This will make the Plans First feature possible - you need to set the switch for this in the settings as well!
-function planFirst()
-{
-	global $option, $aecConfig;
-print_r($aecConfig);exit;
-	$task = mosGetParam( $_REQUEST, 'task', '' );
-
-	if (($option == 'com_registration' && $task == 'register') || ($option == 'com_comprofiler' && $task == 'registers'))
-	{
-		if($aecConfig->cfg['plans_first']){
-			$usage = intval(mosGetParam($_POST,'usage','0'));
-			if($usage == 0 || $option != 'com_comprofiler')
-				mosRedirect( sefRelToAbs( 'index.php?option=com_acctexp&task=subscribe' ) );
+		if ( $verification === false ) {
+			// No Login for you. General purpose block.
+			die('Invalid Access.');
 		}
-	}
-}
-
-//This will make sure a user has a subscription in order to log in - Joomla hack#4
-function checkUserSubscription()
-{
-	global $option;
-
-	$task = mosGetParam( $_REQUEST, 'task', '' );
-	$submit = mosGetParam($_POST,'submit', '');
-
-	if ($option == 'login' ||
-         ($option == 'com_comprofiler' && $task == 'login') &&
-         ($submit == 'Login'))
-	{
-		$username = mosGetParam($_POST,'username', '');
-		$verification = AECToolbox::VerifyUser( $username );
-
-		if ( $verification !== true ) {
-			define( 'AEC_AUTH_ERROR_MSG', $verification );
-			define( 'AEC_AUTH_ERROR_UNAME', $username );
-			onLoginFailure();
-		}
-	}
-}
-
-function onLoginFailure()
-{
-	global $database;
-
-	$query = 'SELECT id'
-	. ' FROM #__users'
-	. ' WHERE username = \'' . AEC_AUTH_ERROR_UNAME . '\''
-	;
-	$database->setQuery( $query );
-	$id = $database->loadResult();
-
-	$redirect = false;
-
-	switch( AEC_AUTH_ERROR_MSG ) {
-		case 'open_invoice':
-			$redirect = 'pending';
-			break;
-		default:
-			$redirect = AEC_AUTH_ERROR_MSG;
-			break;
-	}
-
-	if ( $redirect ) {
-		$url = "index.php?option=com_acctexp&task=$redirect&userid=$id";
-		mosRedirect( sefRelToAbs( $url ) );
 	}
 }
 

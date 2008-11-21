@@ -8170,10 +8170,22 @@ class GeneralInfoRequester
 		$tables	= array();
 		$tables	= $database->getTableList();
 
-		$overrides = explode( ' ', $aecConfig->cfg['bypassintegration'] );
+		if ( !empty( $aecConfig->cfg['bypassintegration'] ) ) {
+			$bypass = str_replace( ',', ' ', $aecConfig->cfg['bypassintegration'] );
 
-		if ( in_array( $component, $overrides ) ) {
-			return false;
+			$overrides = explode( ' ', $bypass );
+
+			foreach ( $overrides as $i => $c ) {
+				$overrides[$i] = trim($c);
+			}
+
+			if ( in_array( 'CB', $overrides ) ) {
+				$overrides[] = 'CB1.2';
+			}
+
+			if ( in_array( $component, $overrides ) ) {
+				return false;
+			}
 		}
 
 		$pathCB		= $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler';
@@ -8666,6 +8678,7 @@ class AECToolbox
 						if ( $invoice ) {
 							$metaUser->setTempAuth();
 							mosRedirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=pending&userid=' . $id ), false, true );
+							return null;
 						}
 					}
 
