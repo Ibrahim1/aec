@@ -20,73 +20,53 @@ if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.cla
 	include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");
 
 	$_MAMBOTS->registerFunction( 'onAfterStart', 'aecBotRouting' );
+	$_MAMBOTS->registerFunction( 'onAfterStart', 'checkUserSubscription' );
 }
 
 function aecBotRouting()
 {
 	global $option, $aecConfig;
 
-	$task = mosGetParam( $_REQUEST, 'task', '' );
+	$task	= mosGetParam( $_REQUEST, 'task', '' );
+	$usage	= intval( mosGetParam( $_POST, 'usage', '0' ) );
 
-	if (
-		($option == 'com_registration' && $task == 'register')
-		|| ($option == 'com_comprofiler' && $task == 'registers')
-		)
-	{
-		$getPlans = false;
+	$nu		= $usage == 0;
 
-		$usage = intval(mosGetParam( $_POST, 'usage', '0' ));
-		$planFirst = $aecConfig->cfg['plans_first'];
+	$creg	= $option == 'com_registration';
+	$ccb	= $option == 'com_comprofiler';
+	$cu		= $option == 'com_user';
 
-		if (
-			( $aecConfig->cfg['plans_first'] && ( $usage != 0 ) )
-			|| ( !$aecConfig->cfg['plans_first'] && ( $usage == 0 ) )
-			)
-		{
+	$treg	= $task == 'register';
+	$tregs	= $task == 'registers';
+	$tcregs	= $task == 'saveregisters';
+	$tsregs	= $task == 'saveRegistration';
+	$tsue	= $task == 'saveUserEdit';
+
+	$joomreg	= ( $creg && $treg );
+	$cbreg		= ( $ccb && ( $tcregs || $tsue ) );
+
+	$pfirst		= $aecConfig->cfg['plans_first'];
+
+	if ( $joomreg || $cbreg ) {
+		// Joomla or CB registration...
+		if ( ( $pfirst && !$nu ) || ( !$pfirst && $nu ) ) {
+			// Plans First and selected or not first and not selected
+			// Both cases = redirect to AEC on the next page
 			$_REQUEST['option'] = "com_acctexp";
+		} elseif ( $pfirst && $nu ) {
+			// Plans first and not yet selected
+			// Immediately redirect to plan selection
+			mosRedirect( sefRelToAbs( 'index.php?option=com_acctexp&task=subscribe' ) );
 		}
-	} elseif
-		(
-		($option == 'com_registration' && $task == 'saveRegistration')
-		||
-		($option == 'com_user' && $task == 'saveUserEdit')
-		||
-		($option == 'com_comprofiler' && $task == 'saveregisters')
-		||
-		($option == 'com_comprofiler' && ( strcasecmp($task,'saveUserEdit') == 0 ))
-		)
-	{
-		$username = mosGetParam($_REQUEST, 'username', '');
+	} elseif ( ( $creg && $tsregs ) || ( $cu && $tsue ) || $cbreg ) {
+		// Any kind of user profile edit = trigger MIs
+		$username = mosGetParam( $_REQUEST, 'username', '' );
+
 		$row = new stdClass();
 		$row->username = $username;
+
 		$mih = new microIntegrationHandler();
-		$mih->userchange($row, $_POST, 'registration');
-	} elseif
-		(
-		($option == 'com_registration' && $task == 'register')
-		|| ($option == 'com_comprofiler' && $task == 'registers')
-		)
-	{
-		$getPlans = false;
-
-		$usage = intval(mosGetParam( $_POST, 'usage', '0' ));
-		$planFirst = $aecConfig->cfg['plans_first'];
-
-		if($planFirst && $usage != 0) $getPlans = true;
-		if(!$planFirst && $usage == 0) $getPlans = true;
-
-		if($getPlans) $_REQUEST['option'] = "com_acctexp";
-	} elseif
-		(
-		($option == 'com_registration' && $task == 'register')
-		|| ($option == 'com_comprofiler' && $task == 'registers')
-		)
-	{
-		if($aecConfig->cfg['plans_first']){
-			$usage = intval(mosGetParam($_POST,'usage','0'));
-			if($usage == 0 || $option != 'com_comprofiler')
-				mosRedirect( sefRelToAbs( 'index.php?option=com_acctexp&task=subscribe' ) );
-		}
+		$mih->userchange( $row, $_POST, 'registration' );
 	}
 }
 
