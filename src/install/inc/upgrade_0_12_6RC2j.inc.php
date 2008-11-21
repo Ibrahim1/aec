@@ -63,9 +63,11 @@ if ( $jsonconversion ) {
 			foreach ( $dec as $fieldname ) {
 				// Decode from jsonized fields
 				if ( ( strpos( $object->$fieldname, "{" ) === 0 ) || strpos( $object->$fieldname, "\n" ) === false ) {
-					$temp = jsoonHandler::decode( stripslashes( $object->$fieldname ) );
+					$decode = stripslashes( str_replace( array( '\n', '\t', '\r' ), array( "\n", "\t", "\r" ), trim($object->$fieldname) ) );
+					$temp = jsoonHandler::decode( $decode );
 				} elseif ( strpos( $object->$fieldname, "\n" ) !== false ) {
-					$temp = parameterHandler::decode( stripslashes( $object->$fieldname ) );
+					// Has stripslashes stuff built in
+					$temp = parameterHandler::decode( $object->$fieldname );
 				} else {
 					continue;
 				}

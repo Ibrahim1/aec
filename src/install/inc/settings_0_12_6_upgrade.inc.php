@@ -18,28 +18,29 @@ $query = 'SELECT `settings` FROM #__acctexp_config'
 ;
 $database->setQuery( $query );
 $res = $database->loadResult();
-$set = stripslashes( $res );
 
-if ( ( ( strpos( $set, '{' ) === 0 ) || ( strpos( $set, "\n" ) !== false ) ) && !empty( $set ) ) {
-	if ( strpos( $set, '{' ) === 0 ) {
-		$settings = jsoonHandler::decode( $set );
+if ( ( ( strpos( $res, '{' ) === 0 ) || ( strpos( $res, "\n" ) !== false ) ) && !empty( $res ) ) {
+	if ( strpos( $res, '{' ) === 0 ) {
+		$res = stripslashes( str_replace( array( '\n', '\t', '\r' ), array( "\n", "\t", "\r" ), trim($res) ) );;
+		$restings = jsoonHandler::decode( $res );
 		$jsonconversion = true;
 	} else {
-		$settings = parameterHandler::decode( $set );
+		// Has stripslashes stuff built in
+		$restings = parameterHandler::decode( $res );
 		$serialupdate = true;
 
-		if ( isset( $settings['milist'] ) ) {
-			$temp = explode( ';', $settings['milist'] );
-			$settings['milist'] = $temp;
+		if ( isset( $restings['milist'] ) ) {
+			$temp = explode( ';', $restings['milist'] );
+			$restings['milist'] = $temp;
 		}
 
-		if ( isset( $settings['gwlist'] ) ) {
-			$temp = explode( ';', $settings['gwlist'] );
-			$settings['gwlist'] = $temp;
+		if ( isset( $restings['gwlist'] ) ) {
+			$temp = explode( ';', $restings['gwlist'] );
+			$restings['gwlist'] = $temp;
 		}
 	}
 
-	$entry = base64_encode( serialize( $settings ) );
+	$entry = base64_encode( serialize( $restings ) );
 
 	$query = 'UPDATE #__acctexp_config'
 	. ' SET `settings` = \'' . $entry . '\''
@@ -47,7 +48,7 @@ if ( ( ( strpos( $set, '{' ) === 0 ) || ( strpos( $set, "\n" ) !== false ) ) && 
 	;
 	$database->setQuery( $query );
 	$database->query();
-} elseif ( empty( $set ) ) {
+} elseif ( empty( $res ) ) {
 	$newinstall = true;
 }
 ?>
