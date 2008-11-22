@@ -63,7 +63,8 @@ function onAfterInitialise ()
 	$tsregs	= $task == 'saveRegistration';
 	$tsue	= $task == 'saveUserEdit';
 
-	$cbreg		= ( $ccb && ( $tcregs || $tsue ) );
+	$cbreg		= ( $ccb && $tregs );
+	$cbsreg		= ( $ccb && ( $tcregs || $tsue ) );
 
 	$pfirst		= $aecConfig->cfg['plans_first'];
 
@@ -80,7 +81,7 @@ function onAfterInitialise ()
 			// Immediately redirect to plan selection
 			mosRedirect( sefRelToAbs( 'index.php?option=com_acctexp&task=subscribe' ) );
 		}
-	} elseif ( $cbreg ) {
+	} elseif ( $cbsreg ) {
 		// Any kind of user profile edit = trigger MIs
 
 		$row = new stdClass();

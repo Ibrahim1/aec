@@ -45,7 +45,8 @@ function aecBotRouting()
 	$tlo	= $task == 'login';
 
 	$joomreg	= ( $creg && $treg );
-	$cbreg		= ( $ccb && ( $tcregs || $tsue ) );
+	$cbreg		= ( $ccb && $tregs );
+	$cbsreg		= ( $ccb && ( $tcregs || $tsue ) );
 
 	$pfirst		= $aecConfig->cfg['plans_first'];
 
@@ -62,7 +63,7 @@ function aecBotRouting()
 			// Immediately redirect to plan selection
 			mosRedirect( sefRelToAbs( 'index.php?option=com_acctexp&task=subscribe' ) );
 		}
-	} elseif ( ( $creg && $tsregs ) || ( $cu && $tsue ) || $cbreg ) {
+	} elseif ( ( $creg && $tsregs ) || ( $cu && $tsue ) || $cbsreg ) {
 		// Any kind of user profile edit = trigger MIs
 
 		$row = new stdClass();
