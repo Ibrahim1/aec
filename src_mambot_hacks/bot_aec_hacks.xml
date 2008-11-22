@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<mosinstall version="1.0.0" type="mambot" group="system">
+	<name>AEC Hacks bot</name>
+	<author>David Deutsch, Mati Kochen, Team AEC</author>
+	<creationDate>Aug 2007</creationDate>
+	<copyright>(C) 2008 All rights reserved.</copyright>
+	<license>GNU/GPL v2.0 or later</license>
+	<authorEmail>mails@globalnerd.org</authorEmail>
+	<authorUrl>www.globalnerd.org</authorUrl>
+	<version>0.1</version>
+	<description>Removes the need of hacks</description>
+	<files>
+		<filename mambot="bot_aec_hacks">bot_aec_hacks.php</filename>
+	</files>
+</mosinstall>
