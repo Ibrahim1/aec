@@ -4078,7 +4078,21 @@ class ItemGroupHandler
 		}
 
 		$database->setQuery( $query );
-		return $database->loadResultArray();
+		$result = $database->loadResultArray();
+
+		if ( !empty( $result ) ) {
+		// Order results
+			$query = 'SELECT id'
+					. ' FROM #__acctexp_' . ( ( $type == 'group' ) ? 'itemgroups' : 'plans' )
+					. ' WHERE id IN (' . implode( ',', $result ) . ')'
+					. ' ORDER BY `ordering`'
+					;
+			$database->setQuery( $query );
+
+			return $database->loadResultArray();
+		} else {
+			return $result;
+		}
 	}
 
 	function checkParentRestrictions( $item, $type, $metaUser )
