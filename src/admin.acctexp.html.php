@@ -687,31 +687,37 @@ class HTML_AcctExp
 			$tabs->endTab();
 			$tabs->startTab(_AEC_HEAD_MICRO_INTEGRATION, _AEC_HEAD_MICRO_INTEGRATION);
 
-			$userMIs = $metaUser->getUserMIs();
 			?>
 			<div class="aec_tabheading"><h2><?php echo _AEC_HEAD_MICRO_INTEGRATION; ?>: <?php echo _AEC_HEAD_MICRO_INTEGRATION; ?></h2></div>
+			<?php if ( !empty( $mi['user'] ) ) { ?>
 			<table class="adminform">
 				<tr>
 					<td valign="top" style="padding: 10px;">
-					</td>
-				</tr>
-			</table>
-			<div class="aec_tabheading"><h2><?php echo _AEC_HEAD_MICRO_INTEGRATION; ?>: <?php echo _AEC_HEAD_MICRO_INTEGRATION; ?></h2></div>
-			<table class="adminform">
-				<tr>
-					<td valign="top" style="padding: 10px;">
-						<?php
-						$width = ( count( $userMIs ) > 1 ) ? 45 : 99;
-						foreach ( $userMIs as $mi ) {
-						?>
-							<div class="userinfobox" style="width:<?php echo $width; ?>%">
-								<h3><?php echo $mi->info['name'] . ' - ' . $mi->name; ?></h3>
-								<p><?php echo $mi->admin_info( $metaUser->userid ); ?></p>
+						<?php foreach ( $mi['user'] as $mi ) { ?>
+							<div class="userinfobox">
+								<h3><?php echo $mi['name']; ?></h3>
+								<p><?php echo $mi['info']; ?></p>
 							</div>
 						<?php } ?>
 					</td>
 				</tr>
 			</table>
+			<?php } ?>
+			<div class="aec_tabheading"><h2><?php echo _AEC_HEAD_MICRO_INTEGRATION; ?>: <?php echo _AEC_HEAD_MICRO_INTEGRATION; ?></h2></div>
+			<?php if ( !empty( $mi['admin'] ) ) { ?>
+			<table class="adminform">
+				<tr>
+					<td valign="top" style="padding: 10px;">
+						<?php foreach ( $mi['admin'] as $mi ) { ?>
+							<div class="userinfobox">
+								<h3><?php echo $mi['name']; ?></h3>
+								<p><?php echo $mi['info']; ?></p>
+							</div>
+						<?php } ?>
+					</td>
+				</tr>
+			</table>
+			<?php } ?>
 			<div class="aec_tabheading"><h2><?php echo _AEC_HEAD_MICRO_INTEGRATION; ?>: <?php echo _AEC_HEAD_MICRO_INTEGRATION; ?></h2></div>
 			<table class="adminform">
 				<tr>

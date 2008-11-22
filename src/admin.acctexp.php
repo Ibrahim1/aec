@@ -1071,10 +1071,18 @@ function editUser(  $option, $userid, $subscriptionid, $task )
 	$userMIs = $metaUser->getUserMIs();
 
 	$mi['user'] = array();
+	$mi['admin'] = array();
 	foreach ( $userMIs as $m ) {
-		$mi['user'][] = array( 'name' => $m->info['name'] . ' - ' . $m->name,
-								'info' => $m->admin_info( $metaUser->userid )
-							);
+		$ai = $m->admin_info( $metaUser->userid );
+		$ui = $m->profile_info( $metaUser->userid );
+
+		if ( !empty( $ai ) ) {
+			$mi['admin'][] = array( 'name' => $m->info['name'] . ' - ' . $m->name, 'info' => $ai );
+		}
+
+		if ( !empty( $ui ) ) {
+			$mi['user'][] = array( 'name' => $m->info['name'] . ' - ' . $m->name, 'info' => $ui );
+		}
 	}
 
 	HTML_AcctExp::userForm( $option, $metaUser, $invoices, $mi, $lists, $task );

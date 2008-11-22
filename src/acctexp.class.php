@@ -346,18 +346,22 @@ class metaUser
 		return true;
 	}
 
-	function getSecondarySubscriptions()
+	function getSecondarySubscriptions( $simple=false )
 	{
 		global $database;
 
-		$query = 'SELECT `id`, `plan`, `type`'
+		$query = 'SELECT `id`' . ( $simple ? '' : ', `plan`, `type`' )
 				. ' FROM #__acctexp_subscr'
 				. ' WHERE `userid` = \'' . (int) $this->userid . '\''
 				. ' AND `primary` = \'0\''
 				. ' ORDER BY `lastpay_date` DESC'
 				;
 		$database->setQuery( $query );
-		return $database->loadObjectList();
+		if ( $simple ) {
+			return $database->loadResultArray();
+		} else {
+			return $database->loadObjectList();
+		}
 	}
 
 	function procTriggerCreate( $user, $payment, $usage )
@@ -872,6 +876,19 @@ class metaUser
 			$selected_plan->load( $this->objSubscription->plan );
 
 			$mis = $selected_plan->micro_integrations;
+
+			$sec = $this->getSecondarySubscriptions( true );
+
+			if ( !empty( $sec ) ) {
+				foreach ( $sec as $pid ) {
+					$selected_plan = new SubscriptionPlan( $database );
+					$selected_plan->load( $this->objSubscription->plan );
+
+					$mis = array_merge( $mis, $selected_plan->micro_integrations );
+				}
+			}
+
+			array_unique( $mis );
 
 			if ( count( $mis ) ) {
 				foreach ( $mis as $mi_id ) {
