@@ -5167,8 +5167,13 @@ class SubscriptionPlan extends serialParamDBTable
 		$fixed = array( 'active', 'visible', 'name', 'desc', 'email_desc', 'micro_integrations' );
 
 		foreach ( $fixed as $varname ) {
-			$this->$varname = $post[$varname];
-			unset( $post[$varname] );
+			if ( isset( $post[$varname] ) ) {
+				$this->$varname = $post[$varname];
+
+				unset( $post[$varname] );
+			} else {
+				$this->$varname = '';
+			}
 		}
 
 		// Get selected processors ( have to be filtered out )

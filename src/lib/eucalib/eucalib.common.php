@@ -417,7 +417,7 @@ class serialParamDBTable extends paramDBTable
 
 		if ( !empty( $fields ) ) {
 			foreach ( $fields as $fieldname ) {
-				if ( !empty( $this->$fieldname ) && ( $this->$fieldname != 'null' ) ) {
+				if ( $this->$fieldname != 'null' ) {
 					$this->setParams( $this->$fieldname, $fieldname );
 				} else {
 					unset( $this->$fieldname );
