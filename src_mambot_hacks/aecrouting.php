@@ -1,26 +1,48 @@
 <?php
 /**
  * @version $Id: bot_aec_hacks.php
- * @package AEC - Account Control Expiration - Joomla 1.0 Plugins
- * @subpackage Hacks Bot
+ * @package AEC - Account Control Expiration - Joomla 1.5 Plugins
+ * @subpackage Hacks Plugin
  * @copyright 2006-2008 Copyright (C) David Deutsch
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
+// Check to ensure this file is included in Joomla!
+defined('_JEXEC') or die();
 
-global $mosConfig_absolute_path;
+jimport('joomla.event.plugin');
 
-if ( defined( 'JPATH_SITE' ) ) {
-	$mosConfig_absolute_path = JPATH_SITE;
-}
-
-include_once( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php" );
+include_once( JPATH_SITE . "/components/com_acctexp/acctexp.class.php" );
 
 $_MAMBOTS->registerFunction( 'onAfterStart', 'aecBotRouting' );
 
-function aecBotRouting()
+/**
+ * AEC Authentication plugin
+ *
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
+ * @package AEC Component
+ */
+class plgSystemAECrouting extends JPlugin
+{
+
+	/**
+	 * Constructor
+	 *
+	 * For php4 compatability we must not use the __constructor as a constructor for plugins
+	 * because func_get_args ( void ) returns a copy of all passed arguments NOT references.
+	 * This causes problems with cross-referencing necessary for the observer design pattern.
+	 *
+	 * @param object $subject The object to observe
+	 * @param array  $config  An array that holds the plugin configuration
+	 * @since 1.5
+	 */
+	function plgSystemAECrouting( &$subject, $config ) {
+		parent::__construct( $subject, $config );
+	}
+
+
+function onAfterInitialise ()
 {
 	global $option, $aecConfig;
 
@@ -32,24 +54,20 @@ function aecBotRouting()
 
 	$nu		= $usage == 0;
 
-	$creg	= $option == 'com_registration';
 	$ccb	= $option == 'com_comprofiler';
 	$cu		= $option == 'com_user';
-	$olo	= $option == 'login';
 
 	$treg	= $task == 'register';
 	$tregs	= $task == 'registers';
 	$tcregs	= $task == 'saveregisters';
 	$tsregs	= $task == 'saveRegistration';
 	$tsue	= $task == 'saveUserEdit';
-	$tlo	= $task == 'login';
 
-	$joomreg	= ( $creg && $treg );
 	$cbreg		= ( $ccb && ( $tcregs || $tsue ) );
 
 	$pfirst		= $aecConfig->cfg['plans_first'];
 
-	if ( $joomreg || $cbreg ) {
+	if ( $treg || $cbreg ) {
 		// Joomla or CB registration...
 		if ( ( $pfirst && !$nu ) || ( !$pfirst && $nu ) ) {
 			// Plans First and selected or not first and not selected
@@ -62,7 +80,7 @@ function aecBotRouting()
 			// Immediately redirect to plan selection
 			mosRedirect( sefRelToAbs( 'index.php?option=com_acctexp&task=subscribe' ) );
 		}
-	} elseif ( ( $creg && $tsregs ) || ( $cu && $tsue ) || $cbreg ) {
+	} elseif ( $cbreg ) {
 		// Any kind of user profile edit = trigger MIs
 
 		$row = new stdClass();
@@ -72,14 +90,8 @@ function aecBotRouting()
 		$mih->userchange( $row, $_POST, 'registration' );
 	}
 
-	if ( $olo || ( $ccb && $tlo ) ) {
-		$verification = AECToolbox::VerifyUsername( $username );
+}
 
-		if ( $verification === false ) {
-			// No Login for you. General purpose block.
-			die('Invalid Access.');
-		}
-	}
 }
 
 ?>
