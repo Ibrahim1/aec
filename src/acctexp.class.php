@@ -8830,6 +8830,8 @@ class AECToolbox
 
 		$var['username'] = aecEscape( $var['username'], array( 'string', 'badchars' ) );
 
+		$savepwd = aecEscape( $var['password'], array( 'string', 'badchars' ) );
+
 		if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
 			// This is a CB registration, borrowing their code to save the user
 			@saveRegistration( $option );
@@ -8983,7 +8985,7 @@ class AECToolbox
 			}
 
 			if ( ( $activation == 1 ) && !$overrideActivation ) {
-				$message = sprintf( _AEC_USEND_MSG_ACTIVATE, $name, $mosConfig_sitename, $mosConfig_live_site."index.php?option=com_registration&task=activate&activation=".$row->activation, $mosConfig_live_site, $username, $pwd );
+				$message = sprintf( _AEC_USEND_MSG_ACTIVATE, $name, $mosConfig_sitename, $mosConfig_live_site."index.php?option=com_registration&task=activate&activation=".$row->activation, $mosConfig_live_site, $username, $savepwd );
 			} else {
 				$message = sprintf( _AEC_USEND_MSG, $name, $mosConfig_sitename, $mosConfig_live_site );
 			}
