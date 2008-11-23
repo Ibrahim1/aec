@@ -2768,7 +2768,7 @@ class processor extends serialParamDBTable
 	{
 		global $aecConfig;
 
-		if ( function_exists ( curl_init )) {
+		if ( !function_exists( 'curl_init' ) ) {
 			$response = false ;
 			global $database ;
 			$short	= 'cURL failure';
