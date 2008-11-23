@@ -25,7 +25,7 @@ function aecBotRouting()
 	global $option, $aecConfig;
 
 	$task	= mosGetParam( $_REQUEST, 'task', '' );
-	$usage	= intval( mosGetParam( $_POST, 'usage', '0' ) );
+	$usage	= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$submit	= mosGetParam( $_POST, 'submit', '' );
 
 	$username = aecGetParam( 'username', true, array( 'string', 'clear_nonalnum' ) );
@@ -36,6 +36,7 @@ function aecBotRouting()
 	$ccb	= $option == 'com_comprofiler';
 	$cu		= $option == 'com_user';
 	$olo	= $option == 'login';
+	$acc	= $option == 'com_acctexp';
 
 	$treg	= $task == 'register';
 	$tregs	= $task == 'registers';
@@ -43,14 +44,16 @@ function aecBotRouting()
 	$tsregs	= $task == 'saveRegistration';
 	$tsue	= $task == 'saveUserEdit';
 	$tlo	= $task == 'login';
+	$tcon	= $task == 'confirm';
 
 	$joomreg	= ( $creg && $treg );
 	$cbreg		= ( $ccb && $tregs );
 	$cbsreg		= ( $ccb && ( $tcregs || $tsue ) );
 
 	$pfirst		= $aecConfig->cfg['plans_first'];
+	$intreg		= $aecConfig->cfg['integrate_registration'];
 
-	if ( ( $joomreg || $cbreg ) && $aecConfig->cfg['integrate_registration'] ) {
+	if ( ( $joomreg || $cbreg ) && $intreg ) {
 		// Joomla or CB registration...
 		if ( ( $pfirst && !$nu ) || ( !$pfirst && $nu ) ) {
 			// Plans First and selected or not first and not selected
@@ -72,7 +75,7 @@ function aecBotRouting()
 		$mih = new microIntegrationHandler();
 		$mih->userchange( $row, $_POST, 'registration' );
 	}
-
+	
 	if ( $olo || ( $ccb && $tlo ) ) {
 		AECToolbox::VerifyUsername( $username );
 	}

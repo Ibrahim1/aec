@@ -497,7 +497,7 @@ function confirmSubscription( $option )
 	$processor	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$username	= aecGetParam( 'username', 0, true, array( 'word', 'int' ) );
 
-	if ( ( $usage > 0 ) && !$username && !$userid && !$my->id ) {
+	if ( $aecConfig->cfg['plans_first'] && ( $usage > 0 ) && !$username && !$userid && !$my->id ) {
 		if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
 			// This is a CB registration, borrowing their code to register the user
 			include_once( $mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.html.php' );
