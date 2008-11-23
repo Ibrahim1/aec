@@ -591,16 +591,9 @@ class metaUser
 	{
 		global $database;
 
-		$query = 'SELECT `name`'
-				. ' FROM #__comprofiler_fields'
-				. ' WHERE `table` != \'#__users\''
-				. ' AND `name` != \'NA\'';
-		$database->setQuery( $query );
-		$fields = $database->loadResultArray();
-
-		$query = 'SELECT cbactivation' . ( !empty( $fields ) ? ', ' . implode( ', ', $fields ) : '')
-				. ' FROM #__comprofiler'
-				. ' WHERE `user_id` = \'' . (int) $this->userid . '\'';
+		$query = 'SELECT *'
+			. ' FROM #__users u, #__comprofiler ue'
+			. ' WHERE `user_id` = \'' . (int) $this->userid . '\' AND u.id = ue.id';
 		$database->setQuery( $query );
 		$database->loadObject( $this->cbUser );
 
