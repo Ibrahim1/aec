@@ -4973,7 +4973,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 
 	$hacks[$n]['insert']			=	sprintf($aec_jhack3, $n, $n) . "\n" . $hacks[$n]['read'];
 	$hacks[$n]['important']			=	$v15 ? 0 : 1;
-	$hacks[$n]['legacy']			=	$v15 ? 1 : 0;
+	$hacks[$n]['legacy']			=	1;
 
 	// registration.php
 	if ( !$v15 ) {
@@ -5021,6 +5021,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.php';
 		$hacks[$n]['read']			=	'HTML_comprofiler::registerForm( $option, $emailpass, $userComplete, $regErrorMSG );';
 		$hacks[$n]['insert']		=	sprintf($aec_rhackbefore_fix, $n, $n) . "\n" . $hacks[$n]['read'];
+		$hacks[$n]['legacy']		=	1;
 
 		$n = 'comprofilerhtml2';
 		$hacks[$n]['name']			=	'comprofiler.html.php ' . _AEC_HACK_HACK . ' #2';
@@ -5246,6 +5247,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 			$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/administrator/components/com_comprofiler/library/cb/cb.tables.php';
 			$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserUpdate\', array( &$this, &$this, true ) );';
 			$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( $aec_uchangehackCB12x, $n, 'user', $n );
+			$hacks[$n]['legacy']		=	1;
 		} else {
 			$n = 'comprofilerphp4';
 			$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #4';
