@@ -446,6 +446,7 @@ class metaUser
 				$this->focusSubscription = new Subscription( $database );
 				$this->focusSubscription->load( 0 );
 				$this->focusSubscription->createNew( $this->userid, $processor, 1, $plan_params['make_primary'] );
+				$this->focusSubscription->applyUsage( $payment_plan->id, 'none', 1, 0 );
 				$this->hasSubscription = 1;
 
 				if ( $plan_params['make_primary'] ) {
@@ -7698,8 +7699,7 @@ class Subscription extends serialParamDBTable
 		$this->status		= $pending ? 'Pending' : 'Active';
 		$this->type			= $processor;
 
-		$this->check();
-		$this->store();
+		$this->storeload();
 		$this->id = $this->getMax();
 	}
 
