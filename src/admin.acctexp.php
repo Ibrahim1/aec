@@ -1965,6 +1965,7 @@ function editSettings( $option )
 	$params['root_group']					= array( 'list', 0 );
 	$params['root_group_rw']				= array( 'inputD', 0 );
 	$params['plans_first']					= array( 'list_yesno', 0 );
+	$params['integrate_registration']		= array( 'list_yesno', 0 );
 	$params['displayccinfo']				= array( 'list_yesno', 0 );
 	$params['enable_coupons']				= array( 'list_yesno', 0 );
 	$params['ssl_signup']					= array( 'list_yesno', 0 );

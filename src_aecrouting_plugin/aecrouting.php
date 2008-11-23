@@ -68,7 +68,7 @@ function onAfterInitialise ()
 
 	$pfirst		= $aecConfig->cfg['plans_first'];
 
-	if ( $treg || $cbreg ) {
+	if ( ( $treg || $cbreg ) && $aecConfig->cfg['integrate_registration'] ) {
 		// Joomla or CB registration...
 		if ( ( $pfirst && !$nu ) || ( !$pfirst && $nu ) ) {
 			// Plans First and selected or not first and not selected

@@ -1255,6 +1255,7 @@ class Config_General extends serialParamDBTable
 		$def['root_group_rw']					= '';
 		// TODO: $def['show_groups_first']						= 1;
 		// TODO: $def['show_empty_groups']						= 1;
+		$def['integrate_registration']			= 1;
 
 		// Insert a new entry if there is none yet
 		if ( empty( $this->settings ) ) {
