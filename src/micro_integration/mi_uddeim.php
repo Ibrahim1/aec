@@ -170,9 +170,11 @@ class mi_uddeim
 	function action( $request )
 	{
 		global $database;
+		
+		$userid = $request->metaUser->userid;
 
 		$mi_uddeimhandler = new uddeim_restriction( $database );
-		$id = $mi_uddeimhandler->getIDbyUserID( $request->metaUser->userid );
+		$id = $mi_uddeimhandler->getIDbyUserID( $userid );
 		$mi_id = $id ? $id : 0;
 		$mi_uddeimhandler->load( $mi_id );
 
@@ -300,6 +302,7 @@ class uddeim_restriction extends mosDBTable {
 
 	function addMessages( $add )
 	{
+
 		$this->granted_messages += $add;
 	}
 }
