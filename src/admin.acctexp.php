@@ -2825,10 +2825,16 @@ function editSubscriptionPlan( $id, $option )
 		foreach ( $settings_array as $name => $values ) {
 			$setting_name = $pp->id . '_' . $name;
 
+			if ( isset( $customparams_values[$setting_name] ) ) {
+				$value = $customparams_values[$setting_name];
+			} else {
+				$value = $pp->settings[$name];
+			}
+
 			// ...assign new list fields
 			switch( $settings_array[$name][0] ) {
 				case 'list_yesno':
-					$lists[$setting_name] = mosHTML::yesnoSelectList( $setting_name, '', $pp->settings[$name] );
+					$lists[$setting_name] = mosHTML::yesnoSelectList( $setting_name, '', $value );
 
 					$settings_array[$name][0] = 'list';
 					break;
@@ -2846,7 +2852,7 @@ function editSubscriptionPlan( $id, $option )
 					}
 
 					// Create list
-					$lists[$setting_name] = mosHTML::selectList( $currency_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
+					$lists[$setting_name] = mosHTML::selectList( $currency_code_list, $setting_name, 'size="10"', 'value', 'text', $value );
 					$settings_array[$name][0] = 'list';
 					break;
 
@@ -2860,7 +2866,7 @@ function editSubscriptionPlan( $id, $option )
 						$language_code_list[] = mosHTML::makeOption( $language, ( defined( '_AEC_LANG_' . $language  ) ? constant( '_AEC_LANG_' . $language ) : $language ) );
 					}
 					// Create list
-					$lists[$setting_name] = mosHTML::selectList( $language_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
+					$lists[$setting_name] = mosHTML::selectList( $language_code_list, $setting_name, 'size="10"', 'value', 'text', $value );
 					$settings_array[$name][0] = 'list';
 					break;
 
