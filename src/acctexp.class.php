@@ -2173,16 +2173,18 @@ class PaymentProcessor
 		}
 	}
 
-	function exchangeSettings( $settings )
+	function exchangeSettings( $exchange )
 	{
-		 if ( !empty( $settings ) ) {
-			 foreach ( $settings as $key => $value ) {
-				if ( is_array( $value ) ) {
-					continue;
-				}
-
-				if ( strcmp( $value, '[[SET_TO_NULL]]' ) === 0 ) {
-					$this->settings[$key] = null;
+		 if ( !empty( $exchange ) ) {
+			 foreach ( $exchange as $key => $value ) {
+				if( is_string( $value ) ) {
+					if ( strcmp( $value, '[[SET_TO_NULL]]' ) === 0 ) {
+						// Exception for NULL case
+						// TODO: SET_TO_NULL undocumented!!!
+						$this->settings[$key] = null;
+					} else {
+						$this->settings[$key] = $value;
+					}
 				} else {
 					$this->settings[$key] = $value;
 				}
@@ -2628,19 +2630,25 @@ class processor extends serialParamDBTable
 		return '<p>' . $this->settings['info'] . '</p>';
 	}
 
-	function exchangeSettings( $settings, $planvars )
+	function exchangeSettings( $settings, $exchange )
 	{
-		foreach ( $settings as $key => $value ) {
-			if ( isset( $planvars[$key] ) ) {
-				if ( !is_null( $planvars[$key] ) && ( $planvars[$key] != '' ) ) {
-					if ( strcmp( $planvars[$key], '[[SET_TO_NULL]]' ) === 0 ) {
-						$settings[$key] = '';
+		 if ( !empty( $exchange ) ) {
+			 foreach ( $exchange as $key => $value ) {
+				if ( !is_null( $value ) && ( $value != '' ) ) {
+					if( is_string( $value ) ) {
+						if ( strcmp( $value, '[[SET_TO_NULL]]' ) === 0 ) {
+							// Exception for NULL case
+							// TODO: SET_TO_NULL undocumented!!!
+							$settings[$key] = null;
+						} else {
+							$settings[$key] = $value;
+						}
 					} else {
-						$settings[$key] = $planvars[$key];
+						$settings[$key] = $value;
 					}
 				}
-			}
-		}
+			 }
+		 }
 
 		return $settings;
 	}
@@ -10493,21 +10501,21 @@ class microIntegration extends serialParamDBTable
 
 	function exchangeSettings( $exchange )
 	{
-		foreach ( $this->settings as $key => $value ) {
-			if ( !isset( $exchange[$key] ) ) {
-				continue;
-			}
-
-			if ( !empty( $exchange[$key] ) ) {
-				// Exception for NULL case
-				// TODO: SET_TO_NULL undocumented!!!
-				if ( strcmp( $exchange[$key], '[[SET_TO_NULL]]' ) === 0 ) {
-					$this->settings[$key] = '';
+		 if ( !empty( $exchange ) ) {
+			 foreach ( $exchange as $key => $value ) {
+				if( is_string( $value ) ) {
+					if ( strcmp( $value, '[[SET_TO_NULL]]' ) === 0 ) {
+						// Exception for NULL case
+						// TODO: SET_TO_NULL undocumented!!!
+						$this->settings[$key] = null;
+					} else {
+						$this->settings[$key] = $value;
+					}
 				} else {
-					$this->settings[$key] = $exchange[$key];
+					$this->settings[$key] = $value;
 				}
-			}
-		}
+			 }
+		 }
 	}
 
 	function savePostParams( $array )
