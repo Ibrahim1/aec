@@ -83,7 +83,7 @@ class processor_clickbank extends URLprocessor
 		$response = array();
 		$response['invoice']			= aecGetParam( 'invoice' );
 
-		$amount = aecGetParam( 'ctransamount' );
+		$amount = aecGetParam( 'ctransamount', '', true, array( 'word' ) );
 
 		if ( !empty( $amount ) ) {
 			$response['amount_paid']	= $amount / 100;
@@ -94,82 +94,103 @@ class processor_clickbank extends URLprocessor
 
 	function validateNotification( $response, $request, $invoice )
 	{
-		/**
-		 * 	function cbValid() {
-		 *	$key='YOUR SECRET KEY';
-		 *	$rcpt=$_REQUEST['cbreceipt'];
-		 *	$time=$_REQUEST['time'];
-		 *	$item=$_REQUEST['item'];
-		 *	$cbpop=$_REQUEST['cbpop'];
-		 *	$xxpop=sha1("$key|$rcpt|$time|$item");
-		 *	$xxpop=strtoupper(substr($xxpop,0,8));
-		 *	if ($cbpop==$xxpop) return 1; else return 0; }
-		 */
+		if ( !isset( $_REQUEST['cverify'] ) ) {
+			/**
+			 * option,com_acctexp
+			 * task,clickbanknotification
+			 * item,1
+			 * cbreceipt,TESTHER2
+			 * time,1227402795
+			 * cbpop,05115E23
+			 * cbaffi,0
+			 * cname,Bruno+Bruno
+			 * cemail,bruno%40bruno.com
+			 * czip,90210
+			 * ccountry,US
+			 * allowedTypes,1
+			 * invoice,IM2E2MTNiYTM2YTIz/
+			 */
 
-		// Standard parameters that Clickbank will send back (leaving out 'cverify')
-		$stdParams = array( 'ccustname', 'ccuststate', 'ccustcc', 'ccustemail',
-							'cproditem', 'cprodtitle', 'cprodtype', 'ctransaction',
-							'ctransaffiliate', 'ctransamount', 'ctranspaymentmethod', 'ctranspublisher',
-							'ctransreceipt', 'caffitid', 'cvendthru', 'ctranstime' );
+			// It seems this is the crude postback. Trying to decypher.
 
-		$params = array();
-		foreach ( $stdParams as $name ) {
-			$params[] = aecGetParam( $name, '' );
-		}
+			$key='YOUR SECRET KEY';
 
-		$params[] = $this->settings['secret_key'];
+			$check = array();
+			$check[] = $this->settings['secret_key'];
+			$check[] = $_REQUEST['cbreceipt'];
+			$check[] = $_REQUEST['time'];
+			$check[] = $_REQUEST['item'];
 
-		$verify = strtoupper( substr( implode( '|', $params ), 0, 8 ) );
+			$code = sha1( implode( '|', $check) );
 
-		$response['valid'] = 0;
+			$xxpop = strtoupper( substr( $code,0 ,8 ) );
+			if ($cbpop==$xxpop) return 1; else return 0;
 
-		if ( aecGetParam( 'cverify' ) == $verify ) {
-			switch ( $request[''] ) {
-				// The purchase of a standard product or the initial purchase of recurring billing product.
-				case 'SALE':
-					$response['valid']	= 1;
-					break;
-				// The purchase of a standard product or the initial purchase of recurring billing product.
-				case 'BILL':
-					$response['valid']	= 1;
-					break;
-				// The refunding of a standard or recurring billing product. Recurring billing products that are refunded also result in a "CANCEL-REBILL" action.
-				case 'RFND':
-					$response['delete']	= 1;
-					break;
-				// A chargeback for a standard or recurring product.
-				case 'CGBK':
-					$response['delete']	= 1;
-					break;
-				// A chargeback for a standard or recurring product.
-				case 'INSF':
-					$response['delete']	= 1;
-					break;
-				// The cancellation of a recurring billing product. Recurring billing products that are canceled do not result in any other action.
-				case 'CANCEL-REBILL':
-					$response['cancel']	= 1;
-					break;
-				// Reversing the cancellation of a recurring billing product.
-				case 'UNCANCEL-REBILL':
-					$response['cancel']	= 1;
-					break;
-				// Triggered by using the test link on the site page.
-				case 'TEST':
-					if ( $this->settings['secret_key'] ) {
-						$response['valid']	= 1;
-					} else {
-						$response['valid'] = 0;
-						$response['pending_reason'] = 'testmode claimed when not activated';
-					}
-					break;
-			}
 		} else {
+			// Standard parameters that Clickbank will send back (leaving out 'cverify')
+			$stdParams = array( 'ccustname', 'ccuststate', 'ccustcc', 'ccustemail',
+								'cproditem', 'cprodtitle', 'cprodtype', 'ctransaction',
+								'ctransaffiliate', 'ctransamount', 'ctranspaymentmethod', 'ctranspublisher',
+								'ctransreceipt', 'caffitid', 'cvendthru', 'ctranstime' );
+
+			$params = array();
+			foreach ( $stdParams as $name ) {
+				$params[] = aecGetParam( $name, '', true, array( 'word', 'string' ) );
+			}
+
+			$params[] = $this->settings['secret_key'];
+
+			$verify = strtoupper( substr( implode( '|', $params ), 0, 8 ) );
+
 			$response['valid'] = 0;
-			$response['pending_reason'] = 'verification error';
+
+			if ( aecGetParam( 'cverify' ) == $verify ) {
+				switch ( $request[''] ) {
+					// The purchase of a standard product or the initial purchase of recurring billing product.
+					case 'SALE':
+						$response['valid']	= 1;
+						break;
+					// The purchase of a standard product or the initial purchase of recurring billing product.
+					case 'BILL':
+						$response['valid']	= 1;
+						break;
+					// The refunding of a standard or recurring billing product. Recurring billing products that are refunded also result in a "CANCEL-REBILL" action.
+					case 'RFND':
+						$response['delete']	= 1;
+						break;
+					// A chargeback for a standard or recurring product.
+					case 'CGBK':
+						$response['delete']	= 1;
+						break;
+					// A chargeback for a standard or recurring product.
+					case 'INSF':
+						$response['delete']	= 1;
+						break;
+					// The cancellation of a recurring billing product. Recurring billing products that are canceled do not result in any other action.
+					case 'CANCEL-REBILL':
+						$response['cancel']	= 1;
+						break;
+					// Reversing the cancellation of a recurring billing product.
+					case 'UNCANCEL-REBILL':
+						$response['cancel']	= 1;
+						break;
+					// Triggered by using the test link on the site page.
+					case 'TEST':
+						if ( $this->settings['secret_key'] ) {
+							$response['valid']	= 1;
+						} else {
+							$response['valid'] = 0;
+							$response['pending_reason'] = 'testmode claimed when not activated';
+						}
+						break;
+				}
+			} else {
+				$response['valid'] = 0;
+				$response['pending_reason'] = 'verification error';
+			}
+
+			return $response;
 		}
-
-		return $response;
-
 	}
 
 }
