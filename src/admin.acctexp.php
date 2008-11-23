@@ -3374,8 +3374,11 @@ function editItemGroup( $id, $option )
 	$settings = new aecSettings ( 'itemgroup', 'general' );
 	if ( is_array( $customparams_values ) ) {
 		$settingsparams = array_merge( $params_values, $customparams_values, $restrictions_values );
-	} else {
+	} elseif( is_array( $restrictions_values ) ){
 		$settingsparams = array_merge( $params_values, $restrictions_values );
+	}
+	else {
+		$settingsparams = $params_values;
 	}
 
 	$lists = array_merge( $lists, $restrictionHelper->getLists( $params_values, $restrictions_values ) );

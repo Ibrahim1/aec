@@ -443,6 +443,7 @@ define( '_CANCEL_PAYPLAN', 'Cancel');
 define( '_PAYPLANS_TITLE', 'Payment Plans Manager');
 define( '_PAYPLANS_MAINDESC', 'Published plans will be options for the user on frontend. These plans are only valid for Gateway payments.');
 define( '_PAYPLAN_GROUP', 'Group');
+define( '_PAYPLAN_NOGROUP', 'No Group');
 define( '_PAYPLAN_NAME', 'Name');
 define( '_PAYPLAN_DESC', 'Description (first 50 chars)');
 define( '_PAYPLAN_ACTIVE', 'Published');
