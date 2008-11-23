@@ -1118,7 +1118,9 @@ function processNotification( $option, $processor )
 	foreach ( $_POST as $key => $value ) {
 		$responsestring .= $key . '=' . urlencode( stripslashes( $value ) ) . "\n";
 	}
-//aecDebug( "ResponseFunction:processNotification" );aecDebug( "GET:".json_encode( $_GET ) );aecDebug( "POST:".json_encode( $_POST ) );
+
+	// aecDebug( "ResponseFunction:processNotification" );aecDebug( "GET:".json_encode( $_GET ) );aecDebug( "POST:".json_encode( $_POST ) );
+
 	// parse processor notification
 	$pp = new PaymentProcessor( $processor );
 	if ( $pp->loadName( $processor ) ) {
@@ -1139,7 +1141,7 @@ function processNotification( $option, $processor )
 		$tags	= 'invoice,processor,payment,error';
 		$params = array( 'invoice_number' => $objInvoice->invoice_number );
 
-		$eventlog = new eventLog($database);
+		$eventlog = new eventLog( $database );
 		$eventlog->issue( $short, $tags, $event, 128, $params );
 
 		$error = 'Invoice Number not found. Invoice number provided: "' . $response['invoice'] . '"';
@@ -1149,9 +1151,8 @@ function processNotification( $option, $processor )
 	} else {
 		$response['responsestring'] = $responsestring;
 
-		$objInvoice = new Invoice( $database );
-		$objInvoice->load( $id );
-		$objInvoice->processorResponse( $pp, $response );
+		$invoicefact = new InvoiceFactory( null, null, null, null, $response['invoice'] );
+		$invoicefact->processorResponse( $option, $response );
 	}
 }
 

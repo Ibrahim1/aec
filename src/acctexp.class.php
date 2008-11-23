@@ -6371,8 +6371,32 @@ class InvoiceFactory
 
 		if ( isset( $response['error'] ) ) {
 			$this->error( $option, $this->metaUser->cmsUser, $this->objInvoice->invoice_number, $response['error'] );
-		} else { // TODO: Check for renew!!!
+		} else {
 			$this->thanks( $option, 1, false );
+		}
+	}
+
+	function processorResponse( $option, $response )
+	{
+		global $database;
+
+		$this->touchInvoice( $option );
+
+		$this->userid = $this->objInvoice->userid;
+		$this->loadMetaUser();
+
+		$this->puffer();
+
+		$this->objInvoice->processorResponse( $this->pp, $response );
+
+		if ( isset( $response['error'] ) ) {
+			$this->error( $option, $this->metaUser->cmsUser, $this->objInvoice->invoice_number, $response['error'] );
+		} else {
+			if ( $pp->info['notify_trail_thanks'] ) {
+				$this->thanks( $option );
+			} else {
+				exit;
+			}
 		}
 	}
 
@@ -6412,7 +6436,7 @@ class InvoiceFactory
 		}
 	}
 
-	function thanks( $option, $renew, $free )
+	function thanks( $option, $renew=false, $free=false )
 	{
 		global $mosConfig_useractivation, $aecConfig, $mainframe;
 
@@ -6920,7 +6944,6 @@ class Invoice extends serialParamDBTable
 
 		$notificationerror = null;
 
-		$nothanks = 1;
 		if ( $response['valid'] ) {
 			$break = 0;
 
@@ -6960,9 +6983,6 @@ class Invoice extends serialParamDBTable
 					$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_VALID_APPFAIL;
 					$tags	.= ',payment,action_failed';
 				} else {
-					if ( !empty( $pp->info['notify_trail_thanks'] ) ) {
-						$nothanks = 0;
-					}
 					$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_VALID;
 					$tags	.= ',payment,action';
 				}
@@ -7103,12 +7123,6 @@ class Invoice extends serialParamDBTable
 			$pp->notificationError( $response, $pp->notificationError( $response, $notificationerror ) );
 		} else {
 			$pp->notificationSuccess( $response );
-		}
-
-		if ( !$nothanks ) {
-			thanks( 'com_acctexp', $renew, ($pp === 0) );
-		} else {
-			exit;
 		}
 	}
 
