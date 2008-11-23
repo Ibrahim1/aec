@@ -1093,6 +1093,16 @@ function joomlaregisterForm($option, $useractivation)
 {
 	global $aecConfig, $mosConfig_absolute_path;
 
+	$name = $username = $email = '';
+
+	$values = array( 'name', 'username', 'email' );
+
+	foreach ( $values as $n ) {
+		if ( isset( $_POST[$n] ) ) {
+			$$n = $_POST[$n];
+		}
+	}
+
 	if ( aecJoomla15check() ) {
 	?>
 	<script type="text/javascript">
@@ -1117,7 +1127,7 @@ function joomlaregisterForm($option, $useractivation)
 			</label>
 		</td>
 	  	<td>
-	  		<input type="text" name="name" id="name" size="40" value="" class="inputbox required" maxlength="50" /> *
+	  		<input type="text" name="name" id="name" size="40" value="<?php echo $name; ?>" class="inputbox required" maxlength="50" /> *
 	  	</td>
 	</tr>
 	<tr>
@@ -1127,7 +1137,7 @@ function joomlaregisterForm($option, $useractivation)
 			</label>
 		</td>
 		<td>
-			<input type="text" id="username" name="username" size="40" value="" class="inputbox required validate-username" maxlength="25" /> *
+			<input type="text" id="username" name="username" size="40" value="<?php echo $username;  ?>" class="inputbox required validate-username" maxlength="25" /> *
 		</td>
 	</tr>
 	<tr>
@@ -1137,7 +1147,7 @@ function joomlaregisterForm($option, $useractivation)
 			</label>
 		</td>
 		<td>
-			<input type="text" id="email" name="email" size="40" value="" class="inputbox required validate-email" maxlength="100" /> *
+			<input type="text" id="email" name="email" size="40" value="<?php echo $email;  ?>" class="inputbox required validate-email" maxlength="100" /> *
 		</td>
 	</tr>
 	<tr>
@@ -1165,15 +1175,11 @@ function joomlaregisterForm($option, $useractivation)
 		require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
 		?>
 		<tr>
-		<td height="40">
-			<label>
-			</label>
-		</td>
-		<td>
-		<?php
-		echo recaptcha_get_html( $aecConfig->cfg['recaptcha_publickey'] );
-		?>
-		</td>
+			<td height="40">
+				<label>
+				</label>
+			</td>
+			<td><?php echo recaptcha_get_html( $aecConfig->cfg['recaptcha_publickey'] ); ?></td>
 		</tr>
 		<?php
 	}
@@ -1243,7 +1249,7 @@ function joomlaregisterForm($option, $useractivation)
 			<?php echo _REGISTER_NAME; ?> *
 		</td>
 	  	<td>
-	  		<input type="text" name="name" size="40" value="" class="inputbox" maxlength="50" />
+	  		<input type="text" name="name" size="40" value="<?php echo $name;  ?>" class="inputbox" maxlength="50" />
 	  	</td>
 	</tr>
 	<tr>
@@ -1251,7 +1257,7 @@ function joomlaregisterForm($option, $useractivation)
 			<?php echo _REGISTER_UNAME; ?> *
 		</td>
 		<td>
-			<input type="text" name="username" size="40" value="" class="inputbox" maxlength="25" />
+			<input type="text" name="username" size="40" value="<?php echo $username;  ?>" class="inputbox" maxlength="25" />
 		</td>
 	</tr>
 	<tr>
@@ -1259,7 +1265,7 @@ function joomlaregisterForm($option, $useractivation)
 			<?php echo _REGISTER_EMAIL; ?> *
 		</td>
 		<td>
-			<input type="text" name="email" size="40" value="" class="inputbox" maxlength="100" />
+			<input type="text" name="email" size="40" value="<?php echo $email;  ?>" class="inputbox" maxlength="100" />
 		</td>
 	</tr>
 	<tr>
@@ -1287,12 +1293,8 @@ function joomlaregisterForm($option, $useractivation)
 		require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
 		?>
 		<tr>
-		<td></td>
-		<td>
-		<?php
-		echo recaptcha_get_html( $aecConfig->cfg['recaptcha_publickey'] );
-		?>
-		</td>
+			<td></td>
+			<td><?php echo recaptcha_get_html( $aecConfig->cfg['recaptcha_publickey'] ); ?></td>
 		</tr>
 		<?php
 	}
