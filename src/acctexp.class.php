@@ -7585,7 +7585,7 @@ class Subscription extends serialParamDBTable
 
 	function declareParamFields()
 	{
-		return array( 'used_plans', 'params', 'customparams' );
+		return array( 'params', 'customparams' );
 	}
 
 	function check()

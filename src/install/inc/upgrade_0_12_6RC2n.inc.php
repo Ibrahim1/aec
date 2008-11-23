@@ -43,26 +43,6 @@ if ( count( $planlist ) > $database->loadResult() ) {
 	ItemGroupHandler::setChildren( 1, $planlist );
 }
 
-/*
-// Modifying MI tables for MI Scope
-
-// Make sure we have MIs in the first place
-
-// Loop through MIs putting settings in subarrays (convert old _exp _pre_exp stuff)
-
-// Convert old interpretative pre-expiration into new event table scheme
-// Get all MIs that have pre-exp
-// Get plans that have that MI
-// Get active users with that plan
-// Create events for users
-
-// Delete old mi table columns
-$eucaInstalldb->dropColifExists( 'auto_check', 'microintegrations' );
-$eucaInstalldb->dropColifExists( 'on_userchange', 'microintegrations' );
-$eucaInstalldb->dropColifExists( 'pre_exp_check', 'microintegrations' );
-
-*/
-
 // Fixing secondary invoice numbers for CCBill
 $query = 'SELECT id FROM #__acctexp_config_processors WHERE name = \'ccbill\'';
 $database->setQuery( $query );
@@ -93,5 +73,46 @@ if ( $ccid ) {
 		}
 	}
 }
+
+// Haunted by ghosts of xmas past
+$query = 'SELECT `id` FROM #__acctexp_subscr WHERE `params` LIKE \'%_jsoon%\'';
+$database->setQuery( $query );
+
+$list = $database->loadResultArray();
+
+if ( !empty( $list ) ) {
+	foreach ( $list as $sid ) {
+		$query = 'SELECT `params` FROM #__acctexp_subscr WHERE `id` = \'' . $sid . '\'';
+		$database->setQuery( $query );
+
+		$params = $database->loadResult();
+		$decode = stripslashes( str_replace( array( '\n', '\t', '\r' ), array( "\n", "\t", "\r" ), trim($params) ) );
+		$temp = jsoonHandler::decode( $decode );
+
+		$query = 'UPDATE #__acctexp_subscr SET `params` = \'' . base64_encode( serialize( $temp ) ) . '\' WHERE `id` = \'' . $sid . '\'';
+		$database->setQuery( $query );
+		$database->query();
+	}
+}
+
+/*
+// Modifying MI tables for MI Scope
+
+// Make sure we have MIs in the first place
+
+// Loop through MIs putting settings in subarrays (convert old _exp _pre_exp stuff)
+
+// Convert old interpretative pre-expiration into new event table scheme
+// Get all MIs that have pre-exp
+// Get plans that have that MI
+// Get active users with that plan
+// Create events for users
+
+// Delete old mi table columns
+$eucaInstalldb->dropColifExists( 'auto_check', 'microintegrations' );
+$eucaInstalldb->dropColifExists( 'on_userchange', 'microintegrations' );
+$eucaInstalldb->dropColifExists( 'pre_exp_check', 'microintegrations' );
+
+*/
 
 ?>
