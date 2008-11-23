@@ -1587,6 +1587,11 @@ class aecHeartbeat extends mosDBTable
 								$subscription_plan->load( $metaUser->focusSubscription->plan );
 								$userplan_mis = $subscription_plan->micro_integrations;
 
+								// Double check whether we have the MIs
+								if ( empty( $userplan_mis ) ) {
+									continue;
+								}
+
 								// Get the right MIs
 								$user_pexpmis = array_intersect( $userplan_mis, $mi_pexp );
 
