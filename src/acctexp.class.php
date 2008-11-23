@@ -446,13 +446,13 @@ class metaUser
 				$this->focusSubscription = new Subscription( $database );
 				$this->focusSubscription->load( 0 );
 				$this->focusSubscription->createNew( $this->userid, $processor, 1, $plan_params['make_primary'] );
-				$this->focusSubscription->applyUsage( $payment_plan->id, 'none', 1, 0 );
 				$this->hasSubscription = 1;
 
 				if ( $plan_params['make_primary'] ) {
 					$this->objSubscription = $this->focusSubscription;
 				}
 			}
+
 		}
 
 		$this->temporaryRFIX();
@@ -8698,6 +8698,10 @@ class AECToolbox
 		$database->setQuery( $query );
 		$id = $database->loadResult();
 
+		if ( empty( $id ) ) {
+			return false;
+		}
+
 		$metaUser = new metaUser( $id );
 
 		if ( $metaUser->hasSubscription ) {
@@ -8709,6 +8713,8 @@ class AECToolbox
 					$payment_plan->load( $aecConfig->cfg['entry_plan'] );
 
 					$metaUser->establishFocus( $payment_plan, 'Free' );
+
+					$metaUser->focusSubscription->applyUsage( $payment_plan->id, 'Free', 1, 0 );
 
 					return AECToolbox::VerifyUsername( $username );
 				} else {
@@ -8747,6 +8753,10 @@ class AECToolbox
 		$database->setQuery( $query );
 		$id = $database->loadResult();
 
+		if ( empty( $id ) ) {
+			return false;
+		}
+
 		$metaUser = new metaUser( $id );
 
 		if ( $metaUser->hasSubscription ) {
@@ -8764,6 +8774,8 @@ class AECToolbox
 					$payment_plan->load( $aecConfig->cfg['entry_plan'] );
 
 					$metaUser->establishFocus( $payment_plan, 'Free' );
+
+					$metaUser->focusSubscription->applyUsage( $payment_plan->id, 'Free', 1, 0 );
 
 					return AECToolbox::VerifyUser( $username );
 				} else {
@@ -10245,14 +10257,13 @@ class microIntegration extends serialParamDBTable
 			$this->exchangeSettings( $exchange );
 		}
 
-		$params = $metaUser->meta->getMIParams( $this->id, $objplan->id );
-
 		$request = new stdClass();
 		$request->parent			=& $this;
 		$request->metaUser			=& $metaUser;
 		$request->invoice			=& $invoice;
 		$request->plan				=& $objplan;
-		$request->params			=& $params;
+
+		$request->params		=& $metaUser->meta->getMIParams( $this->id, $objplan->id );;
 
 		if ( $add !== false ) {
 			$request->add			=& $add;

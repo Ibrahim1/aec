@@ -74,12 +74,7 @@ function aecBotRouting()
 	}
 
 	if ( $olo || ( $ccb && $tlo ) ) {
-		$verification = AECToolbox::VerifyUsername( $username );
-
-		if ( $verification === false ) {
-			// No Login for you. General purpose block.
-			die('Invalid Access.');
-		}
+		AECToolbox::VerifyUsername( $username );
 	}
 }
 
