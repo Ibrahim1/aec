@@ -44,9 +44,10 @@ class plgSystemAECrouting extends JPlugin
 
 function onAfterInitialise ()
 {
-	global $option, $aecConfig;
+	global $aecConfig;
 
 	$task	= mosGetParam( $_REQUEST, 'task', '' );
+	$option	= mosGetParam( $_REQUEST, 'option', '' );
 	$usage	= intval( mosGetParam( $_POST, 'usage', '0' ) );
 	$submit	= mosGetParam( $_POST, 'submit', '' );
 
@@ -79,7 +80,8 @@ function onAfterInitialise ()
 		} elseif ( $pfirst && $nu ) {
 			// Plans first and not yet selected
 			// Immediately redirect to plan selection
-			mosRedirect( sefRelToAbs( 'index.php?option=com_acctexp&task=subscribe' ) );
+			global $mainframe;
+			$mainframe->redirect( 'index.php?option=com_acctexp&task=subscribe' );
 		}
 	} elseif ( $cbsreg ) {
 		// Any kind of user profile edit = trigger MIs
