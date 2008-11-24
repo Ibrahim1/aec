@@ -4732,28 +4732,26 @@ class SubscriptionPlan extends serialParamDBTable
 			} else {
 				$metaUser->focusSubscription->recurring = 0;
 			}
-		}
 
-		$result = $this->triggerMIs( 'action', $metaUser, null, $invoice, false, $silent );
-
-		if ( $result === false ) {
-			return false;
-		}
-
-		if ( $userid ) {
+			$result = $this->triggerMIs( 'action', $metaUser, null, $invoice, false, $silent );
+	
+			if ( $result === false ) {
+				return false;
+			}
+	
 			if ( $this->params['gid_enabled'] ) {
 				$metaUser->instantGIDchange($this->params['gid']);
 			}
 
 			$metaUser->focusSubscription->storeload();
-		}
-
-		if ( !( $silent || $aecConfig->cfg['noemails'] ) ) {
-			if ( ( $this->id !== $aecConfig->cfg['entry_plan'] ) ) {
-				$metaUser->focusSubscription->sendEmailRegistered( $renew );
+	
+			if ( !( $silent || $aecConfig->cfg['noemails'] ) ) {
+				if ( ( $this->id !== $aecConfig->cfg['entry_plan'] ) ) {
+					$metaUser->focusSubscription->sendEmailRegistered( $renew );
+				}
 			}
 		}
-
+		
 		return $renew;
 	}
 
