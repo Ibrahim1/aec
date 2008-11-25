@@ -10,7 +10,7 @@
 	<version>0.4</version>
 	<description>The AEC Access Plugin regulates access to Joomla! based on the subscription status of a user within the AEC.</description>
 	<files>
-		<filename plugin="aecaccess">aecaccess.php</filename>
+		<filename plugin="AECaccess">aecaccess.php</filename>
 	</files>
 	<params/>
 </install>

@@ -10,7 +10,7 @@
 	<version>0.2</version>
 	<description>The AEC User Plugin makes sure that changes to a user account are propagated to the AEC.</description>
 	<files>
-		<filename plugin="aecuser">aecuser.php</filename>
+		<filename plugin="AECuser">aecuser.php</filename>
 	</files>
 	<params/>
 </install>

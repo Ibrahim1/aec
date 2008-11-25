@@ -8,9 +8,29 @@
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
-
 // Check to ensure this file is included in Joomla!
 defined( '_JEXEC' ) or die( 'Restricted access' );
+
+if ( !class_exists( 'mosDBTable' ) ) {
+	// We have a problem - the legacy bot is not published (yet).
+	// Issue error end do not load anything.
+
+	$db =& JFactory::getDBO();
+
+	$date	= date( 'Y-m-d H:i:s' );
+	$short	= 'Plugin could not be loaded';
+	$tags	= 'system,plugins,fatal';
+	$event	= 'One of the AEC Plugins could not be loaded because the Legacy Plugin not published or published after AEC plugins. MUST be published before AEC plugins!';
+	$level	= 128;
+	$notify	= 1;
+
+	$query = 'INSERT INTO #__acctexp_eventlog'
+			. ' (`datetime`, `short`, `tags`, `event`, `level`, `notify` )'
+			. ' VALUES (\'' . $date . '\', \'' . $short . '\', \'' . $tags . '\', \'' . $event . '\', \'' . $level . '\', \'' . $notify . '\')';
+
+	$db->setQuery( $query );
+	$db->query();
+} else {
 
 // Import library dependencies
 jimport('joomla.event.plugin');
@@ -21,7 +41,7 @@ jimport('joomla.event.plugin');
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
  * @package AEC Component
  */
-class plgSystemAECErrorHandler extends JPlugin
+class plgSystemAECerrorhandler extends JPlugin
 {
 	/**
 	 * Constructor
@@ -34,7 +54,7 @@ class plgSystemAECErrorHandler extends JPlugin
 	 * @param array  $config  An array that holds the plugin configuration
 	 * @since 1.5
 	 */
-	function plgSystemAECErrorHandler( &$subject, $config )
+	function plgSystemAECerrorhandler( &$subject, $config )
 	{
 		parent::__construct( $subject, $config );
 	}
@@ -103,6 +123,8 @@ class plgSystemAECErrorHandler extends JPlugin
 			$mainframe->redirect( "index.php?option=com_acctexp&task=NotAllowed" );
 		}
 	}
+
+}
 
 }
 

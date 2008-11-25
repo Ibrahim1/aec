@@ -11,6 +11,27 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
+if ( !class_exists( 'mosDBTable' ) ) {
+	// We have a problem - the legacy bot is not published (yet).
+	// Issue error end do not load anything.
+
+	$db =& JFactory::getDBO();
+
+	$date	= date( 'Y-m-d H:i:s' );
+	$short	= 'Plugin could not be loaded';
+	$tags	= 'system,plugins,fatal';
+	$event	= 'One of the AEC Plugins could not be loaded because the Legacy Plugin not published or published after AEC plugins. MUST be published before AEC plugins!';
+	$level	= 128;
+	$notify	= 1;
+
+	$query = 'INSERT INTO #__acctexp_eventlog'
+			. ' (`datetime`, `short`, `tags`, `event`, `level`, `notify` )'
+			. ' VALUES (\'' . $date . '\', \'' . $short . '\', \'' . $tags . '\', \'' . $event . '\', \'' . $level . '\', \'' . $notify . '\')';
+
+	$db->setQuery( $query );
+	$db->query();
+} else {
+
 jimport('joomla.event.plugin');
 
 include_once( JPATH_SITE . "/components/com_acctexp/acctexp.class.php" );
@@ -92,6 +113,8 @@ function onAfterInitialise ()
 		$mih = new microIntegrationHandler();
 		$mih->userchange( $row, $_POST, 'registration' );
 	}
+
+}
 
 }
 

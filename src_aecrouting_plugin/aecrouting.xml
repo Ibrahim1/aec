@@ -10,7 +10,7 @@
 	<version>0.1</version>
 	<description>The AEC Routing Plugin replaces old hacks - rerouting the user (especially during registration) according to the AEC Settings.</description>
 	<files>
-		<filename plugin="aecrouting">aecrouting.php</filename>
+		<filename plugin="AECrouting">aecrouting.php</filename>
 	</files>
 	<params/>
 </install>

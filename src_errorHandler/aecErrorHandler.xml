@@ -10,7 +10,7 @@
 	<version>0.1</version>
 	<description>The AEC Error Handler introduces a new JErrorHandler to handle &amp; redirect upon the different errors.</description>
 	<files>
-		<filename plugin="aecErrorHandler">aecErrorHandler.php</filename>
+		<filename plugin="AECerrorhandler">aecErrorHandler.php</filename>
 	</files>
 	<params/>
 </install>
