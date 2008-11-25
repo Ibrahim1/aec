@@ -554,6 +554,7 @@ define( '_CANCEL_PAYPLAN', 'Abbrechen' );
 define( '_PAYPLANS_TITLE', 			'Abonnement Verwaltung' );
 define( '_PAYPLANS_MAINDESC',		'Ver&ouml;ffentlichte Abos werden den Benutzern angezeigt' );
 define( '_PAYPLAN_GROUP', 'Group');
+define( '_PAYPLAN_NOGROUP', 'No Group');
 define( '_PAYPLAN_NAME', 'Name' );
 define( '_PAYPLAN_DESC', 'Beschreibung (ersten 50 Zeichen)' );
 define( '_PAYPLAN_ACTIVE', 'Aktiv' );

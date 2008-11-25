@@ -556,6 +556,7 @@ define( '_CANCEL_PAYPLAN', '�?�消');
 define( '_PAYPLANS_TITLE', '�?�还计划的管�?�者');
 define( '_PAYPLANS_MAINDESC', '�?�布计划将被�?�?�的使用者选择,这些计划仅对网关支付事有效的.');
 define( '_PAYPLAN_GROUP', 'Group');
+define( '_PAYPLAN_NOGROUP', 'No Group');
 define( '_PAYPLAN_NAME', '�??字');
 define( '_PAYPLAN_DESC', '�??述(�?超过50个字符)');
 define( '_PAYPLAN_ACTIVE', '�?�布');

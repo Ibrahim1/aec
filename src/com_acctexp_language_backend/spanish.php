@@ -556,6 +556,7 @@ define( '_CANCEL_PAYPLAN', 'Cancelar');
 define( '_PAYPLANS_TITLE', 'Administrador de planes de pago');
 define( '_PAYPLANS_MAINDESC', 'Los planes publicados seran opciones para el usuario en el frontend. Estos planes son validos unicamente para pagos a travez de PayPal.');
 define( '_PAYPLAN_GROUP', 'Group');
+define( '_PAYPLAN_NOGROUP', 'No Group');
 define( '_PAYPLAN_NAME', 'Nombre');
 define( '_PAYPLAN_DESC', 'Descripcion (los primeros 50 caracteres)');
 define( '_PAYPLAN_ACTIVE', 'Publicado');

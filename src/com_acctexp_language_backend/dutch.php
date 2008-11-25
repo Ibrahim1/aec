@@ -444,6 +444,7 @@ define( '_CANCEL_PAYPLAN', 'Annuleren');
 define( '_PAYPLANS_TITLE', 'Betalingsplannen manager');
 define( '_PAYPLANS_MAINDESC', 'Gepubliceerde plannen zijn plan opties in de gebruikers front-end. Deze plannen zijn alleen geldig op gateway betalingen (dus niet handmatige aanmeldingen).');
 define( '_PAYPLAN_GROUP', 'Group');
+define( '_PAYPLAN_NOGROUP', 'No Group');
 define( '_PAYPLAN_NAME', 'Naam');
 define( '_PAYPLAN_DESC', 'Omschrijving (eerste 50 caracters)');
 define( '_PAYPLAN_ACTIVE', 'Gepubliceerd');

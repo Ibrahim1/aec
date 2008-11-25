@@ -557,6 +557,7 @@ define( '_CANCEL_PAYPLAN', 'Cancella');
 define( '_PAYPLANS_TITLE', 'Gestione Piano Pagamento');
 define( '_PAYPLANS_MAINDESC', 'Questa lista non include le iscrizioni effettuate manualmente, solo quelle processate tramite Gateway.');
 define( '_PAYPLAN_GROUP', 'Group');
+define( '_PAYPLAN_NOGROUP', 'No Group');
 define( '_PAYPLAN_NAME', 'Nome');
 define( '_PAYPLAN_DESC', 'Descrizione (primi 50 caratteri)');
 define( '_PAYPLAN_ACTIVE', 'Pubblicato');

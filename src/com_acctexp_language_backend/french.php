@@ -441,6 +441,7 @@ define( '_CANCEL_PAYPLAN', 'Annuler');
 define( '_PAYPLANS_TITLE', 'Gestionnaire des plans');
 define( '_PAYPLANS_MAINDESC', 'Les plans Publi&eacute;s seront des options pour l&amp;acute;utilisateur sur le frontend du site. Ces plans sont valides uniquement pour les paiements Paypal.');
 define( '_PAYPLAN_GROUP', 'Group');
+define( '_PAYPLAN_NOGROUP', 'No Group');
 define( '_PAYPLAN_NAME', 'Nom');
 define( '_PAYPLAN_DESC', 'Description (premiers 50 caract&egrave;res)');
 define( '_PAYPLAN_ACTIVE', 'Publi&eacute;');
