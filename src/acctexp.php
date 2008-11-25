@@ -381,7 +381,8 @@ function subscribe( $option )
 		} else {
 			if ( isset( $_POST['username'] ) && isset($_POST['email'] ) ) {
 				if ( checkDuplicateUsernameEmail( $username, $email ) !== true ) {
-					return false;
+					echo "<script> alert('".html_entity_decode($row->getError())."'); window.history.go(-1); </script>\n";
+					exit();
 				}
 			}
 		}
@@ -403,7 +404,8 @@ function subscribe( $option )
 		} elseif ( !$userid ) {
 			if ( isset( $_POST['username'] ) && isset($_POST['email'] ) ) {
 				if ( checkDuplicateUsernameEmail( $username, $email ) !== true ) {
-					return false;
+					echo "<script> alert('".html_entity_decode($row->getError())."'); window.history.go(-1); </script>\n";
+					exit();
 				}
 			}
 
