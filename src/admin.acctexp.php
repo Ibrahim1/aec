@@ -5030,7 +5030,6 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['name']			=	'comprofiler.html.php ' . _AEC_HACK_HACK . ' #2';
 		$hacks[$n]['desc']			=	_AEC_HACKS_CB_HTML2;
 		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['condition']		=	'comprofilerphp6';
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.html.php';
 		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveregisters" />';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);

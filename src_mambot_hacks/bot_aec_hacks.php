@@ -58,9 +58,10 @@ function aecBotRouting()
 		if ( ( $pfirst && !$nu ) || ( !$pfirst && $nu ) ) {
 			// Plans First and selected or not first and not selected
 			// Both cases = redirect to AEC on the next page
-			$_REQUEST['option'] = "com_acctexp";
-			// Just to be sure
+
 			$option = "com_acctexp";
+
+			$_REQUEST['option'] = $option;
 		} elseif ( $pfirst && $nu ) {
 			// Plans first and not yet selected
 			// Immediately redirect to plan selection
@@ -75,7 +76,7 @@ function aecBotRouting()
 		$mih = new microIntegrationHandler();
 		$mih->userchange( $row, $_POST, 'registration' );
 	}
-	
+
 	if ( $olo || ( $ccb && $tlo ) ) {
 		AECToolbox::VerifyUsername( $username );
 	}
