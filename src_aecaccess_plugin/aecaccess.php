@@ -90,7 +90,9 @@ class plgAuthenticationAECaccess extends JPlugin
 						}
 
 						// Try to authenticate
-						$plugin->onAuthenticate($credentials, $options, $response);
+						if ( method_exists( $plugin, 'onAuthenticate' ) ) {
+							$plugin->onAuthenticate($credentials, $options, $response);
+						}
 
 						// If authentication is unsuccessfull break whole authorization
 						if ( $response->status !== JAUTHENTICATE_STATUS_SUCCESS ) {
