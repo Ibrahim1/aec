@@ -2176,7 +2176,9 @@ class PaymentProcessor
 						// TODO: SET_TO_NULL undocumented!!!
 						$this->settings[$key] = null;
 					} else {
-						$this->settings[$key] = $value;
+						if ( !empty( $value ) ) {
+							$this->settings[$key] = $value;
+						}
 					}
 				} else {
 					$this->settings[$key] = $value;
