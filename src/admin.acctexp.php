@@ -2392,8 +2392,31 @@ function saveSettings( $option, $return=0 )
 	unset( $_POST['task'] );
 	unset( $_POST['option'] );
 
-	$general_settings = array();
+	if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
+		$ch = hackcorefile( $option, 'comprofilerhtml2', true, false, true );
 
+		if ( ( !$ch && $_POST['plans_first'] ) || ( $ch && !$_POST['plans_first'] ) ) {
+			$short	= 'AEC Settings Error';
+
+			if ( !$ch && $_POST['plans_first'] ) {
+				$_POST['plans_first'] = 0;
+
+				$event	= 'Cannot set Plans First to yes if comprofiler.php ' . _AEC_HACK_HACK . ' #2 is not applied';
+			} elseif ( $ch && !$_POST['plans_first'] ) {
+				$_POST['plans_first'] = 1;
+
+				$event	= 'Cannot set Plans First to no if comprofiler.php ' . _AEC_HACK_HACK . ' #2 is still applied';
+			}
+
+			$tags	= 'settings,system';
+			$params = array();
+
+			$eventlog = new eventLog( $database );
+			$eventlog->issue( $short, $tags, $event, 128, $params, 1 );
+		}
+	}
+
+	$general_settings = array();
 	foreach ( $_POST as $name => $value ) {
 		$general_settings[$name] = $value;
 	}
@@ -4701,7 +4724,7 @@ function obsafe_print_r($var, $return = false, $html = false, $level = 0) {
       else echo $output;
 }
 
-function hackcorefile( $option, $filename, $check_hack, $undohack )
+function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=false )
 {
 	global $mosConfig_absolute_path, $mosConfig_live_site, $database;
 	global $mosConfig_debug;
@@ -5082,12 +5105,10 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['name']			=	'comprofiler.html.php ' . _AEC_HACK_HACK . ' #2';
 		$hacks[$n]['desc']			=	_AEC_HACKS_CB_HTML2;
 		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['condition']		=	'comprofilerphp6';
 		$hacks[$n]['uncondition']	=	'comprofilerhtml';
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.html.php';
 		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveregisters" />';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
-		$hacks[$n]['important']		=	1;
 
 	} elseif ( GeneralInfoRequester::detect_component( 'CBE' ) ) {
 		$n = 'comprofilerphp2';
@@ -5135,12 +5156,10 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['name']			=	'comprofiler.html.php ' . _AEC_HACK_HACK . ' #2';
 		$hacks[$n]['desc']			=	_AEC_HACKS_CB_HTML2;
 		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['condition']		=	'comprofilerphp6';
 		$hacks[$n]['uncondition']	=	'comprofilerhtml';
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.html.php';
 		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveRegistration" />';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
-		$hacks[$n]['important']		=	1;
 	} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
 		$n = 'juserhtml1';
 		$hacks[$n]['name']			=	'juser.html.php ' . _AEC_HACK_HACK . ' #1';
@@ -5406,6 +5425,10 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 					break;
 			}
 		}
+	}
+
+	if ( $checkonly ) {
+		return $hacks[$filename]['status'];
 	}
 
 	// Commit the hacks
