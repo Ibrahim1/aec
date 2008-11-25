@@ -336,7 +336,7 @@ function subscribe( $option )
 	$isJoomla15 = aecJoomla15check();
 
 	if ( !empty( $username ) && $usage ) {
-		$CB = ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) );
+		$CB = ( GeneralInfoRequester::detect_component( 'anyCB' ) );
 		if ( $isJoomla15 && !$CB ) {
 			// Joomla 1.5 Sanity Check
 
@@ -390,7 +390,7 @@ function subscribe( $option )
 		$invoicefact = new InvoiceFactory( $userid, $usage, $group, $processor );
 		$invoicefact->confirm( $option, $_POST );
 	} else {
-		$CB = ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) );
+		$CB = ( GeneralInfoRequester::detect_component( 'anyCB' ) );
 		if ( $isJoomla15 && !$CB ) {
 			//if Joomla15 - add the form validation JS
 			JHTML::_('behavior.formvalidation');
@@ -500,7 +500,7 @@ function confirmSubscription( $option )
 	$username	= aecGetParam( 'username', 0, true, array( 'word', 'int' ) );
 
 	if ( $aecConfig->cfg['plans_first'] && ( $usage > 0 ) && !$username && !$userid && !$my->id ) {
-		if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+		if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 			// This is a CB registration, borrowing their code to register the user
 			include_once( $mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.html.php' );
 			include_once( $mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.php' );
@@ -1043,7 +1043,7 @@ function notAllowed( $option )
 		$processors = false;
 	}
 
-	$CB = ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) );
+	$CB = ( GeneralInfoRequester::detect_component( 'anyCB' ) );
 
 	if ( $my->id ) {
 		$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=renewsubscription' );

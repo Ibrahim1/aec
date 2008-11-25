@@ -528,7 +528,7 @@ class Payment_HTML
 			$gw_current = strtolower( $pp->processor_name );
 
 			if ( $register ) {
-				if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+				if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 					$option	= 'com_comprofiler';
 					$task	= 'registers';
 				} else {

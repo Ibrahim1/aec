@@ -4734,24 +4734,24 @@ class SubscriptionPlan extends serialParamDBTable
 			}
 
 			$result = $this->triggerMIs( 'action', $metaUser, null, $invoice, false, $silent );
-	
+
 			if ( $result === false ) {
 				return false;
 			}
-	
+
 			if ( $this->params['gid_enabled'] ) {
 				$metaUser->instantGIDchange($this->params['gid']);
 			}
 
 			$metaUser->focusSubscription->storeload();
-	
+
 			if ( !( $silent || $aecConfig->cfg['noemails'] ) ) {
 				if ( ( $this->id !== $aecConfig->cfg['entry_plan'] ) ) {
 					$metaUser->focusSubscription->sendEmailRegistered( $renew );
 				}
 			}
 		}
-		
+
 		return $renew;
 	}
 
@@ -5667,7 +5667,7 @@ class InvoiceFactory
 				}
 
 				// Create dummy CB/CBE user
-				if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+				if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 					$this->metaUser->hasCBprofile = 1;
 					$this->metaUser->cbUser = new stdClass();
 
@@ -5958,7 +5958,7 @@ class InvoiceFactory
 				}
 
 				// Send to CB or joomla!
-				if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+				if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 					// This is a CB registration, borrowing their code to register the user
 
 					global $task;
@@ -8248,6 +8248,10 @@ class GeneralInfoRequester
 				$overrides[] = 'CB1.2';
 			}
 
+			if ( in_array( 'CB', $overrides ) || in_array( 'CB1.2', $overrides ) || in_array( 'CBE', $overrides ) ) {
+				$overrides[] = 'anyCB';
+			}
+
 			if ( in_array( $component, $overrides ) ) {
 				return false;
 			}
@@ -8256,6 +8260,9 @@ class GeneralInfoRequester
 		$pathCB		= $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler';
 		$pathSMF	= $mainframe->getCfg( 'absolute_path' ) . '/administrator/components/com_smf';
 		switch ( $component ) {
+			case 'anyCB': // any Community Builder
+				return is_dir( $pathCB );
+				break;
 			case 'CB1.2': // Community Builder 1.2
 				$is_cbe	= ( is_dir( $pathCB. '/enhanced' ) || is_dir( $pathCB . '/enhanced_admin' ) );
 				$is_cb	= ( is_dir( $pathCB ) && !$is_cbe );
@@ -8826,7 +8833,7 @@ class AECToolbox
 		global $database, $mainframe, $task, $acl, $aecConfig; // Need to load $acl for Joomla and CBE
 
 		// Let CB/JUSER think that everything is going fine
-		if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+		if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 			if ( GeneralInfoRequester::detect_component( 'CBE' ) || $overrideActivation ) {
 				global $ueConfig;
 			}
@@ -8872,7 +8879,7 @@ class AECToolbox
 
 		$savepwd = aecEscape( $var['password'], array( 'string', 'badchars' ) );
 
-		if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+		if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 			// This is a CB registration, borrowing their code to save the user
 			@saveRegistration( $option );
 		} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
@@ -9306,7 +9313,7 @@ class AECToolbox
 			$rewrite['user'][] = 'activationcode';
 			$rewrite['user'][] = 'activationlink';
 
-			if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+			if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 				global $database;
 
 				$query = 'SELECT name, title'
@@ -9485,7 +9492,7 @@ class AECToolbox
 			$rewrite['user_last_name']			= $lastname;
 			$rewrite['user_email']				= $metaUser->cmsUser->email;
 
-			if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+			if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 				if ( !$metaUser->hasCBprofile ) {
 					$metaUser->loadCBuser();
 				}

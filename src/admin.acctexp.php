@@ -5231,7 +5231,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 		$hacks[$n]['legacy']		=	1;
 	}
 
-	if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+	if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 		if ( GeneralInfoRequester::detect_component( 'CB1.2' ) ) {
 			$n = 'comprofilerphp7';
 			$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #7';
@@ -5330,7 +5330,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack )
 	}
 
 	if ( !$v15 ) {
-		if ( GeneralInfoRequester::detect_component( 'CB' ) || GeneralInfoRequester::detect_component( 'CBE' ) ) {
+		if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 			$n = 'comprofilerphp';
 			$hacks[$n]['name']			=	"comprofiler.php";
 			$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY;
