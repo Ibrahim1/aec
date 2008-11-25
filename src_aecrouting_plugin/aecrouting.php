@@ -36,8 +36,6 @@ jimport('joomla.event.plugin');
 
 include_once( JPATH_SITE . "/components/com_acctexp/acctexp.class.php" );
 
-$_MAMBOTS->registerFunction( 'onAfterStart', 'aecBotRouting' );
-
 /**
  * AEC Authentication plugin
  *
@@ -63,58 +61,57 @@ class plgSystemAECrouting extends JPlugin
 	}
 
 
-function onAfterInitialise ()
-{
-	global $aecConfig;
+	function onAfterInitialise ()
+	{
+		global $aecConfig;
 
-	$task	= mosGetParam( $_REQUEST, 'task', '' );
-	$option	= mosGetParam( $_REQUEST, 'option', '' );
-	$usage	= intval( mosGetParam( $_POST, 'usage', '0' ) );
-	$submit	= mosGetParam( $_POST, 'submit', '' );
+		$task	= mosGetParam( $_REQUEST, 'task', '' );
+		$option	= mosGetParam( $_REQUEST, 'option', '' );
+		$usage	= intval( mosGetParam( $_POST, 'usage', '0' ) );
+		$submit	= mosGetParam( $_POST, 'submit', '' );
 
-	$username = aecGetParam( 'username', true, array( 'string', 'clear_nonalnum' ) );
+		$username = aecGetParam( 'username', true, array( 'string', 'clear_nonalnum' ) );
 
-	$nu		= $usage == 0;
+		$nu		= $usage == 0;
 
-	$ccb	= $option == 'com_comprofiler';
-	$cu		= $option == 'com_user';
+		$ccb	= $option == 'com_comprofiler';
+		$cu		= $option == 'com_user';
 
-	$treg	= $task == 'register';
-	$tregs	= $task == 'registers';
-	$tcregs	= $task == 'saveregisters';
-	$tsregs	= $task == 'saveRegistration';
-	$tsue	= $task == 'saveUserEdit';
+		$treg	= $task == 'register';
+		$tregs	= $task == 'registers';
+		$tcregs	= $task == 'saveregisters';
+		$tsregs	= $task == 'saveRegistration';
+		$tsue	= $task == 'saveUserEdit';
 
-	$cbreg		= ( $ccb && $tregs );
-	$cbsreg		= ( $ccb && ( $tcregs || $tsue ) );
+		$cbreg		= ( $ccb && $tregs );
+		$cbsreg		= ( $ccb && ( $tcregs || $tsue ) );
 
-	$pfirst		= $aecConfig->cfg['plans_first'];
+		$pfirst		= $aecConfig->cfg['plans_first'];
 
-	if ( ( $treg || $cbreg ) && $aecConfig->cfg['integrate_registration'] ) {
-		// Joomla or CB registration...
-		if ( ( $pfirst && !$nu ) || ( !$pfirst && $nu ) ) {
-			// Plans First and selected or not first and not selected
-			// Both cases = redirect to AEC on the next page
-			$_REQUEST['option'] = "com_acctexp";
-			// Just to be sure
-			$option = "com_acctexp";
-		} elseif ( $pfirst && $nu ) {
-			// Plans first and not yet selected
-			// Immediately redirect to plan selection
-			global $mainframe;
-			$mainframe->redirect( 'index.php?option=com_acctexp&task=subscribe' );
+		if ( ( $treg || $cbreg ) && $aecConfig->cfg['integrate_registration'] ) {
+			// Joomla or CB registration...
+			if ( ( $pfirst && !$nu ) || ( !$pfirst && $nu ) ) {
+				// Plans First and selected or not first and not selected
+				// Both cases = redirect to AEC on the next page
+				$_REQUEST['option'] = "com_acctexp";
+				// Just to be sure
+				$option = "com_acctexp";
+			} elseif ( $pfirst && $nu ) {
+				// Plans first and not yet selected
+				// Immediately redirect to plan selection
+				global $mainframe;
+				$mainframe->redirect( 'index.php?option=com_acctexp&task=subscribe' );
+			}
+		} elseif ( $cbsreg ) {
+			// Any kind of user profile edit = trigger MIs
+
+			$row = new stdClass();
+			$row->username = $username;
+
+			$mih = new microIntegrationHandler();
+			$mih->userchange( $row, $_POST, 'registration' );
 		}
-	} elseif ( $cbsreg ) {
-		// Any kind of user profile edit = trigger MIs
-
-		$row = new stdClass();
-		$row->username = $username;
-
-		$mih = new microIntegrationHandler();
-		$mih->userchange( $row, $_POST, 'registration' );
 	}
-
-}
 
 }
 

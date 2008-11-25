@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <install version="1.5" type="plugin" group="user">
-	<name>User - AECuser</name>
+	<name>User - AEC User</name>
 	<author>David Deutsch</author>
 	<creationDate>11.03.2008</creationDate>
 	<copyright>Copyright (C) 2008 David Deutsch</copyright>
@@ -10,7 +10,7 @@
 	<version>0.2</version>
 	<description>The AEC User Plugin makes sure that changes to a user account are propagated to the AEC.</description>
 	<files>
-		<filename plugin="AECuser">aecuser.php</filename>
+		<filename plugin="aecuser">aecuser.php</filename>
 	</files>
 	<params/>
 </install>

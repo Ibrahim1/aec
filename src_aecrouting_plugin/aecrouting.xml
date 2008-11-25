@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <install version="1.5" type="plugin" group="system">
-	<name>System - AECrouting</name>
+	<name>System - AEC Routing</name>
 	<author>David Deutsch</author>
 	<creationDate>23.11.2008</creationDate>
 	<copyright>Copyright (C) 2008 David Deutsch</copyright>
@@ -10,7 +10,7 @@
 	<version>0.1</version>
 	<description>The AEC Routing Plugin replaces old hacks - rerouting the user (especially during registration) according to the AEC Settings.</description>
 	<files>
-		<filename plugin="AECrouting">aecrouting.php</filename>
+		<filename plugin="aecrouting">aecrouting.php</filename>
 	</files>
 	<params/>
 </install>

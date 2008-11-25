@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <install version="1.5" type="plugin" group="system">
-	<name>System - AECErrorHandler</name>
+	<name>System - AEC ErrorHandler</name>
 	<author>David Deutsch</author>
 	<creationDate>Sept. 2008</creationDate>
 	<copyright>Copyright (C) 2008 David Deutsch</copyright>
@@ -10,7 +10,7 @@
 	<version>0.1</version>
 	<description>The AEC Error Handler introduces a new JErrorHandler to handle &amp; redirect upon the different errors.</description>
 	<files>
-		<filename plugin="arcerrorhandler">aecerrorhandler.php</filename>
+		<filename plugin="aecerrorhandler">aecerrorhandler.php</filename>
 	</files>
 	<params/>
 </install>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <install version="1.5" type="plugin" group="authentication">
-	<name>Authentication - AECaccess</name>
+	<name>Authentication - AEC Access</name>
 	<author>David Deutsch</author>
 	<creationDate>24.02.2008</creationDate>
 	<copyright>Copyright (C) 2008 David Deutsch</copyright>
