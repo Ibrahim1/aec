@@ -291,12 +291,18 @@ switch( strtolower( $task ) ) {
 
 			if ( is_array( $id ) ) {
 				foreach ( $id as $pid ) {
-				$row = new ItemGroup( $database );
-				$row->load( $pid );
-				$row->id = 0;
-				$row->check();
-				$row->store();
+					$row = new ItemGroup( $database );
+					$row->load( $pid );
+					$row->id = 0;
+					$row->storeload();
+
+					$parents = ItemGroupHandler::parentGroups( $pid, 'item' );
+
+					foreach ( $parents as $parentid ) {
+						ItemGroupHandler::setChildren( $parentid, array($row->id), 'item' );
+					}
 				}
+
 			}
 
 			mosRedirect( 'index2.php?option='. $option . '&task=showItemGroups' );
@@ -5056,7 +5062,6 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.html.php';
 		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveregisters" />';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
-		$hacks[$n]['important']		=	1;
 
 	} elseif ( GeneralInfoRequester::detect_component( 'CB' ) ) {
 		$n = 'comprofilerphp2';

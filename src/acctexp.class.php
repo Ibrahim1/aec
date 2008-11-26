@@ -4050,19 +4050,19 @@ class ItemGroupHandler
 		return $ig->createNew( $type, $item_id, $group_id );
 	}
 
-	function setChildren( $item_id, $groups, $type='item' )
+	function setChildren( $item_id, $children, $type='item' )
 	{
 		global $database;
 
-		foreach ( $groups as $group_id ) {
+		foreach ( $children as $child_id ) {
 			// Check bogus assignments
 			if ( $type == 'group' ) {
 				// Don't let a group be assigned to itself
-				if ( ( $group_id == $item_id ) ) {
+				if ( ( $child_id == $item_id ) ) {
 					continue;
 				}
 
-				$children = ItemGroupHandler::getChildren( $group_id, 'group' );
+				$children = ItemGroupHandler::getChildren( $child_id, 'group' );
 
 				// Don't allow circular assignment
 				if ( in_array( $item_id, $children ) ) {
@@ -4072,7 +4072,7 @@ class ItemGroupHandler
 
 			$ig = new itemXgroup( $database );
 
-			if ( !$ig->createNew( $type, $group_id, $item_id ) ) {
+			if ( !$ig->createNew( $type, $child_id, $item_id ) ) {
 				return false;
 			}
 		}
