@@ -223,7 +223,7 @@ switch( strtolower( $task ) ) {
 					$parents = ItemGroupHandler::parentGroups( $pid, 'item' );
 
 					foreach ( $parents as $parentid ) {
-						ItemGroupHandler::setChild( $parentid, $row->id, 'item' );
+						ItemGroupHandler::setChild( $row->id, $parentid, 'item' );
 					}
 				}
 			}
@@ -304,7 +304,7 @@ switch( strtolower( $task ) ) {
 					$parents = ItemGroupHandler::parentGroups( $pid, 'group' );
 
 					foreach ( $parents as $parentid ) {
-						ItemGroupHandler::setChild( $parentid, $row->id, 'group' );
+						ItemGroupHandler::setChild( $row->id, $parentid, 'group' );
 					}
 				}
 			}
@@ -3150,6 +3150,8 @@ function removeSubscriptionPlan( $id, $option )
 			exit();
 		}
 
+		ItemGroupHandler::removeChildren( $id, false, 'item' );
+
 		$msg = $total . ' ' . _AEC_MSG_ITEMS_DELETED;
 	}
 	mosRedirect( 'index2.php?option=' . $option . '&task=showSubscriptionPlans', $msg );
@@ -3487,6 +3489,8 @@ function removeItemGroup( $id, $option )
 		$ig->load( $i );
 
 		if ( $ig->delete() !== false ) {
+			ItemGroupHandler::removeChildren( $i, false, 'group' );
+
 			$total++;
 		}
 	}

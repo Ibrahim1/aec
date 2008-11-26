@@ -4042,17 +4042,17 @@ class ItemGroupHandler
 		ItemGroupHandler::removeChildren( $item_id, $delGroups, $type );
 	}
 
-	function setChild( $item_id, $group_id, $type='item' )
+	function setChild( $child_id, $group_id, $type='item' )
 	{
 		global $database;
 
 		if ( $type == 'group' ) {
 			// Don't let a group be assigned to itself
-			if ( ( $item_id == $item_id ) ) {
+			if ( ( $group_id == $child_id ) ) {
 				continue;
 			}
 
-			$children = ItemGroupHandler::getChildren( $item_id, 'group' );
+			$children = ItemGroupHandler::getChildren( $child_id, 'group' );
 
 			// Don't allow circular assignment
 			if ( in_array( $group_id, $children ) ) {
@@ -4061,7 +4061,7 @@ class ItemGroupHandler
 		}
 
 		$ig = new itemXgroup( $database );
-		return $ig->createNew( $type, $item_id, $group_id );
+		return $ig->createNew( $type, $child_id, $group_id );
 	}
 
 	function setChildren( $group_id, $children, $type='item' )
@@ -4257,16 +4257,25 @@ class ItemGroupHandler
 						);
 	}
 
-	function removeChildren( $item_id, $groups, $type='item' )
+	function removeChildren( $items, $groups, $type='item' )
 	{
 		global $database;
 
 		$query = 'DELETE'
 				. ' FROM #__acctexp_itemxgroup'
 				. ' WHERE `type` = \'' . $type . '\''
-				. ' AND `item_id` = \'' . $item_id . '\''
-				. ' AND `group_id` IN (' . implode( ',', $groups ) . ')'
 				;
+
+		if ( is_array( $items ) ) {
+			$query .= ' AND `item_id` IN (' . implode( ',', $items ) . ')';
+		} else {
+			$query .= ' AND `item_id` = \'' . $items . '\'';
+		}
+
+		if ( !empty( $groups ) ) {
+			$query .= ' AND `group_id` IN (' . implode( ',', $groups ) . ')';
+		}
+
 		$database->setQuery( $query );
 		return $database->loadResultArray();
 	}
