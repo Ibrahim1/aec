@@ -4046,11 +4046,25 @@ class ItemGroupHandler
 	{
 		global $database;
 
+		if ( $type == 'group' ) {
+			// Don't let a group be assigned to itself
+			if ( ( $item_id == $item_id ) ) {
+				continue;
+			}
+
+			$children = ItemGroupHandler::getChildren( $item_id, 'group' );
+
+			// Don't allow circular assignment
+			if ( in_array( $group_id, $children ) ) {
+				continue;
+			}
+		}
+
 		$ig = new itemXgroup( $database );
 		return $ig->createNew( $type, $item_id, $group_id );
 	}
 
-	function setChildren( $item_id, $children, $type='item' )
+	function setChildren( $group_id, $children, $type='item' )
 	{
 		global $database;
 
@@ -4058,21 +4072,21 @@ class ItemGroupHandler
 			// Check bogus assignments
 			if ( $type == 'group' ) {
 				// Don't let a group be assigned to itself
-				if ( ( $child_id == $item_id ) ) {
+				if ( ( $child_id == $group_id ) ) {
 					continue;
 				}
 
 				$children = ItemGroupHandler::getChildren( $child_id, 'group' );
 
 				// Don't allow circular assignment
-				if ( in_array( $item_id, $children ) ) {
+				if ( in_array( $group_id, $children ) ) {
 					continue;
 				}
 			}
 
 			$ig = new itemXgroup( $database );
 
-			if ( !$ig->createNew( $type, $child_id, $item_id ) ) {
+			if ( !$ig->createNew( $type, $child_id, $group_id ) ) {
 				return false;
 			}
 		}

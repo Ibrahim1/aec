@@ -215,11 +215,16 @@ switch( strtolower( $task ) ) {
 
 			if ( is_array( $id ) ) {
 				foreach ( $id as $pid ) {
-				$row = new SubscriptionPlan( $database );
-				$row->load( $pid );
-				$row->id = 0;
-				$row->check();
-				$row->store();
+					$row = new SubscriptionPlan( $database );
+					$row->load( $pid );
+					$row->id = 0;
+					$row->storeload();
+
+					$parents = ItemGroupHandler::parentGroups( $pid, 'item' );
+
+					foreach ( $parents as $parentid ) {
+						ItemGroupHandler::setChild( $parentid, $row->id, 'item' );
+					}
 				}
 			}
 
@@ -296,13 +301,12 @@ switch( strtolower( $task ) ) {
 					$row->id = 0;
 					$row->storeload();
 
-					$parents = ItemGroupHandler::parentGroups( $pid, 'item' );
+					$parents = ItemGroupHandler::parentGroups( $pid, 'group' );
 
 					foreach ( $parents as $parentid ) {
-						ItemGroupHandler::setChildren( $parentid, array($row->id), 'item' );
+						ItemGroupHandler::setChild( $parentid, $row->id, 'group' );
 					}
 				}
-
 			}
 
 			mosRedirect( 'index2.php?option='. $option . '&task=showItemGroups' );
