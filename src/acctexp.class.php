@@ -882,9 +882,9 @@ class metaUser
 				}
 			}
 
-			array_unique( $mis );
-
 			if ( count( $mis ) ) {
+				array_unique( $mis );
+
 				foreach ( $mis as $mi_id ) {
 					if ( $mi_id ) {
 						$mi = new MicroIntegration( $database );
