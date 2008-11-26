@@ -71,16 +71,18 @@ class plgUserAECuser extends JPlugin
 	 */
 	function onAfterStoreUser($user, $isnew, $succes, $msg)
 	{
-		include_once( JPATH_ADMINISTRATOR . "/../components/com_acctexp/acctexp.class.php" );
+		if ( file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
+			include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
 
-		if ( $isnew ) {
-			$trace = 'registration';
-		} else {
-			$trace = 'user';
+			if ( $isnew ) {
+				$trace = 'registration';
+			} else {
+				$trace = 'user';
+			}
+
+			$mih = new microIntegrationHandler();
+			$mih->userchange( $user, $user, $trace );
 		}
-
-		$mih = new microIntegrationHandler();
-		$mih->userchange( $user, $user, $trace );
 	}
 
 }

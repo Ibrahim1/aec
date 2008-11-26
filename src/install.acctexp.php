@@ -168,6 +168,9 @@ function com_install()
 	// Create the Joomla Backend Menu
 	require_once( $incpath . '/menusetup.inc.php' );
 
+	// Create root group
+	require_once( $incpath . '/create_rootgroup.inc.php' );
+
 	// Make all Superadmins excluded by default
 	$database->setQuery("SELECT id FROM #__users WHERE gid='25'");
 	$administrators = $database->loadResultArray();

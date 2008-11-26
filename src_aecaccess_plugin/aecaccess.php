@@ -70,11 +70,10 @@ class plgAuthenticationAECaccess extends JPlugin
 	 */
 	function onAuthenticate( $credentials, $options, &$response )
 	{
-		global $database;
 		if ( file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
 			include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
 
-			$aecConfig = new Config_General( $database );
+			global $aecConfig;
 
 			$autholist = $aecConfig->cfg['authorization_list'];
 
@@ -137,6 +136,23 @@ class plgAuthenticationAECaccess extends JPlugin
 				$this->_AECVerification( $credentials, $response );
 				return;
 			}
+		} else {
+			$auth = 'joomla';
+
+			$className = 'plgAuthentication'.$auth;
+			$plugin = JPluginHelper::getPlugin( 'authentication', $auth );
+
+			JLoader::import( 'authentication.'.$auth, JPATH_ROOT.DS.'plugins', 'plugins' );
+			if ( class_exists( $className ) ) {
+				$plugin = new $className( JAuthentication::getInstance(), (array)$plugin );
+			}
+
+			// Try to authenticate
+			if ( method_exists( $plugin, 'onAuthenticate' ) ) {
+				$plugin->onAuthenticate($credentials, $options, $response);
+			}
+
+			return;
 		}
 	}
 

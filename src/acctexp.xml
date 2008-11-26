@@ -207,6 +207,7 @@
 			<filename>install/jf_content_elements_aec.de.tar.gz</filename>
 			<filename>install/jf_content_elements_aec.en.tar.gz</filename>
 			<filename>install/inc/index.html</filename>
+			<filename>install/inc/create_rootgroup.inc.php</filename>
 			<filename>install/inc/dbtables.inc.php</filename>
 			<filename>install/inc/menusetup.inc.php</filename>
 			<filename>install/inc/settings_0_12_6_upgrade.inc.php</filename>
