@@ -52,11 +52,13 @@ class processor_iats extends XMLprocessor
 		$settings['password']	= array( 'inputC' );
 
 		$settings['exp_amount']	= array( 'inputC' );
+		$settings['exp_unit']	= array( 'list' );
 
+		$perunit = array();
 		$perunit[] = mosHTML::makeOption( 'M', _PAYPLAN_PERUNIT3 );
 		$perunit[] = mosHTML::makeOption( 'Y', _PAYPLAN_PERUNIT4 );
 
-		$lists['exp_unit']		= mosHTML::selectList( $perunit, 'exp_unit', 'size="4"', 'value', 'text', ( empty($this->settings['exp_unit']) ? 'Y' : $this->settings['exp_unit'] ) );
+		$settings['lists']['exp_unit']		= mosHTML::selectList( $perunit, 'iats_exp_unit', 'size="4"', 'value', 'text', ( empty($this->settings['exp_unit']) ? 'Y' : $this->settings['exp_unit'] ) );
 
 		return $settings;
 	}
@@ -154,8 +156,8 @@ class processor_iats extends XMLprocessor
 
 			$f = $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
 
-			$fvar['ScheduleType']		= $t['unit'];
-			$fvar['ScheduleDate']		= $t['period'];
+			$fvar['ScheduleType']		= $f['unit'];
+			$fvar['ScheduleDate']		= $f['period'];
 
 			$offset2 = strtotime( '+' . $this->settings['exp_amount'] . ' ' . ( ( $this->settings['exp_unit'] == 'M' ) ? 'months' : 'years' ) );
 
@@ -175,17 +177,14 @@ class processor_iats extends XMLprocessor
 
 			$fvar['CVV2']				= $request->int_var['params']['cardVV2'];
 
-			$fvar['Amount']				= $request->int_var['amount']['amount1'];
+			$fvar['Amount']				= $request->int_var['amount']['amount3'];
 			$fvar['Reoccurring']		= "ON";
-
-			$var['ScheduleType1']		= $f['unit'];
-			$var['BillingFrequency']	= $f['period'];
-			$var['Amount1']				= $request->int_var['amount']['amount3'];
-			$var['ProfileReference']	= $request->int_var['invoice'];
 
 			foreach ( $fvar as $n => $v ) {
 				$var[$n.($hastrial ? '2' : '1')] = $v;
 			}
+
+			$var['ProfileReference']	= $request->int_var['invoice'];
 
 			$this->path = "/itravel/Customer_Create.pro";
 		} else {
