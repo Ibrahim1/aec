@@ -59,7 +59,6 @@ class processor_verotel extends URLprocessor
 		$p = array();
 
 		$p['verotel_product']	= array( 'inputC' );
-		$p['recurring']			= array( 'list_yesno' );
 
 		return $p;
 	}
@@ -98,14 +97,38 @@ class processor_verotel extends URLprocessor
 	{
 		$res = explode(":", aecGetParam('vercode'));
 
+		$username	= $res[0];
 		$secret		= $res[2];
 		$action     = $res[3];
 		$amount     = $res[4];
 		$payment_id = $res[5];
-		$pnref 	    = $res[6];
 
 		$response = array();
-		$response['invoice'] = $payment_id;
+		$response['invoice'] = null;
+
+		if ( $res[3] == 'add' ) {
+			$response['invoice'] = $payment_id;
+		} else {
+			global $database;
+
+			$query = 'SELECT `id` FROM #__users WHERE `username` = \'' . $username . '\'';
+			$database->setQuery( $query );
+
+			$userid = $database->loadResult();
+
+			if ( $userid ) {
+				$id = AECfetchfromDB::lastClearedInvoiceIDbyUserID( $userid );
+
+				$query = 'SELECT `invoice_number` FROM #__acctexp_invoices WHERE `id` = \'' . $id . '\'';
+				$database->setQuery( $query );
+
+				$invoice_number = $database->loadResult();
+
+				if ( !empty( $invoice_number ) ) {
+					$response['invoice'] = $invoice_number;
+				}
+			}
+		}
 
 		return $response;
 	}
@@ -130,9 +153,6 @@ class processor_verotel extends URLprocessor
 		switch ( $res[3] ) {
 			case 'add':
 				$response['valid'] = 1;
-				if ( !empty( $post['planparams']['recurring'] ) ) {
-					$response['multiplicator'] = 'lifetime';
-				}
 				break;
 			case 'cancel':
 				$response['cancel'] = 1;
