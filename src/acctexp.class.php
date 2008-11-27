@@ -871,6 +871,10 @@ class metaUser
 
 			$mis = $selected_plan->micro_integrations;
 
+			if ( empty( $mis ) ) {
+				$mis = array();
+			}
+
 			$sec = $this->getSecondarySubscriptions( true );
 
 			if ( !empty( $sec ) ) {
@@ -976,8 +980,7 @@ class metaUserDB extends serialParamDBTable
 		$this->created_date		= date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
 		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
 
-		$this->check();
-		$this->store();
+		$this->storeload();
 		$this->id = $this->getMax();
 
 	}
@@ -5532,14 +5535,14 @@ class InvoiceFactory
 		$this->renew = 0;
 
 		if ( !empty( $this->userid ) ) {
-			if ( !empty( $this->metaUser ) ) {
-				$this->renew = count( $this->metaUser->meta->plan_history ) ? 1 : 0;
+			if ( !empty( $this->metaUser ) ) {aecDebug($this->metaUser->meta);
+				$this->renew = count( $this->metaUser->meta->plan_history ) > 1;
 			} elseif ( AECfetchfromDB::SubscriptionIDfromUserID( $this->userid ) ) {
 				$user_subscription = new Subscription( $database );
 				$user_subscription->loadUserID( $this->userid );
 
-				if ( ( strcmp( $user_subscription->lastpay_date, '0000-00-00 00:00:00' ) !== 0 ) ) {
-					$this->renew = 1;
+				if ( ( strcmp( $user_subscription->lastpay_date, '0000-00-00 00:00:00' ) !== 0 )  ) {
+					$this->renew = true;
 				}
 			}
 		}
@@ -6300,7 +6303,7 @@ class InvoiceFactory
 				|| ( $this->objUsage->params['trial_free'] && empty( $this->objInvoice->counter ) ) ) {
 				// Then mark payed
 				if ( $this->objInvoice->pay() !== false ) {
-					$this->thanks( $option, $this->renew, 1 );
+					$this->thanks( $option, false, true );
 					return;
 				}
 			}
@@ -6359,7 +6362,7 @@ class InvoiceFactory
 		// Either this is fully free, or the next term is free and this is non recurring
 		if ( $this->terms->checkFree() || ( $this->terms->nextterm->free && !$this->recurring ) ) {
 			$this->objInvoice->pay();
-			$this->thanks( $option, $this->renew, 1 );
+			$this->thanks( $option, false, true );
 			return;
 		}
 
@@ -6406,7 +6409,7 @@ class InvoiceFactory
 		if ( isset( $response['error'] ) ) {
 			$this->error( $option, $this->metaUser->cmsUser, $this->objInvoice->invoice_number, $response['error'] );
 		} else {
-			$this->thanks( $option, 1, false );
+			$this->thanks( $option );
 		}
 	}
 

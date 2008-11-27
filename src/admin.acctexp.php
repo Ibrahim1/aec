@@ -4726,13 +4726,15 @@ function obsafe_print_r($var, $return = false, $html = false, $level = 0) {
         $title = get_class($var)." Object";
     }
     $output = $title . $newline . $newline;
-    foreach($var as $key => $value) {
-        if (is_array($value) || is_object($value)) {
-            $level++;
-            $value = obsafe_print_r($value, true, $html, $level);
-            $level--;
-        }
-        $output .= $tabs . "[" . $key . "] => " . $value . $newline;
+    if ( !empty( $var ) ) {
+	    foreach($var as $key => $value) {
+	        if (is_array($value) || is_object($value)) {
+	            $level++;
+	            $value = obsafe_print_r($value, true, $html, $level);
+	            $level--;
+	        }
+	        $output .= $tabs . "[" . $key . "] => " . $value . $newline;
+	    }
     }
     if ($return) return $output;
       else echo $output;

@@ -2670,7 +2670,7 @@ class HTML_AcctExp
 	 */
 	function DisplayDateInLocalTime( $SQLDate )
 	{
-		if ( $SQLDate == '' || $SQLDate == '-' ) {
+		if ( $SQLDate == '' || $SQLDate == '-' || $SQLDate == '0000-00-00 00:00:00')  {
 			return _AEC_CMN_NOT_SET;
 		} else {
 			global $database, $aecConfig;

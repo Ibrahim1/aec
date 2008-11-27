@@ -283,6 +283,23 @@ class serialParamDBTable extends paramDBTable
 			return null;
 		}
 
+		// TODO: Make these into update on install upgrades
+
+		// Ouch.
+		if ( $this->$field == 'czowOiIiOw==' ) {
+			return null;
+		}
+
+		// Double Ouch.
+		if ( $this->$field == 'czoxMjoiY3pvd09pSWlPdz09Ijs=' ) {
+			return null;
+		}
+
+		// Haven't seen this so far, but just in case: Triple Ouch.
+		if ( $this->$field == 'czowOiJjem94TWpvaVkzcHZkMDlwU1dsUGR6MDlJanM9Ijs=' ) {
+			return null;
+		}
+
 		// Check for base64 consistency
 		if ( preg_match( '%^[a-zA-Z0-9/+]*={0,2}$%', $this->$field ) ) {
 			return unserialize( base64_decode( $this->$field ) );
