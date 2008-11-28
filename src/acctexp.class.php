@@ -6422,7 +6422,7 @@ class InvoiceFactory
 		$this->userid = $this->objInvoice->userid;
 		$this->loadMetaUser();
 
-		$this->puffer();
+		$this->puffer( $option );
 
 		$this->objInvoice->processorResponse( $this->pp, $response );
 
