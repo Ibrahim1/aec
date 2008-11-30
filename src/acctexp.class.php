@@ -1555,10 +1555,13 @@ class aecHeartbeat extends mosDBTable
 							;
 					$database->setQuery( $query );
 					$plan_mis = unserialize( base64_decode( $database->loadResult() ) );
-					$pexp_mis = array_intersect( $plan_mis, $mi_pexp );
 
-					if ( count( $pexp_mis ) ) {
-						$expmi_plans[] = $plan_id;
+					if ( is_array( $plan_mis ) && !empty( $plan_mis ) ) {
+						$pexp_mis = array_intersect( $plan_mis, $mi_pexp );
+
+						if ( count( $pexp_mis ) ) {
+							$expmi_plans[] = $plan_id;
+						}
 					}
 				}
 
