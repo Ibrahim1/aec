@@ -6886,7 +6886,7 @@ class Invoice extends serialParamDBTable
 
 		$this->computeAmount();
 
-		$this->addParams( array( 'creator_ip' => $_SERVER['REMOTE_ADDR'] ), 'params', false );
+		$this->params = array( 'creator_ip' => $_SERVER['REMOTE_ADDR'] );
 
 		$this->storeload();
 	}
