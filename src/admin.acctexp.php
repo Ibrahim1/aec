@@ -1462,6 +1462,16 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 	$filter_planid	= intval( $mainframe->getUserStateFromRequest( "filter_planid{$option}", 'filter_planid', 0 ) );
 
+	if ( !empty( $orderby ) ) {
+		$forder = array(	'expiration ASC', 'expiration DESC', 'lastpay_date ASC', 'lastpay_date DESC',
+							'plan_name ASC', 'plan_name DESC', 'status ASC', 'status DESC',
+							'type ASC', 'type DESC' );
+
+		if ( in_array( $orderby, $forder ) ) {
+			$orderby = 'name ASC';
+		}
+	}
+
 	if ( !empty( $_REQUEST['groups'] ) ) {
 		if ( is_array($_REQUEST['groups'] ) ) {
 			$groups 	= $_REQUEST['groups'];
@@ -1623,16 +1633,6 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 		if ( in_array( 'notconfig', $groups ) ) {
  			$notconfig = true;
  			$groups = array( 'notconfig' );
-
-			if ( !empty( $orderby ) ) {
-				$forder = array(	'expiration ASC', 'expiration DESC', 'lastpay_date ASC', 'lastpay_date DESC',
-									'plan_name ASC', 'plan_name DESC', 'status ASC', 'status DESC',
-									'type ASC', 'type DESC' );
-
-				if ( in_array( $orderby, $forder ) ) {
-					$orderby = 'name ASC';
-				}
-			}
 		} else {
 			if ( in_array( 'excluded', $groups ) ) {
 				$where_or[] = "a.status = 'Excluded'";
