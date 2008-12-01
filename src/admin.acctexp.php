@@ -2291,7 +2291,7 @@ function editSettings( $option )
 		$glist[] = mosHTML::makeOption( $glisti[0], $glisti[1] );
 	}
 
-	$lists['root_group'] 		= mosHTML::selectList( $glist, 'root_group', 'size="' . min(6,count($glist)+1) . '"', 'value', 'text', $aecConfig->cfg['root_group'] );
+	$lists['root_group'] 		= mosHTML::selectList( $glist, 'root_group', 'size="' . min(6,count($glist)+1) . '"', 'value', 'text', !empty( $aecConfig->cfg['root_group'] ) ?  $aecConfig->cfg['root_group'] : '' );
 
 	$editors = array();
 	foreach ( $tab_data as $tab ) {
