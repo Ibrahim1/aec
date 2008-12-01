@@ -103,9 +103,9 @@ class processor_cybermut extends POSTprocessor
 		/*$var['retourPLUS']		= $request->int_var['return_url'];
 		$var['societe']			= $this->settings['key'];*/
 
-		$var['url_retour']		= $mosConfig_live_site . 'index';
-		$var['url_retour_ok']	= $mosConfig_live_site . 'index?option=com_acctexp&task=thanks';
-		$var['url_retour_err']	= $mosConfig_live_site . 'index?option=com_acctexp&task=cancel';
+		$var['url_retour']		= $mosConfig_live_site . '/index.php';
+		$var['url_retour_ok']	= $mosConfig_live_site . '/index.php?option=com_acctexp&task=thanks';
+		$var['url_retour_err']	= $mosConfig_live_site . '/index.php?option=com_acctexp&task=cancel';
 
 		foreach ( $var as $k => $v ) {
 			$var[$k] = $this->HtmlEncode( $v );

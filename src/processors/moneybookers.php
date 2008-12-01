@@ -79,8 +79,8 @@ class processor_moneybookers extends POSTprocessor
 		$var['transaction_id']			= $request->int_var['invoice'];
 
 		$var['return_url']				= $request->int_var['return_url'];
-		$var['cancel_url']				= AECToolbox::deadsureURL( 'index?option=com_acctexp&amp;task=cancel' );
-		$var['status_url']				= AECToolbox::deadsureURL( 'index?option=com_acctexp&amp;task=moneybookersnotification' );
+		$var['cancel_url']				= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cancel' );
+		$var['status_url']				= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=moneybookersnotification' );
 
 		$var['language']				= $this->settings['language'];
 		$var['hide_login']				= $this->settings['hide_login'];

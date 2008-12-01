@@ -64,8 +64,8 @@ class processor_psigate extends POSTprocessor
 		//$var['OrderID']			= md5($this->settings['secretWord'] . $request->int_var['amount']);
 		$var['SubTotal']		= $request->int_var['amount'];
 		$var['PaymentType']		= "CC";
-		$var['ThanksURL']		= AECToolbox::deadsureURL( "index?option=com_acctexp&amp;task=psigatenotification" );
-		$var['NoThanksURL']		= AECToolbox::deadsureURL( "index?option=com_acctexp&amp;task=psigatenotification" );
+		$var['ThanksURL']		= AECToolbox::deadsureURL( "index.php?option=com_acctexp&amp;task=psigatenotification" );
+		$var['NoThanksURL']		= AECToolbox::deadsureURL( "index.php?option=com_acctexp&amp;task=psigatenotification" );
 		$var['CardAction']		= "0";
 		$var['test123']			= "tester123";
 		return $var;

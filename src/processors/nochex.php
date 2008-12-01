@@ -57,7 +57,7 @@ class processor_nochex extends POSTprocessor
 		$var['post_url']	= 'https://secure.nochex.com/';
 		if ( $this->settings['testmode'] == '1' ) {
 			$var['test_transaction'] = '100';
-			$var['test_success_url'] = AECToolbox::deadsureURL( 'index?option=com_acctexp&amp;task=nochexnotification' );
+			$var['test_success_url'] = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=nochexnotification' );
 		}
 
 		$var['merchant_id']			= $this->settings['merchant_id'];
@@ -65,9 +65,9 @@ class processor_nochex extends POSTprocessor
 		$var['order_id']			= $request->int_var['invoice'];
 		$var['amount']				= $request->int_var['amount'];
 		$var['success_url']			= $request->int_var['return_url'];
-		$var['cancel_url']			= AECToolbox::deadsureURL( 'index?option=com_acctexp&amp;task=cancel' );
-		$var['declined_url']		= AECToolbox::deadsureURL( 'index?option=com_acctexp&amp;task=cancel' );
-		$var['callback_url']		= AECToolbox::deadsureURL( 'index?option=com_acctexp&amp;task=nochexnotification' );
+		$var['cancel_url']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cancel' );
+		$var['declined_url']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cancel' );
+		$var['callback_url']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=nochexnotification' );
 		$var['billing_fullname']	= $request->metaUser->cmsUser->name;
 		$var['email_address']		= $request->metaUser->cmsUser->email;
 

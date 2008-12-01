@@ -167,7 +167,7 @@ class processor_locaweb_pgcerto extends XMLprocessor
 
 		// Define os valores inicias de postagem
 		$chaveVendedor													= $this->settings['chaveVendedor'];																														// Chave do vendedor
-		$urlRetornoLoja													= AECToolbox::deadsureURL( 'index?option=com_acctexp&amp;task=locaweb_pgcertonotification' );		// URL de retorno
+		$urlRetornoLoja													= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=locaweb_pgcertonotification' );		// URL de retorno
 
 
 		$parms = new stdClass();

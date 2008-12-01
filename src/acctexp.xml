@@ -48,15 +48,6 @@
 		<filename>lib/krumo/krumo.tar.gz</filename>
 		<filename>lib/mammontini/index.html</filename>
 		<filename>lib/mammontini/mammontini.php</filename>
-		<filename>lib/minixml/index.html</filename>
-		<filename>lib/minixml/minixml.php</filename>
-		<filename>lib/minixml/CHANGELOG</filename>
-		<filename>lib/minixml/LICENSE</filename>
-		<filename>lib/minixml/README</filename>
-		<filename>lib/minixml/classes/doc.inc.php</filename>
-		<filename>lib/minixml/classes/element.inc.php</filename>
-		<filename>lib/minixml/classes/node.inc.php</filename>
-		<filename>lib/minixml/classes/treecomp.inc.php</filename>
 		<filename>lib/mootools/index.html</filename>
 		<filename>lib/mootools/mootools.tar.gz</filename>
 		<filename>lib/mootools/mootabs.js</filename>

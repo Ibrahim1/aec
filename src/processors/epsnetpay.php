@@ -113,8 +113,8 @@ class processor_epsnetpay extends POSTprocessor
 			$epsparams .= $StsPar[$i][0] . $StsPar[$i][1];
 		}
 
-		$var['sapPopOkUrl']		= AECToolbox::deadsureURL("index?option=com_acctexp&amp;task=thanks");
-		$var['sapPopNokUrl']	= AECToolbox::deadsureURL("index?option=com_acctexp&amp;task=cancel");
+		$var['sapPopOkUrl']		= AECToolbox::deadsureURL("index.php?option=com_acctexp&amp;task=thanks");
+		$var['sapPopNokUrl']	= AECToolbox::deadsureURL("index.php?option=com_acctexp&amp;task=cancel");
 		$sapUgawwhg				= "EUR"; // HAS TO BE EUR !!
 		$var['sapUgawwhg']		= $sapUgawwhg;
 		$sapUkddaten			= $request->metaUser->cmsUser->id;
