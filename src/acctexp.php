@@ -423,9 +423,8 @@ function subscribe( $option )
 				$passthrough = array();
 				foreach ( $_POST as $ke => $va ) {
 					if ( is_array( $va ) ) {
-						$i = 0;
 						foreach ( $va as $con ) {
-							$passthrough[] = array( $ke . '['.++$i.']', $con );
+							$passthrough[] = array( $ke . '[]', $con );
 						}
 					} else {
 						$passthrough[] = array( $ke, $va );
