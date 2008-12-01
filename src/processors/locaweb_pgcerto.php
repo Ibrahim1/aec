@@ -287,7 +287,7 @@ class processor_locaweb_pgcerto extends XMLprocessor
 				$nodeCodigoTransacao								= $objDom->getElementsByTagName('Codigo')->item(0);
 				$Codigo														= $nodeCodigoTransacao->nodeValue;
 
-				/$nodeDataTransacao									= $objDom->getElementsByTagName('Data')->item(0);
+				$nodeDataTransacao									= $objDom->getElementsByTagName('Data')->item(0);
 				$Data															= $nodeDataTransacao->nodeValue;
 
 				// Resgata os dados do comprador no Pagamento Certo
