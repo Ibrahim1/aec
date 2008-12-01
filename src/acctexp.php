@@ -423,8 +423,9 @@ function subscribe( $option )
 				$passthrough = array();
 				foreach ( $_POST as $ke => $va ) {
 					if ( is_array( $va ) ) {
+						$i = 0;
 						foreach ( $va as $con ) {
-							$passthrough[] = array( $ke . '[]', $con );
+							$passthrough[] = array( $ke . '['.++$i.']', $con );
 						}
 					} else {
 						$passthrough[] = array( $ke, $va );
@@ -491,7 +492,7 @@ function checkDuplicateUsernameEmail( $username, $email )
 
 function confirmSubscription( $option )
 {
-	global $mosConfig_absolute_path, $mosConfig_emailpass, $mosConfig_useractivation, $mainframe, $my;
+	global $mosConfig_absolute_path, $mosConfig_emailpass, $mosConfig_useractivation, $mainframe, $my, $aecConfig;
 
 	$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 	$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
