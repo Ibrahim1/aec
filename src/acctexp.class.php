@@ -5538,7 +5538,7 @@ class InvoiceFactory
 		$this->renew = 0;
 
 		if ( !empty( $this->userid ) ) {
-			if ( !empty( $this->metaUser ) ) {aecDebug($this->metaUser->meta);
+			if ( !empty( $this->metaUser ) ) {
 				$this->renew = count( $this->metaUser->meta->plan_history ) > 1;
 			} elseif ( AECfetchfromDB::SubscriptionIDfromUserID( $this->userid ) ) {
 				$user_subscription = new Subscription( $database );
