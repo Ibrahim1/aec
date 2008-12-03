@@ -124,8 +124,10 @@ class processor_clickbank extends URLprocessor
 			$code = sha1( implode( '|', $check) );
 
 			$xxpop = strtoupper( substr( $code,0 ,8 ) );
-			if ($cbpop==$xxpop) return 1; else return 0;
 
+			if ( $_REQUEST['cbpop'] == $xxpop ) {
+				$response['valid']	= 1;
+			}
 		} else {
 			// Standard parameters that Clickbank will send back (leaving out 'cverify')
 			$stdParams = array( 'ccustname', 'ccuststate', 'ccustcc', 'ccustemail',
