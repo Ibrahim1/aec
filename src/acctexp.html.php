@@ -561,15 +561,15 @@ class Payment_HTML
 			$hidden = array();
 
 			if ( !empty( $pp->recurring ) ) {
-				$hidden[] = array( 'recurring' => 1 );
+				$hidden[] = array( 'recurring', 1 );
 			} else {
-				$hidden[] = array( 'recurring' => 0 );
+				$hidden[] = array( 'recurring', 0 );
 			}
 
-			$hidden[] = array( 'processor' => strtolower( $pp->processor_name ) );
+			$hidden[] = array( 'processor', strtolower( $pp->processor_name ) );
 
 			if ( !empty( $planid ) ) {
-				$hidden[] = array( 'usage' => $planid );
+				$hidden[] = array( 'usage', $planid );
 			}
 
 			$html_code .= Payment_HTML::planpageButton( $option, $task, $urlbutton, $hidden, $userid, $passthrough );
