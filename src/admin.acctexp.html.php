@@ -370,7 +370,7 @@ class General_css
 					} ?>
 				</tr>
 			</table>
-			<table class="adminform">
+			<table class="aecadminform">
 				<tr>
 					<th>
 						<?php echo $css_path; ?>
@@ -440,7 +440,7 @@ class HTML_AcctExp
 			$tabs->startTab(_AEC_HEAD_PLAN_INFO, _AEC_HEAD_PLAN_INFO);
 			echo '<div class="aec_tabheading"><h2>' . _AEC_HEAD_PLAN_INFO . '</h2></div>';
 			?>
-			<table class="adminform">
+			<table class="aecadminform">
 				<tr>
 					<td width="50%" style="padding:10px;" valign="top">
 						<div class="userinfobox">
@@ -690,7 +690,7 @@ class HTML_AcctExp
 			?>
 			<div class="aec_tabheading"><h2><?php echo _AEC_HEAD_MICRO_INTEGRATION; ?>: <?php echo _AEC_HEAD_MICRO_INTEGRATION; ?></h2></div>
 			<?php if ( !empty( $mi['user'] ) ) { ?>
-			<table class="adminform">
+			<table class="aecadminform">
 				<tr>
 					<td valign="top" style="padding: 10px;">
 						<?php foreach ( $mi['user'] as $mi ) { ?>
@@ -705,7 +705,7 @@ class HTML_AcctExp
 			<?php } ?>
 			<div class="aec_tabheading"><h2><?php echo _AEC_HEAD_MICRO_INTEGRATION; ?>: <?php echo _AEC_HEAD_MICRO_INTEGRATION; ?></h2></div>
 			<?php if ( !empty( $mi['admin'] ) ) { ?>
-			<table class="adminform">
+			<table class="aecadminform">
 				<tr>
 					<td valign="top" style="padding: 10px;">
 						<?php foreach ( $mi['admin'] as $mi ) { ?>
@@ -719,7 +719,7 @@ class HTML_AcctExp
 			</table>
 			<?php } ?>
 			<div class="aec_tabheading"><h2><?php echo _AEC_HEAD_MICRO_INTEGRATION; ?>: <?php echo _AEC_HEAD_MICRO_INTEGRATION; ?></h2></div>
-			<table class="adminform">
+			<table class="aecadminform">
 				<tr>
 					<td valign="top" style="padding: 10px;">
 						<pre><?php print_r( $metaUser->meta->params->mi ); ?></pre>
@@ -784,7 +784,7 @@ class HTML_AcctExp
 		HTML_myCommon::addBackendCSS();
 		// frontpage table
 		?>
-		<table class="adminform">
+		<table class="aecadminform">
 			<tr>
 				<td valign="top">
 					<div id="aec_center">
@@ -902,7 +902,7 @@ class HTML_AcctExp
 		global $mosConfig_live_site;
 		HTML_myCommon::addBackendCSS();
 		?>
-		<table class="adminform">
+		<table class="aecadminform">
 			<tr>
 				<td width="55%" valign="top" style="background-color: #eee;">
 					<div style="background-color: #949494; margin: 2px; padding: 6px;">
@@ -974,7 +974,7 @@ class HTML_AcctExp
 				<td></td>
 			</tr>
 		</table>
-		<table class="adminform">
+		<table class="aecadminform">
 			<tr><td>
 				<div style="width:100%; float:left;">
 					<div class="usernote" style="width:350px; margin:5px;">
@@ -1079,7 +1079,7 @@ class HTML_AcctExp
 			</tr>
 			<tr><td></td></tr>
 		</table>
-		<table class="adminform">
+		<table class="aecadminform">
 			<tr><td>
 				<table border="0">
 					<tr><td>
@@ -1179,7 +1179,7 @@ class HTML_AcctExp
 				echo '<div class="aec_tabheading">' . $tab[2] . '</div>';
 			}
 
-			echo '<table width="100%" class="adminform"><tr><td>';
+			echo '<table width="100%" class="aecadminform"><tr><td>';
 
 			foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
 				echo $aecHTML->createSettingsParticle( $rowname );
@@ -1427,7 +1427,7 @@ class HTML_AcctExp
 						<?php
 		                $tabs->startPane( 'createMicroIntegration' );
 		                $tabs->startTab( _MI_E_TITLE, _MI_E_TITLE ); ?>
-		                <table width="100%" class="adminform">
+		                <table width="100%" class="aecadminform">
 							<tr>
 								<td colspan="2"><h2><?php echo _MI_E_TITLE_LONG; ?></h2></td>
 							</tr>
@@ -1502,7 +1502,7 @@ class HTML_AcctExp
 							<?php
 			                $tabs->endTab();
 			                $tabs->startTab( _MI_E_SETTINGS, _MI_E_SETTINGS ); ?>
-				                <table width="100%" class="adminform">
+				                <table width="100%" class="aecadminform">
 									<?php
 									foreach ( $aecHTML->rows as $name => $content ) { ?>
 				                		<tr><td><?php echo $aecHTML->createSettingsParticle( $name ); ?></td></tr>
@@ -1681,7 +1681,7 @@ class HTML_AcctExp
 		                $tabs->startTab( _PAYPLAN_DETAIL_TITLE, _PAYPLAN_DETAIL_TITLE );
 		                ?>
 		                <div class="aec_tabheading"><h2><?php echo _PAYPLAN_DETAIL_TITLE; ?></h2></div>
-						<table class="adminform">
+						<table class="aecadminform">
 							<tr>
 								<td style="padding:10px;" valign="top">
 									<div style="position:relative;float:left;width:32%;padding:4px;">
@@ -1764,7 +1764,7 @@ class HTML_AcctExp
 		                $tabs->startTab( _PAYPLAN_PROCESSORS_TITLE, _PAYPLAN_PROCESSORS_TITLE );
 						?>
 						<div class="aec_tabheading"><h2><?php echo _PAYPLAN_PROCESSORS_TITLE_LONG; ?></h2></div>
-						<table width="100%" class="adminform"><tr><td>
+						<table width="100%" class="aecadminform"><tr><td>
 							<?php
 							if ( !empty( $aecHTML->customparams->pp ) ) {
 								foreach ( $aecHTML->customparams->pp as $id => $processor ) {
@@ -1789,7 +1789,7 @@ class HTML_AcctExp
 		                $tabs->startTab( _PAYPLAN_TEXT_TITLE, _PAYPLAN_TEXT_TITLE );
 		                ?>
 		                <div class="aec_tabheading"><h2><?php echo _PAYPLAN_TEXT_TITLE; ?></h2></div>
-		                <table width="100%" class="adminform"><tr><td>
+		                <table width="100%" class="aecadminform"><tr><td>
 							<div class="userinfobox">
 								<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
 								<?php echo $aecHTML->createSettingsParticle( 'email_desc' ); ?>
@@ -1803,7 +1803,7 @@ class HTML_AcctExp
 		                $tabs->startTab( _PAYPLAN_RESTRICTIONS_TITLE, _PAYPLAN_RESTRICTIONS_TITLE );
 		                ?>
 		                <div class="aec_tabheading"><h2><?php echo _PAYPLAN_RESTRICTIONS_TITLE; ?></h2></div>
-						<table class="adminform">
+						<table class="aecadminform">
 							<tr><td>
 								<div class="userinfobox">
 									<div style="position:relative;float:left;width:260px;">
@@ -1874,7 +1874,7 @@ class HTML_AcctExp
 		                $tabs->startTab( _PAYPLAN_TRIAL_TITLE, _PAYPLAN_TRIAL_TITLE );
 						?>
 						<div class="aec_tabheading"><h2><?php echo _PAYPLAN_TRIAL_TITLE; ?><?php echo $aecHTML->ToolTip( _PAYPLAN_TRIAL_DESC, _PAYPLAN_TRIAL ); ?></h2></div>
-						<table width="100%" class="adminform"><tr><td>
+						<table width="100%" class="aecadminform"><tr><td>
 							<div class="userinfobox">
 								<?php echo $aecHTML->createSettingsParticle( 'trial_free' ); ?>
 								<?php echo $aecHTML->createSettingsParticle( 'trial_amount' ); ?>
@@ -1890,7 +1890,7 @@ class HTML_AcctExp
 		                $tabs->startTab( _PAYPLAN_RELATIONS_TITLE, _PAYPLAN_RELATIONS_TITLE );
 						?>
 						<div class="aec_tabheading"><h2><?php echo _PAYPLAN_RELATIONS_TITLE; ?></h2></div>
-						<table width="100%" class="adminform"><tr><td>
+						<table width="100%" class="aecadminform"><tr><td>
 							<div class="userinfobox">
 								<?php echo $aecHTML->createSettingsParticle( 'similarplans' ); ?>
 								<?php echo $aecHTML->createSettingsParticle( 'equalplans' ); ?>
@@ -1901,7 +1901,7 @@ class HTML_AcctExp
 		                $tabs->startTab( _PAYPLAN_MI, _PAYPLAN_MI );
 		                ?>
 		                <div class="aec_tabheading"><h2><?php echo _PAYPLAN_MI; ?></h2></div>
-		                <table width="100%" class="adminform"><tr><td>
+		                <table width="100%" class="aecadminform"><tr><td>
 							<div class="userinfobox">
 								<?php echo $aecHTML->createSettingsParticle( 'micro_integrations' ); ?>
 							</div>
@@ -2066,7 +2066,7 @@ class HTML_AcctExp
 		                $tabs->startTab( _ITEMGROUP_DETAIL_TITLE, _ITEMGROUP_DETAIL_TITLE );
 		                ?>
 		                <h2><?php echo _ITEMGROUP_DETAIL_TITLE; ?></h2>
-						<table class="adminform">
+						<table class="aecadminform">
 							<tr>
 								<td style="padding:10px;" valign="top">
 									<div style="position:relative;float:left;width:32%;padding:4px;">
@@ -2129,7 +2129,7 @@ class HTML_AcctExp
 		                $tabs->startTab( _ITEMGROUP_RESTRICTIONS_TITLE, _ITEMGROUP_RESTRICTIONS_TITLE );
 		                ?>
 		                <h2><?php echo _ITEMGROUP_RESTRICTIONS_TITLE; ?></h2>
-						<table class="adminform">
+						<table class="aecadminform">
 							<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 						<tr><td>
 							<div class="userinfobox">
@@ -2147,7 +2147,7 @@ class HTML_AcctExp
 		                $tabs->startTab( _ITEMGROUP_RELATIONS_TITLE, _ITEMGROUP_RELATIONS_TITLE );
 						?>
 						<h2><?php echo _ITEMGROUP_RELATIONS_TITLE; ?></h2>
-						<table width="100%" class="adminform"><tr><td>
+						<table width="100%" class="aecadminform"><tr><td>
 							<div class="userinfobox">
 								<?php echo $aecHTML->createSettingsParticle( 'similargroups' ); ?>
 								<?php echo $aecHTML->createSettingsParticle( 'equalgroups' ); ?>
@@ -2269,7 +2269,7 @@ class HTML_AcctExp
 		                $tabs->startPane( 'editSubscriptionPlan' );
 		                $tabs->startTab( _COUPON_DETAIL_TITLE, _COUPON_DETAIL_TITLE ); ?>
 		                <h2><?php echo _COUPON_DETAIL_TITLE; ?></h2>
-						<table class="adminform">
+						<table class="aecadminform">
 							<tr>
 								<td style="padding:10px;" valign="top">
 									<div style="position:relative;float:left;width:48%;padding:4px;">
@@ -2338,7 +2338,7 @@ class HTML_AcctExp
 		                $tabs->startTab( _COUPON_RESTRICTIONS_TITLE, _COUPON_RESTRICTIONS_TITLE );
 		                ?>
 		                <h2><?php echo _COUPON_RESTRICTIONS_TITLE_FULL; ?></h2>
-						<table class="adminform">
+						<table class="aecadminform">
 							<tr><td>
 								<div class="userinfobox">
 									<div style="position:relative;float:left;width:200px;">
@@ -2395,7 +2395,7 @@ class HTML_AcctExp
 		                $tabs->endTab();
 		                $tabs->startTab( _COUPON_MI, _COUPON_MI );
 		                ?>
-		                <table width="100%" class="adminform"><tr><td>
+		                <table width="100%" class="aecadminform"><tr><td>
 							<div class="userinfobox">
 								<h2><?php echo _COUPON_MI_FULL; ?></h2>
 								<?php echo $aecHTML->createSettingsParticle( 'micro_integrations' ); ?>
@@ -2637,7 +2637,7 @@ class HTML_AcctExp
 		</tr>
 		</table>
 
-		<table class="adminform">
+		<table class="aecadminform">
 			<tr>
 				<td valign="top">
 					<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {

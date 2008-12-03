@@ -214,6 +214,13 @@ vertical-align: bottom;
 padding-right: 4px;
 }
 
+.table.aecadminform {
+background-color: #F9F9F9;
+border-collapse: collapse;
+margin: 8px 0 15px;
+width: 100%;
+}
+
 .userinfobox {
 position: relative;
 float: left;
@@ -384,6 +391,7 @@ padding:5px 0 5px 30px;
 
 .aec_tabheading {
 background-color: #D5D5D5;
+border: 1px solid #999;
 color: #FFFFFF;
 height: 36px;
 margin: 0px;

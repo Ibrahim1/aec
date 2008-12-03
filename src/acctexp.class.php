@@ -8694,7 +8694,7 @@ class AECToolbox
 		if ( $aecConfig->cfg['simpleurls'] ) {
 			$new_url = $mosConfig_live_site . '/' . $url;
 		} else {
-			if ( !strrpos( strtolower( $url ), 'itemid' ) ) {
+			if ( !strpos( strtolower( $url ), 'itemid' ) ) {
 				global $Itemid;
 				if ( $Itemid ) {
 					$url .= '&amp;Itemid=' . $Itemid;
