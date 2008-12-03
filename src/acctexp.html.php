@@ -491,7 +491,7 @@ class Payment_HTML
 						<div class="aec_groupbutton">
 							<?php
 							$urlbutton = $mosConfig_live_site . '/components/com_acctexp/images/select_button.png';
-							$hidden = array( 'group' => $litem['id'] );
+							$hidden = array( array( 'group', $litem['id'] ) );
 							echo Payment_HTML::planpageButton( $option, 'subscribe', $urlbutton, $hidden, $userid, $passthrough );
 							?>
 						</div>
@@ -561,15 +561,15 @@ class Payment_HTML
 			$hidden = array();
 
 			if ( !empty( $pp->recurring ) ) {
-				$hidden['recurring'] = 1;
+				$hidden[] = array( 'recurring' => 1 );
 			} else {
-				$hidden['recurring'] = 0;
+				$hidden[] = array( 'recurring' => 0 );
 			}
 
-			$hidden['processor']	= strtolower( $pp->processor_name );
+			$hidden[] = array( 'processor' => strtolower( $pp->processor_name ) );
 
 			if ( !empty( $planid ) ) {
-				$hidden['usage']		= $planid;
+				$hidden[] = array( 'usage' => $planid );
 			}
 
 			$html_code .= Payment_HTML::planpageButton( $option, $task, $urlbutton, $hidden, $userid, $passthrough );
@@ -588,21 +588,21 @@ class Payment_HTML
 		. ' method="post">' . "\n"
 		. '<input type="image" src="' . $urlbutton . '" border="0" name="submit" alt="submit" />';
 
-		$hidden['option']		= $option;
-		$hidden['task']			= $task;
+		$hidden[] = array( 'option', $option );
+		$hidden[] = array( 'task', $task );
 
-		$hidden['userid']		= $userid ? $userid : 0;
+		$hidden[] = array( 'userid', ( $userid ? $userid : 0 ) );
 
 		// Rewrite Passthrough
 		if ( $passthrough != false ) {
 			foreach ( $passthrough as $key => $array ) {
-				$hidden[$array[0]] = $array[1];
+				$hidden[] = array( $array[0], $array[1] );
 			}
 		}
 
 		// Assemble hidden fields
-		foreach ( $hidden as $key => $value ) {
-			$html_code .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
+		foreach ( $hidden as $h ) {
+			$html_code .= '<input type="hidden" name="' . $h[0] . '" value="' . $h[1] . '" />' . "\n";
 		}
 
 		$html_code .= '</form></div>' . "\n";
