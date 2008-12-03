@@ -8709,6 +8709,10 @@ class AECToolbox
 
 			$new_url = sefRelToAbs( $url );
 
+			if ( !( strpos( $new_url, $mosConfig_live_site.'/' ) === 0 ) ) {
+				$new_url = str_replace( $mosConfig_live_site, $mosConfig_live_site.'/', $new_url );
+			}
+
 			if ( !( strpos( $new_url, $mosConfig_live_site ) === 0 ) ) {
 				// look out for malformed live_site
 				if ( strpos( $mosConfig_live_site, '/' ) === strlen( $mosConfig_live_site ) ) {
@@ -8722,7 +8726,7 @@ class AECToolbox
 					if ( strpos( $new_url, $rooturl ) === 0 ) {
 						$new_url = $mosConfig_live_site . substr( $new_url, strlen( $rooturl ) );
 					} else {
-						$new_url = $mosConfig_live_site . $new_url;
+						$new_url = $mosConfig_live_site . '/' . $new_url;
 					}
 				}
 			}
