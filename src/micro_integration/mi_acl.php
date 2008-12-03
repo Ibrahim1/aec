@@ -256,7 +256,7 @@ class mi_acl
 			foreach ( $this->settings[$section] as $gid ) {
 				if ( !in_array( $gid, $groups ) ) {
 					$query = 'INSERT INTO #__jaclplus_user_group'
-							. ' VALUES( \'' . (int) $metaUser->userid . '\', \'sub\', \'' . $gid . '\' )'
+							. ' VALUES( \'' . (int) $metaUser->userid . '\', \'sub\', \'' . $gid . '\', \'0\' )'
 							;
 					$database->setQuery( $query );
 					$database->query() or die( $database->stderr() );
