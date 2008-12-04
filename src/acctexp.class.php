@@ -9529,16 +9529,11 @@ class AECToolbox
 				}
 
 				if ( !empty( $metaUser->hasCBprofile ) ) {
-					$query = 'SELECT `name`'
-							. ' FROM #__comprofiler_fields'
-							. ' WHERE `table` != \'#__users\''
-							. ' AND `name` != \'NA\'';
-					$database->setQuery( $query );
-					$fields = $database->loadResultArray();
+					$fields = get_object_vars( $metaUser->cbUser );
 
 					if ( !empty( $fields ) ) {
-						foreach ( $fields as $fieldname ) {
-							$rewrite['user_' . $fieldname] = $metaUser->cbUser->$fieldname;
+						foreach ( $fields as $fieldname => $fieldcontents ) {
+							$rewrite['user_' . $fieldname] = $fieldcontents;
 						}
 					}
 
