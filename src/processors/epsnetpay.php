@@ -93,7 +93,7 @@ class processor_epsnetpay extends POSTprocessor
 	{
 		global $mosConfig_live_site;
 
-		$sapPopStsURL			= $mosConfig_live_site . "index";
+		$sapPopStsURL			= $mosConfig_live_site . "/index.php";
 		$var['sapInfoVersion']	= "3"; //Current Version
 		$var['language']		= "DE"; // Must be german
 		$var['sapPopRequestor']	= $this->settings['merchantid_' . $request->int_var['params']['bank_selection']]; // Marchant ID
@@ -232,7 +232,7 @@ class processor_epsnetpay extends POSTprocessor
 			$epsparams .= $StsPar[$i][0] . $StsPar[$i][1];
 		}
 
-		$sapPopStsURL = $mosConfig_live_site . "index";
+		$sapPopStsURL = $mosConfig_live_site . "/index.php";
 
 		$sapPopStsDurchfDatum = isset($post['sapPopStsDurchfDatum']) ? @$post['sapPopStsDurchfDatum'] : "";
 
