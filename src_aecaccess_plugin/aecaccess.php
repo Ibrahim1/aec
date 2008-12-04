@@ -180,6 +180,9 @@ class plgAuthenticationAECaccess extends JPlugin
 			case 'hold':
 				$redirect = JURI::base( true ) . '/index.php?option=com_acctexp&task=hold&userid=' . $id ;
 				break;
+			case 'subscribe':
+				$redirect = JURI::base( true ) . '/index.php?option=com_acctexp&task=subscribe&userid=' . $id ;
+				break;
 		}
 
 		if ( $redirect ) {
