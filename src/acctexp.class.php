@@ -9067,7 +9067,7 @@ class AECToolbox
 			}
 
 			if ( ( $activation == 1 ) && !$overrideActivation ) {
-				$message = sprintf( _AEC_USEND_MSG_ACTIVATE, $name, $mosConfig_sitename, $mosConfig_live_site."index.php?option=com_registration&task=activate&activation=".$row->activation, $mosConfig_live_site, $username, $savepwd );
+				$message = sprintf( _AEC_USEND_MSG_ACTIVATE, $name, $mosConfig_sitename, $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=".$row->activation, $mosConfig_live_site, $username, $savepwd );
 			} else {
 				$message = sprintf( _AEC_USEND_MSG, $name, $mosConfig_sitename, $mosConfig_live_site );
 			}
@@ -9547,14 +9547,14 @@ class AECToolbox
 					}
 
 					$rewrite['user_activationcode']		= $metaUser->cbUser->cbactivation;
-					$rewrite['user_activationlink']		= $mosConfig_live_site."index.php?option=com_comprofiler&task=confirm&confirmcode=" . $metaUser->cbUser->cbactivation;
+					$rewrite['user_activationlink']		= $mosConfig_live_site."/index.php?option=com_comprofiler&task=confirm&confirmcode=" . $metaUser->cbUser->cbactivation;
 				} else {
 					$rewrite['user_activationcode']		= $metaUser->cmsUser->activation;
-					$rewrite['user_activationlink']		= $mosConfig_live_site."index.php?option=com_registration&task=activate&activation=" . $metaUser->cmsUser->activation;
+					$rewrite['user_activationlink']		= $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=" . $metaUser->cmsUser->activation;
 				}
 			} else {
 				$rewrite['user_activationcode']		= $metaUser->cmsUser->activation;
-				$rewrite['user_activationlink']		= $mosConfig_live_site."index.php?option=com_registration&task=activate&activation=" . $metaUser->cmsUser->activation;
+				$rewrite['user_activationlink']		= $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=" . $metaUser->cmsUser->activation;
 			}
 
 			if ( $metaUser->hasSubscription ) {
