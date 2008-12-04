@@ -47,7 +47,7 @@ class mi_aecplan
 		$new_plan = new SubscriptionPlan( $database );
 		$new_plan->load( $this->settings['plan_apply'.$area] );
 
-		$request->metaUser->establishFocus( $new_plan, 'none' );
+		$request->metaUser->establishFocus( $new_plan, 'none', false );
 
 		$request->metaUser->focusSubscription->applyUsage( $this->settings['plan_apply'.$area], 'none', 0, 1 );
 

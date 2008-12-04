@@ -408,7 +408,7 @@ class metaUser
 		return;
 	}
 
-	function establishFocus( $payment_plan, $processor='none' )
+	function establishFocus( $payment_plan, $processor='none', $silent=false )
 	{
 		global $database;
 
@@ -437,7 +437,7 @@ class metaUser
 					$this->focusSubscription = new Subscription( $database );
 					$this->focusSubscription->load( 0 );
 					$this->focusSubscription->createNew( $this->userid, 'none', 1, 1 );
-					$this->focusSubscription->applyUsage( $plan_params['standard_parent'], 'none', 1, 0 );
+					$this->focusSubscription->applyUsage( $plan_params['standard_parent'], 'none', $silent, 0 );
 
 					$this->objSubscription = $this->focusSubscription;
 				}
@@ -4650,7 +4650,7 @@ class SubscriptionPlan extends serialParamDBTable
 			}
 
 			if ( !$metaUser->hasSubscription || empty( $this->params['make_primary'] ) ) {
-				$metaUser->establishFocus( $this, $processor );
+				$metaUser->establishFocus( $this, $processor, false );
 
 				$is_pending	= true;
 				$is_trial	= false;
@@ -5136,23 +5136,19 @@ class SubscriptionPlan extends serialParamDBTable
 
 				$is_email = strcmp( $mi->class_name, 'mi_email' ) === 0;
 
-				// Only trigger if this is not email or made not silent
-				if ( ( $is_email === false ) || ( $is_email && !$silent ) ) {
-					if ( method_exists( $metaUser, $action ) ) {
-						if ( $mi->$action( $metaUser, null, $invoice, $this ) === false ) {
-							if ( $aecConfig->cfg['breakon_mi_error'] ) {
-								return false;
-							}
-						}
-					} else {
-						if ( $mi->relayAction( $metaUser, $exchange, $invoice, $this, $action, $add ) === false ) {
-							if ( $aecConfig->cfg['breakon_mi_error'] ) {
-								return false;
-							}
+				// TODO: Only trigger if this is not email or made not silent
+				if ( method_exists( $metaUser, $action ) ) {
+					if ( $mi->$action( $metaUser, null, $invoice, $this ) === false ) {
+						if ( $aecConfig->cfg['breakon_mi_error'] ) {
+							return false;
 						}
 					}
-
-
+				} else {
+					if ( $mi->relayAction( $metaUser, $exchange, $invoice, $this, $action, $add ) === false ) {
+						if ( $aecConfig->cfg['breakon_mi_error'] ) {
+							return false;
+						}
+					}
 				}
 
 				unset( $mi );
@@ -7185,7 +7181,7 @@ class Invoice extends serialParamDBTable
 		if ( is_object( $metaUser ) && is_object( $new_plan ) ) {
 			if ( $metaUser->userid ) {
 				if ( empty( $this->subscr_id ) ) {
-					$metaUser->establishFocus( $new_plan, $this->method );
+					$metaUser->establishFocus( $new_plan, $this->method, false );
 
 					$this->subscr_id = $metaUser->focusSubscription->id;
 				} else {
@@ -8777,7 +8773,7 @@ class AECToolbox
 					$payment_plan = new SubscriptionPlan( $database );
 					$payment_plan->load( $aecConfig->cfg['entry_plan'] );
 
-					$metaUser->establishFocus( $payment_plan, 'Free' );
+					$metaUser->establishFocus( $payment_plan, 'Free', false );
 
 					$metaUser->focusSubscription->applyUsage( $payment_plan->id, 'Free', 1, 0 );
 
@@ -8838,7 +8834,7 @@ class AECToolbox
 					$payment_plan = new SubscriptionPlan( $database );
 					$payment_plan->load( $aecConfig->cfg['entry_plan'] );
 
-					$metaUser->establishFocus( $payment_plan, 'Free' );
+					$metaUser->establishFocus( $payment_plan, 'Free', false );
 
 					$metaUser->focusSubscription->applyUsage( $payment_plan->id, 'Free', 1, 0 );
 

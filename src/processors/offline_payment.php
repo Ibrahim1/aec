@@ -58,7 +58,7 @@ class processor_offline_payment extends processor
 					$payment_plan = new SubscriptionPlan( $database );
 					$payment_plan->load( $this->settings['waitingplan'] );
 
-					$metaUser->establishFocus( $payment_plan, 'offline_payment' );
+					$metaUser->establishFocus( $payment_plan, 'offline_payment', false );
 				}
 
 				$metaUser->objSubscription->applyUsage( $this->settings['waitingplan'], 'none', 0 );
