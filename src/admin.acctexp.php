@@ -1535,8 +1535,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 		foreach ( $userid as $uid ) {
 			$subscriptionHandler = new Subscription( $database );
 			$subscriptionHandler->createNew( $uid, '', 1 );
-			$subscriptionHandler->check();
-			$subscriptionHandler->store();
+			$subscriptionHandler->storeload();
 			$subscriptionid[] = $subscriptionHandler->getMax();
 		}
 	}
@@ -3678,14 +3677,7 @@ function saveMicroIntegration( $option, $apply=0 )
 	if ( $mi->callIntegration( 1 ) ) {
 		$mi->savePostParams( $_POST );
 
-		if ( !$mi->check() ) {
-			echo "<script> alert('".$mi->getError()."'); window.history.go(-2); </script>\n";
-			exit();
-		}
-		if ( !$mi->store() ) {
-			echo "<script> alert('".$mi->getError()."'); window.history.go(-2); </script>\n";
-			exit();
-		}
+		$mi->storeload();
 	} else {
 		// TODO: log error
 	}
@@ -4128,14 +4120,7 @@ function saveCoupon( $option, $type, $apply=0 )
 
 			$cph->coupon->savePOSTsettings( $post );
 
-			if ( !$cph->coupon->check() ) {
-				echo "<script> alert('".$cph->coupon->getError()."'); window.history.go(-2); </script>\n";
-				exit();
-			}
-			if ( !$cph->coupon->store() ) {
-				echo "<script> alert('".$cph->coupon->getError()."'); window.history.go(-2); </script>\n";
-				exit();
-			}
+			$mi->storeload();
 		} else {
 			// TODO: log error
 		}

@@ -7724,8 +7724,7 @@ class Subscription extends serialParamDBTable
 		$database->query();
 
 		$this->primary = 1;
-		$this->check();
-		$this->store();
+		$this->storeload();
 	}
 
 	function manualVerify()
@@ -7957,8 +7956,7 @@ class Subscription extends serialParamDBTable
 
 			if ( !( strcmp( $this->status, 'Expired' ) === 0 ) || !( strcmp( $this->status, 'Closed' ) === 0 ) ) {
 				$this->status = 'Expired';
-				$this->check();
-				$this->store();
+				$this->storeload();
 			} else {
 				return false;
 			}
@@ -8039,8 +8037,7 @@ class Subscription extends serialParamDBTable
 	function setStatus( $status )
 	{
 		$this->status = $status;
-		$this->check();
-		$this->store();
+		$this->storeload();
 	}
 
 	function applyUsage( $usage = 0, $processor = 'none', $silent = 0, $multiplicator = 1, $invoice=null )
@@ -11393,7 +11390,7 @@ class coupon extends serialParamDBTable
 	function deactivate()
 	{
 		$this->active = 0;
-		$this->check();
+		$this->storeload();
 		$this->store();
 	}
 
@@ -11496,15 +11493,13 @@ class coupon extends serialParamDBTable
 	function incrementCount()
 	{
 		$this->usecount += 1;
-		$this->check();
-		$this->store();
+		$this->storeload();
 	}
 
 	function decrementCount()
 	{
 		$this->usecount -= 1;
-		$this->check();
-		$this->store();
+		$this->storeload();
 	}
 
 	function generateCouponCode( $maxlength = 6 )
@@ -11581,8 +11576,7 @@ class couponXuser extends paramDBTable
 
 		$this->usecount = 1;
 
-		$this->check();
-		$this->store();
+		$this->storeload();
 	}
 
 	function getInvoiceList()
