@@ -12340,4 +12340,5 @@ class PluginHandler
 				return $plugins;
 	}
 }
+
 ?>
