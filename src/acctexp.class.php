@@ -12340,5 +12340,5 @@ class PluginHandler
 				return $plugins;
 	}
 }
-
+//dummy comment
 ?>
