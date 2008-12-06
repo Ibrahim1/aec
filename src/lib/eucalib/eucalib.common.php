@@ -19,12 +19,92 @@
 
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Restricted access' );
 
-class eucaObject extends JObject {}
-
 function eucaInclude( $string )
 {
 	return JLoader::import( $string, _EUCA_APP_COMPDIR, 'lib.');
 }
+
+function resolveProxy ( $task, $returntask=null, $admin=false )
+{
+	if ( empty( $task ) ) {
+		$task = 'self_notask';
+	}
+
+	// Explode task
+	$atask = explode( '_', $task, 4 );
+
+	$requires = array();
+
+	// Load eucalib for this section
+	$requires[] = _EUCA_BASEDIR.'/eucalib.' . $atask[0] . '.php';
+
+	// Load class
+	$requires[] = _EUCA_APP_COMPDIR .'/' . _EUCA_APP_SHORTNAME . '.class.php';
+
+	if ( $admin ) {
+		// Load admin
+		$requires[] = _EUCA_BASEDIR.'/eucalib.admin.' . $atask[0] . '.php';
+
+		// Load admin common
+		$requires[] = _EUCA_BASEDIR.'/eucalib.admin.common.php';
+
+		// Load admin class
+		$requires[] = _EUCA_APP_ADMINDIR .'/admin.' . _EUCA_APP_SHORTNAME . '.class.php';
+
+		// Load admin file
+		$requires[] = _EUCA_APP_ADMINDIR .'/admin.' . _EUCA_APP_SHORTNAME . '.' . $atask[0] . '.php';
+	} else {
+		// Load regular file
+		$requires[] = _EUCA_APP_COMPDIR .'/' . _EUCA_APP_SHORTNAME . '.' . $atask[0] . '.php';
+	}
+
+	foreach ( $requires as $require ) {
+		if( file_exists( $require ) ) {
+			include_once( $require );
+		}
+	}
+
+	$subtask = '';
+
+	if ( isset( $atask[1] ) ) {
+		if ( $atask[1] ) {
+			$subtask = $atask[1];
+			if ( isset( $atask[2] ) ) {
+				$action = $atask[2];
+			} else {
+				$action = 'init';
+			}
+		}
+	}
+
+	if ( class_exists ( $subtask ) ) {
+		$class = new $subtask();
+		if ( method_exists( $class, $action ) ) {
+			if ( isset( $atask[3] ) ) {
+				$class->$action( $atask[3] );
+			} else {
+				$class->$action();
+			}
+		}
+	}
+
+	if ( !empty( $returntask ) ) {
+		$append = '';
+		foreach ( $_REQUEST as $name => $value ) {
+			if ( !( strlen( $name ) >= 32 ) && ( $name != "option" ) && ( $name != "task" ) && ( $name != "returntask" ) ) {
+				$append .= '&amp;' . $name . '=' . $value;
+			}
+		}
+
+		if ( $admin ) {
+			mosRedirect( '/administrator/index2.php?option=com_' . _EUCA_APP_SHORTNAME . '&task='  . $returntask . $append );
+		} else {
+			mosRedirect( 'index.php?option=com_' . _EUCA_APP_SHORTNAME . '&task='  . $returntask . $append );
+		}
+	}
+}
+
+class eucaObject extends JObject {}
 
 /**
 * parameterized Database Table entry
@@ -447,172 +527,6 @@ class serialParamDBTable extends paramDBTable
 
 }
 
-/**
-* jsonized Database Table entry
-*
-* For use with as an abstract class that adds onto table entries
-*/
-class jsonDBTable extends paramDBTable
-{
-	function storeload()
-	{
-		$this->check();
-		$this->store( true );
-
-		return $this->load( $this->id );
-	}
-
-	/**
-	 * Receive Parameters and decode them into an array
-	 * @return array
-	 */
-	function getParams( $field = 'params' )
-	{
-		if ( empty( $this->$field ) ) {
-			return null;
-		}
-
-		return jsoonHandler::decode( stripslashes( $this->$field ) );
-	}
-
-	/**
-	 * Encode array and set Parameter field
-	 */
-	function setParams( $input, $field = 'params' )
-	{
-		if ( !empty( $field ) && ( $input != 'null' ) ) {
-			if ( get_magic_quotes_gpc() ) {
-				$store = jsonDBTable::multistripslashes( $input );
-			} else {
-				$store = $input;
-			}
-			$this->$field = $this->_db->getEscaped( jsoonHandler::encode( $store ) );
-		} else {
-			$this->$field = null;
-		}
-		return true;
-	}
-
-	function multistripslashes( $input )
-	{
-		if ( is_object( $input ) ) {
-			$properties = get_object_vars( $input );
-
-			foreach ( $properties as $pname => $pvalue ) {
-				$input->$pname = jsonDBTable::multistripslashes( $pvalue );
-			}
-		} elseif ( is_array( $input ) ) {
-			foreach ( $input as $pname => $pvalue ) {
-				$input[$pname] = jsonDBTable::multistripslashes( $pvalue );
-			}
-		} else {
-			$input = stripslashes( $input );
-		}
-
-		return $input;
-	}
-
-	/**
-	 * Add an array of Parameters to an existing parameter field
-	 */
-	function addParams( $params, $field = 'params', $overwrite = true )
-	{
-		if ( empty( $this->$field ) || ( $this->$field == 'null' ) ) {
-			$this->$field = $params;
-		} elseif ( gettype( $this->$field ) == gettype( $params ) ) {
-			$this->$field = jsonDBTable::mergeParams( $this->$field, $params, $overwrite );
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * Recursive Merging of two Entities, regardless of type
-	 */
-	function mergeParams( $subject, $subject2, $overwrite=true )
-	{
-		if ( is_object( $subject ) ) {
-			$properties = get_object_vars( $subject2 );
-
-			foreach ( $properties as $pname => $pvalue ) {
-				if ( !isset( $subject->$pname ) ) {
-					$subject->$pname = $pvalue;
-				} elseif ( isset( $subject->$pname ) && $overwrite ) {
-					$subject->$pname = jsonDBTable::mergeParams( $subject->$pname, $pvalue, $overwrite );
-				}
-			}
-		} elseif ( is_array( $subject ) ) {
-			foreach ( $subject2 as $pname => $pvalue ) {
-				if ( !isset( $subject[$pname] ) ) {
-					$subject[$pname] = $pvalue;
-				} elseif ( isset( $subject[$pname] ) && $overwrite ) {
-					$subject[$pname] = jsonDBTable::mergeParams( $subject[$pname], $pvalue, $overwrite );
-				}
-			}
-		} else {
-			if ( $overwrite ) {
-				$subject = $subject2;
-			}
-		}
-
-		return $subject;
-	}
-
-	/**
-	 * Delete a set of Parameters providing an array of key names
-	 */
-	function delParams( $array, $field = 'params' )
-	{
-
-	}
-
-	/**
-	 * Return the differences between a new set of Parameters and the existing one
-	 */
-	function diffParams( $array, $field = 'params' )
-	{
-
-	}
-
-	function load( $id, $jsonfields=array() )
-	{
-		if ( method_exists( $this, 'declareJSONfields' ) ) {
-			$jsonfields = array_merge( $jsonfields, $this->declareJSONfields() );
-		}
-
-		parent::load( $id );
-
-		if ( !empty( $jsonfields ) ) {
-			foreach ( $jsonfields as $fieldname ) {
-				$this->$fieldname = $this->getParams( $fieldname );
-			}
-		}
-
-		return true;
-	}
-
-	function check( $jsonfields=array() )
-	{
-		if ( method_exists( $this, 'declareJSONfields' ) ) {
-			$jsonfields = array_merge( $jsonfields, $this->declareJSONfields() );
-		}
-
-		if ( !empty( $jsonfields ) ) {
-			foreach ( $jsonfields as $fieldname ) {
-				if ( !empty( $this->$fieldname ) && ( $this->$fieldname != 'null' ) ) {
-					$this->setParams( $this->$fieldname, $fieldname );
-				} else {
-					unset( $this->$fieldname );
-				}
-			}
-		}
-
-		return true;
-	}
-
-}
-
 class jsoonHandler
 {
 	function decode( $input )
@@ -805,129 +719,6 @@ class parameterHandler
 		return implode( "\n", $params );
 	}
 
-}
-
-class languageFileHandler
-{
-	function languageFileHandler( $filepath ) {
-		$this->filepath = $filepath;
-	}
-
-	function getConstantsArray() {
-
-		$file = fopen( $this->filepath, "r" );
-
-		$array = array();
-		while ( !feof( $file ) ) {
-			$buffer = fgets($file, 4096);
-			if ( strpos( $buffer, 'define') !== false ) {
-				$linearray = explode( '\'', $buffer );
-				if ( count( $linearray ) === 5 ) {
-					$array[$linearray[1]] = $linearray[3];
-				}
-			}
-    	}
-
-		return $array;
-	}
-
-	function getHTML() {
-
-		$file = fopen( $this->filepath, "r" );
-
-		$array = array();
-		while ( !feof( $file ) ) {
-			$buffer = fgets($file, 4096);
-			if ( strpos( $buffer, 'define') !== false ) {
-				$linearray = explode( '\'', $buffer );
-				if ( count( $linearray ) === 5 ) {
-					$array[$linearray[1]] = $linearray[3];
-				}
-			}
-    	}
-
-		return $array;
-	}
-}
-
-function resolveProxy ( $task, $returntask=null, $admin=false )
-{
-	if ( empty( $task ) ) {
-		$task = 'self_notask';
-	}
-
-	// Explode task
-	$atask = explode( '_', $task, 4 );
-
-	$requires = array();
-
-	// Load eucalib for this section
-	$requires[] = _EUCA_BASEDIR.'/eucalib.' . $atask[0] . '.php';
-
-	// Load class
-	$requires[] = _EUCA_APP_COMPDIR .'/' . _EUCA_APP_SHORTNAME . '.class.php';
-
-	if ( $admin ) {
-		// Load admin
-		$requires[] = _EUCA_BASEDIR.'/eucalib.admin.' . $atask[0] . '.php';
-
-		// Load admin common
-		$requires[] = _EUCA_BASEDIR.'/eucalib.admin.common.php';
-
-		// Load admin class
-		$requires[] = _EUCA_APP_ADMINDIR .'/admin.' . _EUCA_APP_SHORTNAME . '.class.php';
-
-		// Load admin file
-		$requires[] = _EUCA_APP_ADMINDIR .'/admin.' . _EUCA_APP_SHORTNAME . '.' . $atask[0] . '.php';
-	} else {
-		// Load regular file
-		$requires[] = _EUCA_APP_COMPDIR .'/' . _EUCA_APP_SHORTNAME . '.' . $atask[0] . '.php';
-	}
-
-	foreach ( $requires as $require ) {
-		if( file_exists( $require ) ) {
-			include_once( $require );
-		}
-	}
-
-	$subtask = '';
-
-	if ( isset( $atask[1] ) ) {
-		if ( $atask[1] ) {
-			$subtask = $atask[1];
-			if ( isset( $atask[2] ) ) {
-				$action = $atask[2];
-			} else {
-				$action = 'init';
-			}
-		}
-	}
-
-	if ( class_exists ( $subtask ) ) {
-		$class = new $subtask();
-		if ( method_exists( $class, $action ) ) {
-			if ( isset( $atask[3] ) ) {
-				$class->$action( $atask[3] );
-			} else {
-				$class->$action();
-			}
-		}
-	}
-
-	if ( !empty( $returntask ) ) {
-		$append = '';
-		foreach ( $_REQUEST as $name => $value ) {
-			if ( !( strlen( $name ) >= 32 ) && ( $name != "option" ) && ( $name != "task" ) && ( $name != "returntask" ) ) {
-				$append .= '&amp;' . $name . '=' . $value;
-			}
-		}
-
-		if ( $admin ) {
-			mosRedirect( '/administrator/index2.php?option=com_' . _EUCA_APP_SHORTNAME . '&task='  . $returntask . $append );
-		} else {
-			mosRedirect( 'index.php?option=com_' . _EUCA_APP_SHORTNAME . '&task='  . $returntask . $append );
-		}
-	}
 }
 
 class eucaToolbox
