@@ -986,10 +986,10 @@ define( '_ITEMGROUP_GENERAL_COLOR_DESC', 'The color marking of this group.');
 define( '_ITEMGROUP_GENERAL_ICON_NAME', 'Icon:');
 define( '_ITEMGROUP_GENERAL_ICON_DESC', 'The icon marking of this group.');
 
-define( '_ITEMGROUP_GENERAL_REVEAL_CHILD_ITEMS_NAME ', 'Reveal Child Items');
-define( '_ITEMGROUP_GENERAL_REVEAL_CHILD_ITEMS_DESC ', 'If you set this switch to "yes", the AEC will not show a group button (linking the user on to this contents of the group), but directly display the contents of this group in any parent group.');
-define( '_ITEMGROUP_GENERAL_SYMLINK_NAME ', 'Group Symlink');
-define( '_ITEMGROUP_GENERAL_SYMLINK_DESC ', 'Entering a link here will redirect a user to this link when selecting this group in the plans selection page. Overrides any linking to contents of this group!');
+define( '_ITEMGROUP_GENERAL_REVEAL_CHILD_ITEMS_NAME', 'Reveal Child Items');
+define( '_ITEMGROUP_GENERAL_REVEAL_CHILD_ITEMS_DESC', 'If you set this switch to "yes", the AEC will not show a group button (linking the user on to this contents of the group), but directly display the contents of this group in any parent group.');
+define( '_ITEMGROUP_GENERAL_SYMLINK_NAME', 'Group Symlink');
+define( '_ITEMGROUP_GENERAL_SYMLINK_DESC', 'Entering a link here will redirect a user to this link when selecting this group in the plans selection page. Overrides any linking to contents of this group!');
 
 // Group Restrictions
 
