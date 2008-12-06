@@ -2742,6 +2742,10 @@ class processor extends serialParamDBTable
 
 		if ( $connection === false ) {
 			global $database;
+			
+			if ( $errno == 0 ) {
+				$errstr .= " This is usually SSL error.  Check if your server supports fsocket open via SSL.";
+			}
 
 			$short	= 'fsockopen failure';
 			$event	= 'Trying to establish connection with ' . $url . ' failed with Error #' . $errno . ' ( "' . $errstr . '" ) - will try cURL instead. If Error persists and cURL works, please permanently switch to using that!';
