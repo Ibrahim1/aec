@@ -16,9 +16,13 @@ if ( defined( 'JPATH_SITE' ) ) {
 	$mosConfig_absolute_path = JPATH_SITE;
 }
 
-include_once( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php" );
+$aecClass = $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php";
 
-$_MAMBOTS->registerFunction( 'onAfterStart', 'aecBotRouting' );
+if( file_exists( $aecClass ) ){
+	include_once( $aecClass );
+
+	$_MAMBOTS->registerFunction( 'onAfterInitialise', 'aecBotRouting' );
+}
 
 function aecBotRouting()
 {
