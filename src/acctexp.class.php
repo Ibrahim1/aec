@@ -2741,7 +2741,7 @@ class processor extends serialParamDBTable
 
 		if ( $connection === false ) {
 			global $database;
-			
+
 			if ( $errno == 0 ) {
 				$errstr .= " This is usually SSL error.  Check if your server supports fsocket open via SSL.";
 			}
@@ -12286,63 +12286,63 @@ class PluginHandler
 {
 	function PluginHandler() { }
 
-		function &getPlugin($type, $plugin = null)
+	function &getPlugin($type, $plugin = null)
+	{
+		$result = array();
+
+		$plugins = PluginHandler::_load();
+
+		$total = count($plugins);
+		for($i = 0; $i < $total; $i++)
 		{
-				$result = array();
-
-				$plugins = PluginHandler::_load();
-
-				$total = count($plugins);
-				for($i = 0; $i < $total; $i++)
-				{
-						if(is_null($plugin))
-						{
-								if($plugins[$i]->type == $type) {
-										$result[] = $plugins[$i];
-								}
-						}
-						else
-						{
-								if($plugins[$i]->type == $type && $plugins[$i]->name == $plugin) {
-										$result = $plugins[$i];
-										break;
-								}
-						}
-
+			if(is_null($plugin))
+			{
+				if($plugins[$i]->type == $type) {
+						$result[] = $plugins[$i];
 				}
+			}
+			else
+			{
+				if($plugins[$i]->type == $type && $plugins[$i]->name == $plugin) {
+						$result = $plugins[$i];
+						break;
+				}
+			}
 
-				return $result;
+		}
+
+		return $result;
 	}
 
 	function _load()
 	{
-				$db        =& JFactory::getDBO();
-				$user    =& JFactory::getUser();
+		$db        =& JFactory::getDBO();
+		$user    =& JFactory::getUser();
 
-				if (isset($user))
-				{
-						$aid = $user->get('aid', 0);
+		if (isset($user))
+		{
+			$aid = $user->get('aid', 0);
 
-						$query = 'SELECT folder AS type, element AS name, params'
-								. ' FROM #__plugins'
-								. ' WHERE access <= ' . (int) $aid
-								. ' ORDER BY ordering';
-				}
-				else
-				{
-						$query = 'SELECT folder AS type, element AS name, params'
-								. ' FROM #__plugins'
-								. ' ORDER BY ordering';
-				}
+			$query = 'SELECT folder AS type, element AS name, params'
+					. ' FROM #__plugins'
+					. ' WHERE access <= ' . (int) $aid
+					. ' ORDER BY ordering';
+		}
+		else
+		{
+			$query = 'SELECT folder AS type, element AS name, params'
+					. ' FROM #__plugins'
+					. ' ORDER BY ordering';
+		}
 
-				$db->setQuery( $query );
+		$db->setQuery( $query );
 
-				if (!($plugins = $db->loadObjectList())) {
-						JError::raiseWarning( 'SOME_ERROR_CODE', "Error loading Plugins: " . $db->getErrorMsg());
-						return false;
-				}
+		if (!($plugins = $db->loadObjectList())) {
+				JError::raiseWarning( 'SOME_ERROR_CODE', "Error loading Plugins: " . $db->getErrorMsg());
+				return false;
+		}
 
-				return $plugins;
+		return $plugins;
 	}
 }
 
