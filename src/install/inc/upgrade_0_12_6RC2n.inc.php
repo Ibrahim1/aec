@@ -64,6 +64,55 @@ if ( !empty( $list ) ) {
 	}
 }
 
+if ( in_array( $mosConfig_dbprefix . "acctexp_mi_hotproperty", $tables ) ) {
+	$filename = $mosConfig_absolute_path . '/components/com_acctexp/micro_integration/mi_hotproperty.php';
+
+	if ( file_exists( $filename ) ) {
+		include_once $filename;
+
+		$fielddeclare = array( 'params' );
+
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_mi_hotproperty'
+				;
+		$database->setQuery( $query );
+		$entries = $database->loadResultArray();
+
+		if ( !empty( $entries ) ) {
+			foreach ( $entries as $id ) {
+				$object = null;
+				$query = 'SELECT `params` FROM #__acctexp_mi_hotproperty'
+				. ' WHERE `id` = \'' . $id . '\''
+				;
+				$database->setQuery( $query );
+				$database->loadObject( $object );
+
+				if ( empty( $object->params ) ) {
+					continue;
+				}
+
+				// Decode from jsonized fields
+				if ( strpos( $object->params, "{" ) === 0 ) {
+					$decode = stripslashes( str_replace( array( '\n', '\t', '\r' ), array( "\n", "\t", "\r" ), trim($object->params) ) );
+					$temp = jsoonHandler::decode( $decode );
+				} else {
+					continue;
+				}
+
+				// ... to serialized
+				$query = 'UPDATE #__acctexp_' . $dbtable
+				. ' SET `params` = \'' . base64_encode( serialize( $temp ) ) . '\''
+				. ' WHERE `id` = \'' . $id . '\''
+				;
+				$database->setQuery( $query );
+				if ( !$database->query() ) {
+			    	$errors[] = array( $database->getErrorMsg(), $query );
+				}
+			}
+		}
+	}
+}
+
 /*
 // Modifying MI tables for MI Scope
 

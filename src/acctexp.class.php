@@ -981,7 +981,6 @@ class metaUserDB extends serialParamDBTable
 		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
 
 		$this->storeload();
-		$this->id = $this->getMax();
 
 	}
 
@@ -11034,14 +11033,12 @@ class couponHandler
 			$couponxuser->usecount += 1;
 			$couponxuser->addInvoice( $invoice->invoice_number );
 			$couponxuser->last_updated = date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
-			$couponxuser->check();
-			$couponxuser->store();
+			$couponxuser->storeload();
 		} else {
 			// Relation does not exist, create one
 			$couponxuser->createNew( $invoice->userid, $this->coupon, $this->type );
 			$couponxuser->addInvoice( $invoice->invoice_number );
-			$couponxuser->check();
-			$couponxuser->store();
+			$couponxuser->storeload();
 		}
 
 		$this->coupon->incrementcount();
@@ -11076,8 +11073,7 @@ class couponHandler
 			if ( $couponxuser->usecount ) {
 				// Use count is 1 or above - break invoice relation but leave overall relation intact
 				$couponxuser->delInvoice( $invoice->invoice_number );
-				$couponxuser->check();
-				$couponxuser->store();
+				$couponxuser->storeload();
 			} else {
 				// Use count is 0 or below - delete relationship
 				$couponxuser->delete();
@@ -11536,7 +11532,7 @@ class coupon extends serialParamDBTable
 	}
 }
 
-class couponXuser extends paramDBTable
+class couponXuser extends serialParamDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -11560,6 +11556,11 @@ class couponXuser extends paramDBTable
 	function couponXuser( &$db )
 	{
 		$this->mosDBTable( '#__acctexp_couponsxuser', 'id', $db );
+	}
+
+	function declareParamFields()
+	{
+		return array( 'params'  );
 	}
 
 	function createNew( $userid, $coupon, $type, $params=null )
@@ -12344,5 +12345,5 @@ class PluginHandler
 				return $plugins;
 	}
 }
-//dummy comment
+
 ?>

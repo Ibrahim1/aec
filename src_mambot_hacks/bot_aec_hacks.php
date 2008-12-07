@@ -12,17 +12,14 @@
 
 global $mosConfig_absolute_path;
 
-if ( defined( 'JPATH_SITE' ) ) {
-	$mosConfig_absolute_path = JPATH_SITE;
-}
+if ( !defined( '_JEXEC' ) ) {
 
 $aecClass = $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php";
 
-if( file_exists( $aecClass ) ){
+if( file_exists( $aecClass ) ) {
 	include_once( $aecClass );
 
 	$_MAMBOTS->registerFunction( 'onAfterInitialise', 'aecBotRouting' );
-}
 
 function aecBotRouting()
 {
@@ -84,6 +81,10 @@ function aecBotRouting()
 	if ( $olo || ( $ccb && $tlo ) ) {
 		AECToolbox::VerifyUsername( $username );
 	}
+}
+
+}
+
 }
 
 ?>

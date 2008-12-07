@@ -4056,7 +4056,11 @@ function editCoupon( $id, $option, $new, $type )
 				. ' WHERE `coupon_code` IN (\'' . implode( '\',\'', $restrictions_values['bad_combinations'] ) . '\')'
 				;
 		$database->setQuery( $query );
-		$sel_coupons = array_merge( $database->loadObjectList(), $sel_coupons );
+		$nc = $database->loadObjectList();
+
+		if ( !empty( $nc ) ) {
+			$sel_coupons = array_merge( $nc, $sel_coupons );
+		}
 	} else {
 		$sel_coupons = '';
 	}
@@ -4120,7 +4124,7 @@ function saveCoupon( $option, $type, $apply=0 )
 
 			$cph->coupon->savePOSTsettings( $post );
 
-			$mi->storeload();
+			$cph->coupon->storeload();
 		} else {
 			// TODO: log error
 		}

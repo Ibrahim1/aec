@@ -467,8 +467,7 @@ class mi_hotproperty extends MI
 				}
 			}
 
-			$mi_hphandler->check();
-			$mi_hphandler->store();
+			$mi_hphandler->storeload();
 		}
 
 		return true;
@@ -678,7 +677,7 @@ class mi_hotproperty extends MI
 
 }
 
-class aec_hotproperty extends jsonDBTable
+class aec_hotproperty extends serialDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -693,7 +692,7 @@ class aec_hotproperty extends jsonDBTable
 	/** @var text */
 	var $params				= null;
 
-	function declareJSONfields(){ return array( 'params' ); }
+	function declareParamFields(){ return array( 'params' ); }
 
 	function aec_hotproperty( &$db )
 	{
@@ -792,8 +791,7 @@ class aec_hotproperty extends jsonDBTable
 	{
 		if ( $this->hasListingsLeft() && $this->is_active() ) {
 			$this->used_listings++;
-			$this->check();
-			$this->store();
+			$this->storeload();
 			return true;
 		} else {
 			return false;
@@ -804,8 +802,7 @@ class aec_hotproperty extends jsonDBTable
 	{
 		if ( $this->is_active() ) {
 			$this->used_listings--;
-			$this->check();
-			$this->store();
+			$this->storeload();
 			return true;
 		} else {
 			return false;

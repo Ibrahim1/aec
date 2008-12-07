@@ -30,14 +30,25 @@
 	<target name="deploy.userdir">
 		<copy todir="${deployment.userdir}" overwrite="yes">
 			<fileset dir="${source.dir}">
-				<include name="*.zip"/>
-				<include name="README"/>
-				<exclude name="AEC_package*"/>
+				<include name="com_*.zip"/>
+				<include name="mod_*.zip"/>
+				<include name="README.txt"/>
+				<include name="AEC_Guide.pdf"/>
+			</fileset>
+		</copy>
+		<copy todir="${deployment.userdir}/joomla_1_5_plugins" overwrite="yes">
+			<fileset dir="${source.dir}">
+				<include name="*plugin*.zip"/>
+			</fileset>
+		</copy>
+		<copy todir="${deployment.userdir}/joomla_1_0_mambots" overwrite="yes">
+			<fileset dir="${source.dir}">
+				<include name="*mambot*.zip"/>
 			</fileset>
 		</copy>
 	</target>
 	<target name="dist.generate">
-		<zip destfile="${distribution.dir}/AEC_package_0_12_6.zip" update="false">
+		<zip destfile="${distribution.dir}/AEC_package_0_12_6RC2n.zip" update="false">
 			<fileset dir="${deployment.userdir}"/>
 		</zip>
 	</target>
