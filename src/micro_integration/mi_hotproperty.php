@@ -677,7 +677,7 @@ class mi_hotproperty extends MI
 
 }
 
-class aec_hotproperty extends serialDBTable
+class aec_hotproperty extends serialParamDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
