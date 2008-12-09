@@ -7484,7 +7484,11 @@ class Invoice extends serialParamDBTable
 	function addCoupon( $couponcode )
 	{
 		if ( !empty( $this->coupons ) ) {
-			$oldcoupons = $this->coupons;
+			if ( !is_array( $this->coupons ) ) {
+				$oldcoupons = explode( ';', $this->coupons );
+			} else {
+				$oldcoupons = $this->coupons;
+			}
 		} else {
 			$oldcoupons = array();
 		}
