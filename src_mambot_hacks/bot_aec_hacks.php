@@ -19,7 +19,7 @@ $aecClass = $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.ph
 if( file_exists( $aecClass ) ) {
 	include_once( $aecClass );
 
-	$_MAMBOTS->registerFunction( 'onAfterInitialise', 'aecBotRouting' );
+	$_MAMBOTS->registerFunction( 'onAfterStart', 'aecBotRouting' );
 
 function aecBotRouting()
 {
