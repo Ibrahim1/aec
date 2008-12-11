@@ -34,17 +34,9 @@ class mi_email
 		$settings['text_html']			= array( 'list_yesno' );
 		$settings['text']				= array( !empty( $this->settings['text_html'] ) ? 'editor' : 'inputD' );
 
-		$settings['subject_first']		= array( 'inputE' );
-		$settings['text_first_html']	= array( 'list_yesno' );
-		$settings['text_first']			= array( !empty( $this->settings['text_first_html'] ) ? 'editor' : 'inputD' );
-
-		$settings['subject_exp']		= array( 'inputE' );
-		$settings['text_exp_html']		= array( 'list_yesno' );
-		$settings['text_exp']			= array( !empty( $this->settings['text_exp_html'] ) ? 'editor' : 'inputD' );
-
-		$settings['subject_pre_exp']	= array( 'inputE' );
-		$settings['text_pre_exp_html']	= array( 'list_yesno' );
-		$settings['text_pre_exp']		= array( !empty( $this->settings['text_pre_exp_html'] ) ? 'editor' : 'inputD' );
+		$settings['base_path']			= array( 'inputE' );
+		$settings['path_list']			= array( 'inputD' );
+		$settings['desc_list']			= array( 'inputD' );
 
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
