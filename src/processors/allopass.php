@@ -72,30 +72,26 @@ class processor_allopass extends POSTprocessor
 		global $mosConfig_live_site;
 
 		$var['post_url']      			= AECToolbox::deadsureURL("index.php?option=com_acctexp&amp;task=allopassnotification");
-		$var['ssl_test_mode']			= $this->settings['testmode'] ? "true" : "false";
-
-		$var['params_array']['CODE0']	= array("inputA", "CODE0", "Code", $request->int_var['params']['CODE0']);
+		//$var['ssl_test_mode']			= $this->settings['testmode'] ? "true" : "false";
 
 		$var['CODE0']					= $request->int_var['params']['CODE0'];
 		$var['SITE_ID']					= $this->settings['siteid'];
 		$var['DOC_ID']					= $this->settings['docid'];
-		$var['AUTH']					= $this->settings['auth'];
-		$var['RECALL']					= "1" ;
 
-		$var['currency_code']			= $this->settings['currency_code'];
-		$var['ssl_merchant_id']			= $var['SITE_ID'];
-		$var['ssl_user_id']				= $var['DOC_ID'];
-		$var['ssl_pin']					= $var['AUTH'];
-		$var['ssl_invoice_number']		= $request->int_var['invoice'];
-		$var['ssl_salestax']			= "0";
-		$var['ssl_result_format']		= "HTML";
-		$var['ssl_receipt_link_method']	= "POST";
-		$var['ssl_receipt_link_url']	= AECToolbox::deadsureURL("index.php?option=com_acctexp&amp;task=allopassnotification");
-		$var['ssl_receipt_link_text']	= "Continue";
-		$var['ssl_amount']				= $request->int_var['amount'];
+		//$var['currency_code']			= $this->settings['currency_code'];
+		//$var['ssl_merchant_id']			= $var['SITE_ID'];
+		//$var['ssl_user_id']				= $var['DOC_ID'];
+		//$var['ssl_pin']					= $var['AUTH'];
+		//$var['ssl_invoice_number']		= $request->int_var['invoice'];
+		//$var['ssl_salestax']			= "0";
+		//$var['ssl_result_format']		= "HTML";
+		//$var['ssl_receipt_link_method']	= "POST";
+		//$var['ssl_receipt_link_url']	= AECToolbox::deadsureURL("index.php?option=com_acctexp&amp;task=allopassnotification");
+		//$var['ssl_receipt_link_text']	= "Continue";
+		//$var['ssl_amount']				= $request->int_var['amount'];
 
-		$var['ssl_customer_code']		= $request->metaUser->cmsUser->id;
-		$var['ssl_description']			= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
+		//$var['ssl_customer_code']		= $request->metaUser->cmsUser->id;
+		//$var['ssl_description']			= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
 
 		return $var;
 	}
@@ -116,12 +112,20 @@ class processor_allopass extends POSTprocessor
 		if (trim($post['RECALL'])=="") {
 			$response['valid'] = false;
 		} else {
-			$r=@file("http://www.allopass.com/check/vf.php4?CODE=" . urlencode( $post['CODE0'] ) . "&AUTH=" . $this->settings['auth'] )  ;
+			$path = "/acte/access.apu";
+			$url = "http://payment.allopass.com" . $path;
 
-			$test_ap = substr($r[0],0,2);
+			$vars = array();
+			$vars['CODE'] = urlencode( $post['CODE0'] );
+			$vars['AUTH'] = $this->settings['auth'];
+
+			$fp = $this->transmitRequest( $url, $path, $vars );
+
+			$test_ap = substr( $fp, 0, 2 );
+
 			if ( $test_ap != "OK") {
 				$response['valid'] = false;
-			} elseif ($test_ap = "OK") {
+			} elseif ( $test_ap = "OK" ) {
 				$response['valid'] = true;
 				return;
 			} else {
