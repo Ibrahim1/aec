@@ -68,6 +68,15 @@ class plgSystemAECrouting extends JPlugin
 
 			$task	= mosGetParam( $_REQUEST, 'task', '' );
 			$option	= mosGetParam( $_REQUEST, 'option', '' );
+
+			if ( empty( $task ) ) {
+				$task = JRequest::getVar( 'task', null );
+			}
+
+			if ( empty( $option ) ) {
+				$option = JRequest::getVar( 'option', null );
+			}
+
 			$usage	= intval( mosGetParam( $_POST, 'usage', '0' ) );
 			$submit	= mosGetParam( $_POST, 'submit', '' );
 
