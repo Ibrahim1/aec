@@ -64,6 +64,7 @@ class processor_allopass extends POSTprocessor
 
 	function Params( $params )
 	{
+		$var['params']['DESC0'] = array("p", "Code Explanation", "Please [FIXME]");
 		$var['params']['CODE0'] = array("inputC", "Allopass Code", "Please [FIXME]");
 	}
 
@@ -74,6 +75,7 @@ class processor_allopass extends POSTprocessor
 		$var['post_url']      			= AECToolbox::deadsureURL("index.php?option=com_acctexp&amp;task=allopassnotification");
 		//$var['ssl_test_mode']			= $this->settings['testmode'] ? "true" : "false";
 
+		$var['DESC0']					= $request->int_var['params']['CODE0'];
 		$var['CODE0']					= $request->int_var['params']['CODE0'];
 		$var['SITE_ID']					= $this->settings['siteid'];
 		$var['DOC_ID']					= $this->settings['docid'];

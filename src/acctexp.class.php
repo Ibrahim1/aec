@@ -3859,11 +3859,11 @@ class aecHTML
 				break;
 			default:
 				if ( !empty( $row[0] ) ) {
-					$return .= '<' . $row[0] . '>' . $row[2] . '</' . $row[0] . '>';
+					$return .= '<' . $row[0] . '>' . $row[2] . $value . '</' . $row[0] . '>';
 				} elseif ( empty( $row[0] ) && empty( $row[2] ) ) {
-					$return .= '<' . $row[1] . ' />';
+					$return .= '<' . $row[1] . $value . ' />';
 				} else {
-					$return .= $row[2];
+					$return .= $row[2] . $value;
 				}
 				break;
 		}
