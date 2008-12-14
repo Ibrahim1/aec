@@ -379,10 +379,10 @@ function subscribe( $option )
 				exit();
 			}
 		} else {
-			if ( isset( $_POST['username'] ) && isset($_POST['email'] ) ) {
-				if ( checkDuplicateUsernameEmail( $username, $email ) !== true ) {
-					echo "<script> alert('".html_entity_decode($row->getError())."'); window.history.go(-1); </script>\n";
-					exit();
+			if ( isset( $_POST['username'] ) && isset( $_POST['email'] ) ) {
+				$check = checkDuplicateUsernameEmail( $username, $email );
+				if ( $check !== true ) {
+					return $check;
 				}
 			}
 		}
@@ -401,11 +401,11 @@ function subscribe( $option )
 			$passthrough	= false;
 		} elseif ( !empty( $userid ) && !isset( $_POST['username'] ) ) {
 			$passthrough	= false;
-		} elseif ( !$userid ) {
-			if ( isset( $_POST['username'] ) && isset($_POST['email'] ) ) {
-				if ( checkDuplicateUsernameEmail( $username, $email ) !== true ) {
-					echo "<script> alert('".html_entity_decode($row->getError())."'); window.history.go(-1); </script>\n";
-					exit();
+		} elseif ( empty( $userid ) ) {
+			if ( !empty( $_POST['username'] ) && !empty( $_POST['email'] ) ) {
+				$check = checkDuplicateUsernameEmail( $username, $email );
+				if ( $check !== true ) {
+					return $check;
 				}
 			}
 
@@ -420,6 +420,16 @@ function subscribe( $option )
 			}
 
 			if ( !empty( $_POST ) ) {
+				if ( empty( $_POST['username'] ) || empty( $_POST['email'] ) || empty( $_POST['password'] ) ) {
+					if ( !aecJoomla15check() ) {
+						mosErrorAlert( _REGWARN_INUSE );
+						return false;
+					} else {
+						mosErrorAlert( JText::_( 'WARNREG_INUSE' ) );
+						return JText::_( 'WARNREG_INUSE' );
+					}
+				}
+
 				$passthrough = array();
 				foreach ( $_POST as $ke => $va ) {
 					if ( is_array( $va ) ) {
@@ -467,7 +477,7 @@ function checkDuplicateUsernameEmail( $username, $email )
 	}
 
 	if ( !empty( $email ) ) {
-		if ( $mosConfig_uniquemail || ( aecJoomla15check()) ) { // J1.5 forces unique email
+		if ( $mosConfig_uniquemail || aecJoomla15check() ) { // J1.5 forces unique email
 			// check for existing email
 			$query = 'SELECT `id`'
 					. ' FROM #__users'

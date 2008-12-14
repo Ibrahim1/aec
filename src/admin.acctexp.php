@@ -4900,6 +4900,22 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 
 	$aec_regvarshack_fix = str_replace( 'planid', 'usage', $aec_regvarshack);
 
+	$aec_regvarshack_fixcb = $aec_hack_start
+						. $aec_global_call
+						. $aec_condition_start
+						. 'if ( isset( $_POST[\'usage\'] ) ) {' . "\n"
+						. '$regFormTag .= \'<input type="hidden" name="usage" value="\' . $_POST[\'usage\'] . \'" />\';' . "\n"
+						. '}' . "\n"
+						. 'if ( isset( $_POST[\'processor\'] ) ) {' . "\n"
+						. '$regFormTag .= \'<input type="hidden" name="processor" value="\' . $_POST[\'processor\'] . \'" />\';' . "\n"
+						. '}' . "\n"
+						. 'if ( isset( $_POST[\'recurring\'] ) ) {' . "\n"
+						. '$regFormTag .= \'<input type="hidden" name="recurring" value="\' . $_POST[\'recurring\'] . \'" />\';' . "\n"
+						. '}' . "\n"
+						. $aec_condition_end
+						. $aec_hack_end
+						;
+
 	$aec_regredirect = $aec_hack_start
 					. $aec_global_call
 					. $aec_condition_start
@@ -5048,7 +5064,6 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #6';
 		$hacks[$n]['desc']			=	_AEC_HACKS_CB6;
 		$hacks[$n]['type']			=	'file';
-/*		$hacks[$n]['condition']		=	'comprofilerphp2'; removed dependency [#0000161]*/
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.php';
 		$hacks[$n]['read']			=	'HTML_comprofiler::registerForm( $option, $emailpass, $userComplete, $regErrorMSG );';
 		$hacks[$n]['insert']		=	sprintf($aec_rhackbefore_fix, $n, $n) . "\n" . $hacks[$n]['read'];
@@ -5059,8 +5074,8 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['desc']			=	_AEC_HACKS_CB_HTML2;
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.html.php';
-		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveregisters" />';
-		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
+		$hacks[$n]['read']			=	'echo HTML_comprofiler::_cbTemplateRender( $user, \'RegisterForm\'';
+		$hacks[$n]['insert']		=	sprintf($aec_regvarshack_fixcb, $n, $n) . "\n" . $hacks[$n]['read'];
 
 	} elseif ( GeneralInfoRequester::detect_component( 'CB' ) ) {
 		$n = 'comprofilerphp2';

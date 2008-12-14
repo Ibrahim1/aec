@@ -5990,17 +5990,18 @@ class InvoiceFactory
 				if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 					// This is a CB registration, borrowing their code to register the user
 
-					global $task;
+					global $task, $_CB_framework;
 
 					$savetask	= $task;
 					$_REQUEST['task'] = 'done';
 
-					include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.html.php' );
 					include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
+					include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.html.php' );
 
 					$task = $savetask;
 
 					registerForm($option, $mainframe->getCfg( 'emailpass' ), null);
+					$_CB_framework->getAllJsPageCodes();
 				} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
 					// This is a JUSER registration, borrowing their code to register the user
 
