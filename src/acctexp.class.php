@@ -5427,8 +5427,7 @@ class InvoiceFactory
 			} elseif ( $this->userid ) {
 				if ( AECToolbox::quickVerifyUserID( $this->userid ) === true ) {
 					// This user is not expired, so he could log in...
-					mosNotAuth();
-					return;
+					return mosNotAuth();
 				} else {
 					$this->userid = $database->getEscaped( $userid );
 				}
@@ -5474,11 +5473,11 @@ class InvoiceFactory
 		$restrictions = $row->getRestrictionsArray();
 
 		if ( !aecRestrictionHelper::checkRestriction( $restrictions, $this->metaUser ) ) {
-			mosNotAuth();
+			return mosNotAuth();
 		}
 
 		if ( !ItemGroupHandler::checkParentRestrictions( $row, 'item', $this->metaUser ) ) {
-			mosNotAuth();
+			return mosNotAuth();
 		}
 	}
 
@@ -5486,12 +5485,12 @@ class InvoiceFactory
 	{
 		global $database;
 
-		if ( $this->usage ) {
+		if ( !empty( $this->usage ) ) {
 			// get the payment plan
 			$this->objUsage = new SubscriptionPlan( $database );
 			$this->objUsage->load( $this->usage );
 		} else {
-			mosNotAuth();
+			return mosNotAuth();
 		}
 
 		if ( !is_null( $this->processor ) && !( $this->processor == '' ) ) {
@@ -5530,7 +5529,7 @@ class InvoiceFactory
 					break;
 			}
 		} else {
-			mosNotAuth();
+			return mosNotAuth();
 		}
 
 		$user_subscription = false;
@@ -7867,13 +7866,16 @@ class Subscription extends serialParamDBTable
 		}
 
 		if ( ( $expired || ( strcmp( $this->status, 'Closed' ) === 0 ) ) && $aecConfig->cfg['require_subscription'] ) {
-			$expire = $this->expire();
+			if ( $metaUser !== false ) {
+				$metaUser->setTempAuth();
+			}
 
-			if ( $expire ) {
-				if ( $metaUser !== false ) {
-					$metaUser->setTempAuth();
-				}
+			if ( strcmp( $this->status, 'Expired' ) === 0 ) {
 				mosRedirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=expired&userid=' . $this->userid ), false, true );
+			} else {
+				if ( $this->expire() ) {
+					mosRedirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=expired&userid=' . $this->userid ), false, true );
+				}
 			}
 		} elseif ( ( strcmp( $this->status, 'Pending' ) === 0 ) || $block ) {
 			if ( $metaUser !== false ) {
@@ -7885,7 +7887,7 @@ class Subscription extends serialParamDBTable
 		}
 	}
 
-	function verify( $block )
+	function verify( $block, $metaUser=false )
 	{
 		global $mosConfig_live_site, $database, $aecConfig;
 
@@ -7906,10 +7908,16 @@ class Subscription extends serialParamDBTable
 		}
 
 		if ( ( $expired || ( strcmp( $this->status, 'Closed' ) === 0 ) ) && $aecConfig->cfg['require_subscription'] ) {
-			$expire = $this->expire();
+			if ( $metaUser !== false ) {
+				$metaUser->setTempAuth();
+			}
 
-			if ( $expire ) {
+			if ( strcmp( $this->status, 'Expired' ) === 0 ) {
 				return 'expired';
+			} else {
+				if ( $this->expire() ) {
+					return 'expired';
+				}
 			}
 		} elseif ( ( strcmp( $this->status, 'Pending' ) === 0 ) || $block ) {
 			return 'pending';
@@ -8770,7 +8778,7 @@ class AECToolbox
 		$metaUser = new metaUser( $id );
 
 		if ( $metaUser->hasSubscription ) {
-			$metaUser->objSubscription->verifyLogin( $metaUser->cmsUser->block, $metaUser );
+			$metaUser->objSubscription->verifylogin( $metaUser->cmsUser->block, $metaUser );
 		} else {
 			if ( $aecConfig->cfg['require_subscription'] ) {
 				if ( $aecConfig->cfg['entry_plan'] ) {
@@ -8825,7 +8833,7 @@ class AECToolbox
 		$metaUser = new metaUser( $id );
 
 		if ( $metaUser->hasSubscription ) {
-			$result = $metaUser->objSubscription->verify( $metaUser->cmsUser->block );
+			$result = $metaUser->objSubscription->verify( $metaUser->cmsUser->block, $metaUser );
 
 			if ( ( $result == 'expired' ) || ( $result == 'pending' ) ) {
 				$metaUser->setTempAuth();
@@ -9703,13 +9711,52 @@ class AECToolbox
 					if ( isset( $vars[0] ) && isset( $vars[1] ) ) {
 						$call = strtoupper( $vars[0] );
 
+						$v = $vars[1];
+
 						$allowed = array( 'SERVER', 'GET', 'POST', 'FILES', 'COOKIE', 'SESSION', 'REQUEST', 'ENV' );
 
-						if ( in_array( $vars[0], $allowed ) ) {
-							$v = '_' . $vars[0];
-
-							if ( isset( $$v[$vars[1]] ) ) {
-								$result = $$v[$vars[1]];
+						if ( in_array( $call, $allowed ) ) {
+							switch ( $call ) {
+								case 'SERVER':
+									if ( isset( $_SERVER[$v] ) ) {
+										$result = $_SERVER[$v];
+									}
+									break;
+								case 'GET':
+									if ( isset( $_GET[$v] ) ) {
+										$result = $_GET[$v];
+									}
+									break;
+								case 'POST':
+									if ( isset( $_POST[$v] ) ) {
+										$result = $_POST[$v];
+									}
+									break;
+								case 'FILES':
+									if ( isset( $_FILES[$v] ) ) {
+										$result = $_FILES[$v];
+									}
+									break;
+								case 'COOKIE':
+									if ( isset( $_COOKIE[$v] ) ) {
+										$result = $_COOKIE[$v];
+									}
+									break;
+								case 'SESSION':
+									if ( isset( $_SESSION[$v] ) ) {
+										$result = $_SESSION[$v];
+									}
+									break;
+								case 'REQUEST':
+									if ( isset( $_REQUEST[$v] ) ) {
+										$result = $_REQUEST[$v];
+									}
+									break;
+								case 'ENV':
+									if ( isset( $_ENV[$v] ) ) {
+										$result = $_ENV[$v];
+									}
+									break;
 							}
 						}
 					}
