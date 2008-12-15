@@ -3632,6 +3632,9 @@ class aecHTML
 
 	function createSettingsParticle( $name )
 	{
+		if ( !isset( $this->rows[$name] ) ) {
+			return;
+		}
 
 		$row	= $this->rows[$name];
 		$type	= $row[0];
@@ -5489,6 +5492,10 @@ class InvoiceFactory
 			// get the payment plan
 			$this->objUsage = new SubscriptionPlan( $database );
 			$this->objUsage->load( $this->usage );
+
+			if ( !is_object( $this->objUsage ) ) {
+				return mosNotAuth();
+			}
 		} else {
 			return mosNotAuth();
 		}

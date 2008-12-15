@@ -3483,8 +3483,8 @@ function removeItemGroup( $id, $option )
 
 	$total = 0;
 
-	foreach ( $ids as $i ) {
-		$ig = ItemGroup( $database );
+	foreach ( $id as $i ) {
+		$ig = new ItemGroup( $database );
 		$ig->load( $i );
 
 		if ( $ig->delete() !== false ) {
