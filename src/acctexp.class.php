@@ -5997,7 +5997,7 @@ class InvoiceFactory
 				if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 					// This is a CB registration, borrowing their code to register the user
 
-					global $task, $_CB_framework;
+					global $task;
 
 					$savetask	= $task;
 					$_REQUEST['task'] = 'done';
@@ -6009,7 +6009,7 @@ class InvoiceFactory
 					registerForm($option, $mainframe->getCfg( 'emailpass' ), null);
 
 					if ( GeneralInfoRequester::detect_component( 'CB1.2' ) ) {
-						global $_CB_framework;
+						global $task, $_CB_framework;
 
 						$_CB_framework->getAllJsPageCodes();
 					}
@@ -6034,13 +6034,12 @@ class InvoiceFactory
 					}
 
 					if ( aecJoomla15check() ) {
-						$usersConfig = &JComponentHelper::getParams( 'com_users' );
+						$usersConfig =& JComponentHelper::getParams( 'com_users' );
 						$activation = $usersConfig->get('useractivation');
 					} else {
 						$activation = $mainframe->getCfg( 'useractivation' );
 					}
 
-					//include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/acctexp.html.php' );
 					joomlaregisterForm( $option, $activation );
 				}
 			} else {

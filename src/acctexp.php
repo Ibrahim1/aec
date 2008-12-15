@@ -63,6 +63,10 @@ if ( !empty( $task ) ) {
 			subscribe( $option );
 			break;
 
+		case 'rerouteregister':
+			rerouteRegister( $option, $task );
+			break;
+
 		case 'confirm':
 			confirmSubscription($option);
 			break;
@@ -318,6 +322,42 @@ function pending( $option, $userid )
 		$frontend->pending( $option, $objUser, $invoice, $reason );
 	} else {
 		mosRedirect( sefRelToAbs( 'index.php' ) );
+	}
+}
+
+function rerouteRegister( $option, $task )
+{
+	if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
+		global $mainframe;
+
+		if ( $task == 'rerouteRegister' ) {
+			$task = 'registers';
+		}
+
+		$savetask = $task;
+		$_REQUEST['task'] = 'done';
+		$_REQUEST['option'] = "com_acctexp";
+
+		include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
+		include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.html.php' );
+
+		$task = $savetask;
+		registerForm($option, $mainframe->getCfg( 'emailpass' ), null);
+
+		if ( GeneralInfoRequester::detect_component( 'CB1.2' ) ) {
+			global $_CB_framework;
+
+			$_CB_framework->getAllJsPageCodes();
+		}
+	} else {
+		if ( aecJoomla15check() ) {
+			$usersConfig =& JComponentHelper::getParams( 'com_users' );
+			$activation = $usersConfig->get('useractivation');
+		} else {
+			$activation = $mainframe->getCfg( 'useractivation' );
+		}
+
+		joomlaregisterForm( $option, $activation );
 	}
 }
 

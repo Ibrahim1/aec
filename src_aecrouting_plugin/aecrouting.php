@@ -58,8 +58,7 @@ class plgSystemAECrouting extends JPlugin
 		parent::__construct( $subject, $config );
 	}
 
-
-	function onAfterInitialise ()
+	function onAfterRoute()
 	{
 		if ( file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
 			include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
@@ -82,31 +81,37 @@ class plgSystemAECrouting extends JPlugin
 
 			$username = aecGetParam( 'username', true, array( 'string', 'clear_nonalnum' ) );
 
-			$nu		= $usage == 0;
+			$no_usage	= $usage == 0;
 
-			$ccb	= $option == 'com_comprofiler';
-			$cu		= $option == 'com_user';
+			$ccb		= $option == 'com_comprofiler';
+			$cu			= $option == 'com_user';
 
-			$treg	= $task == 'register';
-			$tregs	= $task == 'registers';
-			$tcregs	= $task == 'saveregisters';
-			$tsregs	= $task == 'saveRegistration';
-			$tsue	= $task == 'saveUserEdit';
+			$j_reg		= $task == 'register';
+			$cb_reg		= $task == 'registers';
+			$tcregs		= $task == 'saveregisters';
+			$tsregs		= $task == 'saveRegistration';
+			$tsue		= $task == 'saveUserEdit';
+			$tsu		= $task == 'save';
 
-			$cbreg		= ( $ccb && $tregs );
-			$cbsreg		= ( $ccb && ( $tcregs || $tsue ) );
+			$cbsreg		= ( ( $ccb && $tsue ) || ( $cu && $tsu ) );
 
 			$pfirst		= $aecConfig->cfg['plans_first'];
 
-			if ( ( $treg || $cbreg ) && $aecConfig->cfg['integrate_registration'] ) {
+			if ( ( $j_reg || $cb_reg ) && $aecConfig->cfg['integrate_registration'] ) {
 				// Joomla or CB registration...
-				if ( ( $pfirst && !$nu ) || ( !$pfirst && $nu ) ) {
+				if ( ( $pfirst && !$no_usage ) || ( !$pfirst ) ) {
 					// Plans First and selected or not first and not selected
 					// Both cases = redirect to AEC on the next page
 					$_REQUEST['option'] = "com_acctexp";
+					$_REQUEST['task'] = "rerouteregister";
 					// Just to be sure
+					unset( $option );
+					global $option;
 					$option = "com_acctexp";
-				} elseif ( $pfirst && $nu ) {
+
+					//global $mainframe;
+					//$mainframe->redirect( 'index.php?option=com_acctexp&task=rerouteregister' );
+				} elseif ( $pfirst && $no_usage ) {
 					// Plans first and not yet selected
 					// Immediately redirect to plan selection
 					global $mainframe;

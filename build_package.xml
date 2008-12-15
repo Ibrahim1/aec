@@ -48,7 +48,7 @@
 		</copy>
 	</target>
 	<target name="dist.generate">
-		<zip destfile="${distribution.dir}/AEC_package_0_12_6RC2n.zip" update="false">
+		<zip destfile="${distribution.dir}/AEC_package_0_12_6RC2n_unzip_first.zip" update="false">
 			<fileset dir="${deployment.userdir}"/>
 		</zip>
 	</target>
