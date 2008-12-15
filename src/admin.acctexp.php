@@ -2570,6 +2570,8 @@ function editSubscriptionPlan( $id, $option )
 	$row = new SubscriptionPlan( $database );
 	$row->load( $id );
 
+	$restrictionHelper = new aecRestrictionHelper();
+
 	if ( !$row->id ) {
 		$row->ordering	= 9999;
 		$hasrecusers	= false;
@@ -2655,67 +2657,43 @@ function editSubscriptionPlan( $id, $option )
 		$glist[] = mosHTML::makeOption( $glisti[0], $glisti[1] );
 	}
 
-	$lists['add_group'] 		= mosHTML::selectList( $glist, 'add_group', 'size="' . min(6,count($glist)+1) . '"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
+	$lists['add_group'] 			= mosHTML::selectList( $glist, 'add_group', 'size="' . min(6,count($glist)+1) . '"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
 
-	$params['add_group']				= array( 'list', '', '', ( ( $row->id ) ? 0 : 1 ) );
+	$params['add_group']			= array( 'list', '', '', ( ( $row->id ) ? 0 : 1 ) );
 
-	$params['params_remap']				= array( 'subarea_change', 'params' );
+	$params['params_remap']			= array( 'subarea_change', 'params' );
 
-	$params['override_activation']		= array( 'list_yesno', 0 );
-	$params['override_regmail']			= array( 'list_yesno', 0 );
+	$params['override_activation']	= array( 'list_yesno', 0 );
+	$params['override_regmail']		= array( 'list_yesno', 0 );
 
-	$params['full_free']				= array( 'list_yesno', '' );
-	$params['full_amount']				= array( 'inputB', '' );
-	$params['full_period']				= array( 'inputB', '' );
-	$params['full_periodunit']			= array( 'list', 'D' );
-	$params['trial_free']				= array( 'list_yesno', '' );
-	$params['trial_amount']				= array( 'inputB', '' );
-	$params['trial_period']				= array( 'inputB', '' );
-	$params['trial_periodunit']			= array( 'list', 'D' );
+	$params['full_free']			= array( 'list_yesno', '' );
+	$params['full_amount']			= array( 'inputB', '' );
+	$params['full_period']			= array( 'inputB', '' );
+	$params['full_periodunit']		= array( 'list', 'D' );
+	$params['trial_free']			= array( 'list_yesno', '' );
+	$params['trial_amount']			= array( 'inputB', '' );
+	$params['trial_period']			= array( 'inputB', '' );
+	$params['trial_periodunit']		= array( 'list', 'D' );
 
-	$params['gid_enabled']				= array( 'list_yesno', 1 );
-	$params['gid']						= array( 'list', 18 );
-	$params['lifetime']					= array( 'list_yesno', 0 );
-	$params['processors']				= array( 'list', '' );
-	$params['standard_parent']			= array( 'list', '' );
-	$params['fallback']					= array( 'list', '' );
-	$params['make_active']				= array( 'list_yesno', 1 );
-	$params['make_primary']				= array( 'list_yesno', 1 );
-	$params['update_existing']			= array( 'list_yesno', 1 );
+	$params['gid_enabled']			= array( 'list_yesno', 1 );
+	$params['gid']					= array( 'list', 18 );
+	$params['lifetime']				= array( 'list_yesno', 0 );
+	$params['processors']			= array( 'list', '' );
+	$params['standard_parent']		= array( 'list', '' );
+	$params['fallback']				= array( 'list', '' );
+	$params['make_active']			= array( 'list_yesno', 1 );
+	$params['make_primary']			= array( 'list_yesno', 1 );
+	$params['update_existing']		= array( 'list_yesno', 1 );
 
-	$params['similarplans']				= array( 'list', '' );
-	$params['equalplans']				= array( 'list', '' );
+	$params['similarplans']			= array( 'list', '' );
+	$params['equalplans']			= array( 'list', '' );
 
-	$params['restr_remap']				= array( 'subarea_change', 'restrictions' );
+	$params['restr_remap']			= array( 'subarea_change', 'restrictions' );
 
-	$params['mingid_enabled']					= array( 'list_yesno', 0 );
-	$params['mingid']							= array( 'list', 18 );
-	$params['fixgid_enabled']					= array( 'list_yesno', 0 );
-	$params['fixgid']							= array( 'list', 19 );
-	$params['maxgid_enabled']					= array( 'list_yesno', 0 );
-	$params['maxgid']							= array( 'list', 21 );
-	$params['previousplan_req_enabled'] 		= array( 'list_yesno', 0 );
-	$params['previousplan_req']					= array( 'list', 0 );
-	$params['previousplan_req_enabled_excluded']	= array( 'list_yesno', 0 );
-	$params['previousplan_req_excluded']			= array( 'list', 0 );
-	$params['currentplan_req_enabled']			= array( 'list_yesno', 0 );
-	$params['currentplan_req']					= array( 'list', 0 );
-	$params['currentplan_req_enabled_excluded']	= array( 'list_yesno', 0 );
-	$params['currentplan_req_excluded']			= array( 'list', 0 );
-	$params['overallplan_req_enabled']			= array( 'list_yesno', 0 );
-	$params['overallplan_req']					= array( 'list', 0 );
-	$params['overallplan_req_enabled_excluded']	= array( 'list_yesno', 0 );
-	$params['overallplan_req_excluded']			= array( 'list', 0 );
-	$params['used_plan_min_enabled']			= array( 'list_yesno', 0 );
-	$params['used_plan_min_amount']				= array( 'inputB', 0 );
-	$params['used_plan_min']					= array( 'list', 0 );
-	$params['used_plan_max_enabled']			= array( 'list_yesno', 0 );
-	$params['used_plan_max_amount']				= array( 'inputB', 0 );
-	$params['used_plan_max']					= array( 'list', 0 );
-	$params['custom_restrictions_enabled']		= array( 'list_yesno', '' );
-	$params['custom_restrictions']				= array( 'inputD', '' );
-	$rewriteswitches							= array( 'cms', 'user' );
-	$params['rewriteInfo']						= array( 'fieldset', '', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+	$params = array_merge( $params, $restrictionHelper->getParams() );
+
+	$rewriteswitches				= array( 'cms', 'user' );
+	$params['rewriteInfo']			= array( 'fieldset', '', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
 	// ensure user can't add group higher than themselves
 	$my_groups = $acl->get_object_groups( 'users', $my->id, 'ARO' );
@@ -2741,11 +2719,6 @@ function editSubscriptionPlan( $id, $option )
 			$i++;
 		}
 	}
-
-	$lists['gid'] 		= mosHTML::selectList( $gtree, 'gid', 'size="6"', 'value', 'text', arrayValueDefault($params_values, 'gid', 18) );
-	$lists['mingid'] 	= mosHTML::selectList( $gtree, 'mingid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'mingid', 18) );
-	$lists['fixgid'] 	= mosHTML::selectList( $gtree, 'fixgid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'fixgid', 19) );
-	$lists['maxgid'] 	= mosHTML::selectList( $gtree, 'maxgid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'maxgid', 21) );
 
 	// make the select list for first trial period units
 	$perunit[] = mosHTML::makeOption( 'D', _PAYPLAN_PERUNIT1 );
@@ -2998,40 +2971,7 @@ function editSubscriptionPlan( $id, $option )
 
 	$lists['equalplans'] = mosHTML::selectList($payment_plans, 'equalplans[]', 'size="' . $total_plans . '" multiple="multiple"', 'value', 'text', $sel_equal_plans);
 
-	// get available plans
-	$available_plans = array();
-	$available_plans[] = mosHTML::makeOption( '0', _PAYPLAN_NOPLAN );
-
-	$query = 'SELECT `id` AS value, `name` AS text'
-			. ' FROM #__acctexp_plans'
-			;
-	$database->setQuery( $query );
-	$plans = $database->loadObjectList();
-
- 	if ( is_array( $plans ) ) {
- 		$all_plans	= array_merge( $available_plans, $plans );
- 	} else {
- 		$all_plans	= $available_plans;
- 	}
-	$total_all_plans	= min( max( ( count( $all_plans ) + 1 ), 4 ), 20 );
-
-	$lists['previousplan_req']	= mosHTML::selectList($all_plans, 'previousplan_req[]', 'size="' . $total_all_plans . '" multiple="multiple"',
-									'value', 'text', arrayValueDefault($restrictions_values, 'previousplan_req', 0));
-	$lists['currentplan_req']	= mosHTML::selectList($all_plans, 'currentplan_req[]', 'size="' . $total_all_plans . '" multiple="multiple"',
-									'value', 'text', arrayValueDefault($restrictions_values, 'currentplan_req', 0));
-	$lists['overallplan_req']	= mosHTML::selectList($all_plans, 'overallplan_req[]', 'size="' . $total_all_plans . '" multiple="multiple"',
-									'value', 'text', arrayValueDefault($restrictions_values, 'overallplan_req', 0));
-	$lists['used_plan_min']		= mosHTML::selectList($all_plans, 'used_plan_min', 'size="' . $total_all_plans . '"',
-									'value', 'text', arrayValueDefault($restrictions_values, 'used_plan_min', 0));
-	$lists['used_plan_max']		= mosHTML::selectList($all_plans, 'used_plan_max', 'size="' . $total_all_plans . '"',
-									'value', 'text', arrayValueDefault($restrictions_values, 'used_plan_max', 0));
-
-	$lists['previousplan_req_excluded']	= mosHTML::selectList($all_plans, 'previousplan_req_excluded[]', 'size="' . $total_all_plans . '" multiple="multiple"',
-									'value', 'text', arrayValueDefault($restrictions_values, 'previousplan_req_excluded', 0));
-	$lists['currentplan_req_excluded']	= mosHTML::selectList($all_plans, 'currentplan_req_excluded[]', 'size="' . $total_all_plans . '" multiple="multiple"',
-									'value', 'text', arrayValueDefault($restrictions_values, 'currentplan_req_excluded', 0));
-	$lists['overallplan_req_excluded']	= mosHTML::selectList($all_plans, 'overallplan_req_excluded[]', 'size="' . $total_all_plans . '" multiple="multiple"',
-									'value', 'text', arrayValueDefault($restrictions_values, 'overallplan_req_excluded', 0));
+	$lists = array_merge( $lists, $restrictionHelper->getLists( $params_values, $restrictions_values ) );
 
 	// get available micro integrations
 	$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
@@ -3364,16 +3304,16 @@ function editItemGroup( $id, $option )
 		$glist[] = mosHTML::makeOption( $glisti[0], $glisti[1] );
 	}
 
-	$lists['add_group'] 		= mosHTML::selectList( $glist, 'add_group', 'size="' . min(6,count($glist)+1) . '"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
+	$lists['add_group'] 	= mosHTML::selectList( $glist, 'add_group', 'size="' . min(6,count($glist)+1) . '"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
 
-	$params['add_group']				= array( 'list', '', '', ( ( $row->id ) ? 0 : 1 ) );
+	$params['add_group']	= array( 'list', '', '', ( ( $row->id ) ? 0 : 1 ) );
 
-	$params['restr_remap']				= array( 'subarea_change', 'restrictions' );
+	$params['restr_remap']	= array( 'subarea_change', 'restrictions' );
 
 	$params = array_merge( $params, $restrictionHelper->getParams() );
 
-	$rewriteswitches							= array( 'cms', 'user' );
-	$params['rewriteInfo']						= array( 'fieldset', '', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+	$rewriteswitches		= array( 'cms', 'user' );
+	$params['rewriteInfo']	= array( 'fieldset', '', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
 
 	// light blue, another blue, brown, green, another green, reddish gray, yellowish, purpleish, red

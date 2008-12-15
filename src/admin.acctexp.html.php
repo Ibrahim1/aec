@@ -1804,61 +1804,8 @@ class HTML_AcctExp
 		                ?>
 		                <div class="aec_tabheading"><h2><?php echo _PAYPLAN_RESTRICTIONS_TITLE; ?></h2></div>
 						<table class="aecadminform">
-							<tr><td>
-								<div class="userinfobox">
-									<div style="position:relative;float:left;width:260px;">
-										<?php echo $aecHTML->createSettingsParticle( 'mingid_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'mingid' ); ?>
-									</div>
-									<div style="position:relative;float:left;width:260px;">
-										<?php echo $aecHTML->createSettingsParticle( 'fixgid_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'fixgid' ); ?>
-									</div>
-									<div style="position:relative;float:left;width:260px;">
-										<?php echo $aecHTML->createSettingsParticle( 'maxgid_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'maxgid' ); ?>
-									</div>
-								</div>
-							</td></tr>
-							<tr><td>
-								<div class="userinfobox">
-									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( 'previousplan_req_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'previousplan_req' ); ?>
-									</div>
-									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( 'previousplan_req_enabled_excluded' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'previousplan_req_excluded' ); ?>
-									</div>
-									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( 'currentplan_req_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'currentplan_req' ); ?>
-									</div>
-									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( 'currentplan_req_enabled_excluded' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'currentplan_req_excluded' ); ?>
-									</div>
-									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( 'overallplan_req_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'overallplan_req' ); ?>
-									</div>
-									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( 'overallplan_req_enabled_excluded' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'overallplan_req_excluded' ); ?>
-									</div>
-								</div>
-								<div class="userinfobox">
-									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( 'used_plan_min_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'used_plan_min_amount' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'used_plan_min' ); ?>
-									</div>
-									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( 'used_plan_max_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'used_plan_max_amount' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'used_plan_max' ); ?>
-									</div>
-								</div>
+							<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
+						<tr><td>
 								<div class="userinfobox">
 									<div style="position:relative;float:left;">
 										<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions_enabled' ); ?>

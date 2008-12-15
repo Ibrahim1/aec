@@ -12038,6 +12038,24 @@ class aecRestrictionHelper
 		$params['used_plan_max_enabled']			= array( 'list_yesno', 0 );
 		$params['used_plan_max_amount']				= array( 'inputB', 0 );
 		$params['used_plan_max']					= array( 'list', 0 );
+		$params['previousgroup_req_enabled'] 		= array( 'list_yesno', 0 );
+		$params['previousgroup_req']				= array( 'list', 0 );
+		$params['previousgroup_req_enabled_excluded']	= array( 'list_yesno', 0 );
+		$params['previousgroup_req_excluded']		= array( 'list', 0 );
+		$params['currentgroup_req_enabled']			= array( 'list_yesno', 0 );
+		$params['currentgroup_req']					= array( 'list', 0 );
+		$params['currentgroup_req_enabled_excluded']	= array( 'list_yesno', 0 );
+		$params['currentgroup_req_excluded']		= array( 'list', 0 );
+		$params['overallgroup_req_enabled']			= array( 'list_yesno', 0 );
+		$params['overallgroup_req']					= array( 'list', 0 );
+		$params['overallgroup_req_enabled_excluded']	= array( 'list_yesno', 0 );
+		$params['overallgroup_req_excluded']		= array( 'list', 0 );
+		$params['used_group_min_enabled']			= array( 'list_yesno', 0 );
+		$params['used_group_min_amount']			= array( 'inputB', 0 );
+		$params['used_group_min']					= array( 'list', 0 );
+		$params['used_group_max_enabled']			= array( 'list_yesno', 0 );
+		$params['used_group_max_amount']			= array( 'inputB', 0 );
+		$params['used_group_max']					= array( 'list', 0 );
 		$params['custom_restrictions_enabled']		= array( 'list_yesno', '' );
 		$params['custom_restrictions']				= array( 'inputD', '' );
 
