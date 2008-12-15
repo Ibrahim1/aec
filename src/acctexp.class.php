@@ -5999,9 +5999,13 @@ class InvoiceFactory
 					include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.html.php' );
 
 					$task = $savetask;
-
 					registerForm($option, $mainframe->getCfg( 'emailpass' ), null);
-					$_CB_framework->getAllJsPageCodes();
+
+					if ( GeneralInfoRequester::detect_component( 'CB1.2' ) ) {
+						global $_CB_framework;
+
+						$_CB_framework->getAllJsPageCodes();
+					}
 				} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
 					// This is a JUSER registration, borrowing their code to register the user
 
