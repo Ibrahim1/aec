@@ -6011,7 +6011,7 @@ class InvoiceFactory
 					if ( GeneralInfoRequester::detect_component( 'CB1.2' ) ) {
 						global $task, $_CB_framework;
 
-						$_CB_framework->getAllJsPageCodes();
+						echo $_CB_framework->getAllJsPageCodes();
 					}
 				} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
 					// This is a JUSER registration, borrowing their code to register the user

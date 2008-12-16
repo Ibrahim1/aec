@@ -99,18 +99,18 @@ class plgSystemAECrouting extends JPlugin
 
 			if ( ( $j_reg || $cb_reg ) && $aecConfig->cfg['integrate_registration'] ) {
 				// Joomla or CB registration...
-				if ( ( $pfirst && !$no_usage ) || ( !$pfirst ) ) {
+				if ( ( $pfirst && !$no_usage ) || ( !$pfirst && $no_usage ) ) {
 					// Plans First and selected or not first and not selected
 					// Both cases = redirect to AEC on the next page
-					$_REQUEST['option'] = "com_acctexp";
-					$_REQUEST['task'] = "rerouteregister";
+					//$_REQUEST['option'] = "com_acctexp";
+					//$_REQUEST['task'] = "rerouteregister";
 					// Just to be sure
-					unset( $option );
-					global $option;
-					$option = "com_acctexp";
+					//unset( $option );
+					//global $option;
+					//$option = "com_acctexp";
 
-					//global $mainframe;
-					//$mainframe->redirect( 'index.php?option=com_acctexp&task=rerouteregister' );
+					global $mainframe;
+					$mainframe->redirect( 'index.php?option=com_acctexp&task=rerouteregister' );
 				} elseif ( $pfirst && $no_usage ) {
 					// Plans first and not yet selected
 					// Immediately redirect to plan selection

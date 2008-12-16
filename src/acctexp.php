@@ -347,7 +347,7 @@ function rerouteRegister( $option, $task )
 		if ( GeneralInfoRequester::detect_component( 'CB1.2' ) ) {
 			global $_CB_framework;
 
-			$_CB_framework->getAllJsPageCodes();
+			echo $_CB_framework->getAllJsPageCodes();
 		}
 	} else {
 		if ( aecJoomla15check() ) {
