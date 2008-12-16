@@ -580,7 +580,8 @@ class metaUser
 
 		// Update Session
 		$query = 'UPDATE #__session'
-				. ' SET `usertype` = \'' . $gid_name . '\''
+				. ' SET `usertype` = \'' . $gid . '\''
+				. ' `gid` = \'' . $gid_name . '\''
 				. ' WHERE `userid` = \'' . (int) $this->userid . '\''
 				;
 		$database->setQuery( $query );
@@ -3955,10 +3956,30 @@ class ItemGroupHandler
 
 	function getTree()
 	{
-		$tree = ItemGroupHandler::resolveTreeItem( 1 );
+		global $database;
+
+		$query = 'SELECT id'
+				. ' FROM #__acctexp_itemxgroup'
+				. ' WHERE `type` = \'group\''
+				;
+		$database->setQuery( $query );
+		$nitems = $database->loadResultArray();
+
+		$query = 'SELECT id'
+				. ' FROM #__acctexp_itemgroups'
+				. ( !empty( $nitems ) ? ' WHERE `id` NOT IN (' . implode( ',', $nitems ) . ')' : '' )
+				;
+		$database->setQuery( $query );
+		$items = $database->loadResultArray();
 
 		$list = array();
-		return ItemGroupHandler::indentList( $tree, $list );
+		foreach( $items as $itemid ) {
+			$tree = ItemGroupHandler::resolveTreeItem( $itemid );
+
+			$list = array_merge( $list, ItemGroupHandler::indentList( $tree, $list ) );
+		}
+
+		return $list;
 	}
 
 	function indentList( $tree, &$list, $indent=0 )

@@ -238,6 +238,23 @@ class mi_acl
 			$groups = $database->loadResultArray();
 		}
 
+		if ( aecJoomla15check() ) {
+			$sessiongroups = $_SESSION['__default']['jaclplus'];
+		} else {
+			$query = 'SELECT `jaclplus`'
+					. ' FROM #__session'
+					. ' WHERE `userid` = \'' . (int) $metaUser->userid . '\''
+					;
+			$database->setQuery( $query );
+			$q = $database->loadResult();
+
+			if ( !empty( $q ) ) {
+				$sessiongroups = explode( ',', $q );
+			} else {
+				$sessiongroups = array();
+			}
+		}
+
 		if ( !empty( $this->settings[$section.'_del'] ) ) {
 			foreach ( $this->settings[$section.'_del'] as $gid ) {
 				if ( in_array( $gid, $groups ) ) {
@@ -248,6 +265,10 @@ class mi_acl
 							;
 					$database->setQuery( $query );
 					$database->query() or die( $database->stderr() );
+				}
+
+				if ( in_array( $gid, $sessiongroups ) ) {
+
 				}
 			}
 		}
@@ -262,6 +283,10 @@ class mi_acl
 					$database->query() or die( $database->stderr() );
 				}
 			}
+		}
+
+		if ( aecJoomla15check() ) {
+			$_SESSION['__default']['jaclplus'] = $sessiongroups;
 		}
 
 		return true;
