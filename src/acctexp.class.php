@@ -8715,7 +8715,7 @@ class AECToolbox
 	{
 		global $mosConfig_live_site;
 
-		return '<a href="' .  $mosConfig_live_site . '/administratorindex2.php?option=com_acctexp&amp;task=' . $task . '" title="' . $text . '">' . $text . '</a>';
+		return '<a href="' .  $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&amp;task=' . $task . '" title="' . $text . '">' . $text . '</a>';
 	}
 
 	/**
