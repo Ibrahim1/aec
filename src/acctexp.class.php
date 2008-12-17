@@ -3976,7 +3976,7 @@ class ItemGroupHandler
 		foreach( $items as $itemid ) {
 			$tree = ItemGroupHandler::resolveTreeItem( $itemid );
 
-			$list = array_merge( $list, ItemGroupHandler::indentList( $tree, $list ) );
+			ItemGroupHandler::indentList( $tree, $list );
 		}
 
 		return $list;
