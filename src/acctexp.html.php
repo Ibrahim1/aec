@@ -529,8 +529,8 @@ class Payment_HTML
 
 			if ( $register ) {
 				if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
-					$option	= 'com_comprofiler';
-					$task	= 'registers';
+					$option	= 'com_acctexp';
+					$task	= 'rerouteregister';
 				} else {
 					$option	= 'com_acctexp';
 					$task	= 'subscribe';
