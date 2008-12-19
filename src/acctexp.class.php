@@ -580,8 +580,7 @@ class metaUser
 
 		// Update Session
 		$query = 'UPDATE #__session'
-				. ' SET `usertype` = \'' . $gid . '\''
-				. ' `gid` = \'' . $gid_name . '\''
+				. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\''
 				. ' WHERE `userid` = \'' . (int) $this->userid . '\''
 				;
 		$database->setQuery( $query );
