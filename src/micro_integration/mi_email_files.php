@@ -35,8 +35,9 @@ class mi_email
 		$settings['text']				= array( !empty( $this->settings['text_html'] ) ? 'editor' : 'inputD' );
 
 		$settings['base_path']			= array( 'inputE' );
-		$settings['path_list']			= array( 'inputD' );
+		$settings['file_list']			= array( 'inputD' );
 		$settings['desc_list']			= array( 'inputD' );
+		$settings['max_choices']		= array( 'inputA' );
 
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
@@ -70,18 +71,10 @@ class mi_email
 		return $settings;
 	}
 
-	function relayAction( $request, $area )
+	function action( $request )
 	{
-		if ( $area == '' ) {
-			if ( !empty( $this->settings['text_first'] ) ) {
-				if ( empty( $request->metaUser->objSubscription->previous_plan ) && ( $request->metaUser->objSubscription->status == 'Pending' ) ) {
-					$area = '_first';
-				}
-			}
-		}
-
-		$message	= AECToolbox::rewriteEngineRQ( $this->settings['text' . $area], $request );
-		$subject	= AECToolbox::rewriteEngineRQ( $this->settings['subject' . $area], $request );
+		$message	= AECToolbox::rewriteEngineRQ( $this->settings['text'], $request );
+		$subject	= AECToolbox::rewriteEngineRQ( $this->settings['subject'], $request );
 
 		if ( empty( $message ) ) {
 			return null;
@@ -94,9 +87,31 @@ class mi_email
         foreach ( $recips as $k => $email ) {
             $recipients2[$k] = trim( $email );
         }
+
         $recipients = $recipients2;
 
-		mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text' . $area . '_html'] );
+		$f = explode( "\n", $this->settings['file_list'] );
+
+		if ( !empty( $this->settings['base_path'] ) ) {
+			$b = $this->settings['base_path'];
+		} else {
+			$b = '';
+		}
+
+		$attach = array();
+		foreach ( $f as $fname ) {
+			if ( empty( $fname ) ) {
+				continue;
+			}
+
+			$ff = $b . $fname;
+
+			if ( file_exists( $ff ) ) {
+				$attach[] = $ff;
+			}
+		}
+
+		mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'], null, null, $attach );
 
 		return true;
 	}

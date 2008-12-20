@@ -713,4 +713,28 @@ define( '_MI_MI_PROMA_REBUILD_DESC',			'Attempt to rebuild the list of users ass
 define( '_MI_MI_PROMA_REMOVE_NAME',			'Remove' );
 define( '_MI_MI_PROMA_REMOVE_DESC',			'Attempt to remove the effect of this MI to the users who hold a plan it has been assigned to.' );
 
+// email files
+define( '_AEC_MI_NAME_EMAIL_FILES',		'Email Files' );
+define( '_AEC_MI_DESC_EMAIL_FILES',		'Send an Email with attached files to one or more adresses on application of the subscription' );
+define( '_MI_MI_EMAIL_FILES_SENDER_NAME',		'Sender E-Mail' );
+define( '_MI_MI_EMAIL_FILES_SENDER_DESC',		'Sender E-Mail Address' );
+define( '_MI_MI_EMAIL_FILES_SENDER_NAME_NAME',	'Sender Name' );
+define( '_MI_MI_EMAIL_FILES_SENDER_NAME_DESC',	'The displayed name of the Sender' );
+define( '_MI_MI_EMAIL_FILES_RECIPIENT_NAME',	'Recipient(s)' );
+define( '_MI_MI_EMAIL_FILES_RECIPIENT_DESC',	'Who is to receive this E-Mail? Separate with comma. The rewriting routines explained below will work for this field.' );
+define( '_MI_MI_EMAIL_FILES_SUBJECT_NAME',		'Subject' );
+define( '_MI_MI_EMAIL_FILES_SUBJECT_DESC',		'Subject of this email (Uses RewriteEngine explained below as well)' );
+define( '_MI_MI_EMAIL_FILES_TEXT_HTML_NAME',	'HTML Encoding' );
+define( '_MI_MI_EMAIL_FILES_TEXT_HTML_DESC',	'Do you want this email to be HTML encoded? (Make sure that there are not tags in it if you do not want this)' );
+define( '_MI_MI_EMAIL_FILES_TEXT_NAME',			'Text' );
+define( '_MI_MI_EMAIL_FILES_TEXT_DESC',			'Text to be sent when the plan is purchased. The rewriting routines explained below will work for this field.' );
+define( '_MI_MI_EMAIL_FILES_BASE_PATH_NAME',	'Base Path' );
+define( '_MI_MI_EMAIL_FILES_BASE_PATH_DESC',	'Base Path of the files you want to attach.' );
+define( '_MI_MI_EMAIL_FILES_FILE_LIST_NAME',	'File List' );
+define( '_MI_MI_EMAIL_FILES_FILE_LIST_DESC',	'List of your files - separate by new lines.' );
+define( '_MI_MI_EMAIL_FILES_DESC_LIST_NAME',	'Description List' );
+define( '_MI_MI_EMAIL_FILES_DESC_LIST_DESC',	'List of your files that the user will see on frontend - separate by new lines. Leave empty to not show a user selection' );
+define( '_MI_MI_EMAIL_FILES_MAX_CHOICES_NAME',	'Description List' );
+define( '_MI_MI_EMAIL_FILES_MAX_CHOICES_DESC',	'List of your files that the user will see on frontend - separate by new lines. Leave empty to not show a user selection' );
+
 ?>
