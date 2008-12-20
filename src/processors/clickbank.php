@@ -94,6 +94,8 @@ class processor_clickbank extends URLprocessor
 
 	function validateNotification( $response, $request, $invoice )
 	{
+		$response['valid'] = 0;
+
 		if ( !isset( $_REQUEST['cverify'] ) ) {
 			/**
 			 * option,com_acctexp
@@ -127,6 +129,8 @@ class processor_clickbank extends URLprocessor
 
 			if ( $_REQUEST['cbpop'] == $xxpop ) {
 				$response['valid']	= 1;
+			} else {
+				$response['pending_reason'] = 'verification error';
 			}
 		} else {
 			// Standard parameters that Clickbank will send back (leaving out 'cverify')
@@ -181,13 +185,11 @@ class processor_clickbank extends URLprocessor
 						if ( $this->settings['secret_key'] ) {
 							$response['valid']	= 1;
 						} else {
-							$response['valid'] = 0;
 							$response['pending_reason'] = 'testmode claimed when not activated';
 						}
 						break;
 				}
 			} else {
-				$response['valid'] = 0;
 				$response['pending_reason'] = 'verification error';
 			}
 
