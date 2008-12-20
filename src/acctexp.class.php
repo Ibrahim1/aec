@@ -5683,8 +5683,7 @@ class InvoiceFactory
 			$this->recurring = $this->objInvoice->params['userselect_recurring'];
 		} elseif ( !is_null( $recurring ) ) {
 			$this->objInvoice->addParams( array( 'userselect_recurring' => $recurring ) );
-			$this->objInvoice->check();
-			$this->objInvoice->store();
+			$this->objInvoice->storeload();
 		}
 
 		return;
@@ -6271,8 +6270,7 @@ class InvoiceFactory
 
 		if ( !empty( $coupon ) ) {
 			$this->objInvoice->addCoupon( $coupon );
-			$this->objInvoice->check();
-			$this->objInvoice->store();
+			$this->objInvoice->storeload();
 
 			// Make sure we have the correct amount loaded
 			$this->touchInvoice( $option );
@@ -6380,8 +6378,7 @@ class InvoiceFactory
 					}
 				}
 
-				$this->objInvoice->check();
-				$this->objInvoice->store();
+				$this->objInvoice->storeload();
 			}
 
 			$cpsh_err = $cpsh->getErrors();
@@ -11849,8 +11846,7 @@ class aecExport extends serialParamDBTable
 		global $mosConfig_offset;
 
 		$this->lastused_date = date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
-		$this->check();
-		$this->store();
+		$this->storeload();
 	}
 
 	function save( $name, $filter, $options, $params, $system=false )
@@ -11888,8 +11884,7 @@ class aecExport extends serialParamDBTable
 			$this->created_date = date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
 		}
 
-		$this->check();
-		$this->store();
+		$this->storeload();
 	}
 
 }
