@@ -148,8 +148,6 @@ class processor_clickbank extends URLprocessor
 
 			$verify = strtoupper( substr( implode( '|', $params ), 0, 8 ) );
 
-			$response['valid'] = 0;
-
 			if ( aecGetParam( 'cverify' ) == $verify ) {
 				switch ( $request[''] ) {
 					// The purchase of a standard product or the initial purchase of recurring billing product.
