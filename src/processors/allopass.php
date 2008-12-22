@@ -76,7 +76,23 @@ class processor_allopass extends POSTprocessor
 		//$var['ssl_test_mode']			= $this->settings['testmode'] ? "true" : "false";
 
 		$var['DESC0']					= $request->int_var['params']['CODE0'];
-		$var['CODE0']					= $request->int_var['params']['CODE0'];
+
+		return $var;
+	}
+
+	function parseNotification( $post )
+	{
+
+   		$ssl_amount = aecGetParam( 'ssl_amount' ) ;
+
+		$response = array();
+		$response['invoice'] = $post['ssl_invoice_number'];
+
+		return $response;
+	}
+
+	function validateNotification( $response, $post, $invoice )
+	{
 		$var['SITE_ID']					= $this->settings['siteid'];
 		$var['DOC_ID']					= $this->settings['docid'];
 
@@ -95,31 +111,17 @@ class processor_allopass extends POSTprocessor
 		//$var['ssl_customer_code']		= $request->metaUser->cmsUser->id;
 		//$var['ssl_description']			= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
 
-		return $var;
-	}
+		$response['valid'] = false;
 
-	function parseNotification( $post )
-	{
-
-   		$ssl_amount = aecGetParam( 'ssl_amount' ) ;
-
-		$response = array();
-		$response['invoice'] = $post['ssl_invoice_number'];
-
-		return $response;
-	}
-
-	function validateNotification( $response, $post, $invoice )
-	{
-		if (trim($post['RECALL'])=="") {
-			$response['valid'] = false;
-		} else {
+		if ( !empty( $post['CODE0'] ) ) {
 			$path = "/acte/access.apu";
 			$url = "http://payment.allopass.com" . $path;
 
 			$vars = array();
-			$vars['CODE'] = urlencode( $post['CODE0'] );
-			$vars['AUTH'] = $this->settings['auth'];
+			$vars['CODE']		= urlencode( $post['CODE0'] );
+			$vars['AUTH']		= $this->settings['auth'];
+			$vars['SITE_ID']	= $this->settings['siteid'];
+			$vars['DOC_ID']		= $this->settings['docid'];
 
 			$fp = $this->transmitRequest( $url, $path, $vars );
 
