@@ -6283,13 +6283,13 @@ class InvoiceFactory
 				if ( !empty( $mi_form ) ) {
 					$params = array();
 					foreach ( $mi_form as $key => $value ) {
-						$val = aecGetParam( $key );
-
 						$k = explode( '_', $key, 3 );
 
-						if ( !empty( $val ) ) {
-							$params[$k[1]][$k[2]] = $val;
+						if ( !isset( $params[$k[1]] ) ) {
+							$params[$k[1]] = array();
 						}
+
+						$params[$k[1]][$k[2]] = aecGetParam( $key );
 					}
 
 					if ( !empty( $params ) ) {

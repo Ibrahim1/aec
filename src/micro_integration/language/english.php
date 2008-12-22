@@ -734,7 +734,9 @@ define( '_MI_MI_EMAIL_FILES_FILE_LIST_NAME',	'File List' );
 define( '_MI_MI_EMAIL_FILES_FILE_LIST_DESC',	'List of your files - separate by new lines.' );
 define( '_MI_MI_EMAIL_FILES_DESC_LIST_NAME',	'Description List' );
 define( '_MI_MI_EMAIL_FILES_DESC_LIST_DESC',	'List of your files that the user will see on frontend - separate by new lines. Leave empty to not show a user selection' );
-define( '_MI_MI_EMAIL_FILES_MAX_CHOICES_NAME',	'Description List' );
-define( '_MI_MI_EMAIL_FILES_MAX_CHOICES_DESC',	'List of your files that the user will see on frontend - separate by new lines. Leave empty to not show a user selection' );
+define( '_MI_MI_EMAIL_FILES_MAX_CHOICES_NAME',	'Max Choices' );
+define( '_MI_MI_EMAIL_FILES_MAX_CHOICES_DESC',	'How many items may the user select?' );
+define( '_MI_MI_USER_CHOICE_FILES_NAME',	'Please select:' );
+define( '_MI_MI_USER_CHOICE_FILES_DESC',	'Please select' );
 
 ?>

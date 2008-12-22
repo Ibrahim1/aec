@@ -51,8 +51,8 @@ class mi_email_files
 
 		$settings = array();
 
-		if ( !empty( $this->settings['user_choice_files'] ) ) {
-			$list = explode( "\n", $this->settings['user_choice_files'] );
+		if ( !empty( $this->settings['desc_list'] ) ) {
+			$list = explode( "\n", $this->settings['desc_list'] );
 
 			$gr = array();
 			foreach ( $list as $id => $choice ) {
@@ -61,7 +61,15 @@ class mi_email_files
 				$gr[] = mosHTML::makeOption( $id, $choice );
 			}
 
-			$settings['lists']['mi_email_files'] = mosHTML::selectList( $gr, 'mi_email_files', 'size="6"', 'value', 'text', '' );
+			if ( $this->settings['max_choices'] != 1 ) {
+				$m1 = '[]';
+				$m2 = ' multiple="multiple"';
+			} else {
+				$m1 = '';
+				$m2 = '';
+			}
+
+			$settings['lists']['mi_email_files'] = mosHTML::selectList( $gr, 'mi_email_files'.$m1, 'size="6"'.$m2, 'value', 'text', '' );
 		} else {
 			return false;
 		}
@@ -92,19 +100,37 @@ class mi_email_files
 
 		$f = explode( "\n", $this->settings['file_list'] );
 
+		if ( !empty( $this->settings['desc_list'] ) ) {
+			$userchoice = $request->params['mi_email_files'];
+
+			if ( !empty( $this->settings['max_choices'] ) ) {
+				if ( count( $userchoice ) > $this->settings['max_choices'] ) {
+					$userchoice = array_slice( $userchoice, 0, $this->settings['max_choices']);
+				}
+			}
+		} else {
+			$userchoice = false;
+		}
+
 		if ( !empty( $this->settings['base_path'] ) ) {
-			$b = $this->settings['base_path'];
+			$b = $this->settings['base_path'] . '/';
 		} else {
 			$b = '';
 		}
 
 		$attach = array();
-		foreach ( $f as $fname ) {
+		foreach ( $f as $fid => $fname ) {
 			if ( empty( $fname ) ) {
 				continue;
 			}
 
-			$ff = $b . $fname;
+			if ( $userchoice != false ) {
+				if ( !in_array( $fid, $userchoice ) ) {
+					continue;
+				}
+			}
+
+			$ff = $b . trim( $fname );
 
 			if ( file_exists( $ff ) ) {
 				$attach[] = $ff;
