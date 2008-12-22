@@ -228,11 +228,28 @@ background-color: #EED;
 background-image: url(/administrator/components/com_acctexp/images/backend_gfx/infoblock_lowerright.png);
 background-position: bottom right;
 background-repeat: no-repeat;
-margin: 5px;
 padding: 12px 3px 12px 6px;
 border-bottom: solid 3px #998;
 width: 95%;
 margin: 2px;
+}
+
+.aec_userinfobox_sub {
+background-color: #f9f9e9;
+margin: 4px auto;
+padding: 4px;
+width: 95%;
+}
+
+.aec_userinfobox_sub h4 {
+background: #555 none repeat scroll 0 0;
+background-image: url(/administrator/components/com_acctexp/images/backend_gfx/infobox_sub_lr.png);
+background-position: bottom left;
+background-repeat: no-repeat;
+color: #fff;
+float: right;
+margin: -4px;
+padding: 8px;
 }
 
 #accordion .userinfobox {

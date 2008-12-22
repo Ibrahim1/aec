@@ -1217,7 +1217,7 @@ class Config_General extends serialParamDBTable
 		$def['ssl_signup']						= 0;
 		$def['error_notification_level']		= 32;
 		$def['email_notification_level']		= 128;
-		$def['temp_auth_exp']					= 60;
+		$def['temp_auth_exp']					= 15;
 		$def['skip_confirmation']				= 0;
 		$def['show_fixeddecision']				= 0;
 		$def['confirmation_coupons']			= 0;
@@ -3741,6 +3741,9 @@ class aecHTML
 				break;
 			case 'userinfobox':
 				$return = '<div style="position:relative;float:left;width:' . $value . '%;padding:4px;"><div class="userinfobox">';
+				break;
+			case 'userinfobox_sub':
+				$return = '<div class="aec_userinfobox_sub"><h4>' . $value . '</h4>';
 				break;
 			case 'fieldset':
 				$return = '<div class="setting_form">' . "\n"
