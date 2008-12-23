@@ -2288,10 +2288,37 @@ class PaymentProcessor
 			$settings = $this->processor->backend_settings();
 		}
 
-		$default_settings = array();
-		$default_settings['generic_buttons']	= array( 'list_yesno' );
+		$settings['generic_buttons']	= array( 'list_yesno' );
 
-		return array_merge( $settings, $default_settings );
+		if ( !isset( $this->info ) ) {
+			$this->getInfo();
+		}
+
+		if ( !empty( $this->info['cc_list'] ) ) {
+			$settings['cc_icons']			= array( 'list' );
+
+			$cc_array = explode( ',', $this->info['cc_list'] );
+
+			if ( isset( $this->settings['cc_icons'] ) ) {
+				$set = $this->settings['cc_icons'];
+			} else {
+				$set = $cc_array;
+			}
+
+			$cc = array();
+			$ccs = array();
+			foreach ( $cc_array as $ccname ) {
+				$cc[] = mosHTML::makeOption( $ccname, $ccname );
+
+				if ( in_array( $ccname, $set ) ) {
+					$ccs[] = mosHTML::makeOption( $ccname, $ccname );
+				}
+			}
+
+			$settings['lists']['cc_icons'] = mosHTML::selectList( $cc, $this->processor_name.'_cc_icons[]', 'size="4" multiple="multiple"', 'value', 'text', $ccs );
+		}
+
+		return $settings;
 	}
 
 	function checkoutAction( $int_var=null, $metaUser=null, $new_subscription=null, $invoice=null )

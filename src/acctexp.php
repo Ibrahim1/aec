@@ -1084,6 +1084,7 @@ function notAllowed( $option )
 			if ( $processors[$processor]->loadName( $processor ) ) {
 				$processors[$processor]->init();
 				$processors[$processor]->getInfo();
+				$processors[$processor]->getSettings();
 			} else {
 				// TODO: Log error
 				unset( $processors[$processor] );

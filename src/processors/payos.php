@@ -83,7 +83,7 @@ class processor_payos extends URLprocessor
 		$var['_language']	= 'de';
 		$var['Country']		= 'DE';
 
-		if ( $this->settings['recurring'] ) {
+		if ( is_array( $request->int_var['amount'] ) ) {
 
 			$var['AboAmount'] = $request->int_var['amount']['amount3'];
 

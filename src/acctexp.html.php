@@ -374,7 +374,13 @@ class HTML_frontEnd
 			<tr>
 				<td class="cc_gateway"></td>
 				<td class="cc_icons">
-					<?php echo Payment_HTML::getCCiconsHTML ( $option, $processorObj->info['cc_list'] ); ?>
+					<?php
+					if ( isset( $processorObj->settings['cc_icons'] ) ) {
+						echo Payment_HTML::getCCiconsHTML ( $option, $processorObj->settings['cc_icons'] );
+					} else {
+						echo Payment_HTML::getCCiconsHTML ( $option, $processorObj->info['cc_list'] );
+					}
+					?>
 				</td>
 			</tr>
 			<?php
@@ -618,7 +624,11 @@ class Payment_HTML
 		// If there was no gateway specified, it passes the cc list on to the next function
 		$html_code	= '';
 		// Function to create a string of images by a list of CreditCards
-		$cc_array = explode( ',', $cc_list );
+		if ( is_array( $cc_list ) ) {
+			$cc_array = $cc_list;
+		} else {
+			$cc_array = explode( ',', $cc_list );
+		}
 
 		for( $i = 0; $i < count( $cc_array ); $i++ ) {
 			$html_code .= '<img src="' . $mosConfig_live_site . '/components/' . $option

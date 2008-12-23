@@ -109,7 +109,7 @@ class processor_netdebit extends URLprocessor
 		$var['KUN']		= $iscust;
 		$var['KNR']		= $cust;
 
-		if ( $this->settings['recurring'] ) {
+		if ( is_array( $request->int_var['amount'] ) ) {
 			$var['TIM']	= 1;
 
 			switch ( $request->int_var['amount']['unit3'] ) {

@@ -61,6 +61,8 @@ define( '_CFG_PROCESSOR_TAX_NAME', 'Tax:');
 define( '_CFG_PROCESSOR_TAX_DESC', 'Set the percentage that should be split to taxes. For example if you want 10% of 10$ to be tax - put in a 10. This will result in an amount of 9.09 and a tax amount of additional 0.91.');
 define( '_CFG_PROCESSOR_GENERIC_BUTTONS_NAME', 'Generic Buttons:');
 define( '_CFG_PROCESSOR_GENERIC_BUTTONS_DESC', 'Do not show buttons with the processor logo, but plan "Buy Now" and "Subscribe" buttons instead.');
+define( '_CFG_PROCESSOR_CC_ICONS_NAME', 'CC Icons:');
+define( '_CFG_PROCESSOR_CC_ICONS_DESC', 'Show the selected CreditCard (or similar) icons to the user as being supported by this processor.');
 
 define( '_AEC_SELECT_RECURRING_NO', 'Non-Recurring');
 define( '_AEC_SELECT_RECURRING_YES', 'Recurring');

@@ -1946,7 +1946,7 @@ function editSettings( $option )
 
 	$tab_data = array();
 
-	$params[] = array( 'userinfobox', 30 );
+	$params[] = array( 'userinfobox', 32 );
 	$params[] = array( 'userinfobox_sub', 'Access' );
 	$params['require_subscription']			= array( 'list_yesno', 0 );
 	$params['adminaccess']					= array( 'list_yesno', 0 );
@@ -1964,6 +1964,8 @@ function editSettings( $option )
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', 'Debug' );
 	$params['bypassintegration']			= array( 'inputC', 0 );
+	$params['overrideJ15']					= array( 'list_yesno', 0 );
+	$params['curl_default']					= array( 'list_yesno', 0 );
 	$params['simpleurls']					= array( 'list_yesno', 0 );
 	$params['error_notification_level']		= array( 'list', 0 );
 	$params['email_notification_level']		= array( 'list', 0 );
@@ -1972,7 +1974,7 @@ function editSettings( $option )
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
-	$params[] = array( 'userinfobox', 30 );
+	$params[] = array( 'userinfobox', 33 );
 	$params[] = array( 'userinfobox_sub', 'Registration Flow' );
 	$params['plans_first']					= array( 'list_yesno', 0 );
 	$params['integrate_registration']		= array( 'list_yesno', 0 );
@@ -1990,7 +1992,7 @@ function editSettings( $option )
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
-	$params[] = array( 'userinfobox', 30 );
+	$params[] = array( 'userinfobox', 32 );
 	$params[] = array( 'userinfobox_sub', 'Confirmation Page' );
 	$params['tos']							= array( 'inputC', '' );
 	$params['tos_iframe']					= array( 'list_yesno', '' );
@@ -2004,16 +2006,12 @@ function editSettings( $option )
 	$params['ssl_profile']					= array( 'list_yesno', 0 );
 	$params['override_reqssl']				= array( 'list_yesno', 0 );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', 'System' );
-	$params['overrideJ15']					= array( 'list_yesno', 0 );
-	$params['curl_default']					= array( 'list_yesno', 0 );
-	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
 	@end( $params );
 	$tab_data[] = array( _CFG_TAB1_TITLE, key( $params ), '<h2>' . _CFG_TAB1_SUBTITLE . '</h2>' );
 
-	$params[] = array( 'userinfobox', 45 );
+	$params[] = array( 'userinfobox', 48 );
 	$params[] = array( 'userinfobox_sub', 'Custom Redirects' );
 	$params['customintro']						= array( 'inputC', '' );
 	$params['customthanks']						= array( 'inputC', '' );
@@ -2035,7 +2033,7 @@ function editSettings( $option )
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
-	$params[] = array( 'userinfobox', 45 );
+	$params[] = array( 'userinfobox', 48 );
 	$params[] = array( 'userinfobox_sub', 'Date Formatting' );
 	$params['display_date_frontend']			= array( 'inputC', '%a, %d %b %Y %T %Z' );
 	$params['display_date_backend']				= array( 'inputC', '%a, %d %b %Y %T %Z' );
@@ -2404,6 +2402,10 @@ function saveSettings( $option, $return=0 )
 			}
 
 			foreach ( $settings as $name => $value ) {
+				if ( $name == 'lists' ) {
+					continue;
+				}
+
 				$postname = $procname  . '_' . $name;
 
 				if ( isset( $_POST[$postname] ) ) {
