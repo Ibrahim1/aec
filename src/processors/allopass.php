@@ -18,7 +18,7 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_allopass extends POSTprocessor
+class processor_allopass extends XMLprocessor
 {
 	function info()
 	{
@@ -62,20 +62,11 @@ class processor_allopass extends POSTprocessor
 		return $settings;
 	}
 
-	function Params( $params )
+	function checkoutform( $request )
 	{
-		$var['params']['DESC0'] = array("p", "Code Explanation", "Please [FIXME]");
-		$var['params']['CODE0'] = array("inputC", "Allopass Code", "Please [FIXME]");
-	}
-
-	function createGatewayLink( $request )
-	{
-		global $mosConfig_live_site;
-
-		$var['post_url']      			= AECToolbox::deadsureURL("index.php?option=com_acctexp&amp;task=allopassnotification");
-		//$var['ssl_test_mode']			= $this->settings['testmode'] ? "true" : "false";
-
-		$var['DESC0']					= $request->int_var['params']['CODE0'];
+		$var = array();
+		$var['params']['DESC0'] = array("p", "<img scr=\"http://payment.allopass.com/acte/scripts/popup/access.apu?ids=" . $this->settings['siteid'] . "&idd=" . $this->settings['docid'] . "&lang=fr&country=fr\" />");
+		$var['params']['CODE0'] = array("inputC", "Allopass Code", "");
 
 		return $var;
 	}
@@ -91,10 +82,43 @@ class processor_allopass extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	function createRequestXML( $request )
 	{
-		$var['SITE_ID']					= $this->settings['siteid'];
-		$var['DOC_ID']					= $this->settings['docid'];
+		$var = array();
+		$var['CODE']		= urlencode( $request->int_var['params']['CODE0'] );
+		$var['AUTH']		= $this->settings['auth'];
+		$var['SITE_ID']	= $this->settings['siteid'];
+		$var['DOC_ID']		= $this->settings['docid'];
+
+		$content = array();
+		foreach ( $var as $name => $value ) {
+			$content[] .= strtoupper( $name ) . '=' . urlencode( stripslashes( $value ) );
+		}
+
+		return implode( '&', $content );
+	}
+
+	function transmitRequestXML( $xml, $request )
+	{
+		$path = "/acte/access.apu";
+		$url = "http://payment.allopass.com" . $path;
+
+		$fp = $this->transmitRequest( $url, $path, $xml );
+
+		$test_ap = substr( $fp, 0, 2 );
+
+		if ( $test_ap != "OK") {
+			$response['valid'] = false;
+		} elseif ( $test_ap = "OK" ) {
+			$response['valid'] = true;
+			return;
+		} else {
+			$response['valid'] = false;
+		}
+
+	}
+
+}
 
 		//$var['currency_code']			= $this->settings['currency_code'];
 		//$var['ssl_merchant_id']			= $var['SITE_ID'];
@@ -111,34 +135,4 @@ class processor_allopass extends POSTprocessor
 		//$var['ssl_customer_code']		= $request->metaUser->cmsUser->id;
 		//$var['ssl_description']			= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
 
-		$response['valid'] = false;
-
-		if ( !empty( $post['CODE0'] ) ) {
-			$path = "/acte/access.apu";
-			$url = "http://payment.allopass.com" . $path;
-
-			$vars = array();
-			$vars['CODE']		= urlencode( $post['CODE0'] );
-			$vars['AUTH']		= $this->settings['auth'];
-			$vars['SITE_ID']	= $this->settings['siteid'];
-			$vars['DOC_ID']		= $this->settings['docid'];
-
-			$fp = $this->transmitRequest( $url, $path, $vars );
-
-			$test_ap = substr( $fp, 0, 2 );
-
-			if ( $test_ap != "OK") {
-				$response['valid'] = false;
-			} elseif ( $test_ap = "OK" ) {
-				$response['valid'] = true;
-				return;
-			} else {
-				$response['valid'] = false;
-			}
-		}
-
-		return $response;
-	}
-
-}
 ?>
