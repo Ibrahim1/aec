@@ -107,9 +107,7 @@ class processor_allopass extends XMLprocessor
 
 		$test_ap = substr( $fp, 0, 2 );
 
-		if ( $test_ap != "OK") {
-			$response['valid'] = false;
-		} elseif ( $test_ap = "OK" ) {
+		if ( $test_ap = "OK" ) {
 			$response['valid'] = true;
 			return;
 		} else {

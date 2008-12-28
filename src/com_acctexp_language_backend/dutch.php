@@ -534,6 +534,15 @@ define( '_CFG_GENERAL_INTEGRATE_REGISTRATION_DESC', 'With this switch, you can m
 
 define( '_CFG_TAB_CUSTOMIZATION_TITLE', 'Aanpassen');
 define( '_CFG_TAB_CUSTOMIZATION_SUBTITLE', 'Aanpassen');
+
+define( '_CFG_CUSTOMIZATION_SUB_CREDIRECT', 'Custom Redirects');
+define( '_CFG_CUSTOMIZATION_SUB_PROXY', 'Proxy');
+define( '_CFG_CUSTOMIZATION_SUB_BUTTONS_SUB', 'Subscribed Member Buttons');
+define( '_CFG_CUSTOMIZATION_SUB_FORMAT_DATE', 'Date Formatting');
+define( '_CFG_CUSTOMIZATION_SUB_FORMAT_PRICE', 'Price Formatting');
+define( '_CFG_CUSTOMIZATION_SUB_FORMAT_INUM', 'Invoice Number Format');
+define( '_CFG_CUSTOMIZATION_SUB_CAPTCHA', 'ReCAPTACHA');
+
 define( '_CFG_GENERAL_CUSTOMINTRO_NAME', 'Aangepaste intropagina link:');
 define( '_CFG_GENERAL_CUSTOMINTRO_DESC', 'Geef hier svp de volledige link (inclusief http://) naar uw eigen intropagina. De intropagina moet een link bevatten die lijkt op: http://www.yourdomain.com/index.php?option=com_acctexp&task=subscribe&intro=1 die de intro negeerd, en de gebruiker goed doorstuurd naar de betaalplannen pagina of de registratiepagina. Als u dit niet wilt kunt u dit veld blanco laten.');
 define( '_CFG_GENERAL_CUSTOMTHANKS_NAME', 'Aangepaste bedank pagina:');

@@ -645,6 +645,15 @@ define( '_CFG_GENERAL_INTEGRATE_REGISTRATION_DESC', 'With this switch, you can m
 
 define( '_CFG_TAB_CUSTOMIZATION_TITLE',	'Anpassen' );
 define( '_CFG_TAB_CUSTOMIZATION_SUBTITLE', 'Anpassungen');
+
+define( '_CFG_CUSTOMIZATION_SUB_CREDIRECT', 'Custom Redirects');
+define( '_CFG_CUSTOMIZATION_SUB_PROXY', 'Proxy');
+define( '_CFG_CUSTOMIZATION_SUB_BUTTONS_SUB', 'Subscribed Member Buttons');
+define( '_CFG_CUSTOMIZATION_SUB_FORMAT_DATE', 'Date Formatting');
+define( '_CFG_CUSTOMIZATION_SUB_FORMAT_PRICE', 'Price Formatting');
+define( '_CFG_CUSTOMIZATION_SUB_FORMAT_INUM', 'Invoice Number Format');
+define( '_CFG_CUSTOMIZATION_SUB_CAPTCHA', 'ReCAPTACHA');
+
 define( '_CFG_GENERAL_CUSTOMINTRO_NAME',			'Individuelle Einstiegsseite:' );
 define( '_CFG_GENERAL_CUSTOMINTRO_DESC',			'Hier den kompletten Link (inkl. http://) angeben der zur Einstiegsseite f&uuml;hren soll. Diese Seite sollte einen Link wie z.B. http://www.yourdomain.com/index.php?option=com_acctexp&amp;task=subscribe&amp;intro=1 beinhalten welcher die Einf&uuml;hrung &uuml;bergeht und den Benutzer direkt zur Aboseite oder Registrierungsseite f&uuml;hrt.<br />Wenn diese Option nicht gew&uuml;nscht wird, dann dieses Feld leer lassen.' );
 define( '_CFG_GENERAL_CUSTOMTHANKS_NAME',			'Link zu individueller Dankeseite:' );

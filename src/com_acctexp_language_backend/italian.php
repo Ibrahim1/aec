@@ -647,6 +647,15 @@ define( '_CFG_GENERAL_INTEGRATE_REGISTRATION_DESC', 'With this switch, you can m
 
 define( '_CFG_TAB_CUSTOMIZATION_TITLE', 'Customize');
 define( '_CFG_TAB_CUSTOMIZATION_SUBTITLE', 'Customization');
+
+define( '_CFG_CUSTOMIZATION_SUB_CREDIRECT', 'Custom Redirects');
+define( '_CFG_CUSTOMIZATION_SUB_PROXY', 'Proxy');
+define( '_CFG_CUSTOMIZATION_SUB_BUTTONS_SUB', 'Subscribed Member Buttons');
+define( '_CFG_CUSTOMIZATION_SUB_FORMAT_DATE', 'Date Formatting');
+define( '_CFG_CUSTOMIZATION_SUB_FORMAT_PRICE', 'Price Formatting');
+define( '_CFG_CUSTOMIZATION_SUB_FORMAT_INUM', 'Invoice Number Format');
+define( '_CFG_CUSTOMIZATION_SUB_CAPTCHA', 'ReCAPTACHA');
+
 define( '_CFG_GENERAL_CUSTOMINTRO_NAME', 'Custom intro page link:');
 define( '_CFG_GENERAL_CUSTOMINTRO_DESC', 'Provide a full link (including http://) that leads to your custom intro page. That page has to contain a link like this: http://www.yourdomain.com/index.php?option=com_acctexp&task=subscribe&intro=1 which bypasses the intro and correctly forwards the user to the payment plans or registration details page. Leave this field blank if you don\'t want this at all.');
 define( '_CFG_GENERAL_CUSTOMTHANKS_NAME', 'Custom thanks page link:');
