@@ -601,6 +601,16 @@ define( '_USERINVOICE_ACTION_CLEAR_APPLY',	'als&nbsp;bezahlt&nbsp;markieren&nbsp
 define( '_CFG_TAB1_TITLE',				'Konfigurationsoptionen' );
 define( '_CFG_TAB1_SUBTITLE', 'Optionen f&uuml;r die Interaktion mit dem Benutzer' );
 
+define( '_CFG_GENERAL_SUB_ACCESS', 'Access');
+define( '_CFG_GENERAL_SUB_SYSTEM', 'System');
+define( '_CFG_GENERAL_SUB_EMAIL', 'Email');
+define( '_CFG_GENERAL_SUB_DEBUG', 'Debug');
+define( '_CFG_GENERAL_SUB_REGFLOW', 'Registration Flow');
+define( '_CFG_GENERAL_SUB_PLANS', 'Subscription Plans');
+define( '_CFG_GENERAL_SUB_CONFIRMATION', 'Confirmation Page');
+define( '_CFG_GENERAL_SUB_PROCESSORS', 'Payment Processors');
+define( '_CFG_GENERAL_SUB_SECURITY', 'Security');
+
 define( '_CFG_GENERAL_ALERTLEVEL2_NAME',			'Alarmebene 2:' );
 define( '_CFG_GENERAL_ALERTLEVEL2_DESC',			'In Tagen. Dies ist die erste Grenze die beginnt den Benutzer auf den Auslauf seines Abonnements hinzuweisen.' );
 define( '_CFG_GENERAL_ALERTLEVEL1_NAME',			'Alarmebene 1:' );

@@ -1947,22 +1947,22 @@ function editSettings( $option )
 	$tab_data = array();
 
 	$params[] = array( 'userinfobox', 32 );
-	$params[] = array( 'userinfobox_sub', 'Access' );
+	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_ACCESS );
 	$params['require_subscription']			= array( 'list_yesno', 0 );
 	$params['adminaccess']					= array( 'list_yesno', 0 );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', 'System' );
+	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_SYSTEM );
 	$params['alertlevel2']					= array( 'inputA', 0 );
 	$params['alertlevel1']					= array( 'inputA', 0 );
 	$params['expiration_cushion']			= array( 'inputA', 0 );
 	$params['heartbeat_cycle']				= array( 'inputA', 0 );
 	$params['heartbeat_cycle_backend']		= array( 'inputA', 0 );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', 'Email' );
+	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_EMAIL );
 	$params['noemails']						= array( 'list_yesno', 0 );
 	$params['nojoomlaregemails']			= array( 'list_yesno', 0 );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', 'Debug' );
+	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_DEBUG );
 	$params['bypassintegration']			= array( 'inputC', 0 );
 	$params['overrideJ15']					= array( 'list_yesno', 0 );
 	$params['curl_default']					= array( 'list_yesno', 0 );
@@ -1975,7 +1975,7 @@ function editSettings( $option )
 	$params[] = array( '2div_end', 0 );
 
 	$params[] = array( 'userinfobox', 33 );
-	$params[] = array( 'userinfobox_sub', 'Registration Flow' );
+	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_REGFLOW );
 	$params['plans_first']					= array( 'list_yesno', 0 );
 	$params['integrate_registration']		= array( 'list_yesno', 0 );
 	$params['show_fixeddecision']			= array( 'list_yesno', 0 );
@@ -1985,7 +1985,7 @@ function editSettings( $option )
 	$params['enable_coupons']				= array( 'list_yesno', 0 );
 	$params['confirmation_coupons']			= array( 'list_yesno', 0 );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', 'Subscription Plans' );
+	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_PLANS );
 	$params['root_group']					= array( 'list', 0 );
 	$params['root_group_rw']				= array( 'inputD', 0 );
 	$params['entry_plan']					= array( 'list', 0 );
@@ -1993,15 +1993,15 @@ function editSettings( $option )
 	$params[] = array( '2div_end', 0 );
 
 	$params[] = array( 'userinfobox', 32 );
-	$params[] = array( 'userinfobox_sub', 'Confirmation Page' );
+	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_CONFIRMATION );
 	$params['tos']							= array( 'inputC', '' );
 	$params['tos_iframe']					= array( 'list_yesno', '' );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', 'Payment Processors' );
+	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_PROCESSORS );
 	$params['gwlist_enabled']				= array( 'list', 0 );
 	$params['gwlist']						= array( 'list', 0 );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', 'Security' );
+	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_SECURITY );
 	$params['ssl_signup']					= array( 'list_yesno', 0 );
 	$params['ssl_profile']					= array( 'list_yesno', 0 );
 	$params['override_reqssl']				= array( 'list_yesno', 0 );
@@ -2012,13 +2012,13 @@ function editSettings( $option )
 	$tab_data[] = array( _CFG_TAB1_TITLE, key( $params ), '<h2>' . _CFG_TAB1_SUBTITLE . '</h2>' );
 
 	$params[] = array( 'userinfobox', 48 );
-	$params[] = array( 'userinfobox_sub', 'Custom Redirects' );
+	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_CREDIRECT );
 	$params['customintro']						= array( 'inputC', '' );
 	$params['customthanks']						= array( 'inputC', '' );
 	$params['customcancel']						= array( 'inputC', '' );
 	$params['customnotallowed']					= array( 'inputC', '' );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', 'Proxy' );
+	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_PROXY );
 	$params['use_proxy']						= array( 'list_yesno', '' );
 	$params['proxy']							= array( 'inputC', '' );
 	$params['proxy_port']						= array( 'inputC', '' );
@@ -2026,7 +2026,7 @@ function editSettings( $option )
 	$params['proxy_password']					= array( 'inputC', '' );
 	$params['gethostbyaddr']					= array( 'list_yesno', '' );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', 'Subscribed Member Buttons' );
+	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_BUTTONS_SUB );
 	$params['renew_button_never']				= array( 'list_yesno', '' );
 	$params['renew_button_nolifetimerecurring']	= array( 'list_yesno', '' );
 	$params['continue_button']					= array( 'list_yesno', '' );
@@ -2034,20 +2034,20 @@ function editSettings( $option )
 	$params[] = array( '2div_end', 0 );
 
 	$params[] = array( 'userinfobox', 48 );
-	$params[] = array( 'userinfobox_sub', 'Date Formatting' );
+	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_FORMAT_DATE );
 	$params['display_date_frontend']			= array( 'inputC', '%a, %d %b %Y %T %Z' );
 	$params['display_date_backend']				= array( 'inputC', '%a, %d %b %Y %T %Z' );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', 'Price Formatting' );
+	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_FORMAT_PRICE );
 	$params['amount_currency_symbol']			= array( 'list_yesno', 0 );
 	$params['amount_currency_symbolfirst']		= array( 'list_yesno', 0 );
 	$params['amount_use_comma']					= array( 'list_yesno', 0 );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', 'Invoice Number Format' );
+	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_FORMAT_INUM );
 	$params['invoicenum_doformat']				= array( 'list_yesno', '' );
 	$params['invoicenum_formatting']			= array( 'inputD', '' );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', 'ReCAPTACHA' );
+	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_CAPTCHA );
 	$params['use_recaptcha']					= array( 'list_yesno', '' );
 	$params['recaptcha_privatekey']				= array( 'inputC', '' );
 	$params['recaptcha_publickey']				= array( 'inputC', '' );

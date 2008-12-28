@@ -491,6 +491,16 @@ define( '_USERINVOICE_ACTION_CLEAR_APPLY','Schoon op&nbsp;&amp;&nbsp;toepassen&n
 define( '_CFG_TAB1_TITLE', 'Algemeen');
 define( '_CFG_TAB1_SUBTITLE', 'Algemene installatie');
 
+define( '_CFG_GENERAL_SUB_ACCESS', 'Access');
+define( '_CFG_GENERAL_SUB_SYSTEM', 'System');
+define( '_CFG_GENERAL_SUB_EMAIL', 'Email');
+define( '_CFG_GENERAL_SUB_DEBUG', 'Debug');
+define( '_CFG_GENERAL_SUB_REGFLOW', 'Registration Flow');
+define( '_CFG_GENERAL_SUB_PLANS', 'Subscription Plans');
+define( '_CFG_GENERAL_SUB_CONFIRMATION', 'Confirmation Page');
+define( '_CFG_GENERAL_SUB_PROCESSORS', 'Payment Processors');
+define( '_CFG_GENERAL_SUB_SECURITY', 'Security');
+
 define( '_CFG_GENERAL_ALERTLEVEL2_NAME', 'Alarm level 2:');
 define( '_CFG_GENERAL_ALERTLEVEL2_DESC', 'In dagen is dit de eerste actie die gebeurd om een gebruiker op de hoogte te stellen dat een account gaat verlopen. <strong>Deze verzend geen email!</strong>');
 define( '_CFG_GENERAL_ALERTLEVEL1_NAME', 'Alarm level 1:');

@@ -490,6 +490,16 @@ define( '_USERINVOICE_ACTION_CLEAR_APPLY','clear&nbsp;&amp;&nbsp;apply&nbsp;Plan
 define( '_CFG_TAB1_TITLE', 'Global');
 define( '_CFG_TAB1_SUBTITLE', 'General Configuration');
 
+define( '_CFG_GENERAL_SUB_ACCESS', 'Access');
+define( '_CFG_GENERAL_SUB_SYSTEM', 'System');
+define( '_CFG_GENERAL_SUB_EMAIL', 'Email');
+define( '_CFG_GENERAL_SUB_DEBUG', 'Debug');
+define( '_CFG_GENERAL_SUB_REGFLOW', 'Registration Flow');
+define( '_CFG_GENERAL_SUB_PLANS', 'Subscription Plans');
+define( '_CFG_GENERAL_SUB_CONFIRMATION', 'Confirmation Page');
+define( '_CFG_GENERAL_SUB_PROCESSORS', 'Payment Processors');
+define( '_CFG_GENERAL_SUB_SECURITY', 'Security');
+
 define( '_CFG_GENERAL_ALERTLEVEL2_NAME', 'Alert Level 2:');
 define( '_CFG_GENERAL_ALERTLEVEL2_DESC', 'In days. This is the first threshold to start warning user that his subscription is about to expire. <strong>This does not send out an email!</strong>');
 define( '_CFG_GENERAL_ALERTLEVEL1_NAME', 'Alert Level 1:');
@@ -523,6 +533,15 @@ define( '_CFG_GENERAL_INTEGRATE_REGISTRATION_DESC', 'With this switch, you can m
 
 define( '_CFG_TAB_CUSTOMIZATION_TITLE', 'Customize');
 define( '_CFG_TAB_CUSTOMIZATION_SUBTITLE', 'Customization');
+
+define( '_CFG_CUSTOMIZATION_SUB_CREDIRECT', 'Custom Redirects');
+define( '_CFG_CUSTOMIZATION_SUB_PROXY', 'Proxy');
+define( '_CFG_CUSTOMIZATION_SUB_BUTTONS_SUB', 'Subscribed Member Buttons');
+define( '_CFG_CUSTOMIZATION_SUB_FORMAT_DATE', 'Date Formatting');
+define( '_CFG_CUSTOMIZATION_SUB_FORMAT_PRICE', 'Price Formatting');
+define( '_CFG_CUSTOMIZATION_SUB_FORMAT_INUM', 'Invoice Number Format');
+define( '_CFG_CUSTOMIZATION_SUB_CAPTCHA', 'ReCAPTACHA');
+
 define( '_CFG_GENERAL_CUSTOMINTRO_NAME', 'Custom intro page link:');
 define( '_CFG_GENERAL_CUSTOMINTRO_DESC', 'Provide a full link (including http://) that leads to your custom intro page. That page has to contain a link like this: http://www.yourdomain.com/index.php?option=com_acctexp&task=subscribe&intro=1 which bypasses the intro and correctly forwards the user to the payment plans or registration details page. Leave this field blank if you don\'t want this at all.');
 define( '_CFG_GENERAL_CUSTOMTHANKS_NAME', 'Custom thanks page link:');

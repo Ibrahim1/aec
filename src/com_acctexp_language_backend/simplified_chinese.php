@@ -603,6 +603,16 @@ define( '_USERINVOICE_ACTION_CLEAR_APPLY','clear&nbsp;&amp;&nbsp;apply&nbsp;Plan
 define( '_CFG_TAB1_TITLE', '全�?�的');
 define( '_CFG_TAB1_SUBTITLE', '用户交互选择');
 
+define( '_CFG_GENERAL_SUB_ACCESS', 'Access');
+define( '_CFG_GENERAL_SUB_SYSTEM', 'System');
+define( '_CFG_GENERAL_SUB_EMAIL', 'Email');
+define( '_CFG_GENERAL_SUB_DEBUG', 'Debug');
+define( '_CFG_GENERAL_SUB_REGFLOW', 'Registration Flow');
+define( '_CFG_GENERAL_SUB_PLANS', 'Subscription Plans');
+define( '_CFG_GENERAL_SUB_CONFIRMATION', 'Confirmation Page');
+define( '_CFG_GENERAL_SUB_PROCESSORS', 'Payment Processors');
+define( '_CFG_GENERAL_SUB_SECURITY', 'Security');
+
 define( '_CFG_GENERAL_ALERTLEVEL2_NAME', '警告级别2:');
 define( '_CFG_GENERAL_ALERTLEVEL2_DESC', '几天�?�,将第一次开始通知用户他的订阅将失效.');
 define( '_CFG_GENERAL_ALERTLEVEL1_NAME', '警告级别1:');

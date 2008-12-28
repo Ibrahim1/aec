@@ -488,6 +488,16 @@ define( '_USERINVOICE_ACTION_CLEAR_APPLY','OK &amp; applique Plan');
 define( '_CFG_TAB1_TITLE', ' Configuration');
 define( '_CFG_TAB1_SUBTITLE', 'Options utilisateur');
 
+define( '_CFG_GENERAL_SUB_ACCESS', 'Access');
+define( '_CFG_GENERAL_SUB_SYSTEM', 'System');
+define( '_CFG_GENERAL_SUB_EMAIL', 'Email');
+define( '_CFG_GENERAL_SUB_DEBUG', 'Debug');
+define( '_CFG_GENERAL_SUB_REGFLOW', 'Registration Flow');
+define( '_CFG_GENERAL_SUB_PLANS', 'Subscription Plans');
+define( '_CFG_GENERAL_SUB_CONFIRMATION', 'Confirmation Page');
+define( '_CFG_GENERAL_SUB_PROCESSORS', 'Payment Processors');
+define( '_CFG_GENERAL_SUB_SECURITY', 'Security');
+
 define( '_CFG_GENERAL_ALERTLEVEL2_NAME', 'Alerte niveau 2:');
 define( '_CFG_GENERAL_ALERTLEVEL2_DESC', 'En jours. C&amp;acute;est le premier seuil pour informer l&amp;acute;utilisateur que son inscription est sur le point d&amp;acute;expirer. &lt;strong&gt;Pas d&amp;acute;email envoy&eacute; !&lt;/strong&gt;');
 define( '_CFG_GENERAL_ALERTLEVEL1_NAME', 'Alerte niveau 1:');

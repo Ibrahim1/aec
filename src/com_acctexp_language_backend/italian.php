@@ -604,6 +604,16 @@ define( '_USERINVOICE_ACTION_CLEAR_APPLY','clear&nbsp;&amp;&nbsp;apply&nbsp;Plan
 define( '_CFG_TAB1_TITLE', 'Globale');
 define( '_CFG_TAB1_SUBTITLE', 'Opzioni di interazione con l\'utente');
 
+define( '_CFG_GENERAL_SUB_ACCESS', 'Access');
+define( '_CFG_GENERAL_SUB_SYSTEM', 'System');
+define( '_CFG_GENERAL_SUB_EMAIL', 'Email');
+define( '_CFG_GENERAL_SUB_DEBUG', 'Debug');
+define( '_CFG_GENERAL_SUB_REGFLOW', 'Registration Flow');
+define( '_CFG_GENERAL_SUB_PLANS', 'Subscription Plans');
+define( '_CFG_GENERAL_SUB_CONFIRMATION', 'Confirmation Page');
+define( '_CFG_GENERAL_SUB_PROCESSORS', 'Payment Processors');
+define( '_CFG_GENERAL_SUB_SECURITY', 'Security');
+
 define( '_CFG_GENERAL_ALERTLEVEL2_NAME', 'Livello di pericolo 2:');
 define( '_CFG_GENERAL_ALERTLEVEL2_DESC', 'In giorni. Questo &egrave; il primo limite per cominciare ad avvisare l\'utente che la sua iscrizione sta per scadere.');
 define( '_CFG_GENERAL_ALERTLEVEL1_NAME', 'Livello di pericolo 1:');
