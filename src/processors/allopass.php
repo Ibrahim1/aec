@@ -107,13 +107,22 @@ class processor_allopass extends XMLprocessor
 
 		$test_ap = substr( $fp, 0, 2 );
 
-		if ( $test_ap = "OK" ) {
+		if ( $test_ap == "OK" ) {
 			$response['valid'] = true;
 			return;
 		} else {
 			$response['valid'] = false;
+
+			if ( empty( $request->int_var['params']['CODE0'] ) ) {
+				$response['error'] = 'No code entered!';
+			} elseif ( empty( $test_ap ) ) {
+				$response['error'] = 'Unknown Error - no response from processor';
+			} else {
+				$response['error'] = $test_ap;
+			}
 		}
 
+		return $response;
 	}
 
 }
