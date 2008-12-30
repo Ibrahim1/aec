@@ -1234,7 +1234,7 @@ function cancelPayment( $option )
 
 	// Look whether we have a custom Cancel page
 	if ( $aecConfig->cfg['customcancel'] ) {
-		mosRedirect( $cfg->cfg['customcancel'] );
+		mosRedirect( $aecConfig->cfg['customcancel'] );
 	} else {
 		$mainframe->SetPageTitle( _CANCEL_TITLE );
 
