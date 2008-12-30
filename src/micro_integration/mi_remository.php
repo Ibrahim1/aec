@@ -125,7 +125,7 @@ class mi_remository
 		$hacks[$n]['type']				=	'file';
 		$hacks[$n]['filename']			=	$mosConfig_absolute_path
 											. '/components/com_remository/c-classes/remository_download_Controller.php';
-		$hacks[$n]['read']				=	'$this->writeHeaders($ctype, $displayname, $len);';
+		$hacks[$n]['read']				=	'$this->writeHeaders($ctype, $displayname);';
 		$hacks[$n]['insert']			=	$downloadhack . "\n"  . $hacks[$n]['read'];
 
 		return $hacks;
