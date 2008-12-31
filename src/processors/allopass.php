@@ -52,7 +52,6 @@ class processor_allopass extends XMLprocessor
 		$settings = array();
 		$settings['testmode']		= array( "list_yesno" );
 		$settings['siteid']			= array( "inputC" );
-		$settings['docid']			= array( "inputC" );
 		$settings['auth']			= array( "inputC" );
 		$settings['item_name']		= array( "inputE" );
 		$settings['customparams']	= array( 'inputD' );
@@ -60,6 +59,14 @@ class processor_allopass extends XMLprocessor
 		$settings				= AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
+	}
+
+	function CustomPlanParams()
+	{
+		$p = array();
+		$p['docid']	= array( 'inputC' );
+
+		return $p;
 	}
 
 	function checkoutform( $request )
