@@ -85,8 +85,24 @@ class mi_remository
 		$settings['set_group_exp']			= array( 'list_yesno' );
 		$settings['group_exp']				= array( 'list' );
 
-		$settings['lists']['group']			= mosHTML::selectList( $sg, 'group', 'size="4" multiple="multiple"', 'value', 'text', $this->settings['group'] );
-		$settings['lists']['group_exp']		= mosHTML::selectList( $sg, 'group_exp', 'size="4" multiple="multiple"', 'value', 'text', $this->settings['group_exp'] );
+		$sg = array();
+
+		if ( !empty( $this->settings['group'] ) ) {
+			foreach ( $this->settings['group'] as $g ) {
+				$sg[] = mosHTML::makeOption( $g, $g );
+			}
+		}
+
+		$sg = array();
+
+		if ( !empty( $this->settings['group_exp'] ) ) {
+			foreach ( $this->settings['group_exp'] as $g ) {
+				$eg[] = mosHTML::makeOption( $g, $g );
+			}
+		}
+
+		$settings['lists']['group']			= mosHTML::selectList( $sg, 'group', 'size="4" multiple="multiple"', 'value', 'text', $sg );
+		$settings['lists']['group_exp']		= mosHTML::selectList( $sg, 'group_exp', 'size="4" multiple="multiple"', 'value', 'text', $eg );
 		$settings['lists']['delete_on_exp'] = mosHTML::selectList( $del_opts, 'delete_on_exp', 'size="3"', 'value', 'text', $this->settings['delete_on_exp'] );
 
 		return $settings;
