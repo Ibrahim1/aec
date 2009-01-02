@@ -11695,8 +11695,6 @@ class couponXuser extends serialParamDBTable
 
 	function getInvoiceList()
 	{
-		$params = $this->getParams();
-
 		$invoicelist = array();
 		if ( isset( $this->params['invoices'] ) ) {
 			$invoices = explode( ';', $this->params['invoices'] );

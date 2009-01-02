@@ -363,6 +363,10 @@ class serialParamDBTable extends paramDBTable
 			return null;
 		}
 
+		if ( is_array( $this->$field ) || is_object( $this->$field ) ) {
+			return $this->$field;
+		}
+
 		// TODO: Make these into update on install upgrades
 
 		// Ouch.
