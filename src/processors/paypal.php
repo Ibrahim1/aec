@@ -239,8 +239,7 @@ class processor_paypal extends POSTprocessor
 					if ( $this->settings['acceptpendingecheck'] ) {
 						if ( is_object( $invoice ) ) {
 							$invoice->setParams( array( 'acceptedpendingecheck' => 1 ) );
-							$invoice->check();
-							$invoice->store();
+							$invoice->storeload();
 						}
 
 						$response['valid']			= 1;
@@ -252,15 +251,12 @@ class processor_paypal extends POSTprocessor
 				} elseif ( strcmp( $payment_type, 'echeck' ) == 0 && strcmp( $payment_status, 'Completed' ) == 0 ) {
 					if ( $this->settings['acceptpendingecheck'] ) {
 						if ( is_object( $invoice ) ) {
-							$invoiceparams = $invoice->getParams();
-
-							if ( isset( $invoiceparams['acceptedpendingecheck'] ) ) {
+							if ( isset( $invoice->params['acceptedpendingecheck'] ) ) {
 								$response['valid']		= 0;
 								$response['duplicate']	= 1;
 
 								$invoice->delParams( array( 'acceptedpendingecheck' ) );
-								$invoice->check();
-								$invoice->store();
+								$invoice->storeload();
 							}
 						} else {
 							$response['valid']			= 1;

@@ -84,9 +84,7 @@ class processor_airtoy extends XMLprocessor
 			return $return;
 		}
 
-		$invoiceparams = $request->invoice->getParams();
-
-		$compare = ( strcmp( $request->int_var['params']['smscode'], $invoiceparams['airtoy_smscode'] ) === 0 );
+		$compare = ( strcmp( $request->int_var['params']['smscode'], $request->invoice->params['airtoy_smscode'] ) === 0 );
 
 		if ( $compare ) {
 			$return['valid'] = true;

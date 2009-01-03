@@ -269,10 +269,8 @@ class processor_authorize_arb extends XMLprocessor
 					. '</merchantAuthentication>'
 					. '<refId>' . $request->invoice->invoice_number . '</refId>';
 
-		$invoiceparams = $request->invoice->getParams();
-
 		// Add Payment information
-		$content .=	'<subscriptionId>' . $invoiceparams['subscriptionid'] . '</subscriptionId>';
+		$content .=	'<subscriptionId>' . $request->invoice->params['subscriptionid'] . '</subscriptionId>';
 
 		// Close Request
 		$content .=	'</ARBCancelSubscriptionRequest>';

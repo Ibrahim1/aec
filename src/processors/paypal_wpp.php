@@ -77,8 +77,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 	function customtab_details( $request )
 	{
-		$invoiceparams = $request->invoice->getParams();
-		$profileid = $invoiceparams['paypal_wpp_customerProfileId'];
+		$profileid = $request->invoice->params['paypal_wpp_customerProfileId'];
 
 		$billfirstname	= aecGetParam( 'billFirstName', null );
 		$billcardnumber	= aecGetParam( 'cardNumber', null );
@@ -366,8 +365,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$var['action']				= 'Cancel';
 		$var['note']				= $this->settings['cancel_note'];
 
-		$invoiceparams = $request->invoice->getParams();
-		$profileid = $invoiceparams['paypal_wpp_customerProfileId'];
+		$profileid = $request->invoice->params['paypal_wpp_customerProfileId'];
 
 		$response = $this->ProfileRequest( $request, $profileid, $var );
 

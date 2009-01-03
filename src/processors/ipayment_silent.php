@@ -106,10 +106,8 @@ class processor_ipayment_silent extends XMLprocessor
 	{
 		global $mosConfig_live_site, $database;
 
-		$invoice_params = $request->invoice->getParams();
-
-		if ( isset( $invoice_params['creator_ip'] ) ) {
-			$ip = $invoice_params['creator_ip'];
+		if ( isset( $request->invoice->params['creator_ip'] ) ) {
+			$ip = $request->invoice->params['creator_ip'];
 		} else {
 			$ip = $_SERVER['REMOTE_ADDR'];
 		}
@@ -178,8 +176,7 @@ class processor_ipayment_silent extends XMLprocessor
 		$a['tempsecret'] = substr( base64_encode( md5( rand() ) ), 0, 12 );
 
 		$request->invoice->addParams( array( 'tempsecret' => $a['tempsecret'] ) );
-		$request->invoice->check();
-		$request->invoice->store();
+		$request->invoice->storeload();
 
 		if ( false ) {
 			return $a;

@@ -212,10 +212,8 @@ class processor_epsnetpay extends POSTprocessor
 	{
 		global $mosConfig_live_site;
 
-		$params = $invoice->getParams("params");
-
-		$merchantid = $this->settings['merchantid_' . $params['bank_selection']];
-		$merchantpin = $this->settings['merchantpin_' . $params['bank_selection']];
+		$merchantid = $this->settings['merchantid_' . $invoice->params['bank_selection']];
+		$merchantpin = $this->settings['merchantpin_' . $invoice->params['bank_selection']];
 		$sapPopStsReturnStatus	= $post['sapPopStsReturnStatus']; // Statuscode (OK/NOK/VOK)
 
 
