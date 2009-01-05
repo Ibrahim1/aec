@@ -245,6 +245,8 @@ class mi_hotproperty extends MI
 	{
 		global $mosConfig_absolute_path;
 
+		$v10 = is_dir( $mosConfig_absolute_path . '/components/com_hotproperty/helpers' );
+
 		$hacks = array();
 
 		$edithack = '// AEC HACK hotproperty1 START' . "\n"
@@ -285,7 +287,7 @@ class mi_hotproperty extends MI
 		. '// AEC HACK hotproperty2 END' . "\n"
 		;
 
-		$edithack3 = '// AEC HACK adminhotproperty3 START' . "\n"
+		/*$edithack3 = '// AEC HACK adminhotproperty3 START' . "\n"
 		. 'global $mosConfig_absolute_path;' . "\n"
 		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
@@ -301,7 +303,7 @@ class mi_hotproperty extends MI
 		. 'continue;' . "\n"
 		. '}' . "\n"
 		. '// AEC HACK adminhotproperty3 END' . "\n"
-		;
+		;*/
 
 		$edithack4 = '// AEC HACK adminhotproperty4 START' . "\n"
 		. 'global $mosConfig_absolute_path;' . "\n"
@@ -315,41 +317,55 @@ class mi_hotproperty extends MI
 		. '// AEC HACK adminhotproperty4 END' . "\n"
 		;
 
-		if ( file_exists( $mosConfig_absolute_path . '/administrator/components/com_hotproperty/' ) ) {
-
-		} else {
-			$n = 'hotproperty1';
-			$hacks[$n]['name']				=	'hotproperty.php #1';
-			$hacks[$n]['desc']				=	_AEC_MI_HACK3_HOTPROPERTY;
-			$hacks[$n]['type']				=	'file';
+		$n = 'hotproperty1';
+		$hacks[$n]['name']				=	'hotproperty.php #1';
+		$hacks[$n]['desc']				=	_AEC_MI_HACK3_HOTPROPERTY;
+		$hacks[$n]['type']				=	'file';
+		if ( $v10 ) {
 			$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_hotproperty/property.php';
 			$hacks[$n]['read']				=	'# Assign default value for new data';
-			$hacks[$n]['insert']			=	$edithack . "\n"  . $hacks[$n]['read'];
+		} else {
+			$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_hotproperty/property.php';
+			$hacks[$n]['read']				=	'# Assign default value for new data';
+		}
+		$hacks[$n]['insert']			=	$edithack . "\n"  . $hacks[$n]['read'];
 
-			$n = 'hotproperty2';
-			$hacks[$n]['name']				=	'hotproperty.php #2';
-			$hacks[$n]['desc']				=	_AEC_MI_HACK4_HOTPROPERTY;
-			$hacks[$n]['type']				=	'file';
+		$n = 'hotproperty2';
+		$hacks[$n]['name']				=	'hotproperty.php #2';
+		$hacks[$n]['desc']				=	_AEC_MI_HACK4_HOTPROPERTY;
+		$hacks[$n]['type']				=	'file';
+		if ( $v10 ) {
 			$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_hotproperty/property.php';
 			$hacks[$n]['read']				=	'# Assign current logon user to Agent field';
 			$hacks[$n]['insert']			=	$edithack2 . "\n"  . $hacks[$n]['read'];
-/*
-			$n = 'adminhotproperty3';
-			$hacks[$n]['name']				=	'admin.hotproperty.php #3';
-			$hacks[$n]['desc']				=	_AEC_MI_HACK5_HOTPROPERTY;
-			$hacks[$n]['type']				=	'file';
-			$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/administrator/components/com_hotproperty/admin.mtree.php';
-			$hacks[$n]['read']				=	'if ( $mtLinks->link_approved == 0 ) {';
-			$hacks[$n]['insert']			=	$hacks[$n]['read'] . "\n" . $edithack3;
-*/
-			$n = 'adminhotproperty4';
-			$hacks[$n]['name']				=	'admin.hotproperty.php #4';
-			$hacks[$n]['desc']				=	_AEC_MI_HACK5_HOTPROPERTY;
-			$hacks[$n]['type']				=	'file';
+		} else {
+			$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_hotproperty/property.php';
+			$hacks[$n]['oldread']			=	'# Assign current logon user to Agent field';
+			$hacks[$n]['oldinsert']			=	$hacks[$n]['oldread'] . "\n" . $edithack2;
+			$hacks[$n]['read']				=	'if ($row->id < 1) {';
+			$hacks[$n]['insert']			=	$hacks[$n]['read'] . "\n" . $edithack2;
+		}
+
+		/*$n = 'adminhotproperty3';
+		$hacks[$n]['name']				=	'admin.hotproperty.php #3';
+		$hacks[$n]['desc']				=	_AEC_MI_HACK5_HOTPROPERTY;
+		$hacks[$n]['type']				=	'file';
+		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/administrator/components/com_hotproperty/admin.mtree.php';
+		$hacks[$n]['read']				=	'if ( $mtLinks->link_approved == 0 ) {';
+		$hacks[$n]['insert']			=	$hacks[$n]['read'] . "\n" . $edithack3;*/
+
+		$n = 'adminhotproperty4';
+		$hacks[$n]['name']				=	'admin.hotproperty.php #4';
+		$hacks[$n]['desc']				=	_AEC_MI_HACK5_HOTPROPERTY;
+		$hacks[$n]['type']				=	'file';
+		if ( $v10 ) {
 			$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/administrator/components/com_hotproperty/admin.hotproperty.php';
 			$hacks[$n]['read']				=	'# Remove property from database';
-			$hacks[$n]['insert']			=	$hacks[$n]['read'] . "\n" . $edithack4;
+		} else {
+			$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/administrator/components/com_hotproperty/admin.hotproperty.php';
+			$hacks[$n]['read']				=	'# Remove property from database';
 		}
+		$hacks[$n]['insert']			=	$hacks[$n]['read'] . "\n" . $edithack4;
 
 		return $hacks;
 	}

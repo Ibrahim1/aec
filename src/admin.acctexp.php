@@ -5451,6 +5451,10 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 							$newData = preg_replace( '/\/\/.AEC.(HACK|CHANGE).START\\n.*\/\/.AEC.(HACK|CHANGE).END\\n/s', $hacks[$filename]['read'], $oldData );
 						} else {
 							if ( strpos( $oldData, $hacks[$filename]['insert'] ) ) {
+								if ( isset( $hacks[$filename]['oldread'] ) && isset( $hacks[$filename]['oldinsert'] ) ) {
+									$newData = str_replace( $hacks[$filename]['oldinsert'], $hacks[$filename]['oldread'], $oldData );
+								}
+
 								$newData = str_replace( $hacks[$filename]['insert'], $hacks[$filename]['read'], $oldData );
 							} else {
 								$newData = preg_replace( '/\/\/.AEC.(HACK|CHANGE).' . $filename . '.START\\n.*\/\/.AEC.(HACK|CHANGE).' . $filename . '.END\\n/s', $hacks[$filename]['read'], $oldData );
