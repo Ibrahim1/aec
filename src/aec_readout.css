@@ -8,6 +8,18 @@ th.visible {
 background-color:#9999FF !important;
 }
 
+th.auto_check {
+background-color:#9999FF !important;
+}
+
+th.pre_exp_check {
+background-color:#9999BB !important;
+}
+
+th.on_userchange {
+background-color:#9999FF !important;
+}
+
 th.params_full_amount {
 background-color:#FFFF99 !important;
 }

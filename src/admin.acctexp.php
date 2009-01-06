@@ -5640,8 +5640,8 @@ function readout( $option )
 						"Restrictions" => array( array( 'restrictions', 'custom_restrictions' ) ),
 					);
 
-					$plans = SubscriptionPlanHandler::getPlanList();
 /**
+ *
  * LEFTOVER:
  * params
  * [customthanks] =>
@@ -5654,7 +5654,11 @@ function readout( $option )
  * [5_recurring] => 0
  * mis
  * [0] => 2
+ *
  */
+
+					$plans = SubscriptionPlanHandler::getPlanList();
+
 					$r['set'] = array();
 					foreach ( $plans as $planid ) {
 						$plan = new SubscriptionPlan( $database );
@@ -5697,7 +5701,10 @@ function readout( $option )
 								"Published" => array( 'active', 'bool' ),
 								"Visible" => array( 'visible', 'bool' ),
 								"Name" => array( 'name', 'smartlimit32' ),
-								"Desc" => array( 'desc', 'notags limit32' )
+								"Desc" => array( 'desc', 'notags limit32' ),
+								"Exp Action" => array( 'auto_check', 'bool' ),
+								"PreExp Action" => array( 'pre_exp_check' ),
+								"UserChange Action" => array( 'on_userchange', 'bool' )
 								);
 
 							$settings = $mi->getSettings();

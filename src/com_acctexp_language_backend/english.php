@@ -1511,9 +1511,11 @@ define( '_EXPORT_PARAMS_EXPORT_METHOD_NAME', 'Exporting Method');
 define( '_EXPORT_PARAMS_EXPORT_METHOD_DESC', 'The filetype you want to export to');
 
 // --== READOUT ==--
-define( '_AEC_READOUT', 'System Readout');
+define( '_AEC_READOUT', 'Sys Readout');
 define( '_READOUT_GENERAL_SHOW_SETTINGS_NAME', 'Settings');
 define( '_READOUT_GENERAL_SHOW_SETTINGS_DESC', 'Display AEC System Settings on the Readout');
+define( '_READOUT_GENERAL_SHOW_EXTSETTINGS_NAME', 'Extended Settings');
+define( '_READOUT_GENERAL_SHOW_EXTSETTINGS_DESC', 'Display extended AEC System Settings on the Readout');
 define( '_READOUT_GENERAL_SHOW_PROCESSORS_NAME', 'Processor Settings');
 define( '_READOUT_GENERAL_SHOW_PROCESSORS_DESC', 'Display Processor Settings on the Readout');
 define( '_READOUT_GENERAL_SHOW_PLANS_NAME', 'Plans');
