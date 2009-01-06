@@ -2689,10 +2689,6 @@ class HTML_AcctExp
 														$dcc = $dcc ? 'Yes' : 'No';
 														$tdclass .= " bool".$dcc;
 														break;
-													case 'gid';
-														$dcc = $dcc ? 'Yes' : 'No';
-														$tdclass .= " bool".$dcc;
-														break;
 												}
 											}
 										} else {

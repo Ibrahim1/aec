@@ -5502,7 +5502,21 @@ function backupFile( $file, $file_new )
 
 function readout( $option )
 {
-	global $database, $aecConfig;
+	global $acl, $database, $aecConfig;
+
+	$lists = array();
+
+	$acllist = $acl->_getBelow( '#__core_acl_aro_groups', 'g1.group_id, g1.name, COUNT(g2.name) AS level', 'g1.name', null, 'USERS', true );
+
+	foreach ( $acllist as $aclitem ) {
+		$lists['gid'][$aclitem->group_id] = $aclitem->name;
+	}
+
+	$planlist = SubscriptionPlanHandler::getFullPlanList();
+
+	foreach ( $planlist as $planitem ) {
+		$lists['plan'][$planitem->id] = $planitem->name;
+	}
 
 	$optionlist = array(
 							'show_settings' => 0,
@@ -5593,10 +5607,10 @@ function readout( $option )
 						"Override Activat." => array( array( 'params', 'override_activation' ), 'bool' ),
 						"Override Reg. Email" => array( array( 'params', 'override_regmail' ), 'bool' ),
 						"Set GID" => array( array( 'params', 'gid_enabled' ), 'bool' ),
-						"GID" => array( array( 'params', 'gid' ) ),
+						"GID" => array( array( 'params', 'gid' ), 'gid' ),
 
-						"Standard Parent Plan" => array( array( 'params', 'standard_parent' ) ),
-						"Fallback Plan" => array( array( 'params', 'fallback' ) ),
+						"Standard Parent Plan" => array( array( 'params', 'standard_parent' ), 'plan' ),
+						"Fallback Plan" => array( array( 'params', 'fallback' ), 'plan' ),
 
 						"Free" => array( array( 'params', 'full_free' ), 'bool' ),
 						"Cost" => array( array( 'params', 'full_amount' ) ),
@@ -5610,31 +5624,31 @@ function readout( $option )
 						"Trial Unit" => array( array( 'params', 'trial_periodunit' ) ),
 
 						"Has MinGID" => array( array( 'restrictions', 'mingid_enabled' ), 'bool' ),
-						"MinGID" => array( array( 'restrictions', 'mingid' ) ),
+						"MinGID" => array( array( 'restrictions', 'mingid' ), 'gid' ),
 						"Has FixGID" => array( array( 'restrictions', 'fixgid_enabled' ), 'bool' ),
-						"FixGID" => array( array( 'restrictions', 'fixgid' ) ),
+						"FixGID" => array( array( 'restrictions', 'fixgid' ), 'gid' ),
 						"Has MaxGID" => array( array( 'restrictions', 'fixgid_enabled' ), 'bool' ),
-						"MaxGID" => array( array( 'restrictions', 'fixgid' ) ),
+						"MaxGID" => array( array( 'restrictions', 'fixgid' ), 'gid' ),
 
 						"Requires Prev. Plan" => array( array( 'restrictions', 'previousplan_req_enabled' ), 'bool' ),
-						"Prev. Plan" => array( array( 'restrictions', 'previousplan_req' ) ),
+						"Prev. Plan" => array( array( 'restrictions', 'previousplan_req' ), 'plan' ),
 						"Excluding Prev. Plan" => array( array( 'restrictions', 'previousplan_req_enabled_excluded' ), 'bool' ),
-						"Excl. Prev. Plan" => array( array( 'restrictions', 'previousplan_req_excluded' ) ),
+						"Excl. Prev. Plan" => array( array( 'restrictions', 'previousplan_req_excluded' ), 'plan' ),
 						"Requires Curr. Plan" => array( array( 'restrictions', 'currentplan_req_enabled' ), 'bool' ),
-						"Curr. Plan" => array( array( 'restrictions', 'currentplan_req_enabled' ) ),
+						"Curr. Plan" => array( array( 'restrictions', 'currentplan_req_enabled' ), 'plan' ),
 						"Excluding Curr. Plan" => array( array( 'restrictions', 'currentplan_req_enabled_excluded' ), 'bool' ),
-						"Excl. Curr. Plan" => array( array( 'restrictions', 'currentplan_req_excluded' ) ),
+						"Excl. Curr. Plan" => array( array( 'restrictions', 'currentplan_req_excluded' ), 'plan' ),
 						"Requires Overall Plan" => array( array( 'restrictions', 'overallplan_req_enabled' ), 'bool' ),
-						"Overall Plan" => array( array( 'restrictions', 'overallplan_req' ) ),
+						"Overall Plan" => array( array( 'restrictions', 'overallplan_req' ), 'plan' ),
 						"Excluding Overall. Plan" => array( array( 'restrictions', 'overallplan_req_enabled_excluded' ), 'bool' ),
-						"Excl. Overall. Plan" => array( array( 'restrictions', 'overallplan_req_excluded' ) ),
+						"Excl. Overall. Plan" => array( array( 'restrictions', 'overallplan_req_excluded' ), 'plan' ),
 
 						"Min Used Plan" => array( array( 'restrictions', 'used_plan_min_enabled' ), 'bool' ),
 						"Min Used Plan Amount" => array( array( 'restrictions', 'used_plan_min_amount' ) ),
-						"Min Used Plans" => array( array( 'restrictions', 'used_plan_min' ) ),
+						"Min Used Plans" => array( array( 'restrictions', 'used_plan_min' ), 'plan' ),
 						"Max Used Plan" => array( array( 'restrictions', 'used_plan_max_enabled' ), 'bool' ),
 						"Max Used Plan Amount" => array( array( 'restrictions', 'used_plan_max_amount' ) ),
-						"Max Used Plans" => array( array( 'restrictions', 'used_plan_max' ) ),
+						"Max Used Plans" => array( array( 'restrictions', 'used_plan_max' ), 'plan' ),
 
 						"Custom Restrictions" => array( array( 'restrictions', 'custom_restrictions_enabled' ), 'bool' ),
 						"Restrictions" => array( array( 'restrictions', 'custom_restrictions' ) ),
@@ -5667,9 +5681,32 @@ function readout( $option )
 						$ps = array();
 						foreach ( $r['def'] as $nn => $def ) {
 							if ( !empty( $def[1] ) ) {
-								$ps = array_merge( $ps, readoutConversionHelper( $def[0], $plan, $def[1] ) );
+								$ps = array_merge( $ps, readoutConversionHelper( $def[0], $plan, $lists, $def[1] ) );
 							} else {
-								$ps = array_merge( $ps, readoutConversionHelper( $def[0], $plan ) );
+								$ps = array_merge( $ps, readoutConversionHelper( $def[0], $plan, $lists ) );
+							}
+						}
+
+						$r['set'][] = $ps;
+					}
+					break;
+				case 'show_mi_relations':
+					$r['head'] = "Payment Plan - MicroIntegration relationships";
+					$r['type'] = "table";
+
+					$plans = SubscriptionPlanHandler::getPlanList();
+
+					$r['set'] = array();
+					foreach ( $plans as $planid ) {
+						$plan = new SubscriptionPlan( $database );
+						$plan->load( $planid );
+
+						$ps = array();
+						foreach ( $r['def'] as $nn => $def ) {
+							if ( !empty( $def[1] ) ) {
+								$ps = array_merge( $ps, readoutConversionHelper( $def[0], $plan, $lists, $def[1] ) );
+							} else {
+								$ps = array_merge( $ps, readoutConversionHelper( $def[0], $plan, $lists ) );
 							}
 						}
 
@@ -5729,9 +5766,9 @@ function readout( $option )
 						$ps = array();
 						foreach ( $r['def'] as $nn => $def ) {
 							if ( !empty( $def[1] ) ) {
-								$ps = array_merge( $ps, readoutConversionHelper( $def[0], $mi, $def[1] ) );
+								$ps = array_merge( $ps, readoutConversionHelper( $def[0], $mi, $lists, $def[1] ) );
 							} else {
-								$ps = array_merge( $ps, readoutConversionHelper( $def[0], $mi ) );
+								$ps = array_merge( $ps, readoutConversionHelper( $def[0], $mi, $lists ) );
 							}
 						}
 
@@ -5790,7 +5827,7 @@ function readout( $option )
 	}
 }
 
-function readoutConversionHelper( $content, $obj, $type=null )
+function readoutConversionHelper( $content, $obj, $lists=null, $type=null )
 {
 	if ( is_array( $content ) ) {
 		$dname = $content[0].'_'.$content[1];
@@ -5812,8 +5849,46 @@ function readoutConversionHelper( $content, $obj, $type=null )
 					$dvalue = substr( $dvalue, 0, 32 );
 					break;
 				case 'smartlimit32':
-					if ( strlen( $dvalue ) > 32 ) {
-						$dvalue = substr( $dvalue, 0, 24 ) . '...' . substr( $dvalue, -8, 8 );
+					if ( strlen( $dvalue ) > 44 ) {
+						$dvalue = substr( $dvalue, 0, 32 ) . '<strong>[...]</strong>' . substr( $dvalue, -12, 12 );
+					}
+					break;
+				case 'gid':
+					if ( is_array( $dvalue ) ) {
+						$vv = array();
+						foreach ( $dvalue as $val ) {
+							if ( $dvalue == 0 ) {
+								$vv[] = '--';
+							} else {
+								$vv[] = "#" . $val . ":&nbsp;<strong>" . $lists['gid'][$val] . "</strong>";
+							}
+						}
+						$dvalue = implode( ", ", $vv );
+					} else {
+						if ( $dvalue == 0 ) {
+							$dvalue = '--';
+						} else {
+							$dvalue = "#" . $dvalue . ":&nbsp;<strong>" . $lists['gid'][$dvalue] . "</strong>";
+						}
+					}
+					break;
+				case 'plan':
+					if ( is_array( $dvalue ) ) {
+						$vv = array();
+						foreach ( $dvalue as $val ) {
+							if ( $dvalue == 0 ) {
+								$vv[] = '--';
+							} else {
+								$vv[] = "#" . $val . ":&nbsp;<strong>" . $lists['plan'][$val] . "</strong>";
+							}
+						}
+						$dvalue = implode( ", ", $vv );
+					} else {
+						if ( $dvalue == 0 ) {
+							$dvalue = '--';
+						} else {
+							$dvalue = "#" . $dvalue . ":&nbsp;<strong>" . $lists['plan'][$dvalue] . "</strong>";
+						}
 					}
 					break;
 			}
