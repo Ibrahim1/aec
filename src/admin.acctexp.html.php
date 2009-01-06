@@ -2674,25 +2674,26 @@ class HTML_AcctExp
 
 										$tdclass = $dn;
 
+										$dcc = $entry[$dn];
+
 										if ( isset( $dc[1] ) ) {
-											switch ( $dc[1] ) {
-												case 'bool';
-													$dcc = $entry[$dn] ? 'Yes' : 'No';
-													$tdclass .= " bool".$dcc;
-													break;
-												case 'gid';
-													$dcc = $entry[$dn] ? 'Yes' : 'No';
-													$tdclass .= " bool".$dcc;
-													break;
-												default:
-													$dcc = $entry[$dn];
-													break;
+											$types = explode( ' ', $dc[1] );
+
+											foreach ( $types as $tt ) {
+												switch ( $tt ) {
+													case 'bool';
+														$dcc = $dcc ? 'Yes' : 'No';
+														$tdclass .= " bool".$dcc;
+														break;
+													case 'gid';
+														$dcc = $dcc ? 'Yes' : 'No';
+														$tdclass .= " bool".$dcc;
+														break;
+												}
 											}
 										} else {
-											if ( is_array( $entry[$dn] ) ) {
-												$dcc = implode( ', ', $entry[$dn] );
-											} else {
-												$dcc = $entry[$dn];
+											if ( is_array( $dcc ) ) {
+												$dcc = implode( ', ', $dcc );
 											}
 										}
 

@@ -1522,6 +1522,8 @@ define( '_READOUT_GENERAL_SHOW_MI_RELATIONS_NAME', 'Plan -> MI Relations');
 define( '_READOUT_GENERAL_SHOW_MI_RELATIONS_DESC', 'Display Plan -> MI Relations on the Readout');
 define( '_READOUT_GENERAL_SHOW_MIS_NAME', 'Micro Integrations');
 define( '_READOUT_GENERAL_SHOW_MIS_DESC', 'Display Micro Integrations and their Settings on the Readout');
+define( '_READOUT_GENERAL_STORE_SETTINGS_NAME', 'Remember Settings');
+define( '_READOUT_GENERAL_STORE_SETTINGS_DESC', 'Remember Settings on this page for your admin account');
 
 // new for errors
 define( '_AEC_ERR_NO_SUBSCRIPTION', 'The user has no Subscription');

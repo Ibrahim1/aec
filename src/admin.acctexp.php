@@ -5505,11 +5505,13 @@ function readout( $option )
 	global $database, $aecConfig;
 
 	$optionlist = array(
-							'show_settings',
-							'show_processors',
-							'show_plans',
-							'show_mi_relations',
-							'show_mis'
+							'show_settings' => 0,
+							'show_extsettings' => 0,
+							'show_processors' => 0,
+							'show_plans' => 1,
+							'show_mi_relations' => 1,
+							'show_mis' => 1,
+							'store_settings' => 1
 						);
 
 	if ( !empty( $_POST['as_spreadsheet'] ) ) {
@@ -5517,12 +5519,60 @@ function readout( $option )
 	} elseif ( isset( $_POST['display'] ) ) {
 		$readout = array();
 
-		foreach ( $optionlist as $opt ) {
+		foreach ( $optionlist as $opt => $odefault ) {
 			$r = array();
+
+			if ( !isset( $_POST[$opt] ) ) {
+				continue;
+			}
 
 			switch ( $opt ) {
 				case 'show_settings':
 					$r['head'] = "Settings";
+					$r['type'] = "table";
+
+					$setdef = Config_General::paramsList();
+
+					$r['def'] = array();
+					foreach ( $setdef as $sd => $sdd ) {
+						if ( ( $sdd === 0 ) || ( $sdd === 1 ) ) {
+							$tname = constant( '_CFG_GENERAL_' . strtoupper( $sd ) . '_NAME' );
+
+							$r['def'][$tname] = array( $sd, 'bool' );
+						}
+					}
+
+					$r['set'][] = $aecConfig->cfg;
+
+					if ( !empty( $_POST['show_extsettings'] ) ) {
+						$readout[] = $r;
+
+						unset($r);
+
+						$r['head'] = "";
+						$r['type'] = "table";
+
+						$setdef = Config_General::paramsList();
+
+						$r['def'] = array();
+						foreach ( $setdef as $sd => $sdd ) {
+							if ( ( $sdd !== 0 ) && ( $sdd !== 1 ) ) {
+								$reg = array( 'GENERAL', 'MI', 'AUTH' );
+
+								foreach ( $reg as $regg ) {
+									$cname = '_CFG_' . $regg . '_' . strtoupper( $sd ) . '_NAME';
+
+									if ( defined( $cname ) )  {
+										$tname = constant( $cname );
+									}
+								}
+
+								$r['def'][$tname] = array( $sd );
+							}
+						}
+
+						$r['set'][] = $aecConfig->cfg;
+					}
 					break;
 				case 'show_processors':
 					$r['head'] = "Processors";
@@ -5536,6 +5586,7 @@ function readout( $option )
 						"Published" => array( 'active', 'bool' ),
 						"Visible" => array( 'visible', 'bool' ),
 						"Name" => array( 'name' ),
+						"Desc" => array( 'desc', 'notags limit32' ),
 						"Primary" => array( array( 'params', 'make_primary' ), 'bool' ),
 						"Activate" => array( array( 'params', 'make_active' ), 'bool' ),
 						"Update Exist." => array( array( 'params', 'update_existing' ), 'bool' ),
@@ -5614,10 +5665,29 @@ function readout( $option )
 						$ps = array();
 						foreach ( $r['def'] as $nn => $def ) {
 							if ( is_array( $def[0] ) ) {
-								$ps[$def[0][0].'_'.$def[0][1]] = $plan->{$def[0][0]}[$def[0][1]];
+								$dname = $def[0][0].'_'.$def[0][1];
+								$dvalue = $plan->{$def[0][0]}[$def[0][1]];
 							} else {
-								$ps[$def[0]] = $plan->{$def[0]};
+								$dname = $def[0];
+								$dvalue = $plan->{$def[0]};
 							}
+
+							if ( !empty( $def[1] ) ) {
+								$types = explode( ' ', $def[1] );
+
+								foreach ( $types as $tt ) {
+									switch ( $tt ) {
+										case 'notags':
+											$dvalue = strip_tags( $dvalue );
+											break;
+										case 'limit32':
+											$dvalue = substr( $dvalue, 0, 32 );
+											break;
+									}
+								}
+							}
+
+							$ps[$dname] = $dvalue;
 						}
 
 						$r['set'][] = $ps;
@@ -5626,6 +5696,21 @@ function readout( $option )
 				case 'show_mis':
 					$r['head'] = "Micro Integration";
 					break;
+				case 'store_settings':
+					global $my;
+
+					$settings = array();
+					foreach ( $optionlist as $opt => $optdefault ) {
+						if ( !empty( $_POST[$opt] ) ) {
+							$settings[$opt] = 1;
+						} else {
+							$settings[$opt] = 0;
+						}
+					}
+
+					$metaUser = new metaUser( $my->id );
+					$metaUser->meta->addCustomParams( array( 'aecadmin_readout' => $settings ) );
+					$metaUser->meta->storeload();
 			}
 
 			$readout[] = $r;
@@ -5633,13 +5718,26 @@ function readout( $option )
 
 		HTML_AcctExp::readout( $option, $readout );
 	} else {
-		foreach ( $optionlist as $opt ) {
-			$params[$opt] = array( 'checkbox', 0 );
+		global $my;
+
+		$metaUser = new metaUser( $my->id );
+		if ( isset( $metaUser->meta->custom_params['aecadmin_readout'] ) ) {
+			$prefs = $metaUser->meta->custom_params['aecadmin_readout'];
+		} else {
+			$prefs = array();
+		}
+
+		foreach ( $optionlist as $opt => $optdefault ) {
+			if ( isset( $prefs[$opt] ) ) {
+				$params[$opt] = array( 'checkbox', $prefs[$opt] );
+			} else {
+				$params[$opt] = array( 'checkbox', $optdefault );
+			}
 		}
 
 		$settings = new aecSettings ( 'readout', 'general' );
 
-		$settings->fullSettingsArray( $params, array(), array() ) ;
+		$settings->fullSettingsArray( $params, $prefs, array() ) ;
 
 		// Call HTML Class
 		$aecHTML = new aecHTML( $settings->settings, $settings->lists );

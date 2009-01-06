@@ -1164,7 +1164,7 @@ class Config_General extends serialParamDBTable
 		return parent::check();
 	}
 
-	function initParams()
+	function paramsList()
 	{
 		$def = array();
 		$def['require_subscription']			= 0;
@@ -1177,7 +1177,7 @@ class Config_General extends serialParamDBTable
 		$def['simpleurls']						= 0;
 		$def['display_date_frontend']			= "%a, %d %b %Y %T %Z";
 		$def['display_date_backend']			= "%a, %d %b %Y %T %Z";
-		$def['enable_mimeta']					= 0;
+		//$def['enable_mimeta']					= 0;
 		$def['enable_coupons']					= 0;
 		$def['gwlist']							= array();
 		$def['milist']							= array( 'mi_email','mi_htaccess','mi_mysql_query','mi_email','mi_aecplan','mi_joomlauser' );
@@ -1253,6 +1253,11 @@ class Config_General extends serialParamDBTable
 		// TODO: $def['show_empty_groups']						= 1;
 		$def['integrate_registration']			= 1;
 
+		return $def;
+	}
+
+	function initParams()
+	{
 		// Insert a new entry if there is none yet
 		if ( empty( $this->settings ) ) {
 			global $database;
@@ -1275,7 +1280,7 @@ class Config_General extends serialParamDBTable
 		}
 
 		// Write to Params, do not overwrite existing data
-		$this->addParams( $def, 'settings', false );
+		$this->addParams( $this->paramsList(), 'settings', false );
 
 		$this->storeload();
 
