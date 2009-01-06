@@ -10038,6 +10038,31 @@ class microIntegrationHandler
 		$this->mi_dir = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/micro_integration';
 	}
 
+	function getMIList( $limitstart=false, $limit=false )
+	{
+		global $database;
+
+		$query = 'SELECT id, class_name'
+			 	. ' FROM #__acctexp_microintegrations'
+			 	. ' GROUP BY `id`'
+			 	. ' ORDER BY `class_name`'
+			 	;
+
+		if ( !empty( $limitstart ) && !empty( $limit ) ) {
+			$query .= 'LIMIT ' . $limitstart . ',' . $limit;
+		}
+
+		$database->setQuery( $query );
+
+		$rows = $database->loadObjectList();
+		if ( $database->getErrorNum() ) {
+			echo $database->stderr();
+			return false;
+		} else {
+			return $rows;
+		}
+	}
+
 	function getIntegrationList()
 	{
 		$list = AECToolbox::getFileArray( $this->mi_dir, 'php', false, true );

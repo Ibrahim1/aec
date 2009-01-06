@@ -2638,7 +2638,11 @@ class HTML_AcctExp
 				<tr>
 					<td valign="top">
 					<?php
-						echo "<h1>" . $part['head'] . "</h1>";
+						if ( !empty( $part['sub'] ) ) {
+							echo "<h2>" . $part['head'] . "</h2>";
+						} else {
+							echo "<h1>" . $part['head'] . "</h1>";
+						}
 
 						switch ( $part['type'] ) {
 							case 'table':
@@ -2708,14 +2712,6 @@ class HTML_AcctExp
 
 								echo "</table>";
 								break;
-						}
-
-						if ( is_array( $part['content'] ) ) {
-							foreach ( $part['content'] as $p ) {
-								echo "<h2>" . $p['head'] . "</h2>";
-							}
-						} else {
-							echo "<p>" . $part['content'] . "</p>";
 						}
 					?>
 					</td>

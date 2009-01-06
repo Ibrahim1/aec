@@ -5585,7 +5585,7 @@ function readout( $option )
 						"ID" => array( 'id' ),
 						"Published" => array( 'active', 'bool' ),
 						"Visible" => array( 'visible', 'bool' ),
-						"Name" => array( 'name' ),
+						"Name" => array( 'name', 'smartlimit32' ),
 						"Desc" => array( 'desc', 'notags limit32' ),
 						"Primary" => array( array( 'params', 'make_primary' ), 'bool' ),
 						"Activate" => array( array( 'params', 'make_active' ), 'bool' ),
@@ -5641,22 +5641,20 @@ function readout( $option )
 					);
 
 					$plans = SubscriptionPlanHandler::getPlanList();
-
-					/**
-					 * Array
-	params
-      [customthanks] =>
-      [customtext_thanks_keeporiginal] => 1
-      [customtext_thanks] =>
-      [processors] =>
-    custom params
-      [add_group] => 0
-      [5_Allowedtypes] =>
-      [5_recurring] => 0
-    mis
-      [0] => 2
-					 */
-
+/**
+ * LEFTOVER:
+ * params
+ * [customthanks] =>
+ * [customtext_thanks_keeporiginal] => 1
+ * [customtext_thanks] =>
+ * [processors] =>
+ * custom params
+ * [add_group] => 0
+ * [5_Allowedtypes] =>
+ * [5_recurring] => 0
+ * mis
+ * [0] => 2
+ */
 					$r['set'] = array();
 					foreach ( $plans as $planid ) {
 						$plan = new SubscriptionPlan( $database );
@@ -5664,30 +5662,11 @@ function readout( $option )
 
 						$ps = array();
 						foreach ( $r['def'] as $nn => $def ) {
-							if ( is_array( $def[0] ) ) {
-								$dname = $def[0][0].'_'.$def[0][1];
-								$dvalue = $plan->{$def[0][0]}[$def[0][1]];
-							} else {
-								$dname = $def[0];
-								$dvalue = $plan->{$def[0]};
-							}
-
 							if ( !empty( $def[1] ) ) {
-								$types = explode( ' ', $def[1] );
-
-								foreach ( $types as $tt ) {
-									switch ( $tt ) {
-										case 'notags':
-											$dvalue = strip_tags( $dvalue );
-											break;
-										case 'limit32':
-											$dvalue = substr( $dvalue, 0, 32 );
-											break;
-									}
-								}
+								$ps = array_merge( $ps, readoutConversionHelper( $def[0], $plan, $def[1] ) );
+							} else {
+								$ps = array_merge( $ps, readoutConversionHelper( $def[0], $plan ) );
 							}
-
-							$ps[$dname] = $dvalue;
 						}
 
 						$r['set'][] = $ps;
@@ -5695,6 +5674,64 @@ function readout( $option )
 					break;
 				case 'show_mis':
 					$r['head'] = "Micro Integration";
+
+					$milist = microIntegrationHandler::getMIList();
+
+					$micursor = '';
+					foreach ( $milist as $miobj ) {
+						$mi = new microIntegration( $database );
+						$mi->load( $miobj->id );
+						$mi->callIntegration();
+
+						if ( $miobj->class_name != $micursor ) {
+							$readout[] = $r;
+							unset($r);
+							$r = array();
+							$r['head'] = $mi->info['name'];
+							$r['type'] = "table";
+							$r['sub'] = true;
+							$r['set'] = array();
+
+							$r['def'] = array (
+								"ID" => array( 'id' ),
+								"Published" => array( 'active', 'bool' ),
+								"Visible" => array( 'visible', 'bool' ),
+								"Name" => array( 'name', 'smartlimit32' ),
+								"Desc" => array( 'desc', 'notags limit32' )
+								);
+
+							$settings = $mi->getSettings();
+
+							if ( isset( $settings['lists'] ) ) {
+								unset( $settings['lists'] );
+							}
+
+							if ( !empty( $settings ) ) {
+								foreach ( $settings as $sname => $setting ) {
+									$name =  '_MI_' . strtoupper( $miobj->class_name ) . '_' . strtoupper( $sname ) .'_NAME';
+
+									if ( defined( $name ) ) {
+										$r['def'][constant($name)] = array( array( 'settings', $sname ), 'notags smartlimit32' );
+									} else {
+										$r['def'][$sname] = array( array( 'settings', $sname ), 'notags smartlimit32' );
+									}
+								}
+							}
+						}
+
+						$ps = array();
+						foreach ( $r['def'] as $nn => $def ) {
+							if ( !empty( $def[1] ) ) {
+								$ps = array_merge( $ps, readoutConversionHelper( $def[0], $mi, $def[1] ) );
+							} else {
+								$ps = array_merge( $ps, readoutConversionHelper( $def[0], $mi ) );
+							}
+						}
+
+						$r['set'][] = $ps;
+
+						$micursor = $miobj->class_name;
+					}
 					break;
 				case 'store_settings':
 					global $my;
@@ -5744,6 +5781,39 @@ function readout( $option )
 
 		HTML_AcctExp::readoutSetup( $option, $aecHTML );
 	}
+}
+
+function readoutConversionHelper( $content, $obj, $type=null )
+{
+	if ( is_array( $content ) ) {
+		$dname = $content[0].'_'.$content[1];
+		$dvalue = $obj->{$content[0]}[$content[1]];
+	} else {
+		$dname = $content;
+		$dvalue = $obj->{$content};
+	}
+
+	if ( !empty( $type ) ) {
+		$types = explode( ' ', $type );
+
+		foreach ( $types as $tt ) {
+			switch ( $tt ) {
+				case 'notags':
+					$dvalue = strip_tags( $dvalue );
+					break;
+				case 'limit32':
+					$dvalue = substr( $dvalue, 0, 32 );
+					break;
+				case 'smartlimit32':
+					if ( strlen( $dvalue ) > 32 ) {
+						$dvalue = substr( $dvalue, 0, 24 ) . '...' . substr( $dvalue, -8, 8 );
+					}
+					break;
+			}
+		}
+	}
+
+	return array( $dname => $dvalue );
 }
 
 function importData()
