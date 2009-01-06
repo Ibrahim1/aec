@@ -4581,6 +4581,55 @@ class ItemRelationHandler
 
 class SubscriptionPlanHandler
 {
+	function getPlanList( $limitstart=false, $limit=false )
+	{
+		global $database;
+
+		$query = 'SELECT id'
+			 	. ' FROM #__acctexp_plans'
+			 	. ' GROUP BY `id`'
+			 	;
+
+		if ( !empty( $limitstart ) && !empty( $limit ) ) {
+			$query .= 'LIMIT ' . $limitstart . ',' . $limit;
+		}
+
+		$database->setQuery( $query );
+
+		$rows = $database->loadResultArray();
+		if ( $database->getErrorNum() ) {
+			echo $database->stderr();
+			return false;
+		} else {
+			return $rows;
+		}
+	}
+
+	function getFullPlanList( $limitstart=false, $limit=false )
+	{
+		global $database;
+
+		$query = 'SELECT *'
+				. ' FROM #__acctexp_plans'
+				. ' GROUP BY `id`'
+				. ' ORDER BY `ordering`'
+			 	;
+
+		if ( !empty( $limitstart ) && !empty( $limit ) ) {
+			$query .= 'LIMIT ' . $limitstart . ',' . $limit;
+		}
+
+		$database->setQuery( $query );
+
+		$rows = $database->loadObjectList();
+		if ( $database->getErrorNum() ) {
+			echo $database->stderr();
+			return false;
+		} else {
+			return $rows;
+		}
+	}
+
 	function getPlanUserlist( $planid )
 	{
 		global $database;

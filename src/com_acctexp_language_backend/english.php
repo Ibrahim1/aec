@@ -1510,6 +1510,19 @@ define( '_EXPORT_PARAMS_SAVE_NAME_DESC', 'Save new preset under this name');
 define( '_EXPORT_PARAMS_EXPORT_METHOD_NAME', 'Exporting Method');
 define( '_EXPORT_PARAMS_EXPORT_METHOD_DESC', 'The filetype you want to export to');
 
+// --== READOUT ==--
+define( '_AEC_READOUT', 'System Readout');
+define( '_READOUT_GENERAL_SHOW_SETTINGS_NAME', 'Settings');
+define( '_READOUT_GENERAL_SHOW_SETTINGS_DESC', 'Display AEC System Settings on the Readout');
+define( '_READOUT_GENERAL_SHOW_PROCESSORS_NAME', 'Processor Settings');
+define( '_READOUT_GENERAL_SHOW_PROCESSORS_DESC', 'Display Processor Settings on the Readout');
+define( '_READOUT_GENERAL_SHOW_PLANS_NAME', 'Plans');
+define( '_READOUT_GENERAL_SHOW_PLANS_DESC', 'Display Plans on the Readout');
+define( '_READOUT_GENERAL_SHOW_MI_RELATIONS_NAME', 'Plan -> MI Relations');
+define( '_READOUT_GENERAL_SHOW_MI_RELATIONS_DESC', 'Display Plan -> MI Relations on the Readout');
+define( '_READOUT_GENERAL_SHOW_MIS_NAME', 'Micro Integrations');
+define( '_READOUT_GENERAL_SHOW_MIS_DESC', 'Display Micro Integrations and their Settings on the Readout');
+
 // new for errors
 define( '_AEC_ERR_NO_SUBSCRIPTION', 'The user has no Subscription');
 ?>

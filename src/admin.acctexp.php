@@ -608,6 +608,10 @@ switch( strtolower( $task ) ) {
 		eventlog( $option );
 		break;
 
+	case 'readout':
+		readout( $option );
+		break;
+
 	case 'export':
 		exportData( $option );
 		break;
@@ -2524,19 +2528,7 @@ function listSubscriptionPlans( $option )
 	$pageNav = new mosPageNav( $total, $limitstart, $limit );
 
  	// get the subset (based on limits) of records
- 	$query = 'SELECT *'
-		 	. ' FROM #__acctexp_plans'
-		 	. ' GROUP BY `id`'
-		 	. ' ORDER BY `ordering`'
-		 	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
-		 	;
-	$database->setQuery( $query );
-
- 	$rows = $database->loadObjectList();
- 	if ( $database->getErrorNum() ) {
- 		echo $database->stderr();
- 		return false;
- 	}
+	$rows = SubscriptionPlanHandler::getFullPlanList( $pageNav->limitstart, $pageNav->limit );
 
 	$gcolors = array();
 
@@ -5506,6 +5498,154 @@ function backupFile( $file, $file_new )
 				return false;
 		}
 		return true;
+}
+
+function readout( $option )
+{
+	global $database, $aecConfig;
+
+	$optionlist = array(
+							'show_settings',
+							'show_processors',
+							'show_plans',
+							'show_mi_relations',
+							'show_mis'
+						);
+
+	if ( !empty( $_POST['as_spreadsheet'] ) ) {
+		// For later
+	} elseif ( isset( $_POST['display'] ) ) {
+		$readout = array();
+
+		foreach ( $optionlist as $opt ) {
+			$r = array();
+
+			switch ( $opt ) {
+				case 'show_settings':
+					$r['head'] = "Settings";
+					break;
+				case 'show_processors':
+					$r['head'] = "Processors";
+					break;
+				case 'show_plans':
+					$r['head'] = "Payment Plans";
+					$r['type'] = "table";
+
+					$r['def'] = array (
+						"ID" => array( 'id' ),
+						"Published" => array( 'active', 'bool' ),
+						"Visible" => array( 'visible', 'bool' ),
+						"Name" => array( 'name' ),
+						"Primary" => array( array( 'params', 'make_primary' ), 'bool' ),
+						"Activate" => array( array( 'params', 'make_active' ), 'bool' ),
+						"Update Exist." => array( array( 'params', 'update_existing' ), 'bool' ),
+						"Override Activat." => array( array( 'params', 'override_activation' ), 'bool' ),
+						"Override Reg. Email" => array( array( 'params', 'override_regmail' ), 'bool' ),
+						"Set GID" => array( array( 'params', 'gid_enabled' ), 'bool' ),
+						"GID" => array( array( 'params', 'gid' ) ),
+
+						"Standard Parent Plan" => array( array( 'params', 'standard_parent' ) ),
+						"Fallback Plan" => array( array( 'params', 'fallback' ) ),
+
+						"Free" => array( array( 'params', 'full_free' ), 'bool' ),
+						"Cost" => array( array( 'params', 'full_amount' ) ),
+						"Lifetime" => array( array( 'params', 'lifetime' ), 'bool' ),
+						"Period" => array( array( 'params', 'full_period' ) ),
+						"Unit" => array( array( 'params', 'full_periodunit' ) ),
+
+						"Free Trial" => array( array( 'params', 'trial_free' ), 'bool' ),
+						"Trial Cost" => array( array( 'params', 'trial_amount' ) ),
+						"Trial Period" => array( array( 'params', 'trial_period' ) ),
+						"Trial Unit" => array( array( 'params', 'trial_periodunit' ) ),
+
+						"Has MinGID" => array( array( 'restrictions', 'mingid_enabled' ), 'bool' ),
+						"MinGID" => array( array( 'restrictions', 'mingid' ) ),
+						"Has FixGID" => array( array( 'restrictions', 'fixgid_enabled' ), 'bool' ),
+						"FixGID" => array( array( 'restrictions', 'fixgid' ) ),
+						"Has MaxGID" => array( array( 'restrictions', 'fixgid_enabled' ), 'bool' ),
+						"MaxGID" => array( array( 'restrictions', 'fixgid' ) ),
+
+						"Requires Prev. Plan" => array( array( 'restrictions', 'previousplan_req_enabled' ), 'bool' ),
+						"Prev. Plan" => array( array( 'restrictions', 'previousplan_req' ) ),
+						"Excluding Prev. Plan" => array( array( 'restrictions', 'previousplan_req_enabled_excluded' ), 'bool' ),
+						"Excl. Prev. Plan" => array( array( 'restrictions', 'previousplan_req_excluded' ) ),
+						"Requires Curr. Plan" => array( array( 'restrictions', 'currentplan_req_enabled' ), 'bool' ),
+						"Curr. Plan" => array( array( 'restrictions', 'currentplan_req_enabled' ) ),
+						"Excluding Curr. Plan" => array( array( 'restrictions', 'currentplan_req_enabled_excluded' ), 'bool' ),
+						"Excl. Curr. Plan" => array( array( 'restrictions', 'currentplan_req_excluded' ) ),
+						"Requires Overall Plan" => array( array( 'restrictions', 'overallplan_req_enabled' ), 'bool' ),
+						"Overall Plan" => array( array( 'restrictions', 'overallplan_req' ) ),
+						"Excluding Overall. Plan" => array( array( 'restrictions', 'overallplan_req_enabled_excluded' ), 'bool' ),
+						"Excl. Overall. Plan" => array( array( 'restrictions', 'overallplan_req_excluded' ) ),
+
+						"Min Used Plan" => array( array( 'restrictions', 'used_plan_min_enabled' ), 'bool' ),
+						"Min Used Plan Amount" => array( array( 'restrictions', 'used_plan_min_amount' ) ),
+						"Min Used Plans" => array( array( 'restrictions', 'used_plan_min' ) ),
+						"Max Used Plan" => array( array( 'restrictions', 'used_plan_max_enabled' ), 'bool' ),
+						"Max Used Plan Amount" => array( array( 'restrictions', 'used_plan_max_amount' ) ),
+						"Max Used Plans" => array( array( 'restrictions', 'used_plan_max' ) ),
+
+						"Custom Restrictions" => array( array( 'restrictions', 'custom_restrictions_enabled' ), 'bool' ),
+						"Restrictions" => array( array( 'restrictions', 'custom_restrictions' ) ),
+					);
+
+					$plans = SubscriptionPlanHandler::getPlanList();
+
+					/**
+					 * Array
+	params
+      [customthanks] =>
+      [customtext_thanks_keeporiginal] => 1
+      [customtext_thanks] =>
+      [processors] =>
+    custom params
+      [add_group] => 0
+      [5_Allowedtypes] =>
+      [5_recurring] => 0
+    mis
+      [0] => 2
+					 */
+
+					$r['set'] = array();
+					foreach ( $plans as $planid ) {
+						$plan = new SubscriptionPlan( $database );
+						$plan->load( $planid );
+
+						$ps = array();
+						foreach ( $r['def'] as $nn => $def ) {
+							if ( is_array( $def[0] ) ) {
+								$ps[$def[0][0].'_'.$def[0][1]] = $plan->{$def[0][0]}[$def[0][1]];
+							} else {
+								$ps[$def[0]] = $plan->{$def[0]};
+							}
+						}
+
+						$r['set'][] = $ps;
+					}
+					break;
+				case 'show_mis':
+					$r['head'] = "Micro Integration";
+					break;
+			}
+
+			$readout[] = $r;
+		}
+
+		HTML_AcctExp::readout( $option, $readout );
+	} else {
+		foreach ( $optionlist as $opt ) {
+			$params[$opt] = array( 'checkbox', 0 );
+		}
+
+		$settings = new aecSettings ( 'readout', 'general' );
+
+		$settings->fullSettingsArray( $params, array(), array() ) ;
+
+		// Call HTML Class
+		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+
+		HTML_AcctExp::readoutSetup( $option, $aecHTML );
+	}
 }
 
 function importData()

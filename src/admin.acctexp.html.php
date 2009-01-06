@@ -208,6 +208,13 @@ class HTML_myCommon
 		<?php } ?>
 		<?php
 	}
+
+	function addReadoutCSS()
+	{
+		global $mainframe; ?>
+		<link rel="stylesheet" type="text/css" media="all" href="<?php echo $mainframe->getCfg( 'live_site' ); ?>/administrator/components/com_acctexp/aec_readout.css" />
+		<?php
+	}
 }
 
 class formParticles
@@ -813,7 +820,8 @@ class HTML_AcctExp
 										array( 'eventlog', 'eventlog', _AEC_CENTR_LOG ),
 										array( 'hacks', 'hacks', _AEC_CENTR_HACKS ),
 										array( 'help', 'help', _AEC_CENTR_HELP ),
-										array( 'export', 'export', _AEC_CENTR_EXPORT )
+										array( 'export', 'export', _AEC_CENTR_EXPORT ),
+										array( 'readout', 'export', _AEC_READOUT )
 						);
 
 						$linkroot = "index2.php?option=com_acctexp&amp;task=";
@@ -2562,6 +2570,158 @@ class HTML_AcctExp
 		if ( _EUCA_DEBUGMODE ) {
 			krumo( $option, $events, $search, $pageNav );
 		}
+
+ 		HTML_myCommon::GlobalNerd();
+	}
+
+	function readoutSetup( $option, $aecHTML )
+	{
+		global $mosConfig_live_site;
+
+		mosCommonHTML::loadOverlib();
+		HTML_myCommon::addBackendCSS();
+		?>
+		<form action="index2.php" method="post" name="adminForm">
+		<table class="adminheading">
+		<tr>
+			<th width="100%" class="sectionname" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_export.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;" rowspan="2" nowrap="nowrap">
+				<?php echo _AEC_READOUT; ?>
+			</th>
+			<td nowrap="nowrap" style="padding: 0 5px;">
+			</td>
+		</tr>
+		</table>
+
+		<div class="aec_readout">
+			<table style="text-align:right;width:200px;">
+				<tr>
+					<td valign="top">
+						<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
+							echo $aecHTML->createSettingsParticle( $rowname );
+						} ?>
+					</td>
+				</tr>
+			</table>
+
+			<input type="hidden" name="option" value="<?php echo $option;?>" />
+			<input type="hidden" name="task" value="readout" />
+			<input type="hidden" name="returnTask" value="readout" />
+			<input type="hidden" name="display" value="1" />
+			<br />
+			<input type="submit" />
+			<br />
+		</div>
+
+		</form>
+
+
+		<?php
+		echo $aecHTML->loadJS();
+
+		if ( _EUCA_DEBUGMODE ) {
+			krumo( $option, $aecHTML );
+		}
+
+ 		HTML_myCommon::GlobalNerd();
+	}
+
+	function readout( $option, $readout )
+	{
+		global $mosConfig_live_site;
+
+		mosCommonHTML::loadOverlib();
+		HTML_myCommon::addReadoutCSS();
+		?>
+
+		<table class="aec_readout">
+			<?php foreach ( $readout as $part ) { ?>
+				<tr>
+					<td valign="top">
+					<?php
+						echo "<h1>" . $part['head'] . "</h1>";
+
+						switch ( $part['type'] ) {
+							case 'table':
+								echo "<table>";
+
+								$i = 0;
+								$j = 0;
+								foreach ( $part['set'] as $entry ) {
+
+									if ( $j%20 == 0 ) {
+										$k = 0;
+										foreach ( $part['def'] as $def => $dc ) {
+											if ( is_array( $dc[0] ) ) {
+												$dn = $dc[0][0].'_'.$dc[0][1];
+											} else {
+												$dn = $dc[0];
+											}
+
+											echo "<th class=\"col".$k." ".$dn."\">" . $def . "</th>";
+											$k = $k ? 0 : 1;
+										}
+										echo "</tr>";
+									}
+
+									echo "<tr class=\"row".$i."\">";
+
+									foreach ( $part['def'] as $def => $dc ) {
+										if ( is_array( $dc[0] ) ) {
+											$dn = $dc[0][0].'_'.$dc[0][1];
+										} else {
+											$dn = $dc[0];
+										}
+
+										$tdclass = $dn;
+
+										if ( isset( $dc[1] ) ) {
+											switch ( $dc[1] ) {
+												case 'bool';
+													$dcc = $entry[$dn] ? 'Yes' : 'No';
+													$tdclass .= " bool".$dcc;
+													break;
+												case 'gid';
+													$dcc = $entry[$dn] ? 'Yes' : 'No';
+													$tdclass .= " bool".$dcc;
+													break;
+												default:
+													$dcc = $entry[$dn];
+													break;
+											}
+										} else {
+											if ( is_array( $entry[$dn] ) ) {
+												$dcc = implode( ', ', $entry[$dn] );
+											} else {
+												$dcc = $entry[$dn];
+											}
+										}
+
+										echo "<td class=\"".$tdclass."\">" . $dcc . "</td>";
+									}
+
+									echo "</tr>";
+
+									$i = $i ? 0 : 1;
+									$j++;
+								}
+
+								echo "</table>";
+								break;
+						}
+
+						if ( is_array( $part['content'] ) ) {
+							foreach ( $part['content'] as $p ) {
+								echo "<h2>" . $p['head'] . "</h2>";
+							}
+						} else {
+							echo "<p>" . $part['content'] . "</p>";
+						}
+					?>
+					</td>
+				</tr>
+			<?php } ?>
+		</table>
+		<?php
 
  		HTML_myCommon::GlobalNerd();
 	}
