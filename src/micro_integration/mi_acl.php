@@ -203,7 +203,7 @@ class mi_acl
 				$database->query() or die( $database->stderr() );
 			} else {
 				$query = 'INSERT INTO #__jaclplus_user_group'
-						. ' VALUES( \'' . (int) $metaUser->userid . '\', \'main\', \'' . (int) $this->settings[$section] . '\' )'
+						. ' VALUES( \'' . (int) $metaUser->userid . '\', \'main\', \'' . (int) $this->settings[$section] . '\', \'\' )'
 						;
 				$database->setQuery( $query );
 				$database->query() or die( $database->stderr() );
@@ -277,7 +277,7 @@ class mi_acl
 			foreach ( $this->settings[$section] as $gid ) {
 				if ( !in_array( $gid, $groups ) ) {
 					$query = 'INSERT INTO #__jaclplus_user_group'
-							. ' VALUES( \'' . (int) $metaUser->userid . '\', \'sub\', \'' . $gid . '\', \'0\' )'
+							. ' VALUES( \'' . (int) $metaUser->userid . '\', \'sub\', \'' . $gid . '\', \'\' )'
 							;
 					$database->setQuery( $query );
 					$database->query() or die( $database->stderr() );
