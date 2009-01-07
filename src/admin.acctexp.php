@@ -5502,11 +5502,20 @@ function backupFile( $file, $file_new )
 
 function readout( $option )
 {
-	global $acl, $database, $aecConfig;
+	global $database, $aecConfig;
 
 	$lists = array();
 
-	$acllist = $acl->_getBelow( '#__core_acl_aro_groups', 'g1.group_id, g1.name, COUNT(g2.name) AS level', 'g1.name', null, 'USERS', true );
+	if ( aecJoomla15check() ) {
+		$acl =& JFactory::getACL();
+
+		$acllist = $acl->get_group_children( 28 );
+	} else {
+		global $acl;
+
+		$acllist = $acl->_getBelow( '#__core_acl_aro_groups', 'g1.group_id, g1.name, COUNT(g2.name) AS level', 'g1.name', null, 'USERS', true );
+
+	}
 
 	foreach ( $acllist as $aclitem ) {
 		$lists['gid'][$aclitem->group_id] = $aclitem->name;

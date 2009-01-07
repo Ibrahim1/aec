@@ -2638,10 +2638,12 @@ class HTML_AcctExp
 				<tr>
 					<td valign="top">
 					<?php
-						if ( !empty( $part['sub'] ) ) {
-							echo "<h2>" . $part['head'] . "</h2>";
-						} else {
-							echo "<h1>" . $part['head'] . "</h1>";
+						if ( !empty( $part['head'] ) ) {
+							if ( !empty( $part['sub'] ) ) {
+								echo "<h2>" . $part['head'] . "</h2>";
+							} else {
+								echo "<h1>" . $part['head'] . "</h1>";
+							}
 						}
 
 						switch ( $part['type'] ) {

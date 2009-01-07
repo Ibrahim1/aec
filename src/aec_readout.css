@@ -5,8 +5,13 @@ background: #fff;
 }
 
 table.aec_readout h1 {
-background: #000;
+background: #555 none repeat scroll 0 0;
+background-image: url(/administrator/components/com_acctexp/images/backend_gfx/heading_sub_lr.png);
+background-position: bottom left;
+background-repeat: no-repeat;
+padding: 4px 0 4px 22px;
 color: #fff;
+margin: 8px 0;
 }
 
 
