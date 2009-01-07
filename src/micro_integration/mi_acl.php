@@ -164,7 +164,6 @@ class mi_acl
 		$database->setQuery( $query );
 		$database->query() or die( $database->stderr() );
 
-		// Moxie Mod - updated to add usertype to users table and update session table for immediate access to usertype features
 		$gid_name = $acl->get_group_name( $this->settings[$section], 'ARO' );
 
 		$query = 'UPDATE #__users'
@@ -176,7 +175,7 @@ class mi_acl
 
 		if ( $this->settings['change_session'] ) {
 			$query = 'UPDATE #__session'
-			. ' SET `usertype` = \'' . $gid_name . '\''
+			. ' SET `usertype` = \'' . $gid_name . '\', `gid` = \'' . $this->settings[$section] . '\''
 			. ' WHERE `userid` = \'' . (int) $metaUser->userid . '\''
 			;
 			$database->setQuery( $query );
