@@ -207,6 +207,23 @@ class mi_acl
 				$database->setQuery( $query );
 				$database->query() or die( $database->stderr() );
 			}
+
+			if ( $this->settings['change_session'] ) {
+				// Check for main entry
+				$query = 'SELECT `value`'
+						. ' FROM #__core_acl_aro_groups'
+						. ' WHERE `id` = \'' . (int) $this->settings[$section] . '\''
+						;
+				$database->setQuery( $query );
+				$groupid = $database->loadResult();
+
+				$query = 'UPDATE #__session'
+				. ' SET `usertype` = \'' . $gid_name . '\', `gid` = \'' . $this->settings[$section] . '\''
+				. ' WHERE `userid` = \'' . (int) $metaUser->userid . '\''
+				;
+				$database->setQuery( $query );
+				$database->query() or die( $database->stderr() );
+			}
 		}
 
 		return true;
