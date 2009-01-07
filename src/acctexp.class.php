@@ -346,6 +346,38 @@ class metaUser
 		return true;
 	}
 
+	function getAllCurrentSubscriptions()
+	{
+		global $database;
+
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_subscr'
+				. ' WHERE `userid` = \'' . (int) $this->userid . '\''
+				. ' AND `status` != \'Expired\''
+				. ' AND `status` != \'Closed\''
+				. ' AND `status` != \'Hold\''
+				. ' ORDER BY `lastpay_date` DESC'
+				;
+		$database->setQuery( $query );
+		return $database->loadResultArray();
+	}
+
+	function getAllCurrentSubscriptionPlans()
+	{
+		global $database;
+
+		$query = 'SELECT `plan`'
+				. ' FROM #__acctexp_subscr'
+				. ' WHERE `userid` = \'' . (int) $this->userid . '\''
+				. ' AND `status` != \'Expired\''
+				. ' AND `status` != \'Closed\''
+				. ' AND `status` != \'Hold\''
+				. ' ORDER BY `lastpay_date` DESC'
+				;
+		$database->setQuery( $query );
+		return $database->loadResultArray();
+	}
+
 	function getSecondarySubscriptions( $simple=false )
 	{
 		global $database;
@@ -687,8 +719,12 @@ class metaUser
 						// Check whether the user is currently in the right plan
 						case 'plan_present':
 							if ( $this->hasSubscription ) {
-								if ( in_array( (int) $this->focusSubscription->plan, $check ) ) {
-									$status = true;
+								$subs = $this->getAllCurrentSubscriptionsPlans();
+
+								foreach ( $subs as $subid ) {
+									if ( in_array( (int) $subid, $check ) ) {
+										$status = true;
+									}
 								}
 							} else {
 								if ( in_array( 0, $check ) ) {
@@ -716,9 +752,11 @@ class metaUser
 						// Check whether the user has used the right plan before
 						case 'plan_overall':
 							if ( $this->hasSubscription ) {
+								$subs = $this->getAllCurrentSubscriptionsPlans();
+
 								$array = $this->meta->getUsedPlans();
 								foreach ( $check as $v ) {
-									if ( ( !empty( $array[(int) $v] ) || ( $this->focusSubscription->plan == $v ) ) ) {
+									if ( ( !empty( $array[(int) $v] ) || in_array( $v, $subs ) ) ) {
 										$status = true;
 									}
 								}
@@ -732,17 +770,22 @@ class metaUser
 						// Check whether the user has used the plan at least a certain number of times
 						case 'plan_amount_min':
 							if ( $this->hasSubscription ) {
+								$subs = $this->getAllCurrentSubscriptionsPlans();
+
 								$usage = $this->meta->getUsedPlans();
 								$check = explode( ',', $value );
-								if ( isset( $usage[(int) $check[0]] ) ) {
-									// We have to add one here if the user is currently in the plan
-									if ( (int) $this->focusSubscription->plan === (int) $check[0] ) {
-										$used_times = (int) $check[1] + 1;
-									} else {
-										$used_times = (int) $check[1];
-									}
 
-									if ( $usage[(int) $check[0]] >= (int) $used_times ) {
+								// We have to add one here if the user is currently in the plan
+								if ( in_array( $check[0], $subs ) ) {
+									if ( isset( $usage[(int) $check[0]] ) ) {
+										$usage[(int) $check[0]] += 1;
+									} else {
+										$usage[(int) $check[0]] = 1;
+									}
+								}
+
+								if ( isset( $usage[(int) $check[0]] ) ) {
+									if ( $usage[(int) $check[0]] >= (int) $check[1] ) {
 										$status = true;
 									}
 								}
@@ -751,17 +794,22 @@ class metaUser
 						// Check whether the user has used the plan at max a certain number of times
 						case 'plan_amount_max':
 							if ( $this->hasSubscription ) {
+								$subs = $this->getAllCurrentSubscriptionsPlans();
+
 								$usage = $this->meta->getUsedPlans();
 								$check = explode( ',', $value );
-								if ( isset( $usage[(int) $check[0]] ) ) {
-									// We have to add one here if the user is currently in the plan
-									if ( (int) $this->focusSubscription->plan === (int) $check[0] ) {
-										$used_times = (int) $check[1] + 1;
-									} else {
-										$used_times = (int) $check[1];
-									}
 
-									if ( $usage[(int) $check[0]] <= (int) $used_times ) {
+								// We have to add one here if the user is currently in the plan
+								if ( in_array( $check[0], $subs ) ) {
+									if ( isset( $usage[(int) $check[0]] ) ) {
+										$usage[(int) $check[0]] += 1;
+									} else {
+										$usage[(int) $check[0]] = 1;
+									}
+								}
+
+								if ( isset( $usage[(int) $check[0]] ) ) {
+									if ( $usage[(int) $check[0]] <= (int) $check[1] ) {
 										$status = true;
 									}
 								} else {
@@ -4881,7 +4929,7 @@ class SubscriptionPlan extends serialParamDBTable
 			}
 
 			if ( $this->params['gid_enabled'] ) {
-				$metaUser->instantGIDchange($this->params['gid']);
+				$metaUser->instantGIDchange( $this->params['gid'] );
 			}
 
 			$metaUser->focusSubscription->storeload();
