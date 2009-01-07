@@ -5590,6 +5590,89 @@ function readout( $option )
 					break;
 				case 'show_processors':
 					$r['head'] = "Processors";
+
+					$processors = PaymentProcessorHandler::getInstalledNameList();
+
+					foreach ( $processors as $procname ) {
+						$pp = null;
+						$pp = new PaymentProcessor( $database );
+
+						if ( !$pp->loadName( $procname ) ) {
+							continue;
+						}
+
+						$pp->fullInit();
+
+						$readout[] = $r;
+
+						$r = array();
+
+						$r['head'] = $pp->info['longname'];
+						$r['type'] = "table";
+						$r['sub'] = true;
+
+						$r['def'] = array (
+							"ID" => array( 'id' ),
+							"Published" => array( 'active', 'bool' )
+						);
+
+						foreach ( $pp->info as $iname => $ic ) {
+							if ( empty( $iname ) ) {
+								continue;
+							}
+
+							$cname = '_CFG_' . strtoupper( $procname ) . '_' . strtoupper($iname) . '_NAME';
+							$gname = '_CFG_PROCESSOR_' . strtoupper($iname) . '_NAME';
+
+							if ( defined( $cname ) )  {
+								$tname = constant( $cname );
+							} elseif ( defined( $gname ) )  {
+								$tname = constant( $gname );
+							} else {
+								$tname = $iname;
+							}
+
+							$r['def'][$tname] = array( array( 'info', $iname ), 'smartlimit' );
+						}
+
+						$bsettings = $pp->getBackendSettings();
+
+						foreach ( $bsettings as $psname => $sc ) {
+							if ( empty( $psname ) || is_numeric( $psname ) || ( $psname == 'lists') ) {
+								continue;
+							}
+
+							$cname = '_CFG_' . strtoupper( $procname ) . '_' . strtoupper($psname) . '_NAME';
+							$gname = '_CFG_PROCESSOR_' . strtoupper($psname) . '_NAME';
+
+							if ( defined( $cname ) )  {
+								$tname = constant( $cname );
+							} elseif ( defined( $gname ) )  {
+								$tname = constant( $gname );
+							} else {
+								$tname = $psname;
+							}
+
+							if ( $sc[0] == 'list_yesno' ) {
+								$stype = 'bool';
+							} else {
+								$stype = 'smartlimit';
+							}
+
+							$r['def'][$tname] = array( array( 'settings', $psname ), $stype );
+						}
+
+						$ps = array();
+						foreach ( $r['def'] as $nn => $def ) {
+							if ( !empty( $def[1] ) ) {
+								$ps = array_merge( $ps, readoutConversionHelper( $def[0], $pp, $lists, $def[1] ) );
+							} else {
+								$ps = array_merge( $ps, readoutConversionHelper( $def[0], $pp, $lists ) );
+							}
+						}
+
+						$r['set'] = array( 0 => $ps );
+					}
 					break;
 				case 'show_plans':
 					$r['head'] = "Payment Plans";
@@ -5599,8 +5682,8 @@ function readout( $option )
 						"ID" => array( 'id' ),
 						"Published" => array( 'active', 'bool' ),
 						"Visible" => array( 'visible', 'bool' ),
-						"Name" => array( 'name', 'smartlimit32' ),
-						"Desc" => array( 'desc', 'notags limit32' ),
+						"Name" => array( 'name', 'smartlimit' ),
+						"Desc" => array( 'desc', 'notags smartlimit' ),
 						"Primary" => array( array( 'params', 'make_primary' ), 'bool' ),
 						"Activate" => array( array( 'params', 'make_active' ), 'bool' ),
 						"Update Exist." => array( array( 'params', 'update_existing' ), 'bool' ),
@@ -5651,7 +5734,7 @@ function readout( $option )
 						"Max Used Plans" => array( array( 'restrictions', 'used_plan_max' ), 'plan' ),
 
 						"Custom Restrictions" => array( array( 'restrictions', 'custom_restrictions_enabled' ), 'bool' ),
-						"Restrictions" => array( array( 'restrictions', 'custom_restrictions' ) ),
+						"Restrictions" => array( array( 'restrictions', 'custom_restrictions' ) )
 					);
 
 /**
@@ -5694,12 +5777,50 @@ function readout( $option )
 					$r['head'] = "Payment Plan - MicroIntegration relationships";
 					$r['type'] = "table";
 
-					$plans = SubscriptionPlanHandler::getPlanList();
+					$r['def'] = array (
+						"ID" => array( 'id' ),
+						"Published" => array( 'active', 'bool' ),
+						"Visible" => array( 'visible', 'bool' ),
+						"Name" => array( 'name', 'smartlimit' )
+					);
+
+					$milist = microIntegrationHandler::getMIList();
+
+					$micursor = '';
+					$mis = array();
+					foreach ( $milist as $miobj ) {
+						$mi = new microIntegration( $database );
+						$mi->load( $miobj->id );
+						if ( !$mi->callIntegration() ) {
+							continue;
+						}
+
+						if ( $miobj->class_name != $micursor ) {
+							if ( !empty( $mi->info ) ) {
+								$miname = $mi->info['name'];
+							} else {
+								$miname = $miobj->class_name;
+							}
+							$r['def'][$miname] = array( $miobj->class_name, 'smartlimit' );
+
+							$micursor = $miobj->class_name;
+						}
+
+						$mis[$mi->id] = array( $miobj->class_name, $mi->name );
+					}
 
 					$r['set'] = array();
-					foreach ( $plans as $planid ) {
+					foreach ( $planlist as $planid => $planname ) {
 						$plan = new SubscriptionPlan( $database );
 						$plan->load( $planid );
+
+						if ( !empty( $plan->micro_integrations ) ) {
+							foreach ( $plan->micro_integrations as $pmi ) {
+								if ( isset( $mis[$pmi] ) ) {
+									$plan->{$mis[$pmi][0]}[] = "#" . $pmi . ":&nbsp;<strong>" . $mis[$pmi][1] . "</strong>";
+								}
+							}
+						}
 
 						$ps = array();
 						foreach ( $r['def'] as $nn => $def ) {
@@ -5737,8 +5858,8 @@ function readout( $option )
 								"ID" => array( 'id' ),
 								"Published" => array( 'active', 'bool' ),
 								"Visible" => array( 'visible', 'bool' ),
-								"Name" => array( 'name', 'smartlimit32' ),
-								"Desc" => array( 'desc', 'notags limit32' ),
+								"Name" => array( 'name', 'smartlimit' ),
+								"Desc" => array( 'desc', 'notags smartlimit' ),
 								"Exp Action" => array( 'auto_check', 'bool' ),
 								"PreExp Action" => array( 'pre_exp_check' ),
 								"UserChange Action" => array( 'on_userchange', 'bool' )
@@ -5755,9 +5876,9 @@ function readout( $option )
 									$name =  '_MI_' . strtoupper( $miobj->class_name ) . '_' . strtoupper( $sname ) .'_NAME';
 
 									if ( defined( $name ) ) {
-										$r['def'][constant($name)] = array( array( 'settings', $sname ), 'notags smartlimit32' );
+										$r['def'][constant($name)] = array( array( 'settings', $sname ), 'notags smartlimit' );
 									} else {
-										$r['def'][$sname] = array( array( 'settings', $sname ), 'notags smartlimit32' );
+										$r['def'][$sname] = array( array( 'settings', $sname ), 'notags smartlimit' );
 									}
 								}
 							}
@@ -5795,6 +5916,7 @@ function readout( $option )
 			}
 
 			$readout[] = $r;
+			unset($r);
 		}
 
 		HTML_AcctExp::readout( $option, $readout );
@@ -5831,9 +5953,15 @@ function readoutConversionHelper( $content, $obj, $lists=null, $type=null )
 {
 	if ( is_array( $content ) ) {
 		$dname = $content[0].'_'.$content[1];
+		if ( !isset( $obj->{$content[0]}[$content[1]] ) ) {
+			return array( $dname => '' );
+		}
 		$dvalue = $obj->{$content[0]}[$content[1]];
 	} else {
 		$dname = $content;
+		if ( !isset( $obj->{$content} ) ) {
+			return array( $dname => '' );
+		}
 		$dvalue = $obj->{$content};
 	}
 
@@ -5848,9 +5976,21 @@ function readoutConversionHelper( $content, $obj, $lists=null, $type=null )
 				case 'limit32':
 					$dvalue = substr( $dvalue, 0, 32 );
 					break;
-				case 'smartlimit32':
-					if ( strlen( $dvalue ) > 44 ) {
-						$dvalue = substr( $dvalue, 0, 32 ) . '<strong>[...]</strong>' . substr( $dvalue, -12, 12 );
+				case 'smartlimit':
+					if ( is_array( $dvalue ) ) {
+						$vv = array();
+						foreach ( $dvalue as $val ) {
+							if ( strlen( $val ) > 44 ) {
+								$vv[] = substr( $val, 0, 32 ) . '<strong>[...]</strong>' . substr( $val, -12, 12 );
+							} else {
+								$vv[] = $val;
+							}
+						}
+						$dvalue = implode( ", ", $vv );
+					} else {
+						if ( strlen( $dvalue ) > 44 ) {
+							$dvalue = substr( $dvalue, 0, 32 ) . '<strong>[...]</strong>' . substr( $dvalue, -12, 12 );
+						}
 					}
 					break;
 				case 'gid':
@@ -5876,7 +6016,7 @@ function readoutConversionHelper( $content, $obj, $lists=null, $type=null )
 					if ( is_array( $dvalue ) ) {
 						$vv = array();
 						foreach ( $dvalue as $val ) {
-							if ( $dvalue == 0 ) {
+							if ( ( $dvalue == 0 ) || ( $val == 0 ) ) {
 								$vv[] = '--';
 							} else {
 								$vv[] = "#" . $val . ":&nbsp;<strong>" . $lists['plan'][$val] . "</strong>";

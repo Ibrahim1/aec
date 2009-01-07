@@ -1,5 +1,15 @@
 /* == AccountExpiration Readout Style by David 'skOre' Deutsch == */
 
+table.aec_readout {
+background: #fff;
+}
+
+table.aec_readout h1 {
+background: #000;
+color: #fff;
+}
+
+
 th.active {
 background-color:#99FF99 !important;
 }
