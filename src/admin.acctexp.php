@@ -5534,6 +5534,10 @@ function readout( $option )
 							'show_plans' => 1,
 							'show_mi_relations' => 1,
 							'show_mis' => 1,
+							'truncation_length' => 42,
+							'noformat_newlines' => 0,
+							'use_ordering' => 1,
+							'column_headers' => 20,
 							'store_settings' => 1
 						);
 
@@ -5763,7 +5767,7 @@ function readout( $option )
  *
  */
 
-					$plans = SubscriptionPlanHandler::getPlanList();
+					$plans = SubscriptionPlanHandler::getPlanList( null, null, isset( $_POST['use_ordering'] ) );
 
 					$r['set'] = array();
 					foreach ( $plans as $planid ) {
@@ -5793,7 +5797,7 @@ function readout( $option )
 						"Name" => array( 'name', 'smartlimit' )
 					);
 
-					$milist = microIntegrationHandler::getMIList();
+					$milist = microIntegrationHandler::getMIList( null, null, isset( $_POST['use_ordering'] ) );
 
 					$micursor = '';
 					$mis = array();
@@ -5846,7 +5850,7 @@ function readout( $option )
 				case 'show_mis':
 					$r['head'] = "Micro Integration";
 
-					$milist = microIntegrationHandler::getMIList();
+					$milist = microIntegrationHandler::getMIList( null, null, isset( $_POST['use_ordering'] ) );
 
 					$micursor = '';
 					foreach ( $milist as $miobj ) {
@@ -5913,7 +5917,7 @@ function readout( $option )
 					$settings = array();
 					foreach ( $optionlist as $opt => $optdefault ) {
 						if ( !empty( $_POST[$opt] ) ) {
-							$settings[$opt] = 1;
+							$settings[$opt] = $_POST[$opt];
 						} else {
 							$settings[$opt] = 0;
 						}
@@ -5941,9 +5945,15 @@ function readout( $option )
 
 		foreach ( $optionlist as $opt => $optdefault ) {
 			if ( isset( $prefs[$opt] ) ) {
-				$params[$opt] = array( 'checkbox', $prefs[$opt] );
+				$optval = $prefs[$opt];
 			} else {
-				$params[$opt] = array( 'checkbox', $optdefault );
+				$optval = $optdefault;
+			}
+
+			if ( ( $optdefault == 1 ) || ( $optdefault == 0 ) ) {
+				$params[$opt] = array( 'checkbox', $optval );
+			} else {
+				$params[$opt] = array( 'inputB', $optval );
 			}
 		}
 
@@ -5974,6 +5984,12 @@ function readoutConversionHelper( $content, $obj, $lists=null, $type=null )
 		$dvalue = $obj->{$content};
 	}
 
+	if ( isset( $_POST['noformat_newlines'] ) ) {
+		$nnl = ', ';
+	} else {
+		$nnl = ',<br />';
+	}
+
 	if ( !empty( $type ) ) {
 		$types = explode( ' ', $type );
 
@@ -5986,16 +6002,22 @@ function readoutConversionHelper( $content, $obj, $lists=null, $type=null )
 					$dvalue = substr( $dvalue, 0, 32 );
 					break;
 				case 'smartlimit':
+					if ( isset( $_POST['truncation_length'] ) ) {
+						$truncation = $_POST['truncation_length'];
+					} else {
+						$truncation = 42;
+					}
+
 					if ( is_array( $dvalue ) ) {
 						$vv = array();
 						foreach ( $dvalue as $val ) {
-							if ( strlen( $val ) > 44 ) {
-								$vv[] = substr( $val, 0, 32 ) . '<strong>[...]</strong>' . substr( $val, -12, 12 );
+							if ( strlen( $val ) > $truncation ) {
+								$vv[] = substr( $val, 0, $truncation-12 ) . '<strong>[...]</strong>' . substr( $val, -12, 12 );
 							} else {
 								$vv[] = $val;
 							}
 						}
-						$dvalue = implode( ", ", $vv );
+						$dvalue = implode( $nnl, $vv );
 					} else {
 						if ( strlen( $dvalue ) > 44 ) {
 							$dvalue = substr( $dvalue, 0, 32 ) . '<strong>[...]</strong>' . substr( $dvalue, -12, 12 );
@@ -6012,7 +6034,7 @@ function readoutConversionHelper( $content, $obj, $lists=null, $type=null )
 								$vv[] = "#" . $val . ":&nbsp;<strong>" . $lists['gid'][$val] . "</strong>";
 							}
 						}
-						$dvalue = implode( ", ", $vv );
+						$dvalue = implode( $nnl, $vv );
 					} else {
 						if ( $dvalue == 0 ) {
 							$dvalue = '--';
@@ -6031,7 +6053,7 @@ function readoutConversionHelper( $content, $obj, $lists=null, $type=null )
 								$vv[] = "#" . $val . ":&nbsp;<strong>" . $lists['plan'][$val] . "</strong>";
 							}
 						}
-						$dvalue = implode( ", ", $vv );
+						$dvalue = implode( $nnl, $vv );
 					} else {
 						if ( $dvalue == 0 ) {
 							$dvalue = '--';

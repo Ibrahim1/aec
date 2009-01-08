@@ -2593,7 +2593,7 @@ class HTML_AcctExp
 		</table>
 
 		<div class="aec_readout">
-			<table style="text-align:right;width:200px;">
+			<table style="text-align:right;width:250px;">
 				<tr>
 					<td valign="top">
 						<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
@@ -2631,91 +2631,93 @@ class HTML_AcctExp
 
 		mosCommonHTML::loadOverlib();
 		HTML_myCommon::addReadoutCSS();
+
+		if ( isset( $_POST['column_headers'] ) ) {
+			$ch = $_POST['column_headers'];
+		} else {
+			$ch = 20;
+		}
+
 		?>
 
-		<table class="aec_readout">
+		<table class="aec_bg"><tr><td>
 			<?php foreach ( $readout as $part ) { ?>
-				<tr>
-					<td valign="top">
-					<?php
-						if ( !empty( $part['head'] ) ) {
-							if ( !empty( $part['sub'] ) ) {
-								echo "<h2>" . $part['head'] . "</h2>";
-							} else {
-								echo "<h1>" . $part['head'] . "</h1>";
+				<?php
+				if ( !empty( $part['head'] ) ) {
+					if ( !empty( $part['sub'] ) ) {
+						echo "<h2>" . $part['head'] . "</h2>";
+					} else {
+						echo "<h1>" . $part['head'] . "</h1>";
+					}
+				}
+
+				switch ( $part['type'] ) {
+					case 'table':
+						echo "<table class=\"aec_readout\">";
+
+						$i = 0;
+						$j = 0;
+						foreach ( $part['set'] as $entry ) {
+
+							if ( $j%$ch == 0 ) {
+								$k = 0;
+								foreach ( $part['def'] as $def => $dc ) {
+									if ( is_array( $dc[0] ) ) {
+										$dn = $dc[0][0].'_'.$dc[0][1];
+									} else {
+										$dn = $dc[0];
+									}
+
+									echo "<th class=\"col".$k." ".$dn."\">" . $def . "</th>";
+									$k = $k ? 0 : 1;
+								}
+								echo "</tr>";
 							}
-						}
 
-						switch ( $part['type'] ) {
-							case 'table':
-								echo "<table>";
+							echo "<tr class=\"row".$i."\">";
 
-								$i = 0;
-								$j = 0;
-								foreach ( $part['set'] as $entry ) {
-
-									if ( $j%20 == 0 ) {
-										$k = 0;
-										foreach ( $part['def'] as $def => $dc ) {
-											if ( is_array( $dc[0] ) ) {
-												$dn = $dc[0][0].'_'.$dc[0][1];
-											} else {
-												$dn = $dc[0];
-											}
-
-											echo "<th class=\"col".$k." ".$dn."\">" . $def . "</th>";
-											$k = $k ? 0 : 1;
-										}
-										echo "</tr>";
-									}
-
-									echo "<tr class=\"row".$i."\">";
-
-									foreach ( $part['def'] as $def => $dc ) {
-										if ( is_array( $dc[0] ) ) {
-											$dn = $dc[0][0].'_'.$dc[0][1];
-										} else {
-											$dn = $dc[0];
-										}
-
-										$tdclass = $dn;
-
-										$dcc = $entry[$dn];
-
-										if ( isset( $dc[1] ) ) {
-											$types = explode( ' ', $dc[1] );
-
-											foreach ( $types as $tt ) {
-												switch ( $tt ) {
-													case 'bool';
-														$dcc = $dcc ? 'Yes' : 'No';
-														$tdclass .= " bool".$dcc;
-														break;
-												}
-											}
-										} else {
-											if ( is_array( $dcc ) ) {
-												$dcc = implode( ', ', $dcc );
-											}
-										}
-
-										echo "<td class=\"".$tdclass."\">" . $dcc . "</td>";
-									}
-
-									echo "</tr>";
-
-									$i = $i ? 0 : 1;
-									$j++;
+							foreach ( $part['def'] as $def => $dc ) {
+								if ( is_array( $dc[0] ) ) {
+									$dn = $dc[0][0].'_'.$dc[0][1];
+								} else {
+									$dn = $dc[0];
 								}
 
-								echo "</table>";
-								break;
+								$tdclass = $dn;
+
+								$dcc = $entry[$dn];
+
+								if ( isset( $dc[1] ) ) {
+									$types = explode( ' ', $dc[1] );
+
+									foreach ( $types as $tt ) {
+										switch ( $tt ) {
+											case 'bool';
+												$dcc = $dcc ? 'Yes' : 'No';
+												$tdclass .= " bool".$dcc;
+												break;
+										}
+									}
+								} else {
+									if ( is_array( $dcc ) ) {
+										$dcc = implode( ', ', $dcc );
+									}
+								}
+
+								echo "<td class=\"".$tdclass."\">" . $dcc . "</td>";
+							}
+
+							echo "</tr>";
+
+							$i = $i ? 0 : 1;
+							$j++;
 						}
-					?>
-					</td>
-				</tr>
+
+						echo "</table>";
+						break;
+				} ?>
 			<?php } ?>
-		</table>
+		</td></tr></table>
 		<?php
 
  		HTML_myCommon::GlobalNerd();

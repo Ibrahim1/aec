@@ -1,10 +1,10 @@
 /* == AccountExpiration Readout Style by David 'skOre' Deutsch == */
 
-table.aec_readout {
+table.aec_bg {
 background: #fff;
 }
 
-table.aec_readout h1 {
+table.aec_bg h1 {
 background: #555 none repeat scroll 0 0;
 background-image: url(/administrator/components/com_acctexp/images/backend_gfx/heading_sub_lr.png);
 background-position: bottom left;
@@ -14,6 +14,21 @@ color: #fff;
 margin: 8px 0;
 }
 
+table.aec_readout {
+border-spacing: 0;
+border-collapse: collapse;
+}
+
+table.aec_readout td {
+border: 1px solid #333;
+padding: 2px;
+}
+
+table.aec_readout th {
+border: 1px solid #ddd;
+border-bottom: 1px solid #333;
+padding: 4px;
+}
 
 th.active {
 background-color:#99FF99 !important;

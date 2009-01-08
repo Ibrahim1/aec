@@ -4634,13 +4634,13 @@ class ItemRelationHandler
 
 class SubscriptionPlanHandler
 {
-	function getPlanList( $limitstart=false, $limit=false )
+	function getPlanList( $limitstart=false, $limit=false, $use_order=false )
 	{
 		global $database;
 
 		$query = 'SELECT id'
 			 	. ' FROM #__acctexp_plans'
-			 	. ' GROUP BY `id`'
+			 	. ' GROUP BY ' . ( $use_order ? '`ordering`' : '`id`' )
 			 	;
 
 		if ( !empty( $limitstart ) && !empty( $limit ) ) {
@@ -10086,13 +10086,13 @@ class microIntegrationHandler
 		$this->mi_dir = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/micro_integration';
 	}
 
-	function getMIList( $limitstart=false, $limit=false )
+	function getMIList( $limitstart=false, $limit=false, $use_order=false )
 	{
 		global $database;
 
 		$query = 'SELECT id, class_name'
 			 	. ' FROM #__acctexp_microintegrations'
-			 	. ' GROUP BY `id`'
+			 	. ' GROUP BY ' . ( $use_order ? '`ordering`' : '`id`' )
 			 	. ' ORDER BY `class_name`'
 			 	;
 

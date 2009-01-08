@@ -1526,6 +1526,14 @@ define( '_READOUT_GENERAL_SHOW_MIS_NAME', 'Micro Integrations');
 define( '_READOUT_GENERAL_SHOW_MIS_DESC', 'Display Micro Integrations and their Settings on the Readout');
 define( '_READOUT_GENERAL_STORE_SETTINGS_NAME', 'Remember Settings');
 define( '_READOUT_GENERAL_STORE_SETTINGS_DESC', 'Remember Settings on this page for your admin account');
+define( '_READOUT_GENERAL_TRUNCATION_LENGTH_NAME', 'Truncation Length');
+define( '_READOUT_GENERAL_TRUNCATION_LENGTH_DESC', 'Reduce content of fields to this length where appropriate');
+define( '_READOUT_GENERAL_USE_ORDERING_NAME', 'Use Ordering');
+define( '_READOUT_GENERAL_USE_ORDERING_DESC', 'Instead of showing entries by their database order, show them by their set ordering - if applicable');
+define( '_READOUT_GENERAL_COLUMN_HEADERS_NAME', 'Column Headers');
+define( '_READOUT_GENERAL_COLUMN_HEADERS_DESC', 'Show Column Headers every X rows');
+define( '_READOUT_GENERAL_NOFORMAT_NEWLINES_NAME', 'Format: no newlines');
+define( '_READOUT_GENERAL_NOFORMAT_NEWLINES_DESC', 'Do not use newlines when formatting multiple entries of a field. Makes entries more compact, yet more messy.');
 
 // new for errors
 define( '_AEC_ERR_NO_SUBSCRIPTION', 'The user has no Subscription');
