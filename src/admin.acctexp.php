@@ -5536,7 +5536,7 @@ function readout( $option )
 							'show_mis' => 1,
 							'truncation_length' => 42,
 							'noformat_newlines' => 0,
-							'use_ordering' => 1,
+							'use_ordering' => 0,
 							'column_headers' => 20,
 							'store_settings' => 1
 						);
@@ -5677,11 +5677,7 @@ function readout( $option )
 
 						$ps = array();
 						foreach ( $r['def'] as $nn => $def ) {
-							if ( !empty( $def[1] ) ) {
-								$ps = array_merge( $ps, readoutConversionHelper( $def[0], $pp, $lists, $def[1] ) );
-							} else {
-								$ps = array_merge( $ps, readoutConversionHelper( $def[0], $pp, $lists ) );
-							}
+							$ps = array_merge( $ps, readoutConversionHelper( $def, $pp, $lists ) );
 						}
 
 						$r['set'] = array( 0 => $ps );
@@ -5695,7 +5691,7 @@ function readout( $option )
 						"ID" => array( 'id' ),
 						"Published" => array( 'active', 'bool' ),
 						"Visible" => array( 'visible', 'bool' ),
-						"Name" => array( 'name', 'smartlimit' ),
+						"Name" => array( 'name', 'smartlimit haslink', 'editSubscriptionPlan', 'id' ),
 						"Desc" => array( 'desc', 'notags smartlimit' ),
 						"Primary" => array( array( 'params', 'make_primary' ), 'bool' ),
 						"Activate" => array( array( 'params', 'make_active' ), 'bool' ),
@@ -5776,11 +5772,7 @@ function readout( $option )
 
 						$ps = array();
 						foreach ( $r['def'] as $nn => $def ) {
-							if ( !empty( $def[1] ) ) {
-								$ps = array_merge( $ps, readoutConversionHelper( $def[0], $plan, $lists, $def[1] ) );
-							} else {
-								$ps = array_merge( $ps, readoutConversionHelper( $def[0], $plan, $lists ) );
-							}
+							$ps = array_merge( $ps, readoutConversionHelper( $def, $plan, $lists ) );
 						}
 
 						$r['set'][] = $ps;
@@ -5837,11 +5829,7 @@ function readout( $option )
 
 						$ps = array();
 						foreach ( $r['def'] as $nn => $def ) {
-							if ( !empty( $def[1] ) ) {
-								$ps = array_merge( $ps, readoutConversionHelper( $def[0], $plan, $lists, $def[1] ) );
-							} else {
-								$ps = array_merge( $ps, readoutConversionHelper( $def[0], $plan, $lists ) );
-							}
+							$ps = array_merge( $ps, readoutConversionHelper( $def, $plan, $lists ) );
 						}
 
 						$r['set'][] = $ps;
@@ -5899,11 +5887,7 @@ function readout( $option )
 
 						$ps = array();
 						foreach ( $r['def'] as $nn => $def ) {
-							if ( !empty( $def[1] ) ) {
-								$ps = array_merge( $ps, readoutConversionHelper( $def[0], $mi, $lists, $def[1] ) );
-							} else {
-								$ps = array_merge( $ps, readoutConversionHelper( $def[0], $mi, $lists ) );
-							}
+							$ps = array_merge( $ps, readoutConversionHelper( $def, $mi, $lists ) );
 						}
 
 						$r['set'][] = $ps;
@@ -5968,20 +5952,28 @@ function readout( $option )
 	}
 }
 
-function readoutConversionHelper( $content, $obj, $lists=null, $type=null )
+function readoutConversionHelper( $content, $obj, $lists=null )
 {
-	if ( is_array( $content ) ) {
-		$dname = $content[0].'_'.$content[1];
-		if ( !isset( $obj->{$content[0]}[$content[1]] ) ) {
-			return array( $dname => '' );
-		}
-		$dvalue = $obj->{$content[0]}[$content[1]];
+	$cc = $content[1];
+
+	if ( isset( $content[2] ) ) {
+		$type = $content[2];
 	} else {
-		$dname = $content;
-		if ( !isset( $obj->{$content} ) ) {
+		$type = null;
+	}
+
+	if ( is_array( $cc ) ) {
+		$dname = $cc[0].'_'.$cc[1];
+		if ( !isset( $obj->{$cc[0]}[$cc[1]] ) ) {
 			return array( $dname => '' );
 		}
-		$dvalue = $obj->{$content};
+		$dvalue = $obj->{$cc[0]}[$cc[1]];
+	} else {
+		$dname = $cc;
+		if ( !isset( $obj->{$cc} ) ) {
+			return array( $dname => '' );
+		}
+		$dvalue = $obj->{$cc};
 	}
 
 	if ( isset( $_POST['noformat_newlines'] ) ) {
@@ -6059,6 +6051,16 @@ function readoutConversionHelper( $content, $obj, $lists=null, $type=null )
 							$dvalue = '--';
 						} else {
 							$dvalue = "#" . $dvalue . ":&nbsp;<strong>" . $lists['plan'][$dvalue] . "</strong>";
+						}
+					}
+					break;
+				case 'haslink':
+					if ( !empty( $type_opt ) ) {
+						if ( isset( $content[4] ) ) {
+							$tasklink = $content[3] . "&amp;" . $content[4] . "=" . $obj->{$content[4]};
+							$value = AECToolbox::backendTaskLink( $tasklink, $dname );
+						} else {
+							$value = AECToolbox::backendTaskLink( $content[3], $dname );
 						}
 					}
 					break;

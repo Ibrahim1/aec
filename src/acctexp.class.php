@@ -719,7 +719,7 @@ class metaUser
 						// Check whether the user is currently in the right plan
 						case 'plan_present':
 							if ( $this->hasSubscription ) {
-								$subs = $this->getAllCurrentSubscriptionsPlans();
+								$subs = $this->getAllCurrentSubscriptionPlans();
 
 								foreach ( $subs as $subid ) {
 									if ( in_array( (int) $subid, $check ) ) {
@@ -752,7 +752,7 @@ class metaUser
 						// Check whether the user has used the right plan before
 						case 'plan_overall':
 							if ( $this->hasSubscription ) {
-								$subs = $this->getAllCurrentSubscriptionsPlans();
+								$subs = $this->getAllCurrentSubscriptionPlans();
 
 								$array = $this->meta->getUsedPlans();
 								foreach ( $check as $v ) {
@@ -770,7 +770,7 @@ class metaUser
 						// Check whether the user has used the plan at least a certain number of times
 						case 'plan_amount_min':
 							if ( $this->hasSubscription ) {
-								$subs = $this->getAllCurrentSubscriptionsPlans();
+								$subs = $this->getAllCurrentSubscriptionPlans();
 
 								$usage = $this->meta->getUsedPlans();
 								$check = explode( ',', $value );
@@ -794,7 +794,7 @@ class metaUser
 						// Check whether the user has used the plan at max a certain number of times
 						case 'plan_amount_max':
 							if ( $this->hasSubscription ) {
-								$subs = $this->getAllCurrentSubscriptionsPlans();
+								$subs = $this->getAllCurrentSubscriptionPlans();
 
 								$usage = $this->meta->getUsedPlans();
 								$check = explode( ',', $value );
