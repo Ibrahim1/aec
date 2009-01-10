@@ -5978,12 +5978,10 @@ class InvoiceFactory
 
 				$restrictions = $plan->getRestrictionsArray();
 
-				if ( aecRestrictionHelper::checkRestriction( $restrictions, $this->metaUser ) === false ) {
-					continue;
-				}
-
-				if ( ItemGroupHandler::checkParentRestrictions( $plan, 'item', $this->metaUser ) ) {
-					$list[] = ItemGroupHandler::getItemListItem( $plan );
+				if ( aecRestrictionHelper::checkRestriction( $restrictions, $this->metaUser ) !== false ) {
+					if ( ItemGroupHandler::checkParentRestrictions( $plan, 'item', $this->metaUser ) ) {
+						$list[] = ItemGroupHandler::getItemListItem( $plan );
+					}
 				}
 			}
 		} elseif ( !empty( $group ) ) {
