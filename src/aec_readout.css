@@ -17,6 +17,7 @@ margin: 8px 0;
 table.aec_readout {
 border-spacing: 0;
 border-collapse: collapse;
+margin-bottom: 12px;
 }
 
 table.aec_readout td {
@@ -28,6 +29,7 @@ table.aec_readout th {
 border: 1px solid #ddd;
 border-bottom: 1px solid #333;
 padding: 4px;
+font-weight: bold;
 }
 
 th.active {

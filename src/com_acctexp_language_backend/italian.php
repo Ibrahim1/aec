@@ -1572,7 +1572,7 @@ define( '_READOUT_GENERAL_USE_ORDERING_NAME', 'Use Ordering');
 define( '_READOUT_GENERAL_USE_ORDERING_DESC', 'Instead of showing entries by their database order, show them by their set ordering - if applicable');
 define( '_READOUT_GENERAL_COLUMN_HEADERS_NAME', 'Column Headers');
 define( '_READOUT_GENERAL_COLUMN_HEADERS_DESC', 'Show Column Headers every X rows');
-define( '_READOUT_GENERAL_NOFORMAT_NEWLINES_NAME', 'Format: no newlines');
-define( '_READOUT_GENERAL_NOFORMAT_NEWLINES_DESC', 'Do not use newlines when formatting multiple entries of a field. Makes entries more compact, yet more messy.');
+define( '_READOUT_GENERAL_NOFORMAT_NEWLINES_NAME', 'Format: no linebreaks');
+define( '_READOUT_GENERAL_NOFORMAT_NEWLINES_DESC', 'Multiple entries for a table cell are normally displayed in separate lines, with this option, these entries are just displayed in a single block of text.');
 
 ?>

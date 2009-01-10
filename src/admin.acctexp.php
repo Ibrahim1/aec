@@ -5859,7 +5859,7 @@ function readout( $option )
 								"ID" => array( 'id' ),
 								"Published" => array( 'active', 'bool' ),
 								"Visible" => array( 'visible', 'bool' ),
-								"Name" => array( 'name', 'smartlimit' ),
+								"Name" => array( 'name', 'smartlimit haslink', 'editMicroIntegration', 'id' ),
 								"Desc" => array( 'desc', 'notags smartlimit' ),
 								"Exp Action" => array( 'auto_check', 'bool' ),
 								"PreExp Action" => array( 'pre_exp_check' ),
@@ -5954,13 +5954,7 @@ function readout( $option )
 
 function readoutConversionHelper( $content, $obj, $lists=null )
 {
-	$cc = $content[1];
-
-	if ( isset( $content[2] ) ) {
-		$type = $content[2];
-	} else {
-		$type = null;
-	}
+	$cc = $content[0];
 
 	if ( is_array( $cc ) ) {
 		$dname = $cc[0].'_'.$cc[1];
@@ -5974,6 +5968,12 @@ function readoutConversionHelper( $content, $obj, $lists=null )
 			return array( $dname => '' );
 		}
 		$dvalue = $obj->{$cc};
+	}
+
+	if ( isset( $content[1] ) ) {
+		$type = $content[1];
+	} else {
+		$type = null;
 	}
 
 	if ( isset( $_POST['noformat_newlines'] ) ) {
@@ -6055,13 +6055,11 @@ function readoutConversionHelper( $content, $obj, $lists=null )
 					}
 					break;
 				case 'haslink':
-					if ( !empty( $type_opt ) ) {
-						if ( isset( $content[4] ) ) {
-							$tasklink = $content[3] . "&amp;" . $content[4] . "=" . $obj->{$content[4]};
-							$value = AECToolbox::backendTaskLink( $tasklink, $dname );
-						} else {
-							$value = AECToolbox::backendTaskLink( $content[3], $dname );
-						}
+					if ( isset( $content[3] ) ) {
+						$tasklink = $content[2] . "&amp;" . $content[3] . "=" . $obj->{$content[3]};
+						$dvalue = AECToolbox::backendTaskLink( $tasklink, $dvalue );
+					} else {
+						$dvalue = AECToolbox::backendTaskLink( $content[2], $dvalue );
 					}
 					break;
 			}

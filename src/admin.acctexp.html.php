@@ -2655,11 +2655,10 @@ class HTML_AcctExp
 					case 'table':
 						echo "<table class=\"aec_readout\">";
 
-						$i = 0;
-						$j = 0;
+						$i = 0; $j = 0;
 						foreach ( $part['set'] as $entry ) {
-
 							if ( $j%$ch == 0 ) {
+								echo "<tr>";
 								$k = 0;
 								foreach ( $part['def'] as $def => $dc ) {
 									if ( is_array( $dc[0] ) ) {
