@@ -68,6 +68,7 @@ define( '_COUPON_INFO_CHECKOUT',			'Voer hier je couponcode in en selecteer de b
 // --== BETAAL PLANNEN PAGINA ==--
 define( '_PAYPLANS_HEADER', 'Betalingsplannen');
 define( '_NOPLANS_ERROR', 'Geen betalingsplan beschikbaar. Neem contact op met de administrator.');
+define( '_NOPLANS_AUTHERROR', 'You are not authorized to access this option. Please contact administrator if you have any further questions.');
 define( '_PLANGROUP_BACK', '&lt; Go back');
 
 // --== ACCOUNT DETAILS PAGINA ==--

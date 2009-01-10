@@ -5959,6 +5959,8 @@ class InvoiceFactory
 
 		$list = array();
 
+		$auth_problem = false;
+
 		if ( !empty( $usage ) ) {
 			$query = 'SELECT `id`'
 					. ' FROM #__acctexp_plans'
@@ -5981,7 +5983,11 @@ class InvoiceFactory
 				if ( aecRestrictionHelper::checkRestriction( $restrictions, $this->metaUser ) !== false ) {
 					if ( ItemGroupHandler::checkParentRestrictions( $plan, 'item', $this->metaUser ) ) {
 						$list[] = ItemGroupHandler::getItemListItem( $plan );
+					} else {
+						$auth_problem = true;
 					}
+				} else {
+					$auth_problem = true;
 				}
 			}
 		} elseif ( !empty( $group ) ) {
@@ -5994,6 +6000,10 @@ class InvoiceFactory
 				}
 
 				$list = ItemGroupHandler::getTotalAllowedChildItems( array( $group ), $this->metaUser );
+
+				if ( count( $list ) == 0 ) {
+					$auth_problem = true;
+				}
 			}
 		} else {
 			if ( !empty( $aecConfig->cfg['root_group_rw'] ) ) {
@@ -6018,7 +6028,12 @@ class InvoiceFactory
 
 		// There are no plans to begin with, so we need to punch out an error here
 		if ( count( $list ) == 0 ) {
-			mosRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_ERROR ), false, true );
+			if ( $auth_problem ) {
+				mosRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_AUTHERROR ), false, true );
+			} else {
+				mosRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_ERROR ), false, true );
+			}
+
 			return;
 		}
 

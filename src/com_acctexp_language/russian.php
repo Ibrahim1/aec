@@ -117,6 +117,8 @@ define( '_PAYPLANS_HEADER', 'Планы подписки');
 
 define( '_NOPLANS_ERROR', 'No payment plans available. Please contact administrator.');
 
+define( '_NOPLANS_AUTHERROR', 'You are not authorized to access this option. Please contact administrator if you have any further questions.');
+
 define( '_PLANGROUP_BACK', '&lt; Go back');
 
 

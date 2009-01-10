@@ -63,6 +63,7 @@ define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED',	', User has been expired' );
 // --== PAYMENT PLANS PAGE ==--
 define( '_PAYPLANS_HEADER', 'Payment Plans');
 define( '_NOPLANS_ERROR', 'No payment plans available. Please contact administrator.');
+define( '_NOPLANS_AUTHERROR', 'You are not authorized to access this option. Please contact administrator if you have any further questions.');
 define( '_PLANGROUP_BACK', '&lt; Go back');
 
 // --== ACCOUNT DETAILS PAGE ==--

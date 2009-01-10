@@ -67,6 +67,7 @@ define( '_COUPON_INFO_CHECKOUT',			'Please enter your coupon code here and click
 // --== PAYMENT PLANS PAGE ==--
 define( '_PAYPLANS_HEADER', 'Piani Pagamento');
 define( '_NOPLANS_ERROR', 'No payment plans available. Please contact administrator.');
+define( '_NOPLANS_AUTHERROR', 'You are not authorized to access this option. Please contact administrator if you have any further questions.');
 define( '_PLANGROUP_BACK', '&lt; Go back');
 
 // --== ACCOUNT DETAILS PAGE ==--
