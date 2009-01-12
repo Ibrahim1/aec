@@ -7197,6 +7197,8 @@ class Invoice extends serialParamDBTable
 					$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_VALID;
 					$tags	.= ',payment,action';
 				}
+			} else {
+				$level = 128;
 			}
 		} else {
 			if ( isset( $response['pending'] ) ) {

@@ -157,6 +157,7 @@ class processor_paypal extends POSTprocessor
 		$response['amount_currency'] = $post['mc_currency'];
 
 		switch ( $post['txn_type'] ) {
+			case "web_accept":
 			case "subscr_payment":
 				$response['amount_paid'] = $post['mc_gross'];
 				break;
@@ -171,11 +172,11 @@ class processor_paypal extends POSTprocessor
 			case "subscr_eot":
 				// May create a problem somewhere donw the line, but NULL
 				// is a more representative value
-				$reponse['amount_paid'] = null;
 			break;
 			default:
 			// Either a fraud attempt, or PayPal has changed its API
 			// TODO: Raise Error
+			$response['amount_paid'] = null;
 		}
 
 		return $response;
