@@ -5815,9 +5815,9 @@ function readout( $option )
 					}
 
 					$r['set'] = array();
-					foreach ( $planlist as $planid => $planname ) {
+					foreach ( $planlist as $planid => $planobj ) {
 						$plan = new SubscriptionPlan( $database );
-						$plan->load( $planid );
+						$plan->load( $planobj->id );
 
 						if ( !empty( $plan->micro_integrations ) ) {
 							foreach ( $plan->micro_integrations as $pmi ) {
@@ -6000,19 +6000,25 @@ function readoutConversionHelper( $content, $obj, $lists=null )
 						$truncation = 42;
 					}
 
+					if ( $truncation > 12 ) {
+						$tls = 12;
+					} else {
+						$tls = $truncation/2;
+					}
+
 					if ( is_array( $dvalue ) ) {
 						$vv = array();
 						foreach ( $dvalue as $val ) {
 							if ( strlen( $val ) > $truncation ) {
-								$vv[] = substr( $val, 0, $truncation-12 ) . '<strong>[...]</strong>' . substr( $val, -12, 12 );
+								$vv[] = substr( $val, 0, $truncation-$tls ) . '<strong>[...]</strong>' . substr( $val, -$tls, $tls );
 							} else {
 								$vv[] = $val;
 							}
 						}
 						$dvalue = implode( $nnl, $vv );
 					} else {
-						if ( strlen( $dvalue ) > 44 ) {
-							$dvalue = substr( $dvalue, 0, 32 ) . '<strong>[...]</strong>' . substr( $dvalue, -12, 12 );
+						if ( strlen( $dvalue ) > $truncation ) {
+							$dvalue = substr( $dvalue, 0, $truncation-$tls ) . '<strong>[...]</strong>' . substr( $dvalue, -$tls, $tls );
 						}
 					}
 					break;
