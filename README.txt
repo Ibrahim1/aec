@@ -14,7 +14,7 @@ mod_acctexp_0_12_4_6.zip
 
 If you want to deploy this in a Joomla 1.0.x CMS, please install (in this order):
 
-com_acctexp_0_12_6RC2n.zip
+com_acctexp_0_12_6RC2o.zip
 aechacks_mambot_0_1.zip
 mod_acctexp_0_12_4_6.zip
 
@@ -22,7 +22,7 @@ If you want to deploy this in a Joomla 1.5.x CMS, please install (in this order)
 
 ALWAYS order the joomla legacy plugin BEFORE all the AEC plugins!!!
 
-com_acctexp_0_12_6RC2n.zip
+com_acctexp_0_12_6RC2o.zip
 aecaccess_plugin_0_4.zip
 aecerror_plugin_0_1.zip
 aecrouting_plugin_0_1.zip

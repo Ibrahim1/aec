@@ -37,6 +37,7 @@
 		</copy>
 		<copy todir="${deployment.userdir}" overwrite="yes">
 			<fileset dir="${source2.dir}">
+				<include name="CHANGELOG.txt"/>
 				<include name="README.txt"/>
 				<include name="AEC_Guide.pdf"/>
 			</fileset>

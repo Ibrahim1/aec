@@ -1,0 +1,159 @@
+AEC - Account Expiration Control - Change Log
+
+AEC - Account Expiration Control - 0.12.6 RC2 o (not yet released)
+==================================================================
+skOre
+[Feature]
+- 0000006: Option to post-select CC icons
+- 0000219: Move old stuff out of Eucalib
+- 0000244: New Email MI that sends files
+- 0000250: System Readout
+- 0000252: Clear Message when user is not authorized for a certain plan or group access
+[Bug]
+- 0000196: "\r\n" being capped to "rn" on multiple occasions on an upgrade/install [JCE]
+- 0000210: several minor bugs in Group Back-End
+- 0000222: Error with Mi Acajoom
+- 0000228: several notices & a fatal error
+- 0000229: coupon insertion
+- 0000230: double coupon
+- 0000238: Update Existing on Secondary Plans
+- 0000239: Groups, Free Plan in other than Group # 1
+- 0000240: CB Checking for errors on registration screen
+- 0000241: Retest ReWrite engine
+- 0000242: CB 1.2RC4 compatibility
+- 0000246: Mi ACL
+- 0000247: Recognize Secondary Plans on access restrictions
+- 0000249: Warnignon checkout
+- 0000255: payment notification: Amount check fails
+
+jake46a
+[Bug]
+- 0000243: Plans still not working on CB
+[21 issues]
+
+AEC - Account Expiration Control - 0.12.6 RC2 n (released 2008-12-05)
+=====================================================================
+skOre
+[Feature]
+- 0000084: Chase Paymentech Integration
+- 0000057: Plan Groups System
+ - 0000132: Group/Plan Symlinks
+- 0000059: PayOS and Netdebit Integration
+ - 0000087: Allow processors to attach to the html head
+ - 0000088: Allow processors to attach onclick events to the checkout button
+ - 0000112: Missing notification state: Chargeback -> Reopen
+ - 0000113: Error handling for processors on failed notification
+- 0000074: cURL proxy username+password options
+- 0000079: Update of JARC MI
+- 0000105: NULL action in processor notifications
+- 0000106: MIs should be able to register tabs
+- 0000131: PROMA MI - User contribution
+- 0000135: Reworking HTTP MI to use system Curl/fsockopen
+- 0000137: Offer Setting to disable gethostbyaddr in _aecIP()
+- 0000141: MI Information in Backend
+- 0000157: Processors to support extra buttons for "buy now" and "subscribe" if they have multiple options at once
+- 0000179: Authorize CIM: cancel option missing
+- 0000184: Make RWengine load and write PHP Superglobals
+- 0000204: Condense Mambot and rewrite separately as plugin for J!1.5
+ - 0000207: "Integrate Registration" Switch
+[Bug]
+ - 0000190: function checkUserSubscription
+- 0000211: Make ReCAPTCHA more error friendly for a smoother user experience
+- 0000003: unserialize errors when installing
+- 0000021: Pre-expiration actions for Email MI not happening
+- 0000054: Joomla 1.5 404 Access restricted should be redirected to AEC NotAllowed
+- 0000064: Coupon MI Problems
+- 0000082: ->cancel should not call ->expire
+- 0000085: JUGA MI language file - references to Gallery should be Group
+- 0000093: Checkout button dissapers in IE 7
+ - 0000097: Missing closing tags for "cright" table element on CC Checkout
+- 0000094: Possible bug in ClickBank Processor
+- 0000110: Remository MI
+- 0000116: Joomla 1.0.15 and Hack (subdirectory)
+- 0000120: Alertpay security code check fails
+- 0000124: iDevAffiliate Bug
+- 0000125: MI htacess rebuild
+- 0000128: PayPal: txn_type=subscr_failed not handeled
+- 0000130: Apparently still lingering SQL Injection
+- 0000134: Error trying to use the aec error plugin on J! less than 1.5.7
+- 0000136: Alert Pay Currency Code Bug
+- 0000138: Raffle MI
+- 0000142: Authorize.net ARB - Blank Page after transaction
+- 0000144: CSS Editor not working
+- 0000145: Problem with IP being recorded (iDevAffilate MI)
+- 0000152: Error on Authentication tab in settings
+- 0000169: Manual Expiration with Fallback plan doesn't complete
+- 0000174: PayPal: cancel should be cancel_return
+- 0000175: PayPal: Undefined index: mc_gross
+- 0000176: Error on removing hacks
+- 0000178: Entry Plan does not seem to apply Micro Integrations on application
+- 0000181: Waiting Plan in Offline Payment - doesn't apply
+- 0000182: Thank you text
+- 0000193: More consistent Renew tracking for ThankYou page
+- 0000195: Proposed fixes for RECAPTCHA library
+- 0000198: Retain Plan and Group ordering when displaying on frontend
+- 0000199: check for defined('_JEXEC') besides defined( '_VALID_MOS' )
+- 0000200: Notice: Undefined variable: pwd in /com_acctexp/acctexp.class.php on line 8909
+- 0000201: Paypal: over write global setting does not save the over-written setting for currency
+- 0000203: Fixing ReCAPTCHA
+- 0000205: Deselecting a MI on the Plans
+- 0000206: Warning: array_intersect(): Argument # 1 is not an array in */components/com_acctexp/acctexp.class.php on line 1560
+- 0000209: Simple URLS
+- 0000213: CB Loop with registration with new hack bot
+- 0000214: Plugins: Auto-Deactivate if loaded before legacy plugin
+- 0000216: JDispatcher::register: Event handler not recognized.
+- 0000218: Double invoice creation on expiration
+- 0000220: Login to a new install of AEC for already registered user
+- 0000223: Clear and apply plan
+- 0000227: database query problem with ACL MI - JACLplus subgroups
+- 0000232: Manually Assigning the plans
+- 0000235: After isntalling going to the settign screen
+[General]
+- 0000126: paysite-cash processor
+- 0000212: Compatibility check with J1.5.8
+
+mtk
+[Feature]
+- 0000098: AECaccess to support including other access plugins for authorization
+- 0000139: Add Uddeim (PMS) MI
+- 0000156: New CB Version (1.2 RC3) Compatibility
+[Bug]
+ - 0000159: endless loop in CB registration
+ - 0000161: CB Registration & plan confirmation
+ - 0000164: registration doesn't redirect to plans page
+ - 0000185: CB Registration gets into a blank page
+ - 0000172: Multi-Value registrations with CB (skOre)
+ - 0000190: function checkUserSubscription (skOre)
+- 0000158: Somehow disable Hacks Mambot from being installed in J!1.5
+- 0000186: MI_UddeIM - add restriction to CB_Plugin
+- 0000188: throw an error when limit is exceeded
+- 0000133: focusSubscription = NULL for manually added users
+- 0000163: SEF not working properly, maily in forms
+- 0000166: Re write engine not working for cb fields
+- 0000167: Parse Error
+- 0000168: upgrade changes subscription history
+[General]
+ - 0000194: Fallback & upgrade (history)
+- 0000171: ACL MI - User group allocation on expiration error (with fix)
+- 0000173: Coupon restrictions when using a %
+- 0000187: MI_UddeIM - restriction application
+- 0000189: function hasMessagessLeft not found
+- 0000208: CB + bot new routing + plan_first = NO
+- 0000215: first enter to the back-end ends in a blank page
+- 0000217: CB Ajax name and email checker
+- 0000221: Parse error: syntax error, unexpected '/'
+- 0000234: removing AEC breaks the system
+- 0000191: remove hacks covered by the new bot_hack
+
+polc1410
+[Bug]
+- 0000012: If cURL fails it doesn't always result in an error being detected
+- 0000067: Joomla Email confirmations not going out
+- 0000069: DOUBLE CHECK PayPal Workflows
+ - 0000075: Skip Confirmation fails to keep userid planid for PayPal (skOre)
+ - 0000115: User reports IPN applies plan but doesn't clear invoice (skOre)
+- 0000092: Override Activation
+- 0000095: ACL MI - PHP Warning
+- 0000107: Need to test if PreExpiration actions are possible when a plan is re-used
+- 0000177: "Plan" apears on the create new MI window
+[111 issues]
