@@ -7161,7 +7161,7 @@ class Invoice extends serialParamDBTable
 			// Only check on the amount on the first transaction to make up for coupon errors
 			// TODO: This is very bad right here and a potential loophole, needs to be replaced with a more thorough check
 			// ...once we have more precise invoices
-			if ( !empty( $pp->settings['testmode'] ) ) {
+			if ( empty( $pp->settings['testmode'] ) ) {
 				if ( isset( $response['amount_paid'] ) ) {
 					if ( $response['amount_paid'] != $this->amount ) {
 						// Amount Fraud, cancel payment and create error log addition
