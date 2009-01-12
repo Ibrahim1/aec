@@ -19,6 +19,7 @@
 		<property name="deployment.userdir" value="/home/skore/tmp/AEC_packageANT"/>
 		<property name="distribution.dir" value="/home/skore/tmp/"/>
 		<property name="source.dir" value="/home/skore/tmp/"/>
+		<property name="source2.dir" value="./" />
 
 	</target>
 
@@ -32,6 +33,10 @@
 			<fileset dir="${source.dir}">
 				<include name="com_*.zip"/>
 				<include name="mod_*.zip"/>
+			</fileset>
+		</copy>
+		<copy todir="${deployment.userdir}" overwrite="yes">
+			<fileset dir="${source2.dir}">
 				<include name="README.txt"/>
 				<include name="AEC_Guide.pdf"/>
 			</fileset>
@@ -48,7 +53,7 @@
 		</copy>
 	</target>
 	<target name="dist.generate">
-		<zip destfile="${distribution.dir}/AEC_package_0_12_6RC2n_unzip_first.zip" update="false">
+		<zip destfile="${distribution.dir}/AEC_package_0_12_6RC2o_unzip_first.zip" update="false">
 			<fileset dir="${deployment.userdir}"/>
 		</zip>
 	</target>
