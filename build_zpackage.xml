@@ -34,13 +34,11 @@
 				<include name="com_*.zip"/>
 				<include name="mod_*.zip"/>
 			</fileset>
-		</copy>
-		<copy todir="${deployment.userdir}" overwrite="yes">
-			<fileset dir="${source2.dir}">
-				<include name="CHANGELOG.txt"/>
-				<include name="README.txt"/>
-				<include name="AEC_Guide.pdf"/>
-			</fileset>
+				<fileset dir="${source2.dir}">
+					<include name="CHANGELOG.txt"/>
+					<include name="README.txt"/>
+					<include name="AEC_Guide.pdf"/>
+				</fileset>
 		</copy>
 		<copy todir="${deployment.userdir}/joomla_1_5_plugins" overwrite="yes">
 			<fileset dir="${source.dir}">
