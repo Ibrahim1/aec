@@ -1,12 +1,14 @@
 AEC - Account Expiration Control - Change Log
 
-AEC - Account Expiration Control - 0.12.6 RC2 o (not yet released)
-==================================================================
+AEC - Account Expiration Control - 0.12.6 RC2 o (released 2009-01-12)
+=====================================================================
 skOre
 [Feature]
 - 0000006: Option to post-select CC icons
+- 0000155: New Quickstart Manual
 - 0000219: Move old stuff out of Eucalib
 - 0000244: New Email MI that sends files
+- 0000245: New portoguese translation
 - 0000250: System Readout
 - 0000252: Clear Message when user is not authorized for a certain plan or group access
 [Bug]
@@ -24,12 +26,13 @@ skOre
 - 0000246: Mi ACL
 - 0000247: Recognize Secondary Plans on access restrictions
 - 0000249: Warnignon checkout
+- 0000253: Mini Calendar
+- 0000254: The new AEC Readout
 - 0000255: payment notification: Amount check fails
-
 jake46a
 [Bug]
 - 0000243: Plans still not working on CB
-[21 issues]
+[25 issues]
 
 AEC - Account Expiration Control - 0.12.6 RC2 n (released 2008-12-05)
 =====================================================================

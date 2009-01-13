@@ -283,9 +283,7 @@ class mi_acl
 					$database->query() or die( $database->stderr() );
 				}
 
-				if ( in_array( $gid, $sessiongroups ) ) {
 
-				}
 			}
 		}
 
