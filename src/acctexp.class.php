@@ -12453,7 +12453,7 @@ class aecReadout
 		return $r;
 	}
 
-	function readoutConversionHelperHTML( $content, $obj )
+	function conversionHelperHTML( $content, $obj )
 	{
 		$cc = $content[0];
 

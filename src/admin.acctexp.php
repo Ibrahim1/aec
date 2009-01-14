@@ -5504,29 +5504,6 @@ function readout( $option )
 {
 	global $database, $aecConfig;
 
-	$lists = array();
-
-	if ( aecJoomla15check() ) {
-		$acl =& JFactory::getACL();
-
-		$acllist = $acl->get_group_children( 28 );
-	} else {
-		global $acl;
-
-		$acllist = $acl->_getBelow( '#__core_acl_aro_groups', 'g1.group_id, g1.name, COUNT(g2.name) AS level', 'g1.name', null, 'USERS', true );
-
-	}
-
-	foreach ( $acllist as $aclitem ) {
-		$lists['gid'][$aclitem->group_id] = $aclitem->name;
-	}
-
-	$planlist = SubscriptionPlanHandler::getFullPlanList();
-
-	foreach ( $planlist as $planitem ) {
-		$lists['plan'][$planitem->id] = $planitem->name;
-	}
-
 	$optionlist = array(
 							'show_settings' => 0,
 							'show_extsettings' => 0,
@@ -5541,342 +5518,36 @@ function readout( $option )
 							'store_settings' => 1
 						);
 
-	if ( !empty( $_POST['as_spreadsheet'] ) ) {
-		// For later
-	} elseif ( isset( $_POST['display'] ) ) {
-		$readout = array();
+	if ( isset( $_POST['display'] ) ) {
+		if ( !empty( $_POST['export_csv'] ) ) {
+			$method = "csv";
+		} else {
+			$method = "html";
+		}
+
+		$r = array();
+		$readout = new aecReadout( $optionlist, $method );
 
 		foreach ( $optionlist as $opt => $odefault ) {
-			$r = array();
-
 			if ( !isset( $_POST[$opt] ) ) {
 				continue;
 			}
 
 			switch ( $opt ) {
 				case 'show_settings':
-					$r['head'] = "Settings";
-					$r['type'] = "table";
-
-					$setdef = Config_General::paramsList();
-
-					$r['def'] = array();
-					foreach ( $setdef as $sd => $sdd ) {
-						if ( ( $sdd === 0 ) || ( $sdd === 1 ) ) {
-							$tname = constant( '_CFG_GENERAL_' . strtoupper( $sd ) . '_NAME' );
-
-							$r['def'][$tname] = array( $sd, 'bool' );
-						}
-					}
-
-					$r['set'][] = $aecConfig->cfg;
-
-					if ( !empty( $_POST['show_extsettings'] ) ) {
-						$readout[] = $r;
-
-						unset($r);
-
-						$r['head'] = "";
-						$r['type'] = "table";
-
-						$setdef = Config_General::paramsList();
-
-						$r['def'] = array();
-						foreach ( $setdef as $sd => $sdd ) {
-							if ( ( $sdd !== 0 ) && ( $sdd !== 1 ) ) {
-								$reg = array( 'GENERAL', 'MI', 'AUTH' );
-
-								foreach ( $reg as $regg ) {
-									$cname = '_CFG_' . $regg . '_' . strtoupper( $sd ) . '_NAME';
-
-									if ( defined( $cname ) )  {
-										$tname = constant( $cname );
-									}
-								}
-
-								$r['def'][$tname] = array( $sd );
-							}
-						}
-
-						$r['set'][] = $aecConfig->cfg;
-					}
+					$r[] =  $readout->readSettings();
 					break;
 				case 'show_processors':
-					$r['head'] = "Processors";
-
-					$processors = PaymentProcessorHandler::getInstalledNameList();
-
-					foreach ( $processors as $procname ) {
-						$pp = null;
-						$pp = new PaymentProcessor( $database );
-
-						if ( !$pp->loadName( $procname ) ) {
-							continue;
-						}
-
-						$pp->fullInit();
-
-						$readout[] = $r;
-
-						$r = array();
-
-						$r['head'] = $pp->info['longname'];
-						$r['type'] = "table";
-						$r['sub'] = true;
-
-						$r['def'] = array (
-							"ID" => array( 'id' ),
-							"Published" => array( 'active', 'bool' )
-						);
-
-						foreach ( $pp->info as $iname => $ic ) {
-							if ( empty( $iname ) ) {
-								continue;
-							}
-
-							$cname = '_CFG_' . strtoupper( $procname ) . '_' . strtoupper($iname) . '_NAME';
-							$gname = '_CFG_PROCESSOR_' . strtoupper($iname) . '_NAME';
-
-							if ( defined( $cname ) )  {
-								$tname = constant( $cname );
-							} elseif ( defined( $gname ) )  {
-								$tname = constant( $gname );
-							} else {
-								$tname = $iname;
-							}
-
-							$r['def'][$tname] = array( array( 'info', $iname ), 'smartlimit' );
-						}
-
-						$bsettings = $pp->getBackendSettings();
-
-						foreach ( $bsettings as $psname => $sc ) {
-							if ( empty( $psname ) || is_numeric( $psname ) || ( $psname == 'lists') ) {
-								continue;
-							}
-
-							$cname = '_CFG_' . strtoupper( $procname ) . '_' . strtoupper($psname) . '_NAME';
-							$gname = '_CFG_PROCESSOR_' . strtoupper($psname) . '_NAME';
-
-							if ( defined( $cname ) )  {
-								$tname = constant( $cname );
-							} elseif ( defined( $gname ) )  {
-								$tname = constant( $gname );
-							} else {
-								$tname = $psname;
-							}
-
-							if ( $sc[0] == 'list_yesno' ) {
-								$stype = 'bool';
-							} else {
-								$stype = 'smartlimit';
-							}
-
-							$r['def'][$tname] = array( array( 'settings', $psname ), $stype );
-						}
-
-						$ps = array();
-						foreach ( $r['def'] as $nn => $def ) {
-							$ps = array_merge( $ps, readoutConversionHelper( $def, $pp, $lists ) );
-						}
-
-						$r['set'] = array( 0 => $ps );
-					}
+					$r[] = $readout->readProcessors();
 					break;
 				case 'show_plans':
-					$r['head'] = "Payment Plans";
-					$r['type'] = "table";
-
-					$r['def'] = array (
-						"ID" => array( 'id' ),
-						"Published" => array( 'active', 'bool' ),
-						"Visible" => array( 'visible', 'bool' ),
-						"Name" => array( 'name', 'smartlimit haslink', 'editSubscriptionPlan', 'id' ),
-						"Desc" => array( 'desc', 'notags smartlimit' ),
-						"Primary" => array( array( 'params', 'make_primary' ), 'bool' ),
-						"Activate" => array( array( 'params', 'make_active' ), 'bool' ),
-						"Update Exist." => array( array( 'params', 'update_existing' ), 'bool' ),
-						"Override Activat." => array( array( 'params', 'override_activation' ), 'bool' ),
-						"Override Reg. Email" => array( array( 'params', 'override_regmail' ), 'bool' ),
-						"Set GID" => array( array( 'params', 'gid_enabled' ), 'bool' ),
-						"GID" => array( array( 'params', 'gid' ), 'gid' ),
-
-						"Standard Parent Plan" => array( array( 'params', 'standard_parent' ), 'plan' ),
-						"Fallback Plan" => array( array( 'params', 'fallback' ), 'plan' ),
-
-						"Free" => array( array( 'params', 'full_free' ), 'bool' ),
-						"Cost" => array( array( 'params', 'full_amount' ) ),
-						"Lifetime" => array( array( 'params', 'lifetime' ), 'bool' ),
-						"Period" => array( array( 'params', 'full_period' ) ),
-						"Unit" => array( array( 'params', 'full_periodunit' ) ),
-
-						"Free Trial" => array( array( 'params', 'trial_free' ), 'bool' ),
-						"Trial Cost" => array( array( 'params', 'trial_amount' ) ),
-						"Trial Period" => array( array( 'params', 'trial_period' ) ),
-						"Trial Unit" => array( array( 'params', 'trial_periodunit' ) ),
-
-						"Has MinGID" => array( array( 'restrictions', 'mingid_enabled' ), 'bool' ),
-						"MinGID" => array( array( 'restrictions', 'mingid' ), 'gid' ),
-						"Has FixGID" => array( array( 'restrictions', 'fixgid_enabled' ), 'bool' ),
-						"FixGID" => array( array( 'restrictions', 'fixgid' ), 'gid' ),
-						"Has MaxGID" => array( array( 'restrictions', 'fixgid_enabled' ), 'bool' ),
-						"MaxGID" => array( array( 'restrictions', 'fixgid' ), 'gid' ),
-
-						"Requires Prev. Plan" => array( array( 'restrictions', 'previousplan_req_enabled' ), 'bool' ),
-						"Prev. Plan" => array( array( 'restrictions', 'previousplan_req' ), 'plan' ),
-						"Excluding Prev. Plan" => array( array( 'restrictions', 'previousplan_req_enabled_excluded' ), 'bool' ),
-						"Excl. Prev. Plan" => array( array( 'restrictions', 'previousplan_req_excluded' ), 'plan' ),
-						"Requires Curr. Plan" => array( array( 'restrictions', 'currentplan_req_enabled' ), 'bool' ),
-						"Curr. Plan" => array( array( 'restrictions', 'currentplan_req' ), 'plan' ),
-						"Excluding Curr. Plan" => array( array( 'restrictions', 'currentplan_req_enabled_excluded' ), 'bool' ),
-						"Excl. Curr. Plan" => array( array( 'restrictions', 'currentplan_req_excluded' ), 'plan' ),
-						"Requires Overall Plan" => array( array( 'restrictions', 'overallplan_req_enabled' ), 'bool' ),
-						"Overall Plan" => array( array( 'restrictions', 'overallplan_req' ), 'plan' ),
-						"Excluding Overall. Plan" => array( array( 'restrictions', 'overallplan_req_enabled_excluded' ), 'bool' ),
-						"Excl. Overall. Plan" => array( array( 'restrictions', 'overallplan_req_excluded' ), 'plan' ),
-
-						"Min Used Plan" => array( array( 'restrictions', 'used_plan_min_enabled' ), 'bool' ),
-						"Min Used Plan Amount" => array( array( 'restrictions', 'used_plan_min_amount' ) ),
-						"Min Used Plans" => array( array( 'restrictions', 'used_plan_min' ), 'plan' ),
-						"Max Used Plan" => array( array( 'restrictions', 'used_plan_max_enabled' ), 'bool' ),
-						"Max Used Plan Amount" => array( array( 'restrictions', 'used_plan_max_amount' ) ),
-						"Max Used Plans" => array( array( 'restrictions', 'used_plan_max' ), 'plan' ),
-
-						"Custom Restrictions" => array( array( 'restrictions', 'custom_restrictions_enabled' ), 'bool' ),
-						"Restrictions" => array( array( 'restrictions', 'custom_restrictions' ) )
-					);
-
-					$plans = SubscriptionPlanHandler::getPlanList( null, null, isset( $_POST['use_ordering'] ) );
-
-					$r['set'] = array();
-					foreach ( $plans as $planid ) {
-						$plan = new SubscriptionPlan( $database );
-						$plan->load( $planid );
-
-						$ps = array();
-						foreach ( $r['def'] as $nn => $def ) {
-							$ps = array_merge( $ps, readoutConversionHelper( $def, $plan, $lists ) );
-						}
-
-						$r['set'][] = $ps;
-					}
+					$r[] = $readout->readPlans();
 					break;
 				case 'show_mi_relations':
-					$r['head'] = "Payment Plan - MicroIntegration relationships";
-					$r['type'] = "table";
-
-					$r['def'] = array (
-						"ID" => array( 'id' ),
-						"Published" => array( 'active', 'bool' ),
-						"Visible" => array( 'visible', 'bool' ),
-						"Name" => array( 'name', 'smartlimit' )
-					);
-
-					$milist = microIntegrationHandler::getMIList( null, null, isset( $_POST['use_ordering'] ) );
-
-					$micursor = '';
-					$mis = array();
-					foreach ( $milist as $miobj ) {
-						$mi = new microIntegration( $database );
-						$mi->load( $miobj->id );
-						if ( !$mi->callIntegration() ) {
-							continue;
-						}
-
-						if ( $miobj->class_name != $micursor ) {
-							if ( !empty( $mi->info ) ) {
-								$miname = $mi->info['name'];
-							} else {
-								$miname = $miobj->class_name;
-							}
-							$r['def'][$miname] = array( $miobj->class_name, 'smartlimit' );
-
-							$micursor = $miobj->class_name;
-						}
-
-						$mis[$mi->id] = array( $miobj->class_name, $mi->name );
-					}
-
-					$r['set'] = array();
-					foreach ( $planlist as $planid => $planobj ) {
-						$plan = new SubscriptionPlan( $database );
-						$plan->load( $planobj->id );
-
-						if ( !empty( $plan->micro_integrations ) ) {
-							foreach ( $plan->micro_integrations as $pmi ) {
-								if ( isset( $mis[$pmi] ) ) {
-									$plan->{$mis[$pmi][0]}[] = "#" . $pmi . ":&nbsp;<strong>" . $mis[$pmi][1] . "</strong>";
-								}
-							}
-						}
-
-						$ps = array();
-						foreach ( $r['def'] as $nn => $def ) {
-							$ps = array_merge( $ps, readoutConversionHelper( $def, $plan, $lists ) );
-						}
-
-						$r['set'][] = $ps;
-					}
+					$r[] = $readout->readPlanMIrel();
 					break;
 				case 'show_mis':
-					$r['head'] = "Micro Integration";
-
-					$milist = microIntegrationHandler::getMIList( null, null, isset( $_POST['use_ordering'] ) );
-
-					$micursor = '';
-					foreach ( $milist as $miobj ) {
-						$mi = new microIntegration( $database );
-						$mi->load( $miobj->id );
-						$mi->callIntegration();
-
-						if ( $miobj->class_name != $micursor ) {
-							$readout[] = $r;
-							unset($r);
-							$r = array();
-							$r['head'] = $mi->info['name'];
-							$r['type'] = "table";
-							$r['sub'] = true;
-							$r['set'] = array();
-
-							$r['def'] = array (
-								"ID" => array( 'id' ),
-								"Published" => array( 'active', 'bool' ),
-								"Visible" => array( 'visible', 'bool' ),
-								"Name" => array( 'name', 'smartlimit haslink', 'editMicroIntegration', 'id' ),
-								"Desc" => array( 'desc', 'notags smartlimit' ),
-								"Exp Action" => array( 'auto_check', 'bool' ),
-								"PreExp Action" => array( 'pre_exp_check' ),
-								"UserChange Action" => array( 'on_userchange', 'bool' )
-								);
-
-							$settings = $mi->getSettings();
-
-							if ( isset( $settings['lists'] ) ) {
-								unset( $settings['lists'] );
-							}
-
-							if ( !empty( $settings ) ) {
-								foreach ( $settings as $sname => $setting ) {
-									$name =  '_MI_' . strtoupper( $miobj->class_name ) . '_' . strtoupper( $sname ) .'_NAME';
-
-									if ( defined( $name ) ) {
-										$r['def'][constant($name)] = array( array( 'settings', $sname ), 'notags smartlimit' );
-									} else {
-										$r['def'][$sname] = array( array( 'settings', $sname ), 'notags smartlimit' );
-									}
-								}
-							}
-						}
-
-						$ps = array();
-						foreach ( $r['def'] as $nn => $def ) {
-							$ps = array_merge( $ps, readoutConversionHelper( $def, $mi, $lists ) );
-						}
-
-						$r['set'][] = $ps;
-
-						$micursor = $miobj->class_name;
-					}
+					$r[] = $readout->readMIs();
 					break;
 				case 'store_settings':
 					global $my;
@@ -5893,13 +5564,11 @@ function readout( $option )
 					$metaUser = new metaUser( $my->id );
 					$metaUser->meta->addCustomParams( array( 'aecadmin_readout' => $settings ) );
 					$metaUser->meta->storeload();
+					break;
 			}
-
-			$readout[] = $r;
-			unset($r);
 		}
 
-		HTML_AcctExp::readout( $option, $readout );
+		HTML_AcctExp::readout( $option, $r );
 	} else {
 		global $my;
 
