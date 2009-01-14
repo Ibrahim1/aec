@@ -5727,7 +5727,7 @@ function readout( $option )
 						"Excluding Prev. Plan" => array( array( 'restrictions', 'previousplan_req_enabled_excluded' ), 'bool' ),
 						"Excl. Prev. Plan" => array( array( 'restrictions', 'previousplan_req_excluded' ), 'plan' ),
 						"Requires Curr. Plan" => array( array( 'restrictions', 'currentplan_req_enabled' ), 'bool' ),
-						"Curr. Plan" => array( array( 'restrictions', 'currentplan_req_enabled' ), 'plan' ),
+						"Curr. Plan" => array( array( 'restrictions', 'currentplan_req' ), 'plan' ),
 						"Excluding Curr. Plan" => array( array( 'restrictions', 'currentplan_req_enabled_excluded' ), 'bool' ),
 						"Excl. Curr. Plan" => array( array( 'restrictions', 'currentplan_req_excluded' ), 'plan' ),
 						"Requires Overall Plan" => array( array( 'restrictions', 'overallplan_req_enabled' ), 'bool' ),
