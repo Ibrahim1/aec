@@ -12059,6 +12059,524 @@ class aecExport extends serialParamDBTable
 
 }
 
+class aecReadout
+{
+
+	function aecReadout( $optionlist, $method )
+	{
+		$this->optionlist = $optionlist;
+		$this->method = "conversionHelper" . strtoupper( $method );
+
+		$this->lists = array();
+
+		if ( aecJoomla15check() ) {
+			$acl =& JFactory::getACL();
+
+			$this->acllist = $acl->get_group_children( 28 );
+		} else {
+			global $acl;
+
+			$this->acllist = $acl->_getBelow( '#__core_acl_aro_groups', 'g1.group_id, g1.name, COUNT(g2.name) AS level', 'g1.name', null, 'USERS', true );
+
+		}
+
+		foreach ( $this->acllist as $aclitem ) {
+			$this->lists['gid'][$aclitem->group_id] = $aclitem->name;
+		}
+
+		$this->planlist = SubscriptionPlanHandler::getFullPlanList();
+
+		foreach ( $this->planlist as $planitem ) {
+			$this->lists['plan'][$planitem->id] = $planitem->name;
+		}
+	}
+
+	function conversionHelper( $content, $obj )
+	{
+		return $this->{$this->method}( $content, $obj );
+	}
+
+	function readSettings()
+	{
+		$r = array();
+		$r['head'] = "Settings";
+		$r['type'] = "table";
+
+		$setdef = Config_General::paramsList();
+
+		$r['def'] = array();
+		foreach ( $setdef as $sd => $sdd ) {
+			if ( ( $sdd === 0 ) || ( $sdd === 1 ) ) {
+				$tname = constant( '_CFG_GENERAL_' . strtoupper( $sd ) . '_NAME' );
+
+				$r['def'][$tname] = array( $sd, 'bool' );
+			}
+		}
+
+		$r['set'][] = $aecConfig->cfg;
+
+		if ( !empty( $_POST['show_extsettings'] ) ) {
+			$readout[] = $r;
+
+			unset($r);
+
+			$r['head'] = "";
+			$r['type'] = "table";
+
+			$setdef = Config_General::paramsList();
+
+			$r['def'] = array();
+			foreach ( $setdef as $sd => $sdd ) {
+				if ( ( $sdd !== 0 ) && ( $sdd !== 1 ) ) {
+					$reg = array( 'GENERAL', 'MI', 'AUTH' );
+
+					foreach ( $reg as $regg ) {
+						$cname = '_CFG_' . $regg . '_' . strtoupper( $sd ) . '_NAME';
+
+						if ( defined( $cname ) )  {
+							$tname = constant( $cname );
+						}
+					}
+
+					$r['def'][$tname] = array( $sd );
+				}
+			}
+
+			$r['set'][] = $aecConfig->cfg;
+		}
+
+		return $r;
+	}
+
+	function readProcessors()
+	{
+		global $database;
+
+		$r = array();
+		$r['head'] = "Processors";
+
+		$processors = PaymentProcessorHandler::getInstalledNameList();
+
+		foreach ( $processors as $procname ) {
+			$pp = null;
+			$pp = new PaymentProcessor( $database );
+
+			if ( !$pp->loadName( $procname ) ) {
+				continue;
+			}
+
+			$pp->fullInit();
+
+			$readout[] = $r;
+
+			$r = array();
+
+			$r['head'] = $pp->info['longname'];
+			$r['type'] = "table";
+			$r['sub'] = true;
+
+			$r['def'] = array (
+				"ID" => array( 'id' ),
+				"Published" => array( 'active', 'bool' )
+			);
+
+			foreach ( $pp->info as $iname => $ic ) {
+				if ( empty( $iname ) ) {
+					continue;
+				}
+
+				$cname = '_CFG_' . strtoupper( $procname ) . '_' . strtoupper($iname) . '_NAME';
+				$gname = '_CFG_PROCESSOR_' . strtoupper($iname) . '_NAME';
+
+				if ( defined( $cname ) )  {
+					$tname = constant( $cname );
+				} elseif ( defined( $gname ) )  {
+					$tname = constant( $gname );
+				} else {
+					$tname = $iname;
+				}
+
+				$r['def'][$tname] = array( array( 'info', $iname ), 'smartlimit' );
+			}
+
+			$bsettings = $pp->getBackendSettings();
+
+			foreach ( $bsettings as $psname => $sc ) {
+				if ( empty( $psname ) || is_numeric( $psname ) || ( $psname == 'lists') ) {
+					continue;
+				}
+
+				$cname = '_CFG_' . strtoupper( $procname ) . '_' . strtoupper($psname) . '_NAME';
+				$gname = '_CFG_PROCESSOR_' . strtoupper($psname) . '_NAME';
+
+				if ( defined( $cname ) )  {
+					$tname = constant( $cname );
+				} elseif ( defined( $gname ) )  {
+					$tname = constant( $gname );
+				} else {
+					$tname = $psname;
+				}
+
+				if ( $sc[0] == 'list_yesno' ) {
+					$stype = 'bool';
+				} else {
+					$stype = 'smartlimit';
+				}
+
+				$r['def'][$tname] = array( array( 'settings', $psname ), $stype );
+			}
+
+			$ps = array();
+			foreach ( $r['def'] as $nn => $def ) {
+				$ps = array_merge( $ps, $this->conversionHelper( $def, $pp ) );
+			}
+
+			$r['set'] = array( 0 => $ps );
+		}
+
+		return $r;
+	}
+
+	function readPlans()
+	{
+		global $database;
+
+		$r = array();
+		$r['head'] = "Payment Plans";
+		$r['type'] = "table";
+
+		$r['def'] = array (
+			"ID" => array( 'id' ),
+			"Published" => array( 'active', 'bool' ),
+			"Visible" => array( 'visible', 'bool' ),
+			"Name" => array( 'name', 'smartlimit haslink', 'editSubscriptionPlan', 'id' ),
+			"Desc" => array( 'desc', 'notags smartlimit' ),
+			"Primary" => array( array( 'params', 'make_primary' ), 'bool' ),
+			"Activate" => array( array( 'params', 'make_active' ), 'bool' ),
+			"Update Exist." => array( array( 'params', 'update_existing' ), 'bool' ),
+			"Override Activat." => array( array( 'params', 'override_activation' ), 'bool' ),
+			"Override Reg. Email" => array( array( 'params', 'override_regmail' ), 'bool' ),
+			"Set GID" => array( array( 'params', 'gid_enabled' ), 'bool' ),
+			"GID" => array( array( 'params', 'gid' ), 'gid' ),
+
+			"Standard Parent Plan" => array( array( 'params', 'standard_parent' ), 'plan' ),
+			"Fallback Plan" => array( array( 'params', 'fallback' ), 'plan' ),
+
+			"Free" => array( array( 'params', 'full_free' ), 'bool' ),
+			"Cost" => array( array( 'params', 'full_amount' ) ),
+			"Lifetime" => array( array( 'params', 'lifetime' ), 'bool' ),
+			"Period" => array( array( 'params', 'full_period' ) ),
+			"Unit" => array( array( 'params', 'full_periodunit' ) ),
+
+			"Free Trial" => array( array( 'params', 'trial_free' ), 'bool' ),
+			"Trial Cost" => array( array( 'params', 'trial_amount' ) ),
+			"Trial Period" => array( array( 'params', 'trial_period' ) ),
+			"Trial Unit" => array( array( 'params', 'trial_periodunit' ) ),
+
+			"Has MinGID" => array( array( 'restrictions', 'mingid_enabled' ), 'bool' ),
+			"MinGID" => array( array( 'restrictions', 'mingid' ), 'gid' ),
+			"Has FixGID" => array( array( 'restrictions', 'fixgid_enabled' ), 'bool' ),
+			"FixGID" => array( array( 'restrictions', 'fixgid' ), 'gid' ),
+			"Has MaxGID" => array( array( 'restrictions', 'fixgid_enabled' ), 'bool' ),
+			"MaxGID" => array( array( 'restrictions', 'fixgid' ), 'gid' ),
+
+			"Requires Prev. Plan" => array( array( 'restrictions', 'previousplan_req_enabled' ), 'bool' ),
+			"Prev. Plan" => array( array( 'restrictions', 'previousplan_req' ), 'plan' ),
+			"Excluding Prev. Plan" => array( array( 'restrictions', 'previousplan_req_enabled_excluded' ), 'bool' ),
+			"Excl. Prev. Plan" => array( array( 'restrictions', 'previousplan_req_excluded' ), 'plan' ),
+			"Requires Curr. Plan" => array( array( 'restrictions', 'currentplan_req_enabled' ), 'bool' ),
+			"Curr. Plan" => array( array( 'restrictions', 'currentplan_req' ), 'plan' ),
+			"Excluding Curr. Plan" => array( array( 'restrictions', 'currentplan_req_enabled_excluded' ), 'bool' ),
+			"Excl. Curr. Plan" => array( array( 'restrictions', 'currentplan_req_excluded' ), 'plan' ),
+			"Requires Overall Plan" => array( array( 'restrictions', 'overallplan_req_enabled' ), 'bool' ),
+			"Overall Plan" => array( array( 'restrictions', 'overallplan_req' ), 'plan' ),
+			"Excluding Overall. Plan" => array( array( 'restrictions', 'overallplan_req_enabled_excluded' ), 'bool' ),
+			"Excl. Overall. Plan" => array( array( 'restrictions', 'overallplan_req_excluded' ), 'plan' ),
+
+			"Min Used Plan" => array( array( 'restrictions', 'used_plan_min_enabled' ), 'bool' ),
+			"Min Used Plan Amount" => array( array( 'restrictions', 'used_plan_min_amount' ) ),
+			"Min Used Plans" => array( array( 'restrictions', 'used_plan_min' ), 'plan' ),
+			"Max Used Plan" => array( array( 'restrictions', 'used_plan_max_enabled' ), 'bool' ),
+			"Max Used Plan Amount" => array( array( 'restrictions', 'used_plan_max_amount' ) ),
+			"Max Used Plans" => array( array( 'restrictions', 'used_plan_max' ), 'plan' ),
+
+			"Custom Restrictions" => array( array( 'restrictions', 'custom_restrictions_enabled' ), 'bool' ),
+			"Restrictions" => array( array( 'restrictions', 'custom_restrictions' ) )
+		);
+
+		$plans = SubscriptionPlanHandler::getPlanList( null, null, isset( $_POST['use_ordering'] ) );
+
+		$r['set'] = array();
+		foreach ( $plans as $planid ) {
+			$plan = new SubscriptionPlan( $database );
+			$plan->load( $planid );
+
+			$ps = array();
+			foreach ( $r['def'] as $nn => $def ) {
+				$ps = array_merge( $ps, $this->conversionHelper( $def, $plan ) );
+			}
+
+			$r['set'][] = $ps;
+		}
+
+		return $r;
+	}
+
+	function readPlanMIrel()
+	{
+		global $database;
+
+		$r = array();
+		$r['head'] = "Payment Plan - MicroIntegration relationships";
+		$r['type'] = "table";
+
+		$r['def'] = array (
+			"ID" => array( 'id' ),
+			"Published" => array( 'active', 'bool' ),
+			"Visible" => array( 'visible', 'bool' ),
+			"Name" => array( 'name', 'smartlimit' )
+		);
+
+		$milist = microIntegrationHandler::getMIList( null, null, isset( $_POST['use_ordering'] ) );
+
+		$micursor = '';
+		$mis = array();
+		foreach ( $milist as $miobj ) {
+			$mi = new microIntegration( $database );
+			$mi->load( $miobj->id );
+			if ( !$mi->callIntegration() ) {
+				continue;
+			}
+
+			if ( $miobj->class_name != $micursor ) {
+				if ( !empty( $mi->info ) ) {
+					$miname = $mi->info['name'];
+				} else {
+					$miname = $miobj->class_name;
+				}
+				$r['def'][$miname] = array( $miobj->class_name, 'smartlimit' );
+
+				$micursor = $miobj->class_name;
+			}
+
+			$mis[$mi->id] = array( $miobj->class_name, $mi->name );
+		}
+
+		$r['set'] = array();
+		foreach ( $this->planlist as $planid => $planobj ) {
+			$plan = new SubscriptionPlan( $database );
+			$plan->load( $planobj->id );
+
+			if ( !empty( $plan->micro_integrations ) ) {
+				foreach ( $plan->micro_integrations as $pmi ) {
+					if ( isset( $mis[$pmi] ) ) {
+						$plan->{$mis[$pmi][0]}[] = "#" . $pmi . ":&nbsp;<strong>" . $mis[$pmi][1] . "</strong>";
+					}
+				}
+			}
+
+			$ps = array();
+			foreach ( $r['def'] as $nn => $def ) {
+				$ps = array_merge( $ps, $this->conversionHelper( $def, $plan ) );
+			}
+
+			$r['set'][] = $ps;
+		}
+
+		return $r;
+	}
+
+	function readMIs()
+	{
+		global $database;
+
+		$r = array();
+					$r['head'] = "Micro Integration";
+
+					$milist = microIntegrationHandler::getMIList( null, null, isset( $_POST['use_ordering'] ) );
+
+					$micursor = '';
+					foreach ( $milist as $miobj ) {
+						$mi = new microIntegration( $database );
+						$mi->load( $miobj->id );
+						$mi->callIntegration();
+
+						if ( $miobj->class_name != $micursor ) {
+							$readout[] = $r;
+							unset($r);
+							$r = array();
+							$r['head'] = $mi->info['name'];
+							$r['type'] = "table";
+							$r['sub'] = true;
+							$r['set'] = array();
+
+							$r['def'] = array (
+								"ID" => array( 'id' ),
+								"Published" => array( 'active', 'bool' ),
+								"Visible" => array( 'visible', 'bool' ),
+								"Name" => array( 'name', 'smartlimit haslink', 'editMicroIntegration', 'id' ),
+								"Desc" => array( 'desc', 'notags smartlimit' ),
+								"Exp Action" => array( 'auto_check', 'bool' ),
+								"PreExp Action" => array( 'pre_exp_check' ),
+								"UserChange Action" => array( 'on_userchange', 'bool' )
+								);
+
+							$settings = $mi->getSettings();
+
+							if ( isset( $settings['lists'] ) ) {
+								unset( $settings['lists'] );
+							}
+
+							if ( !empty( $settings ) ) {
+								foreach ( $settings as $sname => $setting ) {
+									$name =  '_MI_' . strtoupper( $miobj->class_name ) . '_' . strtoupper( $sname ) .'_NAME';
+
+									if ( defined( $name ) ) {
+										$r['def'][constant($name)] = array( array( 'settings', $sname ), 'notags smartlimit' );
+									} else {
+										$r['def'][$sname] = array( array( 'settings', $sname ), 'notags smartlimit' );
+									}
+								}
+							}
+						}
+
+						$ps = array();
+						foreach ( $r['def'] as $nn => $def ) {
+							$ps = array_merge( $ps, $this->conversionHelper( $def, $mi ) );
+						}
+
+						$r['set'][] = $ps;
+
+						$micursor = $miobj->class_name;
+					}
+
+		return $r;
+	}
+
+	function readoutConversionHelperHTML( $content, $obj )
+	{
+		$cc = $content[0];
+
+		if ( is_array( $cc ) ) {
+			$dname = $cc[0].'_'.$cc[1];
+			if ( !isset( $obj->{$cc[0]}[$cc[1]] ) ) {
+				return array( $dname => '' );
+			}
+			$dvalue = $obj->{$cc[0]}[$cc[1]];
+		} else {
+			$dname = $cc;
+			if ( !isset( $obj->{$cc} ) ) {
+				return array( $dname => '' );
+			}
+			$dvalue = $obj->{$cc};
+		}
+
+		if ( isset( $content[1] ) ) {
+			$type = $content[1];
+		} else {
+			$type = null;
+		}
+
+		if ( isset( $_POST['noformat_newlines'] ) ) {
+			$nnl = ', ';
+		} else {
+			$nnl = ',<br />';
+		}
+
+		if ( !empty( $type ) ) {
+			$types = explode( ' ', $type );
+
+			foreach ( $types as $tt ) {
+				switch ( $tt ) {
+					case 'notags':
+						$dvalue = strip_tags( $dvalue );
+						break;
+					case 'limit32':
+						$dvalue = substr( $dvalue, 0, 32 );
+						break;
+					case 'smartlimit':
+						if ( isset( $_POST['truncation_length'] ) ) {
+							$truncation = $_POST['truncation_length'];
+						} else {
+							$truncation = 42;
+						}
+
+						if ( $truncation > 12 ) {
+							$tls = 12;
+						} else {
+							$tls = $truncation/2;
+						}
+
+						if ( is_array( $dvalue ) ) {
+							$vv = array();
+							foreach ( $dvalue as $val ) {
+								if ( strlen( $val ) > $truncation ) {
+									$vv[] = substr( $val, 0, $truncation-$tls ) . '<strong>[...]</strong>' . substr( $val, -$tls, $tls );
+								} else {
+									$vv[] = $val;
+								}
+							}
+							$dvalue = implode( $nnl, $vv );
+						} else {
+							if ( strlen( $dvalue ) > $truncation ) {
+								$dvalue = substr( $dvalue, 0, $truncation-$tls ) . '<strong>[...]</strong>' . substr( $dvalue, -$tls, $tls );
+							}
+						}
+						break;
+					case 'gid':
+						if ( is_array( $dvalue ) ) {
+							$vv = array();
+							foreach ( $dvalue as $val ) {
+								if ( $dvalue == 0 ) {
+									$vv[] = '--';
+								} else {
+									$vv[] = "#" . $val . ":&nbsp;<strong>" . $this->lists['gid'][$val] . "</strong>";
+								}
+							}
+							$dvalue = implode( $nnl, $vv );
+						} else {
+							if ( $dvalue == 0 ) {
+								$dvalue = '--';
+							} else {
+								$dvalue = "#" . $dvalue . ":&nbsp;<strong>" . $this->lists['gid'][$dvalue] . "</strong>";
+							}
+						}
+						break;
+					case 'plan':
+						if ( is_array( $dvalue ) ) {
+							$vv = array();
+							foreach ( $dvalue as $val ) {
+								if ( ( $dvalue == 0 ) || ( $val == 0 ) ) {
+									$vv[] = '--';
+								} else {
+									$vv[] = "#" . $val . ":&nbsp;<strong>" . $this->lists['plan'][$val] . "</strong>";
+								}
+							}
+							$dvalue = implode( $nnl, $vv );
+						} else {
+							if ( $dvalue == 0 ) {
+								$dvalue = '--';
+							} else {
+								$dvalue = "#" . $dvalue . ":&nbsp;<strong>" . $this->lists['plan'][$dvalue] . "</strong>";
+							}
+						}
+						break;
+					case 'haslink':
+						if ( isset( $content[3] ) ) {
+							$tasklink = $content[2] . "&amp;" . $content[3] . "=" . $obj->{$content[3]};
+							$dvalue = AECToolbox::backendTaskLink( $tasklink, $dvalue );
+						} else {
+							$dvalue = AECToolbox::backendTaskLink( $content[2], $dvalue );
+						}
+						break;
+				}
+			}
+		}
+
+		return array( $dname => $dvalue );
+	}
+
+}
 
 class aecRestrictionHelper
 {

@@ -5746,23 +5746,6 @@ function readout( $option )
 						"Restrictions" => array( array( 'restrictions', 'custom_restrictions' ) )
 					);
 
-/**
- *
- * LEFTOVER:
- * params
- * [customthanks] =>
- * [customtext_thanks_keeporiginal] => 1
- * [customtext_thanks] =>
- * [processors] =>
- * custom params
- * [add_group] => 0
- * [5_Allowedtypes] =>
- * [5_recurring] => 0
- * mis
- * [0] => 2
- *
- */
-
 					$plans = SubscriptionPlanHandler::getPlanList( null, null, isset( $_POST['use_ordering'] ) );
 
 					$r['set'] = array();
