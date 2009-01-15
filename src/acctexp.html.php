@@ -162,6 +162,7 @@ class HTML_frontEnd
 			<?php
 		} ?>
 		</div>
+		<div style="clear:both"></div> 
 		<?php
 	}
 
@@ -789,6 +790,7 @@ class Payment_HTML
 					</table>
 				</td></tr>
 			</table>
+			<div style="clear:both"></div>
 		</div>
 		<?php
 	}
@@ -951,6 +953,7 @@ class Payment_HTML
 				} ?>
 			</td></tr>
 		</table>
+		<div style="clear:both"></div>
 		</div>
 		<?php
 	}
@@ -1069,6 +1072,7 @@ class Payment_HTML
 		<div id="box_pending">
 			<p><?php echo _CHECKOUT_ERROR_EXPLANATION . ( $error ? ( ': ' . $error) : '' ); ?></p>
 			<p><?php echo $actions; ?></p>
+			<div style="clear:both"></div>
 		</div>
 		<?php
 	}
