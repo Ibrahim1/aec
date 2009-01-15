@@ -5515,6 +5515,7 @@ function readout( $option )
 							'noformat_newlines' => 0,
 							'use_ordering' => 0,
 							'column_headers' => 20,
+							'export_csv' => 0,
 							'store_settings' => 1
 						);
 
@@ -5568,7 +5569,11 @@ function readout( $option )
 			}
 		}
 
-		HTML_AcctExp::readout( $option, $r );
+		if ( !empty( $_POST['export_csv'] ) ) {
+			HTML_AcctExp::readoutCSV( $option, $r );
+		} else {
+			HTML_AcctExp::readout( $option, $r );
+		}
 	} else {
 		global $my;
 

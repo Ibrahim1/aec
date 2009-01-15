@@ -2741,6 +2741,95 @@ class HTML_AcctExp
  		HTML_myCommon::GlobalNerd();
 	}
 
+	function readoutCSV( $option, $readout )
+	{
+		global $mosConfig_live_site, $mosConfig_absolute_path;
+
+		// Send download header
+		header("Pragma: public");
+		header("Expires: 0");
+		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+
+		header("Content-Type: application/force-download");
+		header("Content-Type: application/octet-stream");
+
+		header("Content-Type: application/download");
+		header('Content-Disposition: inline; filename="aec_readout.csv"');
+
+		// Load Exporting Class
+		$filename = $mosConfig_absolute_path . '/components/com_acctexp/lib/export/csv.php';
+		$classname = 'AECexport_csv';
+
+		include_once( $filename );
+
+		$exphandler = new $classname();
+
+
+		if ( isset( $_POST['column_headers'] ) ) {
+			$ch = $_POST['column_headers'];
+		} else {
+			$ch = 20;
+		}
+
+		foreach ( $readout as $part ) {
+			if ( !empty( $part['head'] ) ) {
+				echo $exphandler->export_line( array( $part['head'] ) );
+			}
+
+			switch ( $part['type'] ) {
+				case 'table':
+
+					$i = 0; $j = 0;
+					foreach ( $part['set'] as $entry ) {
+						if ( $j%$ch == 0 ) {
+							$array = array();
+							foreach ( $part['def'] as $k => $v ) {
+								$array[] = $k;
+							}
+							echo $exphandler->export_line( $array );
+						}
+
+						$array = array();
+						foreach ( $part['def'] as $def => $dc ) {
+							if ( is_array( $dc[0] ) ) {
+								$dn = $dc[0][0].'_'.$dc[0][1];
+							} else {
+								$dn = $dc[0];
+							}
+
+							$dcc = $entry[$dn];
+
+							if ( isset( $dc[1] ) ) {
+								$types = explode( ' ', $dc[1] );
+
+								foreach ( $types as $tt ) {
+									switch ( $tt ) {
+										case 'bool';
+											$dcc = $dcc ? 'Yes' : 'No';
+											break;
+									}
+								}
+							}
+
+							if ( is_array( $dcc ) ) {
+								$dcc = implode( ', ', $dcc );
+							}
+
+							$array[] = $dcc;
+						}
+
+						echo $exphandler->export_line( $array );
+
+						$j++;
+					}
+
+					echo "\n\n";
+					break;
+			}
+		}
+ 		exit;
+	}
+
 	function export( $option, $aecHTML )
 	{
 		global $mosConfig_live_site;

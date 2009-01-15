@@ -1532,5 +1532,7 @@ define( '_READOUT_GENERAL_COLUMN_HEADERS_NAME', 'Column Headers');
 define( '_READOUT_GENERAL_COLUMN_HEADERS_DESC', 'Show Column Headers every X rows');
 define( '_READOUT_GENERAL_NOFORMAT_NEWLINES_NAME', 'Format: no linebreaks');
 define( '_READOUT_GENERAL_NOFORMAT_NEWLINES_DESC', 'Multiple entries for a table cell are normally displayed in separate lines, with this option, these entries are just displayed in a single block of text.');
+define( '_READOUT_GENERAL_EXPORT_CSV_NAME', 'Export as .csv');
+define( '_READOUT_GENERAL_EXPORT_CSV_DESC', 'Export data as a comma separated file that can be loaded in a spreadsheet application.');
 
 ?>

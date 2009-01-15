@@ -10101,11 +10101,11 @@ class microIntegrationHandler
 		$this->mi_dir = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/micro_integration';
 	}
 
-	function getMIList( $limitstart=false, $limit=false, $use_order=false )
+	function getMIList( $limitstart=false, $limit=false, $use_order=false, $name=false )
 	{
 		global $database;
 
-		$query = 'SELECT id, class_name'
+		$query = 'SELECT id, class_name' . ( $name ? ', name' : '' )
 			 	. ' FROM #__acctexp_microintegrations'
 			 	. ' GROUP BY ' . ( $use_order ? '`ordering`' : '`id`' )
 			 	. ' ORDER BY `class_name`'
@@ -12089,6 +12089,12 @@ class aecReadout
 		foreach ( $this->planlist as $planitem ) {
 			$this->lists['plan'][$planitem->id] = $planitem->name;
 		}
+
+		$this->milist = microIntegrationHandler::getMIList( null, null, isset( $_POST['use_ordering'] ), true );
+
+		foreach ( $this->milist as $miitem ) {
+			$this->lists['mi'][$miitem->id] = $miitem->name;
+		}
 	}
 
 	function conversionHelper( $content, $obj )
@@ -12257,10 +12263,10 @@ class aecReadout
 			"Override Activat." => array( array( 'params', 'override_activation' ), 'bool' ),
 			"Override Reg. Email" => array( array( 'params', 'override_regmail' ), 'bool' ),
 			"Set GID" => array( array( 'params', 'gid_enabled' ), 'bool' ),
-			"GID" => array( array( 'params', 'gid' ), 'gid' ),
+			"GID" => array( array( 'params', 'list', 'gid' ), 'list', 'gid' ),
 
-			"Standard Parent Plan" => array( array( 'params', 'standard_parent' ), 'plan' ),
-			"Fallback Plan" => array( array( 'params', 'fallback' ), 'plan' ),
+			"Standard Parent Plan" => array( array( 'params', 'standard_parent' ), 'list', 'plan' ),
+			"Fallback Plan" => array( array( 'params', 'fallback' ), 'list', 'plan' ),
 
 			"Free" => array( array( 'params', 'full_free' ), 'bool' ),
 			"Cost" => array( array( 'params', 'full_amount' ) ),
@@ -12274,31 +12280,31 @@ class aecReadout
 			"Trial Unit" => array( array( 'params', 'trial_periodunit' ) ),
 
 			"Has MinGID" => array( array( 'restrictions', 'mingid_enabled' ), 'bool' ),
-			"MinGID" => array( array( 'restrictions', 'mingid' ), 'gid' ),
+			"MinGID" => array( array( 'restrictions', 'mingid' ), 'list', 'gid' ),
 			"Has FixGID" => array( array( 'restrictions', 'fixgid_enabled' ), 'bool' ),
-			"FixGID" => array( array( 'restrictions', 'fixgid' ), 'gid' ),
+			"FixGID" => array( array( 'restrictions', 'fixgid' ), 'list', 'gid' ),
 			"Has MaxGID" => array( array( 'restrictions', 'fixgid_enabled' ), 'bool' ),
-			"MaxGID" => array( array( 'restrictions', 'fixgid' ), 'gid' ),
+			"MaxGID" => array( array( 'restrictions', 'fixgid' ), 'list', 'gid' ),
 
 			"Requires Prev. Plan" => array( array( 'restrictions', 'previousplan_req_enabled' ), 'bool' ),
-			"Prev. Plan" => array( array( 'restrictions', 'previousplan_req' ), 'plan' ),
+			"Prev. Plan" => array( array( 'restrictions', 'previousplan_req' ), 'list', 'plan' ),
 			"Excluding Prev. Plan" => array( array( 'restrictions', 'previousplan_req_enabled_excluded' ), 'bool' ),
-			"Excl. Prev. Plan" => array( array( 'restrictions', 'previousplan_req_excluded' ), 'plan' ),
+			"Excl. Prev. Plan" => array( array( 'restrictions', 'previousplan_req_excluded' ), 'list', 'plan' ),
 			"Requires Curr. Plan" => array( array( 'restrictions', 'currentplan_req_enabled' ), 'bool' ),
-			"Curr. Plan" => array( array( 'restrictions', 'currentplan_req' ), 'plan' ),
+			"Curr. Plan" => array( array( 'restrictions', 'currentplan_req' ), 'list', 'plan' ),
 			"Excluding Curr. Plan" => array( array( 'restrictions', 'currentplan_req_enabled_excluded' ), 'bool' ),
-			"Excl. Curr. Plan" => array( array( 'restrictions', 'currentplan_req_excluded' ), 'plan' ),
+			"Excl. Curr. Plan" => array( array( 'restrictions', 'currentplan_req_excluded' ), 'list', 'plan' ),
 			"Requires Overall Plan" => array( array( 'restrictions', 'overallplan_req_enabled' ), 'bool' ),
-			"Overall Plan" => array( array( 'restrictions', 'overallplan_req' ), 'plan' ),
+			"Overall Plan" => array( array( 'restrictions', 'overallplan_req' ), 'list', 'plan' ),
 			"Excluding Overall. Plan" => array( array( 'restrictions', 'overallplan_req_enabled_excluded' ), 'bool' ),
-			"Excl. Overall. Plan" => array( array( 'restrictions', 'overallplan_req_excluded' ), 'plan' ),
+			"Excl. Overall. Plan" => array( array( 'restrictions', 'overallplan_req_excluded' ), 'list', 'plan' ),
 
 			"Min Used Plan" => array( array( 'restrictions', 'used_plan_min_enabled' ), 'bool' ),
 			"Min Used Plan Amount" => array( array( 'restrictions', 'used_plan_min_amount' ) ),
-			"Min Used Plans" => array( array( 'restrictions', 'used_plan_min' ), 'plan' ),
+			"Min Used Plans" => array( array( 'restrictions', 'used_plan_min' ), 'list', 'plan' ),
 			"Max Used Plan" => array( array( 'restrictions', 'used_plan_max_enabled' ), 'bool' ),
 			"Max Used Plan Amount" => array( array( 'restrictions', 'used_plan_max_amount' ) ),
-			"Max Used Plans" => array( array( 'restrictions', 'used_plan_max' ), 'plan' ),
+			"Max Used Plans" => array( array( 'restrictions', 'used_plan_max' ), 'list', 'plan' ),
 
 			"Custom Restrictions" => array( array( 'restrictions', 'custom_restrictions_enabled' ), 'bool' ),
 			"Restrictions" => array( array( 'restrictions', 'custom_restrictions' ) )
@@ -12337,11 +12343,9 @@ class aecReadout
 			"Name" => array( 'name', 'smartlimit' )
 		);
 
-		$milist = microIntegrationHandler::getMIList( null, null, isset( $_POST['use_ordering'] ) );
-
 		$micursor = '';
 		$mis = array();
-		foreach ( $milist as $miobj ) {
+		foreach ( $this->milist as $miobj ) {
 			$mi = new microIntegration( $database );
 			$mi->load( $miobj->id );
 			if ( !$mi->callIntegration() ) {
@@ -12354,7 +12358,7 @@ class aecReadout
 				} else {
 					$miname = $miobj->class_name;
 				}
-				$r['def'][$miname] = array( $miobj->class_name, 'smartlimit' );
+				$r['def'][$miname] = array( $miobj->class_name, 'list', 'mi' );
 
 				$micursor = $miobj->class_name;
 			}
@@ -12370,7 +12374,7 @@ class aecReadout
 			if ( !empty( $plan->micro_integrations ) ) {
 				foreach ( $plan->micro_integrations as $pmi ) {
 					if ( isset( $mis[$pmi] ) ) {
-						$plan->{$mis[$pmi][0]}[] = "#" . $pmi . ":&nbsp;<strong>" . $mis[$pmi][1] . "</strong>";
+						$plan->{$mis[$pmi][0]}[] = $pmi;
 					}
 				}
 			}
@@ -12393,10 +12397,8 @@ class aecReadout
 		$r = array();
 					$r['head'] = "Micro Integration";
 
-					$milist = microIntegrationHandler::getMIList( null, null, isset( $_POST['use_ordering'] ) );
-
 					$micursor = '';
-					foreach ( $milist as $miobj ) {
+					foreach ( $this->milist as $miobj ) {
 						$mi = new microIntegration( $database );
 						$mi->load( $miobj->id );
 						$mi->callIntegration();
@@ -12523,14 +12525,14 @@ class aecReadout
 							}
 						}
 						break;
-					case 'gid':
+					case 'list':
 						if ( is_array( $dvalue ) ) {
 							$vv = array();
 							foreach ( $dvalue as $val ) {
 								if ( $dvalue == 0 ) {
 									$vv[] = '--';
 								} else {
-									$vv[] = "#" . $val . ":&nbsp;<strong>" . $this->lists['gid'][$val] . "</strong>";
+									$vv[] = "#" . $val . ":&nbsp;<strong>" . $this->lists[$content[2]][$val] . "</strong>";
 								}
 							}
 							$dvalue = implode( $nnl, $vv );
@@ -12538,26 +12540,7 @@ class aecReadout
 							if ( $dvalue == 0 ) {
 								$dvalue = '--';
 							} else {
-								$dvalue = "#" . $dvalue . ":&nbsp;<strong>" . $this->lists['gid'][$dvalue] . "</strong>";
-							}
-						}
-						break;
-					case 'plan':
-						if ( is_array( $dvalue ) ) {
-							$vv = array();
-							foreach ( $dvalue as $val ) {
-								if ( ( $dvalue == 0 ) || ( $val == 0 ) ) {
-									$vv[] = '--';
-								} else {
-									$vv[] = "#" . $val . ":&nbsp;<strong>" . $this->lists['plan'][$val] . "</strong>";
-								}
-							}
-							$dvalue = implode( $nnl, $vv );
-						} else {
-							if ( $dvalue == 0 ) {
-								$dvalue = '--';
-							} else {
-								$dvalue = "#" . $dvalue . ":&nbsp;<strong>" . $this->lists['plan'][$dvalue] . "</strong>";
+								$dvalue = "#" . $dvalue . ":&nbsp;<strong>" . $this->lists[$content[2]][$dvalue] . "</strong>";
 							}
 						}
 						break;
@@ -12603,7 +12586,7 @@ class aecReadout
 		if ( isset( $_POST['noformat_newlines'] ) ) {
 			$nnl = ', ';
 		} else {
-			$nnl = ', ';
+			$nnl = ',' . "\n";
 		}
 
 		if ( !empty( $type ) ) {
@@ -12646,14 +12629,14 @@ class aecReadout
 							}
 						}
 						break;
-					case 'gid':
+					case 'list':
 						if ( is_array( $dvalue ) ) {
 							$vv = array();
 							foreach ( $dvalue as $val ) {
 								if ( $dvalue == 0 ) {
 									$vv[] = '--';
 								} else {
-									$vv[] = "#" . $val . ": " . $this->lists['gid'][$val];
+									$vv[] = "#" . $val . ": " . $this->lists[$content[2]][$val];
 								}
 							}
 							$dvalue = implode( $nnl, $vv );
@@ -12661,36 +12644,12 @@ class aecReadout
 							if ( $dvalue == 0 ) {
 								$dvalue = '--';
 							} else {
-								$dvalue = "#" . $dvalue . ": " . $this->lists['gid'][$dvalue];
-							}
-						}
-						break;
-					case 'plan':
-						if ( is_array( $dvalue ) ) {
-							$vv = array();
-							foreach ( $dvalue as $val ) {
-								if ( ( $dvalue == 0 ) || ( $val == 0 ) ) {
-									$vv[] = '--';
-								} else {
-									$vv[] = "#" . $val . ": " . $this->lists['plan'][$val];
-								}
-							}
-							$dvalue = implode( $nnl, $vv );
-						} else {
-							if ( $dvalue == 0 ) {
-								$dvalue = '--';
-							} else {
-								$dvalue = "#" . $dvalue . ": " . $this->lists['plan'][$dvalue];
+								$dvalue = "#" . $dvalue . ": " . $this->lists[$content[2]][$dvalue];
 							}
 						}
 						break;
 					case 'haslink':
-						if ( isset( $content[3] ) ) {
-							$tasklink = $content[2] . "& " . $content[3] . "=" . $obj->{$content[3]};
-							$dvalue = AECToolbox::backendTaskLink( $tasklink, $dvalue );
-						} else {
-							$dvalue = AECToolbox::backendTaskLink( $content[2], $dvalue );
-						}
+						$dvalue = $dvalue;
 						break;
 				}
 			}
