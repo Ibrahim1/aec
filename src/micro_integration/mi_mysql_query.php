@@ -41,7 +41,7 @@ class mi_mysql_query
 		$query = AECToolbox::rewriteEngineRQ( $this->settings['query'.$area], $request );
 
 		$database->setQuery( $query );
-		$database->query();
+		$database->query_batch( false );
 
 		return true;
 	}
