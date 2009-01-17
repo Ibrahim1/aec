@@ -22,8 +22,9 @@ class processor_alertpay extends POSTprocessor
 		$info['description']			= _DESCRIPTION_ALERTPAY;
 		$info['currencies']				= 'USD';
 		$info['cc_list']				= 'visa,mastercard,discover,americanexpress,echeck';
-		$info['recurring']				= 0;
+		$info['recurring']				= 2;
 		$info['notify_trail_thanks']	= 1;
+		$info['recurring_buttons']		= 2;
 
 		return $info;
 	}
@@ -66,23 +67,41 @@ class processor_alertpay extends POSTprocessor
 			$var['ap_test'] = '1';
 		}
 
-		$var['ap_purchasetype']	= 'Item'; //Item or Subscription - Subscription not supported yet
+		if ( is_array( $request->int_var['amount'] ) ) {
+			$var['ap_purchasetype']	= 'Subscription';
 
-		//$var['ap_purchasetype']	= 'Subscription'; //Item and Subscription - Right now no subscription but it will be built into system
+			if ( isset( $request->int_var['amount1'] ) ) {
+				$put = $this->convertPeriodUnit( $request->int_var['unit1'], $request->int_var['period1'], true );
+				$var['ap_trialtimeunit'] 		= $put['unit'];
+				$var['ap_trialperiodlength'] 	= $put['period'];
+			}
+
+			if ( !empty( $this->settings['tax'] ) ) {
+				$tax = $request->int_var['amount3'] / ( 100 + $this->settings['tax'] ) * 100;
+				$var['ap_amount'] 	= round( $tax, 2 );
+			} else {
+				$var['ap_amount'] 	= $request->int_var['amount3'];
+			}
+
+			$puf = $this->convertPeriodUnit( $request->int_var['unit3'], $request->int_var['period3'] );
+			$var['ap_timeunit'] 		= $puf['unit'];
+			$var['ap_periodlength'] 	= $puf['period'];
+		} else {
+			$var['ap_purchasetype']	= 'Item';
+
+			if ( !empty( $this->settings['tax'] ) ) {
+				$tax = $request->int_var['amount'] / ( 100 + $this->settings['tax'] ) * 100;
+				$var['ap_amount'] 	= round( $tax, 2 );
+			} else {
+				$var['ap_amount'] 	= $request->int_var['amount'];
+			}
+		}
 
 		$var['ap_merchant']		= $this->settings['merchant'];
 		$var['ap_itemname']		= $request->int_var['invoice'];
 		$var['ap_currency']		= $this->settings['currency'];
 		$var['ap_returnurl']	= AECToolbox::deadsureURL( "index.php?option=com_acctexp&amp;task=thanks" );
-		$var['ap_quantity']		= '';
 		$var['ap_description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, $mosConfig_live_site, $request->metaUser->cmsUser->name, $request->metaUser->cmsUser->username );
-
-		if ( !empty( $this->settings['tax'] ) ) {
-			$tax = $request->int_var['amount'] / ( 100 + $this->settings['tax'] ) * 100;
-			$var['ap_amount'] 	= round( $tax, 2 );
-		} else {
-			$var['ap_amount'] 	= $request->int_var['amount'];
-		}
 
 		$var['ap_cancelurl']	= AECToolbox::deadsureURL( "index.php?option=com_acctexp&amp;task=cancel" );
 
@@ -91,6 +110,28 @@ class processor_alertpay extends POSTprocessor
 		$var['apc_3']			= $request->int_var['usage'];
 
 		return $var;
+	}
+
+	function convertPeriodUnit( $period, $unit, $t=false )
+	{
+		$return = array();
+		$return['period'] = $period;
+		switch ( $unit ) {
+			case 'D':
+				$return['unit'] = 'Day';
+				break;
+			case 'W':
+				$return['unit'] = 'Week' . ( $t ? 's' : '' );
+				break;
+			case 'M':
+				$return['unit'] = 'Month' . ( $t ? 's' : '' );
+				break;
+			case 'Y':
+				$return['unit'] = 'Year' . ( $t ? 's' : '' );
+				break;
+		}
+
+		return $return;
 	}
 
 	function parseNotification( $post )
@@ -112,12 +153,16 @@ class processor_alertpay extends POSTprocessor
 	{
 		$response['valid'] = false;
 
-		if ( !( strcmp( $post['ap_status'], "Success" ) === 0 ) ) {
-			$response['error'] = 'ap_status: ' . $post['ap_status'];
-		} elseif( $post['ap_securitycode'] != $this->settings['securitycode'] ) {
-			$response['error'] = 'Security Code Mismatch: ' . $post['ap_securitycode'] . ' != ' . $this->settings['securitycode'];
+		if ( ( $post['ap_status'] == "Success" ) || ( $post['ap_status'] == "Subscription-Payment-Success" ) ) {
+			if ( $post['ap_securitycode'] != $this->settings['securitycode'] ) {
+				$response['error'] = 'Security Code Mismatch: ' . $post['ap_securitycode'] . ' != ' . $this->settings['securitycode'];
+			} else {
+				$response['valid'] = true;
+			}
+		} elseif ( $post['ap_status'] == "Subscription-Payment-Canceled" ) {
+			$response['cancel'] = 1;
 		} else {
-			$response['valid'] = true;
+			$response['error'] = 'ap_status: ' . $post['ap_status'];
 		}
 
 		return $response;
