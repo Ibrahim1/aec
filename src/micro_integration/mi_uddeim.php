@@ -137,7 +137,7 @@ class mi_uddeim
 		$hacks[$n]['name']				=	'pms.uddeim.php';
 		$hacks[$n]['desc']				=	_AEC_MI_HACK2_UDDEIM;
 		$hacks[$n]['type']				=	'file';
-		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/comprofiler/plugin/user/plug_pmsuddeim/pms.uddeim.php';
+		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_comprofiler/plugin/user/plug_pmsuddeim/pms.uddeim.php';
 		$hacks[$n]['read']				=	'$adminpath = $this->absolute_path."/administrator/components/com_uddeim";
 ';
 		$hacks[$n]['insert']			=	$messagehack . "\n"  . $hacks[$n]['read'];
@@ -170,7 +170,7 @@ class mi_uddeim
 	function action( $request )
 	{
 		global $database;
-		
+
 		$userid = $request->metaUser->userid;
 
 		$mi_uddeimhandler = new uddeim_restriction( $database );
