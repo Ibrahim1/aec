@@ -1773,6 +1773,8 @@ class HTML_AcctExp
 											<?php echo $aecHTML->createSettingsParticle( 'lifetime' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'full_period' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'full_periodunit' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'full_useramount' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'full_useramount_hasmin' ); ?>
 											<div class="usernote" style="width:200px;">
 												<?php echo _PAYPLAN_AMOUNT_NOTICE_TEXT; ?>
 											</div>

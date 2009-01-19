@@ -2695,6 +2695,8 @@ function editSubscriptionPlan( $id, $option )
 	$params['override_regmail']		= array( 'list_yesno', 0 );
 
 	$params['full_free']			= array( 'list_yesno', '' );
+	$params['full_useramount']		= array( 'list_yesno', '' );
+	$params['full_useramount_hasmin']		= array( 'list_yesno', '' );
 	$params['full_amount']			= array( 'inputB', '' );
 	$params['full_period']			= array( 'inputB', '' );
 	$params['full_periodunit']		= array( 'list', 'D' );
