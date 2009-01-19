@@ -1319,6 +1319,7 @@ define( '_REWRITE_KEY_SYSTEM_SERVER_TIMESTAMP_BACKEND', 'Server Timestamp (Backe
 define( '_REWRITE_AREA_INVOICE', 'Factuur Gerelateerd');
 define( '_REWRITE_KEY_INVOICE_ID', 'Factuur ID');
 define( '_REWRITE_KEY_INVOICE_NUMBER', 'Factuurnummer');
+define( '_REWRITE_KEY_INVOICE_NUMBER_FORMAT', 'Factuurnummer (formatted)');
 define( '_REWRITE_KEY_INVOICE_CREATED_DATE', 'Datum van registratie');
 define( '_REWRITE_KEY_INVOICE_TRANSACTION_DATE', 'Datum van betaling');
 define( '_REWRITE_KEY_INVOICE_METHOD', 'Betalings methode');
