@@ -132,7 +132,7 @@ define( '_AEC_PROMPT_PASSWORD_WRONG', 'Das Passwort stimmt nicht mit dem &uuml;b
 define( '_AEC_PROMPT_PASSWORD_BUTTON', 'Weiter');
 
 // --== CHECKOUT FORM ==--
-define( '_CHECKOUT_TITLE',					'Abschlie&szlig;ssen');
+define( '_CHECKOUT_TITLE',					'Abschlie&szlig;en');
 define( '_CHECKOUT_INFO',					'Die Angaben wurden gespeichert, es ist jetzt erforderlich, dass Sie mit der Bezahlung ihrer getroffenen Auswahl fortfahren.<br />Sollte es im Folgenden Unklarheiten geben, k&ouml;nnen Sie immer zu dieser Seite zur&uuml;ckkehren, indem Sie sich mit ihren Zugangsdaten einw&auml;hlen.');
 define( '_CHECKOUT_INFO_REPEAT',			'Willkommen zur&uuml;ck! Die Bezahlung ihrer getroffenen Auswahl ist noch ausst&auml;ndig.<br />Sollte es im Folgenden Unklarheiten geben, k&ouml;nnen Sie immer zu dieser Seite zur&uuml;ckkehren, indem Sie sich mit ihren Zugangsdaten einw&auml;hlen.');
 define( '_BUTTON_CHECKOUT',					'Fortfahren');
