@@ -2526,12 +2526,12 @@ class PaymentProcessor
 
 		$params = array();
 
-		if ( method_exists( $this->processor, 'CustomPlanParams' ) ) {
-			$params = $this->processor->CustomPlanParams();
-		}
-
 		if ( $this->is_recurring() == 2 ) {
 			$params = array_merge( array( 'recurring' => array( 'list_recurring' ) ), $params );
+		}
+
+		if ( method_exists( $this->processor, 'CustomPlanParams' ) ) {
+			$params = array_merge( $params, $this->processor->CustomPlanParams() );
 		}
 
 		if ( !empty( $params ) ) {
