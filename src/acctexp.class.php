@@ -2518,8 +2518,24 @@ class PaymentProcessor
 			$this->getSettings();
 		}
 
+		if ( is_int( $this->is_recurring() ) ) {
+			$settings = array_merge( array( 'recurring' => array( 'list_recurring' ) ), $this->processor->backend_settings() );
+		} else {
+			$settings = $this->processor->backend_settings();
+		}
+
+		$params = array();
+
 		if ( method_exists( $this->processor, 'CustomPlanParams' ) ) {
-			return $this->processor->CustomPlanParams();
+			$params = $this->processor->CustomPlanParams();
+		}
+
+		if ( $this->is_recurring() == 2 ) {
+			$params = array_merge( array( 'recurring' => array( 'list_recurring' ) ), $params );
+		}
+
+		if ( !empty( $params ) ) {
+			return $params;
 		} else {
 			return false;
 		}

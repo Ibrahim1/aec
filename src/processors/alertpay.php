@@ -20,7 +20,7 @@ class processor_alertpay extends POSTprocessor
 		$info['longname']				= _AEC_PROC_INFO_AP_LNAME;
 		$info['statement']				= _AEC_PROC_INFO_AP_STMNT;
 		$info['description']			= _DESCRIPTION_ALERTPAY;
-		$info['currencies']				= 'USD';
+		$info['currencies']				= 'USD,EUR,GBP,CAD,AUD,BGN,CZK,DKK,EEK,HKD,HUF,LTL,MYR,NZD,NOK,PLN,ROL,SGD,ZAR,SEK,CHF';
 		$info['cc_list']				= 'visa,mastercard,discover,americanexpress,echeck';
 		$info['recurring']				= 2;
 		$info['notify_trail_thanks']	= 1;
@@ -70,20 +70,20 @@ class processor_alertpay extends POSTprocessor
 		if ( is_array( $request->int_var['amount'] ) ) {
 			$var['ap_purchasetype']	= 'Subscription';
 
-			if ( isset( $request->int_var['amount1'] ) ) {
-				$put = $this->convertPeriodUnit( $request->int_var['unit1'], $request->int_var['period1'], true );
+			if ( isset( $request->int_var['amount']['amount1'] ) ) {
+				$put = $this->convertPeriodUnit( $request->int_var['amount']['unit1'], $request->int_var['amount']['period1'], true );
 				$var['ap_trialtimeunit'] 		= $put['unit'];
 				$var['ap_trialperiodlength'] 	= $put['period'];
 			}
 
 			if ( !empty( $this->settings['tax'] ) ) {
-				$tax = $request->int_var['amount3'] / ( 100 + $this->settings['tax'] ) * 100;
+				$tax = $request->int_var['amount']['amount3'] / ( 100 + $this->settings['tax'] ) * 100;
 				$var['ap_amount'] 	= round( $tax, 2 );
 			} else {
-				$var['ap_amount'] 	= $request->int_var['amount3'];
+				$var['ap_amount'] 	= $request->int_var['amount']['amount3'];
 			}
 
-			$puf = $this->convertPeriodUnit( $request->int_var['unit3'], $request->int_var['period3'] );
+			$puf = $this->convertPeriodUnit( $request->int_var['amount']['unit3'], $request->int_var['amount']['period3'] );
 			$var['ap_timeunit'] 		= $puf['unit'];
 			$var['ap_periodlength'] 	= $puf['period'];
 		} else {
