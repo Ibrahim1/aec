@@ -2647,6 +2647,7 @@ function editSubscriptionPlan( $id, $option )
 	$params['customtext_thanks']		= array( 'editor', '' );
 	$params['email_desc']				= array( 'inputD', '' );
 	$params['micro_integrations']		= array( 'list', '' );
+	$params['micro_integrations_plan']	= array( 'list', '' );
 
 	$params['params_remap']				= array( 'subarea_change', 'groups' );
 
@@ -2695,8 +2696,6 @@ function editSubscriptionPlan( $id, $option )
 	$params['override_regmail']		= array( 'list_yesno', 0 );
 
 	$params['full_free']			= array( 'list_yesno', '' );
-	$params['full_useramount']		= array( 'list_yesno', '' );
-	$params['full_useramount_hasmin']		= array( 'list_yesno', '' );
 	$params['full_amount']			= array( 'inputB', '' );
 	$params['full_period']			= array( 'inputB', '' );
 	$params['full_periodunit']		= array( 'list', 'D' );
@@ -3007,6 +3006,7 @@ function editSubscriptionPlan( $id, $option )
 	$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
 			. ' FROM #__acctexp_microintegrations'
 			. ' WHERE `active` = 1'
+		 	. ' AND `hidden` = \'0\''
 			. ' ORDER BY ordering'
 			;
 	$database->setQuery( $query );
@@ -3016,6 +3016,7 @@ function editSubscriptionPlan( $id, $option )
 		$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
 				. ' FROM #__acctexp_microintegrations'
 				. ' WHERE `id` IN (' . implode( ',', $row->micro_integrations ) . ')'
+		 		. ' AND `hidden` = \'0\''
 				;
 	 	$database->setQuery( $query );
 		$selected_mi = $database->loadObjectList();
@@ -3024,6 +3025,84 @@ function editSubscriptionPlan( $id, $option )
 	}
 
 	$lists['micro_integrations'] = mosHTML::selectList($mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $selected_mi);
+
+	$mi_list = $mi_handler->getIntegrationList();
+
+	$mi_htmllist = array();
+	$mi_htmllist[]	= mosHTML::makeOption( '', _AEC_CMN_NONE_SELECTED );
+
+	foreach ( $mi_list as $name ) {
+		$mi = new microIntegration( $database );
+		$mi->class_name = $name;
+		if ( $mi->callIntegration() ){
+			$len = 30 - AECToolbox::visualstrlen( trim( $mi->name ) );
+			$fullname = str_replace( '#', '&nbsp;', str_pad( $mi->name, $len, '#' ) ) . ' - ' . substr($mi->desc, 0, 120);
+			$mi_htmllist[] = mosHTML::makeOption( $name, $fullname );
+		}
+	}
+
+	$lists['micro_integrations_plan'] = mosHTML::selectList( $mi_htmllist, 'micro_integrations_plan[]', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '" multiple', 'value', 'text', 0 );
+
+	$query = 'SELECT `id`'
+			. ' FROM #__acctexp_microintegrations'
+			. ' WHERE `id` IN (' . implode( ',', $row->micro_integrations ) . ')'
+	 		. ' AND `hidden` = \'1\''
+			;
+ 	$database->setQuery( $query );
+	$hidden_mi = $database->loadObjectList();
+
+	$custompar = array();
+
+	foreach ( $hidden_mi as $miid ) {
+		$mi = new microIntegration( $database );
+		$mi->load( $miid );
+
+		if ( !$mi->load( $miid ) ) {
+			continue;
+		}
+
+		if ( !$mi->callIntegration( 1 ) ) {
+			continue;
+		}
+
+		$prefix = 'MI_' . $miid . '_';
+
+		$params['remap_mi_' . $miid]	= array( 'area_change', 'MI' );
+		$params['remaps_mi_' . $miid]	= array( 'subarea_change', $mi->class_name );
+		$params['prefix_mi_' . $miid]	= array( 'add_prefix', $miid );
+
+		$custompar[$miid] = array();
+		$custompar[$miid]['name'] = $mi->name;
+		$custompar[$miid]['params'] = array();
+
+		# How can we make sure it won't get confused between prefixed and non-prefixed items?
+
+		$params['mi_active'] = array( 'checkbox', _PAYPLAN_MI_ACTIVE_NAME, _PAYPLAN_MI_ACTIVE_DESC );
+		$params_values['mi_active'] = 1;
+		$custompar[$miid]['params'][] = 'mi_active';
+
+		$settings_array = $mi->getSettings();
+
+		if ( isset( $settings_array['lists'] ) ) {
+			foreach ( $settings_array['lists'] as $listname => $listcontent ) {
+				$lists[$prefix . $listname] = $listcontent;
+			}
+
+			unset( $settings_array['lists'] );
+		}
+
+		// Iterate through settings form
+		foreach ( $settings_array as $name => $values ) {
+			$setting_name = $miid . '_' . $name;
+
+			$params[$prefix . $name] = $settings_array[$name];
+			$custompar[$miid]['params'][] = $prefix . $name;
+		}
+	}
+
+	if ( !empty( $custompar ) ) {
+		$customparamsarray->mi = $custompar;
+	}
 
 	$settings = new aecSettings ( 'payplan', 'general' );
 	if ( is_array( $customparams_values ) ) {
@@ -3035,6 +3114,7 @@ function editSubscriptionPlan( $id, $option )
 
 	// Call HTML Class
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+
 	if ( !empty( $customparamsarray ) ) {
 		$aecHTML->customparams = $customparamsarray;
 	}
@@ -3525,6 +3605,7 @@ function listMicroIntegrations( $option )
  	// get the total number of records
  	$query = 'SELECT count(*)'
 		 	. ' FROM #__acctexp_microintegrations'
+		 	. ' WHERE `hidden` = \'0\''
 		 	;
  	$database->setQuery( $query );
  	$total = $database->loadResult();
@@ -3543,6 +3624,7 @@ function listMicroIntegrations( $option )
 		 	. ' GROUP BY `id`'
 		 	. ' ORDER BY `ordering`'
 		 	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+		 	. ' WHERE `hidden` = \'0\''
 		 	;
  	$database->setQuery( $query );
 

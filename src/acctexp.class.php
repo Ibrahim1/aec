@@ -3588,6 +3588,7 @@ class aecSettings
 		$this->params_values	= $params_values;
 		$this->lists			= $lists;
 		$this->settings			= $settings;
+		$this->prefix			= '';
 
 		foreach ( $this->params as $name => $content ) {
 
@@ -3597,19 +3598,22 @@ class aecSettings
 			// $content[3] = set name
 			// $content[4] = set description
 
-			if ( isset( $this->params_values[$name] ) ) {
-				$value = $this->params_values[$name];
-			} else {
+			$cname = $name;
+
+			$name = $this->prefix . $cname;
+
+			if ( !isset( $this->params_values[$name] ) ) {
 				if ( isset( $content[3] ) ) {
-					$value						= $content[3];
 					$this->params_values[$name] = $content[3];
 				} elseif ( isset( $content[1] ) && !isset( $content[2] ) ) {
-					$value						= $content[1];
 					$this->params_values[$name] = $content[1];
 				} else {
-					$value						= '';
 					$this->params_values[$name] = '';
 				}
+			}
+
+			if ( isset( $this->params_values[$name] ) ) {
+				$value = $this->params_values[$name];
 			}
 
 			// Checking for remap functions
@@ -3629,10 +3633,10 @@ class aecSettings
 				// Create constant names
 				$constant_generic	= '_' . strtoupper($this->area)
 										. '_' . strtoupper( $this->original_subarea )
-										. '_' . strtoupper( $name );
+										. '_' . strtoupper( $cname );
 				$constant			= '_' . strtoupper( $this->area )
 										. '_' . strtoupper( $this->subarea )
-										. '_' . strtoupper( $name );
+										. '_' . strtoupper( $cname );
 				$constantname		= $constant . '_NAME';
 				$constantdesc		= $constant . '_DESC';
 
@@ -3664,13 +3668,27 @@ class aecSettings
 				$info_desc = $content[2];
 			}
 
-			$this->settings[$name] = array($type, $info_name, $info_desc, $value);
+			$this->settings[$name] = array( $type, $info_name, $info_desc, $value );
 		}
+	}
+
+	function remap_add_prefix( $name, $value )
+	{
+		$this->prefix = $value;
+		return 'DEL';
+	}
+
+	function remap_area_change( $name, $value )
+	{
+		$this->area = $value;
+		$this->prefix = '';
+		return 'DEL';
 	}
 
 	function remap_subarea_change( $name, $value )
 	{
 		$this->subarea = $value;
+		$this->prefix = '';
 		return 'DEL';
 	}
 
@@ -5277,6 +5295,7 @@ class SubscriptionPlan extends serialParamDBTable
 			$query = 'SELECT `id`'
 					. ' FROM #__acctexp_microintegrations'
 					. ' WHERE `id` IN (' . $this->_db->getEscaped( implode( ',', $this->micro_integrations ) ) . ')'
+		 			. ' AND `active` = \'1\''
 					. ' ORDER BY `ordering` ASC'
 					;
 			$this->_db->setQuery( $query );
@@ -6359,13 +6378,9 @@ class InvoiceFactory
 		$this->coupons = array();
 		$this->coupons['active'] = $aecConfig->cfg['enable_coupons'];
 
-		if ( !empty( $aecConfig->cfg['skip_confirmation'] ) ) {
-			if ( $passthrough ) {
-				$this->loadMetaUser( $passthrough, true );
-			}
+		$confirm = !empty( $aecConfig->cfg['skip_confirmation'] );
 
-			$this->save( $option, $var );
-		} else {
+		if ( $confirm ) {
 			global $mainframe;
 
 			$this->mi_form = $this->objUsage->getMIforms();
@@ -6373,6 +6388,12 @@ class InvoiceFactory
 			$mainframe->SetPageTitle( _CONFIRM_TITLE );
 
 			Payment_HTML::confirmForm( $option, $this, $user, $passthrough );
+		} else {
+			if ( $passthrough ) {
+				$this->loadMetaUser( $passthrough, true );
+			}
+
+			$this->save( $option, $var );
 		}
 	}
 
@@ -10125,6 +10146,7 @@ class microIntegrationHandler
 			 	. ' FROM #__acctexp_microintegrations'
 			 	. ' GROUP BY ' . ( $use_order ? '`ordering`' : '`id`' )
 			 	. ' ORDER BY `class_name`'
+		 		. ' WHERE `hidden` = \'0\''
 			 	;
 
 		if ( !empty( $limitstart ) && !empty( $limit ) ) {
@@ -10403,6 +10425,8 @@ class microIntegration extends serialParamDBTable
 	var $active 			= null;
 	/** @var int */
 	var $system 			= null;
+	/** @var int */
+	var $hidden 			= null;
 	/** @var int */
 	var $ordering			= null;
 	/** @var string */

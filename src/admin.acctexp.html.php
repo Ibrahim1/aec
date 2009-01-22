@@ -1773,8 +1773,6 @@ class HTML_AcctExp
 											<?php echo $aecHTML->createSettingsParticle( 'lifetime' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'full_period' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'full_periodunit' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'full_useramount' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'full_useramount_hasmin' ); ?>
 											<div class="usernote" style="width:200px;">
 												<?php echo _PAYPLAN_AMOUNT_NOTICE_TEXT; ?>
 											</div>
@@ -1881,6 +1879,26 @@ class HTML_AcctExp
 							<div class="userinfobox">
 								<?php echo $aecHTML->createSettingsParticle( 'micro_integrations' ); ?>
 							</div>
+							<div class="userinfobox">
+								<?php echo $aecHTML->createSettingsParticle( 'micro_integrations_plan' ); ?>
+							</div>
+							<?php
+							if ( !empty( $aecHTML->customparams->mi ) ) {
+								foreach ( $aecHTML->customparams->mi as $id => $mi ) {
+									?>
+									<div class="userinfobox clear">
+										<h2 style="clear:both;"><?php echo $mi['name']; ?></h2>
+										<?php
+										$k = 0;
+										foreach ( $processor['params'] as $customparam ) {
+											echo $aecHTML->createSettingsParticle( $customparam );
+										}
+										?>
+									</div>
+									<?php
+								}
+							}
+							?>
 						</td></tr></table>
 						<?php
 		                $tabs->endTab();

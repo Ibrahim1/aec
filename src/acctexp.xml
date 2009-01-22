@@ -212,6 +212,7 @@
 			<filename>install/inc/upgrade_0_12_6RC2j.inc.php</filename>
 			<filename>install/inc/upgrade_0_12_6RC2m.inc.php</filename>
 			<filename>install/inc/upgrade_0_12_6RC2n.inc.php</filename>
+			<filename>install/inc/upgrade_0_12_6.inc.php</filename>
 		</files>
 		<images>
 		</images>

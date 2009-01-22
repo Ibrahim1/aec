@@ -113,24 +113,4 @@ if ( in_array( $mosConfig_dbprefix . "acctexp_mi_hotproperty", $tables ) ) {
 	}
 }
 
-/*
-// Modifying MI tables for MI Scope
-
-// Make sure we have MIs in the first place
-
-// Loop through MIs putting settings in subarrays (convert old _exp _pre_exp stuff)
-
-// Convert old interpretative pre-expiration into new event table scheme
-// Get all MIs that have pre-exp
-// Get plans that have that MI
-// Get active users with that plan
-// Create events for users
-
-// Delete old mi table columns
-$eucaInstalldb->dropColifExists( 'auto_check', 'microintegrations' );
-$eucaInstalldb->dropColifExists( 'on_userchange', 'microintegrations' );
-$eucaInstalldb->dropColifExists( 'pre_exp_check', 'microintegrations' );
-
-*/
-
 ?>
