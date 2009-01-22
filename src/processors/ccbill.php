@@ -63,7 +63,6 @@ class processor_ccbill extends POSTprocessor
 	{
 		$p = array();
 		$p['Allowedtypes']	= array( 'inputC' );
-		$p['recurring']		= array( 'list_yesno' );
 
 		return $p;
 	}
