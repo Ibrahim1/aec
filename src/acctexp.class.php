@@ -3600,6 +3600,12 @@ class aecSettings
 
 			$cname = $name;
 
+			if ( !empty( $this->prefix ) ) {
+				if ( strpos( $name, $this->prefix ) === 0 ) {
+					$cname = str_replace( $this->prefix, '', $name );
+				}
+			}
+
 			$name = $this->prefix . $cname;
 
 			if ( !isset( $this->params_values[$name] ) ) {
@@ -5387,6 +5393,35 @@ class SubscriptionPlan extends serialParamDBTable
 
 		if ( !empty( $post['add_group'] ) ) {
 			ItemGroupHandler::setChildren( $post['add_group'], array( $planid ) );
+		}
+
+		if ( !empty( $post['micro_integrations_plan'] ) ) {
+			foreach ( $post['micro_integrations_plan'] as $miname ) {
+				$mi = new microIntegration( $database );
+				$mi->load(0);
+
+				$mi->storeload();
+				$post['micro_integrations'][] = $mi->id;
+			}
+		}
+
+		// Update MI settings
+		foreach ( $post['micro_integrations'] as $miid ) {
+			$mi = new microIntegration( $database );
+			$mi->load( $miid );
+
+			$prefix = 'MI_' . $miid . '_';
+
+			$settings = array();
+			foreach ( $post as $name => $value ) {
+				if ( strpos( $name, $prefix ) ) {
+					$rname = str_replace( $prefix, '', $name );
+
+					$settings[$rname] = $value;
+				}
+			}
+
+			$mi->savePostParams( $settings );
 		}
 
 		// Filter out fixed variables
@@ -10501,8 +10536,6 @@ class microIntegration extends serialParamDBTable
 
 	function callDry( $mi_name )
 	{
-		global $mosConfig_absolute_path;
-
 		$this->class_name = $mi_name;
 		$this->callIntegration( true );
 	}
@@ -10782,6 +10815,18 @@ class microIntegration extends serialParamDBTable
 		}
 	}
 
+	function getGeneralSettings()
+	{
+		$settings['name']			= array( 'inputC', '' );
+		$settings['desc']			= array( 'editor', '' );
+		$settings['active']			= array( 'checkbox', '' );
+		$settings['auto_check']		= array( 'checkbox', '' );
+		$settings['on_userchange']	= array( 'checkbox', '' );
+		$settings['pre_exp_check']	= array( 'inputB', '' );
+
+		return $settings;
+	}
+
 	function getSettings()
 	{
 		// See whether an install is neccessary (and possible)
@@ -10854,6 +10899,13 @@ class microIntegration extends serialParamDBTable
 		} else {
 			$new_params = $params;
 		}
+
+		$this->name				= $this['name'];
+		$this->desc				= $this['desc'];
+		$this->active			= $this['active'];
+		$this->auto_check		= $this['auto_check'];
+		$this->on_userchange	= $this['on_userchange'];
+		$this->pre_exp_check	= $this['pre_exp_check'];
 
 		if ( !empty( $new_params['rebuild'] ) ) {
 			global $database;

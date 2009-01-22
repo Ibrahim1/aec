@@ -1911,7 +1911,7 @@ function editSettings( $option )
 		$selected_mis		= '';
 	}
 
-	$lists['milist'] = mosHTML::selectList( $mi_htmllist, 'milist[]', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '" multiple', 'value', 'text', $selected_mis );
+	$lists['milist'] = mosHTML::selectList( $mi_htmllist, 'milist[]', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '" multiple="multiple"', 'value', 'text', $selected_mis );
 
 	// Create Authentication Plugin Selection List
 	if ( aecJoomla15check() ) {
@@ -1944,8 +1944,8 @@ function editSettings( $option )
 			}
 		}
 
-		$lists['authlist'] = mosHTML::selectList( $auth_htmllist, 'authlist[]', 'size="' . min( ( $auth_counter + 1 ), 25 ) . '" multiple', 'value', 'text', $selected_authentications );
-		$lists['authorization_list'] = mosHTML::selectList( $auth_htmllist, 'authorization_list[]', 'size="' . min( ( $auth_counter + 1 ), 25 ) . '" multiple', 'value', 'text', $selected_authorizations );
+		$lists['authlist'] = mosHTML::selectList( $auth_htmllist, 'authlist[]', 'size="' . min( ( $auth_counter + 1 ), 25 ) . '" multiple="multiple"', 'value', 'text', $selected_authentications );
+		$lists['authorization_list'] = mosHTML::selectList( $auth_htmllist, 'authorization_list[]', 'size="' . min( ( $auth_counter + 1 ), 25 ) . '" multiple="multiple"', 'value', 'text', $selected_authorizations );
 	}
 
 	$tab_data = array();
@@ -2315,8 +2315,8 @@ function editSettings( $option )
 		}
 	}
 
-	$lists['gwlist_enabled']	= mosHTML::selectList($gw_list_html, 'gwlist_enabled[]', 'size="' . max(min(count($gwlist), 12), 2) . '" multiple', 'value', 'text', $gw_list_enabled);
-	$lists['gwlist']			= mosHTML::selectList($gw_list_enabled_html, 'gwlist[]', 'size="' . max(min(count($gw_list_enabled), 12), 3) . '" multiple', 'value', 'text', $gwlist_selected);
+	$lists['gwlist_enabled']	= mosHTML::selectList($gw_list_html, 'gwlist_enabled[]', 'size="' . max(min(count($gwlist), 12), 2) . '" multiple="multiple"', 'value', 'text', $gw_list_enabled);
+	$lists['gwlist']			= mosHTML::selectList($gw_list_enabled_html, 'gwlist[]', 'size="' . max(min(count($gw_list_enabled), 12), 3) . '" multiple="multiple"', 'value', 'text', $gwlist_selected);
 
 	$grouplist = ItemGroupHandler::getTree();
 
@@ -3026,6 +3026,7 @@ function editSubscriptionPlan( $id, $option )
 
 	$lists['micro_integrations'] = mosHTML::selectList($mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $selected_mi);
 
+	$mi_handler = new microIntegrationHandler();
 	$mi_list = $mi_handler->getIntegrationList();
 
 	$mi_htmllist = array();
@@ -3041,7 +3042,7 @@ function editSubscriptionPlan( $id, $option )
 		}
 	}
 
-	$lists['micro_integrations_plan'] = mosHTML::selectList( $mi_htmllist, 'micro_integrations_plan[]', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '" multiple', 'value', 'text', 0 );
+	$lists['micro_integrations_plan'] = mosHTML::selectList( $mi_htmllist, 'micro_integrations_plan[]', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '" multiple="multiple"', 'value', 'text', array() );
 
 	$query = 'SELECT `id`'
 			. ' FROM #__acctexp_microintegrations'
@@ -3067,20 +3068,6 @@ function editSubscriptionPlan( $id, $option )
 
 		$prefix = 'MI_' . $miid . '_';
 
-		$params['remap_mi_' . $miid]	= array( 'area_change', 'MI' );
-		$params['remaps_mi_' . $miid]	= array( 'subarea_change', $mi->class_name );
-		$params['prefix_mi_' . $miid]	= array( 'add_prefix', $miid );
-
-		$custompar[$miid] = array();
-		$custompar[$miid]['name'] = $mi->name;
-		$custompar[$miid]['params'] = array();
-
-		# How can we make sure it won't get confused between prefixed and non-prefixed items?
-
-		$params['mi_active'] = array( 'checkbox', _PAYPLAN_MI_ACTIVE_NAME, _PAYPLAN_MI_ACTIVE_DESC );
-		$params_values['mi_active'] = 1;
-		$custompar[$miid]['params'][] = 'mi_active';
-
 		$settings_array = $mi->getSettings();
 
 		if ( isset( $settings_array['lists'] ) ) {
@@ -3090,6 +3077,22 @@ function editSubscriptionPlan( $id, $option )
 
 			unset( $settings_array['lists'] );
 		}
+
+		$generalsettings = $mi->getGeneralSettings();
+
+		foreach ( $generalsettings as $name => $value ) {
+			$params_values[$prefix.$name] = $mi->$name;
+		}
+
+		$settings_array = array_merge( $settings_array, $generalsettings );
+
+		$params[$prefix.'remap']	= array( 'area_change', 'MI' );
+		$params[$prefix.'remaps']	= array( 'subarea_change', $mi->class_name );
+		$params[$prefix.'prefix']	= array( 'add_prefix', $miid );
+
+		$custompar[$miid] = array();
+		$custompar[$miid]['name'] = $mi->name;
+		$custompar[$miid]['params'] = array();
 
 		// Iterate through settings form
 		foreach ( $settings_array as $name => $values ) {
@@ -3716,17 +3719,13 @@ function saveMicroIntegration( $option, $apply=0 )
 	$mi = new microIntegration( $database );
 	$mi->load( $id );
 
-	$mi->name			= $_POST['name'];
-	$mi->desc			= $_POST['desc'];
-	$mi->active			= $_POST['active'];
 	if ( !empty( $_POST['class_name'] ) ) {
-		$mi->class_name	= $_POST['class_name'];
+		$load = $mi->callDry( $_POST['class_name'] );
+	} else {
+		$load = $mi->callIntegration( 1 );
 	}
-	$mi->auto_check		= $_POST['auto_check'];
-	$mi->on_userchange	= $_POST['on_userchange'];
-	$mi->pre_exp_check	= $_POST['pre_exp_check'];
 
-	if ( $mi->callIntegration( 1 ) ) {
+	if ( $load ) {
 		$mi->savePostParams( $_POST );
 
 		$mi->storeload();
@@ -3743,7 +3742,7 @@ function saveMicroIntegration( $option, $apply=0 )
 			mosRedirect( 'index2.php?option=' . $option . '&task=showMicroIntegrations', _AEC_MSG_SUCESSFULLY_SAVED );
 		}
 	} else {
-		mosRedirect( 'index2.php?option=' . $option . '&task=editMicroIntegration&id=' . $mi->getMax() , _AEC_MSG_SUCESSFULLY_SAVED );
+		mosRedirect( 'index2.php?option=' . $option . '&task=editMicroIntegration&id=' . $mi->id , _AEC_MSG_SUCESSFULLY_SAVED );
 	}
 
 }
@@ -4045,7 +4044,7 @@ function editCoupon( $id, $option, $new, $type )
 		$sel_usage_plans = 0;
 	}
 
-	$lists['usage_plans']		= mosHTML::selectList($all_plans, 'usage_plans[]', 'size="' . $total_all_plans . '" multiple',
+	$lists['usage_plans']		= mosHTML::selectList($all_plans, 'usage_plans[]', 'size="' . $total_all_plans . '" multiple="multiple"',
 									'value', 'text', $sel_usage_plans);
 
 	// get available micro integrations
@@ -4079,7 +4078,7 @@ function editCoupon( $id, $option, $new, $type )
  		$selected_mi = array();
  	}
 
-	$lists['micro_integrations'] = mosHTML::selectList( $mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple', 'value', 'text', $selected_mi );
+	$lists['micro_integrations'] = mosHTML::selectList( $mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $selected_mi );
 
 	$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
 			. ' FROM #__acctexp_coupons'
@@ -4117,7 +4116,7 @@ function editCoupon( $id, $option, $new, $type )
 		$sel_coupons = '';
 	}
 
-	$lists['bad_combinations']		= mosHTML::selectList($coupons, 'bad_combinations[]', 'size="' . min((count( $coupons ) + 1), 25) . '" multiple',
+	$lists['bad_combinations']		= mosHTML::selectList($coupons, 'bad_combinations[]', 'size="' . min((count( $coupons ) + 1), 25) . '" multiple="multiple"',
 									'value', 'text', $sel_coupons);
 
 	$settings = new aecSettings( 'coupon', 'general' );
