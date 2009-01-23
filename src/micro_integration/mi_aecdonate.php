@@ -28,7 +28,9 @@ class mi_aecdonate
 	function saveParams( $params )
 	{
 		foreach ( $params as $n => $v ) {
-			$params[$n] = AECToolbox::correctAmount( $v );
+			if ( !empty( $v ) ) {
+				$params[$n] = AECToolbox::correctAmount( $v );
+			}
 		}
 
 		return $params;
@@ -49,12 +51,18 @@ class mi_aecdonate
 	{
 		$price = AECToolbox::correctAmount( $request->params['amt'] );
 
-		if ( ( $price >= $this->settings['min'] ) && ( $price <= $this->settings['max'] ) ) {
-			$request->add->price = $price;
-		} elseif ( $price > $this->settings['max'] ) {
-			$request->add->price = $this->settings['max'];
-		} elseif ( $price < $this->settings['min'] ) {
-			$request->add->price = $this->settings['min'];
+		$request->add->price = $price;
+
+		if ( !empty( $this->settings['max'] ) ) {
+			if ( $price > $this->settings['max'] ) {
+				$request->add->price = $this->settings['max'];
+			}
+		}
+
+		if ( !empty( $this->settings['min'] ) ) {
+			if ( $price < $this->settings['min'] ) {
+				$request->add->price = $this->settings['min'];
+			}
 		}
 
 		return null;
