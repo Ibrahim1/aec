@@ -3750,7 +3750,7 @@ class aecHTML
 		$this->js		= $js;
 	}
 
-	function createSettingsParticle( $name )
+	function createSettingsParticle( $name, $notooltip=false )
 	{
 		if ( !isset( $this->rows[$name] ) ) {
 			return;
@@ -3768,7 +3768,7 @@ class aecHTML
 				$value = '';
 			}
 
-			if ( !empty( $row[1] ) && !empty( $row[2] ) ) {
+			if ( !empty( $row[1] ) && !empty( $row[2] ) && !$notooltip ) {
 				if (  aecJoomla15check() ) {
 					$return = '<div class="setting_desc">';
 					$return .= '<span class="editlinktip hasTip" title="';
@@ -3913,20 +3913,20 @@ class aecHTML
 		return $return;
 	}
 
-	function returnFull()
+	function returnFull( $notooltip=false )
 	{
 		$return = '';
 		foreach ( $this->rows as $rowname => $rowcontent ) {
-			$return .= $this->createSettingsParticle( $rowname );
+			$return .= $this->createSettingsParticle( $rowname, $notooltip );
 		}
 
 		return $return;
 	}
 
-	function printFull()
+	function printFull( $notooltip=false )
 	{
 		foreach ( $this->rows as $rowname => $rowcontent ) {
-			echo $this->createSettingsParticle( $rowname );
+			echo $this->createSettingsParticle( $rowname, $notooltip );
 		}
 	}
 
@@ -5301,7 +5301,7 @@ class SubscriptionPlan extends serialParamDBTable
 			$settings->fullSettingsArray( $params, array(), $lists ) ;
 
 			$aecHTML = new aecHTML( $settings->settings, $settings->lists );
-			return $aecHTML->returnFull();
+			return $aecHTML->returnFull( true );
 		}
 	}
 
