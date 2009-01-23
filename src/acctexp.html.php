@@ -162,7 +162,7 @@ class HTML_frontEnd
 			<?php
 		} ?>
 		</div>
-		<div style="clear:both"></div> 
+		<div style="clear:both"></div>
 		<?php
 	}
 
@@ -749,7 +749,7 @@ class Payment_HTML
 							<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
 						<?php } ?>
 						<?php if ( !empty( $InvoiceFactory->mi_form ) ) {
-							echo $InvoiceFactory->mi_form;
+							echo '<div id="confirmation_extra">' . $InvoiceFactory->mi_form . '</div>';
 						} ?>
 						<input type="hidden" name="option" value="<?php echo $option; ?>" />
 						<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0; ?>" />

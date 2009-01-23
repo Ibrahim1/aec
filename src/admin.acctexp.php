@@ -2613,6 +2613,16 @@ function editSubscriptionPlan( $id, $option )
 	} else {
 		$params_values = $row->params;
 		$restrictions_values = $row->restrictions;
+
+		// Clean up custom params
+		if ( !empty( $row->customparams ) ) {
+			foreach ( $row->customparams as $n => $v ) {
+				if ( isset( $params_values[$n] ) || isset( $restrictions_values[$n] ) ) {
+					unset( $row->customparams[$n] );
+				}
+			}
+		}
+
 		$customparams_values = $row->custom_params;
 
 		// We need to convert the values that are set as object properties
@@ -3059,7 +3069,8 @@ function editSubscriptionPlan( $id, $option )
 		$hidden_mi_list[] = $miobj->id;
 	}
 
-	$params['micro_integrations_hidden'] = array( 'hidden', $hidden_mi_list );
+	$params['micro_integrations_hidden']		= array( 'hidden', '' );
+	$params_values['micro_integrations_hidden']		= $hidden_mi_list;
 
 	foreach ( $hidden_mi as $miobj ) {
 		$mi = new microIntegration( $database );
@@ -3078,9 +3089,10 @@ function editSubscriptionPlan( $id, $option )
 
 		$prefix = 'MI_' . $mi->id . '_';
 
-		$params[$prefix.'gremap']	= array( 'area_change', 'MI' );
-		$params[$prefix.'gremaps']	= array( 'subarea_change', 'E' );
-		$params[$prefix.'gprefix']	= array( 'add_prefix', $prefix );
+		$params[] = array( 'area_change', 'MI' );
+		$params[] = array( 'subarea_change', 'E' );
+		$params[] = array( 'add_prefix', $prefix );
+		$params[] = array( 'userinfobox_sub', _MI_E_TITLE );
 
 		$generalsettings = $mi->getGeneralSettings();
 
@@ -3090,6 +3102,8 @@ function editSubscriptionPlan( $id, $option )
 
 			$params_values[$prefix.$name] = $mi->$name;
 		}
+
+		$params[]	= array( 'div_end', 0 );
 
 		$misettings = $mi->getSettings();
 
@@ -3101,14 +3115,17 @@ function editSubscriptionPlan( $id, $option )
 			unset( $misettings['lists'] );
 		}
 
-		$params[$prefix.'remap']	= array( 'area_change', 'MI' );
-		$params[$prefix.'remaps']	= array( 'subarea_change', $mi->class_name );
-		$params[$prefix.'prefix']	= array( 'add_prefix', $prefix );
+		$params[] = array( 'area_change', 'MI' );
+		$params[] = array( 'subarea_change', $mi->class_name );
+		$params[] = array( 'add_prefix', $prefix );
+		$params[] = array( 'userinfobox_sub', _MI_E_SETTINGS );
 
 		foreach ( $misettings as $name => $value ) {
 			$params[$prefix . $name] = $value;
 			$custompar[$mi->id]['params'][] = $prefix . $name;
 		}
+
+		$params[]	= array( 'div_end', 0 );
 	}
 
 	if ( !empty( $custompar ) ) {
@@ -3658,17 +3675,16 @@ function editMicroIntegration ( $id, $option )
 
 	$aecHTML = null;
 
+	$mi_gsettings = $mi->getGeneralSettings();
+
 	if ( !$mi->id ) {
-		// Set lowest ordering
-		$mi->ordering	= 9999;
-		$mi->active		= 1;
 		$mi_list		= array();
-		$mi_htmllist	= array();
 
 		if ( $aecConfig->cfg['milist'] ) {
 			$mi_list = $aecConfig->cfg['milist'];
 		}
 
+		$mi_htmllist	= array();
 		if ( count( $mi_list ) > 0 ) {
 			foreach ( $mi_list as $name ) {
 				$mi_item = new microIntegration( $database );
@@ -3686,11 +3702,17 @@ function editMicroIntegration ( $id, $option )
 		} else {
 			$lists['class_name'] = '';
 		}
-	} else {
+	}
+
+	$aecHTML->hasSettings = false;
+
+	if ( $mi->id ) {
 		// Call MI (override active check) and Settings
 		if ( $mi->callIntegration( true ) ) {
-			$mi_gsettings = array();
-			$mi_gsettings = $mi->getGeneralSettings();
+			$set = array();
+			foreach ( $mi_gsettings as $n => $v ) {
+				$set[$n] = $mi->$n;
+			}
 
 			$mi_gsettings[$mi->id.'remap']	= array( 'area_change', 'MI' );
 			$mi_gsettings[$mi->id.'remaps']	= array( 'subarea_change', $mi->class_name );
@@ -3704,7 +3726,7 @@ function editMicroIntegration ( $id, $option )
 			}
 
 			$settings = new aecSettings( 'MI', 'E' );
-			$settings->fullSettingsArray( array_merge( $mi_gsettings, $mi_settings ), array(), $lists );
+			$settings->fullSettingsArray( array_merge( $mi_gsettings, $mi_settings ), $set, $lists );
 
 			// Call HTML Class
 			$aecHTML = new aecHTML( $settings->settings, $settings->lists );
@@ -3713,9 +3735,17 @@ function editMicroIntegration ( $id, $option )
 			foreach ( $mi_settings as $n => $v ) {
 				$aecHTML->customparams[] = $n;
 			}
+
+			$aecHTML->hasSettings = true;
 		} else {
 			// TODO: log error
 		}
+	} else {
+		$settings = new aecSettings( 'MI', 'E' );
+		$settings->fullSettingsArray( $mi_gsettings, array(), $lists );
+
+		// Call HTML Class
+		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 	}
 
 	HTML_AcctExp::editMicroIntegration( $option, $mi, $lists, $aecHTML );

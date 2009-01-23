@@ -1014,6 +1014,8 @@ define( '_PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_DESC', 'Se desejar, poder seleci
 define( '_PAYPLAN_MI', 'Micro Integr.');
 define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_NAME', 'Micro Integra&ccedil;&otilde;es:');
 define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_DESC', 'Selecionar as Micro Integra&ccedil;&otilde;es que pretende associar utilizador com o plano.');
+define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_PLAN_NAME', 'Local Micro Integrations:');
+define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_PLAN_DESC', 'Select the Micro Integrations that you want to apply to the user with the plan. Instead of global instances, these MIs will be specific only to this payment plan.');
 
 define( '_PAYPLAN_CURRENCY', 'Moeda');
 

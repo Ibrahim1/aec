@@ -1474,7 +1474,7 @@ class HTML_AcctExp
 								<h3><?php echo _MI_E_FUNCTION_NAME; ?></h3>
 								<div class="userinfobox">
 									<div style="position:relative;float:left;">
-									<?php if ( is_null( $aecHTML ) ) {
+									<?php if ( !$aecHTML->hasSettings ) {
 										if ( $lists['class_name'] ) {
 											echo $lists['class_name']; ?>
 											<br />
@@ -1490,7 +1490,7 @@ class HTML_AcctExp
 								</td>
 							</tr>
 							</table>
-							<?php if ( !is_null( $aecHTML ) ) {
+							<?php if ( $aecHTML->hasSettings ) {
 			                $tabs->endTab();
 			                $tabs->startTab( _MI_E_SETTINGS, _MI_E_SETTINGS ); ?>
 				                <div class="aec_tabheading"><h2><?php echo _MI_E_SETTINGS; ?></h2></div>
@@ -1849,7 +1849,7 @@ class HTML_AcctExp
 							</div>
 							<?php
 							if ( !empty( $aecHTML->customparams->mi ) ) {
-								foreach ( $aecHTML->customparams->mi as $id => $mi ) {//print_r($mi);print_r($aecHTML);exit;
+								foreach ( $aecHTML->customparams->mi as $id => $mi ) {
 									?>
 									<div class="userinfobox clear">
 										<h2 style="clear:both;"><?php echo $mi['name']; ?></h2>

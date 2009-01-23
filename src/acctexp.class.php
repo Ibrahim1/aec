@@ -5443,14 +5443,18 @@ class SubscriptionPlan extends serialParamDBTable
 
 			$settings = array();
 			foreach ( $post as $name => $value ) {
-				if ( strpos( $name, $prefix ) ) {
+				if ( strpos( $name, $prefix ) === 0 ) {
 					$rname = str_replace( $prefix, '', $name );
 
 					$settings[$rname] = $value;
+					unset( $post[$name] );
 				}
 			}
 
-			$mi->savePostParams( $settings );
+			if ( !empty( $settings ) ) {
+				$mi->savePostParams( $settings );
+				$mi->storeload();
+			}
 		}
 
 		// Filter out fixed variables
@@ -6442,7 +6446,7 @@ class InvoiceFactory
 		$this->coupons = array();
 		$this->coupons['active'] = $aecConfig->cfg['enable_coupons'];
 
-		$confirm = !empty( $aecConfig->cfg['skip_confirmation'] );
+		$confirm = empty( $aecConfig->cfg['skip_confirmation'] );
 
 		if ( $confirm ) {
 			global $mainframe;
@@ -10566,7 +10570,8 @@ class microIntegration extends serialParamDBTable
 	function callDry( $mi_name )
 	{
 		$this->class_name = $mi_name;
-		$this->callIntegration( true );
+
+		return $this->callIntegration( true );
 	}
 
 	function callIntegration( $override = 0 )
@@ -10577,7 +10582,7 @@ class microIntegration extends serialParamDBTable
 
 		$file_exists = file_exists( $filename );
 
-		if ( ( ( !$this->active && $this->id ) || !$file_exists ) && !$override ) {
+		if ( ( ( !$this->active && !empty( $this->id ) ) || !$file_exists ) && !$override ) {
 			// MI does not exist or is deactivated
 			return false;
 		} elseif ( $file_exists ) {
@@ -10929,12 +10934,12 @@ class microIntegration extends serialParamDBTable
 			$new_params = $params;
 		}
 
-		$this->name				= $this['name'];
-		$this->desc				= $this['desc'];
-		$this->active			= $this['active'];
-		$this->auto_check		= $this['auto_check'];
-		$this->on_userchange	= $this['on_userchange'];
-		$this->pre_exp_check	= $this['pre_exp_check'];
+		$this->name				= $array['name'];
+		$this->desc				= $array['desc'];
+		$this->active			= $array['active'];
+		$this->auto_check		= $array['auto_check'];
+		$this->on_userchange	= $array['on_userchange'];
+		$this->pre_exp_check	= $array['pre_exp_check'];
 
 		if ( !empty( $new_params['rebuild'] ) ) {
 			global $database;
@@ -12910,7 +12915,11 @@ class aecRestrictionHelper
 						'previousplan_req_enabled_excluded', 'previousplan_req_excluded', 'currentplan_req_enabled_excluded', 'currentplan_req_excluded',
 						'overallplan_req_enabled_excluded', 'overallplan_req_excluded', 'used_plan_min_enabled', 'used_plan_min_amount',
 						'used_plan_min', 'used_plan_max_enabled', 'used_plan_max_amount', 'used_plan_max',
-						'custom_restrictions_enabled', 'custom_restrictions' );
+						'custom_restrictions_enabled', 'custom_restrictions', 'previousgroup_req_enabled', 'previousgroup_req',
+						'previousgroup_req_enabled_excluded', 'previousgroup_req_excluded', 'currentgroup_req_enabled', 'currentgroup_req',
+						'currentgroup_req_enabled_excluded', 'currentgroup_req_excluded', 'overallgroup_req_enabled', 'overallgroup_req',
+						'overallgroup_req_enabled_excluded', 'overallgroup_req_excluded', 'used_group_min_enabled', 'used_group_min_amount',
+						'used_group_min', 'used_group_max_enabled', 'used_group_max_amount', 'used_group_max' );
 
 		return $list;
 	}
