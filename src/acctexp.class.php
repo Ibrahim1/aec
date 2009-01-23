@@ -2257,7 +2257,7 @@ class PaymentProcessor
 		}
 
 		if ( empty( $plan_params ) ) {
-			$planparams = $plan->getProcessorParameters( $this->id );
+			$plan_params = $plan->getProcessorParameters( $this->id );
 		}
 
 		if ( isset( $plan_params['aec_overwrite_settings'] ) ) {
