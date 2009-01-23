@@ -3875,6 +3875,16 @@ class aecHTML
 				. '</div>'
 				;
 				break;
+			case 'hidden':
+				$return = '';
+				if ( is_array( $value ) ) {
+					foreach ( $value as $v ) {
+						$return .= '<input type="hidden" name="' . $name . '[]" value="' . $v . '" />';
+					}
+				} else {
+					$return .= '<input type="hidden" name="' . $name . '" value="' . $value . '" />';
+				}
+				break;
 			default:
 				$return = $value;
 				break;
@@ -5393,6 +5403,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 		if ( !empty( $post['add_group'] ) ) {
 			ItemGroupHandler::setChildren( $post['add_group'], array( $planid ) );
+			unset( $post['add_group'] );
 		}
 
 		if ( !empty( $post['micro_integrations_plan'] ) ) {
@@ -5400,15 +5411,33 @@ class SubscriptionPlan extends serialParamDBTable
 				$mi = new microIntegration( $database );
 				$mi->load(0);
 
+				$mi->class_name = $miname;
+				$mi->hidden = 1;
+
 				$mi->storeload();
+
 				$post['micro_integrations'][] = $mi->id;
 			}
+
+			$mi->updateOrder();
+
+			unset( $post['micro_integrations_plan'] );
+		}
+
+		if ( !empty( $post['micro_integrations_hidden'] ) ) {
+			$post['micro_integrations'] = array_merge( $post['micro_integrations'], $post['micro_integrations_hidden'] );
+
+			unset( $post['micro_integrations_hidden'] );
 		}
 
 		// Update MI settings
 		foreach ( $post['micro_integrations'] as $miid ) {
 			$mi = new microIntegration( $database );
 			$mi->load( $miid );
+
+			if ( !$mi->hidden ) {
+				continue;
+			}
 
 			$prefix = 'MI_' . $miid . '_';
 
@@ -10179,9 +10208,9 @@ class microIntegrationHandler
 
 		$query = 'SELECT id, class_name' . ( $name ? ', name' : '' )
 			 	. ' FROM #__acctexp_microintegrations'
+		 		. ' WHERE `hidden` = \'0\''
 			 	. ' GROUP BY ' . ( $use_order ? '`ordering`' : '`id`' )
 			 	. ' ORDER BY `class_name`'
-		 		. ' WHERE `hidden` = \'0\''
 			 	;
 
 		if ( !empty( $limitstart ) && !empty( $limit ) ) {
@@ -10818,10 +10847,10 @@ class microIntegration extends serialParamDBTable
 	function getGeneralSettings()
 	{
 		$settings['name']			= array( 'inputC', '' );
-		$settings['desc']			= array( 'editor', '' );
-		$settings['active']			= array( 'checkbox', '' );
-		$settings['auto_check']		= array( 'checkbox', '' );
-		$settings['on_userchange']	= array( 'checkbox', '' );
+		$settings['desc']			= array( 'inputD', '' );
+		$settings['active']			= array( 'list_yesno', '' );
+		$settings['auto_check']		= array( 'list_yesno', '' );
+		$settings['on_userchange']	= array( 'list_yesno', '' );
 		$settings['pre_exp_check']	= array( 'inputB', '' );
 
 		return $settings;

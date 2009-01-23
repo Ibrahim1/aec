@@ -3054,11 +3054,17 @@ function editSubscriptionPlan( $id, $option )
 
 	$custompar = array();
 
-	foreach ( $hidden_mi as $miid ) {
-		$mi = new microIntegration( $database );
-		$mi->load( $miid );
+	$hidden_mi_list = array();
+	foreach ( $hidden_mi as $miobj ) {
+		$hidden_mi_list[] = $miobj->id;
+	}
 
-		if ( !$mi->load( $miid ) ) {
+	$params['micro_integrations_hidden'] = array( 'hidden', $hidden_mi_list );
+
+	foreach ( $hidden_mi as $miobj ) {
+		$mi = new microIntegration( $database );
+
+		if ( !$mi->load( $miobj->id ) ) {
 			continue;
 		}
 
@@ -3066,40 +3072,42 @@ function editSubscriptionPlan( $id, $option )
 			continue;
 		}
 
-		$prefix = 'MI_' . $miid . '_';
+		$custompar[$mi->id] = array();
+		$custompar[$mi->id]['name'] = $mi->name;
+		$custompar[$mi->id]['params'] = array();
 
-		$settings_array = $mi->getSettings();
+		$prefix = 'MI_' . $mi->id . '_';
 
-		if ( isset( $settings_array['lists'] ) ) {
-			foreach ( $settings_array['lists'] as $listname => $listcontent ) {
-				$lists[$prefix . $listname] = $listcontent;
-			}
-
-			unset( $settings_array['lists'] );
-		}
+		$params[$prefix.'gremap']	= array( 'area_change', 'MI' );
+		$params[$prefix.'gremaps']	= array( 'subarea_change', 'E' );
+		$params[$prefix.'gprefix']	= array( 'add_prefix', $prefix );
 
 		$generalsettings = $mi->getGeneralSettings();
 
 		foreach ( $generalsettings as $name => $value ) {
+			$params[$prefix . $name] = $value;
+			$custompar[$mi->id]['params'][] = $prefix . $name;
+
 			$params_values[$prefix.$name] = $mi->$name;
 		}
 
-		$settings_array = array_merge( $settings_array, $generalsettings );
+		$misettings = $mi->getSettings();
+
+		if ( isset( $misettings['lists'] ) ) {
+			foreach ( $misettings['lists'] as $listname => $listcontent ) {
+				$lists[$prefix . $listname] = $listcontent;
+			}
+
+			unset( $misettings['lists'] );
+		}
 
 		$params[$prefix.'remap']	= array( 'area_change', 'MI' );
 		$params[$prefix.'remaps']	= array( 'subarea_change', $mi->class_name );
-		$params[$prefix.'prefix']	= array( 'add_prefix', $miid );
+		$params[$prefix.'prefix']	= array( 'add_prefix', $prefix );
 
-		$custompar[$miid] = array();
-		$custompar[$miid]['name'] = $mi->name;
-		$custompar[$miid]['params'] = array();
-
-		// Iterate through settings form
-		foreach ( $settings_array as $name => $values ) {
-			$setting_name = $miid . '_' . $name;
-
-			$params[$prefix . $name] = $settings_array[$name];
-			$custompar[$miid]['params'][] = $prefix . $name;
+		foreach ( $misettings as $name => $value ) {
+			$params[$prefix . $name] = $value;
+			$custompar[$mi->id]['params'][] = $prefix . $name;
 		}
 	}
 
@@ -3624,10 +3632,10 @@ function listMicroIntegrations( $option )
  	// get the subset (based on limits) of required records
  	$query = 'SELECT *'
 		 	. ' FROM #__acctexp_microintegrations'
+		 	. ' WHERE `hidden` = \'0\''
 		 	. ' GROUP BY `id`'
 		 	. ' ORDER BY `ordering`'
 		 	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
-		 	. ' WHERE `hidden` = \'0\''
 		 	;
  	$database->setQuery( $query );
 
@@ -3680,29 +3688,35 @@ function editMicroIntegration ( $id, $option )
 		}
 	} else {
 		// Call MI (override active check) and Settings
-		if ( $mi->callIntegration( 1 ) ) {
+		if ( $mi->callIntegration( true ) ) {
+			$mi_gsettings = array();
+			$mi_gsettings = $mi->getGeneralSettings();
+
+			$mi_gsettings[$mi->id.'remap']	= array( 'area_change', 'MI' );
+			$mi_gsettings[$mi->id.'remaps']	= array( 'subarea_change', $mi->class_name );
+
 			$mi_settings = $mi->getSettings();
 
 			// Get lists supplied by the MI
-			if ( @is_array( $mi_settings['lists'] ) ) {
+			if ( !empty( $mi_settings['lists'] ) ) {
 				$lists = array_merge( $lists, $mi_settings['lists'] );
 				unset( $mi_settings['lists'] );
 			}
 
-			$settings = new aecSettings( 'MI', $mi->class_name );
-			$settings->fullSettingsArray( $mi_settings, array(), $lists );
+			$settings = new aecSettings( 'MI', 'E' );
+			$settings->fullSettingsArray( array_merge( $mi_gsettings, $mi_settings ), array(), $lists );
 
 			// Call HTML Class
 			$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+
+			$aecHTML->customparams = array();
+			foreach ( $mi_settings as $n => $v ) {
+				$aecHTML->customparams[] = $n;
+			}
 		} else {
 			// TODO: log error
 		}
 	}
-
-	// make select lists
-	$lists['yesno']				= mosHTML::yesnoSelectList('active', '', $mi->active);
-	$lists['yesno_auto']		= mosHTML::yesnoSelectList('auto_check', '', $mi->auto_check);
-	$lists['yesno_userupdate']	= mosHTML::yesnoSelectList('on_userchange', '', $mi->on_userchange);
 
 	HTML_AcctExp::editMicroIntegration( $option, $mi, $lists, $aecHTML );
 }

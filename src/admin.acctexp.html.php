@@ -1452,61 +1452,29 @@ class HTML_AcctExp
 					<td valign="top">
 						<?php
 		                $tabs->startPane( 'createMicroIntegration' );
-		                $tabs->startTab( _MI_E_TITLE, _MI_E_TITLE ); ?>
+		                $tabs->startTab( _MI_E_TITLE, _MI_E_TITLE );
+		                ?>
+		                <div class="aec_tabheading"><h2><?php echo _MI_E_TITLE; ?></h2></div>
 		                <table width="100%" class="aecadminform">
 							<tr>
-								<td colspan="2"><h2><?php echo _MI_E_TITLE_LONG; ?></h2></td>
-							</tr>
-							<tr>
-								<td width="120">
-									<?php echo aecHTML::ToolTip( _MI_E_ACTIVE_DESC, _MI_E_ACTIVE_NAME, null ); ?>
-									<?php echo _MI_E_ACTIVE_NAME; ?>
-								</td>
-								<td align="left"><?php echo $lists['yesno']; ?></td>
-							</tr>
-							<tr>
-								<td>
-									<?php echo aecHTML::ToolTip( _MI_E_NAME_DESC, _MI_E_NAME_NAME, null ); ?>
-									<?php echo _MI_E_NAME_NAME; ?>
-								</td>
-								<td><input class="inputbox" type="text" name="name" size="30" maxlength="40" value="<?php echo $row->name; ?>" /></td>
-							</tr>
-							<tr>
-								<td valign="top">
-									<?php echo aecHTML::ToolTip( _MI_E_DESC_DESC, _MI_E_DESC_NAME, null ); ?>
-									<?php echo _MI_E_DESC_NAME; ?>
-								</td>
-								<td><textarea name="desc" cols="60" rows="5"><?php echo $row->desc; ?></textarea></td>
-							</tr>
-							<tr>
-								<td>
-									<?php echo aecHTML::ToolTip( _MI_E_ACTIVE_AUTO_DESC, _MI_E_ACTIVE_AUTO_NAME, null ); ?>
-									<?php echo _MI_E_ACTIVE_AUTO_NAME; ?>
-								</td>
-								<td align="left"><?php echo $lists['yesno_auto']; ?></td>
-							</tr>
-							<tr>
-								<td>
-									<?php echo aecHTML::ToolTip( _MI_E_ACTIVE_USERUPDATE_DESC, _MI_E_ACTIVE_USERUPDATE_NAME, null ); ?>
-									<?php echo _MI_E_ACTIVE_USERUPDATE_NAME; ?>
-								</td>
-								<td align="left"><?php echo $lists['yesno_userupdate']; ?></td>
-							</tr>
-							<tr>
-								<td>
-									<?php echo aecHTML::ToolTip( _MI_E_PRE_EXP_DESC, _MI_E_PRE_EXP_NAME, null ); ?>
-									<?php echo _MI_E_PRE_EXP_NAME; ?>
-								</td>
-								<td>
-									<input class="inputbox" type="text" name="pre_exp_check" size="30" maxlength="40" value="<?php echo $row->pre_exp_check; ?>" />
-								</td>
-							</tr>
-							<?php
-							if ( is_null( $aecHTML ) ) { ?>
-								<tr>
-									<td><?php echo _MI_E_FUNCTION_NAME; ?></td>
-									<td>
-										<?php
+							<td>
+								<h2><?php echo _MI_E_TITLE_LONG; ?></h2>
+								<div class="userinfobox">
+									<div style="position:relative;float:left;">
+										<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'auto_check' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'on_userchange' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'pre_exp_check' ); ?>
+									</div>
+								</div>
+							</td>
+							<td valign="top">
+								<h3><?php echo _MI_E_FUNCTION_NAME; ?></h3>
+								<div class="userinfobox">
+									<div style="position:relative;float:left;">
+									<?php if ( is_null( $aecHTML ) ) {
 										if ( $lists['class_name'] ) {
 											echo $lists['class_name']; ?>
 											<br />
@@ -1514,23 +1482,21 @@ class HTML_AcctExp
 											echo _MI_E_FUNCTION_DESC;
 										} else {
 											echo _AEC_MSG_MIS_NOT_DEFINED;
-										} ?>
-									</td>
-								</tr>
+										}
+									} else {
+										echo "<p><strong>" . $row->class_name . "</p></strong>";
+									}
+									?>
+								</td>
+							</tr>
 							</table>
-							<?php
-							} else { ?>
-								<tr>
-									<td><?php echo _MI_E_FUNCTION_NAME; ?>:</td>
-									<td><strong><?php echo $row->class_name; ?></strong></td>
-								</tr>
-							</table>
-							<?php
+							<?php if ( !is_null( $aecHTML ) ) {
 			                $tabs->endTab();
 			                $tabs->startTab( _MI_E_SETTINGS, _MI_E_SETTINGS ); ?>
+				                <div class="aec_tabheading"><h2><?php echo _MI_E_SETTINGS; ?></h2></div>
 				                <table width="100%" class="aecadminform">
 									<?php
-									foreach ( $aecHTML->rows as $name => $content ) { ?>
+									foreach ( $aecHTML->customparams as $name ) { ?>
 				                		<tr><td><?php echo $aecHTML->createSettingsParticle( $name ); ?></td></tr>
 				                		<?php
 									} ?>
@@ -1799,7 +1765,6 @@ class HTML_AcctExp
 										<h2 style="clear:both;"><?php echo $processor['name']; ?></h2>
 										<p><a href="<?php echo $mosConfig_live_site; ?>/index.php?option=com_acctexp&amp;task=subscribe&amp;usage=<?php echo $row->id; ?>&amp;processor=<?php echo $processor['handle']; ?>" title="<?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?></a></p>
 										<?php
-										$k = 0;
 										foreach ( $processor['params'] as $customparam ) {
 											echo $aecHTML->createSettingsParticle( $customparam );
 										}
@@ -1880,16 +1845,16 @@ class HTML_AcctExp
 							</div>
 							<div class="userinfobox">
 								<?php echo $aecHTML->createSettingsParticle( 'micro_integrations_plan' ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'micro_integrations_hidden' ); ?>
 							</div>
 							<?php
 							if ( !empty( $aecHTML->customparams->mi ) ) {
-								foreach ( $aecHTML->customparams->mi as $id => $mi ) {
+								foreach ( $aecHTML->customparams->mi as $id => $mi ) {//print_r($mi);print_r($aecHTML);exit;
 									?>
 									<div class="userinfobox clear">
 										<h2 style="clear:both;"><?php echo $mi['name']; ?></h2>
 										<?php
-										$k = 0;
-										foreach ( $processor['params'] as $customparam ) {
+										foreach ( $mi['params'] as $customparam ) {
 											echo $aecHTML->createSettingsParticle( $customparam );
 										}
 										?>
