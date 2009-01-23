@@ -390,6 +390,14 @@ border: 2px solid #fff;
 width: 97%;
 }
 
+#confirmation_extra {
+background: #ddd;
+border:1px solid #ccc;
+padding: 8px;
+margin: 12px;
+width: 97%;
+}
+
 #confirmation table {
 float:left;
 width: 100%;
@@ -419,6 +427,21 @@ text-align: center;
 td.append_button {
 text-align: center;
 width: 90%;
+}
+
+div.setting_desc {
+position: relative;
+float: left;
+padding: 4px;
+clear: left;
+}
+
+div.setting_form {
+padding: 5px;
+}
+
+div.clear div.setting_desc {
+clear: both;
 }
 
 /* == Styling for the Checkout Page == */
