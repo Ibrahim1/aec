@@ -5408,6 +5408,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 		if ( !empty( $post['micro_integrations_plan'] ) ) {
 			foreach ( $post['micro_integrations_plan'] as $miname ) {
+				// Create new blank MIs
 				$mi = new microIntegration( $database );
 				$mi->load(0);
 
@@ -5416,6 +5417,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 				$mi->storeload();
 
+				// Add in new MI id
 				$post['micro_integrations'][] = $mi->id;
 			}
 
@@ -5425,6 +5427,7 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 
 		if ( !empty( $post['micro_integrations_hidden'] ) ) {
+			// Recover hidden MI relation to full list
 			$post['micro_integrations'] = array_merge( $post['micro_integrations'], $post['micro_integrations_hidden'] );
 
 			unset( $post['micro_integrations_hidden'] );
@@ -5435,12 +5438,14 @@ class SubscriptionPlan extends serialParamDBTable
 			$mi = new microIntegration( $database );
 			$mi->load( $miid );
 
+			// Only act special on hidden MIs
 			if ( !$mi->hidden ) {
 				continue;
 			}
 
 			$prefix = 'MI_' . $miid . '_';
 
+			// Get Settings from post array
 			$settings = array();
 			foreach ( $post as $name => $value ) {
 				if ( strpos( $name, $prefix ) === 0 ) {
@@ -5451,15 +5456,51 @@ class SubscriptionPlan extends serialParamDBTable
 				}
 			}
 
-			// TODO: Figure out if there is already an hidden instance with these settings
-			// If so, change MI number to existing instance
-
-			// TODO: If not, check if other plans have this MI applied
-			// In this case, create a new instance and replace MI number with that ID
-
+			// If we indeed HAVE settings, more to come here
 			if ( !empty( $settings ) ) {
-				$mi->savePostParams( $settings );
-				$mi->storeload();
+				// First, check whether there is already an MI with the exact same settings
+				$similarmis = microIntegrationHandler::getMIList( false, false, true, false, $mi->classname );
+
+				$similarmi = false;
+				if ( !empty( $similarmis ) ) {
+					foreach ( $similarmis as $miobj ) {
+						if ( $miobj->id == $mi->id ) {
+							continue;
+						}
+
+						if ( microIntegrationHandler::compareMIs( $mi, $miobj->id ) ) {
+							$similarmi = $miobj->id;
+						}
+					}
+				}
+
+				if ( $similarmi ) {
+					// We have a similar MI - unset old reference
+					$ref = array_search( $mi->id, $post['micro_integrations'] );
+					unset( $post['micro_integrations'][$ref] );
+
+					// No MI is similar, lets check for other plans
+					$plans = microIntegrationHandler::getPlansbyMI( $mi->id );
+
+					if ( count( $plans ) <= 1 ) {
+						// No other plan depends on this MI, just delete it
+						$mi->delete;
+					}
+
+					// Set new MI
+					$post['micro_integrations'][] = $similarmi;
+				} else {
+					// No MI is similar, lets check for other plans
+					$plans = microIntegrationHandler::getPlansbyMI( $mi->id );
+
+					if ( count( $plans ) > 1 ) {
+						// We have other plans depending on THIS setup of the MI, create a copy
+						$mi->id = 0;
+					}
+
+					$mi->savePostParams( $settings );
+					$mi->storeload();
+				}
 			}
 		}
 
@@ -10266,6 +10307,33 @@ class microIntegrationHandler
 		}
 	}
 
+	function compareMIs( $mi, $cmi_id )
+	{
+		global $database;
+
+		$excluded_props = array( 'id' );
+
+		$cmi = new microIntegration( $database );
+		$cmi->load( $cmi_id );
+
+		$props = get_object_vars( $mi );
+
+		$similar = true;
+		foreach ( $props as $prop ) {
+			if ( ( strpos( $prop, '_' ) === 0 ) || in_array( $prop, $excluded_props ) ) {
+				// This is an internal or excluded variable
+				continue;
+			}
+
+			if ( $cmi->$prop != $mi->$prop ) {
+				// Nope, this one is different
+				$similar = false;
+			}
+		}
+
+		return $similar;
+	}
+
 	function getIntegrationList()
 	{
 		$list = AECToolbox::getFileArray( $this->mi_dir, 'php', false, true );
@@ -10279,7 +10347,7 @@ class microIntegrationHandler
 		return $integration_list;
 	}
 
-	function getPlansbyMI ( $mi_id )
+	function getPlansbyMI( $mi_id )
 	{
 		global $database;
 

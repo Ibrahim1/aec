@@ -112,7 +112,7 @@ class processor_alertpay extends POSTprocessor
 		return $var;
 	}
 
-	function convertPeriodUnit( $period, $unit, $t=false )
+	function convertPeriodUnit( $unit, $period, $t=false )
 	{
 		$return = array();
 		$return['period'] = $period;
