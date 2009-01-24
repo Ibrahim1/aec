@@ -3054,6 +3054,7 @@ function editSubscriptionPlan( $id, $option )
 
 	$lists['micro_integrations_plan'] = mosHTML::selectList( $mi_htmllist, 'micro_integrations_plan[]', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '" multiple="multiple"', 'value', 'text', array() );
 
+	if ( !empty( $row->micro_integrations ) ) {
 	$query = 'SELECT `id`'
 			. ' FROM #__acctexp_microintegrations'
 			. ' WHERE `id` IN (' . implode( ',', $row->micro_integrations ) . ')'
@@ -3061,6 +3062,9 @@ function editSubscriptionPlan( $id, $option )
 			;
  	$database->setQuery( $query );
 	$hidden_mi = $database->loadObjectList();
+	} else {
+		$hidden_mi = array();
+	}
 
 	$custompar = array();
 
