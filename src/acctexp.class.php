@@ -6787,7 +6787,7 @@ class InvoiceFactory
 
 		$b = '';
 		if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) {
-			$b .= '<div class="componentheading"' . _THANKYOU_TITLE . '</div>';
+			$b .= '<div class="componentheading">' . _THANKYOU_TITLE . '</div>';
 		}
 
 		if ( $aecConfig->cfg['customtext_thanks'] ) {
@@ -6847,7 +6847,7 @@ class InvoiceFactory
 
 		$b = '';
 		if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) {
-			$b .= '<div class="componentheading"' . _THANKYOU_TITLE . '</div>';
+			$b .= '<div class="componentheading">' . _THANKYOU_TITLE . '</div>';
 		}
 
 		if ( $aecConfig->cfg['customtext_thanks'] ) {
