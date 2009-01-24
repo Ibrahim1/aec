@@ -5451,6 +5451,12 @@ class SubscriptionPlan extends serialParamDBTable
 				}
 			}
 
+			// TODO: Figure out if there is already an hidden instance with these settings
+			// If so, change MI number to existing instance
+
+			// TODO: If not, check if other plans have this MI applied
+			// In this case, create a new instance and replace MI number with that ID
+
 			if ( !empty( $settings ) ) {
 				$mi->savePostParams( $settings );
 				$mi->storeload();
@@ -9571,6 +9577,33 @@ class AECToolbox
 		return $dirArray;
 	}
 
+	function versionSort( $array )
+	{
+		$change = 1;
+
+		$alen = count( $array );
+
+		while ( true ) {
+			$change = false;
+
+			for ( $i=0; $i<$alen; $i++ ) {
+				if ( version_compare( $array[$i+1], $array[$i], '<' ) ) {
+					$temp = $array[$i];
+
+					$array[$i] = $array[$i+1];
+					$array[$i+1] = $temp;
+					$change = true;
+				}
+			}
+
+			if ( !$change ) {
+				break;
+			}
+		}
+
+		return $array;
+	}
+
 	function visualstrlen( $string )
 	{
 		// Visually Short Chars
@@ -10206,13 +10239,14 @@ class microIntegrationHandler
 		$this->mi_dir = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/micro_integration';
 	}
 
-	function getMIList( $limitstart=false, $limit=false, $use_order=false, $name=false )
+	function getMIList( $limitstart=false, $limit=false, $use_order=false, $name=false, $classname=false )
 	{
 		global $database;
 
 		$query = 'SELECT id, class_name' . ( $name ? ', name' : '' )
 			 	. ' FROM #__acctexp_microintegrations'
 		 		. ' WHERE `hidden` = \'0\''
+		 		. ( !empty( $classname ) ? ' AND `class_name` = \'' . $classname . '\'' : '' )
 			 	. ' GROUP BY ' . ( $use_order ? '`ordering`' : '`id`' )
 			 	. ' ORDER BY `class_name`'
 			 	;

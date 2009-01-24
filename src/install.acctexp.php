@@ -107,17 +107,21 @@ function com_install()
 
 		//require_once( $incpath . '/upgrade_0_12_6RC2m.inc.php' );
 
-
 		$incfiles = AECToolbox::getFileArray( $incpath, 'inc.php', false, true );
 
-		$upgrades = array();
+		$versions = array();
 		foreach ( $incfiles as $filename ) {
 			if ( strpos( $filename, 'upgrade_' ) === false ) {
 				continue;
+			} else {
+				$versions[] = str_replace( array( 'upgrade_', '.inc.php' ), array( '', '' ), $filename );
 			}
+		}
 
-			$version = str_replace( array( 'upgrade_', '.inc.php' ), array( '', '' ), $filename );
+		$incf = AECToolbox::versionSort( $versions );
 
+		$versions = array();
+		foreach ( $incf as $version ) {
 			if ( version_compare( $version, $oldversion, '>=' ) ) {
 				require_once( $incpath . '/upgrade_' . $version . '.inc.php' );
 			}
