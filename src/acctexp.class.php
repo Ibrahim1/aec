@@ -543,7 +543,7 @@ class metaUser
 		}
 	}
 
-	function instantGIDchange( $gid )
+	function instantGIDchange( $gid, $session=true )
 	{
 		global $database, $acl;
 
@@ -610,13 +610,15 @@ class metaUser
 		$database->setQuery( $query );
 		$database->query() or die( $database->stderr() );
 
-		// Update Session
-		$query = 'UPDATE #__session'
-				. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\''
-				. ' WHERE `userid` = \'' . (int) $this->userid . '\''
-				;
-		$database->setQuery( $query );
-		$database->query() or die( $database->stderr() );
+		if ( $session ) {
+			// Update Session
+			$query = 'UPDATE #__session'
+					. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\''
+					. ' WHERE `userid` = \'' . (int) $this->userid . '\''
+					;
+			$database->setQuery( $query );
+			$database->query() or die( $database->stderr() );
+		}
 	}
 
 	function loadCBuser()

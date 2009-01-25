@@ -93,40 +93,14 @@ class mi_acl
 		return $settings;
 	}
 
-	function pre_expiration_action( $request )
+	function relayAction( $request, $area )
 	{
-		if ( $this->settings['set_gid_pre_exp'] ) {
-			$this->instantGIDchange( $request->metaUser, 'gid_pre_exp' );
+		if ( $this->settings['set_gid' . $area] ) {
+			$this->instantGIDchange( $request->metaUser, 'gid' . $area);
 		}
 
-		if ( $this->settings['sub_set_gid_pre_exp'] ) {
-			$this->jaclplusGIDchange( $request->metaUser, 'sub_gid_pre_exp' );
-		}
-
-		return true;
-	}
-
-	function expiration_action( $request )
-	{
-		if ( $this->settings['set_gid_exp'] ) {
-			$this->instantGIDchange( $request->metaUser, 'gid_exp' );
-		}
-
-		if ( $this->settings['sub_set_gid_exp'] ) {
-			$this->jaclplusGIDchange( $request->metaUser, 'sub_gid_exp' );
-		}
-
-		return true;
-	}
-
-	function action( $request )
-	{
-		if ( $this->settings['set_gid'] ) {
-			$this->instantGIDchange( $request->metaUser, 'gid' );
-		}
-
-		if ( $this->settings['sub_set_gid'] ) {
-			$this->jaclplusGIDchange( $request->metaUser, 'sub_gid' );
+		if ( $this->settings['sub_set_gid' . $area] ) {
+			$this->jaclplusGIDchange( $request->metaUser, 'sub_gid' . $area );
 		}
 
 		return true;
@@ -136,53 +110,11 @@ class mi_acl
 	{
 		global $database, $acl;
 
-		// Always protect last administrator
-		if ( $metaUser->cmsUser->gid >= 24 ) {
-			$query = 'SELECT count(*)'
-					. ' FROM #__core_acl_groups_aro_map'
-					. ' WHERE `group_id` = \'25\''
-					;
-			$database->setQuery( $query );
-			if ( $database->loadResult() <= 1) {
-				return false;
-			}
-		}
-
-		// Get ARO ID for user
-		$query = 'SELECT `' . ( aecJoomla15check() ? 'id' : 'aro_id' )  . '`'
-		. ' FROM #__core_acl_aro'
-		. ' WHERE `value` = \'' . (int) $metaUser->userid . '\''
-		;
-		$database->setQuery( $query );
-		$aro_id = $database->loadResult();
-
-		// Carry out ARO ID -> ACL group mapping
-		$query = 'UPDATE #__core_acl_groups_aro_map'
-				. ' SET `group_id` = \'' . (int) $this->settings[$section] . '\''
-				. ' WHERE `aro_id` = \'' . $aro_id . '\''
-				;
-		$database->setQuery( $query );
-		$database->query() or die( $database->stderr() );
-
-		$gid_name = $acl->get_group_name( $this->settings[$section], 'ARO' );
-
-		$query = 'UPDATE #__users'
-				. ' SET `gid` = \'' .  (int) $this->settings[$section] . '\', `usertype` = \'' . $gid_name . '\''
-				. ' WHERE `id` = \''  . (int) $metaUser->userid . '\''
-				;
-		$database->setQuery( $query );
-		$database->query() or die( $database->stderr() );
-
-		if ( $this->settings['change_session'] ) {
-			$query = 'UPDATE #__session'
-			. ' SET `usertype` = \'' . $gid_name . '\', `gid` = \'' . $this->settings[$section] . '\''
-			. ' WHERE `userid` = \'' . (int) $metaUser->userid . '\''
-			;
-			$database->setQuery( $query );
-			$database->query() or die( $database->stderr() );
-		}
+		$metaUser->instantGIDchange( $this->settings[$section], $this->settings['change_session'] );
 
 		if ( $this->settings['jaclpluspro'] ) {
+			$gid_name = $acl->get_group_name( $this->settings[$section], 'ARO' );
+
 			// Check for main entry
 			$query = 'SELECT `group_id`'
 					. ' FROM #__jaclplus_user_group'
@@ -209,20 +141,35 @@ class mi_acl
 			}
 
 			if ( $this->settings['change_session'] ) {
-				// Check for main entry
-				$query = 'SELECT `value`'
-						. ' FROM #__core_acl_aro_groups'
-						. ' WHERE `id` = \'' . (int) $this->settings[$section] . '\''
+				$session = null;
+
+				// Get Session
+				$query = 'SELECT *'
+						. ' FROM #__session'
+						. ' WHERE `userid` = \'' . (int) $metaUser->userid . '\''
 						;
 				$database->setQuery( $query );
-				$groupid = $database->loadResult();
+				$database->loadObject( $session ) or die( $database->stderr() );
 
-				$query = 'UPDATE #__session'
-				. ' SET `usertype` = \'' . $gid_name . '\', `gid` = \'' . $this->settings[$section] . '\''
-				. ' WHERE `userid` = \'' . (int) $metaUser->userid . '\''
-				;
-				$database->setQuery( $query );
-				$database->query() or die( $database->stderr() );
+				if ( $session->userid  ) {
+					$query = 'SELECT `value`'
+							. ' FROM #__core_acl_aro_groups'
+							. ' WHERE `id` = \'' . (int) $this->settings[$section] . '\''
+							;
+					$database->setQuery( $query );
+					$sessiongroups = $database->loadResult();
+
+					$data = unserialize( $session->data );
+					$data['__default']['jaclplus'] = $sessiongroups;
+
+					$query = 'UPDATE #__session'
+							. ' SET `usertype` = \'' . $gid_name . '\', `gid` = \'' . $this->settings[$section] . '\','
+							. ' `data` = \'' .  serialize( $data ) . '\''
+							. ' WHERE `userid` = \'' . (int) $metaUser->userid . '\''
+							;
+					$database->setQuery( $query );
+					$database->query() or die( $database->stderr() );
+				}
 			}
 		}
 
@@ -254,23 +201,6 @@ class mi_acl
 			$groups = $database->loadResultArray();
 		}
 
-		if ( aecJoomla15check() ) {
-			$sessiongroups = $_SESSION['__default']['jaclplus'];
-		} else {
-			$query = 'SELECT `jaclplus`'
-					. ' FROM #__session'
-					. ' WHERE `userid` = \'' . (int) $metaUser->userid . '\''
-					;
-			$database->setQuery( $query );
-			$q = $database->loadResult();
-
-			if ( !empty( $q ) ) {
-				$sessiongroups = explode( ',', $q );
-			} else {
-				$sessiongroups = array();
-			}
-		}
-
 		if ( !empty( $this->settings[$section.'_del'] ) ) {
 			foreach ( $this->settings[$section.'_del'] as $gid ) {
 				if ( in_array( $gid, $groups ) ) {
@@ -297,10 +227,6 @@ class mi_acl
 					$database->query() or die( $database->stderr() );
 				}
 			}
-		}
-
-		if ( aecJoomla15check() ) {
-			$_SESSION['__default']['jaclplus'] = $sessiongroups;
 		}
 
 		return true;
