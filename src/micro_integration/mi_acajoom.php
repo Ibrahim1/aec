@@ -93,7 +93,7 @@ class mi_acajoom
 	function hasList( $subscriber_id, $listid )
 	{
 		global $database;
-		$query = 'SELECT `id`'
+		$query = 'SELECT `qid`'
 				. ' FROM #__acajoom_queue'
 				. ' WHERE `subscriber_id` = \'' . $subscriber_id . '\''
 				. ' AND `list_id` = \'' . $listid . '\''
