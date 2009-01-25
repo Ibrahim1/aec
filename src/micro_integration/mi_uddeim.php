@@ -109,7 +109,7 @@ class mi_uddeim
 
 		$hacks = array();
 
-		$messagehack =	'// AEC HACK uddeimphp START' . "\n"
+		$messagehack =	'// AEC HACK %s START' . "\n"
 		. 'global $my, $mosConfig_absolute_path;' . "\n"
 		. 'include( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_uddeim.php\');' . "\n\n"
 		. '$restrictionhandler = new uddeim_restriction( $database );' . "\n"
@@ -122,7 +122,7 @@ class mi_uddeim
 		. "\t\t" . '$restrictionhandler->useMessage();' . "\n"
 		. '\t}' . "\n"
 		. '}' . "\n"
-		. '// AEC HACK uddeimmessagephp END' . "\n"
+		. '// AEC HACK %s END' . "\n"
 		;
 
 		$n = 'uddeimphp';
@@ -131,7 +131,7 @@ class mi_uddeim
 		$hacks[$n]['type']				=	'file';
 		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_uddeim/uddeim.php';
 		$hacks[$n]['read']				=	'// I could have modified this function to process mails to public users but instead of adding';
-		$hacks[$n]['insert']			=	$messagehack . "\n"  . $hacks[$n]['read'];
+		$hacks[$n]['insert']			=	sprintf($messagehack, $n, $n) . "\n"  . $hacks[$n]['read'];
 
 		$n = 'pmsuddeimphp';
 		$hacks[$n]['name']				=	'pms.uddeim.php';
@@ -140,7 +140,7 @@ class mi_uddeim
 		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_comprofiler/plugin/user/plug_pmsuddeim/pms.uddeim.php';
 		$hacks[$n]['read']				=	'$adminpath = $this->absolute_path."/administrator/components/com_uddeim";
 ';
-		$hacks[$n]['insert']			=	$messagehack . "\n"  . $hacks[$n]['read'];
+		$hacks[$n]['insert']			=	sprintf($messagehack, $n, $n) . "\n"  . $hacks[$n]['read'];
 
 		return $hacks;
 	}
