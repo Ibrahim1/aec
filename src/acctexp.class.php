@@ -5413,6 +5413,11 @@ class SubscriptionPlan extends serialParamDBTable
 				$mi->load(0);
 
 				$mi->class_name = $miname;
+
+				if ( !$mi->callIntegration( true ) ) {
+					continue;
+				}
+
 				$mi->hidden = 1;
 
 				$mi->storeload();
@@ -5458,6 +5463,8 @@ class SubscriptionPlan extends serialParamDBTable
 
 			// If we indeed HAVE settings, more to come here
 			if ( !empty( $settings ) ) {
+				$mi->savePostParams( $settings );
+
 				// First, check whether there is already an MI with the exact same settings
 				$similarmis = microIntegrationHandler::getMIList( false, false, true, false, $mi->classname );
 
@@ -5473,7 +5480,7 @@ class SubscriptionPlan extends serialParamDBTable
 						}
 					}
 				}
-
+print_r($mi);var_dump($similarmi);exit;
 				if ( $similarmi ) {
 					// We have a similar MI - unset old reference
 					$ref = array_search( $mi->id, $post['micro_integrations'] );
@@ -5481,6 +5488,12 @@ class SubscriptionPlan extends serialParamDBTable
 
 					// No MI is similar, lets check for other plans
 					$plans = microIntegrationHandler::getPlansbyMI( $mi->id );
+
+					foreach ( $plans as $cid => $pid ) {
+						if ( $pid == $this->id ) {
+							unset( $plans[$cid] );
+						}
+					}
 
 					if ( count( $plans ) <= 1 ) {
 						// No other plan depends on this MI, just delete it
@@ -5493,12 +5506,17 @@ class SubscriptionPlan extends serialParamDBTable
 					// No MI is similar, lets check for other plans
 					$plans = microIntegrationHandler::getPlansbyMI( $mi->id );
 
+					foreach ( $plans as $cid => $pid ) {
+						if ( $pid == $this->id ) {
+							unset( $plans[$cid] );
+						}
+					}
+
 					if ( count( $plans ) > 1 ) {
 						// We have other plans depending on THIS setup of the MI, create a copy
 						$mi->id = 0;
 					}
 
-					$mi->savePostParams( $settings );
 					$mi->storeload();
 				}
 			}
@@ -10316,6 +10334,10 @@ class microIntegrationHandler
 		$cmi = new microIntegration( $database );
 		$cmi->load( $cmi_id );
 
+		if ( !$cmi->callIntegration( true ) ) {
+			continue;
+		}
+
 		$props = get_object_vars( $mi );
 
 		$similar = true;
@@ -10692,6 +10714,7 @@ class microIntegration extends serialParamDBTable
 
 			$class = $this->class_name;
 
+			// TODO: throw error when class doesnt exist
 			$this->mi_class = new $class();
 			$this->mi_class->id = $this->id;
 
