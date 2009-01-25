@@ -6775,7 +6775,7 @@ class InvoiceFactory
 		if ( isset( $response['error'] ) ) {
 			$this->error( $option, $this->metaUser->cmsUser, $this->objInvoice->invoice_number, $response['error'] );
 		} else {
-			if ( $pp->info['notify_trail_thanks'] ) {
+			if ( !empty( $pp->info['notify_trail_thanks'] ) ) {
 				$this->thanks( $option );
 			} else {
 				exit;
