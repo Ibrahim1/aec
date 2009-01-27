@@ -71,7 +71,8 @@ class processor_alertpay extends POSTprocessor
 			$var['ap_purchasetype']	= 'Subscription';
 
 			if ( isset( $request->int_var['amount']['amount1'] ) ) {
-				$put = $this->convertPeriodUnit( $request->int_var['amount']['unit1'], $request->int_var['amount']['period1'], true );
+				$var['ap_trialamount'] 		= $request->int_var['amount']['amount1'];
+				$put = $this->convertPeriodUnit( $request->int_var['amount']['unit1'], $request->int_var['amount']['period1'] );
 				$var['ap_trialtimeunit'] 		= $put['unit'];
 				$var['ap_trialperiodlength'] 	= $put['period'];
 			}
@@ -112,7 +113,7 @@ class processor_alertpay extends POSTprocessor
 		return $var;
 	}
 
-	function convertPeriodUnit( $unit, $period, $t=false )
+	function convertPeriodUnit( $unit, $period )
 	{
 		$return = array();
 		$return['period'] = $period;
@@ -121,13 +122,13 @@ class processor_alertpay extends POSTprocessor
 				$return['unit'] = 'Day';
 				break;
 			case 'W':
-				$return['unit'] = 'Week' . ( $t ? 's' : '' );
+				$return['unit'] = 'Week';
 				break;
 			case 'M':
-				$return['unit'] = 'Month' . ( $t ? 's' : '' );
+				$return['unit'] = 'Month';
 				break;
 			case 'Y':
-				$return['unit'] = 'Year' . ( $t ? 's' : '' );
+				$return['unit'] = 'Year';
 				break;
 		}
 
