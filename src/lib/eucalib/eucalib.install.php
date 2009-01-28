@@ -142,8 +142,6 @@ class eucaInstall extends eucaObject
 		$values[] = $entry[1];
 		$fields[] = 'link';
 		$values[] = $frontend ? ( 'option=' . _EUCA_APP_COMPNAME ) : '' ;
-		$fields[] = 'menuid';
-		$values[] = 0;
 		$fields[] = 'parent';
 		$values[] = $id;
 		$fields[] = 'admin_menu_link';
@@ -156,15 +154,6 @@ class eucaInstall extends eucaObject
 		$values[] = isset( $entry[3] ) ? $entry[3] : $ordering;
 		$fields[] = 'admin_menu_img';
 		$values[] = $entry[2];
-		$fields[] = 'iscore';
-		$values[] = 0;
-		$fields[] = 'params';
-		$values[] = '';
-
-		if ( aecJoomla15check() ) {
-			$fields[] = 'enabled';
-			$values[] = 1;
-		}
 
 		$query = 'INSERT INTO #__components'
 				. ' (`' . implode( '`, `', $fields) . '`)'
