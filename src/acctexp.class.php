@@ -7155,35 +7155,45 @@ class Invoice extends serialParamDBTable
 				$this->coupons = $sc;
 			}
 
+			// Remove trial if we have a transaction completed ( whether a trial is allowed was figured out before)
+			if ( is_array( $return['amount'] ) ) {
+				if ( isset( $return['amount']['amount1'] ) && ( $this->transaction_date != '0000-00-00 00:00:00' ) ) {
+					unset( $return['amount']['amount1'] );
+					unset( $return['amount']['period1'] );
+					unset( $return['amount']['unit1'] );
+				}
+			}
+
 			if ( is_array( $return['amount'] ) ) {
 				// Check whether we have a trial amount and whether this invoice has had a trial with a payment already
-				$this->amount = false;
+				$found_amount = false;
 
 				if ( isset( $return['amount']['amount1'] ) ) {
-					if ( !is_null( $return['amount']['amount1'] )
-					&& !( ( $this->amount == $return['amount']['amount1'] )
-					&& !( strcmp( $this->transaction_date, '0000-00-00 00:00:00' ) === 0 ) ) ) {
+					if ( !is_null( $return['amount']['amount1'] ) && ( $this->transaction_date == '0000-00-00 00:00:00' ) ) {
 						$this->amount = $return['amount']['amount1'];
+						$found_amount = true;
 					}
 				}
 
-				if ( $this->amount === false ) {
+				if ( $found_amount === false ) {
 					if ( isset( $return['amount']['amount2'] ) ) {
 						if ( !is_null( $return['amount']['amount2'] ) ) {
 							$this->amount = $return['amount']['amount2'];
+							$found_amount = true;
 						}
 					}
 				}
 
-				if ( $this->amount === false ) {
+				if ( $found_amount === false ) {
 					if ( isset( $return['amount']['amount3'] ) ) {
 						if ( !is_null( $return['amount']['amount3'] ) ) {
 							$this->amount = $return['amount']['amount3'];
+							$found_amount = true;
 						}
 					}
 				}
 
-				if ( $this->amount === false ) {
+				if ( $found_amount === false ) {
 					$this->amount = '0.00';
 				}
 			} else {
@@ -7204,7 +7214,6 @@ class Invoice extends serialParamDBTable
 				// TODO: Log Error
 			}
 
-			$temp = $this->amount;
 			$this->amount = AECToolbox::correctAmount( $this->amount );
 		}
 	}
@@ -11805,14 +11814,23 @@ class couponHandler
 					if ( $this->discount['useon_full_all'] ) {
 						$amount['amount3']	= $this->applyDiscount( $amount['amount3'] );
 					} else {
-						if ( $amount['amount1'] > 0 ) {
-							$amount['amount2']	= $this->applyDiscount( $amount['amount3'] );
-							$amount['period2']	= $amount['period3'];
-							$amount['unit2']	= $amount['unit3'];
-						} else {
+						// If we have no trial yet, the one-off discount will be one
+						if ( !isset( $amount['amount1'] ) ) {
 							$amount['amount1']	= $this->applyDiscount( $amount['amount3'] );
 							$amount['period1']	= $amount['period3'];
 							$amount['unit1']	= $amount['unit3'];
+						} else {
+							if ( $amount['amount1'] > 0 ) {
+								// If we already have a trial that costs, we can put the discount on that
+								$amount['amount1']	= $this->applyDiscount( $amount['amount3'] );
+								$amount['period1']	= $amount['period3'];
+								$amount['unit1']	= $amount['unit3'];
+							} else {
+								// Otherwise we need to create a new period
+								$amount['amount2']	= $this->applyDiscount( $amount['amount3'] );
+								$amount['period2']	= $amount['period3'];
+								$amount['unit2']	= $amount['unit3'];
+							}
 						}
 					}
 				}
