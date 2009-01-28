@@ -5482,7 +5482,7 @@ class SubscriptionPlan extends serialParamDBTable
 						}
 					}
 				}
-print_r($mi);var_dump($similarmi);exit;
+
 				if ( $similarmi ) {
 					// We have a similar MI - unset old reference
 					$ref = array_search( $mi->id, $post['micro_integrations'] );
@@ -5515,11 +5515,20 @@ print_r($mi);var_dump($similarmi);exit;
 					}
 
 					if ( count( $plans ) > 1 ) {
-						// We have other plans depending on THIS setup of the MI, create a copy
-						$mi->id = 0;
-					}
+						// We have other plans depending on THIS setup of the MI, unset original reference
+						$ref = array_search( $mi->id, $post['micro_integrations'] );
+						unset( $post['micro_integrations'][$ref] );
 
-					$mi->storeload();
+						// And create new MI
+						$mi->id = 0;
+
+						$mi->storeload();
+
+						// Set new MI
+						$post['micro_integrations'][] = $mi->id;
+					} else {
+						$mi->storeload();
+					}
 				}
 			}
 		}
@@ -10346,13 +10355,13 @@ class microIntegrationHandler
 		$cmi->load( $cmi_id );
 
 		if ( !$cmi->callIntegration( true ) ) {
-			continue;
+			return false;
 		}
 
 		$props = get_object_vars( $mi );
 
 		$similar = true;
-		foreach ( $props as $prop ) {
+		foreach ( $props as $prop => $value ) {
 			if ( ( strpos( $prop, '_' ) === 0 ) || in_array( $prop, $excluded_props ) ) {
 				// This is an internal or excluded variable
 				continue;
