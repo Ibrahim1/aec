@@ -3054,14 +3054,14 @@ function editSubscriptionPlan( $id, $option )
 
 	$lists['micro_integrations_plan'] = mosHTML::selectList( $mi_htmllist, 'micro_integrations_plan[]', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '" multiple="multiple"', 'value', 'text', array() );
 
-	if ( !empty( $row->micro_integrations ) ) {
-	$query = 'SELECT `id`'
-			. ' FROM #__acctexp_microintegrations'
-			. ' WHERE `id` IN (' . implode( ',', $row->micro_integrations ) . ')'
-	 		. ' AND `hidden` = \'1\''
-			;
- 	$database->setQuery( $query );
-	$hidden_mi = $database->loadObjectList();
+	if ( !empty( $row->micro_integrations ) && is_array( $row->micro_integrations ) ) {
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_microintegrations'
+				. ' WHERE `id` IN (' . implode( ',', $row->micro_integrations ) . ')'
+		 		. ' AND `hidden` = \'1\''
+				;
+	 	$database->setQuery( $query );
+		$hidden_mi = $database->loadObjectList();
 	} else {
 		$hidden_mi = array();
 	}
@@ -3069,8 +3069,10 @@ function editSubscriptionPlan( $id, $option )
 	$custompar = array();
 
 	$hidden_mi_list = array();
-	foreach ( $hidden_mi as $miobj ) {
-		$hidden_mi_list[] = $miobj->id;
+	if ( !empty( $hidden_mi ) ) {
+		foreach ( $hidden_mi as $miobj ) {
+			$hidden_mi_list[] = $miobj->id;
+		}
 	}
 
 	$params['micro_integrations_hidden']		= array( 'hidden', '' );
