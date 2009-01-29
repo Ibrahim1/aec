@@ -198,6 +198,34 @@ switch( strtolower( $task ) ) {
 		cancelSettings( $option );
 		break;
 
+	case 'showprocessors':
+		listProcessors( $option );
+		break;
+
+	case 'newprocessor':
+		editProcessor( 0, $option );
+		break;
+
+	case 'editprocessor':
+		editProcessor( $id[0], $option );
+		break;
+
+	case 'saveprocessor':
+		saveProcessor( $option );
+		break;
+
+	case 'applyprocessor':
+		saveProcessor( $option, 1 );
+		break;
+
+	case 'publishprocessor':
+		changeProcessor( $id, 1, 'active', $option );
+		break;
+
+	case 'unpublishprocessor':
+		changeProcessor( $id, 0, 'active', $option );
+		break;
+
 	case 'showsubscriptionplans':
 		listSubscriptionPlans( $option );
 		break;
@@ -2497,6 +2525,343 @@ function saveSettings( $option, $return=0 )
 
 	$eventlog = new eventLog( $database );
 	$eventlog->issue( $short, $tags, $event, 2, $params );
+
+	if ( $return ) {
+		mosRedirect( 'index2.php?option=' . $option . '&task=showSettings', _AEC_CONFIG_SAVED );
+	} else {
+		mosRedirect( 'index2.php?option=' . $option . '&task=showCentral', _AEC_CONFIG_SAVED );
+	}
+}
+
+function listProcessors( $option )
+{
+ 	global $database, $mainframe, $mosConfig_list_limit;
+
+ 	$limit = $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
+	$limitstart = $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
+
+ 	// get the total number of records
+ 	$query = 'SELECT count(*)'
+		 	. ' FROM #__acctexp_config_processors'
+		 	;
+ 	$database->setQuery( $query );
+ 	$total = $database->loadResult();
+
+ 	if ( $limit > $total ) {
+ 		$limitstart = 0;
+ 	}
+
+ 	require_once( $mainframe->getCfg( 'absolute_path' ) . '/administrator/includes/pageNavigation.php' );
+	$pageNav = new mosPageNav( $total, $limitstart, $limit );
+
+ 	// get the subset (based on limits) of records
+ 	$query = 'SELECT name'
+		 	. ' FROM #__acctexp_config_processors'
+		 	. ' GROUP BY `id`'
+		 	//. ' ORDER BY `ordering`'
+		 	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+		 	;
+	$database->setQuery( $query );
+	$names = $database->loadResultArray();
+
+	$rows = array();
+	foreach ( $names as $name ) {
+		$pp = new PaymentProcessor( $database );
+		$pp->loadName( $name );
+		$pp->fullInit();
+
+		$rows[] = $pp;
+	}
+
+ 	HTML_AcctExp::listProcessors( $rows, $pageNav, $option );
+ }
+
+function editProcessor( $id, $option )
+{
+	global $database, $acl, $my, $aecConfig, $mosConfig_live_site;
+
+	if ( $id ) {
+		$pp = new PaymentProcessor();
+
+		if ( !$pp->loadId( $id ) ) {
+			return false;
+		}
+
+		if ( $pp->id ) {
+			// Init Info and Settings
+			$pp->fullInit();
+
+
+			foreach ( $pp->settings as $pname => $pvalue ) {
+				$ppsettings[$pp->processor_name . '_' . $pname] = $pvalue;
+			}
+
+			if ( $pp->processor->active ) {
+				// Get Backend Settings
+				$settings_array		= $pp->getBackendSettings();
+				$original_settings	= $pp->processor->settings();
+
+				if ( isset( $settings_array['lists'] ) ) {
+					foreach ( $settings_array['lists'] as $lname => $lvalue ) {
+						$lists[$pp->processor_name . '_' . $lname] = $lvalue;
+					}
+					unset( $settings_array['lists'] );
+				}
+
+				if ( empty( $settings_array ) ) {
+					continue;
+				}
+
+				// Iterate through settings form assigning the db settings
+				foreach ( $settings_array as $name => $values ) {
+					$setting_name = $pp->processor_name . '_' . $name;
+
+					switch( $settings_array[$name][0] ) {
+						case 'list_currency':
+							// Get currency list
+							$currency_array	= explode( ',', $pp->info['currencies'] );
+
+							// Transform currencies into OptionArray
+							$currency_code_list = array();
+							foreach ( $currency_array as $currency ) {
+								if ( defined( '_CURRENCY_' . $currency )) {
+									$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
+								}
+							}
+
+							// Create list
+							$lists[$setting_name] = mosHTML::selectList( $currency_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
+							$settings_array[$name][0] = 'list';
+							break;
+						case 'list_language':
+							// Get language list
+							$language_array	= explode( ',', $pp->info['languages'] );
+
+							// Transform languages into OptionArray
+							$language_code_list = array();
+							foreach ( $language_array as $language ) {
+								$language_code_list[] = mosHTML::makeOption( $language, ( defined( '_AEC_LANG_' . $language  ) ? constant( '_AEC_LANG_' . $language ) : $language ) );
+							}
+							// Create list
+							$lists[$setting_name] = mosHTML::selectList( $language_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
+							$settings_array[$name][0] = 'list';
+							break;
+						case 'list_plan':
+							// Create list
+							$lists[$setting_name] = mosHTML::selectList($available_plans, $setting_name, 'size="' . $total_plans . '"', 'value', 'text', $pp->settings[$name] );
+							$settings_array[$name][0] = 'list';
+							break;
+						default:
+							break;
+					}
+
+					if ( !isset( $settings_array[$name][1] ) ) {
+						// Create constant names
+						$constantname = '_CFG_' . strtoupper( $ppname ) . '_' . strtoupper($name) . '_NAME';
+						$constantdesc = '_CFG_' . strtoupper( $ppname ) . '_' . strtoupper($name) . '_DESC';
+
+						// If the constantname does not exists, try a generic name or insert an error
+						if ( defined( $constantname ) ) {
+							$settings_array[$name][1] = constant( $constantname );
+						} else {
+							$genericname = '_CFG_PROCESSOR_' . strtoupper($name) . '_NAME';
+							if ( defined( $genericname ) ) {
+								$settings_array[$name][1] = constant( $genericname );
+							} else {
+								$settings_array[$name][1] = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantname );
+							}
+						}
+
+						// If the constantname does not exists, try a generic name or insert an error
+						if ( defined( $constantdesc ) ) {
+							$settings_array[$name][2] = constant( $constantdesc );
+						} else {
+							$genericdesc = '_CFG_PROCESSOR_' . strtoupper($name) . '_DESC';
+							if ( defined( $genericname ) ) {
+								$settings_array[$name][2] = constant( $genericdesc );
+							} else {
+								$settings_array[$name][2] = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantdesc );
+							}
+						}
+					}
+
+					// It might be that the processor has got some new properties, so we need to double check here
+					if ( isset( $pp->settings[$name] ) ) {
+						$content = $pp->settings[$name];
+					} elseif ( isset( $original_settings[$name] ) ) {
+						$content = $original_settings[$name];
+					} else {
+						$content = null;
+					}
+
+					// Set the settings value
+					$settings_array[$setting_name] = array_merge( (array) $settings_array[$name], array( $content ) );
+
+					// unload the original value
+					unset( $settings_array[$name] );
+				}
+
+				if ( is_array( $settings_array ) && !empty( $settings_array ) ) {
+					$params = array_merge( $params, $settings_array );
+				}
+
+				$longname = $ppname . '_info_longname';
+				$description = $ppname . '_info_description';
+
+				$params[$longname] = array( 'inputC', _CFG_PROCESSOR_NAME_NAME, _CFG_PROCESSOR_NAME_DESC, $pp->info['longname'], $longname);
+				$params[$description] = array( 'editor', _CFG_PROCESSOR_DESC_NAME, _CFG_PROCESSOR_DESC_DESC, $pp->info['description'], $description);
+
+				$pphead = '<h2>' . $pp->info['longname'] . '</h2>';
+				$pphead .= '<img src="' . $mosConfig_live_site . '/components/' . $option . '/images/pplogo_' . $pp->processor_name . '.png" alt="' . $pp->processor_name . '" title="' . $pp->processor_name .'" class="plogo" />';
+
+				@end( $params );
+
+				// Add to Active List
+				$pp_list_enabled[]->value = $ppname;
+
+				// Add to selected Description List if existing in db entry
+				if ( !empty( $desc_list ) ) {
+					if ( in_array( $ppname, $desc_list ) ) {
+						$pplist_selected[]->value = $ppname;
+					}
+				}
+
+				// Add to Description List
+				$pp_list_enabled_html[] = mosHTML::makeOption( $ppname, $pp->info['longname'] );
+
+			} else {
+				$pp->Init();
+				$pp->getInfo();
+			}
+
+
+		} else {
+			$pp->info = $pp->processor->info();
+		}
+
+		// Add to general PP List
+		$pp_list_html[] = mosHTML::makeOption( $ppname, $readppname );
+	} else {
+		// Create Processor Selection Screen
+
+		$pph					= new PaymentProcessorHandler();
+		$pplist					= $pph->getProcessorList();
+		$pp_installed_list		= $pph->getInstalledObjectList( true );
+
+		$pp_list_html			= array();
+		$pp_list_html[]			= mosHTML::makeOption( 'none', _AEC_CMN_NONE_SELECTED );
+
+		asort($pplist);
+
+		foreach ( $pplist as $ppname ) {
+			if ( in_array( $ppname, $pp_installed_list ) ) {
+				continue;
+			}
+
+			$readppname = ucwords( str_replace( '_', ' ', strtolower( $ppname ) ) );
+
+			// Load Payment Processor
+			$pp = new PaymentProcessor();
+			if ( $pp->loadName( $ppname ) ) {
+				$pp->Init();
+				$pp->getInfo();
+
+				// Add to general PP List
+				$pp_list_html[] = mosHTML::makeOption( $ppname, $readppname );
+			}
+		}
+
+		$lists['processors']	= mosHTML::selectList( $pp_list_html, 'processors[]', 'size="' . max(min(count($pplist), 12), 2) . '"', 'value', 'text' );
+
+	}
+
+	$settings = new aecSettings ( 'pp', 'general' );
+	$settingsparams = array_merge( $aecConfig->cfg, $ppsettings );
+	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
+
+	// Call HTML Class
+	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+	if ( !empty( $customparamsarray ) ) {
+		$aecHTML->customparams = $customparamsarray;
+	}
+
+	HTML_AcctExp::Settings( $option, $aecHTML );
+}
+
+/**
+* Cancels an configure operation
+*/
+function cancelProcessor( $option )
+{
+	mosRedirect( 'index2.php?option=' . $option . '&task=showCentral', _AEC_CONFIG_CANCELLED );
+}
+
+
+function saveProcessor( $option, $return=0 )
+{
+	global $database, $mainframe, $my, $acl, $aecConfig;
+
+	$pp = new PaymentProcessor();
+
+	// Go next if this is the zero option selected
+	if ( empty( $procname ) ) {
+		continue;
+	}
+
+	if ( $pp->loadName( $procname ) ) {
+		$pp->fullInit();
+		$pp->processor->active = in_array( $procname, $pplist_enabled );
+
+		$pp->storeload();
+
+		$longname		= $procname . '_info_longname';
+		$description	= $procname . '_info_description';
+
+		if ( isset( $_POST[$longname] ) ) {
+			$pp->info['longname'] = $_POST[$longname];
+			unset( $_POST[$longname] );
+		}
+
+		if ( isset( $_POST[$description] ) ) {
+			$pp->info['description'] = $_POST[$description];
+			unset( $_POST[$description] );
+		}
+
+		$settings = $pp->getBackendSettings();
+
+		if ( is_int( $pp->is_recurring() ) ) {
+			$settings['recurring'] = 2;
+		}
+
+		foreach ( $settings as $name => $value ) {
+			if ( $name == 'lists' ) {
+				continue;
+			}
+
+			$postname = $procname  . '_' . $name;
+
+			if ( isset( $_POST[$postname] ) ) {
+				$val = $_POST[$postname];
+
+				if ( empty( $val ) ) {
+					switch( $name ) {
+						case 'currency':
+							$val = 'USD';
+							break;
+						default:
+							break;
+					}
+				}
+
+				$pp->settings[$name] = $_POST[$postname];
+				unset( $_POST[$postname] );
+			}
+		}
+
+		$pp->storeload();
+	} else {
+		// TODO: Log error
+	}
 
 	if ( $return ) {
 		mosRedirect( 'index2.php?option=' . $option . '&task=showSettings', _AEC_CONFIG_SAVED );

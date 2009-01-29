@@ -834,6 +834,7 @@ class HTML_AcctExp
 										array( 'showCouponsStatic', 'coupons_static', _AEC_CENTR_COUPONS_STATIC ),
 										_AEC_CENTR_AREA_SETTINGS,
 										array( 'showSettings', 'settings', _AEC_CENTR_SETTINGS ),
+										array( 'showProcessors', 'settings', _AEC_CENTR_SETTINGS ),
 										array( 'editCSS', 'css', _AEC_CENTR_EDIT_CSS ),
 										array( 'history', 'history', _AEC_CENTR_VIEW_HISTORY ),
 										array( 'eventlog', 'eventlog', _AEC_CENTR_LOG ),
@@ -1163,6 +1164,148 @@ class HTML_AcctExp
 	}
 
 	function Settings( $option, $aecHTML, $tab_data, $editors )
+	{
+		global $mosConfig_live_site;
+
+		HTML_myCommon::addBackendCSS();
+		mosCommonHTML::loadOverlib();
+		?>
+		<script language="javascript" type="text/javascript">
+		    /* <![CDATA[ */
+			function submitbutton(pressbutton) {
+				<?php
+				$k = 1;
+				foreach ($editors as $editor) {
+					getEditorContents( 'editor' . $k, $editor );
+					$k++;
+				}
+				?>
+				submitform( pressbutton );
+			}
+			/* ]]> */
+		</script>
+		<form action="index2.php" method="post" name="adminForm">
+		<table class="adminheading">
+			<tr>
+				<th width="100%" class="sectionname" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_settings.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+					<?php echo _AEC_HEAD_SETTINGS; ?>
+				</th>
+			</tr>
+			<tr><td></td></tr>
+		</table>
+		<?php
+
+		$tabs = new mosTabs(0);
+		$tabs->startPane( 'settings' );
+
+		$i = 0;
+
+		foreach( $tab_data as $tab ) {
+			$tabs->startTab( $tab[0], $tab[0] );
+
+			if ( isset( $tab[2] ) ) {
+				echo '<div class="aec_tabheading">' . $tab[2] . '</div>';
+			}
+
+			echo '<table width="100%" class="aecadminform"><tr><td>';
+
+			foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
+				echo $aecHTML->createSettingsParticle( $rowname );
+				unset( $aecHTML->rows[$rowname] );
+				// Skip to next tab if last item in this one reached
+				if ( strcmp( $rowname, $tab[1] ) === 0 ) {
+					echo '</td></tr></table>';
+					$tabs->endTab();
+					continue 2;
+				}
+			}
+
+			echo '</td></tr></table>';
+			$tabs->endTab();
+		}
+		?>
+		<input type="hidden" name="id" value="1" />
+		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="option" value="<?php echo $option; ?>" />
+		</form>
+		<?php
+		// close pane and include footer
+		$tabs->endPane();
+
+		echo $aecHTML->loadJS();
+
+		if ( _EUCA_DEBUGMODE ) {
+			krumo( $option, $aecHTML, $tab_data, $editors );
+		}
+
+ 		HTML_myCommon::GlobalNerd();
+	}
+
+	function listProcessors( $rows, $pageNav, $option )
+	{
+		global $mosConfig_live_site;
+
+		HTML_myCommon::addBackendCSS(); ?>
+		<form action="index2.php" method="post" name="adminForm">
+			<table class="adminheading">
+				<tr>
+					<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_processors.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+						<?php echo _PROCESSOR_TITLE; ?>
+					</th>
+				</tr>
+				<tr><td></td></tr>
+			</table>
+
+			<table class="adminlist">
+				<tr>
+					<th width="1%">#</th>
+					<th width="1%">id</th>
+					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
+					<th width="15%" align="left" nowrap="nowrap"><?php echo _PROCESSOR_NAME; ?></th>
+					<th align="left" nowrap="nowrap"><?php echo _PROCESSOR_INFO; ?></th>
+					<th width="3%" nowrap="nowrap"><?php echo _PROCESSOR_ACTIVE; ?></th>
+				</tr>
+
+		<?php
+		$k = 0;
+		for( $i=0, $n=count( $rows ); $i < $n; $i++ ) {
+			$row = &$rows[$i]; ?>
+				<tr class="row<?php echo $k; ?>">
+					<td width="1%" align="center"><?php echo $pageNav->rowNumber( $i ); ?></td>
+					<td width="1%" align="center"><?php echo $row->processor->id; ?></td>
+					<td width="1%"><?php echo mosHTML::idBox( $i, $row->processor->id, false, 'id' ); ?></td>
+					<td width="15%">
+						<a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editProcessor')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $row->processor->info['name']; ?></a>
+					</td>
+					<td><?php echo $row->processor->info['statement']; ?></td>
+					<td width="3%" align="center">
+						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $row->processor->active ? 'unpublishProcessor' : 'publishProcessor'; ?>')">
+							<img src="<?php echo $mosConfig_live_site; ?>/administrator/images/<?php echo $row->processor->active ? 'publish_g.png' : 'publish_x.png'; ?>" width="12" height="12" border="0" alt="<?php echo $row->processor->active ? _AEC_CMN_YES : _AEC_CMN_NO; ?>" title="<?php echo $row->processor->active ? _AEC_CMN_YES : _AEC_CMN_NO; ?>" />
+						</a>
+					</td>
+				</tr>
+			<?php
+			$k = 1 - $k;
+		} ?>
+		</table>
+ 		<?php
+ 		echo $pageNav->getListFooter();
+		HTML_myCommon::ContentLegend(); ?>
+		<input type="hidden" name="option" value="<?php echo $option; ?>" />
+		<input type="hidden" name="task" value="showProcessors" />
+		<input type="hidden" name="returnTask" value="showProcessors" />
+		<input type="hidden" name="boxchecked" value="0" />
+		</form>
+
+		<?php
+		if ( _EUCA_DEBUGMODE ) {
+			krumo( $rows, $pageNav, $option );
+		}
+
+ 		HTML_myCommon::GlobalNerd();
+	}
+
+	function editProcessor( $option, $aecHTML, $tab_data, $editors )
 	{
 		global $mosConfig_live_site;
 

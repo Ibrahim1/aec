@@ -27,6 +27,18 @@ switch ( $task ) {
 		ComponentMenu::EDIT_SETTINGS();
 		break;
 
+	case 'showProcessors':
+		ComponentMenu::LIST_PROCESSORS();
+		break;
+
+	case 'newProcessor':
+		ComponentMenu::EDIT_PROCESSOR();
+		break;
+
+	case 'editProcessor':
+		ComponentMenu::EDIT_PROCESSOR();
+		break;
+
 	case 'showSubscriptionPlans':
 		ComponentMenu::LIST_SUBSCRIPTIONPLANS();
 		break;

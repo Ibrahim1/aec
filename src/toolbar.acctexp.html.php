@@ -69,6 +69,26 @@ class ComponentMenu
 		mosMenuBar::endTable();
 	}
 
+	function LIST_PROCESSORS()
+	{
+		mosMenuBar::startTable();
+		mosMenuBar::custom( 'publishProcessor', 'publish.png',  'publish_f2.png', _PUBLISH_PROCESSOR, true );
+		mosMenuBar::custom( 'unpublishProcessor', 'unpublish.png',  'unpublish_f2.png', _UNPUBLISH_PROCESSOR, true );
+		mosMenuBar::custom( 'newProcessor', 'new.png',  'new_f2.png', _NEW_PROCESSOR, false );
+		mosMenuBar::custom( 'editProcessor', 'edit.png',  'edit_f2.png', _EDIT_PROCESSOR, true );
+		mosMenuBar::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
+		mosMenuBar::endTable();
+	}
+
+	function EDIT_PROCESSOR()
+	{
+		mosMenuBar::startTable();
+		mosMenuBar::custom( 'saveProcessor', 'save.png',  'save_f2.png', _SAVE_PROCESSOR, false );
+		mosMenuBar::custom( 'applyProcessor', 'apply.png',  'apply_f2.png', _APPLY_PROCESSOR, false );
+		mosMenuBar::custom( 'cancelProcessor', 'cancel.png',  'cancel_f2.png', _CANCEL_PROCESSOR, false );
+		mosMenuBar::endTable();
+	}
+
 	function LIST_SUBSCRIPTIONPLANS()
 	{
 		mosMenuBar::startTable();
