@@ -218,6 +218,10 @@ switch( strtolower( $task ) ) {
 		saveProcessor( $option, 1 );
 		break;
 
+	case 'cancelprocessor':
+		cancelProcessor( $option );
+		break;
+
 	case 'publishprocessor':
 		changeProcessor( $id, 1, 'active', $option );
 		break;
@@ -1891,21 +1895,9 @@ function editSettings( $option )
 	$currency_code_list	= AECToolbox::_aecCurrencyField( true, true, true );
 	$lists['currency_code_general'] = mosHTML::selectList( $currency_code_list, ( 'currency_code_general' ), 'size="10"', 'value', 'text', ( !empty( $aecConfig->cfg['currency_code_general'] ) ? $aecConfig->cfg['currency_code_general'] : '' ) );
 
-	// get entry Plan selection
-	$available_plans	= array();
-	$available_plans[]	= mosHTML::makeOption( '0', _PAYPLAN_NOPLAN );
+	$available_plans	= SubscriptionPlanHandler::getActivePlanList();
 
-	$query = 'SELECT `id` AS value, `name` AS text'
-			. ' FROM #__acctexp_plans'
-			. ' WHERE `active` = \'1\''
-			;
-	$database->setQuery( $query );
-	$dbaplans = $database->loadObjectList();
-
- 	if ( is_array( $dbaplans ) ) {
- 		$available_plans	= array_merge( $available_plans, $dbaplans );
- 	}
-	$total_plans		= count( $available_plans ) + 1;
+	$total_plans		= count( $available_plans );
 
 	$selected_plan = isset($aecConfig->cfg['entry_plan']) ? $aecConfig->cfg['entry_plan'] : '0';
 
@@ -2587,160 +2579,123 @@ function editProcessor( $id, $option )
 			return false;
 		}
 
-		if ( $pp->id ) {
-			// Init Info and Settings
-			$pp->fullInit();
+		// Init Info and Settings
+		$pp->fullInit();
 
+		// Get Backend Settings
+		$settings_array		= $pp->getBackendSettings();
+		$original_settings	= $pp->processor->settings();
 
-			foreach ( $pp->settings as $pname => $pvalue ) {
-				$ppsettings[$pp->processor_name . '_' . $pname] = $pvalue;
+		if ( isset( $settings_array['lists'] ) ) {
+			foreach ( $settings_array['lists'] as $lname => $lvalue ) {
+				$lists[$pp->processor_name . '_' . $lname] = $lvalue;
 			}
-
-			if ( $pp->processor->active ) {
-				// Get Backend Settings
-				$settings_array		= $pp->getBackendSettings();
-				$original_settings	= $pp->processor->settings();
-
-				if ( isset( $settings_array['lists'] ) ) {
-					foreach ( $settings_array['lists'] as $lname => $lvalue ) {
-						$lists[$pp->processor_name . '_' . $lname] = $lvalue;
-					}
-					unset( $settings_array['lists'] );
-				}
-
-				if ( empty( $settings_array ) ) {
-					continue;
-				}
-
-				// Iterate through settings form assigning the db settings
-				foreach ( $settings_array as $name => $values ) {
-					$setting_name = $pp->processor_name . '_' . $name;
-
-					switch( $settings_array[$name][0] ) {
-						case 'list_currency':
-							// Get currency list
-							$currency_array	= explode( ',', $pp->info['currencies'] );
-
-							// Transform currencies into OptionArray
-							$currency_code_list = array();
-							foreach ( $currency_array as $currency ) {
-								if ( defined( '_CURRENCY_' . $currency )) {
-									$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
-								}
-							}
-
-							// Create list
-							$lists[$setting_name] = mosHTML::selectList( $currency_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
-							$settings_array[$name][0] = 'list';
-							break;
-						case 'list_language':
-							// Get language list
-							$language_array	= explode( ',', $pp->info['languages'] );
-
-							// Transform languages into OptionArray
-							$language_code_list = array();
-							foreach ( $language_array as $language ) {
-								$language_code_list[] = mosHTML::makeOption( $language, ( defined( '_AEC_LANG_' . $language  ) ? constant( '_AEC_LANG_' . $language ) : $language ) );
-							}
-							// Create list
-							$lists[$setting_name] = mosHTML::selectList( $language_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
-							$settings_array[$name][0] = 'list';
-							break;
-						case 'list_plan':
-							// Create list
-							$lists[$setting_name] = mosHTML::selectList($available_plans, $setting_name, 'size="' . $total_plans . '"', 'value', 'text', $pp->settings[$name] );
-							$settings_array[$name][0] = 'list';
-							break;
-						default:
-							break;
-					}
-
-					if ( !isset( $settings_array[$name][1] ) ) {
-						// Create constant names
-						$constantname = '_CFG_' . strtoupper( $ppname ) . '_' . strtoupper($name) . '_NAME';
-						$constantdesc = '_CFG_' . strtoupper( $ppname ) . '_' . strtoupper($name) . '_DESC';
-
-						// If the constantname does not exists, try a generic name or insert an error
-						if ( defined( $constantname ) ) {
-							$settings_array[$name][1] = constant( $constantname );
-						} else {
-							$genericname = '_CFG_PROCESSOR_' . strtoupper($name) . '_NAME';
-							if ( defined( $genericname ) ) {
-								$settings_array[$name][1] = constant( $genericname );
-							} else {
-								$settings_array[$name][1] = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantname );
-							}
-						}
-
-						// If the constantname does not exists, try a generic name or insert an error
-						if ( defined( $constantdesc ) ) {
-							$settings_array[$name][2] = constant( $constantdesc );
-						} else {
-							$genericdesc = '_CFG_PROCESSOR_' . strtoupper($name) . '_DESC';
-							if ( defined( $genericname ) ) {
-								$settings_array[$name][2] = constant( $genericdesc );
-							} else {
-								$settings_array[$name][2] = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantdesc );
-							}
-						}
-					}
-
-					// It might be that the processor has got some new properties, so we need to double check here
-					if ( isset( $pp->settings[$name] ) ) {
-						$content = $pp->settings[$name];
-					} elseif ( isset( $original_settings[$name] ) ) {
-						$content = $original_settings[$name];
-					} else {
-						$content = null;
-					}
-
-					// Set the settings value
-					$settings_array[$setting_name] = array_merge( (array) $settings_array[$name], array( $content ) );
-
-					// unload the original value
-					unset( $settings_array[$name] );
-				}
-
-				if ( is_array( $settings_array ) && !empty( $settings_array ) ) {
-					$params = array_merge( $params, $settings_array );
-				}
-
-				$longname = $ppname . '_info_longname';
-				$description = $ppname . '_info_description';
-
-				$params[$longname] = array( 'inputC', _CFG_PROCESSOR_NAME_NAME, _CFG_PROCESSOR_NAME_DESC, $pp->info['longname'], $longname);
-				$params[$description] = array( 'editor', _CFG_PROCESSOR_DESC_NAME, _CFG_PROCESSOR_DESC_DESC, $pp->info['description'], $description);
-
-				$pphead = '<h2>' . $pp->info['longname'] . '</h2>';
-				$pphead .= '<img src="' . $mosConfig_live_site . '/components/' . $option . '/images/pplogo_' . $pp->processor_name . '.png" alt="' . $pp->processor_name . '" title="' . $pp->processor_name .'" class="plogo" />';
-
-				@end( $params );
-
-				// Add to Active List
-				$pp_list_enabled[]->value = $ppname;
-
-				// Add to selected Description List if existing in db entry
-				if ( !empty( $desc_list ) ) {
-					if ( in_array( $ppname, $desc_list ) ) {
-						$pplist_selected[]->value = $ppname;
-					}
-				}
-
-				// Add to Description List
-				$pp_list_enabled_html[] = mosHTML::makeOption( $ppname, $pp->info['longname'] );
-
-			} else {
-				$pp->Init();
-				$pp->getInfo();
-			}
-
-
-		} else {
-			$pp->info = $pp->processor->info();
+			unset( $settings_array['lists'] );
 		}
 
-		// Add to general PP List
-		$pp_list_html[] = mosHTML::makeOption( $ppname, $readppname );
+		$available_plans = SubscriptionPlanHandler::getActivePlanList();
+		$total_plans = count( $available_plans );
+
+		// Iterate through settings form assigning the db settings
+		foreach ( $settings_array as $name => $values ) {
+			$setting_name = $pp->processor_name . '_' . $name;
+
+			switch( $settings_array[$name][0] ) {
+				case 'list_currency':
+					// Get currency list
+					$currency_array	= explode( ',', $pp->info['currencies'] );
+
+					// Transform currencies into OptionArray
+					$currency_code_list = array();
+					foreach ( $currency_array as $currency ) {
+						if ( defined( '_CURRENCY_' . $currency )) {
+							$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
+						}
+					}
+
+					// Create list
+					$lists[$setting_name] = mosHTML::selectList( $currency_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
+					$settings_array[$name][0] = 'list';
+					break;
+				case 'list_language':
+					// Get language list
+					$language_array	= explode( ',', $pp->info['languages'] );
+
+					// Transform languages into OptionArray
+					$language_code_list = array();
+					foreach ( $language_array as $language ) {
+						$language_code_list[] = mosHTML::makeOption( $language, ( defined( '_AEC_LANG_' . $language  ) ? constant( '_AEC_LANG_' . $language ) : $language ) );
+					}
+					// Create list
+					$lists[$setting_name] = mosHTML::selectList( $language_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
+					$settings_array[$name][0] = 'list';
+					break;
+				case 'list_plan':
+					// Create list
+					$lists[$setting_name] = mosHTML::selectList($available_plans, $setting_name, 'size="' . $total_plans . '"', 'value', 'text', $pp->settings[$name] );
+					$settings_array[$name][0] = 'list';
+					break;
+				default:
+					break;
+			}
+
+			if ( !isset( $settings_array[$name][1] ) ) {
+				// Create constant names
+				$constantname = '_CFG_' . strtoupper( $pp->processor_name ) . '_' . strtoupper($name) . '_NAME';
+				$constantdesc = '_CFG_' . strtoupper( $pp->processor_name ) . '_' . strtoupper($name) . '_DESC';
+
+				// If the constantname does not exists, try a generic name or insert an error
+				if ( defined( $constantname ) ) {
+					$settings_array[$name][1] = constant( $constantname );
+				} else {
+					$genericname = '_CFG_PROCESSOR_' . strtoupper($name) . '_NAME';
+					if ( defined( $genericname ) ) {
+						$settings_array[$name][1] = constant( $genericname );
+					} else {
+						$settings_array[$name][1] = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantname );
+					}
+				}
+
+				// If the constantname does not exists, try a generic name or insert an error
+				if ( defined( $constantdesc ) ) {
+					$settings_array[$name][2] = constant( $constantdesc );
+				} else {
+					$genericdesc = '_CFG_PROCESSOR_' . strtoupper($name) . '_DESC';
+					if ( defined( $genericname ) ) {
+						$settings_array[$name][2] = constant( $genericdesc );
+					} else {
+						$settings_array[$name][2] = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantdesc );
+					}
+				}
+			}
+
+			// It might be that the processor has got some new properties, so we need to double check here
+			if ( isset( $pp->settings[$name] ) ) {
+				$content = $pp->settings[$name];
+			} elseif ( isset( $original_settings[$name] ) ) {
+				$content = $original_settings[$name];
+			} else {
+				$content = null;
+			}
+
+			// Set the settings value
+			$settings_array[$setting_name] = array_merge( (array) $settings_array[$name], array( $content ) );
+
+			// unload the original value
+			unset( $settings_array[$name] );
+		}
+
+		if ( is_array( $settings_array ) && !empty( $settings_array ) ) {
+			$params = array_merge( $params, $settings_array );
+		}
+
+		$longname = $pp->processor_name . '_info_longname';
+		$description = $pp->processor_name . '_info_description';
+
+		$params[$longname] = array( 'inputC', _CFG_PROCESSOR_NAME_NAME, _CFG_PROCESSOR_NAME_DESC, $pp->info['longname'], $longname);
+		$params[$description] = array( 'editor', _CFG_PROCESSOR_DESC_NAME, _CFG_PROCESSOR_DESC_DESC, $pp->info['description'], $description);
+
+		$settingsparams = $pp->settings;
 	} else {
 		// Create Processor Selection Screen
 
@@ -2773,10 +2728,11 @@ function editProcessor( $id, $option )
 
 		$lists['processors']	= mosHTML::selectList( $pp_list_html, 'processors[]', 'size="' . max(min(count($pplist), 12), 2) . '"', 'value', 'text' );
 
+		$settings_array['processors'] = array( 'list' );
+		$settingsparams = array();
 	}
 
 	$settings = new aecSettings ( 'pp', 'general' );
-	$settingsparams = array_merge( $aecConfig->cfg, $ppsettings );
 	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
 
 	// Call HTML Class
@@ -2785,7 +2741,9 @@ function editProcessor( $id, $option )
 		$aecHTML->customparams = $customparamsarray;
 	}
 
-	HTML_AcctExp::Settings( $option, $aecHTML );
+	$aecHTML->pp = $pp;
+
+	HTML_AcctExp::editProcessor( $option, $aecHTML );
 }
 
 /**
@@ -2793,7 +2751,7 @@ function editProcessor( $id, $option )
 */
 function cancelProcessor( $option )
 {
-	mosRedirect( 'index2.php?option=' . $option . '&task=showCentral', _AEC_CONFIG_CANCELLED );
+	mosRedirect( 'index2.php?option=' . $option . '&task=showProcessors', _AEC_CONFIG_CANCELLED );
 }
 
 
@@ -2806,6 +2764,10 @@ function saveProcessor( $option, $return=0 )
 	// Go next if this is the zero option selected
 	if ( empty( $procname ) ) {
 		continue;
+	}
+
+	if ( !empty( $_POST['id'] ) ) {
+		$pp->loadId( $_POST['id'] );
 	}
 
 	if ( $pp->loadName( $procname ) ) {

@@ -4710,6 +4710,28 @@ class SubscriptionPlanHandler
 		}
 	}
 
+	function getActivePlanList()
+	{
+		global $database;
+
+		// get entry Plan selection
+		$available_plans	= array();
+		$available_plans[]	= mosHTML::makeOption( '0', _PAYPLAN_NOPLAN );
+
+		$query = 'SELECT `id` AS value, `name` AS text'
+				. ' FROM #__acctexp_plans'
+				. ' WHERE `active` = \'1\''
+				;
+		$database->setQuery( $query );
+		$dbaplans = $database->loadObjectList();
+
+	 	if ( is_array( $dbaplans ) ) {
+	 		$available_plans = array_merge( $available_plans, $dbaplans );
+	 	}
+
+		return $available_plans;
+	}
+
 	function getFullPlanList( $limitstart=false, $limit=false )
 	{
 		global $database;

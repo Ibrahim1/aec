@@ -1305,32 +1305,18 @@ class HTML_AcctExp
  		HTML_myCommon::GlobalNerd();
 	}
 
-	function editProcessor( $option, $aecHTML, $tab_data, $editors )
+	function editProcessor( $option, $aecHTML )
 	{
 		global $mosConfig_live_site;
 
 		HTML_myCommon::addBackendCSS();
 		mosCommonHTML::loadOverlib();
 		?>
-		<script language="javascript" type="text/javascript">
-		    /* <![CDATA[ */
-			function submitbutton(pressbutton) {
-				<?php
-				$k = 1;
-				foreach ($editors as $editor) {
-					getEditorContents( 'editor' . $k, $editor );
-					$k++;
-				}
-				?>
-				submitform( pressbutton );
-			}
-			/* ]]> */
-		</script>
 		<form action="index2.php" method="post" name="adminForm">
 		<table class="adminheading">
 			<tr>
 				<th width="100%" class="sectionname" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_settings.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
-					<?php echo _AEC_HEAD_SETTINGS; ?>
+					<?php echo _AEC_HEAD_SETTINGS . ': ' . $aecHTML->pp->info['longname']; ?>
 				</th>
 			</tr>
 			<tr><td></td></tr>
@@ -1339,34 +1325,22 @@ class HTML_AcctExp
 
 		$tabs = new mosTabs(0);
 		$tabs->startPane( 'settings' );
+		$tabs->startTab( $aecHTML->pp->processor_name, $aecHTML->pp->info['longname'] );
 
-		$i = 0;
+		echo '<div class="aec_tabheading"><h2>' . $aecHTML->pp->info['longname'] . '</h2>';
+		echo '<img src="' . $mosConfig_live_site . '/components/' . $option . '/images/gwlogo_' . $aecHTML->pp->processor_name . '.png" alt="' . $aecHTML->pp->processor_name . '" title="' . $aecHTML->pp->processor_name .'" class="plogo" />';
+		echo '</div>';
 
-		foreach( $tab_data as $tab ) {
-			$tabs->startTab( $tab[0], $tab[0] );
+		echo '<table width="100%" class="aecadminform"><tr><td>';
 
-			if ( isset( $tab[2] ) ) {
-				echo '<div class="aec_tabheading">' . $tab[2] . '</div>';
-			}
-
-			echo '<table width="100%" class="aecadminform"><tr><td>';
-
-			foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
-				echo $aecHTML->createSettingsParticle( $rowname );
-				unset( $aecHTML->rows[$rowname] );
-				// Skip to next tab if last item in this one reached
-				if ( strcmp( $rowname, $tab[1] ) === 0 ) {
-					echo '</td></tr></table>';
-					$tabs->endTab();
-					continue 2;
-				}
-			}
-
-			echo '</td></tr></table>';
-			$tabs->endTab();
+		foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
+			echo $aecHTML->createSettingsParticle( $rowname );
 		}
+
+		echo '</td></tr></table>';
+		$tabs->endTab();
 		?>
-		<input type="hidden" name="id" value="1" />
+		<input type="hidden" name="id" value="<?php echo $aecHTML->pp->id; ?>" />
 		<input type="hidden" name="task" value="" />
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		</form>
@@ -1377,7 +1351,7 @@ class HTML_AcctExp
 		echo $aecHTML->loadJS();
 
 		if ( _EUCA_DEBUGMODE ) {
-			krumo( $option, $aecHTML, $tab_data, $editors );
+			krumo( $option, $aecHTML );
 		}
 
  		HTML_myCommon::GlobalNerd();
