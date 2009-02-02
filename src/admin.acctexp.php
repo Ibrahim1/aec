@@ -2698,13 +2698,10 @@ function editProcessor( $id, $option )
 		$settingsparams = $pp->settings;
 	} else {
 		// Create Processor Selection Screen
-
-		$pph					= new PaymentProcessorHandler();
-		$pplist					= $pph->getProcessorList();
-		$pp_installed_list		= $pph->getInstalledObjectList( true );
+		$pplist					= PaymentProcessorHandler::getProcessorList();
+		$pp_installed_list		= PaymentProcessorHandler::getInstalledObjectList( true, true );
 
 		$pp_list_html			= array();
-		$pp_list_html[]			= mosHTML::makeOption( 'none', _AEC_CMN_NONE_SELECTED );
 
 		asort($pplist);
 
@@ -2726,10 +2723,12 @@ function editProcessor( $id, $option )
 			}
 		}
 
-		$lists['processors']	= mosHTML::selectList( $pp_list_html, 'processors[]', 'size="' . max(min(count($pplist), 12), 2) . '"', 'value', 'text' );
+		$lists['processor']	= mosHTML::selectList( $pp_list_html, 'processor', 'size="' . max(min(count($pplist), 24), 2) . '"', 'value', 'text' );
 
-		$settings_array['processors'] = array( 'list' );
+		$params['processor'] = array( 'list' );
 		$settingsparams = array();
+
+		$pp = null;
 	}
 
 	$settings = new aecSettings ( 'pp', 'general' );
@@ -2768,62 +2767,67 @@ function saveProcessor( $option, $return=0 )
 
 	if ( !empty( $_POST['id'] ) ) {
 		$pp->loadId( $_POST['id'] );
+
+		if ( empty( $pp->id ) ) {
+			cancel();
+		}
+
+		$procname = $pp->processor_name;
+	} elseif ( isset( $_POST['processor'] ) ) {
+		$pp->loadName( $_POST['processor'] );
+
+		$procname = $_POST['processor'];
 	}
 
-	if ( $pp->loadName( $procname ) ) {
-		$pp->fullInit();
-		$pp->processor->active = in_array( $procname, $pplist_enabled );
+	$pp->fullInit();
 
-		$pp->storeload();
+	$pp->storeload();
 
-		$longname		= $procname . '_info_longname';
-		$description	= $procname . '_info_description';
+	$longname		= $procname . '_info_longname';
+	$description	= $procname . '_info_description';
 
-		if ( isset( $_POST[$longname] ) ) {
-			$pp->info['longname'] = $_POST[$longname];
-			unset( $_POST[$longname] );
+	if ( isset( $_POST[$longname] ) ) {
+		$pp->info['longname'] = $_POST[$longname];
+		unset( $_POST[$longname] );
+	}
+
+	if ( isset( $_POST[$description] ) ) {
+		$pp->info['description'] = $_POST[$description];
+		unset( $_POST[$description] );
+	}
+
+	$settings = $pp->getBackendSettings();
+
+	if ( is_int( $pp->is_recurring() ) ) {
+		$settings['recurring'] = 2;
+	}
+
+	foreach ( $settings as $name => $value ) {
+		if ( $name == 'lists' ) {
+			continue;
 		}
 
-		if ( isset( $_POST[$description] ) ) {
-			$pp->info['description'] = $_POST[$description];
-			unset( $_POST[$description] );
-		}
+		$postname = $procname  . '_' . $name;
 
-		$settings = $pp->getBackendSettings();
+		if ( isset( $_POST[$postname] ) ) {
+			$val = $_POST[$postname];
 
-		if ( is_int( $pp->is_recurring() ) ) {
-			$settings['recurring'] = 2;
-		}
-
-		foreach ( $settings as $name => $value ) {
-			if ( $name == 'lists' ) {
-				continue;
-			}
-
-			$postname = $procname  . '_' . $name;
-
-			if ( isset( $_POST[$postname] ) ) {
-				$val = $_POST[$postname];
-
-				if ( empty( $val ) ) {
-					switch( $name ) {
-						case 'currency':
-							$val = 'USD';
-							break;
-						default:
-							break;
-					}
+			if ( empty( $val ) ) {
+				switch( $name ) {
+					case 'currency':
+						$val = 'USD';
+						break;
+					default:
+						break;
 				}
-
-				$pp->settings[$name] = $_POST[$postname];
-				unset( $_POST[$postname] );
 			}
-		}
 
-		$pp->storeload();
-	} else {
-		// TODO: Log error
+			$pp->settings[$name] = $_POST[$postname];
+			unset( $_POST[$postname] );
+		}
 	}
+
+	$pp->storeload();
 
 	if ( $return ) {
 		mosRedirect( 'index2.php?option=' . $option . '&task=showSettings', _AEC_CONFIG_SAVED );

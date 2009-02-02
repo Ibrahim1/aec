@@ -2033,11 +2033,11 @@ class PaymentProcessorHandler
 	 * @param bool	$active		get only active objects
 	 * @return array of (active) payment processors
 	 */
-	function getInstalledObjectList( $active = false )
+	function getInstalledObjectList( $active = false, $simple = false )
 	{
 		global $database;
 
-		$query = 'SELECT `id`, `active`, `name`'
+		$query = 'SELECT `name`' . ( $simple ? '' : ', `active`, `id`' )
 				. ' FROM #__acctexp_config_processors'
 				;
 		if ( $active ) {
@@ -2045,7 +2045,11 @@ class PaymentProcessorHandler
 		}
 		$database->setQuery( $query );
 
-		return $database->loadObjectList();
+		if ( $simple ) {
+			return $database->loadResultArray();
+		} else {
+			return $database->loadObjectList();
+		}
 	}
 
 	function getInstalledNameList($active=false)
@@ -6806,7 +6810,7 @@ class InvoiceFactory
 		if ( isset( $response['error'] ) ) {
 			$this->error( $option, $this->metaUser->cmsUser, $this->objInvoice->invoice_number, $response['error'] );
 		} else {
-			if ( !empty( $pp->info['notify_trail_thanks'] ) ) {
+			if ( !empty( $this->pp->info['notify_trail_thanks'] ) ) {
 				$this->thanks( $option );
 			} else {
 				exit;

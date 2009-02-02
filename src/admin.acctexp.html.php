@@ -1325,11 +1325,18 @@ class HTML_AcctExp
 
 		$tabs = new mosTabs(0);
 		$tabs->startPane( 'settings' );
-		$tabs->startTab( $aecHTML->pp->processor_name, $aecHTML->pp->info['longname'] );
+		if ( !empty( $aecHTML->pp ) ) {
+			$tabs->startTab( $aecHTML->pp->processor_name, $aecHTML->pp->info['longname'] );
 
-		echo '<div class="aec_tabheading"><h2>' . $aecHTML->pp->info['longname'] . '</h2>';
-		echo '<img src="' . $mosConfig_live_site . '/components/' . $option . '/images/gwlogo_' . $aecHTML->pp->processor_name . '.png" alt="' . $aecHTML->pp->processor_name . '" title="' . $aecHTML->pp->processor_name .'" class="plogo" />';
-		echo '</div>';
+			echo '<div class="aec_tabheading"><h2>' . $aecHTML->pp->info['longname'] . '</h2>';
+			echo '<img src="' . $mosConfig_live_site . '/components/' . $option . '/images/gwlogo_' . $aecHTML->pp->processor_name . '.png" alt="' . $aecHTML->pp->processor_name . '" title="' . $aecHTML->pp->processor_name .'" class="plogo" />';
+			echo '</div>';
+			$id = $aecHTML->pp->id;
+		} else {
+			$tabs->startTab( 'new processor', 'new processor' );
+
+			echo '<div class="aec_tabheading"><h2>' . '' . '</h2></div>';
+		}
 
 		echo '<table width="100%" class="aecadminform"><tr><td>';
 
@@ -1340,7 +1347,7 @@ class HTML_AcctExp
 		echo '</td></tr></table>';
 		$tabs->endTab();
 		?>
-		<input type="hidden" name="id" value="<?php echo $aecHTML->pp->id; ?>" />
+		<input type="hidden" name="id" value="<?php echo $id; ?>" />
 		<input type="hidden" name="task" value="" />
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		</form>
