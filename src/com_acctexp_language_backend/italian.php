@@ -287,6 +287,7 @@ define( '_AEC_CENTR_EXPIRED',					'Expired' );
 define( '_AEC_CENTR_CANCELLED',					'Cancelled' );
 define( '_AEC_CENTR_HOLD',						'On Hold' );
 define( '_AEC_CENTR_CLOSED',					'Closed' );
+define( '_AEC_CENTR_PROCESSORS',				'Processors' );
 define( '_AEC_CENTR_SETTINGS',					'Settings' );
 define( '_AEC_CENTR_EDIT_CSS',					'Edit CSS' );
 define( '_AEC_CENTR_V_INVOICES',				'View Invoices' );

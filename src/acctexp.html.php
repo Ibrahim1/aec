@@ -355,8 +355,13 @@ class HTML_frontEnd
 
 	function processorInfo( $option, $processorObj, $displaycc = 1 )
 	{
-		global $mosConfig_live_site; ?>
+		global $aecConfig, $mosConfig_live_site;
 
+		if ( !in_array( $processorObj->processor_name, $aecConfig->cfg['gwlist'] ) ) {
+			return;
+		}
+
+		?>
 		<tr>
 			<td class="cc_gateway">
 				<p align="center"><img src="<?php echo $mosConfig_live_site . '/components/' . $option . '/images/gwlogo_' . $processorObj->processor_name . '.png" alt="' . $processorObj->processor_name . '" title="' . $processorObj->processor_name; ?>" /></p>

@@ -286,6 +286,7 @@ define( '_AEC_CENTR_EXPIRED',					'Verlopen' );
 define( '_AEC_CENTR_CANCELLED',					'Geannuleerd' );
 define( '_AEC_CENTR_HOLD',						'On Hold' );
 define( '_AEC_CENTR_CLOSED',					'Gesloten' );
+define( '_AEC_CENTR_PROCESSORS',				'Processors' );
 define( '_AEC_CENTR_SETTINGS',					'Instellingen' );
 define( '_AEC_CENTR_EDIT_CSS',					'Bewerk CSS' );
 define( '_AEC_CENTR_V_INVOICES',				'Bekijk facturen' );
