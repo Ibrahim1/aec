@@ -2685,17 +2685,21 @@ function editProcessor( $id, $option )
 			unset( $settings_array[$name] );
 		}
 
+		$longname = $pp->processor_name . '_info_longname';
+		$description = $pp->processor_name . '_info_description';
+
+		$settingsparams = $pp->settings;
+
+		$params = array();
+		$params[$pp->processor_name.'_active'] = array( 'list_yesno', _PP_GENERAL_ACTIVE_NAME, _PP_GENERAL_ACTIVE_DESC, $pp->processor->active);
+
 		if ( is_array( $settings_array ) && !empty( $settings_array ) ) {
 			$params = array_merge( $params, $settings_array );
 		}
 
-		$longname = $pp->processor_name . '_info_longname';
-		$description = $pp->processor_name . '_info_description';
-
 		$params[$longname] = array( 'inputC', _CFG_PROCESSOR_NAME_NAME, _CFG_PROCESSOR_NAME_DESC, $pp->info['longname'], $longname);
 		$params[$description] = array( 'editor', _CFG_PROCESSOR_DESC_NAME, _CFG_PROCESSOR_DESC_DESC, $pp->info['description'], $description);
 
-		$settingsparams = $pp->settings;
 	} else {
 		// Create Processor Selection Screen
 		$pplist					= PaymentProcessorHandler::getProcessorList();

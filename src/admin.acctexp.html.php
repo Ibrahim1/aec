@@ -834,7 +834,7 @@ class HTML_AcctExp
 										array( 'showCouponsStatic', 'coupons_static', _AEC_CENTR_COUPONS_STATIC ),
 										_AEC_CENTR_AREA_SETTINGS,
 										array( 'showSettings', 'settings', _AEC_CENTR_SETTINGS ),
-										array( 'showProcessors', 'settings', _AEC_CENTR_SETTINGS ),
+										array( 'showProcessors', 'settings', _AEC_CENTR_PROCESSORS ),
 										array( 'editCSS', 'css', _AEC_CENTR_EDIT_CSS ),
 										array( 'history', 'history', _AEC_CENTR_VIEW_HISTORY ),
 										array( 'eventlog', 'eventlog', _AEC_CENTR_LOG ),
@@ -1250,7 +1250,7 @@ class HTML_AcctExp
 			<table class="adminheading">
 				<tr>
 					<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_processors.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
-						<?php echo _PROCESSOR_TITLE; ?>
+						<?php echo _PROCESSORS_TITLE; ?>
 					</th>
 				</tr>
 				<tr><td></td></tr>

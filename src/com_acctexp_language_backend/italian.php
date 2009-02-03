@@ -811,6 +811,31 @@ define( '_CFG_GENERAL_SENDINVOICE_DESC', 'Send and invoice/purchase order email 
 define( '_CFG_GENERAL_INVOICETMPL_NAME', 'Invoice Template');
 define( '_CFG_GENERAL_INVOICETMPL_DESC', 'Template for invoices/purchase orders');
 
+// --== Processors PAGE ==--
+
+define( '_PROCESSORS_TITLE', 'Processors');
+define( '_PROCESSOR_NAME', 'Name');
+define( '_PROCESSOR_DESC', 'Description (first 50 chars)');
+define( '_PROCESSOR_ACTIVE', 'Published');
+define( '_PROCESSOR_VISIBLE', 'Visible');
+define( '_PROCESSOR_REORDER', 'Reorder');
+define( '_PROCESSOR_INFO', 'Information');
+
+define( '_PUBLISH_PROCESSOR', 'Publish');
+define( '_UNPUBLISH_PROCESSOR', 'Unpublish');
+define( '_NEW_PROCESSOR', 'New');
+define( '_COPY_PROCESSOR', 'Copy');
+define( '_APPLY_PROCESSOR', 'Apply');
+define( '_EDIT_PROCESSOR', 'Edit');
+define( '_REMOVE_PROCESSOR', 'Delete');
+define( '_SAVE_PROCESSOR', 'Save');
+define( '_CANCEL_PROCESSOR', 'Cancel');
+
+define( '_PP_GENERAL_PROCESSOR_NAME', 'Payment Processor');
+define( '_PP_GENERAL_PROCESSOR_DESC', 'Select which payment processor you want to use.');
+define( '_PP_GENERAL_ACTIVE_NAME', 'Active');
+define( '_PP_GENERAL_ACTIVE_DESC', 'Select whether this processor is currently active (and thus can carry out its function and be available to your users)');
+
 // --== PAYMENT PLAN PAGE ==--
 // Additions of variables for free trial periods by Michael Spredemann (scubaguy)
 
