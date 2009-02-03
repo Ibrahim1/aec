@@ -76,8 +76,8 @@ define( '_CHK_USERNAME_AVAIL', "Gebruikersnaam %s is nog beschikbaar");
 define( '_CHK_USERNAME_NOTAVAIL', "Gebruikersnaam %s is al in gebruik!");
 
 // --== MIJN ABONNEMENTEN PAGINA ==--
-define( '_HISTORY_TITLE', 'Account history - Laatste 10 betalingen');
-define( '_HISTORY_SUBTITLE', 'Lid sinds ');
+define( '_MYSUBSCRIPTION_TITLE', 'Mijn abonnement');
+define( '_MEMBER_SINCE', 'Lid sinds');
 define( '_HISTORY_COL1_TITLE', 'Factuur');
 define( '_HISTORY_COL2_TITLE', 'Bedrag');
 define( '_HISTORY_COL3_TITLE', 'Betalingsdatum');
