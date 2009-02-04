@@ -2165,30 +2165,24 @@ function editSettings( $option )
 	$ppsettings = array();
 
 	foreach ( $gwlist as $gwname ) {
-		$readgwname = ucwords( str_replace( '_', ' ', strtolower( $gwname ) ) );
-
-		// Load Payment Processor
 		$pp = new PaymentProcessor();
 		if ( $pp->loadName( $gwname ) ) {
-			if ( $pp->id ) {
-				// Init Info and Settings
-				$pp->fullInit();
+			$pp->fullInit();
 
-				if ( $pp->processor->active ) {
-					// Add to Active List
-					$gw_list_enabled[]->value = $gwname;
+			if ( $pp->processor->active ) {
+				// Add to Active List
+				$gw_list_enabled[]->value = $gwname;
 
-					// Add to selected Description List if existing in db entry
-					if ( !empty( $desc_list ) ) {
-						if ( in_array( $gwname, $desc_list ) ) {
-							$gwlist_selected[]->value = $gwname;
-						}
+				// Add to selected Description List if existing in db entry
+				if ( !empty( $desc_list ) ) {
+					if ( in_array( $gwname, $desc_list ) ) {
+						$gwlist_selected[]->value = $gwname;
 					}
-
-					// Add to Description List
-					$gw_list_enabled_html[] = mosHTML::makeOption( $gwname, $pp->info['longname'] );
-
 				}
+
+				// Add to Description List
+				$gw_list_enabled_html[] = mosHTML::makeOption( $gwname, $pp->info['longname'] );
+
 			}
 		}
 	}

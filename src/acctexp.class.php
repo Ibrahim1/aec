@@ -8896,6 +8896,578 @@ class AECfetchfromDB
 
 }
 
+class reWriteEngine
+{
+	function reWriteEngine()
+	{
+
+	}
+
+	function info( $switches=array(), $params=null )
+	{
+		if ( is_array( $switches ) ) {
+			if ( !count( $switches ) ) {
+				$switches = array( 'cms', 'user', 'subscription', 'invoice', 'plan', 'system' );
+			}
+		} else {
+			if ( empty( $switches ) ) {
+				$switches = array( 'cms', 'user', 'subscription', 'invoice', 'plan', 'system' );
+			} else {
+				$temp = $switches;
+				$switches = array( $temp );
+			}
+		}
+
+		$rewrite = array();
+
+		if ( in_array( 'system', $switches ) ) {
+			$rewrite['system'][] = 'timestamp';
+			$rewrite['system'][] = 'timestamp_backend';
+			$rewrite['system'][] = 'server_timestamp';
+			$rewrite['system'][] = 'server_timestamp_backend';
+		}
+
+		if ( in_array( 'cms', $switches ) ) {
+			$rewrite['cms'][] = 'absolute_path';
+			$rewrite['cms'][] = 'live_site';
+		}
+
+		if ( in_array( 'user', $switches ) ) {
+			$rewrite['user'][] = 'id';
+			$rewrite['user'][] = 'username';
+			$rewrite['user'][] = 'name';
+			$rewrite['user'][] = 'first_name';
+			$rewrite['user'][] = 'first_first_name';
+			$rewrite['user'][] = 'last_name';
+			$rewrite['user'][] = 'email';
+			$rewrite['user'][] = 'activationcode';
+			$rewrite['user'][] = 'activationlink';
+
+			if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
+				global $database;
+
+				$query = 'SELECT name, title'
+						. ' FROM #__comprofiler_fields'
+						. ' WHERE `table` != \'#__users\''
+						. ' AND name != \'NA\'';
+				$database->setQuery( $query );
+				$objects = $database->loadObjectList();
+
+				if ( is_array( $objects ) ) {
+					foreach ( $objects as $object ) {
+						$rewrite['user'][] = $object->name;
+
+						if ( strpos( $object->title, '_' ) === 0 ) {
+							$content = $object->name;
+						} else {
+							$content = $object->title;
+						}
+
+						$name = '_REWRITE_KEY_USER_' . strtoupper( $object->name );
+						if ( !defined( $name ) ) {
+							define( $name, $content );
+						}
+					}
+				}
+			}
+		}
+
+		if ( in_array( 'subscription', $switches ) ) {
+			$rewrite['subscription'][] = 'type';
+			$rewrite['subscription'][] = 'status';
+			$rewrite['subscription'][] = 'signup_date';
+			$rewrite['subscription'][] = 'lastpay_date';
+			$rewrite['subscription'][] = 'plan';
+			$rewrite['subscription'][] = 'previous_plan';
+			$rewrite['subscription'][] = 'recurring';
+			$rewrite['subscription'][] = 'lifetime';
+			$rewrite['subscription'][] = 'expiration_date';
+			$rewrite['subscription'][] = 'expiration_date_backend';
+		}
+
+		if ( in_array( 'invoice', $switches ) ) {
+			$rewrite['invoice'][] = 'id';
+			$rewrite['invoice'][] = 'number';
+			$rewrite['invoice'][] = 'number_format';
+			$rewrite['invoice'][] = 'created_date';
+			$rewrite['invoice'][] = 'transaction_date';
+			$rewrite['invoice'][] = 'method';
+			$rewrite['invoice'][] = 'amount';
+			$rewrite['invoice'][] = 'currency';
+			$rewrite['invoice'][] = 'coupons';
+		}
+
+		if ( in_array( 'plan', $switches ) ) {
+			$rewrite['plan'][] = 'name';
+			$rewrite['plan'][] = 'desc';
+		}
+
+		if ( !empty( $params ) ) {
+			$params[] = array( 'accordion_start', 'small_accordion' );
+
+			$params[] = array( 'accordion_itemstart', constant( '_REWRITE_ENGINE_TITLE' ) );
+			$list = '<div class="rewriteinfoblock">' . "\n"
+			. '<p>' . constant( '_REWRITE_ENGINE_DESC' ) . '</p>' . "\n"
+			. '</div>' . "\n";
+			$params[] = array( 'literal', $list );
+			$params[] = array( 'div_end', '' );
+
+			foreach ( $rewrite as $area => $keys ) {
+				$params[] = array( 'accordion_itemstart', constant( '_REWRITE_AREA_' . strtoupper( $area ) ) );
+
+				$list = '<div class="rewriteinfoblock">' . "\n"
+				. '<ul>' . "\n";
+
+				foreach ( $keys as $key ) {
+					$list .= '<li>[[' . $area . "_" . $key . ']] =&gt; ' . constant( '_REWRITE_KEY_' . strtoupper( $area . "_" . $key ) ) . '</li>' . "\n";
+				}
+				$list .= '</ul>' . "\n"
+				. '</div>' . "\n";
+
+				$params[] = array( 'literal', $list );
+				$params[] = array( 'div_end', '' );
+			}
+
+			$params[] = array( 'accordion_itemstart', constant( '_REWRITE_ENGINE_AECJSON_TITLE' ) );
+			$list = '<div class="rewriteinfoblock">' . "\n"
+			. '<p>' . constant( '_REWRITE_ENGINE_AECJSON_DESC' ) . '</p>' . "\n"
+			. '</div>' . "\n";
+			$params[] = array( 'literal', $list );
+			$params[] = array( 'div_end', '' );
+
+			$params[] = array( 'div_end', '' );
+
+			return $params;
+		} else {
+			$return = '';
+			foreach ( $rewrite as $area => $keys ) {
+				$return .= '<div class="rewriteinfoblock">' . "\n"
+				. '<p><strong>' . constant( '_REWRITE_AREA_' . strtoupper( $area ) ) . '</strong></p>' . "\n"
+				. '<ul>' . "\n";
+
+				foreach ( $keys as $key ) {
+					$return .= '<li>[[' . $area . "_" . $key . ']] =&gt; ' . constant( '_REWRITE_KEY_' . strtoupper( $area . "_" . $key ) ) . '</li>' . "\n";
+				}
+				$return .= '</ul>' . "\n"
+				. '</div>' . "\n";
+			}
+
+			$return .= '<div class="rewriteinfoblock">' . "\n"
+			. '<p><strong>' . constant( '_REWRITE_ENGINE_AECJSON_TITLE' ) . '</strong></p>' . "\n"
+			. '<p>' . constant( '_REWRITE_ENGINE_AECJSON_DESC' ) . '</p>' . "\n"
+			. '</div>' . "\n";
+
+			return $return;
+		}
+	}
+
+	function resolveRequest( $request )
+	{
+		$rqitems = get_object_vars( $request );
+
+		$data = array();
+		foreach ( $rqitems as $rqitem ) {
+			$data[$rqitem] = $request->$rqitem;
+		}
+
+		$this->feedData( $data );
+
+		return true;
+	}
+
+	function feedData( $data )
+	{
+		if ( !isset( $this->data ) ) {
+			$this->data = array();
+		}
+
+		foreach ( $data as $name => $content ) {
+			$this->data[$name] = $content;
+		}
+
+		return true;
+	}
+
+	function armRewrite()
+	{
+		global $aecConfig, $database, $mosConfig_absolute_path, $mosConfig_live_site, $mosConfig_offset;
+
+		$this->rewrite = array();
+
+		$this->rewrite['system_timestamp']			= strftime( $aecConfig->cfg['display_date_frontend'],  time() + $mosConfig_offset * 3600 );
+		$this->rewrite['system_timestamp_backend']	= strftime( $aecConfig->cfg['display_date_backend'], time() + $mosConfig_offset * 3600 );
+		$this->rewrite['system_serverstamp_time']	= strftime( $aecConfig->cfg['display_date_frontend'], time() );
+		$this->rewrite['system_server_timestamp_backend']	= strftime( $aecConfig->cfg['display_date_backend'], time() );
+
+		$this->rewrite['cms_absolute_path']	= $mosConfig_absolute_path;
+		$this->rewrite['cms_live_site']		= $mosConfig_live_site;
+
+		if ( is_object( $this->data['metaUser'] ) ) {
+			if ( !empty( $this->data['metaUser']->hasExpiration ) ) {
+				$this->rewrite['expiration_date'] = $this->data['metaUser']->objExpiration->expiration;
+			}
+
+			// Explode Name
+			if ( is_array( $this->data['metaUser']->cmsUser->name ) ) {
+				$namearray	= $this->data['metaUser']->cmsUser->name;
+			} else {
+				$namearray	= explode( " ", $this->data['metaUser']->cmsUser->name );
+			}
+			$firstfirstname	= $namearray[0];
+			$maxname		= count($namearray) - 1;
+			$lastname		= $namearray[$maxname];
+			unset( $namearray[$maxname] );
+			$firstname = implode( ' ', $namearray );
+
+			$this->rewrite['user_id']					= $this->data['metaUser']->cmsUser->id;
+			$this->rewrite['user_username']			= $this->data['metaUser']->cmsUser->username;
+			$this->rewrite['user_name']				= $this->data['metaUser']->cmsUser->name;
+			$this->rewrite['user_first_name']			= $firstname;
+			$this->rewrite['user_first_first_name']	= $firstfirstname;
+			$this->rewrite['user_last_name']			= $lastname;
+			$this->rewrite['user_email']				= $this->data['metaUser']->cmsUser->email;
+
+			if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
+				if ( !$this->data['metaUser']->hasCBprofile ) {
+					$this->data['metaUser']->loadCBuser();
+				}
+
+				if ( !empty( $this->data['metaUser']->hasCBprofile ) ) {
+					$fields = get_object_vars( $this->data['metaUser']->cbUser );
+
+					if ( !empty( $fields ) ) {
+						foreach ( $fields as $fieldname => $fieldcontents ) {
+							$this->rewrite['user_' . $fieldname] = $fieldcontents;
+						}
+					}
+
+					$this->rewrite['user_activationcode']		= $this->data['metaUser']->cbUser->cbactivation;
+					$this->rewrite['user_activationlink']		= $mosConfig_live_site."/index.php?option=com_comprofiler&task=confirm&confirmcode=" . $this->data['metaUser']->cbUser->cbactivation;
+				} else {
+					$this->rewrite['user_activationcode']		= $this->data['metaUser']->cmsUser->activation;
+					$this->rewrite['user_activationlink']		= $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+				}
+			} else {
+				$this->rewrite['user_activationcode']		= $this->data['metaUser']->cmsUser->activation;
+				$this->rewrite['user_activationlink']		= $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+			}
+
+			if ( $this->data['metaUser']->hasSubscription ) {
+				$this->rewrite['subscription_type']			= $this->data['metaUser']->focusSubscription->type;
+				$this->rewrite['subscription_status']			= $this->data['metaUser']->focusSubscription->status;
+				$this->rewrite['subscription_signup_date']	= $this->data['metaUser']->focusSubscription->signup_date;
+				$this->rewrite['subscription_lastpay_date']	= $this->data['metaUser']->focusSubscription->lastpay_date;
+				$this->rewrite['subscription_plan']			= $this->data['metaUser']->focusSubscription->plan;
+				$this->rewrite['subscription_previous_plan']	= $this->data['metaUser']->focusSubscription->previous_plan;
+				$this->rewrite['subscription_recurring']		= $this->data['metaUser']->focusSubscription->recurring;
+				$this->rewrite['subscription_lifetime']		= $this->data['metaUser']->focusSubscription->lifetime;
+				$this->rewrite['subscription_expiration_date']		= strftime( $aecConfig->cfg['display_date_frontend'], strtotime( $this->data['metaUser']->focusSubscription->expiration ) );
+				$this->rewrite['subscription_expiration_date_backend']		= strftime( $aecConfig->cfg['display_date_backend'], strtotime( $this->data['metaUser']->focusSubscription->expiration ) );
+			}
+
+			if ( is_null( $this->data['invoice'] ) ) {
+				$lastinvoice = AECfetchfromDB::lastClearedInvoiceIDbyUserID( $this->data['metaUser']->cmsUser->id );
+
+				$this->data['invoice'] = new Invoice( $database );
+				$this->data['invoice']->load( $lastinvoice );
+			}
+		}
+
+		if ( is_object( $this->data['invoice'] ) ) {
+			$this->rewrite['invoice_id']					= $this->data['invoice']->id;
+			$this->rewrite['invoice_number']				= $this->data['invoice']->invoice_number;
+			$this->rewrite['invoice_created_date']		= $this->data['invoice']->created_date;
+			$this->rewrite['invoice_transaction_date']	= $this->data['invoice']->transaction_date;
+			$this->rewrite['invoice_method']				= $this->data['invoice']->method;
+			$this->rewrite['invoice_amount']				= $this->data['invoice']->amount;
+			$this->rewrite['invoice_currency']			= $this->data['invoice']->currency;
+
+			if ( !empty( $this->data['invoice']->coupons ) && is_array( $this->data['invoice']->coupons ) ) {
+				$this->rewrite['invoice_coupons']			=  implode( ';', $this->data['invoice']->coupons );
+			} else {
+				$this->rewrite['invoice_coupons']			=  '';
+			}
+
+			if ( !is_null( $this->data['metaUser'] ) && !is_null( $this->data['plan'] ) ) {
+				$this->data['invoice']->formatInvoiceNumber();
+				$this->rewrite['invoice_number_format']	= $this->data['invoice']->invoice_number;
+				$this->data['invoice']->deformatInvoiceNumber();
+			}
+		}
+
+		if ( is_object( $this->data['plan'] ) ) {
+			$this->rewrite['plan_name'] = $this->data['plan']->getProperty( 'name' );
+			$this->rewrite['plan_desc'] = $this->data['plan']->getProperty( 'desc' );
+		}
+	}
+
+	function resolve( $subject )
+	{
+		// Check whether a replacement exists at all
+		if ( ( strpos( $subject, '[[' ) === false ) && ( strpos( $subject, '{aecjson}' ) === false ) ) {
+			return $subject;
+		}
+
+		if ( empty( $this->rewrite ) ) {
+			$this->armRewrite();
+		}
+
+		if ( strpos( $subject, '{aecjson}' ) !== false ) {
+			// We have at least one JSON object, switching to JSON mode
+			return $this->decodeTags( $subject );
+		} else {
+			// No JSON found, do traditional parsing
+			$search = array();
+			$replace = array();
+			foreach ( $this->rewrite as $name => $replacement ) {
+				$search[]	= '[[' . $name . ']]';
+				$replace[]	= $replacement;
+			}
+
+			return str_replace( $search, $replace, $subject );
+		}
+	}
+
+	function decodeTags( $subject )
+	{
+		// Example:
+		// {aecjson} {"cmd":"concat","vars":["These ",{"cmd":"condition","vars":{"cmd":"compare","vars":["apples","=","oranges"]},"appl","orang"},"es"} {/aecjson}
+		// ...would return either "These apples" or "These oranges", depending on whether the compare function thinks that they are the same
+
+		$regex = "#{aecjson}(.*?){/aecjson}#s";
+
+		// find all instances of json code
+		$matches = array();
+		preg_match_all( $regex, $subject, $matches, PREG_SET_ORDER );
+
+		if ( count( $matches ) < 1 ) {
+			return $subject;
+		}
+
+		foreach ( $matches as $match ) {
+			$json = jsoonHandler::decode( $match[1] );
+
+			$result = $this->resolveJSONitem( $json );
+
+			$subject = str_replace( $match, $result, $subject );
+		}
+
+		return $result;
+	}
+
+	function resolveJSONitem( $current )
+	{
+		if ( is_object( $current ) ) {
+			if ( !isset( $current->cmd ) || !isset( $current->vars ) ) {
+				// Malformed String
+				return "JSON PARSE ERROR - Malformed String!";
+			}
+
+			$command = $current->cmd;
+			$variables = $current->vars;
+
+			$variables = $this->resolveJSONitem( $variables );
+
+			$current = $this->executeCommand( $command, $variables );
+
+		} elseif ( is_array( $current ) ) {
+			foreach( $current as $id => $item ) {
+				$current[$id] = $this->resolveJSONitem( $item );
+			}
+		}
+
+		return $current;
+	}
+
+	function executeCommand( $command, $vars )
+	{
+		$result = '';
+		switch( $command ) {
+			case 'rw_constant':
+				if ( isset( $this->rewrite[$vars] ) ) {
+					$result = $this->rewrite[$vars];
+				}
+				break;
+			case 'metaUser':
+				if ( !is_object( $this->data['metaUser'] ) ) {
+					return false;
+				}
+
+				// We also support dot notation for the vars,
+				// so explode if that is what the admin wants here
+				if ( !is_array( $vars ) && ( strpos( $vars, '.' ) !== false ) ) {
+					$temp = explode( '.', $vars );
+					$vars = $temp;
+				} elseif ( !is_array( $vars ) ) {
+					return false;
+				}
+
+				$result = $this->data['metaUser']->getProperty( $vars );
+				break;
+			case 'constant':
+				if ( defined( $vars ) ) {
+					$result = constant( $vars );
+				}
+				break;
+			case 'global':
+				if ( is_array( $vars ) ) {
+					if ( isset( $vars[0] ) && isset( $vars[1] ) ) {
+						$call = strtoupper( $vars[0] );
+
+						$v = $vars[1];
+
+						$allowed = array( 'SERVER', 'GET', 'POST', 'FILES', 'COOKIE', 'SESSION', 'REQUEST', 'ENV' );
+
+						if ( in_array( $call, $allowed ) ) {
+							switch ( $call ) {
+								case 'SERVER':
+									if ( isset( $_SERVER[$v] ) ) {
+										$result = $_SERVER[$v];
+									}
+									break;
+								case 'GET':
+									if ( isset( $_GET[$v] ) ) {
+										$result = $_GET[$v];
+									}
+									break;
+								case 'POST':
+									if ( isset( $_POST[$v] ) ) {
+										$result = $_POST[$v];
+									}
+									break;
+								case 'FILES':
+									if ( isset( $_FILES[$v] ) ) {
+										$result = $_FILES[$v];
+									}
+									break;
+								case 'COOKIE':
+									if ( isset( $_COOKIE[$v] ) ) {
+										$result = $_COOKIE[$v];
+									}
+									break;
+								case 'SESSION':
+									if ( isset( $_SESSION[$v] ) ) {
+										$result = $_SESSION[$v];
+									}
+									break;
+								case 'REQUEST':
+									if ( isset( $_REQUEST[$v] ) ) {
+										$result = $_REQUEST[$v];
+									}
+									break;
+								case 'ENV':
+									if ( isset( $_ENV[$v] ) ) {
+										$result = $_ENV[$v];
+									}
+									break;
+							}
+						}
+					}
+				} else {
+					if ( isset( $GLOBALS[$vars] ) ) {
+						$result = $GLOBALS[$vars];
+					}
+				}
+				break;
+			case 'condition':
+				if ( empty( $vars[0] ) || !isset( $vars[1] ) ) {
+					if ( isset( $vars[2] ) && !isset( $vars[1] ) ) {
+						$result = $vars[2];
+					} else {
+						$result = '';
+					}
+				} elseif ( isset( $vars[1] ) ) {
+					$result = $vars[1];
+				} else {
+					$result = '';
+				}
+				break;
+			case 'uppercase':
+				$result = strtoupper( $vars );
+				break;
+			case 'lowercase':
+				$result = strtoupper( $vars );
+				break;
+			case 'concat':
+				$result = implode( $vars );
+				break;
+			case 'date':
+				$result = date( $vars[0], strtotime( $vars[1] ) );
+				break;
+			case 'crop':
+				if ( isset( $vars[2] ) ) {
+					$result = substr( $vars[0], (int) $vars[1], (int) $vars[2] );
+				} else {
+					$result = substr( $vars[0], (int) $vars[1] );
+				}
+				break;
+			case 'pad':
+				if ( isset( $vars[3] ) ) {
+					$result = str_pad($vars[0], (int) $vars[1], $vars[2], ( constant( "STR_PAD_" . strtoupper( $vars[3] ) ) ) );
+				} elseif ( isset( $vars[2] ) ) {
+					$result = str_pad( $vars[0], (int) $vars[1], $vars[2] );
+				} else {
+					$result = str_pad( $vars[0], (int) $vars[1] );
+				}
+				break;
+			case 'chunk':
+				$chunks = str_split( $vars[0], (int) $vars[1] );
+
+				if ( isset( $vars[2] ) ) {
+					$result = implode( $vars[2], $chunks );
+				} else {
+					$result = implode( ' ', $chunks );
+				}
+				break;
+			case 'compare':
+				if ( isset( $vars[2] ) ) {
+					$result = AECToolbox::compare( $vars[1], $vars[0], $vars[2] );
+				} else {
+					$result = 0;
+				}
+				break;
+			case 'math':
+				if ( isset( $vars[2] ) ) {
+					$result = AECToolbox::math( $vars[1], (float) $vars[0], (float) $vars[2] );
+				} else {
+					$result = 0;
+				}
+				break;
+			case 'php_function':
+				if ( isset( $vars[1] ) ) {
+					$result = call_user_func_array( $vars[0], $vars[1] );
+				} else {
+					$result = call_user_func_array( $vars[0] );
+				}
+				break;
+			case 'php_method':
+				if ( function_exists( 'call_user_method_array' ) ) {
+					if ( isset( $vars[2] ) ) {
+						$result = call_user_method_array( $vars[0], $vars[1], $vars[2] );
+					} else {
+						$result = call_user_method_array( $vars[0], $vars[1] );
+					}
+				} else {
+					// TODO: Check whether this is right
+					$callback = array( $vars[0], $vars[1] );
+
+					if ( isset( $vars[2] ) ) {
+						$result = call_user_func_array( $callback, $vars[2] );
+					} else {
+						$result = call_user_func_array( $callback );
+					}
+				}
+				break;
+			default:
+				$result = $command;
+				break;
+		}
+
+		return $result;
+	}
+
+}
+
 class AECToolbox
 {
 	/**
@@ -9656,7 +10228,6 @@ class AECToolbox
 		return aecPostParamClear( $post );
 	}
 
-
 	function getFileArray( $dir, $extension=false, $listDirectories=false, $skipDots=true )
 	{
 		$dirArray	= array();
@@ -9736,549 +10307,37 @@ class AECToolbox
 
 	function rewriteEngineInfo( $switches=array(), $params=null )
 	{
-		if ( is_array( $switches ) ) {
-			if ( !count( $switches ) ) {
-				$switches = array( 'cms', 'user', 'subscription', 'invoice', 'plan', 'system' );
-			}
-		} else {
-			if ( empty( $switches ) ) {
-				$switches = array( 'cms', 'user', 'subscription', 'invoice', 'plan', 'system' );
-			} else {
-				$temp = $switches;
-				$switches = array( $temp );
-			}
-		}
+		$rwEngine = new reWriteEngine();
+		return $rwEngine->info( $switches, $params );
+	}
 
-		$rewrite = array();
-
-		if ( in_array( 'system', $switches ) ) {
-			$rewrite['system'][] = 'timestamp';
-			$rewrite['system'][] = 'timestamp_backend';
-			$rewrite['system'][] = 'server_timestamp';
-			$rewrite['system'][] = 'server_timestamp_backend';
-		}
-
-		if ( in_array( 'cms', $switches ) ) {
-			$rewrite['cms'][] = 'absolute_path';
-			$rewrite['cms'][] = 'live_site';
-		}
-
-		if ( in_array( 'user', $switches ) ) {
-			$rewrite['user'][] = 'id';
-			$rewrite['user'][] = 'username';
-			$rewrite['user'][] = 'name';
-			$rewrite['user'][] = 'first_name';
-			$rewrite['user'][] = 'first_first_name';
-			$rewrite['user'][] = 'last_name';
-			$rewrite['user'][] = 'email';
-			$rewrite['user'][] = 'activationcode';
-			$rewrite['user'][] = 'activationlink';
-
-			if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
-				global $database;
-
-				$query = 'SELECT name, title'
-						. ' FROM #__comprofiler_fields'
-						. ' WHERE `table` != \'#__users\''
-						. ' AND name != \'NA\'';
-				$database->setQuery( $query );
-				$objects = $database->loadObjectList();
-
-				if ( is_array( $objects ) ) {
-					foreach ( $objects as $object ) {
-						$rewrite['user'][] = $object->name;
-
-						if ( strpos( $object->title, '_' ) === 0 ) {
-							$content = $object->name;
-						} else {
-							$content = $object->title;
-						}
-
-						$name = '_REWRITE_KEY_USER_' . strtoupper( $object->name );
-						if ( !defined( $name ) ) {
-							define( $name, $content );
-						}
-					}
-				}
-			}
-		}
-
-		if ( in_array( 'subscription', $switches ) ) {
-			$rewrite['subscription'][] = 'type';
-			$rewrite['subscription'][] = 'status';
-			$rewrite['subscription'][] = 'signup_date';
-			$rewrite['subscription'][] = 'lastpay_date';
-			$rewrite['subscription'][] = 'plan';
-			$rewrite['subscription'][] = 'previous_plan';
-			$rewrite['subscription'][] = 'recurring';
-			$rewrite['subscription'][] = 'lifetime';
-			$rewrite['subscription'][] = 'expiration_date';
-			$rewrite['subscription'][] = 'expiration_date_backend';
-		}
-
-		if ( in_array( 'invoice', $switches ) ) {
-			$rewrite['invoice'][] = 'id';
-			$rewrite['invoice'][] = 'number';
-			$rewrite['invoice'][] = 'number_format';
-			$rewrite['invoice'][] = 'created_date';
-			$rewrite['invoice'][] = 'transaction_date';
-			$rewrite['invoice'][] = 'method';
-			$rewrite['invoice'][] = 'amount';
-			$rewrite['invoice'][] = 'currency';
-			$rewrite['invoice'][] = 'coupons';
-		}
-
-		if ( in_array( 'plan', $switches ) ) {
-			$rewrite['plan'][] = 'name';
-			$rewrite['plan'][] = 'desc';
-		}
-
-		if ( !empty( $params ) ) {
-			$params[] = array( 'accordion_start', 'small_accordion' );
-
-			$params[] = array( 'accordion_itemstart', constant( '_REWRITE_ENGINE_TITLE' ) );
-			$list = '<div class="rewriteinfoblock">' . "\n"
-			. '<p>' . constant( '_REWRITE_ENGINE_DESC' ) . '</p>' . "\n"
-			. '</div>' . "\n";
-			$params[] = array( 'literal', $list );
-			$params[] = array( 'div_end', '' );
-
-			foreach ( $rewrite as $area => $keys ) {
-				$params[] = array( 'accordion_itemstart', constant( '_REWRITE_AREA_' . strtoupper( $area ) ) );
-
-				$list = '<div class="rewriteinfoblock">' . "\n"
-				. '<ul>' . "\n";
-
-				foreach ( $keys as $key ) {
-					$list .= '<li>[[' . $area . "_" . $key . ']] =&gt; ' . constant( '_REWRITE_KEY_' . strtoupper( $area . "_" . $key ) ) . '</li>' . "\n";
-				}
-				$list .= '</ul>' . "\n"
-				. '</div>' . "\n";
-
-				$params[] = array( 'literal', $list );
-				$params[] = array( 'div_end', '' );
-			}
-
-			$params[] = array( 'accordion_itemstart', constant( '_REWRITE_ENGINE_AECJSON_TITLE' ) );
-			$list = '<div class="rewriteinfoblock">' . "\n"
-			. '<p>' . constant( '_REWRITE_ENGINE_AECJSON_DESC' ) . '</p>' . "\n"
-			. '</div>' . "\n";
-			$params[] = array( 'literal', $list );
-			$params[] = array( 'div_end', '' );
-
-			$params[] = array( 'div_end', '' );
-
-			return $params;
-		} else {
-			$return = '';
-			foreach ( $rewrite as $area => $keys ) {
-				$return .= '<div class="rewriteinfoblock">' . "\n"
-				. '<p><strong>' . constant( '_REWRITE_AREA_' . strtoupper( $area ) ) . '</strong></p>' . "\n"
-				. '<ul>' . "\n";
-
-				foreach ( $keys as $key ) {
-					$return .= '<li>[[' . $area . "_" . $key . ']] =&gt; ' . constant( '_REWRITE_KEY_' . strtoupper( $area . "_" . $key ) ) . '</li>' . "\n";
-				}
-				$return .= '</ul>' . "\n"
-				. '</div>' . "\n";
-			}
-
-			$return .= '<div class="rewriteinfoblock">' . "\n"
-			. '<p><strong>' . constant( '_REWRITE_ENGINE_AECJSON_TITLE' ) . '</strong></p>' . "\n"
-			. '<p>' . constant( '_REWRITE_ENGINE_AECJSON_DESC' ) . '</p>' . "\n"
-			. '</div>' . "\n";
-
-			return $return;
-		}
+	function rewriteEngine( $content, $metaUser=null, $subscriptionPlan=null, $invoice=null )
+	{
+		return AECToolbox::rewriteEngineRQ( $content, null, $metaUser, $subscriptionPlan, $invoice );
 	}
 
 	function rewriteEngineRQ( $content, $request, $metaUser=null, $subscriptionPlan=null, $invoice=null )
 	{
-		if ( isset( $request->metaUser ) ) {
-			$metaUser = $request->metaUser;
+		if ( !is_object( $request ) ) {
+			$request = new stdClass();
 		}
 
-		if ( isset( $request->plan ) ) {
-			$subscriptionPlan = $request->plan;
+		if ( !empty( $metaUser ) ) {
+			$request->metaUser = $metaUser;
 		}
 
-		if ( isset( $request->invoice ) ) {
-			$invoice = $request->invoice;
+		if ( !empty( $subscriptionPlan ) ) {
+			$request->plan = $subscriptionPlan;
 		}
 
-		return AECToolbox::rewriteEngine( $content, $metaUser, $subscriptionPlan, $invoice );
-	}
-
-	function rewriteEngine( $subject, $metaUser=null, $subscriptionPlan=null, $invoice=null )
-	{
-		global $aecConfig, $database, $mosConfig_absolute_path, $mosConfig_live_site, $mosConfig_offset;
-
-		// Check whether a replacement exists at all
-		if ( ( strpos( $subject, '[[' ) === false ) && ( strpos( $subject, '{aecjson}' ) === false ) ) {
-			return $subject;
+		if ( !empty( $invoice ) ) {
+			$request->invoice = $invoice;
 		}
 
-		$rewrite = array();
+		$rwEngine = new reWriteEngine();
+		$rwEngine->resolveRequest( $request );
 
-		$rewrite['system_timestamp']			= strftime( $aecConfig->cfg['display_date_frontend'],  time() + $mosConfig_offset * 3600 );
-		$rewrite['system_timestamp_backend']	= strftime( $aecConfig->cfg['display_date_backend'], time() + $mosConfig_offset * 3600 );
-		$rewrite['system_serverstamp_time']	= strftime( $aecConfig->cfg['display_date_frontend'], time() );
-		$rewrite['system_server_timestamp_backend']	= strftime( $aecConfig->cfg['display_date_backend'], time() );
-
-		$rewrite['cms_absolute_path']	= $mosConfig_absolute_path;
-		$rewrite['cms_live_site']		= $mosConfig_live_site;
-
-		if ( is_object( $metaUser ) ) {
-			if ( !empty( $metaUser->hasExpiration ) ) {
-				$rewrite['expiration_date'] = $metaUser->objExpiration->expiration;
-			}
-
-			// Explode Name
-			if ( is_array( $metaUser->cmsUser->name ) ) {
-				$namearray	= $metaUser->cmsUser->name;
-			} else {
-				$namearray	= explode( " ", $metaUser->cmsUser->name );
-			}
-			$firstfirstname	= $namearray[0];
-			$maxname		= count($namearray) - 1;
-			$lastname		= $namearray[$maxname];
-			unset( $namearray[$maxname] );
-			$firstname = implode( ' ', $namearray );
-
-			$rewrite['user_id']					= $metaUser->cmsUser->id;
-			$rewrite['user_username']			= $metaUser->cmsUser->username;
-			$rewrite['user_name']				= $metaUser->cmsUser->name;
-			$rewrite['user_first_name']			= $firstname;
-			$rewrite['user_first_first_name']	= $firstfirstname;
-			$rewrite['user_last_name']			= $lastname;
-			$rewrite['user_email']				= $metaUser->cmsUser->email;
-
-			if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
-				if ( !$metaUser->hasCBprofile ) {
-					$metaUser->loadCBuser();
-				}
-
-				if ( !empty( $metaUser->hasCBprofile ) ) {
-					$fields = get_object_vars( $metaUser->cbUser );
-
-					if ( !empty( $fields ) ) {
-						foreach ( $fields as $fieldname => $fieldcontents ) {
-							$rewrite['user_' . $fieldname] = $fieldcontents;
-						}
-					}
-
-					$rewrite['user_activationcode']		= $metaUser->cbUser->cbactivation;
-					$rewrite['user_activationlink']		= $mosConfig_live_site."/index.php?option=com_comprofiler&task=confirm&confirmcode=" . $metaUser->cbUser->cbactivation;
-				} else {
-					$rewrite['user_activationcode']		= $metaUser->cmsUser->activation;
-					$rewrite['user_activationlink']		= $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=" . $metaUser->cmsUser->activation;
-				}
-			} else {
-				$rewrite['user_activationcode']		= $metaUser->cmsUser->activation;
-				$rewrite['user_activationlink']		= $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=" . $metaUser->cmsUser->activation;
-			}
-
-			if ( $metaUser->hasSubscription ) {
-				$rewrite['subscription_type']			= $metaUser->focusSubscription->type;
-				$rewrite['subscription_status']			= $metaUser->focusSubscription->status;
-				$rewrite['subscription_signup_date']	= $metaUser->focusSubscription->signup_date;
-				$rewrite['subscription_lastpay_date']	= $metaUser->focusSubscription->lastpay_date;
-				$rewrite['subscription_plan']			= $metaUser->focusSubscription->plan;
-				$rewrite['subscription_previous_plan']	= $metaUser->focusSubscription->previous_plan;
-				$rewrite['subscription_recurring']		= $metaUser->focusSubscription->recurring;
-				$rewrite['subscription_lifetime']		= $metaUser->focusSubscription->lifetime;
-				$rewrite['subscription_expiration_date']		= strftime( $aecConfig->cfg['display_date_frontend'], strtotime( $metaUser->focusSubscription->expiration ) );
-				$rewrite['subscription_expiration_date_backend']		= strftime( $aecConfig->cfg['display_date_backend'], strtotime( $metaUser->focusSubscription->expiration ) );
-			}
-
-			if ( is_null( $invoice ) ) {
-				$lastinvoice = AECfetchfromDB::lastClearedInvoiceIDbyUserID( $metaUser->cmsUser->id );
-
-				$invoice = new Invoice( $database );
-				$invoice->load( $lastinvoice );
-			}
-		}
-
-		if ( is_object( $invoice ) ) {
-			$rewrite['invoice_id']					= $invoice->id;
-			$rewrite['invoice_number']				= $invoice->invoice_number;
-			$rewrite['invoice_created_date']		= $invoice->created_date;
-			$rewrite['invoice_transaction_date']	= $invoice->transaction_date;
-			$rewrite['invoice_method']				= $invoice->method;
-			$rewrite['invoice_amount']				= $invoice->amount;
-			$rewrite['invoice_currency']			= $invoice->currency;
-			if ( !empty( $invoice->coupons ) && is_array( $invoice->coupons ) ) {
-				$rewrite['invoice_coupons']			=  implode( ';', $invoice->coupons );
-			} else {
-				$rewrite['invoice_coupons']			=  '';
-			}
-
-			if ( !is_null( $metaUser ) && !is_null( $subscriptionPlan ) ) {
-				$invoice->formatInvoiceNumber();
-				$rewrite['invoice_number_format']	= $invoice->invoice_number;
-				$invoice->deformatInvoiceNumber();
-			}
-		}
-
-		if ( is_object( $subscriptionPlan ) ) {
-			$rewrite['plan_name'] = $subscriptionPlan->getProperty( 'name' );
-			$rewrite['plan_desc'] = $subscriptionPlan->getProperty( 'desc' );
-		}
-
-		if ( strpos( $subject, '{aecjson}' ) !== false ) {
-			// We have at least one JSON object, switching to JSON mode
-			return AECToolbox::decodeTags( $subject, $rewrite, $metaUser );
-		} else {
-			// No JSON found, do traditional parsing
-			$search = array();
-			$replace = array();
-			foreach ( $rewrite as $name => $replacement ) {
-				$search[]	= '[[' . $name . ']]';
-				$replace[]	= $replacement;
-			}
-
-			return str_replace( $search, $replace, $subject );
-		}
-	}
-
-	function decodeTags( $subject, $rewrite, $metaUser )
-	{
-		global $mosConfig_absolute_path;
-
-		// Example:
-		// {aecjson} {"cmd":"concat","vars":["These ",{"cmd":"condition","vars":{"cmd":"compare","vars":["apples","=","oranges"]},"appl","orang"},"es"} {/aecjson}
-		// ...would return either "These apples" or "These oranges", depending on whether the compare function thinks that they are the same
-
-		$regex = "#{aecjson}(.*?){/aecjson}#s";
-
-		// find all instances of json code
-		$matches = array();
-		preg_match_all( $regex, $subject, $matches, PREG_SET_ORDER );
-
-		if ( count( $matches ) < 1 ) {
-			return $subject;
-		}
-
-		foreach ( $matches as $match ) {
-			$json = jsoonHandler::decode( $match[1] );
-
-			$result = AECToolbox::resolveJSONitem( $json, $rewrite, $metaUser );
-
-			$subject = str_replace( $match, $result, $subject );
-		}
-
-		return $result;
-	}
-
-	function resolveJSONitem( $current, $rewrite, $metaUser )
-	{
-		if ( is_object( $current ) ) {
-			if ( !isset( $current->cmd ) || !isset( $current->vars ) ) {
-				// Malformed String
-				return "JSON PARSE ERROR - Malformed String!";
-			}
-
-			$command = $current->cmd;
-			$variables = $current->vars;
-
-			$variables = AECToolbox::resolveJSONitem( $variables, $rewrite, $metaUser );
-
-			$current = AECToolbox::executeCommand( $command, $variables, $rewrite, $metaUser );
-
-		} elseif ( is_array( $current ) ) {
-			foreach( $current as $id => $item ) {
-				$current[$id] = AECToolbox::resolveJSONitem( $item, $rewrite, $metaUser );
-			}
-		}
-
-		return $current;
-	}
-
-	function executeCommand( $command, $vars, $rewrite, $metaUser )
-	{
-		$result = '';
-		switch( $command ) {
-			case 'rw_constant':
-				if ( isset( $rewrite[$vars] ) ) {
-					$result = $rewrite[$vars];
-				}
-				break;
-			case 'metaUser':
-				if ( !is_object( $metaUser ) ) {
-					return false;
-				}
-
-				// We also support dot notation for the vars,
-				// so explode if that is what the admin wants here
-				if ( !is_array( $vars ) && ( strpos( $vars, '.' ) !== false ) ) {
-					$temp = explode( '.', $vars );
-					$vars = $temp;
-				} elseif ( !is_array( $vars ) ) {
-					return false;
-				}
-
-				$result = $metaUser->getProperty( $vars );
-				break;
-			case 'constant':
-				if ( defined( $vars ) ) {
-					$result = constant( $vars );
-				}
-				break;
-			case 'global':
-				if ( is_array( $vars ) ) {
-					if ( isset( $vars[0] ) && isset( $vars[1] ) ) {
-						$call = strtoupper( $vars[0] );
-
-						$v = $vars[1];
-
-						$allowed = array( 'SERVER', 'GET', 'POST', 'FILES', 'COOKIE', 'SESSION', 'REQUEST', 'ENV' );
-
-						if ( in_array( $call, $allowed ) ) {
-							switch ( $call ) {
-								case 'SERVER':
-									if ( isset( $_SERVER[$v] ) ) {
-										$result = $_SERVER[$v];
-									}
-									break;
-								case 'GET':
-									if ( isset( $_GET[$v] ) ) {
-										$result = $_GET[$v];
-									}
-									break;
-								case 'POST':
-									if ( isset( $_POST[$v] ) ) {
-										$result = $_POST[$v];
-									}
-									break;
-								case 'FILES':
-									if ( isset( $_FILES[$v] ) ) {
-										$result = $_FILES[$v];
-									}
-									break;
-								case 'COOKIE':
-									if ( isset( $_COOKIE[$v] ) ) {
-										$result = $_COOKIE[$v];
-									}
-									break;
-								case 'SESSION':
-									if ( isset( $_SESSION[$v] ) ) {
-										$result = $_SESSION[$v];
-									}
-									break;
-								case 'REQUEST':
-									if ( isset( $_REQUEST[$v] ) ) {
-										$result = $_REQUEST[$v];
-									}
-									break;
-								case 'ENV':
-									if ( isset( $_ENV[$v] ) ) {
-										$result = $_ENV[$v];
-									}
-									break;
-							}
-						}
-					}
-				} else {
-					if ( isset( $GLOBALS[$vars] ) ) {
-						$result = $GLOBALS[$vars];
-					}
-				}
-				break;
-			case 'condition':
-				if ( empty( $vars[0] ) || !isset( $vars[1] ) ) {
-					if ( isset( $vars[2] ) && !isset( $vars[1] ) ) {
-						$result = $vars[2];
-					} else {
-						$result = '';
-					}
-				} elseif ( isset( $vars[1] ) ) {
-					$result = $vars[1];
-				} else {
-					$result = '';
-				}
-				break;
-			case 'uppercase':
-				$result = strtoupper( $vars );
-				break;
-			case 'lowercase':
-				$result = strtoupper( $vars );
-				break;
-			case 'concat':
-				$result = implode( $vars );
-				break;
-			case 'date':
-				$result = date( $vars[0], strtotime( $vars[1] ) );
-				break;
-			case 'crop':
-				if ( isset( $vars[2] ) ) {
-					$result = substr( $vars[0], (int) $vars[1], (int) $vars[2] );
-				} else {
-					$result = substr( $vars[0], (int) $vars[1] );
-				}
-				break;
-			case 'pad':
-				if ( isset( $vars[3] ) ) {
-					$result = str_pad($vars[0], (int) $vars[1], $vars[2], ( constant( "STR_PAD_" . strtoupper( $vars[3] ) ) ) );
-				} elseif ( isset( $vars[2] ) ) {
-					$result = str_pad( $vars[0], (int) $vars[1], $vars[2] );
-				} else {
-					$result = str_pad( $vars[0], (int) $vars[1] );
-				}
-				break;
-			case 'chunk':
-				$chunks = str_split( $vars[0], (int) $vars[1] );
-
-				if ( isset( $vars[2] ) ) {
-					$result = implode( $vars[2], $chunks );
-				} else {
-					$result = implode( ' ', $chunks );
-				}
-				break;
-			case 'compare':
-				if ( isset( $vars[2] ) ) {
-					$result = AECToolbox::compare( $vars[1], $vars[0], $vars[2] );
-				} else {
-					$result = 0;
-				}
-				break;
-			case 'math':
-				if ( isset( $vars[2] ) ) {
-					$result = AECToolbox::math( $vars[1], (float) $vars[0], (float) $vars[2] );
-				} else {
-					$result = 0;
-				}
-				break;
-			case 'php_function':
-				if ( isset( $vars[1] ) ) {
-					$result = call_user_func_array( $vars[0], $vars[1] );
-				} else {
-					$result = call_user_func_array( $vars[0] );
-				}
-				break;
-			case 'php_method':
-				if ( function_exists( 'call_user_method_array' ) ) {
-					if ( isset( $vars[2] ) ) {
-						$result = call_user_method_array( $vars[0], $vars[1], $vars[2] );
-					} else {
-						$result = call_user_method_array( $vars[0], $vars[1] );
-					}
-				} else {
-					// TODO: Check whether this is right
-					$callback = array( $vars[0], $vars[1] );
-
-					if ( isset( $vars[2] ) ) {
-						$result = call_user_func_array( $callback, $vars[2] );
-					} else {
-						$result = call_user_func_array( $callback );
-					}
-				}
-				break;
-			default:
-				$result = $command;
-				break;
-		}
-
-		return $result;
+		return $rwEngine->resolve( $content );
 	}
 
 	function compare( $eval, $check1, $check2 )
