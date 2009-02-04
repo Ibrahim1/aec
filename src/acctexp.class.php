@@ -861,54 +861,7 @@ class metaUser
 
 	function getProperty( $key )
 	{
-		if ( !is_array( $key ) ) {
-			return $this->$key;
-		} else {
-			$subject = $this;
-
-			foreach ( $key as $k ) {
-					if ( is_object( $subject ) ) {
-						if ( isset( $subject->{$k} ) ) {
-							$return =& $subject->{$k};
-						} else {
-							global $database;
-
-							$props = get_object_vars( $subject );
-
-							$event = 'Syntax Parser cannot parse next property: ' . $k . '; does not exist! Possible values are: ' . implode( ';', $props );
-
-							$eventlog = new eventLog( $database );
-							$eventlog->issue( 'AECjson cmd:metaUser Syntax Error', 'aecjson,metaUser,syntax,error', $event, 128, array() );
-						}
-					} elseif ( is_array( $subject ) ) {
-						if ( isset( $subject[$k] ) ) {
-							$return =& $subject[$k];
-						} else {
-							global $database;
-
-							$props = array_keys( $subject );
-
-							$event = 'Syntax Parser cannot parse next key: ' . $k . '; does not exist! Possible values are: ' . implode( ';', $props );
-
-							$eventlog = new eventLog( $database );
-							$eventlog->issue( 'AECjson cmd:metaUser Syntax Error', 'aecjson,metaUser,syntax,error', $event, 128, array() );
-						}
-
-					} else {
-						global $database;
-
-						$event = 'Syntax Parser cannot parse next reference: ' . $k . '; neither property nor array field';
-
-						$eventlog = new eventLog( $database );
-						$eventlog->issue( 'AECjson cmd:metaUser Syntax Error', 'aecjson,metaUser,syntax,error', $event, 128, array() );
-						return false;
-					}
-
-				$subject =& $return;
-			}
-
-			return $return;
-		}
+		return AECToolbox::getObjectProperty( $this, $key );
 	}
 
 	function getUserMIs(){
@@ -9288,6 +9241,22 @@ class reWriteEngine
 					$result = $this->rewrite[$vars];
 				}
 				break;
+			case 'data':
+				if ( empty( $this->data ) ) {
+					return false;
+				}
+
+				// We also support dot notation for the vars,
+				// so explode if that is what the admin wants here
+				if ( !is_array( $vars ) && ( strpos( $vars, '.' ) !== false ) ) {
+					$temp = explode( '.', $vars );
+					$vars = $temp;
+				} elseif ( !is_array( $vars ) ) {
+					return false;
+				}
+
+				$result = AECToolbox::getObjectProperty( $this->data, $vars );
+				break;
 			case 'metaUser':
 				if ( !is_object( $this->data['metaUser'] ) ) {
 					return false;
@@ -10392,6 +10361,65 @@ class AECToolbox
 		return $result;
 	}
 
+	function getObjectProperty( $object, $key )
+	{
+		if ( !is_array( $key ) ) {
+			if ( isset( $object->$key ) ) {
+				return $object->$key;
+			} else {
+				return null;
+			}
+		} else {
+			$return = $object;
+
+			$err = 'AECjson cmd:data Syntax Error';
+			$erp = 'aecjson,data,syntax,error';
+			$erx = 'Syntax Parser cannot parse next property: ';
+
+			foreach ( $key as $k ) {
+				$subject =& $return;
+
+				if ( is_object( $subject ) ) {
+					if ( isset( $subject->{$k} ) ) {
+						$return =& $subject->{$k};
+					} else {
+						global $database;
+
+						$props = get_object_vars( $subject );
+
+						$event = $erx . $k . '; does not exist! Possible values are: ' . implode( ';', $props );
+
+						$eventlog = new eventLog( $database );
+						$eventlog->issue( $err, $erp, $event, 128, array() );
+					}
+				} elseif ( is_array( $subject ) ) {
+					if ( isset( $subject[$k] ) ) {
+						$return =& $subject[$k];
+					} else {
+						global $database;
+
+						$props = array_keys( $subject );
+
+						$event = $erx . $k . '; does not exist! Possible values are: ' . implode( ';', $props );
+
+						$eventlog = new eventLog( $database );
+						$eventlog->issue( $err, $erp, $event, 128, array() );
+					}
+
+				} else {
+					global $database;
+
+					$event = $erx . $k . '; neither property nor array field';
+
+					$eventlog = new eventLog( $database );
+					$eventlog->issue( $err, $erp, $event, 128, array() );
+					return false;
+				}
+			}
+
+			return $return;
+		}
+	}
 }
 
 class microIntegrationHandler
