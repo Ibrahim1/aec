@@ -5909,6 +5909,14 @@ class InvoiceFactory
 			}
 		}
 
+		// Amend ->payment
+		$this->payment->currency_symbol = AECToolbox::getCurrencySymbol( $this->payment->currency );
+
+		$amount_array = explode( '.', $this->payment->amount );
+
+		$this->payment->amount_significant	= $amount_array[0];
+		$this->payment->amount_decimal		= $amount_array[1];
+
 		return;
 	}
 
@@ -10161,6 +10169,33 @@ class AECToolbox
 		return $amount;
 	}
 
+	function getCurrencySymbol( $currency )
+	{
+		$cursym = array(	'AUD' => 'AU$', 'AWG' => '&#402;', 'ANG' => '&#402;', 'BDT' => '&#2547;',
+							'BRL' => 'R$', 'BWP' => 'P', 'BYR' => 'Br', 'CHF' => 'Fr.',
+							'CLP' => '$', 'CNY' => '&#165;', 'CRC' => '&#8353;', 'CVE' => '$',
+							'CZK' => '&#75;&#269;', 'DKK' => 'kr', 'EUR' => '&euro;', 'GBP' => '&pound;',
+							'GHS' => '&#8373;', 'GTQ' => 'Q', 'HUF' => 'Ft', 'HKD' => 'HK$',
+							'INR' => '&#8360;', 'IDR' => 'Rp', 'ILS' => '&#8362;', 'IRR' => '&#65020;',
+							'ISK' => 'kr', 'JPY' => '&#165;', 'KRW' => '&#8361;', 'KPW' => '&#8361;',
+							'LAK' => '&#8365;', 'LBP' => '&#1604;.&#1604;', 'LKR' => '&#8360;', 'MYR' => 'RM',
+							'MUR' => '&#8360;', 'MVR' => 'Rf', 'MNT' => '&#8366;', 'NDK' => 'kr',
+							'NGN' => '&#8358;', 'NIO' => 'C$', 'NPR' => '&#8360;', 'NZD' => 'NZ$',
+							'PAB' => 'B/.', 'PEH' => 'S/.', 'PEN' => 'S/.', 'PCA' => 'PC&#1044;',
+							'PHP' => '&#8369;', 'PKR' => '&#8360;', 'PLN' => '&#122;&#322;', 'PYG' => '&#8370;',
+							'RUB' => '&#1088;&#1091;&#1073;', 'SCR' => '&#8360;', 'SEK' => 'kr', 'SGD' => 'S$',
+							'SRC' => '&#8353;', 'THB' => '&#3647;', 'TOP' => 'T$', 'TRY' => 'TL',
+							'USD' => '$', 'UAH' => '&#8372;', 'VND' => '&#8363;', 'VEF' => 'Bs. F',
+							'ZAR' => 'R',
+							);
+
+		if ( array_key_exists( $currency, $cursym ) ) {
+			return $cursym[$currency];
+		} else {
+			return '&#164;';
+		}
+	}
+
 	function computeExpiration( $value, $unit, $timestamp )
 	{
 		$sign = strpos( $value, '-' ) ? '-' : '+';
@@ -10377,6 +10412,8 @@ class AECToolbox
 			$erx = 'Syntax Parser cannot parse next property: ';
 
 			foreach ( $key as $k ) {
+				// TODO: This should be refactored (if possible) to go without the constant reassigning of pointers
+				// and use {}/variable variables instead
 				$subject =& $return;
 
 				if ( is_object( $subject ) ) {
