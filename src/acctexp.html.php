@@ -714,16 +714,7 @@ class Payment_HTML
 						<p><?php echo _CONFIRM_ROW_EMAIL; ?> <?php echo $user->email; ?></p>
 					</td>
 					<td><p><?php echo $InvoiceFactory->objUsage->name; ?></p></td>
-					<td><p>
-						<?php
-						if ( ( !empty( $InvoiceFactory->payment->amount ) && ( $InvoiceFactory->payment->amount != '0.00' ) ) && !$InvoiceFactory->payment->freetrial ) {
-							echo AECToolbox::formatAmount( $InvoiceFactory->payment->amount, $InvoiceFactory->payment->currency); ?>&nbsp;-&nbsp;
-							<?php
-						} elseif ( $InvoiceFactory->payment->freetrial ) {
-							echo _CONFIRM_FREETRIAL . '&nbsp;-&nbsp;';
-						}
-						echo $InvoiceFactory->payment->method_name; ?>
-					</p></td>
+					<td><p><?php echo $InvoiceFactory->payment->amount_format ?></p></td>
 				</tr>
 				<tr>
 					<td colspan="4" class="confirmation_description"><?php echo stripslashes( $InvoiceFactory->objUsage->desc ); ?></td>

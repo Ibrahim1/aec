@@ -5916,6 +5916,14 @@ class InvoiceFactory
 
 		$this->payment->amount_significant	= $amount_array[0];
 		$this->payment->amount_decimal		= $amount_array[1];
+//{"cmd":"concat","vars":[{"cmd":"data","vars":["payment.amount"]},"-",{"cmd":"rw_constant","vars":"invoice_id"}]}
+		if ( ( !empty( $this->payment->amount ) && ( $this->payment->amount != '0.00' ) ) && !$this->payment->freetrial ) {
+			$this->payment->amount_format = AECToolbox::formatAmount( $this->payment->amount, $this->payment->currency); ?>&nbsp;-&nbsp;
+			<?php
+		} elseif ( $this->payment->freetrial ) {
+			echo _CONFIRM_FREETRIAL . '&nbsp;-&nbsp;';
+		}
+		echo $this->payment->method_name;
 
 		return;
 	}
@@ -10177,7 +10185,7 @@ class AECToolbox
 							'CZK' => '&#75;&#269;', 'DKK' => 'kr', 'EUR' => '&euro;', 'GBP' => '&pound;',
 							'GHS' => '&#8373;', 'GTQ' => 'Q', 'HUF' => 'Ft', 'HKD' => 'HK$',
 							'INR' => '&#8360;', 'IDR' => 'Rp', 'ILS' => '&#8362;', 'IRR' => '&#65020;',
-							'ISK' => 'kr', 'JPY' => '&#165;', 'KRW' => '&#8361;', 'KPW' => '&#8361;',
+							'ISK' => 'kr', 'JPY' => '&yen;', 'KRW' => '&#8361;', 'KPW' => '&#8361;',
 							'LAK' => '&#8365;', 'LBP' => '&#1604;.&#1604;', 'LKR' => '&#8360;', 'MYR' => 'RM',
 							'MUR' => '&#8360;', 'MVR' => 'Rf', 'MNT' => '&#8366;', 'NDK' => 'kr',
 							'NGN' => '&#8358;', 'NIO' => 'C$', 'NPR' => '&#8360;', 'NZD' => 'NZ$',
