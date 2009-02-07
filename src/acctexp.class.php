@@ -3928,6 +3928,11 @@ class aecHTML
 				$return .= '<input type="radio" name="' . $row[1] . '"' . ( ( $row[3] == $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" />';
 				$return .= '</td><td class="cright">' . $row[4];
 				break;
+			case 'checkbox':
+				$return = '<tr><td class="cleft">';
+				$return .= '<input type="checkbox" name="' . $row[1] . '"' . ( ( $row[3] == $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" />';
+				$return .= '</td><td class="cright">' . $row[4];
+				break;
 			case "list":
 				$return .= $lists[$value ? $value : $name];
 				break;
