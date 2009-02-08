@@ -3925,12 +3925,12 @@ class aecHTML
 				break;
 			case 'radio':
 				$return = '<tr><td class="cleft">';
-				$return .= '<input type="radio" name="' . $row[1] . '"' . ( ( $row[3] == $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" />';
+				$return .= '<input type="radio" name="' . $row[1] . '"' . ( ( $row[3] === $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" />';
 				$return .= '</td><td class="cright">' . $row[4];
 				break;
 			case 'checkbox':
 				$return = '<tr><td class="cleft">';
-				$return .= '<input type="checkbox" name="' . $row[1] . '"' . ( ( $row[3] == $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" />';
+				$return .= '<input type="checkbox" name="' . $row[1] . '"' . ( ( $row[3] === $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" />';
 				$return .= '</td><td class="cright">' . $row[4];
 				break;
 			case "list":
@@ -5273,6 +5273,39 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 	}
 
+	function verifyMIformParams( $metaUser )
+	{
+		$mis = $this->getMicroIntegrations();
+
+		if ( !empty( $mis ) ) {
+			global $database;
+
+			$v = array();
+			foreach ( $mis as $mi_id ) {
+				$mi = new MicroIntegration( $database );
+				$mi->load( $mi_id );
+
+				if ( !$mi->callIntegration() ) {
+					continue;
+				}
+
+				$verify = $mi->verifyMIform( $this );
+
+				if ( !empty( $verify ) && is_array( $verify ) ) {
+					$v[] = $verify;
+				}
+			}
+
+			if ( empty( $v ) ) {
+				return true;
+			} else {
+				return $v;
+			}
+		} else {
+			return true;
+		}
+	}
+
 	function getMIforms()
 	{
 		$params = $this->getMIformParams();
@@ -6434,7 +6467,7 @@ class InvoiceFactory
 		}
 	}
 
-	function confirm( $option, $var=array(), $passthrough=false )
+	function confirm( $option, $var=array(), $passthrough=false, $mierror=false )
 	{
 		global $database, $my, $aecConfig, $mosConfig_absolute_path;
 
@@ -6522,16 +6555,16 @@ class InvoiceFactory
 		$this->coupons = array();
 		$this->coupons['active'] = $aecConfig->cfg['enable_coupons'];
 
-		$confirm = empty( $aecConfig->cfg['skip_confirmation'] );
+		$this->mi_form = $this->objUsage->getMIforms();
+
+		$confirm = empty( $aecConfig->cfg['skip_confirmation'] ) && !empty( $this->mi_form );
 
 		if ( $confirm ) {
 			global $mainframe;
 
-			$this->mi_form = $this->objUsage->getMIforms();
-
 			$mainframe->SetPageTitle( _CONFIRM_TITLE );
 
-			Payment_HTML::confirmForm( $option, $this, $user, $passthrough );
+			Payment_HTML::confirmForm( $option, $this, $user, $passthrough, $mierror );
 		} else {
 			if ( $passthrough ) {
 				$this->loadMetaUser( $passthrough, true );
@@ -6624,6 +6657,23 @@ class InvoiceFactory
 						}
 
 						$this->metaUser->meta->storeload();
+					}
+
+					$verifymi = $this->objUsage->verifyMIformParams();
+
+					if ( is_array( $verifymi ) && !empty( $verifymi ) ) {
+						foreach ( $verifymi as $vmi ) {
+							if ( !is_array( $vmi ) ) {
+								continue;
+							}
+
+							if ( !empty( $vmi['error'] ) ) {
+								$mierror[] = $vmi['error'];
+							}
+						}
+					}
+					if ( !empty( $mierror ) ) {
+						$this->confirm( $option, $var, null, $mierror );
 					}
 				}
 
@@ -10922,7 +10972,7 @@ class microIntegration extends serialParamDBTable
 
 	function action( $metaUser, $exchange=null, $invoice=null, $objplan=null )
 	{
-		return $this->relayAction( $metaUser, $exchange, $invoice, $objplan, 'action', $add=false );
+		return $this->relayAction( $metaUser, $exchange, $invoice, $objplan, 'action', false );
 	}
 
 	function pre_expiration_action( $metaUser, $objplan=null )
@@ -10961,7 +11011,7 @@ class microIntegration extends serialParamDBTable
 
 			$metaUser->meta->storeload();
 
-			return $this->relayAction( $metaUser, null, null, $objplan, 'pre_expiration_action', $add=false );
+			return $this->relayAction( $metaUser, null, null, $objplan, 'pre_expiration_action', false );
 		} else {
 			return null;
 		}
@@ -10969,7 +11019,7 @@ class microIntegration extends serialParamDBTable
 
 	function expiration_action( $metaUser, $objplan=null )
 	{
-		return $this->relayAction( $metaUser, null, null, $objplan, 'expiration_action', $add=false );
+		return $this->relayAction( $metaUser, null, null, $objplan, 'expiration_action', false );
 	}
 
 	function relayAction( $metaUser, $exchange=null, $invoice=null, $objplan=null, $stage='action', &$add )
@@ -10980,15 +11030,15 @@ class microIntegration extends serialParamDBTable
 		}
 
 		$request = new stdClass();
-		$request->parent			=& $this;
-		$request->metaUser			=& $metaUser;
-		$request->invoice			=& $invoice;
-		$request->plan				=& $objplan;
+		$request->parent	=& $this;
+		$request->metaUser	=& $metaUser;
+		$request->invoice	=& $invoice;
+		$request->plan		=& $objplan;
 
-		$request->params		=& $metaUser->meta->getMIParams( $this->id, $objplan->id );;
+		$request->params	=& $metaUser->meta->getMIParams( $this->id, $objplan->id );
 
 		if ( $add !== false ) {
-			$request->add			=& $add;
+			$request->add	=& $add;
 		}
 
 		// Call Action
@@ -11056,6 +11106,17 @@ class microIntegration extends serialParamDBTable
 		}
 
 		return $return;
+	}
+
+	function verifyMIform( $plan, $metaUser )
+	{
+		if ( method_exists( $this->mi_class, 'verifyMIform' ) ) {
+			$params	= $metaUser->meta->getMIParams( $this->id, $plan->id );
+
+			return $this->mi_class->getMIform( $plan );
+		} else {
+			return true;
+		}
 	}
 
 	function getMIform( $plan )

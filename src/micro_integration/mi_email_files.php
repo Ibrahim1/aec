@@ -38,6 +38,7 @@ class mi_email_files
 		$settings['file_list']			= array( 'inputD' );
 		$settings['desc_list']			= array( 'inputD' );
 		$settings['max_choices']		= array( 'inputA' );
+		$settings['min_choices']		= array( 'inputA' );
 
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
@@ -58,25 +59,37 @@ class mi_email_files
 			foreach ( $list as $id => $choice ) {
 				$choice = trim( $choice );
 
-				$gr[] = mosHTML::makeOption( $id, $choice );
+				if ( $this->settings['max_choices'] > 1 ) {
+					$settings['ef'.$id] = array( 'checkbox', 'mi_email_files', $id, null, $choice );
+				} else {
+					$settings['ef'.$id] = array( 'radio', 'mi_email_files', $id, null, $choice );
+				}
 			}
 
-			if ( $this->settings['max_choices'] != 1 ) {
-				$m1 = '[]';
-				$m2 = ' multiple="multiple"';
-			} else {
-				$m1 = '';
-				$m2 = '';
-			}
-
-			$settings['lists']['mi_email_files'] = mosHTML::selectList( $gr, 'mi_email_files'.$m1, 'size="6"'.$m2, 'value', 'text', '' );
 		} else {
 			return false;
 		}
 
-		$settings['mi_email_files'] = array( 'list', _MI_MI_USER_CHOICE_FILES_NAME, _MI_MI_USER_CHOICE_FILES_DESC );
-
 		return $settings;
+	}
+
+	function verifyMIform( $params )
+	{
+		global $database;
+
+		$return = array();
+
+		$selected = count( $params['mi_email_files'] );
+
+		if ( $selected > $this->settings['max_choices'] ) {
+			$return = "Too many options selected! Please select no more than " . $this->settings['max_choices'] . " options!";
+		}
+
+		if ( $selected < $this->settings['min_choices'] ) {
+			$return = "Please select more than " . $this->settings['min_choices'] . " options!";
+		}
+
+		return $return;
 	}
 
 	function action( $request )
