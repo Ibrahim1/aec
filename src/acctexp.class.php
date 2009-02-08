@@ -3872,21 +3872,23 @@ class aecHTML
 		return $return;
 	}
 
-	function returnFull( $notooltip=false )
+	function returnFull( $notooltip=false, $formsonly=false, $table=false )
 	{
 		$return = '';
 		foreach ( $this->rows as $rowname => $rowcontent ) {
-			$return .= $this->createSettingsParticle( $rowname, $notooltip );
+			if ( $formsonly ) {
+				$return .= $this->createFormParticle( $rowname, $this->rows[$rowname], $this->lists, $table );
+			} else {
+				$return .= $this->createSettingsParticle( $rowname, $notooltip );
+			}
 		}
 
 		return $return;
 	}
 
-	function printFull( $notooltip=false )
+	function printFull( $notooltip=false, $formsonly=false )
 	{
-		foreach ( $this->rows as $rowname => $rowcontent ) {
-			echo $this->createSettingsParticle( $rowname, $notooltip );
-		}
+		echo $this->returnFull( $notooltip, $formsonly );
 	}
 
 	function createFormParticle( $name, $row, $lists, $table=0 )
@@ -5318,9 +5320,9 @@ class SubscriptionPlan extends serialParamDBTable
 
 			$settings = new aecSettings ( 'mi', 'frontend_forms' );
 			$settings->fullSettingsArray( $params, array(), $lists ) ;
-
+print_r($settings);exit;
 			$aecHTML = new aecHTML( $settings->settings, $settings->lists );
-			return $aecHTML->returnFull( true );
+			return "<table>" . $aecHTML->returnFull( true, true, true ) . "</table>";
 		}
 	}
 
@@ -6467,7 +6469,7 @@ class InvoiceFactory
 		}
 	}
 
-	function confirm( $option, $var=array(), $passthrough=false, $mierror=false )
+	function confirm( $option, $var=array(), $passthrough=false )
 	{
 		global $database, $my, $aecConfig, $mosConfig_absolute_path;
 
@@ -6564,7 +6566,7 @@ class InvoiceFactory
 
 			$mainframe->SetPageTitle( _CONFIRM_TITLE );
 
-			Payment_HTML::confirmForm( $option, $this, $user, $passthrough, $mierror );
+			Payment_HTML::confirmForm( $option, $this, $user, $passthrough );
 		} else {
 			if ( $passthrough ) {
 				$this->loadMetaUser( $passthrough, true );
@@ -6661,6 +6663,7 @@ class InvoiceFactory
 
 					$verifymi = $this->objUsage->verifyMIformParams();
 
+					$this->mi_error = array();
 					if ( is_array( $verifymi ) && !empty( $verifymi ) ) {
 						foreach ( $verifymi as $vmi ) {
 							if ( !is_array( $vmi ) ) {
@@ -6668,12 +6671,12 @@ class InvoiceFactory
 							}
 
 							if ( !empty( $vmi['error'] ) ) {
-								$mierror[] = $vmi['error'];
+								$this->mi_error[] = $vmi['error'];
 							}
 						}
 					}
-					if ( !empty( $mierror ) ) {
-						$this->confirm( $option, $var, null, $mierror );
+					if ( !empty( $this->mi_error ) ) {
+						$this->confirm( $option, $var, null );
 					}
 				}
 

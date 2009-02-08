@@ -391,8 +391,18 @@ width: 97%;
 }
 
 #confirmation_extra {
+float: left;
 background: #ddd;
 border:1px solid #ccc;
+padding: 8px;
+margin: 12px;
+width: 97%;
+}
+
+#confirmation_error {
+float: left;
+background: #dff;
+border:1px solid #faa;
 padding: 8px;
 margin: 12px;
 width: 97%;

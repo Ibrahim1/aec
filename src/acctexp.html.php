@@ -745,6 +745,9 @@ class Payment_HTML
 							<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
 						<?php } ?>
 						<?php if ( !empty( $InvoiceFactory->mi_form ) ) {
+							if ( !empty( $InvoiceFactory->mi_error ) ) {
+								echo '<div id="confirmation_error">' . $InvoiceFactory->mi_error . '</div>';
+							}
 							echo '<div id="confirmation_extra">' . $InvoiceFactory->mi_form . '</div>';
 						} ?>
 						<input type="hidden" name="option" value="<?php echo $option; ?>" />

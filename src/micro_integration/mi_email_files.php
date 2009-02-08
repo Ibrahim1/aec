@@ -60,9 +60,9 @@ class mi_email_files
 				$choice = trim( $choice );
 
 				if ( $this->settings['max_choices'] > 1 ) {
-					$settings['ef'.$id] = array( 'checkbox', 'mi_email_files', $id, null, $choice );
+					$settings['ef'.$id] = array( 'checkbox', 'mi_email_files', $id, true, $choice );
 				} else {
-					$settings['ef'.$id] = array( 'radio', 'mi_email_files', $id, null, $choice );
+					$settings['ef'.$id] = array( 'radio', 'mi_email_files', $id, true, $choice );
 				}
 			}
 
