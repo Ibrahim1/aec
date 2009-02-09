@@ -697,29 +697,31 @@ class Payment_HTML
 			<?php
 		} ?>
 		<div id="confirmation">
-			<table>
-				<tr>
-					<th><?php echo _CONFIRM_COL1_TITLE; ?></th>
-					<th><?php echo _CONFIRM_COL2_TITLE; ?></th>
-					<th><?php echo _CONFIRM_COL3_TITLE; ?></th>
-				</tr>
-				<tr>
-					<td>
-						<?php
-						if ( !empty( $user->name ) ) { ?>
-							<p><?php echo _CONFIRM_ROW_NAME; ?> <?php echo $user->name; ?></p>
+			<div id="confirmation_info">
+				<table>
+					<tr>
+						<th><?php echo _CONFIRM_COL1_TITLE; ?></th>
+						<th><?php echo _CONFIRM_COL2_TITLE; ?></th>
+						<th><?php echo _CONFIRM_COL3_TITLE; ?></th>
+					</tr>
+					<tr>
+						<td>
 							<?php
-						} ?>
-						<p><?php echo _CONFIRM_ROW_USERNAME; ?> <?php echo $user->username; ?></p>
-						<p><?php echo _CONFIRM_ROW_EMAIL; ?> <?php echo $user->email; ?></p>
-					</td>
-					<td><p><?php echo $InvoiceFactory->objUsage->name; ?></p></td>
-					<td><p><?php echo $InvoiceFactory->payment->amount_format ?></p></td>
-				</tr>
-				<tr>
-					<td colspan="4" class="confirmation_description"><?php echo stripslashes( $InvoiceFactory->objUsage->desc ); ?></td>
-				</tr>
-			</table>
+							if ( !empty( $user->name ) ) { ?>
+								<p><?php echo _CONFIRM_ROW_NAME; ?> <?php echo $user->name; ?></p>
+								<?php
+							} ?>
+							<p><?php echo _CONFIRM_ROW_USERNAME; ?> <?php echo $user->username; ?></p>
+							<p><?php echo _CONFIRM_ROW_EMAIL; ?> <?php echo $user->email; ?></p>
+						</td>
+						<td><p><?php echo $InvoiceFactory->objUsage->name; ?></p></td>
+						<td><p><?php echo $InvoiceFactory->payment->amount_format ?></p></td>
+					</tr>
+					<tr>
+						<td colspan="4" class="confirmation_description"><?php echo stripslashes( $InvoiceFactory->objUsage->desc ); ?></td>
+					</tr>
+				</table>
+			</div>
 			<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 			<table>
 				<tr>

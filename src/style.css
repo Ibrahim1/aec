@@ -390,6 +390,13 @@ border: 2px solid #fff;
 width: 97%;
 }
 
+div#confirmation_info {
+float: left;
+padding: 0 8px 0;
+margin: 0 12px 0;
+width: 97%;
+}
+
 div#confirmation_extra {
 float: left;
 background: #ddd;
