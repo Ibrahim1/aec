@@ -5979,9 +5979,9 @@ class InvoiceFactory
 			$this->payment->amount_format = AECToolbox::formatAmount( $this->payment->amount, $this->payment->currency); ?>&nbsp;-&nbsp;
 			<?php
 		} elseif ( $this->payment->freetrial ) {
-			echo _CONFIRM_FREETRIAL . '&nbsp;-&nbsp;';
+			$this->payment->amount_format = _CONFIRM_FREETRIAL . '&nbsp;-&nbsp;';
 		}
-		echo $this->payment->method_name;
+		// TODO: $this->payment->method_name;
 
 		return;
 	}
