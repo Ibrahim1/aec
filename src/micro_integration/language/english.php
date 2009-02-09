@@ -738,8 +738,8 @@ define( '_MI_MI_EMAIL_FILES_MAX_CHOICES_NAME',	'Max Choices' );
 define( '_MI_MI_EMAIL_FILES_MAX_CHOICES_DESC',	'How many items may the user select?' );
 define( '_MI_MI_EMAIL_FILES_MIN_CHOICES_NAME',	'Min Choices' );
 define( '_MI_MI_EMAIL_FILES_MIN_CHOICES_DESC',	'How many items must the user select?' );
-define( '_MI_MI_USER_CHOICE_FILES_NAME',	'Please select:' );
-define( '_MI_MI_USER_CHOICE_FILES_DESC',	'Please select' );
+define( '_MI_MI_USER_CHOICE_FILES_NAME',	'Please select' );
+define( '_MI_MI_USER_CHOICE_FILES_DESC',	'Download Delivery Option' );
 
 // AEC Donate MI
 define( '_AEC_MI_AECDONATE_NAME', 'AEC Donate' );

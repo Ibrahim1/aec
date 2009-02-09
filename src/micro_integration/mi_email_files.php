@@ -53,6 +53,8 @@ class mi_email_files
 		$settings = array();
 
 		if ( !empty( $this->settings['desc_list'] ) ) {
+			$settings['exp'] = array( 'p', _MI_MI_USER_CHOICE_FILES_NAME, _MI_MI_USER_CHOICE_FILES_DESC );
+
 			$list = explode( "\n", $this->settings['desc_list'] );
 
 			$gr = array();
@@ -60,12 +62,12 @@ class mi_email_files
 				$choice = trim( $choice );
 
 				if ( $this->settings['max_choices'] > 1 ) {
-					$settings['ef'.$id] = array( 'checkbox', 'mi_email_files', $id, true, $choice );
+					$settings['ef'.$id] = array( 'checkbox', 'mi_'.$this->id.'_mi_email_files[]', $id, true, $choice );
 				} else {
-					$settings['ef'.$id] = array( 'radio', 'mi_email_files', $id, true, $choice );
+					$settings['ef'.$id] = array( 'radio', 'mi_'.$this->id.'_mi_email_files', $id, true, $choice );
 				}
 			}
-
+			$settings['mi_email_files'] = array( 'hidden', 'mi_email_files[]' );
 		} else {
 			return false;
 		}

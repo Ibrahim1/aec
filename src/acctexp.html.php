@@ -720,36 +720,41 @@ class Payment_HTML
 					<td colspan="4" class="confirmation_description"><?php echo stripslashes( $InvoiceFactory->objUsage->desc ); ?></td>
 				</tr>
 			</table>
-			<?php
-			if ( $aecConfig->cfg['customtext_confirm'] ) { ?>
-				<p><?php echo $aecConfig->cfg['customtext_confirm']; ?></p>
-				<?php
-			}
-			if ( $aecConfig->cfg['customtext_confirm_keeporiginal'] ) { ?>
-				<p><?php echo _CONFIRM_INFO; ?></p>
-				<?php
-			}
-			if ( $InvoiceFactory->coupons['active'] ) {
-				if ( !empty( $aecConfig->cfg['confirmation_coupons'] ) ) {
-					?><p><?php echo _CONFIRM_COUPON_INFO_BOTH; ?></p><?php
-				} else {
-					?><p><?php echo _CONFIRM_COUPON_INFO; ?></p><?php
-				}
-			} ?>
+			<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 			<table>
 				<tr>
-					<td class="confirmation_button">
-						<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
-						<?php if ( !empty( $aecConfig->cfg['confirmation_coupons'] ) ) { ?>
-							<strong><?php echo _CHECKOUT_COUPON_CODE; ?></strong>
-							<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
-						<?php } ?>
+					<td id="confirmation_extra">
 						<?php if ( !empty( $InvoiceFactory->mi_form ) ) {
 							if ( !empty( $InvoiceFactory->mi_error ) ) {
 								echo '<div id="confirmation_error">' . $InvoiceFactory->mi_error . '</div>';
 							}
 							echo '<div id="confirmation_extra">' . $InvoiceFactory->mi_form . '</div>';
 						} ?>
+						<?php
+						if ( $aecConfig->cfg['customtext_confirm'] ) { ?>
+							<p><?php echo $aecConfig->cfg['customtext_confirm']; ?></p>
+							<?php
+						}
+						if ( $aecConfig->cfg['customtext_confirm_keeporiginal'] ) { ?>
+							<p><?php echo _CONFIRM_INFO; ?></p>
+							<?php
+						}
+						if ( $InvoiceFactory->coupons['active'] ) {
+							if ( !empty( $aecConfig->cfg['confirmation_coupons'] ) ) {
+								?><p><?php echo _CONFIRM_COUPON_INFO_BOTH; ?></p><?php
+							} else {
+								?><p><?php echo _CONFIRM_COUPON_INFO; ?></p><?php
+							}
+						} ?>
+						<?php if ( !empty( $aecConfig->cfg['confirmation_coupons'] ) ) { ?>
+							<strong><?php echo _CHECKOUT_COUPON_CODE; ?></strong>
+							<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
+						<?php } ?>
+					</td>
+				</tr>
+				<tr>
+					<td id="confirmation_button">
+					<div id="confirmation_button">
 						<input type="hidden" name="option" value="<?php echo $option; ?>" />
 						<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0; ?>" />
 						<input type="hidden" name="task" value="saveSubscription" />
@@ -777,7 +782,7 @@ class Payment_HTML
 								<?php
 							}
 						} ?>
-						</form>
+					</div>
 					</td>
 				</tr>
 				<tr><td>
@@ -789,6 +794,7 @@ class Payment_HTML
 					</table>
 				</td></tr>
 			</table>
+			</form>
 			<div style="clear:both"></div>
 		</div>
 		<?php

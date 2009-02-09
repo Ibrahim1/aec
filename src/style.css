@@ -390,21 +390,29 @@ border: 2px solid #fff;
 width: 97%;
 }
 
-#confirmation_extra {
+div#confirmation_extra {
 float: left;
 background: #ddd;
 border:1px solid #ccc;
-padding: 8px;
-margin: 12px;
+padding: 0 8px 8px 8px;
+margin: 0 12px 16px 12px;
 width: 97%;
 }
 
-#confirmation_error {
+div#confirmation_error {
 float: left;
 background: #dff;
 border:1px solid #faa;
+padding: 0 8px 8px 8px;
+margin: 0 12px 16px 12px;
+width: 97%;
+}
+
+div#confirmation_button {
+float: left;
+background-color: #ded;
 padding: 8px;
-margin: 12px;
+margin: 0 12px 16px 12px;
 width: 97%;
 }
 
@@ -430,13 +438,22 @@ td.confirmation_description {
 text-align: left;
 }
 
-td.confirmation_button {
-text-align: center;
+td#confirmation_button {
 }
 
-td.append_button {
-text-align: center;
-width: 90%;
+td#confirmation_extra td {
+padding: 2px !important;
+}
+
+td#confirmation_extra table {
+padding: 0 !important;
+}
+
+#confirmation .button{
+clear: both;
+display:block;
+float:right;
+margin: 6px;
 }
 
 div.setting_desc {

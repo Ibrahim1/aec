@@ -76,7 +76,7 @@ if ( !function_exists( 'aecJoomla15check' ) ) {
 function aecGetParam( $name, $default='', $safe=false, $safe_params=array() )
 {
 	if ( aecJoomla15check() ) {
-		$return = JArrayHelper::getValue( $_REQUEST, $name );
+		$return = JArrayHelper::getValue( $_REQUEST, $name, $default );
 	} else {
 		$return = mosGetParam( $_REQUEST, $name, $default, 0x0002 );
 	}
@@ -3594,7 +3594,7 @@ class aecSettings
 				continue;
 			}
 
-			if ( !isset( $content[2] ) || ( !$content[2] && ( $content[2] !== '' ) ) ) {
+			if ( !isset( $content[2] ) || ( ( $content[2] === false ) && ( $content[2] !== '' ) ) ) {
 				// Create constant names
 				$constant_generic	= '_' . strtoupper($this->area)
 										. '_' . strtoupper( $this->original_subarea )
@@ -3633,7 +3633,11 @@ class aecSettings
 				$info_desc = $content[2];
 			}
 
-			$this->settings[$name] = array( $type, $info_name, $info_desc, $value );
+			if ( isset( $content[4] ) ) {
+				$this->settings[$name] = array( $type, $info_name, $info_desc, $value, $content[4] );
+			} else {
+				$this->settings[$name] = array( $type, $info_name, $info_desc, $value );
+			}
 		}
 	}
 
@@ -3958,6 +3962,20 @@ class aecHTML
 				break;
 			case 'tabberend':
 				$return = '</div></td></tr>';
+				break;
+			case 'hidden':
+				if ( !empty( $content[1] ) ) {
+					$name = $content[1];
+				}
+
+				$return = '';
+				if ( is_array( $value ) ) {
+					foreach ( $value as $v ) {
+						$return .= '<input type="hidden" name="' . $name . '[]" value="' . $v . '" />';
+					}
+				} else {
+					$return .= '<input type="hidden" name="' . $name . '" value="' . $value . '" />';
+				}
 				break;
 			default:
 				if ( !empty( $row[0] ) ) {
@@ -5291,7 +5309,7 @@ class SubscriptionPlan extends serialParamDBTable
 					continue;
 				}
 
-				$verify = $mi->verifyMIform( $this );
+				$verify = $mi->verifyMIform( $this, $metaUser );
 
 				if ( !empty( $verify ) && is_array( $verify ) ) {
 					$v[] = $verify;
@@ -5320,7 +5338,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 			$settings = new aecSettings ( 'mi', 'frontend_forms' );
 			$settings->fullSettingsArray( $params, array(), $lists ) ;
-print_r($settings);exit;
+
 			$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 			return "<table>" . $aecHTML->returnFull( true, true, true ) . "</table>";
 		}
@@ -6644,13 +6662,17 @@ class InvoiceFactory
 				if ( !empty( $mi_form ) ) {
 					$params = array();
 					foreach ( $mi_form as $key => $value ) {
-						$k = explode( '_', $key, 3 );
+						$value = aecGetParam( $key, '__DEL' );
 
-						if ( !isset( $params[$k[1]] ) ) {
-							$params[$k[1]] = array();
+						if ( $value !== '__DEL' ) {
+							$k = explode( '_', $key, 3 );
+
+							if ( !isset( $params[$k[1]] ) ) {
+								$params[$k[1]] = array();
+							}
+
+							$params[$k[1]][$k[2]] = $value;
 						}
-
-						$params[$k[1]][$k[2]] = aecGetParam( $key );
 					}
 
 					if ( !empty( $params ) ) {
@@ -6661,7 +6683,7 @@ class InvoiceFactory
 						$this->metaUser->meta->storeload();
 					}
 
-					$verifymi = $this->objUsage->verifyMIformParams();
+					$verifymi = $this->objUsage->verifyMIformParams( $this->metaUser );
 
 					$this->mi_error = array();
 					if ( is_array( $verifymi ) && !empty( $verifymi ) ) {
@@ -11115,8 +11137,8 @@ class microIntegration extends serialParamDBTable
 	{
 		if ( method_exists( $this->mi_class, 'verifyMIform' ) ) {
 			$params	= $metaUser->meta->getMIParams( $this->id, $plan->id );
-
-			return $this->mi_class->getMIform( $plan );
+print_r($metaUser);exit;
+			return $this->mi_class->verifyMIform( $params );
 		} else {
 			return true;
 		}
