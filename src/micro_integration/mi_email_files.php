@@ -67,7 +67,7 @@ class mi_email_files
 					$settings['ef'.$id] = array( 'radio', 'mi_'.$this->id.'_mi_email_files', $id, true, $choice );
 				}
 			}
-			$settings['mi_email_files'] = array( 'hidden', 'mi_email_files[]' );
+			$settings['mi_email_files'] = array( 'hidden', null, 'mi_'.$this->id.'mi_email_files[]' );
 		} else {
 			return false;
 		}
@@ -78,6 +78,17 @@ class mi_email_files
 	function verifyMIform( $params )
 	{
 		global $database;
+
+		if ( empty( $params['mi_email_files'] ) ) {
+			$return = "Please select more than " . $this->settings['min_choices'] . " options!";
+			return $return;
+		}
+
+		foreach ( $params['mi_email_files'] as $i => $v ) {
+			if ( empty( $v ) && ( $v !== "0" ) && ( $v !== 0 ) ) {
+				unset( $params['mi_email_files'][$i] );
+			}
+		}
 
 		$return = array();
 

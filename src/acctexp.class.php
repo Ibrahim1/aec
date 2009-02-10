@@ -3964,8 +3964,8 @@ class aecHTML
 				$return = '</div></td></tr>';
 				break;
 			case 'hidden':
-				if ( !empty( $content[1] ) ) {
-					$name = $content[1];
+				if ( !empty( $row[2] ) ) {
+					$name = $row[2];
 				}
 
 				$return = '';
@@ -5976,8 +5976,7 @@ class InvoiceFactory
 		$this->payment->amount_decimal		= $amount_array[1];
 //{"cmd":"concat","vars":[{"cmd":"data","vars":["payment.amount"]},"-",{"cmd":"rw_constant","vars":"invoice_id"}]}
 		if ( ( !empty( $this->payment->amount ) && ( $this->payment->amount != '0.00' ) ) && !$this->payment->freetrial ) {
-			$this->payment->amount_format = AECToolbox::formatAmount( $this->payment->amount, $this->payment->currency); ?>&nbsp;-&nbsp;
-			<?php
+			$this->payment->amount_format = AECToolbox::formatAmount( $this->payment->amount, $this->payment->currency);
 		} elseif ( $this->payment->freetrial ) {
 			$this->payment->amount_format = _CONFIRM_FREETRIAL . '&nbsp;-&nbsp;';
 		}
@@ -6662,6 +6661,10 @@ class InvoiceFactory
 				if ( !empty( $mi_form ) ) {
 					$params = array();
 					foreach ( $mi_form as $key => $value ) {
+						if ( strpos( $key,'[]' ) ) {
+							$key = str_replace( '[]', '', $key );
+						}
+
 						$value = aecGetParam( $key, '__DEL' );
 
 						if ( $value !== '__DEL' ) {
@@ -11137,7 +11140,7 @@ class microIntegration extends serialParamDBTable
 	{
 		if ( method_exists( $this->mi_class, 'verifyMIform' ) ) {
 			$params	= $metaUser->meta->getMIParams( $this->id, $plan->id );
-print_r($metaUser);exit;
+print_r($params);print_r($metaUser);exit;
 			return $this->mi_class->verifyMIform( $params );
 		} else {
 			return true;
