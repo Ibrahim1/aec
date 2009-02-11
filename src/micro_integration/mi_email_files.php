@@ -79,8 +79,10 @@ class mi_email_files
 	{
 		global $database;
 
+		$return = array();
+
 		if ( empty( $params['mi_email_files'] ) ) {
-			$return = "Please select more than " . $this->settings['min_choices'] . " options!";
+			$return['error'] = "Please select more than " . $this->settings['min_choices'] . " options!";
 			return $return;
 		}
 
@@ -90,16 +92,14 @@ class mi_email_files
 			}
 		}
 
-		$return = array();
-
 		$selected = count( $params['mi_email_files'] );
 
 		if ( $selected > $this->settings['max_choices'] ) {
-			$return = "Too many options selected! Please select no more than " . $this->settings['max_choices'] . " options!";
+			$return['error'] = "Too many options selected! Please select no more than " . $this->settings['max_choices'] . " options!";
 		}
 
 		if ( $selected < $this->settings['min_choices'] ) {
-			$return = "Please select more than " . $this->settings['min_choices'] . " options!";
+			$return['error'] = "Please select more than " . $this->settings['min_choices'] . " options!";
 		}
 
 		return $return;

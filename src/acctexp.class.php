@@ -3963,6 +3963,16 @@ class aecHTML
 			case 'tabberend':
 				$return = '</div></td></tr>';
 				break;
+			case 'divstart':
+				if ( isset( $row[4] ) ) {
+					$return = '<div id="' . $row[4] . '">';
+				} else {
+					$return = '<div class="' . $row[3] . '">';
+				}
+				break;
+			case 'divend':
+				$return = '</div>';
+				break;
 			case 'hidden':
 				if ( !empty( $row[2] ) ) {
 					$name = $row[2];
@@ -5247,7 +5257,7 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 	}
 
-	function getMIformParams()
+	function getMIformParams( $errors=array() )
 	{
 		$mis = $this->getMicroIntegrations();
 
@@ -5279,8 +5289,17 @@ class SubscriptionPlan extends serialParamDBTable
 
 					$params['mi_'.$mi->id.'_remap_area'] = array( 'subarea_change', $mi->class_name );
 
+					if ( array_key_exists( $mi->id, $errors ) ) {
+						$params[] = array( 'divstart', null, null, 'confirmation_error_bg' );
+						//$params[] = array( 'h2', $errors[$mi->id] );
+					}
+
 					foreach ( $mi_form as $fname => $fcontent ) {
 						$params['mi_'.$mi->id.'_'.$fname] = $fcontent;
+					}
+
+					if ( array_key_exists( $mi->id, $errors ) ) {
+						$params[] = array( 'divend' );
 					}
 				}
 			}
@@ -5312,7 +5331,7 @@ class SubscriptionPlan extends serialParamDBTable
 				$verify = $mi->verifyMIform( $this, $metaUser );
 
 				if ( !empty( $verify ) && is_array( $verify ) ) {
-					$v[] = $verify;
+					$v[] = array_merge( array( 'id' => $mi->id ), $verify );
 				}
 			}
 
@@ -5326,9 +5345,9 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 	}
 
-	function getMIforms()
+	function getMIforms( $errors=array() )
 	{
-		$params = $this->getMIformParams();
+		$params = $this->getMIformParams( $errors );
 
 		if ( empty( $params ) ) {
 			return false;
@@ -5338,7 +5357,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 			$settings = new aecSettings ( 'mi', 'frontend_forms' );
 			$settings->fullSettingsArray( $params, array(), $lists ) ;
-
+//print_r($settings);exit;
 			$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 			return "<table>" . $aecHTML->returnFull( true, true, true ) . "</table>";
 		}
@@ -6569,7 +6588,11 @@ class InvoiceFactory
 		$this->coupons = array();
 		$this->coupons['active'] = $aecConfig->cfg['enable_coupons'];
 
-		$this->mi_form = $this->plan->getMIforms();
+		if ( empty( $this->mi_error ) ) {
+			$this->mi_error = array();
+		}
+
+		$this->mi_form = $this->plan->getMIforms( $this->mi_error );
 
 		$confirm = empty( $aecConfig->cfg['skip_confirmation'] ) && !empty( $this->mi_form );
 
@@ -6691,12 +6714,13 @@ class InvoiceFactory
 							}
 
 							if ( !empty( $vmi['error'] ) ) {
-								$this->mi_error[] = $vmi['error'];
+								$this->mi_error[$vmi['id']] = $vmi['error'];
 							}
 						}
 					}
 					if ( !empty( $this->mi_error ) ) {
-						$this->confirm( $option, $var, null );
+						$this->confirmed = 0;
+						return $this->confirm( $option, $var, null );
 					}
 				}
 
@@ -11151,7 +11175,7 @@ class microIntegration extends serialParamDBTable
 	{
 		if ( method_exists( $this->mi_class, 'verifyMIform' ) ) {
 			$params	= $metaUser->meta->getMIParams( $this->id, $plan->id );
-print_r($params);print_r($metaUser);exit;
+
 			return $this->mi_class->verifyMIform( $params );
 		} else {
 			return true;
