@@ -1906,6 +1906,7 @@ class HTML_AcctExp
 		                <div class="aec_tabheading"><h2><?php echo _PAYPLAN_TEXT_TITLE; ?></h2></div>
 		                <table width="100%" class="aecadminform"><tr><td>
 							<div class="userinfobox">
+								<?php echo $aecHTML->createSettingsParticle( 'customamountformat' ); ?>
 								<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
 								<?php echo $aecHTML->createSettingsParticle( 'email_desc' ); ?>
 								<?php echo $aecHTML->createSettingsParticle( 'customthanks' ); ?>

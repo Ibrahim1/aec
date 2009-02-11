@@ -5599,7 +5599,7 @@ class SubscriptionPlan extends serialParamDBTable
 						'gid_enabled', 'gid', 'lifetime', 'standard_parent',
 						'fallback', 'similarplans', 'equalplans', 'make_active',
 						'make_primary', 'update_existing', 'customthanks', 'customtext_thanks_keeporiginal',
-						'customtext_thanks', 'override_activation', 'override_regmail'
+						'customamountformat', 'customtext_thanks', 'override_activation', 'override_regmail'
 						);
 
 		$params = array();
@@ -5810,10 +5810,10 @@ class InvoiceFactory
 		}
 
 		// Init variables
-		$this->usage		= $usage;
-		$this->group		= $group;
-		$this->processor	= $processor;
-		$this->invoice		= $invoice;
+		$this->usage			= $usage;
+		$this->group			= $group;
+		$this->processor		= $processor;
+		$this->invoice_number	= $invoice;
 
 		// Delete set userid if it doesn't exist
 		if ( !is_null( $this->userid ) ) {
@@ -5858,10 +5858,10 @@ class InvoiceFactory
 
 		if ( !empty( $this->usage ) ) {
 			// get the payment plan
-			$this->objUsage = new SubscriptionPlan( $database );
-			$this->objUsage->load( $this->usage );
+			$this->plan = new SubscriptionPlan( $database );
+			$this->plan->load( $this->usage );
 
-			if ( !is_object( $this->objUsage ) ) {
+			if ( !is_object( $this->plan ) ) {
 				return mosNotAuth();
 			}
 		} else {
@@ -5881,7 +5881,7 @@ class InvoiceFactory
 					$this->pp = new PaymentProcessor();
 					if ( $this->pp->loadName( $this->processor ) ) {
 						$this->pp->fullInit();
-						$this->pp->exchangeSettingsByPlan( $this->objUsage );
+						$this->pp->exchangeSettingsByPlan( $this->plan );
 
 						$this->payment->method_name	= $this->pp->info['longname'];
 
@@ -5924,9 +5924,9 @@ class InvoiceFactory
 		}
 
 		$this->terms = new mammonTerms();
-		$this->terms->readParams( $this->objUsage->params );
+		$this->terms->readParams( $this->plan->params );
 
-		$return = $this->objUsage->SubscriptionAmount( $this->recurring, $user_subscription );
+		$return = $this->plan->SubscriptionAmount( $this->recurring, $user_subscription );
 
 		$this->payment->freetrial = 0;
 
@@ -5974,13 +5974,8 @@ class InvoiceFactory
 
 		$this->payment->amount_significant	= $amount_array[0];
 		$this->payment->amount_decimal		= $amount_array[1];
-//{"cmd":"concat","vars":[{"cmd":"data","vars":["payment.amount"]},"-",{"cmd":"rw_constant","vars":"invoice_id"}]}
-		if ( ( !empty( $this->payment->amount ) && ( $this->payment->amount != '0.00' ) ) && !$this->payment->freetrial ) {
-			$this->payment->amount_format = AECToolbox::formatAmount( $this->payment->amount, $this->payment->currency);
-		} elseif ( $this->payment->freetrial ) {
-			$this->payment->amount_format = _CONFIRM_FREETRIAL . '&nbsp;-&nbsp;';
-		}
-		// TODO: $this->payment->method_name;
+
+		$this->payment->amount_format = AECToolbox::formatAmountCustom( $this, $this->plan );
 
 		return;
 	}
@@ -5993,60 +5988,60 @@ class InvoiceFactory
 			$invoiceid = AECfetchfromDB::InvoiceIDfromNumber($invoice_number, $this->userid);
 
 			if ( $invoiceid ) {
-				$this->invoice = $invoice_number;
+				$this->invoice_number = $invoice_number;
 			}
 		}
 
-		if ( !empty( $this->invoice ) ) {
-			if ( !isset( $this->objInvoice ) ) {
-				$this->objInvoice = null;
+		if ( !empty( $this->invoice_number ) ) {
+			if ( !isset( $this->invoice ) ) {
+				$this->invoice = null;
 			}
 
-			if ( !is_object( $this->objInvoice ) ) {
+			if ( !is_object( $this->invoice ) ) {
 				global $database;
-				$this->objInvoice = new Invoice( $database );
+				$this->invoice = new Invoice( $database );
 			}
 
-			$this->objInvoice->loadInvoiceNumber( $this->invoice );
-			$this->objInvoice->computeAmount();
+			$this->invoice->loadInvoiceNumber( $this->invoice_number );
+			$this->invoice->computeAmount();
 
-			$this->processor = $this->objInvoice->method;
-			$this->usage = $this->objInvoice->usage;
+			$this->processor = $this->invoice->method;
+			$this->usage = $this->invoice->usage;
 
-			if ( empty( $this->usage ) && empty( $this->objInvoice->conditions ) ) {
-				$this->create( $option, 0, 0, $this->invoice_number );
+			if ( empty( $this->usage ) && empty( $this->invoice->conditions ) ) {
+				$this->create( $option, 0, 0, $this->invoice_number_number );
 			} elseif ( empty( $this->processor ) ) {
-				$this->create( $option, 0, $this->usage, $this->invoice_number );
+				$this->create( $option, 0, $this->usage, $this->invoice_number_number );
 			}
 		} else {
 			global $database;
 
-			$this->objInvoice = new Invoice( $database );
+			$this->invoice = new Invoice( $database );
 
-			$this->objInvoice->create( $this->userid, $this->usage, $this->processor );
-			$this->objInvoice->computeAmount();
+			$this->invoice->create( $this->userid, $this->usage, $this->processor );
+			$this->invoice->computeAmount();
 
 			if ( is_object( $this->pp ) ) {
 				$this->pp->invoiceCreationAction( $this );
 			}
 
-			if ( !empty( $this->objUsage ) ) {
-				$this->objUsage->triggerMIs( '_invoice_creation', $this->metaUser, null, $this->objInvoice );
+			if ( !empty( $this->plan ) ) {
+				$this->plan->triggerMIs( '_invoice_creation', $this->metaUser, null, $this->invoice );
 			}
 
 			// Reset parameters
-			$this->processor	= $this->objInvoice->method;
-			$this->usage		= $this->objInvoice->usage;
-			$this->invoice		= $this->objInvoice->invoice_number;
+			$this->processor	= $this->invoice->method;
+			$this->usage		= $this->invoice->usage;
+			$this->invoice_number		= $this->invoice->invoice_number;
 		}
 
 		$recurring = aecGetParam( 'recurring', null );
 
-		if ( isset( $this->objInvoice->params['userselect_recurring'] ) ) {
-			$this->recurring = $this->objInvoice->params['userselect_recurring'];
+		if ( isset( $this->invoice->params['userselect_recurring'] ) ) {
+			$this->recurring = $this->invoice->params['userselect_recurring'];
 		} elseif ( !is_null( $recurring ) ) {
-			$this->objInvoice->addParams( array( 'userselect_recurring' => $recurring ) );
-			$this->objInvoice->storeload();
+			$this->invoice->addParams( array( 'userselect_recurring' => $recurring ) );
+			$this->invoice->storeload();
 		}
 
 		return;
@@ -6451,7 +6446,7 @@ class InvoiceFactory
 				$this->processor	= $plans[0]['gw'][0]->processor_name;
 
 				if ( ( $invoice != 0 ) && !is_null( $invoice ) ) {
-					$this->invoice	= $invoice;
+					$this->invoice_number	= $invoice;
 				}
 
 				$password = aecGetParam( 'password', null );
@@ -6574,7 +6569,7 @@ class InvoiceFactory
 		$this->coupons = array();
 		$this->coupons['active'] = $aecConfig->cfg['enable_coupons'];
 
-		$this->mi_form = $this->objUsage->getMIforms();
+		$this->mi_form = $this->plan->getMIforms();
 
 		$confirm = empty( $aecConfig->cfg['skip_confirmation'] ) && !empty( $this->mi_form );
 
@@ -6615,20 +6610,20 @@ class InvoiceFactory
 
 		if ( !empty( $this->usage ) ) {
 			// get the payment plan
-			$this->objUsage = new SubscriptionPlan( $database );
-			$this->objUsage->load( $this->usage );
+			$this->plan = new SubscriptionPlan( $database );
+			$this->plan->load( $this->usage );
 		}
 
 		if ( empty( $this->userid ) ) {
-			if ( !empty( $this->objUsage ) ) {
-				if ( isset( $this->objUsage->params['override_activation'] ) ) {
-					$overrideActivation = $this->objUsage->params['override_activation'];
+			if ( !empty( $this->plan ) ) {
+				if ( isset( $this->plan->params['override_activation'] ) ) {
+					$overrideActivation = $this->plan->params['override_activation'];
 				} else {
 					$overrideActivation = false;
 				}
 
-				if ( isset( $this->objUsage->params['override_regmail'] ) ) {
-					$overrideEmail = $this->objUsage->params['override_regmail'];
+				if ( isset( $this->plan->params['override_regmail'] ) ) {
+					$overrideEmail = $this->plan->params['override_regmail'];
 				} else {
 					$overrideEmail = false;
 				}
@@ -6647,16 +6642,16 @@ class InvoiceFactory
 		$this->touchInvoice( $option );
 
 		if ( !empty( $coupon ) ) {
-			$this->objInvoice->addCoupon( $coupon );
-			$this->objInvoice->storeload();
+			$this->invoice->addCoupon( $coupon );
+			$this->invoice->storeload();
 
 			// Make sure we have the correct amount loaded
 			$this->touchInvoice( $option );
 		}
 
-		if ( !empty( $this->objUsage ) ) {
-			if ( is_object( $this->objUsage ) ) {
-				$mi_form = $this->objUsage->getMIformParams();
+		if ( !empty( $this->plan ) ) {
+			if ( is_object( $this->plan ) ) {
+				$mi_form = $this->plan->getMIformParams();
 
 				if ( !empty( $mi_form ) ) {
 					$params = array();
@@ -6680,13 +6675,13 @@ class InvoiceFactory
 
 					if ( !empty( $params ) ) {
 						foreach ( $params as $mi_id => $content ) {
-							$this->metaUser->meta->setMIParams( $mi_id, $this->objUsage->id, $content );
+							$this->metaUser->meta->setMIParams( $mi_id, $this->plan->id, $content );
 						}
 
 						$this->metaUser->meta->storeload();
 					}
 
-					$verifymi = $this->objUsage->verifyMIformParams( $this->metaUser );
+					$verifymi = $this->plan->verifyMIformParams( $this->metaUser );
 
 					$this->mi_error = array();
 					if ( is_array( $verifymi ) && !empty( $verifymi ) ) {
@@ -6729,14 +6724,14 @@ class InvoiceFactory
 		// If this is marked as supposedly free
 		if ( in_array( strtolower( $this->processor ), $exceptproc ) ) {
 			// And if it is either made free through coupons
-			if ( !empty( $this->objInvoice->made_free )
+			if ( !empty( $this->invoice->made_free )
 				// Or a free full period that the user CAN use
-				|| ( $this->objUsage->params['full_free'] && $this->objInvoice->counter )
-				|| ( $this->objUsage->params['full_free'] && empty( $this->objInvoice->counter ) && empty( $this->objUsage->params['trial_period'] ) )
+				|| ( $this->plan->params['full_free'] && $this->invoice->counter )
+				|| ( $this->plan->params['full_free'] && empty( $this->invoice->counter ) && empty( $this->plan->params['trial_period'] ) )
 				// Or a free trial that the user CAN use
-				|| ( $this->objUsage->params['trial_free'] && empty( $this->objInvoice->counter ) ) ) {
+				|| ( $this->plan->params['trial_free'] && empty( $this->invoice->counter ) ) ) {
 				// Then mark payed
-				if ( $this->objInvoice->pay() !== false ) {
+				if ( $this->invoice->pay() !== false ) {
 					$this->thanks( $option, false, true );
 					return;
 				}
@@ -6751,24 +6746,24 @@ class InvoiceFactory
 		}
 
 		if ( !empty( $this->pp->info['secure'] ) && empty( $_SERVER['HTTPS'] ) && !$aecConfig->cfg['override_reqssl'] ) {
-			mosRedirect( AECToolbox::deadsureURL( "index.php?option=" . $option . "&task=repeatPayment&invoice=" . $this->objInvoice->invoice_number . "&first=" . ( $repeat ? 0 : 1 ), true, false ) );
+			mosRedirect( AECToolbox::deadsureURL( "index.php?option=" . $option . "&task=repeatPayment&invoice=" . $this->invoice->invoice_number . "&first=" . ( $repeat ? 0 : 1 ), true, false ) );
 			exit();
 		};
 
 		$this->terms = new mammonTerms();
-		$this->terms->readParams( $this->objUsage->termsParamsRequest( $this->recurring, $this->metaUser ) );
+		$this->terms->readParams( $this->plan->termsParamsRequest( $this->recurring, $this->metaUser ) );
 
-		$c = $this->objUsage->doPlanComparison( $this->metaUser->objSubscription );
+		$c = $this->plan->doPlanComparison( $this->metaUser->objSubscription );
 
 		// Do not allow a Trial if the user has used this or a similar plan
 		if ( $this->terms->hasTrial && !( ( $c['comparison'] === false ) && ( $c['total_comparison'] === false ) ) ) {
 			$this->terms->incrementPointer();
 		}
 
-		$this->amount = $this->objUsage->SubscriptionAmount( $this->recurring, $this->metaUser->objSubscription, $this->metaUser );
+		$this->amount = $this->plan->SubscriptionAmount( $this->recurring, $this->metaUser->objSubscription, $this->metaUser );
 
-		if ( !empty( $aecConfig->cfg['enable_coupons'] ) && !empty( $this->objInvoice->coupons ) ) {
-			$coupons = $this->objInvoice->coupons;
+		if ( !empty( $aecConfig->cfg['enable_coupons'] ) && !empty( $this->invoice->coupons ) ) {
+			$coupons = $this->invoice->coupons;
 			$orcoupn = $coupons;
 
 			$cpsh = new couponsHandler();
@@ -6778,11 +6773,11 @@ class InvoiceFactory
 			if ( count( $orcoupn ) != count( $coupons ) ) {
 				foreach ( $orcoupn as $couponcode ) {
 					if ( !in_array( $couponcode, $coupons ) ) {
-						$this->objInvoice->removeCoupon( $couponcode );
+						$this->invoice->removeCoupon( $couponcode );
 					}
 				}
 
-				$this->objInvoice->storeload();
+				$this->invoice->storeload();
 			}
 
 			$cpsh_err = $cpsh->getErrors();
@@ -6794,7 +6789,7 @@ class InvoiceFactory
 
 		// Either this is fully free, or the next term is free and this is non recurring
 		if ( $this->terms->checkFree() || ( $this->terms->nextterm->free && !$this->recurring ) ) {
-			$this->objInvoice->pay();
+			$this->invoice->pay();
 			$this->thanks( $option, false, true );
 			return;
 		}
@@ -6806,9 +6801,9 @@ class InvoiceFactory
 	{
 		global $mainframe;
 
-		$var = $this->objInvoice->prepareProcessorLink( $this );
+		$var = $this->invoice->prepareProcessorLink( $this );
 
-		$this->objInvoice->formatInvoiceNumber();
+		$this->invoice->formatInvoiceNumber();
 
 		$mainframe->SetPageTitle( _CHECKOUT_TITLE );
 
@@ -6823,10 +6818,10 @@ class InvoiceFactory
 
 		$this->puffer( $option );
 
-		$var = $this->objInvoice->getFullVars();
+		$var = $this->invoice->getFullVars();
 
 		$new_subscription = new SubscriptionPlan( $database );
-		$new_subscription->load( $this->objInvoice->usage );
+		$new_subscription->load( $this->invoice->usage );
 
 		$badbadvars = array( 'userid', 'invoice', 'task', 'option' );
 		foreach ( $badbadvars as $badvar ) {
@@ -6837,10 +6832,10 @@ class InvoiceFactory
 
 		$var['params'] = aecPostParamClear( $_POST );
 
-		$response = $this->pp->checkoutProcess( $var, $this->metaUser, $new_subscription, $this->objInvoice );
+		$response = $this->pp->checkoutProcess( $var, $this->metaUser, $new_subscription, $this->invoice );
 
 		if ( isset( $response['error'] ) ) {
-			$this->error( $option, $this->metaUser->cmsUser, $this->objInvoice->invoice_number, $response['error'] );
+			$this->error( $option, $this->metaUser->cmsUser, $this->invoice->invoice_number, $response['error'] );
 		} else {
 			$this->thanks( $option );
 		}
@@ -6852,15 +6847,15 @@ class InvoiceFactory
 
 		$this->touchInvoice( $option );
 
-		$this->userid = $this->objInvoice->userid;
+		$this->userid = $this->invoice->userid;
 		$this->loadMetaUser();
 
 		$this->puffer( $option );
 
-		$this->objInvoice->processorResponse( $this->pp, $response );
+		$this->invoice->processorResponse( $this->pp, $response );
 
 		if ( isset( $response['error'] ) ) {
-			$this->error( $option, $this->metaUser->cmsUser, $this->objInvoice->invoice_number, $response['error'] );
+			$this->error( $option, $this->metaUser->cmsUser, $this->invoice->invoice_number, $response['error'] );
 		} else {
 			if ( !empty( $this->pp->info['notify_trail_thanks'] ) ) {
 				$this->thanks( $option );
@@ -6910,9 +6905,9 @@ class InvoiceFactory
 	{
 		global $mosConfig_useractivation, $aecConfig, $mainframe;
 
-		if ( is_object( $this->objUsage ) ) {
-			if ( !empty( $this->objUsage->params['customthanks'] ) ) {
-				mosRedirect( $this->objUsage->params['customthanks'] );
+		if ( is_object( $this->plan ) ) {
+			if ( !empty( $this->plan->params['customthanks'] ) ) {
+				mosRedirect( $this->plan->params['customthanks'] );
 			} elseif ( $aecConfig->cfg['customthanks'] ) {
 				mosRedirect( $aecConfig->cfg['customthanks'] );
 			}
@@ -6952,7 +6947,7 @@ class InvoiceFactory
 			$b .= '<div id="thankyou_page">' . '<p>' . $msg . '</p>' . '</div>';
 		}
 
-		$up =& $this->objUsage->params;
+		$up =& $this->plan->params;
 
 		if ( !empty( $up['customtext_thanks'] ) ) {
 			if ( isset( $up['customtext_thanks_keeporiginal'] ) ) {
@@ -9118,7 +9113,7 @@ class reWriteEngine
 		$rqitems = get_object_vars( $request );
 
 		$data = array();
-		foreach ( $rqitems as $rqitem ) {
+		foreach ( $rqitems as $rqitem => $content ) {
 			$data[$rqitem] = $request->$rqitem;
 		}
 
@@ -9171,13 +9166,13 @@ class reWriteEngine
 			unset( $namearray[$maxname] );
 			$firstname = implode( ' ', $namearray );
 
-			$this->rewrite['user_id']					= $this->data['metaUser']->cmsUser->id;
+			$this->rewrite['user_id']				= $this->data['metaUser']->cmsUser->id;
 			$this->rewrite['user_username']			= $this->data['metaUser']->cmsUser->username;
 			$this->rewrite['user_name']				= $this->data['metaUser']->cmsUser->name;
-			$this->rewrite['user_first_name']			= $firstname;
+			$this->rewrite['user_first_name']		= $firstname;
 			$this->rewrite['user_first_first_name']	= $firstfirstname;
-			$this->rewrite['user_last_name']			= $lastname;
-			$this->rewrite['user_email']				= $this->data['metaUser']->cmsUser->email;
+			$this->rewrite['user_last_name']		= $lastname;
+			$this->rewrite['user_email']			= $this->data['metaUser']->cmsUser->email;
 
 			if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 				if ( !$this->data['metaUser']->hasCBprofile ) {
@@ -9200,21 +9195,21 @@ class reWriteEngine
 					$this->rewrite['user_activationlink']		= $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
 				}
 			} else {
-				$this->rewrite['user_activationcode']		= $this->data['metaUser']->cmsUser->activation;
-				$this->rewrite['user_activationlink']		= $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+				$this->rewrite['user_activationcode']			= $this->data['metaUser']->cmsUser->activation;
+				$this->rewrite['user_activationlink']			= $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
 			}
 
 			if ( $this->data['metaUser']->hasSubscription ) {
-				$this->rewrite['subscription_type']			= $this->data['metaUser']->focusSubscription->type;
+				$this->rewrite['subscription_type']				= $this->data['metaUser']->focusSubscription->type;
 				$this->rewrite['subscription_status']			= $this->data['metaUser']->focusSubscription->status;
-				$this->rewrite['subscription_signup_date']	= $this->data['metaUser']->focusSubscription->signup_date;
-				$this->rewrite['subscription_lastpay_date']	= $this->data['metaUser']->focusSubscription->lastpay_date;
-				$this->rewrite['subscription_plan']			= $this->data['metaUser']->focusSubscription->plan;
+				$this->rewrite['subscription_signup_date']		= $this->data['metaUser']->focusSubscription->signup_date;
+				$this->rewrite['subscription_lastpay_date']		= $this->data['metaUser']->focusSubscription->lastpay_date;
+				$this->rewrite['subscription_plan']				= $this->data['metaUser']->focusSubscription->plan;
 				$this->rewrite['subscription_previous_plan']	= $this->data['metaUser']->focusSubscription->previous_plan;
 				$this->rewrite['subscription_recurring']		= $this->data['metaUser']->focusSubscription->recurring;
-				$this->rewrite['subscription_lifetime']		= $this->data['metaUser']->focusSubscription->lifetime;
-				$this->rewrite['subscription_expiration_date']		= strftime( $aecConfig->cfg['display_date_frontend'], strtotime( $this->data['metaUser']->focusSubscription->expiration ) );
-				$this->rewrite['subscription_expiration_date_backend']		= strftime( $aecConfig->cfg['display_date_backend'], strtotime( $this->data['metaUser']->focusSubscription->expiration ) );
+				$this->rewrite['subscription_lifetime']			= $this->data['metaUser']->focusSubscription->lifetime;
+				$this->rewrite['subscription_expiration_date']	= strftime( $aecConfig->cfg['display_date_frontend'], strtotime( $this->data['metaUser']->focusSubscription->expiration ) );
+				$this->rewrite['subscription_expiration_date_backend']	= strftime( $aecConfig->cfg['display_date_backend'], strtotime( $this->data['metaUser']->focusSubscription->expiration ) );
 			}
 
 			if ( is_null( $this->data['invoice'] ) ) {
@@ -9226,18 +9221,18 @@ class reWriteEngine
 		}
 
 		if ( is_object( $this->data['invoice'] ) ) {
-			$this->rewrite['invoice_id']					= $this->data['invoice']->id;
-			$this->rewrite['invoice_number']				= $this->data['invoice']->invoice_number;
+			$this->rewrite['invoice_id']				= $this->data['invoice']->id;
+			$this->rewrite['invoice_number']			= $this->data['invoice']->invoice_number;
 			$this->rewrite['invoice_created_date']		= $this->data['invoice']->created_date;
 			$this->rewrite['invoice_transaction_date']	= $this->data['invoice']->transaction_date;
-			$this->rewrite['invoice_method']				= $this->data['invoice']->method;
-			$this->rewrite['invoice_amount']				= $this->data['invoice']->amount;
+			$this->rewrite['invoice_method']			= $this->data['invoice']->method;
+			$this->rewrite['invoice_amount']			= $this->data['invoice']->amount;
 			$this->rewrite['invoice_currency']			= $this->data['invoice']->currency;
 
 			if ( !empty( $this->data['invoice']->coupons ) && is_array( $this->data['invoice']->coupons ) ) {
-				$this->rewrite['invoice_coupons']			=  implode( ';', $this->data['invoice']->coupons );
+				$this->rewrite['invoice_coupons']		=  implode( ';', $this->data['invoice']->coupons );
 			} else {
-				$this->rewrite['invoice_coupons']			=  '';
+				$this->rewrite['invoice_coupons']		=  '';
 			}
 
 			if ( !is_null( $this->data['metaUser'] ) && !is_null( $this->data['plan'] ) ) {
@@ -9315,13 +9310,9 @@ class reWriteEngine
 				return "JSON PARSE ERROR - Malformed String!";
 			}
 
-			$command = $current->cmd;
-			$variables = $current->vars;
+			$variables = $this->resolveJSONitem( $current->vars );
 
-			$variables = $this->resolveJSONitem( $variables );
-
-			$current = $this->executeCommand( $command, $variables );
-
+			$current = $this->executeCommand( $current->cmd, $variables );
 		} elseif ( is_array( $current ) ) {
 			foreach( $current as $id => $item ) {
 				$current[$id] = $this->resolveJSONitem( $item );
@@ -9375,6 +9366,8 @@ class reWriteEngine
 			case 'constant':
 				if ( defined( $vars ) ) {
 					$result = constant( $vars );
+				} else {
+					$result = $vars;
 				}
 				break;
 			case 'global':
@@ -10192,6 +10185,24 @@ class AECToolbox
 		} else {
 			return null;
 		}
+	}
+
+	function formatAmountCustom( $request, $plan )
+	{
+		if ( !isset( $plan->params['customamountformat'] ) || empty( $plan->params['customamountformat'] ) ) {
+			$stdformat = '{aecjson}{"cmd":"condition","vars":[{"cmd":"data","vars":"payment.freetrial"},'
+						.'{"cmd":"concat","vars":[{"cmd":"constant","vars":"_CONFIRM_FREETRIAL"},"&nbsp;",{"cmd":"data","vars":"payment.method_name"}]},'
+						.'{"cmd":"concat","vars":[{"cmd":"data","vars":"payment.amount"},{"cmd":"data","vars":"payment.currency_symbol"},"&nbsp;",{"cmd":"data","vars":"payment.method_name"}]}'
+						.']}{/aecjson}'
+						;
+		} else {
+			$format = $plan->params['customamountformat'];
+		}
+
+		$rwEngine = new reWriteEngine();
+		$rwEngine->resolveRequest( $request );
+
+		return $rwEngine->resolve( $format );
 	}
 
 	function formatAmount( $amount, $currency=null ) {

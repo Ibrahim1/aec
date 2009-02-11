@@ -2759,12 +2759,19 @@ function editSubscriptionPlan( $id, $option )
 		$hasrecusers = ( $database->loadResult() > 0 ) ? true : false;
 	}
 
+	$stdformat = '{aecjson}{"cmd":"condition","vars":[{"cmd":"data","vars":"payment.freetrial"},'
+				.'{"cmd":"concat","vars":[{"cmd":"constant","vars":"_CONFIRM_FREETRIAL"},"&nbsp;",{"cmd":"data","vars":"payment.method_name"}]},'
+				.'{"cmd":"concat","vars":[{"cmd":"data","vars":"payment.amount"},{"cmd":"data","vars":"payment.currency_symbol"},"&nbsp;",{"cmd":"data","vars":"payment.method_name"}]}'
+				.']}{/aecjson}'
+				;
+
 	// params and their type values
 	$params['active']					= array( 'list_yesno', 1 );
 	$params['visible']					= array( 'list_yesno', 1 );
 
 	$params['name']						= array( 'inputC', '' );
 	$params['desc']						= array( 'editor', '' );
+	$params['customamountformat']		= array( 'inputD', $stdformat );
 	$params['customthanks']				= array( 'inputC', '' );
 	$params['customtext_thanks_keeporiginal']	= array( 'list_yesno', 1 );
 	$params['customtext_thanks']		= array( 'editor', '' );
