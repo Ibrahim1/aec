@@ -249,6 +249,8 @@ define( '_CFG_ALLOPASS_DOCID_NAME', 'DOC_ID');
 define( '_CFG_ALLOPASS_DOCID_DESC', 'Il tuo DOC_ID su AlloPass.');
 define( '_CFG_ALLOPASS_AUTH_NAME', 'AUTH');
 define( '_CFG_ALLOPASS_AUTH_DESC', 'AUTH su AlloPass.');
+define( '_CFG_ALLOPASS_PLAN_PARAMS_DOCID_NAME', 'DOC_ID');
+define( '_CFG_ALLOPASS_PLAN_PARAMS_DOCID_DESC', 'Your DOC_ID on AlloPass.');
 
 // 2Checkout Settings
 define( '_CFG_2CHECKOUT_SID_NAME', 'SID');
