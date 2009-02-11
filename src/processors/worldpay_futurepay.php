@@ -79,7 +79,7 @@ class processor_worldpay_futurepay extends POSTprocessor
 		$var['instId']		= $this->settings['instId'];
 		$var['currency']	= $this->settings['currency'];
 		$var['cartId']		= $request->int_var['invoice'];
-		$var['desc']		= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
+		$var['desc']		= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 
 		$var['futurePayType']		= 'regular';
 		$var['option']		= '0';

@@ -110,7 +110,7 @@ class processor_authorize_arb extends XMLprocessor
 
 		$full = $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
 
-		$name = AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
+		$name = AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 
 		// Add Payment information
 		$content .=	'<subscription>'

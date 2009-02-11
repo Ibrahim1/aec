@@ -78,7 +78,7 @@ class processor_2checkout extends POSTprocessor
 		$var['total']				= $request->int_var['amount'];
 
 		$var['cust_id']				= $request->metaUser->cmsUser->id;
-		$var['cart_order_id']		= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
+		$var['cart_order_id']		= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 		$var['username']			= $request->metaUser->cmsUser->username;
 		$var['name']				= $request->metaUser->cmsUser->name;
 

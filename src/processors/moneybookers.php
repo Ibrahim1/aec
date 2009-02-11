@@ -87,7 +87,7 @@ class processor_moneybookers extends POSTprocessor
 		$var['pay_from_email']			= $request->metaUser->cmsUser->email;
 		$var['amount']					= $request->int_var['amount'];
 
-		$var['detail1_description']		= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
+		$var['detail1_description']		= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 		$var['detail1_text']			= $request->metaUser->cmsUser->id;
 		$var['currency']				= $this->settings['currency'];
 		$var['confirmation_note']		= $this->settings['confirmation_note'];

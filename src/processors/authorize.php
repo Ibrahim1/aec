@@ -119,7 +119,7 @@ class processor_authorize extends POSTprocessor
 		$var['x_fp_hash']		= $fingerprint;
 
 		$var['x_cust_id']			= $request->metaUser->cmsUser->id;
-		$var['x_description']		= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
+		$var['x_description']		= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 
 		return $var;
 	}

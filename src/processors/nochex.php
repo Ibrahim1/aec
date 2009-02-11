@@ -61,7 +61,7 @@ class processor_nochex extends POSTprocessor
 		}
 
 		$var['merchant_id']			= $this->settings['merchant_id'];
-		$var['description']			= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
+		$var['description']			= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 		$var['order_id']			= $request->int_var['invoice'];
 		$var['amount']				= $request->int_var['amount'];
 		$var['success_url']			= $request->int_var['return_url'];

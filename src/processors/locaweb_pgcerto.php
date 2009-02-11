@@ -92,7 +92,7 @@ class processor_locaweb_pgcerto extends XMLprocessor
 	function createRequestXML( $request )
 	{
 		global $mosConfig_live_site;
-		$subDesc											= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
+		$subDesc											= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 		$separators										= array(",", ".");			// We want them removed
 		$valorTotal										= str_replace($separators, "", trim( $request->int_var['amount'] ));
 		$separators										= array("-", "/");			// We want them removed

@@ -76,7 +76,7 @@ class processor_ewayXML extends XMLprocessor
 					"ewayTotalAmount" => $order_total,
 					"ewayCustomerFirstName" => $request->metaUser->cmsUser->username,
 					"ewayCustomerLastName" => $request->metaUser->cmsUser->name,
-					"ewayCustomerInvoiceDescription" => AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice ),
+					"ewayCustomerInvoiceDescription" => AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ),
 					"ewayCustomerInvoiceRef" => $request->int_var['invoice'],
 					"ewayOption1" => $request->metaUser->cmsUser->id, //Send in option1, the id of the user
 					"ewayOption2" => $request->int_var['invoice'], //Send in option2, the invoice number

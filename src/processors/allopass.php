@@ -147,6 +147,6 @@ class processor_allopass extends XMLprocessor
 		//$var['ssl_amount']				= $request->int_var['amount'];
 
 		//$var['ssl_customer_code']		= $request->metaUser->cmsUser->id;
-		//$var['ssl_description']			= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
+		//$var['ssl_description']			= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 
 ?>

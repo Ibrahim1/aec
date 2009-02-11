@@ -116,7 +116,7 @@ class processor_authorize_aim extends XMLprocessor
 		$a['x_card_num']		= trim( $request->int_var['params']['cardNumber'] );
 		$a['x_exp_date']		= str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ) . $request->int_var['params']['expirationYear'];
 		$a['x_card_code']		= trim( $request->int_var['params']['cardVV2'] );
-		$a['x_description']		= trim( substr( AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice ), 0, 20 ) );
+		$a['x_description']		= trim( substr( AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ), 0, 20 ) );
 		$a['x_invoice_num']		= $request->int_var['invoice'];
 		$a['x_amount']			= $request->int_var['amount'];
 		$a['x_first_name']		= trim( $request->int_var['params']['billFirstName'] );

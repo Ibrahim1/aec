@@ -139,7 +139,7 @@ class processor_payer extends POSTprocessor
 		// Start the Purchase list
 		$xml .=		"<purchase_list>";
 
-		$desc = AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
+		$desc = AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 
 		// Purchase list (freeform purchases)
 		$xml .= 		"<freeform_purchase>" .

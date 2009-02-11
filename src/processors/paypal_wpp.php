@@ -219,7 +219,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$var['zip']					= $request->int_var['params']['billZip'];
 		$var['countrycode']			= $request->int_var['params']['billCountry'];
 		$var['NotifyUrl']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=paypal_wppnotification' );
-		$var['desc']				= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
+		$var['desc']				= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 		$var['InvNum']				= $request->int_var['invoice'];;
 
 		if ( is_array( $request->int_var['amount'] ) ) {

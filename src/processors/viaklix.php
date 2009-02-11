@@ -77,7 +77,7 @@ class processor_viaklix extends POSTprocessor
 		$var['currency_code']			= $this->settings['currency_code'];
 
 		$var['item_number']				= $row->id;
-		$var['item_name']				= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
+		$var['item_name']				= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 		$var['custom']					= $request->int_var['usage'];
 
 		return $var;

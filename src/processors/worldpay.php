@@ -81,7 +81,7 @@ class processor_worldpay extends POSTprocessor
 		$var['cartId']		= $request->int_var['invoice'];
 		$var['amount']		= $request->int_var['amount'];
 
-		$var['desc']	= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription );
+		$var['desc']	= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 
 		return $var;
 	}

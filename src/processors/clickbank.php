@@ -73,7 +73,7 @@ class processor_clickbank extends URLprocessor
 		// pass internal invoice to clickbank, so it will pass back to us for internal checking
 		$var['invoice']			= $request->int_var['invoice'];
 
-		$var['cart_order_id']	= AECToolbox::rewriteEngine( $this->settings['item_number'], $request->metaUser, $request->new_subscription, $request->invoice );
+		$var['cart_order_id']	= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 
 		return $var;
 	}

@@ -2333,7 +2333,7 @@ class PaymentProcessor
 		return $settings;
 	}
 
-	function checkoutAction( $int_var=null, $metaUser=null, $new_subscription=null, $invoice=null )
+	function checkoutAction( $int_var=null, $metaUser=null, $plan=null, $invoice=null )
 	{
 		if ( empty( $this->settings ) ) {
 			$this->getSettings();
@@ -2349,7 +2349,7 @@ class PaymentProcessor
 		$request->parent			=& $this;
 		$request->int_var			=& $int_var;
 		$request->metaUser			=& $metaUser;
-		$request->new_subscription	=& $new_subscription;
+		$request->plan				=& $plan;
 		$request->invoice			=& $invoice;
 
 		return $this->processor->checkoutAction( $request );
@@ -7864,10 +7864,10 @@ class Invoice extends serialParamDBTable
 
 		$urladd = '';
 		if ( $this->usage ) {
-			$new_subscription = new SubscriptionPlan( $database );
-			$new_subscription->load( $this->usage );
+			$plan = new SubscriptionPlan( $database );
+			$plan->load( $this->usage );
 
-			$int_var['planparams'] = $new_subscription->getProcessorParameters( $InvoiceFactory->pp->id );
+			$int_var['planparams'] = $plan->getProcessorParameters( $InvoiceFactory->pp->id );
 
 			if ( isset( $int_var['params']['userselect_recurring'] ) ) {
 				$recurring = $InvoiceFactory->pp->is_recurring( $int_var['params']['userselect_recurring'], true );
@@ -7882,12 +7882,12 @@ class Invoice extends serialParamDBTable
 			}
 
 			if ( $InvoiceFactory->metaUser->hasSubscription ) {
-				$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], $InvoiceFactory->metaUser->objSubscription, $InvoiceFactory->metaUser );
+				$amount = $plan->SubscriptionAmount( $int_var['recurring'], $InvoiceFactory->metaUser->objSubscription, $InvoiceFactory->metaUser );
 			} else {
-				$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], false, $InvoiceFactory->metaUser );
+				$amount = $plan->SubscriptionAmount( $int_var['recurring'], false, $InvoiceFactory->metaUser );
 			}
 
-			if ( !empty( $new_subscription->params['customthanks'] ) || !empty( $new_subscription->params['customtext_thanks'] ) ) {
+			if ( !empty( $plan->params['customthanks'] ) || !empty( $plan->params['customtext_thanks'] ) ) {
 				$urladd .= '&amp;u=' . $this->usage;
 			}
 		} else {
@@ -7913,7 +7913,7 @@ class Invoice extends serialParamDBTable
 		$int_var['usage']		= $this->invoice_number;
 
 		// Assemble Checkout Response
-		$return['var']		= $InvoiceFactory->pp->checkoutAction( $int_var, $InvoiceFactory->metaUser, $new_subscription, $this );
+		$return['var']		= $InvoiceFactory->pp->checkoutAction( $int_var, $InvoiceFactory->metaUser, $plan, $this );
 		$return['params']	= $InvoiceFactory->pp->getParamsHTML( $int_var['params'], $InvoiceFactory->pp->getParams( $int_var['params'] ) );
 
 		if ( empty( $return['params'] ) ) {
