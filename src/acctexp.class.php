@@ -5352,14 +5352,18 @@ class SubscriptionPlan extends serialParamDBTable
 		if ( empty( $params ) ) {
 			return false;
 		} else {
-			$lists = $params['lists'];
-			unset( $params['lists'] );
+				$lists = $params['lists'];
+				unset( $params['lists'] );
 
-			$settings = new aecSettings ( 'mi', 'frontend_forms' );
-			$settings->fullSettingsArray( $params, array(), $lists ) ;
-//print_r($settings);exit;
-			$aecHTML = new aecHTML( $settings->settings, $settings->lists );
-			return "<table>" . $aecHTML->returnFull( true, true, true ) . "</table>";
+				if ( !empty( $params ) ) {
+				$settings = new aecSettings ( 'mi', 'frontend_forms' );
+				$settings->fullSettingsArray( $params, array(), $lists ) ;
+
+				$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+				return "<table>" . $aecHTML->returnFull( true, true, true ) . "</table>";
+			} else {
+				return null;
+			}
 		}
 	}
 
@@ -6594,7 +6598,11 @@ class InvoiceFactory
 
 		$this->mi_form = $this->plan->getMIforms( $this->mi_error );
 
-		$confirm = empty( $aecConfig->cfg['skip_confirmation'] ) && !empty( $this->mi_form );
+		if ( $aecConfig->cfg['skip_confirmation'] && empty( $this->mi_form ) ) {
+			$confirm = false;
+		} else {
+			$confirm = true;
+		}
 
 		if ( $confirm ) {
 			global $mainframe;

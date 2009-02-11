@@ -714,11 +714,11 @@ class Payment_HTML
 							<p><?php echo _CONFIRM_ROW_USERNAME; ?> <?php echo $user->username; ?></p>
 							<p><?php echo _CONFIRM_ROW_EMAIL; ?> <?php echo $user->email; ?></p>
 						</td>
-						<td><p><?php echo $InvoiceFactory->objUsage->name; ?></p></td>
+						<td><p><?php echo $InvoiceFactory->plan->name; ?></p></td>
 						<td><p><?php echo $InvoiceFactory->payment->amount_format ?></p></td>
 					</tr>
 					<tr>
-						<td colspan="4" class="confirmation_description"><?php echo stripslashes( $InvoiceFactory->objUsage->desc ); ?></td>
+						<td colspan="4" class="confirmation_description"><?php echo stripslashes( $InvoiceFactory->plan->desc ); ?></td>
 					</tr>
 				</table>
 			</div>
