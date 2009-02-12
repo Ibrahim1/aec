@@ -854,6 +854,8 @@ define( '_PAYPLAN_GENERAL_ACTIVE_DESC',					'Ein ver&ouml;ffentlichtes Abo wird 
 define( '_PAYPLAN_GENERAL_VISIBLE_NAME',				'Sichtbar:' );
 define( '_PAYPLAN_GENERAL_VISIBLE_DESC',				'Sichtbare Abos werden im Frontend angezeigt. Unsichtbare werden nicht angezeigt und sind nur verf&uuml;gbar als Ersatz bei Problemen' );
 
+define( '_PAYPLAN_GENERAL_CUSTOMAMOUNTFORMAT_NAME', 'Custom amount formatting:');
+define( '_PAYPLAN_GENERAL_CUSTOMAMOUNTFORMAT_DESC', 'Please use a aecJSON string like the one already filled in to modify how the cost of this plan are displayed.');
 define( '_PAYPLAN_GENERAL_CUSTOMTHANKS_NAME', 'Custom thanks page link:');
 define( '_PAYPLAN_GENERAL_CUSTOMTHANKS_DESC', 'Provide a full link (including http://) that leads to your custom thanks page. Leave this field blank if you don\'t want this at all.');
 define( '_PAYPLAN_GENERAL_CUSTOMTEXT_THANKS_KEEPORIGINAL_NAME', 'Keep Original Text');

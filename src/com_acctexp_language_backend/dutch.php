@@ -744,6 +744,8 @@ define( '_PAYPLAN_GENERAL_ACTIVE_DESC', 'Een gepubliceerd plan is beschikbaar in
 define( '_PAYPLAN_GENERAL_VISIBLE_NAME', 'Zichtbaar:');
 define( '_PAYPLAN_GENERAL_VISIBLE_DESC', 'Een zichtbaar plan is zichtbaar in de frontend. Onzichtbare plannen zijn niet zichtbaar in de frontend en zijn alleen te gebruiken via automatische gebeurtenissen (Zoals terugval of instap plannen).');
 
+define( '_PAYPLAN_GENERAL_CUSTOMAMOUNTFORMAT_NAME', 'Custom amount formatting:');
+define( '_PAYPLAN_GENERAL_CUSTOMAMOUNTFORMAT_DESC', 'Please use a aecJSON string like the one already filled in to modify how the cost of this plan are displayed.');
 define( '_PAYPLAN_GENERAL_CUSTOMTHANKS_NAME', 'Custom thanks page link:');
 define( '_PAYPLAN_GENERAL_CUSTOMTHANKS_DESC', 'Provide a full link (including http://) that leads to your custom thanks page. Leave this field blank if you don\'t want this at all.');
 define( '_PAYPLAN_GENERAL_CUSTOMTEXT_THANKS_KEEPORIGINAL_NAME', 'Keep Original Text');

@@ -739,6 +739,8 @@ define( '_PAYPLAN_GENERAL_ACTIVE_DESC', 'Un Plan publi&eacute; sera accessible a
 define( '_PAYPLAN_GENERAL_VISIBLE_NAME', 'Visible:');
 define( '_PAYPLAN_GENERAL_VISIBLE_DESC', 'Seuls les Plans Visibles seront montr&eacute;s sur le frontend. Les plans invisibles ne seront pas montr&eacute;s et seront seulement accessibles par les applications automatiques (like Fallbacks or Entry Plans).');
 
+define( '_PAYPLAN_GENERAL_CUSTOMAMOUNTFORMAT_NAME', 'Custom amount formatting:');
+define( '_PAYPLAN_GENERAL_CUSTOMAMOUNTFORMAT_DESC', 'Please use a aecJSON string like the one already filled in to modify how the cost of this plan are displayed.');
 define( '_PAYPLAN_GENERAL_CUSTOMTHANKS_NAME', 'Custom thanks page link:');
 define( '_PAYPLAN_GENERAL_CUSTOMTHANKS_DESC', 'Provide a full link (including http://) that leads to your custom thanks page. Leave this field blank if you don\'t want this at all.');
 define( '_PAYPLAN_GENERAL_CUSTOMTEXT_THANKS_KEEPORIGINAL_NAME', 'Keep Original Text');

@@ -9464,7 +9464,7 @@ class reWriteEngine
 				break;
 			case 'condition':
 				if ( empty( $vars[0] ) || !isset( $vars[1] ) ) {
-					if ( isset( $vars[2] ) && !isset( $vars[1] ) ) {
+					if ( isset( $vars[2] ) ) {
 						$result = $vars[2];
 					} else {
 						$result = '';
@@ -10221,10 +10221,10 @@ class AECToolbox
 
 	function formatAmountCustom( $request, $plan )
 	{
-		if ( !isset( $plan->params['customamountformat'] ) || empty( $plan->params['customamountformat'] ) ) {
-			$stdformat = '{aecjson}{"cmd":"condition","vars":[{"cmd":"data","vars":"payment.freetrial"},'
+		if ( empty( $plan->params['customamountformat'] ) ) {
+			$format = '{aecjson}{"cmd":"condition","vars":[{"cmd":"data","vars":"payment.freetrial"},'
 						.'{"cmd":"concat","vars":[{"cmd":"constant","vars":"_CONFIRM_FREETRIAL"},"&nbsp;",{"cmd":"data","vars":"payment.method_name"}]},'
-						.'{"cmd":"concat","vars":[{"cmd":"data","vars":"payment.amount"},{"cmd":"data","vars":"payment.currency_symbol"},"&nbsp;",{"cmd":"data","vars":"payment.method_name"}]}'
+						.'{"cmd":"concat","vars":[{"cmd":"data","vars":"payment.amount"},{"cmd":"data","vars":"payment.currency_symbol"},"&nbsp;-&nbsp;",{"cmd":"data","vars":"payment.method_name"}]}'
 						.']}{/aecjson}'
 						;
 		} else {
@@ -10532,6 +10532,10 @@ class AECToolbox
 
 	function getObjectProperty( $object, $key )
 	{
+		if ( strpos( '.', $key ) !== false ) {
+			$key = explode( '.', $key );
+		}
+
 		if ( !is_array( $key ) ) {
 			if ( isset( $object->$key ) ) {
 				return $object->$key;
