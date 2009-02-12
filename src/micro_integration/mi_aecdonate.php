@@ -42,7 +42,7 @@ class mi_aecdonate
 
 		$settings = array();
 
-		$settings['amt'] = array( 'inputB', _MI_MI_AECDONATE_USERSELECT_AMT_NAME, _MI_MI_AECDONATE_USERSELECT_AMT_DESC, $this->settings['min'] );
+		$settings['amt'] = array( 'inputB', _MI_MI_AECDONATE_USERSELECT_AMT_NAME, _MI_MI_AECDONATE_USERSELECT_AMT_DESC, '' );
 
 		return $settings;
 	}
