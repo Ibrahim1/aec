@@ -175,6 +175,9 @@ define( '_AEC_MI_HACK1_REMOS',		'No Credits' );
 define( '_AEC_MI_HACK2_REMOS',		'Build in a downloads restriction for reMOSitory, to be used with Micro Integrations.' );
 define( '_MI_MI_REMOSITORY_DELETE_ON_EXP_NAME', 			'Action for existing groups when account expires:' );
 define( '_MI_MI_REMOSITORY_DELETE_ON_EXP_DESC',			'Choose what action you want to happen to already defined ReMOSitory groups when the user expires.' );
+define( '_MI_MI_REMOSITORY_DELETERULES_NO',			'Just apply group(s) below.' );
+define( '_MI_MI_REMOSITORY_DELETERULES_ALL',			'Delete ALL, then apply group(s) below.' );
+define( '_MI_MI_REMOSITORY_DELETERULES_SET',			'Delete Group Set on Application, then apply group(s) below.' );
 
 // VirtueMart
 define( '_AEC_MI_NAME_VIRTM',		'VirtueMart' );

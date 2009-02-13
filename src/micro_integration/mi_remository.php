@@ -70,9 +70,9 @@ class mi_remository
 		}
 
  		$del_opts = array();
-		$del_opts[0] = mosHTML::makeOption ( "No", "Just apply group(s) below." ); // Should probably be langauge file defined?
-		$del_opts[1] = mosHTML::makeOption ( "All", "Delete ALL, then apply group(s) below." );
-		$del_opts[2] = mosHTML::makeOption ( "Set", "Delete Group Set on Application, then apply group(s) below." );
+		$del_opts[0] = mosHTML::makeOption ( "No", _MI_MI_REMOSITORY_DELETERULES_NO );
+		$del_opts[1] = mosHTML::makeOption ( "All", _MI_MI_REMOSITORY_DELETERULES_ALL );
+		$del_opts[2] = mosHTML::makeOption ( "Set", _MI_MI_REMOSITORY_DELETERULES_SET );
 
         	$settings = array();
 		$settings['add_downloads']			= array( 'inputA' );
@@ -153,26 +153,27 @@ class mi_remository
 
 		$this->includeRemCore();
 
-		$authoriser =& aliroAuthorisationAdmin::getInstance();
-
  		if ( $this->settings['delete_on_exp'] == "Set" ) {
-			$authoriser->unassign( $this->settings['group'], 'aUser', $request->metaUser->userid );
+			foreach ( $this->settings['group'] as $role ) {
+				$this->authoriser->unassign( $role, 'aUser', $request->metaUser->userid );
+			}
 		}
 
 		if ( $this->settings['delete_on_exp'] == "All" ) {
-			$authoriser->dropAccess( 'aUser', $request->metaUser->userid );
+			$this->authoriser->dropAccess( 'aUser', $request->metaUser->userid );
 		}
 
 		if ( $this->settings['set_group_exp'] ) {
-			$authoriser->assign( $this->settings['group_exp'], 'aUser', $request->metaUser->userid );
+			foreach ( $this->settings['group_exp'] as $role ) {
+				$this->authoriser->assign( $role, 'aUser', $request->metaUser->userid );
+			}
 		}
 
 		$mi_remositoryhandler = new remository_restriction( $database );
 		$id = $mi_remositoryhandler->getIDbyUserID( $request->metaUser->userid );
-		$mi_id = $id ? $id : 0;
-		$mi_remositoryhandler->load( $mi_id );
+		$mi_remositoryhandler->load( $id );
 
-		if ( $mi_id ) {
+		if ( $id ) {
 			$mi_remositoryhandler->active = 0;
 			$mi_remositoryhandler->check();
 			$mi_remositoryhandler->store();
@@ -217,7 +218,11 @@ class mi_remository
 
 	function includeRemCore()
 	{
-		global $mainframe;
+		if ( !defined('_JLEGACY') && method_exists('mosMainFrame', 'getInstance' ) ) {
+			$mainframe = mosMainFrame::getInstance();
+		} else {
+			global $mainframe;
+		}
 
 		$rempath = $mainframe->getCfg('absolute_path').'/components/com_remository/';
 
@@ -225,10 +230,10 @@ class mi_remository
 		include_once( $rempath.'remository.class.php' );
 		include_once( $rempath.'p-classes/remositoryAuthoriser.php' );
 
-		$interface =& remositoryInterface::getInstance();
-		$this->absolute_path = $interface->getCfg('absolute_path');
+		$this->remInterface =& remositoryInterface::getInstance();
+		$this->absolute_path = $this->remInterface->getCfg('absolute_path');
 
-		$lang = $interface->getCfg('lang');
+		$lang = $this->remInterface->getCfg('lang');
 
 		if ( file_exists( $rempath.'language/'.$lang.'.php' ) ) {
 			require_once( $rempath.'language/'.$lang.'.php' );
