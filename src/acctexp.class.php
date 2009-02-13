@@ -2860,8 +2860,18 @@ class processor extends serialParamDBTable
 		$curl_calls[CURLOPT_HEADER]			= false;
 		$curl_calls[CURLOPT_POST]			= true;
 		$curl_calls[CURLOPT_POSTFIELDS]		= $content;
-		$curl_calls[CURLOPT_SSL_VERIFYPEER]	= false;
-		$curl_calls[CURLOPT_SSL_VERIFYHOST]	= false;
+
+		if ( !empty( $aecConfig->cfg['ssl_verifypeer'] ) ) {
+			$curl_calls[CURLOPT_SSL_VERIFYPEER]	= $aecConfig->cfg['ssl_verifypeer'];
+		} else {
+			$curl_calls[CURLOPT_SSL_VERIFYPEER]	= false;
+		}
+
+		if ( !empty( $aecConfig->cfg['ssl_verifyhost'] ) ) {
+			$curl_calls[CURLOPT_SSL_VERIFYHOST]	= $aecConfig->cfg['ssl_verifyhost'];
+		} else {
+			$curl_calls[CURLOPT_SSL_VERIFYHOST]	= false;
+		}
 
 		if ( !empty( $aecConfig->cfg['use_proxy'] ) && !empty( $aecConfig->cfg['proxy'] ) ) {
 			$curl_calls[CURLOPT_HTTPPROXYTUNNEL]	= true;

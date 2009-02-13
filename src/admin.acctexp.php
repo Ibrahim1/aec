@@ -2028,6 +2028,10 @@ function editSettings( $option )
 	$params['ssl_signup']					= array( 'list_yesno', 0 );
 	$params['ssl_profile']					= array( 'list_yesno', 0 );
 	$params['override_reqssl']				= array( 'list_yesno', 0 );
+	$params['ssl_verifypeer']				= array( 'list_yesno', 0 );
+	$params['ssl_verifyhost']				= array( 'inputC', '' );
+	$params['ssl_cainfo']					= array( 'inputC', '' );
+	$params['ssl_capath']					= array( 'inputC', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
