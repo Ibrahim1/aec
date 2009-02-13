@@ -1166,19 +1166,16 @@ function processNotification( $option, $processor )
 			break;
 	}
 
-	// Create Response String for History
-	$responsestring = '';
-	foreach ( $_POST as $key => $value ) {
-		$responsestring .= $key . '=' . urlencode( stripslashes( $value ) ) . "\n";
-	}
-
 	// aecDebug( "ResponseFunction:processNotification" );aecDebug( "GET:".json_encode( $_GET ) );aecDebug( "POST:".json_encode( $_POST ) );
+
+	$response = array();
+	$response['fullresponse'] = $_POST;
 
 	// parse processor notification
 	$pp = new PaymentProcessor( $processor );
 	if ( $pp->loadName( $processor ) ) {
 		$pp->init();
-		$response = $pp->parseNotification( $_POST );
+		$response = array_merge( $response, $pp->parseNotification( $_POST ) );
 	} else {
 		return;
 		// TODO: Log error
@@ -1202,8 +1199,6 @@ function processNotification( $option, $processor )
 		$pp->notificationError( $response, $error );
 		return;
 	} else {
-		$response['responsestring'] = $responsestring;
-
 		$invoicefact = new InvoiceFactory( null, null, null, null, $response['invoice'] );
 		$invoicefact->processorResponse( $option, $response );
 	}

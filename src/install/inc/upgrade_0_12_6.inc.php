@@ -10,6 +10,50 @@
 
 $eucaInstalldb->addColifNotExists( 'hidden', "int(4) NOT NULL default '0'", 'microintegrations' );
 
+// Upgrade old processor notification storage
+$database->setQuery( "SELECT max(id) FROM #__acctexp_log_history" );
+$himax = $database->loadResult();
+
+for ( $hid=1; $hid<=$himax; $hid++ ) {
+	$history = null;
+	$database->setQuery( "SELECT * FROM #__acctexp_log_history WHERE `id` = $hid" );
+	$database->loadObject( $history );
+
+	if ( ( $history->id != $hid ) || empty( $history->response ) ) {
+		continue;
+	}
+
+	// Fix broken newlines
+	$history->response = str_replace( '\n', "\n", $history->response );
+	// Fix faulty parameters in old PayPal entries
+	$history->response = str_replace( 'Validation: ', "paypal_verification=", $history->response );
+	// Fix faulty parameters in extremely old PayPal entries
+	$history->response = str_replace( 'VERIFIED ', "paypal_verification=VERIFIED\n", $history->response );
+
+	// Resolve into Array
+	$temp = parameterHandler::decode( $history->response );
+
+	// Fix faulty parameters in old locaweb_pgcerto entries
+	if ( ( count( $temp ) <= 1 ) && isset( $temp[0] ) ) {
+		$temp2 = array( 'response' => $temp[0] );
+		$temp = $temp2;
+	} elseif ( !is_array( $temp ) ) {
+		$temp2 = array( 'response' => $temp );
+		$temp = $temp2;
+	}
+
+	foreach ( $temp as $k => $v ) {
+		$temp[$k] = urldecode($v);
+	}
+
+	$query = 'UPDATE #__acctexp_log_history'
+	. ' SET `response` = \'' . base64_encode( serialize( $temp ) ) . '\''
+	. ' WHERE `id` = \'' . $hid . '\''
+	;
+	$database->setQuery( $query );
+	$database->query();
+}
+
 /*
 // Modifying MI tables for MI Scope
 

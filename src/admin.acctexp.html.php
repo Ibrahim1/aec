@@ -2618,7 +2618,7 @@ class HTML_AcctExp
 				<td align="center"><?php echo $row->proc_name; ?></td>
 				<td align="center"><?php echo $row->amount; ?></td>
 				<td align="left">
-					<?php echo str_replace( "\n", '<br />', $row->response ); ?>
+					<?php if ( !empty( $row->response ) ) { $field = unserialize( base64_decode( $row->response ) ); foreach ( $field as $n => $v) { echo $n." = ".$v."<br />"; } } ?>
 				</td>
 			</tr>
 			<?php

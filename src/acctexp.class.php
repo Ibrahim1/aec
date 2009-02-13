@@ -3283,14 +3283,17 @@ class XMLprocessor extends processor
 		}
 
 		if ( $response != false ) {
+			$resp = array();
 			if ( isset( $response['raw'] ) ) {
-				$responsestring = $response['raw'];
+				if ( is_array( $response['raw'] ) ) {
+					$resp = $response['raw'];
+				} else {
+					$resp['response'] = $response['raw'];
+				}
 				unset( $response['raw'] );
-			} else {
-				$responsestring = '';
 			}
 
-			$request->invoice->processorResponse( $request->parent, $response, $responsestring, true );
+			$request->invoice->processorResponse( $request->parent, $response, $resp, true );
 		} else {
 			return false;
 		}
@@ -5717,7 +5720,7 @@ class SubscriptionPlan extends serialParamDBTable
 	}
 }
 
-class logHistory extends mosDBTable
+class logHistory extends serialParamDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -5745,10 +5748,14 @@ class logHistory extends mosDBTable
 	/**
 	* @param database A database connector object
 	*/
-
 	function logHistory( &$db )
 	{
 		$this->mosDBTable( '#__acctexp_log_history', 'id', $db );
+	}
+
+	function declareParamFields()
+	{
+		return array( 'response' );
 	}
 
 	function entryFromInvoice( $objInvoice, $response, $pp )
@@ -5780,14 +5787,8 @@ class logHistory extends mosDBTable
 		$eventlog = new eventLog( $database );
 		$eventlog->issue( $short, $tags, $event, 2, $params );
 
-		if ( !$this->check() ) {
-			echo "<script> alert('".$this->getError()."'); window.history.go(-1); </script>\n";
-			exit();
-		}
-		if ( !$this->store() ) {
-			echo "<script> alert('".$this->getError()."'); window.history.go(-1); </script>\n";
-			exit();
-		}
+		$this->check();
+		$this->store();
 	}
 }
 
@@ -7379,7 +7380,7 @@ class Invoice extends serialParamDBTable
 		return $inum;
 	}
 
-	function processorResponse( $pp, $response, $responsestring='', $altvalidation=false )
+	function processorResponse( $pp, $response, $resp='', $altvalidation=false )
 	{
 		global $database;
 
@@ -7417,9 +7418,9 @@ class Invoice extends serialParamDBTable
 			$multiplicator = 1;
 		}
 
-		if ( isset( $response['responsestring'] ) ) {
-			$responsestring = $response['responsestring'];
-			unset( $response['responsestring'] );
+		if ( isset( $response['fullresponse'] ) ) {
+			$resp = $response['fullresponse'];
+			unset( $response['fullresponse'] );
 		}
 
 		$metaUser = new metaUser( $this->userid );
@@ -7428,7 +7429,7 @@ class Invoice extends serialParamDBTable
 
 		// Create history entry
 		$history = new logHistory( $database );
-		$history->entryFromInvoice( $this, $responsestring, $pp );
+		$history->entryFromInvoice( $this, $resp, $pp );
 
 		$short = _AEC_MSG_PROC_INVOICE_ACTION_SH;
 		$event = _AEC_MSG_PROC_INVOICE_ACTION_EV . "\n";

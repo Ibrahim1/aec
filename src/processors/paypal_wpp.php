@@ -479,7 +479,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 		$res = $fp;
 
-		$response['responsestring'] = 'paypal_verification=' . $res . "\n" . $response['responsestring'];
+		$response['fullresponse']['paypal_verification'] = $res;
 
 		$receiver_email	= null;
 		$txn_type		= null;

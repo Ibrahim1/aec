@@ -204,7 +204,7 @@ class processor_paypal extends POSTprocessor
 
 		$res = $fp;
 
-		$response['responsestring'] = 'paypal_verification=' . $res . "\n" . $response['responsestring'];
+		$response['fullresponse']['paypal_verification'] = $res;
 
 		$receiver_email	= null;
 		$txn_type		= null;
