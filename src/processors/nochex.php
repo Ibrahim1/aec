@@ -78,16 +78,38 @@ class processor_nochex extends POSTprocessor
 	{
 		$response = array();
 		$response['invoice'] = $post['order_id'];
+		$response['amount'] = $post['amount'];
 
 		return $response;
 	}
 
 	function validateNotification( $response, $post, $invoice )
 	{
-		// TODO: There needs to be some way to verify this!!!
+		if ( $this->settings['testmode'] ) {
+			$path = '/nochex.dll/apc/testapc';
+		} else {
+			$path = '/nochex.dll/apc/apc';
+		}
+
+		$url = 'www.nochex.com' . $path;
+
+		foreach ( $post as $key => $value ) {
+			$value = urlencode( stripslashes( $value ) );
+			$req .= "&$key=$value";
+		}
+
+		$result = $this->transmitRequest( $url, $path, $req );
+
 		$response['valid'] = 0;
-		if ( $response['invoice'] == $post['order_id'] ) {
-			$response['valid'] = 1;
+
+		if ( strcmp( $result, 'AUTHORISED' ) == 0 ) {
+			if ( ( $post['status'] == 'test' ) && $this->settings['testmode'] ) {
+				$response['valid'] = 1;
+			} elseif ( $post['status'] == 'live' ) {
+				$response['valid'] = 1;
+			}
+		} else {
+			$response['pending_reason'] = 'notification verification failed: ' . $response;
 		}
 
 		return $response;
