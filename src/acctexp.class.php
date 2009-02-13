@@ -113,6 +113,16 @@ function aecEscape( $value, $safe_params )
 {
 	global $database;
 
+	$regex = "#{aecjson}(.*?){/aecjson}#s";
+
+	// find all instances of json code
+	$matches = array();
+	preg_match_all( $regex, $value, $matches, PREG_SET_ORDER );
+
+	if ( count( $matches ) ) {
+		$value = str_replace( $matches, array(''), $value );
+	}
+
 	if ( get_magic_quotes_gpc() ) {
 		$return = stripslashes( $value );
 	} else {
