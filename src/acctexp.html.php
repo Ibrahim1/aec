@@ -856,7 +856,7 @@ class Payment_HTML
 								}
 								$ta .= '&nbsp;[<a href="'
 									. AECToolbox::deadsureURL( 'index.php?option=' . $option
-									. '&amp;task=InvoiceRemoveCoupon&amp;invoice=' . $InvoiceFactory->invoice
+									. '&amp;task=InvoiceRemoveCoupon&amp;invoice=' . $InvoiceFactory->invoice_number
 									. '&amp;coupon_code=' . $citem->cost['coupon'] )
 									. '" title="' . _CHECKOUT_INVOICE_COUPON_REMOVE . '">'
 									. _CHECKOUT_INVOICE_COUPON_REMOVE . '</a>]';
@@ -922,7 +922,7 @@ class Payment_HTML
 								<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
 								<input type="hidden" name="option" value="<?php echo $option; ?>" />
 								<input type="hidden" name="task" value="InvoiceAddCoupon" />
-								<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice; ?>" />
+								<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice_number; ?>" />
 								<input type="submit" class="button" value="<?php echo _BUTTON_APPLY; ?>" />
 							</form>
 						</td>
@@ -938,7 +938,7 @@ class Payment_HTML
 								<?php echo $params; ?>
 								<input type="hidden" name="option" value="<?php echo $option; ?>" />
 								<input type="hidden" name="task" value="InvoiceAddParams" />
-								<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice; ?>" />
+								<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice_number; ?>" />
 								<input type="submit" class="button" value="<?php echo _BUTTON_APPEND; ?>" />
 							</form>
 						</td>
