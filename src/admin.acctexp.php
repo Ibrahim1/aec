@@ -2995,8 +2995,10 @@ function editSubscriptionPlan( $id, $option )
 
 			if ( isset( $customparams_values[$setting_name] ) ) {
 				$value = $customparams_values[$setting_name];
-			} else {
+			} elseif ( isset( $pp->settings[$name] ) ) {
 				$value = $pp->settings[$name];
+			} else {
+				$value = '';
 			}
 
 			// ...assign new list fields
