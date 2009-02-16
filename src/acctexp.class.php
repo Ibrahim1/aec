@@ -11067,7 +11067,9 @@ class microIntegration extends serialParamDBTable
 
 	function action( $metaUser, $exchange=null, $invoice=null, $objplan=null )
 	{
-		return $this->relayAction( $metaUser, $exchange, $invoice, $objplan, 'action', false );
+		$add = false;
+
+		return $this->relayAction( $metaUser, $exchange, $invoice, $objplan, 'action', $add );
 	}
 
 	function pre_expiration_action( $metaUser, $objplan=null )
@@ -11106,7 +11108,9 @@ class microIntegration extends serialParamDBTable
 
 			$metaUser->meta->storeload();
 
-			return $this->relayAction( $metaUser, null, null, $objplan, 'pre_expiration_action', false );
+			$add = false;
+
+			return $this->relayAction( $metaUser, null, null, $objplan, 'pre_expiration_action', $add );
 		} else {
 			return null;
 		}
@@ -11114,7 +11118,9 @@ class microIntegration extends serialParamDBTable
 
 	function expiration_action( $metaUser, $objplan=null )
 	{
-		return $this->relayAction( $metaUser, null, null, $objplan, 'expiration_action', false );
+		$add = false;
+
+			return $this->relayAction( $metaUser, null, null, $objplan, 'expiration_action', $add );
 	}
 
 	function relayAction( $metaUser, $exchange=null, $invoice=null, $objplan=null, $stage='action', &$add )
