@@ -1042,13 +1042,13 @@ class metaUserDB extends serialParamDBTable
 		return false;
 	}
 
-	function setMIParams( $miid, $usageid=false, $params )
+	function setMIParams( $miid, $usageid=false, $params, $replace=false )
 	{
 		global $mosConfig_offset;
 
 		if ( $usageid ) {
 			if ( isset( $this->plan_params[$usageid] ) ) {
-				if ( isset( $this->plan_params[$usageid][$miid] ) ) {
+				if ( isset( $this->plan_params[$usageid][$miid] ) && !$replace ) {
 					$this->plan_params[$usageid][$miid] = $this->mergeParams( $this->plan_params[$usageid][$miid], $params );
 				} else {
 					$this->plan_params[$usageid][$miid] = $params;
@@ -1058,7 +1058,7 @@ class metaUserDB extends serialParamDBTable
 			}
 		}
 
-		if ( isset( $this->params->mi[$miid] ) ) {
+		if ( isset( $this->params->mi[$miid] ) && !$replace ) {
 			$this->params->mi[$miid] = $this->mergeParams( $this->params->mi[$miid], $params );
 		} else {
 			$this->params->mi[$miid] = $params;
@@ -6726,7 +6726,7 @@ class InvoiceFactory
 
 					if ( !empty( $params ) ) {
 						foreach ( $params as $mi_id => $content ) {
-							$this->metaUser->meta->setMIParams( $mi_id, $this->plan->id, $content );
+							$this->metaUser->meta->setMIParams( $mi_id, $this->plan->id, $content, true );
 						}
 
 						$this->metaUser->meta->storeload();

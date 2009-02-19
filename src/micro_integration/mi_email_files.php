@@ -67,7 +67,7 @@ class mi_email_files
 					$settings['ef'.$id] = array( 'radio', 'mi_'.$this->id.'_mi_email_files', $id, true, $choice );
 				}
 			}
-			$settings['mi_email_files'] = array( 'hidden', null, 'mi_'.$this->id.'mi_email_files[]' );
+			$settings['mi_email_files'] = array( 'hidden', null, 'mi_'.$this->id.'_mi_email_files[]' );
 		} else {
 			return false;
 		}
@@ -81,25 +81,37 @@ class mi_email_files
 
 		$return = array();
 
-		if ( empty( $params['mi_email_files'] ) ) {
-			$return['error'] = "Please select more than " . $this->settings['min_choices'] . " options!";
-			return $return;
-		}
-
 		foreach ( $params['mi_email_files'] as $i => $v ) {
-			if ( empty( $v ) && ( $v !== "0" ) && ( $v !== 0 ) ) {
+			if ( empty( $v ) ) {
 				unset( $params['mi_email_files'][$i] );
 			}
+		}
+
+		if ( empty( $params['mi_email_files'] ) ) {
+			if ( $this->settings['min_choices'] == $this->settings['max_choices'] ) {
+				$return['error'] = "Please select " . $this->settings['min_choices'] . " options!";
+			} else {
+				$return['error'] = "Please select at least " . $this->settings['min_choices'] . " options!";
+			}
+			return $return;
 		}
 
 		$selected = count( $params['mi_email_files'] );
 
 		if ( $selected > $this->settings['max_choices'] ) {
-			$return['error'] = "Too many options selected! Please select no more than " . $this->settings['max_choices'] . " options!";
+			if ( $this->settings['min_choices'] == $this->settings['max_choices'] ) {
+				$return['error'] = "Too many options selected - Please select exactly " . $this->settings['max_choices'] . " options!";
+			} else {
+				$return['error'] = "Too many options selected! Please select no more than " . $this->settings['max_choices'] . " options!";
+			}
 		}
 
 		if ( $selected < $this->settings['min_choices'] ) {
-			$return['error'] = "Please select more than " . $this->settings['min_choices'] . " options!";
+			if ( $this->settings['min_choices'] == $this->settings['max_choices'] ) {
+				$return['error'] = "Not enough options selected - Please select exactly " . $this->settings['min_choices'] . " options!";
+			} else {
+				$return['error'] = "Please select more than " . $this->settings['min_choices'] . " options!";
+			}
 		}
 
 		return $return;
