@@ -257,7 +257,7 @@ aecDebug($url);aecDebug($path);aecDebug($port);aecDebug($curlextra);aecDebug($xm
 
 	function transmitRequestXML( $xml, $request, $path=null )
 	{
-		$response = $this->transmitToTicketmaster( $xml, $request, $path=null );
+		$response = $this->transmitToTicketmaster( $xml, $request, $path );
 aecDebug($response);
 		$cccheck	= stristr( $response, "CustCode " );
 		$cccheck	= stristr( $cccheck, "value=" );
