@@ -82,7 +82,7 @@ class mi_email_files
 		$return = array();
 
 		foreach ( $params['mi_email_files'] as $i => $v ) {
-			if ( empty( $v ) ) {
+			if ( is_null( $v ) || ( $v == "" ) ) {
 				unset( $params['mi_email_files'][$i] );
 			}
 		}

@@ -36,12 +36,16 @@ class mi_mysql_query
 
 	function relayAction( $request, $area )
 	{
-		global $database;
+		if ( isset( $this->settings['query'.$area] ) ) {
+			global $database;
 
-		$query = AECToolbox::rewriteEngineRQ( $this->settings['query'.$area], $request );
+			$query = AECToolbox::rewriteEngineRQ( $this->settings['query'.$area], $request );
 
-		$database->setQuery( $query );
-		$database->query_batch( false );
+			$database->setQuery( $query );
+			if ( !$database->query_batch( false ) ) {
+				$this->error = "MYSQL ERROR: " . $database->stderr();
+			}
+		}
 
 		return true;
 	}
