@@ -7001,6 +7001,7 @@ class InvoiceFactory
 
 		$up =& $this->plan->params;
 
+		$msg = "";
 		if ( !empty( $up['customtext_thanks'] ) ) {
 			if ( isset( $up['customtext_thanks_keeporiginal'] ) ) {
 				if ( empty( $up['customtext_thanks_keeporiginal'] ) ) {
