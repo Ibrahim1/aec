@@ -6207,15 +6207,17 @@ class InvoiceFactory
 
 		$register = $this->loadMetaUser( $passthrough, true );
 
-		$subscriptionClosed = false;
-		if ( $this->metaUser->hasSubscription ) {
-			$subscriptionClosed = ( strcmp( $this->metaUser->objSubscription->status, 'Closed' ) === 0 );
-		} elseif ( empty( $this->usage ) ) {
+		if ( empty( $this->usage ) ) {
 			// TODO: Check if the user has already subscribed once, if not - link to intro
 			// TODO: Make sure a registration hybrid wont get lost here
 			if ( !$intro && !empty( $aecConfig->cfg['customintro'] ) ) {
 				mosRedirect( $aecConfig->cfg['customintro'] );
 			}
+		}
+
+		$subscriptionClosed = false;
+		if ( $this->metaUser->hasSubscription ) {
+			$subscriptionClosed = ( strcmp( $this->metaUser->objSubscription->status, 'Closed' ) === 0 );
 		}
 
 		$recurring = aecGetParam( 'recurring', null );
@@ -7012,6 +7014,8 @@ class InvoiceFactory
 			} else {
 				$msg = $up['customtext_thanks'];
 			}
+		} else {
+			$msg = $b;
 		}
 
 		$mainframe->SetPageTitle( _THANKYOU_TITLE );
