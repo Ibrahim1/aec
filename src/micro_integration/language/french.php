@@ -724,6 +724,8 @@ define( '_AEC_MI_AECDONATE_NAME', 'AEC Donate' );
 define( '_AEC_MI_AECDONATE_DESC', 'Let the user pay whatever he likes (with minimum and maximum) for a plan' );
 define( '_MI_MI_AECDONATE_MIN_NAME',		'Min' );
 define( '_MI_MI_AECDONATE_MIN_DESC',		'The minimum amount you want the user to pay' );
+define( '_MI_MI_AECDONATE_REC_NAME',		'Recommended' );
+define( '_MI_MI_AECDONATE_REC_DESC',		'The recommended Donation amount, automatically filled in the form' );
 define( '_MI_MI_AECDONATE_MAX_NAME',		'Max' );
 define( '_MI_MI_AECDONATE_MAX_DESC',		'The maximum amount you want the user to pay' );
 define( '_MI_MI_AECDONATE_USERSELECT_AMT_NAME',		'Amount you want to pay' );

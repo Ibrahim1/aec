@@ -12531,6 +12531,11 @@ class aecExport extends serialParamDBTable
 		$this->mosDBTable( '#__acctexp_export', 'id', $db );
 	}
 
+	function declareParamFields()
+	{
+		return array( 'filter', 'options', 'params'  );
+	}
+
 	function useExport()
 	{
 		global $mosConfig_offset, $mosConfig_absolute_path;

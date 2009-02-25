@@ -5919,7 +5919,11 @@ function exportData( $option, $cmd=null )
 
 	if ( !empty( $system_values->selected_export ) || $cmd_save || $cmd_apply ) {
 		$row = new aecExport( $database );
-		$row->load( isset( $system_values->selected_export ) ? $system_values->selected_export : 0 );
+		if ( isset( $system_values->selected_export ) ) {
+			$row->load( $system_values->selected_export );
+		} else {
+			$row->load(0);
+		}
 
 		if ( !empty( $system_values->delete ) ) {
 			// User wants to delete the entry

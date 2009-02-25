@@ -20,6 +20,7 @@ class mi_aecdonate
 		$settings = array();
 
 		$settings['min'] = array( 'inputB' );
+		$settings['rec'] = array( 'inputB' );
 		$settings['max'] = array( 'inputB' );
 
 		return $settings;
@@ -29,7 +30,9 @@ class mi_aecdonate
 	{
 		foreach ( $params as $n => $v ) {
 			if ( !empty( $v ) ) {
-				$params[$n] = AECToolbox::correctAmount( $v );
+				if ( $n != 'rec' ) {
+					$params[$n] = AECToolbox::correctAmount( $v );
+				}
 			}
 		}
 
@@ -42,7 +45,11 @@ class mi_aecdonate
 
 		$settings = array();
 
-		$settings['amt'] = array( 'inputB', _MI_MI_AECDONATE_USERSELECT_AMT_NAME, _MI_MI_AECDONATE_USERSELECT_AMT_DESC, '' );
+		if ( !empty( $this->settings['rec'] ) ) {
+			$settings['amt'] = array( 'inputC', _MI_MI_AECDONATE_USERSELECT_AMT_NAME, _MI_MI_AECDONATE_USERSELECT_AMT_DESC, $this->settings['rec'] );
+		} else {
+			$settings['amt'] = array( 'inputC', _MI_MI_AECDONATE_USERSELECT_AMT_NAME, _MI_MI_AECDONATE_USERSELECT_AMT_DESC, '' );
+		}
 
 		return $settings;
 	}
