@@ -233,16 +233,7 @@ class metaUser
 			$used_plans = array();
 		}
 
-		if ( !empty( $this->meta->plan_history->plan_history ) && is_array( $this->meta->plan_history->plan_history ) ) {
-			$prev = count( $this->meta->plan_history->plan_history ) - 2;
-			if ( isset( $this->meta->plan_history->plan_history[$prev] ) ) {
-				$previous_plan = $this->meta->plan_history->plan_history[$prev];
-			} else {
-				$previous_plan = 0;
-			}
-		} else {
-			$previous_plan = 0;
-		}
+		$previous_plan = $this->meta->getPreviousPlan();
 
 		$this->focusSubscription->used_plans = $used_plans;
 		$this->focusSubscription->previous_plan = $previous_plan;
@@ -1127,7 +1118,7 @@ class metaUserDB extends serialParamDBTable
 
 	function getPreviousPlan()
 	{
-		$last = count( $this->plan_history->plan_history ) - 1;
+		$last = count( $this->plan_history->plan_history ) - 2;
 
 		if ( $last < 0 ) {
 			return null;

@@ -454,18 +454,18 @@ class serialParamDBTable extends paramDBTable
 			$properties = get_object_vars( $subject2 );
 
 			foreach ( $properties as $pname => $pvalue ) {
-				if ( !isset( $subject->$pname ) ) {
-					$subject->$pname = $pvalue;
-				} elseif ( isset( $subject->$pname ) && $overwrite ) {
+				if ( isset( $subject->$pname ) && $overwrite ) {
 					$subject->$pname = serialParamDBTable::mergeParams( $subject->$pname, $pvalue, $overwrite );
+				} else {
+					$subject->$pname = $pvalue;
 				}
 			}
 		} elseif ( is_array( $subject ) ) {
 			foreach ( $subject2 as $pname => $pvalue ) {
-				if ( !isset( $subject[$pname] ) ) {
-					$subject[$pname] = $pvalue;
-				} elseif ( isset( $subject[$pname] ) && $overwrite ) {
+				if ( isset( $subject[$pname] ) && $overwrite ) {
 					$subject[$pname] = serialParamDBTable::mergeParams( $subject[$pname], $pvalue, $overwrite );
+				} else {
+					$subject[$pname] = $pvalue;
 				}
 			}
 		} else {
