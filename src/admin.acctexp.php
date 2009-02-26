@@ -2041,6 +2041,7 @@ function editSettings( $option )
 	$params[] = array( 'userinfobox', 48 );
 	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_CREDIRECT );
 	$params['customintro']						= array( 'inputC', '' );
+	$params['customintro_userid']				= array( 'list_yesno', '' );
 	$params['customthanks']						= array( 'inputC', '' );
 	$params['customcancel']						= array( 'inputC', '' );
 	$params['customnotallowed']					= array( 'inputC', '' );

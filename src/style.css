@@ -826,6 +826,10 @@ text-align: center;
 #cancel_page {
 }
 
+.aechidden {
+display: none;
+}
+
 #myTabs{
 margin: 6px auto;
 padding: 2px;
