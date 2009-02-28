@@ -4944,7 +4944,7 @@ class SubscriptionPlan extends serialParamDBTable
 			if ( $is_pending ) {
 				// Is new = set signup date
 				$metaUser->focusSubscription->signup_date = date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
-				if ( $this->params['trial_period'] > 0 && !$is_trial ) {
+				if ( ( $this->params['trial_period'] ) > 0 && !$is_trial ) {
 					$status = 'Trial';
 				} else {
 					if ( $this->params['full_period'] || $this->params['lifetime'] ) {
@@ -8146,12 +8146,13 @@ class Subscription extends serialParamDBTable
 
 	function check()
 	{
-		if ( isset( $this->used_plans ) ) {
-			unset( $this->used_plans );
-		}
+		$vars = get_class_vars( 'Subscription' );
+		$props = get_object_vars( $this );
 
-		if ( isset( $this->previous_plan ) ) {
-			unset( $this->previous_plan );
+		foreach ( $props as $n => $prop ) {
+			if ( !array_key_exists( $n, $vars  ) ) {
+				unset( $this->$n );
+			}
 		}
 
 		return parent::check();

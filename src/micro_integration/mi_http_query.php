@@ -83,10 +83,11 @@ class mi_http_query
 		$url_parsed = parse_url( $purl );
 
 		$host = $url_parsed["host"];
-		$port = $url_parsed["port"];
 
-		if ( empty( $port ) ) {
+		if ( empty( $url_parsed["port"] ) ) {
 			$port = 80;
+		} else {
+			$port = $url_parsed["port"];
 		}
 
 		$path = $url_parsed["path"];
