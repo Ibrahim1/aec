@@ -20,7 +20,7 @@ class processor_iats extends XMLprocessor
 		$info['longname']		= _CFG_IATS_LONGNAME;
 		$info['statement']		= _CFG_IATS_STATEMENT;
 		$info['description']	= _CFG_IATS_DESCRIPTION;
-		$info['currencies']		= 'USD';
+		$info['currencies']		= 'USD,GBP,AUD';
 		$info['languages']		= 'GB';
 		$info['cc_list']		= 'visa,mastercard,discover,americanexpress';
 		$info['recurring']		= 2;
@@ -46,6 +46,7 @@ class processor_iats extends XMLprocessor
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'list_yesno' );
+		$settings['currency']		= array( 'list_currency' );
 		$settings['server_type']	= array( 'list_yesno' );
 
 		$settings['agent_code']	= array( 'inputC' );
@@ -229,6 +230,10 @@ aecDebug($content);
 			$iats = 'iatsuk';
 		} else {
 			$iats = 'iats';
+		}
+
+		if ( $request->invoice->currency == "AUD" ) {
+			$iats = 'iatsau';
 		}
 
 		if ( $this->settings['testmode'] ) {

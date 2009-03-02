@@ -530,10 +530,10 @@ class metaUser
 			$this->allSubscriptions = array();
 
 			foreach ( $subscrids as $subscrid ) {
-			$subscription = new Subscription( $database );
-			$subscription->load( $subscrid );
+				$subscription = new Subscription( $database );
+				$subscription->load( $subscrid );
 
-			$this->allSubscriptions[] = $subscription;
+				$this->allSubscriptions[] = $subscription;
 			}
 
 			return true;
