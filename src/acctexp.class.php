@@ -458,12 +458,15 @@ class metaUser
 			$plan_params['make_primary'] = 1;
 		}
 
+		$return = 'false';
+
 		// To be failsafe, a new subscription may have to be added in here
 		if ( empty( $this->hasSubscription ) || !$plan_params['make_primary'] ) {
-			if ( $existing_record && ( $plan_params['update_existing'] || $plan_params['make_primary'] ) ) {
+			if ( !empty( $existing_record ) && ( $plan_params['update_existing'] || $plan_params['make_primary'] ) ) {
 				// Update existing non-primary subscription
 				$this->focusSubscription = new Subscription( $database );
 				$this->focusSubscription->load( $existing_record );
+				$return = 'existing';
 			} else {
 				// Create a root new subscription
 				if ( !$plan_params['make_primary'] && !empty( $plan_params['standard_parent'] ) ) {
@@ -484,11 +487,15 @@ class metaUser
 				if ( $plan_params['make_primary'] ) {
 					$this->objSubscription = $this->focusSubscription;
 				}
+
+				$return = 'new';
 			}
 
 		}
 
 		$this->temporaryRFIX();
+
+		return $return;
 	}
 
 	function moveFocus( $subscrid )
@@ -4888,10 +4895,15 @@ class SubscriptionPlan extends serialParamDBTable
 			}
 
 			if ( !$metaUser->hasSubscription || empty( $this->params['make_primary'] ) ) {
-				$metaUser->establishFocus( $this, $processor, false );
+				$status = $metaUser->establishFocus( $this, $processor, false );
 
-				$is_pending	= true;
-				$is_trial	= false;
+				if ( !empty( $this->params['update_existing'] ) && ( $status == 'existing') ) {
+					$is_pending	= ( strcmp( $metaUser->focusSubscription->status, 'Pending' ) === 0 );
+					$is_trial	= ( strcmp( $metaUser->focusSubscription->status, 'Trial' ) === 0 );
+				} else {
+					$is_pending	= true;
+					$is_trial	= false;
+				}
 			} else {
 				$is_pending	= ( strcmp( $metaUser->focusSubscription->status, 'Pending' ) === 0 );
 				$is_trial	= ( strcmp( $metaUser->focusSubscription->status, 'Trial' ) === 0 );

@@ -72,8 +72,6 @@ class mi_communitybuilder
 		}
 
 		if ( $this->settings['set_fields'] ) {
-			$request->metaUser = new metaUser( $request->metaUser->userid );
-
 			$query = 'SELECT `name`, `title`'
 					. ' FROM #__comprofiler_fields'
 					. ' WHERE `table` != \'#__users\''
@@ -122,8 +120,6 @@ class mi_communitybuilder
 		}
 
 		if ( $this->settings['set_fields_exp'] ) {
-			$request->metaUser = new metaUser( $request->metaUser->userid );
-
 			$query = 'SELECT `name`, `title`'
 					. ' FROM #__comprofiler_fields'
 					. ' WHERE `table` != \'#__users\''
