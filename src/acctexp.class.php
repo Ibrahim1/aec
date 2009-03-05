@@ -9373,7 +9373,7 @@ class reWriteEngine
 			$subject = str_replace( $match, $result, $subject );
 		}
 
-		return $result;
+		return $subject;
 	}
 
 	function resolveJSONitem( $current )

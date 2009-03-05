@@ -51,7 +51,7 @@ class processor_netpay extends POSTprocessor
 		$settings['SiteTitle']		= array( 'inputC' );
 		$settings['item_name']		= array( 'inputE' );
 
-				$settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+		$settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
 		return $settings;
 	}
