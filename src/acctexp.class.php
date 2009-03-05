@@ -11553,10 +11553,17 @@ class couponsHandler extends eucaObject
 			return $amount;
 		}
 
+		$couponIdList = array();
+
 		foreach ( $coupons as $arrayid => $coupon_code ) {
 			$cph = new couponHandler();
 			$cph->load( $coupon_code );
 
+			if ( in_array( $couponIdList ) ) {
+				unset( $coupons[$arrayid] );
+				continue;
+			}
+			
 			if ( !$cph->status ) {
 				$this->setError( $cph->error );
 				unset( $coupons[$arrayid] );
