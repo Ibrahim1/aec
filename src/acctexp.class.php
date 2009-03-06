@@ -11561,7 +11561,7 @@ class couponsHandler extends eucaObject
 				unset( $coupons[$arrayid] );
 				continue;
 			}
-			
+
 			if ( !$cph->status ) {
 				$this->setError( $cph->error );
 				unset( $coupons[$arrayid] );
@@ -11611,6 +11611,11 @@ class couponsHandler extends eucaObject
 		foreach ( $coupons as $arrayid => $coupon_code ) {
 			$cph = new couponHandler();
 			$cph->load( $coupon_code );
+
+			if ( $cph->coupon->coupon_code !== $coupon_code ) {
+				unset( $coupons[$arrayid] );
+				continue;
+			}
 
 			if ( !$cph->status ) {
 				$this->setError( $cph->error );
