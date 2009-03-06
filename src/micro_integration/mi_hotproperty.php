@@ -346,13 +346,15 @@ class mi_hotproperty extends MI
 			$hacks[$n]['insert']			=	$hacks[$n]['read'] . "\n" . $edithack2;
 		}
 
-		/*$n = 'adminhotproperty3';
+		/*
+		$n = 'adminhotproperty3';
 		$hacks[$n]['name']				=	'admin.hotproperty.php #3';
 		$hacks[$n]['desc']				=	_AEC_MI_HACK5_HOTPROPERTY;
 		$hacks[$n]['type']				=	'file';
 		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/administrator/components/com_hotproperty/admin.mtree.php';
 		$hacks[$n]['read']				=	'if ( $mtLinks->link_approved == 0 ) {';
-		$hacks[$n]['insert']			=	$hacks[$n]['read'] . "\n" . $edithack3;*/
+		$hacks[$n]['insert']			=	$hacks[$n]['read'] . "\n" . $edithack3;
+		*/
 
 		$n = 'adminhotproperty4';
 		$hacks[$n]['name']				=	'admin.hotproperty.php #4';
