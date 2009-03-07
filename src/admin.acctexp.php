@@ -2539,6 +2539,39 @@ function cancelProcessor( $option )
 	mosRedirect( 'index2.php?option=' . $option . '&task=showProcessors', _AEC_CONFIG_CANCELLED );
 }
 
+function changeProcessor( $cid=null, $state=0, $type, $option )
+{
+	global $database, $mosConfig_live_site;
+
+	if ( count( $cid ) < 1 ) {
+		echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
+		exit;
+	}
+
+	$total	= count( $cid );
+	$cids	= implode( ',', $cid );
+
+	$query = 'UPDATE #__acctexp_config_processors'
+			. ' SET `' . $type . '` = \'' . $state . '\''
+			. ' WHERE `id` IN (' . $cids . ')'
+			;
+	$database->setQuery( $query );
+
+	if ( !$database->query() ) {
+		echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
+		exit();
+	}
+
+	if ( $state == '1' ) {
+		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? _AEC_CMN_PUBLISHED : _AEC_CMN_MADE_VISIBLE );
+	} elseif ( $state == '0' ) {
+		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? _AEC_CMN_NOT_PUBLISHED : _AEC_CMN_MADE_INVISIBLE );
+	}
+
+	$msg = sprintf( _AEC_MSG_ITEMS_SUCESSFULLY, $total ) . ' ' . $msg;
+
+	mosRedirect( 'index2.php?option=' . $option . '&task=showProcessors', $msg );
+}
 
 function saveProcessor( $option, $return=0 )
 {

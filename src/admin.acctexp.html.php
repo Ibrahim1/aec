@@ -1275,7 +1275,7 @@ class HTML_AcctExp
 					<td width="1%" align="center"><?php echo $row->processor->id; ?></td>
 					<td width="1%"><?php echo mosHTML::idBox( $i, $row->processor->id, false, 'id' ); ?></td>
 					<td width="15%">
-						<a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editProcessor')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $row->processor->info['name']; ?></a>
+						<a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editProcessor')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $row->processor->info['longname']; ?></a>
 					</td>
 					<td><?php echo $row->processor->info['statement']; ?></td>
 					<td width="3%" align="center">
