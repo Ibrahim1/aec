@@ -8108,6 +8108,77 @@ class Invoice extends serialParamDBTable
 	}
 }
 
+class aecBasket extends serialParamDBTable
+{
+	/** @var int Primary key */
+	var $id					= null;
+	/** @var int */
+	var $userid				= null;
+	/** @var int */
+	var $primary			= null;
+	/** @var string */
+	var $type				= null;
+	/** @var string */
+	var $status				= null;
+	/** @var datetime */
+	var $created_date		= null;
+	/** @var datetime */
+	var $updated_date		= null;
+	/** @var text */
+	var $history 			= null;
+	/** @var text */
+	var $params 			= null;
+	/** @var text */
+	var $customparams		= null;
+
+	/**
+	* @param database A database connector object
+	*/
+	function Subscription( &$db )
+	{
+		$this->mosDBTable( '#__acctexp_subscr', 'id', $db );
+	}
+
+	function declareParamFields()
+	{
+		return array( 'params', 'customparams' );
+	}
+
+	function do( $action, $details )
+	{
+		if ( method_exists( $this, $action ) ) {
+			$this->$action( $details );
+		} else {
+			$this->issueHistoryEvent( 'error', 'action_not_found', array( $action, $details ) );
+		}
+	}
+
+	function addItem( $item )
+	{
+		
+	}
+
+	function removeItem( $itemid )
+	{
+		
+		$this->issueHistoryEvent( 'action', 'item_remove', $itemid );
+	}
+
+	function issueHistoryEvent( $class, $event, $details )
+	{
+		if ( !is_array( $this->history ) ) {
+			$this->history = array();
+		}
+
+		$this->history[] = array(
+							'timestamp'	=> time(),
+							'class'		=> $class,
+							'event'		=> $event,
+							'details'	=> $details,
+							);
+	}
+}
+
 class Subscription extends serialParamDBTable
 {
 	/** @var int Primary key */
