@@ -1263,6 +1263,8 @@ class Config_General extends serialParamDBTable
 		// TODO: $def['show_empty_groups']						= 1;
 		$def['integrate_registration']			= 1;
 		$def['customintro_userid']				= 0;
+		$def['enable_shoppingbasket']			= 0;
+		$def['customlink_continueshopping']		= '';
 
 		return $def;
 	}
@@ -8114,16 +8116,14 @@ class aecBasket extends serialParamDBTable
 	var $id					= null;
 	/** @var int */
 	var $userid				= null;
-	/** @var int */
-	var $primary			= null;
-	/** @var string */
-	var $type				= null;
 	/** @var string */
 	var $status				= null;
 	/** @var datetime */
 	var $created_date		= null;
 	/** @var datetime */
-	var $updated_date		= null;
+	var $last_updated		= null;
+	/** @var text */
+	var $content 			= null;
 	/** @var text */
 	var $history 			= null;
 	/** @var text */
@@ -8134,9 +8134,9 @@ class aecBasket extends serialParamDBTable
 	/**
 	* @param database A database connector object
 	*/
-	function Subscription( &$db )
+	function aecBasket( &$db )
 	{
-		$this->mosDBTable( '#__acctexp_subscr', 'id', $db );
+		$this->mosDBTable( '#__acctexp_basket', 'id', $db );
 	}
 
 	function declareParamFields()
@@ -8144,38 +8144,82 @@ class aecBasket extends serialParamDBTable
 		return array( 'params', 'customparams' );
 	}
 
-	function do( $action, $details )
+	function save()
+	{
+		if ( !$this->id ) {
+			global $mosConfig_offset;
+
+			$this->created_date = date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
+		}
+
+		return parent::save();
+	}
+
+	function storeload()
+	{
+		global $mosConfig_offset;
+
+		$this->last_updated = date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
+
+		return parent::storeload();
+	}
+
+	function action( $action, $details )
 	{
 		if ( method_exists( $this, $action ) ) {
-			$this->$action( $details );
+			$a = array( 'action' => 'action',
+						'event' => $action,
+						'details' => $details
+			);
+
+			$return = $this->$action( $a, $details );
+
+			$this->issueHistoryEvent( $return['action'], $return['event'], $return['details'] );
 		} else {
 			$this->issueHistoryEvent( 'error', 'action_not_found', array( $action, $details ) );
 		}
+
+		$this->storeload();
 	}
 
-	function addItem( $item )
+	function addItem( $return, $item )
 	{
-		
+		$return['details'] = array( 'item' => $item );
+
+		return $return;
 	}
 
-	function removeItem( $itemid )
+	function removeItem( $return, $itemid )
 	{
-		
-		$this->issueHistoryEvent( 'action', 'item_remove', $itemid );
+		if ( isset( $this->content[$itemid] ) ) {
+			$return['details'] = array( 'item_id' => $itemid, 'item' => $this->content[$itemid] );
+			unset( $this->content[$itemid] );
+		} else {
+			$return = array( 'action' => 'error',
+						'event' => 'item_not_found',
+						'details' => array( 'item_id' => $itemid )
+			);
+		}
+
+		return $return;
 	}
 
 	function issueHistoryEvent( $class, $event, $details )
 	{
+		global $mosConfig_offset;
+
 		if ( !is_array( $this->history ) ) {
 			$this->history = array();
 		}
 
 		$this->history[] = array(
-							'timestamp'	=> time(),
+							'timestamp'	=> date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 ),
 							'class'		=> $class,
 							'event'		=> $event,
 							'details'	=> $details,
 							);
+
+		return true;
 	}
 }
 

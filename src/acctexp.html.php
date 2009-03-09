@@ -697,6 +697,37 @@ class Payment_HTML
 			<?php
 		} ?>
 		<div id="confirmation">
+			<?php if ( !empty( $InvoiceFactory->basket ) ) { ?>
+			<div id="confirmation_info">
+				<?php
+				if ( !empty( $user->name ) ) { ?>
+					<p><?php echo _CONFIRM_ROW_NAME; ?> <?php echo $user->name; ?></p>
+					<?php
+				} ?>
+				<p><?php echo _CONFIRM_ROW_USERNAME; ?> <?php echo $user->username; ?></p>
+				<p><?php echo _CONFIRM_ROW_EMAIL; ?> <?php echo $user->email; ?></p>
+				<p>update numbers functionlink:confirm_basketupdate</p>
+				<table>
+					<tr>
+						<th>Item</th>
+						<th>Cost</th>
+						<th>Amount</th>
+						<th>Delete</th>
+					</tr>
+					<?php foreach ( $InvoiceFactory->basket as $bid => $bitem ) { ?>
+					<tr>
+						<td><?php echo $bitem->name; ?></td>
+						<td><?php echo $bitem->cost; ?></td>
+						<td>amount</td>
+						<td>delete functionlink:confirm_basketremove $bid</td>
+					</tr>
+					<?php } ?>
+				</table>
+				<?php if ( count( $InvoiceFactory->basket ) > 5 ) { ?>
+				<p>update numbers functionlink:confirm_basketupdate</p>
+				<?php } ?>
+			</div>
+			<?php } else { ?>
 			<div id="confirmation_info">
 				<table>
 					<tr>
@@ -722,6 +753,14 @@ class Payment_HTML
 					</tr>
 				</table>
 			</div>
+			<?php } ?>
+			<?php if ( !empty( $aecConfig->cfg['enable_shoppingbasket'] ) ) { ?>
+				<?php if ( !empty( $InvoiceFactory->userid ) ) { ?>
+				<p>Save Registration to Continue Shopping functionlink:confirm_savereg</p>
+				<?php } else { ?>
+				<p>Continue Shopping functionlink:subscribe?</p>
+				<?php } ?>
+			<?php } ?>
 			<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 			<table>
 				<tr>
