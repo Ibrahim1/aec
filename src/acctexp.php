@@ -82,6 +82,15 @@ if ( !empty( $task ) ) {
 			$invoicefact->save( $option, $_POST, $coupon );
 			break;
 
+		case 'cartadditem':
+			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
+			$type		= aecGetParam( 'type', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
+			$item		= aecGetParam( 'item', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
+
+			$invoicefact = new InvoiceFactory( $userid );
+			$invoicefact->basketadd( $option, $type, $item );
+			break;
+
 		case 'checkout':
 			$invoice	= aecGetParam( 'invoice', 0 );
 			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );

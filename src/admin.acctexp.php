@@ -2017,6 +2017,11 @@ function editSettings( $option )
 	$params[] = array( '2div_end', 0 );
 
 	$params[] = array( 'userinfobox', 32 );
+	$params[] = array( 'userinfobox_sub', 'Shopping Cart' );
+	$params['enable_shoppingbasket']		= array( 'list_yesno', '' );
+	$params['customlink_continueshopping']	= array( 'inputC', '' );
+	$params['additem_stayonpage']			= array( 'list_yesno', '' );
+	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_CONFIRMATION );
 	$params['tos']							= array( 'inputC', '' );
 	$params['tos_iframe']					= array( 'list_yesno', '' );

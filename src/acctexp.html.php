@@ -755,7 +755,7 @@ class Payment_HTML
 			</div>
 			<?php } ?>
 			<?php if ( !empty( $aecConfig->cfg['enable_shoppingbasket'] ) ) { ?>
-				<?php if ( !empty( $InvoiceFactory->userid ) ) { ?>
+				<?php if ( empty( $InvoiceFactory->userid ) ) { ?>
 				<p>Save Registration to Continue Shopping functionlink:confirm_savereg</p>
 				<?php } else { ?>
 				<p>Continue Shopping functionlink:subscribe?</p>

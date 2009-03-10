@@ -1265,6 +1265,7 @@ class Config_General extends serialParamDBTable
 		$def['customintro_userid']				= 0;
 		$def['enable_shoppingbasket']			= 0;
 		$def['customlink_continueshopping']		= '';
+		$def['additem_stayonpage']				= '';
 
 		return $def;
 	}
@@ -6029,6 +6030,21 @@ class InvoiceFactory
 		return;
 	}
 
+	function updateBasket()
+	{
+		if ( empty( $this->_basket ) ) {
+			$this->_basket = aecBasketHelper::getBasketbyUserid( $this->userid );
+		}
+
+		if ( !empty( $this->plan ) ) {
+			$this->_basket->addItem( $this->plan );
+		}
+
+		$this->_basket->action( 'addItem', $this->plan );
+
+		$this->basket = $this->_basket->getCheckout();
+	}
+
 	function touchInvoice( $option, $invoice_number=false )
 	{
 		// Checking whether we are trying to repeat an invoice
@@ -6632,16 +6648,22 @@ class InvoiceFactory
 		$this->coupons = array();
 		$this->coupons['active'] = $aecConfig->cfg['enable_coupons'];
 
-		if ( empty( $this->mi_error ) ) {
-			$this->mi_error = array();
-		}
+		if ( !empty( $aecConfig->cfg['enable_shoppingbasket'] ) ) {
+			$this->updateBasket();
 
-		$this->mi_form = $this->plan->getMIforms( $this->mi_error );
-
-		if ( $aecConfig->cfg['skip_confirmation'] && empty( $this->mi_form ) ) {
-			$confirm = false;
-		} else {
 			$confirm = true;
+		} else {
+			if ( empty( $this->mi_error ) ) {
+				$this->mi_error = array();
+			}
+
+			$this->mi_form = $this->plan->getMIforms( $this->mi_error );
+
+			if ( $aecConfig->cfg['skip_confirmation'] && empty( $this->mi_form ) ) {
+				$confirm = false;
+			} else {
+				$confirm = true;
+			}
 		}
 
 		if ( $confirm ) {
@@ -8110,26 +8132,40 @@ class Invoice extends serialParamDBTable
 	}
 }
 
+class aecBasketHelper
+{
+	function getBasketbyUserid( $userid )
+	{
+		global $database;
+
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_basket'
+				. ' WHERE userid = \'' . $userid . '\''
+				;
+
+		$database->setQuery( $query );
+		$id = $database->loadResult();
+	}
+}
+
 class aecBasket extends serialParamDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
 	/** @var int */
 	var $userid				= null;
-	/** @var string */
-	var $status				= null;
 	/** @var datetime */
 	var $created_date		= null;
 	/** @var datetime */
 	var $last_updated		= null;
 	/** @var text */
-	var $content 			= null;
+	var $content 			= array();
 	/** @var text */
-	var $history 			= null;
+	var $history 			= array();
 	/** @var text */
-	var $params 			= null;
+	var $params 			= array();
 	/** @var text */
-	var $customparams		= null;
+	var $customparams		= array();
 
 	/**
 	* @param database A database connector object
@@ -8141,27 +8177,34 @@ class aecBasket extends serialParamDBTable
 
 	function declareParamFields()
 	{
-		return array( 'params', 'customparams' );
+		return array( 'content', 'history', 'params', 'customparams' );
+	}
+
+	function check()
+	{
+		$vars = get_class_vars( 'aecBasket' );
+		$props = get_object_vars( $this );
+
+		foreach ( $props as $n => $prop ) {
+			if ( !array_key_exists( $n, $vars  ) ) {
+				unset( $this->$n );
+			}
+		}
+
+		return parent::check();
 	}
 
 	function save()
 	{
-		if ( !$this->id ) {
 			global $mosConfig_offset;
 
+		if ( !$this->id ) {
 			$this->created_date = date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
 		}
 
-		return parent::save();
-	}
-
-	function storeload()
-	{
-		global $mosConfig_offset;
-
 		$this->last_updated = date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
 
-		return parent::storeload();
+		return parent::save();
 	}
 
 	function action( $action, $details )
@@ -8184,7 +8227,31 @@ class aecBasket extends serialParamDBTable
 
 	function addItem( $return, $item )
 	{
-		$return['details'] = array( 'item' => $item );
+		if ( !empty( $item ) ) {
+			$element			= array();
+			$element['type']	= 'plan';
+			$element['id']		= $item->id;
+			$element['count']	= 1;
+			$return['details'] = array( 'type' => 'plan', 'id' => $item->id );
+
+			$update = false;
+			foreach ( $this->content as $iid => $item ) {
+				if ( ( $item['type'] == $element['type'] ) && ( $item['id'] == $element['id'] ) ) {
+					$return['action']	= 'updateItem';
+					$this->content[$iid]['count']++;
+					$update = true;
+					break;
+				}
+			}
+
+			if ( !$update ) {
+				$this->content[] = $element;
+			}
+		} else {
+			$return['action']	= 'error';
+			$return['event']	= 'no_item_provided';
+			$return['details'] = array( 'type' => 'plan', 'item' => $item );
+		}
 
 		return $return;
 	}
@@ -8207,6 +8274,10 @@ class aecBasket extends serialParamDBTable
 	function issueHistoryEvent( $class, $event, $details )
 	{
 		global $mosConfig_offset;
+
+		if ( $class == 'error' ) {
+			$this->_error = $event;
+		}
 
 		if ( !is_array( $this->history ) ) {
 			$this->history = array();
@@ -10376,9 +10447,9 @@ class AECToolbox
 		}
 	}
 
-	function formatAmountCustom( $request, $plan )
+	function formatAmountCustom( $request, $plan, $forcedefault=false, $proposed=null )
 	{
-		if ( empty( $plan->params['customamountformat'] ) ) {
+		if ( empty( $plan->params['customamountformat'] ) || $forcedefault ) {
 			$format = '{aecjson}{"cmd":"condition","vars":[{"cmd":"data","vars":"payment.freetrial"},'
 						.'{"cmd":"concat","vars":[{"cmd":"constant","vars":"_CONFIRM_FREETRIAL"},"&nbsp;",{"cmd":"data","vars":"payment.method_name"}]},'
 						.'{"cmd":"concat","vars":[{"cmd":"data","vars":"payment.amount"},{"cmd":"data","vars":"payment.currency_symbol"},"&nbsp;-&nbsp;",{"cmd":"data","vars":"payment.method_name"}]}'
@@ -10391,7 +10462,17 @@ class AECToolbox
 		$rwEngine = new reWriteEngine();
 		$rwEngine->resolveRequest( $request );
 
-		return $rwEngine->resolve( $format );
+		$amount = $rwEngine->resolve( $format );
+
+		if ( strpos( $amount, 'JSON PARSE ERROR' ) !== false ) {
+			if ( !$forcedefault ) {
+				return AECToolbox::formatAmountCustom( $request, $plan, true, $amount );
+			} else {
+				return $proposed;
+			}
+		}
+
+		return $amount;
 	}
 
 	function formatAmount( $amount, $currency=null ) {
