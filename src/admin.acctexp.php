@@ -2018,7 +2018,7 @@ function editSettings( $option )
 
 	$params[] = array( 'userinfobox', 32 );
 	$params[] = array( 'userinfobox_sub', 'Shopping Cart' );
-	$params['enable_shoppingbasket']		= array( 'list_yesno', '' );
+	$params['enable_shoppingcart']			= array( 'list_yesno', '' );
 	$params['customlink_continueshopping']	= array( 'inputC', '' );
 	$params['additem_stayonpage']			= array( 'list_yesno', '' );
 	$params[] = array( 'div_end', 0 );

@@ -1263,7 +1263,7 @@ class Config_General extends serialParamDBTable
 		// TODO: $def['show_empty_groups']						= 1;
 		$def['integrate_registration']			= 1;
 		$def['customintro_userid']				= 0;
-		$def['enable_shoppingbasket']			= 0;
+		$def['enable_shoppingcart']			= 0;
 		$def['customlink_continueshopping']		= '';
 		$def['additem_stayonpage']				= '';
 
@@ -6030,19 +6030,41 @@ class InvoiceFactory
 		return;
 	}
 
-	function updateBasket()
+	function getCart()
 	{
-		if ( empty( $this->_basket ) ) {
-			$this->_basket = aecBasketHelper::getBasketbyUserid( $this->userid );
+		if ( empty( $this->_cart ) ) {
+			$this->_cart = aecCartHelper::getCartbyUserid( $this->userid );
 		}
 
-		if ( !empty( $this->plan ) ) {
-			$this->_basket->addItem( $this->plan );
+		$this->loadMetaUser();
+
+		$this->cart = $this->_cart->getCheckout( $this->metaUser );
+	}
+
+	function addtoCart( $option, $usage )
+	{
+		if ( empty( $this->_cart ) ) {
+			$this->_cart = aecCartHelper::getCartbyUserid( $this->userid );
 		}
 
-		$this->_basket->action( 'addItem', $this->plan );
+		$this->_cart->action( 'addItem', $usage );
+	}
 
-		$this->basket = $this->_basket->getCheckout();
+	function updateCart( $option, $data )
+	{
+		$update = array();
+		foreach ( $data as $dn => $dv ) {
+			if ( strpos( $dn, 'cartitem_' ) !== false ) {
+				$n = str_replace( 'cartitem_', '', $dn );
+				$update[$n] = $dv;
+			}
+		}
+
+		if ( empty( $this->_cart ) ) {
+			$this->_cart = aecCartHelper::getCartbyUserid( $this->userid );
+		}
+
+		$this->_cart->action( 'updateItems', $update );
 	}
 
 	function touchInvoice( $option, $invoice_number=false )
@@ -6366,6 +6388,16 @@ class InvoiceFactory
 		}
 
 		foreach ( $plans as $pid => $plan ) {
+			if ( $this->userid && $aecConfig->cfg['enable_shoppingcart'] ) {
+				// We have a shopping cart situation, care about processors later
+
+				$plans[$pid]['gw'][0]						= new stdClass();
+				$plans[$pid]['gw'][0]->processor_name		= 'add_to_cart';
+				$plans[$pid]['gw'][0]->info['statement']	= '';
+				$plans[$pid]['gw'][0]->recurring			= 0;
+				continue;
+			}
+
 			if ( $plan['plan']->params['full_free'] ) {
 				$plans[$pid]['gw'][0]						= new stdClass();
 				$plans[$pid]['gw'][0]->processor_name		= 'free';
@@ -6623,10 +6655,10 @@ class InvoiceFactory
 			// require the recaptcha library
 			require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
 
-			//finally chack with reCAPTCHA if the entry was correct
+			// finally chack with reCAPTCHA if the entry was correct
 			$resp = recaptcha_check_answer ( $aecConfig->cfg['recaptcha_privatekey'], $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"] );
 
-			//if the response is INvalid, then go back one page, and try again. Give a nice message
+			// if the response is INvalid, then go back one page, and try again. Give a nice message
 			if (!$resp->is_valid) {
 				echo "<script> alert('The reCAPTCHA entered incorrectly. Please try again.'); </script>\n";
 
@@ -6648,22 +6680,16 @@ class InvoiceFactory
 		$this->coupons = array();
 		$this->coupons['active'] = $aecConfig->cfg['enable_coupons'];
 
-		if ( !empty( $aecConfig->cfg['enable_shoppingbasket'] ) ) {
-			$this->updateBasket();
+		if ( empty( $this->mi_error ) ) {
+			$this->mi_error = array();
+		}
 
-			$confirm = true;
+		$this->mi_form = $this->plan->getMIforms( $this->mi_error );
+
+		if ( $aecConfig->cfg['skip_confirmation'] && empty( $this->mi_form ) ) {
+			$confirm = false;
 		} else {
-			if ( empty( $this->mi_error ) ) {
-				$this->mi_error = array();
-			}
-
-			$this->mi_form = $this->plan->getMIforms( $this->mi_error );
-
-			if ( $aecConfig->cfg['skip_confirmation'] && empty( $this->mi_form ) ) {
-				$confirm = false;
-			} else {
-				$confirm = true;
-			}
+			$confirm = true;
 		}
 
 		if ( $confirm ) {
@@ -6681,6 +6707,17 @@ class InvoiceFactory
 		}
 	}
 
+	function cart( $option )
+	{
+		global $database;
+
+		$user = new mosUser( $database );
+		$user->load( $this->userid );
+
+		$this->getCart();
+
+		Payment_HTML::cart( $option, $this, $user );
+	}
 
 	function save( $option, $var, $coupon=null )
 	{
@@ -7703,36 +7740,76 @@ class Invoice extends serialParamDBTable
 	{
 		global $database, $aecConfig;
 
-		$metaUser = false;
-		$new_plan = false;
+		$metaUser	= false;
+		$new_plan	= false;
+		$plans		= array();
 
 		if ( !empty( $this->userid ) ) {
 			$metaUser = new metaUser( $this->userid );
 		}
 
 		if ( !empty( $this->usage ) ) {
-			$new_plan = new SubscriptionPlan( $database );
-			$new_plan->load( $this->usage );
-		}
+			$usage = explode( '.', $this->usage );
 
-		if ( is_object( $metaUser ) && is_object( $new_plan ) ) {
-			if ( $metaUser->userid ) {
-				if ( empty( $this->subscr_id ) ) {
-					$metaUser->establishFocus( $new_plan, $this->method, false );
-
-					$this->subscr_id = $metaUser->focusSubscription->id;
-				} else {
-					$metaUser->moveFocus( $this->subscr_id );
-				}
-
-				// Apply the Plan
-				$application = $metaUser->focusSubscription->applyUsage( $this->usage, $this->method, 0, $multiplicator, $this );
-			} else {
-				$application = $new_plan->applyPlan( 0, $this->method, 0, $multiplicator, $this );
+			// Update old notation
+			if ( !isset( $usage[1] ) ) {
+				$temp = $usage[0];
+				$usage[0] = 'p';
+				$usage[1] = $temp;
 			}
 
-			if ( $application === false ) {
-				return false;
+			switch ( strtolower( $usage[0] ) ) {
+				case 'c':
+				case 'cart':
+					$cart = new aecCart( $database );
+					$cart->load( $usage[1] );
+
+					foreach ( $cart->content as $c ) {
+						$new_plan = new SubscriptionPlan( $database );
+						$new_plan->load( $c['id'] );
+
+						$plans[] = $new_plan;
+					}
+
+					$cart->clear();
+
+					$this->params['cart'] = $cart;
+
+					$cart->delete();
+					break;
+				case 'p':
+				case 'plan':
+				default:
+					$new_plan = new SubscriptionPlan( $database );
+					$new_plan->load( $this->usage );
+
+					$plans[] = $new_plan;
+					break;
+				// Single Payments?
+			}
+
+		}
+
+		foreach ( $plans as $plan ) {
+			if ( is_object( $metaUser ) && is_object( $plan ) ) {
+				if ( $metaUser->userid ) {
+					if ( empty( $this->subscr_id ) ) {
+						$metaUser->establishFocus( $plan, $this->method, false );
+
+						$this->subscr_id = $metaUser->focusSubscription->id;
+					} else {
+						$metaUser->moveFocus( $this->subscr_id );
+					}
+
+					// Apply the Plan
+					$application = $metaUser->focusSubscription->applyUsage( $plan->id, $this->method, 0, $multiplicator, $this );
+				} else {
+					$application = $plan->applyPlan( 0, $this->method, 0, $multiplicator, $this );
+				}
+
+				if ( $application === false ) {
+					return false;
+				}
 			}
 		}
 
@@ -8132,23 +8209,32 @@ class Invoice extends serialParamDBTable
 	}
 }
 
-class aecBasketHelper
+class aecCartHelper
 {
-	function getBasketbyUserid( $userid )
+	function getCartbyUserid( $userid )
 	{
 		global $database;
 
 		$query = 'SELECT `id`'
-				. ' FROM #__acctexp_basket'
+				. ' FROM #__acctexp_cart'
 				. ' WHERE userid = \'' . $userid . '\''
 				;
 
 		$database->setQuery( $query );
 		$id = $database->loadResult();
+
+		$cart = new aecCart( $database );
+		$cart->load( $id );
+
+		if ( empty( $id ) ) {
+			$cart->userid = $userid;
+		}
+
+		return $cart;
 	}
 }
 
-class aecBasket extends serialParamDBTable
+class aecCart extends serialParamDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -8170,9 +8256,9 @@ class aecBasket extends serialParamDBTable
 	/**
 	* @param database A database connector object
 	*/
-	function aecBasket( &$db )
+	function aecCart( &$db )
 	{
-		$this->mosDBTable( '#__acctexp_basket', 'id', $db );
+		$this->mosDBTable( '#__acctexp_cart', 'id', $db );
 	}
 
 	function declareParamFields()
@@ -8182,7 +8268,7 @@ class aecBasket extends serialParamDBTable
 
 	function check()
 	{
-		$vars = get_class_vars( 'aecBasket' );
+		$vars = get_class_vars( 'aecCart' );
 		$props = get_object_vars( $this );
 
 		foreach ( $props as $n => $prop ) {
@@ -8227,17 +8313,23 @@ class aecBasket extends serialParamDBTable
 
 	function addItem( $return, $item )
 	{
-		if ( !empty( $item ) ) {
+		if ( is_object( $item ) ) {
+			$id = $item->id;
+		} else {
+			$id = $item;
+		}
+
+		if ( !empty( $id ) ) {
 			$element			= array();
 			$element['type']	= 'plan';
-			$element['id']		= $item->id;
+			$element['id']		= $id;
 			$element['count']	= 1;
-			$return['details'] = array( 'type' => 'plan', 'id' => $item->id );
+			$return['details'] = array( 'type' => 'plan', 'id' => $id );
 
 			$update = false;
 			foreach ( $this->content as $iid => $item ) {
 				if ( ( $item['type'] == $element['type'] ) && ( $item['id'] == $element['id'] ) ) {
-					$return['action']	= 'updateItem';
+					$return['event']	= 'updateItem';
 					$this->content[$iid]['count']++;
 					$update = true;
 					break;
@@ -8267,6 +8359,85 @@ class aecBasket extends serialParamDBTable
 						'details' => array( 'item_id' => $itemid )
 			);
 		}
+
+		return $return;
+	}
+
+	function updateItems( $return, $updates )
+	{
+		foreach ( $updates as $uid => $count ) {
+			if ( isset( $this->content[$uid] ) ) {
+				if ( empty( $count ) ) {
+					unset( $this->content[$uid] );
+				} else {
+					$this->content[$uid]['count'] = $count;
+				}
+			}
+		}
+
+		return $return;
+	}
+
+	function getCheckout( $metaUser )
+	{
+		global $database;
+
+		$usagecache = array();
+
+		$totalcost = 0;
+
+		$return = array();
+		foreach ( $this->content as $cid => $content ) {
+			if ( !isset( $usagecache[$content['type']][$content['id']] ) ) {
+				switch ( $content['type'] ) {
+					case 'plan':
+						$obj = new SubscriptionPlan( $database );
+						$obj->load( $content['id']);
+
+						$o = array();
+						$o['name']	= $obj->getProperty( 'name' );
+						$o['cost']	= $obj->SubscriptionAmount( false, $metaUser->focusSubscription, $metaUser );
+
+						$usagecache[$content['type']][$content['id']] = $o;
+						break;
+				}
+			}
+
+			$entry = array();
+			$entry['name']			= $usagecache[$content['type']][$content['id']]['name'];
+			$entry['cost']			= $usagecache[$content['type']][$content['id']]['cost']['amount'];
+
+			if ( is_array( $entry['cost'] ) ) {
+				$entry['cost']			= $usagecache[$content['type']][$content['id']]['cost']['amount']['amount3'];
+
+				if ( $entry['cost'] > 0 ) {
+					$total = $content['count'] * $entry['cost'];
+
+					$entry['cost_total']	= AECToolbox::correctAmount( $total );
+				} else {
+					$entry['cost_total']	= AECToolbox::correctAmount( '0.00' );
+				}
+			} else {
+				if ( $entry['cost'] > 0 ) {
+					$total = $content['count'] * $entry['cost'];
+
+					$entry['cost_total']	= AECToolbox::correctAmount( $total );
+				} else {
+					$entry['cost_total']	= AECToolbox::correctAmount( '0.00' );
+				}
+			}
+			$entry['count']			= $content['count'];
+
+			$totalcost += $entry['cost_total'];
+
+			$return[$cid] = $entry;
+		}
+
+		$return[] = array( 'name' => '',
+							'count' => '',
+							'cost' => '',
+							'cost_total' => AECToolbox::correctAmount( $totalcost )
+							);
 
 		return $return;
 	}

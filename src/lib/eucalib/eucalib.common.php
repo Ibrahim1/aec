@@ -510,6 +510,18 @@ class serialParamDBTable extends paramDBTable
 		return true;
 	}
 
+	function clear()
+	{
+		$vars = get_class_vars( get_class( $this ) );
+		$props = get_object_vars( $this );
+
+		foreach ( $props as $n => $prop ) {
+			if ( !array_key_exists( $n, $vars  ) || ( $n[0] == '_' ) ) {
+				unset( $this->$n );
+			}
+		}
+	}
+
 	function check( $fields=array() )
 	{
 		if ( method_exists( $this, 'declareParamFields' ) ) {

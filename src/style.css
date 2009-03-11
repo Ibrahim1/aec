@@ -429,6 +429,24 @@ margin: 0 12px 16px 12px;
 width: 97%;
 }
 
+div#update_button {
+float: left;
+background-color: #eed;
+padding-right: 8px;
+margin: 2px 2px;
+width: 100%;
+text-align: right;
+}
+
+div#continue_button {
+float: left;
+background-color: #dee;
+padding-right: 8px;
+margin: 6px 2px;
+width: 100%;
+text-align: left;
+}
+
 #confirmation table {
 float:left;
 width: 100%;

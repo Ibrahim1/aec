@@ -539,49 +539,60 @@ class Payment_HTML
 		foreach ( $pps as $pp ) {
 			$gw_current = strtolower( $pp->processor_name );
 
-			if ( $register ) {
-				if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
-					$option	= 'com_acctexp';
-					$task	= 'rerouteregister';
-				} else {
-					$option	= 'com_acctexp';
-					$task	= 'subscribe';
-				}
-			} else {
+			if ( $gw_current == 'add_to_cart' ) {
 				$option		= 'com_acctexp';
-				$task		= 'confirm';
-			}
+				$task		= 'addtocart';
+				$urlbutton	= $imgroot . 'add_to_cart_button.png';
 
-			if ( !empty( $pp->settings['generic_buttons'] ) ) {
-				if ( !empty( $pp->recurring ) ) {
-					$urlbutton = $imgroot . 'gw_button_generic_subscribe.png';
-				} else {
-					$urlbutton = $imgroot . 'gw_button_generic_buy_now.png';
+				$hidden = array();
+				if ( !empty( $planid ) ) {
+					$hidden[] = array( 'usage', $planid );
 				}
 			} else {
-				if ( isset( $pp->info['recurring_buttons'] ) ) {
-					if ( $pp->recurring ) {
-						$urlbutton = $imgroot . 'gw_button_' . $pp->processor_name . '_recurring_1' . '.png';
+				if ( $register ) {
+					if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
+						$option	= 'com_acctexp';
+						$task	= 'rerouteregister';
 					} else {
-						$urlbutton = $imgroot . 'gw_button_' . $pp->processor_name . '_recurring_0' . '.png';
+						$option	= 'com_acctexp';
+						$task	= 'subscribe';
 					}
 				} else {
-					$urlbutton = $imgroot . 'gw_button_' . $pp->processor_name . '.png';
+					$option		= 'com_acctexp';
+					$task		= 'confirm';
 				}
-			}
 
-			$hidden = array();
+				if ( !empty( $pp->settings['generic_buttons'] ) ) {
+					if ( !empty( $pp->recurring ) ) {
+						$urlbutton = $imgroot . 'gw_button_generic_subscribe.png';
+					} else {
+						$urlbutton = $imgroot . 'gw_button_generic_buy_now.png';
+					}
+				} else {
+					if ( isset( $pp->info['recurring_buttons'] ) ) {
+						if ( $pp->recurring ) {
+							$urlbutton = $imgroot . 'gw_button_' . $pp->processor_name . '_recurring_1' . '.png';
+						} else {
+							$urlbutton = $imgroot . 'gw_button_' . $pp->processor_name . '_recurring_0' . '.png';
+						}
+					} else {
+						$urlbutton = $imgroot . 'gw_button_' . $pp->processor_name . '.png';
+					}
+				}
 
-			if ( !empty( $pp->recurring ) ) {
-				$hidden[] = array( 'recurring', 1 );
-			} else {
-				$hidden[] = array( 'recurring', 0 );
-			}
+				$hidden = array();
 
-			$hidden[] = array( 'processor', strtolower( $pp->processor_name ) );
+				if ( !empty( $pp->recurring ) ) {
+					$hidden[] = array( 'recurring', 1 );
+				} else {
+					$hidden[] = array( 'recurring', 0 );
+				}
 
-			if ( !empty( $planid ) ) {
-				$hidden[] = array( 'usage', $planid );
+				$hidden[] = array( 'processor', strtolower( $pp->processor_name ) );
+
+				if ( !empty( $planid ) ) {
+					$hidden[] = array( 'usage', $planid );
+				}
 			}
 
 			$html_code .= Payment_HTML::planpageButton( $option, $task, $urlbutton, $hidden, $userid, $passthrough );
@@ -697,37 +708,6 @@ class Payment_HTML
 			<?php
 		} ?>
 		<div id="confirmation">
-			<?php if ( !empty( $InvoiceFactory->basket ) ) { ?>
-			<div id="confirmation_info">
-				<?php
-				if ( !empty( $user->name ) ) { ?>
-					<p><?php echo _CONFIRM_ROW_NAME; ?> <?php echo $user->name; ?></p>
-					<?php
-				} ?>
-				<p><?php echo _CONFIRM_ROW_USERNAME; ?> <?php echo $user->username; ?></p>
-				<p><?php echo _CONFIRM_ROW_EMAIL; ?> <?php echo $user->email; ?></p>
-				<p>update numbers functionlink:confirm_basketupdate</p>
-				<table>
-					<tr>
-						<th>Item</th>
-						<th>Cost</th>
-						<th>Amount</th>
-						<th>Delete</th>
-					</tr>
-					<?php foreach ( $InvoiceFactory->basket as $bid => $bitem ) { ?>
-					<tr>
-						<td><?php echo $bitem->name; ?></td>
-						<td><?php echo $bitem->cost; ?></td>
-						<td>amount</td>
-						<td>delete functionlink:confirm_basketremove $bid</td>
-					</tr>
-					<?php } ?>
-				</table>
-				<?php if ( count( $InvoiceFactory->basket ) > 5 ) { ?>
-				<p>update numbers functionlink:confirm_basketupdate</p>
-				<?php } ?>
-			</div>
-			<?php } else { ?>
 			<div id="confirmation_info">
 				<table>
 					<tr>
@@ -753,14 +733,6 @@ class Payment_HTML
 					</tr>
 				</table>
 			</div>
-			<?php } ?>
-			<?php if ( !empty( $aecConfig->cfg['enable_shoppingbasket'] ) ) { ?>
-				<?php if ( empty( $InvoiceFactory->userid ) ) { ?>
-				<p>Save Registration to Continue Shopping functionlink:confirm_savereg</p>
-				<?php } else { ?>
-				<p>Continue Shopping functionlink:subscribe?</p>
-				<?php } ?>
-			<?php } ?>
 			<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 			<table>
 				<tr>
@@ -843,6 +815,162 @@ class Payment_HTML
 			<div style="clear:both"></div>
 		</div>
 		<?php
+	}
+
+	function cart( $option, $InvoiceFactory, $user )
+	{
+		global $database, $aecConfig, $mosConfig_live_site;
+
+		HTML_frontend::aec_styling( $option );
+		?>
+
+		<div class="componentheading"><?php echo _CART_TITLE; ?></div>
+		<?php
+		if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
+			<script type="text/javascript">
+				/* <![CDATA[ */
+				function submitPayment() {
+					if ( document.confirmForm.tos.checked ) {
+						document.confirmForm.submit();
+					} else {
+						alert("<?php echo html_entity_decode( _CONFIRM_TOS_ERROR ); ?>");
+					}
+				}
+				/* ]]> */
+			</script>
+			<?php
+		} ?>
+		<div id="confirmation">
+			<div id="confirmation_info">
+				<?php
+				if ( !empty( $user->name ) ) { ?>
+					<p><?php echo _CONFIRM_ROW_NAME; ?> <?php echo $user->name; ?></p>
+					<?php
+				} ?>
+				<p><?php echo _CONFIRM_ROW_USERNAME; ?> <?php echo $user->username; ?></p>
+				<p><?php echo _CONFIRM_ROW_EMAIL; ?> <?php echo $user->email; ?></p>
+				<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+				<table>
+					<tr>
+						<th>Item</th>
+						<th>Cost</th>
+						<th>Amount</th>
+						<th>Total</th>
+					</tr>
+					<?php
+					foreach ( $InvoiceFactory->cart as $bid => $bitem ) {
+						if ( !empty( $bitem['name'] ) ) {
+							?><tr>
+								<td><?php echo $bitem['name']; ?></td>
+								<td><?php echo $bitem['cost']; ?></td>
+								<td><input type="inputbox" type="text" size="2" name="cartitem_<?php echo $bid; ?>" value="<?php echo $bitem['count']; ?>" /></td>
+								<td><?php echo $bitem['cost_total']; ?></td>
+							</tr><?php
+						} else {
+							?><tr>
+								<td><?php echo _CONFIRM_ROW_TOTAL; ?></td>
+								<td></td>
+								<td></td>
+								<td><?php echo $bitem['cost_total']; ?></td>
+							</tr><?php
+						}
+					}
+					?>
+				</table>
+				<input type="hidden" name="option" value="<?php echo $option; ?>" />
+				<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0; ?>" />
+				<input type="hidden" name="task" value="updateCart" />
+				<div id="update_button"><input type="image" src="<?php echo $mosConfig_live_site . '/components/com_acctexp/images/update_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
+				</form>
+				<?php if ( empty( $InvoiceFactory->userid ) ) { ?>
+				<p>Save Registration to Continue Shopping functionlink:confirm_savereg</p>
+				<?php } else { ?>
+				<div id="continue_button">
+					<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=subscribe', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+						<input type="image" src="<?php echo $mosConfig_live_site . '/components/com_acctexp/images/continue_shopping_button.png'; ?>" border="0" name="submit" alt="submit" />
+					</form>
+				</div>
+				<?php } ?>
+			</div>
+			<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+			<table>
+				<tr>
+					<td id="confirmation_extra">
+						<?php if ( !empty( $InvoiceFactory->mi_form ) ) {
+							if ( !empty( $InvoiceFactory->mi_error ) ) {
+								echo '<div id="confirmation_error">';
+								foreach ( $InvoiceFactory->mi_error as $error ) {
+									echo '<p>' . $error . '</p>';
+								}
+								echo '</div>';
+							}
+							echo '<div id="confirmation_extra">' . $InvoiceFactory->mi_form . '</div>';
+						} ?>
+						<?php
+						if ( $aecConfig->cfg['customtext_confirm'] ) { ?>
+							<p><?php echo $aecConfig->cfg['customtext_confirm']; ?></p>
+							<?php
+						}
+						if ( $aecConfig->cfg['customtext_confirm_keeporiginal'] ) { ?>
+							<p><?php echo _CONFIRM_INFO; ?></p>
+							<?php
+						}
+						if ( $InvoiceFactory->coupons['active'] ) {
+							if ( !empty( $aecConfig->cfg['confirmation_coupons'] ) ) {
+								?><p><?php echo _CONFIRM_COUPON_INFO_BOTH; ?></p><?php
+							} else {
+								?><p><?php echo _CONFIRM_COUPON_INFO; ?></p><?php
+							}
+						} ?>
+						<?php if ( !empty( $aecConfig->cfg['confirmation_coupons'] ) ) { ?>
+							<strong><?php echo _CHECKOUT_COUPON_CODE; ?></strong>
+							<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
+						<?php } ?>
+					</td>
+				</tr>
+				<tr>
+					<td id="confirmation_button">
+					<div id="confirmation_button">
+						<input type="hidden" name="option" value="<?php echo $option; ?>" />
+						<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0; ?>" />
+						<input type="hidden" name="task" value="saveSubscription" />
+						<?php if ( isset( $InvoiceFactory->recurring ) ) { ?>
+						<input type="hidden" name="recurring" value="<?php echo $InvoiceFactory->recurring;?>" />
+						<?php }
+						if ( !empty( $aecConfig->cfg['tos_iframe'] ) && !empty( $aecConfig->cfg['tos'] ) ) { ?>
+							<iframe src="<?php echo $aecConfig->cfg['tos']; ?>" width="100%" height="150px"></iframe>
+							<p><input name="tos" type="checkbox" /><?php echo _CONFIRM_TOS_IFRAME; ?></p>
+							<input type="button" onclick="javascript:submitPayment()" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
+							<?php
+						} elseif ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
+							<p><input name="tos" type="checkbox" /><?php echo sprintf( _CONFIRM_TOS, $aecConfig->cfg['tos'] ); ?></p>
+							<input type="button" onclick="javascript:submitPayment()" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
+							<?php
+						} else { ?>
+							<input type="submit" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
+							<?php
+						} ?>
+					</div>
+					</td>
+				</tr>
+				<tr><td>
+					<table>
+						<?php
+						if ( is_object( $InvoiceFactory->pp ) ) {
+							HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $aecConfig->cfg['displayccinfo'] );
+						} ?>
+					</table>
+				</td></tr>
+			</table>
+			</form>
+			<div style="clear:both"></div>
+		</div>
+		<?php
+	}
+
+	function cartProcessorSelection( $option, $InvoiceFactory )
+	{
+		HTML_frontend::aec_styling( $option );
 	}
 
 	function checkoutForm( $option, $var, $params = null, $InvoiceFactory, $repeat = 0 )
