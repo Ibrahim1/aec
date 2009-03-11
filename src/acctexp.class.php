@@ -6758,7 +6758,7 @@ class InvoiceFactory
 
 	function cart( $option )
 	{
-		global $database;
+		global $aecConfig, $database;
 
 		$user = new mosUser( $database );
 		$user->load( $this->userid );
