@@ -106,6 +106,14 @@ if ( !empty( $task ) ) {
 			$invoicefact->cart( $option );
 			break;
 
+		case 'confirmcart':
+			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
+			$coupon		= aecGetParam( 'coupon_code', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
+
+			$invoicefact = new InvoiceFactory( $userid );
+			$invoicefact->confirmcart( $option, $coupon );
+			break;
+
 		case 'checkout':
 			$invoice	= aecGetParam( 'invoice', 0 );
 			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
@@ -927,10 +935,14 @@ function subscriptionDetails( $option, $sub='' )
 			unset( $sf[array_search( 'invoices', $sf )] );
 		}
 
+		$cart = aecCartHelper::getCartbyUserid( $metaUser->userid );
+
+		$hascart = $cart->id;
+
 		$mainframe->SetPageTitle( _MYSUBSCRIPTION_TITLE . ' - ' . $subfields[$sub] );
 
 		$html = new HTML_frontEnd();
-		$html->subscriptionDetails( $option, $subfields, $sub, $invoices, $metaUser, $upgrade_button, $pp, $mi_info, $alert, $subscriptions, $custom );
+		$html->subscriptionDetails( $option, $subfields, $sub, $invoices, $metaUser, $upgrade_button, $pp, $mi_info, $alert, $subscriptions, $custom, $hascart );
 	}
 }
 

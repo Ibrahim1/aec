@@ -166,9 +166,9 @@ class HTML_frontEnd
 		<?php
 	}
 
-	function subscriptionDetails( $option, $subfields, $sub, $invoices, $metaUser, $upgrade_button, $pp, $mi, $alert, $subscriptions = null, $custom = null )
+	function subscriptionDetails( $option, $subfields, $sub, $invoices, $metaUser, $upgrade_button, $pp, $mi, $alert, $subscriptions = null, $custom = null, $cart=false )
 	{
-		global $database, $aecConfig;
+		global $database, $aecConfig, $mosConfig_live_site;
 
 		$securelinks = !empty( $aecConfig->cfg['ssl_profile'] );
 
@@ -195,6 +195,12 @@ class HTML_frontEnd
 			switch ( $sub ) {
 				case 'overview':
 					echo '<p>' . _MEMBER_SINCE . '&nbsp;' . HTML_frontend::DisplayDateInLocalTime( $metaUser->objSubscription->signup_date ) .'</p>';
+
+					if ( $cart ) { ?>
+					<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+					<div id="update_button"><input type="image" src="<?php echo $mosConfig_live_site . '/components/com_acctexp/images/your_cart_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
+					</form><br /><br />
+					<?php }
 
 					foreach ( $subscriptions as $sid => $subscription ) {
 						switch ( $sid ) {
@@ -842,13 +848,13 @@ class Payment_HTML
 		} ?>
 		<div id="confirmation">
 			<div id="confirmation_info">
-				<?php
+				<p><?php
 				if ( !empty( $user->name ) ) { ?>
-					<p><?php echo _CONFIRM_ROW_NAME; ?> <?php echo $user->name; ?></p>
+					<?php echo _CONFIRM_ROW_NAME; ?> <?php echo $user->name; ?><br />
 					<?php
 				} ?>
-				<p><?php echo _CONFIRM_ROW_USERNAME; ?> <?php echo $user->username; ?></p>
-				<p><?php echo _CONFIRM_ROW_EMAIL; ?> <?php echo $user->email; ?></p>
+				<?php echo _CONFIRM_ROW_USERNAME; ?> <?php echo $user->username; ?><br />
+				<?php echo _CONFIRM_ROW_EMAIL; ?> <?php echo $user->email; ?></p>
 				<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 				<table>
 					<tr>
@@ -868,10 +874,10 @@ class Payment_HTML
 							</tr><?php
 						} else {
 							?><tr>
-								<td><?php echo _CONFIRM_ROW_TOTAL; ?></td>
+								<td><strong><?php echo _CART_ROW_TOTAL; ?></strong></td>
 								<td></td>
 								<td></td>
-								<td><?php echo $bitem['cost_total']; ?></td>
+								<td><strong><?php echo $bitem['cost_total']; ?></strong></td>
 							</tr><?php
 						}
 					}
@@ -912,7 +918,7 @@ class Payment_HTML
 							<?php
 						}
 						if ( $aecConfig->cfg['customtext_confirm_keeporiginal'] ) { ?>
-							<p><?php echo _CONFIRM_INFO; ?></p>
+							<p><?php echo _CART_INFO; ?></p>
 							<?php
 						}
 						if ( $InvoiceFactory->coupons['active'] ) {
@@ -933,7 +939,7 @@ class Payment_HTML
 					<div id="confirmation_button">
 						<input type="hidden" name="option" value="<?php echo $option; ?>" />
 						<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0; ?>" />
-						<input type="hidden" name="task" value="saveSubscription" />
+						<input type="hidden" name="task" value="confirmCart" />
 						<?php if ( isset( $InvoiceFactory->recurring ) ) { ?>
 						<input type="hidden" name="recurring" value="<?php echo $InvoiceFactory->recurring;?>" />
 						<?php }
@@ -979,7 +985,11 @@ class Payment_HTML
 
 		HTML_frontend::aec_styling( $option );
 
-		$terms = $InvoiceFactory->terms->getTerms();
+		if ( !empty( $InvoiceFactory->terms ) ) {
+			$terms = $InvoiceFactory->terms->getTerms();
+		} else {
+			$terms = false;
+		}
 
 		$introtext = '_CHECKOUT_INFO' . ( $repeat ? '_REPEAT' : '' );
 
@@ -997,64 +1007,75 @@ class Payment_HTML
 			} ?>
 			<table id="aec_checkout">
 			<?php
-				foreach ( $terms as $tid => $term ) {
-					$ttype = 'aec_termtype_' . $term->type;
+				if ( !empty( $terms ) ) {
+					foreach ( $terms as $tid => $term ) {
+						$ttype = 'aec_termtype_' . $term->type;
 
-					//$future = ( $tid > $InvoiceFactory->terms->pointer ) ? '&nbsp;('._AEC_CHECKOUT_FUTURETERM.')' : '';
-					$applicable = ( $tid >= $InvoiceFactory->terms->pointer ) ? '' : '&nbsp;('._AEC_CHECKOUT_NOTAPPLICABLE.')';
+						//$future = ( $tid > $InvoiceFactory->terms->pointer ) ? '&nbsp;('._AEC_CHECKOUT_FUTURETERM.')' : '';
+						$applicable = ( $tid >= $InvoiceFactory->terms->pointer ) ? '' : '&nbsp;('._AEC_CHECKOUT_NOTAPPLICABLE.')';
 
-					$current = ( $tid == $InvoiceFactory->terms->pointer ) ? ' current_period' : '';
+						$current = ( $tid == $InvoiceFactory->terms->pointer ) ? ' current_period' : '';
 
-					// Headline - What type is this term
-					echo '<tr class="aec_term_typerow' . $current . '"><th colspan="2" class="' . $ttype . '">' . constant( strtoupper( '_' . $ttype ) ) . $applicable . '</th></tr>';
-					// Subheadline - specify the details of this term
-					echo '<tr class="aec_term_durationrow' . $current . '"><td colspan="2" class="aec_term_duration">' . _AEC_CHECKOUT_DURATION . ': ' . $term->renderDuration() . '</td></tr>';
+						// Headline - What type is this term
+						echo '<tr class="aec_term_typerow' . $current . '"><th colspan="2" class="' . $ttype . '">' . constant( strtoupper( '_' . $ttype ) ) . $applicable . '</th></tr>';
+						// Subheadline - specify the details of this term
+						echo '<tr class="aec_term_durationrow' . $current . '"><td colspan="2" class="aec_term_duration">' . _AEC_CHECKOUT_DURATION . ': ' . $term->renderDuration() . '</td></tr>';
 
-					// Iterate through costs
-					foreach ( $term->renderCost() as $citem ) {
-						$t = constant( strtoupper( '_aec_checkout_' . $citem->type ) );
-						$c = AECToolbox::formatAmount( $citem->cost['amount'], $InvoiceFactory->payment->currency );
+						// Iterate through costs
+						foreach ( $term->renderCost() as $citem ) {
+							$t = constant( strtoupper( '_aec_checkout_' . $citem->type ) );
+							$c = AECToolbox::formatAmount( $citem->cost['amount'], $InvoiceFactory->payment->currency );
 
-						switch ( $citem->type ) {
-							case 'discount':
-								$ta = $t;
-								if ( !empty( $citem->cost['details'] ) ) {
-									$ta .= '&nbsp;(' . $citem->cost['details'] . ')';
-								}
-								$ta .= '&nbsp;[<a href="'
-									. AECToolbox::deadsureURL( 'index.php?option=' . $option
-									. '&amp;task=InvoiceRemoveCoupon&amp;invoice=' . $InvoiceFactory->invoice_number
-									. '&amp;coupon_code=' . $citem->cost['coupon'] )
-									. '" title="' . _CHECKOUT_INVOICE_COUPON_REMOVE . '">'
-									. _CHECKOUT_INVOICE_COUPON_REMOVE . '</a>]';
-
-								$t = $ta;
-
-								$c = AECToolbox::formatAmount( $citem->cost['amount'] );
-
-								// Strip out currency symbol and replace with blanks
-								if ( !$aecConfig->cfg['amount_currency_symbolfirst'] ) {
-									$strlen = 2;
-
-									if ( !$aecConfig->cfg['amount_currency_symbol'] ) {
-										$strlen = 1 + strlen( $InvoiceFactory->payment->currency ) * 2;
+							switch ( $citem->type ) {
+								case 'discount':
+									$ta = $t;
+									if ( !empty( $citem->cost['details'] ) ) {
+										$ta .= '&nbsp;(' . $citem->cost['details'] . ')';
 									}
+									$ta .= '&nbsp;[<a href="'
+										. AECToolbox::deadsureURL( 'index.php?option=' . $option
+										. '&amp;task=InvoiceRemoveCoupon&amp;invoice=' . $InvoiceFactory->invoice_number
+										. '&amp;coupon_code=' . $citem->cost['coupon'] )
+										. '" title="' . _CHECKOUT_INVOICE_COUPON_REMOVE . '">'
+										. _CHECKOUT_INVOICE_COUPON_REMOVE . '</a>]';
 
-									for( $i=0; $i<=$strlen;$i++ ) {
-										$c .= '&nbsp;';
+									$t = $ta;
+
+									$c = AECToolbox::formatAmount( $citem->cost['amount'] );
+
+									// Strip out currency symbol and replace with blanks
+									if ( !$aecConfig->cfg['amount_currency_symbolfirst'] ) {
+										$strlen = 2;
+
+										if ( !$aecConfig->cfg['amount_currency_symbol'] ) {
+											$strlen = 1 + strlen( $InvoiceFactory->payment->currency ) * 2;
+										}
+
+										for( $i=0; $i<=$strlen;$i++ ) {
+											$c .= '&nbsp;';
+										}
 									}
-								}
-								break;
-							case 'cost': break;
-							case 'total': break;
-							default: break;
+									break;
+								case 'cost': break;
+								case 'total': break;
+								default: break;
+							}
+
+							echo '<tr class="aec_term_' . $citem->type . 'row' . $current . '"><td class="aec_term_' . $citem->type . 'title">' . $t . ':' . '</td><td class="aec_term_' . $citem->type . 'amount">' . $c . '</td></tr>';
 						}
 
-						echo '<tr class="aec_term_' . $citem->type . 'row' . $current . '"><td class="aec_term_' . $citem->type . 'title">' . $t . ':' . '</td><td class="aec_term_' . $citem->type . 'amount">' . $c . '</td></tr>';
+						// Draw Separator Line
+						echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
 					}
+				} elseif ( !empty( $InvoiceFactory->cart ) ) {
+					foreach ( $InvoiceFactory->cart as $cartitem ) {
+						if ( !empty( $cartitem['name'] ) ) {
+							echo '<tr class="aec_term_costrow"><td class="aec_term_title">' . $cartitem['name'] . ' (' . $cartitem['cost'] . 'x' . $cartitem['count'] . ')' . '</td><td class="aec_term_amount">' . $cartitem['cost_total'] . '</td></tr>';
+						} else {
+							echo '<tr class="aec_term_totalrow"><td class="aec_term_title">' . _CART_ROW_TOTAL . '</td><td class="aec_term_amount">' . $cartitem['cost_total'] . '</td></tr>';
+						}
 
-					// Draw Separator Line
-					echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
+					}
 				}
 			?>
 			</table>
@@ -1068,18 +1089,20 @@ class Payment_HTML
 						</td>
 					</tr>
 					<?php
-					if ( isset( $InvoiceFactory->terms->errors ) ) {
-						foreach ( $InvoiceFactory->terms->errors as $error ) { ?>
-						<tr>
-							<td class="couponerror">
-								<p>
-									<strong><?php echo _COUPON_ERROR_PRETEXT; ?></strong>
-									&nbsp;
-									<?php echo $error; ?>
-								</p>
-							</td>
-						</tr>
-						<?php
+					if ( !empty( $InvoiceFactory->terms ) ) {
+						if ( isset( $InvoiceFactory->terms->errors ) ) {
+							foreach ( $InvoiceFactory->terms->errors as $error ) { ?>
+							<tr>
+								<td class="couponerror">
+									<p>
+										<strong><?php echo _COUPON_ERROR_PRETEXT; ?></strong>
+										&nbsp;
+										<?php echo $error; ?>
+									</p>
+								</td>
+							</tr>
+							<?php
+							}
 						}
 					} ?>
 					<tr>
@@ -1126,9 +1149,12 @@ class Payment_HTML
 		<table width="100%">
 			<tr><td>
 				<?php
-				if ( is_object( $InvoiceFactory->pp ) ) {
-					HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $aecConfig->cfg['displayccinfo'] );
-				} ?>
+				if ( !empty( $InvoiceFactory->pp ) ) {
+					if ( is_object( $InvoiceFactory->pp ) ) {
+						HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $aecConfig->cfg['displayccinfo'] );
+					}
+				}
+				?>
 			</td></tr>
 		</table>
 		<div style="clear:both"></div>
