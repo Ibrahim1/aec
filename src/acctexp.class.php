@@ -11372,8 +11372,10 @@ class microIntegrationHandler
 		$mi_autointegrations = $this->getAutoIntegrations();
 
 		if ( is_array( $mi_autointegrations ) || ( $subscription_plan !== false ) ) {
-			if ( is_array( $subscription_plan->micro_integrations ) ) {
-				$user_auto_integrations = array_intersect( $subscription_plan->micro_integrations, $mi_autointegrations );
+			$mis = $subscription_plan->getMicroIntegrations();
+
+			if ( is_array( $mis ) ) {
+				$user_auto_integrations = array_intersect( $mis, $mi_autointegrations );
 			} else {
 				$user_auto_integrations = $mi_autointegrations;
 			}

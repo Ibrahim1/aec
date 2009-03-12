@@ -2490,7 +2490,7 @@ function editProcessor( $id, $option )
 		// Create Processor Selection Screen
 		$pph					= new PaymentProcessorHandler();
 		$pplist					= $pph->getProcessorList();
-		$pp_installed_list		= $pph->getInstalledObjectList( true, true );
+		$pp_installed_list		= $pph->getInstalledObjectList( false, true );
 
 		$pp_list_html			= array();
 
@@ -2506,7 +2506,6 @@ function editProcessor( $id, $option )
 			// Load Payment Processor
 			$pp = new PaymentProcessor();
 			if ( $pp->loadName( $ppname ) ) {
-				$pp->Init();
 				$pp->getInfo();
 
 				// Add to general PP List
