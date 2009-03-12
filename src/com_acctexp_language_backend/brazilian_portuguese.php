@@ -660,6 +660,8 @@ define( '_CFG_CUSTOMIZATION_SUB_CAPTCHA', 'ReCAPTACHA');
 
 define( '_CFG_GENERAL_CUSTOMINTRO_NAME', 'Link para a pagina de introdu&ccedil;&atilde;o personalida:');
 define( '_CFG_GENERAL_CUSTOMINTRO_DESC', 'Forne&ccedil;a um link completo (inclu&iacute;ndo http://) que conduza &agrave; sua p&aacute;gina de introdu&ccedil;&atilde;o Padr&atilde;o. Est&aacute; pagina deve conter um link como por exemplo:: http://www.oseudominio.com/index.php?option=com_acctexp&amp;task=subscribe&amp;intro=1 o que ignora a intordu&ccedil;&atilde;o e encaminha correctamente o utilizador para a pagina de planos de pagamento ou detalhes do registo. Deixe o campo em branco se n&atilde;o pretender isto.');
+define( '_CFG_GENERAL_CUSTOMINTRO_USERID_NAME', 'Pass Userid');
+define( '_CFG_GENERAL_CUSTOMINTRO_USERID_DESC', 'Pass Userid via a Joomla notification. This can be helpful for flexible custom signup pages that need to function even if the user is not logged in. You can use Javascript to modify your signup links according to the passed userid.');
 define( '_CFG_GENERAL_CUSTOMTHANKS_NAME', 'Link pagina de agradecimento Padr&atilde;o:');
 define( '_CFG_GENERAL_CUSTOMTHANKS_DESC', 'Forne&ccedil;a um link completo (inclu&iacute;ndo http://) este encaminha para a sua pagina de agradecimento Padr&atilde;o. Deixe o campo em branco se n&atilde;o pretender isso.');
 define( '_CFG_GENERAL_CUSTOMCANCEL_NAME', 'Link pagina Cancelamento Padr&atilde;o:');
@@ -791,6 +793,13 @@ define( '_CFG_GENERAL_CONFIRMATION_COUPONS_NAME', 'Cup&otilde;es na Confirma&cce
 define( '_CFG_GENERAL_CONFIRMATION_COUPONS_DESC', 'Oferta para fornecer c&oacute;digos de cup&oacute;es quano cliquem no bot&atilde;o de Confirma&ccedil;&atilde;o na pagina de Confirma&ccedil;&atilde;o');
 define( '_CFG_GENERAL_BREAKON_MI_ERROR_NAME', 'Quebra no Erro MI');
 define( '_CFG_GENERAL_BREAKON_MI_ERROR_DESC', 'Para aplica&ccedil;&atilde;o dos planos se um dos MI encontrar erros (ser&aacute; tra&ccedil;ado um log do evento de qualquer forma)');
+
+define( '_CFG_GENERAL_ENABLE_SHOPPINGCART_NAME', 'Enable Shopping Cart');
+define( '_CFG_GENERAL_ENABLE_SHOPPINGCART_DESC', 'Handle purchases via shopping cart. Available only for logged-in users.');
+define( '_CFG_GENERAL_CUSTOMLINK_CONTINUESHOPPING_NAME', 'Custom Continue Shopping Link');
+define( '_CFG_GENERAL_CUSTOMLINK_CONTINUESHOPPING_DESC', 'Instead of routing a user to the standard subscription page, route here.');
+define( '_CFG_GENERAL_ADDITEM_STAYONPAGE_NAME', 'Stay on Page');
+define( '_CFG_GENERAL_ADDITEM_STAYONPAGE_DESC', 'Instead of moving to the shopping cart after selecting an item, stay on the same page.');
 
 define( '_CFG_GENERAL_CURL_DEFAULT_NAME', 'Usar cURL');
 define( '_CFG_GENERAL_CURL_DEFAULT_DESC', 'Usar cURL em vez de fsockopen por padr&atilde;o (falhar&aacute; o outro, se a primeira escolha falhar)');

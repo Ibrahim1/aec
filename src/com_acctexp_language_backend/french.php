@@ -543,6 +543,8 @@ define( '_CFG_CUSTOMIZATION_SUB_CAPTCHA', 'ReCAPTACHA');
 
 define( '_CFG_GENERAL_CUSTOMINTRO_NAME', 'Lien personnalis&eacute; de la page d\'introduction:');
 define( '_CFG_GENERAL_CUSTOMINTRO_DESC', 'Provide a full link (including http://) that leads to your custom intro page. That page has to contain a link like this: http://www.yourdomain.com/index.php?option=com_acctexp&amp;task=subscribe&amp;intro=1 which bypasses the intro and correctly forwards the user to the payment plans or registration details page. Leave this field blank if you don&amp;acute;t want this at all.');
+define( '_CFG_GENERAL_CUSTOMINTRO_USERID_NAME', 'Pass Userid');
+define( '_CFG_GENERAL_CUSTOMINTRO_USERID_DESC', 'Pass Userid via a Joomla notification. This can be helpful for flexible custom signup pages that need to function even if the user is not logged in. You can use Javascript to modify your signup links according to the passed userid.');
 define( '_CFG_GENERAL_CUSTOMTHANKS_NAME', 'Lien personnalis&eacute; de la page de remerciement:');
 define( '_CFG_GENERAL_CUSTOMTHANKS_DESC', 'Fournir un lien complet (avec http://) qui dirige &agrave; votre page de remerciement personnalis&eacute;e. Laissez ce champ vide si vous n&amp;acute;en voulez.');
 define( '_CFG_GENERAL_CUSTOMCANCEL_NAME', 'Lien personnalis&eacute; de la page d\'annulation:');
@@ -672,6 +674,13 @@ define( '_CFG_GENERAL_CONFIRMATION_COUPONS_NAME', 'Coupons on Confirmation');
 define( '_CFG_GENERAL_CONFIRMATION_COUPONS_DESC', 'Offer to provide coupon codes when clicking the Confirm Button on the Confirmation page');
 define( '_CFG_GENERAL_BREAKON_MI_ERROR_NAME', 'Break on MI Error');
 define( '_CFG_GENERAL_BREAKON_MI_ERROR_DESC', 'Stop plan application if one of its attached MIs encounters an error (there will be trace in the eventlog either way)');
+
+define( '_CFG_GENERAL_ENABLE_SHOPPINGCART_NAME', 'Enable Shopping Cart');
+define( '_CFG_GENERAL_ENABLE_SHOPPINGCART_DESC', 'Handle purchases via shopping cart. Available only for logged-in users.');
+define( '_CFG_GENERAL_CUSTOMLINK_CONTINUESHOPPING_NAME', 'Custom Continue Shopping Link');
+define( '_CFG_GENERAL_CUSTOMLINK_CONTINUESHOPPING_DESC', 'Instead of routing a user to the standard subscription page, route here.');
+define( '_CFG_GENERAL_ADDITEM_STAYONPAGE_NAME', 'Stay on Page');
+define( '_CFG_GENERAL_ADDITEM_STAYONPAGE_DESC', 'Instead of moving to the shopping cart after selecting an item, stay on the same page.');
 
 define( '_CFG_GENERAL_CURL_DEFAULT_NAME', 'Use cURL');
 define( '_CFG_GENERAL_CURL_DEFAULT_DESC', 'Use cURL instead of fsockopen as default (will fall back to the other one if the first choice fails)');
