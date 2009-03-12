@@ -8450,6 +8450,7 @@ class aecCartHelper
 		$query = 'SELECT id'
 		. ' FROM #__acctexp_invoices'
 		. ' WHERE `usage` = \'c.' . $cart->id . '\''
+		. ' AND active = \'1\''
 		;
 		$database->setQuery( $query );
 		return $database->loadResult();
@@ -8549,12 +8550,14 @@ class aecCart extends serialParamDBTable
 			$return['details'] = array( 'type' => 'plan', 'id' => $id );
 
 			$update = false;
-			foreach ( $this->content as $iid => $item ) {
-				if ( ( $item['type'] == $element['type'] ) && ( $item['id'] == $element['id'] ) ) {
-					$return['event']	= 'updateItem';
-					$this->content[$iid]['count']++;
-					$update = true;
-					break;
+			if ( !empty( $this->content ) ) {
+				foreach ( $this->content as $iid => $item ) {
+					if ( ( $item['type'] == $element['type'] ) && ( $item['id'] == $element['id'] ) ) {
+						$return['event']	= 'updateItem';
+						$this->content[$iid]['count']++;
+						$update = true;
+						break;
+					}
 				}
 			}
 
