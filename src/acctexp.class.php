@@ -6513,7 +6513,7 @@ class InvoiceFactory
 
 		// After filtering out the processors, no plan or group can be used, so we have to again issue an error
 		 if ( count( $list ) == 0 ) {
-			mosRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_ERROR ), false, true );
+			mosRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_ERROR, false, true ), false, true );
 			return;
 		}
 
@@ -10550,7 +10550,7 @@ class AECToolbox
 			return $result;
 		} else {
 			if ( $aecConfig->cfg['require_subscription'] ) {
-				if ( $aecConfig->cfg['entry_plan'] ) {
+				if ( !empty( $aecConfig->cfg['entry_plan'] ) ) {
 					$payment_plan = new SubscriptionPlan( $database );
 					$payment_plan->load( $aecConfig->cfg['entry_plan'] );
 
@@ -12899,7 +12899,6 @@ class coupon extends serialParamDBTable
 	{
 		$this->active = 0;
 		$this->storeload();
-		$this->store();
 	}
 
 	function createNew( $code=null, $created=null )
