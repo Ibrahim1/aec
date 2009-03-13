@@ -242,6 +242,12 @@ define( '_CONFIRM_COUPON_INFO_BOTH', 'Если у Вас есть купон в�
 define( '_CONFIRM_FREETRIAL', 'Бесплатный тестовый период');
 
 
+// --== SHOPPING CART FORM ==--
+define( '_CART_TITLE', 'Shopping Cart');
+define( '_CART_ROW_TOTAL', 'Total');
+define( '_CART_INFO', 'Please use the Continue-Button below to complete your purchase.');
+
+
 
 // --== PROMPT PASSWORD FORM ==--
 

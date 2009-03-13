@@ -126,6 +126,11 @@ define( '_CONFIRM_COUPON_INFO', 'Hvis du har en kupon kode, kan du indtaste den 
 define( '_CONFIRM_COUPON_INFO_BOTH', 'Hvis du har en kupon kode, kan ud indtaste den her, eller p&aring; tjek ud siden for at f&aring; rabat p&aring; din betaling');
 define( '_CONFIRM_FREETRIAL', 'Gratis pr&oslash;veperiode');
 
+// --== SHOPPING CART FORM ==--
+define( '_CART_TITLE', 'Shopping Cart');
+define( '_CART_ROW_TOTAL', 'Total');
+define( '_CART_INFO', 'Please use the Continue-Button below to complete your purchase.');
+
 // --== PROMPT PASSWORD FORM ==--
 define( '_AEC_PROMPT_PASSWORD', 'For sikkerhedsgrunde skal du indtaste dit kodeord for at fors&aelig;tte.');
 define( '_AEC_PROMPT_PASSWORD_WRONG', 'Det indtastede kodeord passer ikke det det vi har registreret tilh&oslash;rende din konto. Pr&oslash;v venligst igen.');

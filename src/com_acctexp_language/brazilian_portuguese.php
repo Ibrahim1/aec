@@ -131,6 +131,11 @@ define( '_CONFIRM_COUPON_INFO', 'Se tiver um cup&atilde;o promocional, pode inse
 define( '_CONFIRM_COUPON_INFO_BOTH', 'Se tiver um cup&atilde;o promocional, pode inserir o seu c&oacute;digo aqui, ou na Pagina de Verifica&ccedil;&atilde;o para obter um desconto sobre o seu pagamento');
 define( '_CONFIRM_FREETRIAL', 'Demonstra&ccedil;&atilde;o Gr&aacute;tis');
 
+// --== SHOPPING CART FORM ==--
+define( '_CART_TITLE', 'Shopping Cart');
+define( '_CART_ROW_TOTAL', 'Total');
+define( '_CART_INFO', 'Please use the Continue-Button below to complete your purchase.');
+
 // --== PROMPT PASSWORD FORM ==--
 define( '_AEC_PROMPT_PASSWORD', 'por raz&otilde;es de seguran&ccedil;a, precisa inserir a sua senha para continuar.');
 define( '_AEC_PROMPT_PASSWORD_WRONG', 'A Senha inserida n&atilde;o corresponde com a sua senha indicada na inscri&ccedil;&atilde;o. Por favor tente novamente.');
