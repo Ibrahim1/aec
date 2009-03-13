@@ -1139,7 +1139,7 @@ function saveUser( $option, $apply=0 )
 	global $database, $mainframe, $mosConfig_list_limit;
 
 	$metaUser = new metaUser( $_POST['userid'] );
-	$establish = false;
+	$established = false;
 
 	if ( $metaUser->hasSubscription && !empty( $_POST['id'] ) ) {
 		$metaUser->moveFocus( $_POST['id'] );
@@ -1157,7 +1157,7 @@ function saveUser( $option, $apply=0 )
 
 		if ( !$metaUser->hasSubscription ) {
 			$metaUser->establishFocus( $plan );
-			$establish = true;
+			$established = true;
 		}
 
 		$metaUser->focusSubscription->applyUsage( $_POST['assignto_plan'], 'none', 1 );
@@ -1206,16 +1206,12 @@ function saveUser( $option, $apply=0 )
 		}
 	}
 
-	if ( $metaUser->hasSubscription || $establish ) {
-		if ( !$metaUser->focusSubscription->check() ) {
-			echo "<script> alert('".$metaUser->focusSubscription->getError()."'); window.history.go(-1); </script>\n";
-			exit();
-		}
+	if ( !empty( $_POST['notes'] ) ) {
+		$metaUser->focusSubscription->custom_params['notes'] = $_POST['notes'];
+	}
 
-		if ( !$metaUser->focusSubscription->store() ) {
-			echo "<script> alert('".$metaUser->focusSubscription->getError()."'); window.history.go(-1); </script>\n";
-			exit();
-		}
+	if ( $metaUser->hasSubscription || $established ) {
+		$metaUser->focusSubscription->storeload()
 	}
 
  	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );

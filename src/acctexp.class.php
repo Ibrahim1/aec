@@ -11377,7 +11377,7 @@ class microIntegrationHandler
 			if ( is_array( $mis ) ) {
 				$user_auto_integrations = array_intersect( $mis, $mi_autointegrations );
 			} else {
-				$user_auto_integrations = $mi_autointegrations;
+				return null;
 			}
 
 			if ( count( $user_auto_integrations ) ) {
@@ -11762,9 +11762,10 @@ class microIntegration extends serialParamDBTable
 
 	function expiration_action( $metaUser, $objplan=null )
 	{
+		// Needs to be declared as variable due to call by reference
 		$add = false;
 
-			return $this->relayAction( $metaUser, null, null, $objplan, 'expiration_action', $add );
+		return $this->relayAction( $metaUser, null, null, $objplan, 'expiration_action', $add );
 	}
 
 	function relayAction( $metaUser, $exchange=null, $invoice=null, $objplan=null, $stage='action', &$add )

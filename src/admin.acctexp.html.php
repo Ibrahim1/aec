@@ -706,6 +706,13 @@ class HTML_AcctExp
 								<?php echo _AEC_FEATURE_NOT_ACTIVE; ?>
 							</div>
 						</div>-->
+						<div class="userinfobox">
+							<div style="float: left; text-align: right;">
+								<h3><?php echo 'Notes'; ?></h3>
+							</div>
+							<div style="float: left; text-align: left;">
+							<textarea style="width:100%" cols="450" rows="1" name="notes" id="notes" value="<?php echo $metaUser->focusSubscription->custom_params['notes']; ?>" />
+							</div>
 					</td>
 				</tr>
 			</table>
