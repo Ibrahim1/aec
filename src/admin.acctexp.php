@@ -1211,7 +1211,7 @@ function saveUser( $option, $apply=0 )
 	}
 
 	if ( $metaUser->hasSubscription || $established ) {
-		$metaUser->focusSubscription->storeload()
+		$metaUser->focusSubscription->storeload();
 	}
 
  	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
