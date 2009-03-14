@@ -6941,17 +6941,14 @@ class InvoiceFactory
 				|| ( $this->plan->params['trial_free'] && empty( $this->invoice->counter ) ) ) {
 				// Then mark payed
 				if ( $this->invoice->pay() !== false ) {
-					$this->thanks( $option, false, true );
-					return;
+					return $this->thanks( $option, false, true );
 				}
 			}
 
-			notAllowed( $option );
-			return;
+			return notAllowed( $option );
 		} elseif ( strcmp( strtolower( $this->processor ), 'error' ) === 0 ) {
 			// Nope, won't work buddy
-			notAllowed( $option );
-			return;
+			return notAllowed( $option );
 		}
 
 		if ( !empty( $this->pp->info['secure'] ) && empty( $_SERVER['HTTPS'] ) && !$aecConfig->cfg['override_reqssl'] ) {
@@ -7008,8 +7005,7 @@ class InvoiceFactory
 		if ( !empty( $this->terms ) ) {
 			if ( $this->terms->checkFree() || ( $this->terms->nextterm->free && !$this->recurring ) ) {
 				$this->invoice->pay();
-				$this->thanks( $option, false, true );
-				return;
+				return $this->thanks( $option, false, true );
 			}
 		}
 
@@ -7155,7 +7151,7 @@ class InvoiceFactory
 				mosRedirect( $aecConfig->cfg['customthanks'] );
 			}
 		} else {
-			$this->simplethanks( $option, $renew, $free );
+			return $this->simplethanks( $option, $renew, $free );
 		}
 
 		if ( isset( $this->renew ) ) {
