@@ -13418,6 +13418,8 @@ class aecReadout
 	{
 		global $database;
 
+		$readout = array();
+
 		$r = array();
 		$r['head'] = "Processors";
 
@@ -13500,7 +13502,9 @@ class aecReadout
 			$r['set'] = array( 0 => $ps );
 		}
 
-		return $r;
+		$readout[] = $r;
+
+		return $readout;
 	}
 
 	function readPlans()
@@ -13655,64 +13659,71 @@ class aecReadout
 		global $database;
 
 		$r = array();
-					$r['head'] = "Micro Integration";
+		$r['head'] = "Micro Integration";
+		$r['type'] = "";
 
-					$micursor = '';
-					foreach ( $this->milist as $miobj ) {
-						$mi = new microIntegration( $database );
-						$mi->load( $miobj->id );
-						$mi->callIntegration();
+		$micursor = '';
+		foreach ( $this->milist as $miobj ) {
+			$mi = new microIntegration( $database );
+			$mi->load( $miobj->id );
+			$mi->callIntegration(true);
 
-						if ( $miobj->class_name != $micursor ) {
-							$readout[] = $r;
-							unset($r);
-							$r = array();
-							$r['head'] = $mi->info['name'];
-							$r['type'] = "table";
-							$r['sub'] = true;
-							$r['set'] = array();
+			if ( $miobj->class_name != $micursor ) {
+				$readout[] = $r;
+				unset($r);
+				$r = array();
+				if ( !empty( $mi->info ) ) {
+					$r['head'] = $mi->info['name'];
+				} else {
+					$r['head'] = $miobj->class_name;
+				}
+				$r['type'] = "table";
+				$r['sub'] = true;
+				$r['set'] = array();
 
-							$r['def'] = array (
-								"ID" => array( 'id' ),
-								"Published" => array( 'active', 'bool' ),
-								"Visible" => array( 'visible', 'bool' ),
-								"Name" => array( 'name', 'smartlimit haslink', 'editMicroIntegration', 'id' ),
-								"Desc" => array( 'desc', 'notags smartlimit' ),
-								"Exp Action" => array( 'auto_check', 'bool' ),
-								"PreExp Action" => array( 'pre_exp_check' ),
-								"UserChange Action" => array( 'on_userchange', 'bool' )
-								);
+				$r['def'] = array (
+					"ID" => array( 'id' ),
+					"Published" => array( 'active', 'bool' ),
+					"Visible" => array( 'visible', 'bool' ),
+					"Name" => array( 'name', 'smartlimit haslink', 'editMicroIntegration', 'id' ),
+					"Desc" => array( 'desc', 'notags smartlimit' ),
+					"Exp Action" => array( 'auto_check', 'bool' ),
+					"PreExp Action" => array( 'pre_exp_check' ),
+					"UserChange Action" => array( 'on_userchange', 'bool' )
+					);
 
-							$settings = $mi->getSettings();
+				$settings = $mi->getSettings();
 
-							if ( isset( $settings['lists'] ) ) {
-								unset( $settings['lists'] );
-							}
+				if ( isset( $settings['lists'] ) ) {
+					unset( $settings['lists'] );
+				}
 
-							if ( !empty( $settings ) ) {
-								foreach ( $settings as $sname => $setting ) {
-									$name =  '_MI_' . strtoupper( $miobj->class_name ) . '_' . strtoupper( $sname ) .'_NAME';
+				if ( !empty( $settings ) ) {
+					foreach ( $settings as $sname => $setting ) {
+						$name =  '_MI_' . strtoupper( $miobj->class_name ) . '_' . strtoupper( $sname ) .'_NAME';
 
-									if ( defined( $name ) ) {
-										$r['def'][constant($name)] = array( array( 'settings', $sname ), 'notags smartlimit' );
-									} else {
-										$r['def'][$sname] = array( array( 'settings', $sname ), 'notags smartlimit' );
-									}
-								}
-							}
+						if ( defined( $name ) ) {
+							$r['def'][constant($name)] = array( array( 'settings', $sname ), 'notags smartlimit' );
+						} else {
+							$r['def'][$sname] = array( array( 'settings', $sname ), 'notags smartlimit' );
 						}
-
-						$ps = array();
-						foreach ( $r['def'] as $nn => $def ) {
-							$ps = array_merge( $ps, $this->conversionHelper( $def, $mi ) );
-						}
-
-						$r['set'][] = $ps;
-
-						$micursor = $miobj->class_name;
 					}
+				}
+			}
 
-		return $r;
+			$ps = array();
+			foreach ( $r['def'] as $nn => $def ) {
+				$ps = array_merge( $ps, $this->conversionHelper( $def, $mi ) );
+			}
+
+			$r['set'][] = $ps;
+
+			$micursor = $miobj->class_name;
+		}
+
+		$readout[] = $r;
+
+		return $readout;
 	}
 
 	function conversionHelperHTML( $content, $obj )
@@ -13789,7 +13800,7 @@ class aecReadout
 						if ( is_array( $dvalue ) ) {
 							$vv = array();
 							foreach ( $dvalue as $val ) {
-								if ( $dvalue == 0 ) {
+								if ( $val == 0 ) {
 									$vv[] = '--';
 								} else {
 									$vv[] = "#" . $val . ":&nbsp;<strong>" . $this->lists[$content[2]][$val] . "</strong>";

@@ -2786,6 +2786,7 @@ class HTML_AcctExp
 					}
 				}
 
+				if ( !empty( $part['type'] ) ) {
 				switch ( $part['type'] ) {
 					case 'table':
 						echo "<table class=\"aec_readout\">";
@@ -2849,6 +2850,7 @@ class HTML_AcctExp
 
 						echo "</table>";
 						break;
+				}
 				} ?>
 			<?php } ?>
 		</td></tr></table>

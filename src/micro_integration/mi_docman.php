@@ -92,12 +92,12 @@ class mi_docman
 
 			$gr[] = mosHTML::makeOption( $group->groups_id, $desc );
 
-			if ( is_array( $this->settings['group'] ) ) {
+			if ( !empty( $this->settings['group'] ) ) {
 				if ( in_array( $group->groups_id, $this->settings['group'] ) ) {
 					$sg[] = mosHTML::makeOption( $group->groups_id, $desc );
 				}
 			}
-			if ( is_array( $this->settings['group_exp'] ) ) {
+			if ( !empty( $this->settings['group_exp'] ) ) {
 				if ( in_array( $group->groups_id, $this->settings['group_exp'] ) ) {
 					$sge[] = mosHTML::makeOption( $group->groups_id, $desc );
 				}
@@ -111,7 +111,14 @@ class mi_docman
 
 		$settings['lists']['group']			= mosHTML::selectList( $gr, 'group[]', 'size="4" multiple="multiple"', 'value', 'text', $sg );
 		$settings['lists']['group_exp'] 	= mosHTML::selectList( $gr, 'group_exp[]', 'size="4" multiple="multiple"', 'value', 'text', $sge );
-		$settings['lists']['delete_on_exp']	= mosHTML::selectList( $del_opts, 'delete_on_exp', 'size="3"', 'value', 'text', $this->settings['delete_on_exp'] );
+
+		if ( !empty( $this->settings['delete_on_exp'] ) ) {
+			$dee = $this->settings['delete_on_exp'];
+		} else {
+			$dee = array();
+		}
+
+		$settings['lists']['delete_on_exp']	= mosHTML::selectList( $del_opts, 'delete_on_exp', 'size="3"', 'value', 'text', $dee );
 
 		return $settings;
 	}
