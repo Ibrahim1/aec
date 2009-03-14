@@ -386,6 +386,7 @@ function rerouteRegister( $option, $task )
 			$usersConfig =& JComponentHelper::getParams( 'com_users' );
 			$activation = $usersConfig->get('useractivation');
 		} else {
+			global $mainframe;
 			$activation = $mainframe->getCfg( 'useractivation' );
 		}
 
