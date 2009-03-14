@@ -3814,12 +3814,12 @@ class aecHTML
 				break;
 			case 'inputD':
 				$return .= '<div class="setting_form">';
-				$return .= '<textarea cols="50" rows="5" name="' . $name . '" />' . $value . '</textarea>';
+				$return .= '<textarea cols="50" rows="5" name="' . $name . '" >' . $value . '</textarea>';
 				$return .= '</div>';
 				break;
 			case 'inputE':
 				$return .= '<div class="setting_form">';
-				$return .= '<textarea style="width:520px" cols="450" rows="1" name="' . $name . '" />' . $value . '</textarea>';
+				$return .= '<textarea style="width:520px" cols="450" rows="1" name="' . $name . '" >' . $value . '</textarea>';
 				$return .= '</div>';
 				break;
 			case 'checkbox':

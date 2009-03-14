@@ -1207,7 +1207,7 @@ function saveUser( $option, $apply=0 )
 	}
 
 	if ( !empty( $_POST['notes'] ) ) {
-		$metaUser->focusSubscription->custom_params['notes'] = $_POST['notes'];
+		$metaUser->focusSubscription->customparams['notes'] = $_POST['notes'];
 	}
 
 	if ( $metaUser->hasSubscription || $established ) {
