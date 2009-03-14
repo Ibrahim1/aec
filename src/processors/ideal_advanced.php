@@ -16,6 +16,7 @@ class processor_ideal_advanced extends XMLprocessor
 	function info()
 	{
 		$i = array();
+		$i['name']			= 'ideal_advanced';
 		$i['longname']		= _CFG_IDEAL_ADVANCED_LONGNAME;
 		$i['statement']		= _CFG_IDEAL_ADVANCED_STATEMENT;
 		$i['description']	= _CFG_IDEAL_ADVANCED_DESCRIPTION;

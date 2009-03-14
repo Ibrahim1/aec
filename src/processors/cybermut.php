@@ -16,6 +16,7 @@ class processor_cybermut extends POSTprocessor
 	function info()
 	{
 		$info = array();
+		$info['name'] = 'cybermut';
 		$info['longname'] = _CFG_CYBERMUT_LONGNAME;
 		$info['statement'] = _CFG_CYBERMUT_STATEMENT;
 		$info['description'] = _CFG_CYBERMUT_DESCRIPTION;

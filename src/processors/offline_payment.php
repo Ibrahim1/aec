@@ -16,6 +16,7 @@ class processor_offline_payment extends processor
 	function info()
 	{
 		$info = array();
+		$info['name']			= 'offline_payment';
 		$info['longname']		= _CFG_OFFLINE_PAYMENT_LONGNAME;
 		$info['statement']		= _CFG_OFFLINE_PAYMENT_STATEMENT;
 		$info['description']	= _CFG_OFFLINE_PAYMENT_DESCRIPTION;

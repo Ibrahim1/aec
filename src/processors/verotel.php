@@ -16,6 +16,7 @@ class processor_verotel extends URLprocessor
 	function info()
 	{
 		$i = array();
+		$i['name']					= 'verotel';
 		$i['longname']				= _CFG_VEROTEL_LONGNAME;
 		$i['statement']				= _CFG_VEROTEL_STATEMENT;
 		$i['description']			= _CFG_VEROTEL_DESCRIPTION;

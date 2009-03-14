@@ -16,6 +16,7 @@ class processor_paysite_cash extends URLprocessor
 	function info()
 	{
 		$i = array();
+		$i['name'] = 'paysite_cash';
 		$i['longname'] = _CFG_PAYSITE_CASH_LONGNAME;
 		$i['statement'] = _CFG_PAYSITE_CASH_STATEMENT;
 		$i['description'] = _CFG_PAYSITE_CASH_DESCRIPTION;

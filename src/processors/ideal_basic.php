@@ -16,6 +16,7 @@ class processor_ideal_basic extends URLprocessor
 	function info()
 	{
 		$i = array();
+		$i['name']			= 'ideal_basic';
 		$i['longname']		= _CFG_IDEAL_BASIC_LONGNAME;
 		$i['statement']		= _CFG_IDEAL_BASIC_STATEMENT;
 		$i['description']	= _CFG_IDEAL_BASIC_DESCRIPTION;
