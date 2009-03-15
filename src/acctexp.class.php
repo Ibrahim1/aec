@@ -7430,6 +7430,8 @@ class Invoice extends serialParamDBTable
 	{
 		global $database;
 
+		$pp = null;
+
 		if ( !is_null( $this->usage ) && !( $this->usage == '' ) ) {
 			$recurring = '';
 
@@ -7482,12 +7484,14 @@ class Invoice extends serialParamDBTable
 
 					$metaUser = new metaUser( $this->userid ? $this->userid : 0 );
 
-					$pp->exchangeSettingsByPlan( $plan );
+					if ( is_object( $pp ) ) {
+						$pp->exchangeSettingsByPlan( $plan );
 
-					if ( $pp->is_recurring() ) {
-						$recurring = $pp->is_recurring();
-					} else {
-						$recurring = 0;
+						if ( $pp->is_recurring() ) {
+							$recurring = $pp->is_recurring();
+						} else {
+							$recurring = 0;
+						}
 					}
 
 					if ( $metaUser->hasSubscription ) {
