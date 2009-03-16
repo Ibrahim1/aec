@@ -44,6 +44,14 @@
 		<filename>lib/j15/index.html</filename>
 		<filename>lib/j15/j15.php</filename>
 		<filename>lib/j15/object.php</filename>
+		<filename>lib/jquery/css/index.html</filename>
+		<filename>lib/jquery/css/smoothness/index.html</filename>
+		<filename>lib/jquery/css/smoothness/jquery-ui-1.7.custom.css</filename>
+		<filename>lib/jquery/css/smoothness/images/index.html</filename>
+		<filename>lib/jquery/css/smoothness/images/jquery_ui_smoothness_img.tar.gz</filename>
+		<filename>lib/jquery/index.html</filename>
+		<filename>lib/jquery/jquery-1.3.2.min.js</filename>
+		<filename>lib/jquery/jquery-ui-1.7.custom.min.js</filename>
 		<filename>lib/krumo/index.html</filename>
 		<filename>lib/krumo/krumo.tar.gz</filename>
 		<filename>lib/mammontini/index.html</filename>
@@ -69,6 +77,7 @@
 		<filename>micro_integration/mi_aecdonate.php</filename>
 		<filename>micro_integration/mi_aecplan.php</filename>
 		<filename>micro_integration/mi_affiliatepro.php</filename>
+		<filename>micro_integration/mi_age_restriction.php</filename>
 		<filename>micro_integration/mi_apc.php</filename>
 		<filename>micro_integration/mi_attend_events.php</filename>
 		<filename>micro_integration/mi_communitybuilder.php</filename>
@@ -116,6 +125,7 @@
 		<filename>processors/cybermut.php</filename>
 		<filename>processors/epsnetpay.php</filename>
 		<filename>processors/eway.php</filename>
+		<filename>processors/eway_xml.php</filename>
 		<filename>processors/iats.php</filename>
 		<filename>processors/ideal_basic.php</filename>
 		<filename>processors/ideal_advanced.php</filename>

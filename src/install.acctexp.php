@@ -199,6 +199,7 @@ function com_install()
 					array( 'images/gateway_logos.tar.gz',						'images/',						0 ),
 					array( 'lib/krumo/krumo.tar.gz',							'lib/krumo/',					0 ),
 					array( 'lib/mootools/mootools.tar.gz',						'lib/mootools/',				0 ),
+					array( 'lib/jquery/css/smoothness/images/jquery_ui_smoothness_img.tar.gz',						'lib/jquery/css/smoothness/images/',				0 ),
 					array( 'processors/ideal_advanced/ideal_advanced.tar.gz',	'processors/ideal_advanced/',	0 )
 					);
 
