@@ -1474,6 +1474,8 @@ define( '_MI_E_ON_USERCHANGE_NAME', 'User Account Update Action');
 define( '_MI_E_ON_USERCHANGE_DESC', 'If the function allows this, you can enable actions that happen when a user account is being changed (if supported by the MI).');
 define( '_MI_E_PRE_EXP_CHECK_NAME', 'Pre Expiration');
 define( '_MI_E_PRE_EXP_CHECK_DESC', 'Set the amount of days before expiration when a pre-expiration action should be triggered (if supported by the MI).');
+define( '_MI_E__AEC_GLOBAL_EXP_ALL_NAME', 'Expire all instances');
+define( '_MI_E__AEC_GLOBAL_EXP_ALL_DESC', 'Trigger the expiration action even if the user has another payment plan with this MI attached. The standard behavior is to call the expiration action on an MI only when it really is the last MI instance that this user has in all payment plans.');
 define( '_MI_E_FUNCTION_NAME', 'Function Name');
 define( '_MI_E_FUNCTION_DESC', 'Please choose which of these integrations should be used');
 define( '_MI_E_FUNCTION_EXPLANATION', 'Before you can setup the Micro Integration, you have to select which of the integration files we should use for this. Make a selection and save the Micro Integration. When you edit it again, you will be able to set the parameters. Note also, that the function name cannot be changed once its set.');

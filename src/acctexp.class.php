@@ -397,6 +397,48 @@ class metaUser
 		}
 	}
 
+	function getMIlist()
+	{
+		$plans = $this->getAllCurrentSubscriptionPlans();
+
+		$milist = array();
+		foreach ( $plans as $plan_id ) {
+			$mis = microIntegrationHandler::getMIsbyPlan( $plan_id );
+
+			if ( !empty( $mis ) ) {
+				foreach ( $mis as $mi ) {
+					if ( array_key_exists( $mi, $milist ) ) {
+						$milist[$mi]++;
+					} else {
+						$milist[$mi] = 1;
+					}
+				}
+			}
+		}
+
+		return $milist;
+	}
+
+	function getMIcount( $mi_id )
+	{
+		$plans = $this->getAllCurrentSubscriptionPlans();
+
+		$count = 0;
+		foreach ( $plans as $plan_id ) {
+			$mis = microIntegrationHandler::getMIsbyPlan( $plan_id );
+
+			if ( !empty( $mis ) ) {
+				foreach ( $mis as $mi ) {
+					if ( $mi == $mi_id ) {
+						$count++;
+					}
+				}
+			}
+		}
+
+		return $count;
+	}
+
 	function procTriggerCreate( $user, $payment, $usage )
 	{
 		global $database, $aecConfig;
@@ -11374,6 +11416,24 @@ class microIntegrationHandler
 		return $integration_list;
 	}
 
+	function getMIsbyPlan( $plan_id )
+	{
+		global $database;
+
+		$query = 'SELECT `micro_integrations`'
+				. ' FROM #__acctexp_plans'
+				. ' WHERE `id` = \'' . $plan_id . '\''
+				;
+		$database->setQuery( $query );
+		$mis = $database->loadResultArray();
+
+		if ( empty( $mis ) ) {
+			return array();
+		}
+
+		return unserialize( base64_decode( $mis ) );
+	}
+
 	function getPlansbyMI( $mi_id )
 	{
 		global $database;
@@ -11800,6 +11860,13 @@ class microIntegration extends serialParamDBTable
 		// Needs to be declared as variable due to call by reference
 		$add = false;
 
+		if ( !empty( $this->settings['_aec_global_exp_all'] ) ) {
+			if ( $metaUser->getMIcount( $this->id ) > 1 ) {
+				// We have more instances than this one attached to the user, pass on.
+				return null;
+			}
+		}
+
 		return $this->relayAction( $metaUser, null, null, $objplan, 'expiration_action', $add );
 	}
 
@@ -12003,8 +12070,9 @@ class microIntegration extends serialParamDBTable
 	{
 		$settings['name']			= array( 'inputC', '' );
 		$settings['desc']			= array( 'inputD', '' );
-		$settings['active']			= array( 'list_yesno', '' );
+		$settings['active']			= array( 'list_yesno', 1 );
 		$settings['auto_check']		= array( 'list_yesno', '' );
+		$settings['_aec_global_exp_all']		= array( 'list_yesno', 0 );
 		$settings['on_userchange']	= array( 'list_yesno', '' );
 		$settings['pre_exp_check']	= array( 'inputB', '' );
 

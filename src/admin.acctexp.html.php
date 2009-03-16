@@ -1596,6 +1596,7 @@ class HTML_AcctExp
 										<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'auto_check' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( '_aec_global_exp_all' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'on_userchange' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'pre_exp_check' ); ?>
 									</div>

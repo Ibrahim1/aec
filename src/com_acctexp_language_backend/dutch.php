@@ -1321,6 +1321,8 @@ define( '_MI_E_ON_USERCHANGE_NAME', 'Gebruiksaccount update actie');
 define( '_MI_E_ON_USERCHANGE_DESC', 'Als de functie dit toe staat, kunt u hier de opties instellen die moeten gebeuren als een account geupdate wordt.');
 define( '_MI_E_PRE_EXP_CHECK_NAME', 'Voor-Verval');
 define( '_MI_E_PRE_EXP_CHECK_DESC', 'Zet het aantal dagen voor de vervaldatum dat er een actie ondernomen moet worden.');
+define( '_MI_E__AEC_GLOBAL_EXP_ALL_NAME', 'Expire all instances');
+define( '_MI_E__AEC_GLOBAL_EXP_ALL_DESC', 'Trigger the expiration action even if the user has another payment plan with this MI attached. The standard behavior is to call the expiration action on an MI only when it really is the last MI instance that this user has in all payment plans.');
 define( '_MI_E_FUNCTION_NAME', 'Functie naam');
 define( '_MI_E_FUNCTION_DESC', 'Kies s.v.p. welke integraties gebruikt moeten worden');
 define( '_MI_E_FUNCTION_EXPLANATION', 'Voordat u Mico Integraties kunt gaan installeren moet u aangeven welke installatiebestanden we hiervoor moeten gebruiken. Maak een selectie en sla de instellingen op. Bewerk Micro Integraties daarna opnieuw en u bent in de gelegenheid om parameters in te stellen. LET OP: Een funcite naam kan niet aangepast worden zodra deze is ingesteld.');

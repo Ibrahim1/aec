@@ -1411,6 +1411,8 @@ define( '_MI_E_ON_USERCHANGE_NAME',		'Benutzeraktion' );
 define( '_MI_E_ON_USERCHANGE_DESC',		'Falls von der Komponente unterst&uuml;tzt k&ouml;nnen Aktionen definiert werden wenn ein Benutzerabo ausl&auml;ft' );
 define( '_MI_E_PRE_EXP_CHECK_NAME',				'Tage vor Ablauf' );
 define( '_MI_E_PRE_EXP_CHECK_DESC',				'Anzahl der Tage vor dem Ablauf ab wann die Aktionen gelten sollen' );
+define( '_MI_E__AEC_GLOBAL_EXP_ALL_NAME', 'Expire all instances');
+define( '_MI_E__AEC_GLOBAL_EXP_ALL_DESC', 'Trigger the expiration action even if the user has another payment plan with this MI attached. The standard behavior is to call the expiration action on an MI only when it really is the last MI instance that this user has in all payment plans.');
 define( '_MI_E_FUNCTION_NAME',				'Funktionsname' );
 define( '_MI_E_FUNCTION_DESC',				'Welche der Systeme sollen verwendet weren' );
 define( '_MI_E_FUNCTION_EXPLANATION',		'Bevor die MicroIntegration definiert wird, muss bestimmt werden welche der MicroIntegrationen g&uuml;ltig/aktiv sind. Wahl treffen und speichern. Dann nochmals bearbeiten, die Einstellungen sind erst dann sichtbar. HINWEIS: einmal definiert lassen sich die Einstellungen nicht r&uuml;ckg&auml;ngig machen' );

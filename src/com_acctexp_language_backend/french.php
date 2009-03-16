@@ -1317,6 +1317,8 @@ define( '_MI_E_ON_USERCHANGE_NAME', 'Action de mise &agrave; jour du compte util
 define( '_MI_E_ON_USERCHANGE_DESC', 'Si la fonction est active, vous pouvez activer des actions qui se produisent quand un compte d&amp;acute;utilisateur est mis &agrave; jour (Si elle est support&eacute;e par la MI).');
 define( '_MI_E_PRE_EXP_CHECK_NAME', 'Pr&eacute;-expiration');
 define( '_MI_E_PRE_EXP_CHECK_DESC', 'R&eacute;glez le volume de jours avant l&amp;acute;expiration quand une pr&eacute;-expiration action devrait &ecirc;tre d&eacute;clench&eacute; (Si elle est support&eacute;e par la MI).');
+define( '_MI_E__AEC_GLOBAL_EXP_ALL_NAME', 'Expire all instances');
+define( '_MI_E__AEC_GLOBAL_EXP_ALL_DESC', 'Trigger the expiration action even if the user has another payment plan with this MI attached. The standard behavior is to call the expiration action on an MI only when it really is the last MI instance that this user has in all payment plans.');
 define( '_MI_E_FUNCTION_NAME', 'Nom de la fonction');
 define( '_MI_E_FUNCTION_DESC', 'S&amp;acute;il vous pla&#238;t d&eacute;finissez laquelle de ces int&eacute;grations doit &ecirc;tre utilis&eacute;e');
 define( '_MI_E_FUNCTION_EXPLANATION', 'Avant de pouvoir configurer la Micro int&eacute;gration, vous devez s&eacute;lectionner la MI de fichier qui sera utilis&eacute;. Faites une s&eacute;lection et enregistr&eacute; la micro int&eacute;gration. Lorsque vous modifiez &agrave; nouveau, vous serez en mesure d&amp;acute;&eacute;tablir les param&egrave;tres. Notez &eacute;galement que le nom de la fonction ne peut pas &ecirc;tre chang&eacute; une fois int&eacute;gr&eacute;.');
