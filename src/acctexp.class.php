@@ -7915,7 +7915,7 @@ class Invoice extends serialParamDBTable
 
 					$this->params['cart'] = $cart;
 
-					$cart->delete();
+					// TODO: $cart->delete();print_r($database);exit;
 					break;
 				case 'p':
 				case 'plan':
@@ -8097,7 +8097,7 @@ class Invoice extends serialParamDBTable
 		}
 	}
 
-	function getFullVars()
+	function getFullVars( $InvoiceFactory )
 	{
 		global $database, $mosConfig_live_site;
 
@@ -8115,38 +8115,77 @@ class Invoice extends serialParamDBTable
 			}
 		}
 
-		$metaUser = new metaUser( $this->userid );
-
-		$new_subscription = new SubscriptionPlan( $database );
-		$new_subscription->load( $this->usage );
-
-		$pp = new PaymentProcessor();
-		if ( !$pp->loadName( strtolower( $this->method ) ) ) {
-	 		// Nope, won't work buddy
-		 	notAllowed( 'com_acctexp' );
+		if ( !empty( $InvoiceFactory->cart ) ) {
+			$cart = $InvoiceFactory->_cart;
+		} else {
+			$cart = null;
 		}
 
-		$pp->init();
-		$pp->getInfo();
+		$plan = false;
 
-		$int_var['planparams'] = $new_subscription->getProcessorParameters( $pp->id );
+		$urladd = '';
+		if ( $this->usage ) {
+			$plan = $this->getObjUsage();
 
-		if ( $pp->is_recurring() ) {
-			$int_var['recurring'] = $pp->is_recurring();
+			if ( !empty( $plan ) ) {
+				$int_var['planparams'] = $plan->getProcessorParameters( $InvoiceFactory->pp->id );
+
+				if ( isset( $int_var['params']['userselect_recurring'] ) ) {
+					$recurring = $InvoiceFactory->pp->is_recurring( $int_var['params']['userselect_recurring'], true );
+				} else {
+					$recurring = $InvoiceFactory->pp->is_recurring();
+				}
+
+				if ( $InvoiceFactory->metaUser->hasSubscription ) {
+					$amount = $plan->SubscriptionAmount( $int_var['recurring'], $InvoiceFactory->metaUser->objSubscription, $InvoiceFactory->metaUser );
+				} else {
+					$amount = $plan->SubscriptionAmount( $int_var['recurring'], false, $InvoiceFactory->metaUser );
+				}
+
+				if ( !empty( $plan->params['customthanks'] ) || !empty( $plan->params['customtext_thanks'] ) ) {
+					$urladd .= '&amp;u=' . $this->usage;
+				}
+			} else {
+				$recurring = false;
+				$plan = false;
+
+				if ( empty( $cart ) ) {
+					$cc = explode( '.', $this->usage );
+
+					if ( isset( $cc[1] ) ) {
+						$cart = new aecCart( $database );
+						$cart->load( $cc[1] );
+
+					}
+				}
+
+				$amount = $cart->getAmount( $InvoiceFactory->metaUser, $this->cart );
+			}
+
+			if ( $recurring ) {
+				$int_var['recurring'] = $recurring;
+			} else {
+				$int_var['recurring'] = 0;
+			}
 		} else {
+			$amount['amount'] = $this->amount;
 			$int_var['recurring'] = 0;
 		}
-
-		$amount = $new_subscription->SubscriptionAmount( $int_var['recurring'], $metaUser->objSubscription, $metaUser );
 
 		if ( !empty( $this->coupons ) ) {
 			$cph = new couponsHandler();
 
-			$amount['amount'] = $cph->applyCoupons( $amount['amount'], $this->coupons, $metaUser );
+			$amount['amount'] = $cph->applyCoupons( $amount['amount'], $this->coupons, $InvoiceFactory->metaUser, $InvoiceFactory );
 		}
 
 		$int_var['amount']		= $amount['amount'];
-		$int_var['return_url']	= $amount['return_url'];
+
+		if ( !empty( $amount['return_url'] ) ) {
+			$int_var['return_url'] = $amount['return_url'] . $urladd;
+		} else {
+			$int_var['return_url'] = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=thanks&amp;renew=0' . $urladd );
+		}
+
 		$int_var['invoice']		= $this->invoice_number;
 		$int_var['usage']		= $this->invoice_number;
 
@@ -8200,6 +8239,8 @@ class Invoice extends serialParamDBTable
 			$cart = null;
 		}
 
+		$plan = false;
+
 		$urladd = '';
 		if ( $this->usage ) {
 			$plan = $this->getObjUsage();
@@ -8244,8 +8285,6 @@ class Invoice extends serialParamDBTable
 			} else {
 				$int_var['recurring'] = 0;
 			}
-
-
 		} else {
 			$amount['amount'] = $this->amount;
 			$int_var['recurring'] = 0;
