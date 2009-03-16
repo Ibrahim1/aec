@@ -1681,6 +1681,8 @@ class aecHeartbeat extends mosDBTable
 			}
 		}
 
+		aecEventHandler::pingEvents();
+
 		$short	= _AEC_LOG_SH_HEARTBEAT;
 		$event	= _AEC_LOG_LO_HEARTBEAT . ' ';
 		$tags	= array( 'heartbeat' );
@@ -1995,6 +1997,149 @@ class eventLog extends serialParamDBTable
 		$this->store();
 	}
 
+}
+
+class aecEventHandler
+{
+	function pingEvents()
+	{
+		global $database;
+
+		// Load all events happening now or before now
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_event'
+				. ' WHERE `due_date` <= \'' . date( 'Y-m-d H:i:s' ) . '\''
+	 			. ' AND `status` = \'waiting\''
+				;
+		$database->setQuery( $query );
+		$events = $database->loadResultArray();
+
+		// Call each event individually
+		foreach ( $events as $evid ) {
+			$event = new aecEvent( $database );
+			$event->load( $evid );
+			$event->trigger();
+		}
+	}
+
+	// TODO: Finish function that, according to setting, cleans out old entries (like more than two weeks old default)
+	function deleteOldEvents()
+	{
+		global $database;
+
+		// Load all events happening now or before now
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_event'
+				. ' WHERE `due_date` <= \'' . date( 'Y-m-d H:i:s' ) . '\''
+	 			. ' AND `status` = \'waiting\''
+				;
+		$database->setQuery( $query );
+		$events = $database->loadResultArray();
+
+		// Call each event individually
+		foreach ( $events as $evid ) {
+			$event = new aecEvent( $database );
+			$event->load( $evid );
+			$event->trigger();
+		}
+	}
+}
+
+class aecEvent extends serialParamDBTable
+{
+	/** @var int Primary key */
+	var $id					= null;
+	/** @var int */
+	var $userid				= null;
+	/** @var int */
+	var $status				= null;
+	/** @var string */
+	var $type		 		= null;
+	/** @var string */
+	var $subtype	 		= null;
+	/** @var string */
+	var $event		 		= null;
+	/** @var datetime */
+	var $created_date		= null;
+	/** @var datetime */
+	var $due_date			= null;
+	/** @var text */
+	var $context 			= array();
+	/** @var text */
+	var $params 			= array();
+	/** @var text */
+	var $customparams		= array();
+
+	/**
+	* @param database A database connector object
+	*/
+	function aecEvent( &$db )
+	{
+		$this->mosDBTable( '#__acctexp_event', 'id', $db );
+	}
+
+	function declareParamFields()
+	{
+		return array( 'context', 'params', 'customparams' );
+	}
+
+	function issue( $type, $subtype, $event, $userid, $due_date, $context=array(), $params=array(), $customparams=array() )
+	{
+		global $mosConfig_offset;
+
+		$this->userid			= $userid;
+		$this->status			= 'waiting';
+
+		$this->type				= $type;
+		$this->subtype			= $subtype;
+		$this->event			= $event;
+		$this->created_date 	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );;
+		$this->due_date 		= $due_date;
+
+		$this->context			= $context;
+		$this->params			= $params;
+		$this->customparams		= $customparams;
+
+		$this->storeload();
+
+		return $this->id;
+	}
+
+	function trigger()
+	{
+		if ( empty( $this->type ) ) {
+			return null;
+		}
+
+		if ( empty( $this->event ) ) {
+			return null;
+		}
+
+		$obj = null;
+
+		switch ( $this->type ) {
+			case 'mi':
+				$obj->
+				break;
+		}
+
+		if ( !empty( $obj ) ) {
+			$return = $obj->aecEventHook( $this );
+
+			if ( !is_array( $return ) ) {
+				$this->status = 'done';
+			} else {
+				if ( isset( $return['reset_due_date'] ) ) {
+					$this->status	= 'waiting';
+					$this->due_date	= $return['reset_due_date'];
+				}
+			}
+
+			return $this->storeload();
+		} else {
+			// TODO: Issure error
+		}
+	}
 }
 
 class PaymentProcessorHandler
@@ -11674,6 +11819,70 @@ class MI
 		$this->warning[] = $warning;
 	}
 
+	function issueEvent( $request, $event, $due_date, $context=array(), $params=array(), $customparams=array() )
+	{
+		global $database;
+
+		if ( !empty( $request->metaUser ) ) {
+			$context['user_id']	= $request->metaUser->userid;
+			$userid				= $request->metaUser->userid;
+		} else {
+			$context['user_id']	= 0;
+			$userid				= 0;
+		}
+
+		if ( !empty( $request->metaUser->focusSubscription->id ) ) {
+			$context['subscription_id'] = $request->metaUser->focusSubscription->id;
+		}
+
+		if ( !empty( $request->invoice->id ) ) {
+			$context['invoice_id'] = $request->invoice->id;
+		}
+
+		if ( !empty( $request->invoice->invoice_number ) ) {
+			$context['invoice_number'] = $request->invoice->invoice_number;
+		}
+
+		$event = new aecEvent( $database );
+
+		return $event->issue( 'mi', $this->info['name'], $event, $userid, $due_date, $context, $params, $customparams );
+	}
+
+	function aecEventHook( $event )
+	{
+		global $database;
+
+		$method = 'aecEventHook' . $event->event;
+
+		if ( !method_exists( $this, $method ) ) {
+			return null;
+		}
+
+		$request = new stdClass();
+
+		$request->parent	=& $this;
+		$request->event		=& $event;
+
+		// Establish metaUser object
+		if ( !empty( $event->userid ) ) {
+			$request->metaUser = new metaUser( $event->userid );
+		} else {
+			$request->metaUser = false;
+		}
+
+		// Select correct subscription
+		if ( !empty( $event->context['subscription_id'] ) && !empty( $request->metaUser ) ) {
+			$request->metaUser->moveFocus( $event->context['subscription_id'] );
+		}
+
+		// Select correct invoice
+		if ( !empty( $event->context['invoice_id'] ) ) {
+			$request->invoice = new Invoice( $database );
+			$request->invoice->load( $event->context['invoice_id'] );
+		}
+
+		return $this->$method( $request );
+	}
 }
 
 class microIntegration extends serialParamDBTable

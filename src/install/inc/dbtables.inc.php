@@ -193,6 +193,22 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_scope` ('
 . ') TYPE=MyISAM;'
 ;
 */
+$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_event` ('
+. '`id` int(11) NOT NULL auto_increment,'
+. '`userid` int(11) NOT NULL default \'0\','
+. '`status` varchar(40) NULL,'
+. '`type` varchar(255) NULL,'
+. '`subtype` varchar(255) NULL,'
+. '`event` varchar(255) NULL,'
+. '`created_date` datetime NULL default \'0000-00-00 00:00:00\','
+. '`due_date` datetime NULL default \'0000-00-00 00:00:00\','
+. '`context` text NULL,'
+. '`params` text NULL,'
+. '`customparams` text NULL,'
+. ' PRIMARY KEY (`id`)'
+. ') TYPE=MyISAM;'
+;
+
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_subscr` ('
 . '`id` int(11) NOT NULL auto_increment,'
 . '`userid` int(11) NULL,'
