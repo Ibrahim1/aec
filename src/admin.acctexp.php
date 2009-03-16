@@ -3868,7 +3868,15 @@ function editMicroIntegration ( $id, $option )
 		if ( $mi->callIntegration( true ) ) {
 			$set = array();
 			foreach ( $mi_gsettings as $n => $v ) {
-				$set[$n] = $mi->$n;
+				if ( !isset( $mi->$n ) ) {
+					if (  isset( $mi->settings[$n] ) ) {
+						$set[$n] = $mi->settings[$n];
+					} else {
+						$set[$n] = null;
+					}
+				} else {
+					$set[$n] = $mi->$n;
+				}
 			}
 
 			$mi_gsettings[$mi->id.'remap']	= array( 'area_change', 'MI' );
