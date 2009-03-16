@@ -59,6 +59,10 @@ class mi_acajoom
 		if ( $this->hasList( $acauser, $this->settings['list'] ) ) {
 			$this->deleteFromList( $acauser, $this->settings['list'] );
 		}
+
+		if ( !$this->hasList( $acauser, $this->settings['list_exp'] ) ) {
+			$this->addToList( $acauser, $this->settings['list_exp'] );
+		}
 	}
 
 	function action( $request )
@@ -68,6 +72,10 @@ class mi_acajoom
 		if ( !$acauser ) {
 			$this->createSubscriber( $request->metaUser->userid );
 			$acauser = $this->getSubscriberID( $request->metaUser->userid );
+		}
+
+		if ( $this->hasList( $acauser, $this->settings['list_exp'] ) ) {
+			$this->deleteFromList( $acauser, $this->settings['list_exp'] );
 		}
 
 		if ( !$this->hasList( $acauser, $this->settings['list'] ) ) {
