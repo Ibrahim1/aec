@@ -5828,19 +5828,19 @@ function readout( $option )
 
 			switch ( $opt ) {
 				case 'show_settings':
-					$r[] =  $readout->readSettings();
+					$s = $readout->readSettings();
 					break;
 				case 'show_processors':
-					$r[] = $readout->readProcessors();
+					$s = $readout->readProcessors();
 					break;
 				case 'show_plans':
-					$r[] = $readout->readPlans();
+					$s = $readout->readPlans();
 					break;
 				case 'show_mi_relations':
-					$r[] = $readout->readPlanMIrel();
+					$s = $readout->readPlanMIrel();
 					break;
 				case 'show_mis':
-					$r[] = $readout->readMIs();
+					$s = $readout->readMIs();
 					break;
 				case 'store_settings':
 					global $my;
@@ -5858,6 +5858,14 @@ function readout( $option )
 					$metaUser->meta->addCustomParams( array( 'aecadmin_readout' => $settings ) );
 					$metaUser->meta->storeload();
 					break;
+			}
+
+			if ( isset( $s['def'] ) ) {
+				$r[] = $s;
+			} elseif ( is_array( $s ) ) {
+				foreach ( $s as $x ) {
+					$r[] = $x;
+				}
 			}
 		}
 

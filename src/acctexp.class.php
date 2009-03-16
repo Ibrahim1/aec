@@ -13686,6 +13686,8 @@ class aecReadout
 
 	function readSettings()
 	{
+		global $aecConfig;
+
 		$r = array();
 		$r['head'] = "Settings";
 		$r['type'] = "table";
@@ -13695,7 +13697,7 @@ class aecReadout
 		$r['def'] = array();
 		foreach ( $setdef as $sd => $sdd ) {
 			if ( ( $sdd === 0 ) || ( $sdd === 1 ) ) {
-				$tname = constant( '_CFG_GENERAL_' . strtoupper( $sd ) . '_NAME' );
+				$tname = str_replace( ':', '', constant( '_CFG_GENERAL_' . strtoupper( $sd ) . '_NAME' ) );
 
 				$r['def'][$tname] = array( $sd, 'bool' );
 			}
@@ -13716,13 +13718,13 @@ class aecReadout
 			$r['def'] = array();
 			foreach ( $setdef as $sd => $sdd ) {
 				if ( ( $sdd !== 0 ) && ( $sdd !== 1 ) ) {
-					$reg = array( 'GENERAL', 'MI', 'AUTH' );
+					$reg = array( 'GENERAL', 'MI' );
 
 					foreach ( $reg as $regg ) {
 						$cname = '_CFG_' . $regg . '_' . strtoupper( $sd ) . '_NAME';
 
 						if ( defined( $cname ) )  {
-							$tname = constant( $cname );
+							$tname = str_replace( ':', '', constant( $cname ) );
 						}
 					}
 
@@ -13733,7 +13735,9 @@ class aecReadout
 			$r['set'][] = $aecConfig->cfg;
 		}
 
-		return $r;
+		$readout[] = $r;
+
+		return $readout;
 	}
 
 	function readProcessors()
