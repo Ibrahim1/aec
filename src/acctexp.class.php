@@ -6197,7 +6197,6 @@ class InvoiceFactory
 			$this->metaUser->cmsUser = new stdClass();
 			$this->metaUser->cmsUser->gid = 29;
 			$this->metaUser->hasSubscription = false;
-			$this->metaUser->hasExpiration = false;
 
 			if ( is_array( $passthrough ) && !empty( $passthrough ) ) {
 				$cpass = $passthrough;
@@ -9834,16 +9833,13 @@ class reWriteEngine
 		$this->rewrite['cms_live_site']		= $mosConfig_live_site;
 
 		if ( is_object( $this->data['metaUser'] ) ) {
-			if ( !empty( $this->data['metaUser']->hasExpiration ) ) {
-				$this->rewrite['expiration_date'] = $this->data['metaUser']->objExpiration->expiration;
-			}
-
 			// Explode Name
 			if ( is_array( $this->data['metaUser']->cmsUser->name ) ) {
 				$namearray	= $this->data['metaUser']->cmsUser->name;
 			} else {
 				$namearray	= explode( " ", $this->data['metaUser']->cmsUser->name );
 			}
+
 			$firstfirstname	= $namearray[0];
 			$maxname		= count($namearray) - 1;
 			$lastname		= $namearray[$maxname];

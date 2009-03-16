@@ -40,7 +40,7 @@ jimport('joomla.event.plugin');
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
  * @package AEC Component
  */
-class plgAuthenticationAECaccess extends JPlugin
+class plgUserAECaccess extends JPlugin
 {
 
 	/**
@@ -54,7 +54,7 @@ class plgAuthenticationAECaccess extends JPlugin
 	 * @param array  $config  An array that holds the plugin configuration
 	 * @since 1.5
 	 */
-	function plgAuthenticationAECaccess( &$subject, $config ) {
+	function plgUserAECaccess( &$subject, $config ) {
 		parent::__construct( $subject, $config );
 	}
 
@@ -68,95 +68,21 @@ class plgAuthenticationAECaccess extends JPlugin
 	 * @return	boolean
 	 * @since 1.5
 	 */
-	function onAuthenticate( $credentials, $options, &$response )
+	function onLoginUser( $credentials, $remember )
 	{
 		if ( file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
 			include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
 
 			global $aecConfig;
 
-			$autholist = $aecConfig->cfg['authorization_list'];
-
-			if ( !empty( $autholist ) ) {
-				foreach( $autholist as $auth ) {
-					if ( !empty( $auth ) ) {
-						$className = 'plgAuthentication'.$auth;
-						$plugin = PluginHandler::getPlugin( 'authentication', $auth );
-
-						JLoader::import( 'authentication.'.$auth, JPATH_ROOT.DS.'plugins', 'plugins' );
-						if ( class_exists( $className ) ) {
-							$plugin = new $className( JAuthentication::getInstance(), (array)$plugin );
-						}
-
-						// Try to authenticate
-						if ( method_exists( $plugin, 'onAuthenticate' ) ) {
-							$plugin->onAuthenticate($credentials, $options, $response);
-						}
-
-						// If authentication is unsuccessfull break whole authorization
-						if ( $response->status !== JAUTHENTICATE_STATUS_SUCCESS ) {
-							return;
-						}
-					}
-				}
-			}
-
-			$authlist = $aecConfig->cfg['authlist'];
-
-			if ( empty( $authlist ) ) {
-				$authlist = array( 'joomla' );
-			}
-
-			if ( empty( $authlist[0] ) ) {
-				$authlist = array( 'joomla' );
-			}
-
-			foreach( $authlist as $auth ) {
-				if ( !empty( $auth ) ) {
-					$className = 'plgAuthentication'.$auth;
-					$plugin = PluginHandler::getPlugin( 'authentication', $auth );
-
-					JLoader::import( 'authentication.'.$auth, JPATH_ROOT.DS.'plugins', 'plugins' );
-					if ( class_exists( $className ) ) {
-						$plugin = new $className( JAuthentication::getInstance(), (array)$plugin );
-					}
-
-					// Try to authenticate
-					$plugin->onAuthenticate($credentials, $options, $response);
-
-					// If authentication is successfull break the loop
-					if ( $response->status === JAUTHENTICATE_STATUS_SUCCESS ) {
-						break;
-					}
-				}
-			}
-
 			// process AEC verifications
-			if ( $response->status === JAUTHENTICATE_STATUS_SUCCESS ) {
-				$this->_AECVerification( $credentials, $response );
-				return;
-			}
+			return $this->verify( $credentials );
 		} else {
-			$auth = 'joomla';
-
-			$className = 'plgAuthentication'.$auth;
-			$plugin = JPluginHelper::getPlugin( 'authentication', $auth );
-
-			JLoader::import( 'authentication.'.$auth, JPATH_ROOT.DS.'plugins', 'plugins' );
-			if ( class_exists( $className ) ) {
-				$plugin = new $className( JAuthentication::getInstance(), (array)$plugin );
-			}
-
-			// Try to authenticate
-			if ( method_exists( $plugin, 'onAuthenticate' ) ) {
-				$plugin->onAuthenticate($credentials, $options, $response);
-			}
-
-			return;
+			return true;
 		}
 	}
 
-	function onLoginFailure( &$response )
+	function onLoginFailure( $credentials, $response )
 	{
 		$db =& JFactory::getDBO();
 
@@ -185,16 +111,19 @@ class plgAuthenticationAECaccess extends JPlugin
 				break;
 		}
 
+		$app =& JFactory::getApplication();
+
+		$app->logout();
+
 		if ( $redirect ) {
-			$app =& JFactory::getApplication();
 			$app->redirect( $redirect );
 		}
 	}
 
-	function _AECVerification( $credentials, &$response )
+	function verify( $credentials)
 	{
 		if ( strpos( JPATH_BASE, '/administrator' ) ) {
-			$response->status = JAUTHENTICATE_STATUS_SUCCESS;
+			// Don't act when entering admin area
 			return true;
 		}
 
@@ -211,12 +140,11 @@ class plgAuthenticationAECaccess extends JPlugin
 		$verification = AECToolbox::VerifyUser( $credentials['username'] );
 
 		if ( $verification === true ) {
-			$response->status = JAUTHENTICATE_STATUS_SUCCESS;
+			return true;
 		} else {
-			$this->_error = $verification;
-			define( 'AEC_AUTH_ERROR_MSG', $this->_error );
+			define( 'AEC_AUTH_ERROR_MSG', $verification );
 			define( 'AEC_AUTH_ERROR_UNAME', $credentials['username'] );
-			$response->status = JAUTHENTICATE_STATUS_FAILURE;
+			return false;
 		}
 	}
 }
