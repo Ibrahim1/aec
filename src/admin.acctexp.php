@@ -2133,15 +2133,6 @@ function editSettings( $option )
 	@end( $params );
 	$tab_data[] = array( _CFG_TAB_MICROINTEGRATION_TITLE, key( $params ), '<h2>' . _CFG_TAB_MICROINTEGRATION_SUBTITLE . '</h2>' );
 
-	if ( aecJoomla15check() ) {
-		$params['auth_remap']					= array( 'subarea_change', 'auth' );
-		$params['authlist']						= array( 'list', '' );
-		$params['authorization_list']			= array( 'list', '' );
-
-		@end( $params );
-		$tab_data[] = array( _CFG_TAB_AUTHENTICATION_TITLE, key( $params ), '<h2>' . _CFG_TAB_AUTHENTICATION_SUBTITLE . '</h2>' );
-	}
-
 	$error_reporting_notices[] = mosHTML::makeOption( 512, _AEC_NOTICE_NUMBER_512 );
 	$error_reporting_notices[] = mosHTML::makeOption( 128, _AEC_NOTICE_NUMBER_128 );
 	$error_reporting_notices[] = mosHTML::makeOption( 32, _AEC_NOTICE_NUMBER_32 );
