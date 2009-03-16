@@ -5052,9 +5052,9 @@ class SubscriptionPlan extends serialParamDBTable
 			$metaUser->focusSubscription->storeload();
 
 			if ( !( $silent || $aecConfig->cfg['noemails'] ) ) {
-				if ( ( $this->id !== $aecConfig->cfg['entry_plan'] ) ) {
-					$metaUser->focusSubscription->sendEmailRegistered( $renew );
-				}
+				$adminonly = $this->id !== $aecConfig->cfg['entry_plan'];
+
+				$metaUser->focusSubscription->sendEmailRegistered( $renew, $adminonly );
 			}
 		}
 
@@ -9194,7 +9194,7 @@ class Subscription extends serialParamDBTable
 		}
 	}
 
-	function sendEmailRegistered( $renew )
+	function sendEmailRegistered( $renew, $adminonly=false )
 	{
 		global $database, $acl, $mainframe;
 
@@ -9280,7 +9280,9 @@ class Subscription extends serialParamDBTable
 			$adminEmail2	= $row2->email;
 		}
 
-		mosMail( $adminEmail2, $adminName2, $email, $subject, $message );
+		if ( !$adminonly ) {
+			mosMail( $adminEmail2, $adminName2, $email, $subject, $message );
+		}
 
 		// Send notification to all administrators
 		$aecUser = AECToolbox::_aecIP();
