@@ -2057,6 +2057,8 @@ class aecEvent extends serialParamDBTable
 	var $type		 		= null;
 	/** @var string */
 	var $subtype	 		= null;
+	/** @var int */
+	var $appid				= null;
 	/** @var string */
 	var $event		 		= null;
 	/** @var datetime */
@@ -2083,7 +2085,7 @@ class aecEvent extends serialParamDBTable
 		return array( 'context', 'params', 'customparams' );
 	}
 
-	function issue( $type, $subtype, $event, $userid, $due_date, $context=array(), $params=array(), $customparams=array() )
+	function issue( $type, $subtype, $appid, $event, $userid, $due_date, $context=array(), $params=array(), $customparams=array() )
 	{
 		global $mosConfig_offset;
 
@@ -2092,6 +2094,7 @@ class aecEvent extends serialParamDBTable
 
 		$this->type				= $type;
 		$this->subtype			= $subtype;
+		$this->appid			= $appid;
 		$this->event			= $event;
 		$this->created_date 	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );;
 		$this->due_date 		= $due_date;
@@ -2107,6 +2110,8 @@ class aecEvent extends serialParamDBTable
 
 	function trigger()
 	{
+		global $database;
+
 		if ( empty( $this->type ) ) {
 			return null;
 		}
@@ -2119,7 +2124,8 @@ class aecEvent extends serialParamDBTable
 
 		switch ( $this->type ) {
 			case 'mi':
-				$obj->
+				$obj = new microIntegration( $database );
+				$obj->load( $this->appid );
 				break;
 		}
 
@@ -11845,7 +11851,7 @@ class MI
 
 		$event = new aecEvent( $database );
 
-		return $event->issue( 'mi', $this->info['name'], $event, $userid, $due_date, $context, $params, $customparams );
+		return $event->issue( 'mi', $this->info['name'], $this->id, $event, $userid, $due_date, $context, $params, $customparams );
 	}
 
 	function aecEventHook( $event )
