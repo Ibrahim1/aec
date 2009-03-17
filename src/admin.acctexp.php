@@ -5861,13 +5861,17 @@ function readout( $option )
 					$metaUser = new metaUser( $my->id );
 					$metaUser->meta->addCustomParams( array( 'aecadmin_readout' => $settings ) );
 					$metaUser->meta->storeload();
+					continue 2;
+					break;
+				default:
+					continue 2;
 					break;
 			}
 
 			if ( isset( $s['def'] ) ) {
 				$r[] = $s;
 			} elseif ( is_array( $s ) ) {
-				foreach ( $s as $x ) {
+				foreach ( $s as $i => $x ) {
 					$r[] = $x;
 				}
 			}
