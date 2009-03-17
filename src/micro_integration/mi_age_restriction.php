@@ -42,7 +42,17 @@ class mi_age_restriction extends MI
 
 		$return = array();
 
+		if ( empty( $params['birthday'] ) ) {
+			$return['error'] = "Please fill in your date of birth";
+			return $return;
+		}
+
 		$age = $this->getAge( $params['birthday'] );
+
+		if ( empty( $age ) ) {
+			$return['error'] = "Please fill in your date of birth";
+			return $return;
+		}
 
 		if ( !empty( $this->settings['min_age'] ) ) {
 			if ( $age < $this->settings['min_age'] ) {
@@ -63,12 +73,12 @@ class mi_age_restriction extends MI
 
 	function relayAction( $request, $area )
 	{
-		if ( $area == 'action' ) {
+		if ( ( $area == '' ) && !empty( $this->settings['max_age'] ) ) {
 			$age = $this->getAge( $request->params['birthday'] );
 
 			$due_date = strtotime( "+" . $this->settings['max_age'] . " years", strtotime( $request->params['birthday'] ) );
 
-			$this->issueEvent( $request, 'BirthdayExpiration', $due_date );
+			$event_id = $this->issueUniqueEvent( $request, 'BirthdayExpiration', date( 'Y-m-d H:i:s', $due_date ) );
 		}
 
 		return true;
@@ -85,7 +95,7 @@ class mi_age_restriction extends MI
 
 	function getAge( $bd )
 	{
-		return (int) ( strtotime( $bd ) - time() ) / 31556926;
+		return round( abs( ( time() - strtotime( $bd ) ) / 31556926 ) );
 	}
 }
 ?>

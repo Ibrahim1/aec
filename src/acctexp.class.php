@@ -2935,7 +2935,7 @@ class processor extends serialParamDBTable
 	function customParams( $custom, $var, $request )
 	{
 		if ( !empty( $custom ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $custom, $request->metaUser, $request->new_subscription, $request->invoice );
+			$rw_params = AECToolbox::rewriteEngine( $custom, $request->metaUser, $request->plan, $request->invoice );
 
 			$params = explode( "\n", $rw_params );
 
@@ -8330,9 +8330,9 @@ class Invoice extends serialParamDBTable
 				}
 
 				if ( $InvoiceFactory->metaUser->hasSubscription ) {
-					$amount = $plan->SubscriptionAmount( $int_var['recurring'], $InvoiceFactory->metaUser->objSubscription, $InvoiceFactory->metaUser );
+					$amount = $plan->SubscriptionAmount( $recurring, $InvoiceFactory->metaUser->objSubscription, $InvoiceFactory->metaUser );
 				} else {
-					$amount = $plan->SubscriptionAmount( $int_var['recurring'], false, $InvoiceFactory->metaUser );
+					$amount = $plan->SubscriptionAmount( $recurring, false, $InvoiceFactory->metaUser );
 				}
 
 				if ( !empty( $plan->params['customthanks'] ) || !empty( $plan->params['customtext_thanks'] ) ) {
@@ -8448,9 +8448,9 @@ class Invoice extends serialParamDBTable
 				}
 
 				if ( $InvoiceFactory->metaUser->hasSubscription ) {
-					$amount = $plan->SubscriptionAmount( $int_var['recurring'], $InvoiceFactory->metaUser->objSubscription, $InvoiceFactory->metaUser );
+					$amount = $plan->SubscriptionAmount( $recurring, $InvoiceFactory->metaUser->objSubscription, $InvoiceFactory->metaUser );
 				} else {
-					$amount = $plan->SubscriptionAmount( $int_var['recurring'], false, $InvoiceFactory->metaUser );
+					$amount = $plan->SubscriptionAmount( $recurring, false, $InvoiceFactory->metaUser );
 				}
 
 				if ( !empty( $plan->params['customthanks'] ) || !empty( $plan->params['customtext_thanks'] ) ) {
@@ -11825,6 +11825,28 @@ class MI
 		$this->warning[] = $warning;
 	}
 
+	function issueUniqueEvent( $request, $event, $due_date, $context=array(), $params=array(), $customparams=array() )
+	{
+		global $database;
+
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_event'
+				. ' WHERE `userid` = \'' . $request->metaUser->userid . '\''
+				. ' AND `appid` = \'' . $this->id . '\''
+				. ' AND `event` = \'' . $event . '\''
+				. ' AND `type` = \'mi\''
+	 			. ' AND `status` = \'waiting\''
+				;
+		$database->setQuery( $query );
+		$id = $database->loadResult();
+
+		if ( $id ) {
+			return null;
+		} else {
+			return $this->issueEvent( $request, $event, $due_date, $context, $params, $customparams );
+		}
+	}
+
 	function issueEvent( $request, $event, $due_date, $context=array(), $params=array(), $customparams=array() )
 	{
 		global $database;
@@ -11849,9 +11871,9 @@ class MI
 			$context['invoice_number'] = $request->invoice->invoice_number;
 		}
 
-		$event = new aecEvent( $database );
+		$aecEvent = new aecEvent( $database );
 
-		return $event->issue( 'mi', $this->info['name'], $this->id, $event, $userid, $due_date, $context, $params, $customparams );
+		return $aecEvent->issue( 'mi', $this->info['name'], $this->id, $event, $userid, $due_date, $context, $params, $customparams );
 	}
 
 	function aecEventHook( $event )
@@ -12227,6 +12249,17 @@ class microIntegration extends serialParamDBTable
 		}
 
 		return $return;
+	}
+
+	function aecEventHook( $event )
+	{
+		if ( empty( $this->mi_class ) ) {
+			$this->callIntegration();
+		}
+
+		if ( method_exists( $this->mi_class, 'aecEventHook' ) ) {
+			return $this->mi_class->aecEventHook( $event );
+		}
 	}
 
 	function on_userchange_action( $row, $post, $trace )

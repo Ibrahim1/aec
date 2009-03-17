@@ -731,4 +731,16 @@ define( '_MI_MI_AECDONATE_MAX_DESC',		'The maximum amount you want the user to p
 define( '_MI_MI_AECDONATE_USERSELECT_AMT_NAME',		'Amount you want to pay' );
 define( '_MI_MI_AECDONATE_USERSELECT_AMT_DESC',		'Your amount for this payment plan' );
 
+// Age Restriction MI
+define( '_AEC_MI_AGE_RESTRICTION_NAME', 'Age Restriction' );
+define( '_AEC_MI_AGE_RESTRICTION_DESC', 'Require the user to submit a birthdate and allow checking out a plan based on that.' );
+define( '_MI_MI_AGE_RESTRICTION_MIN_AGE_NAME',		'Min Age' );
+define( '_MI_MI_AGE_RESTRICTION_MIN_AGE_DESC',		'The minimum age a user must have to get the plan this MI is attached to. Leave empty for no limit.' );
+define( '_MI_MI_AGE_RESTRICTION_MAX_AGE_NAME',		'Max Age' );
+define( '_MI_MI_AGE_RESTRICTION_MAX_AGE_DESC',		'The maximum age a user can have to get the plan this MI is attached to. Leave empty for no limit.' );
+define( '_MI_MI_AGE_RESTRICTION_RESTRICT_CALENDAR_NAME',		'Restrict Calendar' );
+define( '_MI_MI_AGE_RESTRICTION_RESTRICT_CALENDAR_DESC',		'Restrict the dates a user can select in the calendar to the age range (if provided).' );
+define( '_MI_MI_AGE_RESTRICTION_USERSELECT_BIRTHDAY_NAME',		'Birthday' );
+define( '_MI_MI_AGE_RESTRICTION_USERSELECT_BIRTHDAY_DESC',		'Your birthday' );
+
 ?>

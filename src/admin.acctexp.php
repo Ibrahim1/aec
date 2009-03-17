@@ -3257,7 +3257,11 @@ function editSubscriptionPlan( $id, $option )
 			$params[$prefix . $name] = $value;
 			$custompar[$mi->id]['params'][] = $prefix . $name;
 
-			$params_values[$prefix.$name] = $mi->$name;
+			if ( isset( $mi->$name ) ) {
+				$params_values[$prefix.$name] = $mi->$name;
+			} else {
+				$params_values[$prefix.$name] = '';
+			}
 		}
 
 		$params[]	= array( 'div_end', 0 );
