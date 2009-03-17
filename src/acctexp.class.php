@@ -7248,7 +7248,7 @@ class InvoiceFactory
 
 		$this->puffer( $option );
 
-		$var = $this->invoice->getFullVars();
+		$var = $this->invoice->getFullVars( $this );
 
 		$new_subscription = $this->getObjUsage();
 
