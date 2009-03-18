@@ -480,6 +480,8 @@ define( '_CFG_IDEAL_ADVANCED_DESCRIPTION_DESC', 'The Item description that is sh
 define( '_CFG_AUTHORIZE_AIM_LONGNAME', 'Authorize.net AIM');
 define( '_CFG_AUTHORIZE_AIM_STATEMENT', 'Make on-site CreditCard payments with Authorize.net');
 define( '_CFG_AUTHORIZE_AIM_DESCRIPTION', 'Make on-site CreditCard payments with Authorize.net');
+define( '_CFG_AUTHORIZE_AIM_DUMPMODE_NAME', 'Dumpmode');
+define( '_CFG_AUTHORIZE_AIM_DUMPMODE_DESC', 'Do not post to live or testmode server, but only let Authorize.net display the data that was sent over.');
 define( '_CFG_AUTHORIZE_AIM_LOGIN_NAME', 'API Login ID');
 define( '_CFG_AUTHORIZE_AIM_LOGIN_DESC', 'Your API Login ID on Authorize.net.');
 define( '_CFG_AUTHORIZE_AIM_TRANSACTION_KEY_NAME', 'Transaction Key');

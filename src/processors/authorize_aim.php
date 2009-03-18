@@ -39,6 +39,7 @@ class processor_authorize_aim extends XMLprocessor
 		$settings['login']				= "login";
 		$settings['transaction_key']	= "transaction_key";
 		$settings['testmode']			= 0;
+		$settings['dumpmode']			= 0;
 		$settings['currency']			= "USD";
 		$settings['promptAddress']		= 0;
 		$settings['promptZipOnly']		= 0;
@@ -52,6 +53,7 @@ class processor_authorize_aim extends XMLprocessor
 	{
 		$settings = array();
 		$settings['testmode']			= array( "list_yesno" );
+		$settings['dumpmode']			= array( "list_yesno" );
 		$settings['login'] 				= array( "inputC" );
 		$settings['transaction_key']	= array( "inputC" );
 		$settings['currency']			= array( "list_currency" );
@@ -139,7 +141,7 @@ class processor_authorize_aim extends XMLprocessor
 			}
 
 			// TODO: trailing colon required? . '|'
-			$a['x_line_item']		= implode( '|', $lineitems );
+			$a['x_line_item']		= implode( '|', $lineitems ) . '|';
 		}
 
 		$a['x_description']		= trim( substr( AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ), 0, 20 ) );
@@ -181,11 +183,15 @@ class processor_authorize_aim extends XMLprocessor
 	function transmitRequestXML( $xml, $request )
 	{
 		$path = "/gateway/transact.dll";
-		if ( $this->settings['testmode'] ) {
+
+		if ( !empty( $this->settings['dumpmode'] ) ) {
+			$url = "https://para_dump.authorize.net" . $path;
+		} elseif ( $this->settings['testmode'] ) {
 			$url = "https://test.authorize.net" . $path;
 		} else {
 			$url = "https://secure.authorize.net" . $path;
 		}
+
 
 		$response = $this->transmitRequest( $url, $path, $xml, 443 );
 
