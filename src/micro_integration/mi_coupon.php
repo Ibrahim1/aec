@@ -26,6 +26,7 @@ class mi_coupon
 	{
 		$settings = array();
 		$settings['master_coupon']		= array( 'inputC' );
+		$settings['switch_type']		= array( 'list_yesno' );
 		$settings['bind_subscription']	= array( 'list_yesno' );
 		$settings['create_new_coupons']	= array( 'inputC' );
 		$settings['max_reuse']			= array( 'inputC' );
@@ -80,7 +81,7 @@ class mi_coupon
 		if ( ( !empty( $existing_coupons ) && !empty( $this->settings['always_new_coupons'] ) ) || empty( $existing_coupons ) ) {
 			if ( !empty( $this->settings['create_new_coupons'] ) && !empty( $this->settings['master_coupon'] ) ) {
 
-				$cph = new CouponHandler(  );
+				$cph = new CouponHandler();
 				$cph->load( $this->settings['master_coupon'] );
 
 				if ( is_object( $cph->coupon ) ) {
@@ -103,8 +104,11 @@ class mi_coupon
 							$cph->restrictions['subscr_id_dependency'] = $request->metaUser->focusSubscription->id;
 						}
 
-						$cph->coupon->check();
-						$cph->coupon->store();
+						$cph->coupon->storeload();
+
+						if ( !empty( $this->settings['switch_type'] ) ) {
+							$cph->switchType();
+						}
 					}
 
 					if ( !empty( $this->settings['mail_out_coupons'] ) ) {

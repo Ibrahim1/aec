@@ -347,7 +347,7 @@ class HTML_frontEnd
 		} ?>
 		<p></p>
 		<?php
-		if ( is_array( $processors ) ) { ?>
+		if ( !empty( $processors ) ) { ?>
 			<p><?php echo _NOT_ALLOWED_SECONDPAR; ?></p>
 			<table id="cc_list">
 				<?php

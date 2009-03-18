@@ -273,6 +273,8 @@ define( '_AEC_MI_NAME_COUPON', 'Coupons' );
 define( '_AEC_MI_DESC_COUPON', 'Create and send out coupons' );
 define( '_MI_MI_COUPON_MASTER_COUPON_NAME', 'Master Coupon' );
 define( '_MI_MI_COUPON_MASTER_COUPON_DESC', 'Which Master Coupon should these be copied from?' );
+define( '_MI_MI_COUPON_SWITCH_TYPE_NAME', 'Switch Type' );
+define( '_MI_MI_COUPON_SWITCH_TYPE_DESC', 'If the master coupon is static, make this a regular coupon and vice versa.' );
 define( '_MI_MI_COUPON_BIND_SUBSCRIPTION_NAME', 'Bind to Subscription' );
 define( '_MI_MI_COUPON_BIND_SUBSCRIPTION_DESC', 'If activated, the coupons will only be usable if the subscription they have been created with is still active as well' );
 define( '_MI_MI_COUPON_CREATE_NEW_COUPONS_NAME', 'Amount' );
