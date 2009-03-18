@@ -545,6 +545,8 @@ define( '_CFG_GENERAL_CUSTOMINTRO_NAME', 'Lien personnalis&eacute; de la page d\
 define( '_CFG_GENERAL_CUSTOMINTRO_DESC', 'Provide a full link (including http://) that leads to your custom intro page. That page has to contain a link like this: http://www.yourdomain.com/index.php?option=com_acctexp&amp;task=subscribe&amp;intro=1 which bypasses the intro and correctly forwards the user to the payment plans or registration details page. Leave this field blank if you don&amp;acute;t want this at all.');
 define( '_CFG_GENERAL_CUSTOMINTRO_USERID_NAME', 'Pass Userid');
 define( '_CFG_GENERAL_CUSTOMINTRO_USERID_DESC', 'Pass Userid via a Joomla notification. This can be helpful for flexible custom signup pages that need to function even if the user is not logged in. You can use Javascript to modify your signup links according to the passed userid.');
+define( '_CFG_GENERAL_CUSTOMINTRO_ALWAYS_NAME', 'Always Show Intro');
+define( '_CFG_GENERAL_CUSTOMINTRO_ALWAYS_DESC', 'Display the Intro regardless of whether the user is already registered.');
 define( '_CFG_GENERAL_CUSTOMTHANKS_NAME', 'Lien personnalis&eacute; de la page de remerciement:');
 define( '_CFG_GENERAL_CUSTOMTHANKS_DESC', 'Fournir un lien complet (avec http://) qui dirige &agrave; votre page de remerciement personnalis&eacute;e. Laissez ce champ vide si vous n&amp;acute;en voulez.');
 define( '_CFG_GENERAL_CUSTOMCANCEL_NAME', 'Lien personnalis&eacute; de la page d\'annulation:');

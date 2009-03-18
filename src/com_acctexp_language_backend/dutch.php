@@ -548,6 +548,8 @@ define( '_CFG_GENERAL_CUSTOMINTRO_NAME', 'Aangepaste intropagina link:');
 define( '_CFG_GENERAL_CUSTOMINTRO_DESC', 'Geef hier svp de volledige link (inclusief http://) naar uw eigen intropagina. De intropagina moet een link bevatten die lijkt op: http://www.yourdomain.com/index.php?option=com_acctexp&task=subscribe&intro=1 die de intro negeerd, en de gebruiker goed doorstuurd naar de betaalplannen pagina of de registratiepagina. Als u dit niet wilt kunt u dit veld blanco laten.');
 define( '_CFG_GENERAL_CUSTOMINTRO_USERID_NAME', 'Pass Userid');
 define( '_CFG_GENERAL_CUSTOMINTRO_USERID_DESC', 'Pass Userid via a Joomla notification. This can be helpful for flexible custom signup pages that need to function even if the user is not logged in. You can use Javascript to modify your signup links according to the passed userid.');
+define( '_CFG_GENERAL_CUSTOMINTRO_ALWAYS_NAME', 'Always Show Intro');
+define( '_CFG_GENERAL_CUSTOMINTRO_ALWAYS_DESC', 'Display the Intro regardless of whether the user is already registered.');
 define( '_CFG_GENERAL_CUSTOMTHANKS_NAME', 'Aangepaste bedank pagina:');
 define( '_CFG_GENERAL_CUSTOMTHANKS_DESC', 'Geef hier de volledige link (inclusief http://) die naar uw eigen aangepaste bedankt pagina gaat. Laat dit veld blanco als u hier geen gebruik van maakt.');
 define( '_CFG_GENERAL_CUSTOMCANCEL_NAME', 'Aangepaste annulerings pagina:');

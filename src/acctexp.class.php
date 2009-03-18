@@ -1303,9 +1303,11 @@ class Config_General extends serialParamDBTable
 		// TODO: $def['show_empty_groups']						= 1;
 		$def['integrate_registration']			= 1;
 		$def['customintro_userid']				= 0;
-		$def['enable_shoppingcart']			= 0;
+		$def['enable_shoppingcart']				= 0;
 		$def['customlink_continueshopping']		= '';
 		$def['additem_stayonpage']				= '';
+		$def['additem_stayonpage']				= '';
+		$def['customintro_always']				= 1;
 
 		return $def;
 	}
@@ -6493,6 +6495,11 @@ class InvoiceFactory
 		if ( empty( $this->usage ) ) {
 			// TODO: Check if the user has already subscribed once, if not - link to intro
 			// TODO: Make sure a registration hybrid wont get lost here
+
+			if ( !empty( $this->userid ) && !$aecConfig->cfg['customintro_always'] ) {
+				$intro = false;
+			}
+
 			if ( !$intro && !empty( $aecConfig->cfg['customintro'] ) ) {
 				if ( !empty( $aecConfig->cfg['customintro_userid'] ) ) {
 					if ( aecJoomla15check() ) {

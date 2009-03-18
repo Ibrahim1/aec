@@ -662,6 +662,8 @@ define( '_CFG_GENERAL_CUSTOMINTRO_NAME', 'Link para a pagina de introdu&ccedil;&
 define( '_CFG_GENERAL_CUSTOMINTRO_DESC', 'Forne&ccedil;a um link completo (inclu&iacute;ndo http://) que conduza &agrave; sua p&aacute;gina de introdu&ccedil;&atilde;o Padr&atilde;o. Est&aacute; pagina deve conter um link como por exemplo:: http://www.oseudominio.com/index.php?option=com_acctexp&amp;task=subscribe&amp;intro=1 o que ignora a intordu&ccedil;&atilde;o e encaminha correctamente o utilizador para a pagina de planos de pagamento ou detalhes do registo. Deixe o campo em branco se n&atilde;o pretender isto.');
 define( '_CFG_GENERAL_CUSTOMINTRO_USERID_NAME', 'Pass Userid');
 define( '_CFG_GENERAL_CUSTOMINTRO_USERID_DESC', 'Pass Userid via a Joomla notification. This can be helpful for flexible custom signup pages that need to function even if the user is not logged in. You can use Javascript to modify your signup links according to the passed userid.');
+define( '_CFG_GENERAL_CUSTOMINTRO_ALWAYS_NAME', 'Always Show Intro');
+define( '_CFG_GENERAL_CUSTOMINTRO_ALWAYS_DESC', 'Display the Intro regardless of whether the user is already registered.');
 define( '_CFG_GENERAL_CUSTOMTHANKS_NAME', 'Link pagina de agradecimento Padr&atilde;o:');
 define( '_CFG_GENERAL_CUSTOMTHANKS_DESC', 'Forne&ccedil;a um link completo (inclu&iacute;ndo http://) este encaminha para a sua pagina de agradecimento Padr&atilde;o. Deixe o campo em branco se n&atilde;o pretender isso.');
 define( '_CFG_GENERAL_CUSTOMCANCEL_NAME', 'Link pagina Cancelamento Padr&atilde;o:');
