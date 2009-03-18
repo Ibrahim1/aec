@@ -24,6 +24,7 @@ class processor_verotel extends URLprocessor
 		$i['languages']				= 'AU,DE,FR,IT,GB,ES,US';
 		$i['cc_list']				= 'visa,mastercard,discover,americanexpress,echeck';
 		$i['notify_trail_thanks']	= 1;
+		$i['recurring']				= 0;
 
 		return $i;
 	}

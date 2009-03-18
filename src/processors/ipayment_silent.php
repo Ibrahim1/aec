@@ -27,6 +27,7 @@ class processor_ipayment_silent extends XMLprocessor
 								'LKR,SHP,ECS,SDD,SRG,SEK,CHF,SYP,TJR,BDT,WST,TZS,KZT,TPE,SIT,TTD,MNT,TND,TRL,UGX,ECV,CLF,USN,USS,USD,UZS,VUV,KRW,YER,JPY,CNY,ZWD,PLN';
 		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['secure'] = 1;
+		$info['recurring']				= 0;
 
 		return $info;
 	}

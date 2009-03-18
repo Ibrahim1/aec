@@ -23,6 +23,7 @@ class processor_cybermut extends POSTprocessor
 		$info['currencies'] = "EUR,USD,GBP,CHF";
 		$info['languages'] = "FR,EN,DE,IT,ES,NL";
 		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck,giropay";
+		$info['recurring']				= 0;
 
 		return $info;
 	}
