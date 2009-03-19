@@ -120,16 +120,20 @@ class processor_authorize_aim extends XMLprocessor
 		$a['x_card_code']		= trim( $request->int_var['params']['cardVV2'] );
 
 		if ( !empty( $request->cart ) ) {
-			$lineitems = array();
-
 			$sid = 0;
 			foreach ( $request->cart as $ciid => $ci ) {
+				if ( $ci['is_total'] ) {
+					continue;
+				}
+
+				$lineitems = array();
+
 				// Item ID<|>
-				$lineitems[] = substr( $sid, 0, 31 );;
+				$lineitems[] = 'item'.substr( $sid, 0, 31 );
 				// <|>item name<|>
 				$lineitems[] = substr( $ci['name'], 0, 31 );
 				// <|>item description<|>
-				$lineitems[] = substr( $ci['desc'], 0, 255);
+				$lineitems[] = empty($ci['desc']) ? substr( $ci['name'], 0, 31 ) : substr( $ci['desc'], 0, 255);
 				// <|>itemX quantity<|>
 				$lineitems[] = $ci['count'];
 				// <|>item price (unit cost)<|>
@@ -138,10 +142,10 @@ class processor_authorize_aim extends XMLprocessor
 				$lineitems[] = 0;
 
 				$sid++;
-			}
 
-			// TODO: trailing colon required? . '|'
-			$a['x_line_item']		= implode( '|', $lineitems ) . '|';
+				// TODO: trailing colon required? . '|'
+				$a['x_line_item'][] = implode( '<|>', $lineitems );
+			}
 		}
 
 		$a['x_description']		= trim( substr( AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ), 0, 20 ) );
@@ -172,7 +176,13 @@ class processor_authorize_aim extends XMLprocessor
 
 		$stringarray = array();
 		foreach ( $a as $name => $value ) {
-			$stringarray[] = $name . '=' . urlencode( stripslashes( $value ) );
+			if ( is_array( $value ) ) {
+				foreach ( $value as $v ) {
+					$stringarray[] = $name . '=' . urlencode( stripslashes( $v ) );
+				}
+			} else {
+				$stringarray[] = $name . '=' . urlencode( stripslashes( $value ) );
+			}
 		}
 
 		$string = implode( '&', $stringarray );
@@ -185,15 +195,29 @@ class processor_authorize_aim extends XMLprocessor
 		$path = "/gateway/transact.dll";
 
 		if ( !empty( $this->settings['dumpmode'] ) ) {
-			$url = "https://para_dump.authorize.net" . $path;
+			$path = "/tools/datavalidation";
+			$url = "http://developer.authorize.net" . $path;
 		} elseif ( $this->settings['testmode'] ) {
 			$url = "https://test.authorize.net" . $path;
 		} else {
 			$url = "https://secure.authorize.net" . $path;
 		}
 
-
 		$response = $this->transmitRequest( $url, $path, $xml, 443 );
+
+		if ( !empty( $this->settings['dumpmode'] ) ) {
+			echo "<h1>Request:</h1>";
+			echo "<pre>";
+			echo print_r($request);
+			echo "</pre>";
+			echo "<h1>We send:</h1>";
+			echo "<pre>";
+			echo urldecode(str_replace( "&", "\n", $xml ));
+			echo "</pre>";
+			echo "<h1>Authorize.net reponds:</h1>";
+			echo $response;
+			exit;
+		}
 
 		$return['valid'] = false;
 		$return['raw'] = $response;

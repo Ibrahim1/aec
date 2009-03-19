@@ -7269,7 +7269,11 @@ class InvoiceFactory
 
 		$var['params'] = aecPostParamClear( $_POST );
 
-		$response = $this->pp->checkoutProcess( $var, $this->metaUser, $new_subscription, $this->invoice );
+		if ( !empty( $this->cart ) ) {
+			$response = $this->pp->checkoutProcess( $var, $this->metaUser, $new_subscription, $this->invoice, $this->cart );
+		} else {
+			$response = $this->pp->checkoutProcess( $var, $this->metaUser, $new_subscription, $this->invoice );
+		}
 
 		if ( isset( $response['error'] ) ) {
 			$this->error( $option, $this->metaUser->cmsUser, $this->invoice->invoice_number, $response['error'] );
@@ -8360,7 +8364,11 @@ class Invoice extends serialParamDBTable
 					}
 				}
 
-				$amount = $cart->getAmount( $InvoiceFactory->metaUser, $this->cart );
+				if ( !empty( $InvoiceFactory->cart ) ) {
+					$amount = $cart->getAmount( $InvoiceFactory->metaUser, $InvoiceFactory->cart );
+				} else {
+					$amount = $cart->getAmount( $InvoiceFactory->metaUser );
+				}
 			}
 
 			if ( $recurring ) {
@@ -8908,7 +8916,8 @@ class aecCart extends serialParamDBTable
 		$return[] = array( 'name' => '',
 							'count' => '',
 							'cost' => '',
-							'cost_total' => AECToolbox::correctAmount( $totalcost )
+							'cost_total' => AECToolbox::correctAmount( $totalcost ),
+							'is_total' => true
 							);
 
 		return $return;
