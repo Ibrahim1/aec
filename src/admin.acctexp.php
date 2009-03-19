@@ -2652,16 +2652,23 @@ function listSubscriptionPlans( $option )
 {
  	global $database, $mainframe, $mosConfig_list_limit;
 
- 	$limit = $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
-	$limitstart = $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
+ 	$limit			= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
+	$limitstart		= $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
+	$filter_group	= $mainframe->getUserStateFromRequest( "filter_group", 'filter_group', array() );
+
+	if ( !empty( $filter_group ) ) {
+		$subselect = ItemGroupHandler::getChildren( $filter_group, 'item' );
+	} else {
+		$subselect = array();
+	}
 
  	// get the total number of records
  	$query = 'SELECT count(*)'
 		 	. ' FROM #__acctexp_plans'
+		 	. ( empty( $subselect ) ? '' : ' WHERE id IN (' . implode( ',', $subselect ) . ')' )
 		 	;
  	$database->setQuery( $query );
  	$total = $database->loadResult();
- 	echo $database->getErrorMsg();
 
  	if ( $limit > $total ) {
  		$limitstart = 0;
@@ -2671,7 +2678,7 @@ function listSubscriptionPlans( $option )
 	$pageNav = new mosPageNav( $total, $limitstart, $limit );
 
  	// get the subset (based on limits) of records
-	$rows = SubscriptionPlanHandler::getFullPlanList( $pageNav->limitstart, $pageNav->limit );
+	$rows = SubscriptionPlanHandler::getFullPlanList( $pageNav->limitstart, $pageNav->limit, $subselect );
 
 	$gcolors = array();
 
@@ -2724,7 +2731,30 @@ function listSubscriptionPlans( $option )
 		$rows[$n]->color = $gcolors[$group]['color'];
 	}
 
- 	HTML_AcctExp::listSubscriptionPlans( $rows, $pageNav, $option );
+
+	$grouplist = ItemGroupHandler::getTree();
+
+	$glist		= array();
+	$sel_groups	= array();
+
+	$glist[] = mosHTML::makeOption( 0, '- - - - - -' );
+
+	if ( empty( $filter_group ) ) {
+		$sel_groups[] = mosHTML::makeOption( 0, '- - - - - -' );
+	}
+
+	foreach ( $grouplist as $id => $glisti ) {
+		$glist[] = mosHTML::makeOption( $glisti[0], $glisti[1] );
+		if ( !empty( $filter_group ) ) {
+			if ( in_array( $glisti[0], $filter_group ) ) {
+				$sel_groups[] = mosHTML::makeOption( $glisti[0], $glisti[1] );
+			}
+		}
+	}
+
+	$lists['filter_group'] = mosHTML::selectList( $glist, 'filter_group[]', 'size="' . min(8,count($glist)+1) . '" multiple="multiple"', 'value', 'text', $sel_groups );
+
+ 	HTML_AcctExp::listSubscriptionPlans( $rows, $lists, $pageNav, $option );
  }
 
 function editSubscriptionPlan( $id, $option )

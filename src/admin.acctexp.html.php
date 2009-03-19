@@ -1653,16 +1653,18 @@ class HTML_AcctExp
  		HTML_myCommon::GlobalNerd();
 	}
 
-	function listSubscriptionPlans( $rows, $pageNav, $option )
+	function listSubscriptionPlans( $rows, $lists, $pageNav, $option )
 	{
 		global $mosConfig_live_site;
 		HTML_myCommon::addBackendCSS(); ?>
 		<form action="index2.php" method="post" name="adminForm">
 			<table class="adminheading">
 				<tr>
-					<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_plans.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
-						<?php echo _PAYPLANS_TITLE; ?>
-					</th>
+					<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_plans.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;"><?php echo _PAYPLANS_TITLE; ?></th>
+					<td nowrap="nowrap">
+						<?php echo $lists['filter_group'];?>
+						<input type="button" class="button" onclick="document.adminForm.submit();" value="<?php echo _AEC_CMN_APPLY; ?>" style="margin:2px;text-align:center;" />
+					</td>
 				</tr>
 				<tr><td></td></tr>
 			</table>

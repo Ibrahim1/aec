@@ -4963,12 +4963,13 @@ class SubscriptionPlanHandler
 		return $available_plans;
 	}
 
-	function getFullPlanList( $limitstart=false, $limit=false )
+	function getFullPlanList( $limitstart=false, $limit=false, $subselect=array() )
 	{
 		global $database;
 
 		$query = 'SELECT *'
 				. ' FROM #__acctexp_plans'
+				. ( empty( $subselect ) ? '' : ' WHERE id IN (' . implode( ',', $subselect ) . ')' )
 				. ' GROUP BY `id`'
 				. ' ORDER BY `ordering`'
 			 	;
