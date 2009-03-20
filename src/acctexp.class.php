@@ -6260,6 +6260,31 @@ class InvoiceFactory
 		return;
 	}
 
+	function raiseException( $exception )
+	{
+		if ( empty( $this->exceptions ) ) {
+			$this->exceptions = array();
+		}
+
+		$this->exceptions[] = $exception;
+	}
+
+	function hasExceptions()
+	{
+		return !empty( $this->exceptions );
+	}
+
+	function addressExceptions( $option )
+	{
+		foreach ( $this->exceptions as $ex ) {
+			// Convert Exception into actionable form
+		}
+
+		$mainframe->SetPageTitle( _EXCEPTION_TITLE );
+
+		Payment_HTML::exceptionForm( $option, $this );
+	}
+
 	function getCart()
 	{
 		if ( empty( $this->_cart ) ) {
@@ -7218,9 +7243,13 @@ class InvoiceFactory
 
 		$this->invoice->formatInvoiceNumber();
 
-		$mainframe->SetPageTitle( _CHECKOUT_TITLE );
+		if ( $this->hasExceptions() ) {
+			$this->addressExceptions();
+		} else {
+			$mainframe->SetPageTitle( _CHECKOUT_TITLE );
 
-		Payment_HTML::checkoutForm( $option, $var['var'], $var['params'], $this, $repeat );
+			Payment_HTML::checkoutForm( $option, $var['var'], $var['params'], $this, $repeat );
+		}
 	}
 
 	function getObjUsage()

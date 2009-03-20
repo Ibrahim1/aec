@@ -4187,6 +4187,7 @@ function editCoupon( $id, $option, $new, $type )
 	$params['max_peruser_reuse']			= array( 'inputB',			1 );
 	$params['usecount']						= array( 'inputB',			0 );
 
+	$params['usage_cart_full']				= array( 'list_yesno',		0 );
 	$params['usage_plans_enabled']			= array( 'list_yesno',		0 );
 	$params['usage_plans']					= array( 'list',			0 );
 
