@@ -1168,14 +1168,12 @@ class Payment_HTML
 
 		HTML_frontend::aec_styling( $option );
 
-		$introtext = '_EXCEPTION_INFO';
-
 		?>
 		<div class="componentheading"><?php echo _EXCEPTION_TITLE; ?></div>
 		<div id="checkout">
 			<?php
 			if ( $aecConfig->cfg['customtext_exception_keeporiginal'] ) { ?>
-				<p><?php echo constant( $introtext ); ?></p>
+				<p><?php echo _EXCEPTION_INFO; ?></p>
 				<?php
 			}
 			if ( $aecConfig->cfg['customtext_exception'] ) { ?>
@@ -1183,6 +1181,7 @@ class Payment_HTML
 				<?php
 			} ?>
 			<table id="aec_checkout">
+			<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=addressException', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 			<?php
 				foreach ( $InvoiceFactory->exceptions as $ex ) {
 					$ttype = 'aec_termtype_' . $term->type;
@@ -1250,9 +1249,11 @@ class Payment_HTML
 			<tr><th><?php echo _CHECKOUT_TITLE; ?></th></tr>
 			<tr>
 				<td class="checkout_action">
-					<?php
-					print $var;
-					?>
+						<input type="hidden" name="option" value="<?php echo $option; ?>" />
+						<input type="hidden" name="task" value="addressException" />
+						<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice_number; ?>" />
+						<input type="submit" class="button" value="<?php echo _BUTTON_APPLY; ?>" />
+					</form>
 				</td>
 			</tr>
 		</table>

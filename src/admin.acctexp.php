@@ -2099,6 +2099,10 @@ function editSettings( $option )
 	$params['customtext_checkout_keeporiginal']	= array( 'list_yesno', '' );
 	$params['customtext_checkout']				= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
+	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_EXCEPTION_NAME );
+	$params['customtext_exception_keeporiginal']	= array( 'list_yesno', '' );
+	$params['customtext_exception']				= array( 'editor', '' );
+	$params[] = array( 'div_end', '' );
 	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_NAME );
 	$params['customtext_notallowed_keeporiginal']	= array( 'list_yesno', '' );
 	$params['customtext_notallowed']			= array( 'editor', '' );

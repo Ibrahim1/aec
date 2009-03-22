@@ -1262,7 +1262,9 @@ class Config_General extends serialParamDBTable
 		$def['override_reqssl']					= 0;
 		// new 0.12.4.16
 		$def['invoicenum_doformat']				= 0;
-		$def['invoicenum_formatting']			= '{aecjson}{"cmd":"concat","vars":[{"cmd":"date","vars":["Y",{"cmd":"rw_constant","vars":"invoice_created_date"}]},"-",{"cmd":"rw_constant","vars":"invoice_id"}]}{/aecjson}';
+		$def['invoicenum_formatting']			= '{aecjson}{"cmd":"concat","vars":[{"cmd":"date","vars":["Y",{"cmd":"rw_constant",'
+													. '"vars":"invoice_created_date"}]},"-",{"cmd":"rw_constant","vars":"invoice_id"}]}'
+													.'{/aecjson}';
 		$def['use_recaptcha']					= 0;
 		$def['recaptcha_privatekey']			= '';
 		$def['recaptcha_publickey']				= '';
@@ -1308,6 +1310,8 @@ class Config_General extends serialParamDBTable
 		$def['additem_stayonpage']				= '';
 		$def['additem_stayonpage']				= '';
 		$def['customintro_always']				= 1;
+		$def['customtext_exception_keeporiginal']	= 1;
+		$def['customtext_exception']			= '';
 
 		return $def;
 	}
@@ -8714,6 +8718,21 @@ class aecCartHelper
 	{
 		foreach ( $cart->content as $cid => $c ) {
 			return aecCartHelper::getCartItemObject( $cart, $cid );
+		}
+	}
+
+	function getCartProcessorList( $cart, $nofree=true )
+	{
+		$proclist = array();
+
+		foreach ( $cart->content as $cid => $c ) {
+			$cartitem = aecCartHelper::getCartItemObject( $cart, $cid );
+
+			if ( is_array( $cartitem->params['processors'][0] ) ) {
+
+			} else {
+				if ( )
+			}
 		}
 	}
 
