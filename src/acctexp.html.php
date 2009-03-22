@@ -1162,7 +1162,7 @@ class Payment_HTML
 		<?php
 	}
 
-	function exceptionForm( $option, $var, $params = null, $InvoiceFactory )
+	function exceptionForm( $option, $InvoiceFactory )
 	{
 		global $database, $aecConfig;
 
@@ -1184,75 +1184,64 @@ class Payment_HTML
 			} ?>
 			<table id="aec_checkout">
 			<?php
-				if ( !empty( $terms ) ) {
-					foreach ( $terms as $tid => $term ) {
-						$ttype = 'aec_termtype_' . $term->type;
+				foreach ( $InvoiceFactory->exceptions as $ex ) {
+					$ttype = 'aec_termtype_' . $term->type;
 
-						//$future = ( $tid > $InvoiceFactory->terms->pointer ) ? '&nbsp;('._AEC_CHECKOUT_FUTURETERM.')' : '';
-						$applicable = ( $tid >= $InvoiceFactory->terms->pointer ) ? '' : '&nbsp;('._AEC_CHECKOUT_NOTAPPLICABLE.')';
+					//$future = ( $tid > $InvoiceFactory->terms->pointer ) ? '&nbsp;('._AEC_CHECKOUT_FUTURETERM.')' : '';
+					$applicable = ( $tid >= $InvoiceFactory->terms->pointer ) ? '' : '&nbsp;('._AEC_CHECKOUT_NOTAPPLICABLE.')';
 
-						$current = ( $tid == $InvoiceFactory->terms->pointer ) ? ' current_period' : '';
+					$current = ( $tid == $InvoiceFactory->terms->pointer ) ? ' current_period' : '';
 
-						// Headline - What type is this term
-						echo '<tr class="aec_term_typerow' . $current . '"><th colspan="2" class="' . $ttype . '">' . constant( strtoupper( '_' . $ttype ) ) . $applicable . '</th></tr>';
-						// Subheadline - specify the details of this term
-						echo '<tr class="aec_term_durationrow' . $current . '"><td colspan="2" class="aec_term_duration">' . _AEC_CHECKOUT_DURATION . ': ' . $term->renderDuration() . '</td></tr>';
+					// Headline - What type is this term
+					echo '<tr class="aec_term_typerow' . $current . '"><th colspan="2" class="' . $ttype . '">' . constant( strtoupper( '_' . $ttype ) ) . $applicable . '</th></tr>';
+					// Subheadline - specify the details of this term
+					echo '<tr class="aec_term_durationrow' . $current . '"><td colspan="2" class="aec_term_duration">' . _AEC_CHECKOUT_DURATION . ': ' . $term->renderDuration() . '</td></tr>';
 
-						// Iterate through costs
-						foreach ( $term->renderCost() as $citem ) {
-							$t = constant( strtoupper( '_aec_checkout_' . $citem->type ) );
-							$c = AECToolbox::formatAmount( $citem->cost['amount'], $InvoiceFactory->payment->currency );
+					// Iterate through costs
+					foreach ( $term->renderCost() as $citem ) {
+						$t = constant( strtoupper( '_aec_checkout_' . $citem->type ) );
+						$c = AECToolbox::formatAmount( $citem->cost['amount'], $InvoiceFactory->payment->currency );
 
-							switch ( $citem->type ) {
-								case 'discount':
-									$ta = $t;
-									if ( !empty( $citem->cost['details'] ) ) {
-										$ta .= '&nbsp;(' . $citem->cost['details'] . ')';
+						switch ( $citem->type ) {
+							case 'discount':
+								$ta = $t;
+								if ( !empty( $citem->cost['details'] ) ) {
+									$ta .= '&nbsp;(' . $citem->cost['details'] . ')';
+								}
+								$ta .= '&nbsp;[<a href="'
+									. AECToolbox::deadsureURL( 'index.php?option=' . $option
+									. '&amp;task=InvoiceRemoveCoupon&amp;invoice=' . $InvoiceFactory->invoice_number
+									. '&amp;coupon_code=' . $citem->cost['coupon'] )
+									. '" title="' . _CHECKOUT_INVOICE_COUPON_REMOVE . '">'
+									. _CHECKOUT_INVOICE_COUPON_REMOVE . '</a>]';
+
+								$t = $ta;
+
+								$c = AECToolbox::formatAmount( $citem->cost['amount'] );
+
+								// Strip out currency symbol and replace with blanks
+								if ( !$aecConfig->cfg['amount_currency_symbolfirst'] ) {
+									$strlen = 2;
+
+									if ( !$aecConfig->cfg['amount_currency_symbol'] ) {
+										$strlen = 1 + strlen( $InvoiceFactory->payment->currency ) * 2;
 									}
-									$ta .= '&nbsp;[<a href="'
-										. AECToolbox::deadsureURL( 'index.php?option=' . $option
-										. '&amp;task=InvoiceRemoveCoupon&amp;invoice=' . $InvoiceFactory->invoice_number
-										. '&amp;coupon_code=' . $citem->cost['coupon'] )
-										. '" title="' . _CHECKOUT_INVOICE_COUPON_REMOVE . '">'
-										. _CHECKOUT_INVOICE_COUPON_REMOVE . '</a>]';
 
-									$t = $ta;
-
-									$c = AECToolbox::formatAmount( $citem->cost['amount'] );
-
-									// Strip out currency symbol and replace with blanks
-									if ( !$aecConfig->cfg['amount_currency_symbolfirst'] ) {
-										$strlen = 2;
-
-										if ( !$aecConfig->cfg['amount_currency_symbol'] ) {
-											$strlen = 1 + strlen( $InvoiceFactory->payment->currency ) * 2;
-										}
-
-										for( $i=0; $i<=$strlen;$i++ ) {
-											$c .= '&nbsp;';
-										}
+									for( $i=0; $i<=$strlen;$i++ ) {
+										$c .= '&nbsp;';
 									}
-									break;
-								case 'cost': break;
-								case 'total': break;
-								default: break;
-							}
-
-							echo '<tr class="aec_term_' . $citem->type . 'row' . $current . '"><td class="aec_term_' . $citem->type . 'title">' . $t . ':' . '</td><td class="aec_term_' . $citem->type . 'amount">' . $c . '</td></tr>';
+								}
+								break;
+							case 'cost': break;
+							case 'total': break;
+							default: break;
 						}
 
-						// Draw Separator Line
-						echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
+						echo '<tr class="aec_term_' . $citem->type . 'row' . $current . '"><td class="aec_term_' . $citem->type . 'title">' . $t . ':' . '</td><td class="aec_term_' . $citem->type . 'amount">' . $c . '</td></tr>';
 					}
-				} elseif ( !empty( $InvoiceFactory->cart ) ) {
-					foreach ( $InvoiceFactory->cart as $cartitem ) {
-						if ( !empty( $cartitem['name'] ) ) {
-							echo '<tr class="aec_term_costrow"><td class="aec_term_title">' . $cartitem['name'] . ' (' . $cartitem['cost'] . 'x' . $cartitem['count'] . ')' . '</td><td class="aec_term_amount">' . $cartitem['cost_total'] . '</td></tr>';
-						} else {
-							echo '<tr class="aec_term_totalrow"><td class="aec_term_title">' . _CART_ROW_TOTAL . '</td><td class="aec_term_amount">' . $cartitem['cost_total'] . '</td></tr>';
-						}
 
-					}
+					// Draw Separator Line
+					echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
 				}
 			?>
 			</table>
