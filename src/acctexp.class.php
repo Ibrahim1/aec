@@ -12641,27 +12641,35 @@ class microIntegration extends serialParamDBTable
 
 class couponsHandler extends eucaObject
 {
+	function couponsHandler( $metaUser, $InvoiceFactory, $coupons )
+	{
+		$this->metaUser			=& $metaUser;
+		$this->InvoiceFactory	=& $InvoiceFactory;
+		$this->coupons			=& $coupons;
+
+		$this->global_nomix 	= array();
+		$this->delete_list	 	= array();
+		$this->applied_coupons 	= array();
+	}
+
 	function applyCoupons( $amount, &$coupons, $metaUser, $original_amount=null, $invoiceFactory=null )
 	{
-		$applied_coupons = array();
-		$global_nomix = array();
-
-		if ( empty( $coupons ) || !is_array( $coupons ) ) {
+		if ( empty( $this->coupons ) || !is_array( $this->coupons ) ) {
 			return $amount;
 		}
 
-		foreach ( $coupons as $arrayid => $coupon_code ) {
+		foreach ( $this->coupons as $arrayid => $coupon_code ) {
 			$cph = new couponHandler();
 			$cph->load( $coupon_code );
 
 			if ( $cph->coupon->coupon_code !== $coupon_code ) {
-				unset( $coupons[$arrayid] );
+				unset( $this->coupons[$arrayid] );
 				continue;
 			}
 
 			if ( !$cph->status ) {
 				$this->setError( $cph->error );
-				unset( $coupons[$arrayid] );
+				unset( $this->coupons[$arrayid] );
 				continue;
 			}
 
@@ -12672,28 +12680,29 @@ class couponsHandler extends eucaObject
 				$nomix = array();
 			}
 
-			if ( count( array_intersect( $applied_coupons, $nomix ) ) || in_array( $coupon_code, $global_nomix ) ) {
+			if ( count( array_intersect( $this->applied_coupons, $nomix ) ) || in_array( $coupon_code, $this->global_nomix ) ) {
 				// This coupon either interferes with one of the coupons already applied, or the other way round
 				$this->setError( _COUPON_ERROR_COMBINATION );
-				unset( $coupons[$arrayid] );
+				unset( $this->coupons[$arrayid] );
 			} else {
 				if ( $cph->status ) {
 					// Coupon approved, checking restrictions
-					$cph->checkRestrictions( $metaUser, $amount, $original_amount, $invoiceFactory );
+					$cph->checkRestrictions( $this->metaUser, $amount, $original_amount, $invoiceFactory );
 					if ( $cph->status ) {
 						$amount = $cph->applyCoupon( $amount );
-						$applied_coupons[] = $coupon_code;
-						$global_nomix = array_merge( $global_nomix, $nomix );
+
+						$this->applied_coupons[] = $coupon_code;
+						$this->global_nomix = array_merge( $this->global_nomix, $nomix );
 					} else {
 						// Coupon restricted for this user, thus it needs to be deleted later on
 						$this->setError( $cph->error );
-						unset( $coupons[$arrayid] );
+						unset( $this->coupons[$arrayid] );
 					}
 				} else {
 					// Coupon not approved, thus it needs to be deleted later on
 					// Set Error
 					$this->setError( $cph->error );
-					unset( $coupons[$arrayid] );
+					unset( $this->coupons[$arrayid] );
 				}
 			}
 		}
@@ -12704,7 +12713,7 @@ class couponsHandler extends eucaObject
 	function applyCouponsToMultiTerms( $terms, &$coupons, $metaUser, $original_amount, $invoiceFactory )
 	{
 		if ( count( $terms ) == 1 ) {
-			$terms[0] = $cpsh->applyCouponsToTerms( $terms[0], $coupons, $this->metaUser, $this->amount, $this );
+			$terms[0] = couponsHandler::applyCouponsToTerms( $terms[0], $this->coupons, $this->metaUser, $this->amount, $this );
 		} else {
 			foreach ( $terms as $tid => $term ) {
 
@@ -12716,183 +12725,109 @@ class couponsHandler extends eucaObject
 
 	function applyCouponsToTerms( $terms, &$coupons, $metaUser, $original_amount, $invoiceFactory )
 	{
-		$applied_coupons = array();
-		$global_nomix = array();
-		foreach ( $coupons as $arrayid => $coupon_code ) {
-			$cph = new couponHandler();
-			$cph->load( $coupon_code );
+		$this->applied_coupons = array();
 
-			if ( $cph->coupon->coupon_code !== $coupon_code ) {
-				unset( $coupons[$arrayid] );
-				continue;
-			}
-
-			if ( !$cph->status ) {
-				$this->setError( $cph->error );
-				unset( $coupons[$arrayid] );
-				continue;
-			}
-
-			// Get the coupons that this one cannot be mixed with
-			if ( !empty( $cph->restrictions['restrict_combination'] ) && !empty( $cph->restrictions['bad_combinations'] ) ) {
-				$nomix = $cph->restrictions['bad_combinations'];
-			} else {
-				$nomix = array();
-			}
-
-			if ( count( array_intersect( $applied_coupons, $nomix ) ) || in_array( $coupon_code, $global_nomix ) ) {
-				// This coupon either interferes with one of the coupons already applied, or the other way round
-				$this->setError( _COUPON_ERROR_COMBINATION );
-				unset( $coupons[$arrayid] );
-			} else {
-				if ( $cph->status ) {
-					// Coupon approved, checking restrictions
-					$cph->checkRestrictions( $metaUser, $original_amount, $invoiceFactory );
-					if ( $cph->status ) {
-						$start = 0;
-
-						if ( $cph->discount['useon_trial'] && $terms->hasTrial && ( $terms->pointer == 0 ) ) {
-							$start = 0;
-						} elseif( $terms->hasTrial ) {
-							$start = 1;
-						}
-
-						$info = array();
-						$info['coupon'] = $coupon_code;
-
-						for ( $i = $start; $i < count( $terms->terms ); $i++ ) {
-							if ( !$cph->discount['useon_full'] && ( $i > 0 ) ) {
-								continue;
-							}
-
-							if ( $cph->discount['percent_first'] ) {
-								if ( $cph->discount['amount_percent_use'] ) {
-									$info['details'] = '-' . $cph->discount['amount_percent'] . '%';
-									$terms->terms[$i]->discount( null, $cph->discount['amount_percent'], $info );
-								}
-								if ( $cph->discount['amount_use'] ) {
-									$info['details'] = null;
-									$terms->terms[$i]->discount( $cph->discount['amount'], null, $info );
-								}
-							} else {
-								if ( $cph->discount['amount_use'] ) {
-									$info['details'] = null;
-									$terms->terms[$i]->discount( $cph->discount['amount'], null, $info );
-								}
-								if ( $cph->discount['amount_percent_use'] ) {
-									$info['details'] = '-' . $cph->discount['amount_percent'] . '%';
-									$terms->terms[$i]->discount( null, $cph->discount['amount_percent'], $info );
-								}
-							}
-						}
-
-						$applied_coupons[] = $coupon_code;
-						$global_nomix = array_merge( $global_nomix, $nomix );
-					} else {
-						// Coupon restricted for this user, thus it needs to be deleted later on
-						$this->setError( $cph->error );
-						unset( $coupons[$arrayid] );
-					}
-				} else {
-					// Coupon not approved, thus it needs to be deleted later on
-					$this->setError( $cph->error );
-					unset( $coupons[$arrayid] );
-				}
-			}
+		foreach ( $this->coupons as $arrayid => $coupon_code ) {
+			$this->applyCouponToTerms( $terms[0], $this->coupons, $this->metaUser, $this->amount, $this );
 		}
 
 		return $terms;
 	}
 
-	function applyCouponToTerms( $terms, $coupon, $metaUser, $original_amount, $invoiceFactory )
+	function applyCouponToTerms( $terms, $coupon_code )
 	{
-		$applied_coupons = array();
-		$global_nomix = array();
-		foreach ( $coupons as $arrayid => $coupon_code ) {
-			$cph = new couponHandler();
-			$cph->load( $coupon_code );
+		$cph = new couponHandler();
+		$cph->load( $coupon_code );
 
-			if ( $cph->coupon->coupon_code !== $coupon_code ) {
-				unset( $coupons[$arrayid] );
-				continue;
-			}
+		$cursor = array_search( $coupon_code, $this->coupons );
 
-			if ( !$cph->status ) {
-				$this->setError( $cph->error );
-				unset( $coupons[$arrayid] );
-				continue;
-			}
+		if ( $cph->coupon->coupon_code !== $coupon_code ) {
+			$this->delete_list[] = $coupon_code;
+			return $terms;
+		}
 
-			// Get the coupons that this one cannot be mixed with
-			if ( !empty( $cph->restrictions['restrict_combination'] ) && !empty( $cph->restrictions['bad_combinations'] ) ) {
-				$nomix = $cph->restrictions['bad_combinations'];
-			} else {
-				$nomix = array();
-			}
+		if ( !$cph->status ) {
+			$this->setError( $cph->error );
 
-			if ( count( array_intersect( $applied_coupons, $nomix ) ) || in_array( $coupon_code, $global_nomix ) ) {
-				// This coupon either interferes with one of the coupons already applied, or the other way round
-				$this->setError( _COUPON_ERROR_COMBINATION );
-				unset( $coupons[$arrayid] );
-			} else {
+			$this->delete_list[] = $coupon_code;
+			return $terms;
+		}
+
+		// Get the coupons that this one cannot be mixed with
+		if ( !empty( $cph->restrictions['restrict_combination'] ) && !empty( $cph->restrictions['bad_combinations'] ) ) {
+			$nomix = $cph->restrictions['bad_combinations'];
+		} else {
+			$nomix = array();
+		}
+
+		if ( count( array_intersect( $this->applied_coupons, $nomix ) ) || in_array( $coupon_code, $this->global_nomix ) ) {
+			// This coupon either interferes with one of the coupons already applied, or the other way round
+			$this->setError( _COUPON_ERROR_COMBINATION );
+			unset( $this->coupons[$cursor] );
+		} else {
+			if ( $cph->status ) {
+				// Coupon approved, checking restrictions
+				$cph->checkRestrictions( $this->metaUser, $original_amount, $this->InvoiceFactory );
+
 				if ( $cph->status ) {
-					// Coupon approved, checking restrictions
-					$cph->checkRestrictions( $metaUser, $original_amount, $invoiceFactory );
-					if ( $cph->status ) {
-						$start = 0;
+					$this->applyCouponToTerms( $terms, $cph );
 
-						if ( $cph->discount['useon_trial'] && $terms->hasTrial && ( $terms->pointer == 0 ) ) {
-							$start = 0;
-						} elseif( $terms->hasTrial ) {
-							$start = 1;
-						}
-
-						$info = array();
-						$info['coupon'] = $coupon_code;
-
-						for ( $i = $start; $i < count( $terms->terms ); $i++ ) {
-							if ( !$cph->discount['useon_full'] && ( $i > 0 ) ) {
-								continue;
-							}
-
-							if ( $cph->discount['percent_first'] ) {
-								if ( $cph->discount['amount_percent_use'] ) {
-									$info['details'] = '-' . $cph->discount['amount_percent'] . '%';
-									$terms->terms[$i]->discount( null, $cph->discount['amount_percent'], $info );
-								}
-								if ( $cph->discount['amount_use'] ) {
-									$info['details'] = null;
-									$terms->terms[$i]->discount( $cph->discount['amount'], null, $info );
-								}
-							} else {
-								if ( $cph->discount['amount_use'] ) {
-									$info['details'] = null;
-									$terms->terms[$i]->discount( $cph->discount['amount'], null, $info );
-								}
-								if ( $cph->discount['amount_percent_use'] ) {
-									$info['details'] = '-' . $cph->discount['amount_percent'] . '%';
-									$terms->terms[$i]->discount( null, $cph->discount['amount_percent'], $info );
-								}
-							}
-						}
-
-						$applied_coupons[] = $coupon_code;
-						$global_nomix = array_merge( $global_nomix, $nomix );
-					} else {
-						// Coupon restricted for this user, thus it needs to be deleted later on
-						$this->setError( $cph->error );
-						unset( $coupons[$arrayid] );
-					}
+					$this->global_nomix = array_merge( $this->global_nomix, $nomix );
 				} else {
-					// Coupon not approved, thus it needs to be deleted later on
+					// Coupon restricted for this user, thus it needs to be deleted later on
 					$this->setError( $cph->error );
-					unset( $coupons[$arrayid] );
+					unset( $this->coupons[$cursor] );
+				}
+			} else {
+				// Coupon not approved, thus it needs to be deleted later on
+				$this->setError( $cph->error );
+				unset( $this->coupons[$cursor] );
+			}
+		}
+	}
+
+	function applyCouponToTerms( $terms, $cph )
+	{
+		$offset = 0;
+
+		if ( $cph->discount['useon_trial'] && $terms->hasTrial && ( $terms->pointer == 0 ) ) {
+			$offset = 0;
+		} elseif( $terms->hasTrial ) {
+			$offset = 1;
+		}
+
+		$info = array();
+		$info['coupon'] = $cph->coupon->coupon_code;
+
+		for ( $i = $offset; $i < count( $terms->terms ); $i++ ) {
+			if ( !$cph->discount['useon_full'] && ( $i > 0 ) ) {
+				continue;
+			}
+
+			if ( $cph->discount['percent_first'] ) {
+				if ( $cph->discount['amount_percent_use'] ) {
+					$info['details'] = '-' . $cph->discount['amount_percent'] . '%';
+					$terms->terms[$i]->discount( null, $cph->discount['amount_percent'], $info );
+				}
+				if ( $cph->discount['amount_use'] ) {
+					$info['details'] = null;
+					$terms->terms[$i]->discount( $cph->discount['amount'], null, $info );
+				}
+			} else {
+				if ( $cph->discount['amount_use'] ) {
+					$info['details'] = null;
+					$terms->terms[$i]->discount( $cph->discount['amount'], null, $info );
+				}
+				if ( $cph->discount['amount_percent_use'] ) {
+					$info['details'] = '-' . $cph->discount['amount_percent'] . '%';
+					$terms->terms[$i]->discount( null, $cph->discount['amount_percent'], $info );
 				}
 			}
 		}
 
-		return $terms;
+		$this->applied_coupons[] = $cph->coupon->coupon_code;
 	}
+
 }
 
 class couponHandler

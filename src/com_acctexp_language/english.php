@@ -119,17 +119,17 @@ define( '_CONFIRM_ROW_USERNAME', 'Username: ');
 define( '_CONFIRM_ROW_EMAIL', 'E-mail:');
 define( '_CONFIRM_INFO', 'Please use the Continue-Button to complete your registration.');
 define( '_BUTTON_CONFIRM', 'Continue');
-define( '_CONFIRM_TOS', "I have read and agree to the <a href=\"%s\" target=\"_blank\" title=\"ToS\">Terms of Service</a>");
+define( '_CONFIRM_TOS', "I have read and agree to the <a href=\"%s\" target=\"_blank\" title=\"ToS\">Terms of Service</a>.");
 define( '_CONFIRM_TOS_IFRAME', "I have read and agree to the Terms of Service (above)");
-define( '_CONFIRM_TOS_ERROR', 'Please read and agree to our Terms of Service');
-define( '_CONFIRM_COUPON_INFO', 'If you have a coupon code, you can enter it on the Checkout Page to get a discount on your payment');
-define( '_CONFIRM_COUPON_INFO_BOTH', 'If you have a coupon code, you can enter it here, or on the Checkout Page to get a discount on your payment');
+define( '_CONFIRM_TOS_ERROR', 'Please read and agree to our Terms of Service.');
+define( '_CONFIRM_COUPON_INFO', 'If you have a coupon code, you can enter it on the Checkout Page to get a discount on your payment.');
+define( '_CONFIRM_COUPON_INFO_BOTH', 'If you have a coupon code, you can enter it here, or on the Checkout Page to get a discount on your payment.');
 define( '_CONFIRM_FREETRIAL', 'Free Trial');
 
 // --== SHOPPING CART FORM ==--
 define( '_CART_TITLE', 'Shopping Cart');
 define( '_CART_ROW_TOTAL', 'Total');
-define( '_CART_INFO', 'Please use the Continue-Button below to complete your purchase.');
+define( '_CART_INFO', 'Please use the continue button below to complete your purchase.');
 
 // --== PROMPT PASSWORD FORM ==--
 define( '_AEC_PROMPT_PASSWORD', 'For security reasons, you need to put in your password to continue.');
@@ -263,8 +263,8 @@ define( '_ACCTEXP_MAILPARTICLE_THANKSREN', "Thank you for renewing your subscrip
 define( '_ACCTEXP_MAILPARTICLE_PAYREC', "Your payment for your membership has been received.");
 define( '_ACCTEXP_MAILPARTICLE_LOGIN', "You may now login to %s with your username and password.");
 define( '_ACCTEXP_MAILPARTICLE_FOOTER',"\n\nPlease do not respond to this message as it is automatically generated and is for information purposes only.");
-define( '_ACCTEXP_ASEND_MSG',				"Hello %s,\n\na new user has created a subscription at [ %s ].\n\nHere further details:\n\nName.........: %s\nEmail........: %s\nUsername.....: %s\nSubscr.-ID...: %s\nSubscription.: %s\nIP...........: %s\nISP..........: %s\n\nPlease do not respond to this message as it is automatically generated and is for information purposes only." );
-define( '_ACCTEXP_ASEND_MSG_RENEW',			"Hello %s,\n\na user has renewed his subscription at [ %s ].\n\nHere further details:\n\nName.........: %s\nEmail........: %s\nUsername.....: %s\nSubscr.-ID...: %s\nSubscription.: %s\nIP...........: %s\nISP..........: %s\n\nPlease do not respond to this message as it is automatically generated and is for information purposes only." );
+define( '_ACCTEXP_ASEND_MSG',				"Hello %s,\n\nA new user has created a subscription at [ %s ].\n\nHere further details:\n\nName.........: %s\nEmail........: %s\nUsername.....: %s\nSubscr.-ID...: %s\nSubscription.: %s\nIP...........: %s\nISP..........: %s\n\nPlease do not respond to this message as it is automatically generated and is for information purposes only." );
+define( '_ACCTEXP_ASEND_MSG_RENEW',			"Hello %s,\n\nA user has renewed his subscription at [ %s ].\n\nHere further details:\n\nName.........: %s\nEmail........: %s\nUsername.....: %s\nSubscr.-ID...: %s\nSubscription.: %s\nIP...........: %s\nISP..........: %s\n\nPlease do not respond to this message as it is automatically generated and is for information purposes only." );
 define( '_AEC_ASEND_MSG_NEW_REG',			"Hello %s,\n\nThere has been a new registration at [ %s ].\n\nHere further details:\n\nName.....: %s\nEmail.: %s\nUsername....: %s\nIP.......: %s\nISP......: %s\n\nPlease do not respond to this message as it is automatically generated and is for information purposes only." );
 define( '_AEC_ASEND_NOTICE',				"AEC %s: %s at %s" );
 define( '_AEC_ASEND_NOTICE_MSG',		"According to the E-Mail reporting level you have selected, this is an automatic notification about an EventLog entry.\n\nThe details of this message are:\n\n--- --- --- ---\n\n%s\n\n--- --- --- ---\n\nPlease do not respond to this message as it is automatically generated and is for information purposes only. You can change the level of reported entries in your AEC Settings." );

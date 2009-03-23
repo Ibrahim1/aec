@@ -1488,7 +1488,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$limit			= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
 	$limitstart		= $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
-	$orderby		= $mainframe->getUserStateFromRequest( "order", 'orderby', 'name ASC' );
+	$orderby		= $mainframe->getUserStateFromRequest( "order{$option}", 'orderby', 'name ASC' );
 	$search			= $mainframe->getUserStateFromRequest( "search{$option}", 'search', '' );
 	$search			= $database->getEscaped( trim( strtolower( $search ) ) );
 
@@ -1829,13 +1829,13 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	if ( is_array( $db_plans ) ) {
 		$plans = array_merge( $plans, $db_plans );
 	}
-	$lists['filterplanid']	= mosHTML::selectList( $plans, 'filter_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit( );"', 'id', 'name', $filter_planid );
+	$lists['filterplanid']	= mosHTML::selectList( $plans, 'filter_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $filter_planid );
 
 	$plans2[] = mosHTML::makeOption( '0', _BIND_USER, 'id', 'name' );
 	if ( is_array( $db_plans ) ) {
 		$plans2 = array_merge( $plans2, $db_plans );
 	}
-	$lists['planid']	= mosHTML::selectList( $plans2, 'assign_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit( );"', 'id', 'name', 0 );
+	$lists['planid']	= mosHTML::selectList( $plans2, 'assign_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', 0 );
 
 	$group_selection = array();
 	$group_selection[] = mosHTML::makeOption( 'excluded',	_AEC_SEL_EXCLUDED );
@@ -3475,7 +3475,7 @@ function listItemGroups( $option )
 {
  	global $database, $mainframe, $mosConfig_list_limit;
 
- 	$limit = $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
+ 	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
 	$limitstart = $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
  	// get the total number of records
@@ -4200,6 +4200,16 @@ function editCoupon( $id, $option, $new, $type )
 
 	$params['restr_remap']					= array( 'subarea_change',	'restrictions' );
 
+	$params['depend_on_subscr_id']			= array( 'list_yesno',		0 );
+	$params['subscr_id_dependency']			= array( 'inputB',			'' );
+	$params['allow_trial_depend_subscr']	= array( 'list_yesno',		0 );
+
+	$params['restrict_combination']			= array( 'list_yesno',		0 );
+	$params['bad_combinations']				= array( 'list',			'' );
+
+	$params['restrict_combination_cart']	= array( 'list_yesno',		0 );
+	$params['bad_combinations_cart']		= array( 'list',			'' );
+
 	$params['mingid_enabled']				= array( 'list_yesno',		0 );
 	$params['mingid']						= array( 'list',			18 );
 	$params['fixgid_enabled']				= array( 'list_yesno',		0 );
@@ -4218,11 +4228,6 @@ function editCoupon( $id, $option, $new, $type )
 	$params['used_plan_max_enabled']		= array( 'list_yesno',		0 );
 	$params['used_plan_max_amount']			= array( 'inputB',			0 );
 	$params['used_plan_max']				= array( 'list',			'' );
-	$params['restrict_combination']			= array( 'list_yesno',		0 );
-	$params['bad_combinations']				= array( 'list',			'' );
-	$params['depend_on_subscr_id']			= array( 'list_yesno',		0 );
-	$params['subscr_id_dependency']			= array( 'inputB',			'' );
-	$params['allow_trial_depend_subscr']	= array( 'list_yesno',		0 );
 
 	// ensure user can't add group higher than themselves
 	$my_groups = $acl->get_object_groups( 'users', $my->id, 'ARO' );
@@ -4347,7 +4352,7 @@ function editCoupon( $id, $option, $new, $type )
 	$coupons = array_merge( $database->loadObjectList(), $coupons );
 
 	if ( !empty( $restrictions_values['bad_combinations'] ) ) {
-		$query = 'SELECT `coupon_codev` as value, `coupon_code` as text'
+		$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
 				. ' FROM #__acctexp_coupons'
 				. ' WHERE `coupon_code` IN (\'' . implode( '\',\'', $restrictions_values['bad_combinations'] ) . '\')'
 				;
@@ -4368,8 +4373,30 @@ function editCoupon( $id, $option, $new, $type )
 		$sel_coupons = '';
 	}
 
-	$lists['bad_combinations']		= mosHTML::selectList($coupons, 'bad_combinations[]', 'size="' . min((count( $coupons ) + 1), 25) . '" multiple="multiple"',
-									'value', 'text', $sel_coupons);
+	if ( !empty( $restrictions_values['bad_combinations_cart'] ) ) {
+		$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
+				. ' FROM #__acctexp_coupons'
+				. ' WHERE `coupon_code` IN (\'' . implode( '\',\'', $restrictions_values['bad_combinations_cart'] ) . '\')'
+				;
+		$database->setQuery( $query );
+		$sel_coupons_cart = $database->loadObjectList();
+
+		$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
+				. ' FROM #__acctexp_coupons_static'
+				. ' WHERE `coupon_code` IN (\'' . implode( '\',\'', $restrictions_values['bad_combinations_cart'] ) . '\')'
+				;
+		$database->setQuery( $query );
+		$nc_cart = $database->loadObjectList();
+
+		if ( !empty( $nc_cart ) ) {
+			$sel_coupons_cart = array_merge( $nc_cart, $sel_coupons_cart );
+		}
+	} else {
+		$sel_coupons_cart = '';
+	}
+
+	$lists['bad_combinations']		= mosHTML::selectList($coupons, 'bad_combinations[]', 'size="' . min((count( $coupons ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $sel_coupons);
+	$lists['bad_combinations_cart']	= mosHTML::selectList($coupons, 'bad_combinations_cart[]', 'size="' . min((count( $coupons ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $sel_coupons_cart);
 
 	$settings = new aecSettings( 'coupon', 'general' );
 	$settings->fullSettingsArray( $params, array_merge( (array) $params_values, (array) $discount_values, (array) $restrictions_values ), $lists );

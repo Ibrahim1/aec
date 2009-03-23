@@ -2440,6 +2440,23 @@ class HTML_AcctExp
 							<tr><td>
 								<div class="userinfobox">
 									<div style="position:relative;float:left;width:200px;">
+										<?php echo $aecHTML->createSettingsParticle( 'depend_on_subscr_id' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'subscr_id_dependency' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'allow_trial_depend_subscr' ); ?>
+									</div>
+									<div style="position:relative;float:left;width:200px;">
+										<?php echo $aecHTML->createSettingsParticle( 'restrict_combination' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'bad_combinations' ); ?>
+									</div>
+									<div style="position:relative;float:left;width:200px;">
+										<?php echo $aecHTML->createSettingsParticle( 'restrict_combination_cart' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'bad_combinations_cart' ); ?>
+									</div>
+								</div>
+							</td></tr>
+							<tr><td>
+								<div class="userinfobox">
+									<div style="position:relative;float:left;width:200px;">
 										<?php echo $aecHTML->createSettingsParticle( 'mingid_enabled' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'mingid' ); ?>
 									</div>
@@ -2478,13 +2495,6 @@ class HTML_AcctExp
 										<?php echo $aecHTML->createSettingsParticle( 'used_plan_max_enabled' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'used_plan_max_amount' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'used_plan_max' ); ?>
-									</div>
-									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( 'restrict_combination' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'bad_combinations' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'depend_on_subscr_id' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'subscr_id_dependency' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'allow_trial_depend_subscr' ); ?>
 									</div>
 								</div>
 						</td></tr>
