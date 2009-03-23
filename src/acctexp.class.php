@@ -6141,9 +6141,19 @@ class InvoiceFactory
 
 			$this->getCart();
 
-			$cartitem = aecCartHelper::getFirstCartItemObject( $this->_cart );
+			$procs = aecCartHelper::getCartProcessorList( $this->_cart );
 
-			$this->processor = PaymentProcessorHandler::getProcessorNamefromId( $cartitem->params['processors'][0] );
+			if ( count( $procs ) > 1 ) {
+				$pgroups = aecCartHelper::getCartProcessorGroups( $this->_cart );
+
+				foreach ( $pgroups as $pgroup ) {
+
+				}
+
+				$this->raiseException();
+			} else {
+				$this->processor = PaymentProcessorHandler::getProcessorNamefromId( $procs[0] );
+			}
 		}
 
 		if ( !is_null( $this->processor ) && !( $this->processor == '' ) ) {
@@ -7181,22 +7191,26 @@ class InvoiceFactory
 		if ( !empty( $this->pp->info['secure'] ) && empty( $_SERVER['HTTPS'] ) && !$aecConfig->cfg['override_reqssl'] ) {
 			mosRedirect( AECToolbox::deadsureURL( "index.php?option=" . $option . "&task=repeatPayment&invoice=" . $this->invoice->invoice_number . "&first=" . ( $repeat ? 0 : 1 ), true, false ) );
 			exit();
-		};
+		}
+
+		$this->terms = array();
 
 		if ( empty( $this->cart ) ) {
 			$this->amount = $this->plan->SubscriptionAmount( $this->recurring, $this->metaUser->objSubscription, $this->metaUser );
 
-			$this->terms = new mammonTerms();
-			$this->terms->readParams( $this->plan->termsParamsRequest( $this->recurring, $this->metaUser ) );
+			$terms = new mammonTerms();
+			$terms->readParams( $this->plan->termsParamsRequest( $this->recurring, $this->metaUser ) );
 
 			if ( !empty( $this->plan ) ) {
 				$c = $this->plan->doPlanComparison( $this->metaUser->objSubscription );
 
 				// Do not allow a Trial if the user has used this or a similar plan
-				if ( $this->terms->hasTrial && !( ( $c['comparison'] === false ) && ( $c['total_comparison'] === false ) ) ) {
-					$this->terms->incrementPointer();
+				if ( $terms->hasTrial && !( ( $c['comparison'] === false ) && ( $c['total_comparison'] === false ) ) ) {
+					$terms->incrementPointer();
 				}
 			}
+
+			$this->terms[] = $terms;
 		} else {
 			$this->amount = $this->_cart->getAmount( $this->metaUser, $this->cart );
 
@@ -8728,12 +8742,56 @@ class aecCartHelper
 		foreach ( $cart->content as $cid => $c ) {
 			$cartitem = aecCartHelper::getCartItemObject( $cart, $cid );
 
-			if ( is_array( $cartitem->params['processors'][0] ) ) {
-
-			} else {
-				if ( )
+			if ( is_array( $cartitem->params['processors'] ) && !empty( $cartitem->params['processors'] ) ) {
+				foreach ( $cartitem->params['processors'] as $pid ) {
+					if ( array_search( $proclist, $pid ) === false ) {
+						$proclist[] = $pid;
+					}
+				}
 			}
 		}
+
+		return $proclist;
+	}
+
+	function getCartProcessorGroups( $cart )
+	{
+		$pgroups = array();
+
+		foreach ( $cart->content as $cid => $c ) {
+			$cartitem = aecCartHelper::getCartItemObject( $cart, $cid );
+
+			if ( empty( $pgroups ) ) {
+				$pg = array();
+				$pg['members']		= array( $cid );
+				$pg['processors']	= $cartitem->params['processors'];
+				$pgroups[] = $pg;
+			} else {
+				foreach ( $pgroups as $g ) {
+					$c = true;
+					if ( count( $cartitem->params['processors'] ) == count ( $g ) ) {
+						foreach ( $cartitem->params['processors'] as $k => $v ) {
+							if ( $g[$k] != $v ) {
+								$c = false;
+							}
+						}
+
+						if ( $c ) {
+							$pg['members'][] = $cid;
+						}
+					}
+
+					if ( !$c ) {
+						$pg = array();
+						$pg['members']		= array( $cid );
+						$pg['processors']	= $cartitem->params['processors'];
+						$pgroups[] = $pg;
+					}
+				}
+			}
+		}
+
+		return $pgroups;
 	}
 
 	function getInvoiceIdByCart( $cart )
@@ -12643,7 +12701,110 @@ class couponsHandler extends eucaObject
 		return $amount;
 	}
 
+	function applyCouponsToMultiTerms( $terms, &$coupons, $metaUser, $original_amount, $invoiceFactory )
+	{
+		if ( count( $terms ) == 1 ) {
+			$terms[0] = $cpsh->applyCouponsToTerms( $terms[0], $coupons, $this->metaUser, $this->amount, $this );
+		} else {
+			foreach ( $terms as $tid => $term ) {
+
+			}
+		}
+
+		return $terms;
+	}
+
 	function applyCouponsToTerms( $terms, &$coupons, $metaUser, $original_amount, $invoiceFactory )
+	{
+		$applied_coupons = array();
+		$global_nomix = array();
+		foreach ( $coupons as $arrayid => $coupon_code ) {
+			$cph = new couponHandler();
+			$cph->load( $coupon_code );
+
+			if ( $cph->coupon->coupon_code !== $coupon_code ) {
+				unset( $coupons[$arrayid] );
+				continue;
+			}
+
+			if ( !$cph->status ) {
+				$this->setError( $cph->error );
+				unset( $coupons[$arrayid] );
+				continue;
+			}
+
+			// Get the coupons that this one cannot be mixed with
+			if ( !empty( $cph->restrictions['restrict_combination'] ) && !empty( $cph->restrictions['bad_combinations'] ) ) {
+				$nomix = $cph->restrictions['bad_combinations'];
+			} else {
+				$nomix = array();
+			}
+
+			if ( count( array_intersect( $applied_coupons, $nomix ) ) || in_array( $coupon_code, $global_nomix ) ) {
+				// This coupon either interferes with one of the coupons already applied, or the other way round
+				$this->setError( _COUPON_ERROR_COMBINATION );
+				unset( $coupons[$arrayid] );
+			} else {
+				if ( $cph->status ) {
+					// Coupon approved, checking restrictions
+					$cph->checkRestrictions( $metaUser, $original_amount, $invoiceFactory );
+					if ( $cph->status ) {
+						$start = 0;
+
+						if ( $cph->discount['useon_trial'] && $terms->hasTrial && ( $terms->pointer == 0 ) ) {
+							$start = 0;
+						} elseif( $terms->hasTrial ) {
+							$start = 1;
+						}
+
+						$info = array();
+						$info['coupon'] = $coupon_code;
+
+						for ( $i = $start; $i < count( $terms->terms ); $i++ ) {
+							if ( !$cph->discount['useon_full'] && ( $i > 0 ) ) {
+								continue;
+							}
+
+							if ( $cph->discount['percent_first'] ) {
+								if ( $cph->discount['amount_percent_use'] ) {
+									$info['details'] = '-' . $cph->discount['amount_percent'] . '%';
+									$terms->terms[$i]->discount( null, $cph->discount['amount_percent'], $info );
+								}
+								if ( $cph->discount['amount_use'] ) {
+									$info['details'] = null;
+									$terms->terms[$i]->discount( $cph->discount['amount'], null, $info );
+								}
+							} else {
+								if ( $cph->discount['amount_use'] ) {
+									$info['details'] = null;
+									$terms->terms[$i]->discount( $cph->discount['amount'], null, $info );
+								}
+								if ( $cph->discount['amount_percent_use'] ) {
+									$info['details'] = '-' . $cph->discount['amount_percent'] . '%';
+									$terms->terms[$i]->discount( null, $cph->discount['amount_percent'], $info );
+								}
+							}
+						}
+
+						$applied_coupons[] = $coupon_code;
+						$global_nomix = array_merge( $global_nomix, $nomix );
+					} else {
+						// Coupon restricted for this user, thus it needs to be deleted later on
+						$this->setError( $cph->error );
+						unset( $coupons[$arrayid] );
+					}
+				} else {
+					// Coupon not approved, thus it needs to be deleted later on
+					$this->setError( $cph->error );
+					unset( $coupons[$arrayid] );
+				}
+			}
+		}
+
+		return $terms;
+	}
+
+	function applyCouponToTerms( $terms, $coupon, $metaUser, $original_amount, $invoiceFactory )
 	{
 		$applied_coupons = array();
 		$global_nomix = array();

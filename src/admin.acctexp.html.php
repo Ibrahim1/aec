@@ -2421,6 +2421,11 @@ class HTML_AcctExp
 												<?php echo $aecHTML->createSettingsParticle( 'usage_plans_enabled' ); ?>
 												<?php echo $aecHTML->createSettingsParticle( 'usage_plans' ); ?>
 											</div>
+											<div style="position:relative;float:left;">
+												<?php echo $aecHTML->createSettingsParticle( 'usage_cart_full' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'cart_multiple_items' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'cart_multiple_items_amount' ); ?>
+											</div>
 										</div>
 									</div>
 								</td>
