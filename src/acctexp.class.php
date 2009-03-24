@@ -7218,7 +7218,7 @@ class InvoiceFactory
 			exit();
 		}
 
-		$this->terms = array();
+		$this->items = array();
 
 		if ( empty( $this->cart ) ) {
 			$this->amount = $this->plan->SubscriptionAmount( $this->recurring, $this->metaUser->objSubscription, $this->metaUser );
@@ -7235,7 +7235,7 @@ class InvoiceFactory
 				}
 			}
 
-			$this->terms[] = $terms;
+			$this->items[] = array( 'obj' => $this->plan, 'terms' => $terms );
 		} else {
 			$this->amount = $this->_cart->getAmount( $this->metaUser, $this->cart );
 
@@ -7250,7 +7250,7 @@ class InvoiceFactory
 					$terms->incrementPointer();
 				}
 
-				$this->terms[] = $terms;
+				$this->items[] = array( 'obj' => $citem['obj'], 'terms' => $terms );
 			}
 		}
 
@@ -7260,7 +7260,7 @@ class InvoiceFactory
 
 			$cpsh = new couponsHandler( $this->metaUser, $this, $coupons );
 
-			$this->terms = $cpsh->applyToMultiTerms( $this->terms );
+			$this->items = $cpsh->applyToMultiItems( $this->items );
 
 			if ( count( $cpsh->delete_list ) ) {
 				foreach ( $cpsh->delete_list as $couponcode ) {
@@ -12699,9 +12699,123 @@ class couponsHandler extends eucaObject
 		$this->InvoiceFactory	=& $InvoiceFactory;
 		$this->coupons			=& $coupons;
 
+		$this->couponslist		= array();
 		$this->global_nomix 	= array();
+		$this->global_applied 	= array();
+
 		$this->delete_list	 	= array();
-		$this->applied_coupons 	= array();
+	}
+
+	function mixGlobalAllowed( $coupon_code )
+	{
+		return in_array( $coupon_code, $this->global_nomix );
+	}
+
+	function addnomixGlobal( $nomix )
+	{
+		if ( !empty( $nomix ) ) {
+			$this->global_nomix = array_merge( $this->global_nomix, $nomix );
+		}
+	}
+
+	function addappliedGlobal( $coupon_code )
+	{
+		if ( !empty( $nomix ) ) {
+			$this->global_nomix = array_merge( $this->global_nomix, $nomix );
+			$this->global_applied[] = $coupon_code;
+		}
+	}
+
+	function mixCheck( $item, $coupon_code, $nomix )
+	{
+		if ( count( array_intersect( $this->global_applied, $nomix ) ) || $this->mixGlobalAllowed( $coupon_code ) ) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	function loadCoupon( $coupon_code )
+	{
+		$cph = new couponHandler();
+		$cph->load( $coupon_code );
+
+		if ( $cph->coupon->coupon_code !== $coupon_code ) {
+			$this->delete_list[] = $coupon_code;
+			return false;
+		}
+
+		if ( !$cph->status ) {
+			$this->setError( $cph->error );
+
+			$this->delete_list[] = $coupon_code;
+			return false;
+		}
+
+		$this->coupons_list[] = array( 'coupon_code' => $coupon_code, 'cph' => $cph );
+
+		$this->cph = $cph;
+
+		return true;
+	}
+
+	function applyToMultiItems( $items, $original_amount )
+	{
+		if ( count( $terms ) == 1 ) {
+			// Only one item, so no conflicts possible
+			$terms[0] = $this->applyMultiToTerms( $terms, $this->coupons, $this->metaUser, $this->amount, $this );
+		} else {
+			foreach ( $terms as $tid => $term ) {
+
+			}
+		}
+
+		return $terms;
+	}
+
+	function applyMultiToTerms( $terms, $original_amount )
+	{
+		$this->global_applied = array();
+
+		foreach ( $this->coupons as $arrayid => $coupon_code ) {
+			$this->applyToTerms( 0, $terms[0], $this->amount );
+		}
+
+		return $terms;
+	}
+
+	function applyToTerms( $id, $terms, $coupon_code )
+	{
+		if ( !$this->loadCoupon( $coupon_code ) ) {
+			return $terms;
+		}
+
+		$nomix = $this->cph->getBadCombinations();
+
+		if ( !$this->mixCheck( $coupon_code, $nomix ) ) {
+			$this->setError( _COUPON_ERROR_COMBINATION );
+		} else {
+			if ( $this->cph->status ) {
+				// Coupon approved, checking restrictions
+				$this->cph->checkRestrictions( $this->metaUser, $original_amount, $this->InvoiceFactory );
+
+				if ( $this->cph->status ) {
+					$terms = $this->cph->applyToTerms( $terms, $this->cph );
+
+					$this->addappliedGlobal( $coupon_code );
+
+					$this->addnomixGlobal( $nomix );
+
+					return true;
+				}
+			}
+
+			$this->setError( $this->cph->error );
+		}
+
+		$this->delete_list[] = $coupon_code;
+
+		return false;
 	}
 
 	function applyToAmount( $amount, $original_amount=null, $invoiceFactory=null )
@@ -12727,7 +12841,7 @@ class couponsHandler extends eucaObject
 
 			$nomix = $cph->getBadCombinations();
 
-			if ( count( array_intersect( $this->applied_coupons, $nomix ) ) || in_array( $coupon_code, $this->global_nomix ) ) {
+			if ( count( array_intersect( $this->global_applied, $nomix ) ) || $this->mixGlobalAllowed( $coupon_code ) ) {
 				// This coupon either interferes with one of the coupons already applied, or the other way round
 				$this->setError( _COUPON_ERROR_COMBINATION );
 				unset( $this->coupons[$arrayid] );
@@ -12738,8 +12852,8 @@ class couponsHandler extends eucaObject
 					if ( $cph->status ) {
 						$amount = $cph->applyCoupon( $amount );
 
-						$this->applied_coupons[] = $coupon_code;
-						$this->global_nomix = array_merge( $this->global_nomix, $nomix );
+						$this->global_applied[] = $coupon_code;
+						$this->addnomixGlobal( $nomix );
 					} else {
 						// Coupon restricted for this user, thus it needs to be deleted later on
 						$this->setError( $cph->error );
@@ -12754,77 +12868,6 @@ class couponsHandler extends eucaObject
 		}
 
 		return $amount;
-	}
-
-	function applyToMultiTerms( $terms, $original_amount )
-	{
-		if ( count( $terms ) == 1 ) {
-			// Only one item, so no conflicts possible
-			$terms[0] = $this->applyMultiToTerms( $terms, $this->coupons, $this->metaUser, $this->amount, $this );
-		} else {
-			foreach ( $terms as $tid => $term ) {
-
-			}
-		}
-
-		return $terms;
-	}
-
-	function applyMultiToTerms( $terms, $original_amount )
-	{
-		$this->applied_coupons = array();
-
-		foreach ( $this->coupons as $arrayid => $coupon_code ) {
-			$this->applyToTerms( $terms[0], $this->coupons, $this->metaUser, $this->amount, $this );
-		}
-
-		return $terms;
-	}
-
-	function applyToTerms( $terms, $coupon_code )
-	{
-		$cph = new couponHandler();
-		$cph->load( $coupon_code );
-
-		$cursor = array_search( $coupon_code, $this->coupons );
-
-		if ( $cph->coupon->coupon_code !== $coupon_code ) {
-			$this->delete_list[] = $coupon_code;
-			return $terms;
-		}
-
-		if ( !$cph->status ) {
-			$this->setError( $cph->error );
-
-			$this->delete_list[] = $coupon_code;
-			return $terms;
-		}
-
-		$nomix = $cph->getBadCombinations();
-
-		if ( count( array_intersect( $this->applied_coupons, $nomix ) ) || in_array( $coupon_code, $this->global_nomix ) ) {
-			// This coupon either interferes with one of the coupons already applied, or the other way round
-			$this->setError( _COUPON_ERROR_COMBINATION );
-		} else {
-			if ( $cph->status ) {
-				// Coupon approved, checking restrictions
-				$cph->checkRestrictions( $this->metaUser, $original_amount, $this->InvoiceFactory );
-
-				if ( $cph->status ) {
-					$this->applied_coupons[] = $cph->applyToTerms( $terms, $cph );
-
-					$this->global_nomix = array_merge( $this->global_nomix, $nomix );
-
-					return true;
-				}
-			}
-
-			$this->setError( $cph->error );
-		}
-
-		$this->delete_list[] = $coupon_code;
-
-		return false;
 	}
 
 }
@@ -13414,7 +13457,7 @@ class couponHandler
 			}
 		}
 
-		return $cph->coupon->coupon_code;
+		return $terms;
 	}
 }
 
