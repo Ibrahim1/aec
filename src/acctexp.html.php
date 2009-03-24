@@ -1184,57 +1184,15 @@ class Payment_HTML
 			<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=addressException', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 			<?php
 				foreach ( $InvoiceFactory->exceptions as $ex ) {
-					$ttype = 'aec_termtype_' . $term->type;
-
-					//$future = ( $tid > $InvoiceFactory->terms->pointer ) ? '&nbsp;('._AEC_CHECKOUT_FUTURETERM.')' : '';
-					$applicable = ( $tid >= $InvoiceFactory->terms->pointer ) ? '' : '&nbsp;('._AEC_CHECKOUT_NOTAPPLICABLE.')';
-
-					$current = ( $tid == $InvoiceFactory->terms->pointer ) ? ' current_period' : '';
-
 					// Headline - What type is this term
-					echo '<tr class="aec_term_typerow' . $current . '"><th colspan="2" class="' . $ttype . '">' . constant( strtoupper( '_' . $ttype ) ) . $applicable . '</th></tr>';
+					echo '<tr><th colspan="2">' . $ex['head'] . '</th></tr>';
 					// Subheadline - specify the details of this term
-					echo '<tr class="aec_term_durationrow' . $current . '"><td colspan="2" class="aec_term_duration">' . _AEC_CHECKOUT_DURATION . ': ' . $term->renderDuration() . '</td></tr>';
+					echo '<tr><td colspan="2">' . $ex['desc'] . '</td></tr>';
 
 					// Iterate through costs
-					foreach ( $term->renderCost() as $citem ) {
+					foreach ( $ex->rows as $citem ) {
 						$t = constant( strtoupper( '_aec_checkout_' . $citem->type ) );
 						$c = AECToolbox::formatAmount( $citem->cost['amount'], $InvoiceFactory->payment->currency );
-
-						switch ( $citem->type ) {
-							case 'discount':
-								$ta = $t;
-								if ( !empty( $citem->cost['details'] ) ) {
-									$ta .= '&nbsp;(' . $citem->cost['details'] . ')';
-								}
-								$ta .= '&nbsp;[<a href="'
-									. AECToolbox::deadsureURL( 'index.php?option=' . $option
-									. '&amp;task=InvoiceRemoveCoupon&amp;invoice=' . $InvoiceFactory->invoice_number
-									. '&amp;coupon_code=' . $citem->cost['coupon'] )
-									. '" title="' . _CHECKOUT_INVOICE_COUPON_REMOVE . '">'
-									. _CHECKOUT_INVOICE_COUPON_REMOVE . '</a>]';
-
-								$t = $ta;
-
-								$c = AECToolbox::formatAmount( $citem->cost['amount'] );
-
-								// Strip out currency symbol and replace with blanks
-								if ( !$aecConfig->cfg['amount_currency_symbolfirst'] ) {
-									$strlen = 2;
-
-									if ( !$aecConfig->cfg['amount_currency_symbol'] ) {
-										$strlen = 1 + strlen( $InvoiceFactory->payment->currency ) * 2;
-									}
-
-									for( $i=0; $i<=$strlen;$i++ ) {
-										$c .= '&nbsp;';
-									}
-								}
-								break;
-							case 'cost': break;
-							case 'total': break;
-							default: break;
-						}
 
 						echo '<tr class="aec_term_' . $citem->type . 'row' . $current . '"><td class="aec_term_' . $citem->type . 'title">' . $t . ':' . '</td><td class="aec_term_' . $citem->type . 'amount">' . $c . '</td></tr>';
 					}

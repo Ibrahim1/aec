@@ -680,12 +680,23 @@ border-collapse: collapse;
 color: #777;
 }
 
-.current_period {
-color: #000;
-}
-
 table#aec_checkout td {
 padding: 2px !important;
+}
+
+table#aec_checkout_item {
+width: 80%;
+margin: 10px 10%;
+border-collapse: collapse;
+color: #777;
+}
+
+table#aec_checkout_item td {
+padding: 2px !important;
+}
+
+.current_period {
+color: #000;
 }
 
 tr.aec_term_typerow {
