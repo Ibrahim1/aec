@@ -81,6 +81,10 @@ function aecGetParam( $name, $default='', $safe=false, $safe_params=array() )
 		$return = mosGetParam( $_REQUEST, $name, $default, 0x0002 );
 	}
 
+	if ( !isset( $_REQUEST[$name] ) ) {
+		return $default;
+	}
+
 	if ( !is_array( $return ) ) {
 		$return = trim( $return );
 	}
@@ -6145,14 +6149,14 @@ class InvoiceFactory
 
 			if ( count( $procs ) > 1 ) {
 				$pgroups = aecCartHelper::getCartProcessorGroups( $this->_cart );
-
-				$ex = array();
-				$ex['head'] = "Select Payment Processor";
-				$ex['desc'] = "There are a number of possible payment processors for your items, please select below.<br />";
-
-				$ex['rows'] = array();
-
+print_r($this->_cart);print_r($pgroups);exit;
 				foreach ( $pgroups as $pgid => $pgroup ) {
+					$ex = array();
+					$ex['head'] = "Select Payment Processor";
+					$ex['desc'] = "There are a number of possible payment processors for your items, please select below.<br />";
+
+					$ex['rows'] = array();
+
 					$fname = 'cartgroup_'.$pgid.'_processor';
 
 					$pgsel = aecGetParam( $fname, null, true, array( 'word', 'int' ) );
@@ -6171,11 +6175,11 @@ class InvoiceFactory
 												'form' => array( 'radio', $fname, $pgid, true, '' )
 												);
 					}
-				}
 
-				if ( !empty( $ex['rows'] ) ) {
-					$this->raiseException( $ex );
-				}
+					if ( !empty( $ex['rows'] ) ) {
+						$this->raiseException( $ex );
+					}
+				}print_r($this->exceptions);exit;
 			} else {
 				$this->processor = PaymentProcessorHandler::getProcessorNamefromId( $procs[0] );
 			}
@@ -7240,17 +7244,19 @@ class InvoiceFactory
 			$this->amount = $this->_cart->getAmount( $this->metaUser, $this->cart );
 
 			foreach ( $this->cart as $citem ) {
-				$terms = new mammonTerms();
-				$terms->readParams( $citem['obj']->plan->termsParamsRequest( $this->recurring, $this->metaUser ) );
+				if ( $citem['obj'] !== false ) {
+					$terms = new mammonTerms();
+					$terms->readParams( $citem['obj']->termsParamsRequest( $this->recurring, $this->metaUser ) );
 
-				$c = $citem['obj']->doPlanComparison( $this->metaUser->objSubscription );
+					$c = $citem['obj']->doPlanComparison( $this->metaUser->objSubscription );
 
-				// Do not allow a Trial if the user has used this or a similar plan
-				if ( $terms->hasTrial && !( ( $c['comparison'] === false ) && ( $c['total_comparison'] === false ) ) ) {
-					$terms->incrementPointer();
+					// Do not allow a Trial if the user has used this or a similar plan
+					if ( $terms->hasTrial && !( ( $c['comparison'] === false ) && ( $c['total_comparison'] === false ) ) ) {
+						$terms->incrementPointer();
+					}
+
+					$this->items[] = array( 'item' => $citem, 'terms' => $terms );
 				}
-
-				$this->items[] = array( 'item' => $citem, 'terms' => $terms );
 			}
 		}
 
@@ -7307,14 +7313,14 @@ class InvoiceFactory
 	function InvoiceToCheckout( $option, $repeat=0 )
 	{
 		global $mainframe;
-
-		$var = $this->invoice->prepareProcessorLink( $this );
-
-		$this->invoice->formatInvoiceNumber();
-
+print_r($this);exit;
 		if ( $this->hasExceptions() ) {
 			$this->addressExceptions();
 		} else {
+			$var = $this->invoice->prepareProcessorLink( $this );
+
+			$this->invoice->formatInvoiceNumber();
+
 			$mainframe->SetPageTitle( _CHECKOUT_TITLE );
 
 			Payment_HTML::checkoutForm( $option, $var['var'], $var['params'], $this, $repeat );
@@ -8795,7 +8801,7 @@ class aecCartHelper
 
 			if ( is_array( $cartitem->params['processors'] ) && !empty( $cartitem->params['processors'] ) ) {
 				foreach ( $cartitem->params['processors'] as $pid ) {
-					if ( array_search( $proclist, $pid ) === false ) {
+					if ( array_search( $pid, $proclist ) === false ) {
 						$proclist[] = $pid;
 					}
 				}
@@ -8807,22 +8813,52 @@ class aecCartHelper
 
 	function getCartProcessorGroups( $cart )
 	{
-		$pgroups = array();
+		$pgroups	= array();
 
 		foreach ( $cart->content as $cid => $c ) {
 			$cartitem = aecCartHelper::getCartItemObject( $cart, $cid );
 
+			$pplist = array();
+			if ( !empty( $cartitem->params['processors'] ) ) {
+				foreach ( $cartitem->params['processors'] as $n ) {
+					$pp = new PaymentProcessor();
+
+					if ( !$pp->loadId( $n ) ) {
+						continue;
+					}
+
+					$pp->init();
+					$pp->getInfo();
+					$pp->exchangeSettingsByPlan( $cartitem );
+
+					$recurring = $pp->is_recurring( $this->recurring );
+
+					if ( $recurring > 1 ) {
+						$pplist[] = $pp->id;
+
+						if ( !$plan['plan']->params['lifetime'] ) {
+							$pplist[] = $pp->id.'_recurring';
+						}
+					} elseif ( !( $plan['plan']->params['lifetime'] && $recurring ) ) {
+						$pplist[] = $pp->id . ( $recurring ? '' : '_recurring' );
+					}
+				}
+			}
+
 			if ( empty( $pgroups ) ) {
 				$pg = array();
 				$pg['members']		= array( $cid );
-				$pg['processors']	= $cartitem->params['processors'];
+				$pg['processors']	= $pplist;
 				$pgroups[] = $pg;
 			} else {
-				foreach ( $pgroups as $g ) {
-					$c = true;
-					if ( count( $cartitem->params['processors'] ) == count ( $g ) ) {
-						foreach ( $cartitem->params['processors'] as $k => $v ) {
-							if ( $g[$k] != $v ) {
+				$c = true;
+
+				foreach ( $pgroups as $pgroup ) {
+					$pg = array();
+
+					if ( count( $pplist ) == count ( $pgroup['processors'] ) ) {
+						foreach ( $pplist as $k => $v ) {
+							if ( $pgroup['processors'][$k] != $v ) {
 								$c = false;
 							}
 						}
@@ -8831,17 +8867,16 @@ class aecCartHelper
 							$pg['members'][] = $cid;
 						}
 					}
+				}
 
-					if ( !$c ) {
-						$pg = array();
-						$pg['members']		= array( $cid );
-						$pg['processors']	= $cartitem->params['processors'];
-						$pgroups[] = $pg;
-					}
+				if ( !$c ) {
+					$pg['members']		= array( $cid );
+					$pg['processors']	= $pplist;
+					$pgroups[] = $pg;
 				}
 			}
 		}
-
+print_r($cart->content);print_r($pgroups);exit;
 		return $pgroups;
 	}
 
@@ -9138,7 +9173,8 @@ class aecCart extends serialParamDBTable
 							'count' => '',
 							'cost' => '',
 							'cost_total' => AECToolbox::correctAmount( $totalcost ),
-							'is_total' => true
+							'is_total' => true,
+							'obj' => false
 							);
 
 		return $return;
@@ -12762,6 +12798,8 @@ class couponsHandler extends eucaObject
 		$this->InvoiceFactory	=& $InvoiceFactory;
 		$this->coupons			=& $coupons;
 
+		$this->noapplylist		= array();
+
 		$this->couponslist		= array();
 		$this->global_nomix 	= array();
 		$this->global_applied 	= array();
@@ -12827,6 +12865,40 @@ class couponsHandler extends eucaObject
 
 	function applyToCart( $items, $cart=false )
 	{
+		foreach ( $this->coupons as $coupon_code ) {
+			if ( $this->loadCoupon( $coupon_code ) ) {
+				if ( $this->cph->coupon->params['usage_cart_full'] ) {
+					if ( !$cart->hasCoupon( $coupon_code ) ) {
+						$cart->addCoupon( $coupon_code );
+
+						$this->noapplylist[] = $coupon_code;
+					}
+				} else {
+					if ( $this->cph->coupon->params['usage_plans_enabled'] ) {
+						$plans = $cart->getItemIdArray();
+
+						$allowed = array_intersect( $plans, $this->cph->coupon->params['usage_plans'] );
+
+						if ( empty( $allowed ) ) {
+							$allowed = false;
+						}
+					} else {
+						$allowed = true;
+					}
+
+					if ( is_array( $allowed ) ) {
+						if ( count( $allowed ) > 1 ) {
+
+						} else {
+							$item = $this->applyToItem( $id, $item, $coupon_code );
+						}
+					} else {
+
+					}
+				}
+			}
+		}
+
 		foreach ( $items as $iid => $item ) {
 			$items[$iid] = $this->applyAllToItems( $iid, $item, $cart );
 		}
@@ -12839,12 +12911,12 @@ class couponsHandler extends eucaObject
 		$this->global_applied = array();
 
 		foreach ( $this->coupons as $coupon_code ) {
+			if ( in_array( $coupon_code, $this->noapplylist ) ) {
+				continue;
+			}
+
 			if ( $this->loadCoupon( $coupon_code ) ) {
-				if ( $this->cph->coupon->params['usage_cart_full'] ) {
-					if ( !$cart->hasCoupon( $coupon_code ) ) {
-						$cart->addCoupon( $coupon_code );
-					}
-				} elseif ( $cart->hasCoupon( $coupon_code, $id ) ) {
+				if ( $cart->hasCoupon( $coupon_code, $id ) ) {
 					$item = $this->applyToItem( $id, $item, $coupon_code );
 				} else {
 					if ( $this->cph->coupon->params['usage_plans_enabled'] ) {
@@ -12863,7 +12935,7 @@ class couponsHandler extends eucaObject
 						if ( count( $allowed ) > 1 ) {
 
 						} else {
-							$item = $this->applyToItem( $id, $item, $coupon_code )
+							$item = $this->applyToItem( $id, $item, $coupon_code );
 						}
 					} else {
 
