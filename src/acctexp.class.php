@@ -7235,7 +7235,7 @@ class InvoiceFactory
 				}
 			}
 
-			$this->items[] = array( 'obj' => $this->plan, 'terms' => $terms );
+			$this->items[] = array( 'item' => array( 'obj' => $this->plan ), 'terms' => $terms );
 		} else {
 			$this->amount = $this->_cart->getAmount( $this->metaUser, $this->cart );
 
@@ -7250,7 +7250,7 @@ class InvoiceFactory
 					$terms->incrementPointer();
 				}
 
-				$this->items[] = array( 'obj' => $citem['obj'], 'terms' => $terms );
+				$this->items[] = array( 'item' => $citem, 'terms' => $terms );
 			}
 		}
 
@@ -7260,7 +7260,7 @@ class InvoiceFactory
 
 			$cpsh = new couponsHandler( $this->metaUser, $this, $coupons );
 
-			$this->items = $cpsh->applyToMultiItems( $this->items );
+			$this->items = $cpsh->applyToCart( $this->items );
 
 			if ( count( $cpsh->delete_list ) ) {
 				foreach ( $cpsh->delete_list as $couponcode ) {
@@ -7284,6 +7284,10 @@ class InvoiceFactory
 				foreach ( $cpsh_exc as $exception ) {
 					$this->raiseException();
 				}
+			}
+
+			if ( !empty( $this->cart ) ) {
+				$this->amount = $this->_cart->getAmount( $this->metaUser, $this->cart );
 			}
 		}
 
@@ -8945,6 +8949,7 @@ class aecCart extends serialParamDBTable
 			$element['type']	= 'plan';
 			$element['id']		= $id;
 			$element['count']	= 1;
+
 			$return['details'] = array( 'type' => 'plan', 'id' => $id );
 
 			$update = false;
@@ -8971,6 +8976,50 @@ class aecCart extends serialParamDBTable
 		return $return;
 	}
 
+	function addCoupon( $coupon_code, $id=null )
+	{
+		if ( empty( $id ) ) {
+			if ( !isset( $this->params['overall_coupons'] ) ) {
+				$this->params['overall_coupons'] = array();
+			}
+
+			$this->params['overall_coupons'][] = $coupon_code;
+		} elseif ( isset( $this->content[$id] ) ) {
+			if ( !isset( $this->content[$id]['coupons'] ) ) {
+				$this->content[$id]['coupons'] = array();
+			}
+
+			$this->content[$id]['coupons'][] = $coupon_code;
+		}
+	}
+
+	function hasCoupon( $coupon_code, $id=null )
+	{
+		if ( empty( $id ) ) {
+			if ( isset( $this->params['overall_coupons'] ) ) {
+				return array_search( $coupon_code, $this->params['overall_coupons'] );
+			} else {
+				return false;
+			}
+		} elseif ( isset( $this->content[$id] ) ) {
+			if ( isset( $this->content[$id]['coupons'] ) ) {
+				return array_search( $coupon_code, $this->content[$id]['coupons'] );
+			} else {
+				return false;
+			}
+		}
+	}
+
+	function getItemIdArray()
+	{
+		$array = array();
+		foreach ( $this->content as $cid => $content ) {
+			$array[$cid] = $content['id'];
+		}
+
+		return $array;
+	}
+
 	function getItem( $item )
 	{
 		if ( isset( $this->content[$item] ) ) {
@@ -8986,10 +9035,10 @@ class aecCart extends serialParamDBTable
 			$return['details'] = array( 'item_id' => $itemid, 'item' => $this->content[$itemid] );
 			unset( $this->content[$itemid] );
 		} else {
-			$return = array( 'action' => 'error',
-						'event' => 'item_not_found',
-						'details' => array( 'item_id' => $itemid )
-			);
+			$return = array(	'action' => 'error',
+								'event' => 'item_not_found',
+								'details' => array( 'item_id' => $itemid )
+								);
 		}
 
 		return $return;
@@ -9014,13 +9063,14 @@ class aecCart extends serialParamDBTable
 	{
 		global $database;
 
-		$usagecache = array();
+		$c = array();
 
 		$totalcost = 0;
 
 		$return = array();
 		foreach ( $this->content as $cid => $content ) {
-			if ( !isset( $usagecache[$content['type']][$content['id']] ) ) {
+			// Cache items
+			if ( !isset( $c[$content['type']][$content['id']] ) ) {
 				switch ( $content['type'] ) {
 					case 'plan':
 						$obj = new SubscriptionPlan( $database );
@@ -9032,21 +9082,27 @@ class aecCart extends serialParamDBTable
 						$o['desc']	= $obj->getProperty( 'desc' );
 						$o['cost']	= $obj->SubscriptionAmount( false, $metaUser->focusSubscription, $metaUser );
 
-						$usagecache[$content['type']][$content['id']] = $o;
+						$c[$content['type']][$content['id']] = $o;
 						break;
 				}
 			}
 
 			$entry = array();
-			$entry['obj']			= $usagecache[$content['type']][$content['id']]['obj'];
-			$entry['fullamount']	= $usagecache[$content['type']][$content['id']]['cost'];
+			$entry['obj']			= $c[$content['type']][$content['id']]['obj'];
+			$entry['fullamount']	= $c[$content['type']][$content['id']]['cost'];
 
-			$entry['name']			= $usagecache[$content['type']][$content['id']]['name'];
-			$entry['desc']			= $usagecache[$content['type']][$content['id']]['desc'];
-			$entry['cost']			= $usagecache[$content['type']][$content['id']]['cost']['amount'];
+			$entry['name']			= $c[$content['type']][$content['id']]['name'];
+			$entry['desc']			= $c[$content['type']][$content['id']]['desc'];
+			$entry['cost']			= $c[$content['type']][$content['id']]['cost']['amount'];
+
+			if ( !empty( $content['coupons'] ) ) {
+				$cpsh = new couponsHandler( $metaUser, false, $content['coupons'] );
+
+				$entry['cost']		= $cpsh->applyToAmount( $entry['cost'] );
+			}
 
 			if ( is_array( $entry['cost'] ) ) {
-				$entry['cost']			= $usagecache[$content['type']][$content['id']]['cost']['amount']['amount3'];
+				$entry['cost']			= $c[$content['type']][$content['id']]['cost']['amount']['amount3'];
 
 				if ( $entry['cost'] > 0 ) {
 					$total = $content['count'] * $entry['cost'];
@@ -9068,9 +9124,16 @@ class aecCart extends serialParamDBTable
 
 			$totalcost += $entry['cost_total'];
 
+			if ( !empty( $this->params['overall_coupons'] ) ) {
+				$cpsh = new couponsHandler( $metaUser, false, $this->params['overall_coupons'] );
+
+				$totalcost		= $cpsh->applyToAmount( $totalcost );
+			}
+
 			$return[$cid] = $entry;
 		}
 
+		// Append total cost
 		$return[] = array( 'name' => '',
 							'count' => '',
 							'cost' => '',
@@ -12706,33 +12769,36 @@ class couponsHandler extends eucaObject
 		$this->delete_list	 	= array();
 	}
 
-	function mixGlobalAllowed( $coupon_code )
-	{
-		return in_array( $coupon_code, $this->global_nomix );
-	}
-
-	function addnomixGlobal( $nomix )
+	function addCouponToRecord( $itemid, $coupon_code, $nomix )
 	{
 		if ( !empty( $nomix ) ) {
 			$this->global_nomix = array_merge( $this->global_nomix, $nomix );
 		}
-	}
 
-	function addappliedGlobal( $coupon_code )
-	{
-		if ( !empty( $nomix ) ) {
-			$this->global_nomix = array_merge( $this->global_nomix, $nomix );
-			$this->global_applied[] = $coupon_code;
+		$this->global_applied[] = $coupon_code;
+
+		if ( $itemid !== false ) {
+			if ( !empty( $nomix ) ) {
+				$this->items_nomix[$itemid] = array_merge( $this->global_nomix, $nomix );
+			}
+
+			$this->item_applied[$itemid][] = $coupon_code;
 		}
 	}
 
-	function mixCheck( $item, $coupon_code, $nomix )
+	function mixCheck( $itemid, $coupon_code, $nomix )
 	{
-		if ( count( array_intersect( $this->global_applied, $nomix ) ) || $this->mixGlobalAllowed( $coupon_code ) ) {
+		if ( count( array_intersect( $this->global_applied, $nomix ) ) || in_array( $coupon_code, $this->global_nomix ) ) {
 			return false;
-		} else {
-			return true;
 		}
+
+		if ( $itemid !== false ) {
+			if ( count( array_intersect( $this->item_applied[$itemid], $nomix ) ) || in_array( $coupon_code, $this->item_nomix ) ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	function loadCoupon( $coupon_code )
@@ -12759,40 +12825,73 @@ class couponsHandler extends eucaObject
 		return true;
 	}
 
-	function applyToMultiItems( $items, $original_amount )
+	function applyToCart( $items, $cart=false )
 	{
-		if ( count( $terms ) == 1 ) {
-			// Only one item, so no conflicts possible
-			$terms[0] = $this->applyMultiToTerms( $terms, $this->coupons, $this->metaUser, $this->amount, $this );
-		} else {
-			foreach ( $terms as $tid => $term ) {
-
-			}
+		foreach ( $items as $iid => $item ) {
+			$items[$iid] = $this->applyAllToItems( $iid, $item, $cart );
 		}
 
-		return $terms;
+		return $items;
 	}
 
-	function applyMultiToTerms( $terms, $original_amount )
+	function applyAllToItems( $id, $item, $cart=false )
 	{
 		$this->global_applied = array();
 
-		foreach ( $this->coupons as $arrayid => $coupon_code ) {
-			$this->applyToTerms( 0, $terms[0], $this->amount );
+		foreach ( $this->coupons as $coupon_code ) {
+			if ( $this->loadCoupon( $coupon_code ) ) {
+				if ( $this->cph->coupon->params['usage_cart_full'] ) {
+					if ( !$cart->hasCoupon( $coupon_code ) ) {
+						$cart->addCoupon( $coupon_code );
+					}
+				} elseif ( $cart->hasCoupon( $coupon_code, $id ) ) {
+					$item = $this->applyToItem( $id, $item, $coupon_code );
+				} else {
+					if ( $this->cph->coupon->params['usage_plans_enabled'] ) {
+						$plans = $cart->getItemIdArray();
+
+						$allowed = array_intersect( $plans, $this->cph->coupon->params['usage_plans'] );
+
+						if ( empty( $allowed ) ) {
+							$allowed = false;
+						}
+					} else {
+						$allowed = true;
+					}
+
+					if ( is_array( $allowed ) ) {
+						if ( count( $allowed ) > 1 ) {
+
+						} else {
+							$item = $this->applyToItem( $id, $item, $coupon_code )
+						}
+					} else {
+
+					}
+				}
+			}
 		}
 
-		return $terms;
+		return $item;
 	}
 
-	function applyToTerms( $id, $terms, $coupon_code )
+	function applyToItem( $id, $terms, $item, $coupon_code )
 	{
 		if ( !$this->loadCoupon( $coupon_code ) ) {
-			return $terms;
+			return $item;
+		}
+
+		if ( isset( $item['cost'] ) ) {
+			$original_amount = $item['cost'];
+		} elseif ( isset( $item['obj'] ) ) {
+			$original_amount = $item['obj']->SubscriptionAmount( false, $this->metaUser->focusSubscription, $this->metaUser );
+		} else {
+			return $item;
 		}
 
 		$nomix = $this->cph->getBadCombinations();
 
-		if ( !$this->mixCheck( $coupon_code, $nomix ) ) {
+		if ( !$this->mixCheck( $id, $coupon_code, $nomix ) ) {
 			$this->setError( _COUPON_ERROR_COMBINATION );
 		} else {
 			if ( $this->cph->status ) {
@@ -12800,13 +12899,11 @@ class couponsHandler extends eucaObject
 				$this->cph->checkRestrictions( $this->metaUser, $original_amount, $this->InvoiceFactory );
 
 				if ( $this->cph->status ) {
-					$terms = $this->cph->applyToTerms( $terms, $this->cph );
+					$item['terms'] = $this->cph->applyToTerms( $item['terms'], $this->cph );
 
-					$this->addappliedGlobal( $coupon_code );
+					$this->addCouponToRecord( $id, $coupon_code, $nomix );
 
-					$this->addnomixGlobal( $nomix );
-
-					return true;
+					return $item;
 				}
 			}
 
@@ -12815,7 +12912,7 @@ class couponsHandler extends eucaObject
 
 		$this->delete_list[] = $coupon_code;
 
-		return false;
+		return $item;
 	}
 
 	function applyToAmount( $amount, $original_amount=null, $invoiceFactory=null )
@@ -12824,48 +12921,32 @@ class couponsHandler extends eucaObject
 			return $amount;
 		}
 
-		foreach ( $this->coupons as $arrayid => $coupon_code ) {
-			$cph = new couponHandler();
-			$cph->load( $coupon_code );
-
-			if ( $cph->coupon->coupon_code !== $coupon_code ) {
-				unset( $this->coupons[$arrayid] );
-				continue;
+		foreach ( $this->coupons as $coupon_code ) {
+			if ( !$this->loadCoupon( $coupon_code ) ) {
+				return $amount;
 			}
 
-			if ( !$cph->status ) {
-				$this->setError( $cph->error );
-				unset( $this->coupons[$arrayid] );
-				continue;
-			}
+			$nomix = $this->cph->getBadCombinations();
 
-			$nomix = $cph->getBadCombinations();
-
-			if ( count( array_intersect( $this->global_applied, $nomix ) ) || $this->mixGlobalAllowed( $coupon_code ) ) {
-				// This coupon either interferes with one of the coupons already applied, or the other way round
+			if ( !$this->mixCheck( false, $coupon_code, $nomix ) ) {
 				$this->setError( _COUPON_ERROR_COMBINATION );
-				unset( $this->coupons[$arrayid] );
 			} else {
-				if ( $cph->status ) {
+				if ( $this->cph->status ) {
 					// Coupon approved, checking restrictions
-					$cph->checkRestrictions( $this->metaUser, $amount, $original_amount, $invoiceFactory );
-					if ( $cph->status ) {
-						$amount = $cph->applyCoupon( $amount );
+					$this->cph->checkRestrictions( $this->metaUser, $amount, $original_amount, $invoiceFactory );
 
-						$this->global_applied[] = $coupon_code;
-						$this->addnomixGlobal( $nomix );
-					} else {
-						// Coupon restricted for this user, thus it needs to be deleted later on
-						$this->setError( $cph->error );
-						unset( $this->coupons[$arrayid] );
+					if ( $this->cph->status ) {
+						$amount = $this->cph->applyCoupon( $amount );
+
+						$this->addCouponToRecord( false, $coupon_code, $nomix );
+
+						return $amount;
 					}
-				} else {
-					// Coupon not approved, thus it needs to be deleted later on
-					$this->setError( $cph->error );
-					unset( $this->coupons[$arrayid] );
 				}
 			}
 		}
+
+		$this->setError( $this->cph->error );
 
 		return $amount;
 	}
