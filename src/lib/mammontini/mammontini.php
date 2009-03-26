@@ -228,7 +228,9 @@ class mammonTerm extends eucaObject
 	 */
 	function renderDuration()
 	{
-		if ( isset( $this->duration['lifetime'] ) ) {
+		if ( isset( $this->duration['none'] ) ) {
+			return '';
+		} elseif ( isset( $this->duration['lifetime'] ) ) {
 			return _AEC_CHECKOUT_DUR_LIFETIME;
 		} else {
 			switch ( $this->duration['unit'] ) {

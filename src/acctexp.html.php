@@ -1007,7 +1007,13 @@ class Payment_HTML
 			} ?>
 			<table id="aec_checkout">
 			<?php
-				if ( !empty( $terms ) ) {
+				foreach ( $InvoiceFactory->items as $item ) {
+					if ( !empty( $item['terms'] ) ) {
+						$terms = $item['terms']->getTerms();
+					} else {
+						$terms = false;
+					}
+
 					foreach ( $terms as $tid => $term ) {
 						$ttype = 'aec_termtype_' . $term->type;
 
@@ -1016,10 +1022,22 @@ class Payment_HTML
 
 						$current = ( $tid == $InvoiceFactory->terms->pointer ) ? ' current_period' : '';
 
-						// Headline - What type is this term
-						echo '<tr class="aec_term_typerow' . $current . '"><th colspan="2" class="' . $ttype . '">' . constant( strtoupper( '_' . $ttype ) ) . $applicable . '</th></tr>';
-						// Subheadline - specify the details of this term
-						echo '<tr class="aec_term_durationrow' . $current . '"><td colspan="2" class="aec_term_duration">' . _AEC_CHECKOUT_DURATION . ': ' . $term->renderDuration() . '</td></tr>';
+						if ( isset( $item['item'] ) ) {
+							// This is an item, show its name (skip for total)
+							echo '<tr><td><h4>' . $item['item']['name'] . '</h4></td></tr>';
+						}
+
+						if ( defined( strtoupper( '_' . $ttype ) ) ) {
+							// Headline - What type is this term
+							echo '<tr class="aec_term_typerow' . $current . '"><th colspan="2" class="' . $ttype . '">' . constant( strtoupper( '_' . $ttype ) ) . $applicable . '</th></tr>';
+						} else {
+							echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
+						}
+
+						if ( !isset( $term->duration['none'] ) ) {
+							// Subheadline - specify the details of this term
+							echo '<tr class="aec_term_durationrow' . $current . '"><td colspan="2" class="aec_term_duration">' . _AEC_CHECKOUT_DURATION . ': ' . $term->renderDuration() . '</td></tr>';
+						}
 
 						// Iterate through costs
 						foreach ( $term->renderCost() as $citem ) {
@@ -1066,15 +1084,6 @@ class Payment_HTML
 
 						// Draw Separator Line
 						echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
-					}
-				} elseif ( !empty( $InvoiceFactory->cart ) ) {
-					foreach ( $InvoiceFactory->cart as $cartitem ) {
-						if ( !empty( $cartitem['name'] ) ) {
-							echo '<tr class="aec_term_costrow"><td class="aec_term_title">' . $cartitem['name'] . ' (' . $cartitem['cost'] . 'x' . $cartitem['count'] . ')' . '</td><td class="aec_term_amount">' . $cartitem['cost_total'] . '</td></tr>';
-						} else {
-							echo '<tr class="aec_term_totalrow"><td class="aec_term_title">' . _CART_ROW_TOTAL . '</td><td class="aec_term_amount">' . $cartitem['cost_total'] . '</td></tr>';
-						}
-
 					}
 				}
 			?>
