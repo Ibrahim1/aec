@@ -71,6 +71,13 @@ if ( !empty( $task ) ) {
 			confirmSubscription($option);
 			break;
 
+		case 'addressexception':
+			$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+			$userid		= aecGetParam( 'userid', 0 );
+
+			repeatInvoice( $option, $invoice, $userid );
+			break;
+
 		case 'savesubscription':
 			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 			$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );

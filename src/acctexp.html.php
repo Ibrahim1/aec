@@ -985,12 +985,6 @@ class Payment_HTML
 
 		HTML_frontend::aec_styling( $option );
 
-		if ( !empty( $InvoiceFactory->terms ) ) {
-			$terms = $InvoiceFactory->terms->getTerms();
-		} else {
-			$terms = false;
-		}
-
 		$introtext = '_CHECKOUT_INFO' . ( $repeat ? '_REPEAT' : '' );
 
 		?>
@@ -1022,16 +1016,24 @@ class Payment_HTML
 
 						$current = ( $tid == $InvoiceFactory->terms->pointer ) ? ' current_period' : '';
 
+						$add = "";
+
+						if ( isset( $item['item']['count'] ) ) {
+							if ( $item['item']['count'] > 1 ) {
+								$add = " (x" . $item['item']['count'] . ")";
+							}
+						}
+
 						if ( isset( $item['item'] ) ) {
 							// This is an item, show its name (skip for total)
-							echo '<tr><td><h4>' . $item['item']['name'] . '</h4></td></tr>';
+							echo '<tr><td><h4>' . $item['item']['name'] . $add . '</h4></td></tr>';
 						}
 
 						if ( defined( strtoupper( '_' . $ttype ) ) ) {
 							// Headline - What type is this term
 							echo '<tr class="aec_term_typerow' . $current . '"><th colspan="2" class="' . $ttype . '">' . constant( strtoupper( '_' . $ttype ) ) . $applicable . '</th></tr>';
 						} else {
-							echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
+							echo '<tr class="aec_term_totalhead' . $current . '"><th colspan="2" class="' . $ttype . '">' . _CART_ROW_TOTAL . '</th></tr>';
 						}
 
 						if ( !isset( $term->duration['none'] ) ) {
@@ -1042,8 +1044,13 @@ class Payment_HTML
 						// Iterate through costs
 						foreach ( $term->renderCost() as $citem ) {
 							$t = constant( strtoupper( '_aec_checkout_' . $citem->type ) );
-							$c = AECToolbox::formatAmount( $citem->cost['amount'], $InvoiceFactory->payment->currency );
 
+							if ( isset( $item['item']['count'] ) ) {
+								$c = AECToolbox::formatAmount( $citem->cost['amount'] * $item['item']['count'], $InvoiceFactory->payment->currency );
+							} else {
+								$c = AECToolbox::formatAmount( $citem->cost['amount'], $InvoiceFactory->payment->currency );
+							}
+//print_r($item['item']);exit;
 							switch ( $citem->type ) {
 								case 'discount':
 									$ta = $t;
@@ -1059,7 +1066,13 @@ class Payment_HTML
 
 									$t = $ta;
 
-									$c = AECToolbox::formatAmount( $citem->cost['amount'] );
+									if ( isset( $item['item']['count'] ) ) {
+										$amount = $citem->cost['amount'] * $item['item']['count'];
+									} else {
+										$amount = $citem->cost['amount'];
+									}
+
+									$c = AECToolbox::formatAmount( $amount );
 
 									// Strip out currency symbol and replace with blanks
 									if ( !$aecConfig->cfg['amount_currency_symbolfirst'] ) {
@@ -1216,6 +1229,7 @@ class Payment_HTML
 						<input type="hidden" name="option" value="<?php echo $option; ?>" />
 						<input type="hidden" name="task" value="addressException" />
 						<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice_number; ?>" />
+						<input type="hidden" name="userid" value="<?php echo $InvoiceFactory->metaUser->userid; ?>" />
 						<input type="submit" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
 					</form>
 				</td>

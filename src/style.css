@@ -699,6 +699,18 @@ padding: 2px !important;
 color: #000;
 }
 
+.aec_term_totalhead {
+background-color: #fee;
+text-indent: 12px;
+border-bottom: 2px solid #daa;
+}
+
+tr.aec_term_totalhead th {
+padding: 3px !important;
+padding-top: 5px !important;
+font-size: 110%;
+}
+
 tr.aec_term_typerow {
 background-color: #eef;
 text-indent: 12px;
