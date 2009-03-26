@@ -1162,7 +1162,7 @@ class Payment_HTML
 		<?php
 	}
 
-	function exceptionForm( $option, $InvoiceFactory )
+	function exceptionForm( $option, $InvoiceFactory, $aecHTML )
 	{
 		global $database, $aecConfig;
 
@@ -1183,18 +1183,15 @@ class Payment_HTML
 			<table id="aec_checkout">
 			<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=addressException', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 			<?php
-				foreach ( $InvoiceFactory->exceptions as $ex ) {
+				foreach ( $InvoiceFactory->exceptions as $eid => $ex ) {
 					// Headline - What type is this term
 					echo '<tr><th colspan="2">' . $ex['head'] . '</th></tr>';
 					// Subheadline - specify the details of this term
 					echo '<tr><td colspan="2">' . $ex['desc'] . '</td></tr>';
 
 					// Iterate through costs
-					foreach ( $ex->rows as $citem ) {
-						$t = constant( strtoupper( '_aec_checkout_' . $citem->type ) );
-						$c = AECToolbox::formatAmount( $citem->cost['amount'], $InvoiceFactory->payment->currency );
-
-						echo '<tr class="aec_term_' . $citem->type . 'row' . $current . '"><td class="aec_term_' . $citem->type . 'title">' . $t . ':' . '</td><td class="aec_term_' . $citem->type . 'amount">' . $c . '</td></tr>';
+					foreach ( $ex['rows'] as $rid => $row ) {
+						echo '<tr><td colspan="2">' . $aecHTML->createFormParticle( $eid.'_'.$rid ) . '</td></tr>';
 					}
 
 					// Draw Separator Line
@@ -1204,13 +1201,13 @@ class Payment_HTML
 			</table>
 
 		<table width="100%" id="checkoutbox">
-			<tr><th><?php echo _CHECKOUT_TITLE; ?></th></tr>
+			<tr><th><?php echo _CONFIRM_TITLE; ?></th></tr>
 			<tr>
 				<td class="checkout_action">
 						<input type="hidden" name="option" value="<?php echo $option; ?>" />
 						<input type="hidden" name="task" value="addressException" />
 						<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice_number; ?>" />
-						<input type="submit" class="button" value="<?php echo _BUTTON_APPLY; ?>" />
+						<input type="submit" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
 					</form>
 				</td>
 			</tr>

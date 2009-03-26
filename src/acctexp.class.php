@@ -2204,6 +2204,25 @@ class PaymentProcessorHandler
 		return $database->loadResult();
 	}
 
+	function getProcessorNameListbyId( $idlist )
+	{
+		global $database;
+
+		$query = 'SELECT `id`, `name`'
+				. ' FROM #__acctexp_config_processors';
+		$database->setQuery( $query );
+		$res = $database->loadObjectList();
+
+		$return = array();
+		foreach ( $res as $pobj ) {
+			if ( in_array( $pobj->id, $idlist ) ) {
+				$return[$pobj->id] = $pobj->name;
+			}
+		}
+
+		return $return;
+	}
+
 	/**
 	 * gets installed and active processors
 	 *
@@ -4142,8 +4161,16 @@ class aecHTML
 		echo $this->returnFull( $notooltip, $formsonly );
 	}
 
-	function createFormParticle( $name, $row, $lists, $table=0 )
+	function createFormParticle( $name, $row=null, $lists=array(), $table=0 )
 	{
+		if ( is_null( $row ) && !empty( $this->rows ) ) {
+			if ( isset( $this->rows[$name] ) ) {
+				$row = $this->rows[$name];
+			} else {
+				return '';
+			}
+		}
+
 		$return = '';
 		if ( isset( $row[3] ) ) {
 			$value = $row[3];
@@ -6149,7 +6176,9 @@ class InvoiceFactory
 
 			if ( count( $procs ) > 1 ) {
 				$pgroups = aecCartHelper::getCartProcessorGroups( $this->_cart );
-print_r($this->_cart);print_r($pgroups);exit;
+
+				$procnames = PaymentProcessorHandler::getProcessorNameListbyId( $procs );
+
 				foreach ( $pgroups as $pgid => $pgroup ) {
 					$ex = array();
 					$ex['head'] = "Select Payment Processor";
@@ -6166,20 +6195,23 @@ print_r($this->_cart);print_r($pgroups);exit;
 						continue;
 					}
 
+					$ex['desc'] .= "<ul>";
+
 					foreach ( $pgroup['members'] as $pgmember ) {
-						$ex['desc'] .= "<strong>" . $this->cart[$pgmember]['name'] . "</strong><br />";
+						$ex['desc'] .= "<li><strong>" . $this->cart[$pgmember]['name'] . "</strong><br /></li>";
 					}
 
-					foreach ( $pgroup['processors'] as $pgproc ) {
-						$ex['rows'][] = array(	'desc' => PaymentProcessorHandler::getProcessorNamefromId( $pgproc ),
-												'form' => array( 'radio', $fname, $pgid, true, '' )
-												);
+					$ex['desc'] .= "</ul>";
+
+					foreach ( $pgroup['processors'] as $pid => $pgproc ) {
+						$pgex = explode( '_', $pgproc );
+						$ex['rows'][] = array( 'radio', $fname, $pgproc, true, $procnames[$pgex[0]].( isset( $pgex[1] ) ? ' (recurring billing)' : '') );
 					}
 
 					if ( !empty( $ex['rows'] ) ) {
 						$this->raiseException( $ex );
 					}
-				}print_r($this->exceptions);exit;
+				}
 			} else {
 				$this->processor = PaymentProcessorHandler::getProcessorNamefromId( $procs[0] );
 			}
@@ -6319,13 +6351,25 @@ print_r($this->_cart);print_r($pgroups);exit;
 
 	function addressExceptions( $option )
 	{
-		foreach ( $this->exceptions as $ex ) {
+		global $mainframe;
+
+		$params = array();
+		foreach ( $this->exceptions as $eid => $ex ) {
 			// Convert Exception into actionable form
+
+			foreach ( $ex['rows'] as $rid => $row ) {
+				$params[$eid.'_'.$rid] = $row;
+			}
 		}
+
+		$settings = new aecSettings ( 'exception', 'frontend_exception' );
+		$settings->fullSettingsArray( $params, array(), array() ) ;
+
+		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
 		$mainframe->SetPageTitle( _EXCEPTION_TITLE );
 
-		Payment_HTML::exceptionForm( $option, $this );
+		Payment_HTML::exceptionForm( $option, $this, $aecHTML );
 	}
 
 	function getCart()
@@ -7313,9 +7357,9 @@ print_r($this->_cart);print_r($pgroups);exit;
 	function InvoiceToCheckout( $option, $repeat=0 )
 	{
 		global $mainframe;
-print_r($this);exit;
+
 		if ( $this->hasExceptions() ) {
-			$this->addressExceptions();
+			$this->addressExceptions( $option );
 		} else {
 			$var = $this->invoice->prepareProcessorLink( $this );
 
@@ -8849,34 +8893,40 @@ class aecCartHelper
 				$pg = array();
 				$pg['members']		= array( $cid );
 				$pg['processors']	= $pplist;
+
 				$pgroups[] = $pg;
 			} else {
 				$c = true;
 
-				foreach ( $pgroups as $pgroup ) {
+				foreach ( $pgroups as $pgid => $pgroup ) {
 					$pg = array();
 
-					if ( count( $pplist ) == count ( $pgroup['processors'] ) ) {
+					if ( count( $pplist ) == count( $pgroup['processors'] ) ) {
+						$a = true;
 						foreach ( $pplist as $k => $v ) {
 							if ( $pgroup['processors'][$k] != $v ) {
-								$c = false;
+								$a = false;
 							}
 						}
 
-						if ( $c ) {
-							$pg['members'][] = $cid;
+						if ( $a ) {
+							$pgroups[$pgid]['members'][] = $cid;
+							$c = false;
 						}
+					} else {
+						$c = false;
 					}
 				}
 
 				if ( !$c ) {
 					$pg['members']		= array( $cid );
 					$pg['processors']	= $pplist;
+
 					$pgroups[] = $pg;
 				}
 			}
 		}
-print_r($cart->content);print_r($pgroups);exit;
+
 		return $pgroups;
 	}
 
