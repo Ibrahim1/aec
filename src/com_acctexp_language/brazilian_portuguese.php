@@ -136,6 +136,10 @@ define( '_CART_TITLE', 'Shopping Cart');
 define( '_CART_ROW_TOTAL', 'Total');
 define( '_CART_INFO', 'Please use the Continue-Button below to complete your purchase.');
 
+// --== EXCEPTION FORM ==--
+define( '_EXCEPTION_TITLE', 'Additional Information Required');
+define( '_EXCEPTION_INFO', 'To proceed with your checkout, we need you to provide additional information as specified below:');
+
 // --== PROMPT PASSWORD FORM ==--
 define( '_AEC_PROMPT_PASSWORD', 'por raz&otilde;es de seguran&ccedil;a, precisa inserir a sua senha para continuar.');
 define( '_AEC_PROMPT_PASSWORD_WRONG', 'A Senha inserida n&atilde;o corresponde com a sua senha indicada na inscri&ccedil;&atilde;o. Por favor tente novamente.');

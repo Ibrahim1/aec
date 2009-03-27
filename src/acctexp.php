@@ -99,10 +99,16 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'cart':
-			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
+			global $my;
 
-			$invoicefact = new InvoiceFactory( $userid );
-			$invoicefact->cart( $option );
+			if ( !$my->id ) {
+				notAllowed( $option );
+			} else {
+				$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
+
+				$invoicefact = new InvoiceFactory( $userid );
+				$invoicefact->cart( $option );
+			}
 			break;
 
 		case 'updatecart':

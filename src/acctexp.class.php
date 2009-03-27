@@ -6510,7 +6510,7 @@ class InvoiceFactory
 				$this->invoice->load( $id );
 			} else {
 				$this->invoice->create( $this->userid, $this->usage, $this->processor );
-				$this->invoice->computeAmount();
+				$this->invoice->computeAmount( $this );
 
 				if ( is_object( $this->pp ) ) {
 					$this->pp->invoiceCreationAction( $this );
@@ -7322,7 +7322,6 @@ class InvoiceFactory
 
 		if ( !empty( $aecConfig->cfg['enable_coupons'] ) && !empty( $this->invoice->coupons ) ) {
 			$coupons = $this->invoice->coupons;
-			$orcoupn = $coupons;
 
 			$cpsh = new couponsHandler( $this->metaUser, $this, $coupons );
 
@@ -7330,9 +7329,7 @@ class InvoiceFactory
 
 			if ( count( $cpsh->delete_list ) ) {
 				foreach ( $cpsh->delete_list as $couponcode ) {
-					if ( !in_array( $couponcode, $coupons ) ) {
-						$this->invoice->removeCoupon( $couponcode );
-					}
+					$this->invoice->removeCoupon( $couponcode );
 				}
 
 				$this->invoice->storeload();
@@ -7801,9 +7798,13 @@ class Invoice extends serialParamDBTable
 		return $database->loadResult();
 	}
 
-	function computeAmount()
+	function computeAmount( $InvoiceFactory=null )
 	{
-		$metaUser = new metaUser( $this->userid ? $this->userid : 0 );
+		if ( !empty( $InvoiceFactory->metaUser ) ) {
+			$metaUser = $InvoiceFactory->metaUser;
+		} else {
+			$metaUser = new metaUser( $this->userid ? $this->userid : 0 );
+		}
 
 		global $database;
 
@@ -7878,13 +7879,9 @@ class Invoice extends serialParamDBTable
 			}
 
 			if ( $this->coupons ) {
-				$cpsh = new couponsHandler( $this->metaUser, $this, $this->coupons );
+				$cpsh = new couponsHandler( $this->metaUser, $InvoiceFactory, $this->coupons );
 
-				$sc = $this->coupons;
-
-				$return['amount'] = $cpsh->applyToAmount( $return['amount'], $this->coupons, $metaUser );
-
-				$this->coupons = $sc;
+				$return['amount'] = $cpsh->applyToAmount( $return['amount'] );
 			}
 
 			// Remove trial if we have a transaction completed ( whether a trial is allowed was figured out before)
@@ -13051,7 +13048,7 @@ class couponsHandler extends eucaObject
 						$pgsel = aecGetParam( $fname, null, true, array( 'word', 'int' ) );
 
 						if ( !is_null( $pgsel ) ) {
-							$items[$pgsel] == $this->applyToItem( $allowed[0], $items[$pgsel], $coupon_code );
+							$items[$pgsel] == $this->applyToItem( $pgsel, $items[$pgsel], $coupon_code );
 
 							if ( !$cart->hasCoupon( $coupon_code, $pgsel ) ) {
 								$cart->addCoupon( $coupon_code, $pgsel );
@@ -13489,6 +13486,10 @@ class couponHandler
 
 	function checkRestrictions( $metaUser, $original_amount=null, $invoiceFactory=null )
 	{
+		if ( empty( $metaUser ) ) {
+			return false;
+		}
+
 		// Load Restrictions and resulting Permissions
 		$restrictions	= $this->getRestrictionsArray();
 		$permissions	= $metaUser->permissionResponse( $restrictions );

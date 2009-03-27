@@ -1082,7 +1082,7 @@ class Payment_HTML
 											$strlen = 1 + strlen( $InvoiceFactory->payment->currency ) * 2;
 										}
 
-										for( $i=0; $i<=$strlen;$i++ ) {
+										for( $i=0; $i<=$strlen+1;$i++ ) {
 											$c .= '&nbsp;';
 										}
 									}

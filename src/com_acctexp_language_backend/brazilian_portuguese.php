@@ -439,6 +439,12 @@ define( '_COUPON_PARAMS_USAGE_PLANS_ENABLED_NAME', 'Definir Plano');
 define( '_COUPON_PARAMS_USAGE_PLANS_ENABLED_DESC', 'Pretende utilizar este cup&atilde;o paenas para determinados planos?');
 define( '_COUPON_PARAMS_USAGE_PLANS_NAME', 'Planos');
 define( '_COUPON_PARAMS_USAGE_PLANS_DESC', 'Escolha quais os planos que pretende associar a este cup&atilde;o');
+define( '_COUPON_PARAMS_USAGE_CART_FULL_NAME', 'Use on Cart');
+define( '_COUPON_PARAMS_USAGE_CART_FULL_DESC', 'Allow Application to a full shopping card');
+define( '_COUPON_PARAMS_CART_MULTIPLE_ITEMS_NAME', 'Multiple Items');
+define( '_COUPON_PARAMS_CART_MULTIPLE_ITEMS_DESC', 'Let the user apply the coupon to multiple items of a shopping cart, if overall restrictions permit it');
+define( '_COUPON_PARAMS_CART_MULTIPLE_ITEMS_AMOUNT_NAME', 'Multiple Items Amount');
+define( '_COUPON_PARAMS_CART_MULTIPLE_ITEMS_AMOUNT_DESC', 'Set a limit for application to multiple items of one shopping cart');
 
 define( '_COUPON_RESTRICTIONS_MINGID_ENABLED_NAME', 'ActivarGID Minimo:');
 define( '_COUPON_RESTRICTIONS_MINGID_ENABLED_DESC', 'Activar esta op&ccedil;&atilde;o se voce pretende definir um n&uacute;mero m&iacute;nimo de grupo de utilizadores onde o utilizador pde uar este cup&atilde;o.');
@@ -489,6 +495,10 @@ define( '_COUPON_RESTRICTIONS_SUBSCR_ID_DEPENDENCY_NAME', 'ID Subscri&ccedil;&at
 define( '_COUPON_RESTRICTIONS_SUBSCR_ID_DEPENDENCY_DESC', 'A ID da subscri&ccedil;&atilde;o da qualo cup&atilde;o depende.');
 define( '_COUPON_RESTRICTIONS_ALLOW_TRIAL_DEPEND_SUBSCR_NAME', 'Permitir Subscri&ccedil;&otilde;es de Demonstra&ccedil;&atilde;o:');
 define( '_COUPON_RESTRICTIONS_ALLOW_TRIAL_DEPEND_SUBSCR_DESC', 'Permitiro uso do cup&atilde;o quando o utilizador depende de uma subscri&ccedil;&atilde;o que ainda se encontra em demonstra&ccedil;&atilde;o.');
+define( '_COUPON_RESTRICTIONS_RESTRICT_COMBINATION_CART_NAME', 'Restrict Combination Cart:');
+define( '_COUPON_RESTRICTIONS_RESTRICT_COMBINATION_CART_DESC', 'Choose to not let your users combine this coupon with one of the following when applied to a cart');
+define( '_COUPON_RESTRICTIONS_BAD_COMBINATIONS_CART_NAME', 'Coupons:');
+define( '_COUPON_RESTRICTIONS_BAD_COMBINATIONS_CART_DESC', 'Make a selection which coupons this one is not to be used with');
 
 // end new 0.12.4 (mic)
 

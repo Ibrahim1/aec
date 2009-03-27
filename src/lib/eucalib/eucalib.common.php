@@ -353,6 +353,11 @@ class serialParamDBTable extends paramDBTable
 		return $this->load( $this->id );
 	}
 
+	function reload()
+	{
+		return $this->load( $this->id );
+	}
+
 	/**
 	 * Receive Parameters and decode them into an array
 	 * @return array
