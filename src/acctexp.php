@@ -93,9 +93,13 @@ if ( !empty( $task ) ) {
 			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 			$usage		= aecGetParam( 'usage', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 
-			$invoicefact = new InvoiceFactory( $userid );
-			$invoicefact->addtoCart( $option, $usage );
-			$invoicefact->cart( $option );
+			if ( !$my->id ) {
+				notAllowed( $option );
+			} else {
+				$invoicefact = new InvoiceFactory( $userid );
+				$invoicefact->addtoCart( $option, $usage );
+				$invoicefact->cart( $option );
+			}
 			break;
 
 		case 'cart':
@@ -114,17 +118,25 @@ if ( !empty( $task ) ) {
 		case 'updatecart':
 			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 
-			$invoicefact = new InvoiceFactory( $userid );
-			$invoicefact->updateCart( $option, $_POST );
-			$invoicefact->cart( $option );
+			if ( !$my->id ) {
+				notAllowed( $option );
+			} else {
+				$invoicefact = new InvoiceFactory( $userid );
+				$invoicefact->updateCart( $option, $_POST );
+				$invoicefact->cart( $option );
+			}
 			break;
 
 		case 'confirmcart':
 			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 			$coupon		= aecGetParam( 'coupon_code', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 
-			$invoicefact = new InvoiceFactory( $userid );
-			$invoicefact->confirmcart( $option, $coupon );
+			if ( !$my->id ) {
+				notAllowed( $option );
+			} else {
+				$invoicefact = new InvoiceFactory( $userid );
+				$invoicefact->confirmcart( $option, $coupon );
+			}
 			break;
 
 		case 'checkout':

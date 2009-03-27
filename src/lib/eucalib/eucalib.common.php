@@ -368,7 +368,7 @@ class serialParamDBTable extends paramDBTable
 			return null;
 		}
 
-		if ( is_array( $this->$field ) || is_object( $this->$field ) ) {
+		if ( !is_string( $this->$field ) ) {
 			return $this->$field;
 		}
 

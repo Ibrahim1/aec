@@ -1316,6 +1316,7 @@ class Config_General extends serialParamDBTable
 		$def['customintro_always']				= 1;
 		$def['customtext_exception_keeporiginal']	= 1;
 		$def['customtext_exception']			= '';
+		$def['gwlist']							= array();
 
 		return $def;
 	}
@@ -5308,6 +5309,10 @@ class SubscriptionPlan extends serialParamDBTable
 		$var		= null;
 		$free_trial = 0;
 
+		if ( !isset( $this->params['full_free'] ) ) {
+			$this->params['full_free'] = false;
+		}
+
 		if ( !empty( $recurring ) ) {
 			$amount = array();
 
@@ -6330,7 +6335,11 @@ class InvoiceFactory
 		$this->payment->amount_significant	= $amount_array[0];
 		$this->payment->amount_decimal		= $amount_array[1];
 
-		$this->payment->amount_format = AECToolbox::formatAmountCustom( $this, $this->plan );
+		if ( !empty( $this->plan ) ) {
+			$this->payment->amount_format = AECToolbox::formatAmountCustom( $this, $this->plan );
+		} else {
+			$this->payment->amount_format = $this->payment->amount;
+		}
 
 		return;
 	}
@@ -7120,17 +7129,14 @@ class InvoiceFactory
 
 	function cart( $option )
 	{
-		global $aecConfig, $database;
-
-		$user = new mosUser( $database );
-		$user->load( $this->userid );
+		global $aecConfig;
 
 		$this->getCart();
 
 		$this->coupons = array();
 		$this->coupons['active'] = $aecConfig->cfg['enable_coupons'];
 
-		Payment_HTML::cart( $option, $this, $user );
+		Payment_HTML::cart( $option, $this );
 	}
 
 	function confirmcart( $option, $coupon=null )
@@ -7314,7 +7320,7 @@ class InvoiceFactory
 		}
 
 		if ( !empty( $this->pp->info['secure'] ) && empty( $_SERVER['HTTPS'] ) && !$aecConfig->cfg['override_reqssl'] ) {
-			mosRedirect( AECToolbox::deadsureURL( "index.php?option=" . $option . "&task=repeatPayment&invoice=" . $this->invoice->invoice_number . "&first=" . ( $repeat ? 0 : 1 ), true, false ) );
+			mosRedirect( AECToolbox::deadsureURL( "index.php?option=" . $option . "&task=repeatPayment&invoice=" . $this->invoice->invoice_number . "&first=" . ( $repeat ? 0 : 1 ), true, true ) );
 			exit();
 		}
 
@@ -7879,7 +7885,7 @@ class Invoice extends serialParamDBTable
 			}
 
 			if ( $this->coupons ) {
-				$cpsh = new couponsHandler( $this->metaUser, $InvoiceFactory, $this->coupons );
+				$cpsh = new couponsHandler( $metaUser, $InvoiceFactory, $this->coupons );
 
 				$return['amount'] = $cpsh->applyToAmount( $return['amount'] );
 			}
@@ -8656,7 +8662,7 @@ class Invoice extends serialParamDBTable
 					}
 				}
 
-				$amount = $cart->getAmount( $InvoiceFactory->metaUser, $this->cart );
+				$amount = $cart->getAmount( $InvoiceFactory->metaUser, $InvoiceFactory->cart );
 			}
 
 			if ( $recurring ) {
@@ -9128,7 +9134,7 @@ class aecCart extends serialParamDBTable
 	function removeCoupon( $coupon_code, $id=null )
 	{
 		foreach ( $this->content as $cid => $content ) {
-			if ( !is_null( $id ) ) {print_r($id);exit;
+			if ( !is_null( $id ) ) {
 				if ( $id !== $cid ) {
 					continue;
 				}
@@ -9287,7 +9293,7 @@ class aecCart extends serialParamDBTable
 			$totalcost_ncp = $totalcost;
 			$totalcost = $cpsh->applyToAmount( $totalcost );
 		} else {
-			$totalcost_ncp = $cpsh->applyToAmount( $totalcost );
+			$totalcost_ncp = $totalcost;
 		}
 
 		// Append total cost
@@ -10543,16 +10549,18 @@ class reWriteEngine
 				$this->rewrite['invoice_coupons']		=  '';
 			}
 
-			if ( !is_null( $this->data['metaUser'] ) && !is_null( $this->data['plan'] ) ) {
+			if ( !empty( $this->data['metaUser'] ) && !empty( $this->data['plan'] ) ) {
 				$this->data['invoice']->formatInvoiceNumber();
 				$this->rewrite['invoice_number_format']	= $this->data['invoice']->invoice_number;
 				$this->data['invoice']->deformatInvoiceNumber();
 			}
 		}
 
-		if ( is_object( $this->data['plan'] ) ) {
-			$this->rewrite['plan_name'] = $this->data['plan']->getProperty( 'name' );
-			$this->rewrite['plan_desc'] = $this->data['plan']->getProperty( 'desc' );
+		if ( !empty( $this->data['plan'] ) ) {
+			if ( is_object( $this->data['plan'] ) ) {
+				$this->rewrite['plan_name'] = $this->data['plan']->getProperty( 'name' );
+				$this->rewrite['plan_desc'] = $this->data['plan']->getProperty( 'desc' );
+			}
 		}
 	}
 

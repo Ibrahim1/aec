@@ -678,6 +678,7 @@ width: 80%;
 margin: 10px 10%;
 border-collapse: collapse;
 color: #777;
+text-align: left;
 }
 
 table#aec_checkout td {

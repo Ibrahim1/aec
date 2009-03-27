@@ -343,11 +343,10 @@ class HTML_frontEnd
 		}
 		if ( $aecConfig->cfg['customtext_notallowed'] ) { ?>
 			<?php echo $aecConfig->cfg['customtext_notallowed']; ?>
-			<?php
-		} ?>
-		<p></p>
+		<?php } ?>
 		<?php
-		if ( !empty( $processors ) ) { ?>
+		if ( !empty( $processors ) && !empty( $aecConfig->cfg['gwlist'] ) ) { ?>
+			<p>&nbsp;</p>
 			<p><?php echo _NOT_ALLOWED_SECONDPAR; ?></p>
 			<table id="cc_list">
 				<?php
@@ -823,7 +822,7 @@ class Payment_HTML
 		<?php
 	}
 
-	function cart( $option, $InvoiceFactory, $user )
+	function cart( $option, $InvoiceFactory )
 	{
 		global $database, $aecConfig, $mosConfig_live_site;
 
@@ -848,13 +847,7 @@ class Payment_HTML
 		} ?>
 		<div id="confirmation">
 			<div id="confirmation_info">
-				<p><?php
-				if ( !empty( $user->name ) ) { ?>
-					<?php echo _CONFIRM_ROW_NAME; ?> <?php echo $user->name; ?><br />
-					<?php
-				} ?>
-				<?php echo _CONFIRM_ROW_USERNAME; ?> <?php echo $user->username; ?><br />
-				<?php echo _CONFIRM_ROW_EMAIL; ?> <?php echo $user->email; ?></p>
+				<p>
 				<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 				<table>
 					<tr>
@@ -962,8 +955,10 @@ class Payment_HTML
 				<tr><td>
 					<table>
 						<?php
-						if ( is_object( $InvoiceFactory->pp ) ) {
-							HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $aecConfig->cfg['displayccinfo'] );
+						if ( !empty( $InvoiceFactory->pp ) ) {
+							if ( is_object( $InvoiceFactory->pp ) ) {
+								HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $aecConfig->cfg['displayccinfo'] );
+							}
 						} ?>
 					</table>
 				</td></tr>
@@ -1009,12 +1004,16 @@ class Payment_HTML
 					}
 
 					foreach ( $terms as $tid => $term ) {
+						if ( !is_object( $term ) ) {
+							continue;
+						}
+
 						$ttype = 'aec_termtype_' . $term->type;
 
 						//$future = ( $tid > $InvoiceFactory->terms->pointer ) ? '&nbsp;('._AEC_CHECKOUT_FUTURETERM.')' : '';
-						$applicable = ( $tid >= $InvoiceFactory->terms->pointer ) ? '' : '&nbsp;('._AEC_CHECKOUT_NOTAPPLICABLE.')';
+						$applicable = ( $tid >= $item['terms']->pointer ) ? '' : '&nbsp;('._AEC_CHECKOUT_NOTAPPLICABLE.')';
 
-						$current = ( $tid == $InvoiceFactory->terms->pointer ) ? ' current_period' : '';
+						$current = ( $tid == $item['terms']->pointer ) ? ' current_period' : '';
 
 						$add = "";
 
@@ -1024,7 +1023,7 @@ class Payment_HTML
 							}
 						}
 
-						if ( isset( $item['item'] ) ) {
+						if ( isset( $item['item']['name'] ) ) {
 							// This is an item, show its name (skip for total)
 							echo '<tr><td><h4>' . $item['item']['name'] . $add . '</h4></td></tr>';
 						}
@@ -1050,7 +1049,7 @@ class Payment_HTML
 							} else {
 								$c = AECToolbox::formatAmount( $citem->cost['amount'], $InvoiceFactory->payment->currency );
 							}
-//print_r($item['item']);exit;
+
 							switch ( $citem->type ) {
 								case 'discount':
 									$ta = $t;

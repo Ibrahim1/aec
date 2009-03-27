@@ -63,7 +63,7 @@ class processor_chase_paymentech extends PROFILEprocessor
 
 		$paytypes = array( 'cc', 'echeck', 'eudd', 'gc', 'debit' );
 
-		$paytypes = array();
+		$pt = array();
 		foreach ( $paytypes as $name ) {
 			$desc = constant( '_AEC_'.strtoupper($name).'FORM_TABNAME' );
 
