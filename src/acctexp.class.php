@@ -1171,6 +1171,10 @@ class metaUserDB extends serialParamDBTable
 
 	function getPreviousPlan()
 	{
+		if ( empty( $this->plan_history ) ) {
+			return null;
+		}
+
 		$last = count( $this->plan_history->plan_history ) - 2;
 
 		if ( $last < 0 ) {
@@ -7345,9 +7349,6 @@ class InvoiceFactory
 				// Reload cart object and cart - was changed by $cpsh
 				$this->_cart->reload();
 				$this->getCart();
-
-				// Reload Items
-				$this->loadItems();
 			}
 
 			$cpsh_err = $cpsh->getErrors();
@@ -7370,14 +7371,14 @@ class InvoiceFactory
 		}
 
 		// Either this is fully free, or the next term is free and this is non recurring
-		/*if ( !empty( $this->terms ) ) {
-			if ( count( $this->terms ) == 1 ) {
-				if ( $this->terms[0]->checkFree() || ( $this->terms[0]->nextterm->free && !$this->recurring ) ) {
+		if ( !empty( $this->items ) ) {
+			if ( count( $this->items ) == 1 ) {
+				if ( $this->items[0]['terms'][0]->checkFree() || ( $this->items[0]['terms'][0]->nextterm->free && !$this->recurring ) ) {
 					$this->invoice->pay();
 					return $this->thanks( $option, false, true );
 				}
 			}
-		}*/
+		}
 
 		$this->InvoiceToCheckout( $option, $repeat );
 	}
@@ -13021,7 +13022,7 @@ class couponsHandler extends eucaObject
 			return false;
 		}
 
-		$this->coupons_list[] = array( 'coupon_code' => $coupon_code, 'cph' => $cph );
+		$this->coupons_list[] = array( 'coupon_code' => $coupon_code/*, 'cph' => $cph*/ );
 
 		$this->cph = $cph;
 
@@ -13037,16 +13038,22 @@ class couponsHandler extends eucaObject
 					continue;
 				}
 
-				if ( $this->cph->coupon->restrictions['usage_plans_enabled'] ) {
-					$plans = $cart->getItemIdArray();
+				$plans = $cart->getItemIdArray();
 
+				if ( $this->cph->coupon->restrictions['usage_plans_enabled'] ) {
 					$allowed = array_intersect( $plans, $this->cph->coupon->restrictions['usage_plans'] );
 
 					if ( empty( $allowed ) ) {
 						$allowed = false;
 					}
 				} else {
-					$allowed = true;
+					$allowed = $plans;
+				}
+
+				foreach ( $cart->content as $iid => $c ) {
+					if ( $cart->hasCoupon( $coupon_code, $iid ) ) {
+						continue 2;
+					}
 				}
 
 				if ( is_array( $allowed ) ) {
@@ -13064,14 +13071,14 @@ class couponsHandler extends eucaObject
 
 								$this->affectedCart = true;
 							}
-
-							$this->noapplylist[] = $coupon_code;
 						} else {
 							$found = false;
 							foreach ( $cart->content as $cid => $content ) {
 								if ( $cart->hasCoupon( $coupon_code, $cid ) ) {
 									$items[$cid] == $this->applyToItem( $cid, $items[$cid], $coupon_code );
 									$found = true;
+
+									$this->noapplylist[] = $coupon_code;
 								}
 							}
 
@@ -13091,8 +13098,6 @@ class couponsHandler extends eucaObject
 								}
 							}
 						}
-
-						$this->noapplylist[] = $coupon_code;
 					} else {
 						foreach ( $items as $iid => $item ) {
 							if ( $item['item']['obj']->id == $allowed[0] ) {

@@ -870,7 +870,7 @@ class Payment_HTML
 								<td><strong><?php echo _CART_ROW_TOTAL; ?></strong></td>
 								<td></td>
 								<td></td>
-								<td><strong><?php echo $bitem['cost_total']; ?></strong></td>
+								<td><strong><?php echo $bitem['cost']; ?></strong></td>
 							</tr><?php
 						}
 					}

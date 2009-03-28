@@ -414,7 +414,7 @@ class HTML_AcctExp
 		mosCommonHTML::loadCalendar();
 
 		if ( aecJoomla15check() ) {
-			$edituserlink = "index.php?option=com_users&amp;view=user&amp;task=edit&amp;cid=" . $metaUser->userid;
+			$edituserlink = "index.php?option=com_users&amp;view=user&amp;task=edit&amp;cid[]=" . $metaUser->userid;
 			JHTML::_('behavior.calendar');
 		} else {
 			$edituserlink = "index2.php?option=com_users&amp;task=editA&amp;id=" . $metaUser->userid . "&amp;hidemainmenu=1";
