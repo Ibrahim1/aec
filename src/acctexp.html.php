@@ -362,6 +362,10 @@ class HTML_frontEnd
 	{
 		global $aecConfig, $mosConfig_live_site;
 
+		if ( empty( $aecConfig->cfg['gwlist'] ) ) {
+			return;
+		}
+
 		if ( !in_array( $processorObj->processor_name, $aecConfig->cfg['gwlist'] ) ) {
 			return;
 		}

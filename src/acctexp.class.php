@@ -9281,6 +9281,8 @@ class aecCart extends serialParamDBTable
 				}
 			}
 
+			$entry['cost']			= AECToolbox::correctAmount( $entry['cost'] );
+
 			$entry['count']					= $content['count'];
 
 			$totalcost += $entry['cost_total'];
@@ -12923,24 +12925,28 @@ class microIntegration extends serialParamDBTable
 
 class couponsHandler extends eucaObject
 {
+	/** @var bool - Was the cart changed? Needed to signal reload action */
+	var $affectedCart		= false;
+	/** @var array - Coupons that should not be applied on any later action */
+	var $noapplylist		= array();
+	/** @var array - List of coupons */
+	var $coupons_list		= array();
+	/** @var array - Coupons that will be applied to the whole cart */
+	var $fullcartlist		= array();
+	/** @var array - Global List of excluding coupons */
+	var $global_nomix 		= array();
+	/** @var array - Global List of applied coupons */
+	var $global_applied 	= array();
+	/** @var array - Coupons that need to be deleted */
+	var $delete_list	 	= array();
+	/** @var array - Exceptions that need to be addressed (by the user) */
+	var $exceptions			= array();
+
 	function couponsHandler( $metaUser, $InvoiceFactory, $coupons )
 	{
 		$this->metaUser			=& $metaUser;
 		$this->InvoiceFactory	=& $InvoiceFactory;
 		$this->coupons			=& $coupons;
-
-		$this->affectedCart		= false;
-
-		$this->noapplylist		= array();
-
-		$this->couponslist		= array();
-		$this->fullcartlist		= array();
-		$this->global_nomix 	= array();
-		$this->global_applied 	= array();
-
-		$this->delete_list	 	= array();
-
-		$this->exceptions		= array();
 	}
 
 	function raiseException( $exception )
@@ -13031,6 +13037,17 @@ class couponsHandler extends eucaObject
 
 	function applyToCart( $items, $cart=false, $fullcart=false )
 	{
+		$this->prefilter( $items, $cart, $fullcart );
+
+		foreach ( $items as $iid => $item ) {
+			$items[$iid] = $this->applyAllToItems( $iid, $item, $cart );
+		}
+
+		return $items;
+	}
+
+	function prefilter( $items, $cart=false, $fullcart=false )
+	{
 		foreach ( $this->coupons as $ccid => $coupon_code ) {
 			if ( $this->loadCoupon( $coupon_code ) ) {
 				if ( $this->cph->coupon->restrictions['usage_cart_full'] ) {
@@ -13112,12 +13129,6 @@ class couponsHandler extends eucaObject
 				}
 			}
 		}
-
-		foreach ( $items as $iid => $item ) {
-			$items[$iid] = $this->applyAllToItems( $iid, $item, $cart );
-		}
-
-		return $items;
 	}
 
 	function applyAllToItems( $id, $item, $cart=false )
