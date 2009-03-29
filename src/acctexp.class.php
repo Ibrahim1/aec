@@ -7373,7 +7373,7 @@ class InvoiceFactory
 		// Either this is fully free, or the next term is free and this is non recurring
 		if ( !empty( $this->items ) ) {
 			if ( count( $this->items ) == 1 ) {
-				if ( $this->items[0]['terms'][0]->checkFree() || ( $this->items[0]['terms'][0]->nextterm->free && !$this->recurring ) ) {
+				if ( $this->items[0]['terms']->checkFree() || ( $this->items[0]['terms']->nextterm->free && !$this->recurring ) ) {
 					$this->invoice->pay();
 					return $this->thanks( $option, false, true );
 				}
