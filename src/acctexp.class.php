@@ -2969,12 +2969,12 @@ class processor extends serialParamDBTable
 	function customParams( $custom, $var, $request )
 	{
 		if ( !empty( $custom ) ) {
-			$rw_params = AECToolbox::rewriteEngine( $custom, $request->metaUser, $request->plan, $request->invoice );
+			$rw_params = AECToolbox::rewriteEngineRQ( $custom, $request );
 
 			$params = explode( "\n", $rw_params );
 
 			foreach ( $params as $custom ) {
-				$paramsarray = explode( '=', $custom );
+				$paramsarray = explode( '=', $custom, 2 );
 
 				if ( !empty( $paramsarray[0] ) && isset( $paramsarray[1] ) ) {
 					$var[$paramsarray[0]] = $paramsarray[1];
@@ -9302,7 +9302,7 @@ class aecCart extends serialParamDBTable
 		// Append total cost
 		$return[] = array( 'name' => '',
 							'count' => '',
-							'cost' => $totalcost_ncp,
+							'cost' => AECToolbox::correctAmount( $totalcost_ncp ),
 							'cost_total' => AECToolbox::correctAmount( $totalcost ),
 							'is_total' => true,
 							'obj' => false
@@ -12504,7 +12504,7 @@ class microIntegration extends serialParamDBTable
 		// Needs to be declared as variable due to call by reference
 		$add = false;
 
-		if ( !empty( $this->settings['_aec_global_exp_all'] ) ) {
+		if ( empty( $this->settings['_aec_global_exp_all'] ) ) {
 			if ( $metaUser->getMIcount( $this->id ) > 1 ) {
 				// We have more instances than this one attached to the user, pass on.
 				return null;
