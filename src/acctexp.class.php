@@ -1236,7 +1236,7 @@ class Config_General extends serialParamDBTable
 		$def['heartbeat_cycle_backend']			= 1;
 		$def['plans_first']						= 0;
 		$def['simpleurls']						= 0;
-		$def['display_date_frontend']			= "%a, %d %b %Y %T %Z";
+		$def['display_date_frontend']			= "%d %b %Y";
 		$def['display_date_backend']			= "%a, %d %b %Y %T %Z";
 		//$def['enable_mimeta']					= 0;
 		$def['enable_coupons']					= 0;
