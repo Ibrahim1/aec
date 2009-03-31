@@ -1032,6 +1032,11 @@ class Payment_HTML
 							echo '<tr><td><h4>' . $item['item']['name'] . $add . '</h4></td></tr>';
 						}
 
+						if ( isset( $item['item']['desc'] ) && $aecConfig->cfg['checkout_display_descriptions'] ) {
+							// This is an item, show its name (skip for total)
+							echo '<tr><td>' . $item['item']['desc'] . '</td></tr>';
+						}
+
 						if ( defined( strtoupper( '_' . $ttype ) ) ) {
 							// Headline - What type is this term
 							echo '<tr class="aec_term_typerow' . $current . '"><th colspan="2" class="' . $ttype . '">' . constant( strtoupper( '_' . $ttype ) ) . $applicable . '</th></tr>';

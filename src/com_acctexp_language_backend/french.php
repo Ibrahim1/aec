@@ -496,6 +496,7 @@ define( '_CFG_GENERAL_SUB_DEBUG', 'Debug');
 define( '_CFG_GENERAL_SUB_REGFLOW', 'Registration Flow');
 define( '_CFG_GENERAL_SUB_PLANS', 'Subscription Plans');
 define( '_CFG_GENERAL_SUB_CONFIRMATION', 'Confirmation Page');
+define( '_CFG_GENERAL_SUB_CHECKOUT', 'Checkout Page');
 define( '_CFG_GENERAL_SUB_PROCESSORS', 'Payment Processors');
 define( '_CFG_GENERAL_SUB_SECURITY', 'Security');
 
@@ -555,6 +556,9 @@ define( '_CFG_GENERAL_TOS_NAME', 'Conditions d\'utilisation:');
 define( '_CFG_GENERAL_TOS_DESC', 'Entrez l&amp;acute;URL de conditions d&amp;acute;utilisation. L&amp;acute;utilisateur devra s&eacute;lectionner une case &agrave; cocher lors de la confirmation de son compte. Si laiss&eacute; vide, rien ne sera affich&eacute;.');
 define( '_CFG_GENERAL_CUSTOMNOTALLOWED_NAME', 'Lien personnalis&eacute; de la page Non-autoris&eacute;:');
 define( '_CFG_GENERAL_CUSTOMNOTALLOWED_DESC', 'Fournir un lien complet (avec http://) qui dirige &agrave; votre page de non autoris&eacute;s personnalis&eacute;e. Laissez ce champ vide si vous n&amp;acute;en voulez.');
+
+define( '_CFG_GENERAL_CHECKOUT_DISPLAY_DESCRIPTIONS_NAME', 'Display Descriptions:');
+define( '_CFG_GENERAL_CHECKOUT_DISPLAY_DESCRIPTIONS_DESC', 'If you have multiple plans on checkout, or skipped the confirmation, it might be helpful to show the plan description again. This switch does just that.');
 
 define( '_CFG_GENERAL_DISPLAY_DATE_FRONTEND_NAME', 'Format de date frontend');
 define( '_CFG_GENERAL_DISPLAY_DATE_FRONTEND_DESC', 'Pr&eacute;ciser la fa&ccedil;on dont la date est affich&eacute;e sur le frontend. Reportez-vous au &lt;a href=&quot;http://www.php.net/manual/en/function.strftime.php&quot;&gt;manuel PHP&lt;/a&gt; pour une syntax correct.');

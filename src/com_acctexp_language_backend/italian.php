@@ -622,6 +622,7 @@ define( '_CFG_GENERAL_SUB_DEBUG', 'Debug');
 define( '_CFG_GENERAL_SUB_REGFLOW', 'Registration Flow');
 define( '_CFG_GENERAL_SUB_PLANS', 'Subscription Plans');
 define( '_CFG_GENERAL_SUB_CONFIRMATION', 'Confirmation Page');
+define( '_CFG_GENERAL_SUB_CHECKOUT', 'Checkout Page');
 define( '_CFG_GENERAL_SUB_PROCESSORS', 'Payment Processors');
 define( '_CFG_GENERAL_SUB_SECURITY', 'Security');
 
@@ -683,6 +684,9 @@ define( '_CFG_GENERAL_TOS_IFRAME_NAME', 'ToS Iframe:');
 define( '_CFG_GENERAL_TOS_IFRAME_DESC', 'Display the Terms of Service (as specified above) in an iframe on confirmation');
 define( '_CFG_GENERAL_CUSTOMNOTALLOWED_NAME', 'Custom NotAllowed link:');
 define( '_CFG_GENERAL_CUSTOMNOTALLOWED_DESC', 'Provide a full link (including http://) that leads to your custom NotAllowed page. Leave this field blank if you don\'t want this at all.');
+
+define( '_CFG_GENERAL_CHECKOUT_DISPLAY_DESCRIPTIONS_NAME', 'Display Descriptions:');
+define( '_CFG_GENERAL_CHECKOUT_DISPLAY_DESCRIPTIONS_DESC', 'If you have multiple plans on checkout, or skipped the confirmation, it might be helpful to show the plan description again. This switch does just that.');
 
 define( '_CFG_GENERAL_DISPLAY_DATE_FRONTEND_NAME', 'Frontend Date Format');
 define( '_CFG_GENERAL_DISPLAY_DATE_FRONTEND_DESC', 'Specify the way a date is displayed on the frontend. Refer to <a href="http://www.php.net/manual/en/function.strftime.php">the php manual</a> for the correct syntax.');

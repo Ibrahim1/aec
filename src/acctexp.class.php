@@ -1321,6 +1321,7 @@ class Config_General extends serialParamDBTable
 		$def['customtext_exception_keeporiginal']	= 1;
 		$def['customtext_exception']			= '';
 		$def['gwlist']							= array();
+		$def['checkout_display_descriptions']	= 0;
 
 		return $def;
 	}

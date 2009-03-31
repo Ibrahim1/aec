@@ -2022,6 +2022,9 @@ function editSettings( $option )
 	$params['tos']							= array( 'inputC', '' );
 	$params['tos_iframe']					= array( 'list_yesno', '' );
 	$params[] = array( 'div_end', 0 );
+	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_CHECKOUT );
+	$params['checkout_display_descriptions']	= array( 'list_yesno', '' );
+	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_PROCESSORS );
 	$params['gwlist']				= array( 'list', 0 );
 	$params[] = array( 'div_end', 0 );
