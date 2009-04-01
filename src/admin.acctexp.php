@@ -2032,6 +2032,7 @@ function editSettings( $option )
 	$params['ssl_signup']					= array( 'list_yesno', 0 );
 	$params['ssl_profile']					= array( 'list_yesno', 0 );
 	$params['override_reqssl']				= array( 'list_yesno', 0 );
+	$params['override_altsslurl']				= array( 'inputC', '' );
 	$params['ssl_verifypeer']				= array( 'list_yesno', 0 );
 	$params['ssl_verifyhost']				= array( 'inputC', '' );
 	$params['ssl_cainfo']					= array( 'inputC', '' );

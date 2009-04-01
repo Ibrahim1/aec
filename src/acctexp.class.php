@@ -1322,6 +1322,7 @@ class Config_General extends serialParamDBTable
 		$def['customtext_exception']			= '';
 		$def['gwlist']							= array();
 		$def['checkout_display_descriptions']	= 0;
+		$def['altsslurl']						= '';
 
 		return $def;
 	}
@@ -11039,12 +11040,18 @@ class AECToolbox
 	{
 		global $mosConfig_live_site, $mosConfig_absolute_path, $database, $aecConfig;
 
-		if ( $aecConfig->cfg['override_reqssl'] ) {
-			$secure = false;
+		$base = $mosConfig_live_site;
+
+		if ( $secure ) {
+			if ( $aecConfig->cfg['override_reqssl'] ) {
+				$secure = false;
+			} elseif ( !empty( $aecConfig->cfg['altsslurl'] ) ) {
+				$base = $aecConfig->cfg['altsslurl'];
+			}
 		}
 
 		if ( $aecConfig->cfg['simpleurls'] ) {
-			$new_url = $mosConfig_live_site . '/' . $url;
+			$new_url = $base . '/' . $url;
 		} else {
 			if ( !strpos( strtolower( $url ), 'itemid' ) ) {
 				global $Itemid;
@@ -11061,24 +11068,24 @@ class AECToolbox
 
 			$new_url = sefRelToAbs( $url );
 
-			if ( !( strpos( $new_url, $mosConfig_live_site.'/' ) === 0 ) ) {
-				$new_url = str_replace( $mosConfig_live_site, $mosConfig_live_site.'/', $new_url );
+			if ( !( strpos( $new_url, $base.'/' ) === 0 ) ) {
+				$new_url = str_replace( $base, $base.'/', $new_url );
 			}
 
-			if ( !( strpos( $new_url, $mosConfig_live_site ) === 0 ) ) {
+			if ( !( strpos( $new_url, $base ) === 0 ) ) {
 				// look out for malformed live_site
-				if ( strpos( $mosConfig_live_site, '/' ) === strlen( $mosConfig_live_site ) ) {
-					$new_url = substr( $mosConfig_live_site, 0, -1 ) . $new_url;
+				if ( strpos( $base, '/' ) === strlen( $base ) ) {
+					$new_url = substr( $base, 0, -1 ) . $new_url;
 				} else {
 					// It seems we have a sefRelToAbs malfunction (subdirectory is not appended)
-					$metaurl = explode( '/', $mosConfig_live_site );
+					$metaurl = explode( '/', $base );
 					$rooturl = $metaurl[0] . '//' . $metaurl[2];
 
 					// Replace root to include subdirectory - if all fails, just prefix the live site
 					if ( strpos( $new_url, $rooturl ) === 0 ) {
-						$new_url = $mosConfig_live_site . substr( $new_url, strlen( $rooturl ) );
+						$new_url = $base . substr( $new_url, strlen( $rooturl ) );
 					} else {
-						$new_url = $mosConfig_live_site . '/' . $new_url;
+						$new_url = $base . '/' . $new_url;
 					}
 				}
 			}

@@ -640,6 +640,8 @@ define( '_CFG_GENERAL_DEBUGMODE_NAME', 'Debug Mode');
 define( '_CFG_GENERAL_DEBUGMODE_DESC', 'Activates the display of debug information.');
 define( '_CFG_GENERAL_OVERRIDE_REQSSL_NAME', 'Override SSL Requirement');
 define( '_CFG_GENERAL_OVERRIDE_REQSSL_DESC', 'Some payment processors require an SSL secured connection to the user - for example when sensitive information (like CreditCard data) is required on the frontend.');
+define( '_CFG_GENERAL_ALTSSLURL_NAME', 'Alternative SSL Url');
+define( '_CFG_GENERAL_ALTSSLURL_DESC', 'Use this URL instead of the base url that is configured in Joomla! when routing through SSL.');
 define( '_CFG_GENERAL_OVERRIDEJ15_NAME', 'Override Joomla 1.5 Integration');
 define( '_CFG_GENERAL_OVERRIDEJ15_DESC', 'Some Addons trick a 1.0 Joomla into believing it really is 1.5 (you know who you are! stop it!) - which AEC follows and fails. This makes a permanent switch forcing 1.0 mode.');
 define( '_CFG_GENERAL_SSL_SIGNUP_NAME', 'SSL Signup');

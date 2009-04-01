@@ -764,6 +764,8 @@ define( '_CFG_GENERAL_DEBUGMODE_NAME', 'Modo de Analide de Erros');
 define( '_CFG_GENERAL_DEBUGMODE_DESC', 'Activar a visualiza&ccedil;&atilde;o de informa&ccedil;&atilde;o de analise de erros.');
 define( '_CFG_GENERAL_OVERRIDE_REQSSL_NAME', 'Sobrepor Requirimento SSL');
 define( '_CFG_GENERAL_OVERRIDE_REQSSL_DESC', 'Alguns processos de pagamentos requerem uma conex&atilde;o segura SSL para o utilizador - por examplo quando informa&ccedil;&atilde;o sens&iacute;vel ( informa&ccedil;&atilde;o de Cart&atilde;o de Cr&eacute;dito) &eacute; solicitada na Pagia Principal');
+define( '_CFG_GENERAL_ALTSSLURL_NAME', 'Alternative SSL Url');
+define( '_CFG_GENERAL_ALTSSLURL_DESC', 'Use this URL instead of the base url that is configured in Joomla! when routing through SSL.');
 define( '_CFG_GENERAL_OVERRIDEJ15_NAME', 'Sobrepor integra&ccedil;&atilde;o Joomla 1.5');
 define( '_CFG_GENERAL_OVERRIDEJ15_DESC', 'Alguns adi&ccedil;&otilde;es do Joomla 1.0 levam o sistema a pensar que se tratam realmentede adic&ccedil;&otilde;es do Joomla 1.5(se n&atilde;o sabe o que esta a fazer, n&atilde;o altere nada!) - com o AEC segue e falha. Isto obriga a uma permanente forcing para alterar para o modo 1.0.');
 define( '_CFG_GENERAL_SSL_SIGNUP_NAME', 'Inscrever SSL');
