@@ -12509,6 +12509,7 @@ class microIntegration extends serialParamDBTable
 		// Needs to be declared as variable due to call by reference
 		$add = false;
 
+		// IF ExpireAllInstances=0 AND hasMoreThanOneInstance -> return null
 		if ( empty( $this->settings['_aec_global_exp_all'] ) ) {
 			if ( $metaUser->getMIcount( $this->id ) > 1 ) {
 				// We have more instances than this one attached to the user, pass on.
@@ -12527,12 +12528,13 @@ class microIntegration extends serialParamDBTable
 		}
 
 		$request = new stdClass();
-		$request->parent	=& $this;
-		$request->metaUser	=& $metaUser;
-		$request->invoice	=& $invoice;
-		$request->plan		=& $objplan;
+		$request->action	=	$stage;
+		$request->parent	=&	$this;
+		$request->metaUser	=&	$metaUser;
+		$request->invoice	=&	$invoice;
+		$request->plan		=&	$objplan;
 
-		$request->params	=& $metaUser->meta->getMIParams( $this->id, $objplan->id );
+		$request->params	=&	$metaUser->meta->getMIParams( $this->id, $objplan->id );
 
 		if ( $add !== false ) {
 			$request->add	=& $add;

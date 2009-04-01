@@ -25,6 +25,7 @@ define( '_AEC_CONFIG_SAVED',					'Configuratie opgeslagen' );
 define( '_AEC_CONFIG_CANCELLED',				'Configuratie cancelled' );
 define( '_AEC_TIP_NO_GROUP_PF_PB',				'Public Frontend en public Backend zijn geen gebruikersgroepen!' );
 define( '_AEC_CGF_LINK_ABO_FRONTEND',			'Link naar de FrontEnd' );
+define( '_AEC_CGF_LINK_CART_FRONTEND',			'Direct Add To Cart link' );
 define( '_AEC_NOT_SET',							'Net gespecificeerd' );
 define( '_AEC_COUPON',							'Coupon' );
 define( '_AEC_CMN_NEW',							'Nieuw' );

@@ -24,7 +24,8 @@ define( '_DESCRIPTION_PAYSIGNET',				'Zahlungen mit allen g&auml;ngigen Kreditka
 define( '_AEC_CONFIG_SAVED',					'Konfiguration erfolgreich gesichert' );
 define( '_AEC_CONFIG_CANCELLED',				'Konfiguration abgebrochen' );
 define( '_AEC_TIP_NO_GROUP_PF_PB',				'Weder "Public Frontend" noch "Public Backend" sind w&auml;hlbare Benutzergruppen!' );
-define( '_AEC_CGF_LINK_ABO_FRONTEND',			'Zur Einstiegsseite' );
+define( '_AEC_CGF_LINK_ABO_FRONTEND',			'Direkter Link zum Abo' );
+define( '_AEC_CGF_LINK_CART_FRONTEND',			'Direct Add To Cart link' );
 define( '_AEC_NOT_SET',							'Nein' );
 define( '_AEC_COUPON',							'Gutschein' );
 define( '_AEC_CMN_NEW',							'Neu' );

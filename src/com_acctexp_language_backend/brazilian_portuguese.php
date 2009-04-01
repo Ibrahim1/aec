@@ -25,6 +25,7 @@ define( '_AEC_CONFIG_SAVED',					'Configrua&ccedil;&atilde;o Guardada' );
 define( '_AEC_CONFIG_CANCELLED',				'Configura&ccedil;&atilde;o cancelada' );
 define( '_AEC_TIP_NO_GROUP_PF_PB',				'Public Frontend&quot; n&atilde;o &eacute; um grupo de utilizadores - e nem &eacute; um &quot;Public Backend' );
 define( '_AEC_CGF_LINK_ABO_FRONTEND',			'Link Directo Pagina Principal' );
+define( '_AEC_CGF_LINK_CART_FRONTEND',			'Direct Add To Cart link' );
 define( '_AEC_NOT_SET',							'N&atilde;o definido' );
 define( '_AEC_COUPON',							'Cup&atilde;o' );
 define( '_AEC_CMN_NEW',							'Novo' );

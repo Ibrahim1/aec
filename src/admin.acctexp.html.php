@@ -1815,7 +1815,8 @@ class HTML_AcctExp
 											<div style="position:relative;float:left;width:100%;">
 												<?php
 												if ( $row->id ) { ?>
-													<p style="float:right;padding:2px;"><a href="<?php echo $mosConfig_live_site; ?>/index.php?option=com_acctexp&amp;task=subscribe&amp;usage=<?php echo $row->id; ?>" title="<?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?></a></p>
+													<p style="float:right;padding:2px;clear:right;"><a href="<?php echo $mosConfig_live_site; ?>/index.php?option=com_acctexp&amp;task=subscribe&amp;usage=<?php echo $row->id; ?>" title="<?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?></a></p>
+													<p style="float:right;padding:2px;clear:right;"><a href="<?php echo $mosConfig_live_site; ?>/index.php?option=com_acctexp&amp;task=addtocart&amp;usage=<?php echo $row->id; ?>" title="<?php echo _AEC_CGF_LINK_CART_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_CART_FRONTEND; ?></a></p>
 													<?php
 												}
 												echo $aecHTML->createSettingsParticle( 'name' );

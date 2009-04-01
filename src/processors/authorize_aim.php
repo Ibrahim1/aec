@@ -172,7 +172,7 @@ class processor_authorize_aim extends XMLprocessor
 			$a['x_test_request']		= "TRUE";
 		}
 
-		$var = $this->customParams( $this->settings['customparams'], $var, $request );
+		$a = $this->customParams( $this->settings['customparams'], $a, $request );
 
 		$stringarray = array();
 		foreach ( $a as $name => $value ) {

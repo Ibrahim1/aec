@@ -25,6 +25,7 @@ define( '_AEC_CONFIG_SAVED',					'Configuration saved' );
 define( '_AEC_CONFIG_CANCELLED',				'Configuration cancelled' );
 define( '_AEC_TIP_NO_GROUP_PF_PB',				'Public Frontend" is NOT a usergroup - and neither is "Public Backend' );
 define( '_AEC_CGF_LINK_ABO_FRONTEND',			'Direct Frontend link' );
+define( '_AEC_CGF_LINK_CART_FRONTEND',			'Direct Add To Cart link' );
 define( '_AEC_NOT_SET',							'Not set' );
 define( '_AEC_COUPON',							'Coupon' );
 define( '_AEC_CMN_NEW',							'New' );
