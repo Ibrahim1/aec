@@ -11651,7 +11651,7 @@ class AECToolbox
 		return date( 'Y-m-d H:i:s', $timestamp );
 	}
 
-	function cleanPOST( $post )
+	function cleanPOST( $post, $safe=true )
 	{
 		$badparams = array( 'option', 'task' );
 
@@ -11661,7 +11661,11 @@ class AECToolbox
 			}
 		}
 
-		return aecPostParamClear( $post );
+		if ( $safe ) {
+			return aecPostParamClear( $post );
+		} else {
+			return $post;
+		}
 	}
 
 	function getFileArray( $dir, $extension=false, $listDirectories=false, $skipDots=true )

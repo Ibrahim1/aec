@@ -3356,7 +3356,7 @@ function saveSubscriptionPlan( $option, $apply=0 )
 	$row = new SubscriptionPlan( $database );
 	$row->load( $_POST['id'] );
 
-	$post = AECToolbox::cleanPOST( $_POST );
+	$post = AECToolbox::cleanPOST( $_POST, false );
 
 	$row->savePOSTsettings( $post );
 
@@ -3712,7 +3712,7 @@ function saveItemGroup( $option, $apply=0 )
 	$row = new ItemGroup( $database );
 	$row->load( $_POST['id'] );
 
-	$post = AECToolbox::cleanPOST( $_POST );
+	$post = AECToolbox::cleanPOST( $_POST, false );
 
 	$row->savePOSTsettings( $post );
 
@@ -4453,7 +4453,7 @@ function saveCoupon( $option, $type, $apply=0 )
 
 			unset( $_POST['type'] );
 			unset( $_POST['id'] );
-			$post = AECToolbox::cleanPOST( $_POST );
+			$post = AECToolbox::cleanPOST( $_POST, false );
 
 			$cph->coupon->savePOSTsettings( $post );
 
