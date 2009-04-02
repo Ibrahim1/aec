@@ -1323,6 +1323,8 @@ class Config_General extends serialParamDBTable
 		$def['gwlist']							= array();
 		$def['checkout_display_descriptions']	= 0;
 		$def['altsslurl']						= '';
+		$def['checkout_as_gift']				= 0;
+		$def['checkout_as_gift_adminonly']		= 1;
 
 		return $def;
 	}
@@ -8270,6 +8272,12 @@ class Invoice extends serialParamDBTable
 			$metaUser = new metaUser( $this->userid );
 		}
 
+		if ( !empty( $this->params['target_user'] ) ) {
+			$subjectUser = new metaUser( $this->params['target_user'] );
+		} else {
+			$subjectUser =& $metaUser;
+		}
+
 		if ( !empty( $this->usage ) ) {
 			$usage = explode( '.', $this->usage );
 
@@ -8315,18 +8323,18 @@ class Invoice extends serialParamDBTable
 		}
 
 		foreach ( $plans as $plan ) {
-			if ( is_object( $metaUser ) && is_object( $plan ) ) {
-				if ( $metaUser->userid ) {
+			if ( is_object( $subjectUser ) && is_object( $plan ) ) {
+				if ( $subjectUser->userid ) {
 					if ( empty( $this->subscr_id ) ) {
-						$metaUser->establishFocus( $plan, $this->method, false );
+						$subjectUser->establishFocus( $plan, $this->method, false );
 
-						$this->subscr_id = $metaUser->focusSubscription->id;
+						$this->subscr_id = $subjectUser->focusSubscription->id;
 					} else {
-						$metaUser->moveFocus( $this->subscr_id );
+						$subjectUser->moveFocus( $this->subscr_id );
 					}
 
 					// Apply the Plan
-					$application = $metaUser->focusSubscription->applyUsage( $plan->id, $this->method, 0, $multiplicator, $this );
+					$application = $subjectUser->focusSubscription->applyUsage( $plan->id, $this->method, 0, $multiplicator, $this );
 				} else {
 					$application = $plan->applyPlan( 0, $this->method, 0, $multiplicator, $this );
 				}

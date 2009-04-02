@@ -560,6 +560,10 @@ define( '_CFG_GENERAL_CUSTOMNOTALLOWED_DESC', 'Fournir un lien complet (avec htt
 
 define( '_CFG_GENERAL_CHECKOUT_DISPLAY_DESCRIPTIONS_NAME', 'Display Descriptions:');
 define( '_CFG_GENERAL_CHECKOUT_DISPLAY_DESCRIPTIONS_DESC', 'If you have multiple plans on checkout, or skipped the confirmation, it might be helpful to show the plan description again. This switch does just that.');
+define( '_CFG_GENERAL_CHECKOUT_AS_GIFT_NAME', 'Allow Gift Checkout:');
+define( '_CFG_GENERAL_CHECKOUT_AS_GIFT_DESC', 'With this option, users can gift a checkout to another user - all the plans and attached functionality is then carried out on the recipients user account.');
+define( '_CFG_GENERAL_CHECKOUT_AS_GIFT_ADMINONLY_NAME', 'Admin Only Gifts:');
+define( '_CFG_GENERAL_CHECKOUT_AS_GIFT_ADMINONLY_DESC', 'Only allow admins to checkout items as a gift to another user (makes sense in a situations where sales are handled over the phone, but user account is in Joomla!).');
 
 define( '_CFG_GENERAL_DISPLAY_DATE_FRONTEND_NAME', 'Format de date frontend');
 define( '_CFG_GENERAL_DISPLAY_DATE_FRONTEND_DESC', 'Pr&eacute;ciser la fa&ccedil;on dont la date est affich&eacute;e sur le frontend. Reportez-vous au &lt;a href=&quot;http://www.php.net/manual/en/function.strftime.php&quot;&gt;manuel PHP&lt;/a&gt; pour une syntax correct.');
