@@ -36,13 +36,21 @@ class mi_affiliatepro
 		global $database, $mosConfig_live_site, $mosConfig_sitename;
 
 		$text = '<script id="pap_x2s6df8d" src="' . $this->settings['url'] . '" type="text/javascript"></script>'
-				. '<script type="text/javascript"><!--'
-				. 'var TotalCost="' . $request->invoice->amount . ';'
-				. 'var OrderID="' . $request->invoice->invoice_number . '";'
-				. 'var ProductID="' . $request->plan->id . '";'
-				. 'papSale();'
-				. '--></script>';
+				. '<script type="text/javascript">'
+				. 'var sale = PostAffTracker.createSale();'
+				. "sale.setTotalCost('" . $request->invoice->amount . "');"
+				. "sale.setOrderID('" . $request->invoice->invoice_number . "');"
+				. "sale.setProductID('" . $request->plan->id . "');"
+				. "sale.setStatus('A');"
+				. 'PostAffTracker.register();'
+				. '</script>';
+// TODO:
+// sale.setAffiliateID('testaff'); - force Affiliate ID
+// sale.setCampaignID('11111111'); - campaign
+// sale.setCustomCommission('10.23'); - force Custom Commission
 
+// PostAffTracker.setChannel('testchannel'); - force channel
+// PostAffTracker.setCookieValue('testchannel'); - force to register commission with this cookie value. The cookie value saves affiliate ID and campaign ID. It is in format AFFILIATEID_CAMPAIGNID, for example e2r48sv3_d3425s9f.
 		$displaypipeline = new displayPipeline( $database );
 		$displaypipeline->create( $metaUser->userid, 1, 0, 0, null, 1, $text );
 
