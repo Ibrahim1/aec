@@ -239,6 +239,10 @@ if ( !empty( $task ) ) {
 			planaction( $option, $action, $subscr );
 			break;
 
+		case 'invoicemakegift':
+			InvoiceMakeGift( $option );
+			break;
+
 		case 'invoiceaddcoupon':
 			InvoiceAddCoupon( $option );
 			break;
@@ -1094,6 +1098,23 @@ function InvoiceAddParams( $option )
 	$objinvoice->savePostParams( $_POST );
 	$objinvoice->check();
 	$objinvoice->store();
+
+	repeatInvoice( $option, $invoice, $objinvoice->userid );
+}
+
+function InvoiceMakeGift( $option )
+{
+	global $database;
+
+	$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+	$user_ident	= aecGetParam( 'user_ident', 0, true, array( 'string', 'clear_nonalnum' ) );
+
+	$objinvoice = new Invoice( $database );
+	$objinvoice->loadInvoiceNumber( $invoice );
+
+	if ( $objinvoice->addTargetUser( strtolower($user_ident) ) ) {
+		$objinvoice->storeload();
+	}
 
 	repeatInvoice( $option, $invoice, $objinvoice->userid );
 }

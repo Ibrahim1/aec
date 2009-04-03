@@ -6217,8 +6217,16 @@ class InvoiceFactory
 					$ex['desc'] .= "</ul>";
 
 					foreach ( $pgroup['processors'] as $pid => $pgproc ) {
-						$pgex = explode( '_', $pgproc );
-						$ex['rows'][] = array( 'radio', $fname, $pgproc, true, $procnames[$pgex[0]].( isset( $pgex[1] ) ? ' (recurring billing)' : '') );
+						$pgex = $pgproc;
+
+						if ( strpos( $pgproc, '_recurring' ) ) {
+							$pgex = str_replace( '_recurring', '', $pgproc );
+							$recurring = true;
+						} else {
+							$recurring = false;
+						}
+
+						$ex['rows'][] = array( 'radio', $fname, $pgproc, true, $procnames[$pgex].( $recurring ? ' (recurring billing)' : '') );
 					}
 
 					if ( !empty( $ex['rows'] ) ) {
@@ -8712,6 +8720,56 @@ class Invoice extends serialParamDBTable
 		}
 
 		return $return;
+	}
+
+	function addTargetUser( $user_ident )
+	{
+		global $my;
+
+		if ( !empty( $aecConfig->cfg['checkout_as_gift'] ) ) {
+			if ( !empty( $aecConfig->cfg['checkout_as_gift_adminonly'] ) ) {
+				if ( !in_array( strtolower( $my->usertype ), array( 'administrator', 'superadministrator' ) ) ) {
+					return false;
+				}
+			}
+		} else {
+			return false;
+		}
+
+		$queries = array();
+
+		// Try username and name
+		$queries[] = 'FROM #__users'
+					. ' WHERE LOWER( `username` ) LIKE \'%' . $user_ident . '%\''
+					;
+
+		// If its not that, how about the user email?
+		$queries[] = 'FROM #__users'
+					. ' WHERE LOWER( `email` ) = \'' . $user_ident . '\''
+					;
+
+		// Try to find this as a userid
+		$queries[] = 'FROM #__users'
+					. ' WHERE `id` = \'' . $user_ident . '\''
+					;
+
+		// Try to find this as a full name
+		$queries[] = 'FROM #__users'
+					. ' WHERE LOWER( `name` ) LIKE \'%' . $user_ident . '%\''
+					;
+
+		foreach ( $queries as $base_query ) {
+			$query = 'SELECT `id` ' . $base_query;
+			$database->setQuery( $query );
+			$res = $database->loadResult();
+
+			if ( !empty( $res ) ) {
+				$this->params['target_user'] = $res;
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	function addCoupon( $couponcode )

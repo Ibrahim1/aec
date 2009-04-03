@@ -980,7 +980,7 @@ class Payment_HTML
 
 	function checkoutForm( $option, $var, $params = null, $InvoiceFactory, $repeat = 0 )
 	{
-		global $database, $aecConfig;
+		global $database, $my, $aecConfig;
 
 		HTML_frontend::aec_styling( $option );
 
@@ -1145,6 +1145,45 @@ class Payment_HTML
 								<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice_number; ?>" />
 								<input type="submit" class="button" value="<?php echo _BUTTON_APPLY; ?>" />
 							</form>
+						</td>
+					</tr>
+				</table>
+				<?php
+			}
+
+			$makegift = false;
+
+			if ( !empty( $aecConfig->cfg['checkout_as_gift'] ) ) {
+				if ( !empty( $aecConfig->cfg['checkout_as_gift_adminonly'] ) ) {
+					if ( in_array( strtolower( $my->usertype ), array( 'administrator', 'superadministrator' ) ) ) {
+						$makegift = true;
+					}
+				} else {
+					$makegift = true;
+				}
+			}
+
+			if ( $makegift ) { ?>
+				<table width="100%" id="couponsbox">
+					<tr>
+						<td class="couponinfo">
+							<strong><?php echo _CHECKOUT_GIFT_HEAD; ?></strong>
+						</td>
+					</tr>
+					<tr>
+						<td class="giftdetails">
+							<?php if ( !empty( $InvoiceFactory->invoice->params['target_user'] ) ) { ?>
+								<p>Username here</p>
+							<?php } else { ?>
+							<p><?php echo _CHECKOUT_GIFT_INFO; ?></p>
+							<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceMakeGift', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+								<input type="text" size="20" name="user_ident" class="inputbox" value="" />
+								<input type="hidden" name="option" value="<?php echo $option; ?>" />
+								<input type="hidden" name="task" value="InvoiceMakeGift" />
+								<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice_number; ?>" />
+								<input type="submit" class="button" value="<?php echo _BUTTON_APPLY; ?>" />
+							</form>
+							<?php } ?>
 						</td>
 					</tr>
 				</table>
