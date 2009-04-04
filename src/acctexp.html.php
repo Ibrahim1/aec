@@ -851,7 +851,11 @@ class Payment_HTML
 		} ?>
 		<div id="confirmation">
 			<div id="confirmation_info">
-				<p>
+				<?php if ( empty( $InvoiceFactory->cart ) ) { ?>
+				<p>Your Shopping Cart is empty!</p>
+				<?php } else { ?>
+				<p>&nbsp;</p>
+				<div id="update_button"><a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=clearCart', $aecConfig->cfg['ssl_signup'] ); ?>">clear the whole cart</a></div>
 				<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 				<table>
 					<tr>
@@ -885,6 +889,7 @@ class Payment_HTML
 				<input type="hidden" name="task" value="updateCart" />
 				<div id="update_button"><input type="image" src="<?php echo $mosConfig_live_site . '/components/com_acctexp/images/update_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
 				</form>
+				<?php } ?>
 				<?php if ( empty( $InvoiceFactory->userid ) ) { ?>
 				<p>Save Registration to Continue Shopping functionlink:confirm_savereg</p>
 				<?php } else { ?>
@@ -895,6 +900,7 @@ class Payment_HTML
 				</div>
 				<?php } ?>
 			</div>
+			<?php if ( !empty( $InvoiceFactory->cart ) ) { ?>
 			<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 			<table>
 				<tr>
@@ -968,6 +974,7 @@ class Payment_HTML
 				</td></tr>
 			</table>
 			</form>
+			<?php } ?>
 			<div style="clear:both"></div>
 		</div>
 		<?php
@@ -980,7 +987,7 @@ class Payment_HTML
 
 	function checkoutForm( $option, $var, $params = null, $InvoiceFactory, $repeat = 0 )
 	{
-		global $database, $my, $aecConfig;
+		global $database, $mosConfig_live_site, $my, $aecConfig;
 
 		HTML_frontend::aec_styling( $option );
 
@@ -999,6 +1006,11 @@ class Payment_HTML
 				<?php
 			} ?>
 			<table id="aec_checkout">
+			<?php if ( !empty( $InvoiceFactory->_cart ) ) { ?>
+				<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+				<div id="update_button"><input type="image" src="<?php echo $mosConfig_live_site . '/components/com_acctexp/images/your_cart_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
+				</form><br /><br />
+			<?php } ?>
 			<?php
 				foreach ( $InvoiceFactory->items as $item ) {
 					if ( !empty( $item['terms'] ) ) {

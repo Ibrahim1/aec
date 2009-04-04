@@ -6488,6 +6488,15 @@ class InvoiceFactory
 		$this->_cart->action( 'updateItems', $update );
 	}
 
+	function clearCart( $option )
+	{
+		if ( empty( $this->_cart ) ) {
+			$this->_cart = aecCartHelper::getCartbyUserid( $this->userid );
+		}
+
+		$this->_cart->action( 'clearCart' );
+	}
+
 	function touchInvoice( $option, $invoice_number=false )
 	{
 		// Checking whether we are trying to repeat an invoice
@@ -7458,10 +7467,16 @@ class InvoiceFactory
 
 		$var['params'] = aecPostParamClear( $_POST );
 
-		if ( !empty( $this->cart ) ) {
-			$response = $this->pp->checkoutProcess( $var, $this->metaUser, $new_subscription, $this->invoice, $this->cart );
+		if ( !empty( $this->invoice->params['target_user'] ) ) {
+			$targetUser = new metaUser( $this->invoice->params['target_user'] );
 		} else {
-			$response = $this->pp->checkoutProcess( $var, $this->metaUser, $new_subscription, $this->invoice );
+			$targetUser =& $this->metaUser;
+		}
+
+		if ( !empty( $this->cart ) ) {
+			$response = $this->pp->checkoutProcess( $var, $targetUser, $new_subscription, $this->invoice, $this->cart );
+		} else {
+			$response = $this->pp->checkoutProcess( $var, $targetUser, $new_subscription, $this->invoice );
 		}
 
 		if ( isset( $response['error'] ) ) {
@@ -8281,9 +8296,9 @@ class Invoice extends serialParamDBTable
 		}
 
 		if ( !empty( $this->params['target_user'] ) ) {
-			$subjectUser = new metaUser( $this->params['target_user'] );
+			$targetUser = new metaUser( $this->params['target_user'] );
 		} else {
-			$subjectUser =& $metaUser;
+			$targetUser =& $metaUser;
 		}
 
 		if ( !empty( $this->usage ) ) {
@@ -8331,18 +8346,18 @@ class Invoice extends serialParamDBTable
 		}
 
 		foreach ( $plans as $plan ) {
-			if ( is_object( $subjectUser ) && is_object( $plan ) ) {
-				if ( $subjectUser->userid ) {
+			if ( is_object( $targetUser ) && is_object( $plan ) ) {
+				if ( $targetUser->userid ) {
 					if ( empty( $this->subscr_id ) ) {
-						$subjectUser->establishFocus( $plan, $this->method, false );
+						$targetUser->establishFocus( $plan, $this->method, false );
 
-						$this->subscr_id = $subjectUser->focusSubscription->id;
+						$this->subscr_id = $targetUser->focusSubscription->id;
 					} else {
-						$subjectUser->moveFocus( $this->subscr_id );
+						$targetUser->moveFocus( $this->subscr_id );
 					}
 
 					// Apply the Plan
-					$application = $subjectUser->focusSubscription->applyUsage( $plan->id, $this->method, 0, $multiplicator, $this );
+					$application = $targetUser->focusSubscription->applyUsage( $plan->id, $this->method, 0, $multiplicator, $this );
 				} else {
 					$application = $plan->applyPlan( 0, $this->method, 0, $multiplicator, $this );
 				}
@@ -9139,8 +9154,12 @@ class aecCart extends serialParamDBTable
 		return parent::save();
 	}
 
-	function action( $action, $details )
+	function action( $action, $details=null )
 	{
+		if ( $action == "clearCart" ) {
+			return $this->delete();
+		}
+
 		if ( method_exists( $this, $action ) ) {
 			$a = array( 'action' => 'action',
 						'event' => $action,

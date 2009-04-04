@@ -143,6 +143,24 @@ if ( !empty( $task ) ) {
 			}
 			break;
 
+		case 'clearcart':
+			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
+
+			if ( !empty( $my->id ) ) {
+				$userid = $my->id;
+			}
+
+			if ( !$my->id ) {
+				notAllowed( $option );
+			} else {
+				$invoicefact = new InvoiceFactory( $userid );
+				$invoicefact->clearCart( $option );
+
+				$invoicefact = new InvoiceFactory( $userid );
+				$invoicefact->cart( $option );
+			}
+			break;
+
 		case 'confirmcart':
 			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 			$coupon		= aecGetParam( 'coupon_code', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
