@@ -160,6 +160,8 @@ define( '_CHECKOUT_INVOICE_COUPON', 'Cup&atilde;o');
 define( '_CHECKOUT_INVOICE_COUPON_REMOVE', 'remover');
 define( '_CHECKOUT_INVOICE_TOTAL_AMOUNT', 'Valor Total');
 define( '_CHECKOUT_COUPON_INFO', 'Se tiver um cup&atilde;o promocional, pode inserir aqui o eu c&oacute;digo para obter um desconto no seu pagamento');
+define( '_CHECKOUT_GIFT_HEAD', 'Gift to another user');
+define( '_CHECKOUT_GIFT_INFO', 'Enter details for another user of this site to give the item(s) you are about to purchase to that account.');
 
 define( '_AEC_TERMTYPE_TRIAL', 'Factura&ccedil;&atilde;o Inicial');
 define( '_AEC_TERMTYPE_TERM', 'Termo Regular de Factura&ccedil;&atilde;o');

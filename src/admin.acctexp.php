@@ -1497,9 +1497,9 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	if ( !empty( $orderby ) ) {
 		$forder = array(	'expiration ASC', 'expiration DESC', 'lastpay_date ASC', 'lastpay_date DESC',
 							'plan_name ASC', 'plan_name DESC', 'status ASC', 'status DESC',
-							'type ASC', 'type DESC' );
+							'type ASC', 'type DESC', 'lastname ASC', 'lastname DESC' );
 
-		if ( in_array( $orderby, $forder ) ) {
+		if ( !in_array( $orderby, $forder ) ) {
 			$orderby = 'name ASC';
 		}
 	}
@@ -1741,6 +1741,10 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 	// get the subset (based on limits) of required records
 	if ( $notconfig ) {
+		if ( strpos( $orderby, 'lastname' ) !== false ) {
+			$orderby = str_replace( 'lastname', 'SUBSTRING_INDEX(name, \' \', -1)', $orderby );
+		}
+
 		$query = 'SELECT `userid`'
 				. ' FROM #__acctexp_subscr'
 				. ' WHERE `userid` != \'\''
@@ -1772,7 +1776,15 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 		}
 
 		$query .=	' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit;
+
+		if ( strpos( $orderby, 'SUBSTRING_INDEX' ) !== false ) {
+			$orderby = str_replace( 'SUBSTRING_INDEX(name, \' \', -1)', 'lastname', $orderby );
+		}
 	} else {
+		if ( strpos( $orderby, 'lastname' ) !== false ) {
+			$orderby = str_replace( 'lastname', 'SUBSTRING_INDEX(b.name, \' \', -1)', $orderby );
+		}
+
 		$query = 'SELECT a.*, b.name, b.username, b.email, c.name AS plan_name'
 				. ' FROM #__acctexp_subscr AS a'
 				. ' INNER JOIN #__users AS b ON a.userid = b.id'
@@ -1781,6 +1793,10 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 				. ' ORDER BY ' . $orderby
 				. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
 				;
+
+		if ( strpos( $orderby, 'SUBSTRING_INDEX' ) !== false ) {
+			$orderby = str_replace( 'SUBSTRING_INDEX(b.name, \' \', -1)', 'lastname', $orderby );
+		}
 	}
 
 	$database->setQuery( 'SET SQL_BIG_SELECTS=1');
@@ -1802,6 +1818,8 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$sel[] = mosHTML::makeOption( 'expiration DESC',	_EXP_DESC );
 	$sel[] = mosHTML::makeOption( 'name ASC',			_NAME_ASC );
 	$sel[] = mosHTML::makeOption( 'name DESC',			_NAME_DESC );
+	$sel[] = mosHTML::makeOption( 'lastname ASC',		_LASTNAME_ASC );
+	$sel[] = mosHTML::makeOption( 'lastname DESC',		_LASTNAME_DESC );
 	$sel[] = mosHTML::makeOption( 'username ASC',		_LOGIN_ASC );
 	$sel[] = mosHTML::makeOption( 'username DESC',		_LOGIN_DESC );
 	$sel[] = mosHTML::makeOption( 'signup_date ASC',	_SIGNUP_ASC );

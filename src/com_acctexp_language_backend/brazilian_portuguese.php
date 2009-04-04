@@ -530,6 +530,8 @@ define( '_EXP_ASC','Expira&ccedil;&atilde;o Asc');
 define( '_EXP_DESC','Expirac&atilde;o Desc');
 define( '_NAME_ASC','Nome Asc');
 define( '_NAME_DESC','Nome Desc');
+define( '_LASTNAME_ASC','Last Name Asc');
+define( '_LASTNAME_DESC','Last Name Desc');
 define( '_LOGIN_ASC','Login Asc');
 define( '_LOGIN_DESC','Login Desc');
 define( '_SIGNUP_ASC','Data de Inscri&ccedil;&atilde;o Asc');
@@ -741,6 +743,11 @@ define( '_CFG_GENERAL_CUSTOMTEXT_HOLD_KEEPORIGINAL_NAME', 'Manter Texto Original
 define( '_CFG_GENERAL_CUSTOMTEXT_HOLD_KEEPORIGINAL_DESC', 'Selecione esta op&ccedil;&atilde;o se pretende manter o texto original na pagina de Espera ');
 define( '_CFG_GENERAL_CUSTOMTEXT_HOLD_NAME', 'Texto Pagina Em Espera Padr&atilde;o');
 define( '_CFG_GENERAL_CUSTOMTEXT_HOLD_DESC', 'Texto que ser&aacute; mostrado na pagina de espera');
+
+define( '_CFG_GENERAL_CUSTOMTEXT_EXCEPTION_KEEPORIGINAL_NAME', 'Keep Original Text');
+define( '_CFG_GENERAL_CUSTOMTEXT_EXCEPTION_KEEPORIGINAL_DESC', 'Select this option if you want to keep the original text on the Exception Page');
+define( '_CFG_GENERAL_CUSTOMTEXT_EXCEPTION_NAME', 'Custom Text Exception Page');
+define( '_CFG_GENERAL_CUSTOMTEXT_EXCEPTION_DESC', 'Text that will be displayed on the Exception Page (typically showing up when a user has to specify which payment processor to use for a shopping cart, or what item a coupon should be applied to).');
 
 define( '_CFG_GENERAL_USE_RECAPTCHA_NAME', 'Usar ReCAPTCHA');
 define( '_CFG_GENERAL_USE_RECAPTCHA_DESC', 'Se possuir uma conta para <a href="http://recaptcha.net/">ReCAPTCHA</a>, pode activar esta op&ccedil;&atilde;o. N&Atilde;O se esque&ccedil;a de colocar as chaves em baixo.');

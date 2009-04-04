@@ -607,6 +607,23 @@ background-color: #ddd;
 border-collapse: collapse;
 }
 
+td.giftinfo {
+text-align: center;
+background-color: #eee;
+border-bottom: 2px solid #aaa;
+padding: 2px !important;
+}
+
+td.giftdetails {
+text-align: center;
+padding: 4px !important;
+}
+
+table#giftbox {
+background-color: #ddd;
+border-collapse: collapse;
+}
+
 table#paramsbox {
 margin-top: 24px;
 background-color: #ddd;

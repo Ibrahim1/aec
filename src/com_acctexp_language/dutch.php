@@ -160,6 +160,8 @@ define( '_CHECKOUT_INVOICE_COUPON', 'Coupon');
 define( '_CHECKOUT_INVOICE_COUPON_REMOVE', 'verwijderen');
 define( '_CHECKOUT_INVOICE_TOTAL_AMOUNT', 'Totaal Bedrag');
 define( '_CHECKOUT_COUPON_INFO', 'Als u een coupon code heeft kunt u die hier invullen om een korting op het bedrag te betalen.');
+define( '_CHECKOUT_GIFT_HEAD', 'Gift to another user');
+define( '_CHECKOUT_GIFT_INFO', 'Enter details for another user of this site to give the item(s) you are about to purchase to that account.');
 
 define( '_AEC_TERMTYPE_TRIAL', 'Initial Billing');
 define( '_AEC_TERMTYPE_TERM', 'Regular Billing Term');

@@ -6518,7 +6518,7 @@ class InvoiceFactory
 
 			if ( empty( $this->usage ) && empty( $this->invoice->conditions ) ) {
 				$this->create( $option, 0, 0, $this->invoice_number_number );
-			} elseif ( empty( $this->processor ) ) {
+			} elseif ( empty( $this->processor ) && ( strpos( 'c', $this->usage ) !== false ) ) {
 				$this->create( $option, 0, $this->usage, $this->invoice_number_number );
 			}
 		} else {
@@ -8724,11 +8724,13 @@ class Invoice extends serialParamDBTable
 
 	function addTargetUser( $user_ident )
 	{
-		global $my;
+		global $database, $aecConfig;
 
 		if ( !empty( $aecConfig->cfg['checkout_as_gift'] ) ) {
 			if ( !empty( $aecConfig->cfg['checkout_as_gift_adminonly'] ) ) {
-				if ( !in_array( strtolower( $my->usertype ), array( 'administrator', 'superadministrator' ) ) ) {
+				global $my;
+
+				if ( !in_array( strtolower( $my->usertype ), array( 'administrator', 'superadministrator', 'super administrator' ) ) ) {
 					return false;
 				}
 			}
@@ -8759,17 +8761,31 @@ class Invoice extends serialParamDBTable
 					;
 
 		foreach ( $queries as $base_query ) {
-			$query = 'SELECT `id` ' . $base_query;
+			$res = null;
+			$query = 'SELECT `id`, `username`, `email` ' . $base_query;
 			$database->setQuery( $query );
-			$res = $database->loadResult();
+			$database->loadObject( $res );
 
 			if ( !empty( $res ) ) {
-				$this->params['target_user'] = $res;
+				$this->params['target_user'] = $res->id;
+				$this->params['target_username'] = $res->username . ' (' . $res->email . ')';
 				return true;
 			}
 		}
 
 		return false;
+	}
+
+	function removeTargetUser()
+	{
+		if ( isset( $this->params['target_user'] ) ) {
+			unset( $this->params['target_user'] );
+			unset( $this->params['target_username'] );
+
+			return true;
+		} else {
+			return null;
+		}
 	}
 
 	function addCoupon( $couponcode )

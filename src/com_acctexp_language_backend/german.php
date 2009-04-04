@@ -528,6 +528,8 @@ define( '_EXP_ASC',					'Auslauf A-Z' );
 define( '_EXP_DESC',				'Auslauf Z-A' );
 define( '_NAME_ASC',				'Name A-Z' );
 define( '_NAME_DESC',				'Name Z-A' );
+define( '_LASTNAME_ASC','Last Name Asc');
+define( '_LASTNAME_DESC','Last Name Desc');
 define( '_LOGIN_ASC',				'Login A-Z' );
 define( '_LOGIN_DESC',				'Login Z-A' );
 define( '_SIGNUP_ASC',				'Abschlussdatum A-Z' );
@@ -737,6 +739,11 @@ define( '_CFG_GENERAL_CUSTOMTEXT_HOLD_KEEPORIGINAL_NAME', 'Keep Original Text');
 define( '_CFG_GENERAL_CUSTOMTEXT_HOLD_KEEPORIGINAL_DESC', 'Select this option if you want to keep the original text on the Hold Page');
 define( '_CFG_GENERAL_CUSTOMTEXT_HOLD_NAME', 'Custom Text Hold Page');
 define( '_CFG_GENERAL_CUSTOMTEXT_HOLD_DESC', 'Text that will be displayed on the Hold Page');
+
+define( '_CFG_GENERAL_CUSTOMTEXT_EXCEPTION_KEEPORIGINAL_NAME', 'Keep Original Text');
+define( '_CFG_GENERAL_CUSTOMTEXT_EXCEPTION_KEEPORIGINAL_DESC', 'Select this option if you want to keep the original text on the Exception Page');
+define( '_CFG_GENERAL_CUSTOMTEXT_EXCEPTION_NAME', 'Custom Text Exception Page');
+define( '_CFG_GENERAL_CUSTOMTEXT_EXCEPTION_DESC', 'Text that will be displayed on the Exception Page (typically showing up when a user has to specify which payment processor to use for a shopping cart, or what item a coupon should be applied to).');
 
 define( '_CFG_GENERAL_USE_RECAPTCHA_NAME', 'Use ReCAPTCHA');
 define( '_CFG_GENERAL_USE_RECAPTCHA_DESC', 'If you have an account for <a href="http://recaptcha.net/">ReCAPTCHA</a>, you can activate this option. Do NOT forget to put in the keys below.');

@@ -155,6 +155,8 @@ define( '_CHECKOUT_INVOICE_COUPON', 'Kupon');
 define( '_CHECKOUT_INVOICE_COUPON_REMOVE', 'fjern');
 define( '_CHECKOUT_INVOICE_TOTAL_AMOUNT', 'Total Bel&oslash;b');
 define( '_CHECKOUT_COUPON_INFO', 'Hvis du har en kupon kode, kan du skrive den her, for at f&aring; rabat p&aring; din betaling');
+define( '_CHECKOUT_GIFT_HEAD', 'Gift to another user');
+define( '_CHECKOUT_GIFT_INFO', 'Enter details for another user of this site to give the item(s) you are about to purchase to that account.');
 
 define( '_AEC_TERMTYPE_TRIAL', 'Start regning');
 define( '_AEC_TERMTYPE_TERM', 'Normale betalings betingelser');

@@ -75,6 +75,10 @@ if ( !empty( $task ) ) {
 			$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 			$userid		= aecGetParam( 'userid', 0 );
 
+			if ( !empty( $my->id ) ) {
+				$userid = $my->id;
+			}
+
 			repeatInvoice( $option, $invoice, $userid );
 			break;
 
@@ -93,6 +97,10 @@ if ( !empty( $task ) ) {
 			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 			$usage		= aecGetParam( 'usage', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 
+			if ( !empty( $my->id ) ) {
+				$userid = $my->id;
+			}
+
 			if ( !$my->id ) {
 				notAllowed( $option );
 			} else {
@@ -110,6 +118,10 @@ if ( !empty( $task ) ) {
 			} else {
 				$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 
+				if ( !empty( $my->id ) ) {
+					$userid = $my->id;
+				}
+
 				$invoicefact = new InvoiceFactory( $userid );
 				$invoicefact->cart( $option );
 			}
@@ -117,6 +129,10 @@ if ( !empty( $task ) ) {
 
 		case 'updatecart':
 			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
+
+			if ( !empty( $my->id ) ) {
+				$userid = $my->id;
+			}
 
 			if ( !$my->id ) {
 				notAllowed( $option );
@@ -130,6 +146,10 @@ if ( !empty( $task ) ) {
 		case 'confirmcart':
 			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 			$coupon		= aecGetParam( 'coupon_code', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
+
+			if ( !empty( $my->id ) ) {
+				$userid = $my->id;
+			}
 
 			if ( !$my->id ) {
 				notAllowed( $option );
@@ -241,6 +261,10 @@ if ( !empty( $task ) ) {
 
 		case 'invoicemakegift':
 			InvoiceMakeGift( $option );
+			break;
+
+		case 'invoiceremovegift':
+			InvoiceRemoveGift( $option );
 			break;
 
 		case 'invoiceaddcoupon':
@@ -1112,7 +1136,23 @@ function InvoiceMakeGift( $option )
 	$objinvoice = new Invoice( $database );
 	$objinvoice->loadInvoiceNumber( $invoice );
 
-	if ( $objinvoice->addTargetUser( strtolower($user_ident) ) ) {
+	if ( $objinvoice->addTargetUser( strtolower( $user_ident ) ) ) {
+		$objinvoice->storeload();
+	}
+
+	repeatInvoice( $option, $invoice, $objinvoice->userid );
+}
+
+function InvoiceRemoveGift( $option )
+{
+	global $database;
+
+	$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+
+	$objinvoice = new Invoice( $database );
+	$objinvoice->loadInvoiceNumber( $invoice );
+
+	if ( $objinvoice->removeTargetUser() ) {
 		$objinvoice->storeload();
 	}
 

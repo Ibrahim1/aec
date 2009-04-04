@@ -159,6 +159,8 @@ define( '_CHECKOUT_INVOICE_COUPON', 'Coupon');
 define( '_CHECKOUT_INVOICE_COUPON_REMOVE', 'remove');
 define( '_CHECKOUT_INVOICE_TOTAL_AMOUNT', 'Total Amount');
 define( '_CHECKOUT_COUPON_INFO', 'If you have a coupon code, you can enter it here to get a rebate on your payment');
+define( '_CHECKOUT_GIFT_HEAD', 'Gift to another user');
+define( '_CHECKOUT_GIFT_INFO', 'Enter details for another user of this site to give the item(s) you are about to purchase to that account.');
 
 define( '_AEC_TERMTYPE_TRIAL', 'Initial Billing');
 define( '_AEC_TERMTYPE_TERM', 'Regular Billing Term');

@@ -160,6 +160,8 @@ define( '_CHECKOUT_INVOICE_COUPON', 'Bon de r&amp;eactue;duction');
 define( '_CHECKOUT_INVOICE_COUPON_REMOVE', 'supprimer');
 define( '_CHECKOUT_INVOICE_TOTAL_AMOUNT', 'Montant total');
 define( '_CHECKOUT_COUPON_INFO', 'Si vous avez un code de bon de r&eacute;duction, vous pouvez le saisir ici pour qu\'il soit pris en compte.');
+define( '_CHECKOUT_GIFT_HEAD', 'Gift to another user');
+define( '_CHECKOUT_GIFT_INFO', 'Enter details for another user of this site to give the item(s) you are about to purchase to that account.');
 
 define( '_AEC_TERMTYPE_TRIAL', 'Facturation initiale');
 define( '_AEC_TERMTYPE_TERM', 'Mode de facturation');

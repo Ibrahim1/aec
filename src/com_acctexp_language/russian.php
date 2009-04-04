@@ -297,6 +297,9 @@ define( '_CHECKOUT_INVOICE_TOTAL_AMOUNT', 'Общая сумма');
 
 define( '_CHECKOUT_COUPON_INFO', 'Если у Вас есть купон - введите');
 
+define( '_CHECKOUT_GIFT_HEAD', 'Gift to another user');
+
+define( '_CHECKOUT_GIFT_INFO', 'Enter details for another user of this site to give the item(s) you are about to purchase to that account.');
 
 
 define( '_AEC_TERMTYPE_TRIAL', 'Первоначальный платеж');

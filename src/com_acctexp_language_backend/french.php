@@ -405,6 +405,8 @@ define( '_EXP_ASC','Expiration ordre Croissant');
 define( '_EXP_DESC','Expiration ordre D&eacute;croissant');
 define( '_NAME_ASC','Nom ordre Croissant');
 define( '_NAME_DESC','Nom ordre D&eacute;croissant');
+define( '_LASTNAME_ASC','Last Name Asc');
+define( '_LASTNAME_DESC','Last Name Desc');
 define( '_LOGIN_ASC','Utilisateur ordre Croissant');
 define( '_LOGIN_DESC','Utilisateur ordre D&eacute;croissant');
 define( '_SIGNUP_ASC','Inscription date asc.');
@@ -612,6 +614,11 @@ define( '_CFG_GENERAL_CUSTOMTEXT_HOLD_KEEPORIGINAL_NAME', 'Keep Original Text');
 define( '_CFG_GENERAL_CUSTOMTEXT_HOLD_KEEPORIGINAL_DESC', 'Select this option if you want to keep the original text on the Hold Page');
 define( '_CFG_GENERAL_CUSTOMTEXT_HOLD_NAME', 'Custom Text Hold Page');
 define( '_CFG_GENERAL_CUSTOMTEXT_HOLD_DESC', 'Text that will be displayed on the Hold Page');
+
+define( '_CFG_GENERAL_CUSTOMTEXT_EXCEPTION_KEEPORIGINAL_NAME', 'Keep Original Text');
+define( '_CFG_GENERAL_CUSTOMTEXT_EXCEPTION_KEEPORIGINAL_DESC', 'Select this option if you want to keep the original text on the Exception Page');
+define( '_CFG_GENERAL_CUSTOMTEXT_EXCEPTION_NAME', 'Custom Text Exception Page');
+define( '_CFG_GENERAL_CUSTOMTEXT_EXCEPTION_DESC', 'Text that will be displayed on the Exception Page (typically showing up when a user has to specify which payment processor to use for a shopping cart, or what item a coupon should be applied to).');
 
 define( '_CFG_GENERAL_USE_RECAPTCHA_NAME', 'Utilisation de ReCAPTCHA');
 define( '_CFG_GENERAL_USE_RECAPTCHA_DESC', 'Si vous avez un compte pour &lt;a href=&quot;http://recaptcha.net/&quot;&gt;ReCAPTCHA&lt;/a&gt;, vous pouvez activer cette option. N&amp;acute;oubliez pas de mettre la cl&eacute; en dessous.');

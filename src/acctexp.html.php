@@ -1155,7 +1155,7 @@ class Payment_HTML
 
 			if ( !empty( $aecConfig->cfg['checkout_as_gift'] ) ) {
 				if ( !empty( $aecConfig->cfg['checkout_as_gift_adminonly'] ) ) {
-					if ( in_array( strtolower( $my->usertype ), array( 'administrator', 'superadministrator' ) ) ) {
+					if ( in_array( strtolower( $my->usertype ), array( 'administrator', 'superadministrator', 'super administrator' ) ) ) {
 						$makegift = true;
 					}
 				} else {
@@ -1164,7 +1164,7 @@ class Payment_HTML
 			}
 
 			if ( $makegift ) { ?>
-				<table width="100%" id="couponsbox">
+				<table width="100%" id="giftbox">
 					<tr>
 						<td class="couponinfo">
 							<strong><?php echo _CHECKOUT_GIFT_HEAD; ?></strong>
@@ -1173,7 +1173,7 @@ class Payment_HTML
 					<tr>
 						<td class="giftdetails">
 							<?php if ( !empty( $InvoiceFactory->invoice->params['target_user'] ) ) { ?>
-								<p>Username here</p>
+								<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username']; ?> (<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceRemoveGift&amp;invoice='.$InvoiceFactory->invoice_number, $aecConfig->cfg['ssl_signup'] ); ?>">undo?</a>)</p>
 							<?php } else { ?>
 							<p><?php echo _CHECKOUT_GIFT_INFO; ?></p>
 							<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceMakeGift', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
