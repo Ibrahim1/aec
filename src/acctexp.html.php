@@ -985,7 +985,7 @@ class Payment_HTML
 		HTML_frontend::aec_styling( $option );
 	}
 
-	function checkoutForm( $option, $var, $params = null, $InvoiceFactory, $repeat = 0 )
+	function checkoutForm( $option, $var, $params = null, $InvoiceFactory, $error = null, $repeat = 0 )
 	{
 		global $database, $mosConfig_live_site, $my, $aecConfig;
 
@@ -1219,6 +1219,17 @@ class Payment_HTML
 			} ?>
 		<table width="100%" id="checkoutbox">
 			<tr><th><?php echo _CHECKOUT_TITLE; ?></th></tr>
+		<?php if ( !empty( $error ) ) { ?>
+			<tr>
+				<td class="checkout_error">
+					<p>
+						<strong><?php echo _CHECKOUT_ERROR_EXPLANATION . ( $error ? ( ': ' . $error) : '' ); ?></strong>
+						&nbsp;
+						<?php echo $error; ?>
+					</p>
+				</td>
+			</tr>
+		<?php } ?>
 			<tr>
 				<td class="checkout_action">
 					<?php

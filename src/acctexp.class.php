@@ -7404,7 +7404,7 @@ class InvoiceFactory
 		$this->InvoiceToCheckout( $option, $repeat );
 	}
 
-	function InvoiceToCheckout( $option, $repeat=0 )
+	function InvoiceToCheckout( $option, $error=null, $repeat=0 )
 	{
 		global $mainframe;
 
@@ -7417,7 +7417,7 @@ class InvoiceFactory
 
 			$mainframe->SetPageTitle( _CHECKOUT_TITLE );
 
-			Payment_HTML::checkoutForm( $option, $var['var'], $var['params'], $this, $repeat );
+			Payment_HTML::checkoutForm( $option, $var['var'], $var['params'], $this, $error, $repeat );
 		}
 	}
 
@@ -7480,7 +7480,7 @@ class InvoiceFactory
 		}
 
 		if ( isset( $response['error'] ) ) {
-			$this->error( $option, $this->metaUser->cmsUser, $this->invoice->invoice_number, $response['error'] );
+			$this->InvoiceToCheckout( $option, $response['error'], true );
 		} else {
 			$this->thanks( $option );
 		}
@@ -7500,7 +7500,7 @@ class InvoiceFactory
 		$this->invoice->processorResponse( $this->pp, $response );
 
 		if ( isset( $response['error'] ) ) {
-			$this->error( $option, $this->metaUser->cmsUser, $this->invoice->invoice_number, $response['error'] );
+			$this->InvoiceToCheckout( $option, $response['error'], true );
 		} else {
 			if ( !empty( $this->pp->info['notify_trail_thanks'] ) ) {
 				$this->thanks( $option );

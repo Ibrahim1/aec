@@ -648,6 +648,15 @@ text-align: center;
 padding: 6px !important;
 }
 
+td.checkout_error {
+background-color: #fcc;
+clear: both;
+width: 100%;
+margin-bottom: 10px;
+border-bottom: 2px solid #aaa;
+padding: 8px 4px 2px 8px;
+}
+
 #checkoutbox a.linkbutton {
 display: block;
 padding: 4px;
