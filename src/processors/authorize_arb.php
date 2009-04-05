@@ -298,8 +298,14 @@ class processor_authorize_arb extends XMLprocessor
 				$return['valid'] = 0;
 				$return['cancel'] = true;
 			} else {
+				switch ( $code ) {
+					case 'XYZ':
+						$text = "Custom Error";
+						break;
+				}
+
 				$return['valid'] = 0;
-				$return['error'] = $text;
+				$return['error'] = $text . "(code: $code)";
 			}
 
 			return $return;
