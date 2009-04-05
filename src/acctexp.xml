@@ -125,6 +125,7 @@
 		<filename>processors/cybermut.php</filename>
 		<filename>processors/epsnetpay.php</filename>
 		<filename>processors/eway.php</filename>
+		<filename>processors/ewayxml.php</filename>
 		<filename>processors/iats.php</filename>
 		<filename>processors/ideal_basic.php</filename>
 		<filename>processors/ideal_advanced.php</filename>
