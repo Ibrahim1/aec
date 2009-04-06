@@ -9828,17 +9828,17 @@ class Subscription extends serialParamDBTable
 				}
 			}
 
+			// Call Expiration MIs
+			if ( $subscription_plan !== false ) {
+				$mih = new microIntegrationHandler();
+				$mih->userPlanExpireActions( $metaUser, $subscription_plan );
+			}
+
 			if ( !( strcmp( $this->status, 'Expired' ) === 0 ) || !( strcmp( $this->status, 'Closed' ) === 0 ) ) {
 				$this->status = 'Expired';
 				$this->storeload();
 			} else {
 				return false;
-			}
-
-			// Call Expiration MIs
-			if ( $subscription_plan !== false ) {
-				$mih = new microIntegrationHandler();
-				$mih->userPlanExpireActions( $metaUser, $subscription_plan );
 			}
 
 			return true;
@@ -12096,7 +12096,7 @@ class microIntegrationHandler
 				. ' WHERE `id` = \'' . $plan_id . '\''
 				;
 		$database->setQuery( $query );
-		$mis = $database->loadResultArray();
+		$mis = $database->loadResult();
 
 		if ( empty( $mis ) ) {
 			return array();
