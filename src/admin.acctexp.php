@@ -1496,8 +1496,10 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 	if ( !empty( $orderby ) ) {
 		$forder = array(	'expiration ASC', 'expiration DESC', 'lastpay_date ASC', 'lastpay_date DESC',
-							'plan_name ASC', 'plan_name DESC', 'status ASC', 'status DESC',
-							'type ASC', 'type DESC', 'lastname ASC', 'lastname DESC' );
+							'name ASC', 'name DESC', 'lastname ASC', 'lastname DESC', 'username ASC', 'username DESC',
+							'signup_date ASC', 'signup_date DESC', 'lastpay_date ASC', 'lastpay_date DESC',
+							'plan_name ASC', 'plan_name DESC', 'status ASC', 'status DESC', 'type ASC', 'type DESC'
+							);
 
 		if ( !in_array( $orderby, $forder ) ) {
 			$orderby = 'name ASC';
@@ -1741,6 +1743,13 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 	// get the subset (based on limits) of required records
 	if ( $notconfig ) {
+		$forder = array(	'expiration ASC', 'expiration DESC', 'lastpay_date ASC', 'lastpay_date DESC',
+							'lastname ASC', 'lastname DESC' );
+
+		if ( !in_array( $orderby, $forder ) ) {
+			$orderby = 'name ASC';
+		}
+
 		if ( strpos( $orderby, 'lastname' ) !== false ) {
 			$orderby = str_replace( 'lastname', 'SUBSTRING_INDEX(name, \' \', -1)', $orderby );
 		}
