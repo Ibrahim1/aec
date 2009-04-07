@@ -6468,7 +6468,13 @@ class InvoiceFactory
 			$this->_cart = aecCartHelper::getCartbyUserid( $this->userid );
 		}
 
-		$this->_cart->action( 'addItem', $usage );
+		if ( is_array( $usage ) ) {
+			foreach ( $usage as $us ) {
+				$this->_cart->action( 'addItem', $us );
+			}
+		} else {
+			$this->_cart->action( 'addItem', $usage );
+		}
 	}
 
 	function updateCart( $option, $data )
