@@ -1956,40 +1956,22 @@ function editSettings( $option )
 
 	$lists['milist'] = mosHTML::selectList( $mi_htmllist, 'milist[]', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '" multiple="multiple"', 'value', 'text', $selected_mis );
 
-	// Create Authentication Plugin Selection List
-	if ( aecJoomla15check() ) {
-		$auth_htmllist = array();
-		$auth_htmllist[]	= mosHTML::makeOption( '', _AEC_CMN_NONE_SELECTED );
+	$gtree = $acl->get_group_children_tree( null, 'USERS', true );
 
-		$auth_counter = 0;
-		$auth_list = PluginHandler::getPlugin('authentication');
+	$ex_groups = array( 28, 29, 30 );
 
-		foreach( $auth_list as $auth ){
-			$auth_name = $auth->name;
-
-			if ( $auth_name !== 'aecaccess' ) {
-				$auth_htmllist[]	= mosHTML::makeOption( $auth_name, $auth_name);
-				$auth_counter++;
-			}
+	// remove users 'above' me
+	$i = 0;
+	while ( $i < count( $gtree ) ) {
+		if ( in_array( $gtree[$i]->value, $ex_groups ) ) {
+			array_splice( $gtree, $i, 1 );
+		} else {
+			$i++;
 		}
-
-		$selected_authentications = array();
-		if ( !empty( $aecConfig->cfg['authlist'] ) ) {
-			foreach ( $aecConfig->cfg['authlist'] as $auth_name ) {
-				$selected_authentications[]->value = $auth_name;
-			}
-		}
-
-		$selected_authorizations = array();
-		if ( !empty( $aecConfig->cfg['authorization_list'] ) ) {
-			foreach ( $aecConfig->cfg['authorization_list'] as $auth_name ) {
-				$selected_authorizations[]->value = $auth_name;
-			}
-		}
-
-		$lists['authlist'] = mosHTML::selectList( $auth_htmllist, 'authlist[]', 'size="' . min( ( $auth_counter + 1 ), 25 ) . '" multiple="multiple"', 'value', 'text', $selected_authentications );
-		$lists['authorization_list'] = mosHTML::selectList( $auth_htmllist, 'authorization_list[]', 'size="' . min( ( $auth_counter + 1 ), 25 ) . '" multiple="multiple"', 'value', 'text', $selected_authorizations );
 	}
+
+	// Create GID related Lists
+	$lists['checkout_as_gift_access'] 		= mosHTML::selectList( $gtree, 'checkout_as_gift_access', 'size="6"', 'value', 'text', $aecConfig->cfg['checkout_as_gift_access'] );
 
 	$tab_data = array();
 
@@ -2052,7 +2034,7 @@ function editSettings( $option )
 	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_CHECKOUT );
 	$params['checkout_display_descriptions']	= array( 'list_yesno', '' );
 	$params['checkout_as_gift']				= array( 'list_yesno', '' );
-	$params['checkout_as_gift_adminonly']	= array( 'list_yesno', '' );
+	$params['checkout_as_gift_access']		= array( 'list', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_PROCESSORS );
 	$params['gwlist']				= array( 'list', 0 );

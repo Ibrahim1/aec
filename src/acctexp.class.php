@@ -1324,7 +1324,7 @@ class Config_General extends serialParamDBTable
 		$def['checkout_display_descriptions']	= 0;
 		$def['altsslurl']						= '';
 		$def['checkout_as_gift']				= 0;
-		$def['checkout_as_gift_adminonly']		= 1;
+		$def['checkout_as_gift_access']			= 23;
 
 		return $def;
 	}
@@ -8742,10 +8742,15 @@ class Invoice extends serialParamDBTable
 		global $database, $aecConfig;
 
 		if ( !empty( $aecConfig->cfg['checkout_as_gift'] ) ) {
-			if ( !empty( $aecConfig->cfg['checkout_as_gift_adminonly'] ) ) {
+			if ( !empty( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
 				global $my;
 
-				if ( !in_array( strtolower( $my->usertype ), array( 'administrator', 'superadministrator', 'super administrator' ) ) ) {
+				$metaUser = new metaUser( $my->id );
+
+				// Apparently, we cannot trust $my->gid
+				$groups = GeneralInfoRequester::getLowerACLGroup( $metaUser->cmsUser->gid );
+
+				if ( !in_array( $aecConfig->cfg['checkout_as_gift_access'], $groups ) ) {
 					return false;
 				}
 			}
@@ -15236,10 +15241,7 @@ class aecRestrictionHelper
 
 		$gtree = $acl->get_group_children_tree( null, 'USERS', true );
 
-		// mic: exclude public front- & backend
-		$ex_groups[] = 28;
-		$ex_groups[] = 29;
-		$ex_groups[] = 30;
+		$ex_groups = array_merge( $ex_groups, array( 28, 29, 30 ) );
 
 		// remove users 'above' me
 		$i = 0;

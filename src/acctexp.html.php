@@ -1166,8 +1166,11 @@ class Payment_HTML
 			$makegift = false;
 
 			if ( !empty( $aecConfig->cfg['checkout_as_gift'] ) ) {
-				if ( !empty( $aecConfig->cfg['checkout_as_gift_adminonly'] ) ) {
-					if ( in_array( strtolower( $my->usertype ), array( 'administrator', 'superadministrator', 'super administrator' ) ) ) {
+				if ( !empty( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
+					// Apparently, we cannot trust $my->gid
+					$groups = GeneralInfoRequester::getLowerACLGroup( $InvoiceFactory->metaUser->cmsUser->gid );
+
+					if ( in_array( $aecConfig->cfg['checkout_as_gift_access'], $groups ) ) {
 						$makegift = true;
 					}
 				} else {
