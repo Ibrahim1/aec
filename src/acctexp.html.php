@@ -471,7 +471,7 @@ class HTML_Results
 
 class Payment_HTML
 {
-	function selectSubscriptionPlanForm( $option, $userid, $list, $expired, $passthrough = false, $register = false )
+	function selectSubscriptionPlanForm( $option, $userid, $list, $expired, $passthrough=false, $register=false, $cart=false )
 	{
 		global $mosConfig_live_site, $aecConfig;
 
@@ -479,6 +479,15 @@ class Payment_HTML
 		?>
 
 		<div class="componentheading"><?php echo _PAYPLANS_HEADER; ?></div>
+		<?php if ( !empty( $cart ) ) { ?>
+			<div id="checkout">
+			<table id="aec_checkout">
+			<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+			<div id="update_button">You can always go back to: <input type="image" src="<?php echo $mosConfig_live_site . '/components/com_acctexp/images/your_cart_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
+			</form><br /><br />
+			</table>
+			</div>
+		<?php } ?>
 		<div class="subscriptions">
 			<?php
 			if ( $aecConfig->cfg['customtext_plans'] ) { ?>
@@ -1222,7 +1231,7 @@ class Payment_HTML
 			} ?>
 		<table width="100%" id="checkoutbox">
 			<tr><th><?php echo _CHECKOUT_TITLE; ?></th></tr>
-		<?php if ( !empty( $error ) ) { ?>
+		<?php if ( is_string( $error ) ) { ?>
 			<tr>
 				<td class="checkout_error">
 					<p>

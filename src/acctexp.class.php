@@ -7043,8 +7043,10 @@ class InvoiceFactory
 				$list['group'] = ItemGroupHandler::getGroupListItem( $g );
 			}
 
+			$cart = aecCartHelper::getCartidbyUserid( $this->userid );
+
 			// Of to the Subscription Plan Selection Page!
-			Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $list, $subscriptionClosed, $passthrough, $register );
+			Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $list, $subscriptionClosed, $passthrough, $register, $cart );
 		}
 	}
 
@@ -8337,11 +8339,10 @@ class Invoice extends serialParamDBTable
 						}
 					}
 
-					$cart->clear();
-
 					$this->params['cart'] = $cart;
+					$this->params['cart']->clear();
 
-					$cart->delete();print_r($database);exit;
+					$cart->delete();
 					break;
 				case 'p':
 				case 'plan':
@@ -8498,13 +8499,11 @@ class Invoice extends serialParamDBTable
 	{
 		global $database, $mosConfig_offset, $aecConfig;
 
-		$tdate = strtotime( $this->transaction_date );
+		$tdate				= strtotime( $this->transaction_date );
 		$time_passed		= ( ( time() + $mosConfig_offset*3600 ) - $tdate ) / 3600;
 		$transaction_date	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
 
-		if ( ( strcmp( $this->transaction_date, '0000-00-00 00:00:00' ) === 0 )
-			|| empty( $tdate )
-			|| ( $time_passed > $aecConfig->cfg['invoicecushion'] ) ) {
+		if ( $time_passed > $aecConfig->cfg['invoicecushion'] ) {
 			$this->counter += 1;
 			$this->transaction_date	= $transaction_date;
 
@@ -8963,7 +8962,7 @@ class Invoice extends serialParamDBTable
 
 class aecCartHelper
 {
-	function getCartbyUserid( $userid )
+	function getCartidbyUserid( $userid )
 	{
 		global $database;
 
@@ -8973,7 +8972,15 @@ class aecCartHelper
 				;
 
 		$database->setQuery( $query );
-		$id = $database->loadResult();
+		return $database->loadResult();
+
+	}
+
+	function getCartbyUserid( $userid )
+	{
+		global $database;
+
+		$id = aecCartHelper::getCartidbyUserid( $userid );
 
 		$cart = new aecCart( $database );
 		$cart->load( $id );
