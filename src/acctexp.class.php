@@ -6414,7 +6414,9 @@ class InvoiceFactory
 	{
 		$this->items = array();
 
-		if ( empty( $this->cart ) ) {
+		if ( empty( $this->_cart ) ) {
+			global $database;
+
 			$this->amount = $this->plan->SubscriptionAmount( $this->recurring, $this->metaUser->objSubscription, $this->metaUser );
 
 			$terms = new mammonTerms();
@@ -6430,6 +6432,9 @@ class InvoiceFactory
 			}
 
 			$this->items[] = array( 'item' => array( 'obj' => $this->plan ), 'terms' => $terms );
+
+			$this->cart = new aecCart( $database );
+			$this->cart->addItem( array(), $this->plan );
 		} else {
 			$this->amount = $this->_cart->getAmount( $this->metaUser, $this->cart );
 
@@ -9207,7 +9212,7 @@ class aecCart extends serialParamDBTable
 			if ( !empty( $this->content ) ) {
 				foreach ( $this->content as $iid => $item ) {
 					if ( ( $item['type'] == $element['type'] ) && ( $item['id'] == $element['id'] ) ) {
-						$return['event']	= 'updateItem';
+						$return['event'] = 'updateItem';
 						$this->content[$iid]['count']++;
 						$update = true;
 						break;
@@ -9221,7 +9226,7 @@ class aecCart extends serialParamDBTable
 		} else {
 			$return['action']	= 'error';
 			$return['event']	= 'no_item_provided';
-			$return['details'] = array( 'type' => 'plan', 'item' => $item );
+			$return['details']	= array( 'type' => 'plan', 'item' => $item );
 		}
 
 		return $return;

@@ -1133,13 +1133,13 @@ class Payment_HTML
 					<?php
 					if ( !empty( $InvoiceFactory->terms ) ) {
 						if ( isset( $InvoiceFactory->terms->errors ) ) {
-							foreach ( $InvoiceFactory->terms->errors as $error ) { ?>
+							foreach ( $InvoiceFactory->terms->errors as $err ) { ?>
 							<tr>
 								<td class="couponerror">
 									<p>
 										<strong><?php echo _COUPON_ERROR_PRETEXT; ?></strong>
 										&nbsp;
-										<?php echo $error; ?>
+										<?php echo $err; ?>
 									</p>
 								</td>
 							</tr>
