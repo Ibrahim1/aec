@@ -6433,8 +6433,8 @@ class InvoiceFactory
 
 			$this->items[] = array( 'item' => array( 'obj' => $this->plan ), 'terms' => $terms );
 
-			$this->cart = new aecCart( $database );
-			$this->cart->addItem( array(), $this->plan );
+			$this->_cart = new aecCart( $database );
+			$this->_cart->addItem( array(), $this->plan );
 		} else {
 			$this->amount = $this->_cart->getAmount( $this->metaUser, $this->cart );
 
@@ -8341,7 +8341,7 @@ class Invoice extends serialParamDBTable
 
 					$this->params['cart'] = $cart;
 
-					// TODO: $cart->delete();print_r($database);exit;
+					$cart->delete();print_r($database);exit;
 					break;
 				case 'p':
 				case 'plan':

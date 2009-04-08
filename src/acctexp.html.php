@@ -1006,7 +1006,7 @@ class Payment_HTML
 				<?php
 			} ?>
 			<table id="aec_checkout">
-			<?php if ( !empty( $InvoiceFactory->_cart ) ) { ?>
+			<?php if ( !empty( $InvoiceFactory->_cart ) && !empty( $InvoiceFactory->cart ) ) { ?>
 				<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 				<div id="update_button">You can always go back to: <input type="image" src="<?php echo $mosConfig_live_site . '/components/com_acctexp/images/your_cart_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
 				</form><br /><br />

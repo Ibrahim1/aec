@@ -580,7 +580,7 @@ clear: both;
 width: 100%;
 margin-bottom: 10px;
 border-bottom: 2px solid #aaa;
-padding: 8px 4px 2px 8px;
+padding: 8px 4px 2px 8px !important;
 }
 
 .couponwarning {
@@ -654,7 +654,7 @@ clear: both;
 width: 100%;
 margin-bottom: 10px;
 border-bottom: 2px solid #aaa;
-padding: 8px 4px 2px 8px;
+padding: 8px 4px 2px 8px !important;
 }
 
 #checkoutbox a.linkbutton {
