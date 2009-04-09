@@ -514,7 +514,11 @@ class metaUser
 				$this->focusSubscription->load( $existing_record );
 				$return = 'existing';
 			} else {
-				$existing_parent = $this->focusSubscription->getSubscriptionID( $this->userid, $plan_params['standard_parent'], null );
+				if ( !empty( $this->hasSubscription ) ) {
+					$existing_parent = $this->focusSubscription->getSubscriptionID( $this->userid, $plan_params['standard_parent'], null );
+				} else {
+					$existing_parent = false;
+				}
 
 				// Create a root new subscription
 				if ( !$plan_params['make_primary'] && !empty( $plan_params['standard_parent'] ) && empty( $existing_parent ) ) {
