@@ -514,8 +514,10 @@ class metaUser
 				$this->focusSubscription->load( $existing_record );
 				$return = 'existing';
 			} else {
+				$existing_parent = $this->focusSubscription->getSubscriptionID( $this->userid, $plan_params['standard_parent'], null );
+
 				// Create a root new subscription
-				if ( !$plan_params['make_primary'] && !empty( $plan_params['standard_parent'] ) ) {
+				if ( !$plan_params['make_primary'] && !empty( $plan_params['standard_parent'] ) && empty( $existing_parent ) ) {
 					$this->focusSubscription = new Subscription( $database );
 					$this->focusSubscription->load( 0 );
 					$this->focusSubscription->createNew( $this->userid, 'none', 1, 1 );
@@ -7486,7 +7488,7 @@ class InvoiceFactory
 			$targetUser =& $this->metaUser;
 		}
 
-		if ( !empty( $this->cart ) ) {
+		if ( !empty( $this->_cart ) && !empty( $this->cart ) ) {
 			$response = $this->pp->checkoutProcess( $var, $targetUser, $new_subscription, $this->invoice, $this->cart );
 		} else {
 			$response = $this->pp->checkoutProcess( $var, $targetUser, $new_subscription, $this->invoice );
@@ -9407,6 +9409,12 @@ class aecCart extends serialParamDBTable
 				}
 			}
 
+			if ( $entry['cost_total'] == '0.00' ) {
+				$entry['free'] = true;
+			} else {
+				$entry['free'] = false;
+			}
+
 			$entry['cost']			= AECToolbox::correctAmount( $entry['cost'] );
 
 			$entry['count']					= $content['count'];
@@ -9560,17 +9568,21 @@ class Subscription extends serialParamDBTable
 				;
 
 		if ( !empty( $usage ) ) {
-			if ( $similar ) {
+			if ( $similar && !empty( $plan->params['equalplans'] ) ) {
 				$plan = new SubscriptionPlan( $database );
 				$plan->load( $usage );
 
+				$allplans = array( $usage );
+
 				if ( !empty( $plan->params['similarplans'] ) && !empty( $plan->params['equalplans'] ) ) {
-					$similar = $plan->params['similarplans'];
+					$simipla = $plan->params['similarplans'];
 					$equalpl = $plan->params['equalplans'];
 
-					$allplans = array_merge( $similar, $equalpl, array( $usage ) );
-				} else {
-					$allplans = array( $usage );
+					if ( $similar ) {
+						$allplans = array_merge( $plan->params['similarplans'], $plan->params['equalplans'], $allplans );
+					} else {
+						$allplans = array_merge( $plan->params['equalplans'], $allplans );
+					}
 				}
 
 				foreach ( $allplans as $apid => $pid ) {
@@ -13075,6 +13087,10 @@ class couponsHandler extends eucaObject
 	var $global_nomix 		= array();
 	/** @var array - Global List of applied coupons */
 	var $global_applied 	= array();
+	/** @var array - Local List of excluding coupons */
+	var $item_nomix 		= array();
+	/** @var array - Local List of applied coupons */
+	var $item_applied 		= array();
 	/** @var array - Coupons that need to be deleted */
 	var $delete_list	 	= array();
 	/** @var array - Exceptions that need to be addressed (by the user) */
@@ -13149,12 +13165,18 @@ class couponsHandler extends eucaObject
 		return true;
 	}
 
-	function loadCoupon( $coupon_code )
+	function loadCoupon( $coupon_code, $strict=true )
 	{
+		if ( in_array( $coupon_code, $this->delete_list ) && $strict ) {
+			return false;
+		}
+
 		$cph = new couponHandler();
 		$cph->load( $coupon_code );
 
 		if ( $cph->coupon->coupon_code !== $coupon_code ) {
+			$this->setError( "The code entered is not valid" );
+
 			$this->delete_list[] = $coupon_code;
 			return false;
 		}
@@ -13187,83 +13209,87 @@ class couponsHandler extends eucaObject
 	function prefilter( $items, $cart=false, $fullcart=false )
 	{
 		foreach ( $this->coupons as $ccid => $coupon_code ) {
-			if ( $this->loadCoupon( $coupon_code ) ) {
-				if ( $this->cph->coupon->restrictions['usage_cart_full'] ) {
-					$this->fullcartlist[] = $coupon_code;
-					continue;
+			if ( !$this->loadCoupon( $coupon_code ) ) {
+				continue;
+			}
+
+			if ( $this->cph->coupon->restrictions['usage_cart_full'] ) {
+				$this->fullcartlist[] = $coupon_code;
+				continue;
+			}
+
+			$plans = $cart->getItemIdArray();
+
+			if ( $this->cph->coupon->restrictions['usage_plans_enabled'] ) {
+				$allowed = array_intersect( $plans, $this->cph->coupon->restrictions['usage_plans'] );
+
+				if ( empty( $allowed ) ) {
+					$allowed = false;
 				}
+			} else {
+				$allowed = $plans;
+			}
 
-				$plans = $cart->getItemIdArray();
+			foreach ( $cart->content as $iid => $c ) {
+				if ( $cart->hasCoupon( $coupon_code, $iid ) ) {
+					continue 2;
+				}
+			}
 
-				if ( $this->cph->coupon->restrictions['usage_plans_enabled'] ) {
-					$allowed = array_intersect( $plans, $this->cph->coupon->restrictions['usage_plans'] );
+			if ( !is_array( $allowed ) ) {
+				continue;
+			}
 
-					if ( empty( $allowed ) ) {
-						$allowed = false;
+			if ( count( $allowed ) > 1 ) {
+				$fname = 'cartcoupon_'.$ccid.'_item';
+
+				$pgsel = aecGetParam( $fname, null, true, array( 'word', 'int' ) );
+
+				if ( !is_null( $pgsel ) ) {
+					$items[$pgsel] == $this->applyToItem( $pgsel, $items[$pgsel], $coupon_code );
+
+					if ( !$cart->hasCoupon( $coupon_code, $pgsel ) ) {
+						$cart->addCoupon( $coupon_code, $pgsel );
+						$cart->storeload();
+
+						$this->affectedCart = true;
 					}
 				} else {
-					$allowed = $plans;
-				}
+					$found = false;
+					foreach ( $cart->content as $cid => $content ) {
+						if ( $cart->hasCoupon( $coupon_code, $cid ) ) {
+							$items[$cid] == $this->applyToItem( $cid, $items[$cid], $coupon_code );
+							$found = true;
 
-				foreach ( $cart->content as $iid => $c ) {
-					if ( $cart->hasCoupon( $coupon_code, $iid ) ) {
-						continue 2;
-					}
-				}
-
-				if ( is_array( $allowed ) ) {
-					if ( count( $allowed ) > 1 ) {
-						$fname = 'cartcoupon_'.$ccid.'_item';
-
-						$pgsel = aecGetParam( $fname, null, true, array( 'word', 'int' ) );
-
-						if ( !is_null( $pgsel ) ) {
-							$items[$pgsel] == $this->applyToItem( $pgsel, $items[$pgsel], $coupon_code );
-
-							if ( !$cart->hasCoupon( $coupon_code, $pgsel ) ) {
-								$cart->addCoupon( $coupon_code, $pgsel );
-								$cart->storeload();
-
-								$this->affectedCart = true;
-							}
-						} else {
-							$found = false;
-							foreach ( $cart->content as $cid => $content ) {
-								if ( $cart->hasCoupon( $coupon_code, $cid ) ) {
-									$items[$cid] == $this->applyToItem( $cid, $items[$cid], $coupon_code );
-									$found = true;
-
-									$this->noapplylist[] = $coupon_code;
-								}
-							}
-
-							if ( !$found ) {
-								$ex = array();
-								$ex['head'] = "Select Item for Coupon \"" . $coupon_code . "\"";
-								$ex['desc'] = "The coupon you have entered can be applied to one of the following items:<br />";
-
-								$ex['rows'] = array();
-
-								foreach ( $allowed as $cid => $objid ) {
-									$ex['rows'][] = array( 'radio', $fname, $cid, true, $fullcart[$cid]['name'] );
-								}
-
-								if ( !empty( $ex['rows'] ) ) {
-									$this->raiseException( $ex );
-								}
-							}
-						}
-					} else {
-						foreach ( $items as $iid => $item ) {
-							if ( $item['item']['obj']->id == $allowed[0] ) {
-								$items[$iid] == $this->applyToItem( $allowed[0], $item, $coupon_code );
-
-								$this->noapplylist[] = $coupon_code;
-							}
+							$this->noapplylist[] = $coupon_code;
 						}
 					}
-				} else {
 
+					if ( !$found ) {
+						$ex = array();
+						$ex['head'] = "Select Item for Coupon \"" . $coupon_code . "\"";
+						$ex['desc'] = "The coupon you have entered can be applied to one of the following items:<br />";
+
+						$ex['rows'] = array();
+
+						foreach ( $allowed as $cid => $objid ) {
+							if ( empty( $fullcart[$cid]['free'] ) ) {
+								$ex['rows'][] = array( 'radio', $fname, $cid, true, $fullcart[$cid]['name'] );
+							}
+						}
+
+						if ( !empty( $ex['rows'] ) ) {
+							$this->raiseException( $ex );
+						}
+					}
+				}
+			} else {
+				foreach ( $items as $iid => $item ) {
+					if ( $item['item']['obj']->id == $allowed[0] ) {
+						$items[$iid] == $this->applyToItem( $allowed[0], $item, $coupon_code );
+
+						$this->noapplylist[] = $coupon_code;
+					}
 				}
 			}
 		}
@@ -13299,7 +13325,11 @@ class couponsHandler extends eucaObject
 
 	function applyToItem( $id, $item, $coupon_code )
 	{
-		if ( !$this->loadCoupon( $coupon_code ) ) {
+		if ( !$this->loadCoupon( $coupon_code, false ) ) {
+			return $item;
+		}
+
+		if ( in_array( $coupon_code, $this->item_applied[$id] ) ) {
 			return $item;
 		}
 
