@@ -2449,7 +2449,7 @@ class HTML_AcctExp
 										<?php echo $aecHTML->createSettingsParticle( 'restrict_combination' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'bad_combinations' ); ?>
 									</div>
-									<div style="position:relative;float:left;width:200px;">
+									<div style="position:relative;float:left;width:240px;">
 										<?php echo $aecHTML->createSettingsParticle( 'restrict_combination_cart' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'bad_combinations_cart' ); ?>
 									</div>
