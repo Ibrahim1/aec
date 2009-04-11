@@ -13138,8 +13138,20 @@ class couponsHandler extends eucaObject
 		}
 	}
 
-	function mixCheck( $itemid, $coupon_code, $nomix )
+	function mixCheck( $itemid, $coupon_code, $nomix, $onlymix )
 	{
+		if ( !empty( $this->global_applied ) && !empty( $onlymix ) ) {
+			if ( !count( array_intersect( $this->global_applied, $onlymix ) ) ) {
+				return false;
+			}
+		}
+
+		if ( !empty( $this->global_onlymix ) ) {
+			if ( !in_array( $coupon_code, $this->global_onlymix ) ) {
+				return false;
+			}
+		}
+
 		if ( !empty( $this->global_applied ) && !empty( $nomix ) ) {
 			if ( count( array_intersect( $this->global_applied, $nomix ) ) ) {
 				return false;
@@ -13345,7 +13357,8 @@ class couponsHandler extends eucaObject
 			return $item;
 		}
 
-		$nomix = $this->cph->getBadCombinations();
+		$nomix		= $this->cph->getBadCombinations();
+		$onlymix	= $this->cph->getOnlyCombinations();
 
 		if ( !empty( $item['item']['obj']->id ) ) {
 			$this->InvoiceFactory->usage = $item['item']['obj']->id;
@@ -13353,7 +13366,7 @@ class couponsHandler extends eucaObject
 			$this->InvoiceFactory->usage = null;
 		}
 
-		if ( !$this->mixCheck( $id, $coupon_code, $nomix ) ) {
+		if ( !$this->mixCheck( $id, $coupon_code, $nomix, $onlymix ) ) {
 			$this->setError( _COUPON_ERROR_COMBINATION );
 		} else {
 			if ( $this->cph->status ) {
@@ -13363,7 +13376,7 @@ class couponsHandler extends eucaObject
 				if ( $this->cph->status ) {
 					$item['terms'] = $this->cph->applyToTerms( $item['terms'], $this->cph );
 
-					$this->addCouponToRecord( $id, $coupon_code, $nomix );
+					$this->addCouponToRecord( $id, $coupon_code, $nomix, $onlymix );
 
 					return $item;
 				}
@@ -13888,6 +13901,16 @@ class couponHandler
 		// Get the coupons that this one cannot be mixed with
 		if ( !empty( $this->restrictions['restrict_combination'] ) && !empty( $this->restrictions['bad_combinations'] ) ) {
 			return $this->restrictions['bad_combinations'];
+		} else {
+			return array();
+		}
+	}
+
+	function getOnlyCombinations()
+	{
+		// Get the coupons that this one cannot be mixed with
+		if ( !empty( $this->restrictions['restrict_only_combination'] ) && !empty( $this->restrictions['only_combinations'] ) ) {
+			return $this->restrictions['only_combinations'];
 		} else {
 			return array();
 		}
