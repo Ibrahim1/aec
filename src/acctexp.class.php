@@ -13087,13 +13087,11 @@ class couponsHandler extends eucaObject
 	var $coupons_list		= array();
 	/** @var array - Coupons that will be applied to the whole cart */
 	var $fullcartlist		= array();
-	/** @var array - Global List of excluding coupons */
-	var $global_nomix 		= array();
+	/** @var array - Global List of coupon mix rules */
+	var $mixlist	 		= array();
 	/** @var array - Global List of applied coupons */
 	var $global_applied 	= array();
 	/** @var array - Local List of excluding coupons */
-	var $item_nomix 		= array();
-	/** @var array - Local List of applied coupons */
 	var $item_applied 		= array();
 	/** @var array - Coupons that need to be deleted */
 	var $delete_list	 	= array();
@@ -13120,7 +13118,7 @@ class couponsHandler extends eucaObject
 	function addCouponToRecord( $itemid, $coupon_code, $nomix )
 	{
 		if ( !empty( $nomix ) ) {
-			$this->global_nomix = array_merge( $this->global_nomix, $nomix );
+			$this->mixlist['global']['nomix'] = array_merge( $this->global_nomix, $nomix );
 		}
 
 		$this->global_applied[] = $coupon_code;
@@ -13128,9 +13126,9 @@ class couponsHandler extends eucaObject
 		if ( $itemid !== false ) {
 			if ( !empty( $nomix ) ) {
 				if ( isset( $this->items_nomix[$itemid] ) ) {
-					$this->items_nomix[$itemid] = array_merge( $this->items_nomix[$itemid], $nomix );
+					$this->mixlist['local'][$itemid]['nomix'] = array_merge( $this->mixlist['local'][$itemid]['nomix'], $nomix );
 				} else {
-					$this->items_nomix[$itemid] = $nomix;
+					$this->mixlist['local'][$itemid]['nomix'] = $nomix;
 				}
 			}
 
@@ -13146,7 +13144,7 @@ class couponsHandler extends eucaObject
 			}
 		}
 
-		if ( !empty( $this->global_onlymix ) ) {
+		if ( !empty( $this->mixlist['global']['allowmix'] ) ) {
 			if ( !in_array( $coupon_code, $this->global_onlymix ) ) {
 				return false;
 			}
