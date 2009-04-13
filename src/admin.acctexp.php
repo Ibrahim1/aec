@@ -4222,8 +4222,14 @@ function editCoupon( $id, $option, $new, $type )
 	$params['restrict_combination']			= array( 'list_yesno',		0 );
 	$params['bad_combinations']				= array( 'list',			'' );
 
+	$params['allow_combination']			= array( 'list_yesno',		0 );
+	$params['good_combinations']			= array( 'list',			'' );
+
 	$params['restrict_combination_cart']	= array( 'list_yesno',		0 );
 	$params['bad_combinations_cart']		= array( 'list',			'' );
+
+	$params['allow_combination_cart']		= array( 'list_yesno',		0 );
+	$params['good_combinations_cart']		= array( 'list',			'' );
 
 	$params['mingid_enabled']				= array( 'list_yesno',		0 );
 	$params['mingid']						= array( 'list',			18 );
@@ -4366,52 +4372,33 @@ function editCoupon( $id, $option, $new, $type )
 	$database->setQuery( $query );
 	$coupons = array_merge( $database->loadObjectList(), $coupons );
 
-	if ( !empty( $restrictions_values['bad_combinations'] ) ) {
-		$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
-				. ' FROM #__acctexp_coupons'
-				. ' WHERE `coupon_code` IN (\'' . implode( '\',\'', $restrictions_values['bad_combinations'] ) . '\')'
-				;
-		$database->setQuery( $query );
-		$sel_coupons = $database->loadObjectList();
+	$cpl = array( 'bad_combinations', 'good_combinations', 'bad_combinations_cart', 'good_combinations_cart' );
 
-		$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
-				. ' FROM #__acctexp_coupons_static'
-				. ' WHERE `coupon_code` IN (\'' . implode( '\',\'', $restrictions_values['bad_combinations'] ) . '\')'
-				;
-		$database->setQuery( $query );
-		$nc = $database->loadObjectList();
+	foreach ( $cpl as $cpn ) {
+		$cur = array();
 
-		if ( !empty( $nc ) ) {
-			$sel_coupons = array_merge( $nc, $sel_coupons );
+		if ( !empty( $restrictions_values[$cpn] ) ) {
+			$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
+					. ' FROM #__acctexp_coupons'
+					. ' WHERE `coupon_code` IN (\'' . implode( '\',\'', $restrictions_values[$cpn] ) . '\')'
+					;
+			$database->setQuery( $query );
+			$cur = $database->loadObjectList();
+
+			$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
+					. ' FROM #__acctexp_coupons_static'
+					. ' WHERE `coupon_code` IN (\'' . implode( '\',\'', $restrictions_values[$cpn] ) . '\')'
+					;
+			$database->setQuery( $query );
+			$nc = $database->loadObjectList();
+
+			if ( !empty( $nc ) ) {
+				$cur = array_merge( $nc, $cur );
+			}
 		}
-	} else {
-		$sel_coupons = '';
+
+		$lists[$cpn] = mosHTML::selectList($coupons, $cpn.'[]', 'size="' . min((count( $coupons ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $cur);
 	}
-
-	if ( !empty( $restrictions_values['bad_combinations_cart'] ) ) {
-		$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
-				. ' FROM #__acctexp_coupons'
-				. ' WHERE `coupon_code` IN (\'' . implode( '\',\'', $restrictions_values['bad_combinations_cart'] ) . '\')'
-				;
-		$database->setQuery( $query );
-		$sel_coupons_cart = $database->loadObjectList();
-
-		$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
-				. ' FROM #__acctexp_coupons_static'
-				. ' WHERE `coupon_code` IN (\'' . implode( '\',\'', $restrictions_values['bad_combinations_cart'] ) . '\')'
-				;
-		$database->setQuery( $query );
-		$nc_cart = $database->loadObjectList();
-
-		if ( !empty( $nc_cart ) ) {
-			$sel_coupons_cart = array_merge( $nc_cart, $sel_coupons_cart );
-		}
-	} else {
-		$sel_coupons_cart = '';
-	}
-
-	$lists['bad_combinations']		= mosHTML::selectList($coupons, 'bad_combinations[]', 'size="' . min((count( $coupons ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $sel_coupons);
-	$lists['bad_combinations_cart']	= mosHTML::selectList($coupons, 'bad_combinations_cart[]', 'size="' . min((count( $coupons ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $sel_coupons_cart);
 
 	$settings = new aecSettings( 'coupon', 'general' );
 	$settings->fullSettingsArray( $params, array_merge( (array) $params_values, (array) $discount_values, (array) $restrictions_values ), $lists );

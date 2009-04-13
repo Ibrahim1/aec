@@ -13115,20 +13115,40 @@ class couponsHandler extends eucaObject
 		return $this->exceptions;
 	}
 
-	function addCouponToRecord( $itemid, $coupon_code, $nomix )
+	function addCouponToRecord( $itemid, $coupon_code, $ccombo )
 	{
-		if ( !empty( $nomix ) ) {
-			$this->mixlist['global']['nomix'] = array_merge( $this->global_nomix, $nomix );
+		if ( !empty( $ccombo['bad_combinations_cart'] ) ) {
+			if ( !empty( $this->mixlist['global']['restrictmix'] ) ) {
+				$this->mixlist['global']['restrictmix'] = array_merge( $this->mixlist['global']['restrictmix'], $ccombo['bad_combinations_cart'] );
+			} else {
+				$this->mixlist['global']['restrictmix'] = $ccombo['bad_combinations_cart'];
+			}
+		}
+
+		if ( !empty( $ccombo['good_combinations_cart'] ) ) {
+			if ( !empty( $this->mixlist['global']['allowmix'] ) ) {
+				$this->mixlist['global']['allowmix'] = array_merge( $this->mixlist['global']['allowmix'], $ccombo['good_combinations_cart'] );
+			} else {
+				$this->mixlist['global']['allowmix'] = $ccombo['good_combinations_cart'];
+			}
 		}
 
 		$this->global_applied[] = $coupon_code;
 
 		if ( $itemid !== false ) {
-			if ( !empty( $nomix ) ) {
-				if ( isset( $this->items_nomix[$itemid] ) ) {
-					$this->mixlist['local'][$itemid]['nomix'] = array_merge( $this->mixlist['local'][$itemid]['nomix'], $nomix );
+			if ( !empty( $ccombo['bad_combinations'] ) ) {
+				if ( !empty( $this->mixlist['local'][$itemid]['restrictmix'] ) ) {
+					$this->mixlist['local'][$itemid]['restrictmix'] = array_merge( $this->mixlist['local'][$itemid]['restrictmix'], $ccombo['bad_combinations'] );
 				} else {
-					$this->mixlist['local'][$itemid]['nomix'] = $nomix;
+					$this->mixlist['local'][$itemid]['restrictmix'] = $ccombo['bad_combinations'];
+				}
+			}
+
+			if ( !empty( $ccombo['good_combinations'] ) ) {
+				if ( !empty( $this->mixlist['local'][$itemid]['allowmix'] ) ) {
+					$this->mixlist['local'][$itemid]['allowmix'] = array_merge( $this->mixlist['local'][$itemid]['allowmix'], $ccombo['good_combinations'] );
+				} else {
+					$this->mixlist['local'][$itemid]['allowmix'] = $ccombo['good_combinations'];
 				}
 			}
 
@@ -13136,41 +13156,88 @@ class couponsHandler extends eucaObject
 		}
 	}
 
-	function mixCheck( $itemid, $coupon_code, $nomix, $onlymix )
+	function mixCheck( $itemid, $coupon_code, $ccombo )
 	{
-		if ( !empty( $this->global_applied ) && !empty( $onlymix ) ) {
-			if ( !count( array_intersect( $this->global_applied, $onlymix ) ) ) {
-				return false;
-			}
-		}
-
+		// First check whether any other coupon in the cart could block this
 		if ( !empty( $this->mixlist['global']['allowmix'] ) ) {
-			if ( !in_array( $coupon_code, $this->global_onlymix ) ) {
+			// Or maybe it just blocks everything?
+			if ( !is_array( $this->mixlist['global']['allowmix'] ) ) {
 				return false;
+			} else {
+				// Nope, check which ones it blocks
+				if ( !in_array( $coupon_code, $this->mixlist['global']['allowmix'] ) ) {
+					return false;
+				}
 			}
 		}
 
-		if ( !empty( $this->global_applied ) && !empty( $nomix ) ) {
-			if ( count( array_intersect( $this->global_applied, $nomix ) ) ) {
-				return false;
+		if ( $itemid !== false ) {
+			// Now check whether any other coupon for this item could block this
+			if ( !empty( $this->mixlist['local'][$itemid]['allowmix'] ) ) {
+				// Or maybe it just blocks everything?
+				if ( !is_array( $this->mixlist['local'][$itemid]['allowmix'] ) ) {
+					return false;
+				} else {
+					// Nope, check which ones it blocks
+					if ( !in_array( $coupon_code, $this->mixlist['local'][$itemid]['allowmix'] ) ) {
+						return false;
+					}
+				}
 			}
 		}
 
-		if ( !empty( $this->global_nomix ) ) {
-			if ( in_array( $coupon_code, $this->global_nomix ) ) {
+		if ( !empty( $this->global_applied ) && !empty( $ccombo['good_combinations_cart'] ) ) {
+			// Now check whether any other coupon in the cart could interfere with this ones restrictions
+			// Maybe it just blocks everything?
+			if ( !is_array( $ccombo['good_combinations_cart'] ) ) {
+				return false;
+			} else {
+				// Nope, check which ones it blocks
+				if ( !count( array_intersect( $this->global_applied, $ccombo['good_combinations_cart'] ) ) ) {
+					return false;
+				}
+			}
+		}
+
+		if ( $itemid !== false ) {
+			if ( !empty( $this->item_applied[$itemid] ) && !empty( $ccombo['good_combinations'] ) ) {
+				// Now check whether any other coupon for this item could interfere with this ones restrictions
+				// Maybe it just blocks everything?
+				if ( !is_array( $ccombo['good_combinations'] ) ) {
+					return false;
+				} else {
+					// Nope, check which ones it blocks
+					if ( !count( array_intersect( $this->item_applied[$itemid], $ccombo['good_combinations'] ) ) ) {
+						return false;
+					}
+				}
+			}
+		}
+
+		// Now check for restrictions the other way around
+		if ( !empty( $this->mixlist['global']['restrictmix'] ) && is_array( $this->mixlist['global']['restrictmix'] ) ) {
+			if ( in_array( $coupon_code, $this->mixlist['global']['restrictmix'] ) ) {
 				return false;
 			}
 		}
 
 		if ( $itemid !== false ) {
-			if ( !empty( $this->item_applied[$itemid] ) && !empty( $nomix ) ) {
-				if ( count( array_intersect( $this->item_applied[$itemid], $nomix ) ) ) {
+			if ( !empty( $this->mixlist['local'][$itemid]['restrictmix'] ) && is_array( $this->mixlist['local'][$itemid]['restrictmix'] ) ) {
+				if ( in_array( $coupon_code, $this->mixlist['local'][$itemid]['restrictmix'] ) ) {
 					return false;
 				}
 			}
+		}
 
-			if ( !empty( $this->item_nomix[$itemid] ) ) {
-				if ( in_array( $coupon_code, $this->item_nomix[$itemid] ) ) {
+		if ( !empty( $this->global_applied ) && !empty( $ccombo['bad_combinations_cart'] ) && is_array( $ccombo['bad_combinations_cart'] ) ) {
+			if ( count( array_intersect( $this->global_applied, $ccombo['bad_combinations_cart'] ) ) ) {
+				return false;
+			}
+		}
+
+		if ( $itemid !== false ) {
+			if ( !empty( $this->item_applied[$itemid] ) && !empty( $ccombo['bad_combinations'] ) && is_array( $ccombo['bad_combinations'] ) ) {
+				if ( count( array_intersect( $this->item_applied[$itemid], $ccombo['bad_combinations'] ) ) ) {
 					return false;
 				}
 			}
@@ -13355,8 +13422,7 @@ class couponsHandler extends eucaObject
 			return $item;
 		}
 
-		$nomix		= $this->cph->getBadCombinations();
-		$onlymix	= $this->cph->getOnlyCombinations();
+		$ccombo		= $this->cph->getCombinations();
 
 		if ( !empty( $item['item']['obj']->id ) ) {
 			$this->InvoiceFactory->usage = $item['item']['obj']->id;
@@ -13364,7 +13430,7 @@ class couponsHandler extends eucaObject
 			$this->InvoiceFactory->usage = null;
 		}
 
-		if ( !$this->mixCheck( $id, $coupon_code, $nomix, $onlymix ) ) {
+		if ( !$this->mixCheck( $id, $coupon_code, $ccombo ) ) {
 			$this->setError( _COUPON_ERROR_COMBINATION );
 		} else {
 			if ( $this->cph->status ) {
@@ -13374,7 +13440,7 @@ class couponsHandler extends eucaObject
 				if ( $this->cph->status ) {
 					$item['terms'] = $this->cph->applyToTerms( $item['terms'], $this->cph );
 
-					$this->addCouponToRecord( $id, $coupon_code, $nomix, $onlymix );
+					$this->addCouponToRecord( $id, $coupon_code, $ccombo );
 
 					return $item;
 				}
@@ -13399,9 +13465,9 @@ class couponsHandler extends eucaObject
 				return $amount;
 			}
 
-			$nomix = $this->cph->getBadCombinations();
+			$ccombo		= $this->cph->getCombinations();
 
-			if ( !$this->mixCheck( false, $coupon_code, $nomix ) ) {
+			if ( !$this->mixCheck( false, $coupon_code, $ccombo ) ) {
 				$this->setError( _COUPON_ERROR_COMBINATION );
 			} else {
 				if ( $this->cph->status ) {
@@ -13411,7 +13477,7 @@ class couponsHandler extends eucaObject
 					if ( $this->cph->status ) {
 						$amount = $this->cph->applyCoupon( $amount );
 
-						$this->addCouponToRecord( false, $coupon_code, $nomix );
+						$this->addCouponToRecord( false, $coupon_code, $ccombo );
 
 						return $amount;
 					}
@@ -13894,24 +13960,29 @@ class couponHandler
 		$this->action = $action;
 	}
 
-	function getBadCombinations()
+	function getCombinations()
 	{
-		// Get the coupons that this one cannot be mixed with
-		if ( !empty( $this->restrictions['restrict_combination'] ) && !empty( $this->restrictions['bad_combinations'] ) ) {
-			return $this->restrictions['bad_combinations'];
-		} else {
-			return array();
-		}
-	}
+		$combinations = array();
 
-	function getOnlyCombinations()
-	{
-		// Get the coupons that this one cannot be mixed with
-		if ( !empty( $this->restrictions['restrict_only_combination'] ) && !empty( $this->restrictions['only_combinations'] ) ) {
-			return $this->restrictions['only_combinations'];
-		} else {
-			return array();
+		$cpl = array( 'bad_combinations', 'good_combinations', 'bad_combinations_cart', 'good_combinations_cart' );
+
+		foreach ( $cpl as $cpn ) {
+			if ( strpos( 'bad', $cpn ) !== false ) {
+				$cmd = str_replace( "bad", "restrict", $cpn );
+			} else {
+				$cmd = str_replace( "good", "allow", $cpn );
+			}
+
+			if ( !empty( $this->restrictions[$cmd] ) && !empty( $this->restrictions[$cpn] ) ) {
+				$combinations[$cpn] = $this->restrictions[$cpn];
+			} elseif ( !empty( $this->restrictions[$cmd] ) ) {
+				$combinations[$cpn] = true;
+			} else {
+				$combinations[$cpn] = false;
+			}
 		}
+
+		return $combinations;
 	}
 
 	function applyCoupon( $amount )
