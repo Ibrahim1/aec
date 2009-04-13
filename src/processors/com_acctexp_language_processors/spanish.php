@@ -115,6 +115,7 @@ define( '_AEC_ECHECKFORM_BANK_NAME_NAME', 'Bank Name');
 define( '_AEC_ECHECKFORM_BANK_NAME_DESC', 'The Bank Name');
 
 // Generic Wire Transfer Form
+define( '_AEC_WTFORM_TABNAME', 'Wire Transfer');
 define( '_AEC_WTFORM_ACCOUNTNAME_NAME', 'Account owner Name');
 define( '_AEC_WTFORM_ACCOUNTNAME_DESC', 'The name of the person holding this account');
 define( '_AEC_WTFORM_ACCOUNTNUMBER_NAME', 'Account Number');
