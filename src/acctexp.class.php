@@ -8078,6 +8078,7 @@ class Invoice extends serialParamDBTable
 		$response['userid'] = $this->userid;
 
 		$pp->exchangeSettingsByPlan( $plan, $plan->params );
+
 		if ( $altvalidation ) {
 			$response = $pp->instantvalidateNotification( $response, $post, $this );
 		} else {
