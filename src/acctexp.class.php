@@ -7150,6 +7150,22 @@ class InvoiceFactory
 
 		$this->mi_form = $this->plan->getMIforms( $this->mi_error );
 
+		if ( !empty( $this->mi_form ) ) {
+			$params = $this->getMIformParams( array() );
+			print_r($params);print_r($passthrough);exit;
+			foreach ( $params as $mik => $miv ) {
+				if ( $mik == 'lists' ) {
+					continue;
+				}
+
+				foreach ( $passthrough as $pid => $pk ) {
+					if ( ( $pk[0] == $mik ) || ( $pk[0] == $mik.'[]' ) ) {
+						unset($passthrough[$pid]);
+					}
+				}
+			}
+		}
+
 		if ( $aecConfig->cfg['skip_confirmation'] && empty( $this->mi_form ) ) {
 			$confirm = false;
 		} else {

@@ -65,7 +65,13 @@ class processor_chase_paymentech extends PROFILEprocessor
 
 		$pt = array();
 		foreach ( $paytypes as $name ) {
-			$desc = constant( '_AEC_'.strtoupper($name).'FORM_TABNAME' );
+			$cname = '_AEC_'.strtoupper($name).'FORM_TABNAME';
+
+			if ( defined( $cname ) ) {
+				$desc = constant( $cname );
+			} else {
+				$desc = $cname;
+			}
 
 			$paytypes_selection[] = mosHTML::makeOption( $name, $desc );
 
