@@ -7462,20 +7462,33 @@ class InvoiceFactory
 
 		$usage = null;
 		if ( isset( $this->invoice->usage ) ) {
-			$usage = $this->invoice->usage;
+			return $this->invoice->getObjUsage();
 		} elseif ( isset( $this->usage ) ) {
 			$usage = $this->usage;
 		}
 
-		if ( strpos( $usage, 'c' ) !== false ) {
-			$usage = null;
-		}
-
 		if ( !empty( $usage ) ) {
-			$new_subscription = new SubscriptionPlan( $database );
-			$new_subscription->load( $usage );
+			$u = explode( '.', $usage );
 
-			return $new_subscription;
+			switch ( strtolower( $u[0] ) ) {
+				case 'c':
+				case 'cart':
+					$objUsage = new aecCart( $database );
+					$objUsage->load( $u[1] );
+					break;
+				case 'p':
+				case 'plan':
+				default:
+					if ( !isset( $u[1] ) ) {
+						$u[1] = $u[0];
+					}
+
+					$objUsage = new SubscriptionPlan( $database );
+					$objUsage->load( $u[1] );
+					break;
+			}
+
+			return $objUsage;
 		} else {
 			return null;
 		}
@@ -8069,8 +8082,13 @@ class Invoice extends serialParamDBTable
 
 		$this->computeAmount();
 
-		$plan = new SubscriptionPlan( $database );
-		$plan->load( $this->usage );
+		$objUsage = $this->getObjUsage();
+
+		if ( is_a( $objUsage, 'SubscriptionPlan' ) ) {
+			$plan = $objUsage;
+		} else {
+			$plan = $usage->getTopPlan();
+		}
 
 		$post = aecPostParamClear( $_POST );
 		$post['planparams'] = $plan->getProcessorParameters( $pp->id );
@@ -8569,13 +8587,16 @@ class Invoice extends serialParamDBTable
 			$cart = null;
 		}
 
+		$cart = null;
 		$plan = false;
 
-		$urladd = '';
-		if ( $this->usage ) {
-			$plan = $this->getObjUsage();
+		$objUsage = $this->getObjUsage();
 
-			if ( !empty( $plan ) ) {
+		$urladd = '';
+		if ( !empty( $objUsage ) ) {
+			if ( is_a( $objUsage, 'SubscriptionPlan' ) ) {
+				$plan = $objUsage;
+
 				$int_var['planparams'] = $plan->getProcessorParameters( $InvoiceFactory->pp->id );
 
 				if ( isset( $int_var['params']['userselect_recurring'] ) ) {
@@ -8595,23 +8616,14 @@ class Invoice extends serialParamDBTable
 				}
 			} else {
 				$recurring = false;
-				$plan = false;
-
-				if ( empty( $cart ) ) {
-					$cc = explode( '.', $this->usage );
-
-					if ( isset( $cc[1] ) ) {
-						$cart = new aecCart( $database );
-						$cart->load( $cc[1] );
-
-					}
-				}
 
 				if ( !empty( $InvoiceFactory->cart ) ) {
-					$amount = $cart->getAmount( $InvoiceFactory->metaUser, $InvoiceFactory->cart );
+					$cart = $InvoiceFactory->_cart;
 				} else {
-					$amount = $cart->getAmount( $InvoiceFactory->metaUser );
+					$cart = $objUsage;
 				}
+
+				$amount = $cart->getAmount( $InvoiceFactory->metaUser, $InvoiceFactory->cart );
 			}
 
 			if ( $recurring ) {
@@ -8644,29 +8656,6 @@ class Invoice extends serialParamDBTable
 		return $int_var;
 	}
 
-	function getObjUsage()
-	{
-		global $database;
-
-		$usage = null;
-		if ( !empty( $this->usage ) ) {
-			$usage = $this->usage;
-		}
-
-		if ( strpos( $usage, 'c' ) !== false ) {
-			$usage = null;
-		}
-
-		if ( !empty( $usage ) ) {
-			$new_subscription = new SubscriptionPlan( $database );
-			$new_subscription->load( $usage );
-
-			return $new_subscription;
-		} else {
-			return null;
-		}
-	}
-
 	function prepareProcessorLink( $InvoiceFactory=null )
 	{
 		global $database, $mosConfig_live_site;
@@ -8685,19 +8674,16 @@ class Invoice extends serialParamDBTable
 			}
 		}
 
-		if ( !empty( $InvoiceFactory->cart ) ) {
-			$cart = $InvoiceFactory->_cart;
-		} else {
-			$cart = null;
-		}
-
+		$cart = null;
 		$plan = false;
 
-		$urladd = '';
-		if ( $this->usage ) {
-			$plan = $this->getObjUsage();
+		$objUsage = $this->getObjUsage();
 
-			if ( !empty( $plan ) ) {
+		$urladd = '';
+		if ( !empty( $objUsage ) ) {
+			if ( is_a( $objUsage, 'SubscriptionPlan' ) ) {
+				$plan = $objUsage;
+
 				$int_var['planparams'] = $plan->getProcessorParameters( $InvoiceFactory->pp->id );
 
 				if ( isset( $int_var['params']['userselect_recurring'] ) ) {
@@ -8717,16 +8703,11 @@ class Invoice extends serialParamDBTable
 				}
 			} else {
 				$recurring = false;
-				$plan = false;
 
-				if ( empty( $cart ) ) {
-					$cc = explode( '.', $this->usage );
-
-					if ( isset( $cc[1] ) ) {
-						$cart = new aecCart( $database );
-						$cart->load( $cc[1] );
-
-					}
+				if ( !empty( $InvoiceFactory->cart ) ) {
+					$cart = $InvoiceFactory->_cart;
+				} else {
+					$cart = $objUsage;
 				}
 
 				$amount = $cart->getAmount( $InvoiceFactory->metaUser, $InvoiceFactory->cart );
@@ -8768,6 +8749,42 @@ class Invoice extends serialParamDBTable
 		}
 
 		return $return;
+	}
+
+	function getObjUsage()
+	{
+		global $database;
+
+		$usage = null;
+		if ( !empty( $this->usage ) ) {
+			$usage = $this->usage;
+		}
+
+		if ( !empty( $usage ) ) {
+			$u = explode( '.', $usage );
+
+			switch ( strtolower( $u[0] ) ) {
+				case 'c':
+				case 'cart':
+					$objUsage = new aecCart( $database );
+					$objUsage->load( $u[1] );
+					break;
+				case 'p':
+				case 'plan':
+				default:
+					if ( !isset( $u[1] ) ) {
+						$u[1] = $u[0];
+					}
+
+					$objUsage = new SubscriptionPlan( $database );
+					$objUsage->load( $u[1] );
+					break;
+			}
+
+			return $objUsage;
+		} else {
+			return null;
+		}
 	}
 
 	function addTargetUser( $user_ident )
@@ -9482,6 +9499,11 @@ class aecCart extends serialParamDBTable
 		$return['free_trial']	= false;
 
 		return $return;
+	}
+
+	function getTopPlan()
+	{
+		return aecCartHelper::getFirstCartItemObject( $this );
 	}
 
 	function issueHistoryEvent( $class, $event, $details )
