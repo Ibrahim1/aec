@@ -9052,6 +9052,28 @@ class aecCartHelper
 		}
 	}
 
+	function getFirstSortedCartItemObject( $cart )
+	{
+		$highest = 0;
+		$cursor = 999999;
+
+		foreach ( $cart->content as $cid => $c ) {
+			$query = 'SELECT ordering'
+			. ' FROM #__acctexp_plans'
+			. ' WHERE `id` = \'' . $c . '\''
+			;
+			$database->setQuery( $query );
+			$ordering = $database->loadResult();
+
+			if ( $ordering > $cursor ) {
+				$highest = $c;
+				$cursor = $ordering;
+			}
+		}
+
+		return aecCartHelper::getCartItemObject( $cart, $highest );
+	}
+
 	function getCartProcessorList( $cart, $nofree=true )
 	{
 		$proclist = array();
@@ -9503,7 +9525,7 @@ class aecCart extends serialParamDBTable
 
 	function getTopPlan()
 	{
-		return aecCartHelper::getFirstCartItemObject( $this );
+		return aecCartHelper::getFirstSortedCartItemObject( $this );
 	}
 
 	function issueHistoryEvent( $class, $event, $details )
