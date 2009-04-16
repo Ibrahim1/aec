@@ -2623,17 +2623,17 @@ class PaymentProcessor
 		if ( empty( $this->settings ) ) {
 			$this->getSettings();
 		}
-
+aecDebug("checkoutProcess1");
 		if ( isset( $int_var['planparams']['aec_overwrite_settings'] ) ) {
 			if ( !empty( $int_var['planparams']['aec_overwrite_settings'] ) ) {
 				$this->exchangeSettingsByPlan( null, $int_var['planparams'] );
 			}
 		}
-
+aecDebug("checkoutProcess1");
 		if ( empty( $plan ) && !empty( $cart ) ) {
 			$plan = aecCartHelper::getFirstCartItemObject( $cart );
 		}
-
+aecDebug("checkoutProcess1");
 		$request = new stdClass();
 		$request->parent			=& $this;
 		$request->int_var			=& $int_var;
@@ -2641,7 +2641,7 @@ class PaymentProcessor
 		$request->plan				=& $plan;
 		$request->invoice			=& $invoice;
 		$request->cart				=& $cart;
-
+aecDebug("checkoutProcess1");
 		return $this->processor->checkoutProcess( $request );
 	}
 
@@ -3546,7 +3546,7 @@ class XMLprocessor extends processor
 
 		// Transmit xml to server
 		$response = $this->transmitRequestXML( $xml, $request );
-
+aecDebug("checkoutProcess2");
 		if ( empty( $response['invoice'] ) ) {
 			$response['invoice'] = $request->invoice->invoice_number;
 		}
@@ -3555,7 +3555,7 @@ class XMLprocessor extends processor
 			$request->invoice = new Invoice( $database );
 			$request->invoice->loadInvoiceNumber( $response['invoice'] );
 		}
-
+aecDebug("checkoutProcess2");
 		if ( !empty( $response['error'] ) ) {
 			return $response;
 		}
@@ -3570,7 +3570,7 @@ class XMLprocessor extends processor
 				}
 				unset( $response['raw'] );
 			}
-
+aecDebug("checkoutProcess2");
 			$request->invoice->processorResponse( $request->parent, $response, $resp, true );
 		} else {
 			return false;
@@ -7152,7 +7152,6 @@ class InvoiceFactory
 
 		if ( !empty( $this->mi_form ) ) {
 			$params = $this->getMIformParams( array() );
-			print_r($params);print_r($passthrough);exit;
 			foreach ( $params as $mik => $miv ) {
 				if ( $mik == 'lists' ) {
 					continue;
@@ -7405,12 +7404,16 @@ class InvoiceFactory
 				// Reload cart object and cart - was changed by $cpsh
 				$this->_cart->reload();
 				$this->getCart();
+
+				$this->loadItems();
+				$cpsh = new couponsHandler( $this->metaUser, $this, $coupons );
+				$this->items = $cpsh->applyToCart( $this->items, $this->_cart, $this->cart );
 			}
 
 			$cpsh_err = $cpsh->getErrors();
 
 			if ( count( $cpsh_err ) ) {
-				$this->terms->errors = $cpsh_err;
+				$this->items->errors = $cpsh_err;
 			}
 
 			$cpsh_exc = $cpsh->getExceptions();
@@ -7451,7 +7454,7 @@ class InvoiceFactory
 			$this->invoice->formatInvoiceNumber();
 
 			$mainframe->SetPageTitle( _CHECKOUT_TITLE );
-
+//
 			Payment_HTML::checkoutForm( $option, $var['var'], $var['params'], $this, $error, $repeat );
 		}
 	}
@@ -7497,22 +7500,30 @@ class InvoiceFactory
 	function internalcheckout( $option )
 	{
 		global $database;
-
+aecDebug("internalcheckout");
 		$this->metaUser = new metaUser( $this->userid );
 
 		$this->puffer( $option );
 
 		$var = $this->invoice->getFullVars( $this );
 
-		$new_subscription = $this->getObjUsage();
+		$objUsage = $this->getObjUsage();
+aecDebug("internalcheckout");
+		if ( is_a( $objUsage, 'SubscriptionPlan' ) ) {
+			$new_subscription = $objUsage;
+		} else {
+			$new_subscription = $usage->getTopPlan();
+		}
 
+		$new_subscription = $this->getObjUsage();
+aecDebug("internalcheckout");
 		$badbadvars = array( 'userid', 'invoice', 'task', 'option' );
 		foreach ( $badbadvars as $badvar ) {
 			if ( isset( $_POST[$badvar] ) ) {
 				unset( $_POST[$badvar] );
 			}
 		}
-
+aecDebug("internalcheckout");
 		$var['params'] = aecPostParamClear( $_POST );
 
 		if ( !empty( $this->invoice->params['target_user'] ) ) {
@@ -7520,13 +7531,13 @@ class InvoiceFactory
 		} else {
 			$targetUser =& $this->metaUser;
 		}
-
+aecDebug("internalcheckout");
 		if ( !empty( $this->_cart ) && !empty( $this->cart ) ) {
 			$response = $this->pp->checkoutProcess( $var, $targetUser, $new_subscription, $this->invoice, $this->cart );
 		} else {
 			$response = $this->pp->checkoutProcess( $var, $targetUser, $new_subscription, $this->invoice );
 		}
-
+aecDebug("internalcheckout");
 		if ( isset( $response['error'] ) ) {
 			$this->InvoiceToCheckout( $option, $response['error'], true );
 		} else {
@@ -9065,7 +9076,7 @@ class aecCartHelper
 			$database->setQuery( $query );
 			$ordering = $database->loadResult();
 
-			if ( $ordering > $cursor ) {
+			if ( $ordering < $cursor ) {
 				$highest = $c;
 				$cursor = $ordering;
 			}
@@ -9303,12 +9314,14 @@ class aecCart extends serialParamDBTable
 
 	function addCoupon( $coupon_code, $id=null )
 	{
-		if ( empty( $id ) ) {
+		if ( empty( $id ) && ( $id != 0 ) ) {
 			if ( !isset( $this->params['overall_coupons'] ) ) {
 				$this->params['overall_coupons'] = array();
 			}
 
-			$this->params['overall_coupons'][] = $coupon_code;
+			if ( !in_array( $coupon_code, $this->content['overall_coupons'] ) ) {
+				$this->params['overall_coupons'][] = $coupon_code;
+			}
 		} elseif ( isset( $this->content[$id] ) ) {
 			if ( !isset( $this->content[$id]['coupons'] ) ) {
 				$this->content[$id]['coupons'] = array();
@@ -9477,7 +9490,7 @@ class aecCart extends serialParamDBTable
 
 			$entry['cost']			= AECToolbox::correctAmount( $entry['cost'] );
 
-			$entry['count']					= $content['count'];
+			$entry['count']			= $content['count'];
 
 			$totalcost += $entry['cost_total'];
 
@@ -11797,9 +11810,8 @@ class AECToolbox
 			}
 		}
 
-		$amount = round( $amount, 2 );
+		$a = explode( '.', (string) round( $amount, 2 ) );
 
-		$a		= explode( '.', $amount );
 		if ( empty( $a[1] ) ) {
 			$amount = $a[0] . '.00';
 		} else {
@@ -13382,55 +13394,53 @@ class couponsHandler extends eucaObject
 				continue;
 			}
 
-			if ( count( $allowed ) > 1 ) {
-				$fname = 'cartcoupon_'.$ccid.'_item';
+			$fname = 'cartcoupon_'.$ccid.'_item';
 
-				$pgsel = aecGetParam( $fname, null, true, array( 'word', 'int' ) );
+			$pgsel = aecGetParam( $fname, null, true, array( 'word', 'int' ) );
 
-				if ( !is_null( $pgsel ) ) {
-					$items[$pgsel] == $this->applyToItem( $pgsel, $items[$pgsel], $coupon_code );
-
-					if ( !$cart->hasCoupon( $coupon_code, $pgsel ) ) {
-						$cart->addCoupon( $coupon_code, $pgsel );
-						$cart->storeload();
-
-						$this->affectedCart = true;
-					}
-				} else {
-					$found = false;
-					foreach ( $cart->content as $cid => $content ) {
-						if ( $cart->hasCoupon( $coupon_code, $cid ) ) {
-							$items[$cid] == $this->applyToItem( $cid, $items[$cid], $coupon_code );
-							$found = true;
-
-							$this->noapplylist[] = $coupon_code;
-						}
-					}
-
-					if ( !$found ) {
-						$ex = array();
-						$ex['head'] = "Select Item for Coupon \"" . $coupon_code . "\"";
-						$ex['desc'] = "The coupon you have entered can be applied to one of the following items:<br />";
-
-						$ex['rows'] = array();
-
-						foreach ( $allowed as $cid => $objid ) {
-							if ( empty( $fullcart[$cid]['free'] ) ) {
-								$ex['rows'][] = array( 'radio', $fname, $cid, true, $fullcart[$cid]['name'] );
-							}
-						}
-
-						if ( !empty( $ex['rows'] ) ) {
-							$this->raiseException( $ex );
-						}
-					}
-				}
-			} else {
+			if ( ( count( $allowed ) == 1 ) ) {
 				foreach ( $items as $iid => $item ) {
 					if ( $item['item']['obj']->id == $allowed[0] ) {
-						$items[$iid] == $this->applyToItem( $allowed[0], $item, $coupon_code );
+						$pgsel = $iid;
+					}
+				}
+			}
+
+			if ( !is_null( $pgsel ) ) {
+				$items[$pgsel] == $this->applyToItem( $pgsel, $items[$pgsel], $coupon_code );
+
+				if ( !$cart->hasCoupon( $coupon_code, $pgsel ) ) {
+					$cart->addCoupon( $coupon_code, $pgsel );
+					$cart->storeload();
+
+					$this->affectedCart = true;
+				}
+			} else {
+				$found = false;
+				foreach ( $cart->content as $cid => $content ) {
+					if ( $cart->hasCoupon( $coupon_code, $cid ) ) {
+						$items[$cid] == $this->applyToItem( $cid, $items[$cid], $coupon_code );
+						$found = true;
 
 						$this->noapplylist[] = $coupon_code;
+					}
+				}
+
+				if ( !$found ) {
+					$ex = array();
+					$ex['head'] = "Select Item for Coupon \"" . $coupon_code . "\"";
+					$ex['desc'] = "The coupon you have entered can be applied to one of the following items:<br />";
+
+					$ex['rows'] = array();
+
+					foreach ( $allowed as $cid => $objid ) {
+						if ( empty( $fullcart[$cid]['free'] ) ) {
+							$ex['rows'][] = array( 'radio', $fname, $cid, true, $fullcart[$cid]['name'] );
+						}
+					}
+
+					if ( !empty( $ex['rows'] ) ) {
+						$this->raiseException( $ex );
 					}
 				}
 			}
@@ -13523,7 +13533,7 @@ class couponsHandler extends eucaObject
 
 		foreach ( $this->coupons as $coupon_code ) {
 			if ( !$this->loadCoupon( $coupon_code ) ) {
-				return $amount;
+				continue;
 			}
 
 			$ccombo		= $this->cph->getCombinations();
@@ -13539,8 +13549,6 @@ class couponsHandler extends eucaObject
 						$amount = $this->cph->applyCoupon( $amount );
 
 						$this->addCouponToRecord( false, $coupon_code, $ccombo );
-
-						return $amount;
 					}
 				}
 			}

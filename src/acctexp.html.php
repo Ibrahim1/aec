@@ -1035,7 +1035,6 @@ class Payment_HTML
 
 						$ttype = 'aec_termtype_' . $term->type;
 
-						//$future = ( $tid > $InvoiceFactory->terms->pointer ) ? '&nbsp;('._AEC_CHECKOUT_FUTURETERM.')' : '';
 						$applicable = ( $tid >= $item['terms']->pointer ) ? '' : '&nbsp;('._AEC_CHECKOUT_NOTAPPLICABLE.')';
 
 						$current = ( $tid == $item['terms']->pointer ) ? ' current_period' : '';
@@ -1101,7 +1100,7 @@ class Payment_HTML
 										$amount = $citem->cost['amount'];
 									}
 
-									$c = AECToolbox::formatAmount( $amount );
+									$c = AECToolbox::correctAmount( $amount );
 
 									// Strip out currency symbol and replace with blanks
 									if ( !$aecConfig->cfg['amount_currency_symbolfirst'] ) {
@@ -1140,9 +1139,9 @@ class Payment_HTML
 						</td>
 					</tr>
 					<?php
-					if ( !empty( $InvoiceFactory->terms ) ) {
-						if ( isset( $InvoiceFactory->terms->errors ) ) {
-							foreach ( $InvoiceFactory->terms->errors as $err ) { ?>
+					if ( !empty( $InvoiceFactory->items ) ) {
+						if ( isset( $InvoiceFactory->items->errors ) ) {
+							foreach ( $InvoiceFactory->items->errors as $err ) { ?>
 							<tr>
 								<td class="couponerror">
 									<p>
