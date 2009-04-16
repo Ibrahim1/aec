@@ -122,7 +122,7 @@ class processor_authorize_aim extends XMLprocessor
 		if ( !empty( $request->cart ) ) {
 			$sid = 0;
 			foreach ( $request->cart as $ciid => $ci ) {
-				if ( $ci['is_total'] ) {
+				if ( !empty( $ci['is_total'] ) ) {
 					continue;
 				}
 

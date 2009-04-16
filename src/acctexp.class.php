@@ -2623,17 +2623,17 @@ class PaymentProcessor
 		if ( empty( $this->settings ) ) {
 			$this->getSettings();
 		}
-aecDebug("checkoutProcess1");
+
 		if ( isset( $int_var['planparams']['aec_overwrite_settings'] ) ) {
 			if ( !empty( $int_var['planparams']['aec_overwrite_settings'] ) ) {
 				$this->exchangeSettingsByPlan( null, $int_var['planparams'] );
 			}
 		}
-aecDebug("checkoutProcess1");
+
 		if ( empty( $plan ) && !empty( $cart ) ) {
 			$plan = aecCartHelper::getFirstCartItemObject( $cart );
 		}
-aecDebug("checkoutProcess1");
+
 		$request = new stdClass();
 		$request->parent			=& $this;
 		$request->int_var			=& $int_var;
@@ -2641,7 +2641,7 @@ aecDebug("checkoutProcess1");
 		$request->plan				=& $plan;
 		$request->invoice			=& $invoice;
 		$request->cart				=& $cart;
-aecDebug("checkoutProcess1");
+
 		return $this->processor->checkoutProcess( $request );
 	}
 
@@ -3546,7 +3546,7 @@ class XMLprocessor extends processor
 
 		// Transmit xml to server
 		$response = $this->transmitRequestXML( $xml, $request );
-aecDebug("checkoutProcess2");
+
 		if ( empty( $response['invoice'] ) ) {
 			$response['invoice'] = $request->invoice->invoice_number;
 		}
@@ -3555,7 +3555,7 @@ aecDebug("checkoutProcess2");
 			$request->invoice = new Invoice( $database );
 			$request->invoice->loadInvoiceNumber( $response['invoice'] );
 		}
-aecDebug("checkoutProcess2");
+
 		if ( !empty( $response['error'] ) ) {
 			return $response;
 		}
@@ -3570,7 +3570,7 @@ aecDebug("checkoutProcess2");
 				}
 				unset( $response['raw'] );
 			}
-aecDebug("checkoutProcess2");
+
 			$request->invoice->processorResponse( $request->parent, $response, $resp, true );
 		} else {
 			return false;
@@ -7343,7 +7343,7 @@ class InvoiceFactory
 		$this->checkout( $option );
 	}
 
-	function checkout( $option, $repeat=0 )
+	function checkout( $option, $repeat=0, $error=null )
 	{
 		global $database, $aecConfig;
 
@@ -7439,10 +7439,10 @@ class InvoiceFactory
 			}
 		}
 
-		$this->InvoiceToCheckout( $option, $repeat );
+		$this->InvoiceToCheckout( $option, $repeat, $error );
 	}
 
-	function InvoiceToCheckout( $option, $error=null, $repeat=0 )
+	function InvoiceToCheckout( $option, $repeat=0, $error=null )
 	{
 		global $mainframe;
 
@@ -7454,7 +7454,7 @@ class InvoiceFactory
 			$this->invoice->formatInvoiceNumber();
 
 			$mainframe->SetPageTitle( _CHECKOUT_TITLE );
-//
+
 			Payment_HTML::checkoutForm( $option, $var['var'], $var['params'], $this, $error, $repeat );
 		}
 	}
@@ -7500,7 +7500,7 @@ class InvoiceFactory
 	function internalcheckout( $option )
 	{
 		global $database;
-aecDebug("internalcheckout");
+
 		$this->metaUser = new metaUser( $this->userid );
 
 		$this->puffer( $option );
@@ -7508,22 +7508,20 @@ aecDebug("internalcheckout");
 		$var = $this->invoice->getFullVars( $this );
 
 		$objUsage = $this->getObjUsage();
-aecDebug("internalcheckout");
+
 		if ( is_a( $objUsage, 'SubscriptionPlan' ) ) {
 			$new_subscription = $objUsage;
 		} else {
-			$new_subscription = $usage->getTopPlan();
+			$new_subscription = $objUsage->getTopPlan();
 		}
 
-		$new_subscription = $this->getObjUsage();
-aecDebug("internalcheckout");
 		$badbadvars = array( 'userid', 'invoice', 'task', 'option' );
 		foreach ( $badbadvars as $badvar ) {
 			if ( isset( $_POST[$badvar] ) ) {
 				unset( $_POST[$badvar] );
 			}
 		}
-aecDebug("internalcheckout");
+
 		$var['params'] = aecPostParamClear( $_POST );
 
 		if ( !empty( $this->invoice->params['target_user'] ) ) {
@@ -7531,15 +7529,15 @@ aecDebug("internalcheckout");
 		} else {
 			$targetUser =& $this->metaUser;
 		}
-aecDebug("internalcheckout");
+
 		if ( !empty( $this->_cart ) && !empty( $this->cart ) ) {
 			$response = $this->pp->checkoutProcess( $var, $targetUser, $new_subscription, $this->invoice, $this->cart );
 		} else {
 			$response = $this->pp->checkoutProcess( $var, $targetUser, $new_subscription, $this->invoice );
 		}
-aecDebug("internalcheckout");
+
 		if ( isset( $response['error'] ) ) {
-			$this->InvoiceToCheckout( $option, $response['error'], true );
+			$this->checkout( $option, true, $response['error'] );
 		} else {
 			$this->thanks( $option );
 		}
@@ -7559,7 +7557,7 @@ aecDebug("internalcheckout");
 		$this->invoice->processorResponse( $this->pp, $response );
 
 		if ( isset( $response['error'] ) ) {
-			$this->InvoiceToCheckout( $option, $response['error'], true );
+			$this->checkout( $option, true, $response['error'] );
 		} else {
 			if ( !empty( $this->pp->info['notify_trail_thanks'] ) ) {
 				$this->thanks( $option );
@@ -8098,7 +8096,7 @@ class Invoice extends serialParamDBTable
 		if ( is_a( $objUsage, 'SubscriptionPlan' ) ) {
 			$plan = $objUsage;
 		} else {
-			$plan = $usage->getTopPlan();
+			$plan = $objUsage->getTopPlan();
 		}
 
 		$post = aecPostParamClear( $_POST );
@@ -9065,19 +9063,21 @@ class aecCartHelper
 
 	function getFirstSortedCartItemObject( $cart )
 	{
+		global $database;
+
 		$highest = 0;
 		$cursor = 999999;
 
 		foreach ( $cart->content as $cid => $c ) {
 			$query = 'SELECT ordering'
 			. ' FROM #__acctexp_plans'
-			. ' WHERE `id` = \'' . $c . '\''
+			. ' WHERE `id` = \'' . $c['id'] . '\''
 			;
 			$database->setQuery( $query );
 			$ordering = $database->loadResult();
 
 			if ( $ordering < $cursor ) {
-				$highest = $c;
+				$highest = $cid;
 				$cursor = $ordering;
 			}
 		}
@@ -9673,7 +9673,7 @@ class Subscription extends serialParamDBTable
 			}
 		}
 
-		if ( $primary ) {
+		if ( !empty( $primary ) ) {
 			$query .= ' AND `primary` = \'1\'';
 		} elseif ( $primary === false ) {
 			$query .= ' AND `primary` = \'0\'';
@@ -9684,7 +9684,7 @@ class Subscription extends serialParamDBTable
 		$subscriptionid = $database->loadResult();
 
 		if ( empty( $subscriptionid ) && !$similar ) {
-			return $this->getSubscriptionID( $userid, $usage, $primary, true );
+			return $this->getSubscriptionID( $userid, $usage, false, true );
 		}
 
 		return $subscriptionid;

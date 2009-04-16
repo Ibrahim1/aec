@@ -1234,9 +1234,7 @@ class Payment_HTML
 			<tr>
 				<td class="checkout_error">
 					<p>
-						<strong><?php echo _CHECKOUT_ERROR_EXPLANATION . ( $error ? ( ': ' . $error) : '' ); ?></strong>
-						&nbsp;
-						<?php echo $error; ?>
+						<?php echo _CHECKOUT_ERROR_EXPLANATION . ":"; ?>&nbsp;<strong><?php echo $error; ?></strong>
 					</p>
 				</td>
 			</tr>
