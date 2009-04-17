@@ -8645,10 +8645,12 @@ class Invoice extends serialParamDBTable
 			$int_var['recurring'] = 0;
 		}
 
-		if ( !empty( $this->coupons ) ) {
-			$cph = new couponsHandler( $InvoiceFactory->metaUser, $InvoiceFactory, $this->coupons );
+		if ( empty( $objUsage ) || is_a( $objUsage, 'SubscriptionPlan' ) ) {
+			if ( !empty( $this->coupons ) ) {
+				$cph = new couponsHandler( $InvoiceFactory->metaUser, $InvoiceFactory, $this->coupons );
 
-			$amount['amount'] = $cph->applyToAmount( $amount['amount'] );
+				$amount['amount'] = $cph->applyToAmount( $amount['amount'] );
+			}
 		}
 
 		$int_var['amount']		= $amount['amount'];
@@ -8738,7 +8740,7 @@ class Invoice extends serialParamDBTable
 			$amount['amount'] = $cph->applyToAmount( $amount['amount'] );
 		}
 
-		$int_var['amount'] = $amount['amount'];
+		$int_var['amount']		 = $amount['amount'];
 
 		if ( !empty( $amount['return_url'] ) ) {
 			$int_var['return_url'] = $amount['return_url'] . $urladd;

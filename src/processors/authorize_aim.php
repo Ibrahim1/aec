@@ -150,7 +150,7 @@ class processor_authorize_aim extends XMLprocessor
 
 		$a['x_description']		= trim( substr( AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ), 0, 20 ) );
 		$a['x_invoice_num']		= $request->int_var['invoice'];
-		$a['x_amount']			= $request->int_var['amount'];
+		$a['x_amount']			= $request->int_var['amount']['amount'];
 		$a['x_first_name']		= trim( $request->int_var['params']['billFirstName'] );
 		$a['x_last_name']		= trim( $request->int_var['params']['billLastName'] );
 
