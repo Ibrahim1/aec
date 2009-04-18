@@ -1155,15 +1155,14 @@ function saveUser( $option, $apply=0 )
 		$plan = new SubscriptionPlan( $database );
 		$plan->load( $_POST['assignto_plan'] );
 
-		if ( !$metaUser->hasSubscription ) {
-			$metaUser->establishFocus( $plan );
-			$established = true;
-		}
+		$metaUser->establishFocus( $plan );
 
 		$metaUser->focusSubscription->applyUsage( $_POST['assignto_plan'], 'none', 1 );
 
-		// We have to reload the metaUser object because it was changed underway
+		// We have to reload the metaUser object because of the changes
 		$metaUser = new metaUser( $_POST['userid'] );
+
+		$established = true;
 	}
 
 	$ck_lifetime = aecGetParam( 'ck_lifetime', 'off' );

@@ -493,15 +493,15 @@ class metaUser
 
 		$plan_params = $payment_plan->params;
 
-		// Check whether a record exists
-		if ( $this->hasSubscription ) {
-			$existing_record = $this->focusSubscription->getSubscriptionID( $this->userid, $payment_plan->id, null );
-		} else {
-			$existing_record = 0;
-		}
-
 		if ( !isset( $plan_params['make_primary'] ) ) {
 			$plan_params['make_primary'] = 1;
+		}
+
+		// Check whether a record exists
+		if ( $this->hasSubscription ) {
+			$existing_record = $this->focusSubscription->getSubscriptionID( $this->userid, $payment_plan->id, $plan_params['make_primary'] );
+		} else {
+			$existing_record = 0;
 		}
 
 		$return = 'false';
@@ -9671,15 +9671,23 @@ class Subscription extends serialParamDBTable
 				;
 
 		if ( !empty( $usage ) ) {
-			if ( $similar && !empty( $plan->params['equalplans'] ) ) {
-				$plan = new SubscriptionPlan( $database );
-				$plan->load( $usage );
+			$plan = new SubscriptionPlan( $database );
+			$plan->load( $usage );
 
+			if ( ( !empty( $plan->params['similarplans'] ) && $similar ) || !empty( $plan->params['equalplans'] ) ) {
 				$allplans = array( $usage );
 
-				if ( !empty( $plan->params['similarplans'] ) && !empty( $plan->params['equalplans'] ) ) {
-					$simipla = $plan->params['similarplans'];
-					$equalpl = $plan->params['equalplans'];
+				if ( !empty( $plan->params['similarplans'] ) || !empty( $plan->params['equalplans'] ) ) {
+					if ( !empty( $plan->params['similarplans'] ) ) {
+						$simipla = $plan->params['similarplans'];
+					} else {
+						$simipla = array();
+					}
+					if ( !empty( $plan->params['equalplans'] ) ) {
+						$equalpl = $plan->params['equalplans'];
+					} else {
+						$equalpl = array();
+					}
 
 					if ( $similar ) {
 						$allplans = array_merge( $plan->params['similarplans'], $plan->params['equalplans'], $allplans );
@@ -9700,7 +9708,7 @@ class Subscription extends serialParamDBTable
 
 		if ( !empty( $primary ) ) {
 			$query .= ' AND `primary` = \'1\'';
-		} elseif ( $primary === false ) {
+		} elseif ( !is_null( $primary ) ) {
 			$query .= ' AND `primary` = \'0\'';
 		}
 
