@@ -1331,6 +1331,7 @@ class Config_General extends serialParamDBTable
 		$def['altsslurl']						= '';
 		$def['checkout_as_gift']				= 0;
 		$def['checkout_as_gift_access']			= 23;
+		// TODO: $def['invoicecushion']						= 5; //Minutes
 
 		return $def;
 	}
@@ -6240,7 +6241,17 @@ class InvoiceFactory
 					}
 				}
 			} else {
-				$this->processor = PaymentProcessorHandler::getProcessorNamefromId( $procs[0] );
+				if ( isset( $procs[0] ) ) {
+					$this->processor = PaymentProcessorHandler::getProcessorNamefromId( $procs[0] );
+				} else {
+					$am = $this->_cart->getAmount( $this->metaUser, $this->cart );
+
+					if ( $am['amount'] == "0.00" ) {
+						$this->processor = 'free';
+					} else {
+						$this->processor = 'none';
+					}
+				}
 			}
 		}
 
@@ -7431,8 +7442,10 @@ class InvoiceFactory
 
 		// Either this is fully free, or the next term is free and this is non recurring
 		if ( !empty( $this->items ) ) {
-			if ( count( $this->items ) == 1 ) {
-				if ( $this->items[0]['terms']->checkFree() || ( $this->items[0]['terms']->nextterm->free && !$this->recurring ) ) {
+			if ( ( count( $this->items ) == 2 ) || ( $this->amount['amount'] == "0.00" ) ) {
+				$min = array_shift( array_keys( $this->items ) );
+
+				if ( $this->items[$min]['terms']->checkFree() || ( $this->items[$min]['terms']->nextterm->free && !$this->recurring ) || ( $this->amount['amount'] == "0.00" ) ) {
 					$this->invoice->pay();
 					return $this->thanks( $option, false, true );
 				}
@@ -7891,13 +7904,13 @@ class Invoice extends serialParamDBTable
 
 	function computeAmount( $InvoiceFactory=null )
 	{
+		global $database;
+
 		if ( !empty( $InvoiceFactory->metaUser ) ) {
 			$metaUser = $InvoiceFactory->metaUser;
 		} else {
 			$metaUser = new metaUser( $this->userid ? $this->userid : 0 );
 		}
-
-		global $database;
 
 		$pp = null;
 
@@ -8377,10 +8390,10 @@ class Invoice extends serialParamDBTable
 			switch ( strtolower( $usage[0] ) ) {
 				case 'c':
 				case 'cart':
-					$cart = new aecCart( $database );
-					$cart->load( $usage[1] );
+					$this->params['cart'] = new aecCart( $database );
+					$this->params['cart']->load( $usage[1] );
 
-					foreach ( $cart->content as $c ) {
+					foreach ( $this->params['cart']->content as $c ) {
 						$new_plan = new SubscriptionPlan( $database );
 						$new_plan->load( $c['id'] );
 
@@ -8389,9 +8402,11 @@ class Invoice extends serialParamDBTable
 						}
 					}
 
-					$this->params['cart'] = $cart;
 					$this->params['cart']->clear();
 
+					// Load and delete original entry
+					$cart = new aecCart( $database );
+					$cart->load( $usage[1] );
 					$cart->delete();
 					break;
 				case 'p':
@@ -8553,7 +8568,13 @@ class Invoice extends serialParamDBTable
 		$time_passed		= ( ( time() + $mosConfig_offset*3600 ) - $tdate ) / 3600;
 		$transaction_date	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
 
-		if ( $time_passed > $aecConfig->cfg['invoicecushion'] ) {
+		if ( !empty( $aecConfig->cfg['invoicecushion'] ) ) {
+			$cushion = $aecConfig->cfg['invoicecushion']*60;
+		} else {
+			$cushion = 0;
+		}
+
+		if ( $time_passed > $cushion ) {
 			$this->counter += 1;
 			$this->transaction_date	= $transaction_date;
 
@@ -13483,8 +13504,10 @@ class couponsHandler extends eucaObject
 			return $item;
 		}
 
-		if ( in_array( $coupon_code, $this->item_applied[$id] ) ) {
-			return $item;
+		if ( !empty( $this->item_applied[$id] ) ) {
+			if ( in_array( $coupon_code, $this->item_applied[$id] ) ) {
+				return $item;
+			}
 		}
 
 		if ( isset( $item['item']['cost'] ) ) {
