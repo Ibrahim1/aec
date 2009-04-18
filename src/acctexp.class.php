@@ -8755,10 +8755,12 @@ class Invoice extends serialParamDBTable
 			$int_var['recurring'] = 0;
 		}
 
-		if ( !empty( $this->coupons ) ) {
-			$cph = new couponsHandler( $InvoiceFactory->metaUser, $InvoiceFactory, $this->coupons );
+		if ( empty( $objUsage ) || is_a( $objUsage, 'SubscriptionPlan' ) ) {
+			if ( !empty( $this->coupons ) ) {
+				$cph = new couponsHandler( $InvoiceFactory->metaUser, $InvoiceFactory, $this->coupons );
 
-			$amount['amount'] = $cph->applyToAmount( $amount['amount'] );
+				$amount['amount'] = $cph->applyToAmount( $amount['amount'] );
+			}
 		}
 
 		$int_var['amount']		 = $amount['amount'];
@@ -9337,7 +9339,7 @@ class aecCart extends serialParamDBTable
 
 	function addCoupon( $coupon_code, $id=null )
 	{
-		if ( empty( $id ) && ( $id != 0 ) ) {
+		if ( is_null( $id ) ) {
 			if ( !isset( $this->params['overall_coupons'] ) ) {
 				$this->params['overall_coupons'] = array();
 			}
@@ -13392,6 +13394,14 @@ class couponsHandler extends eucaObject
 
 			if ( $this->cph->coupon->restrictions['usage_cart_full'] ) {
 				$this->fullcartlist[] = $coupon_code;
+
+				if ( !$cart->hasCoupon( $coupon_code ) ) {
+					$cart->addCoupon( $coupon_code );
+					$cart->storeload();
+
+					$this->affectedCart = true;
+				}
+
 				continue;
 			}
 
@@ -13422,9 +13432,11 @@ class couponsHandler extends eucaObject
 			$pgsel = aecGetParam( $fname, null, true, array( 'word', 'int' ) );
 
 			if ( ( count( $allowed ) == 1 ) ) {
+				$min = array_shift( array_keys( $allowed ) );
+
 				foreach ( $items as $iid => $item ) {
-					if ( $item['item']['obj']->id == $allowed[0] ) {
-						$pgsel = $iid;
+					if ( $item['item']['obj']->id == $allowed[$min] ) {
+						$pgsel = $iid;var_dump($iid);
 					}
 				}
 			}
