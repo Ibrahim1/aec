@@ -489,6 +489,10 @@ class metaUser
 
 	function establishFocus( $payment_plan, $processor='none', $silent=false )
 	{
+		if ( $this->focusSubscription->plan == $payment_plan->id ) {
+			return 'existing';
+		}
+
 		global $database;
 
 		$plan_params = $payment_plan->params;
@@ -497,18 +501,30 @@ class metaUser
 			$plan_params['make_primary'] = 1;
 		}
 
+		$existing_record = 0;
+		$existing_status = false;
+
 		// Check whether a record exists
 		if ( $this->hasSubscription ) {
 			$existing_record = $this->focusSubscription->getSubscriptionID( $this->userid, $payment_plan->id, $plan_params['make_primary'] );
+
+			if ( !empty( $existing_record ) ) {
+				$query = 'SELECT `status`'
+						. ' FROM #__acctexp_subscr'
+						. ' WHERE `id` = \'' . (int) $existing_record . '\''
+						;
+				$database->setQuery( $query );
+				$existing_status = $database->loadResult();
+			}
 		} else {
 			$existing_record = 0;
 		}
 
-		$return = 'false';
+		$return = false;
 
 		// To be failsafe, a new subscription may have to be added in here
 		if ( empty( $this->hasSubscription ) || !$plan_params['make_primary'] ) {
-			if ( !empty( $existing_record ) && ( $plan_params['update_existing'] || $plan_params['make_primary'] ) ) {
+			if ( !empty( $existing_record ) && ( ( $existing_status == 'Pending' ) || $plan_params['update_existing'] || $plan_params['make_primary'] ) ) {
 				// Update existing non-primary subscription
 				$this->focusSubscription = new Subscription( $database );
 				$this->focusSubscription->load( $existing_record );
@@ -521,10 +537,10 @@ class metaUser
 				}
 
 				// Create a root new subscription
-				if ( !$plan_params['make_primary'] && !empty( $plan_params['standard_parent'] ) && empty( $existing_parent ) ) {
+				if ( empty( $this->hasSubscription ) && !$plan_params['make_primary'] && !empty( $plan_params['standard_parent'] ) && empty( $existing_parent ) ) {
 					$this->focusSubscription = new Subscription( $database );
 					$this->focusSubscription->load( 0 );
-					$this->focusSubscription->createNew( $this->userid, 'none', 1, 1 );
+					$this->focusSubscription->createNew( $this->userid, 'none', 1, 1, $plan_params['standard_parent'] );
 					$this->focusSubscription->applyUsage( $plan_params['standard_parent'], 'none', $silent, 0 );
 
 					$this->objSubscription = $this->focusSubscription;
@@ -533,7 +549,7 @@ class metaUser
 				// Create new subscription
 				$this->focusSubscription = new Subscription( $database );
 				$this->focusSubscription->load( 0 );
-				$this->focusSubscription->createNew( $this->userid, $processor, 1, $plan_params['make_primary'] );
+				$this->focusSubscription->createNew( $this->userid, $processor, 1, $plan_params['make_primary'], $payment_plan->id );
 				$this->hasSubscription = 1;
 
 				if ( $plan_params['make_primary'] ) {
@@ -928,7 +944,7 @@ class metaUser
 		global $database;
 
 		$return = array();
-		if ( $this->objSubscription->plan ) {
+		if ( !empty( $this->objSubscription->plan ) ) {
 			$selected_plan = new SubscriptionPlan( $database );
 			$selected_plan->load( $this->objSubscription->plan );
 
@@ -9678,15 +9694,12 @@ class Subscription extends serialParamDBTable
 				$allplans = array( $usage );
 
 				if ( !empty( $plan->params['similarplans'] ) || !empty( $plan->params['equalplans'] ) ) {
-					if ( !empty( $plan->params['similarplans'] ) ) {
-						$simipla = $plan->params['similarplans'];
-					} else {
-						$simipla = array();
+					if ( empty( $plan->params['similarplans'] ) ) {
+						$plan->params['similarplans'] = array();
 					}
-					if ( !empty( $plan->params['equalplans'] ) ) {
-						$equalpl = $plan->params['equalplans'];
-					} else {
-						$equalpl = array();
+
+					if ( empty( $plan->params['equalplans'] ) ) {
+						$plan->params['equalplans'] = array();
 					}
 
 					if ( $similar ) {
@@ -9700,7 +9713,7 @@ class Subscription extends serialParamDBTable
 					$allplans[$apid] = '`plan` = \'' . $pid . '\'';
 				}
 
-				$query .= ' AND ' . implode( ' OR ', $allplans );
+				$query .= ' AND (' . implode( ' OR ', $allplans ) . ')';
 			} else {
 				$query .= ' AND ' . '`plan` = \'' . $usage . '\'';
 			}
@@ -9748,7 +9761,7 @@ class Subscription extends serialParamDBTable
 		}
 	}
 
-	function createNew( $userid, $processor, $pending, $primary=1 )
+	function createNew( $userid, $processor, $pending, $primary=1, $plan=null )
 	{
 		global $mosConfig_offset;
 
@@ -9758,6 +9771,10 @@ class Subscription extends serialParamDBTable
 		$this->expiration	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
 		$this->status		= $pending ? 'Pending' : 'Active';
 		$this->type			= $processor;
+
+		if ( !empty( $plan ) ) {
+			$this->plan		= $plan;
+		}
 
 		$this->storeload();
 		$this->id = $this->getMax();
