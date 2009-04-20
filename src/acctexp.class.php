@@ -7178,7 +7178,7 @@ class InvoiceFactory
 		$this->mi_form = $this->plan->getMIforms( $this->mi_error );
 
 		if ( !empty( $this->mi_form ) ) {
-			$params = $this->getMIformParams( array() );
+			$params = $this->plan->getMIformParams( array() );
 			foreach ( $params as $mik => $miv ) {
 				if ( $mik == 'lists' ) {
 					continue;
