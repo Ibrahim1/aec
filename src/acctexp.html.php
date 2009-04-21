@@ -901,9 +901,15 @@ class Payment_HTML
 				<?php } ?>
 				<?php if ( empty( $InvoiceFactory->userid ) ) { ?>
 				<p>Save Registration to Continue Shopping functionlink:confirm_savereg</p>
-				<?php } else { ?>
+				<?php } else {
+					if ( !empty( $aecConfig->cfg['customlink_continueshopping'] ) ) {
+						$continueurl = $aecConfig->cfg['customlink_continueshopping'];
+					} else {
+						$continueurl = AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=subscribe', $aecConfig->cfg['ssl_signup'] );
+					}
+				?>
 				<div id="continue_button">
-					<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=subscribe', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+					<form name="confirmForm" action="<?php echo $continueurl; ?>" method="post">
 						<input type="image" src="<?php echo $mosConfig_live_site . '/components/com_acctexp/images/continue_shopping_button.png'; ?>" border="0" name="submit" alt="submit" />
 					</form>
 				</div>
