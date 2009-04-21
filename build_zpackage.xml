@@ -42,12 +42,12 @@
 		</copy>
 		<copy todir="${deployment.userdir}/joomla_1_5_plugins" overwrite="yes">
 			<fileset dir="${source.dir}">
-				<include name="*plugin*.zip"/>
+				<include name="aec*plugin*.zip"/>
 			</fileset>
 		</copy>
 		<copy todir="${deployment.userdir}/joomla_1_0_mambots" overwrite="yes">
 			<fileset dir="${source.dir}">
-				<include name="*mambot*.zip"/>
+				<include name="aec*mambot*.zip"/>
 			</fileset>
 		</copy>
 	</target>
