@@ -7380,6 +7380,14 @@ class InvoiceFactory
 
 		$this->puffer( $option );
 
+		$user_ident	= aecGetParam( 'user_ident', 0, true, array( 'string', 'clear_nonalnum' ) );
+
+		if ( !empty( $user_ident ) && !empty( $this->invoice ) ) {
+			if ( $objinvoice->addTargetUser( strtolower( $user_ident ) ) ) {
+				$objinvoice->storeload();
+			}
+		}
+
 		$repeat = empty( $repeat ) ? 0 : $repeat;
 
 		$exceptproc = array( 'none', 'free' );
