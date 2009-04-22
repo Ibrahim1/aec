@@ -133,6 +133,22 @@ function aecEscape( $value, $safe_params )
 		$return = $value;
 	}
 
+	if ( in_array( 'clear_nonemail', $safe_params ) ) {
+		if ( strpos( $value, '@' ) === false ) {
+			if ( !in_array( 'clear_nonalnum', $safe_params ) ) {
+				// This is not a valid email adress to begin with, so strip everything hazardous
+				$safe_params[] = 'clear_nonalnum';
+			}
+		} else {
+			$array = explode('@', $value, 2);
+
+			$username = preg_replace('/[^a-z0-9._+-]+/i', '', $username);
+			$domain = preg_replace('/[^a-z0-9.-]+/i', '', $domain);
+
+			$value = $username.'@'.$domain;
+		}
+	}
+
 	if ( in_array( 'clear_nonalnum', $safe_params ) ) {
 		$value = preg_replace( "/[^a-z \d]/i", "", $value );
 	}
@@ -538,12 +554,10 @@ class metaUser
 
 				// Create a root new subscription
 				if ( empty( $this->hasSubscription ) && !$plan_params['make_primary'] && !empty( $plan_params['standard_parent'] ) && empty( $existing_parent ) ) {
-					$this->focusSubscription = new Subscription( $database );
-					$this->focusSubscription->load( 0 );
-					$this->focusSubscription->createNew( $this->userid, 'none', 1, 1, $plan_params['standard_parent'] );
-					$this->focusSubscription->applyUsage( $plan_params['standard_parent'], 'none', $silent, 0 );
-
-					$this->objSubscription = $this->focusSubscription;
+					$this->objSubscription = new Subscription( $database );
+					$this->objSubscription->load( 0 );
+					$this->objSubscription->createNew( $this->userid, 'none', 1, 1, $plan_params['standard_parent'] );
+					$this->objSubscription->applyUsage( $plan_params['standard_parent'], 'none', $silent, 0 );
 				}
 
 				// Create new subscription
@@ -7380,11 +7394,11 @@ class InvoiceFactory
 
 		$this->puffer( $option );
 
-		$user_ident	= aecGetParam( 'user_ident', 0, true, array( 'string', 'clear_nonalnum' ) );
+		$user_ident	= aecGetParam( 'user_ident', 0, true, array( 'string', 'clear_nonemail' ) );
 
 		if ( !empty( $user_ident ) && !empty( $this->invoice ) ) {
-			if ( $objinvoice->addTargetUser( strtolower( $user_ident ) ) ) {
-				$objinvoice->storeload();
+			if ( $this->invoice->addTargetUser( strtolower( $user_ident ) ) ) {
+				$this->invoice->storeload();
 			}
 		}
 

@@ -1149,7 +1149,7 @@ function InvoiceMakeGift( $option )
 	global $database;
 
 	$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
-	$user_ident	= aecGetParam( 'user_ident', 0, true, array( 'string', 'clear_nonalnum' ) );
+	$user_ident	= aecGetParam( 'user_ident', 0, true, array( 'string', 'clear_nonemail' ) );
 
 	$objinvoice = new Invoice( $database );
 	$objinvoice->loadInvoiceNumber( $invoice );
