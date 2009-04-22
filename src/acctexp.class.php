@@ -505,11 +505,22 @@ class metaUser
 
 	function establishFocus( $payment_plan, $processor='none', $silent=false )
 	{
+		global $database;
+
+		if ( !is_object( $payment_plan ) ) {
+			$planid = $payment_plan;
+
+			$payment_plan = new SubscriptionPlan( $database );
+			$payment_plan->load( $planid );
+
+			if ( empty( $payment_plan->id ) ) {
+				return false;
+			}
+		}
+
 		if ( $this->focusSubscription->plan == $payment_plan->id ) {
 			return 'existing';
 		}
-
-		global $database;
 
 		$plan_params = $payment_plan->params;
 

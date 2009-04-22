@@ -986,6 +986,40 @@ class Payment_HTML
 						<?php } ?>
 					</td>
 				</tr>
+				<?php
+				$makegift = false;
+
+				if ( !empty( $aecConfig->cfg['confirm_as_gift'] ) ) {
+					if ( !empty( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
+						// Apparently, we cannot trust $my->gid
+						$groups = GeneralInfoRequester::getLowerACLGroup( $InvoiceFactory->metaUser->cmsUser->gid );
+
+						if ( in_array( $aecConfig->cfg['checkout_as_gift_access'], $groups ) ) {
+							$makegift = true;
+						}
+					} else {
+						$makegift = true;
+					}
+				}
+
+				if ( $makegift ) { ?>
+						<tr>
+							<td class="couponinfo">
+								<strong><?php echo _CHECKOUT_GIFT_HEAD; ?></strong>
+							</td>
+						</tr>
+						<tr>
+							<td class="giftdetails">
+								<?php if ( !empty( $InvoiceFactory->invoice->params['target_user'] ) ) { ?>
+									<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username']; ?> (<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceRemoveGift&amp;invoice='.$InvoiceFactory->invoice_number, $aecConfig->cfg['ssl_signup'] ); ?>">undo?</a>)</p>
+								<?php } else { ?>
+									<p><?php echo _CHECKOUT_GIFT_INFO; ?></p>
+									<input type="text" size="20" name="user_ident" class="inputbox" value="" />
+								<?php } ?>
+							</td>
+						</tr>
+					<?php
+				} ?>
 				<tr>
 					<td id="confirmation_button">
 					<div id="confirmation_button">

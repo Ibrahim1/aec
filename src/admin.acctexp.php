@@ -1194,14 +1194,12 @@ function saveUser( $option, $apply=0 )
 	if ( !is_null( $set_status ) ) {
 		if ( strcmp( $set_status, 'now' ) === 0 ) {
 			$metaUser->focusSubscription->expire();
-		} elseif ( strcmp( $set_status, 'exclude' ) === 0 ) {
-			$metaUser->focusSubscription->setStatus( 'Excluded' );
-		} elseif ( strcmp( $set_status, 'close' ) === 0 ) {
-			$metaUser->focusSubscription->setStatus( 'Closed' );
-		} elseif ( strcmp( $set_status, 'include' ) === 0 ) {
-			$metaUser->focusSubscription->setStatus( 'Active' );
-		} elseif ( strcmp( $set_status, 'hold' ) === 0 ) {
-			$metaUser->focusSubscription->setStatus( 'Hold' );
+		} else {
+			$statusstatus = array( 'exclude' => 'Excluded', 'Closed' => 'Closed', 'include' => 'Active', 'hold' => 'Hold' );
+
+			if ( isset( $statusstatus[$set_status] ) ) {
+				$metaUser->focusSubscription->setStatus( $statusstatus[$set_status] );
+			}
 		}
 	}
 
