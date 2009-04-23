@@ -1575,7 +1575,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 				$metaUser = new metaUser( false, $sid );
 				$metaUser->establishFocus( $plan );
 
-				$metaUser->focusSubscription->applyUsage( $_POST['assignto_plan'], 'none', 1 );
+				$metaUser->focusSubscription->applyUsage( $planid, 'none', 1 );
 			}
 		}
 
@@ -1584,7 +1584,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 				$metaUser = new metaUser( $uid );
 				$metaUser->establishFocus( $plan );
 
-				$metaUser->focusSubscription->applyUsage( $_POST['assignto_plan'], 'none', 1 );
+				$metaUser->focusSubscription->applyUsage( $planid, 'none', 1 );
 
 				$subscriptionid[] = $metaUser->focusSubscription->id;
 			}
