@@ -1562,33 +1562,37 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$where_or	= array();
 	$notconfig	= false;
 
-	if ( !empty( $userid ) ) {
-		foreach ( $userid as $uid ) {
-			$subscriptionHandler = new Subscription( $database );
-			$subscriptionHandler->createNew( $uid, '', 1 );
-			$subscriptionHandler->storeload();
-			$subscriptionid[] = $subscriptionHandler->getMax();
-		}
-	}
-
 	$planid = trim( aecGetParam( 'assign_planid', null ) );
-	if ( $planid > 0 && is_array( $subscriptionid ) && count( $subscriptionid ) > 0 ) {
-		foreach ($subscriptionid as $k) {
-			$subscriptionHandler = new Subscription( $database );
 
-			if ( !empty( $k ) ) {
-				$subscriptionHandler->load( $k );
-			} else {
-				$subscriptionHandler->load( 0 );
-				$subscriptionHandler->createNew( $k, '', 1 );
+	$users_selected = ( ( is_array( $subscriptionid ) && count( $subscriptionid ) ) || ( is_array( $userid ) && count( $userid ) ) );
+
+	if ( $planid > 0 && $users_selected ) {
+		$plan = new SubscriptionPlan( $database );
+		$plan->load( $planid );
+
+		if ( !empty( $subscriptionid ) ) {
+			foreach ( $subscriptionid as $sid ) {
+				$metaUser = new metaUser( false, $sid );
+				$metaUser->establishFocus( $plan );
+
+				$metaUser->focusSubscription->applyUsage( $_POST['assignto_plan'], 'none', 1 );
 			}
+		}
 
-			$subscriptionHandler->applyUsage( $planid, 'none', 1 );
+		if ( !empty( $subscriptionid ) ) {
+			foreach ( $userid as $uid ) {
+				$metaUser = new metaUser( $uid );
+				$metaUser->establishFocus( $plan );
 
-			// Also show active users now
-			if ( !in_array( 'active', $groups ) ) {
-				$groups[] = 'active';
+				$metaUser->focusSubscription->applyUsage( $_POST['assignto_plan'], 'none', 1 );
+
+				$subscriptionid[] = $metaUser->focusSubscription->id;
 			}
+		}
+
+		// Also show active users now
+		if ( !in_array( 'active', $groups ) ) {
+			$groups[] = 'active';
 		}
 	}
 

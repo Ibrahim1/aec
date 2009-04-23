@@ -212,9 +212,13 @@ class metaUser
 	/** @var int */
 	var $hasSubscription	= null;
 
-	function metaUser( $userid )
+	function metaUser( $userid, $subscriptionid=null )
 	{
 		global $database;
+
+		if ( empty( $userid ) && !empty( $subscriptionid ) ) {
+			$userid = AECfetchfromDB::UserIDfromSubscriptionID( $userid );
+		}
 
 		$this->meta = new metaUserDB( $database );
 		$this->meta->loadUserid( $userid );
@@ -233,7 +237,12 @@ class metaUser
 
 			$this->userid = $userid;
 
-			$aecid = AECfetchfromDB::SubscriptionIDfromUserID( $userid );
+			if ( !empty( $subscriptionid ) ) {
+				$aecid = $subscriptionid;
+			} else {
+				$aecid = AECfetchfromDB::SubscriptionIDfromUserID( $userid );
+			}
+
 			if ( $aecid ) {
 				$this->objSubscription = new Subscription( $database );
 				$this->objSubscription->load( $aecid );
@@ -9810,7 +9819,6 @@ class Subscription extends serialParamDBTable
 		}
 
 		$this->storeload();
-		$this->id = $this->getMax();
 	}
 
 	function is_expired( $offset=false )
