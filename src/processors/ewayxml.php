@@ -37,29 +37,29 @@ class processor_ewayxml extends XMLprocessor
 
 	function settings()
 	{
-		$this->settings = array();
-		$this->settings['testmode']		= "1";
-		$this->settings['custId']		= "87654321";
-		$this->settings['tax']			= "10";
-		$this->settings['testAmount']	= "00";
-		$this->settings['item_name']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
-		$this->settings['rewriteInfo']	= ''; // added mic
-		$this->settings['SiteTitle']	= '';
+		$settings = array();
+		$settings['testmode']		= "1";
+		$settings['custId']		= "87654321";
+		$settings['tax']			= "10";
+		$settings['testAmount']	= "00";
+		$settings['item_name']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['rewriteInfo']	= ''; // added mic
+		$settings['SiteTitle']	= '';
 
-		return $this->settings;
+		return $settings;
 	}
 
 	function backend_settings()
 	{
-		$this->settings = array();
-		$this->settings['testmode']		= array( 'list_yesno' );
-		$this->settings['custId']		= array( 'inputC' );
-		$this->settings['SiteTitle']	= array( 'inputC' );
-		$this->settings['item_name']	= array( 'inputE' );
+		$settings = array();
+		$settings['testmode']		= array( 'list_yesno' );
+		$settings['custId']		= array( 'inputC' );
+		$settings['SiteTitle']	= array( 'inputC' );
+		$settings['item_name']	= array( 'inputE' );
 
-        $this->settings = AECToolbox::rewriteEngineInfo( null, $this->settings );
+        $settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
-		return $this->settings;
+		return $settings;
 	}
 
 	function createRequestXML( $request )
