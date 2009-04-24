@@ -37,12 +37,41 @@ class mi_affiliatepro
 
 		$text = '<script id="pap_x2s6df8d" src="' . $this->settings['url'] . '" type="text/javascript"></script>'
 				. '<script type="text/javascript">'
-				. 'var sale = PostAffTracker.createSale();'
+				;
+
+		if ( !empty( $request->cart ) ) {
+			$sid = 0;
+			foreach ( $request->cart as $ciid => $ci ) {
+				if ( !empty( $ci['is_total'] ) ) {
+					continue;
+				}
+
+				$sid++;
+
+				if ( $sid == 1 ) {
+					$no = '';
+				} else {
+					$no = $sid;
+				}
+
+				$text .= 'var sale'.$no.' = PostAffTracker.createSale();'
+					. "sale".$no.".setTotalCost('" . $ci['cost_total'] . "');"
+					. "sale".$no.".setOrderID('" . $request->invoice->invoice_number . "');"
+					. "sale".$no.".setProductID('" . $ci['obj']->id . "');"
+					. "sale".$no.".setStatus('A');"
+					;
+			}
+		} else {
+			$text .= 'var sale = PostAffTracker.createSale();'
 				. "sale.setTotalCost('" . $request->invoice->amount . "');"
 				. "sale.setOrderID('" . $request->invoice->invoice_number . "');"
 				. "sale.setProductID('" . $request->plan->id . "');"
 				. "sale.setStatus('A');"
-				. 'PostAffTracker.register();'
+				;
+		}
+
+
+		$text .= 'PostAffTracker.register();'
 				. '</script>';
 // TODO:
 // sale.setAffiliateID('testaff'); - force Affiliate ID
