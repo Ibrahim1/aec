@@ -91,19 +91,21 @@ class mi_idevaffiliate
 
 		$newget = array();
 		foreach ( $getparams as $v ) {
-			$newget[] = urlencode($v) . '=' . urlencode($v);
+			$va = explode( '=', $v, 2 );
+
+			$newget[] = urlencode($va[0]) . '=' . urlencode($va[1]);
 		}
 
 		if ( !empty( $this->settings['use_curl'] ) ) {
 			$ch = curl_init();
-			$curl_url = $rooturl . "/sale.php?" . implode( '&', $getparams );
+			$curl_url = $rooturl . "/sale.php?" . implode( '&', $newget );
 			curl_setopt($ch, CURLOPT_URL, $curl_url );
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_exec($ch);
 			curl_close($ch);
 		} else {
 			$text = '<img border="0" '
-					.'src="' . $rooturl .'/sale.php?' . implode( '&amp;', $getparams ) . '" '
+					.'src="' . $rooturl .'/sale.php?' . implode( '&amp;', $newget ) . '" '
 					.'width="1" height="1" />';
 
 			$displaypipeline = new displayPipeline($database);
