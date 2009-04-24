@@ -217,7 +217,7 @@ class metaUser
 		global $database;
 
 		if ( empty( $userid ) && !empty( $subscriptionid ) ) {
-			$userid = AECfetchfromDB::UserIDfromSubscriptionID( $userid );
+			$userid = AECfetchfromDB::UserIDfromSubscriptionID( $subscriptionid );
 		}
 
 		$this->meta = new metaUserDB( $database );
