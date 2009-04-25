@@ -1,12 +1,12 @@
 <?php
 /**
- * @version $Id: mi_fireboard.php 01 2007-08-11 13:29:29Z SBS $
+ * @version $Id: mi_phpbb3.php 01 2007-08-11 13:29:29Z SBS $
  * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
- * @subpackage Micro Integrations - Fireboard
+ * @subpackage Micro Integrations - phpBB3
  * @copyright 2006/2007 Copyright (C) David Deutsch
- * @author Calum Polwart & Team AEC - http://www.globalnerd.org
+ * @author Calum Polwart, Jon Goldman, David Deutsch & Team AEC - http://www.globalnerd.org
  * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
- * Based on code from the mi_remository.php file from sk0re.
+ * Based on code from the mi_remository.php and mi_juga.php by David Deutsch.
  */
 
 // Dont allow direct linking
@@ -37,8 +37,18 @@ class mi_phpbb3
 		$sg = array();
 		foreach ( $groups as $group ) {
 			$sg[] = mosHTML::makeOption( $group->group_id, $group->group_name );
-						$sg2[] = mosHTML::makeOption( $group->group_colour, $group->group_name );
+			$sg2[] = mosHTML::makeOption( $group->group_colour, $group->group_name );
 		}
+
+         //Explode the Groups to Exclude
+         if (!empty($this->settings['groups_exclude'])) {
+         		$selected_groups_exclude = array();
+         		foreach ( $this->settings['groups_exclude'] as $group_exclude) {
+         			$selected_groups_exclude[]->value = $group_exclude;
+         		}
+         	} else {
+         		$selected_groups_exclude			= '';
+         	}
 
 		$settings = array();
 
@@ -47,14 +57,19 @@ class mi_phpbb3
 		$settings['lists']['group_colour']		= mosHTML::selectList($sg2, 'group_colour', 'size="4"', 'value', 'text', $this->settings['group_colour']);
 		$settings['lists']['group_colour_exp']	= mosHTML::selectList($sg2, 'group_colour_exp', 'size="4"', 'value', 'text', $this->settings['group_colour_exp']);
 
-		$settings['set_group']			= array( 'list_yesno' );
-		$settings['group']				= array( 'list' );
-		$settings['group_colour']		= array( 'list' );
-		$settings['set_group_exp']		= array( 'list_yesno' );
-		$settings['group_exp']			= array( 'list' );
-		$settings['group_colour_exp']	= array( 'list' );
-		$settings['rebuild']			= array( 'list_yesno' );
-		$settings['remove']				= array( 'list_yesno' );
+		$settings['lists']['groups_exclude']		= mosHTML::selectList( $sg, 'groups_exclude[]', 'size="10" multiple="true"', 'value', 'text', $selected_groups_exclude );
+
+		$settings['set_group']				= array( 'list_yesno' );
+		$settings['group']					= array( 'list' );
+		$settings['group_colour']			= array( 'list' );
+		$settings['set_group_exp']			= array( 'list_yesno' );
+		$settings['group_exp']				= array( 'list' );
+		$settings['group_colour_exp']		= array( 'list' );
+		$settings['groups_exclude']			= array( 'list' );
+		$settings['set_groups_exclude']		= array( 'list_yesno' );
+		$settings['set_clear_groups']		= array( 'list_yesno' );
+		$settings['rebuild']				= array( 'list_yesno' );
+		$settings['remove']					= array( 'list_yesno' );
 
 		return $settings;
 	}
@@ -64,12 +79,75 @@ class mi_phpbb3
 		global $database;
 
 		if ( $this->settings['set_group_exp'] ) {
-			$query = 'UPDATE phpbb_users'
-						. ' SET `group_id` = \'' . $this->settings['group_exp'] . '\', `user_colour` = \'' . $this->settings['group_colour_exp'] . '\''
-				. ' WHERE `username` = \'' . $request->metaUser->cmsUser->username . '\''
-				;
+			$userid = $request->metaUser->userid;
+
+			$bbuser = null;
+			// Get user info from PHPBB3 User Record
+			$query = 'SELECT `user_id`, `group_id`'
+					. ' FROM phpbb_users'
+					. ' WHERE LOWER(user_email) = \'' . strtolower( $request->metaUser->cmsUser->email ) . '\''
+					;
 			$database->setQuery( $query );
-			$database->query();
+			$database->loadObject( $bbuser );
+
+			// check PHPBB3 primary group not on excluded list
+			if ( in_array( $bbuser->group_id, $this->settings['groups_exclude'] ) ) {
+				$onExcludeList = true;
+			} else {
+				$onExcludeList = false;
+			}
+
+			// check PHPBB3 secondary groups not on excluded list as long as primary group isn't already
+			if ( ( $this->settings['set_groups_exclude'] ) && ( !$onExcludeList ) ) {
+				$secGroups = null;
+				$query = 'SELECT `group_id`'
+						. ' FROM phpbb_user_group'
+						. ' WHERE `user_id` = \'' . $bbuser->user_id . '\''
+						;
+				$database->setQuery( $query );
+				$database->loadObject( $secGroups );
+
+			 	foreach ( $secGroups as $secGroup ) {
+					if ( in_array( $secGroup, $this->settings['groups_exclude'] ) ) {
+						$onExcludeList = true;
+						break;
+					}
+				}
+			}
+
+			$queries = array();
+
+			// If Not On Exclude List, apply expiration group & clear secondary groups (if set)
+			if ( !$onExcludeList ) {
+				// update PHPBB3 groups list
+				$queries[] = 'UPDATE phpbb_user_group'
+						. ' SET `group_id` = \'' . $this->settings['group_exp'] . '\''
+						. ' WHERE `group_id` = \'' . $bbuser->group_id . '\''
+						. ' AND `user_id` = \'' . $bbuser->user_id . '\''
+						;
+				// update PHPBB3 primary group
+				$queries[] = 'UPDATE phpbb_users'
+						. ' SET `group_id` = \'' . $this->settings['group_exp'] . '\''
+						. ' WHERE `user_id` = \'' . $bbuser->user_id . '\''
+						;
+				// Clear Secondary Groups (if flag set)
+				if ( $this->settings['set_clear_groups'] ) {
+					$queries[] = 'DELETE FROM phpbb_user_group'
+							. ' WHERE `group_id` != \'' . $this->settings['group_exp'] . '\''
+							. ' AND `user_id` = \'' . $bbuser->user_id . '\''
+							;
+				}
+			}
+
+			$queries[] = 'UPDATE phpbb_users'
+						. ' SET `group_id` = \'' . $this->settings['group_exp'] . '\', `user_colour` = \'' . $this->settings['group_colour_exp'] . '\''
+						. ' WHERE `username` = \'' . $request->metaUser->cmsUser->username . '\''
+						;
+
+			foreach ( $queries as $query ) {
+				$database->setQuery( $query );
+				$database->query();
+			}
 		}
 
 		return true;
@@ -80,88 +158,67 @@ class mi_phpbb3
 		global $database;
 
 		if ( $this->settings['set_group'] ) {
+			$bbuser = null;
 			// get the user phpbb user id
-			$query = 'SELECT `user_id`'
+			$query = 'SELECT `user_id`, `group_id`'
 					. ' FROM phpbb_users'
-					. ' WHERE `username` = \'' . $request->metaUser->cmsUser->username . '\''
+					. ' WHERE LOWER(user_email) = \'' . strtolower( $request->metaUser->cmsUser->email ) . '\''
 					;
 			$database->setQuery( $query );
-						$phpbbuser = $database->loadObjectList();
-						$phpbbuser = $phpbbuser[0]->user_id;
+			$database->loadObject( $bbuser );
 
-			// If already an entry exists -> update, if not -> create
-			if ( $phpbbuser ) {
-				$query = 'UPDATE phpbb_users'
-								. ' SET `group_id` = \'' . $this->settings['group'] . '\', `user_colour` = \'' . $this->settings['group_colour'] . '\''
-								. ' WHERE `user_id` = \'' . $phpbbuser . '\''
-								;
-				$database->setQuery( $query );
-				$database->query();
-
-				$query = 'UPDATE phpbb_user_group'
-										. ' SET `group_id` = \'' . $this->settings['group'] . '\''
-										. ' WHERE `user_id` = \'' . $phpbbuser . '\''
-										;
-				$database->setQuery( $query );
-				$database->query();
+			// check PHPBB3 primary group not on excluded list
+			if ( in_array( $bbuser->group_id, $this->settings['groups_exclude'] ) ) {
+				$onExcludeList = true;
 			} else {
-				$GLOBALS['TEMP_USER'] = $user_data;
-				global $phpbb_root_path, $phpEx;
-				global $auth, $user, $template, $cache, $db, $config;
+				$onExcludeList = false;
+			}
 
-				//Include the bridge configuration
-				$path = JPATH_ROOT.DS.'forum';
-				require_once($path.DS.'includes'.DS.'helper.php');
+			// check PHPBB3 secondary groups not on excluded list as long as primary group isn't already
+			if ( ( $this->settings['set_groups_exclude'] ) && ( !$onExcludeList ) ) {
+				$secGroups = null;
+				$query = 'SELECT `group_id`'
+						. ' FROM phpbb_user_group'
+						. ' WHERE `user_id` = \'' . $bbuser->user_id . '\''
+						;
+				$database->setQuery( $query );
+				$database->loadObject( $secGroups );
 
-				JForumHelper::loadPHPBB3($path);
+			 	foreach ( $secGroups as $secGroup ) {
+					if ( in_array( $secGroup, $this->settings['groups_exclude'] ) ) {
+						$onExcludeList = true;
+						break;
+					}
+				}
+			}
 
-				require_once($phpbb_root_path.DS.'includes/functions_user.php');
+			// If Not On Exclude List, apply expiration group & clear secondary groups (if set)
+			if ( !$onExcludeList ) {
+				// update PHPBB3 groups list
+				$queries[] = 'UPDATE phpbb_user_group'
+						. ' SET `group_id` = \'' . $this->settings['group'] . '\''
+						. ' WHERE `group_id` = \'' . $bbuser->group_id . '\''
+						. ' AND `user_id` = \'' . $bbuser->user_id . '\''
+						;
+				// update PHPBB3 primary group
+				$queries[] = 'UPDATE phpbb_users'
+						. ' SET `group_id` = \'' . $this->settings['group'] . '\''
+						. ' WHERE `user_id` = \'' . $bbuser->user_id . '\''
+						;
+			}
 
-				//$fullname = $this->_fullNameSupport();
-				$userid   = $this->_getUserId($username, $fullname);
+			$queries[] = 'UPDATE phpbb_users'
+						. ' SET `group_id` = \'' . $this->settings['group'] . '\', `user_colour` = \'' . $this->settings['group_colour'] . '\''
+						. ' WHERE `username` = \'' . $request->metaUser->cmsUser->username . '\''
+						;
 
-				$login_name        = $user_data['username'];
-				$username          = $request->metaUser->cmsUser->username;
-				$username_clean    = utf8_clean_string($username);
-				$user_email        = $request->metaUser->cmsUser->email;
-				$user_email_hash   = crc32($user_email) . strlen($user_email);
-
-				$query = 'INSERT INTO phpbb_users'
-				. ' ( `user_id` ,`group_id` , `username`, `username_clean`, `user_email`, `user_email_hash`, `user_colour` )'
-				. ' VALUES (\'' . $userid . '\',\'' . $this->settings['group'] . '\', \'' . $username . '\', \'' . $username_clean . '\', \'' . $user_email . '\', \'' . $user_email_hash . '\', \'' . $this->settings['group_colour'] . '\')'
-				;
+			foreach ( $queries as $query ) {
 				$database->setQuery( $query );
 				$database->query();
 			}
-
 		}
 
 		return true;
-	}
-
-
-	/*
-	 * function to get username based on fullname support
-	 */
-	function _getUserId($username, $fullname)
-	{
-		global $db;
-
-		// if login_name exists use it
-		if (!empty($fullname)) {
-			$where = "login_name='" . $username . "'";
-		} else {
-			$where = "username_clean='" . utf8_clean_string($username) . "'";
-		}
-
-		// Get the user_id of the phpbb user
-		$sql = "SELECT user_id FROM ".USERS_TABLE." WHERE " . $where;
-
-		$result = $db->sql_query($sql);
-		$userid = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
-
-		return $userid;
 	}
 }
 

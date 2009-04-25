@@ -674,9 +674,16 @@ define( '_MI_MI_PHPBB3_SET_GROUP_EXP_NAME','Set group on expiration of plan' );
 define( '_MI_MI_PHPBB3_SET_GROUP_EXP_DESC','Choose Yes if you wish the fireboard group to be changed when the plan expires' );
 define( '_MI_MI_PHPBB3_GROUP_EXP_NAME','Fireboard group to apply member to on expiration of plan.' );
 define( '_MI_MI_PHPBB3_GROUP_EXP_DESC','The group you wish to use if the plan expires.  Manually add groups to the table jos_fb_groups' );
-define( '_MI_MI_PHPBB3_REBUILD_NAME',                'Rebuild Gallerys' );
-define( '_MI_MI_PHPBB3_REBUILD_DESC',                'This option will rebuild your whole Fireboard group assignment by looking for each plan that has this MI applied and then add each user that uses one of these plans to the file.' );
-
+define( '_MI_MI_PHPBB3_SET_GROUPS_EXCLUDE_NAME',	'Check exclude groups list against secondary groups?' );
+define( '_MI_MI_PHPBB3_SET_GROUPS_EXCLUDE_DESC',	'If set to Yes, all groups that a user belongs to will be checked for exclusion (primary and secondary groups).  Set to No and only primary groups will be checked against the exclude list' );
+define( '_MI_MI_PHPBB3_SET_CLEAR_GROUPS_NAME',		'Clear all user\'s secondary groups while applying expiration primary group?' );
+define( '_MI_MI_PHPBB3_SET_CLEAR_GROUPS_DESC',		'If set to Yes, all secondary groups will be cleared from the user record as expiration group is applied as primary.  NOTE: You must have expiration groups set for this to function and exclusions will be checked BEFORE this function is executed' );
+define( '_MI_MI_PHPBB3_GROUPS_EXCLUDE_NAME',		'PHPBB3 Groups to Exclude' );
+define( '_MI_MI_PHPBB3_GROUPS_EXCLUDE_DESC',		'Select all groups that will NOT be changed upon apply or expire (whether this is checked against primary or all user\'s groups will depend upon settings below' );
+define( '_MI_MI_PHPBB3_REBUILD_NAME',				'Rebuild: ' );
+define( '_MI_MI_PHPBB3_REBUILD_DESC',				'Choose yes and then save the MI to recreate the actions fo all users with this MI on a currently active plan.' );
+define( '_MI_MI_PHPBB3_REMOVE_NAME',				'Remove: ' );
+define( '_MI_MI_PHPBB3_REMOVE_DESC',				'Choose yes and then save the MI to carry out the expiration action for all users with this MI on a currently active plan.' );
 
 // uddeim
 define( '_AEC_MI_NAME_UDDEIM',		'UddeIM' );
