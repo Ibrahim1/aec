@@ -7667,7 +7667,7 @@ class InvoiceFactory
 
 		$response = $pp->customAction( $action, $invoice, $this->metaUser );
 
-		$invoice->processorResponse( $pp, $response );
+		$invoice->processorResponse( $pp, $response, '', true );
 
 		if ( isset( $response['cancel'] ) ) {
 			HTML_Results::cancel( 'com_acctexp' );
