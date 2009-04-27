@@ -40,15 +40,16 @@ class mi_phpbb3
 			$sg2[] = mosHTML::makeOption( $group->group_colour, $group->group_name );
 		}
 
-         //Explode the Groups to Exclude
-         if (!empty($this->settings['groups_exclude'])) {
-         		$selected_groups_exclude = array();
-         		foreach ( $this->settings['groups_exclude'] as $group_exclude) {
-         			$selected_groups_exclude[]->value = $group_exclude;
-         		}
-         	} else {
-         		$selected_groups_exclude			= '';
-         	}
+         // Explode the Groups to Exclude
+         if ( !empty($this->settings['groups_exclude'] ) ) {
+     		$selected_groups_exclude = array();
+
+     		foreach ( $this->settings['groups_exclude'] as $group_exclude ) {
+     			$selected_groups_exclude[]->value = $group_exclude;
+     		}
+     	} else {
+     		$selected_groups_exclude			= '';
+     	}
 
 		$settings = array();
 
