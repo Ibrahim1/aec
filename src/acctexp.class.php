@@ -848,9 +848,11 @@ class metaUser
 						// Check whether the user was in the correct plan before
 						case 'plan_previous':
 							if ( $this->hasSubscription ) {
+								$previous = (int) $this->meta->getPreviousPlan();
+
 								if (
-									( in_array( (int) $this->meta->getPreviousPlan(), $check ) )
-									|| ( ( in_array( 0, $check ) ) && is_null( $this->meta->getPreviousPlan() ) )
+									( in_array( $previous, $check ) )
+									|| ( ( in_array( 0, $check ) ) && is_null( $previous ) )
 									) {
 									$status = true;
 								}
