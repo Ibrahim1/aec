@@ -7419,8 +7419,10 @@ class InvoiceFactory
 		$user_ident	= aecGetParam( 'user_ident', 0, true, array( 'string', 'clear_nonemail' ) );
 
 		if ( !empty( $user_ident ) && !empty( $this->invoice ) ) {
-			if ( $this->invoice->addTargetUser( strtolower( $user_ident ) ) ) {
-				$this->invoice->storeload();
+			if ( is_object( $this->invoice ) ) {
+				if ( $this->invoice->addTargetUser( strtolower( $user_ident ) ) ) {
+					$this->invoice->storeload();
+				}
 			}
 		}
 
@@ -7977,6 +7979,8 @@ class Invoice extends serialParamDBTable
 		if ( !is_null( $this->usage ) && !( $this->usage == '' ) ) {
 			$recurring = '';
 
+			$original_amount = $this->amount;
+
 			switch ( $this->method ) {
 				case 'none':
 				case 'free':
@@ -8108,6 +8112,10 @@ class Invoice extends serialParamDBTable
 			}
 
 			$this->amount = AECToolbox::correctAmount( $this->amount );
+
+			if ( $original_amount != $this->amount ) {
+				$this->storeload();
+			}
 		}
 	}
 
@@ -13504,7 +13512,7 @@ class couponsHandler extends eucaObject
 
 				foreach ( $items as $iid => $item ) {
 					if ( $item['item']['obj']->id == $allowed[$min] ) {
-						$pgsel = $iid;var_dump($iid);
+						$pgsel = $iid;
 					}
 				}
 			}
