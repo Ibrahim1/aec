@@ -81,7 +81,7 @@ class mi_affiliatepro
 // PostAffTracker.setChannel('testchannel'); - force channel
 // PostAffTracker.setCookieValue('testchannel'); - force to register commission with this cookie value. The cookie value saves affiliate ID and campaign ID. It is in format AFFILIATEID_CAMPAIGNID, for example e2r48sv3_d3425s9f.
 		$displaypipeline = new displayPipeline( $database );
-		$displaypipeline->create( $metaUser->userid, 1, 0, 0, null, 1, $text );
+		$displaypipeline->create( $request->metaUser->userid, 1, 0, 0, null, 1, $text );
 
 		return true;
 	}
