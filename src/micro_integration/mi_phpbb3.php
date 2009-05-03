@@ -58,13 +58,15 @@ class mi_phpbb3
 		$settings['lists']['group_colour']		= mosHTML::selectList($sg2, 'group_colour', 'size="4"', 'value', 'text', $this->settings['group_colour']);
 		$settings['lists']['group_colour_exp']	= mosHTML::selectList($sg2, 'group_colour_exp', 'size="4"', 'value', 'text', $this->settings['group_colour_exp']);
 
-		$settings['lists']['groups_exclude']		= mosHTML::selectList( $sg, 'groups_exclude[]', 'size="10" multiple="true"', 'value', 'text', $selected_groups_exclude );
+		$settings['lists']['groups_exclude']	= mosHTML::selectList( $sg, 'groups_exclude[]', 'size="10" multiple="true"', 'value', 'text', $selected_groups_exclude );
 
 		$settings['set_group']				= array( 'list_yesno' );
 		$settings['group']					= array( 'list' );
+		$settings['apply_colour']			= array( 'list_yesno' );
 		$settings['group_colour']			= array( 'list' );
 		$settings['set_group_exp']			= array( 'list_yesno' );
 		$settings['group_exp']				= array( 'list' );
+		$settings['apply_colour_exp']		= array( 'list_yesno' );
 		$settings['group_colour_exp']		= array( 'list' );
 		$settings['groups_exclude']			= array( 'list' );
 		$settings['set_groups_exclude']		= array( 'list_yesno' );

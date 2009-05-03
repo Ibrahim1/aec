@@ -3119,7 +3119,7 @@ class processor extends serialParamDBTable
 			global $database;
 
 			if ( $errno == 0 ) {
-				$errstr .= " This is usually SSL error.  Check if your server supports fsocket open via SSL.";
+				$errstr .= " This is usually an SSL error.  Check if your server supports fsocket open via SSL.";
 			}
 
 			$short	= 'fsockopen failure';
