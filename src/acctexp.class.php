@@ -8020,7 +8020,22 @@ class Invoice extends serialParamDBTable
 					$cart = new aecCart( $database );
 					$cart->load( $usage[1] );
 
-					$return = $cart->getAmount( $metaUser );
+					if ( $cart->id ) {
+						$return = $cart->getAmount( $metaUser );
+					} elseif ( isset( $this->params->cart ) ) {
+						// Cart has been deleted, use copied data
+						$vars = get_object_vars( $this->params->cart );
+						foreach ( $vars as $v => $c ) {
+							// Make extra sure we don't put through any _properties
+							if ( strpos( $v, '_' ) !== 0 ) {
+								$cart->$v = $c;
+							}
+						}
+
+						$return = $cart->getAmount( $metaUser );
+					} else {
+						$return = '0.00';
+					}
 					break;
 				case 'p':
 				case 'plan':
