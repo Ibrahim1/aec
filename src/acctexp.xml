@@ -145,6 +145,7 @@
 		<filename>processors/paysignet.php</filename>
 		<filename>processors/paysite_cash.php</filename>
 		<filename>processors/psigate.php</filename>
+		<filename>processors/vcs.php</filename>
 		<filename>processors/viaklix.php</filename>
 		<filename>processors/virtualmerchant.php</filename>
 		<filename>processors/verotel.php</filename>
@@ -156,6 +157,9 @@
 		<filename>processors/ideal_advanced/ideal_advanced.tar.gz</filename>
 		<filename>processors/authorizenet_cim/index.html</filename>
 		<filename>processors/authorizenet_cim/authorizenet.cim.class.php</filename>
+		<filename>processors/vcs/index.html</filename>
+		<filename>processors/vcs/fail.php</filename>
+		<filename>processors/vcs/success.php</filename>
 		<filename>processors/com_acctexp_language_processors/index.html</filename>
 		<filename>processors/com_acctexp_language_processors/brazilian_portuguese.php</filename>
 		<filename>processors/com_acctexp_language_processors/dutch.php</filename>
