@@ -729,4 +729,14 @@ define( '_CFG_LOCAWEB_PGCERTO_RAZAOSOCIAL_NAME', 			'Razão Social (se Comprador
 define( '_CFG_LOCAWEB_PGCERTO_RAZAOSOCIAL_DESC', 			'Razão Social.');
 define( '_CFG_LOCAWEB_PGCERTO_EMAIL_NAME', 						'Email de Comprador Locaweb se já possuir');
 define( '_CFG_LOCAWEB_PGCERTO_EMAIL_DESC', 							'Email de cadastro na Locaweb se houver.');
+
+// VCS
+define( '_CFG_VCS_LONGNAME', 'Virtual Card Services');
+define( '_CFG_VCS_STATEMENT', 'Betaal met krediet kaart!');
+define( '_CFG_VCS_DESCRIPTION', 'Card processing systems for South African merchants.');
+define( '_CFG_VCS_MERCHANT_ID_NAME', 'Merchant ID');
+define( '_CFG_VCS_MERCHANT_ID_DESC', 'Your VCS Merchant ID');
+define( '_CFG_VCS_PAM_NAME', 'PAM');
+define( '_CFG_VCS_PAM_DESC', 'Personal Authentication Message, a security feature to confirm that the response is from VCS. The merchant enters the Merchant PAM in his merchant settings and VCS returns that PAM with the response.');
+
 ?>
