@@ -34,8 +34,9 @@ class processor_vcs extends POSTprocessor
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'list_yesno');
-		$settings['pam']			= array( 'inputC');
 		$settings['merchant_id']	= array( 'inputC');
+		$settings['pam']			= array( 'inputC');
+		$settings['currency']		= array( 'list_currency' );
 		$settings['item_name']		= array( 'inputE');
 		$settings['customparams']	= array( 'inputD' );
 
