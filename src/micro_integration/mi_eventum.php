@@ -82,7 +82,7 @@ class mi_eventum extends MI
 
 	}
 
-	function getEventumUserid( $userid )
+	function getEventumUserid( $metaUser )
 	{
 		return $userid;
 	}
