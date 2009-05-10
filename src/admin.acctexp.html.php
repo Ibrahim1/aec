@@ -1465,7 +1465,7 @@ class HTML_AcctExp
  		HTML_myCommon::GlobalNerd();
 	}
 
-	function listMicroIntegrations( $rows, $pageNav, $option )
+	function listMicroIntegrations( $rows, $pageNav, $option, $lists, $search, $ordering )
 	{
 		global $mosConfig_live_site;
 
@@ -1473,13 +1473,24 @@ class HTML_AcctExp
 		<form action="index2.php" method="post" name="adminForm">
 			<table class="adminheading">
 				<tr>
-					<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_microintegrations.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
-						<?php echo _MI_TITLE; ?>
-					</th>
+					<th width="100%" style="background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_symbol_microintegrations.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;"><?php echo _MI_TITLE; ?></th>
+					<td nowrap="nowrap"><?php echo $lists['groups'];?></td>
+					<td style="text-align:center;">
+						<?php echo _PLAN_FILTER; ?>
+						&nbsp;
+						<?php echo $lists['filterplanid'] . _ORDER_BY . $lists['orderNav']; ?>
+						<input type="button" class="button" onclick="document.adminForm.submit();" value="<?php echo _AEC_CMN_APPLY; ?>" style="margin:2px;text-align:center;" />
+					</td>
+					<td style="white-space:nowrap; float:right; text-align:left; padding:3px; margin:3px;">
+						<br />
+						<br />
+						<?php echo _AEC_CMN_SEARCH; ?>
+						<br />
+						<input type="text" name="search" value="<?php echo $search; ?>" class="inputbox" onChange="document.adminForm.submit();" />
+					</td>
 				</tr>
 				<tr><td></td></tr>
 			</table>
-
 			<table class="adminlist">
 				<tr>
 					<th width="20">#</th>
@@ -1488,7 +1499,9 @@ class HTML_AcctExp
 					<th width="15%" align="left" nowrap="nowrap"><?php echo _MI_NAME; ?></th>
 					<th width="20%" align="left" nowrap="nowrap" ><?php echo _MI_DESC; ?></th>
 					<th width="3%" nowrap="nowrap"><?php echo _MI_ACTIVE; ?></th>
-					<th width="5%" colspan="2" nowrap="nowrap"><?php echo _MI_REORDER; ?></th>
+					<?php if ( $ordering ) { ?>
+						<th width="5%" colspan="2" nowrap="nowrap"><?php echo _MI_REORDER; ?></th>
+					<?php } ?>
 					<th width="5%" align="right" nowrap="nowrap"><?php echo _MI_FUNCTION; ?></th>
 				</tr>
 
@@ -1517,8 +1530,10 @@ class HTML_AcctExp
 							<img src="<?php echo $mosConfig_live_site; ?>/administrator/images/<?php echo ( $row->active ) ? 'publish_g.png' : 'publish_x.png'; ?>" width="12" height="12" border="0" alt="<?php echo ( $row->active ) ? _AEC_CMN_YES : _AEC_CMN_NO; ?>" title="<?php echo ( $row->active ) ? _AEC_CMN_YES : _AEC_CMN_NO; ?>" />
 						</a>
 					</td>
-					<td align="right"><?php echo $pageNav->orderUpIcon( $i, true, 'ordermiup' ); ?></td>
-					<td align="right"><?php echo $pageNav->orderDownIcon( $i, $n, true, 'ordermidown' ); ?></td>
+					<?php if ( $ordering ) { ?>
+						<td align="right"><?php echo $pageNav->orderUpIcon( $i, true, 'ordermiup' ); ?></td>
+						<td align="right"><?php echo $pageNav->orderDownIcon( $i, $n, true, 'ordermidown' ); ?></td>
+					<?php } ?>
 					<td width="45%" align="right"><?php echo $row->class_name; ?></td>
 				</tr>
 			<?php

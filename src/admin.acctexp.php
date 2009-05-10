@@ -1700,7 +1700,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 		}
 	}
 
-	if ( isset($filter_planid) && $filter_planid > 0 ) {
+	if ( isset( $filter_planid ) && $filter_planid > 0 ) {
 		if ( !$notconfig ) {
 			$where[] = "(a.plan='$filter_planid')";
 		}
@@ -3838,45 +3838,104 @@ function changeItemGroup( $cid=null, $state=0, $type, $option )
 
 function listMicroIntegrations( $option )
 {
- 	global $database, $mainframe, $mosConfig_list_limit;
+	global $database, $mainframe, $mosConfig_list_limit;
 
- 	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
+	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
 	$limitstart	= $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
- 	// get the total number of records
- 	$query = 'SELECT count(*)'
+	$orderby		= $mainframe->getUserStateFromRequest( "order{$option}", 'orderby', 'ordering ASC' );
+	$search			= $mainframe->getUserStateFromRequest( "search{$option}", 'search', '' );
+	$search			= $database->getEscaped( trim( strtolower( $search ) ) );
+
+	$filter_planid	= intval( $mainframe->getUserStateFromRequest( "filter_planid{$option}", 'filter_planid', 0 ) );
+
+	$ordering = false;
+
+	if ( strpos( $orderby, 'ordering' ) !== false ) {
+		$ordering = true;
+	}
+
+	// get the total number of records
+	$query = 'SELECT count(*)'
 		 	. ' FROM #__acctexp_microintegrations'
 		 	. ' WHERE `hidden` = \'0\''
 		 	;
- 	$database->setQuery( $query );
- 	$total = $database->loadResult();
- 	echo $database->getErrorMsg();
+	$database->setQuery( $query );
+	$total = $database->loadResult();
+	echo $database->getErrorMsg();
 
- 	if ( $limit > $total ) {
- 		$limitstart = 0;
- 	}
+	if ( $limit > $total ) {
+		$limitstart = 0;
+	}
 
- 	require_once( $mainframe->getCfg( 'absolute_path' ) . '/administrator/includes/pageNavigation.php' );
+	require_once( $mainframe->getCfg( 'absolute_path' ) . '/administrator/includes/pageNavigation.php' );
 	$pageNav = new mosPageNav( $total, $limitstart, $limit );
 
- 	// get the subset (based on limits) of required records
- 	$query = 'SELECT *'
-		 	. ' FROM #__acctexp_microintegrations'
-		 	. ' WHERE `hidden` = \'0\''
-		 	. ' GROUP BY `id`'
-		 	. ' ORDER BY `ordering`'
-		 	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
-		 	;
- 	$database->setQuery( $query );
+	$where = array();
+	$where[] = '`hidden` = \'0\'';
 
- 	$rows = $database->loadObjectList();
- 	if ( $database->getErrorNum() ) {
- 		echo $database->stderr();
- 		return false;
- 	}
+	if ( isset( $search ) && $search!= '' ) {
+		$where[] = "(name LIKE '%$search%' OR class_name LIKE '%$search%')";
+	}
 
- 	HTML_AcctExp::listMicroIntegrations( $rows, $pageNav, $option );
- }
+	if ( isset( $filter_planid ) && $filter_planid > 0 ) {
+		$mis = microIntegrationHandler::getMIsbyPlan( $filter_planid );
+
+		if ( !empty( $mis ) ) {
+			$where[] = "(id IN (" . implode( ',', $mis ) . "))";
+		} else {
+			$filter_planid = "";
+		}
+	}
+
+	// get the subset (based on limits) of required records
+	$query = 'SELECT * FROM #__acctexp_microintegrations';
+
+	$query .= (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' );
+
+	if ( $orderby != 'class_name' ) {
+		$query .= ' GROUP BY `class_name`';
+	}
+
+	$query .= ' ORDER BY ' . $orderby;
+	$query .= ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit;
+
+	$database->setQuery( $query );
+
+	$rows = $database->loadObjectList();
+	if ( $database->getErrorNum() ) {
+		echo $database->stderr();
+		return false;
+	}
+
+	$sel = array();
+	$sel[] = mosHTML::makeOption( 'ordering ASC',		_ORDERING_ASC );
+	$sel[] = mosHTML::makeOption( 'ordering DESC',		_ORDERING_DESC );
+	$sel[] = mosHTML::makeOption( 'id ASC',				_ID_ASC );
+	$sel[] = mosHTML::makeOption( 'id DESC',			_ID_DESC );
+	$sel[] = mosHTML::makeOption( 'name ASC',			_NAME_ASC );
+	$sel[] = mosHTML::makeOption( 'name DESC',			_NAME_DESC );
+	$sel[] = mosHTML::makeOption( 'class_name ASC',		_CLASSNAME_ASC );
+	$sel[] = mosHTML::makeOption( 'class_name DESC',	_CLASSNAME_DESC );
+
+	$lists['orderNav'] = mosHTML::selectList( $sel, 'orderby', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $orderby );
+
+	// Get list of plans for filter
+	$query = 'SELECT `id`, `name`'
+			. ' FROM #__acctexp_plans'
+			. ' ORDER BY `ordering`'
+			;
+	$database->setQuery( $query );
+	$db_plans = $database->loadObjectList();
+
+	$plans[] = mosHTML::makeOption( '0', _FILTER_PLAN, 'id', 'name' );
+	if ( is_array( $db_plans ) ) {
+		$plans = array_merge( $plans, $db_plans );
+	}
+	$lists['filterplanid']	= mosHTML::selectList( $plans, 'filter_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $filter_planid );
+
+	HTML_AcctExp::listMicroIntegrations( $rows, $pageNav, $option, $lists, $search, $ordering );
+}
 
 function editMicroIntegration ( $id, $option )
 {
