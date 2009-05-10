@@ -757,7 +757,6 @@ define( '_CFG_NETCASH_PASSWORD_NAME', 'Netcash Password');
 define( '_CFG_NETCASH_PASSWORD_DESC', 'Your electronic password assigned to you by Netcash');
 define( '_CFG_NETCASH_RECIPIENT_DESCRIPTION_NAME', 'Company Name');
 define( '_CFG_NETCASH_RECIPIENT_DESCRIPTION_DESC', 'The Company Name appearing on invoices');
-//define( '_CFG_NETCASH_LOGO_URL_DESC', 'The URL of the logo which you would like to appear at the top of the merchant gateway. The logo must be accessible via HTTPS otherwise it will not be shown.');
 define( '_CFG_NETCASH_CONFIRMATION_NOTE_NAME', 'Confirmation Note');
 define( '_CFG_AUTH_NETCASH_CONFIRMATION_NOTE_NAME', 'Success confirmation message');
 define( '_CFG_AUTH_NETCASH_CONFIRMATION_NOTE_DESC', 'Message to show succesful payments');

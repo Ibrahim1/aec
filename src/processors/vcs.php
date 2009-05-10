@@ -23,7 +23,7 @@ class processor_vcs extends POSTprocessor
 		$settings['testmode'] 		= 1;
 		$settings['merchant_id']	= '1234';
 		$settings['pam']			= 'PAM';
-		$settings['currency']		= 'USD';
+		$settings['currency']		= 'ZAR';
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']	= "";
 

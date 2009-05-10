@@ -743,4 +743,24 @@ define( '_CFG_VCS_MERCHANT_ID_DESC', 'Your VCS Merchant ID');
 define( '_CFG_VCS_PAM_NAME', 'PAM');
 define( '_CFG_VCS_PAM_DESC', 'Personal Authentication Message, a security feature to confirm that the response is from VCS. The merchant enters the Merchant PAM in his merchant settings and VCS returns that PAM with the response.');
 
+// Netcash
+define( '_CFG_NETCASH_LONGNAME', 'Netcash.co.za');
+define( '_CFG_NETCASH_STATEMENT', 'Debit orders | Online payment gateway South Africa | Ecommerce web provider');
+define( '_CFG_NETCASH_DESCRIPTION', 'Access all the services via the internet from anywhere, at any time, using any device with a browser');
+define( '_CFG_NETCASH_USER_NAME_NAME', 'Netcash Username');
+define( '_CFG_NETCASH_USER_NAME_DESC', 'Your electronic username assigned to you by Netcash');
+define( '_CFG_NETCASH_PIN_NAME', 'Netcash PIN');
+define( '_CFG_NETCASH_PIN_DESC', 'Your electronic PIN assigned to you by Netcash');
+define( '_CFG_NETCASH_TERMINAL_ID_NAME', 'Netcash Terminal Number');
+define( '_CFG_NETCASH_TERMINAL_ID_DESC', 'Your electronic Termininal Number assigned to you by Netcash');
+define( '_CFG_NETCASH_PASSWORD_NAME', 'Netcash Password');
+define( '_CFG_NETCASH_PASSWORD_DESC', 'Your electronic password assigned to you by Netcash');
+define( '_CFG_NETCASH_RECIPIENT_DESCRIPTION_NAME', 'Company Name');
+define( '_CFG_NETCASH_RECIPIENT_DESCRIPTION_DESC', 'The Company Name appearing on invoices');
+define( '_CFG_NETCASH_CONFIRMATION_NOTE_NAME', 'Confirmation Note');
+define( '_CFG_AUTH_NETCASH_CONFIRMATION_NOTE_NAME', 'Success confirmation message');
+define( '_CFG_AUTH_NETCASH_CONFIRMATION_NOTE_DESC', 'Message to show succesful payments');
+define( '_CFG_AUTH_NETCASH_HIDE_LOGIN_NAME', 'Hide Login');
+define( '_CFG_PROCESSOR_CONFIRMATION_NOTE_DESC', '??' );
+
 ?>

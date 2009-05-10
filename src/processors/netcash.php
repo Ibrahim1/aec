@@ -19,6 +19,7 @@ class processor_netcash extends POSTprocessor
 		$info['longname'] 				= _CFG_NETCASH_LONGNAME;
 		$info['statement'] 				= _CFG_NETCASH_STATEMENT;
 		$info['description'] 			= _CFG_NETCASH_DESCRIPTION;
+		$info['currencies']				= 'ZAR';
 		$info['cc_list'] 				= "visa,mastercard";
 		$info['recurring'] 				= 0;
 		$info['languages']			    = 'EN';
@@ -38,9 +39,8 @@ class processor_netcash extends POSTprocessor
 		$settings['pin']		        	= '';
 		$settings['terminal_id']			= '';
 		$settings['recipient_description']	= $mosConfig_sitename;
-		//$settings['logo_url'] 				= AECToolbox::deadsureURL( 'images/logo.png' );
 		$settings['language'] 				= 'EN';
-		//$settings['currency'] 				= 'ZAR';
+		$settings['currency'] 				= 'ZAR';
 		$settings['confirmation_note']		= "Thank you for subscribing on $mosConfig_sitename!";
 		$settings['item_name']				= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']			= "";
@@ -57,9 +57,8 @@ class processor_netcash extends POSTprocessor
 		$settings['pin']		        	= array( 'inputC');
 		$settings['terminal_id']			= array( 'inputC');
 		$settings['recipient_description']	= array( 'inputE');
-		//$settings['logo_url']				= array( 'inputE');
 		$settings['language'] 				= array( 'list_language' );
-		//$settings['currency'] 				= array( 'list_currency' );
+		$settings['currency'] 				= array( 'list_currency' );
 		$settings['confirmation_note']		= array( 'inputE');
 		$settings['item_name']				= array( 'inputE');
 		$settings['customparams']			= array( 'inputD' );
@@ -74,6 +73,7 @@ class processor_netcash extends POSTprocessor
 		global $mosConfig_live_site;
 
 		$var['post_url']				= 'https://gateway.netcash.co.za/vvonline/ccnetcash.asp';
+
 		$var['m_1']                     = $this->settings['user_name'];
 		$var['m_2']                     = $this->settings['password'];
 		$var['m_3']                     = $this->settings['pin'];
@@ -93,7 +93,7 @@ class processor_netcash extends POSTprocessor
 	{
 		$response = array();
 		$get = aecPostParamClear( $_GET );
-		
+
 		$response['invoice']			= $get['Reference'];
 		$response['amount_paid']		= $get['Amount'];
 		$response['reason']             = $get['Reason'];
@@ -102,17 +102,17 @@ class processor_netcash extends POSTprocessor
 	}
 
 	function validateNotification( $response, $post, $invoice )
-	{		
+	{
 		$response['valid'] = 0;
 		$get = aecPostParamClear( $_GET );
-		
+
 		if($get['TransactionAccepted'] == 'true'){
 			$response['valid'] = 1;
 		}else{
 		    $response['valid'] = 0;
 		    $response['error'] = 1;
 		    $response['errormsg'] = $get['Reason'];
-		}				
+		}
 
 		return $response;
 	}
