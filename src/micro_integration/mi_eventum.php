@@ -1,8 +1,8 @@
 <?php
 /**
- * @version $Id: mi_eventlog.php
+ * @version $Id: mi_eventum.php
  * @package AEC - Account Control Expiration - Membership Manager
- * @subpackage Micro Integrations - Eventlog
+ * @subpackage Micro Integrations - Eventum
  * @copyright 2006-2008 Copyright (C) David Deutsch
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
@@ -11,13 +11,13 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_eventlog extends MI
+class mi_eventum extends MI
 {
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_EVENTLOG_NAME;
-		$info['desc'] = _AEC_MI_EVENTLOG_DESC;
+		$info['name'] = _AEC_MI_EVENTUM_NAME;
+		$info['desc'] = _AEC_MI_EVENTUM_DESC;
 
 		return $info;
 	}
@@ -25,13 +25,13 @@ class mi_eventlog extends MI
 	function Settings()
 	{
 		$settings = array();
-		$settings['short']			= array( 'inputE' );
-		$settings['tags']			= array( 'inputE' );
-		$settings['text']			= array( 'inputD' );
-		$settings['level']			= array( 'list' );
-		$settings['force_notify']	= array( 'list_yesno' );
-		$settings['force_email']	= array( 'list_yesno' );
-		$settings['params']		= array( 'inputD' );
+		$settings['set_issue_level']	= array( 'inputE' );
+		$settings['tags']				= array( 'inputE' );
+		$settings['text']				= array( 'inputD' );
+		$settings['level']				= array( 'list' );
+		$settings['force_notify']		= array( 'list_yesno' );
+		$settings['force_email']		= array( 'list_yesno' );
+		$settings['params']				= array( 'inputD' );
 
 		$settings = $this->autoduplicatesettings( $settings );
 
@@ -53,6 +53,8 @@ class mi_eventlog extends MI
 
 	function relayAction( $request, $area )
 	{
+		$eventum_userid = $this->getEventumUser( $request->metaUser->userid );
+
 		global $database;
 
 		$rewriting = array( 'short', 'tags', 'text', 'params' );
@@ -63,6 +65,36 @@ class mi_eventlog extends MI
 
 		$log_entry = new EventLog( $database );
 		$log_entry->issue( $this->settings['short'.$area], $this->settings['tags'.$area], $this->settings['text'.$area], $this->settings['level'.$area], $this->settings['params'.$area], $this->settings['force_notify'.$area], $this->settings['force_email'.$area] );
+	}
+
+	function getEventum()
+	{
+
+	}
+
+	function getEventumCustomFields()
+	{
+
+	}
+
+	function getEventumFieldOptions()
+	{
+
+	}
+
+	function getEventumUserid( $userid )
+	{
+		return $userid;
+	}
+
+	function updateIssueLevel( $eventum_userid, $level )
+	{
+
+	}
+
+	function createIssue( $eventum_userid, $details )
+	{
+
 	}
 }
 ?>
