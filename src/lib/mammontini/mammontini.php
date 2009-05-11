@@ -57,10 +57,14 @@ class mammonTerms extends eucaObject
 	 * @return	boolean	True on success
 	 * @since	1.0
 	 */
-	function readParams( $params )
+	function readParams( $params, $allow_trial=true )
 	{
 		// Old params only had trial and full
-		$terms	= array( 'trial_', 'full_' );
+		if ( $allow_trial ) {
+			$terms	= array( 'trial_', 'full_' );
+		} else {
+			$terms	= array( 'full_' );
+		}
 		$return	= false;
 
 		foreach ( $terms as $t ) {
@@ -111,16 +115,70 @@ class mammonTerms extends eucaObject
 	}
 
 	/**
-	 * add Term to Terms Array
+	 * Create old style moun from new style terms
 	 *
 	 * @access	public
 	 * @return	boolean	True on success
 	 * @since	1.0
 	 */
-	function incrementPointer()
+	function getOldAmount()
 	{
-		if ( $this->pointer < ( count( $this->terms ) - 1 ) ) {
-			$this->pointer++;
+		$amount = array();
+
+		$apointer = 0;
+		foreach ( $this->terms as $tid => $term ) {
+			$apointer++;
+			if ( $tid < $this->pointer ) {
+				continue;
+			}
+
+			$i = $apointer;
+
+			if ( count( $this->terms ) == 1 ) {
+				$i = 3;
+			} elseif ( count( $this->terms ) == 2 ) {
+				if ( $i == 2 ) {
+					$i = 3;
+				}
+			}
+
+			$amount['amount'.$i]	= $term->renderCost();
+			$amount['period'.$i]	= $term->duration['period'];
+			$amount['unit'.$i]		= $term->duration['unit'];
+		}
+
+		return $amount;
+	}
+
+	/**
+	 * increment Terms Array pointer
+	 *
+	 * @access	public
+	 * @return	boolean	True on success
+	 * @since	1.0
+	 */
+	function incrementPointer( $amount=1 )
+	{
+		for ( $i=0; $i<$amount; $i++ ) {
+			if ( $this->pointer < ( count( $this->terms ) - 1 ) ) {
+				$this->pointer++;
+			}
+		}
+
+		$this->nextterm =& $this->terms[$this->pointer];
+	}
+
+	/**
+	 * set Terms Array pointer
+	 *
+	 * @access	public
+	 * @return	boolean	True on success
+	 * @since	1.0
+	 */
+	function setPointer( $pointer )
+	{
+		if ( $pointer < ( count( $this->terms ) ) ) {
+			$this->pointer = $pointer;
 		}
 
 		$this->nextterm =& $this->terms[$this->pointer];

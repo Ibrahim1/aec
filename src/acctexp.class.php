@@ -5358,79 +5358,9 @@ class SubscriptionPlan extends serialParamDBTable
 		return $renew;
 	}
 
-	function SubscriptionAmount( $recurring, $user_subscription, $metaUser=false )
+	function getTerms( $recurring, $user_subscription, $metaUser=false )
 	{
-		if ( is_object( $user_subscription ) ) {
-			$comparison				= $this->doPlanComparison( $user_subscription );
-			$plans_comparison		= $comparison['comparison'];
-			$plans_comparison_total	= $comparison['total_comparison'];
-			$renew					= $comparison['renew'] ? 1 : 0;
-			$is_trial				= (strcmp($user_subscription->status, 'Trial') === 0);
-		} else {
-			$plans_comparison		= false;
-			$plans_comparison_total	= false;
-			$renew					= 0;
-			$is_trial				= 0;
-		}
-
-		$var		= null;
-		$free_trial = 0;
-
-		if ( !isset( $this->params['full_free'] ) ) {
-			$this->params['full_free'] = false;
-		}
-
-		if ( !empty( $recurring ) ) {
-			$amount = array();
-
-			// Only Allow a Trial when the User is coming from a different PlanGroup or is new
-			if ( ( $plans_comparison === false ) && ( $plans_comparison_total === false ) && !empty( $this->params['trial_period'] ) ) {
-				if ( $this->params['trial_free'] ) {
-					$amount['amount1'] = '0.00';
-					$free_trial = 1;
-				} else {
-					$amount['amount1']	= $this->params['trial_amount'];
-				}
-				$amount['period1']	= $this->params['trial_period'];
-				$amount['unit1']	= $this->params['trial_periodunit'];
-			}
-
-			if ( $this->params['full_free'] ) {
-				$amount['amount3'] = '0.00';
-			} else {
-				$amount['amount3']	= $this->params['full_amount'];
-			}
-
-			$amount['period3']		= $this->params['full_period'];
-			$amount['unit3']		= $this->params['full_periodunit'];
-		} else {
-			if ( empty( $this->params['trial_period'] ) && $this->params['full_free'] && $this->params['trial_free'] ) {
-				$amount = '0.00';
-			} else {
-				if ( ( $plans_comparison === false ) && ( $plans_comparison_total === false ) ) {
-					if ( !$is_trial && !empty($this->params['trial_period']) ) {
-						if ( $this->params['trial_free'] ) {
-							$amount = '0.00';
-							$free_trial = 1;
-						} else {
-							$amount = $this->params['trial_amount'];
-						}
-					} else {
-						if ( $this->params['full_free'] ) {
-							$amount = '0.00';
-						} else {
-							$amount = $this->params['full_amount'];
-						}
-					}
-				} else {
-					if ( $this->params['full_free'] ) {
-						$amount = '0.00';
-					} else {
-						$amount = $this->params['full_amount'];
-					}
-				}
-			}
-		}
+		$terms = $this->getTerms( $recurring, $user_subscription, $metaUser );
 
 		if ( !empty( $this->micro_integrations ) && ( is_object( $user_subscription ) || is_object( $metaUser ) ) ) {
 			$mih = new microIntegrationHandler();
@@ -5439,73 +5369,49 @@ class SubscriptionPlan extends serialParamDBTable
 				$metaUser = new metaUser( $user_subscription->userid );
 			}
 
-			$mih->applyMIs( $amount, $this, $metaUser );
+			$mih->applyMIs( $terms, $this, $metaUser );
 		}
 
 		$return_url	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=thanks&amp;renew=' . $renew );
 
 		$return['return_url']	= $return_url;
-		$return['amount']		= $amount;
-		$return['free_trial']	= $free_trial;
+		$return['terms']		= $terms;
 
 		return $return;
 	}
 
-	function termsParamsRequest( $recurring, $metaUser )
+	function getTerms( $recurring, $user_subscription, $metaUser=false )
 	{
-		if ( !empty( $this->micro_integrations ) ) {
+		if ( is_object( $metaUser->objSubscription ) ) {
+			$comparison				= $this->doPlanComparison( $metaUser->objSubscription );
+			$plans_comparison		= $comparison['comparison'];
+			$plans_comparison_total	= $comparison['total_comparison'];
+			$renew					= $comparison['renew'] ? 1 : 0;
+			$is_trial				= ( strcmp( $metaUser->objSubscription->status, 'Trial' ) === 0 );
+		} else {
+			$plans_comparison		= false;
+			$plans_comparison_total	= false;
+			$renew					= 0;
+			$is_trial				= 0;
+		}
+
+		if ( !isset( $this->params['full_free'] ) ) {
+			$this->params['full_free'] = false;
+		}
+
+		$allow_trial = ( $plans_comparison === false ) && ( $plans_comparison_total === false ) && !$is_trial;
+
+		$terms = new mammonTerms();
+		$terms->readParams( $this->params, $allow_trial );
+
+		if ( !empty( $this->micro_integrations ) && ( is_object( $user_subscription ) || is_object( $metaUser ) ) ) {
 			$mih = new microIntegrationHandler();
 
-			if ( is_object( $metaUser->objSubscription ) ) {
-				$comparison				= $this->doPlanComparison( $metaUser->objSubscription );
-				$plans_comparison		= $comparison['comparison'];
-				$plans_comparison_total	= $comparison['total_comparison'];
-				$renew					= $comparison['renew'] ? 1 : 0;
-				$is_trial				= ( strcmp( $metaUser->objSubscription->status, 'Trial' ) === 0 );
-			} else {
-				$plans_comparison		= false;
-				$plans_comparison_total	= false;
-				$renew					= 0;
-				$is_trial				= 0;
+			if ( !is_object( $metaUser ) ) {
+				$metaUser = new metaUser( $user_subscription->userid );
 			}
 
-			$var		= null;
-			$free_trial = 0;
-
-			if ( !empty( $recurring ) ) {
-				$amount = array();
-
-				// Only Allow a Trial when the User is coming from a different PlanGroup or is new
-				if ( ( $plans_comparison === false ) && ( $plans_comparison_total === false ) && !empty( $this->params['trial_period'] ) ) {
-					if ( !$this->params['trial_free'] ) {
-						$mih->applyMIs( $this->params['trial_amount'], $this, $metaUser );
-					}
-				}
-
-				if ( !$this->params['full_free'] ) {
-					$mih->applyMIs( $this->params['full_amount'], $this, $metaUser );
-				}
-			} else {
-				if ( !$this->params['trial_period'] && $this->params['full_free'] && $this->params['trial_free'] ) {
-					// Huh?
-				} else {
-					if ( ( $plans_comparison === false ) && ( $plans_comparison_total === false ) ) {
-						if ( !$is_trial && !empty($this->params['trial_period']) ) {
-							if ( !$this->params['trial_free'] ) {
-								$mih->applyMIs( $this->params['trial_amount'], $this, $metaUser );
-							}
-						} else {
-							if ( !$this->params['full_free'] ) {
-								$mih->applyMIs( $this->params['full_amount'], $this, $metaUser );
-							}
-						}
-					} else {
-						if ( !$this->params['full_free'] ) {
-							$mih->applyMIs( $this->params['full_amount'], $this, $metaUser );
-						}
-					}
-				}
-			}
+			$mih->applyMIs( $terms, $this, $metaUser );
 		}
 
 		return $this->params;
@@ -6364,52 +6270,20 @@ class InvoiceFactory
 			}
 		}
 
-		if ( empty( $this->cart ) ) {
-			$return = $this->plan->SubscriptionAmount( $this->recurring, $user_subscription );
-
-			$this->terms = new mammonTerms();
-			$this->terms->readParams( $this->plan->params );
-		} else {
-			$return = $this->_cart->getAmount( $this->metaUser, $this->cart );
-		}
-
 		$this->payment->freetrial = 0;
 
-		if ( is_array( $return['amount'] ) ) {
-			$this->payment->amount = false;
+		if ( empty( $this->cart ) ) {
+			$return = $this->plan->getTerms( $this->recurring, $user_subscription );
 
-			if ( isset( $return['amount']['amount1'] ) ) {
-				if ( !is_null( $return['amount']['amount1'] ) ) {
-					$this->payment->amount = $return['amount']['amount1'];
-					if ( $this->payment->amount == '0.00' ) {
-						$this->payment->freetrial = 1;
-					}
-				}
-			}
+			$this->terms = $return['terms'];
 
-			if ( $this->payment->amount === false ) {
-				if ( isset( $return['amount']['amount2'] ) ) {
-					if ( !is_null( $return['amount']['amount2'] ) ) {
-						$this->payment->amount = $return['amount']['amount2'];
-						if ( $this->payment->amount == '0.00' ) {
-							$this->payment->freetrial = 1;
-						}
-					}
-				}
-			}
+			$this->payment->amount = $this->terms->nextterm->renderCost();
 
-			if ( $this->payment->amount === false ) {
-				if ( isset( $return['amount']['amount3'] ) ) {
-					if ( !is_null( $return['amount']['amount3'] ) ) {
-						$this->payment->amount = $return['amount']['amount3'];
-					}
-				}
-			}
-		} else {
-			$this->payment->amount = $return['amount'];
-			if ( ( $this->payment->amount == '0.00' ) && $return['free_trial'] ) {
+			if ( $this->terms->nextterm->free && ( $this->terms->nextterm->get( 'type' ) == 'trial' ) ) {
 				$this->payment->freetrial = 1;
 			}
+		} else {
+			$this->payment->amount = $this->_cart->getAmount( $this->metaUser, $this->cart );
 		}
 
 		// Amend ->payment
@@ -6486,10 +6360,7 @@ class InvoiceFactory
 		if ( empty( $this->_cart ) ) {
 			global $database;
 
-			$this->amount = $this->plan->SubscriptionAmount( $this->recurring, $this->metaUser->objSubscription, $this->metaUser );
-
-			$terms = new mammonTerms();
-			$terms->readParams( $this->plan->termsParamsRequest( $this->recurring, $this->metaUser ) );
+			$terms = $this->plan->getTerms( $this->recurring, $this->metaUser->objSubscription, $this->metaUser );
 
 			if ( !empty( $this->plan ) ) {
 				$c = $this->plan->doPlanComparison( $this->metaUser->objSubscription );
@@ -6509,8 +6380,7 @@ class InvoiceFactory
 
 			foreach ( $this->cart as $cid => $citem ) {
 				if ( $citem['obj'] !== false ) {
-					$terms = new mammonTerms();
-					$terms->readParams( $citem['obj']->termsParamsRequest( $this->recurring, $this->metaUser ) );
+					$terms = $citem['obj']->getTerms( $this->recurring, $this->metaUser->objSubscription, $this->metaUser );
 
 					$c = $citem['obj']->doPlanComparison( $this->metaUser->objSubscription );
 
@@ -6530,7 +6400,7 @@ class InvoiceFactory
 
 					$terms->addTerm( $term );
 
-					$this->items[] = array( 'item' => array( 'cost' => $this->amount['amount'] ), 'terms' => $terms );
+					$this->items[] = array( 'item' => array( 'cost' => $citem['cost'] ), 'terms' => $terms );
 				}
 			}
 		}
@@ -8032,9 +7902,15 @@ class Invoice extends serialParamDBTable
 							}
 						}
 
-						$return = $cart->getAmount( $metaUser );
+						$this->amount = $cart->getAmount( $metaUser );
+
+						if ( $this->coupons ) {
+							$cpsh = new couponsHandler( $metaUser, $InvoiceFactory, $this->coupons );
+
+							$this->amount = $cpsh->applyDiscount( $this->amount );
+						}
 					} else {
-						$return = '0.00';
+						$this->amount = '0.00';
 					}
 					break;
 				case 'p':
@@ -8054,62 +7930,23 @@ class Invoice extends serialParamDBTable
 					}
 
 					if ( $metaUser->hasSubscription ) {
-						$return = $plan->SubscriptionAmount( $recurring, $metaUser->objSubscription, $metaUser );
+						$return = $plan->getTerms( $recurring, $metaUser->objSubscription, $metaUser );
 					} else {
-						$return = $plan->SubscriptionAmount( $recurring, false, $metaUser );
+						$return = $plan->getTerms( $recurring, false, $metaUser );
 					}
+
+					$terms = $return['terms'];
+
+					$terms->incrementPointer( $this->counter );
+
+					if ( $this->coupons ) {
+						$cpsh = new couponsHandler( $metaUser, $InvoiceFactory, $this->coupons );
+
+						$terms = $cpsh->applyToTerms( $terms );
+					}
+
+					$this->amount = $terms->nextterm->renderCost();
 				break;
-			}
-
-			if ( $this->coupons ) {
-				$cpsh = new couponsHandler( $metaUser, $InvoiceFactory, $this->coupons );
-
-				$return['amount'] = $cpsh->applyToAmount( $return['amount'] );
-			}
-
-			// Remove trial if we have a transaction completed ( whether a trial is allowed was figured out before)
-			if ( is_array( $return['amount'] ) ) {
-				if ( isset( $return['amount']['amount1'] ) && ( $this->transaction_date != '0000-00-00 00:00:00' ) ) {
-					unset( $return['amount']['amount1'] );
-					unset( $return['amount']['period1'] );
-					unset( $return['amount']['unit1'] );
-				}
-			}
-
-			if ( is_array( $return['amount'] ) ) {
-				// Check whether we have a trial amount and whether this invoice has had a trial with a payment already
-				$found_amount = false;
-
-				if ( isset( $return['amount']['amount1'] ) ) {
-					if ( !is_null( $return['amount']['amount1'] ) && ( $this->transaction_date == '0000-00-00 00:00:00' ) ) {
-						$this->amount = $return['amount']['amount1'];
-						$found_amount = true;
-					}
-				}
-
-				if ( $found_amount === false ) {
-					if ( isset( $return['amount']['amount2'] ) ) {
-						if ( !is_null( $return['amount']['amount2'] ) ) {
-							$this->amount = $return['amount']['amount2'];
-							$found_amount = true;
-						}
-					}
-				}
-
-				if ( $found_amount === false ) {
-					if ( isset( $return['amount']['amount3'] ) ) {
-						if ( !is_null( $return['amount']['amount3'] ) ) {
-							$this->amount = $return['amount']['amount3'];
-							$found_amount = true;
-						}
-					}
-				}
-
-				if ( $found_amount === false ) {
-					$this->amount = '0.00';
-				}
-			} else {
-				$this->amount = $return['amount'];
 			}
 
 			// We cannot afford to have this ever come out as null, so we will rather have it as gratis
@@ -8719,10 +8556,12 @@ class Invoice extends serialParamDBTable
 				}
 
 				if ( $InvoiceFactory->metaUser->hasSubscription ) {
-					$amount = $plan->SubscriptionAmount( $recurring, $InvoiceFactory->metaUser->objSubscription, $InvoiceFactory->metaUser );
+					$amount = $plan->getTerms( $recurring, $InvoiceFactory->metaUser->objSubscription, $InvoiceFactory->metaUser );
 				} else {
-					$amount = $plan->SubscriptionAmount( $recurring, false, $InvoiceFactory->metaUser );
+					$amount = $plan->getTerms( $recurring, false, $InvoiceFactory->metaUser );
 				}
+
+				$amount['amount'] = $amount['terms']->getOldAmount();
 
 				if ( !empty( $plan->params['customthanks'] ) || !empty( $plan->params['customtext_thanks'] ) ) {
 					$urladd .= '&amp;u=' . $this->usage;
@@ -8808,10 +8647,12 @@ class Invoice extends serialParamDBTable
 				}
 
 				if ( $InvoiceFactory->metaUser->hasSubscription ) {
-					$amount = $plan->SubscriptionAmount( $recurring, $InvoiceFactory->metaUser->objSubscription, $InvoiceFactory->metaUser );
+					$amount = $plan->getTerms( $recurring, $InvoiceFactory->metaUser->objSubscription, $InvoiceFactory->metaUser );
 				} else {
-					$amount = $plan->SubscriptionAmount( $recurring, false, $InvoiceFactory->metaUser );
+					$amount = $plan->getTerms( $recurring, false, $InvoiceFactory->metaUser );
 				}
+
+				$amount['amount'] = $amount['terms']->getOldAmount();
 
 				if ( !empty( $plan->params['customthanks'] ) || !empty( $plan->params['customtext_thanks'] ) ) {
 					$urladd .= '&amp;u=' . $this->usage;
@@ -9528,7 +9369,7 @@ class aecCart extends serialParamDBTable
 		return $return;
 	}
 
-	function getCheckout( $metaUser )
+	function getCheckout( $metaUser, $counter=0 )
 	{
 		global $database;
 
@@ -9543,13 +9384,18 @@ class aecCart extends serialParamDBTable
 				switch ( $content['type'] ) {
 					case 'plan':
 						$obj = new SubscriptionPlan( $database );
-						$obj->load( $content['id']);
+						$obj->load( $content['id'] );
 
 						$o = array();
 						$o['obj']	= $obj;
 						$o['name']	= $obj->getProperty( 'name' );
 						$o['desc']	= $obj->getProperty( 'desc' );
-						$o['cost']	= $obj->SubscriptionAmount( false, $metaUser->focusSubscription, $metaUser );
+
+						$samnt		= $obj->getTerms( false, $metaUser->focusSubscription, $metaUser );
+
+						$samnt['terms']->incrementPointer( $counter );
+
+						$o['terms']	= $samnt['terms'];
 
 						$c[$content['type']][$content['id']] = $o;
 						break;
@@ -9562,32 +9408,22 @@ class aecCart extends serialParamDBTable
 
 			$entry['name']			= $c[$content['type']][$content['id']]['name'];
 			$entry['desc']			= $c[$content['type']][$content['id']]['desc'];
-			$entry['cost']			= $c[$content['type']][$content['id']]['cost']['amount'];
+			$entry['terms']			= $c[$content['type']][$content['id']]['terms'];
 
 			if ( !empty( $content['coupons'] ) ) {
 				$cpsh = new couponsHandler( $metaUser, false, $content['coupons'] );
 
-				$entry['cost']		= $cpsh->applyToAmount( $entry['cost'] );
+				$entry['terms']		= $cpsh->applyToTerms( $entry['cost'] );
 			}
 
-			if ( is_array( $entry['cost'] ) ) {
-				$entry['cost']			= $entry['cost']['amount3'];
+			$entry['cost'] = $entry['terms']->nextterm->renderCost();
 
-				if ( $entry['cost'] > 0 ) {
-					$total = $content['count'] * $entry['cost'];
+			if ( $entry['cost'] > 0 ) {
+				$total = $content['count'] * $entry['cost'];
 
-					$entry['cost_total']	= AECToolbox::correctAmount( $total );
-				} else {
-					$entry['cost_total']	= AECToolbox::correctAmount( '0.00' );
-				}
+				$entry['cost_total']	= AECToolbox::correctAmount( $total );
 			} else {
-				if ( $entry['cost'] > 0 ) {
-					$total = $content['count'] * $entry['cost'];
-
-					$entry['cost_total']	= AECToolbox::correctAmount( $total );
-				} else {
-					$entry['cost_total']	= AECToolbox::correctAmount( '0.00' );
-				}
+				$entry['cost_total']	= AECToolbox::correctAmount( '0.00' );
 			}
 
 			if ( $entry['cost_total'] == '0.00' ) {
@@ -9639,7 +9475,6 @@ class aecCart extends serialParamDBTable
 		$return = array();
 		$return['return_url']	= $return_url;
 		$return['amount']		= $checkout[$max]['cost_total'];
-		$return['free_trial']	= false;
 
 		return $return;
 	}
@@ -13616,7 +13451,7 @@ class couponsHandler extends eucaObject
 		if ( isset( $item['item']['cost'] ) ) {
 			$original_amount = $item['item']['cost'];
 		} elseif ( isset( $item['item']['obj'] ) ) {
-			$original_amount = $item['item']['obj']->SubscriptionAmount( false, $this->metaUser->focusSubscription, $this->metaUser );
+			$original_amount = $item['item']['obj']->getTerms( false, $this->metaUser->focusSubscription, $this->metaUser );
 		} else {
 			return $item;
 		}
@@ -13664,7 +13499,7 @@ class couponsHandler extends eucaObject
 				continue;
 			}
 
-			$ccombo		= $this->cph->getCombinations();
+			$ccombo	= $this->cph->getCombinations();
 
 			if ( !$this->mixCheck( false, $coupon_code, $ccombo ) ) {
 				$this->setError( _COUPON_ERROR_COMBINATION );
@@ -14202,18 +14037,19 @@ class couponHandler
 						$amount['amount3']	= $this->applyDiscount( $amount['amount3'] );
 					} else {
 						// If we have no trial yet, the one-off discount will be one
-						if ( !isset( $amount['amount1'] ) ) {
+						if ( empty( $amount['period1'] ) ) {
 							$amount['amount1']	= $this->applyDiscount( $amount['amount3'] );
 							$amount['period1']	= $amount['period3'];
 							$amount['unit1']	= $amount['unit3'];
 						} else {
 							if ( $amount['amount1'] > 0 ) {
 								// If we already have a trial that costs, we can put the discount on that
-								$amount['amount1']	= $this->applyDiscount( $amount['amount3'] );
-								$amount['period1']	= $amount['period3'];
-								$amount['unit1']	= $amount['unit3'];
+								$amount['amount1']	= $this->applyDiscount( $amount['amount1'] );
+								$amount['period1']	= $amount['period1'];
+								$amount['unit1']	= $amount['unit1'];
 							} else {
 								// Otherwise we need to create a new period
+								// Even in case the user cannot get it - then it will just be skipped anyhow
 								$amount['amount2']	= $this->applyDiscount( $amount['amount3'] );
 								$amount['period2']	= $amount['period3'];
 								$amount['unit2']	= $amount['unit3'];
