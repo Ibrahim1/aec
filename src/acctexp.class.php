@@ -731,6 +731,15 @@ class metaUser
 		}
 	}
 
+	function is_renewing()
+	{
+		if ( !empty( $this->meta ) ) {
+			return ( $this->meta->is_renewing() ? 1 : 0 );
+		} else {
+			return 0;
+		}
+	}
+
 	function loadCBuser()
 	{
 		global $database;
@@ -1221,7 +1230,10 @@ class metaUserDB extends serialParamDBTable
 
 		return true;
 	}
-
+	function is_renewing()
+	{
+		return count( $this->plan_history->used_plans );
+	}
 	function getUsedPlans()
 	{
 		return $this->plan_history->used_plans;
@@ -5232,11 +5244,7 @@ class SubscriptionPlan extends serialParamDBTable
 			}
 
 			$comparison		= $this->doPlanComparison( $metaUser->focusSubscription );
-			if ( empty( $comparison['renew'] ) ) {
-				$renew = 0;
-			} else {
-				$renew = 1;
-			}
+			$renew = $metaUser->is_renewing();
 
 			$lifetime		= $metaUser->focusSubscription->lifetime;
 
@@ -5358,18 +5366,14 @@ class SubscriptionPlan extends serialParamDBTable
 		return $renew;
 	}
 
-	function getTerms( $recurring, $user_subscription, $metaUser=false )
+	function getReturnTerms( $recurring, $user_subscription, $metaUser=false )
 	{
 		$terms = $this->getTerms( $recurring, $user_subscription, $metaUser );
 
-		if ( !empty( $this->micro_integrations ) && ( is_object( $user_subscription ) || is_object( $metaUser ) ) ) {
-			$mih = new microIntegrationHandler();
-
-			if ( !is_object( $metaUser ) ) {
-				$metaUser = new metaUser( $user_subscription->userid );
-			}
-
-			$mih->applyMIs( $terms, $this, $metaUser );
+		if ( is_object( $metaUser ) ) {
+			$renew = $metaUser->is_renewing();
+		} else {
+			$renew = 0;
 		}
 
 		$return_url	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=thanks&amp;renew=' . $renew );
@@ -5386,12 +5390,10 @@ class SubscriptionPlan extends serialParamDBTable
 			$comparison				= $this->doPlanComparison( $metaUser->objSubscription );
 			$plans_comparison		= $comparison['comparison'];
 			$plans_comparison_total	= $comparison['total_comparison'];
-			$renew					= $comparison['renew'] ? 1 : 0;
 			$is_trial				= ( strcmp( $metaUser->objSubscription->status, 'Trial' ) === 0 );
 		} else {
 			$plans_comparison		= false;
 			$plans_comparison_total	= false;
-			$renew					= 0;
 			$is_trial				= 0;
 		}
 
@@ -5414,7 +5416,7 @@ class SubscriptionPlan extends serialParamDBTable
 			$mih->applyMIs( $terms, $this, $metaUser );
 		}
 
-		return $this->params;
+		return $terms;
 	}
 
 	function doPlanComparison( $user_subscription )
@@ -5423,11 +5425,8 @@ class SubscriptionPlan extends serialParamDBTable
 
 		$return['total_comparison']	= false;
 		$return['comparison']		= false;
-		$return['renew']			= 0;
 
 		if ( !empty( $user_subscription->plan ) ) {
-			$return['renew'] = 1;
-
 			if ( !empty( $user_subscription->used_plans ) ) {
 				$plans_comparison	= false;
 
@@ -6273,11 +6272,11 @@ class InvoiceFactory
 		$this->payment->freetrial = 0;
 
 		if ( empty( $this->cart ) ) {
-			$return = $this->plan->getTerms( $this->recurring, $user_subscription );
+			$return = $this->plan->getReturnTerms( $this->recurring, $user_subscription );
 
 			$this->terms = $return['terms'];
 
-			$this->payment->amount = $this->terms->nextterm->renderCost();
+			$this->payment->amount = $this->terms->nextterm->renderTotal();
 
 			if ( $this->terms->nextterm->free && ( $this->terms->nextterm->get( 'type' ) == 'trial' ) ) {
 				$this->payment->freetrial = 1;
@@ -7930,9 +7929,9 @@ class Invoice extends serialParamDBTable
 					}
 
 					if ( $metaUser->hasSubscription ) {
-						$return = $plan->getTerms( $recurring, $metaUser->objSubscription, $metaUser );
+						$return = $plan->getReturnTerms( $recurring, $metaUser->objSubscription, $metaUser );
 					} else {
-						$return = $plan->getTerms( $recurring, false, $metaUser );
+						$return = $plan->getReturnTerms( $recurring, false, $metaUser );
 					}
 
 					$terms = $return['terms'];
@@ -7945,7 +7944,7 @@ class Invoice extends serialParamDBTable
 						$terms = $cpsh->applyToTerms( $terms );
 					}
 
-					$this->amount = $terms->nextterm->renderCost();
+					$this->amount = $terms->nextterm->renderTotal();
 				break;
 			}
 
@@ -8126,8 +8125,7 @@ class Invoice extends serialParamDBTable
 			}
 
 			if ( !$break ) {
-				$renew = $this->pay( $multiplicator );
-				if ( $renew === false ) {
+				if ( $this->pay( $multiplicator ) === false ) {
 					$notificationerror = 'Item Application failed. Please contact the System Administrator';
 
 					// Something went wrong
@@ -8144,8 +8142,10 @@ class Invoice extends serialParamDBTable
 			if ( isset( $response['pending'] ) ) {
 				if ( strcmp( $response['pending_reason'], 'signup' ) === 0 ) {
 					if ( $plan->params['trial_free'] || ( $this->amount == '0.00' ) ) {
-						$renew	= $this->pay( $multiplicator );
+						$this->pay( $multiplicator );
+
 						$this->addParams( array( 'free_trial' => $response['pending_reason'] ), 'params', true );
+
 						$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_TRIAL;
 						$tags	.= ',payment,action,trial';
 					}
@@ -8556,9 +8556,9 @@ class Invoice extends serialParamDBTable
 				}
 
 				if ( $InvoiceFactory->metaUser->hasSubscription ) {
-					$amount = $plan->getTerms( $recurring, $InvoiceFactory->metaUser->objSubscription, $InvoiceFactory->metaUser );
+					$amount = $plan->getReturnTerms( $recurring, $InvoiceFactory->metaUser->objSubscription, $InvoiceFactory->metaUser );
 				} else {
-					$amount = $plan->getTerms( $recurring, false, $InvoiceFactory->metaUser );
+					$amount = $plan->getReturnTerms( $recurring, false, $InvoiceFactory->metaUser );
 				}
 
 				$amount['amount'] = $amount['terms']->getOldAmount();
@@ -8647,9 +8647,9 @@ class Invoice extends serialParamDBTable
 				}
 
 				if ( $InvoiceFactory->metaUser->hasSubscription ) {
-					$amount = $plan->getTerms( $recurring, $InvoiceFactory->metaUser->objSubscription, $InvoiceFactory->metaUser );
+					$amount = $plan->getReturnTerms( $recurring, $InvoiceFactory->metaUser->objSubscription, $InvoiceFactory->metaUser );
 				} else {
-					$amount = $plan->getTerms( $recurring, false, $InvoiceFactory->metaUser );
+					$amount = $plan->getReturnTerms( $recurring, false, $InvoiceFactory->metaUser );
 				}
 
 				$amount['amount'] = $amount['terms']->getOldAmount();
@@ -9391,7 +9391,7 @@ class aecCart extends serialParamDBTable
 						$o['name']	= $obj->getProperty( 'name' );
 						$o['desc']	= $obj->getProperty( 'desc' );
 
-						$samnt		= $obj->getTerms( false, $metaUser->focusSubscription, $metaUser );
+						$samnt		= $obj->getReturnTerms( false, $metaUser->focusSubscription, $metaUser );
 
 						$samnt['terms']->incrementPointer( $counter );
 
@@ -9416,7 +9416,7 @@ class aecCart extends serialParamDBTable
 				$entry['terms']		= $cpsh->applyToTerms( $entry['cost'] );
 			}
 
-			$entry['cost'] = $entry['terms']->nextterm->renderCost();
+			$entry['cost'] = $entry['terms']->nextterm->renderTotal();
 
 			if ( $entry['cost'] > 0 ) {
 				$total = $content['count'] * $entry['cost'];
@@ -12314,12 +12314,12 @@ class microIntegrationHandler
 		}
 	}
 
-	function applyMIs( &$amount, $subscription, $metaUser )
+	function applyMIs( &$terms, $subscription, $metaUser )
 	{
 		global $database;
 
 		$add = new stdClass();
-		$add->price =& $amount;
+		$add->terms =& $terms;
 
 		if ( !empty( $subscription->micro_integrations ) ) {
 			foreach ( $subscription->micro_integrations as $mi_id ) {
@@ -13448,10 +13448,10 @@ class couponsHandler extends eucaObject
 			}
 		}
 
-		if ( isset( $item['item']['cost'] ) ) {
-			$original_amount = $item['item']['cost'];
-		} elseif ( isset( $item['item']['obj'] ) ) {
-			$original_amount = $item['item']['obj']->getTerms( false, $this->metaUser->focusSubscription, $this->metaUser );
+		if ( isset( $item['item']['obj'] ) ) {
+			$terms = $item['item']['obj']->getTerms( false, $this->metaUser->focusSubscription, $this->metaUser );
+		} elseif ( isset( $item['item']['cost'] ) ) {
+			$terms = $item['item']['cost'];
 		} else {
 			return $item;
 		}
@@ -13469,7 +13469,7 @@ class couponsHandler extends eucaObject
 		} else {
 			if ( $this->cph->status ) {
 				// Coupon approved, checking restrictions
-				$this->cph->checkRestrictions( $this->metaUser, $original_amount, $this->InvoiceFactory );
+				$this->cph->checkRestrictions( $this->metaUser, $terms, $this->InvoiceFactory );
 
 				if ( $this->cph->status ) {
 					$item['terms'] = $this->cph->applyToTerms( $item['terms'], $this->cph );
@@ -13789,7 +13789,7 @@ class couponHandler
 		$this->coupon->decrementCount();
 	}
 
-	function checkRestrictions( $metaUser, $original_amount=null, $invoiceFactory=null )
+	function checkRestrictions( $metaUser, $terms=null, $invoiceFactory=null )
 	{
 		if ( empty( $metaUser ) ) {
 			return false;
@@ -13814,13 +13814,13 @@ class couponHandler
 		}
 
 		// Check for Trial only
-		if ( $this->discount['useon_trial'] && !$this->discount['useon_full'] && !is_null( $original_amount ) ) {
-			if ( !is_null( $original_amount ) ) {
-				if ( is_array( $original_amount ) ) {
-					if ( isset( $original_amount['amount']['amount1'] ) || isset( $original_amount['amount1'] ) ) {
+		if ( $this->discount['useon_trial'] && !$this->discount['useon_full'] && is_object( $terms ) ) {
+			$permissions['trial_only'] = false;
+
+			foreach ( $terms->terms as $tid => $term ) {
+				if ( $terms->type == 'trial' ) {
+					if ( $tid > $terms->pointer ) {
 						$permissions['trial_only'] = true;
-					} else {
-						$permissions['trial_only'] = false;
 					}
 				}
 			}

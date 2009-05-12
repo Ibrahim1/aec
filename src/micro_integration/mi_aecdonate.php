@@ -56,21 +56,27 @@ class mi_aecdonate
 
 	function modifyPrice( $request )
 	{
-		$price = AECToolbox::correctAmount( $request->params['amt'] );
+		if ( !isset( $request->params['amt'] ) ) {
+			return null;
+		}
 
-		$request->add->price = $price;
+		$price = AECToolbox::correctAmount( $request->params['amt'] );
 
 		if ( !empty( $this->settings['max'] ) ) {
 			if ( $price > $this->settings['max'] ) {
-				$request->add->price = $this->settings['max'];
+				$price = $this->settings['max'];
 			}
 		}
 
 		if ( !empty( $this->settings['min'] ) ) {
 			if ( $price < $this->settings['min'] ) {
-				$request->add->price = $this->settings['min'];
+				$price = $this->settings['min'];
 			}
 		}
+
+		$price = AECToolbox::correctAmount( $request->params['amt'] );
+
+		$request->add->terms->nextterm->setCost( $price );
 
 		return null;
 	}

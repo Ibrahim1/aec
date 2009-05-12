@@ -323,11 +323,9 @@ class mammonTerm extends eucaObject
 	 */
 	function renderCost()
 	{
-		if ( count( $this->cost ) <= 2 ) {
-			return array( $this->cost[0] );
-		} else {
-			return $this->cost;
-		}
+		$k = array_pop( array_keys( $this->cost ) );
+
+		return $this->cost[$k]->cost['amount'];
 	}
 
 	/**
@@ -367,7 +365,7 @@ class mammonTerm extends eucaObject
 			$cost->set( 'cost', array( 'amount' => $amount ) );
 		}
 
-		$this->cost[count($this->cost)] = $cost;
+		$this->cost[] = $cost;
 
 		// Compute value of total cost
 		$total = 0;
@@ -384,7 +382,50 @@ class mammonTerm extends eucaObject
 			$this->free = true;
 		}
 
-		$this->cost[count($this->cost)] = $cost;
+		$this->cost[] = $cost;
+	}
+
+	/**
+	 * Reset all cost entries, create new root cost
+	 * Will automatically compute the total.
+	 *
+	 * @access	public
+	 * @return	string
+	 * @since	1.0
+	 */
+	function setCost( $amount, $info=null )
+	{
+		$this->cost = array();
+
+		$cost = new mammonCost();
+		$cost->set( 'type', 'cost' );
+
+		if ( !empty( $info ) && is_array( $info ) ) {
+			$content = array_merge( array( 'amount' => $amount ), $info );
+
+			$cost->set( 'cost', $content );
+		} else {
+			$cost->set( 'cost', array( 'amount' => $amount ) );
+		}
+
+		$this->cost[] = $cost;
+
+		// Compute value of total cost
+		$total = 0;
+		foreach ( $this->cost as $citem ) {
+			$total += $citem->renderCost();
+		}
+
+		// Set total cost object
+		$cost = new mammonCost();
+		$cost->set( 'type', 'total' );
+		$cost->set( 'cost', array( 'amount' => $total ) );
+
+		if ( $cost->isFree() ) {
+			$this->free = true;
+		}
+
+		$this->cost[] = $cost;
 	}
 
 	/**
@@ -425,8 +466,8 @@ class mammonTerm extends eucaObject
 	 */
 	function renderTotal()
 	{
-		$max = count( $this->cost ) - 1;
-		return $this->cost[$max]->renderCost();
+		$k = array_pop( array_keys( $this->cost ) );
+		return $this->cost[$k]->renderCost();
 	}
 
 }
