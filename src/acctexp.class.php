@@ -6469,7 +6469,7 @@ class InvoiceFactory
 			}
 
 			$this->invoice->loadInvoiceNumber( $this->invoice_number );
-			$this->invoice->computeAmount();
+			$this->invoice->computeAmount( $this );
 
 			$this->processor = $this->invoice->method;
 			$this->usage = $this->invoice->usage;
@@ -7332,37 +7332,51 @@ class InvoiceFactory
 
 			$cpsh = new couponsHandler( $this->metaUser, $this, $coupons );
 
-			$this->items = $cpsh->applyToCart( $this->items, $this->_cart, $this->cart );
+			if ( !empty( $this->_cart ) && !empty( $this->cart ) ) {
+				$this->items = $cpsh->applyToCart( $this->items, $this->_cart, $this->cart );
 
-			if ( count( $cpsh->delete_list ) ) {
-				foreach ( $cpsh->delete_list as $couponcode ) {
-					$this->invoice->removeCoupon( $couponcode );
+				if ( count( $cpsh->delete_list ) ) {
+					foreach ( $cpsh->delete_list as $couponcode ) {
+						$this->invoice->removeCoupon( $couponcode );
+					}
+
+					$this->invoice->storeload();
 				}
 
-				$this->invoice->storeload();
-			}
+				if ( $cpsh->affectedCart ) {
+					// Reload cart object and cart - was changed by $cpsh
+					$this->_cart->reload();
+					$this->getCart();
 
-			if ( $cpsh->affectedCart ) {
-				// Reload cart object and cart - was changed by $cpsh
-				$this->_cart->reload();
-				$this->getCart();
+					$this->loadItems();
+					$cpsh = new couponsHandler( $this->metaUser, $this, $coupons );
+					$this->items = $cpsh->applyToCart( $this->items, $this->_cart, $this->cart );
+				}
+			} else {
+				$this->items = $cpsh->applyToItemList( $this->items );
 
-				$this->loadItems();
-				$cpsh = new couponsHandler( $this->metaUser, $this, $coupons );
-				$this->items = $cpsh->applyToCart( $this->items, $this->_cart, $this->cart );
+				if ( count( $cpsh->delete_list ) ) {
+					foreach ( $cpsh->delete_list as $couponcode ) {
+						$this->invoice->removeCoupon( $couponcode );
+					}
+
+					$this->invoice->storeload();
+				}
 			}
 
 			$cpsh_err = $cpsh->getErrors();
 
-			if ( count( $cpsh_err ) ) {
-				$this->items->errors = $cpsh_err;
+			if ( !empty( $cpsh_err ) ) {
+				$this->errors = $cpsh_err;
 			}
 
-			$cpsh_exc = $cpsh->getExceptions();
+			if ( !empty( $this->_cart ) && !empty( $this->cart ) ) {
+				$cpsh_exc = $cpsh->getExceptions();
 
-			if ( count( $cpsh_exc ) ) {
-				foreach ( $cpsh_exc as $exception ) {
-					$this->raiseException( $exception );
+				if ( count( $cpsh_exc ) ) {
+					foreach ( $cpsh_exc as $exception ) {
+						$this->raiseException( $exception );
+					}
 				}
 			}
 
@@ -7888,9 +7902,10 @@ class Invoice extends serialParamDBTable
 				case 'cart':
 					$cart = new aecCart( $database );
 					$cart->load( $usage[1] );
-
+print_r($cart);exit;
 					if ( $cart->id ) {
 						$return = $cart->getAmount( $metaUser );
+						print_r($return);exit;
 					} elseif ( isset( $this->params->cart ) ) {
 						// Cart has been deleted, use copied data
 						$vars = get_object_vars( $this->params->cart );
@@ -7902,12 +7917,6 @@ class Invoice extends serialParamDBTable
 						}
 
 						$this->amount = $cart->getAmount( $metaUser );
-
-						if ( $this->coupons ) {
-							$cpsh = new couponsHandler( $metaUser, $InvoiceFactory, $this->coupons );
-
-							$this->amount = $cpsh->applyDiscount( $this->amount );
-						}
 					} else {
 						$this->amount = '0.00';
 					}
@@ -7938,10 +7947,14 @@ class Invoice extends serialParamDBTable
 
 					$terms->incrementPointer( $this->counter );
 
+					$item = array( 'item' => array( 'obj' => $this->plan ), 'terms' => $terms );
+
 					if ( $this->coupons ) {
 						$cpsh = new couponsHandler( $metaUser, $InvoiceFactory, $this->coupons );
 
-						$terms = $cpsh->applyToTerms( $terms );
+						$item = $cpsh->applyAllToItems( 0, $item );
+
+						$terms = $item['terms'];
 					}
 
 					$this->amount = $terms->nextterm->renderTotal();
@@ -7964,9 +7977,7 @@ class Invoice extends serialParamDBTable
 
 			$this->amount = AECToolbox::correctAmount( $this->amount );
 
-			if ( $original_amount != $this->amount ) {
-				$this->storeload();
-			}
+			$this->storeload();
 		}
 	}
 
@@ -8561,7 +8572,7 @@ class Invoice extends serialParamDBTable
 					$amount = $plan->getReturnTerms( $recurring, false, $InvoiceFactory->metaUser );
 				}
 
-				$amount['amount'] = $amount['terms']->getOldAmount();
+				$amount['amount'] = $amount['terms']->getOldAmount( $recurring );
 
 				if ( !empty( $plan->params['customthanks'] ) || !empty( $plan->params['customtext_thanks'] ) ) {
 					$urladd .= '&amp;u=' . $this->usage;
@@ -8652,7 +8663,7 @@ class Invoice extends serialParamDBTable
 					$amount = $plan->getReturnTerms( $recurring, false, $InvoiceFactory->metaUser );
 				}
 
-				$amount['amount'] = $amount['terms']->getOldAmount();
+				$amount['amount'] = $amount['terms']->getOldAmount( $recurring );
 
 				if ( !empty( $plan->params['customthanks'] ) || !empty( $plan->params['customtext_thanks'] ) ) {
 					$urladd .= '&amp;u=' . $this->usage;
@@ -9410,10 +9421,14 @@ class aecCart extends serialParamDBTable
 			$entry['desc']			= $c[$content['type']][$content['id']]['desc'];
 			$entry['terms']			= $c[$content['type']][$content['id']]['terms'];
 
+			$item = array( 'item' => array( 'obj' => $entry['obj'] ), 'terms' => $entry['terms'] );
+
 			if ( !empty( $content['coupons'] ) ) {
 				$cpsh = new couponsHandler( $metaUser, false, $content['coupons'] );
 
-				$entry['terms']		= $cpsh->applyToTerms( $entry['cost'] );
+				$item = $cpsh->applyAllToItems( 0, $item );
+
+				$entry['terms'] = $item['terms'];
 			}
 
 			$entry['cost'] = $entry['terms']->nextterm->renderTotal();
@@ -13311,6 +13326,15 @@ class couponsHandler extends eucaObject
 		return $items;
 	}
 
+	function applyToItemList( $items )
+	{
+		foreach ( $items as $iid => $item ) {
+			$items[$iid] = $this->applyAllToItems( $iid, $item );
+		}
+
+		return $items;
+	}
+
 	function prefilter( $items, $cart=false, $fullcart=false )
 	{
 		foreach ( $this->coupons as $ccid => $coupon_code ) {
@@ -13412,7 +13436,7 @@ class couponsHandler extends eucaObject
 	{
 		$this->global_applied = array();
 
-		if ( empty( $item['item']['obj'] ) ) {
+		if ( empty( $item['item']['obj'] ) && empty( $item['terms'] ) ) {
 			// This is the total item - apply total coupons - totally
 			foreach ( $this->coupons as $coupon_code ) {
 				if ( in_array( $coupon_code, $this->fullcartlist ) ) {
@@ -13426,7 +13450,11 @@ class couponsHandler extends eucaObject
 				}
 
 				if ( $this->loadCoupon( $coupon_code ) ) {
-					if ( $cart->hasCoupon( $coupon_code, $id ) ) {
+					if ( $cart != false ) {
+						if ( $cart->hasCoupon( $coupon_code, $id ) ) {
+							$item = $this->applyToItem( $id, $item, $coupon_code );
+						}
+					} else {
 						$item = $this->applyToItem( $id, $item, $coupon_code );
 					}
 				}
@@ -13448,7 +13476,9 @@ class couponsHandler extends eucaObject
 			}
 		}
 
-		if ( isset( $item['item']['obj'] ) ) {
+		if ( isset( $item['terms'] ) ) {
+			$terms = $item['terms'];
+		} elseif ( isset( $item['item']['obj'] ) ) {
 			$terms = $item['item']['obj']->getTerms( false, $this->metaUser->focusSubscription, $this->metaUser );
 		} elseif ( isset( $item['item']['cost'] ) ) {
 			$terms = $item['item']['cost'];
@@ -13469,10 +13499,10 @@ class couponsHandler extends eucaObject
 		} else {
 			if ( $this->cph->status ) {
 				// Coupon approved, checking restrictions
-				$this->cph->checkRestrictions( $this->metaUser, $terms, $this->InvoiceFactory );
+				$this->cph->checkRestrictions( $this->metaUser, $terms, $this->InvoiceFactory->usage );
 
 				if ( $this->cph->status ) {
-					$item['terms'] = $this->cph->applyToTerms( $item['terms'], $this->cph );
+					$item['terms'] = $this->cph->applyToTerms( $terms, $this->cph );
 
 					$this->addCouponToRecord( $id, $coupon_code, $ccombo );
 
@@ -13488,7 +13518,7 @@ class couponsHandler extends eucaObject
 		return $item;
 	}
 
-	function applyToAmount( $amount, $original_amount=null, $invoiceFactory=null )
+	function applyToAmount( $amount, $original_amount=null )
 	{
 		if ( empty( $this->coupons ) || !is_array( $this->coupons ) ) {
 			return $amount;
@@ -13506,7 +13536,7 @@ class couponsHandler extends eucaObject
 			} else {
 				if ( $this->cph->status ) {
 					// Coupon approved, checking restrictions
-					$this->cph->checkRestrictions( $this->metaUser, $amount, $original_amount, $invoiceFactory );
+					$this->cph->checkRestrictions( $this->metaUser, $amount, $original_amount, $this->InvoiceFactory->usage );
 
 					if ( $this->cph->status ) {
 						$amount = $this->cph->applyCoupon( $amount );
@@ -13789,7 +13819,7 @@ class couponHandler
 		$this->coupon->decrementCount();
 	}
 
-	function checkRestrictions( $metaUser, $terms=null, $invoiceFactory=null )
+	function checkRestrictions( $metaUser, $terms=null, $usage=null )
 	{
 		if ( empty( $metaUser ) ) {
 			return false;
@@ -13800,12 +13830,12 @@ class couponHandler
 		$permissions	= $metaUser->permissionResponse( $restrictions );
 
 		// Check for a set usage
-		if ( !empty( $this->restrictions['usage_plans_enabled'] ) && !is_null( $invoiceFactory ) ) {
+		if ( !empty( $this->restrictions['usage_plans_enabled'] ) && !is_null( $usage ) ) {
 			if ( !empty( $this->restrictions['usage_plans'] ) ) {
 				// Check whether this usage is restricted
 				$plans = $this->restrictions['usage_plans'];
 
-				if ( in_array( $invoiceFactory->usage, $plans ) ) {
+				if ( in_array( $usage, $plans ) ) {
 					$permissions['usage'] = true;
 				} else {
 					$permissions['usage'] = false;
@@ -14070,7 +14100,7 @@ class couponHandler
 		// Apply Discount according to rules
 		if ( $this->discount['percent_first'] ) {
 			if ( $this->discount['amount_percent_use'] ) {
-				$amount -= ( ( $amount / 100 ) * $this->discount['amount_percent'] );
+				$amount -= round( ( ( $amount / 100 ) * $this->discount['amount_percent'] ), 2 );
 			}
 			if ( $this->discount['amount_use'] ) {
 				$amount -= $this->discount['amount'];
@@ -14080,7 +14110,7 @@ class couponHandler
 				$amount -= $this->discount['amount'];
 			}
 			if ( $this->discount['amount_percent_use'] ) {
-				$amount -= ( ( $amount / 100 ) * $this->discount['amount_percent'] );
+				$amount -= round( ( ( $amount / 100 ) * $this->discount['amount_percent'] ), 2 );
 			}
 		}
 

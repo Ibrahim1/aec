@@ -121,7 +121,7 @@ class mammonTerms extends eucaObject
 	 * @return	boolean	True on success
 	 * @since	1.0
 	 */
-	function getOldAmount()
+	function getOldAmount( $recurring=true )
 	{
 		$amount = array();
 
@@ -142,9 +142,13 @@ class mammonTerms extends eucaObject
 				}
 			}
 
-			$amount['amount'.$i]	= $term->renderCost();
-			$amount['period'.$i]	= $term->duration['period'];
-			$amount['unit'.$i]		= $term->duration['unit'];
+			if ( $recurring ) {
+				$amount['amount'.$i]	= $term->renderTotal();
+				$amount['period'.$i]	= $term->duration['period'];
+				$amount['unit'.$i]		= $term->duration['unit'];
+			} else {
+				$amount = $term->renderTotal();
+			}
 		}
 
 		return $amount;
@@ -323,9 +327,11 @@ class mammonTerm extends eucaObject
 	 */
 	function renderCost()
 	{
-		$k = array_pop( array_keys( $this->cost ) );
-
-		return $this->cost[$k]->cost['amount'];
+		if ( count( $this->cost ) <= 2 ) {
+			return array( $this->cost[0] );
+		} else {
+			return $this->cost;
+		}
 	}
 
 	/**
@@ -450,7 +456,7 @@ class mammonTerm extends eucaObject
 			if ( !empty( $percent ) ) {
 				$total = $this->renderTotal();
 
-				$am = 0 - ( ( $total / 100 ) * $percent );
+				$am = 0 - round( ( ( $total / 100 ) * $percent ), 2 );
 				$am = AECToolbox::correctAmount( $am );
 				$this->addCost( $am, $info );
 			}

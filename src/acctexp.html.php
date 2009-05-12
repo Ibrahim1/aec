@@ -1213,20 +1213,18 @@ class Payment_HTML
 						</td>
 					</tr>
 					<?php
-					if ( !empty( $InvoiceFactory->items ) ) {
-						if ( isset( $InvoiceFactory->items->errors ) ) {
-							foreach ( $InvoiceFactory->items->errors as $err ) { ?>
-							<tr>
-								<td class="couponerror">
-									<p>
-										<strong><?php echo _COUPON_ERROR_PRETEXT; ?></strong>
-										&nbsp;
-										<?php echo $err; ?>
-									</p>
-								</td>
-							</tr>
-							<?php
-							}
+					if ( !empty( $InvoiceFactory->errors ) ) {
+						foreach ( $InvoiceFactory->errors as $err ) { ?>
+						<tr>
+							<td class="couponerror">
+								<p>
+									<strong><?php echo _COUPON_ERROR_PRETEXT; ?></strong>
+									&nbsp;
+									<?php echo $err; ?>
+								</p>
+							</td>
+						</tr>
+						<?php
 						}
 					} ?>
 					<tr>
