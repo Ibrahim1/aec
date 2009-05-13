@@ -7292,6 +7292,9 @@ class InvoiceFactory
 				if ( $this->invoice->addTargetUser( strtolower( $user_ident ) ) ) {
 					$this->invoice->storeload();
 				}
+
+				// Bounce back to confirmation
+				return $this->confirm();
 			}
 		}
 

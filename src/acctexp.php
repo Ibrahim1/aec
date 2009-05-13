@@ -1177,6 +1177,28 @@ function InvoiceRemoveGift( $option )
 	repeatInvoice( $option, $invoice, $objinvoice->userid );
 }
 
+function InvoiceRemoveGiftConfirm( $option )
+{
+	global $database;
+
+	$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+	$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
+	$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+	$group		= aecGetParam( 'group', 0, true, array( 'word', 'int' ) );
+	$processor	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
+	$username	= aecGetParam( 'username', 0, true, array( 'word', 'int' ) );
+
+	$objinvoice = new Invoice( $database );
+	$objinvoice->loadInvoiceNumber( $invoice );
+
+	if ( $objinvoice->removeTargetUser() ) {
+		$objinvoice->storeload();
+	}
+
+	$invoicefact = new InvoiceFactory( $userid, $usage, $group, $processor, $invoice );
+	$invoicefact->confirm( $option, $_POST );
+}
+
 function InvoiceAddCoupon( $option )
 {
 	global $database;
