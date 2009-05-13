@@ -1340,8 +1340,8 @@ function processNotification( $option, $processor )
 		$pp->notificationError( $response, $error );
 		return;
 	} else {
-		$invoicefact = new InvoiceFactory( null, null, null, null, $response['invoice'] );
-		$invoicefact->processorResponse( $option, $response );
+		$invoiceFactory = new InvoiceFactory( null, null, null, null, $response['invoice'] );
+		$invoiceFactory->processorResponse( $option, $response );
 	}
 }
 

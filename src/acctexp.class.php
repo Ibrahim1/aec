@@ -7902,10 +7902,9 @@ class Invoice extends serialParamDBTable
 				case 'cart':
 					$cart = new aecCart( $database );
 					$cart->load( $usage[1] );
-print_r($cart);exit;
+
 					if ( $cart->id ) {
-						$return = $cart->getAmount( $metaUser );
-						print_r($return);exit;
+						$return = $cart->getAmount( $metaUser, false, $this->counter );
 					} elseif ( isset( $this->params->cart ) ) {
 						// Cart has been deleted, use copied data
 						$vars = get_object_vars( $this->params->cart );
@@ -7916,7 +7915,7 @@ print_r($cart);exit;
 							}
 						}
 
-						$this->amount = $cart->getAmount( $metaUser );
+						$this->amount = $cart->getAmount( $metaUser, false, $this->counter );
 					} else {
 						$this->amount = '0.00';
 					}
@@ -9404,7 +9403,9 @@ class aecCart extends serialParamDBTable
 
 						$samnt		= $obj->getReturnTerms( false, $metaUser->focusSubscription, $metaUser );
 
-						$samnt['terms']->incrementPointer( $counter );
+						if ( $counter ) {
+							$samnt['terms']->incrementPointer( $counter );
+						}
 
 						$o['terms']	= $samnt['terms'];
 
@@ -9477,10 +9478,10 @@ class aecCart extends serialParamDBTable
 		return $return;
 	}
 
-	function getAmount( $metaUser=null, $checkout=false )
+	function getAmount( $metaUser=null, $checkout=false, $counter=0 )
 	{
 		if ( empty( $checkout ) ) {
-			$checkout = $this->getCheckout( $metaUser );
+			$checkout = $this->getCheckout( $metaUser, $counter );
 		}
 
 		$max = array_pop( array_keys( $checkout ) );
