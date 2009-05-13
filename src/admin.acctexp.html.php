@@ -2184,7 +2184,7 @@ class HTML_AcctExp
 												<?php
 												echo $aecHTML->createSettingsParticle( 'name' );
 												if ( $row->id ) { ?>
-													<p><a href="<?php echo $mosConfig_live_site; ?>/index.php?option=com_acctexp&amp;task=subscribe&amp;usage=<?php echo $row->id; ?>" title="<?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?></a></p>
+													<p><a href="<?php echo $mosConfig_live_site; ?>/index.php?option=com_acctexp&amp;task=subscribe&amp;group=<?php echo $row->id; ?>" title="<?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?></a></p>
 													<?php
 												} ?>
 											</div>
