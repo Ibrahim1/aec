@@ -159,12 +159,12 @@ class mi_acl
 					$database->setQuery( $query );
 					$sessiongroups = $database->loadResult();
 
-					$data = unserialize( $session->data );
+					$data = metaUser::joomunserializesession( $session->data );
 					$data['__default']['jaclplus'] = $sessiongroups;
 
 					$query = 'UPDATE #__session'
 							. ' SET `usertype` = \'' . $gid_name . '\', `gid` = \'' . $this->settings[$section] . '\','
-							. ' `data` = \'' .  serialize( $data ) . '\''
+							. ' `data` = \'' .  metaUser::joomserializesession( $data ) . '\''
 							. ' WHERE `userid` = \'' . (int) $metaUser->userid . '\''
 							;
 					$database->setQuery( $query );

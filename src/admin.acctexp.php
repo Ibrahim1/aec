@@ -4978,8 +4978,8 @@ function quicklookup( $option )
 {
 	global $database, $mosConfig_live_site;
 
-	$search	= aecGetParam( 'search', 0 );
-	$search = $database->getEscaped( trim( strtolower( $search ) ) );
+	$searcc	= trim( aecGetParam( 'search', 0 ) );
+	$search = $database->getEscaped( strtolower( $searcc ) );
 
 	$userid = 0;
 	$k = 0;
@@ -5046,8 +5046,7 @@ function quicklookup( $option )
 	}
 
 	if ( strpos( $search, 'jsonserialencode' ) === 0 ) {
-		$search = aecGetParam( 'search', '' );
-		$s = trim( substr( $search, 16 ) );
+		$s = trim( substr( $searcc, 16 ) );
 		if ( !empty( $s ) ) {
 			$return = base64_encode( serialize( jsoonHandler::decode( $s ) ) );
 			return '<div style="text-align:left;">' . $return . '</div>';
@@ -5055,8 +5054,7 @@ function quicklookup( $option )
 	}
 
 	if ( strpos( $search, 'serialdecodejson' ) === 0 ) {
-		$search = aecGetParam( 'search', '' );
-		$s = trim( substr( $search, 16 ) );
+		$s = trim( substr( $searcc, 16 ) );
 		if ( !empty( $s ) ) {
 			$return = jsoonHandler::encode( unserialize( base64_decode( $s ) ) );
 			return '<div style="text-align:left;">' . $return . '</div>';
@@ -5064,10 +5062,17 @@ function quicklookup( $option )
 	}
 
 	if ( strpos( $search, 'serialdecode' ) === 0 ) {
-		$search = aecGetParam( 'search', '' );
-		$s = trim( substr( $search, 12 ) );
+		$s = trim( substr( $searcc, 12 ) );
 		if ( !empty( $s ) ) {
 			$return = unserialize( base64_decode( $s ) );
+			return '<div style="text-align:left;">' . obsafe_print_r( $return, true, true ) . '</div>';
+		}
+	}
+
+	if ( strpos( $search, 'unserialize' ) === 0 ) {
+		$s = trim( substr( $searcc, 11 ) );
+		if ( !empty( $s ) ) {
+			$return = unserialize( $s );
 			return '<div style="text-align:left;">' . obsafe_print_r( $return, true, true ) . '</div>';
 		}
 	}

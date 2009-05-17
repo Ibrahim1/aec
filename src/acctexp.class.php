@@ -722,13 +722,66 @@ class metaUser
 
 		if ( $session ) {
 			// Update Session
-			$query = 'UPDATE #__session'
-					. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\''
-					. ' WHERE `userid` = \'' . (int) $this->userid . '\''
-					;
-			$database->setQuery( $query );
-			$database->query() or die( $database->stderr() );
+			if ( aecJoomla15check() ) {
+				$query = 'SELECT data'
+				. ' FROM #__session'
+				. ' WHERE `userid` = \'' . (int) $this->userid . '\''
+				;
+				$database->setQuery( $query );
+				$data = $database->loadResult();
+
+				$se = $this->joomunserializesession( $data );
+
+				$key = array_pop( array_keys( $data ) );
+
+				if ( isset( $se[$key]['user'] ) ) {
+					$se[$key]['user']['gid']		= $gid;
+					$se[$key]['user']['usertype']	= $gid_name;
+
+					$sdata = $this->joomserializesession( $se );
+				} else {
+					$sdata = $data;
+				}
+
+				$query = 'UPDATE #__session'
+						. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\', `data` = \'' . $sdata . '\''
+						. ' WHERE `userid` = \'' . (int) $this->userid . '\''
+						;
+				$database->setQuery( $query );
+				$database->query() or die( $database->stderr() );
+			} else {
+				$query = 'UPDATE #__session'
+						. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\''
+						. ' WHERE `userid` = \'' . (int) $this->userid . '\''
+						;
+				$database->setQuery( $query );
+				$database->query() or die( $database->stderr() );
+			}
 		}
+	}
+
+	function unserializesession( $data )
+	{
+		$vars = preg_split('/([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff^|]*)\|/', $data, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE );
+
+		for ( $i=0; $vars[$i]; $i++ ) {
+			$result[$vars[$i++]] = unserialize( $vars[$i] );
+		}
+
+		return $result;
+	}
+
+	function joomunserializesession( $data )
+	{
+		$se = explode( "|", $data );
+		$se[1] = unserialize( $se[1] );
+
+		return array( $se[0] => $se[1] );
+	}
+
+	function joomserializesession( $data )
+	{
+		return $data[0] . "|" . serialize( $data[1] );
 	}
 
 	function is_renewing()
