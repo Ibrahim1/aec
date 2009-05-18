@@ -12769,10 +12769,10 @@ class microIntegration extends serialParamDBTable
 	{
 		// Needs to be declared as variable due to call by reference
 		$add = false;
-
+aecDebug("Calling MI ID " . $this->id);
 		// IF ExpireAllInstances=0 AND hasMoreThanOneInstance -> return null
-		if ( empty( $this->settings['_aec_global_exp_all'] ) ) {
-			if ( $metaUser->getMIcount( $this->id ) > 1 ) {
+		if ( empty( $this->settings['_aec_global_exp_all'] ) ) {aecDebug("EXP ALL disabled.");
+			if ( $metaUser->getMIcount( $this->id ) > 1 ) {aecDebug("Found other instance. Dropping out.");
 				// We have more instances than this one attached to the user, pass on.
 				return null;
 			}
