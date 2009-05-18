@@ -336,7 +336,7 @@ define( '_AEC_SEL_NOT_CONFIGURED',				'Niet geconfigureerd' );
 
 // footer
 define( '_AEC_FOOT_TX_CHOOSING',				'Dank u voor het kiezen van het AEC component!' );
-define( '_AEC_FOOT_TX_GPL',						'Dit is een Joomla/Mambo component. Ontworpen en uitgebracht onder de <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU/GPL</a> licentie door Helder Garcia en David Deutsch van <a href="http://www.valanx.org" target="_blank">valanx.org</a>. Vertaling van het Nederlandse component is gedaan door Q5 Grafisch Webdesign <a href="http://www.q-5.nl" target="_blank">Q5 Grafisch Webdesign</a>.' );
+define( '_AEC_FOOT_TX_GPL',						'This Joomla component was developed and released under the <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU/GPL</a> license by David Deutsch & Team AEC from <a href="http://www.valanx.org" target="_blank">valanx.org</a>' );
 define( '_AEC_FOOT_TX_SUBSCRIBE',				'Als u meer opties / professioneel advies / updates / handleidingen en online hulp wilt voor dit component kunt u zich aanmelden voor deze services op onze website!' );
 define( '_AEC_FOOT_CREDIT',						'Lees s.v.p. onze %s' );
 define( '_AEC_FOOT_CREDIT_LTEXT',				'Volledige credits' );

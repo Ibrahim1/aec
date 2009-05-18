@@ -336,7 +336,7 @@ define( '_AEC_SEL_NOT_CONFIGURED',				'N&atilde;o Configurado' );
 
 // footer
 define( '_AEC_FOOT_TX_CHOOSING',				'Obrigado por ter escolhido o Componente de Controlo de Espira&ccedil;&atilde;o de Contas!' );
-define( '_AEC_FOOT_TX_GPL',						'Este &eacute; um componente Joomla/Mambo e foi desenvolvido e disponibilizado ao abrigo da licen&ccedil;a <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU/GPL</a> por Helder Garcia e David Deutsch de <a href="http://www.valanx.org" target="_blank">valanx.org</a>' );
+define( '_AEC_FOOT_TX_GPL',						'This Joomla component was developed and released under the <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU/GPL</a> license by David Deutsch & Team AEC from <a href="http://www.valanx.org" target="_blank">valanx.org</a>' );
 define( '_AEC_FOOT_TX_SUBSCRIBE',				'Se desejar mais funcionalidade, servi&ccedil;os profissionais, updates, manuais e ajuda online para este componente, pode subscrever os nossos servi&ccedil;os no link abaixo. Isso ahuda-nos bastante nos nossos deenvolvimentos!' );
 define( '_AEC_FOOT_CREDIT',						'Por leia os nossos %s' );
 define( '_AEC_FOOT_CREDIT_LTEXT',				'cr&eacute;ditos completos' );

@@ -334,7 +334,7 @@ define( '_AEC_SEL_NOT_CONFIGURED',				'Ni. Konfiguriert / Neu' );
 
 // footer
 define( '_AEC_FOOT_TX_CHOOSING',				'Danke dass Sie sich f&uuml;r AEC - Account Expiration Control entschieden haben!' );
-define( '_AEC_FOOT_TX_GPL',						'Diese Komponente wurde entwickelt und ver&ouml;ffentlicht unter der <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank" title="GNU/GPL">GNU/GPL</a> von Helder Garcia, David Deutsch und dem Team von <a href="https://valanx.org" target="_blank" title="valanx.org">valanx.org</a>' );
+define( '_AEC_FOOT_TX_GPL',						'Diese Komponente wurde entwickelt und ver&ouml;ffentlicht unter der <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank" title="GNU/GPL">GNU/GPL</a> von David Deutsch und dem Team von <a href="https://valanx.org" target="_blank" title="valanx.org">valanx.org</a>' );
 define( '_AEC_FOOT_TX_SUBSCRIBE',				'Weitere Features, professionelles Service, Updates, Handb&uuml;cher und Online Hilfe, einfach auf den Link oben klicken. Es hilft uns vor allem auch bei der weiteren Entwicklung!' );
 define( '_AEC_FOOT_CREDIT',						'Bitte auch die %s lesen' );
 define( '_AEC_FOOT_CREDIT_LTEXT',				'Credits' );

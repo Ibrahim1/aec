@@ -920,7 +920,7 @@ class HTML_AcctExp
 					<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;"><p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION; ?></p>
 						<p><?php echo _AEC_FOOT_TX_CHOOSING; ?></p>
 						<div style="margin: 0 auto;text-align:center;">
-							<a href="http://www.valanx.org"> <img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/valanx_logo_tiny.png" border="0" alt="valanx" width="44" height="44" /></a>
+							<a href="http://www.valanx.org"> <img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/valanx_logo.png" border="0" alt="valanx" /></a>
 							<p><?php echo _AEC_FOOT_TX_GPL; ?></p>
 							<p><?php echo _AEC_FOOT_TX_SUBSCRIBE; ?></p>
 							<p><?php printf( _AEC_FOOT_CREDIT, AECToolbox::backendTaskLink( 'credits', _AEC_FOOT_CREDIT_LTEXT ) ); ?></p>
@@ -953,7 +953,7 @@ class HTML_AcctExp
 					<h1>Past Contributing Programmers</h1>
 					<p>Helder 'hlblog' Garcia, Michael 'mic' Pagler, Steven 'corephp' Pignataro, Ben 'Slinky' Ingram, Charles 'Slydder' Williams</p>
 					<h1>Graphics</h1>
-					<p>All layout and graphics Design is CC-BY-NC-SA 2006-2008 David 'skOre' Deutsch. Additional icons are the silk icon set by Mark James (<a href="http://www.famfamfam.com/">famfamfam.com</a>).
+					<p>All layout and graphics design is CC-BY-NC-SA 2006-2009 David 'skOre' Deutsch. Additional icons are the silk icon set by Mark James (<a href="http://www.famfamfam.com/">famfamfam.com</a>).
 					<h1>Eternal Gratitude</h1>
 					<p>These are the people without whom I could not have kept up the pace:</p>
 					<p>William 'Jake' Jacobs, Calum 'polc1410' Polwart</p>
@@ -975,7 +975,7 @@ class HTML_AcctExp
 					<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;"><p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION ?></p>
 						<p><?php echo _AEC_FOOT_TX_CHOOSING; ?></p>
 					<div style="margin: 0 auto;text-align:center;">
-						<a href="http://www.valanx.org"> <img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/valanx_logo_tiny.png" border="0" alt="valanx" /></a>
+						<a href="http://www.valanx.org"> <img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/valanx_logo.png" border="0" alt="valanx" /></a>
 						<p><?php echo _AEC_FOOT_TX_GPL; ?></a></p>
 						<p><?php echo _AEC_FOOT_TX_SUBSCRIBE; ?></p>
 					</div>
