@@ -7173,12 +7173,25 @@ class InvoiceFactory
 
 	function cart( $option )
 	{
-		global $aecConfig;
+		global $database, $aecConfig;
 
 		$this->getCart();
 
 		$this->coupons = array();
 		$this->coupons['active'] = $aecConfig->cfg['enable_coupons'];
+
+		$query = 'SELECT `invoice_number`'
+				. ' FROM #__acctexp_invoices'
+				. ' WHERE `userid` = \'' . $this->userid . '\''
+				. ' AND `usage` = \'c.' . $this->_cart->id . '\''
+				;
+
+		$database->setQuery( $query );
+		$in = $database->loadResult();
+
+		$this->invoice_number = $in;
+
+		$this->touchInvoice( $option );
 
 		Payment_HTML::cart( $option, $this );
 	}
@@ -7346,8 +7359,13 @@ class InvoiceFactory
 					$this->invoice->storeload();
 				}
 
-				// Bounce back to confirmation
-				return $this->confirm();
+				if ( !empty( $this->_cart ) && !empty( $this->cart ) ) {
+					// Bounce back to cart
+					return $this->cart( $option );
+				} else {
+					// or confirmation
+					return $this->confirm( $option );
+				}
 			}
 		}
 

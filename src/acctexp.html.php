@@ -1011,7 +1011,7 @@ class Payment_HTML
 						<tr>
 							<td class="giftdetails">
 								<?php if ( !empty( $InvoiceFactory->invoice->params['target_user'] ) ) { ?>
-									<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username']; ?> (<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceRemoveGiftConfirm&amp;invoice='.$InvoiceFactory->invoice_number, $aecConfig->cfg['ssl_signup'] ); ?>">undo?</a>)</p>
+									<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username']; ?> (<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceRemoveGiftCart&amp;invoice='.$InvoiceFactory->invoice_number, $aecConfig->cfg['ssl_signup'] ); ?>">undo?</a>)</p>
 								<?php } else { ?>
 									<p><?php echo _CHECKOUT_GIFT_INFO; ?></p>
 									<input type="text" size="20" name="user_ident" class="inputbox" value="" />

@@ -285,6 +285,14 @@ if ( !empty( $task ) ) {
 			InvoiceRemoveGift( $option );
 			break;
 
+		case 'invoiceremovegiftcart':
+			InvoiceRemoveGiftCart( $option );
+			break;
+
+		case 'invoiceremovegiftconfirm':
+			InvoiceRemoveGiftConfirm( $option );
+			break;
+
 		case 'invoiceaddcoupon':
 			InvoiceAddCoupon( $option );
 			break;
@@ -1197,6 +1205,24 @@ function InvoiceRemoveGiftConfirm( $option )
 
 	$invoicefact = new InvoiceFactory( $userid, $usage, $group, $processor, $invoice );
 	$invoicefact->confirm( $option, $_POST );
+}
+
+function InvoiceRemoveGiftCart( $option )
+{
+	global $database;
+
+	$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+	$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
+
+	$objinvoice = new Invoice( $database );
+	$objinvoice->loadInvoiceNumber( $invoice );
+
+	if ( $objinvoice->removeTargetUser() ) {
+		$objinvoice->storeload();
+	}
+
+	$invoicefact = new InvoiceFactory( $userid );
+	$invoicefact->cart( $option );
 }
 
 function InvoiceAddCoupon( $option )
