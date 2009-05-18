@@ -43,6 +43,8 @@ class mi_hotproperty extends MI
 		return;
 	}
 
+
+
 	function Settings()
 	{
 		global $database;

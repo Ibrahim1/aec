@@ -128,11 +128,18 @@ class mi_phpbb3
 						. ' WHERE `group_id` = \'' . $bbuser->group_id . '\''
 						. ' AND `user_id` = \'' . $bbuser->user_id . '\''
 						;
-				// update PHPBB3 primary group
+
+				if ( $this->settings['apply_colour_exp'] ) {
+					$color = ', `user_colour` = \'' . $this->settings['group_colour_exp'] . '\'';
+				} else {
+					$color = '';
+				}
+
 				$queries[] = 'UPDATE phpbb_users'
-						. ' SET `group_id` = \'' . $this->settings['group_exp'] . '\''
-						. ' WHERE `user_id` = \'' . $bbuser->user_id . '\''
-						;
+							. ' SET `group_id` = \'' . $this->settings['group_exp'] . '\'' . $color
+							. ' WHERE `user_id` = \'' . $bbuser->user_id . '\''
+							;
+
 				// Clear Secondary Groups (if flag set)
 				if ( $this->settings['set_clear_groups'] ) {
 					$queries[] = 'DELETE FROM phpbb_user_group'
@@ -141,11 +148,6 @@ class mi_phpbb3
 							;
 				}
 			}
-
-			$queries[] = 'UPDATE phpbb_users'
-						. ' SET `group_id` = \'' . $this->settings['group_exp'] . '\', `user_colour` = \'' . $this->settings['group_colour_exp'] . '\''
-						. ' WHERE `username` = \'' . $request->metaUser->cmsUser->username . '\''
-						;
 
 			foreach ( $queries as $query ) {
 				$database->setQuery( $query );
@@ -204,16 +206,17 @@ class mi_phpbb3
 						. ' AND `user_id` = \'' . $bbuser->user_id . '\''
 						;
 				// update PHPBB3 primary group
-				$queries[] = 'UPDATE phpbb_users'
-						. ' SET `group_id` = \'' . $this->settings['group'] . '\''
-						. ' WHERE `user_id` = \'' . $bbuser->user_id . '\''
-						;
-			}
+				if ( $this->settings['apply_colour'] ) {
+					$color = ', `user_colour` = \'' . $this->settings['group_colour'] . '\'';
+				} else {
+					$color = '';
+				}
 
-			$queries[] = 'UPDATE phpbb_users'
-						. ' SET `group_id` = \'' . $this->settings['group'] . '\', `user_colour` = \'' . $this->settings['group_colour'] . '\''
-						. ' WHERE `username` = \'' . $request->metaUser->cmsUser->username . '\''
-						;
+				$queries[] = 'UPDATE phpbb_users'
+							. ' SET `group_id` = \'' . $this->settings['group'] . '\'' . $color
+							. ' WHERE `user_id` = \'' . $bbuser->user_id . '\''
+							;
+			}
 
 			foreach ( $queries as $query ) {
 				$database->setQuery( $query );
