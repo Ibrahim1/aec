@@ -4,7 +4,7 @@
 * @package AEC - Account Control Expiration - Membership Manager
 * @subpackage Language - Backend - Dutch
 * @copyright 2006-2008 Copyright (C) David Deutsch
-* @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org & Jarno en Mark Baselier from Q5 Grafisch Webdesign
+* @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org & Jarno en Mark Baselier from Q5 Grafisch Webdesign
 * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
 */
 
@@ -195,14 +195,14 @@ define( '_AEC_LOG_LO_INST',						'The AEC Versie %s is geinstalleerd' );
 
 // installatie teksten
 define( '_AEC_INST_NOTE_IMPORTANT',				'Belangrijke melding' );
-define( '_AEC_INST_NOTE_SECURITY',				'Voor <strong>uw systeem beveiliging</strong> moet u system hacks toepassen op de Joomla Core files. Voor uw gemak hebben we een autohacking optie gemaakt.' );
-define( '_AEC_INST_APPLY_HACKS',				'Om deze hacks nu toe te passen, gaat u naar de %s. (U kunt deze pagina ook later vinden onder het AEC menu)' );
-define( '_AEC_INST_APPLY_HACKS_LTEXT',			'hacks pagina' );
-define( '_AEC_INST_NOTE_UPGRADE',				'<strong>Als u upgrade, zorg dan dat u de hacks nogmaals toepast, omdat er dingen verandert kunnen zijn!!!</strong>' );
-define( '_AEC_INST_NOTE_HELP',					'Om u met veel voorkomende problemen te helpen, hebben we een %s gemaakt waarmee u de meest voorkomende problemen kunt oplossen (u kunt deze ook vinden onder het AEC menu.' );
-define( '_AEC_INST_NOTE_HELP_LTEXT',			'help functie' );
-define( '_AEC_INST_HINTS',						'Tips' );
-define( '_AEC_INST_HINT1',						'Bezoek s.v.p. <a href="%s" target="_blank">globalnerd.org forums</a> om mee te doen <strong>aan de dicussies op het forum.</strong> ' );
+define( '_AEC_INST_NOTE_SECURITY',				'For certain features, you may need to apply hacks to other components. For your convenience, we have included an autohacking feature that does just that with the click of a link' );
+define( '_AEC_INST_APPLY_HACKS',				'In order to commit these hacks right now, go to the %s. (You can also access this page later on from the AEC central view or menu)' );
+define( '_AEC_INST_APPLY_HACKS_LTEXT',			'hacks page' );
+define( '_AEC_INST_NOTE_UPGRADE',				'<strong>If you are upgrading, make sure to check the hacks page anyways, since there are changes from time to time!!!</strong>' );
+define( '_AEC_INST_NOTE_HELP',					'To help you along with frequently encountered problems, we have created a %s that will help you ship around the most common setup problems (access is also available from the AEC central).' );
+define( '_AEC_INST_NOTE_HELP_LTEXT',			'help function' );
+define( '_AEC_INST_HINTS',						'Hints' );
+define( '_AEC_INST_HINT1',						'We encourage you to visit the <a href="%s" target="_blank">valanx.org forums</a> and to <strong>participate in the discussion there</strong>. Chances are, that other users have found the same bugs and it is equally likely that there is at least a fix to hack in or even a new version.' );
 define( '_AEC_INST_HINT2',						'zorg altijd dat u uw instellingen goed nakijkt, en maak altijd een test betaalopdracht! Zij doen er uiteraard ons best voor om upgrades zo soepel mogelijk te laten verlopen, helaas is het technisch onmogelijk om dit altijd 100% vlekkenloos te laten verlopen.' );
 define( '_AEC_INST_ATTENTION',					'Geen reden om de oude logins te gebruiken!' );
 define( '_AEC_INST_ATTENTION1',					'Als u nog steeds oude AEC modules geinstalleerd heeft, verwijder deze dan.' );
@@ -336,7 +336,7 @@ define( '_AEC_SEL_NOT_CONFIGURED',				'Niet geconfigureerd' );
 
 // footer
 define( '_AEC_FOOT_TX_CHOOSING',				'Dank u voor het kiezen van het AEC component!' );
-define( '_AEC_FOOT_TX_GPL',						'Dit is een Joomla/Mambo component. Ontworpen en uitgebracht onder de <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU/GPL</a> licentie door Helder Garcia en David Deutsch van <a href="http://www.globalnerd.org" target="_blank">globalnerd.org</a>. Vertaling van het Nederlandse component is gedaan door Q5 Grafisch Webdesign <a href="http://www.q-5.nl" target="_blank">Q5 Grafisch Webdesign</a>.' );
+define( '_AEC_FOOT_TX_GPL',						'Dit is een Joomla/Mambo component. Ontworpen en uitgebracht onder de <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU/GPL</a> licentie door Helder Garcia en David Deutsch van <a href="http://www.valanx.org" target="_blank">valanx.org</a>. Vertaling van het Nederlandse component is gedaan door Q5 Grafisch Webdesign <a href="http://www.q-5.nl" target="_blank">Q5 Grafisch Webdesign</a>.' );
 define( '_AEC_FOOT_TX_SUBSCRIBE',				'Als u meer opties / professioneel advies / updates / handleidingen en online hulp wilt voor dit component kunt u zich aanmelden voor deze services op onze website!' );
 define( '_AEC_FOOT_CREDIT',						'Lees s.v.p. onze %s' );
 define( '_AEC_FOOT_CREDIT_LTEXT',				'Volledige credits' );

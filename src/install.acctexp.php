@@ -4,7 +4,7 @@
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Installation
  * @copyright 2006-2008 Copyright (C) David Deutsch
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
@@ -282,21 +282,21 @@ function com_install()
 					. '</div>' . "\n";
 				} ?>
 				<div class="usernote" style="width:350px;margin:8px;">
-					<h1 style="color: #FF0000;"><?php echo _AEC_INST_NOTE_IMPORTANT; ?>:</h1>
-					<img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/backend_gfx/hacks_scribble.png" border="0" alt="" style="position:relative;float:left;padding:4px;" />
-					<p><?php echo _AEC_INST_NOTE_SECURITY; ?></p>
-					<p><?php printf( _AEC_INST_APPLY_HACKS, AECToolbox::backendTaskLink( 'hacks', _AEC_INST_APPLY_HACKS_LTEXT ) ); ?></p>
-					<p><?php echo _AEC_INST_NOTE_UPGRADE; ?></p>
-				</div>
-				<div class="usernote" style="width:350px;margin:8px;">
 					<h1><?php echo _AEC_INST_HINTS; ?></h1>
-					<p><?php echo sprintf( _AEC_INST_HINT1, 'https://globalnerd.org/index.php?option=com_fireboard&Itemid=88' ); ?></p>
+					<p><?php echo sprintf( _AEC_INST_HINT1, 'http://valanx.org' ); ?></p>
 					<p><?php echo _AEC_INST_HINT2; ?></p>
 				</div>
 				<div class="usernote" style="width:350px;margin:8px;">
 					<h1><?php echo _AEC_INST_NOTE_IMPORTANT; ?>:</h1>
 					<img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/backend_gfx/help_scribble.png" border="0" alt="" style="position:relative;float:left;padding:4px;" />
 					<p><?php printf( _AEC_INST_NOTE_HELP, AECToolbox::backendTaskLink( 'help', _AEC_INST_NOTE_HELP_LTEXT ) ); ?></p>
+				</div>
+				<div class="usernote" style="width:350px;margin:8px;">
+					<h1><?php echo _AEC_INST_NOTE_IMPORTANT; ?>:</h1>
+					<img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/backend_gfx/hacks_scribble.png" border="0" alt="" style="position:relative;float:left;padding:4px;" />
+					<p><?php echo _AEC_INST_NOTE_SECURITY; ?></p>
+					<p><?php printf( _AEC_INST_APPLY_HACKS, AECToolbox::backendTaskLink( 'hacks', _AEC_INST_APPLY_HACKS_LTEXT ) ); ?></p>
+					<p><?php echo _AEC_INST_NOTE_UPGRADE; ?></p>
 				</div>
 			</td>
 			<td width="30%" valign="top">
@@ -307,7 +307,7 @@ function com_install()
 					<p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION; ?></p>
 					<p><?php echo _AEC_FOOT_TX_CHOOSING; ?></p>
 					<div style="margin: 0 auto;text-align:center;">
-						<a href="https://www.globalnerd.org" target="_blank"> <img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/globalnerd_logo_tiny.png" border="0" alt="globalnerd" /></a>
+						<a href="https://www.valanx.org" target="_blank"><img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/valanx_logo.png" border="0" alt="valanx.org" /></a>
 						<p><?php echo _AEC_FOOT_TX_GPL; ?></p>
 						<p><?php echo _AEC_FOOT_TX_SUBSCRIBE; ?></p>
 						<p><?php printf( _AEC_FOOT_CREDIT, AECToolbox::backendTaskLink( 'credits', _AEC_FOOT_CREDIT_LTEXT ) ); ?></p>

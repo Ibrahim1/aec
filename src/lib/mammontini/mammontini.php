@@ -15,7 +15,7 @@
 /**
  * Terms Object, collation of a full payment description
  *
- * @author	David Deutsch <mails@globalnerd.org>
+ * @author	David Deutsch <mails@valanx.org>
  * @package		AEC Component
  * @subpackage	Library - Mammontini!
  * @since 1.0
@@ -237,7 +237,7 @@ class mammonTerms extends eucaObject
 /**
  * Term Object, representing one Term in a payment description
  *
- * @author	David Deutsch <mails@globalnerd.org>
+ * @author	David Deutsch <mails@valanx.org>
  * @package		AEC Component
  * @subpackage	Library - Mammontini!
  * @since 1.0
@@ -481,7 +481,7 @@ class mammonTerm extends eucaObject
 /**
  * Cost Object, representing cost of one term
  *
- * @author	David Deutsch <mails@globalnerd.org>
+ * @author	David Deutsch <skore@valanx.org>
  * @package		AEC Component
  * @subpackage	Library - Mammontini!
  * @since 1.0

@@ -15,7 +15,7 @@
 /**
  * Object class, allowing __construct in PHP4.
  *
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
  * @package		Joomla.Framework
  * @subpackage	Base
  * @since		1.5

@@ -5,8 +5,8 @@
 	<creationDate>11.03.2008</creationDate>
 	<copyright>Copyright (C) 2008 David Deutsch</copyright>
 	<license>GNU/GPL Version 2.0 or later - http://www.gnu.org/copyleft/gpl.html</license>
-	<authorEmail>mails@globalnerd.org</authorEmail>
-	<authorUrl>https://globalnerd.org</authorUrl>
+	<authorEmail>skore@valanx.org</authorEmail>
+	<authorUrl>https://valanx.org</authorUrl>
 	<version>0.3</version>
 	<description>The AEC User Plugin makes sure that changes to a user account are propagated to the AEC.</description>
 	<files>

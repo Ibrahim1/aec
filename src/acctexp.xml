@@ -2,12 +2,12 @@
 <mosinstall type="component">
 	<name>AcctExp</name>
 	<creationDate>2008.06.06</creationDate>
-	<author>David Deutsch, Helder Garcia, Team AEC</author>
+	<author>David Deutsch, Team AEC, Helder Garcia</author>
 	<copyright>@Copyright (C) 2004-2008 David Deutsch</copyright>
-	<authorEmail>mails@globalnerd.org</authorEmail>
-	<authorUrl>https://globalnerd.org</authorUrl>
+	<authorEmail>skore@valanx.org</authorEmail>
+	<authorUrl>http://valanx.org</authorUrl>
 	<version>0.12.6 RC2p</version>
-	<description>A complete subscription management system. By Helder Garcia (hlbog), David Deutsch (skOre) and the team of AEC at globalnerd.org</description>
+	<description>A complete subscription management system. By David Deutsch (skOre) and the team of AEC at valanx.org (initially started as a project by Helder Garcia (hlbog))</description>
 	<files>
 		<filename>index.html</filename>
 		<filename>acctexp.php</filename>

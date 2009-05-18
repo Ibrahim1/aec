@@ -4,7 +4,7 @@
 * @package AEC - Account Control Expiration - Membership Manager
 * @subpackage Language - Backend - French
 * @copyright 2006-2008 Copyright (C) David Deutsch
-* @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
+* @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
 * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
 */
 
@@ -195,14 +195,14 @@ define( '_AEC_LOG_LO_INST',                        'La version %s de AEC est int
 
 // install texts
 define( '_AEC_INST_NOTE_IMPORTANT',                'Avis important' );
-define( '_AEC_INST_NOTE_SECURITY',                'Pour &lt;strong&gt;la s&eacute;curit&eacute; de votre syst&egrave;me&lt;/strong&gt; vous devez appliquer des hacks sur les fichiers du noyau Joomla. Pour votre confort, nous avons inclus un dispositif de autohacking qui r&eacute;alise l\'op&eacute;ration d\'un simple click sur le lien' );
-define( '_AEC_INST_APPLY_HACKS',                'Afin de valider ces hacks d&egrave;s maintenant allez &agrave; %s. (Vous pourrez aussi acc&egrave;der &agrave; cette page plus tard &agrave; partir de la vue AEC Central ou du menu)' );
-define( '_AEC_INST_APPLY_HACKS_LTEXT',            'Page des hacks' );
-define( '_AEC_INST_NOTE_UPGRADE',                '&lt;strong&gt;S\'il s\'agit d\'un changement de version, verifiez la page de hacks, car il peut y avoir des changements de temps en temps!!!&lt;/strong&gt;' );
-define( '_AEC_INST_NOTE_HELP',                    'Pour vous aider &agrave; r&eacute;soudre les probl&egrave;mes fr&eacute;quemment rencontr&eacute;s, nous avons cr&eacute;&eacute; un %s qui vous assistera (l\'acc&egrave;s est aussi possible depuis AEC Central.' );
-define( '_AEC_INST_NOTE_HELP_LTEXT',            'Fonction d\'aide' );
-define( '_AEC_INST_HINTS',                        'Indices' );
-define( '_AEC_INST_HINT1',                        'Nous vous recommandons de visiter les &lt;a href=&quot;%s&quot; target=&quot;_blank&quot;&gt;globalnerd.org forums&lt;/a&gt; et de &lt;strong&gt; participer aux discussions&lt;/strong&gt;. Il est probable que d\'autres utilisateurs aient trouv&eacute; les m&ecirc;mes bugs et aussi les solutions imm&eacute;diates ou &agrave; venir dans une nouvelle version.' );
+define( '_AEC_INST_NOTE_SECURITY',				'For certain features, you may need to apply hacks to other components. For your convenience, we have included an autohacking feature that does just that with the click of a link' );
+define( '_AEC_INST_APPLY_HACKS',				'In order to commit these hacks right now, go to the %s. (You can also access this page later on from the AEC central view or menu)' );
+define( '_AEC_INST_APPLY_HACKS_LTEXT',			'hacks page' );
+define( '_AEC_INST_NOTE_UPGRADE',				'<strong>If you are upgrading, make sure to check the hacks page anyways, since there are changes from time to time!!!</strong>' );
+define( '_AEC_INST_NOTE_HELP',					'To help you along with frequently encountered problems, we have created a %s that will help you ship around the most common setup problems (access is also available from the AEC central).' );
+define( '_AEC_INST_NOTE_HELP_LTEXT',			'help function' );
+define( '_AEC_INST_HINTS',						'Hints' );
+define( '_AEC_INST_HINT1',						'We encourage you to visit the <a href="%s" target="_blank">valanx.org forums</a> and to <strong>participate in the discussion there</strong>. Chances are, that other users have found the same bugs and it is equally likely that there is at least a fix to hack in or even a new version.' );
 define( '_AEC_INST_HINT2',                        'Dans tous les cas (et sp&eacute;cialement si vous utilisez AEC sur un site de production): allez sur la page de param&eacute;trage et faite un test de souscription pour v&eacute;rifer que tout fonctionne de fa&ccedil;on satisfaisante! Although we try our best to make upgrading as flawless as possible, some fundamental changes to our program may not be possible to cushion for all users.' );
 define( '_AEC_INST_ATTENTION',                    'Pas besoin d\'utiliser les vieux logins!' );
 define( '_AEC_INST_ATTENTION1',                    'Si vous avez encore les vieux modules de login d\'AEC, d&eacute;sinstallez les (peu importe qu\'il s\'agisse de CB ou Joomla) et utilisez les modules de Joomla ou CB actuels. Il n\'y a plus besoin d\'utiliser ces vieux modules.' );
@@ -336,7 +336,7 @@ define( '_AEC_SEL_NOT_CONFIGURED',                'Non configurer' );
 
 // footer
 define( '_AEC_FOOT_TX_CHOOSING',                'Merci d\'avoir choisi le composant AEC de contr&ocirc;le d\'expiration des comptes!' );
-define( '_AEC_FOOT_TX_GPL',                        'Ce composant Joomla/Mambo a &eacute;t&eacute; &eacute;labor&eacute; et publi&eacute; sous licence <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU/GPL</a>; par Helder Garcia et David Deutsch de <a href="http://www.globalnerd.org"; target="_blank">globalnerd.org</a><br />Traduction fran&ccedil;aise par Garstud, Johnpoulain, Cobayes, cb75ter, Sharky' );
+define( '_AEC_FOOT_TX_GPL',                        'Ce composant Joomla/Mambo a &eacute;t&eacute; &eacute;labor&eacute; et publi&eacute; sous licence <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU/GPL</a>; par Helder Garcia et David Deutsch de <a href="http://www.valanx.org"; target="_blank">valanx.org</a><br />Traduction fran&ccedil;aise par Garstud, Johnpoulain, Cobayes, cb75ter, Sharky' );
 define( '_AEC_FOOT_TX_SUBSCRIBE',                'Si vous voulez plus de fonctionnalit&eacute;s, services professionnels, mises &agrave; jour, les manuels et l\'aide en ligne pour ce composant, vous pouvez vous abonner &agrave; nos services sur le lien ci-dessus. Il nous aide beaucoup dans notre d&eacute;veloppement!' );
 define( '_AEC_FOOT_CREDIT',                        'S\'il vous pla&#238;t lisez notre %s' );
 define( '_AEC_FOOT_CREDIT_LTEXT',                'liste de remerciements' );

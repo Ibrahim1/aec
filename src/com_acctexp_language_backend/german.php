@@ -4,7 +4,7 @@
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Language - Backend - German Formal
  * @copyright 2006-2008 Copyright (C) David Deutsch
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
@@ -195,7 +195,7 @@ define( '_AEC_LOG_LO_INST',						'AEC Version %s wurde installiert' );
 
 // install texts
 define( '_AEC_INST_NOTE_IMPORTANT',				'Wichtiger Hinweis' );
-define( '_AEC_INST_NOTE_SECURITY',				'Um das CMS <strong>sicher zu betreiben</strong> ist es notwendig einige &Auml;nderungen an den Stammdateien zu machen.<br />Mit dieser Version von AEC wird eine Funktion mitgeliefert die exakt diese Aufgabe &uuml;bernimmt, daf&uuml;r bitte auf den nachfolgenden Link klicken' );
+define( '_AEC_INST_NOTE_SECURITY',				'Um die Integration mit manchen anderen Komponenten es notwendig einige &Auml;nderungen an deren Dateien zu machen.<br />Mit dieser Version von AEC wird eine Funktion mitgeliefert die exakt diese Aufgabe &uuml;bernimmt, daf&uuml;r bitte auf den nachfolgenden Link klicken' );
 define( '_AEC_INST_APPLY_HACKS',				'Um die erforderlichen &Auml;nderungen durchzuf&uuml;hren bitte %s<br />Dieser Link kann auch sp&auml;ter jederzeit aufgerufen werden - siehe AEC Verwaltung' );
 define( '_AEC_INST_APPLY_HACKS_LTEXT',			'hier klicken' );
 define( '_AEC_INST_NOTE_UPGRADE',				'<strong>Falls ein bestehendes AEC upgedated werden soll, bitte auf alle F&auml;lle das Men&uuml; "Hacks" aufrufen - es gibt immer wieder neue &Auml;nderungen</strong>' );
@@ -334,7 +334,7 @@ define( '_AEC_SEL_NOT_CONFIGURED',				'Ni. Konfiguriert / Neu' );
 
 // footer
 define( '_AEC_FOOT_TX_CHOOSING',				'Danke dass Sie sich f&uuml;r AEC - Account Expiration Control entschieden haben!' );
-define( '_AEC_FOOT_TX_GPL',						'Diese Komponente wurde entwickelt und ver&ouml;ffentlicht unter der <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank" title="GNU/GPL">GNU/GPL</a> von Helder Garcia, David Deutsch und dem Team von <a href="https://globalnerd.org" target="_blank" title="globalnerd.org">globalnerd.org</a>' );
+define( '_AEC_FOOT_TX_GPL',						'Diese Komponente wurde entwickelt und ver&ouml;ffentlicht unter der <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank" title="GNU/GPL">GNU/GPL</a> von Helder Garcia, David Deutsch und dem Team von <a href="https://valanx.org" target="_blank" title="valanx.org">valanx.org</a>' );
 define( '_AEC_FOOT_TX_SUBSCRIBE',				'Weitere Features, professionelles Service, Updates, Handb&uuml;cher und Online Hilfe, einfach auf den Link oben klicken. Es hilft uns vor allem auch bei der weiteren Entwicklung!' );
 define( '_AEC_FOOT_CREDIT',						'Bitte auch die %s lesen' );
 define( '_AEC_FOOT_CREDIT_LTEXT',				'Credits' );

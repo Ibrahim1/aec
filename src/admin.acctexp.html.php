@@ -4,7 +4,7 @@
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Main HTML Backend
  * @copyright 2006-2008 Copyright (C) David Deutsch
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
@@ -87,7 +87,7 @@ class HTML_myCommon
 		return $html;
 	}
 
-	function GlobalNerd()
+	function Valanx()
 	{
 		global $mosConfig_live_site;
 		?>
@@ -100,8 +100,8 @@ class HTML_myCommon
 				<td align="center">
 					<div align="center" class="smallgrey">
 						<p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION ?><br />
-						<a href="http://www.globalnerd.org/index.php?option=com_docman&amp;Itemid=27" target="_blank"><?php echo _AEC_FOOT_VERSION_CHECK; ?></a>&nbsp;&nbsp;|&nbsp;
-						<a href="http://www.globalnerd.org/index.php?option=com_content&amp;task=view&amp;id=14&amp;Itemid=28" target="_blank"><?php echo _AEC_FOOT_MEMBERSHIP; ?></a></p>
+						<a href="http://www.valanx.org/index.php?option=com_docman&amp;Itemid=27" target="_blank"><?php echo _AEC_FOOT_VERSION_CHECK; ?></a>&nbsp;&nbsp;|&nbsp;
+						<a href="http://www.valanx.org/index.php?option=com_content&amp;task=view&amp;id=14&amp;Itemid=28" target="_blank"><?php echo _AEC_FOOT_MEMBERSHIP; ?></a></p>
 					</div>
 					<div align="center">
 						<p><?php echo _AEC_FOOT_TX_GPL; ?></p>
@@ -109,7 +109,7 @@ class HTML_myCommon
 					</div>
 				</td>
 				<td align="center">
-					<img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/globalnerd_logo_tiny.png" border="0" alt="globalnerd" width="44" height="44" />
+					<a href="https://www.valanx.org" target="_blank"><img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/valanx_logo_tiny.png" border="0" alt="valanx" /></a>
 				</td>
 			</tr>
 			</table>
@@ -393,7 +393,7 @@ class General_css
 			<input type="hidden" name="task" value="" />
 		</form>
 
-		<?php HTML_myCommon::GlobalNerd();
+		<?php HTML_myCommon::Valanx();
 	}
 }
 
@@ -776,7 +776,7 @@ class HTML_AcctExp
 			krumo( $option, $metaUser, $invoices, $lists, $nexttask );
 		}
 
- 		HTML_myCommon::GlobalNerd();
+ 		HTML_myCommon::Valanx();
 	}
 
 	function SubscriptionName( $subscriptionid )
@@ -920,7 +920,7 @@ class HTML_AcctExp
 					<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;"><p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION; ?></p>
 						<p><?php echo _AEC_FOOT_TX_CHOOSING; ?></p>
 						<div style="margin: 0 auto;text-align:center;">
-							<a href="http://www.globalnerd.org"> <img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/globalnerd_logo_tiny.png" border="0" alt="globalnerd" width="44" height="44" /></a>
+							<a href="http://www.valanx.org"> <img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/valanx_logo_tiny.png" border="0" alt="valanx" width="44" height="44" /></a>
 							<p><?php echo _AEC_FOOT_TX_GPL; ?></p>
 							<p><?php echo _AEC_FOOT_TX_SUBSCRIBE; ?></p>
 							<p><?php printf( _AEC_FOOT_CREDIT, AECToolbox::backendTaskLink( 'credits', _AEC_FOOT_CREDIT_LTEXT ) ); ?></p>
@@ -975,7 +975,7 @@ class HTML_AcctExp
 					<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;"><p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION ?></p>
 						<p><?php echo _AEC_FOOT_TX_CHOOSING; ?></p>
 					<div style="margin: 0 auto;text-align:center;">
-						<a href="http://www.globalnerd.org"> <img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/globalnerd_logo_tiny.png" border="0" alt="globalnerd" width="44" height="44" /></a>
+						<a href="http://www.valanx.org"> <img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/valanx_logo_tiny.png" border="0" alt="valanx" /></a>
 						<p><?php echo _AEC_FOOT_TX_GPL; ?></a></p>
 						<p><?php echo _AEC_FOOT_TX_SUBSCRIBE; ?></p>
 					</div>
@@ -1092,7 +1092,7 @@ class HTML_AcctExp
 			krumo( $option, $hacks );
 		}
 
- 		HTML_myCommon::GlobalNerd();
+ 		HTML_myCommon::Valanx();
 	}
 
 	function help ( $option, $diagnose )
@@ -1167,7 +1167,7 @@ class HTML_AcctExp
 			krumo( $option, $diagnose );
 		}
 
- 		HTML_myCommon::GlobalNerd();
+ 		HTML_myCommon::Valanx();
 	}
 
 	function Settings( $option, $aecHTML, $tab_data, $editors )
@@ -1245,7 +1245,7 @@ class HTML_AcctExp
 			krumo( $option, $aecHTML, $tab_data, $editors );
 		}
 
- 		HTML_myCommon::GlobalNerd();
+ 		HTML_myCommon::Valanx();
 	}
 
 	function listProcessors( $rows, $pageNav, $option )
@@ -1309,7 +1309,7 @@ class HTML_AcctExp
 			krumo( $rows, $pageNav, $option );
 		}
 
- 		HTML_myCommon::GlobalNerd();
+ 		HTML_myCommon::Valanx();
 	}
 
 	function editProcessor( $option, $aecHTML )
@@ -1368,7 +1368,7 @@ class HTML_AcctExp
 			krumo( $option, $aecHTML );
 		}
 
- 		HTML_myCommon::GlobalNerd();
+ 		HTML_myCommon::Valanx();
 	}
 
 	function listSubscriptions( $rows, $pageNav, $search, $option, $lists, $subscriptionid, $action )
@@ -1462,7 +1462,7 @@ class HTML_AcctExp
 			krumo( $my, $rows, $pageNav, $search, $option, $lists, $subscriptionid, $action );
 		}
 
- 		HTML_myCommon::GlobalNerd();
+ 		HTML_myCommon::Valanx();
 	}
 
 	function listMicroIntegrations( $rows, $pageNav, $option, $lists, $search, $ordering )
@@ -1554,7 +1554,7 @@ class HTML_AcctExp
 			krumo( $rows, $pageNav, $option );
 		}
 
- 		HTML_myCommon::GlobalNerd();
+ 		HTML_myCommon::Valanx();
 	}
 
 	function editMicroIntegration( $option, $row, $lists, $aecHTML )
@@ -1665,7 +1665,7 @@ class HTML_AcctExp
 			krumo( $option, $row, $lists, $aecHTML );
 		}
 
- 		HTML_myCommon::GlobalNerd();
+ 		HTML_myCommon::Valanx();
 	}
 
 	function listSubscriptionPlans( $rows, $lists, $pageNav, $option )
@@ -1785,7 +1785,7 @@ class HTML_AcctExp
 			krumo( $rows, $pageNav, $option );
 		}
 
- 		HTML_myCommon::GlobalNerd();
+ 		HTML_myCommon::Valanx();
 	}
 
 	function editSubscriptionPlan( $option, $aecHTML, $row, $hasrecusers )
@@ -2034,7 +2034,7 @@ class HTML_AcctExp
 			krumo( $option, $aecHTML, $row, $hasrecusers );
 		}
 
- 		HTML_myCommon::GlobalNerd();
+ 		HTML_myCommon::Valanx();
 	}
 
 	function listItemGroups( $rows, $pageNav, $option )
@@ -2146,7 +2146,7 @@ class HTML_AcctExp
 			krumo( $rows, $pageNav, $option );
 		}
 
- 		HTML_myCommon::GlobalNerd();
+ 		HTML_myCommon::Valanx();
 	}
 
 	function editItemGroup( $option, $aecHTML, $row )
@@ -2281,7 +2281,7 @@ class HTML_AcctExp
 			krumo( $option, $aecHTML, $row );
 		}
 
- 		HTML_myCommon::GlobalNerd();
+ 		HTML_myCommon::Valanx();
 	}
 
 	function listCoupons( $rows, $pageNav, $option, $type )
@@ -2351,7 +2351,7 @@ class HTML_AcctExp
 			krumo( $rows, $pageNav, $option, $type );
 		}
 
- 		HTML_myCommon::GlobalNerd();
+ 		HTML_myCommon::Valanx();
 	}
 
 	function editCoupon( $option, $aecHTML, $row, $type )
@@ -2552,7 +2552,7 @@ class HTML_AcctExp
 			krumo( $option, $aecHTML, $row, $type );
 		}
 
- 		HTML_myCommon::GlobalNerd();
+ 		HTML_myCommon::Valanx();
 	}
 
 	function viewinvoices( $option, $rows, $search, $pageNav )
@@ -2621,7 +2621,7 @@ class HTML_AcctExp
 			krumo( $option, $rows, $search, $pageNav );
 		}
 
- 		HTML_myCommon::GlobalNerd();
+ 		HTML_myCommon::Valanx();
 	}
 
 	function viewhistory( $option, $rows, $search, $pageNav )
@@ -2686,7 +2686,7 @@ class HTML_AcctExp
 			krumo( $option, $rows, $search, $pageNav );
 		}
 
- 		HTML_myCommon::GlobalNerd();
+ 		HTML_myCommon::Valanx();
 	}
 
 	function eventlog( $option, $events, $search, $pageNav )
@@ -2748,7 +2748,7 @@ class HTML_AcctExp
 			krumo( $option, $events, $search, $pageNav );
 		}
 
- 		HTML_myCommon::GlobalNerd();
+ 		HTML_myCommon::Valanx();
 	}
 
 	function readoutSetup( $option, $aecHTML )
@@ -2799,7 +2799,7 @@ class HTML_AcctExp
 			krumo( $option, $aecHTML );
 		}
 
- 		HTML_myCommon::GlobalNerd();
+ 		HTML_myCommon::Valanx();
 	}
 
 	function readout( $option, $readout )
@@ -2898,7 +2898,7 @@ class HTML_AcctExp
 		</td></tr></table>
 		<?php
 
- 		HTML_myCommon::GlobalNerd();
+ 		HTML_myCommon::Valanx();
 	}
 
 	function readoutCSV( $option, $readout )
@@ -3030,7 +3030,7 @@ class HTML_AcctExp
 			krumo( $option, $aecHTML );
 		}
 
- 		HTML_myCommon::GlobalNerd();
+ 		HTML_myCommon::Valanx();
 	}
 
 	/**

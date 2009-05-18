@@ -3,7 +3,7 @@
 // Copyright (C) 2004-2007 Helder Garcia, David Deutsch
 // All rights reserved.
 // This source file is part of the Account Expiration Control Component, a  Joomla
-// custom Component By Helder Garcia and David Deutsch - http://www.globalnerd.org
+// custom Component By Helder Garcia and David Deutsch - http://www.valanx.org
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License (GPL)

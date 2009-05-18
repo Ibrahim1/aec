@@ -4,7 +4,7 @@
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Main Backend
  * @copyright 2006-2008 Copyright (C) David Deutsch
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
@@ -903,7 +903,7 @@ function help( $option )
 
 /*
 	$diagnose[]	= array("AEC Version", $diagnostic['AEC_stable'], 1, "You are running the most recent stable Version of the AEC", 0, 1);
-	$diagnose[]	= array("AEC Version", !$diagnostic['AEC_stable'], 3, "There appears to be a more recent Version of the AEC available on <a href=\"http://www.globalnerd.org\">www.globalnerd.org</a>", 0, 1);
+	$diagnose[]	= array("AEC Version", !$diagnostic['AEC_stable'], 3, "There appears to be a more recent Version of the AEC available on <a href=\"http://www.valanx.org\">www.valanx.org</a>", 0, 1);
 */
 	// Apache related file permission problems
 	if ( substr_count( $diagnostic['server_software'], 'Apache' ) && !$diagnostic['no_permission_problem'] ) {

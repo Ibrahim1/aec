@@ -4,7 +4,7 @@
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Processors - Pagamento Certo Locaweb - http://www.pagamentocerto.com.br
  * @copyright 2008 Copyright (C) Helder Garcia - http://sounerd.com.br - http://investidorlegal.com.br
- * @author Helder Garcia <helder.garcia@gmail.com> & Team AEC - http://www.globalnerd.org
+ * @author Helder Garcia <helder.garcia@gmail.com> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 

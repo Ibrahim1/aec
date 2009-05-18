@@ -46,10 +46,6 @@
  *
  * @category
  * @package AEC - Account Control Expiration - Membership Manager
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org 
- * @copyright 2006-2008 Copyright (C) David Deutsch
  * @version     CVS: $Id: JSON.php,v 1.31 2006/06/28 05:54:17 migurski Exp $
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  * @link        http://pear.php.net/pepr/pepr-proposal-show.php?id=198

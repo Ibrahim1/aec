@@ -4,8 +4,8 @@
 <creationDate>24.02.2008</creationDate>
 <author>Helder Garcia, David 'skOre' Deutsch</author>
 <copyright>This module is released under the GNU/GPL License.  </copyright>
-<authorEmail>mails@globalnerd.org</authorEmail>
-<authorUrl>www.globalnerd.org</authorUrl>
+<authorEmail>skore@valanx.org</authorEmail>
+<authorUrl>www.valanx.org</authorUrl>
 <version>0.12.6</version>
 <description>Module for use with Account Expiration Control Component.</description>
 <files>
