@@ -89,10 +89,14 @@ class mi_communitybuilder
 			if ( !empty( $changes ) ) {
 				$alterstring = array();
 				foreach ( $changes as $name => $value ) {
-					if ( strcmp( $value, 'NULL' ) === 0 ) {
-						$alterstring[] = $name . ' = NULL';
+					if ( ( $value === 0 ) || ( $value === "0" ) ) {
+						$alterstring[] = "`" . $name . "`" . ' = 0';
+					} elseif ( ( $value === 1 ) || ( $value === "1" ) ) {
+						$alterstring[] = "`" . $name . "`" . ' = 1';
+					} elseif ( strcmp( $value, 'NULL' ) === 0 ) {
+						$alterstring[] = "`" . $name . "`" . ' = NULL';
 					} else {
-						$alterstring[] = $name . ' = \'' . AECToolbox::rewriteEngineRQ( $value, $request ) . '\'';
+						$alterstring[] = "`" . $name . "`" . ' = \'' . AECToolbox::rewriteEngineRQ( $value, $request ) . '\'';
 					}
 				}
 
@@ -137,10 +141,14 @@ class mi_communitybuilder
 			if ( !empty( $changes ) ) {
 				$alterstring = array();
 				foreach ( $changes as $name => $value ) {
-					if ( strcmp( $value, 'NULL' ) === 0 ) {
-						$alterstring[] = '`' . $name . '`' . ' = NULL';
+					if ( ( $value === 0 ) || ( $value === "0" ) ) {
+						$alterstring[] = "`" . $name . "`" . ' = 0';
+					} elseif ( ( $value === 1 ) || ( $value === "1" ) ) {
+						$alterstring[] = "`" . $name . "`" . ' = 1';
+					} elseif ( strcmp( $value, 'NULL' ) === 0 ) {
+						$alterstring[] = "`" . $name . "`" . ' = NULL';
 					} else {
-						$alterstring[] = '`' . $name . '`' . ' = \'' . AECToolbox::rewriteEngineRQ( $value, $request ) . '\'';
+						$alterstring[] = "`" . $name . "`" . ' = \'' . AECToolbox::rewriteEngineRQ( $value, $request ) . '\'';
 					}
 				}
 
