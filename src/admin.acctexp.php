@@ -3893,10 +3893,6 @@ function listMicroIntegrations( $option )
 
 	$query .= (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' );
 
-	if ( $orderby != 'class_name' ) {
-		$query .= ' GROUP BY `class_name`';
-	}
-
 	$query .= ' ORDER BY ' . $orderby;
 	$query .= ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit;
 
