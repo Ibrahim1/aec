@@ -11982,7 +11982,8 @@ class AECToolbox
 	{
 		$change = 1;
 
-		$alen = count( $array );
+		// Always sort until the previous to last key
+		$alen = count( $array ) - 1;
 
 		while ( true ) {
 			$change = false;
