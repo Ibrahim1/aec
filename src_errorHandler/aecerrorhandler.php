@@ -67,16 +67,13 @@ class plgSystemAECerrorhandler extends JPlugin
 
 			// handle login redirect
 			$this->handleLoginRedirect();
-
-			// set the new ErrorHendler
-			JError::setErrorHandling( E_ALL, 'callback', array( $this, 'aecErrorHandler' ) );
-
 		}
 	}
 
-	/* check if we are at the login page & there is a return URI set.
-	*  if so, check if the return was to com_content (regarless of the view) & redirect to NotAllowed.
-	*/
+	/**
+	 * check if we are at the login page & there is a return URI set.
+	 * if so, check if the return was to com_content (regarless of the view) & redirect to NotAllowed.
+	 */
 	function handleLoginRedirect()
 	{
 		global $mainframe;
@@ -85,9 +82,12 @@ class plgSystemAECerrorhandler extends JPlugin
 		$option = $uri->getVar( 'option' );
 		$view = $uri->getVar( 'view' );
 
-		if ( $return = JRequest::getVar( 'return', '', 'method', 'base64' ) ) {
+		if ( $return = JRequest::getVar( 'return', '', 'method', 'base64' ) )
+		{
 			$return = base64_decode( $return );
-			if ( function_exists( 'JURI::isInternal' ) ) {
+
+			if ( function_exists( 'JURI::isInternal' ) )
+			{
 				if ( !JURI::isInternal( $return ) ) {
 					$return = '';
 				}
@@ -107,20 +107,9 @@ class plgSystemAECerrorhandler extends JPlugin
 			$uri = new JURI( $return );
 			$option = $uri->getVar( 'option' );
 
-			if( $option == 'com_content' )
-			{
+			if ( $option == 'com_content' ) {
 				$mainframe->redirect( "index.php?option=com_acctexp&task=NotAllowed" );
 			}
-		}
-	}
-
-	// catch the Error & redirect if needed
-	function aecErrorHandler(& $error)
-	{
-		global $mainframe;
-
-		if( $error->message == JText::_( "ALERTNOTAUTH" ) ) {
-			$mainframe->redirect( "index.php?option=com_acctexp&task=NotAllowed" );
 		}
 	}
 
