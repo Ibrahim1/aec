@@ -1107,6 +1107,25 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid )
 			$objInvoice->params = array( 'deactivated' => 'cancel' );
 			$objInvoice->check();
 			$objInvoice->store();
+
+			$usage = null;
+			if ( !empty( $objInvoice->usage ) ) {
+				$usage = $this->usage;
+			}
+
+			if ( !empty( $usage ) ) {
+				$u = explode( '.', $usage );
+
+				switch ( strtolower( $u[0] ) ) {
+					case 'c':
+					case 'cart':
+						// Delete Carts referenced in this Invoice as well
+						$query = 'DELETE FROM #__acctexp_cart WHERE `id` = \'' . $u[1] . '\'';
+						$database->setQuery( $query );
+						$database->query();
+						break;
+				}
+			}
 		}
 	} else {
 		mosNotAuth();
@@ -1116,7 +1135,7 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid )
 	if ( $pending ) {
 		pending( $option, $userid );
 	} else {
-		subscriptionDetails( $option );
+		subscriptionDetails( $option, 'invoices' );
 	}
 
 }
@@ -1235,7 +1254,7 @@ function InvoiceAddCoupon( $option )
 	$objinvoice = new Invoice( $database );
 	$objinvoice->loadInvoiceNumber( $invoice );
 	$objinvoice->addCoupon( $coupon_code );
-	$objinvoice->storeload();
+	$objinvoice->computeAmount();
 
 	repeatInvoice( $option, $invoice, $objinvoice->userid );
 }
@@ -1250,7 +1269,7 @@ function InvoiceRemoveCoupon( $option )
 	$objinvoice = new Invoice( $database );
 	$objinvoice->loadInvoiceNumber( $invoice );
 	$objinvoice->removeCoupon( $coupon_code );
-	$objinvoice->storeload();
+	$objinvoice->computeAmount();
 
 	repeatInvoice( $option, $invoice, $objinvoice->userid );
 }

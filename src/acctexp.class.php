@@ -6546,7 +6546,7 @@ class InvoiceFactory
 				$this->invoice->load( $id );
 			} else {
 				$this->invoice->create( $this->userid, $this->usage, $this->processor );
-				$this->invoice->computeAmount( $this );
+				$this->invoice->computeAmount( $this, false );
 
 				if ( is_object( $this->pp ) ) {
 					$this->pp->invoiceCreationAction( $this );
@@ -7189,9 +7189,11 @@ class InvoiceFactory
 		$database->setQuery( $query );
 		$in = $database->loadResult();
 
-		$this->invoice_number = $in;
+		if ( !empty( $in ) ) {
+			$this->invoice_number = $in;
 
-		$this->touchInvoice( $option );
+			$this->touchInvoice( $option );
+		}
 
 		Payment_HTML::cart( $option, $this );
 	}
@@ -7350,6 +7352,8 @@ class InvoiceFactory
 		}
 
 		$this->puffer( $option );
+
+		$this->touchInvoice( $option );
 
 		$user_ident	= aecGetParam( 'user_ident', 0, true, array( 'string', 'clear_nonemail' ) );
 
@@ -7921,7 +7925,7 @@ class Invoice extends serialParamDBTable
 		return $database->loadResult();
 	}
 
-	function computeAmount( $InvoiceFactory=null )
+	function computeAmount( $InvoiceFactory=null, $save=true )
 	{
 		global $database;
 
@@ -7979,6 +7983,8 @@ class Invoice extends serialParamDBTable
 
 					if ( $cart->id ) {
 						$return = $cart->getAmount( $metaUser, false, $this->counter );
+
+						$this->amount = $return['amount'];
 					} elseif ( isset( $this->params->cart ) ) {
 						// Cart has been deleted, use copied data
 						$vars = get_object_vars( $this->params->cart );
@@ -7989,7 +7995,9 @@ class Invoice extends serialParamDBTable
 							}
 						}
 
-						$this->amount = $cart->getAmount( $metaUser, false, $this->counter );
+						$return = $cart->getAmount( $metaUser, false, $this->counter );
+
+						$this->amount = $return['amount'];
 					} else {
 						$this->amount = '0.00';
 					}
@@ -8050,7 +8058,9 @@ class Invoice extends serialParamDBTable
 
 			$this->amount = AECToolbox::correctAmount( $this->amount );
 
-			$this->storeload();
+			if ( $save ) {
+				$this->storeload();
+			}
 		}
 	}
 
@@ -9286,6 +9296,13 @@ class aecCart extends serialParamDBTable
 	function action( $action, $details=null )
 	{
 		if ( $action == "clearCart" ) {
+			global $database;
+
+			// Delete Invoices referencing this Cart as well
+			$query = 'DELETE FROM #__acctexp_invoices WHERE `usage` = \'c.' . $this->id . '\'';
+			$database->setQuery( $query );
+			$database->query();
+
 			return $this->delete();
 		}
 
@@ -9381,6 +9398,13 @@ class aecCart extends serialParamDBTable
 						unset( $this->content[$cid]['coupons'][$ccid] );
 					}
 				}
+			}
+		}
+
+		if ( is_null( $id ) ) {
+			if ( in_array( $coupon_code, $this->params['overall_coupons'] ) ) {
+				$oid = array_search( $coupon_code, $this->params['overall_coupons'] );
+				unset( $this->params['overall_coupons'][$oid] );
 			}
 		}
 	}
@@ -13401,15 +13425,6 @@ class couponsHandler extends eucaObject
 		return $items;
 	}
 
-	function applyToItemList( $items )
-	{
-		foreach ( $items as $iid => $item ) {
-			$items[$iid] = $this->applyAllToItems( $iid, $item );
-		}
-
-		return $items;
-	}
-
 	function prefilter( $items, $cart=false, $fullcart=false )
 	{
 		foreach ( $this->coupons as $ccid => $coupon_code ) {
@@ -13507,11 +13522,32 @@ class couponsHandler extends eucaObject
 		}
 	}
 
+	function applyToItemList( $items )
+	{
+		foreach ( $items as $iid => $item ) {
+			$items[$iid] = $this->applyAllToItems( $iid, $item );
+		}
+
+		return $items;
+	}
+
 	function applyAllToItems( $id, $item, $cart=false )
 	{
 		$this->global_applied = array();
 
-		if ( empty( $item['item']['obj'] ) && empty( $item['terms'] ) ) {
+		$hasterm = !empty( $item['terms'] );
+
+		if ( $hasterm ) {
+			if ( !empty( $item['terms']->terms[0]->type ) ) {
+				$termtype = $item['terms']->terms[0]->type;
+			} else {
+				$termtype = null;
+			}
+		} else {
+			$termtype = null;
+		}
+
+		if ( empty( $item['item']['obj'] ) && ( !$hasterm || ( $termtype == "total" ) ) ) {
 			// This is the total item - apply total coupons - totally
 			foreach ( $this->coupons as $coupon_code ) {
 				if ( in_array( $coupon_code, $this->fullcartlist ) ) {
