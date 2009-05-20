@@ -60,6 +60,8 @@ class mi_mosets_tree extends MI
 		$settings['set_listings']	= array( 'inputA' );
 		$settings['publish_all']	= array( 'list_yesno' );
 		$settings['unpublish_all']	= array( 'list_yesno' );
+		$settings['feature_all']	= array( 'list_yesno' );
+		$settings['unfeature_all']	= array( 'list_yesno' );
 
 		return $settings;
 	}
@@ -79,6 +81,10 @@ class mi_mosets_tree extends MI
 
 		if ( $this->settings['unpublish_all'] ) {
 			$this->unpublishListings( $request->metaUser );
+		}
+
+		if ( $this->settings['unfeature_all'] ) {
+			$this->unfeatureListings( $request->metaUser );
 		}
 
 		return true;
@@ -109,6 +115,10 @@ class mi_mosets_tree extends MI
 
 		if ( $this->settings['publish_all'] ) {
 			$this->publishListings( $request->metaUser );
+		}
+
+		if ( $this->settings['feature_all'] ) {
+			$this->featureListings( $request->metaUser );
 		}
 
 		return true;
@@ -252,6 +262,40 @@ class mi_mosets_tree extends MI
 
 		$query = 'UPDATE #__mt_links'
 				. ' SET `link_published` = \'0\''
+				. ' WHERE `user_id` = \'' . $metaUser->userid . '\''
+				;
+		$database->setQuery( $query );
+		if ( $database->query() ) {
+			return true;
+		} else {
+			$this->setError( $database->getErrorMsg() );
+			return false;
+		}
+	}
+
+	function featureListings( $metaUser )
+	{
+		global $database;
+
+		$query = 'UPDATE #__mt_links'
+				. ' SET `link_featured` = \'1\''
+				. ' WHERE `user_id` = \'' . $metaUser->userid . '\''
+				;
+		$database->setQuery( $query );
+		if ( $database->query() ) {
+			return true;
+		} else {
+			$this->setError( $database->getErrorMsg() );
+			return false;
+		}
+	}
+
+	function unfeatureListings( $metaUser )
+	{
+		global $database;
+
+		$query = 'UPDATE #__mt_links'
+				. ' SET `link_featured` = \'0\''
 				. ' WHERE `user_id` = \'' . $metaUser->userid . '\''
 				;
 		$database->setQuery( $query );
