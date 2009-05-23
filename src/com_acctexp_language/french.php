@@ -4,7 +4,7 @@
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Language - Frontend
  * @copyright 2006-2008 Copyright (C) David Deutsch
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.globalnerd.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
@@ -19,11 +19,11 @@ if( defined( '_AEC_LANG' ) ) {
 
 define( '_AEC_EXPIRE_TODAY',				'Ce compte est actif jusqu\'&agrave; aujourd\'hui' );
 define( '_AEC_EXPIRE_FUTURE',				'Ce compte est actif jusqu\'au' );
-define( '_AEC_EXPIRE_PAST',					'Ce compte &eacute;tait actif jusqu\'au' );
+define( '_AEC_EXPIRE_PAST',				'Ce compte &eacute;tait actif jusqu\'au' );
 define( '_AEC_DAYS_ELAPSED',				'jour(s) &eacute;coul&eacute;s');
-define( '_AEC_EXPIRE_TRIAL_TODAY',			'This trial is active until today' );
-define( '_AEC_EXPIRE_TRIAL_FUTURE',			'This trial is active until' );
-define( '_AEC_EXPIRE_TRIAL_PAST',			'This trial was valid until' );
+define( '_AEC_EXPIRE_TRIAL_TODAY',			'Cette p&eacute;riode d\'essai est valable jusqu\'&agrave; aujourd\'hui ' );
+define( '_AEC_EXPIRE_TRIAL_FUTURE',			'Cette p&eacute;riode d\'essai est valable jusqu\'au' );
+define( '_AEC_EXPIRE_TRIAL_PAST',			'Cette p&eacute;riode d\'essai &eacute;tait valable jusqu\'au' );
 
 define( '_AEC_EXPIRE_NOT_SET',				'Non d&eacute;termin&eacute;' );
 define( '_AEC_GEN_ERROR',					'&lt;h1&gt;Erreur g&eacute;n&eacute;rale&lt;/h1&gt;&lt;p&gt;Nous avons rencontr&eacute; des probl&egrave;mes pour traiter votre demande. Veuillez contacter l\'administrateur du site Web.&lt;/p&gt;' );
@@ -42,21 +42,21 @@ define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_STATUS',	'Etat de la facture :' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_FRAUD',	'La v&eacute;rification du montant a &eacute;chou&eacute;, r&eacute;gl&eacute;: %s, facture: %s - paiement annul&eacute;' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CURR',		'La v&eacute;rification de la monnaie a &eacute;chou&eacute;, r&eacute;gl&eacute;: %s, facture: %s - paiement annul&eacute;' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_VALID',	'Paiement valid&eacute;, l\'action est engag&eacute;e' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_VALID_APPFAIL',	'Payment valid, Application failed!' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_VALID_APPFAIL',	'Paiement valid&eacute;, &eacute;chec de l\'application !' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_TRIAL',	'Paiement valid&eacute; - p&eacute;riode d\'essai gratuite' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_PEND',		'Paiement non valid&eacute; - compte en suspens ; raison : %s' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CANCEL',	'Pas de paiement - Abonnement annul&eacute;' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CHARGEBACK',	'No Payment - Chargeback' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CHARGEBACK_SETTLE',	'No Payment - Chargeback Settlement' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CHARGEBACK',	'Pas de paiement - Chargeback' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CHARGEBACK_SETTLE',	'Pas de paiement - Chargeback Settlement' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS',	', le compte utilisateur a &eacute;t&eacute; mis &agrave; jour &agrave; \'Annul&eacute;\'' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS_HOLD',	', Userstatus has been updated to \'Hold\'' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS_ACTIVE',	', Userstatus has been updated to \'Active\'' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS_HOLD',	', le statut de l\'utilisateur est pass&eacute; &agrave; \'En attente\'' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS_ACTIVE',	', le statut de l\'utilisateur est pass&eacute; &agrave; \'Actif\'' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EOT',		'Pas de paiment - Fin de la p&eacute;riode d\'abonnement' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_DUPLICATE','No Payment - Duplicate' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_NULL','No Payment - Null' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_DUPLICATE','Pas de paiement - Doublon' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_NULL','Pas de paiement - Vide' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR',	'Erreur inconnue' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_REFUND',	'Pas de paiment - Souscription supprim&eacute;e (rembours&eacute;e)' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED',	', L&amp;acute;utilisateur a expir&eacute;' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_REFUND',	'Pas de paiement - Abonnement supprim&eacute; (rembours&eacute;)' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED',	', L\'utilisateur a expir&eacute;' );
 
 // --== COUPON INFO ==--
 define( '_COUPON_INFO',						'Bons de r&eacute;duction :' );
@@ -68,15 +68,15 @@ define( '_COUPON_INFO_CHECKOUT',			'Veuillez saisir ici le code de votre bon de 
 // --== PAGE PLANS ==--
 define( '_PAYPLANS_HEADER', ' Plans');
 define( '_NOPLANS_ERROR', 'Aucun plan disponible pour le moment.');
-define( '_NOPLANS_AUTHERROR', 'You are not authorized to access this option. Please contact administrator if you have any further questions.');
-define( '_PLANGROUP_BACK', '&lt; Go back');
+define( '_NOPLANS_AUTHERROR', 'Vous n\'&ecirc;tes pas autoris&eacute; &agrave; acc&eacute;der &agrave; cette option.: Veuillez contacter l\'administrateur si vous avez des questions.');
+define( '_PLANGROUP_BACK', '&lt; Revenir');
 
 // --== PAGE INFORMATIONS DU COMPTE ==--
-define( '_CHK_USERNAME_AVAIL', 'Le nom d\'utilisateur %s est disponible');
-define( '_CHK_USERNAME_NOTAVAIL', 'Le nom d\'utilisateur %s est d&eacute;j&agrave; pris!');
+define( '_CHK_USERNAME_AVAIL', 'L\'identifiant %s est disponible');
+define( '_CHK_USERNAME_NOTAVAIL', 'L\'identifiant %s est d&eacute;j&agrave; pris !');
 
 // --== PAGE ABONNEMENT ==--
-define( '_MYSUBSCRIPTION_TITLE', 'My Membership');
+define( '_MYSUBSCRIPTION_TITLE', 'Mon abonnement');
 define( '_HISTORY_SUBTITLE', 'Membre depuis ');
 define( '_HISTORY_COL1_TITLE', 'Facture');
 define( '_HISTORY_COL2_TITLE', 'Montant');
@@ -84,29 +84,29 @@ define( '_HISTORY_COL3_TITLE', 'Date de Paiement');
 define( '_HISTORY_COL4_TITLE', 'M&eacute;thode');
 define( '_HISTORY_COL5_TITLE', 'Action');
 define( '_HISTORY_COL6_TITLE', 'Plan');
-define( '_HISTORY_ACTION_REPEAT', 'Payer');
+define( '_HISTORY_ACTION_REPEAT', 'Payeur');
 define( '_HISTORY_ACTION_CANCEL', 'Annuler');
 define( '_RENEW_LIFETIME', 'Vous avez un abonnement &agrave; vie.');
 define( '_RENEW_DAYSLEFT', 'jours restants');
 define( '_RENEW_DAYSLEFT_EXCLUDED', 'Vous n\'&ecirc;tes pas concern&eacute; par l\'expiration');
 define( '_RENEW_DAYSLEFT_INFINITE', '&amp;#8734');
-define( '_RENEW_DAYSLEFT_TRIAL', 'Days left in Trial');
+define( '_RENEW_DAYSLEFT_TRIAL', 'jours restant pour la p&eacute;riode d\'essai');
 define( '_RENEW_INFO', 'Vous utilisez les paiements r&eacute;currents.');
 define( '_RENEW_OFFLINE', 'Renouveler');
 define( '_RENEW_BUTTON_UPGRADE', 'Mettre &agrave; jour');
 define( '_PAYMENT_PENDING_REASON_ECHECK', '&eacute;chec non r&eacute;solu (1-4 jours ouvr&eacute;s)');
 define( '_PAYMENT_PENDING_REASON_TRANSFER', 'en attente de transfert du paiement');
-define( '_YOUR_SUBSCRIPTION', 'Votre souscription');
-define( '_YOUR_FURTHER_SUBSCRIPTIONS', 'Souscriptions suppl&eacute;mentaires');
+define( '_YOUR_SUBSCRIPTION', 'Votre abonnement');
+define( '_YOUR_FURTHER_SUBSCRIPTIONS', 'Abonnements suppl&eacute;mentaires');
 define( '_PLAN_PROCESSOR_ACTIONS', 'Pour cela, vous disposez des options suivantes:');
-define( '_AEC_SUBDETAILS_TAB_OVERVIEW', 'Overview');
-define( '_AEC_SUBDETAILS_TAB_INVOICES', 'Invoices');
-define( '_AEC_SUBDETAILS_TAB_DETAILS', 'Details');
+define( '_AEC_SUBDETAILS_TAB_OVERVIEW', 'Vue g&eacute;n&eacute;rale');
+define( '_AEC_SUBDETAILS_TAB_INVOICES', 'Factures');
+define( '_AEC_SUBDETAILS_TAB_DETAILS', 'D&eacute;tails');
 
 // --== PAGE EXPIRATION ==--
 define( '_EXPIRE_INFO', 'Votre compte est actif jusqu\'au');
 define( '_RENEW_BUTTON', 'Renouveler Maintenant');
-define( '_RENEW_BUTTON_CONTINUE', 'Extend Previous Membership');
+define( '_RENEW_BUTTON_CONTINUE', 'Prolonger l\'abonnement pr&eacute;c&eacute;dent');
 define( '_ACCT_DATE_FORMAT', '%d-%m-%Y');
 define( '_EXPIRED', 'Votre compte est d&eacute;sactiv&eacute;&lt;br&gt; Merci de nous contacter pour renouveler votre inscription.&lt;br&gt;Date d\'expiration :');
 define( '_EXPIRED_TRIAL', 'Votre p&eacute;riode d\'essai a expir&eacute; le : ');
@@ -120,56 +120,54 @@ define( '_CONFIRM_COL1_TITLE', 'Compte');
 define( '_CONFIRM_COL2_TITLE', 'Informations');
 define( '_CONFIRM_COL3_TITLE', 'Montant');
 define( '_CONFIRM_ROW_NAME', 'Nom: ');
-define( '_CONFIRM_ROW_USERNAME', 'Nom d\'utilisateur: ');
+define( '_CONFIRM_ROW_USERNAME', 'Identifiant : ');
 define( '_CONFIRM_ROW_EMAIL', 'mail:');
 define( '_CONFIRM_INFO', 'Veuillez utiliser le bouton Continuer pour compl&eacute;ter votre enregistrement.');
 define( '_BUTTON_CONFIRM', 'Continuer');
 define( '_CONFIRM_TOS', 'J\'ai lu et j\'accepte les &lt;a href=\&quot;%s\&quot; target=\&quot;_blank\&quot; title=\&quot;CdU\&quot;&gt;conditions d\'utilisation&lt;/a&gt;');
-define( '_CONFIRM_TOS_IFRAME', "I have read and agree to the Terms of Service (above)");
+define( '_CONFIRM_TOS_IFRAME', "J\'ai lu et j\'accepte les conditions d\'utilisation (ci-dessus)");
 define( '_CONFIRM_TOS_ERROR', 'Veuillez lire et accepter nos conditions d\'utilisation');
 define( '_CONFIRM_COUPON_INFO', 'Si vous avez un code de bon de r&eacute;duction, vous pourrez le saisir sur la page du r&egrave;glement pour qu\'il soit pris en compte.');
-define( '_CONFIRM_COUPON_INFO_BOTH', 'If you have a coupon code, you can enter it here, or on the Checkout Page to get a discount on your payment');
+define( '_CONFIRM_COUPON_INFO_BOTH', 'Si vous avez un bon de r&eacute;duction, vous pouvez le saisir ici ou sur la page de confirmation pour b&eacute;n&eacute;ficier de la remise');
 define( '_CONFIRM_FREETRIAL', 'P&eacute;riode d\'essai gratuite');
 
 // --== SHOPPING CART FORM ==--
-define( '_CART_TITLE', 'Shopping Cart');
+define( '_CART_TITLE', 'Panier');
 define( '_CART_ROW_TOTAL', 'Total');
-define( '_CART_INFO', 'Please use the Continue-Button below to complete your purchase.');
+define( '_CART_INFO', 'Veuillez cliquer sur le bouton Continuer ci-dessous pour finaliser votre achat.');
 
 // --== EXCEPTION FORM ==--
-define( '_EXCEPTION_TITLE', 'Additional Information Required');
-define( '_EXCEPTION_INFO', 'To proceed with your checkout, we need you to provide additional information as specified below:');
-
+define( '_EXCEPTION_TITLE', 'Informations compl&eacute;mentaires requises');
+define( '_EXCEPTION_INFO', 'Pour finaliser votre achat, vous devez fournir les informations compl&eacute;mentaires indiqu&eacute;es ci-dessous :');
 // --== PROMPT PASSWORD FORM ==--
 define( '_AEC_PROMPT_PASSWORD', 'Pour des raisons de s&eacute;curit&eacute;, vous devez entrer votre mot de passe pour continuer.');
-define( '_AEC_PROMPT_PASSWORD_WRONG', 'Le mot de passe que vous avez entr&eacute; ne correspond pas &amp;agrave celui enregistr&eacute; dans notre base. Veuillez r&eacute;essayer s\'il vous plait.');
+define( '_AEC_PROMPT_PASSWORD_WRONG', 'Le mot de passe que vous avez entr&eacute; ne correspond pas &agrave; celui enregistr&eacute; dans notre base. Veuillez r&eacute;essayer s\'il vous plait.');
 define( '_AEC_PROMPT_PASSWORD_BUTTON', 'Continuer');
 
 // --== FORMULAIRE DE PAIEMENT ==--
 define( '_CHECKOUT_TITLE', 'Effectuer votre r&egrave;glement');
-define( '_CHECKOUT_INFO', 'Votre enregistrement a &eacute;t&eacute; pris en compte. Sur cette page, vous pouvez terminer votre r&egrave;glement. &lt;br /&gt; Si vous rencontrez des probl&egrave;mes en cours de route, vous pouvez revenir &amp;agrave cette &eacute;tape en vous authentifiant avec vos nouveaux nom d\'utilisateur et mot de passe - Notre syst&egrave;me vous autorisera une nouvelle tentative de r&egrave;glement.');
-define( '_CHECKOUT_INFO_REPEAT', 'Merci de votre fid&eacute;lit&eacute;. Sur cette page, vous pouvez terminer votre r&egrave;glement. &lt;br /&gt; Si vous rencontrez des probl&egrave;mes en cours de route, vous pouvez revenir &amp;agrave cette &eacute;tape en vous authentifiant avec vos nouveaux nom d\'utilisateur et mot de passe - Notre syst&egrave;me vous autorisera une nouvelle tentative de r&egrave;glement.');
+define( '_CHECKOUT_INFO', 'Votre enregistrement a &eacute;t&eacute; pris en compte. Sur cette page, vous pouvez terminer votre r&egrave;glement. &lt;br&gt; Si vous rencontrez des probl&egrave;mes en cours de route, vous pouvez revenir &agrave; cette &eacute;tape en vous authentifiant avec vos nouveaux identifiant et mot de passe - Notre syst&egrave;me vous autorisera une nouvelle tentative de r&egrave;glement.');
+define( '_CHECKOUT_INFO_REPEAT', 'Merci de votre fid&eacute;lit&eacute;. Sur cette page, vous pouvez terminer votre r&egrave;glement. &lt;br /&gt; Si vous rencontrez des probl&egrave;mes en cours de route, vous pouvez revenir &agrave; cette &eacute;tape en vous authentifiant avec vos nouveaux identifiant et mot de passe - Notre syst&egrave;me vous autorisera une nouvelle tentative de r&egrave;glement.');
 define( '_BUTTON_CHECKOUT', 'Effectuer votre r&egrave;glement');
 define( '_BUTTON_APPEND', 'Ajouter');
 define( '_BUTTON_APPLY', 'Appliquer');
-define( '_BUTTON_EDIT', 'Edit');
-define( '_BUTTON_SELECT', 'Select');
+define( '_BUTTON_EDIT', 'Editer');
+define( '_BUTTON_SELECT', 'S&eacute;lectionner');
 define( '_CHECKOUT_COUPON_CODE', 'Code du bon de r&eacute;duction');
 define( '_CHECKOUT_INVOICE_AMOUNT', 'Montant de la facture');
 define( '_CHECKOUT_INVOICE_COUPON', 'Bon de r&amp;eactue;duction');
 define( '_CHECKOUT_INVOICE_COUPON_REMOVE', 'supprimer');
 define( '_CHECKOUT_INVOICE_TOTAL_AMOUNT', 'Montant total');
 define( '_CHECKOUT_COUPON_INFO', 'Si vous avez un code de bon de r&eacute;duction, vous pouvez le saisir ici pour qu\'il soit pris en compte.');
-define( '_CHECKOUT_GIFT_HEAD', 'Gift to another user');
-define( '_CHECKOUT_GIFT_INFO', 'Enter details for another user of this site to give the item(s) you are about to purchase to that account.');
-
+define( '_CHECKOUT_GIFT_HEAD', 'Cadeau &agrave; un autre utilisateur');
+define( '_CHECKOUT_GIFT_INFO', 'Veuillez saisir les d&eacute;tails d\'un autre utilisateur de ce site pour lui faire don de l\'achat que vous &ecirc;tes sur le point de faire.');
 define( '_AEC_TERMTYPE_TRIAL', 'Facturation initiale');
 define( '_AEC_TERMTYPE_TERM', 'Mode de facturation');
 define( '_AEC_CHECKOUT_TERM', 'Mode de facturation');
 define( '_AEC_CHECKOUT_NOTAPPLICABLE', 'non applicable');
 define( '_AEC_CHECKOUT_FUTURETERM', 'future limite');
-define( '_AEC_CHECKOUT_COST', 'Cout');
-define( '_AEC_CHECKOUT_DISCOUNT', 'Discount');
+define( '_AEC_CHECKOUT_COST', 'Co&ucirc;t');
+define( '_AEC_CHECKOUT_DISCOUNT', 'Remise');
 define( '_AEC_CHECKOUT_TOTAL', 'Total');
 define( '_AEC_CHECKOUT_DURATION', 'Dur&eacute;e');
 
@@ -201,7 +199,7 @@ define( '_NOT_ALLOWED_HEADLINE', 'Abonnement requis!');
 define( '_NOT_ALLOWED_FIRSTPAR', 'Le Contenu que vous tentez d\'acc&eacute;der est uniquement accessible aux abonn&eacute;es de notre site. Si vous &ecirc;tes d&eacute;j&agrave; abonn&eacute; vous devez d\'abord vous connecter. Veuillez suivre ce lien si vous d&eacute;sirez vous abonner:');
 define( '_NOT_ALLOWED_REGISTERLINK', 'Page d\'enregistrement');
 define( '_NOT_ALLOWED_FIRSTPAR_LOGGED', 'Le contenu que vous essayez de consulter n\'est accessible qu\'&agrave; nos membres ayant souscrit &agrave; un abonnement sp&eacute;cifique. Veuillez suivre ce lien si vous souhaitez vous abonner : ');
-define( '_NOT_ALLOWED_REGISTERLINK_LOGGED', 'Page d\'bonnement');
+define( '_NOT_ALLOWED_REGISTERLINK_LOGGED', 'Page d\'abonnement');
 define( '_NOT_ALLOWED_SECONDPAR', 'Vous abonner ne prendra que quelques minutes - nous utilisons les services de :');
 
 // --== PAGE ANNULATION ==--
@@ -216,12 +214,12 @@ define( '_GOTO_CHECKOUT_CANCEL', 'vous avez &eacute;galement la possibilibt&eacu
 define( '_PENDING_NOINVOICE', 'Il apparait que vous avez annul&eacute; la seule facture restante de votre compte. Veuillez cliquer sur le bouton ci-dessous pour retourner &agrave; l\'&eacute;cran de s&eacute;lection du plan :');
 define( '_PENDING_NOINVOICE_BUTTON', 'S&eacute;lection du plan');
 define( '_PENDING_REASON_ECHECK', 'Il apparait que vous avez d&eacute;cid&eacute; de payer par ch&egrave;que electronique, veuillez patienter jusqu\'&agrave; la validation du paiement - cela peut prendre entre 1 et 4 jours.)');
-define( '_PENDING_REASON_WAITING_RESPONSE', '(According to our information however, we are just waiting for a response from the payment processor. You will be notified once that has happened. Sorry for the delay.)');
-define( '_PENDING_REASON_TRANSFER', 'Il apparait que vous avez d&eacute;cid&eacute; de payer par courrier postale, veuillez patienter jusqu\'&agrave; la validation du paiement - cela peut prendre plusieurs jours.)');
+define( '_PENDING_REASON_WAITING_RESPONSE', '(D\'apr&egrave;s nos informations, nous attendons juste la r&eacute;ponse du processeur de paiement. Vous serez notifi&eacute; d&egrave;s que la r&eacute;ponse sera arriv&eacute;e. D&eacute;sol&eacute; pour le d&eacute;lai.)');
+define( '_PENDING_REASON_TRANSFER', 'Il apparait que vous avez d&eacute;cid&eacute; de payer par courrier postal, veuillez patienter jusqu\'&agrave; la validation du paiement - cela peut prendre plusieurs jours.)');
 
 // --== HOLD PAGE ==--
-define( '_HOLD_TITLE', 'Account on Hold');
-define( '_HOLD_EXPLANATION', 'Your account is currently on hold. The most likely cause for this is that there was a problem with a payment you recently made. If you don\'t receive an email within the next 24 hours, please contact the site administrator.');
+define( '_HOLD_TITLE', 'Compte suspendu');
+define( '_HOLD_EXPLANATION', 'Votre compte est actuellement suspendu. La raison la plus probable est qu\'il y ait eu un probl&egrave;me avec votre dernier paiement. Si vous ne recevez pas de mail dans les prochaines 24 heures, veuillez contacter l\'administrateur du site.');
 
 // --== PAGE REMERCIEMENT ==--
 define( '_THANKYOU_TITLE', 'Merci !');
@@ -237,7 +235,7 @@ define( '_SUB_FEPARTICLE_MAIL', 'Vous allez recevoir un mail une fois que notre 
 
 // --== CHECKOUT ERROR PAGE ==--
 define( '_CHECKOUT_ERROR_TITLE', 'Erreur pendant le traitement de votre paiement!');
-define( '_CHECKOUT_ERROR_EXPLANATION', 'Une erreur est survenu pendant le traitement de votre paiement');
+define( '_CHECKOUT_ERROR_EXPLANATION', 'Une erreur est survenue pendant le traitement de votre paiement');
 define( '_CHECKOUT_ERROR_OPENINVOICE', 'Votre facture reste invalid&eacute;. Pour refaire une tentative de paiement, vous pouvez retourner sur la page de validation:');
 
 // --== COUPON ERROR MESSAGES ==--
@@ -258,27 +256,27 @@ define( '_COUPON_ERROR_SPONSORSHIP_ENDED', 'Ce bon n\'est plus valide ou bien in
 
 // ----======== TEXTE POUR MESSAGES mailS ========----
 
-define( '_AEC_SEND_SUB',				"Account details for %s at %s" );
-define( '_AEC_USEND_MSG',				"Hello %s,\n\nThank you for registering at %s.\n\nYou may now login to %s using the username and password you registered with." );
-define( '_AEC_USEND_MSG_ACTIVATE',				"Hello %s,\n\nThank you for registering at %s. Your account is created and must be activated before you can use it.\nTo activate the account click on the following link or copy-paste it in your browser:\n%s\n\nAfter activation you may login to %s using the following username and password:\n\nUsername - %s\nPassword - %s" );
-define( '_ACCTEXP_SEND_MSG','Abonnement du %s au %s');
-define( '_ACCTEXP_SEND_MSG_RENEW','Renouvellement de l\'abonnement pour la p&eacute;riode du %s au %s');
+define( '_AEC_SEND_SUB',				"D&eacute;tails du compte de %s &agrave; %s" );
+define( '_AEC_USEND_MSG',				"Bonjour %s,\n\nMerci de vous &ecirc;tre inscrit &agrave; %s.\n\nVous pouvez maintenant vous connecter &agrave; %s avec l\'identifiant et le mot de passe avec lesquels vous vous &ecirc;tes inscrit." );
+define( '_AEC_USEND_MSG_ACTIVATE',				"Bonjour %s,\n\nMerci de vous &ecirc;tre inscrit &agrave; %s. Votre compte est cr&eacute;&eacute; et doit &ecirc;tre activ&eacute; avant de pouvoir &ecirc;tre utilis&eacute;.\nPour activer votre compte, cliquer sur le lien suivant ou faites)en un copier/coller dans votre navigateur :\n%s\n\nApr&egrave;s l\'activation vous pourrez vous connecter &agrave; %s avec l\'identifiant et le mot de passe suivants :\n\nIdentifiant - %s\nMot de passe - %s" );
+define( '_ACCTEXP_SEND_MSG','Abonnement de %s &agrave; %s');
+define( '_ACCTEXP_SEND_MSG_RENEW','Renouvellement de l\'abonnement de %s &agrave; %s');
 define( '_ACCTEXP_MAILPARTICLE_GREETING', 'Bonjour %s,\n\n');
 define( '_ACCTEXP_MAILPARTICLE_THANKSREG', 'Merci de vous &ecirc;tre abonn&eacute; &agrave; %s.\n');
 define( '_ACCTEXP_MAILPARTICLE_THANKSREN', 'Merci d\'avoir renouvel&eacute; votre abonnement &agrave; %s.');
 define( '_ACCTEXP_MAILPARTICLE_PAYREC', ';Votre paiement pour votre abonnement a &eacute;t&eacute; re&ccedil;u.');
-define( '_ACCTEXP_MAILPARTICLE_LOGIN', ';Vous pouvez maintenant vous connecter &agrave; %s avec votre nom d\'utilisateur et mot de passe.');
+define( '_ACCTEXP_MAILPARTICLE_LOGIN', ';Vous pouvez maintenant vous connecter &agrave; %s avec votre identifiant et mot de passe.');
 define( '_ACCTEXP_MAILPARTICLE_FOOTER',';\n\nNe pas r&eacute;pondre &agrave; ce message, il a &eacute;t&eacute; g&eacute;n&eacute;r&eacute; automatiquement et seulement pour votre information.');
 
-define( '_ACCTEXP_ASEND_MSG',				'Bonjour %s,\n\nun nouvel utilisateur a cr&eacute;&eacute; un abonnement &agrave; [ %s ].\n\nLes informations pour cet utilisateur sont:\n\nNom..............: %s\nmail.........: %s\nNom d\'utilisateur.: %s\nSubscr.-ID.......: %s\nSubscription.....: %s\nIP...............: %s\nISP..............: %s\n\nNe pas r&eacute;pondre &agrave; ce message il a &eacute;t&eacute; g&eacute;n&eacute;r&eacute; automatiquement et seulement pour votre information.' );
-define( '_ACCTEXP_ASEND_MSG_RENEW',			'Bonjour %s,\n\nun abonn&amp;eacte;bonn&eacute; a renouvell&eacute; son abonnement &agrave; [ %s ].\n\nLes informations pour cet utilisateur sont:\n\nNom..............: %s\nmail.........: %s\nNom d\'utilisateur.: %s\nSubscr.-ID.......: %s\nAbonnement.....: %s\nIP...............: %s\nISP..............: %s\n\nNe pas r&eacute;pondre &agrave; ce message, il a &eacute;t&eacute; g&eacute;n&eacute;r&eacute; automatiquement et seulement pour votre information.' );
-define( '_AEC_ASEND_MSG_NEW_REG',			'Bonjour %s,\n\nvoici un nouvel inscrit &agrave; [ %s ].\n\nVoici les d&eacute;tails :\n\nNom.....: %s\nNom d\'utilisateur: %s\nEmail....: %s\nIP.......: %s\nFAI......: %s\n\nNe pas r&eacute;pondre &agrave; ce message, il a &eacute;t&eacute; g&eacute;n&eacute;r&eacute; automatiquement et seulement pour votre information.' );
+define( '_ACCTEXP_ASEND_MSG',				'Bonjour %s,\n\nun nouvel utilisateur a cr&eacute;&eacute; un abonnement &agrave; [ %s ].\n\nLes informations pour cet utilisateur sont:\n\nNom..............: %s\nmail.........: %s\nIdentifiant : %s\nSubscr.-ID.......: %s\nAbonnement.....: %s\nIP...............: %s\nISP..............: %s\n\nNe pas r&eacute;pondre &agrave; ce message il a &eacute;t&eacute; g&eacute;n&eacute;r&eacute; automatiquement et seulement pour votre information.' );
+define( '_ACCTEXP_ASEND_MSG_RENEW',			'Bonjour %s,\n\nun abonn&amp;eacte;bonn&eacute; a renouvell&eacute; son abonnement &agrave; [ %s ].\n\nLes informations pour cet utilisateur sont:\n\nNom..............: %s\nmail.........: %s\nIdentifiant : %s\nSubscr.-ID.......: %s\nAbonnement.....: %s\nIP...............: %s\nISP..............: %s\n\nNe pas r&eacute;pondre &agrave; ce message, il a &eacute;t&eacute; g&eacute;n&eacute;r&eacute; automatiquement et seulement pour votre information.' );
+define( '_AEC_ASEND_MSG_NEW_REG',			'Bonjour %s,\n\nvoici un nouvel inscrit &agrave; [ %s ].\n\nVoici les d&eacute;tails :\n\nNom.....: %s\nIdentifiant : %s\nEmail....: %s\nIP.......: %s\nFAI......: %s\n\nNe pas r&eacute;pondre &agrave; ce message, il a &eacute;t&eacute; g&eacute;n&eacute;r&eacute; automatiquement et seulement pour votre information.' );
 define( '_AEC_ASEND_NOTICE',				'AEC %s: %s at %s' );
-define( '_AEC_ASEND_NOTICE_MSG',		'Suivant le niveau de reporting par courrier electronique que vous avez choisi, voici une notification automatique &agrave; propos du rapport d\'&eacute;v&egrave;nements .\n\nLes d&eacute;tails du message sont:\n\n--- --- --- ---\n\n%s\n\n--- --- --- ---\n\nNe pas r&eacute;pondre &agrave; ce message, il a &eacute;t&eacute; g&eacute;n&eacute;r&eacute; automatiquement et seulement pour votre information. Vous pouvez changer le niveau de reporting dans vos param&egrave;tres de configuration AEC.' );
+define( '_AEC_ASEND_NOTICE_MSG',		'Suivant le niveau de reporting par courrier &eacute;lectronique que vous avez choisi, voici une notification automatique &agrave; propos du rapport d\'&eacute;v&egrave;nements .\n\nLes d&eacute;tails du message sont:\n\n--- --- --- ---\n\n%s\n\n--- --- --- ---\n\nNe pas r&eacute;pondre &agrave; ce message, il a &eacute;t&eacute; g&eacute;n&eacute;r&eacute; automatiquement et seulement pour votre information. Vous pouvez changer le niveau de reporting dans vos param&egrave;tres de configuration AEC.' );
 
 // ----======== COUNTRY CODES ========----
 
-define( 'COUNTRYCODE_SELECT', 'Select Country' );
+define( 'COUNTRYCODE_SELECT', 'S&eacute;lectionner le pays' );
 define( 'COUNTRYCODE_US', 'United States' );
 define( 'COUNTRYCODE_AL', 'Albania' );
 define( 'COUNTRYCODE_DZ', 'Algeria' );
