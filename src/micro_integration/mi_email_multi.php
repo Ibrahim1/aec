@@ -57,14 +57,21 @@ class mi_email_multi
 			}
 		}
 
-		$message	= AECToolbox::rewriteEngineRQ( $this->settings['text' . $area], $request );
-		$subject	= AECToolbox::rewriteEngineRQ( $this->settings['subject' . $area], $request );
+		return true;
+	}
+
+	function aecEventHookEmail( $request )
+	{
+		$pf = 'email_' . $request->event->params['emailid'] . '_';
+
+		$message	= AECToolbox::rewriteEngineRQ( $this->settings[$pf.'text'], $request );
+		$subject	= AECToolbox::rewriteEngineRQ( $this->settings[$pf.'subject'], $request );
 
 		if ( empty( $message ) ) {
 			return null;
 		}
 
-		$recipients = AECToolbox::rewriteEngineRQ( $this->settings['recipient'], $request );
+		$recipients = AECToolbox::rewriteEngineRQ( $this->settings[$pf.'recipient'], $request );
 		$recips = explode( ',', $recipients );
 
         $recipients2 = array();
@@ -73,9 +80,7 @@ class mi_email_multi
         }
         $recipients = $recipients2;
 
-		mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text' . $area . '_html'] );
-
-		return true;
+		mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings[$pf.'text_html'] );
 	}
 }
 ?>
