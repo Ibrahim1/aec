@@ -11,7 +11,7 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_email_multi
+class mi_email_multi extends MI
 {
 	function Info()
 	{
@@ -34,6 +34,7 @@ class mi_email_multi
 			for ( $i=0; $i<$this->settings['emails_count']; $i++ ) {
 				$pf = 'email_' . $i . '_';
 
+				$settings[$pf.'timing']				= array( 'inputE' );
 				$settings[$pf.'recipient']			= array( 'inputE' );
 				$settings[$pf.'subject']			= array( 'inputE' );
 				$settings[$pf.'text_html']			= array( 'list_yesno' );
@@ -47,12 +48,24 @@ class mi_email_multi
 		return $settings;
 	}
 
-	function relayAction( $request, $area )
+	function action( $request )
 	{
-		if ( $area == '' ) {
-			if ( !empty( $this->settings['text_first'] ) ) {
-				if ( empty( $request->metaUser->objSubscription->previous_plan ) ) {
-					$area = '_first';
+		if ( !empty( $this->settings['emails_count'] ) && !empty( $this->settings['sender'] ) && !empty( $this->settings['sender_name'] ) ) {
+			for ( $i=0; $i<$this->settings['emails_count']; $i++ ) {
+				$pf = 'email_' . $i . '_';
+
+				if ( !empty( $this->settings[$pf.'recipient'] ) && !empty( $this->settings[$pf.'timing'] ) ) {
+					if ( strpos( $this->settings[$pf.'timing'], '-' ) === 0 ) {
+						// Go back from Expiration date
+						$tstamp = strtotime( $request->metaUser->focusSubscription->expiration );
+					} else {
+						// Go from current timestamp
+						$tstamp = time();
+					}
+
+					$due_date = strtotime( $this->settings[$pf.'timing'], $tstamp );
+
+					$this->issueEvent( $request, 'email', $due_date, array(), array( 'emailid' => $i ) );
 				}
 			}
 		}
