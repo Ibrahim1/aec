@@ -762,4 +762,11 @@ define( '_MI_MI_AGE_RESTRICTION_RESTRICT_CALENDAR_DESC',		'Restrict the dates a 
 define( '_MI_MI_AGE_RESTRICTION_USERSELECT_BIRTHDAY_NAME',		'Birthday' );
 define( '_MI_MI_AGE_RESTRICTION_USERSELECT_BIRTHDAY_DESC',		'Your birthday' );
 
+define( '_AEC_MI_NAME_AECMODIFYEXPIRATION', 'Modify Expiration Date');
+define( '_AEC_MI_DESC_AECMODIFYEXPIRATION', 'Dynamically resets the Expiration Date of the subscription it is applied to');
+define( '_MI_MI_AECMODIFYEXPIRATION_TIME_MOD_NAME', 'Time Modification' );
+define( '_MI_MI_AECMODIFYEXPIRATION_TIME_MOD_DESC', 'Plain English modification (according to PHP manual on the strtotime() function, e.g. "+1 week 2 days 4 hours 2 seconds", "10 September 2000" or "last Monday")');
+define( '_MI_MI_AECMODIFYEXPIRATION_TIMESTAMP_NAME', 'Base Timestamp' );
+define( '_MI_MI_AECMODIFYEXPIRATION_TIMESTAMP_DESC', 'The point in time from which the modification is made. Defaults to the current time, but you can use the rewrite engine to, for instance, use the original expiration date.');
+
 ?>
