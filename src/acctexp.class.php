@@ -10470,6 +10470,26 @@ class AECfetchfromDB
 		return $database->loadResult();
 	}
 
+	function InvoiceNumberfromId( $id, $override_active = false )
+	{
+		global $database;
+
+		$query = 'SELECT `invoice_number`'
+				. ' FROM #__acctexp_invoices'
+				;
+
+		if ( $override_active ) {
+			$query .= ' WHERE';
+		} else {
+			$query .= ' WHERE `active` = \'1\' AND';
+		}
+
+		$query .= ' `id` = \'' . $id . '\'';
+
+		$database->setQuery( $query );
+		return $database->loadResult();
+	}
+
 	function lastUnclearedInvoiceIDbyUserID( $userid )
 	{
 		global $database;
