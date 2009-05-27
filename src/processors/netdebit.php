@@ -137,6 +137,8 @@ class processor_netdebit extends URLprocessor
 			$var['BET'] = $request->int_var['amount'];
 		}
 
+		$var['VAL'] = md5( $request->int_var['amount'] . $this->settings['secret'] );
+
 		if ( $this->settings['javascript_checkout'] ) {
 			// Link to NetDebit Javascript from Checkout link
 			$var['_aec_checkout_onclick'] = 'GATE_NDV2_AMOUNT(\'' . $var['VAR1'] . '\',\'' . $var['VAR2'] . '\',\'' . $var['ZAH'] . '\',\'' . $var['POS'] . '\',\'' . $var['KUN'] . '\',\'' . $var['KNR'] . '\',\'' . $var['TIM'] . '\',\'' . $var['BET'] . '\',\'' . $var['LZS'] . '\',\'' . $var['LZW'] . '\');return false;';
