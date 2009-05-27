@@ -7142,9 +7142,11 @@ class InvoiceFactory
 					continue;
 				}
 
-				foreach ( $passthrough as $pid => $pk ) {
-					if ( ( $pk[0] == $mik ) || ( $pk[0] == $mik.'[]' ) ) {
-						unset($passthrough[$pid]);
+				if ( is_array( $passthrough ) ) {
+					foreach ( $passthrough as $pid => $pk ) {
+						if ( ( $pk[0] == $mik ) || ( $pk[0] == $mik.'[]' ) ) {
+							unset($passthrough[$pid]);
+						}
 					}
 				}
 			}
