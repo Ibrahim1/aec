@@ -422,6 +422,14 @@ class HTML_AcctExp
 
 		$cb = GeneralInfoRequester::detect_component('anyCB');
 
+		$exp = "";
+
+		if ( $metaUser->hasSubscription ) {
+			if ( isset( $metaUser->focusSubscription->expiration ) ) {
+				$exp = $metaUser->focusSubscription->expiration;
+			}
+		}
+
 		?>
 		<script type="text/javascript">
 			/* <![CDATA[ */
@@ -496,7 +504,7 @@ class HTML_AcctExp
 						<div class="userinfobox">
 							<h3><?php echo _AEC_USER_EXPIRATION; ?></h3>
 							<?php
-							if ( !empty( $metaUser->focusSubscription->expiration ) && $metaUser->focusSubscription->lifetime ) { ?>
+							if ( !empty( $exp ) && $metaUser->focusSubscription->lifetime ) { ?>
 								<p>
 								<?php echo _AEC_USER_CURR_EXPIRE_DATE; ?>:&nbsp;
 								<?php echo aecHTML::Icon( 'clock_pause.png', _AEC_USER_LIFETIME ); ?>&nbsp;
@@ -509,12 +517,12 @@ class HTML_AcctExp
 									<?php echo _AEC_USER_RESET_EXP_DATE; ?>:&nbsp;
 									<?php echo aecHTML::Icon( 'clock_edit.png', _AEC_USER_RESET_EXP_DATE ); ?>
 									<?php if ( !aecJoomla15check() ) { ?>
-										<input class="text_area" type="text" name="expiration" id="expiration" size="19" maxlength="19" value="<?php echo $metaUser->focusSubscription->expiration; ?>" disabled="disabled" />
+										<input class="text_area" type="text" name="expiration" id="expiration" size="19" maxlength="19" value="<?php echo $exp; ?>" disabled="disabled" />
 										<input type="reset" name="reset" class="button" onClick="return showCalendar('expiration', 'y-mm-dd');" value="..." disabled="disabled" />
 									<?php } else {
-										echo JHTML::_('calendar', $metaUser->focusSubscription->expiration, 'expiration', 'expiration', '%Y-%m-%d %H:%M:%S', array('class'=>'inputbox', 'size'=>'25',  'maxlength'=>'19', 'disabled'=>"disabled" ));
+										echo JHTML::_('calendar', $exp, 'expiration', 'expiration', '%Y-%m-%d %H:%M:%S', array('class'=>'inputbox', 'size'=>'25',  'maxlength'=>'19', 'disabled'=>"disabled" ));
 									} ?>
-									<input type="hidden" name="expiration_check" id="expiration_check" value="<?php echo ( !empty( $metaUser->focusSubscription->expiration ) ? $metaUser->focusSubscription->expiration : date( 'Y-m-d H:i:s' ) ); ?>"/>
+									<input type="hidden" name="expiration_check" id="expiration_check" value="<?php echo ( !empty( $exp ) ? $exp : date( 'Y-m-d H:i:s' ) ); ?>"/>
 								</p>
 								<?php
 							} else {
@@ -522,7 +530,7 @@ class HTML_AcctExp
 								<p>
 									<?php echo _AEC_USER_CURR_EXPIRE_DATE; ?>:&nbsp;
 									<?php echo aecHTML::Icon( 'clock_red.png', _AEC_USER_CURR_EXPIRE_DATE ); ?>&nbsp;
-									<strong><?php echo ( !empty( $metaUser->focusSubscription->expiration ) ? $metaUser->focusSubscription->expiration : _AEC_CMN_NOT_SET ); ?></strong>
+									<strong><?php echo ( !empty( $exp ) ? $exp : _AEC_CMN_NOT_SET ); ?></strong>
 								</p>
 								<p>
 									<?php echo _AEC_USER_LIFETIME; ?>:&nbsp;
@@ -531,12 +539,12 @@ class HTML_AcctExp
 								<p>
 									<?php echo _AEC_USER_RESET_EXP_DATE; ?>:&nbsp;<?php echo aecHTML::Icon( 'clock_edit.png', _AEC_USER_RESET_EXP_DATE ); ?>
 									<?php if ( !aecJoomla15check() ) { ?>
-										<input class="text_area" type="text" name="expiration" id="expiration" size="19" maxlength="19" value="<?php echo $metaUser->focusSubscription->expiration; ?>" />
+										<input class="text_area" type="text" name="expiration" id="expiration" size="19" maxlength="19" value="<?php echo $exp; ?>" />
 										<input type="reset" name="reset" class="button" onClick="return showCalendar('expiration', 'y-mm-dd');" value="..." />
 									<?php } else {
-										echo JHTML::_('calendar', $metaUser->focusSubscription->expiration, 'expiration', 'expiration', '%Y-%m-%d %H:%M:%S', array('class'=>'inputbox', 'size'=>'25',  'maxlength'=>'19'));
+										echo JHTML::_('calendar', $exp, 'expiration', 'expiration', '%Y-%m-%d %H:%M:%S', array('class'=>'inputbox', 'size'=>'25',  'maxlength'=>'19'));
 									} ?>
-									<input type="hidden" name="expiration_check" id="expiration_check" value="<?php echo ( !empty( $metaUser->focusSubscription->expiration ) ? $metaUser->focusSubscription->expiration : date( 'Y-m-d H:i:s' ) ); ?>"/>
+									<input type="hidden" name="expiration_check" id="expiration_check" value="<?php echo ( !empty( $exp ) ? $exp : date( 'Y-m-d H:i:s' ) ); ?>"/>
 								</p>
 								<?php
 							} ?>
@@ -711,7 +719,7 @@ class HTML_AcctExp
 								<h3><?php echo 'Notes'; ?></h3>
 							</div>
 							<div style="float: left; text-align: left;">
-							<textarea style="width:90%" cols="450" rows="10" name="notes" id="notes" ><?php echo $metaUser->focusSubscription->customparams['notes']; ?></textarea>
+							<textarea style="width:90%" cols="450" rows="10" name="notes" id="notes" ><?php echo ( !empty( $metaUser->focusSubscription->customparams['notes'] ) ? $metaUser->focusSubscription->customparams['notes'] : "" ); ?></textarea>
 							</div>
 					</td>
 				</tr>

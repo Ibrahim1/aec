@@ -730,25 +730,29 @@ class metaUser
 				$database->setQuery( $query );
 				$data = $database->loadResult();
 
-				$se = $this->joomunserializesession( $data );
+				if ( !empty( $data ) ) {
+					$se = $this->joomunserializesession( $data );
 
-				$key = array_pop( array_keys( $data ) );
+					$keys = array_keys( $se );
 
-				if ( isset( $se[$key]['user'] ) ) {
-					$se[$key]['user']['gid']		= $gid;
-					$se[$key]['user']['usertype']	= $gid_name;
+					$key = array_pop( $keys );
 
-					$sdata = $this->joomserializesession( $se );
-				} else {
-					$sdata = $data;
+					if ( isset( $se[$key]['user'] ) ) {
+						$se[$key]['user']->gid		= $gid;
+						$se[$key]['user']->usertype	= $gid_name;
+
+						$sdata = $this->joomserializesession( $se );
+					} else {
+						$sdata = $data;
+					}
+
+					$query = 'UPDATE #__session'
+							. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\', `data` = \'' . $sdata . '\''
+							. ' WHERE `userid` = \'' . (int) $this->userid . '\''
+							;
+					$database->setQuery( $query );
+					$database->query() or die( $database->stderr() );
 				}
-
-				$query = 'UPDATE #__session'
-						. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\', `data` = \'' . $sdata . '\''
-						. ' WHERE `userid` = \'' . (int) $this->userid . '\''
-						;
-				$database->setQuery( $query );
-				$database->query() or die( $database->stderr() );
 			} else {
 				$query = 'UPDATE #__session'
 						. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\''
@@ -781,7 +785,9 @@ class metaUser
 
 	function joomserializesession( $data )
 	{
-		return $data[0] . "|" . serialize( $data[1] );
+		$key = array_pop( array_keys( $data ) );
+
+		return $key . "|" . serialize( $data[$key] );
 	}
 
 	function is_renewing()
@@ -1285,11 +1291,19 @@ class metaUserDB extends serialParamDBTable
 	}
 	function is_renewing()
 	{
-		return count( $this->plan_history->used_plans );
+		if ( isset( $this->plan_history->used_plans ) ) {
+			return count( $this->plan_history->used_plans );
+		} else {
+			return false;
+		}
 	}
 	function getUsedPlans()
 	{
-		return $this->plan_history->used_plans;
+		if ( isset( $this->plan_history->used_plans ) ) {
+			return $this->plan_history->used_plans;
+		} else {
+			return array();
+		}
 	}
 
 	function getPreviousPlan()
@@ -5439,15 +5453,17 @@ class SubscriptionPlan extends serialParamDBTable
 
 	function getTerms( $recurring, $user_subscription, $metaUser=false )
 	{
-		if ( is_object( $metaUser->objSubscription ) ) {
-			$comparison				= $this->doPlanComparison( $metaUser->objSubscription );
-			$plans_comparison		= $comparison['comparison'];
-			$plans_comparison_total	= $comparison['total_comparison'];
-			$is_trial				= ( strcmp( $metaUser->objSubscription->status, 'Trial' ) === 0 );
-		} else {
-			$plans_comparison		= false;
-			$plans_comparison_total	= false;
-			$is_trial				= 0;
+		$plans_comparison		= false;
+		$plans_comparison_total	= false;
+		$is_trial				= 0;
+
+		if ( is_object( $metaUser ) ) {
+			if ( is_object( $metaUser->objSubscription ) ) {
+				$comparison				= $this->doPlanComparison( $metaUser->objSubscription );
+				$plans_comparison		= $comparison['comparison'];
+				$plans_comparison_total	= $comparison['total_comparison'];
+				$is_trial				= ( strcmp( $metaUser->objSubscription->status, 'Trial' ) === 0 );
+			}
 		}
 
 		if ( !isset( $this->params['full_free'] ) ) {
@@ -10773,25 +10789,34 @@ class reWriteEngine
 		$this->rewrite['cms_live_site']		= $mosConfig_live_site;
 
 		if ( is_object( $this->data['metaUser'] ) ) {
-			// Explode Name
-			if ( is_array( $this->data['metaUser']->cmsUser->name ) ) {
-				$namearray	= $this->data['metaUser']->cmsUser->name;
-			} else {
-				$namearray	= explode( " ", $this->data['metaUser']->cmsUser->name );
-			}
+			$name = array();
+			$name['first_first']	= "";
+			$name['first']			= "";
+			$name['last']			= "";
 
-			$firstfirstname	= $namearray[0];
-			$maxname		= count($namearray) - 1;
-			$lastname		= $namearray[$maxname];
-			unset( $namearray[$maxname] );
-			$firstname = implode( ' ', $namearray );
+			// Explode Name
+			if ( isset( $this->data['metaUser']->cmsUser->name ) ) {
+				if ( is_array( $this->data['metaUser']->cmsUser->name ) ) {
+					$namearray	= $this->data['metaUser']->cmsUser->name;
+				} else {
+					$namearray	= explode( " ", $this->data['metaUser']->cmsUser->name );
+				}
+
+				$name['first_first']	= $namearray[0];
+				$maxname				= count($namearray) - 1;
+				$name['last']			= $namearray[$maxname];
+
+				unset( $namearray[$maxname] );
+
+				$name['first']			= implode( ' ', $namearray );
+			}
 
 			$this->rewrite['user_id']				= $this->data['metaUser']->cmsUser->id;
 			$this->rewrite['user_username']			= $this->data['metaUser']->cmsUser->username;
 			$this->rewrite['user_name']				= $this->data['metaUser']->cmsUser->name;
-			$this->rewrite['user_first_name']		= $firstname;
-			$this->rewrite['user_first_first_name']	= $firstfirstname;
-			$this->rewrite['user_last_name']		= $lastname;
+			$this->rewrite['user_first_name']		= $name['first'];
+			$this->rewrite['user_first_first_name']	= $name['first_first'];
+			$this->rewrite['user_last_name']		= $name['first'];
 			$this->rewrite['user_email']			= $this->data['metaUser']->cmsUser->email;
 
 			if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
