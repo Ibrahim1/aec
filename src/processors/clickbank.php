@@ -78,78 +78,76 @@ class processor_clickbank extends URLprocessor
 		return $var;
 	}
 
-	function parseNotification( $request )
+	function parseNotification( $post )
 	{
 		$response = array();
-		$response['invoice']			= aecGetParam( 'invoice' );
+		$response['invoice']			= aecGetParam( 'invoice', '', true, array( 'word' ) );
 
 		$amount = aecGetParam( 'ctransamount', '', true, array( 'word' ) );
 
 		if ( !empty( $amount ) ) {
 			$response['amount_paid']	= $amount / 100;
 		}
-aecDebug($_REQUEST);aecDebug($request);aecDebug($response);
+
 		return $response;
 	}
 
-	function validateNotification( $response, $request, $invoice )
+	function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
 
-		if ( !isset( $_REQUEST['cverify'] ) ) {
-			/**
-			 * option,com_acctexp
-			 * task,clickbanknotification
-			 * item,1
-			 * cbreceipt,TESTHER2
-			 * time,1227402795
-			 * cbpop,05115E23
-			 * cbaffi,0
-			 * cname,Bruno+Bruno
-			 * cemail,bruno%40bruno.com
-			 * czip,90210
-			 * ccountry,US
-			 * allowedTypes,1
-			 * invoice,IM2E2MTNiYTM2YTIz/
-			 */
+		$cverify = aecGetParam( 'cverify', '', true, array( 'word' ) );
+
+		if ( empty( $cverify ) ) {
+			$postback = array( 'item', 'cbreceipt', 'time', 'cbpop', 'cbaffi', 'cname', 'czip', 'ccountry', 'allowedTypes', 'invoice' );
+
+			foreach ( $postback as $pb ) {
+				if ( $pb == 'cname' ) {
+					$post[$pb] = aecGetParam( $pb, '', true, array( 'string' ) );
+				} else {
+					$post[$pb] = aecGetParam( $pb, '', true, array( 'word', 'string' ) );
+				}
+			}
 
 			// It seems this is the crude postback. Trying to decypher.
 
-			$key='YOUR SECRET KEY';
-
 			$check = array();
 			$check[] = $this->settings['secret_key'];
-			$check[] = $_REQUEST['cbreceipt'];
-			$check[] = $_REQUEST['time'];
-			$check[] = $_REQUEST['item'];
+			$check[] = $post['cbreceipt'];
+			$check[] = $post['time'];
+			$check[] = $post['item'];
 
 			$code = sha1( implode( '|', $check) );
 
-			$xxpop = strtoupper( substr( $code,0 ,8 ) );
+			$xxpop = strtoupper( substr( $code, 0 ,8 ) );
 
-			if ( $_REQUEST['cbpop'] == $xxpop ) {
+			if ( $post['cbpop'] == $xxpop ) {
 				$response['valid']	= 1;
 			} else {
 				$response['pending_reason'] = 'verification error';
 			}
 		} else {
 			// Standard parameters that Clickbank will send back (leaving out 'cverify')
-			$stdParams = array( 'ccustname', 'ccuststate', 'ccustcc', 'ccustemail',
+			$postback = array( 'ccustname', 'ccuststate', 'ccustcc', 'ccustemail',
 								'cproditem', 'cprodtitle', 'cprodtype', 'ctransaction',
 								'ctransaffiliate', 'ctransamount', 'ctranspaymentmethod', 'ctranspublisher',
 								'ctransreceipt', 'caffitid', 'cvendthru', 'ctranstime' );
 
 			$params = array();
-			foreach ( $stdParams as $name ) {
-				$params[] = aecGetParam( $name, '', true, array( 'word', 'string' ) );
+			foreach ( $postback as $pb ) {
+				$post[$pb] = aecGetParam( $pb, '', true, array( 'word', 'string' ) );
+
+				$params[] = $post[$pb];
 			}
+
+			$post['cverify'] = $cverify;
 
 			$params[] = $this->settings['secret_key'];
 
 			$verify = strtoupper( substr( implode( '|', $params ), 0, 8 ) );
 
-			if ( aecGetParam( 'cverify' ) == $verify ) {
-				switch ( $request[''] ) {
+			if ( $cverify == $verify ) {
+				switch ( $post['ctransreceipt'] ) {
 					// The purchase of a standard product or the initial purchase of recurring billing product.
 					case 'SALE':
 						$response['valid']	= 1;
@@ -191,8 +189,11 @@ aecDebug($_REQUEST);aecDebug($request);aecDebug($response);
 				$response['pending_reason'] = 'verification error';
 			}
 
-			return $response;
 		}
+
+		$response['fullresponse'] = $post;
+
+		return $response;
 	}
 
 }
