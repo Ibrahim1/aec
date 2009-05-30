@@ -7055,7 +7055,7 @@ class InvoiceFactory
 			$cart = aecCartHelper::getCartidbyUserid( $this->userid );
 
 			// Of to the Subscription Plan Selection Page!
-			Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $list, $subscriptionClosed, $passthrough, $register, $cart );
+			Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $list, $subscriptionClosed, base64_encode( serialize( $passthrough ) ), $register, $cart );
 		}
 	}
 
@@ -7105,16 +7105,7 @@ class InvoiceFactory
 				$user->username = $var['username'];
 				$user->email	= $var['email'];
 
-				$passthrough = array();
-				foreach ( $var as $ke => $va ) {
-					if ( is_array( $va ) ) {
-						foreach ( $va as $con ) {
-							$passthrough[] = array( $ke . '[]', $con );
-						}
-					} else {
-						$passthrough[] = array( $ke, $va );
-					}
-				}
+				$passthrough = $var;
 			}
 		}
 
@@ -7181,7 +7172,7 @@ class InvoiceFactory
 
 			$mainframe->SetPageTitle( _CONFIRM_TITLE );
 
-			Payment_HTML::confirmForm( $option, $this, $user, $passthrough );
+			Payment_HTML::confirmForm( $option, $this, $user, base64_encode( serialize( $passthrough ) ) );
 		} else {
 			if ( $passthrough ) {
 				$this->loadMetaUser( $passthrough, true );
@@ -7248,9 +7239,16 @@ class InvoiceFactory
 	{
 		global $database, $mainframe, $task;
 
-		if ( isset( $var['task'] ) ) {
-			unset( $var['task'] );
-			unset( $var['option'] );
+		if ( isset( $var['passthrough'] ) ) {
+			if ( is_array( $var['passthrough'] ) ) {
+				$passthrough = $var['passthrough'];
+			} else {
+				$passthrough = unserialize( base64_decode( $var['passthrough'] ) );
+			}
+
+			unset( $var['passthrough'] );
+		} else {
+			$passthrough = $var;
 		}
 
 		if ( $this->usage == '' ) {
@@ -7283,9 +7281,9 @@ class InvoiceFactory
 					$overrideEmail = false;
 				}
 
-				$this->userid = AECToolbox::saveUserRegistration( $option, $var, false, $overrideActivation, $overrideEmail );
+				$this->userid = AECToolbox::saveUserRegistration( $option, $passthrough, false, $overrideActivation, $overrideEmail );
 			} else {
-				$this->userid = AECToolbox::saveUserRegistration( $option, $var );
+				$this->userid = AECToolbox::saveUserRegistration( $option, $passthrough );
 			}
 		}
 
@@ -9012,64 +9010,6 @@ class Invoice extends serialParamDBTable
 		return true;
 	}
 
-	function printInvoice($option)
-	{
-		global $mosConfig_sitename, $mosConfig_mailfrom, $database;
-
-
-		if($this->usage != 2 && $this->usage != 4){
-
-			$query = "SELECT * FROM #__vm_user_info WHERE user_id = ".$this->userid;
-			$database->setQuery($query);
-			$vm_user_details = $database->loadAssocList();
-			$vm_user_details = $vm_user_details[0];
-
-			$user = new metaUser($this->userid);
-			$body = '';
-			$body = str_replace("{inv_no}",$this->invoice_number,$body);
-			$body = str_replace("{date}",date('D, jS M Y',strtotime($this->created_date)),$body);
-			$body = str_replace("{name}",$user->cmsUser->name,$body);
-			$body = str_replace("{username}",$user->cmsUser->username,$body);
-			$body = str_replace("{company}",$vm_user_details['company'],$body);
-			$body = str_replace("{address}",$vm_user_details['address_1'],$body);
-			$body = str_replace("{city}",$vm_user_details['city'],$body);
-			$body = str_replace("{state}",$vm_user_details['state'],$body);
-			$body = str_replace("{postcode}",$vm_user_details['zip'],$body);
-			$body = str_replace("{country}",$vm_user_details['country'],$body);
-			$body = str_replace("{phone}",$vm_user_details['phone_1'],$body);
-			$body = str_replace("{email}",$user->cmsUser->email,$body);
-			if($this->usage == 3){
-				$body = str_replace("{invoice_desc}","",$body);
-			}else{
-				$body = str_replace("{invoice_desc}","",$body);
-			}
-
-			$body = str_replace("{cost}","$".$this->amount,$body);
-			$body = str_replace("{total}","$".$this->amount,$body);
-			$body = str_replace("{gst}","$".number_format($this->amount / 11,2),$body);
-
-			$subject = "".$this->invoice_number;
-
-			$query = "SELECT * FROM #__vm_vendor WHERE vendor_id = 1";
-			$database->setQuery($query);
-			$vm_vendor = $database->loadAssocList();
-			$vm_vendor = $vm_vendor[0];
-
-			if($this->method == 'transfer'){
-				if($this->transaction_date == '0000-00-00 00:00:00'){
-
-					mosMail($mosConfig_mailfrom, $mosConfig_sitename, $user->cmsUser->email, $subject, $body, 1);
-					mosMail($mosConfig_mailfrom, $mosConfig_sitename, $vm_vendor['contact_email'], $subject, $body, 1);
-				}
-			}else{
-				if($this->transaction_date != '0000-00-00 00:00:00'){
-
-					mosMail($mosConfig_mailfrom, $mosConfig_sitename, $user->cmsUser->email, $subject, $body, 1);
-					mosMail($mosConfig_mailfrom, $mosConfig_sitename, $vm_vendor['contact_email'], $subject, $body, 1);
-				}
-			}
-		}
-	}
 }
 
 class aecCartHelper

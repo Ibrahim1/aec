@@ -636,9 +636,7 @@ class Payment_HTML
 
 		// Rewrite Passthrough
 		if ( $passthrough != false ) {
-			foreach ( $passthrough as $key => $array ) {
-				$hidden[] = array( $array[0], $array[1] );
-			}
+			$hidden[] = array( 'aec_passthrough', $passthrough );
 		}
 
 		// Assemble hidden fields
@@ -845,12 +843,9 @@ class Payment_HTML
 							<input type="submit" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
 							<?php
 						}
-						if ( $passthrough != false ) {
-							foreach ( $passthrough as $id => $array ) { ?>
-								<input type="hidden" name="<?php echo $array[0]; ?>" value="<?php echo $array[1]; ?>" />
-								<?php
-							}
-						} ?>
+						if ( $passthrough != false ) {?>
+							<input type="hidden" name="aec_passthrough" value="<?php echo $passthrough; ?>" />
+						<?php } ?>
 					</div>
 					</td>
 				</tr>
