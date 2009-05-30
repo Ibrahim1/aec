@@ -25,25 +25,25 @@ class mi_email_multi extends MI
 	function Settings()
 	{
 		$settings = array();
-		$settings['sender']				= array( 'inputE' );
-		$settings['sender_name']		= array( 'inputE' );
+		$settings['sender']			= array( 'inputE' );
+		$settings['sender_name']	= array( 'inputE' );
 
-		$settings['emails_count']		= array( 'inputC' );
+		$settings['emails_count']	= array( 'inputC' );
 
 		if ( !empty( $this->settings['emails_count'] ) ) {
 			for ( $i=0; $i<$this->settings['emails_count']; $i++ ) {
 				$pf = 'email_' . $i . '_';
 
-				$settings[$pf.'timing']				= array( 'inputE' );
-				$settings[$pf.'recipient']			= array( 'inputE' );
-				$settings[$pf.'subject']			= array( 'inputE' );
-				$settings[$pf.'text_html']			= array( 'list_yesno' );
-				$settings[$pf.'text']				= array( !empty( $this->settings[$pf.'text_html'] ) ? 'editor' : 'inputD' );
+				$settings[$pf.'timing']		= array( 'inputE', sprintf( _MI_MI_EMAIL_MULTI_TIMING_NAME, $i+1 ), _MI_MI_EMAIL_MULTI_TIMING_DESC );
+				$settings[$pf.'recipient']	= array( 'inputE', sprintf( _MI_MI_EMAIL_MULTI_RECIPIENT_NAME, $i+1 ), _MI_MI_EMAIL_MULTI_RECIPIENT_DESC );
+				$settings[$pf.'subject']	= array( 'inputE', sprintf( _MI_MI_EMAIL_MULTI_SUBJECT_NAME, $i+1 ), _MI_MI_EMAIL_MULTI_SUBJECT_DESC );
+				$settings[$pf.'text_html']	= array( 'list_yesno', sprintf( _MI_MI_EMAIL_MULTI_TEXT_HTML_NAME, $i+1 ), _MI_MI_EMAIL_MULTI_TEXT_HTML_DESC );
+				$settings[$pf.'text']		= array( ( !empty( $this->settings[$pf.'text_html'] ) ? 'editor' : 'inputD' ), sprintf( _MI_MI_EMAIL_MULTI_TEXT_NAME, $i+1 ), _MI_MI_EMAIL_MULTI_TEXT_DESC );
 			}
 		}
 
-		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
-		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
+		$settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_SET11_EMAIL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
 		return $settings;
 	}

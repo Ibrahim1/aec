@@ -797,4 +797,25 @@ define( '_MI_MI_AECMODIFYEXPIRATION_TIME_MOD_DESC', 'Plain English modification 
 define( '_MI_MI_AECMODIFYEXPIRATION_TIMESTAMP_NAME', 'Base Timestamp' );
 define( '_MI_MI_AECMODIFYEXPIRATION_TIMESTAMP_DESC', 'The point in time from which the modification is made. Defaults to the current time, but you can use the rewrite engine to, for instance, use the original expiration date.');
 
+// Multi Emails
+define( '_AEC_MI_NAME_EMAIL_MULTI',		'Multiple Emails' );
+define( '_AEC_MI_DESC_EMAIL_MULTI',		'Send multiple Emails at once on application of the subscription' );
+define( '_MI_MI_EMAIL_MULTI_SENDER_NAME',		'Sender E-Mail' );
+define( '_MI_MI_EMAIL_MULTI_SENDER_DESC',		'Sender E-Mail Address' );
+define( '_MI_MI_EMAIL_MULTI_SENDER_NAME_NAME',	'Sender Name' );
+define( '_MI_MI_EMAIL_MULTI_SENDER_NAME_DESC',	'The displayed name of the Sender' );
+define( '_MI_MI_EMAIL_MULTI_EMAILS_COUNT_NAME',		'Email Count' );
+define( '_MI_MI_EMAIL_MULTI_EMAILS_COUNT_DESC',		'How many emails do you want to send out? After saving, there will be further settings for each email individually.' );
+
+define( '_MI_MI_EMAIL_MULTI_TIMING_NAME',		'#%s: Timing' );
+define( '_MI_MI_EMAIL_MULTI_TIMING_DESC',		'At what point in time do you want this email to be sent out? Consult PHP Manual on strtotime for details on what values are possible. Use negative values to have the counter go back starting from the expiration date.' );
+define( '_MI_MI_EMAIL_MULTI_RECIPIENT_NAME',	'#%s: Recipient(s)' );
+define( '_MI_MI_EMAIL_MULTI_RECIPIENT_DESC',	'Who is to receive this E-Mail? Separate with comma. The rewriting routines explained below will work for this field.' );
+define( '_MI_MI_EMAIL_MULTI_SUBJECT_NAME',		'#%s: Subject' );
+define( '_MI_MI_EMAIL_MULTI_SUBJECT_DESC',		'Subject of this email (Uses RewriteEngine explained below as well)' );
+define( '_MI_MI_EMAIL_MULTI_TEXT_HTML_NAME',	'#%s: HTML Encoding' );
+define( '_MI_MI_EMAIL_MULTI_TEXT_HTML_DESC',	'Do you want this email to be HTML encoded? (Make sure that there are not tags in it if you do not want this)' );
+define( '_MI_MI_EMAIL_MULTI_TEXT_NAME',			'#%s: Text' );
+define( '_MI_MI_EMAIL_MULTI_TEXT_DESC',			'Text to be sent when the plan is purchased. The rewriting routines explained below will work for this field.' );
+
 ?>
