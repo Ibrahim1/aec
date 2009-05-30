@@ -364,6 +364,21 @@ define( '_CFG_OFFLINE_PAYMENT_INFO_DESC', 'Die Information, die dem Benutzer auf
 define( '_CFG_OFFLINE_PAYMENT_WAITINGPLAN_NAME', 'Warte-Plan');
 define( '_CFG_OFFLINE_PAYMENT_WAITINGPLAN_DESC', 'Mit dieser Option wird der Benutzer einem Plan zugewiesen w&auml;hrend die Zahlung unterwegs ist');
 
+define( '_CFG_OFFLINE_PAYMENT_EMAIL_INFO_NAME',		'E-Mail Info' );
+define( '_CFG_OFFLINE_PAYMENT_EMAIL_INFO_DESC',		'Do you want to mail out any information similar to the one displayed on the checkout page to the user when the Invoice is created?' );
+define( '_CFG_OFFLINE_PAYMENT_SENDER_NAME',		'Sender E-Mail' );
+define( '_CFG_OFFLINE_PAYMENT_SENDER_DESC',		'Sender E-Mail Address' );
+define( '_CFG_OFFLINE_PAYMENT_SENDER_NAME_NAME',	'Sender Name' );
+define( '_CFG_OFFLINE_PAYMENT_SENDER_NAME_DESC',	'The displayed name of the Sender' );
+define( '_CFG_OFFLINE_PAYMENT_RECIPIENT_NAME',	'Recipient(s)' );
+define( '_CFG_OFFLINE_PAYMENT_RECIPIENT_DESC',	'Who is to receive this E-Mail? Separate with comma. The rewriting routines explained below will work for this field.' );
+define( '_CFG_OFFLINE_PAYMENT_SUBJECT_NAME',		'Subject' );
+define( '_CFG_OFFLINE_PAYMENT_SUBJECT_DESC',		'Subject of this email (Uses RewriteEngine explained below as well)' );
+define( '_CFG_OFFLINE_PAYMENT_TEXT_HTML_NAME',	'HTML Encoding' );
+define( '_CFG_OFFLINE_PAYMENT_TEXT_HTML_DESC',	'Do you want this email to be HTML encoded? (Make sure that there are not tags in it if you do not want this)' );
+define( '_CFG_OFFLINE_PAYMENT_TEXT_NAME',			'Text' );
+define( '_CFG_OFFLINE_PAYMENT_TEXT_DESC',			'Text to be sent when the plan is purchased. The rewriting routines explained below will work for this field.' );
+
 // Verotel
 define( '_CFG_VEROTEL_LONGNAME', 'Verotel');
 define( '_CFG_VEROTEL_STATEMENT', 'Use Verotel: Putting Trust in Global Payments');

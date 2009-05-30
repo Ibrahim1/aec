@@ -34,21 +34,70 @@ class processor_offline_payment extends processor
 		$settings['waitingplan']	= 0;
 		$settings['currency']		='';
 
+		$settings['email_info']		= 0;
+		$settings['sender']			= "";
+		$settings['sender_name']	= "";
+		$settings['recipient']		= "[[user_email]]";
+		$settings['subject']		= "";
+		$settings['text_html']		= 0;
+		$settings['text']			= "";
+
 		return $settings;
 	}
 
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['waitingplan']	= array( 'list_plan' );
-		$settings['info']			= array( 'editor' );
-		$settings['currency']		= array( 'list_currency' );
+		$settings['waitingplan']		= array( 'list_plan' );
+		$settings['info']				= array( 'editor' );
+		$settings['currency']			= array( 'list_currency' );
+
+		$settings['email_info']			= array( 'list_yesno' );
+
+		$settings['sender']				= array( 'inputE' );
+		$settings['sender_name']		= array( 'inputE' );
+
+		$settings['recipient']			= array( 'inputE' );
+
+		$settings['subject']			= array( 'inputE' );
+		$settings['text_html']			= array( 'list_yesno' );
+		$settings['text']				= array( !empty( $this->settings['text_html'] ) ? 'editor' : 'inputD' );
+
+		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
+		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
 		return $settings;
 	}
 
 	function invoiceCreationAction( $objInvoice )
 	{
+		if ( $this->settings['email_info'] ) {
+			$metaUser = new metaUser( $objInvoice->userid );
+
+			$request = new stdClass();
+			$request->metaUser	=&	$metaUser;
+			$request->invoice	=&	$objInvoice;
+			$request->plan		=&	$objInvoice->getObjUsage();
+
+			$message	= AECToolbox::rewriteEngineRQ( $this->settings['text'], $request );
+			$subject	= AECToolbox::rewriteEngineRQ( $this->settings['subject'], $request );
+
+			if ( empty( $message ) ) {
+				return null;
+			}
+
+			$recipients = AECToolbox::rewriteEngineRQ( $this->settings['recipient'], $request );
+			$recips = explode( ',', $recipients );
+
+	        $recipients2 = array();
+	        foreach ( $recips as $k => $email ) {
+	            $recipients2[$k] = trim( $email );
+	        }
+	        $recipients = $recipients2;
+
+			mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'] );
+		}
+
 		if ( $this->settings['waitingplan'] ) {
 			global $database;
 
