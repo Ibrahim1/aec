@@ -37,23 +37,23 @@ if ( $my->id ) {
 		}
 
 		$expiration = null;
-		$query = 'SELECT expiration'
+		$query = 'SELECT `expiration`'
 				. ' FROM #__acctexp_subscr'
-				. ' WHERE userid = \'' . $my->id . '\''
-				. ' AND primary = \'1\''
-				. ' AND recurring != \'1\''
-				. ' AND lifetime != \'1\''
-				. ' AND status != \'Excluded\'';
+				. ' WHERE `userid` = \'' . $my->id . '\''
+				. ' AND `primary` = \'1\''
+				. ' AND `recurring` != \'1\''
+				. ' AND `lifetime` != \'1\''
+				. ' AND `status` != \'Excluded\'';
 		$database->setQuery($query);
 		$expiration = $database->loadResult();
 
 		if ( empty( $expiration ) ) {
-			$query = 'SELECT expiration'
+			$query = 'SELECT `expiration`'
 					. ' FROM #__acctexp_subscr'
-					. ' WHERE userid = \'' . $my->id . '\''
-					. ' AND recurring != \'1\''
-	                . ' AND lifetime != \'1\''
-	                . ' AND status != \'Excluded\'';
+					. ' WHERE `userid` = \'' . $my->id . '\''
+					. ' AND `recurring` != \'1\''
+	                . ' AND `lifetime` != \'1\''
+	                . ' AND `status` != \'Excluded\'';
 			$database->setQuery($query);
 			$expiration = $database->loadResult();
 		}
