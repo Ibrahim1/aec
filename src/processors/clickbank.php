@@ -88,7 +88,7 @@ class processor_clickbank extends URLprocessor
 		if ( !empty( $amount ) ) {
 			$response['amount_paid']	= $amount / 100;
 		}
-
+aecDebug($_REQUEST);aecDebug($request);aecDebug($response);
 		return $response;
 	}
 
