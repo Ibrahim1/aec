@@ -21,7 +21,7 @@ class processor_paypal extends POSTprocessor
 		$info['statement']			= _AEC_PROC_INFO_PP_STMNT;
 		$info['description'] 		= _DESCRIPTION_PAYPAL;
 		$info['currencies']			= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS';
-		$info['languages']			= 'GB,DE,FR,IT,ES,US,NL';
+		$info['languages']			= AECToolbox::_getISO4271_codes();
 		$info['cc_list']			= 'visa,mastercard,discover,americanexpress,echeck,giropay';
 		$info['recurring']			= 0;
 
