@@ -7052,7 +7052,9 @@ class InvoiceFactory
 				$list['group'] = ItemGroupHandler::getGroupListItem( $g );
 			}
 
-			$cart = aecCartHelper::getCartidbyUserid( $this->userid );
+			if ( $this->userid ) {
+				$cart = aecCartHelper::getCartidbyUserid( $this->userid );
+			}
 
 			// Of to the Subscription Plan Selection Page!
 			Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $list, $subscriptionClosed, base64_encode( serialize( $passthrough ) ), $register, $cart );
@@ -7062,6 +7064,16 @@ class InvoiceFactory
 	function confirm( $option, $var=array(), $passthrough=false )
 	{
 		global $database, $my, $aecConfig, $mosConfig_absolute_path;
+
+		if ( isset( $var['aec_passthrough'] ) ) {
+			if ( is_array( $var['aec_passthrough'] ) ) {
+				$passthrough = $var['aec_passthrough'];
+			} else {
+				$passthrough = unserialize( base64_decode( $var['aec_passthrough'] ) );
+			}
+
+			unset( $var['aec_passthrough'] );
+		}
 
 		if ( empty( $passthrough ) ) {
 			if ( !$this->checkAuth( $option, $var ) ) {
@@ -7092,9 +7104,9 @@ class InvoiceFactory
 
 				$details = array( 'name', 'username', 'email' );
 
-				foreach ( $passthrough as $id => $array ) {
-					if ( in_array( $array[0], $details ) ) {
-						$user->{$array[0]} = $array[1];
+				foreach ( $passthrough as $key => $value ) {
+					if ( in_array( $key, $details ) ) {
+						$user->$key = $value;
 					}
 				}
 			} else {
@@ -7174,8 +7186,9 @@ class InvoiceFactory
 
 			Payment_HTML::confirmForm( $option, $this, $user, base64_encode( serialize( $passthrough ) ) );
 		} else {
-			if ( $passthrough ) {
+			if ( !empty( $passthrough ) ) {
 				$this->loadMetaUser( $passthrough, true );
+				$var['aec_passthrough'] = $passthrough;
 			}
 
 			$this->save( $option, $var );
@@ -7239,14 +7252,14 @@ class InvoiceFactory
 	{
 		global $database, $mainframe, $task;
 
-		if ( isset( $var['passthrough'] ) ) {
-			if ( is_array( $var['passthrough'] ) ) {
-				$passthrough = $var['passthrough'];
+		if ( isset( $var['aec_passthrough'] ) ) {
+			if ( is_array( $var['aec_passthrough'] ) ) {
+				$passthrough = $var['aec_passthrough'];
 			} else {
-				$passthrough = unserialize( base64_decode( $var['passthrough'] ) );
+				$passthrough = unserialize( base64_decode( $var['aec_passthrough'] ) );
 			}
 
-			unset( $var['passthrough'] );
+			unset( $var['aec_passthrough'] );
 		} else {
 			$passthrough = $var;
 		}
