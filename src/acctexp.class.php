@@ -7968,6 +7968,8 @@ class Invoice extends serialParamDBTable
 
 		$pp = null;
 
+		$madefree = false;
+
 		if ( !is_null( $this->usage ) && !( $this->usage == '' ) ) {
 			$recurring = '';
 
@@ -8073,24 +8075,22 @@ class Invoice extends serialParamDBTable
 				break;
 			}
 
-			// We cannot afford to have this ever come out as null, so we will rather have it as gratis
-			if ( empty( $this->amount ) ) {
-				$this->amount = '0.00';
-				$this->made_free = true;
-			}
+			$this->amount = AECToolbox::correctAmount( $this->amount );
 
 			if ( ( strcmp( $this->amount, '0.00' ) === 0 ) && !$recurring ) {
 				$this->method = 'free';
-				$this->made_free = true;
+				$madefree = true;
 			} elseif ( strcmp( $this->method, 'free' ) === 0 ) {
 				$this->method = 'error';
 				// TODO: Log Error
 			}
 
-			$this->amount = AECToolbox::correctAmount( $this->amount );
-
 			if ( $save ) {
 				$this->storeload();
+			}
+
+			if ( $madefree ) {
+				$this->made_free = true;
 			}
 		}
 	}
@@ -9375,9 +9375,11 @@ class aecCart extends serialParamDBTable
 		}
 
 		if ( is_null( $id ) ) {
-			if ( in_array( $coupon_code, $this->params['overall_coupons'] ) ) {
-				$oid = array_search( $coupon_code, $this->params['overall_coupons'] );
-				unset( $this->params['overall_coupons'][$oid] );
+			if ( is_array( $this->params['overall_coupons'] ) && !empty( $this->params['overall_coupons'] ) ) {
+				if ( in_array( $coupon_code, $this->params['overall_coupons'] ) ) {
+					$oid = array_search( $coupon_code, $this->params['overall_coupons'] );
+					unset( $this->params['overall_coupons'][$oid] );
+				}
 			}
 		}
 	}
@@ -13634,7 +13636,7 @@ class couponsHandler extends eucaObject
 		} else {
 			if ( $this->cph->status ) {
 				// Coupon approved, checking restrictions
-				$this->cph->checkRestrictions( $this->metaUser, $terms, $this->InvoiceFactory->usage );
+				$r = $this->cph->checkRestrictions( $this->metaUser, $terms, $this->InvoiceFactory->usage );
 
 				if ( $this->cph->status ) {
 					$item['terms'] = $this->cph->applyToTerms( $terms, $this->cph );
@@ -13642,10 +13644,10 @@ class couponsHandler extends eucaObject
 					$this->addCouponToRecord( $id, $coupon_code, $ccombo );
 
 					return $item;
+				} else {
+					$this->setError( $this->cph->error );
 				}
 			}
-
-			$this->setError( $this->cph->error );
 		}
 
 		$this->delete_list[] = $coupon_code;
@@ -13997,7 +13999,7 @@ class couponHandler
 
 			if ( $used == false ) {
 				$permissions['max_peruser_reuse'] = true;
-			} elseif ( (int) $used  <= (int) $this->restrictions['max_peruser_reuse'] ) {
+			} elseif ( (int) $used  < (int) $this->restrictions['max_peruser_reuse'] ) {
 				$permissions['max_peruser_reuse'] = true;
 			} else {
 				$permissions['max_peruser_reuse'] = false;
@@ -14019,11 +14021,14 @@ class couponHandler
 										'plan_overall'		=> 'wrong_plan_overall',
 										'plan_amount_min'	=> 'wrong_plan',
 										'plan_amount_max'	=> 'wrong_plan_overall',
-										'max_reuse'			=> 'max_reuse'
+										'max_reuse'			=> 'max_reuse',
+										'max_peruser_reuse'	=> 'max_reuse'
 									);
 
 					if ( isset( $errors[$name] ) ) {
 						$this->setError( constant( strtoupper( '_coupon_error_' . $errors[$name] ) ) );
+					} else {
+						$this->status = false;
 					}
 
 					return false;
