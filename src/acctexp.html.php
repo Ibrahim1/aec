@@ -1058,11 +1058,6 @@ class Payment_HTML
 		<?php
 	}
 
-	function cartProcessorSelection( $option, $InvoiceFactory )
-	{
-		HTML_frontend::aec_styling( $option );
-	}
-
 	function checkoutForm( $option, $var, $params = null, $InvoiceFactory, $error = null, $repeat = 0 )
 	{
 		global $database, $mosConfig_live_site, $my, $aecConfig;

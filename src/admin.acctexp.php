@@ -3281,64 +3281,66 @@ function editSubscriptionPlan( $id, $option )
 	$params['micro_integrations_hidden']		= array( 'hidden', '' );
 	$params_values['micro_integrations_hidden']		= $hidden_mi_list;
 
-	foreach ( $hidden_mi as $miobj ) {
-		$mi = new microIntegration( $database );
+	if ( !empty( $hidden_mi ) ) {
+		foreach ( $hidden_mi as $miobj ) {
+			$mi = new microIntegration( $database );
 
-		if ( !$mi->load( $miobj->id ) ) {
-			continue;
-		}
-
-		if ( !$mi->callIntegration( 1 ) ) {
-			continue;
-		}
-
-		$custompar[$mi->id] = array();
-		$custompar[$mi->id]['name'] = $mi->name;
-		$custompar[$mi->id]['params'] = array();
-
-		$prefix = 'MI_' . $mi->id . '_';
-
-		$params[] = array( 'area_change', 'MI' );
-		$params[] = array( 'subarea_change', 'E' );
-		$params[] = array( 'add_prefix', $prefix );
-		$params[] = array( 'userinfobox_sub', _MI_E_TITLE );
-
-		$generalsettings = $mi->getGeneralSettings();
-
-		foreach ( $generalsettings as $name => $value ) {
-			$params[$prefix . $name] = $value;
-			$custompar[$mi->id]['params'][] = $prefix . $name;
-
-			if ( isset( $mi->$name ) ) {
-				$params_values[$prefix.$name] = $mi->$name;
-			} else {
-				$params_values[$prefix.$name] = '';
-			}
-		}
-
-		$params[]	= array( 'div_end', 0 );
-
-		$misettings = $mi->getSettings();
-
-		if ( isset( $misettings['lists'] ) ) {
-			foreach ( $misettings['lists'] as $listname => $listcontent ) {
-				$lists[$prefix . $listname] = $listcontent;
+			if ( !$mi->load( $miobj->id ) ) {
+				continue;
 			}
 
-			unset( $misettings['lists'] );
+			if ( !$mi->callIntegration( 1 ) ) {
+				continue;
+			}
+
+			$custompar[$mi->id] = array();
+			$custompar[$mi->id]['name'] = $mi->name;
+			$custompar[$mi->id]['params'] = array();
+
+			$prefix = 'MI_' . $mi->id . '_';
+
+			$params[] = array( 'area_change', 'MI' );
+			$params[] = array( 'subarea_change', 'E' );
+			$params[] = array( 'add_prefix', $prefix );
+			$params[] = array( 'userinfobox_sub', _MI_E_TITLE );
+
+			$generalsettings = $mi->getGeneralSettings();
+
+			foreach ( $generalsettings as $name => $value ) {
+				$params[$prefix . $name] = $value;
+				$custompar[$mi->id]['params'][] = $prefix . $name;
+
+				if ( isset( $mi->$name ) ) {
+					$params_values[$prefix.$name] = $mi->$name;
+				} else {
+					$params_values[$prefix.$name] = '';
+				}
+			}
+
+			$params[]	= array( 'div_end', 0 );
+
+			$misettings = $mi->getSettings();
+
+			if ( isset( $misettings['lists'] ) ) {
+				foreach ( $misettings['lists'] as $listname => $listcontent ) {
+					$lists[$prefix . $listname] = $listcontent;
+				}
+
+				unset( $misettings['lists'] );
+			}
+
+			$params[] = array( 'area_change', 'MI' );
+			$params[] = array( 'subarea_change', $mi->class_name );
+			$params[] = array( 'add_prefix', $prefix );
+			$params[] = array( 'userinfobox_sub', _MI_E_SETTINGS );
+
+			foreach ( $misettings as $name => $value ) {
+				$params[$prefix . $name] = $value;
+				$custompar[$mi->id]['params'][] = $prefix . $name;
+			}
+
+			$params[]	= array( 'div_end', 0 );
 		}
-
-		$params[] = array( 'area_change', 'MI' );
-		$params[] = array( 'subarea_change', $mi->class_name );
-		$params[] = array( 'add_prefix', $prefix );
-		$params[] = array( 'userinfobox_sub', _MI_E_SETTINGS );
-
-		foreach ( $misettings as $name => $value ) {
-			$params[$prefix . $name] = $value;
-			$custompar[$mi->id]['params'][] = $prefix . $name;
-		}
-
-		$params[]	= array( 'div_end', 0 );
 	}
 
 	if ( !empty( $custompar ) ) {
