@@ -1347,10 +1347,15 @@ class Payment_HTML
 			<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=addressException', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 			<?php
 				foreach ( $InvoiceFactory->exceptions as $eid => $ex ) {
-					// Headline - What type is this term
-					echo '<tr><th colspan="2">' . $ex['head'] . '</th></tr>';
-					// Subheadline - specify the details of this term
-					echo '<tr><td colspan="2">' . $ex['desc'] . '</td></tr>';
+					if ( !empty( $ex['head'] ) ) {
+						// Headline - What type is this term
+						echo '<tr><th colspan="2">' . $ex['head'] . '</th></tr>';
+					}
+
+					if ( !empty( $ex['desc'] ) ) {
+						// Subheadline - specify the details of this term
+						echo '<tr><td colspan="2">' . $ex['desc'] . '</td></tr>';
+					}
 
 					// Iterate through costs
 					foreach ( $ex['rows'] as $rid => $row ) {

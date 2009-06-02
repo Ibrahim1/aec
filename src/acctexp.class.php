@@ -6227,10 +6227,21 @@ class InvoiceFactory
 
 				$procnames = PaymentProcessorHandler::getProcessorNameListbyId( $procs );
 
+				$c = false;
+
 				foreach ( $pgroups as $pgid => $pgroup ) {
+					if ( count( $pgroup['processors'] ) < 2 ) {
+						continue;
+					}
+
 					$ex = array();
-					$ex['head'] = "Select Payment Processor";
-					$ex['desc'] = "There are a number of possible payment processors for one or more of your items, please select one below:<br />";
+					if ( $c ) {
+						$ex['head'] = null;
+						$ex['desc'] = null;
+					} else {
+						$ex['head'] = "Select Payment Processor";
+						$ex['desc'] = "There are a number of possible payment processors for one or more of your items, please select one below:<br />";
+					}
 
 					$ex['rows'] = array();
 
@@ -6265,6 +6276,8 @@ class InvoiceFactory
 					}
 
 					if ( !empty( $ex['rows'] ) ) {
+						$c = true;
+
 						$this->raiseException( $ex );
 					}
 				}
@@ -7243,6 +7256,10 @@ class InvoiceFactory
 
 			// Make sure we have the correct amount loaded
 			$this->touchInvoice( $option );
+		}
+
+		if ( $this->hasExceptions() ) {
+			return $this->addressExceptions( $option );
 		}
 
 		$this->checkout( $option );
