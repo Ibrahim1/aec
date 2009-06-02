@@ -110,7 +110,7 @@ class processor_ePay extends POSTprocessor//processor //Evt. med [] omkring ePay
 		$var['orderid']			= $request->int_var['invoice'];
 		$var['amount']			= $request->int_var['amount'] * 100;
 		$var['merchantnumber']	= $this->settings['merchantnumber'];
-		$var['currency']		= AECToolbox::_aecNumCurrency( $this->settings['currency'] );
+		$var['currency']		= AECToolbox::aecNumCurrency( $this->settings['currency'] );
 		$var['language']		= $this->getEpayLanguage( $this->settings['language'] );
 
 		// for this solution always use state 2 (full window (same window))

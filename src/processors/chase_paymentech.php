@@ -20,7 +20,7 @@ class processor_chase_paymentech extends PROFILEprocessor
 		$info['longname']			= _CFG_CHASE_PAYMENTECH_LONGNAME;
 		$info['statement']			= _CFG_CHASE_PAYMENTECH_STATEMENT;
 		$info['description']		= _CFG_CHASE_PAYMENTECH_DESCRIPTION;
-		$info['currencies']			= AECToolbox::_aecCurrencyField( true, true, true, true );
+		$info['currencies']			= AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list']			= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring']			= 2;
 		$info['recurring_buttons']	= 2;
@@ -354,8 +354,8 @@ aecDebug( $xml );
 
 	function appendCurrencyData( &$var )
 	{
-		$var['CurrencyCode']		= AECToolbox::_aecNumCurrency( $this->settings['currency'] );
-		$var['CurrencyExponent']	= AECToolbox::_aecCurrencyExp( $this->settings['currency'] );
+		$var['CurrencyCode']		= AECToolbox::aecNumCurrency( $this->settings['currency'] );
+		$var['CurrencyExponent']	= AECToolbox::aecCurrencyExp( $this->settings['currency'] );
 	}
 
 	function appendPayData( &$var, $request )

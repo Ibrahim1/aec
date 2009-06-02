@@ -20,17 +20,7 @@ class processor_worldpay_futurepay extends POSTprocessor
 		$info['longname']			= _CFG_WORLDPAY_FUTUREPAY_LONGNAME;
 		$info['statement']			= _CFG_WORLDPAY_FUTUREPAY_STATEMENT;
 		$info['description']		= _CFG_WORLDPAY_FUTUREPAY_DESCRIPTION;
-		$info['currencies']			= 'AFA,ALL,DZD,AON,ARS,AWG,AUD,EUR,BSD,BHD,BDT,BBD,BZD,BMD,BOB,BAD,BWP,BRL,BND,BGL,XOF,'
-									. 'BIF,KHR,XAF,CAD,CVE,KYD,CLP,CNY,COP,KMF,CRC,HRK,CUP,CYP,CZK,DKK,DJF,XCD,DOP,TPE,ECS,'
-									. 'EGP,SVC,EEK,ETB,FKP,FJD,XPF,GMD,GHC,GIP,GTQ,GNF,GWP,GYD,HTG,HNL,HKD,HUF,ISK,INR,IDR,'
-									. 'IRR,IQD,ILS,JMD,JPY,JOD,KZT,KES,KRW,KPW,KWD,KGS,LAK,LVL,LBP,LSL,LRD,LYD,LTL,MOP,MKD,'
-									. 'MGF,MWK,MYR,MVR,MTL,MRO,MUR,MXN,MNT,MAD,MZM,MMK,NAD,NPR,ANG,NZD,NIO,NGN,NOK,OMR,PKR,'
-									. 'PAB,PGK,PYG,PEN,PHP,PLN,QAR,ROL,RUB,RWF,WST,STD,SAR,SCR,SLL,SGD,SKK,SIT,SBD,SOS,ZAR,'
-									. 'LKR,SHP,SDP,SRG,SZL,SEK,CHF,SYP,TWD,TJR,TZS,THB,TOP,TTD,TND,TRY,UGX,UAH,AED,GBP,USD,'
-									. 'UYU,VUV,VEB,VND,YER,YUM,ZRN,ZMK,ZWD'
-									;
-		// mic: prepared to use instead of above
-		// $info['currencies'] 		= _aecCurrencies::_CurrencyField( true, true, true );
+		$info['currencies']			= AECToolbox::getISO4271_codes();;
 		$info['cc_list']			= 'visa,mastercard,discover,americanexpress,echeck,giropay';
 		$info['recurring']			= 0;
 

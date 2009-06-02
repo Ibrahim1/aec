@@ -1916,7 +1916,7 @@ function editSettings( $option )
 
 	$lists = array();
 
-	$currency_code_list	= AECToolbox::_aecCurrencyField( true, true, true );
+	$currency_code_list	= AECToolbox::aecCurrencyField( true, true, true );
 	$lists['currency_code_general'] = mosHTML::selectList( $currency_code_list, ( 'currency_code_general' ), 'size="10"', 'value', 'text', ( !empty( $aecConfig->cfg['currency_code_general'] ) ? $aecConfig->cfg['currency_code_general'] : '' ) );
 
 	$available_plans	= SubscriptionPlanHandler::getActivePlanList();
@@ -2302,7 +2302,7 @@ function saveSettings( $option, $return=0 )
 	$aecConfig->cfg = $general_settings;
 	$aecConfig->saveSettings();
 
-	$ip = AECToolbox::_aecIP();
+	$ip = AECToolbox::aecIP();
 
 	$short	= _AEC_LOG_SH_SETT_SAVED;
 	$event	= _AEC_LOG_LO_SETT_SAVED . ' ' . $difference;

@@ -21,7 +21,7 @@ class processor_paypal extends POSTprocessor
 		$info['statement']			= _AEC_PROC_INFO_PP_STMNT;
 		$info['description'] 		= _DESCRIPTION_PAYPAL;
 		$info['currencies']			= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS';
-		$info['languages']			= AECToolbox::_getISO4271_codes();
+		$info['languages']			= AECToolbox::getISO4271_codes();
 		$info['cc_list']			= 'visa,mastercard,discover,americanexpress,echeck,giropay';
 		$info['recurring']			= 0;
 
@@ -260,15 +260,15 @@ class processor_paypal extends POSTprocessor
 								$invoice->storeload();
 							}
 						} else {
-							$response['valid']			= 1;
+							$response['valid']		= 1;
 						}
 					} else {
 						$response['valid']			= 1;
 					}
 				}
 			} elseif ( strcmp( $txn_type, 'subscr_signup' ) == 0 ) {
-				$response['pending']		= 1;
-				$response['pending_reason'] = 'signup';
+				$response['pending']			= 1;
+				$response['pending_reason']	 = 'signup';
 			} elseif ( strcmp( $txn_type, 'subscr_eot' ) == 0 ) {
 				$response['eot']				= 1;
 			} elseif ( strcmp( $txn_type, 'subscr_failed' ) == 0 ) {

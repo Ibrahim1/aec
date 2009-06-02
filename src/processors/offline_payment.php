@@ -20,7 +20,7 @@ class processor_offline_payment extends processor
 		$info['longname']		= _CFG_OFFLINE_PAYMENT_LONGNAME;
 		$info['statement']		= _CFG_OFFLINE_PAYMENT_STATEMENT;
 		$info['description']	= _CFG_OFFLINE_PAYMENT_DESCRIPTION;
-		$info['currencies']		= AECToolbox::_aecCurrencyField( true, true, true, true );
+		$info['currencies']		= AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list']		= "";
 		$info['recurring']		= 0;
 

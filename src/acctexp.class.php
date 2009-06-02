@@ -6220,10 +6220,10 @@ class InvoiceFactory
 
 			$this->getCart();
 
-			$procs = aecCartHelper::getCartProcessorList( $this->_cart );
+			$procs = aecCartHelper::getCartProcessorList( $this->cartobject );
 
 			if ( count( $procs ) > 1 ) {
-				$pgroups = aecCartHelper::getCartProcessorGroups( $this->_cart );
+				$pgroups = aecCartHelper::getCartProcessorGroups( $this->cartobject );
 
 				$procnames = PaymentProcessorHandler::getProcessorNameListbyId( $procs );
 
@@ -6285,7 +6285,7 @@ class InvoiceFactory
 				if ( isset( $procs[0] ) ) {
 					$this->processor = PaymentProcessorHandler::getProcessorNamefromId( $procs[0] );
 				} else {
-					$am = $this->_cart->getAmount( $this->metaUser, $this->cart );
+					$am = $this->cartobject->getAmount( $this->metaUser, $this->cart );
 
 					if ( $am['amount'] == "0.00" ) {
 						$this->processor = 'free';
@@ -6366,7 +6366,7 @@ class InvoiceFactory
 				$this->payment->freetrial = 1;
 			}
 		} else {
-			$this->payment->amount = $this->_cart->getAmount( $this->metaUser, $this->cart );
+			$this->payment->amount = $this->cartobject->getAmount( $this->metaUser, $this->cart );
 		}
 
 		// Amend ->payment
@@ -6425,14 +6425,14 @@ class InvoiceFactory
 
 	function getCart()
 	{
-		if ( empty( $this->_cart ) ) {
-			$this->_cart = aecCartHelper::getCartbyUserid( $this->userid );
+		if ( empty( $this->cartobject ) ) {
+			$this->cartobject = aecCartHelper::getCartbyUserid( $this->userid );
 		}
 
 		$this->loadMetaUser();
 
-		if ( $this->_cart->id ) {
-			$this->cart = $this->_cart->getCheckout( $this->metaUser );
+		if ( $this->cartobject->id ) {
+			$this->cart = $this->cartobject->getCheckout( $this->metaUser );
 		}
 	}
 
@@ -6440,7 +6440,7 @@ class InvoiceFactory
 	{
 		$this->items = array();
 
-		if ( empty( $this->_cart ) ) {
+		if ( empty( $this->cartobject ) ) {
 			global $database;
 
 			$terms = $this->plan->getTerms( $this->recurring, $this->metaUser->objSubscription, $this->metaUser );
@@ -6456,10 +6456,10 @@ class InvoiceFactory
 
 			$this->items[] = array( 'item' => array( 'obj' => $this->plan ), 'terms' => $terms );
 
-			$this->_cart = new aecCart( $database );
-			$this->_cart->addItem( array(), $this->plan );
+			$this->cartobject = new aecCart( $database );
+			$this->cartobject->addItem( array(), $this->plan );
 		} else {
-			$this->amount = $this->_cart->getAmount( $this->metaUser, $this->cart );
+			$this->amount = $this->cartobject->getAmount( $this->metaUser, $this->cart );
 
 			foreach ( $this->cart as $cid => $citem ) {
 				if ( $citem['obj'] !== false ) {
@@ -6491,16 +6491,16 @@ class InvoiceFactory
 
 	function addtoCart( $option, $usage )
 	{
-		if ( empty( $this->_cart ) ) {
-			$this->_cart = aecCartHelper::getCartbyUserid( $this->userid );
+		if ( empty( $this->cartobject ) ) {
+			$this->cartobject = aecCartHelper::getCartbyUserid( $this->userid );
 		}
 
 		if ( is_array( $usage ) ) {
 			foreach ( $usage as $us ) {
-				$this->_cart->action( 'addItem', $us );
+				$this->cartobject->action( 'addItem', $us );
 			}
 		} else {
-			$this->_cart->action( 'addItem', $usage );
+			$this->cartobject->action( 'addItem', $usage );
 		}
 	}
 
@@ -6514,20 +6514,20 @@ class InvoiceFactory
 			}
 		}
 
-		if ( empty( $this->_cart ) ) {
-			$this->_cart = aecCartHelper::getCartbyUserid( $this->userid );
+		if ( empty( $this->cartobject ) ) {
+			$this->cartobject = aecCartHelper::getCartbyUserid( $this->userid );
 		}
 
-		$this->_cart->action( 'updateItems', $update );
+		$this->cartobject->action( 'updateItems', $update );
 	}
 
 	function clearCart( $option )
 	{
-		if ( empty( $this->_cart ) ) {
-			$this->_cart = aecCartHelper::getCartbyUserid( $this->userid );
+		if ( empty( $this->cartobject ) ) {
+			$this->cartobject = aecCartHelper::getCartbyUserid( $this->userid );
 		}
 
-		$this->_cart->action( 'clearCart' );
+		$this->cartobject->action( 'clearCart' );
 	}
 
 	function touchInvoice( $option, $invoice_number=false )
@@ -6570,7 +6570,7 @@ class InvoiceFactory
 
 			$id = 0;
 			if ( strpos( $this->usage, 'c' ) !== false ) {
-				$id = aecCartHelper::getInvoiceIdByCart( $this->_cart );
+				$id = aecCartHelper::getInvoiceIdByCart( $this->cartobject );
 			}
 
 			if ( $id ) {
@@ -7220,7 +7220,7 @@ class InvoiceFactory
 		$query = 'SELECT `invoice_number`'
 				. ' FROM #__acctexp_invoices'
 				. ' WHERE `userid` = \'' . $this->userid . '\''
-				. ' AND `usage` = \'c.' . $this->_cart->id . '\''
+				. ' AND `usage` = \'c.' . $this->cartobject->id . '\''
 				;
 
 		$database->setQuery( $query );
@@ -7246,7 +7246,7 @@ class InvoiceFactory
 
 		$this->puffer( $option );
 
-		$this->usage = 'c.' . $this->_cart->id;
+		$this->usage = 'c.' . $this->cartobject->id;
 
 		$this->touchInvoice( $option );
 
@@ -7411,7 +7411,7 @@ class InvoiceFactory
 					$this->invoice->storeload();
 				}
 
-				if ( !empty( $this->_cart ) && !empty( $this->cart ) ) {
+				if ( !empty( $this->cartobject ) && !empty( $this->cart ) ) {
 					// Bounce back to cart
 					return $this->cart( $option );
 				} else {
@@ -7458,8 +7458,8 @@ class InvoiceFactory
 
 			$cpsh = new couponsHandler( $this->metaUser, $this, $coupons );
 
-			if ( !empty( $this->_cart ) && !empty( $this->cart ) ) {
-				$this->items = $cpsh->applyToCart( $this->items, $this->_cart, $this->cart );
+			if ( !empty( $this->cartobject ) && !empty( $this->cart ) ) {
+				$this->items = $cpsh->applyToCart( $this->items, $this->cartobject, $this->cart );
 
 				if ( count( $cpsh->delete_list ) ) {
 					foreach ( $cpsh->delete_list as $couponcode ) {
@@ -7471,12 +7471,12 @@ class InvoiceFactory
 
 				if ( $cpsh->affectedCart ) {
 					// Reload cart object and cart - was changed by $cpsh
-					$this->_cart->reload();
+					$this->cartobject->reload();
 					$this->getCart();
 
 					$this->loadItems();
 					$cpsh = new couponsHandler( $this->metaUser, $this, $coupons );
-					$this->items = $cpsh->applyToCart( $this->items, $this->_cart, $this->cart );
+					$this->items = $cpsh->applyToCart( $this->items, $this->cartobject, $this->cart );
 				}
 			} else {
 				$this->items = $cpsh->applyToItemList( $this->items );
@@ -7496,7 +7496,7 @@ class InvoiceFactory
 				$this->errors = $cpsh_err;
 			}
 
-			if ( !empty( $this->_cart ) && !empty( $this->cart ) ) {
+			if ( !empty( $this->cartobject ) && !empty( $this->cart ) ) {
 				$cpsh_exc = $cpsh->getExceptions();
 
 				if ( count( $cpsh_exc ) ) {
@@ -7507,7 +7507,7 @@ class InvoiceFactory
 			}
 
 			if ( !empty( $this->cart ) ) {
-				$this->amount = $this->_cart->getAmount( $this->metaUser, $this->cart );
+				$this->amount = $this->cartobject->getAmount( $this->metaUser, $this->cart );
 			}
 		}
 
@@ -7614,7 +7614,7 @@ class InvoiceFactory
 			$targetUser =& $this->metaUser;
 		}
 
-		if ( !empty( $this->_cart ) && !empty( $this->cart ) ) {
+		if ( !empty( $this->cartobject ) && !empty( $this->cart ) ) {
 			$response = $this->pp->checkoutProcess( $var, $targetUser, $new_subscription, $this->invoice, $this->cart );
 		} else {
 			$response = $this->pp->checkoutProcess( $var, $targetUser, $new_subscription, $this->invoice );
@@ -8674,7 +8674,7 @@ class Invoice extends serialParamDBTable
 		}
 
 		if ( !empty( $InvoiceFactory->cart ) ) {
-			$cart = $InvoiceFactory->_cart;
+			$cart = $InvoiceFactory->cartobject;
 		} else {
 			$cart = null;
 		}
@@ -8712,7 +8712,7 @@ class Invoice extends serialParamDBTable
 				$recurring = false;
 
 				if ( !empty( $InvoiceFactory->cart ) ) {
-					$cart = $InvoiceFactory->_cart;
+					$cart = $InvoiceFactory->cartobject;
 				} else {
 					$cart = $objUsage;
 				}
@@ -8803,7 +8803,7 @@ class Invoice extends serialParamDBTable
 				$recurring = false;
 
 				if ( !empty( $InvoiceFactory->cart ) ) {
-					$cart = $InvoiceFactory->_cart;
+					$cart = $InvoiceFactory->cartobject;
 				} else {
 					$cart = $objUsage;
 				}
@@ -11161,7 +11161,7 @@ class AECToolbox
 	 * @since 0.12.4
 	 * @return array
 	 */
-	function _aecCurrencyField( $currMain = false, $currGen = false, $currOth = false, $list_only = false )
+	function aecCurrencyField( $currMain = false, $currGen = false, $currOth = false, $list_only = false )
 	{
 		$currencies = array();
 
@@ -11213,7 +11213,7 @@ class AECToolbox
 		return $currency_code_list;
 	}
 
-	function _aecNumCurrency( $string )
+	function aecNumCurrency( $string )
 	{
 		$iso4217num = array( 'AED' => '784', 'AFN' => '971', 'ALL' => '008' ,'AMD' => '051', 'ANG' => '532',
 							'AOA' => '973', 'ARS' => '032', 'AUD' => '036', 'AWG' => '533', 'AZN' => '944',
@@ -11260,7 +11260,7 @@ class AECToolbox
 		}
 	}
 
-	function _aecCurrencyExp( $string )
+	function aecCurrencyExp( $string )
 	{
 		$iso4217exp3 = array( 'BHD', 'IQD', 'JOD', 'KRW', 'LYD', 'OMR', 'TND'  );
 		$iso4217exp0 = array( 'BIF', 'BYR', 'CLF', 'CLP', 'DJF', 'GNF', 'ISK', 'JPY', 'KMF', 'KRW',
@@ -11279,7 +11279,7 @@ class AECToolbox
 		}
 	}
 
-	function _getISO4271_codes()
+	function getISO4271_codes()
 	{
 		return array( 'AF', 'AX', 'AL', 'DZ', 'AS', 'AD', 'AO', 'AI', 'AQ', 'AG', 'AR', 'AM', 'AW', 'AU', 'AT', 'AZ',
 						'BS', 'BH', 'BD', 'BB', 'BY', 'BE', 'BZ', 'BJ', 'BM', 'BT', 'BO', 'BA', 'BW', 'BV', 'BR', 'IO',
@@ -11305,7 +11305,7 @@ class AECToolbox
 	 *
 	 * @return array w/ values
 	 */
-	function _aecIP()
+	function aecIP()
 	{
 		global $aecConfig;
 
@@ -12685,7 +12685,7 @@ class microIntegration extends serialParamDBTable
 		$this->mosDBTable( '#__acctexp_microintegrations', 'id', $db );
 
 		if ( !defined( '_AEC_LANG_INCLUDED_MI' ) ) {
-			$this->_callMILanguage();
+			$this->callMILanguage();
 		}
 	}
 
@@ -12711,7 +12711,7 @@ class microIntegration extends serialParamDBTable
 		return parent::check();
 	}
 
-	function _callMILanguage()
+	function callMILanguage()
 	{
 		global $mainframe;
 
