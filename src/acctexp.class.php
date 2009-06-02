@@ -11578,6 +11578,14 @@ class AECToolbox
 			include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_juser/juser.php' );
 			include_once( $mosConfig_absolute_path .'/administrator/components/com_juser/juser.class.php' );
 			$task		= $savetask;
+		} elseif ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) ) {
+			global $mosConfig_absolute_path;
+
+			$savetask	= $task;
+			$task		= 'blind';
+			include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_juser/juser.php' );
+			include_once( $mosConfig_absolute_path .'/administrator/components/com_juser/juser.class.php' );
+			$task		= $savetask;
 		}
 
 		// For joomla and CB, we must filter out some internal variables before handing over the POST data
