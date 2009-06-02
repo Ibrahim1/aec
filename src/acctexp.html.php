@@ -635,7 +635,7 @@ class Payment_HTML
 		$hidden[] = array( 'userid', ( $userid ? $userid : 0 ) );
 
 		// Rewrite Passthrough
-		if ( $passthrough != false ) {
+		if ( !empty( $passthrough ) ) {
 			$hidden[] = array( 'aec_passthrough', $passthrough );
 		}
 

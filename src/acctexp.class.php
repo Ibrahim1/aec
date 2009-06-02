@@ -7069,8 +7069,14 @@ class InvoiceFactory
 				$cart = aecCartHelper::getCartidbyUserid( $this->userid );
 			}
 
+			if ( !empty( $passthrough ) ) {
+				$pt = base64_encode( serialize( $passthrough ) );
+			} else {
+				$pt = null;
+			}
+
 			// Of to the Subscription Plan Selection Page!
-			Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $list, $subscriptionClosed, base64_encode( serialize( $passthrough ) ), $register, $cart );
+			Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $list, $subscriptionClosed, $pt, $register, $cart );
 		}
 	}
 
