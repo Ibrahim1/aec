@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: payboxch.php
+ * @version $Id: payboxat.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Processors - Paybox.ch
  * @copyright 2007-2008 Copyright (C) David Deutsch
@@ -11,15 +11,15 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_payboxch extends XMLprocessor
+class processor_payboxat extends XMLprocessor
 {
 	function info()
 	{
 		$info = array();
-		$info['name'] = 'payboxch';
-		$info['longname'] = _CFG_PAYBOXCH_LONGNAME;
-		$info['statement'] = _CFG_PAYBOXCH_STATEMENT;
-		$info['description'] = _CFG_PAYBOXCH_DESCRIPTION;
+		$info['name'] = 'payboxat';
+		$info['longname'] = _CFG_PAYBOXAT_LONGNAME;
+		$info['statement'] = _CFG_PAYBOXAT_STATEMENT;
+		$info['description'] = _CFG_PAYBOXAT_DESCRIPTION;
 		$info['currencies'] = 'AFA,DZD,ADP,ARS,AMD,AWG,AUD,AZM,BSD,BHD,THB,PAB,BBD,BYB,BEF,BZD,BMD,VEB,BOB,BRL,BND,BGN,BIF,CAD,CVE,KYD,GHC,XOF,XAF,XPF,CLP,COP,KMF,BAM,NIO,CRC,CUP,CYP,CZK,GMD,'.
 								'DKK,MKD,DEM,AED,DJF,STD,DOP,VND,GRD,XCD,EGP,SVC,ETB,EUR,FKP,FJD,HUF,CDF,FRF,GIP,XAU,HTG,PYG,GNF,GWP,GYD,HKD,UAH,ISK,INR,IRR,IQD,IEP,ITL,JMD,JOD,KES,PGK,LAK,EEK,'.
 								'HRK,KWD,MWK,ZMK,AOR,MMK,GEL,LVL,LBP,ALL,HNL,SLL,ROL,BGL,LRD,LYD,SZL,LTL,LSL,LUF,MGF,MYR,MTL,TMM,FIM,MUR,MZM,MXN,MXV,MDL,MAD,BOV,NGN,ERN,NAD,NPR,ANG,NLG,YUM,ILS,'.
@@ -79,20 +79,20 @@ class processor_payboxch extends XMLprocessor
 		$maxname		= count($namearray) - 1;
 		$lastname		= $namearray[$maxname];
 
-		$var['params']['billFirstName'] = array( 'inputC', _AEC_PAYBOXCH_PARAMS_BILLFIRSTNAME_NAME, _AEC_PAYBOXCH_PARAMS_BILLFIRSTNAME_NAME, $firstfirstname );
-		$var['params']['billLastName'] = array( 'inputC', _AEC_PAYBOXCH_PARAMS_BILLLASTNAME_NAME, _AEC_PAYBOXCH_PARAMS_BILLLASTNAME_NAME, $lastname );
+		$var['params']['billFirstName'] = array( 'inputC', _AEC_PAYBOXAT_PARAMS_BILLFIRSTNAME_NAME, _AEC_PAYBOXAT_PARAMS_BILLFIRSTNAME_NAME, $firstfirstname );
+		$var['params']['billLastName'] = array( 'inputC', _AEC_PAYBOXAT_PARAMS_BILLLASTNAME_NAME, _AEC_PAYBOXAT_PARAMS_BILLLASTNAME_NAME, $lastname );
 
 		if ( !empty( $this->settings['promptAddress'] ) || !empty( $this->settings['promptZipOnly'] ) ) {
 			if ( empty( $this->settings['promptZipOnly'] ) ) {
-				$var['params']['billAddress'] = array( 'inputC', _AEC_PAYBOXCH_PARAMS_BILLADDRESS_NAME );
-				$var['params']['billCity'] = array( 'inputC', _AEC_PAYBOXCH_PARAMS_BILLCITY_NAME );
-				$var['params']['billState'] = array( 'inputC', _AEC_PAYBOXCH_PARAMS_BILLSTATE_NAME );
+				$var['params']['billAddress'] = array( 'inputC', _AEC_PAYBOXAT_PARAMS_BILLADDRESS_NAME );
+				$var['params']['billCity'] = array( 'inputC', _AEC_PAYBOXAT_PARAMS_BILLCITY_NAME );
+				$var['params']['billState'] = array( 'inputC', _AEC_PAYBOXAT_PARAMS_BILLSTATE_NAME );
 			}
 
-			$var['params']['billZip'] = array( 'inputC', _AEC_PAYBOXCH_PARAMS_BILLZIP_NAME );
+			$var['params']['billZip'] = array( 'inputC', _AEC_PAYBOXAT_PARAMS_BILLZIP_NAME );
 
 			if ( empty( $this->settings['promptZipOnly'] ) ) {
-				$var['params']['billCountry'] = array( 'inputC', _AEC_PAYBOXCH_PARAMS_BILLCOUNTRY_NAME );
+				$var['params']['billCountry'] = array( 'inputC', _AEC_PAYBOXAT_PARAMS_BILLCOUNTRY_NAME );
 			}
 		}
 
