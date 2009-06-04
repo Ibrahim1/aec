@@ -4933,7 +4933,7 @@ class ItemGroup extends serialParamDBTable
 	{
 		global $database;
 
-		// Fake knowing the planid if is zero. TODO: This needs to replaced with something better later on!
+		// Fake knowing the planid if is zero.
 		if ( !empty( $post['id'] ) ) {
 			$groupid = $post['id'];
 		} else {
