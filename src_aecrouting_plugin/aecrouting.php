@@ -65,8 +65,10 @@ class plgSystemAECrouting extends JPlugin
 
 			global $aecConfig;
 
-			$task	= mosGetParam( $_REQUEST, 'task', '' );
-			$option	= mosGetParam( $_REQUEST, 'option', '' );
+			$uri = &JFactory::getURI();
+			$task	= $uri->getVar( 'task' );
+			$option	= $uri->getVar( 'option' );
+			$view	= $uri->getVar( 'view' );
 
 			if ( empty( $task ) ) {
 				$task = JRequest::getVar( 'task', null );
@@ -76,8 +78,8 @@ class plgSystemAECrouting extends JPlugin
 				$option = JRequest::getVar( 'option', null );
 			}
 
-			$usage	= intval( mosGetParam( $_POST, 'usage', '0' ) );
-			$submit	= mosGetParam( $_POST, 'submit', '' );
+			$usage	= intval( JRequest::getVar( 'usage', '0' ) );
+			$submit	= JRequest::getVar( 'submit', '' );
 
 			$username = aecGetParam( 'username', true, array( 'string', 'clear_nonalnum' ) );
 
@@ -87,6 +89,7 @@ class plgSystemAECrouting extends JPlugin
 			$cu			= $option == 'com_user';
 
 			$j_reg		= $task == 'register';
+			$j15_reg	= $view == 'register';
 			$cb_reg		= $task == 'registers';
 			$tcregs		= $task == 'saveregisters';
 			$tsregs		= $task == 'saveRegistration';
@@ -97,7 +100,7 @@ class plgSystemAECrouting extends JPlugin
 
 			$pfirst		= $aecConfig->cfg['plans_first'];
 
-			if ( ( $j_reg || $cb_reg ) && $aecConfig->cfg['integrate_registration'] ) {
+			if ( ( $j15_reg || $j_reg || $cb_reg ) && $aecConfig->cfg['integrate_registration'] ) {
 				// Joomla or CB registration...
 				if ( ( $pfirst && !$no_usage ) || ( !$pfirst && $no_usage ) ) {
 					// Plans First and selected or not first and not selected
