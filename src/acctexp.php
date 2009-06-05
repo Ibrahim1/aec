@@ -1101,7 +1101,7 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid )
 
 			$usage = null;
 			if ( !empty( $objInvoice->usage ) ) {
-				$usage = $this->usage;
+				$usage = $objInvoice->usage;
 			}
 
 			if ( !empty( $usage ) ) {
