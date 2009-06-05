@@ -10199,7 +10199,7 @@ class Subscription extends serialParamDBTable
 		}
 
 		// Send notification to all administrators
-		$aecUser = AECToolbox::_aecIP();
+		$aecUser = AECToolbox::aecIP();
 
 		if ( $renew ) {
 			$subject2 = sprintf( _ACCTEXP_SEND_MSG_RENEW, $name, $mainframe->getCfg( 'sitename' ) );
@@ -11793,7 +11793,7 @@ class AECToolbox
 			}
 
 			// Send notification to all administrators
-			$aecUser	= AECToolbox::_aecIP();
+			$aecUser	= AECToolbox::aecIP();
 
 			$subject2	= sprintf( _AEC_SEND_SUB, $name, $mainframe->getCfg( 'sitename' ) );
 			$message2	= sprintf( _AEC_ASEND_MSG_NEW_REG, $adminName2, $mainframe->getCfg( 'sitename' ), $row->name, $email, $username, $aecUser['ip'], $aecUser['isp'] );
