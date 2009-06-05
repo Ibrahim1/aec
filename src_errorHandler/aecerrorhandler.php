@@ -78,9 +78,22 @@ class plgSystemAECerrorhandler extends JPlugin
 	{
 		global $mainframe;
 
-		$uri = &JFactory::getURI();
-		$option = $uri->getVar( 'option' );
-		$view = $uri->getVar( 'view' );
+		$uri	= &JFactory::getURI();
+		$task	= $uri->getVar( 'task' );
+		$option	= $uri->getVar( 'option' );
+		$view	= $uri->getVar( 'view' );
+
+		if ( empty( $task ) ) {
+			$task	= JRequest::getVar( 'task', null );
+		}
+
+		if ( empty( $option ) ) {
+			$option	= JRequest::getVar( 'option', null );
+		}
+
+		if ( empty( $view ) ) {
+			$view	= JRequest::getVar( 'view', null );
+		}
 
 		if ( $return = JRequest::getVar( 'return', '', 'method', 'base64' ) )
 		{
@@ -96,7 +109,7 @@ class plgSystemAECerrorhandler extends JPlugin
 				$uri =& JURI::getInstance($return);
 				$base = $uri->toString(array('scheme', 'host', 'port', 'path'));
 				$host = $uri->toString(array('scheme', 'host', 'port'));
-				if(strpos(strtolower($base), strtolower(JURI::base())) !== 0 && !empty($host)) {
+				if ( ( strpos( strtolower($base), strtolower(JURI::base()) ) !== 0 ) && !empty($host) ) {
 					$return = '';
 				}
 			}
