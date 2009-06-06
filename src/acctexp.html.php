@@ -674,7 +674,7 @@ class Payment_HTML
 		return $html_code;
 	}
 
-	function promptpassword( $option, $var, $wrong )
+	function promptpassword( $option, $passthrough, $wrong )
 	{
 		global $database, $aecConfig;
 		?>
@@ -688,11 +688,9 @@ class Payment_HTML
 			<div id="upgrade_button">
 				<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 					<input type="password" size="20" class="inputbox" id="password" name="password"/>
-					<?php
-						foreach ( $var as $name => $array ) {
-							echo '<input type="hidden" name="' . $array[0] . '" value="' . $array[1] . '" />';
-						}
-					?>
+					<?php if ( $passthrough != false ) { ?>
+							<input type="hidden" name="aec_passthrough" value="<?php echo $passthrough; ?>" />
+					<?php } ?>
 					<input type="submit" class="button" value="<?php echo _AEC_PROMPT_PASSWORD_BUTTON;?>" />
 				</form>
 			</div>
@@ -843,7 +841,7 @@ class Payment_HTML
 							<input type="submit" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
 							<?php
 						}
-						if ( $passthrough != false ) {?>
+						if ( $passthrough != false ) { ?>
 							<input type="hidden" name="aec_passthrough" value="<?php echo $passthrough; ?>" />
 						<?php } ?>
 					</div>
@@ -851,8 +849,7 @@ class Payment_HTML
 				</tr>
 				<tr><td>
 					<table>
-						<?php
-						if ( is_object( $InvoiceFactory->pp ) ) {
+						<?php if ( is_object( $InvoiceFactory->pp ) ) {
 							HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $aecConfig->cfg['displayccinfo'] );
 						} ?>
 					</table>

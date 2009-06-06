@@ -90,7 +90,7 @@ if ( !empty( $task ) ) {
 			$coupon		= aecGetParam( 'coupon_code', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 
 			$invoicefact = new InvoiceFactory( $userid, $usage, $group, $processor );
-			$invoicefact->save( $option, $_POST, $coupon );
+			$invoicefact->save( $option, $coupon );
 			break;
 
 		case 'addtocart':
@@ -540,7 +540,7 @@ function subscribe( $option )
 		}
 
 		$invoicefact = new InvoiceFactory( $userid, $usage, $group, $processor );
-		$invoicefact->confirm( $option, $_POST );
+		$invoicefact->confirm( $option );
 	} else {
 		$CB = ( GeneralInfoRequester::detect_component( 'anyCB' ) );
 		if ( $isJoomla15 && !$CB ) {
@@ -595,8 +595,8 @@ function subscribe( $option )
 			}
 		}
 
-		$invoicefact = new InvoiceFactory( $userid, $usage, $group, $processor );
-		$invoicefact->create( $option, $intro, $usage, $group, $processor, 0, $passthrough );
+		$invoicefact = new InvoiceFactory( $userid, $usage, $group, $processor, null, $passthrough );
+		$invoicefact->create( $option, $intro, $usage, $group, $processor, 0 );
 	}
 }
 
@@ -665,7 +665,7 @@ function confirmSubscription( $option )
 		}
 	} else {
 		$invoicefact = new InvoiceFactory( $userid, $usage, $group, $processor );
-		$invoicefact->confirm( $option, $_POST );
+		$invoicefact->confirm( $option );
 	}
 }
 

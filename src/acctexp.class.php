@@ -6130,7 +6130,7 @@ class InvoiceFactory
 	/** @var int */
 	var $confirmed		= null;
 
-	function InvoiceFactory( $userid=null, $usage=null, $group=null, $processor=null, $invoice=null )
+	function InvoiceFactory( $userid=null, $usage=null, $group=null, $processor=null, $invoice=null, $passthrough=null )
 	{
 		global $database, $mainframe, $my;
 
@@ -6163,6 +6163,20 @@ class InvoiceFactory
 		$this->group			= $group;
 		$this->processor		= $processor;
 		$this->invoice_number	= $invoice;
+
+		if ( empty( $passthrough ) ) {
+			$passthrough = aecPostParamClear( $_POST );
+		}
+
+		if ( isset( $passthrough['aec_passthrough'] ) ) {
+			if ( is_array( $passthrough['aec_passthrough'] ) ) {
+				$this->passthrough = $passthrough['aec_passthrough'];
+			} else {
+				$this->passthrough = unserialize( base64_decode( $passthrough['aec_passthrough'] ) );
+			}
+		} else {
+			$this->passthrough = $passthrough;
+		}
 
 		// Delete set userid if it doesn't exist
 		if ( !is_null( $this->userid ) ) {
@@ -6198,6 +6212,15 @@ class InvoiceFactory
 
 		if ( !ItemGroupHandler::checkParentRestrictions( $row, 'item', $this->metaUser ) ) {
 			return mosNotAuth();
+		}
+	}
+
+	function getPassthrough()
+	{
+		if ( !empty( $this->passthrough ) ) {
+			return base64_encode( serialize( $this->passthrough ) );
+		} else {
+			return "";
 		}
 	}
 
@@ -6375,7 +6398,12 @@ class InvoiceFactory
 		$amount_array = explode( '.', $this->payment->amount );
 
 		$this->payment->amount_significant	= $amount_array[0];
-		$this->payment->amount_decimal		= $amount_array[1];
+
+		if ( isset( $amount_array[1] ) ) {
+			$this->payment->amount_decimal		= $amount_array[1];
+		} else {
+			$this->payment->amount_decimal		= '00';
+		}
 
 		if ( !empty( $this->plan ) ) {
 			$this->payment->amount_format = AECToolbox::formatAmountCustom( $this, $this->plan );
@@ -6608,23 +6636,26 @@ class InvoiceFactory
 		return;
 	}
 
-	function loadMetaUser( $passthrough=false, $force=false )
+	function loadMetaUser( $force=false )
 	{
 		if ( isset( $this->metaUser ) ) {
 			if ( is_object( $this->metaUser ) && !$force ) {
-				return false;
+				if ( !isset( $this->metaUser->_incomplete ) ) {
+					return false;
+				}
 			}
 		}
 
 		if ( empty( $this->userid ) ) {
 			// Creating a dummy user object
 			$this->metaUser = new metaUser( 0 );
-			$this->metaUser->cmsUser = new stdClass();
-			$this->metaUser->cmsUser->gid = 29;
 			$this->metaUser->hasSubscription = false;
 
-			if ( is_array( $passthrough ) && !empty( $passthrough ) ) {
-				$cpass = $passthrough;
+			$this->metaUser->cmsUser = new stdClass();
+			$this->metaUser->cmsUser->gid = 29;
+
+			if ( is_array( $this->passthrough ) && !empty( $this->passthrough ) ) {
+				$cpass = $this->passthrough;
 				unset( $cpass['id'] );
 
 				$cmsfields = array( 'name', 'username', 'email', 'password' );
@@ -6653,8 +6684,14 @@ class InvoiceFactory
 					}
 				}
 
+				if ( isset( $this->metaUser->_incomplete ) ) {
+					unset( $this->metaUser->_incomplete );
+				}
+
 				return false;
 			} else {
+				$this->metaUser->_incomplete = true;
+
 				return true;
 			}
 		} else {
@@ -6664,7 +6701,7 @@ class InvoiceFactory
 		}
 	}
 
-	function checkAuth( $option, $var )
+	function checkAuth( $option )
 	{
 		$return = true;
 
@@ -6698,31 +6735,20 @@ class InvoiceFactory
 		return $return;
 	}
 
-	function promptpassword( $option, $var, $wrong=false )
+	function promptpassword( $option, $wrong=false )
 	{
 		global $mainframe;
 
-		$passthrough = array();
-		foreach ( $var as $ke => $va ) {
-			if ( is_array( $va ) ) {
-				foreach ( $va as $con ) {
-					$passthrough[] = array( $ke . '[]', $con );
-				}
-			} else {
-				$passthrough[] = array( $ke, $va );
-			}
-		}
-
 		$mainframe->SetPageTitle( _AEC_PROMPT_PASSWORD );
 
-		Payment_HTML::promptpassword( $option, $passthrough, $wrong );
+		Payment_HTML::promptpassword( $option, $this->getPassthrough(), $wrong );
 	}
 
-	function create( $option, $intro=0, $usage=0, $group=0, $processor=null, $invoice=0, $passthrough=false )
+	function create( $option, $intro=0, $usage=0, $group=0, $processor=null, $invoice=0 )
 	{
 		global $database, $mainframe, $my, $aecConfig;
 
-		$register = $this->loadMetaUser( $passthrough, true );
+		$register = $this->loadMetaUser( true );
 
 		if ( empty( $this->usage ) ) {
 			// TODO: Check if the user has already subscribed once, if not - link to intro
@@ -7045,12 +7071,12 @@ class InvoiceFactory
 					$var['password'] = $password;
 				}
 
-				$this->confirm( $option, $var, $passthrough );
+				$this->confirm( $option, $var );
 			}
 		} else {
 			// Reset $register if we seem to have all data
 			// TODO: find better solution for this
-			if ( $register && isset( $passthrough['username'] ) ) {
+			if ( $register && isset( $this->passthrough['username'] ) ) {
 				$register = 0;
 			} else {
 
@@ -7067,76 +7093,22 @@ class InvoiceFactory
 
 			if ( $this->userid ) {
 				$cart = aecCartHelper::getCartidbyUserid( $this->userid );
-			}
-
-			if ( !empty( $passthrough ) ) {
-				$pt = base64_encode( serialize( $passthrough ) );
 			} else {
-				$pt = null;
+				$cart = false;
 			}
 
 			// Of to the Subscription Plan Selection Page!
-			Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $list, $subscriptionClosed, $pt, $register, $cart );
+			Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $list, $subscriptionClosed, $this->getPassthrough(), $register, $cart );
 		}
 	}
 
-	function confirm( $option, $var=array(), $passthrough=false )
+	function confirm( $option )
 	{
 		global $database, $my, $aecConfig, $mosConfig_absolute_path;
 
-		if ( isset( $var['aec_passthrough'] ) ) {
-			if ( is_array( $var['aec_passthrough'] ) ) {
-				$passthrough = $var['aec_passthrough'];
-			} else {
-				$passthrough = unserialize( base64_decode( $var['aec_passthrough'] ) );
-			}
-
-			unset( $var['aec_passthrough'] );
-		}
-
-		if ( empty( $passthrough ) ) {
-			if ( !$this->checkAuth( $option, $var ) ) {
+		if ( empty( $this->passthrough ) ) {
+			if ( !$this->checkAuth( $option ) ) {
 				return false;
-			}
-		}
-
-		if ( isset( $var['task'] ) ) {
-			unset( $var['task'] );
-			unset( $var['option'] );
-		}
-
-		if ( $this->userid ) {
-			$user = new mosUser( $database );
-			$user->load( $this->userid );
-
-			$passthrough = false;
-		} else {
-			if ( isset( $var['usage'] ) ) {
-				unset( $var['usage'] );
-				unset( $var['processor'] );
-				unset( $var['currency'] );
-				unset( $var['amount'] );
-			}
-
-			if ( is_array( $passthrough ) ) {
-				$user = new mosUser( $database );
-
-				$details = array( 'name', 'username', 'email' );
-
-				foreach ( $passthrough as $key => $value ) {
-					if ( in_array( $key, $details ) ) {
-						$user->$key = $value;
-					}
-				}
-			} else {
-				$user = new mosUser( $database );
-				if ( isset( $var['name'] ) ) {
-					$user->name		= $var['name'];
-				}
-				$user->username = $var['username'];
-				$user->email	= $var['email'];
-
-				$passthrough = $var;
 			}
 		}
 
@@ -7182,10 +7154,10 @@ class InvoiceFactory
 					continue;
 				}
 
-				if ( is_array( $passthrough ) ) {
-					foreach ( $passthrough as $pid => $pk ) {
+				if ( is_array( $this->passthrough ) ) {
+					foreach ( $this->passthrough as $pid => $pk ) {
 						if ( ( $pk[0] == $mik ) || ( $pk[0] == $mik.'[]' ) ) {
-							unset($passthrough[$pid]);
+							unset($this->passthrough[$pid]);
 						}
 					}
 				}
@@ -7203,14 +7175,9 @@ class InvoiceFactory
 
 			$mainframe->SetPageTitle( _CONFIRM_TITLE );
 
-			Payment_HTML::confirmForm( $option, $this, $user, base64_encode( serialize( $passthrough ) ) );
+			Payment_HTML::confirmForm( $option, $this, $this->metaUser->cmsUser, $this->getPassthrough() );
 		} else {
-			if ( !empty( $passthrough ) ) {
-				$this->loadMetaUser( $passthrough, true );
-				$var['aec_passthrough'] = $passthrough;
-			}
-
-			$this->save( $option, $var );
+			$this->save( $option );
 		}
 	}
 
@@ -7271,20 +7238,20 @@ class InvoiceFactory
 		$this->checkout( $option );
 	}
 
-	function save( $option, $var, $coupon=null )
+	function save( $option, $coupon=null )
 	{
 		global $database, $mainframe, $task;
 
 		if ( isset( $var['aec_passthrough'] ) ) {
 			if ( is_array( $var['aec_passthrough'] ) ) {
-				$passthrough = $var['aec_passthrough'];
+				$this->passthrough = $var['aec_passthrough'];
 			} else {
-				$passthrough = unserialize( base64_decode( $var['aec_passthrough'] ) );
+				$this->passthrough = unserialize( base64_decode( $var['aec_passthrough'] ) );
 			}
 
 			unset( $var['aec_passthrough'] );
 		} else {
-			$passthrough = $var;
+			$this->passthrough = $var;
 		}
 
 		if ( $this->usage == '' ) {
@@ -7317,9 +7284,9 @@ class InvoiceFactory
 					$overrideEmail = false;
 				}
 
-				$this->userid = AECToolbox::saveUserRegistration( $option, $passthrough, false, $overrideActivation, $overrideEmail );
+				$this->userid = AECToolbox::saveUserRegistration( $option, $this->passthrough, false, $overrideActivation, $overrideEmail );
 			} else {
-				$this->userid = AECToolbox::saveUserRegistration( $option, $passthrough );
+				$this->userid = AECToolbox::saveUserRegistration( $option, $this->passthrough );
 			}
 		}
 
@@ -7401,7 +7368,7 @@ class InvoiceFactory
 	{
 		global $database, $aecConfig;
 
-		if ( !$this->checkAuth( $option, aecPostParamClear( $_POST ) ) ) {
+		if ( !$this->checkAuth( $option ) ) {
 			return false;
 		}
 
@@ -10791,7 +10758,12 @@ class reWriteEngine
 				$name['first']			= implode( ' ', $namearray );
 			}
 
-			$this->rewrite['user_id']				= $this->data['metaUser']->cmsUser->id;
+			if ( isset( $this->data['metaUser']->cmsUser->id ) ) {
+				$this->rewrite['user_id']				= $this->data['metaUser']->cmsUser->id;
+			} else {
+				$this->rewrite['user_id']				= 0;
+			}
+
 			$this->rewrite['user_username']			= $this->data['metaUser']->cmsUser->username;
 			$this->rewrite['user_name']				= $this->data['metaUser']->cmsUser->name;
 			$this->rewrite['user_first_name']		= $name['first'];
@@ -10805,19 +10777,29 @@ class reWriteEngine
 				}
 
 				if ( !empty( $this->data['metaUser']->hasCBprofile ) ) {
-					$fields = get_object_vars( $this->data['metaUser']->cbUser );
+					if ( isset( $this->data['metaUser']->cbUser->cbactivation ) ) {
+						$fields = get_object_vars( $this->data['metaUser']->cbUser );
 
-					if ( !empty( $fields ) ) {
-						foreach ( $fields as $fieldname => $fieldcontents ) {
-							$this->rewrite['user_' . $fieldname] = $fieldcontents;
+						if ( !empty( $fields ) ) {
+							foreach ( $fields as $fieldname => $fieldcontents ) {
+								$this->rewrite['user_' . $fieldname] = $fieldcontents;
+							}
 						}
-					}
 
-					$this->rewrite['user_activationcode']		= $this->data['metaUser']->cbUser->cbactivation;
-					$this->rewrite['user_activationlink']		= $mosConfig_live_site."/index.php?option=com_comprofiler&task=confirm&confirmcode=" . $this->data['metaUser']->cbUser->cbactivation;
+						$this->rewrite['user_activationcode']		= $this->data['metaUser']->cbUser->cbactivation;
+						$this->rewrite['user_activationlink']		= $mosConfig_live_site."/index.php?option=com_comprofiler&task=confirm&confirmcode=" . $this->data['metaUser']->cbUser->cbactivation;
+					} else {
+						$this->rewrite['user_activationcode']		= "";
+						$this->rewrite['user_activationlink']		= "";
+					}
 				} else {
-					$this->rewrite['user_activationcode']		= $this->data['metaUser']->cmsUser->activation;
-					$this->rewrite['user_activationlink']		= $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+					if ( isset( $this->data['metaUser']->cmsUser->activation ) ) {
+						$this->rewrite['user_activationcode']		= $this->data['metaUser']->cmsUser->activation;
+						$this->rewrite['user_activationlink']		= $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+					} else {
+						$this->rewrite['user_activationcode']		= "";
+						$this->rewrite['user_activationlink']		= "";
+					}
 				}
 			} else {
 				$this->rewrite['user_activationcode']			= $this->data['metaUser']->cmsUser->activation;
