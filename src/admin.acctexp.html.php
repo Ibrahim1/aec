@@ -1351,6 +1351,8 @@ class HTML_AcctExp
 			$tabs->startTab( 'new processor', 'new processor' );
 
 			echo '<div class="aec_tabheading"><h2>' . '' . '</h2></div>';
+
+			$id = 0;
 		}
 
 		echo '<table width="100%" class="aecadminform"><tr><td>';
