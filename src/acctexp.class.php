@@ -142,8 +142,8 @@ function aecEscape( $value, $safe_params )
 		} else {
 			$array = explode('@', $value, 2);
 
-			$username = preg_replace('/[^a-z0-9._+-]+/i', '', $username);
-			$domain = preg_replace('/[^a-z0-9.-]+/i', '', $domain);
+			$username = preg_replace( '/[^a-z0-9._+-]+/i', '', $username );
+			$domain = preg_replace( '/[^a-z0-9.-]+/i', '', $domain );
 
 			$value = $username.'@'.$domain;
 		}
@@ -12931,23 +12931,30 @@ class microIntegration extends serialParamDBTable
 		return $return;
 	}
 
-	function verifyMIform( $plan, $metaUser )
-	{
-		if ( method_exists( $this->mi_class, 'verifyMIform' ) ) {
-			$params	= $metaUser->meta->getMIParams( $this->id, $plan->id );
-
-			return $this->mi_class->verifyMIform( $params );
-		} else {
-			return true;
-		}
-	}
-
 	function getMIform( $plan )
 	{
 		if ( method_exists( $this->mi_class, 'getMIform' ) ) {
 			return $this->mi_class->getMIform( $plan );
 		} else {
 			return null;
+		}
+	}
+
+	function verifyMIform( $plan, $metaUser )
+	{
+		if ( method_exists( $this->mi_class, 'verifyMIform' ) ) {
+			$params	= $metaUser->meta->getMIParams( $this->id, $plan->id );
+
+			$request = new stdClass();
+			$request->action	=	'verifyMIform';
+			$request->parent	=&	$this;
+			$request->metaUser	=&	$metaUser;
+			$request->plan		=&	$plan;
+			$request->params	=&	$params;
+
+			return $this->mi_class->verifyMIform( $request );
+		} else {
+			return true;
 		}
 	}
 

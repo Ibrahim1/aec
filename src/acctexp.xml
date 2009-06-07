@@ -75,7 +75,9 @@
 		<filename>micro_integration/mi_acajoom.php</filename>
 		<filename>micro_integration/mi_acl.php</filename>
 		<filename>micro_integration/mi_aecdonate.php</filename>
+		<filename>micro_integration/mi_aecmodifyexpiration.php</filename>
 		<filename>micro_integration/mi_aecplan.php</filename>
+		<filename>micro_integration/mi_aecuserdetails.php</filename>
 		<filename>micro_integration/mi_affiliatepro.php</filename>
 		<filename>micro_integration/mi_age_restriction.php</filename>
 		<filename>micro_integration/mi_apc.php</filename>
@@ -87,6 +89,7 @@
 		<filename>micro_integration/mi_docman.php</filename>
 		<filename>micro_integration/mi_email.php</filename>
 		<filename>micro_integration/mi_email_files.php</filename>
+		<filename>micro_integration/mi_email_multi.php</filename>
 		<filename>micro_integration/mi_eventlog.php</filename>
 		<filename>micro_integration/mi_fireboard.php</filename>
 		<filename>micro_integration/mi_g2.php</filename>

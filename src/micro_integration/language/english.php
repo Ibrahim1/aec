@@ -818,4 +818,21 @@ define( '_MI_MI_EMAIL_MULTI_TEXT_HTML_DESC',	'Do you want this email to be HTML 
 define( '_MI_MI_EMAIL_MULTI_TEXT_NAME',			'#%s: Text' );
 define( '_MI_MI_EMAIL_MULTI_TEXT_DESC',			'Text to be sent when the plan is purchased. The rewriting routines explained below will work for this field.' );
 
+// Custom User Details
+define( '_AEC_MI_NAME_AECUSERDETAILS',		'Custom User Details' );
+define( '_AEC_MI_DESC_AECUSERDETAILS',		'Request additional user details on Confirmation' );
+define( '_MI_MI_AECUSERDETAILS_SETTINGS_NAME',		'Settings' );
+define( '_MI_MI_AECUSERDETAILS_SETTINGS_DESC',		'How many details do you want the user to set?' );
+
+define( '_MI_MI_AECUSERDETAILS_SET_SHORT_NAME',		'#%s: Short Name' );
+define( '_MI_MI_AECUSERDETAILS_SET_SHORT_DESC',		'A technical/internal handle for the setting. i.e.: "telephone_number" or "pool_size" - no spaces or funny characters' );
+define( '_MI_MI_AECUSERDETAILS_SET_NAME_NAME',	'#%s: Name' );
+define( '_MI_MI_AECUSERDETAILS_SET_NAME_DESC',	'What the user will see to know what to put into the field.' );
+define( '_MI_MI_AECUSERDETAILS_SET_DESC_NAME',		'#%s: Description' );
+define( '_MI_MI_AECUSERDETAILS_SET_DESC_DESC',		'Description of the setting' );
+define( '_MI_MI_AECUSERDETAILS_SET_TYPE_NAME',	'#%s: Type' );
+define( '_MI_MI_AECUSERDETAILS_SET_TYPE_DESC',	'Type of Input' );
+define( '_MI_MI_AECUSERDETAILS_SET_DEFAULT_NAME',			'#%s: Default' );
+define( '_MI_MI_AECUSERDETAILS_SET_DEFAULT_DESC',			'An automatically provided value - may be left blank.' );
+
 ?>

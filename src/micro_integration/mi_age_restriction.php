@@ -36,18 +36,18 @@ class mi_age_restriction extends MI
 		return $settings;
 	}
 
-	function verifyMIform( $params )
+	function verifyMIform( $request )
 	{
 		global $database;
 
 		$return = array();
 
-		if ( empty( $params['birthday'] ) ) {
+		if ( empty( $request->params['birthday'] ) ) {
 			$return['error'] = "Please fill in your date of birth";
 			return $return;
 		}
 
-		$age = $this->getAge( $params['birthday'] );
+		$age = $this->getAge( $request->params['birthday'] );
 
 		if ( empty( $age ) ) {
 			$return['error'] = "Please fill in your date of birth";

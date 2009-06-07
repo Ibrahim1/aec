@@ -75,19 +75,19 @@ class mi_email_files
 		return $settings;
 	}
 
-	function verifyMIform( $params )
+	function verifyMIform( $request )
 	{
 		global $database;
 
 		$return = array();
 
-		foreach ( $params['mi_email_files'] as $i => $v ) {
+		foreach ( $request->params['mi_email_files'] as $i => $v ) {
 			if ( is_null( $v ) || ( $v == "" ) ) {
-				unset( $params['mi_email_files'][$i] );
+				unset( $request->params['mi_email_files'][$i] );
 			}
 		}
 
-		if ( empty( $params['mi_email_files'] ) ) {
+		if ( empty( $request->params['mi_email_files'] ) ) {
 			if ( $this->settings['min_choices'] == $this->settings['max_choices'] ) {
 				$return['error'] = "Please select " . $this->settings['min_choices'] . " options!";
 			} else {
@@ -96,7 +96,7 @@ class mi_email_files
 			return $return;
 		}
 
-		$selected = count( $params['mi_email_files'] );
+		$selected = count( $request->params['mi_email_files'] );
 
 		if ( $selected > $this->settings['max_choices'] ) {
 			if ( $this->settings['min_choices'] == $this->settings['max_choices'] ) {
