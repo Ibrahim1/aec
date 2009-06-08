@@ -18,17 +18,26 @@ class mi_aecuserdetails
 		global $database;
 
 		$settings = array();
-
+		$settings['lists']		= array();
 		$settings['settings']	= array( 'inputB' );
 
+		$types = array( "inputA", "inputB", "inputC", "inputD" );
+
+ 		$typelist = array();
+ 		foreach ( $types as $type ) {
+ 			$typelist[] = mosHTML::makeOption ( $type, $type );
+ 		}
+
 		if ( !empty( $this->settings['settings'] ) ) {
-			for ( $i=0; $i<=$this->settings['settings']; $i++ ) {
+			for ( $i=0; $i<$this->settings['settings']; $i++ ) {
 				$p = $i . '_';
+
+				$settings['lists'][$p.'type']	= mosHTML::selectList( $typelist, 'delete_on_exp', 'size="3"', 'value', 'text', $this->settings[$p.'type'] );
 
 				$settings[$p.'short']	= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_SHORT_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_SHORT_DESC );
 				$settings[$p.'name']	= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_NAME_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_NAME_DESC );
 				$settings[$p.'desc']	= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_DESC_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_DESC_DESC );
-				$settings[$p.'type']	= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_TYPE_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_TYPE_DESC );
+				$settings[$p.'type']	= array( 'list', sprintf( _MI_MI_AECUSERDETAILS_SET_TYPE_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_TYPE_DESC );
 				$settings[$p.'default']	= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_DEFAULT_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_DEFAULT_DESC );
 			}
 		}
@@ -54,7 +63,7 @@ class mi_aecuserdetails
 		$settings = array();
 
 		if ( !empty( $this->settings['settings'] ) ) {
-			for ( $i=0; $i<=$this->settings['settings']; $i++ ) {
+			for ( $i=0; $i<$this->settings['settings']; $i++ ) {
 				$p = $i . '_';
 
 				if ( !empty( $this->settings[$p.'short'] ) ) {
@@ -72,7 +81,7 @@ class mi_aecuserdetails
 
 		$params = array();
 		if ( !empty( $this->settings['settings'] ) ) {
-			for ( $i=0; $i<=$this->settings['settings']; $i++ ) {
+			for ( $i=0; $i<$this->settings['settings']; $i++ ) {
 				$p = $i . '_';
 
 				if ( !empty( $this->settings[$p.'short'] ) ) {
