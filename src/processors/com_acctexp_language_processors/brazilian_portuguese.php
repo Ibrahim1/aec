@@ -648,6 +648,8 @@ define( '_CFG_AUTHORIZE_CIM_PROMPTADDRESS_NAME', 'Prompt for Address');
 define( '_CFG_AUTHORIZE_CIM_PROMPTADDRESS_DESC', 'Ask the user to put in an Address with the Billing Name.');
 define( '_CFG_AUTHORIZE_CIM_PROMPTZIPONLY_NAME', 'Prompt for Zip only');
 define( '_CFG_AUTHORIZE_CIM_PROMPTZIPONLY_DESC', 'Ask the user to put in a Zip code only.');
+define( '_CFG_AUTHORIZE_CIM_DEDICATEDSHIPPING_NAME', 'Dedicated Shipping Details');
+define( '_CFG_AUTHORIZE_CIM_DEDICATEDSHIPPING_DESC', 'Offer the user a dedicated shipping details form.');
 
 // ClickBank
 define( '_CFG_CLICKBANK_LONGNAME',			'ClickBank' );

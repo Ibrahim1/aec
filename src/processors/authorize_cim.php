@@ -137,7 +137,7 @@ class processor_authorize_cim extends XMLprocessor
 
 
 				if ( $post['payprofileselect'] == "new" ) {
-					$cim->createCustomerPaymentProfileRequest();
+					$cim->createCustomerPaymentProfileRequest( $this );
 
 					if ( $cim->isSuccessful() ) {
 						$profileid = $cim->substring_between( $cim->response,'<customerPaymentProfileId>','</customerPaymentProfileId>' );
@@ -149,7 +149,7 @@ class processor_authorize_cim extends XMLprocessor
 					if ( isset( $ppParams->paymentProfiles->{$post['payprofileselect']} ) ) {
 						$stored_spid = $ppParams->paymentProfiles->{$post['payprofileselect']}->profileid;
 						$cim->setParameter( 'customerPaymentProfileId', $stored_spid );
-						$cim->updateCustomerPaymentProfileRequest();
+						$cim->updateCustomerPaymentProfileRequest( $this );
 
 						if ( $cim->isSuccessful() ) {
 							$this->payProfileUpdate( $request, $post['payprofileselect'], $post, $ppParams );
@@ -157,7 +157,7 @@ class processor_authorize_cim extends XMLprocessor
 					}
 				}
 
-				$cim->updateCustomerPaymentProfileRequest();
+				$cim->updateCustomerPaymentProfileRequest( $this );
 
 				$cim->setParameter( 'customerProfileId',		$cim->customerProfileId );
 				$cim->setParameter( 'customerPaymentProfileId',	$cim->customerPaymentProfileId );
@@ -186,7 +186,7 @@ class processor_authorize_cim extends XMLprocessor
 					$stored_spid = $ppParams->shippingProfiles->{$ppParams->shippingprofileid}->profileid;
 
 					$cim->setParameter( 'customerAddressId', $stored_spid );
-					$cim->updateCustomerShippingAddressRequest();
+					$cim->updateCustomerShippingAddressRequest( $this );
 
 					if ( $cim->isSuccessful() ) {
 						$this->shipProfileUpdate( $request, $post['shipprofileselect'], $post, $ppParams );
@@ -251,7 +251,7 @@ class processor_authorize_cim extends XMLprocessor
 			}
 
 			if ( $post['shipprofileselect'] == "new" ) {
-				$cim->createCustomerShippingAddressRequest();
+				$cim->createCustomerShippingAddressRequest( $this );
 
 				if ( $cim->isSuccessful() ) {
 					$profileid = $cim->substring_between( $cim->response,'<customerAddressId>','</customerAddressId>' );
@@ -263,7 +263,7 @@ class processor_authorize_cim extends XMLprocessor
 				if ( isset( $ppParams->shippingProfiles->{$post['shipprofileselect']} ) ) {
 					$stored_spid = $ppParams->shippingProfiles->{$post['shipprofileselect']}->profileid;
 					$cim->setParameter( 'customerAddressId', $stored_spid );
-					$cim->updateCustomerShippingAddressRequest();
+					$cim->updateCustomerShippingAddressRequest( $this );
 
 					if ( $cim->isSuccessful() ) {
 						$this->shipProfileUpdate( $request, $post['shipprofileselect'], $post, $ppParams );
@@ -301,7 +301,7 @@ class processor_authorize_cim extends XMLprocessor
 		if ( $ppParams === false ) {
 			$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
 		}
-
+aecDebug($ppParams);
 		if ( empty( $cim ) ) {
 			if ( $nobill ) {
 				$cim = $this->loadCIMship( $ppParams );
@@ -377,9 +377,9 @@ class processor_authorize_cim extends XMLprocessor
 	function checkoutAction( $request )
 	{
 		global $aecConfig;
-
+aecDebug($request->metaUser->meta);
 		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
-
+aecDebug($ppParams);
 		// Actual form, with ProfileID reference numbers as options
 
 		$return = '<form action="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', true ) . '" method="post">' . "\n";
@@ -392,8 +392,10 @@ class processor_authorize_cim extends XMLprocessor
 			$var = $this->shipProfileSelect( $var, $ppParams, false, false, false );
 
 			$return .= $this->getParamsHTML( $var ) . '<br /><br />';
+		} else {
+			$cim = false;
 		}
-
+aecDebug($cim);
 		$return .= $this->getParamsHTML( $this->checkoutform( $request, $cim ) ) . '<br /><br />';
 		$return .= '<input type="hidden" name="invoice" value="' . $request->int_var['invoice'] . '" />' . "\n";
 		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
@@ -501,7 +503,7 @@ class processor_authorize_cim extends XMLprocessor
 		if ( !empty( $ppParams ) ) {
 			if ( strpos( $request->int_var['params']['cardNumber'], 'X' ) === false ) {
 				if ( $request->int_var['params']['payprofileselect'] == "new" ) {
-					$cim->createCustomerPaymentProfileRequest();
+					$cim->createCustomerPaymentProfileRequest( $this );
 
 					if ( $cim->isSuccessful() ) {
 						$profileid = $cim->substring_between( $cim->response,'<customerPaymentProfileId>','</customerPaymentProfileId>' );
@@ -514,7 +516,7 @@ class processor_authorize_cim extends XMLprocessor
 				} else {
 					$stored_ppid = $ppParams->paymentProfiles->{$request->int_var['params']['payprofileselect']}->profileid;
 					$cim->setParameter( 'customerPaymentProfileId', (int) $stored_ppid );
-					$cim->updateCustomerPaymentProfileRequest();
+					$cim->updateCustomerPaymentProfileRequest( $this );
 
 					if ( $cim->isSuccessful() ) {
 						$this->payProfileUpdate( $request, $request->int_var['params']['payprofileselect'], $request->int_var['params'], $ppParams );
@@ -525,7 +527,7 @@ class processor_authorize_cim extends XMLprocessor
 					$stored_spid = $ppParams->shippingProfiles->{$request->int_var['params']['shipprofileselect']}->profileid;
 
 					$cim->setParameter( 'customerAddressId', (int) $stored_spid );
-					$cim->updateCustomerShippingAddressRequest();
+					$cim->updateCustomerShippingAddressRequest( $this );
 
 					if ( $cim->isSuccessful() ) {
 						$this->shipProfileUpdate( $request, $request->int_var['params']['shipprofileselect'], $request->int_var['params'], $ppParams );
@@ -542,7 +544,7 @@ class processor_authorize_cim extends XMLprocessor
 				}
 			}
 		} else {
-			$cim->createCustomerProfileRequest();
+			$cim->createCustomerProfileRequest( $this );
 
 			if ( $cim->isSuccessful() ) {
 				$ppParams = $this->ProfileAdd( $request, $cim->customerProfileId );
@@ -580,7 +582,7 @@ class processor_authorize_cim extends XMLprocessor
 			$cim->setParameter( 'transactionType',		'profileTransAuthCapture' );
 			$cim->setParameter( 'transactionCardCode',	trim( $request->int_var['params']['cardVV2'] ) );
 
-			$cim->createCustomerProfileTransactionRequest();
+			$cim->createCustomerProfileTransactionRequest( $this );
 
 			if ( $cim->isSuccessful() ) {
 				$return['valid']	= true;
@@ -801,7 +803,7 @@ class processor_authorize_cim extends XMLprocessor
 		}
 
 		$cim->setParameter( 'customerProfileId', $ppParams->profileid );
-		$cim->getCustomerProfileRequest();
+		$cim->getCustomerProfileRequest( $this );
 
 		if ( $cim->isSuccessful() ) {
 			return $cim;
@@ -816,7 +818,7 @@ class processor_authorize_cim extends XMLprocessor
 
 		$cim->setParameter( 'customerProfileId', $ppParams->paymentProfiles->{$ppParams->profileid}->profileid );
 		$cim->setParameter( 'customerAddressId', $ppParams->shippingProfiles->{$ppParams->shippingprofileid}->profileid );
-		$cim->getCustomerShippingAddressRequest();
+		$cim->getCustomerShippingAddressRequest( $this );
 
 		if ( $cim->isSuccessful() ) {
 			return $cim;
@@ -853,7 +855,7 @@ class processor_authorize_cim extends XMLprocessor
 			$cim = $this->loadCIM( $ppParams );
 
 			$cim->setParameter( 'customerProfileId',		$ppParams->paymentProfiles->{$ppParams->profileid}->profileid );
-			$cim->getCustomerProfileRequest();
+			$cim->getCustomerProfileRequest( $this );
 
 			$cim->setParameter( 'customerProfileId',		$cim->customerProfileId );
 			$cim->setParameter( 'customerPaymentProfileId',	$cim->customerPaymentProfileId );
@@ -868,7 +870,7 @@ class processor_authorize_cim extends XMLprocessor
 
 			$cim->setParameter( 'transactionType',			'profileTransAuthCapture' );
 
-			$cim->createCustomerProfileTransactionRequest();
+			$cim->createCustomerProfileTransactionRequest( $this );
 
 			if ( $cim->isSuccessful() ) {
 				$invoice->pay();

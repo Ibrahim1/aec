@@ -1168,7 +1168,7 @@ class metaUserDB extends serialParamDBTable
 	}
 
 	function getProcessorParams( $processorid )
-	{
+	{aecDebug($this);aecDebug($this->processor_params);aecDebug("requesting: " . $processorid);
 		if ( isset( $this->processor_params->$processorid ) ) {
 			return $this->processor_params->$processorid;
 		} else {
@@ -6487,7 +6487,7 @@ class InvoiceFactory
 			$this->cartobject = new aecCart( $database );
 			$this->cartobject->addItem( array(), $this->plan );
 		} else {
-			$this->amount = $this->cartobject->getAmount( $this->metaUser, $this->cart );
+			$this->payment->amount = $this->cartobject->getAmount( $this->metaUser, $this->cart );
 
 			foreach ( $this->cart as $cid => $citem ) {
 				if ( $citem['obj'] !== false ) {
@@ -7480,16 +7480,16 @@ class InvoiceFactory
 			}
 
 			if ( !empty( $this->cart ) ) {
-				$this->amount = $this->cartobject->getAmount( $this->metaUser, $this->cart );
+				$this->payment->amount = $this->cartobject->getAmount( $this->metaUser, $this->cart );
 			}
 		}
 
 		// Either this is fully free, or the next term is free and this is non recurring
 		if ( !empty( $this->items ) ) {
-			if ( ( count( $this->items ) == 2 ) || ( $this->amount['amount'] == "0.00" ) ) {
+			if ( ( count( $this->items ) == 2 ) || ( $this->payment->amount['amount'] == "0.00" ) ) {
 				$min = array_shift( array_keys( $this->items ) );
 
-				if ( $this->items[$min]['terms']->checkFree() || ( $this->items[$min]['terms']->nextterm->free && !$this->recurring ) || ( $this->amount['amount'] == "0.00" ) ) {
+				if ( $this->items[$min]['terms']->checkFree() || ( $this->items[$min]['terms']->nextterm->free && !$this->recurring ) || ( $this->payment->amount['amount'] == "0.00" ) ) {
 					$this->invoice->pay();
 					return $this->thanks( $option, false, true );
 				}
@@ -8051,7 +8051,7 @@ class Invoice extends serialParamDBTable
 
 					$terms->incrementPointer( $this->counter );
 
-					$item = array( 'item' => array( 'obj' => $this->plan ), 'terms' => $terms );
+					$item = array( 'item' => array( 'obj' => $plan ), 'terms' => $terms );
 
 					if ( $this->coupons ) {
 						$cpsh = new couponsHandler( $metaUser, $InvoiceFactory, $this->coupons );

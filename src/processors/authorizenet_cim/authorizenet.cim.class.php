@@ -94,48 +94,67 @@ class AuthNetCim {
 		$this->transkey = $transkey;
 		$this->test_mode = $test_mode;
 
+		$this->path = "/xml/v1/request.api";
+
 		$subdomain = ($this->test_mode) ? 'apitest' : 'api';
-		$this->url = "https://" . $subdomain . ".authorize.net/xml/v1/request.api";
+		$this->url = "https://" . $subdomain . ".authorize.net" . $this->path;
 	}
 
-	function process($retries = 3)
+	function process( $parent=false, $retries = 3)
 	{
 		// before we make a connection, lets check if there are basic validation errors
 		if (count($this->error_messages) == 0)
 		{
-			$count = 0;
-			while ($count < $retries)
-			{
-				$ch = curl_init();
-				curl_setopt($ch, CURLOPT_URL, $this->url);
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml"));
-				curl_setopt($ch, CURLOPT_HEADER, 0);
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $this->xml);
-				curl_setopt($ch, CURLOPT_POST, 1);
-				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-				// proxy option for godaddy hosted customers (required)
-				//curl_setopt($ch, CURLOPT_PROXY,"http://proxy.shr.secureserver.net:3128");
-				$this->response = curl_exec($ch);
+			if ( !empty( $parent ) ) {
+				$this->response = $parent->transmitRequest( $this->url, $this->path, $this->xml, 443 );
+
 				$this->parseResults();
 
 				if ($this->resultCode == "Ok")
 				{
 					$this->success = true;
 					$this->error = false;
-					break;
 				}
 				else
 				{
 					$this->success = false;
 					$this->error = true;
-					break;
+				}
+			} else {
+				$count = 0;
+				while ($count < $retries)
+				{
+					$ch = curl_init();
+					curl_setopt($ch, CURLOPT_URL, $this->url);
+					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+					curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml"));
+					curl_setopt($ch, CURLOPT_HEADER, 0);
+					curl_setopt($ch, CURLOPT_POSTFIELDS, $this->xml);
+					curl_setopt($ch, CURLOPT_POST, 1);
+					curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+					// proxy option for godaddy hosted customers (required)
+					//curl_setopt($ch, CURLOPT_PROXY,"http://proxy.shr.secureserver.net:3128");
+					$this->response = curl_exec($ch);
+					$this->parseResults();
+
+					if ($this->resultCode == "Ok")
+					{
+						$this->success = true;
+						$this->error = false;
+						break;
+					}
+					else
+					{
+						$this->success = false;
+						$this->error = true;
+						break;
+					}
+
+					$count++;
 				}
 
-				$count++;
+				curl_close($ch);
 			}
-
-			curl_close($ch);
 		}
 		else
 		{
@@ -147,7 +166,7 @@ class AuthNetCim {
 
 	// This function is used to create a new customer profile along with any
 	// customer payment profiles and customer shipping addresses for the customer profile.
-	function createCustomerProfileRequest() {
+	function createCustomerProfileRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<createCustomerProfileRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -193,11 +212,11 @@ class AuthNetCim {
 		</shipToList>
 	</profile>
 	</createCustomerProfileRequest>";
-	$this->process();
+	$this->process( $parent );
 	}
 
 	// This function is used to create a new customer payment profile for an existing customer profile
-	function createCustomerPaymentProfileRequest() {
+	function createCustomerPaymentProfileRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<createCustomerPaymentProfileRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -228,11 +247,11 @@ class AuthNetCim {
 	</paymentProfile>
 	" . $this->validationMode() . "
 	</createCustomerPaymentProfileRequest>";
-	$this->process();
+	$this->process( $parent );
 	}
 
 	// This function is used to create a new customer shipping address for an existing customer profile
-	function createCustomerShippingAddressRequest() {
+	function createCustomerShippingAddressRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<createCustomerShippingAddressRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -254,11 +273,11 @@ class AuthNetCim {
 		" . $this->shipTo_faxNumber() . "
 	</address>
 	</createCustomerShippingAddressRequest>";
-	$this->process();
+	$this->process( $parent );
 	}
 
 	// This function is used to create a payment transaction from an existing customer profile
-	function createCustomerProfileTransactionRequest() {
+	function createCustomerProfileTransactionRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<createCustomerProfileTransactionRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -283,12 +302,12 @@ class AuthNetCim {
 		</" . $this->transactionType() . ">
 	</transaction>
 	</createCustomerProfileTransactionRequest>";
-	$this->process();
+	$this->process( $parent );
 	}
 
 	// This function is used to delete an existing customer profile along
 	// with all associated customer payment profiles and customer shipping addresses.
-	function deleteCustomerProfileRequest() {
+	function deleteCustomerProfileRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<deleteCustomerProfileRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -298,11 +317,11 @@ class AuthNetCim {
 	" . $this->refId() . "
 	" . $this->customerProfileId() . "
 	</deleteCustomerProfileRequest>";
-	$this->process();
+	$this->process( $parent );
 	}
 
 	// This function is used to delete a customer payment profile from an existing customer profile.
-	function deleteCustomerPaymentProfileRequest() {
+	function deleteCustomerPaymentProfileRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<deleteCustomerPaymentProfileRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -313,11 +332,11 @@ class AuthNetCim {
 	" . $this->customerProfileId() . "
 	" . $this->customerPaymentProfileId() . "
 	</deleteCustomerPaymentProfileRequest>";
-	$this->process();
+	$this->process( $parent );
 	}
 
 	// This function is used to delete a customer shipping address from an existing customer profile.
-	function deleteCustomerShippingAddressRequest() {
+	function deleteCustomerShippingAddressRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<deleteCustomerShippingAddressRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -328,12 +347,12 @@ class AuthNetCim {
 	" . $this->customerProfileId() . "
 	" . $this->customerAddressId() . "
 	</deleteCustomerShippingAddressRequest>";
-	$this->process();
+	$this->process( $parent );
 	}
 
 	// This function is used to retrieve an existing customer profile along
 	// with all the associated customer payment profiles and customer shipping addresses.
-	function getCustomerProfileRequest() {
+	function getCustomerProfileRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<getCustomerProfileRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -342,11 +361,11 @@ class AuthNetCim {
 	</merchantAuthentication>
 	" . $this->customerProfileId() . "
 	</getCustomerProfileRequest>";
-	$this->process();
+	$this->process( $parent );
 	}
 
 	// This function is used to retrieve a customer payment profile for an existing customer profile.
-	function getCustomerPaymentProfileRequest() {
+	function getCustomerPaymentProfileRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<getCustomerPaymentProfileRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -356,11 +375,11 @@ class AuthNetCim {
 	" . $this->customerProfileId() . "
 	" . $this->customerPaymentProfileId() . "
 	</getCustomerPaymentProfileRequest>";
-	$this->process();
+	$this->process( $parent );
 	}
 
 	// This function is used to retrieve a customer shipping address for an existing customer profile.
-	function getCustomerShippingAddressRequest() {
+	function getCustomerShippingAddressRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<getCustomerShippingAddressRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -370,11 +389,11 @@ class AuthNetCim {
 	" . $this->customerProfileId() . "
 	" . $this->customerAddressId() . "
 	</getCustomerShippingAddressRequest>";
-	$this->process();
+	$this->process( $parent );
 	}
 
 	// This function is used to update an existing customer profile.
-	function updateCustomerProfileRequest() {
+	function updateCustomerProfileRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<updateCustomerProfileRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -389,11 +408,11 @@ class AuthNetCim {
 		" . $this->customerProfileId() . "
 	</profile>
 	</updateCustomerProfileRequest>";
-	$this->process();
+	$this->process( $parent );
 	}
 
 	// This function is used to update a customer payment profile for an existing customer profile.
-	function updateCustomerPaymentProfileRequest() {
+	function updateCustomerPaymentProfileRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<updateCustomerPaymentProfileRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -424,11 +443,11 @@ class AuthNetCim {
 	" . $this->customerPaymentProfileId() . "
 	</paymentProfile>
 	</updateCustomerPaymentProfileRequest>";
-	$this->process();
+	$this->process( $parent );
 	}
 
 	// This function is used to update a shipping address for an existing customer profile.
-	function updateCustomerShippingAddressRequest() {
+	function updateCustomerShippingAddressRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<updateCustomerShippingAddressRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -455,7 +474,7 @@ class AuthNetCim {
 	}
 
 	// This function is used to verify an existing customer payment profile by generating a test transaction.
-	function validateCustomerPaymentProfileRequest() {
+	function validateCustomerPaymentProfileRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<validateCustomerPaymentProfileRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
