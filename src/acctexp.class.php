@@ -13031,12 +13031,12 @@ class microIntegration extends serialParamDBTable
 		}
 	}
 
-	function admin_info ( $userid )
+	function admin_info( $userid )
 	{
 		if ( method_exists( $this->mi_class, 'admin_info' ) ) {
 			return $this->mi_class->admin_info( $userid );
 		} else {
-			return $this->profile_info( $userid );
+			return null;
 		}
 	}
 
