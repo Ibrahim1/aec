@@ -1485,7 +1485,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$limit			= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
 	$limitstart		= $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
-	$orderby		= $mainframe->getUserStateFromRequest( "order{$option}", 'orderby', 'name ASC' );
+	$orderby		= $mainframe->getUserStateFromRequest( "order_subscr{$option}", 'orderby', 'name ASC' );
 	$search			= $mainframe->getUserStateFromRequest( "search{$option}", 'search', '' );
 	$search			= $database->getEscaped( trim( strtolower( $search ) ) );
 
@@ -1843,7 +1843,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$sel[] = mosHTML::makeOption( 'type ASC',			_TYPE_ASC );
 	$sel[] = mosHTML::makeOption( 'type DESC',			_TYPE_DESC );
 
-	$lists['orderNav'] = mosHTML::selectList( $sel, 'orderby', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $orderby );
+	$lists['orderNav'] = mosHTML::selectList( $sel, 'orderby_subscr', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $orderby );
 
 	// Get list of plans for filter
 	$query = 'SELECT `id`, `name`'
@@ -3845,7 +3845,7 @@ function listMicroIntegrations( $option )
 	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
 	$limitstart	= $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
-	$orderby		= $mainframe->getUserStateFromRequest( "order{$option}", 'orderby', 'ordering ASC' );
+	$orderby		= $mainframe->getUserStateFromRequest( "order_mi{$option}", 'orderby', 'ordering ASC' );
 	$search			= $mainframe->getUserStateFromRequest( "search{$option}", 'search', '' );
 	$search			= $database->getEscaped( trim( strtolower( $search ) ) );
 
@@ -3916,7 +3916,7 @@ function listMicroIntegrations( $option )
 	$sel[] = mosHTML::makeOption( 'class_name ASC',		_CLASSNAME_ASC );
 	$sel[] = mosHTML::makeOption( 'class_name DESC',	_CLASSNAME_DESC );
 
-	$lists['orderNav'] = mosHTML::selectList( $sel, 'orderby', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $orderby );
+	$lists['orderNav'] = mosHTML::selectList( $sel, 'orderby_mi', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $orderby );
 
 	// Get list of plans for filter
 	$query = 'SELECT `id`, `name`'
