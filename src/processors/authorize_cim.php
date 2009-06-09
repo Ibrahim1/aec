@@ -301,7 +301,7 @@ class processor_authorize_cim extends XMLprocessor
 		if ( $ppParams === false ) {
 			$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
 		}
-aecDebug($ppParams);
+
 		if ( empty( $cim ) ) {
 			if ( $nobill ) {
 				$cim = $this->loadCIMship( $ppParams );
@@ -377,9 +377,9 @@ aecDebug($ppParams);
 	function checkoutAction( $request )
 	{
 		global $aecConfig;
-aecDebug($request->metaUser->meta);
+
 		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
-aecDebug($ppParams);
+
 		// Actual form, with ProfileID reference numbers as options
 
 		$return = '<form action="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', true ) . '" method="post">' . "\n";
@@ -395,7 +395,7 @@ aecDebug($ppParams);
 		} else {
 			$cim = false;
 		}
-aecDebug($cim);
+
 		$return .= $this->getParamsHTML( $this->checkoutform( $request, $cim ) ) . '<br /><br />';
 		$return .= '<input type="hidden" name="invoice" value="' . $request->int_var['invoice'] . '" />' . "\n";
 		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";

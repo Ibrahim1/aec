@@ -1168,7 +1168,7 @@ class metaUserDB extends serialParamDBTable
 	}
 
 	function getProcessorParams( $processorid )
-	{aecDebug($this);aecDebug($this->processor_params);aecDebug("requesting: " . $processorid);
+	{var_dump($this->processor_params);
 		if ( isset( $this->processor_params->$processorid ) ) {
 			return $this->processor_params->$processorid;
 		} else {
