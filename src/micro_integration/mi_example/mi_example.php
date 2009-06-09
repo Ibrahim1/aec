@@ -116,11 +116,46 @@ class mi_example
 		// Trigger an action here in case the MI is deleted.
 	}
 
-	function profile_info( $userid )
+	function profile_info( $request )
 	{
 		// THIS FUNCTION IS NOT OBLIGATORY - IF YOU DON'T NEED IT, DON'T USE IT
 
 		// Return Info to the MySubscription page of this user
+	}
+
+	function profile_form( $request )
+	{
+		// THIS FUNCTION IS NOT OBLIGATORY - IF YOU DON'T NEED IT, DON'T USE IT
+
+		// Return a Form to the MySubscription page of this user
+	}
+
+	function profile_form_save( $request )
+	{
+		// THIS FUNCTION IS NOT OBLIGATORY - IF YOU DON'T NEED IT, DON'T USE IT
+
+		// Save a Form from the MySubscription page of this user
+	}
+
+	function admin_info( $request )
+	{
+		// THIS FUNCTION IS NOT OBLIGATORY - IF YOU DON'T NEED IT, DON'T USE IT
+
+		// Return Info to the Backend User Form
+	}
+
+	function admin_form( $request )
+	{
+		// THIS FUNCTION IS NOT OBLIGATORY - IF YOU DON'T NEED IT, DON'T USE IT
+
+		// Return a Form to the Backend User Form
+	}
+
+	function admin_form_save( $request )
+	{
+		// THIS FUNCTION IS NOT OBLIGATORY - IF YOU DON'T NEED IT, DON'T USE IT
+
+		// Save a Form from the Backend User Form
 	}
 
 }

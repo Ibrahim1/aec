@@ -12583,6 +12583,22 @@ class MI
 		}
 	}
 
+	function removeEvents( $request, $event )
+	{
+		global $database;
+
+		$query = 'DELETE'
+				. ' FROM #__acctexp_event'
+				. ' WHERE `userid` = \'' . $request->metaUser->userid . '\''
+				. ' AND `appid` = \'' . $this->id . '\''
+				. ' AND `event` = \'' . $event . '\''
+				. ' AND `type` = \'mi\''
+	 			. ' AND `status` = \'waiting\''
+				;
+		$database->setQuery( $query );
+		$database->query();
+	}
+
 	function issueEvent( $request, $event, $due_date, $context=array(), $params=array(), $customparams=array() )
 	{
 		global $database;
@@ -12688,6 +12704,15 @@ class microIntegration extends serialParamDBTable
 	function declareParamFields()
 	{
 		return array( 'params' );
+	}
+
+	function functionProxy( $function, $data, $default=null )
+	{
+		if ( method_exists( $this->mi_class, $function ) ) {
+			return $this->mi_class->$function( $data );
+		} else {
+			return $default;
+		}
 	}
 
 	function check()
@@ -12933,29 +12958,55 @@ class microIntegration extends serialParamDBTable
 
 	function getMIform( $plan )
 	{
-		if ( method_exists( $this->mi_class, 'getMIform' ) ) {
-			return $this->mi_class->getMIform( $plan );
-		} else {
-			return null;
-		}
+		return $this->functionProxy( 'getMIform', $plan );
 	}
 
 	function verifyMIform( $plan, $metaUser )
 	{
-		if ( method_exists( $this->mi_class, 'verifyMIform' ) ) {
-			$params	= $metaUser->meta->getMIParams( $this->id, $plan->id );
+		$params	= $metaUser->meta->getMIParams( $this->id, $plan->id );
 
-			$request = new stdClass();
-			$request->action	=	'verifyMIform';
-			$request->parent	=&	$this;
-			$request->metaUser	=&	$metaUser;
-			$request->plan		=&	$plan;
-			$request->params	=&	$params;
+		$request = new stdClass();
+		$request->action	=	'verifyMIform';
+		$request->parent	=&	$this;
+		$request->metaUser	=&	$metaUser;
+		$request->plan		=&	$plan;
+		$request->params	=&	$params;
 
-			return $this->mi_class->verifyMIform( $request );
-		} else {
-			return true;
+		return $this->functionProxy( 'verifyMIform', $request );
+	}
+
+	function getMIformParams( $plan, $errors )
+	{
+		$mi_form = $this->getMIform( $plan );
+
+		$params = array();
+		if ( !empty( $mi_form ) ) {
+			if ( !empty( $mi_form['lists'] ) ) {
+				foreach ( $mi_form['lists'] as $lname => $lcontent ) {
+					$tempname = 'mi_'.$mi->id.'_'.$lname;
+					$lists[$tempname] = str_replace( $lname, $tempname, $lcontent );
+				}
+
+				unset( $mi_form['lists'] );
+			}
+
+			$params['mi_'.$mi->id.'_remap_area'] = array( 'subarea_change', $mi->class_name );
+
+			if ( array_key_exists( $mi->id, $errors ) ) {
+				$params[] = array( 'divstart', null, null, 'confirmation_error_bg' );
+				//$params[] = array( 'h2', $errors[$mi->id] );
+			}
+
+			foreach ( $mi_form as $fname => $fcontent ) {
+				$params['mi_'.$mi->id.'_'.$fname] = $fcontent;
+			}
+
+			if ( array_key_exists( $mi->id, $errors ) ) {
+				$params[] = array( 'divend' );
+			}
 		}
+
+		return $params;
 	}
 
 	function getErrors()
@@ -13002,9 +13053,7 @@ class microIntegration extends serialParamDBTable
 			$this->callIntegration();
 		}
 
-		if ( method_exists( $this->mi_class, 'aecEventHook' ) ) {
-			return $this->mi_class->aecEventHook( $event );
-		}
+		return $this->functionProxy( 'aecEventHook', $event );
 	}
 
 	function on_userchange_action( $row, $post, $trace )
@@ -13015,29 +13064,71 @@ class microIntegration extends serialParamDBTable
 		$request->post				=& $post;
 		$request->trace				=& $trace;
 
-		if ( method_exists( $this->mi_class, 'on_userchange_action' ) ) {
-			return $this->mi_class->on_userchange_action( $request );
-		} else {
-			return null;
+		return $this->functionProxy( 'on_userchange_action', $request );
+	}
+
+	function profile_info( $metaUser )
+	{
+		$request = new stdClass();
+		$request->parent	=&	$this;
+		$request->metaUser	=&	$metaUser;
+
+		return $this->functionProxy( 'profile_info', $request );
+	}
+
+	function admin_info( $metaUser )
+	{
+		$request = new stdClass();
+		$request->parent	=&	$this;
+		$request->metaUser	=&	$metaUser;
+
+		return $this->functionProxy( 'admin_info', $request );
+	}
+
+	function profile_form( $metaUser )
+	{
+		$request = new stdClass();
+		$request->parent	=&	$this;
+		$request->metaUser	=&	$metaUser;
+		$request->params	=&	$metaUser->meta->getMIParams( $this->id );
+
+		return $this->functionProxy( 'profile_form', $request );
+	}
+
+	function admin_form( $metaUser )
+	{
+		$request = new stdClass();
+		$request->parent	=&	$this;
+		$request->metaUser	=&	$metaUser;
+		$request->params	=&	$metaUser->meta->getMIParams( $this->id );
+
+		$settings = $this->functionProxy( 'admin_form', $request );
+
+		foreach ( $settings as $k => $v ) {
+			if ( isset( $request->params[$k] ) && !isset( $v[3] ) ) {
+				$v[3] = $request->params[$k];
+			}
 		}
 	}
 
-	function profile_info( $userid )
+	function profile_form_save( $metaUser )
 	{
-		if ( method_exists( $this->mi_class, 'profile_info' ) ) {
-			return $this->mi_class->profile_info( $userid );
-		} else {
-			return null;
-		}
+		$request = new stdClass();
+		$request->parent	=&	$this;
+		$request->metaUser	=&	$metaUser;
+		$request->params	=&	$metaUser->meta->getMIParams( $this->id );
+
+		return $this->functionProxy( 'profile_form_save', $request );
 	}
 
-	function admin_info( $userid )
+	function admin_form_save( $metaUser )
 	{
-		if ( method_exists( $this->mi_class, 'admin_info' ) ) {
-			return $this->mi_class->admin_info( $userid );
-		} else {
-			return null;
-		}
+		$request = new stdClass();
+		$request->parent	=&	$this;
+		$request->metaUser	=&	$metaUser;
+		$request->params	=&	$metaUser->meta->getMIParams( $this->id );
+
+		return $this->functionProxy( 'admin_form_save', $request );
 	}
 
 	function getInfo()
@@ -13139,11 +13230,7 @@ class microIntegration extends serialParamDBTable
 		$params = $this->stripNonParams( $array );
 
 		// Check whether there is a custom function for saving params
-		if ( method_exists( $this->mi_class, 'saveparams' ) ) {
-			$new_params = $this->mi_class->saveparams( $params );
-		} else {
-			$new_params = $params;
-		}
+		$new_params = $this->functionProxy( 'saveparams', $params, $params );
 
 		$this->name				= $array['name'];
 		$this->desc				= $array['desc'];

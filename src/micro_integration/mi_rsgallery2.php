@@ -180,9 +180,6 @@ class mi_rsgallery2 extends MI
 		return true;
 	}
 
-	function profile_info( $userid )
-	{}
-
 	function createAlbum( $userid, $parentid, $name, $desc )
 	{
 		global $database;

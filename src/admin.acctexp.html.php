@@ -727,7 +727,6 @@ class HTML_AcctExp
 			<?php
 			$tabs->endTab();
 			$tabs->startTab(_AEC_HEAD_MICRO_INTEGRATION, _AEC_HEAD_MICRO_INTEGRATION);
-
 			?>
 			<div class="aec_tabheading"><h2><?php echo _AEC_HEAD_MICRO_INTEGRATION; ?>: <?php echo _AEC_HEAD_MICRO_INTEGRATION; ?></h2></div>
 			<?php if ( !empty( $mi['user'] ) ) { ?>

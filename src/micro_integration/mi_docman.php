@@ -123,11 +123,11 @@ class mi_docman
 		return $settings;
 	}
 
-	function profile_info( $userid )
+	function profile_info( $request )
 	{
 		global $database;
 		$mi_docmanhandler = new docman_restriction( $database );
-		$id = $mi_docmanhandler->getIDbyUserID( $userid );
+		$id = $mi_docmanhandler->getIDbyUserID( $request->metaUser->userid );
 
 		if ( $id ) {
 			$mi_docmanhandler->load( $id );

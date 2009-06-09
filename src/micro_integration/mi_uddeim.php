@@ -74,11 +74,11 @@ class mi_uddeim
 		return $settings;
 	}
 
-	function profile_info( $userid )
+	function profile_info( $request )
 	{
 		global $database;
 		$mi_uddeimhandler = new uddeim_restriction( $database );
-		$id = $mi_uddeimhandler->getIDbyUserID( $userid );
+		$id = $mi_uddeimhandler->getIDbyUserID( $request->metaUser->userid );
 
 		if ( $id ) {
 			$mi_uddeimhandler->load( $id );

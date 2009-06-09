@@ -47,7 +47,22 @@ class mi_example
 	function delete()
 	{}
 
-	function profile_info( $userid )
+	function profile_info( $request )
+	{}
+
+	function admin_info( $request )
+	{}
+
+	function profile_form( $request )
+	{}
+
+	function admin_form( $request )
+	{}
+
+	function profile_form_save( $request )
+	{}
+
+	function admin_form_save( $request )
 	{}
 
 }

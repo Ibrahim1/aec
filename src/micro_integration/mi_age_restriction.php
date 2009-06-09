@@ -84,6 +84,11 @@ class mi_age_restriction extends MI
 		return true;
 	}
 
+	function admin_form( $request )
+	{
+		return $this->getMIform( $request );
+	}
+
 	function aecEventHookBirthdayExpiration( $request )
 	{
 		if ( !empty( $request->metaUser->focusSubscription->id ) ) {

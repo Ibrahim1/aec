@@ -224,12 +224,12 @@ class mi_mosets_tree extends MI
 		return $hacks;
 	}
 
-	function profile_info( $userid )
+	function profile_info( $request )
 	{
 		global $database;
 
 		$mi_mosetshandler = new mosetstree( $database );
-		$id = $mi_mosetshandler->getIDbyUserID( $userid );
+		$id = $mi_mosetshandler->getIDbyUserID( $request->metaUser->userid );
 
 		if ( $id ) {
 			$mi_mosetshandler->load( $id );

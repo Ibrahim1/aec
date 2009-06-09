@@ -105,12 +105,6 @@ class mi_g2 extends MI
 		return $settings;
 	}
 
-	function pre_expiration_action( $request )
-	{}
-
-	function expiration_action( $request )
-	{}
-
 	function action( $request )
 	{
 		global $database;
@@ -170,12 +164,6 @@ class mi_g2 extends MI
 
 		return null;
 	}
-
-	function on_userchange_action( $request )
-	{}
-
-	function profile_info( $userid )
-	{}
 
 	function loadG2Embed()
 	{

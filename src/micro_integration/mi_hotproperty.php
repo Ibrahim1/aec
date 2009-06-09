@@ -374,12 +374,12 @@ class mi_hotproperty extends MI
 		return $hacks;
 	}
 
-	function profile_info( $userid )
+	function profile_info( $request )
 	{
 		global $database;
 
 		$mi_hphandler = new aec_hotproperty( $database );
-		$id = $mi_hphandler->getIDbyUserID( $userid );
+		$id = $mi_hphandler->getIDbyUserID( $request->metaUser->userid );
 
 		if ( $id ) {
 			$mi_hphandler->load( $id );
@@ -436,7 +436,7 @@ class mi_hotproperty extends MI
 		if ( $this->settings['update_company'.$area] ){
 			if ( !empty( $this->settings['update_cfields'.$area] ) ) {
 				if ( empty( $company ) ) {
-					$company = $this->companyExists( $metaUser->userid );
+					$company = $this->companyExists( $request->metaUser->userid );
 				}
 
 				if ( !empty( $company ) ) {
