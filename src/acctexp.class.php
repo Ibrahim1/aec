@@ -1167,20 +1167,10 @@ class metaUserDB extends serialParamDBTable
 
 	}
 
-	function ppFix()
-	{
-		// Bad mistake to go with an object here, so we need to correct it
-		if ( is_object( $this->processor_params ) ) {
-
-		}
-	}
-
 	function getProcessorParams( $processorid )
 	{
-		$this->ppFix();
-
-		if ( isset( $this->processor_params->$processorid ) ) {
-			return $this->processor_params->$processorid;
+		if ( isset( $this->processor_params[$processorid] ) ) {
+			return $this->processor_params[$processorid];
 		} else {
 			return false;
 		}
@@ -1190,15 +1180,15 @@ class metaUserDB extends serialParamDBTable
 	{
 		global $mosConfig_offset;
 
-		if ( !isset( $this->processor_params ) ) {
-			$this->processor_params = new stdClass();
+		if ( empty( $this->processor_params ) ) {
+			$this->processor_params = array();
 		}
 
-		if ( !is_object( $this->processor_params ) ) {
-			$this->processor_params = new stdClass();
+		if ( !is_array( $this->processor_params[$processorid] ) ) {
+			$this->processor_params[$processorid] = array();
 		}
 
-		$this->processor_params->$processorid = $params;
+		$this->processor_params[$processorid] = $params;
 
 		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
 
