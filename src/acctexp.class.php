@@ -1167,8 +1167,18 @@ class metaUserDB extends serialParamDBTable
 
 	}
 
+	function ppFix()
+	{
+		// Bad mistake to go with an object here, so we need to correct it
+		if ( is_object( $this->processor_params ) ) {
+
+		}
+	}
+
 	function getProcessorParams( $processorid )
-	{var_dump($this->processor_params);
+	{
+		$this->ppFix();
+
 		if ( isset( $this->processor_params->$processorid ) ) {
 			return $this->processor_params->$processorid;
 		} else {
@@ -5603,32 +5613,10 @@ class SubscriptionPlan extends serialParamDBTable
 					continue;
 				}
 
-				$mi_form = $mi->getMIform( $this );
+				$miform_params = $mi->getMIformParams( $this, $errors );
 
-				if ( !empty( $mi_form ) ) {
-					if ( !empty( $mi_form['lists'] ) ) {
-						foreach ( $mi_form['lists'] as $lname => $lcontent ) {
-							$tempname = 'mi_'.$mi->id.'_'.$lname;
-							$lists[$tempname] = str_replace( $lname, $tempname, $lcontent );
-						}
-
-						unset( $mi_form['lists'] );
-					}
-
-					$params['mi_'.$mi->id.'_remap_area'] = array( 'subarea_change', $mi->class_name );
-
-					if ( array_key_exists( $mi->id, $errors ) ) {
-						$params[] = array( 'divstart', null, null, 'confirmation_error_bg' );
-						//$params[] = array( 'h2', $errors[$mi->id] );
-					}
-
-					foreach ( $mi_form as $fname => $fcontent ) {
-						$params['mi_'.$mi->id.'_'.$fname] = $fcontent;
-					}
-
-					if ( array_key_exists( $mi->id, $errors ) ) {
-						$params[] = array( 'divend' );
-					}
+				foreach ( $miform_params as $pk => $pv ) {
+					$params[$pk] = $pv;
 				}
 			}
 
@@ -12583,6 +12571,34 @@ class MI
 		}
 	}
 
+	function redateUniqueEvent( $request, $event, $due_date, $context=array(), $params=array(), $customparams=array() )
+	{
+		global $database;
+
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_event'
+				. ' WHERE `userid` = \'' . $request->metaUser->userid . '\''
+				. ' AND `appid` = \'' . $this->id . '\''
+				. ' AND `event` = \'' . $event . '\''
+				. ' AND `type` = \'mi\''
+	 			. ' AND `status` = \'waiting\''
+				;
+		$database->setQuery( $query );
+		$id = $database->loadResult();
+
+		if ( $id ) {
+			$aecEvent = new aecEvent( $database );
+			$aecEvent->load( $id );
+
+			if ( $aecEvent->due_date != $due_date ) {
+				$aecEvent->due_date = $due_date;
+				$aecEvent->storeload();
+			}
+		} else {
+			return $this->issueEvent( $request, $event, $due_date, $context, $params, $customparams );
+		}
+	}
+
 	function removeEvents( $request, $event )
 	{
 		global $database;
@@ -12979,32 +12995,37 @@ class microIntegration extends serialParamDBTable
 	{
 		$mi_form = $this->getMIform( $plan );
 
-		$params = array();
+		$params	= array();
+		$lists	= array();
 		if ( !empty( $mi_form ) ) {
+			$pref = 'mi_'.$this->id.'_';
+
 			if ( !empty( $mi_form['lists'] ) ) {
 				foreach ( $mi_form['lists'] as $lname => $lcontent ) {
-					$tempname = 'mi_'.$mi->id.'_'.$lname;
+					$tempname = $pref.$lname;
 					$lists[$tempname] = str_replace( $lname, $tempname, $lcontent );
 				}
 
 				unset( $mi_form['lists'] );
 			}
 
-			$params['mi_'.$mi->id.'_remap_area'] = array( 'subarea_change', $mi->class_name );
+			$params[$pref.'remap_area'] = array( 'subarea_change', $this->class_name );
 
-			if ( array_key_exists( $mi->id, $errors ) ) {
+			if ( array_key_exists( $this->id, $errors ) ) {
 				$params[] = array( 'divstart', null, null, 'confirmation_error_bg' );
 				//$params[] = array( 'h2', $errors[$mi->id] );
 			}
 
 			foreach ( $mi_form as $fname => $fcontent ) {
-				$params['mi_'.$mi->id.'_'.$fname] = $fcontent;
+				$params[$pref.$fname] = $fcontent;
 			}
 
-			if ( array_key_exists( $mi->id, $errors ) ) {
+			if ( array_key_exists( $this->id, $errors ) ) {
 				$params[] = array( 'divend' );
 			}
 		}
+
+		$params['lists'] = $lists;
 
 		return $params;
 	}
@@ -13092,23 +13113,17 @@ class microIntegration extends serialParamDBTable
 		$request->metaUser	=&	$metaUser;
 		$request->params	=&	$metaUser->meta->getMIParams( $this->id );
 
-		return $this->functionProxy( 'profile_form', $request );
-	}
+		$settings = $this->functionProxy( 'profile_form', $request, array() );
 
-	function admin_form( $metaUser )
-	{
-		$request = new stdClass();
-		$request->parent	=&	$this;
-		$request->metaUser	=&	$metaUser;
-		$request->params	=&	$metaUser->meta->getMIParams( $this->id );
-
-		$settings = $this->functionProxy( 'admin_form', $request );
-
-		foreach ( $settings as $k => $v ) {
-			if ( isset( $request->params[$k] ) && !isset( $v[3] ) ) {
-				$v[3] = $request->params[$k];
+		if ( !empty( $settings ) ) {
+			foreach ( $settings as $k => $v ) {
+				if ( isset( $request->params[$k] ) && !isset( $v[3] ) ) {
+					$settings[$v][3] = $request->params[$k];
+				}
 			}
 		}
+
+		return $settings;
 	}
 
 	function profile_form_save( $metaUser )
@@ -13119,6 +13134,26 @@ class microIntegration extends serialParamDBTable
 		$request->params	=&	$metaUser->meta->getMIParams( $this->id );
 
 		return $this->functionProxy( 'profile_form_save', $request );
+	}
+
+	function admin_form( $metaUser )
+	{
+		$request = new stdClass();
+		$request->parent	=&	$this;
+		$request->metaUser	=&	$metaUser;
+		$request->params	=&	$metaUser->meta->getMIParams( $this->id );
+
+		$settings = $this->functionProxy( 'admin_form', $request, array() );
+
+		if ( !empty( $settings ) ) {
+			foreach ( $settings as $k => $v ) {
+				if ( isset( $request->params[$k] ) && !isset( $v[3] ) ) {
+					$settings[$k][3] = $request->params[$k];
+				}
+			}
+		}
+
+		return $settings;
 	}
 
 	function admin_form_save( $metaUser )

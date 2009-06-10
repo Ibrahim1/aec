@@ -404,7 +404,7 @@ class HTML_AcctExp
 
 	}
 
-	function userForm( $option, $metaUser, $invoices, $mi, $lists, $nexttask )
+	function userForm( $option, $metaUser, $invoices, $mi, $lists, $nexttask, $aecHTML )
 	{
 		global $mosConfig_live_site;
 
@@ -729,35 +729,65 @@ class HTML_AcctExp
 			$tabs->startTab(_AEC_HEAD_MICRO_INTEGRATION, _AEC_HEAD_MICRO_INTEGRATION);
 			?>
 			<div class="aec_tabheading"><h2><?php echo _AEC_HEAD_MICRO_INTEGRATION; ?>: <?php echo _AEC_HEAD_MICRO_INTEGRATION; ?></h2></div>
-			<?php if ( !empty( $mi['user'] ) ) { ?>
-			<table class="aecadminform">
-				<tr>
-					<td valign="top" style="padding: 10px;">
-						<?php foreach ( $mi['user'] as $mi ) { ?>
-							<div class="userinfobox">
-								<h3><?php echo $mi['name']; ?></h3>
-								<p><?php echo $mi['info']; ?></p>
-							</div>
-						<?php } ?>
-					</td>
-				</tr>
-			</table>
-			<?php } ?>
+			<?php if ( !empty( $mi['profile'] ) || !empty( $mi['profile_form'] ) ) {
+				if ( !empty( $mi['profile'] ) ) { ?>
+				<table class="aecadminform">
+					<tr>
+						<td valign="top" style="padding: 10px;">
+							<?php foreach ( $mi['profile'] as $mi ) { ?>
+									<div class="profileinfobox">
+										<h3><?php echo $mi['name']; ?></h3>
+										<p><?php echo $mi['info']; ?></p>
+									</div>
+								<?php
+							} ?>
+						</td>
+					</tr>
+				</table>
+				<?php }
+				if ( !empty( $mi['profile_form'] ) ) { ?>
+				<table class="aecadminform">
+					<tr>
+						<td valign="top" style="padding: 10px;">
+							<?php foreach ( $mi['profile_form'] as $k ) { ?>
+									<?php echo $aecHTML->createSettingsParticle( $k ); ?>
+								<?php
+							} ?>
+						</td>
+					</tr>
+				</table>
+				<?php }
+			} ?>
 			<div class="aec_tabheading"><h2><?php echo _AEC_HEAD_MICRO_INTEGRATION; ?>: <?php echo _AEC_HEAD_MICRO_INTEGRATION; ?></h2></div>
-			<?php if ( !empty( $mi['admin'] ) ) { ?>
-			<table class="aecadminform">
-				<tr>
-					<td valign="top" style="padding: 10px;">
-						<?php foreach ( $mi['admin'] as $mi ) { ?>
-							<div class="userinfobox">
-								<h3><?php echo $mi['name']; ?></h3>
-								<p><?php echo $mi['info']; ?></p>
-							</div>
-						<?php } ?>
-					</td>
-				</tr>
-			</table>
-			<?php } ?>
+			<?php if ( !empty( $mi['admin'] ) || !empty( $mi['admin_form'] ) ) {
+				if ( !empty( $mi['admin'] ) ) { ?>
+				<table class="aecadminform">
+					<tr>
+						<td valign="top" style="padding: 10px;">
+							<?php foreach ( $mi['admin'] as $mi ) { ?>
+									<div class="admininfobox">
+										<h3><?php echo $mi['name']; ?></h3>
+										<p><?php echo $mi['info']; ?></p>
+									</div>
+								<?php
+							} ?>
+						</td>
+					</tr>
+				</table>
+				<?php }
+				if ( !empty( $mi['admin_form'] ) ) { ?>
+				<table class="aecadminform">
+					<tr>
+						<td valign="top" style="padding: 10px;">
+							<?php foreach ( $mi['admin_form'] as $k ) { ?>
+									<?php echo $aecHTML->createSettingsParticle( $k ); ?>
+								<?php
+							} ?>
+						</td>
+					</tr>
+				</table>
+				<?php }
+			} ?>
 			<div class="aec_tabheading"><h2><?php echo _AEC_HEAD_MICRO_INTEGRATION; ?>: <?php echo _AEC_HEAD_MICRO_INTEGRATION; ?></h2></div>
 			<table class="aecadminform">
 				<tr>

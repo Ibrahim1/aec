@@ -1116,22 +1116,52 @@ function editUser(  $option, $userid, $subscriptionid, $task )
 
 	$userMIs = $metaUser->getUserMIs();
 
-	$mi['user'] = array();
-	$mi['admin'] = array();
-	foreach ( $userMIs as $m ) {
-		$ai = $m->admin_info( $metaUser->userid );
-		$ui = $m->profile_info( $metaUser->userid );
+	$mi['profile']		= array();
+	$mi['admin']		= array();
+	$mi['profile_form']	= array();
+	$mi['admin_form']	= array();
 
+	foreach ( $userMIs as $m ) {
+		$pref = 'mi_'.$m->id.'_';
+
+		$ui = $m->profile_info( $metaUser );
+		if ( !empty( $ui ) ) {
+			$mi['profile'][] = array( 'name' => $m->info['name'] . ' - ' . $m->name, 'info' => $ui );
+		}
+
+		$uf = $m->profile_form( $metaUser );
+		if ( !empty( $uf ) ) {
+			foreach ( $uf as $k => $v ) {
+				$mi['profile_form'][] = $pref.$k;
+				$params[$pref.$k] = $v;
+			}
+		}
+
+		$ai = $m->admin_info( $metaUser );
 		if ( !empty( $ai ) ) {
 			$mi['admin'][] = array( 'name' => $m->info['name'] . ' - ' . $m->name, 'info' => $ai );
 		}
 
-		if ( !empty( $ui ) ) {
-			$mi['user'][] = array( 'name' => $m->info['name'] . ' - ' . $m->name, 'info' => $ui );
+		$af = $m->admin_form( $metaUser );
+		if ( !empty( $af ) ) {
+			foreach ( $af as $k => $v ) {
+				$mi['admin_form'][] = $pref.$k;
+				$params[$pref.$k] = $v;
+			}
 		}
 	}
 
-	HTML_AcctExp::userForm( $option, $metaUser, $invoices, $mi, $lists, $task );
+	if ( !empty( $params ) ) {
+		$settings = new aecSettings ( 'userForm', 'mi' );
+		$settings->fullSettingsArray( $params, array(), $lists ) ;
+
+		// Call HTML Class
+		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+	} else {
+		$aecHTML = false;
+	}
+
+	HTML_AcctExp::userForm( $option, $metaUser, $invoices, $mi, $lists, $task, $aecHTML );
 }
 
 function saveUser( $option, $apply=0 )
@@ -1205,6 +1235,46 @@ function saveUser( $option, $apply=0 )
 
 	if ( !empty( $_POST['notes'] ) ) {
 		$metaUser->focusSubscription->customparams['notes'] = $_POST['notes'];
+	}
+
+	$userMIs = $metaUser->getUserMIs();
+
+	if ( !empty( $userMIs ) ) {
+		foreach ( $userMIs as $m ) {
+			$params = array();
+
+			$pref = 'mi_'.$m->id.'_';
+
+			$uf = $m->profile_form( $metaUser );
+			if ( !empty( $uf ) ) {
+				foreach ( $uf as $k => $v ) {
+					if ( isset( $_POST[$pref.$k] ) ) {
+						$params[$k] = $_POST[$pref.$k];
+					}
+				}
+
+				$m->profile_form_save( $metaUser );
+			}
+
+			$af = $m->admin_form( $metaUser );
+			if ( !empty( $af ) ) {
+				foreach ( $af as $k => $v ) {
+					if ( isset( $_POST[$pref.$k] ) ) {
+						$params[$k] = $_POST[$pref.$k];
+					}
+				}
+
+				$m->admin_form_save( $metaUser );
+			}
+
+			if ( empty( $params ) ) {
+				continue;
+			}
+
+			$metaUser->meta->setMIParams( $m->id, null, $params, true );
+		}
+
+		$metaUser->meta->storeload();
 	}
 
 	if ( $metaUser->hasSubscription || $established ) {

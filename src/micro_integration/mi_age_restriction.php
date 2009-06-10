@@ -89,6 +89,19 @@ class mi_age_restriction extends MI
 		return $this->getMIform( $request );
 	}
 
+	function admin_form_save( $request )
+	{
+		if ( !empty( $this->settings['max_age'] ) ) {
+			$age = $this->getAge( $request->params['birthday'] );
+
+			$due_date = strtotime( "+" . $this->settings['max_age'] . " years", strtotime( $request->params['birthday'] ) );
+
+			$event_id = $this->redateUniqueEvent( $request, 'BirthdayExpiration', date( 'Y-m-d H:i:s', $due_date ) );
+		}
+
+		return true;
+	}
+
 	function aecEventHookBirthdayExpiration( $request )
 	{
 		if ( !empty( $request->metaUser->focusSubscription->id ) ) {
