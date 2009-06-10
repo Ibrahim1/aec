@@ -6619,7 +6619,7 @@ class InvoiceFactory
 		if ( isset( $this->metaUser ) ) {
 			if ( is_object( $this->metaUser ) && !$force ) {
 				if ( !isset( $this->metaUser->_incomplete ) ) {
-					return false;
+					return true;
 				}
 			}
 		}
@@ -6632,7 +6632,7 @@ class InvoiceFactory
 			$this->metaUser->cmsUser = new stdClass();
 			$this->metaUser->cmsUser->gid = 29;
 
-			if ( is_array( $this->passthrough ) && !empty( $this->passthrough ) ) {
+			if ( is_array( $this->passthrough ) && !empty( $this->passthrough ) && !empty( $this->passthrough['username'] ) ) {
 				$cpass = $this->passthrough;
 				unset( $cpass['id'] );
 
@@ -6640,10 +6640,10 @@ class InvoiceFactory
 
 				// Create dummy CMS user
 				foreach( $cmsfields as $cmsfield ) {
-					foreach ( $cpass as $id => $array ) {
-						if ( $array[0] == $cmsfield ) {
-							$this->metaUser->cmsUser->$cmsfield = $array[1];
-							unset( $cpass[$id] );
+					foreach ( $cpass as $k => $v ) {
+						if ( $k == $cmsfield ) {
+							$this->metaUser->cmsUser->$cmsfield = $v;
+							unset( $cpass[$k] );
 						}
 					}
 				}
@@ -7054,10 +7054,8 @@ class InvoiceFactory
 		} else {
 			// Reset $register if we seem to have all data
 			// TODO: find better solution for this
-			if ( $register && isset( $this->passthrough['username'] ) ) {
+			if ( $register && !empty( $this->passthrough['username'] ) ) {
 				$register = 0;
-			} else {
-
 			}
 
 			$mainframe->SetPageTitle( _PAYPLANS_HEADER );
@@ -13909,8 +13907,8 @@ class couponHandler
 			}
 
 			// Check for max reuse
-			if ( $this->restrictions['has_max_reuse'] ) {
-				if ( $this->restrictions['max_reuse'] ) {
+			if ( !empty( $this->restrictions['has_max_reuse'] ) ) {
+				if ( !empty( $this->restrictions['max_reuse'] ) ) {
 					// Error: Max Reuse of this coupon is exceeded
 					if ( (int) $this->coupon->usecount > (int) $this->restrictions['max_reuse'] ) {
 						$this->setError( _COUPON_ERROR_MAX_REUSE );
@@ -14116,12 +14114,8 @@ class couponHandler
 		if ( $this->discount['useon_trial'] && !$this->discount['useon_full'] && is_object( $terms ) ) {
 			$permissions['trial_only'] = false;
 
-			foreach ( $terms->terms as $tid => $term ) {
-				if ( $terms->type == 'trial' ) {
-					if ( $tid > $terms->pointer ) {
-						$permissions['trial_only'] = true;
-					}
-				}
+			if ( $terms->nextterm->type == 'trial' ) {
+				$permissions['trial_only'] = true;
 			}
 		}
 
@@ -14131,7 +14125,8 @@ class couponHandler
 
 			if ( $used == false ) {
 				$permissions['max_peruser_reuse'] = true;
-			} elseif ( (int) $used  < (int) $this->restrictions['max_peruser_reuse'] ) {
+			} elseif ( (int) $used  <= (int) $this->restrictions['max_peruser_reuse'] ) {
+				// use count was set immediately before, so <= is accurate
 				$permissions['max_peruser_reuse'] = true;
 			} else {
 				$permissions['max_peruser_reuse'] = false;

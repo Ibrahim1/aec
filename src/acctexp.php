@@ -582,7 +582,7 @@ function subscribe( $option )
 					}
 				}
 
-				$passthrough = $_POST;
+				$passthrough = $passafter;
 			} else {
 				$passthrough = false;
 			}
