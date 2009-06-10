@@ -7218,26 +7218,6 @@ class InvoiceFactory
 	{
 		global $database, $mainframe, $task;
 
-		if ( isset( $var['aec_passthrough'] ) ) {
-			if ( is_array( $var['aec_passthrough'] ) ) {
-				$this->passthrough = $var['aec_passthrough'];
-			} else {
-				$this->passthrough = unserialize( base64_decode( $var['aec_passthrough'] ) );
-			}
-
-			unset( $var['aec_passthrough'] );
-		} else {
-			$this->passthrough = $var;
-		}
-
-		if ( $this->usage == '' ) {
-			$this->usage = $var['usage'];
-		}
-
-		if ( $this->processor == '' ) {
-			$this->processor = $var['processor'];
-		}
-
 		$this->confirmed = 1;
 
 		if ( !empty( $this->usage ) ) {
@@ -7329,7 +7309,7 @@ class InvoiceFactory
 					}
 					if ( !empty( $this->mi_error ) ) {
 						$this->confirmed = 0;
-						return $this->confirm( $option, $var, null );
+						return $this->confirm( $option );
 					}
 				}
 
@@ -10778,8 +10758,10 @@ class reWriteEngine
 					}
 				}
 			} else {
-				$this->rewrite['user_activationcode']			= $this->data['metaUser']->cmsUser->activation;
-				$this->rewrite['user_activationlink']			= $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+				if ( isset( $this->data['metaUser']->cmsUser->activation ) ) {
+					$this->rewrite['user_activationcode']			= $this->data['metaUser']->cmsUser->activation;
+					$this->rewrite['user_activationlink']			= $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+				}
 			}
 
 			if ( $this->data['metaUser']->hasSubscription ) {
@@ -10795,7 +10777,7 @@ class reWriteEngine
 				$this->rewrite['subscription_expiration_date_backend']	= strftime( $aecConfig->cfg['display_date_backend'], strtotime( $this->data['metaUser']->focusSubscription->expiration ) );
 			}
 
-			if ( is_null( $this->data['invoice'] ) ) {
+			if ( is_null( $this->data['invoice'] ) && !empty( $this->data['metaUser']->cmsUser->id ) ) {
 				$lastinvoice = AECfetchfromDB::lastClearedInvoiceIDbyUserID( $this->data['metaUser']->cmsUser->id );
 
 				$this->data['invoice'] = new Invoice( $database );

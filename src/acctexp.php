@@ -400,6 +400,8 @@ function pending( $option, $userid )
 {
 	global $database, $mainframe;
 
+	$reason = "";
+
 	if ( $userid > 0 ) {
 		$objUser = new mosUser( $database );
 		$objUser->load( $userid );
