@@ -13,6 +13,15 @@
 
 class mi_aecuserdetails
 {
+	function Info()
+	{
+		$info = array();
+		$info['name'] = _AEC_MI_NAME_AECUSERDETAILS;
+		$info['desc'] = _AEC_MI_DESC_AECUSERDETAILS;
+
+		return $info;
+	}
+
 	function Settings()
 	{
 		global $database;
@@ -21,7 +30,7 @@ class mi_aecuserdetails
 		$settings['lists']		= array();
 		$settings['settings']	= array( 'inputB' );
 
-		$types = array( "inputA", "inputB", "inputC", "inputD" );
+		$types = array( "inputA", "inputB", "inputC", "inputD", "checkbox" );
 
  		$typelist = array();
  		foreach ( $types as $type ) {
