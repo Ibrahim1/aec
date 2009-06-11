@@ -20,7 +20,7 @@ class processor_authorize_arb extends XMLprocessor
 		$info['longname'] = _CFG_AUTHORIZE_ARB_LONGNAME;
 		$info['statement'] = _CFG_AUTHORIZE_ARB_STATEMENT;
 		$info['description'] = _CFG_AUTHORIZE_ARB_DESCRIPTION;
-		$info['currencies'] = AECToolbox::getISO4271_codes();
+		$info['currencies'] = AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring'] = 1;
 		$info['actions'] = array('cancel');

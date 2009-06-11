@@ -20,7 +20,7 @@ class processor_worldpay_futurepay extends POSTprocessor
 		$info['longname']			= _CFG_WORLDPAY_FUTUREPAY_LONGNAME;
 		$info['statement']			= _CFG_WORLDPAY_FUTUREPAY_STATEMENT;
 		$info['description']		= _CFG_WORLDPAY_FUTUREPAY_DESCRIPTION;
-		$info['currencies']			= AECToolbox::getISO4271_codes();;
+		$info['currencies']			= AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list']			= 'visa,mastercard,discover,americanexpress,echeck,giropay';
 		$info['recurring']			= 0;
 

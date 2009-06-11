@@ -20,7 +20,7 @@ class processor_authorize extends POSTprocessor
 		$info['longname'] = "Authorize.net";
 		$info['statement'] = "Make payments with Authorize.net!";
 		$info['description'] = _DESCRIPTION_AUTHORIZE;
-		$info['currencies'] = AECToolbox::getISO4271_codes();
+		$info['currencies'] = AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring'] = 0;
 		$info['notify_trail_thanks'] = 1;

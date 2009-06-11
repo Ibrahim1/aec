@@ -22,7 +22,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		$info['longname']		= _CFG_AUTHORIZE_CIM_LONGNAME;
 		$info['statement']		= _CFG_AUTHORIZE_CIM_STATEMENT;
 		$info['description']	= _CFG_AUTHORIZE_CIM_DESCRIPTION;
-		$info['currencies']		= AECToolbox::getISO4271_codes();
+		$info['currencies']		= AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list']		= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring']		= 2;
 		$info['actions']		= array('cancel');

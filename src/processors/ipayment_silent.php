@@ -20,7 +20,7 @@ class processor_ipayment_silent extends XMLprocessor
 		$info['longname'] = _CFG_IPAYMENT_SILENT_LONGNAME;
 		$info['statement'] = _CFG_IPAYMENT_SILENT_STATEMENT;
 		$info['description'] = _CFG_IPAYMENT_SILENT_DESCRIPTION;
-		$info['currencies'] = AECToolbox::getISO4271_codes();
+		$info['currencies'] = AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['secure'] = 1;
 		$info['recurring']				= 0;

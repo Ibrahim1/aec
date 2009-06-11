@@ -5,7 +5,7 @@ class processor_suncorp_migs_vpc extends POSTprocessor
 	function info()
 	{
 		$info = array();
-		$info['name']					= "MIGS";
+		$info['name']					= "suncorp_migs_vpc";
 		$info['longname']				= "MIGS";
 		$info['statement']				= "Suncorp VPC MIGS";
 		$info['description']			= 'Suncorp VPC MIGS';

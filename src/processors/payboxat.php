@@ -11,24 +11,19 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_payboxat extends XMLprocessor
+class processor_payboxat extends SOAPprocessor
 {
 	function info()
 	{
 		$info = array();
-		$info['name'] = 'payboxat';
-		$info['longname'] = _CFG_PAYBOXAT_LONGNAME;
-		$info['statement'] = _CFG_PAYBOXAT_STATEMENT;
-		$info['description'] = _CFG_PAYBOXAT_DESCRIPTION;
-		$info['currencies'] = 'AFA,DZD,ADP,ARS,AMD,AWG,AUD,AZM,BSD,BHD,THB,PAB,BBD,BYB,BEF,BZD,BMD,VEB,BOB,BRL,BND,BGN,BIF,CAD,CVE,KYD,GHC,XOF,XAF,XPF,CLP,COP,KMF,BAM,NIO,CRC,CUP,CYP,CZK,GMD,'.
-								'DKK,MKD,DEM,AED,DJF,STD,DOP,VND,GRD,XCD,EGP,SVC,ETB,EUR,FKP,FJD,HUF,CDF,FRF,GIP,XAU,HTG,PYG,GNF,GWP,GYD,HKD,UAH,ISK,INR,IRR,IQD,IEP,ITL,JMD,JOD,KES,PGK,LAK,EEK,'.
-								'HRK,KWD,MWK,ZMK,AOR,MMK,GEL,LVL,LBP,ALL,HNL,SLL,ROL,BGL,LRD,LYD,SZL,LTL,LSL,LUF,MGF,MYR,MTL,TMM,FIM,MUR,MZM,MXN,MXV,MDL,MAD,BOV,NGN,ERN,NAD,NPR,ANG,NLG,YUM,ILS,'.
-								'AON,TWD,ZRN,NZD,BTN,KPW,NOK,PEN,MRO,TOP,PKR,XPD,MOP,UYU,PHP,XPT,PTE,GBP,BWP,QAR,GTQ,ZAL,ZAR,OMR,KHR,MVR,IDR,RUB,RUR,RWF,SAR,ATS,SCR,XAG,SGD,SKK,SBD,KGS,SOS,ESP,'.
-								'LKR,SHP,ECS,SDD,SRG,SEK,CHF,SYP,TJR,BDT,WST,TZS,KZT,TPE,SIT,TTD,MNT,TND,TRL,UGX,ECV,CLF,USN,USS,USD,UZS,VUV,KRW,YER,JPY,CNY,ZWD,PLN';
-		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
-		$info['recurring'] = 0;
-		$info['actions'] = array('cancel');
-		$info['secure'] = 1;
+		$info['name'] 			= 'payboxat';
+		$info['longname']	 	= _CFG_PAYBOXAT_LONGNAME;
+		$info['statement']		= _CFG_PAYBOXAT_STATEMENT;
+		$info['description']	= _CFG_PAYBOXAT_DESCRIPTION;
+		$info['currencies']		= AECToolbox::getISO4271_codes();
+		$info['languages']		= AECToolbox::aecCurrencyField( true, true, true, true );
+		$info['cc_list'] 		= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
+		$info['recurring'] 		= 0;
 
 		return $info;
 	}
@@ -36,13 +31,11 @@ class processor_payboxat extends XMLprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['login']				= "login";
-		$settings['transaction_key']	= "transaction_key";
 		$settings['testmode']			= 0;
-		$settings['dumpmode']			= 0;
+		$settings['username']			= "your_username";
+		$settings['password']			= "your_password";
+		$settings['merchant_phone']		= "your_phone_number";
 		$settings['currency']			= "USD";
-		$settings['promptAddress']		= 0;
-		$settings['promptZipOnly']		= 0;
 		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']		= '';
 
@@ -53,12 +46,9 @@ class processor_payboxat extends XMLprocessor
 	{
 		$settings = array();
 		$settings['testmode']			= array( "list_yesno" );
-		$settings['dumpmode']			= array( "list_yesno" );
 		$settings['login'] 				= array( "inputC" );
 		$settings['transaction_key']	= array( "inputC" );
 		$settings['currency']			= array( "list_currency" );
-		$settings['promptAddress']		= array( "list_yesno" );
-		$settings['promptZipOnly']		= array( "list_yesno" );
 		$settings['item_name']			= array( "inputE" );
 		$settings['customparams']		= array( 'inputD' );
 
@@ -69,32 +59,7 @@ class processor_payboxat extends XMLprocessor
 
 	function checkoutform( $request )
 	{
-		global $mosConfig_live_site;
-
-		$var = $this->getCCform( array(), array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ) );
-
-		// Explode Name
-		$namearray		= explode( " ", $request->metaUser->cmsUser->name );
-		$firstfirstname	= $namearray[0];
-		$maxname		= count($namearray) - 1;
-		$lastname		= $namearray[$maxname];
-
-		$var['params']['billFirstName'] = array( 'inputC', _AEC_PAYBOXAT_PARAMS_BILLFIRSTNAME_NAME, _AEC_PAYBOXAT_PARAMS_BILLFIRSTNAME_NAME, $firstfirstname );
-		$var['params']['billLastName'] = array( 'inputC', _AEC_PAYBOXAT_PARAMS_BILLLASTNAME_NAME, _AEC_PAYBOXAT_PARAMS_BILLLASTNAME_NAME, $lastname );
-
-		if ( !empty( $this->settings['promptAddress'] ) || !empty( $this->settings['promptZipOnly'] ) ) {
-			if ( empty( $this->settings['promptZipOnly'] ) ) {
-				$var['params']['billAddress'] = array( 'inputC', _AEC_PAYBOXAT_PARAMS_BILLADDRESS_NAME );
-				$var['params']['billCity'] = array( 'inputC', _AEC_PAYBOXAT_PARAMS_BILLCITY_NAME );
-				$var['params']['billState'] = array( 'inputC', _AEC_PAYBOXAT_PARAMS_BILLSTATE_NAME );
-			}
-
-			$var['params']['billZip'] = array( 'inputC', _AEC_PAYBOXAT_PARAMS_BILLZIP_NAME );
-
-			if ( empty( $this->settings['promptZipOnly'] ) ) {
-				$var['params']['billCountry'] = array( 'inputC', _AEC_PAYBOXAT_PARAMS_BILLCOUNTRY_NAME );
-			}
-		}
+		$var = $this->getUserform( array(), array( 'phone' ) );
 
 		return $var;
 	}
@@ -105,125 +70,39 @@ class processor_payboxat extends XMLprocessor
 
 		$a = array();
 
-		$a['x_login']			= trim( substr( $this->settings['login'], 0, 25 ) );
-		$a['x_version']			= "3.1";
-		$a['x_delim_char']		= "|";
-		$a['x_delim_data']		= "TRUE";
-		$a['x_url']				= "FALSE";
-		$a['x_type']			= "AUTH_CAPTURE";
-		$a['x_method']			= "CC";
-		$a['x_tran_key']		= $this->settings['transaction_key'];
-		$a['x_currency_code']	= $this->settings['currency'];
-		$a['x_relay_response']	= "FALSE";
-		$a['x_card_num']		= trim( $request->int_var['params']['cardNumber'] );
-		$a['x_exp_date']		= str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ) . $request->int_var['params']['expirationYear'];
-		$a['x_card_code']		= trim( $request->int_var['params']['cardVV2'] );
-
-		if ( !empty( $request->cart ) ) {
-			$sid = 0;
-			foreach ( $request->cart as $ciid => $ci ) {
-				if ( !empty( $ci['is_total'] ) ) {
-					continue;
-				}
-
-				$lineitems = array();
-
-				// Item ID<|>
-				$lineitems[] = 'item'.substr( $sid, 0, 31 );
-				// <|>item name<|>
-				$lineitems[] = substr( $ci['name'], 0, 31 );
-				// <|>item description<|>
-				$lineitems[] = empty($ci['desc']) ? substr( $ci['name'], 0, 31 ) : substr( $ci['desc'], 0, 255);
-				// <|>itemX quantity<|>
-				$lineitems[] = $ci['count'];
-				// <|>item price (unit cost)<|>
-				$lineitems[] = $ci['cost'];
-				// <|>itemX taxable<|>
-				$lineitems[] = 0;
-
-				$sid++;
-
-				// TODO: trailing colon required? . '|'
-				$a['x_line_item'][] = implode( '<|>', $lineitems );
-			}
-		}
-
-		$a['x_description']		= trim( substr( AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ), 0, 20 ) );
-		$a['x_invoice_num']		= $request->int_var['invoice'];
-
-		if ( is_array( $request->int_var['amount'] ) ) {
-			$a['x_amount']			= $request->int_var['amount']['amount'];
-		} else {
-			$a['x_amount']			= $request->int_var['amount'];
-		}
-
-		$a['x_first_name']		= trim( $request->int_var['params']['billFirstName'] );
-		$a['x_last_name']		= trim( $request->int_var['params']['billLastName'] );
-
-		if ( isset( $request->int_var['params']['billZip'] ) ) {
-			if ( isset( $request->int_var['params']['billAddress'] ) ) {
-				$a['x_address']		= trim( $request->int_var['params']['billAddress'] );
-				$a['x_city']		= trim( $request->int_var['params']['billCity'] );
-				$a['x_state']		= trim( $request->int_var['params']['billState'] );
-			}
-
-			$a['x_zip']			= trim( $request->int_var['params']['billZip'] );
-
-			if ( isset( $request->int_var['params']['billAddress'] ) ) {
-				$a['x_country']			= trim( $request->int_var['params']['billCountry'] );
-			}
-		}
-
-		if ( $this->settings['testmode'] ) {
-			$a['x_test_request']		= "TRUE";
-		}
+		$a['language']		= $this->settings['language'];
+		$a['isTest']		= $this->settings['testmode'];
+		$a['payer']			= "|";
+		$a['payee']			= "TRUE";
+		$a['caller']		= "FALSE";
+		$a['amount']		= "AUTH_CAPTURE";
+		$a['currency']		= "CC";
+		$a['paymentDays']	= $this->settings['transaction_key'];
+		$a['timestamp']		= $this->settings['transaction_key'];
+		$a['posId']			= $this->settings['currency'];
+		$a['traceNo']		= "FALSE";
+		$a['orderId']		= trim( $request->int_var['params']['cardNumber'] );
+		$a['text']			= str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ) . $request->int_var['params']['expirationYear'];
+		$a['sessionId']		= trim( $request->int_var['params']['cardVV2'] );
 
 		$a = $this->customParams( $this->settings['customparams'], $a, $request );
 
-		$stringarray = array();
-		foreach ( $a as $name => $value ) {
-			if ( is_array( $value ) ) {
-				foreach ( $value as $v ) {
-					$stringarray[] = $name . '=' . urlencode( stripslashes( $v ) );
-				}
-			} else {
-				$stringarray[] = $name . '=' . urlencode( stripslashes( $value ) );
-			}
-		}
-
-		$string = implode( '&', $stringarray );
-
-		return $string;
+		return $a;
 	}
 
-	function transmitRequestXML( $xml, $request )
+	function transmitRequestXML( $content, $request )
 	{
-		$path = "/gateway/transact.dll";
+		$path = "/gw-tx/services/PayboxServices";
 
-		if ( !empty( $this->settings['dumpmode'] ) ) {
-			$path = "/tools/datavalidation";
-			$url = "http://developer.authorize.net" . $path;
-		} elseif ( $this->settings['testmode'] ) {
-			$url = "https://test.authorize.net" . $path;
-		} else {
-			$url = "https://secure.authorize.net" . $path;
-		}
+		$url = "https://" . $this->settings['username'] . ":" . $this->settings['password'] . "@www.paybox.at" . $path;
 
-		$response = $this->transmitRequest( $url, $path, $xml, 443 );
+		$headers = '<credentials>'
+					. '<username>' . $this->settings['username'] . '</username>'
+					. '<password>' . $this->settings['password'] . '</password>'
+					. '</credentials>';
 
-		if ( !empty( $this->settings['dumpmode'] ) ) {
-			echo "<h1>Request:</h1>";
-			echo "<pre>";
-			echo print_r($request);
-			echo "</pre>";
-			echo "<h1>We send:</h1>";
-			echo "<pre>";
-			echo urldecode(str_replace( "&", "\n", $xml ));
-			echo "</pre>";
-			echo "<h1>Authorize.net reponds:</h1>";
-			echo $response;
-			exit;
-		}
+		$response = $this->transmitRequest( $url, $path, 'payment', $content, $headers );
+
 
 		$return['valid'] = false;
 		$return['raw'] = $response;
