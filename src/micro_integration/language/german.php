@@ -243,7 +243,7 @@ define( '_MI_MI_DISPLAYPIPELINE_TEXT_DESC',				'Text that is displayed to the us
 
 // GoogleAnalytics
 define( '_AEC_MI_NAME_GOOGLEANALYTICS',		'Google Analytics' );
-define( '_AEC_MI_DESC_GOOGLEANALYTICS',		'With this, you can attach Google Analytics e-commerce tracking code to the DisplayPipeline. [Experimental - please give feedback to the developers!]' );
+define( '_AEC_MI_DESC_GOOGLEANALYTICS',		'With this, you can attach Google Analytics e-commerce tracking code to the DisplayPipeline.' );
 define( '_MI_MI_GOOGLEANALYTICS_ACCOUNT_ID_NAME',		'Google Account ID' );
 define( '_MI_MI_GOOGLEANALYTICS_ACCOUNT_ID_DESC',		'Your Google Account id, it should look like this: UA-xxxx-x' );
 
@@ -806,5 +806,19 @@ define( '_MI_MI_AECUSERDETAILS_SET_TYPE_NAME',	'#%s: Type' );
 define( '_MI_MI_AECUSERDETAILS_SET_TYPE_DESC',	'Type of Input' );
 define( '_MI_MI_AECUSERDETAILS_SET_DEFAULT_NAME',			'#%s: Default' );
 define( '_MI_MI_AECUSERDETAILS_SET_DEFAULT_DESC',			'An automatically provided value - may be left blank.' );
+
+// Google Adsense Conversion
+define( '_AEC_MI_NAME_GOOGLEADSENSECONVERSION',		'Google Adsense Conversion' );
+define( '_AEC_MI_DESC_GOOGLEADSENSECONVERSION',		'With this, you can attach Google Adsense Conversion tracking code to the DisplayPipeline.' );
+define( '_MI_MI_GOOGLEADSENSECONVERSION_CONVERSION_ID_NAME',		'Conversion ID' );
+define( '_MI_MI_GOOGLEADSENSECONVERSION_CONVERSION_ID_DESC',		'The Conversion ID you want to use' );
+define( '_MI_MI_GOOGLEADSENSECONVERSION_LANGUAGE_NAME',		'Language' );
+define( '_MI_MI_GOOGLEADSENSECONVERSION_LANGUAGE_DESC',		'The language you want to use' );
+define( '_MI_MI_GOOGLEADSENSECONVERSION_FORMAT_NAME',		'Format' );
+define( '_MI_MI_GOOGLEADSENSECONVERSION_FORMAT_DESC',		'The format you want to use' );
+define( '_MI_MI_GOOGLEADSENSECONVERSION_COLOR_NAME',		'Color' );
+define( '_MI_MI_GOOGLEADSENSECONVERSION_COLOR_DESC',		'The color you want to use' );
+define( '_MI_MI_GOOGLEADSENSECONVERSION_LABEL_NAME',		'Label' );
+define( '_MI_MI_GOOGLEADSENSECONVERSION_LABEL_DESC',		'The label you want to use' );
 
 ?>
