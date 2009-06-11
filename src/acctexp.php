@@ -271,7 +271,7 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'planaction':
-			$action	= aecGetParam( 'action', 0, true, array( 'word', 'int' ) );
+			$action	= aecGetParam( 'action', 0, true, array( 'word', 'string' ) );
 			$subscr	= aecGetParam( 'subscr', '', true, array( 'word', 'int' ) );
 
 			planaction( $option, $action, $subscr );

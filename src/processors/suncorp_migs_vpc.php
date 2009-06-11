@@ -26,7 +26,6 @@ class processor_suncorp_migs_vpc extends POSTprocessor
 		$settings['vpc_SecureHash']		= "80DB29544054DF49F75F1DAAD4E7A07D";
 		$settings['vpc_OrderInfo']		= "VPC test";
 		$settings['testmode']			= 0;
-		$settings['vpc_MerchTxnRef']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['vpc_TicketNo']		= "xxx";
 		$settings['customparams']		= "";
 
@@ -44,7 +43,6 @@ class processor_suncorp_migs_vpc extends POSTprocessor
 		$settings['vpc_ReturnURL']		= array( "inputC" );
 		$settings['vpc_SecureHash']		= array( "inputC" );
 		$settings['vpc_TicketNo']		= array( "inputC" );
-		$settings['vpc_MerchTxnRef']	= array( "inputE" );
 		$settings['customparams']		= array( 'inputD' );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
@@ -64,7 +62,7 @@ class processor_suncorp_migs_vpc extends POSTprocessor
 		$var['vpc_Version']		= $this->settings['vpc_Version'];
 		$var['vpc_Command']		= $this->settings['vpc_Command'];
 		$var['vpc_AccessCode']	= $this->settings['vpc_AccessCode'];
-		$var['vpc_MerchTxnRef']	= AECToolbox::rewriteEngine( $this->settings['vpc_MerchTxnRef'], $request->metaUser, $request->new_subscription, $request->invoice );
+		$var['vpc_MerchTxnRef']	= $request->int_var['invoice'];
 		$var['vpc_Merchant']	= $this->settings['vpc_Merchant'];
 		$var['vpc_OrderInfo']	= $this->settings['vpc_OrderInfo'];
 		$var['vpc_Amount']		= ($request->int_var['amount'])*100;
@@ -75,14 +73,56 @@ class processor_suncorp_migs_vpc extends POSTprocessor
 		return $var;
 	}
 
+/**
+ * 350     2009-06-08 09:03:46     star     Error     Failed Invoice Payment     invoice, processor, payment, error     Processor migs notification for has failed - invoice number does not exist:     invoice_number()
+ * 349     2009-06-08 09:03:46     star     Error     debug     debug     "POST:[]"     None
+ * 348     2009-06-08 09:03:46     star     Error     debug     debug
+ * "GET:{
+ * "option":"com_acctexp",
+ * "task":"migsnotification",
+ * "Itemid":"",
+ * "AgainLink":"...url...",
+ * "vpc_Amount":"100",
+ * "vpc_BatchNo":"0",
+ * "vpc_Command":"pay",
+ * "vpc_Locale":"en",
+ * "vpc_MerchTxnRef":"IMTI3MWE3MDI5Yzlk",
+ * "vpc_Merchant":"TEST59075896",
+ * "vpc_Message":"Access code [--- ] for merchant [TEST59075896] is incorrect.",
+ * "vpc_OrderInfo":"VPC test",
+ * "vpc_SecureHash":"0B1E0E9817D38864FC1E50FDA57DDB7A",
+ * "vpc_TransactionNo":"0",
+ * "vpc_TxnResponseCode":"7",
+ * "vpc_Version":"1"
+ * }"     None
+ * 344     2009-06-08 08:56:46     star     Error     debug     debug "
+ * GET:{
+ * "option":"com_acctexp",
+ * "task":"migsnotification",
+ * "Itemid":"",
+ * "AgainLink":"...url...",
+ * "vpc_Amount":"100",
+ * "vpc_BatchNo":"0",
+ * "vpc_Command":"pay",
+ * "vpc_Locale":"en",
+ * "vpc_MerchTxnRef":"IMjA4ODVjNzJjYTM1",
+ * "vpc_Merchant":"TEST59075896",
+ * "vpc_Message":"Access code [--- ] for merchant [TEST59075896] is incorrect.",
+ * "vpc_OrderInfo":"VPC test",
+ * "vpc_SecureHash":"FD93A72309097D0534C7075F80F42FED",
+ * "vpc_TransactionNo":"0",
+ * "vpc_TxnResponseCode":"7",
+ * "vpc_Version":"1"
+ * }"     None
+ * 343     2009-06-08 08:56:46     star     Error     debug     debug "ResponseFunction:processNotification"
+ */
 
 	function parseNotification( $post )
 	{
 		$response = array();
 
-		$invoice = explode( "_", $post['vpc_MerchTxnRef'] );
-
-		$response['invoice'] = $invoice[1];
+		$response['invoice'] = $post['vpc_MerchTxnRef'];
+		$response['invoice'] = $post['vpc_MerchTxnRef'];
 
 		return $response;
 	}
