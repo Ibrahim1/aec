@@ -38,7 +38,15 @@ foreach ( $entries as $eid ) {
 
 			$new = array();
 			foreach( $temp as $pid => $param ) {
-				$new[$pid] = get_object_vars( json_decode( json_encode( $param ) ) );
+				$new[$pid] = $param;
+
+				if ( isset( $new[$pid]->paymentProfiles ) ) {
+					$new[$pid]->paymentProfiles = get_object_vars( json_decode( json_encode( $new[$pid]->paymentProfiles ) ) );
+				}
+
+				if ( isset( $new[$pid]->shippingProfiles ) ) {
+					$new[$pid]->shippingProfiles = get_object_vars( json_decode( json_encode( $new[$pid]->shippingProfiles ) ) );
+				}
 			}
 
 			$meta->processor_params = $new;
