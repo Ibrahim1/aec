@@ -41,7 +41,7 @@ class mi_googleadsenseconversion
 		$settings['language']		= "en_US";
 		$settings['format']			= "1";
 		$settings['color']			= "ffffff";
-		$settings['label']			= "en_US";
+		$settings['label']			= "Purchase";
 
 		return $settings;
 	}
