@@ -59,6 +59,19 @@
 		<filename>lib/mootools/index.html</filename>
 		<filename>lib/mootools/mootools.tar.gz</filename>
 		<filename>lib/mootools/mootabs.js</filename>
+		<filename>lib/nusoap/index.html</filename>
+		<filename>lib/nusoap/class.nusoap_base.php</filename>
+		<filename>lib/nusoap/class.soap_fault.php</filename>
+		<filename>lib/nusoap/class.soap_parser.php</filename>
+		<filename>lib/nusoap/class.soap_server.php</filename>
+		<filename>lib/nusoap/class.transport_http.php</filename>
+		<filename>lib/nusoap/class.soap_val.php</filename>
+		<filename>lib/nusoap/class.soapclient.php</filename>
+		<filename>lib/nusoap/class.wsdl.php</filename>
+		<filename>lib/nusoap/class.wsdlcache.php</filename>
+		<filename>lib/nusoap/class.xmlschema.php</filename>
+		<filename>lib/nusoap/nusoap.php</filename>
+		<filename>lib/nusoap/nusoapmime.php</filename>
 		<filename>lib/php4/index.html</filename>
 		<filename>lib/php4/php4.php</filename>
 		<filename>lib/php4/json/index.html</filename>
@@ -227,12 +240,12 @@
 			<filename>install/inc/upgrade_0_8_0.inc.php</filename>
 			<filename>install/inc/upgrade_0_10_0.inc.php</filename>
 			<filename>install/inc/upgrade_0_12_0.inc.php</filename>
+			<filename>install/inc/upgrade_0_12_6RC2a.inc.php</filename>
 			<filename>install/inc/upgrade_0_12_6RC2j.inc.php</filename>
 			<filename>install/inc/upgrade_0_12_6RC2m.inc.php</filename>
 			<filename>install/inc/upgrade_0_12_6RC2n.inc.php</filename>
 			<filename>install/inc/upgrade_0_12_6RC2p.inc.php</filename>
 			<filename>install/inc/upgrade_0_12_6RC2q.inc.php</filename>
-			<filename>install/inc/upgrade_0_12_6.inc.php</filename>
 		</files>
 		<images>
 		</images>
