@@ -545,7 +545,7 @@ class AuthNetCim {
 
 	function isSuccessful()
 	{
-		return $this->success;
+		return $this->success ? true : false;
 	}
 
 	// This function will output the proper xml for a paymentType: (echeck, securesource or creditcard)
