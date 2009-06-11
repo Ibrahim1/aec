@@ -61,10 +61,8 @@ class mi_idevaffiliate
 		if ( !empty( $userflags['IDEV_IP_ADDRESS'] ) ) {
 			$ip = $userflags['IDEV_IP_ADDRESS'];
 		} else {
-			$subscr_params = $request->metaUser->focusSubscription->params;
-
-			if ( isset( $subscr_params['creator_ip'] ) ) {
-				$ip = $subscr_params['creator_ip'];
+			if ( isset( $request->metaUser->focusSubscription->params['creator_ip'] ) ) {
+				$ip = $request->metaUser->focusSubscription->params['creator_ip'];
 			} else {
 				$ip = $_SERVER['REMOTE_ADDR'];
 			}
