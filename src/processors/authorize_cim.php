@@ -13,7 +13,7 @@
 
 require( 'authorizenet_cim/authorizenet.cim.class.php' );
 
-class processor_authorize_cim extends XMLprocessor
+class processor_authorize_cim extends PROFILEprocessor
 {
 	function info()
 	{
@@ -22,11 +22,7 @@ class processor_authorize_cim extends XMLprocessor
 		$info['longname']		= _CFG_AUTHORIZE_CIM_LONGNAME;
 		$info['statement']		= _CFG_AUTHORIZE_CIM_STATEMENT;
 		$info['description']	= _CFG_AUTHORIZE_CIM_DESCRIPTION;
-		$info['currencies']		= 'AFA,DZD,ADP,ARS,AMD,AWG,AUD,AZM,BSD,BHD,THB,PAB,BBD,BYB,BEF,BZD,BMD,VEB,BOB,BRL,BND,BGN,BIF,CAD,CVE,KYD,GHC,XOF,XAF,XPF,CLP,COP,KMF,BAM,NIO,CRC,CUP,CYP,CZK,GMD,'.
-								'DKK,MKD,DEM,AED,DJF,STD,DOP,VND,GRD,XCD,EGP,SVC,ETB,EUR,FKP,FJD,HUF,CDF,FRF,GIP,XAU,HTG,PYG,GNF,GWP,GYD,HKD,UAH,ISK,INR,IRR,IQD,IEP,ITL,JMD,JOD,KES,PGK,LAK,EEK,'.
-								'HRK,KWD,MWK,ZMK,AOR,MMK,GEL,LVL,LBP,ALL,HNL,SLL,ROL,BGL,LRD,LYD,SZL,LTL,LSL,LUF,MGF,MYR,MTL,TMM,FIM,MUR,MZM,MXN,MXV,MDL,MAD,BOV,NGN,ERN,NAD,NPR,ANG,NLG,YUM,ILS,'.
-								'AON,TWD,ZRN,NZD,BTN,KPW,NOK,PEN,MRO,TOP,PKR,XPD,MOP,UYU,PHP,XPT,PTE,GBP,BWP,QAR,GTQ,ZAL,ZAR,OMR,KHR,MVR,IDR,RUB,RUR,RWF,SAR,ATS,SCR,XAG,SGD,SKK,SBD,KGS,SOS,ESP,'.
-								'LKR,SHP,ECS,SDD,SRG,SEK,CHF,SYP,TJR,BDT,WST,TZS,KZT,TPE,SIT,TTD,MNT,TND,TRL,UGX,ECV,CLF,USN,USS,USD,UZS,VUV,KRW,YER,JPY,CNY,ZWD,PLN';
+		$info['currencies']		= AECToolbox::getISO4271_codes();
 		$info['cc_list']		= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring']		= 2;
 		$info['actions']		= array('cancel');
@@ -200,7 +196,7 @@ class processor_authorize_cim extends XMLprocessor
 			$cim = null;
 		}
 
-		$var = $this->ppProfileSelect( array(), $ppParams, true, $ppParams );
+		$var = $this->payProfileSelect( array(), $ppParams, true, $ppParams );
 		$var2 = $this->checkoutform( $request, $cim );
 
 		$return = '<form action="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=subscriptiondetails', true ) . '" method="post">' . "\n";
@@ -388,7 +384,7 @@ class processor_authorize_cim extends XMLprocessor
 			$cim = $this->loadCIM( $ppParams );
 
 			$var = array();
-			$var = $this->ppProfileSelect( $var, $ppParams, false, false );
+			$var = $this->payProfileSelect( $var, $ppParams, false, false );
 			$var = $this->shipProfileSelect( $var, $ppParams, false, false, false );
 
 			$return .= $this->getParamsHTML( $var ) . '<br /><br />';
@@ -580,7 +576,10 @@ class processor_authorize_cim extends XMLprocessor
 			}
 
 			$cim->setParameter( 'transactionType',		'profileTransAuthCapture' );
-			$cim->setParameter( 'transactionCardCode',	trim( $request->int_var['params']['cardVV2'] ) );
+
+			if ( !empty( $request->int_var['params']['cardVV2'] ) ) {
+				$cim->setParameter( 'transactionCardCode',	trim( $request->int_var['params']['cardVV2'] ) );
+			}
 
 			$cim->createCustomerProfileTransactionRequest( $this );
 
@@ -605,86 +604,6 @@ class processor_authorize_cim extends XMLprocessor
 		return $return;
 	}
 
-	function ppProfileSelect( $var, $ppParams, $select=false, $btn=true )
-	{
-		$profiles = get_object_vars( $ppParams->paymentProfiles );
-
-		$var['params'][] = array( 'p', _AEC_USERFORM_BILLING_DETAILS_NAME, '' );
-
-		if ( !empty( $profiles ) ) {
-			// Single-Select Payment Option
-			foreach ( $profiles as $pid => $pobj ) {
-				$info = array();
-
-				$info_array = get_object_vars( $pobj->profilehash );
-
-				foreach ( $info_array as $iak => $iav ) {
-					if ( !empty( $iav ) ) {
-						$info[] = $iav;
-					}
-				}
-
-				if ( $ppParams->paymentprofileid == $pid ) {
-					$text = '<strong>' . implode( '<br />', $info ) . '</strong>';
-				} else {
-					$text = implode( '<br />', $info );
-				}
-
-				$var['params'][] = array( 'radio', 'payprofileselect', $pid, $ppParams->paymentprofileid, $text );
-			}
-
-			if ( count( $profiles ) < 10 ) {
-				$var['params'][] = array( 'radio', 'payprofileselect', "new", $ppParams->paymentprofileid, 'create new profile' );
-			}
-
-			if ( $btn ) {
-				$var['params']['edit_payprofile'] = array( 'submit', '', '', ( $select ? _BUTTON_SELECT : _BUTTON_EDIT ) );
-			}
-		}
-
-		return $var;
-	}
-
-	function shipProfileSelect( $var, $ppParams, $select=false, $btn=true, $new=true )
-	{
-		$profiles = get_object_vars( $ppParams->shippingProfiles );
-
-		$var['params'][] = array( 'p', _AEC_USERFORM_SHIPPING_DETAILS_NAME, '' );
-
-		if ( !empty( $profiles ) ) {
-			// Single-Select Shipment Data
-			foreach ( $profiles as $pid => $pobj ) {
-				$info = array();
-
-				$info_array = get_object_vars( $pobj->profilehash );
-
-				foreach ( $info_array as $iak => $iav ) {
-					if ( !empty( $iav ) ) {
-						$info[] = $iav;
-					}
-				}
-
-				if ( $ppParams->shippingprofileid == $pid ) {
-					$text = '<strong>' . implode( '<br />', $info ) . '</strong>';
-				} else {
-					$text = implode( '<br />', $info );
-				}
-
-				$var['params'][] = array( 'radio', 'shipprofileselect', $pid, $ppParams->shippingprofileid, $text );
-			}
-
-			if ( ( count( $profiles ) < 10 ) && $new ) {
-				$var['params'][] = array( 'radio', 'shipprofileselect', "new", $ppParams->shippingprofileid, 'create new profile' );
-			}
-
-			if ( $btn ) {
-				$var['params']['edit_shipprofile'] = array( 'submit', '', '', ( $select ? _BUTTON_SELECT : _BUTTON_EDIT ) );
-			}
-		}
-
-		return $var;
-	}
-
 	function ProfileAdd( $request, $profileid )
 	{
 		$ppParams = new stdClass();
@@ -696,98 +615,6 @@ class processor_authorize_cim extends XMLprocessor
 
 		$ppParams->shippingprofileid	= '';
 		$ppParams->shippingProfiles		= new stdClass();
-
-		$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
-
-		return $ppParams;
-	}
-
-	function shipProfileAdd( $request, $profileid, $post, $ppParams )
-	{
-		$profiles = get_object_vars( $ppParams->shippingProfiles );
-
-		$pointer = count( $profiles );
-
-		$ppParams->shippingProfiles->$pointer = new stdClass();
-		$ppParams->shippingProfiles->$pointer->profileid = $profileid;
-
-		$hash = new stdClass();
-		$hash->name		= $post['billFirstName'] . ' ' . $post['billLastName'];
-		$hash->address	= $post['billAddress'];
-		$hash->zipcity	= $post['billZip'] . ' ' . $post['billCity'];
-
-		$ppParams->shippingProfiles->$pointer->profilehash = $hash;
-
-		$ppParams->shippingprofileid = $pointer;
-
-		$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
-
-		return $ppParams;
-	}
-
-	function shipProfileUpdate( $request, $profileid, $post, $ppParams )
-	{
-		$hash = new stdClass();
-		$hash->name		= $post['billFirstName'] . ' ' . $post['billLastName'];
-		$hash->address	= $post['billAddress'];
-		$hash->zipcity	= $post['billZip'] . ' ' . $post['billCity'];
-
-		$ppParams->shippingProfiles->$profileid->profilehash = $hash;
-
-		$ppParams->shippingprofileid = $profileid;
-
-		$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
-
-		return $ppParams;
-	}
-
-	function payProfileAdd( $request, $profileid, $post, $ppParams )
-	{
-		$profiles = get_object_vars( $ppParams->paymentProfiles );
-
-		$pointer = count( $profiles );
-
-		$data = new stdClass();
-		$data->profileid = $profileid;
-
-		$hash = new stdClass();
-		$hash->name		= $post['billFirstName'] . ' ' . $post['billLastName'];
-		$hash->address	= $post['billAddress'];
-		$hash->zipcity	= $post['billZip'] . ' ' . $post['billCity'];
-
-		if ( !empty( $post['account_no'] ) ) {
-			$hash->cc		= 'XXXX' . substr( $post['account_no'], -4 );
-		} else {
-			$hash->cc		= 'XXXX' . substr( $post['cardNumber'], -4 );
-		}
-
-		$data->profilehash = $hash;
-
-		$ppParams->paymentProfiles->$pointer = $data;
-
-		$ppParams->paymentprofileid = $pointer;
-
-		$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
-
-		return $ppParams;
-	}
-
-	function payProfileUpdate( $request, $profileid, $post, $ppParams )
-	{
-		$hash = new stdClass();
-		$hash->name		= $post['billFirstName'] . ' ' . $post['billLastName'];
-		$hash->address	= $post['billAddress'];
-		$hash->zipcity	= $post['billZip'] . ' ' . $post['billCity'];
-
-		if ( !empty( $post['account_no'] ) ) {
-			$hash->cc		= 'XXXX' . substr( $post['account_no'], -4 );
-		} else {
-			$hash->cc		= 'XXXX' . substr( $post['cardNumber'], -4 );
-		}
-
-		$ppParams->paymentProfiles->$profileid->profilehash = $hash;
-
-		$ppParams->paymentprofileid = $profileid;
 
 		$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
 
