@@ -3732,18 +3732,83 @@ class XMLprocessor extends processor
 
 }
 
+class SOAPprocessor extends XMLprocessor
+{
+	function transmitRequest( $url, $path, $command, $content, $headers=null )
+	{
+		global $mosConfig_absolute_path;
+
+		require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/nusoap/nusoap.php');
+
+		$this->soapclient = new soapclient($url);
+
+		if ( !empty( $aecConfig->cfg['use_proxy'] ) && !empty( $aecConfig->cfg['proxy'] ) ) {
+			$this->soapclient->setHTTPProxy(	$aecConfig->cfg['proxy'],
+												$aecConfig->cfg['proxy_port'],
+												$aecConfig->cfg['proxy_username'],
+												$aecConfig->cfg['proxy_password']
+											);
+		}
+
+		if ( !empty( $headers ) ) {
+			$this->soapclient->setHeaders( $headers );
+		}
+
+		# execute payment transaction
+		$response = array();
+		$response['return'] = $this->soapclient->call( $command, $content );
+
+		$err = $this->soapclient->getError();
+
+		if ( $err != false ) {
+			$response['error'] = "Error calling SOAP function: " . $err;
+		} else {
+			$payment_error = $response['return']['error'];
+			$payment_description = $response['return']['errorDescription'];
+
+			$payment_id = new soapval('transactionRef', 'long', $response['return']['idTransaction']);
+			$language = new soapval('language', 'string', $language);
+
+			$payment_authorization = $response['return']['authorization'];
+
+			if ( $payment_error == 0 ) {
+			# acknowledge the transaction to Paybox
+				$this->soapclient->call('acknowledge', array($payment_id, $language));
+				echo "Die Zahlung war erfolgreich<br>";
+			} else {
+				echo "Die Zahlung war <b>NICHT</b> erfolgreich.<br>";
+			}
+		}
+
+
+		return $response;
+	}
+}
+
 class PROFILEprocessor extends XMLprocessor
 {
 
-	function ppProfileSelect( $var, $ppParams, $select=false, $btn=true )
+	function ProfileAdd( $request, $profileid )
 	{
-		$profiles = get_object_vars( $ppParams->paymentProfiles );
+		$ppParams = new stdClass();
 
+		$ppParams->profileid			= $profileid;
+
+		$ppParams->paymentprofileid		= '';
+		$ppParams->paymentProfiles		= array();
+
+		$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
+
+		return $ppParams;
+	}
+
+	function payProfileSelect( $var, $ppParams, $select=false, $btn=true )
+	{
 		$var['params'][] = array( 'p', _AEC_USERFORM_BILLING_DETAILS_NAME, '' );
 
-		if ( !empty( $profiles ) ) {
+		if ( !empty( $ppParams->paymentProfiles ) ) {
 			// Single-Select Payment Option
-			foreach ( $profiles as $pid => $pobj ) {
+			foreach ( $ppParams->paymentProfiles as $pid => $pobj ) {
 				$info = array();
 
 				$info_array = get_object_vars( $pobj->profilehash );
@@ -3760,11 +3825,11 @@ class PROFILEprocessor extends XMLprocessor
 					$text = implode( '<br />', $info );
 				}
 
-				$var['params'][] = array( 'radio', 'payprofileselect', $pid, $ppParams->paymentprofileid, $text );
+				$var['params'][] = array( 'radio', 'payprofileselect', $pid, $pobj->paymentprofileid, $text );
 			}
 
-			if ( count( $profiles ) < 10 ) {
-				$var['params'][] = array( 'radio', 'payprofileselect', "new", $ppParams->paymentprofileid, 'create new profile' );
+			if ( count( $ppParams->paymentProfiles ) < 10 ) {
+				$var['params'][] = array( 'radio', 'payprofileselect', "new", $pobj->paymentprofileid, 'create new profile' );
 			}
 
 			if ( $btn ) {
@@ -3775,30 +3840,15 @@ class PROFILEprocessor extends XMLprocessor
 		return $var;
 	}
 
-	function ProfileAdd( $request, $profileid )
-	{
-		$ppParams = new stdClass();
-
-		$ppParams->profileid			= $profileid;
-
-		$ppParams->paymentprofileid		= '';
-		$ppParams->paymentProfiles		= new stdClass();
-
-		$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
-
-		return $ppParams;
-	}
-
 	function payProfileAdd( $request, $profileid, $details, $ppParams )
 	{
-		$profiles = get_object_vars( $ppParams->paymentProfiles );
-		$pointer = count( $profiles );
+		$pointer = count( $ppParams->paymentProfiles );
 
 		$data = new stdClass();
-		$data->profileid = $profileid;
-		$data->profilehash = $this->payProfileHash( $details );
+		$data->profileid	= $profileid;
+		$data->profilehash	= $this->payProfileHash( $details );
 
-		$ppParams->paymentProfiles->$pointer = $data;
+		$ppParams->paymentProfiles[$pointer] = $data;
 
 		$ppParams->paymentprofileid = $pointer;
 
@@ -3809,7 +3859,7 @@ class PROFILEprocessor extends XMLprocessor
 
 	function payProfileUpdate( $request, $profileid, $details, $ppParams )
 	{
-		$ppParams->paymentProfiles->$profileid->profilehash = $this->payProfileHash( $details );
+		$ppParams->paymentProfiles[$profileid]->profilehash = $this->payProfileHash( $details );
 
 		$ppParams->paymentprofileid = $profileid;
 
@@ -3830,6 +3880,81 @@ class PROFILEprocessor extends XMLprocessor
 		} else {
 			$hash->cc		= 'XXXX' . substr( $post['cardNumber'], -4 );
 		}
+
+		return $hash;
+	}
+
+	function shipProfileSelect( $var, $ppParams, $select=false, $btn=true, $new=true )
+	{
+		$var['params'][] = array( 'p', _AEC_USERFORM_SHIPPING_DETAILS_NAME, '' );
+
+		if ( !empty( $ppParams->shippingProfiles ) ) {
+			// Single-Select Shipment Data
+			foreach ( $ppParams->shippingProfiles as $pid => $pobj ) {
+				$info = array();
+
+				$info_array = get_object_vars( $pobj->profilehash );
+
+				foreach ( $info_array as $iak => $iav ) {
+					if ( !empty( $iav ) ) {
+						$info[] = $iav;
+					}
+				}
+
+				if ( $ppParams->shippingprofileid == $pid ) {
+					$text = '<strong>' . implode( '<br />', $info ) . '</strong>';
+				} else {
+					$text = implode( '<br />', $info );
+				}
+
+				$var['params'][] = array( 'radio', 'shipprofileselect', $pid, $pobj->shippingprofileid, $text );
+			}
+
+			if ( ( count( $ppParams->shippingProfiles ) < 10 ) && $new ) {
+				$var['params'][] = array( 'radio', 'shipprofileselect', "new", $pobj->shippingprofileid, 'create new profile' );
+			}
+
+			if ( $btn ) {
+				$var['params']['edit_shipprofile'] = array( 'submit', '', '', ( $select ? _BUTTON_SELECT : _BUTTON_EDIT ) );
+			}
+		}
+
+		return $var;
+	}
+
+	function shipProfileAdd( $request, $profileid, $post, $ppParams )
+	{
+		$pointer = count( $ppParams->paymentProfiles );
+
+		$ppParams->shippingProfiles[$pointer] = new stdClass();
+		$ppParams->shippingProfiles[$pointer]->profileid = $profileid;
+
+		$ppParams->shippingProfiles[$pointer]->profilehash = $this->shipProfileHash( $post );
+
+		$ppParams->shippingprofileid = $pointer;
+
+		$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
+
+		return $ppParams;
+	}
+
+	function shipProfileUpdate( $request, $profileid, $post, $ppParams )
+	{
+		$ppParams->shippingProfiles[$profileid]->profilehash = $this->shipProfileHash( $post );
+
+		$ppParams->shippingprofileid = $profileid;
+
+		$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
+
+		return $ppParams;
+	}
+
+	function shipProfileHash( $post )
+	{
+		$hash = new stdClass();
+		$hash->name		= $post['billFirstName'] . ' ' . $post['billLastName'];
+		$hash->address	= $post['billAddress'];
+		$hash->zipcity	= $post['billZip'] . ' ' . $post['billCity'];
 
 		return $hash;
 	}
@@ -11976,30 +12101,26 @@ class AECToolbox
 
 	function versionSort( $array )
 	{
-		$change = 1;
-
-		// Always sort until the previous to last key
-		$alen = count( $array ) - 1;
-
-		while ( true ) {
-			$change = false;
-
-			for ( $i=0; $i<$alen; $i++ ) {
-				if ( version_compare( $array[$i+1], $array[$i], '<' ) ) {
-					$temp = $array[$i];
-
-					$array[$i] = $array[$i+1];
-					$array[$i+1] = $temp;
-					$change = true;
-				}
-			}
-
-			if ( !$change ) {
-				break;
-			}
+		// Bastardized Quicksort
+		if ( !isset( $array[2] ) ) {
+			return $array;
 		}
 
-		return $array;
+		$piv = $array[0];
+		$x = $y = array();
+		$len = count( $array );
+		$i = 1;
+
+		while ( $i < $len ) {
+			if ( version_compare( $array[$i], $piv, '<' ) ) {
+				$x[] = $array[$i];
+			} else {
+				$y[] = $array[$i];
+			}
+			++$i;
+		}
+
+		return array_merge( AECToolbox::versionSort($x), array($piv), AECToolbox::versionSort($y) );
 	}
 
 	function visualstrlen( $string )
