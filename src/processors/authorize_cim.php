@@ -142,8 +142,8 @@ class processor_authorize_cim extends PROFILEprocessor
 						}
 					}
 				} else {
-					if ( isset( $ppParams->paymentProfiles->{$post['payprofileselect']} ) ) {
-						$stored_spid = $ppParams->paymentProfiles->{$post['payprofileselect']}->profileid;
+					if ( isset( $ppParams->paymentProfiles[$post['payprofileselect']] ) ) {
+						$stored_spid = $ppParams->paymentProfiles[$post['payprofileselect']]->profileid;
 						$cim->setParameter( 'customerPaymentProfileId', $stored_spid );
 						$cim->updateCustomerPaymentProfileRequest( $this );
 
@@ -178,8 +178,8 @@ class processor_authorize_cim extends PROFILEprocessor
 					}
 				}
 
-				if ( isset( $ppParams->shippingProfiles->{$ppParams->shippingprofileid} ) ) {
-					$stored_spid = $ppParams->shippingProfiles->{$ppParams->shippingprofileid}->profileid;
+				if ( isset( $ppParams->shippingProfiles[$ppParams->profileid] ) ) {
+					$stored_spid = $ppParams->shippingProfiles[$ppParams->profileid]->profileid;
 
 					$cim->setParameter( 'customerAddressId', $stored_spid );
 					$cim->updateCustomerShippingAddressRequest( $this );
@@ -256,8 +256,8 @@ class processor_authorize_cim extends PROFILEprocessor
 					}
 				}
 			} else {
-				if ( isset( $ppParams->shippingProfiles->{$post['shipprofileselect']} ) ) {
-					$stored_spid = $ppParams->shippingProfiles->{$post['shipprofileselect']}->profileid;
+				if ( isset( $ppParams->shippingProfiles[$request->int_var['params']['shipprofileselect']] ) ) {
+					$stored_spid = $ppParams->shippingProfiles[$request->int_var['params']['shipprofileselect']]->profileid;
 					$cim->setParameter( 'customerAddressId', $stored_spid );
 					$cim->updateCustomerShippingAddressRequest( $this );
 
@@ -510,7 +510,7 @@ class processor_authorize_cim extends PROFILEprocessor
 
 					$cim->setParameter( 'customerPaymentProfileId', (int) $profileid );
 				} else {
-					$stored_ppid = $ppParams->paymentProfiles->{$request->int_var['params']['payprofileselect']}->profileid;
+					$stored_ppid = $ppParams->paymentProfiles[$request->int_var['params']['payprofileselect']]->profileid;
 					$cim->setParameter( 'customerPaymentProfileId', (int) $stored_ppid );
 					$cim->updateCustomerPaymentProfileRequest( $this );
 
@@ -520,7 +520,7 @@ class processor_authorize_cim extends PROFILEprocessor
 				}
 
 				if ( $this->settings['dedicatedShipping'] ) {
-					$stored_spid = $ppParams->shippingProfiles->{$request->int_var['params']['shipprofileselect']}->profileid;
+					$stored_spid = $ppParams->shippingProfiles[$request->int_var['params']['shipprofileselect']]->profileid;
 
 					$cim->setParameter( 'customerAddressId', (int) $stored_spid );
 					$cim->updateCustomerShippingAddressRequest( $this );
@@ -530,11 +530,11 @@ class processor_authorize_cim extends PROFILEprocessor
 					}
 				}
 			} else {
-				$stored_ppid = $ppParams->paymentProfiles->{$request->int_var['params']['payprofileselect']}->profileid;
+				$stored_ppid = $ppParams->paymentProfiles[$request->int_var['params']['payprofileselect']]->profileid;
 				$cim->setParameter( 'customerPaymentProfileId', (int) $stored_ppid );
 
 				if ( $this->settings['dedicatedShipping'] ) {
-					$stored_spid = $ppParams->shippingProfiles->{$request->int_var['params']['shipprofileselect']}->profileid;
+					$stored_spid = $ppParams->shippingProfiles[$request->int_var['params']['shipprofileselect']]->profileid;
 
 					$cim->setParameter( 'customerAddressId', (int) $stored_spid );
 				}
@@ -567,13 +567,15 @@ class processor_authorize_cim extends PROFILEprocessor
 			if ( is_array( $request->int_var['amount'] ) ) {
 				$cim->setParameter( 'transactionRecurringBilling',	'true' );
 				if ( isset( $request->int_var['amount']['amount1'] ) ) {
-					$cim->setParameter( 'transaction_amount',	$request->int_var['amount']['amount1'] );
+					$amount = $request->int_var['amount']['amount1'];
 				} else {
-					$cim->setParameter( 'transaction_amount',	$request->int_var['amount']['amount3'] );
+					$amount = $request->int_var['amount']['amount3'];
 				}
 			} else {
-				$cim->setParameter( 'transaction_amount',	$request->int_var['amount'] );
+				$amount = $request->int_var['amount'];
 			}
+
+			$cim->setParameter( 'transaction_amount',	AECToolbox::correctAmount( $amount ) );
 
 			$cim->setParameter( 'transactionType',		'profileTransAuthCapture' );
 
@@ -611,10 +613,10 @@ class processor_authorize_cim extends PROFILEprocessor
 		$ppParams->profileid			= $profileid;
 
 		$ppParams->paymentprofileid		= '';
-		$ppParams->paymentProfiles		= new stdClass();
+		$ppParams->paymentProfiles		= array();
 
 		$ppParams->shippingprofileid	= '';
-		$ppParams->shippingProfiles		= new stdClass();
+		$ppParams->shippingProfiles		= array();
 
 		$request->metaUser->meta->setProcessorParams( $request->parent->id, $ppParams );
 
@@ -643,8 +645,8 @@ class processor_authorize_cim extends PROFILEprocessor
 	{
 		$cim = new AuthNetCim( $this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode'] );
 
-		$cim->setParameter( 'customerProfileId', $ppParams->paymentProfiles->{$ppParams->profileid}->profileid );
-		$cim->setParameter( 'customerAddressId', $ppParams->shippingProfiles->{$ppParams->shippingprofileid}->profileid );
+		$cim->setParameter( 'customerProfileId', $ppParams->paymentProfiles[$ppParams->profileid]->profileid );
+		$cim->setParameter( 'customerAddressId', $ppParams->shippingProfiles[$ppParams->profileid]->profileid );
 		$cim->getCustomerShippingAddressRequest( $this );
 
 		if ( $cim->isSuccessful() ) {
@@ -681,7 +683,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		if ( !empty( $ppParams->profileid ) ) {
 			$cim = $this->loadCIM( $ppParams );
 
-			$cim->setParameter( 'customerProfileId',		$ppParams->paymentProfiles->{$ppParams->profileid}->profileid );
+			$cim->setParameter( 'customerProfileId',		$ppParams->paymentProfiles[$ppParams->profileid]->profileid );
 			$cim->getCustomerProfileRequest( $this );
 
 			$cim->setParameter( 'customerProfileId',		$cim->customerProfileId );
