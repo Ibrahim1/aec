@@ -43,7 +43,7 @@ class processor_ewayxml extends XMLprocessor
 		$settings['tax']			= "10";
 		$settings['testAmount']	= "00";
 		$settings['item_name']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
-		$settings['rewriteInfo']	= ''; // added mic
+		$settings['rewriteInfo']	= '';
 		$settings['SiteTitle']	= '';
 
 		return $settings;
@@ -52,12 +52,13 @@ class processor_ewayxml extends XMLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']		= array( 'list_yesno' );
+		$settings['testmode']	= array( 'list_yesno' );
 		$settings['custId']		= array( 'inputC' );
 		$settings['SiteTitle']	= array( 'inputC' );
 		$settings['item_name']	= array( 'inputE' );
 
-        $settings = AECToolbox::rewriteEngineInfo( null, $settings );
+ 		$rewriteswitches		= array( 'cms', 'user', 'expiration', 'subscription', 'plan');
+		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		return $settings;
 	}

@@ -661,14 +661,29 @@ define( '_MI_MI_PHPBB3_REBUILD_DESC',				'Choose yes and then save the MI to rec
 define( '_MI_MI_PHPBB3_REMOVE_NAME',				'Remove: ' );
 define( '_MI_MI_PHPBB3_REMOVE_DESC',				'Choose yes and then save the MI to carry out the expiration action for all users with this MI on a currently active plan.' );
 
-define( '_MI_MI_PHPBB3_APPLY_COLOR_NAME','Apply Group Color' );
-define( '_MI_MI_PHPBB3_APPLY_COLOR_DESC','Choose yes to apply a group color (only check if possible).' );
-define( '_MI_MI_PHPBB3_GROUP_COLOR_NAME','Group Color' );
-define( '_MI_MI_PHPBB3_GROUP_COLOR_DESC','The group color you wish applied - if you chose yes.' );
-define( '_MI_MI_PHPBB3_APPLY_COLOR_EXP_NAME','Apply Group Color (Expiration)' );
-define( '_MI_MI_PHPBB3_APPLY_COLOR_EXP_DESC','Choose yes to apply a group color on expiration (only check if possible).' );
-define( '_MI_MI_PHPBB3_GROUP_COLOR_EXP_NAME','Group Color (Expiration)' );
-define( '_MI_MI_PHPBB3_GROUP_COLOR_EXP_DESC','The group color you wish applied on expiration- if you chose yes.' );
+define( '_MI_MI_PHPBB3_APPLY_COLOUR_NAME','Apply Group Color' );
+define( '_MI_MI_PHPBB3_APPLY_COLOUR_DESC','Choose yes to apply a group color (only check if possible).' );
+define( '_MI_MI_PHPBB3_GROUP_COLOUR_NAME','Group Color' );
+define( '_MI_MI_PHPBB3_GROUP_COLOUR_DESC','The group color you wish applied - if you chose yes.' );
+define( '_MI_MI_PHPBB3_APPLY_COLOUR_EXP_NAME','Apply Group Color (Expiration)' );
+define( '_MI_MI_PHPBB3_APPLY_COLOUR_EXP_DESC','Choose yes to apply a group color on expiration (only check if possible).' );
+define( '_MI_MI_PHPBB3_GROUP_COLOUR_EXP_NAME','Group Color (Expiration)' );
+define( '_MI_MI_PHPBB3_GROUP_COLOUR_EXP_DESC','The group color you wish applied on expiration- if you chose yes.' );
+
+define( '_MI_MI_PHPBB3_USE_ALTDB_NAME','Different Database' );
+define( '_MI_MI_PHPBB3_USE_ALTDB_DESC','If your phpbb3 forum uses a different database than joomla, you can set this option to Yes and provide details below.' );
+define( '_MI_MI_PHPBB3_DBMS_NAME','Database Type' );
+define( '_MI_MI_PHPBB3_DBMS_DESC','Typically mysql or mysqli' );
+define( '_MI_MI_PHPBB3_DBHOST_NAME','Database Host' );
+define( '_MI_MI_PHPBB3_DBHOST_DESC','Typically localhost - or the IP an external DB' );
+define( '_MI_MI_PHPBB3_DBUSER_NAME','Database Username' );
+define( '_MI_MI_PHPBB3_DBUSER_DESC','Your Database Access Username' );
+define( '_MI_MI_PHPBB3_DBPASSWD_NAME','Database Password' );
+define( '_MI_MI_PHPBB3_DBPASSWD_DESC','Your Database Access Password' );
+define( '_MI_MI_PHPBB3_DBNAME_NAME','Database Name' );
+define( '_MI_MI_PHPBB3_DBNAME_DESC','The Name of the database' );
+define( '_MI_MI_PHPBB3_TABLE_PREFIX_NAME','Table Prefix' );
+define( '_MI_MI_PHPBB3_TABLE_PREFIX_DESC','Typically phpbb_ or phpbb3_' );
 
 // uddeim
 define( '_AEC_MI_NAME_UDDEIM',		'UddeIM' );

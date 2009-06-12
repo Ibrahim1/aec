@@ -64,7 +64,7 @@
 		<filename>lib/nusoap/class.soap_fault.php</filename>
 		<filename>lib/nusoap/class.soap_parser.php</filename>
 		<filename>lib/nusoap/class.soap_server.php</filename>
-		<filename>lib/nusoap/class.transport_http.php</filename>
+		<filename>lib/nusoap/class.soap_transport_http.php</filename>
 		<filename>lib/nusoap/class.soap_val.php</filename>
 		<filename>lib/nusoap/class.soapclient.php</filename>
 		<filename>lib/nusoap/class.wsdl.php</filename>

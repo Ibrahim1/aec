@@ -57,6 +57,9 @@ class processor_ipayment_silent extends XMLprocessor
 		$settings['promptAddress']	= array( "list_yesno" );
 		$settings['item_name']		= array( "inputE" );
 
+ 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan');
+		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+
 		return $settings;
 	}
 

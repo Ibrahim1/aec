@@ -26,18 +26,37 @@ class mi_phpbb3
 
 	function Settings()
 	{
-		global $database;
+        if ( $this->settings['use_altdb'] ) {
+	        $options = array(	'driver'	=> $this->settings['dbms'],
+								'host'		=> $this->settings['dbhost'],
+								'user'		=> $this->settings['dbuser'],
+								'password'	=> $this->settings['dbpasswd'],
+								'database'	=> $this->settings['dbname'],
+								'prefix'	=> $this->settings['table_prefix']
+								);
+
+			$prefix = $this->settings['table_prefix'];
+
+	        $database =& JDatabase::getInstance($options);
+        } else {
+        	global $database;
+
+			$prefix = 'phpbb_';
+        }
 
 		$query = 'SELECT `group_id`, `group_name`, `group_colour`'
-			 	. ' FROM phpbb_groups'
+			 	. ' FROM ' . $prefix . 'groups'
 			 	;
 	 	$database->setQuery( $query );
 	 	$groups = $database->loadObjectList();
 
-		$sg = array();
-		foreach ( $groups as $group ) {
-			$sg[] = mosHTML::makeOption( $group->group_id, $group->group_name );
-			$sg2[] = mosHTML::makeOption( $group->group_colour, $group->group_name );
+		$sg		= array();
+		$sg2	= array();
+		if ( !empty( $groups ) ) {
+			foreach ( $groups as $group ) {
+				$sg[] = mosHTML::makeOption( $group->group_id, $group->group_name );
+				$sg2[] = mosHTML::makeOption( $group->group_colour, $group->group_name );
+			}
 		}
 
          // Explode the Groups to Exclude
@@ -52,6 +71,14 @@ class mi_phpbb3
      	}
 
 		$settings = array();
+
+		$settings['use_altdb']		= array( 'list_yesno' );
+		$settings['dbms']			= array( 'inputC' );
+		$settings['dbhost']			= array( 'inputC' );
+		$settings['dbuser']			= array( 'inputC' );
+		$settings['dbpasswd']		= array( 'inputC' );
+		$settings['dbname']			= array( 'inputC' );
+		$settings['table_prefix']	= array( 'inputC' );
 
 		$settings['lists']['group']				= mosHTML::selectList($sg, 'group', 'size="4"', 'value', 'text', $this->settings['group']);
 		$settings['lists']['group_exp']			= mosHTML::selectList($sg, 'group_exp', 'size="4"', 'value', 'text', $this->settings['group_exp']);
@@ -77,9 +104,40 @@ class mi_phpbb3
 		return $settings;
 	}
 
+	function Defaults()
+	{
+		$settings = array();
+
+		$settings['use_altdb']		= 0;
+		$settings['dbms']			= 'mysqli';
+		$settings['dbhost']			= 'localhost';
+		$settings['dbuser']			= '';
+		$settings['dbpasswd']		= '';
+		$settings['dbname']			= '';
+		$settings['table_prefix']	= 'phpbb_';
+
+		return $settings;
+	}
+
 	function expiration_action( $request )
 	{
-		global $database;
+        if ( $this->settings['use_altdb'] ) {
+	        $options = array(	'driver'	=> $this->settings['dbms'],
+								'host'		=> $this->settings['dbhost'],
+								'user'		=> $this->settings['dbuser'],
+								'password'	=> $this->settings['dbpasswd'],
+								'database'	=> $this->settings['dbname'],
+								'prefix'	=> $this->settings['table_prefix']
+								);
+
+			$prefix = $this->settings['table_prefix'];
+
+	        $database =& JDatabase::getInstance($options);
+        } else {
+        	global $database;
+
+			$prefix = 'phpbb_';
+        }
 
 		if ( $this->settings['set_group_exp'] ) {
 			$userid = $request->metaUser->userid;
@@ -87,7 +145,7 @@ class mi_phpbb3
 			$bbuser = null;
 			// Get user info from PHPBB3 User Record
 			$query = 'SELECT `user_id`, `group_id`'
-					. ' FROM phpbb_users'
+					. ' FROM ' . $prefix . 'users'
 					. ' WHERE LOWER(user_email) = \'' . strtolower( $request->metaUser->cmsUser->email ) . '\''
 					;
 			$database->setQuery( $query );
@@ -104,7 +162,7 @@ class mi_phpbb3
 			if ( ( $this->settings['set_groups_exclude'] ) && ( !$onExcludeList ) ) {
 				$secGroups = null;
 				$query = 'SELECT `group_id`'
-						. ' FROM phpbb_user_group'
+						. ' FROM ' . $prefix . 'user_group'
 						. ' WHERE `user_id` = \'' . $bbuser->user_id . '\''
 						;
 				$database->setQuery( $query );
@@ -123,7 +181,7 @@ class mi_phpbb3
 			// If Not On Exclude List, apply expiration group & clear secondary groups (if set)
 			if ( !$onExcludeList ) {
 				// update PHPBB3 groups list
-				$queries[] = 'UPDATE phpbb_user_group'
+				$queries[] = 'UPDATE ' . $prefix . 'user_group'
 						. ' SET `group_id` = \'' . $this->settings['group_exp'] . '\''
 						. ' WHERE `group_id` = \'' . $bbuser->group_id . '\''
 						. ' AND `user_id` = \'' . $bbuser->user_id . '\''
@@ -135,14 +193,14 @@ class mi_phpbb3
 					$color = '';
 				}
 
-				$queries[] = 'UPDATE phpbb_users'
+				$queries[] = 'UPDATE ' . $prefix . 'users'
 							. ' SET `group_id` = \'' . $this->settings['group_exp'] . '\'' . $color
 							. ' WHERE `user_id` = \'' . $bbuser->user_id . '\''
 							;
 
 				// Clear Secondary Groups (if flag set)
 				if ( $this->settings['set_clear_groups'] ) {
-					$queries[] = 'DELETE FROM phpbb_user_group'
+					$queries[] = 'DELETE FROM ' . $prefix . 'user_group'
 							. ' WHERE `group_id` != \'' . $this->settings['group_exp'] . '\''
 							. ' AND `user_id` = \'' . $bbuser->user_id . '\''
 							;
@@ -160,13 +218,29 @@ class mi_phpbb3
 
 	function action( $request )
 	{
-		global $database;
+        if ( $this->settings['use_altdb'] ) {
+	        $options = array(	'driver'	=> $this->settings['dbms'],
+								'host'		=> $this->settings['dbhost'],
+								'user'		=> $this->settings['dbuser'],
+								'password'	=> $this->settings['dbpasswd'],
+								'database'	=> $this->settings['dbname'],
+								'prefix'	=> $this->settings['table_prefix']
+								);
+
+			$prefix = $this->settings['table_prefix'];
+
+	        $database =& JDatabase::getInstance($options);
+        } else {
+        	global $database;
+
+			$prefix = 'phpbb_';
+        }
 
 		if ( $this->settings['set_group'] ) {
 			$bbuser = null;
 			// get the user phpbb user id
 			$query = 'SELECT `user_id`, `group_id`'
-					. ' FROM phpbb_users'
+					. ' FROM ' . $prefix . 'users'
 					. ' WHERE LOWER(user_email) = \'' . strtolower( $request->metaUser->cmsUser->email ) . '\''
 					;
 			$database->setQuery( $query );
@@ -183,7 +257,7 @@ class mi_phpbb3
 			if ( ( $this->settings['set_groups_exclude'] ) && ( !$onExcludeList ) ) {
 				$secGroups = null;
 				$query = 'SELECT `group_id`'
-						. ' FROM phpbb_user_group'
+						. ' FROM ' . $prefix . 'user_group'
 						. ' WHERE `user_id` = \'' . $bbuser->user_id . '\''
 						;
 				$database->setQuery( $query );
@@ -200,7 +274,7 @@ class mi_phpbb3
 			// If Not On Exclude List, apply expiration group & clear secondary groups (if set)
 			if ( !$onExcludeList ) {
 				// update PHPBB3 groups list
-				$queries[] = 'UPDATE phpbb_user_group'
+				$queries[] = 'UPDATE ' . $prefix . 'user_group'
 						. ' SET `group_id` = \'' . $this->settings['group'] . '\''
 						. ' WHERE `group_id` = \'' . $bbuser->group_id . '\''
 						. ' AND `user_id` = \'' . $bbuser->user_id . '\''
@@ -212,7 +286,7 @@ class mi_phpbb3
 					$color = '';
 				}
 
-				$queries[] = 'UPDATE phpbb_users'
+				$queries[] = 'UPDATE ' . $prefix . 'users'
 							. ' SET `group_id` = \'' . $this->settings['group'] . '\'' . $color
 							. ' WHERE `user_id` = \'' . $bbuser->user_id . '\''
 							;

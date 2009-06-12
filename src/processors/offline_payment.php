@@ -63,8 +63,8 @@ class processor_offline_payment extends processor
 		$settings['text_html']			= array( 'list_yesno' );
 		$settings['text']				= array( !empty( $this->settings['text_html'] ) ? 'editor' : 'inputD' );
 
-		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
-		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+ 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan');
+		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		return $settings;
 	}
