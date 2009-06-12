@@ -65,6 +65,8 @@ class plgSystemAECerrorhandler extends JPlugin
 
 		if ( file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
 
+			JError::setErrorHandling( E_ERROR, 'callback', array( 'plgSystemAECerrorhandler', 'redirectNotAllowed' ) );
+
 			// handle login redirect
 			$this->handleLoginRedirect();
 		}
@@ -121,8 +123,23 @@ class plgSystemAECerrorhandler extends JPlugin
 			$option = $uri->getVar( 'option' );
 
 			if ( $option == 'com_content' ) {
-				$mainframe->redirect( "index.php?option=com_acctexp&task=NotAllowed" );
+				$error = stdClass();
+				$error->code = 403;
+
+				$this->redirectNotAllowed( $error );
 			}
+		}
+	}
+
+
+	function redirectNotAllowed( $error )
+	{
+		if ( $error->code == 403 ) {
+			global $mainframe;
+
+			$mainframe->redirect( "index.php?option=com_acctexp&task=NotAllowed" );
+		} else {
+			JError::customErrorPage( $error );
 		}
 	}
 
