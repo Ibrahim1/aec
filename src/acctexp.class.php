@@ -527,8 +527,10 @@ class metaUser
 			}
 		}
 
-		if ( $this->focusSubscription->plan == $payment_plan->id ) {
-			return 'existing';
+		if ( is_object( $this->focusSubscription ) ) {
+			if ( $this->focusSubscription->plan == $payment_plan->id ) {
+				return 'existing';
+			}
 		}
 
 		$plan_params = $payment_plan->params;
@@ -11617,6 +11619,8 @@ class AECToolbox
 	{
 		global $database, $mainframe, $task, $acl, $aecConfig; // Need to load $acl for Joomla and CBE
 
+		ob_start();
+
 		// Let CB/JUSER think that everything is going fine
 		if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 			if ( GeneralInfoRequester::detect_component( 'CBE' ) || $overrideActivation ) {
@@ -11880,6 +11884,8 @@ class AECToolbox
 				mosMail( $adminEmail2, $adminName2, $admin->email, $subject2, $message2 );
 			}
 		}
+
+		ob_clean();
 
 		// We need the new userid, so we're fetching it from the newly created entry here
 		$query = 'SELECT `id`'
