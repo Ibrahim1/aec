@@ -11,27 +11,6 @@
 // Check to ensure this file is included in Joomla!
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-if ( !class_exists( 'mosDBTable' ) ) {
-	// We have a problem - the legacy bot is not published (yet).
-	// Issue error end do not load anything.
-
-	$db =& JFactory::getDBO();
-
-	$date	= date( 'Y-m-d H:i:s' );
-	$short	= 'Plugin could not be loaded';
-	$tags	= 'system,plugins,fatal';
-	$event	= 'One of the AEC Plugins could not be loaded because the Legacy Plugin not published or published after AEC plugins. MUST be published before AEC plugins!';
-	$level	= 128;
-	$notify	= 1;
-
-	$query = 'INSERT INTO #__acctexp_eventlog'
-			. ' (`datetime`, `short`, `tags`, `event`, `level`, `notify` )'
-			. ' VALUES (\'' . $date . '\', \'' . $short . '\', \'' . $tags . '\', \'' . $event . '\', \'' . $level . '\', \'' . $notify . '\')';
-
-	$db->setQuery( $query );
-	$db->query();
-} else {
-
 // Import library dependencies
 jimport('joomla.event.plugin');
 
@@ -66,6 +45,7 @@ class plgSystemAECerrorhandler extends JPlugin
 		if ( file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
 
 			JError::setErrorHandling( E_ERROR, 'callback', array( 'plgSystemAECerrorhandler', 'redirectNotAllowed' ) );
+			JError::setErrorHandling( E_WARNING, 'callback', array( 'plgSystemAECerrorhandler', 'redirectNotAllowed' ) );
 
 			// handle login redirect
 			$this->handleLoginRedirect();
@@ -123,7 +103,7 @@ class plgSystemAECerrorhandler extends JPlugin
 			$option = $uri->getVar( 'option' );
 
 			if ( $option == 'com_content' ) {
-				$error = stdClass();
+				$error = new stdClass();
 				$error->code = 403;
 
 				$this->redirectNotAllowed( $error );
@@ -142,8 +122,6 @@ class plgSystemAECerrorhandler extends JPlugin
 			JError::customErrorPage( $error );
 		}
 	}
-
-}
 
 }
 
