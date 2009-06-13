@@ -63,7 +63,7 @@ class processor_alertpay extends POSTprocessor
 		global $mosConfig_live_site;
 
 		$var['post_url']	= "https://www.alertpay.com/PayProcess.aspx";
-		if ( $this->settings->testmode ) {
+		if ( $this->settings['testmode'] ) {
 			$var['ap_test'] = '1';
 		}
 

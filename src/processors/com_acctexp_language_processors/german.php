@@ -790,4 +790,15 @@ define( '_CFG_AUTH_NETCASH_CONFIRMATION_NOTE_DESC', 'Message to show succesful p
 define( '_CFG_AUTH_NETCASH_HIDE_LOGIN_NAME', 'Hide Login');
 define( '_CFG_PROCESSOR_CONFIRMATION_NOTE_DESC', '??' );
 
+// Paybox.at
+define( '_CFG_PAYBOXAT_LONGNAME', 'Paybox.at');
+define( '_CFG_PAYBOXAT_STATEMENT', 'paybox macht dein Handy zur Geldbörse!');
+define( '_CFG_PAYBOXAT_DESCRIPTION', 'paybox macht dein Handy zur Geldbörse: das weltweit erste massenfähige System zur einfachen und sicheren Zahlungsabwicklung über das Mobiltelefon.');
+define( '_CFG_PAYBOXAT_USERNAME_NAME', 'Paybox Username');
+define( '_CFG_PAYBOXAT_USERNAME_DESC', 'Your electronic username assigned to you by Paybox');
+define( '_CFG_PAYBOXAT_PASSWORD_NAME', 'Paybox Password');
+define( '_CFG_PAYBOXAT_PASSWORD_DESC', 'Your Paybox password');
+define( '_CFG_PAYBOXAT_MERCHANT_PHONE_NAME', 'Merchant Phone');
+define( '_CFG_PAYBOXAT_MERCHANT_PHONE_DESC', 'The full phone number registered with Paybox.at');
+
 ?>

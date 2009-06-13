@@ -46,8 +46,9 @@ class processor_payboxat extends SOAPprocessor
 	{
 		$settings = array();
 		$settings['testmode']			= array( "list_yesno" );
-		$settings['login'] 				= array( "inputC" );
-		$settings['transaction_key']	= array( "inputC" );
+		$settings['username'] 			= array( "inputC" );
+		$settings['password'] 			= array( "inputC" );
+		$settings['merchant_phone']		= array( "inputC" );
 		$settings['currency']			= array( "list_currency" );
 		$settings['item_name']			= array( "inputE" );
 		$settings['customparams']		= array( 'inputD' );
