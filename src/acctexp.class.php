@@ -350,7 +350,7 @@ class metaUser
 		global $aecConfig;
 
 		// Make sure we catch traditional and new joomla passwords
-		if ( $password !== false) {
+		if ( ( $password !== false ) ) {
 			if ( strpos( $this->cmsUser->password, ':') === false ) {
 				if ( $this->cmsUser->password != md5( $password ) ) {
 					return false;
@@ -6811,25 +6811,25 @@ class InvoiceFactory
 		$this->loadMetaUser();
 
 		// Add in task in case this is not set in passthrough
-		if ( !isset( $var['task'] ) ) {
-			$var['task'] = 'subscribe';
+		if ( !isset( $this->passthrough['task'] ) ) {
+			$this->passthrough['task'] = 'subscribe';
 		}
 
 		// Add in userid in case this is not set in passthrough
-		if ( !isset( $var['userid'] ) ) {
-			$var['userid'] = $this->userid;
+		if ( !isset( $this->passthrough['userid'] ) ) {
+			$this->passthrough['userid'] = $this->userid;
 		}
 
 		if ( empty( $this->authed ) ) {
 			if ( !$this->metaUser->getTempAuth() ) {
-				if ( isset( $var['password'] ) ) {
-					if ( !$this->metaUser->setTempAuth( $var['password'] ) ) {
-						unset( $var['password'] );
-						$this->promptpassword( $option, $var, true );
+				if ( isset( $this->passthrough['password'] ) ) {
+					if ( !$this->metaUser->setTempAuth( $this->passthrough['password'] ) ) {
+						unset( $this->passthrough['password'] );
+						$this->promptpassword( $option, true );
 						$return = false;
 					}
 				} else {
-					$this->promptpassword( $option, $var );
+					$this->promptpassword( $option );
 					$return = false;
 				}
 			}
@@ -7371,7 +7371,7 @@ class InvoiceFactory
 			}
 		}
 
-		$this->loadMetaUser( false, true );
+		$this->loadMetaUser( true );
 		$this->metaUser->setTempAuth();
 
 		$this->puffer( $option );
