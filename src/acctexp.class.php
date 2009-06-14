@@ -6663,7 +6663,7 @@ class InvoiceFactory
 		$this->cartobject->action( 'clearCart' );
 	}
 
-	function touchInvoice( $option, $invoice_number=false )
+	function touchInvoice( $option, $invoice_number=false, $storenew=false )
 	{
 		// Checking whether we are trying to repeat an invoice
 		if ( $invoice_number !== false ) {
@@ -6675,7 +6675,7 @@ class InvoiceFactory
 			}
 		}
 
-		if ( !empty( $this->invoice_number ) ) {
+		if ( !empty( $this->invoice_number ) ) {print_r($this->invoice_number);
 			if ( !isset( $this->invoice ) ) {
 				$this->invoice = null;
 			}
@@ -6709,17 +6709,10 @@ class InvoiceFactory
 			if ( $id ) {
 				$this->invoice->load( $id );
 			} else {
-				$this->invoice->create( $this->userid, $this->usage, $this->processor );
-				$this->invoice->computeAmount( $this, false );
-
-				if ( is_object( $this->pp ) ) {
-					$this->pp->invoiceCreationAction( $this );
-				}
-
-				if ( !empty( $this->cart ) ) {
-					// TODO: $this->plan->triggerMIs( '_invoice_creation', $this->metaUser, null, $this->invoice );
-				} elseif ( !empty( $this->plan ) ) {
-					$this->plan->triggerMIs( '_invoice_creation', $this->metaUser, null, $this->invoice );
+				$this->invoice->create( $this->userid, $this->usage, $this->processor, null, $storenew );
+print_r($this);var_dump($storenew);
+				if ( $storenew ) {
+					$this->storeInvoice();
 				}
 			}
 
@@ -6739,6 +6732,21 @@ class InvoiceFactory
 		}
 
 		return;
+	}
+
+	function storeInvoice()
+	{
+		$this->invoice->storeload();
+
+		if ( is_object( $this->pp ) ) {
+			$this->pp->invoiceCreationAction( $this );
+		}
+
+		if ( !empty( $this->cart ) ) {
+			// TODO: $this->plan->triggerMIs( '_invoice_creation', $this->metaUser, null, $this->invoice );
+		} elseif ( !empty( $this->plan ) ) {
+			$this->plan->triggerMIs( '_invoice_creation', $this->metaUser, null, $this->invoice );
+		}
 	}
 
 	function loadMetaUser( $force=false )
@@ -7375,19 +7383,19 @@ class InvoiceFactory
 
 		$this->loadMetaUser( true );
 		$this->metaUser->setTempAuth();
-
+print_r("\n\n START \n\n");
 		$this->puffer( $option );
-
+print_r($this->invoice);
 		$this->touchInvoice( $option );
-
+print_r($this->invoice);
 		if ( !empty( $coupon ) ) {
 			$this->invoice->addCoupon( $coupon );
 			$this->invoice->storeload();
-
+print_r($this->invoice);
 			// Make sure we have the correct amount loaded
 			$this->touchInvoice( $option );
 		}
-
+print_r($this->invoice);print_r("\n\n END \n\n");
 		if ( !empty( $this->plan ) ) {
 			if ( is_object( $this->plan ) ) {
 				$mi_form = $this->plan->getMIformParams();
@@ -7448,7 +7456,7 @@ class InvoiceFactory
 	}
 
 	function checkout( $option, $repeat=0, $error=null )
-	{
+	{print_r("\n\n checkout \n\n");
 		global $database, $aecConfig;
 
 		if ( !$this->checkAuth( $option ) ) {
@@ -7456,9 +7464,9 @@ class InvoiceFactory
 		}
 
 		$this->puffer( $option );
-
-		$this->touchInvoice( $option );
-
+print_r("\n\n puffer \n\n");
+		$this->touchInvoice( $option, false, true );
+print_r("\n\n tI \n\n");exit;
 		$user_ident	= aecGetParam( 'user_ident', 0, true, array( 'string', 'clear_nonemail' ) );
 
 		if ( !empty( $user_ident ) && !empty( $this->invoice ) ) {
@@ -8168,7 +8176,7 @@ class Invoice extends serialParamDBTable
 		}
 	}
 
-	function create( $userid, $usage, $processor, $second_ident=null )
+	function create( $userid, $usage, $processor, $second_ident=null, $store=true )
 	{
 		global $mosConfig_offset;
 
@@ -8189,11 +8197,9 @@ class Invoice extends serialParamDBTable
 		$this->method			= $processor;
 		$this->usage			= $usage;
 
-		$this->computeAmount();
-
 		$this->params = array( 'creator_ip' => $_SERVER['REMOTE_ADDR'] );
 
-		$this->storeload();
+		$this->computeAmount( null, $store );
 	}
 
 	function generateInvoiceNumber( $maxlength = 16 )
@@ -10927,10 +10933,12 @@ class reWriteEngine
 				$this->rewrite['invoice_coupons']		=  '';
 			}
 
-			if ( !empty( $this->data['metaUser'] ) && !empty( $this->data['plan'] ) ) {
-				$this->data['invoice']->formatInvoiceNumber();
-				$this->rewrite['invoice_number_format']	= $this->data['invoice']->invoice_number;
-				$this->data['invoice']->deformatInvoiceNumber();
+			if ( !empty( $this->data['metaUser'] ) && !empty( $this->data['invoice'] ) ) {
+				if ( !empty( $this->data['invoice']->id ) ) {
+					$this->data['invoice']->formatInvoiceNumber();
+					$this->rewrite['invoice_number_format']	= $this->data['invoice']->invoice_number;
+					$this->data['invoice']->deformatInvoiceNumber();
+				}
 			}
 		}
 

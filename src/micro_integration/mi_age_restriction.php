@@ -113,7 +113,7 @@ class mi_age_restriction extends MI
 
 	function getAge( $bd )
 	{
-		return round( abs( ( time() - strtotime( $bd ) ) / 31556926 ) );
+		return ( time() - strtotime( $bd ) ) / 31536000;
 	}
 }
 ?>
