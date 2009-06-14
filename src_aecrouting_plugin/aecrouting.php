@@ -1,8 +1,8 @@
 <?php
 /**
- * @version $Id: bot_aec_hacks.php
+ * @version $Id: aecrouting.php
  * @package AEC - Account Control Expiration - Joomla 1.5 Plugins
- * @subpackage Hacks Plugin
+ * @subpackage Routing Plugin
  * @copyright 2006-2008 Copyright (C) David Deutsch
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
@@ -63,7 +63,7 @@ class plgSystemAECrouting extends JPlugin
 		if ( file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
 			include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
 
-			global $aecConfig;
+			global $mainframe, $aecConfig;
 
 			$uri = &JFactory::getURI();
 			$task	= $uri->getVar( 'task' );
@@ -85,7 +85,11 @@ class plgSystemAECrouting extends JPlugin
 
 			$no_usage	= $usage == 0;
 
+			// Community Builder
 			$ccb		= $option == 'com_comprofiler';
+			// JomSocial
+			$joms		= $option == 'com_community';
+			// Standard Joomla
 			$cu			= $option == 'com_user';
 
 			$j_reg		= $task == 'register';
@@ -103,21 +107,10 @@ class plgSystemAECrouting extends JPlugin
 			if ( ( $j15_reg || $j_reg || $cb_reg ) && $aecConfig->cfg['integrate_registration'] ) {
 				// Joomla or CB registration...
 				if ( ( $pfirst && !$no_usage ) || ( !$pfirst && $no_usage ) ) {
-					// Plans First and selected or not first and not selected
-					// Both cases = redirect to AEC on the next page
-					//$_REQUEST['option'] = "com_acctexp";
-					//$_REQUEST['task'] = "rerouteregister";
-					// Just to be sure
-					//unset( $option );
-					//global $option;
-					//$option = "com_acctexp";
-
-					global $mainframe;
 					$mainframe->redirect( 'index.php?option=com_acctexp&task=rerouteregister' );
 				} elseif ( $pfirst && $no_usage ) {
 					// Plans first and not yet selected
 					// Immediately redirect to plan selection
-					global $mainframe;
 					$mainframe->redirect( 'index.php?option=com_acctexp&task=subscribe' );
 				}
 			} elseif ( $cbsreg ) {
@@ -132,6 +125,31 @@ class plgSystemAECrouting extends JPlugin
 		}
 	}
 
+	/**
+	 * Example prepare content method
+	 *
+	 * Method is called by the view
+	 *
+	 * @param 	object		The article object.  Note $article->text is also available
+	 * @param 	object		The article params
+	 * @param 	int			The 'page' number
+	 */
+	function onPrepareContent( &$article, &$params, $limitstart )
+	{
+		global $mainframe, $aecConfig;
+
+		
+	}
+
+	function addAECvars( $search, $text )
+	{
+		
+
+		$replace = '<input type="hidden" name="planid" value="<?php echo $_POST[\'planid\'];?>" />' . "\n"
+						. '<input type="hidden" name="processor" value="<?php echo $_POST[\'processor\'];?>" />' . "\n"
+
+		return $text;
+	}
 }
 
 }
