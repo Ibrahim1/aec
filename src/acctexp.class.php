@@ -3758,30 +3758,13 @@ class SOAPprocessor extends XMLprocessor
 
 		# execute payment transaction
 		$response = array();
-		$response['return'] = $this->soapclient->call( $command, $content );
+		$response['raw'] = $this->soapclient->call( $command, $content );
 
 		$err = $this->soapclient->getError();
 
 		if ( $err != false ) {
 			$response['error'] = "Error calling SOAP function: " . $err;
-		} else {
-			$payment_error = $response['return']['error'];
-			$payment_description = $response['return']['errorDescription'];
-
-			$payment_id = new soapval('transactionRef', 'long', $response['return']['idTransaction']);
-			$language = new soapval('language', 'string', $language);
-
-			$payment_authorization = $response['return']['authorization'];
-
-			if ( $payment_error == 0 ) {
-			# acknowledge the transaction to Paybox
-				$this->soapclient->call('acknowledge', array($payment_id, $language));
-				echo "Die Zahlung war erfolgreich<br>";
-			} else {
-				echo "Die Zahlung war <b>NICHT</b> erfolgreich.<br>";
-			}
 		}
-
 
 		return $response;
 	}

@@ -306,12 +306,7 @@ class processor_authorize_aim extends XMLprocessor
 
 			$return['invoiceparams'] = array( "transaction_id" => $responsearray['transaction_id'] );
 
-			$stringarray = array();
-			foreach ( $responsearray as $name => $value ) {
-				$stringarray[] = $name . '=' . urlencode( stripslashes( $value ) );
-			}
-
-			$return['raw'] = implode( "\n", $stringarray );
+			$return['raw'] = $responsearray;
 		}
 
 		return $return;
