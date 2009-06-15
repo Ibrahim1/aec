@@ -499,7 +499,7 @@ class Payment_HTML
 				<div class="aec_group_backlink">
 					<?php
 					$urlbutton = $mosConfig_live_site . '/components/com_acctexp/images/back_button.png';
-					echo Payment_HTML::planpageButton( $option, 'subscribe', $urlbutton, array(), $userid, $passthrough, 'func_button' );
+					echo Payment_HTML::planpageButton( $option, 'subscribe', '', $urlbutton, array(), $userid, $passthrough, 'func_button' );
 					?>
 				</div>
 				<h2><?php echo $list['group']['name']; ?></h2>
@@ -522,7 +522,7 @@ class Payment_HTML
 							<?php
 							$urlbutton = $mosConfig_live_site . '/components/com_acctexp/images/select_button.png';
 							$hidden = array( array( 'group', $litem['id'] ) );
-							echo Payment_HTML::planpageButton( $option, 'subscribe', $urlbutton, $hidden, $userid, $passthrough );
+							echo Payment_HTML::planpageButton( $option, 'subscribe', '', $urlbutton, $hidden, $userid, $passthrough );
 							?>
 						</div>
 					<?php
@@ -557,6 +557,8 @@ class Payment_HTML
 		foreach ( $pps as $pp ) {
 			$gw_current = strtolower( $pp->processor_name );
 
+			$view = '';
+
 			if ( $gw_current == 'add_to_cart' ) {
 				$option		= 'com_acctexp';
 				$task		= 'addtocart';
@@ -569,8 +571,12 @@ class Payment_HTML
 			} else {
 				if ( $register ) {
 					if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
-						$option	= 'com_acctexp';
-						$task	= 'rerouteregister';
+						$option	= 'com_comprofiler';
+						$task	= 'registers';
+					} elseif ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) ) {
+						$option	= 'com_community';
+						$task	= '';
+						$view 	= 'register';
 					} else {
 						$option	= 'com_acctexp';
 						$task	= 'subscribe';
@@ -613,24 +619,40 @@ class Payment_HTML
 				}
 			}
 
-			$html_code .= Payment_HTML::planpageButton( $option, $task, $urlbutton, $hidden, $userid, $passthrough );
+			$html_code .= Payment_HTML::planpageButton( $option, $task, $view, $urlbutton, $hidden, $userid, $passthrough );
 		}
 
 		return $html_code;
 	}
 
-	function planpageButton( $option, $task, $urlbutton, $hidden, $userid, $passthrough, $class="gateway_button" )
+	function planpageButton( $option, $task, $view, $urlbutton, $hidden, $userid, $passthrough, $class="gateway_button" )
 	{
 		global $aecConfig;
 
+		$t = "";
+		if ( !empty( $task ) ) {
+			$t = '&amp;task=' . $task;
+		}
+
+		if ( !empty( $view ) ) {
+			$t = '&amp;view=' . $view;
+		}
+
 		$html_code = '';
 		$html_code .= '<div class="' . $class . '">' . "\n"
-		. '<form action="' . AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=' . $task, $aecConfig->cfg['ssl_signup'] ) . '"'
+		. '<form action="' . AECToolbox::deadsureURL( 'index.php?option=' . $option . $t, $aecConfig->cfg['ssl_signup'] ) . '"'
 		. ' method="post">' . "\n"
 		. '<input type="image" src="' . $urlbutton . '" border="0" name="submit" alt="submit" />';
 
 		$hidden[] = array( 'option', $option );
-		$hidden[] = array( 'task', $task );
+
+		if ( !empty( $task ) ) {
+			$hidden[] = array( 'task', $task );
+		}
+
+		if ( !empty( $view ) ) {
+			$hidden[] = array( 'view', $view );
+		}
 
 		$hidden[] = array( 'userid', ( $userid ? $userid : 0 ) );
 

@@ -82,7 +82,7 @@ class plgSystemAECrouting extends JPlugin
 		}
 
 		$vars['usage']		= intval( JRequest::getVar( 'usage', '0' ) );
-		$vars['processor']	= intval( JRequest::getVar( 'processor', '0' ) );
+		$vars['processor']	= JRequest::getVar( 'processor', '' );
 		$vars['recurring']	= intval( JRequest::getVar( 'recurring', '0' ) );
 
 		$vars['submit']		= JRequest::getVar( 'submit', '' );
