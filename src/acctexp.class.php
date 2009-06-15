@@ -6407,7 +6407,7 @@ class InvoiceFactory
 			}
 		}
 
-		if ( !is_null( $this->processor ) && !( $this->processor == '' ) ) {
+		if ( !empty( $this->processor ) ) {
 			$this->pp					= false;
 			$this->recurring			= 0;
 			$this->payment->method_name = _AEC_PAYM_METHOD_NONE;
@@ -6658,7 +6658,7 @@ class InvoiceFactory
 			}
 		}
 
-		if ( !empty( $this->invoice_number ) ) {print_r($this->invoice_number);
+		if ( !empty( $this->invoice_number ) ) {
 			if ( !isset( $this->invoice ) ) {
 				$this->invoice = null;
 			}
@@ -6669,7 +6669,7 @@ class InvoiceFactory
 			}
 
 			$this->invoice->loadInvoiceNumber( $this->invoice_number );
-			$this->invoice->computeAmount( $this );
+			$this->invoice->computeAmount( $this, empty( $this->invoice->id ) );
 
 			$this->processor = $this->invoice->method;
 			$this->usage = $this->invoice->usage;
@@ -6693,16 +6693,20 @@ class InvoiceFactory
 				$this->invoice->load( $id );
 			} else {
 				$this->invoice->create( $this->userid, $this->usage, $this->processor, null, $storenew );
-print_r($this);var_dump($storenew);
+
 				if ( $storenew ) {
 					$this->storeInvoice();
 				}
 			}
 
 			// Reset parameters
-			$this->processor			= $this->invoice->method;
-			$this->usage				= $this->invoice->usage;
-			$this->invoice_number		= $this->invoice->invoice_number;
+			if ( !empty( $this->invoice->method ) ) {
+				$this->processor			= $this->invoice->method;
+			}
+
+			if ( !empty( $this->invoice->usage ) ) {
+				$this->usage				= $this->invoice->usage;
+			}
 		}
 
 		$recurring = aecGetParam( 'recurring', null );
@@ -6711,7 +6715,6 @@ print_r($this);var_dump($storenew);
 			$this->recurring = $this->invoice->params['userselect_recurring'];
 		} elseif ( !is_null( $recurring ) ) {
 			$this->invoice->addParams( array( 'userselect_recurring' => $recurring ) );
-			$this->invoice->storeload();
 		}
 
 		return;
@@ -6722,7 +6725,7 @@ print_r($this);var_dump($storenew);
 		$this->invoice->storeload();
 
 		if ( is_object( $this->pp ) ) {
-			$this->pp->invoiceCreationAction( $this );
+			$this->pp->invoiceCreationAction( $this->invoice );
 		}
 
 		if ( !empty( $this->cart ) ) {
@@ -7122,12 +7125,25 @@ print_r($this);var_dump($storenew);
 					$savetask	= $task;
 					$task = 'blind';
 
-					include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_juser/juser.html.php' );
-					include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_juser/juser.php' );
+					include_once( $mosConfig_absolute_path . '/components/com_juser/juser.html.php' );
+					include_once( $mosConfig_absolute_path . '/components/com_juser/juser.php' );
 
 					$task = $savetask;
 
 					userRegistration( $option, null );
+				} elseif ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) ) {
+					// This is a JUSER registration, borrowing their code to register the user
+
+					global $mosConfig_absolute_path;
+
+					$_REQUEST['view'] = 'register';
+
+					// Simulate JomSocial dispatch
+					// TODO: Not working (because: stupid)
+					$mainframe->dispatch('com_community');
+					$mainframe->triggerEvent('onAfterDispatch');
+					$mainframe->render();
+					$mainframe->triggerEvent('onAfterRender');
 				} else {
 					if ( !isset( $_POST['usage'] ) ) {
 						$_POST['intro'] = $intro;
@@ -7366,19 +7382,19 @@ print_r($this);var_dump($storenew);
 
 		$this->loadMetaUser( true );
 		$this->metaUser->setTempAuth();
-print_r("\n\n START \n\n");
+
 		$this->puffer( $option );
-print_r($this->invoice);
+
 		$this->touchInvoice( $option );
-print_r($this->invoice);
+
 		if ( !empty( $coupon ) ) {
 			$this->invoice->addCoupon( $coupon );
 			$this->invoice->storeload();
-print_r($this->invoice);
+
 			// Make sure we have the correct amount loaded
 			$this->touchInvoice( $option );
 		}
-print_r($this->invoice);print_r("\n\n END \n\n");
+
 		if ( !empty( $this->plan ) ) {
 			if ( is_object( $this->plan ) ) {
 				$mi_form = $this->plan->getMIformParams();
@@ -7439,7 +7455,7 @@ print_r($this->invoice);print_r("\n\n END \n\n");
 	}
 
 	function checkout( $option, $repeat=0, $error=null )
-	{print_r("\n\n checkout \n\n");
+	{
 		global $database, $aecConfig;
 
 		if ( !$this->checkAuth( $option ) ) {
@@ -7447,9 +7463,9 @@ print_r($this->invoice);print_r("\n\n END \n\n");
 		}
 
 		$this->puffer( $option );
-print_r("\n\n puffer \n\n");
+
 		$this->touchInvoice( $option, false, true );
-print_r("\n\n tI \n\n");exit;
+
 		$user_ident	= aecGetParam( 'user_ident', 0, true, array( 'string', 'clear_nonemail' ) );
 
 		if ( !empty( $user_ident ) && !empty( $this->invoice ) ) {
@@ -10424,6 +10440,10 @@ class GeneralInfoRequester
 
 			case 'JUSER':
 				return file_exists( $mainframe->getCfg( 'absolute_path' ) . '/components/com_juser/juser.php' );
+				break;
+
+			case 'JOMSOCIAL':
+				return file_exists( $mainframe->getCfg( 'absolute_path' ) . '/components/com_community/community.php' );
 				break;
 		}
 	}
