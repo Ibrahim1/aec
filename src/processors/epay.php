@@ -11,7 +11,7 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' )) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_ePay extends POSTprocessor//processor //Evt. med [] omkring ePay
+class processor_epay extends POSTprocessor
 {
 	function info()
 	{
