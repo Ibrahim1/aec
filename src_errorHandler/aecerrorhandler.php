@@ -42,6 +42,11 @@ class plgSystemAECerrorhandler extends JPlugin
 	{
 		global $mainframe;
 
+		if ( strpos( JPATH_BASE, '/administrator' ) ) {
+			// Don't act when on backend
+			return true;
+		}
+
 		if ( file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
 
 			JError::setErrorHandling( E_ERROR, 'callback', array( 'plgSystemAECerrorhandler', 'redirectNotAllowed' ) );

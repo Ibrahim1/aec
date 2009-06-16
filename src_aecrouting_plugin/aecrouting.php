@@ -98,8 +98,7 @@ class plgSystemAECrouting extends JPlugin
 		// Standard Joomla
 		$vars['cu']			= $vars['option'] == 'com_user';
 
-		$vars['j_reg']		= $vars['cu']	&& ( $vars['task'] == 'register' );
-		$vars['j15_reg']	= $vars['cu']	&& ( $vars['view'] == 'register' );
+		$vars['j_reg']		= $vars['cu']	&& ( $vars['view'] == 'register' );
 		$vars['cb_reg']		= $vars['ccb']	&& ( $vars['task'] == 'registers' );
 		$vars['joms_reg']	= $vars['joms']	&& ( $vars['view'] == 'register' );
 		$vars['joms_regp']	= $vars['joms']	&& ( $vars['view'] == 'register' ) && ( $vars['task'] == 'registerProfile' );
@@ -108,7 +107,7 @@ class plgSystemAECrouting extends JPlugin
 		$vars['tsue']		= $vars['task'] == 'saveUserEdit';
 		$vars['tsu']		= $vars['task'] == 'save';
 
-		$vars['isreg']		= ( $vars['j15_reg'] || $vars['j_reg'] || $vars['cb_reg'] || $vars['joms_reg'] || $vars['joms_regp'] );
+		$vars['isreg']		= ( $vars['j_reg'] || $vars['cb_reg'] || $vars['joms_reg'] || $vars['joms_regp'] );
 
 		$vars['cbsreg']		= ( ( $vars['ccb'] && $vars['tsue'] ) || ( $vars['cu'] && $vars['tsu'] ) );
 
@@ -120,6 +119,11 @@ class plgSystemAECrouting extends JPlugin
 
 	function onAfterRoute()
 	{
+		if ( strpos( JPATH_BASE, '/administrator' ) ) {
+			// Don't act when on backend
+			return true;
+		}
+
 		if ( file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
 			include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
 
@@ -127,7 +131,7 @@ class plgSystemAECrouting extends JPlugin
 
 			if ( $vars['isreg'] && $vars['int_reg'] ) {
 				// Joomla or CB registration...
-				if ( $vars['pfirst'] && !$vars['has_usage'] ) {
+				if ( $vars['pfirst'] && !$vars['has_usage'] ) {print_r("redirect!");
 					// Plans first and not yet selected -> select!
 					$mainframe->redirect( 'index.php?option=com_acctexp&task=subscribe' );
 				}
@@ -145,12 +149,17 @@ class plgSystemAECrouting extends JPlugin
 
 	function onAfterRender()
 	{
-		global $mainframe, $aecConfig;
-
-		$body = JResponse::getBody();
+		if ( strpos( JPATH_BASE, '/administrator' ) ) {
+			// Don't act when on backend
+			return true;
+		}
 
 		if ( file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
 			include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
+
+			global $mainframe, $aecConfig;
+
+			$body = JResponse::getBody();
 
 			$vars = $this->getVars();
 
@@ -164,7 +173,7 @@ class plgSystemAECrouting extends JPlugin
 				return;
 			}
 
-			if ( !( $vars['ccb'] || $vars['joms_regp'] || $vars['joms_reg'] ) ) {
+			if ( !( $vars['j_reg'] || $vars['ccb'] || $vars['joms_regp'] || $vars['joms_reg'] ) ) {
 				return;
 			}
 
@@ -194,9 +203,26 @@ class plgSystemAECrouting extends JPlugin
 				$replace[]	= '<input type="hidden" name="task" value="subscribe" />';
 			} elseif ( $vars['joms_reg'] ) {
 				$addinmarker = '<input type="hidden" name="task" value="register_save" />';
-			} elseif ( $vars['j15_reg'] ) {
-				$search[]	= '<form action="' . JRoute::_( 'index.php?option=com_acctexp' ) . '" method="post"';
+			} elseif ( $vars['j_reg'] ) {
+				$addinmarker = '<input type="hidden" name="task" value="register_save" />';
+
+				$search[]	= $addinmarker;
+				$replace[]	= '<input type="hidden" name="task" value="subscribe" />'
+								. '<input type="hidden" name="option" value="com_acctexp" />';
+
+				$search[]	= '<form action="' . JRoute::_( 'index.php?option=com_user' ) . '" method="post"';
 				$replace[]	= '<form action="' . JRoute::_( 'index.php?option=com_acctexp' ) . '" method="post"';
+
+				if ( $aecConfig->cfg['use_recaptcha'] && !empty( $aecConfig->cfg['recaptcha_publickey'] ) ) {
+					global $mosConfig_absolute_path;
+
+					require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
+
+					$search[]	= 'type="password" id="password2" name="password2" size="40" value="" />';
+					$replace[]	= 'type="password" id="password2" name="password2" size="40" value="" />'
+									. '<tr><td height="40"><label></label></td><td>'
+									. recaptcha_get_html( $aecConfig->cfg['recaptcha_publickey'] ) . '</td></tr>';
+				}
 			}
 
 			if ( !empty( $addinmarker ) ) {

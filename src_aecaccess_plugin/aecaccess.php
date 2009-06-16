@@ -70,6 +70,11 @@ class plgUserAECaccess extends JPlugin
 	 */
 	function onLoginUser( $credentials, $remember )
 	{
+		if ( strpos( JPATH_BASE, '/administrator' ) ) {
+			// Don't act when entering admin area
+			return true;
+		}
+
 		if ( file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
 			include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
 
@@ -122,11 +127,6 @@ class plgUserAECaccess extends JPlugin
 
 	function verify( $credentials)
 	{
-		if ( strpos( JPATH_BASE, '/administrator' ) ) {
-			// Don't act when entering admin area
-			return true;
-		}
-
 		$savetask = '';
 		if ( isset( $_REQUEST['task'] ) ) {
 			$_REQUEST['task'] = '';
