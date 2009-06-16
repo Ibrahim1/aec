@@ -12,6 +12,9 @@
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 //error_reporting(E_ALL);
 
+// Trying to buy us some time
+@set_time_limit( 240 );
+
 if ( !function_exists( 'aecJoomla15check' ) ) {
 	function aecJoomla15check()
 	{
