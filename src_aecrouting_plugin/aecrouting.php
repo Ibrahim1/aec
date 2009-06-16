@@ -194,6 +194,9 @@ class plgSystemAECrouting extends JPlugin
 				$replace[]	= '<input type="hidden" name="task" value="subscribe" />';
 			} elseif ( $vars['joms_reg'] ) {
 				$addinmarker = '<input type="hidden" name="task" value="register_save" />';
+			} elseif ( $vars['j15_reg'] ) {
+				$search[]	= '<form action="' . JRoute::_( 'index.php?option=com_acctexp' ) . '" method="post"';
+				$replace[]	= '<form action="' . JRoute::_( 'index.php?option=com_acctexp' ) . '" method="post"';
 			}
 
 			if ( !empty( $addinmarker ) ) {
