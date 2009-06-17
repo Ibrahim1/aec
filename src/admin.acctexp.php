@@ -2327,7 +2327,7 @@ function saveSettings( $option, $return=0 )
 	unset( $_POST['task'] );
 	unset( $_POST['option'] );
 
-	if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
+	if ( GeneralInfoRequester::detect_component( 'anyCB' ) && !aecJoomla15check() ) {
 		$ch = hackcorefile( $option, 'comprofilerhtml2', true, false, true );
 
 		if ( ( !$ch && $_POST['plans_first'] ) || ( $ch && !$_POST['plans_first'] ) ) {
@@ -5218,12 +5218,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 
 	$cmsname = strtolower( GeneralInfoRequester::getCMSName() );
 
-	if ( strcmp( $cmsname, 'joomla15' ) === 0 ) {
-		$cmsname = 'joomla';
-		$v15 = true;
-	} else {
-		$v15 = false;
-	}
+	$v15 = aecJoomla15check();
 
 	$aec_hack_start				= "// AEC HACK %s START" . "\n";
 	$aec_hack_end				= "// AEC HACK %s END" . "\n";
@@ -5546,6 +5541,11 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.html.php';
 		$hacks[$n]['read']			=	'echo HTML_comprofiler::_cbTemplateRender( $user, \'RegisterForm\'';
 		$hacks[$n]['insert']		=	sprintf($aec_regvarshack_fixcb, $n, $n) . "\n" . $hacks[$n]['read'];
+
+		if ( $v15 ) {
+			$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY;
+			$hacks[$n]['legacy']		=	1;
+		}
 
 	} elseif ( GeneralInfoRequester::detect_component( 'CB' ) ) {
 		$n = 'comprofilerphp2';
