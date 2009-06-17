@@ -131,7 +131,7 @@ class plgSystemAECrouting extends JPlugin
 
 			if ( $vars['isreg'] && $vars['int_reg'] ) {
 				// Joomla or CB registration...
-				if ( $vars['pfirst'] && !$vars['has_usage'] ) {print_r("redirect!");
+				if ( $vars['pfirst'] && !$vars['has_usage'] ) {
 					// Plans first and not yet selected -> select!
 					$mainframe->redirect( 'index.php?option=com_acctexp&task=subscribe' );
 				}
