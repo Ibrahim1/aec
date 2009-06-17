@@ -1,11 +1,11 @@
 <?php
 
-class processor_suncorp_migs_vpc extends POSTprocessor
+class processor_suncorp_migs extends POSTprocessor
 {
 	function info()
 	{
 		$info = array();
-		$info['name']					= "suncorp_migs_vpc";
+		$info['name']					= "suncorp_migs";
 		$info['longname']				= "MIGS";
 		$info['statement']				= "Suncorp VPC MIGS";
 		$info['description']			= 'Suncorp VPC MIGS';
@@ -23,7 +23,7 @@ class processor_suncorp_migs_vpc extends POSTprocessor
 		$settings['vpc_AccessCode']		= "ACCESSCODE";
 		$settings['vpc_Merchant']		= "MERCHANTCODE";
 		$settings['vpc_Locale']			= "en";
-		$settings['vpc_SecureHash']		= "HASHCODE";
+		$settings['vpc_SecureSecret']	= "SECRET CODE";
 		$settings['vpc_OrderInfo']		= "VPC test";
 		$settings['testmode']			= 0;
 		$settings['vpc_TicketNo']		= "xxx";
@@ -73,56 +73,12 @@ class processor_suncorp_migs_vpc extends POSTprocessor
 		return $var;
 	}
 
-/**
- * 350     2009-06-08 09:03:46     star     Error     Failed Invoice Payment     invoice, processor, payment, error     Processor migs notification for has failed - invoice number does not exist:     invoice_number()
- * 349     2009-06-08 09:03:46     star     Error     debug     debug     "POST:[]"     None
- * 348     2009-06-08 09:03:46     star     Error     debug     debug
- * "GET:{
- * "option":"com_acctexp",
- * "task":"migsnotification",
- * "Itemid":"",
- * "AgainLink":"...url...",
- * "vpc_Amount":"100",
- * "vpc_BatchNo":"0",
- * "vpc_Command":"pay",
- * "vpc_Locale":"en",
- * "vpc_MerchTxnRef":"IMTI3MWE3MDI5Yzlk",
- * "vpc_Merchant":"TEST59075896",
- * "vpc_Message":"Access code [--- ] for merchant [TEST59075896] is incorrect.",
- * "vpc_OrderInfo":"VPC test",
- * "vpc_SecureHash":"0B1E0E9817D38864FC1E50FDA57DDB7A",
- * "vpc_TransactionNo":"0",
- * "vpc_TxnResponseCode":"7",
- * "vpc_Version":"1"
- * }"     None
- * 344     2009-06-08 08:56:46     star     Error     debug     debug "
- * GET:{
- * "option":"com_acctexp",
- * "task":"migsnotification",
- * "Itemid":"",
- * "AgainLink":"...url...",
- * "vpc_Amount":"100",
- * "vpc_BatchNo":"0",
- * "vpc_Command":"pay",
- * "vpc_Locale":"en",
- * "vpc_MerchTxnRef":"IMjA4ODVjNzJjYTM1",
- * "vpc_Merchant":"TEST59075896",
- * "vpc_Message":"Access code [--- ] for merchant [TEST59075896] is incorrect.",
- * "vpc_OrderInfo":"VPC test",
- * "vpc_SecureHash":"FD93A72309097D0534C7075F80F42FED",
- * "vpc_TransactionNo":"0",
- * "vpc_TxnResponseCode":"7",
- * "vpc_Version":"1"
- * }"     None
- * 343     2009-06-08 08:56:46     star     Error     debug     debug "ResponseFunction:processNotification"
- */
-
 	function parseNotification( $post )
 	{
 		$response = array();
 
 		$response['invoice']	= $_GET['vpc_MerchTxnRef'];
-		$response['amount']		= $_GET['vpc_MerchTxnRef'] / 100;
+		$response['amount']		= $_GET['vpc_Amount'] / 100;
 
 		return $response;
 	}

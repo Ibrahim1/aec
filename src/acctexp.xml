@@ -164,7 +164,7 @@
 		<filename>processors/paysignet.php</filename>
 		<filename>processors/paysite_cash.php</filename>
 		<filename>processors/psigate.php</filename>
-		<filename>processors/suncorp_migs_vpc.php</filename>
+		<filename>processors/suncorp_migs.php</filename>
 		<filename>processors/vcs.php</filename>
 		<filename>processors/viaklix.php</filename>
 		<filename>processors/virtualmerchant.php</filename>
