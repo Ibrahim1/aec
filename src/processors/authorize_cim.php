@@ -178,8 +178,8 @@ class processor_authorize_cim extends PROFILEprocessor
 					}
 				}
 
-				if ( isset( $ppParams->shippingProfiles[$ppParams->profileid] ) ) {
-					$stored_spid = $ppParams->shippingProfiles[$ppParams->profileid]->profileid;
+				if ( isset( $ppParams->shippingProfiles[$ppParams->shippingprofileid] ) ) {
+					$stored_spid = $ppParams->shippingProfiles[$ppParams->shippingprofileid]->profileid;
 
 					$cim->setParameter( 'customerAddressId', $stored_spid );
 					$cim->updateCustomerShippingAddressRequest( $this );
@@ -574,7 +574,7 @@ class processor_authorize_cim extends PROFILEprocessor
 			} else {
 				$amount = $request->int_var['amount'];
 			}
-aecDebug('Initiating Payment');aecDebug($request->int_var['amount']);
+
 			$cim->setParameter( 'transaction_amount',	AECToolbox::correctAmount( $amount ) );
 
 			$cim->setParameter( 'transactionType',		'profileTransAuthCapture' );
@@ -645,8 +645,8 @@ aecDebug('Initiating Payment');aecDebug($request->int_var['amount']);
 	{
 		$cim = new AuthNetCim( $this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode'] );
 
-		$cim->setParameter( 'customerProfileId', $ppParams->paymentProfiles[$ppParams->profileid]->profileid );
-		$cim->setParameter( 'customerAddressId', $ppParams->shippingProfiles[$ppParams->profileid]->profileid );
+		$cim->setParameter( 'customerProfileId', $ppParams->profileid );
+		$cim->setParameter( 'customerAddressId', $ppParams->shippingProfiles[$ppParams->shippingprofileid]->profileid );
 		$cim->getCustomerShippingAddressRequest( $this );
 
 		if ( $cim->isSuccessful() ) {
@@ -664,28 +664,28 @@ aecDebug('Initiating Payment');aecDebug($request->int_var['amount']);
 	function validateSubscription( $subscription_id )
 	{
 		global $database;
-aecDebug("Call to validate subscriptionid: " . $subscription_id );
+
 		$subscription = new Subscription( $database );
 		$subscription->load( $subscription_id );
 
 		$allowed = array( "Trial", "Active" );
-aecDebug("Subscription Status: " . $subscription->status );
+
 		if ( !in_array( $subscription->status, $allowed ) ) {
 			return false;
 		}
 
 		$invoice = new Invoice( $database );
 		$invoice->loadbySubscriptionId( $subscription_id );
-aecDebug("Affected Invoice: " . $invoice->id );
+
 		$metaUser = new metaUser( $invoice->userid );
-		$ppParams = $metaUser->meta->getProcessorParams( $request->parent->id );
-aecDebug("Profile ID to be loaded: " . $ppParams->profileid );
+		$ppParams = $metaUser->meta->getProcessorParams( $this->id );
+
 		if ( !empty( $ppParams->profileid ) ) {
 			$cim = $this->loadCIM( $ppParams );
 
-			$cim->setParameter( 'customerProfileId',		$ppParams->paymentProfiles[$ppParams->profileid]->profileid );
+			$cim->setParameter( 'customerProfileId',		$ppParams->profileid );
 			$cim->getCustomerProfileRequest( $this );
-aecDebug("loading Profile...");aecDebug($cim);
+
 			$cim->setParameter( 'customerProfileId',		$cim->customerProfileId );
 			$cim->setParameter( 'customerPaymentProfileId',	$cim->customerPaymentProfileId );
 			$cim->setParameter( 'customerAddressId',		$cim->customerAddressId );
@@ -698,10 +698,10 @@ aecDebug("loading Profile...");aecDebug($cim);
 			$cim->setParameter( 'merchantCustomerId',		$invoice->userid );
 
 			$cim->setParameter( 'transactionType',			'profileTransAuthCapture' );
-aecDebug("setting Params...");aecDebug($cim);
+
 			$cim->createCustomerProfileTransactionRequest( $this );
-aecDebug("made transactionRequest...");aecDebug($cim);
-			if ( $cim->isSuccessful() ) {aecDebug("successful!");
+
+			if ( $cim->isSuccessful() ) {
 				$invoice->pay();
 				return true;
 			}

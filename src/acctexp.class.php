@@ -2470,6 +2470,8 @@ class PaymentProcessor
 			// Initiate Payment Processor Class
 			$class_name = 'processor_' . $this->processor_name;
 			$this->processor = new $class_name( $database );
+			$this->processor->id = $this->id;
+
 			return true;
 		} else {
 			return false;
