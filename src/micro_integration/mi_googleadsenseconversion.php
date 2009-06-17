@@ -25,7 +25,7 @@ class mi_googleadsenseconversion
 	function Settings()
 	{
 		$settings = array();
-		$settings['account_id']		= array( 'inputB' );
+		$settings['conversion_id']	= array( 'inputB' );
 		$settings['language']		= array( 'inputB' );
 		$settings['format']			= array( 'inputB' );
 		$settings['color']			= array( 'inputB' );

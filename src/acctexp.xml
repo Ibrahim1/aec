@@ -139,6 +139,7 @@
 		<filename>processors/chase_paymentech.php</filename>
 		<filename>processors/clickbank.php</filename>
 		<filename>processors/cybermut.php</filename>
+		<filename>processors/epay.php</filename>
 		<filename>processors/epsnetpay.php</filename>
 		<filename>processors/eway.php</filename>
 		<filename>processors/ewayxml.php</filename>
@@ -163,6 +164,7 @@
 		<filename>processors/paysignet.php</filename>
 		<filename>processors/paysite_cash.php</filename>
 		<filename>processors/psigate.php</filename>
+		<filename>processors/suncorp_migs_vpc.php</filename>
 		<filename>processors/vcs.php</filename>
 		<filename>processors/viaklix.php</filename>
 		<filename>processors/virtualmerchant.php</filename>
