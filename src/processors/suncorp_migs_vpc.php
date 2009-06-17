@@ -20,10 +20,10 @@ class processor_suncorp_migs_vpc extends POSTprocessor
 		$settings = array();
 		$settings['vpc_Version']		= "1";
 		$settings['vpc_Command']		= "pay";
-		$settings['vpc_AccessCode']		= "DD3A01D1";
-		$settings['vpc_Merchant']		= "TEST59075896";
+		$settings['vpc_AccessCode']		= "ACCESSCODE";
+		$settings['vpc_Merchant']		= "MERCHANTCODE";
 		$settings['vpc_Locale']			= "en";
-		$settings['vpc_SecureHash']		= "80DB29544054DF49F75F1DAAD4E7A07D";
+		$settings['vpc_SecureHash']		= "HASHCODE";
 		$settings['vpc_OrderInfo']		= "VPC test";
 		$settings['testmode']			= 0;
 		$settings['vpc_TicketNo']		= "xxx";
@@ -121,8 +121,8 @@ class processor_suncorp_migs_vpc extends POSTprocessor
 	{
 		$response = array();
 
-		$response['invoice'] = $post['vpc_MerchTxnRef'];
-		$response['invoice'] = $post['vpc_MerchTxnRef'];
+		$response['invoice']	= $_GET['vpc_MerchTxnRef'];
+		$response['amount']		= $_GET['vpc_MerchTxnRef'] / 100;
 
 		return $response;
 	}
