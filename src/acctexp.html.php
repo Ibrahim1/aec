@@ -834,7 +834,7 @@ class Payment_HTML
 						<tr>
 							<td class="giftdetails">
 								<?php if ( !empty( $InvoiceFactory->invoice->params['target_user'] ) ) { ?>
-									<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username']; ?> (<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceRemoveGiftConfirm&amp;invoice='.$InvoiceFactory->invoice_number, $aecConfig->cfg['ssl_signup'] ); ?>">undo?</a>)</p>
+									<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username']; ?> (<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceRemoveGiftConfirm&amp;invoice='.$InvoiceFactory->invoice->invoice_number, $aecConfig->cfg['ssl_signup'] ); ?>">undo?</a>)</p>
 								<?php } else { ?>
 									<p><?php echo _CHECKOUT_GIFT_INFO; ?></p>
 									<input type="text" size="20" name="user_ident" class="inputbox" value="" />
@@ -1029,7 +1029,7 @@ class Payment_HTML
 						<tr>
 							<td class="giftdetails">
 								<?php if ( !empty( $InvoiceFactory->invoice->params['target_user'] ) ) { ?>
-									<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username']; ?> (<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceRemoveGiftCart&amp;invoice='.$InvoiceFactory->invoice_number, $aecConfig->cfg['ssl_signup'] ); ?>">undo?</a>)</p>
+									<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username']; ?> (<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceRemoveGiftCart&amp;invoice='.$InvoiceFactory->invoice->invoice_number, $aecConfig->cfg['ssl_signup'] ); ?>">undo?</a>)</p>
 								<?php } else { ?>
 									<p><?php echo _CHECKOUT_GIFT_INFO; ?></p>
 									<input type="text" size="20" name="user_ident" class="inputbox" value="" />
@@ -1174,7 +1174,7 @@ class Payment_HTML
 									}
 									$ta .= '&nbsp;[<a href="'
 										. AECToolbox::deadsureURL( 'index.php?option=' . $option
-										. '&amp;task=InvoiceRemoveCoupon&amp;invoice=' . $InvoiceFactory->invoice_number
+										. '&amp;task=InvoiceRemoveCoupon&amp;invoice=' . $InvoiceFactory->invoice->invoice_number
 										. '&amp;coupon_code=' . $citem->cost['coupon'] )
 										. '" title="' . _CHECKOUT_INVOICE_COUPON_REMOVE . '">'
 										. _CHECKOUT_INVOICE_COUPON_REMOVE . '</a>]';
@@ -1247,7 +1247,7 @@ class Payment_HTML
 								<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
 								<input type="hidden" name="option" value="<?php echo $option; ?>" />
 								<input type="hidden" name="task" value="InvoiceAddCoupon" />
-								<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice_number; ?>" />
+								<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice->invoice_number; ?>" />
 								<input type="submit" class="button" value="<?php echo _BUTTON_APPLY; ?>" />
 							</form>
 						</td>
@@ -1281,14 +1281,14 @@ class Payment_HTML
 					<tr>
 						<td class="giftdetails">
 							<?php if ( !empty( $InvoiceFactory->invoice->params['target_user'] ) ) { ?>
-								<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username']; ?> (<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceRemoveGift&amp;invoice='.$InvoiceFactory->invoice_number, $aecConfig->cfg['ssl_signup'] ); ?>">undo?</a>)</p>
+								<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username']; ?> (<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceRemoveGift&amp;invoice='.$InvoiceFactory->invoice->invoice_number, $aecConfig->cfg['ssl_signup'] ); ?>">undo?</a>)</p>
 							<?php } else { ?>
 							<p><?php echo _CHECKOUT_GIFT_INFO; ?></p>
 							<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceMakeGift', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 								<input type="text" size="20" name="user_ident" class="inputbox" value="" />
 								<input type="hidden" name="option" value="<?php echo $option; ?>" />
 								<input type="hidden" name="task" value="InvoiceMakeGift" />
-								<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice_number; ?>" />
+								<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice->invoice_number; ?>" />
 								<input type="submit" class="button" value="<?php echo _BUTTON_APPLY; ?>" />
 							</form>
 							<?php } ?>
@@ -1305,7 +1305,7 @@ class Payment_HTML
 								<?php echo $params; ?>
 								<input type="hidden" name="option" value="<?php echo $option; ?>" />
 								<input type="hidden" name="task" value="InvoiceAddParams" />
-								<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice_number; ?>" />
+								<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice->invoice_number; ?>" />
 								<input type="submit" class="button" value="<?php echo _BUTTON_APPEND; ?>" />
 							</form>
 						</td>
@@ -1397,7 +1397,7 @@ class Payment_HTML
 				<td class="checkout_action">
 						<input type="hidden" name="option" value="<?php echo $option; ?>" />
 						<input type="hidden" name="task" value="addressException" />
-						<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice_number; ?>" />
+						<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice->invoice_number; ?>" />
 						<input type="hidden" name="userid" value="<?php echo $InvoiceFactory->metaUser->userid; ?>" />
 						<input type="submit" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
 					</form>

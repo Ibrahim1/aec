@@ -129,7 +129,7 @@ class mammonTerms extends eucaObject
 		foreach ( $this->terms as $tid => $term ) {
 			$apointer++;
 			if ( $tid < $this->pointer ) {
-				continue;
+				continue;var_dump("continue!");
 			}
 
 			$i = $apointer;
@@ -148,6 +148,9 @@ class mammonTerms extends eucaObject
 				$amount['unit'.$i]		= $term->duration['unit'];
 			} else {
 				$amount = $term->renderTotal();
+
+				// Only render "next" amount
+				return $amount;
 			}
 		}
 
@@ -513,7 +516,7 @@ class mammonCost extends eucaObject
 	 */
 	function renderCost()
 	{
-		return $this->cost['amount'];
+		return AECToolbox::correctAmount( $this->cost['amount'] );
 	}
 
 	/**

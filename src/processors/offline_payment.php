@@ -23,6 +23,7 @@ class processor_offline_payment extends processor
 		$info['currencies']		= AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list']		= "";
 		$info['recurring']		= 0;
+		$info['actions']		= array('email');
 
 		return $info;
 	}
@@ -67,6 +68,29 @@ class processor_offline_payment extends processor
 		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		return $settings;
+	}
+
+	function customaction_email( $request )
+	{
+		$message	= AECToolbox::rewriteEngineRQ( $this->settings['text'], $request );
+		$subject	= AECToolbox::rewriteEngineRQ( $this->settings['subject'], $request );
+
+		if ( empty( $message ) ) {
+			return null;
+		}
+
+		$recipients = AECToolbox::rewriteEngineRQ( $this->settings['recipient'], $request );
+		$recips = explode( ',', $recipients );
+
+        $recipients2 = array();
+        foreach ( $recips as $k => $email ) {
+            $recipients2[$k] = trim( $email );
+        }
+        $recipients = $recipients2;
+
+		mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'] );
+
+		return true;
 	}
 
 	function invoiceCreationAction( $objInvoice )

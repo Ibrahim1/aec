@@ -597,6 +597,10 @@ class metaUser
 
 		}
 
+		if ( empty( $this->objSubscription ) && !empty( $this->focusSubscription ) ) {
+			$this->objSubscription = $this->focusSubscription;
+		}
+
 		$this->temporaryRFIX();
 
 		return $return;
@@ -2794,6 +2798,7 @@ class PaymentProcessor
 			$request->parent			=& $this;
 			$request->metaUser			=& $metaUser;
 			$request->invoice			=& $invoice;
+			$request->plan				=& $invoice->getObjUsage();
 
 			return $this->processor->$method( $request );
 		} else {
@@ -6471,13 +6476,15 @@ class InvoiceFactory
 		if ( empty( $this->cart ) ) {
 			$return = $this->plan->getReturnTerms( $this->recurring, $user_subscription );
 
-			$this->terms = $return['terms'];
+			$terms = $return['terms'];
 
-			$this->payment->amount = $this->terms->nextterm->renderTotal();
+			$this->payment->amount = $terms->nextterm->renderTotal();
 
-			if ( $this->terms->nextterm->free && ( $this->terms->nextterm->get( 'type' ) == 'trial' ) ) {
+			if ( $terms->nextterm->free && ( $terms->nextterm->get( 'type' ) == 'trial' ) ) {
 				$this->payment->freetrial = 1;
 			}
+
+			$this->items[] = array( 'item' => array( 'obj' => $this->plan ), 'terms' => $terms );
 		} else {
 			$this->payment->amount = $this->cartobject->getAmount( $this->metaUser, $this->cart );
 		}
@@ -6648,10 +6655,10 @@ class InvoiceFactory
 		$this->cartobject->action( 'clearCart' );
 	}
 
-	function touchInvoice( $option, $invoice_number=false, $storenew=false )
+	function touchInvoice( $option, $invoice_number=false, $storenew=false, $coupon=false )
 	{
 		// Checking whether we are trying to repeat an invoice
-		if ( $invoice_number !== false ) {
+		if ( !empty( $invoice_number ) ) {
 			// Make sure the invoice really exists and that its the correct user carrying out this action
 			$invoiceid = AECfetchfromDB::InvoiceIDfromNumber($invoice_number, $this->userid);
 
@@ -7720,7 +7727,7 @@ class InvoiceFactory
 	{
 		global $database;
 
-		$this->metaUser = new metaUser( $this->userid );
+		$this->loadMetaUser();
 
 		$invoice = new Invoice( $database );
 
@@ -7737,6 +7744,29 @@ class InvoiceFactory
 		if ( empty( $invoice->id ) ) {
 			$invoice->load( AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $this->userid, $this->metaUser->focusSubscription->plan ) );
 		}
+
+		$pp = new PaymentProcessor( $database );
+		if ( $pp->loadName( $invoice->method ) ) {
+			$pp->fullInit();
+		}
+
+		$response = $pp->customAction( $action, $invoice, $this->metaUser );
+
+		$invoice->processorResponse( $pp, $response, '', true );
+
+		if ( isset( $response['cancel'] ) ) {
+			HTML_Results::cancel( 'com_acctexp' );
+		}
+	}
+
+	function invoiceprocessoraction( $action, $invoiceNum=null )
+	{
+		global $database;
+
+		$this->loadMetaUser();
+
+		$invoice = new Invoice( $database );
+		$invoice->loadInvoiceNumber( $invoiceNum );
 
 		$pp = new PaymentProcessor( $database );
 		if ( $pp->loadName( $invoice->method ) ) {
@@ -8851,13 +8881,7 @@ class Invoice extends serialParamDBTable
 					$recurring = $InvoiceFactory->pp->is_recurring();
 				}
 
-				if ( $InvoiceFactory->metaUser->hasSubscription ) {
-					$amount = $plan->getReturnTerms( $recurring, $InvoiceFactory->metaUser->objSubscription, $InvoiceFactory->metaUser );
-				} else {
-					$amount = $plan->getReturnTerms( $recurring, false, $InvoiceFactory->metaUser );
-				}
-
-				$amount['amount'] = $amount['terms']->getOldAmount( $recurring );
+				$amount['amount'] = $InvoiceFactory->items[0]['terms']->getOldAmount( $recurring );
 
 				if ( !empty( $plan->params['customthanks'] ) || !empty( $plan->params['customtext_thanks'] ) ) {
 					$urladd .= '&amp;u=' . $this->usage;

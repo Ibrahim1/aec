@@ -273,6 +273,13 @@ if ( !empty( $task ) ) {
 			planaction( $option, $action, $subscr );
 			break;
 
+		case 'invoiceaction':
+			$action		= aecGetParam( 'action', 0, true, array( 'word', 'string' ) );
+			$invoice	= aecGetParam( 'invoice', '', true, array( 'word', 'int' ) );
+
+			invoiceaction( $option, $action, $invoice );
+			break;
+
 		case 'invoicemakegift':
 			InvoiceMakeGift( $option );
 			break;
@@ -438,6 +445,7 @@ function subscribe( $option )
 {
 	global $my, $database, $mosConfig_uniquemail, $aecConfig;
 
+	$task		= aecGetParam( 'task', 0, true, array( 'word', 'string' ) );
 	$intro		= aecGetParam( 'intro', 0, true, array( 'word', 'int' ) );
 	$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$group		= aecGetParam( 'group', 0, true, array( 'word', 'int' ) );
@@ -507,6 +515,28 @@ function subscribe( $option )
 		if ( $isJoomla15 && !$CB ) {
 			//if Joomla15 - add the form validation JS
 			JHTML::_('behavior.formvalidation');
+		} elseif( $CB ) {
+			global $mainframe, $_PLUGINS, $ueConfig, $_CB_database;
+
+			$savetask	= $task;
+			$_REQUEST['task']	= 'done';
+			include_once ( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
+			$task		= $savetask;
+
+			cbSpoofCheck( 'registerForm' );
+			cbRegAntiSpamCheck();
+
+			$userComplete =	new moscomprofilerUser( $_CB_database );
+
+			$_PLUGINS->loadPluginGroup('user');
+			$_PLUGINS->trigger( 'onStartSaveUserRegistration', array() );
+			if( $_PLUGINS->is_errors() ) {
+				echo "<script type=\"text/javascript\">alert('".addslashes($_PLUGINS->getErrorMSG())."'); </script>\n";
+				$oldUserComplete				=	new moscomprofilerUser( $_CB_database );
+				$userComplete->bindSafely( $_POST, $_CB_framework->getUi(), 'register', $oldUserComplete );
+				HTML_comprofiler::registerForm( $option, $ueConfig['emailpass'], $userComplete, $_PLUGINS->getErrorMSG("<br />") );
+				return;
+			}
 		}
 
 		if ( $my->id ) {
@@ -522,36 +552,14 @@ function subscribe( $option )
 				}
 			}
 
-			$nopass = array( 'option', 'task', 'intro', 'usage', 'group', 'processor', 'recurring', 'Itemid', 'submit_x', 'submit_y', 'userid' );
+			$nopass = array( 'option', 'task', 'intro', 'usage', 'group', 'processor', 'recurring', 'Itemid', 'submit_x', 'submit_y', 'userid', 'id', 'gid' );
 
-			$passafter = array();
-			foreach ( $nopass as $varname ) {
-				if ( isset( $_POST[$varname] ) ) {
-					$passafter[$varname] = $_POST[$varname];
-					unset( $_POST[$varname] );
-				}
-			}
-
-			if ( !empty( $_POST ) ) {
-				if ( empty( $_POST['username'] ) || empty( $_POST['email'] ) || empty( $_POST['password'] ) ) {
-					if ( !aecJoomla15check() ) {
-						mosErrorAlert( _REGWARN_INUSE );
-						return false;
-					} else {
-						mosErrorAlert( JText::_( 'WARNREG_INUSE' ) );
-						return JText::_( 'WARNREG_INUSE' );
-					}
-				}
-
-				$passthrough = $passafter;
-			} else {
-				$passthrough = false;
-			}
-
-
-			if ( !empty( $passafter ) ) {
-				foreach ( $passafter as $varname => $varcontent ) {
-					$_POST[$varname] = $varcontent;
+			$passthrough = array();
+			foreach ( $_POST as $k => $v ) {
+				if ( in_array( $k, $nopass ) ) {
+					unset( $_POST[$k] );
+				} else {
+					$passthrough[$k] = $v;
 				}
 			}
 		}
@@ -1106,6 +1114,20 @@ function planaction( $option, $action, $subscr )
 		mosNotAuth();
 		return;
 	}
+}
+
+function invoiceaction( $option, $action, $invoice )
+{
+	global $my;
+
+	if ( empty( $my->id ) ) {
+		$userid = AECfetchfromDB::UserIDfromInvoiceNumber( $invoice );
+	} else {
+		$userid = $my->id;
+	}
+
+	$invoicefact = new InvoiceFactory( $userid );
+	$invoicefact->invoiceprocessoraction( $action, $invoice );
 }
 
 function InvoiceAddParams( $option )

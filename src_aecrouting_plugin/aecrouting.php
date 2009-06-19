@@ -184,9 +184,9 @@ class plgSystemAECrouting extends JPlugin
 			if ( $vars['ccb'] ) {
 				$addinmarker = '<input type="hidden" name="task" value="saveregisters" />';
 
-				$search[]	= '<form action="http://dev5.websgold.com/index.php?option=com_comprofiler" method="post"'
+				$search[]	= '<form action="' . JURI::root() . 'index.php?option=com_comprofiler" method="post"'
 								 . ' id="cbcheckedadminForm" name="adminForm" enctype="multipart/form-data">';
-				$replace[]	= '<form action="/index.php?option=com_acctexp&task=subscribe" method="post" enctype="multipart/form-data">';
+				$replace[]	= '<form action="' . JURI::root() . 'index.php?option=com_acctexp&task=subscribe" method="post" enctype="multipart/form-data">';
 
 				$search[]	= '<input type="hidden" name="option" value="com_comprofiler" />';
 				$replace[]	= '<input type="hidden" name="option" value="com_acctexp" />';
