@@ -128,7 +128,7 @@ class mi_virtuemart
 		} elseif ( count( $name ) == 2 ) {
 			$firstname = $name[0];
 			$middlename = '';
-			$lastname = $name[2];
+			$lastname = $name[1];
 		} else {
 			$firstname = $name[0];
 			$middlename = '';
