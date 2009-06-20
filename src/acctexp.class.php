@@ -7396,14 +7396,6 @@ class InvoiceFactory
 
 		$this->touchInvoice( $option );
 
-		if ( !empty( $coupon ) ) {
-			$this->invoice->addCoupon( $coupon );
-			$this->invoice->storeload();
-
-			// Make sure we have the correct amount loaded
-			$this->touchInvoice( $option );
-		}
-
 		if ( !empty( $this->plan ) ) {
 			if ( is_object( $this->plan ) ) {
 				$mi_form = $this->plan->getMIformParams();
@@ -7460,10 +7452,10 @@ class InvoiceFactory
 			}
 		}
 
-		$this->checkout( $option );
+		$this->checkout( $option, 0, null, $coupon );
 	}
 
-	function checkout( $option, $repeat=0, $error=null )
+	function checkout( $option, $repeat=0, $error=null, $coupon=null )
 	{
 		global $database, $aecConfig;
 
@@ -7474,6 +7466,10 @@ class InvoiceFactory
 		$this->puffer( $option );
 
 		$this->touchInvoice( $option, false, true );
+
+		if ( !empty( $coupon ) ) {
+			$this->invoice->addCoupon( $coupon );
+		}
 
 		$user_ident	= aecGetParam( 'user_ident', 0, true, array( 'string', 'clear_nonemail' ) );
 
@@ -9076,6 +9072,10 @@ class Invoice extends serialParamDBTable
 		global $database;
 
 		$oldcoupons = $this->coupons;
+
+		if ( !is_array( $oldcoupons ) ) {
+			$oldcoupons = array();
+		}
 
 		if ( in_array( $coupon_code, $oldcoupons ) ) {
 			foreach ( $oldcoupons as $id => $cc ) {
