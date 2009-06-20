@@ -6678,6 +6678,11 @@ class InvoiceFactory
 			}
 
 			$this->invoice->loadInvoiceNumber( $this->invoice_number );
+
+			if ( !empty( $coupon ) ) {
+				$this->invoice->addCoupon( $coupon );
+			}
+
 			$this->invoice->computeAmount( $this, empty( $this->invoice->id ) );
 
 			$this->processor = $this->invoice->method;
@@ -6700,8 +6705,16 @@ class InvoiceFactory
 
 			if ( $id ) {
 				$this->invoice->load( $id );
+
+				if ( !empty( $coupon ) ) {
+					$this->invoice->addCoupon( $coupon );
+				}
 			} else {
 				$this->invoice->create( $this->userid, $this->usage, $this->processor, null, $storenew );
+
+				if ( !empty( $coupon ) ) {
+					$this->invoice->addCoupon( $coupon );
+				}
 
 				if ( $storenew ) {
 					$this->storeInvoice();
@@ -6731,7 +6744,7 @@ class InvoiceFactory
 
 	function storeInvoice()
 	{
-		$this->invoice->storeload();
+		$this->invoice->computeAmount( $this, true );
 
 		if ( is_object( $this->pp ) ) {
 			$this->pp->invoiceCreationAction( $this->invoice );
@@ -7465,11 +7478,7 @@ class InvoiceFactory
 
 		$this->puffer( $option );
 
-		$this->touchInvoice( $option, false, true );
-
-		if ( !empty( $coupon ) ) {
-			$this->invoice->addCoupon( $coupon );
-		}
+		$this->touchInvoice( $option, false, true, $coupon );
 
 		$user_ident	= aecGetParam( 'user_ident', 0, true, array( 'string', 'clear_nonemail' ) );
 

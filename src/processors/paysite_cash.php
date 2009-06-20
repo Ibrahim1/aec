@@ -16,15 +16,15 @@ class processor_paysite_cash extends URLprocessor
 	function info()
 	{
 		$i = array();
-		$i['name'] = 'paysite_cash';
-		$i['longname'] = _CFG_PAYSITE_CASH_LONGNAME;
-		$i['statement'] = _CFG_PAYSITE_CASH_STATEMENT;
-		$i['description'] = _CFG_PAYSITE_CASH_DESCRIPTION;
-		$i['currencies'] = 'EUR,USD,CAD,GBP,CHF';
-		$i['languages'] = 'FR,US';
-		$i['cc_list'] = 'visa,mastercard,discover,americanexpress,echeck';
+		$i['name']			= 'paysite_cash';
+		$i['longname']		= _CFG_PAYSITE_CASH_LONGNAME;
+		$i['statement']		= _CFG_PAYSITE_CASH_STATEMENT;
+		$i['description']	= _CFG_PAYSITE_CASH_DESCRIPTION;
+		$i['currencies']	= 'EUR,USD,CAD,GBP,CHF';
+		$i['languages']		= 'FR,US';
+		$i['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck';
 		$i['notify_trail_thanks'] = 1;
-		$i['recurring'] = 2;
+		$i['recurring']		= 2;
 
 		return $i;
 	}
