@@ -117,6 +117,16 @@ class plgSystemAECrouting extends JPlugin
 		return $vars;
 	}
 
+	function onAfterInitialise()
+	{
+		if ( strpos( JPATH_BASE, '/administrator' ) ) {
+			// Don't act when on backend
+			return true;
+		}
+
+		print_r("hier\n\n");$vars = $this->getVars();print_r($vars);print_r($_REQUEST);exit;
+	}
+
 	function onAfterRoute()
 	{
 		if ( strpos( JPATH_BASE, '/administrator' ) ) {
@@ -131,7 +141,7 @@ class plgSystemAECrouting extends JPlugin
 
 			if ( $vars['isreg'] && $vars['int_reg'] ) {
 				// Joomla or CB registration...
-				if ( $vars['pfirst'] && !$vars['has_usage'] ) {
+				if ( $vars['pfirst'] && !$vars['has_usage'] ) {print_r($vars);print_r($_REQUEST);exit;
 					// Plans first and not yet selected -> select!
 					$mainframe->redirect( 'index.php?option=com_acctexp&task=subscribe' );
 				}
@@ -239,21 +249,21 @@ class plgSystemAECrouting extends JPlugin
 
 	function addAECvars( $search, $text, $vars )
 	{
-		$replace = "";
+		$add = "\n";
 
 		if ( isset( $vars['usage'] ) ) {
-			$replace .= '<input type="hidden" name="usage" value="' . $vars['usage'] . '" />' . "\n";
+			$add .= '<input type="hidden" name="usage" value="' . $vars['usage'] . '" />' . "\n";
 		}
 
 		if ( isset( $vars['processor'] ) ) {
-			$replace .= '<input type="hidden" name="processor" value="' . $vars['processor'] . '" />' . "\n";
+			$add .= '<input type="hidden" name="processor" value="' . $vars['processor'] . '" />' . "\n";
 		}
 
 		if ( isset( $vars['recurring'] ) ) {
-			$replace .= '<input type="hidden" name="recurring" value="' . $vars['recurring'] . '" />' . "\n";
+			$add .= '<input type="hidden" name="recurring" value="' . $vars['recurring'] . '" />' . "\n";
 		}
 
-		return str_replace( $search, $search.$replace, $text );
+		return str_replace( $search, $search.$add, $text );
 	}
 
 }
