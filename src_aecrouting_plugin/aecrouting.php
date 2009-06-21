@@ -117,16 +117,6 @@ class plgSystemAECrouting extends JPlugin
 		return $vars;
 	}
 
-	function onAfterInitialise()
-	{
-		if ( strpos( JPATH_BASE, '/administrator' ) ) {
-			// Don't act when on backend
-			return true;
-		}
-
-		print_r("hier\n\n");$vars = $this->getVars();print_r($vars);print_r($_REQUEST);exit;
-	}
-
 	function onAfterRoute()
 	{
 		if ( strpos( JPATH_BASE, '/administrator' ) ) {
@@ -141,7 +131,7 @@ class plgSystemAECrouting extends JPlugin
 
 			if ( $vars['isreg'] && $vars['int_reg'] ) {
 				// Joomla or CB registration...
-				if ( $vars['pfirst'] && !$vars['has_usage'] ) {print_r($vars);print_r($_REQUEST);exit;
+				if ( $vars['pfirst'] && !$vars['has_usage'] ) {
 					// Plans first and not yet selected -> select!
 					$mainframe->redirect( 'index.php?option=com_acctexp&task=subscribe' );
 				}
