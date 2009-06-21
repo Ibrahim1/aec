@@ -14952,12 +14952,15 @@ class aecExport extends serialParamDBTable
 		}
 
 		if ( !empty( $this->filter->status ) ) {
+			$stati = array();
 			foreach ( $this->filter->status as $status ) {
-				if ( !empty( $where ) ) {
-					$query .= ' AND LOWER( `status` ) = \'' . strtolower( $status ) . '\'';
-				} else {
-					$query .= ' WHERE LOWER( `status` ) = \'' . strtolower( $status ) . '\'';
-				}
+				$stati[] = 'LOWER( `status` ) = \'' . strtolower( $status ) . '\'';
+			}
+
+			if ( !empty( $where ) ) {
+				$query .= ' AND (' . implode( ' OR ', $stati ) . '\')';
+			} else {
+				$query .= ' WHERE (' . implode( ' OR ', $stati ) . '\')';
 			}
 		}
 
