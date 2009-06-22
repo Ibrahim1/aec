@@ -6212,6 +6212,65 @@ class logHistory extends serialParamDBTable
 	}
 }
 
+class aecTempToken extends serialParamDBTable
+{
+	/** @var int Primary key */
+	var $id					= null;
+	/** @var string */
+	var $token 				= null;
+	/** @var text */
+	var $content 			= null;
+	/** @var datetime */
+	var $created_date	 	= null;
+	/** @var string */
+	var $ip		 			= null;
+
+	function aecTempToken(&$db)
+	{
+		$this->mosDBTable( '#__acctexp_temptoken', 'id', $db );
+	}
+
+	function declareParamFields()
+	{
+		return array( 'content' );
+	}
+
+	function getByToken( $token )
+	{
+		global $database;
+
+		$query = 'SELECT id'
+		. ' FROM #__acctexp_temptoken'
+		. ' WHERE token = \'' . $token . '\''
+		;
+		$database->setQuery( $query );
+
+		return $this->load($database->loadResult());
+	}
+
+	function create( $token, $content )
+	{
+		global $database, $mosConfig_offset;
+
+		$query = 'SELECT id'
+		. ' FROM #__acctexp_temptoken'
+		. ' WHERE token = \'' . $token . '\''
+		;
+		$database->setQuery( $query );
+		$id = $database->loadResult();
+
+		if ( $id ) {
+			$this->id		= $id;
+		}
+
+		$this->token		= $token;
+		$this->content		= $content;
+		$this->created_date	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
+		$this->ip			= $_SERVER['REMOTE_ADDR'];
+
+		return $this->storeload();
+	}
+}
 class InvoiceFactory
 {
 	/** @var int */

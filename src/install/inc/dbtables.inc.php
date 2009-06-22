@@ -100,6 +100,16 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_invoices` ('
 . ') TYPE=MyISAM;'
 ;
 
+$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_temptoken` ('
+. '`id` int(11) NOT NULL auto_increment,'
+. '`token` varchar(200) NULL,'
+. '`content` text NULL,'
+. '`created_date` datetime NULL default \'0000-00-00 00:00:00\','
+. '`ip` varchar(25) NULL,'
+. ' PRIMARY KEY (`id`)'
+. ') TYPE=MyISAM;'
+;
+
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_cart` ('
 . '`id` int(11) NOT NULL auto_increment,'
 . '`userid` int(11) NOT NULL default \'0\','
