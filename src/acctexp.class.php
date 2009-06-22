@@ -8913,14 +8913,6 @@ class Invoice extends serialParamDBTable
 			$int_var['recurring'] = 0;
 		}
 
-		if ( empty( $objUsage ) || is_a( $objUsage, 'SubscriptionPlan' ) ) {
-			if ( !empty( $this->coupons ) ) {
-				$cph = new couponsHandler( $InvoiceFactory->metaUser, $InvoiceFactory, $this->coupons );
-
-				$amount['amount'] = $cph->applyToAmount( $amount['amount'] );
-			}
-		}
-
 		$int_var['amount']		 = $amount['amount'];
 
 		if ( !empty( $amount['return_url'] ) ) {
@@ -14958,9 +14950,9 @@ class aecExport extends serialParamDBTable
 			}
 
 			if ( !empty( $where ) ) {
-				$query .= ' AND (' . implode( ' OR ', $stati ) . '\')';
+				$query .= ' AND (' . implode( ' OR ', $stati ) . ')';
 			} else {
-				$query .= ' WHERE (' . implode( ' OR ', $stati ) . '\')';
+				$query .= ' WHERE (' . implode( ' OR ', $stati ) . ')';
 			}
 		}
 
