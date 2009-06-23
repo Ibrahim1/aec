@@ -28,20 +28,31 @@ class mi_aecplan
 
 		$settings = array();
 
+		$settings['plan_apply_first']				= array( 'list' );
+		$settings['lists']['plan_apply_first']		= mosHTML::selectList( $payment_plans, 'plan_apply_first', 'size="' . $total_plans, 'value', 'text', $this->settings['plan_apply_first'] );
+
 		$settings['plan_apply']						= array( 'list' );
 		$settings['lists']['plan_apply']			= mosHTML::selectList( $payment_plans, 'plan_apply', 'size="' . $total_plans, 'value', 'text', $this->settings['plan_apply'] );
 
-		$settings['plan_apply_exp']					= array( 'list' );
-		$settings['lists']['plan_apply_exp']		= mosHTML::selectList( $payment_plans, 'plan_apply_exp', 'size="' . $total_plans, 'value', 'text', $this->settings['plan_apply_exp'] );
-
 		$settings['plan_apply_pre_exp']				= array( 'list' );
 		$settings['lists']['plan_apply_pre_exp']	= mosHTML::selectList( $payment_plans, 'plan_apply_pre_exp', 'size="' . $total_plans, 'value', 'text', $this->settings['plan_apply_pre_exp'] );
+
+		$settings['plan_apply_exp']					= array( 'list' );
+		$settings['lists']['plan_apply_exp']		= mosHTML::selectList( $payment_plans, 'plan_apply_exp', 'size="' . $total_plans, 'value', 'text', $this->settings['plan_apply_exp'] );
 
 		return $settings;
 	}
 
 	function relayAction( $request, $area )
 	{
+		if ( $area == '' ) {
+			if ( !empty( $this->settings['plan_apply_first'] ) ) {
+				if ( empty( $request->metaUser->objSubscription->previous_plan ) ) {
+					$area = '_first';
+				}
+			}
+		}
+
 		global $database;
 
 		$new_plan = new SubscriptionPlan( $database );

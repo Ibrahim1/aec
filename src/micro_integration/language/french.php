@@ -620,6 +620,8 @@ define( '_MI_MI_AECPLAN_PLAN_APPLY_EXP_NAME',		'Apply Plan (Expiration)' );
 define( '_MI_MI_AECPLAN_PLAN_APPLY_EXP_DESC',		'Apply this payment plan (for free) when the MI is carried out on expiration' );
 define( '_MI_MI_AECPLAN_PLAN_APPLY_PRE_EXP_NAME',		'Apply Plan (Before Expiration)' );
 define( '_MI_MI_AECPLAN_PLAN_APPLY_PRE_EXP_DESC',		'Apply this payment plan (for free) when the MI is carried out before expiration' );
+define( '_MI_MI_AECPLAN_PLAN_APPLY_FIRST_NAME',		'Apply Plan (First Subscription)' );
+define( '_MI_MI_AECPLAN_PLAN_APPLY_FIRST_DESC',		'Apply this payment plan (for free) when the MI is carried out. Only apply if it is the first membership of the user.' );
 
 // SOBI
 define( '_AEC_MI_SOBI_NAME',		'SOBI' );
