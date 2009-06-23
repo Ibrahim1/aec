@@ -1469,6 +1469,9 @@ class Config_General extends serialParamDBTable
 		$def['checkout_as_gift']				= 0;
 		$def['checkout_as_gift_access']			= 23;
 		// TODO: $def['invoicecushion']						= 5; //Minutes
+		$def['allow_frontend_heartbeat']		= 0;
+		$def['disable_regular_heartbeat']		= 0;
+		$def['custom_heartbeat_securehash']		= "";
 
 		return $def;
 	}
@@ -1596,11 +1599,38 @@ class aecHeartbeat extends mosDBTable
 		}
 	}
 
-	function frontendping()
+	function frontendping( $custom=false, $hash=null )
 	{
 		global $aecConfig;
 
-		if ( !empty( $aecConfig->cfg['heartbeat_cycle'] ) ) {
+		if ( !empty( $aecConfig->cfg['disable_regular_heartbeat'] ) && empty( $custom ) ) {
+			return;
+		}
+
+		if ( empty( $aecConfig->cfg['allow_frontend_heartbeat'] ) && !empty( $custom ) ) {
+			return;
+		}
+
+		if ( !empty( $custom ) && !empty( $aecConfig->cfg['custom_heartbeat_securehash'] ) ) {
+			if ( empty( $hash ) ) {
+				return;
+			} elseif( $hash != $aecConfig->cfg['custom_heartbeat_securehash'] ) {
+				global $database;
+				$short	= 'custom heartbeat failure';
+				$event	= 'Custom Frontend Heartbeat attempted, but faile due to false hashcode: "' . $hash . '"';
+				$tags	= 'heartbeat, failure';
+				$params = array();
+
+				$eventlog = new eventLog( $database );
+				$eventlog->issue( $short, $tags, $event, 128, $params );
+
+				return;
+			}
+		}
+
+		if ( !empty( $aecConfig->cfg['allow_frontend_heartbeat'] ) && !empty( $custom ) ) {
+			$this->ping( 0 );
+		} elseif ( !empty( $aecConfig->cfg['heartbeat_cycle'] ) ) {
 			$this->ping( $aecConfig->cfg['heartbeat_cycle'] );
 		}
 	}
@@ -1622,7 +1652,9 @@ class aecHeartbeat extends mosDBTable
 			$this->load(1);
 		}
 
-		if ( $this->last_beat ) {
+		if ( empty( $configCycle ) ) {
+			$ping = 0;
+		} elseif ( $this->last_beat ) {
 			$ping	= strtotime( $this->last_beat ) + $configCycle*3600;
 		} else {
 			$ping = 0;
@@ -3247,8 +3279,9 @@ class processor extends serialParamDBTable
 		global $aecConfig;
 
 		if ( !function_exists( 'curl_init' ) ) {
-			$response = false ;
-			global $database ;
+			$response = false;
+
+			global $database;
 			$short	= 'cURL failure';
 			$event	= 'Trying to establish connection with ' . $url . ' failed - curl_init is not available - will try fsockopen instead. If Error persists and fsockopen works, please permanently switch to using that!';
 			$tags	= 'processor,payment,phperror';

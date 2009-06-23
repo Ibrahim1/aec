@@ -44,6 +44,14 @@ $task = trim( aecGetParam( 'task' ) );
 //aecDebug( $task );
 if ( !empty( $task ) ) {
 	switch ( strtolower( $task ) ) {
+		case 'heartbeat':
+		case 'beat':
+			// Manual Heartbeat
+			$hash = aecGetParam( 'hash', 0, true, array( 'word', 'string' ) );
+
+			aecHeartbeat::frontendping( true, $hash );
+			break;
+
 		case 'register':
 			$intro = aecGetParam( 'intro', 0, true, array( 'word', 'int' ) );
 			$usage = aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );

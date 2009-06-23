@@ -2057,6 +2057,9 @@ function editSettings( $option )
 	$params['expiration_cushion']			= array( 'inputA', 0 );
 	$params['heartbeat_cycle']				= array( 'inputA', 0 );
 	$params['heartbeat_cycle_backend']		= array( 'inputA', 0 );
+	$params['allow_frontend_heartbeat']		= array( 'list_yesno', 0 );
+	$params['disable_regular_heartbeat']	= array( 'list_yesno', 0 );
+	$params['custom_heartbeat_securehash']	= array( 'inputC', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_EMAIL );
 	$params['noemails']						= array( 'list_yesno', 0 );
