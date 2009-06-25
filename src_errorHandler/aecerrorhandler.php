@@ -38,6 +38,24 @@ class plgSystemAECerrorhandler extends JPlugin
 		parent::__construct( $subject, $config );
 	}
 
+	function onAfterRender()
+	{
+		if ( strpos( JPATH_BASE, '/administrator' ) ) {
+			// Don't act when on backend
+			return true;
+		}
+
+		if ( file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
+			$document	=& JFactory::getDocument();
+//print_r($document);print_r($this);exit;
+			if ( $document->getType() == 'error' ) {
+				if ( $this->_error->code == '403' ) {
+					$this->redirectNotAllowed( $this->_error );
+				}
+			}
+		}
+	}
+
 	function onAfterInitialise()
 	{
 		global $mainframe;
@@ -48,10 +66,6 @@ class plgSystemAECerrorhandler extends JPlugin
 		}
 
 		if ( file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
-
-			JError::setErrorHandling( E_ERROR, 'callback', array( 'plgSystemAECerrorhandler', 'redirectNotAllowed' ) );
-			JError::setErrorHandling( E_WARNING, 'callback', array( 'plgSystemAECerrorhandler', 'redirectNotAllowed' ) );
-
 			// handle login redirect
 			$this->handleLoginRedirect();
 		}

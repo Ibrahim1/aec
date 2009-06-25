@@ -1,9 +1,9 @@
 <?php
 /**
- * @version $Id: mi_idevaffiliate.php
+ * @version $Id: mi_shareasale.php
  * @package AEC - Account Control Expiration - Membership Manager
- * @subpackage Micro Integrations - iDevAffiliate
- * @copyright 2006-2008 Copyright (C) David Deutsch
+ * @subpackage Micro Integrations - Share a Sale
+ * @copyright 2006-2009 Copyright (C) David Deutsch
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
@@ -11,13 +11,13 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_idevaffiliate
+class mi_shareasale
 {
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_IDEV;
-		$info['desc'] = _AEC_MI_DESC_IDEV;
+		$info['name'] = _AEC_MI_NAME_SHAREASALE;
+		$info['desc'] = _AEC_MI_DESC_SHAREASALE;
 
 		return $info;
 	}
@@ -58,8 +58,8 @@ class mi_idevaffiliate
 
 		$userflags = $request->metaUser->focusSubscription->getMIflags( $request->plan->id, $this->id );
 
-		if ( !empty( $userflags['IDEV_IP_ADDRESS'] ) ) {
-			$ip = $userflags['IDEV_IP_ADDRESS'];
+		if ( !empty( $userflags['SHAREASALE_IP_ADDRESS'] ) ) {
+			$ip = $userflags['SHAREASALE_IP_ADDRESS'];
 		} else {
 			if ( isset( $request->metaUser->focusSubscription->params['creator_ip'] ) ) {
 				$ip = $request->metaUser->focusSubscription->params['creator_ip'];
@@ -112,6 +112,28 @@ class mi_idevaffiliate
 
 		return true;
 	}
+
+    function logpayment( $invoice )
+    {
+        $user = JFactory::getUser($invoice->userid);
+        $SSAID = $user->getParam('SSAID');
+        $SSAIDDATA = $user->getParam('SSAIDDATA');
+        if($SSAID != '' && $SSAIDDATA != '') {
+            $amount = $invoice->amount;
+            $tracking = $invoice->id;
+            $yourmerchantid = 22068;
+
+            $ch = curl_init();
+            $send_to_url = "https://shareasale.com/q.cfm";
+            $my_curl_url = sprintf("%s?amount=%s&tracking=%s&transtype=sale&merchantID=%s&userID=%s&SSAIDDATA=%s", $send_to_url, $amount, $tracking, $yourmerchantid, $SSAID, $SSAIDDATA);
+            curl_setopt($ch, CURLOPT_URL, $my_curl_url);
+            curl_setopt($ch, CURLOPT_POST, TRUE);
+            curl_setopt($ch, CURLOPT_PORT, 443);
+            curl_exec($ch);
+            curl_close($ch);
+        }
+        return true;
+    }
 
 	function getPath()
 	{
