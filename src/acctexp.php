@@ -519,34 +519,6 @@ function subscribe( $option )
 		$invoicefact = new InvoiceFactory( $userid, $usage, $group, $processor );
 		$invoicefact->confirm( $option );
 	} else {
-		$CB = ( GeneralInfoRequester::detect_component( 'anyCB' ) );
-		if ( $isJoomla15 && !$CB ) {
-			//if Joomla15 - add the form validation JS
-			JHTML::_('behavior.formvalidation');
-		} elseif( $CB ) {
-			global $mainframe, $_PLUGINS, $ueConfig, $_CB_database;
-
-			$savetask	= $task;
-			$_REQUEST['task']	= 'done';
-			include_once ( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
-			$task		= $savetask;
-
-			cbSpoofCheck( 'registerForm' );
-			cbRegAntiSpamCheck();
-
-			$userComplete =	new moscomprofilerUser( $_CB_database );
-
-			$_PLUGINS->loadPluginGroup('user');
-			$_PLUGINS->trigger( 'onStartSaveUserRegistration', array() );
-			if( $_PLUGINS->is_errors() ) {
-				echo "<script type=\"text/javascript\">alert('".addslashes($_PLUGINS->getErrorMSG())."'); </script>\n";
-				$oldUserComplete				=	new moscomprofilerUser( $_CB_database );
-				$userComplete->bindSafely( $_POST, $_CB_framework->getUi(), 'register', $oldUserComplete );
-				HTML_comprofiler::registerForm( $option, $ueConfig['emailpass'], $userComplete, $_PLUGINS->getErrorMSG("<br />") );
-				return;
-			}
-		}
-
 		if ( $my->id ) {
 			$userid			= $my->id;
 			$passthrough	= false;
@@ -1276,7 +1248,14 @@ function notAllowed( $option )
 				$processors[$processor]->getInfo();
 				$processors[$processor]->getSettings();
 			} else {
-				// TODO: Log error
+				$short	= 'processor loading failure';
+				$event	= 'When composing processor info list, tried to load processor: ' . $this->processor;
+				$tags	= 'processor,loading,error';
+				$params = array();
+
+				$eventlog = new eventLog( $database );
+				$eventlog->issue( $short, $tags, $event, 128, $params );
+
 				unset( $processors[$processor] );
 			}
 		}
@@ -1362,13 +1341,21 @@ function processNotification( $option, $processor )
 	$response['fullresponse'] = $_POST;
 
 	// parse processor notification
-	$pp = new PaymentProcessor( $processor );
+	$pp = new PaymentProcessor();
 	if ( $pp->loadName( $processor ) ) {
 		$pp->init();
 		$response = array_merge( $response, $pp->parseNotification( $_POST ) );
 	} else {
+		global $database;
+		$short	= 'processor loading failure';
+		$event	= 'When receiving payment notification, tried to load processor: ' . $this->processor;
+		$tags	= 'processor,loading,error';
+		$params = array();
+
+		$eventlog = new eventLog( $database );
+		$eventlog->issue( $short, $tags, $event, 128, $params );
+
 		return;
-		// TODO: Log error
 	}
 
 	// Get Invoice record
