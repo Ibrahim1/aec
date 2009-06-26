@@ -841,8 +841,6 @@ function help( $option )
  		$diagnostic['global_entry'] = 0;
  	}
 
-	// TODO: No gateway notify
-
 	// Check for Modules and whether they are enabled
 	$modules = array();
 	$modules[] = array( 'mod_comprofilermoderator',	'cb_comprofilermoderator', 'cb_comprofilermoderator_enabled' );
@@ -870,16 +868,6 @@ function help( $option )
 			$diagnostic[$modules[$i][2]] = 0;
 		}
 	}
-
-	// Paypal specific
-
-	// TODO: Check for joomla New User Activation setting
-
-	/*	The idea for this is to provide one page that checks the most neccessary recommendations:
-		- Activate different kinds of integrations (Started)
-			- No: Better only show that the AEC has detected components and is already integrating
-				-SMF? Both integrations/bridges? SEO?
-	*/
 
 	/**
 	 * Diagnose Helper
@@ -1997,36 +1985,6 @@ function editSettings( $option )
 
 	$lists['entry_plan'] = mosHTML::selectList($available_plans, 'entry_plan', 'size="' . $total_plans . '"', 'value', 'text', $selected_plan);
 
-	// Create MI Selection List
-	$mi_handler = new microIntegrationHandler();
-	$mi_list = $mi_handler->getIntegrationList();
-
-	$mi_htmllist = array();
-	$mi_htmllist[]	= mosHTML::makeOption( '', _AEC_CMN_NONE_SELECTED );
-
-	foreach ( $mi_list as $name ) {
-		$mi = new microIntegration( $database );
-		$mi->class_name = $name;
-		if ( $mi->callIntegration() ){
-			$len = 30 - AECToolbox::visualstrlen( trim( $mi->name ) );
-			$fullname = str_replace( '#', '&nbsp;', str_pad( $mi->name, $len, '#' ) ) . ' - ' . substr($mi->desc, 0, 120);
-			$mi_htmllist[] = mosHTML::makeOption( $name, $fullname );
-		}
-	}
-
-	if ( !empty( $aecConfig->cfg['milist'] ) ) {
-		$milist = $aecConfig->cfg['milist'];
-		$selected_mis = array();
-		foreach ( $milist as $mi_name ) {
-			$selected_mis[]->value = $mi_name;
-		}
-	} else {
-		$aecConfig->cfg['milist'] = null;
-		$selected_mis		= '';
-	}
-
-	$lists['milist'] = mosHTML::selectList( $mi_htmllist, 'milist[]', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '" multiple="multiple"', 'value', 'text', $selected_mis );
-
 	$gtree = $acl->get_group_children_tree( null, 'USERS', true );
 
 	$ex_groups = array( 28, 29, 30 );
@@ -2221,12 +2179,6 @@ function editSettings( $option )
 
 	@end( $params );
 	$tab_data[] = array( _CFG_TAB_CUSTOMIZATION_TITLE, key( $params ), '<h2>' . _CFG_TAB_CUSTOMIZATION_SUBTITLE . '</h2>' );
-
-	$params['mi_remap']							= array( 'subarea_change', 'mi' );
-	$params['milist']							= array( 'list', '' );
-
-	@end( $params );
-	$tab_data[] = array( _CFG_TAB_MICROINTEGRATION_TITLE, key( $params ), '<h2>' . _CFG_TAB_MICROINTEGRATION_SUBTITLE . '</h2>' );
 
 	$error_reporting_notices[] = mosHTML::makeOption( 512, _AEC_NOTICE_NUMBER_512 );
 	$error_reporting_notices[] = mosHTML::makeOption( 128, _AEC_NOTICE_NUMBER_128 );
@@ -4025,11 +3977,9 @@ function editMicroIntegration ( $id, $option )
 	$mi_gsettings = $mi->getGeneralSettings();
 
 	if ( !$mi->id ) {
-		$mi_list		= array();
-
-		if ( $aecConfig->cfg['milist'] ) {
-			$mi_list = $aecConfig->cfg['milist'];
-		}
+		// Create MI Selection List
+		$mi_handler = new microIntegrationHandler();
+		$mi_list = $mi_handler->getIntegrationList();
 
 		$mi_htmllist	= array();
 		if ( count( $mi_list ) > 0 ) {
@@ -4093,7 +4043,13 @@ function editMicroIntegration ( $id, $option )
 
 			$aecHTML->hasSettings = true;
 		} else {
-			// TODO: log error
+			$short	= 'microIntegration loading failure';
+			$event	= 'When trying to load microIntegration: ' . $mi->id . ', callIntegration failed';
+			$tags	= 'microintegration,loading,error';
+			$params = array();
+
+			$eventlog = new eventLog( $database );
+			$eventlog->issue( $short, $tags, $event, 128, $params );
 		}
 	} else {
 		$settings = new aecSettings( 'MI', 'E' );
@@ -4129,7 +4085,17 @@ function saveMicroIntegration( $option, $apply=0 )
 
 		$mi->storeload();
 	} else {
-		// TODO: log error
+		$short	= 'microIntegration storing failure';
+		if ( !empty( $_POST['class_name'] ) ) {
+			$event	= 'When trying to store microIntegration: ' . $_POST['class_name'] . ', callIntegration failed';
+		} else {
+			$event	= 'When trying to store microIntegration: ' . $mi->id . ', callIntegration failed';
+		}
+		$tags	= 'microintegration,loading,error';
+		$params = array();
+
+		$eventlog = new eventLog( $database );
+		$eventlog->issue( $short, $tags, $event, 128, $params );
 	}
 
 	$mi->updateOrder();
@@ -4594,7 +4560,13 @@ function saveCoupon( $option, $type, $apply=0 )
 
 			$cph->coupon->storeload();
 		} else {
-			// TODO: log error
+			$short	= 'coupon store failure';
+			$event	= 'When trying to store coupon';
+			$tags	= 'coupon,loading,error';
+			$params = array();
+
+			$eventlog = new eventLog( $database );
+			$eventlog->issue( $short, $tags, $event, 128, $params );
 		}
 
 		$cph->coupon->updateOrder();

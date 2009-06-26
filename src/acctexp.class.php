@@ -705,8 +705,6 @@ class metaUser
 			$aro_id = $database->loadResult();
 		}
 
-		// TODO: Fallback case if groups_aro_map is broken
-
 		// Carry out ARO ID -> ACL group mapping
 		$query = 'UPDATE #__core_acl_groups_aro_map'
 				. ' SET `group_id` = \'' . (int) $gid . '\''
@@ -841,7 +839,7 @@ class metaUser
 		if ( is_array( $restrictions ) ) {
 			$return = array();
 			foreach ( $restrictions as $name => $value ) {
-				// TODO: Tautological && ? Use empty instead?
+				// Might be zero, so do an expensive check
 				if ( !is_null( $value ) && !( $value === "" ) ) {
 					// Switch flag for inverted call
 					if ( strpos( $name, '_excluded' ) !== false ) {
@@ -1383,7 +1381,6 @@ class Config_General extends serialParamDBTable
 		$def['display_date_backend']			= "%a, %d %b %Y %T %Z";
 		//$def['enable_mimeta']					= 0;
 		$def['enable_coupons']					= 0;
-		$def['milist']							= array( 'mi_email','mi_htaccess','mi_mysql_query','mi_email','mi_aecplan','mi_joomlauser' );
 		$def['displayccinfo']					= 1;
 		$def['customtext_confirm_keeporiginal']	= 1;
 		$def['customtext_checkout_keeporiginal']	= 1;
@@ -1510,7 +1507,6 @@ class Config_General extends serialParamDBTable
 	function saveSettings()
 	{
 		// Extra check for duplicated rows
-		// TODO: Sometime in the future, this can be abandoned, but not without a check!
 		if ( $this->RowDuplicationCheck() ) {
 			$this->CleanDuplicatedRows();
 			$this->load(1);
@@ -1677,9 +1673,6 @@ class aecHeartbeat extends mosDBTable
 	{
 		global $database, $aecConfig;
 		// Other ideas: Clean out old Coupons
-
-		// TODO: function to clean up database before doing the checks - could improve performance
-		// maybe just set a database flag for this, so that database cleanup is done only every X days
 
 		// Receive maximum pre expiration time
 		$query = 'SELECT MAX(pre_exp_check)'
@@ -2337,8 +2330,6 @@ class aecEvent extends serialParamDBTable
 			}
 
 			return $this->storeload();
-		} else {
-			// TODO: Issure error
 		}
 	}
 }
@@ -2620,7 +2611,6 @@ class PaymentProcessor
 				if( is_string( $value ) ) {
 					if ( strcmp( $value, '[[SET_TO_NULL]]' ) === 0 ) {
 						// Exception for NULL case
-						// TODO: SET_TO_NULL undocumented!!!
 						$this->settings[$key] = null;
 					} else {
 						if ( !empty( $value ) ) {
@@ -3136,7 +3126,6 @@ class processor extends serialParamDBTable
 					if( is_string( $value ) ) {
 						if ( strcmp( $value, '[[SET_TO_NULL]]' ) === 0 ) {
 							// Exception for NULL case
-							// TODO: SET_TO_NULL undocumented!!!
 							$settings[$key] = null;
 						} else {
 							$settings[$key] = $value;
@@ -5908,10 +5897,10 @@ class SubscriptionPlan extends serialParamDBTable
 	{
 		global $database;
 
-		// Fake knowing the planid if is zero. TODO: This needs to replaced with something better later on!
 		if ( !empty( $post['id'] ) ) {
 			$planid = $post['id'];
 		} else {
+			// Fake knowing the planid if is zero.
 			$planid = $this->getMax() + 1;
 		}
 
@@ -6166,8 +6155,6 @@ class SubscriptionPlan extends serialParamDBTable
 		if ( !$params['trial_free'] && ( strcmp( $params['trial_amount'], "0.00" ) === 0 ) ) {
 			$params['trial_amount'] = '';
 		}
-
-		// TODO: Check for Similarity/Equality relations on other plans
 
 		$this->params = $params;
 	}
@@ -6539,7 +6526,13 @@ class InvoiceFactory
 
 						$this->payment->currency	= isset( $this->pp->settings['currency'] ) ? $this->pp->settings['currency'] : '';
 					} else {
-						// TODO: Log Error
+						$short	= 'processor loading failure';
+						$event	= 'Tried to load processor: ' . $this->processor;
+						$tags	= 'processor,loading,error';
+						$params = array();
+
+						$eventlog = new eventLog( $database );
+						$eventlog->issue( $short, $tags, $event, 128, $params );
 					}
 					break;
 			}
@@ -6565,7 +6558,7 @@ class InvoiceFactory
 
 		$this->payment->freetrial = 0;
 
-		if ( empty( $this->cart ) ) {
+		if ( empty( $this->cart ) && !empty( $this->plan ) ) {
 			$return = $this->plan->getReturnTerms( $this->recurring, $user_subscription );
 
 			$terms = $return['terms'];
@@ -6577,7 +6570,7 @@ class InvoiceFactory
 			}
 
 			$this->items[] = array( 'item' => array( 'obj' => $this->plan ), 'terms' => $terms );
-		} else {
+		} elseif( !empty( $this->cart ) ) {
 			$this->payment->amount = $this->cartobject->getAmount( $this->metaUser, $this->cart );
 		}
 
@@ -6842,8 +6835,12 @@ class InvoiceFactory
 			$this->pp->invoiceCreationAction( $this->invoice );
 		}
 
-		if ( !empty( $this->cart ) ) {
-			// TODO: $this->plan->triggerMIs( '_invoice_creation', $this->metaUser, null, $this->invoice );
+		if ( !empty( $this->cart ) && !empty( $this->cartobject ) ) {
+			foreach ( $this->cart as $cid => $citem ) {
+				if ( $citem['obj'] !== false ) {
+					$terms = $citem['obj']->triggerMIs( '_invoice_creation', $this->metaUser, null, $this->invoice );
+				}
+			}
 		} elseif ( !empty( $this->plan ) ) {
 			$this->plan->triggerMIs( '_invoice_creation', $this->metaUser, null, $this->invoice );
 		}
@@ -6964,10 +6961,8 @@ class InvoiceFactory
 		$register = $this->loadMetaUser( true );
 
 		if ( empty( $this->usage ) ) {
-			// TODO: Check if the user has already subscribed once, if not - link to intro
-			// TODO: Make sure a registration hybrid wont get lost here
-
-			if ( !empty( $this->userid ) && !$aecConfig->cfg['customintro_always'] ) {
+			// Check if the user has already subscribed once, if not - link to intro
+			if ( $this->metaUser->hasSubscription && !$aecConfig->cfg['customintro_always'] ) {
 				$intro = false;
 			}
 
@@ -7215,7 +7210,7 @@ class InvoiceFactory
 				if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 					// This is a CB registration, borrowing their code to register the user
 
-					global $task;
+					global $task, $mainframe, $_PLUGINS, $ueConfig, $_CB_database;;
 
 					$savetask	= $task;
 					$_REQUEST['task'] = 'done';
@@ -7224,12 +7219,25 @@ class InvoiceFactory
 					include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.html.php' );
 
 					$task = $savetask;
-					registerForm($option, $mainframe->getCfg( 'emailpass' ), null);
-
 					if ( GeneralInfoRequester::detect_component( 'CB1.2' ) ) {
-						global $task, $_CB_framework;
+						cbSpoofCheck( 'registerForm' );
+						cbRegAntiSpamCheck();
+
+						$userComplete =	new moscomprofilerUser( $_CB_database );
+
+						$_PLUGINS->loadPluginGroup('user');
+						$_PLUGINS->trigger( 'onStartSaveUserRegistration', array() );
+						if( $_PLUGINS->is_errors() ) {
+							echo "<script type=\"text/javascript\">alert('".addslashes($_PLUGINS->getErrorMSG())."'); </script>\n";
+							$oldUserComplete				=	new moscomprofilerUser( $_CB_database );
+							$userComplete->bindSafely( $_POST, $_CB_framework->getUi(), 'register', $oldUserComplete );
+							HTML_comprofiler::registerForm( $option, $ueConfig['emailpass'], $userComplete, $_PLUGINS->getErrorMSG("<br />") );
+							return;
+						}
 
 						echo $_CB_framework->getAllJsPageCodes();
+					} else {
+						registerForm($option, $mainframe->getCfg( 'emailpass' ), null);
 					}
 				} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
 					// This is a JUSER registration, borrowing their code to register the user
@@ -7265,6 +7273,8 @@ class InvoiceFactory
 					}
 
 					if ( aecJoomla15check() ) {
+						JHTML::_('behavior.formvalidation');
+
 						$usersConfig =& JComponentHelper::getParams( 'com_users' );
 						$activation = $usersConfig->get('useractivation');
 					} else {
@@ -7301,7 +7311,6 @@ class InvoiceFactory
 			}
 		} else {
 			// Reset $register if we seem to have all data
-			// TODO: find better solution for this
 			if ( $register && !empty( $this->passthrough['username'] ) ) {
 				$register = 0;
 			}
@@ -8203,7 +8212,14 @@ class Invoice extends serialParamDBTable
 							$this->currency = isset( $pp->settings['currency'] ) ? $pp->settings['currency'] : '';
 						}
 					} else {
-						// Log Error
+						$short	= 'processor loading failure';
+						$event	= 'When computing invoice amount, tried to load processor: ' . $this->processor;
+						$tags	= 'processor,loading,error';
+						$params = array();
+
+						$eventlog = new eventLog( $database );
+						$eventlog->issue( $short, $tags, $event, 128, $params );
+
 						return;
 					}
 			}
@@ -8290,8 +8306,15 @@ class Invoice extends serialParamDBTable
 				$this->method = 'free';
 				$madefree = true;
 			} elseif ( strcmp( $this->method, 'free' ) === 0 ) {
+				$short	= 'invoice amount error';
+				$event	= 'When computing invoice amount: Method error, amount 0.00, but method = ' . $this->method;
+				$tags	= 'processor,loading,error';
+				$params = array();
+
+				$eventlog = new eventLog( $database );
+				$eventlog->issue( $short, $tags, $event, 128, $params );
+
 				$this->method = 'error';
-				// TODO: Log Error
 			}
 
 			if ( $save ) {
@@ -8429,9 +8452,7 @@ class Invoice extends serialParamDBTable
 		if ( $response['valid'] ) {
 			$break = 0;
 
-			// Only check on the amount on the first transaction to make up for coupon errors
-			// TODO: This is very bad right here and a potential loophole, needs to be replaced with a more thorough check
-			// ...once we have more precise invoices
+			// If not in Testmode, check for amount and currency
 			if ( empty( $pp->settings['testmode'] ) ) {
 				if ( isset( $response['amount_paid'] ) ) {
 					if ( $response['amount_paid'] != $this->amount ) {
@@ -11025,7 +11046,13 @@ class reWriteEngine
 				$this->rewrite['subscription_signup_date']		= $this->data['metaUser']->focusSubscription->signup_date;
 				$this->rewrite['subscription_lastpay_date']		= $this->data['metaUser']->focusSubscription->lastpay_date;
 				$this->rewrite['subscription_plan']				= $this->data['metaUser']->focusSubscription->plan;
-				$this->rewrite['subscription_previous_plan']	= $this->data['metaUser']->focusSubscription->previous_plan;
+
+				if ( !empty( $this->data['metaUser']->focusSubscription->previous_plan ) ) {
+					$this->rewrite['subscription_previous_plan']	= $this->data['metaUser']->focusSubscription->previous_plan;
+				} else {
+					$this->rewrite['subscription_previous_plan']	= "";
+				}
+
 				$this->rewrite['subscription_recurring']		= $this->data['metaUser']->focusSubscription->recurring;
 				$this->rewrite['subscription_lifetime']			= $this->data['metaUser']->focusSubscription->lifetime;
 				$this->rewrite['subscription_expiration_date']	= strftime( $aecConfig->cfg['display_date_frontend'], strtotime( $this->data['metaUser']->focusSubscription->expiration ) );
@@ -11333,7 +11360,6 @@ class reWriteEngine
 						$result = call_user_method_array( $vars[0], $vars[1] );
 					}
 				} else {
-					// TODO: Check whether this is right
 					$callback = array( $vars[0], $vars[1] );
 
 					if ( isset( $vars[2] ) ) {
@@ -11877,7 +11903,6 @@ class AECToolbox
 				$user->set('usertype', '');
 				$user->set('gid', $authorize->get_group_id( '', $newUsertype, 'ARO' ));
 
-				// TODO: Should this be JDate?
 				$user->set('registerDate', date('Y-m-d H:i:s'));
 
 				// If user activation is turned on, we need to set the activation information
@@ -12390,7 +12415,6 @@ class AECToolbox
 			$erx = 'Syntax Parser cannot parse next property: ';
 
 			foreach ( $key as $k ) {
-				// TODO: This should be refactored (if possible) to go without the constant reassigning of pointers
 				// and use {}/variable variables instead
 				$subject =& $return;
 
@@ -13021,7 +13045,6 @@ class microIntegration extends serialParamDBTable
 
 			$class = $this->class_name;
 
-			// TODO: throw error when class doesnt exist
 			$this->mi_class = new $class();
 			$this->mi_class->id = $this->id;
 
@@ -13473,7 +13496,6 @@ class microIntegration extends serialParamDBTable
 				if( is_string( $value ) ) {
 					if ( strcmp( $value, '[[SET_TO_NULL]]' ) === 0 ) {
 						// Exception for NULL case
-						// TODO: SET_TO_NULL undocumented!!!
 						$this->settings[$key] = null;
 					} else {
 						$this->settings[$key] = $value;
