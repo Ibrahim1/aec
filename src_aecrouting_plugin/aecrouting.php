@@ -117,25 +117,6 @@ class plgSystemAECrouting extends JPlugin
 		return $vars;
 	}
 
-	function onAfterInitialise()
-	{
-		if ( strpos( JPATH_BASE, '/administrator' ) ) {
-			// Don't act when on backend
-			return true;
-		}
-
-		static $originalRequest;
-
-		if ( empty( $originalRequest ) ) {
-			$originalRequest = $_REQUEST;
-
-			include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
-			aecDebug('onAfterInitialise');
-			aecDebug($originalRequest);
-			aecDebug($_REQUEST);
-		}
-	}
-
 	function onAfterRoute()
 	{
 		if ( strpos( JPATH_BASE, '/administrator' ) ) {
@@ -147,9 +128,6 @@ class plgSystemAECrouting extends JPlugin
 			include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
 
 			$vars = $this->getVars();
-			aecDebug('onAfterRoute');
-			aecDebug($_REQUEST);
-			aecDebug($vars);
 			if ( $vars['isreg'] && $vars['int_reg'] ) {
 				// Joomla or CB registration...
 				if ( $vars['pfirst'] && !$vars['has_usage'] ) {
@@ -201,20 +179,17 @@ class plgSystemAECrouting extends JPlugin
 				global $database;
 
 				$token = JUtility::getToken();
-aecDebug( "loading token " . $token );
+
 				$temptoken = new aecTempToken( $database );
 				$temptoken->getByToken( $token );
 
-				if ( !empty( $temptoken->content ) ) {aecDebug( $temptoken->content );
+				if ( !empty( $temptoken->content ) ) {
 					$vars['usage']		= $temptoken->content['usage'];
 					$vars['processor']	= $temptoken->content['processor'];
 					$vars['recurring']	= $temptoken->content['recurring'];
 				}
 			}
 
-			aecDebug('onAfterRender');
-			aecDebug($_REQUEST);
-			aecDebug($vars);
 			// Check whether we have a registration situation...
 			if ( !$vars['int_reg'] ) {
 				return;
@@ -252,7 +227,7 @@ aecDebug( "loading token " . $token );
 				$replace[]	= '<form action="/index.php?option=com_acctexp&amp;task=subscribe';
 
 				$search[]	= $addinmarker;
-				$replace[]	= '<input type="hidden" name="task" value="subscribe" />';aecDebug($search);aecDebug($replace);
+				$replace[]	= '<input type="hidden" name="task" value="subscribe" />';
 			} elseif ( $vars['joms_reg'] ) {
 				$addinmarker = '<input type="hidden" name="task" value="register_save" />';
 			} elseif ( $vars['j_reg'] ) {

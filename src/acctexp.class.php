@@ -7691,10 +7691,10 @@ class InvoiceFactory
 
 		// Either this is fully free, or the next term is free and this is non recurring
 		if ( !empty( $this->items ) ) {
-			if ( ( count( $this->items ) == 2 ) || ( $this->payment->amount['amount'] == "0.00" ) ) {
+			if ( ( count( $this->items ) == 1 ) || ( $this->payment->amount['amount'] == "0.00" ) ) {
 				$min = array_shift( array_keys( $this->items ) );
 
-				if ( $this->items[$min]['terms']->checkFree() || ( $this->items[$min]['terms']->nextterm->free && !$this->recurring ) || ( $this->payment->amount['amount'] == "0.00" ) ) {
+				if ( $this->items[$min]['terms']->checkFree() || ( $this->items[$min]['terms']->nextterm->free && !$this->recurring ) || ( $this->payment->amount == "0.00" ) ) {
 					$this->invoice->pay();
 					return $this->thanks( $option, false, true );
 				}
