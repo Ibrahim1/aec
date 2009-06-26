@@ -25,10 +25,7 @@ class mi_shareasale
 	function Settings()
 	{
 		$settings = array();
-		$settings['setupinfo']			= array( 'fieldset' );
-		$settings['profile']			= array( 'inputC' );
-		$settings['directory']			= array( 'inputC' );
-		$settings['use_curl']			= array( 'list_yesno' );
+		$settings['merchantID']			= array( 'inputC' );
 		$settings['onlycustomparams']	= array( 'list_yesno' );
 		$settings['customparams']		= array( 'inputD' );
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
@@ -41,37 +38,24 @@ class mi_shareasale
 	{
 		global $database, $mosConfig_live_site;
 
-		$rooturl = $this->getPath();
+		$rooturl = "https://shareasale.com/q.cfm";
 
 		$getparams = array();
 
-		if ( !empty( $this->settings['profile'] ) ) {
-			$getparams[] = 'profile=' . $this->settings['profile'];
-		}
+        $user		= JFactory::getUser($invoice->userid);
+        $SSAID		= $user->getParam('SSAID');
+        $SSAIDDATA	= $user->getParam('SSAIDDATA');
 
-		$getparams[] = 'idev_saleamt=' . $request->invoice->amount;
-		$getparams[] = 'idev_ordernum=' . $request->invoice->invoice_number;
+		$getparams[] = 'amount='		. $request->invoice->amount;
+		$getparams[] = 'tracking='		. $request->invoice->invoice_number;
+		$getparams[] = 'transtype='		. 'sale';
+		$getparams[] = 'merchantID='	. $this->settings['merchantID'];
+		$getparams[] = 'userID='		. $user->getParam('SSAID');
+		$getparams[] = 'SSAIDDATA='		. $user->getParam('SSAIDDATA');
 
 		if ( !empty( $this->settings['onlycustomparams'] ) && !empty( $this->settings['customparams'] ) ) {
 			$getparams = array();
 		}
-
-		$userflags = $request->metaUser->focusSubscription->getMIflags( $request->plan->id, $this->id );
-
-		if ( !empty( $userflags['SHAREASALE_IP_ADDRESS'] ) ) {
-			$ip = $userflags['SHAREASALE_IP_ADDRESS'];
-		} else {
-			if ( isset( $request->metaUser->focusSubscription->params['creator_ip'] ) ) {
-				$ip = $request->metaUser->focusSubscription->params['creator_ip'];
-			} else {
-				$ip = $_SERVER['REMOTE_ADDR'];
-			}
-
-			$newflags['idev_ip_address'] = $ip;
-			$request->metaUser->objSubscription->setMIflags( $request->plan->id, $this->id, $newflags );
-		}
-
-		$getparams[] = 'ip_address=' . $ip;
 
 		if ( !empty( $this->settings['customparams'] ) ) {
 			$rw_params = AECToolbox::rewriteEngineRQ( $this->settings['customparams'], $request );
@@ -94,68 +78,15 @@ class mi_shareasale
 			$newget[] = urlencode($va[0]) . '=' . urlencode($va[1]);
 		}
 
-		if ( !empty( $this->settings['use_curl'] ) ) {
-			$ch = curl_init();
-			$curl_url = $rooturl . "/sale.php?" . implode( '&', $newget );
-			curl_setopt($ch, CURLOPT_URL, $curl_url );
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_exec($ch);
-			curl_close($ch);
-		} else {
-			$text = '<img border="0" '
-					.'src="' . $rooturl .'/sale.php?' . implode( '&amp;', $newget ) . '" '
-					.'width="1" height="1" />';
-
-			$displaypipeline = new displayPipeline($database);
-			$displaypipeline->create( $request->metaUser->userid, 1, 0, 0, null, 1, $text );
-		}
+		$ch = curl_init();
+		$curl_url = $rooturl . "?" . implode( '&', $newget );
+		curl_setopt($ch, CURLOPT_URL, $curl_url );
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_exec($ch);
+		curl_close($ch);
 
 		return true;
 	}
 
-    function logpayment( $invoice )
-    {
-        $user = JFactory::getUser($invoice->userid);
-        $SSAID = $user->getParam('SSAID');
-        $SSAIDDATA = $user->getParam('SSAIDDATA');
-        if($SSAID != '' && $SSAIDDATA != '') {
-            $amount = $invoice->amount;
-            $tracking = $invoice->id;
-            $yourmerchantid = 22068;
-
-            $ch = curl_init();
-            $send_to_url = "https://shareasale.com/q.cfm";
-            $my_curl_url = sprintf("%s?amount=%s&tracking=%s&transtype=sale&merchantID=%s&userID=%s&SSAIDDATA=%s", $send_to_url, $amount, $tracking, $yourmerchantid, $SSAID, $SSAIDDATA);
-            curl_setopt($ch, CURLOPT_URL, $my_curl_url);
-            curl_setopt($ch, CURLOPT_POST, TRUE);
-            curl_setopt($ch, CURLOPT_PORT, 443);
-            curl_exec($ch);
-            curl_close($ch);
-        }
-        return true;
-    }
-
-	function getPath()
-	{
-		global $mosConfig_live_site;
-
-		if ( !empty( $this->settings['directory'] ) ) {
-			if ( ( strpos( $this->settings['directory'], 'http://' ) === 0 ) || ( strpos( $this->settings['directory'], 'https://' ) === 0 ) ) {
-				$rooturl = $this->settings['directory'];
-			} else {
-				if ( ( strpos( $this->settings['directory'], 'www.' ) === 0 ) ) {
-					$rooturl = "http://" . $this->settings['directory'];
-				} elseif ( strpos( "/", $this->settings['directory'] ) !== 0 ) {
-					$rooturl = $mosConfig_live_site . "/" . $this->settings['directory'];
-				} else {
-					$rooturl = $mosConfig_live_site . $this->settings['directory'];
-				}
-			}
-		} else {
-			$rooturl = $mosConfig_live_site . '/idevaffiliate';
-		}
-
-		return $rooturl;
-	}
 }
 ?>

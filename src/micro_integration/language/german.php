@@ -838,4 +838,14 @@ define( '_MI_MI_GOOGLEADSENSECONVERSION_COLOR_DESC',		'The color you want to use
 define( '_MI_MI_GOOGLEADSENSECONVERSION_LABEL_NAME',		'Label' );
 define( '_MI_MI_GOOGLEADSENSECONVERSION_LABEL_DESC',		'The label you want to use' );
 
+// Share A Sale
+define( '_AEC_MI_NAME_SHAREASALE',		'Share A Sale' );
+define( '_AEC_MI_DESC_SHAREASALE',		'Connect your sales to Share A Sale' );
+define( '_MI_MI_SHAREASALE_MERCHANTID_NAME',		'Merchant ID' );
+define( '_MI_MI_SHAREASALE_MERCHANTID_DESC',		'Your Share A Sale Merchant ID' );
+define( '_MI_MI_SHAREASALE_ONLYCUSTOMPARAMS_NAME',		'Only Custom Parameters' );
+define( '_MI_MI_SHAREASALE_ONLYCUSTOMPARAMS_DESC',		'Only transmit the custom parameters as specified below (instead of transmitting the regular - invoice number and amount - and the profile id if set).' );
+define( '_MI_MI_SHAREASALE_CUSTOMPARAMS_NAME',		'Custom Parameters' );
+define( '_MI_MI_SHAREASALE_CUSTOMPARAMS_DESC',		'If you want to transmit custom parameters instead of or additional to the regular parameters, please put them in here. Separated by linebreaks in the form of "parameter_name=parameter_value". The RewriteEngine works as specified below.' );
+
 ?>
