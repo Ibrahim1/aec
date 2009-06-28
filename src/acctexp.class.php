@@ -6424,7 +6424,9 @@ class InvoiceFactory
 
 				$procnames = PaymentProcessorHandler::getProcessorNameListbyId( $procs );
 
-				$c = false;
+				$c	= false;
+				$s	= array();
+				$se	= true;
 
 				foreach ( $pgroups as $pgid => $pgroup ) {
 					if ( count( $pgroup['processors'] ) < 2 ) {
@@ -6446,36 +6448,111 @@ class InvoiceFactory
 
 					$pgsel = aecGetParam( $fname, null, true, array( 'word', 'int' ) );
 
+					$selection = false;
 					if ( !is_null( $pgsel ) ) {
-						$this->processor = PaymentProcessorHandler::getProcessorNamefromId( $pgsel );
-						continue;
+						if ( isset( $pgroup['processors'][$pgsel] ) ) {
+							$selection = $pgroup['processors'][$pgsel];
+						}
 					}
 
-					$ex['desc'] .= "<ul>";
+					if ( !empty( $selection ) ) {
+						$pgroups[$pgid]['processor'] = $selection;
+						$s[] = $selection;
 
-					foreach ( $pgroup['members'] as $pgmember ) {
-						$ex['desc'] .= "<li><strong>" . $this->cart[$pgmember]['name'] . "</strong><br /></li>";
-					}
-
-					$ex['desc'] .= "</ul>";
-
-					foreach ( $pgroup['processors'] as $pid => $pgproc ) {
-						$pgex = $pgproc;
-
-						if ( strpos( $pgproc, '_recurring' ) ) {
-							$pgex = str_replace( '_recurring', '', $pgproc );
-							$recurring = true;
-						} else {
-							$recurring = false;
+						if ( count( $s ) > 1 ) {
+							if ( !in_array( $selection, $s ) ) {
+								$se = false;
+							}
 						}
 
-						$ex['rows'][] = array( 'radio', $fname, $pgproc, true, $procnames[$pgex].( $recurring ? ' (recurring billing)' : '') );
+						continue;
+					} else {
+						$ex['desc'] .= "<ul>";
+
+						foreach ( $pgroup['members'] as $pgmember ) {
+							$ex['desc'] .= "<li><strong>" . $this->cart[$pgmember]['name'] . "</strong><br /></li>";
+						}
+
+						$ex['desc'] .= "</ul>";
+
+						foreach ( $pgroup['processors'] as $pid => $pgproc ) {
+							$pgex = $pgproc;
+
+							if ( strpos( $pgproc, '_recurring' ) ) {
+								$pgex = str_replace( '_recurring', '', $pgproc );
+								$recurring = true;
+							} else {
+								$recurring = false;
+							}
+
+							$ex['rows'][] = array( 'radio', $fname, $pgproc, true, $procnames[$pgex].( $recurring ? ' (recurring billing)' : '') );
+						}
 					}
 
 					if ( !empty( $ex['rows'] ) ) {
 						$c = true;
 
 						$this->raiseException( $ex );
+					} else {
+						if ( !$se ) {
+							// We have different processors selected for this cart
+							$prelg = array();
+							foreach ( $pgroups as $pgid => $pgroup ) {
+								$prelg[$pgroup['processor']][] = $pgroup;
+							}
+
+							$invoice_highest = 0;
+							foreach ( $prelg as $processor => $pgroups ) {
+								$mpg = array_pop( array_keys( $pgroups ) );
+
+								if ( ( count( $pgroups ) > 1 ) || ( count( $pgroups[$mpg]['members'] ) > 1 ) ) {
+									// We have more than one item for this processor, create temporary cart
+									$tempcart = new aecCart( $database );
+									$tempcart->userid = $this->userid;
+
+									foreach ( $pgroups as $pgr ) {
+										foreach ( $pgr['members'] as $member ) {
+											$r = $tempcart->addItem( $member );
+										}
+									}
+
+									$tempcart->storeload();
+
+									$carthash = 'c.' . $tempcart->id;
+
+									// Create a cart invoice
+									$invoice = new Invoice( $database );
+									$invoice->create( $this->userid, $carthash, $processor );
+								} else {
+									// Only one item in this, create a simple invoice
+									$invoice = new Invoice( $database );
+									$invoice->create( $this->userid, $pgroups[$mpg]['members'][0], $processor );
+								}
+
+								if ( $invoice->amount > $invoice_highest ) {
+									$finalinvoice = $invoice;
+								}
+							}
+
+							$this->invoice_number = $invoice->invoice_number;
+							$this->invoice = $invoice;
+
+							$this->touchInvoice();
+
+							$objUsage = $this->invoice->getObjInvoice();
+
+							if ( is_a( $objUsage, 'aecCart' ) ) {
+								$this->cartobject = $objUsage;
+
+								$this->getCart();
+							} else {
+								$this->plan = $objUsage;
+							}
+						} else {
+							$mpg = array_pop( array_keys( $pgroups ) );
+
+							$this->processor = $pgroups[$mpg]['processor'];
+						}
 					}
 				}
 			} else {

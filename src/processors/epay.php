@@ -116,7 +116,6 @@ class processor_epay extends POSTprocessor
 		$var['windowstate']		= $this->settings['windowstate'];
 		$var['accepturl']		= $request->int_var['return_url'];
 		$var['declineurl']		= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=cancel");
-		//$var['callbackurl']	= AECToolbox::deadsureURL("/components/com_acctexp/epay_callback.php?option=com_acctexp&amp;task=epay");
 		$var['callbackurl']		= AECToolbox::deadsureURL("index.php?option=com_acctexp&amp;task=epaynotification");
 
 		$var['group']			= $this->settings['group'];
@@ -183,6 +182,7 @@ class processor_epay extends POSTprocessor
 
 		foreach ( $minlen as $k ) {
 			if ( strlen( $post[$k] ) == 0 ) {
+				$response['pending_reason'] = 'Empty Data';
 				return $response;
 			}
 		}

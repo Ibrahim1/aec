@@ -1386,9 +1386,9 @@ function removeClosedSubscription( $userid, $option )
 
 			if ( $this_group == 'super administrator' ) {
 				$msg = _AEC_MSG_NODELETE_SUPERADMIN;
-			}else if ( $id == $my->id ){
+			} else if ( $id == $my->id ) {
 				$msg = _AEC_MSG_NODELETE_YOURSELF;
-			}else if ( ( $this_group == 'administrator' ) && ( $my->gid == 24 ) ){
+			} else if ( ( $this_group == 'administrator' ) && ( $my->gid == 24 ) ) {
 				$msg = _AEC_MSG_NODELETE_EXCEPT_SUPERADMIN;
 			} else {
 				if ( !$obj->delete( $id ) ) {
@@ -1464,9 +1464,9 @@ function removePendingSubscription( $userid, $option )
 			$this_group = strtolower( $acl->get_group_name( $groups[0], 'ARO' ) );
 			if ( $this_group == 'super administrator' ) {
 				$msg = _AEC_MSG_NODELETE_SUPERADMIN;
-			}else if ( $id == $my->id ){
+			} else if ( $id == $my->id ) {
 				$msg = _AEC_MSG_NODELETE_YOURSELF;
-			}else if ( ( $this_group == 'administrator' ) && ( $my->gid == 24 ) ){
+			} else if ( ( $this_group == 'administrator' ) && ( $my->gid == 24 ) ) {
 				$msg = _AEC_MSG_NODELETE_EXCEPT_SUPERADMIN;
 			} else {
 				if ( !$obj->delete( $id ) ) {
