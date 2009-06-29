@@ -6259,22 +6259,33 @@ class aecTempToken extends serialParamDBTable
 	{
 		global $database;
 
-		$query = 'SELECT id'
+		$query = 'SELECT `id`'
 		. ' FROM #__acctexp_temptoken'
-		. ' WHERE token = \'' . $token . '\''
+		. ' WHERE `token` = \'' . $token . '\''
 		;
 		$database->setQuery( $query );
+		$id = $database->loadResult();
 
-		return $this->load($database->loadResult());
+		if ( empty( $id ) ) {
+			$query = 'SELECT `id`'
+			. ' FROM #__acctexp_temptoken'
+			. ' WHERE `ip` = \'' . $_SERVER['REMOTE_ADDR'] . '\''
+			;
+			$database->setQuery( $query );
+			$id = $database->loadResult();
+		}
+
+		return $this->load( $id );
 	}
 
 	function create( $token, $content )
 	{
 		global $database, $mosConfig_offset;
 
-		$query = 'SELECT id'
+		$query = 'SELECT `id`'
 		. ' FROM #__acctexp_temptoken'
-		. ' WHERE token = \'' . $token . '\''
+		. ' WHERE `token` = \'' . $token . '\''
+		. ' OR `ip` = \'' . $_SERVER['REMOTE_ADDR'] . '\''
 		;
 		$database->setQuery( $query );
 		$id = $database->loadResult();
