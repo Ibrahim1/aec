@@ -59,7 +59,7 @@ class plgSystemAECrouting extends JPlugin
 	}
 
 	function getVars()
-	{
+	{aecDebug( "getVars" );
 		global $aecConfig;
 
 		$vars = array();
@@ -87,10 +87,6 @@ class plgSystemAECrouting extends JPlugin
 
 		$vars['submit']		= JRequest::getVar( 'submit', '' );
 
-		$vars['username']	= aecGetParam( 'username', true, array( 'string', 'clear_nonalnum' ) );
-
-		$vars['has_usage']	= !empty( $vars['usage'] );
-
 		// Community Builder
 		$vars['ccb']		= $vars['option'] == 'com_comprofiler';
 		// JomSocial
@@ -100,19 +96,58 @@ class plgSystemAECrouting extends JPlugin
 
 		$vars['j_reg']		= $vars['cu']	&& ( $vars['view'] == 'register' );
 		$vars['cb_reg']		= $vars['ccb']	&& ( $vars['task'] == 'registers' );
-		$vars['joms_reg']	= $vars['joms']	&& ( $vars['view'] == 'register' ) && ( $vars['task'] != 'registerProfile' );
+		$vars['joms_reg']	= $vars['joms']	&& ( $vars['view'] == 'register' ) && empty( $vars['task'] );
 		$vars['joms_regp']	= $vars['joms']	&& ( $vars['view'] == 'register' ) && ( $vars['task'] == 'registerProfile' );
+		$vars['joms_regs']	= $vars['joms']	&& ( $vars['view'] == 'register' ) && ( $vars['task'] == 'registerSucess' );
+		$vars['joms_regsv']	= $vars['joms']	&& ( $vars['view'] == 'register' ) && ( $vars['task'] == 'register_save' );
 		$vars['tcregs']		= $vars['task'] == 'saveregisters';
 		$vars['tsregs']		= $vars['task'] == 'saveRegistration';
 		$vars['tsue']		= $vars['task'] == 'saveUserEdit';
 		$vars['tsu']		= $vars['task'] == 'save';
 
-		$vars['isreg']		= ( $vars['j_reg'] || $vars['cb_reg'] || $vars['joms_reg'] );
+		$vars['joms_any']	= ( $vars['joms_regsv'] || $vars['joms_regs'] || $vars['joms_regp'] || $vars['joms_reg'] );
+
+		$vars['isreg']		= ( $vars['j_reg'] || $vars['cb_reg'] || $vars['joms_any'] );
 
 		$vars['cbsreg']		= ( ( $vars['ccb'] && $vars['tsue'] ) || ( $vars['cu'] && $vars['tsu'] ) );
 
 		$vars['pfirst']		= $aecConfig->cfg['plans_first'];
 		$vars['int_reg']	= $aecConfig->cfg['integrate_registration'];
+
+		$vars['username']	= aecGetParam( 'username', "", true, array( 'string', 'clear_nonalnum' ) );
+
+		$vars['has_usage']	= !empty( $vars['usage'] );
+
+		if ( $vars['joms_any'] && !$vars['has_usage'] ) {
+			global $database;
+
+			$vars['username']	= aecGetParam( 'jsusername', "", true, array( 'string', 'clear_nonalnum' ) );
+
+			$temptoken = new aecTempToken( $database );
+			$temptoken->getComposite();
+aecDebug( $temptoken );
+			if ( !empty( $temptoken->content ) ) {
+				$vars['has_usage']	= true;
+				$vars['usage']		= $temptoken->content['usage'];
+				$vars['processor']	= $temptoken->content['processor'];
+				$vars['recurring']	= $temptoken->content['recurring'];
+
+				if ( isset( $temptoken->content['username'] ) ) {
+					$vars['username']	= $temptoken->content['username'];
+					$vars['has_user']	= true;
+				}
+
+				if ( isset( $temptoken->content['email'] ) ) {
+					$vars['email']	= $temptoken->content['email'];
+				}
+
+				if ( isset( $temptoken->content['password'] ) ) {
+					$vars['password']	= $temptoken->content['password'];
+				}
+			}
+		}
+
+		$vars['has_user']	= !empty( $vars['username'] );
 
 		return $vars;
 	}
@@ -124,59 +159,56 @@ class plgSystemAECrouting extends JPlugin
 			return true;
 		}
 
-		if ( file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
-			include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
-$session =& JFactory::getSession();aecDebug($session);
-			$vars = $this->getVars();
-aecDebug($vars);
-			if ( ( $vars['joms_regp'] || $vars['joms_reg'] ) && !$vars['has_usage'] ) {
+		if ( !file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
+			return;
+		}
+
+		include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
+aecDebug( "onAfterRoute" );aecDebug( $_REQUEST );
+		$vars = $this->getVars();
+aecDebug( $vars );
+		if ( $vars['isreg'] && $vars['int_reg'] ) {
+			// Joomla or CB registration...
+			if ( $vars['pfirst'] && !$vars['has_usage'] ) {
+				// Plans first and not yet selected -> select!
+				global $mainframe;
+				$mainframe->redirect( 'index.php?option=com_acctexp&task=subscribe' );
+			} elseif ( $vars['has_user'] && $vars['has_usage'] && $vars['joms_regs'] ) {
+				$mainframe->redirect( 'index.php?option=com_acctexp&task=subscribe&aectoken=1' );
+			} elseif ( $vars['has_usage'] && $vars['joms_reg'] ) {
 				global $database;
 
-				$session =& JFactory::getSession();
-				$token = $session->getToken();
-aecDebug("loadtoken");aecDebug($token);
-				if ( !empty( $token ) ) {
-					$temptoken = new aecTempToken( $database );
-					$temptoken->getByToken( $token );
-aecDebug($temptoken);//exit;
-					if ( !empty( $temptoken->content ) ) {
-						$vars['has_usage']	= true;
-						$vars['usage']		= $temptoken->content['usage'];
-						$vars['processor']	= $temptoken->content['processor'];
-						$vars['recurring']	= $temptoken->content['recurring'];
-					}
-				}
-			}
+				$content = array();
+				$content['usage']		= $vars['usage'];
+				$content['processor']	= $vars['processor'];
+				$content['recurring']	= $vars['recurring'];
 
-			if ( $vars['isreg'] && $vars['int_reg'] ) {
-				// Joomla or CB registration...
-				if ( $vars['pfirst'] && !$vars['has_usage'] ) {
-					// Plans first and not yet selected -> select!
-					global $mainframe;
-					$mainframe->redirect( 'index.php?option=com_acctexp&task=subscribe' );
-				} elseif ( $vars['has_usage'] && $vars['joms_reg'] && empty( $temptoken ) ) {
+				$temptoken = new aecTempToken( $database );
+				$temptoken->create( $content );
+			} elseif ( $vars['has_user'] && $vars['joms_regsv'] ) {
+				$username = aecGetParam( 'jsusername', "", true, array( 'string', 'clear_nonalnum' ) );
+
+				if ( !empty( $username ) ) {
 					global $database;
 
-					$session =& JFactory::getSession();
-					$token = $session->getToken();
+					$temptoken = new aecTempToken( $database );
+					$temptoken->getComposite();
 
 					$content = array();
-					$content['usage']		= $vars['usage'];
-					$content['processor']	= $vars['processor'];
-					$content['recurring']	= $vars['recurring'];
-
-					$temptoken = new aecTempToken( $database );
-					$temptoken->create( $token, $content );aecDebug("savetoken");aecDebug($token);aecDebug($temptoken);
+					$temptoken->content['username']		= $username;
+					$temptoken->content['password']		= aecGetParam( 'jspassword', "", true, array( 'string', 'clear_nonalnum' ) );
+					$temptoken->content['email']		= aecGetParam( 'jsemail', "", true, array( 'string', 'clear_nonemail' ) );
+					$temptoken->storeload();aecDebug($temptoken);
 				}
-			} elseif ( $vars['cbsreg'] ) {
-				// Any kind of user profile edit = trigger MIs
-
-				$row = new stdClass();
-				$row->username = $vars['username'];
-
-				$mih = new microIntegrationHandler();
-				$mih->userchange( $row, $_POST, 'registration' );
 			}
+		} elseif ( $vars['cbsreg'] ) {
+			// Any kind of user profile edit = trigger MIs
+
+			$row = new stdClass();
+			$row->username = $vars['username'];
+
+			$mih = new microIntegrationHandler();
+			$mih->userchange( $row, $_POST, 'registration' );
 		}
 	}
 
@@ -187,103 +219,89 @@ aecDebug($temptoken);//exit;
 			return true;
 		}
 
-		if ( file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
-			include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
-
-			global $mainframe, $aecConfig;
-
-			$body = JResponse::getBody();
-
-			$vars = $this->getVars();
-
-			if ( ( $vars['joms_regp'] || $vars['joms_reg'] ) && !$vars['has_usage'] ) {
-				global $database;
-
-				$token = JUtility::getToken();
-
-				$temptoken = new aecTempToken( $database );
-				$temptoken->getByToken( $token );
-
-				if ( !empty( $temptoken->content ) ) {
-					$vars['has_usage']	= true;
-					$vars['usage']		= $temptoken->content['usage'];
-					$vars['processor']	= $temptoken->content['processor'];
-					$vars['recurring']	= $temptoken->content['recurring'];
-				}
-			}
-
-			// Check whether we have a registration situation...
-			if ( !$vars['int_reg'] ) {
-				return;
-			}
-
-			if ( !( $vars['j_reg'] || $vars['ccb'] || $vars['joms_regp'] || $vars['joms_reg'] ) ) {
-				return;
-			}
-
-			// Check whether we have plans first, but no usage (or vice versa)
-			if ( ( $vars['pfirst'] != $vars['has_usage'] ) && !$vars['joms_regp'] ) {
-				return;
-			}
-
-			// Plans first and selected or not first and not selected -> register
-			$search		= array();
-			$replace	= array();
-
-			if ( $vars['ccb'] ) {
-				$addinmarker = '<input type="hidden" name="task" value="saveregisters" />';
-
-				$search[]	= '<form action="' . JURI::root() . 'index.php?option=com_comprofiler" method="post"'
-								 . ' id="cbcheckedadminForm" name="adminForm" enctype="multipart/form-data">';
-				$replace[]	= '<form action="' . JURI::root() . 'index.php?option=com_acctexp&amp;task=subscribe" method="post" enctype="multipart/form-data">';
-
-				$search[]	= '<input type="hidden" name="option" value="com_comprofiler" />';
-				$replace[]	= '<input type="hidden" name="option" value="com_acctexp" />';
-
-				$search[]	= $addinmarker;
-				$replace[]	= '<input type="hidden" name="task" value="subscribe" />';
-			} elseif ( $vars['joms_regp'] ) {
-				//$addinmarker = '<input type="hidden" name="task" value="registerUpdateProfile" />';
-
-				//$search[]	= '<form action="/index.php?option=com_community&amp;view=register&amp;task=registerProfile';
-				//$replace[]	= '<form action="/index.php?option=com_acctexp&amp;task=subscribe';
-
-				//$search[]	= $addinmarker;
-				//$replace[]	= '<input type="hidden" name="task" value="subscribe" />';
-			} elseif ( $vars['joms_reg'] ) {
-				//$addinmarker = '<input type="hidden" name="task" value="register_save" />';
-			} elseif ( $vars['j_reg'] ) {
-				$addinmarker = '<input type="hidden" name="task" value="register_save" />';
-
-				$search[]	= $addinmarker;
-				$replace[]	= '<input type="hidden" name="task" value="subscribe" />'
-								. '<input type="hidden" name="option" value="com_acctexp" />';
-
-				$search[]	= '<form action="' . JRoute::_( 'index.php?option=com_user' ) . '" method="post"';
-				$replace[]	= '<form action="' . JRoute::_( 'index.php?option=com_acctexp' ) . '" method="post"';
-
-				if ( $aecConfig->cfg['use_recaptcha'] && !empty( $aecConfig->cfg['recaptcha_publickey'] ) ) {
-					global $mosConfig_absolute_path;
-
-					require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
-
-					$search[]	= 'type="password" id="password2" name="password2" size="40" value="" />';
-					$replace[]	= 'type="password" id="password2" name="password2" size="40" value="" />'
-									. '<tr><td height="40"><label></label></td><td>'
-									. recaptcha_get_html( $aecConfig->cfg['recaptcha_publickey'] ) . '</td></tr>';
-				}
-			}
-
-			if ( !empty( $addinmarker ) ) {
-				$body = $this->addAECvars( $addinmarker, $body, $vars );
-			}
-
-			if ( !empty( $search ) ) {
-				$body = str_replace( $search, $replace, $body );
-			}
-
-			JResponse::setBody($body);
+		if ( !file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
+			return;
 		}
+
+		include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
+aecDebug( "onAfterRender" );
+		global $mainframe, $aecConfig;
+
+		$body = JResponse::getBody();
+
+		$vars = $this->getVars();
+
+		// Check whether we have a registration situation...
+		if ( !$vars['int_reg'] ) {
+			return;
+		}
+
+		if ( !( $vars['j_reg'] || $vars['ccb'] || $vars['joms_regp'] || $vars['joms_reg'] ) ) {
+			return;
+		}
+
+		// Check whether we have plans first, but no usage (or vice versa)
+		if ( ( $vars['pfirst'] != $vars['has_usage'] ) && !$vars['joms_regp'] ) {
+			return;
+		}
+
+		// Plans first and selected or not first and not selected -> register
+		$search		= array();
+		$replace	= array();
+
+		if ( $vars['ccb'] ) {
+			$addinmarker = '<input type="hidden" name="task" value="saveregisters" />';
+
+			$search[]	= '<form action="' . JURI::root() . 'index.php?option=com_comprofiler" method="post"'
+							 . ' id="cbcheckedadminForm" name="adminForm" enctype="multipart/form-data">';
+			$replace[]	= '<form action="' . JURI::root() . 'index.php?option=com_acctexp&amp;task=subscribe" method="post" enctype="multipart/form-data">';
+
+			$search[]	= '<input type="hidden" name="option" value="com_comprofiler" />';
+			$replace[]	= '<input type="hidden" name="option" value="com_acctexp" />';
+
+			$search[]	= $addinmarker;
+			$replace[]	= '<input type="hidden" name="task" value="subscribe" />';
+		} elseif ( $vars['joms_regp'] ) {
+			//$addinmarker = '<input type="hidden" name="task" value="registerUpdateProfile" />';
+
+			//$search[]	= '<form action="/index.php?option=com_community&amp;view=register&amp;task=registerProfile';
+			//$replace[]	= '<form action="/index.php?option=com_acctexp&amp;task=subscribe';
+
+			//$search[]	= $addinmarker;
+			//$replace[]	= '<input type="hidden" name="task" value="subscribe" />';
+		} elseif ( $vars['joms_reg'] ) {
+			//$addinmarker = '<input type="hidden" name="task" value="register_save" />';
+		} elseif ( $vars['j_reg'] ) {
+			$addinmarker = '<input type="hidden" name="task" value="register_save" />';
+
+			$search[]	= $addinmarker;
+			$replace[]	= '<input type="hidden" name="task" value="subscribe" />'
+							. '<input type="hidden" name="option" value="com_acctexp" />';
+
+			$search[]	= '<form action="' . JRoute::_( 'index.php?option=com_user' ) . '" method="post"';
+			$replace[]	= '<form action="' . JRoute::_( 'index.php?option=com_acctexp' ) . '" method="post"';
+
+			if ( $aecConfig->cfg['use_recaptcha'] && !empty( $aecConfig->cfg['recaptcha_publickey'] ) ) {
+				global $mosConfig_absolute_path;
+
+				require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
+
+				$search[]	= 'type="password" id="password2" name="password2" size="40" value="" />';
+				$replace[]	= 'type="password" id="password2" name="password2" size="40" value="" />'
+								. '<tr><td height="40"><label></label></td><td>'
+								. recaptcha_get_html( $aecConfig->cfg['recaptcha_publickey'] ) . '</td></tr>';
+			}
+		}
+
+		if ( !empty( $addinmarker ) ) {
+			$body = $this->addAECvars( $addinmarker, $body, $vars );
+		}
+
+		if ( !empty( $search ) ) {
+			$body = str_replace( $search, $replace, $body );
+		}
+
+		JResponse::setBody($body);
 	}
 
 	function addAECvars( $search, $text, $vars )

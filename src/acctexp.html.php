@@ -714,8 +714,17 @@ class Payment_HTML
 			<div id="upgrade_button">
 				<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 					<input type="password" size="20" class="inputbox" id="password" name="password"/>
-					<?php if ( $passthrough != false ) { ?>
-							<input type="hidden" name="aec_passthrough" value="<?php echo $passthrough; ?>" />
+					<?php if ( $passthrough != false ) {
+						$pt = unserialize( base64_decode( $passthrough ) );
+
+						if ( isset( $pt['task'] ) ) {
+							echo '<input type="hidden" name="task" value="' . $pt['task'] . '" />';
+						}
+
+						if ( isset( $pt['userid'] ) ) {
+							echo '<input type="hidden" name="userid" value="' . $pt['userid'] . '" />';
+						} ?>
+						<input type="hidden" name="aec_passthrough" value="<?php echo $passthrough; ?>" />
 					<?php } ?>
 					<input type="submit" class="button" value="<?php echo _AEC_PROMPT_PASSWORD_BUTTON;?>" />
 				</form>

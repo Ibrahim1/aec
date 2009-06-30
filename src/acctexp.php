@@ -462,11 +462,43 @@ function subscribe( $option )
 	$username	= aecGetParam( 'username', '', true, array( 'string' ) );
 	$email		= aecGetParam( 'email', '', true, array( 'string' ) );
 
+	$token		= aecGetParam( 'aectoken', 0, true, array( 'int' ) );
+
+	if ( $token ) {
+		$temptoken = new aecTempToken( $database );
+		$temptoken->getComposite();
+
+		if ( !empty( $temptoken->content ) ) {
+			$details = array( 'usage', 'processor', 'recurring', 'username', 'email' );
+
+			foreach ( $details as $d ) {
+				if ( !empty( $temptoken->content[$d] ) ) {
+					$$d = $temptoken->content[$d];
+				}
+			}
+
+			if ( !empty( $username ) ) {
+				$query = 'SELECT id'
+				. ' FROM #__users'
+				. ' WHERE username = \'' . $username . '\''
+				;
+				$database->setQuery( $query );
+				$id = $database->loadResult();
+
+				if ( !empty( $id ) ) {
+					$userid = $id;
+				}
+			}
+		}
+	}
+
 	$isJoomla15 = aecJoomla15check();
 
 	if ( !empty( $username ) && $usage ) {
 		$CB = ( GeneralInfoRequester::detect_component( 'anyCB' ) );
-		if ( $isJoomla15 && !$CB ) {
+		$JS = ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) );
+
+		if ( $isJoomla15 && !$CB && !$JS ) {
 			// Joomla 1.5 Sanity Check
 
 			// Get required system objects
@@ -507,7 +539,7 @@ function subscribe( $option )
 				echo "<script> alert('".html_entity_decode($row->getError())."'); window.history.go(-1); </script>\n";
 				exit();
 			}
-		} else {
+		} elseif ( empty( $token ) ) {
 			if ( isset( $_POST['username'] ) && isset( $_POST['email'] ) ) {
 				$check = checkDuplicateUsernameEmail( $username, $email );
 				if ( $check !== true ) {

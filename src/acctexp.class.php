@@ -6255,6 +6255,18 @@ class aecTempToken extends serialParamDBTable
 		return array( 'content' );
 	}
 
+	function getComposite()
+	{
+		$session =& JFactory::getSession();
+		$token = $session->getToken();
+
+		$this->getByToken( $token );
+
+		if ( empty( $this->content ) && !empty( $_COOKIE['aec_token'] ) ) {
+			$this->getByToken( $_COOKIE['aec_token'] );
+		}
+	}
+
 	function getByToken( $token )
 	{
 		global $database;
@@ -6275,12 +6287,23 @@ class aecTempToken extends serialParamDBTable
 			$id = $database->loadResult();
 		}
 
-		return $this->load( $id );
+		$this->load( $id );
+
+		if ( $this->ip != $_SERVER['REMOTE_ADDR'] ) {
+			$this->delete();
+
+			$this->load(0);
+		}
 	}
 
-	function create( $token, $content )
+	function create( $content, $token=null )
 	{
 		global $database, $mosConfig_offset;
+
+		if ( empty( $token ) ) {
+			$session =& JFactory::getSession();
+			$token = $session->getToken();
+		}
 
 		$query = 'SELECT `id`'
 		. ' FROM #__acctexp_temptoken'
@@ -6298,6 +6321,8 @@ class aecTempToken extends serialParamDBTable
 		$this->content		= $content;
 		$this->created_date	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
 		$this->ip			= $_SERVER['REMOTE_ADDR'];
+
+		setcookie( 'aec_token', $token, time()+3600 );
 
 		return $this->storeload();
 	}
@@ -6358,6 +6383,14 @@ class InvoiceFactory
 				$this->passthrough = $passthrough['aec_passthrough'];
 			} else {
 				$this->passthrough = unserialize( base64_decode( $passthrough['aec_passthrough'] ) );
+			}
+
+			unset( $passthrough['aec_passthrough'] );
+
+			if ( !empty( $passthrough ) ) {
+				foreach ( $passthrough as $k => $v ) {
+					$this->passthrough[$k] = $v;
+				}
 			}
 		} else {
 			$this->passthrough = $passthrough;
