@@ -6270,7 +6270,20 @@ class aecTempToken extends serialParamDBTable
 		$this->getByToken( $token );
 
 		if ( empty( $this->content ) && !empty( $_COOKIE['aec_token'] ) ) {
-			$this->getByToken( $_COOKIE['aec_token'] );
+			$token = $_COOKIE['aec_token'];
+
+			$this->getByToken( $token );
+		}
+
+		if ( empty( $this->token ) ) {
+			$this->token = $token;
+		}
+
+		if ( empty( $this->ip ) ) {
+			global $mosConfig_offset;
+
+			$this->created_date	= date( 'Y-m-d H:i:s', time() + $mosConfig_offset*3600 );
+			$this->ip			= $_SERVER['REMOTE_ADDR'];
 		}
 	}
 
@@ -6322,6 +6335,10 @@ class aecTempToken extends serialParamDBTable
 
 		if ( $id ) {
 			$this->id		= $id;
+		}
+
+		if ( empty( $token ) ) {
+			return false;
 		}
 
 		$this->token		= $token;
@@ -7338,33 +7355,29 @@ class InvoiceFactory
 				if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 					// This is a CB registration, borrowing their code to register the user
 
-					global $task, $mainframe, $_PLUGINS, $ueConfig, $_CB_database;;
-
-					$savetask	= $task;
-					$_REQUEST['task'] = 'done';
-
-					include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
-					include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.html.php' );
-
-					$task = $savetask;
 					if ( GeneralInfoRequester::detect_component( 'CB1.2' ) ) {
-						cbSpoofCheck( 'registerForm' );
-						cbRegAntiSpamCheck();
-
-						$userComplete =	new moscomprofilerUser( $_CB_database );
-
-						$_PLUGINS->loadPluginGroup('user');
-						$_PLUGINS->trigger( 'onStartSaveUserRegistration', array() );
-						if( $_PLUGINS->is_errors() ) {
-							echo "<script type=\"text/javascript\">alert('".addslashes($_PLUGINS->getErrorMSG())."'); </script>\n";
-							$oldUserComplete				=	new moscomprofilerUser( $_CB_database );
-							$userComplete->bindSafely( $_POST, $_CB_framework->getUi(), 'register', $oldUserComplete );
-							HTML_comprofiler::registerForm( $option, $ueConfig['emailpass'], $userComplete, $_PLUGINS->getErrorMSG("<br />") );
-							return;
+						$content = array();
+						$content['usage']		= $plans[0]['id'];
+						$content['processor']	= $plans[0]['gw'][0]->processor_name;
+						if ( isset( $plans[0]['gw'][0]->recurring ) ) {
+							$content['recurring']	= $plans[0]['gw'][0]->recurring;
 						}
 
-						echo $_CB_framework->getAllJsPageCodes();
+						$temptoken = new aecTempToken( $database );
+						$temptoken->create( $content );
+
+						$mainframe->redirect( 'index.php?option=com_comprofiler&task=registers' );
 					} else {
+						global $task, $mainframe, $_PLUGINS, $ueConfig, $_CB_database;;
+
+						$savetask	= $task;
+						$_REQUEST['task'] = 'done';
+
+						include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
+						include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.html.php' );
+
+						$task = $savetask;
+
 						registerForm($option, $mainframe->getCfg( 'emailpass' ), null);
 					}
 				} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
@@ -7382,18 +7395,27 @@ class InvoiceFactory
 
 					userRegistration( $option, null );
 				} elseif ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) ) {
-					// This is a JUSER registration, borrowing their code to register the user
+					$temptoken = new aecTempToken( $database );
+					$temptoken->getComposite();
 
-					global $mosConfig_absolute_path;
+					if ( empty( $temptoken->content ) ) {
+						$content = array();
+						$content['usage']		= $plans[0]['id'];
+						$content['processor']	= $plans[0]['gw'][0]->processor_name;
+						if ( isset( $plans[0]['gw'][0]->recurring ) ) {
+							$content['recurring']	= $plans[0]['gw'][0]->recurring;
+						}
 
-					$_REQUEST['view'] = 'register';
+						$temptoken->create( $content );
+					} elseif ( empty( $temptoken->content['usage'] ) ) {
+						$temptoken->content['usage']		= $plans[0]['id'];
+						$temptoken->content['processor']	= $plans[0]['gw'][0]->processor_name;
+						if ( isset( $plans[0]['gw'][0]->recurring ) ) {
+							$temptoken->content['recurring']	= $plans[0]['gw'][0]->recurring;
+						}
 
-					// Simulate JomSocial dispatch
-					// TODO: Not working (because: stupid)
-					$mainframe->dispatch('com_community');
-					$mainframe->triggerEvent('onAfterDispatch');
-					$mainframe->render();
-					$mainframe->triggerEvent('onAfterRender');
+						$temptoken->storeload();
+					}
 				} else {
 					if ( !isset( $_POST['usage'] ) ) {
 						$_POST['intro'] = $intro;

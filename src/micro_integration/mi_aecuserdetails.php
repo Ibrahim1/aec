@@ -99,8 +99,8 @@ class mi_aecuserdetails
 			}
 		}
 
-		$request->metaUser->addCustomParams( $params );
-		$request->metaUser->storeload();
+		$request->metaUser->meta->addCustomParams( $params );
+		$request->metaUser->meta->storeload();
 
 		return array();
 	}
