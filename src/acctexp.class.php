@@ -1672,7 +1672,14 @@ class aecHeartbeat extends mosDBTable
 	function beat()
 	{
 		global $database, $aecConfig;
-		// Other ideas: Clean out old Coupons
+
+		// Delete old token entries
+		$query = 'DELETE'
+				. ' FROM #__acctexp_temptoken'
+				. ' WHERE `created_date` <= \'' . AECToolbox::computeExpiration( "-3", 'H', time() ) . '\''
+				;
+		$database->setQuery( $query );
+		$database->query();
 
 		// Receive maximum pre expiration time
 		$query = 'SELECT MAX(pre_exp_check)'
@@ -12320,6 +12327,9 @@ class AECToolbox
 		$sign = strpos( $value, '-' ) ? '-' : '+';
 
 		switch ( $unit ) {
+			case 'H':
+				$add = $sign . $value . ' hour';
+				break;
 			case 'D':
 				$add = $sign . $value . ' day';
 				break;

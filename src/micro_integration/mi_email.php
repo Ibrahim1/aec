@@ -62,6 +62,10 @@ class mi_email
 			}
 		}
 
+		if ( !isset( $this->settings['text' . $area] ) || !isset( $this->settings['subject' . $area] ) ) {
+			return false;
+		}
+
 		$message	= AECToolbox::rewriteEngineRQ( $this->settings['text' . $area], $request );
 		$subject	= AECToolbox::rewriteEngineRQ( $this->settings['subject' . $area], $request );
 

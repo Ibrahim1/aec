@@ -2211,7 +2211,7 @@ function editSettings( $option )
 	foreach ( $gwlist as $gwname ) {
 		$pp = new PaymentProcessor();
 		if ( $pp->loadName( $gwname ) ) {
-			$pp->fullInit();
+			$pp->getInfo();
 
 			if ( $pp->processor->active ) {
 				// Add to Active List

@@ -530,7 +530,7 @@ define( '_MI_MI_HOTPROPERTY_ASSOC_COMPANY_DESC',	'Automatically associate the ne
 define( '_MI_MI_HOTPROPERTY_REBUILD_NAME',	'Rebuild' );
 define( '_MI_MI_HOTPROPERTY_REBUILD_DESC',	'Attempt to rebuild the effect this MI has on the users who are in a plan that has this MI assigned.' );
 define( '_MI_MI_HOTPROPERTY_REMOVE_NAME',	'Remove' );
-define( '_MI_MI_HOTPROPERTY_REMOVE_NAME_DESC',	'Attempt to remove the effect this MI has on the users who are in a plan that has this MI assigned.' );
+define( '_MI_MI_HOTPROPERTY_REMOVE_DESC',	'Attempt to remove the effect this MI has on the users who are in a plan that has this MI assigned.' );
 
 define( '_MI_MI_HOTPROPERTY_ADD_LIST_USERCHOICE_NAME',	'Listings Userchoice' );
 define( '_MI_MI_HOTPROPERTY_ADD_LIST_USERCHOICE_DESC',	'Select whether you want the user to select the amount of listings' );

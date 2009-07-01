@@ -125,7 +125,7 @@ class plgSystemAECrouting extends JPlugin
 
 			$temptoken = new aecTempToken( $database );
 			$temptoken->getComposite();
-aecDebug( $temptoken );
+
 			if ( !empty( $temptoken->content ) ) {
 				$vars['has_usage']	= true;
 				$vars['usage']		= $temptoken->content['usage'];
@@ -248,6 +248,7 @@ aecDebug( "onAfterRender" );
 		// Plans first and selected or not first and not selected -> register
 		$search		= array();
 		$replace	= array();
+		$change		= false;
 
 		if ( $vars['ccb'] ) {
 			$addinmarker = '<input type="hidden" name="task" value="saveregisters" />';
@@ -294,14 +295,18 @@ aecDebug( "onAfterRender" );
 		}
 
 		if ( !empty( $addinmarker ) ) {
-			$body = $this->addAECvars( $addinmarker, $body, $vars );
+			$body	= $this->addAECvars( $addinmarker, $body, $vars );
+			$change	= true;
 		}
 
 		if ( !empty( $search ) ) {
-			$body = str_replace( $search, $replace, $body );
+			$body	= str_replace( $search, $replace, $body );
+			$change	= true;
 		}
 
-		JResponse::setBody($body);
+		if ( $change ) {
+			JResponse::setBody( $body );
+		}
 	}
 
 	function addAECvars( $search, $text, $vars )

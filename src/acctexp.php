@@ -469,7 +469,7 @@ function subscribe( $option )
 		$temptoken->getComposite();
 
 		if ( !empty( $temptoken->content ) ) {
-			$details = array( 'usage', 'processor', 'recurring', 'username', 'email' );
+			$details = array( 'usage', 'processor', 'recurring', 'username', 'email', 'password' );
 
 			foreach ( $details as $d ) {
 				if ( !empty( $temptoken->content[$d] ) ) {
@@ -485,8 +485,11 @@ function subscribe( $option )
 				$database->setQuery( $query );
 				$id = $database->loadResult();
 
-				if ( !empty( $id ) ) {
+				if ( !empty( $id ) && !empty( $password ) ) {
 					$userid = $id;
+
+					$metaUser = new metaUser( $id );
+					$metaUser->setTempAuth( $password );
 				}
 			}
 		}
