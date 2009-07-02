@@ -333,7 +333,7 @@ if ( !empty( $task ) ) {
 				$userid		= aecGetParam( 'userid', true, array( 'word', 'int' ) );
 				$expiration = aecGetParam( 'expiration', true, array( 'word', 'int' ) );
 
-				if ( !empty( $userid ) && !empty( $userid ) ) {
+				if ( !empty( $userid ) ) {
 					expired( $option, $userid, $expiration );
 				} else {
 					subscribe( $option );
