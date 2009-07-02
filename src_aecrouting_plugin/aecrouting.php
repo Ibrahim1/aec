@@ -250,7 +250,7 @@ class plgSystemAECrouting extends JPlugin
 		$body = JResponse::getBody();
 
 		$vars = $this->getVars();
-aecDebug( $_REQUEST );aecDebug( $vars );
+
 		// Check whether we have a registration situation...
 		if ( !$vars['int_reg'] ) {
 			return;
@@ -283,7 +283,9 @@ aecDebug( $_REQUEST );aecDebug( $vars );
 			$search[]	= $addinmarker;
 			$replace[]	= '<input type="hidden" name="task" value="subscribe" />';
 		} elseif ( $vars['ccb'] && $vars['ccb12'] && $vars['tcregs'] ) {
-			//$mainframe->redirect( 'index.php?option=com_acctexp&task=subscribe&aectoken=1' );
+			if ( strpos( $body, '<script type="text/javascript">alert(' ) === false ) {
+				$mainframe->redirect( 'index.php?option=com_acctexp&task=subscribe&aectoken=1' );
+			}
 		} elseif ( $vars['j_reg'] ) {
 			$addinmarker = '<input type="hidden" name="task" value="register_save" />';
 

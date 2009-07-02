@@ -6974,6 +6974,8 @@ class InvoiceFactory
 
 	function storeInvoice()
 	{
+		global $database;
+
 		$this->invoice->computeAmount( $this, true );
 
 		if ( is_object( $this->pp ) ) {
@@ -6988,6 +6990,13 @@ class InvoiceFactory
 			}
 		} elseif ( !empty( $this->plan ) ) {
 			$this->plan->triggerMIs( '_invoice_creation', $this->metaUser, null, $this->invoice );
+		}
+
+		$temptoken = new aecTempToken( $database );
+		$temptoken->getComposite();
+
+		if ( $temptoken->id ) {
+			$temptoken->delete();
 		}
 	}
 
