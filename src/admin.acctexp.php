@@ -1624,7 +1624,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 	$users_selected = ( ( is_array( $subscriptionid ) && count( $subscriptionid ) ) || ( is_array( $userid ) && count( $userid ) ) );
 
-	if ( $planid > 0 && $users_selected ) {
+	if ( !empty( $planid ) && $users_selected ) {
 		$plan = new SubscriptionPlan( $database );
 		$plan->load( $planid );
 
@@ -1637,7 +1637,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 			}
 		}
 
-		if ( !empty( $subscriptionid ) ) {
+		if ( !empty( $userid ) ) {
 			foreach ( $userid as $uid ) {
 				$metaUser = new metaUser( $uid );
 				$metaUser->establishFocus( $plan );
