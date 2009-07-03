@@ -1284,7 +1284,7 @@ function notAllowed( $option )
 				$processors[$processor]->getSettings();
 			} else {
 				$short	= 'processor loading failure';
-				$event	= 'When composing processor info list, tried to load processor: ' . $this->processor;
+				$event	= 'When composing processor info list, tried to load processor: ' . $procname;
 				$tags	= 'processor,loading,error';
 				$params = array();
 
@@ -1383,7 +1383,7 @@ function processNotification( $option, $processor )
 	} else {
 		global $database;
 		$short	= 'processor loading failure';
-		$event	= 'When receiving payment notification, tried to load processor: ' . $this->processor;
+		$event	= 'When receiving payment notification, tried to load processor: ' . $processor;
 		$tags	= 'processor,loading,error';
 		$params = array();
 
