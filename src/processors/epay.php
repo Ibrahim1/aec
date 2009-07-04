@@ -115,7 +115,7 @@ class processor_epay extends POSTprocessor
 		// for this solution always use state 2 (full window (same window))
 		$var['windowstate']		= $this->settings['windowstate'];
 		$var['accepturl']		= $request->int_var['return_url'];
-		$var['declineurl']		= AECToolbox::deadsureURL("/index.php?option=com_acctexp&amp;task=cancel");
+		$var['declineurl']		= AECToolbox::deadsureURL("index.php?option=com_acctexp&amp;task=cancel");
 		$var['callbackurl']		= AECToolbox::deadsureURL("index.php?option=com_acctexp&amp;task=epaynotification");
 
 		$var['group']			= $this->settings['group'];
@@ -134,10 +134,8 @@ class processor_epay extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	function getPost( $post )
 	{
-		global $database;
-
 		$f = array( "tid"		=> array( "word", "int" ),
 					"orderid"	=> array( "word", "int" ),
 					"amount"	=> array( "word", "badchars" ),
@@ -153,6 +151,15 @@ class processor_epay extends POSTprocessor
 		foreach ( $f as $k => $s ) {
 			$post[$k] = aecGetParam( $k, '', true, $s );
 		}
+
+		return $post;
+	}
+
+	function parseNotification( $post )
+	{
+		global $database;
+
+		$post = $this->getPost( $post );
 
 		// Does not transmit invoice number, loading via invoice id
 		$iid = $post['orderid'];
@@ -174,6 +181,8 @@ class processor_epay extends POSTprocessor
 	function validateNotification( $response, $post, $invoice )
 	{
 		global $database;
+
+		$post = $this->getPost( $post );
 
 		$response = array();
 		$response['valid'] = 0;
@@ -204,4 +213,5 @@ class processor_epay extends POSTprocessor
 	}
 
 }
+
 ?>
