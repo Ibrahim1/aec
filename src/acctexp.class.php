@@ -2475,14 +2475,17 @@ class PaymentProcessor
 		// Set Name
 		$this->processor_name = strtolower( $name );
 
+		$res = null;
+
 		// See if the processor is installed & set id
-		$query = 'SELECT id'
+		$query = 'SELECT id, active'
 				. ' FROM #__acctexp_config_processors'
 				. ' WHERE `name` = \'' . $this->processor_name . '\''
 				;
 		$database->setQuery( $query );
-		$result = $database->loadResult();
-		$this->id = $result ? $result : 0;
+		$result = $database->loadObject( $res );
+
+		$this->id = $res->id ? $res->id : 0;
 
 		$file = $this->pph->pp_dir . '/' . $this->processor_name . '.php';
 
@@ -2505,6 +2508,7 @@ class PaymentProcessor
 			$class_name = 'processor_' . $this->processor_name;
 			$this->processor = new $class_name( $database );
 			$this->processor->id = $this->id;
+			$this->processor->active = $res->active;
 
 			return true;
 		} else {
