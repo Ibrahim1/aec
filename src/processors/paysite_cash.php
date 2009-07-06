@@ -32,8 +32,10 @@ class processor_paysite_cash extends URLprocessor
 	function settings()
 	{
 		$s = array();
+		$s['testmode']		= 0;
 		$s['siteid']		= "siteid";
 		$s['secret']		= "secret";
+		$s['currency']		= "EUR";
 		$s['customparams']	= "";
 
 		return $s;
@@ -42,8 +44,10 @@ class processor_paysite_cash extends URLprocessor
 	function backend_settings()
 	{
 		$s = array();
+		$s['testmode']		= array( 'list_yesno' );
 		$s['siteid']		= array( 'inputC' );
 		$s['secret']		= array( 'inputC' );
+		$s['currency']		= array( 'list_currency' );
 		$s['customparams']	= array( 'inputD' );
 
 		return $s;
@@ -55,7 +59,7 @@ class processor_paysite_cash extends URLprocessor
 			$var['test'] = 1;
 		}
 
-		$var['post_url'] = " https://billing.paysite-cash.biz/?";
+		$var['post_url'] = "https://billing.paysite-cash.biz/?";
 		$var['site'] = $this->settings['siteid'];
 		$var['devise'] = $this->settings['currency'];
 
@@ -80,7 +84,7 @@ class processor_paysite_cash extends URLprocessor
 
 		$var['ref'] = $request->int_var['invoice'];
 
-		$var['email'] = $request->int_var['invoice'];
+		$var['email'] = $request->metaUser->cmsUser->email;
 		$var['user'] = $request->metaUser->cmsUser->username;
 		$var['pass'] = 'xxxx';
 
