@@ -7517,17 +7517,8 @@ class InvoiceFactory
 
 			// if the response is INvalid, then go back one page, and try again. Give a nice message
 			if (!$resp->is_valid) {
-				echo "<script> alert('The reCAPTCHA entered incorrectly. Please try again.'); </script>\n";
+				echo "<script> alert('The reCAPTCHA entered incorrectly. Please try again.'); window.history.go(-1);</script>\n";
 
-				if ( aecJoomla15check() ) {
-					$usersConfig = &JComponentHelper::getParams( 'com_users' );
-					$activation = $usersConfig->get('useractivation');
-				} else {
-					global $mainframe;
-					$activation = $mainframe->getCfg( 'useractivation' );
-				}
-
-				joomlaregisterForm( $option, $activation );
 				return;
 			}
 		}
