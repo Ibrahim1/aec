@@ -301,10 +301,10 @@ class plgSystemAECrouting extends JPlugin
 
 				require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
 
-				$search[]	= 'type="password" id="password2" name="password2" size="40" value="" />';
-				$replace[]	= 'type="password" id="password2" name="password2" size="40" value="" />'
+				$search[]	= 'type="password" id="password2" name="password2" size="40" value="" /> *';
+				$replace[]	= 'type="password" id="password2" name="password2" size="40" value="" /> *</td></tr>'
 								. '<tr><td height="40"><label></label></td><td>'
-								. recaptcha_get_html( $aecConfig->cfg['recaptcha_publickey'] ) . '</td></tr>';
+								. recaptcha_get_html( $aecConfig->cfg['recaptcha_publickey'] );
 			}
 		}
 

@@ -2483,9 +2483,11 @@ class PaymentProcessor
 				. ' WHERE `name` = \'' . $this->processor_name . '\''
 				;
 		$database->setQuery( $query );
-		$result = $database->loadObject( $res );
+		$database->loadObject( $res );
 
-		$this->id = $res->id ? $res->id : 0;
+		if ( !empty( $res ) && is_object( $res ) ) {
+			$this->id = $res->id ? $res->id : 0;
+		}
 
 		$file = $this->pph->pp_dir . '/' . $this->processor_name . '.php';
 

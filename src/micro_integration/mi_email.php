@@ -82,8 +82,12 @@ class mi_email
         }
         $recipients = $recipients2;
 
-		mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text' . $area . '_html'] );
-
+		if ( aecJoomla15check() ) {
+			JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $this->settings['sender_name'], $subject, $message, $this->settings['text' . $area . '_html'] );
+		} else {
+			mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text' . $area . '_html'] );
+		}
+//print_r($this->settings);print_r("\n");print_r($message);print_r("\n");print_r(JMailHelper::cleanText( $message ));exit;
 		return true;
 	}
 }
