@@ -260,11 +260,6 @@ class plgSystemAECrouting extends JPlugin
 			return;
 		}
 
-		// Check whether we have plans first, but no usage (or vice versa)
-		if ( $vars['pfirst'] != $vars['has_usage'] ) {
-			return;
-		}
-
 		// Plans first and selected or not first and not selected -> register
 		$search		= array();
 		$replace	= array();

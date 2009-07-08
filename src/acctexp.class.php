@@ -7361,6 +7361,7 @@ class InvoiceFactory
 				if ( !empty( $plans[0]['id'] ) ) {
 					$_POST['usage']		= $plans[0]['id'];
 					$_POST['processor']	= $plans[0]['gw'][0]->processor_name;
+
 					if ( isset( $plans[0]['gw'][0]->recurring ) ) {
 						$_POST['recurring']	= $plans[0]['gw'][0]->recurring;
 					}
@@ -7434,11 +7435,11 @@ class InvoiceFactory
 				} else {
 					if ( !isset( $_POST['usage'] ) ) {
 						$_POST['intro'] = $intro;
-						$_POST['usage'] = $usage;
+						$_POST['usage'] = $plans[0]['id'];
 					}
 
 					if ( aecJoomla15check() ) {
-						// TODO - this might break the flow.
+						$mainframe->redirect( 'index.php?option=com_user&view=register&usage=' . $plans[0]['id'] . '&processor=' . $plans[0]['gw'][0]->processor_name . '&recurring=' . $plans[0]['gw'][0]->recurring );
 					} else {
 						$activation = $mainframe->getCfg( 'useractivation' );
 
