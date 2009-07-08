@@ -1602,19 +1602,19 @@ class AuthNetCim {
 			}
 			else
 			{
-				$this->error_messages[] .= 'setParameter(): customerProfileId is required and must be numeric';
+				$this->error_messages[] .= 'setParameter(): customerProfileId must be numeric. Tried to set: ' . $this->params['customerProfileId'];
 			}
 		}
 		else
 		{
-			$this->error_messages[] .= 'setParameter(): customerProfileId is required and must be numeric';
+			$this->error_messages[] .= 'setParameter(): customerProfileId is required and must be numeric. Was not set.';
 		}
 	}
 
 	// This element is required in some functions
 	// Payment gateway assigned ID associated with the customer payment profile
 	function customerPaymentProfileId()
-	{
+	{aecDebug("paymentprofile: " . $this->params['customerPaymentProfileId']);
 		if (isset($this->params['customerPaymentProfileId']))
 		{
 			if (preg_match('/^[0-9]+$/', $this->params['customerPaymentProfileId']))
@@ -1623,12 +1623,12 @@ class AuthNetCim {
 			}
 			else
 			{
-				$this->error_messages[] .= 'setParameter(): customerPaymentProfileId is required and must be numeric';
+				$this->error_messages[] .= 'setParameter(): customerPaymentProfileId must be numeric. Tried to set: ' . $this->params['customerPaymentProfileId'];
 			}
 		}
 		else
 		{
-			$this->error_messages[] .= 'setParameter(): customerPaymentProfileId is required and must be numeric';
+			$this->error_messages[] .= 'setParameter(): customerPaymentProfileId is required and must be numeric. Was not set.';
 		}
 	}
 

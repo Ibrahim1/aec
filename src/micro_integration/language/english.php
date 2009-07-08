@@ -260,7 +260,7 @@ define( '_MI_MI_GOOGLEANALYTICS_ACCOUNT_ID_DESC',		'Your Google Account id, it s
 
 // Fireboard
 define( '_AEC_MI_NAME_FIREBOARD','Fireboard Micro Integration' );
-define( '_AEC_MI_DESC_FIREBOARD','Will automate addition of a user to a group in FB. *NOTE* FB currently has limited support for FB groups. You are advised to check the fireboard forums for limtiations.  Full use will not come until FB 1.1.  In 1.0.0 to 1.0.2 this can be used with a CSS change to show group information under the user\'s avatar as happens on www.bestofjoomla.org with admin team members' );
+define( '_AEC_MI_DESC_FIREBOARD','Will automate addition of a user to a group in FireBoard' );
 define( '_MI_MI_FIREBOARD_SET_GROUP_NAME','Set group on plan application' );
 define( '_MI_MI_FIREBOARD_SET_GROUP_DESC','Choose Yes if you wish a fireboard group to be applied when the plan is applied' );
 define( '_MI_MI_FIREBOARD_GROUP_NAME','Fireboard group to apply member to on application' );

@@ -41,7 +41,7 @@ class mi_aecuserdetails
 			for ( $i=0; $i<$this->settings['settings']; $i++ ) {
 				$p = $i . '_';
 
-				$settings['lists'][$p.'type']	= mosHTML::selectList( $typelist, $p.'type', 'size="3"', 'value', 'text', $this->settings[$p.'type'] );
+				$settings['lists'][$p.'type']	= mosHTML::selectList( $typelist, $p.'type', 'size="' . max( 10, min( 20, count( $types ) ) ) . '"', 'value', 'text', $this->settings[$p.'type'] );
 
 				$settings[$p.'short']	= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_SHORT_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_SHORT_DESC );
 				$settings[$p.'name']	= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_NAME_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_NAME_DESC );

@@ -2510,7 +2510,12 @@ class PaymentProcessor
 			$class_name = 'processor_' . $this->processor_name;
 			$this->processor = new $class_name( $database );
 			$this->processor->id = $this->id;
-			$this->processor->active = $res->active;
+
+			if ( is_object( $res ) ) {
+				$this->processor->active = $res->active;
+			} else {
+				$this->processor->active = 0;
+			}
 
 			return true;
 		} else {
