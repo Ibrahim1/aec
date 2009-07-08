@@ -65,7 +65,7 @@ class processor_viaklix extends POSTprocessor
 		$var['ssl_test_mode']			= $this->settings['testmode'] ? "true" : "false";
 
 		$var['ssl_merchant_id']			= $this->settings['accountid'];
-		$var['ssl_user_id']				= $this->settings['userid'];
+		//$var['ssl_user_id']				= $this->settings['userid'];
 		$var['ssl_pin']					= $this->settings['pin'];
 		$var['ssl_invoice_number']		= $request->int_var['invoice'];
 		$var['ssl_salestax']			= "0";
@@ -85,19 +85,6 @@ class processor_viaklix extends POSTprocessor
 
 	function parseNotification( $post )
 	{
-		$ssl_result				= $post['ssl_result'];
-		$ssl_result_message		= $post['ssl_result_message'];
-		$ssl_txn_id				= $post['ssl_txn_id'];
-		$ssl_approval_code		= $post['ssl_approval_code'];
-		$ssl_cvv2_response		= $post['ssl_cvv2_response'];
-		$ssl_avs_response		= $post['ssl_avs_response'];
-		$ssl_transaction_type	= $post['ssl_transaction_type'];
-
-		$ssl_amount				= $post['ssl_amount'];
-		$ssl_email				= $post['ssl_email'];
-		$ssl_description		= $post['ssl_description'];
-		$userid					= $post['ssl_customer_code'];
-
 		$response = array();
 		$response['invoice'] = $post['ssl_invoice_number'];
 
