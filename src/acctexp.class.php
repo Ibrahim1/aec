@@ -7438,15 +7438,12 @@ class InvoiceFactory
 					}
 
 					if ( aecJoomla15check() ) {
-						JHTML::_('behavior.formvalidation');
-
-						$usersConfig =& JComponentHelper::getParams( 'com_users' );
-						$activation = $usersConfig->get('useractivation');
+						// TODO - this might break the flow.
 					} else {
 						$activation = $mainframe->getCfg( 'useractivation' );
-					}
 
-					joomlaregisterForm( $option, $activation );
+						joomlaregisterForm( $option, $activation );
+					}
 				}
 			} else {
 				// The user is already existing, so we need to move on to the confirmation page with the details
