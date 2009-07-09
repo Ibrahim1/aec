@@ -4363,6 +4363,26 @@ class aecHTML
 				$return .= $this->lists[$name];
 				$return .= '</div>';
 				break;
+			case 'list_currency':
+				// Get currency list
+				if ( is_array( $pp->info['currencies'] ) ) {
+					$currency_array	= $pp->info['currencies'];
+				} else {
+					$currency_array	= explode( ',', $pp->info['currencies'] );
+				}
+
+				// Transform currencies into OptionArray
+				$currency_code_list = array();
+				foreach ( $currency_array as $currency ) {
+					if ( defined( '_CURRENCY_' . $currency )) {
+						$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
+					}
+				}
+
+				// Create list
+				$lists[$setting_name] = mosHTML::selectList( $currency_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
+				$settings_array[$name][0] = 'list';
+				break;
 			case 'accordion_start':
 				if ( !isset( $this->accordions ) ) {
 					$this->accordions = 1;
@@ -7268,10 +7288,17 @@ class InvoiceFactory
 			if ( $this->userid && $aecConfig->cfg['enable_shoppingcart'] ) {
 				// We have a shopping cart situation, care about processors later
 
+				if ( ( $plan['plan']->params['processors'] == '' ) || is_null( $plan['plan']->params['processors'] ) ) {
+					if ( !$plan['plan']->params['full_free'] ) {
+						continue;
+					}
+				}
+
 				$plans[$pid]['gw'][0]						= new stdClass();
 				$plans[$pid]['gw'][0]->processor_name		= 'add_to_cart';
 				$plans[$pid]['gw'][0]->info['statement']	= '';
 				$plans[$pid]['gw'][0]->recurring			= 0;
+
 				continue;
 			}
 
