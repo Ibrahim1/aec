@@ -209,11 +209,6 @@ class processor_authorize_cim extends PROFILEprocessor
 		$var2 = $this->checkoutform( $request, $cim );
 
 		$return = '<form action="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=subscriptiondetails', true ) . '" method="post">' . "\n";
-
-		if ( count( $ppParams->paymentProfiles ) ) {
-			$return .= '<p>' . ( $strong ? '<em>' : "" ) . 'For security reasons, you must always enter your full CreditCard number if you want to update your profile' . ( $strong ? '</em>' : "" ) . '</p>' . '<br /><br />';
-		}
-
 		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
 		$return .= $this->getParamsHTML( $var2 ) . '<br /><br />';
 		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";

@@ -20,8 +20,8 @@ class processor_payboxat extends SOAPprocessor
 		$info['longname']	 	= _CFG_PAYBOXAT_LONGNAME;
 		$info['statement']		= _CFG_PAYBOXAT_STATEMENT;
 		$info['description']	= _CFG_PAYBOXAT_DESCRIPTION;
-		$info['currencies']		= AECToolbox::getISO4271_codes();
-		$info['languages']		= AECToolbox::aecCurrencyField( true, true, true, true );
+		$info['currencies']		= AECToolbox::aecCurrencyField( true, true, true, true );
+		$info['languages']		= AECToolbox::getISO4271_codes();
 		$info['cc_list'] 		= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring'] 		= 0;
 
@@ -103,6 +103,8 @@ class processor_payboxat extends SOAPprocessor
 					. '<username>' . $this->settings['username'] . '</username>'
 					. '<password>' . $this->settings['password'] . '</password>'
 					. '</credentials>';
+
+		echo "<p>Bitte warten Sie w&auml;hrend das paybox-System versucht Sie anzurufen.</p>";
 
 		$response = $this->transmitRequest( $url, $path, 'payment', $content, $headers );
 
