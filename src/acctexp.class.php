@@ -3383,7 +3383,7 @@ class XMLprocessor extends processor
 	{
 		$var = $this->checkoutform( $request );
 
-		$return = '<form action="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', true ) . '" method="post">' . "\n";
+		$return = '<form action="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', $this->info['secure'] ) . '" method="post">' . "\n";
 		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
 		$return .= '<input type="hidden" name="invoice" value="' . $request->int_var['invoice'] . '" />' . "\n";
 		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
@@ -3789,7 +3789,7 @@ class SOAPprocessor extends XMLprocessor
 
 		require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/nusoap/nusoap.php');
 
-		$this->soapclient = new soapclient($url);
+		$this->soapclient = new soapclient( $url );
 
 		if ( !empty( $aecConfig->cfg['use_proxy'] ) && !empty( $aecConfig->cfg['proxy'] ) ) {
 			$this->soapclient->setHTTPProxy(	$aecConfig->cfg['proxy'],

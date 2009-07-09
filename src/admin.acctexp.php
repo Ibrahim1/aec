@@ -2424,7 +2424,11 @@ function editProcessor( $id, $option )
 			switch( $settings_array[$name][0] ) {
 				case 'list_currency':
 					// Get currency list
-					$currency_array	= explode( ',', $pp->info['currencies'] );
+					if ( is_array( $pp->info['currencies'] ) ) {
+						$currency_array	= $pp->info['currencies'];
+					} else {
+						$currency_array	= explode( ',', $pp->info['currencies'] );
+					}
 
 					// Transform currencies into OptionArray
 					$currency_code_list = array();
