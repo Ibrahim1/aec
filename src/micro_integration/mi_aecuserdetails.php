@@ -30,7 +30,7 @@ class mi_aecuserdetails
 		$settings['lists']		= array();
 		$settings['settings']	= array( 'inputB' );
 
-		$types = array( "inputA", "inputB", "inputC", "inputD", "checkbox" );
+		$types = array( "inputA", "inputB", "inputC", "inputD", "list_language", "checkbox" );
 
  		$typelist = array();
  		foreach ( $types as $type ) {
@@ -67,18 +67,34 @@ class mi_aecuserdetails
 
 	function getMIform()
 	{
-		global $database;
+		$language_array = AECToolbox::getISO4271_codes();
 
-		$settings = array();
+		$language_code_list = array();
+		foreach ( $language_array as $language ) {
+			$language_code_list[] = mosHTML::makeOption( $language, ( defined( '_AEC_LANG_' . $language  ) ? constant( '_AEC_LANG_' . $language ) : $language ) );
+		}
+
+		$settings	= array();
+		$lists		= array();
 
 		if ( !empty( $this->settings['settings'] ) ) {
 			for ( $i=0; $i<$this->settings['settings']; $i++ ) {
 				$p = $i . '_';
 
+				if ( $this->settings[$p.'type'] == 'list_language' ) {
+					$lists[$this->settings[$p.'short']] = mosHTML::selectList( $language_code_list, $this->settings[$p.'short'], 'size="10"', 'value', 'text', $this->settings[$p.'default'] );
+
+					$this->settings[$p.'type'] = 'list';
+				}
+
 				if ( !empty( $this->settings[$p.'short'] ) ) {
-					$settings[$this->settings[$p.'short']] = array( $this->settings[$p.'type'], $this->settings[$p.'name'], $this->settings[$p.'desc'], $this->settings[$p.'default'] );
+					$settings[$this->settings[$p.'short']] = array( $this->settings[$p.'type'], $this->settings[$p.'name'], $this->settings[$p.'desc'] );
 				}
 			}
+		}
+
+		if ( !empty( $lists ) ) {
+			$settings['lists'] = $lists;
 		}
 
 		return $settings;

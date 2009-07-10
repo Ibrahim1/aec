@@ -4363,26 +4363,6 @@ class aecHTML
 				$return .= $this->lists[$name];
 				$return .= '</div>';
 				break;
-			case 'list_currency':
-				// Get currency list
-				if ( is_array( $pp->info['currencies'] ) ) {
-					$currency_array	= $pp->info['currencies'];
-				} else {
-					$currency_array	= explode( ',', $pp->info['currencies'] );
-				}
-
-				// Transform currencies into OptionArray
-				$currency_code_list = array();
-				foreach ( $currency_array as $currency ) {
-					if ( defined( '_CURRENCY_' . $currency )) {
-						$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
-					}
-				}
-
-				// Create list
-				$lists[$setting_name] = mosHTML::selectList( $currency_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
-				$settings_array[$name][0] = 'list';
-				break;
 			case 'accordion_start':
 				if ( !isset( $this->accordions ) ) {
 					$this->accordions = 1;
@@ -5782,6 +5762,14 @@ class SubscriptionPlan extends serialParamDBTable
 
 				$miform_params = $mi->getMIformParams( $this, $errors );
 
+				if ( !empty( $miform_params['lists'] ) ) {
+					foreach ( $miform_params['lists'] as $lname => $lcontent ) {
+						$lists[$lname] = $lcontent;
+					}
+
+					unset( $miform_params['lists'] );
+				}
+
 				foreach ( $miform_params as $pk => $pv ) {
 					$params[$pk] = $pv;
 				}
@@ -5835,15 +5823,15 @@ class SubscriptionPlan extends serialParamDBTable
 		if ( empty( $params ) ) {
 			return false;
 		} else {
-				$lists = $params['lists'];
-				unset( $params['lists'] );
+			$lists = $params['lists'];
+			unset( $params['lists'] );
 
-				if ( !empty( $params ) ) {
-				$settings = new aecSettings ( 'mi', 'frontend_forms' );
-				$settings->fullSettingsArray( $params, array(), $lists ) ;
+			if ( !empty( $params ) ) {
+			$settings = new aecSettings ( 'mi', 'frontend_forms' );
+			$settings->fullSettingsArray( $params, array(), $lists ) ;
 
-				$aecHTML = new aecHTML( $settings->settings, $settings->lists );
-				return "<table>" . $aecHTML->returnFull( true, true, true ) . "</table>";
+			$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+			return "<table>" . $aecHTML->returnFull( true, true, true ) . "</table>";
 			} else {
 				return null;
 			}
@@ -12613,7 +12601,7 @@ class AECToolbox
 					} else {
 						global $database;
 
-						$props = get_object_vars( $subject );
+						$props = array_keys( get_object_vars( $subject ) );
 
 						$event = $erx . $k . '; does not exist! Possible values are: ' . implode( ';', $props );
 
