@@ -3789,7 +3789,7 @@ class SOAPprocessor extends XMLprocessor
 
 		require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/nusoap/nusoap.php');
 
-		$this->soapclient = new soapclient( $url );
+		$this->soapclient = new nusoap_client( $url );
 
 		if ( !empty( $aecConfig->cfg['use_proxy'] ) && !empty( $aecConfig->cfg['proxy'] ) ) {
 			$this->soapclient->setHTTPProxy(	$aecConfig->cfg['proxy'],

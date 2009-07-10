@@ -73,20 +73,15 @@ class processor_payboxat extends SOAPprocessor
 
 		$a = array();
 
-		$a['language']		= $this->settings['language'];
-		$a['isTest']		= $this->settings['testmode'];
+		$a['language']		= strtolower( $this->settings['language'] );
+		$a['isTest']		= $this->settings['testmode'] ? true : false;
 		$a['payer']			= $request->int_var['params']['phone'];
 		$a['payee']			= $this->settings['merchant_phone'];
-		$a['caller']		= null;
-		$a['amount']		= $request->int_var['amount'];
+		$a['amount']		= (int) ( $request->int_var['amount'] * 100 );
 		$a['currency']		= $this->settings['currency'];
-		$a['paymentDays']	= null;
 		$a['timestamp']		= strftime("%H:%M:%S.%Y%m%d");
-		$a['posId']			= $this->settings['currency'];
-		$a['traceNo']		= "FALSE";
-		$a['orderId']		= $request->int_var['invoice'];
-		$a['text']			= null;
-		$a['sessionId']		= null;
+		$a['orderId']		= (int) $request->invoice->id;
+		$a['text']			= $request->int_var['invoice'];
 
 		$a = $this->customParams( $this->settings['customparams'], $a, $request );
 
@@ -95,7 +90,7 @@ class processor_payboxat extends SOAPprocessor
 
 	function transmitRequestXML( $content, $request )
 	{
-		$path = "/gw-tx/services/PayboxServices";
+		$path = "/gw-tx/services/PayboxServices?wsdl";
 
 		$url = "https://" . $this->settings['username'] . ":" . $this->settings['password'] . "@www.paybox.at" . $path;
 
@@ -107,24 +102,26 @@ class processor_payboxat extends SOAPprocessor
 		echo "<p>Bitte warten Sie w&auml;hrend das paybox-System versucht Sie anzurufen.</p>";
 
 		$response = $this->transmitRequest( $url, $path, 'payment', $content, $headers );
-
+aecDebug( $this->soapclient );
 		$return['valid']	= false;
 		$return['raw']		= $response;
-
+aecDebug( $response );
 		if ( $response ) {
 			$payment_error = $response['error'];
 			$payment_description = $response['errorDescription'];
-
+aecDebug( $response['error'] );aecDebug( $response['errorDescription'] );
 			$payment_id	= new soapval( 'transactionRef', 'long', $response['idTransaction'] );
 			$language	= new soapval( 'language', 'string', $this->settings['language'] );
 
 			$payment_authorization = $response['authorization'];
-
-			if ( $payment_error == 0 ) {
+aecDebug( $this->soapclient );
+			if ( empty( $response['error'] ) ) {
 				// acknowledge the transaction to Paybox
 				$this->soapclient->call('acknowledge', array($payment_id, $language));
 
 				$return['valid'] = true;
+			} else {
+				$return['error'] = $response['errorDescription'];
 			}
 		}
 
