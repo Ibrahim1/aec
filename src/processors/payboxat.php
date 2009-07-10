@@ -74,8 +74,8 @@ class processor_payboxat extends SOAPprocessor
 		$a = array();
 
 		$a['language']		= strtolower( $this->settings['language'] );
-		$a['isTest']		= $this->settings['testmode'] ? true : false;
-		$a['payer']			= $request->int_var['params']['phone'];
+		//$a['isTest']		= $this->settings['testmode'] ? true : false;
+		$a['payer']			= $request->int_var['params']['billPhone'];
 		$a['payee']			= $this->settings['merchant_phone'];
 		$a['amount']		= (int) ( $request->int_var['amount'] * 100 );
 		$a['currency']		= $this->settings['currency'];
@@ -95,26 +95,26 @@ class processor_payboxat extends SOAPprocessor
 		$url = "https://" . $this->settings['username'] . ":" . $this->settings['password'] . "@www.paybox.at" . $path;
 
 		$headers = '<credentials>'
-					. '<username>' . $this->settings['username'] . '</username>'
-					. '<password>' . $this->settings['password'] . '</password>'
+					. '<username>' . (string) $this->settings['username'] . '</username>'
+					. '<password>' . (string) $this->settings['password'] . '</password>'
 					. '</credentials>';
 
 		echo "<p>Bitte warten Sie w&auml;hrend das paybox-System versucht Sie anzurufen.</p>";
 
 		$response = $this->transmitRequest( $url, $path, 'payment', $content, $headers );
-aecDebug( $this->soapclient );
+
 		$return['valid']	= false;
 		$return['raw']		= $response;
-aecDebug( $response );
+print_r( $response );
 		if ( $response ) {
 			$payment_error = $response['error'];
 			$payment_description = $response['errorDescription'];
-aecDebug( $response['error'] );aecDebug( $response['errorDescription'] );
+
 			$payment_id	= new soapval( 'transactionRef', 'long', $response['idTransaction'] );
 			$language	= new soapval( 'language', 'string', $this->settings['language'] );
 
 			$payment_authorization = $response['authorization'];
-aecDebug( $this->soapclient );
+
 			if ( empty( $response['error'] ) ) {
 				// acknowledge the transaction to Paybox
 				$this->soapclient->call('acknowledge', array($payment_id, $language));
@@ -124,7 +124,7 @@ aecDebug( $this->soapclient );
 				$return['error'] = $response['errorDescription'];
 			}
 		}
-
+print_r( $this->soapclient );exit;
 		return $return;
 	}
 }
