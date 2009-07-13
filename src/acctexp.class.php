@@ -7452,6 +7452,8 @@ class InvoiceFactory
 
 						$temptoken->storeload();
 					}
+
+					$mainframe->redirect( 'index.php?option=com_community&view=register' );
 				} else {
 					if ( !isset( $_POST['usage'] ) ) {
 						$_POST['intro'] = $intro;
