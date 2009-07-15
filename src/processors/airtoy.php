@@ -62,8 +62,6 @@ class processor_airtoy extends XMLprocessor
 	{
 		$database = &JFactory::getDBO();
 
-		global $mosConfig_live_site;
-
 		$code = $request->int_var['planparams']['smscode_prefix'] . ' ' . $request->invoice->id;
 
 		$var['params']['explain'] = array( 'p', _AEC_AIRTOY_PARAMS_EXPLAIN_NAME, sprintf( _AEC_AIRTOY_PARAMS_EXPLAIN_DESC, $code, $this->settings['phone_number'] ) );

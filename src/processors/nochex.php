@@ -52,8 +52,6 @@ class processor_nochex extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		global $mosConfig_live_site;
-
 		$var['post_url']	= 'https://secure.nochex.com/';
 		if ( $this->settings['testmode'] == '1' ) {
 			$var['test_transaction'] = '100';

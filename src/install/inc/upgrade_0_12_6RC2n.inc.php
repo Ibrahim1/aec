@@ -65,7 +65,7 @@ if ( !empty( $list ) ) {
 }
 
 if ( in_array( $mosConfig_dbprefix . "acctexp_mi_hotproperty", $tables ) ) {
-	$filename = $mosConfig_absolute_path . '/components/com_acctexp/micro_integration/mi_hotproperty.php';
+	$filename = JPATH_SITE . '/components/com_acctexp/micro_integration/mi_hotproperty.php';
 
 	if ( file_exists( $filename ) ) {
 		include_once $filename;

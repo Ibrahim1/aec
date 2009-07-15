@@ -13,10 +13,10 @@
 
 //error_reporting(E_ALL);
 
-global $mosConfig_absolute_path, $mosConfig_offset, $aecConfig;
+global $mosConfig_offset, $aecConfig;
 
 if ( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
-	$langPath = $mosConfig_absolute_path . '/administrator/components/com_acctexp/com_acctexp_language_backend/';
+	$langPath = JPATH_SITE . '/administrator/components/com_acctexp/com_acctexp_language_backend/';
 	if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
 		include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
 	} else {
@@ -26,7 +26,7 @@ if ( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
 }
 
 if ( !defined( '_AEC_LANG' ) ) {
-	$langPath = $mosConfig_absolute_path . '/components/com_acctexp/com_acctexp_language/';
+	$langPath = JPATH_SITE . '/components/com_acctexp/com_acctexp_language/';
 	if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
 		include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
 	} else {
@@ -36,16 +36,16 @@ if ( !defined( '_AEC_LANG' ) ) {
 }
 
 // Make sure we are compatible with php4
-include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/php4/php4.php' );
+include_once( JPATH_SITE . '/components/com_acctexp/lib/php4/php4.php' );
 
 // Make sure we are compatible with joomla1.0
-include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/j15/j15.php' );
+include_once( JPATH_SITE . '/components/com_acctexp/lib/j15/j15.php' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
-	include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.php' );
+	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
 }
 
-include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/mammontini/mammontini.php' );
+include_once( JPATH_SITE . '/components/com_acctexp/lib/mammontini/mammontini.php' );
 
 // Catch all debug function
 function aecDebug( $text, $level = 128 )
@@ -2163,9 +2163,7 @@ class eventLog extends serialParamDBTable
 			}
 
 			if ( !defined( "_AEC_NOTICE_NUMBER_" . $this->level ) ) {
-				global $mosConfig_absolute_path;
-
-				$langPath = $mosConfig_absolute_path . '/administrator/components/com_acctexp/com_acctexp_language_backend/';
+				$langPath = JPATH_SITE . '/administrator/components/com_acctexp/com_acctexp_language_backend/';
 				if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
 					include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
 				} else {
@@ -2358,8 +2356,7 @@ class PaymentProcessorHandler
 
 	function PaymentProcessorHandler()
 	{
-		global $mosConfig_absolute_path;
-		$this->pp_dir = $mosConfig_absolute_path . '/components/com_acctexp/processors';
+		$this->pp_dir = JPATH_SITE . '/components/com_acctexp/processors';
 	}
 
 	function getProcessorList()
@@ -3797,9 +3794,7 @@ class SOAPprocessor extends XMLprocessor
 {
 	function transmitRequest( $url, $path, $command, $content, $headers=null )
 	{
-		global $mosConfig_absolute_path;
-
-		require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/nusoap/nusoap.php');
+		require_once( JPATH_SITE . '/components/com_acctexp/lib/nusoap/nusoap.php');
 
 		$this->soapclient = new nusoap_client( $url );
 
@@ -4605,8 +4600,6 @@ class aecHTML
 	*/
 	function ToolTip( $tooltip, $title='', $width='', $image='help.png', $text='', $href='#', $link=1 )
 	{
-		global $mosConfig_live_site;
-
 		if ( $width ) {
 			$width = ', WIDTH, \''.$width .'\'';
 		}
@@ -4614,7 +4607,7 @@ class aecHTML
 			$title = ', CAPTION, \''.$title .'\'';
 		}
 		if ( !$text ) {
-			$image 	= $mosConfig_live_site . '/administrator/components/com_acctexp/images/icons/'. $image;
+			$image 	= JURI::base( true ) . '/administrator/components/com_acctexp/images/icons/'. $image;
 			$text 	= '<img src="'. $image .'" border="0" alt=""/>';
 		}
 		$style = 'style="text-decoration: none; color: #586C79;"';
@@ -4646,13 +4639,11 @@ class aecHTML
 	 */
 	function Icon( $image = 'error.png', $alt = '' )
 	{
-		global $mosConfig_live_site;
-
 		if ( !$alt ) {
 			$name	= explode( '.', $image );
 			$alt	= $name[0];
 		}
-		$image 	= $mosConfig_live_site . '/administrator/components/com_acctexp/images/icons/'. $image;
+		$image 	= JURI::base( true ) . '/administrator/components/com_acctexp/images/icons/'. $image;
 
 		return '<img src="'. $image .'" border="0" alt="' . $alt . '" title="' . $alt . '" class="aec_icon" />';
 	}
@@ -7441,13 +7432,13 @@ class InvoiceFactory
 				} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
 					// This is a JUSER registration, borrowing their code to register the user
 
-					global $task, $mosConfig_absolute_path;
+					global $task;
 
 					$savetask	= $task;
 					$task = 'blind';
 
-					include_once( $mosConfig_absolute_path . '/components/com_juser/juser.html.php' );
-					include_once( $mosConfig_absolute_path . '/components/com_juser/juser.php' );
+					include_once( JPATH_SITE . '/components/com_juser/juser.html.php' );
+					include_once( JPATH_SITE . '/components/com_juser/juser.php' );
 
 					$task = $savetask;
 
@@ -7546,7 +7537,7 @@ class InvoiceFactory
 	{
 		$database = &JFactory::getDBO();
 
-		global $my, $aecConfig, $mosConfig_absolute_path;
+		global $my, $aecConfig;
 
 		if ( empty( $this->passthrough ) ) {
 			if ( !$this->checkAuth( $option ) ) {
@@ -7556,7 +7547,7 @@ class InvoiceFactory
 
 		if ( $aecConfig->cfg['use_recaptcha'] && !empty( $aecConfig->cfg['recaptcha_privatekey'] ) && isset( $_POST["recaptcha_challenge_field"] ) && isset( $_POST["recaptcha_response_field"] ) ) {
 			// require the recaptcha library
-			require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
+			require_once( JPATH_SITE . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
 
 			// finally chack with reCAPTCHA if the entry was correct
 			$resp = recaptcha_check_answer ( $aecConfig->cfg['recaptcha_privatekey'], $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"] );
@@ -9084,8 +9075,6 @@ class Invoice extends serialParamDBTable
 	{
 		$database = &JFactory::getDBO();
 
-		global $mosConfig_live_site;
-
 		if ( is_array( $this->params ) ) {
 			$int_var['params'] = $this->params;
 		} else {
@@ -9182,8 +9171,6 @@ class Invoice extends serialParamDBTable
 	function prepareProcessorLink( $InvoiceFactory=null )
 	{
 		$database = &JFactory::getDBO();
-
-		global $mosConfig_live_site;
 
 		if ( is_array( $this->params ) ) {
 			$int_var['params'] = $this->params;
@@ -10301,7 +10288,7 @@ class Subscription extends serialParamDBTable
 	{
 		$database = &JFactory::getDBO();
 
-		global $mosConfig_live_site, $aecConfig;
+		global $aecConfig;
 
 		if ( strcmp( $this->status, 'Excluded' ) === 0 ) {
 			$expired = false;
@@ -10347,7 +10334,7 @@ class Subscription extends serialParamDBTable
 	{
 		$database = &JFactory::getDBO();
 
-		global $mosConfig_live_site, $aecConfig;
+		global $aecConfig;
 
 		if ( strcmp( $this->status, 'Excluded' ) === 0 ) {
 			$expired = false;
@@ -10703,9 +10690,7 @@ class GeneralInfoRequester
 	 */
 	function getCMSName()
 	{
-		global $mosConfig_absolute_path;
-
-		$filename	= $mosConfig_absolute_path . '/includes/version.php';
+		$filename	= JPATH_SITE . '/includes/version.php';
 
 		if ( file_exists( $filename ) ) {
 			$originalFileHandle = fopen( $filename, 'r' ) or die ( "Cannot open $filename<br />" );
@@ -11189,7 +11174,7 @@ class reWriteEngine
 	{
 		$database = &JFactory::getDBO();
 
-		global $aecConfig, $mosConfig_absolute_path, $mosConfig_live_site, $mosConfig_offset;
+		global $aecConfig, $mosConfig_offset;
 
 		$this->rewrite = array();
 
@@ -11198,8 +11183,8 @@ class reWriteEngine
 		$this->rewrite['system_serverstamp_time']	= strftime( $aecConfig->cfg['display_date_frontend'], time() );
 		$this->rewrite['system_server_timestamp_backend']	= strftime( $aecConfig->cfg['display_date_backend'], time() );
 
-		$this->rewrite['cms_absolute_path']	= $mosConfig_absolute_path;
-		$this->rewrite['cms_live_site']		= $mosConfig_live_site;
+		$this->rewrite['cms_absolute_path']	= JPATH_SITE;
+		$this->rewrite['cms_live_site']		= JURI::base( true );
 
 		if ( is_object( $this->data['metaUser'] ) ) {
 			$name = array();
@@ -11253,7 +11238,7 @@ class reWriteEngine
 						}
 
 						$this->rewrite['user_activationcode']		= $this->data['metaUser']->cbUser->cbactivation;
-						$this->rewrite['user_activationlink']		= $mosConfig_live_site."/index.php?option=com_comprofiler&task=confirm&confirmcode=" . $this->data['metaUser']->cbUser->cbactivation;
+						$this->rewrite['user_activationlink']		= JURI::base( true )."/index.php?option=com_comprofiler&task=confirm&confirmcode=" . $this->data['metaUser']->cbUser->cbactivation;
 					} else {
 						$this->rewrite['user_activationcode']		= "";
 						$this->rewrite['user_activationlink']		= "";
@@ -11261,7 +11246,7 @@ class reWriteEngine
 				} else {
 					if ( isset( $this->data['metaUser']->cmsUser->activation ) ) {
 						$this->rewrite['user_activationcode']		= $this->data['metaUser']->cmsUser->activation;
-						$this->rewrite['user_activationlink']		= $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+						$this->rewrite['user_activationlink']		= JURI::base( true )."/index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
 					} else {
 						$this->rewrite['user_activationcode']		= "";
 						$this->rewrite['user_activationlink']		= "";
@@ -11270,7 +11255,7 @@ class reWriteEngine
 			} else {
 				if ( isset( $this->data['metaUser']->cmsUser->activation ) ) {
 					$this->rewrite['user_activationcode']			= $this->data['metaUser']->cmsUser->activation;
-					$this->rewrite['user_activationlink']			= $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+					$this->rewrite['user_activationlink']			= JURI::base( true )."/index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
 				}
 			}
 
@@ -11809,9 +11794,7 @@ class AECToolbox
 	 */
 	function backendTaskLink( $task, $text )
 	{
-		global $mosConfig_live_site;
-
-		return '<a href="' .  $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&amp;task=' . $task . '" title="' . $text . '">' . $text . '</a>';
+		return '<a href="' .  JURI::base( true ) . '/administrator/index2.php?option=com_acctexp&amp;task=' . $task . '" title="' . $text . '">' . $text . '</a>';
 	}
 
 	/**
@@ -11823,9 +11806,9 @@ class AECToolbox
 	{
 		$database = &JFactory::getDBO();
 
-		global $mosConfig_live_site, $mosConfig_absolute_path, $aecConfig;
+		global $aecConfig;
 
-		$base = $mosConfig_live_site;
+		$base = JURI::base( true );
 
 		if ( $secure ) {
 			if ( $aecConfig->cfg['override_reqssl'] ) {
@@ -11848,7 +11831,7 @@ class AECToolbox
 			}
 
 			if ( !function_exists( 'sefRelToAbs' ) ) {
-				include_once( $mosConfig_absolute_path . '/includes/sef.php' );
+				include_once( JPATH_SITE . '/includes/sef.php' );
 			}
 
 			$new_url = sefRelToAbs( $url );
@@ -12043,20 +12026,16 @@ class AECToolbox
 				}
 			}
 		} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
-			global $mosConfig_absolute_path;
-
 			$savetask	= $task;
 			$task		= 'blind';
 			include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_juser/juser.php' );
-			include_once( $mosConfig_absolute_path .'/administrator/components/com_juser/juser.class.php' );
+			include_once( JPATH_SITE .'/administrator/components/com_juser/juser.class.php' );
 			$task		= $savetask;
 		} elseif ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) ) {
-			global $mosConfig_absolute_path;
-
 			$savetask	= $task;
 			$task		= 'blind';
 			include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_juser/juser.php' );
-			include_once( $mosConfig_absolute_path .'/administrator/components/com_juser/juser.class.php' );
+			include_once( JPATH_SITE .'/administrator/components/com_juser/juser.class.php' );
 			$task		= $savetask;
 		}
 
@@ -12103,7 +12082,7 @@ class AECToolbox
 			}
 		} else {
 			// This is a joomla registration, borrowing their code to save the user
-			global $mosConfig_useractivation, $mosConfig_sitename, $mosConfig_live_site;
+			global $mosConfig_useractivation, $mosConfig_sitename;
 
 			if ( aecJoomla15check() ) {
 				global $mainframe;
@@ -12226,9 +12205,9 @@ class AECToolbox
 			}
 
 			if ( ( $activation == 1 ) && !$overrideActivation ) {
-				$message = sprintf( _AEC_USEND_MSG_ACTIVATE, $name, $mosConfig_sitename, $mosConfig_live_site."/index.php?option=com_registration&task=activate&activation=".$row->activation, $mosConfig_live_site, $username, $savepwd );
+				$message = sprintf( _AEC_USEND_MSG_ACTIVATE, $name, $mosConfig_sitename, JURI::base( true )."/index.php?option=com_registration&task=activate&activation=".$row->activation, JURI::base( true ), $username, $savepwd );
 			} else {
-				$message = sprintf( _AEC_USEND_MSG, $name, $mosConfig_sitename, $mosConfig_live_site );
+				$message = sprintf( _AEC_USEND_MSG, $name, $mosConfig_sitename, JURI::base( true ) );
 			}
 
 			$message = html_entity_decode( $message, ENT_QUOTES );
@@ -13276,9 +13255,7 @@ class microIntegration extends serialParamDBTable
 
 	function callIntegration( $override = 0 )
 	{
-		global $mosConfig_absolute_path;
-
-		$filename = $mosConfig_absolute_path . '/components/com_acctexp/micro_integration/' . $this->class_name . '.php';
+		$filename = JPATH_SITE . '/components/com_acctexp/micro_integration/' . $this->class_name . '.php';
 
 		$file_exists = file_exists( $filename );
 
@@ -15265,10 +15242,10 @@ class aecExport extends serialParamDBTable
 
 	function useExport()
 	{
-		global $mosConfig_offset, $mosConfig_absolute_path;
+		global $mosConfig_offset;
 
 		// Load Exporting Class
-		$filename = $mosConfig_absolute_path . '/components/com_acctexp/lib/export/' . $this->params->export_method . '.php';
+		$filename = JPATH_SITE . '/components/com_acctexp/lib/export/' . $this->params->export_method . '.php';
 		$classname = 'AECexport_' . $this->params->export_method;
 
 		include_once( $filename );

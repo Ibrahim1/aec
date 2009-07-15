@@ -53,8 +53,6 @@ class mi_coupon
 	{
 		$database = &JFactory::getDBO();
 
-		global $mosConfig_live_site;
-
 		$userflags = $request->metaUser->focusSubscription->getMIflags( $request->plan->id, $this->id );
 
 		$total_coupons = array();

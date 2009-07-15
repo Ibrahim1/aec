@@ -62,8 +62,6 @@ class processor_moneyproxy extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		global $mosConfig_live_site;
-
 		$var['merchant_id']				= $this->settings['merchant_id'];
 		$var['amount']					= $request->int_var['amount'];
 		$var['status_url']				= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=moneyproxynotification' );

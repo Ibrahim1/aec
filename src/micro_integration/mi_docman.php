@@ -36,9 +36,7 @@ class mi_docman
 
 	function detect_application()
 	{
-		global $mosConfig_absolute_path;
-
-		return is_dir( $mosConfig_absolute_path . '/components/com_docman' );
+		return is_dir( JPATH_SITE . '/components/com_docman' );
 	}
 
 	function install()
@@ -156,13 +154,11 @@ class mi_docman
 
 	function hacks()
 	{
-		global $mosConfig_absolute_path;
-
 		$hacks = array();
 
 		$downloadhack =	'// AEC HACK docmandownloadphp START' . "\n"
-		. 'global $my, $mosConfig_absolute_path;' . "\n"
-		. 'include( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_docman.php\');' . "\n\n"
+		. 'global $my, JPATH_SITE;' . "\n"
+		. 'include( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_docman.php\');' . "\n\n"
 		. '$restrictionhandler = new docman_restriction( $database );' . "\n"
 		. '$restrict_id = $restrictionhandler->getIDbyUserID( $my->id );' . "\n"
 		. '$restrictionhandler->load( $restrict_id );' . "\n\n"
@@ -178,7 +174,7 @@ class mi_docman
 		$hacks[$n]['name']				=	'download.php';
 		$hacks[$n]['desc']				=	_AEC_MI_HACK1_DOCMAN;
 		$hacks[$n]['type']				=	'file';
-		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_docman/includes_frontend/download.php';
+		$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_docman/includes_frontend/download.php';
 		$hacks[$n]['read']				=	'// If the remote host is not allowed';
 		$hacks[$n]['insert']			=	$downloadhack . "\n"  . $hacks[$n]['read'];
 

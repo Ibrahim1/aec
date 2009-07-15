@@ -78,8 +78,6 @@ class processor_authorize extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		global $mosConfig_live_site;
-
 		if ( $this->settings['testmode'] ) {
 			$var['post_url']	= "https://test.authorize.net/gateway/transact.dll";
 		} else {

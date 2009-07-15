@@ -52,9 +52,6 @@ class processor_suncorp_migs extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		global $mosConfig_live_site;
-
-
 		$var['post_url']	= 'http://www.worldmuaythaimagazine.com/cms/vpc/PHP_VPC_3Party_DO.php';
 
 		$var['virtualPaymentClientURL']	= "https://migs.mastercard.com.au/vpcpay";

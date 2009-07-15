@@ -64,8 +64,6 @@ class processor_clickbank extends URLprocessor
 
 	function createGatewayLink( $request )
 	{
-		global $mosConfig_live_site;
-
 		$item_number			= $var['allowedTypes'] = $request->int_var['planparams']['item_number'];
 
 		$var['post_url']		= 'http://'.$item_number.'.'.$this->settings['publisher'].'.pay.clickbank.net?';

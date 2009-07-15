@@ -55,9 +55,7 @@ class mi_fireboard
 
 	function detect_application()
 	{
-		global $mosConfig_absolute_path;
-
-		return is_dir( $mosConfig_absolute_path . '/components/com_fireboard' );
+		return is_dir( JPATH_SITE . '/components/com_fireboard' );
 	}
 
 	function expiration_action( $request )

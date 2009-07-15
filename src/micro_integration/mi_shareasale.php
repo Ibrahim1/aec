@@ -38,8 +38,6 @@ class mi_shareasale
 	{
 		$database = &JFactory::getDBO();
 
-		global $mosConfig_live_site;
-
 		$rooturl = "https://shareasale.com/q.cfm";
 
 		$getparams = array();

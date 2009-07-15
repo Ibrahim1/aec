@@ -91,9 +91,7 @@ class processor_epsnetpay extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		global $mosConfig_live_site;
-
-		$sapPopStsURL			= $mosConfig_live_site . "/index.php";
+		$sapPopStsURL			= JURI::base( true ) . "/index.php";
 		$var['sapInfoVersion']	= "3"; //Current Version
 		$var['language']		= "DE"; // Must be german
 		$var['sapPopRequestor']	= $this->settings['merchantid_' . $request->int_var['params']['bank_selection']]; // Marchant ID
@@ -210,8 +208,6 @@ class processor_epsnetpay extends POSTprocessor
 
 	function validateNotification( $response, $post, $invoice )
 	{
-		global $mosConfig_live_site;
-
 		$merchantid = $this->settings['merchantid_' . $invoice->params['bank_selection']];
 		$merchantpin = $this->settings['merchantpin_' . $invoice->params['bank_selection']];
 		$sapPopStsReturnStatus	= $post['sapPopStsReturnStatus']; // Statuscode (OK/NOK/VOK)
@@ -230,7 +226,7 @@ class processor_epsnetpay extends POSTprocessor
 			$epsparams .= $StsPar[$i][0] . $StsPar[$i][1];
 		}
 
-		$sapPopStsURL = $mosConfig_live_site . "/index.php";
+		$sapPopStsURL = JURI::base( true ) . "/index.php";
 
 		$sapPopStsDurchfDatum = isset($post['sapPopStsDurchfDatum']) ? @$post['sapPopStsDurchfDatum'] : "";
 

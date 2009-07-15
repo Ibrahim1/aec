@@ -47,8 +47,6 @@ class processor_vcs extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		global $mosConfig_live_site;
-
 		$var['post_url']	= 'https://www.vcs.co.za/vvonline/ccform.asp';
 
 		if ( $this->settings['testmode'] == '1' ) {

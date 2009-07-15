@@ -15,7 +15,7 @@
 if ( !function_exists( 'json_decode' ) ) {
 	// Make sure no other service has loaded this library somewhere else
 	if ( !class_exists( "Services_JSON" ) ) {
-		require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/php4/json/json.php' );
+		require_once( JPATH_SITE . '/components/com_acctexp/lib/php4/json/json.php' );
 	}
 
 	// Create dummy encoding function

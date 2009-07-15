@@ -59,8 +59,6 @@ class processor_viaklix extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		global $mosConfig_live_site;
-
 		$var['post_url']				= "https://www.viaKLIX.com/process.asp";
 		$var['ssl_test_mode']			= $this->settings['testmode'] ? "true" : "false";
 

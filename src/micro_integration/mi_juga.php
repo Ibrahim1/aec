@@ -78,9 +78,7 @@ class mi_juga
 
 	function detect_application()
 	{
-		global $mosConfig_absolute_path;
-
-		return is_dir( $mosConfig_absolute_path . '/components/com_juga' );
+		return is_dir( JPATH_SITE . '/components/com_juga' );
 	}
 
 	function expiration_action( $request )

@@ -5,8 +5,7 @@
 class mi_qmacd {
 
 	function mi_qmacd () {
-		global $mosConfig_absolute_path;
-		//include_once $mosConfig_absolute_path . "/components/com_acctexp/micro_integration/mi_htaccess/htaccess.class.php";
+		//include_once JPATH_SITE . "/components/com_acctexp/micro_integration/mi_htaccess/htaccess.class.php";
 	}
 
 	function Settings ( $params ) {

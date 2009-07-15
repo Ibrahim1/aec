@@ -66,8 +66,6 @@ class processor_authorize_arb extends XMLprocessor
 
 	function checkoutform( $request )
 	{
-		global $mosConfig_live_site;
-
 		$var = $this->getCCform();
 
 		$name = explode( ' ', $request->metaUser->cmsUser->name );
@@ -92,9 +90,6 @@ class processor_authorize_arb extends XMLprocessor
 
 	function createRequestXML( $request )
 	{
-		global $mosConfig_live_site;
-
-
 		// Start xml, add login and transaction key, as well as invoice number
 		$content =	'<?xml version="1.0" encoding="utf-8"?>'
 					. '<ARBCreateSubscriptionRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">'

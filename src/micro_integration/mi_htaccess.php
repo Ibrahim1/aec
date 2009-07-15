@@ -23,9 +23,7 @@ class mi_htaccess
 
 	function mi_htaccess()
 	{
-		global $mosConfig_absolute_path;
-
-		include_once( $mosConfig_absolute_path . '/components/com_acctexp/micro_integration/mi_htaccess/htaccess.class.php' );
+		include_once( JPATH_SITE . '/components/com_acctexp/micro_integration/mi_htaccess/htaccess.class.php' );
 	}
 
 	function checkInstallation()
@@ -58,8 +56,6 @@ class mi_htaccess
 
 	function Settings()
 	{
-		global $mosConfig_absolute_path;
-
 		$settings = array();
 		// field type; name; variable value, description, extra (variable name)
 		$settings['mi_folder']			= array( 'inputC' );
@@ -76,19 +72,15 @@ class mi_htaccess
 	{
 		$database = &JFactory::getDBO();
 
-		global $mosConfig_absolute_path;
-
-		$mosConfig_absolute_path_above = substr( $mosConfig_absolute_path, 0, strrpos($mosConfig_absolute_path, "/") );
-
 		$newparams = $params;
 
 		// Rewrite foldername to include cmsroot directory
 		if ( strpos("[cmsroot]", $params['mi_folder'] ) ) {
-			$newparams['mi_folder'] = str_replace("[cmsroot]", $mosConfig_absolute_path, $params['mi_folder']);
+			$newparams['mi_folder'] = str_replace("[cmsroot]", JPATH_SITE, $params['mi_folder']);
 		}
 
 		if ( strpos("[abovecmsroot]", $params['mi_passwordfolder'] ) ) {
-			$newparams['mi_passwordfolder'] = str_replace("[abovecmsroot]", $mosConfig_absolute_path_above, $params['mi_passwordfolder']);
+			$newparams['mi_passwordfolder'] = str_replace("[abovecmsroot]", JPATH_SITE_above, $params['mi_passwordfolder']);
 		}
 
 		$newparams['mi_folder_fullpath']		= $newparams['mi_folder'] . "/.htaccess";

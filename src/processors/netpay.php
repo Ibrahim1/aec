@@ -58,8 +58,6 @@ class processor_netpay extends POSTprocessor
 
 	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
 	{
-		global $mosConfig_live_site;
-
 		//URL returned by eWay
 	//	$return_url = AECToolbox::deadsureURL("index.php?option=com_acctexp&amp;task=ewaynotification");
 

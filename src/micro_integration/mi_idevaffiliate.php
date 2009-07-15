@@ -41,8 +41,6 @@ class mi_idevaffiliate
 	{
 		$database = &JFactory::getDBO();
 
-		global $mosConfig_live_site;
-
 		$rooturl = $this->getPath();
 
 		$getparams = array();
@@ -117,8 +115,6 @@ class mi_idevaffiliate
 
 	function getPath()
 	{
-		global $mosConfig_live_site;
-
 		if ( !empty( $this->settings['directory'] ) ) {
 			if ( ( strpos( $this->settings['directory'], 'http://' ) === 0 ) || ( strpos( $this->settings['directory'], 'https://' ) === 0 ) ) {
 				$rooturl = $this->settings['directory'];
@@ -126,13 +122,13 @@ class mi_idevaffiliate
 				if ( ( strpos( $this->settings['directory'], 'www.' ) === 0 ) ) {
 					$rooturl = "http://" . $this->settings['directory'];
 				} elseif ( strpos( "/", $this->settings['directory'] ) !== 0 ) {
-					$rooturl = $mosConfig_live_site . "/" . $this->settings['directory'];
+					$rooturl = JURI::base( true ) . "/" . $this->settings['directory'];
 				} else {
-					$rooturl = $mosConfig_live_site . $this->settings['directory'];
+					$rooturl = JURI::base( true ) . $this->settings['directory'];
 				}
 			}
 		} else {
-			$rooturl = $mosConfig_live_site . '/idevaffiliate';
+			$rooturl = JURI::base( true ) . '/idevaffiliate';
 		}
 
 		return $rooturl;

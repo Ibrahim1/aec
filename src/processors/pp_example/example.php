@@ -35,8 +35,6 @@ class processor_[namehere]
 
 	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
 	{
-		global $mosConfig_live_site;
-
 		$var['post_url']	= "https://www.sandbox.paypal.com/cgi-bin/webscr";
 
 		return $var;

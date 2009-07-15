@@ -69,8 +69,6 @@ class processor_payboxat extends SOAPprocessor
 
 	function createRequestXML( $request )
 	{
-		global $mosConfig_live_site;
-
 		$a = array();
 
 		$a['language']		= strtolower( $this->settings['language'] );

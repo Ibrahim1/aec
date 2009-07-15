@@ -77,8 +77,6 @@ class processor_netdebit extends URLprocessor
 
 	function createGatewayLink( $request )
 	{
-		global $mosConfig_live_site;
-
 		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
 
 		//$var['item_number']		= $request->metaUser->cmsUser->id;

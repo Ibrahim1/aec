@@ -32,7 +32,7 @@ function com_install()
 {
 	$database = &JFactory::getDBO();
 
-	global $mainframe, $mosConfig_absolute_path, $mosConfig_live_site, $mosConfig_dbprefix, $my;
+	global $mainframe, $mosConfig_dbprefix, $my;
 
 	$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" media="all" href="' . $mainframe->getCfg( 'live_site' ) . '/administrator/components/com_acctexp/backend_style.css" />' );
 
@@ -52,13 +52,13 @@ function com_install()
 	}
 
 	// Make sure we are compatible with php4
-	include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/php4/php4.php' );
+	include_once( JPATH_SITE . '/components/com_acctexp/lib/php4/php4.php' );
 
 	// Make sure we are compatible with joomla1.0
-	include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/j15/j15.php' );
+	include_once( JPATH_SITE . '/components/com_acctexp/lib/j15/j15.php' );
 
-	require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.php' );
-	require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.install.php' );
+	require_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
+	require_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.install.php' );
 
 	// Load root install and database object
 	$eucaInstall	= new eucaInstall();
@@ -73,7 +73,7 @@ function com_install()
 	$database->query();
 
 	// Slot in DB tables that do not exist yet
-	$incpath = $mosConfig_absolute_path . '/administrator/components/com_acctexp/install/inc';
+	$incpath = JPATH_SITE . '/administrator/components/com_acctexp/install/inc';
 
 	require_once( $incpath . '/dbtables.inc.php' );
 
@@ -210,14 +210,14 @@ function com_install()
 
 	// check if joomfish (joomla) or nokkaew (mambo) exists)
 	$translation = false;
-	if ( file_exists( $mosConfig_absolute_path . '/administrator/components/com_joomfish/admin.joomfish.php' ) ) {
+	if ( file_exists( JPATH_SITE . '/administrator/components/com_joomfish/admin.joomfish.php' ) ) {
 		$translation = 'joomfish';
-	} elseif ( file_exists( $mosConfig_absolute_path . '/administrator/components/com_nokkaew/admin.nokkaew.php' ) ) {
+	} elseif ( file_exists( JPATH_SITE . '/administrator/components/com_nokkaew/admin.nokkaew.php' ) ) {
 		$translation = 'nokkaew';
 	}
 
 	if ( $translation ) {
-		if ( file_exists( $mosConfig_absolute_path . '/administrator/components/com_acctexp/install/jf_content_elements_aec.' . _AEC_LANGUAGE . '.tar.gz' ) ) {
+		if ( file_exists( JPATH_SITE . '/administrator/components/com_acctexp/install/jf_content_elements_aec.' . _AEC_LANGUAGE . '.tar.gz' ) ) {
 			$xmlInst = 'install/jf_content_elements_aec.' . _AEC_LANGUAGE . '.tar.gz';
 		} else {
 			$xmlInst = 'install/jf_content_elements_aec.en.tar.gz';
@@ -227,8 +227,8 @@ function com_install()
 
 	$eucaInstall->unpackFileArray( $files );
 
-	$krumoabspath = $mosConfig_absolute_path . '/components/com_acctexp/lib/krumo/';
-	$krumourlpath = $mosConfig_live_site . '/components/com_acctexp/lib/krumo/';
+	$krumoabspath = JPATH_SITE . '/components/com_acctexp/lib/krumo/';
+	$krumourlpath = JURI::base( true ) . '/components/com_acctexp/lib/krumo/';
 
 	$eucaInstallef->fileEdit( $krumoabspath . 'krumo.ini', 'http://www.example.com/Krumo/', $krumourlpath, "Krumor Debug Lib did not receive a proper url path, due to writing permission problems" );
 
@@ -257,7 +257,7 @@ function com_install()
 			position: relative;
 			float: left;
 			width: 98%;
-			background: url(<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/backend_gfx/note_lowerright.png) no-repeat bottom right;
+			background: url(<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/backend_gfx/note_lowerright.png) no-repeat bottom right;
 			padding: 6px 18px;
 			color: #000;
 		}
@@ -267,7 +267,7 @@ function com_install()
 			<td width="60%" valign="top" style="background-color: #eee;">
 				<div style="background-color: #949494; margin: 2px; padding: 6px;">
 					<div style="width: 100%; background-color: #000;">
-						<center><img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_dist_gfx.png" border="0" alt="" /></center>
+						<center><img src="<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_dist_gfx.png" border="0" alt="" /></center>
 					</div>
 				</div>
 				<?php
@@ -293,12 +293,12 @@ function com_install()
 				</div>
 				<div class="usernote" style="width:350px;margin:8px;">
 					<h1><?php echo _AEC_INST_NOTE_IMPORTANT; ?>:</h1>
-					<img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/backend_gfx/help_scribble.png" border="0" alt="" style="position:relative;float:left;padding:4px;" />
+					<img src="<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/backend_gfx/help_scribble.png" border="0" alt="" style="position:relative;float:left;padding:4px;" />
 					<p><?php printf( _AEC_INST_NOTE_HELP, AECToolbox::backendTaskLink( 'help', _AEC_INST_NOTE_HELP_LTEXT ) ); ?></p>
 				</div>
 				<div class="usernote" style="width:350px;margin:8px;">
 					<h1><?php echo _AEC_INST_NOTE_IMPORTANT; ?>:</h1>
-					<img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/backend_gfx/hacks_scribble.png" border="0" alt="" style="position:relative;float:left;padding:4px;" />
+					<img src="<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/backend_gfx/hacks_scribble.png" border="0" alt="" style="position:relative;float:left;padding:4px;" />
 					<p><?php echo _AEC_INST_NOTE_SECURITY; ?></p>
 					<p><?php printf( _AEC_INST_APPLY_HACKS, AECToolbox::backendTaskLink( 'hacks', _AEC_INST_APPLY_HACKS_LTEXT ) ); ?></p>
 					<p><?php echo _AEC_INST_NOTE_UPGRADE; ?></p>
@@ -306,13 +306,13 @@ function com_install()
 			</td>
 			<td width="30%" valign="top">
 				<br />
-				<center><img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/aec_logo_big.png" border="0" alt="" /></center>
+				<center><img src="<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_logo_big.png" border="0" alt="" /></center>
 				<br />
 				<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;">
 					<p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION; ?></p>
 					<p><?php echo _AEC_FOOT_TX_CHOOSING; ?></p>
 					<div style="margin: 0 auto;text-align:center;">
-						<a href="https://www.valanx.org" target="_blank"><img src="<?php echo $mosConfig_live_site; ?>/administrator/components/com_acctexp/images/icons/valanx_logo.png" border="0" alt="valanx.org" /></a>
+						<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/valanx_logo.png" border="0" alt="valanx.org" /></a>
 						<p><?php echo _AEC_FOOT_TX_GPL; ?></p>
 						<p><?php echo _AEC_FOOT_TX_SUBSCRIBE; ?></p>
 						<p><?php printf( _AEC_FOOT_CREDIT, AECToolbox::backendTaskLink( 'credits', _AEC_FOOT_CREDIT_LTEXT ) ); ?></p>

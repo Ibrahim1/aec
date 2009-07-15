@@ -11,8 +11,6 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-global $mosConfig_absolute_path;
-
 class HTML_frontEnd
 {
 	function HTML_frontEnd()
@@ -176,7 +174,7 @@ class HTML_frontEnd
 	{
 		$database = &JFactory::getDBO();
 
-		global $aecConfig, $mosConfig_live_site;
+		global $aecConfig;
 
 		$securelinks = !empty( $aecConfig->cfg['ssl_profile'] );
 
@@ -206,7 +204,7 @@ class HTML_frontEnd
 
 					if ( $cart ) { ?>
 					<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
-					<div id="update_button"><input type="image" src="<?php echo $mosConfig_live_site . '/components/com_acctexp/images/your_cart_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
+					<div id="update_button"><input type="image" src="<?php echo JURI::base( true ) . '/components/com_acctexp/images/your_cart_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
 					</form><br /><br />
 					<?php }
 
@@ -370,7 +368,7 @@ class HTML_frontEnd
 
 	function processorInfo( $option, $processorObj, $displaycc = 1 )
 	{
-		global $aecConfig, $mosConfig_live_site;
+		global $aecConfig;
 
 		if ( empty( $aecConfig->cfg['gwlist'] ) ) {
 			return;
@@ -383,7 +381,7 @@ class HTML_frontEnd
 		?>
 		<tr>
 			<td class="cc_gateway">
-				<p align="center"><img src="<?php echo $mosConfig_live_site . '/components/' . $option . '/images/gwlogo_' . $processorObj->processor_name . '.png" alt="' . $processorObj->processor_name . '" title="' . $processorObj->processor_name; ?>" /></p>
+				<p align="center"><img src="<?php echo JURI::base( true ) . '/components/' . $option . '/images/gwlogo_' . $processorObj->processor_name . '.png" alt="' . $processorObj->processor_name . '" title="' . $processorObj->processor_name; ?>" /></p>
 			</td>
 			<td class="cc_icons">
 				<p>
@@ -483,7 +481,7 @@ class Payment_HTML
 {
 	function selectSubscriptionPlanForm( $option, $userid, $list, $expired, $passthrough=false, $register=false, $cart=false )
 	{
-		global $mosConfig_live_site, $aecConfig;
+		global $aecConfig;
 
 		HTML_frontend::aec_styling( $option );
 		?>
@@ -493,7 +491,7 @@ class Payment_HTML
 			<div id="checkout">
 			<table id="aec_checkout">
 			<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
-			<div id="update_button">You can always go back to: <input type="image" src="<?php echo $mosConfig_live_site . '/components/com_acctexp/images/your_cart_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
+			<div id="update_button">You can always go back to: <input type="image" src="<?php echo JURI::base( true ) . '/components/com_acctexp/images/your_cart_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
 			</form><br /><br />
 			</table>
 			</div>
@@ -508,7 +506,7 @@ class Payment_HTML
 			if ( isset( $list['group'] ) ) { ?>
 				<div class="aec_group_backlink">
 					<?php
-					$urlbutton = $mosConfig_live_site . '/components/com_acctexp/images/back_button.png';
+					$urlbutton = JURI::base( true ) . '/components/com_acctexp/images/back_button.png';
 					echo Payment_HTML::planpageButton( $option, 'subscribe', '', $urlbutton, array(), $userid, $passthrough, 'func_button' );
 					?>
 				</div>
@@ -530,7 +528,7 @@ class Payment_HTML
 						<p><?php echo $litem['desc']; ?></p>
 						<div class="aec_groupbutton">
 							<?php
-							$urlbutton = $mosConfig_live_site . '/components/com_acctexp/images/select_button.png';
+							$urlbutton = JURI::base( true ) . '/components/com_acctexp/images/select_button.png';
 							$hidden = array( array( 'group', $litem['id'] ) );
 							echo Payment_HTML::planpageButton( $option, 'subscribe', '', $urlbutton, $hidden, $userid, $passthrough );
 							?>
@@ -558,11 +556,9 @@ class Payment_HTML
 
 	function getPayButtonHTML( $pps, $planid, $userid, $passthrough = false, $register = false )
 	{
-		global $mosConfig_live_site;
-
 		$html_code = '';
 
-		$imgroot = $mosConfig_live_site . '/components/com_acctexp/images/';
+		$imgroot = JURI::base( true ) . '/components/com_acctexp/images/';
 
 		foreach ( $pps as $pp ) {
 			$gw_current = strtolower( $pp->processor_name );
@@ -687,7 +683,6 @@ class Payment_HTML
 
 	function getCCiconsHTML( $option, $cc_list )
 	{
-		global $mosConfig_live_site;
 		// This function first looks whether a specific gateway has been asked for,
 		// if that is the case, it creates a cc list that is to be passed on.
 		// If there was no gateway specified, it passes the cc list on to the next function
@@ -700,7 +695,7 @@ class Payment_HTML
 		}
 
 		for( $i = 0; $i < count( $cc_array ); $i++ ) {
-			$html_code .= '<img src="' . $mosConfig_live_site . '/components/' . $option
+			$html_code .= '<img src="' . JURI::base( true ) . '/components/' . $option
 			. '/images/cc_icons/ccicon_' . $cc_array[$i] . '.png"'
 			. ' alt="' . $cc_array[$i] . '"'
 			. ' title="' . $cc_array[$i] . '"'
@@ -914,7 +909,7 @@ class Payment_HTML
 	{
 		$database = &JFactory::getDBO();
 
-		global $aecConfig, $mosConfig_live_site;
+		global $aecConfig;
 
 		HTML_frontend::aec_styling( $option );
 		?>
@@ -973,7 +968,7 @@ class Payment_HTML
 				<input type="hidden" name="option" value="<?php echo $option; ?>" />
 				<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0; ?>" />
 				<input type="hidden" name="task" value="updateCart" />
-				<div id="update_button"><input type="image" src="<?php echo $mosConfig_live_site . '/components/com_acctexp/images/update_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
+				<div id="update_button"><input type="image" src="<?php echo JURI::base( true ) . '/components/com_acctexp/images/update_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
 				</form>
 				<?php } ?>
 				<?php if ( empty( $InvoiceFactory->userid ) ) { ?>
@@ -987,7 +982,7 @@ class Payment_HTML
 				?>
 				<div id="continue_button">
 					<form name="confirmForm" action="<?php echo $continueurl; ?>" method="post">
-						<input type="image" src="<?php echo $mosConfig_live_site . '/components/com_acctexp/images/continue_shopping_button.png'; ?>" border="0" name="submit" alt="submit" />
+						<input type="image" src="<?php echo JURI::base( true ) . '/components/com_acctexp/images/continue_shopping_button.png'; ?>" border="0" name="submit" alt="submit" />
 					</form>
 				</div>
 				<?php } ?>
@@ -1110,7 +1105,7 @@ class Payment_HTML
 	{
 		$database = &JFactory::getDBO();
 
-		global $mosConfig_live_site, $my, $aecConfig;
+		global $my, $aecConfig;
 
 		HTML_frontend::aec_styling( $option );
 
@@ -1131,7 +1126,7 @@ class Payment_HTML
 			<table id="aec_checkout">
 			<?php if ( !empty( $InvoiceFactory->cartobject ) && !empty( $InvoiceFactory->cart ) ) { ?>
 				<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
-				<div id="update_button">You can always go back to: <input type="image" src="<?php echo $mosConfig_live_site . '/components/com_acctexp/images/your_cart_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
+				<div id="update_button">You can always go back to: <input type="image" src="<?php echo JURI::base( true ) . '/components/com_acctexp/images/your_cart_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
 				</form><br /><br />
 			<?php } ?>
 			<?php
@@ -1600,7 +1595,7 @@ class Payment_HTML
 
 function joomlaregisterForm($option, $useractivation)
 {
-	global $aecConfig, $mosConfig_absolute_path;
+	global $aecConfig;
 
 	$name = $username = $email = '';
 
@@ -1704,7 +1699,7 @@ function joomlaregisterForm($option, $useractivation)
 	</tr>
 	<?php
 	if ( $aecConfig->cfg['use_recaptcha'] && !empty( $aecConfig->cfg['recaptcha_publickey'] ) ) {
-		require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
+		require_once( JPATH_SITE . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
 		?>
 		<tr>
 			<td></td>

@@ -128,22 +128,18 @@ class mi_mosets_tree extends MI
 
 	function detect_application()
 	{
-		global $mosConfig_absolute_path;
-
-		return is_dir( $mosConfig_absolute_path . '/components/com_mtree' );
+		return is_dir( JPATH_SITE . '/components/com_mtree' );
 	}
 
 	function hacks()
 	{
-		global $mosConfig_absolute_path;
-
 		$hacks = array();
 
 		$edithack = '// AEC HACK mtree1 START' . "\n"
 		. 'if (!$link_id) {' . "\n"
-		. 'global $mosConfig_absolute_path;' . "\n"
-		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
-		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_mosets_tree.php\' );' . "\n"
+		. 'global JPATH_SITE;' . "\n"
+		. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
+		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_mosets_tree.php\' );' . "\n"
 		. '$mi_mosetshandler = new mosetstree( $database );' . "\n"
 		. '$mi_mosetshandler->loadUserID( $my->id );' . "\n"
 		. 'if( $mi_mosetshandler->id ) {' . "\n"
@@ -161,9 +157,9 @@ class mi_mosets_tree extends MI
 
 		$edithack2 = '// AEC HACK mtree2 START' . "\n"
 		. 'if ($row->link_approved == 1) {' . "\n"
-		. 'global $mosConfig_absolute_path;' . "\n"
-		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
-		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_mosets_tree.php\' );' . "\n"
+		. 'global JPATH_SITE;' . "\n"
+		. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
+		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_mosets_tree.php\' );' . "\n"
 		. '$mi_mosetshandler = new mosetstree( $database );' . "\n"
 		. '$mi_mosetshandler->loadUserID( $my->id );' . "\n"
 		. 'if( $mi_mosetshandler->id ) {' . "\n"
@@ -182,9 +178,9 @@ class mi_mosets_tree extends MI
 		;
 
 		$edithack3 = '// AEC HACK adminmtree3 START' . "\n"
-		. 'global $mosConfig_absolute_path;' . "\n"
-		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
-		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_mosets_tree.php\' );' . "\n"
+		. 'global JPATH_SITE;' . "\n"
+		. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
+		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_mosets_tree.php\' );' . "\n"
 		. '$mi_mosetshandler = new mosetstree( $database );' . "\n"
 		. '$mi_mosetshandler->loadUserID( $mtLinks->user_id );' . "\n"
 		. 'if( $mi_mosetshandler->id ) {' . "\n"
@@ -203,7 +199,7 @@ class mi_mosets_tree extends MI
 		$hacks[$n]['name']				=	'mtree.php #1';
 		$hacks[$n]['desc']				=	_AEC_MI_HACK3_MOSETS;
 		$hacks[$n]['type']				=	'file';
-		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_mtree/mtree.php';
+		$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_mtree/mtree.php';
 		$hacks[$n]['read']				=	'# OK, you can edit';
 		$hacks[$n]['insert']			=	$edithack . "\n"  . $hacks[$n]['read'];
 
@@ -211,7 +207,7 @@ class mi_mosets_tree extends MI
 		$hacks[$n]['name']				=	'mtree.php #2';
 		$hacks[$n]['desc']				=	_AEC_MI_HACK4_MOSETS;
 		$hacks[$n]['type']				=	'file';
-		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_mtree/mtree.php';
+		$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_mtree/mtree.php';
 		$hacks[$n]['read']				=	'$row->updateLinkCount( 1 );';
 		$hacks[$n]['insert']			=	$edithack2 . "\n"  . $hacks[$n]['read'];
 
@@ -219,7 +215,7 @@ class mi_mosets_tree extends MI
 		$hacks[$n]['name']				=	'admin.mtree.php #3';
 		$hacks[$n]['desc']				=	_AEC_MI_HACK5_MOSETS;
 		$hacks[$n]['type']				=	'file';
-		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/administrator/components/com_mtree/admin.mtree.php';
+		$hacks[$n]['filename']			=	JPATH_SITE . '/administrator/components/com_mtree/admin.mtree.php';
 		$hacks[$n]['read']				=	'if ( $mtLinks->link_approved == 0 ) {';
 		$hacks[$n]['insert']			=	$hacks[$n]['read'] . "\n" . $edithack3;
 

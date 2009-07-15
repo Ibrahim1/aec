@@ -57,8 +57,6 @@ class processor_virtualmerchant extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		global $mosConfig_live_site;
-
 		$var['post_url']				= "https://www.myvirtualmerchant.com/VirtualMerchant/process.do";
 		$var['ssl_test_mode']			= $this->settings['testmode'] ? "true" : "false";
         $var['ssl_transaction_type']	= "ccsale";

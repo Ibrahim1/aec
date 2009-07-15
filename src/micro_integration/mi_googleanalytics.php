@@ -33,7 +33,7 @@ class mi_googleanalytics
 	{
 		$database = &JFactory::getDBO();
 
-		global $mosConfig_live_site, $mosConfig_sitename;
+		global $mosConfig_sitename;
 
 		$text = '<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">'
 				. '</script>'

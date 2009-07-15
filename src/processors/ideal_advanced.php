@@ -63,8 +63,6 @@ class processor_ideal_advanced extends XMLprocessor
 
 	function checkoutform( $request )
 	{
-		global $mosConfig_live_site;
-
 		$var = $this->getCCform();
 
 		$name = explode( ' ', $request->metaUser->cmsUser->name );

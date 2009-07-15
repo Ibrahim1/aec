@@ -63,8 +63,6 @@ class processor_payboxfr extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		global $mosConfig_live_site;
-
 		$var['post_url']	= $this->settings['path'];
 
 		if ( $this->settings['testmode'] ) {

@@ -24,8 +24,6 @@ class mi_jarc
 
 	function Settings()
 	{
-		global $mosConfig_absolute_path;
-
 		$settings = array();
 		$settings['create_affiliates']	= array( 'list_yesno' );
 		$settings['log_payments']		= array( 'list_yesno' );
@@ -113,7 +111,7 @@ class mi_jarc
 	{
 		$database = &JFactory::getDBO();
 
-		global $mosConfig_offset_user, $mosConfig_absolute_path;
+		global $mosConfig_offset_user;
 
 		// Get affiliate ID from cookie.
 		$cookie_name   = mosMainframe::sessionCookieName() . '_JARC';
@@ -121,7 +119,7 @@ class mi_jarc
 
 		list( $cookie_aid, $cookie_count ) = split( ':', $sessioncookie, 2 );
 
-		require_once( $mosConfig_absolute_path . '/components/com_jarc/jarc.class.php' );
+		require_once( JPATH_SITE . '/components/com_jarc/jarc.class.php' );
 
 		$affiliate = new jarc_affiliate( $database );
 		$affiliate->findById( intval( $cookie_aid ) );

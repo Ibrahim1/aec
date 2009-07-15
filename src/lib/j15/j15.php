@@ -11,10 +11,27 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
+if ( !defined( 'JPATH_SITE' ) ) {
+	global $mosConfig_absolute_path;
+
+	define( 'JPATH_SITE', $mosConfig_absolute_path );
+}
+
+if ( !class_exists( 'JURI' ) ) {
+	class JURI
+	{
+	    function base( $what ) {
+	        global $mosConfig_live_site;
+
+			return $mosConfig_live_site;
+	    }
+	}
+}
+
 // Check whether we are on 1.5, otherwise load in some classes
 if ( !class_exists( 'JObject' ) ) {
-	//require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/j15/general.php' );
-	require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/j15/object.php' );
+	//require_once( JPATH_SITE . '/components/com_acctexp/lib/j15/general.php' );
+	require_once( JPATH_SITE . '/components/com_acctexp/lib/j15/object.php' );
 }
 
 if ( !class_exists( 'JTABLE' ) ) {
@@ -29,11 +46,19 @@ if ( !class_exists( 'JTABLE' ) ) {
 if ( !class_exists( 'JFactory' ) ) {
 	class JFactory
 	{
-	    function getDBO() {
+	    function getDBO()
+	    {
 	        global $database;
 
 			return $database;
 	    }
+
+		function getUser()
+		{
+			global $my;
+
+			return $my;
+		}
 	}
 }
 

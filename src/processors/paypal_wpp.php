@@ -152,8 +152,6 @@ class processor_paypal_wpp extends XMLprocessor
 
 	function checkoutform( $request, $vcontent=null, $updated=null )
 	{
-		global $mosConfig_live_site;
-
 		$var = array();
 
 		if ( !empty( $vcontent ) ) {
@@ -177,7 +175,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 	function createRequestXML( $request )
 	{
-		global $mosConfig_live_site, $mosConfig_offset_user;
+		global $mosConfig_offset_user;
 
 		$var = array();
 

@@ -91,13 +91,13 @@ class processor_payer extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		global $mosConfig_live_site, $mosConfig_absolute_path, $my;
+		global $my;
 
 		$baseurl		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=payernotification', false, true );
 		$Auth_url		= $baseurl . '&action=authenticate';
 		$Settle_url		= $baseurl . '&action=settle';
 		$Success_url	= $request->int_var['return_url'];
-		$Shop_url		= $mosConfig_live_site . "/index.php";
+		$Shop_url		= JURI::base( true ) . "/index.php";
 
 			// Explode Name
 			$namearray		= explode( " ", $metaUser->cmsUser->name );
@@ -202,9 +202,7 @@ class processor_payer extends POSTprocessor
 		$allowed = array( '83.241.130.100', '83.241.130.101', '10.4.49.11', '192.168.100.222', '127.0.0.1', '217.151.207.84', '83.241.130.102' );
 
 		if ( in_array( $_SERVER["REMOTE_ADDR"], $allowed ) ) {
-			global $mosConfig_absolute_path;
-
-			require_once( $mosConfig_absolute_path . "/components/com_acctexp/processors/payer/payread_post_api.php" );
+			require_once( JPATH_SITE . "/components/com_acctexp/processors/payer/payread_post_api.php" );
 
 			$postAPI = new payread_post_api( $this->settings );
 

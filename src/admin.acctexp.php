@@ -11,7 +11,7 @@
 // no direct access
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Restricted access' );
 
-global $aecConfig, $mosConfig_absolute_path;
+global $aecConfig;
 
 require_once( $mainframe->getPath( 'class' ) );
 require_once( $mainframe->getPath( 'admin_html' ) );
@@ -33,14 +33,14 @@ if (!$acl->acl_check( 'administration', 'config', 'users', $my->usertype )) {
 	}
 }
 
-$langPathBE = $mosConfig_absolute_path . '/administrator/components/com_acctexp/com_acctexp_language_backend/';
+$langPathBE = JPATH_SITE . '/administrator/components/com_acctexp/com_acctexp_language_backend/';
 if ( file_exists( $langPathBE . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
 	include_once( $langPathBE . $GLOBALS['mosConfig_lang'] . '.php' );
 } else {
 	include_once( $langPathBE . 'english.php' );
 }
 
-$langPathPROC = $mosConfig_absolute_path . '/components/com_acctexp/processors/com_acctexp_language_processors/';
+$langPathPROC = JPATH_SITE . '/components/com_acctexp/processors/com_acctexp_language_processors/';
 if ( file_exists( $langPathPROC . $GLOBALS['mosConfig_lang']. '.php' ) ) {
 	include_once( $langPathPROC . $GLOBALS['mosConfig_lang'] . '.php' );
 } else {
@@ -717,7 +717,7 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'recallinstall':
-		include_once( $mosConfig_absolute_path . '/administrator/components/com_acctexp/install.acctexp.php' );
+		include_once( JPATH_SITE . '/administrator/components/com_acctexp/install.acctexp.php' );
 		com_install();
 		break;
 
@@ -769,7 +769,7 @@ function help( $option )
 {
 	$database = &JFactory::getDBO();
 
-	global $mainframe, $mosConfig_live_site, $aecConfig;
+	global $mainframe, $aecConfig;
 
 	// diagnostic is the overall array that stores relational data that either gets transferred directly into the
 	// diagnose array or that is used in the process of that
@@ -1987,7 +1987,7 @@ function editSettings( $option )
 {
 	$database = &JFactory::getDBO();
 
-	global $acl, $my, $aecConfig, $mosConfig_live_site;
+	global $acl, $my, $aecConfig;
 
 	// See whether we have a duplication
 	if ( $aecConfig->RowDuplicationCheck() ) {
@@ -2421,7 +2421,7 @@ function editProcessor( $id, $option )
 {
 	$database = &JFactory::getDBO();
 
-	global $acl, $my, $aecConfig, $mosConfig_live_site;
+	global $acl, $my, $aecConfig;
 
 	if ( $id ) {
 		$pp = new PaymentProcessor();
@@ -2618,8 +2618,6 @@ function cancelProcessor( $option )
 function changeProcessor( $cid=null, $state=0, $type, $option )
 {
 	$database = &JFactory::getDBO();
-
-	global $mosConfig_live_site;
 
 	if ( count( $cid ) < 1 ) {
 		echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
@@ -3440,8 +3438,6 @@ function saveSubscriptionPlan( $option, $apply=0 )
 {
 	$database = &JFactory::getDBO();
 
-	global $mosConfig_live_site;
-
 	$row = new SubscriptionPlan( $database );
 	$row->load( $_POST['id'] );
 
@@ -3476,8 +3472,6 @@ function saveSubscriptionPlan( $option, $apply=0 )
 function removeSubscriptionPlan( $id, $option )
 {
 	$database = &JFactory::getDBO();
-
-	global $mosConfig_live_site;
 
 	$ids = implode( ',', $id );
 
@@ -3526,16 +3520,12 @@ function removeSubscriptionPlan( $id, $option )
 
 function cancelSubscriptionPlan( $option )
 {
-	global $mosConfig_live_site;
-
 	mosRedirect( 'index2.php?option=' . $option . '&task=showSubscriptionPlans', _AEC_CMN_EDIT_CANCELLED );
 }
 
 function changeSubscriptionPlan( $cid=null, $state=0, $type, $option )
 {
 	$database = &JFactory::getDBO();
-
-	global $mosConfig_live_site;
 
 	if ( count( $cid ) < 1 ) {
 		echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
@@ -3804,8 +3794,6 @@ function saveItemGroup( $option, $apply=0 )
 {
 	$database = &JFactory::getDBO();
 
-	global $mosConfig_live_site;
-
 	$row = new ItemGroup( $database );
 	$row->load( $_POST['id'] );
 
@@ -3840,8 +3828,6 @@ function saveItemGroup( $option, $apply=0 )
 function removeItemGroup( $id, $option )
 {
 	$database = &JFactory::getDBO();
-
-	global $mosConfig_live_site;
 
 	$ids = implode( ',', $id );
 
@@ -3882,16 +3868,12 @@ function removeItemGroup( $id, $option )
 
 function cancelItemGroup( $option )
 {
-	global $mosConfig_live_site;
-
 	mosRedirect( 'index2.php?option=' . $option . '&task=showItemGroups', _AEC_CMN_EDIT_CANCELLED );
 }
 
 function changeItemGroup( $cid=null, $state=0, $type, $option )
 {
 	$database = &JFactory::getDBO();
-
-	global $mosConfig_live_site;
 
 	if ( count( $cid ) < 1 ) {
 		echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
@@ -4126,8 +4108,6 @@ function saveMicroIntegration( $option, $apply=0 )
 {
 	$database = &JFactory::getDBO();
 
-	global $mosConfig_live_site;
-
 	unset( $_POST['option'] );
 	unset( $_POST['task'] );
 
@@ -4178,8 +4158,6 @@ function removeMicroIntegration( $id, $option )
 {
 	$database = &JFactory::getDBO();
 
-	global $mosConfig_live_site;
-
 	$ids = implode( ',', $id );
 
 	$query = 'SELECT count(*)'
@@ -4221,8 +4199,6 @@ function removeMicroIntegration( $id, $option )
 
 function cancelMicroIntegration( $option )
 {
-	global $mosConfig_live_site;
-
 	mosRedirect( 'index2.php?option=' . $option . '&task=showMicroIntegrations', _AEC_CMN_EDIT_CANCELLED );
 }
 
@@ -4234,8 +4210,6 @@ function cancelMicroIntegration( $option )
 function changeMicroIntegration( $cid=null, $state=0, $option )
 {
 	$database = &JFactory::getDBO();
-
-	global $mosConfig_live_site;
 
 	if ( count( $cid ) < 1 ) {
 		$action = $state == 1 ? _AEC_CMN_TOPUBLISH: _AEC_CMN_TOUNPUBLISH;
@@ -4585,8 +4559,6 @@ function saveCoupon( $option, $type, $apply=0 )
 {
 	$database = &JFactory::getDBO();
 
-	global $mosConfig_live_site;
-
 	$new = 0;
 	$type = $_POST['type'];
 
@@ -4664,8 +4636,6 @@ function removeCoupon( $id, $option, $returnTask, $type )
 {
 	$database = &JFactory::getDBO();
 
-	global $mosConfig_live_site;
-
 	$ids = implode( ',', $id );
 
 	// Delete Coupons from table
@@ -4687,16 +4657,12 @@ function removeCoupon( $id, $option, $returnTask, $type )
 
 function cancelCoupon( $option, $type )
 {
-	global $mosConfig_live_site;
-
 	mosRedirect( 'index2.php?option=' . $option . '&task=showCoupons' . ($type ? 'Static' : '' ), _AEC_CMN_EDIT_CANCELLED );
 }
 
 function changeCoupon( $cid=null, $state=0, $option, $type )
 {
 	$database = &JFactory::getDBO();
-
-	global $mosConfig_live_site;
 
 	if ( count( $cid ) < 1 ) {
 		$action = $state == 1 ? _AEC_CMN_TOPUBLISH : _AEC_CMN_TOUNPUBLISH;
@@ -4724,9 +4690,7 @@ function changeCoupon( $cid=null, $state=0, $option, $type )
 }
 
 function editCSS( $option ) {
-	global $mosConfig_absolute_path;
-
-	$file = $mosConfig_absolute_path . '/components/' . $option . '/style.css';
+	$file = JPATH_SITE . '/components/' . $option . '/style.css';
 
 	if ( $fp = fopen( $file, 'r' ) ) {
 		$content = fread( $fp, filesize( $file ) );
@@ -4739,15 +4703,13 @@ function editCSS( $option ) {
 
 function saveCSS( $option )
 {
-	global $mosConfig_absolute_path;
-
 	$filecontent = aecGetParam( 'filecontent' );
 
 	if ( !$filecontent ) {
 		mosRedirect( 'index2.php?option='. $option .'&task=editCSS', _AEC_MSG_OP_FAILED_EMPTY );
 	}
 
-	$file			= $mosConfig_absolute_path .'/components/' . $option . '/style.css';
+	$file			= JPATH_SITE .'/components/' . $option . '/style.css';
 	$enable_write	= aecGetParam( 'enable_write', 0 );
 	$oldperms		= fileperms( $file );
 
@@ -5107,8 +5069,6 @@ function quicklookup( $option )
 {
 	$database = &JFactory::getDBO();
 
-	global $mosConfig_live_site;
-
 	$searcc	= trim( aecGetParam( 'search', 0 ) );
 	$search = $database->getEscaped( strtolower( $searcc ) );
 
@@ -5161,7 +5121,7 @@ function quicklookup( $option )
 					$mosUser = new mosUser( $database );
 					$mosUser->load( $user );
 					$userlink = '<a href="';
-					$userlink .= $mosConfig_live_site . '/administrator/index2.php?option=com_acctexp&amp;task=edit&amp;userid=' . $mosUser->id;
+					$userlink .= JURI::base( true ) . '/administrator/index2.php?option=com_acctexp&amp;task=edit&amp;userid=' . $mosUser->id;
 					$userlink .= '">';
 					$userlink .= $mosUser->name . ' (' . $mosUser->username . ')';
 					$userlink .= '</a>';
@@ -5211,8 +5171,7 @@ function quicklookup( $option )
 	$maybe = array( '?', '??', '???', '????', 'what to do', 'need strategy', 'help', 'help me', 'huh?', 'AAAAH!' );
 
 	if ( in_array( $search, $maybe ) ) {
-		global $mosConfig_absolute_path;
-		include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/eucalib/eucalib.add.php' );
+		include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.add.php' );
 
 		return '<div class="usernote" style="width:200px; padding-top: 40px; padding-bottom: 40px; float: right;">'
 				. ${'edition_0' . ( rand( 1, 4 ) )}['quote_' . str_pad( rand( 1, ( count( ${'edition_0' . ( rand( 1, 4 ) )} ) + 1 ) ), 2, '0' )]
@@ -5262,7 +5221,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 {
 	$database = &JFactory::getDBO();
 
-	global $mosConfig_absolute_path, $mosConfig_live_site, $mosConfig_debug;
+	global $mosConfig_debug;
 
 	if ( !defined( '_AEC_LANG_INCLUDED_MI' ) ) {
 		global $mainframe;
@@ -5286,24 +5245,24 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 	if ( $v15 ) {
 		$aec_condition_start		= 'if (file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" )) {' . "\n";
 	} else {
-		$aec_condition_start		= 'if (file_exists( $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php")) {' . "\n";
+		$aec_condition_start		= 'if (file_exists( JPATH_SITE . "/components/com_acctexp/acctexp.class.php")) {' . "\n";
 	}
 
 	$aec_condition_end			= '}' . "\n";
-	$aec_include_class			= 'include_once($mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php");' . "\n";
+	$aec_include_class			= 'include_once(JPATH_SITE . "/components/com_acctexp/acctexp.class.php");' . "\n";
 	$aec_verification_check		= "AECToolBox::VerifyUsername( %s );" . "\n";
 	$aec_userchange_clause		= '$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($row, $_POST, \'%s\');' . "\n";
 	$aec_userchange_clauseCB12	= '$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($userComplete, $_POST, \'%s\');' . "\n";
 	$aec_userchange_clause15	= '$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($userid, $post, \'%s\');' . "\n";
 	$aec_userregchange_clause15	= '$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($user, $post, \'%s\');' . "\n";
-	$aec_global_call			= 'global $mosConfig_live_site, $mosConfig_absolute_path;' . "\n";
-	$aec_redirect_notallowed	= 'mosRedirect( $mosConfig_live_site . "/index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
+	$aec_global_call			= 'global JURI::base( true ), JPATH_SITE;' . "\n";
+	$aec_redirect_notallowed	= 'mosRedirect( JURI::base( true ) . "/index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
 	$aec_redirect_notallowed15	= 'global $mainframe;' . "\n" . '$mainframe->redirect( "index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
 
 	if ( $v15 ) {
 		$aec_redirect_subscribe		= 'mosRedirect( JURI::base( true ) . \'/index.php?option=com_acctexp&task=subscribe\' );' . "\n";
 	} else {
-		$aec_redirect_subscribe		= 'mosRedirect( $mosConfig_live_site . "/index.php?option=com_acctexp&task=subscribe" );' . "\n";
+		$aec_redirect_subscribe		= 'mosRedirect( JURI::base( true ) . "/index.php?option=com_acctexp&task=subscribe" );' . "\n";
 	}
 
 	$aec_normal_hack = $aec_hack_start
@@ -5382,7 +5341,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 						. $aec_condition_start
 						. 'if (!isset($_POST[\'planid\'])) {' . "\n"
 						. $aec_include_class
-						. 'mosRedirect($mosConfig_live_site . "/index.php?option=com_acctexp&amp;task=subscribe");' . "\n"
+						. 'mosRedirect(JURI::base( true ) . "/index.php?option=com_acctexp&amp;task=subscribe");' . "\n"
 						. $aec_condition_end
 						. $aec_condition_end
 						. $aec_hack_end;
@@ -5394,7 +5353,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 						. $aec_condition_start
 						. 'if (!isset($_POST[\'usage\'])) {' . "\n"
 						. $aec_include_class
-						. 'mosRedirect($mosConfig_live_site . "/index.php?option=com_acctexp&amp;task=subscribe");' . "\n"
+						. 'mosRedirect(JURI::base( true ) . "/index.php?option=com_acctexp&amp;task=subscribe");' . "\n"
 						. $aec_condition_end
 						. $aec_condition_end
 						. $aec_hack_end;
@@ -5474,7 +5433,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['name']				=	$cmsname . '.php';
 		$hacks[$n]['desc']				=	_AEC_HACKS_LEGACY;
 		$hacks[$n]['type']				=	'file';
-		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/includes/' . $cmsname . '.php';
+		$hacks[$n]['filename']			=	JPATH_SITE . '/includes/' . $cmsname . '.php';
 		$hacks[$n]['read']				=	'echo _NOT_AUTH;';
 		$hacks[$n]['insert']			=	sprintf($aec_normal_hack, $n, $n) .	$hacks[$n]['read'];
 		$hacks[$n]['legacy']			=	1;
@@ -5488,7 +5447,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['desc']			=	_AEC_HACKS_NOTAUTH;
 		$hacks[$n]['uncondition']	=	'joomlaphp';
 		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/includes/' . $cmsname . '.php';
+		$hacks[$n]['filename']		=	JPATH_SITE . '/includes/' . $cmsname . '.php';
 		$hacks[$n]['read']			=	"function mosNotAuth() {";
 		$hacks[$n]['insert']		=	sprintf( $aec_jhack1, $n, $n );
 //		$hacks[$n]['legacy']		=	1;
@@ -5498,7 +5457,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['desc']			=	_AEC_HACKS_NOTAUTH;
 		$hacks[$n]['uncondition']	=	'joomlaphp';
 		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/includes/' . $cmsname . '.php';
+		$hacks[$n]['filename']		=	JPATH_SITE . '/includes/' . $cmsname . '.php';
 		$hacks[$n]['read']			=	'function notAllowed( $name ) {';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( $aec_jhack2, $n, $n );
 //		$hacks[$n]['legacy']		=	1;
@@ -5507,7 +5466,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['name']			=	'error.php ' . _AEC_HACK_HACK . ' #1';
 		$hacks[$n]['desc']			=	_AEC_HACKS_NOTAUTH;
 		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/libraries/joomla/error/error.php';
+		$hacks[$n]['filename']		=	JPATH_SITE . '/libraries/joomla/error/error.php';
 		$hacks[$n]['read']			=	'// Initialize variables';
 		$hacks[$n]['insert']		=	sprintf( $aec_j15hack1, $n, $n ) . "\n" . $hacks[$n]['read'];
 		$hacks[$n]['legacy']		=	1;
@@ -5519,7 +5478,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['desc']				=	_AEC_HACKS_LEGACY;
 		$hacks[$n]['uncondition']		=	'joomlaphp';
 		$hacks[$n]['type']				=	'file';
-		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/includes/' . $cmsname . '.php';
+		$hacks[$n]['filename']			=	JPATH_SITE . '/includes/' . $cmsname . '.php';
 		$hacks[$n]['read']				=	'if ($row->block == 1) {';
 		$hacks[$n]['insert']			=	sprintf( $aec_jhack3, $n, $n ) . "\n" . $hacks[$n]['read'];
 		$hacks[$n]['legacy']			=	1;
@@ -5533,12 +5492,12 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 
 	switch( $cmsname ) {
 		case 'joomla':
-			$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/libraries/joomla/user/authentication.php' ) : ( $mosConfig_absolute_path . '/includes/' . $cmsname . '.php' );
+			$hacks[$n]['filename']		=	$v15 ? ( JPATH_SITE . '/libraries/joomla/user/authentication.php' ) : ( JPATH_SITE . '/includes/' . $cmsname . '.php' );
 			$hacks[$n]['read'] 		=	$v15 ? 'if(empty($response->username)) {' : '// initialize session data';
 			break;
 
 		case 'mambo':
-			$hacks[$n]['filename']	=	$mosConfig_absolute_path . '/includes/authenticator.php';
+			$hacks[$n]['filename']	=	JPATH_SITE . '/includes/authenticator.php';
 			$hacks[$n]['read']		=	'// fudge the group stuff';
 			break;
 	}
@@ -5554,7 +5513,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['name']				=	'registration.php';
 		$hacks[$n]['desc']				=	_AEC_HACKS_LEGACY;
 		$hacks[$n]['type']				=	'file';
-		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_registration/registration.php';
+		$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_registration/registration.php';
 		$hacks[$n]['read']				=	'defined( \'_VALID_MOS\' ) or die( \'' . $message . '\' );';
 		$hacks[$n]['insert']			=	$hacks[$n]['read'] . "\n" . sprintf( $aec_normal_hack, $n, $n );
 		$hacks[$n]['legacy']			=	1;
@@ -5567,7 +5526,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['desc']			=	_AEC_HACKS_UHP2_DESC;
 		$hacks[$n]['uncondition']	=	'uhp2managephp';
 		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/modules/mod_uhp2_manage.php';
+		$hacks[$n]['filename']		=	JPATH_SITE . '/modules/mod_uhp2_manage.php';
 		$hacks[$n]['read']			=	'<?php echo "$settings"; ?></a>';
 		$hacks[$n]['insert']		=	sprintf( $hacks[$n]['read'] . "\n</li>\n<?php " . $aec_hack_start . '?>'
 		. '<li class="latest<?php echo $moduleclass_sfx; ?>">'
@@ -5580,7 +5539,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #2';
 		$hacks[$n]['desc']			=	_AEC_HACKS_CB2;
 		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.php';
+		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
 		$hacks[$n]['read']			=	'function registerForm( $option, $emailpass, $regErrorMSG = null ) {';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_optionhack, $n, $n);
 		$hacks[$n]['legacy']		=	1;
@@ -5589,7 +5548,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #6';
 		$hacks[$n]['desc']			=	_AEC_HACKS_CB6;
 		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.php';
+		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
 		$hacks[$n]['read']			=	'HTML_comprofiler::registerForm( $option, $emailpass, $userComplete, $regErrorMSG );';
 		$hacks[$n]['insert']		=	sprintf($aec_rhackbefore_fix, $n, $n) . "\n" . $hacks[$n]['read'];
 		$hacks[$n]['legacy']		=	1;
@@ -5598,7 +5557,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['name']			=	'comprofiler.html.php ' . _AEC_HACK_HACK . ' #2';
 		$hacks[$n]['desc']			=	_AEC_HACKS_CB_HTML2;
 		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.html.php';
+		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php';
 		$hacks[$n]['read']			=	'echo HTML_comprofiler::_cbTemplateRender( $user, \'RegisterForm\'';
 		$hacks[$n]['insert']		=	sprintf($aec_regvarshack_fixcb, $n, $n) . "\n" . $hacks[$n]['read'];
 
@@ -5612,7 +5571,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #2';
 		$hacks[$n]['desc']			=	_AEC_HACKS_CB2;
 		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.php';
+		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
 		$hacks[$n]['read']			=	'if ($regErrorMSG===null) {';
 		$hacks[$n]['insert']		=	sprintf($aec_optionhack, $n, $n) . "\n" . $hacks[$n]['read'];
 
@@ -5622,7 +5581,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 			$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY;
 			$hacks[$n]['type']			=	'file';
 			$hacks[$n]['condition']		=	'comprofilerphp2';
-			$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.php';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
 			$hacks[$n]['read']			=	'HTML_comprofiler::registerForm';
 			$hacks[$n]['insert']		=	sprintf($aec_rhackbefore, $n, $n) . "\n" . $hacks[$n]['read'];
 			$hacks[$n]['legacy']		=	1;
@@ -5634,7 +5593,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['condition']		=	'comprofilerphp2';
 		$hacks[$n]['uncondition']	=	'comprofilerphp3';
-		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.php';
+		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
 		$hacks[$n]['read']			=	'HTML_comprofiler::registerForm';
 		$hacks[$n]['insert']		=	sprintf($aec_rhackbefore_fix, $n, $n) . "\n" . $hacks[$n]['read'];
 
@@ -5644,7 +5603,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 			$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY;
 			$hacks[$n]['type']			=	'file';
 			$hacks[$n]['condition']		=	'comprofilerphp3';
-			$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.html.php';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php';
 			$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveregisters" />';
 			$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack, $n, $n);
 			$hacks[$n]['legacy']		=	1;
@@ -5655,7 +5614,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['desc']			=	_AEC_HACKS_CB_HTML2;
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['uncondition']	=	'comprofilerhtml';
-		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.html.php';
+		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php';
 		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveregisters" />';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
 
@@ -5664,7 +5623,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #2';
 		$hacks[$n]['desc']			=	_AEC_HACKS_CB2;
 		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.php';
+		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
 		$hacks[$n]['read']			=	'$rowFieldValues=array();';
 		$hacks[$n]['insert']		=	sprintf($aec_optionhack, $n, $n) . "\n" . $hacks[$n]['read'];
 
@@ -5674,7 +5633,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 			$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY;
 			$hacks[$n]['type']			=	'file';
 			$hacks[$n]['condition']		=	'comprofilerphp2';
-			$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.php';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
 			$hacks[$n]['read']			=	'HTML_comprofiler::registerForm';
 			$hacks[$n]['insert']		=	sprintf($aec_rhackbefore, $n, $n) . "\n" . $hacks[$n]['read'];
 			$hacks[$n]['legacy']		=	1;
@@ -5685,7 +5644,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['desc']			=	_AEC_HACKS_CB6;
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['condition']		=	'comprofilerphp2';
-		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.php';
+		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
 		$hacks[$n]['read']			=	'HTML_comprofiler::registerForm';
 		$hacks[$n]['insert']		=	sprintf($aec_rhackbefore2, $n, $n) . "\n" . $hacks[$n]['read'];
 
@@ -5695,7 +5654,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 			$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY;
 			$hacks[$n]['type']			=	'file';
 			$hacks[$n]['condition']		=	'comprofilerphp6';
-			$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.html.php';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php';
 			$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveRegistration" />';
 			$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack, $n, $n);
 			$hacks[$n]['legacy']		=	1;
@@ -5706,7 +5665,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['desc']			=	_AEC_HACKS_CB_HTML2;
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['uncondition']	=	'comprofilerhtml';
-		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.html.php';
+		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php';
 		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveRegistration" />';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
 	} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
@@ -5714,7 +5673,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['name']			=	'juser.html.php ' . _AEC_HACK_HACK . ' #1';
 		$hacks[$n]['desc']			=	_AEC_HACKS_JUSER_HTML1;
 		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_juser/juser.html.php';
+		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_juser/juser.html.php';
 		$hacks[$n]['read']			=	'<input type="hidden" name="option" value="com_juser" />';
 		$hacks[$n]['insert']		=	sprintf($aec_regvarshack_fix, $n, $n) . "\n" . '<input type="hidden" name="option" value="com_acctexp" />';
 
@@ -5722,7 +5681,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['name']			=	'juser.php ' . _AEC_HACK_HACK . ' #1';
 		$hacks[$n]['desc']			=	_AEC_HACKS_JUSER_PHP1;
 		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_juser/juser.php';
+		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_juser/juser.php';
 		$hacks[$n]['read']			=	'HTML_JUser::userEdit( $row, $option, $params, $ext_row, \'saveUserRegistration\' );';
 		$hacks[$n]['insert']		=	sprintf($aec_rhackbefore_fix, $n, $n) . "\n" . $hacks[$n]['read'];
 
@@ -5730,7 +5689,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['name']			=	'juser.php ' . _AEC_HACK_HACK . ' #2';
 		$hacks[$n]['desc']			=	_AEC_HACKS_JUSER_PHP2;
 		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_juser/juser.php';
+		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_juser/juser.php';
 		$hacks[$n]['read']			=	'default:';
 		$hacks[$n]['insert']		=	sprintf($juser_blind, $n, $n) . "\n" . $hacks[$n]['read'];
 	} else {
@@ -5739,7 +5698,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 			$hacks[$n]['name']			=	'registration.php ' . _AEC_HACK_HACK . ' #2';
 			$hacks[$n]['desc']			=	_AEC_HACKS_REG2;
 			$hacks[$n]['type']			=	'file';
-			$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/components/com_user/controller.php' ) : ( $mosConfig_absolute_path . '/components/com_registration/registration.php' );
+			$hacks[$n]['filename']		=	$v15 ? ( JPATH_SITE . '/components/com_user/controller.php' ) : ( JPATH_SITE . '/components/com_registration/registration.php' );
 			$hacks[$n]['read']			=	$v15 ? ( 'JRequest::setVar(\'view\', \'register\');' ) : ( '$mainframe->SetPageTitle(_REGISTER_TITLE);' );
 			$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( $aec_optionhack, $n, $n );
 			$hacks[$n]['legacy']		=	1;
@@ -5749,7 +5708,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 			$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY_MAMBOT;
 			$hacks[$n]['type']			=	'file';
 			$hacks[$n]['condition']		=	'registrationphp3';
-			$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_registration/registration.php';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_registration/registration.php';
 			$hacks[$n]['read']			=	'HTML_registration::registerForm';
 			$hacks[$n]['insert']		=	sprintf($aec_rhackbefore, $n, $n) . "\n" . $hacks[$n]['read'];
 			$hacks[$n]['legacy']		=	1;
@@ -5759,7 +5718,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 			$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY_MAMBOT;
 			$hacks[$n]['type']			=	'file';
 			$hacks[$n]['condition']		=	'registrationhtml';
-			$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_registration/registration.html.php';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_registration/registration.html.php';
 			$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveRegistration" />';
 			$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack, $n, $n);
 			$hacks[$n]['legacy']		=	1;
@@ -5771,7 +5730,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['uncondition']	=	'registrationhtml';
 		$hacks[$n]['condition']		=	'registrationphp2';
-		$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/components/com_user/views/register/tmpl/default.php' ) : ( $mosConfig_absolute_path . '/components/com_registration/registration.html.php' );
+		$hacks[$n]['filename']		=	$v15 ? ( JPATH_SITE . '/components/com_user/views/register/tmpl/default.php' ) : ( JPATH_SITE . '/components/com_registration/registration.html.php' );
 		$hacks[$n]['read']			=	$v15 ? ( '<input type="hidden" name="task" value="register_save" />' ) : ( '<input type="hidden" name="task" value="saveRegistration" />' );
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
 		$hacks[$n]['important']		=	1;
@@ -5782,7 +5741,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 			$hacks[$n]['name']			=	'registration.php ' . _AEC_HACK_HACK . ' #5';
 			$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY;
 			$hacks[$n]['type']			=	'file';
-			$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_registration/registration.php';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_registration/registration.php';
 			$hacks[$n]['read']			=	'// no direct access';
 			$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regredirect, $n, $n);
 			$hacks[$n]['legacy']		=	1;
@@ -5793,7 +5752,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['desc']			=	_AEC_HACKS_REG5;
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['uncondition']	=	'registrationphp5';
-		$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/components/com_user/controller.php' ) : ( $mosConfig_absolute_path . '/components/com_registration/registration.php' );
+		$hacks[$n]['filename']		=	$v15 ? ( JPATH_SITE . '/components/com_user/controller.php' ) : ( JPATH_SITE . '/components/com_registration/registration.php' );
 		$hacks[$n]['read']			=	$v15 ? ( 'JRequest::setVar(\'view\', \'register\');' ) : ( 'case \'register\':' );
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regredirect, $n, $n);
 		$hacks[$n]['legacy']		=	1;
@@ -5805,7 +5764,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 			$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #7';
 			$hacks[$n]['desc']			=	_AEC_HACKS_MI1;
 			$hacks[$n]['type']			=	'file';
-			$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.php';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
 			$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserRegistrationMailsSent\',';
 			$hacks[$n]['insert']		=	sprintf( $aec_uchangehackCB12, $n, 'registration', $n ) . "\n" . $hacks[$n]['read'];
 			$hacks[$n]['legacy']		=	1;
@@ -5814,7 +5773,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 			$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #8';
 			$hacks[$n]['desc']			=	_AEC_HACKS_MI1;
 			$hacks[$n]['type']			=	'file';
-			$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/administrator/components/com_comprofiler/library/cb/cb.tables.php';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/administrator/components/com_comprofiler/library/cb/cb.tables.php';
 			$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserUpdate\', array( &$this, &$this, true ) );';
 			$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( $aec_uchangehackCB12x, $n, 'user', $n );
 			$hacks[$n]['legacy']		=	1;
@@ -5823,7 +5782,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 			$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #4';
 			$hacks[$n]['desc']			=	_AEC_HACKS_MI1;
 			$hacks[$n]['type']			=	'file';
-			$hacks[$n]['filename']		=	$mosConfig_absolute_path . "/components/com_comprofiler/comprofiler.php";
+			$hacks[$n]['filename']		=	JPATH_SITE . "/components/com_comprofiler/comprofiler.php";
 			$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserRegistrationMailsSent\',';
 			$hacks[$n]['insert']		=	sprintf($aec_uchangehack, $n, "user", $n) . "\n" . $hacks[$n]['read'];
 			$hacks[$n]['legacy']		=	1;
@@ -5832,7 +5791,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 			$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #5';
 			$hacks[$n]['desc']			=	_AEC_HACKS_MI2;
 			$hacks[$n]['type']			=	'file';
-			$hacks[$n]['filename']		=	$mosConfig_absolute_path . "/components/com_comprofiler/comprofiler.php";
+			$hacks[$n]['filename']		=	JPATH_SITE . "/components/com_comprofiler/comprofiler.php";
 			$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserUpdate\', array($row, $rowExtras, true));';
 			$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_uchangehack, $n, "registration",$n);
 			$hacks[$n]['legacy']		=	1;
@@ -5842,7 +5801,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 			$hacks[$n]['desc']			=	_AEC_HACKS_MI1;
 			$hacks[$n]['type']			=	'file';
 			$hacks[$n]['uncondition']	=	'comprofilerphp4';
-			$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.php';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
 			$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserRegistrationMailsSent\',';
 			$hacks[$n]['insert']		=	sprintf( $aec_uchangehack, $n, 'registration', $n ) . "\n" . $hacks[$n]['read'];
 
@@ -5851,7 +5810,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 			$hacks[$n]['desc']			=	_AEC_HACKS_MI1;
 			$hacks[$n]['type']			=	'file';
 			$hacks[$n]['uncondition']	=	'comprofilerphp5';
-			$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.php';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
 			$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserUpdate\', array($row, $rowExtras, true));';
 			$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( $aec_uchangehack, $n, 'user', $n );
 		}
@@ -5862,7 +5821,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['name']			=	'admin.user.php';
 		$hacks[$n]['desc']			=	_AEC_HACKS_MI1;
 		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	$mosConfig_absolute_path . 'administrator/components/com_users/admin.users.php';
+		$hacks[$n]['filename']		=	JPATH_SITE . 'administrator/components/com_users/admin.users.php';
 		$hacks[$n]['read']			=	'$row->checkin();';
 		$hacks[$n]['insert']		=	sprintf( $aec_uchangehack, $n, 'adminuser', $n ) . "\n" . $hacks[$n]['read'];
 		*/
@@ -5871,7 +5830,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['name']			=	'user.php';
 		$hacks[$n]['desc']			=	$v15 ? _AEC_HACKS_LEGACY : _AEC_HACKS_MI1;
 		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/components/com_user/controller.php' ) : ( $mosConfig_absolute_path . '/components/com_user/user.php' );
+		$hacks[$n]['filename']		=	$v15 ? ( JPATH_SITE . '/components/com_user/controller.php' ) : ( JPATH_SITE . '/components/com_user/user.php' );
 		$hacks[$n]['read']			=	$v15 ? ( 'if ($model->store($post)) {' ) : ( '// check if username has been changed' );
 		$hacks[$n]['insert']		=	sprintf( ( $v15 ? $aec_uchangehack15 : $aec_uchangehack ), $n, "user", $n ) . "\n" . $hacks[$n]['read'];
 		$hacks[$n]['legacy']		=	1;
@@ -5880,7 +5839,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['name']			=	'registration.php ' . _AEC_HACK_HACK . ' #1';
 		$hacks[$n]['desc']			=	$v15 ? _AEC_HACKS_LEGACY : _AEC_HACKS_MI2;
 		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/components/com_user/controller.php' ) : ( $mosConfig_absolute_path . '/components/com_registration/registration.php' );
+		$hacks[$n]['filename']		=	$v15 ? ( JPATH_SITE . '/components/com_user/controller.php' ) : ( JPATH_SITE . '/components/com_registration/registration.php' );
 		$hacks[$n]['read']			=	$v15 ? 'UserController::_sendMail($user, $password);' : '$row->checkin();';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( ( $v15 ? $aec_uchangereghack15 : $aec_uchangehack ), $n, "registration", $n );
 		$hacks[$n]['legacy']		=	1;
@@ -5890,7 +5849,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 	$hacks[$n]['name']			=	'admin.user.php';
 	$hacks[$n]['desc']			=	$v15 ? _AEC_HACKS_LEGACY : _AEC_HACKS_MI3;
 	$hacks[$n]['type']			=	'file';
-	$hacks[$n]['filename']		=	$v15 ? ( $mosConfig_absolute_path . '/administrator/components/com_users/controller.php' ) : ( $mosConfig_absolute_path . '/administrator/components/com_users/admin.users.php' );
+	$hacks[$n]['filename']		=	$v15 ? ( JPATH_SITE . '/administrator/components/com_users/controller.php' ) : ( JPATH_SITE . '/administrator/components/com_users/admin.users.php' );
 	$hacks[$n]['read']			=	$v15 ? 'if (!$user->save())' : '$row->checkin();';
 	$hacks[$n]['insert']		=	sprintf( ( $v15 ? $aec_uchangehack15 : $aec_uchangehack ), $n, 'adminuser', $n ) . "\n" . $hacks[$n]['read'];
 	if ( $v15 ) {
@@ -5903,7 +5862,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 			$hacks[$n]['name']			=	"comprofiler.php";
 			$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY;
 			$hacks[$n]['type']			=	'file';
-			$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/components/com_comprofiler/comprofiler.php';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
 			$hacks[$n]['read']			=	'case "registers":';
 			$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_normal_hack, $n, $n);
 			$hacks[$n]['legacy']		=	1;
@@ -5917,7 +5876,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 			$hacks[$n]['name']			=	'comprofilermoderator.php';
 			$hacks[$n]['desc']			=	_AEC_HACKS_CBM;
 			$hacks[$n]['type']			=	'file';
-			$hacks[$n]['filename']		=	$mosConfig_absolute_path . '/modules/mod_comprofilermoderator.php';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/modules/mod_comprofilermoderator.php';
 			$hacks[$n]['read']			=	'mosNotAuth();';
 			$hacks[$n]['insert']		=	sprintf( $aec_cbmhack, $n, $n );
 		}
@@ -5963,7 +5922,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 					$count = 0;
 					$query = 'SELECT COUNT(*)'
 							. ' FROM #__menu'
-							. ' WHERE `link` = \'' . $mosConfig_live_site  . '/index.php?option=com_acctexp&task=subscriptionDetails\''
+							. ' WHERE `link` = \'' . JURI::base( true )  . '/index.php?option=com_acctexp&task=subscriptionDetails\''
 							;
 					$database->setQuery( $query );
 					$count = $database->loadResult();
@@ -6031,11 +5990,11 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 				if ( !$undohack ) { // Create menu entry
 					if ( aecJoomla15check() ) {
 						$query = 'INSERT INTO #__menu'
-								. ' VALUES (\'\', \'usermenu\', \'' . _AEC_SPEC_MENU_ENTRY . '\', \'' . strtolower( _AEC_SPEC_MENU_ENTRY ) . '\', \'' . $mosConfig_live_site  . '/index.php?option=com_acctexp&task=subscriptionDetails\', \'url\', 1, 0, 0, 6, 0, 0, \'0000-00-00 00:00:00\', 0, 0, 1, 0, \'menu_image=-1\', 0, 0, 0)'
+								. ' VALUES (\'\', \'usermenu\', \'' . _AEC_SPEC_MENU_ENTRY . '\', \'' . strtolower( _AEC_SPEC_MENU_ENTRY ) . '\', \'' . JURI::base( true )  . '/index.php?option=com_acctexp&task=subscriptionDetails\', \'url\', 1, 0, 0, 6, 0, 0, \'0000-00-00 00:00:00\', 0, 0, 1, 0, \'menu_image=-1\', 0, 0, 0)'
 								;
 					} else {
 						$query = 'INSERT INTO #__menu'
-								. ' VALUES (\'\', \'usermenu\', \'' . _AEC_SPEC_MENU_ENTRY . '\', \'' . $mosConfig_live_site  . '/index.php?option=com_acctexp&task=subscriptionDetails\', \'url\', 1, 0, 0, 0, 6, 0, \'0000-00-00 00:00:00\', 0, 0, 1, 0, \'menu_image=-1\')'
+								. ' VALUES (\'\', \'usermenu\', \'' . _AEC_SPEC_MENU_ENTRY . '\', \'' . JURI::base( true )  . '/index.php?option=com_acctexp&task=subscriptionDetails\', \'url\', 1, 0, 0, 0, 6, 0, \'0000-00-00 00:00:00\', 0, 0, 1, 0, \'menu_image=-1\')'
 								;
 					}
 				} else { // Remove menu entry

@@ -66,8 +66,6 @@ class processor_iats extends XMLprocessor
 
 	function checkoutform( $request, $vcontent=null, $updated=null )
 	{
-		global $mosConfig_live_site;
-
 		$var = array();
 
 		if ( !empty( $vcontent ) ) {
@@ -91,7 +89,7 @@ class processor_iats extends XMLprocessor
 
 	function createRequestXML( $request )
 	{
-		global $mosConfig_live_site, $mosConfig_offset_user;
+		global $mosConfig_offset_user;
 
 		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
 

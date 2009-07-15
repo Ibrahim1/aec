@@ -102,8 +102,6 @@ class processor_epay extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		global $mosConfig_live_site;
-
 		 // target for epay standard payment window
 		$var['post_url']		= "https://ssl.ditonlinebetalingssystem.dk/popup/default.asp";
 		$var['orderid']			= $request->int_var['invoice'];

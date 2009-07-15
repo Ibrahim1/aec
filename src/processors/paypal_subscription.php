@@ -93,8 +93,6 @@ class processor_paypal_subscription extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		global $mosConfig_live_site;
-
 		if ( $this->settings['testmode'] ) {
 			$var['post_url']	= 'https://www.sandbox.paypal.com/cgi-bin/webscr';
 		} else {

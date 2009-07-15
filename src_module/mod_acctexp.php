@@ -11,7 +11,7 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-global $mosConfig_absolute_path, $mainframe;
+global $mainframe;
 
 require_once( $mainframe->getPath( 'class', 'com_acctexp' ) );
 
@@ -29,7 +29,7 @@ if ( $my->id ) {
 	}
 
 	if ( $showExpiration ) {
-		$langPath = $mosConfig_absolute_path . '/modules/' . ( aecJoomla15check() ? 'mod_acctexp/' : '' ) . 'mod_acctexp_language/';
+		$langPath = JPATH_SITE . '/modules/' . ( aecJoomla15check() ? 'mod_acctexp/' : '' ) . 'mod_acctexp_language/';
 		if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
 				include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
 		} else {

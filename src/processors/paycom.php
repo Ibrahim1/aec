@@ -52,8 +52,6 @@ class processor_paycom extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		global $mosConfig_live_site;
-
 		$var['post_url']		= "https://wnu.com/secure/fpost.cgi";
 		$var['co_code']			= $this->settings['co_code'];
 		$var['product_id']		= $this->settings['product_id'];

@@ -52,7 +52,6 @@ class processor_psigate extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		global $mosConfig_live_site;
 		if ( $this->settings['testmode'] ) {
 			$var['post_url']	= "https://dev.psigate.com/HTMLPost/HTMLMessenger";
 		} else {

@@ -240,23 +240,19 @@ class mi_hotproperty extends MI
 
 	function detect_application()
 	{
-		global $mosConfig_absolute_path;
-
-		return is_dir( $mosConfig_absolute_path . '/components/com_hotproperty' );
+		return is_dir( JPATH_SITE . '/components/com_hotproperty' );
 	}
 
 	function hacks()
 	{
-		global $mosConfig_absolute_path;
-
-		$v10 = is_dir( $mosConfig_absolute_path . '/components/com_hotproperty/helpers' );
+		$v10 = is_dir( JPATH_SITE . '/components/com_hotproperty/helpers' );
 
 		$hacks = array();
 
 		$edithack = '// AEC HACK hotproperty1 START' . "\n"
-		. 'global $mosConfig_absolute_path;' . "\n"
-		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
-		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
+		. 'global JPATH_SITE;' . "\n"
+		. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
+		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
 		. '$mi_hphandler = new aec_hotproperty( $database );' . "\n"
 		. '$mi_hphandler->loadUserID( $my->id );' . "\n"
 		. 'if( $mi_hphandler->id ) {' . "\n"
@@ -272,9 +268,9 @@ class mi_hotproperty extends MI
 		;
 
 		$edithack2 = '// AEC HACK hotproperty2 START' . "\n"
-		. 'global $mosConfig_absolute_path;' . "\n"
-		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
-		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
+		. 'global JPATH_SITE;' . "\n"
+		. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
+		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
 		. '$mi_hphandler = new aec_hotproperty( $database );' . "\n"
 		. '$mi_hphandler->loadUserID( $my->id );' . "\n"
 		. 'if( $mi_hphandler->id ) {' . "\n"
@@ -292,9 +288,9 @@ class mi_hotproperty extends MI
 		;
 
 		/*$edithack3 = '// AEC HACK adminhotproperty3 START' . "\n"
-		. 'global $mosConfig_absolute_path;' . "\n"
-		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
-		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
+		. 'global JPATH_SITE;' . "\n"
+		. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
+		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
 		. '$mi_hphandler = new aec_hotproperty( $database );' . "\n"
 		. '$mi_hphandler->loadUserID( $mtLinks->user_id );' . "\n"
 		. 'if( $mi_hphandler->id ) {' . "\n"
@@ -310,9 +306,9 @@ class mi_hotproperty extends MI
 		;*/
 
 		$edithack4 = '// AEC HACK adminhotproperty4 START' . "\n"
-		. 'global $mosConfig_absolute_path;' . "\n"
-		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
-		. 'include_once( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
+		. 'global JPATH_SITE;' . "\n"
+		. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
+		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
 		. '$mi_hphandler = new aec_hotproperty( $database );' . "\n"
 		. '$mi_hphandler->loadLinkID( $id[$i] );' . "\n"
 		. 'if( $mi_hphandler->id ) {' . "\n"
@@ -326,10 +322,10 @@ class mi_hotproperty extends MI
 		$hacks[$n]['desc']				=	_AEC_MI_HACK3_HOTPROPERTY;
 		$hacks[$n]['type']				=	'file';
 		if ( $v10 ) {
-			$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_hotproperty/property.php';
+			$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_hotproperty/property.php';
 			$hacks[$n]['read']				=	'# Assign default value for new data';
 		} else {
-			$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_hotproperty/property.php';
+			$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_hotproperty/property.php';
 			$hacks[$n]['read']				=	'# Assign default value for new data';
 		}
 		$hacks[$n]['insert']			=	$edithack . "\n"  . $hacks[$n]['read'];
@@ -339,11 +335,11 @@ class mi_hotproperty extends MI
 		$hacks[$n]['desc']				=	_AEC_MI_HACK4_HOTPROPERTY;
 		$hacks[$n]['type']				=	'file';
 		if ( $v10 ) {
-			$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_hotproperty/property.php';
+			$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_hotproperty/property.php';
 			$hacks[$n]['read']				=	'# Assign current logon user to Agent field';
 			$hacks[$n]['insert']			=	$edithack2 . "\n"  . $hacks[$n]['read'];
 		} else {
-			$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_hotproperty/property.php';
+			$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_hotproperty/property.php';
 			$hacks[$n]['oldread']			=	'# Assign current logon user to Agent field';
 			$hacks[$n]['oldinsert']			=	$hacks[$n]['oldread'] . "\n" . $edithack2;
 			$hacks[$n]['read']				=	'if ($row->id < 1) {';
@@ -355,7 +351,7 @@ class mi_hotproperty extends MI
 		$hacks[$n]['name']				=	'admin.hotproperty.php #3';
 		$hacks[$n]['desc']				=	_AEC_MI_HACK5_HOTPROPERTY;
 		$hacks[$n]['type']				=	'file';
-		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/administrator/components/com_hotproperty/admin.mtree.php';
+		$hacks[$n]['filename']			=	JPATH_SITE . '/administrator/components/com_hotproperty/admin.mtree.php';
 		$hacks[$n]['read']				=	'if ( $mtLinks->link_approved == 0 ) {';
 		$hacks[$n]['insert']			=	$hacks[$n]['read'] . "\n" . $edithack3;
 		*/
@@ -365,10 +361,10 @@ class mi_hotproperty extends MI
 		$hacks[$n]['desc']				=	_AEC_MI_HACK5_HOTPROPERTY;
 		$hacks[$n]['type']				=	'file';
 		if ( $v10 ) {
-			$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/administrator/components/com_hotproperty/admin.hotproperty.php';
+			$hacks[$n]['filename']			=	JPATH_SITE . '/administrator/components/com_hotproperty/admin.hotproperty.php';
 			$hacks[$n]['read']				=	'# Remove property from database';
 		} else {
-			$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/administrator/components/com_hotproperty/admin.hotproperty.php';
+			$hacks[$n]['filename']			=	JPATH_SITE . '/administrator/components/com_hotproperty/admin.hotproperty.php';
 			$hacks[$n]['read']				=	'# Remove property from database';
 		}
 		$hacks[$n]['insert']			=	$hacks[$n]['read'] . "\n" . $edithack4;

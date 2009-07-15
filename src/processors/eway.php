@@ -58,8 +58,6 @@ class processor_eway extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		global $mosConfig_live_site;
-
 		//URL returned by eWay
 		$return_url = AECToolbox::deadsureURL("index.php?option=com_acctexp&amp;task=ewaynotification");
 

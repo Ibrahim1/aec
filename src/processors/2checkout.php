@@ -59,8 +59,6 @@ class processor_2checkout extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		global $mosConfig_live_site;
-
 		if ( $this->settings['alt2courl'] ) {
 			$var['post_url']		= 'https://www2.2checkout.com/2co/buyer/purchase';
 		} else {

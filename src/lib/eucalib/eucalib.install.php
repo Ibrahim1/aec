@@ -26,21 +26,19 @@ class eucaInstall extends eucaObject
 
 	function unpackFileArray( $array )
 	{
-		global $mosConfig_absolute_path;
-
 		if ( !class_exists( 'Archive_Tar' ) || function_exists( 'PclTarExtract' ) ) {
 			if ( aecJoomla15check() ) {
-				require_once( $mosConfig_absolute_path . '/administrator/includes/pcl/pcltar.lib.php' );
+				require_once( JPATH_SITE . '/administrator/includes/pcl/pcltar.lib.php' );
 			} else {
-				require_once( $mosConfig_absolute_path . '/includes/Archive/Tar.php' );
+				require_once( JPATH_SITE . '/includes/Archive/Tar.php' );
 			}
 		}
 
 		foreach ( $array as $file ) {
 			if ( $file[2] ) {
-				$basepath = $mosConfig_absolute_path . '/administrator/components/' . _EUCA_APP_COMPNAME . '/';
+				$basepath = JPATH_SITE . '/administrator/components/' . _EUCA_APP_COMPNAME . '/';
 			} else {
-				$basepath = $mosConfig_absolute_path . '/components/' . _EUCA_APP_COMPNAME . '/';
+				$basepath = JPATH_SITE . '/components/' . _EUCA_APP_COMPNAME . '/';
 			}
 
 			$fullpath	= $basepath . $file[0];

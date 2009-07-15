@@ -70,8 +70,6 @@ class processor_moneybookers extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		global $mosConfig_live_site;
-
 		$var['post_url']				= 'https://www.moneybookers.com/app/payment.pl';
 		$var['pay_to_email']			= $this->settings['pay_to_email'];
 		$var['recipient_description']	= $this->settings['recipient_description'];

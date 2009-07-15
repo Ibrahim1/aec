@@ -69,8 +69,6 @@ class processor_ccbill extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		global $mosConfig_live_site;
-
 		$var['post_url']		= "https://bill.ccbill.com/jpost/signup.cgi";
 		$var['clientAccnum']	= $this->settings['clientAccnum'];
 		if ( !empty( $this->settings['clientSubacc'] ) ) {

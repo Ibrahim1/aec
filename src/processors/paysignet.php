@@ -49,8 +49,6 @@ class processor_paysignet extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		global $mosConfig_live_site;
-
 		$var['post_url']			= "https://www.paysignet.com/validate/paysign_getdetails.asp";
 
 		$var['epq_MMerchantOId']	= $request->int_var['invoice'];

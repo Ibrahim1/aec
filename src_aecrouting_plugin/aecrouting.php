@@ -292,9 +292,7 @@ class plgSystemAECrouting extends JPlugin
 			$replace[]	= '<form action="' . JRoute::_( 'index.php?option=com_acctexp' ) . '" method="post"';
 
 			if ( $aecConfig->cfg['use_recaptcha'] && !empty( $aecConfig->cfg['recaptcha_publickey'] ) ) {
-				global $mosConfig_absolute_path;
-
-				require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
+				require_once( JPATH_SITE . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
 
 				$search[]	= 'type="password" id="password2" name="password2" size="40" value="" /> *';
 				$replace[]	= 'type="password" id="password2" name="password2" size="40" value="" /> *</td></tr>'

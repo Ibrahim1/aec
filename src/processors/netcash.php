@@ -70,8 +70,6 @@ class processor_netcash extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		global $mosConfig_live_site;
-
 		$var['post_url']				= 'https://gateway.netcash.co.za/vvonline/ccnetcash.asp';
 
 		$var['m_1']                     = $this->settings['user_name'];

@@ -36,9 +36,7 @@ class mi_uddeim
 
 	function detect_application()
 	{
-		global $mosConfig_absolute_path;
-
-		return is_dir( $mosConfig_absolute_path . '/components/com_uddeim' );
+		return is_dir( JPATH_SITE . '/components/com_uddeim' );
 	}
 
 	function install()
@@ -107,13 +105,11 @@ class mi_uddeim
 
 	function hacks()
 	{
-		global $mosConfig_absolute_path;
-
 		$hacks = array();
 
 		$messagehack =	'// AEC HACK %s START' . "\n"
-		. 'global $my, $mosConfig_absolute_path;' . "\n"
-		. 'include( $mosConfig_absolute_path . \'/components/com_acctexp/micro_integration/mi_uddeim.php\');' . "\n\n"
+		. 'global $my, JPATH_SITE;' . "\n"
+		. 'include( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_uddeim.php\');' . "\n\n"
 		. '$restrictionhandler = new uddeim_restriction( $database );' . "\n"
 		. '$restrict_id = $restrictionhandler->getIDbyUserID( $my->id );' . "\n"
 		. 'if($restrictionhandler->active){'. "\n\n"
@@ -131,7 +127,7 @@ class mi_uddeim
 		$hacks[$n]['name']				=	'uddeim.php';
 		$hacks[$n]['desc']				=	_AEC_MI_HACK1_UDDEIM;
 		$hacks[$n]['type']				=	'file';
-		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_uddeim/uddeim.php';
+		$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_uddeim/uddeim.php';
 		$hacks[$n]['read']				=	'// I could have modified this function to process mails to public users but instead of adding';
 		$hacks[$n]['insert']			=	sprintf($messagehack, $n, $n) . "\n"  . $hacks[$n]['read'];
 
@@ -139,7 +135,7 @@ class mi_uddeim
 		$hacks[$n]['name']				=	'pms.uddeim.php';
 		$hacks[$n]['desc']				=	_AEC_MI_HACK2_UDDEIM;
 		$hacks[$n]['type']				=	'file';
-		$hacks[$n]['filename']			=	$mosConfig_absolute_path . '/components/com_comprofiler/plugin/user/plug_pmsuddeim/pms.uddeim.php';
+		$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_comprofiler/plugin/user/plug_pmsuddeim/pms.uddeim.php';
 		$hacks[$n]['read']				=	'$adminpath = $this->absolute_path."/administrator/components/com_uddeim";
 ';
 		$hacks[$n]['insert']			=	sprintf($messagehack, $n, $n) . "\n"  . $hacks[$n]['read'];

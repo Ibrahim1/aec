@@ -31,9 +31,7 @@ class mi_attend_events
 	{
 		$database = &JFactory::getDBO();
 
-		global $mosConfig_live_site, $mosConfig_absolute_path;
-
-		include_once( $mosConfig_absolute_path . '/components/com_attend_events/attend_events.class.php' );
+		include_once( JPATH_SITE . '/components/com_attend_events/attend_events.class.php' );
 
 		$database->setQuery("SELECT transaction_id FROM #__events_transactions WHERE ( registration_id = '" . $this->settings['registration_id'] . "' )");
 		$transaction_id = $database->loadResult();
