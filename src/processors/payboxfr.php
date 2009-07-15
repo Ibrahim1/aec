@@ -149,7 +149,7 @@ class processor_payboxfr extends POSTprocessor
 
 	function parseNotification( $post )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$response = array();
 

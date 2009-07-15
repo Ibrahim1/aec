@@ -669,7 +669,7 @@ class processor_authorize_cim extends PROFILEprocessor
 
 	function validateSubscription( $subscription_id )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$subscription = new Subscription( $database );
 		$subscription->load( $subscription_id );

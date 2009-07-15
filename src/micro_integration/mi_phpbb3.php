@@ -39,7 +39,7 @@ class mi_phpbb3
 
 	        $database =& JDatabase::getInstance($options);
         } else {
-        	global $database;
+        	$database = &JFactory::getDBO();
 
 			$prefix = 'phpbb_';
         }
@@ -134,7 +134,7 @@ class mi_phpbb3
 
 	        $database =& JDatabase::getInstance($options);
         } else {
-        	global $database;
+        	$database = &JFactory::getDBO();
 
 			$prefix = 'phpbb_';
         }
@@ -231,7 +231,7 @@ class mi_phpbb3
 
 	        $database =& JDatabase::getInstance($options);
         } else {
-        	global $database;
+        	$database = &JFactory::getDBO();
 
 			$prefix = 'phpbb_';
         }

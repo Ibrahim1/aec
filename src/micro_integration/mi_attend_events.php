@@ -29,7 +29,9 @@ class mi_attend_events
 
 	function action( $request )
 	{
-		global $database, $mosConfig_live_site, $mosConfig_absolute_path;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_live_site, $mosConfig_absolute_path;
 
 		include_once( $mosConfig_absolute_path . '/components/com_attend_events/attend_events.class.php' );
 

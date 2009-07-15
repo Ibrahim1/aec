@@ -24,7 +24,9 @@ class mi_mosets_tree extends MI
 
 	function checkInstallation()
 	{
-		global $database, $mosConfig_dbprefix;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_dbprefix;
 
 		$tables	= array();
 		$tables	= $database->getTableList();
@@ -34,7 +36,7 @@ class mi_mosets_tree extends MI
 
 	function install()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_mosetstree` ('
 		. '`id` int(11) NOT NULL auto_increment,'
@@ -68,7 +70,7 @@ class mi_mosets_tree extends MI
 
 	function expiration_action( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$mi_mosetshandler = new mosetstree( $database );
 		$id = $mi_mosetshandler->getIDbyUserID( $request->metaUser->userid );
@@ -92,7 +94,7 @@ class mi_mosets_tree extends MI
 
 	function action( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$mi_mosetshandler = new mosetstree( $database );
 		$id = $mi_mosetshandler->getIDbyUserID( $request->metaUser->userid );
@@ -226,7 +228,7 @@ class mi_mosets_tree extends MI
 
 	function profile_info( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$mi_mosetshandler = new mosetstree( $database );
 		$id = $mi_mosetshandler->getIDbyUserID( $request->metaUser->userid );
@@ -241,7 +243,7 @@ class mi_mosets_tree extends MI
 
 	function publishListings( $metaUser )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'UPDATE #__mt_links'
 				. ' SET `link_published` = \'1\''
@@ -258,7 +260,7 @@ class mi_mosets_tree extends MI
 
 	function unpublishListings( $metaUser )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'UPDATE #__mt_links'
 				. ' SET `link_published` = \'0\''
@@ -275,7 +277,7 @@ class mi_mosets_tree extends MI
 
 	function featureListings( $metaUser )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'UPDATE #__mt_links'
 				. ' SET `link_featured` = \'1\''
@@ -292,7 +294,7 @@ class mi_mosets_tree extends MI
 
 	function unfeatureListings( $metaUser )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'UPDATE #__mt_links'
 				. ' SET `link_featured` = \'0\''
@@ -309,7 +311,7 @@ class mi_mosets_tree extends MI
 
 }
 
-class mosetstree extends mosDBTable
+class mosetstree extends JTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -335,12 +337,12 @@ class mosetstree extends mosDBTable
 			include_once( $langPathMI . 'english.php' );
 		}
 
-		$this->mosDBTable( '#__acctexp_mi_mosetstree', 'id', $db );
+		parent::__construct( '#__acctexp_mi_mosetstree', 'id', $db );
 	}
 
 	function getIDbyUserID( $userid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_mi_mosetstree'

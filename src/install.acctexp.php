@@ -30,7 +30,9 @@ if ( !function_exists( 'aecJoomla15check' ) ) {
 
 function com_install()
 {
-	global $database, $mainframe, $mosConfig_absolute_path, $mosConfig_live_site, $mosConfig_dbprefix, $my;
+	$database = &JFactory::getDBO();
+
+	global $mainframe, $mosConfig_absolute_path, $mosConfig_live_site, $mosConfig_dbprefix, $my;
 
 	$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" media="all" href="' . $mainframe->getCfg( 'live_site' ) . '/administrator/components/com_acctexp/backend_style.css" />' );
 

@@ -32,7 +32,7 @@ class mi_joomlauser
 
 	function action( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		if ( $this->settings['activate'] ) {
 			$query = 'UPDATE #__users'

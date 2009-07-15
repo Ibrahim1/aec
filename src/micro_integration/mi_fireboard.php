@@ -25,7 +25,7 @@ class mi_fireboard
 
 	function Settings()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`, `title`'
 			 	. ' FROM #__fb_groups'
@@ -62,7 +62,7 @@ class mi_fireboard
 
 	function expiration_action( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		if ( $this->settings['set_group_exp'] ) {
 			$query = 'UPDATE #__fb_users'
@@ -78,7 +78,7 @@ class mi_fireboard
 
 	function action( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		if ( $this->settings['set_group'] ) {
 			// Check if exists - users only appear in FB users table normally when they have posted

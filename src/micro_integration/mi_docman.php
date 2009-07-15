@@ -24,7 +24,9 @@ class mi_docman
 
 	function checkInstallation()
 	{
-		global $database, $mosConfig_dbprefix;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_dbprefix;
 
 		$tables	= array();
 		$tables	= $database->getTableList();
@@ -41,7 +43,7 @@ class mi_docman
 
 	function install()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_docman` ('
 		. '`id` int(11) NOT NULL auto_increment,'
@@ -61,7 +63,7 @@ class mi_docman
 
 	function Settings()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
         $settings = array();
 		$settings['add_downloads']	= array( 'inputA' );
@@ -125,7 +127,7 @@ class mi_docman
 
 	function profile_info( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 		$mi_docmanhandler = new docman_restriction( $database );
 		$id = $mi_docmanhandler->getIDbyUserID( $request->metaUser->userid );
 
@@ -185,7 +187,7 @@ class mi_docman
 
 	function expiration_action( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
  		if ( $this->settings['delete_on_exp']=="Set" ) {
 			$this->DeleteUserFromGroup( $request->metaUser->userid, $this->settings['group'] );
@@ -225,7 +227,7 @@ class mi_docman
 
 	function action( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		if ( $this->settings['set_group'] && !empty( $this->settings['group'] ) ) {
 			foreach ( $this->settings['group'] as $group ) {
@@ -260,7 +262,7 @@ class mi_docman
 
 	function GetUserGroups( $userid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `groups_id`'
 				. ' FROM #__docman_groups'
@@ -287,7 +289,7 @@ class mi_docman
 
 	function AddUserToGroup( $userid, $groupid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$this->DeleteUserFromGroup( $userid, $groupid );
 
@@ -321,7 +323,7 @@ class mi_docman
 
 	function DeleteUserFromGroup( $userid, $groupid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `groups_members`'
 			. ' FROM #__docman_groups'
@@ -357,7 +359,7 @@ class mi_docman
 	}
 }
 
-class docman_restriction extends mosDBTable {
+class docman_restriction extends JTable {
 	/** @var int Primary key */
 	var $id						= null;
 	/** @var int */
@@ -374,7 +376,7 @@ class docman_restriction extends mosDBTable {
 	var $params					= null;
 
 	function getIDbyUserID( $userid ) {
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 			. ' FROM #__acctexp_mi_docman'
@@ -385,7 +387,7 @@ class docman_restriction extends mosDBTable {
 	}
 
 	function docman_restriction( &$db ) {
-		$this->mosDBTable( '#__acctexp_mi_docman', 'id', $db );
+		$this->JTable( '#__acctexp_mi_docman', 'id', $db );
 	}
 
 	function is_active()

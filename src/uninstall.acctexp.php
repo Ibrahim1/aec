@@ -17,7 +17,9 @@ require_once( $mainframe->getPath( 'class', "com_acctexp" ) );
 
 function com_uninstall()
 {
-	global $database, $my;
+	$database = &JFactory::getDBO();
+
+	global $my;
 
 	$short = "AEC uninstall";
 	$event = "AEC has been removed";

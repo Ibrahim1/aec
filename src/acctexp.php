@@ -361,7 +361,9 @@ function hold( $option, $userid )
 
 function expired( $option, $userid, $expiration )
 {
-	global $database, $mainframe, $aecConfig;
+	$database = &JFactory::getDBO();
+
+		global $mainframe, $aecConfig;
 
 	if ( $userid > 0 ) {
 		$metaUser = new metaUser( $userid );
@@ -409,7 +411,9 @@ function expired( $option, $userid, $expiration )
 
 function pending( $option, $userid )
 {
-	global $database, $mainframe;
+	$database = &JFactory::getDBO();
+
+		global $mainframe;
 
 	$reason = "";
 
@@ -451,7 +455,9 @@ function pending( $option, $userid )
 
 function subscribe( $option )
 {
-	global $my, $database, $mosConfig_uniquemail, $aecConfig;
+	$database = &JFactory::getDBO();
+
+	global $my, $mosConfig_uniquemail, $aecConfig;
 
 	$task		= aecGetParam( 'task', 0, true, array( 'word', 'string' ) );
 	$intro		= aecGetParam( 'intro', 0, true, array( 'word', 'int' ) );
@@ -586,7 +592,9 @@ function subscribe( $option )
 
 function checkDuplicateUsernameEmail( $username, $email )
 {
-	global $database, $mosConfig_uniquemail;
+	$database = &JFactory::getDBO();
+
+		global $mosConfig_uniquemail;
 
 	$query = 'SELECT `id`'
 			. ' FROM #__users'
@@ -655,7 +663,9 @@ function confirmSubscription( $option )
 
 function subscriptionDetails( $option, $sub='' )
 {
-	global $database, $my, $mainframe, $aecConfig;
+	$database = &JFactory::getDBO();
+
+		global $my, $mainframe, $aecConfig;
 
 	if ( !$my->id ) {
 		notAllowed( $option );
@@ -1003,7 +1013,9 @@ function subscriptionDetails( $option, $sub='' )
 
 function internalCheckout( $option, $invoice_number, $userid )
 {
-	global $database, $my;
+	$database = &JFactory::getDBO();
+
+		global $my;
 
 	// Always rewrite to session userid
 	if ( !empty( $my->id ) ) {
@@ -1025,7 +1037,9 @@ function internalCheckout( $option, $invoice_number, $userid )
 
 function repeatInvoice( $option, $invoice_number, $userid, $first=0 )
 {
-	global $database, $my;
+	$database = &JFactory::getDBO();
+
+		global $my;
 
 	// Always rewrite to session userid
 	if ( !empty( $my->id ) ) {
@@ -1054,7 +1068,9 @@ function repeatInvoice( $option, $invoice_number, $userid, $first=0 )
 
 function cancelInvoice( $option, $invoice_number, $pending=0, $userid )
 {
-	global $database, $my;
+	$database = &JFactory::getDBO();
+
+		global $my;
 
 	if ( empty($my->id ) ) {
 		if ( $userid ) {
@@ -1117,7 +1133,9 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid )
 
 function planaction( $option, $action, $subscr )
 {
-	global $database, $my;
+	$database = &JFactory::getDBO();
+
+		global $my;
 
 	// Always rewrite to session userid
 	if ( !empty( $my->id ) ) {
@@ -1147,7 +1165,7 @@ function invoiceaction( $option, $action, $invoice )
 
 function InvoiceAddParams( $option )
 {
-	global $database;
+	$database = &JFactory::getDBO();
 
 	$invoice = aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 
@@ -1162,7 +1180,7 @@ function InvoiceAddParams( $option )
 
 function InvoiceMakeGift( $option )
 {
-	global $database;
+	$database = &JFactory::getDBO();
 
 	$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$user_ident	= aecGetParam( 'user_ident', 0, true, array( 'string', 'clear_nonemail' ) );
@@ -1179,7 +1197,7 @@ function InvoiceMakeGift( $option )
 
 function InvoiceRemoveGift( $option )
 {
-	global $database;
+	$database = &JFactory::getDBO();
 
 	$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 
@@ -1195,7 +1213,7 @@ function InvoiceRemoveGift( $option )
 
 function InvoiceRemoveGiftConfirm( $option )
 {
-	global $database;
+	$database = &JFactory::getDBO();
 
 	$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
@@ -1217,7 +1235,7 @@ function InvoiceRemoveGiftConfirm( $option )
 
 function InvoiceRemoveGiftCart( $option )
 {
-	global $database;
+	$database = &JFactory::getDBO();
 
 	$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
@@ -1235,7 +1253,7 @@ function InvoiceRemoveGiftCart( $option )
 
 function InvoiceAddCoupon( $option )
 {
-	global $database;
+	$database = &JFactory::getDBO();
 
 	$invoice		= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$coupon_code	= aecGetParam( 'coupon_code', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
@@ -1250,7 +1268,7 @@ function InvoiceAddCoupon( $option )
 
 function InvoiceRemoveCoupon( $option )
 {
-	global $database;
+	$database = &JFactory::getDBO();
 
 	$invoice		= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$coupon_code	= aecGetParam( 'coupon_code', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
@@ -1265,7 +1283,9 @@ function InvoiceRemoveCoupon( $option )
 
 function notAllowed( $option )
 {
-	global $database, $mainframe, $aecConfig, $my;
+	$database = &JFactory::getDBO();
+
+		global $mainframe, $aecConfig, $my;
 
 	if ( ( $aecConfig->cfg['customnotallowed'] != '' ) && !is_null( $aecConfig->cfg['customnotallowed'] ) ) {
 		mosRedirect( $aecConfig->cfg['customnotallowed'] );
@@ -1320,7 +1340,9 @@ function notAllowed( $option )
 
 function backSubscription( $option )
 {
-	global $mainframe, $database, $my, $acl;
+	$database = &JFactory::getDBO();
+
+	global $mainframe, $my, $acl;
 
 	// Rebuild array
 	foreach ( $_POST as $key => $value ) {
@@ -1352,7 +1374,7 @@ function backSubscription( $option )
 
 function processNotification( $option, $processor )
 {
-	global $database;
+	$database = &JFactory::getDBO();
 
 	// Legacy naming support
 	switch ( $processor ) {
@@ -1381,7 +1403,7 @@ function processNotification( $option, $processor )
 		$pp->init();
 		$response = array_merge( $response, $pp->parseNotification( $_POST ) );
 	} else {
-		global $database;
+		$database = &JFactory::getDBO();
 		$short	= 'processor loading failure';
 		$event	= 'When receiving payment notification, tried to load processor: ' . $processor;
 		$tags	= 'processor,loading,error';
@@ -1423,7 +1445,9 @@ function errorAP( $option, $usage, $userid, $username, $name, $recurring )
 
 function cancelPayment( $option )
 {
-	global $database, $aecConfig, $mainframe;
+	$database = &JFactory::getDBO();
+
+	global $aecConfig, $mainframe;
 
 	$userid = aecGetParam( 'itemnumber', true, array( 'word', 'int' ) );
 	// The user cancel the payment operation

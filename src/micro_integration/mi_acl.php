@@ -108,7 +108,9 @@ class mi_acl
 
 	function instantGIDchange( $metaUser, $section )
 	{
-		global $database, $acl;
+		$database = &JFactory::getDBO();
+
+	global $acl;
 
 		$metaUser->instantGIDchange( $this->settings[$section], $this->settings['change_session'] );
 
@@ -178,7 +180,9 @@ class mi_acl
 
 	function jaclplusGIDchange( $metaUser, $section )
 	{
-		global $database, $acl;
+		$database = &JFactory::getDBO();
+
+		global $acl;
 
 		if ( $this->settings['delete_subgroups'] ) {
 			// Delete sub entries

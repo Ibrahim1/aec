@@ -16,7 +16,9 @@ class mi_hotproperty extends MI
 
 	function checkInstallation()
 	{
-		global $database, $mosConfig_dbprefix;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_dbprefix;
 
 		$tables	= array();
 		$tables	= $database->getTableList();
@@ -26,7 +28,7 @@ class mi_hotproperty extends MI
 
 	function install()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_hotproperty` ('
 		. '`id` int(11) NOT NULL auto_increment,'
@@ -47,7 +49,7 @@ class mi_hotproperty extends MI
 
 	function Settings()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
         $settings = array();
 		$settings['create_agent']	= array( 'list_yesno' );
@@ -103,7 +105,7 @@ class mi_hotproperty extends MI
 
 	function getMIform()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$settings = array();
 
@@ -376,7 +378,7 @@ class mi_hotproperty extends MI
 
 	function profile_info( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$mi_hphandler = new aec_hotproperty( $database );
 		$id = $mi_hphandler->getIDbyUserID( $request->metaUser->userid );
@@ -459,7 +461,7 @@ class mi_hotproperty extends MI
 		}
 
 		if ( !empty( $this->settings['set_listings'.$area] ) || !empty( $this->settings['set_listings'.$area] ) || ( !empty( $this->settings['add_list_userchoice'] ) && !empty( $request->params['hpamt']  ) )  ) {
-			global $database;
+			$database = &JFactory::getDBO();
 
 			$mi_hphandler = new aec_hotproperty( $database );
 			$id = $mi_hphandler->getIDbyUserID( $request->metaUser->userid );
@@ -495,7 +497,7 @@ class mi_hotproperty extends MI
 
 	function agentExists( $userid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT id FROM #__hp_agents'
 				. ' WHERE user = \'' . $userid . '\''
@@ -512,7 +514,7 @@ class mi_hotproperty extends MI
 
 	function createAgent( $fields, $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$check = $this->agentExists( $request->metaUser->userid );
 
@@ -556,7 +558,7 @@ class mi_hotproperty extends MI
 
 	function companyExists( $userid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT company FROM #__hp_agents'
 				. ' WHERE user = \'' . $userid . '\''
@@ -573,7 +575,7 @@ class mi_hotproperty extends MI
 
 	function createCompany( $fields, $assoc, $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$check = $this->companyExists( $request->metaUser->userid );
 		if ( !empty( $check ) ) {
@@ -632,7 +634,7 @@ class mi_hotproperty extends MI
 
 	function update( $table, $id, $fields, $request, $sid=false )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$fields = AECToolbox::rewriteEngineRQ( $fields, $request );
 
@@ -663,7 +665,7 @@ class mi_hotproperty extends MI
 
 	function publishProperties( $agentid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'UPDATE #__hp_properties'
 				. ' SET `published` = \'1\''
@@ -680,7 +682,7 @@ class mi_hotproperty extends MI
 
 	function unpublishProperties( $agentid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'UPDATE #__hp_properties'
 				. ' SET `published` = \'0\''
@@ -725,12 +727,12 @@ class aec_hotproperty extends serialParamDBTable
 			include_once( $langPathMI . 'english.php' );
 		}
 
-		$this->mosDBTable( '#__acctexp_mi_hotproperty', 'id', $db );
+		$this->JTable( '#__acctexp_mi_hotproperty', 'id', $db );
 	}
 
 	function getIDbyUserID( $userid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_mi_hotproperty'
@@ -748,7 +750,7 @@ class aec_hotproperty extends serialParamDBTable
 
 	function getIDbyLinkID( $linkid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `agent`'
 				. ' FROM #__hp_properties'

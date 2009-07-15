@@ -11,7 +11,7 @@
 // no direct access
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Restricted access' );
 
-global $aecConfig, $database, $mosConfig_absolute_path;
+global $aecConfig, $mosConfig_absolute_path;
 
 require_once( $mainframe->getPath( 'class' ) );
 require_once( $mainframe->getPath( 'admin_html' ) );
@@ -62,6 +62,8 @@ if ( !is_null( $id ) ) {
 		$id[0] = $savid;
 	}
 }
+
+$database = &JFactory::getDBO();
 
 // Auto Heartbeat renew every one hour to make sure that the admin gets a view as recent as possible
 $heartbeat = new aecHeartbeat( $database );
@@ -243,7 +245,7 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'copysubscriptionplan':
-			global $database;
+			$database = &JFactory::getDBO();
 
 			if ( is_array( $id ) ) {
 				foreach ( $id as $pid ) {
@@ -296,7 +298,7 @@ switch( strtolower( $task ) ) {
 		break;
 
 		case 'orderplanup':
-			global $database;
+			$database = &JFactory::getDBO();
 			$row = new SubscriptionPlan( $database );
 			$row->load( $id[0] );
 			$row->move( -1 );
@@ -304,7 +306,7 @@ switch( strtolower( $task ) ) {
 				break;
 
 		case 'orderplandown':
-			global $database;
+			$database = &JFactory::getDBO();
 			$row = new SubscriptionPlan( $database );
 			$row->load( $id[0] );
 			$row->move( 1 );
@@ -324,7 +326,7 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'copyitemgroup':
-			global $database;
+			$database = &JFactory::getDBO();
 
 			if ( is_array( $id ) ) {
 				foreach ( $id as $pid ) {
@@ -377,7 +379,7 @@ switch( strtolower( $task ) ) {
 		break;
 
 		case 'ordergroupup':
-			global $database;
+			$database = &JFactory::getDBO();
 			$row = new ItemGroup( $database );
 			$row->load( $id[0] );
 			$row->move( -1 );
@@ -385,7 +387,7 @@ switch( strtolower( $task ) ) {
 				break;
 
 		case 'ordergroupdown':
-			global $database;
+			$database = &JFactory::getDBO();
 			$row = new ItemGroup( $database );
 			$row->load( $id[0] );
 			$row->move( 1 );
@@ -413,7 +415,7 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'copymicrointegration':
-			global $database;
+			$database = &JFactory::getDBO();
 
 			if ( is_array( $id ) ) {
 				foreach ( $id as $pid ) {
@@ -445,7 +447,7 @@ switch( strtolower( $task ) ) {
 		break;
 
 		case 'ordermiup':
-			global $database;
+			$database = &JFactory::getDBO();
 			$row = new microIntegration( $database );
 			$row->load( $id[0] );
 			$row->move( -1 );
@@ -453,7 +455,7 @@ switch( strtolower( $task ) ) {
 				break;
 
 		case 'ordermidown':
-			global $database;
+			$database = &JFactory::getDBO();
 			$row = new microIntegration( $database );
 			$row->load( $id[0] );
 			$row->move( 1 );
@@ -465,7 +467,7 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'copycoupon':
-			global $database;
+			$database = &JFactory::getDBO();
 
 			if ( is_array( $id ) ) {
 				foreach ( $id as $pid ) {
@@ -518,7 +520,7 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'copycouponstatic':
-			global $database;
+			$database = &JFactory::getDBO();
 
 			if ( is_array( $id ) ) {
 				foreach ( $id as $pid ) {
@@ -567,7 +569,7 @@ switch( strtolower( $task ) ) {
 		break;
 
 		case 'ordercouponup':
-			global $database;
+			$database = &JFactory::getDBO();
 			$row = new coupon( $database, 0 );
 			$row->load( $id[0] );
 			$row->move( -1 );
@@ -575,7 +577,7 @@ switch( strtolower( $task ) ) {
 				break;
 
 		case 'ordercoupondown':
-			global $database;
+			$database = &JFactory::getDBO();
 			$row = new coupon( $database, 0 );
 			$row->load( $id[0] );
 			$row->move( 1 );
@@ -583,7 +585,7 @@ switch( strtolower( $task ) ) {
 				break;
 
 		case 'ordercouponstaticup':
-			global $database;
+			$database = &JFactory::getDBO();
 			$row = new coupon( $database, 1 );
 			$row->load( $id[0] );
 			$row->move( -1 );
@@ -591,7 +593,7 @@ switch( strtolower( $task ) ) {
 				break;
 
 		case 'ordercouponstaticdown':
-			global $database;
+			$database = &JFactory::getDBO();
 			$row = new coupon( $database, 1 );
 			$row->load( $id[0] );
 			$row->move( 1 );
@@ -689,7 +691,7 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'readnotice':
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'UPDATE #__acctexp_eventlog'
 				. ' SET `notify` = \'0\''
@@ -702,7 +704,7 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'readallnotices':
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'UPDATE #__acctexp_eventlog'
 				. ' SET `notify` = \'0\''
@@ -731,7 +733,9 @@ switch( strtolower( $task ) ) {
 */
 function aecCentral( $option, $searchresult=null )
 {
-	global $database, $mainframe, $mosConfig_list_limit;
+	$database = &JFactory::getDBO();
+
+	global $mainframe, $mosConfig_list_limit;
 
 	$query = 'SELECT *'
 			. ' FROM #__acctexp_eventlog'
@@ -750,7 +754,9 @@ function aecCentral( $option, $searchresult=null )
 */
 function cancel( $option )
 {
-	global $database, $mainframe, $mosConfig_list_limit;
+	$database = &JFactory::getDBO();
+
+	global $mainframe, $mosConfig_list_limit;
 
  	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
 	$limitstart = $mainframe->getUserStateFromRequest( "viewnotconf{$option}limitstart", 'limitstart', 0 );
@@ -761,7 +767,9 @@ function cancel( $option )
 
 function help( $option )
 {
-	global $database, $mainframe, $mosConfig_live_site, $aecConfig;
+	$database = &JFactory::getDBO();
+
+	global $mainframe, $mosConfig_live_site, $aecConfig;
 
 	// diagnostic is the overall array that stores relational data that either gets transferred directly into the
 	// diagnose array or that is used in the process of that
@@ -944,7 +952,9 @@ function help( $option )
 
 function editUser(  $option, $userid, $subscriptionid, $task )
 {
-	global $database, $mainframe;
+	$database = &JFactory::getDBO();
+
+	global $mainframe;
 
 	if ( !empty( $subscriptionid[0] ) ) {
 		$sid = $subscriptionid[0];
@@ -1154,7 +1164,9 @@ function editUser(  $option, $userid, $subscriptionid, $task )
 
 function saveUser( $option, $apply=0 )
 {
-	global $database, $mainframe, $mosConfig_list_limit;
+	$database = &JFactory::getDBO();
+
+	global $mainframe, $mosConfig_list_limit;
 
 	$metaUser = new metaUser( $_POST['userid'] );
 	$established = false;
@@ -1283,7 +1295,9 @@ function saveUser( $option, $apply=0 )
 
 function removeUser( $userid, $option )
 {
-	global $database, $my, $acl;
+	$database = &JFactory::getDBO();
+
+	global $my, $acl;
 
 	// $userid contains values corresponding to id field of #__acctexp table
 		if ( !is_array( $userid ) || count( $userid ) < 1 ) {
@@ -1338,7 +1352,9 @@ function removeUser( $userid, $option )
 
 function removeClosedSubscription( $userid, $option )
 {
-	global $database, $my, $acl, $mosConfig_dbprefix;
+	$database = &JFactory::getDBO();
+
+	global $my, $acl, $mosConfig_dbprefix;
 
 	// $userid contains values corresponding to id field of #__acctexp table
 		if ( !is_array( $userid ) || count( $userid ) < 1 ) {
@@ -1412,12 +1428,16 @@ function removeClosedSubscription( $userid, $option )
 
 function activateClosedSubscription( $userid, $option )
 {
-	global $database, $my, $acl, $mosConfig_dbprefix;
+	$database = &JFactory::getDBO();
+
+	global $my, $acl, $mosConfig_dbprefix;
 }
 
 function removePendingSubscription( $userid, $option )
 {
-	global $database, $my, $acl, $mosConfig_dbprefix;
+	$database = &JFactory::getDBO();
+
+	global $my, $acl, $mosConfig_dbprefix;
 
 	// $userid contains values corresponding to id field of #__acctexp table
 		if ( !is_array( $userid ) || count( $userid ) < 1 ) {
@@ -1490,7 +1510,7 @@ function removePendingSubscription( $userid, $option )
 
 function activatePendingSubscription( $userid, $option, $renew )
 {
-	global $database;
+	$database = &JFactory::getDBO();
 
 		if (!is_array( $userid ) || count( $userid ) < 1) {
 			echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
@@ -1538,7 +1558,9 @@ function activatePendingSubscription( $userid, $option, $renew )
 
 function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array() )
 {
-	global $database, $mainframe, $mosConfig_list_limit;
+	$database = &JFactory::getDBO();
+
+	global $mainframe, $mosConfig_list_limit;
 
 	$limit			= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
 	$limitstart		= $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
@@ -1963,7 +1985,9 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 function editSettings( $option )
 {
-	global $database, $acl, $my, $aecConfig, $mosConfig_live_site;
+	$database = &JFactory::getDBO();
+
+	global $acl, $my, $aecConfig, $mosConfig_live_site;
 
 	// See whether we have a duplication
 	if ( $aecConfig->RowDuplicationCheck() ) {
@@ -2276,7 +2300,9 @@ function cancelSettings( $option )
 
 function saveSettings( $option, $return=0 )
 {
-	global $database, $mainframe, $my, $acl, $aecConfig;
+	$database = &JFactory::getDBO();
+
+	global $mainframe, $my, $acl, $aecConfig;
 
 	unset( $_POST['id'] );
 	unset( $_POST['task'] );
@@ -2348,7 +2374,9 @@ function saveSettings( $option, $return=0 )
 
 function listProcessors( $option )
 {
- 	global $database, $mainframe, $mosConfig_list_limit;
+ 	$database = &JFactory::getDBO();
+
+	global $mainframe, $mosConfig_list_limit;
 
  	$limit = $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
 	$limitstart = $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
@@ -2391,7 +2419,9 @@ function listProcessors( $option )
 
 function editProcessor( $id, $option )
 {
-	global $database, $acl, $my, $aecConfig, $mosConfig_live_site;
+	$database = &JFactory::getDBO();
+
+	global $acl, $my, $aecConfig, $mosConfig_live_site;
 
 	if ( $id ) {
 		$pp = new PaymentProcessor();
@@ -2587,7 +2617,9 @@ function cancelProcessor( $option )
 
 function changeProcessor( $cid=null, $state=0, $type, $option )
 {
-	global $database, $mosConfig_live_site;
+	$database = &JFactory::getDBO();
+
+	global $mosConfig_live_site;
 
 	if ( count( $cid ) < 1 ) {
 		echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
@@ -2621,7 +2653,9 @@ function changeProcessor( $cid=null, $state=0, $type, $option )
 
 function saveProcessor( $option, $return=0 )
 {
-	global $database, $mainframe, $my, $acl, $aecConfig;
+	$database = &JFactory::getDBO();
+
+	global $mainframe, $my, $acl, $aecConfig;
 
 	$pp = new PaymentProcessor();
 
@@ -2704,7 +2738,9 @@ function saveProcessor( $option, $return=0 )
 
 function listSubscriptionPlans( $option )
 {
- 	global $database, $mainframe, $mosConfig_list_limit;
+ 	$database = &JFactory::getDBO();
+
+	global $mainframe, $mosConfig_list_limit;
 
  	$limit			= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
 	$limitstart		= $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
@@ -2813,7 +2849,9 @@ function listSubscriptionPlans( $option )
 
 function editSubscriptionPlan( $id, $option )
 {
-	global $database, $my, $acl;
+	$database = &JFactory::getDBO();
+
+	global $my, $acl;
 
 	$lists = array();
 	$params_values = array();
@@ -3400,7 +3438,9 @@ function editSubscriptionPlan( $id, $option )
 
 function saveSubscriptionPlan( $option, $apply=0 )
 {
-	global $database, $mosConfig_live_site;
+	$database = &JFactory::getDBO();
+
+	global $mosConfig_live_site;
 
 	$row = new SubscriptionPlan( $database );
 	$row->load( $_POST['id'] );
@@ -3435,7 +3475,9 @@ function saveSubscriptionPlan( $option, $apply=0 )
 
 function removeSubscriptionPlan( $id, $option )
 {
-	global $database, $mosConfig_live_site;
+	$database = &JFactory::getDBO();
+
+	global $mosConfig_live_site;
 
 	$ids = implode( ',', $id );
 
@@ -3491,7 +3533,9 @@ function cancelSubscriptionPlan( $option )
 
 function changeSubscriptionPlan( $cid=null, $state=0, $type, $option )
 {
-	global $database, $mosConfig_live_site;
+	$database = &JFactory::getDBO();
+
+	global $mosConfig_live_site;
 
 	if ( count( $cid ) < 1 ) {
 		echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
@@ -3525,7 +3569,9 @@ function changeSubscriptionPlan( $cid=null, $state=0, $type, $option )
 
 function listItemGroups( $option )
 {
- 	global $database, $mainframe, $mosConfig_list_limit;
+ 	$database = &JFactory::getDBO();
+
+	global $mainframe, $mosConfig_list_limit;
 
  	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
 	$limitstart = $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
@@ -3608,7 +3654,7 @@ function listItemGroups( $option )
 
 function editItemGroup( $id, $option )
 {
-	global $database;
+	$database = &JFactory::getDBO();
 
 	$lists = array();
 	$params_values = array();
@@ -3756,7 +3802,9 @@ function editItemGroup( $id, $option )
 
 function saveItemGroup( $option, $apply=0 )
 {
-	global $database, $mosConfig_live_site;
+	$database = &JFactory::getDBO();
+
+	global $mosConfig_live_site;
 
 	$row = new ItemGroup( $database );
 	$row->load( $_POST['id'] );
@@ -3791,7 +3839,9 @@ function saveItemGroup( $option, $apply=0 )
 
 function removeItemGroup( $id, $option )
 {
-	global $database, $mosConfig_live_site;
+	$database = &JFactory::getDBO();
+
+	global $mosConfig_live_site;
 
 	$ids = implode( ',', $id );
 
@@ -3839,7 +3889,9 @@ function cancelItemGroup( $option )
 
 function changeItemGroup( $cid=null, $state=0, $type, $option )
 {
-	global $database, $mosConfig_live_site;
+	$database = &JFactory::getDBO();
+
+	global $mosConfig_live_site;
 
 	if ( count( $cid ) < 1 ) {
 		echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
@@ -3873,7 +3925,9 @@ function changeItemGroup( $cid=null, $state=0, $type, $option )
 
 function listMicroIntegrations( $option )
 {
-	global $database, $mainframe, $mosConfig_list_limit;
+	$database = &JFactory::getDBO();
+
+	global $mainframe, $mosConfig_list_limit;
 
 	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
 	$limitstart	= $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
@@ -3970,7 +4024,9 @@ function listMicroIntegrations( $option )
 
 function editMicroIntegration ( $id, $option )
 {
-	global $database, $my, $acl, $aecConfig;
+	$database = &JFactory::getDBO();
+
+	global $my, $acl, $aecConfig;
 
 	$lists	= array();
 	$mi		= new microIntegration( $database );
@@ -4068,7 +4124,9 @@ function editMicroIntegration ( $id, $option )
 
 function saveMicroIntegration( $option, $apply=0 )
 {
-	global $database, $mosConfig_live_site;
+	$database = &JFactory::getDBO();
+
+	global $mosConfig_live_site;
 
 	unset( $_POST['option'] );
 	unset( $_POST['task'] );
@@ -4118,7 +4176,9 @@ function saveMicroIntegration( $option, $apply=0 )
 
 function removeMicroIntegration( $id, $option )
 {
-	global $database, $mosConfig_live_site;
+	$database = &JFactory::getDBO();
+
+	global $mosConfig_live_site;
 
 	$ids = implode( ',', $id );
 
@@ -4173,7 +4233,9 @@ function cancelMicroIntegration( $option )
 
 function changeMicroIntegration( $cid=null, $state=0, $option )
 {
-	global $database, $mosConfig_live_site;
+	$database = &JFactory::getDBO();
+
+	global $mosConfig_live_site;
 
 	if ( count( $cid ) < 1 ) {
 		$action = $state == 1 ? _AEC_CMN_TOPUBLISH: _AEC_CMN_TOUNPUBLISH;
@@ -4205,7 +4267,9 @@ function changeMicroIntegration( $cid=null, $state=0, $option )
 
 function listCoupons( $option, $type )
 {
- 	global $database, $mainframe, $mosConfig_list_limit;
+ 	$database = &JFactory::getDBO();
+
+	global $mainframe, $mosConfig_list_limit;
 
  	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
 	$limitstart = $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
@@ -4251,7 +4315,9 @@ function listCoupons( $option, $type )
 
 function editCoupon( $id, $option, $new, $type )
 {
-	global $database, $my, $acl, $mosConfig_offset;
+	$database = &JFactory::getDBO();
+
+	global $my, $acl, $mosConfig_offset;
 
 	$lists					= array();
 	$params_values			= array();
@@ -4517,7 +4583,9 @@ function editCoupon( $id, $option, $new, $type )
 
 function saveCoupon( $option, $type, $apply=0 )
 {
-	global $database, $mosConfig_live_site;
+	$database = &JFactory::getDBO();
+
+	global $mosConfig_live_site;
 
 	$new = 0;
 	$type = $_POST['type'];
@@ -4594,7 +4662,9 @@ function saveCoupon( $option, $type, $apply=0 )
 
 function removeCoupon( $id, $option, $returnTask, $type )
 {
-	global $database, $mosConfig_live_site;
+	$database = &JFactory::getDBO();
+
+	global $mosConfig_live_site;
 
 	$ids = implode( ',', $id );
 
@@ -4624,7 +4694,9 @@ function cancelCoupon( $option, $type )
 
 function changeCoupon( $cid=null, $state=0, $option, $type )
 {
-	global $database, $mosConfig_live_site;
+	$database = &JFactory::getDBO();
+
+	global $mosConfig_live_site;
 
 	if ( count( $cid ) < 1 ) {
 		$action = $state == 1 ? _AEC_CMN_TOPUBLISH : _AEC_CMN_TOUNPUBLISH;
@@ -4711,7 +4783,9 @@ function cancelCSS ( $option )
 
 function invoices( $option )
 {
-	global $database, $mainframe, $mosConfig_list_limit, $aecConfig;
+	$database = &JFactory::getDBO();
+
+	global $mainframe, $mosConfig_list_limit, $aecConfig;
 
 	$limit 		= intval( $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit ) );
 	$limitstart = intval( $mainframe->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
@@ -4768,12 +4842,12 @@ function invoices( $option )
 
 function clearInvoice( $option, $invoice_number, $applyplan, $task )
 {
-	global $database;
+	$database = &JFactory::getDBO();
 
 	$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, 0, true );
 
 	if ( $invoiceid ) {
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$objInvoice = new Invoice( $database );
 		$objInvoice->load( $invoiceid );
@@ -4796,7 +4870,7 @@ function clearInvoice( $option, $invoice_number, $applyplan, $task )
 
 function cancelInvoice( $option, $invoice_number, $task )
 {
-	global $database;
+	$database = &JFactory::getDBO();
 
 	$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, 0, true );
 
@@ -4819,7 +4893,9 @@ function cancelInvoice( $option, $invoice_number, $task )
 
 function history( $option )
 {
-	global $database, $mainframe, $mosConfig_list_limit;
+	$database = &JFactory::getDBO();
+
+	global $mainframe, $mosConfig_list_limit;
 
 	$limit 		= intval( $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit ) );
 	$limitstart = intval( $mainframe->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
@@ -4862,7 +4938,9 @@ function history( $option )
 
 function eventlog( $option )
 {
-	global $database, $mainframe, $mosConfig_list_limit;
+	$database = &JFactory::getDBO();
+
+	global $mainframe, $mosConfig_list_limit;
 
 	$limit 		= intval( $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit ) );
 	$limitstart = intval( $mainframe->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
@@ -4934,7 +5012,7 @@ function eventlog( $option )
 
 function migrate( $option )
 {
-	global $database;
+	$database = &JFactory::getDBO();
 
 	$query = 'SELECT `userid`'
 			. ' FROM #__acctexp_subscr'
@@ -5027,7 +5105,9 @@ foreach ( $rows as $userid ){
 
 function quicklookup( $option )
 {
-	global $database, $mosConfig_live_site;
+	$database = &JFactory::getDBO();
+
+	global $mosConfig_live_site;
 
 	$searcc	= trim( aecGetParam( 'search', 0 ) );
 	$search = $database->getEscaped( strtolower( $searcc ) );
@@ -5180,8 +5260,9 @@ function obsafe_print_r($var, $return = false, $html = false, $level = 0) {
 
 function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=false )
 {
-	global $mosConfig_absolute_path, $mosConfig_live_site, $database;
-	global $mosConfig_debug;
+	$database = &JFactory::getDBO();
+
+	global $mosConfig_absolute_path, $mosConfig_live_site, $mosConfig_debug;
 
 	if ( !defined( '_AEC_LANG_INCLUDED_MI' ) ) {
 		global $mainframe;
@@ -5983,7 +6064,9 @@ function backupFile( $file, $file_new )
 
 function readout( $option )
 {
-	global $database, $aecConfig;
+	$database = &JFactory::getDBO();
+
+	global $aecConfig;
 
 	$optionlist = array(
 							'show_settings' => 0,
@@ -6118,7 +6201,7 @@ function importData()
 
 function exportData( $option, $cmd=null )
 {
-	global $database;
+	$database = &JFactory::getDBO();
 
 	$cmd_save = ( strcmp( 'save', $cmd ) === 0 );
 	$cmd_apply = ( strcmp( 'apply', $cmd ) === 0 );

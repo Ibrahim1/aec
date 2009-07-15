@@ -36,7 +36,9 @@ class mi_shareasale
 
 	function action( $request )
 	{
-		global $database, $mosConfig_live_site;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_live_site;
 
 		$rooturl = "https://shareasale.com/q.cfm";
 

@@ -23,7 +23,7 @@ class mi_apc
 
 	function Settings()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT groupid, title, description'
 	 	. ' FROM #__comprofiler_accesscontrol_groups'
@@ -54,7 +54,7 @@ class mi_apc
 
 	function expiration_action( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		if ( $this->settings['set_group_exp'] ) {
 			return $this->setGroupId( $request->metaUser->userid, $this->settings['group_exp'], $this->settings['set_default_exp'] );
@@ -70,7 +70,7 @@ class mi_apc
 
 	function setGroupId( $userid, $groupid, $default = false )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		if ( $default ) {
 			$query = 'SELECT title'

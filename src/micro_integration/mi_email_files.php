@@ -48,7 +48,7 @@ class mi_email_files
 
 	function getMIform()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$settings = array();
 
@@ -77,7 +77,7 @@ class mi_email_files
 
 	function verifyMIform( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$return = array();
 

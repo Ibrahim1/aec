@@ -18,211 +18,211 @@ class ComponentMenu
 	*/
 	function NEW_MENU()
 	{  // To be deleted?
-		mosMenuBar::startTable();
-		mosMenuBar::custom( 'save', 'save.png',  'save_f2.png', _SAVE, false );
-		mosMenuBar::custom( 'cancel', 'cancel.png',  'cancel_f2.png', _CANCEL, false );
-		mosMenuBar::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
-		mosMenuBar::endTable();
+		JToolBarHelper::startTable();
+		JToolBarHelper::custom( 'save', 'save.png',  'save_f2.png', _SAVE, false );
+		JToolBarHelper::custom( 'cancel', 'cancel.png',  'cancel_f2.png', _CANCEL, false );
+		JToolBarHelper::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
+		JToolBarHelper::endTable();
 	}
 
 	function NEW_EXPIRATION()
 	{
-		mosMenuBar::startTable();
-		mosMenuBar::custom( 'add', 'edit.png',  'edit_f2.png', _CONFIGURE );
-		mosMenuBar::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
-		mosMenuBar::endTable();
+		JToolBarHelper::startTable();
+		JToolBarHelper::custom( 'add', 'edit.png',  'edit_f2.png', _CONFIGURE );
+		JToolBarHelper::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
+		JToolBarHelper::endTable();
 	}
 
 	function EDIT_EXPIRATION()
 	{
-		mosMenuBar::startTable();
-		mosMenuBar::custom( 'edit', 'edit.png',  'edit_f2.png', _CONFIGURE );
-		mosMenuBar::custom( 'expire', 'restore.png',  'restore_f2.png', _REMOVE );
-		mosMenuBar::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
-		mosMenuBar::endTable();
+		JToolBarHelper::startTable();
+		JToolBarHelper::custom( 'edit', 'edit.png',  'edit_f2.png', _CONFIGURE );
+		JToolBarHelper::custom( 'expire', 'restore.png',  'restore_f2.png', _REMOVE );
+		JToolBarHelper::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
+		JToolBarHelper::endTable();
 	}
 
 	function ADD_MENU()
 	{
-		mosMenuBar::startTable();
-		mosMenuBar::custom( 'save', 'save.png',  'save_f2.png', _SAVE, false );
-		mosMenuBar::custom( 'cancel', 'cancel.png',  'cancel_f2.png', _CANCEL, false );
-		mosMenuBar::endTable();
+		JToolBarHelper::startTable();
+		JToolBarHelper::custom( 'save', 'save.png',  'save_f2.png', _SAVE, false );
+		JToolBarHelper::custom( 'cancel', 'cancel.png',  'cancel_f2.png', _CANCEL, false );
+		JToolBarHelper::endTable();
 	}
 
 	function EDIT_MENU()
 	{
-		mosMenuBar::startTable();
-		mosMenuBar::custom( 'save', 'save.png',  'save_f2.png', _SAVE, false );
-		mosMenuBar::custom( 'apply', 'apply.png',  'apply_f2.png', _APPLY_PAYPLAN, false );
-		mosMenuBar::custom( 'cancel', 'cancel.png',  'cancel_f2.png', _CANCEL, false );
-		mosMenuBar::endTable();
+		JToolBarHelper::startTable();
+		JToolBarHelper::custom( 'save', 'save.png',  'save_f2.png', _SAVE, false );
+		JToolBarHelper::custom( 'apply', 'apply.png',  'apply_f2.png', _APPLY_PAYPLAN, false );
+		JToolBarHelper::custom( 'cancel', 'cancel.png',  'cancel_f2.png', _CANCEL, false );
+		JToolBarHelper::endTable();
 	}
 
 	function EDIT_SETTINGS()
 	{
-		mosMenuBar::startTable();
-		mosMenuBar::custom( 'applySettings', 'apply.png',  'apply_f2.png', _APPLY_PAYPLAN, false );
-		mosMenuBar::custom( 'saveSettings', 'save.png',  'save_f2.png', _SAVE, false );
-		mosMenuBar::custom( 'cancelSettings', 'cancel.png',  'cancel_f2.png', _CANCEL, false );
-		mosMenuBar::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
-		mosMenuBar::endTable();
+		JToolBarHelper::startTable();
+		JToolBarHelper::custom( 'applySettings', 'apply.png',  'apply_f2.png', _APPLY_PAYPLAN, false );
+		JToolBarHelper::custom( 'saveSettings', 'save.png',  'save_f2.png', _SAVE, false );
+		JToolBarHelper::custom( 'cancelSettings', 'cancel.png',  'cancel_f2.png', _CANCEL, false );
+		JToolBarHelper::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
+		JToolBarHelper::endTable();
 	}
 
 	function LIST_PROCESSORS()
 	{
-		mosMenuBar::startTable();
-		mosMenuBar::custom( 'publishProcessor', 'publish.png',  'publish_f2.png', _PUBLISH_PROCESSOR, true );
-		mosMenuBar::custom( 'unpublishProcessor', 'unpublish.png',  'unpublish_f2.png', _UNPUBLISH_PROCESSOR, true );
-		mosMenuBar::custom( 'newProcessor', 'new.png',  'new_f2.png', _NEW_PROCESSOR, false );
-		mosMenuBar::custom( 'editProcessor', 'edit.png',  'edit_f2.png', _EDIT_PROCESSOR, true );
-		mosMenuBar::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
-		mosMenuBar::endTable();
+		JToolBarHelper::startTable();
+		JToolBarHelper::custom( 'publishProcessor', 'publish.png',  'publish_f2.png', _PUBLISH_PROCESSOR, true );
+		JToolBarHelper::custom( 'unpublishProcessor', 'unpublish.png',  'unpublish_f2.png', _UNPUBLISH_PROCESSOR, true );
+		JToolBarHelper::custom( 'newProcessor', 'new.png',  'new_f2.png', _NEW_PROCESSOR, false );
+		JToolBarHelper::custom( 'editProcessor', 'edit.png',  'edit_f2.png', _EDIT_PROCESSOR, true );
+		JToolBarHelper::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
+		JToolBarHelper::endTable();
 	}
 
 	function EDIT_PROCESSOR()
 	{
-		mosMenuBar::startTable();
-		mosMenuBar::custom( 'saveProcessor', 'save.png',  'save_f2.png', _SAVE_PROCESSOR, false );
-		mosMenuBar::custom( 'applyProcessor', 'apply.png',  'apply_f2.png', _APPLY_PROCESSOR, false );
-		mosMenuBar::custom( 'cancelProcessor', 'cancel.png',  'cancel_f2.png', _CANCEL_PROCESSOR, false );
-		mosMenuBar::endTable();
+		JToolBarHelper::startTable();
+		JToolBarHelper::custom( 'saveProcessor', 'save.png',  'save_f2.png', _SAVE_PROCESSOR, false );
+		JToolBarHelper::custom( 'applyProcessor', 'apply.png',  'apply_f2.png', _APPLY_PROCESSOR, false );
+		JToolBarHelper::custom( 'cancelProcessor', 'cancel.png',  'cancel_f2.png', _CANCEL_PROCESSOR, false );
+		JToolBarHelper::endTable();
 	}
 
 	function LIST_SUBSCRIPTIONPLANS()
 	{
-		mosMenuBar::startTable();
-		mosMenuBar::custom( 'publishSubscriptionPlan', 'publish.png',  'publish_f2.png', _PUBLISH_PAYPLAN, true );
-		mosMenuBar::custom( 'unpublishSubscriptionPlan', 'unpublish.png',  'unpublish_f2.png', _UNPUBLISH_PAYPLAN, true );
-		mosMenuBar::custom( 'newSubscriptionPlan', 'new.png',  'new_f2.png', _NEW_PAYPLAN, false );
-		mosMenuBar::custom( 'editSubscriptionPlan', 'edit.png',  'edit_f2.png', _EDIT_PAYPLAN, true );
-		mosMenuBar::custom( 'copySubscriptionPlan', 'copy.png', 'copy_f2.png', _COPY_PAYPLAN, true );
-		mosMenuBar::custom( 'removeSubscriptionPlan', 'delete.png',  'delete_f2.png', _REMOVE_PAYPLAN, true );
-		mosMenuBar::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
-		mosMenuBar::endTable();
+		JToolBarHelper::startTable();
+		JToolBarHelper::custom( 'publishSubscriptionPlan', 'publish.png',  'publish_f2.png', _PUBLISH_PAYPLAN, true );
+		JToolBarHelper::custom( 'unpublishSubscriptionPlan', 'unpublish.png',  'unpublish_f2.png', _UNPUBLISH_PAYPLAN, true );
+		JToolBarHelper::custom( 'newSubscriptionPlan', 'new.png',  'new_f2.png', _NEW_PAYPLAN, false );
+		JToolBarHelper::custom( 'editSubscriptionPlan', 'edit.png',  'edit_f2.png', _EDIT_PAYPLAN, true );
+		JToolBarHelper::custom( 'copySubscriptionPlan', 'copy.png', 'copy_f2.png', _COPY_PAYPLAN, true );
+		JToolBarHelper::custom( 'removeSubscriptionPlan', 'delete.png',  'delete_f2.png', _REMOVE_PAYPLAN, true );
+		JToolBarHelper::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
+		JToolBarHelper::endTable();
 	}
 
 	function EDIT_SUBSCRIPTIONPLAN()
 	{
-		mosMenuBar::startTable();
-		mosMenuBar::custom( 'saveSubscriptionPlan', 'save.png',  'save_f2.png', _SAVE_PAYPLAN, false );
-		mosMenuBar::custom( 'applySubscriptionPlan', 'apply.png',  'apply_f2.png', _APPLY_PAYPLAN, false );
-		mosMenuBar::custom( 'cancelSubscriptionPlan', 'cancel.png',  'cancel_f2.png', _CANCEL_PAYPLAN, false );
-		mosMenuBar::endTable();
+		JToolBarHelper::startTable();
+		JToolBarHelper::custom( 'saveSubscriptionPlan', 'save.png',  'save_f2.png', _SAVE_PAYPLAN, false );
+		JToolBarHelper::custom( 'applySubscriptionPlan', 'apply.png',  'apply_f2.png', _APPLY_PAYPLAN, false );
+		JToolBarHelper::custom( 'cancelSubscriptionPlan', 'cancel.png',  'cancel_f2.png', _CANCEL_PAYPLAN, false );
+		JToolBarHelper::endTable();
 	}
 
 	function LIST_ITEMGROUPS()
 	{
-		mosMenuBar::startTable();
-		mosMenuBar::custom( 'publishItemGroup', 'publish.png',  'publish_f2.png', _PUBLISH_ITEMGROUP, true );
-		mosMenuBar::custom( 'unpublishItemGroup', 'unpublish.png',  'unpublish_f2.png', _UNPUBLISH_ITEMGROUP, true );
-		mosMenuBar::custom( 'newItemGroup', 'new.png',  'new_f2.png', _NEW_ITEMGROUP, false );
-		mosMenuBar::custom( 'editItemGroup', 'edit.png',  'edit_f2.png', _EDIT_ITEMGROUP, true );
-		mosMenuBar::custom( 'copyItemGroup', 'copy.png', 'copy_f2.png', _COPY_ITEMGROUP, true );
-		mosMenuBar::custom( 'removeItemGroup', 'delete.png',  'delete_f2.png', _REMOVE_ITEMGROUP, true );
-		mosMenuBar::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
-		mosMenuBar::endTable();
+		JToolBarHelper::startTable();
+		JToolBarHelper::custom( 'publishItemGroup', 'publish.png',  'publish_f2.png', _PUBLISH_ITEMGROUP, true );
+		JToolBarHelper::custom( 'unpublishItemGroup', 'unpublish.png',  'unpublish_f2.png', _UNPUBLISH_ITEMGROUP, true );
+		JToolBarHelper::custom( 'newItemGroup', 'new.png',  'new_f2.png', _NEW_ITEMGROUP, false );
+		JToolBarHelper::custom( 'editItemGroup', 'edit.png',  'edit_f2.png', _EDIT_ITEMGROUP, true );
+		JToolBarHelper::custom( 'copyItemGroup', 'copy.png', 'copy_f2.png', _COPY_ITEMGROUP, true );
+		JToolBarHelper::custom( 'removeItemGroup', 'delete.png',  'delete_f2.png', _REMOVE_ITEMGROUP, true );
+		JToolBarHelper::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
+		JToolBarHelper::endTable();
 	}
 
 	function EDIT_ITEMGROUP()
 	{
-		mosMenuBar::startTable();
-		mosMenuBar::custom( 'saveItemGroup', 'save.png',  'save_f2.png', _SAVE_ITEMGROUP, false );
-		mosMenuBar::custom( 'applyItemGroup', 'apply.png',  'apply_f2.png', _APPLY_ITEMGROUP, false );
-		mosMenuBar::custom( 'cancelItemGroup', 'cancel.png',  'cancel_f2.png', _CANCEL_ITEMGROUP, false );
-		mosMenuBar::endTable();
+		JToolBarHelper::startTable();
+		JToolBarHelper::custom( 'saveItemGroup', 'save.png',  'save_f2.png', _SAVE_ITEMGROUP, false );
+		JToolBarHelper::custom( 'applyItemGroup', 'apply.png',  'apply_f2.png', _APPLY_ITEMGROUP, false );
+		JToolBarHelper::custom( 'cancelItemGroup', 'cancel.png',  'cancel_f2.png', _CANCEL_ITEMGROUP, false );
+		JToolBarHelper::endTable();
 	}
 
 	function LIST_MICROINTEGRATIONS()
 	{
-		mosMenuBar::startTable();
-		mosMenuBar::custom( 'publishMicroIntegration', 'publish.png',  'publish_f2.png', _PUBLISH_PAYPLAN, true );
-		mosMenuBar::custom( 'unpublishMicroIntegration', 'unpublish.png',  'unpublish_f2.png', _UNPUBLISH_PAYPLAN, true );
-		mosMenuBar::custom( 'newMicroIntegration', 'new.png',  'new_f2.png', _NEW_PAYPLAN, false );
-		mosMenuBar::custom( 'editMicroIntegration', 'edit.png',  'edit_f2.png', _EDIT_PAYPLAN, true );
-		mosMenuBar::custom( 'copyMicroIntegration', 'copy.png', 'copy_f2.png', _COPY_PAYPLAN, true );
-		mosMenuBar::custom( 'removeMicroIntegration', 'delete.png',  'delete_f2.png', _REMOVE_PAYPLAN, true );
-		mosMenuBar::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
-		mosMenuBar::endTable();
+		JToolBarHelper::startTable();
+		JToolBarHelper::custom( 'publishMicroIntegration', 'publish.png',  'publish_f2.png', _PUBLISH_PAYPLAN, true );
+		JToolBarHelper::custom( 'unpublishMicroIntegration', 'unpublish.png',  'unpublish_f2.png', _UNPUBLISH_PAYPLAN, true );
+		JToolBarHelper::custom( 'newMicroIntegration', 'new.png',  'new_f2.png', _NEW_PAYPLAN, false );
+		JToolBarHelper::custom( 'editMicroIntegration', 'edit.png',  'edit_f2.png', _EDIT_PAYPLAN, true );
+		JToolBarHelper::custom( 'copyMicroIntegration', 'copy.png', 'copy_f2.png', _COPY_PAYPLAN, true );
+		JToolBarHelper::custom( 'removeMicroIntegration', 'delete.png',  'delete_f2.png', _REMOVE_PAYPLAN, true );
+		JToolBarHelper::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
+		JToolBarHelper::endTable();
 	}
 
 	function EDIT_MICROINTEGRATION()
 	{
-		mosMenuBar::startTable();
-		mosMenuBar::custom( 'saveMicroIntegration', 'save.png',  'save_f2.png', _SAVE_PAYPLAN, false );
-		mosMenuBar::custom( 'applyMicroIntegration', 'apply.png',  'apply_f2.png', _APPLY_PAYPLAN, false );
-		mosMenuBar::custom( 'cancelMicroIntegration', 'cancel.png',  'cancel_f2.png', _CANCEL_PAYPLAN, false );
-		mosMenuBar::endTable();
+		JToolBarHelper::startTable();
+		JToolBarHelper::custom( 'saveMicroIntegration', 'save.png',  'save_f2.png', _SAVE_PAYPLAN, false );
+		JToolBarHelper::custom( 'applyMicroIntegration', 'apply.png',  'apply_f2.png', _APPLY_PAYPLAN, false );
+		JToolBarHelper::custom( 'cancelMicroIntegration', 'cancel.png',  'cancel_f2.png', _CANCEL_PAYPLAN, false );
+		JToolBarHelper::endTable();
 	}
 
 	function LIST_COUPONS()
 	{
-		mosMenuBar::startTable();
-		mosMenuBar::custom( 'publishCoupon', 'publish.png',  'publish_f2.png', _PUBLISH_PAYPLAN, true );
-		mosMenuBar::custom( 'unpublishCoupon', 'unpublish.png',  'unpublish_f2.png', _UNPUBLISH_PAYPLAN, true );
-		mosMenuBar::custom( 'newCoupon', 'new.png',  'new_f2.png', _NEW_PAYPLAN, false );
-		mosMenuBar::custom( 'editCoupon', 'edit.png',  'edit_f2.png', _EDIT_PAYPLAN, true );
-		mosMenuBar::custom( 'copyCoupon', 'copy.png', 'copy_f2.png', 'Copy' );
-		mosMenuBar::custom( 'removeCoupon', 'delete.png',  'delete_f2.png', _REMOVE_PAYPLAN, true );
-		mosMenuBar::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
-		mosMenuBar::endTable();
+		JToolBarHelper::startTable();
+		JToolBarHelper::custom( 'publishCoupon', 'publish.png',  'publish_f2.png', _PUBLISH_PAYPLAN, true );
+		JToolBarHelper::custom( 'unpublishCoupon', 'unpublish.png',  'unpublish_f2.png', _UNPUBLISH_PAYPLAN, true );
+		JToolBarHelper::custom( 'newCoupon', 'new.png',  'new_f2.png', _NEW_PAYPLAN, false );
+		JToolBarHelper::custom( 'editCoupon', 'edit.png',  'edit_f2.png', _EDIT_PAYPLAN, true );
+		JToolBarHelper::custom( 'copyCoupon', 'copy.png', 'copy_f2.png', 'Copy' );
+		JToolBarHelper::custom( 'removeCoupon', 'delete.png',  'delete_f2.png', _REMOVE_PAYPLAN, true );
+		JToolBarHelper::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
+		JToolBarHelper::endTable();
 	}
 
 	function EDIT_COUPON()
 	{
-		mosMenuBar::startTable();
-		mosMenuBar::custom( 'saveCoupon', 'save.png',  'save_f2.png', _SAVE_PAYPLAN, false );
-		mosMenuBar::custom( 'applyCoupon', 'apply.png',  'apply_f2.png', _APPLY_PAYPLAN, false );
-		mosMenuBar::custom( 'cancelCoupon', 'cancel.png',  'cancel_f2.png', _CANCEL_PAYPLAN, false );
-		mosMenuBar::endTable();
+		JToolBarHelper::startTable();
+		JToolBarHelper::custom( 'saveCoupon', 'save.png',  'save_f2.png', _SAVE_PAYPLAN, false );
+		JToolBarHelper::custom( 'applyCoupon', 'apply.png',  'apply_f2.png', _APPLY_PAYPLAN, false );
+		JToolBarHelper::custom( 'cancelCoupon', 'cancel.png',  'cancel_f2.png', _CANCEL_PAYPLAN, false );
+		JToolBarHelper::endTable();
 	}
 
 	function LIST_COUPONS_STATIC()
 	{
-		mosMenuBar::startTable();
-		mosMenuBar::custom( 'publishCouponStatic', 'publish.png',  'publish_f2.png', _PUBLISH_PAYPLAN, true );
-		mosMenuBar::custom( 'unpublishCouponStatic', 'unpublish.png',  'unpublish_f2.png', _UNPUBLISH_PAYPLAN, true );
-		mosMenuBar::custom( 'newCouponStatic', 'new.png',  'new_f2.png', _NEW_PAYPLAN, false );
-		mosMenuBar::custom( 'editCouponStatic', 'edit.png',  'edit_f2.png', _EDIT_PAYPLAN, true );
-		mosMenuBar::custom( 'copyCouponStatic', 'copy.png', 'copy_f2.png', _COPY_PAYPLAN, true );
-		mosMenuBar::custom( 'removeCouponStatic', 'delete.png',  'delete_f2.png', _REMOVE_PAYPLAN, true );
-		mosMenuBar::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
-		mosMenuBar::endTable();
+		JToolBarHelper::startTable();
+		JToolBarHelper::custom( 'publishCouponStatic', 'publish.png',  'publish_f2.png', _PUBLISH_PAYPLAN, true );
+		JToolBarHelper::custom( 'unpublishCouponStatic', 'unpublish.png',  'unpublish_f2.png', _UNPUBLISH_PAYPLAN, true );
+		JToolBarHelper::custom( 'newCouponStatic', 'new.png',  'new_f2.png', _NEW_PAYPLAN, false );
+		JToolBarHelper::custom( 'editCouponStatic', 'edit.png',  'edit_f2.png', _EDIT_PAYPLAN, true );
+		JToolBarHelper::custom( 'copyCouponStatic', 'copy.png', 'copy_f2.png', _COPY_PAYPLAN, true );
+		JToolBarHelper::custom( 'removeCouponStatic', 'delete.png',  'delete_f2.png', _REMOVE_PAYPLAN, true );
+		JToolBarHelper::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
+		JToolBarHelper::endTable();
 	}
 
 	function EDIT_COUPON_STATIC()
 	{
-		mosMenuBar::startTable();
-		mosMenuBar::custom( 'saveCouponStatic', 'save.png',  'save_f2.png', _SAVE_PAYPLAN, false );
-		mosMenuBar::custom( 'applyCouponStatic', 'apply.png',  'apply_f2.png', _APPLY_PAYPLAN, false );
-		mosMenuBar::custom( 'cancelCouponStatic', 'cancel.png',  'cancel_f2.png', _CANCEL_PAYPLAN, false );
-		mosMenuBar::endTable();
+		JToolBarHelper::startTable();
+		JToolBarHelper::custom( 'saveCouponStatic', 'save.png',  'save_f2.png', _SAVE_PAYPLAN, false );
+		JToolBarHelper::custom( 'applyCouponStatic', 'apply.png',  'apply_f2.png', _APPLY_PAYPLAN, false );
+		JToolBarHelper::custom( 'cancelCouponStatic', 'cancel.png',  'cancel_f2.png', _CANCEL_PAYPLAN, false );
+		JToolBarHelper::endTable();
 	}
 
 	function EDIT_EXPORT()
 	{
-		mosMenuBar::startTable();
-		mosMenuBar::custom( 'loadExport', 'next.png',  'next_f2.png', _EXPORT_LOAD, false );
-		mosMenuBar::custom( 'applyExport', 'apply.png',  'apply_f2.png', _EXPORT_APPLY, false );
-		mosMenuBar::custom( 'exportExport', 'download.png',  'download_f2.png', _EXPORT, false );
-		mosMenuBar::custom( 'saveExport', 'save.png',  'save_f2.png', _SAVE_PAYPLAN, false );
-		mosMenuBar::custom( 'cancelSettings', 'cancel.png',  'cancel_f2.png', _CANCEL, false );
-		mosMenuBar::endTable();
+		JToolBarHelper::startTable();
+		JToolBarHelper::custom( 'loadExport', 'next.png',  'next_f2.png', _EXPORT_LOAD, false );
+		JToolBarHelper::custom( 'applyExport', 'apply.png',  'apply_f2.png', _EXPORT_APPLY, false );
+		JToolBarHelper::custom( 'exportExport', 'download.png',  'download_f2.png', _EXPORT, false );
+		JToolBarHelper::custom( 'saveExport', 'save.png',  'save_f2.png', _SAVE_PAYPLAN, false );
+		JToolBarHelper::custom( 'cancelSettings', 'cancel.png',  'cancel_f2.png', _CANCEL, false );
+		JToolBarHelper::endTable();
 	}
 
 	function EDIT_IMPORT()
 	{
-		mosMenuBar::startTable();
-		mosMenuBar::custom( 'applyImport', 'apply.png',  'apply_f2.png', _APPLY_PAYPLAN, false );
-		mosMenuBar::custom( 'cancelSettings', 'cancel.png',  'cancel_f2.png', _CANCEL, false );
-		mosMenuBar::endTable();
+		JToolBarHelper::startTable();
+		JToolBarHelper::custom( 'applyImport', 'apply.png',  'apply_f2.png', _APPLY_PAYPLAN, false );
+		JToolBarHelper::custom( 'cancelSettings', 'cancel.png',  'cancel_f2.png', _CANCEL, false );
+		JToolBarHelper::endTable();
 	}
 
 	function NO_MENU()
 	{
-		mosMenuBar::startTable();
-		mosMenuBar::back();
-		mosMenuBar::endTable();
+		JToolBarHelper::startTable();
+		JToolBarHelper::back();
+		JToolBarHelper::endTable();
 	}
 }
 
@@ -230,11 +230,11 @@ class CommonMenu
 {
 	function EDIT_CSS_MENU()
 	{
-		mosMenuBar::startTable();
-		mosMenuBar::save( 'saveCSS' );
-		mosMenuBar::cancel('cancelCSS');
-		mosMenuBar::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
-		mosMenuBar::endTable();
+		JToolBarHelper::startTable();
+		JToolBarHelper::save( 'saveCSS' );
+		JToolBarHelper::cancel('cancelCSS');
+		JToolBarHelper::custom( 'showCentral', 'extensions.png',  'extensions_f2.png', _CENTRAL_PAGE , false );
+		JToolBarHelper::endTable();
 	}
 }
 

@@ -24,7 +24,7 @@ class mi_acajoom
 
 	function Settings()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`, `list_name`, `list_type`'
 				. ' FROM #__acajoom_lists'
@@ -85,7 +85,7 @@ class mi_acajoom
 
 	function createSubscriber( $userid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$user = new mosUser( $database );
 		$user->load( $userid );
@@ -100,7 +100,7 @@ class mi_acajoom
 
 	function hasList( $subscriber_id, $listid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 		$query = 'SELECT `qid`'
 				. ' FROM #__acajoom_queue'
 				. ' WHERE `subscriber_id` = \'' . $subscriber_id . '\''
@@ -116,7 +116,7 @@ class mi_acajoom
 
 	function getSubscriberID( $userid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 		$query = 'SELECT `id`'
 				. ' FROM #__acajoom_subscribers'
 				. ' WHERE `user_id` = \'' . $userid . '\''
@@ -127,7 +127,7 @@ class mi_acajoom
 
 	function addToList( $subscriber_id, $list_id )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query  = 'INSERT INTO #__acajoom_queue'
 				. ' (type, subscriber_id, list_id, mailing_id, issue_nb, send_date, suspend, delay, acc_level, published, params)'
@@ -139,7 +139,7 @@ class mi_acajoom
 
 	function deleteFromList( $subscriber_id, $list_id )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 		$query = 'DELETE FROM #__acajoom_queue'
 				. ' WHERE `subscriber_id` = \'' . $subscriber_id . '\''
 				. ' AND `list_id` = \'' . $list_id . '\''

@@ -30,7 +30,9 @@ class mi_htaccess
 
 	function checkInstallation()
 	{
-		global $database, $mosConfig_dbprefix;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_dbprefix;
 
 		$tables	= array();
 		$tables	= $database->getTableList();
@@ -40,7 +42,7 @@ class mi_htaccess
 
 	function install()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_htaccess_apachepw`'
 		. ' (`id` int(11) NOT NULL auto_increment,'
@@ -72,7 +74,9 @@ class mi_htaccess
 
 	function saveparams( $params )
 	{
-		global $mosConfig_absolute_path, $database;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_absolute_path;
 
 		$mosConfig_absolute_path_above = substr( $mosConfig_absolute_path, 0, strrpos($mosConfig_absolute_path, "/") );
 
@@ -105,7 +109,7 @@ class mi_htaccess
 
 	function expiration_action( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$ht = new htaccess();
 		$ht->setFPasswd( $this->settings['mi_folder_user_fullpath'] );
@@ -114,7 +118,7 @@ class mi_htaccess
 
 	function action( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$ht = new htaccess();
 		$ht->setFPasswd( $this->settings['mi_folder_user_fullpath'] );
@@ -144,7 +148,7 @@ class mi_htaccess
 
 	function on_userchange_action( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$apachepw = new apachepw( $database );
 		$apwid = $apachepw->getIDbyUserID( $request->row->id );
@@ -206,7 +210,7 @@ class mi_htaccess
 	}
 }
 
-class apachepw extends mosDBTable
+class apachepw extends JTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -217,12 +221,12 @@ class apachepw extends mosDBTable
 
 	function apachepw( &$db )
 	{
-		$this->mosDBTable( '#__acctexp_mi_htaccess_apachepw', 'id', $db );
+		parent::__construct( '#__acctexp_mi_htaccess_apachepw', 'id', $db );
 	}
 
 	function getIDbyUserID( $userid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_mi_htaccess_apachepw'

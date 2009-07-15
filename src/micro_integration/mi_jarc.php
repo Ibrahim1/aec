@@ -45,7 +45,7 @@ class mi_jarc
 
 	function on_userchange_action( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		if ( !$this->settings['create_affiliates'] ) {
 			return null;
@@ -67,7 +67,7 @@ class mi_jarc
 
 	function checkaffiliate( $userid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT affiliate_id'
 				. ' FROM #__jarc_affiliate_network'
@@ -84,7 +84,7 @@ class mi_jarc
 
 	function createaffiliate( $userid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 				// Get affiliate ID from cookie.
 				$cookie_name   = mosMainframe::sessionCookieName() . '_JARC';
 				$sessioncookie = mosGetParam( $_COOKIE, $cookie_name, null );
@@ -111,7 +111,9 @@ class mi_jarc
 
 	function logpayment( $invoice )
 	{
-		global $mosConfig_offset_user, $mosConfig_absolute_path, $database;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_offset_user, $mosConfig_absolute_path;
 
 		// Get affiliate ID from cookie.
 		$cookie_name   = mosMainframe::sessionCookieName() . '_JARC';

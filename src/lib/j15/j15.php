@@ -17,4 +17,29 @@ if ( !class_exists( 'JObject' ) ) {
 	require_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/j15/object.php' );
 }
 
+if ( !class_exists( 'JTABLE' ) ) {
+	class JTABLE extends mosDBTable
+	{
+	    function __construct( $table, $key, &$database ) {
+	        parent::__construct( $table, $key, $database );
+	    }
+	}
+}
+
+if ( !class_exists( 'JFactory' ) ) {
+	class JFactory
+	{
+	    function getDBO() {
+	        global $database;
+
+			return $database;
+	    }
+	}
+}
+
+if ( !class_exists( 'JToolBarHelper' ) ) {
+	class JToolBarHelper extends mosMenuBar
+	{}
+}
+
 ?>

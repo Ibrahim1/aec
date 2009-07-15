@@ -111,7 +111,7 @@ class eucaObject extends JObject {}
 *
 * For use with as an abstract class that adds onto table entries
 */
-class paramDBTable extends mosDBTable
+class paramDBTable extends JTable
 {
 	/**
 	 * Dummy function to be overridden by calling class
@@ -721,7 +721,7 @@ class parameterHandler
 	 */
 	function encode( $array )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$params = array();
 		foreach ( $array as $key => $value ) {

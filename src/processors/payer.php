@@ -193,7 +193,7 @@ class processor_payer extends POSTprocessor
 
 	function parseNotification( $post )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$response = array();
 		$response['valid']		= false;

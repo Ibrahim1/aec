@@ -24,7 +24,7 @@ class mi_g2 extends MI
 
 	function Settings()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$settings = array();
 		$settings['gallery2path']		= array( 'inputD' );
@@ -75,7 +75,7 @@ class mi_g2 extends MI
 
 	function getMIform()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$settings = array();
 
@@ -107,7 +107,7 @@ class mi_g2 extends MI
 
 	function action( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$this->loadG2Embed();
 
@@ -175,7 +175,7 @@ class mi_g2 extends MI
 
 	function mapUserToGroup( $g2userid, $groupid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT g_userId'
 				. ' FROM g2_UserGroupMap'
@@ -196,7 +196,7 @@ class mi_g2 extends MI
 
 	function createAlbumInAlbum( $g2userid, $parentid, $albumname )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		// Check that we don't create a duplicate
 		$query = 'SELECT g_id'
@@ -243,7 +243,7 @@ class mi_g2 extends MI
 
 	function deleteUserFromGroup( $g2userid, $groupid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'DELETE FROM g2_UserGroupMap'
 				. ' WHERE `g_userId` = \'' . $g2userid . '\' AND `g_groupId` = \'' . $groupid . '\''
@@ -273,7 +273,7 @@ class mi_g2 extends MI
 
 	function hasG2userid( $metaUser )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT g_id'
 				. ' FROM g2_User'
@@ -286,7 +286,7 @@ class mi_g2 extends MI
 
 	function createG2User( $metaUser )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT max(g_id)'
 				. ' FROM g2_Entity'

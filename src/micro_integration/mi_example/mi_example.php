@@ -23,7 +23,9 @@ class mi_example
 		// Also check out the below example for a db check for the table that is created
 		// within the install function.
 
-		global $database, $mosConfig_dbprefix;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_dbprefix;
 
 		$tables	= array();
 		$tables	= $database->getTableList();
@@ -41,7 +43,7 @@ class mi_example
 		// for readability of databases) or the installation of other files.
 		// Below is an example how a sample db table creation could look like:
 
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query =	"CREATE TABLE IF NOT EXISTS `#__acctexp_mi_sampletable` (" . "\n" .
 					"`id` int(11) NOT NULL auto_increment," . "\n" .

@@ -30,7 +30,9 @@ class mi_qmacd {
 	}*/
 
 	function expiration_action($params, $userid) {
-		global $database, $qmacddatabase, $mosConfig_debug;
+		$database = &JFactory::getDBO();
+
+	global $qmacddatabase, $mosConfig_debug;
 
 		if(!method_exists($qmacddatabase,"setQuery")){
 			$qmacddatabase = new database( $params['qmacd_dbhost'], $params['qmacd_dbuser'], $params['qmacd_dbpass'], $params['qmacd_dbtable'], "" );
@@ -49,7 +51,9 @@ class mi_qmacd {
 	}
 
 	function action($params, $userid) {
-		global $database, $mosConfig_debug, $qmacddatabase;
+		$database = &JFactory::getDBO();
+
+	global $mosConfig_debug, $qmacddatabase;
 
 		$tplans = explode(",",$params['plans']);
 	    $quotas = explode(",",$params['quotas']);
@@ -67,7 +71,9 @@ class mi_qmacd {
 		$newplan=$database->loadResult();
 
 		if(isset($plans[$newplan])){
-			//global $database, $qmacddatabase;
+			//$database = &JFactory::getDBO();
+
+	global $qmacddatabase;
 			if(!method_exists($qmacddatabase,"setQuery")){
 				$qmacddatabase = new database( $params['qmacd_dbhost'], $params['qmacd_dbuser'], $params['qmacd_dbpass'], $params['qmacd_dbtable'], "" );
 				if ($qmacddatabase->getErrorNum()) {

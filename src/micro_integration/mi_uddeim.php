@@ -24,7 +24,9 @@ class mi_uddeim
 
 	function checkInstallation()
 	{
-		global $database, $mosConfig_dbprefix;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_dbprefix;
 
 		$tables	= array();
 		$tables	= $database->getTableList();
@@ -41,7 +43,7 @@ class mi_uddeim
 
 	function install()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_uddeim` ('
 		. '`id` int(11) NOT NULL auto_increment,'
@@ -61,7 +63,7 @@ class mi_uddeim
 
 	function Settings( $params )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
         $settings = array();
 		$settings['add_messages']	= array( 'inputA' );
@@ -76,7 +78,7 @@ class mi_uddeim
 
 	function profile_info( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 		$mi_uddeimhandler = new uddeim_restriction( $database );
 		$id = $mi_uddeimhandler->getIDbyUserID( $request->metaUser->userid );
 
@@ -147,7 +149,7 @@ class mi_uddeim
 
 	function expiration_action( $params, $userid, $plan )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$mi_uddeimhandler = new uddeim_restriction( $database );
 		$id = $mi_uddeimhandler->getIDbyUserID( $userid );
@@ -169,7 +171,7 @@ class mi_uddeim
 
 	function action( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$userid = $request->metaUser->userid;
 
@@ -200,7 +202,7 @@ class mi_uddeim
 	}
 }
 
-class uddeim_restriction extends mosDBTable {
+class uddeim_restriction extends JTable {
 	/** @var int Primary key */
 	var $id						= null;
 	/** @var int */
@@ -217,7 +219,7 @@ class uddeim_restriction extends mosDBTable {
 	var $params					= null;
 
 	function getIDbyUserID( $userid ) {
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 			. ' FROM #__acctexp_mi_uddeim'
@@ -228,7 +230,7 @@ class uddeim_restriction extends mosDBTable {
 	}
 
 	function uddeim_restriction( &$db ) {
-		$this->mosDBTable( '#__acctexp_mi_uddeim', 'id', $db );
+		parent::__construct( '#__acctexp_mi_uddeim', 'id', $db );
 	}
 
 	function is_active()

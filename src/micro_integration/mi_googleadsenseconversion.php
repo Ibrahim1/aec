@@ -48,7 +48,9 @@ class mi_googleadsenseconversion
 
 	function action( $request )
 	{
-		global $database, $mosConfig_live_site, $mosConfig_sitename;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_live_site, $mosConfig_sitename;
 
 		$text = '<script language="JavaScript" type="text/javascript">' . "\n"
 				. '<!--' . "\n"

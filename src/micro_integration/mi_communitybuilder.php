@@ -23,7 +23,7 @@ class mi_communitybuilder
 
 	function Settings()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$settings = array();
 		$settings['approve']		= array( 'list_yesno' );
@@ -60,7 +60,7 @@ class mi_communitybuilder
 
 	function action( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		if( $this->settings['approve'] ) {
 			$query = 'UPDATE #__comprofiler'
@@ -112,7 +112,7 @@ class mi_communitybuilder
 
 	function expiration_action( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		if( $this->settings['unapprove_exp'] ) {
 			$query = 'UPDATE #__comprofiler'

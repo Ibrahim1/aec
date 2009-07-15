@@ -818,7 +818,7 @@ class HTML_AcctExp
 
 	function SubscriptionName( $subscriptionid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$subscription = new SubscriptionPlan($database);
 		$subscription->load($subscriptionid);
@@ -3083,7 +3083,9 @@ class HTML_AcctExp
 		if ( $SQLDate == '' || $SQLDate == '-' || $SQLDate == '0000-00-00 00:00:00')  {
 			return _AEC_CMN_NOT_SET;
 		} else {
-			global $database, $aecConfig;
+			$database = &JFactory::getDBO();
+
+			global $aecConfig;
 
 			return strftime( $aecConfig->cfg['display_date_backend'], strtotime( $SQLDate )  );
 		}

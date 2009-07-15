@@ -427,7 +427,7 @@ aecDebug( $response );
 
 	function validateSubscription( $subscription_id )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$invoice = new Invoice( $database );
 		$invoice->loadbySubscriptionId( $subscription_id );

@@ -15,7 +15,7 @@ class mi_rsgallery2 extends MI
 {
 	function Settings()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$settings = array();
 		$settings['create_galleries']		= array( 'list_yesno' );
@@ -66,7 +66,7 @@ class mi_rsgallery2 extends MI
 
 	function getMIform()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$settings = array();
 
@@ -98,7 +98,7 @@ class mi_rsgallery2 extends MI
 
 	function action( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		if ( !empty( $this->settings['publish_all'] ) ) {
 			$query = 'SELECT `id`'
@@ -182,7 +182,7 @@ class mi_rsgallery2 extends MI
 
 	function createAlbum( $userid, $parentid, $name, $desc )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		// Check that we don't create a duplicate
 		$query = 'SELECT id'

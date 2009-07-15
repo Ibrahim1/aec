@@ -113,7 +113,7 @@ class processor_payos extends URLprocessor
 
 	function parseNotification( $post )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$response = array();
 		$response['invoice']		= $post['VAR1'];

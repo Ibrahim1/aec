@@ -35,7 +35,9 @@ class HTML_frontEnd
 
 	function expired( $option, $metaUser, $expiration, $invoice, $trial, $continue=0 )
 	{
-		global $database, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $aecConfig;
 
 		if ( $aecConfig->cfg['customtext_expired_keeporiginal'] ) {?>
 			<div class="componentheading"><?php echo _EXPIRED_TITLE; ?></div>
@@ -95,7 +97,9 @@ class HTML_frontEnd
 
 	function hold( $option, $metaUser )
 	{
-		global $database, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $aecConfig;
 
 		if ($aecConfig->cfg['customtext_hold_keeporiginal'] ) {?>
 			<div class="componentheading"><?php echo _HOLD_TITLE; ?></div>
@@ -114,7 +118,9 @@ class HTML_frontEnd
 
 	function pending( $option, $objUser, $invoice, $reason=0 )
 	{
-		global $database, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $aecConfig;
 
 		$actions =	_PENDING_OPENINVOICE
 		. ' <a href="'
@@ -168,7 +174,9 @@ class HTML_frontEnd
 
 	function subscriptionDetails( $option, $subfields, $sub, $invoices, $metaUser, $upgrade_button, $pp, $mi, $alert, $subscriptions = null, $custom = null, $cart=false )
 	{
-		global $database, $aecConfig, $mosConfig_live_site;
+		$database = &JFactory::getDBO();
+
+		global $aecConfig, $mosConfig_live_site;
 
 		$securelinks = !empty( $aecConfig->cfg['ssl_profile'] );
 
@@ -319,7 +327,9 @@ class HTML_frontEnd
 
 	function notAllowed( $option, $processors, $registerlink, $loggedin = 0 )
 	{
-		global $database, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $aecConfig;
 
 		if ( !is_object( $this ) ) {
 			HTML_frontEnd::aec_styling();
@@ -417,7 +427,7 @@ class HTML_frontEnd
 		if ( $SQLDate == '' ) {
 			return _AEC_EXPIRE_NOT_SET;
 		} else {
-			global $database;
+			$database = &JFactory::getDBO();
 
 			$retVal = strftime( $aecConfig->cfg['display_date_frontend'], strtotime( $SQLDate ) );
 
@@ -702,7 +712,9 @@ class Payment_HTML
 
 	function promptpassword( $option, $passthrough, $wrong )
 	{
-		global $database, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $aecConfig;
 		?>
 		<div id="box_pending">
 			<p><?php echo _AEC_PROMPT_PASSWORD; ?></p>
@@ -735,7 +747,9 @@ class Payment_HTML
 
 	function confirmForm( $option, $InvoiceFactory, $user, $passthrough = false)
 	{
-		global $database, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $aecConfig;
 
 		HTML_frontend::aec_styling( $option );
 		?>
@@ -898,7 +912,9 @@ class Payment_HTML
 
 	function cart( $option, $InvoiceFactory )
 	{
-		global $database, $aecConfig, $mosConfig_live_site;
+		$database = &JFactory::getDBO();
+
+		global $aecConfig, $mosConfig_live_site;
 
 		HTML_frontend::aec_styling( $option );
 		?>
@@ -1092,7 +1108,9 @@ class Payment_HTML
 
 	function checkoutForm( $option, $var, $params = null, $InvoiceFactory, $error = null, $repeat = 0 )
 	{
-		global $database, $mosConfig_live_site, $my, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_live_site, $my, $aecConfig;
 
 		HTML_frontend::aec_styling( $option );
 
@@ -1359,7 +1377,9 @@ class Payment_HTML
 
 	function exceptionForm( $option, $InvoiceFactory, $aecHTML )
 	{
-		global $database, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $aecConfig;
 
 		HTML_frontend::aec_styling( $option );
 
@@ -1431,7 +1451,9 @@ class Payment_HTML
 
 	function printInvoice( $option, $var, $params = null, $InvoiceFactory, $repeat = 0 )
 	{
-		global $database, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $aecConfig;
 
 		HTML_frontend::aec_styling( $option );
 		?>
@@ -1517,7 +1539,9 @@ class Payment_HTML
 
 	function error( $option, $objUser, $invoice, $error=false, $suppressactions=false )
 	{
-		global $database, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $aecConfig;
 
 		if ( !$suppressactions ) {
 			$actions =	_CHECKOUT_ERROR_OPENINVOICE

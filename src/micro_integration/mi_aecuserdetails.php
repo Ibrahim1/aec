@@ -24,7 +24,7 @@ class mi_aecuserdetails
 
 	function Settings()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$settings = array();
 		$settings['lists']		= array();
@@ -102,7 +102,7 @@ class mi_aecuserdetails
 
 	function verifyMIform( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$params = array();
 		if ( !empty( $this->settings['settings'] ) ) {

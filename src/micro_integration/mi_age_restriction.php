@@ -15,7 +15,7 @@ class mi_age_restriction extends MI
 {
 	function Settings()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
         $settings = array();
 		$settings['min_age']			= array( 'inputA' );
@@ -27,7 +27,7 @@ class mi_age_restriction extends MI
 
 	function getMIform()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$settings = array();
 
@@ -38,7 +38,7 @@ class mi_age_restriction extends MI
 
 	function verifyMIform( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$return = array();
 

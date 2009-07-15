@@ -14,7 +14,9 @@ class mi_raffle
 {
 	function checkInstallation()
 	{
-		global $database, $mosConfig_dbprefix;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_dbprefix;
 
 		$tables	= array();
 		$tables	= $database->getTableList();
@@ -24,7 +26,7 @@ class mi_raffle
 
 	function install()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_rafflelist` ('
 		. '`id` int(11) NOT NULL auto_increment,'
@@ -54,7 +56,7 @@ class mi_raffle
 
 	function Settings()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
         $settings = array();
 		$settings['list_group']			= array( 'inputA' );
@@ -69,7 +71,9 @@ class mi_raffle
 
 	function saveparams( $params )
 	{
-		global $database, $mosConfig_dbprefix;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_dbprefix;
 
 		$tables	= array();
 		$tables	= $database->getTableList();
@@ -91,7 +95,7 @@ class mi_raffle
 
 	function action( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$raffleuser = new AECMI_raffleuser( $database );
 		$raffleuser->loadUserid( $request->metaUser->userid );
@@ -223,7 +227,7 @@ class AECMI_rafflelist extends serialParamDBTable {
 	*/
 	function AECMI_rafflelist( &$db )
 	{
-		$this->mosDBTable( '#__acctexp_mi_rafflelist', 'id', $db );
+		parent::__construct( '#__acctexp_mi_rafflelist', 'id', $db );
 	}
 
 	function declareParamFields()
@@ -232,7 +236,7 @@ class AECMI_rafflelist extends serialParamDBTable {
 	}
 
 	function loadMax( $group=null ) {
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT max(`id`)'
 			. ' FROM #__acctexp_mi_rafflelist'
@@ -254,7 +258,7 @@ class AECMI_rafflelist extends serialParamDBTable {
 
 	function closeRun( $winid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$participants = array();
 		$winners = array();
@@ -298,7 +302,7 @@ class AECMI_raffleuser extends serialParamDBTable {
 	*/
 	function AECMI_raffleuser( &$db )
 	{
-		$this->mosDBTable( '#__acctexp_mi_raffleuser', 'id', $db );
+		parent::__construct( '#__acctexp_mi_raffleuser', 'id', $db );
 	}
 
 	function declareParamFields()
@@ -307,7 +311,7 @@ class AECMI_raffleuser extends serialParamDBTable {
 	}
 
 	function loadUserid( $userid) {
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 			. ' FROM #__acctexp_mi_raffleuser'

@@ -26,7 +26,7 @@ class mi_juga
 
 	function Settings()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`, `title`, `description`'
 			 	. ' FROM #__juga_groups'
@@ -85,7 +85,7 @@ class mi_juga
 
 	function expiration_action( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		if ( $this->settings['set_remove_group_exp'] ) {
 			foreach ( $this->settings['enroll_group'] as $groupid ) {
@@ -106,7 +106,7 @@ class mi_juga
 
 	function action( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		if ( $this->settings['set_remove_group'] ) {
 			$this->DeleteUserFromGroup( $request->metaUser->userid );
@@ -123,7 +123,7 @@ class mi_juga
 
 	function AddUserToGroup( $userid, $groupid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		// Check user is not already a member of the group.
 		$query = 'SELECT `user_id`'
@@ -151,7 +151,7 @@ class mi_juga
 
 	function DeleteUserFromGroup( $userid, $groupid=null )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'DELETE FROM #__juga_u2g'
 				. ' WHERE `user_id` = \''. $userid . '\''

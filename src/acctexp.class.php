@@ -50,7 +50,7 @@ include_once( $mosConfig_absolute_path . '/components/com_acctexp/lib/mammontini
 // Catch all debug function
 function aecDebug( $text, $level = 128 )
 {
-	global $database;
+	$database = &JFactory::getDBO();
 
 	$eventlog = new eventLog( $database );
 	$eventlog->issue( 'debug', 'debug', json_encode( $text ), $level );
@@ -115,7 +115,7 @@ function aecGetParam( $name, $default='', $safe=false, $safe_params=array() )
 
 function aecEscape( $value, $safe_params )
 {
-	global $database;
+	$database = &JFactory::getDBO();
 
 	$regex = "#{aecjson}(.*?){/aecjson}#s";
 
@@ -214,7 +214,7 @@ class metaUser
 
 	function metaUser( $userid, $subscriptionid=null )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		if ( empty( $userid ) && !empty( $subscriptionid ) ) {
 			$userid = AECfetchfromDB::UserIDfromSubscriptionID( $subscriptionid );
@@ -289,7 +289,7 @@ class metaUser
 
 	function setCMSparams( $array )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$params = explode( "\n", $this->cmsUser->params );
 
@@ -378,7 +378,7 @@ class metaUser
 
 	function getAllCurrentSubscriptions()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_subscr'
@@ -394,7 +394,7 @@ class metaUser
 
 	function getAllCurrentSubscriptionPlans()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `plan`'
 				. ' FROM #__acctexp_subscr'
@@ -410,7 +410,7 @@ class metaUser
 
 	function getSecondarySubscriptions( $simple=false )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`' . ( $simple ? '' : ', `plan`, `type`' )
 				. ' FROM #__acctexp_subscr'
@@ -470,7 +470,9 @@ class metaUser
 
 	function procTriggerCreate( $user, $payment, $usage )
 	{
-		global $database, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $aecConfig;
 
 		// Create a new cmsUser from user details - only allowing basic details so far
 		// Try different types of usernames to make sure we have a unique one
@@ -514,7 +516,7 @@ class metaUser
 
 	function establishFocus( $payment_plan, $processor='none', $silent=false )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		if ( !is_object( $payment_plan ) ) {
 			$planid = $payment_plan;
@@ -608,7 +610,7 @@ class metaUser
 
 	function moveFocus( $subscrid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$subscription = new Subscription( $database );
 		$subscription->load( $subscrid );
@@ -631,7 +633,7 @@ class metaUser
 
 	function loadSubscriptions()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		// Get all the users subscriptions
 		$query = 'SELECT id'
@@ -661,7 +663,9 @@ class metaUser
 
 	function instantGIDchange( $gid, $session=true )
 	{
-		global $database, $acl;
+		$database = &JFactory::getDBO();
+
+		global $acl;
 
 		// Always protect last administrator
 		if ( ( $this->cmsUser->gid == 24 ) || ( $this->cmsUser->gid == 25 ) ) {
@@ -805,7 +809,7 @@ class metaUser
 
 	function loadCBuser()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT *'
 			. ' FROM #__users u, #__comprofiler ue'
@@ -1025,7 +1029,7 @@ class metaUser
 
 	function usedCoupon ( $couponid, $type )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `usecount`'
 				. ' FROM #__acctexp_couponsxuser'
@@ -1049,7 +1053,7 @@ class metaUser
 	}
 
 	function getUserMIs(){
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$return = array();
 		if ( !empty( $this->objSubscription->plan ) ) {
@@ -1122,7 +1126,7 @@ class metaUserDB extends serialParamDBTable
 	*/
 	function metaUserDB( &$db )
 	{
-		$this->mosDBTable( '#__acctexp_metauser', 'id', $db );
+		parent::__construct( '#__acctexp_metauser', 'id', $db );
 	}
 
 	function declareParamFields()
@@ -1148,7 +1152,7 @@ class metaUserDB extends serialParamDBTable
 
 	function getIDbyUserid( $userid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_metauser'
@@ -1337,7 +1341,7 @@ class Config_General extends serialParamDBTable
 
 	function Config_General( &$db )
 	{
-		$this->mosDBTable( '#__acctexp_config', 'id', $db );
+		parent::__construct( '#__acctexp_config', 'id', $db );
 
 		$this->load(1);
 
@@ -1477,7 +1481,7 @@ class Config_General extends serialParamDBTable
 	{
 		// Insert a new entry if there is none yet
 		if ( empty( $this->settings ) ) {
-			global $database;
+			$database = &JFactory::getDBO();
 
 			$query = 'SELECT * FROM #__acctexp_config'
 			. ' WHERE `id` = \'1\''
@@ -1519,7 +1523,7 @@ class Config_General extends serialParamDBTable
 
 	function RowDuplicationCheck()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_config'
@@ -1536,7 +1540,7 @@ class Config_General extends serialParamDBTable
 
 	function CleanDuplicatedRows()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT max(id)'
 				. ' FROM #__acctexp_config'
@@ -1564,12 +1568,14 @@ class Config_General extends serialParamDBTable
 }
 
 if ( !is_object( $aecConfig ) ) {
-	global $database, $aecConfig;
+	$database = &JFactory::getDBO();
+
+		global $aecConfig;
 
 	$aecConfig = new Config_General( $database );
 }
 
-class aecHeartbeat extends mosDBTable
+class aecHeartbeat extends JTable
 {
  	/** @var int Primary key */
 	var $id				= null;
@@ -1581,7 +1587,7 @@ class aecHeartbeat extends mosDBTable
 	 */
 	function aecHeartbeat( &$db )
 	{
-	 	$this->mosDBTable( '#__acctexp_heartbeat', 'id', $db );
+	 	parent::__construct( '#__acctexp_heartbeat', 'id', $db );
 	 	$this->load(1);
 
 		if ( empty( $this->last_beat ) ) {
@@ -1611,7 +1617,7 @@ class aecHeartbeat extends mosDBTable
 			if ( empty( $hash ) ) {
 				return;
 			} elseif( $hash != $aecConfig->cfg['custom_heartbeat_securehash'] ) {
-				global $database;
+				$database = &JFactory::getDBO();
 				$short	= 'custom heartbeat failure';
 				$event	= 'Custom Frontend Heartbeat attempted, but faile due to false hashcode: "' . $hash . '"';
 				$tags	= 'heartbeat, failure';
@@ -1671,7 +1677,9 @@ class aecHeartbeat extends mosDBTable
 
 	function beat()
 	{
-		global $database, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $aecConfig;
 
 		// Delete old token entries
 		$query = 'DELETE'
@@ -1921,7 +1929,9 @@ class displayPipelineHandler
 
 	function getUserPipelineEvents( $userid )
 	{
-		global $database, $mosConfig_offset;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_offset;
 
 		// Entries for this user only
 		$query = 'SELECT `id`'
@@ -2029,7 +2039,7 @@ class displayPipeline extends serialParamDBTable
 	 */
 	function displayPipeline( &$db )
 	{
-	 	$this->mosDBTable( '#__acctexp_displaypipeline', 'id', $db );
+	 	parent::__construct( '#__acctexp_displaypipeline', 'id', $db );
 	}
 
 	function declareParamFields()
@@ -2097,7 +2107,7 @@ class eventLog extends serialParamDBTable
 	 */
 	function eventLog( &$db )
 	{
-	 	$this->mosDBTable( '#__acctexp_eventlog', 'id', $db );
+	 	parent::__construct( '#__acctexp_eventlog', 'id', $db );
 	}
 
 	function declareParamFields()
@@ -2130,7 +2140,9 @@ class eventLog extends serialParamDBTable
 
 		// Mail out notification to all admins if this matches the desired level
 		if ( ( $this->level >= $aecConfig->cfg['email_notification_level'] ) || $force_email ) {
-			global $mainframe, $database;
+			$database = &JFactory::getDBO();
+
+			global $mainframe;
 
 			// check if Global Config `mailfrom` and `fromname` values exist
 			if ( $mainframe->getCfg( 'mailfrom' ) != '' && $mainframe->getCfg( 'fromname' ) != '' ) {
@@ -2198,7 +2210,7 @@ class aecEventHandler
 {
 	function pingEvents()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		// Load all events happening now or before now
 		$query = 'SELECT `id`'
@@ -2220,7 +2232,7 @@ class aecEventHandler
 	// TODO: Finish function that, according to setting, cleans out old entries (like more than two weeks old default)
 	function deleteOldEvents()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		// Load all events happening now or before now
 		$query = 'SELECT `id`'
@@ -2272,7 +2284,7 @@ class aecEvent extends serialParamDBTable
 	*/
 	function aecEvent( &$db )
 	{
-		$this->mosDBTable( '#__acctexp_event', 'id', $db );
+		parent::__construct( '#__acctexp_event', 'id', $db );
 	}
 
 	function declareParamFields()
@@ -2305,7 +2317,7 @@ class aecEvent extends serialParamDBTable
 
 	function trigger()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		if ( empty( $this->type ) ) {
 			return null;
@@ -2365,7 +2377,7 @@ class PaymentProcessorHandler
 
 	function getProcessorIdfromName( $name )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_config_processors'
@@ -2377,7 +2389,7 @@ class PaymentProcessorHandler
 
 	function getProcessorNamefromId( $id )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `name`'
 				. ' FROM #__acctexp_config_processors'
@@ -2389,7 +2401,7 @@ class PaymentProcessorHandler
 
 	function getProcessorNameListbyId( $idlist )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`, `name`'
 				. ' FROM #__acctexp_config_processors';
@@ -2414,7 +2426,7 @@ class PaymentProcessorHandler
 	 */
 	function getInstalledObjectList( $active = false, $simple = false )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `name`' . ( $simple ? '' : ', `active`, `id`' )
 				. ' FROM #__acctexp_config_processors'
@@ -2433,7 +2445,7 @@ class PaymentProcessorHandler
 
 	function getInstalledNameList($active=false)
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `name`'
 				. ' FROM #__acctexp_config_processors'
@@ -2470,7 +2482,7 @@ class PaymentProcessor
 
 	function loadName( $name )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		// Set Name
 		$this->processor_name = strtolower( $name );
@@ -2525,7 +2537,7 @@ class PaymentProcessor
 
 	function loadId( $ppid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		// Fetch name from db and load processor
 		$query = 'SELECT `name`'
@@ -2562,7 +2574,7 @@ class PaymentProcessor
 
 	function install()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		// Create new db entry
 		$this->processor->load( 0 );
@@ -2855,7 +2867,7 @@ class PaymentProcessor
 		$method = 'customtab_' . $action;
 
 		if ( method_exists( $this->processor, $method ) ) {
-			global $database;
+			$database = &JFactory::getDBO();
 
 			$request = new stdClass();
 			$request->parent			=& $this;
@@ -2964,7 +2976,7 @@ class PaymentProcessor
 
 	function parseNotification( $post )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		if ( empty( $this->settings ) ) {
 			$this->getSettings();
@@ -3100,7 +3112,7 @@ class processor extends serialParamDBTable
 	*/
 	function processor( &$db )
 	{
-		$this->mosDBTable( '#__acctexp_config_processors', 'id', $db );
+		parent::__construct( '#__acctexp_config_processors', 'id', $db );
 	}
 
 	function declareParamFields()
@@ -3110,7 +3122,7 @@ class processor extends serialParamDBTable
 
 	function loadName( $name )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_config_processors'
@@ -3245,7 +3257,7 @@ class processor extends serialParamDBTable
 		}
 
 		if ( $connection === false ) {
-			global $database;
+			$database = &JFactory::getDBO();
 
 			if ( $errno == 0 ) {
 				$errstr .= " This is usually an SSL error.  Check if your server supports fsocket open via SSL.";
@@ -3288,7 +3300,7 @@ class processor extends serialParamDBTable
 		if ( !function_exists( 'curl_init' ) ) {
 			$response = false;
 
-			global $database;
+			$database = &JFactory::getDBO();
 			$short	= 'cURL failure';
 			$event	= 'Trying to establish connection with ' . $url . ' failed - curl_init is not available - will try fsockopen instead. If Error persists and fsockopen works, please permanently switch to using that!';
 			$tags	= 'processor,payment,phperror';
@@ -3359,7 +3371,7 @@ class processor extends serialParamDBTable
 		$response = curl_exec( $ch );
 
 		if ( $response === false ) {
-			global $database;
+			$database = &JFactory::getDBO();
 
 			$short	= 'cURL failure';
 			$event	= 'Trying to establish connection with ' . $url . ' failed with Error #' . curl_errno( $ch ) . ' ( "' . curl_error( $ch ) . '" ) - will try fsockopen instead. If Error persists and fsockopen works, please permanently switch to using that!';
@@ -3722,7 +3734,7 @@ class XMLprocessor extends processor
 
 	function checkoutProcess( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		// Create the xml string
 		$xml = $this->createRequestXML( $request );
@@ -4651,7 +4663,7 @@ class ItemGroupHandler
 {
 	function getGroups()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT id'
 				. ' FROM #__acctexp_itemgroups'
@@ -4662,7 +4674,7 @@ class ItemGroupHandler
 
 	function getTree()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT id'
 				. ' FROM #__acctexp_itemxgroup'
@@ -4722,7 +4734,7 @@ class ItemGroupHandler
 
 	function groupName( $groupid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT name'
 				. ' FROM #__acctexp_itemgroups'
@@ -4734,7 +4746,7 @@ class ItemGroupHandler
 
 	function groupColor( $groupid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$group = new ItemGroup( $database );
 		$group->load( $groupid );
@@ -4744,7 +4756,7 @@ class ItemGroupHandler
 
 	function groupIcon( $groupid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$group = new ItemGroup( $database );
 		$group->load( $groupid );
@@ -4754,7 +4766,7 @@ class ItemGroupHandler
 
 	function parentGroups( $item_id, $type='item' )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT group_id'
 				. ' FROM #__acctexp_itemxgroup'
@@ -4783,7 +4795,7 @@ class ItemGroupHandler
 
 	function setChild( $child_id, $group_id, $type='item' )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		if ( $type == 'group' ) {
 			// Don't let a group be assigned to itself
@@ -4805,7 +4817,7 @@ class ItemGroupHandler
 
 	function setChildren( $group_id, $children, $type='item' )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		foreach ( $children as $child_id ) {
 			// Check bogus assignments
@@ -4835,7 +4847,7 @@ class ItemGroupHandler
 
 	function getChildren( $groups, $type )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$where = array();
 
@@ -4934,7 +4946,7 @@ class ItemGroupHandler
 
 	function getTotalAllowedChildItems( $gids, $metaUser, $list=array() )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$groups = ItemGroupHandler::getChildren( $gids, 'group' );
 
@@ -4998,7 +5010,7 @@ class ItemGroupHandler
 
 	function removeChildren( $items, $groups, $type='item' )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'DELETE'
 				. ' FROM #__acctexp_itemxgroup'
@@ -5044,7 +5056,7 @@ class ItemGroup extends serialParamDBTable
 
 	function ItemGroup( &$db )
 	{
-		$this->mosDBTable( '#__acctexp_itemgroups', 'id', $db );
+		parent::__construct( '#__acctexp_itemgroups', 'id', $db );
 	}
 
 	function getProperty( $name )
@@ -5088,7 +5100,7 @@ class ItemGroup extends serialParamDBTable
 
 	function savePOSTsettings( $post )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		// Fake knowing the planid if is zero.
 		if ( !empty( $post['id'] ) ) {
@@ -5183,7 +5195,7 @@ class ItemGroup extends serialParamDBTable
 
 	function delete()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		if ( $this->id == 1 ) {
 			return false;
@@ -5215,7 +5227,7 @@ class ItemGroup extends serialParamDBTable
 	}
 }
 
-class itemXgroup extends mosDBTable
+class itemXgroup extends JTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -5228,7 +5240,7 @@ class itemXgroup extends mosDBTable
 
 	function itemXgroup( &$db )
 	{
-		$this->mosDBTable( '#__acctexp_itemxgroup', 'id', $db );
+		parent::__construct( '#__acctexp_itemxgroup', 'id', $db );
 	}
 
 	function createNew( $type, $item_id, $group_id )
@@ -5260,7 +5272,7 @@ class SubscriptionPlanHandler
 {
 	function getPlanList( $limitstart=false, $limit=false, $use_order=false )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT id'
 			 	. ' FROM #__acctexp_plans'
@@ -5284,7 +5296,7 @@ class SubscriptionPlanHandler
 
 	function getActivePlanList()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		// get entry Plan selection
 		$available_plans	= array();
@@ -5306,7 +5318,7 @@ class SubscriptionPlanHandler
 
 	function getFullPlanList( $limitstart=false, $limit=false, $subselect=array() )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT *'
 				. ' FROM #__acctexp_plans'
@@ -5332,7 +5344,7 @@ class SubscriptionPlanHandler
 
 	function getPlanUserlist( $planid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `userid`'
 				. ' FROM #__acctexp_subscr'
@@ -5345,7 +5357,7 @@ class SubscriptionPlanHandler
 
 	function PlanStatus( $planid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `active`'
 				. ' FROM #__acctexp_plans'
@@ -5358,7 +5370,7 @@ class SubscriptionPlanHandler
 
 	function listPlans()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT id'
 				. ' FROM #__acctexp_plans'
@@ -5396,7 +5408,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 	function SubscriptionPlan( &$db )
 	{
-		$this->mosDBTable( '#__acctexp_plans', 'id', $db );
+		parent::__construct( '#__acctexp_plans', 'id', $db );
 	}
 
 	function declareParamFields()
@@ -5435,7 +5447,9 @@ class SubscriptionPlan extends serialParamDBTable
 
 	function applyPlan( $userid, $processor = 'none', $silent = 0, $multiplicator = 1, $invoice = null, $tempparams = null )
 	{
-		global $database, $mainframe, $mosConfig_offset, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $mainframe, $mosConfig_offset, $aecConfig;
 
 		$forcelifetime = false;
 
@@ -5649,7 +5663,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 	function doPlanComparison( $user_subscription )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$return['total_comparison']	= false;
 		$return['comparison']		= false;
@@ -5747,7 +5761,7 @@ class SubscriptionPlan extends serialParamDBTable
 		$mis = $this->getMicroIntegrations();
 
 		if ( !empty( $mis ) ) {
-			global $database;
+			$database = &JFactory::getDBO();
 
 			$params = array();
 			$lists = array();
@@ -5788,7 +5802,7 @@ class SubscriptionPlan extends serialParamDBTable
 		$mis = $this->getMicroIntegrations();
 
 		if ( !empty( $mis ) ) {
-			global $database;
+			$database = &JFactory::getDBO();
 
 			$v = array();
 			foreach ( $mis as $mi_id ) {
@@ -5921,7 +5935,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 	function savePOSTsettings( $post )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		if ( !empty( $post['id'] ) ) {
 			$planid = $post['id'];
@@ -6152,7 +6166,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 	function saveParams( $params )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		// If the admin wants this to be a free plan, we have to make this more explicit
 		// Setting processors to zero and full_free
@@ -6216,7 +6230,7 @@ class logHistory extends serialParamDBTable
 	*/
 	function logHistory( &$db )
 	{
-		$this->mosDBTable( '#__acctexp_log_history', 'id', $db );
+		parent::__construct( '#__acctexp_log_history', 'id', $db );
 	}
 
 	function declareParamFields()
@@ -6226,7 +6240,9 @@ class logHistory extends serialParamDBTable
 
 	function entryFromInvoice( $objInvoice, $response, $pp )
 	{
-		global $database, $mosConfig_offset;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_offset;
 
 		$user = new mosUser( $database );
 		$user->load( $objInvoice->userid );
@@ -6273,7 +6289,7 @@ class aecTempToken extends serialParamDBTable
 
 	function aecTempToken(&$db)
 	{
-		$this->mosDBTable( '#__acctexp_temptoken', 'id', $db );
+		parent::__construct( '#__acctexp_temptoken', 'id', $db );
 	}
 
 	function declareParamFields()
@@ -6308,7 +6324,7 @@ class aecTempToken extends serialParamDBTable
 
 	function getByToken( $token )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 		. ' FROM #__acctexp_temptoken'
@@ -6337,7 +6353,9 @@ class aecTempToken extends serialParamDBTable
 
 	function create( $content, $token=null )
 	{
-		global $database, $mosConfig_offset;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_offset;
 
 		if ( empty( $token ) ) {
 			$session =& JFactory::getSession();
@@ -6385,7 +6403,9 @@ class InvoiceFactory
 
 	function InvoiceFactory( $userid=null, $usage=null, $group=null, $processor=null, $invoice=null, $passthrough=null )
 	{
-		global $database, $mainframe, $my;
+		$database = &JFactory::getDBO();
+
+		global $mainframe, $my;
 
 		$this->userid = $userid;
 		$this->authed = false;
@@ -6458,7 +6478,7 @@ class InvoiceFactory
 
 	function verifyUsage()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$this->loadMetaUser( false, true );
 
@@ -6487,7 +6507,7 @@ class InvoiceFactory
 
 	function puffer( $option )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		if ( !empty( $this->usage ) && ( strpos( $this->usage, 'c' ) === false ) ) {
 			// get the payment plan
@@ -6815,7 +6835,7 @@ class InvoiceFactory
 		$this->items = array();
 
 		if ( empty( $this->cartobject ) ) {
-			global $database;
+			$database = &JFactory::getDBO();
 
 			$terms = $this->plan->getTerms( $this->recurring, $this->metaUser->objSubscription, $this->metaUser );
 
@@ -6922,7 +6942,7 @@ class InvoiceFactory
 			}
 
 			if ( !is_object( $this->invoice ) ) {
-				global $database;
+				$database = &JFactory::getDBO();
 				$this->invoice = new Invoice( $database );
 			}
 
@@ -6943,7 +6963,7 @@ class InvoiceFactory
 				$this->create( $option, 0, $this->usage, $this->invoice_number_number );
 			}
 		} else {
-			global $database;
+			$database = &JFactory::getDBO();
 
 			$this->invoice = new Invoice( $database );
 
@@ -6993,7 +7013,7 @@ class InvoiceFactory
 
 	function storeInvoice()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$this->invoice->computeAmount( $this, true );
 
@@ -7129,7 +7149,9 @@ class InvoiceFactory
 
 	function create( $option, $intro=0, $usage=0, $group=0, $processor=null, $invoice=0 )
 	{
-		global $database, $mainframe, $my, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $mainframe, $my, $aecConfig;
 
 		$register = $this->loadMetaUser( true );
 
@@ -7522,7 +7544,9 @@ class InvoiceFactory
 
 	function confirm( $option )
 	{
-		global $database, $my, $aecConfig, $mosConfig_absolute_path;
+		$database = &JFactory::getDBO();
+
+		global $my, $aecConfig, $mosConfig_absolute_path;
 
 		if ( empty( $this->passthrough ) ) {
 			if ( !$this->checkAuth( $option ) ) {
@@ -7592,7 +7616,9 @@ class InvoiceFactory
 
 	function cart( $option )
 	{
-		global $database, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $aecConfig;
 
 		$this->getCart();
 
@@ -7619,7 +7645,9 @@ class InvoiceFactory
 
 	function confirmcart( $option, $coupon=null )
 	{
-		global $database, $mainframe, $task;
+		$database = &JFactory::getDBO();
+
+		global $mainframe, $task;
 
 		$this->confirmed = 1;
 
@@ -7649,7 +7677,9 @@ class InvoiceFactory
 
 	function save( $option, $coupon=null )
 	{
-		global $database, $mainframe, $task;
+		$database = &JFactory::getDBO();
+
+		global $mainframe, $task;
 
 		$this->confirmed = 1;
 
@@ -7747,7 +7777,9 @@ class InvoiceFactory
 
 	function checkout( $option, $repeat=0, $error=null, $coupon=null )
 	{
-		global $database, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $aecConfig;
 
 		if ( !$this->checkAuth( $option ) ) {
 			return false;
@@ -7899,7 +7931,7 @@ class InvoiceFactory
 
 	function getObjUsage()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$usage = null;
 		if ( isset( $this->invoice->usage ) ) {
@@ -7937,7 +7969,7 @@ class InvoiceFactory
 
 	function internalcheckout( $option )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$this->metaUser = new metaUser( $this->userid );
 
@@ -7983,7 +8015,7 @@ class InvoiceFactory
 
 	function processorResponse( $option, $response )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$this->touchInvoice( $option );
 
@@ -8007,7 +8039,7 @@ class InvoiceFactory
 
 	function planprocessoraction( $action, $subscr=null )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$this->loadMetaUser();
 
@@ -8043,7 +8075,7 @@ class InvoiceFactory
 
 	function invoiceprocessoraction( $action, $invoiceNum=null )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$this->loadMetaUser();
 
@@ -8231,7 +8263,7 @@ class Invoice extends serialParamDBTable
 
 	function Invoice(&$db)
 	{
-		$this->mosDBTable( '#__acctexp_invoices', 'id', $db );
+		parent::__construct( '#__acctexp_invoices', 'id', $db );
 
 		if ( empty( $this->counter ) && ( $this->transaction_date != '0000-00-00 00:00:00' ) ) {
 			$this->counter = 1;
@@ -8260,7 +8292,7 @@ class Invoice extends serialParamDBTable
 
 	function loadInvoiceNumber( $invoiceNum )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT id'
 		. ' FROM #__acctexp_invoices'
@@ -8307,7 +8339,9 @@ class Invoice extends serialParamDBTable
 
 	function deformatInvoiceNumber()
 	{
-		global $database, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $aecConfig;
 
 		$query = 'SELECT invoice_number'
 		. ' FROM #__acctexp_invoices'
@@ -8321,7 +8355,7 @@ class Invoice extends serialParamDBTable
 
 	function loadbySubscriptionId( $subscrid, $userid=null )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_invoices'
@@ -8339,7 +8373,7 @@ class Invoice extends serialParamDBTable
 
 	function hasDuplicate( $userid, $invoiceNum )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_invoices'
@@ -8352,7 +8386,7 @@ class Invoice extends serialParamDBTable
 
 	function computeAmount( $InvoiceFactory=null, $save=true )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		if ( !empty( $InvoiceFactory->metaUser ) ) {
 			$metaUser = $InvoiceFactory->metaUser;
@@ -8531,7 +8565,7 @@ class Invoice extends serialParamDBTable
 
 	function generateInvoiceNumber( $maxlength = 16 )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$numberofrows	= 1;
 		while ( $numberofrows ) {
@@ -8550,7 +8584,7 @@ class Invoice extends serialParamDBTable
 
 	function processorResponse( $pp, $response, $resp='', $altvalidation=false )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$this->computeAmount();
 
@@ -8810,7 +8844,9 @@ class Invoice extends serialParamDBTable
 
 	function pay( $multiplicator=1 )
 	{
-		global $database, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $aecConfig;
 
 		$metaUser	= false;
 		$new_plan	= false;
@@ -9011,7 +9047,9 @@ class Invoice extends serialParamDBTable
 
 	function setTransactionDate()
 	{
-		global $database, $mosConfig_offset, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_offset, $aecConfig;
 
 		$tdate				= strtotime( $this->transaction_date );
 		$time_passed		= ( ( time() + $mosConfig_offset*3600 ) - $tdate ) / 3600;
@@ -9044,7 +9082,9 @@ class Invoice extends serialParamDBTable
 
 	function getFullVars( $InvoiceFactory )
 	{
-		global $database, $mosConfig_live_site;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_live_site;
 
 		if ( is_array( $this->params ) ) {
 			$int_var['params'] = $this->params;
@@ -9141,7 +9181,9 @@ class Invoice extends serialParamDBTable
 
 	function prepareProcessorLink( $InvoiceFactory=null )
 	{
-		global $database, $mosConfig_live_site;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_live_site;
 
 		if ( is_array( $this->params ) ) {
 			$int_var['params'] = $this->params;
@@ -9226,7 +9268,7 @@ class Invoice extends serialParamDBTable
 
 	function getObjUsage()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$usage = null;
 		if ( !empty( $this->usage ) ) {
@@ -9262,7 +9304,9 @@ class Invoice extends serialParamDBTable
 
 	function addTargetUser( $user_ident )
 	{
-		global $database, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $aecConfig;
 
 		if ( !empty( $aecConfig->cfg['checkout_as_gift'] ) ) {
 			if ( !empty( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
@@ -9359,7 +9403,7 @@ class Invoice extends serialParamDBTable
 
 	function removeCoupon( $coupon_code )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$oldcoupons = $this->coupons;
 
@@ -9423,7 +9467,7 @@ class aecCartHelper
 {
 	function getCartidbyUserid( $userid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_cart'
@@ -9437,7 +9481,7 @@ class aecCartHelper
 
 	function getCartbyUserid( $userid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$id = aecCartHelper::getCartidbyUserid( $userid );
 
@@ -9455,7 +9499,7 @@ class aecCartHelper
 	{
 		$item = $cart->getItem( $id );
 		if ( !empty( $item ) ) {
-			global $database;
+			$database = &JFactory::getDBO();
 
 			$plan = new SubscriptionPlan( $database );
 			$plan->load( $item['id'] );
@@ -9473,7 +9517,7 @@ class aecCartHelper
 
 	function getFirstSortedCartItemObject( $cart )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$highest = 0;
 		$cursor = 999999;
@@ -9589,7 +9633,7 @@ class aecCartHelper
 
 	function getInvoiceIdByCart( $cart )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT id'
 		. ' FROM #__acctexp_invoices'
@@ -9625,7 +9669,7 @@ class aecCart extends serialParamDBTable
 	*/
 	function aecCart( &$db )
 	{
-		$this->mosDBTable( '#__acctexp_cart', 'id', $db );
+		parent::__construct( '#__acctexp_cart', 'id', $db );
 	}
 
 	function declareParamFields()
@@ -9663,7 +9707,7 @@ class aecCart extends serialParamDBTable
 	function action( $action, $details=null )
 	{
 		if ( $action == "clearCart" ) {
-			global $database;
+			$database = &JFactory::getDBO();
 
 			// Delete Invoices referencing this Cart as well
 			$query = 'DELETE FROM #__acctexp_invoices WHERE `usage` = \'c.' . $this->id . '\'';
@@ -9848,7 +9892,7 @@ class aecCart extends serialParamDBTable
 
 	function getCheckout( $metaUser, $counter=0 )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$c = array();
 
@@ -10030,7 +10074,7 @@ class Subscription extends serialParamDBTable
 	*/
 	function Subscription( &$db )
 	{
-		$this->mosDBTable( '#__acctexp_subscr', 'id', $db );
+		parent::__construct( '#__acctexp_subscr', 'id', $db );
 	}
 
 	function declareParamFields()
@@ -10064,7 +10108,7 @@ class Subscription extends serialParamDBTable
 
 	function getSubscriptionID( $userid, $usage=null, $primary=1, $similar=false )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_subscr'
@@ -10123,7 +10167,7 @@ class Subscription extends serialParamDBTable
 
 	function makePrimary()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'UPDATE #__acctexp_subscr'
 				. ' SET `primary` = \'0\''
@@ -10166,7 +10210,9 @@ class Subscription extends serialParamDBTable
 
 	function is_expired( $offset=false )
 	{
-		global $database, $mosConfig_offset, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_offset, $aecConfig;
 
 		if ( !($this->expiration === '9999-12-31 00:00:00') ) {
 			$expiration_cushion = str_pad( $aecConfig->cfg['expiration_cushion'], 2, '0', STR_PAD_LEFT );
@@ -10219,7 +10265,9 @@ class Subscription extends serialParamDBTable
 	*/
 	function GetAlertLevel()
 	{
-		global $database, $mosConfig_offset, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_offset, $aecConfig;
 
 		if ( $this->expiration ) {
 			$alert['level']		= -1;
@@ -10251,7 +10299,9 @@ class Subscription extends serialParamDBTable
 
 	function verifylogin( $block, $metaUser=false )
 	{
-		global $mosConfig_live_site, $database, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_live_site, $aecConfig;
 
 		if ( strcmp( $this->status, 'Excluded' ) === 0 ) {
 			$expired = false;
@@ -10295,7 +10345,9 @@ class Subscription extends serialParamDBTable
 
 	function verify( $block, $metaUser=false )
 	{
-		global $mosConfig_live_site, $database, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_live_site, $aecConfig;
 
 		if ( strcmp( $this->status, 'Excluded' ) === 0 ) {
 			$expired = false;
@@ -10336,7 +10388,7 @@ class Subscription extends serialParamDBTable
 
 	function expire( $overridefallback=false )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		// Users who are excluded cannot expire
 		if ( strcmp( $this->status, 'Excluded' ) === 0 ) {
@@ -10394,7 +10446,7 @@ class Subscription extends serialParamDBTable
 
 	function cancel( $invoice=null )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		// Since some processors do not notify each period, we need to check whether the expiration
 		// lies too far in the future and cut it down to the end of the period the user has paid
@@ -10463,7 +10515,7 @@ class Subscription extends serialParamDBTable
 
 	function applyUsage( $usage = 0, $processor = 'none', $silent = 0, $multiplicator = 1, $invoice=null )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		if ( !$usage ) {
 			$usage = $this->plan;
@@ -10481,7 +10533,9 @@ class Subscription extends serialParamDBTable
 
 	function sendEmailRegistered( $renew, $adminonly=false )
 	{
-		global $database, $acl, $mainframe;
+		$database = &JFactory::getDBO();
+
+		global $acl, $mainframe;
 
 		$langPath = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/com_acctexp_language/';
 		if ( file_exists( $langPath . $mainframe->getCfg( 'mosConfig_lang' ) . '.php' ) ) {
@@ -10677,7 +10731,9 @@ class GeneralInfoRequester
 	 */
 	function detect_component( $component )
 	{
-		global $database, $mainframe, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $mainframe, $aecConfig;
 
 		$tables	= array();
 		$tables	= $database->getTableList();
@@ -10771,7 +10827,7 @@ class GeneralInfoRequester
 	 */
 	function getLowerACLGroup( $group_id )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$group_list	= array();
 		$groups		= '';
@@ -10807,7 +10863,7 @@ class AECfetchfromDB
 {
 	function UserIDfromInvoiceNumber( $invoice_number )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `userid`'
 				. ' FROM #__acctexp_invoices'
@@ -10819,7 +10875,7 @@ class AECfetchfromDB
 
 	function InvoiceIDfromNumber( $invoice_number, $userid = 0, $override_active = false )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_invoices'
@@ -10845,7 +10901,7 @@ class AECfetchfromDB
 
 	function InvoiceNumberfromId( $id, $override_active = false )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `invoice_number`'
 				. ' FROM #__acctexp_invoices'
@@ -10865,7 +10921,7 @@ class AECfetchfromDB
 
 	function lastUnclearedInvoiceIDbyUserID( $userid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `invoice_number`'
 				. ' FROM #__acctexp_invoices'
@@ -10879,7 +10935,7 @@ class AECfetchfromDB
 
 	function lastClearedInvoiceIDbyUserID( $userid, $planid=0 )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT id'
 				. ' FROM #__acctexp_invoices'
@@ -10898,7 +10954,7 @@ class AECfetchfromDB
 
 	function InvoiceCountbyUserID( $userid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_invoices'
@@ -10911,7 +10967,7 @@ class AECfetchfromDB
 
 	function SubscriptionIDfromUserID( $userid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_subscr'
@@ -10924,7 +10980,7 @@ class AECfetchfromDB
 
 	function UserIDfromSubscriptionID( $susbcriptionid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `userid`'
 				. ' FROM #__acctexp_subscr'
@@ -10985,7 +11041,7 @@ class reWriteEngine
 			$rewrite['user'][] = 'activationlink';
 
 			if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
-				global $database;
+				$database = &JFactory::getDBO();
 
 				$query = 'SELECT name, title'
 						. ' FROM #__comprofiler_fields'
@@ -11131,7 +11187,9 @@ class reWriteEngine
 
 	function armRewrite()
 	{
-		global $aecConfig, $database, $mosConfig_absolute_path, $mosConfig_live_site, $mosConfig_offset;
+		$database = &JFactory::getDBO();
+
+		global $aecConfig, $mosConfig_absolute_path, $mosConfig_live_site, $mosConfig_offset;
 
 		$this->rewrite = array();
 
@@ -11763,7 +11821,9 @@ class AECToolbox
 	 */
 	function deadsureURL( $url, $secure=false, $internal=false )
 	{
-		global $mosConfig_live_site, $mosConfig_absolute_path, $database, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_live_site, $mosConfig_absolute_path, $aecConfig;
 
 		$base = $mosConfig_live_site;
 
@@ -11835,7 +11895,9 @@ class AECToolbox
 	 */
 	function VerifyUsername( $username )
 	{
-		global $database, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $aecConfig;
 
 		$heartbeat = new aecHeartbeat( $database );
 		$heartbeat->frontendping();
@@ -11890,7 +11952,9 @@ class AECToolbox
 
 	function VerifyUser( $username )
 	{
-		global $database, $aecConfig;
+		$database = &JFactory::getDBO();
+
+		global $aecConfig;
 
 		$heartbeat = new aecHeartbeat( $database );
 		$heartbeat->frontendping();
@@ -11949,7 +12013,9 @@ class AECToolbox
 
 	function saveUserRegistration( $option, $var, $internal=false, $overrideActivation=false, $overrideEmails=false )
 	{
-		global $database, $mainframe, $task, $acl, $aecConfig; // Need to load $acl for Joomla and CBE
+		$database = &JFactory::getDBO();
+
+		global $mainframe, $task, $acl, $aecConfig; // Need to load $acl for Joomla and CBE
 
 		ob_start();
 
@@ -12229,7 +12295,7 @@ class AECToolbox
 
 	function quickVerifyUserID( $userid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `status`'
 				. ' FROM #__acctexp_subscr'
@@ -12601,7 +12667,7 @@ class AECToolbox
 					if ( isset( $subject->{$k} ) ) {
 						$return =& $subject->{$k};
 					} else {
-						global $database;
+						$database = &JFactory::getDBO();
 
 						$props = array_keys( get_object_vars( $subject ) );
 
@@ -12614,7 +12680,7 @@ class AECToolbox
 					if ( isset( $subject[$k] ) ) {
 						$return =& $subject[$k];
 					} else {
-						global $database;
+						$database = &JFactory::getDBO();
 
 						$props = array_keys( $subject );
 
@@ -12625,7 +12691,7 @@ class AECToolbox
 					}
 
 				} else {
-					global $database;
+					$database = &JFactory::getDBO();
 
 					$event = $erx . $k . '; neither property nor array field';
 
@@ -12651,7 +12717,7 @@ class microIntegrationHandler
 
 	function getMIList( $limitstart=false, $limit=false, $use_order=false, $name=false, $classname=false )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT id, class_name' . ( $name ? ', name' : '' )
 			 	. ' FROM #__acctexp_microintegrations'
@@ -12678,7 +12744,7 @@ class microIntegrationHandler
 
 	function compareMIs( $mi, $cmi_id )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$excluded_props = array( 'id' );
 
@@ -12722,7 +12788,7 @@ class microIntegrationHandler
 
 	function getMIsbyPlan( $plan_id )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `micro_integrations`'
 				. ' FROM #__acctexp_plans'
@@ -12740,7 +12806,7 @@ class microIntegrationHandler
 
 	function getPlansbyMI( $mi_id )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_plans'
@@ -12766,7 +12832,7 @@ class microIntegrationHandler
 
 	function userPlanExpireActions( $metaUser, $subscription_plan )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$mi_autointegrations = $this->getAutoIntegrations();
 
@@ -12822,7 +12888,7 @@ class microIntegrationHandler
 
 	function getAutoIntegrations()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_microintegrations'
@@ -12834,7 +12900,7 @@ class microIntegrationHandler
 
 	function getUserChangeIntegrations()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT id'
 				. ' FROM #__acctexp_microintegrations'
@@ -12847,7 +12913,7 @@ class microIntegrationHandler
 
 	function userchange( $row, $post, $trace = '' )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$mi_list = $this->getUserChangeIntegrations();
 
@@ -12886,7 +12952,7 @@ class microIntegrationHandler
 
 	function applyMIs( &$terms, $subscription, $metaUser )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$add = new stdClass();
 		$add->terms =& $terms;
@@ -12980,7 +13046,7 @@ class MI
 
 	function issueUniqueEvent( $request, $event, $due_date, $context=array(), $params=array(), $customparams=array() )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_event'
@@ -13002,7 +13068,7 @@ class MI
 
 	function redateUniqueEvent( $request, $event, $due_date, $context=array(), $params=array(), $customparams=array() )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_event'
@@ -13030,7 +13096,7 @@ class MI
 
 	function removeEvents( $request, $event )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'DELETE'
 				. ' FROM #__acctexp_event'
@@ -13046,7 +13112,7 @@ class MI
 
 	function issueEvent( $request, $event, $due_date, $context=array(), $params=array(), $customparams=array() )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		if ( !empty( $request->metaUser ) ) {
 			$context['user_id']	= $request->metaUser->userid;
@@ -13075,7 +13141,7 @@ class MI
 
 	function aecEventHook( $event )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$method = 'aecEventHook' . $event->event;
 
@@ -13139,7 +13205,7 @@ class microIntegration extends serialParamDBTable
 
 	function microIntegration(&$db)
 	{
-		$this->mosDBTable( '#__acctexp_microintegrations', 'id', $db );
+		parent::__construct( '#__acctexp_microintegrations', 'id', $db );
 
 		if ( !defined( '_AEC_LANG_INCLUDED_MI' ) ) {
 			$this->callMILanguage();
@@ -13191,7 +13257,7 @@ class microIntegration extends serialParamDBTable
 
 	function mi_exists( $mi_id )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_microintegrations'
@@ -13384,7 +13450,7 @@ class microIntegration extends serialParamDBTable
 
 		// If returning fatal error, issue additional entry
 		if ( $return === false ) {
-			global $database;
+			$database = &JFactory::getDBO();
 
 			$error = 'The MI "' . $this->name . '" ('.$this->class_name.') could not be carried out due to errors, plan application was halted';
 
@@ -13702,7 +13768,7 @@ class microIntegration extends serialParamDBTable
 		$this->pre_exp_check	= $array['pre_exp_check'];
 
 		if ( !empty( $new_params['rebuild'] ) ) {
-			global $database;
+			$database = &JFactory::getDBO();
 
 			$planlist = MicroIntegrationHandler::getPlansbyMI( $this->id );
 
@@ -13724,7 +13790,7 @@ class microIntegration extends serialParamDBTable
 		}
 
 		if ( !empty( $new_params['remove'] ) ) {
-			global $database;
+			$database = &JFactory::getDBO();
 
 			$planlist = MicroIntegrationHandler::getPlansbyMI( $this->id );
 
@@ -13782,7 +13848,7 @@ class microIntegration extends serialParamDBTable
 		$method = 'customtab_' . $action;
 
 		if ( method_exists( $this->mi_class, $method ) ) {
-			global $database;
+			$database = &JFactory::getDBO();
 
 			$request = new stdClass();
 			$request->parent			=& $this;
@@ -14281,7 +14347,7 @@ class couponHandler
 
 	function load( $coupon_code )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		// Get this coupons id from the static table
 		$query = 'SELECT `id`'
@@ -14383,7 +14449,7 @@ class couponHandler
 
 	function forceload( $coupon_code )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		// Get this coupons id from the static table
 		$query = 'SELECT `id`'
@@ -14424,7 +14490,7 @@ class couponHandler
 
 	function switchType()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		// Duplicate Coupon at other table
 		$newcoupon = new coupon( $database, !$this->type );
@@ -14452,7 +14518,7 @@ class couponHandler
 
 	function incrementCount( $invoice )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		// Get existing coupon relations for this user
 		$query = 'SELECT `id`'
@@ -14488,7 +14554,7 @@ class couponHandler
 
 	function decrementCount( $invoice )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		// Get existing coupon relations for this user
 		$query = 'SELECT `id`'
@@ -14899,9 +14965,9 @@ class coupon extends serialParamDBTable
 	function coupon( &$db, $type )
 	{
 		if ( $type ) {
-			$this->mosDBTable( '#__acctexp_coupons_static', 'id', $db );
+			parent::__construct( '#__acctexp_coupons_static', 'id', $db );
 		} else {
-			$this->mosDBTable( '#__acctexp_coupons', 'id', $db );
+			parent::__construct( '#__acctexp_coupons', 'id', $db );
 		}
 	}
 
@@ -15026,7 +15092,7 @@ class coupon extends serialParamDBTable
 
 	function generateCouponCode( $maxlength = 6 )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$numberofrows = 1;
 
@@ -15077,7 +15143,7 @@ class couponXuser extends serialParamDBTable
 
 	function couponXuser( &$db )
 	{
-		$this->mosDBTable( '#__acctexp_couponsxuser', 'id', $db );
+		parent::__construct( '#__acctexp_couponsxuser', 'id', $db );
 	}
 
 	function declareParamFields()
@@ -15189,7 +15255,7 @@ class aecExport extends serialParamDBTable
 
 	function aecExport( &$db )
 	{
-		$this->mosDBTable( '#__acctexp_export', 'id', $db );
+		parent::__construct( '#__acctexp_export', 'id', $db );
 	}
 
 	function declareParamFields()
@@ -15439,7 +15505,7 @@ class aecReadout
 
 	function readProcessors()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$readout = array();
 
@@ -15532,7 +15598,7 @@ class aecReadout
 
 	function readPlans()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$r = array();
 		$r['head'] = "Payment Plans";
@@ -15617,7 +15683,7 @@ class aecReadout
 
 	function readPlanMIrel()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$r = array();
 		$r['head'] = "Payment Plan - MicroIntegration relationships";
@@ -15679,7 +15745,7 @@ class aecReadout
 
 	function readMIs()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$r = array();
 		$r['head'] = "Micro Integration";
@@ -16145,7 +16211,9 @@ class aecRestrictionHelper
 
 	function getLists( $params_values, $restrictions_values )
 	{
-		global $database, $my, $acl;
+		$database = &JFactory::getDBO();
+
+		global $my, $acl;
 
 		// ensure user can't add group higher than themselves
 		$my_groups = $acl->get_object_groups( 'users', $my->id, 'ARO' );

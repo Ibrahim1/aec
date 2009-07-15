@@ -15,7 +15,7 @@ class mi_aecdonate
 {
 	function Settings()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$settings = array();
 
@@ -41,7 +41,7 @@ class mi_aecdonate
 
 	function getMIform()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$settings = array();
 

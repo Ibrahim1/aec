@@ -15,7 +15,7 @@ class mi_aecplan
 {
 	function Settings()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id` AS value, `name` AS text'
 				. ' FROM #__acctexp_plans'
@@ -53,7 +53,7 @@ class mi_aecplan
 			}
 		}
 
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$new_plan = new SubscriptionPlan( $database );
 		$new_plan->load( $this->settings['plan_apply'.$area] );

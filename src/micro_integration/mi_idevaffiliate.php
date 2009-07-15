@@ -39,7 +39,9 @@ class mi_idevaffiliate
 
 	function action( $request )
 	{
-		global $database, $mosConfig_live_site;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_live_site;
 
 		$rooturl = $this->getPath();
 

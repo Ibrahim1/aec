@@ -38,7 +38,9 @@ class mi_qmacd_1 {
 	}*/
 
 	function expiration_action($params, $userid, $plan) {
-		global $database, $qmacddatabase, $mosConfig_debug;
+		$database = &JFactory::getDBO();
+
+	global $qmacddatabase, $mosConfig_debug;
 
 		if(!method_exists($qmacddatabase,"setQuery")){
 			$qmacddatabase = new database( $params['qmacd_dbhost'], $params['qmacd_dbuser'], $params['qmacd_dbpass'], $params['qmacd_dbname'], "" );
@@ -57,7 +59,9 @@ class mi_qmacd_1 {
 	}
 
 	function action($params, $userid, $plan) {
-		global $database, $mosConfig_debug, $qmacddatabase;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_debug, $qmacddatabase;
 		$salt="zdlksjlkjfsdkjf987sf98798sdfjlk2";
 
 		$wq= explode(" ",$params['quota']);
@@ -66,7 +70,9 @@ class mi_qmacd_1 {
 		elseif($wq[1] == "KB") $hd = $wq[0] * 1024;
 		else $hd = $wq[0];
 
-		//global $database, $qmacddatabase;
+		//$database = &JFactory::getDBO();
+
+	global $qmacddatabase;
 		if(!method_exists($qmacddatabase,"setQuery")){
 			$qmacddatabase = new database( $params['qmacd_dbhost'], $params['qmacd_dbuser'], $params['qmacd_dbpass'], $params['qmacd_dbname'], "" );
 			if ($qmacddatabase->getErrorNum()) {
@@ -85,7 +91,9 @@ class mi_qmacd_1 {
 	}
 
 	function userchange($row,$post,$params){
-		global $database, $mosConfig_debug, $qmacddatabase;
+		$database = &JFactory::getDBO();
+
+	global $mosConfig_debug, $qmacddatabase;
 
 		if($post['task']=="saveregisters" || $post['task']=="saveRegistration"){
 			if(!method_exists($qmacddatabase,"setQuery")){

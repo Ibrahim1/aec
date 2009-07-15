@@ -37,7 +37,7 @@ class mi_mysql_query
 	function relayAction( $request, $area )
 	{
 		if ( isset( $this->settings['query'.$area] ) ) {
-			global $database;
+			$database = &JFactory::getDBO();
 
 			$query = AECToolbox::rewriteEngineRQ( $this->settings['query'.$area], $request );
 

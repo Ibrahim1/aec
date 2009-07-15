@@ -333,7 +333,9 @@ class eucaList
 
 	function buildRows()
 	{
-		global $mainframe, $database, $mosConfig_list_limit;
+		$database = &JFactory::getDBO();
+
+		global $mainframe, $mosConfig_list_limit;
 
 		$option = 'com_' . _EUCA_APP_SHORTNAME;
 
@@ -560,7 +562,7 @@ class eucaObjectHandler
 
 	function edit( $id )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$params_values = array();
 		$params_values['startform'] = $this->area . '_' . $this->focus . '_save';
@@ -648,7 +650,7 @@ class eucaObjectHandler
 
 	function save()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		if ( isset( $_POST['euca_collation'] ) ) {
 
@@ -676,7 +678,7 @@ class eucaObjectHandler
 
 	function delete( $id )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$object = new $this->rootclass( $database );
 		$object->load( $id );

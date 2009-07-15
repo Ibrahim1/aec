@@ -24,7 +24,7 @@ class mi_virtuemart
 
 	function Settings()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `shopper_group_id`, `shopper_group_name`'
 				. ' FROM #__vm_shopper_group'
@@ -71,7 +71,7 @@ class mi_virtuemart
 
 	function action( $request )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		if ( $this->settings['set_shopper_group'] ) {
 			if ( $this->checkVMuserexists( $request->metaUser->userid ) ) {
@@ -88,7 +88,7 @@ class mi_virtuemart
 
 	function checkVMuserexists( $userid )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `user_id`' // Jonathan Appleton changed this from id to user_id - good find indeed!
 				. ' FROM #__vm_user_info'
@@ -100,7 +100,7 @@ class mi_virtuemart
 
 	function updateVMuserSgroup( $userid, $shoppergroup )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'UPDATE #__vm_shopper_vendor_xref'
 				. ' SET `shopper_group_id` = \'' . $shoppergroup . '\''
@@ -112,7 +112,7 @@ class mi_virtuemart
 
 	function createVMuser( $metaUser, $shoppergroup )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		// TODO: Replace with RWEngine call
 		$name = explode( ' ', $metaUser->cmsUser->name );

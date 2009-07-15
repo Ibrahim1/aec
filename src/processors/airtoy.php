@@ -60,7 +60,9 @@ class processor_airtoy extends XMLprocessor
 
 	function checkoutform( $request )
 	{
-		global $mosConfig_live_site, $database;
+		$database = &JFactory::getDBO();
+
+		global $mosConfig_live_site;
 
 		$code = $request->int_var['planparams']['smscode_prefix'] . ' ' . $request->invoice->id;
 
@@ -111,7 +113,7 @@ class processor_airtoy extends XMLprocessor
 
 	function parseNotification( $post )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$smscode	= aecGetParam('smscode');
 		$secret		= aecGetParam('secret');

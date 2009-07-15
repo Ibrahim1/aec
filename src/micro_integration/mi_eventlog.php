@@ -53,7 +53,7 @@ class mi_eventlog extends MI
 
 	function relayAction( $request, $area )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$rewriting = array( 'short', 'tags', 'text', 'params' );
 

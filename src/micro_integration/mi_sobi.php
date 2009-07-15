@@ -14,7 +14,7 @@ class mi_sobi extends MI
 {
 	function Settings()
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
         $settings = array();
 		$settings['publish_all']		= array( 'list_yesno' );
@@ -62,7 +62,7 @@ class mi_sobi extends MI
 
 	function publishItems( $metaUser )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'UPDATE #__sobi2_item'
 				. ' SET `published` = \'1\''
@@ -79,7 +79,7 @@ class mi_sobi extends MI
 
 	function unpublishItems( $metaUser )
 	{
-		global $database;
+		$database = &JFactory::getDBO();
 
 		$query = 'UPDATE #__sobi2_item'
 				. ' SET `published` = \'0\''

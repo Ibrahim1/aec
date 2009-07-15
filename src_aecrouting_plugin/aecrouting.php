@@ -123,7 +123,7 @@ class plgSystemAECrouting extends JPlugin
 		$vars['has_usage']	= !empty( $vars['usage'] );
 
 		if ( ( $vars['joms_any'] || $vars['ccb12'] ) && !$vars['has_usage'] ) {
-			global $database;
+			$database = &JFactory::getDBO();
 
 			if ( $vars['joms_any'] ) {
 				$vars['username']	= aecGetParam( 'jsusername', "", true, array( 'string', 'clear_nonalnum' ) );
@@ -188,7 +188,7 @@ class plgSystemAECrouting extends JPlugin
 			} elseif ( $vars['has_user'] && $vars['has_usage'] && $vars['joms_regs'] ) {
 				$mainframe->redirect( 'index.php?option=com_acctexp&task=subscribe&aectoken=1' );
 			} elseif ( $vars['has_usage'] && ( $vars['joms_reg'] || $vars['cb_reg'] ) ) {
-				global $database;
+				$database = &JFactory::getDBO();
 
 				$content = array();
 				$content['usage']		= $vars['usage'];
@@ -209,7 +209,7 @@ class plgSystemAECrouting extends JPlugin
 				}
 
 				if ( !empty( $username ) ) {
-					global $database;
+					$database = &JFactory::getDBO();
 
 					$temptoken = new aecTempToken( $database );
 					$temptoken->getComposite();
