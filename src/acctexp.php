@@ -355,7 +355,11 @@ function hold( $option, $userid )
 		$frontend = new HTML_frontEnd ();
 		$frontend->hold( $option, $metaUser );
 	} else {
-		mosRedirect( sefRelToAbs( 'index.php' ) );
+		if ( aecJoomla15check() ) {
+			$mainframe->redirect( sefRelToAbs( 'index.php' ) );
+		} else {
+			mosRedirect( sefRelToAbs( 'index.php' ) );
+		}
 	}
 }
 
@@ -449,7 +453,11 @@ function pending( $option, $userid )
 		$frontend = new HTML_frontEnd ();
 		$frontend->pending( $option, $objUser, $invoice, $reason );
 	} else {
-		mosRedirect( sefRelToAbs( 'index.php' ) );
+		if ( aecJoomla15check() ) {
+			$mainframe->redirect( sefRelToAbs( 'index.php' ) );
+		} else {
+			mosRedirect( sefRelToAbs( 'index.php' ) );
+		}
 	}
 }
 
@@ -1034,7 +1042,7 @@ function internalCheckout( $option, $invoice_number, $userid )
 		$invoicefact->touchInvoice( $option, $invoice_number );
 		$invoicefact->internalcheckout( $option );
 	} else {
-		mosNotAuth();
+		aecNotAuth();
 		return;
 	}
 }
@@ -1065,7 +1073,7 @@ function repeatInvoice( $option, $invoice_number, $userid, $first=0 )
 		$invoicefact->touchInvoice( $option, $invoice_number );
 		$invoicefact->checkout( $option, !$first );
 	} else {
-		mosNotAuth();
+		aecNotAuth();
 		return;
 	}
 }
@@ -1080,11 +1088,11 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid )
 		if ( $userid ) {
 			if ( AECToolbox::quickVerifyUserID( $userid ) === true ) {
 				// This user is not expired, so he could log in...
-				mosNotAuth();
+				aecNotAuth();
 				return;
 			}
 		} else {
-			mosNotAuth();
+			aecNotAuth();
 		}
 	} else {
 		$userid = $user->id;
@@ -1123,7 +1131,7 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid )
 			}
 		}
 	} else {
-		mosNotAuth();
+		aecNotAuth();
 		return;
 	}
 
@@ -1148,7 +1156,7 @@ function planaction( $option, $action, $subscr )
 		$invoicefact = new InvoiceFactory( $userid );
 		$invoicefact->planprocessoraction( $action, $subscr );
 	} else {
-		mosNotAuth();
+		aecNotAuth();
 		return;
 	}
 }
@@ -1294,7 +1302,11 @@ function notAllowed( $option )
 	global $mainframe, $aecConfig;
 
 	if ( ( $aecConfig->cfg['customnotallowed'] != '' ) && !is_null( $aecConfig->cfg['customnotallowed'] ) ) {
-		mosRedirect( $aecConfig->cfg['customnotallowed'] );
+		if ( aecJoomla15check() ) {
+			$mainframe->redirect( $aecConfig->cfg['customnotallowed'] );
+		} else {
+			mosRedirect( $aecConfig->cfg['customnotallowed'] );
+		}
 	}
 
 	$gwnames = PaymentProcessorHandler::getInstalledNameList( true );
@@ -1350,7 +1362,9 @@ function backSubscription( $option )
 
 	$user = &JFactory::getUser();
 
-	global $mainframe, $acl;
+	$acl = &JFactory::getACL();
+
+	global $mainframe;
 
 	// Rebuild array
 	foreach ( $_POST as $key => $value ) {
@@ -1478,6 +1492,25 @@ function cancelPayment( $option )
 		$mainframe->SetPageTitle( _CANCEL_TITLE );
 
 		HTML_Results::cancel( $option );
+	}
+}
+
+function aecNotAuth()
+{
+	if ( aecJoomla15check() ) {
+		$user =& JFactory::getUser();
+
+		echo JText::_('ALERTNOTAUTH');
+		if ( $user->get('id') < 1 ) {
+			echo "<br />" . JText::_( 'You need to login.' );
+		}
+	} else {
+		global $my;
+
+		echo _NOT_AUTH;
+		if ( $my->id < 1 ) {
+			echo "<br />" . _DO_LOGIN;
+		}
 	}
 }
 

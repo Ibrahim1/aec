@@ -100,7 +100,7 @@ class processor_alertpay extends POSTprocessor
 		$var['ap_itemname']		= $request->int_var['invoice'];
 		$var['ap_currency']		= $this->settings['currency'];
 		$var['ap_returnurl']	= AECToolbox::deadsureURL( "index.php?option=com_acctexp&amp;task=thanks" );
-		$var['ap_description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, JURI::base( true ), $request->metaUser->cmsUser->name, $request->metaUser->cmsUser->username );
+		$var['ap_description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, JURI::root(), $request->metaUser->cmsUser->name, $request->metaUser->cmsUser->username );
 
 		$var['ap_cancelurl']	= AECToolbox::deadsureURL( "index.php?option=com_acctexp&amp;task=cancel" );
 

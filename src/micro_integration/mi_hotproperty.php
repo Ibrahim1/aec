@@ -716,7 +716,7 @@ class aec_hotproperty extends serialParamDBTable
 	{
 		global $mainframe;
 
-		$langPathMI = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/micro_integration/language/';
+		$langPathMI = JPATH_SITE . '/components/com_acctexp/micro_integration/language/';
 		if ( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
 			include_once( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' );
 		} else {

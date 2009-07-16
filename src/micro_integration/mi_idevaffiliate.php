@@ -122,13 +122,13 @@ class mi_idevaffiliate
 				if ( ( strpos( $this->settings['directory'], 'www.' ) === 0 ) ) {
 					$rooturl = "http://" . $this->settings['directory'];
 				} elseif ( strpos( "/", $this->settings['directory'] ) !== 0 ) {
-					$rooturl = JURI::base( true ) . "/" . $this->settings['directory'];
+					$rooturl = JURI::root() . $this->settings['directory'];
 				} else {
-					$rooturl = JURI::base( true ) . $this->settings['directory'];
+					$rooturl = substr_replace(JURI::root(), '', -1, 1) . $this->settings['directory'];
 				}
 			}
 		} else {
-			$rooturl = JURI::base( true ) . '/idevaffiliate';
+			$rooturl = JURI::root() . 'idevaffiliate';
 		}
 
 		return $rooturl;

@@ -95,7 +95,7 @@ class processor_payer extends POSTprocessor
 		$Auth_url		= $baseurl . '&action=authenticate';
 		$Settle_url		= $baseurl . '&action=settle';
 		$Success_url	= $request->int_var['return_url'];
-		$Shop_url		= JURI::base( true ) . "/index.php";
+		$Shop_url		= JURI::root() . "index.php";
 
 			// Explode Name
 			$namearray		= explode( " ", $metaUser->cmsUser->name );

@@ -16,6 +16,10 @@ global $aecConfig;
 require_once( $mainframe->getPath( 'class' ) );
 require_once( $mainframe->getPath( 'admin_html' ) );
 
+if ( aecJoomla15check() ) {
+	JLoader::register('JPaneTabs',  JPATH_LIBRARIES.DS.'joomla'.DS.'html'.DS.'pane.php');
+}
+
 if ( !defined( '_EUCA_DEBUGMODE' ) ) {
 	define( '_EUCA_DEBUGMODE', $aecConfig->cfg['debugmode'] );
 }
@@ -28,9 +32,21 @@ if ( _EUCA_DEBUGMODE ) {
 
 $user = &JFactory::getUser();
 
-if (!$acl->acl_check( 'administration', 'config', 'users', $user->usertype )) {
+$acl = &JFactory::getACL();
 
-	if ( !( ( strcmp( $user->usertype, 'Administrator' ) === 0) && $aecConfig->cfg['adminaccess'] ) ) {
+if ( aecJoomla15check() ) {
+	$acl->addACL( 'administration', 'config', 'users', 'super administrator' );
+}
+
+$acpermission = $acl->acl_check( 'administration', 'config', 'users', $user->usertype );
+
+if ( !$acpermission ) {
+	if ( !( ( strcmp( $user->usertype, 'Administrator' ) === 0 ) && $aecConfig->cfg['adminaccess'] ) ) {
+		if ( aecJoomla15check() ) {
+			$mainframe->redirect( 'index2.php', _NOT_AUTH );
+		} else {
+			mosRedirect( 'index2.php', _NOT_AUTH );
+		}
 		mosRedirect( 'index2.php', _NOT_AUTH );
 	}
 }
@@ -894,7 +910,7 @@ function help( $option )
 	 * 6. Detect Only (0:No, 1:Yes -Don't display if Status=0)
 	 */
 	$pdfPath = $mainframe->getCfg( 'live_site' ) . '/administrator/components/com_acctexp/manual/';
-	if ( file_exists( $mainframe->getCfg( 'absolute_path' ) . '/administrator/components/com_acctexp/manual/AEC_Quickstart.' . _AEC_LANGUAGE . '.pdf' ) ) {
+	if ( file_exists( JPATH_SITE . '/administrator/components/com_acctexp/manual/AEC_Quickstart.' . _AEC_LANGUAGE . '.pdf' ) ) {
 		$pdfHelp = $pdfPath . 'AEC_Quickstart.' . _AEC_LANGUAGE . '.pdf';
 	} else {
 		$pdfHelp = $pdfPath . 'AEC_Quickstart.pdf';
@@ -1305,7 +1321,7 @@ function removeUser( $userid, $option )
 
 	$user = &JFactory::getUser();
 
-	global $acl;
+	$acl = &JFactory::getACL();
 
 	// $userid contains values corresponding to id field of #__acctexp table
 		if ( !is_array( $userid ) || count( $userid ) < 1 ) {
@@ -1364,7 +1380,9 @@ function removeClosedSubscription( $userid, $option )
 
 	$user = &JFactory::getUser();
 
-	global $acl, $mainframe;
+	$acl = &JFactory::getACL();
+
+	global $mainframe;
 
 	// $userid contains values corresponding to id field of #__acctexp table
 		if ( !is_array( $userid ) || count( $userid ) < 1 ) {
@@ -1445,7 +1463,9 @@ function removePendingSubscription( $userid, $option )
 
 	$user = &JFactory::getUser();
 
-	global $acl, $mainframe;
+	$acl = &JFactory::getACL();
+
+	global $mainframe;
 
 	// $userid contains values corresponding to id field of #__acctexp table
 		if ( !is_array( $userid ) || count( $userid ) < 1 ) {
@@ -1827,8 +1847,13 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$database->setQuery( $query );
 	$total = $database->loadResult();
 
-	require_once( $mainframe->getCfg( 'absolute_path' ) . '/administrator/includes/pageNavigation.php' );
-	$pageNav = new mosPageNav( $total, $limitstart, $limit );
+	if ( aecJoomla15check() ) {
+		jimport('joomla.html.pagination');
+		$pageNav = new JPagination( $total, $limitstart, $limit );
+	} else {
+	 	require_once( JPATH_SITE . '/administrator/includes/pageNavigation.php' );
+		$pageNav = new mosPageNav( $total, $limitstart, $limit );
+	}
 
 	// get the subset (based on limits) of required records
 	if ( $notconfig ) {
@@ -1997,7 +2022,9 @@ function editSettings( $option )
 
 	$user = &JFactory::getUser();
 
-	global $acl, $aecConfig;
+	$acl = &JFactory::getACL();
+
+	global $aecConfig;
 
 	// See whether we have a duplication
 	if ( $aecConfig->RowDuplicationCheck() ) {
@@ -2314,7 +2341,9 @@ function saveSettings( $option, $return=0 )
 
 	$user = &JFactory::getUser();
 
-	global $mainframe, $acl, $aecConfig;
+	$acl = &JFactory::getACL();
+
+	global $mainframe, $aecConfig;
 
 	unset( $_POST['id'] );
 	unset( $_POST['task'] );
@@ -2404,8 +2433,13 @@ function listProcessors( $option )
  		$limitstart = 0;
  	}
 
- 	require_once( $mainframe->getCfg( 'absolute_path' ) . '/administrator/includes/pageNavigation.php' );
-	$pageNav = new mosPageNav( $total, $limitstart, $limit );
+	if ( aecJoomla15check() ) {
+		jimport('joomla.html.pagination');
+		$pageNav = new JPagination( $total, $limitstart, $limit );
+	} else {
+	 	require_once( JPATH_SITE . '/administrator/includes/pageNavigation.php' );
+		$pageNav = new mosPageNav( $total, $limitstart, $limit );
+	}
 
  	// get the subset (based on limits) of records
  	$query = 'SELECT name'
@@ -2669,7 +2703,9 @@ function saveProcessor( $option, $return=0 )
 
 	$user = &JFactory::getUser();
 
-	global $mainframe, $acl, $aecConfig;
+	$acl = &JFactory::getACL();
+
+	global $mainframe, $aecConfig;
 
 	$pp = new PaymentProcessor();
 
@@ -2778,8 +2814,13 @@ function listSubscriptionPlans( $option )
  		$limitstart = 0;
  	}
 
- 	require_once( $mainframe->getCfg( 'absolute_path' ) . '/administrator/includes/pageNavigation.php' );
-	$pageNav = new mosPageNav( $total, $limitstart, $limit );
+	if ( aecJoomla15check() ) {
+		jimport('joomla.html.pagination');
+		$pageNav = new JPagination( $total, $limitstart, $limit );
+	} else {
+	 	require_once( JPATH_SITE . '/administrator/includes/pageNavigation.php' );
+		$pageNav = new mosPageNav( $total, $limitstart, $limit );
+	}
 
  	// get the subset (based on limits) of records
 	$rows = SubscriptionPlanHandler::getFullPlanList( $pageNav->limitstart, $pageNav->limit, $subselect );
@@ -2867,7 +2908,7 @@ function editSubscriptionPlan( $id, $option )
 
 	$user = &JFactory::getUser();
 
-	global $acl;
+	$acl = &JFactory::getACL();
 
 	$lists = array();
 	$params_values = array();
@@ -3596,8 +3637,13 @@ function listItemGroups( $option )
  		$limitstart = 0;
  	}
 
- 	require_once( $mainframe->getCfg( 'absolute_path' ) . '/administrator/includes/pageNavigation.php' );
-	$pageNav = new mosPageNav( $total, $limitstart, $limit );
+	if ( aecJoomla15check() ) {
+		jimport('joomla.html.pagination');
+		$pageNav = new JPagination( $total, $limitstart, $limit );
+	} else {
+	 	require_once( JPATH_SITE . '/administrator/includes/pageNavigation.php' );
+		$pageNav = new mosPageNav( $total, $limitstart, $limit );
+	}
 
  	// get the subset (based on limits) of records
  	$query = 'SELECT *'
@@ -3957,8 +4003,13 @@ function listMicroIntegrations( $option )
 		$limitstart = 0;
 	}
 
-	require_once( $mainframe->getCfg( 'absolute_path' ) . '/administrator/includes/pageNavigation.php' );
-	$pageNav = new mosPageNav( $total, $limitstart, $limit );
+	if ( aecJoomla15check() ) {
+		jimport('joomla.html.pagination');
+		$pageNav = new JPagination( $total, $limitstart, $limit );
+	} else {
+	 	require_once( JPATH_SITE . '/administrator/includes/pageNavigation.php' );
+		$pageNav = new mosPageNav( $total, $limitstart, $limit );
+	}
 
 	$where = array();
 	$where[] = '`hidden` = \'0\'';
@@ -4028,7 +4079,9 @@ function editMicroIntegration ( $id, $option )
 
 	$user = &JFactory::getUser();
 
-	global $acl, $aecConfig;
+	$acl = &JFactory::getACL();
+
+	global $aecConfig;
 
 	$lists	= array();
 	$mi		= new microIntegration( $database );
@@ -4286,8 +4339,13 @@ function listCoupons( $option, $type )
  		$limitstart = 0;
  	}
 
- 	require_once( $mainframe->getCfg( 'absolute_path' ) . '/administrator/includes/pageNavigation.php' );
-	$pageNav = new mosPageNav( $total, $limitstart, $limit );
+	if ( aecJoomla15check() ) {
+		jimport('joomla.html.pagination');
+		$pageNav = new JPagination( $total, $limitstart, $limit );
+	} else {
+	 	require_once( JPATH_SITE . '/administrator/includes/pageNavigation.php' );
+		$pageNav = new mosPageNav( $total, $limitstart, $limit );
+	}
 
  	// get the subset (based on limits) of required records
  	$query = 'SELECT *'
@@ -4313,7 +4371,9 @@ function editCoupon( $id, $option, $new, $type )
 
 	$user = &JFactory::getUser();
 
-	global $acl, $mainframe;
+	$acl = &JFactory::getACL();
+
+	global $mainframe;
 
 	$lists					= array();
 	$params_values			= array();
@@ -4793,8 +4853,13 @@ function invoices( $option )
 	$total = $database->loadResult();
 	echo $database->getErrorMsg();
 
-	require_once( $mainframe->getCfg( 'absolute_path' ) . '/administrator/includes/pageNavigation.php' );
-	$pageNav = new mosPageNav( $total, $limitstart, $limit );
+	if ( aecJoomla15check() ) {
+		jimport('joomla.html.pagination');
+		$pageNav = new JPagination( $total, $limitstart, $limit );
+	} else {
+	 	require_once( JPATH_SITE . '/administrator/includes/pageNavigation.php' );
+		$pageNav = new mosPageNav( $total, $limitstart, $limit );
+	}
 
 	// Lets grab the data and fill it in.
 	$query = 'SELECT *'
@@ -4898,8 +4963,13 @@ function history( $option )
 	$total = $database->loadResult();
 	echo $database->getErrorMsg();
 
-	require_once( $mainframe->getCfg( 'absolute_path' ) . '/administrator/includes/pageNavigation.php' );
-	$pageNav = new mosPageNav( $total, $limitstart, $limit );
+	if ( aecJoomla15check() ) {
+		jimport('joomla.html.pagination');
+		$pageNav = new JPagination( $total, $limitstart, $limit );
+	} else {
+	 	require_once( JPATH_SITE . '/administrator/includes/pageNavigation.php' );
+		$pageNav = new mosPageNav( $total, $limitstart, $limit );
+	}
 
 	// Lets grab the data and fill it in.
 	$query = 'SELECT *'
@@ -4951,8 +5021,13 @@ function eventlog( $option )
 	$total = $database->loadResult();
 	echo $database->getErrorMsg();
 
-	require_once( $mainframe->getCfg( 'absolute_path' ) . '/administrator/includes/pageNavigation.php' );
-	$pageNav = new mosPageNav( $total, $limitstart, $limit );
+	if ( aecJoomla15check() ) {
+		jimport('joomla.html.pagination');
+		$pageNav = new JPagination( $total, $limitstart, $limit );
+	} else {
+	 	require_once( JPATH_SITE . '/administrator/includes/pageNavigation.php' );
+		$pageNav = new mosPageNav( $total, $limitstart, $limit );
+	}
 
 	// Lets grab the data and fill it in.
 	$query = 'SELECT id'
@@ -5143,7 +5218,7 @@ function quicklookup( $option )
 					$JTableUser = new JTableUser( $database );
 					$JTableUser->load( $user );
 					$userlink = '<a href="';
-					$userlink .= JURI::base( true ) . '/administrator/index2.php?option=com_acctexp&amp;task=edit&amp;userid=' . $JTableUser->id;
+					$userlink .= JURI::base() . 'index2.php?option=com_acctexp&amp;task=edit&amp;userid=' . $JTableUser->id;
 					$userlink .= '">';
 					$userlink .= $JTableUser->name . ' (' . $JTableUser->username . ')';
 					$userlink .= '</a>';
@@ -5246,7 +5321,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 	global $mainframe;
 
 	if ( !defined( '_AEC_LANG_INCLUDED_MI' ) ) {
-		$langPathMI = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/micro_integration/language/';
+		$langPathMI = JPATH_SITE . '/components/com_acctexp/micro_integration/language/';
 		if ( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
 			include_once( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' );
 		} else {
@@ -5275,14 +5350,14 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 	$aec_userchange_clauseCB12	= '$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($userComplete, $_POST, \'%s\');' . "\n";
 	$aec_userchange_clause15	= '$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($userid, $post, \'%s\');' . "\n";
 	$aec_userregchange_clause15	= '$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($user, $post, \'%s\');' . "\n";
-	$aec_global_call			= 'global JURI::base( true ), JPATH_SITE;' . "\n";
-	$aec_redirect_notallowed	= 'mosRedirect( JURI::base( true ) . "/index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
+	$aec_global_call			= 'global JPATH_SITE;' . "\n";
+	$aec_redirect_notallowed	= 'mosRedirect( JURI::root() . "index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
 	$aec_redirect_notallowed15	= 'global $mainframe;' . "\n" . '$mainframe->redirect( "index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
 
 	if ( $v15 ) {
-		$aec_redirect_subscribe		= 'mosRedirect( JURI::base( true ) . \'/index.php?option=com_acctexp&task=subscribe\' );' . "\n";
+		$aec_redirect_subscribe		= 'mosRedirect( JURI::root() . \'index.php?option=com_acctexp&task=subscribe\' );' . "\n";
 	} else {
-		$aec_redirect_subscribe		= 'mosRedirect( JURI::base( true ) . "/index.php?option=com_acctexp&task=subscribe" );' . "\n";
+		$aec_redirect_subscribe		= 'mosRedirect( JURI::root() . "index.php?option=com_acctexp&task=subscribe" );' . "\n";
 	}
 
 	$aec_normal_hack = $aec_hack_start
@@ -5361,7 +5436,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 						. $aec_condition_start
 						. 'if (!isset($_POST[\'planid\'])) {' . "\n"
 						. $aec_include_class
-						. 'mosRedirect(JURI::base( true ) . "/index.php?option=com_acctexp&amp;task=subscribe");' . "\n"
+						. 'mosRedirect(JURI::root() . "index.php?option=com_acctexp&amp;task=subscribe");' . "\n"
 						. $aec_condition_end
 						. $aec_condition_end
 						. $aec_hack_end;
@@ -5373,7 +5448,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 						. $aec_condition_start
 						. 'if (!isset($_POST[\'usage\'])) {' . "\n"
 						. $aec_include_class
-						. 'mosRedirect(JURI::base( true ) . "/index.php?option=com_acctexp&amp;task=subscribe");' . "\n"
+						. 'mosRedirect(JURI::root() . "index.php?option=com_acctexp&amp;task=subscribe");' . "\n"
 						. $aec_condition_end
 						. $aec_condition_end
 						. $aec_hack_end;
@@ -5942,7 +6017,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 					$count = 0;
 					$query = 'SELECT COUNT(*)'
 							. ' FROM #__menu'
-							. ' WHERE `link` = \'' . JURI::base( true )  . '/index.php?option=com_acctexp&task=subscriptionDetails\''
+							. ' WHERE `link` = \'' . JURI::root()  . '/index.php?option=com_acctexp&task=subscriptionDetails\''
 							;
 					$database->setQuery( $query );
 					$count = $database->loadResult();
@@ -6010,11 +6085,11 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 				if ( !$undohack ) { // Create menu entry
 					if ( aecJoomla15check() ) {
 						$query = 'INSERT INTO #__menu'
-								. ' VALUES (\'\', \'usermenu\', \'' . _AEC_SPEC_MENU_ENTRY . '\', \'' . strtolower( _AEC_SPEC_MENU_ENTRY ) . '\', \'' . JURI::base( true )  . '/index.php?option=com_acctexp&task=subscriptionDetails\', \'url\', 1, 0, 0, 6, 0, 0, \'0000-00-00 00:00:00\', 0, 0, 1, 0, \'menu_image=-1\', 0, 0, 0)'
+								. ' VALUES (\'\', \'usermenu\', \'' . _AEC_SPEC_MENU_ENTRY . '\', \'' . strtolower( _AEC_SPEC_MENU_ENTRY ) . '\', \'' . JURI::root()  . '/index.php?option=com_acctexp&task=subscriptionDetails\', \'url\', 1, 0, 0, 6, 0, 0, \'0000-00-00 00:00:00\', 0, 0, 1, 0, \'menu_image=-1\', 0, 0, 0)'
 								;
 					} else {
 						$query = 'INSERT INTO #__menu'
-								. ' VALUES (\'\', \'usermenu\', \'' . _AEC_SPEC_MENU_ENTRY . '\', \'' . JURI::base( true )  . '/index.php?option=com_acctexp&task=subscriptionDetails\', \'url\', 1, 0, 0, 0, 6, 0, \'0000-00-00 00:00:00\', 0, 0, 1, 0, \'menu_image=-1\')'
+								. ' VALUES (\'\', \'usermenu\', \'' . _AEC_SPEC_MENU_ENTRY . '\', \'' . JURI::root()  . 'index.php?option=com_acctexp&task=subscriptionDetails\', \'url\', 1, 0, 0, 0, 6, 0, \'0000-00-00 00:00:00\', 0, 0, 1, 0, \'menu_image=-1\')'
 								;
 					}
 				} else { // Remove menu entry

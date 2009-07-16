@@ -144,7 +144,11 @@ class mi_coupon
 			$recipients[$current] = AECToolbox::rewriteEngineRQ( trim( $email ), $request );
 		}
 
-		mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'] );
+		if ( aecJoomla15check() ) {
+			JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'] );
+		} else {
+			mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'] );
+		}
 
 		return true;
 	}

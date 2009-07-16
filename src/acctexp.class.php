@@ -278,7 +278,7 @@ class metaUser
 
 	function getCMSparams( $name )
 	{
-		$userParams =& new mosParameters( $this->cmsUser->params );
+		$userParams =& new JParameter( $this->cmsUser->params );
 
 		if ( is_array( $name ) ) {
 			$array = array();
@@ -671,7 +671,7 @@ class metaUser
 	{
 		$database = &JFactory::getDBO();
 
-		global $acl;
+		$acl = &JFactory::getACL();
 
 		// Always protect last administrator
 		if ( ( $this->cmsUser->gid == 24 ) || ( $this->cmsUser->gid == 25 ) ) {
@@ -2198,7 +2198,11 @@ class eventLog extends serialParamDBTable
 
 			foreach ( $admins as $admin ) {
 				// send email to admin & super admin set to recieve system emails
-				mosMail( $adminEmail2, $adminName2, $admin->email, $subject2, $message2 );
+				if ( aecJoomla15check() ) {
+					JUTility::sendMail( $adminEmail2, $adminEmail2, $admin->email, $subject2, $message2 );
+				} else {
+					mosMail( $adminEmail2, $adminName2, $admin->email, $subject2, $message2 );
+				}
 			}
 		}
 
@@ -4619,7 +4623,7 @@ class aecHTML
 			$title = ', CAPTION, \''.$title .'\'';
 		}
 		if ( !$text ) {
-			$image 	= JURI::base( true ) . '/administrator/components/com_acctexp/images/icons/'. $image;
+			$image 	= JURI::root() . 'administrator/components/com_acctexp/images/icons/'. $image;
 			$text 	= '<img src="'. $image .'" border="0" alt=""/>';
 		}
 		$style = 'style="text-decoration: none; color: #586C79;"';
@@ -4655,7 +4659,7 @@ class aecHTML
 			$name	= explode( '.', $image );
 			$alt	= $name[0];
 		}
-		$image 	= JURI::base( true ) . '/administrator/components/com_acctexp/images/icons/'. $image;
+		$image 	= JURI::root() . 'administrator/components/com_acctexp/images/icons/'. $image;
 
 		return '<img src="'. $image .'" border="0" alt="' . $alt . '" title="' . $alt . '" class="aec_icon" />';
 	}
@@ -6424,7 +6428,7 @@ class InvoiceFactory
 			} elseif ( $this->userid ) {
 				if ( AECToolbox::quickVerifyUserID( $this->userid ) === true ) {
 					// This user is not expired, so he could log in...
-					return mosNotAuth();
+					return aecNotAuth();
 				} else {
 					$this->userid = $database->getEscaped( $userid );
 				}
@@ -6492,11 +6496,11 @@ class InvoiceFactory
 		$restrictions = $row->getRestrictionsArray();
 
 		if ( !aecRestrictionHelper::checkRestriction( $restrictions, $this->metaUser ) ) {
-			return mosNotAuth();
+			return aecNotAuth();
 		}
 
 		if ( !ItemGroupHandler::checkParentRestrictions( $row, 'item', $this->metaUser ) ) {
-			return mosNotAuth();
+			return aecNotAuth();
 		}
 	}
 
@@ -6519,11 +6523,11 @@ class InvoiceFactory
 			$this->plan->load( $this->usage );
 
 			if ( !is_object( $this->plan ) ) {
-				return mosNotAuth();
+				return aecNotAuth();
 			}
 		} else {
 			if ( empty( $this->metaUser ) ) {
-				return mosNotAuth();
+				return aecNotAuth();
 			}
 
 			$this->getCart();
@@ -6725,7 +6729,7 @@ class InvoiceFactory
 					break;
 			}
 		} else {
-			return mosNotAuth();
+			return aecNotAuth();
 		}
 
 		$user_subscription = false;
@@ -7437,8 +7441,8 @@ class InvoiceFactory
 						$savetask	= $task;
 						$_REQUEST['task'] = 'done';
 
-						include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
-						include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.html.php' );
+						include_once( JPATH_SITE . '/components/com_comprofiler/comprofiler.php' );
+						include_once( JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php' );
 
 						$task = $savetask;
 
@@ -10543,11 +10547,13 @@ class Subscription extends serialParamDBTable
 	{
 		$database = &JFactory::getDBO();
 
-		global $acl, $mainframe;
+		$acl = &JFactory::getACL();
 
-		$langPath = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/com_acctexp_language/';
-		if ( file_exists( $langPath . $mainframe->getCfg( 'mosConfig_lang' ) . '.php' ) ) {
-			include_once( $langPath . $mainframe->getCfg( 'mosConfig_lang' ) . '.php' );
+		global $mainframe;
+
+		$langPath = JPATH_SITE . '/components/com_acctexp/com_acctexp_language/';
+		if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
+			include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
 		} else {
 			include_once( $langPath . 'english.php' );
 		}
@@ -10628,7 +10634,11 @@ class Subscription extends serialParamDBTable
 		}
 
 		if ( !$adminonly ) {
-			mosMail( $adminEmail2, $adminName2, $email, $subject, $message );
+			if ( aecJoomla15check() ) {
+				JUTility::sendMail( $adminEmail2, $adminEmail2, $admin->email, $subject, $message );
+			} else {
+				mosMail( $adminEmail2, $adminName2, $admin->email, $subject, $message );
+			}
 		}
 
 		// Send notification to all administrators
@@ -10659,7 +10669,11 @@ class Subscription extends serialParamDBTable
 			$row = $rows[0];
 
 			if ( $row->sendEmail ) {
-				mosMail( $adminEmail2, $adminName2, $row->email, $subject2, $message2 );
+				if ( aecJoomla15check() ) {
+					JUTility::sendMail( $adminEmail2, $adminEmail2, $admin->email, $subject2, $message2 );
+				} else {
+					mosMail( $adminEmail2, $adminName2, $admin->email, $subject2, $message2 );
+				}
 			}
 		}
 	}
@@ -10766,8 +10780,8 @@ class GeneralInfoRequester
 			}
 		}
 
-		$pathCB		= $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler';
-		$pathSMF	= $mainframe->getCfg( 'absolute_path' ) . '/administrator/components/com_smf';
+		$pathCB		= JPATH_SITE . '/components/com_comprofiler';
+		$pathSMF	= JPATH_SITE . '/administrator/components/com_smf';
 		switch ( $component ) {
 			case 'anyCB': // any Community Builder
 				return is_dir( $pathCB );
@@ -10793,7 +10807,7 @@ class GeneralInfoRequester
 				break;
 
 			case 'CBM': // Community Builder Moderator for Workflows
-				return file_exists( $mainframe->getCfg( 'absolute_path' ) . '/modules/mod_comprofilermoderator.php' );
+				return file_exists( JPATH_SITE . '/modules/mod_comprofilermoderator.php' );
 				break;
 
 			case 'UE': // User Extended
@@ -10813,15 +10827,15 @@ class GeneralInfoRequester
 				break;
 
 			case 'UHP2':
-				return file_exists( $mainframe->getCfg( 'absolute_path' ) . '/modules/mod_uhp2_manage.php' );
+				return file_exists( JPATH_SITE . '/modules/mod_uhp2_manage.php' );
 				break;
 
 			case 'JUSER':
-				return file_exists( $mainframe->getCfg( 'absolute_path' ) . '/components/com_juser/juser.php' );
+				return file_exists( JPATH_SITE . '/components/com_juser/juser.php' );
 				break;
 
 			case 'JOMSOCIAL':
-				return file_exists( $mainframe->getCfg( 'absolute_path' ) . '/components/com_community/community.php' );
+				return file_exists( JPATH_SITE . '/components/com_community/community.php' );
 				break;
 		}
 	}
@@ -11205,7 +11219,7 @@ class reWriteEngine
 		$this->rewrite['system_server_timestamp_backend']	= strftime( $aecConfig->cfg['display_date_backend'], time() );
 
 		$this->rewrite['cms_absolute_path']	= JPATH_SITE;
-		$this->rewrite['cms_live_site']		= JURI::base( true );
+		$this->rewrite['cms_live_site']		= JURI::root();
 
 		if ( is_object( $this->data['metaUser'] ) ) {
 			$name = array();
@@ -11259,7 +11273,7 @@ class reWriteEngine
 						}
 
 						$this->rewrite['user_activationcode']		= $this->data['metaUser']->cbUser->cbactivation;
-						$this->rewrite['user_activationlink']		= JURI::base( true )."/index.php?option=com_comprofiler&task=confirm&confirmcode=" . $this->data['metaUser']->cbUser->cbactivation;
+						$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_comprofiler&task=confirm&confirmcode=" . $this->data['metaUser']->cbUser->cbactivation;
 					} else {
 						$this->rewrite['user_activationcode']		= "";
 						$this->rewrite['user_activationlink']		= "";
@@ -11267,7 +11281,7 @@ class reWriteEngine
 				} else {
 					if ( isset( $this->data['metaUser']->cmsUser->activation ) ) {
 						$this->rewrite['user_activationcode']		= $this->data['metaUser']->cmsUser->activation;
-						$this->rewrite['user_activationlink']		= JURI::base( true )."/index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+						$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
 					} else {
 						$this->rewrite['user_activationcode']		= "";
 						$this->rewrite['user_activationlink']		= "";
@@ -11276,7 +11290,7 @@ class reWriteEngine
 			} else {
 				if ( isset( $this->data['metaUser']->cmsUser->activation ) ) {
 					$this->rewrite['user_activationcode']			= $this->data['metaUser']->cmsUser->activation;
-					$this->rewrite['user_activationlink']			= JURI::base( true )."/index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+					$this->rewrite['user_activationlink']			= JURI::root()."index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
 				}
 			}
 
@@ -11815,7 +11829,7 @@ class AECToolbox
 	 */
 	function backendTaskLink( $task, $text )
 	{
-		return '<a href="' .  JURI::base( true ) . '/administrator/index2.php?option=com_acctexp&amp;task=' . $task . '" title="' . $text . '">' . $text . '</a>';
+		return '<a href="' .  JURI::root() . 'administrator/index2.php?option=com_acctexp&amp;task=' . $task . '" title="' . $text . '">' . $text . '</a>';
 	}
 
 	/**
@@ -11829,7 +11843,7 @@ class AECToolbox
 
 		global $aecConfig;
 
-		$base = JURI::base( true );
+		$base = JURI::root();
 
 		if ( $secure ) {
 			if ( $aecConfig->cfg['override_reqssl'] ) {
@@ -11840,7 +11854,7 @@ class AECToolbox
 		}
 
 		if ( $aecConfig->cfg['simpleurls'] ) {
-			$new_url = $base . '/' . $url;
+			$new_url = $base . $url;
 		} else {
 			if ( !strpos( strtolower( $url ), 'itemid' ) ) {
 				global $Itemid;
@@ -11856,10 +11870,6 @@ class AECToolbox
 			}
 
 			$new_url = sefRelToAbs( $url );
-
-			if ( !( strpos( $new_url, $base.'/' ) === 0 ) ) {
-				$new_url = str_replace( $base, $base.'/', $new_url );
-			}
 
 			if ( !( strpos( $new_url, $base ) === 0 ) ) {
 				// look out for malformed live_site
@@ -12019,7 +12029,9 @@ class AECToolbox
 	{
 		$database = &JFactory::getDBO();
 
-		global $mainframe, $task, $acl, $aecConfig; // Need to load $acl for Joomla and CBE
+		$acl = &JFactory::getACL();
+
+		global $mainframe, $task, $aecConfig;
 
 		ob_start();
 
@@ -12031,7 +12043,7 @@ class AECToolbox
 
 			$savetask	= $task;
 			$_REQUEST['task']	= 'done';
-			include_once ( $mainframe->getCfg( 'absolute_path' ) . '/components/com_comprofiler/comprofiler.php' );
+			include_once ( JPATH_SITE . '/components/com_comprofiler/comprofiler.php' );
 			$task		= $savetask;
 
 			if ( $overrideActivation ) {
@@ -12049,13 +12061,13 @@ class AECToolbox
 		} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
 			$savetask	= $task;
 			$task		= 'blind';
-			include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_juser/juser.php' );
+			include_once( JPATH_SITE . '/components/com_juser/juser.php' );
 			include_once( JPATH_SITE .'/administrator/components/com_juser/juser.class.php' );
 			$task		= $savetask;
 		} elseif ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) ) {
 			$savetask	= $task;
 			$task		= 'blind';
-			include_once( $mainframe->getCfg( 'absolute_path' ) . '/components/com_juser/juser.php' );
+			include_once( JPATH_SITE . '/components/com_juser/juser.php' );
 			include_once( JPATH_SITE .'/administrator/components/com_juser/juser.class.php' );
 			$task		= $savetask;
 		}
@@ -12226,9 +12238,9 @@ class AECToolbox
 			}
 
 			if ( ( $activation == 1 ) && !$overrideActivation ) {
-				$message = sprintf( _AEC_USEND_MSG_ACTIVATE, $name, $mainframe->getCfg( 'sitename' ), JURI::base( true )."/index.php?option=com_registration&task=activate&activation=".$row->activation, JURI::base( true ), $username, $savepwd );
+				$message = sprintf( _AEC_USEND_MSG_ACTIVATE, $name, $mainframe->getCfg( 'sitename' ), JURI::root()."index.php?option=com_registration&task=activate&activation=".$row->activation, JURI::root(), $username, $savepwd );
 			} else {
-				$message = sprintf( _AEC_USEND_MSG, $name, $mainframe->getCfg( 'sitename' ), JURI::base( true ) );
+				$message = sprintf( _AEC_USEND_MSG, $name, $mainframe->getCfg( 'sitename' ), JURI::root() );
 			}
 
 			$message = html_entity_decode( $message, ENT_QUOTES );
@@ -12254,7 +12266,11 @@ class AECToolbox
 
 			// Send email to user
 			if ( !$aecConfig->cfg['nojoomlaregemails'] || $overrideEmails ) {
-				mosMail( $adminEmail2, $adminName2, $email, $subject, $message );
+				if ( aecJoomla15check() ) {
+					JUTility::sendMail( $adminEmail2, $adminEmail2, $admin->email, $subject, $message );
+				} else {
+					mosMail( $adminEmail2, $adminName2, $admin->email, $subject, $message );
+				}
 			}
 
 			// Send notification to all administrators
@@ -12278,7 +12294,11 @@ class AECToolbox
 
 			foreach ( $admins as $admin ) {
 				// send email to admin & super admin set to recieve system emails
-				mosMail( $adminEmail2, $adminName2, $admin->email, $subject2, $message2 );
+				if ( aecJoomla15check() ) {
+					JUTility::sendMail( $adminEmail2, $adminEmail2, $admin->email, $subject2, $message2 );
+				} else {
+					mosMail( $adminEmail2, $adminName2, $admin->email, $subject2, $message2 );
+				}
 			}
 		}
 
@@ -12712,7 +12732,7 @@ class microIntegrationHandler
 	{
 		global $mainframe;
 
-		$this->mi_dir = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/micro_integration';
+		$this->mi_dir = JPATH_SITE . '/components/com_acctexp/micro_integration';
 	}
 
 	function getMIList( $limitstart=false, $limit=false, $use_order=false, $name=false, $classname=false )
@@ -13247,7 +13267,7 @@ class microIntegration extends serialParamDBTable
 	{
 		global $mainframe;
 
-		$langPathMI = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/micro_integration/language/';
+		$langPathMI = JPATH_SITE . '/components/com_acctexp/micro_integration/language/';
 		if ( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
 			include_once( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' );
 		} else {
@@ -16213,7 +16233,7 @@ class aecRestrictionHelper
 
 		$user = &JFactory::getUser();
 
-		global $acl;
+		$acl = &JFactory::getACL();
 
 		// ensure user can't add group higher than themselves
 		$my_groups = $acl->get_object_groups( 'users', $user->id, 'ARO' );

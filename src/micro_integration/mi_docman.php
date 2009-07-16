@@ -428,7 +428,7 @@ class docman_restriction extends JTable {
 		if ( !defined( '_AEC_LANG_INCLUDED_MI' ) ) {
 			global $mainframe;
 
-			$langPathMI = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/micro_integration/language/';
+			$langPathMI = JPATH_SITE . '/components/com_acctexp/micro_integration/language/';
 			if ( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
 				include_once( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' );
 			} else {
@@ -436,7 +436,13 @@ class docman_restriction extends JTable {
 			}
 		}
 
-		mosRedirect(  'index.php?option=com_docman' , _AEC_MI_DOCMAN_NOCREDIT );
+		if ( aecJoomla15check() ) {
+			global $mainframe;
+
+			$mainframe->redirect( 'index.php?option=com_docman' , _AEC_MI_DOCMAN_NOCREDIT );
+		} else {
+			mosRedirect( 'index.php?option=com_docman' , _AEC_MI_DOCMAN_NOCREDIT );
+		}
 	}
 
 	function useDownload()

@@ -26,7 +26,7 @@ class mi_acl
 	{
 		$user = &JFactory::getUser();
 
-		global $acl;
+		$acl = &JFactory::getACL();
 
 		$settings = array();
 		$settings['change_session']	= array( 'list_yesno' );
@@ -112,7 +112,7 @@ class mi_acl
 	{
 		$database = &JFactory::getDBO();
 
-	global $acl;
+		$acl = &JFactory::getACL();
 
 		$metaUser->instantGIDchange( $this->settings[$section], $this->settings['change_session'] );
 
@@ -188,7 +188,7 @@ class mi_acl
 	{
 		$database = &JFactory::getDBO();
 
-		global $acl;
+		$acl = &JFactory::getACL();
 
 		if ( $this->settings['delete_subgroups'] ) {
 			// Delete sub entries

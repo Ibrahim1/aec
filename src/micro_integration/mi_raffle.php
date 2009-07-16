@@ -209,7 +209,11 @@ class mi_raffle
 
 			$subject = 'Raffle Drawing Results for ' . $mainframe->getCfg( 'sitename' );
 
-			mosMail( $adminEmail2, $adminName2, $recipients, $subject, $colET );
+			if ( aecJoomla15check() ) {
+				JUTility::sendMail( $adminEmail2, $adminEmail2, $admin->email, $subject, $colET );
+			} else {
+				mosMail( $adminEmail2, $adminName2, $admin->email, $subject, $colET );
+			}
 		}
 
 		$rafflelist->check();

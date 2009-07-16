@@ -82,16 +82,16 @@ class plgUserAECaccess extends JPlugin
 		switch ( AEC_AUTH_ERROR_MSG ) {
 			case 'pending':
 			case 'open_invoice':
-				$redirect = JURI::base( true ) . '/index.php?option=com_acctexp&task=pending&userid=' . $id;
+				$redirect = JURI::root() . 'index.php?option=com_acctexp&task=pending&userid=' . $id;
 				break;
 			case 'expired':
-				$redirect = JURI::base( true ) . '/index.php?option=com_acctexp&task=expired&userid=' . $id ;
+				$redirect = JURI::root() . 'index.php?option=com_acctexp&task=expired&userid=' . $id ;
 				break;
 			case 'hold':
-				$redirect = JURI::base( true ) . '/index.php?option=com_acctexp&task=hold&userid=' . $id ;
+				$redirect = JURI::root() . 'index.php?option=com_acctexp&task=hold&userid=' . $id ;
 				break;
 			case 'subscribe':
-				$redirect = JURI::base( true ) . '/index.php?option=com_acctexp&task=subscribe&userid=' . $id ;
+				$redirect = JURI::root() . 'index.php?option=com_acctexp&task=subscribe&userid=' . $id ;
 				break;
 		}
 

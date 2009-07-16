@@ -103,9 +103,9 @@ class processor_cybermut extends POSTprocessor
 		/*$var['retourPLUS']		= $request->int_var['return_url'];
 		$var['societe']			= $this->settings['key'];*/
 
-		$var['url_retour']		= JURI::base( true ) . '/index.php';
-		$var['url_retour_ok']	= JURI::base( true ) . '/index.php?option=com_acctexp&task=thanks';
-		$var['url_retour_err']	= JURI::base( true ) . '/index.php?option=com_acctexp&task=cancel';
+		$var['url_retour']		= JURI::root() . 'index.php';
+		$var['url_retour_ok']	= JURI::root() . 'index.php?option=com_acctexp&task=thanks';
+		$var['url_retour_err']	= JURI::root() . 'index.php?option=com_acctexp&task=cancel';
 
 		foreach ( $var as $k => $v ) {
 			$var[$k] = $this->HtmlEncode( $v );

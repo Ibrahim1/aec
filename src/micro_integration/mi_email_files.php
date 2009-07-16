@@ -175,7 +175,11 @@ class mi_email_files
 			}
 		}
 
-		mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'], null, null, $attach );
+		if ( aecJoomla15check() ) {
+			JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'], null, null, $attach );
+		} else {
+			mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'], null, null, $attach );
+		}
 
 		return true;
 	}

@@ -26,6 +26,8 @@ if ( !defined( 'JPATH_SITE' ) ) {
 	global $mosConfig_absolute_path;
 
 	define( 'JPATH_SITE', $mosConfig_absolute_path );
+} else {
+	JLoader::register('JTableUser', JPATH_LIBRARIES.DS.'joomla'.DS.'database'.DS.'table'.DS.'user.php');
 }
 
 // Make sure we are compatible with php4
@@ -52,7 +54,7 @@ function com_install()
 	$newinstall = false;
 	$tables		= $database->getTableList();
 
-	$pathLang = $mainframe->getCfg( 'absolute_path' ) . '/administrator/components/com_acctexp/com_acctexp_language_backend/';
+	$pathLang = JPATH_SITE . '/administrator/components/com_acctexp/com_acctexp_language_backend/';
 	if ( file_exists( $pathLang . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
 		include_once( $pathLang . $mainframe->getCfg( 'lang' ) . '.php' );
 	} else {
@@ -236,7 +238,7 @@ function com_install()
 	$eucaInstall->unpackFileArray( $files );
 
 	$krumoabspath = JPATH_SITE . '/components/com_acctexp/lib/krumo/';
-	$krumourlpath = JURI::base( true ) . '/components/com_acctexp/lib/krumo/';
+	$krumourlpath = JURI::base() . '../components/com_acctexp/lib/krumo/';
 
 	$eucaInstallef->fileEdit( $krumoabspath . 'krumo.ini', 'http://www.example.com/Krumo/', $krumourlpath, "Krumor Debug Lib did not receive a proper url path, due to writing permission problems" );
 
@@ -265,7 +267,7 @@ function com_install()
 			position: relative;
 			float: left;
 			width: 98%;
-			background: url(<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/backend_gfx/note_lowerright.png) no-repeat bottom right;
+			background: url(<?php echo JURI::base(); ?>components/com_acctexp/images/backend_gfx/note_lowerright.png) no-repeat bottom right;
 			padding: 6px 18px;
 			color: #000;
 		}
@@ -275,7 +277,7 @@ function com_install()
 			<td width="60%" valign="top" style="background-color: #eee;">
 				<div style="background-color: #949494; margin: 2px; padding: 6px;">
 					<div style="width: 100%; background-color: #000;">
-						<center><img src="<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_dist_gfx.png" border="0" alt="" /></center>
+						<center><img src="<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_dist_gfx.png" border="0" alt="" /></center>
 					</div>
 				</div>
 				<?php
@@ -301,12 +303,12 @@ function com_install()
 				</div>
 				<div class="usernote" style="width:350px;margin:8px;">
 					<h1><?php echo _AEC_INST_NOTE_IMPORTANT; ?>:</h1>
-					<img src="<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/backend_gfx/help_scribble.png" border="0" alt="" style="position:relative;float:left;padding:4px;" />
+					<img src="<?php echo JURI::base(); ?>components/com_acctexp/images/backend_gfx/help_scribble.png" border="0" alt="" style="position:relative;float:left;padding:4px;" />
 					<p><?php printf( _AEC_INST_NOTE_HELP, AECToolbox::backendTaskLink( 'help', _AEC_INST_NOTE_HELP_LTEXT ) ); ?></p>
 				</div>
 				<div class="usernote" style="width:350px;margin:8px;">
 					<h1><?php echo _AEC_INST_NOTE_IMPORTANT; ?>:</h1>
-					<img src="<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/backend_gfx/hacks_scribble.png" border="0" alt="" style="position:relative;float:left;padding:4px;" />
+					<img src="<?php echo JURI::base(); ?>components/com_acctexp/images/backend_gfx/hacks_scribble.png" border="0" alt="" style="position:relative;float:left;padding:4px;" />
 					<p><?php echo _AEC_INST_NOTE_SECURITY; ?></p>
 					<p><?php printf( _AEC_INST_APPLY_HACKS, AECToolbox::backendTaskLink( 'hacks', _AEC_INST_APPLY_HACKS_LTEXT ) ); ?></p>
 					<p><?php echo _AEC_INST_NOTE_UPGRADE; ?></p>
@@ -314,13 +316,13 @@ function com_install()
 			</td>
 			<td width="30%" valign="top">
 				<br />
-				<center><img src="<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_logo_big.png" border="0" alt="" /></center>
+				<center><img src="<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_logo_big.png" border="0" alt="" /></center>
 				<br />
 				<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;">
 					<p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION; ?></p>
 					<p><?php echo _AEC_FOOT_TX_CHOOSING; ?></p>
 					<div style="margin: 0 auto;text-align:center;">
-						<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/valanx_logo.png" border="0" alt="valanx.org" /></a>
+						<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::base(); ?>components/com_acctexp/images/icons/valanx_logo.png" border="0" alt="valanx.org" /></a>
 						<p><?php echo _AEC_FOOT_TX_GPL; ?></p>
 						<p><?php echo _AEC_FOOT_TX_SUBSCRIBE; ?></p>
 						<p><?php printf( _AEC_FOOT_CREDIT, AECToolbox::backendTaskLink( 'credits', _AEC_FOOT_CREDIT_LTEXT ) ); ?></p>

@@ -31,7 +31,7 @@ define( '_EUCA_APP_LIBDIR', _EUCA_APP_COMPDIR . '/lib' );
 define( '_EUCA_APP_ICONSDIR', _EUCA_APP_COMPDIR . '/images/icons' );
 define( '_EUCA_APP_ADMINDIR', JPATH_SITE . '/administrator/components/' . _EUCA_APP_COMPNAME );
 define( '_EUCA_APP_ADMINICONSDIR', _EUCA_APP_ADMINDIR . '/images/icons' );
-define( '_EUCA_APP_ADMINACTIONURL', JURI::base( true ) . '/administrator/index2.php?option=' . _EUCA_APP_COMPNAME );
+define( '_EUCA_APP_ADMINACTIONURL', JURI::root() . '/administrator/index2.php?option=' . _EUCA_APP_COMPNAME );
 
 
 ?>

@@ -92,7 +92,7 @@ class HTML_myCommon
 			<table width="500" border="0">
 			<tr>
 				<td align="center">
-					<img src="<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_logo_small_footer.png" border="0" alt="aec" />
+					<img src="<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_logo_small_footer.png" border="0" alt="aec" />
 				</td>
 				<td align="center">
 					<div align="center" class="smallgrey">
@@ -106,7 +106,7 @@ class HTML_myCommon
 					</div>
 				</td>
 				<td align="center">
-					<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/valanx_logo_tiny.png" border="0" alt="valanx" /></a>
+					<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::base(); ?>components/com_acctexp/images/icons/valanx_logo_tiny.png" border="0" alt="valanx" /></a>
 				</td>
 			</tr>
 			</table>
@@ -181,7 +181,7 @@ class HTML_myCommon
 				}
 				$html .= '<div class="sidebar_button_' . $sizing[$size + $add] . '>'
 				. '<a href="index2.php?option=com_acctexp&amp;task=' . $items[$cursor][1] . '>'
-				. '<img src="' . JURI::base( true ) . '/administrator/components/com_acctexp/images/icons/aec_icon_' . $items[$cursor][2] . '_' . $sizing[$size + $add] . '.png" alt="" title="" />'
+				. '<img src="' . JURI::base() . 'components/com_acctexp/images/icons/aec_icon_' . $items[$cursor][2] . '_' . $sizing[$size + $add] . '.png" alt="" title="" />'
 				. '<p>' . $items[$cursor][2] . '</p></a>'
 				. '</div>' . "\n";
 				unset( $add );
@@ -401,7 +401,7 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::addBackendCSS();
 
-		mosCommonHTML::loadOverlib();
+		loadOverlib();
 		mosCommonHTML::loadCalendar();
 
 		if ( aecJoomla15check() ) {
@@ -439,7 +439,7 @@ class HTML_AcctExp
 
 		<table class="adminheading">
 			<tr>
-				<th width="100%" style="background: url(<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_symbol_edit.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+				<th width="100%" style="background: url(<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_symbol_edit.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
 					<?php echo _AEC_HEAD_SUBCRIBER; ?>:
 					&nbsp;
 					<small><?php echo !empty( $metaUser->userid ) ? $metaUser->cmsUser->username . ' (' . _AEC_CMN_ID . ': ' . $metaUser->userid . ')' : _AEC_CMN_NEW; ?></small>
@@ -449,10 +449,10 @@ class HTML_AcctExp
 
 		<form action="index2.php" method="post" name="adminForm">
 			<?php
-			$tabs = new mosTabs(0);
-			$tabs->startPane( 'settings' );
+			$tabs = new JPaneTabs(0);
+			echo $tabs->startPane( 'settings' );
 
-			$tabs->startTab(_AEC_HEAD_PLAN_INFO, _AEC_HEAD_PLAN_INFO);
+			echo $tabs->startPanel(_AEC_HEAD_PLAN_INFO, _AEC_HEAD_PLAN_INFO);
 			echo '<div class="aec_tabheading"><h2>' . _AEC_HEAD_PLAN_INFO . '</h2></div>';
 			?>
 			<table class="aecadminform">
@@ -464,7 +464,7 @@ class HTML_AcctExp
 								<?php echo _AEC_USER_USERID; ?>:&nbsp;<strong><?php echo $metaUser->userid; ?></strong>
 								&nbsp;|&nbsp;
 								<?php echo _AEC_USER_STATUS; ?>:&nbsp;
-								<strong><?php echo !$metaUser->cmsUser->block ? aecHTML::Icon( 'accept.png', _AEC_USER_ACTIVE ) . '&nbsp;' . _AEC_USER_ACTIVE . '</strong>' : aecHTML::Icon( 'exclamation.png', _AEC_USER_BLOCKED ) . '&nbsp;' . _AEC_USER_BLOCKED . '</strong>' . ( ( $metaUser->cmsUser->activation == '' ) ? '' : ' (<a href="' . JURI::base( true ) . '/index.php?option=com_registration&amp;task=activate&amp;activation=' . $metaUser->cmsUser->activation . '" target="_blank">' . _AEC_USER_ACTIVE_LINK . '</a>)' ); ?>
+								<strong><?php echo !$metaUser->cmsUser->block ? aecHTML::Icon( 'accept.png', _AEC_USER_ACTIVE ) . '&nbsp;' . _AEC_USER_ACTIVE . '</strong>' : aecHTML::Icon( 'exclamation.png', _AEC_USER_BLOCKED ) . '&nbsp;' . _AEC_USER_BLOCKED . '</strong>' . ( ( $metaUser->cmsUser->activation == '' ) ? '' : ' (<a href="' . JURI::root() . 'index.php?option=com_registration&amp;task=activate&amp;activation=' . $metaUser->cmsUser->activation . '" target="_blank">' . _AEC_USER_ACTIVE_LINK . '</a>)' ); ?>
 							</p>
 							<p>
 								<?php echo _AEC_USER_PROFILE; ?>:
@@ -716,8 +716,8 @@ class HTML_AcctExp
 				</tr>
 			</table>
 			<?php
-			$tabs->endTab();
-			$tabs->startTab(_AEC_HEAD_MICRO_INTEGRATION, _AEC_HEAD_MICRO_INTEGRATION);
+			echo $tabs->endPanel();
+			echo $tabs->startPanel(_AEC_HEAD_MICRO_INTEGRATION, _AEC_HEAD_MICRO_INTEGRATION);
 			?>
 			<div class="aec_tabheading"><h2><?php echo _AEC_HEAD_MICRO_INTEGRATION; ?>: <?php echo _AEC_HEAD_MICRO_INTEGRATION; ?></h2></div>
 			<?php if ( !empty( $mi['profile'] ) || !empty( $mi['profile_form'] ) ) {
@@ -788,8 +788,8 @@ class HTML_AcctExp
 				</tr>
 			</table>
 			<?php
-			$tabs->endTab();
-			$tabs->endPane();
+			echo $tabs->endPanel();
+			echo $tabs->endPane();
 			?>
 			<input type="hidden" name="option" value="<?php echo $option; ?>" />
 			<input type="hidden" name="id" value="<?php echo !empty( $metaUser->focusSubscription->id ) ? $metaUser->focusSubscription->id : ''; ?>" />
@@ -832,7 +832,7 @@ class HTML_AcctExp
 		} ?>
 		<div class="icon">
 			<a href="<?php echo $link . $hideMenu; ?>">
-				<?php echo mosAdminMenus::imageCheckAdmin( $image, '/administrator/components/com_acctexp/images/icons/', NULL, NULL, $text ); ?>
+				<img border="0" align="middle" alt="<?php echo $text; ?>" src="<?php echo JURI::base() . "components/com_acctexp/images/icons/" . $image; ?>"/>
 				<span><?php echo $text; ?></span>
 			</a>
 		</div>
@@ -892,7 +892,7 @@ class HTML_AcctExp
 						<div class="central_quicksearch">
 							<h2><?php echo _AEC_QUICKSEARCH; ?></h2>
 							<p><?php echo _AEC_QUICKSEARCH_DESC; ?></p>
-							<form action="<?php echo JURI::base( true ); ?>/administrator/index2.php?option=com_acctexp&amp;task=quicklookup" method="post">
+							<form action="<?php echo JURI::base(); ?>index2.php?option=com_acctexp&amp;task=quicklookup" method="post">
 							<input type="text" size="40" name="search" class="inputbox" value="" />
 							<input type="submit" />
 							</form>
@@ -947,7 +947,7 @@ class HTML_AcctExp
 					<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;"><p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION; ?></p>
 						<p><?php echo _AEC_FOOT_TX_CHOOSING; ?></p>
 						<div style="margin: 0 auto;text-align:center;">
-							<a href="http://www.valanx.org"> <img src="<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/valanx_logo.png" border="0" alt="valanx" /></a>
+							<a href="http://www.valanx.org"> <img src="<?php echo JURI::base(); ?>components/com_acctexp/images/icons/valanx_logo.png" border="0" alt="valanx" /></a>
 							<p><?php echo _AEC_FOOT_TX_GPL; ?></p>
 							<p><?php echo _AEC_FOOT_TX_SUBSCRIBE; ?></p>
 							<p><?php printf( _AEC_FOOT_CREDIT, AECToolbox::backendTaskLink( 'credits', _AEC_FOOT_CREDIT_LTEXT ) ); ?></p>
@@ -968,7 +968,7 @@ class HTML_AcctExp
 				<td width="55%" valign="top" style="background-color: #eee;">
 					<div style="background-color: #949494; margin: 2px; padding: 6px;">
 						<div style="width: 100%; background-color: #000;">
-							<center><img src="<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_dist_gfx.png" border="0" alt="" /></center>
+							<center><img src="<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_dist_gfx.png" border="0" alt="" /></center>
 						</div>
 					</div>
 					<div style="margin: 12px;">
@@ -996,12 +996,12 @@ class HTML_AcctExp
 				</td>
 				<td width="45%" valign="top">
 					<br />
-					<center><img src="<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_logo_big.png" border="0" alt="AEC" width="200" height="232" /></center>
+					<center><img src="<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_logo_big.png" border="0" alt="AEC" width="200" height="232" /></center>
 					<br />
 					<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;"><p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION ?></p>
 						<p><?php echo _AEC_FOOT_TX_CHOOSING; ?></p>
 					<div style="margin: 0 auto;text-align:center;">
-						<a href="http://www.valanx.org"> <img src="<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/valanx_logo.png" border="0" alt="valanx" /></a>
+						<a href="http://www.valanx.org"> <img src="<?php echo JURI::base(); ?>components/com_acctexp/images/icons/valanx_logo.png" border="0" alt="valanx" /></a>
 						<p><?php echo _AEC_FOOT_TX_GPL; ?></a></p>
 						<p><?php echo _AEC_FOOT_TX_SUBSCRIBE; ?></p>
 					</div>
@@ -1025,7 +1025,7 @@ class HTML_AcctExp
 		</form>
 		<table class="adminheading">
 			<tr>
-				<th width="100%" class="sectionname" style="background: url(<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_symbol_hacks.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+				<th width="100%" class="sectionname" style="background: url(<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_symbol_hacks.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
 				<?php echo _AEC_HEAD_HACKS; ?>
 				</th>
 			</tr>
@@ -1082,7 +1082,7 @@ class HTML_AcctExp
 						<p style="width:60%; padding:3px;">
 							<?php
 							if ( !empty( $content['legacy'] ) ) { ?>
-								<img src="<?php echo JURI::base( true );?>/administrator/components/com_acctexp/images/icons/aec_symbol_importance_3.png" title="<?php echo _AEC_HACKS_LEGACY; ?>" alt="<?php echo _AEC_HACKS_LEGACY; ?>" />
+								<img src="<?php echo JURI::base();?>components/com_acctexp/images/icons/aec_symbol_importance_3.png" title="<?php echo _AEC_HACKS_LEGACY; ?>" alt="<?php echo _AEC_HACKS_LEGACY; ?>" />
 								<?php
 							} ?>
 							<?php echo $content['desc']; ?>
@@ -1130,7 +1130,7 @@ class HTML_AcctExp
 		</form>
 		<table class="adminheading">
 			<tr>
-				<th width="100%" class="sectionname" style="background: url(<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_symbol_help.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+				<th width="100%" class="sectionname" style="background: url(<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_symbol_help.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
 				<?php echo _AEC_CMN_HELP; ?>
 				</th>
 			</tr>
@@ -1167,7 +1167,7 @@ class HTML_AcctExp
 								$icon_status = aecHTML::Icon( 'stop.png' );
 							} ?>
 							<div class="diagnose">
-								<img src="<?php echo JURI::base( true );?>/administrator/components/com_acctexp/images/icons/aec_symbol_importance_<?php echo $importance; ?>.png" width="60" height="80" alt="" />
+								<img src="<?php echo JURI::base();?>components/com_acctexp/images/icons/aec_symbol_importance_<?php echo $importance; ?>.png" width="60" height="80" alt="" />
 								<h1 class="importance_<?php echo $importance; ?>"><?php echo $dia[0]; ?></h1>
 								<p class="notice_<?php echo $advice; ?>"><?php echo $icon_status; ?> <?php echo $dia[3]; ?></p>
 								<?php
@@ -1195,7 +1195,7 @@ class HTML_AcctExp
 	function Settings( $option, $aecHTML, $tab_data, $editors )
 	{
 		HTML_myCommon::addBackendCSS();
-		mosCommonHTML::loadOverlib();
+		loadOverlib();
 		?>
 		<script language="javascript" type="text/javascript">
 		    /* <![CDATA[ */
@@ -1214,7 +1214,7 @@ class HTML_AcctExp
 		<form action="index2.php" method="post" name="adminForm">
 		<table class="adminheading">
 			<tr>
-				<th width="100%" class="sectionname" style="background: url(<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_symbol_settings.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+				<th width="100%" class="sectionname" style="background: url(<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_symbol_settings.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
 					<?php echo _AEC_HEAD_SETTINGS; ?>
 				</th>
 			</tr>
@@ -1222,13 +1222,13 @@ class HTML_AcctExp
 		</table>
 		<?php
 
-		$tabs = new mosTabs(0);
-		$tabs->startPane( 'settings' );
+		$tabs = new JPaneTabs(0);
+		echo $tabs->startPane( 'settings' );
 
 		$i = 0;
 
 		foreach( $tab_data as $tab ) {
-			$tabs->startTab( $tab[0], $tab[0] );
+			echo $tabs->startPanel( $tab[0], $tab[0] );
 
 			if ( isset( $tab[2] ) ) {
 				echo '<div class="aec_tabheading">' . $tab[2] . '</div>';
@@ -1242,13 +1242,13 @@ class HTML_AcctExp
 				// Skip to next tab if last item in this one reached
 				if ( strcmp( $rowname, $tab[1] ) === 0 ) {
 					echo '</td></tr></table>';
-					$tabs->endTab();
+					echo $tabs->endPanel();
 					continue 2;
 				}
 			}
 
 			echo '</td></tr></table>';
-			$tabs->endTab();
+			echo $tabs->endPanel();
 		}
 		?>
 		<input type="hidden" name="id" value="1" />
@@ -1257,7 +1257,7 @@ class HTML_AcctExp
 		</form>
 		<?php
 		// close pane and include footer
-		$tabs->endPane();
+		echo $tabs->endPane();
 
 		echo $aecHTML->loadJS();
 
@@ -1274,7 +1274,7 @@ class HTML_AcctExp
 		<form action="index2.php" method="post" name="adminForm">
 			<table class="adminheading">
 				<tr>
-					<th width="100%" style="background: url(<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_symbol_processors.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+					<th width="100%" style="background: url(<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_symbol_processors.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
 						<?php echo _PROCESSORS_TITLE; ?>
 					</th>
 				</tr>
@@ -1296,7 +1296,7 @@ class HTML_AcctExp
 		for( $i=0, $n=count( $rows ); $i < $n; $i++ ) {
 			$row = &$rows[$i]; ?>
 				<tr class="row<?php echo $k; ?>">
-					<td width="1%" align="center"><?php echo $pageNav->rowNumber( $i ); ?></td>
+					<td width="1%" align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 					<td width="1%" align="center"><?php echo $row->processor->id; ?></td>
 					<td width="1%"><?php echo mosHTML::idBox( $i, $row->processor->id, false, 'id' ); ?></td>
 					<td width="15%">
@@ -1305,7 +1305,7 @@ class HTML_AcctExp
 					<td><?php echo $row->processor->info['statement']; ?></td>
 					<td width="3%" align="center">
 						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $row->processor->active ? 'unpublishProcessor' : 'publishProcessor'; ?>')">
-							<img src="<?php echo JURI::base( true ); ?>/administrator/images/<?php echo $row->processor->active ? 'publish_g.png' : 'publish_x.png'; ?>" width="12" height="12" border="0" alt="<?php echo $row->processor->active ? _AEC_CMN_YES : _AEC_CMN_NO; ?>" title="<?php echo $row->processor->active ? _AEC_CMN_YES : _AEC_CMN_NO; ?>" />
+							<img src="<?php echo JURI::base(); ?>images/<?php echo $row->processor->active ? 'publish_g.png' : 'publish_x.png'; ?>" width="12" height="12" border="0" alt="<?php echo $row->processor->active ? _AEC_CMN_YES : _AEC_CMN_NO; ?>" title="<?php echo $row->processor->active ? _AEC_CMN_YES : _AEC_CMN_NO; ?>" />
 						</a>
 					</td>
 				</tr>
@@ -1333,12 +1333,12 @@ class HTML_AcctExp
 	function editProcessor( $option, $aecHTML )
 	{
 		HTML_myCommon::addBackendCSS();
-		mosCommonHTML::loadOverlib();
+		loadOverlib();
 		?>
 		<form action="index2.php" method="post" name="adminForm">
 		<table class="adminheading">
 			<tr>
-				<th width="100%" class="sectionname" style="background: url(<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_symbol_settings.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+				<th width="100%" class="sectionname" style="background: url(<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_symbol_settings.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
 					<?php echo _AEC_HEAD_SETTINGS . ': ' . $aecHTML->pp->info['longname']; ?>
 				</th>
 			</tr>
@@ -1346,17 +1346,17 @@ class HTML_AcctExp
 		</table>
 		<?php
 
-		$tabs = new mosTabs(0);
-		$tabs->startPane( 'settings' );
+		$tabs = new JPaneTabs(0);
+		echo $tabs->startPane( 'settings' );
 		if ( !empty( $aecHTML->pp ) ) {
-			$tabs->startTab( $aecHTML->pp->processor_name, $aecHTML->pp->info['longname'] );
+			echo $tabs->startPanel( $aecHTML->pp->processor_name, $aecHTML->pp->info['longname'] );
 
 			echo '<div class="aec_tabheading"><h2>' . $aecHTML->pp->info['longname'] . '</h2>';
 			echo '<img src="' . JURI::base( true ) . '/components/' . $option . '/images/gwlogo_' . $aecHTML->pp->processor_name . '.png" alt="' . $aecHTML->pp->processor_name . '" title="' . $aecHTML->pp->processor_name .'" class="plogo" />';
 			echo '</div>';
 			$id = $aecHTML->pp->id;
 		} else {
-			$tabs->startTab( 'new processor', 'new processor' );
+			echo $tabs->startPanel( 'new processor', 'new processor' );
 
 			echo '<div class="aec_tabheading"><h2>' . '' . '</h2></div>';
 
@@ -1370,7 +1370,7 @@ class HTML_AcctExp
 		}
 
 		echo '</td></tr></table>';
-		$tabs->endTab();
+		echo $tabs->endPanel();
 		?>
 		<input type="hidden" name="id" value="<?php echo $id; ?>" />
 		<input type="hidden" name="task" value="" />
@@ -1378,7 +1378,7 @@ class HTML_AcctExp
 		</form>
 		<?php
 		// close pane and include footer
-		$tabs->endPane();
+		echo $tabs->endPane();
 
 		echo $aecHTML->loadJS();
 
@@ -1397,7 +1397,7 @@ class HTML_AcctExp
 		<form action="index2.php" method="post" name="adminForm">
 			<table class="adminheading" cellpadding="2" cellspacing="2">
 				<tr>
-					<th width="100%" style="background: url(<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_symbol_<?php echo $action[0]; ?>.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;"><?php echo $action[1]; ?></th>
+					<th width="100%" style="background: url(<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_symbol_<?php echo $action[0]; ?>.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;"><?php echo $action[1]; ?></th>
 					<td nowrap="nowrap"><?php echo $lists['groups'];?></td>
 					<td style="text-align:center;">
 						<?php echo _PLAN_FILTER; ?>
@@ -1452,7 +1452,7 @@ class HTML_AcctExp
 						}
 					} ?>
 						<tr class="row<?php echo $k; ?>"<?php echo $rowstyle; ?>>
-							<td width="20" align="center"><?php echo $pageNav->rowNumber( $i ); ?></td>
+							<td width="20" align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 							<td width="20"><?php echo mosHTML::idBox( $i, $row->id, false, ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) ); ?></td>
 							<td width="20"><?php echo !empty( $row->primary ) ? aecHTML::Icon( 'star.png', _AEC_USER_SUBSCRIPTIONS_PRIMARY ) : '&nbsp;'; ?></td>
 							<td width="15%" align="left"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','edit')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $row->name; ?> </a></td>
@@ -1489,8 +1489,7 @@ class HTML_AcctExp
 		<form action="index2.php" method="post" name="adminForm">
 			<table class="adminheading">
 				<tr>
-					<th width="100%" style="background: url(<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_symbol_microintegrations.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;"><?php echo _MI_TITLE; ?></th>
-					<td nowrap="nowrap"><?php echo $lists['groups'];?></td>
+					<th width="100%" style="background: url(<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_symbol_microintegrations.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;"><?php echo _MI_TITLE; ?></th>
 					<td style="text-align:center;">
 						<?php echo _PLAN_FILTER; ?>
 						&nbsp;
@@ -1526,7 +1525,7 @@ class HTML_AcctExp
 		for( $i=0, $n=count( $rows ); $i < $n; $i++ ) {
 			$row = &$rows[$i]; ?>
 				<tr class="row<?php echo $k; ?>">
-					<td width="20" align="center"><?php echo $pageNav->rowNumber( $i ); ?></td>
+					<td width="20" align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 					<td width="20" align="center"><?php echo $row->id; ?></td>
 					<td width="20"><?php echo mosHTML::idBox( $i, $row->id, false, 'id' ); ?></td>
 					<td width="15%">
@@ -1543,7 +1542,7 @@ class HTML_AcctExp
 						</td>
 					<td width="3%" align="center">
 						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo ($row->active) ? 'unpublishMicroIntegration' : 'publishMicroIntegration'; ?>')">
-							<img src="<?php echo JURI::base( true ); ?>/administrator/images/<?php echo ( $row->active ) ? 'publish_g.png' : 'publish_x.png'; ?>" width="12" height="12" border="0" alt="<?php echo ( $row->active ) ? _AEC_CMN_YES : _AEC_CMN_NO; ?>" title="<?php echo ( $row->active ) ? _AEC_CMN_YES : _AEC_CMN_NO; ?>" />
+							<img src="<?php echo JURI::base(); ?>images/<?php echo ( $row->active ) ? 'publish_g.png' : 'publish_x.png'; ?>" width="12" height="12" border="0" alt="<?php echo ( $row->active ) ? _AEC_CMN_YES : _AEC_CMN_NO; ?>" title="<?php echo ( $row->active ) ? _AEC_CMN_YES : _AEC_CMN_NO; ?>" />
 						</a>
 					</td>
 					<?php if ( $ordering ) { ?>
@@ -1577,8 +1576,8 @@ class HTML_AcctExp
 	{
 		//$Returnid = intval( aecGetParam( $_REQUEST, 'Returnid', 0 ) );
 
-		$tabs = new mosTabs(0);
-		mosCommonHTML::loadOverlib();
+		$tabs = new JPaneTabs(0);
+		loadOverlib();
 		HTML_myCommon::addBackendCSS();
 
 		// mic: added swap script here, but NOT complete (has to be adopted if needed here !)
@@ -1601,7 +1600,7 @@ class HTML_AcctExp
 		</script>
 		<table class="adminheading">
 			<tr>
-				<th width="100%" style="background: url(<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_symbol_microintegrations.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+				<th width="100%" style="background: url(<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_symbol_microintegrations.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
 					<?php echo _AEC_HEAD_MICRO_INTEGRATION; ?>:&nbsp;
 					<small><?php echo $row->id ? $row->name : _AEC_CMN_NEW; ?></small>
 	        	</th>
@@ -1612,8 +1611,8 @@ class HTML_AcctExp
 				<tr>
 					<td valign="top">
 						<?php
-		                $tabs->startPane( 'createMicroIntegration' );
-		                $tabs->startTab( _MI_E_TITLE, _MI_E_TITLE );
+		                echo $tabs->startPane( 'createMicroIntegration' );
+		                echo $tabs->startPanel( _MI_E_TITLE, _MI_E_TITLE );
 		                ?>
 		                <div class="aec_tabheading"><h2><?php echo _MI_E_TITLE; ?></h2></div>
 		                <table width="100%" class="aecadminform">
@@ -1653,8 +1652,8 @@ class HTML_AcctExp
 							</tr>
 							</table>
 							<?php if ( $aecHTML->hasSettings ) {
-			                $tabs->endTab();
-			                $tabs->startTab( _MI_E_SETTINGS, _MI_E_SETTINGS ); ?>
+			                echo $tabs->endPanel();
+			                echo $tabs->startPanel( _MI_E_SETTINGS, _MI_E_SETTINGS ); ?>
 				                <div class="aec_tabheading"><h2><?php echo _MI_E_SETTINGS; ?></h2></div>
 				                <table width="100%" class="aecadminform">
 									<?php
@@ -1665,8 +1664,8 @@ class HTML_AcctExp
 								</table>
 								<?php
 							}
-			                $tabs->endTab();
-			                $tabs->endPane(); ?>
+			                echo $tabs->endPanel();
+			                echo $tabs->endPane(); ?>
 						</td>
 					</tr>
 				</table>
@@ -1689,7 +1688,7 @@ class HTML_AcctExp
 		<form action="index2.php" method="post" name="adminForm">
 			<table class="adminheading">
 				<tr>
-					<th width="100%" style="background: url(<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_symbol_plans.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;"><?php echo _PAYPLANS_TITLE; ?></th>
+					<th width="100%" style="background: url(<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_symbol_plans.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;"><?php echo _PAYPLANS_TITLE; ?></th>
 					<td nowrap="nowrap">
 						<?php echo $lists['filter_group'];?>
 						<input type="button" class="button" onclick="document.adminForm.submit();" value="<?php echo _AEC_CMN_APPLY; ?>" style="margin:2px;text-align:center;" />
@@ -1756,7 +1755,7 @@ class HTML_AcctExp
 
 				?>
 				<tr class="row<?php echo $k; ?>">
-					<td align="center"><?php echo $pageNav->rowNumber( $i ); ?></td>
+					<td align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 					<td align="right"><?php echo $rows[$i]->id; ?></td>
 					<td><?php echo mosHTML::idBox( $i, $rows[$i]->id, false, 'id' ); ?></td>
 					<td align="right" style="background: #<?php echo $rows[$i]->color; ?>;"><?php echo $rows[$i]->group; ?></td>
@@ -1806,7 +1805,7 @@ class HTML_AcctExp
 	{
 		$user = &JFactory::getUser();
 
-		mosCommonHTML::loadOverlib();
+		loadOverlib();
 		HTML_myCommon::addBackendCSS(); ?>
 
 		<script type="text/javascript">
@@ -1819,7 +1818,7 @@ class HTML_AcctExp
 		</script>
 		<table class="adminheading">
 			<tr>
-				<th width="100%" style="background: url(<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_symbol_plans.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+				<th width="100%" style="background: url(<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_symbol_plans.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
 					<?php echo _AEC_HEAD_PLAN_INFO; ?>:
 					&nbsp;
 					<small><?php echo $row->id ? $row->name : _AEC_CMN_NEW; ?></small>
@@ -1831,9 +1830,9 @@ class HTML_AcctExp
 				<tr>
 					<td valign="top">
 						<?php
-						$tabs = new mosTabs(0);
-		                $tabs->startPane( 'editSubscriptionPlan' );
-		                $tabs->startTab( _PAYPLAN_DETAIL_TITLE, _PAYPLAN_DETAIL_TITLE );
+						$tabs = new JPaneTabs(0);
+		                echo $tabs->startPane( 'editSubscriptionPlan' );
+		                echo $tabs->startPanel( _PAYPLAN_DETAIL_TITLE, _PAYPLAN_DETAIL_TITLE );
 		                ?>
 		                <div class="aec_tabheading"><h2><?php echo _PAYPLAN_DETAIL_TITLE; ?></h2></div>
 						<table class="aecadminform">
@@ -1916,8 +1915,8 @@ class HTML_AcctExp
 							</tr>
 						</table>
 						<?php
-		                $tabs->endTab();
-		                $tabs->startTab( _PAYPLAN_PROCESSORS_TITLE, _PAYPLAN_PROCESSORS_TITLE );
+		                echo $tabs->endPanel();
+		                echo $tabs->startPanel( _PAYPLAN_PROCESSORS_TITLE, _PAYPLAN_PROCESSORS_TITLE );
 						?>
 						<div class="aec_tabheading"><h2><?php echo _PAYPLAN_PROCESSORS_TITLE_LONG; ?></h2></div>
 						<table width="100%" class="aecadminform"><tr><td>
@@ -1940,8 +1939,8 @@ class HTML_AcctExp
 							?>
 						</td></tr></table>
 						<?php
-		                $tabs->endTab();
-		                $tabs->startTab( _PAYPLAN_TEXT_TITLE, _PAYPLAN_TEXT_TITLE );
+		                echo $tabs->endPanel();
+		                echo $tabs->startPanel( _PAYPLAN_TEXT_TITLE, _PAYPLAN_TEXT_TITLE );
 		                ?>
 		                <div class="aec_tabheading"><h2><?php echo _PAYPLAN_TEXT_TITLE; ?></h2></div>
 		                <table width="100%" class="aecadminform"><tr><td>
@@ -1955,8 +1954,8 @@ class HTML_AcctExp
 							</div>
 						</td></tr></table>
 						<?php
-		                $tabs->endTab();
-		                $tabs->startTab( _PAYPLAN_RESTRICTIONS_TITLE, _PAYPLAN_RESTRICTIONS_TITLE );
+		                echo $tabs->endPanel();
+		                echo $tabs->startPanel( _PAYPLAN_RESTRICTIONS_TITLE, _PAYPLAN_RESTRICTIONS_TITLE );
 		                ?>
 		                <div class="aec_tabheading"><h2><?php echo _PAYPLAN_RESTRICTIONS_TITLE; ?></h2></div>
 						<table class="aecadminform">
@@ -1973,8 +1972,8 @@ class HTML_AcctExp
 						</td></tr>
 						</table>
 						<?php
-		                $tabs->endTab();
-		                $tabs->startTab( _PAYPLAN_TRIAL_TITLE, _PAYPLAN_TRIAL_TITLE );
+		                echo $tabs->endPanel();
+		                echo $tabs->startPanel( _PAYPLAN_TRIAL_TITLE, _PAYPLAN_TRIAL_TITLE );
 						?>
 						<div class="aec_tabheading"><h2><?php echo _PAYPLAN_TRIAL_TITLE; ?><?php echo $aecHTML->ToolTip( _PAYPLAN_TRIAL_DESC, _PAYPLAN_TRIAL ); ?></h2></div>
 						<table width="100%" class="aecadminform"><tr><td>
@@ -1989,8 +1988,8 @@ class HTML_AcctExp
 							</div>
 						</td></tr></table>
 						<?php
-		                $tabs->endTab();
-		                $tabs->startTab( _PAYPLAN_RELATIONS_TITLE, _PAYPLAN_RELATIONS_TITLE );
+		                echo $tabs->endPanel();
+		                echo $tabs->startPanel( _PAYPLAN_RELATIONS_TITLE, _PAYPLAN_RELATIONS_TITLE );
 						?>
 						<div class="aec_tabheading"><h2><?php echo _PAYPLAN_RELATIONS_TITLE; ?></h2></div>
 						<table width="100%" class="aecadminform"><tr><td>
@@ -2000,8 +1999,8 @@ class HTML_AcctExp
 							</div>
 						</td></tr></table>
 						<?php
-		                $tabs->endTab();
-		                $tabs->startTab( _PAYPLAN_MI, _PAYPLAN_MI );
+		                echo $tabs->endPanel();
+		                echo $tabs->startPanel( _PAYPLAN_MI, _PAYPLAN_MI );
 		                ?>
 		                <div class="aec_tabheading"><h2><?php echo _PAYPLAN_MI; ?></h2></div>
 		                <table width="100%" class="aecadminform"><tr><td>
@@ -2030,8 +2029,8 @@ class HTML_AcctExp
 							?>
 						</td></tr></table>
 						<?php
-		                $tabs->endTab();
-		                $tabs->endPane();
+		                echo $tabs->endPanel();
+		                echo $tabs->endPane();
 						?>
 					</td>
 				</tr>
@@ -2057,7 +2056,7 @@ class HTML_AcctExp
 		<form action="index2.php" method="post" name="adminForm">
 			<table class="adminheading">
 				<tr>
-					<th width="100%" style="background: url(<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_symbol_itemgroups.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+					<th width="100%" style="background: url(<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_symbol_itemgroups.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
 						<?php echo _ITEMGROUPS_TITLE; ?>
 					</th>
 				</tr>
@@ -2119,7 +2118,7 @@ class HTML_AcctExp
 
 				?>
 				<tr class="row<?php echo $k; ?>">
-					<td align="center"><?php echo $pageNav->rowNumber( $i ); ?></td>
+					<td align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 					<td align="right"><?php echo $rows[$i]->id; ?></td>
 					<td><?php echo mosHTML::idBox( $i, $rows[$i]->id, false, 'id' ); ?></td>
 					<td align="right" style="background: #<?php echo $rows[$i]->color; ?>;"><?php echo $rows[$i]->group; ?></td>
@@ -2166,12 +2165,12 @@ class HTML_AcctExp
 	{
 		$user = &JFactory::getUser();
 
-		mosCommonHTML::loadOverlib();
+		loadOverlib();
 		HTML_myCommon::addBackendCSS(); ?>
 
 		<table class="adminheading">
 			<tr>
-				<th width="100%" style="background: url(<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_symbol_itemgroups.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+				<th width="100%" style="background: url(<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_symbol_itemgroups.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
 					<?php echo _AEC_HEAD_ITEMGROUP_INFO; ?>:
 					&nbsp;
 					<small><?php echo $row->id ? $row->name : _AEC_CMN_NEW; ?></small>
@@ -2183,9 +2182,9 @@ class HTML_AcctExp
 				<tr>
 					<td valign="top">
 						<?php
-						$tabs = new mosTabs(0);
-		                $tabs->startPane( 'editItemGroup' );
-		                $tabs->startTab( _ITEMGROUP_DETAIL_TITLE, _ITEMGROUP_DETAIL_TITLE );
+						$tabs = new JPaneTabs(0);
+		                echo $tabs->startPane( 'editItemGroup' );
+		                echo $tabs->startPanel( _ITEMGROUP_DETAIL_TITLE, _ITEMGROUP_DETAIL_TITLE );
 		                ?>
 		                <h2><?php echo _ITEMGROUP_DETAIL_TITLE; ?></h2>
 						<table class="aecadminform">
@@ -2247,8 +2246,8 @@ class HTML_AcctExp
 							</tr>
 						</table>
 						<?php
-		                $tabs->endTab();
-		                $tabs->startTab( _ITEMGROUP_RESTRICTIONS_TITLE, _ITEMGROUP_RESTRICTIONS_TITLE );
+		                echo $tabs->endPanel();
+		                echo $tabs->startPanel( _ITEMGROUP_RESTRICTIONS_TITLE, _ITEMGROUP_RESTRICTIONS_TITLE );
 		                ?>
 		                <h2><?php echo _ITEMGROUP_RESTRICTIONS_TITLE; ?></h2>
 						<table class="aecadminform">
@@ -2265,8 +2264,8 @@ class HTML_AcctExp
 						</td></tr>
 						</table>
 						<?php
-		                $tabs->endTab();
-		                $tabs->startTab( _ITEMGROUP_RELATIONS_TITLE, _ITEMGROUP_RELATIONS_TITLE );
+		                echo $tabs->endPanel();
+		                echo $tabs->startPanel( _ITEMGROUP_RELATIONS_TITLE, _ITEMGROUP_RELATIONS_TITLE );
 						?>
 						<h2><?php echo _ITEMGROUP_RELATIONS_TITLE; ?></h2>
 						<table width="100%" class="aecadminform"><tr><td>
@@ -2276,8 +2275,8 @@ class HTML_AcctExp
 							</div>
 						</td></tr></table>
 						<?php
-		                $tabs->endTab();
-		                $tabs->endPane();
+		                echo $tabs->endPanel();
+		                echo $tabs->endPane();
 						?>
 					</td>
 				</tr>
@@ -2303,7 +2302,7 @@ class HTML_AcctExp
 		<form action="index2.php" method="post" name="adminForm">
 			<table class="adminheading">
 				<tr>
-					<th width="100%" style="background: url(<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_symbol_coupons<?php echo $type ? '_static' : ''; ?>.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+					<th width="100%" style="background: url(<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_symbol_coupons<?php echo $type ? '_static' : ''; ?>.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
 						<?php echo constant( '_COUPON_TITLE' . ( $type ? '_STATIC' : '' ) ); ?>
 					</th>
 				</tr>
@@ -2327,7 +2326,7 @@ class HTML_AcctExp
 		for( $i=0, $n=count( $rows ); $i < $n; $i++ ) {
 			?>
 				<tr class="row<?php echo $k; ?>">
-					<td align="center"><?php echo $pageNav->rowNumber( $i ); ?></td>
+					<td align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 					<td><?php echo mosHTML::idBox( $i, $rows[$i]->id, false, 'id' ); ?></td>
 					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editCoupon<?php echo $type ? "Static" : ""; ?>')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $rows[$i]->name; ?></a></td>
 					<td align="center"><strong><?php echo $rows[$i]->coupon_code; ?></strong></td>
@@ -2369,12 +2368,12 @@ class HTML_AcctExp
 	{
 		$user = &JFactory::getUser();
 
-		mosCommonHTML::loadOverlib();
+		loadOverlib();
 		HTML_myCommon::addBackendCSS();
 		mosCommonHTML::loadCalendar(); ?>
 		<table class="adminheading">
 			<tr>
-				<th width="100%" style="background: url(<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_symbol_coupons<?php echo $type ? '_static' : ''; ?>.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+				<th width="100%" style="background: url(<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_symbol_coupons<?php echo $type ? '_static' : ''; ?>.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
 				<?php echo _AEC_COUPON; ?>:&nbsp;<small><?php echo $row->id ? $row->name : _AEC_CMN_NEW; ?></small>
 	        	</th>
 			</tr>
@@ -2385,9 +2384,9 @@ class HTML_AcctExp
 				<tr>
 					<td valign="top">
 						<?php
-						$tabs = new mosTabs(0);
-		                $tabs->startPane( 'editSubscriptionPlan' );
-		                $tabs->startTab( _COUPON_DETAIL_TITLE, _COUPON_DETAIL_TITLE ); ?>
+						$tabs = new JPaneTabs(0);
+		                echo $tabs->startPane( 'editSubscriptionPlan' );
+		                echo $tabs->startPanel( _COUPON_DETAIL_TITLE, _COUPON_DETAIL_TITLE ); ?>
 		                <h2><?php echo _COUPON_DETAIL_TITLE; ?></h2>
 						<table class="aecadminform">
 							<tr>
@@ -2459,8 +2458,8 @@ class HTML_AcctExp
 							</tr>
 						</table>
 						<?php
-		                $tabs->endTab();
-		                $tabs->startTab( _COUPON_RESTRICTIONS_TITLE, _COUPON_RESTRICTIONS_TITLE );
+		                echo $tabs->endPanel();
+		                echo $tabs->startPanel( _COUPON_RESTRICTIONS_TITLE, _COUPON_RESTRICTIONS_TITLE );
 		                ?>
 		                <h2><?php echo _COUPON_RESTRICTIONS_TITLE_FULL; ?></h2>
 						<table class="aecadminform">
@@ -2535,8 +2534,8 @@ class HTML_AcctExp
 						</td></tr>
 						</table>
 						<?php
-		                $tabs->endTab();
-		                $tabs->startTab( _COUPON_MI, _COUPON_MI );
+		                echo $tabs->endPanel();
+		                echo $tabs->startPanel( _COUPON_MI, _COUPON_MI );
 		                ?>
 		                <table width="100%" class="aecadminform"><tr><td>
 							<div class="userinfobox">
@@ -2545,8 +2544,8 @@ class HTML_AcctExp
 							</div>
 						</td></tr></table>
 						<?php
-		                $tabs->endTab();
-		                $tabs->endPane();
+		                echo $tabs->endPanel();
+		                echo $tabs->endPane();
 						?>
 					</td>
 				</tr>
@@ -2570,13 +2569,13 @@ class HTML_AcctExp
 	{
 		$user = &JFactory::getUser();
 
-		mosCommonHTML::loadOverlib();
+		loadOverlib();
 		HTML_myCommon::addBackendCSS();
 		?>
 		<form action="index2.php" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
-			<th width="100%" class="sectionname" style="background: url(<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_symbol_invoices.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;" rowspan="2" nowrap="nowrap">
+			<th width="100%" class="sectionname" style="background: url(<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_symbol_invoices.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;" rowspan="2" nowrap="nowrap">
 			<?php echo _INVOICE_TITLE; ?>
 			</th>
 			<td nowrap="nowrap" style="padding: 0 5px;">
@@ -2604,7 +2603,7 @@ class HTML_AcctExp
 		for( $i=0, $n=count( $rows ); $i < $n; $i++ ) {
 			?>
 			<tr class="row<?php echo $k; ?>">
-				<td><?php echo $pageNav->rowNumber( $i ); ?></td>
+				<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 				<td><a href="index2.php?option=com_acctexp&amp;task=edit&userid=<?php echo $rows[$i]->userid; ?>"><?php echo $rows[$i]->userid; ?></a></td>
 				<td align="center"><?php echo $rows[$i]->invoice_number; ?></td>
 				<td align="center"><?php echo $rows[$i]->secondary_ident; ?></td>
@@ -2638,14 +2637,14 @@ class HTML_AcctExp
 	{
 		$user = &JFactory::getUser();
 
-		mosCommonHTML::loadOverlib();
+		loadOverlib();
 		HTML_myCommon::addBackendCSS();
 
 		?>
 		<form action="index2.php" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
-			<th width="100%" class="sectionname" style="background: url(<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_symbol_history.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;" rowspan="2" nowrap="nowrap">
+			<th width="100%" class="sectionname" style="background: url(<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_symbol_history.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;" rowspan="2" nowrap="nowrap">
 			<?php echo _HISTORY_TITLE2; ?>
 			</th>
 			<td nowrap="nowrap" style="padding: 0 5px;">
@@ -2700,12 +2699,12 @@ class HTML_AcctExp
 
 	function eventlog( $option, $events, $search, $pageNav )
 	{
-		mosCommonHTML::loadOverlib();
+		loadOverlib();
 		HTML_myCommon::addBackendCSS(); ?>
 		<form action="index2.php" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
-			<th width="100%" class="sectionname" style="background: url(<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_symbol_eventlog.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;" rowspan="2" nowrap="nowrap">
+			<th width="100%" class="sectionname" style="background: url(<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_symbol_eventlog.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;" rowspan="2" nowrap="nowrap">
 				<?php echo _AEC_HEAD_LOG; ?>
 			</th>
 			<td nowrap="nowrap" style="padding: 0 5px;">
@@ -2760,13 +2759,13 @@ class HTML_AcctExp
 
 	function readoutSetup( $option, $aecHTML )
 	{
-		mosCommonHTML::loadOverlib();
+		loadOverlib();
 		HTML_myCommon::addBackendCSS();
 		?>
 		<form action="index2.php" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
-			<th width="100%" class="sectionname" style="background: url(<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_symbol_export.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;" rowspan="2" nowrap="nowrap">
+			<th width="100%" class="sectionname" style="background: url(<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_symbol_export.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;" rowspan="2" nowrap="nowrap">
 				<?php echo _AEC_READOUT; ?>
 			</th>
 			<td nowrap="nowrap" style="padding: 0 5px;">
@@ -2809,7 +2808,7 @@ class HTML_AcctExp
 
 	function readout( $option, $readout )
 	{
-		mosCommonHTML::loadOverlib();
+		loadOverlib();
 		HTML_myCommon::addReadoutCSS();
 
 		if ( isset( $_POST['column_headers'] ) ) {
@@ -2993,13 +2992,13 @@ class HTML_AcctExp
 
 	function export( $option, $aecHTML )
 	{
-		mosCommonHTML::loadOverlib();
+		loadOverlib();
 		HTML_myCommon::addBackendCSS();
 		?>
 		<form action="index2.php" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
-			<th width="100%" class="sectionname" style="background: url(<?php echo JURI::base( true ); ?>/administrator/components/com_acctexp/images/icons/aec_symbol_export.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;" rowspan="2" nowrap="nowrap">
+			<th width="100%" class="sectionname" style="background: url(<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_symbol_export.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;" rowspan="2" nowrap="nowrap">
 				<?php echo _AEC_HEAD_LOG; ?>
 			</th>
 			<td nowrap="nowrap" style="padding: 0 5px;">
