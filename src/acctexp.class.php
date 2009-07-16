@@ -59,9 +59,9 @@ function aecDebug( $text, $level = 128 )
 if ( !function_exists( 'aecJoomla15check' ) ) {
 	function aecJoomla15check()
 	{
-		global $aecConfig;
-
 		if ( !defined( 'AECJOOMLA15CHECK' ) ) {
+			global $aecConfig;
+
 			if ( !empty( $aecConfig->cfg['overrideJ15'] ) ) {
 				define( 'AECJOOMLA15CHECK', false );
 			} else {
@@ -815,7 +815,11 @@ class metaUser
 			. ' FROM #__users u, #__comprofiler ue'
 			. ' WHERE `user_id` = \'' . (int) $this->userid . '\' AND u.id = ue.id';
 		$database->setQuery( $query );
-		$database->loadObject( $this->cbUser );
+		if ( aecJoomla15check() ) {
+			$this->cbUser = $database->loadObject();
+		} else {
+			$database->loadObject($this->cbUser);
+		}
 
 		if ( is_object( $this->cbUser ) ) {
 			$this->hasCBprofile = true;
@@ -2490,7 +2494,11 @@ class PaymentProcessor
 				. ' WHERE `name` = \'' . $this->processor_name . '\''
 				;
 		$database->setQuery( $query );
-		$database->loadObject( $res );
+		if ( aecJoomla15check() ) {
+			$res = $database->loadObject();
+		} else {
+			$database->loadObject($res);
+		}
 
 		if ( !empty( $res ) && is_object( $res ) ) {
 			$this->id = $res->id ? $res->id : 0;
@@ -9341,7 +9349,11 @@ class Invoice extends serialParamDBTable
 			$res = null;
 			$query = 'SELECT `id`, `username`, `email` ' . $base_query;
 			$database->setQuery( $query );
-			$database->loadObject( $res );
+			if ( aecJoomla15check() ) {
+				$res = $database->loadObject();
+			} else {
+				$database->loadObject($res);
+			}
 
 			if ( !empty( $res ) ) {
 				$this->params['target_user'] = $res->id;

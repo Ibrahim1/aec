@@ -54,12 +54,20 @@ $aecConfig->saveSettings();
 // check for old values and update (if happen) old tables
 $result = null;
 $database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'params'");
-$database->loadObject($result);
+if ( aecJoomla15check() ) {
+	$result = $database->loadObject();
+} else {
+	$database->loadObject($result);
+}
 
 if ( !( strcmp( $result->Field, 'params' ) === 0 ) ) {
 	$result = null;
 	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'mingid'");
-	$database->loadObject($result);
+	if ( aecJoomla15check() ) {
+		$result = $database->loadObject();
+	} else {
+		$database->loadObject($result);
+	}
 
 	if ( strcmp( $result->Field, 'mingid' ) === 0 ) {
 		$database->setQuery("ALTER TABLE #__acctexp_plans ADD `restrictions` text NULL");
@@ -193,7 +201,13 @@ $eucaInstalldb->addColifNotExists( 'pre_exp_check', "int(4) NULL", 'microintegra
 if ( in_array( $mainframe->getCfg( 'dbprefix' ) . "acctexp", $tables ) ) {
 	$result = null;
 	$database->setQuery("SHOW COLUMNS FROM #__acctexp LIKE 'expiration'");
-	if ( $database->loadObject( $result ) ) {
+	if ( aecJoomla15check() ) {
+		$result = $database->loadObject();
+	} else {
+		$database->loadObject($result);
+	}
+
+	if ( !empty( $result ) ) {
 		if ( (strcmp($result->Field, 'expiration') === 0) && (strcmp($result->Type, 'date') === 0) ) {
 			// Give extra space for plan description
 			$database->setQuery("ALTER TABLE #__acctexp CHANGE `expiration` `expiration` datetime NOT NULL default '0000-00-00 00:00:00'");

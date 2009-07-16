@@ -14,7 +14,11 @@ if ( in_array( $mainframe->getCfg( 'dbprefix' ) . "acctexp_payplans", $tables ) 
 	// It is existent only from version 0.6.0
 	$result = null;
 	$database->setQuery("SHOW COLUMNS FROM #__acctexp_payplans LIKE 'gid'");
-	$database->loadObject($result);
+	if ( aecJoomla15check() ) {
+		$result = $database->loadObject();
+	} else {
+		$database->loadObject($result);
+	}
 	if (strcmp($result->Field, 'gid') === 0) {
 		// You're already running version 0.6.0 or later. No action required.
 	} else {

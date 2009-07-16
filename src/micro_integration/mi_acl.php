@@ -153,7 +153,11 @@ class mi_acl
 						. ' WHERE `userid` = \'' . (int) $metaUser->userid . '\''
 						;
 				$database->setQuery( $query );
-				$database->loadObject( $session ) or die( $database->stderr() );
+				if ( aecJoomla15check() ) {
+					$session = $database->loadObject();
+				} else {
+					$database->loadObject($session);
+				}
 
 				if ( $session->userid  ) {
 					$query = 'SELECT `value`'

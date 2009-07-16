@@ -149,7 +149,11 @@ class mi_phpbb3
 					. ' WHERE LOWER(user_email) = \'' . strtolower( $request->metaUser->cmsUser->email ) . '\''
 					;
 			$database->setQuery( $query );
-			$database->loadObject( $bbuser );
+			if ( aecJoomla15check() ) {
+				$bbuser = $database->loadObject();
+			} else {
+				$database->loadObject($bbuser);
+			}
 
 			// check PHPBB3 primary group not on excluded list
 			if ( in_array( $bbuser->group_id, $this->settings['groups_exclude'] ) ) {
@@ -166,7 +170,11 @@ class mi_phpbb3
 						. ' WHERE `user_id` = \'' . $bbuser->user_id . '\''
 						;
 				$database->setQuery( $query );
-				$database->loadObject( $secGroups );
+				if ( aecJoomla15check() ) {
+					$secGroups = $database->loadObject();
+				} else {
+					$database->loadObject($secGroups);
+				}
 
 			 	foreach ( $secGroups as $secGroup ) {
 					if ( in_array( $secGroup, $this->settings['groups_exclude'] ) ) {
@@ -244,7 +252,11 @@ class mi_phpbb3
 					. ' WHERE LOWER(user_email) = \'' . strtolower( $request->metaUser->cmsUser->email ) . '\''
 					;
 			$database->setQuery( $query );
-			$database->loadObject( $bbuser );
+			if ( aecJoomla15check() ) {
+				$bbuser = $database->loadObject();
+			} else {
+				$database->loadObject($bbuser);
+			}
 
 			// check PHPBB3 primary group not on excluded list
 			if ( in_array( $bbuser->group_id, $this->settings['groups_exclude'] ) ) {
@@ -261,7 +273,11 @@ class mi_phpbb3
 						. ' WHERE `user_id` = \'' . $bbuser->user_id . '\''
 						;
 				$database->setQuery( $query );
-				$database->loadObject( $secGroups );
+				if ( aecJoomla15check() ) {
+					$secGroups = $database->loadObject();
+				} else {
+					$database->loadObject($secGroups);
+				}
 
 			 	foreach ( $secGroups as $secGroup ) {
 					if ( in_array( $secGroup, $this->settings['groups_exclude'] ) ) {

@@ -835,7 +835,11 @@ function help( $option )
 		 	. ' WHERE `active` = \'1\''
 		 	;
  	$database->setQuery( $query );
- 	$database->loadObject( $objentry );
+	if ( aecJoomla15check() ) {
+		$objentry = $database->loadObject();
+	} else {
+		$database->loadObject($objentry);
+	}
 
  	if ( $objentry ) {
  		$diagnostic['no_plan'] = 0;

@@ -82,7 +82,11 @@ class mi_raffle
 			$result = null;
 
 			$database->setQuery( "SHOW COLUMNS FROM #__acctexp_mi_rafflelist LIKE 'finished'" );
-			$database->loadObject( $result );
+			if ( aecJoomla15check() ) {
+				$result = $database->loadObject();
+			} else {
+				$database->loadObject($result);
+			}
 
 			if ( empty( $result->Field ) ) {
 				$database->setQuery( "ALTER TABLE #__acctexp_mi_rafflelist ADD `finished` int(11) default '0'" );
@@ -170,7 +174,11 @@ class mi_raffle
 					. ' WHERE `id` = \'' . $userid . '\'';
 					;
 				$database->setQuery( $query );
-				$database->loadObject( $u );
+				if ( aecJoomla15check() ) {
+					$u = $database->loadObject();
+				} else {
+					$database->loadObject($u);
+				}
 
 				$colET .= $userid . ';' . $u->username . ';' . $u->email . "\n";
 			}

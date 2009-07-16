@@ -18,15 +18,21 @@
 if ( !function_exists( 'aecJoomla15check' ) ) {
 	function aecJoomla15check()
 	{
-		global $aecConfig;
-
-		if ( !empty( $aecConfig->cfg['overrideJ15'] ) ) {
-			return false;
-		} else {
-			return defined( 'JPATH_BASE' );
-		}
+		return defined( 'JPATH_BASE' );
 	}
 }
+
+if ( !defined( 'JPATH_SITE' ) ) {
+	global $mosConfig_absolute_path;
+
+	define( 'JPATH_SITE', $mosConfig_absolute_path );
+}
+
+// Make sure we are compatible with php4
+include_once( JPATH_SITE . '/components/com_acctexp/lib/php4/php4.php' );
+
+// Make sure we are compatible with joomla1.0
+include_once( JPATH_SITE . '/components/com_acctexp/lib/j15/j15.php' );
 
 function com_install()
 {

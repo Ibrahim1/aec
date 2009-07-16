@@ -11,7 +11,11 @@
 // load settings (creates settings parameters that got added in this version)
 $result = null;
 $database->setQuery( "SHOW COLUMNS FROM #__acctexp_config LIKE 'settings'" );
-$database->loadObject($result);
+if ( aecJoomla15check() ) {
+	$result = $database->loadObject();
+} else {
+	$database->loadObject($result);
+}
 
 if ( strcmp( $result->Field, 'settings' ) !== 0 ) {
 	$columns = array(	"transferinfo", "initialexp", "alertlevel1", "alertlevel2",
@@ -25,7 +29,12 @@ if ( strcmp( $result->Field, 'settings' ) !== 0 ) {
 	foreach ($columns as $column) {
 		$result = null;
 		$database->setQuery("SHOW COLUMNS FROM #__acctexp_config LIKE '" . $column . "'");
-		$database->loadObject($result);
+		if ( aecJoomla15check() ) {
+			$result = $database->loadObject();
+		} else {
+			$database->loadObject($result);
+		}
+
 		if (strcmp($result->Field, $column) === 0) {
 			$database->setQuery( "SELECT " . $column . " FROM #__acctexp_config WHERE id='1'" );
 			$settings[$column] = $database->loadResult();

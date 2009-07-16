@@ -45,7 +45,11 @@ if ( $jsonconversion ) {
 			. ' WHERE `id` = \'' . $id . '\''
 			;
 			$database->setQuery( $query );
-			$database->loadObject( $object );
+			if ( aecJoomla15check() ) {
+				$object = $database->loadObject();
+			} else {
+				$database->loadObject($object);
+			}
 
 			$dec = $fielddeclare;
 			foreach ( $fielddeclare as $fieldname ) {
@@ -154,7 +158,11 @@ if ( $jsonconversion ) {
 			. ' WHERE `id` = \'' . $id . '\''
 			;
 			$database->setQuery( $query );
-			$database->loadObject( $object );
+			if ( aecJoomla15check() ) {
+				$object = $database->loadObject();
+			} else {
+				$database->loadObject($object);
+			}
 
 			$dec = $fielddeclare;
 			foreach ( $fielddeclare as $fieldname ) {

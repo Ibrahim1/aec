@@ -209,7 +209,11 @@ class eucaInstallDB extends eucaObject
 				;
 
 		$database->setQuery( $query );
-		$database->loadObject( $result );
+		if ( aecJoomla15check() ) {
+			$result = $database->loadObject();
+		} else {
+			$database->loadObject($result);
+		}
 
 		if( is_object( $result ) ) {
 			if ( strcmp($result->Field, $column) === 0 ) {

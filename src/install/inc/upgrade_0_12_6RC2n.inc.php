@@ -85,7 +85,11 @@ if ( in_array( $mainframe->getCfg( 'dbprefix' ) . "acctexp_mi_hotproperty", $tab
 				. ' WHERE `id` = \'' . $id . '\''
 				;
 				$database->setQuery( $query );
-				$database->loadObject( $object );
+				if ( aecJoomla15check() ) {
+					$object = $database->loadObject();
+				} else {
+					$database->loadObject($object);
+				}
 
 				if ( empty( $object->params ) ) {
 					continue;

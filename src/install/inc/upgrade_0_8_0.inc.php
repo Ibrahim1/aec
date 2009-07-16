@@ -13,12 +13,20 @@ $queri	= array();
 $result = null;
 
 $database->setQuery("SHOW COLUMNS FROM #__acctexp_config LIKE 'alertlevel1'");
-$database->loadObject($result);
+if ( aecJoomla15check() ) {
+	$result = $database->loadObject();
+} else {
+	$database->loadObject($result);
+}
 
 if ( is_object( $result ) ) {
 	if (strcmp($result->Field, 'alertlevel1') === 0) {
 		$database->setQuery("SHOW COLUMNS FROM #__acctexp_config LIKE 'email'");
-		$database->loadObject($result);
+		if ( aecJoomla15check() ) {
+			$result = $database->loadObject();
+		} else {
+			$database->loadObject($result);
+		}
 
 		if (strcmp($result->Field, 'email') === 0) {
 			$queri[] = "ALTER TABLE #__acctexp_config DROP `email`";
