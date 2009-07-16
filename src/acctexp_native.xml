@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install type="component" version="1.5.0">
+	<name>AcctExp</name>
+	<creationDate>2008.06.06</creationDate>
+	<author>David Deutsch, Team AEC, Helder Garcia</author>
+	<authorEmail>skore@valanx.org</authorEmail>
+	<copyright>@Copyright (C) 2004-2009 David Deutsch</copyright>
+	<authorUrl>http://valanx.org</authorUrl>
+	<version>0.12.6 RC2q</version>
+	<description>A complete subscription management system. By David Deutsch (skOre) and the team of AEC at valanx.org (started by Helder Garcia (hlbog))</description>
+	<files>
+		<filename>index.html</filename>
+		<filename>acctexp.php</filename>
+		<filename>acctexp.class.php</filename>
+		<filename>acctexp.html.php</filename>
+		<filename>style.css</filename>
+		<folder>com_acctexp_language</folder>
+		<folder>images</folder>
+		<folder>lib</folder>
+		<folder>micro_integration</folder>
+		<folder>processors</folder>
+	</files>
+	<images>
+	</images>
+	<install>
+		<queries>
+		</queries>
+	</install>
+	<uninstall>
+    	<queries>
+    	</queries>
+	</uninstall>
+	<installfile>install.acctexp.php</installfile>
+	<uninstallfile>uninstall.acctexp.php</uninstallfile>
+	<administration>
+		<files>
+			<filename>index.html</filename>
+			<filename>admin.acctexp.php</filename>
+			<filename>admin.acctexp.html.php</filename>
+			<filename>aec_readout.css</filename>
+			<filename>toolbar.acctexp.php</filename>
+			<filename>toolbar.acctexp.html.php</filename>
+			<filename>backend_style.css</filename>
+			<folder>com_acctexp_language_backend</folder>
+			<folder>images</folder>
+			<folder>install</folder>
+		</files>
+		<images>
+		</images>
+	</administration>
+</mosinstall>
