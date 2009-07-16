@@ -26,6 +26,8 @@ if ( _EUCA_DEBUGMODE ) {
 	$eucaDebug = new eucaDebug();
 }
 
+$user = &JFactory::getUser();
+
 if (!$acl->acl_check( 'administration', 'config', 'users', $user->usertype )) {
 
 	if ( !( ( strcmp( $user->usertype, 'Administrator' ) === 0) && $aecConfig->cfg['adminaccess'] ) ) {

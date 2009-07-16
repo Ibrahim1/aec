@@ -34,11 +34,11 @@ if ( !class_exists( 'JObject' ) ) {
 	require_once( JPATH_SITE . '/components/com_acctexp/lib/j15/object.php' );
 }
 
-if ( !class_exists( 'JTABLE' ) ) {
-	class JTABLE extends mosDBTable
+if ( !class_exists( 'JTable' ) && class_exists( 'mosDBTable' ) ) {
+	class JTable extends mosDBTable
 	{
 	    function __construct( $table, $key, &$database ) {
-	        parent::__construct( $table, $key, $database );
+	        $this->mosDBTable( $table, $key, $database );
 	    }
 	}
 }
@@ -63,11 +63,17 @@ if ( !class_exists( 'JFactory' ) ) {
 }
 
 if ( !class_exists( 'JToolBarHelper' ) ) {
+	if ( !class_exists( 'mosMenuBar' ) ) {
+		global $mosConfig_absolute_path;
+
+		require_once( $mosConfig_absolute_path . '/administrator/includes/menubar.html.php' );
+	}
+
 	class JToolBarHelper extends mosMenuBar
 	{}
 }
 
-if ( !class_exists( 'JTableUser' ) ) {
+if ( !class_exists( 'JTableUser' ) && class_exists( 'mosUser' ) ) {
 	class JTableUser extends mosUser
 	{}
 }

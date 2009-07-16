@@ -15,6 +15,18 @@
 
 global $aecConfig;
 
+if ( !defined( 'JPATH_SITE' ) ) {
+	global $mosConfig_absolute_path;
+
+	define( 'JPATH_SITE', $mosConfig_absolute_path );
+}
+
+// Make sure we are compatible with php4
+include_once( JPATH_SITE . '/components/com_acctexp/lib/php4/php4.php' );
+
+// Make sure we are compatible with joomla1.0
+include_once( JPATH_SITE . '/components/com_acctexp/lib/j15/j15.php' );
+
 if ( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
 	$langPath = JPATH_SITE . '/administrator/components/com_acctexp/com_acctexp_language_backend/';
 	if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
@@ -34,12 +46,6 @@ if ( !defined( '_AEC_LANG' ) ) {
 	}
 	define( '_AEC_LANG', 1 );
 }
-
-// Make sure we are compatible with php4
-include_once( JPATH_SITE . '/components/com_acctexp/lib/php4/php4.php' );
-
-// Make sure we are compatible with joomla1.0
-include_once( JPATH_SITE . '/components/com_acctexp/lib/j15/j15.php' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
