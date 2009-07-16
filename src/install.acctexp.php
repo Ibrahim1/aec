@@ -32,7 +32,9 @@ function com_install()
 {
 	$database = &JFactory::getDBO();
 
-	global $mainframe, $mosConfig_dbprefix, $my;
+	$user = &JFactory::getUser();
+
+	global $mainframe;
 
 	$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" media="all" href="' . $mainframe->getCfg( 'live_site' ) . '/administrator/components/com_acctexp/backend_style.css" />' );
 
@@ -238,7 +240,7 @@ function com_install()
 	$tags		= 'install,system';
 
 	$eventlog	= new eventLog( $database );
-	$params		= array( 'userid' => $my->id );
+	$params		= array( 'userid' => $user->id );
 	$eventlog->issue( $short, $tags, $event, 2, $params, 1 );
 
 	$errors = array_merge( $errors, $eucaInstall->getErrors(), $eucaInstalldb->getErrors(), $eucaInstallef->getErrors() );

@@ -1391,7 +1391,7 @@ class HTML_AcctExp
 
 	function listSubscriptions( $rows, $pageNav, $search, $option, $lists, $subscriptionid, $action )
 	{
-		global $my;
+		$user = &JFactory::getUser();
 
 		HTML_myCommon::addBackendCSS(); ?>
 		<form action="index2.php" method="post" name="adminForm">
@@ -1477,7 +1477,7 @@ class HTML_AcctExp
 
  		<?php
 		if ( _EUCA_DEBUGMODE ) {
-			krumo( $my, $rows, $pageNav, $search, $option, $lists, $subscriptionid, $action );
+			krumo( $user, $rows, $pageNav, $search, $option, $lists, $subscriptionid, $action );
 		}
 
  		HTML_myCommon::Valanx();
@@ -1804,7 +1804,7 @@ class HTML_AcctExp
 
 	function editSubscriptionPlan( $option, $aecHTML, $row, $hasrecusers )
 	{
-		global $my;
+		$user = &JFactory::getUser();
 
 		mosCommonHTML::loadOverlib();
 		HTML_myCommon::addBackendCSS(); ?>
@@ -2164,7 +2164,7 @@ class HTML_AcctExp
 
 	function editItemGroup( $option, $aecHTML, $row )
 	{
-		global $my;
+		$user = &JFactory::getUser();
 
 		mosCommonHTML::loadOverlib();
 		HTML_myCommon::addBackendCSS(); ?>
@@ -2367,7 +2367,7 @@ class HTML_AcctExp
 
 	function editCoupon( $option, $aecHTML, $row, $type )
 	{
-		global $my;
+		$user = &JFactory::getUser();
 
 		mosCommonHTML::loadOverlib();
 		HTML_myCommon::addBackendCSS();
@@ -2568,7 +2568,7 @@ class HTML_AcctExp
 
 	function viewinvoices( $option, $rows, $search, $pageNav )
 	{
-		global $my;
+		$user = &JFactory::getUser();
 
 		mosCommonHTML::loadOverlib();
 		HTML_myCommon::addBackendCSS();
@@ -2636,7 +2636,7 @@ class HTML_AcctExp
 
 	function viewhistory( $option, $rows, $search, $pageNav )
 	{
-		global $my;
+		$user = &JFactory::getUser();
 
 		mosCommonHTML::loadOverlib();
 		HTML_myCommon::addBackendCSS();

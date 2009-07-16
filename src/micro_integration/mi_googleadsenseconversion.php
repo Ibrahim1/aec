@@ -50,8 +50,6 @@ class mi_googleadsenseconversion
 	{
 		$database = &JFactory::getDBO();
 
-		global $mosConfig_sitename;
-
 		$text = '<script language="JavaScript" type="text/javascript">' . "\n"
 				. '<!--' . "\n"
 				. 'var google_conversion_id = ' . $this->settings['conversion_id'] . ';'

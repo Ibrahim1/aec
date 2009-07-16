@@ -87,7 +87,7 @@ class mi_acajoom
 	{
 		$database = &JFactory::getDBO();
 
-		$user = new mosUser( $database );
+		$user = new JTableUser( $database );
 		$user->load( $userid );
 
 		$query  = 'INSERT INTO #__acajoom_subscribers'

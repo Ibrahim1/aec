@@ -67,4 +67,9 @@ if ( !class_exists( 'JToolBarHelper' ) ) {
 	{}
 }
 
+if ( !class_exists( 'JTableUser' ) ) {
+	class JTableUser extends mosUser
+	{}
+}
+
 ?>

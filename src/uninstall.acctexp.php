@@ -19,14 +19,14 @@ function com_uninstall()
 {
 	$database = &JFactory::getDBO();
 
-	global $my;
+	$user = &JFactory::getUser();
 
 	$short = "AEC uninstall";
 	$event = "AEC has been removed";
 	$tags = "uninstall,system";
 
 	$eventlog = new eventLog($database);
-	$params = array("userid" => $my->id);
+	$params = array("userid" => $user->id);
 	$eventlog->issue( $short, $tags, $event, 2, $params );
 
 	echo "Component successfully uninstalled";

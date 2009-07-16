@@ -26,9 +26,9 @@ if ( _EUCA_DEBUGMODE ) {
 	$eucaDebug = new eucaDebug();
 }
 
-if (!$acl->acl_check( 'administration', 'config', 'users', $my->usertype )) {
+if (!$acl->acl_check( 'administration', 'config', 'users', $user->usertype )) {
 
-	if ( !( ( strcmp( $my->usertype, 'Administrator' ) === 0) && $aecConfig->cfg['adminaccess'] ) ) {
+	if ( !( ( strcmp( $user->usertype, 'Administrator' ) === 0) && $aecConfig->cfg['adminaccess'] ) ) {
 		mosRedirect( 'index2.php', _NOT_AUTH );
 	}
 }
@@ -735,7 +735,7 @@ function aecCentral( $option, $searchresult=null )
 {
 	$database = &JFactory::getDBO();
 
-	global $mainframe, $mosConfig_list_limit;
+	global $mainframe;
 
 	$query = 'SELECT *'
 			. ' FROM #__acctexp_eventlog'
@@ -756,9 +756,9 @@ function cancel( $option )
 {
 	$database = &JFactory::getDBO();
 
-	global $mainframe, $mosConfig_list_limit;
+	global $mainframe, $mainframe;
 
- 	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
+ 	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) );
 	$limitstart = $mainframe->getUserStateFromRequest( "viewnotconf{$option}limitstart", 'limitstart', 0 );
 	$nexttask	= aecGetParam( 'nexttask', 'config' ) ;
 
@@ -1166,7 +1166,7 @@ function saveUser( $option, $apply=0 )
 {
 	$database = &JFactory::getDBO();
 
-	global $mainframe, $mosConfig_list_limit;
+	global $mainframe, $mainframe;
 
 	$metaUser = new metaUser( $_POST['userid'] );
 	$established = false;
@@ -1281,7 +1281,7 @@ function saveUser( $option, $apply=0 )
 		$metaUser->focusSubscription->storeload();
 	}
 
- 	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
+ 	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) );
 	$limitstart	= $mainframe->getUserStateFromRequest( "viewnotconf{$option}limitstart", 'limitstart', 0 );
 
 	$nexttask	= aecGetParam( 'nexttask', 'config' ) ;
@@ -1297,7 +1297,9 @@ function removeUser( $userid, $option )
 {
 	$database = &JFactory::getDBO();
 
-	global $my, $acl;
+	$user = &JFactory::getUser();
+
+	global $acl;
 
 	// $userid contains values corresponding to id field of #__acctexp table
 		if ( !is_array( $userid ) || count( $userid ) < 1 ) {
@@ -1309,7 +1311,7 @@ function removeUser( $userid, $option )
 	$msg		= _REMOVED;
 
 	if ( count( $userid ) ) {
-		$obj = new mosUser( $database );
+		$obj = new JTableUser( $database );
 		foreach ( $userid as $id ) {
 			// Get REAL UserID
 			$query = 'SELECT userid'
@@ -1327,9 +1329,9 @@ function removeUser( $userid, $option )
 
 				if ( $this_group == 'super administrator' ) {
 					$msg = _AEC_MSG_NODELETE_SUPERADMIN;
-				} elseif ( $uid == $my->id ){
+				} elseif ( $uid == $user->id ){
 					$msg = _AEC_MSG_NODELETE_YOURSELF;
-				} elseif ( ( $this_group == 'administrator' ) && ( $my->gid == 24 ) ){
+				} elseif ( ( $this_group == 'administrator' ) && ( $user->gid == 24 ) ){
 					$msg = _AEC_MSG_NODELETE_EXCEPT_SUPERADMIN;
 				} else {
 					$query = 'DELETE FROM #__acctexp'
@@ -1354,7 +1356,9 @@ function removeClosedSubscription( $userid, $option )
 {
 	$database = &JFactory::getDBO();
 
-	global $my, $acl, $mosConfig_dbprefix;
+	$user = &JFactory::getUser();
+
+	global $acl, $mainframe;
 
 	// $userid contains values corresponding to id field of #__acctexp table
 		if ( !is_array( $userid ) || count( $userid ) < 1 ) {
@@ -1394,7 +1398,7 @@ function removeClosedSubscription( $userid, $option )
 
 	$msg = _REMOVED;
 	if ( count( $userid ) ) {
-		$obj = new mosUser( $database );
+		$obj = new JTableUser( $database );
 		foreach ( $userid as $id ) {
 			// check for a super admin ... can't delete them
 			$groups		= $acl->get_object_groups( 'users', $id, 'ARO' );
@@ -1402,9 +1406,9 @@ function removeClosedSubscription( $userid, $option )
 
 			if ( $this_group == 'super administrator' ) {
 				$msg = _AEC_MSG_NODELETE_SUPERADMIN;
-			} else if ( $id == $my->id ) {
+			} else if ( $id == $user->id ) {
 				$msg = _AEC_MSG_NODELETE_YOURSELF;
-			} else if ( ( $this_group == 'administrator' ) && ( $my->gid == 24 ) ) {
+			} else if ( ( $this_group == 'administrator' ) && ( $user->gid == 24 ) ) {
 				$msg = _AEC_MSG_NODELETE_EXCEPT_SUPERADMIN;
 			} else {
 				if ( !$obj->delete( $id ) ) {
@@ -1427,17 +1431,15 @@ function removeClosedSubscription( $userid, $option )
 }
 
 function activateClosedSubscription( $userid, $option )
-{
-	$database = &JFactory::getDBO();
-
-	global $my, $acl, $mosConfig_dbprefix;
-}
+{}
 
 function removePendingSubscription( $userid, $option )
 {
 	$database = &JFactory::getDBO();
 
-	global $my, $acl, $mosConfig_dbprefix;
+	$user = &JFactory::getUser();
+
+	global $acl, $mainframe;
 
 	// $userid contains values corresponding to id field of #__acctexp table
 		if ( !is_array( $userid ) || count( $userid ) < 1 ) {
@@ -1477,16 +1479,16 @@ function removePendingSubscription( $userid, $option )
 
 	$msg = _REMOVED;
 	if ( count( $userid ) ) {
-		$obj = new mosUser( $database );
+		$obj = new JTableUser( $database );
 		foreach ($userid as $id) {
 			// check for a super admin ... can't delete them
 			$groups         = $acl->get_object_groups( 'users', $id, 'ARO' );
 			$this_group = strtolower( $acl->get_group_name( $groups[0], 'ARO' ) );
 			if ( $this_group == 'super administrator' ) {
 				$msg = _AEC_MSG_NODELETE_SUPERADMIN;
-			} else if ( $id == $my->id ) {
+			} else if ( $id == $user->id ) {
 				$msg = _AEC_MSG_NODELETE_YOURSELF;
-			} else if ( ( $this_group == 'administrator' ) && ( $my->gid == 24 ) ) {
+			} else if ( ( $this_group == 'administrator' ) && ( $user->gid == 24 ) ) {
 				$msg = _AEC_MSG_NODELETE_EXCEPT_SUPERADMIN;
 			} else {
 				if ( !$obj->delete( $id ) ) {
@@ -1560,9 +1562,9 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 {
 	$database = &JFactory::getDBO();
 
-	global $mainframe, $mosConfig_list_limit;
+	global $mainframe, $mainframe;
 
-	$limit			= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
+	$limit			= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) );
 	$limitstart		= $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
 	$orderby		= $mainframe->getUserStateFromRequest( "order_subscr{$option}", 'orderby', 'name ASC' );
@@ -1987,7 +1989,9 @@ function editSettings( $option )
 {
 	$database = &JFactory::getDBO();
 
-	global $acl, $my, $aecConfig;
+	$user = &JFactory::getUser();
+
+	global $acl, $aecConfig;
 
 	// See whether we have a duplication
 	if ( $aecConfig->RowDuplicationCheck() ) {
@@ -2302,7 +2306,9 @@ function saveSettings( $option, $return=0 )
 {
 	$database = &JFactory::getDBO();
 
-	global $mainframe, $my, $acl, $aecConfig;
+	$user = &JFactory::getUser();
+
+	global $mainframe, $acl, $aecConfig;
 
 	unset( $_POST['id'] );
 	unset( $_POST['task'] );
@@ -2358,7 +2364,7 @@ function saveSettings( $option, $return=0 )
 	$short	= _AEC_LOG_SH_SETT_SAVED;
 	$event	= _AEC_LOG_LO_SETT_SAVED . ' ' . $difference;
 	$tags	= 'settings,system';
-	$params = array(	'userid' => $my->id,
+	$params = array(	'userid' => $user->id,
 						'ip' => $ip['ip'],
 						'isp' => $ip['isp'] );
 
@@ -2376,9 +2382,9 @@ function listProcessors( $option )
 {
  	$database = &JFactory::getDBO();
 
-	global $mainframe, $mosConfig_list_limit;
+	global $mainframe, $mainframe;
 
- 	$limit = $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
+ 	$limit = $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) );
 	$limitstart = $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
  	// get the total number of records
@@ -2421,7 +2427,9 @@ function editProcessor( $id, $option )
 {
 	$database = &JFactory::getDBO();
 
-	global $acl, $my, $aecConfig;
+	$user = &JFactory::getUser();
+
+	global $acl, $aecConfig;
 
 	if ( $id ) {
 		$pp = new PaymentProcessor();
@@ -2653,7 +2661,9 @@ function saveProcessor( $option, $return=0 )
 {
 	$database = &JFactory::getDBO();
 
-	global $mainframe, $my, $acl, $aecConfig;
+	$user = &JFactory::getUser();
+
+	global $mainframe, $acl, $aecConfig;
 
 	$pp = new PaymentProcessor();
 
@@ -2738,9 +2748,9 @@ function listSubscriptionPlans( $option )
 {
  	$database = &JFactory::getDBO();
 
-	global $mainframe, $mosConfig_list_limit;
+	global $mainframe, $mainframe;
 
- 	$limit			= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
+ 	$limit			= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) );
 	$limitstart		= $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 	$filter_group	= $mainframe->getUserStateFromRequest( "filter_group", 'filter_group', array() );
 
@@ -2849,7 +2859,9 @@ function editSubscriptionPlan( $id, $option )
 {
 	$database = &JFactory::getDBO();
 
-	global $my, $acl;
+	$user = &JFactory::getUser();
+
+	global $acl;
 
 	$lists = array();
 	$params_values = array();
@@ -3005,7 +3017,7 @@ function editSubscriptionPlan( $id, $option )
 	$params['rewriteInfo']			= array( 'fieldset', '', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
 	// ensure user can't add group higher than themselves
-	$my_groups = $acl->get_object_groups( 'users', $my->id, 'ARO' );
+	$my_groups = $acl->get_object_groups( 'users', $user->id, 'ARO' );
 	if ( is_array( $my_groups ) && count( $my_groups ) > 0) {
 		$ex_groups = $acl->get_group_children( $my_groups[0], 'ARO', 'RECURSE' );
 	} else {
@@ -3561,9 +3573,9 @@ function listItemGroups( $option )
 {
  	$database = &JFactory::getDBO();
 
-	global $mainframe, $mosConfig_list_limit;
+	global $mainframe, $mainframe;
 
- 	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
+ 	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) );
 	$limitstart = $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
  	// get the total number of records
@@ -3909,9 +3921,9 @@ function listMicroIntegrations( $option )
 {
 	$database = &JFactory::getDBO();
 
-	global $mainframe, $mosConfig_list_limit;
+	global $mainframe, $mainframe;
 
-	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
+	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) );
 	$limitstart	= $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
 	$orderby		= $mainframe->getUserStateFromRequest( "order_mi{$option}", 'orderby', 'ordering ASC' );
@@ -4008,7 +4020,9 @@ function editMicroIntegration ( $id, $option )
 {
 	$database = &JFactory::getDBO();
 
-	global $my, $acl, $aecConfig;
+	$user = &JFactory::getUser();
+
+	global $acl, $aecConfig;
 
 	$lists	= array();
 	$mi		= new microIntegration( $database );
@@ -4243,9 +4257,9 @@ function listCoupons( $option, $type )
 {
  	$database = &JFactory::getDBO();
 
-	global $mainframe, $mosConfig_list_limit;
+	global $mainframe, $mainframe;
 
- 	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
+ 	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) );
 	$limitstart = $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
 	$total = 0;
@@ -4291,7 +4305,9 @@ function editCoupon( $id, $option, $new, $type )
 {
 	$database = &JFactory::getDBO();
 
-	global $my, $acl, $mosConfig_offset;
+	$user = &JFactory::getUser();
+
+	global $acl, $mainframe;
 
 	$lists					= array();
 	$params_values			= array();
@@ -4343,9 +4359,9 @@ function editCoupon( $id, $option, $new, $type )
 	$params['useon_full_all']				= array( 'list_yesno',		'' );
 
 	$params['has_start_date']				= array( 'list_yesno',		1 );
-	$params['start_date']					= array( 'list_date',		date( 'Y-m-d', time() + $mosConfig_offset*3600 ) );
+	$params['start_date']					= array( 'list_date',		date( 'Y-m-d', time() + $mainframe->getCfg( 'offset' ) *3600 ) );
 	$params['has_expiration']				= array( 'list_yesno',		0);
-	$params['expiration']					= array( 'list_date',		date( 'Y-m-d', time() + $mosConfig_offset*3600 ) );
+	$params['expiration']					= array( 'list_date',		date( 'Y-m-d', time() + $mainframe->getCfg( 'offset' ) *3600 ) );
 	$params['has_max_reuse']				= array( 'list_yesno',		1 );
 	$params['max_reuse']					= array( 'inputB',			1 );
 	$params['has_max_peruser_reuse']		= array( 'list_yesno',		1 );
@@ -4397,7 +4413,7 @@ function editCoupon( $id, $option, $new, $type )
 	$params['used_plan_max']				= array( 'list',			'' );
 
 	// ensure user can't add group higher than themselves
-	$my_groups = $acl->get_object_groups( 'users', $my->id, 'ARO' );
+	$my_groups = $acl->get_object_groups( 'users', $user->id, 'ARO' );
 	if ( is_array( $my_groups ) && count( $my_groups ) > 0 ) {
 		$ex_groups = $acl->get_group_children( $my_groups[0], 'ARO', 'RECURSE' );
 	} else {
@@ -4747,9 +4763,9 @@ function invoices( $option )
 {
 	$database = &JFactory::getDBO();
 
-	global $mainframe, $mosConfig_list_limit, $aecConfig;
+	global $mainframe, $mainframe, $aecConfig;
 
-	$limit 		= intval( $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit ) );
+	$limit 		= intval( $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) ) );
 	$limitstart = intval( $mainframe->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
 	$search 	= $mainframe->getUserStateFromRequest( "search{$option}_invoices", 'search', '' );
 
@@ -4857,9 +4873,9 @@ function history( $option )
 {
 	$database = &JFactory::getDBO();
 
-	global $mainframe, $mosConfig_list_limit;
+	global $mainframe, $mainframe;
 
-	$limit 		= intval( $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit ) );
+	$limit 		= intval( $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) ) );
 	$limitstart = intval( $mainframe->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
 	$search 	= $mainframe->getUserStateFromRequest( "search{$option}_log_history", 'search', '' );
 
@@ -4902,9 +4918,9 @@ function eventlog( $option )
 {
 	$database = &JFactory::getDBO();
 
-	global $mainframe, $mosConfig_list_limit;
+	global $mainframe, $mainframe;
 
-	$limit 		= intval( $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit ) );
+	$limit 		= intval( $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) ) );
 	$limitstart = intval( $mainframe->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
 	$search 	= $mainframe->getUserStateFromRequest( "search{$option}_invoices", 'search', '' );
 
@@ -4995,24 +5011,24 @@ function migrate( $option )
 	}
 		exit();
 /*
-		$mosUser = new mosUser( $database );
-		$mosUser->load( $userid );
+		$JTableUser = new JTableUser( $database );
+		$JTableUser->load( $userid );
 
 
 		// Fixing mosLock broken user accounts
 		// it sometimes seems to forget setting the usertype
-		if ( $mosUser->usertype == '' ) {
-			$mosUser->usertype = 'Registered';
-			$mosUser->check();
-			$mosUser->store();
+		if ( $JTableUser->usertype == '' ) {
+			$JTableUser->usertype = 'Registered';
+			$JTableUser->check();
+			$JTableUser->store();
 		}
 
 		// If subscription control was previously done by blocking,
 		// unblock users
-		if ( $mosUser->block == 1 ) {
-			$mosUser->block = 0;
-			$mosUser->check();
-			$mosUser->store();
+		if ( $JTableUser->block == 1 ) {
+			$JTableUser->block = 0;
+			$JTableUser->check();
+			$JTableUser->store();
 		}
 
 		// Create dummy active subscription entry
@@ -5025,7 +5041,7 @@ function migrate( $option )
 			$subscriptionHandler->load( 0 );
 
 			$subscriptionHandler->plan			= 1;
-			$subscriptionHandler->signup_date	= $mosUser->registerDate;
+			$subscriptionHandler->signup_date	= $JTableUser->registerDate;
 
 			$subscriptionHandler->check();
 			$subscriptionHandler->store();
@@ -5038,7 +5054,7 @@ function migrate( $option )
 			$expirationHandler->load(0);
 			$expirationHandler->userid = $userid;
 
-			$timestamp			= strtotime( $mosUser->registerDate );
+			$timestamp			= strtotime( $JTableUser->registerDate );
 			$registrationdate	= date( 'Y-m-d H:i:s', $timestamp );
 
 			$expirationHandler->expiration = $registrationdate;
@@ -5057,7 +5073,7 @@ $database->setQuery( $query );
 $rows = $database->loadResultArray();
 
 foreach ( $rows as $userid ){
-	$user = new mosUser($database);
+	$user = new JTableUser($database);
 	$user->load(1);
 	print_r($user);
 }
@@ -5118,12 +5134,12 @@ function quicklookup( $option )
 
 				$return = array();
 				foreach ( $users as $user ) {
-					$mosUser = new mosUser( $database );
-					$mosUser->load( $user );
+					$JTableUser = new JTableUser( $database );
+					$JTableUser->load( $user );
 					$userlink = '<a href="';
-					$userlink .= JURI::base( true ) . '/administrator/index2.php?option=com_acctexp&amp;task=edit&amp;userid=' . $mosUser->id;
+					$userlink .= JURI::base( true ) . '/administrator/index2.php?option=com_acctexp&amp;task=edit&amp;userid=' . $JTableUser->id;
 					$userlink .= '">';
-					$userlink .= $mosUser->name . ' (' . $mosUser->username . ')';
+					$userlink .= $JTableUser->name . ' (' . $JTableUser->username . ')';
 					$userlink .= '</a>';
 
 					$return[] = $userlink;
@@ -5221,11 +5237,9 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 {
 	$database = &JFactory::getDBO();
 
-	global $mosConfig_debug;
+	global $mainframe;
 
 	if ( !defined( '_AEC_LANG_INCLUDED_MI' ) ) {
-		global $mainframe;
-
 		$langPathMI = $mainframe->getCfg( 'absolute_path' ) . '/components/com_acctexp/micro_integration/language/';
 		if ( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
 			include_once( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' );
@@ -6074,7 +6088,7 @@ function readout( $option )
 					$s = $readout->readMIs();
 					break;
 				case 'store_settings':
-					global $my;
+					$user = &JFactory::getUser();
 
 					$settings = array();
 					foreach ( $optionlist as $opt => $optdefault ) {
@@ -6085,7 +6099,7 @@ function readout( $option )
 						}
 					}
 
-					$metaUser = new metaUser( $my->id );
+					$metaUser = new metaUser( $user->id );
 					$metaUser->meta->addCustomParams( array( 'aecadmin_readout' => $settings ) );
 					$metaUser->meta->storeload();
 					continue 2;
@@ -6110,9 +6124,9 @@ function readout( $option )
 			HTML_AcctExp::readout( $option, $r );
 		}
 	} else {
-		global $my;
+		$user = &JFactory::getUser();
 
-		$metaUser = new metaUser( $my->id );
+		$metaUser = new metaUser( $user->id );
 		if ( isset( $metaUser->meta->custom_params['aecadmin_readout'] ) ) {
 			$prefs = $metaUser->meta->custom_params['aecadmin_readout'];
 		} else {

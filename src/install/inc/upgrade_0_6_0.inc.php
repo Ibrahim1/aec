@@ -9,7 +9,7 @@
  */
 
 // Update routine 0.3.0 -> 0.6.0
-if ( in_array( $mosConfig_dbprefix . "acctexp_payplans", $tables ) ) {
+if ( in_array( $mainframe->getCfg( 'dbprefix' ) . "acctexp_payplans", $tables ) ) {
 	// Check for existence of 'gid' column on table #__acctexp_payplans
 	// It is existent only from version 0.6.0
 	$result = null;

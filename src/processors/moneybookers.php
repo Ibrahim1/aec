@@ -30,18 +30,18 @@ class processor_moneybookers extends POSTprocessor
 
 	function settings()
 	{
-		global $mosConfig_sitename;
+		global $mainframe;
 
 		$settings = array();
 
 		$settings['pay_to_email']			= '';
 		$settings['secret_word']			= '';
-		$settings['recipient_description']	= $mosConfig_sitename;
+		$settings['recipient_description']	= $mainframe->getCfg( 'sitename' );
 		$settings['logo_url'] 				= AECToolbox::deadsureURL( 'images/logo.png' );
 		$settings['language'] 				= 'EN';
 		$settings['hide_login'] 			= 1;
 		$settings['currency'] 				= 'USD';
-		$settings['confirmation_note']		= "Thank you for subscribing on $mosConfig_sitename!";
+		$settings['confirmation_note']		= "Thank you for subscribing on " . $mainframe->getCfg( 'sitename' ) . "!";
 		$settings['item_name']				= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']			= "";
 

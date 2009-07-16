@@ -24,7 +24,9 @@ class mi_acl
 
 	function Settings()
 	{
-		global $my, $acl;
+		$user = &JFactory::getUser();
+
+		global $acl;
 
 		$settings = array();
 		$settings['change_session']	= array( 'list_yesno' );
@@ -50,7 +52,7 @@ class mi_acl
 		$settings['sub_gid_pre_exp']		= array( 'list' );
 
 		// ensure user can't add group higher than themselves
-		$my_groups = $acl->get_object_groups( 'users', $my->id, 'ARO' );
+		$my_groups = $acl->get_object_groups( 'users', $user->id, 'ARO' );
 		if ( is_array( $my_groups ) && count( $my_groups ) > 0) {
 			$ex_groups = $acl->get_group_children( $my_groups[0], 'ARO', 'RECURSE' );
 		} else {

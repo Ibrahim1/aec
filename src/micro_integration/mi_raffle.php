@@ -16,12 +16,12 @@ class mi_raffle
 	{
 		$database = &JFactory::getDBO();
 
-		global $mosConfig_dbprefix;
+		global $mainframe;
 
 		$tables	= array();
 		$tables	= $database->getTableList();
 
-		return in_array( $mosConfig_dbprefix . 'acctexp_mi_rafflelist', $tables );
+		return in_array( $mainframe->getCfg( 'dbprefix' ) . 'acctexp_mi_rafflelist', $tables );
 	}
 
 	function install()
@@ -73,12 +73,12 @@ class mi_raffle
 	{
 		$database = &JFactory::getDBO();
 
-		global $mosConfig_dbprefix;
+		global $mainframe;
 
 		$tables	= array();
 		$tables	= $database->getTableList();
 
-		if ( in_array( $mosConfig_dbprefix . 'acctexp_mi_rafflelist', $tables ) ) {
+		if ( in_array( $mainframe->getCfg( 'dbprefix' ) . 'acctexp_mi_rafflelist', $tables ) ) {
 			$result = null;
 
 			$database->setQuery( "SHOW COLUMNS FROM #__acctexp_mi_rafflelist LIKE 'finished'" );
@@ -142,7 +142,7 @@ class mi_raffle
 		$request->metaUser->meta->storeload();
 
 		if ( count( $rafflelist->params->participants ) >= $rafflelist->params->settings['draw_range'] ) {
-			global $mainframe, $mosConfig_sitename;
+			global $mainframe, $mainframe;
 
 			$range = (int) $rafflelist->params->settings['draw_range'];
 
@@ -199,7 +199,7 @@ class mi_raffle
 				$recipients[$current] = AECToolbox::rewriteEngineRQ( trim( $email ), $request );
 			}
 
-			$subject = 'Raffle Drawing Results for ' . $mosConfig_sitename;
+			$subject = 'Raffle Drawing Results for ' . $mainframe->getCfg( 'sitename' );
 
 			mosMail( $adminEmail2, $adminName2, $recipients, $subject, $colET );
 		}

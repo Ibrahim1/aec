@@ -111,7 +111,7 @@ class mi_jarc
 	{
 		$database = &JFactory::getDBO();
 
-		global $mosConfig_offset_user;
+		global $mainframe;
 
 		// Get affiliate ID from cookie.
 		$cookie_name   = mosMainframe::sessionCookieName() . '_JARC';
@@ -125,7 +125,7 @@ class mi_jarc
 		$affiliate->findById( intval( $cookie_aid ) );
 
 		$query = 'INSERT INTO #__jarc_payments' .
-				' SET `date` = \'' . date( 'Y-m-d H:i:s', time() + $mosConfig_offset_user*3600 ) . '\','
+				' SET `date` = \'' . date( 'Y-m-d H:i:s', time() + $mainframe->getCfg( 'offset_user' ) *3600 ) . '\','
 				. ' `user_id` = \'' . $invoice->userid . '\','
 				. ' `payment_type` = \''.$invoice->method.'\','
 				. ' `payment_status` = \'2\','

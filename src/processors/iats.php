@@ -89,8 +89,6 @@ class processor_iats extends XMLprocessor
 
 	function createRequestXML( $request )
 	{
-		global $mosConfig_offset_user;
-
 		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
 
 		$var = array();

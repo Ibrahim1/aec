@@ -26,12 +26,12 @@ class mi_docman
 	{
 		$database = &JFactory::getDBO();
 
-		global $mosConfig_dbprefix;
+		global $mainframe;
 
 		$tables	= array();
 		$tables	= $database->getTableList();
 
-		return in_array( $mosConfig_dbprefix . 'acctexp_mi_docman', $tables );
+		return in_array( $mainframe->getCfg( 'dbprefix' ) . 'acctexp_mi_docman', $tables );
 	}
 
 	function detect_application()

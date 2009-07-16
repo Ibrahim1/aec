@@ -33,7 +33,7 @@ class mi_googleanalytics
 	{
 		$database = &JFactory::getDBO();
 
-		global $mosConfig_sitename;
+		global $mainframe;
 
 		$text = '<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">'
 				. '</script>'
@@ -42,7 +42,7 @@ class mi_googleanalytics
 				. '  urchinTracker();'
 				. '</script>'
 				. '<form style="display:none;" name="utmform">'
-				. '<textarea id="utmtrans">UTM:T|' . $request->invoice->invoice_number . '|' . $mosConfig_sitename . '|' . $request->invoice->amount . '|0.00|0.00|||'
+				. '<textarea id="utmtrans">UTM:T|' . $request->invoice->invoice_number . '|' . $mainframe->getCfg( 'sitename' ) . '|' . $request->invoice->amount . '|0.00|0.00|||'
 				. 'UTM:I|' . $request->invoice->invoice_number . '|' . $request->plan->id . '|' . $request->plan->name . '|subscription|' . $request->invoice->amount . '|1</textarea>'
 				. '</form>'
 				. '<script type="text/javascript">'

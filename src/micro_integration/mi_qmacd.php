@@ -31,7 +31,7 @@ class mi_qmacd {
 	function expiration_action($params, $userid) {
 		$database = &JFactory::getDBO();
 
-	global $qmacddatabase, $mosConfig_debug;
+	global $qmacddatabase, $mainframe;
 
 		if(!method_exists($qmacddatabase,"setQuery")){
 			$qmacddatabase = new database( $params['qmacd_dbhost'], $params['qmacd_dbuser'], $params['qmacd_dbpass'], $params['qmacd_dbtable'], "" );
@@ -41,7 +41,7 @@ class mi_qmacd {
 				exit();
 			}
 		}
-		$qmacddatabase->debug( $mosConfig_debug );
+		$qmacddatabase->debug( $mainframe->getCfg( 'debug' ) );
 
    		$qmacddatabase->setQuery("update users set action='suspend' where uid='".$userid."'");
         $qmacddatabase->query();
@@ -52,7 +52,7 @@ class mi_qmacd {
 	function action($params, $userid) {
 		$database = &JFactory::getDBO();
 
-	global $mosConfig_debug, $qmacddatabase;
+	global $mainframe, $qmacddatabase;
 
 		$tplans = explode(",",$params['plans']);
 	    $quotas = explode(",",$params['quotas']);
@@ -81,7 +81,7 @@ class mi_qmacd {
 					exit();
 				}
 			}
-			$qmacddatabase->debug( $mosConfig_debug );
+			$qmacddatabase->debug( $mainframe->getCfg( 'debug' ) );
 
      		$qmacddatabase->setQuery("update users set type='email', hd='".$plans[$newplan]."',level='4', action='create' where uid='".$userid."'");
 	        $qmacddatabase->query();

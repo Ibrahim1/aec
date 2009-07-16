@@ -21,7 +21,7 @@ $posttext 				= $params->get( 'posttext' );
 $showExpiration 		= $params->def( 'show_expiration', 0 );
 $displaypipeline		= $params->get( 'displaypipeline', 0 );
 
-if ( $my->id ) {
+if ( $user->id ) {
 // Logout output
 // ie HTML when already logged in and trying to logout
 	if ( !empty( $pretext ) ) {
@@ -39,7 +39,7 @@ if ( $my->id ) {
 		$expiration = null;
 		$query = 'SELECT `expiration`'
 				. ' FROM #__acctexp_subscr'
-				. ' WHERE `userid` = \'' . $my->id . '\''
+				. ' WHERE `userid` = \'' . $user->id . '\''
 				. ' AND `primary` = \'1\''
 				. ' AND `recurring` != \'1\''
 				. ' AND `lifetime` != \'1\''
@@ -50,7 +50,7 @@ if ( $my->id ) {
 		if ( empty( $expiration ) ) {
 			$query = 'SELECT `expiration`'
 					. ' FROM #__acctexp_subscr'
-					. ' WHERE `userid` = \'' . $my->id . '\''
+					. ' WHERE `userid` = \'' . $user->id . '\''
 					. ' AND `recurring` != \'1\''
 	                . ' AND `lifetime` != \'1\''
 	                . ' AND `status` != \'Excluded\'';
@@ -66,11 +66,10 @@ if ( $my->id ) {
 			global $aecConfig;
 
 			// compatibility with Mambo
-			if ( !empty( $mosConfig_offset_user ) ) {
-				$timeOffset = $mosConfig_offset_user * 3600;
+			if ( !empty( $mainframe->getCfg( 'offset_user' ) ) ) {
+				$timeOffset = $mainframe->getCfg( 'offset_user' ) * 3600;
 			} else {
-				global $mosConfig_offset;
-				$timeOffset = $mosConfig_offset * 3600;
+				$timeOffset = $mainframe->getCfg( 'offset' ) * 3600;
 			}
 
 			$retVal = strftime( $aecConfig->cfg['display_date_frontend'], ( strtotime( $expiration ) + $timeOffset ) );
@@ -84,7 +83,7 @@ if ( $my->id ) {
 
 	if ( $displaypipeline ) {
 		$dph = new displayPipelineHandler;
-		echo $dph->getUserPipelineEvents( $my->id );
+		echo $dph->getUserPipelineEvents( $user->id );
 	}
 
 	if ( !empty( $posttext ) ) {

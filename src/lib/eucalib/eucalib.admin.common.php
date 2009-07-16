@@ -335,11 +335,11 @@ class eucaList
 	{
 		$database = &JFactory::getDBO();
 
-		global $mainframe, $mosConfig_list_limit;
+		global $mainframe, $mainframe;
 
 		$option = 'com_' . _EUCA_APP_SHORTNAME;
 
-		$this->limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
+		$this->limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) );
 		$this->limitstart	= $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
 		$this->orderby		= $mainframe->getUserStateFromRequest( "orderby", 'orderby', 'id ASC' );

@@ -18,12 +18,12 @@ class mi_hotproperty extends MI
 	{
 		$database = &JFactory::getDBO();
 
-		global $mosConfig_dbprefix;
+		global $mainframe;
 
 		$tables	= array();
 		$tables	= $database->getTableList();
 
-		return in_array( $mosConfig_dbprefix . '__acctexp_mi_hotproperty', $tables );
+		return in_array( $mainframe->getCfg( 'dbprefix' ) . '__acctexp_mi_hotproperty', $tables );
 	}
 
 	function install()

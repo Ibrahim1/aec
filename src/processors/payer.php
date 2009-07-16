@@ -91,8 +91,6 @@ class processor_payer extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		global $my;
-
 		$baseurl		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=payernotification', false, true );
 		$Auth_url		= $baseurl . '&action=authenticate';
 		$Settle_url		= $baseurl . '&action=settle';

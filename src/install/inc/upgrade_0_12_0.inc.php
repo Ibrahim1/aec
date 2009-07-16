@@ -190,7 +190,7 @@ $eucaInstalldb->addColifNotExists( 'params', "text NULL", 'subscr' );
 $eucaInstalldb->addColifNotExists( 'customparams', "text NULL", 'subscr' );
 $eucaInstalldb->addColifNotExists( 'pre_exp_check', "int(4) NULL", 'microintegrations' );
 
-if ( in_array( $mosConfig_dbprefix . "acctexp", $tables ) ) {
+if ( in_array( $mainframe->getCfg( 'dbprefix' ) . "acctexp", $tables ) ) {
 	$result = null;
 	$database->setQuery("SHOW COLUMNS FROM #__acctexp LIKE 'expiration'");
 	if ( $database->loadObject( $result ) ) {
@@ -211,7 +211,7 @@ $eucaInstalldb->addColifNotExists( 'secondary_ident', "varchar(64) NULL", 'invoi
 
 // This updates from the old one-plan-per-subscription plus expiration table
 // to the new multi-plans-per-user architecture
-if ( in_array( $mosConfig_dbprefix . "acctexp", $tables ) ) {
+if ( in_array( $mainframe->getCfg( 'dbprefix' ) . "acctexp", $tables ) ) {
 	// create new primary and expiration fields
 	$eucaInstalldb->addColifNotExists( 'primary', "int(4) NOT NULL default '0'", 'subscr' );
 	$eucaInstalldb->addColifNotExists( 'expiration', "datetime NULL default '0000-00-00 00:00:00'", 'subscr' );
@@ -260,11 +260,11 @@ $eucaInstalldb->addColifNotExists( 'conditions', "text NULL", 'invoices' );
 $eucaInstalldb->addColifNotExists( 'invoice_number_format', "varchar(64)", 'invoices' );
 
 // update remository and docman MI tables for unlimited downloads if they exist
-if ( in_array( $mosConfig_dbprefix . "acctexp_mi_remository", $tables ) ) {
+if ( in_array( $mainframe->getCfg( 'dbprefix' ) . "acctexp_mi_remository", $tables ) ) {
 	$eucaInstalldb->addColifNotExists( 'unlimited_downloads', "int(3) NULL", 'mi_remository' );
 }
 
-if ( in_array( $mosConfig_dbprefix . "acctexp_mi_docman", $tables ) ) {
+if ( in_array( $mainframe->getCfg( 'dbprefix' ) . "acctexp_mi_docman", $tables ) ) {
 	$eucaInstalldb->addColifNotExists( 'unlimited_downloads', "int(3) NULL", 'mi_docman' );
 }
 

@@ -25,12 +25,12 @@ class mi_example
 
 		$database = &JFactory::getDBO();
 
-		global $mosConfig_dbprefix;
+		global $mainframe;
 
 		$tables	= array();
 		$tables	= $database->getTableList();
 
-		return in_array($mosConfig_dbprefix."_acctexp_mi_sampletable", $tables);
+		return in_array($mainframe->getCfg( 'dbprefix' )."_acctexp_mi_sampletable", $tables);
 	}
 
 	function install()

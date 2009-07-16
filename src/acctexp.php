@@ -79,8 +79,8 @@ if ( !empty( $task ) ) {
 			$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 			$userid		= aecGetParam( 'userid', 0 );
 
-			if ( !empty( $my->id ) ) {
-				$userid = $my->id;
+			if ( !empty( $user->id ) ) {
+				$userid = $user->id;
 			}
 
 			repeatInvoice( $option, $invoice, $userid );
@@ -101,11 +101,11 @@ if ( !empty( $task ) ) {
 			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 			$usage		= aecGetParam( 'usage', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 
-			if ( !empty( $my->id ) ) {
-				$userid = $my->id;
+			if ( !empty( $user->id ) ) {
+				$userid = $user->id;
 			}
 
-			if ( !$my->id ) {
+			if ( !$user->id ) {
 				notAllowed( $option );
 			} else {
 				$invoicefact = new InvoiceFactory( $userid );
@@ -115,15 +115,15 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'cart':
-			global $my;
+			$user = &JFactory::getUser();
 
-			if ( !$my->id ) {
+			if ( !$user->id ) {
 				notAllowed( $option );
 			} else {
 				$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 
-				if ( !empty( $my->id ) ) {
-					$userid = $my->id;
+				if ( !empty( $user->id ) ) {
+					$userid = $user->id;
 				}
 
 				$invoicefact = new InvoiceFactory( $userid );
@@ -134,11 +134,11 @@ if ( !empty( $task ) ) {
 		case 'updatecart':
 			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 
-			if ( !empty( $my->id ) ) {
-				$userid = $my->id;
+			if ( !empty( $user->id ) ) {
+				$userid = $user->id;
 			}
 
-			if ( !$my->id ) {
+			if ( !$user->id ) {
 				notAllowed( $option );
 			} else {
 				$invoicefact = new InvoiceFactory( $userid );
@@ -150,11 +150,11 @@ if ( !empty( $task ) ) {
 		case 'clearcart':
 			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 
-			if ( !empty( $my->id ) ) {
-				$userid = $my->id;
+			if ( !empty( $user->id ) ) {
+				$userid = $user->id;
 			}
 
-			if ( !$my->id ) {
+			if ( !$user->id ) {
 				notAllowed( $option );
 			} else {
 				$invoicefact = new InvoiceFactory( $userid );
@@ -169,11 +169,11 @@ if ( !empty( $task ) ) {
 			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 			$coupon		= aecGetParam( 'coupon_code', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 
-			if ( !empty( $my->id ) ) {
-				$userid = $my->id;
+			if ( !empty( $user->id ) ) {
+				$userid = $user->id;
 			}
 
-			if ( !$my->id ) {
+			if ( !$user->id ) {
 				notAllowed( $option );
 			} else {
 				$invoicefact = new InvoiceFactory( $userid );
@@ -418,7 +418,7 @@ function pending( $option, $userid )
 	$reason = "";
 
 	if ( $userid > 0 ) {
-		$objUser = new mosUser( $database );
+		$objUser = new JTableUser( $database );
 		$objUser->load( $userid );
 
 		$invoices = AECfetchfromDB::InvoiceCountbyUserID( $userid );
@@ -457,7 +457,9 @@ function subscribe( $option )
 {
 	$database = &JFactory::getDBO();
 
-	global $my, $mosConfig_uniquemail, $aecConfig;
+	$user = &JFactory::getUser();
+
+	global $aecConfig;
 
 	$task		= aecGetParam( 'task', 0, true, array( 'word', 'string' ) );
 	$intro		= aecGetParam( 'intro', 0, true, array( 'word', 'int' ) );
@@ -531,7 +533,7 @@ function subscribe( $option )
 			}
 		} elseif ( !$isJoomla15 && !$CB ) {
 			// Joomla 1.0 Sanity Check
-			$row = new mosUser( $database );
+			$row = new JTableUser( $database );
 
 			if (!$row->bind( $_POST, 'usertype' )) {
 				mosErrorAlert( $row->getError() );
@@ -560,8 +562,8 @@ function subscribe( $option )
 		$invoicefact = new InvoiceFactory( $userid, $usage, $group, $processor );
 		$invoicefact->confirm( $option );
 	} else {
-		if ( $my->id ) {
-			$userid			= $my->id;
+		if ( $user->id ) {
+			$userid			= $user->id;
 			$passthrough	= false;
 		} elseif ( !empty( $userid ) && !isset( $_POST['username'] ) ) {
 			$passthrough	= false;
@@ -594,8 +596,6 @@ function checkDuplicateUsernameEmail( $username, $email )
 {
 	$database = &JFactory::getDBO();
 
-		global $mosConfig_uniquemail;
-
 	$query = 'SELECT `id`'
 			. ' FROM #__users'
 			. ' WHERE `username` = \'' . $username . '\''
@@ -612,7 +612,7 @@ function checkDuplicateUsernameEmail( $username, $email )
 	}
 
 	if ( !empty( $email ) ) {
-		if ( $mosConfig_uniquemail || aecJoomla15check() ) { // J1.5 forces unique email
+		if ( $mainframe->getCfg( 'uniquemail' ) || aecJoomla15check() ) { // J1.5 forces unique email
 			// check for existing email
 			$query = 'SELECT `id`'
 					. ' FROM #__users'
@@ -636,7 +636,9 @@ function checkDuplicateUsernameEmail( $username, $email )
 
 function confirmSubscription( $option )
 {
-	global $mosConfig_emailpass, $mosConfig_useractivation, $mainframe, $my, $aecConfig;
+	$user = &JFactory::getUser();
+
+	global $mainframe, $aecConfig;
 
 	$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 	$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
@@ -644,13 +646,13 @@ function confirmSubscription( $option )
 	$processor	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$username	= aecGetParam( 'username', 0, true, array( 'word', 'int' ) );
 
-	if ( $aecConfig->cfg['plans_first'] && !empty( $usage ) && !$username && !$userid && !$my->id ) {
+	if ( $aecConfig->cfg['plans_first'] && !empty( $usage ) && !$username && !$userid && !$user->id ) {
 		if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 			// This is a CB registration, borrowing their code to register the user
 			include_once( JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php' );
 			include_once( JPATH_SITE . '/components/com_comprofiler/comprofiler.php' );
 
-			registerForm( $option, $mosConfig_emailpass, null );
+			registerForm( $option, $mainframe->getCfg( 'emailpass' ), null );
 		} else {
 			// This is a joomla registration
 			joomlaregisterForm( $option, $mainframe->getCfg( 'useractivation' ) );
@@ -665,9 +667,11 @@ function subscriptionDetails( $option, $sub='' )
 {
 	$database = &JFactory::getDBO();
 
-		global $my, $mainframe, $aecConfig;
+	$user = &JFactory::getUser();
 
-	if ( !$my->id ) {
+	global $mainframe, $aecConfig;
+
+	if ( !$user->id ) {
 		notAllowed( $option );
 	} else {
 		if ( !empty( $aecConfig->cfg['ssl_profile'] ) && empty( $_SERVER['HTTPS'] ) && !$aecConfig->cfg['override_reqssl'] ) {
@@ -675,7 +679,7 @@ function subscriptionDetails( $option, $sub='' )
 			exit();
 		};
 
-		$metaUser = new metaUser( $my->id );
+		$metaUser = new metaUser( $user->id );
 
 		if ( !$metaUser->hasSubscription ) {
 			subscribe( $option );
@@ -769,7 +773,7 @@ function subscriptionDetails( $option, $sub='' )
 							continue;
 						}
 
-						$info = $mi->profile_info( $my->id );
+						$info = $mi->profile_info( $user->id );
 						if ( $info !== false ) {
 							$mi_info .= $info;
 						}
@@ -888,7 +892,7 @@ function subscriptionDetails( $option, $sub='' )
 		// count number of payments from user
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_invoices'
-				. ' WHERE `userid` = \'' . $my->id . '\''
+				. ' WHERE `userid` = \'' . $user->id . '\''
 				. ' AND `active` = \'1\''
 				;
 		$database->setQuery( $query );
@@ -900,7 +904,7 @@ function subscriptionDetails( $option, $sub='' )
 		// get payments from user
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_invoices'
-				. ' WHERE `userid` = \'' . $my->id . '\''
+				. ' WHERE `userid` = \'' . $user->id . '\''
 				. ' AND `active` = \'1\''
 				. ' ORDER BY `transaction_date` DESC'
 				. ' LIMIT ' . $min_limit . ',' . $rows_limit
@@ -1015,11 +1019,11 @@ function internalCheckout( $option, $invoice_number, $userid )
 {
 	$database = &JFactory::getDBO();
 
-		global $my;
+	$user = &JFactory::getUser();
 
 	// Always rewrite to session userid
-	if ( !empty( $my->id ) ) {
-		$userid = $my->id;
+	if ( !empty( $user->id ) ) {
+		$userid = $user->id;
 	}
 
 	$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, $userid );
@@ -1039,11 +1043,11 @@ function repeatInvoice( $option, $invoice_number, $userid, $first=0 )
 {
 	$database = &JFactory::getDBO();
 
-		global $my;
+	$user = &JFactory::getUser();
 
 	// Always rewrite to session userid
-	if ( !empty( $my->id ) ) {
-		$userid = $my->id;
+	if ( !empty( $user->id ) ) {
+		$userid = $user->id;
 	}
 
 	$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, $userid );
@@ -1070,9 +1074,9 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid )
 {
 	$database = &JFactory::getDBO();
 
-		global $my;
+	$user = &JFactory::getUser();
 
-	if ( empty($my->id ) ) {
+	if ( empty($user->id ) ) {
 		if ( $userid ) {
 			if ( AECToolbox::quickVerifyUserID( $userid ) === true ) {
 				// This user is not expired, so he could log in...
@@ -1083,7 +1087,7 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid )
 			mosNotAuth();
 		}
 	} else {
-		$userid = $my->id;
+		$userid = $user->id;
 	}
 
 	$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, $userid );
@@ -1135,11 +1139,11 @@ function planaction( $option, $action, $subscr )
 {
 	$database = &JFactory::getDBO();
 
-		global $my;
+	$user = &JFactory::getUser();
 
 	// Always rewrite to session userid
-	if ( !empty( $my->id ) ) {
-		$userid = $my->id;
+	if ( !empty( $user->id ) ) {
+		$userid = $user->id;
 
 		$invoicefact = new InvoiceFactory( $userid );
 		$invoicefact->planprocessoraction( $action, $subscr );
@@ -1151,12 +1155,12 @@ function planaction( $option, $action, $subscr )
 
 function invoiceaction( $option, $action, $invoice )
 {
-	global $my;
+	$user = &JFactory::getUser();
 
-	if ( empty( $my->id ) ) {
+	if ( empty( $user->id ) ) {
 		$userid = AECfetchfromDB::UserIDfromInvoiceNumber( $invoice );
 	} else {
-		$userid = $my->id;
+		$userid = $user->id;
 	}
 
 	$invoicefact = new InvoiceFactory( $userid );
@@ -1285,7 +1289,9 @@ function notAllowed( $option )
 {
 	$database = &JFactory::getDBO();
 
-		global $mainframe, $aecConfig, $my;
+	$user = &JFactory::getUser();
+
+	global $mainframe, $aecConfig;
 
 	if ( ( $aecConfig->cfg['customnotallowed'] != '' ) && !is_null( $aecConfig->cfg['customnotallowed'] ) ) {
 		mosRedirect( $aecConfig->cfg['customnotallowed'] );
@@ -1320,7 +1326,7 @@ function notAllowed( $option )
 
 	$CB = ( GeneralInfoRequester::detect_component( 'anyCB' ) );
 
-	if ( $my->id ) {
+	if ( $user->id ) {
 		$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=renewsubscription' );
 		$loggedin = 1;
 	} else {
@@ -1342,7 +1348,9 @@ function backSubscription( $option )
 {
 	$database = &JFactory::getDBO();
 
-	global $mainframe, $my, $acl;
+	$user = &JFactory::getUser();
+
+	global $mainframe, $acl;
 
 	// Rebuild array
 	foreach ( $_POST as $key => $value ) {
@@ -1358,7 +1366,7 @@ function backSubscription( $option )
 	$objplan->load( $usage );
 
  	// get the user object
-	$objuser = new mosUser( $database );
+	$objuser = new JTableUser( $database );
 	$objuser->load( $userid );
 
 	$unset = array( 'id', 'gid', 'task', 'option', 'name', 'username', 'email', 'password', '', 'password2' );
@@ -1452,7 +1460,7 @@ function cancelPayment( $option )
 	$userid = aecGetParam( 'itemnumber', true, array( 'word', 'int' ) );
 	// The user cancel the payment operation
 	// But user is already created as blocked on database, so we need to delete it
-	$obj = new mosUser( $database );
+	$obj = new JTableUser( $database );
 	$obj->load( $userid );
 
 	if ( $obj->id ) {

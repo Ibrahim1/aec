@@ -34,8 +34,6 @@ class mi_affiliatepro
 	{
 		$database = &JFactory::getDBO();
 
-		global $mosConfig_sitename;
-
 		$text = '<script id="pap_x2s6df8d" src="' . $this->settings['url'] . '" type="text/javascript"></script>'
 				. '<script type="text/javascript">'
 				;

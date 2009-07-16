@@ -175,7 +175,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 	function createRequestXML( $request )
 	{
-		global $mosConfig_offset_user;
+		global $mainframe;
 
 		$var = array();
 
@@ -241,9 +241,9 @@ class processor_paypal_wpp extends XMLprocessor
 					case 'Y': $offset = $request->int_var['amount']['period1'] * 3600 * 24 * 356; break;
 				}
 
-				$timestamp = time() - ($mosConfig_offset_user*3600) + $offset;
+				$timestamp = time() - ($mainframe->getCfg( 'offset_user' ) *3600) + $offset;
 			} else {
-				$timestamp = time() - $mosConfig_offset_user*3600;
+				$timestamp = time() - $mainframe->getCfg( 'offset_user' ) *3600;
 			}
 
 			$var['ProfileStartDate']    = date( 'Y-m-d', $timestamp ) . 'T' . date( 'H:i:s', $timestamp ) . 'Z';

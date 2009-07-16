@@ -30,7 +30,7 @@ class processor_netcash extends POSTprocessor
 
 	function settings()
 	{
-		global $mosConfig_sitename;
+		global $mainframe;
 
 		$settings = array();
 
@@ -38,10 +38,10 @@ class processor_netcash extends POSTprocessor
 		$settings['password']    			= '';
 		$settings['pin']		        	= '';
 		$settings['terminal_id']			= '';
-		$settings['recipient_description']	= $mosConfig_sitename;
+		$settings['recipient_description']	= $mainframe->getCfg( 'sitename' );
 		$settings['language'] 				= 'EN';
 		$settings['currency'] 				= 'ZAR';
-		$settings['confirmation_note']		= "Thank you for subscribing on $mosConfig_sitename!";
+		$settings['confirmation_note']		= "Thank you for subscribing on " . $mainframe->getCfg( 'sitename' ) . "!";
 		$settings['item_name']				= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']			= "";
 

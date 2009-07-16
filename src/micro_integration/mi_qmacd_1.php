@@ -39,7 +39,7 @@ class mi_qmacd_1 {
 	function expiration_action($params, $userid, $plan) {
 		$database = &JFactory::getDBO();
 
-	global $qmacddatabase, $mosConfig_debug;
+	global $qmacddatabase, $mainframe;
 
 		if(!method_exists($qmacddatabase,"setQuery")){
 			$qmacddatabase = new database( $params['qmacd_dbhost'], $params['qmacd_dbuser'], $params['qmacd_dbpass'], $params['qmacd_dbname'], "" );
@@ -49,7 +49,7 @@ class mi_qmacd_1 {
 				exit();
 			}
 		}
-		$qmacddatabase->debug( $mosConfig_debug );
+		$qmacddatabase->debug( $mainframe->getCfg( 'debug' ) );
 
    		$qmacddatabase->setQuery("update users set action='suspend' where uid='".$userid."'");
         $qmacddatabase->query();
@@ -60,7 +60,7 @@ class mi_qmacd_1 {
 	function action($params, $userid, $plan) {
 		$database = &JFactory::getDBO();
 
-		global $mosConfig_debug, $qmacddatabase;
+		global $mainframe, $qmacddatabase;
 		$salt="zdlksjlkjfsdkjf987sf98798sdfjlk2";
 
 		$wq= explode(" ",$params['quota']);
@@ -80,7 +80,7 @@ class mi_qmacd_1 {
 				exit();
 			}
 		}
-		$qmacddatabase->debug( $mosConfig_debug );
+		$qmacddatabase->debug( $mainframe->getCfg( 'debug' ) );
 
  		$qmacddatabase->setQuery("UPDATE users SET type='email', hd='".$hd."',level='4', action='create' WHERE uid='".$userid."'");
         $qmacddatabase->query();
@@ -92,7 +92,7 @@ class mi_qmacd_1 {
 	function userchange($row,$post,$params){
 		$database = &JFactory::getDBO();
 
-	global $mosConfig_debug, $qmacddatabase;
+	global $mainframe, $qmacddatabase;
 
 		if($post['task']=="saveregisters" || $post['task']=="saveRegistration"){
 			if(!method_exists($qmacddatabase,"setQuery")){
@@ -103,7 +103,7 @@ class mi_qmacd_1 {
 					exit();
 				}
 			}
-			$qmacddatabase->debug( $mosConfig_debug );
+			$qmacddatabase->debug( $mainframe->getCfg( 'debug' ) );
 			$query="INSERT INTO users (uid, gid, id, username, username1, name,".
 		" root, password, type, level, hd, aliases, shell, autoreply, forward, catchall,".
 		" lang, skin, action, time) VALUES ('".$row->id."', '".$row->gid."', '1', '".$row->username."',".
