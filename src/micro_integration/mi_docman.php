@@ -436,13 +436,7 @@ class docman_restriction extends JTable {
 			}
 		}
 
-		if ( aecJoomla15check() ) {
-			global $mainframe;
-
-			$mainframe->redirect( 'index.php?option=com_docman' , _AEC_MI_DOCMAN_NOCREDIT );
-		} else {
-			mosRedirect( 'index.php?option=com_docman' , _AEC_MI_DOCMAN_NOCREDIT );
-		}
+		aecRedirect( 'index.php?option=com_docman' , _AEC_MI_DOCMAN_NOCREDIT );
 	}
 
 	function useDownload()

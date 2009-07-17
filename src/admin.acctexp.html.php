@@ -402,7 +402,11 @@ class HTML_AcctExp
 		HTML_myCommon::addBackendCSS();
 
 		loadOverlib();
-		mosCommonHTML::loadCalendar();
+		if ( aecJoomla15check() ) {
+			JHTML::_('behavior.calendar');
+		} else {
+			mosCommonHTML::loadCalendar();
+		}
 
 		if ( aecJoomla15check() ) {
 			$edituserlink = "index.php?option=com_users&amp;view=user&amp;task=edit&amp;cid[]=" . $metaUser->userid;
@@ -2370,7 +2374,14 @@ class HTML_AcctExp
 
 		loadOverlib();
 		HTML_myCommon::addBackendCSS();
-		mosCommonHTML::loadCalendar(); ?>
+
+		if ( aecJoomla15check() ) {
+			JHTML::_('behavior.calendar');
+		} else {
+			mosCommonHTML::loadCalendar();
+		}
+
+		?>
 		<table class="adminheading">
 			<tr>
 				<th width="100%" style="background: url(<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_symbol_coupons<?php echo $type ? '_static' : ''; ?>.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">

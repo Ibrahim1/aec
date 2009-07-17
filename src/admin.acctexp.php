@@ -43,11 +43,12 @@ $acpermission = $acl->acl_check( 'administration', 'config', 'users', $user->use
 if ( !$acpermission ) {
 	if ( !( ( strcmp( $user->usertype, 'Administrator' ) === 0 ) && $aecConfig->cfg['adminaccess'] ) ) {
 		if ( aecJoomla15check() ) {
+			global $mainframe;
+
 			$mainframe->redirect( 'index2.php', _NOT_AUTH );
 		} else {
-			mosRedirect( 'index2.php', _NOT_AUTH );
+			aecRedirect( 'index2.php', _NOT_AUTH );
 		}
-		mosRedirect( 'index2.php', _NOT_AUTH );
 	}
 }
 
@@ -280,7 +281,7 @@ switch( strtolower( $task ) ) {
 				}
 			}
 
-			mosRedirect( 'index2.php?option='. $option . '&task=showSubscriptionPlans' );
+			aecRedirect( 'index2.php?option='. $option . '&task=showSubscriptionPlans' );
 		break;
 
 	case 'savesubscriptionplan':
@@ -320,16 +321,19 @@ switch( strtolower( $task ) ) {
 			$row = new SubscriptionPlan( $database );
 			$row->load( $id[0] );
 			$row->move( -1 );
-			mosRedirect( 'index2.php?option='. $option . '&task=showSubscriptionPlans' );
-				break;
+
+			aecRedirect( 'index2.php?option='. $option . '&task=showSubscriptionPlans' );
+
+			break;
 
 		case 'orderplandown':
 			$database = &JFactory::getDBO();
 			$row = new SubscriptionPlan( $database );
 			$row->load( $id[0] );
 			$row->move( 1 );
-			mosRedirect( 'index2.php?option='. $option . '&task=showSubscriptionPlans' );
-				break;
+
+			aecRedirect( 'index2.php?option='. $option . '&task=showSubscriptionPlans' );
+			break;
 
 	case 'showitemgroups':
 		listItemGroups( $option );
@@ -361,7 +365,7 @@ switch( strtolower( $task ) ) {
 				}
 			}
 
-			mosRedirect( 'index2.php?option='. $option . '&task=showItemGroups' );
+			aecRedirect( 'index2.php?option='. $option . '&task=showItemGroups' );
 		break;
 
 	case 'saveitemgroup':
@@ -401,7 +405,7 @@ switch( strtolower( $task ) ) {
 			$row = new ItemGroup( $database );
 			$row->load( $id[0] );
 			$row->move( -1 );
-			mosRedirect( 'index2.php?option='. $option . '&task=showItemGroups' );
+			aecRedirect( 'index2.php?option='. $option . '&task=showItemGroups' );
 				break;
 
 		case 'ordergroupdown':
@@ -409,8 +413,10 @@ switch( strtolower( $task ) ) {
 			$row = new ItemGroup( $database );
 			$row->load( $id[0] );
 			$row->move( 1 );
-			mosRedirect( 'index2.php?option='. $option . '&task=showItemGroups' );
-				break;
+
+			aecRedirect( 'index2.php?option='. $option . '&task=showItemGroups' );
+
+			break;
 
 	case 'showmicrointegrations':
 		listMicroIntegrations( $option );
@@ -445,7 +451,7 @@ switch( strtolower( $task ) ) {
 				}
 			}
 
-			mosRedirect( 'index2.php?option='. $option . '&task=showMicroIntegrations' );
+			aecRedirect( 'index2.php?option='. $option . '&task=showMicroIntegrations' );
 		break;
 
 	case 'publishmicrointegration':
@@ -469,16 +475,32 @@ switch( strtolower( $task ) ) {
 			$row = new microIntegration( $database );
 			$row->load( $id[0] );
 			$row->move( -1 );
-			mosRedirect( 'index2.php?option='. $option . '&task=showMicroIntegrations' );
-				break;
+
+			if ( aecJoomla15check() ) {
+				global $mainframe;
+
+				$mainframe->redirect( 'index2.php?option='. $option . '&task=showMicroIntegrations' );
+			} else {
+				aecRedirect( 'index2.php?option='. $option . '&task=showMicroIntegrations' );
+			}
+
+			break;
 
 		case 'ordermidown':
 			$database = &JFactory::getDBO();
 			$row = new microIntegration( $database );
 			$row->load( $id[0] );
 			$row->move( 1 );
-			mosRedirect( 'index2.php?option='. $option . '&task=showMicroIntegrations' );
-				break;
+
+			if ( aecJoomla15check() ) {
+				global $mainframe;
+
+				$mainframe->redirect( 'index2.php?option='. $option . '&task=showMicroIntegrations' );
+			} else {
+				aecRedirect( 'index2.php?option='. $option . '&task=showMicroIntegrations' );
+			}
+
+			break;
 
 	case 'showcoupons':
 		listCoupons( $option, 0);
@@ -498,7 +520,7 @@ switch( strtolower( $task ) ) {
 				}
 			}
 
-			mosRedirect( 'index2.php?option='. $option . '&task=showCoupons' );
+			aecRedirect( 'index2.php?option='. $option . '&task=showCoupons' );
 		break;
 
 	case 'newcoupon':
@@ -538,20 +560,27 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'copycouponstatic':
-			$database = &JFactory::getDBO();
+		$database = &JFactory::getDBO();
 
-			if ( is_array( $id ) ) {
-				foreach ( $id as $pid ) {
-				$row = new Coupon( $database, 1 );
-				$row->load( $pid );
-				$row->id = 0;
-				$row->coupon_code = $row->generateCouponCode();
-				$row->check();
-				$row->store();
-				}
+		if ( is_array( $id ) ) {
+			foreach ( $id as $pid ) {
+			$row = new Coupon( $database, 1 );
+			$row->load( $pid );
+			$row->id = 0;
+			$row->coupon_code = $row->generateCouponCode();
+			$row->check();
+			$row->store();
 			}
+		}
 
-			mosRedirect( 'index2.php?option='. $option . '&task=showCouponsStatic' );
+		if ( aecJoomla15check() ) {
+			global $mainframe;
+
+			$mainframe->redirect( 'index2.php?option='. $option . '&task=showCouponsStatic' );
+		} else {
+			aecRedirect( 'index2.php?option='. $option . '&task=showCouponsStatic' );
+		}
+
 		break;
 
 	case 'newcouponstatic':
@@ -591,7 +620,15 @@ switch( strtolower( $task ) ) {
 			$row = new coupon( $database, 0 );
 			$row->load( $id[0] );
 			$row->move( -1 );
-			mosRedirect( 'index2.php?option='. $option . '&task=showCoupons' );
+
+			if ( aecJoomla15check() ) {
+				global $mainframe;
+
+				$mainframe->redirect( 'index2.php?option='. $option . '&task=showCoupons' );
+			} else {
+				aecRedirect( 'index2.php?option='. $option . '&task=showCoupons' );
+			}
+
 				break;
 
 		case 'ordercoupondown':
@@ -599,7 +636,15 @@ switch( strtolower( $task ) ) {
 			$row = new coupon( $database, 0 );
 			$row->load( $id[0] );
 			$row->move( 1 );
-			mosRedirect( 'index2.php?option='. $option . '&task=showCoupons' );
+
+			if ( aecJoomla15check() ) {
+				global $mainframe;
+
+				$mainframe->redirect( 'index2.php?option='. $option . '&task=showCoupons' );
+			} else {
+				aecRedirect( 'index2.php?option='. $option . '&task=showCoupons' );
+			}
+
 				break;
 
 		case 'ordercouponstaticup':
@@ -607,7 +652,15 @@ switch( strtolower( $task ) ) {
 			$row = new coupon( $database, 1 );
 			$row->load( $id[0] );
 			$row->move( -1 );
-			mosRedirect( 'index2.php?option='. $option . '&task=showCouponsStatic' );
+
+			if ( aecJoomla15check() ) {
+				global $mainframe;
+
+				$mainframe->redirect( 'index2.php?option='. $option . '&task=showCouponsStatic' );
+			} else {
+				aecRedirect( 'index2.php?option='. $option . '&task=showCouponsStatic' );
+			}
+
 				break;
 
 		case 'ordercouponstaticdown':
@@ -615,7 +668,15 @@ switch( strtolower( $task ) ) {
 			$row = new coupon( $database, 1 );
 			$row->load( $id[0] );
 			$row->move( 1 );
-			mosRedirect( 'index2.php?option='. $option . '&task=showCouponsStatic' );
+
+			if ( aecJoomla15check() ) {
+				global $mainframe;
+
+				$mainframe->redirect( 'index2.php?option='. $option . '&task=showCouponsStatic' );
+			} else {
+				aecRedirect( 'index2.php?option='. $option . '&task=showCouponsStatic' );
+			}
+
 				break;
 
 	case 'editcss':
@@ -702,9 +763,9 @@ switch( strtolower( $task ) ) {
 		if ( strpos( $return, '</a>' ) || strpos( $return, '</div>' ) ) {
 			aecCentral( $option, $return );
 		} elseif ( !empty( $return ) ) {
-			mosRedirect( 'index2.php?option=' . $option . '&task=edit&userid=' . $return, _AEC_QUICKSEARCH_THANKS );
+			aecRedirect( 'index2.php?option=' . $option . '&task=edit&userid=' . $return, _AEC_QUICKSEARCH_THANKS );
 		} else {
-			mosRedirect( 'index2.php?option=' . $option . '&task=showcentral', _AEC_QUICKSEARCH_NOTFOUND );
+			aecRedirect( 'index2.php?option=' . $option . '&task=showcentral', _AEC_QUICKSEARCH_NOTFOUND );
 		}
 		break;
 
@@ -780,7 +841,11 @@ function cancel( $option )
 	$limitstart = $mainframe->getUserStateFromRequest( "viewnotconf{$option}limitstart", 'limitstart', 0 );
 	$nexttask	= aecGetParam( 'nexttask', 'config' ) ;
 
-	mosRedirect( 'index2.php?option=' . $option . '&task=' . $nexttask, _CANCELED );
+	if ( aecJoomla15check() ) {
+		$mainframe->redirect( 'index2.php?option=' . $option . '&task=' . $nexttask, _CANCELED );
+	} else {
+		aecRedirect( 'index2.php?option=' . $option . '&task=' . $nexttask, _CANCELED );
+	}
 }
 
 function help( $option )
@@ -1309,9 +1374,9 @@ function saveUser( $option, $apply=0 )
 	$nexttask	= aecGetParam( 'nexttask', 'config' ) ;
 	if ( $apply ) {
 		$subID = !empty($_POST['id']) ? $_POST['id'] : $metaUser->focusSubscription->id;
-		mosRedirect( 'index2.php?option=' . $option . '&task=edit&subscriptionid=' . $subID, _AEC_MSG_SUCESSFULLY_SAVED );
+		aecRedirect( 'index2.php?option=' . $option . '&task=edit&subscriptionid=' . $subID, _AEC_MSG_SUCESSFULLY_SAVED );
 	} else {
-		mosRedirect( 'index2.php?option=' . $option . '&task=' . $nexttask, _SAVED );
+		aecRedirect( 'index2.php?option=' . $option . '&task=' . $nexttask, _SAVED );
 	}
 }
 
@@ -1371,7 +1436,7 @@ function removeUser( $userid, $option )
 		}
 	}
 
-	mosRedirect( 'index2.php?option=' . $option . '&task=showManual', $msg );
+	aecRedirect( 'index2.php?option=' . $option . '&task=showManual', $msg );
 }
 
 function removeClosedSubscription( $userid, $option )
@@ -1450,7 +1515,7 @@ function removeClosedSubscription( $userid, $option )
 		echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
 	}
 
-	mosRedirect( 'index2.php?option=' . $option . '&task=showClosed', $msg );
+	aecRedirect( 'index2.php?option=' . $option . '&task=showClosed', $msg );
 
 }
 
@@ -1532,7 +1597,7 @@ function removePendingSubscription( $userid, $option )
 		echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
 	}
 
-	mosRedirect( 'index2.php?option=' . $option . '&task=showPending', $msg );
+	aecRedirect( 'index2.php?option=' . $option . '&task=showPending', $msg );
 
 }
 
@@ -1575,12 +1640,12 @@ function activatePendingSubscription( $userid, $option, $renew )
 		// Admin confirmed an offline payment for a renew
 		// He is working on the Active queue
 		$msg = $n . ' ' . _AEC_MSG_SUBS_RENEWED;
-		mosRedirect( 'index2.php?option=' . $option . '&task=showActive', $msg );
+		aecRedirect( 'index2.php?option=' . $option . '&task=showActive', $msg );
 	} else {
 		// Admin confirmed an offline payment for a new subscription
 		// He is working on the Pending queue
 		$msg = $n . ' ' . _AEC_MSG_SUBS_ACTIVATED;
-		mosRedirect( 'index2.php?option=' . $option . '&task=showPending', $msg );
+		aecRedirect( 'index2.php?option=' . $option . '&task=showPending', $msg );
 	}
 }
 
@@ -2331,7 +2396,7 @@ function editSettings( $option )
 */
 function cancelSettings( $option )
 {
-	mosRedirect( 'index2.php?option=' . $option . '&task=showCentral', _AEC_CONFIG_CANCELLED );
+	aecRedirect( 'index2.php?option=' . $option . '&task=showCentral', _AEC_CONFIG_CANCELLED );
 }
 
 
@@ -2407,9 +2472,9 @@ function saveSettings( $option, $return=0 )
 	$eventlog->issue( $short, $tags, $event, 2, $params );
 
 	if ( $return ) {
-		mosRedirect( 'index2.php?option=' . $option . '&task=showSettings', _AEC_CONFIG_SAVED );
+		aecRedirect( 'index2.php?option=' . $option . '&task=showSettings', _AEC_CONFIG_SAVED );
 	} else {
-		mosRedirect( 'index2.php?option=' . $option . '&task=showCentral', _AEC_CONFIG_SAVED );
+		aecRedirect( 'index2.php?option=' . $option . '&task=showCentral', _AEC_CONFIG_SAVED );
 	}
 }
 
@@ -2660,7 +2725,7 @@ function editProcessor( $id, $option )
 */
 function cancelProcessor( $option )
 {
-	mosRedirect( 'index2.php?option=' . $option . '&task=showProcessors', _AEC_CONFIG_CANCELLED );
+	aecRedirect( 'index2.php?option=' . $option . '&task=showProcessors', _AEC_CONFIG_CANCELLED );
 }
 
 function changeProcessor( $cid=null, $state=0, $type, $option )
@@ -2694,7 +2759,7 @@ function changeProcessor( $cid=null, $state=0, $type, $option )
 
 	$msg = sprintf( _AEC_MSG_ITEMS_SUCESSFULLY, $total ) . ' ' . $msg;
 
-	mosRedirect( 'index2.php?option=' . $option . '&task=showProcessors', $msg );
+	aecRedirect( 'index2.php?option=' . $option . '&task=showProcessors', $msg );
 }
 
 function saveProcessor( $option, $return=0 )
@@ -2780,9 +2845,9 @@ function saveProcessor( $option, $return=0 )
 	$pp->storeload();
 
 	if ( $return ) {
-		mosRedirect( 'index2.php?option=' . $option . '&task=editProcessor&id=' . $pp->id, _AEC_CONFIG_SAVED );
+		aecRedirect( 'index2.php?option=' . $option . '&task=editProcessor&id=' . $pp->id, _AEC_CONFIG_SAVED );
 	} else {
-		mosRedirect( 'index2.php?option=' . $option . '&task=showProcessors', _AEC_CONFIG_SAVED );
+		aecRedirect( 'index2.php?option=' . $option . '&task=showProcessors', _AEC_CONFIG_SAVED );
 	}
 }
 
@@ -3522,9 +3587,9 @@ function saveSubscriptionPlan( $option, $apply=0 )
 	}
 
 	if ( $apply ) {
-		mosRedirect( 'index2.php?option=' . $option . '&task=editSubscriptionPlan&id=' . $id, _AEC_MSG_SUCESSFULLY_SAVED );
+		aecRedirect( 'index2.php?option=' . $option . '&task=editSubscriptionPlan&id=' . $id, _AEC_MSG_SUCESSFULLY_SAVED );
 	} else {
-		mosRedirect( 'index2.php?option=' . $option . '&task=showSubscriptionPlans' );
+		aecRedirect( 'index2.php?option=' . $option . '&task=showSubscriptionPlans' );
 	}
 }
 
@@ -3574,12 +3639,12 @@ function removeSubscriptionPlan( $id, $option )
 
 		$msg = $total . ' ' . _AEC_MSG_ITEMS_DELETED;
 	}
-	mosRedirect( 'index2.php?option=' . $option . '&task=showSubscriptionPlans', $msg );
+	aecRedirect( 'index2.php?option=' . $option . '&task=showSubscriptionPlans', $msg );
 }
 
 function cancelSubscriptionPlan( $option )
 {
-	mosRedirect( 'index2.php?option=' . $option . '&task=showSubscriptionPlans', _AEC_CMN_EDIT_CANCELLED );
+	aecRedirect( 'index2.php?option=' . $option . '&task=showSubscriptionPlans', _AEC_CMN_EDIT_CANCELLED );
 }
 
 function changeSubscriptionPlan( $cid=null, $state=0, $type, $option )
@@ -3613,7 +3678,7 @@ function changeSubscriptionPlan( $cid=null, $state=0, $type, $option )
 
 	$msg = sprintf( _AEC_MSG_ITEMS_SUCESSFULLY, $total ) . ' ' . $msg;
 
-	mosRedirect( 'index2.php?option=' . $option . '&task=showSubscriptionPlans', $msg );
+	aecRedirect( 'index2.php?option=' . $option . '&task=showSubscriptionPlans', $msg );
 }
 
 function listItemGroups( $option )
@@ -3883,9 +3948,9 @@ function saveItemGroup( $option, $apply=0 )
 	}
 
 	if ( $apply ) {
-		mosRedirect( 'index2.php?option=' . $option . '&task=editItemGroup&id=' . $id, _AEC_MSG_SUCESSFULLY_SAVED );
+		aecRedirect( 'index2.php?option=' . $option . '&task=editItemGroup&id=' . $id, _AEC_MSG_SUCESSFULLY_SAVED );
 	} else {
-		mosRedirect( 'index2.php?option=' . $option . '&task=showItemGroups' );
+		aecRedirect( 'index2.php?option=' . $option . '&task=showItemGroups' );
 	}
 }
 
@@ -3926,13 +3991,13 @@ function removeItemGroup( $id, $option )
 	} else {
 		$msg = $total . ' ' . _AEC_MSG_ITEMS_DELETED;
 
-		mosRedirect( 'index2.php?option=' . $option . '&task=showItemGroups', $msg );
+		aecRedirect( 'index2.php?option=' . $option . '&task=showItemGroups', $msg );
 	}
 }
 
 function cancelItemGroup( $option )
 {
-	mosRedirect( 'index2.php?option=' . $option . '&task=showItemGroups', _AEC_CMN_EDIT_CANCELLED );
+	aecRedirect( 'index2.php?option=' . $option . '&task=showItemGroups', _AEC_CMN_EDIT_CANCELLED );
 }
 
 function changeItemGroup( $cid=null, $state=0, $type, $option )
@@ -3966,7 +4031,7 @@ function changeItemGroup( $cid=null, $state=0, $type, $option )
 
 	$msg = sprintf( _AEC_MSG_ITEMS_SUCESSFULLY, $total ) . ' ' . $msg;
 
-	mosRedirect( 'index2.php?option=' . $option . '&task=showItemGroups', $msg );
+	aecRedirect( 'index2.php?option=' . $option . '&task=showItemGroups', $msg );
 }
 
 function listMicroIntegrations( $option )
@@ -4217,12 +4282,12 @@ function saveMicroIntegration( $option, $apply=0 )
 
 	if ( $id ) {
 		if ( $apply ) {
-			mosRedirect( 'index2.php?option=' . $option . '&task=editMicroIntegration&id=' . $id, _AEC_MSG_SUCESSFULLY_SAVED );
+			aecRedirect( 'index2.php?option=' . $option . '&task=editMicroIntegration&id=' . $id, _AEC_MSG_SUCESSFULLY_SAVED );
 		} else {
-			mosRedirect( 'index2.php?option=' . $option . '&task=showMicroIntegrations', _AEC_MSG_SUCESSFULLY_SAVED );
+			aecRedirect( 'index2.php?option=' . $option . '&task=showMicroIntegrations', _AEC_MSG_SUCESSFULLY_SAVED );
 		}
 	} else {
-		mosRedirect( 'index2.php?option=' . $option . '&task=editMicroIntegration&id=' . $mi->id , _AEC_MSG_SUCESSFULLY_SAVED );
+		aecRedirect( 'index2.php?option=' . $option . '&task=editMicroIntegration&id=' . $mi->id , _AEC_MSG_SUCESSFULLY_SAVED );
 	}
 
 }
@@ -4267,12 +4332,12 @@ function removeMicroIntegration( $id, $option )
 
 	$msg = $total . ' ' . _AEC_MSG_ITEMS_DELETED;
 
-	mosRedirect( 'index2.php?option=' . $option . '&task=showMicroIntegrations', $msg );
+	aecRedirect( 'index2.php?option=' . $option . '&task=showMicroIntegrations', $msg );
 }
 
 function cancelMicroIntegration( $option )
 {
-	mosRedirect( 'index2.php?option=' . $option . '&task=showMicroIntegrations', _AEC_CMN_EDIT_CANCELLED );
+	aecRedirect( 'index2.php?option=' . $option . '&task=showMicroIntegrations', _AEC_CMN_EDIT_CANCELLED );
 }
 
 // Changes the state of one or more content pages
@@ -4309,7 +4374,7 @@ function changeMicroIntegration( $cid=null, $state=0, $option )
 		$msg = $total . ' ' . _AEC_MSG_ITEMS_SUCC_UNPUBLISHED;
 	}
 
-	mosRedirect( 'index2.php?option=' . $option . '&task=showMicroIntegrations', $msg );
+	aecRedirect( 'index2.php?option=' . $option . '&task=showMicroIntegrations', $msg );
 }
 
 function listCoupons( $option, $type )
@@ -4704,12 +4769,12 @@ function saveCoupon( $option, $type, $apply=0 )
 		}
 
 		if ( $apply ) {
-			mosRedirect( 'index2.php?option=' . $option . '&task=editCoupon' . ( $type ? 'Static' : '' ) . '&id=' . $id, _AEC_MSG_SUCESSFULLY_SAVED );
+			aecRedirect( 'index2.php?option=' . $option . '&task=editCoupon' . ( $type ? 'Static' : '' ) . '&id=' . $id, _AEC_MSG_SUCESSFULLY_SAVED );
 		} else {
-			mosRedirect( 'index2.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ), _AEC_MSG_SUCESSFULLY_SAVED );
+			aecRedirect( 'index2.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ), _AEC_MSG_SUCESSFULLY_SAVED );
 		}
 	} else {
-		mosRedirect( 'index2.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ), _AEC_MSG_NO_COUPON_CODE );
+		aecRedirect( 'index2.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ), _AEC_MSG_NO_COUPON_CODE );
 	}
 
 }
@@ -4734,12 +4799,12 @@ function removeCoupon( $id, $option, $returnTask, $type )
 
 	$msg = _AEC_MSG_ITEMS_DELETED;
 
-	mosRedirect( 'index2.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ), $msg );
+	aecRedirect( 'index2.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ), $msg );
 }
 
 function cancelCoupon( $option, $type )
 {
-	mosRedirect( 'index2.php?option=' . $option . '&task=showCoupons' . ($type ? 'Static' : '' ), _AEC_CMN_EDIT_CANCELLED );
+	aecRedirect( 'index2.php?option=' . $option . '&task=showCoupons' . ($type ? 'Static' : '' ), _AEC_CMN_EDIT_CANCELLED );
 }
 
 function changeCoupon( $cid=null, $state=0, $option, $type )
@@ -4768,7 +4833,7 @@ function changeCoupon( $cid=null, $state=0, $option, $type )
 		$msg = $total . ' ' . _AEC_MSG_ITEMS_SUCC_UNPUBLISHED;
 	}
 
-	mosRedirect( 'index2.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ), $msg );
+	aecRedirect( 'index2.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ), $msg );
 }
 
 function editCSS( $option ) {
@@ -4779,7 +4844,7 @@ function editCSS( $option ) {
 		$content = htmlspecialchars( $content );
 		General_css::editCSSSource( $content, $option );
 	} else {
-		mosRedirect( 'index2.php?option='. $option .'&task=editCSS', sprintf( _AEC_MSG_OP_FAILED, $file ) );
+		aecRedirect( 'index2.php?option='. $option .'&task=editCSS', sprintf( _AEC_MSG_OP_FAILED, $file ) );
 	}
 }
 
@@ -4788,7 +4853,7 @@ function saveCSS( $option )
 	$filecontent = aecGetParam( 'filecontent' );
 
 	if ( !$filecontent ) {
-		mosRedirect( 'index2.php?option='. $option .'&task=editCSS', _AEC_MSG_OP_FAILED_EMPTY );
+		aecRedirect( 'index2.php?option='. $option .'&task=editCSS', _AEC_MSG_OP_FAILED_EMPTY );
 	}
 
 	$file			= JPATH_SITE .'/components/' . $option . '/style.css';
@@ -4801,7 +4866,7 @@ function saveCSS( $option )
 
 	clearstatcache();
 	if ( is_writable( $file ) == false ) {
-		mosRedirect( 'index2.php?option='. $option .'&task=editCSS', _AEC_MSG_OP_FAILED_NOT_WRITEABLE );
+		aecRedirect( 'index2.php?option='. $option .'&task=editCSS', _AEC_MSG_OP_FAILED_NOT_WRITEABLE );
 	}
 
 	if ( $fp = fopen ($file, 'wb') ) {
@@ -4812,17 +4877,17 @@ function saveCSS( $option )
 		} elseif ( aecGetParam( 'disable_write', 0 ) ) {
 			@chmod( $file, $oldperms & 0777555 );
 		}
-		mosRedirect( 'index2.php?option='. $option .'&task=editCSS', _AEC_CMN_FILE_SAVED );
+		aecRedirect( 'index2.php?option='. $option .'&task=editCSS', _AEC_CMN_FILE_SAVED );
 	} elseif ( $enable_write ) {
 		@chmod($file, $oldperms);
-		mosRedirect( 'index2.php?option='. $option .'&task=editCSS', _AEC_MSG_OP_FAILED_NO_WRITE );
+		aecRedirect( 'index2.php?option='. $option .'&task=editCSS', _AEC_MSG_OP_FAILED_NO_WRITE );
 	}
 
 }
 
 function cancelCSS ( $option )
 {
-	mosRedirect( 'index2.php?option='. $option );
+	aecRedirect( 'index2.php?option='. $option );
 }
 
 function invoices( $option )
@@ -4914,7 +4979,7 @@ function clearInvoice( $option, $invoice_number, $applyplan, $task )
 		}
 	}
 
-	mosRedirect( 'index2.php?option=' . $option . '&task=' . $task . $userid, _AEC_MSG_INVOICE_CLEARED );
+	aecRedirect( 'index2.php?option=' . $option . '&task=' . $task . $userid, _AEC_MSG_INVOICE_CLEARED );
 }
 
 function cancelInvoice( $option, $invoice_number, $task )
@@ -4937,7 +5002,7 @@ function cancelInvoice( $option, $invoice_number, $task )
 		}
 	}
 
-	mosRedirect( 'index2.php?option=' . $option . '&task=' . $task . $userid, _REMOVED );
+	aecRedirect( 'index2.php?option=' . $option . '&task=' . $task . $userid, _REMOVED );
 }
 
 function history( $option )
@@ -5351,13 +5416,13 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 	$aec_userchange_clause15	= '$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($userid, $post, \'%s\');' . "\n";
 	$aec_userregchange_clause15	= '$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($user, $post, \'%s\');' . "\n";
 	$aec_global_call			= 'global JPATH_SITE;' . "\n";
-	$aec_redirect_notallowed	= 'mosRedirect( JURI::root() . "index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
+	$aec_redirect_notallowed	= 'aecRedirect( JURI::root() . "index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
 	$aec_redirect_notallowed15	= 'global $mainframe;' . "\n" . '$mainframe->redirect( "index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
 
 	if ( $v15 ) {
-		$aec_redirect_subscribe		= 'mosRedirect( JURI::root() . \'index.php?option=com_acctexp&task=subscribe\' );' . "\n";
+		$aec_redirect_subscribe		= 'aecRedirect( JURI::root() . \'index.php?option=com_acctexp&task=subscribe\' );' . "\n";
 	} else {
-		$aec_redirect_subscribe		= 'mosRedirect( JURI::root() . "index.php?option=com_acctexp&task=subscribe" );' . "\n";
+		$aec_redirect_subscribe		= 'aecRedirect( JURI::root() . "index.php?option=com_acctexp&task=subscribe" );' . "\n";
 	}
 
 	$aec_normal_hack = $aec_hack_start
@@ -5436,7 +5501,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 						. $aec_condition_start
 						. 'if (!isset($_POST[\'planid\'])) {' . "\n"
 						. $aec_include_class
-						. 'mosRedirect(JURI::root() . "index.php?option=com_acctexp&amp;task=subscribe");' . "\n"
+						. 'aecRedirect(JURI::root() . "index.php?option=com_acctexp&amp;task=subscribe");' . "\n"
 						. $aec_condition_end
 						. $aec_condition_end
 						. $aec_hack_end;
@@ -5448,7 +5513,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 						. $aec_condition_start
 						. 'if (!isset($_POST[\'usage\'])) {' . "\n"
 						. $aec_include_class
-						. 'mosRedirect(JURI::root() . "index.php?option=com_acctexp&amp;task=subscribe");' . "\n"
+						. 'aecRedirect(JURI::root() . "index.php?option=com_acctexp&amp;task=subscribe");' . "\n"
 						. $aec_condition_end
 						. $aec_condition_end
 						. $aec_hack_end;
@@ -6497,7 +6562,7 @@ function exportData( $option, $cmd=null )
 	}
 
 	if ( $cmd_save ) {
-		mosRedirect( 'index2.php?option=' . $option . '&task=showCentral' );
+		aecRedirect( 'index2.php?option=' . $option . '&task=showCentral' );
 	} else {
 		HTML_AcctExp::export( $option, $aecHTML );
 	}

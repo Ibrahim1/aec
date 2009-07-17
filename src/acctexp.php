@@ -355,11 +355,7 @@ function hold( $option, $userid )
 		$frontend = new HTML_frontEnd ();
 		$frontend->hold( $option, $metaUser );
 	} else {
-		if ( aecJoomla15check() ) {
-			$mainframe->redirect( sefRelToAbs( 'index.php' ) );
-		} else {
-			mosRedirect( sefRelToAbs( 'index.php' ) );
-		}
+		aecRedirect( sefRelToAbs( 'index.php' ) );
 	}
 }
 
@@ -409,7 +405,7 @@ function expired( $option, $userid, $expiration )
 		$frontend = new HTML_frontEnd ();
 		$frontend->expired( $option, $metaUser, $expiration, $invoice, $trial, $continue );
 	} else {
-		mosRedirect( sefRelToAbs( 'index.php' ) );
+		aecRedirect( sefRelToAbs( 'index.php' ) );
 	}
 }
 
@@ -453,11 +449,7 @@ function pending( $option, $userid )
 		$frontend = new HTML_frontEnd ();
 		$frontend->pending( $option, $objUser, $invoice, $reason );
 	} else {
-		if ( aecJoomla15check() ) {
-			$mainframe->redirect( sefRelToAbs( 'index.php' ) );
-		} else {
-			mosRedirect( sefRelToAbs( 'index.php' ) );
-		}
+		aecRedirect( sefRelToAbs( 'index.php' ) );
 	}
 }
 
@@ -683,7 +675,7 @@ function subscriptionDetails( $option, $sub='' )
 		notAllowed( $option );
 	} else {
 		if ( !empty( $aecConfig->cfg['ssl_profile'] ) && empty( $_SERVER['HTTPS'] ) && !$aecConfig->cfg['override_reqssl'] ) {
-			mosRedirect( AECToolbox::deadsureURL( "index.php?option=" . $option . "&task=subscriptiondetails", true, false ) );
+			aecRedirect( AECToolbox::deadsureURL( "index.php?option=" . $option . "&task=subscriptiondetails", true, false ) );
 			exit();
 		};
 
@@ -1302,11 +1294,7 @@ function notAllowed( $option )
 	global $mainframe, $aecConfig;
 
 	if ( ( $aecConfig->cfg['customnotallowed'] != '' ) && !is_null( $aecConfig->cfg['customnotallowed'] ) ) {
-		if ( aecJoomla15check() ) {
-			$mainframe->redirect( $aecConfig->cfg['customnotallowed'] );
-		} else {
-			mosRedirect( $aecConfig->cfg['customnotallowed'] );
-		}
+		aecRedirect( $aecConfig->cfg['customnotallowed'] );
 	}
 
 	$gwnames = PaymentProcessorHandler::getInstalledNameList( true );
@@ -1487,7 +1475,7 @@ function cancelPayment( $option )
 
 	// Look whether we have a custom Cancel page
 	if ( $aecConfig->cfg['customcancel'] ) {
-		mosRedirect( $aecConfig->cfg['customcancel'] );
+		aecRedirect( $aecConfig->cfg['customcancel'] );
 	} else {
 		$mainframe->SetPageTitle( _CANCEL_TITLE );
 

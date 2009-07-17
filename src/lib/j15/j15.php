@@ -149,6 +149,24 @@ if ( !defined('_JEXEC') ) {
 		JHTML::_('behavior.tooltip');
 	}
 
+	if ( !function_exists( 'editorArea' ) ) {
+		function editorArea($name, $content, $hiddenField, $width, $height, $col, $row)
+		{
+			jimport( 'joomla.html.editor' );
+			$editor =& JFactory::getEditor();
+			echo $editor->display($hiddenField, $content, $width, $height, $col, $row);
+		}
+	}
+
+	if ( !function_exists( 'getEditorContents' ) ) {
+		function getEditorContents($editorArea, $hiddenField)
+		{
+			jimport( 'joomla.html.editor' );
+			$editor =& JFactory::getEditor();
+			echo $editor->save( $hiddenField );
+		}
+	}
+
 	if ( !class_exists( 'mosHTML' ) ) {
 		/**
 		 * Legacy class, use {@link JHTML} instead

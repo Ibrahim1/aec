@@ -20,16 +20,6 @@
 		<folder>micro_integration</folder>
 		<folder>processors</folder>
 	</files>
-	<images>
-	</images>
-	<install>
-		<queries>
-		</queries>
-	</install>
-	<uninstall>
-    	<queries>
-    	</queries>
-	</uninstall>
 	<installfile>install.acctexp.php</installfile>
 	<uninstallfile>uninstall.acctexp.php</uninstallfile>
 	<administration>
@@ -48,4 +38,4 @@
 		<images>
 		</images>
 	</administration>
-</mosinstall>
+</install>
