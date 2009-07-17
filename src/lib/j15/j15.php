@@ -70,6 +70,10 @@ if ( !defined('_JEXEC') ) {
 		    function __construct( $table, $key, &$database ) {
 		        $this->mosDBTable( $table, $key, $database );
 		    }
+
+		    function reorder( $where='' ) {
+				return $this->updateOrder();
+		    }
 		}
 	}
 
@@ -121,7 +125,7 @@ if ( !defined('_JEXEC') ) {
 	}
 
 	if ( !class_exists( 'JPaneTabs' ) ) {
-		class mosTabs extends JPaneTabs
+		class JPaneTabs extends mosTabs
 		{
 			var $useCookies = false;
 

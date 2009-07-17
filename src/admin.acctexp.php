@@ -3578,7 +3578,7 @@ function saveSubscriptionPlan( $option, $apply=0 )
 		exit();
 	}
 
-	$row->updateOrder();
+	$row->reorder();
 
 	if ( $_POST['id'] ) {
 		$id = $_POST['id'];
@@ -3939,7 +3939,7 @@ function saveItemGroup( $option, $apply=0 )
 		exit();
 	}
 
-	$row->updateOrder();
+	$row->reorder();
 
 	if ( $_POST['id'] ) {
 		$id = $_POST['id'];
@@ -4278,7 +4278,7 @@ function saveMicroIntegration( $option, $apply=0 )
 		$eventlog->issue( $short, $tags, $event, 128, $params );
 	}
 
-	$mi->updateOrder();
+	$mi->reorder();
 
 	if ( $id ) {
 		if ( $apply ) {
@@ -4760,7 +4760,7 @@ function saveCoupon( $option, $type, $apply=0 )
 			$eventlog->issue( $short, $tags, $event, 128, $params );
 		}
 
-		$cph->coupon->updateOrder();
+		$cph->coupon->reorder();
 
 		if ( $cph->coupon->id ) {
 			$id = $cph->coupon->id;

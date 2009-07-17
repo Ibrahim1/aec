@@ -5995,7 +5995,7 @@ class SubscriptionPlan extends serialParamDBTable
 				$post['micro_integrations'][] = $mi->id;
 			}
 
-			$mi->updateOrder();
+			$mi->reorder();
 
 			unset( $post['micro_integrations_plan'] );
 		}
