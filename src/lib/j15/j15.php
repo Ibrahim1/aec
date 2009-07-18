@@ -156,8 +156,10 @@ if ( !defined('_JEXEC') ) {
 	$lang =& JFactory::getLanguage();
 	$GLOBALS['mosConfig_lang']          = $lang->getBackwardLang();
 
-	function loadOverlib() {
-		JHTML::_('behavior.tooltip');
+	if ( !function_exists( 'loadoverlib' ) ) {
+		function loadOverlib() {
+			JHTML::_('behavior.tooltip');
+		}
 	}
 
 	if ( !function_exists( 'editorArea' ) ) {
