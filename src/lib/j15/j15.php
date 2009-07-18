@@ -77,6 +77,13 @@ if ( !defined('_JEXEC') ) {
 		}
 	}
 
+	if ( !function_exists( 'loadoverlib' ) ) {
+		function loadoverlib()
+		{
+			return mosCommonHTML::loadoverlib();
+		}
+	}
+
 	if ( !class_exists( 'JFactory' ) ) {
 		class JFactory
 		{
