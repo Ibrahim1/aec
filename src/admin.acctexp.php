@@ -6052,8 +6052,11 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 	// Receive the status for the hacks
 	foreach ( $hacks as $name => $hack ) {
 
-		// mic: initialize var and set to 0
 		$hacks[$name]['status'] = 0;
+
+		if ( !file_exists( $hack['filename'] ) ) {
+			continue;
+		}
 
 		if ( $hack['type'] ) {
 			switch( $hack['type'] ) {
