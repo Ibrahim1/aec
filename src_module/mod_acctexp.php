@@ -65,8 +65,10 @@ if ( $user->id ) {
 		} else {
 			global $aecConfig;
 
+			$ou = $mainframe->getCfg( 'offset_user' );
+
 			// compatibility with Mambo
-			if ( !empty( $mainframe->getCfg( 'offset_user' ) ) ) {
+			if ( !empty( $ou ) ) {
 				$timeOffset = $mainframe->getCfg( 'offset_user' ) * 3600;
 			} else {
 				$timeOffset = $mainframe->getCfg( 'offset' ) * 3600;

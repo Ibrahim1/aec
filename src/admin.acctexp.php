@@ -4181,8 +4181,6 @@ function editMicroIntegration ( $id, $option )
 		}
 	}
 
-	$aecHTML->hasSettings = false;
-
 	if ( $mi->id ) {
 		// Call MI (override active check) and Settings
 		if ( $mi->callIntegration( true ) ) {
@@ -4216,6 +4214,8 @@ function editMicroIntegration ( $id, $option )
 			// Call HTML Class
 			$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
+			$aecHTML->hasSettings = false;
+
 			$aecHTML->customparams = array();
 			foreach ( $mi_settings as $n => $v ) {
 				$aecHTML->customparams[] = $n;
@@ -4237,6 +4237,8 @@ function editMicroIntegration ( $id, $option )
 
 		// Call HTML Class
 		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+
+		$aecHTML->hasSettings = false;
 	}
 
 	HTML_AcctExp::editMicroIntegration( $option, $mi, $lists, $aecHTML );
@@ -5651,14 +5653,14 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 	$hacks[$n]['type']				=	'file';
 
 	switch( $cmsname ) {
-		case 'joomla':
-			$hacks[$n]['filename']		=	$v15 ? ( JPATH_SITE . '/libraries/joomla/user/authentication.php' ) : ( JPATH_SITE . '/includes/' . $cmsname . '.php' );
-			$hacks[$n]['read'] 		=	$v15 ? 'if(empty($response->username)) {' : '// initialize session data';
-			break;
-
 		case 'mambo':
 			$hacks[$n]['filename']	=	JPATH_SITE . '/includes/authenticator.php';
 			$hacks[$n]['read']		=	'// fudge the group stuff';
+			break;
+		case 'joomla':
+		default:
+			$hacks[$n]['filename']		=	$v15 ? ( JPATH_SITE . '/libraries/joomla/user/authentication.php' ) : ( JPATH_SITE . '/includes/' . $cmsname . '.php' );
+			$hacks[$n]['read'] 		=	$v15 ? 'if(empty($response->username)) {' : '// initialize session data';
 			break;
 	}
 
@@ -6053,6 +6055,10 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 	foreach ( $hacks as $name => $hack ) {
 
 		$hacks[$name]['status'] = 0;
+
+		if ( empty( $hack['filename'] ) ) {
+			continue;
+		}
 
 		if ( !file_exists( $hack['filename'] ) ) {
 			continue;

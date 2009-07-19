@@ -16,8 +16,8 @@ class mi_eventum extends MI
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_EVENTUM_NAME;
-		$info['desc'] = _AEC_MI_EVENTUM_DESC;
+		$info['name'] = 'Eventum MI';
+		$info['desc'] = 'Eventum Help Desk Integration - WIP';
 
 		return $info;
 	}

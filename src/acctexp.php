@@ -594,6 +594,8 @@ function subscribe( $option )
 
 function checkDuplicateUsernameEmail( $username, $email )
 {
+	global $mainframe;
+
 	$database = &JFactory::getDBO();
 
 	$query = 'SELECT `id`'

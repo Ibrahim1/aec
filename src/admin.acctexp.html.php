@@ -352,7 +352,15 @@ class General_css
 						</span>
 					</td>
 					<?php
-					if ( mosIsChmodable( $css_path ) ) {
+					if ( aecJoomla15check() ) {
+						jimport('joomla.filesystem.path');
+
+						$chmod = JPath::canChmod( $css_path );
+					} else {
+						$chmod = mosIsChmodable( $css_path );
+					}
+
+					if ( $chmod ) {
 						if ( is_writable( $css_path ) ) { ?>
 							<td>
 								<input type="checkbox" id="disable_write" name="disable_write" value="1" />
