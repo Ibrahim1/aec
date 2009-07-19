@@ -26,7 +26,7 @@ class mi_phpbb3
 
 	function Settings()
 	{
-        if ( $this->settings['use_altdb'] ) {
+        if ( !empty( $this->settings['use_altdb'] ) ) {
 	        $options = array(	'driver'	=> $this->settings['dbms'],
 								'host'		=> $this->settings['dbhost'],
 								'user'		=> $this->settings['dbuser'],
