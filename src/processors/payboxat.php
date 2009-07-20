@@ -82,7 +82,7 @@ class processor_payboxat extends SOAPprocessor
 		$a['text']			= $request->int_var['invoice'];
 
 		$a = $this->customParams( $this->settings['customparams'], $a, $request );
-
+aecDebug( $request->int_var['params'] );aecDebug( $a );
 		return $a;
 	}
 
@@ -103,7 +103,7 @@ class processor_payboxat extends SOAPprocessor
 
 		$return['valid']	= false;
 		$return['raw']		= $response;
-print_r( $response );
+aecDebug( $response );
 		if ( $response ) {
 			$payment_error = $response['error'];
 			$payment_description = $response['errorDescription'];
@@ -122,7 +122,7 @@ print_r( $response );
 				$return['error'] = $response['errorDescription'];
 			}
 		}
-print_r( $this->soapclient );exit;
+aecDebug( $this->soapclient );
 		return $return;
 	}
 }

@@ -3833,6 +3833,8 @@ class SOAPprocessor extends XMLprocessor
 {
 	function transmitRequest( $url, $path, $command, $content, $headers=null )
 	{
+		global $aecConfig;
+
 		require_once( JPATH_SITE . '/components/com_acctexp/lib/nusoap/nusoap.php');
 
 		$this->soapclient = new nusoap_client( $url );
