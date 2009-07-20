@@ -12301,9 +12301,9 @@ class AECToolbox
 			// Send email to user
 			if ( !$aecConfig->cfg['nojoomlaregemails'] || $overrideEmails ) {
 				if ( aecJoomla15check() ) {
-					JUTility::sendMail( $adminEmail2, $adminEmail2, $admin->email, $subject, $message );
+					JUTility::sendMail( $adminEmail2, $adminEmail2, $email, $subject, $message );
 				} else {
-					mosMail( $adminEmail2, $adminName2, $admin->email, $subject, $message );
+					mosMail( $adminEmail2, $adminName2, $email, $subject, $message );
 				}
 			}
 
