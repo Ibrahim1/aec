@@ -162,6 +162,32 @@ if ( !defined('_JEXEC') ) {
 		}
 	}
 
+	if ( !function_exists( 'mosErrorAlert' ) ) {
+		function mosErrorAlert( $text, $action='window.history.go(-1);', $mode=1 )
+		{
+			global $mainframe;
+
+			$text = strip_tags( addslashes( nl2br( $text ) ) );
+
+			switch ( $mode ) {
+				case 2:
+					echo "<script>$action</script> \n";
+					break;
+
+				case 1:
+				default:
+					echo "<script>alert('$text'); $action</script> \n";
+					echo '<noscript>';
+					echo "$text\n";
+					echo '</noscript>';
+					break;
+			}
+
+			$mainframe->close();
+		}
+	}
+
+
 	if ( !function_exists( 'editorArea' ) ) {
 		function editorArea($name, $content, $hiddenField, $width, $height, $col, $row)
 		{
