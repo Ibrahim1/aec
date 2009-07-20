@@ -80,10 +80,20 @@ class mi_phpbb3
 		$settings['dbname']			= array( 'inputC' );
 		$settings['table_prefix']	= array( 'inputC' );
 
-		$settings['lists']['group']				= mosHTML::selectList($sg, 'group', 'size="4"', 'value', 'text', $this->settings['group']);
-		$settings['lists']['group_exp']			= mosHTML::selectList($sg, 'group_exp', 'size="4"', 'value', 'text', $this->settings['group_exp']);
-		$settings['lists']['group_colour']		= mosHTML::selectList($sg2, 'group_colour', 'size="4"', 'value', 'text', $this->settings['group_colour']);
-		$settings['lists']['group_colour_exp']	= mosHTML::selectList($sg2, 'group_colour_exp', 'size="4"', 'value', 'text', $this->settings['group_colour_exp']);
+		$s = array( 'group', 'group_exp', 'group_colour', 'group_colour_exp' );
+
+		foreach ( $s as $si ) {
+			$v = null;
+			if ( isset( $this->settings[$si] ) ) {
+				$v = $this->settings[$si];
+			}
+
+			if ( strpos( $si, 'color' ) !== false ) {
+				$settings['lists'][$si]	= mosHTML::selectList( $sg2, $si, 'size="4"', 'value', 'text', $v );
+			} else {
+				$settings['lists'][$si]	= mosHTML::selectList( $sg, $si, 'size="4"', 'value', 'text', $v );
+			}
+		}
 
 		$settings['lists']['groups_exclude']	= mosHTML::selectList( $sg, 'groups_exclude[]', 'size="10" multiple="true"', 'value', 'text', $selected_groups_exclude );
 

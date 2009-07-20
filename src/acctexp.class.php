@@ -856,6 +856,14 @@ class metaUser
 			$check2 = AECToolbox::rewriteEngine( $restriction[2], $this );
 			$eval = $restriction[1];
 
+			if ( ( $check1 === $restriction[0] ) && ( reWriteEngine::isRWEstring( $restriction[0] ) ) ) {
+				$check1 = null;
+			}
+
+			if ( ( $check2 === $restriction[2] ) && ( reWriteEngine::isRWEstring( $restriction[2] ) ) ) {
+				$check2 = null;
+			}
+
 			$s['customchecker'.$n] = AECToolbox::compare( $eval, $check1, $check2 );
 			$n++;
 		}
@@ -11027,6 +11035,19 @@ class reWriteEngine
 
 	}
 
+	function isRWEstring( $string )
+	{
+		if ( ( strpos( $string, '[[' ) !== false ) && ( strpos( $string, ']]' ) !== false ) ) {
+			return true;
+		}
+
+		if ( ( strpos( $string, '{aecjson}' ) !== false ) && ( strpos( $string, '{/aecjson}' ) !== false ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
 	function info( $switches=array(), $params=null )
 	{
 		if ( is_array( $switches ) ) {
@@ -11228,7 +11249,11 @@ class reWriteEngine
 		$this->rewrite['cms_absolute_path']	= JPATH_SITE;
 		$this->rewrite['cms_live_site']		= JURI::root();
 
-		if ( is_object( $this->data['metaUser'] ) ) {
+		if ( empty( $this->data['invoice'] ) ) {
+			$this->data['invoice'] = null;
+		}
+
+		if ( is_object( $this->data['metaUser'] ) && !empty( $this->data['metaUser']->userid ) ) {
 			$name = array();
 			$name['first_first']	= "";
 			$name['first']			= "";
@@ -11320,7 +11345,7 @@ class reWriteEngine
 				$this->rewrite['subscription_expiration_date_backend']	= strftime( $aecConfig->cfg['display_date_backend'], strtotime( $this->data['metaUser']->focusSubscription->expiration ) );
 			}
 
-			if ( is_null( $this->data['invoice'] ) && !empty( $this->data['metaUser']->cmsUser->id ) ) {
+			if ( empty( $this->data['invoice'] ) && !empty( $this->data['metaUser']->cmsUser->id ) ) {
 				$lastinvoice = AECfetchfromDB::lastClearedInvoiceIDbyUserID( $this->data['metaUser']->cmsUser->id );
 
 				$this->data['invoice'] = new Invoice( $database );
@@ -16168,7 +16193,7 @@ class aecRestrictionHelper
 
 	function paramList()
 	{
-		$list = array( 'mingid_enabled', 'mingid', 'fixgid_enabled', 'fixgid',
+		return array( 'mingid_enabled', 'mingid', 'fixgid_enabled', 'fixgid',
 						'maxgid_enabled', 'maxgid', 'previousplan_req_enabled', 'previousplan_req',
 						'currentplan_req_enabled', 'currentplan_req', 'overallplan_req_enabled', 'overallplan_req',
 						'previousplan_req_enabled_excluded', 'previousplan_req_excluded', 'currentplan_req_enabled_excluded', 'currentplan_req_excluded',
@@ -16179,8 +16204,6 @@ class aecRestrictionHelper
 						'currentgroup_req_enabled_excluded', 'currentgroup_req_excluded', 'overallgroup_req_enabled', 'overallgroup_req',
 						'overallgroup_req_enabled_excluded', 'overallgroup_req_excluded', 'used_group_min_enabled', 'used_group_min_amount',
 						'used_group_min', 'used_group_max_enabled', 'used_group_max_amount', 'used_group_max' );
-
-		return $list;
 	}
 
 	function getParams()
