@@ -82,8 +82,12 @@ class mi_shareasale
 		$curl_url = $rooturl . "?" . implode( '&', $newget );
 		curl_setopt($ch, CURLOPT_URL, $curl_url );
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_exec($ch);
+		$resp = curl_exec($ch);
+
 		curl_close($ch);
+		if ( $resp == false ) {
+			aecDebug( 'Trying to establish failed with Error #' . curl_errno( $ch ) . ' ( "' . curl_error( $ch ) . '" )' );
+		}
 
 		return true;
 	}
