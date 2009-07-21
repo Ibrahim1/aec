@@ -10656,9 +10656,9 @@ class Subscription extends serialParamDBTable
 
 		if ( !$adminonly ) {
 			if ( aecJoomla15check() ) {
-				JUTility::sendMail( $adminEmail2, $adminEmail2, $admin->email, $subject, $message );
+				JUTility::sendMail( $adminEmail2, $adminEmail2, $email, $subject, $message );
 			} else {
-				mosMail( $adminEmail2, $adminName2, $admin->email, $subject, $message );
+				mosMail( $adminEmail2, $adminName2, $email, $subject, $message );
 			}
 		}
 
@@ -10691,9 +10691,9 @@ class Subscription extends serialParamDBTable
 
 			if ( $row->sendEmail ) {
 				if ( aecJoomla15check() ) {
-					JUTility::sendMail( $adminEmail2, $adminEmail2, $admin->email, $subject2, $message2 );
+					JUTility::sendMail( $adminEmail2, $adminEmail2, $row->email, $subject2, $message2 );
 				} else {
-					mosMail( $adminEmail2, $adminName2, $admin->email, $subject2, $message2 );
+					mosMail( $adminEmail2, $adminName2, $row->email, $subject2, $message2 );
 				}
 			}
 		}

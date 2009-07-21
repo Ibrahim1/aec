@@ -6068,12 +6068,10 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 
 		$hacks[$name]['status'] = 0;
 
-		if ( empty( $hack['filename'] ) ) {
-			continue;
-		}
-
-		if ( !file_exists( $hack['filename'] ) ) {
-			continue;
+		if ( !empty( $hack['filename'] ) ) {
+			if ( !file_exists( $hack['filename'] ) ) {
+				continue;
+			}
 		}
 
 		if ( $hack['type'] ) {
