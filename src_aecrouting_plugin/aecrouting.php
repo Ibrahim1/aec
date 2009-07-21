@@ -163,8 +163,10 @@ class plgSystemAECrouting extends JPlugin
 				global $mainframe;
 				$mainframe->redirect( 'index.php?option=com_acctexp&task=subscribe' );
 			} elseif ( !$vars['has_user'] && !$vars['has_usage'] && $vars['joms_regs'] && !$vars['pfirst'] ) {
+				global $mainframe;
 				$mainframe->redirect( 'index.php?option=com_acctexp&task=subscribe&aectoken=1' );
 			} elseif ( $vars['has_user'] && $vars['has_usage'] && $vars['joms_regs'] ) {
+				global $mainframe;
 				$mainframe->redirect( 'index.php?option=com_acctexp&task=subscribe&aectoken=1' );
 			} elseif ( $vars['has_usage'] && ( $vars['joms_reg'] || $vars['cb_reg'] ) ) {
 				$database = &JFactory::getDBO();
