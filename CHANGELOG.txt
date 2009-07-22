@@ -1,5 +1,99 @@
 AEC - Account Expiration Control - Change Log
 
+
+AEC - Account Expiration Control - 0.12.6 RC2 p (released 2009-05-21)
+=====================================================================
+skOre
+[Feature]
+- 0000083: PHPBB3 MicroIntegration - with the help of Jon Goldman
+- 0000162: Event table
+- 0000251: "Pay as much as you want"/Donation MI
+- 0000256: AEC Readout to export to CSV
+- 0000265: Per-plan MIs
+- 0000277: Separate Processor list and editing screen instead of having all in the settings
+- 0000280: Plan Amount Formatting
+- 0000281: setting for cURL SSL - peer/host verification
+- 0000282: Danish Frontend Translation (thanks to Svend Gundestrup!!!)
+- 0000288: Make sure AECJson is not usable through user supplied input
+- 0000291: Store all Processor Notifications in their real format
+- 0000298: Alternative SSL URL
+- 0000299: Coupon MI: automatically put coupons as regular, even if master coupon is static
+- 0000303: List filters on Plans Page
+- 0000305: Switch AECaccess from authorization to user plugin
+- 0000309: Shopping Cart functionality
+- 0000310: Notes field on user subscription
+- 0000314: MI global option: "Expire All Instances" (even if they're not final) - opposite now standard behavior
+- 0000316: Age Restriction MI
+- 0000318: Switch to display intro page only if user is not registered yet
+- 0000320: Option: Display Plan Description on Checkout
+- 0000321: Make On-Site checkout error page less painful
+- 0000325: "Checkout as gift for another user" Functionality
+- 0000326: Update Post Affiliate Pro MI (+Cart Tracking)
+- 0000333: Sort by Last Name for Subscriptions List
+- 0000336: Add multiple items to Shopping Cart with one link
+- 0000340: Coupon - Inclusive Combination Rules
+- 0000343: Filtering options for MI List
+- 0000346: Eway XML fix
+- 0000353: Netcash Processor Integration (with generous help from Warren Clifton)
+- 0000356: Complete switch to Mammontini - breaks with previous $amount['amount3'] etc.
+- 0000360: Update Session details with gid
+- 0000365: Mosets Tree MI: "Feature/Unfeature all listings" feature
+[Bug]
+- 0000225: CB 1.1 Hacks/Integration
+- 0000233: JACL subgroups on Session
+- 0000236: Need to check on expiration by Admin
+- 0000248: Raffle Mi errors
+- 0000292: name variable on some processors
+- 0000259: MySQL MI does not take multiple queries
+- 0000260: Updated Alertpay and AP recurring
+- 0000261: function in_ip_range doesnt work Verotel
+- 0000263: AEC Readout only shows 2 MIs
+- 0000264: Expiration date wrong on re-write
+- 0000266: Make sure Install .incs load in the correct order
+- 0000269: Coupons on rebills
+- 0000270: custom text bugs
+- 0000272: pms.uddeim.php hacks
+- 0000275: Install error on Joomla 1.5.8
+- 0000276: Warnings on Plan Pages in Back End
+- 0000278: Cancelling in ARB
+- 0000285: [[plan name]] on plans
+- 0000286: NoChex Payment Confirmation Response Support
+- 0000290: No AEC Emails sent
+- 0000293: Aec Readout
+- 0000295: Fatal error on checkout
+- 0000296: Publishing or unpublishing a processor fromt he main processor listing scrren
+- 0000297: Payment Processor Errors found in audit
+- 0000300: Acajoom Mi not working on expiration
+- 0000302: ThankYou Page shows text twice
+- 0000304: Upgrading from n
+- 0000312: Sanity check on build svn 1908
+- 0000313: Mounting escapes in certain plan fields
+- 0000315: Re-Install Issues - Upgrading with new package
+- 0000322: Shopping cart errors for this build
+- 0000327: missing constant
+- 0000331: ARB Expiration Link
+- 0000335: No ordering on Active, Manual etc screens
+- 0000337: Coupon Error
+- 0000338: CCBill Missing Recurring&Pay Once buttons
+- 0000339: Crash when clearing and applying a plan
+- 0000341: iDevAffiliate MI - problem with custom params
+- 0000342: Coupon error warnign showing with error reporting off
+- 0000344: Hitting the continue shopping button redirects wrong
+- 0000345: check if clear_nonalnum strips @s
+- 0000347: re-write variable
+- 0000348: gifting no longer working
+- 0000349: Affiliate Pro MI does not display tracking code
+- 0000359: Shopping cart link shows on checkout
+- 0000361: Groups Direct Frontend link is wrong or inaccurate
+- 0000364: Login error - Does not display any login Error with AEC Error Plugin
+jake46a
+[Bug]
+- 0000274: AlertPay almost there
+polc1410
+[Bug]
+- 0000011: Issues with fsock
+[82 issues]
+
 AEC - Account Expiration Control - 0.12.6 RC2 o (released 2009-01-12)
 =====================================================================
 skOre
