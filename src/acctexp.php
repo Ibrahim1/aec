@@ -15,18 +15,6 @@ global $mainframe, $aecConfig;
 
 define( '_AEC_FRONTEND', 1 );
 
-if ( !defined( '_AEC_LANG' ) ) {
-	$langPath = JPATH_SITE . '/components/com_acctexp/com_acctexp_language/';
-	if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
-		include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
-	} else {
-		include_once( $langPath . 'english.php' );
-	}
-	define( '_AEC_LANG', 1 );
-}
-
-include_once( JPATH_SITE . '/administrator/components/com_acctexp/com_acctexp_language_backend/general.php' );
-
 require_once( $mainframe->getPath( 'class',			'com_acctexp' ) );
 require_once( $mainframe->getPath( 'front_html',	'com_acctexp' ) );
 

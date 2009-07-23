@@ -53,8 +53,6 @@ class mi_proma
 
 	function expiration_action( $request )
 	{
-		$database = &JFactory::getDBO();
-
 		if ( $this->settings['set_group_exp'] ) {
 			return $this->setGroupId( $request->metaUser->userid, $this->settings['group_exp'], $this->settings['set_default_exp'] );
 		}

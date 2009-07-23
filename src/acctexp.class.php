@@ -47,6 +47,8 @@ if ( !defined( '_AEC_LANG' ) ) {
 	define( '_AEC_LANG', 1 );
 }
 
+include_once( JPATH_SITE . '/administrator/components/com_acctexp/com_acctexp_language_backend/general.php' );
+
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
 }

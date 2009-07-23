@@ -250,11 +250,11 @@ class mi_hotproperty extends MI
 		$hacks = array();
 
 		$edithack = '// AEC HACK hotproperty1 START' . "\n"
-		. 'global JPATH_SITE;' . "\n"
-		. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
-		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
+		. ( aecJoomla15check() ? '$user = &JFactory::getUser();' : 'global $mosConfig_absolute_path;' ) . "\n"
+		. 'include_once( ' . ( aecJoomla15check() ? 'JPATH_SITE' : '$mosConfig_absolute_path' ) . ' . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
+		. 'include_once( ' . ( aecJoomla15check() ? 'JPATH_SITE' : '$mosConfig_absolute_path' ) . ' . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
 		. '$mi_hphandler = new aec_hotproperty( $database );' . "\n"
-		. '$mi_hphandler->loadUserID( $my->id );' . "\n"
+		. '$mi_hphandler->loadUserID( ' . ( aecJoomla15check() ? '$user' : '$my' ) . '->id );' . "\n"
 		. 'if( $mi_hphandler->id ) {' . "\n"
 		. 'if( !$mi_hphandler->hasListingsLeft() ) {' . "\n"
 		. 'echo "' . _AEC_MI_HACK1_HOTPROPERTY . '";' . "\n"
@@ -268,11 +268,11 @@ class mi_hotproperty extends MI
 		;
 
 		$edithack2 = '// AEC HACK hotproperty2 START' . "\n"
-		. 'global JPATH_SITE;' . "\n"
-		. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
-		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
+		. ( aecJoomla15check() ? '$user = &JFactory::getUser();' : 'global $mosConfig_absolute_path;' ) . "\n"
+		. 'include_once( ' . ( aecJoomla15check() ? 'JPATH_SITE' : '$mosConfig_absolute_path' ) . ' . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
+		. 'include_once( ' . ( aecJoomla15check() ? 'JPATH_SITE' : '$mosConfig_absolute_path' ) . ' . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
 		. '$mi_hphandler = new aec_hotproperty( $database );' . "\n"
-		. '$mi_hphandler->loadUserID( $my->id );' . "\n"
+		. '$mi_hphandler->loadUserID( ' . ( aecJoomla15check() ? '$user' : '$my' ) . '->id );' . "\n"
 		. 'if( $mi_hphandler->id ) {' . "\n"
 		. 'if( $mi_hphandler->hasListingsLeft() ) {' . "\n"
 		. '$mi_hphandler->useListing();' . "\n"
@@ -306,11 +306,12 @@ class mi_hotproperty extends MI
 		;*/
 
 		$edithack4 = '// AEC HACK adminhotproperty4 START' . "\n"
-		. 'global JPATH_SITE;' . "\n"
-		. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
-		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
+		. ( aecJoomla15check() ? '' : 'global $mosConfig_absolute_path;' ) . "\n"
+		. 'include_once( ' . ( aecJoomla15check() ? 'JPATH_SITE' : '$mosConfig_absolute_path' ) . ' . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
+		. 'include_once( ' . ( aecJoomla15check() ? 'JPATH_SITE' : '$mosConfig_absolute_path' ) . ' . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
+		. ( aecJoomla15check() ? '$cid = array_keys( $datas[$this->getName()] );' : '' ) . "\n"
 		. '$mi_hphandler = new aec_hotproperty( $database );' . "\n"
-		. '$mi_hphandler->loadLinkID( $id[$i] );' . "\n"
+		. '$mi_hphandler->loadLinkID( ' . ( aecJoomla15check() ? '$cid[0]' : '$id[$i]' ) . ' );' . "\n"
 		. 'if( $mi_hphandler->id ) {' . "\n"
 		. '$mi_hphandler->removeListing();' . "\n"
 		. '}' . "\n"
@@ -322,8 +323,8 @@ class mi_hotproperty extends MI
 		$hacks[$n]['desc']				=	_AEC_MI_HACK3_HOTPROPERTY;
 		$hacks[$n]['type']				=	'file';
 		if ( $v10 ) {
-			$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_hotproperty/property.php';
-			$hacks[$n]['read']				=	'# Assign default value for new data';
+			$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_hotproperty/controller.php';
+			$hacks[$n]['read']				=	'$function_name = \'edit\'';
 		} else {
 			$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_hotproperty/property.php';
 			$hacks[$n]['read']				=	'# Assign default value for new data';
@@ -335,8 +336,8 @@ class mi_hotproperty extends MI
 		$hacks[$n]['desc']				=	_AEC_MI_HACK4_HOTPROPERTY;
 		$hacks[$n]['type']				=	'file';
 		if ( $v10 ) {
-			$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_hotproperty/property.php';
-			$hacks[$n]['read']				=	'# Assign current logon user to Agent field';
+			$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_hotproperty/controller.php';
+			$hacks[$n]['read']				=	'$function_name = \'save\'';
 			$hacks[$n]['insert']			=	$edithack2 . "\n"  . $hacks[$n]['read'];
 		} else {
 			$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_hotproperty/property.php';
@@ -361,8 +362,8 @@ class mi_hotproperty extends MI
 		$hacks[$n]['desc']				=	_AEC_MI_HACK5_HOTPROPERTY;
 		$hacks[$n]['type']				=	'file';
 		if ( $v10 ) {
-			$hacks[$n]['filename']			=	JPATH_SITE . '/administrator/components/com_hotproperty/admin.hotproperty.php';
-			$hacks[$n]['read']				=	'# Remove property from database';
+			$hacks[$n]['filename']			=	JPATH_SITE . '/administrator/components/com_hotproperty/controller.php';
+			$hacks[$n]['read']				=	'$_files = JRequest';
 		} else {
 			$hacks[$n]['filename']			=	JPATH_SITE . '/administrator/components/com_hotproperty/admin.hotproperty.php';
 			$hacks[$n]['read']				=	'# Remove property from database';
@@ -723,7 +724,7 @@ class aec_hotproperty extends serialParamDBTable
 			include_once( $langPathMI . 'english.php' );
 		}
 
-		$this->JTable( '#__acctexp_mi_hotproperty', 'id', $db );
+		parent::__construct( '#__acctexp_mi_hotproperty', 'id', $db );
 	}
 
 	function getIDbyUserID( $userid )
