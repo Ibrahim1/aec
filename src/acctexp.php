@@ -187,7 +187,7 @@ if ( !empty( $task ) ) {
 			$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 
 			if ( empty( $usage ) ) {
-				$usage = aecGetParam( 'u', true, array( 'word', 'string', 'clear_nonalnum' ) );
+				$usage = aecGetParam( 'u', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 			}
 
 			$invoicefact = new InvoiceFactory();
