@@ -11351,7 +11351,7 @@ class reWriteEngine
 				if ( !empty( $this->data['metaUser']->hasCBprofile ) ) {
 					if ( isset( $this->data['metaUser']->cbUser->cbactivation ) ) {
 						$fields = get_object_vars( $this->data['metaUser']->cbUser );
-aecDebug("calling CB data. Fields list following.");aecDebug($fields);
+
 						if ( !empty( $fields ) ) {
 							foreach ( $fields as $fieldname => $fieldcontents ) {
 								$this->rewrite['user_' . $fieldname] = $fieldcontents;
