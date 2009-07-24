@@ -99,25 +99,31 @@ aecDebug( $request->int_var['params'] );aecDebug( $a );
 
 		echo "<p>Bitte warten Sie w&auml;hrend das paybox-System versucht Sie anzurufen.</p>";
 
-		$response = $this->transmitRequest( $url, $path, 'payment', $content, $headers );
+		$options = array( "login" => $this->settings['username'], "password" => $this->settings['password'] );
+
+		$response = $this->transmitRequest( $url, $path, 'payment', $content, $headers, $options );
 
 		$return['valid']	= false;
 		$return['raw']		= $response;
 aecDebug( $response );
 		if ( $response ) {
-			$payment_error = $response['error'];
-			$payment_description = $response['errorDescription'];
-
-			$payment_id	= new soapval( 'transactionRef', 'long', $response['idTransaction'] );
-			$language	= new soapval( 'language', 'string', $this->settings['language'] );
-
-			$payment_authorization = $response['authorization'];
-
 			if ( empty( $response['error'] ) ) {
 				// acknowledge the transaction to Paybox
-				$this->soapclient->call('acknowledge', array($payment_id, $language));
+				if ( is_object( $response['raw'] ) ) {
+					$id = $response['raw']->idTransaction;
+				} else {
+					$id = $response['raw']['idTransaction'];
+				}
 
-				$return['valid'] = true;
+				$params = array('language' => strtolower( $this->settings['language'] ), 'transactionRef' => $id );
+
+				$resp = $this->followupRequest('acknowledge', $params );
+
+				if ( !isset( $resp['error'] ) ) {
+					$return['valid'] = true;
+				} else {
+					$return['error'] = $resp['error'];
+				}
 			} else {
 				$return['error'] = $response['errorDescription'];
 			}

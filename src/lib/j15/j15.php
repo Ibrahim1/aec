@@ -11,19 +11,6 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-// Replace sefRelToAbs the other way round
-if ( !function_exists( 'sefRelToAbs' ) ) {
-	function sefRelToAbs($value)
-	{
-		// Replace all &amp; with & as the router doesn't understand &amp;
-		$url = str_replace('&amp;', '&', $value);
-		if(substr(strtolower($url),0,9) != "index.php") return $url;
-		$uri    = JURI::getInstance();
-		$prefix = $uri->toString(array('scheme', 'host', 'port'));
-		return $prefix.JRoute::_($url);
-	}
-}
-
 if ( !defined('_JEXEC') ) {
 	if ( defined( '_JLEGACY' ) ) {
 		if ( _JLEGACY == '1.0' ) {
@@ -151,6 +138,19 @@ if ( !defined('_JEXEC') ) {
 	}
 
 } else {
+	// Replace sefRelToAbs the other way round
+	if ( !function_exists( 'sefRelToAbs' ) ) {
+		function sefRelToAbs($value)
+		{
+			// Replace all &amp; with & as the router doesn't understand &amp;
+			$url = str_replace('&amp;', '&', $value);
+			if(substr(strtolower($url),0,9) != "index.php") return $url;
+			$uri    = JURI::getInstance();
+			$prefix = $uri->toString(array('scheme', 'host', 'port'));
+			return $prefix.JRoute::_($url);
+		}
+	}
+
 	JLoader::register('JTableUser', JPATH_LIBRARIES.DS.'joomla'.DS.'database'.DS.'table'.DS.'user.php');
 
 	$lang =& JFactory::getLanguage();

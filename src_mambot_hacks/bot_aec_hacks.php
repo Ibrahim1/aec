@@ -10,9 +10,11 @@
 
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
+global $mosConfig_absolute_path;
+
 if ( !defined( '_JEXEC' ) ) {
 
-$aecClass = JPATH_SITE . "/components/com_acctexp/acctexp.class.php";
+$aecClass = $mosConfig_absolute_path . "/components/com_acctexp/acctexp.class.php";
 
 if( file_exists( $aecClass ) ) {
 	include_once( $aecClass );

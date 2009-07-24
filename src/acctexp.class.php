@@ -3833,37 +3833,83 @@ class XMLprocessor extends processor
 
 class SOAPprocessor extends XMLprocessor
 {
-	function transmitRequest( $url, $path, $command, $content, $headers=null )
+	function transmitRequest( $url, $path, $command, $content, $headers=null, $options=null )
 	{
 		global $aecConfig;
 
 		require_once( JPATH_SITE . '/components/com_acctexp/lib/nusoap/nusoap.php');
 
-		$this->soapclient = new nusoap_client( $url );
+		if ( class_exists( 'SoapClient' ) ) {
+			try {
+				$this->soapclient = new SoapClient( $url, $options );
+				$return_val = $this->soapclient->__soapCall( $command, $content );
 
-		if ( !empty( $aecConfig->cfg['use_proxy'] ) && !empty( $aecConfig->cfg['proxy'] ) ) {
-			$this->soapclient->setHTTPProxy(	$aecConfig->cfg['proxy'],
-												$aecConfig->cfg['proxy_port'],
-												$aecConfig->cfg['proxy_username'],
-												$aecConfig->cfg['proxy_password']
-											);
-		}
+				if ( $return_val->error != 0 ) {
+					$response['error'] = "Error calling SOAP function: " . $return_val->error;
+				}
+		    } catch (SoapFault $fault) {
+		      trigger_error("SOAP Fault: (faultcode: {$fault->faultcode}, faultstring: {$fault->faultstring})", E_USER_ERROR);
+		    }
+		} else {
+			$this->soapclient = new nusoap_client( $url );
 
-		if ( !empty( $headers ) ) {
-			$this->soapclient->setHeaders( $headers );
-		}
+			if ( !empty( $aecConfig->cfg['use_proxy'] ) && !empty( $aecConfig->cfg['proxy'] ) ) {
+				$this->soapclient->setHTTPProxy(	$aecConfig->cfg['proxy'],
+													$aecConfig->cfg['proxy_port'],
+													$aecConfig->cfg['proxy_username'],
+													$aecConfig->cfg['proxy_password']
+												);
+			}
 
-		# execute payment transaction
-		$response = array();
-		$response['raw'] = $this->soapclient->call( $command, $content );
+			if ( !empty( $headers ) ) {
+				$this->soapclient->setHeaders( $headers );
+			}
 
-		$err = $this->soapclient->getError();
+			// execute payment transaction
+			$response = array();
+			$response['raw'] = $this->soapclient->call( $command, $content );
 
-		if ( $err != false ) {
-			$response['error'] = "Error calling SOAP function: " . $err;
+			$err = $this->soapclient->getError();
+
+			if ( $err != false ) {
+				$response['error'] = "Error calling SOAP function: " . $err;
+			}
 		}
 
 		return $response;
+	}
+
+	function followupRequest( $command, $content )
+	{
+		if ( empty( $this->soapclient ) ) {
+			return null;
+		}
+
+		if ( !is_object( $this->soapclient ) ) {
+			return null;
+		}
+
+		$response = array();
+
+		if ( is_a( $this->soapclient, 'SoapClient' ) ) {
+			$response['raw'] = $this->soapclient->__soapCall( $command, $content );
+
+			if ( $return_val->error != 0 ) {
+				$response['error'] = "Error calling SOAP function: " . $return_val->error;
+			}
+
+			return $response;
+		} else {
+			$response['raw'] = $this->soapclient->call( $command, $content );
+
+			$err = $this->soapclient->getError();
+
+			if ( $err != false ) {
+				$response['error'] = "Error calling SOAP function: " . $err;
+			}
+
+			return $response;
+		}
 	}
 }
 
@@ -8550,7 +8596,7 @@ class Invoice extends serialParamDBTable
 			if ( ( strcmp( $this->amount, '0.00' ) === 0 ) && !$recurring ) {
 				$this->method = 'free';
 				$madefree = true;
-			} elseif ( strcmp( $this->method, 'free' ) === 0 ) {
+			} elseif ( ( strcmp( $this->amount, '0.00' ) === 0 ) && ( strcmp( $this->method, 'free' ) !== 0 ) ) {
 				$short	= 'invoice amount error';
 				$event	= 'When computing invoice amount: Method error, amount 0.00, but method = ' . $this->method;
 				$tags	= 'processor,loading,error';
@@ -11305,7 +11351,7 @@ class reWriteEngine
 				if ( !empty( $this->data['metaUser']->hasCBprofile ) ) {
 					if ( isset( $this->data['metaUser']->cbUser->cbactivation ) ) {
 						$fields = get_object_vars( $this->data['metaUser']->cbUser );
-
+aecDebug("calling CB data. Fields list following.");aecDebug($fields);
 						if ( !empty( $fields ) ) {
 							foreach ( $fields as $fieldname => $fieldcontents ) {
 								$this->rewrite['user_' . $fieldname] = $fieldcontents;

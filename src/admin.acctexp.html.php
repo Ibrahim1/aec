@@ -1351,7 +1351,7 @@ class HTML_AcctExp
 		<table class="adminheading">
 			<tr>
 				<th width="100%" class="sectionname" style="background: url(<?php echo JURI::base(); ?>components/com_acctexp/images/icons/aec_symbol_settings.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
-					<?php echo _AEC_HEAD_SETTINGS . ': ' . $aecHTML->pp->info['longname']; ?>
+					<?php echo _AEC_HEAD_SETTINGS . ': ' . ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ); ?>
 				</th>
 			</tr>
 			<tr><td></td></tr>

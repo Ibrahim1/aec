@@ -22,7 +22,7 @@ class mi_rsgallery2 extends MI
 		$settings['galleries_name']		= array( 'inputC' );
 		$settings['galleries_desc']		= array( 'inputD' );
 		$settings['set_galleries']			= array( 'list_yesno' );
-		$settings['galleries']				= array( 'list_yesno' );
+		$settings['galleries']				= array( 'list' );
 		$settings['set_galleries_user']	= array( 'list_yesno' );
 		$settings['gallery_sel_amt']		= array( 'inputA' );
 		$settings['gallery_sel_scope']	= array( 'list' );
