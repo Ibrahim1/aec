@@ -3840,16 +3840,12 @@ class SOAPprocessor extends XMLprocessor
 		require_once( JPATH_SITE . '/components/com_acctexp/lib/nusoap/nusoap.php');
 
 		if ( class_exists( 'SoapClient' ) ) {
-			try {
-				$this->soapclient = new SoapClient( $url, $options );
-				$return_val = $this->soapclient->__soapCall( $command, $content );
+			$this->soapclient = new SoapClient( $url, $options );
+			$return_val = $this->soapclient->__soapCall( $command, $content );
 
-				if ( $return_val->error != 0 ) {
-					$response['error'] = "Error calling SOAP function: " . $return_val->error;
-				}
-		    } catch (SoapFault $fault) {
-		      trigger_error("SOAP Fault: (faultcode: {$fault->faultcode}, faultstring: {$fault->faultstring})", E_USER_ERROR);
-		    }
+			if ( $return_val->error != 0 ) {
+				$response['error'] = "Error calling SOAP function: " . $return_val->error;
+			}
 		} else {
 			$this->soapclient = new nusoap_client( $url );
 
