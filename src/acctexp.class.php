@@ -3842,9 +3842,9 @@ class SOAPprocessor extends XMLprocessor
 		if ( class_exists( 'SoapClient' ) ) {
 			$this->soapclient = new SoapClient( $url, $options );
 			$return_val = $this->soapclient->__soapCall( $command, $content );
-
+aecDebug( $return_val );aecDebug( $this->soapclient );
 			if ( $return_val->error != 0 ) {
-				$response['error'] = "Error calling SOAP function: " . $return_val->error;
+				$response['error'] = "Error calling native SOAP function: " . $return_val->error;
 			}
 		} else {
 			$this->soapclient = new nusoap_client( $url );
@@ -3866,9 +3866,9 @@ class SOAPprocessor extends XMLprocessor
 			$response['raw'] = $this->soapclient->call( $command, $content );
 
 			$err = $this->soapclient->getError();
-
+aecDebug( $err );aecDebug( $this->soapclient );
 			if ( $err != false ) {
-				$response['error'] = "Error calling SOAP function: " . $err;
+				$response['error'] = "Error calling nuSOAP function: " . $err;
 			}
 		}
 
