@@ -74,7 +74,7 @@ class mi_aecdonate
 			}
 		}
 
-		$price = AECToolbox::correctAmount( $request->params['amt'] );
+		$price = AECToolbox::correctAmount( $price );
 
 		$request->add->terms->nextterm->setCost( $price );
 
