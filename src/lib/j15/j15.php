@@ -94,6 +94,11 @@ if ( !defined('_JEXEC') ) {
 
 				return $acl;
 			}
+
+			function getLanguage()
+			{
+				return $GLOBALS['mosConfig_lang'];
+			}
 		}
 	}
 

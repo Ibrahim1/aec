@@ -73,7 +73,7 @@ if ( !function_exists( 'aecJoomla15check' ) ) {
 			if ( !empty( $aecConfig->cfg['overrideJ15'] ) ) {
 				define( 'AECJOOMLA15CHECK', false );
 			} else {
-				define( 'AECJOOMLA15CHECK', defined( 'JPATH_BASE' ) );
+				define( 'AECJOOMLA15CHECK', defined( '_JEXEC' ) );
 			}
 		}
 
@@ -4396,7 +4396,7 @@ class aecHTML
 			}
 
 			if ( !empty( $row[1] ) && !empty( $row[2] ) && !$notooltip ) {
-				if (  aecJoomla15check() ) {
+				if ( aecJoomla15check() ) {
 					$return = '<div class="setting_desc">';
 					$return .= '<span class="editlinktip hasTip" title="';
 					$return .= htmlentities( $row[1], ENT_QUOTES ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . ':' . htmlentities( $row[2], ENT_QUOTES );
@@ -6373,10 +6373,24 @@ class aecTempToken extends serialParamDBTable
 		return array( 'content' );
 	}
 
+	function getToken()
+	{
+		if ( aecJoomla15check() ) {
+			$session =& JFactory::getSession();
+			return $session->getToken();
+		} else {
+			global $mainframe, $database;
+
+			$session 	=& $mainframe->_session;
+			$session 	= new mosSession( $database );
+
+			return $session->session_id;
+		}
+	}
+
 	function getComposite()
 	{
-		$session =& JFactory::getSession();
-		$token = $session->getToken();
+		$token = $this->getToken();
 
 		$this->getByToken( $token );
 
