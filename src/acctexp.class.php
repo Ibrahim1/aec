@@ -5708,11 +5708,16 @@ class SubscriptionPlan extends serialParamDBTable
 
 		if ( is_object( $metaUser ) ) {
 			if ( is_object( $metaUser->objSubscription ) ) {
-				$comparison				= $this->doPlanComparison( $metaUser->objSubscription );
+				$comparison				= $this->doPlanComparison( $metaUser->focusSubscription );
 				$plans_comparison		= $comparison['comparison'];
 				$plans_comparison_total	= $comparison['total_comparison'];
-				$is_trial				= ( strcmp( $metaUser->objSubscription->status, 'Trial' ) === 0 );
+				$is_trial				= ( strcmp( $metaUser->focusSubscription->status, 'Trial' ) === 0 );
 			}
+		} elseif ( is_object( $user_subscription ) ) {
+			$comparison				= $this->doPlanComparison( $user_subscription );
+			$plans_comparison		= $comparison['comparison'];
+			$plans_comparison_total	= $comparison['total_comparison'];
+			$is_trial				= ( strcmp( $user_subscription->status, 'Trial' ) === 0 );
 		}
 
 		if ( !isset( $this->params['full_free'] ) ) {
@@ -5723,6 +5728,10 @@ class SubscriptionPlan extends serialParamDBTable
 
 		$terms = new mammonTerms();
 		$terms->readParams( $this->params, $allow_trial );
+
+		if ( !$allow_trial && ( count( $terms->terms ) > 1 ) ) {
+			$terms->incrementPointer();
+		}
 
 		if ( !empty( $this->micro_integrations ) && ( is_object( $user_subscription ) || is_object( $metaUser ) ) ) {
 			$mih = new microIntegrationHandler();
@@ -6834,7 +6843,12 @@ class InvoiceFactory
 		$this->payment->freetrial = 0;
 
 		if ( empty( $this->cart ) && !empty( $this->plan ) ) {
-			$return = $this->plan->getReturnTerms( $this->recurring, $user_subscription );
+			if ( !empty( $this->metaUser ) ) {
+				$return = $this->plan->getReturnTerms( $this->recurring, $this->metaUser->focusSubscription, $this->metaUser );
+			} else {
+				$return = $this->plan->getReturnTerms( $this->recurring, $user_subscription );
+			}
+
 
 			$terms = $return['terms'];
 
@@ -6920,7 +6934,7 @@ class InvoiceFactory
 
 		$this->loadMetaUser();
 
-		if ( $this->cartobject->id ) {
+		if ( !empty( $this->cartobject->id ) ) {
 			$this->cart = $this->cartobject->getCheckout( $this->metaUser );
 		}
 	}
@@ -6952,9 +6966,9 @@ class InvoiceFactory
 
 			foreach ( $this->cart as $cid => $citem ) {
 				if ( $citem['obj'] !== false ) {
-					$terms = $citem['obj']->getTerms( $this->recurring, $this->metaUser->objSubscription, $this->metaUser );
+					$terms = $citem['obj']->getTerms( $this->recurring, $this->metaUser->focusSubscription, $this->metaUser );
 
-					$c = $citem['obj']->doPlanComparison( $this->metaUser->objSubscription );
+					$c = $citem['obj']->doPlanComparison( $this->metaUser->focusSubscription );
 
 					// Do not allow a Trial if the user has used this or a similar plan
 					if ( $terms->hasTrial && !( ( $c['comparison'] === false ) && ( $c['total_comparison'] === false ) ) ) {
