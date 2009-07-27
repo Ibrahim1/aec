@@ -72,6 +72,14 @@ if ( !defined('_JEXEC') ) {
 	}
 
 	if ( !class_exists( 'JFactory' ) ) {
+		class dummyLangClass
+		{
+		    function load()
+		    {
+				return true;
+		    }
+		}
+
 		class JFactory
 		{
 		    function getDBO()
@@ -97,7 +105,9 @@ if ( !defined('_JEXEC') ) {
 
 			function getLanguage()
 			{
-				return $GLOBALS['mosConfig_lang'];
+				$lang = new dummyLangClass();
+
+				return $lang;
 			}
 		}
 	}
