@@ -645,6 +645,8 @@ define( '_CFG_AUTHORIZE_CIM_PROMPTZIPONLY_NAME', 'Prompt for Zip only');
 define( '_CFG_AUTHORIZE_CIM_PROMPTZIPONLY_DESC', 'Ask the user to put in a Zip code only.');
 define( '_CFG_AUTHORIZE_CIM_DEDICATEDSHIPPING_NAME', 'Dedicated Shipping Details');
 define( '_CFG_AUTHORIZE_CIM_DEDICATEDSHIPPING_DESC', 'Offer the user a dedicated shipping details form.');
+define( '_CFG_AUTHORIZE_CIM_TOTALOCCURRENCES_NAME', 'Total Occurances');
+define( '_CFG_AUTHORIZE_ARB_TOTALOCCURRENCES_DESC', 'If you want to, you can set a maximum number of rebills - the user will be automatically billed and renewed the number of times you set.');
 
 // ClickBank
 define( '_CFG_CLICKBANK_LONGNAME',			'ClickBank' );

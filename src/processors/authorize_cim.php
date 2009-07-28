@@ -41,6 +41,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		$settings['promptAddress']		= 0;
 		$settings['promptZipOnly']		= 0;
 		$settings['dedicatedShipping']	= 0;
+		$settings['totalOccurrences']	= 12;
 		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']		= '';
 
@@ -57,6 +58,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		$settings['promptAddress']		= array( 'list_yesno' );
 		$settings['promptZipOnly']		= array( 'list_yesno' );
 		$settings['dedicatedShipping']	= array( 'list_yesno' );
+		$settings['totalOccurrences']	= array( 'inputA' );
 		$settings['item_name']			= array( 'inputE' );
 		$settings['customparams']		= array( 'inputD' );
 
@@ -595,6 +597,10 @@ class processor_authorize_cim extends PROFILEprocessor
 			$cim->createCustomerProfileTransactionRequest( $this );
 
 			if ( $cim->isSuccessful() ) {
+				if ( !empty( $this->settings['totalOccurrences'] ) ) {
+					$return['invoiceparams'] = array( 'totalOccurrences' => $this->settings['totalOccurrences'] );
+				}
+
 				$return['valid']	= true;
 				$return['invoice']	= $cim->refId;
 			} else {
@@ -683,6 +689,12 @@ class processor_authorize_cim extends PROFILEprocessor
 		$invoice = new Invoice( $database );
 		$invoice->loadbySubscriptionId( $subscription_id );
 
+		if ( !empty( $this->settings['totalOccurrences'] ) && !empty( $invoice->params['totalOccurrences'] ) ) {
+			if ( $invoice->params['totalOccurrences'] >= $this->settings['totalOccurrences'] ) {
+				return false;
+			}
+		}
+
 		$metaUser = new metaUser( $invoice->userid );
 		$ppParams = $metaUser->meta->getProcessorParams( $this->id );
 
@@ -709,6 +721,13 @@ class processor_authorize_cim extends PROFILEprocessor
 
 			if ( $cim->isSuccessful() ) {
 				$invoice->pay();
+
+				if ( !empty( $this->settings['totalOccurrences'] ) && !empty( $invoice->params['totalOccurrences'] ) ) {
+					$invoice->params['totalOccurrences']++;
+
+					$invoice->storeload();
+				}
+
 				return true;
 			}
 		}
