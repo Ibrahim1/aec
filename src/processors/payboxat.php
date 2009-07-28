@@ -72,14 +72,18 @@ class processor_payboxat extends SOAPprocessor
 		$a = array();
 
 		$a['language']		= strtolower( $this->settings['language'] );
-		//$a['isTest']		= $this->settings['testmode'] ? true : false;
+		$a['isTest']		= $this->settings['testmode'] ? true : false;
 		$a['payer']			= $request->int_var['params']['billPhone'];
 		$a['payee']			= $this->settings['merchant_phone'];
+		$a['caller']		= null;
 		$a['amount']		= (int) ( $request->int_var['amount'] * 100 );
 		$a['currency']		= $this->settings['currency'];
+		$a['paymentDays']	= null;
 		$a['timestamp']		= strftime("%H:%M:%S.%Y%m%d");
+		$a['posId']			= null;
 		$a['orderId']		= (int) $request->invoice->id;
-		$a['text']			= $request->int_var['invoice'];
+		$a['text']			= substr( $request->int_var['invoice'], 1 );
+		$a['sessionId']		= session_id();
 
 		$a = $this->customParams( $this->settings['customparams'], $a, $request );
 aecDebug( $request->int_var['params'] );aecDebug( $a );
