@@ -2593,9 +2593,14 @@ class PaymentProcessor
 
 	function fullInit()
 	{
-		$this->init();
-		$this->getInfo();
-		$this->getSettings();
+		if ( $this->init() ) {
+			$this->getInfo();
+			$this->getSettings();
+
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	function init()
@@ -2606,7 +2611,11 @@ class PaymentProcessor
 			$this->init();
 		} else {
 			// Initiate processor from db
-			$this->processor->load( $this->id );
+			if ( is_object( $this->processor ) ) {
+				return $this->processor->load( $this->id );
+			} else {
+				return false;
+			}
 		}
 	}
 
@@ -2642,6 +2651,10 @@ class PaymentProcessor
 
 	function getInfo()
 	{
+		if ( !is_object( $this->processor ) ) {
+			return false;
+		}
+
 		$this->info	=& $this->processor->info;
 		$original	= $this->processor->info();
 
@@ -2654,6 +2667,10 @@ class PaymentProcessor
 
 	function getSettings()
 	{
+		if ( !is_object( $this->processor ) ) {
+			return false;
+		}
+
 		$this->settings	=& $this->processor->settings;
 		$original		= $this->processor->settings();
 

@@ -2520,9 +2520,10 @@ function listProcessors( $option )
 	foreach ( $names as $name ) {
 		$pp = new PaymentProcessor( $database );
 		$pp->loadName( $name );
-		$pp->fullInit();
 
-		$rows[] = $pp;
+		if ( $pp->fullInit() ) {
+			$rows[] = $pp;
+		}
 	}
 
  	HTML_AcctExp::listProcessors( $rows, $pageNav, $option );
