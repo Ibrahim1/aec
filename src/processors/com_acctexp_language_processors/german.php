@@ -82,20 +82,20 @@ define( '_AEC_SELECT_RECURRING_YES', 'Recurring');
 define( '_AEC_SELECT_RECURRING_BOTH', 'Both');
 
 // Generic User Account Form
-define( '_AEC_USERFORM_BILLING_DETAILS_NAME', 'Billing Details');
-define( '_AEC_USERFORM_SHIPPING_DETAILS_NAME', 'Shipping Details');
-define( '_AEC_USERFORM_BILLFIRSTNAME_NAME', 'First Name');
-define( '_AEC_USERFORM_BILLLASTNAME_NAME', 'Last Name');
-define( '_AEC_USERFORM_BILLADDRESS_NAME', 'Address');
-define( '_AEC_USERFORM_BILLADDRESS2_NAME', 'Address (continued)');
-define( '_AEC_USERFORM_BILLCITY_NAME', 'City');
-define( '_AEC_USERFORM_BILLSTATE_NAME', 'State');
-define( '_AEC_USERFORM_BILLSTATEPROV_NAME', 'State/Prov');
-define( '_AEC_USERFORM_BILLZIP_NAME', 'Zip');
-define( '_AEC_USERFORM_BILLCOUNTRY_NAME', 'Country');
-define( '_AEC_USERFORM_BILLPHONE_NAME', 'Phone');
+define( '_AEC_USERFORM_BILLING_DETAILS_NAME', 'Rechnungsadresse');
+define( '_AEC_USERFORM_SHIPPING_DETAILS_NAME', 'Lieferadresse');
+define( '_AEC_USERFORM_BILLFIRSTNAME_NAME', 'Vorname');
+define( '_AEC_USERFORM_BILLLASTNAME_NAME', 'Nachname');
+define( '_AEC_USERFORM_BILLADDRESS_NAME', 'Adresse');
+define( '_AEC_USERFORM_BILLADDRESS2_NAME', 'Adresse (fortgesetzt)');
+define( '_AEC_USERFORM_BILLCITY_NAME', 'Stadt');
+define( '_AEC_USERFORM_BILLSTATE_NAME', 'Staat');
+define( '_AEC_USERFORM_BILLSTATEPROV_NAME', 'Staat/Provinz');
+define( '_AEC_USERFORM_BILLZIP_NAME', 'PLZ');
+define( '_AEC_USERFORM_BILLCOUNTRY_NAME', 'Land');
+define( '_AEC_USERFORM_BILLPHONE_NAME', 'Telefonnummer');
 define( '_AEC_USERFORM_BILLFAX_NAME', 'Fax');
-define( '_AEC_USERFORM_BILLCOMPANY_NAME', 'Company');
+define( '_AEC_USERFORM_BILLCOMPANY_NAME', 'Firma');
 
 // Generic Credit Card Form
 define( '_AEC_CCFORM_TABNAME', 'Credit Card');
