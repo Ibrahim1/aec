@@ -101,7 +101,7 @@ aecDebug( $request->int_var['params'] );aecDebug( $a );
 					. '<password>' . (string) $this->settings['password'] . '</password>'
 					. '</credentials>';
 
-		echo "<p>Bitte warten Sie w&auml;hrend das paybox-System versucht Sie anzurufen.</p>";
+		//echo "<p>Bitte warten Sie w&auml;hrend das paybox-System versucht Sie anzurufen.</p>";
 
 		$options = array( "login" => $this->settings['username'], "password" => $this->settings['password'] );
 
