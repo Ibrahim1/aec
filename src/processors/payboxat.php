@@ -86,7 +86,7 @@ class processor_payboxat extends SOAPprocessor
 		$a['sessionId']		= session_id();
 
 		$a = $this->customParams( $this->settings['customparams'], $a, $request );
-aecDebug( $request->int_var['params'] );aecDebug( $a );
+
 		return $a;
 	}
 
@@ -109,7 +109,7 @@ aecDebug( $request->int_var['params'] );aecDebug( $a );
 
 		$return['valid']	= false;
 		$return['raw']		= $response['raw'];
-aecDebug( $response );
+
 		if ( $response ) {
 			if ( empty( $response['error'] ) ) {
 				// acknowledge the transaction to Paybox
@@ -122,7 +122,7 @@ aecDebug( $response );
 				$params = array('language' => strtolower( $this->settings['language'] ), 'transactionRef' => $id );
 
 				$resp = $this->followupRequest('acknowledge', $params );
-aecDebug( $resp );
+
 				if ( !isset( $resp['error'] ) ) {
 					$return['valid'] = true;
 				} else {
@@ -132,7 +132,7 @@ aecDebug( $resp );
 				$return['error'] = $response['errorDescription'];
 			}
 		}
-aecDebug( $this->soapclient );
+
 		return $return;
 	}
 }
