@@ -5705,6 +5705,12 @@ class SubscriptionPlan extends serialParamDBTable
 
 				$metaUser->focusSubscription->sendEmailRegistered( $renew, $adminonly );
 			}
+
+			$result = $this->triggerMIs( 'afteraction', $metaUser, null, $invoice, false, $silent );
+
+			if ( $result === false ) {
+				return false;
+			}
 		}
 
 		return $renew;

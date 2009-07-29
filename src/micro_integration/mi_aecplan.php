@@ -53,6 +53,11 @@ class mi_aecplan
 			}
 		}
 
+		// Only allow afterAction
+		if ( $request->action == 'action' ) {
+			return null;
+		}
+
 		$database = &JFactory::getDBO();
 
 		$new_plan = new SubscriptionPlan( $database );
@@ -60,7 +65,7 @@ class mi_aecplan
 
 		$request->metaUser->establishFocus( $new_plan, 'none', false );
 
-		$request->metaUser->focusSubscription->applyUsage( $this->settings['plan_apply'.$area], 'none', 0, 1 );
+		$request->metaUser->focusSubscription->applyUsage( $this->settings['plan_apply'.$area] );
 
 		return true;
 	}
