@@ -876,4 +876,10 @@ define( '_MI_MI_SHAREASALE_ONLYCUSTOMPARAMS_DESC',		'Only transmit the custom pa
 define( '_MI_MI_SHAREASALE_CUSTOMPARAMS_NAME',		'Custom Parameters' );
 define( '_MI_MI_SHAREASALE_CUSTOMPARAMS_DESC',		'If you want to transmit custom parameters instead of or additional to the regular parameters, please put them in here. Separated by linebreaks in the form of "parameter_name=parameter_value". The RewriteEngine works as specified below.' );
 
+// Joomla Plugin
+define( '_AEC_MI_NAME_JOOMLAPLUGIN',		'Joomla Plugin' );
+define( '_AEC_MI_DESC_JOOMLAPLUGIN',		'Call a Joomla Plugin (only Authentication for now)' );
+define( '_MI_MI_JOOMLAPLUGIN_PLUGIN_NAME',			'Plugin' );
+define( '_MI_MI_JOOMLAPLUGIN_PLUGIN_DESC',			'Select the plugin to be called' );
+
 ?>

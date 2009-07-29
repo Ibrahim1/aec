@@ -3787,9 +3787,20 @@ class XMLprocessor extends processor
 		return $var;
 	}
 
+	function sanitizeRequest( &$request )
+	{
+		if ( isset( $request->int_var['params']['cardNumber'] ) ) {
+			$request->int_var['params']['cardNumber'] = preg_replace( '/[^0-9]+/i', '', $request->int_var['params']['cardNumber'] );
+		}
+
+		return true;
+	}
+
 	function checkoutProcess( $request )
 	{
 		$database = &JFactory::getDBO();
+
+		$this->sanitizeRequest( $request );
 
 		// Create the xml string
 		$xml = $this->createRequestXML( $request );
@@ -3858,10 +3869,10 @@ class SOAPprocessor extends XMLprocessor
 
 		if ( class_exists( 'SoapClient' ) ) {
 			$this->soapclient = new SoapClient( $url, $options );
-			$return_val = $this->soapclient->__soapCall( $command, $content );
-aecDebug( $return_val );aecDebug( $this->soapclient );
-			if ( $return_val->error != 0 ) {
-				$response['error'] = "Error calling native SOAP function: " . $return_val->error;
+			$response['raw'] = $this->soapclient->__soapCall( $command, $content );
+
+			if ( $response['raw']->error != 0 ) {
+				$response['error'] = "Error calling native SOAP function: " . $response['raw']->error . ": " . $response['raw']->errorDescription;
 			}
 		} else {
 			$this->soapclient = new nusoap_client( $url );
@@ -3883,7 +3894,7 @@ aecDebug( $return_val );aecDebug( $this->soapclient );
 			$response['raw'] = $this->soapclient->call( $command, $content );
 
 			$err = $this->soapclient->getError();
-aecDebug( $err );aecDebug( $this->soapclient );
+
 			if ( $err != false ) {
 				$response['error'] = "Error calling nuSOAP function: " . $err;
 			}

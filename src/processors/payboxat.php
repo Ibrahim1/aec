@@ -108,7 +108,7 @@ aecDebug( $request->int_var['params'] );aecDebug( $a );
 		$response = $this->transmitRequest( $url, $path, 'payment', $content, $headers, $options );
 
 		$return['valid']	= false;
-		$return['raw']		= $response;
+		$return['raw']		= $response['raw'];
 aecDebug( $response );
 		if ( $response ) {
 			if ( empty( $response['error'] ) ) {
@@ -122,7 +122,7 @@ aecDebug( $response );
 				$params = array('language' => strtolower( $this->settings['language'] ), 'transactionRef' => $id );
 
 				$resp = $this->followupRequest('acknowledge', $params );
-
+aecDebug( $resp );
 				if ( !isset( $resp['error'] ) ) {
 					$return['valid'] = true;
 				} else {
