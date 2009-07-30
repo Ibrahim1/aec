@@ -39,6 +39,10 @@ class mi_http_query
 
 	function relayAction( $request, $area )
 	{
+		if ( !isset( $this->settings['url'.$area] ) ) {
+			return null;
+		}
+
 		$url = AECToolbox::rewriteEngineRQ( $this->settings['url'.$area], $request );
 		$query = AECToolbox::rewriteEngineRQ( $this->settings['query'.$area], $request );
 

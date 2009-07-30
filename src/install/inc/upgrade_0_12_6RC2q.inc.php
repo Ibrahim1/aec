@@ -56,4 +56,46 @@ foreach ( $entries as $eid ) {
 	$meta->check();
 	$meta->store();
 }
+
+$eucaInstalldb->dropColifExists( 'processors', 'plans' );
+
+// Fixing stupid mistake - creating all processors at once for no good reason
+$database->setQuery("SELECT count(*) FROM  #__acctexp_config_processors");
+
+$procnum = $database->loadResult();
+
+$database->setQuery("SELECT count(*) FROM  #__acctexp_plans");
+
+$plannum = $database->loadResult();
+
+if ( ( $database->loadResult() > 20 ) && ( $plannum > 0 ) ) {
+	$allprocs = array();
+
+	$query = 'SELECT id FROM #__acctexp_plans';
+	$database->setQuery( $query );
+
+	$plans = $database->loadResultArray();
+
+	foreach ( $plans as $planid ) {
+		$plan = new SubscriptionPlan( $database );
+		$plan->load( $planid );
+
+		$allprocs = array_merge( $allprocs, $plan->params['processors'] );
+	}
+
+	$query = 'SELECT id FROM #__acctexp_config_processors';
+	$database->setQuery( $query );
+
+	$procs = $database->loadResultArray();
+
+	$del = array();
+	foreach ( $procs as $procid ) {
+		if ( !in_array( $procid, $allprocs ) ) {
+			$del[] = $procid;
+		}
+	}
+
+	aecDebug( "would delete" );aecDebug( $del );
+}
+
 ?>
