@@ -1688,6 +1688,7 @@ define( '_MI_FUNCTION',						'Funktionsname' );
 
 // --== MICRO INTEGRATION EDIT ==--
 define( '_MI_E_TITLE',						'MicroIntegration' );
+define( '_MI_E_TITLE_LONG',					'Micro Integration' );
 define( '_MI_E_SETTINGS',					'Einstellungen' );
 define( '_MI_E_NAME_NAME',					'Name' );
 define( '_MI_E_NAME_DESC',					'Name f&uuml;r diese MicroIntegration' );

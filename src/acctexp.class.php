@@ -6887,10 +6887,12 @@ class InvoiceFactory
 			$terms = $return['terms'];
 
 			if ( !empty( $terms ) ) {
-				$this->payment->amount = $terms->nextterm->renderTotal();
+				if ( is_object( $terms->nextterm ) ) {
+					$this->payment->amount = $terms->nextterm->renderTotal();
 
-				if ( $terms->nextterm->free && ( $terms->nextterm->get( 'type' ) == 'trial' ) ) {
-					$this->payment->freetrial = 1;
+					if ( $terms->nextterm->free && ( $terms->nextterm->get( 'type' ) == 'trial' ) ) {
+						$this->payment->freetrial = 1;
+					}
 				}
 			} else {
 				$this->payment->amount = null;

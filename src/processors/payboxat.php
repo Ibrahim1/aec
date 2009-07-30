@@ -81,8 +81,8 @@ class processor_payboxat extends SOAPprocessor
 		$a['paymentDays']	= null;
 		$a['timestamp']		= strftime("%H:%M:%S.%Y%m%d");
 		$a['posId']			= null;
-		$a['orderId']		= (int) $request->invoice->id;
-		$a['text']			= substr( $request->int_var['invoice'], 1 );
+		$a['orderId']		= $request->int_var['invoice'];
+		$a['text']			= substr( AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ), 0, 16 );
 		$a['sessionId']		= session_id();
 
 		$a = $this->customParams( $this->settings['customparams'], $a, $request );

@@ -1,0 +1,55 @@
+<?php
+/**
+ * @version $Id: generic_pin.php
+ * @package AEC - Account Control Expiration - Membership Manager
+ * @subpackage Processors - Generic PIN
+ * @copyright 2006-2009 Copyright (C) David Deutsch
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
+ * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
+ */
+
+// Dont allow direct linking
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
+
+class processor_generic_pin extends XMLprocessor
+{
+	function info()
+	{
+		$info = array();
+		$info['name']			= 'generic_pin';
+		$info['longname']		= _CFG_GENERIC_PIN_LONGNAME;
+		$info['statement']		= _CFG_GENERIC_PIN_STATEMENT;
+		$info['description']	= _CFG_GENERIC_PIN_DESCRIPTION;
+		$info['currencies']		= AECToolbox::aecCurrencyField( true, true, true, true );
+		$info['cc_list']		= "";
+		$info['recurring']		= 0;
+		$info['actions']		= array('email');
+
+		return $info;
+	}
+
+	function settings()
+	{
+		$settings = array();
+		$settings['currency']			='';
+		$settings['pin_list_file']		='';
+		$settings['tracking_type']		='';
+		$settings['database_gnaaaaa']		='';
+
+		return $settings;
+	}
+
+	function backend_settings()
+	{
+		$settings = array();
+		$settings['currency']			= array( 'list_currency' );
+
+ 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
+		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+
+		return $settings;
+	}
+
+}
+
+?>
