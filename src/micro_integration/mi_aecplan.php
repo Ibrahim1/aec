@@ -43,29 +43,28 @@ class mi_aecplan
 		return $settings;
 	}
 
-	function relayAction( $request, $area )
+	function relayAction( $request )
 	{
-		if ( $area == '' ) {
-			if ( !empty( $this->settings['plan_apply_first'] ) ) {
-				if ( empty( $request->metaUser->objSubscription->previous_plan ) ) {
-					$area = '_first';
-				}
-			}
+		if ( !isset( $this->settings['short'.$request->area] ) ) {
+			return null;
 		}
 
-		// Only allow afterAction
-		if ( $request->action == 'action' ) {
-			return null;
+		if ( $request->area == '' ) {
+			if ( !empty( $this->settings['plan_apply_first'] ) ) {
+				if ( empty( $request->metaUser->objSubscription->previous_plan ) ) {
+					$request->area = '_first';
+				}
+			}
 		}
 
 		$database = &JFactory::getDBO();
 
 		$new_plan = new SubscriptionPlan( $database );
-		$new_plan->load( $this->settings['plan_apply'.$area] );
+		$new_plan->load( $this->settings['plan_apply'.$request->area] );
 
 		$request->metaUser->establishFocus( $new_plan, 'none', false );
 
-		$request->metaUser->focusSubscription->applyUsage( $this->settings['plan_apply'.$area] );
+		$request->metaUser->focusSubscription->applyUsage( $this->settings['plan_apply'.$request->area] );
 
 		return true;
 	}

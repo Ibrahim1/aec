@@ -40,24 +40,17 @@ class mi_sobi extends MI
 		return $defaults;
 	}
 
-	function relayAction( $request, $area )
+	function relayAction( $request )
 	{
-		$agent = null;
-		$company = null;
-
-		if ( $this->settings['unpublish_all'.$area] ) {
+		if ( $this->settings['unpublish_all'.$request->area] ) {
 			$this->unpublishItems( $request->metaUser );
 		}
 
-		if ( $this->settings['publish_all'.$area] ) {
+		if ( $this->settings['publish_all'.$request->area] ) {
 			$this->publishItems( $request->metaUser );
 		}
 
-		if ( $company === false ) {
-			return false;
-		} else {
-			return true;
-		}
+		return true;
 	}
 
 	function publishItems( $metaUser )

@@ -37,14 +37,14 @@ class mi_http_query
 		return $settings;
 	}
 
-	function relayAction( $request, $area )
+	function relayAction( $request )
 	{
-		if ( !isset( $this->settings['url'.$area] ) ) {
+		if ( !isset( $this->settings['url'.$request->area] ) ) {
 			return null;
 		}
 
-		$url = AECToolbox::rewriteEngineRQ( $this->settings['url'.$area], $request );
-		$query = AECToolbox::rewriteEngineRQ( $this->settings['query'.$area], $request );
+		$url = AECToolbox::rewriteEngineRQ( $this->settings['url'.$request->area], $request );
+		$query = AECToolbox::rewriteEngineRQ( $this->settings['query'.$request->area], $request );
 
 		return $this->fetchURL( $this->createURL( $url, $query ) );
 	}

@@ -13567,20 +13567,20 @@ class microIntegration extends serialParamDBTable
 		if ( method_exists( $this->mi_class, 'relayAction' ) ) {
 			switch ( $stage ) {
 				case 'action':
-					$area = '';
+					$request->area = '';
 					break;
 				case 'pre_expiration_action':
-					$area = '_pre_exp';
+					$request->area = '_pre_exp';
 					break;
 				case 'expiration_action':
-					$area = '_exp';
+					$request->area = '_exp';
 					break;
 				default:
-					$area = $stage;
+					$request->area = $stage;
 					break;
 			}
 
-			$return = $this->mi_class->relayAction( $request, $area );
+			$return = $this->mi_class->relayAction( $request );
 		} elseif ( method_exists( $this->mi_class, $stage ) ) {
 			$return = $this->mi_class->$stage( $request );
 		} else {

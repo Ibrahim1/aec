@@ -34,12 +34,12 @@ class mi_mysql_query
 		return $settings;
 	}
 
-	function relayAction( $request, $area )
+	function relayAction( $request )
 	{
-		if ( isset( $this->settings['query'.$area] ) ) {
+		if ( isset( $this->settings['query'.$request->area] ) ) {
 			$database = &JFactory::getDBO();
 
-			$query = AECToolbox::rewriteEngineRQ( $this->settings['query'.$area], $request );
+			$query = AECToolbox::rewriteEngineRQ( $this->settings['query'.$request->area], $request );
 
 			$database->setQuery( $query );
 			if ( !$database->query_batch( false ) ) {

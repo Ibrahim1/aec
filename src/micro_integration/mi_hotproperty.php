@@ -388,18 +388,22 @@ class mi_hotproperty extends MI
 		}
 	}
 
-	function relayAction( $request, $area )
+	function relayAction( $request )
 	{
 		$agent = null;
 		$company = null;
 
-		if ( $area == 'modifyPrice' ) {
+		if ( $request->area == 'modifyPrice' ) {
 			return $this->modifyPrice( $request );
 		}
 
-		if ( $this->settings['create_agent'.$area] ){
-			if ( !empty( $this->settings['agent_fields'.$area] ) ) {
-				$agent = $this->createAgent( $this->settings['agent_fields'.$area], $request );
+		if ( !isset( $this->settings['create_agent'.$request->area] ) ) {
+			return null;
+		}
+
+		if ( $this->settings['create_agent'.$request->area] ){
+			if ( !empty( $this->settings['agent_fields'.$request->area] ) ) {
+				$agent = $this->createAgent( $this->settings['agent_fields'.$request->area], $request );
 			}
 		}
 
@@ -408,10 +412,10 @@ class mi_hotproperty extends MI
 			return false;
 		}
 
-		if ( $this->settings['update_agent'.$area] ){
-			if ( !empty( $this->settings['update_afields'.$area] ) ) {
+		if ( $this->settings['update_agent'.$request->area] ){
+			if ( !empty( $this->settings['update_afields'.$request->area] ) ) {
 				if ( !empty( $agent ) ) {
-					$agent = $this->update( 'agents', 'user', $this->settings['update_afields'.$area], $request );
+					$agent = $this->update( 'agents', 'user', $this->settings['update_afields'.$request->area], $request );
 				}
 			}
 		}
@@ -421,9 +425,9 @@ class mi_hotproperty extends MI
 			return false;
 		}
 
-		if ( $this->settings['create_company'.$area] ){
-			if ( !empty( $this->settings['company_fields'.$area] ) ) {
-				$company = $this->createCompany( $this->settings['company_fields'.$area], $this->settings['assoc_company'], $request );
+		if ( $this->settings['create_company'.$request->area] ){
+			if ( !empty( $this->settings['company_fields'.$request->area] ) ) {
+				$company = $this->createCompany( $this->settings['company_fields'.$request->area], $this->settings['assoc_company'], $request );
 			}
 
 			if ( $company === false ) {
@@ -432,14 +436,14 @@ class mi_hotproperty extends MI
 			}
 		}
 
-		if ( $this->settings['update_company'.$area] ){
-			if ( !empty( $this->settings['update_cfields'.$area] ) ) {
+		if ( $this->settings['update_company'.$request->area] ){
+			if ( !empty( $this->settings['update_cfields'.$request->area] ) ) {
 				if ( empty( $company ) ) {
 					$company = $this->companyExists( $request->metaUser->userid );
 				}
 
 				if ( !empty( $company ) ) {
-					$company = $this->update( 'companies', 'id', $this->settings['update_cfields'.$area], $request, $company );
+					$company = $this->update( 'companies', 'id', $this->settings['update_cfields'.$request->area], $request, $company );
 				}
 
 				if ( $company === false ) {
@@ -449,15 +453,15 @@ class mi_hotproperty extends MI
 			}
 		}
 
-		if ( $this->settings['unpublish_all'.$area] ) {
+		if ( $this->settings['unpublish_all'.$request->area] ) {
 			$this->unpublishProperties( $agent );
 		}
 
-		if ( $this->settings['publish_all'.$area] ) {
+		if ( $this->settings['publish_all'.$request->area] ) {
 			$this->publishProperties( $agent );
 		}
 
-		if ( !empty( $this->settings['set_listings'.$area] ) || !empty( $this->settings['set_listings'.$area] ) || ( !empty( $this->settings['add_list_userchoice'] ) && !empty( $request->params['hpamt']  ) )  ) {
+		if ( !empty( $this->settings['set_listings'.$request->area] ) || !empty( $this->settings['set_listings'.$request->area] ) || ( !empty( $this->settings['add_list_userchoice'] ) && !empty( $request->params['hpamt']  ) )  ) {
 			$database = &JFactory::getDBO();
 
 			$mi_hphandler = new aec_hotproperty( $database );

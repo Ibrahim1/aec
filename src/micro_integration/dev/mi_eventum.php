@@ -51,8 +51,12 @@ class mi_eventum extends MI
 	}
 
 
-	function relayAction( $request, $area )
+	function relayAction( $request )
 	{
+		if ( !isset( $this->settings['short'.$request->area] ) ) {
+			return null;
+		}
+
 		$eventum_userid = $this->getEventumUser( $request->metaUser->userid );
 
 		$database = &JFactory::getDBO();
@@ -60,11 +64,11 @@ class mi_eventum extends MI
 		$rewriting = array( 'short', 'tags', 'text', 'params' );
 
 		foreach ( $rewriting as $rw_name ) {
-			$this->settings[$rw_name.$area] = AECToolbox::rewriteEngineRQ( $this->settings[$rw_name.$area], $request );
+			$this->settings[$rw_name.$request->area] = AECToolbox::rewriteEngineRQ( $this->settings[$rw_name.$request->area], $request );
 		}
 
 		$log_entry = new EventLog( $database );
-		$log_entry->issue( $this->settings['short'.$area], $this->settings['tags'.$area], $this->settings['text'.$area], $this->settings['level'.$area], $this->settings['params'.$area], $this->settings['force_notify'.$area], $this->settings['force_email'.$area] );
+		$log_entry->issue( $this->settings['short'.$request->area], $this->settings['tags'.$request->area], $this->settings['text'.$request->area], $this->settings['level'.$request->area], $this->settings['params'.$request->area], $this->settings['force_notify'.$request->area], $this->settings['force_email'.$request->area] );
 	}
 
 	function getEventum()

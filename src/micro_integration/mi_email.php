@@ -52,22 +52,22 @@ class mi_email
 		return $settings;
 	}
 
-	function relayAction( $request, $area )
+	function relayAction( $request )
 	{
-		if ( $area == '' ) {
+		if ( $request->area == '' ) {
 			if ( !empty( $this->settings['text_first'] ) ) {
 				if ( empty( $request->metaUser->objSubscription->previous_plan ) ) {
-					$area = '_first';
+					$request->area = '_first';
 				}
 			}
 		}
 
-		if ( !isset( $this->settings['text' . $area] ) || !isset( $this->settings['subject' . $area] ) ) {
+		if ( !isset( $this->settings['text' . $request->area] ) || !isset( $this->settings['subject' . $request->area] ) ) {
 			return false;
 		}
 
-		$message	= AECToolbox::rewriteEngineRQ( $this->settings['text' . $area], $request );
-		$subject	= AECToolbox::rewriteEngineRQ( $this->settings['subject' . $area], $request );
+		$message	= AECToolbox::rewriteEngineRQ( $this->settings['text' . $request->area], $request );
+		$subject	= AECToolbox::rewriteEngineRQ( $this->settings['subject' . $request->area], $request );
 
 		if ( empty( $message ) ) {
 			return null;
@@ -83,9 +83,9 @@ class mi_email
         $recipients = $recipients2;
 
 		if ( aecJoomla15check() ) {
-			JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text' . $area . '_html'] );
+			JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text' . $request->area . '_html'] );
 		} else {
-			mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text' . $area . '_html'] );
+			mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text' . $request->area . '_html'] );
 		}
 
 		return true;
