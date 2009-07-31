@@ -18,15 +18,15 @@
 if ( !function_exists( 'aecJoomla15check' ) ) {
 	function aecJoomla15check()
 	{
-		return defined( 'JPATH_BASE' );
+		return defined( '_JEXEC' );
 	}
 }
 
-if ( !defined( 'JPATH_SITE' ) ) {
+if ( !defined( '_JEXEC' ) && !defined( 'JPATH_SITE' ) ) {
 	global $mosConfig_absolute_path;
 
 	define( 'JPATH_SITE', $mosConfig_absolute_path );
-} else {
+} elseif ( defined( '_JEXEC' ) ) {
 	JLoader::register('JTableUser', JPATH_LIBRARIES.DS.'joomla'.DS.'database'.DS.'table'.DS.'user.php');
 }
 
@@ -120,8 +120,6 @@ function com_install()
 			}
 		}
 
-		//require_once( $incpath . '/upgrade_0_12_6RC2m.inc.php' );
-
 		$incfiles = AECToolbox::getFileArray( $incpath, 'inc.php', false, true );
 
 		$versions = array();
@@ -137,7 +135,7 @@ function com_install()
 
 		$versions = array();
 		foreach ( $incf as $version ) {
-			if ( version_compare( $version, $oldversion, '>=' ) ) {
+			if ( version_compare( AECToolbox::normVersionName( $version ), AECToolbox::normVersionName( $oldversion ), '>=' ) ) {
 				require_once( $incpath . '/upgrade_' . $version . '.inc.php' );
 			}
 		}

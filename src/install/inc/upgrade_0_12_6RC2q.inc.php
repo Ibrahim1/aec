@@ -68,7 +68,7 @@ $database->setQuery("SELECT count(*) FROM  #__acctexp_plans");
 
 $plannum = $database->loadResult();
 
-if ( ( $database->loadResult() > 20 ) && ( $plannum > 0 ) ) {
+if ( ( $procnum > 20 ) && ( $plannum > 0 ) ) {
 	$allprocs = array();
 
 	$query = 'SELECT id FROM #__acctexp_plans';
@@ -80,7 +80,13 @@ if ( ( $database->loadResult() > 20 ) && ( $plannum > 0 ) ) {
 		$plan = new SubscriptionPlan( $database );
 		$plan->load( $planid );
 
-		$allprocs = array_merge( $allprocs, $plan->params['processors'] );
+		if ( !empty( $plan->params['processors'] ) ) {
+			foreach ( $plan->params['processors'] as $pi ) {
+				if ( !in_array( $pi, $allprocs ) ) {
+					$allprocs[] = $pi;
+				}
+			}
+		}
 	}
 
 	$query = 'SELECT id FROM #__acctexp_config_processors';
@@ -88,14 +94,20 @@ if ( ( $database->loadResult() > 20 ) && ( $plannum > 0 ) ) {
 
 	$procs = $database->loadResultArray();
 
-	$del = array();
 	foreach ( $procs as $procid ) {
+		// Check whether the processor has a plan it is applied to
 		if ( !in_array( $procid, $allprocs ) ) {
-			$del[] = $procid;
+			// Double check whether we have a history entry
+			$query = 'SELECT id FROM #__acctexp_log_history WHERE `proc_id` = \'' . $procid . '\'';
+			$database->setQuery( $query );
+
+			if ( !$database->loadResult() ) {
+				$query = 'DELETE FROM #__acctexp_config_processors WHERE `id` = \'' . $procid . '\'';
+				$database->setQuery( $query );
+				$database->query();
+			}
 		}
 	}
-
-	aecDebug( "would delete" );aecDebug( $del );
 }
 
 ?>

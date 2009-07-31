@@ -12683,7 +12683,7 @@ class AECToolbox
 		$i = 1;
 
 		while ( $i < $len ) {
-			if ( version_compare( $array[$i], $piv, '<' ) ) {
+			if ( version_compare( AECToolbox::normVersionName( $array[$i] ), AECToolbox::normVersionName( $piv ), '<' ) ) {
 				$x[] = $array[$i];
 			} else {
 				$y[] = $array[$i];
@@ -12692,6 +12692,19 @@ class AECToolbox
 		}
 
 		return array_merge( AECToolbox::versionSort($x), array($piv), AECToolbox::versionSort($y) );
+	}
+
+	function normVersionName( $name )
+	{
+		$str = str_replace( "RC", "_", $name );
+
+		$lastchar = substr( $str, -1, 1 );
+
+		if ( !is_numeric( $lastchar ) ) {
+			$str = substr( $str, 0, strlen( $str )-1 ) . "_" . ord( $lastchar );
+		}
+
+		return $str;
 	}
 
 	function visualstrlen( $string )
