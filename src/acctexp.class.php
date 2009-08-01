@@ -16421,7 +16421,7 @@ class aecRestrictionHelper
 		$lists['maxgid'] 	= mosHTML::selectList( $gtree, 'maxgid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'maxgid', 21) );
 
 		$available_plans = array();
-		$available_plans[] = mosHTML::makeOption( '0', _PAYPLAN_NOPLAN );
+		$available_plans[] = mosHTML::makeOption( '0', "- " . _PAYPLAN_NOPLAN . " -" );
 
 		// Fetch Payment Plans
 		$query = 'SELECT `id` AS value, `name` AS text'
@@ -16435,6 +16435,7 @@ class aecRestrictionHelper
 	 	} else {
 	 		$all_plans	= $available_plans;
 	 	}
+
 		$total_all_plans	= min( max( ( count( $all_plans ) + 1 ), 4 ), 20 );
 
 		$planrest = array( 'previousplan_req', 'currentplan_req', 'overallplan_req', 'used_plan_min', 'used_plan_max', 'previousplan_req_excluded', 'currentplan_req_excluded', 'overallplan_req_excluded'  );

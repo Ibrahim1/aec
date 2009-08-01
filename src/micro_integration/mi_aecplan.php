@@ -22,23 +22,25 @@ class mi_aecplan
 				. ' WHERE `active` = 1'
 				;
 		$database->setQuery( $query );
-		$payment_plans = $database->loadObjectList();
+		$plans = $database->loadObjectList();
+
+		$payment_plans = array_merge( array( mosHTML::makeOption( '0', "- " . _PAYPLAN_NOPLAN . " -" ) ), $plans );
 
 		$total_plans = min( max( (count( $payment_plans ) + 1 ), 4 ), 20 );
 
 		$settings = array();
 
 		$settings['plan_apply_first']				= array( 'list' );
-		$settings['lists']['plan_apply_first']		= mosHTML::selectList( $payment_plans, 'plan_apply_first', 'size="' . $total_plans, 'value', 'text', $this->settings['plan_apply_first'] );
+		$settings['lists']['plan_apply_first']		= mosHTML::selectList( $payment_plans, 'plan_apply_first', 'size="' . $total_plans . '"', 'value', 'text', $this->settings['plan_apply_first'] );
 
 		$settings['plan_apply']						= array( 'list' );
-		$settings['lists']['plan_apply']			= mosHTML::selectList( $payment_plans, 'plan_apply', 'size="' . $total_plans, 'value', 'text', $this->settings['plan_apply'] );
+		$settings['lists']['plan_apply']			= mosHTML::selectList( $payment_plans, 'plan_apply', 'size="' . $total_plans . '"', 'value', 'text', $this->settings['plan_apply'] );
 
 		$settings['plan_apply_pre_exp']				= array( 'list' );
-		$settings['lists']['plan_apply_pre_exp']	= mosHTML::selectList( $payment_plans, 'plan_apply_pre_exp', 'size="' . $total_plans, 'value', 'text', $this->settings['plan_apply_pre_exp'] );
+		$settings['lists']['plan_apply_pre_exp']	= mosHTML::selectList( $payment_plans, 'plan_apply_pre_exp', 'size="' . $total_plans . '"', 'value', 'text', $this->settings['plan_apply_pre_exp'] );
 
 		$settings['plan_apply_exp']					= array( 'list' );
-		$settings['lists']['plan_apply_exp']		= mosHTML::selectList( $payment_plans, 'plan_apply_exp', 'size="' . $total_plans, 'value', 'text', $this->settings['plan_apply_exp'] );
+		$settings['lists']['plan_apply_exp']		= mosHTML::selectList( $payment_plans, 'plan_apply_exp', 'size="' . $total_plans . '"', 'value', 'text', $this->settings['plan_apply_exp'] );
 
 		return $settings;
 	}
@@ -47,6 +49,20 @@ class mi_aecplan
 	{
 		if ( !isset( $this->settings['short'.$request->area] ) ) {
 			return null;
+		}
+
+		if ( empty( $this->settings['short'.$request->area] ) ) {
+			return null;
+		}
+
+		if ( $request->area == '' ) {
+			// Do NOT act on regular action call
+			return null;
+		}
+
+		if ( $request->area == 'afteraction' ) {
+			// But on after action
+			$request->area == '';
 		}
 
 		if ( $request->area == '' ) {
