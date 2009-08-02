@@ -50,6 +50,43 @@ class processor_generic_pin extends XMLprocessor
 		return $settings;
 	}
 
+	function checkoutform( $request )
+	{
+		$var = array();
+		$var['params']['pin_code'] = array( 'inputC', _AEC_GENERIC_PIN_PARAMS_PIN_CODE_NAME, _AEC_GENERIC_PIN_PARAMS_PIN_CODE_DESC);
+
+		return $var;
+	}
+
+
+	function createRequestXML( $request )
+	{
+		return "";
+	}
+
+	function transmitRequestXML( $content, $request )
+	{
+		$return['valid']	= false;
+		$return['raw']		= "AEC Generic Processor Payment";
+		$return['error'] = "Please provide a valid pin_code";
+
+		if ( !empty( $request->int_var['params']['pin_code'] ) ) {
+			if ( $this->usePIN( $request->int_var['params']['pin_code'] ) ) {
+
+			}
+		}
+
+		return $return;
+	}
+
+	function usePIN( $pin )
+	{
+		// Look up PIN in DB
+		// If fails -> return false;
+		// If succeeds
+		// take note in DB
+		// return true;
+	}
 }
 
 ?>
