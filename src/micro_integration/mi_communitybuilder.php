@@ -81,8 +81,10 @@ class mi_communitybuilder
 			$objects = $database->loadObjectList();
 
 			foreach ( $objects as $object ) {
-				if ( $this->settings['cbfield_' . $object->name] !== '' ) {
-					$changes[$object->name] = $this->settings['cbfield_' . $object->name];
+				if ( isset( $this->settings['cbfield_' . $object->name] ) ) {
+					if ( $this->settings['cbfield_' . $object->name] !== '' ) {
+						$changes[$object->name] = $this->settings['cbfield_' . $object->name];
+					}
 				}
 			}
 
