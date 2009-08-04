@@ -785,4 +785,31 @@ define( '_CFG_PAYBOXAT_PASSWORD_DESC', 'Your Paybox password');
 define( '_CFG_PAYBOXAT_MERCHANT_PHONE_NAME', 'Merchant Phone');
 define( '_CFG_PAYBOXAT_MERCHANT_PHONE_DESC', 'The full phone number registered with Paybox.at');
 
+// Epay
+define( '_CFG_EPAY_LONGNAME', 'ePay - Dit Online Betalingssystem');
+define( '_CFG_EPAY_STATEMENT', 'Secure Internet payments by use of ePay (www.epay.dk). ePay is PCI certified by VISA/MasterCard.');
+define( '_CFG_EPAY_DESCRIPTION', 'ePay | Dit Online Betalingssystem is the most leading payment gateway in Denmark and the rest of Scandinavia, which provides payments over the internet for both small, medium and large companies.<br><br>ePay is a payment system with focus on security and stability and therefore ePay is developed by use of the most recent web technologies and security standards defined.<br><br>ePay is PCI certified by Visa/MasterCVard according to the PCI standard (Payment Card Industry Data Security Standard). The PCI standard is developed with focus on raise the security to online payments. As the leading payment gateway in Denmark and Scandinavia it is important to maintain as high security level as possible concerning the payments.');
+define( '_CFG_EPAY_MERCHANTNUMBER_NAME', 'Merchant Number');
+define( '_CFG_EPAY_MERCHANTNUMBER_DESC', 'Your Merchant Number');
+define( '_CFG_EPAY_MD5TYPE_NAME', 'MD5 Type');
+define( '_CFG_EPAY_MD5TYPE_DESC', 'MD5 Type');
+define( '_CFG_EPAY_MD5KEY_NAME', 'MD5 Key');
+define( '_CFG_EPAY_MD5KEY_DESC', 'MD5 Key');
+define( '_CFG_EPAY_WINDOWSTATE_NAME', 'Window State');
+define( '_CFG_EPAY_WINDOWSTATE_DESC', 'Window State');
+define( '_CFG_EPAY_INSTANTCAPTURE_NAME', 'Instant Capture');
+define( '_CFG_EPAY_INSTANTCAPTURE_DESC', 'Instant Capture');
+define( '_CFG_EPAY_GROUP_NAME', 'Group');
+define( '_CFG_EPAY_GROUP_DESC', 'Group');
+define( '_CFG_EPAY_DESCRIPTION_NAME', 'Description');
+define( '_CFG_EPAY_DESCRIPTION_DESC', 'Your Item Description');
+define( '_CFG_EPAY_AUTHSMS_NAME', 'Auth SMS');
+define( '_CFG_EPAY_AUTHSMS_DESC', 'Auth SMS');
+define( '_CFG_EPAY_AUTHMAIL_NAME', 'Auth Mail');
+define( '_CFG_EPAY_AUTHMAIL_DESC', 'Auth Mail');
+define( '_CFG_EPAY_USE3D_NAME', 'Use 3D');
+define( '_CFG_EPAY_USE3D_DESC', 'Use 3D?');
+define( '_CFG_EPAY_ADDFEE_NAME', 'Add Fee');
+define( '_CFG_EPAY_ADDFEE_DESC', 'Add Fee?');
+
 ?>

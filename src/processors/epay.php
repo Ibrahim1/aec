@@ -16,12 +16,12 @@ class processor_epay extends POSTprocessor
 	function info()
 	{
 		$info = array();
-		$info['longname']		= "ePay - Dit Online Betalingssystem (www.epay.dk)";
-		$info['statement']		= "Secure Internet payments by use of ePay (www.epay.dk). ePay is PCI certified by VISA/MasterCard.";
-		$info['description']	= "ePay | Dit Online Betalingssystem is the most leading payment gateway in Denmark and the rest of Scandinavia, which provides payments over the internet for both small, medium and large companies.<br><br>ePay is a payment system with focus on security and stability and therefore ePay is developed by use of the most recent web technologies and security standards defined.<br><br>ePay is PCI certified by Visa/MasterCVard according to the PCI standard (Payment Card Industry Data Security Standard). The PCI standard is developed with focus on raise the security to online payments. As the leading payment gateway in Denmark and Scandinavia it is important to maintain as high security level as possible concerning the payments.";
+		$info['longname']		= _CFG_EPAY_LONGNAME;
+		$info['statement']		= _CFG_EPAY_STATEMENT;
+		$info['description']	= _CFG_EPAY_DESCRIPTION;
 		$info['currencies']		= 'AUD,CAD,DKK,HKD,ISK,JPY,MXN,NZD,NOK,SGD,ZAR,SEK,CHF,GBP,USD,TRY,EUR,PLN';
 		$info['languages']		= "DK,UK,SE,NO,GR,IS,DE";
-		$info['cc_list']		= "epaydankort,epayedankort,epayvisa,epaymaster,epaymaestro,epayelectron,epayjcb,epaydiners,epayamex,epayvisa_vertified,epayvisa_vertified2,epayjcb_vertified,epaymaster_vertified,epaybrugsforeningen,epayewire,epaynordea,epaydanske";
+		$info['cc_list']		= "mastercard,jcb,diners,americanexpress,giropay";
 		$info['recurring']		= 0;
 
 		return $info;
@@ -30,7 +30,7 @@ class processor_epay extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['merchantnumber']	= "Enter your merchant ID here!";
+		$settings['merchantnumber']	= "merchant ID";
 		$settings['currency']		= "DKK";
 		$settings['language']		= "DK";
 		$settings['md5type']		= "0";
@@ -38,7 +38,7 @@ class processor_epay extends POSTprocessor
 		$settings['windowstate']	= 0;
 		$settings['instantcapture']	= 0;
 		$settings['group']			= "";
-		$settings['description']	= "";
+		$settings['description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['authsms']		= "";
 		$settings['authmail']		= "";
 		$settings['use3D']			= 0;
@@ -61,27 +61,20 @@ class processor_epay extends POSTprocessor
 		$settings['description']	= array( 'inputC' );
 		$settings['authsms']		= array( 'inputC',	);
 		$settings['authmail']		= array( 'inputC' );
-		$settings['use3D']			= array( 'inputC'	);
+		$settings['use3D']			= array( 'list_yesno'	);
 		$settings['addfee']			= array( 'list_yesno');
 
 		return $settings;
 	}
 
-	//
-	// This function generates a valid MD5 key on the data about to be transmitted
-	// to ePay. ePay will again verify the data and if the data is not valid and
-	// error will be thrown (redirected to decline)
-	//
 	function generatekeyForEpay($cur, $amount, $orderid, $password) {
 		return md5($cur . $amount . $orderid . $password);
 	}
 
-	//
-	// This function validates data received from ePay, and verifies the md5key is valid
-	//
 	function validateEpayData( $post )
 	{
 		$strForValidate = $post['amount'] . $post['orderid'] . $post['tid'] . $this->settings['md5key'];
+
 		if ( md5( $strForValidate ) == $post['eKey'] ) {
 			return true;
 		} else {
@@ -117,7 +110,7 @@ class processor_epay extends POSTprocessor
 		$var['callbackurl']		= AECToolbox::deadsureURL("index.php?option=com_acctexp&amp;task=epaynotification");
 
 		$var['group']			= $this->settings['group'];
-		$var['description']		= $this->settings['description'];
+		$var['description']		= AECToolbox::rewriteEngineRQ( $this->settings['description'], $request );
 		$var['authsms']			= $this->settings['authsms'];
 		$var['authmail']		= $this->settings['authmail'];
 
