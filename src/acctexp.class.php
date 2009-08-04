@@ -3455,7 +3455,7 @@ class XMLprocessor extends processor
 		$return .= '<input type="hidden" name="invoice" value="' . $request->int_var['invoice'] . '" />' . "\n";
 		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
 		$return .= '<input type="hidden" name="task" value="checkout" />' . "\n";
-		$return .= '<input type="submit" class="button" value="' . _BUTTON_CHECKOUT . '" /><br /><br />' . "\n";
+		$return .= '<input type="submit" class="button" id="aec_checkout_btn" value="' . _BUTTON_CHECKOUT . '" onclick="javascript:document.getElementById(\'aec_checkout_btn\').disabled=true" /><br /><br />' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -4124,10 +4124,10 @@ class POSTprocessor extends processor
 		}
 
 		if ( isset( $var['_aec_checkout_onclick'] ) ) {
-			$onclick = ' onclick="' . $var['_aec_checkout_onclick'] . '"';
+			$onclick = 'onclick="' . $var['_aec_checkout_onclick'] . '"';
 			unset( $var['_aec_checkout_onclick'] );
 		} else {
-			$onclick = '';
+			$onclick = 'onclick="javascript:document.getElementById(\'aec_checkout_btn\').disabled=true"';
 		}
 
 		$return = '<form action="' . $var['post_url'] . '" method="post">' . "\n";
@@ -4137,7 +4137,7 @@ class POSTprocessor extends processor
 			$return .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
 		}
 
-		$return .= '<input type="submit" class="button"' . $onclick . ' value="' . _BUTTON_CHECKOUT . '" />' . "\n";
+		$return .= '<input type="submit" class="button" id="aec_checkout_btn" ' . $onclick . ' value="' . _BUTTON_CHECKOUT . '" />' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
