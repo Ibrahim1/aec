@@ -598,7 +598,7 @@ class processor_authorize_cim extends PROFILEprocessor
 
 			if ( $cim->isSuccessful() ) {
 				if ( !empty( $this->settings['totalOccurrences'] ) ) {
-					$return['invoiceparams'] = array( 'totalOccurrences' => $this->settings['totalOccurrences'] );
+					$return['invoiceparams'] = array( 'maxOccurrences' => $this->settings['totalOccurrences'], 'totalOccurrences' => 1 );
 				}
 
 				$return['valid']	= true;
@@ -689,8 +689,9 @@ class processor_authorize_cim extends PROFILEprocessor
 		$invoice = new Invoice( $database );
 		$invoice->loadbySubscriptionId( $subscription_id );
 
-		if ( !empty( $this->settings['totalOccurrences'] ) && !empty( $invoice->params['totalOccurrences'] ) ) {
-			if ( $invoice->params['totalOccurrences'] >= $this->settings['totalOccurrences'] ) {
+		if ( !empty( $invoice->params['totalOccurrences'] ) && !empty( $invoice->params['maxOccurrences'] ) ) {
+			// Only restrict rebill if we have all the info, otherwise fix below (d'oh)
+			if ( $invoice->params['totalOccurrences'] >= $invoice->params['maxOccurrences'] ) {
 				return false;
 			}
 		}
@@ -722,7 +723,16 @@ class processor_authorize_cim extends PROFILEprocessor
 			if ( $cim->isSuccessful() ) {
 				$invoice->pay();
 
-				if ( !empty( $this->settings['totalOccurrences'] ) && !empty( $invoice->params['totalOccurrences'] ) ) {
+				if ( empty( $invoice->params['maxOccurrences'] ) ) {
+					$invoice->params['maxOccurrences'] = $this->settings['totalOccurrences'];
+
+					if ( $invoice->params['totalOccurrences'] == $this->settings['totalOccurrences'] ) {
+						// Reset old bug
+						$invoice->params['totalOccurrences'] = 1;
+					}
+				}
+
+				if ( !empty( $invoice->params['maxOccurrences'] ) && !empty( $invoice->params['totalOccurrences'] ) ) {
 					$invoice->params['totalOccurrences']++;
 
 					$invoice->storeload();
