@@ -51,4 +51,15 @@ if ( !function_exists( 'str_split' ) ) {
 	}
 }
 
+if ( !function_exists( 'property_exists' ) ) {
+    function property_exists( $class, $property ) {
+        if ( is_object( $class ) ) {
+            $vars = get_object_vars( $class );
+        } else {
+            $vars = get_class_vars( $class );
+        }
+        return array_key_exists( $property, $vars );
+    }
+}
+
 ?>

@@ -47,14 +47,6 @@ class mi_aecplan
 
 	function relayAction( $request )
 	{
-		if ( !isset( $this->settings['short'.$request->area] ) ) {
-			return null;
-		}
-
-		if ( empty( $this->settings['short'.$request->area] ) ) {
-			return null;
-		}
-
 		if ( $request->area == '' ) {
 			// Do NOT act on regular action call
 			return null;
@@ -62,7 +54,15 @@ class mi_aecplan
 
 		if ( $request->area == 'afteraction' ) {
 			// But on after action
-			$request->area == '';
+			$request->area = '';
+		}
+
+		if ( !isset( $this->settings['plan_apply'.$request->area] ) ) {
+			return null;
+		}
+
+		if ( empty( $this->settings['plan_apply'.$request->area] ) ) {
+			return null;
 		}
 
 		if ( $request->area == '' ) {
@@ -78,9 +78,9 @@ class mi_aecplan
 		$new_plan = new SubscriptionPlan( $database );
 		$new_plan->load( $this->settings['plan_apply'.$request->area] );
 
-		$request->metaUser->establishFocus( $new_plan, 'none', false );
-
-		$request->metaUser->focusSubscription->applyUsage( $this->settings['plan_apply'.$request->area] );
+		if ( $request->metaUser->establishFocus( $new_plan, 'none', false ) == 'existing' ) {
+			$request->metaUser->focusSubscription->applyUsage( $this->settings['plan_apply'.$request->area] );
+		}
 
 		return true;
 	}

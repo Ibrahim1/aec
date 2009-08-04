@@ -49,6 +49,10 @@ class mi_idevaffiliate
 			$getparams[] = 'profile=' . $this->settings['profile'];
 		}
 
+		if ( empty( $request->invoice->amount ) ) {
+			return null;
+		}
+
 		$getparams[] = 'idev_saleamt=' . $request->invoice->amount;
 		$getparams[] = 'idev_ordernum=' . $request->invoice->invoice_number;
 

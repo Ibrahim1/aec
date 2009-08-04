@@ -383,7 +383,7 @@ class docman_restriction extends JTable {
 	}
 
 	function docman_restriction( &$db ) {
-		$this->JTable( '#__acctexp_mi_docman', 'id', $db );
+		parent::__construct( '#__acctexp_mi_docman', 'id', $db );
 	}
 
 	function is_active()

@@ -1272,9 +1272,9 @@ function saveUser( $option, $apply=0 )
 		$plan = new SubscriptionPlan( $database );
 		$plan->load( $_POST['assignto_plan'] );
 
-		$metaUser->establishFocus( $plan );
-
-		$metaUser->focusSubscription->applyUsage( $_POST['assignto_plan'], 'none', 1 );
+		if ( $metaUser->establishFocus( $plan ) == 'existing' ) {
+			$metaUser->focusSubscription->applyUsage( $_POST['assignto_plan'], 'none', 1 );
+		}
 
 		// We have to reload the metaUser object because of the changes
 		$metaUser = new metaUser( $_POST['userid'] );
@@ -1746,18 +1746,20 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 		if ( !empty( $subscriptionid ) ) {
 			foreach ( $subscriptionid as $sid ) {
 				$metaUser = new metaUser( false, $sid );
-				$metaUser->establishFocus( $plan );
 
-				$metaUser->focusSubscription->applyUsage( $planid, 'none', 1 );
+				if ( $metaUser->establishFocus( $plan ) == 'existing' ) {
+					$metaUser->focusSubscription->applyUsage( $planid, 'none', 1 );
+				}
 			}
 		}
 
 		if ( !empty( $userid ) ) {
 			foreach ( $userid as $uid ) {
 				$metaUser = new metaUser( $uid );
-				$metaUser->establishFocus( $plan );
 
-				$metaUser->focusSubscription->applyUsage( $planid, 'none', 1 );
+				if ( $metaUser->establishFocus( $plan ) == 'existing' ) {
+					$metaUser->focusSubscription->applyUsage( $planid, 'none', 1 );
+				}
 
 				$subscriptionid[] = $metaUser->focusSubscription->id;
 			}

@@ -6875,6 +6875,7 @@ class InvoiceFactory
 		}
 
 		$this->payment->freetrial = 0;
+		$this->payment->amount = null;
 
 		if ( empty( $this->cart ) && !empty( $this->plan ) ) {
 			if ( !empty( $this->metaUser ) ) {
@@ -9052,15 +9053,18 @@ class Invoice extends serialParamDBTable
 			if ( is_object( $targetUser ) && is_object( $plan ) ) {
 				if ( $targetUser->userid ) {
 					if ( empty( $this->subscr_id ) ) {
-						$targetUser->establishFocus( $plan, $this->method, false );
+						$status = $targetUser->establishFocus( $plan, $this->method, false );
 
 						$this->subscr_id = $targetUser->focusSubscription->id;
 					} else {
 						$targetUser->moveFocus( $this->subscr_id );
+						$status = 'existing';
 					}
 
 					// Apply the Plan
-					$application = $targetUser->focusSubscription->applyUsage( $plan->id, $this->method, 0, $multiplicator, $this );
+					if ( $status == 'existing' ) {
+						$application = $targetUser->focusSubscription->applyUsage( $plan->id, $this->method, 0, $multiplicator, $this );
+					}
 				} else {
 					$application = $plan->applyPlan( 0, $this->method, 0, $multiplicator, $this );
 				}
@@ -11367,7 +11371,7 @@ class reWriteEngine
 			$this->data['invoice'] = null;
 		}
 
-		if ( is_object( $this->data['metaUser'] ) && !empty( $this->data['metaUser']->userid ) ) {
+		if ( is_object( $this->data['metaUser'] ) ) {
 			$name = array();
 			$name['first_first']	= "";
 			$name['first']			= "";
@@ -11409,15 +11413,15 @@ class reWriteEngine
 				}
 
 				if ( !empty( $this->data['metaUser']->hasCBprofile ) ) {
-					if ( isset( $this->data['metaUser']->cbUser->cbactivation ) ) {
-						$fields = get_object_vars( $this->data['metaUser']->cbUser );
+					$fields = get_object_vars( $this->data['metaUser']->cbUser );
 
-						if ( !empty( $fields ) ) {
-							foreach ( $fields as $fieldname => $fieldcontents ) {
-								$this->rewrite['user_' . $fieldname] = $fieldcontents;
-							}
+					if ( !empty( $fields ) ) {
+						foreach ( $fields as $fieldname => $fieldcontents ) {
+							$this->rewrite['user_' . $fieldname] = $fieldcontents;
 						}
+					}
 
+					if ( isset( $this->data['metaUser']->cbUser->cbactivation ) ) {
 						$this->rewrite['user_activationcode']		= $this->data['metaUser']->cbUser->cbactivation;
 						$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_comprofiler&task=confirm&confirmcode=" . $this->data['metaUser']->cbUser->cbactivation;
 					} else {
@@ -11595,7 +11599,7 @@ class reWriteEngine
 				} elseif ( !is_array( $vars ) ) {
 					return false;
 				}
-
+print_r($vars);
 				$result = AECToolbox::getObjectProperty( $this->data, $vars );
 				break;
 			case 'metaUser':
@@ -12083,9 +12087,9 @@ class AECToolbox
 					$payment_plan = new SubscriptionPlan( $database );
 					$payment_plan->load( $aecConfig->cfg['entry_plan'] );
 
-					$metaUser->establishFocus( $payment_plan, 'Free', false );
-
-					$metaUser->focusSubscription->applyUsage( $payment_plan->id, 'Free', 1, 0 );
+					if ( $metaUser->establishFocus( $payment_plan, 'Free', false ) == 'existing' ) {
+						$metaUser->focusSubscription->applyUsage( $payment_plan->id, 'Free', 1, 0 );
+					}
 
 					return AECToolbox::VerifyUsername( $username );
 				} else {
@@ -12146,9 +12150,9 @@ class AECToolbox
 					$payment_plan = new SubscriptionPlan( $database );
 					$payment_plan->load( $aecConfig->cfg['entry_plan'] );
 
-					$metaUser->establishFocus( $payment_plan, 'Free', false );
-
-					$metaUser->focusSubscription->applyUsage( $payment_plan->id, 'Free', 1, 0 );
+					if ( $metaUser->establishFocus( $payment_plan, 'Free', false ) == 'existing' ) {
+						$metaUser->focusSubscription->applyUsage( $payment_plan->id, 'Free', 1, 0 );
+					}
 
 					return AECToolbox::VerifyUser( $username );
 				} else {
@@ -12843,14 +12847,14 @@ class AECToolbox
 				$subject =& $return;
 
 				if ( is_object( $subject ) ) {
-					if ( isset( $subject->{$k} ) ) {
-						$return =& $subject->{$k};
+					if ( property_exists( $subject, $k ) ) {
+						$return =& $subject->$k;
 					} else {
 						$database = &JFactory::getDBO();
 
 						$props = array_keys( get_object_vars( $subject ) );
 
-						$event = $erx . $k . '; does not exist! Possible values are: ' . implode( ';', $props );
+						$event = $erx . $k . ' does not exist! Possible object values are: ' . implode( ';', $props );
 
 						$eventlog = new eventLog( $database );
 						$eventlog->issue( $err, $erp, $event, 128, array() );
@@ -12863,7 +12867,7 @@ class AECToolbox
 
 						$props = array_keys( $subject );
 
-						$event = $erx . $k . '; does not exist! Possible values are: ' . implode( ';', $props );
+						$event = $erx . $k . ' does not exist! Possible array values are: ' . implode( ';', $props );
 
 						$eventlog = new eventLog( $database );
 						$eventlog->issue( $err, $erp, $event, 128, array() );
