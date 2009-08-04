@@ -13621,8 +13621,8 @@ class microIntegration extends serialParamDBTable
 				$level = 128;
 			}
 
-			if ( !empty( $invoice->invoice_number ) ) {
-				$params = array( 'invoice_number' => $objInvoice->invoice_number );
+			if ( !empty( $request->invoice->invoice_number ) ) {
+				$params = array( 'invoice_number' => $request->invoice->invoice_number );
 			} else {
 				$params = array();
 			}
@@ -13642,8 +13642,8 @@ class microIntegration extends serialParamDBTable
 				$error .= ' Last Database Error: ' . $err;
 			}
 
-			if ( !empty( $invoice->invoice_number ) ) {
-				$params = array( 'invoice_number' => $objInvoice->invoice_number );
+			if ( !empty( $request->invoice->invoice_number ) ) {
+				$params = array( 'invoice_number' => $request->invoice->invoice_number );
 			} else {
 				$params = array();
 			}
