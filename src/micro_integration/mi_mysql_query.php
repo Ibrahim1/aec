@@ -42,8 +42,14 @@ class mi_mysql_query
 			$query = AECToolbox::rewriteEngineRQ( $this->settings['query'.$request->area], $request );
 
 			$database->setQuery( $query );
-			if ( !$database->query_batch( false ) ) {
-				$this->error = "MYSQL ERROR: " . $database->stderr();
+			if ( aecJoomla15check() ) {
+				if ( !$database->queryBatch( false ) ) {
+					$this->error = "MYSQL ERROR: " . $database->stderr();
+				}
+			} else {
+				if ( !$database->query_batch( false ) ) {
+					$this->error = "MYSQL ERROR: " . $database->stderr();
+				}
 			}
 		}
 
