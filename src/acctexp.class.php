@@ -11596,7 +11596,7 @@ class reWriteEngine
 				} elseif ( !is_array( $vars ) ) {
 					return false;
 				}
-print_r($vars);
+
 				$result = AECToolbox::getObjectProperty( $this->data, $vars );
 				break;
 			case 'metaUser':
