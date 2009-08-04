@@ -8648,7 +8648,11 @@ class Invoice extends serialParamDBTable
 						$terms = $item['terms'];
 					}
 
-					$this->amount = $terms->nextterm->renderTotal();
+					if ( is_object( $terms->nextterm ) ) {
+						$this->amount = $terms->nextterm->renderTotal();
+					} else {
+						$this->amount = '0.00';
+					}
 				break;
 			}
 
@@ -16325,6 +16329,11 @@ class aecRestrictionHelper
 
 		$custom = array();
 		foreach ( $cr as $field ) {
+			// WAT?! yes.
+			if ( strpos( nl2br( substr( $field, -1, 1 ) ), "<br" ) !== false ) {
+				$field = substr( $field, 0, -1 );
+			}
+
 			$custom[] = explode( ' ', $field );
 		}
 
