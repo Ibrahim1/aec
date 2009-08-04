@@ -21,6 +21,8 @@ $posttext 				= $params->get( 'posttext' );
 $showExpiration 		= $params->def( 'show_expiration', 0 );
 $displaypipeline		= $params->get( 'displaypipeline', 0 );
 
+$user = &JFactory::getUser();
+
 if ( $user->id ) {
 // Logout output
 // ie HTML when already logged in and trying to logout
