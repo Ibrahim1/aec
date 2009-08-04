@@ -13621,8 +13621,14 @@ class microIntegration extends serialParamDBTable
 				$level = 128;
 			}
 
+			if ( !empty( $invoice->invoice_number ) ) {
+				$params = array( 'invoice_number' => $objInvoice->invoice_number );
+			} else {
+				$params = array();
+			}
+
 			$eventlog = new eventLog( $this->_db );
-			$eventlog->issue( 'MI application problems', 'mi, problems, '.$this->class_name, $error, $level );
+			$eventlog->issue( 'MI application problems', 'mi, problems, '.$this->class_name, $error, $level, $params );
 		}
 
 		// If returning fatal error, issue additional entry
@@ -13636,8 +13642,14 @@ class microIntegration extends serialParamDBTable
 				$error .= ' Last Database Error: ' . $err;
 			}
 
+			if ( !empty( $invoice->invoice_number ) ) {
+				$params = array( 'invoice_number' => $objInvoice->invoice_number );
+			} else {
+				$params = array();
+			}
+
 			$eventlog = new eventLog( $database );
-			$eventlog->issue( 'MI application failed', 'mi, failure, '.$this->class_name, $error, 128 );
+			$eventlog->issue( 'MI application failed', 'mi, failure, '.$this->class_name, $error, 128, $params );
 		}
 
 		return $return;
