@@ -91,14 +91,16 @@ class mi_communitybuilder
 			if ( !empty( $changes ) ) {
 				$alterstring = array();
 				foreach ( $changes as $name => $value ) {
-					if ( ( $value === 0 ) || ( $value === "0" ) ) {
+					$v = AECToolbox::rewriteEngineRQ( $value, $request );
+
+					if ( ( $v === 0 ) || ( $v === "0" ) ) {
 						$alterstring[] = "`" . $name . "`" . ' = \'0\'';
-					} elseif ( ( $value === 1 ) || ( $value === "1" ) ) {
+					} elseif ( ( $v === 1 ) || ( $v === "1" ) ) {
 						$alterstring[] = "`" . $name . "`" . ' = \'1\'';
-					} elseif ( strcmp( $value, 'NULL' ) === 0 ) {
+					} elseif ( strcmp( $v, 'NULL' ) === 0 ) {
 						$alterstring[] = "`" . $name . "`" . ' = NULL';
-					} else {
-						$alterstring[] = "`" . $name . "`" . ' = \'' . AECToolbox::rewriteEngineRQ( $value, $request ) . '\'';
+					} elseif ( !empty( $v ) ) {
+						$alterstring[] = "`" . $name . "`" . ' = \'' . $v . '\'';
 					}
 				}
 
