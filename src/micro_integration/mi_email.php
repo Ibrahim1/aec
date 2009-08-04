@@ -11,7 +11,7 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_email
+class mi_email extends MI
 {
 	function Info()
 	{
@@ -63,7 +63,7 @@ class mi_email
 		}
 
 		if ( !isset( $this->settings['text' . $request->area] ) || !isset( $this->settings['subject' . $request->area] ) ) {
-			return false;
+			return null;
 		}
 
 		$message	= AECToolbox::rewriteEngineRQ( $this->settings['text' . $request->area], $request );
