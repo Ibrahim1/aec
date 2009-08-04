@@ -140,14 +140,10 @@ class processor_offline_payment extends processor
 					$payment_plan = new SubscriptionPlan( $database );
 					$payment_plan->load( $this->settings['waitingplan'] );
 
-					$status = $metaUser->establishFocus( $payment_plan, 'offline_payment', false );
-				} else {
-					$status = 'existing';
+					$metaUser->establishFocus( $payment_plan, 'offline_payment', false );
 				}
 
-				if ( $status == 'existing' ) {
-					$metaUser->objSubscription->applyUsage( $this->settings['waitingplan'], 'none', 0 );
-				}
+				$metaUser->objSubscription->applyUsage( $this->settings['waitingplan'], 'none', 0 );
 
 				$short	= 'waiting plan';
 				$event	= 'Offline Payment waiting plan assigned for ' . $objInvoice->invoice_number;

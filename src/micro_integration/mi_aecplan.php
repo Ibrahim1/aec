@@ -78,9 +78,9 @@ class mi_aecplan
 		$new_plan = new SubscriptionPlan( $database );
 		$new_plan->load( $this->settings['plan_apply'.$request->area] );
 
-		if ( $request->metaUser->establishFocus( $new_plan, 'none', false ) == 'existing' ) {
-			$request->metaUser->focusSubscription->applyUsage( $this->settings['plan_apply'.$request->area] );
-		}
+		$request->metaUser->establishFocus( $new_plan, 'none', false );
+
+		$request->metaUser->focusSubscription->applyUsage( $this->settings['plan_apply'.$request->area] );
 
 		return true;
 	}

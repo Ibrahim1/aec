@@ -9053,18 +9053,15 @@ class Invoice extends serialParamDBTable
 			if ( is_object( $targetUser ) && is_object( $plan ) ) {
 				if ( $targetUser->userid ) {
 					if ( empty( $this->subscr_id ) ) {
-						$status = $targetUser->establishFocus( $plan, $this->method, false );
+						$targetUser->establishFocus( $plan, $this->method, false );
 
 						$this->subscr_id = $targetUser->focusSubscription->id;
 					} else {
 						$targetUser->moveFocus( $this->subscr_id );
-						$status = 'existing';
 					}
 
 					// Apply the Plan
-					if ( $status == 'existing' ) {
-						$application = $targetUser->focusSubscription->applyUsage( $plan->id, $this->method, 0, $multiplicator, $this );
-					}
+					$application = $targetUser->focusSubscription->applyUsage( $plan->id, $this->method, 0, $multiplicator, $this );
 				} else {
 					$application = $plan->applyPlan( 0, $this->method, 0, $multiplicator, $this );
 				}
@@ -12087,9 +12084,9 @@ class AECToolbox
 					$payment_plan = new SubscriptionPlan( $database );
 					$payment_plan->load( $aecConfig->cfg['entry_plan'] );
 
-					if ( $metaUser->establishFocus( $payment_plan, 'Free', false ) == 'existing' ) {
-						$metaUser->focusSubscription->applyUsage( $payment_plan->id, 'Free', 1, 0 );
-					}
+					$metaUser->establishFocus( $payment_plan, 'Free', false );
+
+					$metaUser->focusSubscription->applyUsage( $payment_plan->id, 'Free', 1, 0 );
 
 					return AECToolbox::VerifyUsername( $username );
 				} else {
@@ -12150,9 +12147,9 @@ class AECToolbox
 					$payment_plan = new SubscriptionPlan( $database );
 					$payment_plan->load( $aecConfig->cfg['entry_plan'] );
 
-					if ( $metaUser->establishFocus( $payment_plan, 'Free', false ) == 'existing' ) {
-						$metaUser->focusSubscription->applyUsage( $payment_plan->id, 'Free', 1, 0 );
-					}
+					$metaUser->establishFocus( $payment_plan, 'Free', false );
+
+					$metaUser->focusSubscription->applyUsage( $payment_plan->id, 'Free', 1, 0 );
 
 					return AECToolbox::VerifyUser( $username );
 				} else {
