@@ -97,11 +97,11 @@ class mi_acl
 
 	function relayAction( $request )
 	{
-		if ( $this->settings['set_gid' . $request->area] ) {
+		if ( !empty( $this->settings['set_gid' . $request->area] ) ) {
 			$this->instantGIDchange( $request->metaUser, 'gid' . $request->area);
 		}
 
-		if ( $this->settings['sub_set_gid' . $request->area] ) {
+		if ( !empty( $this->settings['sub_set_gid' . $request->area] ) ) {
 			$this->jaclplusGIDchange( $request->metaUser, 'sub_gid' . $request->area );
 		}
 
