@@ -5549,7 +5549,7 @@ class SubscriptionPlan extends serialParamDBTable
 		return aecRestrictionHelper::checkRestriction( $restrictions, $metaUser );
 	}
 
-	function applyPlan( $userid, $processor = 'none', $silent = 0, $multiplicator = 1, $invoice = null, $tempparams = null )
+	function applyPlan( $user, $processor = 'none', $silent = 0, $multiplicator = 1, $invoice = null, $tempparams = null )
 	{
 		$database = &JFactory::getDBO();
 
@@ -5565,14 +5565,24 @@ class SubscriptionPlan extends serialParamDBTable
 			$multiplicator = 1;
 		}
 
-		if ( $userid ) {
-			$metaUser = new metaUser( $userid );
+		if ( !empty( $user ) ) {
+			if ( is_object( $user ) ) {
+				if ( is_a( $user, 'metaUser' ) ) {
+					$metaUser = $user;
+				} elseif( is_a( $user, 'Subscription' ) ) {
+					$metaUser = new metaUser( $user->userid );
+
+					$metaUser->focusSubscription = $user;
+				}
+			} else {
+				$metaUser = new metaUser( $user );
+			}
 
 			if ( !isset( $this->params['make_primary'] ) ) {
 				$this->params['make_primary'] = 1;
 			}
 
-			if ( !$metaUser->hasSubscription || empty( $this->params['make_primary'] ) ) {
+			if ( !$metaUser->hasSubscription ) {
 				$status = $metaUser->establishFocus( $this, $processor, false );
 
 				if ( !empty( $this->params['update_existing'] ) && ( $status == 'existing') ) {
@@ -10671,7 +10681,7 @@ class Subscription extends serialParamDBTable
 		$new_plan->load( $usage );
 
 		if ( $new_plan->id ) {
-			return $new_plan->applyPlan( $this->userid, $processor, $silent, $multiplicator, $invoice );
+			return $new_plan->applyPlan( $this, $processor, $silent, $multiplicator, $invoice );
 		} else {
 			return false;
 		}
