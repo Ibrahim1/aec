@@ -28,6 +28,8 @@ if ( _EUCA_DEBUGMODE ) {
 	$eucaDebug = new eucaDebug();
 }
 
+$user = &JFactory::getUser();
+
 $task = trim( aecGetParam( 'task' ) );
 //aecDebug( $task );
 if ( !empty( $task ) ) {

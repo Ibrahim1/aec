@@ -6744,67 +6744,73 @@ class InvoiceFactory
 						$c = true;
 
 						$this->raiseException( $ex );
-					} else {
-						if ( !$se ) {
-							// We have different processors selected for this cart
-							$prelg = array();
-							foreach ( $pgroups as $pgid => $pgroup ) {
-								$prelg[$pgroup['processor']][] = $pgroup;
-							}
+					}
+				}
 
-							$invoice_highest = 0;
-							foreach ( $prelg as $processor => $pgroups ) {
-								$mpg = array_pop( array_keys( $pgroups ) );
+				if ( !$se ) {
+					// We have different processors selected for this cart
+					$prelg = array();
+					foreach ( $pgroups as $pgid => $pgroup ) {
+						$prelg[$pgroup['processor']][] = $pgroup;
+					}
 
-								if ( ( count( $pgroups ) > 1 ) || ( count( $pgroups[$mpg]['members'] ) > 1 ) ) {
-									// We have more than one item for this processor, create temporary cart
-									$tempcart = new aecCart( $database );
-									$tempcart->userid = $this->userid;
+					$invoice_highest = 0;
+					foreach ( $prelg as $processor => $pgroups ) {
+						$mpg = array_pop( array_keys( $pgroups ) );
 
-									foreach ( $pgroups as $pgr ) {
-										foreach ( $pgr['members'] as $member ) {
-											$r = $tempcart->addItem( $member );
-										}
-									}
+						if ( ( count( $pgroups ) > 1 ) || ( count( $pgroups[$mpg]['members'] ) > 1 ) ) {
+							// We have more than one item for this processor, create temporary cart
+							$tempcart = new aecCart( $database );
+							$tempcart->userid = $this->userid;
 
-									$tempcart->storeload();
-
-									$carthash = 'c.' . $tempcart->id;
-
-									// Create a cart invoice
-									$invoice = new Invoice( $database );
-									$invoice->create( $this->userid, $carthash, $processor );
-								} else {
-									// Only one item in this, create a simple invoice
-									$invoice = new Invoice( $database );
-									$invoice->create( $this->userid, $pgroups[$mpg]['members'][0], $processor );
-								}
-
-								if ( $invoice->amount > $invoice_highest ) {
-									$finalinvoice = $invoice;
+							foreach ( $pgroups as $pgr ) {
+								foreach ( $pgr['members'] as $member ) {
+									$r = $tempcart->addItem( $member );
 								}
 							}
 
-							$this->invoice_number = $invoice->invoice_number;
-							$this->invoice = $invoice;
+							$tempcart->storeload();
 
-							$this->touchInvoice();
+							$carthash = 'c.' . $tempcart->id;
 
-							$objUsage = $this->invoice->getObjInvoice();
-
-							if ( is_a( $objUsage, 'aecCart' ) ) {
-								$this->cartobject = $objUsage;
-
-								$this->getCart();
-							} else {
-								$this->plan = $objUsage;
-							}
+							// Create a cart invoice
+							$invoice = new Invoice( $database );
+							$invoice->create( $this->userid, $carthash, $processor );
 						} else {
-							$mpg = array_pop( array_keys( $pgroups ) );
+							// Only one item in this, create a simple invoice
+							$invoice = new Invoice( $database );
+							$invoice->create( $this->userid, $pgroups[$mpg]['members'][0], $processor );
+						}
 
-							$this->processor = $pgroups[$mpg]['processor'];
+						if ( $invoice->amount > $invoice_highest ) {
+							$finalinvoice = $invoice;
 						}
 					}
+
+					$ex['head'] = "Invoice split up";
+					$ex['desc'] = "The contents of your shopping cart cannot be processed in one go. This is why we have split up the invoice - you can pay for the first part right now and access the other parts as separate invoices later from your membership page.";
+					$ex['rows'] = array();
+
+					$this->raiseException( $ex );
+
+					$this->invoice_number = $invoice->invoice_number;
+					$this->invoice = $invoice;
+
+					$this->touchInvoice();
+
+					$objUsage = $this->invoice->getObjInvoice();
+
+					if ( is_a( $objUsage, 'aecCart' ) ) {
+						$this->cartobject = $objUsage;
+
+						$this->getCart();
+					} else {
+						$this->plan = $objUsage;
+					}
+				} else {
+					$mpg = array_pop( array_keys( $pgroups ) );
+
+					$this->processor = $pgroups[$mpg]['processor'];print_r($this->processor);exit;
 				}
 			} else {
 				if ( isset( $procs[0] ) ) {
