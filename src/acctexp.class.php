@@ -1108,7 +1108,9 @@ class metaUser
 					$selected_plan = new SubscriptionPlan( $database );
 					$selected_plan->load( $this->objSubscription->plan );
 
-					$mis = array_merge( $mis, $selected_plan->micro_integrations );
+					if ( !empty( $selected_plan->micro_integrations ) ) {
+						$mis = array_merge( $mis, $selected_plan->micro_integrations );
+					}
 				}
 			}
 
@@ -1752,7 +1754,7 @@ class aecHeartbeat extends JTable
 				;
 		$database->setQuery( $query );
 		$subscription_list = $database->loadResultArray();
-
+print_r($database);print_r($subscription_list);
 		$expired_users		= array();
 		$pre_expired_users	= array();
 		$found_expired		= 1;
@@ -1773,7 +1775,7 @@ class aecHeartbeat extends JTable
 					// If this check fails, this user and all following users will be put into pre expiration check
 					$found_expired = $subscription->is_expired();
 
-					if ( $found_expired && !in_array( $subscription->userid, $expired_users ) ) {
+					if ( $found_expired ) {
 						// We may need to carry out processor functions
 						if ( !isset( $pps[$subscription->type] ) ) {
 							// Load payment processor into overall array
@@ -1810,9 +1812,9 @@ class aecHeartbeat extends JTable
 							if ( $subscription->expire() ) {
 								$e++;
 							}
-						} else {
-
 						}
+					} elseif( $subscription->is_lifetime() ) {
+						$found_expired = 1;
 					}
 				}
 
@@ -10418,7 +10420,7 @@ class Subscription extends serialParamDBTable
 
 		global $mainframe, $aecConfig;
 
-		if ( !($this->expiration === '9999-12-31 00:00:00') ) {
+		if ( !$this->is_lifetime() ) {
 			$expiration_cushion = str_pad( $aecConfig->cfg['expiration_cushion'], 2, '0', STR_PAD_LEFT );
 
 			if ( $offset ) {
@@ -10432,6 +10434,15 @@ class Subscription extends serialParamDBTable
 			} else {
 				return false;
 			}
+		} else {
+			return false;
+		}
+	}
+
+	function is_lifetime()
+	{
+		if ( ( $this->expiration === '9999-12-31 00:00:00' ) || ( $this->expiration === '0000-00-00 00:00:00' ) ) {
+			return true;
 		} else {
 			return false;
 		}
