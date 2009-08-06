@@ -6697,24 +6697,24 @@ class InvoiceFactory
 
 					$fname = 'cartgroup_'.$pgid.'_processor';
 
-					$pgsel = aecGetParam( $fname, null, true, array( 'word', 'int' ) );
+					$pgsel = aecGetParam( $fname, null, true, array( 'word', 'string' ) );
 
 					$selection = false;
 					if ( !is_null( $pgsel ) ) {
-						if ( isset( $pgroup['processors'][$pgsel] ) ) {
-							$selection = $pgroup['processors'][$pgsel];
+						if ( in_array( $pgsel, $pgroup['processors'] ) ) {
+							$selection = $pgsel;
 						}
 					}
 
 					if ( !empty( $selection ) ) {
-						$pgroups[$pgid]['processor'] = $selection;
-						$s[] = $selection;
-
-						if ( count( $s ) > 1 ) {
+						if ( count( $s ) > 0 ) {
 							if ( !in_array( $selection, $s ) ) {
 								$se = false;
 							}
 						}
+
+						$pgroups[$pgid]['processor'] = $selection;
+						$s[] = $selection;
 
 						continue;
 					} else {
@@ -6781,12 +6781,12 @@ class InvoiceFactory
 							$invoice = new Invoice( $database );
 							$invoice->create( $this->userid, $pgroups[$mpg]['members'][0], $processor );
 						}
-
+print_r($invoice);
 						if ( $invoice->amount > $invoice_highest ) {
 							$finalinvoice = $invoice;
 						}
 					}
-
+print_r($finalinvoice);exit;
 					$ex['head'] = "Invoice split up";
 					$ex['desc'] = "The contents of your shopping cart cannot be processed in one go. This is why we have split up the invoice - you can pay for the first part right now and access the other parts as separate invoices later from your membership page.";
 					$ex['rows'] = array();
@@ -6810,7 +6810,7 @@ class InvoiceFactory
 				} else {
 					$mpg = array_pop( array_keys( $pgroups ) );
 
-					$this->processor = $pgroups[$mpg]['processor'];print_r($this->processor);exit;
+					$this->processor = $pgroups[$mpg]['processor'];
 				}
 			} else {
 				if ( isset( $procs[0] ) ) {
@@ -8557,39 +8557,39 @@ class Invoice extends serialParamDBTable
 		$madefree = false;
 
 		if ( !is_null( $this->usage ) && !( $this->usage == '' ) ) {
-			$recurring = '';
+			$recurring = 0;
 
 			$original_amount = $this->amount;
 
-			switch ( $this->method ) {
-				case 'none':
-				case 'free':
-					break;
-				default:
-					$pp = new PaymentProcessor();
-					if ( $pp->loadName( $this->method ) ) {
-						$pp->fullInit();
+			if ( !empty( $this->method ) ) {
+				switch ( $this->method ) {
+					case 'none':
+					case 'free':
+						break;
+					default:
+						$pp = new PaymentProcessor();
+						if ( $pp->loadName( $this->method ) ) {
+							$pp->fullInit();
 
-						if ( $pp->is_recurring() ) {
-							$recurring = $pp->is_recurring();
+							if ( $pp->is_recurring() ) {
+								$recurring = $pp->is_recurring();
+							}
+
+							if ( empty( $this->currency ) ) {
+								$this->currency = isset( $pp->settings['currency'] ) ? $pp->settings['currency'] : '';
+							}
 						} else {
-							$recurring = 0;
+							$short	= 'processor loading failure';
+							$event	= 'When computing invoice amount, tried to load processor: ' . $this->method;
+							$tags	= 'processor,loading,error';
+							$params = array();
+
+							$eventlog = new eventLog( $database );
+							$eventlog->issue( $short, $tags, $event, 128, $params );
+
+							return;
 						}
-
-						if ( empty( $this->currency ) ) {
-							$this->currency = isset( $pp->settings['currency'] ) ? $pp->settings['currency'] : '';
-						}
-					} else {
-						$short	= 'processor loading failure';
-						$event	= 'When computing invoice amount, tried to load processor: ' . $this->processor;
-						$tags	= 'processor,loading,error';
-						$params = array();
-
-						$eventlog = new eventLog( $database );
-						$eventlog->issue( $short, $tags, $event, 128, $params );
-
-						return;
-					}
+				}
 			}
 
 			$usage = explode( '.', $this->usage );
