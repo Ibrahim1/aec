@@ -1653,17 +1653,17 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 {
 	$database = &JFactory::getDBO();
 
-	global $mainframe, $mainframe;
+	global $mainframe;
 
 	$limit			= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) );
 	$limitstart		= $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
-	$orderby		= $mainframe->getUserStateFromRequest( "order_subscr{$option}", 'orderby', 'name ASC' );
+	$orderby		= $mainframe->getUserStateFromRequest( "orderby_subscr{$option}", 'orderby', 'name ASC' );
 	$search			= $mainframe->getUserStateFromRequest( "search{$option}", 'search', '' );
 	$search			= $database->getEscaped( trim( strtolower( $search ) ) );
 
 	$filter_planid	= intval( $mainframe->getUserStateFromRequest( "filter_planid{$option}", 'filter_planid', 0 ) );
-
+print_r($_REQUEST);print_r($orderby);exit;
 	if ( !empty( $orderby ) ) {
 		$forder = array(	'expiration ASC', 'expiration DESC', 'lastpay_date ASC', 'lastpay_date DESC',
 							'name ASC', 'name DESC', 'lastname ASC', 'lastname DESC', 'username ASC', 'username DESC',
@@ -4046,7 +4046,7 @@ function listMicroIntegrations( $option )
 	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) );
 	$limitstart	= $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
-	$orderby		= $mainframe->getUserStateFromRequest( "order_mi{$option}", 'orderby', 'ordering ASC' );
+	$orderby		= $mainframe->getUserStateFromRequest( "orderby_mi{$option}", 'orderby', 'ordering ASC' );
 	$search			= $mainframe->getUserStateFromRequest( "search{$option}", 'search', '' );
 	$search			= $database->getEscaped( trim( strtolower( $search ) ) );
 
