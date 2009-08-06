@@ -133,6 +133,7 @@ define( '_CART_INFO', 'Please use the Continue-Button below to complete your pur
 
 // --== EXCEPTION FORM ==--
 define( '_EXCEPTION_TITLE', 'Additional Information Required');
+define( '_EXCEPTION_TITLE_NOFORM', 'Please note:');
 define( '_EXCEPTION_INFO', 'To proceed with your checkout, we need you to provide additional information as specified below:');
 
 // --== PROMPT PASSWORD FORM ==--

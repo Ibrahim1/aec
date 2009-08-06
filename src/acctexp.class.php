@@ -2573,7 +2573,7 @@ class PaymentProcessor
 		}
 	}
 
-	function loadId( $ppid )
+	function getNameById( $ppid )
 	{
 		$database = &JFactory::getDBO();
 
@@ -2584,6 +2584,18 @@ class PaymentProcessor
 				;
 		$database->setQuery( $query );
 		$name = $database->loadResult();
+
+		if ( $name ) {
+			return $name;
+		} else {
+			return false;
+		}
+	}
+
+	function loadId( $ppid )
+	{
+		$name = $this->getNameById( $ppid );
+
 		if ( $name ) {
 			return $this->loadName( $name );
 		} else {
@@ -6668,6 +6680,8 @@ class InvoiceFactory
 
 			$this->getCart();
 
+			$this->usage = 'c.' . $this->cartobject->id;
+
 			$procs = aecCartHelper::getCartProcessorList( $this->cartobject );
 
 			if ( count( $procs ) > 1 ) {
@@ -6681,6 +6695,10 @@ class InvoiceFactory
 
 				foreach ( $pgroups as $pgid => $pgroup ) {
 					if ( count( $pgroup['processors'] ) < 2 ) {
+						if ( !empty( $pgroup['processors'][0] ) ) {
+							$pgroups[$pgid]['processor'] = $pgroup['processors'][0];
+						}
+
 						continue;
 					}
 
@@ -6756,8 +6774,17 @@ class InvoiceFactory
 
 					$invoice_highest = 0;
 					foreach ( $prelg as $processor => $pgroups ) {
-						$mpg = array_pop( array_keys( $pgroups ) );
+						if ( strpos( $processor, '_recurring' ) ) {
+							$processor_name = PaymentProcessor::getNameById( str_replace( '_recurring', '', $processor ) );
 
+							$procrecurring = true;
+						} else {
+							$processor_name = PaymentProcessor::getNameById( $processor );
+
+							$procrecurring = false;
+						}
+
+						$mpg = array_pop( array_keys( $pgroups ) );
 						if ( ( count( $pgroups ) > 1 ) || ( count( $pgroups[$mpg]['members'] ) > 1 ) ) {
 							// We have more than one item for this processor, create temporary cart
 							$tempcart = new aecCart( $database );
@@ -6765,7 +6792,7 @@ class InvoiceFactory
 
 							foreach ( $pgroups as $pgr ) {
 								foreach ( $pgr['members'] as $member ) {
-									$r = $tempcart->addItem( $member );
+									$r = $tempcart->addItem( array(), $this->cartobject->content[$member]['id'] );
 								}
 							}
 
@@ -6775,30 +6802,37 @@ class InvoiceFactory
 
 							// Create a cart invoice
 							$invoice = new Invoice( $database );
-							$invoice->create( $this->userid, $carthash, $processor );
+							$invoice->create( $this->userid, $carthash, $processor_name, null, true, $this, $procrecurring );
 						} else {
 							// Only one item in this, create a simple invoice
+							$member = $pgroups[$mpg]['members'][0];
+
 							$invoice = new Invoice( $database );
-							$invoice->create( $this->userid, $pgroups[$mpg]['members'][0], $processor );
+							$invoice->create( $this->userid, $this->cartobject->content[$member]['id'], $processor_name, null, true, $this, $procrecurring );
 						}
-print_r($invoice);
-						if ( $invoice->amount > $invoice_highest ) {
+
+						$invoice->addParams( array( 'userselect_recurring' => $procrecurring ) );
+						$invoice->storeload();
+
+						if ( $invoice->amount == "0.00" ) {
+							$invoice->pay();
+						} elseif ( $invoice->amount > $invoice_highest ) {
 							$finalinvoice = $invoice;
 						}
 					}
-print_r($finalinvoice);exit;
+
 					$ex['head'] = "Invoice split up";
 					$ex['desc'] = "The contents of your shopping cart cannot be processed in one go. This is why we have split up the invoice - you can pay for the first part right now and access the other parts as separate invoices later from your membership page.";
 					$ex['rows'] = array();
 
 					$this->raiseException( $ex );
 
-					$this->invoice_number = $invoice->invoice_number;
-					$this->invoice = $invoice;
+					$this->invoice_number = $finalinvoice->invoice_number;
+					$this->invoice = $finalinvoice;
 
-					$this->touchInvoice();
+					$this->touchInvoice( $option );
 
-					$objUsage = $this->invoice->getObjInvoice();
+					$objUsage = $this->invoice->getObjUsage();
 
 					if ( is_a( $objUsage, 'aecCart' ) ) {
 						$this->cartobject = $objUsage;
@@ -6960,9 +6994,15 @@ print_r($finalinvoice);exit;
 	{
 		global $mainframe;
 
+		$hasform = false;
+
 		$params = array();
 		foreach ( $this->exceptions as $eid => $ex ) {
 			// Convert Exception into actionable form
+
+			if ( !empty( $ex['rows'] ) ) {
+				$hasform = true;
+			}
 
 			foreach ( $ex['rows'] as $rid => $row ) {
 				$params[$eid.'_'.$rid] = $row;
@@ -6974,9 +7014,13 @@ print_r($finalinvoice);exit;
 
 		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
-		$mainframe->SetPageTitle( _EXCEPTION_TITLE );
+		if ( $hasform ) {
+			$mainframe->SetPageTitle( _EXCEPTION_TITLE );
+		} else {
+			$mainframe->SetPageTitle( _EXCEPTION_TITLE_NOFORM );
+		}
 
-		Payment_HTML::exceptionForm( $option, $this, $aecHTML );
+		Payment_HTML::exceptionForm( $option, $this, $aecHTML, $hasform );
 	}
 
 	function getCart()
@@ -7108,7 +7152,9 @@ print_r($finalinvoice);exit;
 				$this->invoice = new Invoice( $database );
 			}
 
-			$this->invoice->loadInvoiceNumber( $this->invoice_number );
+			if ( $this->invoice->invoice_number != $this->invoice_number ) {
+				$this->invoice->loadInvoiceNumber( $this->invoice_number );
+			}
 
 			if ( !empty( $coupon ) ) {
 				$this->invoice->addCoupon( $coupon );
@@ -7120,9 +7166,9 @@ print_r($finalinvoice);exit;
 			$this->usage = $this->invoice->usage;
 
 			if ( empty( $this->usage ) && empty( $this->invoice->conditions ) ) {
-				$this->create( $option, 0, 0, $this->invoice_number_number );
+				$this->create( $option, 0, 0, $this->invoice_number );
 			} elseif ( empty( $this->processor ) && ( strpos( 'c', $this->usage ) !== false ) ) {
-				$this->create( $option, 0, $this->usage, $this->invoice_number_number );
+				$this->create( $option, 0, $this->usage, $this->invoice_number );
 			}
 		} else {
 			$database = &JFactory::getDBO();
@@ -7814,10 +7860,6 @@ print_r($finalinvoice);exit;
 
 		$this->puffer( $option );
 
-		$this->usage = 'c.' . $this->cartobject->id;
-
-		$this->touchInvoice( $option );
-
 		if ( !empty( $coupon ) ) {
 			$this->invoice->addCoupon( $coupon );
 			$this->invoice->storeload();
@@ -7828,9 +7870,9 @@ print_r($finalinvoice);exit;
 
 		if ( $this->hasExceptions() ) {
 			return $this->addressExceptions( $option );
+		} else {
+			$this->checkout( $option );
 		}
-
-		$this->checkout( $option );
 	}
 
 	function save( $option, $coupon=null )
@@ -8542,7 +8584,7 @@ class Invoice extends serialParamDBTable
 		return $database->loadResult();
 	}
 
-	function computeAmount( $InvoiceFactory=null, $save=true )
+	function computeAmount( $InvoiceFactory=null, $save=true, $recurring_choice=null )
 	{
 		$database = &JFactory::getDBO();
 
@@ -8571,8 +8613,8 @@ class Invoice extends serialParamDBTable
 						if ( $pp->loadName( $this->method ) ) {
 							$pp->fullInit();
 
-							if ( $pp->is_recurring() ) {
-								$recurring = $pp->is_recurring();
+							if ( $pp->is_recurring( $recurring_choice ) ) {
+								$recurring = $pp->is_recurring( $recurring_choice );
 							}
 
 							if ( empty( $this->currency ) ) {
@@ -8699,7 +8741,7 @@ class Invoice extends serialParamDBTable
 		}
 	}
 
-	function create( $userid, $usage, $processor, $second_ident=null, $store=true )
+	function create( $userid, $usage, $processor, $second_ident=null, $store=true, $InvoiceFactory=null, $recurring_choice=null )
 	{
 		global $mainframe;
 
@@ -8722,7 +8764,7 @@ class Invoice extends serialParamDBTable
 
 		$this->params = array( 'creator_ip' => $_SERVER['REMOTE_ADDR'] );
 
-		$this->computeAmount( null, $store );
+		$this->computeAmount( $InvoiceFactory, $store, $recurring_choice );
 	}
 
 	function generateInvoiceNumber( $maxlength = 16 )

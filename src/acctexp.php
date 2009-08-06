@@ -1042,7 +1042,13 @@ function repeatInvoice( $option, $invoice_number, $userid, $first=0 )
 		$userid = $user->id;
 	}
 
-	$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, $userid );
+	$cartid = $invoiceid = null;
+
+	if ( strpos( $invoice_number, 'c.' ) !== false ) {
+		$cartid = true;
+	} else {
+		$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, $userid );
+	}
 
 	// Only allow a user to access existing and own invoices
 	if ( $invoiceid ) {
@@ -1056,8 +1062,20 @@ function repeatInvoice( $option, $invoice_number, $userid, $first=0 )
 		$invoicefact = new InvoiceFactory( $userid );
 		$invoicefact->touchInvoice( $option, $invoice_number );
 		$invoicefact->checkout( $option, !$first );
+	} elseif ( $cartid ) {
+		$invoicefact = new InvoiceFactory( $userid );
+
+		$invoicefact->usage = $invoice_number;
+
+		$invoicefact->loadMetaUser();
+
+		$invoicefact->puffer( $option );
+		$invoicefact->checkout( $option, !$first );
+
+		return;
 	} else {
 		aecNotAuth();
+
 		return;
 	}
 }

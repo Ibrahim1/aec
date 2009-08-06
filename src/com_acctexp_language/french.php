@@ -138,6 +138,7 @@ define( '_CART_INFO', 'Veuillez cliquer sur le bouton Continuer ci-dessous pour 
 
 // --== EXCEPTION FORM ==--
 define( '_EXCEPTION_TITLE', 'Informations compl&eacute;mentaires requises');
+define( '_EXCEPTION_TITLE_NOFORM', 'Please note:');
 define( '_EXCEPTION_INFO', 'Pour finaliser votre achat, vous devez fournir les informations compl&eacute;mentaires indiqu&eacute;es ci-dessous :');
 // --== PROMPT PASSWORD FORM ==--
 define( '_AEC_PROMPT_PASSWORD', 'Pour des raisons de s&eacute;curit&eacute;, vous devez entrer votre mot de passe pour continuer.');

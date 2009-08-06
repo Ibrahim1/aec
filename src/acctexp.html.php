@@ -1372,7 +1372,7 @@ class Payment_HTML
 		<?php
 	}
 
-	function exceptionForm( $option, $InvoiceFactory, $aecHTML )
+	function exceptionForm( $option, $InvoiceFactory, $aecHTML, $hasform )
 	{
 		$database = &JFactory::getDBO();
 
@@ -1381,11 +1381,11 @@ class Payment_HTML
 		HTML_frontend::aec_styling( $option );
 
 		?>
-		<div class="componentheading"><?php echo _EXCEPTION_TITLE; ?></div>
+		<div class="componentheading"><?php echo $hasform ? _EXCEPTION_TITLE : _EXCEPTION_TITLE_NOFORM ; ?></div>
 		<div id="checkout">
 			<?php
 			if ( $aecConfig->cfg['customtext_exception_keeporiginal'] ) { ?>
-				<p><?php echo _EXCEPTION_INFO; ?></p>
+				<p><?php echo $hasform ? _EXCEPTION_INFO : ""; ?></p>
 				<?php
 			}
 			if ( $aecConfig->cfg['customtext_exception'] ) { ?>
@@ -1423,7 +1423,7 @@ class Payment_HTML
 				<td class="checkout_action">
 						<input type="hidden" name="option" value="<?php echo $option; ?>" />
 						<input type="hidden" name="task" value="addressException" />
-						<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice->invoice_number; ?>" />
+						<input type="hidden" name="invoice" value="<?php echo !empty( $InvoiceFactory->invoice->invoice_number ) ? $InvoiceFactory->invoice->invoice_number : "c." . $InvoiceFactory->cartobject->id; ?>" />
 						<input type="hidden" name="userid" value="<?php echo $InvoiceFactory->metaUser->userid; ?>" />
 						<input type="submit" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
 					</form>

@@ -429,7 +429,9 @@ class serialParamDBTable extends paramDBTable
 				$input[$pname] = serialParamDBTable::multistripslashes( $pvalue );
 			}
 		} else {
-			$input = stripslashes( $input );
+			if ( !is_bool( $input ) && !is_int( $input ) ) {
+				$input = stripslashes( $input );
+			}
 		}
 
 		return $input;
@@ -539,10 +541,10 @@ class serialParamDBTable extends paramDBTable
 
 		if ( !empty( $fields ) ) {
 			foreach ( $fields as $fieldname ) {
-				if ( $this->$fieldname != 'null' ) {
+				if ( !empty( $this->$fieldname ) ) {
 					$this->setParams( $this->$fieldname, $fieldname );
 				} else {
-					unset( $this->$fieldname );
+					$this->$fieldname = null;
 				}
 			}
 		}
