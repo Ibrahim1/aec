@@ -1658,7 +1658,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$limit			= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) );
 	$limitstart		= $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
-	$orderby		= $mainframe->getUserStateFromRequest( "orderby_subscr{$option}", 'orderby', 'name ASC' );
+	$orderby		= $mainframe->getUserStateFromRequest( "orderby_subscr{$option}", 'orderby_subscr', 'name ASC' );
 	$search			= $mainframe->getUserStateFromRequest( "search{$option}", 'search', '' );
 	$search			= $database->getEscaped( trim( strtolower( $search ) ) );
 
@@ -4046,7 +4046,7 @@ function listMicroIntegrations( $option )
 	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) );
 	$limitstart	= $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
-	$orderby		= $mainframe->getUserStateFromRequest( "orderby_mi{$option}", 'orderby', 'ordering ASC' );
+	$orderby		= $mainframe->getUserStateFromRequest( "orderby_mi{$option}", 'orderby_mi', 'ordering ASC' );
 	$search			= $mainframe->getUserStateFromRequest( "search{$option}", 'search', '' );
 	$search			= $database->getEscaped( trim( strtolower( $search ) ) );
 
