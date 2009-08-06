@@ -1663,7 +1663,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$search			= $database->getEscaped( trim( strtolower( $search ) ) );
 
 	$filter_planid	= intval( $mainframe->getUserStateFromRequest( "filter_planid{$option}", 'filter_planid', 0 ) );
-print_r($_REQUEST);print_r($orderby);exit;
+
 	if ( !empty( $orderby ) ) {
 		$forder = array(	'expiration ASC', 'expiration DESC', 'lastpay_date ASC', 'lastpay_date DESC',
 							'name ASC', 'name DESC', 'lastname ASC', 'lastname DESC', 'username ASC', 'username DESC',
