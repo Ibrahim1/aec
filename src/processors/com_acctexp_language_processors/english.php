@@ -13,16 +13,16 @@
 
 define( '_AEC_LANG_PROCESSOR', 1 );
 
-	// paypal
+  // paypal
 define( '_AEC_PROC_INFO_PP_LNAME',			'PayPal' );
 define( '_AEC_PROC_INFO_PP_STMNT',			'Make payments with PayPal - it\'s fast, free and secure!' );
-	// paypal subscription
+  // paypal subscription
 define( '_AEC_PROC_INFO_PPS_LNAME',			'PayPal Subscription' );
 define( '_AEC_PROC_INFO_PPS_STMNT',			'Make payments with PayPal - it\'s fast, free and secure!' );
-	// 2CheckOut
+  // 2CheckOut
 define( '_AEC_PROC_INFO_2CO_LNAME',			'2CheckOut' );
 define( '_AEC_PROC_INFO_2CO_STMNT',			'Make payments with 2Checkout!' );
-	// alertpay
+  // alertpay
 define( '_AEC_PROC_INFO_AP_LNAME',			'AlertPay' );
 define( '_AEC_PROC_INFO_AP_STMNT',			'Payments with AlertPay' );
 
@@ -819,5 +819,26 @@ define( '_CFG_EPAY_USE3D_NAME', 'Use 3D');
 define( '_CFG_EPAY_USE3D_DESC', 'Use 3D?');
 define( '_CFG_EPAY_ADDFEE_NAME', 'Add Fee');
 define( '_CFG_EPAY_ADDFEE_DESC', 'Add Fee?');
+
+// Suncorp MiGS
+define( '_CFG_SUNCORP_MIGS_LONGNAME', 'Suncorp VPC MIGS');
+define( '_CFG_SUNCORP_MIGS_STATEMENT', 'Suncorp VPC MIGS');
+define( '_CFG_SUNCORP_MIGS_DESCRIPTION', 'Suncorp VPC MIGS');
+define( '_CFG_SUNCORP_MIGS_VPC_VERSION_NAME', 'Protocol Version');
+define( '_CFG_SUNCORP_MIGS_VPC_VERSION_DESC', 'Protocol version');
+define( '_CFG_SUNCORP_MIGS_VPC_COMMAND_NAME', 'VPC Command');
+define( '_CFG_SUNCORP_MIGS_VPC_COMMAND_DESC', 'VPC Command');
+define( '_CFG_SUNCORP_MIGS_VPC_ACCESSCODE_NAME', 'Access Code');
+define( '_CFG_SUNCORP_MIGS_VPC_ACCESSCODE_DESC', 'Your Access Code');
+define( '_CFG_SUNCORP_MIGS_VPC_MERCHANT_NAME', 'Merchant Code');
+define( '_CFG_SUNCORP_MIGS_VPC_MERCHANT_DESC', 'Your Merchant Code');
+define( '_CFG_SUNCORP_MIGS_VPC_LOCALE_NAME', 'Locale');
+define( '_CFG_SUNCORP_MIGS_VPC_LOCALE_DESC', 'Locale, or language setting');
+define( '_CFG_SUNCORP_MIGS_VPC_SECURESECRET_NAME', 'Secure Secret');
+define( '_CFG_SUNCORP_MIGS_VPC_SECURESECRET_DESC', 'Your secret word that is required to verify the authentication of the transaction notification.');
+define( '_CFG_SUNCORP_MIGS_VPC_ORDERINFO_NAME', 'Order Info');
+define( '_CFG_SUNCORP_MIGS_VPC_ORDERINFO_DESC', 'The order description as it will show up with the payment provider.');
+define( '_CFG_SUNCORP_MIGS_VPC_TICKETNO_NAME', 'Ticket No');
+define( '_CFG_SUNCORP_MIGS_VPC_TICKETNO_DESC', 'Ticket No');
 
 ?>

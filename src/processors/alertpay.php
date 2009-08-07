@@ -154,7 +154,7 @@ class processor_alertpay extends POSTprocessor
 
 		if ( ( $post['ap_status'] == "Success" ) || ( $post['ap_status'] == "Subscription-Payment-Success" ) ) {
 			if ( $post['ap_securitycode'] != $this->settings['securitycode'] ) {
-				$response['error'] = 'Security Code Mismatch: ' . $post['ap_securitycode'] . ' != ' . $this->settings['securitycode'];
+				$response['error'] = 'Security Code Mismatch: ' . $post['ap_securitycode'];
 			} else {
 				$response['valid'] = true;
 			}

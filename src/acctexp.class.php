@@ -4226,7 +4226,7 @@ class URLprocessor extends processor
 		$vars = array();
 		if ( !empty( $var ) ) {
 			foreach ( $var as $key => $value ) {
-				$vars[] .= $key . '=' . $value;
+				$vars[] .= urlencode( $key ) . '=' . urlencode( $value );
 			}
 
 			$return .= implode( '&amp;', $vars );
