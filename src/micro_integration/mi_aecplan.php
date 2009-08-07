@@ -30,6 +30,8 @@ class mi_aecplan
 
 		$settings = array();
 
+		$settings['first_plan_not_membership']		= array( 'list_yesno' );
+
 		$settings['plan_apply_first']				= array( 'list' );
 		$settings['lists']['plan_apply_first']		= mosHTML::selectList( $payment_plans, 'plan_apply_first', 'size="' . $total_plans . '"', 'value', 'text', $this->settings['plan_apply_first'] );
 
@@ -58,8 +60,20 @@ class mi_aecplan
 
 			// Or maybe this is a first plan?
 			if ( !empty( $this->settings['plan_apply_first'] ) ) {
-				if ( empty( $request->metaUser->objSubscription->previous_plan ) ) {
-					$request->area = '_first';
+				if ( !empty( $this->settings['first_plan_not_membership'] ) ) {
+					$used_plans = $request->metaUser->meta->getUsedPlans();
+
+					if ( empty( $used_plans ) ) {
+						$request->area = '_first';
+					} else {
+						if ( !in_array( $request->plan->id, $used_plans ) ) {
+							$request->area = '_first';
+						}
+					}
+				} else {
+					if ( empty( $request->metaUser->objSubscription->previous_plan ) ) {
+						$request->area = '_first';
+					}
 				}
 			}
 		}

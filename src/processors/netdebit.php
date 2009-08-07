@@ -91,6 +91,8 @@ class processor_netdebit extends URLprocessor
 
 		if ( $this->settings['testmode'] ) {
 			$this->settings['webmaster_id'] = 9090;
+		} else {
+			$this->settings['webmaster_id'] = 1000;
 		}
 
 		$var['F']		= $this->settings['webmaster_id'];
