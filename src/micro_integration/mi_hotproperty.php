@@ -364,11 +364,13 @@ class mi_hotproperty extends MI
 		if ( $v10 ) {
 			$hacks[$n]['filename']			=	JPATH_SITE . '/administrator/components/com_hotproperty/controller.php';
 			$hacks[$n]['read']				=	'$_files = JRequest';
+			$hacks[$n]['insert']			=	$edithack4 . "\n" . $hacks[$n]['read'];
 		} else {
 			$hacks[$n]['filename']			=	JPATH_SITE . '/administrator/components/com_hotproperty/admin.hotproperty.php';
 			$hacks[$n]['read']				=	'# Remove property from database';
+			$hacks[$n]['insert']			=	$hacks[$n]['read'] . "\n" . $edithack4;
 		}
-		$hacks[$n]['insert']			=	$hacks[$n]['read'] . "\n" . $edithack4;
+
 
 		return $hacks;
 	}
