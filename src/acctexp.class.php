@@ -1754,7 +1754,7 @@ class aecHeartbeat extends JTable
 				;
 		$database->setQuery( $query );
 		$subscription_list = $database->loadResultArray();
-print_r($database);print_r($subscription_list);
+
 		$expired_users		= array();
 		$pre_expired_users	= array();
 		$found_expired		= 1;

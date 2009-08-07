@@ -1614,7 +1614,7 @@ class AuthNetCim {
 	// This element is required in some functions
 	// Payment gateway assigned ID associated with the customer payment profile
 	function customerPaymentProfileId()
-	{aecDebug("paymentprofile: " . $this->params['customerPaymentProfileId']);
+	{
 		if (isset($this->params['customerPaymentProfileId']))
 		{
 			if (preg_match('/^[0-9]+$/', $this->params['customerPaymentProfileId']))

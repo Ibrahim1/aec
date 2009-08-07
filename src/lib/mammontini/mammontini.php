@@ -129,7 +129,7 @@ class mammonTerms extends eucaObject
 		foreach ( $this->terms as $tid => $term ) {
 			$apointer++;
 			if ( $tid < $this->pointer ) {
-				continue;var_dump("continue!");
+				continue;
 			}
 
 			$i = $apointer;
