@@ -81,14 +81,18 @@ class mi_aecuserdetails
 			for ( $i=0; $i<$this->settings['settings']; $i++ ) {
 				$p = $i . '_';
 
-				if ( $this->settings[$p.'type'] == 'list_language' ) {
-					$lists[$this->settings[$p.'short']] = mosHTML::selectList( $language_code_list, $this->settings[$p.'short'], 'size="10"', 'value', 'text', $this->settings[$p.'default'] );
-
-					$this->settings[$p.'type'] = 'list';
-				}
-
 				if ( !empty( $this->settings[$p.'short'] ) ) {
-					$settings[$this->settings[$p.'short']] = array( $this->settings[$p.'type'], $this->settings[$p.'name'], $this->settings[$p.'desc'] );
+					if ( $this->settings[$p.'type'] == 'list_language' ) {
+						$lists[$this->settings[$p.'short']] = mosHTML::selectList( $language_code_list, $this->settings[$p.'short'], 'size="10"', 'value', 'text', $this->settings[$p.'default'] );
+
+						$this->settings[$p.'type'] = 'list';
+					}
+
+					if ( ( $this->settings[$p.'type'] == 'radio' ) || ( $this->settings[$p.'type'] == 'checkbox' ) ) {
+						$settings[$this->settings[$p.'short']] = array( $this->settings[$p.'type'], $this->settings[$p.'name'], null, $this->settings[$p.'desc'] );
+					} else {
+						$settings[$this->settings[$p.'short']] = array( $this->settings[$p.'type'], $this->settings[$p.'name'], $this->settings[$p.'desc'] );
+					}
 				}
 			}
 		}

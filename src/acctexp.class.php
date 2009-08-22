@@ -3464,12 +3464,14 @@ class XMLprocessor extends processor
 	{
 		$var = $this->checkoutform( $request );
 
+		// TODO:  onclick="javascript:document.getElementById(\'aec_checkout_btn\').disabled=true"
+
 		$return = '<form action="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', $this->info['secure'] ) . '" method="post">' . "\n";
 		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
 		$return .= '<input type="hidden" name="invoice" value="' . $request->int_var['invoice'] . '" />' . "\n";
 		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
 		$return .= '<input type="hidden" name="task" value="checkout" />' . "\n";
-		$return .= '<input type="submit" class="button" id="aec_checkout_btn" value="' . _BUTTON_CHECKOUT . '" onclick="javascript:document.getElementById(\'aec_checkout_btn\').disabled=true" /><br /><br />' . "\n";
+		$return .= '<input type="submit" class="button" id="aec_checkout_btn" value="' . _BUTTON_CHECKOUT . '" /><br /><br />' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -4141,7 +4143,7 @@ class POSTprocessor extends processor
 			$onclick = 'onclick="' . $var['_aec_checkout_onclick'] . '"';
 			unset( $var['_aec_checkout_onclick'] );
 		} else {
-			$onclick = 'onclick="javascript:document.getElementById(\'aec_checkout_btn\').disabled=true"';
+			$onclick = ""; // TODO: 'onclick="javascript:document.getElementById(\'aec_checkout_btn\').disabled=true"';
 		}
 
 		$return = '<form action="' . $var['post_url'] . '" method="post">' . "\n";
@@ -8016,12 +8018,14 @@ class InvoiceFactory
 		// If this is marked as supposedly free
 		if ( in_array( strtolower( $this->processor ), $exceptproc ) && !empty( $this->plan ) ) {
 			// And if it is either made free through coupons
-			if ( !empty( $this->invoice->made_free )
+			if (
+				!empty( $this->invoice->made_free )
 				// Or a free full period that the user CAN use
 				|| ( $this->plan->params['full_free'] && $this->invoice->counter )
 				|| ( $this->plan->params['full_free'] && empty( $this->invoice->counter ) && empty( $this->plan->params['trial_period'] ) )
 				// Or a free trial that the user CAN use
-				|| ( $this->plan->params['trial_free'] && empty( $this->invoice->counter ) ) ) {
+				|| ( $this->plan->params['trial_free'] && empty( $this->invoice->counter ) )
+			) {
 				// Then mark payed
 				if ( $this->invoice->pay() !== false ) {
 					return $this->thanks( $option, false, true );
@@ -8100,11 +8104,11 @@ class InvoiceFactory
 		}
 
 		// Either this is fully free, or the next term is free and this is non recurring
-		if ( !empty( $this->items ) ) {
+		if ( !empty( $this->items ) && !$this->recurring ) {
 			if ( ( count( $this->items ) == 1 ) || ( $this->payment->amount['amount'] == "0.00" ) ) {
 				$min = array_shift( array_keys( $this->items ) );
 
-				if ( $this->items[$min]['terms']->checkFree() || ( $this->items[$min]['terms']->nextterm->free && !$this->recurring ) || ( $this->payment->amount == "0.00" ) ) {
+				if ( $this->items[$min]['terms']->checkFree() || ( $this->items[$min]['terms']->nextterm->free && !$this->recurring ) || ( $this->payment->amount['amount'] == "0.00" ) ) {
 					$this->invoice->pay();
 					return $this->thanks( $option, false, true );
 				}
@@ -8600,6 +8604,10 @@ class Invoice extends serialParamDBTable
 
 		$madefree = false;
 
+		if ( is_null( $recurring_choice ) && isset( $this->params['userselect_recurring'] ) ) {
+			$recurring_choice = $this->params['userselect_recurring'];
+		}
+
 		if ( !is_null( $this->usage ) && !( $this->usage == '' ) ) {
 			$recurring = 0;
 
@@ -8681,8 +8689,8 @@ class Invoice extends serialParamDBTable
 					if ( is_object( $pp ) ) {
 						$pp->exchangeSettingsByPlan( $plan );
 
-						if ( $pp->is_recurring() ) {
-							$recurring = $pp->is_recurring();
+						if ( $pp->is_recurring( $recurring_choice ) ) {
+							$recurring = $pp->is_recurring( $recurring_choice );
 						} else {
 							$recurring = 0;
 						}
@@ -12108,6 +12116,10 @@ class AECToolbox
 					}
 				}
 			}
+		}
+
+		if ( strpos( $new_url, '//administrator' ) !== 0 ) {
+			$new_url = str_replace( '//administrator', '/administrator', $new_url );
 		}
 
 		if ( $secure && ( strpos( $new_url, 'https:' ) !== 0 ) ) {

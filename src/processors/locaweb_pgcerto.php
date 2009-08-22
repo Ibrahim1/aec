@@ -192,20 +192,24 @@ class processor_locaweb_pgcerto extends XMLprocessor
 		$loadDom															= $objDom->loadXML($XMLresposta);
 
 		// Resgata os dados iniciais do retorno da transação
-		$nodeCodRetornoInicio										= $objDom->getElementsByTagName('CodRetorno')->item(0);
+		$nodeCodRetornoInicioTemp										= $objDom->getElementsByTagName('CodRetorno');
+		$nodeCodRetornoInicio											= $nodeCodRetornoInicioTemp->item(0);
 		$CodRetornoInicio												= $nodeCodRetornoInicio->nodeValue;
 
-		$nodeMensagemRetornoInicio							= $objDom->getElementsByTagName('MensagemRetorno')->item(0);
+		$nodeMensagemRetornoInicioTemp							= $objDom->getElementsByTagName('MensagemRetorno');
+		$nodeMensagemRetornoInicio							= $nodeMensagemRetornoInicioTemp->item(0);
 		$MensagemRetorno											= $nodeMensagemRetornoInicio->nodeValue;
 
 		// Verifica se o registro da transação foi feito com sucesso
 		if ($CodRetornoInicio == '0') {
 
 			// Resgata o id e a mensagem da transação
-			$nodeIdTransacao											= $objDom->getElementsByTagName('IdTransacao')->item(0);
+			$nodeIdTransacaoTemp											= $objDom->getElementsByTagName('IdTransacao');
+			$nodeIdTransacao												= $nodeIdTransacaoTemp->item(0);
 			$IdTransacao													= $nodeIdTransacao->nodeValue;
 
-			$nodeCodigoRef												= $objDom->getElementsByTagName('Codigo')->item(0);
+			$nodeCodigoRefTemp												= $objDom->getElementsByTagName('Codigo');
+			$nodeCodigoRef												= $nodeCodigoRefTemp->item(0);
 			$Codigo															= $nodeCodigoRef->nodeValue;
 
 			// Inicia a transação
@@ -268,65 +272,83 @@ class processor_locaweb_pgcerto extends XMLprocessor
 			$loadDom 														= $objDom->loadXML($XMLresposta);
 
 			// Resgata os dados iniciais do retorno da transação
-			$nodeCodRetornoConsulta								= $objDom->getElementsByTagName('CodRetorno')->item(0);
+			$nodeCodRetornoConsultaTemp								= $objDom->getElementsByTagName('CodRetorno');
+			$nodeCodRetornoConsulta								= $nodeCodRetornoConsultaTemp->item(0);
 			$CodRetornoConsulta										= $nodeCodRetornoConsulta->nodeValue;
 
-			$nodeMensagemRetornoConsulta					= $objDom->getElementsByTagName('MensagemRetorno')->item(0);
+			$nodeMensagemRetornoConsultaTemp					= $objDom->getElementsByTagName('MensagemRetorno');
+			$nodeMensagemRetornoConsulta					= $nodeMensagemRetornoConsultaTemp->item(0);
 			$MensagemRetornoConsulta							= $nodeMensagemRetornoConsulta->nodeValue;
 
 			if ($CodRetornoConsulta == '15') {
 				// 15 -> Transacao processada
 				// Resgata os dados da transação
-				$nodeIdTransacao										= $objDom->getElementsByTagName('IdTransacao')->item(0);
+				$nodeIdTransacaoTemp										= $objDom->getElementsByTagName('IdTransacao');
+				$nodeIdTransacao										= $nodeIdTransacaoTemp->item(0);
 				$IdTransacao												= $nodeIdTransacao->nodeValue;
 
-				$nodeCodigoTransacao								= $objDom->getElementsByTagName('Codigo')->item(0);
+				$nodeCodigoTransacaoTemp								= $objDom->getElementsByTagName('Codigo');
+				$nodeCodigoTransacao								= $nodeCodigoTransacaoTemp->item(0);
 				$Codigo														= $nodeCodigoTransacao->nodeValue;
 
-				$nodeDataTransacao									= $objDom->getElementsByTagName('Data')->item(0);
+				$nodeDataTransacaoTemp									= $objDom->getElementsByTagName('Data');
+				$nodeDataTransacao									= $nodeDataTransacaoTemp->item(0);
 				$Data															= $nodeDataTransacao->nodeValue;
 
 				// Resgata os dados do comprador no Pagamento Certo
-				$nodeCompradorNome								= $objDom->getElementsByTagName('Nome')->item(0);
+				$nodeCompradorNomeTemp								= $objDom->getElementsByTagName('Nome');
+				$nodeCompradorNome								= $nodeCompradorNomeTemp->item(0);
 				$Nome															= $nodeCompradorNome->nodeValue;
 
-				$nodeCompradorEmail								= $objDom->getElementsByTagName('Email')->item(0);
+				$nodeCompradorEmailTemp								= $objDom->getElementsByTagName('Email');
+				$nodeCompradorEmail								= $nodeCompradorEmailTemp->item(0);
 				$Email															= $nodeCompradorEmail->nodeValue;
 
-				$nodeCompradorCpf									= $objDom->getElementsByTagName('Cpf')->item(0);
+				$nodeCompradorCpfTemp									= $objDom->getElementsByTagName('Cpf');
+				$nodeCompradorCpf									= $nodeCompradorCpfTemp->item(0);
 				$Cpf																= $nodeCompradorCpf->nodeValue;
 
-				$nodeCompradorTipoPessoa						= $objDom->getElementsByTagName('TipoPessoa')->item(0);
+				$nodeCompradorTipoPessoaTemp						= $objDom->getElementsByTagName('TipoPessoa');
+				$nodeCompradorTipoPessoa						= $nodeCompradorTipoPessoaTemp->item(0);
 				$TipoPessoa												= $nodeCompradorTipoPessoa->nodeValue;
 
-				$nodeCompradorRazaoSocial						= $objDom->getElementsByTagName('RazaoSocial')->item(0);
+				$nodeCompradorRazaoSocialTemp						= $objDom->getElementsByTagName('RazaoSocial');
+				$nodeCompradorRazaoSocial						= $nodeCompradorRazaoSocialTemp->item(0);
 				$RazaoSocial												= $nodeCompradorRazaoSocial->nodeValue;
 
-				$nodeCompradorCNPJ									= $objDom->getElementsByTagName('Cnpj')->item(0);
+				$nodeCompradorCNPJTemp									= $objDom->getElementsByTagName('Cnpj');
+				$nodeCompradorCNPJ									= $nodeCompradorCNPJTemp->item(0);
 				$Cnpj															= $nodeCompradorCNPJ->nodeValue;
 
 
 				// Resgata os dados do pagamento
-				$nodeMensagemModuloPagamento			= $objDom->getElementsByTagName('Modulo')->item(0);
+				$nodeMensagemModuloPagamentoTemp			= $objDom->getElementsByTagName('Modulo');
+				$nodeMensagemModuloPagamento			= $nodeMensagemModuloPagamentoTemp->item(0);
 				$Modulo														= $nodeMensagemModuloPagamento->nodeValue;
 
-				$nodeMensagemTipoModuloPagamento	= $objDom->getElementsByTagName('Tipo')->item(0);
+				$nodeMensagemTipoModuloPagamentoTemp	= $objDom->getElementsByTagName('Tipo');
+				$nodeMensagemTipoModuloPagamento	= $nodeMensagemTipoModuloPagamentoTemp->item(0);
 				$Tipo															= $nodeMensagemTipoModuloPagamento->nodeValue;
 
-				$nodeProcessadoPagamento						= $objDom->getElementsByTagName('Processado')->item(0);
+				$nodeProcessadoPagamentoTemp						= $objDom->getElementsByTagName('Processado');
+				$nodeProcessadoPagamento						= $nodeProcessadoPagamentoTemp->item(0);
 				$Processado												= $nodeProcessadoPagamento->nodeValue;
 
-				$nodeMensagemRetornoPagamento			= $objDom->getElementsByTagName('MensagemRetorno')->item(1);
+				$nodeMensagemRetornoPagamentoTemp			= $objDom->getElementsByTagName('MensagemRetorno');
+				$nodeMensagemRetornoPagamento			= $nodeMensagemRetornoPagamentoTemp->item(1);
 				$MensagemRetornoPagamento					= $nodeMensagemRetornoPagamento->nodeValue;
 
-				$nodeMensagemRetornoPagamento			= $objDom->getElementsByTagName('MensagemRetorno')->item(0);
+				$nodeMensagemRetornoPagamentoTemp			= $objDom->getElementsByTagName('MensagemRetorno');
+				$nodeMensagemRetornoPagamento			= $nodeMensagemRetornoPagamentoTemp->item(0);
 				$MensagemRetorno									= $nodeMensagemRetornoPagamento->nodeValue;
 
 				// Resgata os dados do pedido
-				$nodeCodigoPedido										= $objDom->getElementsByTagName('Numero')->item(0);
+				$nodeCodigoPedidoTemp										= $objDom->getElementsByTagName('Numero');
+				$nodeCodigoPedido										= $nodeCodigoPedidoTemp->item(0);
 				$Numero														= $nodeCodigoPedido->nodeValue;
 
-				$nodeValorTotal 											= $objDom->getElementsByTagName('ValorTotal')->item(0);
+				$nodeValorTotalTemp 											= $objDom->getElementsByTagName('ValorTotal');
+				$nodeValorTotal 											= $nodeValorTotalTemp ->item(0);
 				$ValorTotal													= $nodeValorTotal->nodeValue;
 
 				// Monta os dados de resposta para o componente AEC

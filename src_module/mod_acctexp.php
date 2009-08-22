@@ -38,6 +38,8 @@ if ( $user->id ) {
 				include_once( $langPath. 'english.php' );
 		}
 
+		$database = &JFactory::getDBO();
+
 		$expiration = null;
 		$query = 'SELECT `expiration`'
 				. ' FROM #__acctexp_subscr'
