@@ -138,7 +138,7 @@ class processor_allopass extends XMLprocessor
 		//$var['ssl_merchant_id']			= $var['SITE_ID'];
 		//$var['ssl_user_id']				= $var['DOC_ID'];
 		//$var['ssl_pin']					= $var['AUTH'];
-		//$var['ssl_invoice_number']		= $request->int_var['invoice'];
+		//$var['ssl_invoice_number']		= $request->invoice->invoice_number;
 		//$var['ssl_salestax']			= "0";
 		//$var['ssl_result_format']		= "HTML";
 		//$var['ssl_receipt_link_method']	= "POST";

@@ -65,7 +65,7 @@ class processor_viaklix extends POSTprocessor
 		$var['ssl_merchant_id']			= $this->settings['accountid'];
 		//$var['ssl_user_id']				= $this->settings['userid'];
 		$var['ssl_pin']					= $this->settings['pin'];
-		$var['ssl_invoice_number']		= $request->int_var['invoice'];
+		$var['ssl_invoice_number']		= $request->invoice->invoice_number;
 		$var['ssl_salestax']			= "0";
 		$var['ssl_result_format']		= "HTML";
 		$var['ssl_receipt_link_method']	= "POST";

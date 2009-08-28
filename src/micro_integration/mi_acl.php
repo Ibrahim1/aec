@@ -61,7 +61,6 @@ class mi_acl
 
 		$gtree = $acl->get_group_children_tree( null, 'USERS', false );
 
-		// mic: exclude public front- & backend
 		$ex_groups[] = 29;
 		$ex_groups[] = 30;
 

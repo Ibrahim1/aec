@@ -117,9 +117,9 @@ class processor_epsnetpay extends POSTprocessor
 		$var['sapUgawwhg']		= $sapUgawwhg;
 		$sapUkddaten			= $request->metaUser->cmsUser->id;
 		$var['sapUkddaten']		= $sapUkddaten;
-		$sapUvwzweck			= $request->int_var['invoice'];
+		$sapUvwzweck			= $request->invoice->invoice_number;
 		$var['sapUvwzweck']		= $sapUvwzweck;
-		$sapUzusatz				= $request->int_var['invoice'];
+		$sapUzusatz				= $request->invoice->invoice_number;
 		$var['sapUzusatz']		= $sapUzusatz;
 		$value					= preg_split("/[\.,]/", $request->int_var['amount']);
 

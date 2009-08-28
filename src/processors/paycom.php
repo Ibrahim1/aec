@@ -56,7 +56,7 @@ class processor_paycom extends POSTprocessor
 		$var['co_code']			= $this->settings['co_code'];
 		$var['product_id']		= $this->settings['product_id'];
 		$var['reseller']		= "a"; //hardcoded as per Paycom Interface documentation - required
-		$var['x_invoice']		= $request->int_var['invoice'];
+		$var['x_invoice']		= $request->invoice->invoice_number;
 		$var['zip']				= "";  //if you have this available through CB then use it ;)
 		$var['email']			= $request->metaUser->cmsUser->email;
 		$var['country']			= "";  //if you have this available through CB then use it ;) NOTE Paycom want a ISO 2 char country code.

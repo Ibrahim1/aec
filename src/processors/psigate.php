@@ -59,7 +59,7 @@ class processor_psigate extends POSTprocessor
 		}
 
 		$var['StoreKey']		= $this->settings['StoreKey'];
-		$var['CustomerRefNo']	= $request->int_var['invoice'];
+		$var['CustomerRefNo']	= $request->invoice->invoice_number;
 		//$var['OrderID']			= md5($this->settings['secretWord'] . $request->int_var['amount']);
 		$var['SubTotal']		= $request->int_var['amount'];
 		$var['PaymentType']		= "CC";

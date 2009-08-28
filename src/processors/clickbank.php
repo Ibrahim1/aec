@@ -69,7 +69,7 @@ class processor_clickbank extends URLprocessor
 		$var['post_url']		= 'http://'.$item_number.'.'.$this->settings['publisher'].'.pay.clickbank.net?';
 
 		// pass internal invoice to clickbank, so it will pass back to us for internal checking
-		$var['invoice']			= $request->int_var['invoice'];
+		$var['invoice']			= $request->invoice->invoice_number;
 
 		$var['cart_order_id']	= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 

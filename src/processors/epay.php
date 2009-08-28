@@ -97,7 +97,7 @@ class processor_epay extends POSTprocessor
 	{
 		 // target for epay standard payment window
 		$var['post_url']		= "https://ssl.ditonlinebetalingssystem.dk/popup/default.asp";
-		$var['orderid']			= $request->int_var['invoice'];
+		$var['orderid']			= $request->invoice->id;
 		$var['amount']			= $request->int_var['amount'] * 100;
 		$var['merchantnumber']	= $this->settings['merchantnumber'];
 		$var['currency']		= AECToolbox::aecNumCurrency( $this->settings['currency'] );
@@ -174,6 +174,8 @@ class processor_epay extends POSTprocessor
 		$database = &JFactory::getDBO();
 
 		$post = $this->getPost( $post );
+
+		$response['fullresponse'] = $post;
 
 		$response = array();
 		$response['valid'] = 0;

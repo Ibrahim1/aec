@@ -11,8 +11,7 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-// mic: NEW 0.12.4 start
-define( '_AEC_LANGUAGE',						'de' ); // NICHT AENDERN!!
+define( '_AEC_LANGUAGE',						'de' );
 define( '_COUPON_CODE',							'Gutscheincode' );
 define( '_CFG_GENERAL_CUSTOMNOTALLOWED_NAME',	'Link zur Nichterlaubtseite:' );
 

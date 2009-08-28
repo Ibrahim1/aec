@@ -74,7 +74,7 @@ class processor_moneybookers extends POSTprocessor
 		$var['pay_to_email']			= $this->settings['pay_to_email'];
 		$var['recipient_description']	= $this->settings['recipient_description'];
 		$var['logo_url']				= $this->settings['logo_url'];
-		$var['transaction_id']			= $request->int_var['invoice'];
+		$var['transaction_id']			= $request->invoice->invoice_number;
 
 		$var['return_url']				= $request->int_var['return_url'];
 		$var['cancel_url']				= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cancel' );

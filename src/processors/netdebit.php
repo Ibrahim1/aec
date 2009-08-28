@@ -100,7 +100,7 @@ class processor_netdebit extends URLprocessor
 		$var['CON']		= $this->settings['content_id'];
 		$var['SID']		= $this->settings['sid'];
 
-		$var['VAR1']	= $request->int_var['invoice'];
+		$var['VAR1']	= $request->invoice->invoice_number;
 		$var['VAR2']	= "";//implode( "|", array() );
 		$var['ZAH']		= $this->settings['type']; //1 = Lastschrift, 2 = Kreditkarte
 

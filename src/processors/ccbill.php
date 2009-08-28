@@ -76,7 +76,7 @@ class processor_ccbill extends POSTprocessor
 		}
 		$var['formName']		= $this->settings['formName'];
 
-		$var['invoice']			= $request->int_var['invoice'];
+		$var['invoice']			= $request->invoice->invoice_number;
 		$var['username']		= $request->metaUser->cmsUser->username;
 		$var['password']		= "xxxxxx"; // hard coded because the CCBILL system can't deal with an empty password - despite having an option to ignore it...
 		$var['email']			= $request->metaUser->cmsUser->email;

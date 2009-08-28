@@ -11,7 +11,6 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-// mic: NEW 0.12.4
 define( '_AEC_LANGUAGE',						'nl' ); // NIET VERANDEREN!!
 define( '_CFG_GENERAL_ACTIVATE_PAID_NAME',		'Activeer betaalde abonnementen' );
 define( '_CFG_GENERAL_ACTIVATE_PAID_DESC',		'Deze optie zorgt ervoor dat abonnementen altijd betalend zijn, en niet werken met een activatiecode' );

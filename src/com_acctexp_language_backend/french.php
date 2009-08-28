@@ -11,7 +11,6 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-// mic: NEW 0.12.4
 define( '_AEC_LANGUAGE',                        'fr' ); // DO NOT CHANGE!!
 define( '_CFG_GENERAL_ACTIVATE_PAID_NAME',        'Souscription payante activ&eacute;' );
 define( '_CFG_GENERAL_ACTIVATE_PAID_DESC',        'Toujours activer les souscriptions qui sont pay&eacute;es au lieu d&amp;acute;exiger un code d&amp;acute;activation automatique' );

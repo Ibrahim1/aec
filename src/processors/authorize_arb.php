@@ -97,7 +97,7 @@ class processor_authorize_arb extends XMLprocessor
 					. '<name>' . trim( substr( $this->settings['login'], 0, 25 ) ) . '</name>'
 					. '<transactionKey>' . trim( substr( $this->settings['transaction_key'], 0, 16 ) ) . '</transactionKey>'
 					. '</merchantAuthentication>'
-					. '<refId>' . $request->int_var['invoice'] . '</refId>';
+					. '<refId>' . $request->invoice->invoice_number . '</refId>';
 
 		$full = $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
 

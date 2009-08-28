@@ -126,12 +126,12 @@ class processor_ipayment_silent extends XMLprocessor
 			$a['trxpassword']		= $this->settings['password'];
 		}
 
-		$a['order_id']		= AECfetchfromDB::InvoiceIDfromNumber( $request->int_var['invoice'] );
+		$a['order_id']		= AECfetchfromDB::InvoiceIDfromNumber( $request->invoice->invoice_number );
 		$a['from_ip']		= $ip;
 		$a['trx_currency']	= $this->settings['currency'];
 		$a['trx_amount']	= (int) ( $request->int_var['amount'] * 100 );
 		$a['trx_typ']		= 'auth';
-		$a['invoice_text']	= $request->int_var['invoice'];
+		$a['invoice_text']	= $request->invoice->invoice_number;
 		$a['addr_email']	= $request->metaUser->cmsUser->email;
 
 		$varray = array(	'addr_name'	=>	'billFirstName',

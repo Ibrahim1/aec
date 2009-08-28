@@ -123,7 +123,7 @@ class processor_locaweb_pgcerto extends XMLprocessor
 
 		$content .= '</Pagamento>'
 					. '<Pedido>'
-					. '<Numero>'				. trim( $request->int_var['invoice'] )									. '</Numero>'
+					. '<Numero>'				. trim( $request->invoice->invoice_number )									. '</Numero>'
 					. '<ValorSubTotal>'		. $valorTotal																			. '</ValorSubTotal>'
 					. '<ValorFrete>000</ValorFrete>'
 					. '<ValorAcrescimo>000</ValorAcrescimo>'

@@ -73,7 +73,7 @@ class processor_moneyproxy extends POSTprocessor
 		$var['force_client_receipt']	= $this->settings['force_client_receipt'];
 		$var['suggested_memo']			= substr( $this->settings['suggested_memo'], 0, 40 );
 		$var['language']				= strtolower( $this->settings['language'] );
-		$var['custom1']					= $request->int_var['invoice'];
+		$var['custom1']					= $request->invoice->invoice_number;
 
 		$var['input_hash']				= md5( implode( ':', $var ) . ':' . $this->settings['secret_key'] );
 

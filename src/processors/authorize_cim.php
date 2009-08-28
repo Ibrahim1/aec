@@ -404,7 +404,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		}
 
 		$return .= $this->getParamsHTML( $this->checkoutform( $request, $cim ) ) . '<br /><br />';
-		$return .= '<input type="hidden" name="invoice" value="' . $request->int_var['invoice'] . '" />' . "\n";
+		$return .= '<input type="hidden" name="invoice" value="' . $request->invoice->invoice_number . '" />' . "\n";
 		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
 		$return .= '<input type="hidden" name="task" value="checkout" />' . "\n";
 		$return .= '<input type="submit" class="button" value="' . _BUTTON_CHECKOUT . '" /><br /><br />' . "\n";
@@ -438,7 +438,7 @@ class processor_authorize_cim extends PROFILEprocessor
 			$cim = new AuthNetCim( $this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode'] );
 		}
 
-		$basicdata = array(	'refId'					=> $request->int_var['invoice'],
+		$basicdata = array(	'refId'					=> $request->invoice->invoice_number,
 							'merchantCustomerId'	=> $request->metaUser->cmsUser->id,
 							'description'			=> $request->metaUser->cmsUser->name,
 							'email'					=> $request->metaUser->cmsUser->email,

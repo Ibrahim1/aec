@@ -218,7 +218,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$var['countrycode']			= $request->int_var['params']['billCountry'];
 		$var['NotifyUrl']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=paypal_wppnotification' );
 		$var['desc']				= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
-		$var['InvNum']				= $request->int_var['invoice'];;
+		$var['InvNum']				= $request->invoice->invoice_number;;
 
 		if ( is_array( $request->int_var['amount'] ) ) {
 			// $var['InitAmt'] = 'Initial Amount'; // Not Supported Yet
@@ -253,7 +253,7 @@ class processor_paypal_wpp extends XMLprocessor
 			$var['BillingPeriod']		= $full['unit'];
 			$var['BillingFrequency']	= $full['period'];
 			$var['amt']					= $request->int_var['amount']['amount3'];
-			$var['ProfileReference']	= $request->int_var['invoice'];
+			$var['ProfileReference']	= $request->invoice->invoice_number;
 		} else {
 			$var['amt']					= $request->int_var['amount'];
 		}

@@ -181,7 +181,7 @@ class processor_iats extends XMLprocessor
 				$var[$n.($hastrial ? '2' : '1')] = $v;
 			}
 
-			$var['ProfileReference']	= $request->int_var['invoice'];
+			$var['ProfileReference']	= $request->invoice->invoice_number;
 
 			$this->path = "/itravel/Customer_Create.pro";
 		} else {
@@ -196,7 +196,7 @@ class processor_iats extends XMLprocessor
 			$this->path = "/trams/authresult.pro";
 		}
 
-		$var['InvoiceNum']			= $request->int_var['invoice'];
+		$var['InvoiceNum']			= $request->invoice->invoice_number;
 
 		$var['Version']				= "1.30";
 

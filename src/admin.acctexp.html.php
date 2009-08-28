@@ -1592,7 +1592,6 @@ class HTML_AcctExp
 		loadOverlib();
 		HTML_myCommon::addBackendCSS();
 
-		// mic: added swap script here, but NOT complete (has to be adopted if needed here !)
 		?>
 		<script type="text/javascript">
 			/* <![CDATA[ */
@@ -2613,6 +2612,7 @@ class HTML_AcctExp
 			<th align="center" width="30%"><?php echo _INVOICE_CREATED_DATE; ?></th>
 			<th align="center" width="30%"><?php echo _INVOICE_TRANSACTION_DATE; ?></th>
 			<th align="center" width="10%"><?php echo _USERPLAN; ?></th>
+			<th align="center" width="10%"><?php echo _INVOICE_COUPONS; ?></th>
 			<th align="center" width="10%"><?php echo _INVOICE_METHOD; ?></th>
 			<th align="center" width="10%"><?php echo _INVOICE_AMOUNT; ?></th>
 			<th width="10%"><?php echo _INVOICE_CURRENCY; ?></th>
@@ -2623,12 +2623,13 @@ class HTML_AcctExp
 			?>
 			<tr class="row<?php echo $k; ?>">
 				<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-				<td><a href="index2.php?option=com_acctexp&amp;task=edit&userid=<?php echo $rows[$i]->userid; ?>"><?php echo $rows[$i]->userid; ?></a></td>
+				<td><a href="index2.php?option=com_acctexp&amp;task=edit&userid=<?php echo $rows[$i]->userid; ?>"><?php echo $rows[$i]->username; ?></a></td>
 				<td align="center"><?php echo $rows[$i]->invoice_number; ?></td>
 				<td align="center"><?php echo $rows[$i]->secondary_ident; ?></td>
 				<td align="center"><?php echo $rows[$i]->created_date; ?></td>
 				<td align="center"><?php echo $rows[$i]->transaction_date; ?></td>
 	  			<td align="center"><?php echo $rows[$i]->usage; ?></td>
+	  			<td align="center"><?php echo $rows[$i]->coupons; ?></td>
 	  			<td align="center"><?php echo $rows[$i]->method; ?></td>
 				<td align="center"><?php echo $rows[$i]->amount; ?></td>
 				<td align="center"><?php echo $rows[$i]->currency; ?></td>

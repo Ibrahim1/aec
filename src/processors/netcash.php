@@ -76,7 +76,7 @@ class processor_netcash extends POSTprocessor
 		$var['m_2']                     = $this->settings['password'];
 		$var['m_3']                     = $this->settings['pin'];
 		$var['p1']                      = $this->settings['terminal_id'];
-		$var['p2']                      = $request->int_var['invoice'];
+		$var['p2']                      = $request->invoice->invoice_number;
 		$var['p3']                      = AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
 		$var['p4']                      = $request->int_var['amount'];
 		$var['p10']                     = AECToolbox::deadsureURL( 'index.php?task=cancel' );

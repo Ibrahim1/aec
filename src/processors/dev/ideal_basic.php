@@ -68,7 +68,7 @@ class processor_ideal_basic extends URLprocessor
 
 		$var['merchantID']			= $this->settings['merchantid'];
 		$var['subID']				= $this->settings['subid'];
-		$var['purchaseID']			= substr( $request->int_var['invoice'], 1 );
+		$var['purchaseID']			= substr( $request->invoice->invoice_number, 1 );
 
 		if ( $this->settings['testmode'] ) {
 			$var['amount']			= max( 1, min( 7, (int) $this->settings['testmodestage'] ) ) . '.00';

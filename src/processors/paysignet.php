@@ -51,7 +51,7 @@ class processor_paysignet extends POSTprocessor
 	{
 		$var['post_url']			= "https://www.paysignet.com/validate/paysign_getdetails.asp";
 
-		$var['epq_MMerchantOId']	= $request->int_var['invoice'];
+		$var['epq_MMerchantOId']	= $request->invoice->invoice_number;
 		$var['epq_AAmountA1']		= $request->int_var['amount'];
 		$var['epq_MMerchantB2']		= $this->settings['merchant'];
 

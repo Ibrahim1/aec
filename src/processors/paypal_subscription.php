@@ -126,7 +126,7 @@ class processor_paypal_subscription extends POSTprocessor
 		}
 */
 		$var['business']		= $this->settings['business'];
-		$var['invoice']			= $request->int_var['invoice'];
+		$var['invoice']			= $request->invoice->invoice_number;
 		$var['cancel_return']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cancel' );
 
 		if ( strpos( $this->settings['altipnurl'], 'http://' ) === 0 ) {

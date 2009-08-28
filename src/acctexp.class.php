@@ -10949,7 +10949,7 @@ class GeneralInfoRequester
 			} elseif ( strpos( $Data, '@package Mambo' ) ) {
 				return 'Mambo';
 			} else {
-				return 'UNKNOWN'; // mic: DO NOT CHANGE THIS VALUE!! (used later)
+				return 'UNKNOWN';
 			}
 		} elseif (  aecJoomla15check() ) {
 			return 'Joomla15';
@@ -16415,7 +16415,7 @@ class aecRestrictionHelper
 				$field = substr( $field, 0, -1 );
 			}
 
-			$custom[] = explode( ' ', $field );
+			$custom[] = explode( ' ', $field, 3 );
 		}
 
 		return $custom;

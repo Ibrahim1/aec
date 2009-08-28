@@ -255,7 +255,7 @@ class processor_chase_paymentech extends PROFILEprocessor
 		}
 
 		$return .= $this->getParamsHTML( $this->checkoutform( $request ) ) . '<br /><br />';
-		$return .= '<input type="hidden" name="invoice" value="' . $request->int_var['invoice'] . '" />' . "\n";
+		$return .= '<input type="hidden" name="invoice" value="' . $request->invoice->invoice_number . '" />' . "\n";
 		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
 		$return .= '<input type="hidden" name="task" value="checkout" />' . "\n";
 		$return .= '<input type="submit" class="button" value="' . _BUTTON_CHECKOUT . '" /><br /><br />' . "\n";

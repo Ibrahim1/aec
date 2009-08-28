@@ -74,7 +74,7 @@ class processor_payos extends URLprocessor
 
 		$var['WMID']		= $this->settings['webmaster_id'];
 		$var['CON']			= $this->settings['content_id'];
-		$var['VAR1']		= $request->int_var['invoice'];
+		$var['VAR1']		= $request->invoice->invoice_number;
 		$var['VAR2']		= "";//implode( "|", array() );
 		$var['PAY_type']	= $this->settings['type']; //1 = Lastschrift, 2 = Kreditkarte
 		$var['Customer']	= $cust;

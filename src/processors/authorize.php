@@ -85,7 +85,7 @@ class processor_authorize extends POSTprocessor
 		}
 
 		$var['x_login']					= $this->settings['login'];
-		$var['x_invoice_num']			= $request->int_var['invoice'];
+		$var['x_invoice_num']			= $request->invoice->invoice_number;
 		$var['x_receipt_link_method']	= "POST";
 		$var['x_receipt_link_url']		= AECToolbox::deadsureURL("index.php?option=com_acctexp&amp;task=authorizenotification");
 		$var['x_receipt_link_text']		= "Continue";

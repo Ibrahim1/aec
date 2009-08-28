@@ -80,9 +80,9 @@ class processor_paysite_cash extends URLprocessor
 			$var['montant'] = $request->int_var['amount'];
 		}
 
-		$var['divers'] = base64_encode( md5( $this->settings['secret'] . $request->int_var['invoice'] ) );
+		$var['divers'] = base64_encode( md5( $this->settings['secret'] . $request->invoice->invoice_number ) );
 
-		$var['ref'] = $request->int_var['invoice'];
+		$var['ref'] = $request->invoice->invoice_number;
 
 		$var['email'] = $request->metaUser->cmsUser->email;
 		$var['user'] = $request->metaUser->cmsUser->username;

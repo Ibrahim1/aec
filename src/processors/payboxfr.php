@@ -105,10 +105,10 @@ class processor_payboxfr extends POSTprocessor
 
 			$var['PBX_TOTAL']	= round( $request->int_var['amount']['amount3'] * 100 );
 
-			$var['PBX_CMD']		= $request->int_var['invoice'] . $append;
+			$var['PBX_CMD']		= $request->invoice->invoice_number . $append;
 		} else {
 			$var['PBX_TOTAL']	= $request->int_var['amount'] * 100;
-			$var['PBX_CMD']		= $request->int_var['invoice'];
+			$var['PBX_CMD']		= $request->invoice->invoice_number;
 		}
 
 		$iso4217num = array( 'EUR' => 978, 'USD' => 840, 'GBP' => 826, 'AUD' => 036, 'CAD' => 124, 'JPY' => 392, 'NZD' => 554 );

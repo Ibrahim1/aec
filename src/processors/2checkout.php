@@ -71,7 +71,7 @@ class processor_2checkout extends POSTprocessor
 		}
 
 		$var['sid']					= $this->settings['sid'];
-		$var['invoice_number']		= $request->int_var['invoice'];
+		$var['invoice_number']		= $request->invoice->invoice_number;
 		$var['fixed']				= 'Y';
 		$var['total']				= $request->int_var['amount'];
 

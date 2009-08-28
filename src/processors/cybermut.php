@@ -91,7 +91,7 @@ class processor_cybermut extends POSTprocessor
 		$var['date']			= date( "d/m/Y:H:i:s" );
 		$var['montant']			= $request->int_var['amount'] . $this->settings['currency'];
 		$var['reference']		= $request->metaUser->userid;
-		$var['texte-libre']		= $request->int_var['invoice'];
+		$var['texte-libre']		= $request->invoice->invoice_number;
 		$var['lgue']			= $this->settings['language'];
 		$var['societe']			= $this->settings['soc'];
 //print_r($var);print_r($request->int_var);exit();

@@ -66,7 +66,7 @@ class processor_worldpay extends POSTprocessor
 
 		$var['instId']		= $this->settings['instId'];
 		$var['currency']	= $this->settings['currency'];
-		$var['cartId']		= $request->int_var['invoice'];
+		$var['cartId']		= $request->invoice->invoice_number;
 		$var['amount']		= $request->int_var['amount'];
 
 		$var['desc']	= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );

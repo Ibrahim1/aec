@@ -80,7 +80,7 @@ class processor_verotel extends URLprocessor
 			$var['fldwebsitenr']		= $this->settings['siteid'];
 			$var['tc_usercode']			= $request->metaUser->cmsUser->username;
 			$var['tc_passcode']			= "xxxxxxxx";
-			$var['tc_custom1']			= $request->int_var['invoice'];
+			$var['tc_custom1']			= $request->invoice->invoice_number;
 			$var['tc_custom2']			= $request->metaUser->cmsUser->username;
 		} else {
 			$var['post_url']			= "https://secure.verotel.com/cgi-bin/vtjp.pl?";
@@ -89,7 +89,7 @@ class processor_verotel extends URLprocessor
 			$var['verotel_website']		= $this->settings['siteid'];
 			$var['verotel_usercode']	= $request->metaUser->cmsUser->username;
 			$var['verotel_passcode']	= "xxxxxxxx";
-			$var['verotel_custom1']		= $request->int_var['invoice'];
+			$var['verotel_custom1']		= $request->invoice->invoice_number;
 		}
 
 		return $var;

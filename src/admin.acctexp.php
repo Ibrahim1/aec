@@ -3141,7 +3141,6 @@ function editSubscriptionPlan( $id, $option )
 
 	$gtree = $acl->get_group_children_tree( null, 'USERS', true );
 
-	// mic: exclude public front- & backend
 	$ex_groups[] = 28;
 	$ex_groups[] = 29;
 	$ex_groups[] = 30;
@@ -4177,7 +4176,6 @@ function editMicroIntegration ( $id, $option )
 				}
 			}
 
-			// mic: to avoid displaing an empty list, show instead message at html.page
 			$lists['class_name'] = mosHTML::selectList( $mi_htmllist, 'class_name', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '"', 'value', 'text', '' );
 		} else {
 			$lists['class_name'] = '';
@@ -4452,16 +4450,16 @@ function editCoupon( $id, $option, $new, $type )
 	$cph = new couponHandler();
 
 	if ( !$new ) {
-		$cph->coupon = new Coupon($database, $type);
+		$cph->coupon = new Coupon( $database, $type );
 		$cph->coupon->load( $id );
 
 		$params_values			= $cph->coupon->params;
 		$discount_values		= $cph->coupon->discount;
 		$restrictions_values	= $cph->coupon->restrictions;
 	} else {
-		$cph->coupon = new coupon($database, 1);
+		$cph->coupon = new Coupon( $database, 1 );
 		$cph->coupon->createNew();
-		// mic_ fix php.error
+
 		$discount_values		= array();
 		$restrictions_values	= array();
 	}
@@ -4558,7 +4556,6 @@ function editCoupon( $id, $option, $new, $type )
 
 	$gtree = $acl->get_group_children_tree( null, 'USERS', false );
 
-	// mic: exclude public front- & backend
 	$ex_groups[] = 29;
 	$ex_groups[] = 30;
 
@@ -4953,6 +4950,42 @@ function invoices( $option )
 			continue;
 		} else {
 			$rows[$id]->invoice_number = $row->invoice_number . "\n" . '(' . $in_formatted . ')';
+		}
+
+		$query = 'SELECT username'
+				. ' FROM #__user'
+				. ' WHERE `id` = ' . $row->userid . ''
+				;
+		$database->setQuery( $query );
+		$username = $database->loadResult();
+
+		$rows[$id]->username = '<a href="index2.php?option=com_acctexp&amp;task=edit&userid=' . $row->userid . '">';
+
+		if ( !empty( $username ) ) {
+			$rows[$id]->username .= $username . '</a>';
+		} else {
+			$rows[$id]->username .= $row->userid;
+		}
+
+		$rows[$id]->username .= '</a>';
+
+		if ( !empty( $row->coupons ) ) {
+			$coupons = unserialize( base64_decode( $row->coupons ) );
+		} else {
+			$coupons = null;
+		}
+
+		if ( !empty( $coupons ) ) {
+			$rows[$id]->coupons = "";
+
+			$couponslist = array();
+			foreach ( $coupons as $couponcode ) {
+				$couponslist[] = '<a href="index2.php?option=com_acctexp&amp;task=editcoupon&id=' . $couponcode . '">';
+			}
+
+			$rows[$id]->coupons = implode( ", ", $couponslist );
+		} else {
+			$rows[$id]->coupons = null;
 		}
 	}
 
@@ -6080,7 +6113,6 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		if ( $hack['type'] ) {
 			switch( $hack['type'] ) {
 				case 'file':
-					// mic: fix if CMS is not Joomla or Mambo
 					if ( $hack['filename'] != 'UNKNOWN' ) {
 						$originalFileHandle = fopen( $hack['filename'], 'r' );
 						$oldData			= fread( $originalFileHandle, filesize($hack['filename'] ) );

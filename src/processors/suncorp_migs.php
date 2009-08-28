@@ -57,7 +57,7 @@ class processor_suncorp_migs extends URLprocessor
 		$var['vpc_Version']		= $this->settings['vpc_Version'];
 		$var['vpc_Command']		= $this->settings['vpc_Command'];
 		$var['vpc_AccessCode']	= $this->settings['vpc_AccessCode'];
-		$var['vpc_MerchTxnRef']	= $request->int_var['invoice'];
+		$var['vpc_MerchTxnRef']	= $request->invoice->invoice_number;
 		$var['vpc_Merchant']	= $this->settings['vpc_Merchant'];
 		$var['vpc_OrderInfo']	= $this->settings['vpc_OrderInfo'];
 		$var['vpc_Amount']		= ($request->int_var['amount'])*100;

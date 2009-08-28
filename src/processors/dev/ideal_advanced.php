@@ -94,7 +94,7 @@ class processor_ideal_advanced extends XMLprocessor
 
 		//Set parameters for TransactionRequest
 		$data->setIssuerID( $request->metaUser->userid );
-		$data->setPurchaseID( $request->int_var['invoice'] );
+		$data->setPurchaseID( $request->invoice->invoice_number );
 		$data->setAmount( $request->int_var['amount']*100 );
 		$data->setCurrency( $request->int_var['currency'] );
 		$data->setEntranceCode( $this->settings['entrance_code'] );

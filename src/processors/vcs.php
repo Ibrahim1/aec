@@ -55,7 +55,7 @@ class processor_vcs extends POSTprocessor
 		}
 
 		$var['p1']		= $this->settings['merchant_id'];
-		$var['p2']		= $request->int_var['invoice'];
+		$var['p2']		= $request->invoice->invoice_number;
 		$var['p3']		= date("Y.m.d.G.i.s");
 
 		if ( is_array( $request->int_var['amount'] ) ) {

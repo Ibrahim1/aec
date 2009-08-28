@@ -133,7 +133,7 @@ class processor_payer extends POSTprocessor
 		$xml .= "<purchase>" .
 					"<currency>"		. $this->settings['currency']		. "</currency>";
 		// Add RefId if used
-		$xml .=		"<reference_id>" . $request->int_var['invoice']		. "</reference_id>";
+		$xml .=		"<reference_id>" . $request->invoice->invoice_number		. "</reference_id>";
 		// Start the Purchase list
 		$xml .=		"<purchase_list>";
 
