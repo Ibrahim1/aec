@@ -16,13 +16,15 @@ class processor_onebip extends POSTprocessor
 	function info()
 	{
 		$info = array();
-		$info['name']				= 'onebip';
-		$info['longname']			= 'OneBip';
-		$info['statement']			= 'OneBip Mobile Phone Payment';
-		$info['description'] 		= 'OneBip Mobile Phone Payment';
-		$info['currencies']			= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS';
-		$info['languages']			= 'US';
-		$info['recurring']			= 2;
+		$info['name']					= 'onebip';
+		$info['longname']				= 'OneBip';
+		$info['statement']				= 'OneBip Mobile Phone Payment';
+		$info['description'] 			= 'OneBip Mobile Phone Payment';
+		$info['currencies']				= 'AUD,BAM,BGN,BRL,CAD,CHF,CNY,CZK,DKK,EEK,EUR,GBP,HKD,HRK,HUF,IDR'
+											. 'INR,JPY,KRW,KZT,LTL,LVL,MXN,MYR,NOK,NZD,PHP,PLN,RON,RSD,RUB,SEK,SGD,THB,TRY,TWD,UAH,USD,ZAR';
+		$info['languages']				= 'AU,AT,BE,BA,BG,CA,HR,CZ,DK,EE,FI,FR,DE,HU,ID,IE,IT,KZ,LV,LT,MY,NL,NO,PL,'
+											. 'PT,RO,RU,RS,SG,ZA,ES,SE,CH,TW,TH,UA,UK,US';
+		$info['recurring']				= 2;
 		$info['notify_trail_thanks']	= 1;
 		$info['recurring_buttons']		= 2;
 
@@ -35,6 +37,7 @@ class processor_onebip extends POSTprocessor
 		$settings['username']	= 'your@onebip.com';
 		$settings['site_id']	= '0';
 		$settings['currency']	= 'USD';
+		$settings['country']	= 'US';
 		$settings['item_name']	= '';
 
 		return $settings;
@@ -47,6 +50,7 @@ class processor_onebip extends POSTprocessor
 		$settings['username']	= array( 'inputC' );
 		$settings['site_id']	= array( 'inputC' );
 		$settings['currency']	= array( 'list_currency' );
+		$settings['country']	= array( 'list_language' );
 		$settings['item_name']	= array( 'inputE' );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
@@ -69,6 +73,7 @@ class processor_onebip extends POSTprocessor
 		$var['price']		= ($request->int_var['amount'])*100;
 		$var['item_name']	= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 		$var['currency']	= $this->settings['currency'];
+		$var['country']		= strtolower( $this->settings['currency'] );
 
 		$var['cancel_url']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cancel' );
 		$var['notify_url']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=onebipnotification' );
