@@ -832,4 +832,15 @@ define( '_CFG_SUNCORP_MIGS_VPC_ORDERINFO_DESC', 'The order description as it wil
 define( '_CFG_SUNCORP_MIGS_VPC_TICKETNO_NAME', 'Ticket No');
 define( '_CFG_SUNCORP_MIGS_VPC_TICKETNO_DESC', 'Ticket No');
 
+// OneBip
+define( '_CFG_ONEBIP_LONGNAME', 'OneBip');
+define( '_CFG_ONEBIP_STATEMENT', 'OneBip Mobile Phone Payment');
+define( '_CFG_ONEBIP_DESCRIPTION', 'OneBip Mobile Phone Payment');
+define( '_CFG_ONEBIP_USERNAME_NAME', 'Username');
+define( '_CFG_ONEBIP_USERNAME_DESC', 'Your Onebip.com username');
+define( '_CFG_ONEBIP_SITE_ID_NAME', 'Site ID');
+define( '_CFG_ONEBIP_SITE_ID_DESC', 'Your Onebip.com Site ID');
+define( '_CFG_ONEBIP_SECRET_NAME', 'Secret');
+define( '_CFG_ONEBIP_SECRET_DESC', 'Your Onebip.com Secret Word for creating a hash');
+
 ?>

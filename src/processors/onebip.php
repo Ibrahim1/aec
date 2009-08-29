@@ -17,9 +17,9 @@ class processor_onebip extends POSTprocessor
 	{
 		$info = array();
 		$info['name']					= 'onebip';
-		$info['longname']				= 'OneBip';
-		$info['statement']				= 'OneBip Mobile Phone Payment';
-		$info['description'] 			= 'OneBip Mobile Phone Payment';
+		$info['longname']				= _CFG_ONEBIP_LONGNAME;
+		$info['statement']				= _CFG_ONEBIP_STATEMENT;
+		$info['description'] 			= _CFG_ONEBIP_DESCRIPTION;
 		$info['currencies']				= 'AUD,BAM,BGN,BRL,CAD,CHF,CNY,CZK,DKK,EEK,EUR,GBP,HKD,HRK,HUF,IDR'
 											. 'INR,JPY,KRW,KZT,LTL,LVL,MXN,MYR,NOK,NZD,PHP,PLN,RON,RSD,RUB,SEK,SGD,THB,TRY,TWD,UAH,USD,ZAR';
 		$info['languages']				= 'AU,AT,BE,BA,BG,CA,HR,CZ,DK,EE,FI,FR,DE,HU,ID,IE,IT,KZ,LV,LT,MY,NL,NO,PL,'
@@ -38,6 +38,7 @@ class processor_onebip extends POSTprocessor
 		$settings['site_id']	= '0';
 		$settings['currency']	= 'USD';
 		$settings['country']	= 'US';
+		$settings['secret']		= 'secret';
 		$settings['item_name']	= '';
 
 		return $settings;
@@ -51,6 +52,7 @@ class processor_onebip extends POSTprocessor
 		$settings['site_id']	= array( 'inputC' );
 		$settings['currency']	= array( 'list_currency' );
 		$settings['country']	= array( 'list_language' );
+		$settings['secret']		= array( 'inputC' );
 		$settings['item_name']	= array( 'inputE' );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
@@ -63,23 +65,52 @@ class processor_onebip extends POSTprocessor
 		global $mosConfig_live_site;
 
 		$var['post_url']	= 'https://www.onebip.com/otms/';
-		$var['command']		= 'standard_pay';
 
 		$var['username']	= $this->settings['username'];
 		$var['site_id']		= $this->settings['site_id'];
-
-		$var['custom[invoice]']	= $request->invoice->invoice_number;
-
-		$var['price']		= ($request->int_var['amount'])*100;
 		$var['item_name']	= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
+
+		if ( is_array( $request->int_var['amount'] ) ) {
+			$var['price']		= $request->int_var['amount']['amount'] * 100;
+			$var['frequency']	= $this->convertPeriodUnit( $request->int_var['amount']['unit3'], $request->int_var['amount']['period3'] );
+		} else {
+			$var['price']	= $request->int_var['amount'] * 100;
+		}
+
 		$var['currency']	= $this->settings['currency'];
+
+		$var['command']		= 'standard_pay';
+
 		$var['country']		= strtolower( $this->settings['currency'] );
 
+		$var['custom[invoice]']	= $request->invoice->invoice_number;
+		$var['custom[option]']	= 'com_acctexp';
+		$var['custom[task]']	= 'onebipnotification';
+
 		$var['cancel_url']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cancel' );
-		$var['notify_url']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=onebipnotification' );
+		$var['notify_url']	= JURI::root() . 'index.php';
 		$var['return_url']	= $request->int_var['return_url'];
 
 		return $var;
+	}
+
+	function convertPeriodUnit( $unit, $period )
+	{
+		switch ( $unit ) {
+			default:
+			case 'D':
+				return $period;
+				break;
+			case 'W':
+				return $period * 7;
+				break;
+			case 'M':
+				return $period * 31;
+				break;
+			case 'Y':
+				return $period * 356;
+				break;
+		}
 	}
 
 	function parseNotification( $post )
@@ -98,13 +129,14 @@ class processor_onebip extends POSTprocessor
 	{
 		$response['valid'] = 0;
 
-		if ( !$post['error'] && !empty( $response['amount_paid'] ) ) {
-
-			if ( is_object( $invoice ) ) {
-				$invoice->setParams( array( 'acceptedpendingecheck' => 1 ) );
-				$invoice->storeload();
+		if ( !empty( $post['hash'] ) ) {
+			if ( $post['hash'] != md5( $this->settings['secret'] . JURI::root() . 'index.php' ) ) {
+				$response['error'] = "Security Hash Check Failed";
+				return $response;
 			}
+		}
 
+		if ( !$post['error'] && !empty( $response['amount_paid'] ) ) {
 			$response['valid'] = 1;
 		}
 
