@@ -142,7 +142,6 @@ class processor_authorize_cim extends PROFILEprocessor
 					$cim->setParameter( $key, $value );
 				}
 
-
 				if ( $post['payprofileselect'] == "new" ) {
 					$cim->createCustomerPaymentProfileRequest( $this );
 

@@ -11509,7 +11509,12 @@ class reWriteEngine
 				} else {
 					if ( isset( $this->data['metaUser']->cmsUser->activation ) ) {
 						$this->rewrite['user_activationcode']		= $this->data['metaUser']->cmsUser->activation;
-						$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+
+						if ( aecJoomla15check() ) {
+							$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_user&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+						} else {
+							$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+						}
 					} else {
 						$this->rewrite['user_activationcode']		= "";
 						$this->rewrite['user_activationlink']		= "";
@@ -11518,7 +11523,12 @@ class reWriteEngine
 			} else {
 				if ( isset( $this->data['metaUser']->cmsUser->activation ) ) {
 					$this->rewrite['user_activationcode']			= $this->data['metaUser']->cmsUser->activation;
-					$this->rewrite['user_activationlink']			= JURI::root()."index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+
+					if ( aecJoomla15check() ) {
+						$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_user&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+					} else {
+						$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+					}
 				}
 			}
 
@@ -12470,7 +12480,7 @@ class AECToolbox
 			}
 
 			if ( ( $activation == 1 ) && !$overrideActivation ) {
-				$message = sprintf( _AEC_USEND_MSG_ACTIVATE, $name, $mainframe->getCfg( 'sitename' ), JURI::root()."index.php?option=com_registration&task=activate&activation=".$row->activation, JURI::root(), $username, $savepwd );
+				$message = sprintf( _AEC_USEND_MSG_ACTIVATE, $name, $mainframe->getCfg( 'sitename' ), JURI::root()."index.php?option=" . ( aecJoomla15check() ? 'com_user' : 'com_registration' ) . "&task=activate&activation=".$row->activation, JURI::root(), $username, $savepwd );
 			} else {
 				$message = sprintf( _AEC_USEND_MSG, $name, $mainframe->getCfg( 'sitename' ), JURI::root() );
 			}
