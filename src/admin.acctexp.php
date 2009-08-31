@@ -1070,27 +1070,13 @@ function editUser(  $option, $userid, $subscriptionid, $task )
 		}
 	}
 
- 	// count number of payments of user
- 	$query = 'SELECT count(*)'
-		 	. ' FROM #__acctexp_invoices'
-		 	. ' WHERE `userid` = \'' . $userid[0] . '\''
-		 	;
- 	$database->setQuery( $query );
-
- 	$invoices_total	= $database->loadResult();
 	$invoices_limit	= 10;	// Returns last 10 payments
-	if ( $invoices_total > $invoices_limit ) {
- 		$invoices_min_limit	= $invoices_total - $invoices_limit;
-	} else {
-		$invoices_min_limit	= 0;
-	}
 
  	// get payments of user
  	$query = 'SELECT `id`'
 		 	. ' FROM #__acctexp_invoices'
 		 	. ' WHERE `userid` = \'' . $userid[0] . '\''
 		 	. ' ORDER BY `transaction_date` DESC'
-		 	. ' LIMIT ' . $invoices_min_limit . ',' . $invoices_limit
 		 	;
  	$database->setQuery( $query );
  	$invoice_ids = $database->loadResultArray();
@@ -1110,9 +1096,28 @@ function editUser(  $option, $userid, $subscriptionid, $task )
 	$lists['set_status'] = mosHTML::selectList( $group_selection, 'set_status', 'class="inputbox" size="1"', 'value', 'text', '' );
 
 	$invoices = array();
+	$couponsh = array();
+	$invoice_counter = 0;
+
 	foreach ( $invoice_ids as $inv_id ) {
 		$invoice = new Invoice( $database );
 		$invoice->load ($inv_id );
+
+		if ( !empty( $invoice->coupons ) ) {
+			foreach( $invoice->coupons as $coupon_code ) {
+				if ( !isset( $couponsh[$coupon_code] ) ) {
+					$couponsh[$coupon_code] = couponHandler::idFromCode( $coupon_code );
+				}
+
+				$couponsh[$coupon_code]['invoices'][] = $invoice->invoice_number;
+			}
+		}
+
+		if ( $invoice_counter >= $invoices_limit ) {
+			continue;
+		} else {
+			$invoice_counter++;
+		}
 
 		$status = 'uncleared';
 
@@ -1174,6 +1179,23 @@ function editUser(  $option, $userid, $subscriptionid, $task )
 		$invoices[$inv_id]['processor']			= $invoice->method;
 		$invoices[$inv_id]['usage']				= $invoice->usage;
 		$invoices[$inv_id]['actions']			= $actions;
+	}
+
+	$coupons = array();
+
+	$coupon_counter = 0;
+	foreach ( $couponsh as $coupon_code => $coupon ) {
+		if ( $coupon_counter >= 10 ) {
+			continue;
+		} else {
+			$coupon_counter++;
+		}
+
+		$cc = array();
+		$cc['coupon_code']	= '<a href="index2.php?option=com_acctexp&amp;task=' . ( $coupon['type'] ? 'editcouponstatic' : 'editcoupon' ) . '&amp;id=' . $coupon['id'] . '">';;
+		$cc['invoices']		= $coupon['invoices'];
+
+		$coupons[] = $cc;
 	}
 
 	// get available plans
@@ -1246,7 +1268,7 @@ function editUser(  $option, $userid, $subscriptionid, $task )
 		$aecHTML = false;
 	}
 
-	HTML_AcctExp::userForm( $option, $metaUser, $invoices, $mi, $lists, $task, $aecHTML );
+	HTML_AcctExp::userForm( $option, $metaUser, $invoices, $coupons, $mi, $lists, $task, $aecHTML );
 }
 
 function saveUser( $option, $apply=0 )
@@ -4943,6 +4965,7 @@ function invoices( $option )
 		return false;
 	}
 
+	$cclist = array();
 	foreach ( $rows as $id => $row ) {
 		$in_formatted = Invoice::formatInvoiceNumber( $row );
 
@@ -4979,8 +5002,12 @@ function invoices( $option )
 			$rows[$id]->coupons = "";
 
 			$couponslist = array();
-			foreach ( $coupons as $couponcode ) {
-				$couponslist[] = '<a href="index2.php?option=com_acctexp&amp;task=editcoupon&id=' . $couponcode . '">';
+			foreach ( $coupons as $coupon_code ) {
+				if ( !isset( $cclist[$coupon_code] ) ) {
+					$cclist[$coupon_code] = couponHandler::idFromCode( $coupon_code );
+				}
+
+				$couponslist[] = '<a href="index2.php?option=com_acctexp&amp;task=' . ( $cclist[$coupon_code]['type'] ? 'editcouponstatic' : 'editcoupon' ) . '&amp;id=' . $cclist[$coupon_code]['id'] . '">';
 			}
 
 			$rows[$id]->coupons = implode( ", ", $couponslist );

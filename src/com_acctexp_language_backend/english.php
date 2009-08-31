@@ -114,6 +114,13 @@ define( '_AEC_USER_SUBSCRIPTIONS_SINGUP',		'Signup' );
 define( '_AEC_USER_SUBSCRIPTIONS_EXPIRATION',	'Expiration' );
 define( '_AEC_USER_SUBSCRIPTIONS_PRIMARY',		'primary' );
 define( '_AEC_USER_CURR_SUBSCR_PLAN_PRIMARY',	'Primary' );
+define( '_AEC_USER_COUPONS',					'Coupons' );
+define( '_HISTORY_COL_COUPON_CODE',				'Coupon Code' );
+define( '_AEC_USER_NO_COUPONS',					'No coupon use in records' );
+define( '_AEC_USER_MICRO_INTEGRATION',			'Micro Integration Info' );
+define( '_AEC_USER_MICRO_INTEGRATION_USER',		'Frontend' );
+define( '_AEC_USER_MICRO_INTEGRATION_ADMIN',	'Backend' );
+define( '_AEC_USER_MICRO_INTEGRATION_DB',		'Database Readout' );
 
 // new (additional)
 define( '_AEC_MSG_MIS_NOT_DEFINED',				'You have not defined any integrations - see config' );

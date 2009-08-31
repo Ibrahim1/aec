@@ -114,6 +114,13 @@ define( '_AEC_USER_SUBSCRIPTIONS_SINGUP',		'Inscreva-se' );
 define( '_AEC_USER_SUBSCRIPTIONS_EXPIRATION',	'Expira&ccedil;&atilde;o' );
 define( '_AEC_USER_SUBSCRIPTIONS_PRIMARY',		'prim&aacute;rio' );
 define( '_AEC_USER_CURR_SUBSCR_PLAN_PRIMARY',	'Prim&aacute;rio' );
+define( '_AEC_USER_COUPONS',					'Coupons' );
+define( '_HISTORY_COL_COUPON_CODE',				'Coupon Code' );
+define( '_AEC_USER_NO_COUPONS',					'No coupon use recorded' );
+define( '_AEC_USER_MICRO_INTEGRATION',			'Micro Integration Info' );
+define( '_AEC_USER_MICRO_INTEGRATION_USER',		'Frontend' );
+define( '_AEC_USER_MICRO_INTEGRATION_ADMIN',	'Backend' );
+define( '_AEC_USER_MICRO_INTEGRATION_DB',		'Database Readout' );
 
 // new (additional)
 define( '_AEC_MSG_MIS_NOT_DEFINED',				'N&atilde;o definiu nenhuma integra&ccedil;&atilde;o at&eacute; agora - ver configura&ccedil;&atilde;o' );

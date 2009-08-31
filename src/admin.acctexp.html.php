@@ -405,7 +405,7 @@ class HTML_AcctExp
 
 	}
 
-	function userForm( $option, $metaUser, $invoices, $mi, $lists, $nexttask, $aecHTML )
+	function userForm( $option, $metaUser, $invoices, $coupons, $mi, $lists, $nexttask, $aecHTML )
 	{
 		HTML_myCommon::addBackendCSS();
 
@@ -689,7 +689,7 @@ class HTML_AcctExp
 											<td colspan="6" style="border-top: 2px solid #999999;"></td>
 										</tr>
 										<?php
-										if ( $invoices ) {
+										if ( !empty( $invoices ) ) {
 											foreach ( $invoices as $invoice ) { ?>
 												<tr<?php echo $invoice['rowstyle']; ?>>
 													<td><?php echo $invoice['invoice_number']; ?></td>
@@ -703,20 +703,42 @@ class HTML_AcctExp
 											}
 										} else {
 											echo '<tr><td colspan="6" style="text-align:center;">&gt;&gt;&nbsp;'
+											. _AEC_USER_NO_COUPONS
+											. '&nbsp;&lt;&lt;</td></tr>' . "\n";
+										} ?>
+								</table>
+							</div>
+						</div>
+						<div class="userinfobox">
+							<div style="float: left; text-align: right;">
+								<h3><?php echo _AEC_USER_COUPONS; ?></h3>
+							</div>
+							<div style="float: left; text-align: left;">
+								<table width="100%">
+										<tr>
+											<td><?php echo _HISTORY_COL_COUPON_CODE;?></td>
+											<td><?php echo _HISTORY_COL_INVOICE;?></td>
+										</tr>
+										<tr>
+											<td colspan="6" style="border-top: 2px solid #999999;"></td>
+										</tr>
+										<?php
+										if ( !empty( $coupons ) ) {
+											foreach ( $coupons as $coupon ) { ?>
+												<tr>
+													<td><?php echo $coupon['coupon_code']; ?></td>
+													<td><?php echo $coupon['invoices']; ?></td>
+												</tr>
+												<?php
+											}
+										} else {
+											echo '<tr><td colspan="6" style="text-align:center;">&gt;&gt;&nbsp;'
 											. _AEC_USER_NO_INVOICES
 											. '&nbsp;&lt;&lt;</td></tr>' . "\n";
 										} ?>
 								</table>
 							</div>
 						</div>
-						<!--<div class="userinfobox">
-							<div style="float: left; text-align: right;">
-								<h3><?php echo _AEC_USER_INVOICE_FACTORY; ?></h3>
-							</div>
-							<div style="float: left; text-align: center;">
-								<?php echo _AEC_FEATURE_NOT_ACTIVE; ?>
-							</div>
-						</div>-->
 						<div class="userinfobox">
 							<div style="float: left; text-align: right;">
 								<h3><?php echo 'Notes'; ?></h3>
@@ -729,9 +751,9 @@ class HTML_AcctExp
 			</table>
 			<?php
 			echo $tabs->endPanel();
-			echo $tabs->startPanel(_AEC_HEAD_MICRO_INTEGRATION, _AEC_HEAD_MICRO_INTEGRATION);
+			echo $tabs->startPanel(_AEC_USER_MICRO_INTEGRATION, _AEC_USER_MICRO_INTEGRATION);
 			?>
-			<div class="aec_tabheading"><h2><?php echo _AEC_HEAD_MICRO_INTEGRATION; ?>: <?php echo _AEC_HEAD_MICRO_INTEGRATION; ?></h2></div>
+			<div class="aec_tabheading"><h2><?php echo _AEC_USER_MICRO_INTEGRATION; ?>: <?php echo _AEC_USER_MICRO_INTEGRATION_USER; ?></h2></div>
 			<?php if ( !empty( $mi['profile'] ) || !empty( $mi['profile_form'] ) ) {
 				if ( !empty( $mi['profile'] ) ) { ?>
 				<table class="aecadminform">
@@ -761,7 +783,7 @@ class HTML_AcctExp
 				</table>
 				<?php }
 			} ?>
-			<div class="aec_tabheading"><h2><?php echo _AEC_HEAD_MICRO_INTEGRATION; ?>: <?php echo _AEC_HEAD_MICRO_INTEGRATION; ?></h2></div>
+			<div class="aec_tabheading"><h2><?php echo _AEC_USER_MICRO_INTEGRATION; ?>: <?php echo _AEC_USER_MICRO_INTEGRATION_ADMIN; ?></h2></div>
 			<?php if ( !empty( $mi['admin'] ) || !empty( $mi['admin_form'] ) ) {
 				if ( !empty( $mi['admin'] ) ) { ?>
 				<table class="aecadminform">
@@ -791,7 +813,7 @@ class HTML_AcctExp
 				</table>
 				<?php }
 			} ?>
-			<div class="aec_tabheading"><h2><?php echo _AEC_HEAD_MICRO_INTEGRATION; ?>: <?php echo _AEC_HEAD_MICRO_INTEGRATION; ?></h2></div>
+			<div class="aec_tabheading"><h2><?php echo _AEC_USER_MICRO_INTEGRATION; ?>: <?php echo _AEC_USER_MICRO_INTEGRATION_DB; ?></h2></div>
 			<table class="aecadminform">
 				<tr>
 					<td valign="top" style="padding: 10px;">
