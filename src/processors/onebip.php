@@ -81,7 +81,7 @@ class processor_onebip extends POSTprocessor
 
 		$var['command']		= 'standard_pay';
 
-		$var['country']		= strtolower( $this->settings['currency'] );
+		$var['country']		= strtolower( $this->settings['country'] );
 
 		$var['custom[invoice]']	= $request->invoice->invoice_number;
 		$var['custom[option]']	= 'com_acctexp';

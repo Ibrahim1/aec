@@ -372,17 +372,19 @@ class metaUser
 	{
 		global $aecConfig;
 
-		// Make sure we catch traditional and new joomla passwords
-		if ( ( $password !== false ) ) {
-			if ( strpos( $this->cmsUser->password, ':') === false ) {
-				if ( $this->cmsUser->password != md5( $password ) ) {
-					return false;
-				}
-			} else {
-				list( $hash, $salt ) = explode(':', $this->cmsUser->password);
-				$cryptpass = md5( $password . $salt );
-				if ( $hash != $cryptpass ) {
-					return false;
+		if ( !empty( $this->cmsUser->password ) ) {
+			// Make sure we catch traditional and new joomla passwords
+			if ( ( $password !== false ) ) {
+				if ( strpos( $this->cmsUser->password, ':') === false ) {
+					if ( $this->cmsUser->password != md5( $password ) ) {
+						return false;
+					}
+				} else {
+					list( $hash, $salt ) = explode(':', $this->cmsUser->password);
+					$cryptpass = md5( $password . $salt );
+					if ( $hash != $cryptpass ) {
+						return false;
+					}
 				}
 			}
 		}
@@ -7340,7 +7342,7 @@ class InvoiceFactory
 						$this->promptpassword( $option, true );
 						$return = false;
 					}
-				} else {
+				} elseif ( !empty( $this->metaUser->cmsUser->password ) ) {
 					$this->promptpassword( $option );
 					$return = false;
 				}

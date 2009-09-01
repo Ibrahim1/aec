@@ -467,6 +467,8 @@ function subscribe( $option )
 		$temptoken->getComposite();
 
 		if ( !empty( $temptoken->content ) ) {
+			$password = null;
+
 			$details = array( 'usage', 'processor', 'recurring', 'username', 'email', 'password' );
 
 			foreach ( $details as $d ) {
@@ -483,7 +485,7 @@ function subscribe( $option )
 				$database->setQuery( $query );
 				$id = $database->loadResult();
 
-				if ( !empty( $id ) && !empty( $password ) ) {
+				if ( !empty( $id ) ) {
 					$userid = $id;
 
 					$metaUser = new metaUser( $id );
@@ -1436,7 +1438,11 @@ function processNotification( $option, $processor )
 	}
 
 	// Get Invoice record
-	$id = AECfetchfromDB::InvoiceIDfromNumber( $response['invoice'] );
+	if ( !empty( $response['invoice'] ) ) {
+		$id = AECfetchfromDB::InvoiceIDfromNumber( $response['invoice'] );
+	} else {
+		$id = false;
+	}
 
 	if ( !$id ) {
 		$short	= _AEC_MSG_PROC_INVOICE_FAILED_SH;

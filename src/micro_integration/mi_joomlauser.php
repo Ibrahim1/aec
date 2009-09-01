@@ -66,7 +66,19 @@ class mi_joomlauser
 		}
 
 		if ( !empty( $this->settings['password'] ) ) {
-			$set[] = '`password` = \'' . AECToolbox::rewriteEngineRQ( $this->settings['password'], $request ) . '\'';
+			$pw = AECToolbox::rewriteEngineRQ( $this->settings['password'], $request );
+
+			if ( aecJoomla15check() ) {
+				jimport('joomla.user.helper');
+
+				$salt  = JUserHelper::genRandomPassword( 32 );
+				$crypt = JUserHelper::getCryptedPassword( $pw, $salt );
+				$password = $crypt.':'.$salt;
+			} else {
+				$password = md5( $pw );
+			}
+
+			$set[] = '`password` = \'' . $password . '\'';
 		}
 
 		if ( !empty( $set ) ) {

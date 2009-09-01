@@ -23,7 +23,7 @@ class processor_paysite_cash extends URLprocessor
 		$i['currencies']	= 'EUR,USD,CAD,GBP,CHF';
 		$i['languages']		= 'FR,US';
 		$i['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck';
-		$i['notify_trail_thanks'] = 1;
+		$i['notify_trail_thanks'] = 0;
 		$i['recurring']		= 2;
 
 		return $i;
@@ -135,6 +135,8 @@ class processor_paysite_cash extends URLprocessor
 				$response['chargeback'] = true;
 				break;
 		}
+
+		echo("confirmation ok");
 
 		return $response;
 	}
