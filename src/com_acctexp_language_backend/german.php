@@ -1787,9 +1787,10 @@ define( '_INVOICE_USERID',					'Benutzername' );
 define( '_INVOICE_INVOICE_NUMBER',			'Rechnungsnummer' );
 define( '_INVOICE_SECONDARY_IDENT', 'Secondary Identification');
 define( '_INVOICE_TRANSACTION_DATE',		'Durchf&uuml;hrungsdatum' );
-define( '_INVOICE_METHOD',					'Rechnungsart' );
-define( '_INVOICE_AMOUNT',					'Rechnungsbetrag' );
+define( '_INVOICE_METHOD',					'Art' );
+define( '_INVOICE_AMOUNT',					'Betrag' );
 define( '_INVOICE_CURRENCY',				'W&auml;hrung' );
+define( '_INVOICE_COUPONS', 'Coupons');
 
 // --== PAYMENT HISTORY OVERVIEW ==--
 define( '_HISTORY_TITLE2',					'Aktuelle Transaktionsgeschichte' );

@@ -1805,9 +1805,10 @@ define( '_INVOICE_INVOICE_NUMBER', 'Factuur nummer');
 define( '_INVOICE_SECONDARY_IDENT', 'Secondary Identification');
 define( '_INVOICE_TRANSACTION_DATE', 'Transactie datum');
 define( '_INVOICE_CREATED_DATE', 'Aangemaakt op');
-define( '_INVOICE_METHOD', 'Factuur methode');
-define( '_INVOICE_AMOUNT', 'Factuur bedrag');
-define( '_INVOICE_CURRENCY', 'Factuur valuta');
+define( '_INVOICE_METHOD', 'methode');
+define( '_INVOICE_AMOUNT', 'bedrag');
+define( '_INVOICE_CURRENCY', 'valuta');
+define( '_INVOICE_COUPONS', 'Coupons');
 
 // --== BETALINGS HISTORIE OVERZICHT ==--
 define( '_HISTORY_TITLE2', 'Uw huidige historie van transacties');

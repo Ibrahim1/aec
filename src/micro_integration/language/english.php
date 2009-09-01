@@ -204,6 +204,12 @@ define( '_AEC_MI_NAME_JOOMLAUSER',		'Joomla User' );
 define( '_AEC_MI_DESC_JOOMLAUSER',		'Actions that affect the joomla user account' );
 define( '_MI_MI_JOOMLAUSER_ACTIVATE_NAME',			'Activate' );
 define( '_MI_MI_JOOMLAUSER_ACTIVATE_DESC',			'Setting this to "Yes" will unblock a user and clean the activation code' );
+define( '_MI_MI_JOOMLAUSER_USERNAME_NAME',			'Username' );
+define( '_MI_MI_JOOMLAUSER_USERNAME_DESC',			'Automatically set a username (ReWrite-Engine applies)' );
+define( '_MI_MI_JOOMLAUSER_USERNAME_RAND_NAME',		'Random Username' );
+define( '_MI_MI_JOOMLAUSER_USERNAME_RAND_DESC',		'Automatically set a random username - please provide a number of characters (ReWrite-Engine does not apply)' );
+define( '_MI_MI_JOOMLAUSER_PASSWORD_NAME',			'Password' );
+define( '_MI_MI_JOOMLAUSER_PASSWORD_DESC',			'Automatically set a password (ReWrite-Engine applies)' );
 
 // CommunityBuilder
 define( '_AEC_MI_NAME_COMMUNITYBUILDER',				'Community Builder' );

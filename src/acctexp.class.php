@@ -14632,6 +14632,8 @@ class couponHandler
 
 	function idFromCode( $coupon_code )
 	{
+		$database = &JFactory::getDBO();
+
 		$return = array();
 
 		// Get this coupons id from the static table
@@ -14644,7 +14646,7 @@ class couponHandler
 
 		if ( $couponid ) {
 			// Its static, so set type to 1
-			$this->type = 1;
+			$return['type'] = 1;
 		} else {
 			// Coupon not found, take the regular table
 			$query = 'SELECT `id`'
@@ -14655,8 +14657,10 @@ class couponHandler
 			$couponid = $database->loadResult();
 
 			// Its not static, so set type to 0
-			$this->type = 0;
+			$return['type'] = 0;
 		}
+
+		$return['id'] = $couponid;
 
 		return $return;
 	}

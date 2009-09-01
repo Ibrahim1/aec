@@ -1804,9 +1804,10 @@ define( '_INVOICE_USERID', 'Nome de Utilizador');
 define( '_INVOICE_INVOICE_NUMBER', 'Invoice Number');
 define( '_INVOICE_SECONDARY_IDENT', 'identifica&ccedil;&atilde;o Secund&aacute;ria');
 define( '_INVOICE_TRANSACTION_DATE', 'Data de Transa&ccedil;&atilde;o');
-define( '_INVOICE_METHOD', 'Metedo Facturas');
-define( '_INVOICE_AMOUNT', 'Valor Facturas');
-define( '_INVOICE_CURRENCY', 'Moeda Facturas');
+define( '_INVOICE_METHOD', 'Metedo');
+define( '_INVOICE_AMOUNT', 'Valor');
+define( '_INVOICE_CURRENCY', 'Moeda');
+define( '_INVOICE_COUPONS', 'Coupons');
 
 // --== PAYMENT HISTORY OVERVIEW ==--
 define( '_HISTORY_TITLE2', 'Hist&oacute;rico Curente de Transa&ccedil;&otilde;es');

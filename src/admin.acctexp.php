@@ -1192,8 +1192,8 @@ function editUser(  $option, $userid, $subscriptionid, $task )
 		}
 
 		$cc = array();
-		$cc['coupon_code']	= '<a href="index2.php?option=com_acctexp&amp;task=' . ( $coupon['type'] ? 'editcouponstatic' : 'editcoupon' ) . '&amp;id=' . $coupon['id'] . '">';;
-		$cc['invoices']		= $coupon['invoices'];
+		$cc['coupon_code']	= '<a href="index2.php?option=com_acctexp&amp;task=' . ( $coupon['type'] ? 'editcouponstatic' : 'editcoupon' ) . '&amp;id=' . $coupon['id'] . '">' . $coupon_code . '</a>';
+		$cc['invoices']		= implode( ", ", $coupon['invoices'] );
 
 		$coupons[] = $cc;
 	}
@@ -4969,28 +4969,9 @@ function invoices( $option )
 	foreach ( $rows as $id => $row ) {
 		$in_formatted = Invoice::formatInvoiceNumber( $row );
 
-		if ( $in_formatted == $row->invoice_number ) {
-			continue;
-		} else {
+		if ( $in_formatted != $row->invoice_number ) {
 			$rows[$id]->invoice_number = $row->invoice_number . "\n" . '(' . $in_formatted . ')';
 		}
-
-		$query = 'SELECT username'
-				. ' FROM #__user'
-				. ' WHERE `id` = ' . $row->userid . ''
-				;
-		$database->setQuery( $query );
-		$username = $database->loadResult();
-
-		$rows[$id]->username = '<a href="index2.php?option=com_acctexp&amp;task=edit&userid=' . $row->userid . '">';
-
-		if ( !empty( $username ) ) {
-			$rows[$id]->username .= $username . '</a>';
-		} else {
-			$rows[$id]->username .= $row->userid;
-		}
-
-		$rows[$id]->username .= '</a>';
 
 		if ( !empty( $row->coupons ) ) {
 			$coupons = unserialize( base64_decode( $row->coupons ) );
@@ -5007,13 +4988,32 @@ function invoices( $option )
 					$cclist[$coupon_code] = couponHandler::idFromCode( $coupon_code );
 				}
 
-				$couponslist[] = '<a href="index2.php?option=com_acctexp&amp;task=' . ( $cclist[$coupon_code]['type'] ? 'editcouponstatic' : 'editcoupon' ) . '&amp;id=' . $cclist[$coupon_code]['id'] . '">';
+				if ( !empty( $cclist[$coupon_code]['id'] ) ) {
+					$couponslist[] = '<a href="index2.php?option=com_acctexp&amp;task=' . ( $cclist[$coupon_code]['type'] ? 'editcouponstatic' : 'editcoupon' ) . '&amp;id=' . $cclist[$coupon_code]['id'] . '">' . $coupon_code . '</a>';
+				}
 			}
 
 			$rows[$id]->coupons = implode( ", ", $couponslist );
 		} else {
 			$rows[$id]->coupons = null;
 		}
+
+		$query = 'SELECT username'
+				. ' FROM #__users'
+				. ' WHERE `id` = \'' . $row->userid . '\''
+				;
+		$database->setQuery( $query );
+		$username = $database->loadResult();
+
+		$rows[$id]->username = '<a href="index2.php?option=com_acctexp&amp;task=edit&userid=' . $row->userid . '">';
+
+		if ( !empty( $username ) ) {
+			$rows[$id]->username .= $username . '</a>';
+		} else {
+			$rows[$id]->username .= $row->userid;
+		}
+
+		$rows[$id]->username .= '</a>';
 	}
 
 	HTML_AcctExp::viewinvoices( $option, $rows, $search, $pageNav );

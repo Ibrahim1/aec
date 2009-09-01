@@ -25,7 +25,13 @@ class mi_joomlauser
 	function Settings()
 	{
 		$settings = array();
-		$settings['activate'] = array( 'list_yesno' );
+		$settings['activate']		= array( 'list_yesno' );
+		$settings['username']		= array( 'inputD' );
+		$settings['username_rand']	= array( 'inputC' );
+		$settings['password']		= array( 'inputD' );
+
+		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
+		$settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_SET4_MYSQL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
 		return $settings;
 	}
@@ -34,11 +40,40 @@ class mi_joomlauser
 	{
 		$database = &JFactory::getDBO();
 
+		$set = array();
+
 		if ( $this->settings['activate'] ) {
-			$query = 'UPDATE #__users'
-					.' SET `block` = \'0\', `activation` = \'\''
-					.' WHERE `id` = \'' . (int) $request->metaUser->userid . '\''
-					;
+			$set[] = '`block` = \'0\'';
+			$set[] = '`activation` = \'\'';
+		}
+
+		if ( !empty( $this->settings['username_rand'] ) ) {
+			$numberofrows	= 1;
+			while ( $numberofrows ) {
+				$uname =	strtolower( substr( base64_encode( md5( rand() ) ), 0, $this->settings['username_rand'] ) );
+				// Check if already exists
+				$query = 'SELECT count(*)'
+						. ' FROM #__users'
+						. ' WHERE `username` = \'' . $uname . '\''
+						;
+				$database->setQuery( $query );
+				$numberofrows = $database->loadResult();
+			}
+
+			$set[] = '`username` = \'' . $uname . '\'';
+		} elseif ( !empty( $this->settings['username'] ) ) {
+			$set[] = '`username` = \'' . AECToolbox::rewriteEngineRQ( $this->settings['username'], $request ) . '\'';
+		}
+
+		if ( !empty( $this->settings['password'] ) ) {
+			$set[] = '`password` = \'' . AECToolbox::rewriteEngineRQ( $this->settings['password'], $request ) . '\'';
+		}
+
+		if ( !empty( $set ) ) {
+			$query = 'UPDATE #__users';
+			$query .= ' SET ' . implode( ', ', $set );
+			$query .= ' WHERE `id` = \'' . (int) $request->metaUser->userid . '\'';
+
 			$database->setQuery( $query );
 			$database->query() or die( $database->stderr() );
 		}

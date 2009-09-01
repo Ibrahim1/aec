@@ -1806,9 +1806,10 @@ define( '_INVOICE_INVOICE_NUMBER', 'Num&eacute;ro de Facture');
 define( '_INVOICE_SECONDARY_IDENT', 'Secondary Identification');
 define( '_INVOICE_TRANSACTION_DATE', 'Date de Transaction');
 define( '_INVOICE_CREATED_DATE', 'Date de cr&eacute;tion');
-define( '_INVOICE_METHOD', 'M&eacute;thode de Facturation');
-define( '_INVOICE_AMOUNT', 'Montant de la Facture');
-define( '_INVOICE_CURRENCY', 'Devise de la Facture');
+define( '_INVOICE_METHOD', 'M&eacute;thode');
+define( '_INVOICE_AMOUNT', 'Montant');
+define( '_INVOICE_CURRENCY', 'Devise');
+define( '_INVOICE_COUPONS', 'Coupons');
 
 // --== HISTORIQUE DES PAIEMENTS ==--
 define( '_HISTORY_TITLE2', 'Votre Historique de Facturation');

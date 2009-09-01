@@ -193,6 +193,12 @@ define( '_AEC_MI_NAME_JOOMLAUSER',					'Joomla Benutzer' );
 define( '_AEC_MI_DESC_JOOMLAUSER',					'Aktionen die das Joomla Benutzerkonto betreffen.' );
 define( '_MI_MI_JOOMLAUSER_ACTIVATE_NAME',			'Aktivieren' );
 define( '_MI_MI_JOOMLAUSER_ACTIVATE_DESC',			'Mit "Ja" wird der Benutzer automatisch aktiviert, braucht also keinen Aktivierungslink mehr zu benutzen.' );
+define( '_MI_MI_JOOMLAUSER_USERNAME_NAME',			'Username' );
+define( '_MI_MI_JOOMLAUSER_USERNAME_DESC',			'Automatically set a username (ReWrite-Engine applies)' );
+define( '_MI_MI_JOOMLAUSER_USERNAME_RAND_NAME',		'Random Username' );
+define( '_MI_MI_JOOMLAUSER_USERNAME_RAND_DESC',		'Automatically set a random username - please provide a number of characters (ReWrite-Engine does not apply)' );
+define( '_MI_MI_JOOMLAUSER_PASSWORD_NAME',			'Password' );
+define( '_MI_MI_JOOMLAUSER_PASSWORD_DESC',			'Automatically set a password (ReWrite-Engine applies)' );
 
 // CommunityBuilder
 define( '_AEC_MI_NAME_COMMUNITYBUILDER',				'Community Builder' );

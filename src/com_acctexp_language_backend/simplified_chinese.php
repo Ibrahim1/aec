@@ -1804,9 +1804,10 @@ define( '_INVOICE_SEARCH', 'Search');
 define( '_INVOICE_USERID', 'User Name');
 define( '_INVOICE_INVOICE_NUMBER', 'Invoice Number');
 define( '_INVOICE_TRANSACTION_DATE', 'Transaction Date');
-define( '_INVOICE_METHOD', 'Invoice Method');
-define( '_INVOICE_AMOUNT', 'Invoice Amount');
-define( '_INVOICE_CURRENCY', 'Invoices Currency');
+define( '_INVOICE_METHOD', 'Method');
+define( '_INVOICE_AMOUNT', 'Amount');
+define( '_INVOICE_CURRENCY', 'Currency');
+define( '_INVOICE_COUPONS', 'Coupons');
 
 // --== PAYMENT HISTORY OVERVIEW ==--
 define( '_HISTORY_TITLE2', 'Your Current Transaction History');

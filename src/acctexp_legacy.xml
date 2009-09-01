@@ -153,6 +153,7 @@
 		<filename>processors/netdebit.php</filename>
 		<filename>processors/nochex.php</filename>
 		<filename>processors/offline_payment.php</filename>
+		<filename>processors/onebip.php</filename>
 		<filename>processors/payboxat.php</filename>
 		<filename>processors/payboxfr.php</filename>
 		<filename>processors/paycom.php</filename>
