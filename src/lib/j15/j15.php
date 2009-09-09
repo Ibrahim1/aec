@@ -112,6 +112,16 @@ if ( !defined('_JEXEC') ) {
 		}
 	}
 
+	if ( !class_exists( 'JDatabase' ) ) {
+		class JDatabase
+		{
+		    function getInstance( $options )
+		    {
+				return new database( $options['dbhost'], $options['dbuser'], $options['dbpasswd'], $options['dbname'], $options['table_prefix'] );;
+		    }
+		}
+	}
+
 	if ( !class_exists( 'JToolBarHelper' ) ) {
 		if ( !class_exists( 'mosMenuBar' ) ) {
 			global $mosConfig_absolute_path;

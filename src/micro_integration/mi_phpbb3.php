@@ -37,7 +37,7 @@ class mi_phpbb3
 
 			$prefix = $this->settings['table_prefix'];
 
-	        $database =& JDatabase::getInstance($options);
+	        $database = &JDatabase::getInstance($options);
         } else {
         	$database = &JFactory::getDBO();
 
