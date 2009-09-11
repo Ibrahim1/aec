@@ -5190,7 +5190,18 @@ function eventlog( $option )
 		$params = array();
 		if ( !empty( $row->params ) && is_array( $row->params ) ) {
 			foreach ( $row->params as $key => $value ) {
-				$params[] = $key . '(' . $value . ')';
+				switch ( $key ) {
+					case 'userid':
+						$content = '<a href="index2.php?option=com_acctexp&amp;task=edit&userid=' . $value . '">' . $value . '</a>';
+						break;
+					case 'invoice_number':
+						$content = '<a href="index2.php?option=com_acctexp&amp;task=quicklookup&search=' . $value . '">' . $value . '</a>';
+						break;
+					default:
+						$content = $value;
+						break;
+				}
+				$params[] = $key . '(' . $content . ')';
 			}
 		}
 		$events[$id]->params = implode( ', ', $params );
