@@ -539,7 +539,7 @@ class metaUser
 		return;
 	}
 
-	function establishFocus( $payment_plan, $processor='none', $silent=false )
+	function establishFocus( $payment_plan, $processor='none', $silent=false, $bias=null )
 	{
 		$database = &JFactory::getDBO();
 
@@ -571,7 +571,7 @@ class metaUser
 
 		// Check whether a record exists
 		if ( $this->hasSubscription ) {
-			$existing_record = $this->focusSubscription->getSubscriptionID( $this->userid, $payment_plan->id, $plan_params['make_primary'] );
+			$existing_record = $this->focusSubscription->getSubscriptionID( $this->userid, $payment_plan->id, $plan_params['make_primary'], false, $bias );
 
 			if ( !empty( $existing_record ) ) {
 				$query = 'SELECT `status`'
@@ -6869,9 +6869,12 @@ class InvoiceFactory
 
 		if ( !empty( $this->processor ) ) {
 			$this->pp					= false;
-			$this->recurring			= 0;
 			$this->payment->method_name = _AEC_PAYM_METHOD_NONE;
 			$this->payment->currency	= '';
+
+			if ( !isset( $this->recurring ) ) {
+				$this->recurring		= 0;
+			}
 
 			switch ( $this->processor ) {
 				case 'free': $this->payment->method_name = _AEC_PAYM_METHOD_FREE; break;
@@ -6888,14 +6891,10 @@ class InvoiceFactory
 
 						// Check whether we have a recurring payment
 						// If it has been selected just now, or earlier, check whether that is still permitted
-						if ( isset( $this->recurring ) ) {
-							$this->recurring		= $this->pp->is_recurring( $this->recurring );
+						if ( isset( $_POST['recurring'] ) ) {
+							$this->recurring	= $this->pp->is_recurring( $_POST['recurring'] );
 						} else {
-							if ( isset( $_POST['recurring'] ) ) {
-								$this->recurring	= $this->pp->is_recurring( $_POST['recurring'] );
-							} else {
-								$this->recurring	= $this->pp->is_recurring();
-							}
+							$this->recurring	= $this->pp->is_recurring( $this->recurring );
 						}
 
 						$this->payment->currency	= isset( $this->pp->settings['currency'] ) ? $this->pp->settings['currency'] : '';
@@ -7561,6 +7560,13 @@ class InvoiceFactory
 								$plan_gw[] = $pp;
 
 								if ( !$plan['plan']->params['lifetime'] ) {
+									$pp = new PaymentProcessor();
+
+									$pp->loadId( $n );
+									$pp->init();
+									$pp->getInfo();
+									$pp->exchangeSettingsByPlan( $plan['plan'] );
+
 									$pp->recurring = 1;
 									$plan_gw[] = $pp;
 								}
@@ -9126,12 +9132,12 @@ class Invoice extends serialParamDBTable
 		foreach ( $plans as $plan ) {
 			if ( is_object( $targetUser ) && is_object( $plan ) ) {
 				if ( $targetUser->userid ) {
-					if ( empty( $this->subscr_id ) ) {
-						$targetUser->establishFocus( $plan, $this->method, false );
+					if ( !empty( $this->subscr_id ) ) {
+						$targetUser->establishFocus( $plan, $this->method, false, $this->subscr_id );
 
 						$this->subscr_id = $targetUser->focusSubscription->id;
 					} else {
-						$targetUser->moveFocus( $this->subscr_id );
+						$targetUser->establishFocus( $plan, $this->method );
 					}
 
 					// Apply the Plan
@@ -10322,7 +10328,7 @@ class Subscription extends serialParamDBTable
 		$this->load( $this->getSubscriptionID( $userid ) );
 	}
 
-	function getSubscriptionID( $userid, $usage=null, $primary=1, $similar=false )
+	function getSubscriptionID( $userid, $usage=null, $primary=1, $similar=false, $bias=null )
 	{
 		$database = &JFactory::getDBO();
 
@@ -10372,10 +10378,18 @@ class Subscription extends serialParamDBTable
 
 		$database->setQuery( $query );
 
-		$subscriptionid = $database->loadResult();
+		if ( !empty( $bias ) ) {
+			$subscriptionids = $database->loadResultArray();
+
+			if ( in_array( $bias, $subscriptionids ) ) {
+				$subscriptionid = $bias;
+			}
+		} else {
+			$subscriptionid = $database->loadResult();
+		}
 
 		if ( empty( $subscriptionid ) && !$similar ) {
-			return $this->getSubscriptionID( $userid, $usage, false, true );
+			return $this->getSubscriptionID( $userid, $usage, false, true, $bias );
 		}
 
 		return $subscriptionid;
