@@ -859,7 +859,7 @@ function help( $option )
 	$diagonstic = array();
 
 	// Check for correct Global Settings:
-	$diagnostic['reachable']			= ( substr_count( $mainframe->getCfg( 'live_site' ), 'http://' ) || substr_count( $mainframe->getCfg( 'live_site' ), 'https://' ) );
+	$diagnostic['reachable']			= ( substr_count( JURI::root(), 'http://' ) || substr_count( JURI::root(), 'https://' ) );
 	$diagnostic['offline']				= $mainframe->getCfg( 'offline' );
 	$diagnostic['user_registration']	= $mainframe->getCfg( 'allowUserRegistration' );
 	$diagnostic['login_possible']		= $mainframe->getCfg( 'frontend_login' );
@@ -974,7 +974,7 @@ function help( $option )
 	 * 5. Advice
 	 * 6. Detect Only (0:No, 1:Yes -Don't display if Status=0)
 	 */
-	$pdfPath = $mainframe->getCfg( 'live_site' ) . '/administrator/components/com_acctexp/manual/';
+	$pdfPath = JURI::root() . 'administrator/components/com_acctexp/manual/';
 	if ( file_exists( JPATH_SITE . '/administrator/components/com_acctexp/manual/AEC_Quickstart.' . _AEC_LANGUAGE . '.pdf' ) ) {
 		$pdfHelp = $pdfPath . 'AEC_Quickstart.' . _AEC_LANGUAGE . '.pdf';
 	} else {

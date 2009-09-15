@@ -3518,8 +3518,8 @@ class XMLprocessor extends processor
 		global $mainframe;
 
 		// Include Mootools tabber
-		$mainframe->addCustomHeadTag( '<script type="text/javascript" src="' . $mainframe->getCfg( 'live_site' ) . '/components/com_acctexp/lib/mootools/mootools.js"></script>' );
-		$mainframe->addCustomHeadTag( '<script type="text/javascript" src="' . $mainframe->getCfg( 'live_site' ) . '/components/com_acctexp/lib/mootools/mootabs.js"></script>' );
+		$mainframe->addCustomHeadTag( '<script type="text/javascript" src="' . JURI::root() . 'components/com_acctexp/lib/mootools/mootools.js"></script>' );
+		$mainframe->addCustomHeadTag( '<script type="text/javascript" src="' . JURI::root() . 'components/com_acctexp/lib/mootools/mootabs.js"></script>' );
 		$mainframe->addCustomHeadTag( '<script type="text/javascript" charset="utf-8">window.addEvent(\'domready\', init);function init() {myTabs1 = new mootabs(\'myTabs\');}</script>' );
 
 		$nlist	= array();
@@ -10814,10 +10814,10 @@ class Subscription extends serialParamDBTable
 			}
 
 			if ( $free ) {
-				$message .= sprintf( _ACCTEXP_MAILPARTICLE_LOGIN, $mainframe->getCfg( 'live_site' ) );
+				$message .= sprintf( _ACCTEXP_MAILPARTICLE_LOGIN, JURI::root() );
 			} else {
 				$message .= _ACCTEXP_MAILPARTICLE_PAYREC . " "
-				. sprintf( _ACCTEXP_MAILPARTICLE_LOGIN, $mainframe->getCfg( 'live_site' ) );
+				. sprintf( _ACCTEXP_MAILPARTICLE_LOGIN, JURI::root() );
 			}
 		} else {
 			$subject = sprintf( _ACCTEXP_SEND_MSG, $name, $mainframe->getCfg( 'sitename' ) );
@@ -10831,10 +10831,10 @@ class Subscription extends serialParamDBTable
 			}
 
 			if ( $free ) {
-				$message .= sprintf( _ACCTEXP_MAILPARTICLE_LOGIN, $mainframe->getCfg( 'live_site' ) );
+				$message .= sprintf( _ACCTEXP_MAILPARTICLE_LOGIN, JURI::root() );
 			} else {
 				$message .= _ACCTEXP_MAILPARTICLE_PAYREC . " "
-				. sprintf( _ACCTEXP_MAILPARTICLE_LOGIN, $mainframe->getCfg( 'live_site' ) );
+				. sprintf( _ACCTEXP_MAILPARTICLE_LOGIN, JURI::root() );
 			}
 		}
 

@@ -44,7 +44,7 @@ function com_install()
 
 	global $mainframe;
 
-	$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" media="all" href="' . $mainframe->getCfg( 'live_site' ) . '/administrator/components/com_acctexp/backend_style.css" />' );
+	$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root() . '/administrator/components/com_acctexp/backend_style.css" />' );
 
 	// Tracking arrays
 	$queri		= array();

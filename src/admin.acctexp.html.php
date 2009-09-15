@@ -196,18 +196,18 @@ class HTML_myCommon
 
 	function addBackendCSS()
 	{
-		global $mainframe; ?>
-		<link rel="stylesheet" type="text/css" media="all" href="<?php echo $mainframe->getCfg( 'live_site' ); ?>/administrator/components/com_acctexp/backend_style.css" />
+		?>
+		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>administrator/components/com_acctexp/backend_style.css" />
 		<?php if ( !aecJoomla15check() ) { ?>
-		<script type="text/javascript" src="<?php echo $mainframe->getCfg( 'live_site' ); ?>/components/com_acctexp/lib/mootools/mootools.js"></script>
+			<script type="text/javascript" src="<?php echo JURI::root(); ?>components/com_acctexp/lib/mootools/mootools.js"></script>
 		<?php } ?>
 		<?php
 	}
 
 	function addReadoutCSS()
 	{
-		global $mainframe; ?>
-		<link rel="stylesheet" type="text/css" media="all" href="<?php echo $mainframe->getCfg( 'live_site' ); ?>/administrator/components/com_acctexp/aec_readout.css" />
+		?>
+		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>administrator/components/com_acctexp/aec_readout.css" />
 		<?php
 	}
 }
@@ -812,7 +812,9 @@ class HTML_AcctExp
 					</tr>
 				</table>
 				<?php }
-			} ?>
+			}
+
+			if ( !empty( $metaUser->meta->params->mi ) ) { ?>
 			<div class="aec_tabheading"><h2><?php echo _AEC_USER_MICRO_INTEGRATION; ?>: <?php echo _AEC_USER_MICRO_INTEGRATION_DB; ?></h2></div>
 			<table class="aecadminform">
 				<tr>
@@ -822,6 +824,7 @@ class HTML_AcctExp
 				</tr>
 			</table>
 			<?php
+			}
 			echo $tabs->endPanel();
 			echo $tabs->endPane();
 			?>
