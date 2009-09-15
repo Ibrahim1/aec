@@ -474,6 +474,8 @@ function subscribe( $option )
 			foreach ( $details as $d ) {
 				if ( !empty( $temptoken->content[$d] ) ) {
 					$$d = $temptoken->content[$d];
+
+					$_POST[$d] = $temptoken->content[$d];
 				}
 			}
 
@@ -767,7 +769,7 @@ function subscriptionDetails( $option, $sub='' )
 							continue;
 						}
 
-						$info = $mi->profile_info( $user->id );
+						$info = $mi->profile_info( $metaUser );
 						if ( $info !== false ) {
 							$mi_info .= $info;
 						}
@@ -1414,7 +1416,7 @@ function processNotification( $option, $processor )
 			break;
 	}
 
-	// aecDebug( "ResponseFunction:processNotification" );aecDebug( "GET:".json_encode( $_GET ) );aecDebug( "POST:".json_encode( $_POST ) );
+	//aecDebug( "ResponseFunction:processNotification" );aecDebug( "GET:".json_encode( $_GET ) );aecDebug( "POST:".json_encode( $_POST ) );
 
 	$response = array();
 	$response['fullresponse'] = $_POST;
