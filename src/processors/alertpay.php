@@ -100,7 +100,7 @@ class processor_alertpay extends POSTprocessor
 		$var['ap_itemname']		= $request->invoice->invoice_number;
 		$var['ap_currency']		= $this->settings['currency'];
 		$var['ap_returnurl']	= AECToolbox::deadsureURL( "index.php?option=com_acctexp&amp;task=thanks" );
-		$var['ap_description']	= sprintf( $this->settings['item_name'], JURI::root(), $request->metaUser->cmsUser->name, $request->metaUser->cmsUser->username );
+		$var['ap_description']	= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 
 		$var['ap_cancelurl']	= AECToolbox::deadsureURL( "index.php?option=com_acctexp&amp;task=cancel" );
 
@@ -152,7 +152,7 @@ class processor_alertpay extends POSTprocessor
 	{
 		$response['valid'] = false;
 
-		if ( ( $post['ap_status'] == "Success" ) || ( $post['ap_status'] == "Subscription-Payment-Success" ) ) {
+		if ( ( $post['ap_status'] == "Success" && $post['ap_purchasetype'] != "subscription" ) || ( $post['ap_status'] == "Subscription-Payment-Success" ) )  {
 			if ( $post['ap_securitycode'] != $this->settings['securitycode'] ) {
 				$response['error'] = 'Security Code Mismatch: ' . $post['ap_securitycode'];
 			} else {
