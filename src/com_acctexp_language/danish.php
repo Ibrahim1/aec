@@ -117,7 +117,7 @@ define( '_CONFIRM_COL3_TITLE', 'Bel&oslash;b');
 define( '_CONFIRM_ROW_NAME', 'Navn: ');
 define( '_CONFIRM_ROW_USERNAME', 'Brugernavn: ');
 define( '_CONFIRM_ROW_EMAIL', 'E-mail:');
-define( '_CONFIRM_INFO', 'Brug venligst fors&aelig;t knappet, for at f&aelig;rdigg&oslash;re deres registrering.');
+define( '_CONFIRM_INFO', 'Brug venligst fors&aelig;t knappen, for at f&aelig;rdigg&oslash;re deres registrering.');
 define( '_BUTTON_CONFIRM', 'Fors&aelig;t');
 define( '_CONFIRM_TOS', "Jeg har l&aelig;st og accepterer <a href=\"%s\" target=\"_blank\" title=\"ToS\">Terms of Service</a>");
 define( '_CONFIRM_TOS_IFRAME', "Jeg har l&aelig;st og accepterer Terms of Service (som vist ovenfor)");
