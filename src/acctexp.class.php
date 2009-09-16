@@ -2333,7 +2333,7 @@ class aecEvent extends serialParamDBTable
 
 	function issue( $type, $subtype, $appid, $event, $userid, $due_date, $context=array(), $params=array(), $customparams=array() )
 	{
-		global $mainfram;
+		global $mainframe;
 
 		$this->userid			= $userid;
 		$this->status			= 'waiting';
@@ -7059,7 +7059,11 @@ class InvoiceFactory
 				}
 			}
 
-			$this->items[] = array( 'item' => array( 'obj' => $this->plan ), 'terms' => $terms );
+			$this->items[] = array( 'item' => array(	'obj' => $this->plan,
+														'name' => $this->plan->getProperty( 'name' ),
+														'desc' => $this->plan->getProperty( 'desc' )
+													),
+									'terms' => $terms );
 
 			$this->cartobject = new aecCart( $database );
 			$this->cartobject->addItem( array(), $this->plan );
