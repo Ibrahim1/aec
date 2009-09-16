@@ -2426,11 +2426,9 @@ function cancelSettings( $option )
 
 function saveSettings( $option, $return=0 )
 {
-	$database = &JFactory::getDBO();
-
-	$user = &JFactory::getUser();
-
-	$acl = &JFactory::getACL();
+	$db		= &JFactory::getDBO();
+	$user	= &JFactory::getUser();
+	$acl	= &JFactory::getACL();
 
 	global $mainframe, $aecConfig;
 
@@ -2457,7 +2455,7 @@ function saveSettings( $option, $return=0 )
 			$tags	= 'settings,system';
 			$params = array();
 
-			$eventlog = new eventLog( $database );
+			$eventlog = new eventLog( $db );
 			$eventlog->issue( $short, $tags, $event, 128, $params, 1 );
 		}
 	}
@@ -2492,8 +2490,30 @@ function saveSettings( $option, $return=0 )
 						'ip' => $ip['ip'],
 						'isp' => $ip['isp'] );
 
-	$eventlog = new eventLog( $database );
+	$eventlog = new eventLog( $db );
 	$eventlog->issue( $short, $tags, $event, 2, $params );
+
+	if ( !empty( $aecConfig->cfg['entry_plan'] ) ) {
+		$plan = new SubscriptionPlan( $db );
+		$plan->load( $aecConfig->cfg['entry_plan'] );
+
+		$terms = $plan->getTerms();
+
+		if ( !$terms->checkFree() ) {
+			$short	= "Settings Warning";
+			$event	= "You have selected a non-free plan as Entry Plan."
+						. " Please keep in mind that this means that users"
+						. " will be getting it for free when they log in"
+						. " without having any membership";
+			$tags	= 'settings,system';
+			$params = array(	'userid' => $user->id,
+								'ip' => $ip['ip'],
+								'isp' => $ip['isp'] );
+
+			$eventlog = new eventLog( $db );
+			$eventlog->issue( $short, $tags, $event, 32, $params );
+		}
+	}
 
 	if ( $return ) {
 		aecRedirect( 'index2.php?option=' . $option . '&task=showSettings', _AEC_CONFIG_SAVED );
@@ -6062,17 +6082,6 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 			$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserUpdate\', array($row, $rowExtras, true));';
 			$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( $aec_uchangehack, $n, 'user', $n );
 		}
-
-		// TODO: Check and rework
-		/*
-		$n = 'admincomprofilerphp1';
-		$hacks[$n]['name']			=	'admin.user.php';
-		$hacks[$n]['desc']			=	_AEC_HACKS_MI1;
-		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	JPATH_SITE . 'administrator/components/com_users/admin.users.php';
-		$hacks[$n]['read']			=	'$row->checkin();';
-		$hacks[$n]['insert']		=	sprintf( $aec_uchangehack, $n, 'adminuser', $n ) . "\n" . $hacks[$n]['read'];
-		*/
 	} else {
 		$n = 'userphp';
 		$hacks[$n]['name']			=	'user.php';

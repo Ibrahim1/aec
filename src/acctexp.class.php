@@ -5762,7 +5762,7 @@ class SubscriptionPlan extends serialParamDBTable
 		return $return;
 	}
 
-	function getTerms( $recurring, $user_subscription, $metaUser=false )
+	function getTerms( $recurring=false, $user_subscription=false, $metaUser=false )
 	{
 		$plans_comparison		= false;
 		$plans_comparison_total	= false;
