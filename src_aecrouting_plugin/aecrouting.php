@@ -76,7 +76,7 @@ class plgSystemAECrouting extends JPlugin
 		// Standard Joomla
 		$vars['cu']			= $vars['option'] == 'com_user';
 
-		$vars['j_reg']		= $vars['cu']	&& ( $vars['view'] == 'register' );
+		$vars['j_reg']		= $vars['cu']	&& ( ( $vars['view'] == 'register' ) || ( $vars['task'] == 'register' ) );
 		$vars['cb_reg']		= $vars['ccb']	&& ( $vars['task'] == 'registers' );
 		$vars['joms_reg']	= $vars['joms']	&& ( $vars['view'] == 'register' ) && empty( $vars['task'] );
 		$vars['joms_regp']	= $vars['joms']	&& ( $vars['view'] == 'register' ) && ( $vars['task'] == 'registerProfile' );
