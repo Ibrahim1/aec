@@ -39,6 +39,7 @@ class processor_offline_payment extends processor
 		$settings['sender']			= "";
 		$settings['sender_name']	= "";
 		$settings['recipient']		= "[[user_email]]";
+		$settings['bcc']			= "";
 		$settings['subject']		= "";
 		$settings['text_html']		= 0;
 		$settings['text']			= "";
@@ -59,6 +60,7 @@ class processor_offline_payment extends processor
 		$settings['sender_name']		= array( 'inputE' );
 
 		$settings['recipient']			= array( 'inputE' );
+		$settings['bcc']				= array( 'inputE' );
 
 		$settings['subject']			= array( 'inputE' );
 		$settings['text_html']			= array( 'list_yesno' );
@@ -88,10 +90,25 @@ class processor_offline_payment extends processor
         }
         $recipients = $recipients2;
 
-		if ( aecJoomla15check() ) {
-			JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'] );
+		$bccipients = AECToolbox::rewriteEngineRQ( $this->settings['bcc'], $request );
+		$bccips = explode( ',', $bccipients );
+
+        $bccipients2 = array();
+        foreach ( $bccips as $k => $email ) {
+            $bccipients2[$k] = trim( $email );
+        }
+        $bccipients = $bccipients2;
+
+		if ( !empty( $bccipients2 ) ) {
+			$bcc = $bccipients;
 		} else {
-			mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'] );
+			$bcc = null;
+		}
+
+		if ( aecJoomla15check() ) {
+			JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'], null, $bcc  );
+		} else {
+			mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'], null, $bcc );
 		}
 
 		return true;

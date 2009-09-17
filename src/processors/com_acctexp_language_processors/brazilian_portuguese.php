@@ -358,6 +358,8 @@ define( '_CFG_OFFLINE_PAYMENT_SENDER_NAME_NAME',	'Sender Name' );
 define( '_CFG_OFFLINE_PAYMENT_SENDER_NAME_DESC',	'The displayed name of the Sender' );
 define( '_CFG_OFFLINE_PAYMENT_RECIPIENT_NAME',	'Recipient(s)' );
 define( '_CFG_OFFLINE_PAYMENT_RECIPIENT_DESC',	'Who is to receive this E-Mail? Separate with comma. The rewriting routines explained below will work for this field.' );
+define( '_CFG_OFFLINE_PAYMENT_BCC_NAME',	'BCC' );
+define( '_CFG_OFFLINE_PAYMENT_BCC_DESC',	'Who should receive blind carbon copies E-Mail? Separate with comma. The rewriting routines explained below will work for this field.' );
 define( '_CFG_OFFLINE_PAYMENT_SUBJECT_NAME',		'Subject' );
 define( '_CFG_OFFLINE_PAYMENT_SUBJECT_DESC',		'Subject of this email (Uses RewriteEngine explained below as well)' );
 define( '_CFG_OFFLINE_PAYMENT_TEXT_HTML_NAME',	'HTML Encoding' );
