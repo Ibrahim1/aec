@@ -87,19 +87,22 @@ class mi_docman
 		$sge = array();
 
 		$gr = array();
-		foreach( $groups as $group ) {
-			$desc = $group->groups_name . ' - ' . substr( strip_tags( $group->groups_description ), 0, 30 );
+		if ( !empty( $groups ) ) {
+			foreach( $groups as $group ) {
+				$desc = $group->groups_name . ' - ' . substr( strip_tags( $group->groups_description ), 0, 30 );
 
-			$gr[] = mosHTML::makeOption( $group->groups_id, $desc );
+				$gr[] = mosHTML::makeOption( $group->groups_id, $desc );
 
-			if ( !empty( $this->settings['group'] ) ) {
-				if ( in_array( $group->groups_id, $this->settings['group'] ) ) {
-					$sg[] = mosHTML::makeOption( $group->groups_id, $desc );
+				if ( !empty( $this->settings['group'] ) ) {
+					if ( in_array( $group->groups_id, $this->settings['group'] ) ) {
+						$sg[] = mosHTML::makeOption( $group->groups_id, $desc );
+					}
 				}
-			}
-			if ( !empty( $this->settings['group_exp'] ) ) {
-				if ( in_array( $group->groups_id, $this->settings['group_exp'] ) ) {
-					$sge[] = mosHTML::makeOption( $group->groups_id, $desc );
+
+				if ( !empty( $this->settings['group_exp'] ) ) {
+					if ( in_array( $group->groups_id, $this->settings['group_exp'] ) ) {
+						$sge[] = mosHTML::makeOption( $group->groups_id, $desc );
+					}
 				}
 			}
 		}

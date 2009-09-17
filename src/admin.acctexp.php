@@ -3613,21 +3613,81 @@ function saveSubscriptionPlan( $option, $apply=0 )
 
 	$row->savePOSTsettings( $post );
 
-	if ( !$row->check() ) {
-		echo "<script> alert('".$row->getError()."'); window.history.go(-2); </script>\n";
-		exit();
-	}
-	if ( !$row->store() ) {
-		echo "<script> alert('".$row->getError()."'); window.history.go(-2); </script>\n";
-		exit();
-	}
-
-	$row->reorder();
+	$row->storeload();
 
 	if ( $_POST['id'] ) {
 		$id = $_POST['id'];
 	} else {
 		$id = $row->getMax();
+	}
+
+	if ( !empty( $row->params['lifetime'] ) && !empty( $row->params['full_period'] ) ) {
+		$short	= "Plan Warning";
+		$event	= "You have selected a regular period for a plan that"
+					. " already has the 'lifetime' (i.e. 'non expiring') flag set."
+					. " The period you have set will be overridden by"
+					. " that setting.";
+		$tags	= 'settings,plan';
+		$params = array();
+
+		$eventlog = new eventLog( $database );
+		$eventlog->issue( $short, $tags, $event, 32, $params );
+	}
+
+	$terms = $row->getTerms();
+
+	if ( !$terms->checkFree() && empty( $row->params['processors'] ) ) {
+		$short	= "Plan Warning";
+		$event	= "You have set a plan to be non-free, yet did not select a payment processor."
+					. " Without a processor assigned, the plan will not show up on the frontend.";
+		$tags	= 'settings,plan';
+		$params = array();
+
+		$eventlog = new eventLog( $database );
+		$eventlog->issue( $short, $tags, $event, 32, $params );
+	}
+
+	if ( !empty( $row->params['lifetime'] ) && !empty( $row->params['processors'] ) ) {
+		$fcount	= 0;
+		$found	= 0;
+
+		foreach ( $row->params['processors'] as $procid ) {
+			$fcount++;
+
+			if ( isset( $row->custom_params[$procid.'_recurring'] ) ) {
+				if ( ( 0 < $row->custom_params[$procid.'_recurring'] ) && ( $row->custom_params[$procid.'_recurring'] < 2 ) ) {
+					$found++;
+				} elseif ( $row->custom_params[$procid.'_recurring'] == 2 ) {
+					$fcount++;
+				}
+			} else {
+				$pp = new PaymentProcessor( $database );
+				if ( ( 0 < $pp->is_recurring() ) && ( $pp->is_recurring() < 2 ) ) {
+					$found++;
+				} elseif ( $pp->is_recurring() == 2 ) {
+					$fcount++;
+				}
+			}
+		}
+
+		if ( $found ) {
+			if ( ( $found < $fcount ) && ( $fcount > 1 ) ) {
+				$event	= "You have selected one or more processors that only support recurring payments"
+						. ", yet the plan is set to a lifetime period."
+						. " This is not possible and the processors will not be displayed as options.";
+			} else {
+				$event	= "You have selected a processor that only supports recurring payments"
+						. ", yet the plan is set to a lifetime period."
+						. " This is not possible and the plan will not be displayed.";
+			}
+
+			$short	= "Plan Warning";
+			$tags	= 'settings,plan';
+			$params = array();
+
+			$eventlog = new eventLog( $database );
+			$eventlog->issue( $short, $tags, $event, 32, $params );
+		}
 	}
 
 	if ( $apply ) {

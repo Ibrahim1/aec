@@ -2815,7 +2815,7 @@ class PaymentProcessor
 			$this->getSettings();
 		}
 
-		if ( is_int( $this->is_recurring() ) ) {
+		if ( $this->info['recurring'] == 2 ) {
 			$settings = array_merge( array( 'recurring' => array( 'list_recurring' ) ), $this->processor->backend_settings() );
 		} else {
 			$settings = $this->processor->backend_settings();
@@ -3009,7 +3009,7 @@ class PaymentProcessor
 			$this->getSettings();
 		}
 
-		if ( is_int( $this->is_recurring() ) ) {
+		if ( $this->info['recurring'] == 2 ) {
 			$settings = array_merge( array( 'recurring' => array( 'list_recurring' ) ), $this->processor->backend_settings() );
 		} else {
 			$settings = $this->processor->backend_settings();
@@ -3017,7 +3017,7 @@ class PaymentProcessor
 
 		$params = array();
 
-		if ( $this->is_recurring() == 2 ) {
+		if ( $this->info['recurring'] == 2 ) {
 			$params = array_merge( array( 'recurring' => array( 'list_recurring' ) ), $params );
 		}
 
@@ -6100,6 +6100,10 @@ class SubscriptionPlan extends serialParamDBTable
 			unset( $post['add_group'] );
 		}
 
+		if ( empty( $post['micro_integrations'] ) ) {
+			$post['micro_integrations'] = array();
+		}
+
 		if ( !empty( $post['micro_integrations_plan'] ) ) {
 			foreach ( $post['micro_integrations_plan'] as $miname ) {
 				// Create new blank MIs
@@ -6243,8 +6247,12 @@ class SubscriptionPlan extends serialParamDBTable
 		$processors = array();
 		foreach ( $post as $key => $value ) {
 			if ( ( strpos( $key, 'processor_' ) === 0 ) && ( $value == 'on') ) {
-				$processors[] = str_replace( 'processor_', '', $key );
-				unset( $post[$key] );
+				$ppid = str_replace( 'processor_', '', $key );
+
+				if ( !in_array( $ppid, $processors ) ) {
+					$processors[] = $ppid;
+					unset( $post[$key] );
+				}
 			}
 		}
 
