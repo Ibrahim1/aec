@@ -31,9 +31,9 @@ class processor_generic_pin extends XMLprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['currency']			='';
-		$settings['pin_list_file']		='';
-		$settings['tracking_type']		='';
+		$settings['currency']			= '';
+		$settings['pin_list_file']		= '';
+		$settings['tracking_type']		= '';
 		$settings['database_gnaaaaa']		='';
 
 		return $settings;
@@ -43,6 +43,11 @@ class processor_generic_pin extends XMLprocessor
 	{
 		$settings = array();
 		$settings['currency']			= array( 'list_currency' );
+		$settings['dbms']				= array( 'inputC' );
+		$settings['dbhost']				= array( 'inputC' );
+		$settings['dbuser']				= array( 'inputC' );
+		$settings['dbpasswd']			= array( 'inputC' );
+		$settings['dbname']				= array( 'inputC' );
 
  		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
