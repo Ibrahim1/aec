@@ -64,12 +64,12 @@ class mi_uddeim
 		$database = &JFactory::getDBO();
 
         $settings = array();
-		$settings['add_messages']	= array( 'inputA' );
-		$settings['set_messages']	= array( 'inputA' );
-		$settings['set_unlimited']	= array( 'list_yesno' );
+		$settings['add_messages']		= array( 'inputA' );
+		$settings['set_messages']		= array( 'inputA' );
+		$settings['set_unlimited']		= array( 'list_yesno' );
 
 		$settings['unset_unlimited']	= array( 'list_yesno' );
-		$settings['remove']			= array( 'list_yesno' );
+		$settings['remove']				= array( 'list_yesno' );
 
 		return $settings;
 	}
@@ -136,8 +136,7 @@ class mi_uddeim
 		$hacks[$n]['desc']				=	_AEC_MI_HACK2_UDDEIM;
 		$hacks[$n]['type']				=	'file';
 		$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_comprofiler/plugin/user/plug_pmsuddeim/pms.uddeim.php';
-		$hacks[$n]['read']				=	'$adminpath = $this->absolute_path."/administrator/components/com_uddeim";
-';
+		$hacks[$n]['read']				=	'$adminpath = $this->absolute_path."/administrator/components/com_uddeim";';
 		$hacks[$n]['insert']			=	sprintf($messagehack, $n, $n) . "\n"  . $hacks[$n]['read'];
 
 		return $hacks;
@@ -181,13 +180,12 @@ class mi_uddeim
 			$mi_uddeimhandler->active = 1;
 		}
 
-		$params = $request->params;
-		if ( $params['set_messages'] ) {
-			$mi_uddeimhandler->setMessages( $params['set_messages'] );
-		} elseif ( $params['add_messages'] ) {
-			$mi_uddeimhandler->addMessages( $params['add_messages'] );
+		if ( $request->params['set_messages'] ) {
+			$mi_uddeimhandler->setMessages( $request->params['set_messages'] );
+		} elseif ( $request->params['add_messages'] ) {
+			$mi_uddeimhandler->addMessages( $request->params['add_messages'] );
 		}
-		if ( $params['set_unlimited'] ) {
+		if ( $request->params['set_unlimited'] ) {
 			$mi_uddeimhandler->unlimited_messages = true ;
 		}
 
@@ -196,6 +194,19 @@ class mi_uddeim
 
 		return true;
 	}
+
+	function send_message( $from, $to, $msg )
+	{
+		$database = &JFactory::getDBO();
+
+		$query = 'INSERT INTO `jos_uddeim` (`id`, `replyid`, `fromid`, `toid`, `message`, `datum`)'
+				. ' VALUES (NULL, \'0\', \'' . $from . '\', \'' . $to . '\', \'' . $msg . '\', UNIX_TIMESTAMP() );';
+		$database->setQuery( $query );
+		$database->query();
+
+		return true;
+	}
+
 }
 
 class uddeim_restriction extends JTable {
