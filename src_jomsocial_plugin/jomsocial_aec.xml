@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" type="plugin" group="community">
+	<name>AEC Plugin</name>
+	<author>Valanx</author>
+	<creationDate>17 September 2009</creationDate>
+	<copyright>Copyright (C) 2009. All rights reserved.</copyright>
+	<license>GNU GPL v2.0 or later</license>
+	<authorEmail>support@valanx.org</authorEmail>
+	<authorUrl>www.valanx.org</authorUrl>
+	<version>1.0</version>
+	<isapplication>true</isapplication>
+	<description>Various Tricks for integrating JomSocial with AEC</description>
+	<files>
+		<file plugin="jomsocial_aec">jomsocial_aec.php</file>
+		<file>jomsocial_aec.xml</file>
+	</files>
+	<params>
+	</params>
+</install>
