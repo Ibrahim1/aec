@@ -290,8 +290,14 @@ class formParticles
 					<td width="10%" colspan="2">
 					<!-- <textarea name="<?php echo $thisrow_extra; ?>" align="left" cols="60" maxlength="2048" rows="5"><?php echo $thisrow_var; ?></textarea> //-->
 					<?php
-					// parameters : areaname, content, hidden field, width, height, rows, cols
-					editorArea( $thisrow_extra, $thisrow_var, $thisrow_extra, '100%;', '250', '10', '60' ) ; ?>
+					if ( aecJoomla15check() ) {
+						$editor = &JFactory::getEditor();
+
+						$return .= $editor->display( $thisrow_extra,  $thisrow_var , '100%', '250', '50', '20' );
+					} else {
+						$return .= editorArea( $thisrow_extra, $thisrow_var, $thisrow_extra, '100%;', '250', '50', '20' );
+					}
+					?>
 					</td>
 				</tr>
 				<?php

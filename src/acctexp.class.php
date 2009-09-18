@@ -4493,7 +4493,15 @@ class aecHTML
 				break;
 			case 'editor':
 				$return .= '<div class="setting_form">';
-				$return .= '<div><div>' . editorArea( $name, $value, $name, '100%;', '250', '10', '60' ) . '</div></div>';
+
+				if ( aecJoomla15check() ) {
+					$editor = &JFactory::getEditor();
+
+					$return .= '<div>' . $editor->display( $name,  $value , '100%', '250', '50', '20' ) . '</div>';
+				} else {
+					$return .= '<div>' . editorArea( $name, $value, $name, '100%;', '250', '50', '20' ) . '</div>';
+				}
+
 				$return .= '</div>';
 				break;
 			case 'list':
