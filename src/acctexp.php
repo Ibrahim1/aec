@@ -1348,7 +1348,11 @@ function notAllowed( $option )
 		if ( $CB ) {
 			$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_comprofiler&amp;task=registers' );
 		} else {
-			$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_registration&amp;task=register' );
+			if ( aecJoomla15check() ) {
+				$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_registration&amp;view=register' );
+			} else {
+				$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_registration&amp;task=register' );
+			}
 		}
 	}
 
