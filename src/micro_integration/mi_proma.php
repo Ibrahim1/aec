@@ -31,8 +31,10 @@ class mi_proma
 	 	$groups = $database->loadObjectList();
 
 		$sg = array();
-		foreach( $groups as $group ) {
-			$sg[] = mosHTML::makeOption( $group->groupid, $group->title . ' - ' . substr( strip_tags( $group->description ), 0, 30 ) );
+		if ( !empty( $groups ) ) {
+			foreach( $groups as $group ) {
+				$sg[] = mosHTML::makeOption( $group->groupid, $group->title . ' - ' . substr( strip_tags( $group->description ), 0, 30 ) );
+			}
 		}
 
         $settings = array();
@@ -45,8 +47,18 @@ class mi_proma
 		$settings['rebuild']			= array( 'list_yesno' );
 		$settings['remove']				= array( 'list_yesno' );
 
-		$settings['lists']['group']		= mosHTML::selectList( $sg, 'group', 'size="4"', 'value', 'text', $this->settings['group'] );
-		$settings['lists']['group_exp'] = mosHTML::selectList( $sg, 'group_exp', 'size="4"', 'value', 'text', $this->settings['group_exp'] );
+		$group = 0;
+		if ( !empty( $this->settings['group'] ) ) {
+			$group = $this->settings['group'];
+		}
+
+		$group_exp = 0;
+		if ( !empty( $this->settings['group_exp'] ) ) {
+			$group = $this->settings['group_exp'];
+		}
+
+		$settings['lists']['group']		= mosHTML::selectList( $sg, 'group', 'size="4"', 'value', 'text', $group );
+		$settings['lists']['group_exp'] = mosHTML::selectList( $sg, 'group_exp', 'size="4"', 'value', 'text', $group_exp );
 
 		return $settings;
 	}
