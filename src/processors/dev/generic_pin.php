@@ -34,7 +34,13 @@ class processor_generic_pin extends XMLprocessor
 		$settings['currency']			= '';
 		$settings['pin_list_file']		= '';
 		$settings['tracking_type']		= '';
-		$settings['database_gnaaaaa']		='';
+		$settings['currency']			= array( 'list_currency' );
+		$settings['pin_filepath']		= '';
+		$settings['dbms']				= '';
+		$settings['dbhost']				= '';
+		$settings['dbuser']				= '';
+		$settings['dbpasswd']			= '';
+		$settings['dbname']				= '';
 
 		return $settings;
 	}
@@ -43,6 +49,7 @@ class processor_generic_pin extends XMLprocessor
 	{
 		$settings = array();
 		$settings['currency']			= array( 'list_currency' );
+		$settings['pin_filepath']		= array( 'inputC' );
 		$settings['dbms']				= array( 'inputC' );
 		$settings['dbhost']				= array( 'inputC' );
 		$settings['dbuser']				= array( 'inputC' );
@@ -72,8 +79,8 @@ class processor_generic_pin extends XMLprocessor
 	function transmitRequestXML( $content, $request )
 	{
 		$return['valid']	= false;
-		$return['raw']		= "AEC Generic Processor Payment";
-		$return['error'] = "Please provide a valid pin_code";
+		$return['raw']		= "AEC Generic PIN Processor Payment";
+		$return['error']	= "Please provide a valid pin_code";
 
 		if ( !empty( $request->int_var['params']['pin_code'] ) ) {
 			if ( $this->usePIN( $request->int_var['params']['pin_code'] ) ) {
