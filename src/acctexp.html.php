@@ -458,6 +458,8 @@ class HTML_Results
 
 	function cancel( $option )
 	{
+		global $aecConfig;
+
 		HTML_frontend::aec_styling( $option );
 
 		?>
@@ -906,9 +908,9 @@ class Payment_HTML
 
 	function cart( $option, $InvoiceFactory )
 	{
-		$database = &JFactory::getDBO();
-
 		global $aecConfig;
+
+		$database = &JFactory::getDBO();
 
 		HTML_frontend::aec_styling( $option );
 		?>
@@ -1102,11 +1104,11 @@ class Payment_HTML
 
 	function checkoutForm( $option, $var, $params = null, $InvoiceFactory, $error = null, $repeat = 0 )
 	{
+		global $aecConfig;
+
 		$database = &JFactory::getDBO();
 
 		$user = &JFactory::getUser();
-
-		global $aecConfig;
 
 		HTML_frontend::aec_styling( $option );
 

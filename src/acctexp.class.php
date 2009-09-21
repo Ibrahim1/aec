@@ -6535,8 +6535,12 @@ class aecTempToken extends serialParamDBTable
 		global $mainframe;
 
 		if ( empty( $token ) ) {
-			$session =& JFactory::getSession();
-			$token = $session->getToken();
+			if ( aecJoomla15check() ) {
+				$session =& JFactory::getSession();
+				$token = $session->getToken();
+			} else {
+				$token = $mainframe->_session->getCookie();
+			}
 		}
 
 		$query = 'SELECT `id`'
@@ -11485,113 +11489,115 @@ class reWriteEngine
 			$this->data['invoice'] = null;
 		}
 
-		if ( is_object( $this->data['metaUser'] ) ) {
-			$name = array();
-			$name['first_first']	= "";
-			$name['first']			= "";
-			$name['last']			= "";
+		if ( !empty( $this->data['metaUser'] ) ) {
+			if ( is_object( $this->data['metaUser'] ) ) {
+				$name = array();
+				$name['first_first']	= "";
+				$name['first']			= "";
+				$name['last']			= "";
 
-			// Explode Name
-			if ( isset( $this->data['metaUser']->cmsUser->name ) ) {
-				if ( is_array( $this->data['metaUser']->cmsUser->name ) ) {
-					$namearray	= $this->data['metaUser']->cmsUser->name;
-				} else {
-					$namearray	= explode( " ", $this->data['metaUser']->cmsUser->name );
-				}
-
-				$name['first_first']	= $namearray[0];
-				$maxname				= count($namearray) - 1;
-				$name['last']			= $namearray[$maxname];
-
-				unset( $namearray[$maxname] );
-
-				$name['first']			= implode( ' ', $namearray );
-			}
-
-			if ( isset( $this->data['metaUser']->cmsUser->id ) ) {
-				$this->rewrite['user_id']				= $this->data['metaUser']->cmsUser->id;
-			} else {
-				$this->rewrite['user_id']				= 0;
-			}
-
-			$this->rewrite['user_username']			= $this->data['metaUser']->cmsUser->username;
-			$this->rewrite['user_name']				= $this->data['metaUser']->cmsUser->name;
-			$this->rewrite['user_first_name']		= $name['first'];
-			$this->rewrite['user_first_first_name']	= $name['first_first'];
-			$this->rewrite['user_last_name']		= $name['first'];
-			$this->rewrite['user_email']			= $this->data['metaUser']->cmsUser->email;
-
-			if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
-				if ( !$this->data['metaUser']->hasCBprofile ) {
-					$this->data['metaUser']->loadCBuser();
-				}
-
-				if ( !empty( $this->data['metaUser']->hasCBprofile ) ) {
-					$fields = get_object_vars( $this->data['metaUser']->cbUser );
-
-					if ( !empty( $fields ) ) {
-						foreach ( $fields as $fieldname => $fieldcontents ) {
-							$this->rewrite['user_' . $fieldname] = $fieldcontents;
-						}
+				// Explode Name
+				if ( isset( $this->data['metaUser']->cmsUser->name ) ) {
+					if ( is_array( $this->data['metaUser']->cmsUser->name ) ) {
+						$namearray	= $this->data['metaUser']->cmsUser->name;
+					} else {
+						$namearray	= explode( " ", $this->data['metaUser']->cmsUser->name );
 					}
 
-					if ( isset( $this->data['metaUser']->cbUser->cbactivation ) ) {
-						$this->rewrite['user_activationcode']		= $this->data['metaUser']->cbUser->cbactivation;
-						$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_comprofiler&task=confirm&confirmcode=" . $this->data['metaUser']->cbUser->cbactivation;
+					$name['first_first']	= $namearray[0];
+					$maxname				= count($namearray) - 1;
+					$name['last']			= $namearray[$maxname];
+
+					unset( $namearray[$maxname] );
+
+					$name['first']			= implode( ' ', $namearray );
+				}
+
+				if ( isset( $this->data['metaUser']->cmsUser->id ) ) {
+					$this->rewrite['user_id']				= $this->data['metaUser']->cmsUser->id;
+				} else {
+					$this->rewrite['user_id']				= 0;
+				}
+
+				$this->rewrite['user_username']			= $this->data['metaUser']->cmsUser->username;
+				$this->rewrite['user_name']				= $this->data['metaUser']->cmsUser->name;
+				$this->rewrite['user_first_name']		= $name['first'];
+				$this->rewrite['user_first_first_name']	= $name['first_first'];
+				$this->rewrite['user_last_name']		= $name['first'];
+				$this->rewrite['user_email']			= $this->data['metaUser']->cmsUser->email;
+
+				if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
+					if ( !$this->data['metaUser']->hasCBprofile ) {
+						$this->data['metaUser']->loadCBuser();
+					}
+
+					if ( !empty( $this->data['metaUser']->hasCBprofile ) ) {
+						$fields = get_object_vars( $this->data['metaUser']->cbUser );
+
+						if ( !empty( $fields ) ) {
+							foreach ( $fields as $fieldname => $fieldcontents ) {
+								$this->rewrite['user_' . $fieldname] = $fieldcontents;
+							}
+						}
+
+						if ( isset( $this->data['metaUser']->cbUser->cbactivation ) ) {
+							$this->rewrite['user_activationcode']		= $this->data['metaUser']->cbUser->cbactivation;
+							$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_comprofiler&task=confirm&confirmcode=" . $this->data['metaUser']->cbUser->cbactivation;
+						} else {
+							$this->rewrite['user_activationcode']		= "";
+							$this->rewrite['user_activationlink']		= "";
+						}
 					} else {
-						$this->rewrite['user_activationcode']		= "";
-						$this->rewrite['user_activationlink']		= "";
+						if ( isset( $this->data['metaUser']->cmsUser->activation ) ) {
+							$this->rewrite['user_activationcode']		= $this->data['metaUser']->cmsUser->activation;
+
+							if ( aecJoomla15check() ) {
+								$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_user&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+							} else {
+								$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+							}
+						} else {
+							$this->rewrite['user_activationcode']		= "";
+							$this->rewrite['user_activationlink']		= "";
+						}
 					}
 				} else {
 					if ( isset( $this->data['metaUser']->cmsUser->activation ) ) {
-						$this->rewrite['user_activationcode']		= $this->data['metaUser']->cmsUser->activation;
+						$this->rewrite['user_activationcode']			= $this->data['metaUser']->cmsUser->activation;
 
 						if ( aecJoomla15check() ) {
 							$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_user&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
 						} else {
 							$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
 						}
-					} else {
-						$this->rewrite['user_activationcode']		= "";
-						$this->rewrite['user_activationlink']		= "";
 					}
 				}
-			} else {
-				if ( isset( $this->data['metaUser']->cmsUser->activation ) ) {
-					$this->rewrite['user_activationcode']			= $this->data['metaUser']->cmsUser->activation;
 
-					if ( aecJoomla15check() ) {
-						$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_user&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+				if ( $this->data['metaUser']->hasSubscription ) {
+					$this->rewrite['subscription_type']				= $this->data['metaUser']->focusSubscription->type;
+					$this->rewrite['subscription_status']			= $this->data['metaUser']->focusSubscription->status;
+					$this->rewrite['subscription_signup_date']		= $this->data['metaUser']->focusSubscription->signup_date;
+					$this->rewrite['subscription_lastpay_date']		= $this->data['metaUser']->focusSubscription->lastpay_date;
+					$this->rewrite['subscription_plan']				= $this->data['metaUser']->focusSubscription->plan;
+
+					if ( !empty( $this->data['metaUser']->focusSubscription->previous_plan ) ) {
+						$this->rewrite['subscription_previous_plan']	= $this->data['metaUser']->focusSubscription->previous_plan;
 					} else {
-						$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+						$this->rewrite['subscription_previous_plan']	= "";
 					}
-				}
-			}
 
-			if ( $this->data['metaUser']->hasSubscription ) {
-				$this->rewrite['subscription_type']				= $this->data['metaUser']->focusSubscription->type;
-				$this->rewrite['subscription_status']			= $this->data['metaUser']->focusSubscription->status;
-				$this->rewrite['subscription_signup_date']		= $this->data['metaUser']->focusSubscription->signup_date;
-				$this->rewrite['subscription_lastpay_date']		= $this->data['metaUser']->focusSubscription->lastpay_date;
-				$this->rewrite['subscription_plan']				= $this->data['metaUser']->focusSubscription->plan;
-
-				if ( !empty( $this->data['metaUser']->focusSubscription->previous_plan ) ) {
-					$this->rewrite['subscription_previous_plan']	= $this->data['metaUser']->focusSubscription->previous_plan;
-				} else {
-					$this->rewrite['subscription_previous_plan']	= "";
+					$this->rewrite['subscription_recurring']		= $this->data['metaUser']->focusSubscription->recurring;
+					$this->rewrite['subscription_lifetime']			= $this->data['metaUser']->focusSubscription->lifetime;
+					$this->rewrite['subscription_expiration_date']	= strftime( $aecConfig->cfg['display_date_frontend'], strtotime( $this->data['metaUser']->focusSubscription->expiration ) );
+					$this->rewrite['subscription_expiration_date_backend']	= strftime( $aecConfig->cfg['display_date_backend'], strtotime( $this->data['metaUser']->focusSubscription->expiration ) );
 				}
 
-				$this->rewrite['subscription_recurring']		= $this->data['metaUser']->focusSubscription->recurring;
-				$this->rewrite['subscription_lifetime']			= $this->data['metaUser']->focusSubscription->lifetime;
-				$this->rewrite['subscription_expiration_date']	= strftime( $aecConfig->cfg['display_date_frontend'], strtotime( $this->data['metaUser']->focusSubscription->expiration ) );
-				$this->rewrite['subscription_expiration_date_backend']	= strftime( $aecConfig->cfg['display_date_backend'], strtotime( $this->data['metaUser']->focusSubscription->expiration ) );
-			}
+				if ( empty( $this->data['invoice'] ) && !empty( $this->data['metaUser']->cmsUser->id ) ) {
+					$lastinvoice = AECfetchfromDB::lastClearedInvoiceIDbyUserID( $this->data['metaUser']->cmsUser->id );
 
-			if ( empty( $this->data['invoice'] ) && !empty( $this->data['metaUser']->cmsUser->id ) ) {
-				$lastinvoice = AECfetchfromDB::lastClearedInvoiceIDbyUserID( $this->data['metaUser']->cmsUser->id );
-
-				$this->data['invoice'] = new Invoice( $database );
-				$this->data['invoice']->load( $lastinvoice );
+					$this->data['invoice'] = new Invoice( $database );
+					$this->data['invoice']->load( $lastinvoice );
+				}
 			}
 		}
 

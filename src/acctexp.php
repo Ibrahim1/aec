@@ -1488,7 +1488,7 @@ function cancelPayment( $option )
 	$obj->load( $userid );
 
 	if ( $obj->id ) {
-		if ( (  (strcasecmp( $obj->type, 'Super Administrator' ) != 0 ) || ( strcasecmp( $obj->type, 'superadministrator' ) != 0 ) ) && ( strcasecmp( $obj->type, 'Administrator' ) != 0 ) && ( $obj->block == 1 ) ) {
+		if ( (  (strcasecmp( $obj->usertype, 'Super Administrator' ) != 0 ) || ( strcasecmp( $obj->usertype, 'superadministrator' ) != 0 ) ) && ( strcasecmp( $obj->usertype, 'Administrator' ) != 0 ) && ( $obj->block == 1 ) ) {
 			// If the user is not blocked this can be a false cancel
 			// So just delete user if he is blocked and is not an administrator or super admnistrator
 			$obj->delete();
