@@ -128,6 +128,8 @@ class processor_netdebit extends URLprocessor
 			$var['LZW'] = $request->int_var['amount']['period3'];
 
 			$var['BET'] = $request->int_var['amount']['amount3'];
+
+			$var['VAL'] = md5( $request->int_var['amount']['amount3'] . $this->settings['secret'] );
 		} else {
 			$var['TIM'] = 0;
 
@@ -135,9 +137,9 @@ class processor_netdebit extends URLprocessor
 			$var['LZW'] = 1;
 
 			$var['BET'] = $request->int_var['amount'];
-		}
 
-		$var['VAL'] = md5( $request->int_var['amount'] . $this->settings['secret'] );
+			$var['VAL'] = md5( $request->int_var['amount'] . $this->settings['secret'] );
+		}
 
 		if ( $this->settings['javascript_checkout'] ) {
 			// Link to NetDebit Javascript from Checkout link
