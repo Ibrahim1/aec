@@ -33,28 +33,51 @@ class processor_generic_pin extends XMLprocessor
 		$settings = array();
 		$settings['currency']			= '';
 		$settings['pin_list_file']		= '';
-		$settings['tracking_type']		= '';
-		$settings['currency']			= array( 'list_currency' );
-		$settings['pin_filepath']		= '';
 		$settings['dbms']				= '';
 		$settings['dbhost']				= '';
 		$settings['dbuser']				= '';
 		$settings['dbpasswd']			= '';
 		$settings['dbname']				= '';
+		$settings['table_prefix']		= '';
+		$settings['table_name']			= '';
 
 		return $settings;
+	}
+
+	function saveParams( $params )
+	{
+		if ( !empty( $params['table_name'] ) ) {
+			$db = $this->getDB();
+
+			$tables	= $db->getTableList();
+
+			if ( !in_array( $params['table_prefix'] . $params['table_name'], $tables ) ) {
+				$query = 'CREATE TABLE IF NOT EXISTS `' . $params['table_prefix'] . $params['table_name'] . ' ('
+				. '`id` int(11) NOT NULL auto_increment,'
+				. '`pin` text NULL,'
+				. ' PRIMARY KEY (`id`)'
+				. ')'
+				;
+				$db->setQuery( $query );
+				$db->query();
+			}
+		}
+
+		return $params;
 	}
 
 	function backend_settings()
 	{
 		$settings = array();
 		$settings['currency']			= array( 'list_currency' );
-		$settings['pin_filepath']		= array( 'inputC' );
+		$settings['pin_list_file']		= array( 'inputD' );
 		$settings['dbms']				= array( 'inputC' );
 		$settings['dbhost']				= array( 'inputC' );
 		$settings['dbuser']				= array( 'inputC' );
 		$settings['dbpasswd']			= array( 'inputC' );
 		$settings['dbname']				= array( 'inputC' );
+		$settings['table_prefix']		= array( 'inputC' );
+		$settings['table_name']			= array( 'inputC' );
 
  		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
@@ -79,25 +102,108 @@ class processor_generic_pin extends XMLprocessor
 	function transmitRequestXML( $content, $request )
 	{
 		$return['valid']	= false;
-		$return['raw']		= "AEC Generic PIN Processor Payment";
-		$return['error']	= "Please provide a valid pin_code";
+		$return['raw']		= "AEC Generic Processor Payment";
+		$return['error']	= "Please provide a valid Pin Code.";
+
+		if ( empty( $request->int_var['params']['pin_code'] ) ) {
+			return $return;
+		}
 
 		if ( !empty( $request->int_var['params']['pin_code'] ) ) {
 			if ( $this->usePIN( $request->int_var['params']['pin_code'] ) ) {
+				unset( $return['error'] );
 
+				$return['valid'] = true;
+
+				$return['fullresponse'] = "Used PIN " . $request->int_var['params']['pin_code'];
 			}
 		}
 
 		return $return;
 	}
 
+	function getDB()
+	{
+		if ( $this->settings['use_altdb'] ) {
+			$options = array(	'driver'	=> $this->settings['dbms'],
+								'host'		=> $this->settings['dbhost'],
+								'user'		=> $this->settings['dbuser'],
+								'password'	=> $this->settings['dbpasswd'],
+								'database'	=> $this->settings['dbname'],
+								'prefix'	=> $this->settings['table_prefix']
+								);
+
+			$database =& JDatabase::getInstance($options);
+		} else {
+			$database =& JFactory::getDBO();
+		}
+
+		return $database;
+	}
+
 	function usePIN( $pin )
 	{
 		// Look up PIN in DB
-		// If fails -> return false;
-		// If succeeds
-		// take note in DB
-		// return true;
+		$db = $this->getDB();
+
+		$ps = new AECMI_pinstore( $db, $this->settings['table_name'] );
+
+		if ( $ps->loadPin( $pin ) ) {
+			return false;
+		} else {
+			if ( $this->FilePin( $pin ) ){
+				$ps->pin = $pin;
+
+				return $ps->storeload();
+			} else {
+				return false;
+			}
+		}
+	}
+
+	function FilePin( $pin )
+	{
+		if ( file_exists( $this->settings['pin_list_file'] ) ) {
+			// Open File and look for pin
+			$file = fopen($this->settings['pin_list_file'],"r");
+
+			while ( $line = fgets( $file, 200 ) ) {
+				if ( $line == $pin ) {
+					fclose($file);
+					return true;
+				}
+			}
+
+			fclose($file);
+			return false;
+		}
+	}
+
+}
+
+class AECMI_pinstore extends serialParamDBTable {
+	/** @var int Primary key */
+	var $id						= null;
+	/** @var int */
+	var $pin					= null;
+
+	/**
+	* @param database A database connector object
+	*/
+	function AECMI_pinstore( &$db, $table )
+	{
+		parent::__construct( '#__' . $table, 'id', $db );
+	}
+
+	function loadPin( $pin )
+	{
+		$query = "SELECT `id`'"
+		. " FROM #__" . $this->settings['table_name']
+		. " WHERE `pin` = \'' . $pin . '\'"
+		;
+		$db->setQuery( $query );
+
+		return $this->load( $db->loadResult() );
 	}
 }
 
