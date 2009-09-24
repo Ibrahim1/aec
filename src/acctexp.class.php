@@ -6564,7 +6564,7 @@ class aecTempToken extends serialParamDBTable
 		$this->created_date	= date( 'Y-m-d H:i:s', time() + $mainframe->getCfg( 'offset' ) *3600 );
 		$this->ip			= $_SERVER['REMOTE_ADDR'];
 
-		setcookie( 'aec_token', $token, time()+3600 );
+		setcookie( 'aec_token', $token, time()+600 );
 
 		return $this->storeload();
 	}

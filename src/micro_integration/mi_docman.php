@@ -44,16 +44,16 @@ class mi_docman
 		$database = &JFactory::getDBO();
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_docman` ('
-		. '`id` int(11) NOT NULL auto_increment,'
-		. '`userid` int(11) NOT NULL,'
-		. '`active` int(4) NOT NULL default \'1\','
-		. '`granted_downloads` int(11) NULL,'
-		. '`unlimited_downloads` int(3) NULL,'
-		. '`used_downloads` int(11) NULL,'
-		. '`params` text NULL,'
-		. ' PRIMARY KEY (`id`)'
-		. ')'
-		;
+					. '`id` int(11) NOT NULL auto_increment,'
+					. '`userid` int(11) NOT NULL,'
+					. '`active` int(4) NOT NULL default \'1\','
+					. '`granted_downloads` int(11) NULL,'
+					. '`unlimited_downloads` int(3) NULL,'
+					. '`used_downloads` int(11) NULL,'
+					. '`params` text NULL,'
+					. ' PRIMARY KEY (`id`)'
+					. ')'
+					;
 		$database->setQuery( $query );
 		$database->query();
 		return;
