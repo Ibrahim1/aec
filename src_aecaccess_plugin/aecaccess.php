@@ -66,7 +66,7 @@ class plgUserAECaccess extends JPlugin
 		}
 	}
 
-	function onLoginFailure( $credentials, $response )
+	function onLoginFailure( $credentials, $response=null )
 	{
 		$db =& JFactory::getDBO();
 
