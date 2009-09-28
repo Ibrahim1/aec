@@ -48,8 +48,12 @@ class mi_email_multi extends MI
 		return $settings;
 	}
 
-	function action( $request )
+	function relayAction( $request )
 	{
+		if ( !isset( $this->settings['sender'.$request->area] ) ) {
+			return null;
+		}
+
 		if ( !empty( $this->settings['emails_count'] ) && !empty( $this->settings['sender'] ) && !empty( $this->settings['sender_name'] ) ) {
 			for ( $i=0; $i<$this->settings['emails_count']; $i++ ) {
 				$pf = 'email_' . $i . '_';

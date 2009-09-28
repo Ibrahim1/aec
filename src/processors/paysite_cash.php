@@ -74,7 +74,7 @@ class processor_paysite_cash extends URLprocessor
 			$var['periode'.$suffix] = $request->int_var['amount']['period3'] . strtolower( $request->int_var['amount']['unit3'] );
 			$var['montant'.$suffix] = $request->int_var['amount']['amount3'];
 
-			$var['redebit'] = 'x';
+			$var['nb_redebit'] = 'x';
 			$var['subscription'] = 1;
 		} else {
 			$var['montant'] = $request->int_var['amount'];
