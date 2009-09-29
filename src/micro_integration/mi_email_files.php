@@ -81,9 +81,11 @@ class mi_email_files
 
 		$return = array();
 
-		foreach ( $request->params['mi_email_files'] as $i => $v ) {
-			if ( is_null( $v ) || ( $v == "" ) ) {
-				unset( $request->params['mi_email_files'][$i] );
+		if ( !empty( $request->params['mi_email_files'] ) ) {
+			foreach ( $request->params['mi_email_files'] as $i => $v ) {
+				if ( is_null( $v ) || ( $v == "" ) ) {
+					unset( $request->params['mi_email_files'][$i] );
+				}
 			}
 		}
 
