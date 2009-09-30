@@ -155,7 +155,7 @@ class plgSystemAECrouting extends JPlugin
 		include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
 
 		$vars = $this->getVars();
-
+print_r($_REQUEST);print_r($vars);exit;
 		if ( ( $vars['isreg'] || $vars['cbsregsv'] ) && $vars['int_reg'] ) {
 			// Joomla or CB registration...
 			if ( $vars['pfirst'] && !$vars['has_usage'] ) {
@@ -189,7 +189,11 @@ class plgSystemAECrouting extends JPlugin
 					$email		= aecGetParam( 'email', "", true, array( 'string', 'clear_nonalnum' ) );
 				}
 
-				if ( !empty( $username ) ) {
+				if ( empty( $username ) && !empty( $password ) && !empty( $email ) ) {
+					$username = $email;
+				}
+
+				if ( !empty( $username ) && !empty( $password ) && !empty( $email ) ) {
 					$database = &JFactory::getDBO();
 
 					$temptoken = new aecTempToken( $database );
