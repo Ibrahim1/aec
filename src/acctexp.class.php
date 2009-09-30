@@ -8140,7 +8140,13 @@ class InvoiceFactory
 			if ( ( count( $this->items ) == 1 ) || ( $this->payment->amount['amount'] == "0.00" ) ) {
 				$min = array_shift( array_keys( $this->items ) );
 
-				if ( $this->items[$min]['terms']->checkFree() || ( $this->items[$min]['terms']->nextterm->free && !$this->recurring ) || ( $this->payment->amount['amount'] == "0.00" ) ) {
+				if ( is_array( $this->payment->amount ) ) {
+					$amt = $this->payment->amount['amount'];
+				} else {
+					$amt = $this->payment->amount;
+				}
+
+				if ( $this->items[$min]['terms']->checkFree() || ( $this->items[$min]['terms']->nextterm->free && !$this->recurring ) || ( $amt == "0.00" ) ) {
 					$this->invoice->pay();
 					return $this->thanks( $option, false, true );
 				}
