@@ -97,7 +97,12 @@ class plgSystemAECrouting extends JPlugin
 		$vars['pfirst']		= $aecConfig->cfg['plans_first'];
 		$vars['int_reg']	= $aecConfig->cfg['integrate_registration'];
 
-		$vars['username']	= aecGetParam( 'username', "", true, array( 'string', 'clear_nonalnum' ) );
+		if ( empty( $_REQUEST['username'] ) && !empty( $_REQUEST['password'] ) && !empty( $_REQUEST['email'] ) ) {
+			$_POST['username'] = $_POST['email'];
+			$vars['username'] = $_REQUEST['email'];aecDebug("overwriting username");
+		} else {
+			$vars['username']	= aecGetParam( 'username', "", true, array( 'string', 'clear_nonalnum' ) );
+		}
 
 		$vars['has_usage']	= !empty( $vars['usage'] );
 
@@ -112,7 +117,7 @@ class plgSystemAECrouting extends JPlugin
 
 			$temptoken = new aecTempToken( $database );
 			$temptoken->getComposite();
-
+aecDebug("getVars - loading Token");aecDebug($temptoken);
 			if ( !empty( $temptoken->content['usage'] ) ) {
 				$vars['has_usage']	= true;
 				$vars['usage']		= $temptoken->content['usage'];
@@ -130,6 +135,20 @@ class plgSystemAECrouting extends JPlugin
 
 				if ( isset( $temptoken->content['password'] ) ) {
 					$vars['password']	= $temptoken->content['password'];
+				}
+
+				if ( !empty( $_REQUEST['username'] ) && !empty( $_REQUEST['password'] ) && !empty( $_REQUEST['email'] )
+					&& $temptoken->content( $vars['username'] ) && empty( $temptoken->content['password'] ) && empty( $temptoken->content['email'] ) ) {
+					$database = &JFactory::getDBO();
+
+					$temptoken = new aecTempToken( $database );
+					$temptoken->getComposite();
+
+					$content = array();
+					$temptoken->content['username']		= $_REQUEST['username'];
+					$temptoken->content['password']		= $_REQUEST['password'];
+					$temptoken->content['email']		= $_REQUEST['email'];
+					$temptoken->storeload();aecDebug("getVars - stored Token");aecDebug($temptoken);
 				}
 			} elseif ( !empty( $vars['username'] ) ) {
 				$vars['has_user']	= true;
@@ -155,7 +174,7 @@ class plgSystemAECrouting extends JPlugin
 		include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
 
 		$vars = $this->getVars();
-print_r($_REQUEST);print_r($vars);exit;
+aecDebug("onAfterRoute");aecDebug($_REQUEST);aecDebug($vars);
 		if ( ( $vars['isreg'] || $vars['cbsregsv'] ) && $vars['int_reg'] ) {
 			// Joomla or CB registration...
 			if ( $vars['pfirst'] && !$vars['has_usage'] ) {
@@ -198,12 +217,12 @@ print_r($_REQUEST);print_r($vars);exit;
 
 					$temptoken = new aecTempToken( $database );
 					$temptoken->getComposite();
-
+aecDebug("onAfterRoute - loading Token");aecDebug($temptoken);
 					$content = array();
 					$temptoken->content['username']		= $username;
 					$temptoken->content['password']		= $password;
 					$temptoken->content['email']		= $email;
-					$temptoken->storeload();
+					$temptoken->storeload();aecDebug("onAfterRoute - stored Token");aecDebug($temptoken);
 				}
 			}
 		} elseif ( $vars['cbsreg'] ) {
