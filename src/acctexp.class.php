@@ -61,7 +61,11 @@ function aecDebug( $text, $level = 128 )
 	$database = &JFactory::getDBO();
 
 	$eventlog = new eventLog( $database );
-	$eventlog->issue( 'debug', 'debug', json_encode( $text ), $level );
+	if ( !is_string( $text ) ) {
+		$eventlog->issue( 'debug', 'debug', json_encode( $text ), $level );
+	} else {
+		$eventlog->issue( 'debug', 'debug', $text, $level );
+	}
 }
 
 if ( !function_exists( 'aecJoomla15check' ) ) {
