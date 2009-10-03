@@ -32,9 +32,8 @@ $menu[] = array( 'showExcluded',		_AEC_CENTR_EXCLUDED,		$iconroot . 'aec_symbol_
 $menu[] = array( 'showManual',			_AEC_CENTR_MANUAL,			$iconroot . 'aec_symbol_manual_tiny.png' );
 $menu[] = array( 'showMicroIntegrations',_AEC_CENTR_M_INTEGRATION,	$iconroot . 'aec_symbol_mi_tiny.png' );
 $menu[] = array( 'showSettings',		_AEC_CENTR_SETTINGS,		$iconroot . 'aec_symbol_settings_tiny.png' );
-$menu[] = array( 'editCSS',				_AEC_CENTR_EDIT_CSS,		$iconroot . 'aec_symbol_css_tiny.png' );
-$menu[] = array( 'hacks',				_AEC_CENTR_HACKS,			$iconroot . 'aec_symbol_hacks_tiny.png' );
-$menu[] = array( 'help',				_AEC_CENTR_HELP,			$iconroot . 'aec_symbol_help_tiny.png' );
+$menu[] = array( 'showProcessors',		_AEC_CENTR_PROCESSORS,		$iconroot . 'aec_symbol_settings_tiny.png' );
+$menu[] = array( 'eventlog',			_AEC_CENTR_LOG,				$iconroot . 'aec_symbol_eventlog_tiny.png' );
 
 $eucaInstall->populateAdminMenuEntry( $menu );
 ?>
