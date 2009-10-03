@@ -73,7 +73,6 @@ define( '_AEC_MI_DIV1_DOCMAN_UNLIMITED', 	'unlimited' );
 define( '_MI_MI_DOCMAN_UNSET_UNLIMITED_NAME',			'Unset Unlimited on Expiration: ' );
 define( '_MI_MI_DOCMAN_UNSET_UNLIMITED_DESC',			'Remove unlimited downloads when user expires.' );
 
-
 // email
 define( '_AEC_MI_NAME_EMAIL',		'Email' );
 define( '_AEC_MI_DESC_EMAIL',		'Send an Email to one or more adresses on application or expiration of the subscription' );
@@ -905,5 +904,22 @@ define( '_AEC_MI_NAME_JOOMLAPLUGIN',		'Joomla Plugin' );
 define( '_AEC_MI_DESC_JOOMLAPLUGIN',		'Call a Joomla Plugin (only Authentication for now)' );
 define( '_MI_MI_JOOMLAPLUGIN_PLUGIN_NAME',			'Plugin' );
 define( '_MI_MI_JOOMLAPLUGIN_PLUGIN_DESC',			'Select the plugin to be called' );
+
+// K2
+define( '_AEC_MI_NAME_K2',		'K2' );
+define( '_AEC_MI_DESC_K2',		'Assign users to K2 usergroups' );
+define( '_MI_MI_K2_SET_GROUP_NAME',				'Set K2 Group' );
+define( '_MI_MI_K2_SET_GROUP_DESC',				'Choose Yes if you want this MI to set the K2 Group when it is called.' );
+define( '_MI_MI_K2_GROUP_NAME',					'K2 Group' );
+define( '_MI_MI_K2_GROUP_DESC',					'The K2 group that you want the user to be in.' );
+define( '_MI_MI_K2_GROUP_EXP_NAME',				'K2 Group (expiration)' );
+define( '_MI_MI_K2_GROUP_EXP_DESC',				'Choose Yes if you want this MI to set the K2 Group when the calling payment plan expires.' );
+define( '_MI_MI_K2_SET_GROUP_EXP_NAME',			'Expiration group' );
+define( '_MI_MI_K2_SET_GROUP_EXP_DESC',			'The K2 group that you want the user to be in when the subscription runs out.' );
+define( '_MI_MI_K2_REBUILD_NAME',				'Rebuild' );
+define( '_MI_MI_K2_REBUILD_DESC',				'Attempt to rebuild the list of users assigned to the usergroup - >Set K2 Group< and >K2 Group< have to both be set for this.' );
+define( '_AEC_MI_HACK1_K2',						'Build in a downloads restriction for K2, to be used with Micro Integrations. <b>Note:</b> This is an optional hack which adds the ability to restrict number of file downloads.  It should ONLY be applied if this is desired.' );
+define( '_MI_MI_K2_REMOVE_NAME', 				'Remove: ' );
+define( '_MI_MI_K2_REMOVE_NAME_DESC',			'Carry out the expiration action for all users with an active plan attached to this micro-integration' );
 
 ?>
