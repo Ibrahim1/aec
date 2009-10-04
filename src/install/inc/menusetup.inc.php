@@ -34,6 +34,7 @@ $menu[] = array( 'showMicroIntegrations',_AEC_CENTR_M_INTEGRATION,	$iconroot . '
 $menu[] = array( 'showSettings',		_AEC_CENTR_SETTINGS,		$iconroot . 'aec_symbol_settings_tiny.png' );
 $menu[] = array( 'showProcessors',		_AEC_CENTR_PROCESSORS,		$iconroot . 'aec_symbol_settings_tiny.png' );
 $menu[] = array( 'eventlog',			_AEC_CENTR_LOG,				$iconroot . 'aec_symbol_eventlog_tiny.png' );
+$menu[] = array( 'help',				_AEC_CENTR_HELP,			$iconroot . 'aec_symbol_help_tiny.png' );
 
 $eucaInstall->populateAdminMenuEntry( $menu );
 ?>
