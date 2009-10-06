@@ -88,6 +88,11 @@ class mi_joomlauser
 
 			$database->setQuery( $query );
 			$database->query() or die( $database->stderr() );
+
+			$userid = $request->metaUser->userid;
+
+			// Reloading metaUser object for other MIs
+			$request->metaUser = new metaUser( $userid );
 		}
 	}
 }

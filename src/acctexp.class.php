@@ -13704,7 +13704,7 @@ class microIntegration extends serialParamDBTable
 		return $this->relayAction( $metaUser, null, null, $objplan, 'expiration_action', $add );
 	}
 
-	function relayAction( $metaUser, $exchange=null, $invoice=null, $objplan=null, $stage='action', &$add )
+	function relayAction( &$metaUser, $exchange=null, $invoice=null, $objplan=null, $stage='action', &$add )
 	{
 		// Exchange Settings
 		if ( is_array( $exchange ) && !empty( $exchange ) ) {
