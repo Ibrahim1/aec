@@ -899,4 +899,16 @@ define( '_AEC_MI_HACK1_K2',						'Build in a downloads restriction for K2, to be
 define( '_MI_MI_K2_REMOVE_NAME', 				'Remove: ' );
 define( '_MI_MI_K2_REMOVE_NAME_DESC',			'Carry out the expiration action for all users with an active plan attached to this micro-integration' );
 
+// Quotestream
+define( '_AEC_MI_NAME_QUOTESTREAM',		'Quotestream' );
+define( '_AEC_MI_DESC_QUOTESTREAM',		'Authenticate Users with Quotestream' );
+define( '_MI_MI_QUOTESTREAM_LOGIN_NAME',			'Quotestream Login' );
+define( '_MI_MI_QUOTESTREAM_LOGIN_DESC',			'Your Login with Quotestream' );
+define( '_MI_MI_QUOTESTREAM_PASSWORD_NAME',			'Quotestream Password' );
+define( '_MI_MI_QUOTESTREAM_PASSWORD_DESC',			'Your Password with Quotestream' );
+define( '_MI_MI_QUOTESTREAM_PROID_NAME',			'Product Id' );
+define( '_MI_MI_QUOTESTREAM_PROID_DESC',			'The ProId that will be transferred on authentication (leave blank if this does not apply)' );
+define( '_MI_MI_QUOTESTREAM_CLIENTGROUPID_NAME',	'Client Group Id' );
+define( '_MI_MI_QUOTESTREAM_CLIENTGROUPID_DESC',	'The ClientGroupId that will be transferred on authentication (leave blank if this does not apply)' );
+
 ?>

@@ -36,8 +36,22 @@ class mi_quotestream
 
 	function action( $request )
 	{
+		$params = $request->metaUser->meta->setMIParams( $request->parent->id, $request->plan->id );
+
+		if ( empty( $params['has_quotestream_user'] ) ) {
+			if ( $this->createQSuser( $request ) ) {
+				$request->metaUser->meta->setMIParams( $request->parent->id, $request->plan->id, array( 'has_quotestream_user' => true ) );
+				$request->metaUser->meta->storeload();
+			}
+		}
+
+		return true;
+	}
+
+	function createQSuser( $request )
+	{
 		$login = array(	'login' => $this->settings['login'],
-						'password' => $this->settings['login'],
+						'password' => $this->settings['password'],
 						'features' => SOAP_USE_XSI_ARRAY_TYPE
 						);
 
@@ -83,6 +97,27 @@ class mi_quotestream
 			$client->createUser( $user );
 		} catch ( SoapFault $soapFault ) {
 			echo $soapFault;
+			return false;
+		}
+
+		return true;
+	}
+
+
+	function getQSpackages( $request )
+	{
+		$login = array(	'login' => $this->settings['login'],
+						'password' => $this->settings['password'],
+						'features' => SOAP_USE_XSI_ARRAY_TYPE
+						);
+
+		$client = new SoapClient('https://app.quotemedia.com/services/UserWebservice?wsdl', $login );
+
+		try {
+			$pkgs = $client->getAllPackages( $this->settings['login'] );
+		} catch ( SoapFault $soapFault ) {
+			echo $soapFault;
+			return false;
 		}
 
 		return true;
