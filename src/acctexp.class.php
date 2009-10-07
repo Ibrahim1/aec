@@ -9717,6 +9717,12 @@ class Invoice extends serialParamDBTable
 		return true;
 	}
 
+	function getPrintout()
+	{
+		global $aecConfig;
+
+		
+	}
 }
 
 class aecCartHelper
