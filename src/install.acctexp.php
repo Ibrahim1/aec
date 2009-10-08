@@ -220,6 +220,8 @@ function com_install()
 	$translation = false;
 	if ( file_exists( JPATH_SITE . '/administrator/components/com_joomfish/admin.joomfish.php' ) ) {
 		$translation = 'joomfish';
+	} elseif ( file_exists( JPATH_SITE . '/administrator/components/com_joomfish/joomfish.php' ) ) {
+		$translation = 'joomfish';
 	} elseif ( file_exists( JPATH_SITE . '/administrator/components/com_nokkaew/admin.nokkaew.php' ) ) {
 		$translation = 'nokkaew';
 	}
