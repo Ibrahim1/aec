@@ -30,6 +30,31 @@ class mi_quotestream
 		$settings['proId']			= array( 'inputB' );
 		$settings['clientGroupId']	= array( 'inputB' );
 
+		$pkg = $this->getQSpackages();
+
+		if ( $pkg != false ) {
+			if ( !is_array( $this->settings['proId'] ) ) {
+				$this->settings['proId'] = explode( ",", $this->settings['proId'] );
+			}
+
+			$sp		= array();
+			$sps	= array();
+
+			foreach( $pkg as $p ) {
+				$desc = "Put together string";
+
+				$sp[] = mosHTML::makeOption( "id", $desc );
+
+				if ( !empty( $this->settings['proId'] ) ) {
+					if ( in_array( "id", $this->settings['proId'] ) ) {
+						$sps[] = mosHTML::makeOption( "id", $desc );
+					}
+				}
+			}
+
+			$settings['proId']			= array( 'list' );
+			$settings['lists']['proId']	= mosHTML::selectList( $sp, 'proId[]', 'size="4" multiple="multiple"', 'value', 'text', $sps );
+		}
 
 		return $settings;
 	}
@@ -104,23 +129,27 @@ class mi_quotestream
 	}
 
 
-	function getQSpackages( $request )
+	function getQSpackages()
 	{
-		$login = array(	'login' => $this->settings['login'],
-						'password' => $this->settings['password'],
-						'features' => SOAP_USE_XSI_ARRAY_TYPE
-						);
+		$pkgs = array();
 
-		$client = new SoapClient('https://app.quotemedia.com/services/UserWebservice?wsdl', $login );
+		if ( !empty( $this->settings['login'] ) ) {
+			$login = array(	'login' => $this->settings['login'],
+							'password' => $this->settings['password'],
+							'features' => SOAP_USE_XSI_ARRAY_TYPE
+							);
 
-		try {
-			$pkgs = $client->getAllPackages( $this->settings['login'] );
-		} catch ( SoapFault $soapFault ) {
-			echo $soapFault;
-			return false;
+			$client = new SoapClient('https://app.quotemedia.com/services/UserWebservice?wsdl', $login );
+
+			try {
+				$pkgs = $client->getAllPackages( $this->settings['login'] );
+			} catch ( SoapFault $soapFault ) {
+				echo $soapFault;
+				return false;
+			}
 		}
 
-		return true;
+		return $pkgs;
 	}
 }
 ?>
