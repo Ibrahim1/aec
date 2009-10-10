@@ -5756,22 +5756,13 @@ class SubscriptionPlan extends serialParamDBTable
 		return $renew;
 	}
 
-	function getReturnTerms( $recurring, $user_subscription, $metaUser=false )
+	function getTermsForUser( $recurring, $metaUser )
 	{
-		$terms = $this->getTerms( $recurring, $user_subscription, $metaUser );
-
-		if ( is_object( $metaUser ) ) {
-			$renew = $metaUser->is_renewing();
+		if ( $InvoiceFactory->metaUser->hasSubscription ) {
+			return $this->getTerms( $recurring, $metaUser->objSubscription, $metaUser );
 		} else {
-			$renew = 0;
+			return $this->getTerms( $recurring, false, $metaUser );
 		}
-
-		$return_url	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=thanks&amp;renew=' . $renew );
-
-		$return['return_url']	= $return_url;
-		$return['terms']		= $terms;
-
-		return $return;
 	}
 
 	function getTerms( $recurring=false, $user_subscription=false, $metaUser=false )
@@ -5874,6 +5865,8 @@ class SubscriptionPlan extends serialParamDBTable
 				$return['comparison'] = $this->compareToPlan( $last_subscription );
 			}
 		}
+
+		$return['full_comparison'] = ( ( $return['comparison'] === false ) && ( $return['total_comparison'] === false ) );
 
 		return $return;
 	}
@@ -6957,14 +6950,7 @@ class InvoiceFactory
 		$this->payment->amount = null;
 
 		if ( empty( $this->cart ) && !empty( $this->plan ) ) {
-			if ( !empty( $this->metaUser ) ) {
-				$return = $this->plan->getReturnTerms( $this->recurring, $this->metaUser->focusSubscription, $this->metaUser );
-			} else {
-				$return = $this->plan->getReturnTerms( $this->recurring, $user_subscription );
-			}
-
-
-			$terms = $return['terms'];
+			$terms = $this->plan->getTermsForUser( $this->recurring, $this->metaUser );
 
 			if ( !empty( $terms ) ) {
 				if ( is_object( $terms->nextterm ) ) {
@@ -7072,22 +7058,23 @@ class InvoiceFactory
 		if ( empty( $this->cartobject ) ) {
 			$database = &JFactory::getDBO();
 
-			$terms = $this->plan->getTerms( $this->recurring, $this->metaUser->objSubscription, $this->metaUser );
+			$terms = $this->plan->getTermsForUser( $this->recurring, $this->metaUser );
 
 			if ( !empty( $this->plan ) ) {
 				$c = $this->plan->doPlanComparison( $this->metaUser->objSubscription );
 
 				// Do not allow a Trial if the user has used this or a similar plan
-				if ( $terms->hasTrial && !( ( $c['comparison'] === false ) && ( $c['total_comparison'] === false ) ) ) {
+				if ( $terms->hasTrial && !$c['full_comparison'] ) {
 					$terms->incrementPointer();
 				}
 			}
 
-			$this->items[] = array( 'item' => array(	'obj' => $this->plan,
-														'name' => $this->plan->getProperty( 'name' ),
-														'desc' => $this->plan->getProperty( 'desc' )
-													),
-									'terms' => $terms );
+			$this->items[] = array(	'obj'		=> $this->plan,
+									'name'		=> $this->plan->getProperty( 'name' ),
+									'desc'		=> $this->plan->getProperty( 'desc' ),
+									'quantity'	=> 1,
+									'terms'		=> $terms
+								);
 
 			$this->cartobject = new aecCart( $database );
 			$this->cartobject->addItem( array(), $this->plan );
@@ -7096,16 +7083,18 @@ class InvoiceFactory
 
 			foreach ( $this->cart as $cid => $citem ) {
 				if ( $citem['obj'] !== false ) {
-					$terms = $citem['obj']->getTerms( $this->recurring, $this->metaUser->focusSubscription, $this->metaUser );
+					$this->items[$cid] = $citem;
+
+					$terms = $citem['obj']->getTermsForUser( $this->recurring, $this->metaUser );
 
 					$c = $citem['obj']->doPlanComparison( $this->metaUser->focusSubscription );
 
 					// Do not allow a Trial if the user has used this or a similar plan
-					if ( $terms->hasTrial && !( ( $c['comparison'] === false ) && ( $c['total_comparison'] === false ) ) ) {
+					if ( $terms->hasTrial && !$c['full_comparison'] ) {
 						$terms->incrementPointer();
 					}
 
-					$this->items[$cid] = array( 'item' => $citem, 'terms' => $terms );
+					$this->items[$cid]['terms'] = $terms;
 				} else {
 					$terms = new mammonTerms();
 					$term = new mammonTerm();
@@ -7116,7 +7105,7 @@ class InvoiceFactory
 
 					$terms->addTerm( $term );
 
-					$this->items[] = array( 'item' => array( 'cost' => $citem['cost'] ), 'terms' => $terms );
+					$this->items[] = array( 'cost' => $citem['cost'], 'terms' => $terms );
 				}
 			}
 		}
@@ -8167,13 +8156,28 @@ class InvoiceFactory
 		if ( $this->hasExceptions() ) {
 			$this->addressExceptions( $option );
 		} else {
-			$var = $this->invoice->prepareProcessorLink( $this );
+			$int_var = $this->invoice->getWorkingData( $this );
+
+			// Assemble Checkout Response
+			if ( !empty( $int_var['objUsage'] ) ) {
+				if ( is_a( $int_var['objUsage'], 'SubscriptionPlan' ) ) {
+					$int_var['var']		= $this->pp->checkoutAction( $int_var, $this->metaUser, $int_var['objUsage'], $this );
+				} else {
+					$int_var['var']		= $this->pp->checkoutAction( $int_var, $this->metaUser, null, $this, $int_var['objUsage'] );
+				}
+			}
+
+			$int_var['params']	= $this->pp->getParamsHTML( $int_var['params'], $this->pp->getParams( $int_var['params'] ) );
+
+			if ( empty( $int_var['params'] ) ) {
+				$int_var['params'] = null;
+			}
 
 			$this->invoice->formatInvoiceNumber();
 
 			$mainframe->SetPageTitle( _CHECKOUT_TITLE );
 
-			Payment_HTML::checkoutForm( $option, $var['var'], $var['params'], $this, $error, $repeat );
+			Payment_HTML::checkoutForm( $option, $int_var['var'], $int_var['params'], $this, $error, $repeat );
 		}
 	}
 
@@ -8223,7 +8227,7 @@ class InvoiceFactory
 
 		$this->puffer( $option );
 
-		$var = $this->invoice->getFullVars( $this );
+		$var = $this->invoice->getWorkingData( $this );
 
 		$objUsage = $this->getObjUsage();
 
@@ -8240,7 +8244,11 @@ class InvoiceFactory
 			}
 		}
 
-		$var['params'] = aecPostParamClear( $_POST );
+		$post = aecPostParamClear( $_POST );
+
+		foreach ( $post as $pk => $pv ) {
+			$var['params'][$pk] = $pv;
+		}
 
 		if ( !empty( $this->invoice->params['target_user'] ) ) {
 			$targetUser = new metaUser( $this->invoice->params['target_user'] );
@@ -8342,6 +8350,25 @@ class InvoiceFactory
 		if ( isset( $response['cancel'] ) ) {
 			HTML_Results::cancel( 'com_acctexp' );
 		}
+	}
+
+	function invoiceprint( $option, $invoice_number )
+	{
+		$database = &JFactory::getDBO();
+
+		$this->loadMetaUser();
+
+		$this->invoice = new Invoice( $database );
+		$this->invoice->loadInvoiceNumber( $invoice_number );
+
+		$this->pp = new PaymentProcessor( $database );
+		if ( $this->pp->loadName( $invoice->method ) ) {
+			$this->pp->fullInit();
+		}
+
+		$data = $invoice->getPrintout( $this );
+
+		Payment_HTML::confirmForm( $option, $data );
 	}
 
 	function thanks( $option, $renew=false, $free=false )
@@ -8738,13 +8765,7 @@ class Invoice extends serialParamDBTable
 						}
 					}
 
-					if ( $metaUser->hasSubscription ) {
-						$return = $plan->getReturnTerms( $recurring, $metaUser->objSubscription, $metaUser );
-					} else {
-						$return = $plan->getReturnTerms( $recurring, false, $metaUser );
-					}
-
-					$terms = $return['terms'];
+					$terms = $plan->getTermsForUser( $recurring, $metaUser );
 
 					$terms->incrementPointer( $this->counter );
 
@@ -9138,7 +9159,7 @@ class Invoice extends serialParamDBTable
 						$new_plan = new SubscriptionPlan( $database );
 						$new_plan->load( $c['id'] );
 
-						for ( $i=0; $i<$c['count']; $i++ ) {
+						for ( $i=0; $i<$c['quantity']; $i++ ) {
 							$plans[] = $new_plan;
 						}
 					}
@@ -9336,178 +9357,83 @@ class Invoice extends serialParamDBTable
 		}
 	}
 
-	function getFullVars( $InvoiceFactory )
+	function getWorkingData( $InvoiceFactory )
 	{
 		$database = &JFactory::getDBO();
 
+		$int_var = array();
+
+		// Defaults
+		$int_var['params']		= array();
+		$int_var['invoice']		= $this->invoice_number;
+		$int_var['usage']		= $this->usage;
+		$int_var['amount']		= $this->amount;
+		$int_var['recurring']	= 0;
+
 		if ( is_array( $this->params ) ) {
 			$int_var['params'] = $this->params;
-		} else {
-			$int_var['params'] = array();
-		}
 
-		// Filter non-processor params
-		$nonproc = array( 'pending_reason', 'deactivated' );
-		foreach ( $nonproc as $param ) {
-			if ( isset( $int_var['params'][$param] ) ) {
-				unset( $int_var['params'][$param] );
+			// Filter non-processor params
+			$nonproc = array( 'pending_reason', 'deactivated' );
+
+			foreach ( $nonproc as $param ) {
+				if ( isset( $int_var['params'][$param] ) ) {
+					unset( $int_var['params'][$param] );
+				}
 			}
 		}
 
-		$plan = false;
-
-		$objUsage = $this->getObjUsage();
+		$int_var['objUsage'] = $this->getObjUsage();
 
 		$urladd = '';
-		if ( !empty( $objUsage ) ) {
-			if ( is_a( $objUsage, 'SubscriptionPlan' ) ) {
-				$plan = $objUsage;
-
-				$int_var['planparams'] = $plan->getProcessorParameters( $InvoiceFactory->pp->id );
+		if ( !empty( $int_var['objUsage'] ) ) {
+			if ( is_a( $int_var['objUsage'], 'SubscriptionPlan' ) ) {
+				$int_var['planparams'] = $int_var['objUsage']->getProcessorParameters( $InvoiceFactory->pp->id );
 
 				if ( isset( $int_var['params']['userselect_recurring'] ) ) {
-					$recurring = $InvoiceFactory->pp->is_recurring( $int_var['params']['userselect_recurring'], true );
+					$int_var['recurring'] = $InvoiceFactory->pp->is_recurring( $int_var['params']['userselect_recurring'], true );
 				} else {
-					$recurring = $InvoiceFactory->pp->is_recurring();
+					$int_var['recurring'] = $InvoiceFactory->pp->is_recurring();
 				}
 
-				if ( $InvoiceFactory->metaUser->hasSubscription ) {
-					$amount = $plan->getReturnTerms( $recurring, $InvoiceFactory->metaUser->objSubscription, $InvoiceFactory->metaUser );
-				} else {
-					$amount = $plan->getReturnTerms( $recurring, false, $InvoiceFactory->metaUser );
-				}
+				$terms = $int_var['objUsage']->getTermsForUser( $int_var['recurring'], $InvoiceFactory->metaUser );
 
-				$amount['amount'] = $amount['terms']->getOldAmount( $recurring );
+				$int_var['amount']		= $terms->getOldAmount( $int_var['recurring'] );
 
-				if ( !empty( $plan->params['customthanks'] ) || !empty( $plan->params['customtext_thanks'] ) ) {
-					$urladd .= '&amp;u=' . $this->usage;
+				if ( !empty( $int_var['objUsage']->params['customthanks'] ) || !empty( $int_var['objUsage']->params['customtext_thanks'] ) ) {
+					$urladd = '&amp;u=' . $this->usage;
 				}
 			} else {
-				$recurring = false;
+				$int_var['recurring'] = false;
 
-				if ( !empty( $InvoiceFactory->cart ) ) {
-					$cart = $InvoiceFactory->cartobject;
-				} else {
-					$cart = $objUsage;
+				if ( !empty( $InvoiceFactory->cart ) && !empty( $InvoiceFactory->cartobject ) ) {
+					$int_var['objUsage'] = $InvoiceFactory->cartobject;
 				}
 
-				$amount = $cart->getAmount( $InvoiceFactory->metaUser, $InvoiceFactory->cart );
+				// TODO: Figure out whether ->cart really is always present
+				$int_var['amount'] = $int_var['objUsage']->getAmount( $InvoiceFactory->metaUser, $InvoiceFactory->cart );
 			}
-
-			if ( $recurring ) {
-				$int_var['recurring'] = $recurring;
-			} else {
-				$int_var['recurring'] = 0;
-			}
-		} else {
-			$amount['amount'] = $this->amount;
-			$int_var['recurring'] = 0;
 		}
 
-		if ( empty( $objUsage ) || is_a( $objUsage, 'SubscriptionPlan' ) ) {
+		// Does not apply for Cart - as it has already happened in cart->getAmount()
+		// Yet might apply for non-usage invoice
+		if ( empty( $int_var['objUsage'] ) || is_a( $int_var['objUsage'], 'SubscriptionPlan' ) ) {
 			if ( !empty( $this->coupons ) ) {
 				$cph = new couponsHandler( $InvoiceFactory->metaUser, $InvoiceFactory, $this->coupons );
 
-				$amount['amount'] = $cph->applyToAmount( $amount['amount'] );
+				$int_var['amount'] = $cph->applyToAmount( $int_var['amount'] );
 			}
 		}
 
-		$int_var['amount']		= $amount['amount'];
-
-		if ( !empty( $amount['return_url'] ) ) {
-			$int_var['return_url'] = $amount['return_url'] . $urladd;
+		if ( is_object( $InvoiceFactory->metaUser ) ) {
+			$renew = $InvoiceFactory->metaUser->is_renewing();
 		} else {
-			$int_var['return_url'] = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=thanks&amp;renew=0' . $urladd );
+			$renew = 0;
 		}
 
-		$int_var['invoice']		= $this->invoice_number;
-		$int_var['usage']		= $this->invoice_number;
+		$int_var['return_url']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=thanks&amp;renew=' . $renew . $urladd );
 
 		return $int_var;
-	}
-
-	function prepareProcessorLink( $InvoiceFactory=null )
-	{
-		$database = &JFactory::getDBO();
-
-		if ( is_array( $this->params ) ) {
-			$int_var['params'] = $this->params;
-		} else {
-			$int_var['params'] = array();
-		}
-
-		// Filter non-processor params
-		$nonproc = array( 'pending_reason', 'deactivated' );
-		foreach ( $nonproc as $param ) {
-			if ( isset( $int_var['params'][$param] ) ) {
-				unset( $int_var['params'][$param] );
-			}
-		}
-
-		$plan = false;
-
-		$objUsage = $this->getObjUsage();
-
-		$urladd = '';
-		if ( !empty( $objUsage ) ) {
-			if ( is_a( $objUsage, 'SubscriptionPlan' ) ) {
-				$plan = $objUsage;
-
-				$int_var['planparams'] = $plan->getProcessorParameters( $InvoiceFactory->pp->id );
-
-				if ( isset( $int_var['params']['userselect_recurring'] ) ) {
-					$recurring = $InvoiceFactory->pp->is_recurring( $int_var['params']['userselect_recurring'], true );
-				} else {
-					$recurring = $InvoiceFactory->pp->is_recurring();
-				}
-
-				$amount['amount'] = $InvoiceFactory->items[0]['terms']->getOldAmount( $recurring );
-
-				if ( !empty( $plan->params['customthanks'] ) || !empty( $plan->params['customtext_thanks'] ) ) {
-					$urladd .= '&amp;u=' . $this->usage;
-				}
-			} else {
-				$recurring = false;
-
-				if ( !empty( $InvoiceFactory->cart ) ) {
-					$cart = $InvoiceFactory->cartobject;
-				} else {
-					$cart = $objUsage;
-				}
-
-				$amount = $cart->getAmount( $InvoiceFactory->metaUser, $InvoiceFactory->cart );
-			}
-
-			if ( $recurring ) {
-				$int_var['recurring'] = $recurring;
-			} else {
-				$int_var['recurring'] = 0;
-			}
-		} else {
-			$amount['amount'] = $this->amount;
-			$int_var['recurring'] = 0;
-		}
-
-		$int_var['amount']		 = $amount['amount'];
-
-		if ( !empty( $amount['return_url'] ) ) {
-			$int_var['return_url'] = $amount['return_url'] . $urladd;
-		} else {
-			$int_var['return_url'] = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=thanks&amp;renew=0' . $urladd );
-		}
-
-		$int_var['invoice']		= $this->invoice_number;
-		$int_var['usage']		= $this->invoice_number;
-
-		// Assemble Checkout Response
-		$return['var']		= $InvoiceFactory->pp->checkoutAction( $int_var, $InvoiceFactory->metaUser, $plan, $this, $cart );
-		$return['params']	= $InvoiceFactory->pp->getParamsHTML( $int_var['params'], $InvoiceFactory->pp->getParams( $int_var['params'] ) );
-
-		if ( empty( $return['params'] ) ) {
-			$return['params'] = null;
-		}
-
-		return $return;
 	}
 
 	function getObjUsage()
@@ -9709,13 +9635,23 @@ class Invoice extends serialParamDBTable
 		return true;
 	}
 
-	function getPrintout( $option )
+	function getPrintout( $InvoiceFactory )
 	{
-		global $mainframe;
+		$var = $this->getWorkingData( $InvoiceFactory );
 
-		//$mainframe->SetPageTitle( _CONFIRM_TITLE );
+		$data['invoice_date'] = HTML_frontend::DisplayDateInLocalTime( $invoice->created_date );
 
-		Payment_HTML::confirmForm( $option, $this );
+		$var['itemlist'] = array();
+		foreach ( $InvoiceFactory->items as $item ) {
+			$var['itemlist'][] = '<tr id="invoice_content_item">'
+				. '<td>' . $item['name'] . '</td>'
+				. '<td>' . $item['terms']->nextterm->renderTotal() . '</td>'
+				. '<td>' . 1 . '</td>'
+				. '<td>' . $item['terms']->nextterm->renderTotal() . '</td>'
+				. '</tr>';
+		}
+
+		return $var;
 	}
 }
 
@@ -10001,7 +9937,7 @@ class aecCart extends serialParamDBTable
 			$element			= array();
 			$element['type']	= 'plan';
 			$element['id']		= $id;
-			$element['count']	= 1;
+			$element['quantity']	= 1;
 
 			$return['details'] = array( 'type' => 'plan', 'id' => $id );
 
@@ -10010,7 +9946,7 @@ class aecCart extends serialParamDBTable
 				foreach ( $this->content as $iid => $item ) {
 					if ( ( $item['type'] == $element['type'] ) && ( $item['id'] == $element['id'] ) ) {
 						$return['event'] = 'updateItem';
-						$this->content[$iid]['count']++;
+						$this->content[$iid]['quantity']++;
 						$update = true;
 						break;
 					}
@@ -10138,7 +10074,7 @@ class aecCart extends serialParamDBTable
 				if ( empty( $count ) ) {
 					unset( $this->content[$uid] );
 				} else {
-					$this->content[$uid]['count'] = $count;
+					$this->content[$uid]['quantity'] = $count;
 				}
 			}
 		}
@@ -10168,13 +10104,13 @@ class aecCart extends serialParamDBTable
 						$o['name']	= $obj->getProperty( 'name' );
 						$o['desc']	= $obj->getProperty( 'desc' );
 
-						$samnt		= $obj->getReturnTerms( false, $metaUser->focusSubscription, $metaUser );
+						$terms = $objUsage->getTermsForUser( false, $InvoiceFactory->metaUser );
 
 						if ( $counter ) {
-							$samnt['terms']->incrementPointer( $counter );
+							$terms->incrementPointer( $counter );
 						}
 
-						$o['terms']	= $samnt['terms'];
+						$o['terms']	= $terms;
 
 						$c[$content['type']][$content['id']] = $o;
 						break;
@@ -10202,7 +10138,7 @@ class aecCart extends serialParamDBTable
 			$entry['cost'] = $entry['terms']->nextterm->renderTotal();
 
 			if ( $entry['cost'] > 0 ) {
-				$total = $content['count'] * $entry['cost'];
+				$total = $content['quantity'] * $entry['cost'];
 
 				$entry['cost_total']	= AECToolbox::correctAmount( $total );
 			} else {
@@ -10217,7 +10153,7 @@ class aecCart extends serialParamDBTable
 
 			$entry['cost']			= AECToolbox::correctAmount( $entry['cost'] );
 
-			$entry['count']			= $content['count'];
+			$entry['quantity']		= $content['quantity'];
 
 			$totalcost += $entry['cost_total'];
 
@@ -10253,13 +10189,7 @@ class aecCart extends serialParamDBTable
 
 		$max = array_pop( array_keys( $checkout ) );
 
-		$return_url	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=thanks&amp;renew=0' );
-
-		$return = array();
-		$return['return_url']	= $return_url;
-		$return['amount']		= $checkout[$max]['cost_total'];
-
-		return $return;
+		return $checkout[$max]['cost_total'];
 	}
 
 	function getTopPlan()
@@ -14473,7 +14403,7 @@ class couponsHandler extends eucaObject
 				$min = array_shift( array_keys( $allowed ) );
 
 				foreach ( $items as $iid => $item ) {
-					if ( $item['item']['obj']->id == $allowed[$min] ) {
+					if ( $item['obj']->id == $allowed[$min] ) {
 						$pgsel = $iid;
 					}
 				}
@@ -14545,7 +14475,7 @@ class couponsHandler extends eucaObject
 			$termtype = null;
 		}
 
-		if ( empty( $item['item']['obj'] ) && ( !$hasterm || ( $termtype == "total" ) ) ) {
+		if ( empty( $item['obj'] ) && ( !$hasterm || ( $termtype == "total" ) ) ) {
 			// This is the total item - apply total coupons - totally
 			foreach ( $this->coupons as $coupon_code ) {
 				if ( in_array( $coupon_code, $this->fullcartlist ) ) {
@@ -14587,18 +14517,18 @@ class couponsHandler extends eucaObject
 
 		if ( isset( $item['terms'] ) ) {
 			$terms = $item['terms'];
-		} elseif ( isset( $item['item']['obj'] ) ) {
-			$terms = $item['item']['obj']->getTerms( false, $this->metaUser->focusSubscription, $this->metaUser );
-		} elseif ( isset( $item['item']['cost'] ) ) {
-			$terms = $item['item']['cost'];
+		} elseif ( isset( $item['obj'] ) ) {
+			$terms = $item['obj']->getTerms( false, $this->metaUser->focusSubscription, $this->metaUser );
+		} elseif ( isset( $item['cost'] ) ) {
+			$terms = $item['cost'];
 		} else {
 			return $item;
 		}
 
 		$ccombo		= $this->cph->getCombinations();
 
-		if ( !empty( $item['item']['obj']->id ) ) {
-			$this->InvoiceFactory->usage = $item['item']['obj']->id;
+		if ( !empty( $item['obj']->id ) ) {
+			$this->InvoiceFactory->usage = $item['obj']->id;
 		} else {
 			$this->InvoiceFactory->usage = null;
 		}

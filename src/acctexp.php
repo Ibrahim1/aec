@@ -275,7 +275,7 @@ if ( !empty( $task ) ) {
 			$action		= aecGetParam( 'action', 0, true, array( 'word', 'string' ) );
 			$invoice	= aecGetParam( 'invoice', '', true, array( 'word', 'int' ) );
 
-			invoiceaction( $option, $action, $invoice );
+			invoiceAction( $option, $action, $invoice );
 			break;
 
 		case 'invoicemakegift':
@@ -1167,7 +1167,7 @@ function planaction( $option, $action, $subscr )
 	}
 }
 
-function invoiceaction( $option, $action, $invoice )
+function invoiceAction( $option, $action, $invoice )
 {
 	$user = &JFactory::getUser();
 
@@ -1179,6 +1179,20 @@ function invoiceaction( $option, $action, $invoice )
 
 	$invoicefact = new InvoiceFactory( $userid );
 	$invoicefact->invoiceprocessoraction( $action, $invoice );
+}
+
+function InvoicePrintout( $option, $invoice )
+{
+	$user = &JFactory::getUser();
+
+	if ( empty( $user->id ) ) {
+		$userid = AECfetchfromDB::UserIDfromInvoiceNumber( $invoice );
+	} else {
+		$userid = $user->id;
+	}
+
+	$invoicefact = new InvoiceFactory( $userid );
+	$invoicefact->invoiceprint( $option, $invoice );
 }
 
 function InvoiceAddParams( $option )

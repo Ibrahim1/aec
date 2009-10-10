@@ -127,7 +127,7 @@ class processor_authorize_aim extends XMLprocessor
 				// <|>item description<|>
 				$lineitems[] = empty($ci['desc']) ? substr( $ci['name'], 0, 31 ) : substr( $ci['desc'], 0, 255);
 				// <|>itemX quantity<|>
-				$lineitems[] = $ci['count'];
+				$lineitems[] = $ci['quantity'];
 				// <|>item price (unit cost)<|>
 				$lineitems[] = $ci['cost'];
 				// <|>itemX taxable<|>

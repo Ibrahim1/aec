@@ -952,7 +952,7 @@ class Payment_HTML
 							?><tr>
 								<td><?php echo $bitem['name']; ?></td>
 								<td><?php echo $bitem['cost']; ?></td>
-								<td><input type="inputbox" type="text" size="2" name="cartitem_<?php echo $bid; ?>" value="<?php echo $bitem['count']; ?>" /></td>
+								<td><input type="inputbox" type="text" size="2" name="cartitem_<?php echo $bid; ?>" value="<?php echo $bitem['quantity']; ?>" /></td>
 								<td><?php echo $bitem['cost_total']; ?></td>
 							</tr><?php
 						} else {
@@ -1153,20 +1153,20 @@ class Payment_HTML
 
 						$add = "";
 
-						if ( isset( $item['item']['count'] ) ) {
-							if ( $item['item']['count'] > 1 ) {
-								$add = " (x" . $item['item']['count'] . ")";
+						if ( isset( $item['quantity'] ) ) {
+							if ( $item['quantity'] > 1 ) {
+								$add = " (x" . $item['quantity'] . ")";
 							}
 						}
 
-						if ( isset( $item['item']['name'] ) ) {
+						if ( isset( $item['name'] ) ) {
 							// This is an item, show its name (skip for total)
-							echo '<tr><td><h4>' . $item['item']['name'] . $add . '</h4></td></tr>';
+							echo '<tr><td><h4>' . $item['name'] . $add . '</h4></td></tr>';
 						}
 
-						if ( isset( $item['item']['desc'] ) && $aecConfig->cfg['checkout_display_descriptions'] ) {
+						if ( isset( $item['desc'] ) && $aecConfig->cfg['checkout_display_descriptions'] ) {
 							// This is an item, show its name (skip for total)
-							echo '<tr><td>' . $item['item']['desc'] . '</td></tr>';
+							echo '<tr><td>' . $item['desc'] . '</td></tr>';
 						}
 
 						if ( defined( strtoupper( '_' . $ttype ) ) ) {
@@ -1185,8 +1185,8 @@ class Payment_HTML
 						foreach ( $term->renderCost() as $citem ) {
 							$t = constant( strtoupper( '_aec_checkout_' . $citem->type ) );
 
-							if ( isset( $item['item']['count'] ) ) {
-								$c = AECToolbox::formatAmount( $citem->cost['amount'] * $item['item']['count'], $InvoiceFactory->payment->currency );
+							if ( isset( $item['quantity'] ) ) {
+								$c = AECToolbox::formatAmount( $citem->cost['amount'] * $item['quantity'], $InvoiceFactory->payment->currency );
 							} else {
 								$c = AECToolbox::formatAmount( $citem->cost['amount'], $InvoiceFactory->payment->currency );
 							}
@@ -1206,8 +1206,8 @@ class Payment_HTML
 
 									$t = $ta;
 
-									if ( isset( $item['item']['count'] ) ) {
-										$amount = $citem->cost['amount'] * $item['item']['count'];
+									if ( isset( $item['quantity'] ) ) {
+										$amount = $citem->cost['amount'] * $item['quantity'];
 									} else {
 										$amount = $citem->cost['amount'];
 									}
@@ -1447,7 +1447,7 @@ class Payment_HTML
 		<?php
 	}
 
-	function printInvoice( $option, $invoice )
+	function printInvoice( $option, $data )
 	{
 		global $aecConfig;
 
@@ -1466,84 +1466,32 @@ class Payment_HTML
 		</head>
 		<body>
 			<div id="invoice_wrap">
-				<div id="before_header"></div>
+				<div id="before_header"><?php echo $data['before_header']; ?></div>
 				<div id="header">
 					<h1>Invoice</h1>
 					<p><strong>ACME Brick Company</strong><br />3024 Acme Brick Plaza<br />Fort Worth, TX 76109-4104</p>
 				</div>
-				<div id="after_header"></div>
+				<div id="after_header"><?php echo $data['after_header']; ?></div>
 				<div id="invoice_details">
 					<table id="invoice_details">
-						<tr>
-							<th>Date</th>
-						</tr>
-						<tr>
-							<td><?php echo HTML_frontend::DisplayDateInLocalTime( $invoice->created_date ); ?></td>
-						</tr>
-						<tr>
-							<th>Invoice ID</th>
-						</tr>
-						<tr>
-							<td>233901</td>
-						</tr>
-						<tr>
-							<th>Invoice Number</th>
-						</tr>
-						<tr>
-							<td>IYjA4zZjQzMGmZjI5</td>
-						</tr>
+						<tr><th>Date</th></tr>
+						<tr><td><?php echo $data['invoice_date']; ?></td></tr>
+						<tr><th>ID</th></tr>
+						<tr><td><?php echo $data['invoice_id']; ?></td></tr>
+						<tr><th>Reference Number</th></tr>
+						<tr><td><?php echo $data['invoice_number']; ?></td></tr>
 					</table>
 				</div>
-				<div id="text_before_content">
-					<p>Here is some text before the invoice content</p>
-				</div>
+				<div id="text_before_content"><?php echo $data['text_before_content']; ?></div>
 				<div id="invoice_content">
 					<p>This invoice is about:</p>
 					<table id="invoice_content">
-						<tr>
-							<th>Item Name</th>
-							<th>Unit Price</th>
-							<th>Quantity</th>
-							<th>Total</th>
-						</tr>
-						<tr id="invoice_content_item">
-							<td>ACME Bricks</td>
-							<td>19.99</td>
-							<td>10</td>
-							<td>199.90</td>
-						</tr>
-						<tr id="invoice_content_item">
-							<td>ACME Bricks</td>
-							<td>19.99</td>
-							<td>25</td>
-							<td>499.75</td>
-						</tr>
-						<tr id="invoice_content_item">
-							<td>ACME Bricks</td>
-							<td>19.99</td>
-							<td>25</td>
-							<td>499.75</td>
-						</tr>
-						<tr id="invoice_content_item">
-							<td>ACME Bricks</td>
-							<td>19.99</td>
-							<td>10</td>
-							<td>199.90</td>
-						</tr>
-						<tr id="invoice_content_total">
-							<td>Grand Total</td>
-							<td></td>
-							<td></td>
-							<td>1399.30</td>
-						</tr>
+						<tr><th>Item Name</th><th>Unit Price</th><th>Quantity</th><th>Total</th></tr>
+						<?php echo implode( "\r\n", $data['itemlist'] ); ?>
 					</table>
 				</div>
-				<div id="text_after_content">
-					<p>Here is some text after the invoice content</p>
-				</div>
-				<div id="footer">
-					<p>Footertastic</p>
-				</div>
+				<div id="text_after_content"><?php echo $data['text_after_content']; ?></div>
+				<div id="footer"><?php echo $data['footer']; ?></div>
 			</div>
 		</body>
 		<?php
