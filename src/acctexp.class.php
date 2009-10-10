@@ -9168,11 +9168,11 @@ class Invoice extends serialParamDBTable
 				if ( $targetUser->userid ) {
 					if ( !empty( $this->subscr_id ) ) {
 						$targetUser->establishFocus( $plan, $this->method, false, $this->subscr_id );
-
-						$this->subscr_id = $targetUser->focusSubscription->id;
 					} else {
 						$targetUser->establishFocus( $plan, $this->method );
 					}
+
+					$this->subscr_id = $targetUser->focusSubscription->id;
 
 					// Apply the Plan
 					$application = $targetUser->focusSubscription->applyUsage( $plan->id, $this->method, 0, $multiplicator, $this );
@@ -9354,13 +9354,6 @@ class Invoice extends serialParamDBTable
 			}
 		}
 
-		if ( !empty( $InvoiceFactory->cart ) ) {
-			$cart = $InvoiceFactory->cartobject;
-		} else {
-			$cart = null;
-		}
-
-		$cart = null;
 		$plan = false;
 
 		$objUsage = $this->getObjUsage();
@@ -9451,7 +9444,6 @@ class Invoice extends serialParamDBTable
 			}
 		}
 
-		$cart = null;
 		$plan = false;
 
 		$objUsage = $this->getObjUsage();
@@ -9717,11 +9709,13 @@ class Invoice extends serialParamDBTable
 		return true;
 	}
 
-	function getPrintout()
+	function getPrintout( $option )
 	{
-		global $aecConfig;
+		global $mainframe;
 
-		
+		//$mainframe->SetPageTitle( _CONFIRM_TITLE );
+
+		Payment_HTML::confirmForm( $option, $this );
 	}
 }
 

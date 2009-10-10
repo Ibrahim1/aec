@@ -1447,92 +1447,107 @@ class Payment_HTML
 		<?php
 	}
 
-	function printInvoice( $option, $var, $params = null, $InvoiceFactory, $repeat = 0 )
+	function printInvoice( $option, $invoice )
 	{
-		$database = &JFactory::getDBO();
-
 		global $aecConfig;
 
-		HTML_frontend::aec_styling( $option );
+		$path = JURI::root() . 'components/' . $option;
+
 		?>
-		<h3>Name</h3>
-		<p>Details</p>
-		<p>Details</p>
-		<h4>Order Information </h4>
-		<table width="100%" border="0" cellspacing="5" cellpadding="0">
-			<tr>
-				<td>Invoice Number</td>
-				<td>{inv_no}</td>
-			</tr>
-			<tr>
-				<td width="74%">Order Date </td>
-				<td width="26%">{date}</td>
-			</tr>
-		</table>
-		<h4>Customer Details	</h4>
-		<table border="0" cellspacing="5" cellpadding="0">
-			<tr>
-				<td width="146">Name:</td>
-				<td width="281">{name}</td>
-			</tr>
-			<tr>
-				<td>Username:</td>
-				<td>{username}</td>
-			</tr>
-			<tr>
-				<td>Company:</td>
-				<td>{company}</td>
-			</tr>
-			<tr>
-				<td>Address:</td>
-				<td>{address}</td>
-			</tr>
-			<tr>
-				<td>City:</td>
-				<td>{city}</td>
-			</tr>
-			<tr>
-				<td>State:</td>
-				<td>{state}</td>
-			</tr>
-			<tr>
-				<td>Postcode:</td>
-				<td>{postcode}</td>
-			</tr>
-			<tr>
-				<td>Country:</td>
-				<td>{country}</td>
-			</tr>
-			<tr>
-				<td>Phone:</td>
-				<td>{phone}</td>
-			</tr>
-			<tr>
-				<td>Email:</td>
-				<td>{email}</td>
-			</tr>
-		</table>
-		<h4>Order Items	</h4>
-		<table style="border-width: 0px; width: 100%" border="0" cellspacing="5" cellpadding="0">
-			<tbody>
-				<tr>
-					<td>{invoice_desc}:</td>
-					<td align="right">{cost}			</td>
-				</tr>
-				<tr>
-					<td>GST (for Australian customers):</td>
-					<td align="right">{gst}			</td>
-				</tr>
-				<tr>
-					<td><strong>Total:</strong></td>
-					<td align="right"><strong>{total}
-					</strong></td>
-				</tr>
-			</tbody>
-		</table>
-		<h4>Payment Infomation </h4>
-		<p>{pay_method}</p>
+		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+		<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb" lang="en-gb" dir="ltr" >
+
+		<head>
+		<title>Invoice</title>
+		<link rel="stylesheet" href="<?php echo $path; ?>/lib/blueprint/screen.css" type="text/css" />
+		<link rel="stylesheet" href="<?php echo $path; ?>/lib/blueprint/src/grid.css" type="text/css" />
+		<link rel="stylesheet" href="<?php echo $path; ?>/lib/blueprint/src/typography.css" type="text/css" />
+		<link rel="stylesheet" href="<?php echo $path; ?>/invoice_style.css" type="text/css" />
+		</head>
+		<body>
+			<div id="invoice_wrap">
+				<div id="before_header"></div>
+				<div id="header">
+					<h1>Invoice</h1>
+					<p><strong>ACME Brick Company</strong><br />3024 Acme Brick Plaza<br />Fort Worth, TX 76109-4104</p>
+				</div>
+				<div id="after_header"></div>
+				<div id="invoice_details">
+					<table id="invoice_details">
+						<tr>
+							<th>Date</th>
+						</tr>
+						<tr>
+							<td><?php echo HTML_frontend::DisplayDateInLocalTime( $invoice->created_date ); ?></td>
+						</tr>
+						<tr>
+							<th>Invoice ID</th>
+						</tr>
+						<tr>
+							<td>233901</td>
+						</tr>
+						<tr>
+							<th>Invoice Number</th>
+						</tr>
+						<tr>
+							<td>IYjA4zZjQzMGmZjI5</td>
+						</tr>
+					</table>
+				</div>
+				<div id="text_before_content">
+					<p>Here is some text before the invoice content</p>
+				</div>
+				<div id="invoice_content">
+					<p>This invoice is about:</p>
+					<table id="invoice_content">
+						<tr>
+							<th>Item Name</th>
+							<th>Unit Price</th>
+							<th>Quantity</th>
+							<th>Total</th>
+						</tr>
+						<tr id="invoice_content_item">
+							<td>ACME Bricks</td>
+							<td>19.99</td>
+							<td>10</td>
+							<td>199.90</td>
+						</tr>
+						<tr id="invoice_content_item">
+							<td>ACME Bricks</td>
+							<td>19.99</td>
+							<td>25</td>
+							<td>499.75</td>
+						</tr>
+						<tr id="invoice_content_item">
+							<td>ACME Bricks</td>
+							<td>19.99</td>
+							<td>25</td>
+							<td>499.75</td>
+						</tr>
+						<tr id="invoice_content_item">
+							<td>ACME Bricks</td>
+							<td>19.99</td>
+							<td>10</td>
+							<td>199.90</td>
+						</tr>
+						<tr id="invoice_content_total">
+							<td>Grand Total</td>
+							<td></td>
+							<td></td>
+							<td>1399.30</td>
+						</tr>
+					</table>
+				</div>
+				<div id="text_after_content">
+					<p>Here is some text after the invoice content</p>
+				</div>
+				<div id="footer">
+					<p>Footertastic</p>
+				</div>
+			</div>
+		</body>
 		<?php
+		exit;
 	}
 
 	function error( $option, $objUser, $invoice, $error=false, $suppressactions=false )
