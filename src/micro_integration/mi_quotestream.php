@@ -41,19 +41,23 @@ class mi_quotestream
 			$sps	= array();
 
 			foreach( $pkg as $p ) {
-				$desc = "Put together string";
+				$desc = $p->retailPackageCode . " - " - $p->displayName;
 
-				$sp[] = mosHTML::makeOption( "id", $desc );
+				$sp[] = mosHTML::makeOption( $p->retailPackageCode, $desc );
 
 				if ( !empty( $this->settings['proId'] ) ) {
-					if ( in_array( "id", $this->settings['proId'] ) ) {
-						$sps[] = mosHTML::makeOption( "id", $desc );
+					if ( in_array( $p->retailPackageCode, $this->settings['proId'] ) ) {
+						$sps[] = mosHTML::makeOption( $p->retailPackageCode, $desc );
 					}
 				}
 			}
 
 			$settings['proId']			= array( 'list' );
 			$settings['lists']['proId']	= mosHTML::selectList( $sp, 'proId[]', 'size="4" multiple="multiple"', 'value', 'text', $sps );
+		} else {
+			if ( is_array( $this->settings['proId'] ) ) {
+				$this->settings['proId'] = implode( ",", $this->settings['proId'] );
+			}
 		}
 
 		return $settings;
