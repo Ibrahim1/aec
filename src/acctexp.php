@@ -195,8 +195,10 @@ if ( !empty( $task ) ) {
 			$invoicefact = new InvoiceFactory();
 
 			if ( !empty( $usage ) ) {
-				$invoicefact->objUsage = new SubscriptionPlan( $database );
-				$invoicefact->objUsage->load( $usage );
+				$database = &JFactory::getDBO();
+
+				$invoicefact->plan = new SubscriptionPlan( $database );
+				$invoicefact->plan->load( $usage );
 			}
 
 			$invoicefact->thanks( $option, $renew, $free );
@@ -353,7 +355,7 @@ function expired( $option, $userid, $expiration )
 {
 	$database = &JFactory::getDBO();
 
-		global $mainframe, $aecConfig;
+	global $mainframe, $aecConfig;
 
 	if ( $userid > 0 ) {
 		$metaUser = new metaUser( $userid );

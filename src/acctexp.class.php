@@ -8375,11 +8375,15 @@ class InvoiceFactory
 	{
 		global $mainframe, $aecConfig, $mainframe;
 
-		if ( is_object( $this->plan ) ) {
-			if ( !empty( $this->plan->params['customthanks'] ) ) {
-				aecRedirect( $this->plan->params['customthanks'] );
-			} elseif ( $aecConfig->cfg['customthanks'] ) {
-				aecRedirect( $aecConfig->cfg['customthanks'] );
+		if ( isset( $this->plan ) ) {
+			if ( is_object( $this->plan ) ) {
+				if ( !empty( $this->plan->params['customthanks'] ) ) {
+					aecRedirect( $this->plan->params['customthanks'] );
+				} elseif ( $aecConfig->cfg['customthanks'] ) {
+					aecRedirect( $aecConfig->cfg['customthanks'] );
+				}
+			} else {
+				return $this->simplethanks( $option, $renew, $free );
 			}
 		} else {
 			return $this->simplethanks( $option, $renew, $free );
