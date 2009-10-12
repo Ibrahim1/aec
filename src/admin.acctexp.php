@@ -835,7 +835,7 @@ function cancel( $option )
 {
 	$database = &JFactory::getDBO();
 
-	global $mainframe, $mainframe;
+	global $mainframe;
 
  	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) );
 	$limitstart = $mainframe->getUserStateFromRequest( "viewnotconf{$option}limitstart", 'limitstart', 0 );
@@ -1275,7 +1275,7 @@ function saveUser( $option, $apply=0 )
 {
 	$database = &JFactory::getDBO();
 
-	global $mainframe, $mainframe;
+	global $mainframe;
 
 	$metaUser = new metaUser( $_POST['userid'] );
 	$established = false;
@@ -2238,6 +2238,9 @@ function editSettings( $option )
 	$tab_data[] = array( _CFG_TAB1_TITLE, key( $params ), '<h2>' . _CFG_TAB1_SUBTITLE . '</h2>' );
 
 	$params[] = array( 'userinfobox', 48 );
+	$params[] = array( 'userinfobox_sub', 'AEC' );
+	$params['quicksearch_top']					= array( 'list_yesno', '' );
+	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_CREDIRECT );
 	$params['customintro']						= array( 'inputC', '' );
 	$params['customintro_userid']				= array( 'list_yesno', '' );
@@ -2526,7 +2529,7 @@ function listProcessors( $option )
 {
  	$database = &JFactory::getDBO();
 
-	global $mainframe, $mainframe;
+	global $mainframe;
 
  	$limit = $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) );
 	$limitstart = $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
@@ -2578,8 +2581,6 @@ function editProcessor( $id, $option )
 	$database = &JFactory::getDBO();
 
 	$user = &JFactory::getUser();
-
-	global $acl, $aecConfig;
 
 	if ( $id ) {
 		$pp = new PaymentProcessor();
@@ -2815,8 +2816,6 @@ function saveProcessor( $option, $return=0 )
 
 	$acl = &JFactory::getACL();
 
-	global $mainframe, $aecConfig;
-
 	$pp = new PaymentProcessor();
 
 	if ( !empty( $_POST['id'] ) ) {
@@ -2900,7 +2899,7 @@ function listSubscriptionPlans( $option )
 {
  	$database = &JFactory::getDBO();
 
-	global $mainframe, $mainframe;
+	global $mainframe;
 
  	$limit			= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) );
 	$limitstart		= $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
@@ -3789,7 +3788,7 @@ function listItemGroups( $option )
 {
  	$database = &JFactory::getDBO();
 
-	global $mainframe, $mainframe;
+	global $mainframe;
 
  	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) );
 	$limitstart = $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
@@ -4142,7 +4141,7 @@ function listMicroIntegrations( $option )
 {
 	$database = &JFactory::getDBO();
 
-	global $mainframe, $mainframe;
+	global $mainframe;
 
 	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) );
 	$limitstart	= $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
@@ -4249,8 +4248,6 @@ function editMicroIntegration ( $id, $option )
 	$user = &JFactory::getUser();
 
 	$acl = &JFactory::getACL();
-
-	global $aecConfig;
 
 	$lists	= array();
 	$mi		= new microIntegration( $database );
@@ -4486,7 +4483,7 @@ function listCoupons( $option, $type )
 {
  	$database = &JFactory::getDBO();
 
-	global $mainframe, $mainframe;
+	global $mainframe;
 
  	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) );
 	$limitstart = $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
@@ -4998,7 +4995,7 @@ function invoices( $option )
 {
 	$database = &JFactory::getDBO();
 
-	global $mainframe, $mainframe, $aecConfig;
+	global $mainframe;
 
 	$limit 		= intval( $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) ) );
 	$limitstart = intval( $mainframe->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
@@ -5154,7 +5151,7 @@ function history( $option )
 {
 	$database = &JFactory::getDBO();
 
-	global $mainframe, $mainframe;
+	global $mainframe;
 
 	$limit 		= intval( $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) ) );
 	$limitstart = intval( $mainframe->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
@@ -5204,7 +5201,7 @@ function eventlog( $option )
 {
 	$database = &JFactory::getDBO();
 
-	global $mainframe, $mainframe;
+	global $mainframe;
 
 	$limit 		= intval( $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) ) );
 	$limitstart = intval( $mainframe->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
@@ -6345,8 +6342,6 @@ function backupFile( $file, $file_new )
 function readout( $option )
 {
 	$database = &JFactory::getDBO();
-
-	global $aecConfig;
 
 	$optionlist = array(
 							'show_settings' => 0,

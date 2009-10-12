@@ -882,8 +882,35 @@ class HTML_AcctExp
 	<?php
 	}
 
+	function quickSearchBar( $display )
+	{
+		?>
+		<div class="central_quicksearch">
+			<h2><?php echo _AEC_QUICKSEARCH; ?></h2>
+			<p><?php echo _AEC_QUICKSEARCH_DESC; ?></p>
+			<form action="<?php echo JURI::base(); ?>index2.php?option=com_acctexp&amp;task=quicklookup" method="post">
+			<input type="text" size="40" name="search" class="inputbox" value="" />
+			<input type="submit" />
+			</form>
+			<?php
+			if ( !empty( $display ) ) {
+			?>
+				<?php if ( !strpos( $display, '</div>' ) ) { ?>
+				<h2><?php echo _AEC_QUICKSEARCH_MULTIRES; ?></h2>
+				<p><?php echo _AEC_QUICKSEARCH_MULTIRES_DESC; ?></p>
+				<?php } ?>
+				<p><?php echo $display; ?></p>
+			<?php
+			}
+			?>
+		</div>
+		<?php
+	}
+
 	function central( $display=null, $notices=null )
 	{
+		global $aecConfig;
+
 		HTML_myCommon::addBackendCSS();
 		// frontpage table
 		?>
@@ -891,6 +918,9 @@ class HTML_AcctExp
 			<tr>
 				<td valign="top">
 					<div id="aec_center">
+						<?php if ( !empty( $aecConfig->cfg['quicksearch_top'] ) ) {
+							HTML_AcctExp::quickSearchBar( $display );
+						} ?>
 						<h3>&raquo;<?php echo _AEC_CENTR_AREA_MEMBERSHIPS; ?></h3>
 						<div class="central_group">
 						<?php // Assemble Buttons
@@ -930,28 +960,12 @@ class HTML_AcctExp
 							}
 						}
 
-						?>
-						</div>
-						<div class="central_quicksearch">
-							<h2><?php echo _AEC_QUICKSEARCH; ?></h2>
-							<p><?php echo _AEC_QUICKSEARCH_DESC; ?></p>
-							<form action="<?php echo JURI::base(); ?>index2.php?option=com_acctexp&amp;task=quicklookup" method="post">
-							<input type="text" size="40" name="search" class="inputbox" value="" />
-							<input type="submit" />
-							</form>
-							<?php
-							if ( !empty( $display ) ) {
-							?>
-								<?php if ( !strpos( $display, '</div>' ) ) { ?>
-								<h2><?php echo _AEC_QUICKSEARCH_MULTIRES; ?></h2>
-								<p><?php echo _AEC_QUICKSEARCH_MULTIRES_DESC; ?></p>
-								<?php } ?>
-								<p><?php echo $display; ?></p>
-							<?php
-							}
-							?>
-						</div>
-						<?php
+						?></div><?php
+
+						if ( empty( $aecConfig->cfg['quicksearch_top'] ) ) {
+							HTML_AcctExp::quickSearchBar( $display );
+						}
+
 						if ( !empty( $notices ) ) {
 						?>
 						<div class="central_notices">
