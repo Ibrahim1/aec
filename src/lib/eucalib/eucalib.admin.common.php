@@ -335,7 +335,7 @@ class eucaList
 	{
 		$database = &JFactory::getDBO();
 
-		global $mainframe, $mainframe;
+		global $mainframe;
 
 		$option = 'com_' . _EUCA_APP_SHORTNAME;
 

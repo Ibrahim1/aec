@@ -1516,6 +1516,7 @@ class Config_General extends serialParamDBTable
 		$def['allow_frontend_heartbeat']		= 0;
 		$def['disable_regular_heartbeat']		= 0;
 		$def['custom_heartbeat_securehash']		= "";
+		$def['quicksearch_top']					= 0;
 
 		return $def;
 	}
@@ -5583,7 +5584,7 @@ class SubscriptionPlan extends serialParamDBTable
 	{
 		$database = &JFactory::getDBO();
 
-		global $mainframe, $mainframe, $aecConfig;
+		global $mainframe, $aecConfig;
 
 		$forcelifetime = false;
 
@@ -8161,9 +8162,9 @@ class InvoiceFactory
 			// Assemble Checkout Response
 			if ( !empty( $int_var['objUsage'] ) ) {
 				if ( is_a( $int_var['objUsage'], 'SubscriptionPlan' ) ) {
-					$int_var['var']		= $this->pp->checkoutAction( $int_var, $this->metaUser, $int_var['objUsage'], $this );
+					$int_var['var']		= $this->pp->checkoutAction( $int_var, $this->metaUser, $int_var['objUsage'], $this->invoice );
 				} else {
-					$int_var['var']		= $this->pp->checkoutAction( $int_var, $this->metaUser, null, $this, $int_var['objUsage'] );
+					$int_var['var']		= $this->pp->checkoutAction( $int_var, $this->metaUser, null, $this->invoice, $int_var['objUsage'] );
 				}
 			}
 
@@ -10442,7 +10443,7 @@ class Subscription extends serialParamDBTable
 
 	function setExpiration( $unit, $value, $extend )
 	{
-		global $mainframe, $mainframe;
+		global $mainframe;
 
 		$now = time() + $mainframe->getCfg( 'offset' ) *3600;
 

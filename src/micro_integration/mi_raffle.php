@@ -146,7 +146,7 @@ class mi_raffle
 		$request->metaUser->meta->storeload();
 
 		if ( count( $rafflelist->params->participants ) >= $rafflelist->params->settings['draw_range'] ) {
-			global $mainframe, $mainframe;
+			global $mainframe;
 
 			$range = (int) $rafflelist->params->settings['draw_range'];
 
