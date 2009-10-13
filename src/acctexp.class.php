@@ -5759,7 +5759,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 	function getTermsForUser( $recurring, $metaUser )
 	{
-		if ( $InvoiceFactory->metaUser->hasSubscription ) {
+		if ( $metaUser->hasSubscription ) {
 			return $this->getTerms( $recurring, $metaUser->objSubscription, $metaUser );
 		} else {
 			return $this->getTerms( $recurring, false, $metaUser );
@@ -8359,15 +8359,18 @@ class InvoiceFactory
 
 		$this->loadMetaUser();
 
-		$this->invoice = new Invoice( $database );
-		$this->invoice->loadInvoiceNumber( $invoice_number );
+		//$this->invoice = new Invoice( $database );
+		//$this->invoice->loadInvoiceNumber( $invoice_number );
 
 		//$this->pp = new PaymentProcessor( $database );
 		//if ( $this->pp->loadName( $invoice->method ) ) {
 			//$this->pp->fullInit();
 		//}
 
+		$this->touchInvoice( $option, $invoice_number );
+
 		$this->puffer( $option );
+
 		$this->loadItems();
 
 		$data = $this->invoice->getPrintout( $this );

@@ -172,7 +172,7 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'checkout':
-			$invoice	= aecGetParam( 'invoice', 0 );
+			$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 
 			internalcheckout( $option, $invoice, $userid );
@@ -274,14 +274,14 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'invoiceprint':
-			$invoice	= aecGetParam( 'invoice', '', true, array( 'word', 'int' ) );
+			$invoice	= aecGetParam( 'invoice', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 
 			InvoicePrintout( $option, $invoice );
 			break;
 
 		case 'invoiceaction':
 			$action		= aecGetParam( 'action', 0, true, array( 'word', 'string' ) );
-			$invoice	= aecGetParam( 'invoice', '', true, array( 'word', 'int' ) );
+			$invoice	= aecGetParam( 'invoice', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 
 			invoiceAction( $option, $action, $invoice );
 			break;
