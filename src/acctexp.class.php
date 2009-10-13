@@ -8362,14 +8362,17 @@ class InvoiceFactory
 		$this->invoice = new Invoice( $database );
 		$this->invoice->loadInvoiceNumber( $invoice_number );
 
-		$this->pp = new PaymentProcessor( $database );
-		if ( $this->pp->loadName( $invoice->method ) ) {
-			$this->pp->fullInit();
-		}
+		//$this->pp = new PaymentProcessor( $database );
+		//if ( $this->pp->loadName( $invoice->method ) ) {
+			//$this->pp->fullInit();
+		//}
 
-		$data = $invoice->getPrintout( $this );
+		$this->puffer( $option );
+		$this->loadItems();
 
-		Payment_HTML::confirmForm( $option, $data );
+		$data = $this->invoice->getPrintout( $this );
+
+		Payment_HTML::printInvoice( $option, $data );
 	}
 
 	function thanks( $option, $renew=false, $free=false )
@@ -9642,13 +9645,13 @@ class Invoice extends serialParamDBTable
 
 	function getPrintout( $InvoiceFactory )
 	{
-		$var = $this->getWorkingData( $InvoiceFactory );
+		$data = $this->getWorkingData( $InvoiceFactory );
 
-		$data['invoice_date'] = HTML_frontend::DisplayDateInLocalTime( $invoice->created_date );
+		$data['invoice_date'] = HTML_frontend::DisplayDateInLocalTime( $InvoiceFactory->invoice->created_date );
 
-		$var['itemlist'] = array();
+		$data['itemlist'] = array();
 		foreach ( $InvoiceFactory->items as $item ) {
-			$var['itemlist'][] = '<tr id="invoice_content_item">'
+			$data['itemlist'][] = '<tr id="invoice_content_item">'
 				. '<td>' . $item['name'] . '</td>'
 				. '<td>' . $item['terms']->nextterm->renderTotal() . '</td>'
 				. '<td>' . 1 . '</td>'
@@ -9656,7 +9659,9 @@ class Invoice extends serialParamDBTable
 				. '</tr>';
 		}
 
-		return $var;
+		// Put data throug MIs
+
+		return $data;
 	}
 }
 

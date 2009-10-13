@@ -273,6 +273,12 @@ if ( !empty( $task ) ) {
 			planaction( $option, $action, $subscr );
 			break;
 
+		case 'invoiceprint':
+			$invoice	= aecGetParam( 'invoice', '', true, array( 'word', 'int' ) );
+
+			InvoicePrintout( $option, $invoice );
+			break;
+
 		case 'invoiceaction':
 			$action		= aecGetParam( 'action', 0, true, array( 'word', 'string' ) );
 			$invoice	= aecGetParam( 'invoice', '', true, array( 'word', 'int' ) );
@@ -943,6 +949,11 @@ function subscriptionDetails( $option, $sub='' )
 				}
 
 				$actionsarray = array();
+
+				$actionsarray[] = '<a href="'
+				.  AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=invoicePrint&amp;invoice='
+				. $row->invoice_number, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '">' . _HISTORY_ACTION_PRINT
+				. '</a>';
 
 				if ( $row->transaction_date == '0000-00-00 00:00:00' ) {
 					$actionsarray[] = '<a href="'
