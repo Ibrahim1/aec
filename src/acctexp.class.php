@@ -9662,7 +9662,8 @@ class Invoice extends serialParamDBTable
 				. '</tr>';
 		}
 
-		// Put data throug MIs
+		// Put data through MIs
+		$this->plan->triggerMIs( 'invoice_printout', $this->metaUser, null, $this->invoice );
 
 		return $data;
 	}
