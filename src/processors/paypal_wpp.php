@@ -33,17 +33,18 @@ class processor_paypal_wpp extends XMLprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['testmode']				= 0;
-		$settings['currency']				= 'USD';
+		$settings['testmode']			= 0;
+		$settings['brokenipnmode']		= 0;
+		$settings['currency']			= 'USD';
 
-		$settings['api_user']				= '';
-		$settings['api_password']			= '';
-		$settings['use_certificate']		= '';
+		$settings['api_user']			= '';
+		$settings['api_password']		= '';
+		$settings['use_certificate']	= '';
 		$settings['certificate_path']	= '';
-		$settings['signature']				= '';
-		$settings['country']				= 'US';
+		$settings['signature']			= '';
+		$settings['country']			= 'US';
 
-		$settings['item_name']				= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 
 		return $settings;
 	}
@@ -52,6 +53,7 @@ class processor_paypal_wpp extends XMLprocessor
 	{
 		$settings = array();
 		$settings['testmode']				= array( 'list_yesno' );
+		$settings['brokenipnmode']			= array( 'list_yesno' );
 		$settings['currency']				= array( 'list_currency' );
 
 		$settings['api_user']				= array( 'inputC' );
@@ -507,7 +509,11 @@ class processor_paypal_wpp extends XMLprocessor
 
 		if ( strcmp( $receiver_email, $this->settings['business'] ) != 0 && $this->settings['checkbusiness'] ) {
 			$response['pending_reason'] = 'checkbusiness error';
-		} elseif ( strcmp( $res, 'VERIFIED' ) == 0 ) {
+		} elseif ( ( strcmp( $res, 'VERIFIED' ) == 0 ) || ( empty( $res ) && !empty( $this->settings['brokenipnmode'] ) ) ) {
+			if ( empty( $res ) && !empty( $this->settings['brokenipnmode'] ) ) {
+				$response['fullresponse']['paypal_verification'] = "MANUAL_OVERRIDE";
+			}
+
 			// Process payment: Paypal Subscription & Buy Now
 			if ( ( $txn_type == 'web_accept' ) || ( $txn_type == 'subscr_payment' ) || ( $txn_type == 'recurring_payment' ) ) {
 

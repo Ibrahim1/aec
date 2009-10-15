@@ -34,6 +34,7 @@ class processor_paypal_subscription extends POSTprocessor
 		$settings = array();
 		$settings['business']		= 'your@paypal@account.com';
 		$settings['testmode']		= 0;
+		$settings['brokenipnmode']	= 0;
 		$settings['tax']			= ''; // PaypalSubscriptions doesn't support tax but leaving in blank for future.
 		$settings['currency']		= 'USD';
 		$settings['checkbusiness']	= 0;
@@ -64,6 +65,7 @@ class processor_paypal_subscription extends POSTprocessor
 		$settings = array();
 		$settings['business']				= array( 'inputC' );
 		$settings['testmode']				= array( 'list_yesno' );
+		$settings['brokenipnmode']			= array( 'list_yesno' );
 //		$settings['tax']					= array( 'inputA' );
 		$settings['currency']				= array( 'list_currency' );
 		$settings['checkbusiness']			= array( 'list_yesno' );
@@ -206,9 +208,9 @@ class processor_paypal_subscription extends POSTprocessor
 	{
 		$path = '/cgi-bin/webscr';
 		if ($this->settings['testmode']) {
-			$ppurl = 'www.sandbox.paypal.com' . $path;
+			$ppurl = 'https://www.sandbox.paypal.com' . $path;
 		} else {
-			$ppurl = 'www.paypal.com' . $path;
+			$ppurl = 'https://www.paypal.com' . $path;
 		}
 
 		$req = 'cmd=_notify-validate';
@@ -246,7 +248,11 @@ class processor_paypal_subscription extends POSTprocessor
 
 		if ( strcmp( $receiver_email, $this->settings['business'] ) != 0 && $this->settings['checkbusiness'] ) {
 			$response['pending_reason'] = 'checkbusiness error';
-		} elseif ( strcmp( $res, 'VERIFIED' ) == 0 ) {
+		} elseif ( ( strcmp( $res, 'VERIFIED' ) == 0 ) || ( empty( $res ) && !empty( $this->settings['brokenipnmode'] ) ) ) {
+			if ( empty( $res ) && !empty( $this->settings['brokenipnmode'] ) ) {
+				$response['fullresponse']['paypal_verification'] = "MANUAL_OVERRIDE";
+			}
+
 			// Process payment: Paypal Subscription & Buy Now
 			if ( strcmp( $txn_type, 'web_accept' ) == 0 || strcmp( $txn_type, 'subscr_payment' ) == 0 ) {
 

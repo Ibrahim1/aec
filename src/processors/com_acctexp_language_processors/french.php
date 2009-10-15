@@ -127,6 +127,8 @@ define( '_AEC_WTFORM_BANKNAME_DESC', 'Le nom de la banque');
 // Parametres pour Paypal
 define( '_CFG_PAYPAL_BUSINESS_NAME', 'Identifiant marchand :');
 define( '_CFG_PAYPAL_BUSINESS_DESC', 'Votre identifiant marchand (courriel) sur PayPal.');
+define( '_CFG_PAYPAL_BROKENIPNMODE_NAME', 'Broken IPN Mode');
+define( '_CFG_PAYPAL_BROKENIPNMODE_DESC', 'If the PayPal Servers fail to get back a proper response, you can manually override IPN authentication with this switch - JUST MAKE SURE TO PUT IT BACK ON AGAIN! These Problems usually go away within 24 hours.');
 define( '_CFG_PAYPAL_CHECKBUSINESS_NAME', 'V&eacute;rifier ID Marchand:');
 define( '_CFG_PAYPAL_CHECKBUSINESS_DESC', 'S&eacute;lectionner Oui pour activer la proc&eacute;dure de v&eacute;rification de s&eacute;curit&eacute; lors de la r&eacute;ception de la confirmation de paiement. Le champ ID receveur doit &ecirc;tre &eacute;gal &agrave; ID marchand de PayPal pour que le paiement soit accept&eacute;, si la v&eacute;rification est activ&eacute;e.');
 define( '_CFG_PAYPAL_NO_SHIPPING_NAME', 'Sans livraison:');
@@ -162,6 +164,8 @@ define( '_CFG_PAYPAL_PAGE_STYLE_DESC', 'Fixe le style de la page de paiement en 
 // Parametres pour Paypal Subscriptions
 define( '_CFG_PAYPAL_SUBSCRIPTION_BUSINESS_NAME', _CFG_PAYPAL_BUSINESS_NAME);
 define( '_CFG_PAYPAL_SUBSCRIPTION_BUSINESS_DESC', _CFG_PAYPAL_BUSINESS_DESC);
+define( '_CFG_PAYPAL_SUBSCRIPTION_BROKENIPNMODE_NAME', _CFG_PAYPAL_BROKENIPNMODE_NAME);
+define( '_CFG_PAYPAL_SUBSCRIPTION_BROKENIPNMODE_DESC', _CFG_PAYPAL_BROKENIPNMODE_DESC);
 define( '_CFG_PAYPAL_SUBSCRIPTION_CHECKBUSINESS_NAME', _CFG_PAYPAL_CHECKBUSINESS_NAME);
 define( '_CFG_PAYPAL_SUBSCRIPTION_CHECKBUSINESS_DESC', _CFG_PAYPAL_CHECKBUSINESS_DESC);
 define( '_CFG_PAYPAL_SUBSCRIPTION_NO_SHIPPING_NAME', _CFG_PAYPAL_NO_SHIPPING_NAME);
@@ -582,6 +586,8 @@ define( '_CFG_PAYPAL_WPP_LONGNAME', 'PayPal WPP');
 define( '_CFG_PAYPAL_WPP_STATEMENT', 'Make payments with PayPal - it\'s fast, free and secure!');
 define( '_CFG_PAYPAL_WPP_DESCRIPTION', 'PayPal lets you send money to anyone with email. PayPal is free for consumers and works seamlessly with your existing credit card and checking account.');
 
+define( '_CFG_PAYPAL_WPP_BROKENIPNMODE_NAME', 'Broken IPN Mode');
+define( '_CFG_PAYPAL_WPP_BROKENIPNMODE_DESC', 'If the PayPal Servers fail to get back a proper response, you can manually override IPN authentication with this switch - JUST MAKE SURE TO PUT IT BACK ON AGAIN! These Problems usually go away within 24 hours.');
 define( '_CFG_PAYPAL_WPP_API_USER_NAME', 'API Username');
 define( '_CFG_PAYPAL_WPP_API_USER_DESC', 'Your PayPal API Username');
 define( '_CFG_PAYPAL_WPP_API_PASSWORD_NAME', 'API Password');

@@ -127,6 +127,8 @@ define( '_AEC_WTFORM_BANKNAME_DESC', 'The Name of the Bank');
 // Paypal Settings
 define( '_CFG_PAYPAL_BUSINESS_NAME', '商业ID:');
 define( '_CFG_PAYPAL_BUSINESS_DESC', '你在PayPal上的商业ID(email).');
+define( '_CFG_PAYPAL_BROKENIPNMODE_NAME', 'Broken IPN Mode');
+define( '_CFG_PAYPAL_BROKENIPNMODE_DESC', 'If the PayPal Servers fail to get back a proper response, you can manually override IPN authentication with this switch - JUST MAKE SURE TO PUT IT BACK ON AGAIN! These Problems usually go away within 24 hours.');
 define( '_CFG_PAYPAL_CHECKBUSINESS_NAME', '核对商业ID:');
 define( '_CFG_PAYPAL_CHECKBUSINESS_DESC', '选择是将在收到支付确认时使用一个安全的检测程�?.如果检测被�?�用,接收者的ID和PayPal交易ID必须相�?�,支付�?会被接�?�.');
 define( '_CFG_PAYPAL_NO_SHIPPING_NAME', 'No Shipping Required:');
@@ -162,6 +164,8 @@ define( '_CFG_PAYPAL_PAGE_STYLE_DESC', 'Sets the custom payment page style for p
 // Paypal Subscriptions Settings
 define( '_CFG_PAYPAL_SUBSCRIPTION_BUSINESS_NAME', _CFG_PAYPAL_BUSINESS_NAME);
 define( '_CFG_PAYPAL_SUBSCRIPTION_BUSINESS_DESC', _CFG_PAYPAL_BUSINESS_DESC);
+define( '_CFG_PAYPAL_SUBSCRIPTION_BROKENIPNMODE_NAME', _CFG_PAYPAL_BROKENIPNMODE_NAME);
+define( '_CFG_PAYPAL_SUBSCRIPTION_BROKENIPNMODE_DESC', _CFG_PAYPAL_BROKENIPNMODE_DESC);
 define( '_CFG_PAYPAL_SUBSCRIPTION_CHECKBUSINESS_NAME', _CFG_PAYPAL_CHECKBUSINESS_NAME);
 define( '_CFG_PAYPAL_SUBSCRIPTION_CHECKBUSINESS_DESC', _CFG_PAYPAL_CHECKBUSINESS_DESC);
 define( '_CFG_PAYPAL_SUBSCRIPTION_NO_SHIPPING_NAME', _CFG_PAYPAL_NO_SHIPPING_NAME);
@@ -577,6 +581,8 @@ define( '_CFG_PAYPAL_WPP_LONGNAME', 'PayPal WPP');
 define( '_CFG_PAYPAL_WPP_STATEMENT', 'Make payments with PayPal - it\'s fast, free and secure!');
 define( '_CFG_PAYPAL_WPP_DESCRIPTION', 'PayPal lets you send money to anyone with email. PayPal is free for consumers and works seamlessly with your existing credit card and checking account.');
 
+define( '_CFG_PAYPAL_WPP_BROKENIPNMODE_NAME', 'Broken IPN Mode');
+define( '_CFG_PAYPAL_WPP_BROKENIPNMODE_DESC', 'If the PayPal Servers fail to get back a proper response, you can manually override IPN authentication with this switch - JUST MAKE SURE TO PUT IT BACK ON AGAIN! These Problems usually go away within 24 hours.');
 define( '_CFG_PAYPAL_WPP_API_USER_NAME', 'API Username');
 define( '_CFG_PAYPAL_WPP_API_USER_DESC', 'Your PayPal API Username');
 define( '_CFG_PAYPAL_WPP_API_PASSWORD_NAME', 'API Password');
