@@ -1468,8 +1468,7 @@ class Payment_HTML
 			<div id="invoice_wrap">
 				<div id="before_header"><?php echo $data['before_header']; ?></div>
 				<div id="header">
-					<h1>Invoice</h1>
-					<p><strong>ACME Brick Company</strong><br />3024 Acme Brick Plaza<br />Fort Worth, TX 76109-4104</p>
+					<?php echo $data['header']; ?>
 				</div>
 				<div id="after_header"><?php echo $data['after_header']; ?></div>
 				<div id="invoice_details">

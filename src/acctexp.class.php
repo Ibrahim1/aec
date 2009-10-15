@@ -6023,7 +6023,7 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 	}
 
-	function triggerMIs( $action, $metaUser, $exchange, $invoice, $add=false, $silent=false )
+	function triggerMIs( $action, &$metaUser, &$exchange, &$invoice, &$add, &$silent )
 	{
 		global $aecConfig;
 
@@ -7252,21 +7252,24 @@ class InvoiceFactory
 			$this->pp->invoiceCreationAction( $this->invoice );
 		}
 
-		if ( !empty( $this->cart ) && !empty( $this->cartobject ) ) {
-			foreach ( $this->cart as $cid => $citem ) {
-				if ( $citem['obj'] !== false ) {
-					$terms = $citem['obj']->triggerMIs( '_invoice_creation', $this->metaUser, null, $this->invoice );
-				}
-			}
-		} elseif ( !empty( $this->plan ) ) {
-			$this->plan->triggerMIs( '_invoice_creation', $this->metaUser, null, $this->invoice );
-		}
+		$exchange = $add = $silent = null;
+
+		$this->triggerMIs( '_invoice_creation', $exchange, $add, $silent );
 
 		$temptoken = new aecTempToken( $database );
 		$temptoken->getComposite();
 
 		if ( $temptoken->id ) {
 			$temptoken->delete();
+		}
+	}
+
+	function triggerMIs( $action, &$exchange, &$add, &$silent )
+	{
+		if ( !empty( $this->cart ) && !empty( $this->cartobject ) ) {
+			$this->cartobject->triggerMIs( $action, $this->metaUser, $exchange, $this->invoice, $add, $silent, $this->cartobject );
+		} elseif ( !empty( $this->plan ) ) {
+			$this->plan->triggerMIs( $action, $this->metaUser, $exchange, $this->invoice, $add, $silent );
 		}
 	}
 
@@ -9648,6 +9651,8 @@ class Invoice extends serialParamDBTable
 
 	function getPrintout( $InvoiceFactory )
 	{
+		global $aecConfig;
+
 		$data = $this->getWorkingData( $InvoiceFactory );
 
 		$data['invoice_date'] = HTML_frontend::DisplayDateInLocalTime( $InvoiceFactory->invoice->created_date );
@@ -9662,8 +9667,21 @@ class Invoice extends serialParamDBTable
 				. '</tr>';
 		}
 
+		$otherfields = array( "before_header", "header", "after_header", "text_before_content", "text_after_content", "footer" );
+
+		foreach ( $otherfields as $field ) {
+			if ( !empty( $aecConfig->cfg["invoice_".$field] ) ) {
+				$data[$field] = $aecConfig->cfg["invoice_".$field];
+			} else {
+				$data[$field] = "";
+			}
+		}
+
 		// Put data through MIs
-		$this->plan->triggerMIs( 'invoice_printout', $this->metaUser, null, $this->invoice );
+
+		$exchange = $silent = null;
+
+		$this->triggerMIs( 'invoice_printout', $this->metaUser, $exchange, $this->invoice, $data, $silent, $this->cartobject );
 
 		return $data;
 	}
@@ -10209,6 +10227,19 @@ class aecCart extends serialParamDBTable
 	function getTopPlan()
 	{
 		return aecCartHelper::getFirstSortedCartItemObject( $this );
+	}
+
+	function triggerMIs( $action, &$metaUser, &$exchange, &$invoice, &$add, &$silent, &$checkout )
+	{
+		if ( empty( $checkout ) ) {
+			$checkout = $this->getCheckout( $metaUser );
+		}
+
+		foreach ( $checkout as $item ) {
+			if ( !empty( $item['obj'] ) ) {
+				$item['obj']->triggerMIs( $action, $metaUser, $exchange, $invoice, $add, $silent );
+			}
+		}
 	}
 
 	function issueHistoryEvent( $class, $event, $details )
