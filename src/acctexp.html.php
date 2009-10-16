@@ -1459,9 +1459,6 @@ class Payment_HTML
 
 		<head>
 		<title>Invoice</title>
-		<link rel="stylesheet" href="<?php echo $path; ?>/lib/blueprint/screen.css" type="text/css" />
-		<link rel="stylesheet" href="<?php echo $path; ?>/lib/blueprint/src/grid.css" type="text/css" />
-		<link rel="stylesheet" href="<?php echo $path; ?>/lib/blueprint/src/typography.css" type="text/css" />
 		<link rel="stylesheet" href="<?php echo $path; ?>/invoice_style.css" type="text/css" />
 		</head>
 		<body>

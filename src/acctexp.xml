@@ -14,6 +14,7 @@
 		<filename>acctexp.class.php</filename>
 		<filename>acctexp.html.php</filename>
 		<filename>style.css</filename>
+		<filename>invoice_style.css</filename>
 		<folder>com_acctexp_language</folder>
 		<folder>images</folder>
 		<folder>lib</folder>

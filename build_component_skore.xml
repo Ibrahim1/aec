@@ -58,6 +58,7 @@
 			<fileset dir="${source.dir}">
 				<include name="acctexp.*" />
 				<include name="style.css" />
+				<include name="invoice_style.css" />
 			</fileset>
 		</copy>
 	</target>

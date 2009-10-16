@@ -125,7 +125,7 @@ class mi_quotestream
 		try {
 			$client->createUser( $user );
 		} catch ( SoapFault $soapFault ) {
-			echo $soapFault;
+			aecDebug( $soapFault );
 			return false;
 		}
 
@@ -148,7 +148,7 @@ class mi_quotestream
 			try {
 				$pkgs = $client->getAllPackages( $this->settings['login'] );
 			} catch ( SoapFault $soapFault ) {
-				echo $soapFault;
+				aecDebug( $soapFault );
 				return false;
 			}
 		}

@@ -1517,6 +1517,14 @@ class Config_General extends serialParamDBTable
 		$def['disable_regular_heartbeat']		= 0;
 		$def['custom_heartbeat_securehash']		= "";
 		$def['quicksearch_top']					= 0;
+		$def['invoice_before_header']					= 0;
+		$def['invoice_header']					= 0;
+		$def['invoice_after_header']					= 0;
+		$def['invoice_before_content']					= 0;
+		$def['invoice_after_content']					= 0;
+		$def['invoice_before_footer']					= 0;
+		$def['invoice_footer']					= 0;
+		$def['invoice_after_footer']					= 0;
 
 		return $def;
 	}
@@ -8378,6 +8386,10 @@ class InvoiceFactory
 
 		$data = $this->invoice->getPrintout( $this );
 
+		$exchange = $silent = null;
+
+		$this->triggerMIs( 'invoice_printout', $exchange, $data, $silent );
+
 		Payment_HTML::printInvoice( $option, $data );
 	}
 
@@ -9655,6 +9667,9 @@ class Invoice extends serialParamDBTable
 
 		$data = $this->getWorkingData( $InvoiceFactory );
 
+		$data['invoice_id'] = $this->id;
+		$data['invoice_number'] = $this->invoice_number;
+
 		$data['invoice_date'] = HTML_frontend::DisplayDateInLocalTime( $InvoiceFactory->invoice->created_date );
 
 		$data['itemlist'] = array();
@@ -9667,7 +9682,7 @@ class Invoice extends serialParamDBTable
 				. '</tr>';
 		}
 
-		$otherfields = array( "before_header", "header", "after_header", "text_before_content", "text_after_content", "footer" );
+		$otherfields = array( "before_header", "header", "after_header", "before_content", "after_content", "before_footer", "footer", "after_footer" );
 
 		foreach ( $otherfields as $field ) {
 			if ( !empty( $aecConfig->cfg["invoice_".$field] ) ) {
@@ -9676,12 +9691,6 @@ class Invoice extends serialParamDBTable
 				$data[$field] = "";
 			}
 		}
-
-		// Put data through MIs
-
-		$exchange = $silent = null;
-
-		$this->triggerMIs( 'invoice_printout', $this->metaUser, $exchange, $this->invoice, $data, $silent, $this->cartobject );
 
 		return $data;
 	}
