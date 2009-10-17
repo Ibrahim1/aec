@@ -1458,7 +1458,7 @@ class Payment_HTML
 		<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb" lang="en-gb" dir="ltr" >
 
 		<head>
-		<title>Invoice</title>
+		<title><?php echo $data['page_title']; ?></title>
 		<link rel="stylesheet" href="<?php echo $path; ?>/invoice_style.css" type="text/css" />
 		</head>
 		<body>

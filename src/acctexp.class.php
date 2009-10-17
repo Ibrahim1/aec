@@ -1503,7 +1503,6 @@ class Config_General extends serialParamDBTable
 		$def['enable_shoppingcart']				= 0;
 		$def['customlink_continueshopping']		= '';
 		$def['additem_stayonpage']				= '';
-		$def['additem_stayonpage']				= '';
 		$def['customintro_always']				= 1;
 		$def['customtext_exception_keeporiginal']	= 1;
 		$def['customtext_exception']			= '';
@@ -1517,14 +1516,15 @@ class Config_General extends serialParamDBTable
 		$def['disable_regular_heartbeat']		= 0;
 		$def['custom_heartbeat_securehash']		= "";
 		$def['quicksearch_top']					= 0;
-		$def['invoice_before_header']					= 0;
-		$def['invoice_header']					= 0;
-		$def['invoice_after_header']					= 0;
-		$def['invoice_before_content']					= 0;
-		$def['invoice_after_content']					= 0;
-		$def['invoice_before_footer']					= 0;
-		$def['invoice_footer']					= 0;
-		$def['invoice_after_footer']					= 0;
+		$def['invoice_page_title']				= _AEC_CUSTOMSTD_INVOICE_PAGE_TITLE;
+		$def['invoice_before_header']			= "";
+		$def['invoice_header']					= _AEC_CUSTOMSTD_INVOICE_HEADER;
+		$def['invoice_after_header']			= "";
+		$def['invoice_before_content']			= _AEC_CUSTOMSTD_INVOICE_BEFORE_CONTENT;
+		$def['invoice_after_content']			= _AEC_CUSTOMSTD_INVOICE_AFTER_CONTENT;
+		$def['invoice_before_footer']			= "";
+		$def['invoice_footer']					= _AEC_CUSTOMSTD_INVOICE_FOOTER;
+		$def['invoice_after_footer']			= "";
 
 		return $def;
 	}

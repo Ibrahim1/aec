@@ -108,9 +108,9 @@ class mi_docman
 		}
 
  		$del_opts = array();
-		$del_opts[0] = mosHTML::makeOption ( "No", "Just apply group below." ); // Should probably be langauge file defined?
-		$del_opts[1] = mosHTML::makeOption ( "All", "Delete ALL, then apply group below." );
-		$del_opts[2] = mosHTML::makeOption ( "Set", "Delete Group Set on Application, then apply group below." );
+		$del_opts[] = mosHTML::makeOption ( "No", "Just apply group below." ); // Should probably be langauge file defined?
+		$del_opts[] = mosHTML::makeOption ( "All", "Delete ALL, then apply group below." );
+		$del_opts[] = mosHTML::makeOption ( "Set", "Delete Group Set on Application, then apply group below." );
 
 		$settings['lists']['group']			= mosHTML::selectList( $gr, 'group[]', 'size="4" multiple="multiple"', 'value', 'text', $sg );
 		$settings['lists']['group_exp'] 	= mosHTML::selectList( $gr, 'group_exp[]', 'size="4" multiple="multiple"', 'value', 'text', $sge );
