@@ -8370,14 +8370,6 @@ class InvoiceFactory
 
 		$this->loadMetaUser();
 
-		//$this->invoice = new Invoice( $database );
-		//$this->invoice->loadInvoiceNumber( $invoice_number );
-
-		//$this->pp = new PaymentProcessor( $database );
-		//if ( $this->pp->loadName( $invoice->method ) ) {
-			//$this->pp->fullInit();
-		//}
-
 		$this->touchInvoice( $option, $invoice_number );
 
 		$this->puffer( $option );

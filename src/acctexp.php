@@ -1185,13 +1185,11 @@ function invoiceAction( $option, $action, $invoice )
 	$user = &JFactory::getUser();
 
 	if ( empty( $user->id ) ) {
-		$userid = AECfetchfromDB::UserIDfromInvoiceNumber( $invoice );
+		aecNotAuth();
 	} else {
-		$userid = $user->id;
+		$invoicefact = new InvoiceFactory( $user->id );
+		$invoicefact->invoiceprocessoraction( $action, $invoice );
 	}
-
-	$invoicefact = new InvoiceFactory( $userid );
-	$invoicefact->invoiceprocessoraction( $action, $invoice );
 }
 
 function InvoicePrintout( $option, $invoice )
