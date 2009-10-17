@@ -902,8 +902,10 @@ define( '_MI_MI_QUOTESTREAM_LOGIN_NAME',			'Quotestream Login' );
 define( '_MI_MI_QUOTESTREAM_LOGIN_DESC',			'Your Login with Quotestream' );
 define( '_MI_MI_QUOTESTREAM_PASSWORD_NAME',			'Quotestream Password' );
 define( '_MI_MI_QUOTESTREAM_PASSWORD_DESC',			'Your Password with Quotestream' );
-define( '_MI_MI_QUOTESTREAM_PROID_NAME',			'Product Id' );
-define( '_MI_MI_QUOTESTREAM_PROID_DESC',			'The ProId that will be transferred on authentication (leave blank if this does not apply)' );
+define( '_MI_MI_QUOTESTREAM_PRODUCTS_NAME',			'Products' );
+define( '_MI_MI_QUOTESTREAM_PRODUCTS_DESC',			'List of Products to assign the user to, should normally load a list from Quotestream, otherwise provide a comma-separated list on your own' );
+define( '_MI_MI_QUOTESTREAM_PROID_NAME',			'ProId' );
+define( '_MI_MI_QUOTESTREAM_PROID_DESC',			'The ProId if specified by Quotestream (leave blank if you do not know what this is)' );
 define( '_MI_MI_QUOTESTREAM_CLIENTGROUPID_NAME',	'Client Group Id' );
 define( '_MI_MI_QUOTESTREAM_CLIENTGROUPID_DESC',	'The ClientGroupId that will be transferred on authentication (leave blank if this does not apply)' );
 

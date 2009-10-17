@@ -28,13 +28,14 @@ class mi_quotestream
 		$settings['login']			= array( 'inputB' );
 		$settings['password']		= array( 'inputB' );
 		$settings['proId']			= array( 'inputB' );
+		$settings['products']		= array( 'inputB' );
 		$settings['clientGroupId']	= array( 'inputB' );
 
 		$pkg = $this->getQSpackages();
 
 		if ( $pkg != false ) {
-			if ( !is_array( $this->settings['proId'] ) ) {
-				$this->settings['proId'] = explode( ",", $this->settings['proId'] );
+			if ( !is_array( $this->settings['products'] ) ) {
+				$this->settings['products'] = explode( ",", $this->settings['products'] );
 			}
 
 			$sp		= array();
@@ -45,19 +46,17 @@ class mi_quotestream
 
 				$sp[] = mosHTML::makeOption( $p->retailPackageCode, $desc );
 
-				if ( !empty( $this->settings['proId'] ) ) {
-					if ( in_array( $p->retailPackageCode, $this->settings['proId'] ) ) {
+				if ( !empty( $this->settings['products'] ) ) {
+					if ( in_array( $p->retailPackageCode, $this->settings['products'] ) ) {
 						$sps[] = mosHTML::makeOption( $p->retailPackageCode, $desc );
 					}
 				}
 			}
 
-			$settings['proId']			= array( 'list' );
-			$settings['lists']['proId']	= mosHTML::selectList( $sp, 'proId[]', 'size="4" multiple="multiple"', 'value', 'text', $sps );
+			$settings['products']			= array( 'list' );
+			$settings['lists']['products']	= mosHTML::selectList( $sp, 'products[]', 'size="4" multiple="multiple"', 'value', 'text', $sps );
 		} else {
-			if ( is_array( $this->settings['proId'] ) ) {
-				$this->settings['proId'] = implode( ",", $this->settings['proId'] );
-			}
+			$settings['products']			= array( 'inputB' );
 		}
 
 		return $settings;
@@ -100,14 +99,14 @@ class mi_quotestream
 		$user = array(	//'address'		=> 'street or mailing address',								// varchar(64)
 						//'city'		=> 'city',													// varchar(32)
 						//'country'		=> 'country',												// varchar(2) Use ISO 3166
-						'email'			=> substr( 0, 50, $request->metaUser->cmsUser->email ),		// varchar(64)
-						'firstName'		=> substr( 0, 32, $name['first'] ),							// varchar(32)
-						'lastName'		=> substr( 0, 32, $name['last'] ),							// varchar(32)
-						'password'		=> substr( 0, 50, $request->metaUser->cmsUser->password ),	// varchar(32) required
+						'email'			=> substr( $request->metaUser->cmsUser->email, 0, 64 ),		// varchar(64)
+						'firstName'		=> substr( $name['first'], 0, 32 ),							// varchar(32)
+						'lastName'		=> substr( $name['last'], 0, 32 ),							// varchar(32)
+						'password'		=> substr( $request->metaUser->cmsUser->username, 0, 32 ),	// varchar(32) required
 						//'phone'		=> 'phone',													// varchar(24)
 						//'products'	=> 'packagesArray',											// array of strings
 						//'state'		=> 'XX',													// varchar(2) default: US
-						'username'		=> substr( 0, 50, $request->metaUser->cmsUser->username )	// varchar(50) required
+						'username'		=> substr( $request->metaUser->cmsUser->username, 0, 50 )	// varchar(50) required
 						//'wemail'		=> 'wirelessemail@somewhere.com',							// varchar(64)
 						//'zip'			=> 'postal',												// varchar(15)
 						);
@@ -122,6 +121,14 @@ class mi_quotestream
 			$user['proId'] = (int) ( min( 9999999999, $this->settings['proId'] ) );
 		}
 
+		if ( !empty( $this->settings['products'] ) ) {
+			if ( is_array( $this->settings['products'] ) ) {
+				$user['products'] = $this->settings['products'];
+			} else {
+				$user['products'] = explode( ",", $this->settings['products'] );
+			}
+		}
+aecDebug($user);
 		try {
 			$client->createUser( $user );
 		} catch ( SoapFault $soapFault ) {
