@@ -137,9 +137,9 @@ class mi_mosets_tree extends MI
 
 		$edithack = '// AEC HACK mtree1 START' . "\n"
 		. 'if (!$link_id) {' . "\n"
-		. 'global JPATH_SITE;' . "\n"
-		. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
-		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_mosets_tree.php\' );' . "\n"
+		. ( defined( '_JEXEC' ) ? '' : 'global $mosConfig_absolute_path;' ) . "\n"
+		. 'include_once( ' . ( defined( '_JEXEC' ) ? 'JPATH_SITE' : '$mosConfig_absolute_path' ) . ' . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
+		. 'include_once( ' . ( aecJoomla15check() ? 'JPATH_SITE' : '$mosConfig_absolute_path' ) . ' . \'/components/com_acctexp/micro_integration/mi_mosets_tree.php\' );' . "\n"
 		. '$mi_mosetshandler = new mosetstree( $database );' . "\n"
 		. '$mi_mosetshandler->loadUserID( $my->id );' . "\n"
 		. 'if( $mi_mosetshandler->id ) {' . "\n"
@@ -157,9 +157,9 @@ class mi_mosets_tree extends MI
 
 		$edithack2 = '// AEC HACK mtree2 START' . "\n"
 		. 'if ($row->link_approved == 1) {' . "\n"
-		. 'global JPATH_SITE;' . "\n"
-		. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
-		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_mosets_tree.php\' );' . "\n"
+		. ( defined( '_JEXEC' ) ? '' : 'global $mosConfig_absolute_path;' ) . "\n"
+		. 'include_once( ' . ( defined( '_JEXEC' ) ? 'JPATH_SITE' : '$mosConfig_absolute_path' ) . ' . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
+		. 'include_once( ' . ( aecJoomla15check() ? 'JPATH_SITE' : '$mosConfig_absolute_path' ) . ' . \'/components/com_acctexp/micro_integration/mi_mosets_tree.php\' );' . "\n"
 		. '$mi_mosetshandler = new mosetstree( $database );' . "\n"
 		. '$mi_mosetshandler->loadUserID( $my->id );' . "\n"
 		. 'if( $mi_mosetshandler->id ) {' . "\n"
@@ -178,9 +178,9 @@ class mi_mosets_tree extends MI
 		;
 
 		$edithack3 = '// AEC HACK adminmtree3 START' . "\n"
-		. 'global JPATH_SITE;' . "\n"
-		. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
-		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_mosets_tree.php\' );' . "\n"
+		. ( defined( '_JEXEC' ) ? '' : 'global $mosConfig_absolute_path;' ) . "\n"
+		. 'include_once( ' . ( defined( '_JEXEC' ) ? 'JPATH_SITE' : '$mosConfig_absolute_path' ) . ' . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
+		. 'include_once( ' . ( aecJoomla15check() ? 'JPATH_SITE' : '$mosConfig_absolute_path' ) . ' . \'/components/com_acctexp/micro_integration/mi_mosets_tree.php\' );' . "\n"
 		. '$mi_mosetshandler = new mosetstree( $database );' . "\n"
 		. '$mi_mosetshandler->loadUserID( $mtLinks->user_id );' . "\n"
 		. 'if( $mi_mosetshandler->id ) {' . "\n"

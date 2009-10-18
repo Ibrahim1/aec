@@ -250,8 +250,8 @@ class mi_hotproperty extends MI
 		$hacks = array();
 
 		$edithack = '// AEC HACK hotproperty1 START' . "\n"
-		. ( aecJoomla15check() ? '$user = &JFactory::getUser();' : 'global $mosConfig_absolute_path;' ) . "\n"
-		. 'include_once( ' . ( aecJoomla15check() ? 'JPATH_SITE' : '$mosConfig_absolute_path' ) . ' . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
+		. ( defined( '_JEXEC' ) ? '$user = &JFactory::getUser();' : 'global $mosConfig_absolute_path;' ) . "\n"
+		. 'include_once( ' . ( defined( '_JEXEC' ) ? 'JPATH_SITE' : '$mosConfig_absolute_path' ) . ' . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 		. 'include_once( ' . ( aecJoomla15check() ? 'JPATH_SITE' : '$mosConfig_absolute_path' ) . ' . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
 		. '$mi_hphandler = new aec_hotproperty( $database );' . "\n"
 		. '$mi_hphandler->loadUserID( ' . ( aecJoomla15check() ? '$user' : '$my' ) . '->id );' . "\n"
@@ -268,8 +268,8 @@ class mi_hotproperty extends MI
 		;
 
 		$edithack2 = '// AEC HACK hotproperty2 START' . "\n"
-		. ( aecJoomla15check() ? '$user = &JFactory::getUser();' : 'global $mosConfig_absolute_path;' ) . "\n"
-		. 'include_once( ' . ( aecJoomla15check() ? 'JPATH_SITE' : '$mosConfig_absolute_path' ) . ' . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
+		. ( defined( '_JEXEC' ) ? '$user = &JFactory::getUser();' : 'global $mosConfig_absolute_path;' ) . "\n"
+		. 'include_once( ' . ( defined( '_JEXEC' ) ? 'JPATH_SITE' : '$mosConfig_absolute_path' ) . ' . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 		. 'include_once( ' . ( aecJoomla15check() ? 'JPATH_SITE' : '$mosConfig_absolute_path' ) . ' . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
 		. '$mi_hphandler = new aec_hotproperty( $database );' . "\n"
 		. '$mi_hphandler->loadUserID( ' . ( aecJoomla15check() ? '$user' : '$my' ) . '->id );' . "\n"
@@ -306,8 +306,8 @@ class mi_hotproperty extends MI
 		;*/
 
 		$edithack4 = '// AEC HACK adminhotproperty4 START' . "\n"
-		. ( aecJoomla15check() ? '' : 'global $mosConfig_absolute_path;' ) . "\n"
-		. 'include_once( ' . ( aecJoomla15check() ? 'JPATH_SITE' : '$mosConfig_absolute_path' ) . ' . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
+		. ( defined( '_JEXEC' ) ? '' : 'global $mosConfig_absolute_path;' ) . "\n"
+		. 'include_once( ' . ( defined( '_JEXEC' ) ? 'JPATH_SITE' : '$mosConfig_absolute_path' ) . ' . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 		. 'include_once( ' . ( aecJoomla15check() ? 'JPATH_SITE' : '$mosConfig_absolute_path' ) . ' . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
 		. ( aecJoomla15check() ? '$cid = array_keys( $datas[$this->getName()] );' : '' ) . "\n"
 		. '$mi_hphandler = new aec_hotproperty( $database );' . "\n"
