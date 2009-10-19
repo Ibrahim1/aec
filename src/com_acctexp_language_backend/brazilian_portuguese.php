@@ -946,6 +946,24 @@ define( '_CFG_GENERAL_TOS_IFRAME_DESC', 'Mostra os Termos do Servi&ccedil;o (tal
 define( '_CFG_GENERAL_CUSTOMNOTALLOWED_NAME', 'Link N&atilde;o Permitido personalizado:');
 define( '_CFG_GENERAL_CUSTOMNOTALLOWED_DESC', 'Forne&ccedil;a um link completo (inclu&iacute;ndo http://) este encaminha para a sua pagina de N&atilde;o Permitido Padr&atilde;o. Deixe o campo em branco se n&atilde;o pretender isso.');
 
+define( '_CFG_CUSTOMIZATION_INVOICE_PRINTOUT', 'Invoice Printout');
+define( '_CFG_CUSTOMIZATION_INVOICE_PRINTOUT_DETAILS', 'Invoice Printout Details');
+
+define( '_CFG_GENERAL_INVOICE_HEADER_NAME', 'Invoice Header');
+define( '_CFG_GENERAL_INVOICE_HEADER_DESC', 'Header Text for the Invoice Printout');
+define( '_CFG_GENERAL_INVOICE_AFTER_HEADER_NAME', 'Invoice After Header');
+define( '_CFG_GENERAL_INVOICE_AFTER_HEADER_DESC', 'Text after Header for the Invoice Printout');
+define( '_CFG_GENERAL_INVOICE_BEFORE_CONTENT_NAME', 'Invoice Before Content');
+define( '_CFG_GENERAL_INVOICE_BEFORE_CONTENT_DESC', 'Text before Invoice Content for the Invoice Printout');
+define( '_CFG_GENERAL_INVOICE_AFTER_CONTENT_NAME', 'Invoice After Content');
+define( '_CFG_GENERAL_INVOICE_AFTER_CONTENT_DESC', 'Text after Invoice Content for the Invoice Printout');
+define( '_CFG_GENERAL_INVOICE_BEFORE_FOOTER_NAME', 'Invoice Before Footer');
+define( '_CFG_GENERAL_INVOICE_BEFORE_FOOTER_DESC', 'Text before Footer for the Invoice Printout');
+define( '_CFG_GENERAL_INVOICE_FOOTER_NAME', 'Invoice Footer');
+define( '_CFG_GENERAL_INVOICE_FOOTER_DESC', 'Footer Text for the Invoice Printout');
+define( '_CFG_GENERAL_INVOICE_AFTER_FOOTER_NAME', 'Invoice After Footer');
+define( '_CFG_GENERAL_INVOICE_AFTER_FOOTER_DESC', 'Text after Footer for the Invoice Printout');
+
 define( '_CFG_GENERAL_CHECKOUT_DISPLAY_DESCRIPTIONS_NAME', 'Display Descriptions:');
 define( '_CFG_GENERAL_CHECKOUT_DISPLAY_DESCRIPTIONS_DESC', 'If you have multiple plans on checkout, or skipped the confirmation, it might be helpful to show the plan description again. This switch does just that.');
 define( '_CFG_GENERAL_CHECKOUT_AS_GIFT_NAME', 'Allow Gift Checkout:');

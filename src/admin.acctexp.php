@@ -2285,6 +2285,37 @@ function editSettings( $option )
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
+	$params[] = array( 'userinfobox', 48 );
+	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_INVOICE_PRINTOUT );
+	$params['invoice_page_title']				= array( 'inputC', '' );
+	$params[] = array( 'div_end', 0 );
+	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_INVOICE_PRINTOUT_DETAILS );
+	$params[] = array( 'accordion_start', '' );
+	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_INVOICE_HEADER_NAME );
+	$params['invoice_header']					= array( 'editor', '' );
+	$params[] = array( 'div_end', '' );
+	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_INVOICE_AFTER_HEADER_NAME );
+	$params['invoice_after_header']				= array( 'editor', '' );
+	$params[] = array( 'div_end', '' );
+	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_INVOICE_BEFORE_CONTENT_NAME );
+	$params['invoice_before_content']			= array( 'editor', '' );
+	$params[] = array( 'div_end', '' );
+	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_INVOICE_AFTER_CONTENT_NAME );
+	$params['invoice_after_content']			= array( 'editor', '' );
+	$params[] = array( 'div_end', '' );
+	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_INVOICE_BEFORE_FOOTER_NAME );
+	$params['invoice_before_footer']			= array( 'editor', '' );
+	$params[] = array( 'div_end', '' );
+	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_INVOICE_FOOTER_NAME );
+	$params['invoice_footer']					= array( 'editor', '' );
+	$params[] = array( 'div_end', '' );
+	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_INVOICE_AFTER_FOOTER_NAME );
+	$params['invoice_after_footer']				= array( 'editor', '' );
+	$params[] = array( 'div_end', '' );
+	$params[] = array( 'div_end', '' );
+	$params[] = array( 'div_end', 0 );
+	$params[] = array( '2div_end', 0 );
+
 	$rewriteswitches							= array( 'cms', 'invoice' );
 	$params = AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
 
