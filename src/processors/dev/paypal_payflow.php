@@ -56,10 +56,7 @@ class processor_paypal_payflow extends XMLprocessor
 		$settings['currency']				= array( 'list_currency' );
 
 		$settings['api_user']				= array( 'inputC' );
-		$settings['api_vendor']				= array( 'inputC' );
 		$settings['api_password']			= array( 'inputC' );
-		$settings['use_certificate']		= array( 'list_yesno' );
-		$settings['certificate_path']		= array( 'inputC' );
 		$settings['signature'] 				= array( 'inputC' );
 		$settings['country'] 				= array( 'list' );
 
@@ -205,8 +202,6 @@ class processor_paypal_payflow extends XMLprocessor
 		$var['pwd']					= $this->settings['api_password'];
 		$var['signature']			= $this->settings['signature'];
 
-		$var['paymentAction']		= 'Sale';
-		$var['IPaddress']			= $_SERVER['REMOTE_ADDR'];
 		$var['firstName']			= trim( $request->int_var['params']['billFirstName'] );
 		$var['lastName']			= trim( $request->int_var['params']['billLastName'] );
 		$var['creditCardType']		= $request->int_var['params']['cardType'];
@@ -283,17 +278,9 @@ class processor_paypal_payflow extends XMLprocessor
 		$path = "/nvp";
 
 		if ( $this->settings['testmode'] ) {
-			if ( $this->settings['use_certificate'] ) {
-				$url = "https://api.sandbox.paypal.com" . $path;
-			} else {
-				$url = "https://api-3t.sandbox.paypal.com" . $path;
-			}
+			$url = "https://api-3t.sandbox.paypal.com" . $path;
 		} else {
-			if ( $this->settings['use_certificate'] ) {
-				$url = "https://api.paypal.com" . $path;
-			} else {
-				$url = "https://api-3t.paypal.com" . $path;
-			}
+			$url = "https://api-3t.paypal.com" . $path;
 		}
 
 		$curlextra = array();
