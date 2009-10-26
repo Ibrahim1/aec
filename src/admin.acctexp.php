@@ -2160,28 +2160,17 @@ function editSettings( $option )
 	$params['adminaccess']					= array( 'list_yesno', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_SYSTEM );
-	$params['alertlevel2']					= array( 'inputA', 0 );
-	$params['alertlevel1']					= array( 'inputA', 0 );
-	$params['expiration_cushion']			= array( 'inputA', 0 );
 	$params['heartbeat_cycle']				= array( 'inputA', 0 );
-	$params['heartbeat_cycle_backend']		= array( 'inputA', 0 );
-	$params['allow_frontend_heartbeat']		= array( 'list_yesno', 0 );
-	$params['disable_regular_heartbeat']	= array( 'list_yesno', 0 );
-	$params['custom_heartbeat_securehash']	= array( 'inputC', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_EMAIL );
 	$params['noemails']						= array( 'list_yesno', 0 );
 	$params['nojoomlaregemails']			= array( 'list_yesno', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_DEBUG );
-	$params['bypassintegration']			= array( 'inputC', 0 );
-	$params['overrideJ15']					= array( 'list_yesno', 0 );
 	$params['curl_default']					= array( 'list_yesno', 0 );
 	$params['simpleurls']					= array( 'list_yesno', 0 );
 	$params['error_notification_level']		= array( 'list', 0 );
 	$params['email_notification_level']		= array( 'list', 0 );
-	$params['breakon_mi_error']				= array( 'list_yesno', 0 );
-	$params['debugmode']					= array( 'list_yesno', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
@@ -2189,25 +2178,8 @@ function editSettings( $option )
 	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_REGFLOW );
 	$params['plans_first']					= array( 'list_yesno', 0 );
 	$params['integrate_registration']		= array( 'list_yesno', 0 );
-	$params['show_fixeddecision']			= array( 'list_yesno', 0 );
 	$params['skip_confirmation']			= array( 'list_yesno', 0 );
-	$params['temp_auth_exp']				= array( 'inputC', '' );
 	$params['displayccinfo']				= array( 'list_yesno', 0 );
-	$params['enable_coupons']				= array( 'list_yesno', 0 );
-	$params['confirmation_coupons']			= array( 'list_yesno', 0 );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_PLANS );
-	$params['root_group']					= array( 'list', 0 );
-	$params['root_group_rw']				= array( 'inputD', 0 );
-	$params['entry_plan']					= array( 'list', 0 );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( '2div_end', 0 );
-
-	$params[] = array( 'userinfobox', 32 );
-	$params[] = array( 'userinfobox_sub', 'Shopping Cart' );
-	$params['enable_shoppingcart']			= array( 'list_yesno', '' );
-	$params['customlink_continueshopping']	= array( 'inputC', '' );
-	$params['additem_stayonpage']			= array( 'list_yesno', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_CONFIRMATION );
 	$params['tos']							= array( 'inputC', '' );
@@ -2219,18 +2191,19 @@ function editSettings( $option )
 	$params['checkout_as_gift_access']		= array( 'list', '' );
 	$params['confirm_as_gift']				= array( 'list_yesno', '' );
 	$params[] = array( 'div_end', 0 );
+	$params[] = array( '2div_end', 0 );
+
+	$params[] = array( 'userinfobox', 32 );
+	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_PLANS );
+	$params['root_group']					= array( 'list', 0 );
+	$params[] = array( 'div_end', 0 );
+	$params[] = array( 'userinfobox_sub', 'Shopping Cart' );
+	$params['enable_shoppingcart']			= array( 'list_yesno', '' );
+	$params['customlink_continueshopping']	= array( 'inputC', '' );
+	$params['additem_stayonpage']			= array( 'list_yesno', '' );
+	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_PROCESSORS );
 	$params['gwlist']				= array( 'list', 0 );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_SECURITY );
-	$params['ssl_signup']					= array( 'list_yesno', 0 );
-	$params['ssl_profile']					= array( 'list_yesno', 0 );
-	$params['override_reqssl']				= array( 'list_yesno', 0 );
-	$params['altsslurl']					= array( 'inputC', '' );
-	$params['ssl_verifypeer']				= array( 'list_yesno', 0 );
-	$params['ssl_verifyhost']				= array( 'inputC', '' );
-	$params['ssl_cainfo']					= array( 'inputC', '' );
-	$params['ssl_capath']					= array( 'inputC', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
@@ -2240,14 +2213,6 @@ function editSettings( $option )
 	$params[] = array( 'userinfobox', 48 );
 	$params[] = array( 'userinfobox_sub', 'AEC' );
 	$params['quicksearch_top']					= array( 'list_yesno', '' );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_CREDIRECT );
-	$params['customintro']						= array( 'inputC', '' );
-	$params['customintro_userid']				= array( 'list_yesno', '' );
-	$params['customintro_always']				= array( 'list_yesno', '' );
-	$params['customthanks']						= array( 'inputC', '' );
-	$params['customcancel']						= array( 'inputC', '' );
-	$params['customnotallowed']					= array( 'inputC', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_PROXY );
 	$params['use_proxy']						= array( 'list_yesno', '' );
@@ -2285,9 +2250,24 @@ function editSettings( $option )
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
-	$params[] = array( 'userinfobox', 48 );
+	@end( $params );
+	$tab_data[] = array( _CFG_TAB_CUSTOMIZATION_TITLE, key( $params ), '<h2>' . _CFG_TAB_CUSTOMIZATION_SUBTITLE . '</h2>' );
+
+	$params[] = array( 'userinfobox', 100 );
+
+	$rewriteswitches							= array( 'cms', 'invoice' );
+	$params = AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
+
 	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_INVOICE_PRINTOUT );
 	$params['invoice_page_title']				= array( 'inputC', '' );
+	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_CREDIRECT );
+	$params['customintro']						= array( 'inputC', '' );
+	$params['customintro_userid']				= array( 'list_yesno', '' );
+	$params['customintro_always']				= array( 'list_yesno', '' );
+	$params['customthanks']						= array( 'inputC', '' );
+	$params['customcancel']						= array( 'inputC', '' );
+	$params['customnotallowed']					= array( 'inputC', '' );
+	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_INVOICE_PRINTOUT_DETAILS );
 	$params[] = array( 'accordion_start', '' );
@@ -2315,6 +2295,9 @@ function editSettings( $option )
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
+
+	@end( $params );
+	$tab_data[] = array( _CFG_TAB_CUSTOMINVOICE_TITLE, key( $params ), '<h2>' . _CFG_TAB_CUSTOMINVOICE_SUBTITLE . '</h2>' );
 
 	$rewriteswitches							= array( 'cms', 'invoice' );
 	$params = AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
@@ -2362,7 +2345,54 @@ function editSettings( $option )
 	$params[] = array( 'div_end', '' );
 
 	@end( $params );
-	$tab_data[] = array( _CFG_TAB_CUSTOMIZATION_TITLE, key( $params ), '<h2>' . _CFG_TAB_CUSTOMIZATION_SUBTITLE . '</h2>' );
+	$tab_data[] = array( _CFG_TAB_CUSTOMPAGES_TITLE, key( $params ), '<h2>' . _CFG_TAB_CUSTOMPAGES_SUBTITLE . '</h2>' );
+
+	$params[] = array( 'userinfobox', 32 );
+	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_SYSTEM );
+	$params['alertlevel2']					= array( 'inputA', 0 );
+	$params['alertlevel1']					= array( 'inputA', 0 );
+	$params['expiration_cushion']			= array( 'inputA', 0 );
+	$params['heartbeat_cycle_backend']		= array( 'inputA', 0 );
+	$params['allow_frontend_heartbeat']		= array( 'list_yesno', 0 );
+	$params['disable_regular_heartbeat']	= array( 'list_yesno', 0 );
+	$params['custom_heartbeat_securehash']	= array( 'inputC', 0 );
+	$params[] = array( 'div_end', 0 );
+	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_DEBUG );
+	$params['bypassintegration']			= array( 'inputC', 0 );
+	$params['overrideJ15']					= array( 'list_yesno', 0 );
+	$params['breakon_mi_error']				= array( 'list_yesno', 0 );
+	$params['debugmode']					= array( 'list_yesno', 0 );
+	$params[] = array( 'div_end', 0 );
+	$params[] = array( '2div_end', 0 );
+
+	$params[] = array( 'userinfobox', 33 );
+	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_REGFLOW );
+	$params['show_fixeddecision']			= array( 'list_yesno', 0 );
+	$params['temp_auth_exp']				= array( 'inputC', '' );
+	$params['enable_coupons']				= array( 'list_yesno', 0 );
+	$params['confirmation_coupons']			= array( 'list_yesno', 0 );
+	$params[] = array( 'div_end', 0 );
+	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_PLANS );
+	$params['root_group_rw']				= array( 'inputD', 0 );
+	$params['entry_plan']					= array( 'list', 0 );
+	$params[] = array( 'div_end', 0 );
+	$params[] = array( '2div_end', 0 );
+
+	$params[] = array( 'userinfobox', 32 );
+	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_SECURITY );
+	$params['ssl_signup']					= array( 'list_yesno', 0 );
+	$params['ssl_profile']					= array( 'list_yesno', 0 );
+	$params['override_reqssl']				= array( 'list_yesno', 0 );
+	$params['altsslurl']					= array( 'inputC', '' );
+	$params['ssl_verifypeer']				= array( 'list_yesno', 0 );
+	$params['ssl_verifyhost']				= array( 'inputC', '' );
+	$params['ssl_cainfo']					= array( 'inputC', '' );
+	$params['ssl_capath']					= array( 'inputC', '' );
+	$params[] = array( 'div_end', 0 );
+	$params[] = array( '2div_end', 0 );
+
+	@end( $params );
+	$tab_data[] = array( _CFG_TAB_EXPERT_TITLE, key( $params ), '<h2>' . _CFG_TAB_EXPERT_SUBTITLE . '</h2>' );
 
 	$error_reporting_notices[] = mosHTML::makeOption( 512, _AEC_NOTICE_NUMBER_512 );
 	$error_reporting_notices[] = mosHTML::makeOption( 128, _AEC_NOTICE_NUMBER_128 );

@@ -814,6 +814,13 @@ define( '_CFG_GENERAL_CUSTOMNOTALLOWED_DESC', 'Geef hier de volledige link (incl
 define( '_CFG_CUSTOMIZATION_INVOICE_PRINTOUT', 'Invoice Printout');
 define( '_CFG_CUSTOMIZATION_INVOICE_PRINTOUT_DETAILS', 'Invoice Printout Details');
 
+define( '_CFG_TAB_CUSTOMINVOICE_TITLE', 'Invoice Customization');
+define( '_CFG_TAB_CUSTOMINVOICE_SUBTITLE', 'Invoice Customization');
+define( '_CFG_TAB_CUSTOMPAGES_TITLE', 'Page Customization');
+define( '_CFG_TAB_CUSTOMPAGES_SUBTITLE', 'Page Customization');
+define( '_CFG_TAB_EXPERT_TITLE', 'Expert');
+define( '_CFG_TAB_EXPERT_SUBTITLE', 'Expert Settings');
+
 define( '_CFG_GENERAL_INVOICE_HEADER_NAME', 'Invoice Header');
 define( '_CFG_GENERAL_INVOICE_HEADER_DESC', 'Header Text for the Invoice Printout');
 define( '_CFG_GENERAL_INVOICE_AFTER_HEADER_NAME', 'Invoice After Header');

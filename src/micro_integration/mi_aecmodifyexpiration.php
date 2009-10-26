@@ -51,7 +51,7 @@ class mi_aecmodifyexpiration
 
 		$new_expiration = strtotime( $this->settings['time_mod'], $tstamp );
 
-		$request->metaUser->focusSubscription->expiration = date( 'Y-m-d H:i:s', $new_expiration );;
+		$request->metaUser->focusSubscription->expiration = date( 'Y-m-d H:i:s', $new_expiration );
 
 		return true;
 	}

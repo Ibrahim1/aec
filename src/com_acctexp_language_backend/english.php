@@ -756,7 +756,7 @@ define( '_CFG_GENERAL_ALERTLEVEL2_NAME', 'Alert Level 2:');
 define( '_CFG_GENERAL_ALERTLEVEL2_DESC', 'In days. This is the first threshold to start warning user that his subscription is about to expire. <strong>This does not send out an email!</strong>');
 define( '_CFG_GENERAL_ALERTLEVEL1_NAME', 'Alert Level 1:');
 define( '_CFG_GENERAL_ALERTLEVEL1_DESC', 'In days. This is the final threshold to alert user that his subscription is about to expire. This should be the closest interval to expiration. <strong>This does not send out an email!</strong>');
-define( '_CFG_GENERAL_ENTRY_PLAN_NAME', 'Entry Plan:');
+define( '_CFG_GENERAL_ENTRY_PLAN_NAME', 'Grant Entry Plan:');
 define( '_CFG_GENERAL_ENTRY_PLAN_DESC', 'Every user will be subscribed to this plan (no payment!) when the user has no subscription yet');
 define( '_CFG_GENERAL_REQUIRE_SUBSCRIPTION_NAME', 'Require Subscription:');
 define( '_CFG_GENERAL_REQUIRE_SUBSCRIPTION_DESC', 'When enabled, a user MUST have a subscription. If disabled, users will be able to log in without one.');
@@ -813,6 +813,13 @@ define( '_CFG_GENERAL_CUSTOMNOTALLOWED_DESC', 'Provide a full link (including ht
 
 define( '_CFG_CUSTOMIZATION_INVOICE_PRINTOUT', 'Invoice Printout');
 define( '_CFG_CUSTOMIZATION_INVOICE_PRINTOUT_DETAILS', 'Invoice Printout Details');
+
+define( '_CFG_TAB_CUSTOMINVOICE_TITLE', 'Invoice Customization');
+define( '_CFG_TAB_CUSTOMINVOICE_SUBTITLE', 'Invoice Customization');
+define( '_CFG_TAB_CUSTOMPAGES_TITLE', 'Page Customization');
+define( '_CFG_TAB_CUSTOMPAGES_SUBTITLE', 'Page Customization');
+define( '_CFG_TAB_EXPERT_TITLE', 'Expert');
+define( '_CFG_TAB_EXPERT_SUBTITLE', 'Expert Settings');
 
 define( '_CFG_GENERAL_INVOICE_HEADER_NAME', 'Invoice Header');
 define( '_CFG_GENERAL_INVOICE_HEADER_DESC', 'Header Text for the Invoice Printout');
