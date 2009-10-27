@@ -1516,14 +1516,14 @@ class Config_General extends serialParamDBTable
 		$def['disable_regular_heartbeat']		= 0;
 		$def['custom_heartbeat_securehash']		= "";
 		$def['quicksearch_top']					= 0;
-		$def['invoice_page_title']				= _AEC_CUSTOMSTD_INVOICE_PAGE_TITLE;
+		$def['invoice_page_title']				= _AEC_CUSTOM_INVOICE_PAGE_TITLE;
 		$def['invoice_before_header']			= "";
-		$def['invoice_header']					= _AEC_CUSTOMSTD_INVOICE_HEADER;
+		$def['invoice_header']					= _AEC_CUSTOM_INVOICE_HEADER;
 		$def['invoice_after_header']			= "";
-		$def['invoice_before_content']			= _AEC_CUSTOMSTD_INVOICE_BEFORE_CONTENT;
-		$def['invoice_after_content']			= _AEC_CUSTOMSTD_INVOICE_AFTER_CONTENT;
+		$def['invoice_before_content']			= _AEC_CUSTOM_INVOICE_BEFORE_CONTENT;
+		$def['invoice_after_content']			= _AEC_CUSTOM_INVOICE_AFTER_CONTENT;
 		$def['invoice_before_footer']			= "";
-		$def['invoice_footer']					= _AEC_CUSTOMSTD_INVOICE_FOOTER;
+		$def['invoice_footer']					= _AEC_CUSTOM_INVOICE_FOOTER;
 		$def['invoice_after_footer']			= "";
 
 		return $def;
@@ -9663,8 +9663,9 @@ class Invoice extends serialParamDBTable
 		$data['invoice_number'] = $this->invoice_number;
 
 		$data['invoice_date'] = HTML_frontend::DisplayDateInLocalTime( $InvoiceFactory->invoice->created_date );
-
+//print_r($InvoiceFactory);exit;
 		$data['itemlist'] = array();
+		$total = 0;
 		foreach ( $InvoiceFactory->items as $item ) {
 			$data['itemlist'][] = '<tr id="invoice_content_item">'
 				. '<td>' . $item['name'] . '</td>'
@@ -9672,9 +9673,18 @@ class Invoice extends serialParamDBTable
 				. '<td>' . 1 . '</td>'
 				. '<td>' . $item['terms']->nextterm->renderTotal() . '</td>'
 				. '</tr>';
+
+			$total += $item['terms']->nextterm->renderTotal();
 		}
 
-		$otherfields = array( "before_header", "header", "after_header", "before_content", "after_content", "before_footer", "footer", "after_footer" );
+		$data['totallist'][] = '<tr id="invoice_content_item_total">'
+			. '<td></td>'
+			. '<td></td>'
+			. '<td></td>'
+			. '<td>' . AECToolbox::formatAmount( $total ) . '</td>'
+			. '</tr>';
+
+		$otherfields = array( "page_title", "before_header", "header", "after_header", "before_content", "after_content", "before_footer", "footer", "after_footer" );
 
 		foreach ( $otherfields as $field ) {
 			if ( !empty( $aecConfig->cfg["invoice_".$field] ) ) {

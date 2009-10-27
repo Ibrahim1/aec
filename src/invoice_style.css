@@ -130,3 +130,7 @@ text-align: center;
 table#invoice_details td {
 text-align: center;
 }
+
+tr#invoice_content_item_total td {
+font-weight: bold;
+}

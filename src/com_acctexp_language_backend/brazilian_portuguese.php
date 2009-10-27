@@ -956,6 +956,12 @@ define( '_CFG_TAB_CUSTOMPAGES_SUBTITLE', 'Page Customization');
 define( '_CFG_TAB_EXPERT_TITLE', 'Expert');
 define( '_CFG_TAB_EXPERT_SUBTITLE', 'Expert Settings');
 
+define( '_AEC_CUSTOM_INVOICE_PAGE_TITLE', 'Invoice');
+define( '_AEC_CUSTOM_INVOICE_HEADER', 'Invoice');
+define( '_AEC_CUSTOM_INVOICE_BEFORE_CONTENT', 'Invoice/Receipt for:');
+define( '_AEC_CUSTOM_INVOICE_AFTER_CONTENT', 'Thank you very much for choosing our service!');
+define( '_AEC_CUSTOM_INVOICE_FOOTER', ' - Add your company information here - ');
+
 define( '_CFG_GENERAL_INVOICE_HEADER_NAME', 'Invoice Header');
 define( '_CFG_GENERAL_INVOICE_HEADER_DESC', 'Header Text for the Invoice Printout');
 define( '_CFG_GENERAL_INVOICE_AFTER_HEADER_NAME', 'Invoice After Header');

@@ -2253,22 +2253,9 @@ function editSettings( $option )
 	@end( $params );
 	$tab_data[] = array( _CFG_TAB_CUSTOMIZATION_TITLE, key( $params ), '<h2>' . _CFG_TAB_CUSTOMIZATION_SUBTITLE . '</h2>' );
 
-	$params[] = array( 'userinfobox', 100 );
-
 	$rewriteswitches							= array( 'cms', 'invoice' );
 	$params = AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
 
-	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_INVOICE_PRINTOUT );
-	$params['invoice_page_title']				= array( 'inputC', '' );
-	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_CREDIRECT );
-	$params['customintro']						= array( 'inputC', '' );
-	$params['customintro_userid']				= array( 'list_yesno', '' );
-	$params['customintro_always']				= array( 'list_yesno', '' );
-	$params['customthanks']						= array( 'inputC', '' );
-	$params['customcancel']						= array( 'inputC', '' );
-	$params['customnotallowed']					= array( 'inputC', '' );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_INVOICE_PRINTOUT_DETAILS );
 	$params[] = array( 'accordion_start', '' );
 	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_INVOICE_HEADER_NAME );
@@ -2298,6 +2285,20 @@ function editSettings( $option )
 
 	@end( $params );
 	$tab_data[] = array( _CFG_TAB_CUSTOMINVOICE_TITLE, key( $params ), '<h2>' . _CFG_TAB_CUSTOMINVOICE_SUBTITLE . '</h2>' );
+
+	$params[] = array( 'userinfobox', 100 );
+	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_INVOICE_PRINTOUT );
+	$params['invoice_page_title']				= array( 'inputC', '' );
+	$params[] = array( 'div_end', 0 );
+	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_CREDIRECT );
+	$params['customintro']						= array( 'inputC', '' );
+	$params['customintro_userid']				= array( 'list_yesno', '' );
+	$params['customintro_always']				= array( 'list_yesno', '' );
+	$params['customthanks']						= array( 'inputC', '' );
+	$params['customcancel']						= array( 'inputC', '' );
+	$params['customnotallowed']					= array( 'inputC', '' );
+	$params[] = array( 'div_end', 0 );
+	$params[] = array( 'div_end', 0 );
 
 	$rewriteswitches							= array( 'cms', 'invoice' );
 	$params = AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );

@@ -1478,15 +1478,16 @@ class Payment_HTML
 						<tr><td><?php echo $data['invoice_number']; ?></td></tr>
 					</table>
 				</div>
-				<div id="text_before_content"><?php echo $data['text_before_content']; ?></div>
+				<div id="text_before_content"><?php echo $data['before_content']; ?></div>
 				<div id="invoice_content">
 					<p>This invoice is about:</p>
 					<table id="invoice_content">
 						<tr><th>Item Name</th><th>Unit Price</th><th>Quantity</th><th>Total</th></tr>
 						<?php echo implode( "\r\n", $data['itemlist'] ); ?>
+						<?php echo implode( "\r\n", $data['totallist'] ); ?>
 					</table>
 				</div>
-				<div id="text_after_content"><?php echo $data['text_after_content']; ?></div>
+				<div id="text_after_content"><?php echo $data['after_content']; ?></div>
 				<div id="footer"><?php echo $data['footer']; ?></div>
 			</div>
 		</body>
