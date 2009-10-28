@@ -5438,8 +5438,30 @@ foreach ( $rows as $userid ){
 	$user->load(1);
 	print_r($user);
 }
+/*
+	$database = &JFactory::getDBO();
 
+	$query = 'SELECT `id`, `introtext`, `fulltext`'
+			. ' FROM #__content'
+			;
+	$database->setQuery( $query );
+	$articles = $database->loadObjectList();
 
+	foreach ( $articles as $article ) {
+		$article->introtext = str_replace( "/images/stories/", "images/stories/", $article->introtext );
+		$article->fulltext = str_replace( "/images/stories/", "images/stories/", $article->fulltext );
+		$article->introtext = str_replace( "..images/stories/", "images/stories/", $article->introtext );
+		$article->fulltext = str_replace( "..images/stories/", "images/stories/", $article->fulltext );
+
+		$query = 'UPDATE #__content'
+				. ' SET `introtext` = \'' . $database->getEscaped( $article->introtext ) . '\','
+				. ' `fulltext` = \'' . $database->getEscaped( $article->fulltext ) . '\''
+				. ' WHERE `id` = \'' . $article->id . '\''
+				;
+		$database->setQuery( $query );
+		$database->query();
+	}
+*/
 }
 
 function quicklookup( $option )
