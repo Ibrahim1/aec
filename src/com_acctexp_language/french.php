@@ -103,6 +103,16 @@ define( '_AEC_SUBDETAILS_TAB_OVERVIEW', 'Vue g&eacute;n&eacute;rale');
 define( '_AEC_SUBDETAILS_TAB_INVOICES', 'Factures');
 define( '_AEC_SUBDETAILS_TAB_DETAILS', 'D&eacute;tails');
 
+define( '_HISTORY_ACTION_PRINT', 'print');
+define( '_INVOICEPRINT_DATE', 'Date');
+define( '_INVOICEPRINT_ID', 'ID');
+define( '_INVOICEPRINT_REFERENCE_NUMBER', 'Reference Number');
+define( '_INVOICEPRINT_ITEM_NAME', 'Item Name');
+define( '_INVOICEPRINT_UNIT_PRICE', 'Unit Price');
+define( '_INVOICEPRINT_QUANTITY', 'Quantity');
+define( '_INVOICEPRINT_TOTAL', 'Total');
+define( '_INVOICEPRINT_GRAND_TOTAL', 'Grand Total');
+
 // --== PAGE EXPIRATION ==--
 define( '_EXPIRE_INFO', 'Votre compte est actif jusqu\'au');
 define( '_RENEW_BUTTON', 'Renouveler Maintenant');

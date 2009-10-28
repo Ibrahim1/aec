@@ -98,6 +98,16 @@ define( '_AEC_SUBDETAILS_TAB_OVERVIEW', '&Uuml;berblick');
 define( '_AEC_SUBDETAILS_TAB_INVOICES', 'Rechnungen');
 define( '_AEC_SUBDETAILS_TAB_DETAILS', 'Details');
 
+define( '_HISTORY_ACTION_PRINT', 'print');
+define( '_INVOICEPRINT_DATE', 'Date');
+define( '_INVOICEPRINT_ID', 'ID');
+define( '_INVOICEPRINT_REFERENCE_NUMBER', 'Reference Number');
+define( '_INVOICEPRINT_ITEM_NAME', 'Item Name');
+define( '_INVOICEPRINT_UNIT_PRICE', 'Unit Price');
+define( '_INVOICEPRINT_QUANTITY', 'Quantity');
+define( '_INVOICEPRINT_TOTAL', 'Total');
+define( '_INVOICEPRINT_GRAND_TOTAL', 'Grand Total');
+
 // --== EXPIRATION PAGE ==--
 define( '_EXPIRE_INFO',						'Ihr Konto ist aktiv bis');
 define( '_RENEW_BUTTON',					'Erneuern');

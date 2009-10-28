@@ -102,6 +102,16 @@ define( '_AEC_SUBDETAILS_TAB_OVERVIEW', 'Overview');
 define( '_AEC_SUBDETAILS_TAB_INVOICES', 'Invoices');
 define( '_AEC_SUBDETAILS_TAB_DETAILS', 'Details');
 
+define( '_HISTORY_ACTION_PRINT', 'print');
+define( '_INVOICEPRINT_DATE', 'Date');
+define( '_INVOICEPRINT_ID', 'ID');
+define( '_INVOICEPRINT_REFERENCE_NUMBER', 'Reference Number');
+define( '_INVOICEPRINT_ITEM_NAME', 'Item Name');
+define( '_INVOICEPRINT_UNIT_PRICE', 'Unit Price');
+define( '_INVOICEPRINT_QUANTITY', 'Quantity');
+define( '_INVOICEPRINT_TOTAL', 'Total');
+define( '_INVOICEPRINT_GRAND_TOTAL', 'Grand Total');
+
 // --== EXPIRATION PAGE ==--
 define( '_EXPIRE_INFO', '你的�?�?�一直是�?�用的');
 define( '_RENEW_BUTTON', '立刻更新');

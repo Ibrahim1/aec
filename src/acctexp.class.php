@@ -9663,25 +9663,25 @@ class Invoice extends serialParamDBTable
 		$data['invoice_number'] = $this->invoice_number;
 
 		$data['invoice_date'] = HTML_frontend::DisplayDateInLocalTime( $InvoiceFactory->invoice->created_date );
-//print_r($InvoiceFactory);exit;
+
 		$data['itemlist'] = array();
 		$total = 0;
 		foreach ( $InvoiceFactory->items as $item ) {
 			$data['itemlist'][] = '<tr id="invoice_content_item">'
 				. '<td>' . $item['name'] . '</td>'
-				. '<td>' . $item['terms']->nextterm->renderTotal() . '</td>'
+				. '<td>' . AECToolbox::formatAmount( $item['terms']->nextterm->renderTotal(), $InvoiceFactory->invoice->currency ) . '</td>'
 				. '<td>' . 1 . '</td>'
-				. '<td>' . $item['terms']->nextterm->renderTotal() . '</td>'
+				. '<td>' . AECToolbox::formatAmount( $item['terms']->nextterm->renderTotal(), $InvoiceFactory->invoice->currency ) . '</td>'
 				. '</tr>';
 
 			$total += $item['terms']->nextterm->renderTotal();
 		}
 
 		$data['totallist'][] = '<tr id="invoice_content_item_total">'
+			. '<td>' . _INVOICEPRINT_GRAND_TOTAL . '</td>'
 			. '<td></td>'
 			. '<td></td>'
-			. '<td></td>'
-			. '<td>' . AECToolbox::formatAmount( $total ) . '</td>'
+			. '<td>' . AECToolbox::formatAmount( $total, $InvoiceFactory->invoice->currency ) . '</td>'
 			. '</tr>';
 
 		$otherfields = array( "page_title", "before_header", "header", "after_header", "before_content", "after_content", "before_footer", "footer", "after_footer" );

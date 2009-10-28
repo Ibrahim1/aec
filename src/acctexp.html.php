@@ -1470,19 +1470,23 @@ class Payment_HTML
 				<div id="after_header"><?php echo $data['after_header']; ?></div>
 				<div id="invoice_details">
 					<table id="invoice_details">
-						<tr><th>Date</th></tr>
+						<tr><th><?php echo _INVOICEPRINT_DATE; ?></th></tr>
 						<tr><td><?php echo $data['invoice_date']; ?></td></tr>
-						<tr><th>ID</th></tr>
+						<tr><th><?php echo _INVOICEPRINT_ID; ?></th></tr>
 						<tr><td><?php echo $data['invoice_id']; ?></td></tr>
-						<tr><th>Reference Number</th></tr>
+						<tr><th><?php echo _INVOICEPRINT_REFERENCE_NUMBER; ?></th></tr>
 						<tr><td><?php echo $data['invoice_number']; ?></td></tr>
 					</table>
 				</div>
 				<div id="text_before_content"><?php echo $data['before_content']; ?></div>
 				<div id="invoice_content">
-					<p>This invoice is about:</p>
 					<table id="invoice_content">
-						<tr><th>Item Name</th><th>Unit Price</th><th>Quantity</th><th>Total</th></tr>
+						<tr>
+							<th><?php echo _INVOICEPRINT_ITEM_NAME; ?></th>
+							<th><?php echo _INVOICEPRINT_UNIT_PRICE; ?></th>
+							<th><?php echo _INVOICEPRINT_QUANTITY; ?></th>
+							<th><?php echo _INVOICEPRINT_TOTAL; ?></th>
+						</tr>
 						<?php echo implode( "\r\n", $data['itemlist'] ); ?>
 						<?php echo implode( "\r\n", $data['totallist'] ); ?>
 					</table>
