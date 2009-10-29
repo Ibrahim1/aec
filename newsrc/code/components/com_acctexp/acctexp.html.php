@@ -203,7 +203,7 @@ class HTML_frontEnd
 
 					if ( $cart ) { ?>
 					<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
-					<div id="update_button"><input type="image" src="<?php echo JURI::root() . 'components/com_acctexp/images/your_cart_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
+					<div id="update_button"><input type="image" src="<?php echo JURI::root() . 'media/com_acctexp/site/images/your_cart_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
 					</form><br /><br />
 					<?php }
 
@@ -492,7 +492,7 @@ class Payment_HTML
 			<div id="checkout">
 			<table id="aec_checkout">
 			<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
-			<div id="update_button">You can always go back to: <input type="image" src="<?php echo JURI::root() . 'components/com_acctexp/images/your_cart_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
+			<div id="update_button">You can always go back to: <input type="image" src="<?php echo JURI::root() . 'media/com_acctexp/site/images/your_cart_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
 			</form><br /><br />
 			</table>
 			</div>
@@ -507,7 +507,7 @@ class Payment_HTML
 			if ( isset( $list['group'] ) ) { ?>
 				<div class="aec_group_backlink">
 					<?php
-					$urlbutton = JURI::root() . 'components/com_acctexp/images/back_button.png';
+					$urlbutton = JURI::root() . 'media/com_acctexp/site/images/back_button.png';
 					echo Payment_HTML::planpageButton( $option, 'subscribe', '', $urlbutton, array(), $userid, $passthrough, 'func_button' );
 					?>
 				</div>
@@ -529,7 +529,7 @@ class Payment_HTML
 						<p><?php echo $litem['desc']; ?></p>
 						<div class="aec_groupbutton">
 							<?php
-							$urlbutton = JURI::root() . 'components/com_acctexp/images/select_button.png';
+							$urlbutton = JURI::root() . 'media/com_acctexp/site/images/select_button.png';
 							$hidden = array( array( 'group', $litem['id'] ) );
 							echo Payment_HTML::planpageButton( $option, 'subscribe', '', $urlbutton, $hidden, $userid, $passthrough );
 							?>
@@ -559,7 +559,7 @@ class Payment_HTML
 	{
 		$html_code = '';
 
-		$imgroot = JURI::root() . 'components/com_acctexp/images/';
+		$imgroot = JURI::root() . 'media/com_acctexp/site/images/';
 
 		foreach ( $pps as $pp ) {
 			$gw_current = strtolower( $pp->processor_name );
@@ -969,7 +969,7 @@ class Payment_HTML
 				<input type="hidden" name="option" value="<?php echo $option; ?>" />
 				<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0; ?>" />
 				<input type="hidden" name="task" value="updateCart" />
-				<div id="update_button"><input type="image" src="<?php echo JURI::root() . 'components/com_acctexp/images/update_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
+				<div id="update_button"><input type="image" src="<?php echo JURI::root() . 'media/com_acctexp/site/images/update_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
 				</form>
 				<?php } ?>
 				<?php if ( empty( $InvoiceFactory->userid ) ) { ?>
@@ -983,7 +983,7 @@ class Payment_HTML
 				?>
 				<div id="continue_button">
 					<form name="confirmForm" action="<?php echo $continueurl; ?>" method="post">
-						<input type="image" src="<?php echo JURI::root() . 'components/com_acctexp/images/continue_shopping_button.png'; ?>" border="0" name="submit" alt="submit" />
+						<input type="image" src="<?php echo JURI::root() . 'media/com_acctexp/site/images/continue_shopping_button.png'; ?>" border="0" name="submit" alt="submit" />
 					</form>
 				</div>
 				<?php } ?>
@@ -1129,7 +1129,7 @@ class Payment_HTML
 			<table id="aec_checkout">
 			<?php if ( !empty( $InvoiceFactory->cartobject ) && !empty( $InvoiceFactory->cart ) ) { ?>
 				<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
-				<div id="update_button">You can always go back to: <input type="image" src="<?php echo JURI::root() . 'components/com_acctexp/images/your_cart_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
+				<div id="update_button">You can always go back to: <input type="image" src="<?php echo JURI::root() . 'media/com_acctexp/site/images/your_cart_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
 				</form><br /><br />
 			<?php } ?>
 			<?php
