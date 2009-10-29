@@ -28,7 +28,7 @@ include_once( JPATH_SITE . '/components/com_acctexp/lib/php4/php4.php' );
 include_once( JPATH_SITE . '/components/com_acctexp/lib/j15/j15.php' );
 
 if ( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
-	$langPath = JPATH_SITE . '/administrator/components/com_acctexp/com_acctexp_language_backend/';
+	$langPath = JPATH_SITE . '/administrator/components/com_acctexp/lang/';
 	if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
 		include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
 	} else {
@@ -38,7 +38,7 @@ if ( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
 }
 
 if ( !defined( '_AEC_LANG' ) ) {
-	$langPath = JPATH_SITE . '/components/com_acctexp/com_acctexp_language/';
+	$langPath = JPATH_SITE . '/components/com_acctexp/lang/';
 	if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
 		include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
 	} else {
@@ -47,7 +47,7 @@ if ( !defined( '_AEC_LANG' ) ) {
 	define( '_AEC_LANG', 1 );
 }
 
-include_once( JPATH_SITE . '/administrator/components/com_acctexp/com_acctexp_language_backend/general.php' );
+include_once( JPATH_SITE . '/administrator/components/com_acctexp/lang/general.php' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -2213,7 +2213,7 @@ class eventLog extends serialParamDBTable
 			}
 
 			if ( !defined( "_AEC_NOTICE_NUMBER_" . $this->level ) ) {
-				$langPath = JPATH_SITE . '/administrator/components/com_acctexp/com_acctexp_language_backend/';
+				$langPath = JPATH_SITE . '/administrator/components/com_acctexp/lang/';
 				if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
 					include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
 				} else {
@@ -2561,7 +2561,7 @@ class PaymentProcessor
 		// Check whether processor exists
 		if ( file_exists( $file ) ) {
 			if ( !defined( '_AEC_LANG_PROCESSOR' ) ) {
-				$langPath = $this->pph->pp_dir . '/com_acctexp_language_processors/';
+				$langPath = $this->pph->pp_dir . '/lang/';
 				// Include language files for processors
 				if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
 					include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
@@ -10798,7 +10798,7 @@ class Subscription extends serialParamDBTable
 
 		global $mainframe;
 
-		$langPath = JPATH_SITE . '/components/com_acctexp/com_acctexp_language/';
+		$langPath = JPATH_SITE . '/components/com_acctexp/lang/';
 		if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
 			include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
 		} else {

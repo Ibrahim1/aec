@@ -3,7 +3,7 @@
 <project default="build.all" basedir="./">
 
 	<!--    ==================================================      -->
-	<!--    initialize paths and properties                                         -->
+	<!--    initialize paths and properties                         -->
 	<!--    ==================================================      -->
 
 	<!-- initialization -->
@@ -15,50 +15,23 @@
 		<echo message="ant.java.version = ${ant.java.version}" />
 		<echo message="ant.version      = ${ant.version}" />
 
-		<property name="project.name"
-			value="Account Expiration Component" />
-		<property name="deployment.admindir"
-			value="/home/skore/tmp/AEC_JoomlaANT/administrator/components/com_acctexp" />
-		<property name="deployment.userdir"
-			value="/home/skore/tmp/AEC_JoomlaANT/components/com_acctexp" />
+		<property name="project.name" value="Account Expiration Component" />
+		<property name="deployment.dir" value="/home/skore/tmp/AEC_JoomlaANT/" />
 		<property name="distribution.dir" value="/home/skore/tmp" />
-		<property name="source.dir" value="./src/" />
+		<property name="source.dir" value="./newsrc/code/" />
 
 	</target>
 
 	<!-- build all -->
 	<target name="build.all" depends="initialize">
-		<antcall target="deploy.admindir" inheritall="true" />
-		<antcall target="deploy.userdir" inheritall="true" />
+		<antcall target="deploy.dir" inheritall="true" />
 		<antcall target="dist.generate" inheritall="true" />
 	</target>
 
-	<target name="deploy.admindir">
-		<copy todir="${deployment.admindir}" overwrite="yes">
+	<target name="deploy.dir">
+		<copy todir="${deployment.dir}" overwrite="yes">
 			<fileset dir="${source.dir}">
-				<include name="admin.*" />
-				<include name="toolbar.*" />
-				<exclude name="acctexp.class.php" />
-			</fileset>
-		</copy>
-		<copy todir="${deployment.admindir}/images" overwrite="yes">
-			<fileset dir="${source.dir}/images">
-				<include name="*" />
-			</fileset>
-		</copy>
-		<copy todir="${deployment.admindir}/com_acctexp_language"
-			overwrite="yes">
-			<fileset dir="${source.dir}/com_acctexp_language">
-				<include name="*" />
-			</fileset>
-		</copy>
-	</target>
-	<target name="deploy.userdir">
-		<copy todir="${deployment.userdir}" overwrite="yes">
-			<fileset dir="${source.dir}">
-				<include name="acctexp.*" />
-				<include name="style.css" />
-				<include name="invoice_style.css" />
+				<include name="*.*" />
 			</fileset>
 		</copy>
 	</target>

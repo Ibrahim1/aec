@@ -52,14 +52,14 @@ if ( !$acpermission ) {
 	}
 }
 
-$langPathBE = JPATH_SITE . '/administrator/components/com_acctexp/com_acctexp_language_backend/';
+$langPathBE = JPATH_SITE . '/administrator/components/com_acctexp/lang/';
 if ( file_exists( $langPathBE . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
 	include_once( $langPathBE . $GLOBALS['mosConfig_lang'] . '.php' );
 } else {
 	include_once( $langPathBE . 'english.php' );
 }
 
-$langPathPROC = JPATH_SITE . '/components/com_acctexp/processors/com_acctexp_language_processors/';
+$langPathPROC = JPATH_SITE . '/components/com_acctexp/processors/lang/';
 if ( file_exists( $langPathPROC . $GLOBALS['mosConfig_lang']. '.php' ) ) {
 	include_once( $langPathPROC . $GLOBALS['mosConfig_lang'] . '.php' );
 } else {
