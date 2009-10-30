@@ -8051,7 +8051,7 @@ class InvoiceFactory
 		$repeat = empty( $repeat ) ? 0 : $repeat;
 
 		$exceptproc = array( 'none', 'free' );
-
+print_r($this);exit;
 		// If this is marked as supposedly free
 		if ( in_array( strtolower( $this->processor ), $exceptproc ) && !empty( $this->plan ) ) {
 			// And if it is either made free through coupons
