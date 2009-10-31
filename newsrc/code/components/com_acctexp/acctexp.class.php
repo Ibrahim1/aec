@@ -1525,6 +1525,9 @@ class Config_General extends serialParamDBTable
 		$def['invoice_before_footer']			= "";
 		$def['invoice_footer']					= _AEC_CUSTOM_INVOICE_FOOTER;
 		$def['invoice_after_footer']			= "";
+		$def['delete_tables']					= "";
+		$def['delete_tables_sure']				= "";
+		$def['standard_currency']				= "";
 
 		return $def;
 	}
@@ -4387,6 +4390,15 @@ class aecSettings
 	function remap_list_yesno( $name, $value )
 	{
 		$this->lists[$name] = mosHTML::yesnoSelectList( $name, '', $value );
+		return 'list';
+	}
+
+	function remap_list_currency( $name, $value )
+	{
+		$currency_code_list = AECToolbox::aecCurrencyField( true, true, true );
+
+		$this->lists[$name] = mosHTML::selectList( $currency_code_list, $name, 'size="10"', 'value', 'text', $value );
+
 		return 'list';
 	}
 

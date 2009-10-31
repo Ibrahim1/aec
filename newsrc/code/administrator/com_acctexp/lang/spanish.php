@@ -1136,11 +1136,13 @@ define( '_CFG_GENERAL_CUSTOM_HEARTBEAT_SECUREHASH_DESC', 'A code that has to be 
 define( '_CFG_GENERAL_QUICKSEARCH_TOP_NAME', 'Quicksearch on top');
 define( '_CFG_GENERAL_QUICKSEARCH_TOP_DESC', 'This is the setting for all you quicksearch junkies - it will switch it to be above the main icons on the central page');
 
-// Global Micro Integration Settings
-define( '_CFG_TAB_MICROINTEGRATION_TITLE', 'MicroIntegr');
-define( '_CFG_TAB_MICROINTEGRATION_SUBTITLE', 'Micro Integrations');
-define( '_CFG_MI_MILIST_NAME', 'Active MicroIntegrations');
-define( '_CFG_MI_MILIST_DESC', 'Select which MicroIntegrations you want to use');
+define( '_CFG_GENERAL_SUB_UNINSTALL', 'Uninstall');
+define( '_CFG_GENERAL_DELETE_TABLES_NAME', 'Delete Tables');
+define( '_CFG_GENERAL_DELETE_TABLES_DESC', 'Do you want to delete the AEC tables when uninstalling the software?');
+define( '_CFG_GENERAL_DELETE_TABLES_SURE_NAME', 'Really?');
+define( '_CFG_GENERAL_DELETE_TABLES_SURE_DESC', 'Security switch - when deleting the AEC tables, ALL YOUR MEMBERSHIP DATA WILL BE GONE!');
+define( '_CFG_GENERAL_STANDARD_CURRENCY_NAME', 'Standard Currency');
+define( '_CFG_GENERAL_STANDARD_CURRENCY_DESC', 'Which currency should the AEC use if no information is available (for example, if a plan is free, it will have no processor attached to it and get its currency information from here)');
 
 // Global Authentication Settins
 define( '_CFG_TAB_AUTHENTICATION_TITLE', 'Authentication');

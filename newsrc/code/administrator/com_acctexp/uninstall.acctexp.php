@@ -17,19 +17,43 @@ require_once( $mainframe->getPath( 'class', "com_acctexp" ) );
 
 function com_uninstall()
 {
+	global $aecConfig;
+
 	$database = &JFactory::getDBO();
 
-	$user = &JFactory::getUser();
+	if ( $aecConfig->cfg['delete_tables'] && $aecConfig->cfg['delete_tables_sure'] ) {
+		global $mainframe;
 
-	$short = "AEC uninstall";
-	$event = "AEC has been removed";
-	$tags = "uninstall,system";
+		$tables		= $database->getTableList();
 
-	$eventlog = new eventLog($database);
-	$params = array("userid" => $user->id);
-	$eventlog->issue( $short, $tags, $event, 2, $params );
+		$tfound = false;
+		foreach ( $tables as $tname ) {
+			if ( strpos( $tname, $mainframe->getCfg( 'dbprefix' ) . 'acctexp_' ) === 0 ) {
+				$database->setQuery( "DROP TABLE IF EXISTS $tname" );
+				$database->query();
 
-	echo "Component successfully uninstalled";
+				$tfound = true;
+			}
+		}
+
+		if ( $tfound ) {
+			echo "Component successfully uninstalled, all tables have been deleted";
+		} else {
+			echo "Component successfully uninstalled. The component tables are still in the database and will be preserved for the next install or upgrade of the component.";
+		}
+	} else {
+		$user = &JFactory::getUser();
+
+		$short = "AEC uninstall";
+		$event = "AEC has been removed";
+		$tags = "uninstall,system";
+
+		$eventlog = new eventLog($database);
+		$params = array("userid" => $user->id);
+		$eventlog->issue( $short, $tags, $event, 2, $params );
+
+		echo "Component successfully uninstalled. The component tables are still in the database and will be preserved for the next install or upgrade of the component.";
+	}
 }
 
 

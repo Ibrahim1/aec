@@ -2203,7 +2203,8 @@ function editSettings( $option )
 	$params['additem_stayonpage']			= array( 'list_yesno', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_PROCESSORS );
-	$params['gwlist']				= array( 'list', 0 );
+	$params['gwlist']						= array( 'list', 0 );
+	$params['standard_currency']			= array( 'list_currency', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
@@ -2389,6 +2390,10 @@ function editSettings( $option )
 	$params['ssl_verifyhost']				= array( 'inputC', '' );
 	$params['ssl_cainfo']					= array( 'inputC', '' );
 	$params['ssl_capath']					= array( 'inputC', '' );
+	$params[] = array( 'div_end', 0 );
+	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_UNINSTALL );
+	$params['delete_tables']				= array( 'list_yesno', 0 );
+	$params['delete_tables_sure']			= array( 'list_yesno', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
