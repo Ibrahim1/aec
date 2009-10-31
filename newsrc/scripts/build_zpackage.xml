@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project default="build.all" basedir="./">
+
+	<!--    ==================================================      -->
+	<!--    initialize paths and properties                         -->
+	<!--    ==================================================      -->
+
+	<!-- initialization -->
+	<target name="initialize">
+
+		<!-- display ANT Environment -->
+		<echo message="==> ANT Environment"/>
+		<echo message="ant.home         = ${ant.home}"/>
+		<echo message="ant.java.version = ${ant.java.version}"/>
+		<echo message="ant.version      = ${ant.version}"/>
+
+		<property name="project.name" value="Account Expiration Package"/>
+		<property name="deployment.userdir" value="/home/skore/tmp/AEC_packageANT"/>
+		<property name="distribution.dir" value="/home/skore/tmp/"/>
+		<property name="source.dir" value="/home/skore/tmp/"/>
+		<property name="source2.dir" value="./" />
+
+	</target>
+
+	<!-- build all -->
+	<target name="build.all" depends="initialize">
+		<antcall target="deploy.userdir" inheritall="true"/>
+		<antcall target="dist.generate" inheritall="true"/>
+	</target>
+	<target name="deploy.userdir">
+		<copy todir="${deployment.userdir}" overwrite="yes">
+			<fileset dir="${source.dir}">
+				<include name="com_*.zip"/>
+				<include name="mod_*.zip"/>
+			</fileset>
+				<fileset dir="${source2.dir}">
+					<include name="CHANGELOG.txt"/>
+					<include name="README.txt"/>
+					<include name="AEC_Guide.pdf"/>
+				</fileset>
+		</copy>
+		<copy todir="${deployment.userdir}/joomla_1_5_plugins" overwrite="yes">
+			<fileset dir="${source.dir}">
+				<include name="aec*plugin*.zip"/>
+			</fileset>
+		</copy>
+		<copy todir="${deployment.userdir}/joomla_1_0_mambots" overwrite="yes">
+			<fileset dir="${source.dir}">
+				<include name="aec*mambot*.zip"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="dist.generate">
+		<zip destfile="${distribution.dir}/AEC_package_0_12_6_2_unzip_first.zip" update="false">
+			<fileset dir="${deployment.userdir}"/>
+		</zip>
+	</target>
+</project>

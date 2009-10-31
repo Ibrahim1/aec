@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project default="build.all" basedir="./">
+	<target name="initialize">
+		<property name="project.name" value="Account Expiration Module"/>
+		<property name="deployment.userdir" value="/home/skore/tmp/AEC_PluginANT"/>
+		<property name="distribution.dir" value="/home/skore/tmp"/>
+		<property name="source.dir" value="./newsrc/code/plugin/"/>
+	</target>
+
+	<!-- build all -->
+	<target name="build.all" depends="initialize">
+			<antcall target="deploy.userdir" inheritall="true"/>
+			<antcall target="dist.generate" inheritall="true"/>
+	</target>
+	<target name="deploy.userdir">
+		<copy todir="${deployment.userdir}" overwrite="yes">
+			<fileset dir="${source.dir}">
+					<include name="bot*"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="dist.generate">
+	<zip destfile="${distribution.dir}/aecaccess_plugin_0_6.zip" update="false">
+	<fileset dir="${source.dir}"/>
+		<exclude name="build.xml"/>
+	<exclude name=".project"/>
+		</zip>
+		</target>
+</project>
