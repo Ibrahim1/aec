@@ -1527,7 +1527,7 @@ class Config_General extends serialParamDBTable
 		$def['invoice_after_footer']			= "";
 		$def['delete_tables']					= "";
 		$def['delete_tables_sure']				= "";
-		$def['standard_currency']				= "";
+		$def['standard_currency']				= "USD";
 
 		return $def;
 	}
@@ -12743,6 +12743,8 @@ class AECToolbox
 
 		if ( array_key_exists( $currency, $cursym ) ) {
 			return $cursym[$currency];
+		} elseif( array_key_exists( $aecConfig->cfg['standard_currency'], $cursym ) ) {
+			return $cursym[$aecConfig->cfg['standard_currency']];
 		} else {
 			return '&#164;';
 		}
