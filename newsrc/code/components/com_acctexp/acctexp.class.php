@@ -5289,7 +5289,7 @@ class ItemGroup extends serialParamDBTable
 		}
 
 		// Filter out params
-		$fixed = array( 'color', 'icon', 'reveal_child_items', 'symlink' );
+		$fixed = array( 'color', 'icon', 'reveal_child_items', 'symlink', 'notauth_redirect' );
 
 		$params = array();
 		foreach ( $fixed as $varname ) {
@@ -6288,7 +6288,8 @@ class SubscriptionPlan extends serialParamDBTable
 						'gid_enabled', 'gid', 'lifetime', 'standard_parent',
 						'fallback', 'similarplans', 'equalplans', 'make_active',
 						'make_primary', 'update_existing', 'customthanks', 'customtext_thanks_keeporiginal',
-						'customamountformat', 'customtext_thanks', 'override_activation', 'override_regmail'
+						'customamountformat', 'customtext_thanks', 'override_activation', 'override_regmail',
+						'notauth_redirect'
 						);
 
 		$params = array();
@@ -7471,6 +7472,10 @@ class InvoiceFactory
 				} else {
 					$auth_problem = true;
 				}
+
+				if ( $auth_problem && !empty( $plan->params['notauth_redirect'] ) ) {
+					$auth_problem = $plan->params['notauth_redirect'];
+				}
 			}
 		} elseif ( !empty( $group ) ) {
 			$g = new ItemGroup( $database );
@@ -7486,6 +7491,12 @@ class InvoiceFactory
 				if ( count( $list ) == 0 ) {
 					$auth_problem = true;
 				}
+			} else {
+				$auth_problem = true;
+			}
+
+			if ( $auth_problem && !empty( $g->params['notauth_redirect'] ) ) {
+				$auth_problem = $g->params['notauth_redirect'];
 			}
 		} else {
 			if ( !empty( $aecConfig->cfg['root_group_rw'] ) ) {
@@ -7511,7 +7522,11 @@ class InvoiceFactory
 		// There are no plans to begin with, so we need to punch out an error here
 		if ( count( $list ) == 0 ) {
 			if ( $auth_problem ) {
-				aecRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_AUTHERROR ), false, true );
+				if ( is_bool( $auth_problem ) ) {
+					aecRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_AUTHERROR ), false, true );
+				} else {
+					aecRedirect( $auth_problem );
+				}
 			} else {
 				aecRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_ERROR ), false, true );
 			}
@@ -13574,7 +13589,7 @@ class microIntegration extends serialParamDBTable
 	{
 		global $mainframe;
 
-		$langPathMI = JPATH_SITE . '/components/com_acctexp/micro_integration/language/';
+		$langPathMI = JPATH_SITE . '/components/com_acctexp/micro_integration/lang/';
 		if ( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
 			include_once( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' );
 		} else {

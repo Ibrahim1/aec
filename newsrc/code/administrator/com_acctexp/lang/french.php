@@ -1134,6 +1134,9 @@ define( '_PAYPLAN_PARAMS_TRIAL_PERIOD_DESC', 'C&amp;acute;est la dur&eacute;e de
 define( '_PAYPLAN_PARAMS_TRIAL_PERIODUNIT_NAME', 'Unit&eacute;:');
 define( '_PAYPLAN_PARAMS_TRIAL_PERIODUNIT_DESC', 'Il s&amp;acute;agit d&amp;acute;unit&eacute;s de la p&eacute;riode d&amp;acute;essai (au-dessus). S&amp;acute;il y a des abonn&eacute;s &agrave; ce plan ce champ ne peut pas &ecirc;tre chang&eacute;. Si vous souhaitez remplacer ce plan, d&eacute;publiez-le et cr&eacute;ez un nouveau.');
 
+define( '_PAYPLAN_PARAMS_NOTAUTH_REDIRECT_NAME', 'Denied Access Redirect');
+define( '_PAYPLAN_PARAMS_NOTAUTH_REDIRECT_DESC', 'Redirect to a different URL should the user follow a direct link to this item without having the right authorization.');
+
 // Payplan Relations
 
 define( '_PAYPLAN_RELATIONS_TITLE', 'Relations');
@@ -1296,6 +1299,9 @@ define( '_ITEMGROUP_GENERAL_REVEAL_CHILD_ITEMS_NAME', 'Reveal Child Items');
 define( '_ITEMGROUP_GENERAL_REVEAL_CHILD_ITEMS_DESC', 'If you set this switch to "yes", the AEC will not show a group button (linking the user on to this contents of the group), but directly display the contents of this group in any parent group.');
 define( '_ITEMGROUP_GENERAL_SYMLINK_NAME', 'Group Symlink');
 define( '_ITEMGROUP_GENERAL_SYMLINK_DESC', 'Entering a link here will redirect a user to this link when selecting this group in the plans selection page. Overrides any linking to contents of this group!');
+
+define( '_ITEMGROUP_GENERAL_NOTAUTH_REDIRECT_NAME', 'Denied Access Redirect');
+define( '_ITEMGROUP_GENERAL_NOTAUTH_REDIRECT_DESC', 'Redirect to a different URL should the user follow a direct link to this item without having the right authorization.');
 
 // Group Restrictions
 

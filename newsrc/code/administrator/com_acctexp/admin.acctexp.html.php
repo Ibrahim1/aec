@@ -1908,6 +1908,7 @@ class HTML_AcctExp
 											</div>
 											<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'notauth_redirect' ); ?>
 										</div>
 										<div class="userinfobox">
 											<h2 style="clear:both;"><?php echo _ITEMGROUPS_TITLE; ?></h2>
@@ -2262,6 +2263,7 @@ class HTML_AcctExp
 											<?php echo $aecHTML->createSettingsParticle( 'icon' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'reveal_child_items' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'symlink' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'notauth_redirect' ); ?>
 										</div>
 									</div>
 									<div style="position:relative;float:left;width:32%;padding:4px;">

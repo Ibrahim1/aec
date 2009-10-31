@@ -3232,6 +3232,8 @@ function editSubscriptionPlan( $id, $option )
 	$params['similarplans']			= array( 'list', '' );
 	$params['equalplans']			= array( 'list', '' );
 
+	$params['notauth_redirect']		= array( 'inputC', '' );
+
 	$params['restr_remap']			= array( 'subarea_change', 'restrictions' );
 
 	$params = array_merge( $params, $restrictionHelper->getParams() );
@@ -3987,6 +3989,8 @@ function editItemGroup( $id, $option )
 
 	$params['reveal_child_items']		= array( 'list_yesno', 0 );
 	$params['symlink']					= array( 'inputC', '' );
+
+	$params['notauth_redirect']			= array( 'inputD', '' );
 
 	$params['params_remap']				= array( 'subarea_change', 'groups' );
 
@@ -5628,7 +5632,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 	global $mainframe;
 
 	if ( !defined( '_AEC_LANG_INCLUDED_MI' ) ) {
-		$langPathMI = JPATH_SITE . '/components/com_acctexp/micro_integration/language/';
+		$langPathMI = JPATH_SITE . '/components/com_acctexp/micro_integration/lang/';
 		if ( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
 			include_once( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' );
 		} else {
