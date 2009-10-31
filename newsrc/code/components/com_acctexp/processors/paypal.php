@@ -273,6 +273,9 @@ class processor_paypal extends POSTprocessor
 			} elseif ( strcmp( $txn_type, 'subscr_signup' ) == 0 ) {
 				$response['pending']			= 1;
 				$response['pending_reason']	 = 'signup';
+			} elseif ( strcmp( $txn_type, 'paymentreview' ) == 0 ) {
+				$response['pending']			= 1;
+				$response['pending_reason']	 = 'paymentreview';
 			} elseif ( strcmp( $txn_type, 'subscr_eot' ) == 0 ) {
 				$response['eot']				= 1;
 			} elseif ( strcmp( $txn_type, 'subscr_failed' ) == 0 ) {

@@ -560,6 +560,9 @@ class processor_paypal_wpp extends XMLprocessor
 			} elseif ( ( strcmp( $txn_type, 'subscr_signup' ) == 0 ) || ( strcmp( $txn_type, 'recurring_payment_profile_created' ) == 0 ) ) {
 				$response['pending']		= 1;
 				$response['pending_reason'] = 'silent_signup';
+			} elseif ( strcmp( $txn_type, 'paymentreview' ) == 0 ) {
+				$response['pending']			= 1;
+				$response['pending_reason']	 = 'paymentreview';
 			} elseif ( strcmp( $txn_type, 'subscr_eot' ) == 0 ) {
 				$response['eot']				= 1;
 			} elseif ( strcmp( $txn_type, 'subscr_failed' ) == 0 ) {
