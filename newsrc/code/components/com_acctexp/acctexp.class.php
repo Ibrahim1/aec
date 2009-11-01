@@ -8327,6 +8327,7 @@ print_r($this);exit;
 			if ( !empty( $this->pp->info['notify_trail_thanks'] ) ) {
 				$this->thanks( $option );
 			} else {
+				header("HTTP/1.0 200 OK");
 				exit;
 			}
 		}

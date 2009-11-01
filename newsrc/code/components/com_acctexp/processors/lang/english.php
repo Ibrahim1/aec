@@ -880,5 +880,9 @@ define( '_CFG_PAYPAL_PAYFLOW_CANCEL_NOTE_DESC', 'The Cancel Note the user gets d
 define( '_CFG_PAYPAL_PAYFLOW_LINK_LONGNAME', 'PayPal Payflow Link');
 define( '_CFG_PAYPAL_PAYFLOW_LINK_STATEMENT', 'Make payments with PayPal - it\'s fast, free and secure!');
 define( '_CFG_PAYPAL_PAYFLOW_LINK_DESCRIPTION', 'PayPal lets you send money to anyone with email. PayPal is free for consumers and works seamlessly with your existing credit card and checking account.');
+define( '_CFG_PAYPAL_PAYFLOW_LINK_LOGIN_NAME', 'Payflow Login');
+define( '_CFG_PAYPAL_PAYFLOW_LINK_LOGIN_DESC', 'Your Payflow Login');
+define( '_CFG_PAYPAL_PAYFLOW_LINK_PARTNER_NAME', 'Payflow Partner');
+define( '_CFG_PAYPAL_PAYFLOW_LINK_PARTNER_DESC', 'The name of your Partner was provided to you by your Reseller.');
 
 ?>
