@@ -12,9 +12,9 @@
 $eucaInstall->deleteAdminMenuEntries();
 
 if ( aecJoomla15check() ) {
-	$iconroot = '../administrator/components/com_acctexp/images/icons/';
+	$iconroot = '../media/com_acctexp/images/admin/icons/';
 } else {
-	$iconroot = '../administrator/components/com_acctexp/images/icons/';
+	$iconroot = '../media/com_acctexp/images/admin/icons/';
 }
 
 // insert first component entry

@@ -142,7 +142,7 @@ font-size: 110%;
 
 .centerlogo {
 background-color:#f9f9f9;
-background-image: url(images/backend_gfx/centerlogo_bg.png);
+background-image: url(../images/admin/gfx/centerlogo_bg.png);
 background-position: top center;
 background-repeat: repeat-y;
 padding: 10px !important;
@@ -176,7 +176,7 @@ color: #C30;
 background-color: #EED;
 margin: 5px;
 padding: 3px 3px 12px 3px;
-background-image: url(images/backend_gfx/infoblock_lowerright.png);
+background-image: url(../images/admin/gfx/infoblock_lowerright.png);
 background-position: bottom right;
 background-repeat: no-repeat;
 border-bottom: solid 3px #998;
@@ -225,7 +225,7 @@ width: 100%;
 position: relative;
 float: left;
 background-color: #EED;
-background-image: url(images/backend_gfx/infoblock_lowerright.png);
+background-image: url(../images/admin/gfx/infoblock_lowerright.png);
 background-position: bottom right;
 background-repeat: no-repeat;
 padding: 12px 3px 12px 6px;
@@ -243,7 +243,7 @@ width: 95%;
 
 .aec_userinfobox_sub h4 {
 background: #555 none repeat scroll 0 0;
-background-image: url(images/backend_gfx/infobox_sub_lr.png);
+background-image: url(../images/admin/gfx/infobox_sub_lr.png);
 background-position: bottom left;
 background-repeat: no-repeat;
 color: #fff;
@@ -260,7 +260,7 @@ width : 100%;
 position: relative;
 float: left;
 width: 98%;
-background: url(images/backend_gfx/note_lowerright.png) no-repeat bottom right;
+background: url(../images/admin/gfx/note_lowerright.png) no-repeat bottom right;
 padding: 6px 18px;
 color: #000;
 }
@@ -316,7 +316,7 @@ clear: right;
 margin-right: 18px;
 width: 100px;
 height: 110px;
-background-image: url(images/backend_gfx/important_sign.png);
+background-image: url(../images/admin/gfx/important_sign.png);
 }
 
 .userinfobox div.explainblock {
@@ -433,7 +433,7 @@ margin-top: -100px;
 font-align: right;
 margin: 0 auto;
 background-color: #EED;
-background-image: url(images/backend_gfx/infoblock_lowerright.png);
+background-image: url(../images/admin/gfx/infoblock_lowerright.png);
 background-position: bottom right;
 background-repeat: no-repeat;
 padding: 12px 3px 12px 6px;
@@ -446,16 +446,16 @@ overflow-x: auto;
 }
 
 .icon-32-extensions {
-background-image:url(images/icons/aec_central_icon.png);
+background-image:url(../images/site/icons/aec_central_icon.png);
 }
 
-#aec_iconlist_flag_blue { background: url(images/icons/flag_blue.png) no-repeat; text-indent: 14px; }
-#aec_iconlist_flag_green { background: url(images/icons/flag_green.png) no-repeat; text-indent: 14px; }
-#aec_iconlist_flag_orange { background: url(images/icons/flag_orange.png) no-repeat; text-indent: 14px; }
-#aec_iconlist_flag_purple { background: url(images/icons/flag_purple.png) no-repeat; text-indent: 14px; }
-#aec_iconlist_flag_pink { background: url(images/icons/flag_pink.png) no-repeat; text-indent: 14px; }
-#aec_iconlist_flag_red { background: url(images/icons/flag_red.png) no-repeat; text-indent: 14px; }
-#aec_iconlist_flag_yellow { background: url(images/icons/flag_yellow.png) no-repeat; text-indent: 14px; }
+#aec_iconlist_flag_blue { background: url(../images/site/icons/flag_blue.png) no-repeat; text-indent: 14px; }
+#aec_iconlist_flag_green { background: url(../images/site/icons/flag_green.png) no-repeat; text-indent: 14px; }
+#aec_iconlist_flag_orange { background: url(../images/site/icons/flag_orange.png) no-repeat; text-indent: 14px; }
+#aec_iconlist_flag_purple { background: url(../images/site/icons/flag_purple.png) no-repeat; text-indent: 14px; }
+#aec_iconlist_flag_pink { background: url(../images/site/icons/flag_pink.png) no-repeat; text-indent: 14px; }
+#aec_iconlist_flag_red { background: url(../images/site/icons/flag_red.png) no-repeat; text-indent: 14px; }
+#aec_iconlist_flag_yellow { background: url(../images/site/icons/flag_yellow.png) no-repeat; text-indent: 14px; }
 
 #aec_colorlist_BBDDFF { background: #BBDDFF !important; }
 #aec_colorlist_5F8BC4 { background: #5F8BC4 !important; }

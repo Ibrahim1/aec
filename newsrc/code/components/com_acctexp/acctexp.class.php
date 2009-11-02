@@ -4771,7 +4771,7 @@ class aecHTML
 			$title = ', CAPTION, \''.$title .'\'';
 		}
 		if ( !$text ) {
-			$image 	= JURI::root() . 'media/com_acctexp/admin/images/icons/'. $image;
+			$image 	= JURI::root() . 'media/com_acctexp/images/admin/icons/'. $image;
 			$text 	= '<img src="'. $image .'" border="0" alt=""/>';
 		}
 		$style = 'style="text-decoration: none; color: #586C79;"';
@@ -4807,7 +4807,7 @@ class aecHTML
 			$name	= explode( '.', $image );
 			$alt	= $name[0];
 		}
-		$image 	= JURI::root() . 'media/com_acctexp/admin/images/icons/'. $image;
+		$image 	= JURI::root() . 'media/com_acctexp/images/site/icons/'. $image;
 
 		return '<img src="'. $image .'" border="0" alt="' . $alt . '" title="' . $alt . '" class="aec_icon" />';
 	}

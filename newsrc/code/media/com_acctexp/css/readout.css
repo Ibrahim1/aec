@@ -6,7 +6,7 @@ background: #fff;
 
 table.aec_bg h1 {
 background: #555 none repeat scroll 0 0;
-background-image: url(/administrator/components/com_acctexp/images/backend_gfx/heading_sub_lr.png);
+background-image: url(/media/com_acctexp/images/admin/backend_gfx/heading_sub_lr.png);
 background-position: bottom left;
 background-repeat: no-repeat;
 padding: 4px 0 4px 22px;
@@ -96,13 +96,13 @@ background-color:#FF9999;
 font-align: center;
 }
 
-#aec_iconlist_flag_blue { background: url(/administrator/components/com_acctexp/images/icons/flag_blue.png) no-repeat; text-indent: 14px; }
-#aec_iconlist_flag_green { background: url(/administrator/components/com_acctexp/images/icons/flag_green.png) no-repeat; text-indent: 14px; }
-#aec_iconlist_flag_orange { background: url(/administrator/components/com_acctexp/images/icons/flag_orange.png) no-repeat; text-indent: 14px; }
-#aec_iconlist_flag_purple { background: url(/administrator/components/com_acctexp/images/icons/flag_purple.png) no-repeat; text-indent: 14px; }
-#aec_iconlist_flag_pink { background: url(/administrator/components/com_acctexp/images/icons/flag_pink.png) no-repeat; text-indent: 14px; }
-#aec_iconlist_flag_red { background: url(/administrator/components/com_acctexp/images/icons/flag_red.png) no-repeat; text-indent: 14px; }
-#aec_iconlist_flag_yellow { background: url(/administrator/components/com_acctexp/images/icons/flag_yellow.png) no-repeat; text-indent: 14px; }
+#aec_iconlist_flag_blue { background: url(/media/com_acctexp/images/admin/icons/flag_blue.png) no-repeat; text-indent: 14px; }
+#aec_iconlist_flag_green { background: url(/media/com_acctexp/images/admin/icons/flag_green.png) no-repeat; text-indent: 14px; }
+#aec_iconlist_flag_orange { background: url(/media/com_acctexp/images/admin/icons/flag_orange.png) no-repeat; text-indent: 14px; }
+#aec_iconlist_flag_purple { background: url(/media/com_acctexp/images/admin/icons/flag_purple.png) no-repeat; text-indent: 14px; }
+#aec_iconlist_flag_pink { background: url(/media/com_acctexp/images/admin/icons/flag_pink.png) no-repeat; text-indent: 14px; }
+#aec_iconlist_flag_red { background: url(/media/com_acctexp/images/admin/icons/flag_red.png) no-repeat; text-indent: 14px; }
+#aec_iconlist_flag_yellow { background: url(/media/com_acctexp/images/admin/icons/flag_yellow.png) no-repeat; text-indent: 14px; }
 
 #aec_colorlist_BBDDFF { background: #BBDDFF !important; }
 #aec_colorlist_5F8BC4 { background: #5F8BC4 !important; }

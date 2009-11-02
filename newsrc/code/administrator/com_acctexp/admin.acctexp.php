@@ -5009,7 +5009,7 @@ function changeCoupon( $cid=null, $state=0, $option, $type )
 }
 
 function editCSS( $option ) {
-	$file = JPATH_SITE . '/components/' . $option . '/style.css';
+	$file = JPATH_SITE . '/media/' . $option . '/css/style.css';
 
 	if ( $fp = fopen( $file, 'r' ) ) {
 		$content = fread( $fp, filesize( $file ) );
@@ -5028,7 +5028,7 @@ function saveCSS( $option )
 		aecRedirect( 'index2.php?option='. $option .'&task=editCSS', _AEC_MSG_OP_FAILED_EMPTY );
 	}
 
-	$file			= JPATH_SITE .'/components/' . $option . '/style.css';
+	$file			= JPATH_SITE .'/media/' . $option . '/css/style.css';
 	$enable_write	= aecGetParam( 'enable_write', 0 );
 	$oldperms		= fileperms( $file );
 
