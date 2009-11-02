@@ -16,12 +16,14 @@
 				<include name="administrator/**" />
 				<include name="components/**" />
 				<include name="media/**" />
+				<include name="*.xml" />
+				<include name="*.txt" />
 			</fileset>
 		</copy>
 
-		<delete file="${dir.packages}/${file.package}_v${file.version}_rev${svn.lastrevision}${file.extension}" />
+		<delete file="${dir.packages}/${file.package}_ver${file.version}_rev${svn.lastrevision}${file.extension}" />
 
-		<tar destfile="${dir.packages}/${file.package}_v${file.version}_rev${svn.lastrevision}${file.extension}" basedir="${dir.tmp}" compression="${file.compression}" />
+		<tar destfile="${dir.packages}/${file.package}_ver${file.version}_rev${svn.lastrevision}${file.extension}" basedir="${dir.tmp}" compression="${file.compression}" />
 		<delete dir="${dir.tmp}" includeemptydirs="true" />
 	</target>
 
