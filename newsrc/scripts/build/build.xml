@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<!-- $Id$ -->
+<project name="AEC" basedir="." default="build">
+	<target name="build" description="Build all installable packages">
+		<phing phingfile="build_component.xml" inheritRefs="true"/>
+		<phing phingfile="build_plugin_access.xml" inheritRefs="true"/>
+	</target>
+</project>
