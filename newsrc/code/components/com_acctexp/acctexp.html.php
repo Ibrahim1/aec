@@ -23,7 +23,7 @@ class HTML_frontEnd
 		global $mainframe;
 
 		$html = '<link rel="stylesheet" type="text/css" media="all" href="'
-		. JURI::root() . 'media/' . $option . '/site/style.css" />';
+		. JURI::root() . 'media/' . $option . '/css/site.css" />';
 
 		$mainframe->addCustomHeadTag( $html );
  		$mainframe->appendMetaTag( 'description', 'AEC Account Expiration Control' );
@@ -1457,7 +1457,7 @@ class Payment_HTML
 
 		<head>
 		<title><?php echo $data['page_title']; ?></title>
-		<link rel="stylesheet" href="<?php echo JURI::root() . 'media/' . $option; ?>/site/invoice_style.css" type="text/css" />
+		<link rel="stylesheet" href="<?php echo JURI::root() . 'media/' . $option; ?>/css/invoice.css" type="text/css" />
 		</head>
 		<body>
 			<div id="invoice_wrap">

@@ -5749,7 +5749,9 @@ class SubscriptionPlan extends serialParamDBTable
 				$metaUser->focusSubscription->recurring = 0;
 			}
 
-			$result = $this->triggerMIs( 'action', $metaUser, null, $invoice, false, $silent );
+			$exchange = $add = null;
+
+			$result = $this->triggerMIs( 'action', $metaUser, $exchange, $invoice, $add, $silent );
 
 			if ( $result === false ) {
 				return false;
@@ -5767,7 +5769,7 @@ class SubscriptionPlan extends serialParamDBTable
 				$metaUser->focusSubscription->sendEmailRegistered( $renew, $adminonly );
 			}
 
-			$result = $this->triggerMIs( 'afteraction', $metaUser, null, $invoice, false, $silent );
+			$result = $this->triggerMIs( 'afteraction', $metaUser, $exchange, $invoice, $add, $silent );
 
 			if ( $result === false ) {
 				return false;
@@ -5844,20 +5846,14 @@ class SubscriptionPlan extends serialParamDBTable
 				$plans_comparison	= false;
 
 				if ( is_array( $user_subscription->used_plans ) ) {
-					foreach ( $user_subscription->used_plans as $planid ) {
+					foreach ( $user_subscription->used_plans as $planid => $pusage ) {
 						if ( $planid ) {
-							if ( isset( $planid[0] ) ){
-								if ( empty( $planid[0] ) ) {
-									continue;
-								} else {
-									$pid = $planid[0];
-								}
-							} else {
+							if ( empty( $planid ) ){
 								continue;
 							}
 
 							$used_subscription = new SubscriptionPlan( $database );
-							$used_subscription->load( $pid );
+							$used_subscription->load( $planid );
 
 							if ( $this->id === $used_subscription->id ) {
 								$used_comparison = 2;
@@ -8078,7 +8074,7 @@ class InvoiceFactory
 		$repeat = empty( $repeat ) ? 0 : $repeat;
 
 		$exceptproc = array( 'none', 'free' );
-print_r($this);exit;
+
 		// If this is marked as supposedly free
 		if ( in_array( strtolower( $this->processor ), $exceptproc ) && !empty( $this->plan ) ) {
 			// And if it is either made free through coupons
