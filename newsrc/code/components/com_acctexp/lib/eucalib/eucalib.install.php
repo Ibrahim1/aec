@@ -35,14 +35,25 @@ class eucaInstall extends eucaObject
 		}
 
 		foreach ( $array as $file ) {
-			if ( $file[2] ) {
-				$basepath = JPATH_SITE . '/administrator/components/' . _EUCA_APP_COMPNAME . '/';
-			} else {
-				$basepath = JPATH_SITE . '/components/' . _EUCA_APP_COMPNAME . '/';
-			}
+			if ( !empty( $file[3] ) ) {
+				if ( $file[2] ) {
+					$basepath = JPATH_SITE . '/media/' . _EUCA_APP_COMPNAME . '/images/admin/';
+				} else {
+					$basepath = JPATH_SITE . '/media/' . _EUCA_APP_COMPNAME . '/images/site/';
+				}
 
-			$fullpath	= $basepath . $file[0];
-			$deploypath = $basepath . $file[1];
+				$fullpath	= $basepath . $file[0];
+				$deploypath = $basepath . $file[1];
+			} else {
+				if ( $file[2] ) {
+					$basepath = JPATH_SITE . '/administrator/components/' . _EUCA_APP_COMPNAME . '/';
+				} else {
+					$basepath = JPATH_SITE . '/components/' . _EUCA_APP_COMPNAME . '/';
+				}
+
+				$fullpath	= $basepath . $file[0];
+				$deploypath = $basepath . $file[1];
+			}
 
 			if ( !@is_dir( $deploypath ) ) {
 				// Borrowed from php.net page on mkdir. Created by V-Tec (vojtech.vitek at seznam dot cz)

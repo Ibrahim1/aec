@@ -44,7 +44,7 @@ function com_install()
 
 	global $mainframe;
 
-	$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root() . '/media/com_acctexp/admin/backend_style.css" />' );
+	$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root() . '/media/com_acctexp/css/admin.css" />' );
 
 	// Tracking arrays
 	$queri		= array();
@@ -54,7 +54,7 @@ function com_install()
 	$newinstall = false;
 	$tables		= $database->getTableList();
 
-	$pathLang = JPATH_SITE . '/administrator/components/com_acctexp/com_acctexp_language_backend/';
+	$pathLang = JPATH_SITE . '/administrator/components/com_acctexp/lang/';
 	if ( file_exists( $pathLang . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
 		include_once( $pathLang . $mainframe->getCfg( 'lang' ) . '.php' );
 	} else {
@@ -205,7 +205,7 @@ function com_install()
 	// icons
 	$files = array(
 					array( 'icons/backend_icons.tar.gz',	'icons',			1, 1 ),
-					array( 'icons/silk_icons.tar.gz',		'icons',			1, 1 ),
+					array( 'icons/silk_icons.tar.gz',		'icons',			0, 1 ),
 					array( 'gfx/gfx.tar.gz',				'gfx',				1, 1 ),
 					array( 'cc_icons/cc_icons.tar.gz',		'cc_icons',			0, 1 ),
 					array( 'gateway_buttons.tar.gz',		'',					0, 1 ),
@@ -277,7 +277,7 @@ function com_install()
 			<td width="60%" valign="top" style="background-color: #eee;">
 				<div style="background-color: #949494; margin: 2px; padding: 6px;">
 					<div style="width: 100%; background-color: #000;">
-						<center><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/site/icons/aec_dist_gfx.png" border="0" alt="" /></center>
+						<center><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_dist_gfx.png" border="0" alt="" /></center>
 					</div>
 				</div>
 				<?php
@@ -316,13 +316,13 @@ function com_install()
 			</td>
 			<td width="30%" valign="top">
 				<br />
-				<center><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/site/icons/aec_logo_big.png" border="0" alt="" /></center>
+				<center><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="" /></center>
 				<br />
 				<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;">
 					<p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION; ?></p>
 					<p><?php echo _AEC_FOOT_TX_CHOOSING; ?></p>
 					<div style="margin: 0 auto;text-align:center;">
-						<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/site/icons/valanx_logo.png" border="0" alt="valanx.org" /></a>
+						<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/valanx_logo.png" border="0" alt="valanx.org" /></a>
 						<p><?php echo _AEC_FOOT_TX_GPL; ?></p>
 						<p><?php echo _AEC_FOOT_TX_SUBSCRIBE; ?></p>
 						<p><?php printf( _AEC_FOOT_CREDIT, AECToolbox::backendTaskLink( 'credits', _AEC_FOOT_CREDIT_LTEXT ) ); ?></p>
