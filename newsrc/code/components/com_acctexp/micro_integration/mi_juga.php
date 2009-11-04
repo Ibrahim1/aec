@@ -40,7 +40,7 @@ class mi_juga
 			. substr( strip_tags( $group->description ), 0, 30 ) );
 		}
 
-        $settings = array();
+				$settings = array();
 
 		// Explode the selected groups
 		if ( !empty( $this->settings['enroll_group'] ) ) {
@@ -135,11 +135,37 @@ class mi_juga
 		if( $user !== $userid ) {
 			// then the user is not already a member of this group and can be set
 
+			if ( aecJoomla15check() ) {
+				$return = new stdClass();
+				// load the plugins
+				JPluginHelper::importPlugin( 'juga' );
+
+				// fire plugins
+				$dispatcher =& JDispatcher::getInstance();
+				$before     = $dispatcher->trigger( 'onBeforeAddUserToGroup', array( $userid, $groupid, $return ) );
+				if (in_array(false, $before, true)) {
+						JError::raiseError(500, $return->errorMsg );
+						return false;
+				}
+			}
+
 			$query = 'INSERT INTO #__juga_u2g'
 					. ' SET `group_id` = \'' . $groupid . '\', `user_id` = \''.$userid . '\''
 					;
 			$database->setQuery( $query );
-			$database->query();
+
+			if ( aecJoomla15check() ) {
+				if (!$database->query()) {
+					$return->error = true;
+					$return->errorMsg = $database->getErrorMsg();
+					return false;
+				}
+				// fire plugins
+				$dispatcher =& JDispatcher::getInstance();
+				$dispatcher->trigger( 'onAfterAddUserToGroup', array( $userid, $groupid ) );
+			} else {
+				$database->query();
+			}
 
 			return true;
 		} else {
@@ -151,6 +177,20 @@ class mi_juga
 	{
 		$database = &JFactory::getDBO();
 
+		if ( aecJoomla15check() ) {
+			$return = new stdClass();
+			// load the plugins
+			JPluginHelper::importPlugin( 'juga' );
+
+			// fire plugins
+			$dispatcher =& JDispatcher::getInstance();
+			$before     = $dispatcher->trigger( 'onBeforeRemoveUserFromGroup', array( $userid, $groupid, $return ) );
+			if (in_array(false, $before, true)) {
+					JError::raiseError(500, $return->errorMsg );
+					return false;
+			}
+		}
+
 		$query = 'DELETE FROM #__juga_u2g'
 				. ' WHERE `user_id` = \''. $userid . '\''
 				;
@@ -160,7 +200,19 @@ class mi_juga
 		}
 
 		$database->setQuery( $query );
-		$database->query();
+
+		if ( aecJoomla15check() ) {
+			if (!$database->query()) {
+				$return->error = true;
+				$return->errorMsg = $database->getErrorMsg();
+				return false;
+			}
+			// fire plugins
+			$dispatcher =& JDispatcher::getInstance();
+			$dispatcher->trigger( 'onAfterRemoveUserFromGroup', array( $userid, $groupid ) );
+		} else {
+			$database->query();
+		}
 
 		return true;
 	}
