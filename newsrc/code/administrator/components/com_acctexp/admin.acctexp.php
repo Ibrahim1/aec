@@ -2186,6 +2186,7 @@ function editSettings( $option )
 	$params['tos_iframe']					= array( 'list_yesno', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_CHECKOUT );
+	$params['enable_coupons']				= array( 'list_yesno', 0 );
 	$params['checkout_display_descriptions']	= array( 'list_yesno', '' );
 	$params['checkout_as_gift']				= array( 'list_yesno', '' );
 	$params['checkout_as_gift_access']		= array( 'list', '' );
@@ -2371,7 +2372,6 @@ function editSettings( $option )
 	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_REGFLOW );
 	$params['show_fixeddecision']			= array( 'list_yesno', 0 );
 	$params['temp_auth_exp']				= array( 'inputC', '' );
-	$params['enable_coupons']				= array( 'list_yesno', 0 );
 	$params['confirmation_coupons']			= array( 'list_yesno', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_PLANS );

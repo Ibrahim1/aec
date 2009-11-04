@@ -8831,19 +8831,21 @@ class Invoice extends serialParamDBTable
 
 			$this->amount = AECToolbox::correctAmount( $this->amount );
 
-			if ( ( strcmp( $this->amount, '0.00' ) === 0 ) && !$recurring ) {
-				$this->method = 'free';
-				$madefree = true;
-			} elseif ( ( strcmp( $this->amount, '0.00' ) === 0 ) && ( strcmp( $this->method, 'free' ) !== 0 ) ) {
-				$short	= 'invoice amount error';
-				$event	= 'When computing invoice amount: Method error, amount 0.00, but method = ' . $this->method;
-				$tags	= 'processor,loading,error';
-				$params = array();
+			if ( !$recurring ) {
+				if ( ( strcmp( $this->amount, '0.00' ) === 0 ) ) {
+					$this->method = 'free';
+					$madefree = true;
+				} elseif ( ( strcmp( $this->amount, '0.00' ) === 0 ) && ( strcmp( $this->method, 'free' ) !== 0 ) ) {
+					$short	= 'invoice amount error';
+					$event	= 'When computing invoice amount: Method error, amount 0.00, but method = ' . $this->method;
+					$tags	= 'processor,loading,error';
+					$params = array();
 
-				$eventlog = new eventLog( $database );
-				$eventlog->issue( $short, $tags, $event, 128, $params );
+					$eventlog = new eventLog( $database );
+					$eventlog->issue( $short, $tags, $event, 128, $params );
 
-				$this->method = 'error';
+					$this->method = 'error';
+				}
 			}
 
 			if ( $save ) {
@@ -15240,6 +15242,7 @@ class couponHandler
 	{
 		$offset = 0;
 
+		// Only allow application on trial when there is one and the pointer is correct
 		if ( $this->discount['useon_trial'] && $terms->hasTrial && ( $terms->pointer == 0 ) ) {
 			$offset = 0;
 		} elseif( $terms->hasTrial ) {
@@ -15249,9 +15252,16 @@ class couponHandler
 		$info = array();
 		$info['coupon'] = $this->coupon->coupon_code;
 
-		for ( $i = $offset; $i < count( $terms->terms ); $i++ ) {
+		$initcount = count( $terms->terms );
+
+		for ( $i = $offset; $i < $initcount; $i++ ) {
 			if ( !$this->discount['useon_full'] && ( $i > 0 ) ) {
 				continue;
+			}
+
+			if ( !$this->discount['useon_full_all'] && ( $i < $initcount ) ) {
+				// Duplicate current term
+				$terms->addTerm( clone( $terms->terms[$i] ) );
 			}
 
 			if ( $this->discount['percent_first'] ) {
@@ -15274,6 +15284,7 @@ class couponHandler
 				}
 			}
 		}
+
 
 		return $terms;
 	}

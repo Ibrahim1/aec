@@ -62,4 +62,15 @@ if ( !function_exists( 'property_exists' ) ) {
     }
 }
 
+// Double checking for version number
+// Then off to the dirty eval!
+if (version_compare(phpversion(), '5.0') < 0) {
+	eval('
+		if(!function_exists(\'clone\')){
+			function clone($object) {
+				return $object;
+			}
+		}
+	');
+}
 ?>

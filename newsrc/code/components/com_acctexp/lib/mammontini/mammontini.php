@@ -176,6 +176,24 @@ class mammonTerms extends eucaObject
 	}
 
 	/**
+	 * decrement Terms Array pointer
+	 *
+	 * @access	public
+	 * @return	boolean	True on success
+	 * @since	1.0
+	 */
+	function decrementPointer( $amount=1 )
+	{
+		for ( $i=0; $i<$amount; $i++ ) {
+			if ( $this->pointer > 0 ) {
+				$this->pointer--;
+			}
+		}
+
+		$this->nextterm =& $this->terms[$this->pointer];
+	}
+
+	/**
 	 * set Terms Array pointer
 	 *
 	 * @access	public
