@@ -2,6 +2,26 @@
 <!-- $Id$ -->
 <project name="AEC" basedir="." default="build">
 	<target name="build" description="Build all installable packages">
-		<phing phingfile="build_component.xml" inheritRefs="true"/>
+		<phing phingfile="build_component.xml" inheritRefs="true">
+			<property file="properties/com.properties" override="true" />
+		</phing>
+		<phing phingfile="build_mambot_hacks.xml" inheritRefs="true">
+			<property file="properties/mambot_hacks.properties" override="true" />
+		</phing>
+		<phing phingfile="build_module.xml" inheritRefs="true">
+			<property file="properties/module.properties" override="true" />
+		</phing>
+		<phing phingfile="build_plugin_access.xml" inheritRefs="true">
+			<property file="properties/plugin_access.properties" override="true" />
+		</phing>
+		<phing phingfile="build_plugin_error.xml" inheritRefs="true">
+			<property file="properties/plugin_error.properties" override="true" />
+		</phing>
+		<phing phingfile="build_plugin_routing.xml" inheritRefs="true">
+			<property file="properties/plugin_routing.properties" override="true" />
+		</phing>
+		<phing phingfile="build_plugin_user.xml" inheritRefs="true">
+			<property file="properties/plugin_user.properties" override="true" />
+		</phing>
 	</target>
 </project>

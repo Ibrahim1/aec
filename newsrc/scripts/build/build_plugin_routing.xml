@@ -11,12 +11,8 @@
 		<mkdir dir="${dir.tmp}" />
 
 		<copy todir="${dir.tmp}">
-			<fileset dir="${dir.local}">
-				<include name="administrator/**" />
-				<include name="components/**" />
-				<include name="media/**" />
-				<include name="*.xml" />
-				<include name="*.txt" />
+			<fileset dir="${dir.local}/plugins">
+				<include name="aecrouting.*" />
 			</fileset>
 		</copy>
 

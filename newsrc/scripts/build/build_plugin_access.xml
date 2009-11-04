@@ -4,7 +4,6 @@
 
 	<target name="config" description="Load configuration file">
 		<property file="properties/allpackages.properties"  override="true" />
-		<property file="properties/com.properties"  override="false" />
 	</target>
 
 	<target name="build" description="Build installable package" depends="config, svn_lastrevision">
@@ -12,11 +11,8 @@
 		<mkdir dir="${dir.tmp}" />
 
 		<copy todir="${dir.tmp}">
-			<fileset dir="${dir.local}/plugin">
+			<fileset dir="${dir.local}/plugins">
 				<include name="aecaccess.*" />
-			</fileset>
-			<fileset dir="${dir.local}">
-				<include name="*.txt" />
 			</fileset>
 		</copy>
 
