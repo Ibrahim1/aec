@@ -204,6 +204,8 @@ class mammonTerms extends eucaObject
 	{
 		if ( $pointer < ( count( $this->terms ) ) ) {
 			$this->pointer = $pointer;
+		} else {
+			$this->pointer = count( $this->terms ) - 1;
 		}
 
 		$this->nextterm =& $this->terms[$this->pointer];

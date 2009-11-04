@@ -8821,6 +8821,9 @@ class Invoice extends serialParamDBTable
 						$terms = $item['terms'];
 					}
 
+					// Coupons might have changed the terms - reset pointer
+					$terms->setPointer( $this->counter );
+
 					if ( is_object( $terms->nextterm ) ) {
 						$this->amount = $terms->nextterm->renderTotal();
 					} else {
