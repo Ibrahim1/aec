@@ -909,4 +909,12 @@ define( '_MI_MI_QUOTESTREAM_PROID_DESC',			'The ProId if specified by Quotestrea
 define( '_MI_MI_QUOTESTREAM_CLIENTGROUPID_NAME',	'Client Group Id' );
 define( '_MI_MI_QUOTESTREAM_CLIENTGROUPID_DESC',	'The ClientGroupId that will be transferred on authentication (leave blank if this does not apply)' );
 
+// Amigos
+define( '_AEC_MI_NAME_AMIGOS',		'Amigos' );
+define( '_AEC_MI_DESC_AMIGOS',		'Amigos is an Affiliate Tracking Extension for Joomla from Dioscouri.com' );
+define( '_MI_MI_AMIGOS_AMIGOS_DOMAIN_NAME',			'Domain' );
+define( '_MI_MI_AMIGOS_AMIGOS_DOMAIN_DESC',			'The Domain (and subfolder, if applicable) where Amigos is Installed. Include http:// but not the trailing /.  Example: http://www.dioscouri.com/affiliates' );
+define( '_MI_MI_AMIGOS_AMIGOS_CURL_NAME',			'Use Curl?' );
+define( '_MI_MI_AMIGOS_AMIGOS_CURL_DESC',			'Use Curl instead of javascript tracking in the AEC module (must be published if you decide to NOT use curl)' );
+
 ?>
