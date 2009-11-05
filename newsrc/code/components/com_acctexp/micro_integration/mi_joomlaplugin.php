@@ -77,7 +77,7 @@ class mi_joomlaplugin
 
 		$plugin = $db->loadObject();
 
-		// Create authencication response
+		// Create authentication response
 		$response = new JAuthenticationResponse();
 
 		$credentials = array();
