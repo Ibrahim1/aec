@@ -115,6 +115,13 @@ class processor_authorize extends POSTprocessor
 		$var['x_cust_id']			= $request->metaUser->cmsUser->id;
 		$var['x_description']		= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 
+		$s = array( 'x_logo_url', 'x_background_url', 'x_color_background', 'x_color_link',
+					'x_color_text', 'x_header_html_receipt', 'x_footer_html_receipt' );
+
+		foreach ( $s as $n ) {
+			$var[$n]		= AECToolbox::rewriteEngineRQ( $this->settings[$n], $request );
+		}
+
 		return $var;
 	}
 
