@@ -36,6 +36,7 @@ class processor_suncorp_migs extends URLprocessor
 	function backend_settings()
 	{
 		$settings = array();
+		$settings['experimental']		= array( "p" );
 		$settings['testmode']			= array( "list_yesno" );
 		$settings['vpc_Version']		= array( "inputC" );
 		$settings['vpc_Command']		= array( "inputC" );
