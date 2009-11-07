@@ -502,6 +502,31 @@ div.clear div.setting_desc {
 clear: both;
 }
 
+button.aeclink {
+-moz-user-select: text;
+background: transparent none repeat scroll 0 0;
+border: medium none;
+color: #777;
+cursor: pointer;
+font-family: "Verdana",sans-serif;
+font-size: 1em;
+margin: 0;
+padding: 0;
+text-align: left;
+}
+
+button.aeclink span {
+}
+button.aeclink:hover span,
+button.aeclink:focus span {
+	color: black;
+}
+
+.aectextright {
+text-align: right;
+}
+
+
 /* == Styling for the Checkout Page == */
 
 #checkout {

@@ -64,6 +64,8 @@ class plgSystemAECrouting extends JPlugin
 		$vars['processor']	= JRequest::getVar( 'processor', '' );
 		$vars['recurring']	= intval( JRequest::getVar( 'recurring', '0' ) );
 
+		$vars['forget']		= JRequest::getVar( 'forget', '' );
+
 		$vars['submit']		= JRequest::getVar( 'submit', '' );
 
 		// Community Builder
@@ -146,6 +148,19 @@ class plgSystemAECrouting extends JPlugin
 		}
 
 		$vars['has_user']	= !empty( $vars['username'] );
+
+		switch ( $vars['forget'] ) {
+			case 'userdetails':
+				$vars['has_user']	= false;
+				break;
+			case 'usage':
+				$vars['pfirst']		= false;
+				$vars['usage']		= null;
+				$vars['has_usage']	= false;
+				break;
+			default:
+				break;
+		}
 
 		return $vars;
 	}

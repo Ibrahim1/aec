@@ -470,6 +470,8 @@ function subscribe( $option )
 
 	$token		= aecGetParam( 'aectoken', 0, true, array( 'int' ) );
 
+	$forget		= aecGetParam( 'forget', '', true, array( 'string' ) );
+
 	if ( $token ) {
 		$temptoken = new aecTempToken( $database );
 		$temptoken->getComposite();
@@ -477,7 +479,19 @@ function subscribe( $option )
 		if ( !empty( $temptoken->content ) ) {
 			$password = null;
 
-			$details = array( 'usage', 'processor', 'recurring', 'username', 'email', 'password' );
+			$details = array();
+
+			if ( $forget != 'usage' ) {
+				$details[] = 'usage';
+				$details[] = 'processor';
+				$details[] = 'recurring';
+			}
+
+			if ( $forget != 'userdetails' ) {
+				$details[] = 'username';
+				$details[] = 'email';
+				$details[] = 'password';
+			}
 
 			foreach ( $details as $d ) {
 				if ( !empty( $temptoken->content[$d] ) ) {
@@ -642,6 +656,8 @@ function confirmSubscription( $option )
 {
 	$user = &JFactory::getUser();
 
+	$database = &JFactory::getDBO();
+
 	global $mainframe, $aecConfig;
 
 	$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
@@ -650,7 +666,16 @@ function confirmSubscription( $option )
 	$processor	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$username	= aecGetParam( 'username', 0, true, array( 'word', 'int' ) );
 
-	if ( $aecConfig->cfg['plans_first'] && !empty( $usage ) && !$username && !$userid && !$user->id ) {
+	$passthrough = array();
+	if ( isset( $_POST['aec_passthrough'] ) ) {
+		if ( is_array( $_POST['aec_passthrough'] ) ) {
+			$passthrough = $_POST['aec_passthrough'];
+		} else {
+			$passthrough = unserialize( base64_decode( $_POST['aec_passthrough'] ) );
+		}
+	}
+
+	if ( $aecConfig->cfg['plans_first'] && !empty( $usage ) && empty( $username ) && empty( $passthrough['username'] ) && !$userid && !$user->id ) {
 		if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 			// This is a CB registration, borrowing their code to register the user
 			include_once( JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php' );

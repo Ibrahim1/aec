@@ -2358,10 +2358,10 @@ function editSettings( $option )
 	$params['heartbeat_cycle_backend']		= array( 'inputA', 0 );
 	$params['allow_frontend_heartbeat']		= array( 'list_yesno', 0 );
 	$params['disable_regular_heartbeat']	= array( 'list_yesno', 0 );
-	$params['custom_heartbeat_securehash']	= array( 'inputC', 0 );
+	$params['custom_heartbeat_securehash']	= array( 'inputC', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_DEBUG );
-	$params['bypassintegration']			= array( 'inputC', 0 );
+	$params['bypassintegration']			= array( 'inputC', '' );
 	$params['overrideJ15']					= array( 'list_yesno', 0 );
 	$params['breakon_mi_error']				= array( 'list_yesno', 0 );
 	$params['debugmode']					= array( 'list_yesno', 0 );
@@ -2373,6 +2373,10 @@ function editSettings( $option )
 	$params['show_fixeddecision']			= array( 'list_yesno', 0 );
 	$params['temp_auth_exp']				= array( 'inputC', '' );
 	$params['confirmation_coupons']			= array( 'list_yesno', 0 );
+	$params[] = array( 'div_end', 0 );
+	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_CONFIRMATION );
+	$params['confirmation_changeusername']	= array( 'list_yesno', '' );
+	$params['confirmation_changeusage']		= array( 'list_yesno', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_PLANS );
 	$params['root_group_rw']				= array( 'inputD', 0 );

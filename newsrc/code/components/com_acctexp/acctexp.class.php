@@ -1528,6 +1528,8 @@ class Config_General extends serialParamDBTable
 		$def['delete_tables']					= "";
 		$def['delete_tables_sure']				= "";
 		$def['standard_currency']				= "USD";
+		$def['confirmation_changeusername']		= 1;
+		$def['confirmation_changeusage']		= 1;
 
 		return $def;
 	}
@@ -6693,10 +6695,37 @@ class InvoiceFactory
 		}
 	}
 
-	function getPassthrough()
+	function getPassthrough( $unset=null )
 	{
 		if ( !empty( $this->passthrough ) ) {
-			return base64_encode( serialize( $this->passthrough ) );
+			$passthrough = $this->passthrough;
+
+			$unsets = array( 'id', 'gid', 'forget', 'task', 'option' );
+
+			switch ( $unset ) {
+				case 'userdetails':
+					$unsets[] = 'name';
+					$unsets[] = 'username';
+					$unsets[] = 'password';
+					$unsets[] = 'password2';
+					$unsets[] = 'email';
+					break;
+				case 'usage':
+					$unsets[] = 'usage';
+					$unsets[] = 'processor';
+					$unsets[] = 'recurring';
+					break;
+				default:
+					break;
+			}
+
+			foreach ( $unsets as $n ) {
+				if ( isset( $passthrough[$n] ) ) {
+					unset( $passthrough[$n] );
+				}
+			}
+
+			return base64_encode( serialize( $passthrough ) );
 		} else {
 			return "";
 		}
