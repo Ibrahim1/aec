@@ -2841,6 +2841,10 @@ class PaymentProcessor
 
 		$settings['generic_buttons']	= array( 'list_yesno' );
 
+		if ( isset( $settings['aec_experimental'] ) ) {
+			$settings['aec_experimental'] = ""
+		}
+
 		if ( !isset( $this->info ) ) {
 			$this->getInfo();
 		}
