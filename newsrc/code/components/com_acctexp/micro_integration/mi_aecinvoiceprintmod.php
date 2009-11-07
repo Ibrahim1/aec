@@ -30,16 +30,14 @@ class mi_aecinvoiceprintmod
 					);
 
  		$modelist = array();
-		$modelist[] = mosHTML::makeOption ( "none", CONSTANT_ );
-		$modelist[] = mosHTML::makeOption ( "before", CONSTANT_ );
-		$modelist[] = mosHTML::makeOption ( "after", CONSTANT_ );
-		$modelist[] = mosHTML::makeOption ( "replace", CONSTANT_ );
-		$modelist[] = mosHTML::makeOption ( "delete", CONSTANT_ );
+		$modelist[] = mosHTML::makeOption ( "none", AEC_TEXTMODE_NONE );
+		$modelist[] = mosHTML::makeOption ( "before", AEC_TEXTMODE_BEFORE );
+		$modelist[] = mosHTML::makeOption ( "after", AEC_TEXTMODE_AFTER );
+		$modelist[] = mosHTML::makeOption ( "replace", AEC_TEXTMODE_REPLACE );
+		$modelist[] = mosHTML::makeOption ( "delete", AEC_TEXTMODE_DELETE );
 
 		$settings = array();
 		foreach ( $s as $x ) {
-			$settings[$x]			= array( "editor" );
-
 			$y = $x."_mode";
 
 			if ( isset( $this->settings[$y] ) ) {
@@ -48,8 +46,10 @@ class mi_aecinvoiceprintmod
 				$dv = null;
 			}
 
-			$settings[$y]			= array( "group" );
+			$settings[$y]			= array( "list" );
 			$settings['lists'][$y]	= mosHTML::selectList( $modelist, $y, 'size="1"', 'value', 'text', $dv );
+
+			$settings[$x]			= array( "editor" );
 		}
 
 		return $settings;

@@ -13150,6 +13150,8 @@ class microIntegrationHandler
 	{
 		$list = AECToolbox::getFileArray( $this->mi_dir, 'php', false, true );
 
+		asort( $list );
+
 		$integration_list = array();
 		foreach ( $list as $name ) {
 			$parts = explode( '.', $name );

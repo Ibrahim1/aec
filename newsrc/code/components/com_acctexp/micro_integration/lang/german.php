@@ -917,4 +917,48 @@ define( '_MI_MI_AMIGOS_AMIGOS_DOMAIN_DESC',			'The Domain (and subfolder, if app
 define( '_MI_MI_AMIGOS_AMIGOS_CURL_NAME',			'Use Curl?' );
 define( '_MI_MI_AMIGOS_AMIGOS_CURL_DESC',			'Use Curl instead of javascript tracking in the AEC module (must be published if you decide to NOT use curl)' );
 
+// Invoice Print Mod
+define( '_AEC_MI_NAME_AECINVOICEPRINTMOD',		'Customize Invoice Printout' );
+define( '_AEC_MI_DESC_AECINVOICEPRINTMOD',		'Change the Information that is displayed when printing the invoice for a plan that has this MI attached' );
+define( '_MI_MI_AECINVOICEPRINTMOD_BEFORE_HEADER_MODE_NAME',		'Text Mode (Before Header)' );
+define( '_MI_MI_AECINVOICEPRINTMOD_BEFORE_HEADER_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTMOD_BEFORE_HEADER_NAME',		'Before Header' );
+define( '_MI_MI_AECINVOICEPRINTMOD_BEFORE_HEADER_DESC',		'Modify the text that is displayed before the header' );
+define( '_MI_MI_AECINVOICEPRINTMOD_HEADER_MODE_NAME',		'Text Mode (Header)' );
+define( '_MI_MI_AECINVOICEPRINTMOD_HEADER_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTMOD_HEADER_NAME',		'Header' );
+define( '_MI_MI_AECINVOICEPRINTMOD_HEADER_DESC',		'Modify the text that is displayed as the header' );
+define( '_MI_MI_AECINVOICEPRINTMOD_AFTER_HEADER_MODE_NAME',		'Text Mode (After Header)' );
+define( '_MI_MI_AECINVOICEPRINTMOD_AFTER_HEADER_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTMOD_AFTER_HEADER_NAME',		'After Header' );
+define( '_MI_MI_AECINVOICEPRINTMOD_AFTER_HEADER_DESC',		'Modify the text that is displayed after the header' );
+
+define( '_MI_MI_AECINVOICEPRINTMOD_BEFORE_CONTENT_MODE_NAME',		'Text Mode (Before Content)' );
+define( '_MI_MI_AECINVOICEPRINTMOD_BEFORE_CONTENT_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTMOD_BEFORE_CONTENT_NAME',		'Before Content' );
+define( '_MI_MI_AECINVOICEPRINTMOD_BEFORE_CONTENT_DESC',		'Modify the text that is displayed before the content' );
+define( '_MI_MI_AECINVOICEPRINTMOD_AFTER_CONTENT_MODE_NAME',		'Text Mode (After Content)' );
+define( '_MI_MI_AECINVOICEPRINTMOD_AFTER_CONTENT_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTMOD_AFTER_CONTENT_NAME',		'After Content' );
+define( '_MI_MI_AECINVOICEPRINTMOD_AFTER_CONTENT_DESC',		'Modify the text that is displayed after the content' );
+
+define( '_MI_MI_AECINVOICEPRINTMOD_BEFORE_FOOTER_MODE_NAME',		'Text Mode (Before Footer)' );
+define( '_MI_MI_AECINVOICEPRINTMOD_BEFORE_FOOTER_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTMOD_BEFORE_FOOTER_NAME',		'Before Footer' );
+define( '_MI_MI_AECINVOICEPRINTMOD_BEFORE_FOOTER_DESC',		'Modify the text that is displayed before the footer' );
+define( '_MI_MI_AECINVOICEPRINTMOD_FOOTER_MODE_NAME',		'Text Mode (Footer)' );
+define( '_MI_MI_AECINVOICEPRINTMOD_FOOTER_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTMOD_FOOTER_NAME',		'Footer' );
+define( '_MI_MI_AECINVOICEPRINTMOD_FOOTER_DESC',		'Modify the text that is displayed as the footer' );
+define( '_MI_MI_AECINVOICEPRINTMOD_AFTER_FOOTER_MODE_NAME',		'Text Mode (After Footer)' );
+define( '_MI_MI_AECINVOICEPRINTMOD_AFTER_FOOTER_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTMOD_AFTER_FOOTER_NAME',		'After Footer' );
+define( '_MI_MI_AECINVOICEPRINTMOD_AFTER_FOOTER_DESC',		'Modify the text that is displayed after the footer' );
+
+define( 'AEC_TEXTMODE_NONE',		'None - Leave the original text as it was' );
+define( 'AEC_TEXTMODE_BEFORE',		'Before - Place the text in the editor before the original text' );
+define( 'AEC_TEXTMODE_AFTER',		'After - Place the text in the editor after the original text' );
+define( 'AEC_TEXTMODE_REPLACE',		'Replace - Replace the original text with the text in the editor' );
+define( 'AEC_TEXTMODE_DELETE',		'Delete - Delete the original text' );
+
 ?>
