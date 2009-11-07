@@ -55,7 +55,7 @@ class mi_aecinvoiceprintmod
 		return $settings;
 	}
 
-	function action( $request )
+	function invoice_printout( $request )
 	{
 		$database = &JFactory::getDBO();
 
