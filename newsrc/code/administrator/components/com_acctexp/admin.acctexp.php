@@ -3165,6 +3165,7 @@ function editSubscriptionPlan( $id, $option )
 	$params['customtext_thanks_keeporiginal']	= array( 'list_yesno', 1 );
 	$params['customtext_thanks']		= array( 'editor', '' );
 	$params['email_desc']				= array( 'inputD', '' );
+	$params['micro_integrations_inherited']		= array( 'list', '' );
 	$params['micro_integrations']		= array( 'list', '' );
 	$params['micro_integrations_plan']	= array( 'list', '' );
 
@@ -3547,6 +3548,17 @@ function editSubscriptionPlan( $id, $option )
 	}
 
 	$lists['micro_integrations'] = mosHTML::selectList($mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $selected_mi);
+
+	$inherited = $row->getMicroIntegrations( true );
+
+	$inherited_list = array();
+	foreach ( $mi_list as $miobj ) {
+		if ( in_array( $miobj->value, $inherited ) ) {
+			$inherited_list[] = $miobj;
+		}
+	}
+
+	$lists['micro_integrations_inherited'] = mosHTML::selectList($mi_list, 'micro_integrations_inherited[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" disabled="disabled"', 'value', 'text', array());
 
 	$mi_handler = new microIntegrationHandler();
 	$mi_list = $mi_handler->getIntegrationList();
@@ -3996,6 +4008,8 @@ function editItemGroup( $id, $option )
 
 	$params['notauth_redirect']			= array( 'inputD', '' );
 
+	$params['micro_integrations']		= array( 'list', '' );
+
 	$params['params_remap']				= array( 'subarea_change', 'groups' );
 
 	$groups = ItemGroupHandler::parentGroups( $row->id, 'group' );
@@ -4073,6 +4087,30 @@ function editItemGroup( $id, $option )
 	}
 
 	$lists['icon'] = mosHTML::selectList($iconlist, 'icon', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'icon', 'blue'));
+
+	// get available micro integrations
+	$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
+			. ' FROM #__acctexp_microintegrations'
+			. ' WHERE `active` = 1'
+		 	. ' AND `hidden` = \'0\''
+			. ' ORDER BY ordering'
+			;
+	$database->setQuery( $query );
+	$mi_list = $database->loadObjectList();
+
+	if ( !empty( $row->params['micro_integrations'] ) ) {
+		$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
+				. ' FROM #__acctexp_microintegrations'
+				. ' WHERE `id` IN (' . implode( ',', $row->params['micro_integrations'] ) . ')'
+		 		. ' AND `hidden` = \'0\''
+				;
+	 	$database->setQuery( $query );
+		$selected_mi = $database->loadObjectList();
+	} else {
+		$selected_mi = array();
+	}
+
+	$lists['micro_integrations'] = mosHTML::selectList($mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $selected_mi);
 
 	$settings = new aecSettings ( 'itemgroup', 'general' );
 	if ( is_array( $customparams_values ) ) {

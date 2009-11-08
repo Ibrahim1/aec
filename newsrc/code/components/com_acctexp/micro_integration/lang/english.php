@@ -988,4 +988,7 @@ define( 'AEC_TEXTMODE_AFTER',		'After - Place the text in the editor after the o
 define( 'AEC_TEXTMODE_REPLACE',		'Replace - Replace the original text with the text in the editor' );
 define( 'AEC_TEXTMODE_DELETE',		'Delete - Delete the original text' );
 
+// Tax Helper
+define( '_AEC_MI_NAME_AECTAX',		'Tax Helper' );
+define( '_AEC_MI_DESC_AECTAX',		'Specify tax for this item - affects Confirmation&amp;Checkout screen, Item cost and Invoice printout' );
 ?>

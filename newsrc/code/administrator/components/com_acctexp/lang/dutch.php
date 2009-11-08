@@ -1267,6 +1267,8 @@ define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_NAME', 'Micro Integraties:');
 define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_DESC', 'Selecteer de Micro Integraties dat u op dit plan wilt gebruiken.');
 define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_PLAN_NAME', 'Local Micro Integrations:');
 define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_PLAN_DESC', 'Select the Micro Integrations that you want to apply to the user with the plan. Instead of global instances, these MIs will be specific only to this payment plan.');
+define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_INHERITED_NAME', 'Inherited:');
+define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_INHERITED_DESC', 'Shows which Micro Integrations are inherited from parent groups that this plan is a member of.');
 
 define( '_PAYPLAN_CURRENCY', 'Bedrag');
 
@@ -1311,6 +1313,8 @@ define( '_ITEMGROUP_GENERAL_SYMLINK_DESC', 'Entering a link here will redirect a
 
 define( '_ITEMGROUP_GENERAL_NOTAUTH_REDIRECT_NAME', 'Denied Access Redirect');
 define( '_ITEMGROUP_GENERAL_NOTAUTH_REDIRECT_DESC', 'Redirect to a different URL should the user follow a direct link to this item without having the right authorization.');
+define( '_ITEMGROUP_GENERAL_MICRO_INTEGRATIONS_NAME', 'Micro Integrations');
+define( '_ITEMGROUP_GENERAL_MICRO_INTEGRATIONS_DESC', 'Select which Micro Integrations you want to be attached to all child elements of this group.');
 
 // Group Restrictions
 

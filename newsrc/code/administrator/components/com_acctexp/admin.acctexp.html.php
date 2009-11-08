@@ -2062,6 +2062,7 @@ class HTML_AcctExp
 		                <div class="aec_tabheading"><h2><?php echo _PAYPLAN_MI; ?></h2></div>
 		                <table width="100%" class="aecadminform"><tr><td>
 							<div class="userinfobox">
+								<?php echo $aecHTML->createSettingsParticle( 'micro_integrations_inherited' ); ?>
 								<?php echo $aecHTML->createSettingsParticle( 'micro_integrations' ); ?>
 							</div>
 							<div class="userinfobox">
@@ -2330,6 +2331,16 @@ class HTML_AcctExp
 							<div class="userinfobox">
 								<?php echo $aecHTML->createSettingsParticle( 'similargroups' ); ?>
 								<?php echo $aecHTML->createSettingsParticle( 'equalgroups' ); ?>
+							</div>
+						</td></tr></table>
+						<?php
+		                echo $tabs->endPanel();
+		                echo $tabs->startPanel( _PAYPLAN_MI, _PAYPLAN_MI );
+		                ?>
+		                <div class="aec_tabheading"><h2><?php echo _PAYPLAN_MI; ?></h2></div>
+		                <table width="100%" class="aecadminform"><tr><td>
+							<div class="userinfobox">
+								<?php echo $aecHTML->createSettingsParticle( 'micro_integrations' ); ?>
 							</div>
 						</td></tr></table>
 						<?php

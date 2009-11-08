@@ -4816,7 +4816,7 @@ class aecHTML
 		}
 		$image 	= JURI::root() . 'media/com_acctexp/images/site/icons/'. $image;
 
-		return '<img src="'. $image .'" border="0" alt="' . $alt . '" title="' . $alt . '" class="aec_icon" />';
+		return '<img src="'. $image .'" border="0" alt="' . $alt . '" class="aec_icon" />';
 	}
 
 }
@@ -5005,6 +5005,20 @@ class ItemGroupHandler
 		}
 
 		return true;
+	}
+
+	function getParents( $item_id, $type='item' )
+	{
+		$itemParents = ItemGroupHandler::parentGroups( $item_id, $type );
+
+		$allParents = $itemParents;
+		foreach ( $itemParents as $parentid ) {
+			$parentParents = ItemGroupHandler::getParents( $parentid, 'group' );
+
+			$allParents = array_merge( $allParents, $parentParents );
+		}
+
+		return $allParents;
 	}
 
 	function getChildren( $groups, $type )
@@ -5296,7 +5310,7 @@ class ItemGroup extends serialParamDBTable
 		}
 
 		// Filter out params
-		$fixed = array( 'color', 'icon', 'reveal_child_items', 'symlink', 'notauth_redirect' );
+		$fixed = array( 'color', 'icon', 'reveal_child_items', 'symlink', 'notauth_redirect', 'micro_integrations' );
 
 		$params = array();
 		foreach ( $fixed as $varname ) {
@@ -6028,22 +6042,48 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 	}
 
-	function getMicroIntegrations()
+	function getMicroIntegrations( $inherited=false )
 	{
-		if ( !empty( $this->micro_integrations ) ) {
-			$query = 'SELECT `id`'
-					. ' FROM #__acctexp_microintegrations'
-					. ' WHERE `id` IN (' . $this->_db->getEscaped( implode( ',', $this->micro_integrations ) ) . ')'
-		 			. ' AND `active` = \'1\''
-					. ' ORDER BY `ordering` ASC'
-					;
-			$this->_db->setQuery( $query );
-			$mi_list = $this->_db->loadResultArray();
+		$database = &JFactory::getDBO();
 
-			return $mi_list;
+		if ( $inherited ) {
+			$milist = array();
 		} else {
+			if ( empty( $this->micro_integrations ) ) {
+				$milist = array();
+			} else {
+				$milist = $this->micro_integrations;
+			}
+		}
+
+		// Find parent ItemGroups to attache their MIs
+		$parents = ItemGroupHandler::getParents( $this->id );
+
+		foreach ( $parents as $parent ) {
+			$g = new ItemGroup( $database );
+			$g->load( $parent );
+
+			if ( !empty( $g->params['micro_integrations'] ) ) {
+				$milist = array_merge( $milist, $g->params['micro_integrations'] );
+			}
+		}
+
+		if ( empty( $milist ) ) {
 			return false;
 		}
+
+		array_unique($milist);
+
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_microintegrations'
+				. ' WHERE `id` IN (' . $this->_db->getEscaped( implode( ',', $milist ) ) . ')'
+	 			. ' AND `active` = \'1\''
+				. ' ORDER BY `ordering` ASC'
+				;
+		$this->_db->setQuery( $query );
+		$list = $this->_db->loadResultArray();
+
+		return $list;
 	}
 
 	function triggerMIs( $action, &$metaUser, &$exchange, &$invoice, &$add, &$silent )
