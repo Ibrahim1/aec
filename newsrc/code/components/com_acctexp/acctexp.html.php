@@ -180,6 +180,13 @@ class HTML_frontEnd
 		$trial =$metaUser->objSubscription->status == 'Trial';
 
 		?>
+		<script type="text/javascript">
+		function show_confirm( msg )
+		{
+			var r = confirm(msg);
+			return r;
+		}
+		</script>
 		<div class="componentheading"><?php echo _MYSUBSCRIPTION_TITLE;?></div>
 		<div id="subscription_details">
 			<div id="aec_navlist_profile">

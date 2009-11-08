@@ -108,6 +108,8 @@ define( '_INVOICEPRINT_QUANTITY', 'Quantity');
 define( '_INVOICEPRINT_TOTAL', 'Total');
 define( '_INVOICEPRINT_GRAND_TOTAL', 'Grand Total');
 
+define( '_AEC_YOUSURE', 'Are you sure?');
+
 // --== EXPIRATION PAGE ==--
 define( '_EXPIRE_INFO',						'Ihr Konto ist aktiv bis');
 define( '_RENEW_BUTTON',					'Erneuern');

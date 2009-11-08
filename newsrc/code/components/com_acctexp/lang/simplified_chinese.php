@@ -112,6 +112,8 @@ define( '_INVOICEPRINT_QUANTITY', 'Quantity');
 define( '_INVOICEPRINT_TOTAL', 'Total');
 define( '_INVOICEPRINT_GRAND_TOTAL', 'Grand Total');
 
+define( '_AEC_YOUSURE', 'Are you sure?');
+
 // --== EXPIRATION PAGE ==--
 define( '_EXPIRE_INFO', '你的�?�?�一直是�?�用的');
 define( '_RENEW_BUTTON', '立刻更新');

@@ -25,7 +25,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		$info['currencies']		= AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list']		= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring']		= 2;
-		$info['actions']		= array('cancel');
+		$info['actions']		= array( 'cancel' => array( 'confirm' ) );
 		$info['secure']			= 1;
 
 		return $info;

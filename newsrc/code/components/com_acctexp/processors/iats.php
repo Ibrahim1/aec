@@ -25,7 +25,7 @@ class processor_iats extends XMLprocessor
 		$info['cc_list']		= 'visa,mastercard,discover,americanexpress';
 		$info['recurring']		= 2;
 		// TODO: $info['recurring_buttons']	= 2;
-		$info['actions']		= array('cancel');
+		$info['actions']		= array( 'cancel' => array( 'confirm' ) );
 		$info['secure']			= 1;
 
 		return $info;

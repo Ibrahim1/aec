@@ -23,7 +23,7 @@ class processor_generic_pin extends XMLprocessor
 		$info['currencies']		= AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list']		= "";
 		$info['recurring']		= 0;
-		$info['actions']		= array('email');
+		$info['actions']		= array( 'email' => array() );
 
 		return $info;
 	}

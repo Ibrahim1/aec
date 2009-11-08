@@ -24,7 +24,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$info['languages']		= AECToolbox::getISO4271_codes();
 		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck,giropay';
 		$info['recurring']		= 2;
-		$info['actions']		= array('cancel');
+		$info['actions']		= array( 'cancel' => array( 'confirm' ) );
 		$info['secure']			= 1;
 
 		return $info;

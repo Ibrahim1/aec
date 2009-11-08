@@ -834,8 +834,22 @@ function subscriptionDetails( $option, $sub='' )
 					$actions = $pp->info['actions'];
 
 					$selected_plan->proc_actions = array();
-					foreach ( $actions as $action ) {
-						$selected_plan->proc_actions[] = '<a href="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action . '&amp;subscr=' . $metaUser->objSubscription->id, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '">' . $action . '</a>';
+					foreach ( $actions as $action => $aoptions ) {
+						$insert = "";
+
+						if ( !empty( $aoptions ) ) {
+							foreach ( $aoptions as $opt ) {
+								switch ( $opt ) {
+									case 'confirm':
+										$insert .= ' onclick="return show_confirm(\'' . _AEC_YOUSURE . '\')" ';
+										break;
+									default:
+										break;
+								}
+							}
+						}
+
+						$selected_plan->proc_actions[] = '<a href="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action . '&amp;subscr=' . $metaUser->objSubscription->id, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '"' . $insert . '>' . $action . '</a>';
 					}
 				}
 			}
@@ -909,8 +923,22 @@ function subscriptionDetails( $option, $sub='' )
 					$actions = $spp->info['actions'];
 
 					$secondary_plan->proc_actions = array();
-					foreach ( $actions as $action ) {
-						$secondary_plan->proc_actions[] = '<a href="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action . '&amp;subscr=' . $subscription->id, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '">' . $action . '</a>';
+					foreach ( $actions as $action => $aoptions ) {
+						$insert = "";
+
+						if ( !empty( $aoptions ) ) {
+							foreach ( $aoptions as $opt ) {
+								switch ( $opt ) {
+									case 'confirm':
+										$insert .= ' onclick="return show_confirm(\'' . _AEC_YOUSURE . '\')" ';
+										break;
+									default:
+										break;
+								}
+							}
+						}
+
+						$selected_plan->proc_actions[] = '<a href="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action . '&amp;subscr=' . $subscription->id, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '"' . $insert . '>' . $action . '</a>';
 					}
 				}
 
