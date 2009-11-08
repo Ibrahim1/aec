@@ -687,8 +687,12 @@ function confirmSubscription( $option )
 			joomlaregisterForm( $option, $mainframe->getCfg( 'useractivation' ) );
 		}
 	} else {
-		$invoicefact = new InvoiceFactory( $userid, $usage, $group, $processor );
-		$invoicefact->confirm( $option );
+		if ( !empty( $usage ) ) {
+			$invoicefact = new InvoiceFactory( $userid, $usage, $group, $processor );
+			$invoicefact->confirm( $option );
+		} else {
+			subscribe( $option );
+		}
 	}
 }
 
