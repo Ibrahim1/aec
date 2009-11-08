@@ -33,6 +33,7 @@ class processor_vcs extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
+		$settings['aec_experimental']	= array( "p" );
 		$settings['testmode']		= array( 'list_yesno');
 		$settings['merchant_id']	= array( 'inputC');
 		$settings['pam']			= array( 'inputC');

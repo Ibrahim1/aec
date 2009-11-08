@@ -48,16 +48,17 @@ class processor_ipayment_silent extends XMLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']		= array( "list_yesno" );
-		$settings['fake_account']	= array( "list_yesno" );
-		$settings['user_id'] 		= array( "inputC" );
-		$settings['account_id']		= array( "inputC" );
-		$settings['password']		= array( "inputC" );
-		$settings['currency']		= array( "list_currency" );
-		$settings['promptAddress']	= array( "list_yesno" );
-		$settings['item_name']		= array( "inputE" );
+		$settings['aec_experimental']	= array( "p" );
+		$settings['testmode']			= array( "list_yesno" );
+		$settings['fake_account']		= array( "list_yesno" );
+		$settings['user_id'] 			= array( "inputC" );
+		$settings['account_id']			= array( "inputC" );
+		$settings['password']			= array( "inputC" );
+		$settings['currency']			= array( "list_currency" );
+		$settings['promptAddress']		= array( "list_yesno" );
+		$settings['item_name']			= array( "inputE" );
 
- 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan');
+ 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan');
 		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		return $settings;

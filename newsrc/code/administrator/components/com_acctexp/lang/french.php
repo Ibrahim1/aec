@@ -1053,6 +1053,8 @@ define( '_PP_GENERAL_PROCESSOR_NAME', 'Payment Processor');
 define( '_PP_GENERAL_PROCESSOR_DESC', 'Select which payment processor you want to use.');
 define( '_PP_GENERAL_ACTIVE_NAME', 'Active');
 define( '_PP_GENERAL_ACTIVE_DESC', 'Select whether this processor is currently active (and thus can carry out its function and be available to your users)');
+define( '_PP_GENERAL_PLEASE_NOTE', 'Please note');
+define( '_PP_GENERAL_EXPERIMENTAL', 'This payment processor is still not 100% complete - it has either been added to the codebase very recently (and is thus not fully tested) or was partly abandoned due to a customer suddenly not being interested in having us finish it anymore. If you want to use it, we would be very thankful for any kind of helping hand you can give us - either with further information on the integration, with bugreports or fixes, or with sponsorship.');
 
 // --== PAYMENT PLAN PAGE ==--
 // Additions of variables for free trial periods by Michael Spredemann (scubaguy)

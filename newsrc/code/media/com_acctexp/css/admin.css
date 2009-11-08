@@ -441,6 +441,21 @@ border-bottom: solid 3px #998;
 width: 300px;
 }
 
+div.aec_processor_experimentalnote {
+margin: 12px;
+border: 1px solid #c16161;
+background-color: #eaa;
+padding: 12px;
+}
+
+div.aec_processor_experimentalnote h1 {
+color: #000;
+}
+
+div.aec_processor_experimentalnote p {
+font-size: 130%;
+}
+
 td.aec_bigcell {
 overflow-x: auto;
 }

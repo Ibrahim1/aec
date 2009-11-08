@@ -43,6 +43,7 @@ class processor_paypal_payflow_link extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
+		$settings['aec_experimental']	= array( "p" );
 		$settings['login']			= array( 'inputC' );
 		$settings['partner']		= array( 'inputC' );
 		$settings['item_name']		= array( 'inputE' );

@@ -43,6 +43,7 @@ class processor_ideal_advanced extends XMLprocessor
 	function backend_settings()
 	{
 		$s = array();
+		$s['aec_experimental']	= array( "p" );
 		$s['merchantid']	= array( 'inputC' );
 		$s['testmode']		= array( 'list_yesno' );
 		$s['bank']			= array( 'list' );

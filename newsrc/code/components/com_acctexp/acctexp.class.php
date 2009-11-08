@@ -2842,7 +2842,8 @@ class PaymentProcessor
 		$settings['generic_buttons']	= array( 'list_yesno' );
 
 		if ( isset( $settings['aec_experimental'] ) ) {
-			$settings['aec_experimental'] = ""
+			$settings['aec_experimental'] = "p";
+			$this->settings['aec_experimental'] = '<div class="aec_processor_experimentalnote"><h1>' . _PP_GENERAL_PLEASE_NOTE . '</h1><p>' . _PP_GENERAL_EXPERIMENTAL . '</p></div>';
 		}
 
 		if ( !isset( $this->info ) ) {

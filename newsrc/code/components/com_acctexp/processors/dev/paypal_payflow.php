@@ -52,6 +52,7 @@ class processor_paypal_payflow extends XMLprocessor
 	function backend_settings()
 	{
 		$settings = array();
+		$settings['aec_experimental']		= array( "p" );
 		$settings['testmode']				= array( 'list_yesno' );
 		$settings['currency']				= array( 'list_currency' );
 

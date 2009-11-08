@@ -39,6 +39,7 @@ class processor_locaweb_pgcerto extends XMLprocessor
 	function backend_settings()
 	{
 		$settings = array();
+		$settings['aec_experimental']	= array( "p" );
 
 		$settings['chaveVendedor']				= array( 'inputC' );
 		$settings['item_name']					= array( 'inputE' );

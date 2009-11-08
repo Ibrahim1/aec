@@ -46,6 +46,7 @@ class processor_ideal_basic extends URLprocessor
 	function backend_settings()
 	{
 		$s = array();
+		$s['aec_experimental']	= array( "p" );
 		$s['merchantid']	= array( 'inputC' );
 		$s['testmode']		= array( 'list_yesno' );
 		$s['testmodestage']	= array( 'inputC' );
