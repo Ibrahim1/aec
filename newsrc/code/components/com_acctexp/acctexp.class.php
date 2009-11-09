@@ -5637,164 +5637,176 @@ class SubscriptionPlan extends serialParamDBTable
 			$multiplicator = 1;
 		}
 
-		if ( !empty( $user ) ) {
-			if ( is_object( $user ) ) {
-				if ( is_a( $user, 'metaUser' ) ) {
-					$metaUser = $user;
-				} elseif( is_a( $user, 'Subscription' ) ) {
-					$metaUser = new metaUser( $user->userid );
+		if ( empty( $user ) ) {
+			return false;
+		}
+		if ( is_object( $user ) ) {
+			if ( is_a( $user, 'metaUser' ) ) {
+				$metaUser = $user;
+			} elseif( is_a( $user, 'Subscription' ) ) {
+				$metaUser = new metaUser( $user->userid );
 
-					$metaUser->focusSubscription = $user;
-				}
-			} else {
-				$metaUser = new metaUser( $user );
+				$metaUser->focusSubscription = $user;
 			}
+		} else {
+			$metaUser = new metaUser( $user );
+		}
 
-			if ( !isset( $this->params['make_primary'] ) ) {
-				$this->params['make_primary'] = 1;
-			}
+		if ( !isset( $this->params['make_primary'] ) ) {
+			$this->params['make_primary'] = 1;
+		}
 
-			if ( !$metaUser->hasSubscription ) {
-				$status = $metaUser->establishFocus( $this, $processor, false );
+		if ( !$metaUser->hasSubscription ) {
+			$status = $metaUser->establishFocus( $this, $processor, false );
 
-				if ( !empty( $this->params['update_existing'] ) && ( $status == 'existing') ) {
-					$is_pending	= ( strcmp( $metaUser->focusSubscription->status, 'Pending' ) === 0 );
-					$is_trial	= ( strcmp( $metaUser->focusSubscription->status, 'Trial' ) === 0 );
-				} else {
-					$is_pending	= true;
-					$is_trial	= false;
-				}
-			} else {
+			if ( !empty( $this->params['update_existing'] ) && ( $status == 'existing') ) {
 				$is_pending	= ( strcmp( $metaUser->focusSubscription->status, 'Pending' ) === 0 );
 				$is_trial	= ( strcmp( $metaUser->focusSubscription->status, 'Trial' ) === 0 );
+			} else {
+				$is_pending	= true;
+				$is_trial	= false;
 			}
+		} else {
+			$is_pending	= ( strcmp( $metaUser->focusSubscription->status, 'Pending' ) === 0 );
+			$is_trial	= ( strcmp( $metaUser->focusSubscription->status, 'Trial' ) === 0 );
+		}
 
-			$comparison		= $this->doPlanComparison( $metaUser->focusSubscription );
-			$renew = $metaUser->is_renewing();
+		$comparison		= $this->doPlanComparison( $metaUser->focusSubscription );
+		$renew = $metaUser->is_renewing();
 
-			$lifetime		= $metaUser->focusSubscription->lifetime;
+		$lifetime		= $metaUser->focusSubscription->lifetime;
 
-			if ( ( $comparison['total_comparison'] === false ) || $is_pending ) {
-				// If user is using global trial period he still can use the trial period of a plan
-				if ( ( $this->params['trial_period'] > 0 ) && !$is_trial ) {
-					$trial		= true;
-					$value		= $this->params['trial_period'];
-					$perunit	= $this->params['trial_periodunit'];
-					$this->params['lifetime']	= 0; // We are entering the trial period. The lifetime will come at the renew.
-				} else {
-					$trial		= false;
-					$value		= $this->params['full_period'];
-					$perunit	= $this->params['full_periodunit'];
-				}
-			} elseif ( !$is_pending ) {
+		$amount = "0.00";
+		if ( ( $comparison['total_comparison'] === false ) || $is_pending ) {
+			// If user is using global trial period he still can use the trial period of a plan
+			if ( ( $this->params['trial_period'] > 0 ) && !$is_trial ) {
+				$trial		= true;
+				$value		= $this->params['trial_period'];
+				$perunit	= $this->params['trial_periodunit'];
+				$this->params['lifetime']	= 0; // We are entering the trial period. The lifetime will come at the renew.
+
+				$amount		= $this->params['trial_amount'];
+			} else {
 				$trial		= false;
 				$value		= $this->params['full_period'];
 				$perunit	= $this->params['full_periodunit'];
-			} else {
-				return false;
+
+				$amount		= $this->params['full_amount'];
 			}
+		} elseif ( !$is_pending ) {
+			$trial		= false;
+			$value		= $this->params['full_period'];
+			$perunit	= $this->params['full_periodunit'];
+			$amount		= $this->params['full_amount'];
+		} else {
+			return false;
+		}
 
-			if ( $this->params['lifetime'] || $forcelifetime ) {
-				$metaUser->focusSubscription->expiration = '9999-12-31 00:00:00';
-				$metaUser->focusSubscription->lifetime = 1;
+		if ( $this->params['lifetime'] || $forcelifetime ) {
+			$metaUser->focusSubscription->expiration = '9999-12-31 00:00:00';
+			$metaUser->focusSubscription->lifetime = 1;
+		} else {
+			$metaUser->focusSubscription->lifetime = 0;
+
+			$value *= $multiplicator;
+
+			if ( ( $comparison['comparison'] == 2 ) && !$lifetime ) {
+				$metaUser->focusSubscription->setExpiration( $perunit, $value, 1 );
 			} else {
-				$metaUser->focusSubscription->lifetime = 0;
-
-				$value *= $multiplicator;
-
-				if ( ( $comparison['comparison'] == 2 ) && !$lifetime ) {
-					$metaUser->focusSubscription->setExpiration( $perunit, $value, 1 );
-				} else {
-					$metaUser->focusSubscription->setExpiration( $perunit, $value, 0 );
-				}
+				$metaUser->focusSubscription->setExpiration( $perunit, $value, 0 );
 			}
+		}
 
-			if ( $is_pending ) {
-				// Is new = set signup date
-				$metaUser->focusSubscription->signup_date = date( 'Y-m-d H:i:s', time() + $mainframe->getCfg( 'offset' ) *3600 );
-				if ( ( $this->params['trial_period'] ) > 0 && !$is_trial ) {
-					$status = 'Trial';
-				} else {
-					if ( $this->params['full_period'] || $this->params['lifetime'] ) {
-						if ( !isset( $this->params['make_active'] ) ) {
-							$status = 'Active';
-						} else {
-							$status = ( $this->params['make_active'] ? 'Active' : 'Pending' );
-						}
+		if ( $is_pending ) {
+			// Is new = set signup date
+			$metaUser->focusSubscription->signup_date = date( 'Y-m-d H:i:s', time() + $mainframe->getCfg( 'offset' ) *3600 );
+			if ( ( $this->params['trial_period'] ) > 0 && !$is_trial ) {
+				$status = 'Trial';
+			} else {
+				if ( $this->params['full_period'] || $this->params['lifetime'] ) {
+					if ( !isset( $this->params['make_active'] ) ) {
+						$status = 'Active';
 					} else {
-						// This should not happen
-						$status = 'Pending';
+						$status = ( $this->params['make_active'] ? 'Active' : 'Pending' );
 					}
-				}
-			} else {
-				// Renew subscription - Do NOT set signup_date
-				if ( !isset( $this->params['make_active'] ) ) {
-					$status = $trial ? 'Trial' : 'Active';
 				} else {
-					$status = ( $this->params['make_active'] ? ( $trial ? 'Trial' : 'Active' ) : 'Pending' );
-				}
-				$renew = 1;
-			}
-
-			$metaUser->focusSubscription->status = $status;
-			$metaUser->focusSubscription->plan = $this->id;
-
-			$metaUser->meta->addPlanID( $this->id );
-
-			$metaUser->focusSubscription->lastpay_date = date( 'Y-m-d H:i:s', time() + $mainframe->getCfg( 'offset' ) *3600 );
-			$metaUser->focusSubscription->type = $processor;
-
-			// Clear parameters
-			$metaUser->focusSubscription->params = array();
-
-			if ( is_object( $invoice ) ) {
-				if ( !empty( $invoice->params ) ) {
-					$tempparam = array();
-					if ( !empty( $invoice->params['creator_ip'] ) ) {
-						$tempparam['creator_ip'] = $invoice->params['creator_ip'];
-					}
-
-					if ( !empty( $tempparam ) ) {
-						$metaUser->focusSubscription->addParams( $tempparam, 'params', false );
-						$metaUser->focusSubscription->storeload();
-					}
+					// This should not happen
+					$status = 'Pending';
 				}
 			}
-
-			$pp = new PaymentProcessor();
-			if ( $pp->loadName( strtolower( $processor ) ) ) {
-				$pp->init();
-				$pp->getInfo();
-				$metaUser->focusSubscription->recurring = $pp->is_recurring();
+		} else {
+			// Renew subscription - Do NOT set signup_date
+			if ( !isset( $this->params['make_active'] ) ) {
+				$status = $trial ? 'Trial' : 'Active';
 			} else {
-				$metaUser->focusSubscription->recurring = 0;
+				$status = ( $this->params['make_active'] ? ( $trial ? 'Trial' : 'Active' ) : 'Pending' );
 			}
+			$renew = 1;
+		}
 
-			$exchange = $add = null;
+		$metaUser->focusSubscription->status = $status;
+		$metaUser->focusSubscription->plan = $this->id;
 
-			$result = $this->triggerMIs( 'action', $metaUser, $exchange, $invoice, $add, $silent );
+		$metaUser->meta->addPlanID( $this->id );
 
-			if ( $result === false ) {
-				return false;
+		$metaUser->focusSubscription->lastpay_date = date( 'Y-m-d H:i:s', time() + $mainframe->getCfg( 'offset' ) *3600 );
+		$metaUser->focusSubscription->type = $processor;
+
+		// Clear parameters
+		$metaUser->focusSubscription->params = array();
+
+		if ( is_object( $invoice ) ) {
+			if ( !empty( $invoice->params ) ) {
+				$tempparam = array();
+				if ( !empty( $invoice->params['creator_ip'] ) ) {
+					$tempparam['creator_ip'] = $invoice->params['creator_ip'];
+				}
+
+				if ( !empty( $tempparam ) ) {
+					$metaUser->focusSubscription->addParams( $tempparam, 'params', false );
+					$metaUser->focusSubscription->storeload();
+				}
 			}
+		}
 
-			if ( $this->params['gid_enabled'] ) {
-				$metaUser->instantGIDchange( $this->params['gid'] );
-			}
+		$pp = new PaymentProcessor();
+		if ( $pp->loadName( strtolower( $processor ) ) ) {
+			$pp->init();
+			$pp->getInfo();
+			$metaUser->focusSubscription->recurring = $pp->is_recurring();
+		} else {
+			$metaUser->focusSubscription->recurring = 0;
+		}
 
-			$metaUser->focusSubscription->storeload();
+		if ( empty( $invoice ) ) {
+			$invoice = new stdClass();
+			$invoice->amount = $amount;
+		}
 
-			if ( !( $silent || $aecConfig->cfg['noemails'] ) ) {
-				$adminonly = $this->id !== $aecConfig->cfg['entry_plan'];
+		$exchange = $add = null;
 
-				$metaUser->focusSubscription->sendEmailRegistered( $renew, $adminonly );
-			}
+		$result = $this->triggerMIs( 'action', $metaUser, $exchange, $invoice, $add, $silent );
 
-			$result = $this->triggerMIs( 'afteraction', $metaUser, $exchange, $invoice, $add, $silent );
+		if ( $result === false ) {
+			return false;
+		}
 
-			if ( $result === false ) {
-				return false;
-			}
+		if ( $this->params['gid_enabled'] ) {
+			$metaUser->instantGIDchange( $this->params['gid'] );
+		}
+
+		$metaUser->focusSubscription->storeload();
+
+		if ( !( $silent || $aecConfig->cfg['noemails'] ) ) {
+			$adminonly = $this->id !== $aecConfig->cfg['entry_plan'];
+
+			$metaUser->focusSubscription->sendEmailRegistered( $renew, $adminonly );
+		}
+
+		$result = $this->triggerMIs( 'afteraction', $metaUser, $exchange, $invoice, $add, $silent );
+
+		if ( $result === false ) {
+			return false;
 		}
 
 		return $renew;

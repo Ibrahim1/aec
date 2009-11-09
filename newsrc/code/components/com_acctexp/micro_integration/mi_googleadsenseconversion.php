@@ -52,11 +52,11 @@ class mi_googleadsenseconversion
 
 		$text = '<script language="JavaScript" type="text/javascript">' . "\n"
 				. '<!--' . "\n"
-				. 'var google_conversion_id = ' . $this->settings['conversion_id'] . ';'
-				. 'var google_conversion_language = "' . $this->settings['language'] . '";'
-				. 'var google_conversion_format = "' . $this->settings['format'] . '";'
-				. 'var google_conversion_color = "' . $this->settings['format'] . '";'
-				. 'var google_conversion_label = "' . $this->settings['label'] . '";'
+				. 'var google_conversion_id = ' . $this->settings['conversion_id'] . ';' . "\n"
+				. 'var google_conversion_language = "' . $this->settings['language'] . '";' . "\n"
+				. 'var google_conversion_format = "' . $this->settings['format'] . '";' . "\n"
+				. 'var google_conversion_color = "' . $this->settings['format'] . '";' . "\n"
+				. 'var google_conversion_label = "' . $this->settings['label'] . '";' . "\n"
 				. 'var google_conversion_value = ' . $request->invoice->amount . ';' . "\n"
 				. '//-->' . "\n"
 				. '</script>'
