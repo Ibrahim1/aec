@@ -2129,11 +2129,9 @@ function editSettings( $option )
 
 	$available_plans	= SubscriptionPlanHandler::getActivePlanList();
 
-	$total_plans		= count( $available_plans );
-
 	$selected_plan = isset($aecConfig->cfg['entry_plan']) ? $aecConfig->cfg['entry_plan'] : '0';
 
-	$lists['entry_plan'] = mosHTML::selectList($available_plans, 'entry_plan', 'size="' . $total_plans . '"', 'value', 'text', $selected_plan);
+	$lists['entry_plan'] = mosHTML::selectList($available_plans, 'entry_plan', 'size="' . min( 10, count( $available_plans ) + 2 ) . '"', 'value', 'text', $selected_plan);
 
 	$gtree = $acl->get_group_children_tree( null, 'USERS', true );
 
