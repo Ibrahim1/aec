@@ -226,9 +226,11 @@ if ( !empty( $task ) ) {
 
 		case 'renewsubscription':
 			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
+			$intro		= aecGetParam( 'intro', 0, true, array( 'word', 'int' ) );
+			$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'int' ) );
 
 			$invoicefact = new InvoiceFactory( $userid );
-			$invoicefact->create( $option );
+			$invoicefact->create( $option, $intro, $usage );
 			break;
 
 		case 'expired':

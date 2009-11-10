@@ -36,6 +36,12 @@ class HTML_frontEnd
 
 		global $aecConfig;
 
+		if ( $metaUser->objSubscription->status == "Expired" ) {
+			$intro = "&intro=1";
+		} else {
+			$intro = "&intro=0";
+		}
+
 		if ( $aecConfig->cfg['customtext_expired_keeporiginal'] ) {?>
 			<div class="componentheading"><?php echo _EXPIRED_TITLE; ?></div>
 			<div id="expired_greeting">
@@ -69,7 +75,7 @@ class HTML_frontEnd
 				if ( $continue ) {
 					?>
 					<div id="renew_button">
-						<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=renewSubscription', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+						<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=renewSubscription'.$intro, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 						<input type="hidden" name="option" value="<?php echo $option; ?>" />
 						<input type="hidden" name="userid" value="<?php echo $metaUser->userid; ?>" />
 						<input type="hidden" name="usage" value="<?php echo $metaUser->focusSubscription->plan; ?>" />
@@ -80,7 +86,7 @@ class HTML_frontEnd
 					<?php
 				} ?>
 				<div id="renew_button">
-					<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=renewSubscription', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+					<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=renewSubscription'.$intro, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 					<input type="hidden" name="option" value="<?php echo $option; ?>" />
 					<input type="hidden" name="userid" value="<?php echo $metaUser->userid; ?>" />
 					<input type="hidden" name="task" value="renewSubscription" />
