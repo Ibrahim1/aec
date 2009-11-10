@@ -160,6 +160,25 @@ class processor_paypal_wpp extends XMLprocessor
 		return $return;
 	}
 
+	function checkoutAction( $request )
+	{
+		$return = "";
+
+		if ( $this->settings['allow_express_checkout'] ) {
+			$return .= '<form action="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', $this->info['secure'] ) . '" method="post">' . "\n";
+			$return .= '<input type="hidden" name="invoice" value="' . $request->int_var['invoice'] . '" />' . "\n";
+			$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
+			$return .= '<input type="hidden" name="task" value="checkout" />' . "\n";
+			$return .= '<input type="hidden" name="express" value="1" />' . "\n";
+			$return .= '<input type="submit" class="button" id="aec_checkout_btn" value="' . _BUTTON_CHECKOUT . '" /><br /><br />' . "\n";
+			$return .= '</form>' . "\n";
+		}
+
+		$return .= parent::checkoutAction( $request );
+
+		return $return;
+	}
+
 	function checkoutform( $request, $vcontent=null, $updated=null )
 	{
 		$var = array();
@@ -183,12 +202,62 @@ class processor_paypal_wpp extends XMLprocessor
 		return $var;
 	}
 
+	function checkoutProcess( $request )
+	{
+		$database = &JFactory::getDBO();
+
+		$this->sanitizeRequest( $request );
+
+		// Create the xml string
+		$xml = $this->createRequestXML( $request );
+
+		// Transmit xml to server
+		$response = $this->transmitRequestXML( $xml, $request );
+
+		if ( empty( $response['invoice'] ) ) {
+			$response['invoice'] = $request->invoice->invoice_number;
+		}
+
+		if ( $request->invoice->invoice_number != $response['invoice'] ) {
+			$request->invoice = new Invoice( $database );
+			$request->invoice->loadInvoiceNumber( $response['invoice'] );
+		}
+
+		if ( !empty( $response['error'] ) ) {
+			return $response;
+		}
+
+		if ( !empty( $request->int_var['params']['express'] ) && $this->settings['allow_express_checkout'] ) {
+			$this->sanitizeRequest( $request );
+
+			$var = $this->getPayPalVars( $request );
+
+			$var['Method']			= 'SetExpressCheckout';
+			$var['ReturnUrl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=paypal_wppnotification' );
+
+			$xml = $this->getPayPalNVPstring( $var );
+
+			$return = $this->transmitRequestXML( $xml, $request );
+
+			if ( isset( $return['correlationid'] ) ) {
+
+			}
+		} else {
+			return parent::checkoutProcess( $request );
+		}
+	}
+
 	function createRequestXML( $request )
 	{
 		global $mainframe;
 
-		$var = array();
+		$var = $this->getPayPalVars( $request );
 
+		return $this->getPayPalNVPstring( $var );
+	}
+
+	function getPayPalVars( $request )
+	{
 		if ( is_array( $request->int_var['amount'] ) ) {
 			$var['Method']			= 'CreateRecurringPaymentsProfile';
 		} else {
@@ -270,6 +339,11 @@ class processor_paypal_wpp extends XMLprocessor
 
 		$var['currencyCode']			= $this->settings['currency'];
 
+		return $var;
+	}
+
+	function getPayPalNVPstring( $var )
+	{
 		$content = array();
 		foreach ( $var as $name => $value ) {
 			$content[] .= strtoupper( $name ) . '=' . urlencode( stripslashes( $value ) );
@@ -282,24 +356,21 @@ class processor_paypal_wpp extends XMLprocessor
 	{
 		$path = "/nvp";
 
-		if ( $this->settings['testmode'] ) {
-			if ( $this->settings['use_certificate'] ) {
-				$url = "https://api.sandbox.paypal.com" . $path;
-			} else {
-				$url = "https://api-3t.sandbox.paypal.com" . $path;
-			}
-		} else {
-			if ( $this->settings['use_certificate'] ) {
-				$url = "https://api.paypal.com" . $path;
-			} else {
-				$url = "https://api-3t.paypal.com" . $path;
-			}
-		}
+		$url = $this->getPayPalURL( $path );
 
 		$curlextra = array();
 		$curlextra[CURLOPT_VERBOSE] = 1;
 
 		return $this->transmitRequest( $url, $path, $xml, 443, $curlextra );
+	}
+
+	function getPayPalURL( $path )
+	{
+		$url = "https://api" . $this->settings['use_certificate'] ? "-3t" : "";
+
+		$url .= $this->settings['testmode'] ? ".sandbox" : "";
+
+		$url .= ".paypal.com" . $path;
 	}
 
 	function transmitRequestXML( $xml, $request )
@@ -329,6 +400,10 @@ class processor_paypal_wpp extends XMLprocessor
 					}
 				} else {
 					$return['valid'] = 1;
+				}
+
+				if ( isset( $nvpResArray['CORRELATIONID'] ) ) {
+					$return['correlationid'] = $nvpResArray['CORRELATIONID'];
 				}
 			} else {
 				$count = 0;

@@ -27,6 +27,7 @@ class mi_aectax
 		$settings = array();
 
 		// Tax Modes
+		// Multi-Select offer tax modes
 
 		return $settings;
 	}
