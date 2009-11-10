@@ -24,7 +24,7 @@ define( '_AEC_CONFIG_SAVED',					'Konfiguration erfolgreich gesichert' );
 define( '_AEC_CONFIG_CANCELLED',				'Konfiguration abgebrochen' );
 define( '_AEC_TIP_NO_GROUP_PF_PB',				'Weder "Public Frontend" noch "Public Backend" sind w&auml;hlbare Benutzergruppen!' );
 define( '_AEC_CGF_LINK_ABO_FRONTEND',			'Direkter Link zum Abo' );
-define( '_AEC_CGF_LINK_CART_FRONTEND',			'Direkter Link für das Hinzuf&uuml;gen zum Einkaufswagen' );
+define( '_AEC_CGF_LINK_CART_FRONTEND',			'Direkter Link f&uuml;r das Hinzuf&uuml;gen zum Einkaufswagen' );
 define( '_AEC_NOT_SET',							'Nein' );
 define( '_AEC_COUPON',							'Gutschein' );
 define( '_AEC_CMN_NEW',							'Neu' );
@@ -216,7 +216,7 @@ define( '_AEC_INST_MAIN_COMP_ENTRY',			'AEC Abo Verwaltung' );
 define( '_AEC_INST_ERRORS',						'<strong>Achtung</strong><br />leider traten w&auml;hrend der Installation folgende Fehler auf - AEC konnte <strong>nicht</strong>vollst&auml;ndig installiert werden:<br />' );
 
 define( '_AEC_INST_ROOT_GROUP_NAME',			'Stamm' );
-define( '_AEC_INST_ROOT_GROUP_DESC',			'Stammgruppe. Dieser Eintrag kann nicht gelöscht werden, &Auml;nderung ist begrenzt.' );
+define( '_AEC_INST_ROOT_GROUP_DESC',			'Stammgruppe. Dieser Eintrag kann nicht gel&ouml;scht werden, &Auml;nderung ist begrenzt.' );
 
 // help
 define( '_AEC_CMN_HELP',						'Hilfe' );
@@ -952,27 +952,27 @@ define( '_CFG_TAB_CUSTOMPAGES_SUBTITLE', 'Page Customization');
 define( '_CFG_TAB_EXPERT_TITLE', 'Expert');
 define( '_CFG_TAB_EXPERT_SUBTITLE', 'Expert Settings');
 
-define( '_AEC_CUSTOM_INVOICE_PAGE_TITLE', 'Invoice');
-define( '_AEC_CUSTOM_INVOICE_HEADER', 'Invoice');
-define( '_AEC_CUSTOM_INVOICE_BEFORE_CONTENT', 'Invoice/Receipt for:');
-define( '_AEC_CUSTOM_INVOICE_AFTER_CONTENT', 'Thank you very much for choosing our service!');
-define( '_AEC_CUSTOM_INVOICE_FOOTER', ' - Add your company information here - ');
+define( '_AEC_CUSTOM_INVOICE_PAGE_TITLE', 'Rechnung');
+define( '_AEC_CUSTOM_INVOICE_HEADER', 'Rechnung');
+define( '_AEC_CUSTOM_INVOICE_BEFORE_CONTENT', 'Rechnung &uuml;ber:');
+define( '_AEC_CUSTOM_INVOICE_AFTER_CONTENT', 'Vielen Dank, dass Sie sich f&uuml;r uns entschieden haben!');
+define( '_AEC_CUSTOM_INVOICE_FOOTER', ' - Hier weitere Informationen einf&uuml;gen - ');
 
-define( '_CFG_GENERAL_INVOICE_PAGE_TITLE', 'Invoice');
-define( '_CFG_GENERAL_INVOICE_HEADER_NAME', 'Invoice Header');
-define( '_CFG_GENERAL_INVOICE_HEADER_DESC', 'Header Text for the Invoice Printout');
-define( '_CFG_GENERAL_INVOICE_AFTER_HEADER_NAME', 'Invoice After Header');
-define( '_CFG_GENERAL_INVOICE_AFTER_HEADER_DESC', 'Text after Header for the Invoice Printout');
-define( '_CFG_GENERAL_INVOICE_BEFORE_CONTENT_NAME', 'Invoice Before Content');
-define( '_CFG_GENERAL_INVOICE_BEFORE_CONTENT_DESC', 'Text before Invoice Content for the Invoice Printout');
-define( '_CFG_GENERAL_INVOICE_AFTER_CONTENT_NAME', 'Invoice After Content');
-define( '_CFG_GENERAL_INVOICE_AFTER_CONTENT_DESC', 'Text after Invoice Content for the Invoice Printout');
-define( '_CFG_GENERAL_INVOICE_BEFORE_FOOTER_NAME', 'Invoice Before Footer');
-define( '_CFG_GENERAL_INVOICE_BEFORE_FOOTER_DESC', 'Text before Footer for the Invoice Printout');
-define( '_CFG_GENERAL_INVOICE_FOOTER_NAME', 'Invoice Footer');
-define( '_CFG_GENERAL_INVOICE_FOOTER_DESC', 'Footer Text for the Invoice Printout');
-define( '_CFG_GENERAL_INVOICE_AFTER_FOOTER_NAME', 'Invoice After Footer');
-define( '_CFG_GENERAL_INVOICE_AFTER_FOOTER_DESC', 'Text after Footer for the Invoice Printout');
+define( '_CFG_GENERAL_INVOICE_PAGE_TITLE', 'Rechnung');
+define( '_CFG_GENERAL_INVOICE_HEADER_NAME', 'Text Kopfzeile');
+define( '_CFG_GENERAL_INVOICE_HEADER_DESC', 'Kopfzeilen Text f&uuml;r den Rechnungsausdruck');
+define( '_CFG_GENERAL_INVOICE_AFTER_HEADER_NAME', 'Text nach Kopfzeile');
+define( '_CFG_GENERAL_INVOICE_AFTER_HEADER_DESC', 'Text nach Kopfzeile f&uuml;r den Rechnungsausdruck');
+define( '_CFG_GENERAL_INVOICE_BEFORE_CONTENT_NAME', 'Text vor Inhalt');
+define( '_CFG_GENERAL_INVOICE_BEFORE_CONTENT_DESC', 'Text vor Inhalt f&uuml;r den Rechnungsausdruck');
+define( '_CFG_GENERAL_INVOICE_AFTER_CONTENT_NAME', 'Text nach Inhalt');
+define( '_CFG_GENERAL_INVOICE_AFTER_CONTENT_DESC', 'Text nach Inhalt f&uuml;r den Rechnungsausdruck');
+define( '_CFG_GENERAL_INVOICE_BEFORE_FOOTER_NAME', 'Text vor Fu&szlig;zeile');
+define( '_CFG_GENERAL_INVOICE_BEFORE_FOOTER_DESC', 'Text vor Fu&szlig;zeile f&uuml;r den Rechnungsausdruck');
+define( '_CFG_GENERAL_INVOICE_FOOTER_NAME', 'Fu&szlig;zeile');
+define( '_CFG_GENERAL_INVOICE_FOOTER_DESC', 'Text vor Fu&szlig;zeile f&uuml;r den Rechnungsausdruck');
+define( '_CFG_GENERAL_INVOICE_AFTER_FOOTER_NAME', 'Text nach Fu&szlig;zeile');
+define( '_CFG_GENERAL_INVOICE_AFTER_FOOTER_DESC', 'Text nach Fu&szlig;zeile f&uuml;r den Rechnungsausdruck');
 
 define( '_CFG_GENERAL_CHECKOUT_DISPLAY_DESCRIPTIONS_NAME', 'Beschreibungen anzeigen:');
 define( '_CFG_GENERAL_CHECKOUT_DISPLAY_DESCRIPTIONS_DESC', 'Wenn Sie mehrere Pl&auml;ne an der Kasse haben, oder die Best&auml;tigung &uuml;bersprungen haben, k&ouml;nnte es hilfreich sein, die Planbeschreibung erneut anzuzeigen. Dieser Schalter tut das.');
@@ -1136,17 +1136,17 @@ define( '_CFG_GENERAL_QUICKSEARCH_TOP_NAME', 'Quicksearch oben');
 define( '_CFG_GENERAL_QUICKSEARCH_TOP_DESC', 'F&uuml; alle quicksearch junkies - Mit dieser Option wird das Eingabefeld oben &uuml;ber den AEC Icons angezeigt - f&uuml;r noch schnelleres Suchen!');
 
 define( '_CFG_GENERAL_SUB_UNINSTALL', 'Deinstallieren');
-define( '_CFG_GENERAL_DELETE_TABLES_NAME', 'Datenbanktabellen löschen');
+define( '_CFG_GENERAL_DELETE_TABLES_NAME', 'Datenbanktabellen l&ouml;schen');
 define( '_CFG_GENERAL_DELETE_TABLES_DESC', 'Datenbanktabellen bei Deinstallation entfernen?');
 define( '_CFG_GENERAL_DELETE_TABLES_SURE_NAME', 'sicher?');
-define( '_CFG_GENERAL_DELETE_TABLES_SURE_DESC', 'Sicherheits-Schalter - wenn beide Schalter aktiviert sind, werden bei der Deinstallation alle Daten der AEC unwiederbringlich gelöscht!');
-define( '_CFG_GENERAL_STANDARD_CURRENCY_NAME', 'Standard Währung');
-define( '_CFG_GENERAL_STANDARD_CURRENCY_DESC', 'Falls der AEC die Angabe der Währung fehlt, welche soll dann benutzt werden? (Wenn beispielsweise ein Bezahplan kostenlos ist - 0 Euro - wird kein Bezahldienst, welche gewöhnlich die Währungsangabe speichern abgefragt. Hier wird dann diese Angabe verwendet.)');
+define( '_CFG_GENERAL_DELETE_TABLES_SURE_DESC', 'Sicherheits-Schalter - wenn beide Schalter aktiviert sind, werden bei der Deinstallation alle Daten der AEC unwiederbringlich gel&ouml;scht!');
+define( '_CFG_GENERAL_STANDARD_CURRENCY_NAME', 'Standard W&auml;hrung');
+define( '_CFG_GENERAL_STANDARD_CURRENCY_DESC', 'Falls der AEC die Angabe der W&auml;hrung fehlt, welche soll dann benutzt werden? (Wenn beispielsweise ein Bezahplan kostenlos ist - 0 Euro - wird kein Bezahldienst, welche gew&ouml;hnlich die W&auml;hrungsangabe speichern abgefragt. Hier wird dann diese Angabe verwendet.)');
 
-define( '_CFG_GENERAL_CONFIRMATION_CHANGEUSERNAME_NAME', 'Option: Benutzerdaten ändern');
-define( '_CFG_GENERAL_CONFIRMATION_CHANGEUSERNAME_DESC', 'Dem Benutzer auf der Best&auml;tigungs-Seite anbieten, die Benutzerdaten noch einmal zu ändern (falls dem Benutzer ein Fehler unterlaufen ist)');
-define( '_CFG_GENERAL_CONFIRMATION_CHANGEUSAGE_NAME', 'Option: Abo-Auswahl ändern');
-define( '_CFG_GENERAL_CONFIRMATION_CHANGEUSAGE_DESC', 'Dem Benutzer auf der Best&auml;tigungs-Seite anbieten, die Abo-Auswahl noch einmal zu ändern (falls dem Benutzer ein Fehler unterlaufen ist)');
+define( '_CFG_GENERAL_CONFIRMATION_CHANGEUSERNAME_NAME', 'Option: Benutzerdaten &auml;ndern');
+define( '_CFG_GENERAL_CONFIRMATION_CHANGEUSERNAME_DESC', 'Dem Benutzer auf der Best&auml;tigungs-Seite anbieten, die Benutzerdaten noch einmal zu &auml;ndern (falls dem Benutzer ein Fehler unterlaufen ist)');
+define( '_CFG_GENERAL_CONFIRMATION_CHANGEUSAGE_NAME', 'Option: Abo-Auswahl &auml;ndern');
+define( '_CFG_GENERAL_CONFIRMATION_CHANGEUSAGE_DESC', 'Dem Benutzer auf der Best&auml;tigungs-Seite anbieten, die Abo-Auswahl noch einmal zu &auml;ndern (falls dem Benutzer ein Fehler unterlaufen ist)');
 
 //Invoice settings
 define( '_CFG_GENERAL_SENDINVOICE_NAME', 'eine Rechnungs-Email senden');
@@ -1232,7 +1232,7 @@ define( '_PAYPLAN_GENERAL_EMAIL_DESC_DESC',				'Text welcher im Email an den Ben
 define( '_PAYPLAN_GENERAL_FALLBACK_NAME',				'Abo Ersatz:' );
 define( '_PAYPLAN_GENERAL_FALLBACK_DESC',				'Wenn ein Abo endet, aktiviere dieses Abo f&uuml;r diesen Benutzer' );
 define( '_PAYPLAN_GENERAL_STANDARD_PARENT_NAME', '&Uuml;bergeordnetes Abo');
-define( '_PAYPLAN_GENERAL_STANDARD_PARENT_DESC', 'Falls dieses Abo nicht prim&auml;r ist und der Benutzer noch kein prim&auml;res Abo besitzt, wird das ausgewählte angewendet.');
+define( '_PAYPLAN_GENERAL_STANDARD_PARENT_DESC', 'Falls dieses Abo nicht prim&auml;r ist und der Benutzer noch kein prim&auml;res Abo besitzt, wird das ausgew&auml;hlte angewendet.');
 
 define( '_PAYPLAN_GENERAL_PROCESSORS_NAME',				'Bezahldienste:' );
 define( '_PAYPLAN_NOPLAN',								'Kein Abo' );
@@ -1284,7 +1284,7 @@ define( '_PAYPLAN_RESTRICTIONS_MINGID_ENABLED_DESC',	'Aktivieren wenn dieses Abo
 define( '_PAYPLAN_RESTRICTIONS_MINGID_NAME',			'Sichtbare Gruppe:' );
 define( '_PAYPLAN_RESTRICTIONS_MINGID_DESC',			'Die Benutzerebenen ID <strong>AB</strong> welcher dieses Abo gesehen werden kann. Neue Benutzer werden nur die Abos mit der geringsten Gruppen ID sehen' );
 define( '_PAYPLAN_RESTRICTIONS_FIXGID_ENABLED_NAME',	'Fixe Gruppen ID:' );
-define( '_PAYPLAN_RESTRICTIONS_FIXGID_ENABLED_DESC',	'Aktivieren wenn <strong>NUR</strong> eine bestimmte Benutzergruppe dieses Abo ssehen soll' );
+define( '_PAYPLAN_RESTRICTIONS_FIXGID_ENABLED_DESC',	'Aktivieren wenn <strong>NUR</strong> eine bestimmte Benutzergruppe dieses Abo sehen soll' );
 define( '_PAYPLAN_RESTRICTIONS_FIXGID_NAME',			'Gruppe:' );
 define( '_PAYPLAN_RESTRICTIONS_FIXGID_DESC',			'Nur Benutzer aus dieser Gruppe sehen dieses Abo' );
 define( '_PAYPLAN_RESTRICTIONS_MAXGID_ENABLED_NAME',	'Maximum Gruppen ID:' );
@@ -1324,7 +1324,7 @@ define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MIN_AMOUNT_NAME',		'Anzahl:' );
 define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MIN_AMOUNT_DESC',		'Die Mindestanzahl an Abozeitr&auml;men um dieses Abo abonnieren zu k&ouml;nnen' );
 define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MIN_NAME',				'Mindest Abo:' );
 define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MIN_DESC',				'Das Abo, das der Benutzer <strong>vorher abonniert haben musste</strong> um dieses Abo w&auml;hlen zu k&ouml;nnen' );
-define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MAX_ENABLED_NAME',		'Maximal vewendet:' );
+define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MAX_ENABLED_NAME',		'Maximal verwendet:' );
 define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MAX_ENABLED_DESC',		'Aktivieren, wenn Benutzer eine maximale Anzahl an einem speziellen Abo vorher hatten mussten um <strong>dieses</strong> Abo zu sehen' );
 define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MAX_AMOUNT_NAME',		'Anzahl:' );
 define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MAX_AMOUNT_DESC',		'Maximale Anzahl an Benutzern, die dieses Abo verwendet d&uuml;rfen' );
@@ -1332,7 +1332,7 @@ define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MAX_NAME',				'Abo:' );
 define( '_PAYPLAN_RESTRICTIONS_USED_PLAN_MAX_DESC',				'Das Abo, welches maximal verwendet werden darf' );
 
 define( '_PAYPLAN_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_NAME', 'Erforderliche vorherige Gruppe:');
-define( '_PAYPLAN_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_DESC', 'Nur zulassen, wenn der Benutzer direkt zuvor ein Abo aus der gew&auml;hlten Gruppe besessen');
+define( '_PAYPLAN_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_DESC', 'Nur zulassen, wenn der Benutzer direkt zuvor ein Abo aus der gew&auml;hlten Gruppe besessen hat');
 define( '_PAYPLAN_RESTRICTIONS_PREVIOUSGROUP_REQ_NAME', 'Gruppe:');
 define( '_PAYPLAN_RESTRICTIONS_PREVIOUSGROUP_REQ_DESC', 'Ein Benutzer wird diesen Plan nur sehen, wenn er einen Plan aus dieser Gruppe vor dem derzeitigen Plan benutzt hat.');
 define( '_PAYPLAN_RESTRICTIONS_CURRENTGROUP_REQ_ENABLED_NAME', 'Erforderliche derzeitige Gruppe:');
@@ -1345,51 +1345,51 @@ define( '_PAYPLAN_RESTRICTIONS_OVERALLGROUP_REQ_NAME', 'Gruppe:');
 define( '_PAYPLAN_RESTRICTIONS_OVERALLGROUP_REQ_DESC', 'Ein Benutzer wird diese Gruppe nur sehen, wenn er den ausgew&auml;hlten Plan in dieser Gruppe einmal benutzt hat, egal wann');
 
 define( '_PAYPLAN_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_EXCLUDED_NAME', 'Ausgeschlossene vorherige Gruppe:');
-define( '_PAYPLAN_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_EXCLUDED_DESC', 'Diese Gruppe wird Benutzern NICHT angezeigt, wenn sie einen Plan aus dieser Gruppe als vorherigen Bezahlplan hatten.');
+define( '_PAYPLAN_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_EXCLUDED_DESC', 'Dieser Plan wird Benutzern NICHT angezeigt, wenn sie einen Plan aus der angegebenen Gruppe als vorherigen Bezahlplan hatten.');
 define( '_PAYPLAN_RESTRICTIONS_PREVIOUSGROUP_REQ_EXCLUDED_NAME', 'Gruppe:');
-define( '_PAYPLAN_RESTRICTIONS_PREVIOUSGROUP_REQ_EXCLUDED_DESC', 'Ein Benutzer wird diesen Plan nicht sehen, wenn er einen Plan aus dieser Gruppe vor dem aktuellen Plan benutzt hat.');
+define( '_PAYPLAN_RESTRICTIONS_PREVIOUSGROUP_REQ_EXCLUDED_DESC', 'Ein Benutzer wird diesen Plan nicht sehen, wenn er einen Plan aus der angegebenen Gruppe Gruppe vor dem aktuellen Plan benutzt hat.');
 define( '_PAYPLAN_RESTRICTIONS_CURRENTGROUP_REQ_ENABLED_EXCLUDED_NAME', 'Ausgeschlossener aktueller Plan:');
-define( '_PAYPLAN_RESTRICTIONS_CURRENTGROUP_REQ_ENABLED_EXCLUDED_DESC', 'Diesen Plan Benutzern NICHT zeigen, die einen Plan aus dieser Gruppe als ihren aktuellen Bezahlplan haben.');
+define( '_PAYPLAN_RESTRICTIONS_CURRENTGROUP_REQ_ENABLED_EXCLUDED_DESC', 'Diesen Plan Benutzern NICHT zeigen, die einen Plan aus der angegebenen Gruppe Gruppe als ihren aktuellen Bezahlplan haben.');
 define( '_PAYPLAN_RESTRICTIONS_CURRENTGROUP_REQ_EXCLUDED_NAME', 'Gruppe:');
-define( '_PAYPLAN_RESTRICTIONS_CURRENTGROUP_REQ_EXCLUDED_DESC', 'Ein Benutzer wird diesen Plan nicht sehen, wenn er einem Plan aus dieser Gruppe aktuell zugeschrieben ist oder ein Plan aus dieser Gruppe gerade abgelaufen ist');
+define( '_PAYPLAN_RESTRICTIONS_CURRENTGROUP_REQ_EXCLUDED_DESC', 'Ein Benutzer wird diesen Plan nicht sehen, wenn er einem Plan aus der angegebenen Gruppe Gruppe aktuell zugeschrieben ist oder ein Plan aus dieser Gruppe gerade abgelaufen ist');
 define( '_PAYPLAN_RESTRICTIONS_OVERALLGROUP_REQ_ENABLED_EXCLUDED_NAME', 'Ausgeschlossene benutzte Gruppe:');
-define( '_PAYPLAN_RESTRICTIONS_OVERALLGROUP_REQ_ENABLED_EXCLUDED_DESC', 'Diesen Plan Benutzern NICHT anzeigen, die einen Plan aus dieser Gruppe zuvor benutzt haben');
+define( '_PAYPLAN_RESTRICTIONS_OVERALLGROUP_REQ_ENABLED_EXCLUDED_DESC', 'Diesen Plan Benutzern NICHT anzeigen, die einen Plan aus der angegebenen Gruppe Gruppe zuvor benutzt haben');
 define( '_PAYPLAN_RESTRICTIONS_OVERALLGROUP_REQ_EXCLUDED_NAME', 'Gruppe:');
-define( '_PAYPLAN_RESTRICTIONS_OVERALLGROUP_REQ_EXCLUDED_DESC', 'Ein Benutzer wird diesen Plan nicht sehen, wenn er einen Plan aus dieser Gruppe einmal benutzt hat, egal wann.');
+define( '_PAYPLAN_RESTRICTIONS_OVERALLGROUP_REQ_EXCLUDED_DESC', 'Ein Benutzer wird diesen Plan nicht sehen, wenn er einen Plan aus der angegebenen Gruppe Gruppe einmal benutzt hat, egal wann.');
 
 define( '_PAYPLAN_RESTRICTIONS_USED_GROUP_MIN_ENABLED_NAME', 'Minimale Benutzung in Gruppe:');
-define( '_PAYPLAN_RESTRICTIONS_USED_GROUP_MIN_ENABLED_DESC', 'Enable checking for the minimum number of times your consumers have subscribed to a payment plan in this group in order to see THIS plan');
-define( '_PAYPLAN_RESTRICTIONS_USED_GROUP_MIN_AMOUNT_NAME', 'Used Amount:');
-define( '_PAYPLAN_RESTRICTIONS_USED_GROUP_MIN_AMOUNT_DESC', 'The minimum amount a user has to have used the a plan in this group');
+define( '_PAYPLAN_RESTRICTIONS_USED_GROUP_MIN_ENABLED_DESC', 'Einschr&auml;nken ob ein Benutzer diesen Plan kaufen kann - aufgrund der minimalen Anzahl von Benutzungen eines Bezahplans in einer bestimmten Gruppe');
+define( '_PAYPLAN_RESTRICTIONS_USED_GROUP_MIN_AMOUNT_NAME', 'Min. Benutzungen:');
+define( '_PAYPLAN_RESTRICTIONS_USED_GROUP_MIN_AMOUNT_DESC', 'Die minimale Anzahl von Benutzungen des Bezahplans.');
 define( '_PAYPLAN_RESTRICTIONS_USED_GROUP_MIN_NAME', 'Gruppe:');
-// TODO: define( '_PAYPLAN_RESTRICTIONS_USED_GROUP_MIN_DESC', 'Die Gruppe, aus welcher der Benutzer einen Plan eine bestimmte Anzahl haben muss - the specified number of times at least');
-define( '_PAYPLAN_RESTRICTIONS_USED_GROUP_MAX_ENABLED_NAME', 'Max Used Group:');
-define( '_PAYPLAN_RESTRICTIONS_USED_GROUP_MAX_ENABLED_DESC', 'Enable checking for the maximum number of times your users have subscribed to a payment plan in this group in order to see THIS plan');
-define( '_PAYPLAN_RESTRICTIONS_USED_GROUP_MAX_AMOUNT_NAME', 'Used Amount:');
-define( '_PAYPLAN_RESTRICTIONS_USED_GROUP_MAX_AMOUNT_DESC', 'The maximum amount a user can have used a plan in this group');
+define( '_PAYPLAN_RESTRICTIONS_USED_GROUP_MIN_DESC', 'Die Gruppe, aus welcher der Benutzer einen Plan eine bestimmte Anzahl haben muss - mindestens so viele Male wie angegeben');
+define( '_PAYPLAN_RESTRICTIONS_USED_GROUP_MAX_ENABLED_NAME', 'Maximale Benutzung in Gruppe:');
+define( '_PAYPLAN_RESTRICTIONS_USED_GROUP_MAX_ENABLED_DESC', 'Einschr&auml;nken ob ein Benutzer diesen Plan kaufen kann - aufgrund der maximalen Anzahl von Benutzungen eines Bezahplans in einer bestimmten Gruppe');
+define( '_PAYPLAN_RESTRICTIONS_USED_GROUP_MAX_AMOUNT_NAME', 'Max. Benutzungen:');
+define( '_PAYPLAN_RESTRICTIONS_USED_GROUP_MAX_AMOUNT_DESC', 'Die maximale Anzahl von Benutzungen des Bezahplans.');
 define( '_PAYPLAN_RESTRICTIONS_USED_GROUP_MAX_NAME', 'Gruppe:');
-define( '_PAYPLAN_RESTRICTIONS_USED_GROUP_MAX_DESC', 'The group that the user has to have used a plan from - the specified number of times at most');
+define( '_PAYPLAN_RESTRICTIONS_USED_GROUP_MAX_DESC', 'Die Gruppe, aus welcher der Benutzer einen Plan eine bestimmte Anzahl haben muss - h&ouml;chstens so viele Male wie angegeben');
 
 define( '_PAYPLAN_RESTRICTIONS_CUSTOM_RESTRICTIONS_ENABLED_NAME', 'eigene Einschr&auml;nkungen benutzen:');
-// TODO: define( '_PAYPLAN_RESTRICTIONS_CUSTOM_RESTRICTIONS_ENABLED_DESC', 'Enable the use of the below specified restrictions');
-define( '_PAYPLAN_RESTRICTIONS_CUSTOM_RESTRICTIONS_NAME', 'Custom Restrictions:');
-define( '_PAYPLAN_RESTRICTIONS_CUSTOM_RESTRICTIONS_DESC', 'Use RewriteEngine fields to check for specific strings in this form:<br />[[user_id]] >= 1500<br />[[parametername]] = value<br />(Create separate rules by entering a new line).<br />You can use =, <=, >=, <, >, <> as comparing elements. You MUST use spaces between parameters, values and comparators!');
+define( '_PAYPLAN_RESTRICTIONS_CUSTOM_RESTRICTIONS_ENABLED_DESC', 'Eigene Einschr&auml;nkungen wie unten angegeben benutzen.');
+define( '_PAYPLAN_RESTRICTIONS_CUSTOM_RESTRICTIONS_NAME', 'Eigene Einschr&auml;nkungen:');
+define( '_PAYPLAN_RESTRICTIONS_CUSTOM_RESTRICTIONS_DESC', 'RewriteEngine benutzen um eine eigene Regeln zur Anzeige zu stellen:<br />[[user_id]] >= 1500<br />[[parametername]] = value<br />(Jede Regel in eine neue Zeile schreiben).<br />Es k&ouml;nnen =, <=, >=, <, >, <> als untergeordnete Eintr&auml;ge aus dieser genutzt werden. Zwischen Variablen, Werten und Vergleichszeichen muss eine Leerstelle stehen!');
 
 define( '_PAYPLAN_PROCESSORS_TITLE', 'Bezahldienste');
 define( '_PAYPLAN_PROCESSORS_TITLE_LONG', 'Zugewiesene Bezahldienste');
 
 define( '_PAYPLAN_PROCESSORS_ACTIVATE_NAME', 'Aktiv');
 define( '_PAYPLAN_PROCESSORS_ACTIVATE_DESC', 'Diesen Bezahldienst f&uuml;r diesen Bezahlplan anbieten.');
-// TODO: define( '_PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_NAME', 'Overwrite Global Settings');
-// TODO: define( '_PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_DESC', 'Wenn Sie wollen, you can check this box and after saving the plan edit every setting from the global configuration to be different for this plan individually.');
+define( '_PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_NAME', 'Globale Einstellungen &uuml;berschreiben');
+define( '_PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_DESC', 'Wenn Sie wollen, k&ouml;nnen Sie die Einstellungen dieses Bezahldienst speziell f&uuml;r diesen Bezahlplan ab&auml;ndern.');
 
 define( '_PAYPLAN_MI',											'Komponenten' );
 define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_NAME',				'Komponentenname:' );
 define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_DESC',				'Komponente(n) ausw&auml;hlen welche Benutzern mit diesem Abo zugewiesen werden sollen' );
 define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_PLAN_NAME', 'Lokale MicroIntegrationen:');
-// TODO: define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_PLAN_DESC', 'Select the Micro Integrations that you want to apply to the user with the plan. Instead of global instances, these MIs will be specific only to this payment plan.');
-define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_INHERITED_NAME', 'Inherited:');
-define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_INHERITED_DESC', 'Shows which Micro Integrations are inherited from parent groups that this plan is a member of.');
+define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_PLAN_DESC', 'Hiermit k&ouml;nnen MI Instanzen nur f&uuml;r dieses Abo eingestellt werden.');
+define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_INHERITED_NAME', 'Vererbt:');
+define( '_PAYPLAN_GENERAL_MICRO_INTEGRATIONS_INHERITED_DESC', 'Zeigt an, welche MIs der Bezahlplan von den Gruppen geerbt hat, welchen .');
 
 define( '_PAYPLAN_CURRENCY',					'W&auml;hrung' );
 
@@ -1400,7 +1400,7 @@ define( '_ITEMGROUP_NAME', 'Name');
 define( '_ITEMGROUP_DESC', 'Beschreibung (erste 50 Zeichen)');
 define( '_ITEMGROUP_ACTIVE', 'ver&ouml;ffentlicht');
 define( '_ITEMGROUP_VISIBLE', 'sichtbar');
-// TODO: define( '_ITEMGROUP_REORDER', 'Reorder');
+define( '_ITEMGROUP_REORDER', 'Neuordnen');
 
 define( '_PUBLISH_ITEMGROUP', 'ver&ouml;ffentlichen');
 define( '_UNPUBLISH_ITEMGROUP', 'nicht ver&ouml;ffentlichen');
@@ -1427,8 +1427,8 @@ define( '_ITEMGROUP_GENERAL_COLOR_DESC', 'Die Farbmarkierung dieser Gruppe.');
 define( '_ITEMGROUP_GENERAL_ICON_NAME', 'Zeichen:');
 define( '_ITEMGROUP_GENERAL_ICON_DESC', 'Das Zeichen dieser Gruppe.');
 
-// TODO: define( '_ITEMGROUP_GENERAL_REVEAL_CHILD_ITEMS_NAME', 'Reveal Child Items');
-// TODO: define( '_ITEMGROUP_GENERAL_REVEAL_CHILD_ITEMS_DESC', 'Wenn Sie dieses Bedienungsfeld auf "ja" setzen, wird das AEC keinen Gruppenbutton zeigen (der den Benutzer zu den Inhalten der Gruppe leitet), sondern die Inhalte der Gruppe in einer parent group zeigen.');
+define( '_ITEMGROUP_GENERAL_REVEAL_CHILD_ITEMS_NAME', 'Untergeordnete Elemente anzeigen');
+define( '_ITEMGROUP_GENERAL_REVEAL_CHILD_ITEMS_DESC', 'Wenn Sie dieses Bedienungsfeld auf "ja" setzen, wird das AEC keinen Gruppenbutton zeigen (der den Benutzer zu den Inhalten der Gruppe leitet), sondern die Inhalte der Gruppe in einer direkt anzeigen.');
 define( '_ITEMGROUP_GENERAL_SYMLINK_NAME', 'Gruppe Symbolische Verkn&uuml;pfung');
 define( '_ITEMGROUP_GENERAL_SYMLINK_DESC', 'Einen Link hier einzugeben, wird einen Benutzer zu diesem Link weiterleiten, wenn diese Gruppe auf der Auswahlseite der Pl&auml;ne ausgew&auml;hlt wird. Hebt jede Verlinkung zu Inhalten dieser Gruppe auf!');
 
@@ -1441,101 +1441,101 @@ define( '_ITEMGROUP_GENERAL_MICRO_INTEGRATIONS_DESC', 'Select which Micro Integr
 
 define( '_ITEMGROUP_RESTRICTIONS_TITLE', 'Einschr&auml;nkungen');
 
-define( '_ITEMGROUP_RESTRICTIONS_MINGID_ENABLED_NAME', 'Freigabe Min GID:');
-//TODO; define( '_ITEMGROUP_RESTRICTIONS_MINGID_ENABLED_DESC', 'Geben sie diese Einstellung frei, wenn Sie einschr&auml;nken wollen, ob einem Benutzer diese Gruppe gezeigt wird by a minimum usergroup.');
+define( '_ITEMGROUP_RESTRICTIONS_MINGID_ENABLED_NAME', 'Min GID Einschr&auml;nken:');
+define( '_ITEMGROUP_RESTRICTIONS_MINGID_ENABLED_DESC', 'Aktivieren, dass dem Benutzer der Zugriff auf dieses Abo nur mit der eingestellen Benutzergruppe oder dar&uuml;ber gestattet wird.');
 define( '_ITEMGROUP_RESTRICTIONS_MINGID_NAME', 'Sichtbarkeit Gruppe:');
-// TODO: define( '_ITEMGROUP_RESTRICTIONS_MINGID_DESC', 'Die mimimale Anzahl an Benutzern, die ben&ouml;tigt wird, um diese Gruppe zu sehen, wenn die Seite mit den Bezahlpl&auml;nen aufgebaut wird. Neue Nutzer werden immer die Gruppe mit der niedrigsten verf&uuml;gbaren gid sehen. The minimum user level required to see this group when building the payment plans page. New users will always see the group with the lowest gid available.');
-define( '_ITEMGROUP_RESTRICTIONS_FIXGID_ENABLED_NAME', 'Freigabe feste GID:');
-define( '_ITEMGROUP_RESTRICTIONS_FIXGID_ENABLED_DESC', 'Geben Sie diese Einstellung frei, wenn Sie diese Gruppe auf eine Nutzergruppe beschr&auml;nken wollen.');
-//TODO: define( '_ITEMGROUP_RESTRICTIONS_FIXGID_NAME', 'Set Group:');
+define( '_ITEMGROUP_RESTRICTIONS_MINGID_DESC', 'Dem Benutzer den Zugriff auf dieses Abo nur mit hier der eingestellen Benutzergruppe, oder einer dar&uuml;ber gestatten.');
+define( '_ITEMGROUP_RESTRICTIONS_FIXGID_ENABLED_NAME', 'Fixe GID Einschr&auml;nken:');
+define( '_ITEMGROUP_RESTRICTIONS_FIXGID_ENABLED_DESC', 'Aktivieren, dass dem Benutzer der Zugriff auf dieses Abo nur mit der eingestellen Benutzergruppe gestattet wird.');
+define( '_ITEMGROUP_RESTRICTIONS_FIXGID_NAME', 'Fixe GID:');
 define( '_ITEMGROUP_RESTRICTIONS_FIXGID_DESC', 'Nur Benutzer mit dieser Benutzergruppe k&ouml;nnen diese Gruppe ansehen.');
-define( '_ITEMGROUP_RESTRICTIONS_MAXGID_ENABLED_NAME', 'Freigabe Max GID:');
-// TODO: define( '_ITEMGROUP_RESTRICTIONS_MAXGID_ENABLED_DESC', 'Geben Sie diese Einstellung frei, wenn Sie beschr&auml;nken wollen, ob einem Benutzer diese Gruppe angezeigt wird by a maximum usergroup.');
+define( '_ITEMGROUP_RESTRICTIONS_MAXGID_ENABLED_NAME', 'Max GID Einschr&auml;nken:');
+define( '_ITEMGROUP_RESTRICTIONS_MAXGID_ENABLED_DESC', 'GebAktivieren, dass dem Benutzer der Zugriff auf dieses Abo nur mit der eingestellen Benutzergruppe oder darunter gestattet wird.');
 define( '_ITEMGROUP_RESTRICTIONS_MAXGID_NAME', 'Maximale Gruppe:');
-define( '_ITEMGROUP_RESTRICTIONS_MAXGID_DESC', 'The maximum user level a user can have to see this group when building the payment plans page.');
+define( '_ITEMGROUP_RESTRICTIONS_MAXGID_DESC', 'Dem Benutzer den Zugriff auf dieses Abo nur mit der eingestellen Benutzergruppe oder einer darunter gestatten.');
 
-define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSPLAN_REQ_ENABLED_NAME', 'erforderlicher vorheriger Plan:');
-define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSPLAN_REQ_ENABLED_DESC', 'Freigabe, um nach vorherigem Plan zu suchen');
+define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSPLAN_REQ_ENABLED_NAME', 'Erforderlicher vorheriger Plan:');
+define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSPLAN_REQ_ENABLED_DESC', 'Die zuvorige Benutzung eines anderen Plans zur Bedingung machen, um auf diese Gruppe zuzugreifen');
 define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSPLAN_REQ_NAME', 'Plan:');
 define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSPLAN_REQ_DESC', 'Ein Benutzer wird diese Gruppe nur sehen, wenn er den ausgew&auml;hlten Plan vor dem aktuellen Plan benutzt hat');
 define( '_ITEMGROUP_RESTRICTIONS_CURRENTPLAN_REQ_ENABLED_NAME', 'erforderlicher aktueller Plan:');
-define( '_ITEMGROUP_RESTRICTIONS_CURRENTPLAN_REQ_ENABLED_DESC', 'Freigabe, um aktuell benutzten Bezahlplan zu suchen');
+define( '_ITEMGROUP_RESTRICTIONS_CURRENTPLAN_REQ_ENABLED_DESC', 'Die momentane Benutzung eines anderen Plans zur Bedingung machen, um auf diese Gruppe zuzugreifen');
 define( '_ITEMGROUP_RESTRICTIONS_CURRENTPLAN_REQ_NAME', 'Plan:');
 define( '_ITEMGROUP_RESTRICTIONS_CURRENTPLAN_REQ_DESC', 'Ein Benutzer wird diese Gruppe nur sehen, wenn er aktuell dem ausgew&auml;hlten Plan zugeordnet wird oder dieser gerade abgelaufen ist.');
-define( '_ITEMGROUP_RESTRICTIONS_OVERALLPLAN_REQ_ENABLED_NAME', 'erforderlicher benutzter Plan:');
-// TODO: define( '_ITEMGROUP_RESTRICTIONS_OVERALLPLAN_REQ_ENABLED_DESC', 'Freigabe, um nach overall used payment plan zu suchen');
+define( '_ITEMGROUP_RESTRICTIONS_OVERALLPLAN_REQ_ENABLED_NAME', 'Erforderlicher benutzter Plan:');
+define( '_ITEMGROUP_RESTRICTIONS_OVERALLPLAN_REQ_ENABLED_DESC', 'Generell die Benutzung eines anderen Plans zur Bedingung machen, um auf diese Gruppe zuzugreifen, egal wann');
 define( '_ITEMGROUP_RESTRICTIONS_OVERALLPLAN_REQ_NAME', 'Plan:');
-define( '_ITEMGROUP_RESTRICTIONS_OVERALLPLAN_REQ_DESC', 'Ein Benutzer wird diesen Plan nur sehen, wenn er den ausgew&auml;hlten Plan einmal benutzt hat, egal wann.');
+define( '_ITEMGROUP_RESTRICTIONS_OVERALLPLAN_REQ_DESC', 'Ein Benutzer wird diese Gruppe nur sehen, wenn er den ausgew&auml;hlten Plan einmal benutzt hat, egal wann.');
 
-define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSPLAN_REQ_ENABLED_EXCLUDED_NAME', 'ausgeschlossener vorheriger Plan:');
-define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSPLAN_REQ_ENABLED_EXCLUDED_DESC', 'Diese Gruppe Benutzern NICHT anzeigen, die diesen Plan als ihren vorherigen Bezahlplan hatten.');
+define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSPLAN_REQ_ENABLED_EXCLUDED_NAME', 'Ausgeschlossener vorheriger Plan:');
+define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSPLAN_REQ_ENABLED_EXCLUDED_DESC', 'Diese Gruppe Benutzern NICHT anzeigen, wenn diese den ausgew&auml;hlten Plan als vorherigen Bezahlplan hatten.');
 define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSPLAN_REQ_EXCLUDED_NAME', 'Plan:');
-define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSPLAN_REQ_EXCLUDED_DESC', 'Ein Benutzer wird diese Gruppe nicht sehen, wenn er den ausgew&auml;hlten Plan vor dem aktuellen benutzt hat.');
-define( '_ITEMGROUP_RESTRICTIONS_CURRENTPLAN_REQ_ENABLED_EXCLUDED_NAME', 'ausgeschlossener aktueller Plan:');
-define( '_ITEMGROUP_RESTRICTIONS_CURRENTPLAN_REQ_ENABLED_EXCLUDED_DESC', 'Diese Gruppe Benutzern NICHT anzeigen, die diesen Plan als ihren aktuellen Bezahlplan haben');
+define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSPLAN_REQ_EXCLUDED_DESC', 'Ein Benutzer wird diese Gruppe nicht sehen, wenn er oder sie den ausgew&auml;hlten Plan vor dem derzeitigen Plan benutzt hat.');
+define( '_ITEMGROUP_RESTRICTIONS_CURRENTPLAN_REQ_ENABLED_EXCLUDED_NAME', 'derzeitiger Plan ausgeschlossen:');
+define( '_ITEMGROUP_RESTRICTIONS_CURRENTPLAN_REQ_ENABLED_EXCLUDED_DESC', 'Diese Gruppe Benutzern NICHT zeigen, die den ausgew&auml;hlten Plan als ihren derzeitigen Bezahlplan haben.');
 define( '_ITEMGROUP_RESTRICTIONS_CURRENTPLAN_REQ_EXCLUDED_NAME', 'Plan:');
-define( '_ITEMGROUP_RESTRICTIONS_CURRENTPLAN_REQ_EXCLUDED_DESC', 'Ein Benutzer wird diese Gruppe nur sehen, wenn er aktuell dem ausgew&auml;hlten Plan zugeordnet wird oder dieser gerade abgelaufen ist.');
+define( '_ITEMGROUP_RESTRICTIONS_CURRENTPLAN_REQ_EXCLUDED_DESC', 'Ein Benutzer wird diese Gruppe nicht sehen, wenn er derzeit dem ausgew&auml;hlten Plan zugeordnet ist oder dieser Plan gerade f&uuml;r ihn abgelaufen ist');
 define( '_ITEMGROUP_RESTRICTIONS_OVERALLPLAN_REQ_ENABLED_EXCLUDED_NAME', 'ausgeschlossener benutzter Plan:');
-define( '_ITEMGROUP_RESTRICTIONS_OVERALLPLAN_REQ_ENABLED_EXCLUDED_DESC', 'Diese Gruppe Benutzern NICHT anzeigen, die diesen Plan bereits benutzt haben.');
+define( '_ITEMGROUP_RESTRICTIONS_OVERALLPLAN_REQ_ENABLED_EXCLUDED_DESC', 'Diese Gruppe einem Benutzer NICHT anzeigen, der den ausgew&auml;hlten Plan zuvor bereits genutzt hat');
 define( '_ITEMGROUP_RESTRICTIONS_OVERALLPLAN_REQ_EXCLUDED_NAME', 'Plan:');
-define( '_ITEMGROUP_RESTRICTIONS_OVERALLPLAN_REQ_EXCLUDED_DESC', 'Ein Benutzer wird diesen Plan nur sehen, wenn er den ausgew&auml;hlten Plan einmal benutzt hat, egal wann.');
+define( '_ITEMGROUP_RESTRICTIONS_OVERALLPLAN_REQ_EXCLUDED_DESC', 'Ein Benutzer wird diese Gruppe nicht sehen, wenn er den gew&auml;hlten Plan schon einmal benutzt hat, egal wann oder wie oft.');
 
-// TODO: define( '_ITEMGROUP_RESTRICTIONS_USED_PLAN_MIN_ENABLED_NAME', 'Min Used Plan:');
-define( '_ITEMGROUP_RESTRICTIONS_USED_PLAN_MIN_ENABLED_DESC', 'Enable checking for the minimum number of times your consumers have subscribed to a specified payment plan in order to see this group');
-define( '_ITEMGROUP_RESTRICTIONS_USED_PLAN_MIN_AMOUNT_NAME', 'Used Amount:');
-define( '_ITEMGROUP_RESTRICTIONS_USED_PLAN_MIN_AMOUNT_DESC', 'The minimum amount a user has to have used the selected plan');
-define( '_ITEMGROUP_RESTRICTIONS_USED_PLAN_MIN_NAME', 'Plan:');
-define( '_ITEMGROUP_RESTRICTIONS_USED_PLAN_MIN_DESC', 'Der Bezahlplan, den der Benutzer mindestens so oft wie angegeben benutzt hat.');
-// TODO: define( '_ITEMGROUP_RESTRICTIONS_USED_PLAN_MAX_ENABLED_NAME', 'Max Used Plan:');
-define( '_ITEMGROUP_RESTRICTIONS_USED_PLAN_MAX_ENABLED_DESC', 'Enable checking for the maximum number of times your consumers have subscribed to a specified payment plan in order to see this group');
-define( '_ITEMGROUP_RESTRICTIONS_USED_PLAN_MAX_AMOUNT_NAME', 'Used Amount:');
-define( '_ITEMGROUP_RESTRICTIONS_USED_PLAN_MAX_AMOUNT_DESC', 'Die maximale Anzahl, die ein Benutzer den ausgew&auml;hlten Plan benutzt haben kann.');
-define( '_ITEMGROUP_RESTRICTIONS_USED_PLAN_MAX_NAME', 'Plan:');
-// TODO: define( '_ITEMGROUP_RESTRICTIONS_USED_PLAN_MAX_DESC', 'The payment plan that the user has to have used the specified number of times at most');
+define( '_ITEMGROUP_RESTRICTIONS_USED_PLAN_MIN_ENABLED_NAME',		'Mindest Abo:' );
+define( '_ITEMGROUP_RESTRICTIONS_USED_PLAN_MIN_ENABLED_DESC',		'Zugriff nur gestatten, wenn der Benutzer ein anderes Abo <strong>mindestens x Mal vorher</strong> abonniert haben muss' );
+define( '_ITEMGROUP_RESTRICTIONS_USED_PLAN_MIN_AMOUNT_NAME',		'Anzahl:' );
+define( '_ITEMGROUP_RESTRICTIONS_USED_PLAN_MIN_AMOUNT_DESC',		'Die Mindestanzahl an Benutzungen des Abos um diesen Plan abonnieren zu k&ouml;nnen' );
+define( '_ITEMGROUP_RESTRICTIONS_USED_PLAN_MIN_NAME',				'Mindest Abo:' );
+define( '_ITEMGROUP_RESTRICTIONS_USED_PLAN_MIN_DESC',				'Das Abo, das der Benutzer <strong>vorher abonniert haben musste</strong> um dieses Abo w&auml;hlen zu k&ouml;nnen' );
+define( '_ITEMGROUP_RESTRICTIONS_USED_PLAN_MAX_ENABLED_NAME',		'Maximal verwendet:' );
+define( '_ITEMGROUP_RESTRICTIONS_USED_PLAN_MAX_ENABLED_DESC',		'Zugriff nur gestatten, wenn der Benutzer ein anderes Abo <strong>h&ouml;chstens x Mal vorher</strong> abonniert haben muss' );
+define( '_ITEMGROUP_RESTRICTIONS_USED_PLAN_MAX_AMOUNT_NAME',		'Anzahl:' );
+define( '_ITEMGROUP_RESTRICTIONS_USED_PLAN_MAX_AMOUNT_DESC',		'Maximale Anzahl an Benutzungen des Abos um diesen Plan abonnieren zu k&ouml;nnen' );
+define( '_ITEMGROUP_RESTRICTIONS_USED_PLAN_MAX_NAME',				'Abo:' );
+define( '_ITEMGROUP_RESTRICTIONS_USED_PLAN_MAX_DESC',				'Das Abo, welches maximal verwendet werden darf' );
 
-define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_NAME', 'erforderliche vorherige Gruppe:');
-define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_DESC', 'Freigabe, um nach vorherigem Bezahlplan in dieser Gruppe zu suchen');
+define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_NAME', 'Erforderliche vorherige Gruppe:');
+define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_DESC', 'Nur zulassen, wenn der Benutzer direkt zuvor ein Abo aus der gew&auml;hlten Gruppe besessen hat');
 define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSGROUP_REQ_NAME', 'Gruppe:');
-define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSGROUP_REQ_DESC', 'Ein Benutzer wird diese Gruppe nur sehen, wenn er den Plan aus der ausgew&auml;hlten Gruppe vor dem aktuellen Plan benutzt hat.');
-define( '_ITEMGROUP_RESTRICTIONS_CURRENTGROUP_REQ_ENABLED_NAME', 'erforderliche aktuelle Gruppe:');
-define( '_ITEMGROUP_RESTRICTIONS_CURRENTGROUP_REQ_ENABLED_DESC', 'Freigabe, um aktuellen Bezahlplan in dieser Gruppe zu suchen');
+define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSGROUP_REQ_DESC', 'Ein Benutzer wird diese Gruppe nur sehen, wenn er einen Plan aus dieser Gruppe vor dem derzeitigen Plan benutzt hat.');
+define( '_ITEMGROUP_RESTRICTIONS_CURRENTGROUP_REQ_ENABLED_NAME', 'Erforderliche derzeitige Gruppe:');
+define( '_ITEMGROUP_RESTRICTIONS_CURRENTGROUP_REQ_ENABLED_DESC', 'Nur zulassen, wenn der Benutzer momentan ein Abo aus der gew&auml;hlten Gruppe besitzt');
 define( '_ITEMGROUP_RESTRICTIONS_CURRENTGROUP_REQ_NAME', 'Gruppe:');
-define( '_ITEMGROUP_RESTRICTIONS_CURRENTGROUP_REQ_DESC', 'Ein Benutzer wird diese Gruppe nur sehen, wenn er aktuell einem Plan aus dieser Gruppe zugeordnet ist oder ein Plan aus dieser Gruppe gerade abgelaufen ist.');
-define( '_ITEMGROUP_RESTRICTIONS_OVERALLGROUP_REQ_ENABLED_NAME', 'erforderliche benutzte Gruppe:');
-// TODO: define( '_ITEMGROUP_RESTRICTIONS_OVERALLGROUP_REQ_ENABLED_DESC', 'Enable checking for overall used payment plan in this group');
+define( '_ITEMGROUP_RESTRICTIONS_CURRENTGROUP_REQ_DESC', 'Ein Benutzer wird diese Gruppe nur sehen, wenn er derzeit einem Plan aus dieser Gruppe zugeteilt ist oder einer der Pl%auml;ne aus dieser Gruppe gerade abgelaufen ist');
+define( '_ITEMGROUP_RESTRICTIONS_OVERALLGROUP_REQ_ENABLED_NAME', 'Erforderliche benutzte Gruppe:');
+define( '_ITEMGROUP_RESTRICTIONS_OVERALLGROUP_REQ_ENABLED_DESC', 'Nur zulassen, wenn der Benutzer schon einmal ein Abo aus der gew&auml;hlten Gruppe besessen hat, oder noch besitzt');
 define( '_ITEMGROUP_RESTRICTIONS_OVERALLGROUP_REQ_NAME', 'Gruppe:');
-define( '_ITEMGROUP_RESTRICTIONS_OVERALLGROUP_REQ_DESC', 'Ein Benutzer wird diese Gruppe nur sehen, wenn er einen Plan aus der ausgew&auml;hlten Gruppe einmal benutzt hat, egal wann.');
+define( '_ITEMGROUP_RESTRICTIONS_OVERALLGROUP_REQ_DESC', 'Ein Benutzer wird diese Gruppe nur sehen, wenn er den ausgew&auml;hlten Plan in dieser Gruppe einmal benutzt hat, egal wann');
 
-define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_EXCLUDED_NAME', 'ausgeschlossene vorherige Gruppe:');
-define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_EXCLUDED_DESC', 'Diese Gruppe Benutzern NICHT anzeigen, die einen Plan aus dieser Gruppe als ihren vorherigen Bezahlplan hatten');
+define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_EXCLUDED_NAME', 'Ausgeschlossene vorherige Gruppe:');
+define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_EXCLUDED_DESC', 'Diese Gruppe wird Benutzern NICHT angezeigt, wenn sie einen Plan aus der angegebenen Gruppe als vorherigen Bezahlplan hatten.');
 define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSGROUP_REQ_EXCLUDED_NAME', 'Gruppe:');
-define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSGROUP_REQ_EXCLUDED_DESC', 'Ein Benutzer wird diese Gruppe nicht sehen, wenn ereinen Plan aus dieser Gruppe vor dem aktuellen Plan benutzt hat.');
-define( '_ITEMGROUP_RESTRICTIONS_CURRENTGROUP_REQ_ENABLED_EXCLUDED_NAME', 'ausgeschlossene aktuelle Gruppe:');
-define( '_ITEMGROUP_RESTRICTIONS_CURRENTGROUP_REQ_ENABLED_EXCLUDED_DESC', 'Diese Gruppe Benutzern NICHT anzeigen, die einen Plan aus dieser Gruppe als ihren aktuellen Bezahlplan haben');
+define( '_ITEMGROUP_RESTRICTIONS_PREVIOUSGROUP_REQ_EXCLUDED_DESC', 'Ein Benutzer wird diese Gruppe nicht sehen, wenn er einen Plan aus der angegebenen Gruppe vor dem aktuellen Plan benutzt hat.');
+define( '_ITEMGROUP_RESTRICTIONS_CURRENTGROUP_REQ_ENABLED_EXCLUDED_NAME', 'Ausgeschlossener aktueller Plan:');
+define( '_ITEMGROUP_RESTRICTIONS_CURRENTGROUP_REQ_ENABLED_EXCLUDED_DESC', 'Diese Gruppe Benutzern NICHT zeigen, die einen Plan aus der angegebenen Gruppe als ihren aktuellen Bezahlplan haben.');
 define( '_ITEMGROUP_RESTRICTIONS_CURRENTGROUP_REQ_EXCLUDED_NAME', 'Gruppe:');
-define( '_ITEMGROUP_RESTRICTIONS_CURRENTGROUP_REQ_EXCLUDED_DESC', 'Ein Benutzer wird diese Gruppe nicht sehen, wenn er aktuell einen Plan daraus benutzt oder gerade erst benutzt hat.');
-define( '_ITEMGROUP_RESTRICTIONS_OVERALLGROUP_REQ_ENABLED_EXCLUDED_NAME', 'Benutzte Gruppe ausgeschlossen:');
-define( '_ITEMGROUP_RESTRICTIONS_OVERALLGROUP_REQ_ENABLED_EXCLUDED_DESC', 'Diese Gruppe Benutzern NICHT anzeigen, die den Plan in der ausgew&auml;hlten Gruppe bereits benutzt haben.');
+define( '_ITEMGROUP_RESTRICTIONS_CURRENTGROUP_REQ_EXCLUDED_DESC', 'Ein Benutzer wird diese Gruppe nicht sehen, wenn er einem Plan aus der angegebenen Gruppe aktuell zugeschrieben ist oder ein Plan aus dieser Gruppe gerade abgelaufen ist');
+define( '_ITEMGROUP_RESTRICTIONS_OVERALLGROUP_REQ_ENABLED_EXCLUDED_NAME', 'Ausgeschlossene benutzte Gruppe:');
+define( '_ITEMGROUP_RESTRICTIONS_OVERALLGROUP_REQ_ENABLED_EXCLUDED_DESC', 'Diese Gruppe Benutzern NICHT anzeigen, die einen Plan aus der angegebenen Gruppe zuvor benutzt haben');
 define( '_ITEMGROUP_RESTRICTIONS_OVERALLGROUP_REQ_EXCLUDED_NAME', 'Gruppe:');
-define( '_ITEMGROUP_RESTRICTIONS_OVERALLGROUP_REQ_EXCLUDED_DESC', 'Ein Benutzer wird diese Gruppe nicht sehen, wenn er einen Plan in der ausgew&auml;hlten Gruppe einmal benutzt hat, egal wann.');
+define( '_ITEMGROUP_RESTRICTIONS_OVERALLGROUP_REQ_EXCLUDED_DESC', 'Ein Benutzer wird diese Gruppe nicht sehen, wenn er einen Plan aus der angegebenen Gruppe einmal benutzt hat, egal wann.');
 
-define( '_ITEMGROUP_RESTRICTIONS_USED_GROUP_MIN_ENABLED_NAME', 'Min benutzte Gruppe:');
-// TODO: define( '_ITEMGROUP_RESTRICTIONS_USED_GROUP_MIN_ENABLED_DESC', 'Enable checking for the minimum number of times your users have subscribed to a payment plan in the selected group in order to see THIS group');
-define( '_ITEMGROUP_RESTRICTIONS_USED_GROUP_MIN_AMOUNT_NAME', 'Used Amount:');
-define( '_ITEMGROUP_RESTRICTIONS_USED_GROUP_MIN_AMOUNT_DESC', 'The minimum amount a user has to have used the a plan in the selected group');
+define( '_ITEMGROUP_RESTRICTIONS_USED_GROUP_MIN_ENABLED_NAME', 'Minimale Benutzung in Gruppe:');
+define( '_ITEMGROUP_RESTRICTIONS_USED_GROUP_MIN_ENABLED_DESC', 'Einschr&auml;nken ob ein Benutzer untergeordnete Eintr&auml;ge aus dieser Gruppe kaufen kann - aufgrund der minimalen Anzahl von Benutzungen eines Bezahplans in einer bestimmten Gruppe');
+define( '_ITEMGROUP_RESTRICTIONS_USED_GROUP_MIN_AMOUNT_NAME', 'Min. Benutzungen:');
+define( '_ITEMGROUP_RESTRICTIONS_USED_GROUP_MIN_AMOUNT_DESC', 'Die minimale Anzahl von Benutzungen des Bezahplans.');
 define( '_ITEMGROUP_RESTRICTIONS_USED_GROUP_MIN_NAME', 'Gruppe:');
-define( '_ITEMGROUP_RESTRICTIONS_USED_GROUP_MIN_DESC', 'The group that the user has to have used a plan from - the specified number of times at least');
-define( '_ITEMGROUP_RESTRICTIONS_USED_GROUP_MAX_ENABLED_NAME', 'Max Used Group:');
-define( '_ITEMGROUP_RESTRICTIONS_USED_GROUP_MAX_ENABLED_DESC', 'Enable checking for the maximum number of times your users may have subscribed to a payment plan in the selected group in order to see THIS group');
-define( '_ITEMGROUP_RESTRICTIONS_USED_GROUP_MAX_AMOUNT_NAME', 'Used Amount:');
-define( '_ITEMGROUP_RESTRICTIONS_USED_GROUP_MAX_AMOUNT_DESC', 'The maximum amount a user can have used a plan in the selected group');
+define( '_ITEMGROUP_RESTRICTIONS_USED_GROUP_MIN_DESC', 'Die Gruppe, aus welcher der Benutzer einen Plan eine bestimmte Anzahl haben muss - mindestens so viele Male wie angegeben');
+define( '_ITEMGROUP_RESTRICTIONS_USED_GROUP_MAX_ENABLED_NAME', 'Maximale Benutzung in Gruppe:');
+define( '_ITEMGROUP_RESTRICTIONS_USED_GROUP_MAX_ENABLED_DESC', 'Einschr&auml;nken ob ein Benutzer untergeordnete Eintr&auml;ge aus dieser Gruppe kaufen kann - aufgrund der maximalen Anzahl von Benutzungen eines Bezahplans in einer bestimmten Gruppe');
+define( '_ITEMGROUP_RESTRICTIONS_USED_GROUP_MAX_AMOUNT_NAME', 'Max. Benutzungen:');
+define( '_ITEMGROUP_RESTRICTIONS_USED_GROUP_MAX_AMOUNT_DESC', 'Die maximale Anzahl von Benutzungen des Bezahplans.');
 define( '_ITEMGROUP_RESTRICTIONS_USED_GROUP_MAX_NAME', 'Gruppe:');
-define( '_ITEMGROUP_RESTRICTIONS_USED_GROUP_MAX_DESC', 'The group that the user has to have used a plan from - the specified number of times at most');
+define( '_ITEMGROUP_RESTRICTIONS_USED_GROUP_MAX_DESC', 'Die Gruppe, aus welcher der Benutzer einen Plan eine bestimmte Anzahl haben muss - h&ouml;chstens so viele Male wie angegeben');
 
-define( '_ITEMGROUP_RESTRICTIONS_CUSTOM_RESTRICTIONS_ENABLED_NAME', 'Use Custom Restrictions:');
-define( '_ITEMGROUP_RESTRICTIONS_CUSTOM_RESTRICTIONS_ENABLED_DESC', 'Enable the use of the below specified restrictions');
-define( '_ITEMGROUP_RESTRICTIONS_CUSTOM_RESTRICTIONS_NAME', 'Custom Restrictions:');
-define( '_ITEMGROUP_RESTRICTIONS_CUSTOM_RESTRICTIONS_DESC', 'Use RewriteEngine fields to check for specific strings in this form:<br />[[user_id]] >= 1500<br />[[parametername]] = value<br />(Create separate rules by entering a new line).<br />You can use =, <=, >=, <, >, <> as comparing elements. You MUST use spaces between parameters, values and comparators!');
+define( '_ITEMGROUP_RESTRICTIONS_CUSTOM_RESTRICTIONS_ENABLED_NAME', 'eigene Einschr&auml;nkungen benutzen:');
+define( '_ITEMGROUP_RESTRICTIONS_CUSTOM_RESTRICTIONS_ENABLED_DESC', 'Eigene Einschr&auml;nkungen wie unten angegeben benutzen.');
+define( '_ITEMGROUP_RESTRICTIONS_CUSTOM_RESTRICTIONS_NAME', 'Eigene Einschr&auml;nkungen:');
+define( '_ITEMGROUP_RESTRICTIONS_CUSTOM_RESTRICTIONS_DESC', 'RewriteEngine benutzen um eine eigene Regeln zur Anzeige zu stellen:<br />[[user_id]] >= 1500<br />[[parametername]] = value<br />(Jede Regel in eine neue Zeile schreiben).<br />Es k&ouml;nnen =, <=, >=, <, >, <> als untergeordnete Eintr&auml;ge aus dieser genutzt werden. Zwischen Variablen, Werten und Vergleichszeichen muss eine Leerstelle stehen!');
 
 // Group Relations
 
@@ -1543,7 +1543,7 @@ define( '_ITEMGROUP_RELATIONS_TITLE', 'Beziehungen');
 define( '_ITEMGROUP_PARAMS_SIMILARITEMGROUPS_NAME', '&Auml;hnliche Gruppen:');
 define( '_ITEMGROUP_PARAMS_SIMILARITEMGROUPS_DESC', 'W&auml;hlen Sie aus, welche Gruppen dieser &auml;hnlich sind. Es ist einem Benutzer nicht erlaubt, eine Probezeit zu nutzen, wenn er einen Plan kauft, den er zuvor bereits erworben hat und das gilt ebenfalls für &auml;hnliche Pl&auml;ne (oder Pl&auml;ne aus &auml;hnlichen Gruppen).');
 define( '_ITEMGROUP_PARAMS_EQUALITEMGROUPS_NAME', 'Gleichwertige Gruppen:');
-// TODO: define( '_ITEMGROUP_PARAMS_EQUALITEMGROUPS_DESC', 'W&auml;hlen Sie aus, welche Gruppen dieser gleichwertig sind. Ein Benutzer, der zwischen gleichwertigen Pl&auml;nen wechselt (oder Pl&auml;nen in gleichwertigen Gruppen) wird seine Zeitspanne verl&auml;ngert bekommen, anstatt zur&uuml;ckgesetzt. Probezeiten sind au&szlig;erdem nicht erlaubt (siehe &auml;hnliche Gruppen Info).');
+define( '_ITEMGROUP_PARAMS_EQUALITEMGROUPS_DESC', 'W&auml;hlen Sie aus, welche Gruppen dieser Gruppe gleichwertig sind. Ein Benutzer, der zwischen gleichwertigen Pl&auml;nen wechselt (oder Pl&auml;nen in gleichwertigen Gruppen) wird seine Zeitspanne verl&auml;ngert bekommen, anstatt sie vom aktuellen Datum neu zu berechnen. Probezeiten sind au&szlig;erdem nicht erlaubt (siehe &auml;hnliche Gruppen Info).');
 
 // Currencies
 
@@ -1753,8 +1753,8 @@ define( '_MI_E_ON_USERCHANGE_NAME',		'Benutzeraktion' );
 define( '_MI_E_ON_USERCHANGE_DESC',		'Falls von der Komponente unterst&uuml;tzt k&ouml;nnen Aktionen definiert werden wenn ein Benutzerabo ausl&auml;ft' );
 define( '_MI_E_PRE_EXP_CHECK_NAME',				'Tage vor Ablauf' );
 define( '_MI_E_PRE_EXP_CHECK_DESC',				'Anzahl der Tage vor dem Ablauf, ab wann die Aktionen gelten sollen' );
-// TODO: define( '_MI_E__AEC_GLOBAL_EXP_ALL_NAME', 'Expire all instances');
-define( '_MI_E__AEC_GLOBAL_EXP_ALL_DESC', 'Trigger the expiration action even if the user has another payment plan with this MI attached. The standard behavior is to call the expiration action on an MI only when it really is the last MI instance that this user has in all payment plans.');
+define( '_MI_E__AEC_GLOBAL_EXP_ALL_NAME', 'Alle Instanzen ablaufen lassen');
+define( '_MI_E__AEC_GLOBAL_EXP_ALL_DESC', 'Die "Ablauf" Aktion ausf&uuml;hren, auch wenn der Benutzer noch einen anderen aktiven Bezahplan mit der selben MI hat. F&uuml;r gew&ouml;hnlich f&uuml;hrt die AEC solche Aktionen nur aus, wenn eine MI auch wirklich die letzte Instanz ist, die ein Benutzer durch Bezahlpl&auml;ne besitzt.');
 define( '_MI_E_FUNCTION_NAME',				'Funktionsname' );
 define( '_MI_E_FUNCTION_DESC',				'Welche der Systeme sollen verwendet werden' );
 define( '_MI_E_FUNCTION_EXPLANATION',		'Bevor die MicroIntegration definiert wird, muss bestimmt werden, welche der MicroIntegrationen g&uuml;ltig/aktiv sind. Wahl treffen und speichern. Dann nochmals bearbeiten, die Einstellungen sind erst dann sichtbar. HINWEIS: einmal definiert lassen sich die Einstellungen nicht r&uuml;ckg&auml;ngig machen' );
@@ -1812,9 +1812,9 @@ define( '_REWRITE_KEY_INVOICE_CURRENCY', 'W&auml;hrung');
 define( '_REWRITE_KEY_INVOICE_COUPONS', 'Gutschein Liste');
 
 define( '_REWRITE_ENGINE_TITLE', 'Rewrite Engine');
-// TODO: define( '_REWRITE_ENGINE_DESC', 'To create dynamic text, you can add these wiki-style tags in RWengine-enabled fields. Flick through the togglers below to see which tags are available');
+define( '_REWRITE_ENGINE_DESC', 'Um dynamischen Text einzuf&uuml;gen, k&oouml;nnen diese RWengine felder im Wiki-stil benutzt werden. Mit einem Klick durch die &Uuml;berschriften werden die verschiedenen Optionen angezeigt.');
 define( '_REWRITE_ENGINE_AECJSON_TITLE', 'aecJSON');
-define( '_REWRITE_ENGINE_AECJSON_DESC', 'You can also use functions encoded in JSON markup, like this:<br />{aecjson} { "cmd":"date", "vars": [ "Y", { "cmd":"rw_constant", "vars":"invoice_created_date" } ] } {/aecjson}<br />It returns only the Year of a date. Refer to the manual and forums for further instructions!');
+define( '_REWRITE_ENGINE_AECJSON_DESC', 'Es kann auf Funktionalit&auml;t verwendet werden die im JSON markup geschrieben ist, das sieht so aus:<br />{aecjson} { "cmd":"date", "vars": [ "Y", { "cmd":"rw_constant", "vars":"invoice_created_date" } ] } {/aecjson}<br />Dieser Befehl gibt das aktuelle Jahr als Zahl wieder. Bitte im Handbuch und auf unserer Internetseite nach einer genaueren Erkl&auml;rung schauen!');
 
 // --== COUPONS OVERVIEW ==--
 define( '_COUPON_TITLE',					'Gutscheine' );
@@ -1866,7 +1866,7 @@ define( '_EXPORT_APPLY', 'Anwenden');
 define( '_EXPORT_GENERAL_SELECTED_EXPORT_NAME', 'Exportierung Voreinstellung');
 define( '_EXPORT_GENERAL_SELECTED_EXPORT_DESC', 'W&auml;hlen Sie eine Voreinstellung (oder eine automatisch gespeicherte vorherige Exportierung), anstatt die Auswahlen unten zu treffen. Sie k&ouml;nnen auch Anwenden oben rechts anklicken und eine Vorschau zu den Voreinstellungen ansehen.');
 define( '_EXPORT_GENERAL_DELETE_NAME', 'L&ouml;schen');
-// TODO: define( '_EXPORT_GENERAL_DELETE_DESC', 'Diese Voreinstellung l&ouml;schen (on apply)');
+define( '_EXPORT_GENERAL_DELETE_DESC', 'Diese Voreinstellung l&ouml;schen (nach Anwendung)');
 define( '_EXPORT_PARAMS_PLANID_NAME', 'Bezahlplan');
 define( '_EXPORT_PARAMS_PLANID_DESC', 'Abonnements mit diesem Bezahlplan herausfiltern');
 define( '_EXPORT_PARAMS_STATUS_NAME', 'Status');
@@ -1874,13 +1874,13 @@ define( '_EXPORT_PARAMS_STATUS_DESC', 'Nur Abonnements mit diesem Status exporti
 define( '_EXPORT_PARAMS_ORDERBY_NAME', 'Ordnen');
 define( '_EXPORT_PARAMS_ORDERBY_DESC', 'Ordnen nach einem der folgenden Kriterien');
 define( '_EXPORT_PARAMS_REWRITE_RULE_NAME', 'Felder');
-// TODO: define( '_EXPORT_PARAMS_REWRITE_RULE_DESC', 'Put in the ReWrite Engine fields, separated by semicolons, that you want each exported item to hold.');
+define( '_EXPORT_PARAMS_REWRITE_RULE_DESC', 'Die ReWrite Engine Felder (durch semicolon getrennt) eintragen, welche exportiert werden sollen.');
 define( '_EXPORT_PARAMS_SAVE_NAME', 'Speichern als neu?');
 define( '_EXPORT_PARAMS_SAVE_DESC', 'Dieses Feld anklicken, um Ihre Einstellungen als neue Voreinstellung zu speichern');
 define( '_EXPORT_PARAMS_SAVE_NAME_NAME', 'Name speichern');
 define( '_EXPORT_PARAMS_SAVE_NAME_DESC', 'Neue Voreinstellung unter diesem Namen speichern');
-define( '_EXPORT_PARAMS_EXPORT_METHOD_NAME', 'Exportierungsmethode');
-define( '_EXPORT_PARAMS_EXPORT_METHOD_DESC', 'Der Filetyp, in den Sie exportieren wollen');
+define( '_EXPORT_PARAMS_EXPORT_METHOD_NAME', 'Exportiersmethode');
+define( '_EXPORT_PARAMS_EXPORT_METHOD_DESC', 'Der Dateityp, in den Sie exportieren wollen');
 
 // --== READOUT ==--
 define( '_AEC_READOUT', 'AEC Readout');
@@ -1892,21 +1892,21 @@ define( '_READOUT_GENERAL_SHOW_PROCESSORS_NAME', 'Bezahldiensteinstellungen');
 define( '_READOUT_GENERAL_SHOW_PROCESSORS_DESC', 'Bezahldiensteinstellungen im Readout anzeigen');
 define( '_READOUT_GENERAL_SHOW_PLANS_NAME', 'Pl&auml;ne');
 define( '_READOUT_GENERAL_SHOW_PLANS_DESC', 'Pl&auml;ne im Readout anzeigen');
-// TODO define( '_READOUT_GENERAL_SHOW_MI_RELATIONS_NAME', 'Plan -> MI Relations');
-define( '_READOUT_GENERAL_SHOW_MI_RELATIONS_DESC', 'Display Plan -> MI Relations on the Readout');
+define( '_READOUT_GENERAL_SHOW_MI_RELATIONS_NAME', 'Plan -> MI Beziehung');
+define( '_READOUT_GENERAL_SHOW_MI_RELATIONS_DESC', 'Die Beziehung Plan -> MI im Readout anzeigen');
 define( '_READOUT_GENERAL_SHOW_MIS_NAME', 'MicroIntegrationen');
 define( '_READOUT_GENERAL_SHOW_MIS_DESC', 'MicroIntegrationen und ihre Einstellungen im Readout anzeigen');
 define( '_READOUT_GENERAL_STORE_SETTINGS_NAME', 'Einstellungen behalten');
-// TODO: define( '_READOUT_GENERAL_STORE_SETTINGS_DESC', 'Remember Settings on this page for your admin account');
+define( '_READOUT_GENERAL_STORE_SETTINGS_DESC', 'Diese Einstellungen f&uuml;r dieses Administratorkonto merken');
 define( '_READOUT_GENERAL_TRUNCATION_LENGTH_NAME', 'Feldinhalte k&uuml;rzen');
 define( '_READOUT_GENERAL_TRUNCATION_LENGTH_DESC', 'Feldinhalte auf diese L&auml;nge k&uuml;rzen, wo angemessen');
 define( '_READOUT_GENERAL_USE_ORDERING_NAME', 'Ordnung benutzen');
-// TODO: define( '_READOUT_GENERAL_USE_ORDERING_DESC', 'Anstatt Eintr&auml;ge in ihrer Datenbankordnung zu zeigen, werden sie in ihrer set ordering gezeigt - wenn anwendbar');
-define( '_READOUT_GENERAL_COLUMN_HEADERS_NAME', 'Column Headers');
-define( '_READOUT_GENERAL_COLUMN_HEADERS_DESC', 'Show Column Headers every X rows');
+define( '_READOUT_GENERAL_USE_ORDERING_DESC', 'Anstatt Eintr&auml;ge in ihrer Datenbankordnung zu zeigen, werden sie nach ihrer (ebenfalls in der Datenbank gespeicherten) Ordnungsnummer gezeigt (falls anwendbar)');
+define( '_READOUT_GENERAL_COLUMN_HEADERS_NAME', 'Spalten-K&ouml;pfe anzeigen');
+define( '_READOUT_GENERAL_COLUMN_HEADERS_DESC', 'Alle X Zeilen die Spalten-K&ouml;pfe erneut anzeigen (zur &Uuml;bersichtlichkeit)');
 define( '_READOUT_GENERAL_NOFORMAT_NEWLINES_NAME', 'Format: keine Zeilenumbr&uuml;che');
 define( '_READOUT_GENERAL_NOFORMAT_NEWLINES_DESC', 'Verschiedene Eintr&auml;ge f&uuml;r eine Tabellenzelle werden normalerweise in seperaten Zeilen angezeigt. Mit dieser Option werden die Eintr&auml;ge nur in einem einzigen Textblock angezeigt.');
 define( '_READOUT_GENERAL_EXPORT_CSV_NAME', 'Exportieren als .csv');
-// TODO: define( '_READOUT_GENERAL_EXPORT_CSV_DESC', 'Export data as a comma separated file that can be loaded in a spreadsheet application.');
+define( '_READOUT_GENERAL_EXPORT_CSV_DESC', 'Als .csv Datei exportieren welche in einem Programm zur Tabellenkalkulation benutzt werden kann.');
 
 ?>
