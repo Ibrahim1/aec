@@ -64,13 +64,41 @@ class mi_quotestream
 
 	function action( $request )
 	{
-		$params = $request->metaUser->meta->setMIParams( $request->parent->id, $request->plan->id );
+		$params = $request->metaUser->meta->getMIParams( $request->parent->id, $request->plan->id );
 
 		if ( empty( $params['has_quotestream_user'] ) ) {
 			if ( $this->createQSuser( $request ) ) {
 				$request->metaUser->meta->setMIParams( $request->parent->id, $request->plan->id, array( 'has_quotestream_user' => true ) );
 				$request->metaUser->meta->storeload();
 			}
+		}
+
+		return true;
+	}
+
+	function expiration_action( $request )
+	{
+		$this->cancelQSuser( $request );
+
+		return true;
+	}
+
+	function cancelQSuser( $request )
+	{
+		$login = array(	'login' => $this->settings['login'],
+						'password' => $this->settings['password'],
+						'features' => SOAP_USE_XSI_ARRAY_TYPE
+						);
+
+		$client = new SoapClient('https://app.quotemedia.com/services/UserWebservice?wsdl', $login );
+
+		$user = $this->getUser( $request );
+
+		try {
+			$client->cancelUser( $user );
+		} catch ( SoapFault $soapFault ) {
+			aecDebug( $soapFault );
+			return false;
 		}
 
 		return true;
@@ -85,6 +113,20 @@ class mi_quotestream
 
 		$client = new SoapClient('https://app.quotemedia.com/services/UserWebservice?wsdl', $login );
 
+		$user = $this->getUser( $request );
+
+		try {
+			$client->createUser( $user );
+		} catch ( SoapFault $soapFault ) {
+			aecDebug( $soapFault );
+			return false;
+		}
+
+		return true;
+	}
+
+	function getUser( $request )
+	{
 		$namearray	= explode( " ", $request->metaUser->cmsUser->name );
 
 		$name = array();
@@ -128,17 +170,9 @@ class mi_quotestream
 				$user['products'] = explode( ",", $this->settings['products'] );
 			}
 		}
-aecDebug($user);
-		try {
-			$client->createUser( $user );
-		} catch ( SoapFault $soapFault ) {
-			aecDebug( $soapFault );
-			return false;
-		}
 
-		return true;
+		return $user;
 	}
-
 
 	function getQSpackages()
 	{
