@@ -41,7 +41,10 @@ if ( aecJoomla15check() ) {
 $acpermission = $acl->acl_check( 'administration', 'config', 'users', $user->usertype );
 
 if ( !$acpermission ) {
-	if ( !( ( strcmp( $user->usertype, 'Administrator' ) === 0 ) && $aecConfig->cfg['adminaccess'] ) ) {
+	if (
+		!( ( strcmp( $user->usertype, 'Administrator' ) === 0 ) && $aecConfig->cfg['adminaccess'] )
+		&& !( ( strcmp( $user->usertype, 'Manager' ) === 0 ) && $aecConfig->cfg['manageraccess'] )
+	 ) {
 		if ( aecJoomla15check() ) {
 			global $mainframe;
 
@@ -2156,6 +2159,7 @@ function editSettings( $option )
 	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_ACCESS );
 	$params['require_subscription']			= array( 'list_yesno', 0 );
 	$params['adminaccess']					= array( 'list_yesno', 0 );
+	$params['manageraccess']				= array( 'list_yesno', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_SYSTEM );
 	$params['heartbeat_cycle']				= array( 'inputA', 0 );

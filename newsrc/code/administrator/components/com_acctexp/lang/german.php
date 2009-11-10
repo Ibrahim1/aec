@@ -1148,6 +1148,9 @@ define( '_CFG_GENERAL_CONFIRMATION_CHANGEUSERNAME_DESC', 'Dem Benutzer auf der B
 define( '_CFG_GENERAL_CONFIRMATION_CHANGEUSAGE_NAME', 'Option: Abo-Auswahl &auml;ndern');
 define( '_CFG_GENERAL_CONFIRMATION_CHANGEUSAGE_DESC', 'Dem Benutzer auf der Best&auml;tigungs-Seite anbieten, die Abo-Auswahl noch einmal zu &auml;ndern (falls dem Benutzer ein Fehler unterlaufen ist)');
 
+define( '_CFG_GENERAL_MANAGERACCESS_NAME', 'Manager Zugriff:');
+define( '_CFG_GENERAL_MANAGERACCESS_DESC', 'Hiermit d&uuml;rfen nicht nur Administratoren, sondern auch Manager auf das AEC Backend zugreifen.');
+
 //Invoice settings
 define( '_CFG_GENERAL_SENDINVOICE_NAME', 'eine Rechnungs-Email senden');
 define( '_CFG_GENERAL_SENDINVOICE_DESC', 'eine Rechnungs/Bestellungs-Email senden (aus steuerlichen Gr&uuml;nden)');

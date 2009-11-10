@@ -1530,6 +1530,7 @@ class Config_General extends serialParamDBTable
 		$def['standard_currency']				= "USD";
 		$def['confirmation_changeusername']		= 1;
 		$def['confirmation_changeusage']		= 1;
+		$def['manageraccess']					= 0;
 
 		return $def;
 	}
