@@ -979,6 +979,8 @@ function subscriptionDetails( $option, $sub='' )
 			return false;
 		}
 
+		$excludedprocs = array( 'free', 'error' );
+
 		$invoices = array();
 		foreach ( $rows as $rowid ) {
 			$row = new Invoice( $database );
@@ -1009,10 +1011,12 @@ function subscriptionDetails( $option, $sub='' )
 
 				$actionsarray = array();
 
-				$actionsarray[] = '<a href="'
-				.  AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=invoicePrint&amp;invoice='
-				. $row->invoice_number, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '">' . _HISTORY_ACTION_PRINT
-				. '</a>';
+				if ( !in_array( $row->method, $excludedprocs ) ) {
+					$actionsarray[] = '<a href="'
+					.  AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=invoicePrint&amp;invoice='
+					. $row->invoice_number, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '">' . _HISTORY_ACTION_PRINT
+					. '</a>';
+				}
 
 				if ( $row->transaction_date == '0000-00-00 00:00:00' ) {
 					$actionsarray[] = '<a href="'
