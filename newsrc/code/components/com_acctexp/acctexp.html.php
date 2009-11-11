@@ -393,7 +393,7 @@ class HTML_frontEnd
 		?>
 		<tr>
 			<td class="cc_gateway">
-				<p align="center"><img src="<?php echo JURI::root() . 'components/' . $option . '/images/gwlogo_' . $processorObj->processor_name . '.png" alt="' . $processorObj->processor_name . '" title="' . $processorObj->processor_name; ?>" /></p>
+				<p align="center"><img src="<?php echo JURI::root() . 'media/' . $option . '/images/site/gwlogo_' . $processorObj->processor_name . '.png" alt="' . $processorObj->processor_name . '" title="' . $processorObj->processor_name; ?>" /></p>
 			</td>
 			<td class="cc_icons">
 				<p>
@@ -709,8 +709,8 @@ class Payment_HTML
 		}
 
 		for( $i = 0; $i < count( $cc_array ); $i++ ) {
-			$html_code .= '<img src="' . JURI::root() . 'components/' . $option
-			. '/images/cc_icons/ccicon_' . $cc_array[$i] . '.png"'
+			$html_code .= '<img src="' . JURI::root() . 'media/' . $option
+			. '/images/site/cc_icons/ccicon_' . $cc_array[$i] . '.png"'
 			. ' alt="' . $cc_array[$i] . '"'
 			. ' title="' . $cc_array[$i] . '"'
 			. ' class="cc_icon" />';
