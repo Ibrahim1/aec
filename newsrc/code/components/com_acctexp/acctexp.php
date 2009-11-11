@@ -470,7 +470,7 @@ function subscribe( $option )
 	$username	= aecGetParam( 'username', '', true, array( 'string' ) );
 	$email		= aecGetParam( 'email', '', true, array( 'string' ) );
 
-	$token		= aecGetParam( 'aectoken', 0, true, array( 'int' ) );
+	$token		= aecGetParam( 'aectoken', 0, true, array( 'string' ) );
 
 	$forget		= aecGetParam( 'forget', '', true, array( 'string' ) );
 

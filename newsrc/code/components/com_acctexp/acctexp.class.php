@@ -6541,12 +6541,9 @@ class aecTempToken extends serialParamDBTable
 			$session =& JFactory::getSession();
 			return $session->getToken();
 		} else {
-			global $mainframe, $database;
+			global $mainframe;
 
-			$session 	=& $mainframe->_session;
-			$session 	= new mosSession( $database );
-
-			return $session->session_id;
+			return $mainframe->_session->session_id;
 		}
 	}
 
@@ -6614,7 +6611,7 @@ class aecTempToken extends serialParamDBTable
 				$session =& JFactory::getSession();
 				$token = $session->getToken();
 			} else {
-				$token = $mainframe->_session->getCookie();
+				$token = $mainframe->_session->session_id;
 			}
 		}
 
@@ -6631,7 +6628,7 @@ class aecTempToken extends serialParamDBTable
 		}
 
 		if ( empty( $token ) ) {
-			return false;
+			$token = date( 'Y-m-d H:i:s', time() + $mainframe->getCfg( 'offset' ) *3600 );
 		}
 
 		$this->token		= $token;
@@ -7777,7 +7774,17 @@ class InvoiceFactory
 						$temptoken = new aecTempToken( $database );
 						$temptoken->create( $content );
 
-						$mainframe->redirect( 'index.php?option=com_comprofiler&task=registers' );
+						$myparams = "";
+
+						if ( $_GET['fname'] ) {
+							setcookie( "fname", $_GET['fname'], time()+60*10 );
+						}
+
+						if ( $_GET['femail'] ) {
+							setcookie( "femail", $_GET['femail'], time()+60*10 );
+						}
+
+						aecRedirect( 'index.php?option=com_comprofiler&task=registers' );
 					} else {
 						global $task, $mainframe, $_PLUGINS, $ueConfig, $_CB_database;;
 
@@ -7828,7 +7835,7 @@ class InvoiceFactory
 						$temptoken->storeload();
 					}
 
-					$mainframe->redirect( 'index.php?option=com_community&view=register' );
+					aecRedirect( 'index.php?option=com_community&view=register' );
 				} else {
 					if ( !isset( $_POST['usage'] ) ) {
 						$_POST['intro'] = $intro;
