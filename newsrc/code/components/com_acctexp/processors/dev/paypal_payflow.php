@@ -23,7 +23,7 @@ class processor_paypal_payflow extends XMLprocessor
 		$info['currencies']		= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS';
 		$info['languages']		= AECToolbox::getISO4271_codes();
 		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck,giropay';
-		$info['recurring']		= 2;
+		$info['recurring']		= 0;
 		$info['actions']		= array( 'cancel' => array( 'confirm' ) );
 		$info['secure']			= 1;
 
