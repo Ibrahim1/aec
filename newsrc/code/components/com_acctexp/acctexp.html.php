@@ -1397,6 +1397,7 @@ class Payment_HTML
 				</td>
 			</tr>
 		<?php } ?>
+		<?php if ( !empty( $var ) ) { ?>
 			<tr>
 				<td class="checkout_action">
 					<?php
@@ -1404,6 +1405,7 @@ class Payment_HTML
 					?>
 				</td>
 			</tr>
+		<?php } ?>
 		</table>
 		<table width="100%">
 			<tr><td>
