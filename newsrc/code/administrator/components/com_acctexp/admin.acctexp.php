@@ -3482,7 +3482,7 @@ function editSubscriptionPlan( $id, $option )
 	$query = 'SELECT `id` AS value, `name` AS text'
 			. ' FROM #__acctexp_plans'
 			. ' WHERE `active` = 1'
-			. ' AND `id` <> ' . $id
+			. ' AND `id` != \'' . $row->id . '\'';
 			;
 	$database->setQuery( $query );
 	$payment_plans = $database->loadObjectList();
