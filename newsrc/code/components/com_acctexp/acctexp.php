@@ -716,9 +716,14 @@ function subscriptionDetails( $option, $sub='' )
 
 		$metaUser = new metaUser( $user->id );
 
-		if ( !$metaUser->hasSubscription ) {
+		$invoices = AECfetchfromDB::InvoiceCountbyUserID( $user->id );
+
+		$showcheckout = false;
+		if ( !$metaUser->hasSubscription && empty( $invoices ) ) {
 			subscribe( $option );
 			return;
+		} elseif ( !$metaUser->hasSubscription && !empty( $invoices ) ) {
+			$showcheckout = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $user->id );
 		}
 
 		$sf = array( 'overview', 'invoices', 'details' );
@@ -1083,7 +1088,7 @@ function subscriptionDetails( $option, $sub='' )
 		$mainframe->SetPageTitle( _MYSUBSCRIPTION_TITLE . ' - ' . $subfields[$sub] );
 
 		$html = new HTML_frontEnd();
-		$html->subscriptionDetails( $option, $subfields, $sub, $invoices, $metaUser, $upgrade_button, $pp, $mi_info, $alert, $subscriptions, $custom, $hascart );
+		$html->subscriptionDetails( $option, $subfields, $sub, $invoices, $metaUser, $upgrade_button, $pp, $mi_info, $alert, $subscriptions, $custom, $hascart, $showcheckout );
 	}
 }
 

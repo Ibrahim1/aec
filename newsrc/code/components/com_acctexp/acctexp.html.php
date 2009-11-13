@@ -175,7 +175,7 @@ class HTML_frontEnd
 		<?php
 	}
 
-	function subscriptionDetails( $option, $subfields, $sub, $invoices, $metaUser, $upgrade_button, $pp, $mi, $alert, $subscriptions = null, $custom = null, $cart=false )
+	function subscriptionDetails( $option, $subfields, $sub, $invoices, $metaUser, $upgrade_button, $pp, $mi, $alert, $subscriptions = null, $custom = null, $cart=false, $showcheckout )
 	{
 		$database = &JFactory::getDBO();
 
@@ -219,6 +219,15 @@ class HTML_frontEnd
 					<div id="update_button"><input type="image" src="<?php echo JURI::root() . 'media/com_acctexp/images/site/your_cart_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
 					</form><br /><br />
 					<?php }
+
+					if ( !empty( $showcheckout ) ) {
+						?>
+						<p>
+							<?php echo _PENDING_OPENINVOICE; ?>&nbsp;
+							<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice=' . $showcheckout . '&amp;userid=' . $metaUser->userid ); ?>" title="<?php echo _GOTO_CHECKOUT; ?>"><?php echo _GOTO_CHECKOUT; ?></a>
+						</p>
+						<?php
+					}
 
 					foreach ( $subscriptions as $sid => $subscription ) {
 						switch ( $sid ) {
