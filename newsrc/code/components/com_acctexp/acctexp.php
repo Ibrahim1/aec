@@ -739,56 +739,57 @@ function subscriptionDetails( $option, $sub='' )
 
 		$custom = null;
 
-		switch ( strtolower( $metaUser->objSubscription->type ) ) {
-			case 'free':
-			case 'none':
-			case 'transfer':
-			case '':
-				$pp = false;
-				break;
+		$pp = false;
+		if ( !empty( $metaUser->objSubscription->type ) ) {
+			switch ( strtolower( $metaUser->objSubscription->type ) ) {
+				case 'free':
+				case 'none':
+				case 'transfer':
+					break;
 
-			default:
-				$pp = new PaymentProcessor();
-				if ( $pp->loadName( $metaUser->objSubscription->type ) ) {
-					$pp->init();
-					$pp->getInfo();
+				default:
+					$pp = new PaymentProcessor();
+					if ( $pp->loadName( $metaUser->objSubscription->type ) ) {
+						$pp->init();
+						$pp->getInfo();
 
-					$addtabs = $pp->registerProfileTabs();
+						$addtabs = $pp->registerProfileTabs();
 
-					if ( !empty( $addtabs ) ) {
-						foreach ( $addtabs as $atk => $atv ) {
-							$action = $pp->processor_name . '_' . $atk;
-							if ( !isset( $subfields[$action] ) ) {
-								$subfields[$action] = $atv;
+						if ( !empty( $addtabs ) ) {
+							foreach ( $addtabs as $atk => $atv ) {
+								$action = $pp->processor_name . '_' . $atk;
+								if ( !isset( $subfields[$action] ) ) {
+									$subfields[$action] = $atv;
 
-								if ( $action == $sub ) {
-									$custom = $pp->customProfileTab( $atk, $metaUser );
+									if ( $action == $sub ) {
+										$custom = $pp->customProfileTab( $atk, $metaUser );
+									}
 								}
 							}
 						}
+					} else {
+						$pp = false;
 					}
-				} else {
-					$pp = false;
-				}
-				break;
+					break;
+			}
 		}
 
-		if ( strcmp( $metaUser->objSubscription->status, 'Cancelled' ) == 0 ) {
-			$recurring = 0;
-		} else {
-			$recurring = $metaUser->objSubscription->recurring;
+		$recurring = 0;
+		if ( !empty( $metaUser->objSubscription->status ) ) {
+			if ( strcmp( $metaUser->objSubscription->status, 'Cancelled' ) != 0 ) {
+				$recurring = $metaUser->objSubscription->recurring;
+			}
 		}
 
+		$upgrade_button = true;
 		if ( $aecConfig->cfg['renew_button_never'] ) {
 			$upgrade_button = false;
 		} elseif ( $aecConfig->cfg['renew_button_nolifetimerecurring'] ) {
-			if ( $recurring || $metaUser->objSubscription->lifetime ) {
-				$upgrade_button = false;
-			} else {
-				$upgrade_button = true;
+			if ( !empty( $metaUser->objSubscription->lifetime ) ) {
+				if ( $recurring || $metaUser->objSubscription->lifetime ) {
+					$upgrade_button = false;
+				}
 			}
-		} else {
-			$upgrade_button = true;
 		}
 
 		$mi_info = '';
@@ -797,7 +798,7 @@ function subscriptionDetails( $option, $sub='' )
 
 		$actionprocs = array();
 
-		if ( $metaUser->objSubscription->plan ) {
+		if ( !empty( $metaUser->objSubscription->plan ) ) {
 			$selected_plan = new SubscriptionPlan( $database );
 			$selected_plan->load( $metaUser->objSubscription->plan );
 
@@ -873,14 +874,16 @@ function subscriptionDetails( $option, $sub='' )
 		}
 
 		$alert = array();
-		if ( strcmp( $metaUser->objSubscription->status, 'Excluded' ) === 0 ) {
-			$alert['level']		= 3;
-			$alert['daysleft']	= 'excluded';
-		} elseif ( !empty( $metaUser->objSubscription->lifetime ) ) {
-			$alert['level']		= 3;
-			$alert['daysleft']	= 'infinite';
-		} else {
-			$alert = $metaUser->objSubscription->GetAlertLevel();
+		if ( !empty( $metaUser->objSubscription->status ) ) {
+			if ( strcmp( $metaUser->objSubscription->status, 'Excluded' ) === 0 ) {
+				$alert['level']		= 3;
+				$alert['daysleft']	= 'excluded';
+			} elseif ( !empty( $metaUser->objSubscription->lifetime ) ) {
+				$alert['level']		= 3;
+				$alert['daysleft']	= 'infinite';
+			} else {
+				$alert = $metaUser->objSubscription->GetAlertLevel();
+			}
 		}
 
 		$user_subscriptions = $metaUser->getSecondarySubscriptions();
