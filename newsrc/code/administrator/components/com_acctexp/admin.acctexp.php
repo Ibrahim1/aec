@@ -3554,9 +3554,12 @@ function editSubscriptionPlan( $id, $option )
 	$inherited = $row->getMicroIntegrations( true );
 
 	$inherited_list = array();
-	foreach ( $mi_list as $miobj ) {
-		if ( in_array( $miobj->value, $inherited ) ) {
-			$inherited_list[] = $miobj;
+
+	if ( !empty( $inherited ) ) {
+		foreach ( $mi_list as $miobj ) {
+			if ( in_array( $miobj->value, $inherited ) ) {
+				$inherited_list[] = $miobj;
+			}
 		}
 	}
 

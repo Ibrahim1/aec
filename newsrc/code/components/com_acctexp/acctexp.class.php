@@ -2514,6 +2514,36 @@ class PaymentProcessorHandler
 
 		return $database->loadResultArray();
 	}
+
+	function getObjectList( $array, $getinfo=false, $getsettings=false )
+	{
+		$excluded = array( 'free', 'none', 'transfer' );
+
+		$list = array();
+		foreach ( $array as $ppname ) {
+			if ( empty( $ppname ) || in_array( $ppname, $excluded ) ) {
+				continue;
+			}
+
+			$pp = new PaymentProcessor();
+
+			if ( $pp->loadName( $metaUser->objSubscription->type ) ) {
+				$pp->init();
+
+				if ( $getinfo ) {
+					$pp->getInfo();
+				}
+
+				if ( $getsettings ) {
+					$pp->getSettings();
+				}
+			}
+
+			$list[$ppname] = $pp;
+		}
+
+		return $list;
+	}
 }
 
 class PaymentProcessor
@@ -2955,6 +2985,11 @@ class PaymentProcessor
 
 	function customProfileTab( $action, $metaUser )
 	{
+		$s = $this->processor_name . '_';
+		if ( strpos( $action, $s ) ) {
+			$action = str_replace( $s, '', $action );
+		}
+
 		if ( empty( $this->settings ) ) {
 			$this->getSettings();
 		}
@@ -3185,6 +3220,25 @@ class PaymentProcessor
 		return $response;
 	}
 
+	function getProfileTabs( $subfields, $metaUser )
+	{
+		$addtabs = $this->registerProfileTabs();
+
+		if ( empty( $addtabs ) ) {
+			return $subfields;
+		}
+
+		foreach ( $addtabs as $atk => $atv ) {
+			$action = $this->processor_name . '_' . $atk;
+			if ( isset( $subfields[$action] ) ) {
+				continue;
+			}
+
+			$subfields[$action] = $atv;
+		}
+
+		return $subfields;
+	}
 }
 
 class processor extends serialParamDBTable
@@ -8494,6 +8548,8 @@ class InvoiceFactory
 
 		$this->loadItems();
 
+		$this->invoice->formatInvoiceNumber();
+
 		$data = $this->invoice->getPrintout( $this );
 
 		$exchange = $silent = null;
@@ -9811,7 +9867,7 @@ class Invoice extends serialParamDBTable
 
 		foreach ( $otherfields as $field ) {
 			if ( !empty( $aecConfig->cfg["invoice_".$field] ) ) {
-				$data[$field] = $aecConfig->cfg["invoice_".$field];
+				$data[$field] = AECToolbox::rewriteEngineRQ( $aecConfig->cfg["invoice_".$field], $InvoiceFactory );
 			} else {
 				$data[$field] = "";
 			}
