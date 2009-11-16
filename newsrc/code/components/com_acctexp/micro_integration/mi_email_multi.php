@@ -59,7 +59,7 @@ class mi_email_multi extends MI
 				$pf = 'email_' . $i . '_';
 
 				if ( !empty( $this->settings[$pf.'recipient'] ) && !empty( $this->settings[$pf.'timing'] ) ) {
-					if ( strpos( $this->settings[$pf.'timing'], '-' ) === 0 ) {
+					if ( ( strpos( $this->settings[$pf.'timing'], '-' ) === 0 ) || ( strpos( $this->settings[$pf.'timing'], '++' ) === 0 ) ) {
 						// Go back from Expiration date
 						$tstamp = strtotime( $request->metaUser->focusSubscription->expiration );
 					} else {
@@ -67,7 +67,13 @@ class mi_email_multi extends MI
 						$tstamp = time();
 					}
 
-					$due_date = strtotime( $this->settings[$pf.'timing'], $tstamp );
+					if ( strpos( $this->settings[$pf.'timing'], '++' ) === 0 ) {
+						$time = str_replace( '++', '+', $this->settings[$pf.'timing'] );
+					} else {
+						$time = $this->settings[$pf.'timing'];
+					}
+
+					$due_date = strtotime( $time, $tstamp );
 
 					$this->issueEvent( $request, 'email', $due_date, array(), array( 'emailid' => $i ) );
 				}
