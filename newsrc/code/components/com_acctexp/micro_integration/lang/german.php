@@ -961,4 +961,18 @@ define( 'AEC_TEXTMODE_AFTER',		'After - Place the text in the editor after the o
 define( 'AEC_TEXTMODE_REPLACE',		'Replace - Replace the original text with the text in the editor' );
 define( 'AEC_TEXTMODE_DELETE',		'Delete - Delete the original text' );
 
+// RStickets
+define( '_AEC_MI_NAME_RSTICKETS',		'RStickets' );
+define( '_AEC_MI_DESC_RSTICKETS',		'Change the Information that is displayed when printing the invoice for a plan that has this MI attached' );
+define( '_MI_MI_RSTICKETS_USERID_NAME',		'Userid' );
+define( '_MI_MI_RSTICKETS_USERID_DESC',		'The Userid - use the RWengine for dynamic userid.' );
+define( '_MI_MI_RSTICKETS_DEPARTMENT_NAME',		'Department' );
+define( '_MI_MI_RSTICKETS_DEPARTMENT_DESC',		'The Department that the ticket will be assigned to.' );
+define( '_MI_MI_RSTICKETS_SUBJECT_NAME',		'Subject' );
+define( '_MI_MI_RSTICKETS_SUBJECT_DESC',		'The Ticket Subject line.' );
+define( '_MI_MI_RSTICKETS_TEXT_NAME',		'Text' );
+define( '_MI_MI_RSTICKETS_TEXT_DESC',		'The Ticket Text.' );
+define( '_MI_MI_RSTICKETS_PRIORITY_NAME',		'Priority' );
+define( '_MI_MI_RSTICKETS_PRIORITY_DESC',		'The Ticket Priority.' );
+
 ?>
