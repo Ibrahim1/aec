@@ -219,7 +219,7 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'subscriptiondetails':
-			$sub		= aecGetParam( 'sub', '', true, array( 'word', 'string' ) );
+			$sub		= aecGetParam( 'sub', 'overview', true, array( 'word', 'string' ) );
 
 			subscriptionDetails( $option, $sub );
 			break;
@@ -698,382 +698,223 @@ function confirmSubscription( $option )
 	}
 }
 
-function subscriptionDetails( $option, $sub='' )
+function subscriptionDetails( $option, $sub='overview' )
 {
 	$database = &JFactory::getDBO();
-
 	$user = &JFactory::getUser();
-
-	global $mainframe, $aecConfig;
 
 	if ( !$user->id ) {
 		return notAllowed( $option );
 	}
 
+	global $mainframe, $aecConfig;
+
+	$ssl		= !empty( $aecConfig->cfg['ssl_profile'] );
+
+	// Redirect to SSL if the config requires it
 	if ( !empty( $aecConfig->cfg['ssl_profile'] ) && empty( $_SERVER['HTTPS'] ) && !$aecConfig->cfg['override_reqssl'] ) {
 		aecRedirect( AECToolbox::deadsureURL( "index.php?option=" . $option . "&task=subscriptiondetails", true, false ) );
 		exit();
-	};
+	}
 
-	$metaUser = new metaUser( $user->id );
+	// Load metaUser and invoice data
+	$metaUser	= new metaUser( $user->id );
+	$invoiceno	= AECfetchfromDB::InvoiceCountbyUserID( $metaUser->userid );
+	$properties	= array();
 
-	$invoices = AECfetchfromDB::InvoiceCountbyUserID( $user->id );
+	$properties['showcheckout'] = false;
 
-	$showcheckout = false;
-	if ( !$metaUser->hasSubscription && empty( $invoices ) ) {
+	// Do not let the user in without a subscription or at least an invoice
+	if ( !$metaUser->hasSubscription && empty( $invoiceno ) ) {
 		subscribe( $option );
 		return;
-	} elseif ( !$metaUser->hasSubscription && !empty( $invoices ) ) {
-		$showcheckout = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $user->id );
+	} elseif ( !$metaUser->hasSubscription && !empty( $invoiceno ) ) {
+		$properties['showcheckout'] = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $metaUser->userid );
 	}
 
-	$sf = array( 'overview', 'invoices', 'details' );
-
-	$subfields = array();
-	foreach ( $sf as $fname ) {
-		$subfields[$fname] = constant( strtoupper( '_aec_subdetails_tab_' . $fname ) );
+	// Prepare Main Tabs
+	$tabs = array();
+	foreach ( array( 'overview', 'invoices', 'details' ) as $fname ) {
+		$tabs[$fname] = constant( strtoupper( '_aec_subdetails_tab_' . $fname ) );
 	}
 
-	if ( empty( $sub ) ) {
-		$sub = 'overview';
-	}
+	// If we have a cart, we want to link to it
+	$cart = aecCartHelper::getCartbyUserid( $metaUser->userid );
 
-	$custom = null;
+	$properties['hascart'] = $cart->id;
+	$properties['alert'] = $metaUser->getAlertLevel();
 
+	// Load a couple of basic variables
+	$subscriptions	= array();
+	$pplist			= array();
+	$actionprocs	= array();
+	$excludedprocs	= array( 'free', 'error' );
+	$custom			= null;
+	$mi_info		= null;
+
+	// Start off the processor list with objSubscription
 	if ( !empty( $metaUser->objSubscription->type ) ) {
 		$pplist = array( $metaUser->objSubscription->type );
 	}
 
-	$pps = PaymentProcessorHandler::getObjectList( $pplist, true );
-
-	foreach ( $pps as $pp ) {
-		$subfields = $pp->getProfileTabs( $subfields, $metaUser );
-	}
-
-	foreach ( $subfields as $action => $subf ) {
-		if ( $action == $sub ) {
-			$custom = $pp->customProfileTab( $action, $metaUser );
-		}
-	}
-
-	$recurring = 0;
-	if ( !empty( $metaUser->objSubscription->status ) ) {
-		if ( strcmp( $metaUser->objSubscription->status, 'Cancelled' ) != 0 ) {
-			$recurring = $metaUser->objSubscription->recurring;
-		}
-	}
-
-	$upgrade_button = true;
+	// The upgrade button might only show on some occasions
+	$properties['upgrade_button'] = true;
 	if ( $aecConfig->cfg['renew_button_never'] ) {
-		$upgrade_button = false;
+		$properties['upgrade_button'] = false;
 	} elseif ( $aecConfig->cfg['renew_button_nolifetimerecurring'] ) {
 		if ( !empty( $metaUser->objSubscription->lifetime ) ) {
-			if ( $recurring || $metaUser->objSubscription->lifetime ) {
-				$upgrade_button = false;
+			if ( $metaUser->isRecurring() || $metaUser->objSubscription->lifetime ) {
+				$properties['upgrade_button'] = false;
 			}
 		}
 	}
 
-	$mi_info = '';
-
-	$subscriptions = array();
-
-	$actionprocs = array();
-
+	// Build the User Subscription List
+	$subList = $metaUser->getSecondarySubscriptions();
 	if ( !empty( $metaUser->objSubscription->plan ) ) {
-		$selected_plan = new SubscriptionPlan( $database );
-		$selected_plan->load( $metaUser->objSubscription->plan );
-
-		$mis = $selected_plan->micro_integrations;
-
-		if ( count( $mis ) ) {
-			foreach ( $mis as $mi_id ) {
-				if ( $mi_id ) {
-					$mi = new MicroIntegration( $database );
-					$mi->load( $mi_id );
-
-					if ( !$mi->callIntegration() ) {
-						continue;
-					}
-
-					$info = $mi->profile_info( $metaUser );
-					if ( $info !== false ) {
-						$mi_info .= $info;
-					}
-				}
-
-				$addtabs = $mi->registerProfileTabs();
-
-				if ( !empty( $addtabs ) ) {
-					foreach ( $addtabs as $atk => $atv ) {
-						$action = $mi->class_name . '_' . $atk;
-						if ( !isset( $subfields[$action] ) ) {
-							$subfields[$action] = $atv;
-
-							if ( $action == $sub ) {
-								$custom = $mi->customProfileTab( $atk, $metaUser );
-							}
-						}
-					}
-				}
-			}
-		}
-
-		if ( $pp != false ) {
-			if ( !empty( $pp->info['actions'] ) && ( ( strcmp( $metaUser->objSubscription->status, 'Active' ) === 0 ) || ( strcmp( $metaUser->objSubscription->status, 'Trial' ) === 0 )) ) {
-				$actions = $pp->info['actions'];
-
-				$selected_plan->proc_actions = array();
-				foreach ( $actions as $action => $aoptions ) {
-					$insert = "";
-
-					if ( !empty( $aoptions ) ) {
-						foreach ( $aoptions as $opt ) {
-							switch ( $opt ) {
-								case 'confirm':
-									$insert .= ' onclick="return show_confirm(\'' . _AEC_YOUSURE . '\')" ';
-									break;
-								default:
-									break;
-							}
-						}
-					}
-
-					$selected_plan->proc_actions[] = '<a href="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action . '&amp;subscr=' . $metaUser->objSubscription->id, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '"' . $insert . '>' . $action . '</a>';
-				}
-			}
-		}
-
-		$subscriptions[] = $selected_plan;
-
-		if ( !empty( $selected_plan->proc_actions ) ) {
-			$actionprocs[$metaUser->objSubscription->id] = count( $subscriptions ) - 1;
-		}
+		$subList = array_merge( array( $metaUser->objSubscription ), $subList );
 	}
 
-	if ( empty( $mi_info ) ) {
-		unset( $subfields['details'] );
-	}
-
-	$alert = array();
-	if ( !empty( $metaUser->objSubscription->status ) ) {
-		if ( strcmp( $metaUser->objSubscription->status, 'Excluded' ) === 0 ) {
-			$alert['level']		= 3;
-			$alert['daysleft']	= 'excluded';
-		} elseif ( !empty( $metaUser->objSubscription->lifetime ) ) {
-			$alert['level']		= 3;
-			$alert['daysleft']	= 'infinite';
-		} else {
-			$alert = $metaUser->objSubscription->GetAlertLevel();
-		}
-	}
-
-	$user_subscriptions = $metaUser->getSecondarySubscriptions();
-
-	$processors = array();
-
-	if ( !empty( $user_subscriptions ) ) {
-		foreach( $user_subscriptions as $subscription ) {
+	// Prepare Payment Processors attached to active subscriptions
+	if ( !empty( $subList ) ) {
+		foreach( $subList as $usid => $subscription ) {
 			if ( empty( $subscription->id ) || empty( $subscription->plan ) ) {
+				unset( $subList[$usid] );
 				continue;
 			}
 
-			$secondary_plan = new SubscriptionPlan( $database );
-			$secondary_plan->load( $subscription->plan );
+			$subList[$usid]->objPlan = new SubscriptionPlan( $database );
+			$subList[$usid]->objPlan->load( $subscription->plan );
 
-			if ( !isset( $processors[$subscription->type] ) ) {
-				$spp = new PaymentProcessor();
-				if ( $spp->loadName( $subscription->type ) ) {
-					$spp->init();
-					$spp->getInfo();
-
-					$addtabs = $spp->registerProfileTabs();
-
-					if ( !empty( $addtabs ) ) {
-						foreach ( $addtabs as $atk => $atv ) {
-							$action = $spp->processor_name . '_' . $atk;
-							if ( !isset( $subfields[$action] ) ) {
-								$subfields[$action] = $atv;
-
-								if ( $action == $sub ) {
-									$custom = $spp->customProfileTab( $atk, $metaUser );
-								}
-							}
-						}
-					}
-				} else {
-					$spp = false;
-				}
-
-				$processors[$subscription->type] = $spp;
-			} else {
-				$spp = $processors[$subscription->type];
-			}
-
-
-			if ( !empty( $spp->info['actions'] ) && ( ( strcmp( $metaUser->objSubscription->status, 'Active' ) === 0 ) || ( strcmp( $metaUser->objSubscription->status, 'Trial' ) === 0 ) ) ) {
-				$actions = $spp->info['actions'];
-
-				$secondary_plan->proc_actions = array();
-				foreach ( $actions as $action => $aoptions ) {
-					$insert = "";
-
-					if ( !empty( $aoptions ) ) {
-						foreach ( $aoptions as $opt ) {
-							switch ( $opt ) {
-								case 'confirm':
-									$insert .= ' onclick="return show_confirm(\'' . _AEC_YOUSURE . '\')" ';
-									break;
-								default:
-									break;
-							}
-						}
-					}
-
-					$selected_plan->proc_actions[] = '<a href="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action . '&amp;subscr=' . $subscription->id, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '"' . $insert . '>' . $action . '</a>';
-				}
-			}
-
-			$subscriptions[] = $secondary_plan;
-
-			if ( !empty( $secondary_plan->proc_actions ) ) {
-				$actionprocs[$subscription->id] = count( $subscriptions ) - 1;
+			if ( !in_array( $subList[$usid]->objPlan->type, $pplist ) ) {
+				$pplist[] = $subList[$usid]->objPlan->type;
 			}
 		}
 	}
 
-	// count number of payments from user
-	$query = 'SELECT count(*)'
-			. ' FROM #__acctexp_invoices'
-			. ' WHERE `userid` = \'' . $user->id . '\''
-			. ' AND `active` = \'1\''
-			;
-	$database->setQuery( $query );
-	$rows_total	= $database->loadResult();
+	$invoiceList = AECfetchfromDB::InvoiceIdList( $metaUser->userid, $invoiceno );
 
-	$rows_limit	= 20;
-	$min_limit	= ( $rows_total > $rows_limit ) ? ( $rows_total - $rows_limit ) : 0;
-
-	// get payments from user
-	$query = 'SELECT `id`'
-			. ' FROM #__acctexp_invoices'
-			. ' WHERE `userid` = \'' . $user->id . '\''
-			. ' AND `active` = \'1\''
-			. ' ORDER BY `transaction_date` DESC'
-			. ' LIMIT ' . $min_limit . ',' . $rows_limit
-			;
-	$database->setQuery( $query );
-	$rows = $database->loadResultArray();
-	if ( $database->getErrorNum() ) {
-		echo $database->stderr();
-		return false;
-	}
-
-	$excludedprocs = array( 'free', 'error' );
+	$invoiceactionlink = 'index.php?option=' . $option . '&amp;task=%s&amp;%s';
 
 	$invoices = array();
-	foreach ( $rows as $rowid ) {
-		$row = new Invoice( $database );
-		$row->load( $rowid );
+	foreach ( $invoiceList as $invoiceid ) {
+		$invoice = new Invoice( $database );
+		$invoice->load( $invoiceid );
 
-		$hassubstuff = array_key_exists( $row->subscr_id, $actionprocs );
+		$hassubstuff = array_key_exists( $invoice->subscr_id, $actionprocs );
 
-		if ( ( $row->transaction_date == '0000-00-00 00:00:00' ) || ( $row->subscr_id  ) || $hassubstuff ) {
-			$transactiondate = 'uncleared';
-
-			if ( !empty( $row->params ) && is_array( $row->params ) ) {
-				if ( in_array( 'pending_reason', $row->params ) ) {
-					$array = array();
-					foreach ( $row->params as $chunk ) {
-						$k = explode( '=', $chunk );
-						$array[$k[0]] = stripslashes( $k[1] );
-					}
-
-					if ( isset( $array['pending_reason'] ) ) {
-						if ( defined( '_PAYMENT_PENDING_REASON_' . strtoupper( $array['pending_reason'] ) ) ) {
-							$transactiondate = constant( '_PAYMENT_PENDING_REASON_' . strtoupper( $array['pending_reason'] ) );
-						} else {
-							$transactiondate = $array['pending_reason'];
-						}
-					}
-				}
-			}
-
+		if ( ( $invoice->transaction_date == '0000-00-00 00:00:00' ) || ( $invoice->subscr_id  ) || $hassubstuff ) {
 			$actionsarray = array();
 
-			if ( !in_array( $row->method, $excludedprocs ) ) {
-				$actionsarray[] = '<a href="'
-				.  AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=invoicePrint&amp;invoice='
-				. $row->invoice_number, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '" target="_blank">' . _HISTORY_ACTION_PRINT
-				. '</a>';
+			if ( !in_array( $invoice->method, $excludedprocs ) ) {
+				$actionsarray[] = array( 	'task'	=> 'invoicePrint',
+											'add'	=> 'invoice=' . $invoice->invoice_number,
+											'text'	=> _HISTORY_ACTION_PRINT );
 			}
 
-			if ( $row->transaction_date == '0000-00-00 00:00:00' ) {
-				$actionsarray[] = '<a href="'
-				.  AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice='
-				. $row->invoice_number, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '">' . _HISTORY_ACTION_REPEAT
-				. '</a>';
+			if ( $invoice->transaction_date == '0000-00-00 00:00:00' ) {
+				$actionsarray[] = array( 	'task'	=> 'repeatPayment',
+											'add'	=> 'invoice=' . $invoice->invoice_number,
+											'text'	=> _HISTORY_ACTION_REPEAT );
 
-				if ( is_null( $row->fixed ) || !$row->fixed ) {
-					$actionsarray[] = '<a href="'
-					. AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=cancelPayment&amp;invoice='
-					. $row->invoice_number, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '">' . _HISTORY_ACTION_CANCEL
-					. '</a>';
+				if ( is_null( $invoice->fixed ) || !$invoice->fixed ) {
+					$actionsarray[] = array('task'	=> 'cancelPayment',
+											'add'	=> 'invoice=' . $invoice->invoice_number,
+											'text'	=> _HISTORY_ACTION_CANCEL );
 				}
-			} else {
-				$transactiondate = HTML_frontend::DisplayDateInLocalTime( $row->transaction_date );
 			}
 
-			if ( $hassubstuff && !empty( $subscriptions[$actionprocs[$row->subscr_id]]->proc_actions ) && is_array( $subscriptions[$actionprocs[$row->subscr_id]]->proc_actions ) ) {
-				$actionsarray = array_merge( $subscriptions[$actionprocs[$row->subscr_id]]->proc_actions, $actionsarray );
+			$ap = $actionprocs[$invoice->subscr_id];
+			if ( $hassubstuff && !empty( $subscriptions[$ap]->proc_actions ) ) {
+				$actionsarray = array_merge( $subscriptions[$ap]->proc_actions, $actionsarray );
+			}
+
+			foreach ( $actionsarray as $aid => $a ) {
+				if ( is_array( $a ) ) {
+					$link = AECToolbox::deadsureURL( sprintf( $invoiceactionlink, $a['task'], $a['add'] ), $ssl );
+
+					$actionsarray[$aid] = '<a href="' . $link . '">' . $a['text'] . '</a>';
+				}
 			}
 
 			$actions = implode( ' | ', $actionsarray );
 
 			$rowstyle = ' style="background-color:#fee;"';
 		} else {
-			$transactiondate	= HTML_frontend::DisplayDateInLocalTime( $row->transaction_date );
 			$actions			= '- - -';
 			$rowstyle			= '';
 		}
 
-		if ( !isset( $processors[$row->method] ) ) {
-			$processors[$row->method] = new PaymentProcessor();
-			if ( $processors[$row->method]->loadName( $row->method ) ) {
-				$processors[$row->method]->init();
-				$processors[$row->method]->getInfo();
-
-				$processor = $processors[$row->method]->info['longname'];
-			} else {
-				$processor = $row->method;
-			}
+		if ( !in_array( $invoice->method, $pplist ) ) {
+			$pplist[] = $invoice->method;
 		} else {
-			$processor = $processors[$row->method]->info['longname'];
+			$processor = $pplist[$invoice->method]->info['longname'];
 		}
 
-		$row->formatInvoiceNumber();
+		if ( !empty( $pplist[$invoice->method]->info['longname'] ) ) {
+			$processor = $pplist[$invoice->method]->info['longname'];
+		} else {
+			$processor = $invoice->method;
+		}
 
-		$invoices[$rowid]['invoice_number']	= $row->invoice_number;
-		$invoices[$rowid]['amount']			= $row->amount;
-		$invoices[$rowid]['currency_code']	= $row->currency;
-		$invoices[$rowid]['processor']		= $processor;
-		$invoices[$rowid]['actions']		= $actions;
-		$invoices[$rowid]['rowstyle']		= $rowstyle;
-		$invoices[$rowid]['transactiondate'] = $transactiondate;
+		$invoice->formatInvoiceNumber();
+
+		$invoices[$rowid]['invoice_number']		= $invoice->invoice_number;
+		$invoices[$rowid]['amount']				= $invoice->amount;
+		$invoices[$rowid]['currency_code']		= $invoice->currency;
+		$invoices[$rowid]['processor']			= $processor;
+		$invoices[$rowid]['actions']			= $actions;
+		$invoices[$rowid]['rowstyle']			= $rowstyle;
+		$invoices[$rowid]['transactiondate']	= $invoice->getTransactionStatus();
 	}
 
-	if ( empty( $invoices ) ) {
-		unset( $sf[array_search( 'invoices', $sf )] );
+	$pps = PaymentProcessorHandler::getObjectList( $pplist, true );
+
+	// Get the tabs information from the plan
+	if ( !empty( $subList ) ) {
+		foreach( $subList as $usid => $subscription ) {
+			if ( !empty( $pp->info['actions'] ) && ( ( strcmp( $metaUser->objSubscription->status, 'Active' ) === 0 ) || ( strcmp( $metaUser->objSubscription->status, 'Trial' ) === 0 ) ) ) {
+				$actions = $pp->info['actions'];
+
+				$subscription->objPlan->proc_actions = array();
+				foreach ( $actions as $action => $aoptions ) {
+					$insert = "";
+
+					if ( !empty( $aoptions ) ) {
+						foreach ( $aoptions as $opt ) {
+							switch ( $opt ) {
+								case 'confirm':
+									$insert .= ' onclick="return show_confirm(\'' . _AEC_YOUSURE . '\')" ';
+									break;
+								default:
+									break;
+							}
+						}
+					}
+
+					$selected_plan->proc_actions[] = '<a href="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action . '&amp;subscr=' . $subscription->id, $ssl ) . '"' . $insert . '>' . $action . '</a>';
+				}
+			}
+
+			$subscriptions[] = $subscription->objPlan;
+
+			if ( !empty( $subscription->objPlan->proc_actions ) ) {
+				$actionprocs[$subscription->id] = count( $subscriptions ) - 1;
+			}
+		}
+	}
+	foreach ( $pps as $pp ) {
+		$tabs = $pp->getProfileTabs( $tabs, $metaUser );
 	}
 
-	$cart = aecCartHelper::getCartbyUserid( $metaUser->userid );
+	if ( $action == $sub ) {
+		$custom = $pp->customProfileTab( $action, $metaUser );
+	}
 
-	$hascart = $cart->id;
-
-	$mainframe->SetPageTitle( _MYSUBSCRIPTION_TITLE . ' - ' . $subfields[$sub] );
+	$mainframe->SetPageTitle( _MYSUBSCRIPTION_TITLE . ' - ' . $tabs[$sub] );
 
 	$html = new HTML_frontEnd();
-	$html->subscriptionDetails( $option, $subfields, $sub, $invoices, $metaUser, $upgrade_button, $pp, $mi_info, $alert, $subscriptions, $custom, $hascart, $showcheckout );
+	$html->subscriptionDetails( $option, $tabs, $sub, $invoices, $metaUser, $mi_info, $subscriptions, $custom, $properties );
 }
 
 function internalCheckout( $option, $invoice_number, $userid )

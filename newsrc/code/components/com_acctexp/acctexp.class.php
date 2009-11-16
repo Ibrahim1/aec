@@ -1141,6 +1141,35 @@ class metaUser
 		return $return;
 	}
 
+	function getAlertLevel()
+	{
+		$alert = array();
+
+		if ( !empty( $this->objSubscription->status ) ) {
+			if ( strcmp( $this->objSubscription->status, 'Excluded' ) === 0 ) {
+				$alert['level']		= 3;
+				$alert['daysleft']	= 'excluded';
+			} elseif ( !empty( $this->objSubscription->lifetime ) ) {
+				$alert['level']		= 3;
+				$alert['daysleft']	= 'infinite';
+			} else {
+				$alert = $this->objSubscription->GetAlertLevel();
+			}
+		}
+
+		return $alert;
+	}
+
+	function isRecurring()
+	{
+		if ( !empty( $this->objSubscription->status ) ) {
+			if ( strcmp( $this->objSubscription->status, 'Cancelled' ) != 0 ) {
+				return $this->objSubscription->recurring;
+			}
+		}
+
+		return false;
+	}
 }
 
 class metaUserDB extends serialParamDBTable
@@ -3220,24 +3249,24 @@ class PaymentProcessor
 		return $response;
 	}
 
-	function getProfileTabs( $subfields, $metaUser )
+	function getProfileTabs( $tabs, $metaUser )
 	{
 		$addtabs = $this->registerProfileTabs();
 
 		if ( empty( $addtabs ) ) {
-			return $subfields;
+			return $tabs;
 		}
 
 		foreach ( $addtabs as $atk => $atv ) {
 			$action = $this->processor_name . '_' . $atk;
-			if ( isset( $subfields[$action] ) ) {
+			if ( isset( $tabs[$action] ) ) {
 				continue;
 			}
 
-			$subfields[$action] = $atv;
+			$tabs[$action] = $atv;
 		}
 
-		return $subfields;
+		return $tabs;
 	}
 }
 
@@ -9875,6 +9904,27 @@ class Invoice extends serialParamDBTable
 
 		return $data;
 	}
+
+	function getTransactionStatus()
+	{
+		if ( $this->transaction_date == '0000-00-00 00:00:00' ) {
+			$transactiondate = 'uncleared';
+
+			if ( empty( $this->params ) || empty( $row->params['pending_reason'] ) ) {
+				return $transactiondate;
+			}
+
+			if ( defined( '_PAYMENT_PENDING_REASON_' . strtoupper( $row->params['pending_reason'] ) ) ) {
+				$transactiondate = constant( '_PAYMENT_PENDING_REASON_' . strtoupper( $row->params['pending_reason'] ) );
+			} else {
+				$transactiondate = $row->params['pending_reason'];
+			}
+		} else {
+			$transactiondate = HTML_frontend::DisplayDateInLocalTime( $this->transaction_date );
+		}
+
+		return $transactiondate;
+	}
 }
 
 class aecCartHelper
@@ -11409,6 +11459,23 @@ class AECfetchfromDB
 				;
 		$database->setQuery( $query );
 		return $database->loadResult();
+	}
+
+	function InvoiceIdList( $userid, $total, $max=20, $sort='`transaction_date` DESC' )
+	{
+		$database = &JFactory::getDBO();
+
+		$min_limit	= ( $total > $max ) ? ( $total - $max ) : 0;
+
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_invoices'
+				. ' WHERE `userid` = \'' . $userid . '\''
+				. ' AND `active` = \'1\''
+				. ' ORDER BY ' . $sort
+				. ' LIMIT ' . $min_limit . ',' . $max
+				;
+		$database->setQuery( $query );
+		return $database->loadResultArray();
 	}
 
 	function SubscriptionIDfromUserID( $userid )

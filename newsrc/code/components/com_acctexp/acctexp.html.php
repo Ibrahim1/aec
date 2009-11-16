@@ -175,7 +175,7 @@ class HTML_frontEnd
 		<?php
 	}
 
-	function subscriptionDetails( $option, $subfields, $sub, $invoices, $metaUser, $upgrade_button, $pp, $mi, $alert, $subscriptions = null, $custom = null, $cart=false, $showcheckout )
+	function subscriptionDetails( $option, $tabs, $sub, $invoices, $metaUser, $upgrade_button, $mi, $alert, $subscriptions = null, $custom = null, $cart=false, $showcheckout, $properties )
 	{
 		$database = &JFactory::getDBO();
 
@@ -201,7 +201,7 @@ class HTML_frontEnd
 			<div id="aec_navlist_profile">
 				<ul id="aec_navlist_profile">
 				<?php
-				foreach ( $subfields as $fieldlink => $fieldname ) {
+				foreach ( $tabs as $fieldlink => $fieldname ) {
 					if ( $fieldlink == $sub ) {
 						$id = ' id="current"';
 					} else {
@@ -219,18 +219,18 @@ class HTML_frontEnd
 						echo '<p>' . _MEMBER_SINCE . '&nbsp;' . HTML_frontend::DisplayDateInLocalTime( $metaUser->objSubscription->signup_date ) .'</p>';
 					}
 
-					if ( $cart ) { ?>
+					if ( $properties['hascart'] ) { ?>
 					<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 					<div id="update_button"><input type="image" src="<?php echo JURI::root() . 'media/com_acctexp/images/site/your_cart_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
 					</form><br /><br />
 					<?php }
 
-					if ( !empty( $showcheckout ) ) {
+					if ( !empty( $properties['showcheckout'] ) ) {
 						?>
 						<br /><br />
 						<p>
 							<?php echo _PENDING_OPENINVOICE; ?>&nbsp;
-							<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice=' . $showcheckout . '&amp;userid=' . $metaUser->userid ); ?>" title="<?php echo _GOTO_CHECKOUT; ?>"><?php echo _GOTO_CHECKOUT; ?></a>
+							<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice=' . $properties['showcheckout'] . '&amp;userid=' . $metaUser->userid ); ?>" title="<?php echo _GOTO_CHECKOUT; ?>"><?php echo _GOTO_CHECKOUT; ?></a>
 						</p>
 						<br /><br />
 						<?php
@@ -258,7 +258,7 @@ class HTML_frontEnd
 						}
 						?>
 						<div id="box_expired">
-						<div id="alert_level_<?php echo $alert['level']; ?>">
+						<div id="alert_level_<?php echo $properties['alert']['level']; ?>">
 							<div id="expired_greeting">
 								<?php
 								$lifetime = false;
@@ -278,18 +278,18 @@ class HTML_frontEnd
 							</div>
 							<div id="days_left">
 								<?php
-								if ( strcmp( $alert['daysleft'], 'infinite' ) === 0 ) {
+								if ( strcmp( $properties['alert']['daysleft'], 'infinite' ) === 0 ) {
 									$daysleft			= _RENEW_DAYSLEFT_INFINITE;
 									$daysleft_append	= $trial ? _RENEW_DAYSLEFT_TRIAL : _RENEW_DAYSLEFT;
-								} elseif ( strcmp( $alert['daysleft'], 'excluded' ) === 0 ) {
+								} elseif ( strcmp( $properties['alert']['daysleft'], 'excluded' ) === 0 ) {
 									$daysleft			= _RENEW_DAYSLEFT_EXCLUDED;
 									$daysleft_append	= '';
 								} else {
-									if ( $alert['daysleft'] >= 0 ) {
-										$daysleft			= $alert['daysleft'];
+									if ( $properties['alert']['daysleft'] >= 0 ) {
+										$daysleft			= $properties['alert']['daysleft'];
 										$daysleft_append	= $trial ? _RENEW_DAYSLEFT_TRIAL : _RENEW_DAYSLEFT;
 									} else {
-										$daysleft			= $alert['daysleft'];
+										$daysleft			= $properties['alert']['daysleft'];
 										$daysleft_append	= _AEC_DAYS_ELAPSED;
 									}
 								}
@@ -297,7 +297,7 @@ class HTML_frontEnd
 								<p><strong><?php echo $daysleft; ?></strong>&nbsp;&nbsp;<?php echo $daysleft_append; ?></p>
 							</div>
 							<?php
-							if ( !empty( $upgrade_button ) ) { ?>
+							if ( !empty( $properties['upgrade_button'] ) ) { ?>
 								<div id="upgrade_button">
 									<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=renewsubscription', !empty( $aecConfig->cfg['ssl_signup'] ) ); ?>" method="post">
 										<input type="hidden" name="option" value="<?php echo $option; ?>" />
@@ -307,12 +307,6 @@ class HTML_frontEnd
 									</form>
 								</div>
 								<?php
-							}
-							if ( is_object( $pp ) ) {
-								if ( isset( $pp->info['cancel_info'] ) ) { ?>
-									<p><?php echo $pp->info['cancel_info'];?></p>
-									<?php
-								}
 							}
 							?>
 							</div>
