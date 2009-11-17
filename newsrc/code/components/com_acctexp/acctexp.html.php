@@ -175,13 +175,11 @@ class HTML_frontEnd
 		<?php
 	}
 
-	function subscriptionDetails( $option, $tabs, $sub, $invoices, $metaUser, $upgrade_button, $mi, $alert, $subscriptions = null, $custom = null, $cart=false, $showcheckout, $properties )
+	function subscriptionDetails( $option, $tabs, $sub, $invoices, $metaUser, $mi, $subscriptions = null, $custom = null, $properties )
 	{
 		$database = &JFactory::getDBO();
 
 		global $aecConfig;
-
-		$securelinks = !empty( $aecConfig->cfg['ssl_profile'] );
 
 		$trial = false;
 		if ( !empty( $metaUser->objSubscription->status ) ) {

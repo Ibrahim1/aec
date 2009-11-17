@@ -3563,7 +3563,7 @@ function editSubscriptionPlan( $id, $option )
 		}
 	}
 
-	$lists['micro_integrations_inherited'] = mosHTML::selectList($mi_list, 'micro_integrations_inherited[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" disabled="disabled"', 'value', 'text', array());
+	$lists['micro_integrations_inherited'] = mosHTML::selectList($inherited_list, 'micro_integrations_inherited[]', 'size="' . min((count( $inherited_list ) + 1), 25) . '" disabled="disabled"', 'value', 'text', array());
 
 	$mi_handler = new microIntegrationHandler();
 	$mi_list = $mi_handler->getIntegrationList();

@@ -741,8 +741,8 @@ function subscriptionDetails( $option, $sub='overview' )
 	// If we have a cart, we want to link to it
 	$cart = aecCartHelper::getCartbyUserid( $metaUser->userid );
 
-	$properties['hascart'] = $cart->id;
-	$properties['alert'] = $metaUser->getAlertLevel();
+	$properties['hascart']	= $cart->id;
+	$properties['alert']	= $metaUser->getAlertLevel();
 
 	// Load a couple of basic variables
 	$subscriptions	= array();
@@ -859,13 +859,13 @@ function subscriptionDetails( $option, $sub='overview' )
 
 		$invoice->formatInvoiceNumber();
 
-		$invoices[$rowid]['invoice_number']		= $invoice->invoice_number;
-		$invoices[$rowid]['amount']				= $invoice->amount;
-		$invoices[$rowid]['currency_code']		= $invoice->currency;
-		$invoices[$rowid]['processor']			= $processor;
-		$invoices[$rowid]['actions']			= $actions;
-		$invoices[$rowid]['rowstyle']			= $rowstyle;
-		$invoices[$rowid]['transactiondate']	= $invoice->getTransactionStatus();
+		$invoices[$invoiceid]['invoice_number']		= $invoice->invoice_number;
+		$invoices[$invoiceid]['amount']				= $invoice->amount;
+		$invoices[$invoiceid]['currency_code']		= $invoice->currency;
+		$invoices[$invoiceid]['processor']			= $processor;
+		$invoices[$invoiceid]['actions']			= $actions;
+		$invoices[$invoiceid]['rowstyle']			= $rowstyle;
+		$invoices[$invoiceid]['transactiondate']	= $invoice->getTransactionStatus();
 	}
 
 	$pps = PaymentProcessorHandler::getObjectList( $pplist, true );
@@ -873,6 +873,41 @@ function subscriptionDetails( $option, $sub='overview' )
 	// Get the tabs information from the plan
 	if ( !empty( $subList ) ) {
 		foreach( $subList as $usid => $subscription ) {
+			$mis = $subscription->objPlan->micro_integrations;
+
+			if ( count( $mis ) ) {
+				foreach ( $mis as $mi_id ) {
+					if ( $mi_id ) {
+						$mi = new MicroIntegration( $database );
+						$mi->load( $mi_id );
+
+						if ( !$mi->callIntegration() ) {
+							continue;
+						}
+
+						$info = $mi->profile_info( $metaUser );
+						if ( $info !== false ) {
+							$mi_info .= $info;
+						}
+					}
+
+					$addtabs = $mi->registerProfileTabs();
+
+					if ( !empty( $addtabs ) ) {
+						foreach ( $addtabs as $atk => $atv ) {
+							$action = $mi->class_name . '_' . $atk;
+							if ( !isset( $subfields[$action] ) ) {
+								$subfields[$action] = $atv;
+
+								if ( $action == $sub ) {
+									$custom = $mi->customProfileTab( $atk, $metaUser );
+								}
+							}
+						}
+					}
+				}
+			}
+
 			if ( !empty( $pp->info['actions'] ) && ( ( strcmp( $metaUser->objSubscription->status, 'Active' ) === 0 ) || ( strcmp( $metaUser->objSubscription->status, 'Trial' ) === 0 ) ) ) {
 				$actions = $pp->info['actions'];
 
@@ -903,6 +938,7 @@ function subscriptionDetails( $option, $sub='overview' )
 			}
 		}
 	}
+
 	foreach ( $pps as $pp ) {
 		$tabs = $pp->getProfileTabs( $tabs, $metaUser );
 	}
@@ -912,6 +948,10 @@ function subscriptionDetails( $option, $sub='overview' )
 	}
 
 	$mainframe->SetPageTitle( _MYSUBSCRIPTION_TITLE . ' - ' . $tabs[$sub] );
+
+	if ( empty( $mi_info ) ) {
+		unset( $tabs['details'] );
+	}
 
 	$html = new HTML_frontEnd();
 	$html->subscriptionDetails( $option, $tabs, $sub, $invoices, $metaUser, $mi_info, $subscriptions, $custom, $properties );

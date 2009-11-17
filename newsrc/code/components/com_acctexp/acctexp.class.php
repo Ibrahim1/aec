@@ -6301,6 +6301,10 @@ class SubscriptionPlan extends serialParamDBTable
 			unset( $post['micro_integrations_hidden'] );
 		}
 
+		if ( !empty( $post['micro_integrations_inherited'] ) ) {
+			unset( $post['micro_integrations_inherited'] );
+		}
+
 		// Update MI settings
 		foreach ( $post['micro_integrations'] as $miid ) {
 			$mi = new microIntegration( $database );

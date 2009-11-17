@@ -373,7 +373,7 @@ padding: 15px;
 text-align: center;
 border: 2px solid #fff;
 position: relative;
-text-align: center;
+text-align: center !important;
 display: block;
 }
 
