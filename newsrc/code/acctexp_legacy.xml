@@ -6,31 +6,24 @@
 	<copyright>@Copyright (C) 2004-2009 David Deutsch</copyright>
 	<authorEmail>skore@valanx.org</authorEmail>
 	<authorUrl>http://valanx.org</authorUrl>
-	<version>0.12.6</version>
+	<version>0.12.6.2</version>
 	<description>A complete subscription management system. By David Deutsch (skOre) and the team of AEC at valanx.org (started by Helder Garcia (hlbog))</description>
-	<files>
+	<files folder="components/com_acctexp">
 		<filename>index.html</filename>
 		<filename>acctexp.php</filename>
 		<filename>acctexp.class.php</filename>
 		<filename>acctexp.html.php</filename>
-		<filename>style.css</filename>
-		<filename>invoice_style.css</filename>
-		<filename>com_acctexp_language/index.html</filename>
-		<filename>com_acctexp_language/brazilian_portuguese.php</filename>
-		<filename>com_acctexp_language/dutch.php</filename>
-		<filename>com_acctexp_language/english.php</filename>
-		<filename>com_acctexp_language/french.php</filename>
-		<filename>com_acctexp_language/german.php</filename>
-		<filename>com_acctexp_language/germanf.php</filename>
-		<filename>com_acctexp_language/germani.php</filename>
-		<filename>com_acctexp_language/italian.php</filename>
-		<filename>com_acctexp_language/simplified_chinese.php</filename>
-		<filename>com_acctexp_language/spanish.php</filename>
-		<filename>images/index.html</filename>
-		<filename>images/gateway_buttons.tar.gz</filename>
-		<filename>images/gateway_logos.tar.gz</filename>
-		<filename>images/cc_icons/index.html</filename>
-		<filename>images/cc_icons/cc_icons.tar.gz</filename>
+		<filename>lang/index.html</filename>
+		<filename>lang/brazilian_portuguese.php</filename>
+		<filename>lang/dutch.php</filename>
+		<filename>lang/english.php</filename>
+		<filename>lang/french.php</filename>
+		<filename>lang/german.php</filename>
+		<filename>lang/germanf.php</filename>
+		<filename>lang/germani.php</filename>
+		<filename>lang/italian.php</filename>
+		<filename>lang/simplified_chinese.php</filename>
+		<filename>lang/spanish.php</filename>
 		<filename>lib/eucalib/index.html</filename>
 		<filename>lib/eucalib/eucalib.add.php</filename>
 		<filename>lib/eucalib/eucalib.admin.common.php</filename>
@@ -79,21 +72,24 @@
 		<filename>lib/php4/json/json.php</filename>
 		<filename>lib/recaptcha/index.html</filename>
 		<filename>lib/recaptcha/recaptchalib.php</filename>
-		<filename>micro_integration/language/index.html</filename>
-		<filename>micro_integration/language/english.php</filename>
-		<filename>micro_integration/language/french.php</filename>
-		<filename>micro_integration/language/german.php</filename>
-		<filename>micro_integration/language/germanf.php</filename>
-		<filename>micro_integration/language/germani.php</filename>
+		<filename>micro_integration/lang/index.html</filename>
+		<filename>micro_integration/lang/english.php</filename>
+		<filename>micro_integration/lang/french.php</filename>
+		<filename>micro_integration/lang/german.php</filename>
+		<filename>micro_integration/lang/germanf.php</filename>
+		<filename>micro_integration/lang/germani.php</filename>
 		<filename>micro_integration/index.html</filename>
 		<filename>micro_integration/mi_acajoom.php</filename>
 		<filename>micro_integration/mi_acl.php</filename>
 		<filename>micro_integration/mi_aecdonate.php</filename>
+		<filename>micro_integration/mi_aecinvoiceprintmod.php</filename>
 		<filename>micro_integration/mi_aecmodifyexpiration.php</filename>
 		<filename>micro_integration/mi_aecplan.php</filename>
+		<filename>micro_integration/mi_aectax.php</filename>
 		<filename>micro_integration/mi_aecuserdetails.php</filename>
 		<filename>micro_integration/mi_affiliatepro.php</filename>
 		<filename>micro_integration/mi_age_restriction.php</filename>
+		<filename>micro_integration/mi_amigos.php</filename>
 		<filename>micro_integration/mi_apc.php</filename>
 		<filename>micro_integration/mi_attend_events.php</filename>
 		<filename>micro_integration/mi_communitybuilder.php</filename>
@@ -116,6 +112,7 @@
 		<filename>micro_integration/mi_jarc.php</filename>
 		<filename>micro_integration/mi_joomlauser.php</filename>
 		<filename>micro_integration/mi_juga.php</filename>
+		<filename>micro_integration/mi_k2.php</filename>
 		<filename>micro_integration/mi_mosets_tree.php</filename>
 		<filename>micro_integration/mi_mysms.php</filename>
 		<filename>micro_integration/mi_mysql_query.php</filename>
@@ -123,6 +120,7 @@
 		<filename>micro_integration/mi_proma.php</filename>
 		<filename>micro_integration/mi_raffle.php</filename>
 		<filename>micro_integration/mi_rsgallery2.php</filename>
+		<filename>micro_integration/mi_rstickets.php</filename>
 		<filename>micro_integration/mi_shareasale.php</filename>
 		<filename>micro_integration/mi_sobi.php</filename>
 		<filename>micro_integration/mi_uddeim.php</filename>
@@ -152,6 +150,7 @@
 		<filename>processors/moneyproxy.php</filename>
 		<filename>processors/netcash.php</filename>
 		<filename>processors/netdebit.php</filename>
+		<filename>processors/netpay.php</filename>
 		<filename>processors/nochex.php</filename>
 		<filename>processors/offline_payment.php</filename>
 		<filename>processors/onebip.php</filename>
@@ -163,6 +162,7 @@
 		<filename>processors/paypal.php</filename>
 		<filename>processors/paypal_subscription.php</filename>
 		<filename>processors/paypal_wpp.php</filename>
+		<filename>processors/paypal_payflow_link.php</filename>
 		<filename>processors/paysignet.php</filename>
 		<filename>processors/paysite_cash.php</filename>
 		<filename>processors/psigate.php</filename>
@@ -182,19 +182,34 @@
 		<filename>processors/vcs/index.html</filename>
 		<filename>processors/vcs/fail.php</filename>
 		<filename>processors/vcs/success.php</filename>
-		<filename>processors/com_acctexp_language_processors/index.html</filename>
-		<filename>processors/com_acctexp_language_processors/brazilian_portuguese.php</filename>
-		<filename>processors/com_acctexp_language_processors/dutch.php</filename>
-		<filename>processors/com_acctexp_language_processors/english.php</filename>
-		<filename>processors/com_acctexp_language_processors/french.php</filename>
-		<filename>processors/com_acctexp_language_processors/german.php</filename>
-		<filename>processors/com_acctexp_language_processors/germanf.php</filename>
-		<filename>processors/com_acctexp_language_processors/germani.php</filename>
-		<filename>processors/com_acctexp_language_processors/italian.php</filename>
-		<filename>processors/com_acctexp_language_processors/simplified_chinese.php</filename>
-		<filename>processors/com_acctexp_language_processors/spanish.php</filename>
+		<filename>processors/lang/index.html</filename>
+		<filename>processors/lang/brazilian_portuguese.php</filename>
+		<filename>processors/lang/dutch.php</filename>
+		<filename>processors/lang/english.php</filename>
+		<filename>processors/lang/french.php</filename>
+		<filename>processors/lang/german.php</filename>
+		<filename>processors/lang/germanf.php</filename>
+		<filename>processors/lang/germani.php</filename>
+		<filename>processors/lang/italian.php</filename>
+		<filename>processors/lang/simplified_chinese.php</filename>
+		<filename>processors/lang/spanish.php</filename>
 	</files>
 	<images>
+		<filename>site.css</filename>
+		<filename>invoice.css</filename>
+		<filename>images/index.html</filename>
+		<filename>images/gateway_buttons.tar.gz</filename>
+		<filename>images/gateway_logos.tar.gz</filename>
+		<filename>images/cc_icons/index.html</filename>
+		<filename>images/cc_icons/cc_icons.tar.gz</filename>
+			<filename>images/index.html</filename>
+			<filename>images/backend_gfx/index.html</filename>
+			<filename>images/backend_gfx/backend_gfx.tar.gz</filename>
+			<filename>images/icons/index.html</filename>
+			<filename>images/icons/backend_icons.tar.gz</filename>
+			<filename>images/icons/silk_icons.tar.gz</filename>
+			<filename>aec_readout.css</filename>
+			<filename>backend_style.css</filename>
 	</images>
 	<install>
 		<queries>
@@ -204,35 +219,27 @@
     	<queries>
     	</queries>
 	</uninstall>
-	<installfile>install.acctexp.php</installfile>
-	<uninstallfile>uninstall.acctexp.php</uninstallfile>
+	<installfile>install/install.acctexp.php</installfile>
+	<uninstallfile>install/uninstall.acctexp.php</uninstallfile>
 	<administration>
-		<files>
+		<files folder="administrator/components/com_acctexp">
 			<filename>index.html</filename>
 			<filename>admin.acctexp.php</filename>
 			<filename>admin.acctexp.html.php</filename>
-			<filename>aec_readout.css</filename>
 			<filename>toolbar.acctexp.php</filename>
 			<filename>toolbar.acctexp.html.php</filename>
-			<filename>backend_style.css</filename>
-			<filename>com_acctexp_language_backend/index.html</filename>
-			<filename>com_acctexp_language_backend/brazilian_portuguese.php</filename>
-			<filename>com_acctexp_language_backend/dutch.php</filename>
-			<filename>com_acctexp_language_backend/english.php</filename>
-			<filename>com_acctexp_language_backend/french.php</filename>
-			<filename>com_acctexp_language_backend/general.php</filename>
-			<filename>com_acctexp_language_backend/german.php</filename>
-			<filename>com_acctexp_language_backend/germani.php</filename>
-			<filename>com_acctexp_language_backend/germanf.php</filename>
-			<filename>com_acctexp_language_backend/italian.php</filename>
-			<filename>com_acctexp_language_backend/simplified_chinese.php</filename>
-			<filename>com_acctexp_language_backend/spanish.php</filename>
-			<filename>images/index.html</filename>
-			<filename>images/backend_gfx/index.html</filename>
-			<filename>images/backend_gfx/backend_gfx.tar.gz</filename>
-			<filename>images/icons/index.html</filename>
-			<filename>images/icons/backend_icons.tar.gz</filename>
-			<filename>images/icons/silk_icons.tar.gz</filename>
+			<filename>lang/index.html</filename>
+			<filename>lang/brazilian_portuguese.php</filename>
+			<filename>lang/dutch.php</filename>
+			<filename>lang/english.php</filename>
+			<filename>lang/french.php</filename>
+			<filename>lang/general.php</filename>
+			<filename>lang/german.php</filename>
+			<filename>lang/germani.php</filename>
+			<filename>lang/germanf.php</filename>
+			<filename>lang/italian.php</filename>
+			<filename>lang/simplified_chinese.php</filename>
+			<filename>lang/spanish.php</filename>
 			<filename>install/index.html</filename>
 			<filename>install/jf_content_elements_aec.de.tar.gz</filename>
 			<filename>install/jf_content_elements_aec.en.tar.gz</filename>
