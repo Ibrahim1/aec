@@ -3249,12 +3249,12 @@ class PaymentProcessor
 		return $response;
 	}
 
-	function getProfileTabs( $tabs, $metaUser )
+	function getProfileTabs()
 	{
 		$addtabs = $this->registerProfileTabs();
 
 		if ( empty( $addtabs ) ) {
-			return $tabs;
+			return array();
 		}
 
 		foreach ( $addtabs as $atk => $atv ) {
@@ -3267,6 +3267,33 @@ class PaymentProcessor
 		}
 
 		return $tabs;
+	}
+
+	function getActions( $invoice, $subscription )
+	{
+		$actions = array();
+
+		if ( !empty( $pp->info['actions'] ) ) {
+			foreach ( $actions as $action => $aoptions ) {
+				$action = array( 'action' => $action, 'insert' => '' );
+
+				if ( !empty( $aoptions ) ) {
+					foreach ( $aoptions as $opt ) {
+						switch ( $opt ) {
+							case 'confirm':
+								$action['insert'] .= ' onclick="return show_confirm(\'' . _AEC_YOUSURE . '\')" ';
+								break;
+							default:
+								break;
+						}
+					}
+				}
+			}
+
+			$actions[] = $action;
+		}
+
+		return $actions;
 	}
 }
 

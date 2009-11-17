@@ -734,7 +734,7 @@ function subscriptionDetails( $option, $sub='overview' )
 
 	// Prepare Main Tabs
 	$tabs = array();
-	foreach ( array( 'overview', 'invoices', 'details' ) as $fname ) {
+	foreach ( array( 'overview', 'invoices' ) as $fname ) {
 		$tabs[$fname] = constant( strtoupper( '_aec_subdetails_tab_' . $fname ) );
 	}
 
@@ -747,7 +747,6 @@ function subscriptionDetails( $option, $sub='overview' )
 	// Load a couple of basic variables
 	$subscriptions	= array();
 	$pplist			= array();
-	$actionprocs	= array();
 	$excludedprocs	= array( 'free', 'error' );
 	$custom			= null;
 	$mi_info		= null;
@@ -794,24 +793,23 @@ function subscriptionDetails( $option, $sub='overview' )
 
 	$invoiceList = AECfetchfromDB::InvoiceIdList( $metaUser->userid, $invoiceno );
 
-	$invoiceactionlink = 'index.php?option=' . $option . '&amp;task=%s&amp;%s';
-
 	$invoices = array();
 	foreach ( $invoiceList as $invoiceid ) {
+		$invoices[$invoiceid] = array();
+
 		$invoice = new Invoice( $database );
 		$invoice->load( $invoiceid );
 
-		$hassubstuff = array_key_exists( $invoice->subscr_id, $actionprocs );
+		$rowstyle		= '';
+		$actionsarray	= array();
 
-		if ( ( $invoice->transaction_date == '0000-00-00 00:00:00' ) || ( $invoice->subscr_id  ) || $hassubstuff ) {
-			$actionsarray = array();
+		if ( !in_array( $invoice->method, $excludedprocs ) ) {
+			$actionsarray[] = array( 	'task'	=> 'invoicePrint',
+										'add'	=> 'invoice=' . $invoice->invoice_number,
+										'text'	=> _HISTORY_ACTION_PRINT );
+		}
 
-			if ( !in_array( $invoice->method, $excludedprocs ) ) {
-				$actionsarray[] = array( 	'task'	=> 'invoicePrint',
-											'add'	=> 'invoice=' . $invoice->invoice_number,
-											'text'	=> _HISTORY_ACTION_PRINT );
-			}
-
+		if ( ( $invoice->transaction_date == '0000-00-00 00:00:00' ) || ( $invoice->subscr_id  ) ) {
 			if ( $invoice->transaction_date == '0000-00-00 00:00:00' ) {
 				$actionsarray[] = array( 	'task'	=> 'repeatPayment',
 											'add'	=> 'invoice=' . $invoice->invoice_number,
@@ -824,25 +822,7 @@ function subscriptionDetails( $option, $sub='overview' )
 				}
 			}
 
-			$ap = $actionprocs[$invoice->subscr_id];
-			if ( $hassubstuff && !empty( $subscriptions[$ap]->proc_actions ) ) {
-				$actionsarray = array_merge( $subscriptions[$ap]->proc_actions, $actionsarray );
-			}
-
-			foreach ( $actionsarray as $aid => $a ) {
-				if ( is_array( $a ) ) {
-					$link = AECToolbox::deadsureURL( sprintf( $invoiceactionlink, $a['task'], $a['add'] ), $ssl );
-
-					$actionsarray[$aid] = '<a href="' . $link . '">' . $a['text'] . '</a>';
-				}
-			}
-
-			$actions = implode( ' | ', $actionsarray );
-
 			$rowstyle = ' style="background-color:#fee;"';
-		} else {
-			$actions			= '- - -';
-			$rowstyle			= '';
 		}
 
 		if ( !in_array( $invoice->method, $pplist ) ) {
@@ -859,11 +839,11 @@ function subscriptionDetails( $option, $sub='overview' )
 
 		$invoice->formatInvoiceNumber();
 
+		$invoices[$invoiceid]['object']				= $invoice;
 		$invoices[$invoiceid]['invoice_number']		= $invoice->invoice_number;
 		$invoices[$invoiceid]['amount']				= $invoice->amount;
 		$invoices[$invoiceid]['currency_code']		= $invoice->currency;
-		$invoices[$invoiceid]['processor']			= $processor;
-		$invoices[$invoiceid]['actions']			= $actions;
+		$invoices[$invoiceid]['actions']			= $actionsarray;
 		$invoices[$invoiceid]['rowstyle']			= $rowstyle;
 		$invoices[$invoiceid]['transactiondate']	= $invoice->getTransactionStatus();
 	}
@@ -875,83 +855,116 @@ function subscriptionDetails( $option, $sub='overview' )
 		foreach( $subList as $usid => $subscription ) {
 			$mis = $subscription->objPlan->micro_integrations;
 
-			if ( count( $mis ) ) {
-				foreach ( $mis as $mi_id ) {
-					if ( $mi_id ) {
-						$mi = new MicroIntegration( $database );
-						$mi->load( $mi_id );
-
-						if ( !$mi->callIntegration() ) {
-							continue;
-						}
-
-						$info = $mi->profile_info( $metaUser );
-						if ( $info !== false ) {
-							$mi_info .= $info;
-						}
-					}
-
-					$addtabs = $mi->registerProfileTabs();
-
-					if ( !empty( $addtabs ) ) {
-						foreach ( $addtabs as $atk => $atv ) {
-							$action = $mi->class_name . '_' . $atk;
-							if ( !isset( $subfields[$action] ) ) {
-								$subfields[$action] = $atv;
-
-								if ( $action == $sub ) {
-									$custom = $mi->customProfileTab( $atk, $metaUser );
-								}
-							}
-						}
-					}
-				}
+			if ( !count( $mis ) ) {
+				continue;
 			}
 
-			if ( !empty( $pp->info['actions'] ) && ( ( strcmp( $metaUser->objSubscription->status, 'Active' ) === 0 ) || ( strcmp( $metaUser->objSubscription->status, 'Trial' ) === 0 ) ) ) {
-				$actions = $pp->info['actions'];
+			foreach ( $mis as $mi_id ) {
+				if ( $mi_id ) {
+					$mi = new MicroIntegration( $database );
+					$mi->load( $mi_id );
 
-				$subscription->objPlan->proc_actions = array();
-				foreach ( $actions as $action => $aoptions ) {
-					$insert = "";
-
-					if ( !empty( $aoptions ) ) {
-						foreach ( $aoptions as $opt ) {
-							switch ( $opt ) {
-								case 'confirm':
-									$insert .= ' onclick="return show_confirm(\'' . _AEC_YOUSURE . '\')" ';
-									break;
-								default:
-									break;
-							}
-						}
+					if ( !$mi->callIntegration() ) {
+						continue;
 					}
 
-					$selected_plan->proc_actions[] = '<a href="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=planaction&amp;action=' . $action . '&amp;subscr=' . $subscription->id, $ssl ) . '"' . $insert . '>' . $action . '</a>';
+					$info = $mi->profile_info( $metaUser );
+					if ( $info !== false ) {
+						$mi_info .= $info;
+					}
 				}
-			}
 
-			$subscriptions[] = $subscription->objPlan;
+				$addtabs = $mi->registerProfileTabs();
 
-			if ( !empty( $subscription->objPlan->proc_actions ) ) {
-				$actionprocs[$subscription->id] = count( $subscriptions ) - 1;
+				if ( empty( $addtabs ) ) {
+					continue;
+				}
+
+				foreach ( $addtabs as $atk => $atv ) {
+					$action = $mi->class_name . '_' . $atk;
+					if ( isset( $subfields[$action] ) ) {
+						continue;
+					}
+
+					$subfields[$action] = $atv;
+
+					if ( $action == $sub ) {
+						$custom = $mi->customProfileTab( $atk, $metaUser );
+					}
+				}
 			}
 		}
 	}
 
-	foreach ( $pps as $pp ) {
-		$tabs = $pp->getProfileTabs( $tabs, $metaUser );
+	// Add Details tab for MI Stuff
+	if ( !empty( $mi_info ) ) {
+		$tabs['details'] = _AEC_SUBDETAILS_TAB_DETAILS;
 	}
 
-	if ( $action == $sub ) {
-		$custom = $pp->customProfileTab( $action, $metaUser );
+	$invoiceactionlink = 'index.php?option=' . $option . '&amp;task=%s&amp;%s';
+
+	foreach ( $invoiceList as $invoiceid ) {
+		$invoice = $invoices[$invoiceid]['object'];
+
+		$actionsarray = $invoices[$invoiceid]['actions'];
+
+		$pp = $pplist[$invoice->method];
+
+		if ( !empty( $pp->info['longname'] ) ) {
+			$processor = $pp->info['longname'];
+		} else {
+			$processor = $invoice->method;
+		}
+
+		$invoices[$invoiceid]['processor']			= $processor;
+
+		if ( !empty( $pp->info['actions'] ) && ( ( strcmp( $metaUser->objSubscription->status, 'Active' ) === 0 ) || ( strcmp( $metaUser->objSubscription->status, 'Trial' ) === 0 ) ) ) {
+			$actions = $pp->getActions( $invoice, $subscription );
+
+			foreach ( $actions as $action ) {
+				$actionsarray[] = array('task'		=> 'planaction',
+										'add'		=> 'action=' . $action['action'] . '&amp;subscr=' . $subscription->id,
+										'insert'	=> $action['insert'],
+										'text'		=> $action['action'] );
+			}
+		}
+
+		if ( !empty( $actionsarray ) ) {
+			foreach ( $actionsarray as $aid => $a ) {
+				if ( is_array( $a ) ) {
+					$link = AECToolbox::deadsureURL( sprintf( $invoiceactionlink, $a['task'], $a['add'] ), $ssl );
+
+					$insert = '';
+					if ( !empty( $a['insert'] ) ) {
+						$insert = $a['insert'];
+					}
+
+					$actionsarray[$aid] = '<a href="' . $link . '"' . $insert . '>' . $a['text'] . '</a>';
+				}
+			}
+
+			$actions = implode( ' | ', $actionsarray );
+		} else {
+			$actions = ' - - - ';
+		}
+
+		$invoices[$invoiceid]['actions']			= $actions;
+	}
+
+	// Get Custom Processor Tabs
+	foreach ( $pps as $pp ) {
+		$pptabs = $pp->getProfileTabs();
+
+		foreach ( $pptabs as $tname => $tcontent ) {
+			if ( $action == $tname ) {
+				$custom = $pp->customProfileTab( $action, $metaUser );
+			}
+
+			$tabs[$tname] = $tcontent;
+		}
 	}
 
 	$mainframe->SetPageTitle( _MYSUBSCRIPTION_TITLE . ' - ' . $tabs[$sub] );
-
-	if ( empty( $mi_info ) ) {
-		unset( $tabs['details'] );
-	}
 
 	$html = new HTML_frontEnd();
 	$html->subscriptionDetails( $option, $tabs, $sub, $invoices, $metaUser, $mi_info, $subscriptions, $custom, $properties );
