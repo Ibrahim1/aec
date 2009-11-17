@@ -262,7 +262,7 @@ define( '_AEC_HELP_DIAG_LOGIN_DISABLED',		'User Login Disabled' );
 define( '_AEC_HELP_DIAG_LOGIN_DISABLED_DESC',	'Your have disabled the Frontend Login functionality. Because of this, none of your customers can use your website.' );
 define( '_AEC_HELP_DIAG_PAYPAL_BUSS_ID',		'Paypal Check Business ID' );
 define( '_AEC_HELP_DIAG_PAYPAL_BUSS_ID_DESC',	'This routine checks for a matching paypal business ID to enhance security with Paypal Transactions.' );
-define( '_AEC_HELP_DIAG_PAYPAL_BUSS_ID_DESC1',	'Please disable this setting in case you encounter problems where you receive payments correctly, but without users being enabled. Disable the Setting in general in case you are using multiple e-mail adresses with your Paypal account.' );
+define( '_AEC_HELP_DIAG_PAYPAL_BUSS_ID_DESC1',	'Please disable this setting in case you encounter problems where you receive payments correctly, but without users being enabled. Disable the Setting in general in case you are using multiple e-mail addresses with your Paypal account.' );
 
 // micro integration
 	// general
@@ -271,7 +271,7 @@ define( '_AEC_MI_SET1_INAME',					'Subscription at %s - User: %s (%s)' );
 // htaccess
 define( '_AEC_MI_HTACCESS_INFO_DESC',			'Protect a folder with a .htaccess file and only allow users of this subscription to access it with their joomla account details.' );
 	// email
-define( '_AEC_MI_EMAIL_INFO_DESC',				'Send an Email to one or more adresses on application or expiration of the subscription' );
+define( '_AEC_MI_EMAIL_INFO_DESC',				'Send an Email to one or more addresses on application or expiration of the subscription' );
 	// idev
 define( '_AEC_MI_IDEV_DESC',					'Connect your sales to iDevAffiliate' );
 	// mosetstree

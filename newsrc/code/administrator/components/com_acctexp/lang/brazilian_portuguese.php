@@ -271,7 +271,7 @@ define( '_AEC_MI_SET1_INAME',					'Inscri&ccedil;&atilde;o em %s - Utilizador: %
 // htaccess
 define( '_AEC_MI_HTACCESS_INFO_DESC',			'proteger uma pasta com o ficheiro .htaccess e apenas permitir o acesso a utilizadores dessa inscri&ccedil;&atilde;o com as informa&ccedil;&otilde;es da sua conta Joomla.' );
 // email
-define( '_AEC_MI_EMAIL_INFO_DESC',				'Enviar um Email para um ou mais endere&ccedil;os de email to one or more adresses na aplica&ccedil;&atilde;o ou na expira&ccedil;&atilde;o da inscri&ccedil;&atilde;o' );
+define( '_AEC_MI_EMAIL_INFO_DESC',				'Enviar um Email para um ou mais endere&ccedil;os de email to one or more addresses na aplica&ccedil;&atilde;o ou na expira&ccedil;&atilde;o da inscri&ccedil;&atilde;o' );
 // idev
 define( '_AEC_MI_IDEV_DESC',					'Conectar as suas vendas ao iDevAffiliate' );
 // mosetstree

@@ -75,7 +75,7 @@ define( '_MI_MI_DOCMAN_UNSET_UNLIMITED_DESC',			'Remove unlimited downloads when
 
 // email
 define( '_AEC_MI_NAME_EMAIL',		'Email' );
-define( '_AEC_MI_DESC_EMAIL',		'Send an Email to one or more adresses on application or expiration of the subscription' );
+define( '_AEC_MI_DESC_EMAIL',		'Send an Email to one or more addresses on application or expiration of the subscription' );
 define( '_MI_MI_EMAIL_SENDER_NAME',					'Sender E-Mail' );
 define( '_MI_MI_EMAIL_SENDER_DESC',					'Sender E-Mail Address' );
 define( '_MI_MI_EMAIL_SENDER_NAME_NAME',			'Sender Name' );
@@ -780,7 +780,7 @@ define( '_MI_MI_PROMA_REMOVE_DESC',			'Attempt to remove the effect of this MI t
 
 // email files
 define( '_AEC_MI_NAME_EMAIL_FILES',		'Email Files' );
-define( '_AEC_MI_DESC_EMAIL_FILES',		'Send an Email with attached files to one or more adresses on application of the subscription' );
+define( '_AEC_MI_DESC_EMAIL_FILES',		'Send an Email with attached files to one or more addresses on application of the subscription' );
 define( '_MI_MI_EMAIL_FILES_SENDER_NAME',		'Sender E-Mail' );
 define( '_MI_MI_EMAIL_FILES_SENDER_DESC',		'Sender E-Mail Address' );
 define( '_MI_MI_EMAIL_FILES_SENDER_NAME_NAME',	'Sender Name' );

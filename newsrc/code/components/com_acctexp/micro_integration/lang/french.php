@@ -70,7 +70,7 @@ define( '_MI_MI_DOCMAN_REMOVE_NAME_DESC',			'Carry out the expiration action for
 
 // email
 define( '_AEC_MI_NAME_EMAIL',        'Email' );
-define( '_AEC_MI_DESC_EMAIL',        'Envoie un Email &agrave; une ou plusieurs adresses lors de l\'application ou de l\'expiration de l\'abonnement.' );
+define( '_AEC_MI_DESC_EMAIL',        'Envoie un Email &agrave; une ou plusieurs addresses lors de l\'application ou de l\'expiration de l\'abonnement.' );
 define( '_MI_MI_EMAIL_SENDER_NAME',                    'Email exp&eacute;diteur' );
 define( '_MI_MI_EMAIL_SENDER_DESC',                    'Adresse Email de l\'exp&eacute;diteur du message' );
 define( '_MI_MI_EMAIL_SENDER_NAME_NAME',            'Nom expediteur' );
@@ -757,7 +757,7 @@ define( '_MI_MI_PROMA_REMOVE_DESC',			'Attempt to remove the effect of this MI t
 
 // email files
 define( '_AEC_MI_NAME_EMAIL_FILES',		'Email Files' );
-define( '_AEC_MI_DESC_EMAIL_FILES',		'Send an Email with attached files to one or more adresses on application of the subscription' );
+define( '_AEC_MI_DESC_EMAIL_FILES',		'Send an Email with attached files to one or more addresses on application of the subscription' );
 define( '_MI_MI_EMAIL_FILES_SENDER_NAME',		'Sender E-Mail' );
 define( '_MI_MI_EMAIL_FILES_SENDER_DESC',		'Sender E-Mail Address' );
 define( '_MI_MI_EMAIL_FILES_SENDER_NAME_NAME',	'Sender Name' );
