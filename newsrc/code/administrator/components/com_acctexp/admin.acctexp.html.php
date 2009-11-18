@@ -1457,9 +1457,7 @@ class HTML_AcctExp
 					<th width="100%" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_<?php echo $action[0]; ?>.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;"><?php echo $action[1]; ?></th>
 					<td nowrap="nowrap"><?php echo $lists['groups'];?></td>
 					<td style="text-align:center;">
-						<?php echo _PLAN_FILTER; ?>
-						&nbsp;
-						<?php echo $lists['filterplanid'] . _ORDER_BY . $lists['orderNav']; ?>
+						<?php echo _PLAN_FILTER . '<br />' . $lists['filterplanid'] . _ORDER_BY . '<br />' . $lists['orderNav']; ?>
 						<input type="button" class="button" onclick="document.adminForm.submit();" value="<?php echo _AEC_CMN_APPLY; ?>" style="margin:2px;text-align:center;" />
 					</td>
 					<td style="white-space:nowrap; float:right; text-align:left; padding:3px; margin:3px;">
@@ -2065,10 +2063,12 @@ class HTML_AcctExp
 								<?php echo $aecHTML->createSettingsParticle( 'micro_integrations_inherited' ); ?>
 								<?php echo $aecHTML->createSettingsParticle( 'micro_integrations' ); ?>
 							</div>
+							<?php if ( !empty( $aecHTML->customparams->hasperplanmi ) ) { ?>
 							<div class="userinfobox">
 								<?php echo $aecHTML->createSettingsParticle( 'micro_integrations_plan' ); ?>
 								<?php echo $aecHTML->createSettingsParticle( 'micro_integrations_hidden' ); ?>
 							</div>
+							<?php } ?>
 							<?php
 							if ( !empty( $aecHTML->customparams->mi ) ) {
 								foreach ( $aecHTML->customparams->mi as $id => $mi ) {

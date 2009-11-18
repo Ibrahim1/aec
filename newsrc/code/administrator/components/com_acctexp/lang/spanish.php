@@ -1152,6 +1152,8 @@ define( '_CFG_GENERAL_CONFIRMATION_CHANGEUSAGE_DESC', 'Give new users the possib
 
 define( '_CFG_GENERAL_MANAGERACCESS_NAME', 'Manager Access:');
 define( '_CFG_GENERAL_MANAGERACCESS_DESC', 'Grant Access to the AEC not only to Administrators, but to Managers as well.');
+define( '_CFG_GENERAL_PER_PLAN_MIS_NAME', 'Per Plan MIs:');
+define( '_CFG_GENERAL_PER_PLAN_MIS_DESC', 'Shows per-plan MIs that are only editable from within payment plans and are only attached to the one plan they were created in.');
 
 // Global Authentication Settins
 define( '_CFG_TAB_AUTHENTICATION_TITLE', 'Authentication');

@@ -670,7 +670,7 @@ define( '_COUPON_PARAMS_HAS_MAX_REUSE_DESC',	'Soll dieser max. x verwendet werde
 define( '_COUPON_PARAMS_MAX_REUSE_NAME',		'Anzahl' );
 define( '_COUPON_PARAMS_MAX_REUSE_DESC',		'Hier die Anzahl eintragen wie oft dieser Gutschein verwendet werden darf' );
 define( '_COUPON_PARAMS_HAS_MAX_PERUSER_REUSE_NAME', 'Wiederverwendung pro Benutzer begrenzen?');
-define( '_COUPON_PARAMS_HAS_MAX_PERUSER_REUSE_DESC', 'M&ouml;chten Sie die Anzahl der Verwendungen dieses Gutscheins für jeden Benutzer begrenzen?');
+define( '_COUPON_PARAMS_HAS_MAX_PERUSER_REUSE_DESC', 'M&ouml;chten Sie die Anzahl der Verwendungen dieses Gutscheins f&uuml;r jeden Benutzer begrenzen?');
 define( '_COUPON_PARAMS_MAX_PERUSER_REUSE_NAME', 'Maximale Verwendungen pro Benutzer');
 define( '_COUPON_PARAMS_MAX_PERUSER_REUSE_DESC', 'W&auml;hlen Sie die Anzahl der Male, die dieser Gutschein von jedem Benutzer genutzt werden kann');
 
@@ -682,11 +682,11 @@ define( '_COUPON_PARAMS_USAGE_PLANS_ENABLED_DESC',	'Soll dieser Gutschein nur f&
 define( '_COUPON_PARAMS_USAGE_PLANS_NAME',			'Abos' );
 define( '_COUPON_PARAMS_USAGE_PLANS_DESC',			'Welche Abos werden angewendet' );
 define( '_COUPON_PARAMS_USAGE_CART_FULL_NAME', 'Einkaufswagen');
-define( '_COUPON_PARAMS_USAGE_CART_FULL_DESC', 'Anwendung für einen vollen Einkaufswagen erlauben');
+define( '_COUPON_PARAMS_USAGE_CART_FULL_DESC', 'Anwendung f&uuml;r einen vollen Einkaufswagen erlauben');
 define( '_COUPON_PARAMS_CART_MULTIPLE_ITEMS_NAME', 'Verschiedene Posten');
 define( '_COUPON_PARAMS_CART_MULTIPLE_ITEMS_DESC', 'L&auml;sst den Benutzer den Gutschein auf verschiedene Posten im Einkaufswagen anwenden, wenn es die allgemeinen Bedingungen erlauben.');
 define( '_COUPON_PARAMS_CART_MULTIPLE_ITEMS_AMOUNT_NAME', 'Anzahl der verschiedenen Posten');
-define( '_COUPON_PARAMS_CART_MULTIPLE_ITEMS_AMOUNT_DESC', 'Setzen Sie ein Limit für die Anwendung auf verschiedene Posten in einem Einkaufswagen');
+define( '_COUPON_PARAMS_CART_MULTIPLE_ITEMS_AMOUNT_DESC', 'Setzen Sie ein Limit f&uuml;r die Anwendung auf verschiedene Posten in einem Einkaufswagen');
 
 define( '_COUPON_RESTRICTIONS_MINGID_ENABLED_NAME', 'Mindest Gruppen ID:' );
 define( '_COUPON_RESTRICTIONS_MINGID_ENABLED_DESC', 'Hier die Mindestgruppen ID definieren f&uuml;r welche diesen Gutschein g&uuml;ltig sein soll' );
@@ -1150,6 +1150,8 @@ define( '_CFG_GENERAL_CONFIRMATION_CHANGEUSAGE_DESC', 'Dem Benutzer auf der Best
 
 define( '_CFG_GENERAL_MANAGERACCESS_NAME', 'Manager Zugriff:');
 define( '_CFG_GENERAL_MANAGERACCESS_DESC', 'Hiermit d&uuml;rfen nicht nur Administratoren, sondern auch Manager auf das AEC Backend zugreifen.');
+define( '_CFG_GENERAL_PER_PLAN_MIS_NAME', 'Pro Plan MIs:');
+define( '_CFG_GENERAL_PER_PLAN_MIS_DESC', 'Mit dieser Einstellung k&ouml;nnen in Bezahlpl&auml;nen MIs erstellt werden, welche dann nur innerhalb des Planes g&uuml;ltig sind und auch nur dort bearbeitet werden k&ouml;nnen.');
 
 //Invoice settings
 define( '_CFG_GENERAL_SENDINVOICE_NAME', 'eine Rechnungs-Email senden');
@@ -1227,7 +1229,7 @@ define( '_PAYPLAN_PARAMS_MAKE_ACTIVE_DESC',				'Auf >Nein< setzen, falls der Ben
 define( '_PAYPLAN_PARAMS_MAKE_PRIMARY_NAME', 'prim&auml;r:');
 define( '_PAYPLAN_PARAMS_MAKE_PRIMARY_DESC', 'Setzen Sie dies auf "ja", um dieses zum prim&auml;ren Abo f&uuml;r den Benutzer zu machen. Das prim&auml;re Abo ist das, welches die Zugriff zur Seite selbst steuert und bei Ablauf verhindert, dass der Benutzer sich einloggt (falls das so eingestellt ist).');
 define( '_PAYPLAN_PARAMS_UPDATE_EXISTING_NAME', 'Update existiert:');
-define( '_PAYPLAN_PARAMS_UPDATE_EXISTING_DESC', 'Falls es kein prim&auml;res Abo ist, sollen andere existierende Abos mit diesem erneuert werden? Dies kann hilfreich sein, falls Benutzer von einer bestimmten Art Abo immer nur eine Instanz besitzen dürfen.');
+define( '_PAYPLAN_PARAMS_UPDATE_EXISTING_DESC', 'Falls es kein prim&auml;res Abo ist, sollen andere existierende Abos mit diesem erneuert werden? Dies kann hilfreich sein, falls Benutzer von einer bestimmten Art Abo immer nur eine Instanz besitzen d&uuml;rfen.');
 
 define( '_PAYPLAN_TEXT_TITLE',							'Abotext' );
 define( '_PAYPLAN_GENERAL_EMAIL_DESC_NAME',				'Emailtext:' );
@@ -1544,7 +1546,7 @@ define( '_ITEMGROUP_RESTRICTIONS_CUSTOM_RESTRICTIONS_DESC', 'RewriteEngine benut
 
 define( '_ITEMGROUP_RELATIONS_TITLE', 'Beziehungen');
 define( '_ITEMGROUP_PARAMS_SIMILARITEMGROUPS_NAME', '&Auml;hnliche Gruppen:');
-define( '_ITEMGROUP_PARAMS_SIMILARITEMGROUPS_DESC', 'W&auml;hlen Sie aus, welche Gruppen dieser &auml;hnlich sind. Es ist einem Benutzer nicht erlaubt, eine Probezeit zu nutzen, wenn er einen Plan kauft, den er zuvor bereits erworben hat und das gilt ebenfalls für &auml;hnliche Pl&auml;ne (oder Pl&auml;ne aus &auml;hnlichen Gruppen).');
+define( '_ITEMGROUP_PARAMS_SIMILARITEMGROUPS_DESC', 'W&auml;hlen Sie aus, welche Gruppen dieser &auml;hnlich sind. Es ist einem Benutzer nicht erlaubt, eine Probezeit zu nutzen, wenn er einen Plan kauft, den er zuvor bereits erworben hat und das gilt ebenfalls f&uuml;r &auml;hnliche Pl&auml;ne (oder Pl&auml;ne aus &auml;hnlichen Gruppen).');
 define( '_ITEMGROUP_PARAMS_EQUALITEMGROUPS_NAME', 'Gleichwertige Gruppen:');
 define( '_ITEMGROUP_PARAMS_EQUALITEMGROUPS_DESC', 'W&auml;hlen Sie aus, welche Gruppen dieser Gruppe gleichwertig sind. Ein Benutzer, der zwischen gleichwertigen Pl&auml;nen wechselt (oder Pl&auml;nen in gleichwertigen Gruppen) wird seine Zeitspanne verl&auml;ngert bekommen, anstatt sie vom aktuellen Datum neu zu berechnen. Probezeiten sind au&szlig;erdem nicht erlaubt (siehe &auml;hnliche Gruppen Info).');
 

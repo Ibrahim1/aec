@@ -1560,6 +1560,7 @@ class Config_General extends serialParamDBTable
 		$def['confirmation_changeusername']		= 1;
 		$def['confirmation_changeusage']		= 1;
 		$def['manageraccess']					= 0;
+		$def['per_plan_mis']					= 0;
 
 		return $def;
 	}
