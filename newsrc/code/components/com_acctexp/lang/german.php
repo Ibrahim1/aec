@@ -98,15 +98,19 @@ define( '_AEC_SUBDETAILS_TAB_OVERVIEW', '&Uuml;berblick');
 define( '_AEC_SUBDETAILS_TAB_INVOICES', 'Rechnungen');
 define( '_AEC_SUBDETAILS_TAB_DETAILS', 'Details');
 
-define( '_HISTORY_ACTION_PRINT', 'print');
-define( '_INVOICEPRINT_DATE', 'Date');
+define( '_HISTORY_ACTION_PRINT', 'drucken');
+define( '_INVOICEPRINT_DATE', 'Datum');
 define( '_INVOICEPRINT_ID', 'ID');
-define( '_INVOICEPRINT_REFERENCE_NUMBER', 'Reference Number');
-define( '_INVOICEPRINT_ITEM_NAME', 'Item Name');
-define( '_INVOICEPRINT_UNIT_PRICE', 'Unit Price');
-define( '_INVOICEPRINT_QUANTITY', 'Quantity');
-define( '_INVOICEPRINT_TOTAL', 'Total');
-define( '_INVOICEPRINT_GRAND_TOTAL', 'Grand Total');
+define( '_INVOICEPRINT_REFERENCE_NUMBER', 'Referenz Nummer');
+define( '_INVOICEPRINT_ITEM_NAME', 'Artikel');
+define( '_INVOICEPRINT_UNIT_PRICE', 'Einzelpreis');
+define( '_INVOICEPRINT_QUANTITY', 'Menge');
+define( '_INVOICEPRINT_TOTAL', 'Gesamt');
+define( '_INVOICEPRINT_GRAND_TOTAL', 'Rechnungsbetrag');
+
+define( '_INVOICEPRINT_ADDRESSFIELD', 'Hier k&ouml;nnen Sie ihre Addresse eingeben - Sie wird dann auf dem Ausdruck erscheinen.');
+define( '_INVOICEPRINT_PRINT', 'Drucken');
+define( '_INVOICEPRINT_BLOCKNOTICE', 'Dieser Bereich (inklusive Textfeld und Druckbutton) wird nicht mit ausgedruckt.');
 
 define( '_AEC_YOUSURE', 'Are you sure?');
 

@@ -36,7 +36,9 @@ class eucaInstall extends eucaObject
 
 		foreach ( $array as $file ) {
 			if ( !empty( $file[3] ) ) {
-				if ( $file[2] ) {
+				if ( $file[3] == 2 ) {
+					$basepath = JPATH_SITE . '/media/' . _EUCA_APP_COMPNAME . '/js/';
+				} elseif ( $file[2] ) {
 					$basepath = JPATH_SITE . '/media/' . _EUCA_APP_COMPNAME . '/images/admin/';
 				} else {
 					$basepath = JPATH_SITE . '/media/' . _EUCA_APP_COMPNAME . '/images/site/';

@@ -74,7 +74,7 @@ caption {background:#eee;}
 .top {margin-top:0;padding-top:0;}
 .bottom {margin-bottom:0;padding-bottom:0;}
 
-/* invoice_style.css */
+/* Valanx.org AEC Membership Management - invoice.css */
 
 div {
 border: 0px dashed red;
@@ -110,7 +110,7 @@ width: 70%;
 }
 
 table#invoice_content {
-margin: 0 auto;
+margin: 40px auto;
 }
 
 table#invoice_content th {
@@ -133,4 +133,10 @@ text-align: center;
 
 tr#invoice_content_item_total td {
 font-weight: bold;
+}
+
+div#printbutton {
+padding: 20px;
+margin: 20px;
+border: 1px dashed #d94;
 }

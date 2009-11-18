@@ -27,7 +27,7 @@ class HTML_frontEnd
 
 		$mainframe->addCustomHeadTag( $html );
  		$mainframe->appendMetaTag( 'description', 'AEC Account Expiration Control' );
-    	$mainframe->appendMetaTag( 'keywords', 'AEC Account Expiration Control' );
+			$mainframe->appendMetaTag( 'keywords', 'AEC Account Expiration Control' );
 	}
 
 	function expired( $option, $metaUser, $expiration, $invoice, $trial, $continue=0 )
@@ -1522,16 +1522,32 @@ class Payment_HTML
 		<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb" lang="en-gb" dir="ltr" >
 
 		<head>
-		<title><?php echo $data['page_title']; ?></title>
-		<link rel="stylesheet" href="<?php echo JURI::root() . 'media/' . $option; ?>/css/invoice.css" type="text/css" />
+			<title><?php echo $data['page_title']; ?></title>
+			<link rel="stylesheet" href="<?php echo JURI::root() . 'media/' . $option; ?>/css/invoice.css" type="text/css" media="screen, print" />
+			<link rel="stylesheet" href="<?php echo JURI::root() . 'media/' . $option; ?>/css/invoice_print.css" type="text/css" media="print" />
+			<script type="text/javascript" src="<?php echo JURI::root() . 'media/' . $option; ?>/js/jquery/jquery-1.3.2.min.js"></script>
+			<script type="text/javascript">
+			$(document).ready(function() {
+				$('textarea[name=address]').keyup(function() {
+					$('#address pre').text($(this).val());
+				});
+			 });
+			</script>
+
 		</head>
 		<body>
 			<div id="invoice_wrap">
+				<div id="printbutton">
+					<textarea align="left" cols="40" rows="5" name="address" /><?php echo _INVOICEPRINT_ADDRESSFIELD; ?></textarea>
+					<button onclick="window.print()"><?php echo _INVOICEPRINT_PRINT; ?></button>
+					<p><?php echo _INVOICEPRINT_BLOCKNOTICE; ?></p>
+				</div>
 				<div id="before_header"><?php echo $data['before_header']; ?></div>
 				<div id="header">
 					<?php echo $data['header']; ?>
 				</div>
 				<div id="after_header"><?php echo $data['after_header']; ?></div>
+				<div id="address"><pre></pre></div>
 				<div id="invoice_details">
 					<table id="invoice_details">
 						<tr><th><?php echo _INVOICEPRINT_DATE; ?></th></tr>
@@ -1598,12 +1614,12 @@ class Payment_HTML
 		<?php
 	}
 
-    function errorAP( $option, $planid, $userid, $username, $name, $recurring )
-    {
+		function errorAP( $option, $planid, $userid, $username, $name, $recurring )
+		{
 		HTML_frontend::aec_styling($option);?>
-       	<table class="single_subscription">
-       		<th class="heading"><?php echo _REGTITLE ?> <?php echo _ERRORCODE ?></th>
-       		<tr><td class="description"><?php echo _FTEXTA ?><br /><?php echo _RECODE ?></td></tr>
+				 <table class="single_subscription">
+					 <th class="heading"><?php echo _REGTITLE ?> <?php echo _ERRORCODE ?></th>
+					 <tr><td class="description"><?php echo _FTEXTA ?><br /><?php echo _RECODE ?></td></tr>
 			<tr><td class="buttons">
 				<div class="gateway_button">
 					<?php
@@ -1617,10 +1633,10 @@ class Payment_HTML
 		<?php
 	}
 
-    function generalError( $option )
-    {
+		function generalError( $option )
+		{
 		HTML_frontend::aec_styling( $option );
-   		echo _AEC_GEN_ERROR;
+			 echo _AEC_GEN_ERROR;
 	}
 }
 
@@ -1688,9 +1704,9 @@ function joomlaregisterForm($option, $useractivation)
 		<td width="30%">
 			<?php echo _REGISTER_NAME; ?> *
 		</td>
-	  	<td>
-	  		<input type="text" name="name" size="40" value="<?php echo $name;  ?>" class="inputbox" maxlength="50" />
-	  	</td>
+			<td>
+				<input type="text" name="name" size="40" value="<?php echo $name;  ?>" class="inputbox" maxlength="50" />
+			</td>
 	</tr>
 	<tr>
 		<td>
@@ -1712,9 +1728,9 @@ function joomlaregisterForm($option, $useractivation)
 		<td>
 			<?php echo _REGISTER_PASS; ?> *
 		</td>
-	  	<td>
-	  		<input class="inputbox" type="password" name="password" size="40" value="" />
-	  	</td>
+			<td>
+				<input class="inputbox" type="password" name="password" size="40" value="" />
+			</td>
 	</tr>
 	<tr>
 		<td>
@@ -1725,8 +1741,8 @@ function joomlaregisterForm($option, $useractivation)
 		</td>
 	</tr>
 	<tr>
-		  <td colspan="2">
-		  </td>
+			<td colspan="2">
+			</td>
 	</tr>
 	<?php
 	if ( $aecConfig->cfg['use_recaptcha'] && !empty( $aecConfig->cfg['recaptcha_publickey'] ) ) {

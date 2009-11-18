@@ -113,6 +113,10 @@ define( '_INVOICEPRINT_QUANTITY', 'Quantity');
 define( '_INVOICEPRINT_TOTAL', 'Total');
 define( '_INVOICEPRINT_GRAND_TOTAL', 'Grand Total');
 
+define( '_INVOICEPRINT_ADDRESSFIELD', 'Enter your Address here - it will then show on the printout.');
+define( '_INVOICEPRINT_PRINT', 'Print');
+define( '_INVOICEPRINT_BLOCKNOTICE', 'This block (including the text field and print button) will not show on your printout.');
+
 define( '_AEC_YOUSURE', 'Are you sure?');
 
 // --== VERVAL PAGINA ==--
