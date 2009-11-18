@@ -8,7 +8,7 @@
 	<authorEmail>skore@valanx.org</authorEmail>
 	<authorUrl>https://valanx.org</authorUrl>
 	<version>0.3</version>
-	<description>The AEC Error Handler introduces a new JErrorHandler to handle &amp; redirect upon the different errors.</description>
+	<description>The AEC Error Handler introduces a new JErrorHandler to handle &amp; redirect upon the different errors. Can only redirect if users are logged in!</description>
 	<files>
 		<filename plugin="aecerrorhandler">aecerrorhandler.php</filename>
 	</files>
