@@ -3274,8 +3274,10 @@ class PaymentProcessor
 	{
 		$actions = array();
 
-		if ( !empty( $pp->info['actions'] ) ) {
-			foreach ( $actions as $action => $aoptions ) {
+		$actionarray = $this->processor->getActions( $invoice, $subscription );
+
+		if ( !empty( $actionarray ) ) {
+			foreach ( $actionarray as $action => $aoptions ) {
 				$action = array( 'action' => $action, 'insert' => '' );
 
 				if ( !empty( $aoptions ) ) {
@@ -3374,6 +3376,15 @@ class processor extends serialParamDBTable
 		 }
 
 		return $settings;
+	}
+
+	function getActions( $invoice, $subscription )
+	{
+		if ( !empty( $this->info['actions'] ) ) {
+			return $this->info['actions'];
+		} else {
+			return array();
+		}
 	}
 
 	function customParams( $custom, $var, $request )
