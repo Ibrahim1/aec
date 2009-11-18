@@ -28,6 +28,17 @@ class processor_offline_payment extends processor
 		return $info;
 	}
 
+	function getActions( $invoice, $subscription )
+	{
+		$actions = parent::getActions( $invoice, $subscription );
+
+		if ( empty( $this->settings['email_link'] ) ) {
+			unset( $actions['email'] );
+		}
+
+		return $actions;
+	}
+
 	function settings()
 	{
 		$settings = array();
@@ -36,6 +47,7 @@ class processor_offline_payment extends processor
 		$settings['currency']		='';
 
 		$settings['email_info']		= 0;
+		$settings['email_link']		= 1;
 		$settings['sender']			= "";
 		$settings['sender_name']	= "";
 		$settings['recipient']		= "[[user_email]]";
@@ -55,6 +67,7 @@ class processor_offline_payment extends processor
 		$settings['currency']			= array( 'list_currency' );
 
 		$settings['email_info']			= array( 'list_yesno' );
+		$settings['email_link']			= array( 'list_yesno' );
 
 		$settings['sender']				= array( 'inputE' );
 		$settings['sender_name']		= array( 'inputE' );

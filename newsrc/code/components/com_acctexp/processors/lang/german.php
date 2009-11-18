@@ -370,6 +370,8 @@ define( '_CFG_OFFLINE_PAYMENT_WAITINGPLAN_DESC', 'Mit dieser Option wird der Ben
 
 define( '_CFG_OFFLINE_PAYMENT_EMAIL_INFO_NAME',		'E-Mail Info' );
 define( '_CFG_OFFLINE_PAYMENT_EMAIL_INFO_DESC',		'Do you want to mail out any information similar to the one displayed on the checkout page to the user when the Invoice is created?' );
+define( '_CFG_OFFLINE_PAYMENT_EMAIL_LINK_NAME',		'E-Mail Link' );
+define( '_CFG_OFFLINE_PAYMENT_EMAIL_LINK_DESC',		'This provides a link on the Invoice List in the users MySubscription page to send the Payment Details via E-Mail' );
 define( '_CFG_OFFLINE_PAYMENT_SENDER_NAME',		'Sender E-Mail' );
 define( '_CFG_OFFLINE_PAYMENT_SENDER_DESC',		'Sender E-Mail Address' );
 define( '_CFG_OFFLINE_PAYMENT_SENDER_NAME_NAME',	'Sender Name' );
