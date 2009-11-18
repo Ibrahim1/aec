@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <mosinstall type="component">
 	<name>AcctExp</name>
-	<creationDate>2008.06.06</creationDate>
+	<creationDate>2009.11.19</creationDate>
 	<author>David Deutsch, Team AEC, Helder Garcia</author>
 	<copyright>@Copyright (C) 2004-2009 David Deutsch</copyright>
 	<authorEmail>skore@valanx.org</authorEmail>

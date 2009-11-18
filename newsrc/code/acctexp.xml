@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <install type="component" version="1.5.0">
 	<name>AcctExp</name>
-	<creationDate>2008.06.06</creationDate>
+	<creationDate>2009.11.19</creationDate>
 	<author>David Deutsch, Team AEC, Helder Garcia</author>
 	<authorEmail>skore@valanx.org</authorEmail>
 	<copyright>@Copyright (C) 2004-2009 David Deutsch</copyright>
