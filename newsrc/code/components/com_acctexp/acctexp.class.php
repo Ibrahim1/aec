@@ -10409,13 +10409,14 @@ class aecCart extends serialParamDBTable
 						$o['name']	= $obj->getProperty( 'name' );
 						$o['desc']	= $obj->getProperty( 'desc' );
 
-						$terms = $objUsage->getTermsForUser( false, $InvoiceFactory->metaUser );
+						$terms = $obj->getTermsForUser( false, $metaUser );
 
 						if ( $counter ) {
 							$terms->incrementPointer( $counter );
 						}
 
 						$o['terms']	= $terms;
+						$o['cost']	= $terms->nextterm->renderCost();
 
 						$c[$content['type']][$content['id']] = $o;
 						break;
@@ -12990,6 +12991,8 @@ class AECToolbox
 
 	function getCurrencySymbol( $currency )
 	{
+		global $aecConfig;
+
 		$cursym = array(	'AUD' => 'AU$', 'AWG' => '&#402;', 'ANG' => '&#402;', 'BDT' => '&#2547;',
 							'BRL' => 'R$', 'BWP' => 'P', 'BYR' => 'Br', 'CHF' => 'Fr.',
 							'CLP' => '$', 'CNY' => '&#165;', 'CRC' => '&#8353;', 'CVE' => '$',

@@ -1249,10 +1249,12 @@ class Payment_HTML
 							$t = constant( strtoupper( '_aec_checkout_' . $citem->type ) );
 
 							if ( isset( $item['quantity'] ) ) {
-								$c = AECToolbox::formatAmount( $citem->cost['amount'] * $item['quantity'], $InvoiceFactory->payment->currency );
+								$amount = AECToolbox::correctAmount( $citem->cost['amount'] * $item['quantity'] );
 							} else {
-								$c = AECToolbox::formatAmount( $citem->cost['amount'], $InvoiceFactory->payment->currency );
+								$amount = AECToolbox::correctAmount( $citem->cost['amount'] );
 							}
+
+							$c = AECToolbox::formatAmount( $amount, $InvoiceFactory->payment->currency );
 
 							switch ( $citem->type ) {
 								case 'discount':
@@ -1268,14 +1270,6 @@ class Payment_HTML
 										. _CHECKOUT_INVOICE_COUPON_REMOVE . '</a>]';
 
 									$t = $ta;
-
-									if ( isset( $item['quantity'] ) ) {
-										$amount = $citem->cost['amount'] * $item['quantity'];
-									} else {
-										$amount = $citem->cost['amount'];
-									}
-
-									$c = AECToolbox::correctAmount( $amount );
 
 									// Strip out currency symbol and replace with blanks
 									if ( !$aecConfig->cfg['amount_currency_symbolfirst'] ) {
