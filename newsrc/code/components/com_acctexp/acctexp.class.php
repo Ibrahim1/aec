@@ -2556,7 +2556,7 @@ class PaymentProcessorHandler
 
 			$pp = new PaymentProcessor();
 
-			if ( $pp->loadName( $metaUser->objSubscription->type ) ) {
+			if ( $pp->loadName( $ppname ) ) {
 				$pp->init();
 
 				if ( $getinfo ) {
@@ -7855,7 +7855,8 @@ class InvoiceFactory
 					$nochoice = true;
 				}
 			} else {
-				$nochoice = true;
+				// Jump back and use the only group we found
+				return $this->create( $option, $intro, 0, $list[0]['id'] );
 			}
 		}
 
