@@ -827,14 +827,6 @@ function subscriptionDetails( $option, $sub='overview' )
 
 		if ( !in_array( $invoice->method, $pplist ) ) {
 			$pplist[] = $invoice->method;
-		} else {
-			$processor = $pplist[$invoice->method]->info['longname'];
-		}
-
-		if ( !empty( $pplist[$invoice->method]->info['longname'] ) ) {
-			$processor = $pplist[$invoice->method]->info['longname'];
-		} else {
-			$processor = $invoice->method;
 		}
 
 		$invoice->formatInvoiceNumber();
@@ -908,15 +900,13 @@ function subscriptionDetails( $option, $sub='overview' )
 
 		$actionsarray = $invoices[$invoiceid]['actions'];
 
-		$pp = $pplist[$invoice->method];
+		$pp = $pps[$invoice->method];
 
 		if ( !empty( $pp->info['longname'] ) ) {
-			$processor = $pp->info['longname'];
+			$invoices[$invoiceid]['processor'] = $pp->info['longname'];
 		} else {
-			$processor = $invoice->method;
+			$invoices[$invoiceid]['processor'] = $invoice->method;
 		}
-
-		$invoices[$invoiceid]['processor']			= $processor;
 
 		if ( !empty( $pp->info['actions'] ) && ( ( strcmp( $metaUser->objSubscription->status, 'Active' ) === 0 ) || ( strcmp( $metaUser->objSubscription->status, 'Trial' ) === 0 ) ) ) {
 			$actions = $pp->getActions( $invoice, $subscription );
