@@ -30,6 +30,19 @@ class processor_paypal_wpp extends XMLprocessor
 		return $info;
 	}
 
+	function getActions( $invoice, $subscription )
+	{
+		$actions = parent::getActions( $invoice, $subscription );
+
+		if ( ( $subscription->status == 'Cancelled' ) || ( $invoice->transaction_date == '0000-00-00 00:00:00' ) ) {
+			if ( isset( $actions['cancel'] ) ) {
+				unset( $actions['cancel'] );
+			}
+		}
+
+		return $actions;
+	}
+
 	function settings()
 	{
 		$settings = array();
