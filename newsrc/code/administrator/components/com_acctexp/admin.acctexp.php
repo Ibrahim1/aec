@@ -408,8 +408,9 @@ switch( strtolower( $task ) ) {
 			$row = new ItemGroup( $database );
 			$row->load( $id[0] );
 			$row->move( -1 );
+
 			aecRedirect( 'index2.php?option='. $option . '&task=showItemGroups' );
-				break;
+			break;
 
 		case 'ordergroupdown':
 			$database = &JFactory::getDBO();
@@ -418,7 +419,6 @@ switch( strtolower( $task ) ) {
 			$row->move( 1 );
 
 			aecRedirect( 'index2.php?option='. $option . '&task=showItemGroups' );
-
 			break;
 
 	case 'showmicrointegrations':

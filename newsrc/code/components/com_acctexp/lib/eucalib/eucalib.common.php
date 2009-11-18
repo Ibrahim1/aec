@@ -332,6 +332,17 @@ class paramDBTable extends JTable
 
 		return $this->_db->loadResult();
 	}
+
+	function move( $dir )
+	{
+		parent::move( $dir );
+
+		if ( method_exists( $this, 'reorder' ) ) {
+			$this->reorder();
+		} else {
+			$this->updateOrder();
+		}
+	}
 }
 
 /**
