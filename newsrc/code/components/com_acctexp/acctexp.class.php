@@ -252,6 +252,7 @@ class metaUser
 
 		$this->cmsUser = false;
 		$this->hasCBprofile = false;
+		$this->hasJSprofile = false;
 		$this->userid = 0;
 
 		$this->hasSubscription = 0;
@@ -852,6 +853,32 @@ class metaUser
 
 		if ( is_object( $this->cbUser ) ) {
 			$this->hasCBprofile = true;
+		}
+	}
+
+	function loadJSuser()
+	{
+		$database = &JFactory::getDBO();
+
+		$query = 'SELECT `id`'
+				. ' FROM #__community_fields'
+				. ' WHERE `type` != \'group\''
+				;
+		$database->setQuery( $query );
+		$ids = $database->loadResultArray();
+
+		$query = 'SELECT `field_id`, `value`'
+				. ' FROM #__community_fields_values'
+					. ' WHERE `field_id` IN (' . implode( ',', $ids ) . ')'
+					. ' AND `user_id` = \'' . (int) $this->userid . '\'';
+				;
+		$database->setQuery( $query );
+		$fields = $database->loadObjectList();
+
+		$this->jsUser = $fields;
+
+		if ( !empty( $this->jsUser ) ) {
+			$this->hasJSprofile = true;
 		}
 	}
 
@@ -11698,27 +11725,23 @@ class reWriteEngine
 				}
 			}
 
-			if ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) && 0 ) {
+			if ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) ) {
 				$database = &JFactory::getDBO();
 
-				$query = 'SELECT name, title'
-						. ' FROM #__comprofiler_fields'
-						. ' WHERE `table` != \'#__users\''
-						. ' AND name != \'NA\'';
+				$query = 'SELECT `id`, `name`'
+						. ' FROM #__community_fields'
+						. ' WHERE `type` != \'group\''
+						;
 				$database->setQuery( $query );
-				$objects = $database->loadObjectList();
+				$fields = $database->loadObjectList();
 
-				if ( is_array( $objects ) ) {
-					foreach ( $objects as $object ) {
-						$rewrite['user'][] = $object->name;
+				if ( is_array( $fields ) ) {
+					foreach ( $fields as $field ) {
+						$rewrite['user'][] = 'js_' . $field->id;
 
-						if ( strpos( $object->title, '_' ) === 0 ) {
-							$content = $object->name;
-						} else {
-							$content = $object->title;
-						}
+						$content = $field->name;
 
-						$name = '_REWRITE_KEY_USER_' . strtoupper( $object->name );
+						$name = '_REWRITE_KEY_USER_JS_' . $field->id;
 						if ( !defined( $name ) ) {
 							define( $name, $content );
 						}
@@ -11905,34 +11928,9 @@ class reWriteEngine
 						$this->data['metaUser']->loadJSuser();
 					}
 
-					if ( !empty( $this->data['metaUser']->hasCBprofile ) ) {
-						$fields = get_object_vars( $this->data['metaUser']->cbUser );
-
-						if ( !empty( $fields ) ) {
-							foreach ( $fields as $fieldname => $fieldcontents ) {
-								$this->rewrite['user_' . $fieldname] = $fieldcontents;
-							}
-						}
-
-						if ( isset( $this->data['metaUser']->cbUser->cbactivation ) ) {
-							$this->rewrite['user_activationcode']		= $this->data['metaUser']->cbUser->cbactivation;
-							$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_comprofiler&task=confirm&confirmcode=" . $this->data['metaUser']->cbUser->cbactivation;
-						} else {
-							$this->rewrite['user_activationcode']		= "";
-							$this->rewrite['user_activationlink']		= "";
-						}
-					} else {
-						if ( isset( $this->data['metaUser']->cmsUser->activation ) ) {
-							$this->rewrite['user_activationcode']		= $this->data['metaUser']->cmsUser->activation;
-
-							if ( aecJoomla15check() ) {
-								$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_user&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
-							} else {
-								$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
-							}
-						} else {
-							$this->rewrite['user_activationcode']		= "";
-							$this->rewrite['user_activationlink']		= "";
+					if ( !empty( $this->data['metaUser']->hasJSprofile ) ) {
+						foreach ( $this->data['metaUser']->jsUser as $field ) {
+							$this->rewrite['user_js_' . $field->field_id] = $field->value;
 						}
 					}
 				}

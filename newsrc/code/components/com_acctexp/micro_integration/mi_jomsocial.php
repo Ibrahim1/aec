@@ -57,7 +57,7 @@ class mi_jomsocial
 
 	function relayAction( $request )
 	{
-		if ( ( $request->stage == 'action' ) || ( $request->stage == 'expiration_action' ) ) {
+		if ( ( $request->action == 'action' ) || ( $request->action == 'expiration_action' ) ) {
 			$database = &JFactory::getDBO();
 
 			if ( $this->settings['set_fields'.$request->area] ) {

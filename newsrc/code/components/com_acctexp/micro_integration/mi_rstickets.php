@@ -69,7 +69,7 @@ class mi_rstickets extends MI
 
 	function relayAction( $request )
 	{
-		if ( $request->stage == 'action' ) {
+		if ( $request->action == 'action' ) {
 			$this->loadRStickets();
 
 			$text		= AECToolbox::rewriteEngineRQ( $this->settings['text'], $request );

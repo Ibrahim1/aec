@@ -49,7 +49,7 @@ class mi_aecplan
 
 	function relayAction( $request )
 	{
-		if ( $request->stage == 'action' ) {
+		if ( $request->action == 'action' ) {
 			// Do NOT act on regular action call
 			return null;
 		}
@@ -86,7 +86,7 @@ class mi_aecplan
 			return null;
 		}
 
-		if ( $request->stage == 'action' ) {
+		if ( $request->action == 'action' ) {
 			if ( !empty( $this->settings['plan_apply_first'] ) ) {
 				if ( empty( $request->metaUser->objSubscription->previous_plan ) ) {
 					$request->area = '_first';
