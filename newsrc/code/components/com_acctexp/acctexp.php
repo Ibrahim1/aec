@@ -808,7 +808,8 @@ function subscriptionDetails( $option, $sub='overview' )
 		if ( !in_array( $invoice->method, $excludedprocs ) ) {
 			$actionsarray[] = array( 	'task'	=> 'invoicePrint',
 										'add'	=> 'invoice=' . $invoice->invoice_number,
-										'text'	=> _HISTORY_ACTION_PRINT );
+										'text'	=> _HISTORY_ACTION_PRINT,
+										'insert' => ' target="_blank" ' );
 		}
 
 		if ( ( $invoice->transaction_date == '0000-00-00 00:00:00' ) || ( $invoice->subscr_id  ) ) {
