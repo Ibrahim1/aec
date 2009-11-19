@@ -9,17 +9,41 @@
 **/
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
+//( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
 global $mainframe;
 
 require_once( $mainframe->getPath( 'class', "com_acctexp" ) );
+
+function delTree($path)
+{
+	if (is_dir($path) === true) {
+		$files = array_diff(scandir($path), array('.', '..'));
+
+		foreach ($files as $file) {
+			delTree(realpath($path) . '/' . $file);
+		}
+
+		return rmdir($path);
+	} else if (is_file($path) === true) {
+			return unlink($path);
+	}
+
+	return false;
+}
+
 
 function com_uninstall()
 {
 	global $aecConfig;
 
 	$database = &JFactory::getDBO();
+
+	if ( !aecJoomla15check() ) {
+		global $mosConfig_absolute_path;
+
+		delTree( $mosConfig_absolute_path . "/media/com_acctexp" );
+	}
 
 	if ( $aecConfig->cfg['delete_tables'] && $aecConfig->cfg['delete_tables_sure'] ) {
 		global $mainframe;
@@ -55,7 +79,5 @@ function com_uninstall()
 		echo "Component successfully uninstalled. The component tables are still in the database and will be preserved for the next install or upgrade of the component.";
 	}
 }
-
-
 
 ?>

@@ -38,14 +38,6 @@
 		<filename>lib/j15/index.html</filename>
 		<filename>lib/j15/j15.php</filename>
 		<filename>lib/j15/object.php</filename>
-		<filename>lib/jquery/css/index.html</filename>
-		<filename>lib/jquery/css/smoothness/index.html</filename>
-		<filename>lib/jquery/css/smoothness/jquery-ui-1.7.custom.css</filename>
-		<filename>lib/jquery/css/smoothness/images/index.html</filename>
-		<filename>lib/jquery/css/smoothness/images/jquery_ui_smoothness_img.tar.gz</filename>
-		<filename>lib/jquery/index.html</filename>
-		<filename>lib/jquery/jquery-1.3.2.min.js</filename>
-		<filename>lib/jquery/jquery-ui-1.7.custom.min.js</filename>
 		<filename>lib/krumo/index.html</filename>
 		<filename>lib/krumo/krumo.tar.gz</filename>
 		<filename>lib/mammontini/index.html</filename>
@@ -193,24 +185,35 @@
 		<filename>processors/lang/italian.php</filename>
 		<filename>processors/lang/simplified_chinese.php</filename>
 		<filename>processors/lang/spanish.php</filename>
+		<filename>../../media/com_acctexp/css/index.html</filename>
+		<filename>../../media/com_acctexp/css/site.css</filename>
+		<filename>../../media/com_acctexp/css/invoice.css</filename>
+		<filename>../../media/com_acctexp/css/invoice_print.css</filename>
+		<filename>../../media/com_acctexp/css/readout.css</filename>
+		<filename>../../media/com_acctexp/css/admin.css</filename>
+		<filename>../../media/com_acctexp/images/index.html</filename>
+		<filename>../../media/com_acctexp/images/site/index.html</filename>
+		<filename>../../media/com_acctexp/images/site/gateway_buttons.tar.gz</filename>
+		<filename>../../media/com_acctexp/images/site/gateway_logos.tar.gz</filename>
+		<filename>../../media/com_acctexp/images/site/cc_icons/index.html</filename>
+		<filename>../../media/com_acctexp/images/site/cc_icons/cc_icons.tar.gz</filename>
+		<filename>../../media/com_acctexp/images/site/icons/index.html</filename>
+		<filename>../../media/com_acctexp/images/site/icons/silk_icons.tar.gz</filename>
+		<filename>../../media/com_acctexp/images/admin/index.html</filename>
+		<filename>../../media/com_acctexp/images/admin/gfx/index.html</filename>
+		<filename>../../media/com_acctexp/images/admin/gfx/gfx.tar.gz</filename>
+		<filename>../../media/com_acctexp/images/admin/icons/index.html</filename>
+		<filename>../../media/com_acctexp/images/admin/icons/backend_icons.tar.gz</filename>
+		<filename>../../media/com_acctexp/js/index.html</filename>
+		<filename>../../media/com_acctexp/js/jquery/index.html</filename>
+		<filename>../../media/com_acctexp/js/jquery/jquery-1.3.2.min.js</filename>
+		<filename>../../media/com_acctexp/js/jquery/jquery-ui-1.7.custom.min.js</filename>
+		<filename>../../media/com_acctexp/js/jquery/css/index.html</filename>
+		<filename>../../media/com_acctexp/js/jquery/css/smoothness/index.html</filename>
+		<filename>../../media/com_acctexp/js/jquery/css/smoothness/jquery-ui-1.7.custom.css</filename>
+		<filename>../../media/com_acctexp/js/jquery/css/smoothness/images/index.html</filename>
+		<filename>../../media/com_acctexp/js/jquery/css/smoothness/images/jquery_ui_smoothness_img.tar.gz</filename>
 	</files>
-	<images>
-		<filename>site.css</filename>
-		<filename>invoice.css</filename>
-		<filename>images/index.html</filename>
-		<filename>images/gateway_buttons.tar.gz</filename>
-		<filename>images/gateway_logos.tar.gz</filename>
-		<filename>images/cc_icons/index.html</filename>
-		<filename>images/cc_icons/cc_icons.tar.gz</filename>
-			<filename>images/index.html</filename>
-			<filename>images/backend_gfx/index.html</filename>
-			<filename>images/backend_gfx/backend_gfx.tar.gz</filename>
-			<filename>images/icons/index.html</filename>
-			<filename>images/icons/backend_icons.tar.gz</filename>
-			<filename>images/icons/silk_icons.tar.gz</filename>
-			<filename>aec_readout.css</filename>
-			<filename>backend_style.css</filename>
-	</images>
 	<install>
 		<queries>
 		</queries>
@@ -219,8 +222,8 @@
     	<queries>
     	</queries>
 	</uninstall>
-	<installfile>install/install.acctexp.php</installfile>
-	<uninstallfile>install/uninstall.acctexp.php</uninstallfile>
+	<installfile>administrator/components/com_acctexp/install/install.acctexp.php</installfile>
+	<uninstallfile>administrator/components/com_acctexp/install/uninstall.acctexp.php</uninstallfile>
 	<administration>
 		<files folder="administrator/components/com_acctexp">
 			<filename>index.html</filename>

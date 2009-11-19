@@ -11637,6 +11637,145 @@ class AECfetchfromDB
 
 }
 
+class aecSuperCommand
+{
+	function aecSuperCommand()
+	{
+
+	}
+
+	function parseString( $string )
+	{
+		$particles = explode( '|', str_replace( '!supercommand:', '', $string ) );
+
+		if ( count( $particles ) == 2 ) {
+			$this->audience = $this->getParticle( $particles[0] );
+			$this->action = $this->getParticle( $particles[1] );
+
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function getParticle( $data )
+	{
+		$d = explode( ':', $data, 2 );
+
+		$return = array();
+		$return['command'] = $d[0];
+
+		if ( !empty( $d[1] ) ) {
+			$return['parameters'] = explode( ':', $d[1] );
+		}
+
+		return $return;
+	}
+
+	function query( $armed )
+	{
+		$userlist = $this->getAudience();
+
+		$users = count( $userlist );
+
+		if ( $armed ) {
+			foreach( $userlist as $userid ) {
+				$r = $this->action( $userid );
+
+				if ( $r == false ) {
+					return false;
+				}
+			}
+		}
+
+		return $users;
+	}
+
+	function getAudience()
+	{
+		switch ( $this->audience['command'] ) {
+			case 'everybody':
+				$database = &JFactory::getDBO();
+
+				$query = 'SELECT `id`'
+						. ' FROM #__users'
+						;
+				$database->setQuery( $query );
+				$userlist = $database->loadResultArray();
+				break;
+			default:
+				$cmd = 'cmd' . ucfirst( strtolower( $this->audience['command'] ) );
+
+				if ( method_exists( $this, $cmd ) ) {
+					$userlist = $this->$cmd( $this->audience['parameters'] );
+				} else {
+					return false;
+				}
+		}
+
+		return $userlist;
+	}
+
+	function action( $params )
+	{
+
+	}
+
+	function cmdHas( $params )
+	{
+		switch ( strtolower( $params[0] ) ) {
+			case 'userid':
+				$database = &JFactory::getDBO();
+
+				$query = 'SELECT `id`'
+						. ' FROM #__users'
+						. ' WHERE `userid` = \'' . (int) $params[1] . '\''
+						;
+				$database->setQuery( $query );
+				$userlist = $database->loadResultArray();
+				break;
+			case 'plan':
+				$database = &JFactory::getDBO();
+
+				$query = 'SELECT `userid`'
+						. ' FROM #__acctexp_subscr'
+						. ' WHERE `plan` IN (' . implode( ',', $params[1] ) . ')'
+						. ' AND `status` != \'Expired\''
+						. ' AND `status` != \'Closed\''
+						. ' AND `status` != \'Hold\''
+						;
+				$database->setQuery( $query );
+				$userlist = $database->loadResultArray();
+				break;
+			case 'mi':
+				$database = &JFactory::getDBO();
+
+				$mis = explode( ',', $params[1] );
+
+				$plans = microIntegrationHandler::getPlansbyMI( $params[1] );
+
+				$query = 'SELECT `userid`'
+						. ' FROM #__acctexp_subscr'
+						. ' WHERE `plan` IN (' . implode( ',', $params[1] ) . ')'
+						. ' AND `status` != \'Expired\''
+						. ' AND `status` != \'Closed\''
+						. ' AND `status` != \'Hold\''
+						;
+				$database->setQuery( $query );
+				$userlist = $database->loadResultArray();
+				break;
+			default:
+				$cmd = 'cmd' . ucfirst( strtolower( $this->audience['command'] ) );
+
+				if ( method_exists( $this, $cmd ) ) {
+					$userlist = $this->$cmd( $this->audience['parameters'] );
+				} else {
+					return false;
+				}
+		}
+	}
+}
+
 class reWriteEngine
 {
 	function reWriteEngine()

@@ -763,7 +763,9 @@ switch( strtolower( $task ) ) {
 	case 'quicklookup':
 		$return = quicklookup( $option );
 
-		if ( strpos( $return, '</a>' ) || strpos( $return, '</div>' ) ) {
+		if ( is_array( $return ) ) {
+			aecCentral( $option, $return['return'], $return['search'] );
+		} elseif ( strpos( $return, '</a>' ) || strpos( $return, '</div>' ) ) {
 			aecCentral( $option, $return );
 		} elseif ( !empty( $return ) ) {
 			aecRedirect( 'index2.php?option=' . $option . '&task=edit&userid=' . $return, _AEC_QUICKSEARCH_THANKS );
@@ -813,7 +815,7 @@ switch( strtolower( $task ) ) {
 /**
 * Central Page
 */
-function aecCentral( $option, $searchresult=null )
+function aecCentral( $option, $searchresult=null, $searchcontent=null )
 {
 	$database = &JFactory::getDBO();
 
@@ -828,7 +830,7 @@ function aecCentral( $option, $searchresult=null )
 	$database->setQuery( $query	);
 	$notices = $database->loadObjectList();
 
- 	HTML_AcctExp::central( $searchresult, $notices );
+ 	HTML_AcctExp::central( $searchresult, $notices, $searchcontent );
 }
 
 /**
@@ -5539,6 +5541,30 @@ function quicklookup( $option )
 	$userid = 0;
 	$k = 0;
 
+	if ( strpos( $search, '!supercommand:' ) !== false ) {
+		$supercommand = new aecSuperCommand();
+
+		if ( $supercommand->parseString( $search ) ) {
+			$supercommand->parseString( $search );
+
+			if ( strpos( $search, '!' ) === 0 ) {
+				$armed = true;
+			} else {
+				$armed = false;
+			}
+
+			$return = $supercommand->query( $armed );
+
+			if ( $return != false ) {
+
+			}
+
+			$r['return'] = "If you're so clever, you tell us what colour it should be. (Everything went fine. Really!)";
+		}
+
+		return "I think you ought to know I'm feeling very depressed. (Something was wrong with your query.)";
+	}
+
 	// Try username and name
 	$queries[$k] = 'FROM #__users'
 				. ' WHERE LOWER( `username` ) LIKE \'%' . $search . '%\' OR LOWER( `name` ) LIKE \'%' . $search . '%\''
@@ -5648,6 +5674,10 @@ function quicklookup( $option )
 	}
 
 	return false;
+}
+
+function supercommand( $cmd ) {
+
 }
 
 function obsafe_print_r($var, $return = false, $html = false, $level = 0) {
