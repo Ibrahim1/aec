@@ -1080,18 +1080,7 @@ class Payment_HTML
 						if ( $aecConfig->cfg['customtext_confirm_keeporiginal'] ) { ?>
 							<p><?php echo _CART_INFO; ?></p>
 							<?php
-						}
-						if ( $InvoiceFactory->coupons['active'] ) {
-							if ( !empty( $aecConfig->cfg['confirmation_coupons'] ) ) {
-								?><p><?php echo _CONFIRM_COUPON_INFO_BOTH; ?></p><?php
-							} else {
-								?><p><?php echo _CONFIRM_COUPON_INFO; ?></p><?php
-							}
 						} ?>
-						<?php if ( !empty( $aecConfig->cfg['confirmation_coupons'] ) ) { ?>
-							<strong><?php echo _CHECKOUT_COUPON_CODE; ?></strong>
-							<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
-						<?php } ?>
 					</td>
 				</tr>
 				<?php
