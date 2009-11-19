@@ -73,7 +73,7 @@ class mi_age_restriction extends MI
 
 	function relayAction( $request )
 	{
-		if ( ( $request->area == '' ) && !empty( $this->settings['max_age'] ) ) {
+		if ( ( $request->stage == 'action' ) && !empty( $this->settings['max_age'] ) ) {
 			$age = $this->getAge( $request->params['birthday'] );
 
 			$due_date = strtotime( "+" . $this->settings['max_age'] . " years", strtotime( $request->params['birthday'] ) );

@@ -11900,6 +11900,43 @@ class reWriteEngine
 				$this->rewrite['user_last_name']		= $name['first'];
 				$this->rewrite['user_email']			= $this->data['metaUser']->cmsUser->email;
 
+				if ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) ) {
+					if ( !$this->data['metaUser']->hasJSprofile ) {
+						$this->data['metaUser']->loadJSuser();
+					}
+
+					if ( !empty( $this->data['metaUser']->hasCBprofile ) ) {
+						$fields = get_object_vars( $this->data['metaUser']->cbUser );
+
+						if ( !empty( $fields ) ) {
+							foreach ( $fields as $fieldname => $fieldcontents ) {
+								$this->rewrite['user_' . $fieldname] = $fieldcontents;
+							}
+						}
+
+						if ( isset( $this->data['metaUser']->cbUser->cbactivation ) ) {
+							$this->rewrite['user_activationcode']		= $this->data['metaUser']->cbUser->cbactivation;
+							$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_comprofiler&task=confirm&confirmcode=" . $this->data['metaUser']->cbUser->cbactivation;
+						} else {
+							$this->rewrite['user_activationcode']		= "";
+							$this->rewrite['user_activationlink']		= "";
+						}
+					} else {
+						if ( isset( $this->data['metaUser']->cmsUser->activation ) ) {
+							$this->rewrite['user_activationcode']		= $this->data['metaUser']->cmsUser->activation;
+
+							if ( aecJoomla15check() ) {
+								$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_user&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+							} else {
+								$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+							}
+						} else {
+							$this->rewrite['user_activationcode']		= "";
+							$this->rewrite['user_activationlink']		= "";
+						}
+					}
+				}
+
 				if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 					if ( !$this->data['metaUser']->hasCBprofile ) {
 						$this->data['metaUser']->loadCBuser();

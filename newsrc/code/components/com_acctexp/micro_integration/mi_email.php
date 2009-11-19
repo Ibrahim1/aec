@@ -54,7 +54,7 @@ class mi_email extends MI
 
 	function relayAction( $request )
 	{
-		if ( $request->area == '' ) {
+		if ( $request->stage == 'action' ) {
 			if ( !empty( $this->settings['text_first'] ) ) {
 				if ( empty( $request->metaUser->objSubscription->previous_plan ) ) {
 					$request->area = '_first';

@@ -977,4 +977,15 @@ define( '_MI_MI_RSTICKETS_TEXT_DESC',		'The Ticket Text.' );
 define( '_MI_MI_RSTICKETS_PRIORITY_NAME',		'Priority' );
 define( '_MI_MI_RSTICKETS_PRIORITY_DESC',		'The Ticket Priority.' );
 
+// JomSocial
+define( '_AEC_MI_NAME_JOMSOCIAL',				'JomSocial' );
+define( '_AEC_MI_DESC_JOMSOCIAL',				'Actions that affect the JomSocial user account' );
+define( '_MI_MI_JOMSOCIAL_OVERWRITE_EXISTING_NAME',		'Overwrite Existing' );
+define( '_MI_MI_JOMSOCIAL_OVERWRITE_EXISTING_DESC',		'Should AEC overwrite existing entries for fields (Set to Yes)? Or just fill in blanks (Set to No)?' );
+define( '_MI_MI_JOMSOCIAL_SET_FIELDS_NAME',		'Set Fields' );
+define( '_MI_MI_JOMSOCIAL_SET_FIELDS_DESC',		'Automatically set the fields (which are not marked with "(expiration)" when the plan is paid for.' );
+define( '_MI_MI_JOMSOCIAL_SET_FIELDS_EXP_NAME',	'Set Fields Expiration' );
+define( '_MI_MI_JOMSOCIAL_SET_FIELDS_EXP_DESC',	'Automatically set the fields (which are marked with "(expiration)" when the plan is paid for.' );
+define( '_MI_MI_JOMSOCIAL_EXPMARKER',			'(expiration)' );
+
 ?>
