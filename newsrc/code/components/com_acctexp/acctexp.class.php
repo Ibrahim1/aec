@@ -2497,7 +2497,7 @@ class PaymentProcessorHandler
 
 		$return = array();
 		foreach ( $res as $pobj ) {
-			if ( in_array( $pobj->id, $idlist ) ) {
+			if ( in_array( $pobj->id, $idlist ) || in_array( $pobj->id.'_recurring', $idlist ) ) {
 				$return[$pobj->id] = $pobj->name;
 			}
 		}
@@ -7099,7 +7099,19 @@ class InvoiceFactory
 				}
 			} else {
 				if ( isset( $procs[0] ) ) {
-					$this->processor = PaymentProcessorHandler::getProcessorNamefromId( $procs[0] );
+					$pgroups = aecCartHelper::getCartProcessorGroups( $this->cartobject );
+
+					$proc = $pgroups[0]['processors'][0];
+
+					if ( strpos( $proc, '_recurring' ) ) {
+						$this->recurring = 1;
+
+						$proc = str_replace( '_recurring', '', $proc );
+					}
+
+					$this->processor = PaymentProcessorHandler::getProcessorNamefromId( $proc );
+
+					$this->plan = aecCartHelper::getCartItemObject( $this->cartobject, 0 );
 				} else {
 					$am = $this->cartobject->getAmount( $this->metaUser );
 
@@ -9651,7 +9663,12 @@ class Invoice extends serialParamDBTable
 		$int_var['invoice']		= $this->invoice_number;
 		$int_var['usage']		= $this->usage;
 		$int_var['amount']		= $this->amount;
-		$int_var['recurring']	= 0;
+
+		if ( isset( $InvoiceFactory->recurring ) ) {
+			$int_var['recurring']	= $InvoiceFactory->recurring;
+		} else {
+			$int_var['recurring']	= 0;
+		}
 
 		if ( is_array( $this->params ) ) {
 			$int_var['params'] = $this->params;
@@ -9670,6 +9687,12 @@ class Invoice extends serialParamDBTable
 
 		$urladd = '';
 		if ( !empty( $int_var['objUsage'] ) ) {
+			if ( is_a( $int_var['objUsage'], 'aecCart' ) ) {
+				if ( count( $int_var['objUsage']->content ) < 2 ) {
+					$int_var['objUsage'] = aecCartHelper::getCartItemObject( $int_var['objUsage'], 0 );
+				}
+			}
+
 			if ( is_a( $int_var['objUsage'], 'SubscriptionPlan' ) ) {
 				$int_var['planparams'] = $int_var['objUsage']->getProcessorParameters( $InvoiceFactory->pp->id );
 
@@ -9687,13 +9710,10 @@ class Invoice extends serialParamDBTable
 					$urladd = '&amp;u=' . $this->usage;
 				}
 			} else {
-				$int_var['recurring'] = false;
-
 				if ( !empty( $InvoiceFactory->cart ) && !empty( $InvoiceFactory->cartobject ) ) {
 					$int_var['objUsage'] = $InvoiceFactory->cartobject;
 				}
 
-				// TODO: Figure out whether ->cart really is always present
 				$int_var['amount'] = $int_var['objUsage']->getAmount( $InvoiceFactory->metaUser );
 			}
 		}
@@ -10075,8 +10095,22 @@ class aecCartHelper
 
 			if ( is_array( $cartitem->params['processors'] ) && !empty( $cartitem->params['processors'] ) ) {
 				foreach ( $cartitem->params['processors'] as $pid ) {
-					if ( array_search( $pid, $proclist ) === false ) {
-						$proclist[] = $pid;
+					$sid = $pid;
+
+					/*if ( $cartitem->custom_params[$pid . '_aec_overwrite_settings'] == "on" ) {
+						if ( !empty( $cartitem->custom_params[$pid . '_recurring'] ) ) {
+							if ( $cartitem->custom_params[$pid . '_recurring'] == 2 ) {
+								if ( array_search( $sid, $proclist ) === false ) {
+									$proclist[] = $sid;
+								}
+							}
+
+							$sid .= '_recurring';
+						}
+					}*/
+
+					if ( array_search( $sid, $proclist ) === false ) {
+						$proclist[] = $sid;
 					}
 				}
 			}
@@ -10105,16 +10139,22 @@ class aecCartHelper
 					$pp->getInfo();
 					$pp->exchangeSettingsByPlan( $cartitem );
 
-					$recurring = $pp->is_recurring( $this->recurring );
+					if ( isset( $this->recurring ) ) {
+						$recurring = $pp->is_recurring( $this->recurring );
+					} else {
+						$recurring = $pp->is_recurring();
+					}
 
 					if ( $recurring > 1 ) {
 						$pplist[] = $pp->id;
 
-						if ( !$plan['plan']->params['lifetime'] ) {
+						if ( !$cartitem->params['lifetime'] ) {
 							$pplist[] = $pp->id.'_recurring';
 						}
-					} elseif ( !( $plan['plan']->params['lifetime'] && $recurring ) ) {
-						$pplist[] = $pp->id . ( $recurring ? '' : '_recurring' );
+					} elseif ( !( $cartitem->params['lifetime'] && $recurring ) ) {
+						$pplist[] = $pp->id . '_recurring';
+					} else {
+						$pplist[] = $pp->id;
 					}
 				}
 			}
