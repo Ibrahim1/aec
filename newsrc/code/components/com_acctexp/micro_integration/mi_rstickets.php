@@ -26,6 +26,7 @@ class mi_rstickets extends MI
 	{
 		$settings = array();
 		$settings['userid']				= array( 'inputE' );
+		$settings['email']				= array( 'inputE' );
 		$settings['department']			= array( 'list' );
 
 		$settings['subject']			= array( 'inputE' );
@@ -34,7 +35,7 @@ class mi_rstickets extends MI
 		$settings['priority']			= array( 'list' );
 
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
-		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_RSTICKETS, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
 		$this->loadRStickets();
 
@@ -57,6 +58,15 @@ class mi_rstickets extends MI
 		return $settings;
 	}
 
+	function Defaults()
+	{
+		$defaults = array();
+		$defaults['userid']	= "[[user_id]]";
+		$defaults['email']	= "[[user_email]]";
+
+		return $defaults;
+	}
+
 	function relayAction( $request )
 	{
 		if ( $request->area == '' ) {
@@ -65,7 +75,10 @@ class mi_rstickets extends MI
 			$text		= AECToolbox::rewriteEngineRQ( $this->settings['text'], $request );
 			$subject	= AECToolbox::rewriteEngineRQ( $this->settings['subject'], $request );
 
-			rst_add_ticket( $this->settings['department'], $subject, $text, $this->settings['priority'], 0, 0, 0, array(), true );
+			$userid		= AECToolbox::rewriteEngineRQ( $this->settings['userid'], $request );
+			$email		= AECToolbox::rewriteEngineRQ( $this->settings['email'], $request );
+
+			$r = rst_add_ticket( $this->settings['department'], $subject, $text, $this->settings['priority'], $userid, $email, 0, array(), true );
 		}
 
 		return true;
@@ -73,8 +86,8 @@ class mi_rstickets extends MI
 
 	function loadRStickets()
 	{
-		require_once( JPATH_SITE . 'components/com_rstickets/config.php' );
-		require_once( JPATH_SITE . 'components/com_rstickets/functions.php' );
+		require_once( JPATH_SITE . '/components/com_rstickets/config.php' );
+		require_once( JPATH_SITE . '/components/com_rstickets/functions.php' );
 	}
 }
 ?>

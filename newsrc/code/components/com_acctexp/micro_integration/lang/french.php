@@ -970,6 +970,8 @@ define( '_AEC_MI_NAME_RSTICKETS',		'RStickets' );
 define( '_AEC_MI_DESC_RSTICKETS',		'Change the Information that is displayed when printing the invoice for a plan that has this MI attached' );
 define( '_MI_MI_RSTICKETS_USERID_NAME',		'Userid' );
 define( '_MI_MI_RSTICKETS_USERID_DESC',		'The Userid - use the RWengine for dynamic userid.' );
+define( '_MI_MI_RSTICKETS_EMAIL_NAME',		'Email' );
+define( '_MI_MI_RSTICKETS_EMAIL_DESC',		'The Email - use the RWengine for dynamic email address.' );
 define( '_MI_MI_RSTICKETS_DEPARTMENT_NAME',		'Department' );
 define( '_MI_MI_RSTICKETS_DEPARTMENT_DESC',		'The Department that the ticket will be assigned to.' );
 define( '_MI_MI_RSTICKETS_SUBJECT_NAME',		'Subject' );
