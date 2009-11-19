@@ -527,6 +527,7 @@ class Payment_HTML
 			</form><br /><br />
 			</table>
 			</div>
+			<div class="aec_clearfix"></div>
 		<?php } ?>
 		<div class="subscriptions">
 			<?php

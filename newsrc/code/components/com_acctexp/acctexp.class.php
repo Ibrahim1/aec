@@ -7101,7 +7101,7 @@ class InvoiceFactory
 				if ( isset( $procs[0] ) ) {
 					$this->processor = PaymentProcessorHandler::getProcessorNamefromId( $procs[0] );
 				} else {
-					$am = $this->cartobject->getAmount( $this->metaUser, $this->cart );
+					$am = $this->cartobject->getAmount( $this->metaUser );
 
 					if ( $am['amount'] == "0.00" ) {
 						$this->processor = 'free';
@@ -7194,7 +7194,9 @@ class InvoiceFactory
 
 			$this->items[] = array( 'item' => array( 'obj' => $this->plan ), 'terms' => $terms );
 		} elseif( !empty( $this->cart ) ) {
-			$this->payment->amount = $this->cartobject->getAmount( $this->metaUser, $this->cart );
+			$this->getCart();
+
+			$this->payment->amount = $this->cartobject->getAmount( $this->metaUser );
 		}
 
 		// Amend ->payment
@@ -7272,6 +7274,10 @@ class InvoiceFactory
 			$this->cartobject = aecCartHelper::getCartbyUserid( $this->userid );
 		}
 
+		if ( empty( $this->cartobject->content ) && !empty( $this->invoice->params['cart'] ) ) {
+			$this->cartobject = $this->invoice->params['cart'];
+		}
+
 		$this->loadMetaUser();
 
 		if ( !empty( $this->cartobject->id ) ) {
@@ -7307,7 +7313,9 @@ class InvoiceFactory
 			$this->cartobject = new aecCart( $database );
 			$this->cartobject->addItem( array(), $this->plan );
 		} else {
-			$this->payment->amount = $this->cartobject->getAmount( $this->metaUser, $this->cart );
+			$this->getCart();
+
+			$this->payment->amount = $this->cartobject->getAmount( $this->metaUser );
 
 			foreach ( $this->cart as $cid => $citem ) {
 				if ( $citem['obj'] !== false ) {
@@ -7409,7 +7417,6 @@ class InvoiceFactory
 			if ( !empty( $coupon ) ) {
 				$this->invoice->addCoupon( $coupon );
 			}
-
 
 			$this->invoice->computeAmount( $this, empty( $this->invoice->id ) );
 
@@ -8381,7 +8388,7 @@ class InvoiceFactory
 			}
 
 			if ( !empty( $this->cart ) ) {
-				$this->payment->amount = $this->cartobject->getAmount( $this->metaUser, $this->cart );
+				$this->payment->amount = $this->cartobject->getAmount( $this->metaUser );
 			}
 		}
 
@@ -8998,13 +9005,12 @@ class Invoice extends serialParamDBTable
 			switch ( strtolower( $usage[0] ) ) {
 				case 'c':
 				case 'cart':
-					$cart = new aecCart( $database );
-					$cart->load( $usage[1] );
+					$cart = $this->getObjUsage();
 
 					if ( $cart->id ) {
-						$return = $cart->getAmount( $metaUser, false, $this->counter );
+						$return = $cart->getAmount( $metaUser, $this->counter );
 
-						$this->amount = $return['amount'];
+						$this->amount = $return;
 					} elseif ( isset( $this->params->cart ) ) {
 						// Cart has been deleted, use copied data
 						$vars = get_object_vars( $this->params->cart );
@@ -9015,9 +9021,9 @@ class Invoice extends serialParamDBTable
 							}
 						}
 
-						$return = $cart->getAmount( $metaUser, false, $this->counter );
+						$return = $cart->getAmount( $metaUser, $this->counter );
 
-						$this->amount = $return['amount'];
+						$this->amount = $return;
 					} else {
 						$this->amount = '0.00';
 					}
@@ -9025,8 +9031,7 @@ class Invoice extends serialParamDBTable
 				case 'p':
 				case 'plan':
 				default:
-					$plan = new SubscriptionPlan( $database );
-					$plan->load( $this->usage );
+					$plan = $this->getObjUsage();
 
 					if ( is_object( $pp ) ) {
 						$pp->exchangeSettingsByPlan( $plan );
@@ -9689,7 +9694,7 @@ class Invoice extends serialParamDBTable
 				}
 
 				// TODO: Figure out whether ->cart really is always present
-				$int_var['amount'] = $int_var['objUsage']->getAmount( $InvoiceFactory->metaUser, $InvoiceFactory->cart );
+				$int_var['amount'] = $int_var['objUsage']->getAmount( $InvoiceFactory->metaUser );
 			}
 		}
 
@@ -9731,6 +9736,10 @@ class Invoice extends serialParamDBTable
 				case 'cart':
 					$objUsage = new aecCart( $database );
 					$objUsage->load( $u[1] );
+
+					if ( empty( $objUsage->content ) && !empty( $this->params['cart'] ) ) {
+						$objUsage = $this->params['cart'];
+					}
 					break;
 				case 'p':
 				case 'plan':
@@ -9928,11 +9937,13 @@ class Invoice extends serialParamDBTable
 		$total = 0;
 		foreach ( $InvoiceFactory->items as $item ) {
 			if ( isset( $item['obj'] ) ) {
+				$amt =  $item['terms']->nextterm->renderTotal();
+
 				$data['itemlist'][] = '<tr id="invoice_content_item">'
 					. '<td>' . $item['name'] . '</td>'
-					. '<td>' . AECToolbox::formatAmount( $item['terms']->nextterm->renderTotal(), $InvoiceFactory->invoice->currency ) . '</td>'
-					. '<td>' . 1 . '</td>'
-					. '<td>' . AECToolbox::formatAmount( $item['terms']->nextterm->renderTotal(), $InvoiceFactory->invoice->currency ) . '</td>'
+					. '<td>' . AECToolbox::formatAmount( $amt, $InvoiceFactory->invoice->currency ) . '</td>'
+					. '<td>' . $item['quantity'] . '</td>'
+					. '<td>' . AECToolbox::formatAmount( $amt * $item['quantity'], $InvoiceFactory->invoice->currency ) . '</td>'
 					. '</tr>';
 			} else {
 				$data['totallist'][] = '<tr id="invoice_content_item_total">'
@@ -10414,6 +10425,10 @@ class aecCart extends serialParamDBTable
 
 		$totalcost = 0;
 
+		if ( empty( $this->content ) ) {
+			return array();
+		}
+
 		$return = array();
 		foreach ( $this->content as $cid => $content ) {
 			// Cache items
@@ -10506,11 +10521,9 @@ class aecCart extends serialParamDBTable
 		return $return;
 	}
 
-	function getAmount( $metaUser=null, $checkout=false, $counter=0 )
+	function getAmount( $metaUser=null, $counter=0 )
 	{
-		if ( empty( $checkout ) ) {
-			$checkout = $this->getCheckout( $metaUser, $counter );
-		}
+		$checkout = $this->getCheckout( $metaUser, $counter );
 
 		$max = array_pop( array_keys( $checkout ) );
 
@@ -11618,6 +11631,34 @@ class reWriteEngine
 			$rewrite['user'][] = 'activationlink';
 
 			if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
+				$database = &JFactory::getDBO();
+
+				$query = 'SELECT name, title'
+						. ' FROM #__comprofiler_fields'
+						. ' WHERE `table` != \'#__users\''
+						. ' AND name != \'NA\'';
+				$database->setQuery( $query );
+				$objects = $database->loadObjectList();
+
+				if ( is_array( $objects ) ) {
+					foreach ( $objects as $object ) {
+						$rewrite['user'][] = $object->name;
+
+						if ( strpos( $object->title, '_' ) === 0 ) {
+							$content = $object->name;
+						} else {
+							$content = $object->title;
+						}
+
+						$name = '_REWRITE_KEY_USER_' . strtoupper( $object->name );
+						if ( !defined( $name ) ) {
+							define( $name, $content );
+						}
+					}
+				}
+			}
+
+			if ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) && 0 ) {
 				$database = &JFactory::getDBO();
 
 				$query = 'SELECT name, title'
