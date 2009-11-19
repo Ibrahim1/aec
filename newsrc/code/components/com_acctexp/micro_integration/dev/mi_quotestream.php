@@ -92,10 +92,8 @@ class mi_quotestream
 
 		$client = new SoapClient('https://app.quotemedia.com/services/UserWebservice?wsdl', $login );
 
-		$user = $this->getUser( $request );
-
 		try {
-			$client->cancelUser( $user );
+			$client->cancelUser( substr( $request->metaUser->cmsUser->username, 0, 50 ) );
 		} catch ( SoapFault $soapFault ) {
 			aecDebug( $soapFault );
 			return false;
