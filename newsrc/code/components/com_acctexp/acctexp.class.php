@@ -7410,6 +7410,7 @@ class InvoiceFactory
 				$this->invoice->addCoupon( $coupon );
 			}
 
+
 			$this->invoice->computeAmount( $this, empty( $this->invoice->id ) );
 
 			$this->processor = $this->invoice->method;
@@ -7494,7 +7495,7 @@ class InvoiceFactory
 	function triggerMIs( $action, &$exchange, &$add, &$silent )
 	{
 		if ( !empty( $this->cart ) && !empty( $this->cartobject ) ) {
-			$this->cartobject->triggerMIs( $action, $this->metaUser, $exchange, $this->invoice, $add, $silent, $this->cartobject );
+			$this->cartobject->triggerMIs( $action, $this->metaUser, $exchange, $this->invoice, $add, $silent );
 		} elseif ( !empty( $this->plan ) ) {
 			$this->plan->triggerMIs( $action, $this->metaUser, $exchange, $this->invoice, $add, $silent );
 		}
@@ -8384,22 +8385,29 @@ class InvoiceFactory
 			}
 		}
 
+		if ( is_array( $this->payment->amount ) ) {
+			$amt = $this->payment->amount['amount'];
+		} else {
+			$amt = $this->payment->amount;
+		}
+
 		// Either this is fully free, or the next term is free and this is non recurring
 		if ( !empty( $this->items ) && !$this->recurring ) {
 			if ( ( count( $this->items ) == 1 ) || ( $this->payment->amount['amount'] == "0.00" ) ) {
 				$min = array_shift( array_keys( $this->items ) );
-
-				if ( is_array( $this->payment->amount ) ) {
-					$amt = $this->payment->amount['amount'];
-				} else {
-					$amt = $this->payment->amount;
-				}
 
 				if ( $this->items[$min]['terms']->checkFree() || ( $this->items[$min]['terms']->nextterm->free && !$this->recurring ) || ( $amt == "0.00" ) ) {
 					$this->invoice->pay();
 					return $this->thanks( $option, false, true );
 				}
 			}
+		}
+
+		// Argh, this is bad :-(
+		if ( $this->invoice->amount != $amt ) {
+			$this->invoice->amount = $amt;
+
+			$this->invoice->storeload();
 		}
 
 		$this->InvoiceToCheckout( $option, $repeat, $error );
@@ -9919,22 +9927,22 @@ class Invoice extends serialParamDBTable
 		$data['itemlist'] = array();
 		$total = 0;
 		foreach ( $InvoiceFactory->items as $item ) {
-			$data['itemlist'][] = '<tr id="invoice_content_item">'
-				. '<td>' . $item['name'] . '</td>'
-				. '<td>' . AECToolbox::formatAmount( $item['terms']->nextterm->renderTotal(), $InvoiceFactory->invoice->currency ) . '</td>'
-				. '<td>' . 1 . '</td>'
-				. '<td>' . AECToolbox::formatAmount( $item['terms']->nextterm->renderTotal(), $InvoiceFactory->invoice->currency ) . '</td>'
-				. '</tr>';
-
-			$total += $item['terms']->nextterm->renderTotal();
+			if ( isset( $item['obj'] ) ) {
+				$data['itemlist'][] = '<tr id="invoice_content_item">'
+					. '<td>' . $item['name'] . '</td>'
+					. '<td>' . AECToolbox::formatAmount( $item['terms']->nextterm->renderTotal(), $InvoiceFactory->invoice->currency ) . '</td>'
+					. '<td>' . 1 . '</td>'
+					. '<td>' . AECToolbox::formatAmount( $item['terms']->nextterm->renderTotal(), $InvoiceFactory->invoice->currency ) . '</td>'
+					. '</tr>';
+			} else {
+				$data['totallist'][] = '<tr id="invoice_content_item_total">'
+					. '<td>' . _INVOICEPRINT_GRAND_TOTAL . '</td>'
+					. '<td></td>'
+					. '<td></td>'
+					. '<td>' . AECToolbox::formatAmount( $item['cost'], $InvoiceFactory->invoice->currency ) . '</td>'
+					. '</tr>';
+			}
 		}
-
-		$data['totallist'][] = '<tr id="invoice_content_item_total">'
-			. '<td>' . _INVOICEPRINT_GRAND_TOTAL . '</td>'
-			. '<td></td>'
-			. '<td></td>'
-			. '<td>' . AECToolbox::formatAmount( $total, $InvoiceFactory->invoice->currency ) . '</td>'
-			. '</tr>';
 
 		$otherfields = array( "page_title", "before_header", "header", "after_header", "before_content", "after_content", "before_footer", "footer", "after_footer" );
 
@@ -10514,11 +10522,9 @@ class aecCart extends serialParamDBTable
 		return aecCartHelper::getFirstSortedCartItemObject( $this );
 	}
 
-	function triggerMIs( $action, &$metaUser, &$exchange, &$invoice, &$add, &$silent, &$checkout )
+	function triggerMIs( $action, &$metaUser, &$exchange, &$invoice, &$add, &$silent )
 	{
-		if ( empty( $checkout ) ) {
-			$checkout = $this->getCheckout( $metaUser );
-		}
+		$checkout = $this->getCheckout( $metaUser );
 
 		foreach ( $checkout as $item ) {
 			if ( !empty( $item['obj'] ) ) {
