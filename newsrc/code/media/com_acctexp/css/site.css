@@ -918,6 +918,11 @@ text-align: center;
 #cancel_page {
 }
 
+.aec_clearfix {
+clear: both;
+height: 20px;
+}
+
 .aechidden {
 display: none;
 }

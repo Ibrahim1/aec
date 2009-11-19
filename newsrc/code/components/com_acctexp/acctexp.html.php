@@ -346,7 +346,7 @@ class HTML_frontEnd
 					break;
 			}
 			?>
-		</div>
+		</div><div class="aec_clearfix"></div>
 		<?php
 	}
 
@@ -391,6 +391,7 @@ class HTML_frontEnd
 			</table>
 			<?php
 		}
+		?><div class="aec_clearfix"></div><?php
 	}
 
 	function processorInfo( $option, $processorObj, $displaycc = 1 )
@@ -435,6 +436,7 @@ class HTML_frontEnd
 			</tr>
 			<?php
 		}
+		?><div class="aec_clearfix"></div><?php
 	}
 
 	/**
@@ -503,6 +505,7 @@ class HTML_Results
 			</div>
 			<?php
 		}
+		?><div class="aec_clearfix"></div><?php
 	}
 }
 
@@ -580,6 +583,7 @@ class Payment_HTML
 			?>
 			</table>
 		</div>
+		<div class="aec_clearfix"></div>
 		<?php
 	}
 
@@ -766,6 +770,7 @@ class Payment_HTML
 				</form>
 			</div>
 		</div>
+		<div class="aec_clearfix"></div>
 		<?php
 	}
 
@@ -964,8 +969,8 @@ class Payment_HTML
 				</td></tr>
 			</table>
 			</form>
-			<div style="clear:both"></div>
 		</div>
+		<div class="aec_clearfix"></div>
 		<?php
 	}
 
@@ -1160,8 +1165,8 @@ class Payment_HTML
 			</table>
 			</form>
 			<?php } ?>
-			<div style="clear:both"></div>
 		</div>
+		<div class="aec_clearfix"></div>
 		<?php
 	}
 
@@ -1434,8 +1439,8 @@ class Payment_HTML
 				?>
 			</td></tr>
 		</table>
-		<div style="clear:both"></div>
 		</div>
+		<div class="aec_clearfix"></div>
 		<?php
 	}
 
@@ -1508,8 +1513,8 @@ class Payment_HTML
 				?>
 			</td></tr>
 		</table>
-		<div style="clear:both"></div>
 		</div>
+		<div class="aec_clearfix"></div>
 		<?php
 	}
 
@@ -1609,8 +1614,8 @@ class Payment_HTML
 		<div id="box_pending">
 			<p><?php echo _CHECKOUT_ERROR_EXPLANATION . ( $error ? ( ': ' . $error) : '' ); ?></p>
 			<p><?php echo $actions; ?></p>
-			<div style="clear:both"></div>
 		</div>
+		<div class="aec_clearfix"></div>
 		<?php
 	}
 
