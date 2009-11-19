@@ -38,12 +38,6 @@ class mi_jomsocial
 		$objects = $database->loadObjectList();
 
 		foreach ( $objects as $object ) {
-			if ( strpos( $object->title, '_' ) === 0 ) {
-				$title = $object->name;
-			} else {
-				$title = $object->title;
-			}
-
 			$settings['jsfield_' . $object->id] = array( 'inputE', $object->name, $object->name );
 			$expname = $object->name . " " . _MI_MI_JOMSOCIAL_EXPMARKER;
 			$settings['jsfield_' . $object->id . '_exp' ] = array( 'inputE', $expname, $expname );
@@ -83,18 +77,36 @@ class mi_jomsocial
 		}
 	}
 
-	function setField( $fields, $userid )
+	function setFields( $fields, $userid )
 	{
 		$database = &JFactory::getDBO();
 
-		foreach( $fields as $id => $value ) {
-			$query	= 'SELECT COUNT(*) FROM #__community_fields_values'
-					. ' WHERE `field_id` = \'' . (int) $userid . '\''
+		$ids = array();
+		foreach ( $fields as $fi => $ff ) {
+			$ids[] = $fi;
+		}
+
+		$query = 'SELECT `field_id`, `value`'
+				. ' FROM #__community_fields_values'
+					. ' WHERE `field_id` IN (' . implode( ',', $ids ) . ')'
 					. ' AND `user_id` = \'' . (int) $userid . '\'';
-			$db->setQuery( $query );
+				;
+		$database->setQuery( $query );
+		$existingfields = $database->loadObjectList();
 
-			$existingfield = $db->loadResult();
+		foreach( $fields as $id => $value ) {
+			$existingfield = false;
+			if ( !empty( $existingfields ) ) {
+				foreach ( $existingfields as $ff ) {
+					if ( $ff->field_id == $id ) {
+						$existingfield = true;
 
+						continue;
+					}
+				}
+			}
+
+			$query = null;
 			if ( $existingfield && $this->settings['overwrite_existing'] ) {
 				$query	= 'UPDATE #__community_fields_values SET '
 						. ' `value` = \'' . $value . '\''
@@ -102,15 +114,16 @@ class mi_jomsocial
 						. ' AND `field_id` = \'' . (int) $id . '\''
 						;
 			} elseif ( !$existingfield ) {
-			$strSQL	= "INSERT INTO " . $db->nameQuote('#__community_fields_values')
-				. ' SET ' . $db->nameQuote('user_id') . '=' . $db->Quote($userId) . ', '
-				. $db->nameQuote('field_id') . '=' . $db->Quote($id) . ', ' . $db->nameQuote('value')
-				. '=' . $db->Quote($value);
+				$query	= 'INSERT INTO #__community_fields_values'
+						. ' (`user_id`, `field_id`, `value` )'
+						. ' VALUES ( \'' . (int) $userid . '\', \'' . (int) $id . '\', \'' . $database->getEscaped( $value ) . '\' )'
+						;
 			}
-			//echo $strSQL;
-			$db->setQuery( $strSQL );
-			$db->query();
 
+			if ( !empty( $query ) ) {
+				$database->setQuery( $query );
+				$database->query();
+			}
 		}
 
 	}
