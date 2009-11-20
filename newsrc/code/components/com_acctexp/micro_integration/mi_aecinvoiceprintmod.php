@@ -64,7 +64,7 @@ class mi_aecinvoiceprintmod
 				if ( isset( $this->settings[$k."_mode"] ) ) {
 					switch ( $this->settings[$k."_mode"] ) {
 						case "none":
-							continue;
+							$value = $v;
 							break;
 						case "before":
 							$value = $this->settings[$k] . $v;

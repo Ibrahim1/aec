@@ -7351,6 +7351,8 @@ class InvoiceFactory
 
 			$this->cartobject = new aecCart( $database );
 			$this->cartobject->addItem( array(), $this->plan );
+
+			$this->items[] = array( 'cost' => $terms->nextterm->renderTotal(), 'terms' => $terms );
 		} else {
 			$this->getCart();
 

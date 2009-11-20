@@ -111,6 +111,7 @@ define( '_INVOICEPRINT_GRAND_TOTAL', 'Rechnungsbetrag');
 define( '_INVOICEPRINT_ADDRESSFIELD', 'Hier k&ouml;nnen Sie ihre Addresse eingeben - Sie wird dann auf dem Ausdruck erscheinen.');
 define( '_INVOICEPRINT_PRINT', 'Drucken');
 define( '_INVOICEPRINT_BLOCKNOTICE', 'Dieser Bereich (inklusive Textfeld und Druckbutton) wird nicht mit ausgedruckt.');
+define( '_INVOICEPRINT_PRINT_TYPEABOVE', 'Bitte geben Sie im Feld oben ihren Namen und Anschrift ein.');
 
 define( '_AEC_YOUSURE', 'Are you sure?');
 

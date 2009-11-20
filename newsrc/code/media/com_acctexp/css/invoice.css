@@ -76,13 +76,27 @@ caption {background:#eee;}
 
 /* Valanx.org AEC Membership Management - invoice.css */
 
+body {
+background: #ddd;
+}
+
 div {
 border: 0px dashed red;
 }
 
+pre {
+font-size: 110%;
+}
+
 div#invoice_wrap {
 width: 700px;
-margin: 20px;
+background:#fff;
+border-color:#999999;
+border-style:solid;
+border-width:1px 1px 2px 2px;
+margin:20px auto 5px;
+overflow:hidden;
+padding:20px;
 }
 
 div#before_header {
@@ -96,6 +110,7 @@ height: 12px;
 div#invoice_details {
 width: 120px;
 float: right;
+margin-right: 20px;
 }
 
 table#invoice_details {
@@ -125,6 +140,7 @@ table#invoice_details th {
 background: #555;
 color: #fff;
 text-align: center;
+font-weight: bold;
 }
 
 table#invoice_details td {
@@ -135,8 +151,34 @@ tr#invoice_content_item_total td {
 font-weight: bold;
 }
 
+div#address {
+margin: 14px;
+margin-left: 32px;
+}
+
 div#printbutton {
 padding: 20px;
-margin: 20px;
 border: 1px dashed #d94;
+width: 700px;
+background:#ffb;
+margin:20px auto 5px;
+overflow:hidden;
+padding:20px;
+padding-bottom: 0;
+}
+
+div#printbutton_inner {
+width: 350px;
+background:#ffb;
+margin: 0 auto;
+}
+
+div#printbutton p {
+text-align: center;
+margin-top: 14px;
+}
+
+button#printbutton {
+margin: 34px;
+position: absolute;
 }

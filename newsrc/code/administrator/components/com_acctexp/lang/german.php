@@ -959,6 +959,8 @@ define( '_AEC_CUSTOM_INVOICE_AFTER_CONTENT', 'Vielen Dank, dass Sie sich f&uuml;
 define( '_AEC_CUSTOM_INVOICE_FOOTER', ' - Hier weitere Informationen einf&uuml;gen - ');
 
 define( '_CFG_GENERAL_INVOICE_PAGE_TITLE', 'Rechnung');
+define( '_CFG_GENERAL_INVOICE_PAGE_TITLE_NAME', 'Seiten Titel');
+define( '_CFG_GENERAL_INVOICE_PAGE_TITLE_DESC', 'Seitentitel des Rechnungsausdruckes');
 define( '_CFG_GENERAL_INVOICE_HEADER_NAME', 'Text Kopfzeile');
 define( '_CFG_GENERAL_INVOICE_HEADER_DESC', 'Kopfzeilen Text f&uuml;r den Rechnungsausdruck');
 define( '_CFG_GENERAL_INVOICE_AFTER_HEADER_NAME', 'Text nach Kopfzeile');

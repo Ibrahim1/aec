@@ -826,6 +826,8 @@ define( '_AEC_CUSTOM_INVOICE_AFTER_CONTENT', 'Thank you very much for choosing o
 define( '_AEC_CUSTOM_INVOICE_FOOTER', ' - Add your company information here - ');
 
 define( '_CFG_GENERAL_INVOICE_PAGE_TITLE', 'Invoice');
+define( '_CFG_GENERAL_INVOICE_PAGE_TITLE_NAME', 'Page Title');
+define( '_CFG_GENERAL_INVOICE_PAGE_TITLE_DESC', 'Page Title for the Invoice Printout');
 define( '_CFG_GENERAL_INVOICE_HEADER_NAME', 'Invoice Header');
 define( '_CFG_GENERAL_INVOICE_HEADER_DESC', 'Header Text for the Invoice Printout');
 define( '_CFG_GENERAL_INVOICE_AFTER_HEADER_NAME', 'Invoice After Header');

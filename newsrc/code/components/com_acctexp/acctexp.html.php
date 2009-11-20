@@ -241,7 +241,7 @@ class HTML_frontEnd
 									echo '<h2>' . _YOUR_SUBSCRIPTION . '</h2>';
 									break;
 								case 1:
-									echo '<h2>' . _YOUR_FURTHER_SUBSCRIPTIONS . '</h2>';
+									echo '<div style="clear:both"></div><h2>' . _YOUR_FURTHER_SUBSCRIPTIONS . '</h2>';
 									break;
 							}
 
@@ -1522,27 +1522,29 @@ class Payment_HTML
 			<link rel="stylesheet" href="<?php echo JURI::root() . 'media/' . $option; ?>/css/invoice_print.css" type="text/css" media="print" />
 			<script type="text/javascript" src="<?php echo JURI::root() . 'media/' . $option; ?>/js/jquery/jquery-1.3.2.min.js"></script>
 			<script type="text/javascript">
-			$(document).ready(function() {
-				$('textarea[name=address]').keyup(function() {
-					$('#address pre').text($(this).val());
+			jQuery(document).ready(function() {
+				jQuery('textarea[name=address]').keyup(function() {
+					jQuery('#address pre').text($(this).val());
 				});
 			 });
 			</script>
 
 		</head>
 		<body>
-			<div id="invoice_wrap">
-				<div id="printbutton">
+			<div id="printbutton">
+				<div id="printbutton_inner">
 					<textarea align="left" cols="40" rows="5" name="address" /><?php echo _INVOICEPRINT_ADDRESSFIELD; ?></textarea>
-					<button onclick="window.print()"><?php echo _INVOICEPRINT_PRINT; ?></button>
-					<p><?php echo _INVOICEPRINT_BLOCKNOTICE; ?></p>
+					<button onclick="window.print()" id="printbutton"><?php echo _INVOICEPRINT_PRINT; ?></button>
 				</div>
+					<p><?php echo _INVOICEPRINT_BLOCKNOTICE; ?></p>
+			</div>
+			<div id="invoice_wrap">
 				<div id="before_header"><?php echo $data['before_header']; ?></div>
 				<div id="header">
 					<?php echo $data['header']; ?>
 				</div>
 				<div id="after_header"><?php echo $data['after_header']; ?></div>
-				<div id="address"><pre></pre></div>
+				<div id="address"><pre><?php echo _INVOICEPRINT_PRINT_TYPEABOVE; ?></pre></div>
 				<div id="invoice_details">
 					<table id="invoice_details">
 						<tr><th><?php echo _INVOICEPRINT_DATE; ?></th></tr>
