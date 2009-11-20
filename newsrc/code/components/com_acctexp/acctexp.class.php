@@ -11692,7 +11692,13 @@ class aecSuperCommand
 		if ( $armed ) {
 			$x = 0;
 			foreach( $userlist as $userid ) {
-				$r = $this->action( (int) $userid );
+				if ( ( $this->focus == 'users' ) ) {
+					$metaUser = new metaUser( $userid );
+				} else {
+					$metaUser = new metaUser( null, $userid );
+				}
+
+				$r = $this->action( $metaUser );
 
 				if ( $r === false ) {
 					return $x;
@@ -11754,14 +11760,17 @@ class aecSuperCommand
 		return $userlist;
 	}
 
-	function action( $userid )
+	function action( $metaUser )
 	{
 		switch ( $this->action['command'] ) {
+			case 'expire':
+				$metaUser->focusSubscription->expire();
+				break;
 			default:
 				$cmd = 'cmd' . ucfirst( strtolower( $this->action['command'] ) );
 
 				if ( method_exists( $this, $cmd ) ) {
-					$userlist = $this->$cmd( $userid, $this->action['parameters'] );
+					$userlist = $this->$cmd( $metaUser, $this->action['parameters'] );
 				} else {
 					return false;
 				}
@@ -11784,7 +11793,7 @@ class aecSuperCommand
 			case 'plan':
 				$database = &JFactory::getDBO();
 
-				$query = 'SELECT ' . ( $this->focus == 'users' ) ? 'DISTINCT `userid`' : '`id`'
+				$query = 'SELECT ' . ( ( $this->focus == 'users' ) ? 'DISTINCT `userid`' : '`id`' )
 						. ' FROM #__acctexp_subscr'
 						. ' WHERE `plan` IN (' . $params[1] . ')'
 						. ' AND `status` != \'Expired\''
@@ -11815,18 +11824,12 @@ class aecSuperCommand
 		}
 	}
 
-	function cmdApply( $userid, $params )
+	function cmdApply( $metaUser, $params )
 	{
 		$database = &JFactory::getDBO();
 
 		switch ( strtolower( $params[0] ) ) {
 			case 'plan':
-				if ( ( $this->focus == 'users' ) ) {
-					$metaUser = new metaUser( $userid );
-				} else {
-					$metaUser = new metaUser( null, $userid );
-				}
-
 				$plans = explode( ',', $params[1] );
 
 				foreach ( $plans as $planid ) {
@@ -11839,12 +11842,6 @@ class aecSuperCommand
 				}
 				break;
 			case 'mi':
-				if ( ( $this->focus == 'users' ) ) {
-					$metaUser = new metaUser( $userid );
-				} else {
-					$metaUser = new metaUser( null, $userid );
-				}
-
 				$micro_integrations = explode( ',', $params[1] );
 
 				if ( is_array( $micro_integrations ) ) {
