@@ -785,9 +785,9 @@ function subscriptionDetails( $option, $sub='overview' )
 			$subList[$usid]->objPlan = new SubscriptionPlan( $database );
 			$subList[$usid]->objPlan->load( $subscription->plan );
 
-			if ( !empty( $subList[$usid]->objPlan->type ) ) {
-				if ( !in_array( $subList[$usid]->objPlan->type, $pplist ) ) {
-					$pplist[] = $subList[$usid]->objPlan->type;
+			if ( !empty( $subscription->type ) ) {
+				if ( !in_array( $subscription->type, $pplist ) ) {
+					$pplist[] = $subscription->type;
 				}
 			}
 		}

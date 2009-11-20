@@ -5555,11 +5555,15 @@ function quicklookup( $option )
 
 			$return = $supercommand->query( $armed );
 
-			if ( $return != false ) {
+			if ( ( $return != false ) && !$armed ) {
+				$r['search'] = "!" . $search;
 
+				$r['search'] = "This supercommand would affect " . $return . " users. Click the search button again to carry out the query.";
+			} else {
+				$r = "If you're so clever, you tell us what <strong>colour</strong> it should be. (Everything went fine. Really!)";
 			}
 
-			$r['return'] = "If you're so clever, you tell us what colour it should be. (Everything went fine. Really!)";
+			return $r;
 		}
 
 		return "I think you ought to know I'm feeling very depressed. (Something was wrong with your query.)";

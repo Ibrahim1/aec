@@ -11718,7 +11718,25 @@ class aecSuperCommand
 
 	function action( $params )
 	{
+		switch ( $this->action['command'] ) {
+			case 'everybody':
+				$database = &JFactory::getDBO();
 
+				$query = 'SELECT `id`'
+						. ' FROM #__users'
+						;
+				$database->setQuery( $query );
+				$userlist = $database->loadResultArray();
+				break;
+			default:
+				$cmd = 'cmd' . ucfirst( strtolower( $this->audience['command'] ) );
+
+				if ( method_exists( $this, $cmd ) ) {
+					$userlist = $this->$cmd( $this->audience['parameters'] );
+				} else {
+					return false;
+				}
+		}
 	}
 
 	function cmdHas( $params )
