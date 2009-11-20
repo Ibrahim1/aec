@@ -5541,12 +5541,10 @@ function quicklookup( $option )
 	$userid = 0;
 	$k = 0;
 
-	if ( strpos( $search, '!supercommand:' ) !== false ) {
+	if ( strpos( $search, 'supercommand:' ) !== false ) {
 		$supercommand = new aecSuperCommand();
 
 		if ( $supercommand->parseString( $search ) ) {
-			$supercommand->parseString( $search );
-
 			if ( strpos( $search, '!' ) === 0 ) {
 				$armed = true;
 			} else {
@@ -5555,12 +5553,19 @@ function quicklookup( $option )
 
 			$return = $supercommand->query( $armed );
 
+			if ( $return > 1 ) {
+				$multiple = true;
+			} else {
+				$multiple = false;
+			}
+
 			if ( ( $return != false ) && !$armed ) {
 				$r['search'] = "!" . $search;
 
-				$r['search'] = "This supercommand would affect " . $return . " users. Click the search button again to carry out the query.";
+				$r['return'] = '<div style="font-size:110%;border: 2px solid #da5;padding:16px;">This supercommand would affect ' . $return . " user" . ($multiple ? "s":"") . ". Click the search button again to carry out the query.</div>";
 			} else {
-				$r = "If you're so clever, you tell us what <strong>colour</strong> it should be. (Everything went fine. Really!)";
+				$r['search'] = "";
+				$r['return'] = '<div style="font-size:110%;border: 2px solid #da5;padding:16px;">If you\'re so clever, you tell us what <strong>colour</strong> it should be? (Everything went fine. Really! It affected ' . $return . " user" . ($multiple ? "s":"") . ")</div>";
 			}
 
 			return $r;

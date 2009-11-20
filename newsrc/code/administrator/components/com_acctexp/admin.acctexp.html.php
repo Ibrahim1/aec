@@ -889,7 +889,7 @@ class HTML_AcctExp
 			<h2><?php echo _AEC_QUICKSEARCH; ?></h2>
 			<p><?php echo _AEC_QUICKSEARCH_DESC; ?></p>
 			<form action="<?php echo JURI::base(); ?>index2.php?option=com_acctexp&amp;task=quicklookup" method="post">
-			<input type="text" size="40" name="search" class="inputbox" value="<?php echo $searchcontent; ?>" />
+			<textarea cols="60" rows="1" name="search" /><?php echo $searchcontent; ?></textarea>
 			<input type="submit" />
 			</form>
 			<?php
@@ -963,7 +963,7 @@ class HTML_AcctExp
 						?></div><?php
 
 						if ( empty( $aecConfig->cfg['quicksearch_top'] ) ) {
-							HTML_AcctExp::quickSearchBar( $display );
+							HTML_AcctExp::quickSearchBar( $display, $searchcontent );
 						}
 
 						if ( !empty( $notices ) ) {

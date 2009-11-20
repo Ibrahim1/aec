@@ -11646,9 +11646,18 @@ class aecSuperCommand
 
 	function parseString( $string )
 	{
-		$particles = explode( '|', str_replace( '!supercommand:', '', $string ) );
+		$particles = explode( '|', str_replace( 'supercommand:', '', str_replace( '!supercommand:', '', $string ) ) );
 
-		if ( count( $particles ) == 2 ) {
+		if ( count( $particles ) == 3 ) {
+			$this->focus = $particles[0];
+
+			$this->audience = $this->getParticle( $particles[1] );
+			$this->action = $this->getParticle( $particles[2] );
+
+			return true;
+		} elseif ( count( $particles ) == 2 ) {
+			$this->focus = 'users';
+
 			$this->audience = $this->getParticle( $particles[0] );
 			$this->action = $this->getParticle( $particles[1] );
 
@@ -11679,12 +11688,15 @@ class aecSuperCommand
 		$users = count( $userlist );
 
 		if ( $armed ) {
+			$x = 0;
 			foreach( $userlist as $userid ) {
-				$r = $this->action( $userid );
+				$r = $this->action( (int) $userid );
 
-				if ( $r == false ) {
-					return false;
+				if ( $r === false ) {
+					return $x;
 				}
+
+				$x++;
 			}
 		}
 
@@ -11694,6 +11706,7 @@ class aecSuperCommand
 	function getAudience()
 	{
 		switch ( $this->audience['command'] ) {
+			case 'all':
 			case 'everybody':
 				$database = &JFactory::getDBO();
 
@@ -11703,6 +11716,29 @@ class aecSuperCommand
 				$database->setQuery( $query );
 				$userlist = $database->loadResultArray();
 				break;
+			case 'subscribers':
+				$database = &JFactory::getDBO();
+
+				$query = 'SELECT ' . ( $this->focus == 'users' ) ? 'DISTINCT `userid`' : '`id`';
+
+				if ( !empty( $this->audience['parameters'][0] ) ) {
+					$status = explode( ',', $this->audience['parameters'][0] );
+
+					$stats = array();
+					foreach ( $status as $stat ) {
+						$stats[] = 'LOWER( `status` ) = \'' . strtolower( $stat ) . '\'';
+					}
+
+					$query .= ' WHERE ' . implode( ' AND ', $stats);
+				} else {
+					$query .= ' WHERE `status` != \'Expired\''
+							. ' AND `status` != \'Closed\''
+							. ' AND `status` != \'Hold\''
+							;
+				}
+
+				$database->setQuery( $query );
+				return $database->loadResultArray();
 			default:
 				$cmd = 'cmd' . ucfirst( strtolower( $this->audience['command'] ) );
 
@@ -11716,23 +11752,14 @@ class aecSuperCommand
 		return $userlist;
 	}
 
-	function action( $params )
+	function action( $userid )
 	{
 		switch ( $this->action['command'] ) {
-			case 'everybody':
-				$database = &JFactory::getDBO();
-
-				$query = 'SELECT `id`'
-						. ' FROM #__users'
-						;
-				$database->setQuery( $query );
-				$userlist = $database->loadResultArray();
-				break;
 			default:
-				$cmd = 'cmd' . ucfirst( strtolower( $this->audience['command'] ) );
+				$cmd = 'cmd' . ucfirst( strtolower( $this->action['command'] ) );
 
 				if ( method_exists( $this, $cmd ) ) {
-					$userlist = $this->$cmd( $this->audience['parameters'] );
+					$userlist = $this->$cmd( $userid, $this->action['parameters'] );
 				} else {
 					return false;
 				}
@@ -11747,49 +11774,117 @@ class aecSuperCommand
 
 				$query = 'SELECT `id`'
 						. ' FROM #__users'
-						. ' WHERE `userid` = \'' . (int) $params[1] . '\''
+						. ' WHERE `userid` IN (' . $params[1] . ')'
 						;
 				$database->setQuery( $query );
-				$userlist = $database->loadResultArray();
+				return $database->loadResultArray();
 				break;
 			case 'plan':
 				$database = &JFactory::getDBO();
 
-				$query = 'SELECT `userid`'
+				$query = 'SELECT ' . ( $this->focus == 'users' ) ? 'DISTINCT `userid`' : '`id`'
 						. ' FROM #__acctexp_subscr'
-						. ' WHERE `plan` IN (' . implode( ',', $params[1] ) . ')'
+						. ' WHERE `plan` IN (' . $params[1] . ')'
 						. ' AND `status` != \'Expired\''
 						. ' AND `status` != \'Closed\''
 						. ' AND `status` != \'Hold\''
 						;
 				$database->setQuery( $query );
-				$userlist = $database->loadResultArray();
+				return $database->loadResultArray();
 				break;
 			case 'mi':
 				$database = &JFactory::getDBO();
 
 				$mis = explode( ',', $params[1] );
 
-				$plans = microIntegrationHandler::getPlansbyMI( $params[1] );
-
-				$query = 'SELECT `userid`'
-						. ' FROM #__acctexp_subscr'
-						. ' WHERE `plan` IN (' . implode( ',', $params[1] ) . ')'
-						. ' AND `status` != \'Expired\''
-						. ' AND `status` != \'Closed\''
-						. ' AND `status` != \'Hold\''
-						;
-				$database->setQuery( $query );
-				$userlist = $database->loadResultArray();
-				break;
-			default:
-				$cmd = 'cmd' . ucfirst( strtolower( $this->audience['command'] ) );
-
-				if ( method_exists( $this, $cmd ) ) {
-					$userlist = $this->$cmd( $this->audience['parameters'] );
-				} else {
-					return false;
+				$plans = array();
+				foreach ( $plans as $plan ) {
+					$plans = array_merge( $plans, microIntegrationHandler::getPlansbyMI( $params[1] ) );
 				}
+
+				array_unique( $plans );
+
+				$p = array();
+				$p[0] = 'plan';
+				$p[1] = implode( ',', $plans );
+
+				return $this->cmdHas( $p );
+				break;
+		}
+	}
+
+	function cmdApply( $userid, $params )
+	{
+		$database = &JFactory::getDBO();
+
+		switch ( strtolower( $params[0] ) ) {
+			case 'plan':
+				if ( ( $this->focus == 'users' ) ) {
+					$metaUser = new metaUser( $userid );
+				} else {
+					$metaUser = new metaUser( null, $userid );
+				}
+
+				$plans = explode( ',', $params[1] );
+
+				foreach ( $plans as $planid ) {
+					$plan = new SubscriptionPlan( $database );
+					$plan->load( $planid );
+
+					$metaUser->establishFocus( $plan );
+
+					$metaUser->focusSubscription->applyUsage( $planid, 'none', 1 );
+				}
+				break;
+			case 'mi':
+				if ( ( $this->focus == 'users' ) ) {
+					$metaUser = new metaUser( $userid );
+				} else {
+					$metaUser = new metaUser( null, $userid );
+				}
+
+				$micro_integrations = explode( ',', $params[1] );
+
+				if ( is_array( $micro_integrations ) ) {
+					foreach ( $micro_integrations as $mi_id ) {
+						$mi = new microIntegration( $database );
+
+						if ( !$mi->mi_exists( $mi_id ) ) {
+							continue;
+						}
+
+						$mi->load( $mi_id );
+
+						if ( !$mi->callIntegration() ) {
+							continue;
+						}
+
+						if ( isset( $params[2] ) ) {
+							$action = $params[2];
+						} else {
+							$action = 'action';
+						}
+
+						$invoice = $exchange = $add = null;
+
+						if ( method_exists( $metaUser, $action ) ) {
+							if ( $mi->$action( $metaUser, null, $invoice, $this ) === false ) {
+								if ( $aecConfig->cfg['breakon_mi_error'] ) {
+									return false;
+								}
+							}
+						} else {
+							if ( $mi->relayAction( $metaUser, $exchange, $invoice, null, $action, $add ) === false ) {
+								if ( $aecConfig->cfg['breakon_mi_error'] ) {
+									return false;
+								}
+							}
+						}
+
+						unset( $mi );
+					}
+				}
+				break;
 		}
 	}
 }
