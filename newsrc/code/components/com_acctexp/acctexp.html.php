@@ -1170,6 +1170,8 @@ class Payment_HTML
 
 		HTML_frontend::aec_styling( $option );
 
+		$InvoiceFactory->invoice->deformatInvoiceNumber();
+
 		$introtext = '_CHECKOUT_INFO' . ( $repeat ? '_REPEAT' : '' );
 
 		?>
@@ -1275,7 +1277,7 @@ class Payment_HTML
 										}
 
 										for( $i=0; $i<=$strlen+1;$i++ ) {
-											$c .= '&nbsp;';
+											//$c .= '&nbsp;';
 										}
 									}
 									break;
