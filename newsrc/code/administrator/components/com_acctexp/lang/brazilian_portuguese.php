@@ -1158,6 +1158,8 @@ define( '_CFG_GENERAL_MANAGERACCESS_NAME', 'Manager Access:');
 define( '_CFG_GENERAL_MANAGERACCESS_DESC', 'Grant Access to the AEC not only to Administrators, but to Managers as well.');
 define( '_CFG_GENERAL_PER_PLAN_MIS_NAME', 'Per Plan MIs:');
 define( '_CFG_GENERAL_PER_PLAN_MIS_DESC', 'Shows per-plan MIs that are only editable from within payment plans and are only attached to the one plan they were created in.');
+define( '_CFG_GENERAL_INTRO_EXPIRED_NAME', 'Intro for Expired');
+define( '_CFG_GENERAL_INTRO_EXPIRED_DESC', 'AEC normally does not show the intro page (which you may or may not have set) when users whose subscriptions have expired want to sign up for a new one. This setting overrides the behavior.');
 
 // Global Authentication Settins
 define( '_CFG_TAB_AUTHENTICATION_TITLE', 'Authentication');

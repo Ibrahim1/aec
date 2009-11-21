@@ -1588,6 +1588,7 @@ class Config_General extends serialParamDBTable
 		$def['confirmation_changeusage']		= 1;
 		$def['manageraccess']					= 0;
 		$def['per_plan_mis']					= 0;
+		$def['intro_expired']					= 0;
 
 		return $def;
 	}
@@ -7351,8 +7352,6 @@ class InvoiceFactory
 
 			$this->cartobject = new aecCart( $database );
 			$this->cartobject->addItem( array(), $this->plan );
-
-			$this->items[] = array( 'cost' => $terms->nextterm->renderTotal(), 'terms' => $terms );
 		} else {
 			$this->getCart();
 
@@ -8676,6 +8675,20 @@ class InvoiceFactory
 		$this->puffer( $option );
 
 		$this->loadItems();
+
+		if ( count( $this->items ) == 1 ) {
+			// Create a fake total here.
+			$terms = new mammonTerms();
+			$term = new mammonTerm();
+
+			$term->set( 'duration', array( 'none' => true ) );
+			$term->set( 'type', 'total' );
+			$term->addCost( $citem['cost'] );
+
+			$terms->addTerm( $term );
+
+			$this->items[] = array( 'cost' => $citem['cost'], 'terms' => $terms );
+		}
 
 		$this->invoice->formatInvoiceNumber();
 

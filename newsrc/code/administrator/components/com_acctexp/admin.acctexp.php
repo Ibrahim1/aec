@@ -2378,6 +2378,7 @@ function editSettings( $option )
 	$params['show_fixeddecision']			= array( 'list_yesno', 0 );
 	$params['temp_auth_exp']				= array( 'inputC', '' );
 	$params['confirmation_coupons']			= array( 'list_yesno', 0 );
+	$params['intro_expired']				= array( 'list_yesno', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_CONFIRMATION );
 	$params['confirmation_changeusername']	= array( 'list_yesno', '' );

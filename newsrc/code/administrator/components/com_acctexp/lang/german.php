@@ -1154,6 +1154,8 @@ define( '_CFG_GENERAL_MANAGERACCESS_NAME', 'Manager Zugriff:');
 define( '_CFG_GENERAL_MANAGERACCESS_DESC', 'Hiermit d&uuml;rfen nicht nur Administratoren, sondern auch Manager auf das AEC Backend zugreifen.');
 define( '_CFG_GENERAL_PER_PLAN_MIS_NAME', 'Pro Plan MIs:');
 define( '_CFG_GENERAL_PER_PLAN_MIS_DESC', 'Mit dieser Einstellung k&ouml;nnen in Bezahlpl&auml;nen MIs erstellt werden, welche dann nur innerhalb des Planes g&uuml;ltig sind und auch nur dort bearbeitet werden k&ouml;nnen.');
+define( '_CFG_GENERAL_INTRO_EXPIRED_NAME', 'Intro f&uuml;r Abgelaufene');
+define( '_CFG_GENERAL_INTRO_EXPIRED_DESC', 'Auch wenn ein Intro eingestellt ist, &uuml;berspringt AEC f&uuml;r Benutzer, deren Mitgliedschaft ausgelaufen ist und welche eine neue kaufen m&ouml;chten, dieses Intro und geht direkt zu den Bezahlpl&auml;nen weiter. Mit dieser Einstellung kann dieses Verhalten umgestellt werden.');
 
 //Invoice settings
 define( '_CFG_GENERAL_SENDINVOICE_NAME', 'eine Rechnungs-Email senden');
