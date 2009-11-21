@@ -2580,34 +2580,7 @@ class HTML_AcctExp
 									</div>
 								</div>
 							</td></tr>
-							<tr><td>
-								<div class="userinfobox">
-									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( 'previousplan_req_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'previousplan_req' ); ?>
-									</div>
-									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( 'currentplan_req_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'currentplan_req' ); ?>
-									</div>
-									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( 'overallplan_req_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'overallplan_req' ); ?>
-									</div>
-								</div>
-								<div class="userinfobox">
-									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( 'used_plan_min_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'used_plan_min_amount' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'used_plan_min' ); ?>
-									</div>
-									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( 'used_plan_max_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'used_plan_max_amount' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'used_plan_max' ); ?>
-									</div>
-								</div>
-						</td></tr>
+							<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 						</table>
 						<?php
 		                echo $tabs->endPanel();

@@ -16060,15 +16060,21 @@ class coupon extends serialParamDBTable
 
 		$this->saveDiscount( $params );
 
-		// The rest of the vars are restrictions
-		$restrictions = array();
+		// Filter out restrictions
+		$fixed = aecRestrictionHelper::paramList();
 
-		foreach ( $post as $varname => $content ) {
-			$restrictions[$varname] = $content;
+		$restrictions = array();
+		foreach ( $fixed as $varname ) {
+			if ( !isset( $post[$varname] ) ) {
+				continue;
+			}
+
+			$restrictions[$varname] = $post[$varname];
+
 			unset( $post[$varname] );
 		}
 
-		$this->saveRestrictions( $restrictions );
+		$this->restrictions = $restrictions;
 	}
 
 	function saveDiscount( $params )

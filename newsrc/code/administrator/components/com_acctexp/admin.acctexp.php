@@ -4757,98 +4757,8 @@ function editCoupon( $id, $option, $new, $type )
 	$params['allow_combination_cart']		= array( 'list_yesno',		0 );
 	$params['good_combinations_cart']		= array( 'list',			'' );
 
-	$params['mingid_enabled']				= array( 'list_yesno',		0 );
-	$params['mingid']						= array( 'list',			18 );
-	$params['fixgid_enabled']				= array( 'list_yesno',		0 );
-	$params['fixgid']						= array( 'list',			19 );
-	$params['maxgid_enabled']				= array( 'list_yesno',		0 );
-	$params['maxgid']						= array( 'list',			21 );
-	$params['previousplan_req_enabled']		= array( 'list_yesno',		0 );
-	$params['previousplan_req']				= array( 'list',			'' );
-	$params['currentplan_req_enabled']		= array( 'list_yesno',		0 );
-	$params['currentplan_req']				= array( 'list',			'' );
-	$params['overallplan_req_enabled']		= array( 'list_yesno',		0 );
-	$params['overallplan_req']				= array( 'list',			'' );
-	$params['used_plan_min_enabled']		= array( 'list_yesno',		0 );
-	$params['used_plan_min_amount']			= array( 'inputB',			0 );
-	$params['used_plan_min']				= array( 'list',			'' );
-	$params['used_plan_max_enabled']		= array( 'list_yesno',		0 );
-	$params['used_plan_max_amount']			= array( 'inputB',			0 );
-	$params['used_plan_max']				= array( 'list',			'' );
-
-	// ensure user can't add group higher than themselves
-	$my_groups = $acl->get_object_groups( 'users', $user->id, 'ARO' );
-	if ( is_array( $my_groups ) && count( $my_groups ) > 0 ) {
-		$ex_groups = $acl->get_group_children( $my_groups[0], 'ARO', 'RECURSE' );
-	} else {
-		$ex_groups = array();
-	}
-
-	$gtree = $acl->get_group_children_tree( null, 'USERS', false );
-
-	$ex_groups[] = 29;
-	$ex_groups[] = 30;
-
-	// remove users 'above' me
-	$i = 0;
-	while ( $i < count( $gtree ) ) {
-		if ( in_array( $gtree[$i]->value, $ex_groups ) ) {
-			array_splice( $gtree, $i, 1 );
-		} else {
-			$i++;
-		}
-	}
-
-	$lists['mingid']			= mosHTML::selectList( $gtree, 'mingid', 'size="6"', 'value', 'text',
-									arrayValueDefault($restrictions_values, 'mingid', 18) );
-	$lists['fixgid']			= mosHTML::selectList( $gtree, 'fixgid', 'size="6"', 'value', 'text',
-									arrayValueDefault($restrictions_values, 'fixgid', 19) );
-	$lists['maxgid']			= mosHTML::selectList( $gtree, 'maxgid', 'size="6"', 'value', 'text',
-									arrayValueDefault($restrictions_values, 'maxgid', 21) );
-
-	// get available plans
-	$available_plans = array();
-	$available_plans[]			= mosHTML::makeOption( '0', _PAYPLAN_NOPLAN );
-
-	$query = 'SELECT `id` as value, `name` as text'
-			. ' FROM #__acctexp_plans'
-			;
-	$database->setQuery( $query );
-	$plans = $database->loadObjectList();
-
- 	if ( is_array( $plans ) ) {
- 		$all_plans					= array_merge( $available_plans, $plans );
- 	} else {
- 		$all_plans					= $available_plans;
- 	}
-	$total_all_plans			= min( max( ( count( $all_plans ) + 1 ), 4 ), 20 );
-
-	$lists['previousplan_req']	= mosHTML::selectList($all_plans, 'previousplan_req', 'size="' . $total_all_plans . '"',
-									'value', 'text', arrayValueDefault($restrictions_values, 'previousplan_req', 0));
-	$lists['currentplan_req']	= mosHTML::selectList($all_plans, 'currentplan_req', 'size="' . $total_all_plans . '"',
-									'value', 'text', arrayValueDefault($restrictions_values, 'currentplan_req', 0));
-	$lists['overallplan_req']	= mosHTML::selectList($all_plans, 'overallplan_req', 'size="' . $total_all_plans . '"',
-									'value', 'text', arrayValueDefault($restrictions_values, 'overallplan_req', 0));
-	$lists['used_plan_min']		= mosHTML::selectList($all_plans, 'used_plan_min', 'size="' . $total_all_plans . '"',
-									'value', 'text', arrayValueDefault($restrictions_values, 'used_plan_min', 0));
-	$lists['used_plan_max']		= mosHTML::selectList($all_plans, 'used_plan_max', 'size="' . $total_all_plans . '"',
-									'value', 'text', arrayValueDefault($restrictions_values, 'used_plan_max', 0));
-
-	// get usages
-	if ( !empty( $restrictions_values['usage_plans'] ) ) {
-		$query = 'SELECT `id` AS value, `name` as text'
-				. ' FROM #__acctexp_plans'
-				. ' WHERE `id` IN (' . implode( ',', $restrictions_values['usage_plans'] ) . ')'
-				;
-		$database->setQuery( $query );
-
-	 	$sel_usage_plans = $database->loadObjectList();
-	} else {
-		$sel_usage_plans = 0;
-	}
-
-	$lists['usage_plans']		= mosHTML::selectList($all_plans, 'usage_plans[]', 'size="' . $total_all_plans . '" multiple="multiple"',
-									'value', 'text', $sel_usage_plans);
+	$restrictionHelper = new aecRestrictionHelper();
+	$params = array_merge( $params, $restrictionHelper->getParams() );
 
 	// get available micro integrations
 	$available_mi = array();
@@ -4924,6 +4834,8 @@ function editCoupon( $id, $option, $new, $type )
 
 		$lists[$cpn] = mosHTML::selectList($coupons, $cpn.'[]', 'size="' . min((count( $coupons ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $cur);
 	}
+
+	$lists = array_merge( $lists, $restrictionHelper->getLists( $params_values, $restrictions_values ) );
 
 	$settings = new aecSettings( 'coupon', 'general' );
 	$settings->fullSettingsArray( $params, array_merge( (array) $params_values, (array) $discount_values, (array) $restrictions_values ), $lists );
