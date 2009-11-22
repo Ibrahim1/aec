@@ -8683,11 +8683,11 @@ class InvoiceFactory
 
 			$term->set( 'duration', array( 'none' => true ) );
 			$term->set( 'type', 'total' );
-			$term->addCost( $citem['cost'] );
+			$term->addCost( $this->items[0]['terms']->nextterm->renderTotal() );
 
 			$terms->addTerm( $term );
 
-			$this->items[] = array( 'cost' => $citem['cost'], 'terms' => $terms );
+			$this->items[] = array( 'cost' => $this->items[0]['terms']->nextterm->renderTotal(), 'terms' => $terms );
 		}
 
 		$this->invoice->formatInvoiceNumber();
