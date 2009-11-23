@@ -1078,6 +1078,10 @@ class metaUser
 								$status = true;
 							}
 							break;
+						default:
+							// If it's not there, it's super OK!
+							$status = true;
+							break;
 					}
 				}
 
@@ -5214,6 +5218,25 @@ class ItemGroupHandler
 		}
 	}
 
+	function getGroupPlans( $groups )
+	{
+		static $groupstore;
+
+		foreach ( $groups as $group ) {
+			if ( !isset( $groupstore[$group] ) ) {
+				$groupstore[$group] = ItemGroupHandler::getTotalChildItems( array( $group ) );
+
+				array_unique( $groupstore[$group] );
+			}
+		}
+
+		if ( isset( $groupstore[$group] ) ) {
+			return $groupstore[$group];
+		} else {
+			return array();
+		}
+	}
+
 	function checkParentRestrictions( $item, $type, $metaUser )
 	{
 		$parents = ItemGroupHandler::parentGroups( $item->id, $type );
@@ -5271,6 +5294,19 @@ class ItemGroupHandler
 		return false;
 	}
 
+	function getTotalChildItems( $gids, $list=array() )
+	{
+		$groups = ItemGroupHandler::getChildren( $gids, 'group' );
+
+		foreach ( $groups as $groupid ) {
+			$list = ItemGroupHandler::getTotalChildItems( $groupid, $list );
+		}
+
+		$items = ItemGroupHandler::getChildren( $gids, 'item' );
+
+		return array_merge( $list, $items );
+	}
+
 	function getTotalAllowedChildItems( $gids, $metaUser, $list=array() )
 	{
 		$database = &JFactory::getDBO();
@@ -5295,8 +5331,6 @@ class ItemGroupHandler
 		}
 
 		$items = ItemGroupHandler::getChildren( $gids, 'item' );
-
-		$check = count($list);
 
 		$i = 0;
 		foreach( $items as $itemid ) {
@@ -17077,72 +17111,168 @@ class aecRestrictionHelper
 			}
 		}
 
+		// First we sort out the group restrictions and convert them into plan restrictions
+
+		// Check for a directly previously used group
+		if ( !empty( $restrictions['previousgroup_req_enabled'] ) ) {
+			if ( !empty( $restrictions['previousgroup_req'] ) ) {
+				$restrictions = $this->addGroupPlans( $restrictions, 'previousgroup_req', 'previousplan_req' );
+			}
+		}
+
+		// Check for a directly previously used group
+		if ( !empty( $restrictions['previousgroup_req_enabled_excluded'] ) ) {
+			if ( !empty( $restrictions['previousgroup_req_excluded'] ) ) {
+				$restrictions = $this->addGroupPlans( $restrictions, 'previousgroup_req_excluded', 'previousplan_req_excluded' );
+			}
+		}
+
+		// Check for a currently used group
+		if ( !empty( $restrictions['currentgroup_req_enabled'] ) ) {
+			if ( !empty( $restrictions['currentgroup_req'] ) ) {
+				$restrictions = $this->addGroupPlans( $restrictions, 'currentgroup_req', 'currentplan_req' );
+			}
+		}
+
+		// Check for a currently used group
+		if ( !empty( $restrictions['currentgroup_req_enabled_excluded'] ) ) {
+			if ( !empty( $restrictions['currentgroup_req_excluded'] ) ) {
+				$newrest['group_present_excluded'] = $restrictions['currentgroup_req_excluded'];
+				$restrictions = $this->addGroupPlans( $restrictions, 'currentgroup_req_excluded', 'currentplan_req_excluded' );
+			}
+		}
+
+		// Check for a overall used group
+		if ( !empty( $restrictions['overallgroup_req_enabled'] ) ) {
+			if ( !empty( $restrictions['overallgroup_req'] ) ) {
+				$restrictions = $this->addGroupPlans( $restrictions, 'overallplan_req', 'overallgroup_req' );
+			}
+		}
+
+		// Check for a overall used group
+		if ( !empty( $restrictions['overallgroup_req_enabled_excluded'] ) ) {
+			if ( !empty( $restrictions['overallgroup_req_excluded'] ) ) {
+				$restrictions = $this->addGroupPlans( $restrictions, 'overallgroup_req_excluded', 'overallplan_req_excluded' );
+			}
+		}
+
+		// Check for a overall used group with amount minimum
+		if ( !empty( $restrictions['used_group_min_enabled'] ) ) {
+			if ( !empty( $restrictions['used_group_min_amount'] ) && isset( $restrictions['used_group_min'] ) ) {
+				$restrictions = $this->addGroupPlans( $restrictions, 'used_group_min', 'used_plan_min' );
+			}
+		}
+
+		// Check for a overall used group with amount maximum
+		if ( !empty( $restrictions['used_group_max_enabled'] ) ) {
+			if ( !empty( $restrictions['used_group_max_amount'] ) && isset( $restrictions['used_group_max'] ) ) {
+				$restrictions = $this->addGroupPlans( $restrictions, 'used_group_max', 'used_plan_max' );
+			}
+		}
+
+		// And now we prepare the individual plan restrictions
+
 		// Check for a directly previously used plan
 		if ( !empty( $restrictions['previousplan_req_enabled'] ) ) {
-			if ( isset( $restrictions['previousplan_req'] ) ) {
+			if ( !empty( $restrictions['previousplan_req'] ) ) {
 				$newrest['plan_previous'] = $restrictions['previousplan_req'];
-			}
-		}
-
-		// Check for a currently used plan
-		if ( !empty( $restrictions['currentplan_req_enabled'] ) ) {
-			if ( isset( $restrictions['currentplan_req'] ) ) {
-				$newrest['plan_present'] = $restrictions['currentplan_req'];
-			}
-		}
-
-		// Check for a overall used plan
-		if ( !empty( $restrictions['overallplan_req_enabled'] ) ) {
-			if ( isset( $restrictions['overallplan_req'] ) ) {
-				$newrest['plan_overall'] = $restrictions['overallplan_req'];
 			}
 		}
 
 		// Check for a directly previously used plan
 		if ( !empty( $restrictions['previousplan_req_enabled_excluded'] ) ) {
-			if ( isset( $restrictions['previousplan_req_excluded'] ) ) {
+			if ( !empty( $restrictions['previousplan_req_excluded'] ) ) {
 				$newrest['plan_previous_excluded'] = $restrictions['previousplan_req_excluded'];
 			}
 		}
 
 		// Check for a currently used plan
+		if ( !empty( $restrictions['currentplan_req_enabled'] ) ) {
+			if ( !empty( $restrictions['currentplan_req'] ) ) {
+				$newrest['plan_present'] = $restrictions['currentplan_req'];
+			}
+		}
+
+		// Check for a currently used plan
 		if ( !empty( $restrictions['currentplan_req_enabled_excluded'] ) ) {
-			if ( isset( $restrictions['currentplan_req_excluded'] ) ) {
+			if ( !empty( $restrictions['currentplan_req_excluded'] ) ) {
 				$newrest['plan_present_excluded'] = $restrictions['currentplan_req_excluded'];
 			}
 		}
 
 		// Check for a overall used plan
+		if ( !empty( $restrictions['overallplan_req_enabled'] ) ) {
+			if ( !empty( $restrictions['overallplan_req'] ) ) {
+				$newrest['plan_overall'] = $restrictions['overallplan_req'];
+			}
+		}
+
+		// Check for a overall used plan
 		if ( !empty( $restrictions['overallplan_req_enabled_excluded'] ) ) {
-			if ( isset( $restrictions['overallplan_req_excluded'] ) ) {
+			if ( !empty( $restrictions['overallplan_req_excluded'] ) ) {
 				$newrest['plan_overall_excluded'] = $restrictions['overallplan_req_excluded'];
 			}
 		}
 
 		// Check for a overall used plan with amount minimum
 		if ( !empty( $restrictions['used_plan_min_enabled'] ) ) {
-			if ( isset( $restrictions['used_plan_min_amount'] ) && isset( $restrictions['used_plan_min'] ) ) {
-				$newrest['plan_amount_min'] = ( (int) $restrictions['used_plan_min'] )
-				. ',' . ( (int) $restrictions['used_plan_min_amount'] );
+			if ( !empty( $restrictions['used_plan_min_amount'] ) && isset( $restrictions['used_plan_min'] ) ) {
+				$newrest['plan_amount_min'] = array( ( (int) $restrictions['used_plan_min'] )
+				. ',' . ( (int) $restrictions['used_plan_min_amount'] ) );
+			}
+		}
+		if ( !empty( $restrictions['used_plan_min_enabled'] ) ) {
+			if ( !empty( $restrictions['used_plan_min_amount'] ) && isset( $restrictions['used_plan_min'] ) ) {
+				$newrest['plan_amount_min'] = array();
+
+				if ( is_array( $restrictions['used_plan_min'] ) ) {
+					foreach ( $restrictions['used_plan_min'] as $planid ) {
+						$newrest['plan_amount_min'][] = ( (int) $planid ) . ',' . ( (int) $restrictions['used_plan_min_amount'] );
+					}
+				} else {
+					$newrest['plan_amount_min'] = array( ( (int) $restrictions['used_plan_min'] ) . ',' . ( (int) $restrictions['used_plan_min_amount'] ) );
+				}
 			}
 		}
 
 		// Check for a overall used plan with amount maximum
 		if ( !empty( $restrictions['used_plan_max_enabled'] ) ) {
-			if ( isset( $restrictions['used_plan_max_amount'] ) && isset( $restrictions['used_plan_max'] ) ) {
-				$newrest['plan_amount_max'] = ( (int) $restrictions['used_plan_max'] )
-				. ',' . ( (int) $restrictions['used_plan_max_amount'] );
+			if ( !empty( $restrictions['used_plan_max_amount'] ) && isset( $restrictions['used_plan_max'] ) ) {
+				$newrest['plan_amount_max'] = array();
+
+				if ( is_array( $restrictions['used_plan_max'] ) ) {
+					foreach ( $restrictions['used_plan_max'] as $planid ) {
+						$newrest['plan_amount_max'][] = ( (int) $planid ) . ',' . ( (int) $restrictions['used_plan_max_amount'] );
+					}
+				} else {
+					$newrest['plan_amount_max'] = array( ( (int) $restrictions['used_plan_max'] ) . ',' . ( (int) $restrictions['used_plan_max_amount'] ) );
+				}
 			}
 		}
 
 		// Check for a directly previously used plan
 		if ( !empty( $restrictions['custom_restrictions_enabled'] ) ) {
-			if ( isset( $restrictions['custom_restrictions'] ) ) {
+			if ( !empty( $restrictions['custom_restrictions'] ) ) {
 				$newrest['custom_restrictions'] = aecRestrictionHelper::transformCustomRestrictions( $restrictions['custom_restrictions'] );
 			}
 		}
 
 		return $newrest;
+	}
+
+	function addGroupPlans( $restrictions, $gkey, $pkey )
+	{
+		$plans = ItemGroupHandler::getGroupPlans( $restrictions[$gkey] );
+
+		if ( !is_array( $restrictions[$pkey] ) ) {
+			$restrictions[$pkey] = array();
+		}
+
+		$restrictions[$pkey] = array_merge( $restrictions[$pkey], $restrictions[$pkey] );
+
+		array_unique( $restrictions[$pkey] );
+
+		return $restrictions;
 	}
 
 	function transformCustomRestrictions( $customrestrictions )
