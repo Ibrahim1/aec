@@ -727,6 +727,45 @@ define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_AMOUNT_DESC',		'Maximale Anzahl der 
 define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_NAME',				'Abo:' );
 define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_DESC',				'Welches Abo muss vorher verwendet werden' );
 
+define( '_COUPON_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_NAME', 'Erforderliche vorherige Gruppe:');
+define( '_COUPON_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_DESC', 'Nur zulassen, wenn der Benutzer direkt zuvor ein Abo aus der gew&auml;hlten Gruppe besessen hat');
+define( '_COUPON_RESTRICTIONS_PREVIOUSGROUP_REQ_NAME', 'Gruppe:');
+define( '_COUPON_RESTRICTIONS_PREVIOUSGROUP_REQ_DESC', 'Ein Benutzer wird diesen Coupon nur benutzen k&ouml;nnen, wenn er einen Plan aus dieser Gruppe vor dem derzeitigen Plan benutzt hat.');
+define( '_COUPON_RESTRICTIONS_CURRENTGROUP_REQ_ENABLED_NAME', 'Erforderliche derzeitige Gruppe:');
+define( '_COUPON_RESTRICTIONS_CURRENTGROUP_REQ_ENABLED_DESC', 'Nur zulassen, wenn der Benutzer momentan ein Abo aus der gew&auml;hlten Gruppe besitzt');
+define( '_COUPON_RESTRICTIONS_CURRENTGROUP_REQ_NAME', 'Gruppe:');
+define( '_COUPON_RESTRICTIONS_CURRENTGROUP_REQ_DESC', 'Ein Benutzer wird diesen Coupon nur benutzen k&ouml;nnen, wenn er derzeit einem Plan aus dieser Gruppe zugeteilt ist oder einer der Pl%auml;ne aus dieser Gruppe gerade abgelaufen ist');
+define( '_COUPON_RESTRICTIONS_OVERALLGROUP_REQ_ENABLED_NAME', 'Erforderliche benutzte Gruppe:');
+define( '_COUPON_RESTRICTIONS_OVERALLGROUP_REQ_ENABLED_DESC', 'Nur zulassen, wenn der Benutzer schon einmal ein Abo aus der gew&auml;hlten Gruppe besessen hat, oder noch besitzt');
+define( '_COUPON_RESTRICTIONS_OVERALLGROUP_REQ_NAME', 'Gruppe:');
+define( '_COUPON_RESTRICTIONS_OVERALLGROUP_REQ_DESC', 'Ein Benutzer wird diesen Coupon nur dann benutzen d&uuml;rfen, wenn er den ausgew&auml;hlten Plan in dieser Gruppe einmal benutzt hat, egal wann');
+
+define( '_COUPON_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_EXCLUDED_NAME', 'Ausgeschlossene vorherige Gruppe:');
+define( '_COUPON_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_EXCLUDED_DESC', 'Die Benutzung dieses Coupons wird den Benutzern NICHT gestattet, wenn sie einen Plan aus der angegebenen Gruppe als vorherigen Bezahlplan hatten.');
+define( '_COUPON_RESTRICTIONS_PREVIOUSGROUP_REQ_EXCLUDED_NAME', 'Gruppe:');
+define( '_COUPON_RESTRICTIONS_PREVIOUSGROUP_REQ_EXCLUDED_DESC', 'Die Benutzung dieses Coupons wird den Benutzern NICHT gestattet, wenn sie einen Plan aus der angegebenen Gruppe Gruppe vor dem aktuellen Plan benutzt hatten.');
+define( '_COUPON_RESTRICTIONS_CURRENTGROUP_REQ_ENABLED_EXCLUDED_NAME', 'Ausgeschlossener aktueller Plan:');
+define( '_COUPON_RESTRICTIONS_CURRENTGROUP_REQ_ENABLED_EXCLUDED_DESC', 'Die Benutzung dieses Coupons wird den Benutzern NICHT gestattet, die einen Plan aus der angegebenen Gruppe Gruppe als ihren aktuellen Bezahlplan hatten.');
+define( '_COUPON_RESTRICTIONS_CURRENTGROUP_REQ_EXCLUDED_NAME', 'Gruppe:');
+define( '_COUPON_RESTRICTIONS_CURRENTGROUP_REQ_EXCLUDED_DESC', 'Benutzer werden diesen Coupon nicht benutzen d&uuml;rfen, wenn sie einem Plan aus der angegebenen Gruppe Gruppe aktuell zugeschrieben sind oder ein Plan aus dieser Gruppe gerade abgelaufen ist');
+define( '_COUPON_RESTRICTIONS_OVERALLGROUP_REQ_ENABLED_EXCLUDED_NAME', 'Ausgeschlossene benutzte Gruppe:');
+define( '_COUPON_RESTRICTIONS_OVERALLGROUP_REQ_ENABLED_EXCLUDED_DESC', 'Benutzung dieses Coupon nicht Benutzern gestatten, die einen Plan aus der angegebenen Gruppe Gruppe zuvor benutzt haben');
+define( '_COUPON_RESTRICTIONS_OVERALLGROUP_REQ_EXCLUDED_NAME', 'Gruppe:');
+define( '_COUPON_RESTRICTIONS_OVERALLGROUP_REQ_EXCLUDED_DESC', 'Ein Benutzer wird diesen Coupon nicht benutzen d&uuml;rfen, wenn er oder sie einen Plan aus der angegebenen Gruppe Gruppe einmal benutzt hat, egal wann.');
+
+define( '_COUPON_RESTRICTIONS_USED_GROUP_MIN_ENABLED_NAME', 'Minimale Benutzung in Gruppe:');
+define( '_COUPON_RESTRICTIONS_USED_GROUP_MIN_ENABLED_DESC', 'Einschr&auml;nken ob ein Benutzer diesen Coupon benutzen darf - aufgrund der minimalen Anzahl von Benutzungen eines Bezahplans in einer bestimmten Gruppe');
+define( '_COUPON_RESTRICTIONS_USED_GROUP_MIN_AMOUNT_NAME', 'Min. Benutzungen:');
+define( '_COUPON_RESTRICTIONS_USED_GROUP_MIN_AMOUNT_DESC', 'Die minimale Anzahl von Benutzungen des Bezahplans.');
+define( '_COUPON_RESTRICTIONS_USED_GROUP_MIN_NAME', 'Gruppe:');
+define( '_COUPON_RESTRICTIONS_USED_GROUP_MIN_DESC', 'Die Gruppe, aus welcher der Benutzer einen Plan eine bestimmte Anzahl haben muss - mindestens so viele Male wie angegeben');
+define( '_COUPON_RESTRICTIONS_USED_GROUP_MAX_ENABLED_NAME', 'Maximale Benutzung in Gruppe:');
+define( '_COUPON_RESTRICTIONS_USED_GROUP_MAX_ENABLED_DESC', 'Einschr&auml;nken ob ein Benutzer diesen Coupon benutzen darf - aufgrund der maximalen Anzahl von Benutzungen eines Bezahplans in einer bestimmten Gruppe');
+define( '_COUPON_RESTRICTIONS_USED_GROUP_MAX_AMOUNT_NAME', 'Max. Benutzungen:');
+define( '_COUPON_RESTRICTIONS_USED_GROUP_MAX_AMOUNT_DESC', 'Die maximale Anzahl von Benutzungen des Bezahplans.');
+define( '_COUPON_RESTRICTIONS_USED_GROUP_MAX_NAME', 'Gruppe:');
+define( '_COUPON_RESTRICTIONS_USED_GROUP_MAX_DESC', 'Die Gruppe, aus welcher der Benutzer einen Plan eine bestimmte Anzahl haben muss - h&ouml;chstens so viele Male wie angegeben');
+
 define( '_COUPON_RESTRICTIONS_RESTRICT_COMBINATION_NAME', 'Eingeschr&auml;nkte Kombination:');
 define( '_COUPON_RESTRICTIONS_RESTRICT_COMBINATION_DESC', 'W&auml;len Sie, dass Ihre Benutzer diesen Gutschein nicht mit einem der folgenden kombinieren k&ouml;nnen');
 define( '_COUPON_RESTRICTIONS_BAD_COMBINATIONS_NAME', 'Gutscheine:');
@@ -1351,7 +1390,7 @@ define( '_PAYPLAN_RESTRICTIONS_CURRENTGROUP_REQ_DESC', 'Ein Benutzer wird diesen
 define( '_PAYPLAN_RESTRICTIONS_OVERALLGROUP_REQ_ENABLED_NAME', 'Erforderliche benutzte Gruppe:');
 define( '_PAYPLAN_RESTRICTIONS_OVERALLGROUP_REQ_ENABLED_DESC', 'Nur zulassen, wenn der Benutzer schon einmal ein Abo aus der gew&auml;hlten Gruppe besessen hat, oder noch besitzt');
 define( '_PAYPLAN_RESTRICTIONS_OVERALLGROUP_REQ_NAME', 'Gruppe:');
-define( '_PAYPLAN_RESTRICTIONS_OVERALLGROUP_REQ_DESC', 'Ein Benutzer wird diese Gruppe nur sehen, wenn er den ausgew&auml;hlten Plan in dieser Gruppe einmal benutzt hat, egal wann');
+define( '_PAYPLAN_RESTRICTIONS_OVERALLGROUP_REQ_DESC', 'Ein Benutzer wird diesen Plan nur sehen, wenn er den ausgew&auml;hlten Plan in dieser Gruppe einmal benutzt hat, egal wann');
 
 define( '_PAYPLAN_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_EXCLUDED_NAME', 'Ausgeschlossene vorherige Gruppe:');
 define( '_PAYPLAN_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_EXCLUDED_DESC', 'Dieser Plan wird Benutzern NICHT angezeigt, wenn sie einen Plan aus der angegebenen Gruppe als vorherigen Bezahlplan hatten.');

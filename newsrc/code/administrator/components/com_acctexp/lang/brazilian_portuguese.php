@@ -729,6 +729,45 @@ define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_AMOUNT_DESC', 'O vaor m&aacute;ximo 
 define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_NAME', 'Plano:');
 define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_DESC', 'o plano de pagamento que o utilizador teve de utilizar no m&aacute;ximo o n&uacute;mero de vezes espec&iacute;ficado');
 
+define( '_COUPON_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_NAME', 'Required Prev. Group:');
+define( '_COUPON_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_DESC', 'Enable checking for previous payment plan in this group');
+define( '_COUPON_RESTRICTIONS_PREVIOUSGROUP_REQ_NAME', 'Group:');
+define( '_COUPON_RESTRICTIONS_PREVIOUSGROUP_REQ_DESC', 'A user will only be able to use the coupon if he or she used a plan in this group before the one currently in use');
+define( '_COUPON_RESTRICTIONS_CURRENTGROUP_REQ_ENABLED_NAME', 'Required Curr. Group:');
+define( '_COUPON_RESTRICTIONS_CURRENTGROUP_REQ_ENABLED_DESC', 'Enable checking for currently present payment plan in this group');
+define( '_COUPON_RESTRICTIONS_CURRENTGROUP_REQ_NAME', 'Group:');
+define( '_COUPON_RESTRICTIONS_CURRENTGROUP_REQ_DESC', 'A user will only be able to use the coupon if he or she is currently assigned to, or has just expired from a plan in this group selected here');
+define( '_COUPON_RESTRICTIONS_OVERALLGROUP_REQ_ENABLED_NAME', 'Required Used Group:');
+define( '_COUPON_RESTRICTIONS_OVERALLGROUP_REQ_ENABLED_DESC', 'Enable checking for overall used payment plan in this group');
+define( '_COUPON_RESTRICTIONS_OVERALLGROUP_REQ_NAME', 'Group:');
+define( '_COUPON_RESTRICTIONS_OVERALLGROUP_REQ_DESC', 'A user will only be able to use the coupon if he or she has used the selected plan in this group once, no matter when');
+
+define( '_COUPON_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_EXCLUDED_NAME', 'Excluded Prev. Group:');
+define( '_COUPON_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_EXCLUDED_DESC', 'Do NOT allow using this coupon to users who had a plan in this group as their previous payment plan');
+define( '_COUPON_RESTRICTIONS_PREVIOUSGROUP_REQ_EXCLUDED_NAME', 'Group:');
+define( '_COUPON_RESTRICTIONS_PREVIOUSGROUP_REQ_EXCLUDED_DESC', 'A user will not be able to use the coupon if he or she used a plan in this group before the one currently in use');
+define( '_COUPON_RESTRICTIONS_CURRENTGROUP_REQ_ENABLED_EXCLUDED_NAME', 'Excluded Curr. Group:');
+define( '_COUPON_RESTRICTIONS_CURRENTGROUP_REQ_ENABLED_EXCLUDED_DESC', 'Do NOT allow using this coupon to users who have a plan in this group as their currently present payment plan');
+define( '_COUPON_RESTRICTIONS_CURRENTGROUP_REQ_EXCLUDED_NAME', 'Group:');
+define( '_COUPON_RESTRICTIONS_CURRENTGROUP_REQ_EXCLUDED_DESC', 'A user will not be able to use the coupon if he or she is currently assigned to, or has just expired from a plan in this group');
+define( '_COUPON_RESTRICTIONS_OVERALLGROUP_REQ_ENABLED_EXCLUDED_NAME', 'Excluded Used Group:');
+define( '_COUPON_RESTRICTIONS_OVERALLGROUP_REQ_ENABLED_EXCLUDED_DESC', 'Do NOT allow using this coupon to users who have used the a plan in this group before');
+define( '_COUPON_RESTRICTIONS_OVERALLGROUP_REQ_EXCLUDED_NAME', 'Group:');
+define( '_COUPON_RESTRICTIONS_OVERALLGROUP_REQ_EXCLUDED_DESC', 'A user will not be able to use the coupon if he or she has used a plan in this group once, no matter when');
+
+define( '_COUPON_RESTRICTIONS_USED_GROUP_MIN_ENABLED_NAME', 'Min Used Group:');
+define( '_COUPON_RESTRICTIONS_USED_GROUP_MIN_ENABLED_DESC', 'Enable checking for the minimum number of times your consumers have subscribed to a payment plan in this group in order to be able to use the coupon');
+define( '_COUPON_RESTRICTIONS_USED_GROUP_MIN_AMOUNT_NAME', 'Used Amount:');
+define( '_COUPON_RESTRICTIONS_USED_GROUP_MIN_AMOUNT_DESC', 'The minimum amount a user has to have used the a plan in this group');
+define( '_COUPON_RESTRICTIONS_USED_GROUP_MIN_NAME', 'Group:');
+define( '_COUPON_RESTRICTIONS_USED_GROUP_MIN_DESC', 'The group that the user has to have used a plan from - the specified number of times at least');
+define( '_COUPON_RESTRICTIONS_USED_GROUP_MAX_ENABLED_NAME', 'Max Used Group:');
+define( '_COUPON_RESTRICTIONS_USED_GROUP_MAX_ENABLED_DESC', 'Enable checking for the maximum number of times your users have subscribed to a payment plan in this group in order to be able to use the coupon');
+define( '_COUPON_RESTRICTIONS_USED_GROUP_MAX_AMOUNT_NAME', 'Used Amount:');
+define( '_COUPON_RESTRICTIONS_USED_GROUP_MAX_AMOUNT_DESC', 'The maximum amount a user can have used a plan in this group');
+define( '_COUPON_RESTRICTIONS_USED_GROUP_MAX_NAME', 'Group:');
+define( '_COUPON_RESTRICTIONS_USED_GROUP_MAX_DESC', 'The group that the user has to have used a plan from - the specified number of times at most');
+
 define( '_COUPON_RESTRICTIONS_RESTRICT_COMBINATION_NAME', 'Restringir Combina&ccedil;&atilde;o:');
 define( '_COUPON_RESTRICTIONS_RESTRICT_COMBINATION_DESC', 'Escolha para n&atilde;o permitir o utilizador combinar este cup&atilde;o com o seguinte');
 define( '_COUPON_RESTRICTIONS_BAD_COMBINATIONS_NAME', 'Cup&otilde;es:');
