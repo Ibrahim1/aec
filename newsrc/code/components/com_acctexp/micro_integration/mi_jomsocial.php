@@ -65,7 +65,7 @@ class mi_jomsocial
 				foreach ( $objects as $object ) {
 					if ( isset( $this->settings['jsfield_' . $object->id.$request->area] ) ) {
 						if ( $this->settings['jsfield_' . $object->id.$request->area] !== '' ) {
-							$changes[$object->id] = $this->settings['jsfield_' . $object->id.$request->area];
+							$changes[$object->id] = AECToolbox::rewriteEngineRQ( $this->settings['jsfield_' . $object->id.$request->area], $request );
 						}
 					}
 				}
