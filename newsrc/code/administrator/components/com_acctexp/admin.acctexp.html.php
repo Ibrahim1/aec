@@ -207,7 +207,7 @@ class HTML_myCommon
 	function addReadoutCSS()
 	{
 		?>
-		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>administrator/components/com_acctexp/aec_readout.css" />
+		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/readout.css" />
 		<?php
 	}
 }
