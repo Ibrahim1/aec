@@ -164,8 +164,8 @@ define( '_AEC_PROMPT_PASSWORD_BUTTON', 'Continuer');
 
 // --== FORMULAIRE DE PAIEMENT ==--
 define( '_CHECKOUT_TITLE', 'Effectuer votre r&egrave;glement');
-define( '_CHECKOUT_INFO', 'Votre enregistrement a &eacute;t&eacute; pris en compte. Sur cette page, vous pouvez terminer votre r&egrave;glement. &lt;br&gt; Si vous rencontrez des probl&egrave;mes en cours de route, vous pouvez revenir &agrave; cette &eacute;tape en vous authentifiant avec vos nouveaux identifiant et mot de passe - Notre syst&egrave;me vous autorisera une nouvelle tentative de r&egrave;glement.');
-define( '_CHECKOUT_INFO_REPEAT', 'Merci de votre fid&eacute;lit&eacute;. Sur cette page, vous pouvez terminer votre r&egrave;glement. &lt;br /&gt; Si vous rencontrez des probl&egrave;mes en cours de route, vous pouvez revenir &agrave; cette &eacute;tape en vous authentifiant avec vos nouveaux identifiant et mot de passe - Notre syst&egrave;me vous autorisera une nouvelle tentative de r&egrave;glement.');
+define( '_CHECKOUT_INFO', 'Votre enregistrement a &eacute;t&eacute; pris en compte. Sur cette page, vous pouvez terminer votre r&egrave;glement - %s. &lt;br&gt; Si vous rencontrez des probl&egrave;mes en cours de route, vous pouvez revenir &agrave; cette &eacute;tape en vous authentifiant avec vos nouveaux identifiant et mot de passe - Notre syst&egrave;me vous autorisera une nouvelle tentative de r&egrave;glement.');
+define( '_CHECKOUT_INFO_REPEAT', 'Merci de votre fid&eacute;lit&eacute;. Sur cette page, vous pouvez terminer votre r&egrave;glement - %s. &lt;br /&gt; Si vous rencontrez des probl&egrave;mes en cours de route, vous pouvez revenir &agrave; cette &eacute;tape en vous authentifiant avec vos nouveaux identifiant et mot de passe - Notre syst&egrave;me vous autorisera une nouvelle tentative de r&egrave;glement.');
 define( '_BUTTON_CHECKOUT', 'Effectuer votre r&egrave;glement');
 define( '_BUTTON_APPEND', 'Ajouter');
 define( '_BUTTON_APPLY', 'Appliquer');

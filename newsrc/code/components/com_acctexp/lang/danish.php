@@ -160,8 +160,8 @@ define( '_AEC_PROMPT_PASSWORD_BUTTON', 'Forts&aelig;t');
 
 // --== CHECKOUT FORM ==--
 define( '_CHECKOUT_TITLE', 'Tjek-ud');
-define( '_CHECKOUT_INFO', 'Din registrering er gemt. P&aring; denne side kan du afslutte din betaling. <br /> Hvis noget g&aring;r galt undervejs, kan du altid komme tilbage til dette trin, ved at logge ind p&aring; siden med dit brugernavn og kodeord. Vores system vil s&aring; give dig en mulighed for at betale igen.');
-define( '_CHECKOUT_INFO_REPEAT', 'Tak fordi du vender tilbage. P&aring; denne side kan du afslutte din betaling. <br /> Hvis noget g&aring;r galt undervejs, kan du altid komme tilbage til dette trin, ved at logge ind p&aring; siden med dit brugernavn og kodeord. Vores system vil s&aring; give dig en mulighed for at betale igen.');
+define( '_CHECKOUT_INFO', 'Din registrering er gemt. P&aring; denne side kan du afslutte din betaling - %s. <br /> Hvis noget g&aring;r galt undervejs, kan du altid komme tilbage til dette trin, ved at logge ind p&aring; siden med dit brugernavn og kodeord. Vores system vil s&aring; give dig en mulighed for at betale igen.');
+define( '_CHECKOUT_INFO_REPEAT', 'Tak fordi du vender tilbage. P&aring; denne side kan du afslutte din betaling - %s. <br /> Hvis noget g&aring;r galt undervejs, kan du altid komme tilbage til dette trin, ved at logge ind p&aring; siden med dit brugernavn og kodeord. Vores system vil s&aring; give dig en mulighed for at betale igen.');
 define( '_BUTTON_CHECKOUT', 'Tjek-ud');
 define( '_BUTTON_APPEND', 'Tilf&oslash;j');
 define( '_BUTTON_APPLY', 'Tilf&oslash;j');

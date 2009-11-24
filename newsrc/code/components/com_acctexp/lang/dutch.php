@@ -165,8 +165,8 @@ define( '_AEC_PROMPT_PASSWORD_BUTTON', 'Continue');
 
 // --== AFREKEN FORMULIER ==--
 define( '_CHECKOUT_TITLE', 'Afrekenen');
-define( '_CHECKOUT_INFO', 'Uw registratie is nu opgeslagen. Op deze page kunt u uw betaling voltooien. <br /> Als er iets mis gaat kunt u altijd terug keren naar deze pagina door in te loggen op de site. Het systeem geeft u een melding om de betaling opnieuw te proberen.');
-define( '_CHECKOUT_INFO_REPEAT', 'Dank u voor uw bezoek. Op deze pagina kunt u uw betaling voltooien. <br /> Als er iets mis gaat kunt u altijd terug keren naar deze pagina door in te loggen op de site. Het systeem geeft u een melding om de betaling opnieuw te proberen.');
+define( '_CHECKOUT_INFO', 'Uw registratie is nu opgeslagen. Op deze page kunt u uw betaling voltooien - %s. <br /> Als er iets mis gaat kunt u altijd terug keren naar deze pagina door in te loggen op de site. Het systeem geeft u een melding om de betaling opnieuw te proberen.');
+define( '_CHECKOUT_INFO_REPEAT', 'Dank u voor uw bezoek. Op deze pagina kunt u uw betaling voltooien - %s. <br /> Als er iets mis gaat kunt u altijd terug keren naar deze pagina door in te loggen op de site. Het systeem geeft u een melding om de betaling opnieuw te proberen.');
 define( '_BUTTON_CHECKOUT', 'Checkout');
 define( '_BUTTON_APPEND', 'Toepassen');
 define( '_BUTTON_APPLY', 'Apply');

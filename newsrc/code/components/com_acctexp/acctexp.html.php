@@ -1179,7 +1179,7 @@ class Payment_HTML
 		<div id="checkout">
 			<?php
 			if ( $aecConfig->cfg['customtext_checkout_keeporiginal'] ) { ?>
-				<p><?php echo constant( $introtext ); ?></p>
+				<p><?php echo sprintf( constant( $introtext ), $InvoiceFactory->invoice->invoice_number ); ?></p>
 				<?php
 			}
 			if ( $aecConfig->cfg['customtext_checkout'] ) { ?>

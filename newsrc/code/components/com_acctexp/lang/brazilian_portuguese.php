@@ -165,8 +165,8 @@ define( '_AEC_PROMPT_PASSWORD_BUTTON', 'Continua');
 
 // --== CHECKOUT FORM ==--
 define( '_CHECKOUT_TITLE', 'Verifica&ccedil;&atilde;o');
-define( '_CHECKOUT_INFO', 'A sua inscri&ccedil;&atilde;o foi guardada, Nesta p&aacute;gina pode completar o seu pagamento. Se acorrer algum erro, pode sempre voltar atr&aacute;s e retomar este processo, fazendo o acesso no nosso site com o seu Nome de utilizador e Senha - O nosso Sistema fornecer&aacute; uma op&ccedil;&atilde;o para repetir o seu pagamento novamente..');
-define( '_CHECKOUT_INFO_REPEAT', 'Obrigado por voltar. Nesta p&aacute;gina, poder&aacute; completar o seu pagamento. Se acorrer algum erro, pode sempre voltar atr&aacute;s e retomar este processo, fazendo o login no nosso site com o seu Nome de utilizador e Senha - O nosso Sistema fornecer&aacute; uma op&ccedil;&atilde;o para repetir o seu pagamento novamente.');
+define( '_CHECKOUT_INFO', 'A sua inscri&ccedil;&atilde;o foi guardada, Nesta p&aacute;gina pode completar o seu pagamento - %s. Se acorrer algum erro, pode sempre voltar atr&aacute;s e retomar este processo, fazendo o acesso no nosso site com o seu Nome de utilizador e Senha - O nosso Sistema fornecer&aacute; uma op&ccedil;&atilde;o para repetir o seu pagamento novamente..');
+define( '_CHECKOUT_INFO_REPEAT', 'Obrigado por voltar. Nesta p&aacute;gina, poder&aacute; completar o seu pagamento - %s. Se acorrer algum erro, pode sempre voltar atr&aacute;s e retomar este processo, fazendo o login no nosso site com o seu Nome de utilizador e Senha - O nosso Sistema fornecer&aacute; uma op&ccedil;&atilde;o para repetir o seu pagamento novamente.');
 define( '_BUTTON_CHECKOUT', 'Verifica&ccedil;&atilde;o');
 define( '_BUTTON_APPEND', 'Anexar');
 define( '_BUTTON_APPLY', 'Aplicar');
