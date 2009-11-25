@@ -4051,6 +4051,11 @@ class XMLprocessor extends processor
 			$request->invoice->loadInvoiceNumber( $response['invoice'] );
 		}
 
+		return $this->checkoutResponse( $request, $response );
+	}
+
+	function checkoutResponse( $request, $response )
+	{
 		if ( !empty( $response['error'] ) ) {
 			return $response;
 		}

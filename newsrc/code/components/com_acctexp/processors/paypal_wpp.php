@@ -47,6 +47,7 @@ class processor_paypal_wpp extends XMLprocessor
 	{
 		$settings = array();
 		$settings['testmode']			= 0;
+		$settings['allow_express_checkout'] = 1;
 		$settings['brokenipnmode']		= 0;
 		$settings['currency']			= 'USD';
 
@@ -67,6 +68,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$settings = array();
 		$settings['testmode']				= array( 'list_yesno' );
 		$settings['brokenipnmode']			= array( 'list_yesno' );
+		$settings['allow_express_checkout']	= array( 'list_yesno' );
 		$settings['currency']				= array( 'list_currency' );
 
 		$settings['api_user']				= array( 'inputC' );
@@ -177,17 +179,35 @@ class processor_paypal_wpp extends XMLprocessor
 	{
 		$return = "";
 
-		if ( $this->settings['allow_express_checkout'] ) {
+		if ( !empty( $_REQUEST['PayerID'] ) && !empty( $_REQUEST['token'] ) && $this->settings['allow_express_checkout'] ) {
+			$return .= '<table id="aec_checkout_params"><tbody><tr><td>';
+			$return .= '<p style="float:left;text-align:left;"><strong>' . _CFG_PAYPAL_WPP_CHECKOUT_NOTE_RETURN . '</strong></p>';
 			$return .= '<form action="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', $this->info['secure'] ) . '" method="post">' . "\n";
 			$return .= '<input type="hidden" name="invoice" value="' . $request->int_var['invoice'] . '" />' . "\n";
 			$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
 			$return .= '<input type="hidden" name="task" value="checkout" />' . "\n";
 			$return .= '<input type="hidden" name="express" value="1" />' . "\n";
+			$return .= '<input type="hidden" name="token" value="' . $_REQUEST['token'] . '" />' . "\n";
+			$return .= '<input type="hidden" name="PayerID" value="' . $_REQUEST['PayerID'] . '" />' . "\n";
 			$return .= '<input type="submit" class="button" id="aec_checkout_btn" value="' . _BUTTON_CHECKOUT . '" /><br /><br />' . "\n";
 			$return .= '</form>' . "\n";
-		}
+			$return .= '</td></tr></tbody></table>';
+		} else {
+			if ( $this->settings['allow_express_checkout'] ) {
+				$return .= '<table id="aec_checkout_params"><tbody><tr><td>';
+				$return .= '<p style="float:left;text-align:left;"><strong>' . _CFG_PAYPAL_WPP_CHECKOUT_NOTE_HEADLINE . '</strong></p><p style="float:left;text-align:left;">' . _CFG_PAYPAL_WPP_CHECKOUT_NOTE_NOTE . '</p>';
+				$return .= '<form action="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', $this->info['secure'] ) . '" method="post">' . "\n";
+				$return .= '<input type="hidden" name="invoice" value="' . $request->int_var['invoice'] . '" />' . "\n";
+				$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
+				$return .= '<input type="hidden" name="task" value="checkout" />' . "\n";
+				$return .= '<input type="hidden" name="express" value="1" />' . "\n";
+				$return .= '<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" class="button" id="aec_checkout_btn" value="' . _BUTTON_CHECKOUT . '" /><br /><br />' . "\n";
+				$return .= '</form>' . "\n";
+				$return .= '</td></tr></tbody></table>';
+			}
 
-		$return .= parent::checkoutAction( $request );
+			$return .= parent::checkoutAction( $request );
+		}
 
 		return $return;
 	}
@@ -217,47 +237,75 @@ class processor_paypal_wpp extends XMLprocessor
 
 	function checkoutProcess( $request )
 	{
-		$database = &JFactory::getDBO();
-
 		$this->sanitizeRequest( $request );
 
-		// Create the xml string
-		$xml = $this->createRequestXML( $request );
-
-		// Transmit xml to server
-		$response = $this->transmitRequestXML( $xml, $request );
-
-		if ( empty( $response['invoice'] ) ) {
-			$response['invoice'] = $request->invoice->invoice_number;
-		}
-
-		if ( $request->invoice->invoice_number != $response['invoice'] ) {
-			$request->invoice = new Invoice( $database );
-			$request->invoice->loadInvoiceNumber( $response['invoice'] );
-		}
-
-		if ( !empty( $response['error'] ) ) {
-			return $response;
-		}
-
 		if ( !empty( $request->int_var['params']['express'] ) && $this->settings['allow_express_checkout'] ) {
-			$this->sanitizeRequest( $request );
+			if ( !empty( $request->int_var['params']['token'] ) ) {
+				// The user has already returned from Paypal - finish the deal
+				$var['Method']		= 'DoExpressCheckoutPayment';
+				$var['token']		= $request->int_var['params']['token'];
+				$var['PayerID']		= $request->int_var['params']['PayerID'];
 
-			$var = $this->getPayPalVars( $request );
+				$var = $this->getPaymentVars( $var, $request );
 
-			$var['Method']			= 'SetExpressCheckout';
-			$var['ReturnUrl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=paypal_wppnotification' );
+				$var['paymentAction']		= 'Sale';
 
-			$xml = $this->getPayPalNVPstring( $var );
+				$xml = $this->getPayPalNVPstring( $var );
 
-			$return = $this->transmitRequestXML( $xml, $request );
+				$response = $this->transmitRequestXML( $xml, $request );
+			} else {
+				$var = $this->getPayPalVars( $request, false );
 
-			if ( isset( $return['correlationid'] ) ) {
+				$var['Method']			= 'SetExpressCheckout';
+				$var['Version']			= '52.0';
+				$var['ReturnUrl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=repeatPayment&invoice='.$request->invoice->invoice_number, false, true );
+				$var['CancelUrl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=cancel', false, true );
 
+				$xml = $this->getPayPalNVPstring( $var );
+
+				$response = $this->transmitRequestXML( $xml, $request );
+
+				if ( isset( $response['correlationid'] ) && isset( $response['token'] ) ) {
+					$var = array();
+					$var['cmd']			= '_express-checkout';
+					$var['token']		= $response['token'];
+
+					$var = $this->getPaymentVars( $var, $request );
+
+					$var['RETURNURL']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=repeatPayment&invoice='.$request->invoice->invoice_number, false, true );
+					$var['CANCELURL']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=cancel', false, true );
+
+					$get = $this->getPayPalNVPstring( $var, true );
+
+					if ( $this->settings['testmode'] ) {
+						return aecRedirect( 'https://www.sandbox.paypal.com/webscr?' . $get );
+					} else {
+						return aecRedirect( 'https://www.paypal.com/webscr?' . $get );
+					}
+				} elseif ( empty( $response['error'] ) ) {
+					$response['error'] = "Could not retrieve token";
+				}
 			}
 		} else {
-			return parent::checkoutProcess( $request );
+			$database = &JFactory::getDBO();
+
+			// Create the xml string
+			$xml = $this->createRequestXML( $request );
+
+			// Transmit xml to server
+			$response = $this->transmitRequestXML( $xml, $request );
+
+			if ( empty( $response['invoice'] ) ) {
+				$response['invoice'] = $request->invoice->invoice_number;
+			}
+
+			if ( $request->invoice->invoice_number != $response['invoice'] ) {
+				$request->invoice = new Invoice( $database );
+				$request->invoice->loadInvoiceNumber( $response['invoice'] );
+			}
 		}
+
+		return $this->checkoutResponse( $request, $response );
 	}
 
 	function createRequestXML( $request )
@@ -269,8 +317,10 @@ class processor_paypal_wpp extends XMLprocessor
 		return $this->getPayPalNVPstring( $var );
 	}
 
-	function getPayPalVars( $request )
+	function getPayPalVars( $request, $regular=true )
 	{
+		global $mainframe;
+
 		if ( is_array( $request->int_var['amount'] ) ) {
 			$var['Method']			= 'CreateRecurringPaymentsProfile';
 		} else {
@@ -289,28 +339,41 @@ class processor_paypal_wpp extends XMLprocessor
 
 		$var['paymentAction']		= 'Sale';
 		$var['IPaddress']			= $_SERVER['REMOTE_ADDR'];
-		$var['firstName']			= trim( $request->int_var['params']['billFirstName'] );
-		$var['lastName']			= trim( $request->int_var['params']['billLastName'] );
-		$var['creditCardType']		= $request->int_var['params']['cardType'];
-		$var['acct']				= $request->int_var['params']['cardNumber'];
-		$var['expDate']				= str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ).$request->int_var['params']['expirationYear'];
 
-		$var['CardVerificationValue'] = $request->int_var['params']['cardVV2'];
-		$var['cvv2']				= $request->int_var['params']['cardVV2'];
+		if ( $regular ) {
+			$var['firstName']			= trim( $request->int_var['params']['billFirstName'] );
+			$var['lastName']			= trim( $request->int_var['params']['billLastName'] );
+			$var['creditCardType']		= $request->int_var['params']['cardType'];
+			$var['acct']				= $request->int_var['params']['cardNumber'];
+			$var['expDate']				= str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ).$request->int_var['params']['expirationYear'];
 
-		$var['street']				= $request->int_var['params']['billAddress'];
+			$var['CardVerificationValue'] = $request->int_var['params']['cardVV2'];
+			$var['cvv2']				= $request->int_var['params']['cardVV2'];
 
-		if ( !empty( $request->int_var['params']['billAddress2'] ) ) {
-			$var['street2']			= $request->int_var['params']['billAddress2'];
+			$var['street']				= $request->int_var['params']['billAddress'];
+
+			if ( !empty( $request->int_var['params']['billAddress2'] ) ) {
+				$var['street2']			= $request->int_var['params']['billAddress2'];
+			}
+
+			$var['city']				= $request->int_var['params']['billCity'];
+			$var['state']				= $request->int_var['params']['billState'];
+			$var['zip']					= $request->int_var['params']['billZip'];
+			$var['countrycode']			= $request->int_var['params']['billCountry'];
 		}
 
-		$var['city']				= $request->int_var['params']['billCity'];
-		$var['state']				= $request->int_var['params']['billState'];
-		$var['zip']					= $request->int_var['params']['billZip'];
-		$var['countrycode']			= $request->int_var['params']['billCountry'];
-		$var['NotifyUrl']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=paypal_wppnotification' );
+		$var = $this->getPaymentVars( $var, $request );
+
+		$var['NotifyUrl']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=paypal_wppnotification', false, true );
 		$var['desc']				= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
-		$var['InvNum']				= $request->invoice->invoice_number;;
+		$var['InvNum']				= $request->invoice->invoice_number;
+
+		return $var;
+	}
+
+	function getPaymentVars( $var, $request )
+	{
+		global $mainframe;
 
 		if ( is_array( $request->int_var['amount'] ) ) {
 			// $var['InitAmt'] = 'Initial Amount'; // Not Supported Yet
@@ -355,11 +418,15 @@ class processor_paypal_wpp extends XMLprocessor
 		return $var;
 	}
 
-	function getPayPalNVPstring( $var )
+	function getPayPalNVPstring( $var, $nofiddle=false )
 	{
 		$content = array();
 		foreach ( $var as $name => $value ) {
-			$content[] .= strtoupper( $name ) . '=' . urlencode( stripslashes( $value ) );
+			if ( $nofiddle ) {
+				$content[] .= $name . '=' . urlencode( stripslashes( $value ) );
+			} else {
+				$content[] .= strtoupper( $name ) . '=' . urlencode( stripslashes( $value ) );
+			}
 		}
 
 		return implode( '&', $content );
@@ -373,17 +440,20 @@ class processor_paypal_wpp extends XMLprocessor
 
 		$curlextra = array();
 		$curlextra[CURLOPT_VERBOSE] = 1;
+		$curlextra[CURLOPT_HEADER]	= true;
 
 		return $this->transmitRequest( $url, $path, $xml, 443, $curlextra );
 	}
 
 	function getPayPalURL( $path )
 	{
-		$url = "https://api" . $this->settings['use_certificate'] ? "-3t" : "";
+		$url = "https://api" . ( $this->settings['use_certificate'] ? "" : "-3t" );
 
-		$url .= $this->settings['testmode'] ? ".sandbox" : "";
+		$url .= ( $this->settings['testmode'] ? ".sandbox" : "" );
 
 		$url .= ".paypal.com" . $path;
+
+		return $url;
 	}
 
 	function transmitRequestXML( $xml, $request )
@@ -417,6 +487,10 @@ class processor_paypal_wpp extends XMLprocessor
 
 				if ( isset( $nvpResArray['CORRELATIONID'] ) ) {
 					$return['correlationid'] = $nvpResArray['CORRELATIONID'];
+				}
+
+				if ( isset( $nvpResArray['TOKEN'] ) ) {
+					$return['token'] = $nvpResArray['TOKEN'];
 				}
 			} else {
 				$count = 0;

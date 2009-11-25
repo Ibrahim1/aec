@@ -585,6 +585,8 @@ define( '_CFG_PAYPAL_WPP_DESCRIPTION', 'PayPal lets you send money to anyone wit
 
 define( '_CFG_PAYPAL_WPP_BROKENIPNMODE_NAME', 'Broken IPN Mode');
 define( '_CFG_PAYPAL_WPP_BROKENIPNMODE_DESC', 'If the PayPal Servers fail to get back a proper response, you can manually override IPN authentication with this switch - JUST MAKE SURE TO PUT IT BACK ON AGAIN! These Problems usually go away within 24 hours.');
+define( '_CFG_PAYPAL_WPP_ALLOW_EXPRESS_CHECKOUT_NAME', 'Express Checkout');
+define( '_CFG_PAYPAL_WPP_ALLOW_EXPRESS_CHECKOUT_DESC', 'Offer Express Checkout option (PayPal requirement).');
 define( '_CFG_PAYPAL_WPP_API_USER_NAME', 'API Username');
 define( '_CFG_PAYPAL_WPP_API_USER_DESC', 'Your PayPal API Username');
 define( '_CFG_PAYPAL_WPP_API_PASSWORD_NAME', 'API Password');
@@ -599,6 +601,10 @@ define( '_CFG_PAYPAL_WPP_COUNTRY_NAME', 'Country');
 define( '_CFG_PAYPAL_WPP_COUNTRY_DESC', 'Choose the country of your business');
 define( '_CFG_PAYPAL_WPP_CANCEL_NOTE_NAME', 'Cancel Note');
 define( '_CFG_PAYPAL_WPP_CANCEL_NOTE_DESC', 'The Cancel Note the user gets displayed when a subscription via PayPal WPP is cancelled');
+
+define( '_CFG_PAYPAL_WPP_CHECKOUT_NOTE_HEADLINE', 'Check out faster with PayPal Express Checkout!');
+define( '_CFG_PAYPAL_WPP_CHECKOUT_NOTE_NOTE', 'Click the button on the right to use PayPal Express Checkout instead of filling in your Credit Card details below. You will be redirected to the PayPal Website and sign in there. After you have confirmed your details with PayPal, you will be returned here and complete your Checkout.');
+define( '_CFG_PAYPAL_WPP_CHECKOUT_NOTE_RETURN', 'Complete your Checkout by clicking the button on the right:');
 
 // Moneybookers
 define( '_CFG_MONEYBOOKERS_LONGNAME', 'Moneybookers');
