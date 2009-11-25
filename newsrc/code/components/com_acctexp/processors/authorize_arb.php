@@ -198,7 +198,6 @@ class processor_authorize_arb extends XMLprocessor
 		$return['raw'] = $response;
 
 		if ( $response ) {
-			$return['invoice'] = $this->substring_between($response,'<refId>','</refId>');
 			$resultCode = $this->substring_between($response,'<resultCode>','</resultCode>');
 
 			$code = $this->substring_between($response,'<code>','</code>');

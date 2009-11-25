@@ -614,7 +614,6 @@ class processor_authorize_cim extends PROFILEprocessor
 				}
 
 				$return['valid']	= true;
-				$return['invoice']	= $cim->refId;
 			} else {
 				$return['error']	= $cim->code . ": " . $cim->text;
 			}
