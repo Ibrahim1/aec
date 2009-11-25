@@ -1081,7 +1081,7 @@ function editUser(  $option, $userid, $subscriptionid, $task )
  	$query = 'SELECT `id`'
 		 	. ' FROM #__acctexp_invoices'
 		 	. ' WHERE `userid` = \'' . $userid[0] . '\''
-		 	. ' ORDER BY `transaction_date` DESC'
+		 	. ' ORDER BY `transaction_date` ASC'
 		 	;
  	$database->setQuery( $query );
  	$invoice_ids = $database->loadResultArray();

@@ -406,6 +406,18 @@ class metaUser
 		return true;
 	}
 
+	function getAllSubscriptions()
+	{
+		$database = &JFactory::getDBO();
+
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_subscr'
+				. ' WHERE `userid` = \'' . (int) $this->userid . '\''
+				;
+		$database->setQuery( $query );
+		return $database->loadResultArray();
+	}
+
 	function getAllCurrentSubscriptions()
 	{
 		$database = &JFactory::getDBO();
@@ -1212,6 +1224,20 @@ class metaUser
 		}
 
 		return false;
+	}
+
+	function delete()
+	{
+		$subids = $this->getAllSubscriptions();
+
+		foreach ( $subids as $id ) {
+			$subscription = new Subscription();
+			$subscription->load( $id );
+
+			$subscription->delete();
+		}
+
+		$this->meta->delete();
 	}
 }
 
@@ -11786,10 +11812,30 @@ class aecSuperCommand
 				$database->setQuery( $query );
 				$userlist = $database->loadResultArray();
 				break;
+			case 'orphans':
+				/*$this->focus == 'subscriptions';
+
+				$database = &JFactory::getDBO();
+
+				$query = 'SELECT id'
+						. ' FROM #__acctexp_subscr AS subs'
+						. ' WHERE subs.userid NOT IN ('
+						. ' SELECT juser.id'
+						. ' FROM #__users AS juser)'
+						;
+				$query = 'SELECT `id`'
+						. ' FROM #__users'
+						. ' WHERE `userid` IN (' . $params[1] . ')'
+						;
+				$database->setQuery( $query );*/
+				return $database->loadResultArray();
+				break;
 			case 'subscribers':
 				$database = &JFactory::getDBO();
 
 				$query = 'SELECT ' . ( $this->focus == 'users' ) ? 'DISTINCT `userid`' : '`id`';
+
+				$query .= ' FROM #__acctexp_subscr';
 
 				if ( !empty( $this->audience['parameters'][0] ) ) {
 					$status = explode( ',', $this->audience['parameters'][0] );
@@ -11827,6 +11873,19 @@ class aecSuperCommand
 		switch ( $this->action['command'] ) {
 			case 'expire':
 				$metaUser->focusSubscription->expire();
+				break;
+			case 'forget':
+				if ( $this->focus == 'users' ) {
+					$metaUser->cmsUser->delete();
+				} else {
+					$metaUser->focusSubscription->delete();
+				}
+				break;
+			case 'forget_it_all':
+				$metaUser->delete();
+				break;
+			case 'amnesia':
+				$metaUser->meta->delete();
 				break;
 			default:
 				$cmd = 'cmd' . ucfirst( strtolower( $this->action['command'] ) );
