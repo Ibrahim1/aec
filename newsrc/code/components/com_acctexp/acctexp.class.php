@@ -4024,6 +4024,7 @@ class XMLprocessor extends processor
 	function sanitizeRequest( &$request )
 	{
 		if ( isset( $request->int_var['params']['cardNumber'] ) ) {
+			$request->int_var['params']['cardNumberUser'] = $request->int_var['params']['cardNumber'];
 			$request->int_var['params']['cardNumber'] = preg_replace( '/[^0-9]+/i', '', $request->int_var['params']['cardNumber'] );
 		}
 
@@ -4216,11 +4217,11 @@ class PROFILEprocessor extends XMLprocessor
 					$text = implode( '<br />', $info );
 				}
 
-				$var['params'][] = array( 'radio', 'payprofileselect', $pid, $pobj->paymentprofileid, $text );
+				$var['params'][] = array( 'radio', 'payprofileselect', $pid, $ppParams->paymentprofileid, $text );
 			}
 
 			if ( count( $ppParams->paymentProfiles ) < 10 ) {
-				$var['params'][] = array( 'radio', 'payprofileselect', "new", $pobj->paymentprofileid, 'create new profile' );
+				$var['params'][] = array( 'radio', 'payprofileselect', "new", $ppParams->paymentprofileid, 'create new profile' );
 			}
 
 			if ( $btn ) {
@@ -4298,11 +4299,11 @@ class PROFILEprocessor extends XMLprocessor
 					$text = implode( '<br />', $info );
 				}
 
-				$var['params'][] = array( 'radio', 'shipprofileselect', $pid, $pobj->shippingprofileid, $text );
+				$var['params'][] = array( 'radio', 'shipprofileselect', $pid, $ppParams->shippingprofileid, $text );
 			}
 
 			if ( ( count( $ppParams->shippingProfiles ) < 10 ) && $new ) {
-				$var['params'][] = array( 'radio', 'shipprofileselect', "new", $pobj->shippingprofileid, 'create new profile' );
+				$var['params'][] = array( 'radio', 'shipprofileselect', "new", $ppParams->shippingprofileid, 'create new profile' );
 			}
 
 			if ( $btn ) {
@@ -8617,6 +8618,8 @@ class InvoiceFactory
 		$this->metaUser = new metaUser( $this->userid );
 
 		$this->puffer( $option );
+
+		$this->touchInvoice( $option );
 
 		$var = $this->invoice->getWorkingData( $this );
 

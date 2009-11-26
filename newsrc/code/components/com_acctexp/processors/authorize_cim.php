@@ -51,8 +51,8 @@ class processor_authorize_cim extends PROFILEprocessor
 		$settings['transaction_key']	= 'transaction_key';
 		$settings['testmode']			= 0;
 		$settings['currency']			= 'USD';
-		$settings['promptAddress']		= 0;
-		$settings['promptZipOnly']		= 0;
+		$settings['promptAddress']		= 1;
+		$settings['extendedAddress']	= 0;
 		$settings['dedicatedShipping']	= 0;
 		$settings['totalOccurrences']	= 12;
 		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
@@ -69,7 +69,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		$settings['transaction_key']	= array( 'inputC' );
 		$settings['currency']			= array( 'list_currency' );
 		$settings['promptAddress']		= array( 'list_yesno' );
-		$settings['promptZipOnly']		= array( 'list_yesno' );
+		$settings['extendedAddress']	= array( 'list_yesno' );
 		$settings['dedicatedShipping']	= array( 'list_yesno' );
 		$settings['totalOccurrences']	= array( 'inputA' );
 		$settings['item_name']			= array( 'inputE' );
@@ -370,7 +370,11 @@ class processor_authorize_cim extends PROFILEprocessor
 		}
 
 		if ( !empty( $this->settings['promptAddress'] ) ) {
-			$uservalues = array( 'firstName', 'lastName', 'company', 'address', 'city', 'state', 'zip', 'country', 'phone', 'fax' );
+			if ( empty( $this->settings['extendedAddress'] ) ) {
+				$uservalues = array( 'firstName', 'lastName', 'address', 'city', 'state', 'zip' );
+			} else {
+				$uservalues = array( 'firstName', 'lastName', 'company', 'address', 'city', 'state', 'zip', 'country', 'phone', 'fax' );
+			}
 
 			$content = array();
 			if ( $hascim ) {
@@ -520,7 +524,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		}
 
 		if ( !empty( $ppParams ) ) {
-			if ( strpos( $request->int_var['params']['cardNumber'], 'X' ) === false ) {
+			if ( strpos( $request->int_var['params']['cardNumberUser'], 'X' ) === false ) {
 				if ( $request->int_var['params']['payprofileselect'] == "new" ) {
 					$cim->createCustomerPaymentProfileRequest( $this );
 
