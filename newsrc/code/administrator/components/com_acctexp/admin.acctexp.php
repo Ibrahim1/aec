@@ -2367,7 +2367,11 @@ function editSettings( $option )
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_DEBUG );
 	$params['bypassintegration']			= array( 'inputC', '' );
-	$params['overrideJ15']					= array( 'list_yesno', 0 );
+
+	if ( !aecJoomla15check() && !$aecConfig->cfg['overrideJ15'] ) {
+		$params['overrideJ15']					= array( 'list_yesno', 0 );
+	}
+
 	$params['breakon_mi_error']				= array( 'list_yesno', 0 );
 	$params['debugmode']					= array( 'list_yesno', 0 );
 	$params[] = array( 'div_end', 0 );

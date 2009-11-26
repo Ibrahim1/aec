@@ -11782,7 +11782,7 @@ class aecSuperCommand
 
 		$users = count( $userlist );
 
-		if ( $armed ) {
+		if ( $armed && $users ) {
 			$x = 0;
 			foreach( $userlist as $userid ) {
 				if ( ( $this->focus == 'users' ) ) {
@@ -11906,6 +11906,9 @@ class aecSuperCommand
 	function cmdHas( $params )
 	{
 		switch ( strtolower( $params[0] ) ) {
+			case 'subscriptionid':
+				return explode( ',', $params[1] );
+				break;
 			case 'userid':
 				$database = &JFactory::getDBO();
 
@@ -11915,6 +11918,22 @@ class aecSuperCommand
 						;
 				$database->setQuery( $query );
 				return $database->loadResultArray();
+				break;
+			case 'username':
+				$database = &JFactory::getDBO();
+
+				$query = 'SELECT `id`'
+						. ' FROM #__users'
+						. ' WHERE LOWER( `username` ) LIKE \'%' . $params[1] . '%\''
+						;
+				$database->setQuery( $query );
+				$ids = $database->loadResultArray();
+
+				$p = array();
+				$p[0] = 'userid';
+				$p[1] = implode( ',', $ids );
+
+				return $this->cmdHas( $p );
 				break;
 			case 'plan':
 				$database = &JFactory::getDBO();

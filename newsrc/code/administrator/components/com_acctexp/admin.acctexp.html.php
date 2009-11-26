@@ -564,6 +564,10 @@ class HTML_AcctExp
 								<?php if ( $metaUser->hasSubscription ) { ?>
 								<table>
 									<tr>
+										<td width="120"><?php echo _AEC_USER_SUBSCRIPTIONS_ID;?>:</td>
+										<td><strong><?php echo $metaUser->focusSubscription->id; ?></strong></td>
+									</tr>
+									<tr>
 										<td width="120"><?php echo _AEC_USER_STATUS; ?>:</td>
 										<?php
 										switch( $metaUser->focusSubscription->status ) {
@@ -889,7 +893,7 @@ class HTML_AcctExp
 			<h2><?php echo _AEC_QUICKSEARCH; ?></h2>
 			<p><?php echo _AEC_QUICKSEARCH_DESC; ?></p>
 			<form action="<?php echo JURI::base(); ?>index2.php?option=com_acctexp&amp;task=quicklookup" method="post">
-			<textarea cols="60" rows="1" name="search" /><?php echo $searchcontent; ?></textarea>
+			<textarea cols="80" rows="1" name="search" /><?php echo $searchcontent; ?></textarea>
 			<input type="submit" />
 			</form>
 			<?php
