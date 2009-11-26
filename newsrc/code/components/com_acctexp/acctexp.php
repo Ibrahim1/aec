@@ -949,8 +949,8 @@ function subscriptionDetails( $option, $sub='overview' )
 		$pptabs = $pp->getProfileTabs();
 
 		foreach ( $pptabs as $tname => $tcontent ) {
-			if ( $action == $tname ) {
-				$custom = $pp->customProfileTab( $action, $metaUser );
+			if ( $sub == $tname ) {
+				$custom = $pp->customProfileTab( $sub, $metaUser );
 			}
 
 			$tabs[$tname] = $tcontent;

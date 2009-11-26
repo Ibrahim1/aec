@@ -3086,7 +3086,7 @@ class PaymentProcessor
 	function customProfileTab( $action, $metaUser )
 	{
 		$s = $this->processor_name . '_';
-		if ( strpos( $action, $s ) ) {
+		if ( strpos( $action, $s ) !== false ) {
 			$action = str_replace( $s, '', $action );
 		}
 
