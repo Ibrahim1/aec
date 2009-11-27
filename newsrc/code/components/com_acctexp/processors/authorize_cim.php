@@ -524,7 +524,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		}
 
 		if ( !empty( $ppParams ) ) {
-			if ( strpos( $request->int_var['params']['cardNumberUser'], 'X' ) === false ) {
+			if ( strpos( $request->int_var['params']['cardNumber'], 'X' ) === false ) {
 				if ( $request->int_var['params']['payprofileselect'] == "new" ) {
 					$cim->createCustomerPaymentProfileRequest( $this );
 
@@ -619,10 +619,10 @@ class processor_authorize_cim extends PROFILEprocessor
 
 				$return['valid']	= true;
 			} else {
-				$return['error']	= $cim->code . ": " . $cim->text;
+				$return['error']	= $cim->code . ": " . $cim->text . " (" . $cim->directResponse . ")";
 			}
 		} else {
-			$return['error']		= $cim->code . ": " . $cim->text;
+			$return['error']		= $cim->code . ": " . $cim->text . " (" . $cim->directResponse . ")";
 		}
 
 		return $return;
