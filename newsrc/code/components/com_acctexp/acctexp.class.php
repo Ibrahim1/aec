@@ -4024,8 +4024,12 @@ class XMLprocessor extends processor
 	function sanitizeRequest( &$request )
 	{
 		if ( isset( $request->int_var['params']['cardNumber'] ) ) {
-			$request->int_var['params']['cardNumberUser'] = $request->int_var['params']['cardNumber'];
-			$request->int_var['params']['cardNumber'] = preg_replace( '/[^0-9]+/i', '', $request->int_var['params']['cardNumber'] );
+			$pfx = "";
+			if ( strpos( $request->int_var['params']['cardNumber'], 'XXXX' ) !== false ) {
+				$pfx = "XXX";
+			}
+
+			$request->int_var['params']['cardNumber'] = $pfx . preg_replace( '/[^0-9]+/i', '', $request->int_var['params']['cardNumber'] );
 		}
 
 		return true;
@@ -4211,6 +4215,10 @@ class PROFILEprocessor extends XMLprocessor
 					}
 				}
 
+				if ( empty( $ppParams->paymentprofileid ) ) {
+					$ppParams->paymentprofileid = $pid;
+				}
+
 				if ( $ppParams->paymentprofileid == $pid ) {
 					$text = '<strong>' . implode( '<br />', $info ) . '</strong>';
 				} else {
@@ -4291,6 +4299,10 @@ class PROFILEprocessor extends XMLprocessor
 					if ( !empty( $iav ) ) {
 						$info[] = $iav;
 					}
+				}
+
+				if ( empty( $ppParams->shippingprofileid ) ) {
+					$ppParams->shippingprofileid = $pid;
 				}
 
 				if ( $ppParams->shippingprofileid == $pid ) {
@@ -7468,6 +7480,69 @@ class InvoiceFactory
 		}
 	}
 
+	function applyCoupons()
+	{
+		global $aecConfig;
+
+		if ( !empty( $aecConfig->cfg['enable_coupons'] ) && !empty( $this->invoice->coupons ) ) {
+			$coupons = $this->invoice->coupons;
+
+			$cpsh = new couponsHandler( $this->metaUser, $this, $coupons );
+
+			if ( !empty( $this->cartobject ) && !empty( $this->cart ) ) {
+				$this->items = $cpsh->applyToCart( $this->items, $this->cartobject, $this->cart );
+
+				if ( count( $cpsh->delete_list ) ) {
+					foreach ( $cpsh->delete_list as $couponcode ) {
+						$this->invoice->removeCoupon( $couponcode );
+					}
+
+					$this->invoice->storeload();
+				}
+
+				if ( $cpsh->affectedCart ) {
+					// Reload cart object and cart - was changed by $cpsh
+					$this->cartobject->reload();
+					$this->getCart();
+
+					$this->loadItems();
+					$cpsh = new couponsHandler( $this->metaUser, $this, $coupons );
+					$this->items = $cpsh->applyToCart( $this->items, $this->cartobject, $this->cart );
+				}
+			} else {
+				$this->items = $cpsh->applyToItemList( $this->items );
+
+				if ( count( $cpsh->delete_list ) ) {
+					foreach ( $cpsh->delete_list as $couponcode ) {
+						$this->invoice->removeCoupon( $couponcode );
+					}
+
+					$this->invoice->storeload();
+				}
+			}
+
+			$cpsh_err = $cpsh->getErrors();
+
+			if ( !empty( $cpsh_err ) ) {
+				$this->errors = $cpsh_err;
+			}
+
+			if ( !empty( $this->cartobject ) && !empty( $this->cart ) ) {
+				$cpsh_exc = $cpsh->getExceptions();
+
+				if ( count( $cpsh_exc ) ) {
+					foreach ( $cpsh_exc as $exception ) {
+						$this->raiseException( $exception );
+					}
+				}
+			}
+
+			if ( !empty( $this->cart ) ) {
+				$this->payment->amount = $this->cartobject->getAmount( $this->metaUser );
+			}
+		}
+	}
+
 	function addtoCart( $option, $usage )
 	{
 		if ( empty( $this->cartobject ) ) {
@@ -8455,63 +8530,7 @@ class InvoiceFactory
 
 		$this->loadItems();
 
-		if ( !empty( $aecConfig->cfg['enable_coupons'] ) && !empty( $this->invoice->coupons ) ) {
-			$coupons = $this->invoice->coupons;
-
-			$cpsh = new couponsHandler( $this->metaUser, $this, $coupons );
-
-			if ( !empty( $this->cartobject ) && !empty( $this->cart ) ) {
-				$this->items = $cpsh->applyToCart( $this->items, $this->cartobject, $this->cart );
-
-				if ( count( $cpsh->delete_list ) ) {
-					foreach ( $cpsh->delete_list as $couponcode ) {
-						$this->invoice->removeCoupon( $couponcode );
-					}
-
-					$this->invoice->storeload();
-				}
-
-				if ( $cpsh->affectedCart ) {
-					// Reload cart object and cart - was changed by $cpsh
-					$this->cartobject->reload();
-					$this->getCart();
-
-					$this->loadItems();
-					$cpsh = new couponsHandler( $this->metaUser, $this, $coupons );
-					$this->items = $cpsh->applyToCart( $this->items, $this->cartobject, $this->cart );
-				}
-			} else {
-				$this->items = $cpsh->applyToItemList( $this->items );
-
-				if ( count( $cpsh->delete_list ) ) {
-					foreach ( $cpsh->delete_list as $couponcode ) {
-						$this->invoice->removeCoupon( $couponcode );
-					}
-
-					$this->invoice->storeload();
-				}
-			}
-
-			$cpsh_err = $cpsh->getErrors();
-
-			if ( !empty( $cpsh_err ) ) {
-				$this->errors = $cpsh_err;
-			}
-
-			if ( !empty( $this->cartobject ) && !empty( $this->cart ) ) {
-				$cpsh_exc = $cpsh->getExceptions();
-
-				if ( count( $cpsh_exc ) ) {
-					foreach ( $cpsh_exc as $exception ) {
-						$this->raiseException( $exception );
-					}
-				}
-			}
-
-			if ( !empty( $this->cart ) ) {
-				$this->payment->amount = $this->cartobject->getAmount( $this->metaUser );
-			}
-		}
+		$this->applyCoupons();
 
 		if ( is_array( $this->payment->amount ) ) {
 			$amt = $this->payment->amount['amount'];
@@ -8758,6 +8777,8 @@ class InvoiceFactory
 		$this->puffer( $option );
 
 		$this->loadItems();
+
+		$this->applyCoupons();
 
 		if ( count( $this->items ) == 1 ) {
 			// Create a fake total here.
@@ -10098,6 +10119,14 @@ class Invoice extends serialParamDBTable
 					. '<td>' . AECToolbox::formatAmount( $item['cost'], $InvoiceFactory->invoice->currency ) . '</td>'
 					. '</tr>';
 			}
+		}
+
+		if ( $this->transaction_date == '0000-00-00 00:00:00' ) {
+			$data['paidstatus'] = _INVOICEPRINT_PAIDSTATUS_UNPAID;
+		} else {
+			$date = strftime( $aecConfig->cfg['display_date_frontend'], strtotime( $this->transaction_date ) );
+
+			$data['paidstatus'] = sprintf( _INVOICEPRINT_PAIDSTATUS_PAID, $date );
 		}
 
 		$otherfields = array( "page_title", "before_header", "header", "after_header", "before_content", "after_content", "before_footer", "footer", "after_footer" );

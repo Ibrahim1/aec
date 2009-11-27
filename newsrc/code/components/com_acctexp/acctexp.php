@@ -1030,9 +1030,7 @@ function repeatInvoice( $option, $invoice_number, $userid, $first=0 )
 
 		return;
 	} else {
-		aecNotAuth();
-
-		return;
+		return aecNotAuth();
 	}
 }
 
