@@ -1571,6 +1571,7 @@ class Payment_HTML
 					</table>
 				</div>
 				<div id="text_after_content"><?php echo $data['after_content']; ?></div>
+				<div id="invoice_paidstatus"><?php echo $data['paidstatus']; ?></div>
 				<div id="footer"><?php echo $data['footer']; ?></div>
 			</div>
 		</body>

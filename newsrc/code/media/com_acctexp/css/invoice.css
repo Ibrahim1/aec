@@ -103,6 +103,14 @@ div#before_header {
 height: 60px;
 }
 
+div#invoice_paidstatus {
+width: 90%;
+border: 2px solid #000;
+background: #ddd;
+margin: 24px;
+padding: 12px;
+}
+
 div#after_header {
 height: 12px;
 }
