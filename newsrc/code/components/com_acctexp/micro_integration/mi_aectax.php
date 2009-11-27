@@ -25,9 +25,41 @@ class mi_aectax
 	function Settings()
 	{
 		$settings = array();
+		$settings['locations']	= array( 'inputA' );
 
 		// Tax Modes
 		// Multi-Select offer tax modes
+
+		return $settings;
+	}
+
+	function getMIform()
+	{
+		$database = &JFactory::getDBO();
+
+		$settings = array();
+
+		$locations = $this->getLocations();
+
+		if ( !empty( $locations ) ) {
+			$settings['exp'] = array( 'p', _MI_MI_USER_CHOICE_FILES_NAME, _MI_MI_USER_CHOICE_FILES_DESC );
+
+			$list = explode( "\n", $this->settings['desc_list'] );
+
+			$gr = array();
+			foreach ( $list as $id => $choice ) {
+				$choice = trim( $choice );
+
+				if ( $this->settings['max_choices'] > 1 ) {
+					$settings['ef'.$id] = array( 'checkbox', 'mi_'.$this->id.'_mi_email_files[]', $id, true, $choice );
+				} else {
+					$settings['ef'.$id] = array( 'radio', 'mi_'.$this->id.'_mi_email_files', $id, true, $choice );
+				}
+			}
+			$settings['mi_email_files'] = array( 'hidden', null, 'mi_'.$this->id.'_mi_email_files[]' );
+		} else {
+			return false;
+		}
 
 		return $settings;
 	}
@@ -37,6 +69,23 @@ class mi_aectax
 		// Append Tax Data to content
 
 		return true;
+	}
+
+	function getLocationList()
+	{
+		$locations = array();
+
+		$l = explode( "\n", $this->settings['locations'] );
+
+		if ( !empty( $l ) ) {
+			foreach ( $l as $loc ) {
+				$location = explode( "|", $loc );
+
+				$locations[] = array( 'Text' );
+			}
+		}
+
+		return $locations;
 	}
 }
 ?>
