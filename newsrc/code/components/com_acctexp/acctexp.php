@@ -1410,21 +1410,36 @@ function processNotification( $option, $processor )
 		$id = AECfetchfromDB::InvoiceIDfromNumber( $response['invoice'] );
 	} else {
 		$id = false;
+
+		$response['invoice'] = 'empty';
 	}
 
 	if ( !$id ) {
 		$short	= _AEC_MSG_PROC_INVOICE_FAILED_SH;
-		$event	= sprintf( _AEC_MSG_PROC_INVOICE_FAILED_EV, $processor, $objInvoice->invoice_number )
-				. ' ' . $database->getErrorMsg();
-		$tags	= 'invoice,processor,payment,error';
-		$params = array( 'invoice_number' => $objInvoice->invoice_number );
+
+		if ( isset( $response['null'] ) ) {
+				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_NULL;
+				$tags	.= 'invoice,processor,payment,null';
+		} else {
+			$event	= sprintf( _AEC_MSG_PROC_INVOICE_FAILED_EV, $processor, $response['invoice'] )
+					. ' ' . $database->getErrorMsg();
+			$tags	= 'invoice,processor,payment,error';
+		}
+
+		$params = array();
 
 		$eventlog = new eventLog( $database );
-		$eventlog->issue( $short, $tags, $event, 128, $params );
 
-		$error = 'Invoice Number not found. Invoice number provided: "' . $response['invoice'] . '"';
+		if ( isset( $response['null'] ) ) {
+			$eventlog->issue( $short, $tags, $event, 8, $params );
+		} else {
+			$eventlog->issue( $short, $tags, $event, 128, $params );
 
-		$pp->notificationError( $response, $error );
+			$error = 'Invoice Number not found. Invoice number provided: "' . $response['invoice'] . '"';
+
+			$pp->notificationError( $response, $error );
+		}
+
 		return;
 	} else {
 		$invoiceFactory = new InvoiceFactory( null, null, null, null, $response['invoice'] );
