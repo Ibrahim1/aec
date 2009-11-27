@@ -48,6 +48,7 @@ class processor_authorize_arb extends XMLprocessor
 		$settings['login']				= "login";
 		$settings['transaction_key']	= "transaction_key";
 		$settings['testmode']			= 0;
+		$settings['ignore_empty_invoices']	= 0;
 		$settings['currency']			= "USD";
 		$settings['promptAddress']		= 0;
 		$settings['totalOccurrences']	= 12;
@@ -62,6 +63,7 @@ class processor_authorize_arb extends XMLprocessor
 	{
 		$settings = array();
 		$settings['testmode']			= array("list_yesno");
+		$settings['ignore_empty_invoices']	= array("list_yesno");
 		$settings['login'] 				= array("inputC");
 		$settings['transaction_key']	= array("inputC");
 		$settings['currency']			= array("list_currency");
@@ -326,6 +328,13 @@ class processor_authorize_arb extends XMLprocessor
 
 		$response = array();
 		$response['invoice']	= $post['x_invoice_num'];
+
+		if ( empty( $response['invoice'] ) && $this->settings['ignore_empty_invoices'] ) {
+			unset( $response['invoice'] );
+
+			$response['null']			= 1;
+			$response['explanation']	= 'Empty Invoice Number - ignored.';
+		}
 
 		return $response;
 	}

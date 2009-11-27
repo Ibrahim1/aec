@@ -99,7 +99,7 @@ define( '_AEC_CCFORM_CARDTYPE_DESC', 'Le type de carte de cr&eacute;dit');
 define( '_AEC_CCFORM_CARDVV2_NAME', 'Cryptogramme visuel de la carte');
 define( '_AEC_CCFORM_CARDVV2_DESC', 'Cryptogramme visuel de la carte');
 define( '_AEC_CCFORM_UPDATE_NAME', 'Update Notice');
-define( '_AEC_CCFORM_UPDATE_DESC', 'To update your billing details, we need you to enter your CreditCard details again.<br />Leave fields as they are if you want to use all your previous details.');
+define( '_AEC_CCFORM_UPDATE_DESC', 'To update your billing details, we need you to enter your CreditCard details again.<br />Leave fields as they are if you want to use all your previous details.<br /><br /><strong>You must always put in your CSV number!</strong>');
 define( '_AEC_CCFORM_UPDATE2_DESC', 'Updated! Thank you for keeping us up to date.');
 
 // Generic eCheck Form
@@ -435,6 +435,8 @@ define( '_CFG_AUTHORIZE_ARB_USESILENTPOSTRESPONSE_NAME', 'Use Silent Post Respon
 define( '_CFG_AUTHORIZE_ARB_USESILENTPOSTRESPONSE_DESC', 'Please read explanation below');
 define( '_CFG_AUTHORIZE_ARB_SILENTPOST_INFO_NAME', 'Silent Postback');
 define( '_CFG_AUTHORIZE_ARB_SILENTPOST_INFO_DESC', 'When a recurring payment is set up with ARB, the AEC normally applies a multiplicated subscription period accordig to the Total Occurances. This way, the user will stay active throughout the subscription until it runs out or is cancelled. However, this also means that you would have to check for unpaid bills and manually deactivate the subscriptions if such a thing occurs. The other option is to use the Silent Postback which sends notifications for each subsequent payment that was successful. This in turn triggers the AEC to activate the user for another term. Please consult &lt;a href=&quot;http://www.authorize.net/support/Merchant/Integration_Settings/Receipt_Page_Options.htm&quot;&gt;this page&lt;/a&gt; to find out how to set up the Silent Post Url. Enter http://[YOUR JOOMLA LOCATION]/index.php?option=com_acctexp&amp;task=authorize_arbnotification as the Url.');
+define( '_CFG_AUTHORIZE_ARB_IGNORE_EMPTY_INVOICES_NAME', 'Ignore Empty Invoices');
+define( '_CFG_AUTHORIZE_ARB_IGNORE_EMPTY_INVOICES_DESC', 'In some situations, the midnight clearing of ARB Credit Card payments can produce notifications that carry no invoice information. This produces somewhat annoying Eventlog Warnings. With this switch, you can turn them off.');
 
 // CCBill
 define( '_CFG_CCBILL_LONGNAME', 'CCBill');
