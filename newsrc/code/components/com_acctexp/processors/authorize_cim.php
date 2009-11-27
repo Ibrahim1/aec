@@ -612,6 +612,8 @@ class processor_authorize_cim extends PROFILEprocessor
 
 			$cim->createCustomerProfileTransactionRequest( $this );
 
+			$return['raw'] = $cim->response;
+
 			if ( $cim->isSuccessful() ) {
 				if ( !empty( $this->settings['totalOccurrences'] ) ) {
 					$return['invoiceparams'] = array( 'maxOccurrences' => $this->settings['totalOccurrences'], 'totalOccurrences' => 1 );
