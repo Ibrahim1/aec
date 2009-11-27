@@ -158,6 +158,9 @@ class processor_alertpay extends POSTprocessor
 			} else {
 				$response['valid'] = true;
 			}
+		} elseif ( $post['ap_status'] == "Success" && $post['ap_purchasetype'] == "subscription" ) {
+			$response['null']				= 1;
+			$response['explanation']		= 'Duplicate Notification';
 		} elseif ( $post['ap_status'] == "Subscription-Payment-Canceled" ) {
 			$response['cancel'] = 1;
 		} else {
