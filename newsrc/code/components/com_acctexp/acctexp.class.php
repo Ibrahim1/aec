@@ -9543,7 +9543,9 @@ class Invoice extends serialParamDBTable
 			$objUsage = new SubscriptionPlan( $database );
 			$objUsage->load( $this->usage );
 
-			$objUsage->triggerMIs( $mi_event, $metaUser, null, $this, $response );
+			$exchange = $silent = null;
+
+			$objUsage->triggerMIs( $mi_event, $metaUser, $exchange, $this, $response, $silent );
 		}
 
 		if ( isset( $response['explanation'] ) ) {
@@ -9554,7 +9556,7 @@ class Invoice extends serialParamDBTable
 		$eventlog->issue( $short, $tags, $event, $level, $params, $forcedisplay );
 
 		if ( !empty( $notificationerror ) ) {
-			$pp->notificationError( $response, $pp->notificationError( $response, $notificationerror ) );
+			$pp->notificationError( $response, $notificationerror );
 		} else {
 			$pp->notificationSuccess( $response );
 		}
