@@ -5481,9 +5481,12 @@ function quicklookup( $option )
 				$r['search'] = "!" . $search;
 
 				$r['return'] = '<div style="font-size:110%;border: 2px solid #da5;padding:16px;">This supercommand would affect ' . $return . " user" . ($multiple ? "s":"") . ". Click the search button again to carry out the query.</div>";
+			} elseif ( $return != false ) {
+				$r['search'] = "";
+				$r['return'] = '<div style="font-size:110%;border: 2px solid #da5;padding:16px;">If you\'re so clever, you tell us what <strong>colour</strong> it should be!? (Everything went fine. Really! It affected ' . $return . " user" . ($multiple ? "s":"") . ")</div>";
 			} else {
 				$r['search'] = "";
-				$r['return'] = '<div style="font-size:110%;border: 2px solid #da5;padding:16px;">If you\'re so clever, you tell us what <strong>colour</strong> it should be? (Everything went fine. Really! It affected ' . $return . " user" . ($multiple ? "s":"") . ")</div>";
+				$r['return'] = '<div style="font-size:110%;border: 2px solid #da5;padding:16px;">Something went wrong. No users found.</div>';
 			}
 
 			return $r;
