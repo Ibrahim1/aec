@@ -66,7 +66,7 @@ define( '_AEC_MI_DOCMAN_NOCREDIT',					'Es tut uns au&szlig;erordentlich leid, a
 define( '_MI_MI_DOCMAN_DELETE_ON_EXP_NAME', 		'Action for existing groups when account expires:');
 define( '_MI_MI_DOCMAN_DELETE_ON_EXP_DESC',			'Choose what action you want to happen to already defined DocMan groups when the user expires.');
 define( '_MI_MI_DOCMAN_REMOVE_NAME', 				'Remove: ' );
-define( '_MI_MI_DOCMAN_REMOVE_DESC',			'Carry out the expiration action for all users with an active plan attached to this micro-integration' );
+define( '_MI_MI_DOCMAN_REMOVE_DESC',				'Carry out the expiration action for all users with an active plan attached to this micro-integration' );
 
 // email
 define( '_AEC_MI_NAME_EMAIL',		'Email' );
@@ -187,6 +187,8 @@ define( '_MI_MI_VIRTUEMART_CREATE_ACCOUNT_NAME',	'Konto erstellen' );
 define( '_MI_MI_VIRTUEMART_CREATE_ACCOUNT_DESC',	'Legt automatisch ein neues Benutzerkonto an, falls keines vorhanden ist.' );
 define( '_MI_MI_VIRTUEMART_REBUILD_NAME',	'Rebuild' );
 define( '_MI_MI_VIRTUEMART_REBUILD_DESC',	'Attempt to rebuild the list of users assigned to the usergroup according to their relationship to a plan that holds this MI.' );
+define( '_MI_MI_VIRTUEMART_REMOVE_NAME', 				'Remove: ' );
+define( '_MI_MI_VIRTUEMART_REMOVE_DESC',				'Carry out the expiration action for all users with an active plan attached to this micro-integration' );
 
 // Joomlauser
 define( '_AEC_MI_NAME_JOOMLAUSER',					'Joomla Benutzer' );
@@ -266,6 +268,8 @@ define( '_MI_MI_FIREBOARD_GROUP_EXP_NAME','Fireboard group to apply member to on
 define( '_MI_MI_FIREBOARD_GROUP_EXP_DESC','The group you wish to use if the plan expires.  Manually add groups to the table jos_fb_groups');
 define( '_MI_MI_FIREBOARD_REBUILD_NAME',				'Rebuild Groups' );
 define( '_MI_MI_FIREBOARD_REBUILD_DESC',				'This option will rebuild your whole Fireboard group assignment by looking for each plan that has this MI applied and then add each user that uses one of these plans to the file.' );
+define( '_MI_MI_FIREBOARD_REMOVE_NAME', 				'Remove: ' );
+define( '_MI_MI_FIREBOARD_REMOVE_DESC',					'Carry out the expiration action for all users with an active plan attached to this micro-integration' );
 
 // Coupon
 define( '_AEC_MI_NAME_COUPON', 'Coupons');
@@ -430,6 +434,8 @@ define( '_MI_MI_APC_GROUP_EXP_NAME',		'Set APC Group expiration' );
 define( '_MI_MI_APC_GROUP_EXP_DESC',		'Choose Yes if you want this MI to set the APC Group when the calling payment plan expires.' );
 define( '_MI_MI_APC_REBUILD_NAME',			'Rebuild' );
 define( '_MI_MI_APC_REBUILD_DESC',			'Attempt to rebuild the list of users assigned to the usergroup - >Set APC Group< and >APC Group< have to both be set for this.' );
+define( '_MI_MI_APC_REMOVE_NAME', 				'Remove: ' );
+define( '_MI_MI_APC_REMOVE_DESC',				'Carry out the expiration action for all users with an active plan attached to this micro-integration' );
 
 // Hot Property
 define( '_AEC_MI_HOTPROPERTY_NAME', 'Hot Property' );
@@ -893,7 +899,7 @@ define( '_MI_MI_K2_REBUILD_NAME',				'Rebuild' );
 define( '_MI_MI_K2_REBUILD_DESC',				'Attempt to rebuild the list of users assigned to the usergroup - >Set K2 Group< and >K2 Group< have to both be set for this.' );
 define( '_AEC_MI_HACK1_K2',						'Build in a downloads restriction for K2, to be used with Micro Integrations. <b>Note:</b> This is an optional hack which adds the ability to restrict number of file downloads.  It should ONLY be applied if this is desired.' );
 define( '_MI_MI_K2_REMOVE_NAME', 				'Remove: ' );
-define( '_MI_MI_K2_REMOVE_NAME_DESC',			'Carry out the expiration action for all users with an active plan attached to this micro-integration' );
+define( '_MI_MI_K2_REMOVE_DESC',			'Carry out the expiration action for all users with an active plan attached to this micro-integration' );
 
 // Quotestream
 define( '_AEC_MI_NAME_QUOTESTREAM',		'Quotestream' );
