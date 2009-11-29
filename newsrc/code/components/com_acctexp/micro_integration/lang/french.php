@@ -234,6 +234,8 @@ define( '_MI_MI_JUGA_SET_REMOVE_GROUP_EXP_NAME',    'Remove Groups Exp' );
 define( '_MI_MI_JUGA_SET_REMOVE_GROUP_EXP_DESC',    'Set to yes, to delete all groups for this user before the groups below are applied, otherwise these groups will be added to existing groups.' );
 define( '_MI_MI_JUGA_REBUILD_NAME',                    'Rebuild' );
 define( '_MI_MI_JUGA_REBUILD_DESC',                    'Select YES to rebuild the groups relations after saving this' );
+define( '_MI_MI_JUGA_REMOVE_NAME', 					'Remove: ' );
+define( '_MI_MI_JUGA_REMOVE_DESC',					'Carry out the expiration action for all users with an active plan attached to this micro-integration' );
 
 // DisplayPipeline
 define( '_AEC_MI_NAME_DISPLAYPIPELINE',        'DisplayPipeline' );
@@ -426,6 +428,8 @@ define( '_MI_MI_JARC_CREATE_AFFILIATES_NAME', 'Create Affiliates' );
 define( '_MI_MI_JARC_CREATE_AFFILIATES_DESC', 'Create new affiliate accounts when the user is just registering at your site.' );
 define( '_MI_MI_JARC_LOG_PAYMENTS_NAME', 'Log Payments' );
 define( '_MI_MI_JARC_LOG_PAYMENTS_DESC', 'Log transactions in JARC.' );
+define( '_MI_MI_JARC_LOG_SALES_NAME', 'Log Sales' );
+define( '_MI_MI_JARC_LOG_SALES_DESC', 'Log Sales in JARC.' );
 
 // APC
 define( '_AEC_MI_NAME_APC', 'APC' );
