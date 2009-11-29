@@ -30,10 +30,8 @@ class processor_netpay extends POSTprocessor
 	{
 		$settings = array();
 		$settings['testmode']		= "1";
-		$settings['custId']			= "test438";
-		$settings['tax']			= "0";
-		$settings['autoRedirect']	= 1;
-		$settings['testAmount']		= "00";
+		$settings['custId']			= "custid";
+		$settings['password']		= "password";
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']	= '';
 
@@ -44,11 +42,11 @@ class processor_netpay extends POSTprocessor
 	{
 		$settings = array();
 
-		$settings['testmode']		= array( 'list_yesno' );
-		$settings['custId']			= array( 'inputC' );
-		$settings['autoRedirect']	= array( 'list_yesno' ) ;
-		$settings['SiteTitle']		= array( 'inputC' );
-		$settings['item_name']		= array( 'inputE' );
+		$settings['testmode']			= array( 'list_yesno' );
+		$settings['custId']				= array( 'inputC' );
+		$settings['password']			= array( 'inputC' );
+		$settings['item_name']			= array( 'inputE' );
+		$settings['aec_experimental']	= array( 'p' );
 
  		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan');
 		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
@@ -56,71 +54,42 @@ class processor_netpay extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
+	function createGatewayLink( $request )
 	{
-		$var = array(	"post_url" => "https://www.onlinepayment.com.my/NBepay/pay/test438/?",
-						"orderid" => $int_var['invoice'], //The invoice number
-						"bill_name" => $metaUser->cmsUser->name,
-						"bill_email" => $metaUser->cmsUser->email,
+		$var = array(	"post_url" => "https://www.onlinepayment.com.my/NBepay/pay/" . $this->settings['custId'] . "/?",
+						"orderid" => $request->invoice->invoice_number, //The invoice number
+						"bill_name" => $request->metaUser->cmsUser->name,
+						"bill_email" => $request->metaUser->cmsUser->email,
 						"bill_mobile" =>'',
-						"amount" => $int_var['amount'],
-						"bill_desc" => AECToolbox::rewriteEngine( $cfg['item_name'], $metaUser, $new_subscription )
+						"amount" => $request->int_var['amount'],
+						"bill_desc" => AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request )
 					);
 		return $var;
 	}
 
-/*
-	<?PHP
-$passwd="xxxxx";
-//------ below don't change ---------------
-$tranID =$_POST['tranID'];
-$orderid =$_POST['orderid'];
-$status =$_POST['status'];
-$domain =$_POST['domain'];
-$amount =$_POST['amount'];
-$currency =$_POST['currency'];
-$appcode =$_POST['appcode'];
-$paydate =$_POST['paydate'];
-$skey =$_POST['skey'];
-// All undeclared variables below are coming from POST method
-$key0 = md5( $tranID.$orderid.$status.$domain.$amount.$currency );
-$key1 = md5( $paydate.$domain.$key0.$appcode.$passwd );
-if( $skey != $key1 ) $status= -1; // invalid transaction
-//-------------------------------------------
-If ( $status == "00" ){
-// success action, e.g. update order status to paid
-// write your script here .....
-} else {
-// failure action
-// write your script here .....
-}
-?>
-*/
-
-	function parseNotification( $post, $cfg )
+	function parseNotification( $post )
 	{
-		$passwd="ce848";
-		//------ below don't change ---------------
-		$tranID =$_POST['tranID'];
-		$orderid =$_POST['orderid'];
-		$status =$_POST['status'];
-		$domain =$_POST['domain'];
-		$amount =$_POST['amount'];
-		$currency =$_POST['currency'];
-		$appcode =$_POST['appcode'];
-		$paydate =$_POST['paydate'];
-		$skey =$_POST['skey'];
+		$tranID		= $post['tranID'];
+		$orderid	= $post['orderid'];
+		$status		= $post['status'];
+		$domain		= $post['domain'];
+		$amount		= $post['amount'];
+		$currency	= $post['currency'];
+		$appcode	= $post['appcode'];
+		$paydate	= $post['paydate'];
+		$skey		= $post['skey'];
+
 		// All undeclared variables below are coming from POST method
 		$key0 = md5( $tranID.$orderid.$status.$domain.$amount.$currency );
-		$key1 = md5( $paydate.$domain.$key0.$appcode.$passwd );
+		$key1 = md5( $paydate.$domain.$key0.$appcode.$this->settings['password'] );
 		if( $skey != $key1 ) $status= -1; // invalid transaction
 
 		$response = array();
 
 		$response['invoice'] = $post['orderid'];
 
-		if ( $post['status'] == "00" && isset( $appcode ) ) {
-			$response['valid'] = 1;    //Means Status is OK and there is a value in the Approval Code, then update 1
+		if ( $post['status'] == "00" && !empty( $appcode ) ) {
+			$response['valid'] = 1;    // Means Status is OK and there is a value in the Approval Code, then update 1
 		} else {
 			$response['valid'] = 0;
 		}

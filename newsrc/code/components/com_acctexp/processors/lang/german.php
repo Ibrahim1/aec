@@ -907,4 +907,13 @@ define( '_CFG_PAYPAL_PAYFLOW_LINK_LOGIN_DESC', 'Your Payflow Login');
 define( '_CFG_PAYPAL_PAYFLOW_LINK_PARTNER_NAME', 'Payflow Partner');
 define( '_CFG_PAYPAL_PAYFLOW_LINK_PARTNER_DESC', 'The name of your Partner was provided to you by your Reseller.');
 
+// Net Builder NetPay
+define( '_CFG_NETPAY_LONGNAME', 'NetPay');
+define( '_CFG_NETPAY_STATEMENT', 'Net Builder NetPay');
+define( '_CFG_NETPAY_DESCRIPTION', 'Net Builder NetPay');
+define( '_CFG_NETPAY_CUSTID_NAME', 'Customer ID');
+define( '_CFG_NETPAY_CUSTID_DESC', 'Your NetPay Customer ID');
+define( '_CFG_NETPAY_PASSWORD_NAME', 'Password');
+define( '_CFG_NETPAY_PASSWORD_DESC', 'Your NetPay Password');
+
 ?>
