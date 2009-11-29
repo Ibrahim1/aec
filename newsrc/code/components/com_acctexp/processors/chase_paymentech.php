@@ -63,7 +63,7 @@ class processor_chase_paymentech extends PROFILEprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['experimental']		= array( 'p' );
+		$settings['aec_experimental']	= array( 'p' );
 		$settings['testmode']			= array( 'list_yesno' );
 		$settings['merchant_id'] 		= array( 'inputC' );
 		$settings['terminal_id'] 		= array( 'inputC' );
