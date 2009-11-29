@@ -421,6 +421,12 @@ define( '_MI_MI_EVENTLOG_FORCE_NOTIFY_PRE_EXP_NAME', 'Force Notification (Pre-Ex
 define( '_MI_MI_EVENTLOG_FORCE_NOTIFY_PRE_EXP_DESC', 'Force appearance of this entry on the central page, regardless of the settings for notification.' );
 define( '_MI_MI_EVENTLOG_FORCE_EMAIL_PRE_EXP_NAME', 'Force E-Mail (Pre-Expiration)' );
 define( '_MI_MI_EVENTLOG_FORCE_EMAIL_PRE_EXP_DESC', 'Force emailing of this entry, regardless of the settings for notification.' );
+define( '_MI_MI_EVENTLOG_PARAMS_NAME', 'Params' );
+define( '_MI_MI_EVENTLOG_PARAMS_DESC', 'Parameters for this entry.' );
+define( '_MI_MI_EVENTLOG_PARAMS_EXP_NAME', 'Params (Expiration)' );
+define( '_MI_MI_EVENTLOG_PARAMS_EXP_DESC', 'Parameters for this entry on the expiration event.' );
+define( '_MI_MI_EVENTLOG_PARAMS_PRE_EXP_NAME', 'Params (Pre-Expiration)' );
+define( '_MI_MI_EVENTLOG_PARAMS_PRE_EXP_DESC', 'Parameters for this entry on the pre-expiration event.' );
 
 // JARC
 define( '_AEC_MI_NAME_JARC', 'JARC' );
