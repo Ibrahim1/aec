@@ -66,7 +66,7 @@ define( '_AEC_MI_DOCMAN_NOCREDIT',					'Es tut uns au&szlig;erordentlich leid, a
 define( '_MI_MI_DOCMAN_DELETE_ON_EXP_NAME', 		'Action for existing groups when account expires:');
 define( '_MI_MI_DOCMAN_DELETE_ON_EXP_DESC',			'Choose what action you want to happen to already defined DocMan groups when the user expires.');
 define( '_MI_MI_DOCMAN_REMOVE_NAME', 				'Remove: ' );
-define( '_MI_MI_DOCMAN_REMOVE_NAME_DESC',			'Carry out the expiration action for all users with an active plan attached to this micro-integration' );
+define( '_MI_MI_DOCMAN_REMOVE_DESC',			'Carry out the expiration action for all users with an active plan attached to this micro-integration' );
 
 // email
 define( '_AEC_MI_NAME_EMAIL',		'Email' );

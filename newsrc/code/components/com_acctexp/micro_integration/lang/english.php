@@ -66,7 +66,7 @@ define( '_AEC_MI_DOCMAN_NOCREDIT',					'We are terribly sorry: You have no downl
 define( '_MI_MI_DOCMAN_DELETE_ON_EXP_NAME', 		'Action for existing groups when account expires:' );
 define( '_MI_MI_DOCMAN_DELETE_ON_EXP_DESC',			'Choose what action you want to happen to already defined DocMan groups when the user expires.' );
 define( '_MI_MI_DOCMAN_REMOVE_NAME', 				'Remove: ' );
-define( '_MI_MI_DOCMAN_REMOVE_NAME_DESC',			'Carry out the expiration action for all users with an active plan attached to this micro-integration' );
+define( '_MI_MI_DOCMAN_REMOVE_DESC',			'Carry out the expiration action for all users with an active plan attached to this micro-integration' );
 define( '_AEC_MI_DIV1_DOCMAN_USED',		'You have used <strong>%s</strong> downloads.' );
 define( '_AEC_MI_DIV1_DOCMAN_REMAINING',	'You have <strong>%s</strong> downloads remaining.' );
 define( '_AEC_MI_DIV1_DOCMAN_UNLIMITED', 	'unlimited' );
@@ -443,6 +443,8 @@ define( '_MI_MI_APC_GROUP_EXP_NAME',		'Set APC Group expiration' );
 define( '_MI_MI_APC_GROUP_EXP_DESC',		'Choose Yes if you want this MI to set the APC Group when the calling payment plan expires.' );
 define( '_MI_MI_APC_REBUILD_NAME',			'Rebuild' );
 define( '_MI_MI_APC_REBUILD_DESC',			'Attempt to rebuild the list of users assigned to the usergroup - >Set APC Group< and >APC Group< have to both be set for this.' );
+define( '_MI_MI_APC_REMOVE_NAME', 				'Remove: ' );
+define( '_MI_MI_APC_REMOVE_DESC',			'Carry out the expiration action for all users with an active plan attached to this micro-integration' );
 
 // Hot Property
 define( '_AEC_MI_HOTPROPERTY_NAME', 'Hot Property' );
