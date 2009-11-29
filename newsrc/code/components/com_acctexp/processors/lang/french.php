@@ -55,6 +55,8 @@ define( '_CFG_PROCESSOR_PLAN_PARAMS_RECURRING_NAME', ' Paiement r&eacute;current
 define( '_CFG_PROCESSOR_PLAN_PARAMS_RECURRING_DESC', 'Choisissez quel type de facturation &agrave; utiliser.');
 define( '_CFG_PROCESSOR_LANGUAGE_NAME', 'Langue');
 define( '_CFG_PROCESSOR_LANGUAGE_DESC', 'S&eacute;lectionner une des langues possibles pour votre site, visible par votre utilisateur lorsqu\'il effectuera un paiement.');
+define( '_CFG_PROCESSOR_COUNTRY_NAME', 'Country');
+define( '_CFG_PROCESSOR_COUNTRY_DESC', 'Select a country.');
 define( '_CFG_PROCESSOR_RECURRING_NAME', 'Paiement r&eacute;current');
 define( '_CFG_PROCESSOR_RECURRING_DESC', 'Choisissez le type de facturation &agrave; utiliser.');
 define( '_CFG_PROCESSOR_TAX_NAME', 'Tax:');
@@ -341,8 +343,8 @@ define( '_CFG_MONEYPROXY_FORCE_CLIENT_RECEIPT_NAME', 'For&ccedil;age du re&ccedi
 define( '_CFG_MONEYPROXY_FORCE_CLIENT_RECEIPT_DESC', 'En positionnant ce param&egrave;tre &agrave; &quot;Oui&quot;, vous forcez Money Proxy &agrave; demander une adresse email o&ugrave; envoyer le re&ccedil;u de paiement. Par d&eacute;faut, le client peut sauter cette &eacute;tape de re&ccedil;u en laissant l\'adresse email &agrave; blanc.');
 define( '_CFG_MONEYPROXY_SECRET_KEY_NAME', 'Titre du site');
 define( '_CFG_MONEYPROXY_SECRET_KEY_DESC', 'Votre cl&eacute; secr&egrave;te chez MoneyProxy.');
-define( '_CFG_MONEYPROXY_SUGGESTEDMEMO_NAME', 'Suggested Memo');
-define( '_CFG_MONEYPROXY_SUGGESTEDMEMO_DESC', 'Ce param&egrave;tre est utilis&eacute; pour pr&eacute;-remplir le champ m&eacute;mo pour de nombreux syst&egrave;mes de paiement. Malheureusement il est possible que certains syst&egrave;mes depaiement ne supportent pas cette fonctionnalit&eacute;. Maximum de 40 caract&egrave;res.');
+define( '_CFG_MONEYPROXY_SUGGESTED_MEMO_NAME', 'Suggested Memo');
+define( '_CFG_MONEYPROXY_SUGGESTED_MEMO_DESC', 'Ce param&egrave;tre est utilis&eacute; pour pr&eacute;-remplir le champ m&eacute;mo pour de nombreux syst&egrave;mes de paiement. Malheureusement il est possible que certains syst&egrave;mes depaiement ne supportent pas cette fonctionnalit&eacute;. Maximum de 40 caract&egrave;res.');
 define( '_CFG_MONEYPROXY_PAYMENT_ID_NAME', 'Identifiant de paiement ID');
 define( '_CFG_MONEYPROXY_PAYMENT_ID_DESC', 'Le marchand peut utiliser ce champ pour suivre le paiement quand l\'&eacute;tat de l\'URL est appel&eacute;. On peut aller jusqu\'&agrave; 10 positions avec seulement des lettres et des chiffres (0-9a-zA-Z). You can use Rewrite tags here.');
 
