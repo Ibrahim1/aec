@@ -43,8 +43,6 @@ class processor_suncorp_migs extends URLprocessor
 		$settings['vpc_AccessCode']		= array( "inputC" );
 		$settings['vpc_Merchant']		= array( "inputC" );
 		$settings['vpc_Locale']			= array( "list_language" );
-		$settings['vpc_ReturnURL']		= array( "inputC" );
-		$settings['vpc_SecureHash']		= array( "inputC" );
 		$settings['vpc_TicketNo']		= array( "inputC" );
 		$settings['customparams']		= array( 'inputD' );
 

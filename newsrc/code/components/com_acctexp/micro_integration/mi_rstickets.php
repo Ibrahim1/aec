@@ -39,14 +39,18 @@ class mi_rstickets extends MI
 
 		$this->loadRStickets();
 
-		$departments = rst_get_departments();
+		if ( !function_exists( 'rst_get_departments' ) ) {
+			$settings['info']				= array( 'p', 'Notice', 'You need to have RStickets installed to use this MI!' );
+		} else {
+			$departments = rst_get_departments();
 
-		$deps_list = array();
-		foreach ( $departments as $dep ) {
-			$deps_list[] = mosHTML::makeOption ( $dep['DepartmentId'], $dep['DepartmentPrefix'] . ' - ' . $dep['DepartmentName'] );
+			$deps_list = array();
+			foreach ( $departments as $dep ) {
+				$deps_list[] = mosHTML::makeOption ( $dep['DepartmentId'], $dep['DepartmentPrefix'] . ' - ' . $dep['DepartmentName'] );
+			}
+
+			$settings['lists']['department'] = mosHTML::selectList( $deps_list, 'department', 'size="1"', 'value', 'text', $this->settings['department'] );
 		}
-
-		$settings['lists']['department'] = mosHTML::selectList( $deps_list, 'department', 'size="1"', 'value', 'text', $this->settings['department'] );
 
  		$priorities = array();
 		$priorities[] = mosHTML::makeOption ( "low", "low" );

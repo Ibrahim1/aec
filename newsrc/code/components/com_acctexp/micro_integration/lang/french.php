@@ -247,7 +247,7 @@ define( '_MI_MI_DISPLAYPIPELINE_ONCE_PER_USER_DESC',    'Only display this text 
 define( '_MI_MI_DISPLAYPIPELINE_EXPIRE_NAME',            'Expire' );
 define( '_MI_MI_DISPLAYPIPELINE_EXPIRE_DESC',            'Do not display after a certain date.' );
 define( '_MI_MI_DISPLAYPIPELINE_EXPIRATION_NAME',        'Expiration' );
-define( '_MI_MI_DISPLAYPIPELINE_EXPIRATION_DESC',        'Set this as Expiration. Refer to &lt;a href=&quot;http://www.php.net/manual/en/function.strtotime.php&quot; alt=&quot;php.net manual on strtotime function&quot;&gt;this manual&lt;/a&gt; to see what you can use as input here.' );
+define( '_MI_MI_DISPLAYPIPELINE_EXPIRATION_DESC',        'Set this as Expiration. Refer to the php.net manual on the strtotime function to see what you can use as input here.' );
 define( '_MI_MI_DISPLAYPIPELINE_DISPLAYMAX_NAME',        'Display Max' );
 define( '_MI_MI_DISPLAYPIPELINE_DISPLAYMAX_DESC',        'Set amount of times this can be displayed' );
 define( '_MI_MI_DISPLAYPIPELINE_TEXT_NAME',                'Text' );
