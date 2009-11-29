@@ -187,6 +187,7 @@ define( '_AEC_CHECKOUT_TERM', 'Mode de facturation');
 define( '_AEC_CHECKOUT_NOTAPPLICABLE', 'non applicable');
 define( '_AEC_CHECKOUT_FUTURETERM', 'future limite');
 define( '_AEC_CHECKOUT_COST', 'Co&ucirc;t');
+define( '_AEC_CHECKOUT_TAX', 'Tax');
 define( '_AEC_CHECKOUT_DISCOUNT', 'Remise');
 define( '_AEC_CHECKOUT_TOTAL', 'Total');
 define( '_AEC_CHECKOUT_DURATION', 'Dur&eacute;e');

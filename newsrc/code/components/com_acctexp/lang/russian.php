@@ -335,6 +335,7 @@ define( '_AEC_CHECKOUT_FUTURETERM', 'Условия');
 
 define( '_AEC_CHECKOUT_COST', 'Стоимость');
 
+define( '_AEC_CHECKOUT_TAX', 'Tax');
 define( '_AEC_CHECKOUT_DISCOUNT', 'Скидка');
 
 define( '_AEC_CHECKOUT_TOTAL', 'Всего');

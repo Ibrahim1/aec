@@ -954,8 +954,8 @@ class Payment_HTML
 						} else { ?>
 							<input type="submit" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
 							<?php
-						}
-						if ( $passthrough != false ) { ?>
+						} ?>
+						<?php if ( $passthrough != false ) { ?>
 							<input type="hidden" name="aec_passthrough" value="<?php echo $passthrough; ?>" />
 						<?php } ?>
 					</div>
@@ -1280,6 +1280,9 @@ class Payment_HTML
 											//$c .= '&nbsp;';
 										}
 									}
+									break;
+								case 'tax':
+									$t .= '&nbsp;( ' . $citem->cost['details'] . ' )';
 									break;
 								case 'cost': break;
 								case 'total': break;

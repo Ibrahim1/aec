@@ -1004,4 +1004,10 @@ define( '_MI_MI_JOMSOCIAL_SET_FIELDS_EXP_NAME',	'Set Fields Expiration' );
 define( '_MI_MI_JOMSOCIAL_SET_FIELDS_EXP_DESC',	'Automatically set the fields (which are marked with "(expiration)" when the plan is paid for.' );
 define( '_MI_MI_JOMSOCIAL_EXPMARKER',			'(expiration)' );
 
+// Tax Helper
+define( '_AEC_MI_NAME_AECTAX',		'Tax Helper' );
+define( '_AEC_MI_DESC_AECTAX',		'Specify tax for this item - affects Confirmation&amp;Checkout screen, Item cost and Invoice printout' );
+define( '_MI_MI_AECTAX_LOCATIONS_NAME',		'Locations' );
+define( '_MI_MI_AECTAX_LOCATIONS_DESC',		'Enter a list of Tax Options. It should look like this:<br /><br />1|European Union|19|19% VAT<br />2|Rest of the World|0<br /><br />The syntax is ID|Display Name|Tax Percentage|Tax Description - always separate by newlines!' );
+
 ?>

@@ -184,6 +184,7 @@ define( '_AEC_CHECKOUT_TERM', 'Betalings betingelser');
 define( '_AEC_CHECKOUT_NOTAPPLICABLE', 'kan ikke anvendes');
 define( '_AEC_CHECKOUT_FUTURETERM', 'fremtidig term');
 define( '_AEC_CHECKOUT_COST', 'Pris');
+define( '_AEC_CHECKOUT_TAX', 'Tax');
 define( '_AEC_CHECKOUT_DISCOUNT', 'Rabat');
 define( '_AEC_CHECKOUT_TOTAL', 'Total');
 define( '_AEC_CHECKOUT_DURATION', 'Varighed');

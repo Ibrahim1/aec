@@ -8557,6 +8557,10 @@ class InvoiceFactory
 			$this->invoice->storeload();
 		}
 
+		$exchange = $silent = null;
+
+		$this->triggerMIs( 'invoice_items_checkout', $exchange, $this->items, $silent );
+
 		$this->InvoiceToCheckout( $option, $repeat, $error );
 	}
 
@@ -8794,11 +8798,13 @@ class InvoiceFactory
 			$this->items[] = array( 'cost' => $this->items[0]['terms']->nextterm->renderTotal(), 'terms' => $terms );
 		}
 
+		$exchange = $silent = null;
+
+		$this->triggerMIs( 'invoice_items', $exchange, $this->items, $silent );
+
 		$this->invoice->formatInvoiceNumber();
 
 		$data = $this->invoice->getPrintout( $this );
-
-		$exchange = $silent = null;
 
 		$this->triggerMIs( 'invoice_printout', $exchange, $data, $silent );
 
@@ -10103,7 +10109,8 @@ class Invoice extends serialParamDBTable
 
 		$data['itemlist'] = array();
 		$total = 0;
-		foreach ( $InvoiceFactory->items as $item ) {
+		$break = 0;
+		foreach ( $InvoiceFactory->items as $iid => $item ) {
 			if ( isset( $item['obj'] ) ) {
 				$amt =  $item['terms']->nextterm->renderTotal();
 
@@ -10114,12 +10121,32 @@ class Invoice extends serialParamDBTable
 					. '<td>' . AECToolbox::formatAmount( $amt * $item['quantity'], $InvoiceFactory->invoice->currency ) . '</td>'
 					. '</tr>';
 			} else {
-				$data['totallist'][] = '<tr id="invoice_content_item_total">'
-					. '<td>' . _INVOICEPRINT_GRAND_TOTAL . '</td>'
-					. '<td></td>'
-					. '<td></td>'
-					. '<td>' . AECToolbox::formatAmount( $item['cost'], $InvoiceFactory->invoice->currency ) . '</td>'
+				if ( !$break ) {
+					$data['totallist'][] = '<tr id="invoice_content_item_separator">'
+					. '<td colspan="4"></td>'
 					. '</tr>';
+
+					$break = 1;
+				}
+
+				switch ( $item['terms']->terms[0]->type ){
+					case 'tax':
+						$data['totallist'][] = '<tr id="invoice_content_item_tax">'
+							. '<td>Tax' . null . '</td>'
+							. '<td></td>'
+							. '<td></td>'
+							. '<td>' . AECToolbox::formatAmount( $item['cost'], $InvoiceFactory->invoice->currency ) . '</td>'
+							. '</tr>';
+						break;
+					case 'total':
+						$data['totallist'][] = '<tr id="invoice_content_item_total">'
+							. '<td>' . ( ( $iid == count( $InvoiceFactory->items )-1 ) ? _INVOICEPRINT_GRAND_TOTAL : _INVOICEPRINT_TOTAL ) . '</td>'
+							. '<td></td>'
+							. '<td></td>'
+							. '<td>' . AECToolbox::formatAmount( $item['cost'], $InvoiceFactory->invoice->currency ) . '</td>'
+							. '</tr>';
+						break;
+				}
 			}
 		}
 

@@ -189,6 +189,7 @@ define( '_AEC_CHECKOUT_TERM', 'Termo de Factura&ccedil;&atilde;o');
 define( '_AEC_CHECKOUT_NOTAPPLICABLE', 'n&atilde;o aplic&aacute;vel');
 define( '_AEC_CHECKOUT_FUTURETERM', 'termo futuro');
 define( '_AEC_CHECKOUT_COST', 'Custo');
+define( '_AEC_CHECKOUT_TAX', 'Tax');
 define( '_AEC_CHECKOUT_DISCOUNT', 'Desconto');
 define( '_AEC_CHECKOUT_TOTAL', 'Total');
 define( '_AEC_CHECKOUT_DURATION', 'Dura&ccedil;&atilde;o');

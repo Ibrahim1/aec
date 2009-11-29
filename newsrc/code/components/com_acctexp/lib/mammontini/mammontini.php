@@ -365,7 +365,7 @@ class mammonTerm extends eucaObject
 	 * @return	string
 	 * @since	1.0
 	 */
-	function addCost( $amount, $info=null )
+	function addCost( $amount, $info=null, $tax=null )
 	{
 		if ( !empty( $this->cost ) ) {
 			// Delete current total, if exists
@@ -380,7 +380,11 @@ class mammonTerm extends eucaObject
 		if ( $amount < 0 ) {
 			$type = 'discount';
 		} else {
-			$type = 'cost';
+			if ( $tax ) {
+				$type = 'tax';
+			} else {
+				$type = 'cost';
+			}
 		}
 
 		$cost = new mammonCost();
@@ -425,6 +429,8 @@ class mammonTerm extends eucaObject
 	function setCost( $amount, $info=null )
 	{
 		$this->cost = array();
+
+		$amount = AECToolbox::correctAmount( $amount );
 
 		$cost = new mammonCost();
 		$cost->set( 'type', 'cost' );

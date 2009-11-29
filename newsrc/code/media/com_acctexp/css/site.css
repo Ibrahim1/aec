@@ -409,7 +409,7 @@ div#confirmation_error {
 float: left;
 background: #fcc;
 border:1px solid #faa;
-padding: 0 8px 8px 8px;
+padding: 8px;
 margin: 0 12px 16px 12px;
 width: 97%;
 }
@@ -798,6 +798,14 @@ td.aec_term_costamount {
 padding-right: 4px !important;
 text-align: right;
 font-weight: bold;
+}
+
+td.aec_term_taxtitle {
+}
+
+td.aec_term_taxamount {
+padding-right: 4px !important;
+text-align: right;
 }
 
 td.aec_term_discountamount {

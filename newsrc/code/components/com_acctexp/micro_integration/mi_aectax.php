@@ -25,7 +25,7 @@ class mi_aectax
 	function Settings()
 	{
 		$settings = array();
-		$settings['locations']	= array( 'inputA' );
+		$settings['locations']	= array( 'inputD' );
 
 		// Tax Modes
 		// Multi-Select offer tax modes
@@ -39,24 +39,16 @@ class mi_aectax
 
 		$settings = array();
 
-		$locations = $this->getLocations();
+		$locations = $this->getLocationList();
 
 		if ( !empty( $locations ) ) {
-			$settings['exp'] = array( 'p', _MI_MI_USER_CHOICE_FILES_NAME, _MI_MI_USER_CHOICE_FILES_DESC );
-
-			$list = explode( "\n", $this->settings['desc_list'] );
-
+			$settings['exp'] = array( 'p', "test", "testtext" );
+			$settings['location'] = array( 'hidden', null, 'mi_'.$this->id.'_location' );
 			$gr = array();
-			foreach ( $list as $id => $choice ) {
-				$choice = trim( $choice );
-
-				if ( $this->settings['max_choices'] > 1 ) {
-					$settings['ef'.$id] = array( 'checkbox', 'mi_'.$this->id.'_mi_email_files[]', $id, true, $choice );
-				} else {
-					$settings['ef'.$id] = array( 'radio', 'mi_'.$this->id.'_mi_email_files', $id, true, $choice );
-				}
+			foreach ( $locations as $id => $choice ) {
+				$settings['ef'.$id] = array( 'radio', 'mi_'.$this->id.'_location', $choice['id'], true, $choice['text'] );
 			}
-			$settings['mi_email_files'] = array( 'hidden', null, 'mi_'.$this->id.'_mi_email_files[]' );
+
 		} else {
 			return false;
 		}
@@ -64,9 +56,115 @@ class mi_aectax
 		return $settings;
 	}
 
-	function invoice_printout( $request )
+	function verifyMIform( $request )
 	{
+		$return = array();
+
+		if ( is_null( $request->params['location'] ) || ( $request->params['location'] == "" ) ) {
+			$return['error'] = "Please make a selection";
+			return $return;
+		}
+
+		return $return;
+	}
+
+	function invoice_items( $request )
+	{
+		$locations = $this->getLocationList();
+
+		$tt = 0;
+		foreach ( $locations as $location ) {
+			if ( $location['id'] == $request->params['location'] ) {
+				$tt = $location['percentage'];
+			}
+		}
+
+		if ( empty( $tt ) ) {
+			return true;
+		}
+
 		// Append Tax Data to content
+		$m = array_pop( $request->add );
+
+		$x = $m;
+
+		$total = $m['terms']->terms[0]->renderTotal();
+
+		$tax = AECToolbox::correctAmount( $total * ( $tt/100 ) );
+
+		$newtotal = AECToolbox::correctAmount( $total - $tax );
+
+		$m['terms']->terms[0]->setCost( $newtotal );
+		$m['cost'] = $newtotal;
+
+		$request->add[] = $m;
+
+		// Create tax
+		$terms = new mammonTerms();
+		$term = new mammonTerm();
+
+		$term->set( 'duration', array( 'none' => true ) );
+		$term->set( 'type', 'tax' );
+		$term->addCost( $tax );
+
+		$terms->addTerm( $term );
+
+		$request->add[] = array( 'cost' => $tax, 'terms' => $terms );
+
+		$request->add[] = $x;
+
+		return true;
+	}
+
+	function invoice_items_checkout( $request )
+	{
+		$locations = $this->getLocationList();
+
+		$tt = 0;
+		foreach ( $locations as $location ) {
+			if ( $location['id'] == $request->params['location'] ) {
+				$tt = $location['percentage'];
+				$te = trim( $location['extra'] );
+			}
+		}
+
+		if ( empty( $tt ) ) {
+			return true;
+		}
+
+		// Append Tax Data to content
+		$m = array_pop( $request->add );
+
+		$x = $m;
+
+		$total = $m['terms']->terms[0]->renderTotal();
+
+		$tax = AECToolbox::correctAmount( $total * ( $tt/100 ) );
+
+		$newtotal = AECToolbox::correctAmount( $total - $tax );
+
+		$m['terms']->terms[0]->setCost( $newtotal );
+		$m['cost'] = $newtotal;
+
+		$request->add[] = $m;
+
+		// Create tax
+		$terms = new mammonTerms();
+
+		$term = new mammonTerm();
+		$term->set( 'duration', array( 'none' => true ) );
+		$term->set( 'type', 'tax' );
+		$term->addCost( $newtotal );
+
+		if ( !empty( $te ) ) {
+			$term->addCost( $tax, array( 'details' => $te ), true );
+		} else {
+			$term->addCost( $tax, null, true );
+		}
+
+		$terms->addTerm( $term );
+
+		$request->add[] = array( 'cost' => $tax, 'terms' => $terms );
 
 		return true;
 	}
@@ -81,7 +179,11 @@ class mi_aectax
 			foreach ( $l as $loc ) {
 				$location = explode( "|", $loc );
 
-				$locations[] = array( 'Text' );
+				if ( empty( $location[3] ) ) {
+					$location[3] = null;
+				}
+
+				$locations[] = array( 'id' => $location[0], 'text' => $location[1], 'percentage' => $location[2], 'extra' => $location[3] );
 			}
 		}
 
