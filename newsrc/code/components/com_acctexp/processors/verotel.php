@@ -51,6 +51,7 @@ class processor_verotel extends URLprocessor
 		$s['siteid']			= array( 'inputC' );
 		$s['secretcode']		= array( 'inputC' );
 		$s['use_ticketsclub']	= array( 'list_yesno' );
+		$settings['info']		= array( 'fieldset' );
 		$s['customparams']		= array( 'inputD' );
 
 		return $s;

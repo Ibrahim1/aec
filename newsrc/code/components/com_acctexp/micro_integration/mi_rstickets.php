@@ -77,7 +77,7 @@ class mi_rstickets extends MI
 
 			$userid		= AECToolbox::rewriteEngineRQ( $this->settings['userid'], $request );
 			$email		= AECToolbox::rewriteEngineRQ( $this->settings['email'], $request );
-aecDebug($this->settings);aecDebug($email);
+
 			$r = rst_add_ticket( $this->settings['department'], $subject, $text, $this->settings['priority'], $userid, $email, 0, array(), true );
 
 			aecDebug($r);
@@ -88,8 +88,10 @@ aecDebug($this->settings);aecDebug($email);
 
 	function loadRStickets()
 	{
-		require_once( JPATH_SITE . '/components/com_rstickets/config.php' );
-		require_once( JPATH_SITE . '/components/com_rstickets/functions.php' );
+		if ( file_exists( JPATH_SITE . '/components/com_rstickets/config.php' ) ) {
+			require_once( JPATH_SITE . '/components/com_rstickets/config.php' );
+			require_once( JPATH_SITE . '/components/com_rstickets/functions.php' );
+		}
 	}
 }
 ?>

@@ -1836,6 +1836,19 @@ define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_AMOUNT_DESC', 'The maximum amount a 
 define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_NAME', 'Plan:');
 define( '_COUPON_RESTRICTIONS_USED_PLAN_MAX_DESC', 'The payment plan that the user has to have used the specified number of times at most');
 
+define( '_COUPON_RESTRICTIONS_PREVIOUSPLAN_REQ_ENABLED_EXCLUDED_NAME', 'Excluded Prev. Plan:');
+define( '_COUPON_RESTRICTIONS_PREVIOUSPLAN_REQ_ENABLED_EXCLUDED_DESC', 'Do NOT allow using this coupon to users who had the selected plan as their previous payment plan');
+define( '_COUPON_RESTRICTIONS_PREVIOUSPLAN_REQ_EXCLUDED_NAME', 'Plan:');
+define( '_COUPON_RESTRICTIONS_PREVIOUSPLAN_REQ_EXCLUDED_DESC', 'A user will only be able to use the coupon if he or she used the selected plan before the one currently in use');
+define( '_COUPON_RESTRICTIONS_CURRENTPLAN_REQ_ENABLED_EXCLUDED_NAME', 'Excluded Curr. Plan:');
+define( '_COUPON_RESTRICTIONS_CURRENTPLAN_REQ_ENABLED_EXCLUDED_DESC', 'Do NOT allow using this coupon to users who have the selected plan as their currently present payment plan');
+define( '_COUPON_RESTRICTIONS_CURRENTPLAN_REQ_EXCLUDED_NAME', 'Plan:');
+define( '_COUPON_RESTRICTIONS_CURRENTPLAN_REQ_EXCLUDED_DESC', 'A user will only be able to use the coupon if he or she is currently assigned to, or has just expired from the plan selected here');
+define( '_COUPON_RESTRICTIONS_OVERALLPLAN_REQ_ENABLED_EXCLUDED_NAME', 'Excluded Used Plan:');
+define( '_COUPON_RESTRICTIONS_OVERALLPLAN_REQ_ENABLED_EXCLUDED_DESC', 'Do NOT allow using this coupon to users who have used the selected plan before');
+define( '_COUPON_RESTRICTIONS_OVERALLPLAN_REQ_EXCLUDED_NAME', 'Plan:');
+define( '_COUPON_RESTRICTIONS_OVERALLPLAN_REQ_EXCLUDED_DESC', 'A user will only be able to use the coupon if he or she has used the selected plan once, no matter when');
+
 define( '_COUPON_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_NAME', 'Required Prev. Group:');
 define( '_COUPON_RESTRICTIONS_PREVIOUSGROUP_REQ_ENABLED_DESC', 'Enable checking for previous payment plan in this group');
 define( '_COUPON_RESTRICTIONS_PREVIOUSGROUP_REQ_NAME', 'Group:');

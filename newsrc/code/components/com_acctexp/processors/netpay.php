@@ -58,9 +58,6 @@ class processor_netpay extends POSTprocessor
 
 	function createGatewayLink( $int_var, $cfg, $metaUser, $new_subscription )
 	{
-		//URL returned by eWay
-	//	$return_url = AECToolbox::deadsureURL("index.php?option=com_acctexp&amp;task=ewaynotification");
-
 		$var = array(	"post_url" => "https://www.onlinepayment.com.my/NBepay/pay/test438/?",
 						"orderid" => $int_var['invoice'], //The invoice number
 						"bill_name" => $metaUser->cmsUser->name,

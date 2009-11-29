@@ -45,7 +45,8 @@ class processor_paycom extends POSTprocessor
 		$settings['co_code']		= array( "inputC","Company Code","Three (3) alphanumeric ID assigned by Paycom.net" );
 		$settings['product_id']		= array( "inputC","Product Code","Alphanumeric product code assigned by Paycom.net" );
 		$settings['secretWord']		= array( "inputC","Secret Word","Used to encrypt and protect transactions" );
-		$settings['customparams']	= array( 'inputD' );
+		$settings['info']			= array( 'fieldset' );
+		$settings['customparams']	= array( 'inputD', "Notification URL", 'You need to remember to set the \'Notification URL\' url in your Paycom control panel... for both approves and declines this should be...<br />http://[YOUR JOOMLA LOCATION]/index.php?option=com_acctexp&task=paycomnotification<br />Thats it!' );
 
 		return $settings;
 	}

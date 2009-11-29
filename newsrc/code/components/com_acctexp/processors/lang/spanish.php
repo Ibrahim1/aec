@@ -391,6 +391,8 @@ define( '_CFG_VEROTEL_USE_TICKETSCLUB_NAME', 'Tickets Club');
 define( '_CFG_VEROTEL_USE_TICKETSCLUB_DESC', 'Use Tickets Club?');
 define( '_CFG_VEROTEL_PLAN_PARAMS_VEROTEL_PRODUCT_NAME', 'Product Name');
 define( '_CFG_VEROTEL_PLAN_PARAMS_VEROTEL_PRODUCT_DESC', 'The Product Name identifying this plan to Verotel');
+define( '_CFG_VEROTEL_INFO_NAME', 'Notification URL');
+define( '_CFG_VEROTEL_INFO_DESC', 'You need to remember to set the \'Notification URL\' url in your Verotel control panel... for both approves and declines this should be...<br />http://[YOUR JOOMLA LOCATION]/index.php?option=com_acctexp&task=verotelnotification<br />Thats it!');
 
 // Cybermut
 define( '_CFG_CYBERMUT_LONGNAME', 'Cybermut');
