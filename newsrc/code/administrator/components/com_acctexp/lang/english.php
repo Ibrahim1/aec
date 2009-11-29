@@ -153,7 +153,7 @@ define( '_AEC_HACKS_LOOKS_FOR',					'The Hack will look for this' );
 define( '_AEC_HACKS_REPLACE_WITH',				'... and replace it with this' );
 
 define( '_AEC_HACKS_NOTICE',					'IMPORTANT NOTICE' );
-define( '_AEC_HACKS_NOTICE_DESC',				'For security reason you need apply hacks to joomla core files. To do so, please click the "hack file now" links for these files. You may also Add a link to your User Menu so that your Users can have a look at their Subscription Record.' );
+define( '_AEC_HACKS_NOTICE_DESC',				'In some cases, you need apply hacks to some files. To do so, please click the "hack file now" links for these files. You may also Add a link to your User Menu so that your Users can have a look at their Subscription Record.' );
 define( '_AEC_HACKS_NOTICE_DESC2',				'<strong>All functionally important hacks are marked with an arrow and an exclamation mark.</strong>' );
 define( '_AEC_HACKS_NOTICE_DESC3',				'These hacks are <strong>not necessarily in a correct numerical order</strong> - so don\'t wonder if they go #1, #3, #6 - the missing numbers are most likely legacy hacks that you would only see if you had them (incorrectly) applied.' );
 define( '_AEC_HACKS_NOTICE_JACL',				'JACL NOTICE' );
@@ -1933,7 +1933,7 @@ define( '_ACTIVATE', 'Activate');
 define( '_ACTIVATED', 'User activated.');
 
 // --== EXPORT ==--
-define( '_EXPORT', 'Export');
+define( '_AEC_HEAD_EXPORT', 'Export');
 define( '_EXPORT_LOAD', 'Load');
 define( '_EXPORT_APPLY', 'Apply');
 define( '_EXPORT_GENERAL_SELECTED_EXPORT_NAME', 'Export Preset');

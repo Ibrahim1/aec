@@ -341,8 +341,7 @@ class General_css
 {
 	function editCSSSource( &$content, $option )
 	{
-		$cssFile	= 'style.css';
-		$css_path	= JPATH_SITE . '/components/' . $option . '/' . $cssFile;
+		$file = JPATH_SITE . '/media/' . $option . '/css/site.css';
 		HTML_myCommon::addBackendCSS(); ?>
 		<form action="index2.php" method="post" name="adminForm">
 			<table cellpadding="1" cellspacing="1" border="0" width="100%">
@@ -353,21 +352,21 @@ class General_css
 						</table>
 					</td>
 					<td width="260">
-						<span class="componentheading"><?php echo $cssFile; ?>:&nbsp;
-							<?php echo is_writable( $css_path ) ? '<span style="color:green;">' . _AEC_CMN_WRITEABLE . '</span>' : '<span style="color:red;">' . _AEC_CMN_UNWRITEABLE . '</span>'; ?>
+						<span class="componentheading"><?php echo $file; ?>:&nbsp;
+							<?php echo is_writable( $file ) ? '<span style="color:green;">' . _AEC_CMN_WRITEABLE . '</span>' : '<span style="color:red;">' . _AEC_CMN_UNWRITEABLE . '</span>'; ?>
 						</span>
 					</td>
 					<?php
 					if ( aecJoomla15check() ) {
 						jimport('joomla.filesystem.path');
 
-						$chmod = JPath::canChmod( $css_path );
+						$chmod = JPath::canChmod( $file );
 					} else {
-						$chmod = mosIsChmodable( $css_path );
+						$chmod = mosIsChmodable( $file );
 					}
 
 					if ( $chmod ) {
-						if ( is_writable( $css_path ) ) { ?>
+						if ( is_writable( $file ) ) { ?>
 							<td>
 								<input type="checkbox" id="disable_write" name="disable_write" value="1" />
 								<label for="disable_write"><?php echo _AEC_CMN_UNWRITE_AFTER_SAVE; ?></label>
@@ -387,7 +386,7 @@ class General_css
 			<table class="aecadminform">
 				<tr>
 					<th>
-						<?php echo $css_path; ?>
+						<?php echo $file; ?>
 					</th>
 				</tr>
 				<tr>
@@ -1103,10 +1102,12 @@ class HTML_AcctExp
 						<p><?php echo _AEC_HACKS_NOTICE_DESC2; ?></p>
 						<p><?php echo _AEC_HACKS_NOTICE_DESC3; ?></p>
 					</div>
-					<div class="usernote" style="width:350px; margin:5px;">
-						<h2><?php echo _AEC_HACKS_NOTICE_JACL; ?>:</h2>
-						<p><?php echo _AEC_HACKS_NOTICE_JACL_DESC; ?></p>
-					</div>
+					<?php if ( !aecJoomla15check() ) { ?>
+						<div class="usernote" style="width:350px; margin:5px;">
+							<h2><?php echo _AEC_HACKS_NOTICE_JACL; ?>:</h2>
+							<p><?php echo _AEC_HACKS_NOTICE_JACL_DESC; ?></p>
+						</div>
+					<?php } ?>
 				</div>
 				<?php
 				foreach ( $hacks as $handle => $content ) {
@@ -3054,7 +3055,7 @@ class HTML_AcctExp
 		<table class="adminheading">
 		<tr>
 			<th width="100%" class="sectionname" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_export.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;" rowspan="2" nowrap="nowrap">
-				<?php echo _AEC_HEAD_LOG; ?>
+				<?php echo _AEC_HEAD_EXPORT; ?>
 			</th>
 			<td nowrap="nowrap" style="padding: 0 5px;">
 			</td>

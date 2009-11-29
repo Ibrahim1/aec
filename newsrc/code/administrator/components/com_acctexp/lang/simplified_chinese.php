@@ -1934,7 +1934,7 @@ define( '_ACTIVATE', '激活');
 define( '_ACTIVATED', '用户已激活.');
 
 // --== EXPORT ==--
-define( '_EXPORT', 'Export');
+define( '_AEC_HEAD_EXPORT', 'Export');
 define( '_EXPORT_LOAD', 'Load');
 define( '_EXPORT_APPLY', 'Apply');
 define( '_EXPORT_GENERAL_SELECTED_EXPORT_NAME', 'Export Preset');

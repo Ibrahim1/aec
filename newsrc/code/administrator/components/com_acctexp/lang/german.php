@@ -1908,7 +1908,7 @@ define( '_ACTIVATED',						'Benutzer aktiviert.' );
 define( '_ACTIVATE',						'Aktivieren' );
 
 // --== EXPORT ==--
-define( '_EXPORT', 'Exportieren');
+define( '_AEC_HEAD_EXPORT', 'Exportieren');
 define( '_EXPORT_LOAD', 'Laden');
 define( '_EXPORT_APPLY', 'Anwenden');
 define( '_EXPORT_GENERAL_SELECTED_EXPORT_NAME', 'Exportierung Voreinstellung');

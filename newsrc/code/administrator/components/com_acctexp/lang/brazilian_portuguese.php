@@ -1933,7 +1933,7 @@ define( '_ACTIVATE', 'Activar');
 define( '_ACTIVATED', 'Utilizador Activado.');
 
 // --== EXPORT ==--
-define( '_EXPORT', 'Exportar');
+define( '_AEC_HEAD_EXPORT', 'Exportar');
 define( '_EXPORT_LOAD', 'Carregar');
 define( '_EXPORT_APPLY', 'Aplicar');
 define( '_EXPORT_GENERAL_SELECTED_EXPORT_NAME', 'Exportar predefini&ccedil;&atilde;o');

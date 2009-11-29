@@ -1934,7 +1934,7 @@ define( '_ACTIVATE', 'Activ&eacute;');
 define( '_ACTIVATED', 'Utilisateur activ&eacute;.');
 
 // --== EXPORT ==--
-define( '_EXPORT', 'Export');
+define( '_AEC_HEAD_EXPORT', 'Export');
 define( '_EXPORT_LOAD', 'Charger');
 define( '_EXPORT_APPLY', 'Appliquer');
 define( '_EXPORT_GENERAL_SELECTED_EXPORT_NAME', 'Pr&eacute;r&eacute;glage d\'export');
