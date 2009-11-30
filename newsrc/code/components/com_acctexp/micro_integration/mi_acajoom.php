@@ -41,8 +41,10 @@ class mi_acajoom
 		$settings['lists']['list']		= mosHTML::selectList($li, 'list', 'size="4"', 'value', 'text', $this->settings['list']);
 		$settings['lists']['list_exp']	= mosHTML::selectList($li, 'list_exp', 'size="4"', 'value', 'text', $this->settings['list_exp']);
 
-		$settings['list'] = array( 'list' );
-		$settings['list_exp'] = array( 'list' );
+		$settings['list']			= array( 'list' );
+		$settings['list_exp']		= array( 'list' );
+		$settings['user_checkbox']	= array( 'list_yesno' );
+		$settings['custominfo']		= array( 'inputD' );
 
 		return $settings;
 	}

@@ -12077,17 +12077,9 @@ class aecSuperCommand
 
 						$invoice = $exchange = $add = null;
 
-						if ( method_exists( $metaUser, $action ) ) {
-							if ( $mi->$action( $metaUser, null, $invoice, $this ) === false ) {
-								if ( $aecConfig->cfg['breakon_mi_error'] ) {
-									return false;
-								}
-							}
-						} else {
-							if ( $mi->relayAction( $metaUser, $exchange, $invoice, null, $action, $add ) === false ) {
-								if ( $aecConfig->cfg['breakon_mi_error'] ) {
-									return false;
-								}
+						if ( $mi->relayAction( $metaUser, $exchange, $invoice, null, $action, $add ) === false ) {
+							if ( $aecConfig->cfg['breakon_mi_error'] ) {
+								return false;
 							}
 						}
 
@@ -14589,6 +14581,8 @@ class microIntegration extends serialParamDBTable
 
 		if ( $add !== false ) {
 			$request->add	=& $add;
+		} else {
+			$request->add	= null;
 		}
 
 		// Call Action

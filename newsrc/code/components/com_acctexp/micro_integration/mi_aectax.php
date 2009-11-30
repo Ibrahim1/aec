@@ -26,6 +26,7 @@ class mi_aectax
 	{
 		$settings = array();
 		$settings['locations']	= array( 'inputD' );
+		$settings['custominfo']	= array( 'inputD' );
 
 		// Tax Modes
 		// Multi-Select offer tax modes
@@ -42,7 +43,12 @@ class mi_aectax
 		$locations = $this->getLocationList();
 
 		if ( !empty( $locations ) ) {
-			$settings['exp'] = array( 'p', "test", "testtext" );
+			if ( !empty( $request->params['location'] ) ) {
+				$settings['exp'] = array( 'p', "", $request->params['custominfo'] );
+			} else {
+				$settings['exp'] = array( 'p', "", _MI_MI_AECTAX_DEFAULT_NOTICE );
+			}
+
 			$settings['location'] = array( 'hidden', null, 'mi_'.$this->id.'_location' );
 			$gr = array();
 			foreach ( $locations as $id => $choice ) {
@@ -118,17 +124,13 @@ class mi_aectax
 
 	function invoice_items_checkout( $request )
 	{
-		$locations = $this->getLocationList();
+		$location = $this->getLocation( $request );
 
-		$tt = 0;
-		foreach ( $locations as $location ) {
-			if ( $location['id'] == $request->params['location'] ) {
-				$tt = $location['percentage'];
-				$te = trim( $location['extra'] );
-			}
+		if ( empty( $location ) ) {
+			return true;
 		}
 
-		if ( empty( $tt ) ) {
+		if ( empty( $location['percentage'] ) ) {
 			return true;
 		}
 
@@ -139,7 +141,7 @@ class mi_aectax
 
 		$total = $m['terms']->terms[0]->renderTotal();
 
-		$tax = AECToolbox::correctAmount( $total * ( $tt/100 ) );
+		$tax = AECToolbox::correctAmount( $total * ( $location['percentage']/100 ) );
 
 		$newtotal = AECToolbox::correctAmount( $total - $tax );
 
@@ -156,8 +158,8 @@ class mi_aectax
 		$term->set( 'type', 'tax' );
 		$term->addCost( $newtotal );
 
-		if ( !empty( $te ) ) {
-			$term->addCost( $tax, array( 'details' => $te ), true );
+		if ( !empty( $location['extra'] ) ) {
+			$term->addCost( $tax, array( 'details' => $location['extra'] ), true );
 		} else {
 			$term->addCost( $tax, null, true );
 		}
@@ -167,6 +169,52 @@ class mi_aectax
 		$request->add[] = array( 'cost' => $tax, 'terms' => $terms );
 
 		return true;
+	}
+
+	function action( $request )
+	{
+		$location = $this->getLocation( $request );
+
+		if ( empty( $location['mi'] ) ) {
+			return true;
+		}
+
+		$database = &JFactory::getDBO();
+
+		$mi = new microIntegration( $database );
+
+		if ( !$mi->mi_exists( $location['mi'] ) ) {
+			return true;
+		}
+
+		$mi->load( $location['mi'] );
+
+		if ( !$mi->callIntegration() ) {
+			continue;
+		}
+
+		$action = 'action';
+
+		$exchange = null;
+
+		if ( $mi->relayAction( $request->metaUser, $exchange, $request->invoice, null, $action, $request->add ) === false ) {
+			if ( $aecConfig->cfg['breakon_mi_error'] ) {
+				return false;
+			}
+		}
+	}
+
+	function getLocation( $request )
+	{
+		$locations = $this->getLocationList();
+
+		foreach ( $locations as $location ) {
+			if ( $location['id'] == $request->params['location'] ) {
+				return $location;
+			}
+		}
+
+		return null;
 	}
 
 	function getLocationList()
@@ -183,7 +231,11 @@ class mi_aectax
 					$location[3] = null;
 				}
 
-				$locations[] = array( 'id' => $location[0], 'text' => $location[1], 'percentage' => $location[2], 'extra' => $location[3] );
+				if ( empty( $location[4] ) ) {
+					$location[4] = null;
+				}
+
+				$locations[] = array( 'id' => $location[0], 'text' => $location[1], 'percentage' => $location[2], 'extra' => $location[3], 'mi' => $location[4] );
 			}
 		}
 

@@ -5609,10 +5609,6 @@ function quicklookup( $option )
 	return false;
 }
 
-function supercommand( $cmd ) {
-
-}
-
 function obsafe_print_r($var, $return = false, $html = false, $level = 0) {
     $spaces = "";
     $space = $html ? "&nbsp;" : " ";
