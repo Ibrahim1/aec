@@ -23,6 +23,8 @@ define( '_MI_MI_ACAJOOM_LIST_EXP_NAME',        'Fixe la liste d\'expiration' );
 define( '_MI_MI_ACAJOOM_LIST_EXP_DESC',        'A quelle liste de distribution voulez vous assigner cet utilisateur apr&egrave;s l\'expiration?' );
 define( '_MI_MI_ACAJOOM_CUSTOMINFO_NAME',		'Custom Info' );
 define( '_MI_MI_ACAJOOM_CUSTOMINFO_DESC',		'AEC normally displays the text "Do you want to subscribe to our newsletter?" on confirmation above checkbox. If you want it to say something else, enter your text here.' );
+define( '_MI_MI_ACAJOOM_USER_CHECKBOX_NAME',		'User Checkbox' );
+define( '_MI_MI_ACAJOOM_USER_CHECKBOX_DESC',		'Display a Checkbox to let the user decide whether he or she wants a newsletter.' );
 define( '_MI_MI_ACAJOOM_DEFAULT_NOTICE',		'Do you want to subscribe to our newsletter?' );
 
 // htaccess

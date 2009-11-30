@@ -37,7 +37,7 @@ class HTML_frontEnd
 		global $aecConfig;
 
 		if ( $metaUser->objSubscription->status == "Expired" ) {
-			$intro = "&intro=1";
+			$intro = "&intro=" . $aecConfig->cfg['intro_expired'] ? "0" : "1";
 		} else {
 			$intro = "&intro=0";
 		}

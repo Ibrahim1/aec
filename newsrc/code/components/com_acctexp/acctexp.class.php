@@ -4648,8 +4648,13 @@ class aecSettings
 
 	function remap_list_date( $name, $value )
 	{
-		$this->lists[$name] = '<input class="text_area" type="text" name="' . $name . '" id="' . $name . '" size="19" maxlength="19" value="' . $value . '"/>'
-		.'<input type="reset" name="reset" class="button" onClick="return showCalendar(\'' . $name . '\', \'y-mm-dd\');" value="..." />';
+		if ( !aecJoomla15check() ) {
+			$this->lists[$name] = '<input class="text_area" type="text" name="' . $name . '" id="' . $name . '" size="19" maxlength="19" value="' . $value . '"/>'
+				.'<input type="reset" name="reset" class="button" onClick="return showCalendar(\'' . $name . '\', \'y-mm-dd\');" value="..." />';
+		} else {
+			$this->lists[$name] = JHTML::_('calendar', $value, $name, $name, '%Y-%m-%d %H:%M:%S', array('class'=>'inputbox', 'size'=>'25',  'maxlength'=>'19'));
+		}
+
 		return 'list';
 	}
 }
@@ -4960,7 +4965,7 @@ class aecHTML
 			default:
 				if ( !empty( $row[0] ) ) {
 					if ( empty( $row[1] ) ) {
-						$return .= '<tr colspan="2"><td class="cboth"><' . $row[0] . '>' . $row[2] . $value . '</' . $row[0] . '></td></tr>';
+						$return .= '<tr><td class="cboth" colspan="2"><' . $row[0] . '>' . $row[2] . $value . '</' . $row[0] . '></td></tr>';
 					} else {
 						$return .= '<' . $row[0] . '>' . $row[2] . $value . '</' . $row[0] . '>';
 					}

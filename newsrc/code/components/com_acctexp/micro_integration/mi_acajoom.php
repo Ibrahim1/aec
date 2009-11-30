@@ -63,7 +63,7 @@ class mi_acajoom
 			$settings['exp'] = array( 'p', "", _MI_MI_ACAJOOM_DEFAULT_NOTICE );
 		}
 
-		$settings['get_newsletter'] = array( 'checkbox', null, 'mi_'.$this->id.'_location' );
+		$settings['get_newsletter'] = array( 'checkbox', 'mi_'.$this->id.'_get_newsletter', 1, 0, "Sign up to our Newsletter" );
 
 		return $settings;
 	}

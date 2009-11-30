@@ -77,7 +77,7 @@ class mi_aectax
 	{
 		$return = array();
 
-		if ( is_empty( $request->params['location'] ) || ( $request->params['location'] == "" ) ) {
+		if ( empty( $request->params['location'] ) || ( $request->params['location'] == "" ) ) {
 			$return['error'] = "Please make a selection";
 			return $return;
 		}
