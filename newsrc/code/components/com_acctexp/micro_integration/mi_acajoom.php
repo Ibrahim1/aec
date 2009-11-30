@@ -49,26 +49,65 @@ class mi_acajoom
 		return $settings;
 	}
 
+	function getMIform()
+	{
+		$settings = array();
+
+		if ( empty( $this->settings['user_checkbox'] ) ) {
+			return $settings;
+		}
+
+		if ( !empty( $this->settings['custominfo'] ) ) {
+			$settings['exp'] = array( 'p', "", $this->settings['custominfo'] );
+		} else {
+			$settings['exp'] = array( 'p', "", _MI_MI_ACAJOOM_DEFAULT_NOTICE );
+		}
+
+		$settings['get_newsletter'] = array( 'checkbox', null, 'mi_'.$this->id.'_location' );
+
+		return $settings;
+	}
+
 	function expiration_action( $request )
 	{
+		$is_allowed = false;
+
+		if ( empty( $this->settings['user_checkbox'] ) ) {
+			$is_allowed = true;
+		} elseif ( !empty( $this->settings['user_checkbox'] ) && !empty( $request->params['get_newsletter'] ) ) {
+			$is_allowed = true;
+		}
+
 		$acauser = $this->getSubscriberID( $request->metaUser->userid );
 
-		if ( !$acauser ) {
+		if ( !$acauser && $is_allowed ) {
 			$this->createSubscriber( $request->metaUser->userid );
 			$acauser = $this->getSubscriberID( $request->metaUser->userid );
+		}
+
+		if ( !$acauser ) {
+			return null;
 		}
 
 		if ( $this->hasList( $acauser, $this->settings['list'] ) ) {
 			$this->deleteFromList( $acauser, $this->settings['list'] );
 		}
 
-		if ( !$this->hasList( $acauser, $this->settings['list_exp'] ) ) {
+		if ( !$this->hasList( $acauser, $this->settings['list_exp'] ) && $is_allowed ) {
 			$this->addToList( $acauser, $this->settings['list_exp'] );
 		}
 	}
 
 	function action( $request )
 	{
+		$is_allowed = false;
+
+		if ( empty( $this->settings['user_checkbox'] ) ) {
+			$is_allowed = true;
+		} elseif ( !empty( $this->settings['user_checkbox'] ) && !empty( $request->params['get_newsletter'] ) ) {
+			$is_allowed = true;
+		}
+
 		$acauser = $this->getSubscriberID( $request->metaUser->userid );
 
 		if ( !$acauser ) {
@@ -76,11 +115,15 @@ class mi_acajoom
 			$acauser = $this->getSubscriberID( $request->metaUser->userid );
 		}
 
+		if ( !$acauser ) {
+			return null;
+		}
+
 		if ( $this->hasList( $acauser, $this->settings['list_exp'] ) ) {
 			$this->deleteFromList( $acauser, $this->settings['list_exp'] );
 		}
 
-		if ( !$this->hasList( $acauser, $this->settings['list'] ) ) {
+		if ( !$this->hasList( $acauser, $this->settings['list'] ) && $is_allowed ) {
 			$this->addToList( $acauser, $this->settings['list'] );
 		}
 	}

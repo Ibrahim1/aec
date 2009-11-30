@@ -36,8 +36,6 @@ class mi_aectax
 
 	function getMIform()
 	{
-		$database = &JFactory::getDBO();
-
 		$settings = array();
 
 		$locations = $this->getLocationList();
