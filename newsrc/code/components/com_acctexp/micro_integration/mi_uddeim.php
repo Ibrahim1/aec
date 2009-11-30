@@ -155,13 +155,13 @@ class mi_uddeim
 		return $hacks;
 	}
 
-	function expiration_action( $params, $userid, $plan )
+	function expiration_action( $request )
 	{
 		if ( !empty( $this->settings['unset_unlimited'] ) ) {
 			$database = &JFactory::getDBO();
 
 			$mi_uddeimhandler = new uddeim_restriction( $database );
-			$id = $mi_uddeimhandler->getIDbyUserID( $userid );
+			$id = $mi_uddeimhandler->getIDbyUserID( $request->metaUser->userid );
 			$mi_id = $id ? $id : 0;
 			$mi_uddeimhandler->load( $mi_id );
 
