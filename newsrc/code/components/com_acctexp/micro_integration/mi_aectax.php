@@ -50,9 +50,22 @@ class mi_aectax
 			}
 
 			$settings['location'] = array( 'hidden', null, 'mi_'.$this->id.'_location' );
-			$gr = array();
-			foreach ( $locations as $id => $choice ) {
-				$settings['ef'.$id] = array( 'radio', 'mi_'.$this->id.'_location', $choice['id'], true, $choice['text'] );
+
+			if ( count( $locations ) < 5 ) {
+				foreach ( $locations as $id => $choice ) {
+					$settings['ef'.$id] = array( 'radio', 'mi_'.$this->id.'_location', $choice['id'], true, $choice['text'] );
+				}
+			} else {
+				$settings['location'] = array( 'list', "", "" );
+
+				$loc = array();
+				$loc[] = mosHTML::makeOption( 0, "- - - - - - - -" );
+
+				foreach ( $locations as $id => $choice ) {
+					$loc[] = mosHTML::makeOption( $choice['id'], $choice['text'] );
+				}
+
+				$settings['lists']['location']	= mosHTML::selectList( $loc, 'location', 'size="1"', 'value', 'text', 0 );
 			}
 
 		} else {
@@ -66,7 +79,7 @@ class mi_aectax
 	{
 		$return = array();
 
-		if ( is_null( $request->params['location'] ) || ( $request->params['location'] == "" ) ) {
+		if ( is_empty( $request->params['location'] ) || ( $request->params['location'] == "" ) ) {
 			$return['error'] = "Please make a selection";
 			return $return;
 		}
