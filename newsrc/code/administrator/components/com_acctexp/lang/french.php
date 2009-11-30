@@ -832,6 +832,8 @@ define( '_CFG_GENERAL_INVOICE_HEADER_NAME', 'Invoice Header');
 define( '_CFG_GENERAL_INVOICE_HEADER_DESC', 'Header Text for the Invoice Printout');
 define( '_CFG_GENERAL_INVOICE_AFTER_HEADER_NAME', 'Invoice After Header');
 define( '_CFG_GENERAL_INVOICE_AFTER_HEADER_DESC', 'Text after Header for the Invoice Printout');
+define( '_CFG_GENERAL_INVOICE_ADDRESS_NAME', 'Invoice Address Field');
+define( '_CFG_GENERAL_INVOICE_ADDRESS_DESC', 'Text in the Address Field of the Invoice Printout');
 define( '_CFG_GENERAL_INVOICE_BEFORE_CONTENT_NAME', 'Invoice Before Content');
 define( '_CFG_GENERAL_INVOICE_BEFORE_CONTENT_DESC', 'Text before Invoice Content for the Invoice Printout');
 define( '_CFG_GENERAL_INVOICE_AFTER_CONTENT_NAME', 'Invoice After Content');

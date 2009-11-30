@@ -1004,6 +1004,8 @@ define( '_CFG_GENERAL_INVOICE_HEADER_NAME', 'Text Kopfzeile');
 define( '_CFG_GENERAL_INVOICE_HEADER_DESC', 'Kopfzeilen Text f&uuml;r den Rechnungsausdruck');
 define( '_CFG_GENERAL_INVOICE_AFTER_HEADER_NAME', 'Text nach Kopfzeile');
 define( '_CFG_GENERAL_INVOICE_AFTER_HEADER_DESC', 'Text nach Kopfzeile f&uuml;r den Rechnungsausdruck');
+define( '_CFG_GENERAL_INVOICE_ADDRESS_NAME', 'Text im Adress-Feld');
+define( '_CFG_GENERAL_INVOICE_ADDRESS_DESC', 'Text im Adress-Feld des Ausdrucks');
 define( '_CFG_GENERAL_INVOICE_BEFORE_CONTENT_NAME', 'Text vor Inhalt');
 define( '_CFG_GENERAL_INVOICE_BEFORE_CONTENT_DESC', 'Text vor Inhalt f&uuml;r den Rechnungsausdruck');
 define( '_CFG_GENERAL_INVOICE_AFTER_CONTENT_NAME', 'Text nach Inhalt');

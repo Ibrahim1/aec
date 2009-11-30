@@ -24,7 +24,7 @@ class mi_aecinvoiceprintmod
 
 	function Settings()
 	{
-		$s = array( "before_header", "header", "after_header",
+		$s = array( "before_header", "header", "after_header", "address",
 					"before_content", "after_content",
 					"before_footer", "footer", "after_footer",
 					);

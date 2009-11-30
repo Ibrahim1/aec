@@ -953,6 +953,11 @@ define( '_MI_MI_AECINVOICEPRINTMOD_AFTER_HEADER_MODE_DESC',		'Define what to do 
 define( '_MI_MI_AECINVOICEPRINTMOD_AFTER_HEADER_NAME',		'After Header' );
 define( '_MI_MI_AECINVOICEPRINTMOD_AFTER_HEADER_DESC',		'Modify the text that is displayed after the header' );
 
+define( '_MI_MI_AECINVOICEPRINTMOD_ADDRESS_MODE_NAME',		'Text Mode (Address)' );
+define( '_MI_MI_AECINVOICEPRINTMOD_ADDRESS_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTMOD_ADDRESS_NAME',		'Address' );
+define( '_MI_MI_AECINVOICEPRINTMOD_ADDRESS_DESC',		'Modify the text that is displayed in the address field' );
+
 define( '_MI_MI_AECINVOICEPRINTMOD_BEFORE_CONTENT_MODE_NAME',		'Text Mode (Before Content)' );
 define( '_MI_MI_AECINVOICEPRINTMOD_BEFORE_CONTENT_MODE_DESC',		'Define what to do with the original text' );
 define( '_MI_MI_AECINVOICEPRINTMOD_BEFORE_CONTENT_NAME',		'Before Content' );

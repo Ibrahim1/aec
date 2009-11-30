@@ -1622,6 +1622,7 @@ class Config_General extends serialParamDBTable
 		$def['invoice_after_content']			= _AEC_CUSTOM_INVOICE_AFTER_CONTENT;
 		$def['invoice_before_footer']			= "";
 		$def['invoice_footer']					= _AEC_CUSTOM_INVOICE_FOOTER;
+		$def['invoice_address']					= _INVOICEPRINT_ADDRESSFIELD;
 		$def['invoice_after_footer']			= "";
 		$def['delete_tables']					= "";
 		$def['delete_tables_sure']				= "";
@@ -4958,7 +4959,11 @@ class aecHTML
 				break;
 			default:
 				if ( !empty( $row[0] ) ) {
-					$return .= '<' . $row[0] . '>' . $row[2] . $value . '</' . $row[0] . '>';
+					if ( empty( $row[1] ) ) {
+						$return .= '<tr colspan="2"><td class="cboth"><' . $row[0] . '>' . $row[2] . $value . '</' . $row[0] . '></td></tr>';
+					} else {
+						$return .= '<' . $row[0] . '>' . $row[2] . $value . '</' . $row[0] . '>';
+					}
 				} elseif ( empty( $row[0] ) && empty( $row[2] ) ) {
 					$return .= '<' . $row[1] . $value . ' />';
 				} else {
