@@ -157,7 +157,7 @@ class mi_uddeim
 
 	function expiration_action( $params, $userid, $plan )
 	{
-		if ( !empty( $request->params['unset_unlimited'] ) ) {
+		if ( !empty( $this->settings['unset_unlimited'] ) ) {
 			$database = &JFactory::getDBO();
 
 			$mi_uddeimhandler = new uddeim_restriction( $database );
@@ -176,8 +176,8 @@ class mi_uddeim
 			}
 		}
 
-		if ( !empty( $request->params['msg_exp'] ) ) {
-			$this->send_message( $request, $request->params['msg_exp_sender'], $request->params['msg_exp_recipient'], $request->params['msg_exp_text'] );
+		if ( !empty( $this->settings['msg_exp'] ) ) {
+			$this->send_message( $request, $this->settings['msg_exp_sender'], $this->settings['msg_exp_recipient'], $this->settings['msg_exp_text'] );
 		}
 
 		return true;
@@ -185,7 +185,7 @@ class mi_uddeim
 
 	function action( $request )
 	{
-		if ( !empty( $request->params['set_messages'] ) || !empty( $request->params['add_messages'] ) || !empty( $request->params['set_unlimited'] ) ) {
+		if ( !empty( $this->settings['set_messages'] ) || !empty( $this->settings['add_messages'] ) || !empty( $this->settings['set_unlimited'] ) ) {
 			$database = &JFactory::getDBO();
 
 			$mi_uddeimhandler = new uddeim_restriction( $database );
@@ -198,13 +198,13 @@ class mi_uddeim
 				$mi_uddeimhandler->active = 1;
 			}
 
-			if ( !empty( $request->params['set_messages'] ) ) {
-				$mi_uddeimhandler->setMessages( $request->params['set_messages'] );
-			} elseif ( !empty( $request->params['add_messages'] ) ) {
-				$mi_uddeimhandler->addMessages( $request->params['add_messages'] );
+			if ( !empty( $this->settings['set_messages'] ) ) {
+				$mi_uddeimhandler->setMessages( $this->settings['set_messages'] );
+			} elseif ( !empty( $this->settings['add_messages'] ) ) {
+				$mi_uddeimhandler->addMessages( $this->settings['add_messages'] );
 			}
 
-			if ( !empty( $request->params['set_unlimited'] ) ) {
+			if ( !empty( $this->settings['set_unlimited'] ) ) {
 				$mi_uddeimhandler->unlimited_messages = true ;
 			}
 
@@ -212,8 +212,8 @@ class mi_uddeim
 			$mi_uddeimhandler->store();
 		}
 
-		if ( !empty( $request->params['msg'] ) ) {
-			$this->send_message( $request, $request->params['msg_sender'], $request->params['msg_recipient'], $request->params['msg_text'] );
+		if ( !empty( $this->settings['msg'] ) ) {
+			$this->send_message( $request, $this->settings['msg_sender'], $this->settings['msg_recipient'], $this->settings['msg_text'] );
 		}
 
 		return true;
@@ -228,7 +228,7 @@ class mi_uddeim
 		$m = AECToolbox::rewriteEngineRQ( $msg, $request );
 
 		$query = 'INSERT INTO `jos_uddeim` (`id`, `replyid`, `fromid`, `toid`, `message`, `datum`)'
-				. ' VALUES (NULL, \'0\', \'' . $from . '\', \'' . $t . '\', \'' . $m . '\', UNIX_TIMESTAMP() );';
+				. ' VALUES (NULL, \'0\', \'' . $f . '\', \'' . $t . '\', \'' . $m . '\', UNIX_TIMESTAMP() );';
 		$database->setQuery( $query );
 		$database->query();
 
