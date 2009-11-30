@@ -43,8 +43,8 @@ class mi_aectax
 		$locations = $this->getLocationList();
 
 		if ( !empty( $locations ) ) {
-			if ( !empty( $request->params['location'] ) ) {
-				$settings['exp'] = array( 'p', "", $request->params['custominfo'] );
+			if ( !empty( $this->settings['custominfo'] ) ) {
+				$settings['exp'] = array( 'p', "", $this->settings['custominfo'] );
 			} else {
 				$settings['exp'] = array( 'p', "", _MI_MI_AECTAX_DEFAULT_NOTICE );
 			}
