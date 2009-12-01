@@ -1075,13 +1075,13 @@ function editUser(  $option, $userid, $subscriptionid, $task )
 		}
 	}
 
-	$invoices_limit	= 10;	// Returns last 10 payments
+	$invoices_limit	= 15;	// Returns last 15 payments
 
  	// get payments of user
  	$query = 'SELECT `id`'
 		 	. ' FROM #__acctexp_invoices'
 		 	. ' WHERE `userid` = \'' . $userid[0] . '\''
-		 	. ' ORDER BY `transaction_date` ASC'
+		 	. ' ORDER BY `transaction_date` DESC'
 		 	;
  	$database->setQuery( $query );
  	$invoice_ids = $database->loadResultArray();
@@ -1118,7 +1118,7 @@ function editUser(  $option, $userid, $subscriptionid, $task )
 			}
 		}
 
-		if ( $invoice_counter >= $invoices_limit ) {
+		if ( $invoice_counter >= $invoices_limit && ( strcmp( $invoice->transaction_date, '0000-00-00 00:00:00' ) !== 0 ) ) {
 			continue;
 		} else {
 			$invoice_counter++;
