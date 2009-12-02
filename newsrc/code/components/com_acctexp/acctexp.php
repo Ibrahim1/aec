@@ -998,6 +998,10 @@ function repeatInvoice( $option, $invoice_number, $userid, $first=0 )
 	// Always rewrite to session userid
 	if ( !empty( $user->id ) ) {
 		$userid = $user->id;
+	} elseif ( AECToolbox::quickVerifyUserID( $userid ) === true ) {
+		// This user is not expired, so he could log in...
+		aecNotAuth();
+		return;
 	}
 
 	$cartid = $invoiceid = null;
@@ -1042,15 +1046,14 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid )
 
 	$user = &JFactory::getUser();
 
-	if ( empty($user->id ) ) {
+	if ( empty( $user->id ) ) {
 		if ( $userid ) {
 			if ( AECToolbox::quickVerifyUserID( $userid ) === true ) {
 				// This user is not expired, so he could log in...
-				aecNotAuth();
-				return;
+				return aecNotAuth();
 			}
 		} else {
-			aecNotAuth();
+			return aecNotAuth();
 		}
 	} else {
 		$userid = $user->id;
@@ -1124,7 +1127,7 @@ function invoiceAction( $option, $action, $invoice )
 	$user = &JFactory::getUser();
 
 	if ( empty( $user->id ) ) {
-		aecNotAuth();
+		return aecNotAuth();
 	} else {
 		$invoicefact = new InvoiceFactory( $user->id );
 		$invoicefact->invoiceprocessoraction( $action, $invoice );
@@ -1136,7 +1139,7 @@ function InvoicePrintout( $option, $invoice )
 	$user = &JFactory::getUser();
 
 	if ( empty( $user->id ) ) {
-		aecNotAuth();
+		return aecNotAuth();
 	} else {
 		$invoicefact = new InvoiceFactory( $user->id );
 		$invoicefact->invoiceprint( $option, $invoice );

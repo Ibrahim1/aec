@@ -7226,7 +7226,15 @@ class InvoiceFactory
 				} else {
 					$mpg = array_pop( array_keys( $pgroups ) );
 
-					$this->processor = $pgroups[$mpg]['processor'];
+					if ( strpos( $pgroups[$mpg]['processor'], '_recurring' ) ) {
+						$processor = str_replace( '_recurring', '', $pgroups[$mpg]['processor'] );
+						$this->recurring = true;
+					} else {
+						$processor = $pgroups[$mpg]['processor'];
+						$this->recurring = false;
+					}
+
+					$this->processor = PaymentProcessorHandler::getProcessorNamefromId( $processor );
 				}
 			} else {
 				if ( isset( $procs[0] ) ) {
@@ -7651,7 +7659,15 @@ class InvoiceFactory
 					$this->invoice->addCoupon( $coupon );
 				}
 			} else {
-				$this->invoice->create( $this->userid, $this->usage, $this->processor, null, $storenew );
+				if ( strpos( $this->processor, '_recurring' ) !== false ) {
+					$processor = str_replace( '_recurring', '', $this->processor );
+					$recurring = true;
+				} else {
+					$processor = $this->processor;
+					$recurring = null;
+				}
+
+				$this->invoice->create( $this->userid, $this->usage, $processor, null, $storenew, null, $recurring );
 
 				if ( !empty( $coupon ) ) {
 					$this->invoice->addCoupon( $coupon );
