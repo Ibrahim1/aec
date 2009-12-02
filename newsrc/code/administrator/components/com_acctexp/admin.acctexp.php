@@ -4767,6 +4767,41 @@ function editCoupon( $id, $option, $new, $type )
 	$restrictionHelper = new aecRestrictionHelper();
 	$params = array_merge( $params, $restrictionHelper->getParams() );
 
+
+	// get available plans
+	$available_plans = array();
+	$available_plans[]			= mosHTML::makeOption( '0', _PAYPLAN_NOPLAN );
+
+	$query = 'SELECT `id` as value, `name` as text'
+			. ' FROM #__acctexp_plans'
+			;
+	$database->setQuery( $query );
+	$plans = $database->loadObjectList();
+
+ 	if ( is_array( $plans ) ) {
+ 		$all_plans					= array_merge( $available_plans, $plans );
+ 	} else {
+ 		$all_plans					= $available_plans;
+ 	}
+	$total_all_plans			= min( max( ( count( $all_plans ) + 1 ), 4 ), 20 );
+
+	// get usages
+	if ( !empty( $restrictions_values['usage_plans'] ) ) {
+		$query = 'SELECT `id` AS value, `name` as text'
+				. ' FROM #__acctexp_plans'
+				. ' WHERE `id` IN (' . implode( ',', $restrictions_values['usage_plans'] ) . ')'
+				;
+		$database->setQuery( $query );
+
+	 	$sel_usage_plans = $database->loadObjectList();
+	} else {
+		$sel_usage_plans = 0;
+	}
+
+	$lists['usage_plans']		= mosHTML::selectList($all_plans, 'usage_plans[]', 'size="' . $total_all_plans . '" multiple="multiple"',
+									'value', 'text', $sel_usage_plans);
+
+
 	// get available micro integrations
 	$available_mi = array();
 

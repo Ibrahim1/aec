@@ -16220,6 +16220,8 @@ class coupon extends serialParamDBTable
 		// Filter out restrictions
 		$fixed = aecRestrictionHelper::paramList();
 
+		$fixed[] = 'usage_plans';
+
 		$restrictions = array();
 		foreach ( $fixed as $varname ) {
 			if ( !isset( $post[$varname] ) ) {
