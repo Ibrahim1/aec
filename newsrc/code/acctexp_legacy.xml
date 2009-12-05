@@ -94,7 +94,6 @@
 		<filename>micro_integration/mi_email_multi.php</filename>
 		<filename>micro_integration/mi_eventlog.php</filename>
 		<filename>micro_integration/mi_fireboard.php</filename>
-		<filename>micro_integration/mi_g2.php</filename>
 		<filename>micro_integration/mi_googleadsenseconversion.php</filename>
 		<filename>micro_integration/mi_googleanalytics.php</filename>
 		<filename>micro_integration/mi_hotproperty.php</filename>

@@ -65,7 +65,10 @@ class mammonTerms extends eucaObject
 		} else {
 			$terms	= array( 'full_' );
 		}
+
 		$return	= false;
+
+		$this->pointer = 0;
 
 		foreach ( $terms as $t ) {
 			// Make sure this period is actually of substance
@@ -202,6 +205,10 @@ class mammonTerms extends eucaObject
 	 */
 	function setPointer( $pointer )
 	{
+		if ( empty( $pointer ) ) {
+			$pointer = 0;
+		}
+
 		if ( $pointer < ( count( $this->terms ) ) ) {
 			$this->pointer = $pointer;
 		} else {

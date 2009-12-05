@@ -8427,10 +8427,6 @@ class InvoiceFactory
 		$this->loadMetaUser( true );
 		$this->metaUser->setTempAuth();
 
-		$this->puffer( $option );
-
-		$this->touchInvoice( $option );
-
 		if ( !empty( $this->plan ) ) {
 			if ( is_object( $this->plan ) ) {
 				$mi_form = $this->plan->getMIformParams();
@@ -8482,8 +8478,6 @@ class InvoiceFactory
 						return $this->confirm( $option );
 					}
 				}
-
-				$this->touchInvoice( $option );
 			}
 		}
 
