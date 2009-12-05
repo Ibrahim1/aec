@@ -1951,8 +1951,8 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 	// get the subset (based on limits) of required records
 	if ( $notconfig ) {
-		$forder = array(	'expiration ASC', 'expiration DESC', 'lastpay_date ASC', 'lastpay_date DESC',
-							'lastname ASC', 'lastname DESC' );
+		$forder = array(	'expiration ASC', 'expiration DESC',
+							'lastname ASC', 'lastname DESC', 'signup_date ASC', 'signup_date DESC' );
 
 		if ( !in_array( $orderby, $forder ) ) {
 			$orderby = 'name ASC';
