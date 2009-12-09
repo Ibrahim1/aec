@@ -7234,7 +7234,11 @@ class InvoiceFactory
 						$this->recurring = false;
 					}
 
-					$this->processor = PaymentProcessorHandler::getProcessorNamefromId( $processor );
+					$procname = PaymentProcessorHandler::getProcessorNamefromId( $processor );
+
+					if ( !empty( $procname ) ) {
+						$this->processor = $procname;
+					}
 				}
 			} else {
 				if ( isset( $procs[0] ) ) {
@@ -7248,7 +7252,11 @@ class InvoiceFactory
 						$proc = str_replace( '_recurring', '', $proc );
 					}
 
-					$this->processor = PaymentProcessorHandler::getProcessorNamefromId( $proc );
+					$procname = PaymentProcessorHandler::getProcessorNamefromId( $proc );
+
+					if ( !empty( $procname ) ) {
+						$this->processor = $procname;
+					}
 
 					$this->plan = aecCartHelper::getCartItemObject( $this->cartobject, 0 );
 				} else {
@@ -7305,8 +7313,6 @@ class InvoiceFactory
 					}
 					break;
 			}
-		} else {
-			return aecNotAuth();
 		}
 
 		$user_subscription = false;
