@@ -34,7 +34,14 @@ class mi_k2
 		$settings['rebuild']		= array( 'list_yesno' );
 		$settings['remove']			= array( 'list_yesno' );
 
-		$query = 'SELECT groups_id, name'
+		$query = 'SHOW COLUMNS FROM #__k2_user_groups'
+				. ' LIKE \'groups_id\''
+				;
+
+		$database->setQuery( $query );
+		$result = $database->loadResult();
+
+		$query = 'SELECT ' . ( $result ? 'groups_id' : 'id'  ) . ', name'
 			 	. ' FROM #__k2_user_groups'
 			 	;
 	 	$database->setQuery( $query );
