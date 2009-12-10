@@ -374,7 +374,7 @@ class processor_paypal_wpp extends XMLprocessor
 	function getPaymentVars( $var, $request )
 	{
 		global $mainframe;
-print_r($request->int_var);exit;
+
 		if ( is_array( $request->int_var['amount'] ) ) {
 			// $var['InitAmt'] = 'Initial Amount'; // Not Supported Yet
 			// $var['FailedInitAmtAction'] = 'ContinueOnFailure'; // Not Supported Yet (optional)
