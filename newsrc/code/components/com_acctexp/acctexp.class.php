@@ -1347,6 +1347,10 @@ class metaUserDB extends serialParamDBTable
 	function getMIParams( $miid, $usageid=false )
 	{
 		if ( $usageid ) {
+			if ( is_object( $this->plan_params ) ) {
+				$this->plan_params = array();
+			}
+
 			if ( isset( $this->plan_params[$usageid] ) ) {
 				if ( isset( $this->plan_params[$usageid][$miid] ) ) {
 					return $this->plan_params[$usageid][$miid];
@@ -1366,6 +1370,10 @@ class metaUserDB extends serialParamDBTable
 		global $mainframe;
 
 		if ( $usageid ) {
+			if ( is_object( $this->plan_params ) ) {
+				$this->plan_params = array();
+			}
+
 			if ( isset( $this->plan_params[$usageid] ) ) {
 				if ( isset( $this->plan_params[$usageid][$miid] ) && !$replace ) {
 					$this->plan_params[$usageid][$miid] = $this->mergeParams( $this->plan_params[$usageid][$miid], $params );
