@@ -8324,7 +8324,9 @@ class InvoiceFactory
 			$this->mi_error = array();
 		}
 
-		$this->mi_form = $this->plan->getMIforms( $this->mi_error );
+		if ( !empty( $this->plan ) ) {
+			$this->mi_form = $this->plan->getMIforms( $this->mi_error );
+		}
 
 		if ( !empty( $this->mi_form ) ) {
 			$params = $this->plan->getMIformParams( array() );
@@ -8513,6 +8515,7 @@ class InvoiceFactory
 							}
 						}
 					}
+
 					if ( !empty( $this->mi_error ) ) {
 						$this->confirmed = 0;
 						return $this->confirm( $option );
