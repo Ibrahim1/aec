@@ -1633,7 +1633,6 @@ class Config_General extends serialParamDBTable
 		$def['per_plan_mis']					= 0;
 		$def['intro_expired']					= 0;
 		$def['custom_confirm_userdetails']		= "";
-		$def['custom_invoiceprint_userdetails']	= "";
 
 		return $def;
 	}
@@ -10199,7 +10198,7 @@ class Invoice extends serialParamDBTable
 			$data['paidstatus'] = sprintf( _INVOICEPRINT_PAIDSTATUS_PAID, $date );
 		}
 
-		$otherfields = array( "page_title", "before_header", "header", "after_header", "before_content", "after_content", "before_footer", "footer", "after_footer" );
+		$otherfields = array( "page_title", "before_header", "header", "after_header", "address", "before_content", "after_content", "before_footer", "footer", "after_footer" );
 
 		foreach ( $otherfields as $field ) {
 			if ( !empty( $aecConfig->cfg["invoice_".$field] ) ) {
@@ -12451,9 +12450,9 @@ class reWriteEngine
 							$this->rewrite['user_activationcode']		= $this->data['metaUser']->cmsUser->activation;
 
 							if ( aecJoomla15check() ) {
-								$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_user&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+								$this->rewrite['user_activationlink']	= JURI::root()."index.php?option=com_user&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
 							} else {
-								$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+								$this->rewrite['user_activationlink']	= JURI::root()."index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
 							}
 						} else {
 							$this->rewrite['user_activationcode']		= "";
@@ -12469,6 +12468,12 @@ class reWriteEngine
 						} else {
 							$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
 						}
+					}
+				}
+
+				if ( !empty( $this->data['metaUser']->meta->custom_params ) ) {
+					foreach ( $this->data['metaUser']->meta->custom_params as $k => $v ) {
+						$this->rewrite['user_' . $k] = $v;
 					}
 				}
 

@@ -280,7 +280,7 @@ class ComponentMenu
 		}
 		JToolBarHelper::custom( 'loadExport', 'next.png',  'next_f2.png', _EXPORT_LOAD, false );
 		JToolBarHelper::custom( 'applyExport', 'apply.png',  'apply_f2.png', _EXPORT_APPLY, false );
-		JToolBarHelper::custom( 'exportExport', 'download.png',  'download_f2.png', _EXPORT, false );
+		JToolBarHelper::custom( 'exportExport', 'download.png',  'download_f2.png', _AEC_HEAD_EXPORT, false );
 		JToolBarHelper::custom( 'saveExport', 'save.png',  'save_f2.png', _SAVE_PAYPLAN, false );
 		JToolBarHelper::custom( 'cancelSettings', 'cancel.png',  'cancel_f2.png', _CANCEL, false );
 		if ( !aecJoomla15check() ) {

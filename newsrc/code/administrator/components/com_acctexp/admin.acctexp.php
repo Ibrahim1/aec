@@ -2270,6 +2270,7 @@ function editSettings( $option )
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_INVOICE_AFTER_HEADER_NAME );
 	$params['invoice_after_header']				= array( 'editor', '' );
+	$params['invoice_address']					= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_INVOICE_ADDRESS_NAME );
 	$params['invoice_address']					= array( 'editor', '' );
@@ -6842,7 +6843,11 @@ function exportData( $option, $cmd=null )
 	foreach( $getpost as $name => $array ) {
 		$field = $name . '_values';
 		foreach( $array as $vname ) {
-			 $settingsparams[$name] = $$field->$name;
+			if ( !empty( $$field->$name ) ) {
+				$settingsparams[$name] = $$field->$name;
+			} else {
+				$settingsparams[$name] = "";
+			}
 		}
 	}
 
