@@ -1839,7 +1839,8 @@ class aecHeartbeat extends JTable
 			$this->beat();
 		} else {
 			// sleep, mechanical Hound, but do not sleep
-			// kept awake with wolves teeth
+			// kept awake with
+			// wolves teeth
 		}
 	}
 
@@ -1900,6 +1901,17 @@ class aecHeartbeat extends JTable
 			foreach ( $subscription_list as $sub_id ) {
 				$subscription = new Subscription($database);
 				$subscription->load( $sub_id );
+
+				$query = 'SELECT `username`'
+						. ' FROM #__users'
+						. ' WHERE `id` = \'' . $subscription->userid . '\''
+						;
+				$database->setQuery( $query );
+				$username = $database->loadResult();
+
+				if ( empty( $username ) ) {
+					continue;
+				}
 
 				if ( $found_expired ) {
 					// Check whether this user really is expired
