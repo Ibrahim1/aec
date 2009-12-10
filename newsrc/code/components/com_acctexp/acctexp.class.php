@@ -1632,6 +1632,8 @@ class Config_General extends serialParamDBTable
 		$def['manageraccess']					= 0;
 		$def['per_plan_mis']					= 0;
 		$def['intro_expired']					= 0;
+		$def['custom_confirm_userdetails']		= "";
+		$def['custom_invoiceprint_userdetails']	= "";
 
 		return $def;
 	}
@@ -8332,6 +8334,19 @@ class InvoiceFactory
 			global $mainframe;
 
 			$mainframe->SetPageTitle( _CONFIRM_TITLE );
+
+			if ( empty( $aecConfig->cfg['custom_confirm_userdetails'] ) ) {
+				$this->userdetails = "";
+
+				if ( !empty( $this->metaUser->cmsUser->name ) ) {
+					$this->userdetails .= '<p>' . _CONFIRM_ROW_NAME . $user->name . '</p>';
+				}
+
+				$this->userdetails .= '<p>' . _CONFIRM_ROW_USERNAME . $user->username . '</p>';
+				$this->userdetails .= '<p>' . _CONFIRM_ROW_EMAIL . $user->email . '</p>';
+			} else {
+				$this->userdetails = AECToolbox::rewriteEngine( $aecConfig->cfg['custom_confirm_userdetails'], $this );
+			}
 
 			Payment_HTML::confirmForm( $option, $this, $this->metaUser->cmsUser, $this->getPassthrough() );
 		} else {

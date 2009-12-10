@@ -1042,6 +1042,8 @@ define( '_CFG_GENERAL_CUSTOMTEXT_PLANS_NAME', 'Custom Text Plans Page');
 define( '_CFG_GENERAL_CUSTOMTEXT_PLANS_DESC', 'Text that will be displayed on the Plans Page');
 define( '_CFG_GENERAL_CUSTOMTEXT_CONFIRM_NAME', 'Custom Text Confirm Page');
 define( '_CFG_GENERAL_CUSTOMTEXT_CONFIRM_DESC', 'Text that will be displayed on the Confirmation Page');
+define( '_CFG_GENERAL_CUSTOM_CONFIRM_USERDETAILS_NAME', 'Custom Text Confirm Userdetails');
+define( '_CFG_GENERAL_CUSTOM_CONFIRM_USERDETAILS_DESC', 'Customize what the Userdetails field will show on Confirmation');
 define( '_CFG_GENERAL_CUSTOMTEXT_CHECKOUT_NAME', 'Custom Text Checkout Page');
 define( '_CFG_GENERAL_CUSTOMTEXT_CHECKOUT_DESC', 'Text that will be displayed on the Checkout Page');
 define( '_CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_NAME', 'Custom Text NotAllowed Page');

@@ -1044,6 +1044,8 @@ define( '_CFG_GENERAL_CUSTOMTEXT_PLANS_NAME', 'Texto Pagina dos Planos Padr&atil
 define( '_CFG_GENERAL_CUSTOMTEXT_PLANS_DESC', 'Texto que ser&aacute; mostrado na Pagina de Plalnos');
 define( '_CFG_GENERAL_CUSTOMTEXT_CONFIRM_NAME', 'Texto Pagina de Confirma&ccedil;&atilde;o Padr&atilde;o');
 define( '_CFG_GENERAL_CUSTOMTEXT_CONFIRM_DESC', 'Texto que ser&aacute; mostrado na pagina de Confirma&ccedil;&atilde;o');
+define( '_CFG_GENERAL_CUSTOM_CONFIRM_USERDETAILS_NAME', 'Custom Text Confirm Userdetails');
+define( '_CFG_GENERAL_CUSTOM_CONFIRM_USERDETAILS_DESC', 'Customize what the Userdetails field will show on Confirmation');
 define( '_CFG_GENERAL_CUSTOMTEXT_CHECKOUT_NAME', 'Texto Pagina de Finaliza&ccedil;&atilde;o padr&atilde;o Finaliza&ccedil;&atilde;o');
 define( '_CFG_GENERAL_CUSTOMTEXT_CHECKOUT_DESC', 'Texto que ser&aacute; mostrado na pagina de Conclus&atilde;o');
 define( '_CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_NAME', 'Texto Pagina N&atilde;o Permitido Padr&atilde;o');

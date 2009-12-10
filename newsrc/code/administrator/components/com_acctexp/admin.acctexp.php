@@ -2319,6 +2319,7 @@ function editSettings( $option )
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_CONFIRM_NAME );
 	$params['customtext_confirm_keeporiginal']	= array( 'list_yesno', '' );
+	$params['custom_confirm_userdetails']		= array( 'editor', '' );
 	$params['customtext_confirm']				= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_CHECKOUT_NAME );

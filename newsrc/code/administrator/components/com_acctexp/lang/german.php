@@ -1040,6 +1040,8 @@ define( '_CFG_GENERAL_CUSTOMTEXT_PLANS_NAME',		'Text Abo&uuml;bersicht' );
 define( '_CFG_GENERAL_CUSTOMTEXT_PLANS_DESC',		'Individueller Text zur &Uuml;bersicht der Abonnements' );
 define( '_CFG_GENERAL_CUSTOMTEXT_CONFIRM_NAME',		'Text Best&auml;tigungsseite' );
 define( '_CFG_GENERAL_CUSTOMTEXT_CONFIRM_DESC',		'Individueller Text der Best&auml;tigungsseite' );
+define( '_CFG_GENERAL_CUSTOM_CONFIRM_USERDETAILS_NAME', 'Eigener Text Benutzerdetails');
+define( '_CFG_GENERAL_CUSTOM_CONFIRM_USERDETAILS_DESC', 'Anstatt der Standard-Benutzerdetails, diesen Text anzeigen');
 define( '_CFG_GENERAL_CUSTOMTEXT_CHECKOUT_NAME',	'Text Checkout Seite' );
 define( '_CFG_GENERAL_CUSTOMTEXT_CHECKOUT_DESC',	'Individueller Text der Checkoutseite' );
 define( '_CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_NAME',	'Text Nichterlaubt Seite' );

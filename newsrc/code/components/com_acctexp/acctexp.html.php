@@ -809,15 +809,7 @@ class Payment_HTML
 						<th><?php echo _CONFIRM_COL3_TITLE; ?></th>
 					</tr>
 					<tr>
-						<td>
-							<?php
-							if ( !empty( $user->name ) ) { ?>
-								<p><?php echo _CONFIRM_ROW_NAME; ?> <?php echo $user->name; ?></p>
-								<?php
-							} ?>
-							<p><?php echo _CONFIRM_ROW_USERNAME; ?> <?php echo $user->username; ?></p>
-							<p><?php echo _CONFIRM_ROW_EMAIL; ?> <?php echo $user->email; ?></p>
-						</td>
+						<td><?php echo $InvoiceFactory->userdetails; ?></td>
 						<td><p><?php echo $InvoiceFactory->plan->name; ?></p></td>
 						<td><p><?php echo $InvoiceFactory->payment->amount_format ?></p></td>
 					</tr>

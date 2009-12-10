@@ -868,6 +868,8 @@ define( '_CFG_GENERAL_CUSTOMTEXT_PLANS_NAME', 'Page de personnalisation des libe
 define( '_CFG_GENERAL_CUSTOMTEXT_PLANS_DESC', 'Ce texte sera affich&eacute; sur la page du Plan');
 define( '_CFG_GENERAL_CUSTOMTEXT_CONFIRM_NAME', 'Texte personnalis&eacute; de la page de confirmation');
 define( '_CFG_GENERAL_CUSTOMTEXT_CONFIRM_DESC', 'Texte qui sera affich&eacute; sur la page de confirmation');
+define( '_CFG_GENERAL_CUSTOM_CONFIRM_USERDETAILS_NAME', 'Custom Text Confirm Userdetails');
+define( '_CFG_GENERAL_CUSTOM_CONFIRM_USERDETAILS_DESC', 'Customize what the Userdetails field will show on Confirmation');
 define( '_CFG_GENERAL_CUSTOMTEXT_CHECKOUT_NAME', 'Texte personnalis&eacute; pour la page de Checkout');
 define( '_CFG_GENERAL_CUSTOMTEXT_CHECKOUT_DESC', 'Texte qui sera affich&eacute; sur la page de Checkout ');
 define( '_CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_NAME', 'Texte personnalis&eacute; de la page NotAllowed');

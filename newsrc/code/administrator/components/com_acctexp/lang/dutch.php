@@ -870,6 +870,8 @@ define( '_CFG_GENERAL_CUSTOMTEXT_PLANS_NAME', 'Aangepaste tekst voor de plannen 
 define( '_CFG_GENERAL_CUSTOMTEXT_PLANS_DESC', 'Deze tekst zal worden weergegeven op de betaalplannen pagina');
 define( '_CFG_GENERAL_CUSTOMTEXT_CONFIRM_NAME', 'Aangepaste tekst voor de akkoord pagina.');
 define( '_CFG_GENERAL_CUSTOMTEXT_CONFIRM_DESC', 'Deze tekst zal worden weergegeven op de akkoord pagina');
+define( '_CFG_GENERAL_CUSTOM_CONFIRM_USERDETAILS_NAME', 'Custom Text Confirm Userdetails');
+define( '_CFG_GENERAL_CUSTOM_CONFIRM_USERDETAILS_DESC', 'Customize what the Userdetails field will show on Confirmation');
 define( '_CFG_GENERAL_CUSTOMTEXT_CHECKOUT_NAME', 'Aangepaste tekst voor de CheckOut pagina');
 define( '_CFG_GENERAL_CUSTOMTEXT_CHECKOUT_DESC', 'Deze tekst zal worden weergegeven op de CheckOut pagina');
 define( '_CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_NAME', 'Aangepaste tekst voor de NotAllowed pagina');
