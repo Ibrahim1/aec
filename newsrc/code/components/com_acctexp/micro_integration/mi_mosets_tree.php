@@ -200,7 +200,7 @@ class mi_mosets_tree extends MI
 		$hacks[$n]['desc']				=	_AEC_MI_HACK3_MOSETS;
 		$hacks[$n]['type']				=	'file';
 		$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_mtree/mtree.php';
-		$hacks[$n]['read']				=	'# OK, you can edit';
+		$hacks[$n]['read']				=	'// OK, you can edit';
 		$hacks[$n]['insert']			=	$edithack . "\n"  . $hacks[$n]['read'];
 
 		$n = 'mtree2';
