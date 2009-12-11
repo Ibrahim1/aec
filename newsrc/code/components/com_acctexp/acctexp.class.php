@@ -8337,8 +8337,10 @@ class InvoiceFactory
 
 				if ( is_array( $this->passthrough ) ) {
 					foreach ( $this->passthrough as $pid => $pk ) {
-						if ( ( $pk[0] == $mik ) || ( $pk[0] == $mik.'[]' ) ) {
-							unset($this->passthrough[$pid]);
+						if ( is_array( $pk ) ) {
+							if ( ( $pk[0] == $mik ) || ( $pk[0] == $mik.'[]' ) ) {
+								unset($this->passthrough[$pid]);
+							}
 						}
 					}
 				}

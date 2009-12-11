@@ -889,6 +889,8 @@ define( '_MI_MI_AECUSERDETAILS_SET_SHORT_NAME',		'#%s: Short Name' );
 define( '_MI_MI_AECUSERDETAILS_SET_SHORT_DESC',		'A technical/internal handle for the setting. i.e.: "telephone_number" or "pool_size" - no spaces or funny characters' );
 define( '_MI_MI_AECUSERDETAILS_SET_NAME_NAME',	'#%s: Name' );
 define( '_MI_MI_AECUSERDETAILS_SET_NAME_DESC',	'What the user will see to know what to put into the field.' );
+define( '_MI_MI_AECUSERDETAILS_SET_MANDATORY_NAME',	'#%s: Mandatory?' );
+define( '_MI_MI_AECUSERDETAILS_SET_MANDATORY_DESC',	'Whether the user HAS to have this field filled out, of set to no, the field is optional.' );
 define( '_MI_MI_AECUSERDETAILS_SET_DESC_NAME',		'#%s: Description' );
 define( '_MI_MI_AECUSERDETAILS_SET_DESC_DESC',		'Description of the setting' );
 define( '_MI_MI_AECUSERDETAILS_SET_TYPE_NAME',	'#%s: Type' );

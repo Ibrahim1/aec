@@ -43,11 +43,12 @@ class mi_aecuserdetails
 
 				$settings['lists'][$p.'type']	= mosHTML::selectList( $typelist, $p.'type', 'size="' . max( 10, min( 20, count( $types ) ) ) . '"', 'value', 'text', $this->settings[$p.'type'] );
 
-				$settings[$p.'short']	= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_SHORT_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_SHORT_DESC );
-				$settings[$p.'name']	= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_NAME_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_NAME_DESC );
-				$settings[$p.'desc']	= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_DESC_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_DESC_DESC );
-				$settings[$p.'type']	= array( 'list', sprintf( _MI_MI_AECUSERDETAILS_SET_TYPE_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_TYPE_DESC );
-				$settings[$p.'default']	= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_DEFAULT_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_DEFAULT_DESC );
+				$settings[$p.'short']		= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_SHORT_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_SHORT_DESC );
+				$settings[$p.'mandatory']	= array( 'list_yesno', sprintf( _MI_MI_AECUSERDETAILS_SET_MANDATORY_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_MANDATORY_DESC );
+				$settings[$p.'name']		= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_NAME_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_NAME_DESC );
+				$settings[$p.'desc']		= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_DESC_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_DESC_DESC );
+				$settings[$p.'type']		= array( 'list', sprintf( _MI_MI_AECUSERDETAILS_SET_TYPE_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_TYPE_DESC );
+				$settings[$p.'default']		= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_DEFAULT_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_DEFAULT_DESC );
 			}
 		}
 
@@ -63,6 +64,46 @@ class mi_aecuserdetails
 		}
 
 		return $params;
+	}
+
+	function verifyMIform( $request )
+	{
+		$return = array();
+
+		if ( !empty( $this->settings['settings'] ) ) {
+			for ( $i=0; $i<$this->settings['settings']; $i++ ) {
+				$p = $i . '_';
+
+				if ( !empty( $this->settings[$p.'mandatory'] ) ) {
+					if ( empty( $request->params[$p.'name'] ) ) {
+						$return['error'] = "Please fill in the required fields";
+					}
+				}
+
+			}
+		}
+
+		if ( !empty( $return['error'] ) ) {
+			return $return;
+		}
+
+		$database = &JFactory::getDBO();
+
+		$params = array();
+		if ( !empty( $this->settings['settings'] ) ) {
+			for ( $i=0; $i<$this->settings['settings']; $i++ ) {
+				$p = $i . '_';
+
+				if ( !empty( $this->settings[$p.'short'] ) ) {
+					$params[$this->settings[$p.'short']] = $request->params[$this->settings[$p.'short']];
+				}
+			}
+		}
+
+		$request->metaUser->meta->addCustomParams( $params );
+		$request->metaUser->meta->storeload();
+
+		return $return;
 	}
 
 	function getMIform()
@@ -102,27 +143,6 @@ class mi_aecuserdetails
 		}
 
 		return $settings;
-	}
-
-	function verifyMIform( $request )
-	{
-		$database = &JFactory::getDBO();
-
-		$params = array();
-		if ( !empty( $this->settings['settings'] ) ) {
-			for ( $i=0; $i<$this->settings['settings']; $i++ ) {
-				$p = $i . '_';
-
-				if ( !empty( $this->settings[$p.'short'] ) ) {
-					$params[$this->settings[$p.'short']] = $request->params[$this->settings[$p.'short']];
-				}
-			}
-		}
-
-		$request->metaUser->meta->addCustomParams( $params );
-		$request->metaUser->meta->storeload();
-
-		return array();
 	}
 
 }
