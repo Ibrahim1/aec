@@ -8300,16 +8300,22 @@ class InvoiceFactory
 			}
 		}
 
-		if ( $aecConfig->cfg['use_recaptcha'] && !empty( $aecConfig->cfg['recaptcha_privatekey'] ) && isset( $_POST["recaptcha_challenge_field"] ) && isset( $_POST["recaptcha_response_field"] ) ) {
+		if ( $aecConfig->cfg['use_recaptcha'] && !empty( $aecConfig->cfg['recaptcha_privatekey'] ) ) {
 			// require the recaptcha library
 			require_once( JPATH_SITE . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
+
+			if ( !isset( $_POST["recaptcha_challenge_field"] ) || !isset( $_POST["recaptcha_response_field"] ) ) {
+				echo "<script> alert('The reCAPTCHA was not correct. Please try again.'); window.history.go(-1);</script>\n";
+
+				return;
+			}
 
 			// finally chack with reCAPTCHA if the entry was correct
 			$resp = recaptcha_check_answer ( $aecConfig->cfg['recaptcha_privatekey'], $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"] );
 
 			// if the response is INvalid, then go back one page, and try again. Give a nice message
 			if (!$resp->is_valid) {
-				echo "<script> alert('The reCAPTCHA entered incorrectly. Please try again.'); window.history.go(-1);</script>\n";
+				echo "<script> alert('The reCAPTCHA was not correct. Please try again.'); window.history.go(-1);</script>\n";
 
 				return;
 			}
