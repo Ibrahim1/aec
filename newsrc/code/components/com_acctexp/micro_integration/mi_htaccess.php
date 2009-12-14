@@ -58,8 +58,8 @@ class mi_htaccess
 	{
 		$settings = array();
 		// field type; name; variable value, description, extra (variable name)
-		$settings['mi_folder']			= array( 'inputC' );
-		$settings['mi_passwordfolder']	= array( 'inputC' );
+		$settings['mi_folder']			= array( 'inputD' );
+		$settings['mi_passwordfolder']	= array( 'inputD' );
 		$settings['mi_name']			= array( 'inputC' );
 		$settings['use_md5']			= array( 'list_yesno' );
 		$settings['rebuild']			= array( 'list_yesno' );
@@ -75,12 +75,16 @@ class mi_htaccess
 		$newparams = $params;
 
 		// Rewrite foldername to include cmsroot directory
-		if ( strpos("[cmsroot]", $params['mi_folder'] ) ) {
+		if ( strpos( $params['mi_folder'], "[cmsroot]" ) !== false ) {
 			$newparams['mi_folder'] = str_replace("[cmsroot]", JPATH_SITE, $params['mi_folder']);
 		}
 
-		if ( strpos("[abovecmsroot]", $params['mi_passwordfolder'] ) ) {
-			$newparams['mi_passwordfolder'] = str_replace("[abovecmsroot]", JPATH_SITE_above, $params['mi_passwordfolder']);
+		if ( strpos( $params['mi_folder'], "[abovecmsroot]" ) !== false ) {
+			$newparams['mi_folder'] = str_replace("[abovecmsroot]", JPATH_SITE . "/..", $params['mi_folder']);
+		}
+
+		if ( strpos( $params['mi_passwordfolder'], "[abovecmsroot]" ) !== false ) {
+			$newparams['mi_passwordfolder'] = str_replace("[abovecmsroot]", JPATH_SITE . "/..", $params['mi_passwordfolder']);
 		}
 
 		$newparams['mi_folder_fullpath']		= $newparams['mi_folder'] . "/.htaccess";

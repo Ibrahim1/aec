@@ -56,6 +56,10 @@ class htaccess{
 	* @return boolean $created		 Returns true if user have been created otherwise false
   	*/
 	function addUser($username,$password){
+		if ( empty( $username ) ) {
+			return true;
+		}
+
 		// checking if user already exists
 		$file=@fopen($this->fPasswd,"r");
 		$isAlready=false;
