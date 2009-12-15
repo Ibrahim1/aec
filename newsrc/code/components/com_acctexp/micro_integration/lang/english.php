@@ -38,6 +38,8 @@ define( '_MI_MI_HTACCESS_MI_NAME_NAME',				'Area Name' );
 define( '_MI_MI_HTACCESS_MI_NAME_DESC',				'The name of the protected Area' );
 define( '_MI_MI_HTACCESS_USE_MD5_NAME',				'use md5' );
 define( '_MI_MI_HTACCESS_USE_MD5_DESC',				'<strong>Important!</strong> If you want to use this MI to restrict folders with apache, you have to use crypt - so just leave this at NO. If you want to use a different software which uses htaccess/htuser files (like an icecast server for instance), set this to yes and it will use standard md5 encryption.' );
+define( '_MI_MI_HTACCESS_USE_APACHEMD5_NAME',		'use Apache md5' );
+define( '_MI_MI_HTACCESS_USE_APACHEMD5_DESC',		'When using a recent version of Apache, it is most likely that they use their own md5 encryption algorythm. This setting will emulate this behavior.' );
 define( '_MI_MI_HTACCESS_REBUILD_NAME',				'Rebuild htaccess' );
 define( '_MI_MI_HTACCESS_REBUILD_DESC',				'If you changed something important or lost your htaccess file, this option will rebuild your whole htaccess files by looking for each plan that has this MI applied and then add each user that uses one of these plans to the file.' );
 

@@ -38,6 +38,8 @@ define( '_MI_MI_HTACCESS_MI_NAME_NAME',	'Bereichsname' );
 define( '_MI_MI_HTACCESS_MI_NAME_DESC',	'Name des gesch&uuml;tzten Bereiches' );
 define( '_MI_MI_HTACCESS_USE_MD5_NAME',	'md5 verwenden' );
 define( '_MI_MI_HTACCESS_USE_MD5_DESC',	'<strong>Wichtig!</strong> Wenn diese Integration verwendet werden soll, um Ordner auf einem Apacheserver zu sch&uuml;tzen, muss "crypt" verwendet werden. In so einem Fall hier auf "Nein" einstellen.<br />Wird jedoch eine andere Software/anderer Server (wie z.B. ein icecast Server), dann hier auf "Ja" stellen, es wird dann die Standard md5 Verschl&uuml;sselung verwendet.' );
+define( '_MI_MI_HTACCESS_USE_APACHEMD5_NAME',		'use Apache md5' );
+define( '_MI_MI_HTACCESS_USE_APACHEMD5_DESC',		'When using a recent version of Apache, it is most likely that they use their own md5 encryption algorythm. This setting will emulate this behavior.' );
 define( '_MI_MI_HTACCESS_REBUILD_NAME',	'Wiederherstellung' );
 define( '_MI_MI_HTACCESS_REBUILD_DESC',	'Sollte die htaccess-Datei ge&auml;ndert oder diese gel&ouml;scht werden, stellt diese Einstellung sicher, da&szlig; die gesamte .htaccess Wiederhergestellt wird' );
 

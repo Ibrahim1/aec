@@ -62,6 +62,7 @@ class mi_htaccess
 		$settings['mi_passwordfolder']	= array( 'inputD' );
 		$settings['mi_name']			= array( 'inputC' );
 		$settings['use_md5']			= array( 'list_yesno' );
+		$settings['use_apachemd5']		= array( 'list_yesno' );
 		$settings['rebuild']			= array( 'list_yesno' );
 		$settings['remove']				= array( 'list_yesno' );
 
@@ -119,6 +120,7 @@ class mi_htaccess
 		$ht = new htaccess();
 		$ht->setFPasswd( $this->settings['mi_folder_user_fullpath'] );
 		$ht->setFHtaccess( $this->settings['mi_folder_fullpath'] );
+
 		if( isset( $this->settings['mi_name'] ) ) {
 			$ht->setAuthName( $this->settings['mi_name'] );
 		}
@@ -158,16 +160,26 @@ class mi_htaccess
 
 		if ( isset( $request->post['password_clear'] ) ) {
 			$apachepw->apachepw = crypt( $request->post['password_clear'] );
-			$apachepw->check();
-			$apachepw->store();
-		} elseif ( ( isset( $request->post['password'] ) && $request->post['password'] != '' ) || ( isset( $request->post['password2'] ) && $request->post['password2'] != '' )) {
-			$apachepw->apachepw = crypt( isset( $request->post['password2'] ) ? $request->post['password2'] : $request->post['password'] );
-			$apachepw->check();
-			$apachepw->store();
+
+		} elseif ( !empty( $request->post['password'] ) ) {
+			$password = $request->post['password'];
+		} elseif ( !empty( $request->post['password2'] ) ) {
+			$password = $request->post['password2'];
 		} elseif ( !$apwid ) {
 			// No new password and no existing password - nothing to be done here
 			return;
 		}
+
+		if ( !empty( $this->settings['use_apachemd5'] ) ) {
+			$apachepw->apachepw = $this->crypt_apr1_md5( $password );
+		} elseif( $this->settings['use_md5'] ) {
+			$apachepw->apachepw = md5( $password );
+		} else {
+			$apachepw->apachepw = crypt( $password );
+		}
+
+		$apachepw->check();
+		$apachepw->store();
 
 		if ( !( strcmp( $request->trace, 'registration' ) === 0 ) ) {
 			$ht = new htaccess();
@@ -205,7 +217,8 @@ class mi_htaccess
 		return false;
 	}
 
-	function crypt_apr1_md5($plainpasswd) {
+	function crypt_apr1_md5( $plainpasswd )
+	{
 		$salt = substr(str_shuffle("abcdefghijklmnopqrstuvwxyz0123456789"), 0, 8);
 
 		$len = strlen($plainpasswd);

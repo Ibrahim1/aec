@@ -38,6 +38,8 @@ define( '_MI_MI_HTACCESS_MI_NAME_NAME',                'Nom de la zone' );
 define( '_MI_MI_HTACCESS_MI_NAME_DESC',                'Nom de la zone prot&eacute;g&eacute;e' );
 define( '_MI_MI_HTACCESS_USE_MD5_NAME',                'Utiliser md5' );
 define( '_MI_MI_HTACCESS_USE_MD5_DESC',                '&lt;strong&gt;Important!&lt;/strong&gt; Si vous utilisez cette MI pour restreindre les dossiers avec apache, vous devez utiliser crypt donc laissez ceci sur NON. Si vous utilisez un logiciel diff&eacute;rent qui utilise les fichiers htaccess/htuser (comme un serveur icecast par exemple), choisir OUI et l\'encodage md5 standard sera utilis&eacute;.' );
+define( '_MI_MI_HTACCESS_USE_APACHEMD5_NAME',		'use Apache md5' );
+define( '_MI_MI_HTACCESS_USE_APACHEMD5_DESC',		'When using a recent version of Apache, it is most likely that they use their own md5 encryption algorythm. This setting will emulate this behavior.' );
 define( '_MI_MI_HTACCESS_REBUILD_NAME',                'Reconstruire htaccess' );
 define( '_MI_MI_HTACCESS_REBUILD_DESC',                'Si vous avez fait d\'importantes modifications ou que vous avez perdu votre fichier htaccess, cette option reconstruit enti&egrave;rement htaccess en recherchant tous les plans ayant une MI active puis ajoutant au fichier chaque utilisateur utilisant l\'un de ces plans.' );
 
