@@ -60,7 +60,7 @@ class plgUserAECuser extends JPlugin
 			}
 
 			$mih = new microIntegrationHandler();
-			$mih->userchange( $user, $user, $trace );
+			$mih->userchange( $user, $_POST, $trace );
 		}
 	}
 
