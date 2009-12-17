@@ -1344,7 +1344,7 @@ class metaUserDB extends serialParamDBTable
 		$this->storeload();
 	}
 
-	function getMIParams( $miid, $usageid=false )
+	function getMIParams( $miid, $usageid=false, $strict=true )
 	{
 		if ( $usageid ) {
 			if ( is_object( $this->plan_params ) ) {
@@ -1355,6 +1355,8 @@ class metaUserDB extends serialParamDBTable
 				if ( isset( $this->plan_params[$usageid][$miid] ) ) {
 					return $this->plan_params[$usageid][$miid];
 				}
+			} elseif ( !$strict ) {
+				$this->getMIParams( $miid );
 			}
 		} else {
 			if ( isset( $this->params->mi[$miid] ) ) {
@@ -1362,7 +1364,7 @@ class metaUserDB extends serialParamDBTable
 			}
 		}
 
-		return false;
+		return array();
 	}
 
 	function setMIParams( $miid, $usageid=false, $params, $replace=false )
@@ -6233,7 +6235,7 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 	}
 
-	function getMIformParams( $errors=array() )
+	function getMIformParams( $metaUser, $errors=array() )
 	{
 		$mis = $this->getMicroIntegrations();
 
@@ -6251,7 +6253,7 @@ class SubscriptionPlan extends serialParamDBTable
 					continue;
 				}
 
-				$miform_params = $mi->getMIformParams( $this, $errors );
+				$miform_params = $mi->getMIformParams( $this, $metaUser, $errors );
 
 				if ( !empty( $miform_params['lists'] ) ) {
 					foreach ( $miform_params['lists'] as $lname => $lcontent ) {
@@ -6307,9 +6309,9 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 	}
 
-	function getMIforms( $errors=array() )
+	function getMIforms( $metaUser, $errors=array() )
 	{
-		$params = $this->getMIformParams( $errors );
+		$params = $this->getMIformParams( $metaUser, $errors );
 
 		if ( empty( $params ) ) {
 			return false;
@@ -8331,11 +8333,11 @@ class InvoiceFactory
 		}
 
 		if ( !empty( $this->plan ) ) {
-			$this->mi_form = $this->plan->getMIforms( $this->mi_error );
+			$this->mi_form = $this->plan->getMIforms( $this->metaUser, $this->mi_error );
 		}
 
 		if ( !empty( $this->mi_form ) ) {
-			$params = $this->plan->getMIformParams( array() );
+			$params = $this->plan->getMIformParams( $this->metaUser );
 			foreach ( $params as $mik => $miv ) {
 				if ( $mik == 'lists' ) {
 					continue;
@@ -8479,7 +8481,7 @@ class InvoiceFactory
 
 		if ( !empty( $this->plan ) ) {
 			if ( is_object( $this->plan ) ) {
-				$mi_form = $this->plan->getMIformParams();
+				$mi_form = $this->plan->getMIformParams( $this->metaUser );
 
 				if ( !empty( $mi_form ) ) {
 					$params = array();
@@ -14736,14 +14738,23 @@ class microIntegration extends serialParamDBTable
 		return $return;
 	}
 
-	function getMIform( $plan )
+	function getMIform( $plan, $metaUser )
 	{
-		return $this->functionProxy( 'getMIform', $plan );
+		$params	= $metaUser->meta->getMIParams( $this->id, $plan->id, false );
+
+		$request = new stdClass();
+		$request->action	=	'getMIform';
+		$request->parent	=&	$this;
+		$request->metaUser	=&	$metaUser;
+		$request->plan		=&	$plan;
+		$request->params	=&	$params;
+
+		return $this->functionProxy( 'getMIform', $request );
 	}
 
 	function verifyMIform( $plan, $metaUser )
 	{
-		$params	= $metaUser->meta->getMIParams( $this->id, $plan->id );
+		$params	= $metaUser->meta->getMIParams( $this->id, $plan->id, false );
 
 		$request = new stdClass();
 		$request->action	=	'verifyMIform';
@@ -14755,9 +14766,9 @@ class microIntegration extends serialParamDBTable
 		return $this->functionProxy( 'verifyMIform', $request );
 	}
 
-	function getMIformParams( $plan, $errors )
+	function getMIformParams( $plan, $metaUser, $errors )
 	{
-		$mi_form = $this->getMIform( $plan );
+		$mi_form = $this->getMIform( $plan, $metaUser );
 
 		$params	= array();
 		$lists	= array();

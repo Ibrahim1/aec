@@ -49,7 +49,7 @@ class mi_acajoom
 		return $settings;
 	}
 
-	function getMIform()
+	function getMIform( $request )
 	{
 		$settings = array();
 

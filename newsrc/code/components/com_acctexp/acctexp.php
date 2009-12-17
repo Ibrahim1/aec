@@ -913,7 +913,13 @@ function subscriptionDetails( $option, $sub='overview' )
 			$invoices[$invoiceid]['processor'] = $invoice->method;
 		}
 
-		if ( !empty( $pp->info['actions'] ) && ( ( strcmp( $metaUser->objSubscription->status, 'Active' ) === 0 ) || ( strcmp( $metaUser->objSubscription->status, 'Trial' ) === 0 ) ) ) {
+		if ( !empty( $metaUser->objSubscription->status ) ) {
+			$activeortrial = ( ( strcmp( $metaUser->objSubscription->status, 'Active' ) === 0 ) || ( strcmp( $metaUser->objSubscription->status, 'Trial' ) === 0 ) );
+		} else {
+			$activeortrial = false;
+		}
+
+		if ( !empty( $pp->info['actions'] ) && $activeortrial ) {
 			$actions = $pp->getActions( $invoice, $subscription );
 
 			foreach ( $actions as $action ) {

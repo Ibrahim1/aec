@@ -46,7 +46,7 @@ class mi_email_files
 		return $settings;
 	}
 
-	function getMIform()
+	function getMIform( $request )
 	{
 		$database = &JFactory::getDBO();
 

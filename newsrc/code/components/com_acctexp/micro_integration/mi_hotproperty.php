@@ -103,7 +103,7 @@ class mi_hotproperty extends MI
 		return $settings;
 	}
 
-	function getMIform()
+	function getMIform( $request )
 	{
 		$database = &JFactory::getDBO();
 

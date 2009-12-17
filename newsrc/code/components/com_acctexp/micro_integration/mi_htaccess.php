@@ -159,7 +159,7 @@ class mi_htaccess
 		}
 
 		if ( isset( $request->post['password_clear'] ) ) {
-			$apachepw->apachepw = crypt( $request->post['password_clear'] );
+			$password = crypt( $request->post['password_clear'] );
 
 		} elseif ( !empty( $request->post['password'] ) ) {
 			$password = $request->post['password'];
@@ -245,6 +245,7 @@ class mi_htaccess
 			$bin = pack("H32", md5($new));
 		}
 
+		$tmp = "";
 		for ( $i = 0; $i < 5; $i++ ) {
 			$k = $i + 6;
 			$j = $i + 12;

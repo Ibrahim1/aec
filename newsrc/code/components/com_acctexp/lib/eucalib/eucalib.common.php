@@ -413,7 +413,11 @@ class serialParamDBTable extends paramDBTable
 	 */
 	function setParams( $input, $field = 'params' )
 	{
-		if ( !empty( $field ) && ( $input != 'null' ) ) {
+		if ( empty( $field ) ) {
+			return false;
+		}
+var_dump($input);
+		if ( $input != 'null' ) {
 			if ( get_magic_quotes_gpc() ) {
 				$store = serialParamDBTable::multistripslashes( $input );
 			} else {
@@ -424,6 +428,7 @@ class serialParamDBTable extends paramDBTable
 		} else {
 			$this->$field = null;
 		}
+
 		return true;
 	}
 

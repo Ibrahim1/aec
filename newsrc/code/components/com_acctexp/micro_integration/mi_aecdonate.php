@@ -39,7 +39,7 @@ class mi_aecdonate
 		return $params;
 	}
 
-	function getMIform()
+	function getMIform( $request )
 	{
 		$database = &JFactory::getDBO();
 

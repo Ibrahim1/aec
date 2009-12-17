@@ -25,7 +25,7 @@ class mi_age_restriction extends MI
 		return $settings;
 	}
 
-	function getMIform()
+	function getMIform( $request )
 	{
 		$database = &JFactory::getDBO();
 

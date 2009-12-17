@@ -64,7 +64,7 @@ class mi_rsgallery2 extends MI
 		return $settings;
 	}
 
-	function getMIform()
+	function getMIform( $request )
 	{
 		$database = &JFactory::getDBO();
 

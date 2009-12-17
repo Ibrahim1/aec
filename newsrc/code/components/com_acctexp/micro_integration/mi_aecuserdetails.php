@@ -106,7 +106,7 @@ class mi_aecuserdetails
 		return $return;
 	}
 
-	function getMIform()
+	function getMIform( $request )
 	{
 		$language_array = AECToolbox::getISO4271_codes();
 
@@ -122,17 +122,23 @@ class mi_aecuserdetails
 			for ( $i=0; $i<$this->settings['settings']; $i++ ) {
 				$p = $i . '_';
 
+				if ( !empty( $request->params[$p.'name'] ) ) {
+					$content = $request->params[$p.'name'];
+				} else {
+					$content = $this->settings[$p.'default'];
+				}
+
 				if ( !empty( $this->settings[$p.'short'] ) ) {
 					if ( $this->settings[$p.'type'] == 'list_language' ) {
-						$lists[$this->settings[$p.'short']] = mosHTML::selectList( $language_code_list, $this->settings[$p.'short'], 'size="10"', 'value', 'text', $this->settings[$p.'default'] );
+						$lists[$this->settings[$p.'short']] = mosHTML::selectList( $language_code_list, $this->settings[$p.'short'], 'size="10"', 'value', 'text', $content );
 
 						$this->settings[$p.'type'] = 'list';
 					}
 
 					if ( ( $this->settings[$p.'type'] == 'radio' ) || ( $this->settings[$p.'type'] == 'checkbox' ) ) {
-						$settings[$this->settings[$p.'short']] = array( $this->settings[$p.'type'], $this->settings[$p.'name'], null, $this->settings[$p.'desc'] );
+						$settings[$this->settings[$p.'short']] = array( $this->settings[$p.'type'], $this->settings[$p.'name'], null, $this->settings[$p.'desc'], $content );
 					} else {
-						$settings[$this->settings[$p.'short']] = array( $this->settings[$p.'type'], $this->settings[$p.'name'], $this->settings[$p.'desc'] );
+						$settings[$this->settings[$p.'short']] = array( $this->settings[$p.'type'], $this->settings[$p.'name'], $this->settings[$p.'desc'], $content );
 					}
 				}
 			}
