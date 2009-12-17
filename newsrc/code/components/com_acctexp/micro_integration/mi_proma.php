@@ -54,7 +54,7 @@ class mi_proma
 
 		$group_exp = 0;
 		if ( !empty( $this->settings['group_exp'] ) ) {
-			$group = $this->settings['group_exp'];
+			$group_exp = $this->settings['group_exp'];
 		}
 
 		$settings['lists']['group']		= mosHTML::selectList( $sg, 'group', 'size="4"', 'value', 'text', $group );
