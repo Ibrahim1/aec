@@ -2569,22 +2569,6 @@ class HTML_AcctExp
 									</div>
 								</div>
 							</td></tr>
-							<tr><td>
-								<div class="userinfobox">
-									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( 'mingid_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'mingid' ); ?>
-									</div>
-									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( 'fixgid_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'fixgid' ); ?>
-									</div>
-									<div style="position:relative;float:left;width:200px;">
-										<?php echo $aecHTML->createSettingsParticle( 'maxgid_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'maxgid' ); ?>
-									</div>
-								</div>
-							</td></tr>
 							<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 						</table>
 						<?php

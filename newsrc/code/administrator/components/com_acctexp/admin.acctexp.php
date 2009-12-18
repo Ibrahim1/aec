@@ -3696,11 +3696,13 @@ function editSubscriptionPlan( $id, $option )
 	}
 
 	$settings = new aecSettings ( 'payplan', 'general' );
+
 	if ( is_array( $customparams_values ) ) {
 		$settingsparams = array_merge( $params_values, $customparams_values, $restrictions_values );
 	} else {
 		$settingsparams = array_merge( $params_values, $restrictions_values );
 	}
+
 	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
 
 	// Call HTML Class
@@ -4769,7 +4771,6 @@ function editCoupon( $id, $option, $new, $type )
 	$restrictionHelper = new aecRestrictionHelper();
 	$params = array_merge( $params, $restrictionHelper->getParams() );
 
-
 	// get available plans
 	$available_plans = array();
 	$available_plans[]			= mosHTML::makeOption( '0', _PAYPLAN_NOPLAN );
@@ -4882,7 +4883,10 @@ function editCoupon( $id, $option, $new, $type )
 	$lists = array_merge( $lists, $restrictionHelper->getLists( $params_values, $restrictions_values ) );
 
 	$settings = new aecSettings( 'coupon', 'general' );
-	$settings->fullSettingsArray( $params, array_merge( (array) $params_values, (array) $discount_values, (array) $restrictions_values ), $lists );
+
+	$settingsparams = array_merge( $params_values, $discount_values, $restrictions_values );
+
+	$settings->fullSettingsArray( $params, $settingsparams, $lists );
 
 	// Call HTML Class
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );

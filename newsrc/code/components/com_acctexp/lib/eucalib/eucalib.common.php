@@ -416,7 +416,7 @@ class serialParamDBTable extends paramDBTable
 		if ( empty( $field ) ) {
 			return false;
 		}
-var_dump($input);
+
 		if ( $input != 'null' ) {
 			if ( get_magic_quotes_gpc() ) {
 				$store = serialParamDBTable::multistripslashes( $input );

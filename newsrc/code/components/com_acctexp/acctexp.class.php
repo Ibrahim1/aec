@@ -15928,9 +15928,9 @@ class couponHandler
 										'trial_only'		=> 'trial_only',
 										'plan_previous'		=> 'wrong_plan_previous',
 										'plan_present'		=> 'wrong_plan',
-										'plan_overall'		=> 'wrong_plan_overall',
+										'plan_overall'		=> 'wrong_plans_overall',
 										'plan_amount_min'	=> 'wrong_plan',
-										'plan_amount_max'	=> 'wrong_plan_overall',
+										'plan_amount_max'	=> 'wrong_plans_overall',
 										'max_reuse'			=> 'max_reuse',
 										'max_peruser_reuse'	=> 'max_reuse'
 									);
@@ -16279,23 +16279,8 @@ class coupon extends serialParamDBTable
 
 		$this->saveDiscount( $params );
 
-		// Filter out restrictions
-		$fixed = aecRestrictionHelper::paramList();
-
-		$fixed[] = 'usage_plans';
-
-		$restrictions = array();
-		foreach ( $fixed as $varname ) {
-			if ( !isset( $post[$varname] ) ) {
-				continue;
-			}
-
-			$restrictions[$varname] = $post[$varname];
-
-			unset( $post[$varname] );
-		}
-
-		$this->restrictions = $restrictions;
+		// the rest is restrictions
+		$this->saveRestrictions( $post );
 	}
 
 	function saveDiscount( $params )
