@@ -53,17 +53,23 @@ class mi_k2
 		$gr = array();
 		if ( !empty( $groups ) ) {
 			foreach( $groups as $group ) {
-				$gr[] = mosHTML::makeOption( $group->id, $group->name );
+				if ( isset( $group->id ) ) {
+					$gid = $group->id;
+				} else {
+					$gid = $group->groups_id;
+				}
+
+				$gr[] = mosHTML::makeOption( $gid, $group->name );
 
 				if ( !empty( $this->settings['group'] ) ) {
-					if ( in_array( $group->id, $this->settings['group'] ) ) {
-						$sg[] = mosHTML::makeOption( $group->id, $group->name );
+					if ( $gid == $this->settings['group'] ) {
+						$sg[] = mosHTML::makeOption( $gid, $group->name );
 					}
 				}
 
 				if ( !empty( $this->settings['group_exp'] ) ) {
-					if ( in_array( $group->id, $this->settings['group_exp'] ) ) {
-						$sge[] = mosHTML::makeOption( $group->id, $group->name );
+					if ( $gid == $this->settings['group_exp'] ) {
+						$sge[] = mosHTML::makeOption( $gid, $group->name );
 					}
 				}
 			}
