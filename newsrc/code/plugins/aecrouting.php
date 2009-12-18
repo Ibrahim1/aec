@@ -60,9 +60,9 @@ class plgSystemAECrouting extends JPlugin
 			$vars['view']	= JRequest::getVar( 'view', null );
 		}
 
-		$vars['usage']		= intval( JRequest::getVar( 'usage', '0' ) );
-		$vars['processor']	= JRequest::getVar( 'processor', '' );
-		$vars['recurring']	= intval( JRequest::getVar( 'recurring', '0' ) );
+		$vars['usage']		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+		$vars['processor']	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
+		$vars['recurring']	= aecGetParam( 'recurring', 0, true, array( 'word', 'int' ) );
 
 		$vars['forget']		= JRequest::getVar( 'forget', '' );
 
