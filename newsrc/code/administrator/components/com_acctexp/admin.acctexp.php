@@ -2270,7 +2270,6 @@ function editSettings( $option )
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_INVOICE_AFTER_HEADER_NAME );
 	$params['invoice_after_header']				= array( 'editor', '' );
-	$params['invoice_address']					= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_INVOICE_ADDRESS_NAME );
 	$params['invoice_address']					= array( 'editor', '' );
@@ -2298,9 +2297,6 @@ function editSettings( $option )
 	$tab_data[] = array( _CFG_TAB_CUSTOMINVOICE_TITLE, key( $params ), '<h2>' . _CFG_TAB_CUSTOMINVOICE_SUBTITLE . '</h2>' );
 
 	$params[] = array( 'userinfobox', 100 );
-	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_INVOICE_PRINTOUT );
-	$params['invoice_page_title']				= array( 'inputC', '' );
-	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_CREDIRECT );
 	$params['customintro']						= array( 'inputC', '' );
 	$params['customintro_userid']				= array( 'list_yesno', '' );
