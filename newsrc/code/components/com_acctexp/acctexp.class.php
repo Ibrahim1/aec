@@ -9239,6 +9239,8 @@ class Invoice extends serialParamDBTable
 				$usage[1] = $temp;
 			}
 
+			$allfree = false;
+
 			switch ( strtolower( $usage[0] ) ) {
 				case 'c':
 				case 'cart':
@@ -9297,6 +9299,8 @@ class Invoice extends serialParamDBTable
 					// Coupons might have changed the terms - reset pointer
 					$terms->setPointer( $this->counter );
 
+					$allfree = $terms->checkFree();
+
 					if ( is_object( $terms->nextterm ) ) {
 						$this->amount = $terms->nextterm->renderTotal();
 					} else {
@@ -9307,7 +9311,7 @@ class Invoice extends serialParamDBTable
 
 			$this->amount = AECToolbox::correctAmount( $this->amount );
 
-			if ( !$recurring ) {
+			if ( !$recurring || $allfree ) {
 				if ( ( strcmp( $this->amount, '0.00' ) === 0 ) ) {
 					$this->method = 'free';
 					$madefree = true;
@@ -15514,6 +15518,8 @@ class couponsHandler extends eucaObject
 			}
 		}
 
+		$item['terms']->checkFree();
+
 		return $item;
 	}
 
@@ -16159,6 +16165,7 @@ class couponHandler
 			}
 		}
 
+		$terms->checkFree();
 
 		return $terms;
 	}
