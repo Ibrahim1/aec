@@ -9918,12 +9918,6 @@ class Invoice extends serialParamDBTable
 
 		$urladd = '';
 		if ( !empty( $int_var['objUsage'] ) ) {
-			if ( is_a( $int_var['objUsage'], 'aecCart' ) ) {
-				if ( count( $int_var['objUsage']->content ) < 2 ) {
-					$int_var['objUsage'] = aecCartHelper::getCartItemObject( $int_var['objUsage'], 0 );
-				}
-			}
-
 			if ( is_a( $int_var['objUsage'], 'SubscriptionPlan' ) ) {
 				$int_var['planparams'] = $int_var['objUsage']->getProcessorParameters( $InvoiceFactory->pp->id );
 
