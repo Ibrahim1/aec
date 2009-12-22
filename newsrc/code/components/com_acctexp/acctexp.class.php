@@ -8293,8 +8293,6 @@ class InvoiceFactory
 	{
 		$database = &JFactory::getDBO();
 
-		$user = &JFactory::getUser();
-
 		global $aecConfig;
 
 		if ( empty( $this->passthrough ) ) {
@@ -8371,11 +8369,11 @@ class InvoiceFactory
 				$this->userdetails = "";
 
 				if ( !empty( $this->metaUser->cmsUser->name ) ) {
-					$this->userdetails .= '<p>' . _CONFIRM_ROW_NAME . $user->name . '</p>';
+					$this->userdetails .= '<p>' . _CONFIRM_ROW_NAME . $this->metaUser->cmsUser->name . '</p>';
 				}
 
-				$this->userdetails .= '<p>' . _CONFIRM_ROW_USERNAME . $user->username . '</p>';
-				$this->userdetails .= '<p>' . _CONFIRM_ROW_EMAIL . $user->email . '</p>';
+				$this->userdetails .= '<p>' . _CONFIRM_ROW_USERNAME . $this->metaUser->cmsUser->username . '</p>';
+				$this->userdetails .= '<p>' . _CONFIRM_ROW_EMAIL . $this->metaUser->cmsUser->email . '</p>';
 			} else {
 				$this->userdetails = AECToolbox::rewriteEngine( $aecConfig->cfg['custom_confirm_userdetails'], $this );
 			}
