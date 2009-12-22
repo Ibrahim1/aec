@@ -1518,6 +1518,7 @@ class Payment_HTML
 			<title><?php echo $data['page_title']; ?></title>
 			<link rel="stylesheet" href="<?php echo JURI::root() . 'media/' . $option; ?>/css/invoice.css" type="text/css" media="screen, print" />
 			<link rel="stylesheet" href="<?php echo JURI::root() . 'media/' . $option; ?>/css/invoice_print.css" type="text/css" media="print" />
+			<?php if ( !empty( $aecConfig->cfg['invoice_address_allow_edit'] ) ) { ?>
 			<script type="text/javascript" src="<?php echo JURI::root() . 'media/' . $option; ?>/js/jquery/jquery-1.3.2.min.js"></script>
 			<script type="text/javascript">
 			jQuery(document).ready(function() {
@@ -1526,16 +1527,24 @@ class Payment_HTML
 				});
 			 });
 			</script>
-
+			<?php } ?>
 		</head>
 		<body>
-			<div id="printbutton">
-				<div id="printbutton_inner">
-					<textarea align="left" cols="40" rows="5" name="address" /><?php echo $data['address']; ?></textarea>
-					<button onclick="window.print()" id="printbutton"><?php echo _INVOICEPRINT_PRINT; ?></button>
+			<?php if ( !empty( $aecConfig->cfg['invoice_address_allow_edit'] ) ) { ?>
+				<div id="printbutton">
+					<div id="printbutton_inner">
+						<textarea align="left" cols="40" rows="5" name="address" /><?php echo $data['address']; ?></textarea>
+						<button onclick="window.print()" id="printbutton"><?php echo _INVOICEPRINT_PRINT; ?></button>
+					</div>
+					<p><?php echo _INVOICEPRINT_BLOCKNOTICE; ?></p>
 				</div>
-				<p><?php echo _INVOICEPRINT_BLOCKNOTICE; ?></p>
-			</div>
+			<?php } else { ?>
+				<div id="printbutton">
+					<div id="printbutton_inner">
+						<button onclick="window.print()" id="printbutton"><?php echo _INVOICEPRINT_PRINT; ?></button>
+					</div>
+				</div>
+			<?php } ?>
 			<div id="invoice_wrap">
 				<div id="before_header"><?php echo $data['before_header']; ?></div>
 				<div id="header">

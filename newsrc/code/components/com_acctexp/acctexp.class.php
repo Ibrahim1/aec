@@ -1633,6 +1633,7 @@ class Config_General extends serialParamDBTable
 		$def['invoice_before_footer']			= "";
 		$def['invoice_footer']					= _AEC_CUSTOM_INVOICE_FOOTER;
 		$def['invoice_address']					= _INVOICEPRINT_ADDRESSFIELD;
+		$def['invoice_address_allow_edit']		= 1;
 		$def['invoice_after_footer']			= "";
 		$def['delete_tables']					= "";
 		$def['delete_tables_sure']				= "";

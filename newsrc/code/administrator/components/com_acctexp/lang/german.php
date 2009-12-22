@@ -1006,6 +1006,8 @@ define( '_CFG_GENERAL_INVOICE_AFTER_HEADER_NAME', 'Text nach Kopfzeile');
 define( '_CFG_GENERAL_INVOICE_AFTER_HEADER_DESC', 'Text nach Kopfzeile f&uuml;r den Rechnungsausdruck');
 define( '_CFG_GENERAL_INVOICE_ADDRESS_NAME', 'Text im Adress-Feld');
 define( '_CFG_GENERAL_INVOICE_ADDRESS_DESC', 'Text im Adress-Feld des Ausdrucks');
+define( '_CFG_GENERAL_INVOICE_ADDRESS_ALLOW_EDIT_NAME', 'Benutzer darf Addresse bearbeiten');
+define( '_CFG_GENERAL_INVOICE_ADDRESS_ALLOW_EDIT_DESC', 'Mit dieser Option kann der Benutzer die Rechnungsanschrift auf der Ausdrucksseite eintragen oder korrigieren.');
 define( '_CFG_GENERAL_INVOICE_BEFORE_CONTENT_NAME', 'Text vor Inhalt');
 define( '_CFG_GENERAL_INVOICE_BEFORE_CONTENT_DESC', 'Text vor Inhalt f&uuml;r den Rechnungsausdruck');
 define( '_CFG_GENERAL_INVOICE_AFTER_CONTENT_NAME', 'Text nach Inhalt');

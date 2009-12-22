@@ -2272,6 +2272,7 @@ function editSettings( $option )
 	$params['invoice_after_header']				= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_INVOICE_ADDRESS_NAME );
+	$params['invoice_address_allow_edit']		= array( 'list_yesno', '' );
 	$params['invoice_address']					= array( 'inputD', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_INVOICE_BEFORE_CONTENT_NAME );
