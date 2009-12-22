@@ -1531,10 +1531,10 @@ class Payment_HTML
 		<body>
 			<div id="printbutton">
 				<div id="printbutton_inner">
-					<textarea align="left" cols="40" rows="5" name="address" /><?php echo $data['invoice_address']; ?></textarea>
+					<textarea align="left" cols="40" rows="5" name="address" /><?php echo $data['address']; ?></textarea>
 					<button onclick="window.print()" id="printbutton"><?php echo _INVOICEPRINT_PRINT; ?></button>
 				</div>
-					<p><?php echo _INVOICEPRINT_BLOCKNOTICE; ?></p>
+				<p><?php echo _INVOICEPRINT_BLOCKNOTICE; ?></p>
 			</div>
 			<div id="invoice_wrap">
 				<div id="before_header"><?php echo $data['before_header']; ?></div>
@@ -1542,7 +1542,7 @@ class Payment_HTML
 					<?php echo $data['header']; ?>
 				</div>
 				<div id="after_header"><?php echo $data['after_header']; ?></div>
-				<div id="address"><pre><?php echo $data['invoice_address']; ?></pre></div>
+				<div id="address"><pre><?php echo $data['address']; ?></pre></div>
 				<div id="invoice_details">
 					<table id="invoice_details">
 						<tr><th><?php echo _INVOICEPRINT_DATE; ?></th></tr>
