@@ -1162,8 +1162,6 @@ class Payment_HTML
 
 		HTML_frontend::aec_styling( $option );
 
-		$InvoiceFactory->invoice->deformatInvoiceNumber();
-
 		$introtext = '_CHECKOUT_INFO' . ( $repeat ? '_REPEAT' : '' );
 
 		?>
@@ -1174,6 +1172,9 @@ class Payment_HTML
 				<p><?php echo sprintf( constant( $introtext ), $InvoiceFactory->invoice->invoice_number ); ?></p>
 				<?php
 			}
+
+			$InvoiceFactory->invoice->deformatInvoiceNumber();
+
 			if ( $aecConfig->cfg['customtext_checkout'] ) { ?>
 				<p><?php echo $aecConfig->cfg['customtext_checkout']; ?></p>
 				<?php
