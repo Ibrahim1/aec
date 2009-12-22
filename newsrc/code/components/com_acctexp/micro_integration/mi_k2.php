@@ -86,7 +86,7 @@ class mi_k2
 		$database = &JFactory::getDBO();
 
 		if ( $this->settings['set_group_exp'] && !empty( $this->settings['group_exp'] ) ) {
-			$this->AddUserToGroup( $request->metaUser->userid, $this->settings['group_exp'] );
+			$this->AddUserToGroup( $request->metaUser, $this->settings['group_exp'] );
 		}
 
 		return true;
@@ -97,22 +97,37 @@ class mi_k2
 		$database = &JFactory::getDBO();
 
 		if ( $this->settings['set_group'] && !empty( $this->settings['group'] ) ) {
-			$this->AddUserToGroup( $request->metaUser->userid, $this->settings['group'] );
+			$this->AddUserToGroup( $request->metaUser, $this->settings['group'] );
 		}
 
 		return true;
 	}
 
-	function AddUserToGroup( $userid, $groupid )
+	function AddUserToGroup( $metaUser, $groupid )
 	{
 		$database = &JFactory::getDBO();
 
-		$query = 'UPDATE #__k2_users'
-			. ' SET `group` = \'' . $groupid . '\''
-			. ' WHERE `userID` = \'' . $userid . '\''
+		$query = 'SELECT id FROM #__k2_users'
+			. ' WHERE `userID` = \'' . $metaUser->userid . '\''
 			;
 		$database->setQuery( $query );
-		$database->query();
+		$id = $database->loadResult();
+
+		if ( empty( $id ) ) {
+			$query = 'INSERT INTO #__k2_users'
+				. ' (`userID`, `userName`, `group` )'
+				. ' VALUES ( \'' . $metaUser->userid . '\', \'' . $metaUser->cmsUser->username . '\', \'' . $groupid . '\' )'
+				;
+			$database->setQuery( $query );
+			$database->query();
+		} else {
+			$query = 'UPDATE #__k2_users'
+				. ' SET `group` = \'' . $groupid . '\''
+				. ' WHERE `userID` = \'' . $metaUser->userid . '\''
+				;
+			$database->setQuery( $query );
+			$database->query();
+		}
 
 		return true;
 	}
