@@ -14252,7 +14252,7 @@ class MI
 		$new_settings = array();
 		$new_lists = array();
 		foreach ( $settings as $name => $content ) {
-			if ( in_array( $name, $ommit) ) {
+			if ( in_array( $name, $ommit ) ) {
 				continue;
 			}
 
