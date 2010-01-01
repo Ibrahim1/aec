@@ -2259,8 +2259,7 @@ function editSettings( $option )
 	@end( $params );
 	$tab_data[] = array( _CFG_TAB_CUSTOMIZATION_TITLE, key( $params ), '<h2>' . _CFG_TAB_CUSTOMIZATION_SUBTITLE . '</h2>' );
 
-	$rewriteswitches							= array( 'cms', 'invoice', 'user' );
-	$params = AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
+	$params = AECToolbox::rewriteEngineInfo( array(), $params );
 
 	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_INVOICE_PRINTOUT_DETAILS );
 	$params[] = array( 'accordion_start', '' );
