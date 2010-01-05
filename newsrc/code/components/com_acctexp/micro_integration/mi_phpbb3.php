@@ -276,7 +276,7 @@ class mi_phpbb3
 			}
 
 			// check PHPBB3 secondary groups not on excluded list as long as primary group isn't already
-			if ( ( $this->settings['set_groups_exclude'] ) && ( !$onExcludeList ) ) {
+			if ( ( $this->settings['set_groups_exclude'] ) && ( !$onExcludeList ) && !empty( $this->settings['groups_exclude'] ) ) {
 				$secGroups = null;
 				$query = 'SELECT `group_id`'
 						. ' FROM ' . $prefix . 'user_group'

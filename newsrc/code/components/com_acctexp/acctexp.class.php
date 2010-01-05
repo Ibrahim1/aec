@@ -15080,7 +15080,7 @@ class microIntegration extends serialParamDBTable
 				foreach ( $userlist as $userid ) {
 					$metaUser = new metaUser( $userid );
 
-					$this->expiration_action( $params, $metaUser, null, $plan );
+					$this->expiration_action( $metaUser, $plan );
 				}
 			}
 
