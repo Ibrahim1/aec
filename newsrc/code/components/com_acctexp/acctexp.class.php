@@ -1802,9 +1802,9 @@ class aecHeartbeat extends JTable
 		}
 
 		if ( !empty( $aecConfig->cfg['allow_frontend_heartbeat'] ) && !empty( $custom ) ) {
-			$this->ping( 0 );
+			aecHeartbeat::ping( 0 );
 		} elseif ( !empty( $aecConfig->cfg['heartbeat_cycle'] ) ) {
-			$this->ping( $aecConfig->cfg['heartbeat_cycle'] );
+			aecHeartbeat::ping( $aecConfig->cfg['heartbeat_cycle'] );
 		}
 	}
 
