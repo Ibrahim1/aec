@@ -1206,6 +1206,9 @@ define( '_CFG_GENERAL_PER_PLAN_MIS_DESC', 'Shows per-plan MIs that are only edit
 define( '_CFG_GENERAL_INTRO_EXPIRED_NAME', 'Intro for Expired');
 define( '_CFG_GENERAL_INTRO_EXPIRED_DESC', 'AEC normally does not show the intro page (which you may or may not have set) when users whose subscriptions have expired want to sign up for a new one. This setting overrides the behavior.');
 
+define( '_CFG_GENERAL_INVOICE_CUSHION_NAME', 'Invoice Cushion');
+define( '_CFG_GENERAL_INVOICE_CUSHION_DESC', 'The cushion period in which AEC does not accept new notifications for an invoice that was already paid.');
+
 // Global Authentication Settins
 define( '_CFG_TAB_AUTHENTICATION_TITLE', 'Authentication');
 define( '_CFG_TAB_AUTHENTICATION_SUBTITLE', 'Authentication Plugins');

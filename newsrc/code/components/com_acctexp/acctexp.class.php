@@ -1619,7 +1619,7 @@ class Config_General extends serialParamDBTable
 		$def['altsslurl']						= '';
 		$def['checkout_as_gift']				= 0;
 		$def['checkout_as_gift_access']			= 23;
-		// TODO: $def['invoicecushion']						= 5; //Minutes
+		$def['invoice_cushion']					= 10; //Minutes
 		$def['allow_frontend_heartbeat']		= 0;
 		$def['disable_regular_heartbeat']		= 0;
 		$def['custom_heartbeat_securehash']		= "";
@@ -9384,6 +9384,15 @@ class Invoice extends serialParamDBTable
 
 	function processorResponse( $pp, $response, $resp='', $altvalidation=false )
 	{
+		global $aecConfig;
+
+		if ( !empty( $aecConfig->cfg['invoice_cushion'] ) && ( $this->transaction_date !== '0000-00-00 00:00:00' ) ) {
+			if ( ( strtotime( $this->transaction_date ) + $aecConfig->cfg['invoice_cushion']*60 ) > time() ) {
+				// The last notification has not been too long ago - skipping this one
+				return null;
+			}
+		}
+		
 		$database = &JFactory::getDBO();
 
 		$this->computeAmount();

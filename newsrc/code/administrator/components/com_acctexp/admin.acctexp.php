@@ -2361,6 +2361,7 @@ function editSettings( $option )
 	$params['alertlevel2']					= array( 'inputA', 0 );
 	$params['alertlevel1']					= array( 'inputA', 0 );
 	$params['expiration_cushion']			= array( 'inputA', 0 );
+	$params['invoice_cushion']				= array( 'inputA', 0 );
 	$params['heartbeat_cycle_backend']		= array( 'inputA', 0 );
 	$params['allow_frontend_heartbeat']		= array( 'list_yesno', 0 );
 	$params['disable_regular_heartbeat']	= array( 'list_yesno', 0 );

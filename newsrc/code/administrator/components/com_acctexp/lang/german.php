@@ -1202,6 +1202,9 @@ define( '_CFG_GENERAL_PER_PLAN_MIS_DESC', 'Mit dieser Einstellung k&ouml;nnen in
 define( '_CFG_GENERAL_INTRO_EXPIRED_NAME', 'Intro f&uuml;r Abgelaufene');
 define( '_CFG_GENERAL_INTRO_EXPIRED_DESC', 'Auch wenn ein Intro eingestellt ist, &uuml;berspringt AEC f&uuml;r Benutzer, deren Mitgliedschaft ausgelaufen ist und welche eine neue kaufen m&ouml;chten, dieses Intro und geht direkt zu den Bezahlpl&auml;nen weiter. Mit dieser Einstellung kann dieses Verhalten umgestellt werden.');
 
+define( '_CFG_GENERAL_INVOICE_CUSHION_NAME', 'Invoice Cushion');
+define( '_CFG_GENERAL_INVOICE_CUSHION_DESC', 'The cushion period in which AEC does not accept new notifications for an invoice that was already paid.');
+
 //Invoice settings
 define( '_CFG_GENERAL_SENDINVOICE_NAME', 'eine Rechnungs-Email senden');
 define( '_CFG_GENERAL_SENDINVOICE_DESC', 'eine Rechnungs/Bestellungs-Email senden (aus steuerlichen Gr&uuml;nden)');
