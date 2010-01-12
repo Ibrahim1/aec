@@ -3941,6 +3941,9 @@ class XMLprocessor extends processor
 				case 'city':
 					$var['params']['billCity'] = array( 'inputC', _AEC_USERFORM_BILLCITY_NAME, _AEC_USERFORM_BILLCITY_NAME, $vcontent );
 					break;
+				case 'nonus':
+					$var['params']['billNonUs'] = array( 'checkbox', _AEC_USERFORM_BILLNONUS_NAME, 1, $vcontent, _AEC_USERFORM_BILLNONUS_NAME );
+					break;
 				case 'state':
 					$var['params']['billState'] = array( 'inputC', _AEC_USERFORM_BILLSTATE_NAME, _AEC_USERFORM_BILLSTATE_NAME, $vcontent );
 					break;
@@ -9393,7 +9396,7 @@ class Invoice extends serialParamDBTable
 				return null;
 			}
 		}
-		
+
 		$database = &JFactory::getDBO();
 
 		$this->computeAmount();

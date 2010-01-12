@@ -52,6 +52,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		$settings['testmode']			= 0;
 		$settings['currency']			= 'USD';
 		$settings['promptAddress']		= 1;
+		$settings['minimalAddress']		= 0;
 		$settings['extendedAddress']	= 0;
 		$settings['dedicatedShipping']	= 0;
 		$settings['totalOccurrences']	= 12;
@@ -69,6 +70,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		$settings['transaction_key']	= array( 'inputC' );
 		$settings['currency']			= array( 'list_currency' );
 		$settings['promptAddress']		= array( 'list_yesno' );
+		$settings['minimalAddress']		= array( 'list_yesno' );
 		$settings['extendedAddress']	= array( 'list_yesno' );
 		$settings['dedicatedShipping']	= array( 'list_yesno' );
 		$settings['totalOccurrences']	= array( 'inputA' );
@@ -371,9 +373,13 @@ class processor_authorize_cim extends PROFILEprocessor
 
 		if ( !empty( $this->settings['promptAddress'] ) ) {
 			if ( empty( $this->settings['extendedAddress'] ) ) {
-				$uservalues = array( 'firstName', 'lastName', 'address', 'city', 'state', 'zip' );
+				if ( empty( $this->settings['minimalAddress'] ) ) {
+					$uservalues = array( 'firstName', 'lastName', 'address', 'city', 'nonus', 'state', 'zip' );
+				} else {
+					$uservalues = array( 'firstName', 'lastName', 'address', 'city' );
+				}
 			} else {
-				$uservalues = array( 'firstName', 'lastName', 'company', 'address', 'city', 'state', 'zip', 'country', 'phone', 'fax' );
+				$uservalues = array( 'firstName', 'lastName', 'company', 'address', 'city', 'nonus', 'state', 'zip', 'country', 'phone', 'fax' );
 			}
 
 			$content = array();
@@ -515,6 +521,14 @@ class processor_authorize_cim extends PROFILEprocessor
 							'billTo_phoneNumber' => 'billPhone',
 							'billTo_faxNumber' => 'billFax'
 							);
+		}
+
+		if ( !empty( $request->int_var['params']['billNonUs'] ) ) {
+			$unset = array( 'billTo_state', 'billTo_zip' );
+
+			foreach ( $unset as $uk => $uv ) {
+				unset( $udata[$uk] );
+			}
 		}
 
 		foreach ( $udata as $authvar => $aecvar ) {
