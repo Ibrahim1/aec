@@ -14260,7 +14260,7 @@ class microIntegrationHandler
 
 class MI
 {
-	function autoduplicatesettings( $settings, $ommit=array() )
+	function autoduplicatesettings( $settings, $ommit=array(), $collate=true )
 	{
 		if ( isset( $settings['lists'] ) ) {
 			$lists = $settings['lists'];
@@ -14276,9 +14276,19 @@ class MI
 				continue;
 			}
 
-			$new_settings[$name]			= $content;
-			$new_settings[$name.'_exp']		= $content;
-			$new_settings[$name.'_pre_exp']	= $content;
+			if ( $collate ) {
+				$new_settings[$name]				= $content;
+				$new_settings_exp[$name.'_exp']		= $content;
+				$new_settings_pxp[$name.'_pre_exp']	= $content;
+			} else {
+				$new_settings[$name]			= $content;
+				$new_settings[$name.'_exp']		= $content;
+				$new_settings[$name.'_pre_exp']	= $content;
+			}
+		}
+
+		if ( $collate ) {
+			$new_settings = array_merge( $new_settings, $new_settings_exp, $new_settings_pxp );
 		}
 
 		if ( !empty( $new_lists ) ) {

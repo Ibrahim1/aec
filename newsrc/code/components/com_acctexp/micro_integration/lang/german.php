@@ -1027,4 +1027,26 @@ define( '_MI_MI_AECTAX_CUSTOMINFO_NAME',		'Custom Info' );
 define( '_MI_MI_AECTAX_CUSTOMINFO_DESC',		'AEC normally displays the text "Please select your location:" on confirmation above the location selector. If you want it to say something else, enter your text here.' );
 define( '_MI_MI_AECTAX_DEFAULT_NOTICE',		'Please select your location:' );
 
+// File
+define( '_AEC_MI_FILE_NAME',		'File' );
+define( '_AEC_MI_FILE_DESC',		'Create and Modify files on your server' );
+define( '_MI_MI_FILE_PATH_NAME',		'Path' );
+define( '_MI_MI_FILE_PATH_DESC',		'Full System path to the file you want to create or modify.' );
+define( '_MI_MI_FILE_APPEND_NAME',		'Append' );
+define( '_MI_MI_FILE_APPEND_DESC',		'Append new content to existing text (if exists).' );
+define( '_MI_MI_FILE_CONTENT_NAME',		'Content' );
+define( '_MI_MI_FILE_CONTENT_DESC',		'The text that you want to put into the file.' );
+define( '_MI_MI_FILE_PATH_EXP_NAME',		'Path (expiration)' );
+define( '_MI_MI_FILE_PATH_EXP_DESC',		'Full System path to the file you want to create or modify on expiration.' );
+define( '_MI_MI_FILE_APPEND_EXP_NAME',		'Append (expiration)' );
+define( '_MI_MI_FILE_APPEND_EXP_DESC',		'Append new content to existing text (if exists) on expiration.' );
+define( '_MI_MI_FILE_CONTENT_EXP_NAME',		'Content (expiration)' );
+define( '_MI_MI_FILE_CONTENT_EXP_DESC',		'The text that you want to put into the file on expiration.' );
+define( '_MI_MI_FILE_PATH_PRE_EXP_NAME',		'Path (pre-expiration)' );
+define( '_MI_MI_FILE_PATH_PRE_EXP_DESC',		'Full System path to the file you want to create or modify before expiration.' );
+define( '_MI_MI_FILE_APPEND_PRE_EXP_NAME',		'Append (pre-expiration)' );
+define( '_MI_MI_FILE_APPEND_PRE_EXP_DESC',		'Append new content to existing text (if exists) before expiration.' );
+define( '_MI_MI_FILE_CONTENT_PRE_EXP_NAME',		'Content (pre-expiration)' );
+define( '_MI_MI_FILE_CONTENT_PRE_EXP_DESC',		'The text that you want to put into the file before expiration.' );
+
 ?>
