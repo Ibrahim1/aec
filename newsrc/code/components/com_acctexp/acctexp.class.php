@@ -4721,8 +4721,15 @@ class aecHTML
 				if ( aecJoomla15check() ) {
 					$return = '<div class="setting_desc">';
 					$return .= '<span class="editlinktip hasTip" title="';
-					$return .= htmlentities( $row[1], ENT_QUOTES, "ISO-8859-1", false ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . ':' . htmlentities( $row[2], ENT_QUOTES, "ISO-8859-1", false );
-					$return .= '">' . $this->Icon( 'help.png') . htmlentities( $row[1], ENT_QUOTES, "ISO-8859-1", false ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . '</span>';
+
+					if ( strnatcmp( phpversion(),'5.2.3' ) >= 0 ) {
+						$return .= htmlentities( $row[1], ENT_QUOTES, "ISO-8859-1", false ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . ':' . htmlentities( $row[2], ENT_QUOTES, "ISO-8859-1", false );
+						$return .= '">' . $this->Icon( 'help.png') . htmlentities( $row[1], ENT_QUOTES, "ISO-8859-1", false ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . '</span>';
+					} else {
+						$return .= htmlentities( $row[1], ENT_QUOTES, "ISO-8859-1" ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . ':' . htmlentities( $row[2], ENT_QUOTES, "ISO-8859-1" );
+						$return .= '">' . $this->Icon( 'help.png') . htmlentities( $row[1], ENT_QUOTES, "ISO-8859-1" ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . '</span>';
+					}
+
 					$return .= '</div>';
 				} else {
 					$return = '<div class="setting_desc">' . $this->ToolTip( $row[2], $row[1] ) . $row[1] . '</div>';
