@@ -17439,7 +17439,7 @@ class aecRestrictionHelper
 		// Check for a overall used group with amount maximum
 		if ( !empty( $restrictions['used_group_max_enabled'] ) ) {
 			if ( !empty( $restrictions['used_group_max_amount'] ) && isset( $restrictions['used_group_max'] ) ) {
-				$temp = $this->addGroupPlans( $restrictions, 'used_group_max', 'used_plan_max', array() );
+				$temp = aecRestrictionHelper::addGroupPlans( $restrictions, 'used_group_max', 'used_plan_max', array() );
 
 				$ps = array();
 				foreach ( $temp['used_plan_max'] as $planid ) {
