@@ -15,8 +15,6 @@ class mi_aecdonate
 {
 	function Settings()
 	{
-		$database = &JFactory::getDBO();
-
 		$settings = array();
 
 		$settings['min'] = array( 'inputB' );
@@ -41,8 +39,6 @@ class mi_aecdonate
 
 	function getMIform( $request )
 	{
-		$database = &JFactory::getDBO();
-
 		$settings = array();
 
 		if ( !empty( $this->settings['rec'] ) ) {
