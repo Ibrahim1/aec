@@ -48,8 +48,6 @@ class mi_email_files
 
 	function getMIform( $request )
 	{
-		$database = &JFactory::getDBO();
-
 		$settings = array();
 
 		if ( !empty( $this->settings['desc_list'] ) ) {
@@ -77,8 +75,6 @@ class mi_email_files
 
 	function verifyMIform( $request )
 	{
-		$database = &JFactory::getDBO();
-
 		$return = array();
 
 		if ( !empty( $request->params['mi_email_files'] ) ) {
