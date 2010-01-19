@@ -55,6 +55,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		$settings['minimalAddress']		= 0;
 		$settings['extendedAddress']	= 0;
 		$settings['dedicatedShipping']	= 0;
+		$settings['noechecks']			= 0;
 		$settings['totalOccurrences']	= 12;
 		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']		= '';
@@ -73,6 +74,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		$settings['minimalAddress']		= array( 'list_yesno' );
 		$settings['extendedAddress']	= array( 'list_yesno' );
 		$settings['dedicatedShipping']	= array( 'list_yesno' );
+		$settings['noechecks']			= array( 'list_yesno' );
 		$settings['totalOccurrences']	= array( 'inputA' );
 		$settings['item_name']			= array( 'inputE' );
 		$settings['customparams']		= array( 'inputD' );
@@ -354,21 +356,25 @@ class processor_authorize_cim extends PROFILEprocessor
 			$mainframe->addCustomHeadTag( '<script type="text/javascript" src="' . JURI::root() . 'components/com_acctexp/lib/mootools/mootabs.js"></script>' );
 			$mainframe->addCustomHeadTag( '<script type="text/javascript" charset="utf-8">window.addEvent(\'domready\', init);function init() {myTabs1 = new mootabs(\'myTabs\');}</script>' );
 
-			$var['params'][] = array( 'tabberstart', '', '', '' );
-			$var['params'][] = array( 'tabregisterstart', '', '', '' );
-			$var['params'][] = array( 'tabregister', 'ccdetails', 'Credit Card', true );
-			$var['params'][] = array( 'tabregister', 'echeckdetails', 'eCheck', false );
-			$var['params'][] = array( 'tabregisterend', '', '', '' );
+			if ( $this->settings['noechecks'] ) {
+				$var = $this->getCCform( $var, array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), $vcontent );
+			} else {
+				$var['params'][] = array( 'tabberstart', '', '', '' );
+				$var['params'][] = array( 'tabregisterstart', '', '', '' );
+				$var['params'][] = array( 'tabregister', 'ccdetails', 'Credit Card', true );
+				$var['params'][] = array( 'tabregister', 'echeckdetails', 'eCheck', false );
+				$var['params'][] = array( 'tabregisterend', '', '', '' );
 
-			$var['params'][] = array( 'tabstart', 'ccdetails', true, '' );
-			$var = $this->getCCform( $var, array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), $vcontent );
-			$var['params'][] = array( 'tabend', '', '', '' );
+				$var['params'][] = array( 'tabstart', 'ccdetails', true, '' );
+				$var = $this->getCCform( $var, array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), $vcontent );
+				$var['params'][] = array( 'tabend', '', '', '' );
 
-			$var['params'][] = array( 'tabstart', 'echeckdetails', true, '' );
-			$var = $this->getECHECKform( $var );
-			$var['params'][] = array( 'tabend', '', '', '' );
+				$var['params'][] = array( 'tabstart', 'echeckdetails', true, '' );
+				$var = $this->getECHECKform( $var );
+				$var['params'][] = array( 'tabend', '', '', '' );
 
-			$var['params'][] = array( 'tabberend', '', '', '' );
+				$var['params'][] = array( 'tabberend', '', '', '' );
+			}
 		}
 
 		if ( !empty( $this->settings['promptAddress'] ) ) {

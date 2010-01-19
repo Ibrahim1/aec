@@ -670,6 +670,8 @@ define( '_CFG_AUTHORIZE_CIM_EXTENDEDADDRESS_NAME', 'Extended Address');
 define( '_CFG_AUTHORIZE_CIM_EXTENDEDADDRESS_DESC', 'Ask the user for extended details (Country, Company and Telephone).');
 define( '_CFG_AUTHORIZE_CIM_DEDICATEDSHIPPING_NAME', 'Dedicated Shipping Details');
 define( '_CFG_AUTHORIZE_CIM_DEDICATEDSHIPPING_DESC', 'Offer the user a dedicated shipping details form.');
+define( '_CFG_AUTHORIZE_CIM_NOECHECKS_NAME', 'Disable eChecks');
+define( '_CFG_AUTHORIZE_CIM_NOECHECKS_DESC', 'Authorize.net CIM allows you to process eChecks. Set this option to Yes, if you don\'t want to accept eChecks.');
 define( '_CFG_AUTHORIZE_CIM_TOTALOCCURRENCES_NAME', 'Total Occurances');
 define( '_CFG_AUTHORIZE_CIM_TOTALOCCURRENCES_DESC', 'If you want to, you can set a maximum number of rebills - the user will be automatically billed and renewed the number of times you set.');
 
