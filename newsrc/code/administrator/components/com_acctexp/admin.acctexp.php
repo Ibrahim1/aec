@@ -171,7 +171,9 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'showsubscriptions':
-		listSubscriptions( $option, 'active', $subscriptionid, $userid );
+		$planid	= trim( aecGetParam( 'plan', null ) );
+
+		listSubscriptions( $option, 'active', $subscriptionid, $userid, $planid );
 		break;
 
 	case 'showexcluded':
@@ -183,7 +185,9 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'showexpired':
-		listSubscriptions( $option, 'expired', $subscriptionid, $userid );
+		$planid	= trim( aecGetParam( 'plan', null ) );
+
+		listSubscriptions( $option, 'expired', $subscriptionid, $userid, $planid );
 		break;
 
 	case 'showpending':
@@ -1676,7 +1680,7 @@ function activatePendingSubscription( $userid, $option, $renew )
 	}
 }
 
-function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array() )
+function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(), $planid=null )
 {
 	$database = &JFactory::getDBO();
 
@@ -1689,7 +1693,11 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$search			= $mainframe->getUserStateFromRequest( "search{$option}", 'search', '' );
 	$search			= $database->getEscaped( trim( strtolower( $search ) ) );
 
-	$filter_planid	= intval( $mainframe->getUserStateFromRequest( "filter_planid{$option}", 'filter_planid', 0 ) );
+	if ( empty( $planid ) ) {
+		$filter_planid	= intval( $mainframe->getUserStateFromRequest( "filter_planid{$option}", 'filter_planid', 0 ) );
+	} else {
+		$filter_planid	= $planid;
+	}
 
 	if ( !empty( $orderby ) ) {
 		$forder = array(	'expiration ASC', 'expiration DESC', 'lastpay_date ASC', 'lastpay_date DESC',
