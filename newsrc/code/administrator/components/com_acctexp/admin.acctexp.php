@@ -176,6 +176,14 @@ switch( strtolower( $task ) ) {
 		listSubscriptions( $option, 'active', $subscriptionid, $userid, $planid );
 		break;
 
+	case 'showallsubscriptions':
+		$planid	= trim( aecGetParam( 'plan', null ) );
+
+		$groups = array( 'active', 'expired', 'pending', 'cancelled', 'hold', 'closed' );
+
+		listSubscriptions( $option, $groups, $subscriptionid, $userid, $planid );
+		break;
+
 	case 'showexcluded':
 		listSubscriptions( $option, 'excluded', $subscriptionid, $userid );
 		break;
@@ -1717,8 +1725,13 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 			$set_group	= $_REQUEST['groups'][0];
 		}
 	} else {
-		$groups		= array();
-		$groups[]	= $set_group;
+		if ( is_array( $set_group ) ) {
+			$groups		= $set_group;
+			$set_group	= $groups[0];
+		} else {
+			$groups		= array();
+			$groups[]	= $set_group;
+		}
 	}
 
 	// define displaying at html
