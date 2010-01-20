@@ -121,14 +121,15 @@ class mi_htaccess
 		$ht->setFPasswd( $this->settings['mi_folder_user_fullpath'] );
 		$ht->setFHtaccess( $this->settings['mi_folder_fullpath'] );
 
-		if( isset( $this->settings['mi_name'] ) ) {
+		if ( isset( $this->settings['mi_name'] ) ) {
 			$ht->setAuthName( $this->settings['mi_name'] );
 		}
 
-		if( $this->settings['use_md5'] ) {
+		if ( $this->settings['use_md5'] ) {
 			$ht->addUser( $request->metaUser->cmsUser->username, $request->metaUser->cmsUser->password );
 		} else {
 			$apachepw = new apachepw( $database );
+
 			$apwid = $apachepw->getIDbyUserID( $request->metaUser->userid );
 
 			if ( $apwid ) {
@@ -140,6 +141,7 @@ class mi_htaccess
 
 			$ht->addUser( $request->metaUser->cmsUser->username, $apachepw->apachepw );
 		}
+
 		$ht->addLogin();
 		return true;
 	}
