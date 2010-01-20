@@ -35,14 +35,16 @@ class mi_phpbb3
 								'prefix'	=> $this->settings['table_prefix']
 								);
 
-			$prefix = $this->settings['table_prefix'];
-
 	        $database = &JDatabase::getInstance($options);
         } else {
         	$database = &JFactory::getDBO();
-
-			$prefix = 'phpbb_';
         }
+
+		if ( !empty( $this->settings['table_prefix'] ) ) {
+			$prefix = $this->settings['table_prefix'];
+		} else {
+			$prefix = 'phpbb_';
+		}
 
 		$query = 'SELECT `group_id`, `group_name`, `group_colour`'
 			 	. ' FROM ' . $prefix . 'groups'
@@ -140,14 +142,16 @@ class mi_phpbb3
 								'prefix'	=> $this->settings['table_prefix']
 								);
 
-			$prefix = $this->settings['table_prefix'];
-
 	        $database =& JDatabase::getInstance($options);
         } else {
         	$database = &JFactory::getDBO();
-
-			$prefix = 'phpbb_';
         }
+
+		if ( !empty( $this->settings['table_prefix'] ) ) {
+			$prefix = $this->settings['table_prefix'];
+		} else {
+			$prefix = 'phpbb_';
+		}
 
 		if ( $this->settings['set_group_exp'] ) {
 			$userid = $request->metaUser->userid;
@@ -245,14 +249,16 @@ class mi_phpbb3
 								'prefix'	=> $this->settings['table_prefix']
 								);
 
-			$prefix = $this->settings['table_prefix'];
-
 	        $database =& JDatabase::getInstance($options);
         } else {
         	$database = &JFactory::getDBO();
-
-			$prefix = 'phpbb_';
         }
+
+		if ( !empty( $this->settings['table_prefix'] ) ) {
+			$prefix = $this->settings['table_prefix'];
+		} else {
+			$prefix = 'phpbb_';
+		}
 
 		if ( $this->settings['set_group'] ) {
 			$bbuser = null;
