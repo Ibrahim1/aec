@@ -1053,4 +1053,36 @@ define( '_MI_MI_FILE_APPEND_PRE_EXP_DESC',		'Append new content to existing text
 define( '_MI_MI_FILE_CONTENT_PRE_EXP_NAME',		'Content (pre-expiration)' );
 define( '_MI_MI_FILE_CONTENT_PRE_EXP_DESC',		'The text that you want to put into the file before expiration.' );
 
+// Admin-User-Access
+define( '_AEC_MI_NAME_ADMINUSERACCESS','Admin-User-Access' );
+define( '_AEC_MI_DESC_ADMINUSERACCESS','Will automate addition of a user to a Admin-User-Access group in Admin-User-Access' );
+define( '_MI_MI_ADMINUSERACCESS_SET_GROUP_NAME','Set group' );
+define( '_MI_MI_ADMINUSERACCESS_SET_GROUP_DESC','Choose Yes if you wish a Admin-User-Access group to be applied when the plan is applied' );
+define( '_MI_MI_ADMINUSERACCESS_GROUP_NAME','Group' );
+define( '_MI_MI_ADMINUSERACCESS_GROUP_DESC','The Admin-User-Access group you wish applied - if you choose yes.' );
+define( '_MI_MI_ADMINUSERACCESS_SET_GROUP_EXP_NAME','Set group (expiration)' );
+define( '_MI_MI_ADMINUSERACCESS_SET_GROUP_EXP_DESC','Choose Yes if you wish the Admin-User-Access group to be changed when the plan expires. Otherwise, the group assignment is left untouched.' );
+define( '_MI_MI_ADMINUSERACCESS_GROUP_EXP_NAME','Group (expiration)' );
+define( '_MI_MI_ADMINUSERACCESS_GROUP_EXP_DESC','The Admin-User-Access group you wish to use if the plan expires' );
+define( '_MI_MI_ADMINUSERACCESS_REBUILD_NAME','Rebuild' );
+define( '_MI_MI_ADMINUSERACCESS_REBUILD_DESC','This option will rebuild your whole Admin-User-Access group assignment by looking for each plan that has this MI applied and then add each user that uses one of these plans to the file.' );
+define( '_MI_MI_ADMINUSERACCESS_REMOVE_NAME','Remove' );
+define( '_MI_MI_ADMINUSERACCESS_REMOVE_DESC','Carry out the expiration action for all users with an active plan attached to this micro-integration' );
+
+// Frontend-User-Access
+define( '_AEC_MI_NAME_FRONTENDUSERACCESS','Frontend-User-Access' );
+define( '_AEC_MI_DESC_FRONTENDUSERACCESS','Will automate addition of a user to a Frontend-User-Access group in Frontend-User-Access' );
+define( '_MI_MI_FRONTENDUSERACCESS_SET_GROUP_NAME','Set group' );
+define( '_MI_MI_FRONTENDUSERACCESS_SET_GROUP_DESC','Choose Yes if you wish a Frontend-User-Access group to be applied when the plan is applied' );
+define( '_MI_MI_FRONTENDUSERACCESS_GROUP_NAME','Group' );
+define( '_MI_MI_FRONTENDUSERACCESS_GROUP_DESC','The Frontend-User-Access group you wish applied - if you choose yes.' );
+define( '_MI_MI_FRONTENDUSERACCESS_SET_GROUP_EXP_NAME','Set group (expiration)' );
+define( '_MI_MI_FRONTENDUSERACCESS_SET_GROUP_EXP_DESC','Choose Yes if you wish the Frontend-User-Access group to be changed when the plan expires. Otherwise, the group assignment is left untouched.' );
+define( '_MI_MI_FRONTENDUSERACCESS_GROUP_EXP_NAME','Group (expiration)' );
+define( '_MI_MI_FRONTENDUSERACCESS_GROUP_EXP_DESC','The Frontend-User-Access group you wish to use if the plan expires' );
+define( '_MI_MI_FRONTENDUSERACCESS_REBUILD_NAME','Rebuild' );
+define( '_MI_MI_FRONTENDUSERACCESS_REBUILD_DESC','This option will rebuild your whole Frontend-User-Access group assignment by looking for each plan that has this MI applied and then add each user that uses one of these plans to the file.' );
+define( '_MI_MI_FRONTENDUSERACCESS_REMOVE_NAME','Remove' );
+define( '_MI_MI_FRONTENDUSERACCESS_REMOVE_DESC','Carry out the expiration action for all users with an active plan attached to this micro-integration' );
+
 ?>
