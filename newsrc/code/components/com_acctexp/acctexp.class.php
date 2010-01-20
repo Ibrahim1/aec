@@ -9065,8 +9065,13 @@ class Invoice extends serialParamDBTable
 	function Invoice(&$db)
 	{
 		parent::__construct( '#__acctexp_invoices', 'id', $db );
+	}
 
-		if ( empty( $this->counter ) && ( $this->transaction_date != '0000-00-00 00:00:00' ) ) {
+	function load( $id )
+	{
+		parent::load( $id );
+
+		if ( empty( $this->counter ) && ( $this->transaction_date != '0000-00-00 00:00:00' ) && !is_null( $this->transaction_date ) ) {
 			$this->counter = 1;
 		}
 	}
@@ -9395,9 +9400,8 @@ class Invoice extends serialParamDBTable
 	function processorResponse( $pp, $response, $resp='', $altvalidation=false )
 	{
 		global $aecConfig;
-//TODO:aecDebug("cushion: " . $aecConfig->cfg['invoice_cushion'] . ", date: " . $this->transaction_date);
+
 		if ( !empty( $aecConfig->cfg['invoice_cushion'] ) && ( $this->transaction_date !== '0000-00-00 00:00:00' ) ) {
-//TODO:$string = "cushioned: " . ( strtotime( $this->transaction_date ) + $aecConfig->cfg['invoice_cushion']*60 ) . ", stamp: " . time();aecDebug( $string );
 			if ( ( strtotime( $this->transaction_date ) + $aecConfig->cfg['invoice_cushion']*60 ) > time() ) {
 				// The last notification has not been too long ago - skipping this one
 				return null;
