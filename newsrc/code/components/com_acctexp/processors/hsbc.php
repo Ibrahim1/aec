@@ -45,15 +45,12 @@ class processor_hsbc extends XMLprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['login']				= "login";
-		$settings['transaction_key']	= "transaction_key";
+		$settings['clientid']			= "clientid";
+		$settings['name']				= "name";
+		$settings['password']			= "name";
 		$settings['testmode']			= 0;
-		$settings['ignore_empty_invoices']	= 0;
 		$settings['currency']			= "USD";
 		$settings['promptAddress']		= 0;
-		$settings['totalOccurrences']	= 12;
-		$settings['trialOccurrences']	= 1;
-		$settings['useSilentPostResponse']	= 1;
 		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 
 		return $settings;
@@ -63,15 +60,10 @@ class processor_hsbc extends XMLprocessor
 	{
 		$settings = array();
 		$settings['testmode']			= array("list_yesno");
-		$settings['ignore_empty_invoices']	= array("list_yesno");
+		$settings['clientid'] 			= array("inputC");
 		$settings['login'] 				= array("inputC");
-		$settings['transaction_key']	= array("inputC");
 		$settings['currency']			= array("list_currency");
 		$settings['promptAddress']		= array("list_yesno");
-		$settings['totalOccurrences']	= array("inputA");
-		$settings['trialOccurrences']	= array("inputA");
-		$settings['useSilentPostResponse']		= array("list_yesno");
-		$settings['SilentPost_info']			= array( 'fieldset' );
 		$settings['item_name']			= array("inputE");
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
@@ -111,8 +103,8 @@ class processor_hsbc extends XMLprocessor
 					. '<DocVersion DataType="String">1.0</DocVersion>'
 					. '<EngineDoc>'
 					. '<User>'
-					. '<ClientId DataType="S32">' . trim( substr( $this->settings['clientit'], 0, 32 ) ) . '</ClientId>'
-					. '<Name DataType="String">' . this->settings['login'] . '</Name>'
+					. '<ClientId DataType="S32">' . trim( substr( $this->settings['clientid'], 0, 32 ) ) . '</ClientId>'
+					. '<Name DataType="String">' . this->settings['name'] . '</Name>'
 					. '<Password DataType="String">' . this->settings['password'] . '</Password>'
 					. '</User>'
 					;
