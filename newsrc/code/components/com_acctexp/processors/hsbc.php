@@ -1,8 +1,8 @@
 <?php
 /**
- * @version $Id: authorize_arb.php
+ * @version $Id: hsbc.php
  * @package AEC - Account Control Expiration - Membership Manager
- * @subpackage Processors - Authorize ARB
+ * @subpackage Processors - HSBC
  * @copyright 2007-2008 Copyright (C) David Deutsch
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
@@ -11,18 +11,18 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_authorize_arb extends XMLprocessor
+class processor_hsbc extends XMLprocessor
 {
 	function info()
 	{
 		$info = array();
-		$info['name'] = 'authorize_arb';
-		$info['longname'] = _CFG_AUTHORIZE_ARB_LONGNAME;
-		$info['statement'] = _CFG_AUTHORIZE_ARB_STATEMENT;
-		$info['description'] = _CFG_AUTHORIZE_ARB_DESCRIPTION;
+		$info['name'] = 'hsbc';
+		$info['longname'] = _CFG_HSBC_LONGNAME;
+		$info['statement'] = _CFG_HSBC_STATEMENT;
+		$info['description'] = _CFG_HSBC_DESCRIPTION;
 		$info['currencies'] = AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
-		$info['recurring'] = 1;
+		$info['recurring'] = 2;
 		$info['actions'] = array( 'cancel' => array( 'confirm' ) );
 		$info['secure'] = 1;
 
@@ -107,12 +107,15 @@ class processor_authorize_arb extends XMLprocessor
 	{
 		// Start xml, add login and transaction key, as well as invoice number
 		$content =	'<?xml version="1.0" encoding="utf-8"?>'
-					. '<ARBCreateSubscriptionRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">'
-					. '<merchantAuthentication>'
-					. '<name>' . trim( substr( $this->settings['login'], 0, 25 ) ) . '</name>'
-					. '<transactionKey>' . trim( substr( $this->settings['transaction_key'], 0, 16 ) ) . '</transactionKey>'
-					. '</merchantAuthentication>'
-					. '<refId>' . $request->invoice->invoice_number . '</refId>';
+					. '<EngineDocList>'
+					. '<DocVersion DataType="String">1.0</DocVersion>'
+					. '<EngineDoc>'
+					. '<User>'
+					. '<ClientId DataType="S32">' . trim( substr( $this->settings['clientit'], 0, 32 ) ) . '</ClientId>'
+					. '<Name DataType="String">' . this->settings['login'] . '</Name>'
+					. '<Password DataType="String">' . this->settings['password'] . '</Password>'
+					. '</User>'
+					;
 
 		$full = $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
 
@@ -167,7 +170,7 @@ class processor_authorize_arb extends XMLprocessor
 		$content .=	'</subscription>';
 
 		// Close Request
-		$content .=	'</ARBCreateSubscriptionRequest>';
+		$content .=	'</EngineDocList>';
 
 		return $content;
 	}
@@ -183,7 +186,7 @@ class processor_authorize_arb extends XMLprocessor
 
 		if ( !$this->settings['testmode'] && in_array( trim( $request->int_var['params']['cardNumber'] ), $cc_testnumbers)) {
 			$response['valid'] = false;
-			$response['error'] = "Credit Card Number is not a valid ARB testing CC Number";
+			$response['error'] = "Credit Card Number is not a valid";
 			return $response;
 		}
 
