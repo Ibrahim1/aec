@@ -109,14 +109,19 @@ class processor_hsbc extends XMLprocessor
 					. '</User>'
 					;
 
+		// Instructions
+		$content .=	'<Instructions>'
+					. '<Pipeline DataType="String">Payment</Pipeline>'
+					. '</Instructions>';
+					
 		$full = $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
 
 		$name = AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 
 		// Add Payment information
-		$content .=	'<subscription>'
-					. '<name>' . trim( substr( $name, 0, 20 ) ) . '</name>'
-					. '<paymentSchedule>'
+		$content .=	'<OrderFormDoc>'
+					. '<Id DataType="String">' . $request->invoice->invoice_number . '</Id>'
+					. '<Mode DataType="String">P</Mode>'
 					. '<interval>'
 					. '<length>' . trim( $full['period'] ) . '</length>'
 					. '<unit>' . trim( $full['unit'] ) . '</unit>'
@@ -135,14 +140,18 @@ class processor_hsbc extends XMLprocessor
 			$content .=	 '<trialAmount>' . trim( $request->int_var['amount']['amount1'] ) . '</trialAmount>';
 		}
 
-		$expirationDate =  $request->int_var['params']['expirationYear'] . '-' . str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT );
+		$expirationDate =  $request->int_var['params']['expirationMonth'] . '/' . str_pad( $request->int_var['params']['expirationYear'], 2, '0', STR_PAD_LEFT );
 
-		$content .=	'<payment>'
-					. '<creditCard>'
-					. '<cardNumber>' . trim( $request->int_var['params']['cardNumber'] ) . '</cardNumber>'
-					. '<expirationDate>' . trim( $expirationDate ) . '</expirationDate>'
-					. '</creditCard>'
-					. '</payment>'
+		// Customer/Credit Card Details
+		$content .=	'<Consumer>'
+					. '<PaymentMech>'
+					. '<Type DataType="String">CreditCard</Type>'
+					. '<CreditCard>'
+					. '<Number DataType="String">' . trim( $request->int_var['params']['cardNumber'] ) . '</Number>'
+					. '<Expires DataType="ExpirationDate" Locale="826">' . trim( $expirationDate ) . '</Expires>'
+					. '</CreditCard>'
+					. '</PaymentMech>'
+					. '</Consumer>'
 					;
 		$content .=	 '<billTo>'
 					. '<firstName>'. trim( $request->int_var['params']['billFirstName'] ) . '</firstName>'
