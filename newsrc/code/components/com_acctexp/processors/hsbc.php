@@ -61,7 +61,7 @@ class processor_hsbc extends XMLprocessor
 		$settings = array();
 		$settings['testmode']			= array("list_yesno");
 		$settings['clientid'] 			= array("inputC");
-		$settings['login'] 				= array("inputC");
+		$settings['name'] 				= array("inputC");
 		$settings['password'] 			= array("inputC");
 		$settings['currency']			= array("list_currency");
 		$settings['promptAddress']		= array("list_yesno");
@@ -94,8 +94,8 @@ class processor_hsbc extends XMLprocessor
 					. '<EngineDoc>'
 					. '<User>'
 					. '<ClientId DataType="S32">' . trim( substr( $this->settings['clientid'], 0, 32 ) ) . '</ClientId>'
-					. '<Name DataType="String">' . this->settings['name'] . '</Name>'
-					. '<Password DataType="String">' . this->settings['password'] . '</Password>'
+					. '<Name DataType="String">' . $this->settings['name'] . '</Name>'
+					. '<Password DataType="String">' . $this->settings['password'] . '</Password>'
 					. '</User>'
 					;
 
