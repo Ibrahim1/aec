@@ -3,7 +3,7 @@
  * @version $Id: hsbc.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Processors - HSBC
- * @copyright 2007-2008 Copyright (C) David Deutsch
+ * @copyright 2007-2010 Copyright (C) David Deutsch
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
@@ -45,10 +45,10 @@ class processor_hsbc extends XMLprocessor
 	function settings()
 	{
 		$settings = array();
+		$settings['testmode']			= 0;
 		$settings['clientid']			= "clientid";
 		$settings['name']				= "name";
-		$settings['password']			= "name";
-		$settings['testmode']			= 0;
+		$settings['password']			= "password";
 		$settings['currency']			= "USD";
 		$settings['promptAddress']		= 0;
 		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
@@ -62,6 +62,7 @@ class processor_hsbc extends XMLprocessor
 		$settings['testmode']			= array("list_yesno");
 		$settings['clientid'] 			= array("inputC");
 		$settings['login'] 				= array("inputC");
+		$settings['password'] 			= array("inputC");
 		$settings['currency']			= array("list_currency");
 		$settings['promptAddress']		= array("list_yesno");
 		$settings['item_name']			= array("inputE");
@@ -73,24 +74,13 @@ class processor_hsbc extends XMLprocessor
 
 	function checkoutform( $request )
 	{
-		$var = $this->getCCform();
+		$values = array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' );
 
-		$name = explode( ' ', $request->metaUser->cmsUser->name );
+		$var = $this->getCCform( $values );
 
-		if ( empty( $name[1] ) ) {
-			$name[1] = "";
-		}
+		$values = array( 'firstname', 'lastname', 'address', 'city', 'state_usca', 'zip', 'country_list' );
 
-		$var['params']['billFirstName'] = array( 'inputC', _AEC_USERFORM_BILLFIRSTNAME_NAME, _AEC_USERFORM_BILLFIRSTNAME_NAME, $name[0]);
-		$var['params']['billLastName'] = array( 'inputC', _AEC_USERFORM_BILLLASTNAME_NAME, _AEC_USERFORM_BILLLASTNAME_NAME, $name[1]);
-
-		if ( !empty( $this->settings['promptAddress'] ) ) {
-			$var['params']['billAddress'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS_NAME );
-			$var['params']['billCity'] = array( 'inputC', _AEC_USERFORM_BILLCITY_NAME );
-			$var['params']['billState'] = array( 'inputC', _AEC_USERFORM_BILLSTATE_NAME );
-			$var['params']['billZip'] = array( 'inputC', _AEC_USERFORM_BILLZIP_NAME );
-			$var['params']['billCountry'] = array( 'inputC', _AEC_USERFORM_BILLCOUNTRY_NAME );
-		}
+		$var = $this->getUserform( $var, $values, $request->metaUser );
 
 		return $var;
 	}
@@ -113,32 +103,12 @@ class processor_hsbc extends XMLprocessor
 		$content .=	'<Instructions>'
 					. '<Pipeline DataType="String">Payment</Pipeline>'
 					. '</Instructions>';
-					
-		$full = $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
-
-		$name = AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 
 		// Add Payment information
 		$content .=	'<OrderFormDoc>'
 					. '<Id DataType="String">' . $request->invoice->invoice_number . '</Id>'
 					. '<Mode DataType="String">P</Mode>'
-					. '<interval>'
-					. '<length>' . trim( $full['period'] ) . '</length>'
-					. '<unit>' . trim( $full['unit'] ) . '</unit>'
-					. '</interval>'
-					. '<startDate>' . trim( date( 'Y-m-d' ) ) . '</startDate>'
-					. '<totalOccurrences>' . trim( $this->settings['totalOccurrences'] ) . '</totalOccurrences>';
-
-		if ( isset( $request->int_var['amount']['amount1'] ) ) {
-			$content .=	'<trialOccurrences>' . trim( $this->settings['trialOccurrences'] ) . '</trialOccurrences>';
-		}
-
-		$content .=	 '</paymentSchedule>'
-					. '<amount>' . trim( $request->int_var['amount']['amount3'] ) .'</amount>';
-
-		if ( isset( $request->int_var['amount']['amount1'] ) ) {
-			$content .=	 '<trialAmount>' . trim( $request->int_var['amount']['amount1'] ) . '</trialAmount>';
-		}
+					;
 
 		$expirationDate =  $request->int_var['params']['expirationMonth'] . '/' . str_pad( $request->int_var['params']['expirationYear'], 2, '0', STR_PAD_LEFT );
 
@@ -147,30 +117,50 @@ class processor_hsbc extends XMLprocessor
 					. '<PaymentMech>'
 					. '<Type DataType="String">CreditCard</Type>'
 					. '<CreditCard>'
+					. '<Cvv2Indicator DataType="String">1</Cvv2Indicator>'
+					. '<Cvv2Val DataType="String">' . trim( $request->int_var['params']['cardVV2'] ) . '</Cvv2Val>'
 					. '<Number DataType="String">' . trim( $request->int_var['params']['cardNumber'] ) . '</Number>'
 					. '<Expires DataType="ExpirationDate" Locale="826">' . trim( $expirationDate ) . '</Expires>'
 					. '</CreditCard>'
 					. '</PaymentMech>'
-					. '</Consumer>'
-					;
-		$content .=	 '<billTo>'
-					. '<firstName>'. trim( $request->int_var['params']['billFirstName'] ) . '</firstName>'
-					. '<lastName>' . trim( $request->int_var['params']['billLastName'] ) . '</lastName>'
 					;
 
-		if ( isset( $request->int_var['params']['billAddress'] ) ) {
-		$content .=	 '<address>'. trim( $request->int_var['params']['billAddress'] ) . '</address>'
-					. '<city>' . trim( $request->int_var['params']['billCity'] ) . '</city>'
-					. '<state>'. trim( $request->int_var['params']['billState'] ) . '</state>'
-					. '<zip>' . trim( $request->int_var['params']['billZip'] ) . '</zip>'
-					. '<country>'. trim( $request->int_var['params']['billCountry'] ) . '</country>'
-					;
+		if ( !empty( $this->settings['promptAddress'] ) ) {
+			$content .=	'<BillTo>'
+						. '<Address>'
+						. '<City DataType="String">' . trim( $request->int_var['params']['billCity'] ) . '</Type>'
+						. '<Country DataType="String">' . trim( $request->int_var['params']['billCountry'] ) . '</Type>'
+						. '<FirstName DataType="String">' . trim( $request->int_var['params']['billFirstName'] ) . '</Type>'
+						. '<LastName DataType="String">' . trim( $request->int_var['params']['billLastName'] ) . '</Type>'
+						. '<PostalCode DataType="String">' . trim( $request->int_var['params']['billZip'] ) . '</Type>'
+						. '<StateProv DataType="String">' . trim( $request->int_var['params']['billState'] ) . '</Type>'
+						. '</Address>'
+						;
 		}
 
-		$content .=	'</billTo>';
-		$content .=	'</subscription>';
+		$content .=	'</Consumer>';
+
+		$content .=	 '<Transaction>'
+					. '<Type DataType="String">Auth</Type>'
+					. '<CurrentTotals>'
+					. '<Totals>'
+					;
+
+		if ( is_array( $request->int_var['amount'] ) ) {
+			$content .=	 '<Total DataType="Money" Currency="' . AECToolbox::aecNumCurrency( $request->invoice->currency ) . '">' . $request->int_var['amount']['amount3'] . '</Total>';
+		} else {
+			$content .=	 '<Total DataType="Money" Currency="' . AECToolbox::aecNumCurrency( $request->invoice->currency ) . '">' . $request->int_var['amount'] . '</Total>';
+		}
+
+		$content .=	  '</Totals>'
+					. '</CurrentTotals>'
+					. '</Transaction>'
+					;
+
+		$content .=	'</OrderFormDoc>';
 
 		// Close Request
+		$content .=	'</EngineDoc>';
 		$content .=	'</EngineDocList>';
 
 		return $content;
@@ -178,36 +168,28 @@ class processor_hsbc extends XMLprocessor
 
 	function transmitRequestXML( $xml, $request )
 	{
-		// ARB doesn't validate the transactions until the batch processing occurs.  They only do
-		// an initial algorithm check, which the test credit cards pass.  So we have to catch them
-		// here until Authorize.net decides it's a good idea too. See this page for the test cards:
-		// http://developer.authorize.net/faqs/#7429 [KML]
-		$cc_testnumbers = array("370000000000002", "6011000000000012", "5424000000000015", "4007000000027",
-								"4012888818888", "3088000000000017", "38000000000006", "4222222222222" );
 
-		if ( !$this->settings['testmode'] && in_array( trim( $request->int_var['params']['cardNumber'] ), $cc_testnumbers)) {
-			$response['valid'] = false;
-			$response['error'] = "Credit Card Number is not a valid";
-			return $response;
-		}
+		$url = "https://www.secure-epayments.apixml.hsbc.com/";
 
-		$path = "/xml/v1/request.api";
-		if ( $this->settings['testmode'] ) {
-			$url = "https://apitest.authorize.net" . $path;
-		} else {
-			$url = "https://api.authorize.net" . $path;
-		}
-
-		$response = $this->transmitRequest( $url, $path, $xml, 443 );
+		$response = $this->transmitRequest( $url, "", $xml, 443 );
 
 		$return['valid'] = false;
 		$return['raw'] = $response;
 
 		if ( $response ) {
-			$resultCode = $this->substring_between($response,'<resultCode>','</resultCode>');
+			$resultCode = $this->substring_between($response,'<TRANSACTIONSTATUS>','</TRANSACTIONSTATUS>');
 
-			$code = $this->substring_between($response,'<code>','</code>');
-			$text = $this->substring_between($response,'<text>','</text>');
+			$code = $this->substring_between($response,'<CCERRCODE>','</CCERRCODE>');
+			$text = $this->substring_between($response,'<CCRETURNMSG>','</CCRETURNMSG>');
+
+			switch ( $resultCode ) {
+				case "A":
+				case "C":
+					$return['valid'] = 1;
+					break;
+				default:
+					$return['error'] = $text;
+			}
 
 			if ( strcmp( $resultCode, 'Ok' ) === 0) {
 				$return['valid'] = 1;
@@ -215,13 +197,6 @@ class processor_hsbc extends XMLprocessor
 				$return['error'] = $text;
 			}
 
-			if ( ( $this->settings['totalOccurrences'] > 1 ) && !$this->settings['useSilentPostResponse'] ) {
-				$return['multiplicator'] = $this->settings['totalOccurrences'];
-			}
-
-			$subscriptionId = $this->substring_between($response,'<subscriptionId>','</subscriptionId>');
-
-			$return['invoiceparams'] = array( "subscriptionid" => $subscriptionId );
 		}
 
 		return $return;
@@ -237,175 +212,6 @@ class processor_hsbc extends XMLprocessor
 			return substr( $haystack, $start_position, $end_position - $start_position );
 		}
 	}
-
-	function convertPeriodUnit( $period, $unit )
-	{
-		$return = array();
-		switch ( $unit ) {
-			case 'D':
-				$return['unit'] = 'days';
-				$return['period'] = $period;
-				break;
-			case 'W':
-				if ( $period % 4 == 0 ) {
-					$return['unit'] = 'months';
-					$return['period'] = $period/4;
-				} else {
-					$return['unit'] = 'days';
-					$return['period'] = $period*7;
-				}
-				break;
-			case 'M':
-				$return['unit'] = 'months';
-				$return['period'] = $period;
-				break;
-			case 'Y':
-				$return['unit'] = 'months';
-				$return['period'] = $period*12;
-				break;
-		}
-
-		return $return;
-	}
-
-	function customaction_cancel( $request )
-	{
-		$content =	'<?xml version="1.0" encoding="utf-8"?>'
-					. '<ARBCancelSubscriptionRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">'
-					. '<merchantAuthentication>'
-					. '<name>' . trim( substr( $this->settings['login'], 0, 25 ) ) . '</name>'
-					. '<transactionKey>' . trim( substr( $this->settings['transaction_key'], 0, 16 ) ) . '</transactionKey>'
-					. '</merchantAuthentication>'
-					. '<refId>' . $request->invoice->invoice_number . '</refId>';
-
-		// Add Payment information
-		$content .=	'<subscriptionId>' . $request->invoice->params['subscriptionid'] . '</subscriptionId>';
-
-		// Close Request
-		$content .=	'</ARBCancelSubscriptionRequest>';
-
-		$path = "/xml/v1/request.api";
-		if ( $this->settings['testmode'] ) {
-			$url = "https://apitest.authorize.net" . $path;
-		} else {
-			$url = "https://api.authorize.net" . $path;
-		}
-
-		$response = $this->transmitRequest( $url, $path, $content, 443 );
-
-		if ( !empty( $response ) ) {
-			$responsestring = $response;
-
-			$resultCode = $this->substring_between( $response,'<resultCode>','</resultCode>' );
-
-			$code = $this->substring_between( $response,'<code>','</code>' );
-			$text = $this->substring_between( $response,'<text>','</text>' );
-
-			$return['invoice'] = $this->substring_between( $response,'<refId>','</refId>' );
-
-			if ( strcmp( $resultCode, 'Ok' ) === 0 ) {
-				$return['valid'] = 0;
-				$return['cancel'] = true;
-			} else {
-				switch ( $code ) {
-					case 'XYZ':
-						$text = "Custom Error";
-						break;
-				}
-
-				$return['valid'] = 0;
-				$return['error'] = $text . "(code: $code)";
-			}
-
-			return $return;
-		} else {
-			Payment_HTML::error( 'com_acctexp', $request->metaUser->cmsUser, $request->invoice, "An error occured while cancelling your subscription. Please contact the system administrator!", true );
-		}
-	}
-
-	function parseNotification( $post )
-	{
-		$x_description			= $post['x_description'];
-
-		$x_amount				= $post['x_amount'];
-		$userid					= $post['x_cust_id'];
-
-		$response = array();
-		$response['invoice']	= $post['x_invoice_num'];
-
-		if ( empty( $response['invoice'] ) && $this->settings['ignore_empty_invoices'] ) {
-			unset( $response['invoice'] );
-
-			$response['null']			= 1;
-			$response['explanation']	= 'Empty Invoice Number - ignored.';
-		}
-
-		return $response;
-	}
-
-	function validateNotification( $response, $post, $invoice )
-	{
-		if ( $post['x_subscription_paynum'] > 1 ) {
-			$x_response_code		= $post['x_response_code'];
-			$x_response_reason_text	= $post['x_response_reason_text'];
-
-			$response['valid'] = ( $x_response_code == '1' );
-		} else {
-			$response['valid'] = 0;
-			$response['duplicate'] = true;
-		}
-
-		return $response;
-	}
-
-/**
- * 2008-02-19-17:41:15
-Array
-(
-		[x_response_code] => 1
-		[x_response_subcode] => 1
-		[x_response_reason_code] => 1
-		[x_response_reason_text] => This transaction has been approved.
-		[x_auth_code] =>
-		[x_avs_code] => P
-		[x_trans_id] => 1736352859
-		[x_invoice_num] => IMGNkYjJjMTFlOWRm
-		[x_description] => Account Cancellation
-		[x_amount] => 299.00
-		[x_method] => CC
-		[x_type] => credit
-		[x_cust_id] =>
-		[x_first_name] => Fay
-		[x_last_name] => Jozoff
-		[x_company] =>
-		[x_address] => 430 E. 56th Street
-		[x_city] => New York
-		[x_state] => NY
-		[x_zip] => 10022
-		[x_country] => U.S.A.
-		[x_phone] => 347-678-5711
-		[x_fax] => 212-230-1225
-		[x_email] => fayannlee@gmail.com
-		[x_ship_to_first_name] => Fay
-		[x_ship_to_last_name] => Jozoff
-		[x_ship_to_company] =>
-		[x_ship_to_address] => 430 E. 56th Street
-		[x_ship_to_city] => New York
-		[x_ship_to_state] => NY
-		[x_ship_to_zip] => 10022
-		[x_ship_to_country] => U.S.A.
-		[x_tax] => 0.0000
-		[x_duty] => 0.0000
-		[x_freight] => 0.0000
-		[x_tax_exempt] => FALSE
-		[x_po_num] =>
-		[x_MD5_Hash] => DB9B84B6D350D7B8259AA807FBF6C229
-		[x_cvv2_resp_code] =>
-		[x_cavv_response] =>
-		[x_test_request] => false
-		[x_customer_id] =>
-)
- */
 
 }
 ?>

@@ -155,12 +155,12 @@ class processor_authorize_arb extends XMLprocessor
 					;
 
 		if ( isset( $request->int_var['params']['billAddress'] ) ) {
-		$content .=	 '<address>'. trim( $request->int_var['params']['billAddress'] ) . '</address>'
-					. '<city>' . trim( $request->int_var['params']['billCity'] ) . '</city>'
-					. '<state>'. trim( $request->int_var['params']['billState'] ) . '</state>'
-					. '<zip>' . trim( $request->int_var['params']['billZip'] ) . '</zip>'
-					. '<country>'. trim( $request->int_var['params']['billCountry'] ) . '</country>'
-					;
+			$content .=	 '<address>'. trim( $request->int_var['params']['billAddress'] ) . '</address>'
+						. '<city>' . trim( $request->int_var['params']['billCity'] ) . '</city>'
+						. '<state>'. trim( $request->int_var['params']['billState'] ) . '</state>'
+						. '<zip>' . trim( $request->int_var['params']['billZip'] ) . '</zip>'
+						. '<country>'. trim( $request->int_var['params']['billCountry'] ) . '</country>'
+						;
 		}
 
 		$content .=	'</billTo>';
@@ -353,55 +353,6 @@ class processor_authorize_arb extends XMLprocessor
 
 		return $response;
 	}
-
-/**
- * 2008-02-19-17:41:15
-Array
-(
-		[x_response_code] => 1
-		[x_response_subcode] => 1
-		[x_response_reason_code] => 1
-		[x_response_reason_text] => This transaction has been approved.
-		[x_auth_code] =>
-		[x_avs_code] => P
-		[x_trans_id] => 1736352859
-		[x_invoice_num] => IMGNkYjJjMTFlOWRm
-		[x_description] => Account Cancellation
-		[x_amount] => 299.00
-		[x_method] => CC
-		[x_type] => credit
-		[x_cust_id] =>
-		[x_first_name] => Fay
-		[x_last_name] => Jozoff
-		[x_company] =>
-		[x_address] => 430 E. 56th Street
-		[x_city] => New York
-		[x_state] => NY
-		[x_zip] => 10022
-		[x_country] => U.S.A.
-		[x_phone] => 347-678-5711
-		[x_fax] => 212-230-1225
-		[x_email] => fayannlee@gmail.com
-		[x_ship_to_first_name] => Fay
-		[x_ship_to_last_name] => Jozoff
-		[x_ship_to_company] =>
-		[x_ship_to_address] => 430 E. 56th Street
-		[x_ship_to_city] => New York
-		[x_ship_to_state] => NY
-		[x_ship_to_zip] => 10022
-		[x_ship_to_country] => U.S.A.
-		[x_tax] => 0.0000
-		[x_duty] => 0.0000
-		[x_freight] => 0.0000
-		[x_tax_exempt] => FALSE
-		[x_po_num] =>
-		[x_MD5_Hash] => DB9B84B6D350D7B8259AA807FBF6C229
-		[x_cvv2_resp_code] =>
-		[x_cavv_response] =>
-		[x_test_request] => false
-		[x_customer_id] =>
-)
- */
 
 }
 ?>
