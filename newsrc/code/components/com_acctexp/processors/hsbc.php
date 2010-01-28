@@ -78,7 +78,11 @@ class processor_hsbc extends XMLprocessor
 
 		$var = $this->getCCform( $values );
 
-		$values = array( 'firstname', 'lastname', 'address', 'city', 'state_usca', 'zip', 'country_list' );
+		if ( !empty( $this->settings['promptAddress'] ) ) {
+			$values = array( 'firstname', 'lastname', 'address', 'city', 'state_usca', 'zip', 'country_list' );
+		} else {
+			$values = array( 'firstname', 'lastname' );
+		}
 
 		$var = $this->getUserform( $var, $values, $request->metaUser );
 
