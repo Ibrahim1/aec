@@ -151,10 +151,12 @@ class processor_hsbc extends XMLprocessor
 					;
 
 		if ( is_array( $request->int_var['amount'] ) ) {
-			$content .=	 '<Total DataType="Money" Currency="' . AECToolbox::aecNumCurrency( $request->invoice->currency ) . '">' . $request->int_var['amount']['amount3'] . '</Total>';
+			$amount = $request->int_var['amount']['amount3'];
 		} else {
-			$content .=	 '<Total DataType="Money" Currency="' . AECToolbox::aecNumCurrency( $request->invoice->currency ) . '">' . $request->int_var['amount'] . '</Total>';
+			$amount = $request->int_var['amount'];
 		}
+
+		$content .=	 '<Total DataType="Money" Currency="' . AECToolbox::aecNumCurrency( $request->invoice->currency ) . '">' . ( (int) ( $amount * 100) ) . '</Total>';
 
 		$content .=	  '</Totals>'
 					. '</CurrentTotals>'
