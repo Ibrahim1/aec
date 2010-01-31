@@ -111,7 +111,7 @@ class processor_hsbc extends XMLprocessor
 		// Add Payment information
 		$content .=	'<OrderFormDoc>'
 					. '<Id DataType="String">' . $request->invoice->invoice_number . '</Id>'
-					. '<Mode DataType="String">P</Mode>'
+					. '<Mode DataType="String">' . ( $this->settings['testmode'] ? "Y" : "P" ) . '</Mode>'
 					;
 
 		$expirationDate =  $request->int_var['params']['expirationMonth'] . '/' . str_pad( $request->int_var['params']['expirationYear'], 2, '0', STR_PAD_LEFT );
@@ -174,8 +174,11 @@ class processor_hsbc extends XMLprocessor
 
 	function transmitRequestXML( $xml, $request )
 	{
-
-		$url = "https://www.secure-epayments.apixml.hsbc.com/";
+		if ( $this->settings['testmode'] ) {
+			$url = "https://www.uat.apixml.netq.hsbc.com/"
+		} else {
+			$url = "https://www.secure-epayments.apixml.hsbc.com/";
+		}
 
 		$response = $this->transmitRequest( $url, "", $xml, 443 );
 

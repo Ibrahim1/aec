@@ -100,7 +100,7 @@ class mi_proma
 		if ( !empty( $group ) ) {
 			$query = 'UPDATE #__comprofiler'
 					. ' SET `proma_type` = \'' . $group . '\''
-					. ' WHERE `id` = \'' . (int) $this->userid . '\''
+					. ' WHERE `id` = \'' . (int) $userid . '\''
 					;
 			$database->setQuery( $query );
 		} else {
