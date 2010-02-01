@@ -1936,7 +1936,7 @@ define( '_EXPORT_PARAMS_SAVE_NAME', 'Speichern als neu?');
 define( '_EXPORT_PARAMS_SAVE_DESC', 'Dieses Feld anklicken, um Ihre Einstellungen als neue Voreinstellung zu speichern');
 define( '_EXPORT_PARAMS_SAVE_NAME_NAME', 'Name speichern');
 define( '_EXPORT_PARAMS_SAVE_NAME_DESC', 'Neue Voreinstellung unter diesem Namen speichern');
-define( '_EXPORT_PARAMS_EXPORT_METHOD_NAME', 'Exportiersmethode');
+define( '_EXPORT_PARAMS_EXPORT_METHOD_NAME', 'Exportiermethode');
 define( '_EXPORT_PARAMS_EXPORT_METHOD_DESC', 'Der Dateityp, in den Sie exportieren wollen');
 
 // --== READOUT ==--

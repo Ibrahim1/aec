@@ -1,7 +1,22 @@
 <?xml version="1.0" ?>
 <!-- $Id$ -->
 <project name="AEC" basedir="." default="build">
-	<target name="build" description="Build all installable packages">
+	<target name="build" description="Build all installable packages" depends="config, svn_lastrevision">
+		<property file="properties/allpackages.properties" override="true" />
+		<property file="properties/allpackages_compression_targz" override="true" />
+
+
+	</target>
+
+	<target name="svn_lastrevision">
+		<svnlastrevision workingcopy="${dir.local}" propertyname="svn.lastrevision" />
+	</target>
+
+	<target name="config" description="Load configuration file">
+		<property file="properties/allpackages.properties"  override="true" />
+	</target>
+
+	<target name="build_packages">
 		<phing phingfile="build_component.xml" inheritRefs="true">
 			<property file="properties/com.properties" override="true" />
 		</phing>
@@ -24,4 +39,5 @@
 			<property file="properties/plugin_user.properties" override="true" />
 		</phing>
 	</target>
+
 </project>

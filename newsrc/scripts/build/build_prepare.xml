@@ -1,7 +1,12 @@
 <?xml version="1.0" ?>
 <!-- $Id$ -->
 <project name="AEC" basedir="." default="build">
-	<target name="build" description="Build installable package">
+
+	<target name="config" description="Load configuration file">
+		<property file="properties/allpackages.properties"  override="true" />
+	</target>
+
+	<target name="build" description="Build installable package" depends="config, svn_lastrevision">
 		<mkdir dir="${dir.packages}" />
 		<mkdir dir="${dir.tmp}" />
 
@@ -19,5 +24,9 @@
 
 		<tar destfile="${dir.packages}/${file.package}_ver${file.version}_rev${svn.lastrevision}${file.extension}" basedir="${dir.tmp}" compression="${file.compression}" />
 		<delete dir="${dir.tmp}" includeemptydirs="true" />
+	</target>
+
+	<target name="svn_lastrevision" depends="config">
+		<svnlastrevision workingcopy="${dir.local}" propertyname="svn.lastrevision" />
 	</target>
 </project>
