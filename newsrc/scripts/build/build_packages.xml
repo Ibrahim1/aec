@@ -1,0 +1,97 @@
+<?xml version="1.0" ?>
+<!-- $Id$ -->
+<project name="AEC" basedir="." default="build">
+	<target name="build">
+		<delete dir="${dir.packages}" />
+		<mkdir dir="${dir.packages}" />
+
+		<phing phingfile="build_component.xml" inheritRefs="true">
+			<property file="properties/com.properties" override="true" />
+		</phing>
+		<phing phingfile="build_mambot_hacks.xml" inheritRefs="true">
+			<property file="properties/mambot_hacks.properties" override="true" />
+		</phing>
+		<phing phingfile="build_module.xml" inheritRefs="true">
+			<property file="properties/module.properties" override="true" />
+		</phing>
+		<phing phingfile="build_plugin_access.xml" inheritRefs="true">
+			<property file="properties/plugin_access.properties" override="true" />
+		</phing>
+		<phing phingfile="build_plugin_error.xml" inheritRefs="true">
+			<property file="properties/plugin_error.properties" override="true" />
+		</phing>
+		<phing phingfile="build_plugin_routing.xml" inheritRefs="true">
+			<property file="properties/plugin_routing.properties" override="true" />
+		</phing>
+		<phing phingfile="build_plugin_user.xml" inheritRefs="true">
+			<property file="properties/plugin_user.properties" override="true" />
+		</phing>
+
+		<mkdir dir="${dir.packages}/packages" />
+		<copy todir="${dir.packages}/packages" includeemptydirs="false">
+			<fileset dir="${dir.packages}">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<mkdir dir="${dir.packages}/Joomla_1.0_mambot" />
+		<copy todir="${dir.packages}/Joomla_1.0_mambot">
+			<fileset dir="${dir.packages}">
+				<include name="mambot**" />
+			</fileset>
+		</copy>
+		<delete>
+			<fileset dir="${dir.packages}">
+				<include name="mambot**" />
+			</fileset>
+		</delete>
+
+		<mkdir dir="${dir.packages}/Joomla_1.5_plugins" />
+		<copy todir="${dir.packages}/Joomla_1.5_plugins">
+			<fileset dir="${dir.packages}">
+				<include name="plugin**" />
+			</fileset>
+		</copy>
+		<delete>
+			<fileset dir="${dir.packages}">
+				<include name="plugin**" />
+			</fileset>
+		</delete>
+
+		<mkdir dir="${dir.packages}/fullpack" />
+		<copy todir="${dir.packages}/fullpack" includeemptydirs="false">
+			<fileset dir="${dir.packages}">
+				<exclude name="packages**" />
+			</fileset>
+		</copy>
+
+		<delete dir="${dir.packages}/Joomla_1.5_plugins" />
+		<delete dir="${dir.packages}/Joomla_1.0_mambot" />
+		<delete>
+			<fileset dir="${dir.packages}">
+				<include name="*acctexp*" />
+			</fileset>
+		</delete>
+
+		<tar destfile="${dir.packages}/${file.dist_package}_${file.dist_version}_rev${svn.lastrevision}_UNZIP_FIRST.zip" basedir="${dir.packages}/fullpack" compression="${file.compression}" />
+
+		<delete dir="${dir.packages}/fullpack" />
+
+		<delete dir="${dir.dropbox}/${file.extension}" />
+		<mkdir dir="${dir.dropbox}/${file.extension}" />
+
+		<copy todir="${dir.dropbox}/${file.extension}" includeemptydirs="false">
+			<fileset dir="${dir.packages}">
+				<include name="*.*" />
+			</fileset>
+		</copy>
+
+		<mkdir dir="${dir.dropbox}/${file.extension}/packages" />
+		<copy todir="${dir.dropbox}/${file.extension}/packages" includeemptydirs="false">
+			<fileset dir="${dir.packages}/packages">
+				<include name="*.*" />
+			</fileset>
+		</copy>
+
+	</target>
+</project>
