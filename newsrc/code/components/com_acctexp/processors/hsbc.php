@@ -168,14 +168,14 @@ class processor_hsbc extends XMLprocessor
 		// Close Request
 		$content .=	'</EngineDoc>';
 		$content .=	'</EngineDocList>';
-
+aecDebug($content);
 		return $content;
 	}
 
 	function transmitRequestXML( $xml, $request )
 	{
 		if ( $this->settings['testmode'] ) {
-			$url = "https://www.uat.apixml.netq.hsbc.com/"
+			$url = "https://www.uat.apixml.netq.hsbc.com/";
 		} else {
 			$url = "https://www.secure-epayments.apixml.hsbc.com/";
 		}
