@@ -76,7 +76,7 @@ class processor_hsbc extends XMLprocessor
 	{
 		$values = array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' );
 
-		$var = $this->getCCform( $values );
+		$var = $this->getCCform( array(), $values );
 
 		if ( !empty( $this->settings['promptAddress'] ) ) {
 			$values = array( 'firstname', 'lastname', 'address', 'city', 'state_usca', 'zip', 'country_list' );
@@ -138,6 +138,13 @@ class processor_hsbc extends XMLprocessor
 						. '<LastName DataType="String">' . trim( $request->int_var['params']['billLastName'] ) . '</Type>'
 						. '<PostalCode DataType="String">' . trim( $request->int_var['params']['billZip'] ) . '</Type>'
 						. '<StateProv DataType="String">' . trim( $request->int_var['params']['billState'] ) . '</Type>'
+						. '</Address>'
+						;
+		} else {
+			$content .=	'<BillTo>'
+						. '<Address>'
+						. '<FirstName DataType="String">' . trim( $request->int_var['params']['billFirstName'] ) . '</Type>'
+						. '<LastName DataType="String">' . trim( $request->int_var['params']['billLastName'] ) . '</Type>'
 						. '</Address>'
 						;
 		}
