@@ -96,6 +96,7 @@ class processor_hsbc extends XMLprocessor
 					. '<EngineDocList>'
 					. '<DocVersion DataType="String">1.0</DocVersion>'
 					. '<EngineDoc>'
+					. '<ContentType>OrderFormDoc</ContentType>'
 					. '<User>'
 					. '<ClientId DataType="S32">' . trim( substr( $this->settings['clientid'], 0, 32 ) ) . '</ClientId>'
 					. '<Name DataType="String">' . $this->settings['name'] . '</Name>'
@@ -129,10 +130,12 @@ class processor_hsbc extends XMLprocessor
 					. '</PaymentMech>'
 					;
 
+		$content .=	'<BillTo>'
+					. '<Address>'
+					;
+
 		if ( !empty( $this->settings['promptAddress'] ) ) {
-			$content .=	'<BillTo>'
-						. '<Address>'
-						. '<City DataType="String">' . trim( $request->int_var['params']['billCity'] ) . '</Type>'
+			$content .=	'<City DataType="String">' . trim( $request->int_var['params']['billCity'] ) . '</Type>'
 						. '<Country DataType="String">' . trim( $request->int_var['params']['billCountry'] ) . '</Type>'
 						. '<FirstName DataType="String">' . trim( $request->int_var['params']['billFirstName'] ) . '</Type>'
 						. '<LastName DataType="String">' . trim( $request->int_var['params']['billLastName'] ) . '</Type>'
@@ -141,13 +144,15 @@ class processor_hsbc extends XMLprocessor
 						. '</Address>'
 						;
 		} else {
-			$content .=	'<BillTo>'
-						. '<Address>'
-						. '<FirstName DataType="String">' . trim( $request->int_var['params']['billFirstName'] ) . '</Type>'
+			$content .=	'<FirstName DataType="String">' . trim( $request->int_var['params']['billFirstName'] ) . '</Type>'
 						. '<LastName DataType="String">' . trim( $request->int_var['params']['billLastName'] ) . '</Type>'
 						. '</Address>'
 						;
 		}
+
+		$content .=	'</Address>'
+					. '</BillTo>'
+					;
 
 		$content .=	'</Consumer>';
 
