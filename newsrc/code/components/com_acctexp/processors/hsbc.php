@@ -141,12 +141,10 @@ class processor_hsbc extends XMLprocessor
 						. '<LastName DataType="String">' . trim( $request->int_var['params']['billLastName'] ) . '</Type>'
 						. '<PostalCode DataType="String">' . trim( $request->int_var['params']['billZip'] ) . '</Type>'
 						. '<StateProv DataType="String">' . trim( $request->int_var['params']['billState'] ) . '</Type>'
-						. '</Address>'
 						;
 		} else {
 			$content .=	'<FirstName DataType="String">' . trim( $request->int_var['params']['billFirstName'] ) . '</Type>'
 						. '<LastName DataType="String">' . trim( $request->int_var['params']['billLastName'] ) . '</Type>'
-						. '</Address>'
 						;
 		}
 
