@@ -81,7 +81,11 @@ class mi_kunena extends MI
 
 		$kuser = $database->loadObject();
 
-		$rank = $kuser->group_id;
+		if ( isset( $kuser->group_id ) ) {
+			$rank = $kuser->group_id;
+		} else {
+			$rank = 0;
+		}
 
 		if ( !empty( $remove ) && $kuser->userid ) {
 			if ( $remove == $rank ) {

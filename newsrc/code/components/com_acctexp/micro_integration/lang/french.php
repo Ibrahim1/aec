@@ -1085,4 +1085,24 @@ define( '_MI_MI_FRONTENDUSERACCESS_REBUILD_DESC','This option will rebuild your 
 define( '_MI_MI_FRONTENDUSERACCESS_REMOVE_NAME','Remove' );
 define( '_MI_MI_FRONTENDUSERACCESS_REMOVE_DESC','Carry out the expiration action for all users with an active plan attached to this micro-integration' );
 
+// Kunena MI
+define( '_AEC_MI_NAME_KUNENA','Kunena Forum' );
+define( '_AEC_MI_DESC_KUNENA','Change the Users Rank in Kunena' );
+define( '_MI_MI_KUNENA_RANK_NAME','Apply Rank' );
+define( '_MI_MI_KUNENA_RANK_DESC','Select the rank you want to apply to the user on membership activation' );
+define( '_MI_MI_KUNENA_UNRANK_NAME','Remove Rank' );
+define( '_MI_MI_KUNENA_UNRANK_DESC','Select the rank you want to remove from to the user on membership activation' );
+define( '_MI_MI_KUNENA_RANK_EXP_NAME','Apply Rank (Expiration)' );
+define( '_MI_MI_KUNENA_RANK_EXP_DESC','Select the rank you want to apply to the user on membership expiration' );
+define( '_MI_MI_KUNENA_UNRANK_EXP_NAME','Remove Rank (Expiration)' );
+define( '_MI_MI_KUNENA_UNRANK_EXP_DESC','Select the rank you want to remove from to the user on membership expiration' );
+define( '_MI_MI_KUNENA_RANK_PRE_EXP_NAME','Apply Rank (Pre-Expiration)' );
+define( '_MI_MI_KUNENA_RANK_PRE_EXP_DESC','Select the rank you want to apply to the user before membership expiration' );
+define( '_MI_MI_KUNENA_UNRANK_PRE_EXP_NAME','Remove Rank (Pre-Expiration)' );
+define( '_MI_MI_KUNENA_UNRANK_PRE_EXP_DESC','Select the rank you want to remove from to the user before membership expiration' );
+define( '_MI_MI_KUNENA_REBUILD_NAME','Rebuild' );
+define( '_MI_MI_KUNENA_REBUILD_DESC','This option will rebuild your whole Kunena group assignment by looking for each plan that has this MI applied and then add each user that uses one of these plans to the file.' );
+define( '_MI_MI_KUNENA_REMOVE_NAME','Remove' );
+define( '_MI_MI_KUNENA_REMOVE_DESC','Carry out the expiration action for all users with an active plan attached to this micro-integration' );
+
 ?>
