@@ -73,7 +73,10 @@
 			</fileset>
 		</delete>
 
-		<tar destfile="${dir.packages}/${file.dist_package}_${file.dist_version}_rev${svn.lastrevision}_UNZIP_FIRST.zip" basedir="${dir.packages}/fullpack" compression="${file.compression}" />
+		<tar destfile="${dir.packages}/${file.dist_package}_${file.dist_version}_rev${svn.lastrevision}_UNZIP_FIRST.zip" compression="gzip">
+			 <fileset dir="${dir.packages}/fullpack">
+			 </fileset>
+		</tar>
 
 		<delete dir="${dir.packages}/fullpack" />
 
