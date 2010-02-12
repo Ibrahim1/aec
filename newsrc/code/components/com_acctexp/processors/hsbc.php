@@ -46,6 +46,7 @@ class processor_hsbc extends XMLprocessor
 	{
 		$settings = array();
 		$settings['testmode']			= 0;
+		$settings['payer_auth']			= 0;
 		$settings['clientid']			= "clientid";
 		$settings['name']				= "name";
 		$settings['password']			= "password";
@@ -60,6 +61,7 @@ class processor_hsbc extends XMLprocessor
 	{
 		$settings = array();
 		$settings['testmode']			= array("list_yesno");
+		$settings['payer_auth']			= array("list_yesno");
 		$settings['clientid'] 			= array("inputC");
 		$settings['name'] 				= array("inputC");
 		$settings['password'] 			= array("inputC");
