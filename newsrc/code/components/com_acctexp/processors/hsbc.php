@@ -46,10 +46,11 @@ class processor_hsbc extends XMLprocessor
 	{
 		$settings = array();
 		$settings['testmode']			= 0;
-		$settings['payer_auth']			= 0;
 		$settings['clientid']			= "clientid";
 		$settings['name']				= "name";
 		$settings['password']			= "password";
+		$settings['payer_auth']			= 0;
+		$settings['pas_id']				= "";
 		$settings['currency']			= "USD";
 		$settings['promptAddress']		= 0;
 		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
@@ -61,10 +62,11 @@ class processor_hsbc extends XMLprocessor
 	{
 		$settings = array();
 		$settings['testmode']			= array("list_yesno");
-		$settings['payer_auth']			= array("list_yesno");
 		$settings['clientid'] 			= array("inputC");
 		$settings['name'] 				= array("inputC");
 		$settings['password'] 			= array("inputC");
+		$settings['payer_auth']			= array("list_yesno");
+		$settings['pas_id'] 			= array("inputC");
 		$settings['currency']			= array("list_currency");
 		$settings['promptAddress']		= array("list_yesno");
 		$settings['item_name']			= array("inputE");
@@ -72,6 +74,36 @@ class processor_hsbc extends XMLprocessor
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
+	}
+
+	function checkoutAction( $request )
+	{
+		if ( $this->settings['payer_auth'] ) {
+
+		} else {
+			return parent::checkoutAction( $request );
+		}
+	}
+
+	function createGatewayLink( $request )
+	{
+		if ( $this->settings['testmode'] ) {
+			$var['post_url']	= 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+		} else {
+			$var['post_url']	= 'https://www.paypal.com/cgi-bin/webscr';
+		}
+
+		$var['CardExpiration']		= '';
+		$var['CardholderPan']		= '';
+		$var['CcpaClientId']		= '';
+		$var['MD']					= '';
+		$var['PurchaseAmount']		= '';
+		$var['PurchaseAmountRaw']	= '';
+		$var['PurchaseCurrency']	= '';
+		$var['PurchaseDesc']		= '';
+		$var['ResultUrl']			= '';
+
+		return $var;
 	}
 
 	function checkoutform( $request )
