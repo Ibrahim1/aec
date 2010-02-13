@@ -97,26 +97,26 @@ class mi_acl
 	function relayAction( $request )
 	{
 		if ( !empty( $this->settings['set_gid' . $request->area] ) ) {
-			$this->instantGIDchange( $request->metaUser, 'gid' . $request->area);
+			$this->instantGIDchange( $request->metaUser, $this->settings['gid' . $request->area] );
 		}
 
 		if ( !empty( $this->settings['sub_set_gid' . $request->area] ) ) {
-			$this->jaclplusGIDchange( $request->metaUser, 'sub_gid' . $request->area );
+			$this->jaclplusGIDchange( $request->metaUser, $this->settings['sub_gid' . $request->area] );
 		}
 
 		return true;
 	}
 
-	function instantGIDchange( $metaUser, $section )
+	function instantGIDchange( $metaUser, $gid )
 	{
 		$database = &JFactory::getDBO();
 
 		$acl = &JFactory::getACL();
 
-		$metaUser->instantGIDchange( $this->settings[$section], $this->settings['change_session'] );
+		$metaUser->instantGIDchange( $gid, $this->settings['change_session'] );
 
 		if ( $this->settings['jaclpluspro'] ) {
-			$gid_name = $acl->get_group_name( $this->settings[$section], 'ARO' );
+			$gid_name = $acl->get_group_name( $gid, 'ARO' );
 
 			// Check for main entry
 			$query = 'SELECT `group_id`'
@@ -129,7 +129,7 @@ class mi_acl
 
 			if ( !empty( $groupid ) ) {
 				$query = 'UPDATE #__jaclplus_user_group'
-						. ' SET `group_id` = \'' . (int)$this->settings[$section] . '\''
+						. ' SET `group_id` = \'' . (int) $gid . '\''
 						. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
 						. ' AND `group_type` = \'main\''
 						;
@@ -137,7 +137,7 @@ class mi_acl
 				$database->query() or die( $database->stderr() );
 			} else {
 				$query = 'INSERT INTO #__jaclplus_user_group'
-						. ' VALUES( \'' . (int) $metaUser->userid . '\', \'main\', \'' . (int) $this->settings[$section] . '\', \'\' )'
+						. ' VALUES( \'' . (int) $metaUser->userid . '\', \'main\', \'' . (int) $gid . '\', \'\' )'
 						;
 				$database->setQuery( $query );
 				$database->query() or die( $database->stderr() );
@@ -161,7 +161,7 @@ class mi_acl
 				if ( $session->userid  ) {
 					$query = 'SELECT `value`'
 							. ' FROM #__core_acl_aro_groups'
-							. ' WHERE `id` = \'' . (int) $this->settings[$section] . '\''
+							. ' WHERE `id` = \'' . (int) $gid . '\''
 							;
 					$database->setQuery( $query );
 					$sessiongroups = $database->loadResult();
@@ -170,7 +170,7 @@ class mi_acl
 					$data['__default']['jaclplus'] = $sessiongroups;
 
 					$query = 'UPDATE #__session'
-							. ' SET `usertype` = \'' . $gid_name . '\', `gid` = \'' . $this->settings[$section] . '\','
+							. ' SET `usertype` = \'' . $gid_name . '\', `gid` = \'' . $gid . '\','
 							. ' `data` = \'' .  metaUser::joomserializesession( $data ) . '\''
 							. ' WHERE `userid` = \'' . (int) $metaUser->userid . '\''
 							;

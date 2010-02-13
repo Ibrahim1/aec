@@ -76,15 +76,6 @@ class processor_hsbc extends XMLprocessor
 		return $settings;
 	}
 
-	function checkoutAction( $request )
-	{
-		if ( $this->settings['payer_auth'] ) {
-
-		} else {
-			return parent::checkoutAction( $request );
-		}
-	}
-
 	function createGatewayLink( $request )
 	{
 		if ( $this->settings['testmode'] ) {
@@ -108,21 +99,36 @@ class processor_hsbc extends XMLprocessor
 
 	function checkoutform( $request )
 	{
-		$values = array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' );
+		if ( $this->settings['payer_auth'] ) {
+			$values = array( 'card_number', 'card_exp_month', 'card_exp_year' );
 
-		$var = $this->getCCform( array(), $values );
-
-		if ( !empty( $this->settings['promptAddress'] ) ) {
-			$values = array( 'firstname', 'lastname', 'address', 'city', 'state_usca', 'zip', 'country_list' );
+			$var = $this->getCCform( array(), $values );
 		} else {
-			$values = array( 'firstname', 'lastname' );
-		}
+			$values = array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' );
 
-		$var = $this->getUserform( $var, $values, $request->metaUser );
+			$var = $this->getCCform( array(), $values );
+
+			if ( !empty( $this->settings['promptAddress'] ) ) {
+				$values = array( 'firstname', 'lastname', 'address', 'city', 'state_usca', 'zip', 'country_list' );
+			} else {
+				$values = array( 'firstname', 'lastname' );
+			}
+
+			$var = $this->getUserform( $var, $values, $request->metaUser );
+		}
 
 		return $var;
 	}
 
+	function checkoutProcess( $request )
+	{
+		if ( $this->settings['payer_auth'] ) {
+
+		} else {
+			return parent::checkoutProcess( $request );
+		}
+	}
+	
 	function createRequestXML( $request )
 	{
 		// Start xml, add login and transaction key, as well as invoice number

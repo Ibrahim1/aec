@@ -703,7 +703,7 @@ class metaUser
 		}
 	}
 
-	function instantGIDchange( $gid, $session=true )
+	function instantGIDchange( $gid, $session=true, $sessionextra=null )
 	{
 		$database = &JFactory::getDBO();
 
@@ -827,10 +827,9 @@ class metaUser
 
 	function joomunserializesession( $data )
 	{
-		$se = explode( "|", $data );
-		$se[1] = unserialize( $se[1] );
+		$se = explode( "|", $data, 2 );
 
-		return array( $se[0] => $se[1] );
+		return array( $se[0] => unserialize( $se[1] ) );
 	}
 
 	function joomserializesession( $data )
@@ -3707,13 +3706,33 @@ class XMLprocessor extends processor
 	{
 		$var = $this->checkoutform( $request );
 
+		if ( isset( $var['aec_alternate_checkout'] ) ) {
+			$url = $var['aec_alternate_checkout'];
+
+			unset( $var['aec_alternate_checkout'] );
+		} else {
+			$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', $this->info['secure'] )
+		}
+
+		if ( isset( $var['aec_remove_std_vars'] ) ) {
+			$stdvars = false;
+
+			unset( $var['aec_remove_std_vars'] );
+		} else {
+			$stdvars = true;
+		}
+
 		// TODO:  onclick="javascript:document.getElementById(\'aec_checkout_btn\').disabled=true"
 
-		$return = '<form action="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', $this->info['secure'] ) . '" method="post">' . "\n";
+		$return = '<form action="' . $var . '" method="post">' . "\n";
 		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
-		$return .= '<input type="hidden" name="invoice" value="' . $request->int_var['invoice'] . '" />' . "\n";
-		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
-		$return .= '<input type="hidden" name="task" value="checkout" />' . "\n";
+
+		if ( $stdvars ) {
+			$return .= '<input type="hidden" name="invoice" value="' . $request->int_var['invoice'] . '" />' . "\n";
+			$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
+			$return .= '<input type="hidden" name="task" value="checkout" />' . "\n";
+		}
+
 		$return .= '<input type="submit" class="button" id="aec_checkout_btn" value="' . _BUTTON_CHECKOUT . '" /><br /><br />' . "\n";
 		$return .= '</form>' . "\n";
 
@@ -3848,7 +3867,8 @@ class XMLprocessor extends processor
 					// Create a selection box with the next 10 years
 					$year = date('Y');
 					$years = array();
-					for( $i = $year; $i < $year + 15; $i++ ) {
+
+					for ( $i = $year; $i < $year + 15; $i++ ) {
 						$years[] = mosHTML::makeOption( $i, $i );
 					}
 
