@@ -23,7 +23,6 @@ class processor_hsbc extends XMLprocessor
 		$info['currencies'] = AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring'] = 2;
-		$info['actions'] = array( 'cancel' => array( 'confirm' ) );
 		$info['secure'] = 1;
 
 		return $info;
@@ -49,8 +48,9 @@ class processor_hsbc extends XMLprocessor
 		$settings['clientid']			= "clientid";
 		$settings['name']				= "name";
 		$settings['password']			= "password";
-		$settings['payer_auth']			= 0;
+		$settings['pas']			= 0;
 		$settings['pas_id']				= "";
+		$settings['pas_url']			= "https://www.ccpa.hsbc.com/ccpa";
 		$settings['currency']			= "USD";
 		$settings['promptAddress']		= 0;
 		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
@@ -65,8 +65,9 @@ class processor_hsbc extends XMLprocessor
 		$settings['clientid'] 			= array("inputC");
 		$settings['name'] 				= array("inputC");
 		$settings['password'] 			= array("inputC");
-		$settings['payer_auth']			= array("list_yesno");
+		$settings['pas']			= array("list_yesno");
 		$settings['pas_id'] 			= array("inputC");
+		$settings['pas_url'] 			= array("inputC");
 		$settings['currency']			= array("list_currency");
 		$settings['promptAddress']		= array("list_yesno");
 		$settings['item_name']			= array("inputE");
@@ -76,37 +77,46 @@ class processor_hsbc extends XMLprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
-	{
-		if ( $this->settings['testmode'] ) {
-			$var['post_url']	= 'https://www.sandbox.paypal.com/cgi-bin/webscr';
-		} else {
-			$var['post_url']	= 'https://www.paypal.com/cgi-bin/webscr';
+	function checkoutAction( $request )
+	{aecDebug("checkoutAction");
+		if ( $this->settings['pas'] && !empty( $request->int_var['params']['cardNumber'] ) ) {
+			$var = $this->createGatewayLink( $request );
+aecDebug("preparing PAS form");
+			return POSTprocessor::checkoutAction( $request, $var );
+		} else {aecDebug("preparing regular checkout");
+			return parent::checkoutAction( $request );
 		}
+	}
 
-		$var['CardExpiration']		= '';
-		$var['CardholderPan']		= '';
-		$var['CcpaClientId']		= '';
-		$var['MD']					= '';
-		$var['PurchaseAmount']		= '';
-		$var['PurchaseAmountRaw']	= '';
-		$var['PurchaseCurrency']	= '';
-		$var['PurchaseDesc']		= '';
-		$var['ResultUrl']			= '';
+	function createGatewayLink( $request )
+	{aecDebug("createGatewayLink");
+		$var['post_url']			= $this->settings['pas_url'];
+
+		$var['CardExpiration']		= $request->int_var['params']['expirationMonth'] . substr( $request->int_var['params']['expirationYear'], 2, 2 );
+		$var['CardholderPan']		= $request->int_var['params']['cardNumber'];
+		$var['CcpaClientId']		= $this->settings['pas_id'];
+		$var['MD']					= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
+		$var['PurchaseAmount']		= $this->settings['currency']." ".$request->int_var['amount'];
+		$var['PurchaseAmountRaw']	= (int) ( $request->int_var['amount'] * 100 );
+		$var['PurchaseCurrency']	= $this->settings['currency'];
+		$var['PurchaseDesc']		= $request->invoice->invoice_number;
+		$var['ResultUrl']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout&amp;invoice='.$request->invoice->invoice_number );
 
 		return $var;
 	}
 
 	function checkoutform( $request )
-	{
-		if ( $this->settings['payer_auth'] ) {
+	{aecDebug("checkoutform");
+		$var = array();
+
+		if ( 0/*$this->settings['pas']*/ ) {
 			$values = array( 'card_number', 'card_exp_month', 'card_exp_year' );
 
-			$var = $this->getCCform( array(), $values );
+			$var = $this->getCCform( $var, $values );
 		} else {
 			$values = array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' );
 
-			$var = $this->getCCform( array(), $values );
+			$var = $this->getCCform( $var, $values );
 
 			if ( !empty( $this->settings['promptAddress'] ) ) {
 				$values = array( 'firstname', 'lastname', 'address', 'city', 'state_usca', 'zip', 'country_list' );
@@ -121,16 +131,18 @@ class processor_hsbc extends XMLprocessor
 	}
 
 	function checkoutProcess( $request )
-	{
-		if ( $this->settings['payer_auth'] ) {
+	{aecDebug("checkoutProcess");
+		if ( $this->settings['pas'] ) {aecDebug("marking double checkout, preparing PAS");
+			$request->invoice->preparePickup( $request->int_var['params'] );
 
-		} else {
+			return array( 'doublecheckout' => true );
+		} else {aecDebug("checking out data");
 			return parent::checkoutProcess( $request );
 		}
 	}
-	
+
 	function createRequestXML( $request )
-	{
+	{aecDebug("createRequestXML");
 		// Start xml, add login and transaction key, as well as invoice number
 		$content =	'<?xml version="1.0" encoding="utf-8"?>'
 					. '<EngineDocList>'
@@ -155,6 +167,17 @@ class processor_hsbc extends XMLprocessor
 					. '<Mode DataType="String">' . ( $this->settings['testmode'] ? "Y" : "P" ) . '</Mode>'
 					;
 
+		if ( is_array( $request->int_var['amount'] ) ) {
+			$pu = $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
+
+			$content .=	'<PbOrder>'
+						. '<OrderType>' . trim( $request->int_var['params']['billCountry'] ) . '</OrderType>'
+						. '<OrderFrequencyCycle>' . $pu['unit'] . '</OrderFrequencyCycle>'
+						. '<OrderFrequencyInterval>' . $pu['period'] . '</OrderFrequencyInterval>'
+						. '</PbOrder>'
+						;
+		}
+
 		$expirationDate =  $request->int_var['params']['expirationMonth'] . '/' . str_pad( $request->int_var['params']['expirationYear'], 2, '0', STR_PAD_LEFT );
 
 		// Customer/Credit Card Details
@@ -175,16 +198,16 @@ class processor_hsbc extends XMLprocessor
 					;
 
 		if ( !empty( $this->settings['promptAddress'] ) ) {
-			$content .=	'<City DataType="String">' . trim( $request->int_var['params']['billCity'] ) . '</Type>'
-						. '<Country DataType="String">' . trim( $request->int_var['params']['billCountry'] ) . '</Type>'
-						. '<FirstName DataType="String">' . trim( $request->int_var['params']['billFirstName'] ) . '</Type>'
-						. '<LastName DataType="String">' . trim( $request->int_var['params']['billLastName'] ) . '</Type>'
-						. '<PostalCode DataType="String">' . trim( $request->int_var['params']['billZip'] ) . '</Type>'
-						. '<StateProv DataType="String">' . trim( $request->int_var['params']['billState'] ) . '</Type>'
+			$content .=	'<City DataType="String">' . trim( $request->int_var['params']['billCity'] ) . '</City>'
+						. '<Country DataType="String">' . trim( $request->int_var['params']['billCountry'] ) . '</Country>'
+						. '<FirstName DataType="String">' . trim( $request->int_var['params']['billFirstName'] ) . '</FirstName>'
+						. '<LastName DataType="String">' . trim( $request->int_var['params']['billLastName'] ) . '</LastName>'
+						. '<PostalCode DataType="String">' . trim( $request->int_var['params']['billZip'] ) . '</PostalCode>'
+						. '<StateProv DataType="String">' . trim( $request->int_var['params']['billState'] ) . '</StateProv>'
 						;
 		} else {
 			$content .=	'<FirstName DataType="String">' . trim( $request->int_var['params']['billFirstName'] ) . '</Type>'
-						. '<LastName DataType="String">' . trim( $request->int_var['params']['billLastName'] ) . '</Type>'
+						. '<LastName DataType="String">' . trim( $request->int_var['params']['billLastName'] ) . '</LastName>'
 						;
 		}
 
@@ -206,7 +229,7 @@ class processor_hsbc extends XMLprocessor
 			$amount = $request->int_var['amount'];
 		}
 
-		$content .=	 '<Total DataType="Money" Currency="' . AECToolbox::aecNumCurrency( $request->invoice->currency ) . '">' . ( (int) ( $amount * 100) ) . '</Total>';
+		$content .=	 '<Total DataType="Money" Currency="' . AECToolbox::aecNumCurrency( $request->invoice->currency ) . '">' . ( (int) ( $amount * 100 ) ) . '</Total>';
 
 		$content .=	  '</Totals>'
 					. '</CurrentTotals>'
@@ -256,6 +279,44 @@ aecDebug($content);
 				$return['error'] = $text;
 			}
 
+		}
+
+		return $return;
+	}
+
+	function prepareValidation( $subscription_list )
+	{
+		return true;
+	}
+
+	function validateSubscription( $subscription_id )
+	{
+		$database = &JFactory::getDBO();
+
+		$subscription = new Subscription( $database );
+		$subscription->load( $subscription_id );
+
+		$allowed = array( "Trial", "Active" );
+
+		if ( !in_array( $subscription->status, $allowed ) ) {
+			// Do not renew when the account has been canceled
+			return false;
+		}
+
+		return true;
+	}
+
+	function convertPeriodUnit( $period, $unit )
+	{
+		$return['unit'] = $unit;
+		$return['period'] = $period;
+
+		$return = array();
+		switch ( $unit ) {
+			case 'Y':
+				$return['unit'] = 'M';
+				$return['period'] = $period*12;
+				break;
 		}
 
 		return $return;

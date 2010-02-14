@@ -3711,7 +3711,7 @@ class XMLprocessor extends processor
 
 			unset( $var['aec_alternate_checkout'] );
 		} else {
-			$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', $this->info['secure'] )
+			$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', $this->info['secure'] );
 		}
 
 		if ( isset( $var['aec_remove_std_vars'] ) ) {
@@ -3724,7 +3724,7 @@ class XMLprocessor extends processor
 
 		// TODO:  onclick="javascript:document.getElementById(\'aec_checkout_btn\').disabled=true"
 
-		$return = '<form action="' . $var . '" method="post">' . "\n";
+		$return = '<form action="' . $url . '" method="post">' . "\n";
 		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
 
 		if ( $stdvars ) {
@@ -4415,12 +4415,16 @@ class PROFILEprocessor extends XMLprocessor
 
 class POSTprocessor extends processor
 {
-	function checkoutAction( $request )
+	function checkoutAction( $request, $xvar=null )
 	{
-		$var = $this->createGatewayLink( $request );
+		if ( empty( $xvar ) ) {
+			$var = $this->createGatewayLink( $request );
 
-		if ( !empty( $this->settings['customparams'] ) ) {
-			$var = $this->customParams( $this->settings['customparams'], $var, $request );
+			if ( !empty( $this->settings['customparams'] ) ) {
+				$var = $this->customParams( $this->settings['customparams'], $var, $request );
+			}
+		} else {
+			$var = $xvar;
 		}
 
 		if ( isset( $var['_aec_checkout_onclick'] ) ) {
@@ -8666,14 +8670,18 @@ class InvoiceFactory
 		$this->InvoiceToCheckout( $option, $repeat, $error );
 	}
 
-	function InvoiceToCheckout( $option, $repeat=0, $error=null )
+	function InvoiceToCheckout( $option, $repeat=0, $error=null, $data=null )
 	{
 		global $mainframe;
 
 		if ( $this->hasExceptions() ) {
 			$this->addressExceptions( $option );
 		} else {
-			$int_var = $this->invoice->getWorkingData( $this );
+			if ( !empty( $data ) ) {
+				$int_var = $data;
+			} else {
+				$int_var = $this->invoice->getWorkingData( $this );
+			}
 
 			// Assemble Checkout Response
 			if ( !empty( $int_var['objUsage'] ) ) {
@@ -8783,6 +8791,8 @@ class InvoiceFactory
 
 		if ( isset( $response['error'] ) ) {
 			$this->checkout( $option, true, $response['error'] );
+		} elseif ( isset( $response['doublecheckout'] ) ) {
+			$this->InvoiceToCheckout( $option, true, null, $var );
 		} else {
 			$this->thanks( $option );
 		}
@@ -9708,6 +9718,14 @@ class Invoice extends serialParamDBTable
 			$targetUser =& $metaUser;
 		}
 
+		if ( !empty( $this->params['aec_pickup'] ) ) {
+			foreach ( $this->params['aec_pickup'] as $key ) {
+				if ( isset( $this->params[$key] ) ) {
+					unset( $this->params[$key] );
+				}
+			}
+		}
+
 		if ( !empty( $this->usage ) ) {
 			$usage = explode( '.', $this->usage );
 
@@ -10198,6 +10216,15 @@ class Invoice extends serialParamDBTable
 		}
 
 		$this->coupons = $oldcoupons;
+	}
+
+	function preparePickup( $array )
+	{
+		$this->addParams( array( "aec_pickup" => array_keys( $array ) ) );
+
+		$this->addParams( $array );
+
+		$this->storeload();
 	}
 
 	function savePostParams( $array )

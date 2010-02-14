@@ -923,6 +923,14 @@ define( '_CFG_HSBC_NAME_NAME', 'Client Name');
 define( '_CFG_HSBC_NAME_DESC', 'Your HSBC Client Name');
 define( '_CFG_HSBC_PASSWORD_NAME', 'Password');
 define( '_CFG_HSBC_PASSWORD_DESC', 'Your HSBC Password');
+
+define( '_CFG_HSBC_PAS_NAME', 'Payer Authentication Service');
+define( '_CFG_HSBC_PAS_DESC', 'Use the HSBC Payer Authentication Service');
+define( '_CFG_HSBC_PAS_ID_NAME', 'PAS ID');
+define( '_CFG_HSBC_PAS_ID_DESC', 'Your HSBC PAS ID');
+define( '_CFG_HSBC_PAS_URL_NAME', 'PAS Url');
+define( '_CFG_HSBC_PAS_URL_DESC', 'The Url that your customers will be sent to for PAS');
+
 define( '_CFG_HSBC_PROMPTADDRESS_NAME', 'Prompt for Address');
 define( '_CFG_HSBC_PROMPTADDRESS_DESC', 'Ask the user to put in an Address with the Billing Name.');
 
