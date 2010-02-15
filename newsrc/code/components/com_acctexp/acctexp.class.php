@@ -4085,8 +4085,6 @@ class XMLprocessor extends processor
 
 	function checkoutProcess( $request )
 	{
-		$database = &JFactory::getDBO();
-
 		$this->sanitizeRequest( $request );
 
 		// Create the xml string
@@ -4100,6 +4098,8 @@ class XMLprocessor extends processor
 		}
 
 		if ( $request->invoice->invoice_number != $response['invoice'] ) {
+			$database = &JFactory::getDBO();
+
 			$request->invoice = new Invoice( $database );
 			$request->invoice->loadInvoiceNumber( $response['invoice'] );
 		}

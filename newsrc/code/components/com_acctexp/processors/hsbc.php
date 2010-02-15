@@ -84,24 +84,39 @@ class processor_hsbc extends XMLprocessor
 aecDebug("preparing PAS form");
 			return POSTprocessor::checkoutAction( $request, $var );
 		} else {aecDebug("preparing regular checkout");
-			return parent::checkoutAction( $request );
+			if ( $this->settings['pas'] ) {
+				$check = aecGetParam( 'CcpaResultsCode', null, true, array( 'int' ) );
+
+				if ( !is_null( $check ) ) {
+					if ( $check == 1 ) {
+						return parent::checkoutProcess( $request );
+					} else {
+						$response = array( 'error' => 'Security Check failed, Error Number: ' . $check );
+aecDebug($response);
+						return parent::checkoutResponse( $request, $response );
+					}
+				}
+			}
 		}
+
+		return parent::checkoutAction( $request );
 	}
 
 	function createGatewayLink( $request )
 	{aecDebug("createGatewayLink");
 		$var['post_url']			= $this->settings['pas_url'];
 
-		$var['CardExpiration']		= $request->int_var['params']['expirationMonth'] . substr( $request->int_var['params']['expirationYear'], 2, 2 );
+		$var['CardExpiration']		= substr( $request->int_var['params']['expirationYear'], 2, 2 ) . $request->int_var['params']['expirationMonth'];
 		$var['CardholderPan']		= $request->int_var['params']['cardNumber'];
 		$var['CcpaClientId']		= $this->settings['pas_id'];
+		$var['CurrencyExponent']	= AECToolbox::aecCurrencyExp( $this->settings['currency'] );
 		$var['MD']					= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
-		$var['PurchaseAmount']		= $this->settings['currency']." ".$request->int_var['amount'];
+		$var['PurchaseAmount']		= AECToolbox::getCurrencySymbol( $this->settings['currency'] )." ".$request->int_var['amount'];
 		$var['PurchaseAmountRaw']	= (int) ( $request->int_var['amount'] * 100 );
-		$var['PurchaseCurrency']	= $this->settings['currency'];
+		$var['PurchaseCurrency']	= AECToolbox::aecNumCurrency( $this->settings['currency'] );
 		$var['PurchaseDesc']		= $request->invoice->invoice_number;
 		$var['ResultUrl']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout&amp;invoice='.$request->invoice->invoice_number );
-
+aecDebug($var);
 		return $var;
 	}
 
@@ -134,7 +149,7 @@ aecDebug("preparing PAS form");
 	{aecDebug("checkoutProcess");
 		if ( $this->settings['pas'] ) {aecDebug("marking double checkout, preparing PAS");
 			$request->invoice->preparePickup( $request->int_var['params'] );
-
+aecDebug($request->invoice->params );
 			return array( 'doublecheckout' => true );
 		} else {aecDebug("checking out data");
 			return parent::checkoutProcess( $request );
