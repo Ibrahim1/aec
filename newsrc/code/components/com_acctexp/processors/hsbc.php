@@ -79,7 +79,7 @@ class processor_hsbc extends XMLprocessor
 
 	function checkoutAction( $request )
 	{aecDebug("checkoutAction");
-		if ( $this->settings['pas'] && !empty( $request->int_var['params']['cardNumber'] ) ) {
+		if ( $this->settings['pas'] && !empty( $request->int_var['params']['cardNumber'] ) && !isset( $request->int_var['params']['CcpaResultsCode'] ) ) {
 			$var = $this->createGatewayLink( $request );
 aecDebug("preparing PAS form");
 			return POSTprocessor::checkoutAction( $request, $var );
@@ -88,13 +88,17 @@ aecDebug("preparing PAS form");
 				$check = aecGetParam( 'CcpaResultsCode', null, true, array( 'int' ) );
 
 				if ( !is_null( $check ) ) {
-					if ( $check == 1 ) {
+					if ( $check == 0 ) {
 						return parent::checkoutProcess( $request );
 					} else {
 						$response = array( 'error' => 'Security Check failed, Error Number: ' . $check );
 aecDebug($response);
 						return parent::checkoutResponse( $request, $response );
 					}
+				} else {
+					$var = $this->createGatewayLink( $request );
+
+					return POSTprocessor::checkoutAction( $request, $var );
 				}
 			}
 		}
