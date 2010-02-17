@@ -48,7 +48,7 @@ class processor_hsbc extends XMLprocessor
 		$settings['clientid']			= "clientid";
 		$settings['name']				= "name";
 		$settings['password']			= "password";
-		$settings['pas']			= 0;
+		$settings['pas']				= 0;
 		$settings['pas_id']				= "";
 		$settings['pas_url']			= "https://www.ccpa.hsbc.com/ccpa";
 		$settings['currency']			= "USD";
@@ -65,7 +65,7 @@ class processor_hsbc extends XMLprocessor
 		$settings['clientid'] 			= array("inputC");
 		$settings['name'] 				= array("inputC");
 		$settings['password'] 			= array("inputC");
-		$settings['pas']			= array("list_yesno");
+		$settings['pas']				= array("list_yesno");
 		$settings['pas_id'] 			= array("inputC");
 		$settings['pas_url'] 			= array("inputC");
 		$settings['currency']			= array("list_currency");
@@ -78,13 +78,14 @@ class processor_hsbc extends XMLprocessor
 	}
 
 	function checkoutAction( $request )
-	{aecDebug("checkoutAction");
-		if ( $this->settings['pas'] && !empty( $request->int_var['params']['cardNumber'] ) && !isset( $request->int_var['params']['CcpaResultsCode'] ) ) {
+	{
+		if ( $this->settings['pas'] ) {
+			if ( !empty( $request->int_var['params']['cardNumber'] ) && !isset( $request->int_var['params']['CcpaResultsCode'] ) ) {
+
 			$var = $this->createGatewayLink( $request );
-aecDebug("preparing PAS form");
-			return POSTprocessor::checkoutAction( $request, $var );
-		} else {aecDebug("preparing regular checkout");
-			if ( $this->settings['pas'] ) {
+
+				return POSTprocessor::checkoutAction( $request, $var );
+			} elseif ( !empty( $request->int_var['params']['cardNumber'] ) ) {
 				$check = aecGetParam( 'CcpaResultsCode', null, true, array( 'int' ) );
 
 				if ( !is_null( $check ) ) {
@@ -92,7 +93,7 @@ aecDebug("preparing PAS form");
 						return parent::checkoutProcess( $request );
 					} else {
 						$response = array( 'error' => 'Security Check failed, Error Number: ' . $check );
-aecDebug($response);
+
 						return parent::checkoutResponse( $request, $response );
 					}
 				} else {
@@ -107,7 +108,7 @@ aecDebug($response);
 	}
 
 	function createGatewayLink( $request )
-	{aecDebug("createGatewayLink");
+	{
 		$var['post_url']			= $this->settings['pas_url'];
 
 		$var['CardExpiration']		= substr( $request->int_var['params']['expirationYear'], 2, 2 ) . $request->int_var['params']['expirationMonth'];
@@ -120,12 +121,12 @@ aecDebug($response);
 		$var['PurchaseCurrency']	= AECToolbox::aecNumCurrency( $this->settings['currency'] );
 		$var['PurchaseDesc']		= $request->invoice->invoice_number;
 		$var['ResultUrl']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout&amp;invoice='.$request->invoice->invoice_number );
-aecDebug($var);
+
 		return $var;
 	}
 
 	function checkoutform( $request )
-	{aecDebug("checkoutform");
+	{
 		$var = array();
 
 		if ( 0/*$this->settings['pas']*/ ) {
@@ -138,7 +139,7 @@ aecDebug($var);
 			$var = $this->getCCform( $var, $values );
 
 			if ( !empty( $this->settings['promptAddress'] ) ) {
-				$values = array( 'firstname', 'lastname', 'address', 'city', 'state_usca', 'zip', 'country_list' );
+				$values = array( 'firstname', 'lastname', 'address', 'city', 'zip', 'state_usca', 'country3_list' );
 			} else {
 				$values = array( 'firstname', 'lastname' );
 			}
@@ -150,18 +151,18 @@ aecDebug($var);
 	}
 
 	function checkoutProcess( $request )
-	{aecDebug("checkoutProcess");
-		if ( $this->settings['pas'] ) {aecDebug("marking double checkout, preparing PAS");
+	{
+		if ( $this->settings['pas'] ) {
 			$request->invoice->preparePickup( $request->int_var['params'] );
 aecDebug($request->invoice->params );
 			return array( 'doublecheckout' => true );
-		} else {aecDebug("checking out data");
+		} else {
 			return parent::checkoutProcess( $request );
 		}
 	}
 
 	function createRequestXML( $request )
-	{aecDebug("createRequestXML");
+	{
 		// Start xml, add login and transaction key, as well as invoice number
 		$content =	'<?xml version="1.0" encoding="utf-8"?>'
 					. '<EngineDocList>'
@@ -212,7 +213,9 @@ aecDebug($request->invoice->params );
 					. '</PaymentMech>'
 					;
 
+		// Customer Address Details
 		$content .=	'<BillTo>'
+					. '<Location>'
 					. '<Address>'
 					;
 
@@ -222,6 +225,7 @@ aecDebug($request->invoice->params );
 						. '<FirstName DataType="String">' . trim( $request->int_var['params']['billFirstName'] ) . '</FirstName>'
 						. '<LastName DataType="String">' . trim( $request->int_var['params']['billLastName'] ) . '</LastName>'
 						. '<PostalCode DataType="String">' . trim( $request->int_var['params']['billZip'] ) . '</PostalCode>'
+						. '<Street1 DataType="String">' . trim( $request->int_var['params']['billAddress'] ) . '</Street1>'
 						. '<StateProv DataType="String">' . trim( $request->int_var['params']['billState'] ) . '</StateProv>'
 						;
 		} else {
@@ -231,6 +235,7 @@ aecDebug($request->invoice->params );
 		}
 
 		$content .=	'</Address>'
+					. '</Location>'
 					. '</BillTo>'
 					;
 
@@ -238,7 +243,23 @@ aecDebug($request->invoice->params );
 
 		$content .=	 '<Transaction>'
 					. '<Type DataType="String">Auth</Type>'
-					. '<CurrentTotals>'
+					;
+
+		// Payer Authentication Details
+		if ( $this->settings['pas'] ) {
+			$pac = $this->getPACpostback( $request->int_var['params'] );
+
+			if ( !$return['error'] ) {
+				$content .=	 '<PayerSecurityLevel DataType="S32">' . $pac['level'] . '</PayerSecurityLevel>'
+							. '<PayerAuthenticationCode DataType="String">' . $pac['code'] . '</PayerAuthenticationCode>'
+							. '<PayerTxnId DataType="String">' . $pac['txnid'] . '</PayerTxnId>'
+							. '<CardholderPresentCode DataType="S32">' . $pac['cpc'] . '</CardholderPresentCode>'
+							;
+			}
+		}
+
+		// Transaction Details
+		$content .=	 '<CurrentTotals>'
 					. '<Totals>'
 					;
 
@@ -260,8 +281,62 @@ aecDebug($request->invoice->params );
 		// Close Request
 		$content .=	'</EngineDoc>';
 		$content .=	'</EngineDocList>';
-aecDebug($content);
+
 		return $content;
+	}
+
+	function getPACpostback( $params )
+	{
+		$return = array(	'level' => 4,
+							'code'	=> "",
+							'txnid'	=> "",
+							'cpc'	=> "",
+							'error'	=> false
+						);
+		
+		switch( $params['CcpaResultsCode'] ) {
+			// Success
+			case "0":
+				$return['level']	= 2;
+				$return['code']		= $params['CAVV'];
+				$return['txnid']	= $params['XID'];
+				$return['cpc']		= 13;
+				break;
+				
+			// card was not within a participating BIN range
+			case "1":
+				$return['level']	= 5;
+				$return['cpc']		= 13;
+				break;
+				
+			// cardholder in a participating BIN range, but not enrolled in 3-D Secure
+			case "2":
+				$return['level']	= 1;
+				$return['cpc']		= 13;
+				break;
+				
+			// Not enrolled in 3-D Secure. But was authenticated using the 3-D Secure attempt server
+			case "3":
+				$return['level']	= 6;
+				$return['code']		= $params['CAVV'];
+				$return['txnid']	= $params['XID'];
+				$return['cpc']		= 13;
+				break;
+				
+			// 3-D Secure enrolled. PARes not yet received for this transaction
+			case "4": $return['level'] = 4; break;
+				
+			// The cardholder has failed payer authentication
+			case "5": $return['error'] = true; exit;
+				
+			// Signature validation of the results from the ACS failed
+			case "6": $return['error'] = true; exit;
+
+			// Not recognised, or not supported card type
+			case "14": $return['level'] = 7; break;
+		}
+
+		return $return;
 	}
 
 	function transmitRequestXML( $xml, $request )
@@ -271,17 +346,17 @@ aecDebug($content);
 		} else {
 			$url = "https://www.secure-epayments.apixml.hsbc.com/";
 		}
-
+aecDebug($xml);
 		$response = $this->transmitRequest( $url, "", $xml, 443 );
 
 		$return['valid'] = false;
 		$return['raw'] = $response;
 
 		if ( $response ) {
-			$resultCode = $this->substring_between($response,'<TRANSACTIONSTATUS>','</TRANSACTIONSTATUS>');
+			$resultCode = $this->substring_between($response,'<TransactionStatus DataType="String">','</TransactionStatus>');
 
-			$code = $this->substring_between($response,'<CCERRCODE>','</CCERRCODE>');
-			$text = $this->substring_between($response,'<CCRETURNMSG>','</CCRETURNMSG>');
+			$code = $this->substring_between($response,'<CcErrCode DataType="S32">','</CcErrCode>');
+			$text = $this->substring_between($response,'<CcReturnMsg DataType="String">','</CcReturnMsg>');
 
 			switch ( $resultCode ) {
 				case "A":
@@ -291,13 +366,6 @@ aecDebug($content);
 				default:
 					$return['error'] = $text;
 			}
-
-			if ( strcmp( $resultCode, 'Ok' ) === 0) {
-				$return['valid'] = 1;
-			} else {
-				$return['error'] = $text;
-			}
-
 		}
 
 		return $return;
