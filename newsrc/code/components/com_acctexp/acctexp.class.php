@@ -4136,7 +4136,7 @@ class XMLprocessor extends processor
 				unset( $response['raw'] );
 			}
 
-			$request->invoice->processorResponse( $request->parent, $response, $resp, true );
+			return $request->invoice->processorResponse( $request->parent, $response, $resp, true );
 		} else {
 			return false;
 		}

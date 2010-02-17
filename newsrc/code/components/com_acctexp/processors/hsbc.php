@@ -89,13 +89,7 @@ class processor_hsbc extends XMLprocessor
 				$check = aecGetParam( 'CcpaResultsCode', null, true, array( 'int' ) );
 
 				if ( !is_null( $check ) ) {
-					if ( $check == 0 ) {
-						return parent::checkoutProcess( $request );
-					} else {
-						$response = array( 'error' => 'Security Check failed, Error Number: ' . $check );
-
-						return parent::checkoutResponse( $request, $response );
-					}
+					return parent::checkoutProcess( $request );
 				} else {
 					$var = $this->createGatewayLink( $request );
 
@@ -154,7 +148,7 @@ class processor_hsbc extends XMLprocessor
 	{
 		if ( $this->settings['pas'] ) {
 			$request->invoice->preparePickup( $request->int_var['params'] );
-aecDebug($request->invoice->params );
+
 			return array( 'doublecheckout' => true );
 		} else {
 			return parent::checkoutProcess( $request );
@@ -249,7 +243,7 @@ aecDebug($request->invoice->params );
 		if ( $this->settings['pas'] ) {
 			$pac = $this->getPACpostback( $request->int_var['params'] );
 
-			if ( !$return['error'] ) {
+			if ( !$pac['error'] ) {
 				$content .=	 '<PayerSecurityLevel DataType="S32">' . $pac['level'] . '</PayerSecurityLevel>'
 							. '<PayerAuthenticationCode DataType="String">' . $pac['code'] . '</PayerAuthenticationCode>'
 							. '<PayerTxnId DataType="String">' . $pac['txnid'] . '</PayerTxnId>'
@@ -293,7 +287,7 @@ aecDebug($request->invoice->params );
 							'cpc'	=> "",
 							'error'	=> false
 						);
-		
+
 		switch( $params['CcpaResultsCode'] ) {
 			// Success
 			case "0":
@@ -302,19 +296,19 @@ aecDebug($request->invoice->params );
 				$return['txnid']	= $params['XID'];
 				$return['cpc']		= 13;
 				break;
-				
+
 			// card was not within a participating BIN range
 			case "1":
 				$return['level']	= 5;
 				$return['cpc']		= 13;
 				break;
-				
+
 			// cardholder in a participating BIN range, but not enrolled in 3-D Secure
 			case "2":
 				$return['level']	= 1;
 				$return['cpc']		= 13;
 				break;
-				
+
 			// Not enrolled in 3-D Secure. But was authenticated using the 3-D Secure attempt server
 			case "3":
 				$return['level']	= 6;
@@ -322,13 +316,13 @@ aecDebug($request->invoice->params );
 				$return['txnid']	= $params['XID'];
 				$return['cpc']		= 13;
 				break;
-				
+
 			// 3-D Secure enrolled. PARes not yet received for this transaction
 			case "4": $return['level'] = 4; break;
-				
+
 			// The cardholder has failed payer authentication
 			case "5": $return['error'] = true; exit;
-				
+
 			// Signature validation of the results from the ACS failed
 			case "6": $return['error'] = true; exit;
 
@@ -346,7 +340,7 @@ aecDebug($request->invoice->params );
 		} else {
 			$url = "https://www.secure-epayments.apixml.hsbc.com/";
 		}
-aecDebug($xml);
+
 		$response = $this->transmitRequest( $url, "", $xml, 443 );
 
 		$return['valid'] = false;
@@ -365,9 +359,10 @@ aecDebug($xml);
 					break;
 				default:
 					$return['error'] = $text;
+					break;
 			}
 		}
-
+aecDebug("return");aecDebug($return);
 		return $return;
 	}
 
