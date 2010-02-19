@@ -5748,13 +5748,13 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$aec_global_call			= 'global $mosConfig_live_site, $mosConfig_absolute_path;' . "\n";
 	}
 
-	$aec_redirect_notallowed	= 'aecRedirect( $mosConfig_live_site . "index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
+	$aec_redirect_notallowed	= 'aecRedirect( $mosConfig_live_site . "/index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
 	$aec_redirect_notallowed15	= 'global $mainframe;' . "\n" . '$mainframe->redirect( "index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
 
 	if ( $v15 ) {
 		$aec_redirect_subscribe		= 'aecRedirect( JURI::root() . \'index.php?option=com_acctexp&task=subscribe\' );' . "\n";
 	} else {
-		$aec_redirect_subscribe		= 'aecRedirect( $mosConfig_live_site . "index.php?option=com_acctexp&task=subscribe" );' . "\n";
+		$aec_redirect_subscribe		= 'aecRedirect( $mosConfig_live_site . "/index.php?option=com_acctexp&task=subscribe" );' . "\n";
 	}
 
 	$aec_normal_hack = $aec_hack_start
