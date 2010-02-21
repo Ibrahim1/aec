@@ -968,7 +968,7 @@ function subscriptionDetails( $option, $sub='overview' )
 	$mainframe->SetPageTitle( _MYSUBSCRIPTION_TITLE . ' - ' . $tabs[$sub] );
 
 	$html = new HTML_frontEnd();
-	$html->subscriptionDetails( $option, $tabs, $sub, $invoices, $metaUser, $mi_info, $subscriptions, $custom, $properties );
+	$html->subscriptionDetails( $option, $tabs, $sub, $invoices, $metaUser, $mi_info, $subList, $custom, $properties );
 }
 
 function internalCheckout( $option, $invoice_number, $userid )

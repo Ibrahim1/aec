@@ -247,10 +247,10 @@ class HTML_frontEnd
 
 							?><div class="subscription_info"><?php
 
-							echo '<p><strong>' . $subscription->getProperty( 'name' ) . '</strong></p>';
-							echo '<p>' . $subscription->getProperty( 'desc' ) . '</p>';
-							if ( !empty( $subscription->proc_actions ) ) {
-								echo '<p>' . _PLAN_PROCESSOR_ACTIONS . ' ' . implode( " | ", $subscription->proc_actions ) . '</p>';
+							echo '<p><strong>' . $subscription->objPlan->getProperty( 'name' ) . '</strong></p>';
+							echo '<p>' . $subscription->objPlan->getProperty( 'desc' ) . '</p>';
+							if ( !empty( $subscription->objPlan->proc_actions ) ) {
+								echo '<p>' . _PLAN_PROCESSOR_ACTIONS . ' ' . implode( " | ", $subscription->objPlan->proc_actions ) . '</p>';
 							}
 							?></div><?php
 						}
