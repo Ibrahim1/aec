@@ -41,25 +41,29 @@ if ( $user->id ) {
 		$database = &JFactory::getDBO();
 
 		$expiration = null;
-		$query = 'SELECT `expiration`'
+		$query = 'SELECT `expiration`, `lifetime`'
 				. ' FROM #__acctexp_subscr'
 				. ' WHERE `userid` = \'' . $user->id . '\''
 				. ' AND `primary` = \'1\''
 				. ' AND `recurring` != \'1\''
-				. ' AND `lifetime` != \'1\''
 				. ' AND `status` != \'Excluded\'';
 		$database->setQuery($query);
-		$expiration = $database->loadResult();
+		$entry = $database->loadObject();
 
-		if ( empty( $expiration ) ) {
-			$query = 'SELECT `expiration`'
-					. ' FROM #__acctexp_subscr'
-					. ' WHERE `userid` = \'' . $user->id . '\''
-					. ' AND `recurring` != \'1\''
-	                . ' AND `lifetime` != \'1\''
-	                . ' AND `status` != \'Excluded\'';
-			$database->setQuery($query);
-			$expiration = $database->loadResult();
+		if ( !$entry->lifetime ) {
+			if ( !empty( $entry->expiration ) ) {
+				$query = 'SELECT `expiration`'
+						. ' FROM #__acctexp_subscr'
+						. ' WHERE `userid` = \'' . $user->id . '\''
+						. ' AND `recurring` != \'1\''
+		                . ' AND `status` != \'Excluded\'';
+				$database->setQuery($query);
+				$expiration = $database->loadResult();
+			} else {
+				$expiration = $entry->expiration;
+			}
+		} else {
+			$expiration = null;
 		}
 
 		if ( empty( $expiration ) ) {
