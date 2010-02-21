@@ -4144,7 +4144,7 @@ class XMLprocessor extends processor
 
 	function XMLtoArray( $xml )
 	{
-		if (!($xml->children())) {
+		if ( !( $xml->children() ) ) {
 			return (string) $xml;
 		}
 

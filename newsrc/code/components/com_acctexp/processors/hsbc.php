@@ -123,30 +123,24 @@ class processor_hsbc extends XMLprocessor
 	{
 		$var = array();
 
-		if ( 0/*$this->settings['pas']*/ ) {
-			$values = array( 'card_number', 'card_exp_month', 'card_exp_year' );
+		$values = array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' );
 
-			$var = $this->getCCform( $var, $values );
+		$var = $this->getCCform( $var, $values );
+
+		if ( !empty( $this->settings['promptAddress'] ) ) {
+			$values = array( 'firstname', 'lastname', 'address', 'city', 'zip', 'state_usca', 'country3_list' );
 		} else {
-			$values = array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' );
-
-			$var = $this->getCCform( $var, $values );
-
-			if ( !empty( $this->settings['promptAddress'] ) ) {
-				$values = array( 'firstname', 'lastname', 'address', 'city', 'zip', 'state_usca', 'country3_list' );
-			} else {
-				$values = array( 'firstname', 'lastname' );
-			}
-
-			$var = $this->getUserform( $var, $values, $request->metaUser );
+			$values = array( 'firstname', 'lastname' );
 		}
+
+		$var = $this->getUserform( $var, $values, $request->metaUser );
 
 		return $var;
 	}
 
 	function checkoutProcess( $request )
 	{
-		if ( $this->settings['pas'] ) {
+		if ( $this->settings['pas'] && empty( $request->int_var['params']['CAVV'] ) ) {
 			$request->invoice->preparePickup( $request->int_var['params'] );
 
 			return array( 'doublecheckout' => true );
@@ -245,8 +239,8 @@ class processor_hsbc extends XMLprocessor
 
 			if ( !$pac['error'] ) {
 				$content .=	 '<PayerSecurityLevel DataType="S32">' . $pac['level'] . '</PayerSecurityLevel>'
-							. '<PayerAuthenticationCode DataType="String">' . $pac['code'] . '</PayerAuthenticationCode>'
-							. '<PayerTxnId DataType="String">' . $pac['txnid'] . '</PayerTxnId>'
+							. '<PayerAuthenticationCode DataType="String">' . urldecode( $pac['code'] ) . '</PayerAuthenticationCode>'
+							. '<PayerTxnId DataType="String">' . urldecode( $pac['txnid'] ) . '</PayerTxnId>'
 							. '<CardholderPresentCode DataType="S32">' . $pac['cpc'] . '</CardholderPresentCode>'
 							;
 			}
@@ -362,7 +356,7 @@ class processor_hsbc extends XMLprocessor
 					break;
 			}
 		}
-aecDebug("return");aecDebug($return);
+
 		return $return;
 	}
 
