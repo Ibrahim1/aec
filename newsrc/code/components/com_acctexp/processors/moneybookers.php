@@ -81,6 +81,7 @@ class processor_moneybookers extends POSTprocessor
 		$var['status_url']				= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=moneybookersnotification' );
 
 		$var['language']				= $this->settings['language'];
+		$var['payment_methods']			= $this->settings['ACC'];
 		$var['hide_login']				= $this->settings['hide_login'];
 		$var['pay_from_email']			= $request->metaUser->cmsUser->email;
 		$var['amount']					= $request->int_var['amount'];
