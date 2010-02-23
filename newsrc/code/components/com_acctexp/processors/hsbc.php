@@ -23,6 +23,7 @@ class processor_hsbc extends XMLprocessor
 		$info['currencies'] = AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring'] = 2;
+		$info['actions'] = array( 'cancel' => array( 'confirm' ) );
 		$info['secure'] = 1;
 
 		return $info;
@@ -407,6 +408,14 @@ class processor_hsbc extends XMLprocessor
 			$end_position = strpos( $haystack, $end );
 			return substr( $haystack, $start_position, $end_position - $start_position );
 		}
+	}
+
+	function customaction_cancel( $request )
+	{
+		$return['valid']	= 0;
+		$return['cancel']	= true;
+
+		return $return;
 	}
 
 }

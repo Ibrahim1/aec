@@ -771,16 +771,15 @@ function subscriptionDetails( $option, $sub='overview' )
 	}
 
 	// Build the User Subscription List
-	$subList = $metaUser->getSecondarySubscriptions();
+	$sList = $metaUser->getSecondarySubscriptions();
 	if ( !empty( $metaUser->objSubscription->plan ) ) {
-		$subList = array_merge( array( $metaUser->objSubscription ), $subList );
+		$sList = array_merge( array( $metaUser->objSubscription ), $sList );
 	}
 
 	// Prepare Payment Processors attached to active subscriptions
-	if ( !empty( $subList ) ) {
-		foreach( $subList as $usid => $subscription ) {
+	if ( !empty( $sList ) ) {
+		foreach( $sList as $usid => $subscription ) {
 			if ( empty( $subscription->id ) || empty( $subscription->plan ) ) {
-				unset( $subList[$usid] );
 				continue;
 			}
 
@@ -919,14 +918,26 @@ function subscriptionDetails( $option, $sub='overview' )
 			$activeortrial = false;
 		}
 
-		if ( !empty( $pp->info['actions'] ) && $activeortrial ) {
-			$actions = $pp->getActions( $invoice, $subscription );
+		$found = false;
+		foreach ( $subList as $ssub ) {
+			if ( $ssub->id == $invoice->subscr_id ) {
+				$tempsubscription = $subList[$invoice->subscr_id];
 
-			foreach ( $actions as $action ) {
-				$actionsarray[] = array('task'		=> 'planaction',
-										'add'		=> 'action=' . $action['action'] . '&amp;subscr=' . $subscription->id,
-										'insert'	=> $action['insert'],
-										'text'		=> $action['action'] );
+				$found = true;
+				continue;
+			}
+		}
+
+		if ( $found ) {
+			if ( !empty( $pp->info['actions'] ) && $activeortrial ) {
+				$actions = $pp->getActions( $invoice, $tempsubscription );
+
+				foreach ( $actions as $action ) {
+					$actionsarray[] = array('task'		=> 'planaction',
+											'add'		=> 'action=' . $action['action'] . '&amp;subscr=' . $tempsubscription->id,
+											'insert'	=> $action['insert'],
+											'text'		=> $action['action'] );
+				}
 			}
 		}
 

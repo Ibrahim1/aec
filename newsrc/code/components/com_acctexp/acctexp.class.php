@@ -6001,6 +6001,7 @@ class SubscriptionPlan extends serialParamDBTable
 		$lifetime		= $metaUser->focusSubscription->lifetime;
 
 		$amount = "0.00";
+
 		if ( ( $comparison['total_comparison'] === false ) || $is_pending ) {
 			// If user is using global trial period he still can use the trial period of a plan
 			if ( ( $this->params['trial_period'] > 0 ) && !$is_trial ) {
@@ -6122,7 +6123,7 @@ class SubscriptionPlan extends serialParamDBTable
 		$metaUser->focusSubscription->storeload();
 
 		if ( !( $silent || $aecConfig->cfg['noemails'] ) ) {
-			$adminonly = $this->id !== $aecConfig->cfg['entry_plan'];
+			$adminonly = ( $this->id !== $aecConfig->cfg['entry_plan'] );
 
 			$metaUser->focusSubscription->sendEmailRegistered( $renew, $adminonly );
 		}
@@ -9208,12 +9209,13 @@ class Invoice extends serialParamDBTable
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_invoices'
 				. ' WHERE `subscr_id` = \'' . $subscrid . '\''
-				. ' ORDER BY `transaction_date` DESC'
 				;
 
 		if ( !empty( $userid ) ) {
 			$query .= ' AND `userid` = \'' . $userid . '\'';
 		}
+
+		$query .= ' ORDER BY `transaction_date` DESC';
 
 		$database->setQuery( $query );
 		$this->load( $database->loadResult() );
@@ -10052,11 +10054,11 @@ class Invoice extends serialParamDBTable
 			switch ( strtolower( $u[0] ) ) {
 				case 'c':
 				case 'cart':
-					$objUsage = new aecCart( $database );
-					$objUsage->load( $u[1] );
-
-					if ( empty( $objUsage->content ) && !empty( $this->params['cart'] ) ) {
+					if ( isset( $this->params['cart'] ) ) {
 						$objUsage = $this->params['cart'];
+					} else {
+						$objUsage = new aecCart( $database );
+						$objUsage->load( $u[1] );
 					}
 					break;
 				case 'p':
@@ -11550,7 +11552,7 @@ class Subscription extends serialParamDBTable
 		}
 
 		if ( !$adminonly ) {
-			if ( aecJoomla15check() ) {
+			if ( aecJoomla15check() ) {aecDebug("finally_sending");
 				JUTility::sendMail( $adminEmail2, $adminEmail2, $email, $subject, $message );
 			} else {
 				mosMail( $adminEmail2, $adminName2, $email, $subject, $message );
