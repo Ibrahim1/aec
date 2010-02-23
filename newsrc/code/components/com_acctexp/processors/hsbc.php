@@ -25,6 +25,7 @@ class processor_hsbc extends XMLprocessor
 		$info['recurring'] = 2;
 		$info['actions'] = array( 'cancel' => array( 'confirm' ) );
 		$info['secure'] = 1;
+		$info['recurring_buttons']		= 2;
 
 		return $info;
 	}
@@ -79,14 +80,14 @@ class processor_hsbc extends XMLprocessor
 	}
 
 	function checkoutAction( $request )
-	{
+	{aecDebug("checkoutAction");
 		if ( $this->settings['pas'] ) {
 			if ( !empty( $request->int_var['params']['cardNumber'] ) && !isset( $request->int_var['params']['CcpaResultsCode'] ) ) {
 
 			$var = $this->createGatewayLink( $request );
-
+aecDebug("checkoutAction");
 				return POSTprocessor::checkoutAction( $request, $var );
-			} elseif ( !empty( $request->int_var['params']['cardNumber'] ) ) {
+			} elseif ( !empty( $request->int_var['params']['cardNumber'] ) ) {aecDebug("preparing regular checkout");
 				$check = aecGetParam( 'CcpaResultsCode', null, true, array( 'int' ) );
 
 				if ( !is_null( $check ) ) {
@@ -106,22 +107,28 @@ class processor_hsbc extends XMLprocessor
 	{
 		$var['post_url']			= $this->settings['pas_url'];
 
+		if ( is_array( $request->int_var['amount'] ) ) {
+			$amount = $request->int_var['amount']['amount3'];
+		} else {
+			$amount = $request->int_var['amount'];
+		}
+
 		$var['CardExpiration']		= substr( $request->int_var['params']['expirationYear'], 2, 2 ) . $request->int_var['params']['expirationMonth'];
 		$var['CardholderPan']		= $request->int_var['params']['cardNumber'];
 		$var['CcpaClientId']		= $this->settings['pas_id'];
 		$var['CurrencyExponent']	= AECToolbox::aecCurrencyExp( $this->settings['currency'] );
 		$var['MD']					= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 		$var['PurchaseAmount']		= AECToolbox::getCurrencySymbol( $this->settings['currency'] )." ".$request->int_var['amount'];
-		$var['PurchaseAmountRaw']	= (int) ( $request->int_var['amount'] * 100 );
+		$var['PurchaseAmountRaw']	= (int) ( $amount * 100 );
 		$var['PurchaseCurrency']	= AECToolbox::aecNumCurrency( $this->settings['currency'] );
 		$var['PurchaseDesc']		= $request->invoice->invoice_number;
 		$var['ResultUrl']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout&amp;invoice='.$request->invoice->invoice_number );
-
+aecDebug($var);
 		return $var;
 	}
 
 	function checkoutform( $request )
-	{
+	{aecDebug("checkoutform");
 		$var = array();
 
 		$values = array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' );
@@ -141,17 +148,17 @@ class processor_hsbc extends XMLprocessor
 
 	function checkoutProcess( $request )
 	{
-		if ( $this->settings['pas'] && empty( $request->int_var['params']['CAVV'] ) ) {
+		if ( $this->settings['pas'] && empty( $request->int_var['params']['CAVV'] ) ) {aecDebug("marking double checkout, preparing PAS");
 			$request->invoice->preparePickup( $request->int_var['params'] );
-
+aecDebug($request->invoice->params );
 			return array( 'doublecheckout' => true );
-		} else {
+		} else {aecDebug("checking out data");
 			return parent::checkoutProcess( $request );
 		}
 	}
 
 	function createRequestXML( $request )
-	{
+	{aecDebug("createRequestXML");
 		// Start xml, add login and transaction key, as well as invoice number
 		$content =	'<?xml version="1.0" encoding="utf-8"?>'
 					. '<EngineDocList>'
@@ -329,7 +336,7 @@ class processor_hsbc extends XMLprocessor
 	}
 
 	function transmitRequestXML( $xml, $request )
-	{
+	{aecDebug("transmitRequestXML");
 		if ( $this->settings['testmode'] ) {
 			$url = "https://www.uat.apixml.netq.hsbc.com/";
 		} else {
@@ -337,7 +344,7 @@ class processor_hsbc extends XMLprocessor
 		}
 
 		$response = $this->transmitRequest( $url, "", $xml, 443 );
-
+aecDebug($xml);aecDebug($response);
 		$return['valid'] = false;
 		$return['raw'] = $response;
 
