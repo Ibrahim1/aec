@@ -1342,14 +1342,14 @@ class HTML_AcctExp
 			</table>
 
 			<table class="adminlist">
-				<tr>
+				<thead><tr>
 					<th width="1%">#</th>
 					<th width="1%">id</th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
 					<th width="15%" align="left" nowrap="nowrap"><?php echo _PROCESSOR_NAME; ?></th>
 					<th align="left" nowrap="nowrap"><?php echo _PROCESSOR_INFO; ?></th>
 					<th width="3%" nowrap="nowrap"><?php echo _PROCESSOR_ACTIVE; ?></th>
-				</tr>
+				</tr></thead>
 
 		<?php
 		$k = 0;
@@ -1372,10 +1372,15 @@ class HTML_AcctExp
 			<?php
 			$k = 1 - $k;
 		} ?>
+		<tfoot>
+			<tr>
+				<td colspan="6">
+ 					<?php echo $pageNav->getListFooter(); ?>
+				</td>
+			</tr>
+		</tfoot>
 		</table>
- 		<?php
- 		echo $pageNav->getListFooter();
-		HTML_myCommon::ContentLegend(); ?>
+ 		<?php HTML_myCommon::ContentLegend(); ?>
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		<input type="hidden" name="task" value="showProcessors" />
 		<input type="hidden" name="returnTask" value="showProcessors" />
@@ -1476,7 +1481,7 @@ class HTML_AcctExp
 				<tr><td></td></tr>
 			</table>
 			<table class="adminlist">
-				<tr>
+				<thead><tr>
 					<th width="20">#</th>
 					<th width="20"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
 					<th width="20">&nbsp;</th>
@@ -1488,7 +1493,7 @@ class HTML_AcctExp
 					<th width="10%" align="left" nowrap="nowrap"><?php echo _METHOD; ?></th>
 					<th width="10%" align="left" nowrap="nowrap"><?php echo _USERPLAN; ?></th>
 					<th width="27%" align="left" nowrap="nowrap"><?php echo _EXPIRATION; ?></th>
-				</tr>
+				</tr></thead>
 				<?php
 				$k = 0;
 				for( $i=0; $i < count( $rows ); $i++ ) {
@@ -1525,8 +1530,14 @@ class HTML_AcctExp
 					<?php
 					$k = 1 - $k;
 				} ?>
-			</table>
-			<?php echo $pageNav->getListFooter(); ?>
+		<tfoot>
+			<tr>
+				<td colspan="11">
+ 					<?php echo $pageNav->getListFooter(); ?>
+				</td>
+			</tr>
+		</tfoot>
+		</table>
 			<input type="hidden" name="option" value="<?php echo $option;?>" />
 			<input type="hidden" name="task" value="showActive" />
 			<input type="hidden" name="returnTask" value="showActive" />
@@ -1565,7 +1576,7 @@ class HTML_AcctExp
 				<tr><td></td></tr>
 			</table>
 			<table class="adminlist">
-				<tr>
+				<thead><tr>
 					<th width="20">#</th>
 					<th width="20">id</th>
 					<th width="20"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
@@ -1576,7 +1587,7 @@ class HTML_AcctExp
 						<th width="5%" colspan="2" nowrap="nowrap"><?php echo _MI_REORDER; ?></th>
 					<?php } ?>
 					<th width="5%" align="right" nowrap="nowrap"><?php echo _MI_FUNCTION; ?></th>
-				</tr>
+				</tr></thead>
 
 		<?php
 		$k = 0;
@@ -1612,10 +1623,15 @@ class HTML_AcctExp
 			<?php
 			$k = 1 - $k;
 		} ?>
+		<tfoot>
+			<tr>
+				<td colspan="9">
+ 					<?php echo $pageNav->getListFooter(); ?>
+				</td>
+			</tr>
+		</tfoot>
 		</table>
- 		<?php
- 		echo $pageNav->getListFooter();
-		HTML_myCommon::ContentLegend(); ?>
+ 		<?php HTML_myCommon::ContentLegend(); ?>
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		<input type="hidden" name="task" value="showMicroIntegrations" />
 		<input type="hidden" name="returnTask" value="showMicroIntegrations" />
@@ -1755,7 +1771,7 @@ class HTML_AcctExp
 			</table>
 
 			<table class="adminlist">
-				<tr>
+				<thead><tr>
 					<th width="1%">#</th>
 					<th width="1%"><?php echo _AEC_CMN_ID; ?></th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
@@ -1768,7 +1784,7 @@ class HTML_AcctExp
 					<th width="5%" nowrap="nowrap" align="center"><?php echo _PAYPLAN_USERCOUNT; ?></th>
 					<th width="5%" nowrap="nowrap" align="center"><?php echo _PAYPLAN_EXPIREDCOUNT; ?></th>
 					<th width="5%" nowrap="nowrap" align="center"><?php echo _PAYPLAN_TOTALCOUNT; ?></th>
-				</tr>
+				</tr></thead>
 
 		<?php
 		$k = 0;
@@ -1846,10 +1862,15 @@ class HTML_AcctExp
 			<?php
 			$k = 1 - $k;
 		} ?>
+		<tfoot>
+			<tr>
+				<td colspan="13">
+ 					<?php echo $pageNav->getListFooter(); ?>
+				</td>
+			</tr>
+		</tfoot>
 		</table>
- 		<?php
- 		echo $pageNav->getListFooter();
-		HTML_myCommon::ContentLegend(); ?>
+ 		<?php HTML_myCommon::ContentLegend(); ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="showSubscriptionPlans" />
 		<input type="hidden" name="returnTask" value="showSubscriptionPlans" />
@@ -2131,7 +2152,7 @@ class HTML_AcctExp
 			</table>
 
 			<table class="adminlist">
-				<tr>
+				<thead><tr>
 					<th width="1%">#</th>
 					<th width="1%"><?php echo _AEC_CMN_ID; ?></th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
@@ -2141,7 +2162,7 @@ class HTML_AcctExp
 					<th width="3%" nowrap="nowrap"><?php echo _ITEMGROUP_ACTIVE; ?></th>
 					<th width="3%" nowrap="nowrap"><?php echo _ITEMGROUP_VISIBLE; ?></th>
 					<th width="5%" colspan="2" nowrap="nowrap"><?php echo _ITEMGROUP_REORDER; ?></th>
-				</tr>
+				</tr></thead>
 
 		<?php
 		$k = 0;
@@ -2210,10 +2231,15 @@ class HTML_AcctExp
 			<?php
 			$k = 1 - $k;
 		} ?>
+		<tfoot>
+			<tr>
+				<td colspan="10">
+ 					<?php echo $pageNav->getListFooter(); ?>
+				</td>
+			</tr>
+		</tfoot>
 		</table>
- 		<?php
- 		echo $pageNav->getListFooter();
-		HTML_myCommon::ContentLegend(); ?>
+ 		<?php HTML_myCommon::ContentLegend(); ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="showItemGroups" />
 		<input type="hidden" name="returnTask" value="showItemGroups" />
@@ -2388,7 +2414,7 @@ class HTML_AcctExp
 			</table>
 
 			<table class="adminlist">
-				<tr>
+				<thead><tr>
 					<th width="1%">#</th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
 					<th width="15%" align="left" nowrap="nowrap"><?php echo _COUPON_NAME; ?></th>
@@ -2397,7 +2423,7 @@ class HTML_AcctExp
 					<th width="3%" nowrap="nowrap"><?php echo _COUPON_ACTIVE; ?></th>
 					<th width="5%" colspan="2" nowrap="nowrap"><?php echo _COUPON_REORDER; ?></th>
 					<th width="5%" nowrap="nowrap" align="center"><?php echo _COUPON_USECOUNT; ?></th>
-				</tr>
+				</tr></thead>
 
 		<?php
 		$k = 0;
@@ -2424,10 +2450,15 @@ class HTML_AcctExp
 			<?php
 			$k = 1 - $k;
 		} ?>
+		<tfoot>
+			<tr>
+				<td colspan="9">
+ 					<?php echo $pageNav->getListFooter(); ?>
+				</td>
+			</tr>
+		</tfoot>
 		</table>
- 		<?php
- 		echo $pageNav->getListFooter();
-		HTML_myCommon::ContentLegend(); ?>
+ 		<?php HTML_myCommon::ContentLegend(); ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="showCoupons<?php echo $type ? 'Static' : ''; ?>" />
 		<input type="hidden" name="returnTask" value="showCoupons<?php echo $type ? 'Static' : ''; ?>" />
@@ -2628,7 +2659,7 @@ class HTML_AcctExp
 		</table>
 
 		<table class="adminlist">
-		<tr>
+		<thead><tr>
 			<th width="5%">#</th>
 			<th align="left" width="10%"><?php echo _INVOICE_USERID; ?></th>
 			<th align="center" width="10%"><?php echo _INVOICE_INVOICE_NUMBER; ?></th>
@@ -2640,7 +2671,7 @@ class HTML_AcctExp
 			<th align="center" width="10%"><?php echo _INVOICE_METHOD; ?></th>
 			<th align="center" width="10%"><?php echo _INVOICE_AMOUNT; ?></th>
 			<th width="10%"><?php echo _INVOICE_CURRENCY; ?></th>
-		  </tr>
+		  </tr></thead>
 		<?php
 		$k = 0;
 		for( $i=0, $n=count( $rows ); $i < $n; $i++ ) {
@@ -2661,8 +2692,14 @@ class HTML_AcctExp
 			<?php
 			$k = 1 - $k;
 		} ?>
+		<tfoot>
+			<tr>
+				<td colspan="11">
+ 					<?php echo $pageNav->getListFooter(); ?>
+				</td>
+			</tr>
+		</tfoot>
 		</table>
-		<?php echo $pageNav->getListFooter(); ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="invoices" />
 		<input type="hidden" name="returnTask" value="invoices" />
@@ -2699,7 +2736,7 @@ class HTML_AcctExp
 		</table>
 
 		<table class="adminlist">
-		<tr>
+		<thead><tr>
 			<th align="left" width="15%"><?php echo _HISTORY_USERID; ?></th>
 			<th align="center" width="10%"><?php echo _HISTORY_INVOICE_NUMBER; ?></th>
 			<th width="10%"><?php echo _HISTORY_PLAN_NAME; ?></th>
@@ -2707,7 +2744,7 @@ class HTML_AcctExp
 			<th align="center" width="10%"><?php echo _HISTORY_METHOD; ?></th>
 			<th align="center" width="10%"><?php echo _HISTORY_AMOUNT; ?></th>
 			<th width="30%"><?php echo _HISTORY_RESPONSE; ?></th>
-		  </tr>
+		  </tr></thead>
 		<?php
 		$k = 0;
 		foreach ( $rows as $row ) { ?>
@@ -2725,8 +2762,14 @@ class HTML_AcctExp
 			<?php
 			$k = 1 - $k;
 		} ?>
+		<tfoot>
+			<tr>
+				<td colspan="7">
+ 					<?php echo $pageNav->getListFooter(); ?>
+				</td>
+			</tr>
+		</tfoot>
 		</table>
-		<?php echo $pageNav->getListFooter(); ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="history" />
 		<input type="hidden" name="returnTask" value="history" />
@@ -2759,7 +2802,7 @@ class HTML_AcctExp
 		</table>
 
 		<table class="adminlist">
-		<tr>
+		<thead><tr>
 			<th align="left" width="30"><?php echo _AEC_CMN_ID; ?></th>
 			<th align="left" width="120"><?php echo _AEC_CMN_DATE; ?></th>
 			<th align="left">&nbsp;</th>
@@ -2768,7 +2811,7 @@ class HTML_AcctExp
 			<th align="left"><?php echo _AEC_CMN_TAGS; ?></th>
 			<th align="left"><?php echo _AEC_CMN_ACTION; ?></th>
 			<th align="left"><?php echo _AEC_CMN_PARAMETER; ?></th>
-		  </tr>
+		  </tr></thead>
 		<?php
 		$k = 0;
 		foreach ( $events as $row ) { ?>
@@ -2785,8 +2828,14 @@ class HTML_AcctExp
 			<?php
 			$k = 1 - $k;
 		} ?>
+		<tfoot>
+			<tr>
+				<td colspan="8">
+ 					<?php echo $pageNav->getListFooter(); ?>
+				</td>
+			</tr>
+		</tfoot>
 		</table>
-		<?php echo $pageNav->getListFooter(); ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="eventlog" />
 		<input type="hidden" name="returnTask" value="eventlog" />
