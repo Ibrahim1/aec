@@ -97,8 +97,6 @@ class HTML_myCommon
 				<td align="center">
 					<div align="center" class="smallgrey">
 						<p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION ?><br />
-						<a href="http://www.valanx.org/index.php?option=com_docman&amp;Itemid=27" target="_blank"><?php echo _AEC_FOOT_VERSION_CHECK; ?></a>&nbsp;&nbsp;|&nbsp;
-						<a href="http://www.valanx.org/index.php?option=com_content&amp;task=view&amp;id=14&amp;Itemid=28" target="_blank"><?php echo _AEC_FOOT_MEMBERSHIP; ?></a></p>
 					</div>
 					<div align="center">
 						<p><?php echo _AEC_FOOT_TX_GPL; ?></p>
