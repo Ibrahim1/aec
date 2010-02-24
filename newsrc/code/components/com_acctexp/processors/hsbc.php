@@ -106,19 +106,19 @@ aecDebug("checkoutAction");
 	function createGatewayLink( $request )
 	{
 		$var['post_url']			= $this->settings['pas_url'];
-
+aecDebug($request->int_var['amount']);
 		if ( is_array( $request->int_var['amount'] ) ) {
 			$amount = $request->int_var['amount']['amount3'];
 		} else {
 			$amount = $request->int_var['amount'];
 		}
-
+aecDebug($amount);
 		$var['CardExpiration']		= substr( $request->int_var['params']['expirationYear'], 2, 2 ) . $request->int_var['params']['expirationMonth'];
 		$var['CardholderPan']		= $request->int_var['params']['cardNumber'];
 		$var['CcpaClientId']		= $this->settings['pas_id'];
 		$var['CurrencyExponent']	= AECToolbox::aecCurrencyExp( $this->settings['currency'] );
 		$var['MD']					= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
-		$var['PurchaseAmount']		= AECToolbox::getCurrencySymbol( $this->settings['currency'] )." ".$request->int_var['amount'];
+		$var['PurchaseAmount']		= AECToolbox::getCurrencySymbol( $this->settings['currency'] )." ".$amount;
 		$var['PurchaseAmountRaw']	= (int) ( $amount * 100 );
 		$var['PurchaseCurrency']	= AECToolbox::aecNumCurrency( $this->settings['currency'] );
 		$var['PurchaseDesc']		= $request->invoice->invoice_number;
@@ -185,11 +185,10 @@ aecDebug($request->invoice->params );
 
 		if ( is_array( $request->int_var['amount'] ) ) {
 			$pu = $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
-
+aecDebug($pu);
 			$content .=	'<PbOrder>'
-						. '<OrderType>' . trim( $request->int_var['params']['billCountry'] ) . '</OrderType>'
-						. '<OrderFrequencyCycle>' . $pu['unit'] . '</OrderFrequencyCycle>'
-						. '<OrderFrequencyInterval>' . $pu['period'] . '</OrderFrequencyInterval>'
+						. '<OrderFrequencyCycle DataType="String">' . $pu['unit'] . '</OrderFrequencyCycle>'
+						. '<OrderFrequencyInterval DataType="S32">' . $pu['period'] . '</OrderFrequencyInterval>'
 						. '</PbOrder>'
 						;
 		}
@@ -364,7 +363,7 @@ aecDebug($xml);aecDebug($response);
 					break;
 			}
 		}
-
+aecDebug($return);
 		return $return;
 	}
 
@@ -392,10 +391,10 @@ aecDebug($xml);aecDebug($response);
 
 	function convertPeriodUnit( $period, $unit )
 	{
+		$return = array();
 		$return['unit'] = $unit;
 		$return['period'] = $period;
 
-		$return = array();
 		switch ( $unit ) {
 			case 'Y':
 				$return['unit'] = 'M';
