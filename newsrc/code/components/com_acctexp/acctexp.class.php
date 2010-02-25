@@ -6123,7 +6123,7 @@ class SubscriptionPlan extends serialParamDBTable
 		$metaUser->focusSubscription->storeload();
 
 		if ( !( $silent || $aecConfig->cfg['noemails'] ) ) {
-			$adminonly = ( $this->id !== $aecConfig->cfg['entry_plan'] );
+			$adminonly = ( $this->id == $aecConfig->cfg['entry_plan'] );
 
 			$metaUser->focusSubscription->sendEmailRegistered( $renew, $adminonly );
 		}
