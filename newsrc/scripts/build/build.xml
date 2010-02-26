@@ -18,7 +18,7 @@
 	</target>
 
 	<target name="svn_lastrevision">
-		<svnlastrevision workingcopy="${dir.local}" propertyname="svn.lastrevision" />
+		<svnlastrevision workingcopy="${dir.local}/components/com_acctexp/acctexp.class.php" propertyname="svn.lastrevision" />
 	</target>
 
 	<target name="config" description="Load configuration file">
