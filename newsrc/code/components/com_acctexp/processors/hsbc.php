@@ -136,7 +136,7 @@ aecDebug($var);
 		$var = $this->getCCform( $var, $values );
 
 		if ( !empty( $this->settings['promptAddress'] ) ) {
-			$values = array( 'firstname', 'lastname', 'address', 'city', 'zip', 'state_usca', 'country3_list' );
+			$values = array( 'firstname', 'lastname', 'company', 'address', 'address2', 'city', 'zip', 'state_usca', 'country3_list' );
 		} else {
 			$values = array( 'firstname', 'lastname' );
 		}
@@ -148,17 +148,17 @@ aecDebug($var);
 
 	function checkoutProcess( $request )
 	{
-		if ( $this->settings['pas'] && empty( $request->int_var['params']['CAVV'] ) ) {aecDebug("marking double checkout, preparing PAS");
+		if ( $this->settings['pas'] && empty( $request->int_var['params']['CcpaResultsCode'] ) ) {
 			$request->invoice->preparePickup( $request->int_var['params'] );
-aecDebug($request->invoice->params );
+
 			return array( 'doublecheckout' => true );
-		} else {aecDebug("checking out data");
+		} else {
 			return parent::checkoutProcess( $request );
 		}
 	}
 
 	function createRequestXML( $request )
-	{aecDebug("createRequestXML");
+	{
 		// Start xml, add login and transaction key, as well as invoice number
 		$content =	'<?xml version="1.0" encoding="utf-8"?>'
 					. '<EngineDocList>'
@@ -185,7 +185,7 @@ aecDebug($request->invoice->params );
 
 		if ( is_array( $request->int_var['amount'] ) ) {
 			$pu = $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
-aecDebug($pu);
+
 			$content .=	'<PbOrder>'
 						. '<OrderFrequencyCycle DataType="String">' . $pu['unit'] . '</OrderFrequencyCycle>'
 						. '<OrderFrequencyInterval DataType="S32">' . $pu['period'] . '</OrderFrequencyInterval>'
@@ -216,11 +216,13 @@ aecDebug($pu);
 
 		if ( !empty( $this->settings['promptAddress'] ) ) {
 			$content .=	'<City DataType="String">' . trim( $request->int_var['params']['billCity'] ) . '</City>'
+						. '<Company DataType="String">' . trim( $request->int_var['params']['billCompany'] ) . '</Company>'
 						. '<Country DataType="String">' . trim( $request->int_var['params']['billCountry'] ) . '</Country>'
 						. '<FirstName DataType="String">' . trim( $request->int_var['params']['billFirstName'] ) . '</FirstName>'
 						. '<LastName DataType="String">' . trim( $request->int_var['params']['billLastName'] ) . '</LastName>'
 						. '<PostalCode DataType="String">' . trim( $request->int_var['params']['billZip'] ) . '</PostalCode>'
 						. '<Street1 DataType="String">' . trim( $request->int_var['params']['billAddress'] ) . '</Street1>'
+						. '<Street2 DataType="String">' . trim( $request->int_var['params']['billAddress2'] ) . '</Street2>'
 						. '<StateProv DataType="String">' . trim( $request->int_var['params']['billState'] ) . '</StateProv>'
 						;
 		} else {
@@ -243,11 +245,11 @@ aecDebug($pu);
 		// Payer Authentication Details
 		if ( $this->settings['pas'] ) {
 			$pac = $this->getPACpostback( $request->int_var['params'] );
-
+aecDebug($pac);
 			if ( !$pac['error'] ) {
 				$content .=	 '<PayerSecurityLevel DataType="S32">' . $pac['level'] . '</PayerSecurityLevel>'
 							. '<PayerAuthenticationCode DataType="String">' . urldecode( $pac['code'] ) . '</PayerAuthenticationCode>'
-							. '<PayerTxnId DataType="String">' . urldecode( $pac['txnid'] ) . '</PayerTxnId>'
+							. '<PayerTxnId DataType="String">' . urlencode( $pac['txnid'] ) . '</PayerTxnId>'
 							. '<CardholderPresentCode DataType="S32">' . $pac['cpc'] . '</CardholderPresentCode>'
 							;
 			}
