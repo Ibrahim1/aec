@@ -635,6 +635,8 @@ define( '_CFG_MONEYBOOKERS_HIDE_LOGIN_NAME', 'Hide Login');
 define( '_CFG_MONEYBOOKERS_HIDE_LOGIN_DESC', 'Merchants can show their customers the gateway page without the prominent login');
 define( '_CFG_MONEYBOOKERS_CONFIRMATION_NOTE_NAME', 'Confirmation Note');
 define( '_CFG_MONEYBOOKERS_CONFIRMATION_NOTE_DESC', 'Merchant may show to the customer on the confirmation screen - the end step of the process - a note, confirmation number, PIN or any other message. Line breaks (&lt;br /&gt;) may be used for longer messages.');
+define( '_CFG_MONEYBOOKERS_PAYMENT_METHODS_NAME', 'Payment Methods');
+define( '_CFG_MONEYBOOKERS_PAYMENT_METHODS_DESC', 'Select the payment methods to be presented to the customer. You can choose more than one at a time by dragging the mouse and/or holding ctrl');
 
 // Nochex
 define( '_CFG_NOCHEX_LONGNAME', 'Nochex');

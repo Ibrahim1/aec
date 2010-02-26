@@ -39,6 +39,7 @@ class processor_moneybookers extends POSTprocessor
 		$settings['recipient_description']	= $mainframe->getCfg( 'sitename' );
 		$settings['logo_url'] 				= AECToolbox::deadsureURL( 'images/logo.png' );
 		$settings['language'] 				= 'EN';
+		$settings['payment_methods']		= array( 'ACC' );
 		$settings['hide_login'] 			= 1;
 		$settings['currency'] 				= 'USD';
 		$settings['confirmation_note']		= "Thank you for subscribing on " . $mainframe->getCfg( 'sitename' ) . "!";
@@ -57,11 +58,71 @@ class processor_moneybookers extends POSTprocessor
 		$settings['recipient_description']	= array( 'inputE');
 		$settings['logo_url']				= array( 'inputE');
 		$settings['language'] 				= array( 'list_language' );
+		$settings['payment_methods']		= array( 'list');
 		$settings['hide_login']				= array( 'list_yesno');
 		$settings['currency'] 				= array( 'list_currency' );
 		$settings['confirmation_note']		= array( 'inputE');
 		$settings['item_name']				= array( 'inputE');
 		$settings['customparams']			= array( 'inputD' );
+
+		$methods = array(	'All Card Types' => 'ACC',
+							'Visa' => 'VSA',
+							'MasterCard' => 'MSC',
+							'Visa Delta/Debit (UK)' => 'VSD',
+							'Visa Electron' => 'VSE',
+							'Maestro (UK, Spain & Austria)' => 'MAE',
+							'Solo (UK)' => 'SLO',
+							'American Express' => 'AMX',
+							'Diners' => 'DIN',
+							'JCB' => 'JCB',
+							'Laser (Rep. of Ireland)' => 'LSR',
+							'Carte Bleue' => 'GCB',
+							'Dankort' => 'DNK',
+							'PostePay' => 'PSP',
+							'CartaSi' => 'CSI',
+							'Giropay (Germany)' => 'GIR',
+							'Direct Debit (Germany)' => 'DID',
+							'Sofortueberweisung' => 'SFT',
+							'eNETS (Singapore)' => 'ENT',
+							'Nordea Solo (Sweden)' => 'EBT',
+							'Nordea Solo (Finland)' => 'SO2',
+							'iDEAL (Netherlands)' => 'IDL',
+							'EPS (Netpay) Austria' => 'NPY',
+							'POLi (Australia)' => 'PLI',
+							'All Polish Banks' => 'PWY',
+							'ING Bank Śląski' => 'PWY5',
+							'PKO BP (PKO Inteligo)' => 'PWY6',
+							'Multibank (Multitransfer)' => 'PWY7',
+							'Lukas Bank' => 'PWY14',
+							'Bank BPH' => 'PWY15',
+							'InvestBank' => 'PWY17',
+							'PeKaO S.A.' => 'PWY18',
+							'Citibank handlowy' => 'PWY19',
+							'Bank Zachodni WBK (Przelew24)' => 'PWY20',
+							'BGŻ' => 'PWY21',
+							'Millenium' => 'PWY22',
+							'mBank (mTransfer)' => 'PWY25',
+							'Płacę z Inteligo' => 'PWY26',
+							'Bank Ochrony Środowiska' => 'PWY28',
+							'Nordea' => 'PWY32',
+							'Fortis Bank' => 'PWY33',
+							'Deutsche Bank PBC S.A.' => 'PWY36',
+							'ePay.bg (Bulgaria)' => 'EPY'
+							);
+
+		$pmethods = array();
+		$pmethodssel = array();
+		foreach ( $methods as $name => $key ) {
+			$pmethods[] = mosHTML::makeOption ( $key, $name );
+
+			if ( !empty( $this->settings['payment_methods'] ))
+				if ( in_array( $key, $this->settings['payment_methods'] ) ) {
+					$pmethodssel[] = mosHTML::makeOption ( $key, $name );
+				}
+			}
+		}
+
+		$settings['lists']['payment_methods'] = mosHTML::selectList( $pmethods, 'payment_methods[]', 'size="8" multiple="multiple"', 'value', 'text', $pmethodssel );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
@@ -81,7 +142,7 @@ class processor_moneybookers extends POSTprocessor
 		$var['status_url']				= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=moneybookersnotification' );
 
 		$var['language']				= $this->settings['language'];
-		$var['payment_methods']			= $this->settings['ACC'];
+		$var['payment_methods']			= implode( ',', $this->settings['payment_methods'] );
 		$var['hide_login']				= $this->settings['hide_login'];
 		$var['pay_from_email']			= $request->metaUser->cmsUser->email;
 		$var['amount']					= $request->int_var['amount'];
