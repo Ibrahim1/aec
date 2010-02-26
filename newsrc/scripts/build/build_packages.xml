@@ -61,7 +61,7 @@
 		<mkdir dir="${dir.packages}/fullpack" />
 		<copy todir="${dir.packages}/fullpack" includeemptydirs="false">
 			<fileset dir="${dir.packages}">
-				<exclude name="packages**" />
+				<exclude name="packages/" />
 			</fileset>
 		</copy>
 
@@ -73,10 +73,7 @@
 			</fileset>
 		</delete>
 
-		<tar destfile="${dir.packages}/${file.dist_package}_${file.dist_version}_rev${svn.lastrevision}_UNZIP_FIRST.zip" compression="gzip">
-			 <fileset dir="${dir.packages}/fullpack">
-			 </fileset>
-		</tar>
+		<zip destfile="${dir.packages}/${file.dist_package}_${file.dist_version}_rev${svn.lastrevision}_UNZIP_FIRST.zip" basedir="${dir.packages}/fullpack" />
 
 		<delete dir="${dir.packages}/fullpack" />
 

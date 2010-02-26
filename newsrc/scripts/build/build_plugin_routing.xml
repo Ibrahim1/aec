@@ -10,7 +10,15 @@
 			</fileset>
 		</copy>
 
-		<tar destfile="${dir.packages}/${file.package}_ver${file.version}_rev${svn.lastrevision}.${file.extension}" basedir="${dir.tmp}" compression="${file.compression}" />
+		<if>
+			<equals arg1="${file.extension}" arg2="zip" />
+			<then>
+				<zip destfile="${dir.packages}/${file.package}_ver${file.version}_rev${svn.lastrevision}.${file.extension}" basedir="${dir.tmp}" />
+			</then>
+			<else>
+				<tar destfile="${dir.packages}/${file.package}_ver${file.version}_rev${svn.lastrevision}.${file.extension}" basedir="${dir.tmp}" compression="${file.compression}" />
+			</else>
+		</if>
 
 		<delete dir="${dir.tmp}" includeemptydirs="true" />
 	</target>

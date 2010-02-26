@@ -189,11 +189,11 @@ class mi_docman
 	{
 		$database = &JFactory::getDBO();
 
- 		if ( $this->settings['delete_on_exp']=="Set" ) {
+ 		if ( $this->settings['delete_on_exp'] == "Set" ) {
 			$this->DeleteUserFromGroup( $request->metaUser->userid, $this->settings['group'] );
 		}
 
-		if ( $this->settings['delete_on_exp']=="All" ) {
+		if ( $this->settings['delete_on_exp'] == "All" ) {
 			$groups = $this->GetUserGroups( $request->metaUser->userid );
 			foreach ($groups as $group) {
 				$this->DeleteUserFromGroup( $request->metaUser->userid, $group );
