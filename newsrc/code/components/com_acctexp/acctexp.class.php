@@ -1003,7 +1003,7 @@ class metaUser
 						// Check whether the user was in the correct plan before
 						case 'plan_previous':
 							if ( $this->hasSubscription ) {
-								$previous = (int) $this->meta->getPreviousPlan();
+								$previous = (int) $this->getPreviousPlan();
 
 								if (
 									( in_array( $previous, $check ) )
@@ -1145,6 +1145,17 @@ class metaUser
 	function getProperty( $key )
 	{
 		return AECToolbox::getObjectProperty( $this, $key );
+	}
+
+	function getPreviousPlan()
+	{
+		$current = $this->getAllCurrentSubscriptions();
+
+		if ( empty( $current ) ) {
+			return $this->focusSubscription->plan;
+		} else {
+			return $this->meta->getPreviousPlan();
+		}
 	}
 
 	function getUserMIs(){
