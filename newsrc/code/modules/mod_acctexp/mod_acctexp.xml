@@ -28,7 +28,7 @@
 		<option value="0">Do not show</option>
 		<option value="1">Show</option>
 	</param>
-	<param name="extended" type="list" default="1" label="Extended" description="The AEC Module normally only shows the primary membership and its expiration. Switching to extended Mode (activating this setting here) will display every membership that the user currently holds." >
+	<param name="extended" type="list" default="0" label="Extended" description="The AEC Module normally only shows the primary membership and its expiration. Switching to extended Mode (activating this setting here) will display every membership that the user currently holds." >
 		<option value="0">Disable</option>
 		<option value="1">Enable</option>
 	</param>
