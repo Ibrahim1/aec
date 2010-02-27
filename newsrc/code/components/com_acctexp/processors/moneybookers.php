@@ -115,7 +115,7 @@ class processor_moneybookers extends POSTprocessor
 		foreach ( $methods as $name => $key ) {
 			$pmethods[] = mosHTML::makeOption ( $key, $name );
 
-			if ( !empty( $this->settings['payment_methods'] ))
+			if ( !empty( $this->settings['payment_methods'] )) {
 				if ( in_array( $key, $this->settings['payment_methods'] ) ) {
 					$pmethodssel[] = mosHTML::makeOption ( $key, $name );
 				}
