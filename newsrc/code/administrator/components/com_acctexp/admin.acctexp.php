@@ -2397,6 +2397,8 @@ function editSettings( $option )
 
 	$params['breakon_mi_error']				= array( 'list_yesno', 0 );
 	$params['debugmode']					= array( 'list_yesno', 0 );
+	$params['email_default_admins']			= array( 'list_yesno', 1 );
+	$params['email_extra_admins']			= array( 'inputD', "" );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 

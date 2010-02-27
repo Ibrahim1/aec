@@ -1671,6 +1671,8 @@ class Config_General extends serialParamDBTable
 		$def['per_plan_mis']					= 0;
 		$def['intro_expired']					= 0;
 		$def['custom_confirm_userdetails']		= "";
+		$def['email_default_admins']			= 1;
+		$def['email_extra_admins']				= "";
 
 		return $def;
 	}
@@ -2387,21 +2389,15 @@ class eventLog extends serialParamDBTable
 			$message2	= html_entity_decode( $message2, ENT_QUOTES );
 
 			// get email addresses of all admins and superadmins set to recieve system emails
-			$query = 'SELECT `email`'
-					. ' FROM #__users'
-					. ' WHERE ( `gid` = 24 OR `gid` = 25 )'
-					. ' AND `sendEmail` = 1'
-					. ' AND `block` = 0'
-					;
-			$database->setQuery( $query );
-			$admins = $database->loadObjectList();
+			$admins = AECToolbox::getAdminEmailList();
 
-			foreach ( $admins as $admin ) {
-				// send email to admin & super admin set to recieve system emails
-				if ( aecJoomla15check() ) {
-					JUTility::sendMail( $adminEmail2, $adminEmail2, $admin->email, $subject2, $message2 );
-				} else {
-					mosMail( $adminEmail2, $adminName2, $admin->email, $subject2, $message2 );
+			foreach ( $admins as $adminemail ) {
+				if ( !empty( $adminemail ) ) {
+					if ( aecJoomla15check() ) {
+						JUTility::sendMail( $adminEmail2, $adminEmail2, $adminemail, $subject2, $message2 );
+					} else {
+						mosMail( $adminEmail2, $adminName2, $adminemail, $subject2, $message2 );
+					}
 				}
 			}
 		}
@@ -11605,24 +11601,14 @@ class Subscription extends serialParamDBTable
 		$subject2 = html_entity_decode( $subject2, ENT_QUOTES );
 		$message2 = html_entity_decode( $message2, ENT_QUOTES );
 
-		// get superadministrators id
-		$admins = $acl->get_group_objects( 25, 'ARO' );
+		$admins = AECToolbox::getAdminEmailList();
 
-		foreach ( $admins['users'] as $id ) {
-			$query = 'SELECT `email`, `sendEmail`'
-					. ' FROM #__users'
-					. ' WHERE `id` = \'' . $id . '\''
-					;
-			$database->setQuery( $query );
-			$rows = $database->loadObjectList();
-
-			$row = $rows[0];
-
-			if ( $row->sendEmail ) {
+		foreach ( $admins as $adminemail ) {
+			if ( !empty( $adminemail ) ) {
 				if ( aecJoomla15check() ) {
-					JUTility::sendMail( $adminEmail2, $adminEmail2, $row->email, $subject2, $message2 );
+					JUTility::sendMail( $adminEmail2, $adminEmail2, $adminemail, $subject2, $message2 );
 				} else {
-					mosMail( $adminEmail2, $adminName2, $row->email, $subject2, $message2 );
+					mosMail( $adminEmail2, $adminName2, $adminemail, $subject2, $message2 );
 				}
 			}
 		}
@@ -13665,21 +13651,15 @@ class AECToolbox
 			$message2	= html_entity_decode( $message2, ENT_QUOTES );
 
 			// get email addresses of all admins and superadmins set to recieve system emails
-			$query = 'SELECT email, sendEmail'
-			. ' FROM #__users'
-			. ' WHERE ( gid = 24 OR gid = 25 )'
-			. ' AND sendEmail = 1'
-			. ' AND block = 0'
-			;
-			$database->setQuery( $query );
-			$admins = $database->loadObjectList();
+			$admins = AECToolbox::getAdminEmailList();
 
-			foreach ( $admins as $admin ) {
-				// send email to admin & super admin set to recieve system emails
-				if ( aecJoomla15check() ) {
-					JUTility::sendMail( $adminEmail2, $adminEmail2, $admin->email, $subject2, $message2 );
-				} else {
-					mosMail( $adminEmail2, $adminName2, $admin->email, $subject2, $message2 );
+			foreach ( $admins as $adminemail ) {
+				if ( !empty( $adminemail ) ) {
+					if ( aecJoomla15check() ) {
+						JUTility::sendMail( $adminEmail2, $adminEmail2, $adminemail, $subject2, $message2 );
+					} else {
+						mosMail( $adminEmail2, $adminName2, $adminemail, $subject2, $message2 );
+					}
 				}
 			}
 		}
@@ -14122,6 +14102,37 @@ class AECToolbox
 
 			return $return;
 		}
+	}
+
+	function getAdminEmailList()
+	{
+		global $aecConfig;
+
+		$adminlist = array();
+		if ( $aecConfig->cfg['email_default_admins'] ) {
+			$query = 'SELECT email, sendEmail'
+			. ' FROM #__users'
+			. ' WHERE ( gid = 24 OR gid = 25 )'
+			. ' AND sendEmail = 1'
+			. ' AND block = 0'
+			;
+			$database->setQuery( $query );
+			$admins = $database->loadObjectList();
+
+			foreach ( $admins as $admin ) {
+				if ( !empty( $admin->sendEmail ) ) {
+					$adminlist[] = $admin->email;
+				}
+			}
+		}
+
+		if ( !empty( $aecConfig->cfg['email_extra_admins'] ) ) {
+			$al = explode( ',', $aecConfig->cfg['email_extra_admins'] );
+
+			$adminlist = array_merge( $adminlist, $al );
+		}
+
+		return $adminlist;
 	}
 }
 
