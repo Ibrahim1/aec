@@ -28,11 +28,15 @@
 		<option value="0">Do not show</option>
 		<option value="1">Show</option>
 	</param>
+	<param name="extended" type="list" default="1" label="Extended" description="The AEC Module normally only shows the primary membership and its expiration. Switching to extended Mode (activating this setting here) will display every membership that the user currently holds." >
+		<option value="0">Disable</option>
+		<option value="1">Enable</option>
+	</param>
 	<param name="displaypipeline" type="list" default="1" label="DisplayPipeline" description="If you have MicroIntegrations that write to the DisplayPipeline, enable this feature to actually display things." >
 		<option value="0">Disable</option>
 		<option value="1">Enable</option>
 	</param>
-	<param name="cache" type="list" default="1" label="Caching" description="Select whether to cache the content of this module">
+	<param name="cache" type="list" default="0" label="Caching" description="Select whether to cache the content of this module">
 		<option value="1">Use global</option>
 		<option value="0">No caching</option>
 	</param>

@@ -418,6 +418,23 @@ class metaUser
 		return $database->loadResultArray();
 	}
 
+	function getAllCurrentSubscriptionsInfo()
+	{
+		$database = &JFactory::getDBO();
+
+		$query = 'SELECT `a`.`id`, `a`.`plan`, `a`.`expiration`, `b`.`name`'
+				. ' FROM #__acctexp_subscr AS a'
+				. ' INNER JOIN #__acctexp_plans AS b ON a.plan = b.id'		
+				. ' WHERE `userid` = \'' . (int) $this->userid . '\''
+				. ' AND `status` != \'Expired\''
+				. ' AND `status` != \'Closed\''
+				. ' AND `status` != \'Hold\''
+				. ' ORDER BY `lastpay_date` DESC'
+				;
+		$database->setQuery( $query );
+		return $database->loadObjectList();
+	}
+	
 	function getAllCurrentSubscriptions()
 	{
 		$database = &JFactory::getDBO();

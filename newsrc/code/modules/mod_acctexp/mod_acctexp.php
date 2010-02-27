@@ -20,12 +20,14 @@ $pretext 				= $params->get( 'pretext' );
 $posttext 				= $params->get( 'posttext' );
 $showExpiration 		= $params->def( 'show_expiration', 0 );
 $displaypipeline		= $params->get( 'displaypipeline', 0 );
+$extended				= $params->get( 'extended', 0 );
 
 $user = &JFactory::getUser();
 
 if ( $user->id ) {
-// Logout output
-// ie HTML when already logged in and trying to logout
+
+	echo '<div class="aec_module_inner">';
+
 	if ( !empty( $pretext ) ) {
 		echo $pretext;
 	}
@@ -38,6 +40,42 @@ if ( $user->id ) {
 				include_once( $langPath. 'english.php' );
 		}
 
+		if ( $extended ) {
+			echo AECMenuHelper::getExpirationSimple();
+		} else {
+			$metaUser = new metaUser( $user->id );
+			
+			$subscriptions = $metaUser->getAllCurrentSubscriptionsInfo();
+
+			foreach ( $subscriptions as $subscription ) {
+				echo '<div class="aec_module_subscription aec_module_subscriptionid_' . $subscription->id  . '">';
+
+				echo "<h4>" . $subscription->name . "</h4>";
+
+				echo AECMenuHelper::textExpiration( $subscription->expiration );
+
+				echo '</div>';
+			}
+		}
+
+	}
+
+	if ( $displaypipeline ) {
+		$dph = new displayPipelineHandler;
+		echo $dph->getUserPipelineEvents( $user->id );
+	}
+
+	if ( !empty( $posttext ) ) {
+		echo $posttext;
+	}
+
+	echo '</div>';
+}
+
+class AECMenuHelper
+{
+	function getExpirationSimple()
+	{
 		$database = &JFactory::getDBO();
 
 		$expiration = null;
@@ -58,48 +96,47 @@ if ( $user->id ) {
 						. ' AND `recurring` != \'1\''
 		                . ' AND `status` != \'Excluded\'';
 				$database->setQuery($query);
-				$expiration = $database->loadResult();
+
+				return AECMenuHelper::textExpiration( $database->loadResult() );
 			} else {
-				$expiration = $entry->expiration;
+				return AECMenuHelper::textExpiration( $entry->expiration );
 			}
-		} else {
-			$expiration = null;
 		}
 
+		return null;
+	}
+
+	function textExpiration( $expiration )
+	{
 		if ( empty( $expiration ) ) {
-			?>
-			<p><?php echo _ACCOUNT_UNLIMIT; ?></p>
-			<?php
+			return AECMenuHelper::textUnlimited();
 		} else {
-			global $aecConfig;
-
-			$ou = $mainframe->getCfg( 'offset_user' );
-
-			// compatibility with Mambo
-			if ( !empty( $ou ) ) {
-				$timeOffset = $mainframe->getCfg( 'offset_user' ) * 3600;
-			} else {
-				$timeOffset = $mainframe->getCfg( 'offset' ) * 3600;
-			}
-
-			$retVal = strftime( $aecConfig->cfg['display_date_frontend'], ( strtotime( $expiration ) + $timeOffset ) );
-
-			?>
-			<p><?php echo _ACCOUNT_EXPIRES; ?></p>
-			<p><?php echo $retVal; ?></p>
-			<?php
+			return AECMenuHelper::textExpirationDate( $expiration );
 		}
 	}
 
-	if ( $displaypipeline ) {
-		$dph = new displayPipelineHandler;
-		echo $dph->getUserPipelineEvents( $user->id );
+	function textUnlimited()
+	{
+		return "<p>" . _ACCOUNT_UNLIMIT . "</p>";
 	}
 
-	if ( !empty( $posttext ) ) {
-		echo $posttext;
-	}
+	function textExpirationDate( $expiration )
+	{
+		global $mainframe, $aecConfig;
 
+		$ou = $mainframe->getCfg( 'offset_user' );
+
+		// compatibility with Mambo
+		if ( !empty( $ou ) ) {
+			$timeOffset = $ou;
+		} else {
+			$timeOffset = $mainframe->getCfg( 'offset' );
+		}
+
+		$retVal = strftime( $aecConfig->cfg['display_date_frontend'], ( strtotime( $expiration ) + $timeOffset*3600 ) );
+
+		return "<p>" . _ACCOUNT_EXPIRES . ": " . $retVal . "</p>";
+	}
 }
 
 ?>
