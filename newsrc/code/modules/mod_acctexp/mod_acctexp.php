@@ -40,7 +40,7 @@ if ( $user->id ) {
 				include_once( $langPath. 'english.php' );
 		}
 
-		if ( $extended ) {
+		if ( !$extended ) {
 			echo AECMenuHelper::getExpirationSimple();
 		} else {
 			$metaUser = new metaUser( $user->id );
@@ -48,7 +48,7 @@ if ( $user->id ) {
 			$subscriptions = $metaUser->getAllCurrentSubscriptionsInfo();
 
 			foreach ( $subscriptions as $subscription ) {
-				echo '<div class="aec_module_subscription aec_module_subscriptionid_' . $subscription->id  . '">';
+				echo '<div class="aec_module_subscription aec_module_subscriptionid_' . $subscription->plan  . '">';
 
 				echo "<h4>" . $subscription->name . "</h4>";
 
