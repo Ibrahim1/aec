@@ -424,7 +424,7 @@ class metaUser
 
 		$query = 'SELECT `a`.`id`, `a`.`plan`, `a`.`expiration`, `b`.`name`'
 				. ' FROM #__acctexp_subscr AS a'
-				. ' INNER JOIN #__acctexp_plans AS b ON a.plan = b.id'		
+				. ' INNER JOIN #__acctexp_plans AS b ON a.plan = b.id'
 				. ' WHERE `userid` = \'' . (int) $this->userid . '\''
 				. ' AND `status` != \'Expired\''
 				. ' AND `status` != \'Closed\''
@@ -434,7 +434,7 @@ class metaUser
 		$database->setQuery( $query );
 		return $database->loadObjectList();
 	}
-	
+
 	function getAllCurrentSubscriptions()
 	{
 		$database = &JFactory::getDBO();
@@ -5107,7 +5107,11 @@ class aecHTML
 			$href = '#';
 		}
 
-		$mousover = 'return overlib(\''. htmlentities( $tooltip, ENT_QUOTES, "ISO-8859-1", false ) .'\''. $title .', BELOW, RIGHT'. $width .');';
+		if ( strnatcmp( phpversion(),'5.2.3' ) >= 0 ) {
+			$mousover = 'return overlib(\''. htmlentities( $tooltip, ENT_QUOTES, "ISO-8859-1", false ) .'\''. $title .', BELOW, RIGHT'. $width .');';
+		} else {
+			$mousover = 'return overlib(\''. htmlentities( $tooltip, ENT_QUOTES, "ISO-8859-1" ) .'\''. $title .', BELOW, RIGHT'. $width .');';
+		}
 
 		$tip = '';
 		if ( $link ) {
