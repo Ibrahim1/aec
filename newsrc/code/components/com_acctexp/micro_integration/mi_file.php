@@ -48,12 +48,9 @@ class mi_file extends MI
 
 		$rewriting = array( 'path', 'append', 'content' );
 
-		foreach ( $rewriting as $rw_name ) {
-			$this->settings[$rw_name.$request->area] = AECToolbox::rewriteEngineRQ( $this->settings[$rw_name.$request->area], $request );
+		foreach ( $rewriting as $rw ) {
+			$this->settings[$rw.$request->area] = AECToolbox::rewriteEngineRQ( $this->settings[$rw.$request->area], $request );
 		}
-
-		$log_entry = new EventLog( $database );
-		$log_entry->issue( $this->settings['short'.$request->area], $this->settings['tags'.$request->area], $this->settings['text'.$request->area], $this->settings['level'.$request->area], $this->settings['params'.$request->area], $this->settings['force_notify'.$request->area], $this->settings['force_email'.$request->area] );
 
 		if ( $this->settings['append'.$request->area] ) {
 			$file = fopen( $this->settings['path'.$request->area], "a" );

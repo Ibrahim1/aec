@@ -73,6 +73,7 @@
 		<filename>micro_integration/index.html</filename>
 		<filename>micro_integration/mi_acajoom.php</filename>
 		<filename>micro_integration/mi_acl.php</filename>
+		<filename>micro_integration/mi_adminuseraccess.php</filename>
 		<filename>micro_integration/mi_aecdonate.php</filename>
 		<filename>micro_integration/mi_aecinvoiceprintmod.php</filename>
 		<filename>micro_integration/mi_aecmodifyexpiration.php</filename>
@@ -84,6 +85,7 @@
 		<filename>micro_integration/mi_amigos.php</filename>
 		<filename>micro_integration/mi_apc.php</filename>
 		<filename>micro_integration/mi_attend_events.php</filename>
+		<filename>micro_integration/mi_communityacl.php</filename>
 		<filename>micro_integration/mi_communitybuilder.php</filename>
 		<filename>micro_integration/mi_coupon.php</filename>
 		<filename>micro_integration/mi_directory.php</filename>
@@ -93,6 +95,7 @@
 		<filename>micro_integration/mi_email_files.php</filename>
 		<filename>micro_integration/mi_email_multi.php</filename>
 		<filename>micro_integration/mi_eventlog.php</filename>
+		<filename>micro_integration/mi_file.php</filename>
 		<filename>micro_integration/mi_fireboard.php</filename>
 		<filename>micro_integration/mi_googleadsenseconversion.php</filename>
 		<filename>micro_integration/mi_googleanalytics.php</filename>
@@ -101,9 +104,11 @@
 		<filename>micro_integration/mi_http_query.php</filename>
 		<filename>micro_integration/mi_idevaffiliate.php</filename>
 		<filename>micro_integration/mi_jarc.php</filename>
+		<filename>micro_integration/mi_joomlaplugin.php</filename>
 		<filename>micro_integration/mi_joomlauser.php</filename>
 		<filename>micro_integration/mi_juga.php</filename>
 		<filename>micro_integration/mi_k2.php</filename>
+		<filename>micro_integration/mi_kunena.php</filename>
 		<filename>micro_integration/mi_mosets_tree.php</filename>
 		<filename>micro_integration/mi_mysms.php</filename>
 		<filename>micro_integration/mi_mysql_query.php</filename>
