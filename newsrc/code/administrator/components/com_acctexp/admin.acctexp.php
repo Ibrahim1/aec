@@ -2280,8 +2280,6 @@ function editSettings( $option )
 	@end( $params );
 	$tab_data[] = array( _CFG_TAB_CUSTOMIZATION_TITLE, key( $params ), '<h2>' . _CFG_TAB_CUSTOMIZATION_SUBTITLE . '</h2>' );
 
-	$params = AECToolbox::rewriteEngineInfo( array(), $params );
-
 	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_INVOICE_PRINTOUT_DETAILS );
 	$params[] = array( 'accordion_start', '' );
 	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_INVOICE_HEADER_NAME );
@@ -2312,6 +2310,9 @@ function editSettings( $option )
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'div_end', 0 );
+
+	$params = AECToolbox::rewriteEngineInfo( array(), $params );
+
 	$params[] = array( '2div_end', 0 );
 
 	@end( $params );
@@ -2387,6 +2388,8 @@ function editSettings( $option )
 	$params['allow_frontend_heartbeat']		= array( 'list_yesno', 0 );
 	$params['disable_regular_heartbeat']	= array( 'list_yesno', 0 );
 	$params['custom_heartbeat_securehash']	= array( 'inputC', '' );
+	$params['countries_available']			= array( 'list_country', 0 );
+	$params['countries_top']				= array( 'list_country', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_DEBUG );
 	$params['bypassintegration']			= array( 'inputC', '' );

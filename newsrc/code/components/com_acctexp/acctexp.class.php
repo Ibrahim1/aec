@@ -1673,6 +1673,8 @@ class Config_General extends serialParamDBTable
 		$def['custom_confirm_userdetails']		= "";
 		$def['email_default_admins']			= 1;
 		$def['email_extra_admins']				= "";
+		$def['countries_available']				= "";
+		$def['countries_top']					= "";
 
 		return $def;
 	}
@@ -4038,7 +4040,7 @@ class XMLprocessor extends processor
 					$var['params']['billZip'] = array( 'inputC', _AEC_USERFORM_BILLZIP_NAME, _AEC_USERFORM_BILLZIP_NAME, $vcontent );
 					break;
 				case 'country_list':
-					$countries = AECToolbox::getISO3166_1a2_codes();
+					$countries = AECToolbox::getCountryCodeList();
 
 					$countrylist[] = mosHTML::makeOption( '" disabled="disabled', COUNTRYCODE_SELECT );
 
@@ -4061,7 +4063,7 @@ class XMLprocessor extends processor
 					$var['params']['billCountry'] = array( 'list', _AEC_USERFORM_BILLCOUNTRY_NAME, $vcontent );
 					break;
 				case 'country3_list':
-					$countries = AECToolbox::getISO3166_num_codes();
+					$countries = AECToolbox::getCountryCodeList( 'num' );
 
 					$countrylist[] = mosHTML::makeOption( '" disabled="disabled', COUNTRYCODE_SELECT );
 
@@ -4069,7 +4071,7 @@ class XMLprocessor extends processor
 						$vcontent = 826;
 					}
 
-					$conversion = AECToolbox::conversionlist_ISO3166_num_1a2();
+					$conversion = AECToolbox::ISO3166_conversiontable( 'num', 'a2' );
 
 					$countrylist = array();
 					foreach ( $countries as $country ) {
@@ -13079,6 +13081,57 @@ class AECToolbox
 		}
 	}
 
+	function getCountryCodeList( $format=null )
+	{
+		global $aecConfig;
+
+		$regular = AECToolbox::getISO3166_1a2_codes();
+
+		if ( !empty( $aecConfig->cfg['countries_available'] ) ) {
+			$countries = $aecConfig->cfg['countries_available'];
+		} else {
+			$countries = $regular;
+		}
+
+		if ( !empty( $aecConfig->cfg['countries_top'] ) ) {
+			$countries = array_merge( $aecConfig->cfg['countries_top'], array_diff( $aecConfig->cfg['countries_top'] , $countries ) );
+		}
+
+		if ( $format ) {
+			switch ( $format ) {
+				case 'a2':
+					return $countries;
+					break;
+				default:
+					$conversion = AECToolbox::ISO3166_conversiontable( 'a2', $format );
+
+					$newlist = array();
+					foreach ( $countries as $c ) {
+						$newlist[] = $conversion[$c];
+					}
+
+					return $newlist;
+					break;
+			}
+		} else {
+			return $countries;
+		}
+	}
+
+	function ISO3166_convert( $list, $from, $to )
+	{
+		$num = AECToolbox::getISO3166_num_codes();
+		$a2 = AECToolbox::getISO3166_1a2_codes();
+	}
+
+	function ISO3166_conversiontable( $type1, $type2 )
+	{
+		$list1 = call_user_func( array( 'AECToolbox', 'getISO3166_' . $type1 . '_codes' ) );
+		$list2 = call_user_func( array( 'AECToolbox', 'getISO3166_' . $type1 . '_codes' ) );
+
+		return array_combine( $list1, $list2 );
+	}
+
 	function getISO3166_1a2_codes()
 	{
 		return array( 'AF', 'AX', 'AL', 'DZ', 'AS', 'AD', 'AO', 'AI', 'AQ', 'AG', 'AR', 'AM', 'AW', 'AU', 'AT', 'AZ',
@@ -13121,7 +13174,7 @@ class AECToolbox
 						'VNM', 'VGB', 'VIR', 'WLF', 'ESH', 'YEM', 'ZMB', 'ZWE' );
 	}
 
-	function getISO3166_num_codes()
+	function getISO3166_1num_codes()
 	{
 		return array( 004, 248, 008, 012, 016, 020, 024, 660, 010, 028, 032, 051, 533, 036, 040, 031, 044, 048, 050, 052,
 						112, 056, 084, 204, 060, 064, 068, 070, 072, 074, 076, 086, 096, 100, 854, 108, 116, 120, 124, 132,
@@ -13136,14 +13189,6 @@ class AECToolbox
 						705, 090, 706, 710, 239, 724, 144, 736, 740, 744, 748, 752, 756, 760, 158, 762, 834, 764, 626, 768,
 						772, 776, 780, 788, 792, 795, 796, 798, 800, 804, 784, 826, 840, 581, 858, 860, 548, 862, 704, 092,
 						850, 876, 732, 887, 894, 716 );
-	}
-
-	function conversionlist_ISO3166_num_1a2()
-	{
-		$num = AECToolbox::getISO3166_num_codes();
-		$a2 = AECToolbox::getISO3166_1a2_codes();
-
-		return array_combine( $num, $a2 );
 	}
 
 	/**
