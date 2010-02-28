@@ -252,6 +252,12 @@ class HTML_frontEnd
 							if ( !empty( $subscription->objPlan->proc_actions ) ) {
 								echo '<p>' . _PLAN_PROCESSOR_ACTIONS . ' ' . implode( " | ", $subscription->objPlan->proc_actions ) . '</p>';
 							}
+							if ( $subscription->lifetime ) {
+								echo '<p>' . _AEC_ISLIFETIME . '</p>';
+							} else {
+								echo '<p>' . _AEC_WILLEXPIRE . ': ' . HTML_frontend::DisplayDateInLocalTime( $subscription->expiration ) . '</p>';
+							}
+
 							?></div><?php
 						}
 						?>

@@ -5,7 +5,7 @@
  * @subpackage Language - Frontend - English
  * @copyright 2006-2008 Copyright (C) David Deutsch
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
- 
+
  * @Translation into Swedish: Anders Carlén <anders@carlencommunications.se> - http://www.carlencommunications.s
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
@@ -119,6 +119,9 @@ define( '_INVOICEPRINT_PAIDSTATUS_PAID', 'Denna faktura betalades den %s'); //Th
 
 define( '_AEC_YOUSURE', 'Är du säker?'); //Are you sure?
 
+define( '_AEC_WILLEXPIRE', 'This membership will expire');
+define( '_AEC_ISLIFETIME', 'Lifetime Membership');
+
 // --== EXPIRATION PAGE ==--
 define( '_EXPIRE_INFO', 'Din prenumeration gäller till och med'); //Your account is active until
 define( '_RENEW_BUTTON', 'Förnya nu'); //Renew Now
@@ -218,7 +221,7 @@ define( '_STEP_EXPIRED', 'Prenumerationen har gått ut!'); //Expired!
 define( '_NOT_ALLOWED_HEADLINE', 'Endast för medlemmar!'); //Membership required!
 define( '_NOT_ALLOWED_FIRSTPAR', 'Detta innehåll är bara tillgängligt för registrerade medlemmar. Är du redan medlem behöver du först logga in för att se sidan. Följ denna länk för att bli medlem: '); //The Content you are trying to see is available only for members of our site. If you already have a Membership you need to log in to see it. Please follow this link if you want to register:
 define( '_NOT_ALLOWED_REGISTERLINK', 'Registrera medlemskap'); //Registration Page
-define( '_NOT_ALLOWED_FIRSTPAR_LOGGED', 'Detta innehåll är bara tillgängligt för betalande medlemmar. Följ denna länk för att köpa eller uppdatera ditt abonnemang: '); //The Content you are trying to see is available only for members of our site who have a certain subscription. Please follow this link if you want to change your subscription: 
+define( '_NOT_ALLOWED_FIRSTPAR_LOGGED', 'Detta innehåll är bara tillgängligt för betalande medlemmar. Följ denna länk för att köpa eller uppdatera ditt abonnemang: '); //The Content you are trying to see is available only for members of our site who have a certain subscription. Please follow this link if you want to change your subscription:
 define( '_NOT_ALLOWED_REGISTERLINK_LOGGED', 'Abonnemang'); //Subscription Page
 define( '_NOT_ALLOWED_SECONDPAR', 'Det går snabbt och enkelt att registrera sig - vi använder oss av:'); //Joining will take you less than a minute - we use the service of:
 
@@ -251,8 +254,8 @@ define( '_SUB_FEPARTICLE_THANKS', 'Tack för att du registrerat dig hos oss.'); 
 define( '_SUB_FEPARTICLE_THANKSRENEW', 'Tack för att du förnyat din prenumeration. '); //Thank you for renewing your subscription.
 define( '_SUB_FEPARTICLE_PROCESS', 'Vi arbetar nu med din beställning. '); //Our system will now work on your request.
 define( '_SUB_FEPARTICLE_PROCESSPAY', 'Vi väntar nu på din betalning. '); //Our system will now await your payment.
-define( '_SUB_FEPARTICLE_ACTMAIL', 'Du kommer att få ett e-postmeddelande med en aktivieringskod så snart vårt system behandlat din beställning.'); //You will receive an e-mail with an activation link once our system has processed your request. 
-define( '_SUB_FEPARTICLE_MAIL', 'Du kommer att få ett e-postmeddelande så snart vårt system behandlat din beställning.'); //You will receive an e-mail once our system has processed your request. 
+define( '_SUB_FEPARTICLE_ACTMAIL', 'Du kommer att få ett e-postmeddelande med en aktivieringskod så snart vårt system behandlat din beställning.'); //You will receive an e-mail with an activation link once our system has processed your request.
+define( '_SUB_FEPARTICLE_MAIL', 'Du kommer att få ett e-postmeddelande så snart vårt system behandlat din beställning.'); //You will receive an e-mail once our system has processed your request.
 
 // --== CHECKOUT ERROR PAGE ==--
 define( '_CHECKOUT_ERROR_TITLE', 'Problem med betalningen!'); //Error while processing the payment!
@@ -367,7 +370,7 @@ define( 'COUNTRYCODE_DO', 'Dominican Republic' );
 define( 'COUNTRYCODE_EC', 'Ecuador' );
 define( 'COUNTRYCODE_EG', 'Egypt' );
 define( 'COUNTRYCODE_SV', 'El Salvador' );
-define( 'COUNTRYCODE_GQ', 'Equatorial Guinea' );						
+define( 'COUNTRYCODE_GQ', 'Equatorial Guinea' );
 define( 'COUNTRYCODE_ER', 'Eritrea' );
 define( 'COUNTRYCODE_EE', 'Estonia' );
 define( 'COUNTRYCODE_ET', 'Ethiopia' );

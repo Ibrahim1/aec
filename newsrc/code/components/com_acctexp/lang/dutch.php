@@ -122,6 +122,9 @@ define( '_INVOICEPRINT_PAIDSTATUS_PAID', 'This invoice has been paid on: %s');
 
 define( '_AEC_YOUSURE', 'Are you sure?');
 
+define( '_AEC_WILLEXPIRE', 'This membership will expire');
+define( '_AEC_ISLIFETIME', 'Lifetime Membership');
+
 // --== VERVAL PAGINA ==--
 define( '_EXPIRE_INFO', 'Uw account is actief tot');
 define( '_RENEW_BUTTON', 'Nu vernieuwen');

@@ -117,6 +117,9 @@ define( '_INVOICEPRINT_PAIDSTATUS_PAID', 'Diese Rechnung wurde am folgenden Datu
 
 define( '_AEC_YOUSURE', 'Are you sure?');
 
+define( '_AEC_WILLEXPIRE', 'Diese Mitgliedschaft ist g&uuml;ltig bis');
+define( '_AEC_ISLIFETIME', 'Lebenslange Mitgliedschaft');
+
 // --== EXPIRATION PAGE ==--
 define( '_EXPIRE_INFO',						'Ihr Konto ist aktiv bis');
 define( '_RENEW_BUTTON',					'Erneuern');

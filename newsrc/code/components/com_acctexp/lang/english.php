@@ -117,6 +117,9 @@ define( '_INVOICEPRINT_PAIDSTATUS_PAID', 'This invoice has been paid on: %s');
 
 define( '_AEC_YOUSURE', 'Are you sure?');
 
+define( '_AEC_WILLEXPIRE', 'This membership will expire');
+define( '_AEC_ISLIFETIME', 'Lifetime Membership');
+
 // --== EXPIRATION PAGE ==--
 define( '_EXPIRE_INFO', 'Your account is active until');
 define( '_RENEW_BUTTON', 'Renew Now');
@@ -365,7 +368,7 @@ define( 'COUNTRYCODE_DO', 'Dominican Republic' );
 define( 'COUNTRYCODE_EC', 'Ecuador' );
 define( 'COUNTRYCODE_EG', 'Egypt' );
 define( 'COUNTRYCODE_SV', 'El Salvador' );
-define( 'COUNTRYCODE_GQ', 'Equatorial Guinea' );						
+define( 'COUNTRYCODE_GQ', 'Equatorial Guinea' );
 define( 'COUNTRYCODE_ER', 'Eritrea' );
 define( 'COUNTRYCODE_EE', 'Estonia' );
 define( 'COUNTRYCODE_ET', 'Ethiopia' );

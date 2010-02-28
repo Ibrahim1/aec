@@ -471,7 +471,7 @@ class metaUser
 	{
 		$database = &JFactory::getDBO();
 
-		$query = 'SELECT `id`' . ( $simple ? '' : ', `plan`, `type`' )
+		$query = 'SELECT `id`' . ( $simple ? '' : ', `plan`, `type`, `expiration`' )
 				. ' FROM #__acctexp_subscr'
 				. ' WHERE `userid` = \'' . (int) $this->userid . '\''
 				. ' AND `primary` = \'0\''

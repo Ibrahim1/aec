@@ -121,6 +121,9 @@ define( '_INVOICEPRINT_PAIDSTATUS_PAID', 'This invoice has been paid on: %s');
 
 define( '_AEC_YOUSURE', 'Are you sure?');
 
+define( '_AEC_WILLEXPIRE', 'This membership will expire');
+define( '_AEC_ISLIFETIME', 'Lifetime Membership');
+
 // --== EXPIRATION PAGE ==--
 define( '_EXPIRE_INFO', '你的�?�?�一直是�?�用的');
 define( '_RENEW_BUTTON', '立刻更新');

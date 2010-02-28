@@ -122,6 +122,9 @@ define( '_INVOICEPRINT_PAIDSTATUS_PAID', 'This invoice has been paid on: %s');
 
 define( '_AEC_YOUSURE', 'Are you sure?');
 
+define( '_AEC_WILLEXPIRE', 'This membership will expire');
+define( '_AEC_ISLIFETIME', 'Lifetime Membership');
+
 // --== EXPIRATION PAGE ==--
 define( '_EXPIRE_INFO', 'A sua Conta est&aacute; activa at&eacute;');
 define( '_RENEW_BUTTON', 'Renovar Agora');

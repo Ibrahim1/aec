@@ -783,6 +783,8 @@ function subscriptionDetails( $option, $sub='overview' )
 				continue;
 			}
 
+			$subList[$usid] = $subscription;
+
 			$subList[$usid]->objPlan = new SubscriptionPlan( $database );
 			$subList[$usid]->objPlan->load( $subscription->plan );
 
