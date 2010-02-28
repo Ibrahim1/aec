@@ -25,8 +25,8 @@ class mi_aecmodifyexpiration
 	function Settings()
 	{
 		$settings = array();
-		$settings['time_mod']		= array('inputA');
-		$settings['timestamp']		= array('inputA');
+		$settings['time_mod']		= array('inputD');
+		$settings['timestamp']		= array('inputD');
 
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 		$settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_SET11_EMAIL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
