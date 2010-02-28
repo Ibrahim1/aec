@@ -59,7 +59,9 @@ class mi_email_multi extends MI
 				$pf = 'email_' . $i . '_';
 
 				if ( !empty( $this->settings[$pf.'recipient'] ) && !empty( $this->settings[$pf.'timing'] ) ) {
-					if ( ( strpos( $this->settings[$pf.'timing'], '-' ) === 0 ) || ( strpos( $this->settings[$pf.'timing'], '++' ) === 0 ) ) {
+					$timing	= AECToolbox::rewriteEngineRQ( $this->settings[$pf.'timing'], $request );
+
+					if ( ( strpos( $timing, '-' ) === 0 ) || ( strpos( $timing, '++' ) === 0 ) ) {
 						// Go back from Expiration date
 						$tstamp = strtotime( $request->metaUser->focusSubscription->expiration );
 					} else {
@@ -67,10 +69,10 @@ class mi_email_multi extends MI
 						$tstamp = time();
 					}
 
-					if ( strpos( $this->settings[$pf.'timing'], '++' ) === 0 ) {
+					if ( strpos( $timing, '++' ) === 0 ) {
 						$time = str_replace( '++', '+', $this->settings[$pf.'timing'] );
 					} else {
-						$time = $this->settings[$pf.'timing'];
+						$time = $timing;
 					}
 
 					$due_date = strtotime( $time, $tstamp );
