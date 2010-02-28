@@ -34,20 +34,34 @@ class mi_googleanalytics
 		$database = &JFactory::getDBO();
 
 		global $mainframe;
-
-		$text = '<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">'
+				
+		$text = '<script type="text/javascript">'
+				. 'var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");'
+				. 'document.write(unescape("%3Cscript src=\'" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript\'%3E%3C/script%3E"));'
 				. '</script>'
 				. '<script type="text/javascript">'
-				. '  _uacct="' . $this->settings['account_id'] . '";'
-				. '  urchinTracker();'
-				. '</script>'
-				. '<form style="display:none;" name="utmform">'
-				. '<textarea id="utmtrans">UTM:T|' . $request->invoice->invoice_number . '|' . $mainframe->getCfg( 'sitename' ) . '|' . $request->invoice->amount . '|0.00|0.00|||'
-				. 'UTM:I|' . $request->invoice->invoice_number . '|' . $request->plan->id . '|' . $request->plan->name . '|subscription|' . $request->invoice->amount . '|1</textarea>'
-				. '</form>'
-				. '<script type="text/javascript">'
-				. '__utmSetTrans();'
-				. '</script>';
+				. 'try {'
+				. 'var pageTracker = _gat._getTracker("' . $this->settings['account_id'] . '");'
+				. 'pageTracker._addTrans('
+				. '"' . $request->invoice->invoice_number . '",	// Order ID'
+				. '"' . $mainframe->getCfg( 'sitename' ) . '",	// Affiliation'
+				. '"' . $request->invoice->amount . '",			// Total'
+				. '"",				// Tax'
+				. '"",				// Shipping'
+				. '"",				// City'
+				. '"",				// State'
+				. '""				// Country'
+				. ');'
+				. 'pageTracker._addItem('
+				. '"' . $request->invoice->invoice_number . '",	// Order ID'
+				. '"' . $request->plan->id . '",				// SKU'
+				. '"' . $request->plan->name . '",				// Product Name' 
+				. '"' . $request->invoice->amount . '",			// Price'
+				. '"1"		// Quantity'
+				. ');'
+				. 'pageTracker._trackTrans();'
+				. '} catch(err) {}</script>'
+				;
 
 		$displaypipeline = new displayPipeline($database);
 		$displaypipeline->create( $request->metaUser->userid, 1, 0, 0, null, 1, $text );
