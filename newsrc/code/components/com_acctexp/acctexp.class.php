@@ -6164,6 +6164,7 @@ class SubscriptionPlan extends serialParamDBTable
 		// Clear parameters
 		$metaUser->focusSubscription->params = array();
 
+		$recurring_choice = null;
 		if ( is_object( $invoice ) ) {
 			if ( !empty( $invoice->params ) ) {
 				$tempparam = array();
@@ -6183,9 +6184,18 @@ class SubscriptionPlan extends serialParamDBTable
 			$pp->init();
 			$pp->getInfo();
 
+			$recurring_choice = null;
+			if ( is_object( $invoice ) ) {
+				if ( !empty( $invoice->params ) ) {
+					if ( isset( $invoice->params["userselect_recurring"] ) ) {
+						$recurring_choice = $invoice->params["userselect_recurring"];
+					}
+				}
+			}
+
 			// Check whether we have a custome choice set
-			if ( isset( $metaUser->focusSubscription->custom_params[$pp->id."_recurring"] ) ) {
-				$metaUser->focusSubscription->recurring = $pp->is_recurring( $metaUser->focusSubscription->custom_params[$pp->id."_recurring"] );
+			if ( !is_null( $recurring_choice ) ) {
+				$metaUser->focusSubscription->recurring = $pp->is_recurring( $recurring_choice );
 			} else {
 				$metaUser->focusSubscription->recurring = $pp->is_recurring();
 			}
@@ -7781,6 +7791,7 @@ class InvoiceFactory
 			}
 		}
 
+		$recurring = null;
 		if ( !empty( $this->invoice_number ) ) {
 			if ( !isset( $this->invoice ) ) {
 				$this->invoice = null;
@@ -7855,12 +7866,15 @@ class InvoiceFactory
 			}
 		}
 
-		$recurring = aecGetParam( 'recurring', null );
+		if ( is_null( $recurring ) ) {
+			$recurring = aecGetParam( 'recurring', null );
+		}
 
 		if ( isset( $this->invoice->params['userselect_recurring'] ) ) {
 			$this->recurring = $this->invoice->params['userselect_recurring'];
 		} elseif ( !is_null( $recurring ) ) {
 			$this->invoice->addParams( array( 'userselect_recurring' => $recurring ) );
+			$this->invoice->storeload();
 		}
 
 		return;
