@@ -35,7 +35,7 @@ class processor_hsbc extends XMLprocessor
 		$actions = parent::getActions( $invoice, $subscription );
 
 		if ( ( $subscription->status == 'Cancelled' ) || ( $invoice->transaction_date == '0000-00-00 00:00:00' ) ) {
-			if ( isset( $actions['cancel'] ) ) {
+			if ( isset( $actions['cancel'] ) && $subscription->recurring ) {
 				unset( $actions['cancel'] );
 			}
 		}
@@ -131,12 +131,12 @@ aecDebug($var);
 	{aecDebug("checkoutform");
 		$var = array();
 
-		$values = array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' );
+		$values = array( 'card_number*', 'card_exp_month*', 'card_exp_year*', 'card_cvv2*' );
 
 		$var = $this->getCCform( $var, $values );
 
 		if ( !empty( $this->settings['promptAddress'] ) ) {
-			$values = array( 'firstname', 'lastname', 'company', 'address', 'address2', 'city', 'zip', 'state_usca', 'country3_list' );
+			$values = array( 'firstname*', 'lastname*', 'company', 'address*', 'address2*', 'city*', 'zip*', 'state_usca', 'country3_list*' );
 		} else {
 			$values = array( 'firstname', 'lastname' );
 		}
