@@ -1005,7 +1005,7 @@ class Payment_HTML
 				<?php } else { ?>
 				<p>&nbsp;</p>
 				<div id="update_button"><a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=clearCart', $aecConfig->cfg['ssl_signup'] ); ?>">clear the whole cart</a></div>
-				<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+				<form name="updateForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 				<table>
 					<tr>
 						<th>Item</th>
@@ -1049,7 +1049,7 @@ class Payment_HTML
 					}
 				?>
 				<div id="continue_button">
-					<form name="confirmForm" action="<?php echo $continueurl; ?>" method="post">
+					<form name="continueForm" action="<?php echo $continueurl; ?>" method="post">
 						<input type="image" src="<?php echo JURI::root() . 'media/com_acctexp/images/site/continue_shopping_button.png'; ?>" border="0" name="submit" alt="submit" />
 					</form>
 				</div>
