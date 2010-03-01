@@ -2388,8 +2388,8 @@ function editSettings( $option )
 	$params['allow_frontend_heartbeat']		= array( 'list_yesno', 0 );
 	$params['disable_regular_heartbeat']	= array( 'list_yesno', 0 );
 	$params['custom_heartbeat_securehash']	= array( 'inputC', '' );
-	$params['countries_available']			= array( 'list_country', 0 );
-	$params['countries_top']				= array( 'list_country', 0 );
+	$params['countries_available']			= array( 'list_country_full', 0 );
+	$params['countries_top']				= array( 'list_country_full', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_DEBUG );
 	$params['bypassintegration']			= array( 'inputC', '' );

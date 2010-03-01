@@ -923,7 +923,7 @@ function subscriptionDetails( $option, $sub='overview' )
 		$found = false;
 		foreach ( $subList as $ssub ) {
 			if ( $ssub->id == $invoice->subscr_id ) {
-				$tempsubscription = $subList[$invoice->subscr_id];
+				$tempsubscription = $ssub;
 
 				$found = true;
 				continue;

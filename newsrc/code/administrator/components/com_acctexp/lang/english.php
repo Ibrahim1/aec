@@ -1039,15 +1039,17 @@ define( '_CFG_GENERAL_INTRO_EXPIRED_DESC', 'AEC normally does not show the intro
 define( '_CFG_GENERAL_INVOICE_CUSHION_NAME', 'Invoice Cushion');
 define( '_CFG_GENERAL_INVOICE_CUSHION_DESC', 'The cushion period in which AEC does not accept new notifications for an invoice that was already paid.');
 
-// Global Authentication Settins
-define( '_CFG_TAB_AUTHENTICATION_TITLE', 'Authentication');
-define( '_CFG_TAB_AUTHENTICATION_SUBTITLE', 'Authentication Plugins');
-define( '_CFG_AUTH_AUTHLIST_NAME', 'Active Authentication Plugins');
-define( '_CFG_AUTH_AUTHLIST_DESC', 'Select which Authentication (as in: at least one of them has to be successful for the login to pass) Plugins will be used. AECaeccss Plugin must be the only Authentication Plugin enabled in the Joomla Plugin Manager.');
-define( '_CFG_AUTH_AUTHORIZATION_LIST_NAME', 'Active Authorization Plugins');
-define( '_CFG_AUTH_AUTHORIZATION_LIST_DESC', 'Select which Authorization (as in: all of them have to be successful for the login to pass) Plugins will be used. AECaeccss Plugin must be the only Authentication Plugin enabled in the Joomla Plugin Manager.');
+define( '_CFG_GENERAL_COUNTRIES_AVAILABLE_NAME', 'Available Countries');
+define( '_CFG_GENERAL_COUNTRIES_AVAILABLE_DESC', 'With this setting, you can choose a reduced set of countries that will show on a standard country list (which is used, for instance, on some processor checkout pages to let customers choose their location)');
+define( '_CFG_GENERAL_COUNTRIES_TOP_NAME', 'Top Countries');
+define( '_CFG_GENERAL_COUNTRIES_TOP_DESC', 'This will sort the selected countries on the top of the list, when showing a standard country list (which is used, for instance, on some processor checkout pages to let customers choose their location)');
 
-//Invoice settings
+define( '_CFG_GENERAL_EMAIL_DEFAULT_ADMINS_NAME', 'Usual Suspects Admin Email Alerts');
+define( '_CFG_GENERAL_EMAIL_DEFAULT_ADMINS_DESC', 'With this setting enabled, all Administrators who have chosen to receive Joomla System Emails will also receive AEC System Email Notifications');
+define( '_CFG_GENERAL_EMAIL_EXTRA_ADMINS_NAME', 'Additional Email Recipients');
+define( '_CFG_GENERAL_EMAIL_EXTRA_ADMINS_DESC', 'If you want AEC to send System Alerts to additional recipients, you can enter them here - you can add more than one by separating them by comma');
+
+// Invoice settings
 define( '_CFG_GENERAL_SENDINVOICE_NAME', 'Send an invoice email');
 define( '_CFG_GENERAL_SENDINVOICE_DESC', 'Send and invoice/purchase order email (for tax reasons)');
 define( '_CFG_GENERAL_INVOICETMPL_NAME', 'Invoice Template');

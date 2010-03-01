@@ -471,7 +471,7 @@ class metaUser
 	{
 		$database = &JFactory::getDBO();
 
-		$query = 'SELECT `id`' . ( $simple ? '' : ', `plan`, `type`, `expiration`' )
+		$query = 'SELECT `id`' . ( $simple ? '' : ', `plan`, `type`, `expiration`, `recurring`' )
 				. ' FROM #__acctexp_subscr'
 				. ' WHERE `userid` = \'' . (int) $this->userid . '\''
 				. ' AND `primary` = \'0\''
@@ -3858,6 +3858,14 @@ class XMLprocessor extends processor
 				$vcontent = '';
 			}
 
+			if ( strpos( '*', $value ) ) {
+				$pf = '*';
+
+				$value = substr( $value, -1, 1 );
+			} else {
+				$pf = '';
+			}
+
 			switch ( strtolower( $value ) ) {
 				case 'card_type':
 					$cctlist = array(	'visa' => 'Visa',
@@ -3872,11 +3880,11 @@ class XMLprocessor extends processor
 					}
 
 					$var['params']['lists']['cardType'] = mosHTML::selectList( $options, 'cardType', 'size="1" style="width:120px;"', 'value', 'text', $vcontent );
-					$var['params']['cardType'] = array( 'list', _AEC_CCFORM_CARDTYPE_NAME, $vcontent );
+					$var['params']['cardType'] = array( 'list', _AEC_CCFORM_CARDTYPE_NAME.$pf, $vcontent );
 					break;
 				case 'card_number':
 					// Request the Card number
-					$var['params']['cardNumber'] = array( 'inputC', _AEC_CCFORM_CARDNUMBER_NAME, _AEC_CCFORM_CARDNUMBER_DESC, $vcontent );
+					$var['params']['cardNumber'] = array( 'inputC', _AEC_CCFORM_CARDNUMBER_NAME.$pf, _AEC_CCFORM_CARDNUMBER_DESC, $vcontent );
 					break;
 				case 'card_exp_month':
 					// Create a selection box with 12 months
@@ -3887,7 +3895,7 @@ class XMLprocessor extends processor
 					}
 
 					$var['params']['lists']['expirationMonth'] = mosHTML::selectList( $months, 'expirationMonth', 'size="1" style="width:50px;"', 'value', 'text', $vcontent );
-					$var['params']['expirationMonth'] = array( 'list', _AEC_CCFORM_EXPIRATIONMONTH_NAME, _AEC_CCFORM_EXPIRATIONMONTH_DESC, $vcontent );
+					$var['params']['expirationMonth'] = array( 'list', _AEC_CCFORM_EXPIRATIONMONTH_NAME.$pf, _AEC_CCFORM_EXPIRATIONMONTH_DESC, $vcontent );
 					break;
 				case 'card_exp_year':
 					// Create a selection box with the next 10 years
@@ -3899,10 +3907,10 @@ class XMLprocessor extends processor
 					}
 
 					$var['params']['lists']['expirationYear'] = mosHTML::selectList( $years, 'expirationYear', 'size="1" style="width:70px;"', 'value', 'text', $vcontent );
-					$var['params']['expirationYear'] = array( 'list', _AEC_CCFORM_EXPIRATIONYEAR_NAME, _AEC_CCFORM_EXPIRATIONYEAR_DESC, $vcontent );
+					$var['params']['expirationYear'] = array( 'list', _AEC_CCFORM_EXPIRATIONYEAR_NAME.$pf, _AEC_CCFORM_EXPIRATIONYEAR_DESC, $vcontent );
 					break;
 				case 'card_cvv2':
-					$var['params']['cardVV2'] = array( 'inputC', _AEC_CCFORM_CARDVV2_NAME, _AEC_CCFORM_CARDVV2_DESC, $vcontent );
+					$var['params']['cardVV2'] = array( 'inputC', _AEC_CCFORM_CARDVV2_NAME.$pf, _AEC_CCFORM_CARDVV2_DESC, $vcontent );
 					break;
 			}
 		}
@@ -3923,18 +3931,26 @@ class XMLprocessor extends processor
 				$vcontent = '';
 			}
 
+			if ( strpos( '*', $value ) ) {
+				$pf = '*';
+
+				$value = substr( $value, -1, 1 );
+			} else {
+				$pf = '';
+			}
+
 			switch ( strtolower( $value ) ) {
 				case 'routing_no':
-					$var['params']['routing_no'] = array( 'inputC', _AEC_ECHECKFORM_ROUTING_NO_NAME, _AEC_ECHECKFORM_ROUTING_NO_DESC, $vcontent );
+					$var['params']['routing_no'] = array( 'inputC', _AEC_ECHECKFORM_ROUTING_NO_NAME.$pf, _AEC_ECHECKFORM_ROUTING_NO_DESC, $vcontent );
 					break;
 				case 'account_no':
-					$var['params']['account_no'] = array( 'inputC', _AEC_ECHECKFORM_ACCOUNT_NO_NAME, _AEC_ECHECKFORM_ACCOUNT_NO_DESC, $vcontent );
+					$var['params']['account_no'] = array( 'inputC', _AEC_ECHECKFORM_ACCOUNT_NO_NAME.$pf, _AEC_ECHECKFORM_ACCOUNT_NO_DESC, $vcontent );
 					break;
 				case 'account_name':
-					$var['params']['account_name'] = array( 'inputC', _AEC_ECHECKFORM_ACCOUNT_NAME_NAME, _AEC_ECHECKFORM_ACCOUNT_NAME_DESC, $vcontent );
+					$var['params']['account_name'] = array( 'inputC', _AEC_ECHECKFORM_ACCOUNT_NAME_NAME.$pf, _AEC_ECHECKFORM_ACCOUNT_NAME_DESC, $vcontent );
 					break;
 				case 'bank_name':
-					$var['params']['bank_name'] = array( 'inputC', _AEC_ECHECKFORM_BANK_NAME_NAME, _AEC_ECHECKFORM_BANK_NAME_DESC, $vcontent );
+					$var['params']['bank_name'] = array( 'inputC', _AEC_ECHECKFORM_BANK_NAME_NAME.$pf, _AEC_ECHECKFORM_BANK_NAME_DESC, $vcontent );
 					break;
 			}
 		}
@@ -3971,27 +3987,35 @@ class XMLprocessor extends processor
 				$vcontent = '';
 			}
 
+			if ( strpos( $value, '*' ) ) {
+				$pf = '*';
+
+				$value = substr( $value, 0, -1 );
+			} else {
+				$pf = '';
+			}
+
 			switch ( strtolower( $value ) ) {
 				case 'firstname':
-					$var['params']['billFirstName'] = array( 'inputC', _AEC_USERFORM_BILLFIRSTNAME_NAME, _AEC_USERFORM_BILLFIRSTNAME_NAME, $vcontent );
+					$var['params']['billFirstName'] = array( 'inputC', _AEC_USERFORM_BILLFIRSTNAME_NAME.$pf, _AEC_USERFORM_BILLFIRSTNAME_NAME, $vcontent );
 					break;
 				case 'lastname':
-					$var['params']['billLastName'] = array( 'inputC', _AEC_USERFORM_BILLLASTNAME_NAME, _AEC_USERFORM_BILLLASTNAME_NAME, $vcontent );
+					$var['params']['billLastName'] = array( 'inputC', _AEC_USERFORM_BILLLASTNAME_NAME.$pf, _AEC_USERFORM_BILLLASTNAME_NAME, $vcontent );
 					break;
 				case 'address':
-					$var['params']['billAddress'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS_NAME, _AEC_USERFORM_BILLCOMPANY_NAME, $vcontent );
+					$var['params']['billAddress'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS_NAME.$pf, _AEC_USERFORM_BILLCOMPANY_NAME, $vcontent );
 					break;
 				case 'address2':
-					$var['params']['billAddress2'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS2_NAME, _AEC_USERFORM_BILLADDRESS2_NAME, $vcontent );
+					$var['params']['billAddress2'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS2_NAME.$pf, _AEC_USERFORM_BILLADDRESS2_NAME, $vcontent );
 					break;
 				case 'city':
-					$var['params']['billCity'] = array( 'inputC', _AEC_USERFORM_BILLCITY_NAME, _AEC_USERFORM_BILLCITY_NAME, $vcontent );
+					$var['params']['billCity'] = array( 'inputC', _AEC_USERFORM_BILLCITY_NAME.$pf, _AEC_USERFORM_BILLCITY_NAME, $vcontent );
 					break;
 				case 'nonus':
-					$var['params']['billNonUs'] = array( 'checkbox', _AEC_USERFORM_BILLNONUS_NAME, 1, $vcontent, _AEC_USERFORM_BILLNONUS_NAME );
+					$var['params']['billNonUs'] = array( 'checkbox', _AEC_USERFORM_BILLNONUS_NAME.$pf, 1, $vcontent, _AEC_USERFORM_BILLNONUS_NAME );
 					break;
 				case 'state':
-					$var['params']['billState'] = array( 'inputC', _AEC_USERFORM_BILLSTATE_NAME, _AEC_USERFORM_BILLSTATE_NAME, $vcontent );
+					$var['params']['billState'] = array( 'inputC', _AEC_USERFORM_BILLSTATE_NAME.$pf, _AEC_USERFORM_BILLSTATE_NAME, $vcontent );
 					break;
 				case 'state_us':
 					$states = array( '', '--- United States ---', 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI',
@@ -4012,7 +4036,7 @@ class XMLprocessor extends processor
 					}
 
 					$var['params']['lists']['billState'] = mosHTML::selectList( $statelist, 'billState', 'size="1"', 'value', 'text', $vcontent );
-					$var['params']['billState'] = array( 'list', _AEC_USERFORM_BILLSTATE_NAME, $vcontent );
+					$var['params']['billState'] = array( 'list', _AEC_USERFORM_BILLSTATE_NAME.$pf, $vcontent );
 					break;
 				case 'state_usca':
 					$states = array( '', '--- United States ---', 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI',
@@ -4034,10 +4058,10 @@ class XMLprocessor extends processor
 					}
 
 					$var['params']['lists']['billState'] = mosHTML::selectList( $statelist, 'billState', 'size="1"', 'value', 'text', $vcontent );
-					$var['params']['billState'] = array( 'list', _AEC_USERFORM_BILLSTATEPROV_NAME, $vcontent );
+					$var['params']['billState'] = array( 'list', _AEC_USERFORM_BILLSTATEPROV_NAME.$pf, $vcontent );
 					break;
 				case 'zip':
-					$var['params']['billZip'] = array( 'inputC', _AEC_USERFORM_BILLZIP_NAME, _AEC_USERFORM_BILLZIP_NAME, $vcontent );
+					$var['params']['billZip'] = array( 'inputC', _AEC_USERFORM_BILLZIP_NAME.$pf, _AEC_USERFORM_BILLZIP_NAME, $vcontent );
 					break;
 				case 'country_list':
 					$countries = AECToolbox::getCountryCodeList();
@@ -4060,12 +4084,10 @@ class XMLprocessor extends processor
 					}
 
 					$var['params']['lists']['billCountry'] = mosHTML::selectList( $countrylist, 'billCountry', 'size="1"', 'value', 'text', $vcontent );
-					$var['params']['billCountry'] = array( 'list', _AEC_USERFORM_BILLCOUNTRY_NAME, $vcontent );
+					$var['params']['billCountry'] = array( 'list', _AEC_USERFORM_BILLCOUNTRY_NAME.$pf, $vcontent );
 					break;
 				case 'country3_list':
 					$countries = AECToolbox::getCountryCodeList( 'num' );
-
-					$countrylist[] = mosHTML::makeOption( '" disabled="disabled', COUNTRYCODE_SELECT );
 
 					if ( empty( $vcontent ) ) {
 						$vcontent = 826;
@@ -4074,6 +4096,8 @@ class XMLprocessor extends processor
 					$conversion = AECToolbox::ISO3166_conversiontable( 'num', 'a2' );
 
 					$countrylist = array();
+					$countrylist[] = mosHTML::makeOption( '" disabled="disabled', COUNTRYCODE_SELECT );
+
 					foreach ( $countries as $country ) {
 						if ( defined( 'COUNTRYCODE_' . $conversion[$country] ) ) {
 							$cname = constant( 'COUNTRYCODE_' . $conversion[$country] );
@@ -4083,23 +4107,25 @@ class XMLprocessor extends processor
 							}
 
 							$countrylist[] = mosHTML::makeOption( $country, $cname );
+						} elseif ( is_null( $country ) ) {
+							$countrylist[] = mosHTML::makeOption( '" disabled="disabled', " -- -- -- -- -- -- " );
 						}
 					}
 
 					$var['params']['lists']['billCountry'] = mosHTML::selectList( $countrylist, 'billCountry', 'size="1"', 'value', 'text', $vcontent );
-					$var['params']['billCountry'] = array( 'list', _AEC_USERFORM_BILLCOUNTRY_NAME, $vcontent );
+					$var['params']['billCountry'] = array( 'list', _AEC_USERFORM_BILLCOUNTRY_NAME.$pf, $vcontent );
 					break;
 				case 'country':
-					$var['params']['billCountry'] = array( 'inputC', _AEC_USERFORM_BILLCOUNTRY_NAME, _AEC_USERFORM_BILLCOUNTRY_NAME, $vcontent );
+					$var['params']['billCountry'] = array( 'inputC', _AEC_USERFORM_BILLCOUNTRY_NAME.$pf, _AEC_USERFORM_BILLCOUNTRY_NAME, $vcontent );
 					break;
 				case 'phone':
-					$var['params']['billPhone'] = array( 'inputC', _AEC_USERFORM_BILLPHONE_NAME, _AEC_USERFORM_BILLPHONE_NAME, $vcontent );
+					$var['params']['billPhone'] = array( 'inputC', _AEC_USERFORM_BILLPHONE_NAME.$pf, _AEC_USERFORM_BILLPHONE_NAME, $vcontent );
 					break;
 				case 'fax':
-					$var['params']['billFax'] = array( 'inputC', _AEC_USERFORM_BILLFAX_NAME, _AEC_USERFORM_BILLPHONE_NAME, $vcontent );
+					$var['params']['billFax'] = array( 'inputC', _AEC_USERFORM_BILLFAX_NAME.$pf, _AEC_USERFORM_BILLPHONE_NAME, $vcontent );
 					break;
 				case 'company':
-					$var['params']['billCompany'] = array( 'inputC', _AEC_USERFORM_BILLCOMPANY_NAME, _AEC_USERFORM_BILLCOMPANY_NAME, $vcontent );
+					$var['params']['billCompany'] = array( 'inputC', _AEC_USERFORM_BILLCOMPANY_NAME.$pf, _AEC_USERFORM_BILLCOMPANY_NAME, $vcontent );
 					break;
 			}
 		}
@@ -4706,6 +4732,34 @@ class aecSettings
 		$currency_code_list = AECToolbox::aecCurrencyField( true, true, true );
 
 		$this->lists[$name] = mosHTML::selectList( $currency_code_list, $name, 'size="10"', 'value', 'text', $value );
+
+		return 'list';
+	}
+
+	function remap_list_country( $name, $value )
+	{
+		$country_code_list = AECToolbox::getCountryCodeList();
+
+		$code_list = array();
+		foreach ( $country_code_list as $country ) {
+			$code_list[] = mosHTML::makeOption( $country, constant( '_AEC_LANG_' . $country ) );
+		}
+
+		$this->lists[$name] = mosHTML::selectList( $code_list, $name.'[]', 'size="10" multiple="multiple"', 'value', 'text', $value );
+
+		return 'list';
+	}
+
+	function remap_list_country_full( $name, $value )
+	{
+		$country_code_list = AECToolbox::getISO3166_1a2_codes();
+
+		$code_list = array();
+		foreach ( $country_code_list as $country ) {
+			$code_list[] = mosHTML::makeOption( $country, $country . " - " . constant( '_AEC_LANG_' . $country ) );
+		}
+
+		$this->lists[$name] = mosHTML::selectList( $code_list, $name.'[]', 'size="10" multiple="multiple"', 'value', 'text', $value );
 
 		return 'list';
 	}
@@ -6128,7 +6182,13 @@ class SubscriptionPlan extends serialParamDBTable
 		if ( $pp->loadName( strtolower( $processor ) ) ) {
 			$pp->init();
 			$pp->getInfo();
-			$metaUser->focusSubscription->recurring = $pp->is_recurring();
+
+			// Check whether we have a custome choice set
+			if ( isset( $metaUser->focusSubscription->custom_params[$pp->id."_recurring"] ) ) {
+				$metaUser->focusSubscription->recurring = $pp->is_recurring( $metaUser->focusSubscription->custom_params[$pp->id."_recurring"] );
+			} else {
+				$metaUser->focusSubscription->recurring = $pp->is_recurring();
+			}
 		} else {
 			$metaUser->focusSubscription->recurring = 0;
 		}
@@ -11582,7 +11642,7 @@ class Subscription extends serialParamDBTable
 		}
 
 		if ( !$adminonly ) {
-			if ( aecJoomla15check() ) {aecDebug("finally_sending");
+			if ( aecJoomla15check() ) {
 				JUTility::sendMail( $adminEmail2, $adminEmail2, $email, $subject, $message );
 			} else {
 				mosMail( $adminEmail2, $adminName2, $email, $subject, $message );
@@ -13094,7 +13154,11 @@ class AECToolbox
 		}
 
 		if ( !empty( $aecConfig->cfg['countries_top'] ) ) {
-			$countries = array_merge( $aecConfig->cfg['countries_top'], array_diff( $aecConfig->cfg['countries_top'] , $countries ) );
+			//  Take out top countries
+			$diff = array_diff( $countries, $aecConfig->cfg['countries_top'] );
+
+			// Merge top countries to beginning of list
+			$countries = array_merge( $aecConfig->cfg['countries_top'], array( null ), $diff );
 		}
 
 		if ( $format ) {
@@ -13126,8 +13190,8 @@ class AECToolbox
 
 	function ISO3166_conversiontable( $type1, $type2 )
 	{
-		$list1 = call_user_func( array( 'AECToolbox', 'getISO3166_' . $type1 . '_codes' ) );
-		$list2 = call_user_func( array( 'AECToolbox', 'getISO3166_' . $type1 . '_codes' ) );
+		$list1 = call_user_func( array( 'AECToolbox', 'getISO3166_1' . $type1 . '_codes' ) );
+		$list2 = call_user_func( array( 'AECToolbox', 'getISO3166_1' . $type2 . '_codes' ) );
 
 		return array_combine( $list1, $list2 );
 	}
@@ -13176,19 +13240,19 @@ class AECToolbox
 
 	function getISO3166_1num_codes()
 	{
-		return array( 004, 248, 008, 012, 016, 020, 024, 660, 010, 028, 032, 051, 533, 036, 040, 031, 044, 048, 050, 052,
-						112, 056, 084, 204, 060, 064, 068, 070, 072, 074, 076, 086, 096, 100, 854, 108, 116, 120, 124, 132,
-						136, 140, 148, 152, 156, 162, 166, 170, 174, 178, 180, 184, 188, 384, 191, 192, 196, 203, 208, 262,
-						212, 214, 218, 818, 222, 226, 232, 233, 231, 238, 234, 242, 246, 250, 254, 258, 260, 266, 270, 268,
-						276, 288, 292, 300, 304, 308, 312, 316, 320, 831, 324, 624, 328, 332, 334, 336, 340, 344, 348, 352,
-						356, 360, 364, 368, 372, 833, 376, 380, 388, 392, 832, 400, 398, 404, 296, 408, 410, 414, 417, 418,
-						428, 422, 426, 430, 434, 438, 440, 442, 446, 807, 450, 454, 458, 462, 466, 470, 584, 474, 478, 480,
-						175, 484, 583, 498, 492, 496, 499, 500, 504, 508, 104, 516, 520, 524, 528, 530, 540, 554, 558, 562,
-						566, 570, 574, 580, 578, 512, 586, 585, 275, 591, 598, 600, 604, 608, 612, 616, 620, 630, 634, 638,
-						642, 643, 646, 652, 654, 659, 662, 663, 666, 670, 882, 674, 678, 682, 686, 688, 690, 694, 702, 703,
-						705, 090, 706, 710, 239, 724, 144, 736, 740, 744, 748, 752, 756, 760, 158, 762, 834, 764, 626, 768,
-						772, 776, 780, 788, 792, 795, 796, 798, 800, 804, 784, 826, 840, 581, 858, 860, 548, 862, 704, 092,
-						850, 876, 732, 887, 894, 716 );
+		return array( '004', '248', '008', '012', '016', '020', '024', '660', '010', '028', '032', '051', '533', '036', '040', '031', '044', '048', '050', '052',
+						'112', '056', '084', '204', '060', '064', '068', '070', '072', '074', '076', '086', '096', '100', '854', '108', '116', '120', '124', '132',
+						'136', '140', '148', '152', '156', '162', '166', '170', '174', '178', '180', '184', '188', '384', '191', '192', '196', '203', '208', '262',
+						'212', '214', '218', '818', '222', '226', '232', '233', '231', '238', '234', '242', '246', '250', '254', '258', '260', '266', '270', '268',
+						'276', '288', '292', '300', '304', '308', '312', '316', '320', '831', '324', '624', '328', '332', '334', '336', '340', '344', '348', '352',
+						'356', '360', '364', '368', '372', '833', '376', '380', '388', '392', '832', '400', '398', '404', '296', '408', '410', '414', '417', '418',
+						'428', '422', '426', '430', '434', '438', '440', '442', '446', '807', '450', '454', '458', '462', '466', '470', '584', '474', '478', '480',
+						'175', '484', '583', '498', '492', '496', '499', '500', '504', '508', '104', '516', '520', '524', '528', '530', '540', '554', '558', '562',
+						'566', '570', '574', '580', '578', '512', '586', '585', '275', '591', '598', '600', '604', '608', '612', '616', '620', '630', '634', '638',
+						'642', '643', '646', '652', '654', '659', '662', '663', '666', '670', '882', '674', '678', '682', '686', '688', '690', '694', '702', '703',
+						'705', '090', '706', '710', '239', '724', '144', '736', '740', '744', '748', '752', '756', '760', '158', '762', '834', '764', '626', '768',
+						'772', '776', '780', '788', '792', '795', '796', '798', '800', '804', '784', '826', '840', '581', '858', '860', '548', '862', '704', '092',
+						'850', '876', '732', '887', '894', '716' );
 	}
 
 	/**
