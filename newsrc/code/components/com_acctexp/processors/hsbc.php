@@ -34,10 +34,12 @@ class processor_hsbc extends XMLprocessor
 	{
 		$actions = parent::getActions( $invoice, $subscription );
 
-		if ( ( $subscription->status == 'Cancelled' ) || ( $invoice->transaction_date == '0000-00-00 00:00:00' ) ) {
+		if ( !in_array( $subscription->status, array( 'Active', 'Trial', 'Pending' ) ) || ( $invoice->transaction_date == '0000-00-00 00:00:00' ) ) {
 			if ( isset( $actions['cancel'] ) && $subscription->recurring ) {
 				unset( $actions['cancel'] );
 			}
+		} elseif ( isset( $actions['cancel'] ) && !$subscription->recurring ) {
+			unset( $actions['cancel'] );
 		}
 
 		return $actions;
@@ -136,7 +138,7 @@ aecDebug($var);
 		$var = $this->getCCform( $var, $values );
 
 		if ( !empty( $this->settings['promptAddress'] ) ) {
-			$values = array( 'firstname*', 'lastname*', 'company', 'address*', 'address2*', 'city*', 'zip*', 'state_usca', 'country3_list*' );
+			$values = array( 'firstname*', 'lastname*', 'company', 'address*', 'address2', 'city*', 'zip*', 'state_usca', 'country3_list*' );
 		} else {
 			$values = array( 'firstname', 'lastname' );
 		}
@@ -221,9 +223,15 @@ aecDebug($var);
 						. '<FirstName DataType="String">' . trim( $request->int_var['params']['billFirstName'] ) . '</FirstName>'
 						. '<LastName DataType="String">' . trim( $request->int_var['params']['billLastName'] ) . '</LastName>'
 						. '<PostalCode DataType="String">' . trim( $request->int_var['params']['billZip'] ) . '</PostalCode>'
-						. '<Street1 DataType="String">' . trim( $request->int_var['params']['billAddress'] ) . '</Street1>'
-						. '<Street2 DataType="String">' . trim( $request->int_var['params']['billAddress2'] ) . '</Street2>'
-						. '<StateProv DataType="String">' . trim( $request->int_var['params']['billState'] ) . '</StateProv>'
+						;
+
+			if ( !empty( $request->int_var['params']['billAddress2'] ) ) {
+				$content .= '<Street1 DataType="String">' . trim( $request->int_var['params']['billAddress'] ) . " " . trim( $request->int_var['params']['billAddress2'] ) . '</Street1>';
+			} else {
+				$content .= '<Street1 DataType="String">' . trim( $request->int_var['params']['billAddress'] ) . '</Street1>';
+			}
+
+			$content .= '<StateProv DataType="String">' . trim( $request->int_var['params']['billState'] ) . '</StateProv>'
 						;
 		} else {
 			$content .=	'<FirstName DataType="String">' . trim( $request->int_var['params']['billFirstName'] ) . '</Type>'
@@ -241,7 +249,7 @@ aecDebug($var);
 		$content .=	 '<Transaction>'
 					. '<Type DataType="String">Auth</Type>'
 					;
-
+aecDebug($request->int_var['params']);
 		// Payer Authentication Details
 		if ( $this->settings['pas'] ) {
 			$pac = $this->getPACpostback( $request->int_var['params'] );

@@ -471,10 +471,12 @@ class metaUser
 	{
 		$database = &JFactory::getDBO();
 
-		$query = 'SELECT `id`' . ( $simple ? '' : ', `plan`, `type`, `expiration`, `recurring`' )
+		$query = 'SELECT `id`' . ( $simple ? '' : ', `status`, `plan`, `type`, `expiration`, `recurring`' )
 				. ' FROM #__acctexp_subscr'
 				. ' WHERE `userid` = \'' . (int) $this->userid . '\''
 				. ' AND `primary` = \'0\''
+				. ' AND `status` != \'Expired\''
+				. ' AND `status` != \'Closed\''
 				. ' ORDER BY `lastpay_date` DESC'
 				;
 		$database->setQuery( $query );
@@ -5031,7 +5033,14 @@ class aecHTML
 
 		$return .= $table ? '<tr><td class="cleft">' : '<p>';
 
+		$sx = "";
 		if ( !empty( $row[1] ) ) {
+			if ( strpos( $row[1], '*' ) ) {
+				$sx = '<span class="aec_required">*</span>';
+
+				$row[1] = substr( $row[1], 0, -1 );
+			}
+
 			$return .= '<strong>' . $row[1] . ':</strong>';
 		}
 
@@ -5043,16 +5052,16 @@ class aecHTML
 				$return .= '<input type="submit" class="button" name="' . $name . '" value="' . $value . '" />' . "\n";
 				break;
 			case "inputA":
-				$return .= '<input name="' . $name . '" type="text" size="4" maxlength="5" value="' . $value . '"/>';
+				$return .= '<input name="' . $name . '" type="text" size="4" maxlength="5" value="' . $value . '"/>' . $sx;
 				break;
 			case "inputB":
-				$return .= '<input class="inputbox" type="text" name="' . $name . '" size="2" maxlength="10" value="' . $value . '" />';
+				$return .= '<input class="inputbox" type="text" name="' . $name . '" size="2" maxlength="10" value="' . $value . '" />' . $sx;
 				break;
 			case "inputC":
-				$return .= '<input type="text" size="20" name="' . $name . '" class="inputbox" value="' . $value . '" />';
+				$return .= '<input type="text" size="20" name="' . $name . '" class="inputbox" value="' . $value . '" />' . $sx;
 				break;
 			case "inputD":
-				$return .= '<textarea align="left" cols="60" rows="5" name="' . $name . '" />' . $value . '</textarea>';
+				$return .= '<textarea align="left" cols="60" rows="5" name="' . $name . '" />' . $value . '</textarea>' . $sx;
 				break;
 			case 'radio':
 				$return = '<tr><td class="cleft">';
@@ -5061,11 +5070,11 @@ class aecHTML
 				break;
 			case 'checkbox':
 				$return = '<tr><td class="cleft">';
-				$return .= '<input type="checkbox" name="' . $row[1] . '"' . ( ( $row[3] === $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" />';
+				$return .= '<input type="checkbox" name="' . $row[1] . '"' . ( ( $row[3] === $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" />' . $sx;
 				$return .= '</td><td class="cright">' . $row[4];
 				break;
 			case "list":
-				$return .= $lists[$value ? $value : $name];
+				$return .= $lists[$value ? $value : $name] . $sx;
 				break;
 			case 'tabberstart':
 				$return = '<tr><td colspan="2"><div id="myTabs">';

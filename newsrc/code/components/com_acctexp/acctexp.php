@@ -901,6 +901,7 @@ function subscriptionDetails( $option, $sub='overview' )
 
 	$invoiceactionlink = 'index.php?option=' . $option . '&amp;task=%s&amp;%s';
 
+	$handledsubs = array();
 	foreach ( $invoiceList as $invoiceid ) {
 		$invoice = $invoices[$invoiceid]['object'];
 
@@ -921,12 +922,16 @@ function subscriptionDetails( $option, $sub='overview' )
 		}
 
 		$found = false;
-		foreach ( $subList as $ssub ) {
-			if ( $ssub->id == $invoice->subscr_id ) {
-				$tempsubscription = $ssub;
+		if ( !in_array( $invoice->subscr_id, $handledsubs ) ) {
+			foreach ( $subList as $ssub ) {
+				if ( $ssub->id == $invoice->subscr_id ) {
+					$tempsubscription = $ssub;
 
-				$found = true;
-				continue;
+					$found = true;
+
+					$handledsubs[] = $ssub->id;
+					continue;
+				}
 			}
 		}
 
