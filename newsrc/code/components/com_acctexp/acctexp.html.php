@@ -255,7 +255,11 @@ class HTML_frontEnd
 							if ( $subscription->lifetime ) {
 								echo '<p>' . _AEC_ISLIFETIME . '</p>';
 							} else {
-								echo '<p>' . _AEC_WILLEXPIRE . ': ' . HTML_frontend::DisplayDateInLocalTime( $subscription->expiration ) . '</p>';
+								if ( $subscription->recurring ) {
+									echo '<p>' . _AEC_WILLRENEW . ': ' . HTML_frontend::DisplayDateInLocalTime( $subscription->expiration ) . '</p>';
+								} else {
+									echo '<p>' . _AEC_WILLEXPIRE . ': ' . HTML_frontend::DisplayDateInLocalTime( $subscription->expiration ) . '</p>';
+								}
 							}
 
 							?></div><?php
@@ -1400,7 +1404,7 @@ class Payment_HTML
 		if ( $var == "<p></p>" ) {
 			$var = null;
 		}
-
+aecDebug("vardump");aecDebug($var);
 		if ( !empty( $var ) ) { ?>
 		<table width="100%" id="checkoutbox">
 			<tr><th><?php echo _CHECKOUT_TITLE; ?></th></tr>

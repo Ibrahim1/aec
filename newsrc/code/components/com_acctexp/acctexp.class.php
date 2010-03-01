@@ -422,7 +422,7 @@ class metaUser
 	{
 		$database = &JFactory::getDBO();
 
-		$query = 'SELECT `a`.`id`, `a`.`plan`, `a`.`expiration`, `b`.`name`'
+		$query = 'SELECT `a`.`id`, `a`.`plan`, `a`.`expiration`, `a`.`recurring`, `b`.`name`'
 				. ' FROM #__acctexp_subscr AS a'
 				. ' INNER JOIN #__acctexp_plans AS b ON a.plan = b.id'
 				. ' WHERE `userid` = \'' . (int) $this->userid . '\''
@@ -3858,10 +3858,10 @@ class XMLprocessor extends processor
 				$vcontent = '';
 			}
 
-			if ( strpos( '*', $value ) ) {
+			if ( strpos( $value, '*' ) ) {
 				$pf = '*';
 
-				$value = substr( $value, -1, 1 );
+				$value = substr( $value, 0, -1 );
 			} else {
 				$pf = '';
 			}
@@ -3931,10 +3931,10 @@ class XMLprocessor extends processor
 				$vcontent = '';
 			}
 
-			if ( strpos( '*', $value ) ) {
+			if ( strpos( $value, '*' ) ) {
 				$pf = '*';
 
-				$value = substr( $value, -1, 1 );
+				$value = substr( $value, 0, -1 );
 			} else {
 				$pf = '';
 			}
@@ -14219,6 +14219,8 @@ class AECToolbox
 
 		$adminlist = array();
 		if ( $aecConfig->cfg['email_default_admins'] ) {
+			$database = &JFactory::getDBO();
+
 			$query = 'SELECT email, sendEmail'
 			. ' FROM #__users'
 			. ' WHERE ( gid = 24 OR gid = 25 )'

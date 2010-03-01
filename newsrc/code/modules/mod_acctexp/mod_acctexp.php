@@ -44,7 +44,7 @@ if ( $user->id ) {
 			echo AECMenuHelper::getExpirationSimple();
 		} else {
 			$metaUser = new metaUser( $user->id );
-			
+
 			$subscriptions = $metaUser->getAllCurrentSubscriptionsInfo();
 
 			foreach ( $subscriptions as $subscription ) {
@@ -52,7 +52,7 @@ if ( $user->id ) {
 
 				echo "<h4>" . $subscription->name . "</h4>";
 
-				echo AECMenuHelper::textExpiration( $subscription->expiration );
+				echo AECMenuHelper::textExpiration( $subscription->expiration, $subscription->recurring );
 
 				echo '</div>';
 			}
@@ -106,12 +106,12 @@ class AECMenuHelper
 		return null;
 	}
 
-	function textExpiration( $expiration )
+	function textExpiration( $expiration, $recurring=false )
 	{
 		if ( empty( $expiration ) ) {
 			return AECMenuHelper::textUnlimited();
 		} else {
-			return AECMenuHelper::textExpirationDate( $expiration );
+			return AECMenuHelper::textExpirationDate( $expiration, $recurring );
 		}
 	}
 
@@ -120,7 +120,7 @@ class AECMenuHelper
 		return "<p>" . _ACCOUNT_UNLIMIT . "</p>";
 	}
 
-	function textExpirationDate( $expiration )
+	function textExpirationDate( $expiration, $recurring )
 	{
 		global $mainframe, $aecConfig;
 
@@ -135,7 +135,11 @@ class AECMenuHelper
 
 		$retVal = strftime( $aecConfig->cfg['display_date_frontend'], ( strtotime( $expiration ) + $timeOffset*3600 ) );
 
-		return "<p>" . _ACCOUNT_EXPIRES . ": " . $retVal . "</p>";
+		if ( $recurring ) {
+			return "<p>" . _ACCOUNT_RENEWAL . ": " . $retVal . "</p>";
+		} else {
+			return "<p>" . _ACCOUNT_EXPIRES . ": " . $retVal . "</p>";
+		}
 	}
 }
 

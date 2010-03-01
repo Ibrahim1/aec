@@ -120,6 +120,7 @@ define( '_INVOICEPRINT_PAIDSTATUS_PAID', 'Denna faktura betalades den %s'); //Th
 define( '_AEC_YOUSURE', 'Är du säker?'); //Are you sure?
 
 define( '_AEC_WILLEXPIRE', 'This membership will expire');
+define( '_AEC_WILLRENEW', 'This membership will renew');
 define( '_AEC_ISLIFETIME', 'Lifetime Membership');
 
 // --== EXPIRATION PAGE ==--
