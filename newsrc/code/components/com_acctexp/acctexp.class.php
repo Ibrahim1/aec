@@ -13210,11 +13210,8 @@ class AECToolbox
 		}
 
 		if ( !empty( $aecConfig->cfg['countries_top'] ) ) {
-			//  Take out top countries
-			$diff = array_diff( $countries, $aecConfig->cfg['countries_top'] );
-
 			// Merge top countries to beginning of list
-			$countries = array_merge( $aecConfig->cfg['countries_top'], array( null ), $diff );
+			$countries = array_merge( $aecConfig->cfg['countries_top'], array( null ), $countries );
 		}
 
 		if ( $format ) {
