@@ -127,6 +127,10 @@ define( '_AEC_WTFORM_BANKNUMBER_DESC', 'The Bank Number');
 define( '_AEC_WTFORM_BANKNAME_NAME', 'Bank Name');
 define( '_AEC_WTFORM_BANKNAME_DESC', 'The Name of the Bank');
 
+// Generic Form Info
+define( '_AEC_FORMINFO_TABNAME', 'Info');
+define( '_AEC_FORMINFO_ASTERISK', 'Fields marked with an asterix * are required');
+
 // Paypal Settings
 define( '_CFG_PAYPAL_BUSINESS_NAME', '商业ID:');
 define( '_CFG_PAYPAL_BUSINESS_DESC', '你在PayPal上的商业ID(email).');

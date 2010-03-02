@@ -127,6 +127,10 @@ define( '_AEC_WTFORM_BANKNUMBER_DESC', 'Le code banque');
 define( '_AEC_WTFORM_BANKNAME_NAME', 'Nom de la banque');
 define( '_AEC_WTFORM_BANKNAME_DESC', 'Le nom de la banque');
 
+// Generic Form Info
+define( '_AEC_FORMINFO_TABNAME', 'Info');
+define( '_AEC_FORMINFO_ASTERISK', 'Fields marked with an asterix * are required');
+
 // Parametres pour Paypal
 define( '_CFG_PAYPAL_BUSINESS_NAME', 'Identifiant marchand :');
 define( '_CFG_PAYPAL_BUSINESS_DESC', 'Votre identifiant marchand (courriel) sur PayPal.');

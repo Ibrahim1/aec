@@ -552,6 +552,16 @@ width: 50%;
 text-align: left !important;
 }
 
+td.cboth {
+padding: 2px;
+margin: 0px;
+text-align: center !important;
+}
+
+td.cboth p {
+text-align: center !important;
+}
+
 table.amount {
 float:left;
 width: 100%;
