@@ -5064,7 +5064,11 @@ class aecHTML
 			$value = '';
 		}
 
-		$return .= $table ? '<tr><td class="cleft">' : '<p>';
+		if ( !empty( $row[2] ) ) {
+			$return .= $table ? '<tr title="' . $row[2] . '"><td class="cleft">' : '<p>';
+		} else {
+			$return .= $table ? '<tr><td class="cleft">' : '<p>';
+		}
 
 		$sx = "";
 		if ( !empty( $row[1] ) ) {
@@ -5157,9 +5161,9 @@ class aecHTML
 			default:
 				if ( !empty( $row[0] ) ) {
 					if ( empty( $row[1] ) ) {
-						$return .= '<tr><td class="cboth" colspan="2"><' . $row[0] . '>' . $row[2] . $value . '</' . $row[0] . '></td></tr>';
+						$return = '<tr><td class="cboth" colspan="2"><' . $row[0] . '>' . $row[2] . $value . '</' . $row[0] . '></td></tr>';
 					} else {
-						$return .= '<' . $row[0] . '>' . $row[2] . $value . '</' . $row[0] . '>';
+						$return = '<' . $row[0] . '>' . $row[2] . $value . '</' . $row[0] . '>';
 					}
 				} elseif ( empty( $row[0] ) && empty( $row[2] ) ) {
 					$return .= '<' . $row[1] . $value . ' />';
@@ -8944,7 +8948,7 @@ aecDebug("InvoiceToCheckout");
 
 		if ( !empty( $this->cartobject ) && !empty( $this->cart ) ) {
 			$response = $this->pp->checkoutProcess( $var, $targetUser, $new_subscription, $this->invoice, $this->cart );
-		} else {
+		} else {aecDebug("this->pp->checkoutProcess");
 			$response = $this->pp->checkoutProcess( $var, $targetUser, $new_subscription, $this->invoice );
 		}
 aecDebug("internalCheckout");aecDebug($response);
@@ -9011,7 +9015,7 @@ aecDebug("processorResponse");aecDebug($response);
 
 		$response = $pp->customAction( $action, $invoice, $this->metaUser );
 
-		$invoice->processorResponse( $pp, $response, '', true );
+		$response = $invoice->processorResponse( $pp, $response, '', true );
 
 		if ( isset( $response['cancel'] ) ) {
 			HTML_Results::cancel( 'com_acctexp' );
@@ -9034,7 +9038,7 @@ aecDebug("processorResponse");aecDebug($response);
 
 		$response = $pp->customAction( $action, $invoice, $this->metaUser );
 
-		$invoice->processorResponse( $pp, $response, '', true );
+		$response = $invoice->processorResponse( $pp, $response, '', true );
 
 		if ( isset( $response['cancel'] ) ) {
 			HTML_Results::cancel( 'com_acctexp' );
@@ -9856,6 +9860,8 @@ class Invoice extends serialParamDBTable
 		} else {aecDebug("notificationSuccess");
 			$pp->notificationSuccess( $response );
 		}
+aecDebug("invoice->processorresponse");aecDebug($response);
+		return $response;
 	}
 
 	function pay( $multiplicator=1 )
