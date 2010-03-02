@@ -92,16 +92,16 @@ aecDebug("checkoutAction");
 			} elseif ( !empty( $request->int_var['params']['cardNumber'] ) ) {aecDebug("preparing regular checkout");
 				$check = aecGetParam( 'CcpaResultsCode', null, true, array( 'int' ) );
 
-				if ( !is_null( $check ) ) {
+				if ( !is_null( $check ) ) {aecDebug("isn't null - parent::checkoutProcess'");
 					return parent::checkoutProcess( $request );
 				} else {
 					$var = $this->createGatewayLink( $request );
-
+aecDebug("else - POSTprocessor::checkoutAction'");
 					return POSTprocessor::checkoutAction( $request, $var );
 				}
 			}
 		}
-
+aecDebug("nullReturn parent::checkoutAction'");
 		return parent::checkoutAction( $request );
 	}
 
@@ -145,16 +145,18 @@ aecDebug($var);
 
 		$var = $this->getUserform( $var, $values, $request->metaUser );
 
+		$var = $this->getFormInfo( $var, array( 'asterisk' ) );
+
 		return $var;
 	}
 
 	function checkoutProcess( $request )
-	{
+	{aecDebug("checkoutProcess");
 		if ( $this->settings['pas'] && empty( $request->int_var['params']['CcpaResultsCode'] ) ) {
 			$request->invoice->preparePickup( $request->int_var['params'] );
-
+aecDebug("preparePickup, return doublecheckout");
 			return array( 'doublecheckout' => true );
-		} else {
+		} else {aecDebug("go to parent::checkoutProcess");
 			return parent::checkoutProcess( $request );
 		}
 	}
@@ -255,6 +257,14 @@ aecDebug($request->int_var['params']);
 			$pac = $this->getPACpostback( $request->int_var['params'] );
 aecDebug($pac);
 			if ( !$pac['error'] ) {
+				if ( $pac['cpc'] <> 2 ) {
+					$text	= "PAC Responded with bad CcpaResultsCode - " . $request->int_var['CcpaResultsCode'] . " - Please check on this transaction manually";
+					$tags	= "processing,checkout,security";
+					$params	= array( 'invoice_number' => $request->invoice->invoice_number );
+
+					$this->fileError( $text, 128, $tags, $params );
+				}
+
 				$content .=	 '<PayerSecurityLevel DataType="S32">' . $pac['level'] . '</PayerSecurityLevel>'
 							. '<PayerAuthenticationCode DataType="String">' . urldecode( $pac['code'] ) . '</PayerAuthenticationCode>'
 							. '<PayerTxnId DataType="String">' . urlencode( $pac['txnid'] ) . '</PayerTxnId>'

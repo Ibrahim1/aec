@@ -3478,6 +3478,22 @@ class processor extends serialParamDBTable
 		return '<p>' . $this->settings['info'] . '</p>';
 	}
 
+	function fileError( $text, $level=128, $tags="", $params=array() )
+	{
+		$database = &JFactory::getDBO();
+
+		$eventlog = new eventLog( $database );
+
+		$t = explode( ',', $tags );
+		$t[] = $this->name;
+
+		if ( !is_string( $text ) ) {
+			$eventlog->issue( 'processor error', implode( ',', $t ), json_encode( $text ), $level );
+		} else {
+			$eventlog->issue( 'processor error', implode( ',', $t ), $text, $level, $params );
+		}
+	}
+
 	function exchangeSettings( $settings, $exchange )
 	{
 		 if ( !empty( $exchange ) ) {
@@ -4128,6 +4144,23 @@ class XMLprocessor extends processor
 					break;
 				case 'company':
 					$var['params']['billCompany'] = array( 'inputC', _AEC_USERFORM_BILLCOMPANY_NAME.$pf, _AEC_USERFORM_BILLCOMPANY_NAME, $vcontent );
+					break;
+			}
+		}
+
+		return $var;
+	}
+
+	function getFormInfo( $var=array(), $values=null )
+	{
+		if ( empty( $values ) ) {
+			$values = array( 'asterisk' );
+		}
+
+		foreach ( $values as $value ) {
+			switch ( strtolower( $value ) ) {
+				case 'asterisk':
+					$var['params']['asteriskInfo'] = array( 'p', 0, _AEC_FORMINFO_ASTERISK );
 					break;
 			}
 		}
