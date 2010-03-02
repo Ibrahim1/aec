@@ -9455,6 +9455,12 @@ class Invoice extends serialParamDBTable
 					$cart = $this->getObjUsage();
 
 					if ( $cart->id ) {
+						foreach ( $this->coupons as $coupon ) {
+							if ( !$cart->hasCoupon( $coupon ) ) {
+								$cart->addCoupon( $coupon );
+							}
+						}
+
 						$return = $cart->getAmount( $metaUser, $this->counter );
 
 						$this->amount = $return;
@@ -10837,7 +10843,7 @@ class aecCart extends serialParamDBTable
 				$this->params['overall_coupons'] = array();
 			}
 
-			if ( !in_array( $coupon_code, $this->content['overall_coupons'] ) ) {
+			if ( !in_array( $coupon_code, $this->params['overall_coupons'] ) ) {
 				$this->params['overall_coupons'][] = $coupon_code;
 			}
 		} elseif ( isset( $this->content[$id] ) ) {
