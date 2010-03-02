@@ -4188,10 +4188,10 @@ class XMLprocessor extends processor
 
 		// Create the xml string
 		$xml = $this->createRequestXML( $request );
-
+aecDebug("ogCheckout - aftercreate");
 		// Transmit xml to server
 		$response = $this->transmitRequestXML( $xml, $request );
-
+aecDebug("ogCheckout - aftertransmit");
 		if ( empty( $response['invoice'] ) ) {
 			$response['invoice'] = $request->invoice->invoice_number;
 		}
@@ -4202,7 +4202,7 @@ class XMLprocessor extends processor
 			$request->invoice = new Invoice( $database );
 			$request->invoice->loadInvoiceNumber( $response['invoice'] );
 		}
-
+aecDebug("ogCheckout - afterinvoicereload");
 		return $this->checkoutResponse( $request, $response );
 	}
 
@@ -4222,7 +4222,7 @@ class XMLprocessor extends processor
 				}
 				unset( $response['raw'] );
 			}
-
+aecDebug("ogCheckout - invoice->processorresponse");
 			return $request->invoice->processorResponse( $request->parent, $response, $resp, true );
 		} else {
 			return false;
@@ -8732,7 +8732,7 @@ class InvoiceFactory
 	function checkout( $option, $repeat=0, $error=null, $coupon=null )
 	{
 		$database = &JFactory::getDBO();
-
+aecDebug("checkout");
 		global $aecConfig;
 
 		if ( !$this->checkAuth( $option ) ) {
@@ -8832,7 +8832,7 @@ class InvoiceFactory
 	function InvoiceToCheckout( $option, $repeat=0, $error=null, $data=null )
 	{
 		global $mainframe;
-
+aecDebug("InvoiceToCheckout");
 		if ( $this->hasExceptions() ) {
 			$this->addressExceptions( $option );
 		} else {
@@ -8947,7 +8947,7 @@ class InvoiceFactory
 		} else {
 			$response = $this->pp->checkoutProcess( $var, $targetUser, $new_subscription, $this->invoice );
 		}
-
+aecDebug("internalCheckout");aecDebug($response);
 		if ( isset( $response['error'] ) ) {
 			$this->checkout( $option, true, $response['error'] );
 		} elseif ( isset( $response['doublecheckout'] ) ) {
@@ -8969,7 +8969,7 @@ class InvoiceFactory
 		$this->puffer( $option );
 
 		$this->invoice->processorResponse( $this->pp, $response );
-
+aecDebug("processorResponse");aecDebug($response);
 		if ( isset( $response['error'] ) ) {
 			$this->checkout( $option, true, $response['error'] );
 		} else {
@@ -9851,9 +9851,9 @@ class Invoice extends serialParamDBTable
 		$eventlog = new eventLog( $database );
 		$eventlog->issue( $short, $tags, $event, $level, $params, $forcedisplay );
 
-		if ( !empty( $notificationerror ) ) {
+		if ( !empty( $notificationerror ) ) {aecDebug("notificationError");
 			$pp->notificationError( $response, $notificationerror );
-		} else {
+		} else {aecDebug("notificationSuccess");
 			$pp->notificationSuccess( $response );
 		}
 	}

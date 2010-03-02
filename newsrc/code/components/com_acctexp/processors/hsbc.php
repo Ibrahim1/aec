@@ -257,8 +257,8 @@ aecDebug($request->int_var['params']);
 			$pac = $this->getPACpostback( $request->int_var['params'] );
 aecDebug($pac);
 			if ( !$pac['error'] ) {
-				if ( $pac['cpc'] <> 2 ) {
-					$text	= "PAC Responded with bad CcpaResultsCode - " . $request->int_var['CcpaResultsCode'] . " - Please check on this transaction manually";
+				if ( $pac['level'] <> 2 ) {
+					$text	= "PAC Responded with bad CcpaResultsCode - " . $request->int_var['params']['CcpaResultsCode'] . " - Please check on this transaction manually";
 					$tags	= "processing,checkout,security";
 					$params	= array( 'invoice_number' => $request->invoice->invoice_number );
 
