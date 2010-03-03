@@ -50,9 +50,9 @@ class mi_kunena extends MI
 
 		foreach ( $settings as $k => $v ) {
 			if ( isset( $this->settings[$k] ) ) {
-				$settings['lists'][$k]	= mosHTML::selectList( $ranklist, $k, 'size="4" multiple="multiple"', 'value', 'text', '' );
+				$settings['lists'][$k]	= mosHTML::selectList( $ranklist, $k, 'size="4"', 'value', 'text', '' );
 			} else {
-				$settings['lists'][$k]	= mosHTML::selectList( $ranklist, $k, 'size="4" multiple="multiple"', 'value', 'text', $this->settings[$k] );
+				$settings['lists'][$k]	= mosHTML::selectList( $ranklist, $k, 'size="4"', 'value', 'text', $this->settings[$k] );
 			}
 		}
 
