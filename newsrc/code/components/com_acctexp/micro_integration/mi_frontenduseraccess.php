@@ -60,7 +60,7 @@ class mi_frontenduseraccess
 	function action( $request )
 	{
 		if ( !empty( $this->settings['set_group'] ) && !empty( $this->settings['group'] ) ) {
-			$this->update_fua_group( $request->metaUser->userid, $this->settings['group'] );
+			$this->set_fua_group( $request->metaUser->userid, $this->settings['group'] );
 		}
 
 		return true;
@@ -69,10 +69,27 @@ class mi_frontenduseraccess
 	function expiration_action( $request )
 	{
 		if ( !empty( $this->settings['set_group_exp'] ) && !empty( $this->settings['group_exp'] ) ) {
-			$this->update_fua_group( $request->metaUser->userid, $this->settings['group_exp'] );
+			$this->set_fua_group( $request->metaUser->userid, $this->settings['group_exp'] );
 		}
 
 		return true;
+	}
+
+	function set_fua_group( $user_id, $fua_group )
+	{
+		$database = &JFactory::getDBO();
+
+		$query = 'SELECT `group_id`'
+				. ' FROM #__fua_userindex'
+				. ' WHERE `user_id` = \'' . $user_id . '\''
+				;
+		$database->setQuery( $query );
+
+		if ( $database->loadResult() ) {
+			$this->update_fua_group( $user_id, $fua_group );
+		} else {
+			$this->insert_fua_group( $user_id, $fua_group );
+		}
 	}
 
 	function update_fua_group( $user_id, $fua_group )
@@ -82,6 +99,18 @@ class mi_frontenduseraccess
 		$query = 'UPDATE #__fua_userindex'
 				. ' SET `group_id` = \'' . $fua_group . '\''
 				. ' WHERE `user_id` = \'' . $user_id . '\''
+				;
+		$database->setQuery( $query );
+		$database->query();
+	}
+
+	function insert_fua_group( $user_id, $fua_group )
+	{
+		$database = &JFactory::getDBO();
+
+		$query = 'INSERT INTO #__fua_userindex'
+				. ' (`group_id`, `user_id` )'
+				. 'VALUES ( \'' . $fua_group . '\', \'' . $user_id . '\' )'
 				;
 		$database->setQuery( $query );
 		$database->query();
