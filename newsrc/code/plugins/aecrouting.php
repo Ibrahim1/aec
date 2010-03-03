@@ -179,7 +179,7 @@ class plgSystemAECrouting extends JPlugin
 		include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
 
 		$vars = $this->getVars();
-
+print_r($vars);
 		if ( ( $vars['isreg'] || $vars['cbsregsv'] ) && $vars['int_reg'] ) {
 			// Joomla or CB registration...
 			if ( $vars['pfirst'] && !$vars['has_usage'] ) {
@@ -187,6 +187,9 @@ class plgSystemAECrouting extends JPlugin
 				global $mainframe;
 				$mainframe->redirect( 'index.php?option=com_acctexp&task=subscribe' );
 			} elseif ( !$vars['has_user'] && !$vars['has_usage'] && $vars['joms_regs'] && !$vars['pfirst'] ) {
+				global $mainframe;
+				$mainframe->redirect( 'index.php?option=com_acctexp&task=subscribe&aectoken=1' );
+			} elseif ( $vars['has_user'] && !$vars['has_usage'] && $vars['joms_regs'] ) {
 				global $mainframe;
 				$mainframe->redirect( 'index.php?option=com_acctexp&task=subscribe&aectoken=1' );
 			} elseif ( $vars['has_user'] && $vars['has_usage'] && $vars['joms_regs'] ) {
