@@ -152,7 +152,7 @@ aecDebug($var);
 
 	function checkoutProcess( $request )
 	{aecDebug("checkoutProcess");
-		if ( $this->settings['pas'] && empty( $request->int_var['params']['CcpaResultsCode'] ) ) {
+		if ( $this->settings['pas'] && is_null( $request->int_var['params']['CcpaResultsCode'] ) ) {
 			$request->invoice->preparePickup( $request->int_var['params'] );
 aecDebug("preparePickup, return doublecheckout");
 			return array( 'doublecheckout' => true );
@@ -228,7 +228,8 @@ aecDebug("preparePickup, return doublecheckout");
 						;
 
 			if ( !empty( $request->int_var['params']['billAddress2'] ) ) {
-				$content .= '<Street1 DataType="String">' . trim( $request->int_var['params']['billAddress'] ) . " " . trim( $request->int_var['params']['billAddress2'] ) . '</Street1>';
+				$content .= '<Street1 DataType="String">' . trim( $request->int_var['params']['billAddress'] ) . '</Street1>';
+				$content .= '<Street2 DataType="String">' . trim( $request->int_var['params']['billAddress2'] ) . '</Street2>';
 			} else {
 				$content .= '<Street1 DataType="String">' . trim( $request->int_var['params']['billAddress'] ) . '</Street1>';
 			}
