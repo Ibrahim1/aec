@@ -6238,7 +6238,7 @@ class SubscriptionPlan extends serialParamDBTable
 					}
 				}
 			}
-
+aecDebug("02_userselecttest");aecDebug($invoice->params);
 			// Check whether we have a custome choice set
 			if ( !is_null( $recurring_choice ) ) {
 				$metaUser->focusSubscription->recurring = $pp->is_recurring( $recurring_choice );
@@ -7380,9 +7380,13 @@ class InvoiceFactory
 						} else {
 							$processor_name = PaymentProcessor::getNameById( $processor );
 
-							$procrecurring = false;
+							if ( isset( $_POST['recurring'] ) ) {
+								$procrecurring = $_POST['recurring'];
+							} else {
+								$procrecurring = false;
+							}
 						}
-
+aecDebug("procrecurring");aecDebug($procrecurring);
 						$mpg = array_pop( array_keys( $pgroups ) );
 						if ( ( count( $pgroups ) > 1 ) || ( count( $pgroups[$mpg]['members'] ) > 1 ) ) {
 							// We have more than one item for this processor, create temporary cart
@@ -7409,9 +7413,6 @@ class InvoiceFactory
 							$invoice = new Invoice( $database );
 							$invoice->create( $this->userid, $this->cartobject->content[$member]['id'], $processor_name, null, true, $this, $procrecurring );
 						}
-
-						$invoice->addParams( array( 'userselect_recurring' => $procrecurring ) );
-						$invoice->storeload();
 
 						if ( $invoice->amount == "0.00" ) {
 							$invoice->pay();
@@ -7915,7 +7916,7 @@ class InvoiceFactory
 		if ( is_null( $recurring ) ) {
 			$recurring = aecGetParam( 'recurring', null );
 		}
-
+aecDebug("01_userselecttest");aecDebug($this->invoice->params);
 		if ( isset( $this->invoice->params['userselect_recurring'] ) ) {
 			$this->recurring = $this->invoice->params['userselect_recurring'];
 		} elseif ( !is_null( $recurring ) ) {
@@ -8863,7 +8864,7 @@ aecDebug("InvoiceToCheckout");
 					$int_var['var']		= $this->pp->checkoutAction( $int_var, $this->metaUser, null, $this->invoice, $int_var['objUsage'] );
 				}
 			}
-
+aecDebug("InvoiceToCheckout");
 			$int_var['params']	= $this->pp->getParamsHTML( $int_var['params'], $this->pp->getParams( $int_var['params'] ) );
 
 			if ( empty( $int_var['params'] ) ) {
@@ -8917,7 +8918,7 @@ aecDebug("InvoiceToCheckout");
 	}
 
 	function internalcheckout( $option )
-	{
+	{aecDebug("internalCheckout2");
 		$database = &JFactory::getDBO();
 
 		$this->metaUser = new metaUser( $this->userid );
@@ -8955,7 +8956,7 @@ aecDebug("InvoiceToCheckout");
 			$targetUser =& $this->metaUser;
 		}
 
-		if ( !empty( $this->cartobject ) && !empty( $this->cart ) ) {
+		if ( !empty( $this->cartobject ) && !empty( $this->cart ) ) {aecDebug("this->pp->checkoutProcess, cart");
 			$response = $this->pp->checkoutProcess( $var, $targetUser, $new_subscription, $this->invoice, $this->cart );
 		} else {aecDebug("this->pp->checkoutProcess");
 			$response = $this->pp->checkoutProcess( $var, $targetUser, $new_subscription, $this->invoice );
@@ -9586,6 +9587,10 @@ class Invoice extends serialParamDBTable
 
 		$this->params = array( 'creator_ip' => $_SERVER['REMOTE_ADDR'] );
 
+		if ( !is_null( $recurring_choice ) ) {
+			$this->params['userselect_recurring'] = $recurring_choice;
+		}
+
 		$this->computeAmount( $InvoiceFactory, $store, $recurring_choice );
 	}
 
@@ -9907,6 +9912,8 @@ aecDebug("invoice->processorresponse");aecDebug($response);
 					unset( $this->params[$key] );
 				}
 			}
+
+			unset( $this->params['aec_pickup'] );
 		}
 
 		if ( !empty( $this->usage ) ) {
@@ -10403,7 +10410,16 @@ aecDebug("invoice->processorresponse");aecDebug($response);
 
 	function preparePickup( $array )
 	{
-		$this->addParams( array( "aec_pickup" => array_keys( $array ) ) );
+		// Prevent double-saving of system parameters by bad integrations
+		$exceptions = array( 'creator_ip', 'userselect_recurring' );
+
+		foreach ( $exceptions as $key ) {
+			if ( isset( $array[$key] ) ) {
+				unset( $array[$key] );
+			}
+		}
+
+		$this->addParams( array( 'aec_pickup' => array_keys( $array ) ) );
 
 		$this->addParams( $array );
 
@@ -10412,9 +10428,13 @@ aecDebug("invoice->processorresponse");aecDebug($response);
 
 	function savePostParams( $array )
 	{
-		unset( $array['task'] );
-		unset( $array['option'] );
-		unset( $array['invoice'] );
+		$delete = array( 'task', 'option', 'invoice' );
+
+		foreach ( $delete as $key ) {
+			if ( isset( $array[$key] ) ) {
+				unset( $array[$key] );
+			}
+		}
 
 		$this->addParams( $array );
 		return true;
