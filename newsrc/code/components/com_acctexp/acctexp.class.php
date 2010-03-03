@@ -8780,7 +8780,16 @@ aecDebug("checkout");
 				// Or a free trial that the user CAN use
 				|| ( $this->plan->params['trial_free'] && empty( $this->invoice->counter ) )
 			) {
-				// Then mark payed
+				// mark paid
+				if ( $this->invoice->pay() !== false ) {
+					return $this->thanks( $option, false, true );
+				}
+			}
+
+			return notAllowed( $option );
+		} elseif ( in_array( strtolower( $this->processor ), $exceptproc ) ) {
+			if ( !empty( $this->invoice->made_free ) ) {
+				// mark paid
 				if ( $this->invoice->pay() !== false ) {
 					return $this->thanks( $option, false, true );
 				}
@@ -9462,6 +9471,8 @@ class Invoice extends serialParamDBTable
 						}
 
 						$return = $cart->getAmount( $metaUser, $this->counter );
+
+						$allfree = $cart->checkAllFree( $metaUser, $this->counter );
 
 						$this->amount = $return;
 					} elseif ( isset( $this->params->cart ) ) {
@@ -11064,6 +11075,21 @@ class aecCart extends serialParamDBTable
 		$max = array_pop( array_keys( $checkout ) );
 
 		return $checkout[$max]['cost_total'];
+	}
+
+	function checkAllFree( $metaUser, $counter=0 )
+	{
+		$co = $this->getCheckout( $metaUser, $counter=0 );
+
+		foreach ( $co as $entry ) {
+			if ( is_object( $entry ) ) {
+				if ( !$entry['terms']->checkFree() ) {
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
 	function getTopPlan()
