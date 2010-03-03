@@ -34,10 +34,10 @@ class mi_googleanalytics
 		$database = &JFactory::getDBO();
 
 		global $mainframe;
-				
+
 		$text = '<script type="text/javascript">'
 				. 'var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");'
-				. 'document.write(unescape("%3Cscript src=\'" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript\'%3E%3C/script%3E"));'
+				. 'document.write(unescape("%3Cscript src=\'" + gaJsHost + "google-analytics.com/ga.js\' type=\'text/javascript\'%3E%3C/script%3E"));'
 				. '</script>'
 				. '<script type="text/javascript">'
 				. 'try {'
@@ -55,7 +55,7 @@ class mi_googleanalytics
 				. 'pageTracker._addItem('
 				. '"' . $request->invoice->invoice_number . '",	// Order ID'
 				. '"' . $request->plan->id . '",				// SKU'
-				. '"' . $request->plan->name . '",				// Product Name' 
+				. '"' . $request->plan->name . '",				// Product Name'
 				. '"' . $request->invoice->amount . '",			// Price'
 				. '"1"		// Quantity'
 				. ');'
