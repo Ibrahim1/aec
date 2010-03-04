@@ -4015,25 +4015,25 @@ class XMLprocessor extends processor
 
 			switch ( strtolower( $value ) ) {
 				case 'firstname':
-					$var['params']['billFirstName'] = array( 'inputC', _AEC_USERFORM_BILLFIRSTNAME_NAME.$pf, _AEC_USERFORM_BILLFIRSTNAME_NAME, $vcontent );
+					$var['params']['billFirstName'] = array( 'inputC', _AEC_USERFORM_BILLFIRSTNAME_NAME.$pf, _AEC_USERFORM_BILLFIRSTNAME_DESC, $vcontent );
 					break;
 				case 'lastname':
-					$var['params']['billLastName'] = array( 'inputC', _AEC_USERFORM_BILLLASTNAME_NAME.$pf, _AEC_USERFORM_BILLLASTNAME_NAME, $vcontent );
+					$var['params']['billLastName'] = array( 'inputC', _AEC_USERFORM_BILLLASTNAME_NAME.$pf, _AEC_USERFORM_BILLLASTNAME_DESC, $vcontent );
 					break;
 				case 'address':
-					$var['params']['billAddress'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS_NAME.$pf, _AEC_USERFORM_BILLCOMPANY_NAME, $vcontent );
+					$var['params']['billAddress'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS_NAME.$pf, _AEC_USERFORM_BILLCOMPANY_DESC, $vcontent );
 					break;
 				case 'address2':
-					$var['params']['billAddress2'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS2_NAME.$pf, _AEC_USERFORM_BILLADDRESS2_NAME, $vcontent );
+					$var['params']['billAddress2'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS2_NAME.$pf, _AEC_USERFORM_BILLADDRESS2_DESC, $vcontent );
 					break;
 				case 'city':
-					$var['params']['billCity'] = array( 'inputC', _AEC_USERFORM_BILLCITY_NAME.$pf, _AEC_USERFORM_BILLCITY_NAME, $vcontent );
+					$var['params']['billCity'] = array( 'inputC', _AEC_USERFORM_BILLCITY_NAME.$pf, _AEC_USERFORM_BILLCITY_DESC, $vcontent );
 					break;
 				case 'nonus':
-					$var['params']['billNonUs'] = array( 'checkbox', _AEC_USERFORM_BILLNONUS_NAME.$pf, 1, $vcontent, _AEC_USERFORM_BILLNONUS_NAME );
+					$var['params']['billNonUs'] = array( 'checkbox', _AEC_USERFORM_BILLNONUS_NAME.$pf, 1, $vcontent, _AEC_USERFORM_BILLNONUS_DESC );
 					break;
 				case 'state':
-					$var['params']['billState'] = array( 'inputC', _AEC_USERFORM_BILLSTATE_NAME.$pf, _AEC_USERFORM_BILLSTATE_NAME, $vcontent );
+					$var['params']['billState'] = array( 'inputC', _AEC_USERFORM_BILLSTATE_NAME.$pf, _AEC_USERFORM_BILLSTATE_DESC, $vcontent );
 					break;
 				case 'state_us':
 					$states = array( '', '--- United States ---', 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI',
@@ -4079,7 +4079,7 @@ class XMLprocessor extends processor
 					$var['params']['billState'] = array( 'list', _AEC_USERFORM_BILLSTATEPROV_NAME.$pf, $vcontent );
 					break;
 				case 'zip':
-					$var['params']['billZip'] = array( 'inputC', _AEC_USERFORM_BILLZIP_NAME.$pf, _AEC_USERFORM_BILLZIP_NAME, $vcontent );
+					$var['params']['billZip'] = array( 'inputC', _AEC_USERFORM_BILLZIP_NAME.$pf, _AEC_USERFORM_BILLZIP_DESC, $vcontent );
 					break;
 				case 'country_list':
 					$countries = AECToolbox::getCountryCodeList();
@@ -4134,16 +4134,16 @@ class XMLprocessor extends processor
 					$var['params']['billCountry'] = array( 'list', _AEC_USERFORM_BILLCOUNTRY_NAME.$pf, $vcontent );
 					break;
 				case 'country':
-					$var['params']['billCountry'] = array( 'inputC', _AEC_USERFORM_BILLCOUNTRY_NAME.$pf, _AEC_USERFORM_BILLCOUNTRY_NAME, $vcontent );
+					$var['params']['billCountry'] = array( 'inputC', _AEC_USERFORM_BILLCOUNTRY_NAME.$pf, _AEC_USERFORM_BILLCOUNTRY_DESC, $vcontent );
 					break;
 				case 'phone':
-					$var['params']['billPhone'] = array( 'inputC', _AEC_USERFORM_BILLPHONE_NAME.$pf, _AEC_USERFORM_BILLPHONE_NAME, $vcontent );
+					$var['params']['billPhone'] = array( 'inputC', _AEC_USERFORM_BILLPHONE_NAME.$pf, _AEC_USERFORM_BILLPHONE_DESC, $vcontent );
 					break;
 				case 'fax':
-					$var['params']['billFax'] = array( 'inputC', _AEC_USERFORM_BILLFAX_NAME.$pf, _AEC_USERFORM_BILLPHONE_NAME, $vcontent );
+					$var['params']['billFax'] = array( 'inputC', _AEC_USERFORM_BILLFAX_NAME.$pf, _AEC_USERFORM_BILLFAX_DESC, $vcontent );
 					break;
 				case 'company':
-					$var['params']['billCompany'] = array( 'inputC', _AEC_USERFORM_BILLCOMPANY_NAME.$pf, _AEC_USERFORM_BILLCOMPANY_NAME, $vcontent );
+					$var['params']['billCompany'] = array( 'inputC', _AEC_USERFORM_BILLCOMPANY_NAME.$pf, _AEC_USERFORM_BILLCOMPANY_DESC, $vcontent );
 					break;
 			}
 		}
@@ -4188,10 +4188,10 @@ class XMLprocessor extends processor
 
 		// Create the xml string
 		$xml = $this->createRequestXML( $request );
-aecDebug("ogCheckout - aftercreate");
+
 		// Transmit xml to server
 		$response = $this->transmitRequestXML( $xml, $request );
-aecDebug("ogCheckout - aftertransmit");
+
 		if ( empty( $response['invoice'] ) ) {
 			$response['invoice'] = $request->invoice->invoice_number;
 		}
@@ -4202,7 +4202,7 @@ aecDebug("ogCheckout - aftertransmit");
 			$request->invoice = new Invoice( $database );
 			$request->invoice->loadInvoiceNumber( $response['invoice'] );
 		}
-aecDebug("ogCheckout - afterinvoicereload");
+
 		return $this->checkoutResponse( $request, $response );
 	}
 
@@ -4222,7 +4222,7 @@ aecDebug("ogCheckout - afterinvoicereload");
 				}
 				unset( $response['raw'] );
 			}
-aecDebug("ogCheckout - invoice->processorresponse");
+
 			return $request->invoice->processorResponse( $request->parent, $response, $resp, true );
 		} else {
 			return false;
@@ -6238,7 +6238,7 @@ class SubscriptionPlan extends serialParamDBTable
 					}
 				}
 			}
-aecDebug("02_userselecttest");aecDebug($invoice->params);
+
 			// Check whether we have a custome choice set
 			if ( !is_null( $recurring_choice ) ) {
 				$metaUser->focusSubscription->recurring = $pp->is_recurring( $recurring_choice );
@@ -7386,7 +7386,7 @@ class InvoiceFactory
 								$procrecurring = false;
 							}
 						}
-aecDebug("procrecurring");aecDebug($procrecurring);
+
 						$mpg = array_pop( array_keys( $pgroups ) );
 						if ( ( count( $pgroups ) > 1 ) || ( count( $pgroups[$mpg]['members'] ) > 1 ) ) {
 							// We have more than one item for this processor, create temporary cart
@@ -7916,7 +7916,7 @@ aecDebug("procrecurring");aecDebug($procrecurring);
 		if ( is_null( $recurring ) ) {
 			$recurring = aecGetParam( 'recurring', null );
 		}
-aecDebug("01_userselecttest");aecDebug($this->invoice->params);
+
 		if ( isset( $this->invoice->params['userselect_recurring'] ) ) {
 			$this->recurring = $this->invoice->params['userselect_recurring'];
 		} elseif ( !is_null( $recurring ) ) {
@@ -8737,7 +8737,7 @@ aecDebug("01_userselecttest");aecDebug($this->invoice->params);
 	function checkout( $option, $repeat=0, $error=null, $coupon=null )
 	{
 		$database = &JFactory::getDBO();
-aecDebug("checkout");
+
 		global $aecConfig;
 
 		if ( !$this->checkAuth( $option ) ) {
@@ -8846,7 +8846,7 @@ aecDebug("checkout");
 	function InvoiceToCheckout( $option, $repeat=0, $error=null, $data=null )
 	{
 		global $mainframe;
-aecDebug("InvoiceToCheckout");
+
 		if ( $this->hasExceptions() ) {
 			$this->addressExceptions( $option );
 		} else {
@@ -8864,7 +8864,7 @@ aecDebug("InvoiceToCheckout");
 					$int_var['var']		= $this->pp->checkoutAction( $int_var, $this->metaUser, null, $this->invoice, $int_var['objUsage'] );
 				}
 			}
-aecDebug("InvoiceToCheckout");
+
 			$int_var['params']	= $this->pp->getParamsHTML( $int_var['params'], $this->pp->getParams( $int_var['params'] ) );
 
 			if ( empty( $int_var['params'] ) ) {
@@ -8918,7 +8918,7 @@ aecDebug("InvoiceToCheckout");
 	}
 
 	function internalcheckout( $option )
-	{aecDebug("internalCheckout2");
+	{
 		$database = &JFactory::getDBO();
 
 		$this->metaUser = new metaUser( $this->userid );
@@ -8956,12 +8956,12 @@ aecDebug("InvoiceToCheckout");
 			$targetUser =& $this->metaUser;
 		}
 
-		if ( !empty( $this->cartobject ) && !empty( $this->cart ) ) {aecDebug("this->pp->checkoutProcess, cart");
+		if ( !empty( $this->cartobject ) && !empty( $this->cart ) ) {
 			$response = $this->pp->checkoutProcess( $var, $targetUser, $new_subscription, $this->invoice, $this->cart );
-		} else {aecDebug("this->pp->checkoutProcess");
+		} else {
 			$response = $this->pp->checkoutProcess( $var, $targetUser, $new_subscription, $this->invoice );
 		}
-aecDebug("internalCheckout");aecDebug($response);
+
 		if ( isset( $response['error'] ) ) {
 			$this->checkout( $option, true, $response['error'] );
 		} elseif ( isset( $response['doublecheckout'] ) ) {
@@ -8983,7 +8983,7 @@ aecDebug("internalCheckout");aecDebug($response);
 		$this->puffer( $option );
 
 		$this->invoice->processorResponse( $this->pp, $response );
-aecDebug("processorResponse");aecDebug($response);
+
 		if ( isset( $response['error'] ) ) {
 			$this->checkout( $option, true, $response['error'] );
 		} else {
@@ -9877,12 +9877,12 @@ class Invoice extends serialParamDBTable
 		$eventlog = new eventLog( $database );
 		$eventlog->issue( $short, $tags, $event, $level, $params, $forcedisplay );
 
-		if ( !empty( $notificationerror ) ) {aecDebug("notificationError");
+		if ( !empty( $notificationerror ) ) {
 			$pp->notificationError( $response, $notificationerror );
-		} else {aecDebug("notificationSuccess");
+		} else {
 			$pp->notificationSuccess( $response );
 		}
-aecDebug("invoice->processorresponse");aecDebug($response);
+
 		return $response;
 	}
 

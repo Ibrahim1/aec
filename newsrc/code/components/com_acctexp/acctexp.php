@@ -1005,8 +1005,8 @@ function internalCheckout( $option, $invoice_number, $userid )
 	// Only allow a user to access existing and own invoices
 	if ( $invoiceid ) {
 		$invoicefact = new InvoiceFactory( $userid );
-		$invoicefact->touchInvoice( $option, $invoice_number );aecDebug("afterTI");
-		$invoicefact->internalcheckout( $option );aecDebug("afterIC");
+		$invoicefact->touchInvoice( $option, $invoice_number );
+		$invoicefact->internalcheckout( $option );
 	} else {
 		aecNotAuth();
 		return;

@@ -72,20 +72,33 @@ define( '_AEC_SELECT_RECURRING_BOTH', 'Les deux');
 
 // Generic User Account Form
 define( '_AEC_USERFORM_BILLING_DETAILS_NAME', 'Billing Details');
-define( '_AEC_USERFORM_SHIPPING_DETAILS_NAME', 'Shipping Details');
+define( '_AEC_USERFORM_SHIPPING_DETAILS_DESC', 'Shipping Details');
 define( '_AEC_USERFORM_BILLFIRSTNAME_NAME', 'First Name');
+define( '_AEC_USERFORM_BILLFIRSTNAME_DESC', 'First Name');
 define( '_AEC_USERFORM_BILLLASTNAME_NAME', 'Last Name');
+define( '_AEC_USERFORM_BILLLASTNAME_DESC', 'Last Name');
 define( '_AEC_USERFORM_BILLADDRESS_NAME', 'Address');
+define( '_AEC_USERFORM_BILLADDRESS_DESC', 'Address');
 define( '_AEC_USERFORM_BILLADDRESS2_NAME', 'Address (continued)');
+define( '_AEC_USERFORM_BILLADDRESS2_DESC', 'Address (continued)');
 define( '_AEC_USERFORM_BILLCITY_NAME', 'City');
+define( '_AEC_USERFORM_BILLCITY_DESC', 'City');
 define( '_AEC_USERFORM_BILLNONUS_NAME', '&larr; check if Non-U.S. (State &amp; Zip not required)');
+define( '_AEC_USERFORM_BILLNONUS_DESC', '&larr; check if Non-U.S. (State &amp; Zip not required)');
 define( '_AEC_USERFORM_BILLSTATE_NAME', 'State');
+define( '_AEC_USERFORM_BILLSTATE_DESC', 'State');
 define( '_AEC_USERFORM_BILLSTATEPROV_NAME', 'State/Prov');
+define( '_AEC_USERFORM_BILLSTATEPROV_DESC', 'State/Prov');
 define( '_AEC_USERFORM_BILLZIP_NAME', 'Zip');
+define( '_AEC_USERFORM_BILLZIP_DESC', 'Zip');
 define( '_AEC_USERFORM_BILLCOUNTRY_NAME', 'Country');
+define( '_AEC_USERFORM_BILLCOUNTRY_DESC', 'Country');
 define( '_AEC_USERFORM_BILLPHONE_NAME', 'Phone');
+define( '_AEC_USERFORM_BILLPHONE_DESC', 'Phone');
 define( '_AEC_USERFORM_BILLFAX_NAME', 'Fax');
+define( '_AEC_USERFORM_BILLFAX_DESC', 'Fax');
 define( '_AEC_USERFORM_BILLCOMPANY_NAME', 'Company');
+define( '_AEC_USERFORM_BILLCOMPANY_DESC', 'Company');
 
 // Generic Credit Card Form
 define( '_AEC_CCFORM_TABNAME', 'Credit Card');

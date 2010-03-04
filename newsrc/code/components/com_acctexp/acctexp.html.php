@@ -1404,7 +1404,7 @@ class Payment_HTML
 		if ( $var == "<p></p>" ) {
 			$var = null;
 		}
-aecDebug("vardump");aecDebug($var);
+
 		if ( !empty( $var ) ) { ?>
 		<table width="100%" id="checkoutbox">
 			<tr><th><?php echo _CHECKOUT_TITLE; ?></th></tr>
