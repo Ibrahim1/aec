@@ -3897,7 +3897,7 @@ class XMLprocessor extends processor
 						$options[] = mosHTML::makeOption( $ccname, $cclongname );
 					}
 
-					$var['params']['lists']['cardType'] = mosHTML::selectList( $options, 'cardType', 'size="1" style="width:120px;"', 'value', 'text', $vcontent );
+					$var['params']['lists']['cardType'] = mosHTML::selectList( $options, 'cardType', 'size="1" style="width:120px;" class="aec_formfield" title="'._AEC_CCFORM_CARDNUMBER_DESC.'" ', 'value', 'text', $vcontent );
 					$var['params']['cardType'] = array( 'list', _AEC_CCFORM_CARDTYPE_NAME.$pf, $vcontent );
 					break;
 				case 'card_number':
@@ -3912,7 +3912,7 @@ class XMLprocessor extends processor
 						$months[] = mosHTML::makeOption( $month, $month );
 					}
 
-					$var['params']['lists']['expirationMonth'] = mosHTML::selectList( $months, 'expirationMonth', 'size="1" style="width:50px;"', 'value', 'text', $vcontent );
+					$var['params']['lists']['expirationMonth'] = mosHTML::selectList( $months, 'expirationMonth', 'size="1" class="aec_formfield" style="width:50px;" title="'._AEC_CCFORM_EXPIRATIONMONTH_DESC.'"', 'value', 'text', $vcontent );
 					$var['params']['expirationMonth'] = array( 'list', _AEC_CCFORM_EXPIRATIONMONTH_NAME.$pf, _AEC_CCFORM_EXPIRATIONMONTH_DESC, $vcontent );
 					break;
 				case 'card_exp_year':
@@ -3924,7 +3924,7 @@ class XMLprocessor extends processor
 						$years[] = mosHTML::makeOption( $i, $i );
 					}
 
-					$var['params']['lists']['expirationYear'] = mosHTML::selectList( $years, 'expirationYear', 'size="1" style="width:70px;"', 'value', 'text', $vcontent );
+					$var['params']['lists']['expirationYear'] = mosHTML::selectList( $years, 'expirationYear', 'size="1" class="aec_formfield" style="width:70px;" title="'._AEC_CCFORM_EXPIRATIONYEAR_DESC.'"', 'value', 'text', $vcontent );
 					$var['params']['expirationYear'] = array( 'list', _AEC_CCFORM_EXPIRATIONYEAR_NAME.$pf, _AEC_CCFORM_EXPIRATIONYEAR_DESC, $vcontent );
 					break;
 				case 'card_cvv2':
@@ -4053,8 +4053,8 @@ class XMLprocessor extends processor
 						}
 					}
 
-					$var['params']['lists']['billState'] = mosHTML::selectList( $statelist, 'billState', 'size="1"', 'value', 'text', $vcontent );
-					$var['params']['billState'] = array( 'list', _AEC_USERFORM_BILLSTATE_NAME.$pf, $vcontent );
+					$var['params']['lists']['billState'] = mosHTML::selectList( $statelist, 'billState', 'size="1" class="aec_formfield" title="'._AEC_USERFORM_BILLSTATE_DESC.'"', 'value', 'text', $vcontent );
+					$var['params']['billState'] = array( 'list', _AEC_USERFORM_BILLSTATE_NAME.$pf, _AEC_USERFORM_BILLSTATE_DESC );
 					break;
 				case 'state_usca':
 					$states = array( '', '--- United States ---', 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI',
@@ -4075,8 +4075,8 @@ class XMLprocessor extends processor
 						}
 					}
 
-					$var['params']['lists']['billState'] = mosHTML::selectList( $statelist, 'billState', 'size="1"', 'value', 'text', $vcontent );
-					$var['params']['billState'] = array( 'list', _AEC_USERFORM_BILLSTATEPROV_NAME.$pf, $vcontent );
+					$var['params']['lists']['billState'] = mosHTML::selectList( $statelist, 'billState', 'size="1" class="aec_formfield" title="'._AEC_USERFORM_BILLSTATE_DESC.'"', 'value', 'text', $vcontent );
+					$var['params']['billState'] = array( 'list', _AEC_USERFORM_BILLSTATEPROV_NAME.$pf, _AEC_USERFORM_BILLSTATEPROV_DESC );
 					break;
 				case 'zip':
 					$var['params']['billZip'] = array( 'inputC', _AEC_USERFORM_BILLZIP_NAME.$pf, _AEC_USERFORM_BILLZIP_DESC, $vcontent );
@@ -4101,8 +4101,8 @@ class XMLprocessor extends processor
 						$countrylist[] = mosHTML::makeOption( $country, $cname );
 					}
 
-					$var['params']['lists']['billCountry'] = mosHTML::selectList( $countrylist, 'billCountry', 'size="1"', 'value', 'text', $vcontent );
-					$var['params']['billCountry'] = array( 'list', _AEC_USERFORM_BILLCOUNTRY_NAME.$pf, $vcontent );
+					$var['params']['lists']['billCountry'] = mosHTML::selectList( $countrylist, 'billCountry', 'size="1" class="aec_formfield" title="'._AEC_USERFORM_BILLCOUNTRY_DESC.'"', 'value', 'text', $vcontent );
+					$var['params']['billCountry'] = array( 'list', _AEC_USERFORM_BILLCOUNTRY_NAME.$pf, _AEC_USERFORM_BILLCOUNTRY_DESC );
 					break;
 				case 'country3_list':
 					$countries = AECToolbox::getCountryCodeList( 'num' );
@@ -4130,8 +4130,8 @@ class XMLprocessor extends processor
 						}
 					}
 
-					$var['params']['lists']['billCountry'] = mosHTML::selectList( $countrylist, 'billCountry', 'size="1"', 'value', 'text', $vcontent );
-					$var['params']['billCountry'] = array( 'list', _AEC_USERFORM_BILLCOUNTRY_NAME.$pf, $vcontent );
+					$var['params']['lists']['billCountry'] = mosHTML::selectList( $countrylist, 'billCountry', 'size="1" class="aec_formfield" title="'._AEC_USERFORM_BILLCOUNTRY_DESC.'"', 'value', 'text', $vcontent );
+					$var['params']['billCountry'] = array( 'list', _AEC_USERFORM_BILLCOUNTRY_NAME.$pf, _AEC_USERFORM_BILLCOUNTRY_DESC );
 					break;
 				case 'country':
 					$var['params']['billCountry'] = array( 'inputC', _AEC_USERFORM_BILLCOUNTRY_NAME.$pf, _AEC_USERFORM_BILLCOUNTRY_DESC, $vcontent );
@@ -5086,28 +5086,28 @@ class aecHTML
 		$noappend = false;
 		switch ( $row[0] ) {
 			case 'submit':
-				$return .= '<input type="submit" class="button" name="' . $name . '" value="' . $value . '" />' . "\n";
+				$return .= '<input type="submit" class="button aec_formfield" name="' . $name . '" value="' . $value . '" title="' . $row[2] . '" />' . "\n";
 				break;
 			case "inputA":
-				$return .= '<input name="' . $name . '" type="text" size="4" maxlength="5" value="' . $value . '"/>' . $sx;
+				$return .= '<input type="text" class="inputbox aec_formfield" name="' . $name . '" size="4" maxlength="5" value="' . $value . '" title="' . $row[2] . '" />' . $sx;
 				break;
 			case "inputB":
-				$return .= '<input class="inputbox" type="text" name="' . $name . '" size="2" maxlength="10" value="' . $value . '" />' . $sx;
+				$return .= '<input type="text" class="inputbox aec_formfield" name="' . $name . '" size="2" maxlength="10" value="' . $value . '" title="' . $row[2] . '" />' . $sx;
 				break;
 			case "inputC":
-				$return .= '<input type="text" size="20" name="' . $name . '" class="inputbox" value="' . $value . '" />' . $sx;
+				$return .= '<input type="text" class="inputbox aec_formfield" name="' . $name . '" size="20" value="' . $value . '" title="' . $row[2] . '" class=""/>' . $sx;
 				break;
 			case "inputD":
-				$return .= '<textarea align="left" cols="60" rows="5" name="' . $name . '" />' . $value . '</textarea>' . $sx;
+				$return .= '<textarea align="left" cols="60" rows="5" name="' . $name . '" title="' . $row[2] . '" class="aec_formfield"/>' . $value . '</textarea>' . $sx;
 				break;
 			case 'radio':
 				$return = '<tr><td class="cleft">';
-				$return .= '<input type="radio" name="' . $row[1] . '"' . ( ( $row[3] === $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" />';
+				$return .= '<input type="radio" name="' . $row[1] . '"' . ( ( $row[3] === $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" title="' . $row[2] . '" class="aec_formfield"/>';
 				$return .= '</td><td class="cright">' . $row[4];
 				break;
 			case 'checkbox':
 				$return = '<tr><td class="cleft">';
-				$return .= '<input type="checkbox" name="' . $row[1] . '"' . ( ( $row[3] === $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" />' . $sx;
+				$return .= '<input type="checkbox" name="' . $row[1] . '"' . ( ( $row[3] === $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" title="' . $row[2] . '" class="aec_formfield"/>' . $sx;
 				$return .= '</td><td class="cright">' . $row[4];
 				break;
 			case "list":

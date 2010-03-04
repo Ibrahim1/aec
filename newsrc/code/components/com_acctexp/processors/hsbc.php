@@ -82,39 +82,39 @@ class processor_hsbc extends XMLprocessor
 	}
 
 	function checkoutAction( $request )
-	{aecDebug("checkoutAction");
+	{
 		if ( $this->settings['pas'] ) {
 			if ( !empty( $request->int_var['params']['cardNumber'] ) && !isset( $request->int_var['params']['CcpaResultsCode'] ) ) {
 
 			$var = $this->createGatewayLink( $request );
-aecDebug("checkoutAction");
+
 				return POSTprocessor::checkoutAction( $request, $var );
-			} elseif ( !empty( $request->int_var['params']['cardNumber'] ) ) {aecDebug("preparing regular checkout");
+			} elseif ( !empty( $request->int_var['params']['cardNumber'] ) ) {
 				$check = aecGetParam( 'CcpaResultsCode', null, true, array( 'int' ) );
 
-				if ( !is_null( $check ) ) {aecDebug("isn't null - parent::checkoutProcess'");
+				if ( !is_null( $check ) ) {
 					return parent::checkoutProcess( $request );
 				} else {
 					$var = $this->createGatewayLink( $request );
-aecDebug("else - POSTprocessor::checkoutAction'");
+
 					return POSTprocessor::checkoutAction( $request, $var );
 				}
 			}
 		}
-aecDebug("nullReturn parent::checkoutAction'");
+
 		return parent::checkoutAction( $request );
 	}
 
 	function createGatewayLink( $request )
 	{
 		$var['post_url']			= $this->settings['pas_url'];
-aecDebug($request->int_var['amount']);
+
 		if ( is_array( $request->int_var['amount'] ) ) {
 			$amount = $request->int_var['amount']['amount3'];
 		} else {
 			$amount = $request->int_var['amount'];
 		}
-aecDebug($amount);
+
 		$var['CardExpiration']		= substr( $request->int_var['params']['expirationYear'], 2, 2 ) . $request->int_var['params']['expirationMonth'];
 		$var['CardholderPan']		= $request->int_var['params']['cardNumber'];
 		$var['CcpaClientId']		= $this->settings['pas_id'];
@@ -125,12 +125,12 @@ aecDebug($amount);
 		$var['PurchaseCurrency']	= AECToolbox::aecNumCurrency( $this->settings['currency'] );
 		$var['PurchaseDesc']		= $request->invoice->invoice_number;
 		$var['ResultUrl']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout&amp;invoice='.$request->invoice->invoice_number );
-aecDebug($var);
+
 		return $var;
 	}
 
 	function checkoutform( $request )
-	{aecDebug("checkoutform");
+	{
 		$var = array();
 
 		$values = array( 'card_number*', 'card_exp_month*', 'card_exp_year*', 'card_cvv2*' );
@@ -151,12 +151,12 @@ aecDebug($var);
 	}
 
 	function checkoutProcess( $request )
-	{aecDebug("checkoutProcess");
+	{
 		if ( $this->settings['pas'] && is_null( $request->int_var['params']['CcpaResultsCode'] ) ) {
 			$request->invoice->preparePickup( $request->int_var['params'] );
-aecDebug("preparePickup, return doublecheckout");
+
 			return array( 'doublecheckout' => true );
-		} else {aecDebug("go to parent::checkoutProcess");
+		} else {
 			return parent::checkoutProcess( $request );
 		}
 	}
@@ -252,11 +252,11 @@ aecDebug("preparePickup, return doublecheckout");
 		$content .=	 '<Transaction>'
 					. '<Type DataType="String">Auth</Type>'
 					;
-aecDebug($request->int_var['params']);
+
 		// Payer Authentication Details
 		if ( $this->settings['pas'] ) {
 			$pac = $this->getPACpostback( $request->int_var['params'] );
-aecDebug($pac);
+
 			if ( !$pac['error'] ) {
 				if ( $pac['level'] <> 2 ) {
 					$text	= "PAC Responded with bad CcpaResultsCode - " . $request->int_var['params']['CcpaResultsCode'] . " - Please check on this transaction manually";
@@ -356,7 +356,7 @@ aecDebug($pac);
 	}
 
 	function transmitRequestXML( $xml, $request )
-	{aecDebug("transmitRequestXML");
+	{
 		if ( $this->settings['testmode'] ) {
 			$url = "https://www.uat.apixml.netq.hsbc.com/";
 		} else {
@@ -364,7 +364,7 @@ aecDebug($pac);
 		}
 
 		$response = $this->transmitRequest( $url, "", $xml, 443 );
-aecDebug($xml);aecDebug($response);
+
 		$return['valid'] = false;
 		$return['raw'] = $response;
 
@@ -384,7 +384,7 @@ aecDebug($xml);aecDebug($response);
 					break;
 			}
 		}
-aecDebug($return);
+
 		return $return;
 	}
 
