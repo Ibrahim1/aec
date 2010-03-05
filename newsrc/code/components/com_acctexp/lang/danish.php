@@ -260,6 +260,7 @@ define( '_SUB_FEPARTICLE_MAIL', 'Du vil modtage en e-mail, n&aring;r vores syste
 define( '_CHECKOUT_ERROR_TITLE', 'Fejl under betalingen!');
 define( '_CHECKOUT_ERROR_EXPLANATION', 'Der er sket en fejl under din betaling');
 define( '_CHECKOUT_ERROR_OPENINVOICE', 'Dette efterlader din faktura ubetalt. For at betale igen, skal du g&aring; til tjek ud siden igen:');
+define( '_CHECKOUT_ERROR_FURTHEREXPLANATION', 'This leaves your invoice uncleared, but you can try to check out again below. If you experience further problems or need any assistance with your checkout, please do not hesitate to contact us.');
 
 // --== COUPON INFO ==--
 define( '_COUPON_INFO', 'Kupon:');

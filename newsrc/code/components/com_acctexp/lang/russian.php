@@ -482,6 +482,7 @@ define( '_CHECKOUT_ERROR_EXPLANATION', 'В процессе оплаты воз�
 
 define( '_CHECKOUT_ERROR_OPENINVOICE', 'Оплата не подтверждена. Вернитесь для завершения оплаты:');
 
+define( '_CHECKOUT_ERROR_FURTHEREXPLANATION', 'This leaves your invoice uncleared, but you can try to check out again below. If you experience further problems or need any assistance with your checkout, please do not hesitate to contact us.');
 
 
 // --== COUPON INFO ==--

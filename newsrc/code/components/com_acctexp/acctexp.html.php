@@ -1411,9 +1411,9 @@ class Payment_HTML
 		<?php if ( is_string( $error ) ) { ?>
 			<tr>
 				<td class="checkout_error">
-					<p>
-						<?php echo _CHECKOUT_ERROR_EXPLANATION . ":"; ?>&nbsp;<strong><?php echo $error; ?></strong>
-					</p>
+					<p><?php echo _CHECKOUT_ERROR_EXPLANATION . ":"; ?></p>
+					<p><strong><?php echo $error; ?></strong></p>
+					<p><?php echo _CHECKOUT_ERROR_FURTHEREXPLANATION; ?></p>
 				</td>
 			</tr>
 		<?php } ?>

@@ -264,6 +264,7 @@ define( '_SUB_FEPARTICLE_MAIL', 'You will receive an e-mail once our system has 
 define( '_CHECKOUT_ERROR_TITLE', 'Error while processing the payment!');
 define( '_CHECKOUT_ERROR_EXPLANATION', 'An error occured while processing your payment');
 define( '_CHECKOUT_ERROR_OPENINVOICE', 'This leaves your invoice uncleared. To retry the payment, you can go to the checkout page once again to try again:');
+define( '_CHECKOUT_ERROR_FURTHEREXPLANATION', 'This leaves your invoice uncleared, but you can try to check out again below. If you experience further problems or need any assistance with your checkout, please do not hesitate to contact us.');
 
 // --== COUPON ERROR MESSAGES ==--
 define( '_COUPON_WARNING_AMOUNT', 'One Coupon that you have added to this invoice does not affect the next payment, so although it seems that it does not affect this invoice, it will affect a subsequent payment.');

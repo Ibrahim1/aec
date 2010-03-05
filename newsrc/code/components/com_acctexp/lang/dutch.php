@@ -261,6 +261,12 @@ define( '_SUB_FEPARTICLE_PROCESSPAY', 'Ons systeem wacht nu tot uw betaling is v
 define( '_SUB_FEPARTICLE_ACTMAIL', 'U ontvangt een email met een bevestigings link.');
 define( '_SUB_FEPARTICLE_MAIL', 'U ontvangt een email wanneer uw betaling ontvangen is. ');
 
+// --== CHECKOUT ERROR PAGE ==--
+define( '_CHECKOUT_ERROR_TITLE', 'Error while processing the payment!');
+define( '_CHECKOUT_ERROR_EXPLANATION', 'An error occurred while processing your payment');
+define( '_CHECKOUT_ERROR_OPENINVOICE', 'This leaves your invoice uncleared. To retry the payment, you can go to the checkout page once again to try again:');
+define( '_CHECKOUT_ERROR_FURTHEREXPLANATION', 'This leaves your invoice uncleared, but you can try to check out again below. If you experience further problems or need any assistance with your checkout, please do not hesitate to contact us.');
+
 // --== COUPON INFORMATIE ==--
 define( '_COUPON_INFO', 'Coupons:');
 define( '_COUPON_INFO_CONFIRM', 'Als u een of meer coupons wilt gebruiken voor deze betaling kunt u dit doen op de afreken pagina.');

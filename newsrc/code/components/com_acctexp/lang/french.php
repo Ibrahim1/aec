@@ -262,6 +262,7 @@ define( '_SUB_FEPARTICLE_MAIL', 'Vous allez recevoir un mail une fois que notre 
 define( '_CHECKOUT_ERROR_TITLE', 'Erreur pendant le traitement de votre paiement!');
 define( '_CHECKOUT_ERROR_EXPLANATION', 'Une erreur est survenue pendant le traitement de votre paiement');
 define( '_CHECKOUT_ERROR_OPENINVOICE', 'Votre facture reste invalid&eacute;. Pour refaire une tentative de paiement, vous pouvez retourner sur la page de validation:');
+define( '_CHECKOUT_ERROR_FURTHEREXPLANATION', 'This leaves your invoice uncleared, but you can try to check out again below. If you experience further problems or need any assistance with your checkout, please do not hesitate to contact us.');
 
 // --== COUPON ERROR MESSAGES ==--
 define( '_COUPON_WARNING_AMOUNT', 'Un des bons de r&eacute;duction que vous avez ajout&eacute; &agrave; cette facture ne modifie pas le montant du prochain paiement. Bien qu\'il semble ne pas affecter cette facture, il modifie en r&eacute;alit&eacute; un paiement ult&eacute;rieur.');

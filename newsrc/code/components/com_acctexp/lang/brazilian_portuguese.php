@@ -265,6 +265,7 @@ define( '_SUB_FEPARTICLE_MAIL', 'Voc&ecirc; ir&aacute; receber um email, ap&oacu
 define( '_CHECKOUT_ERROR_TITLE', 'Erro enquanto se processava o pagamento!');
 define( '_CHECKOUT_ERROR_EXPLANATION', 'Ocorreu um erro no processamento do seu pagamento');
 define( '_CHECKOUT_ERROR_OPENINVOICE', 'Isto deixa a sua factura por liquidar. Para repetir o pagamento, poder&aacute; ir a p&aacute;gina de Verifica&ccedil;&atilde;o novamente, e tentar uma vez mais:');
+define( '_CHECKOUT_ERROR_FURTHEREXPLANATION', 'This leaves your invoice uncleared, but you can try to check out again below. If you experience further problems or need any assistance with your checkout, please do not hesitate to contact us.');
 
 // --== COUPON ERROR MESSAGES ==--
 define( '_COUPON_WARNING_AMOUNT', 'Um Cup&atilde;o que adicionou a esta factura n&atilde;o afectar&aacute; o pr&oacute;ximo pagamento, embora ele n&atilde;o afecta esta factura, ir&aacute; afectar um pagamento posterior.');

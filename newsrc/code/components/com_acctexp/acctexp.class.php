@@ -5065,9 +5065,9 @@ class aecHTML
 		}
 
 		if ( !empty( $row[2] ) ) {
-			$return .= $table ? '<tr title="' . $row[2] . '" class="aec_formrow"><td class="cleft">' : '<p>';
+			$return .= $table ? '<tr class="aec_formrow"><td class="cleft">' : '<p>';
 		} else {
-			$return .= $table ? '<tr><td class="cleft">' : '<p>';
+			$return .= $table ? '<tr class="aec_formrow"><td class="cleft">' : '<p>';
 		}
 
 		$sx = "";

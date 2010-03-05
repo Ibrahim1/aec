@@ -262,6 +262,7 @@ define( '_SUB_FEPARTICLE_MAIL', 'Du kommer att få ett e-postmeddelande så snar
 define( '_CHECKOUT_ERROR_TITLE', 'Problem med betalningen!'); //Error while processing the payment!
 define( '_CHECKOUT_ERROR_EXPLANATION', 'Ett fel inträffade under betalningsprocessen.'); //An error occurred while processing your payment
 define( '_CHECKOUT_ERROR_OPENINVOICE', 'Detta innebär att fakturan fortfarande är obetald. För att betala fakturan, gå tillbaka till kassan och försök igen:'); //This leaves your invoice uncleared. To retry the payment, you can go to the checkout page once again to try again:
+define( '_CHECKOUT_ERROR_FURTHEREXPLANATION', 'This leaves your invoice uncleared, but you can try to check out again below. If you experience further problems or need any assistance with your checkout, please do not hesitate to contact us.');
 
 // --== COUPON INFO ==--
 define( '_COUPON_INFO', 'Kupong:'); //Coupons
