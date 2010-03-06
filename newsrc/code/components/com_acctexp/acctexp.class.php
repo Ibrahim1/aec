@@ -4021,7 +4021,7 @@ class XMLprocessor extends processor
 					$var['params']['billLastName'] = array( 'inputC', _AEC_USERFORM_BILLLASTNAME_NAME.$pf, _AEC_USERFORM_BILLLASTNAME_DESC, $vcontent );
 					break;
 				case 'address':
-					$var['params']['billAddress'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS_NAME.$pf, _AEC_USERFORM_BILLCOMPANY_DESC, $vcontent );
+					$var['params']['billAddress'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS_NAME.$pf, _AEC_USERFORM_BILLADDRESS_DESC, $vcontent );
 					break;
 				case 'address2':
 					$var['params']['billAddress2'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS2_NAME.$pf, _AEC_USERFORM_BILLADDRESS2_DESC, $vcontent );
