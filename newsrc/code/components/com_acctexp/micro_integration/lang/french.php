@@ -265,6 +265,8 @@ define( '_AEC_MI_NAME_GOOGLEANALYTICS',        'Google Analytics' );
 define( '_AEC_MI_DESC_GOOGLEANALYTICS',        'With this, you can attach Google Analytics e-commerce tracking code to the DisplayPipeline.' );
 define( '_MI_MI_GOOGLEANALYTICS_ACCOUNT_ID_NAME',        'Google Account ID' );
 define( '_MI_MI_GOOGLEANALYTICS_ACCOUNT_ID_DESC',        'Your Google Account id, it should look like this: UA-xxxx-x' );
+define( '_MI_MI_GOOGLEANALYTICS_METHOD_NAME',		'Javascript Method' );
+define( '_MI_MI_GOOGLEANALYTICS_METHOD_DESC',		'Select the Javascript Method that the Google Tracking code will be put on your site with. Select the standard method if you don\'t know what this means.' );
 
 // Fireboard
 define( '_AEC_MI_NAME_FIREBOARD','Fireboard Micro Integration');
