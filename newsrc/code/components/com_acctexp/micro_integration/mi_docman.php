@@ -64,18 +64,18 @@ class mi_docman
 		$database = &JFactory::getDBO();
 
         $settings = array();
-		$settings['add_downloads']	= array( 'inputA' );
-		$settings['set_downloads']	= array( 'inputA' );
-		$settings['set_unlimited']	= array( 'list_yesno' );
+		$settings['add_downloads']		= array( 'inputA' );
+		$settings['set_downloads']		= array( 'inputA' );
+		$settings['set_unlimited']		= array( 'list_yesno' );
 
-		$settings['set_group']		= array( 'list_yesno' );
-		$settings['group']			= array( 'list' );
-		$settings['set_group_exp']	= array( 'list_yesno' );
-		$settings['group_exp']		= array( 'list' );
-		$settings['delete_on_exp'] 	= array( 'list' );
+		$settings['set_group']			= array( 'list_yesno' );
+		$settings['group']				= array( 'list' );
+		$settings['delete_on_exp'] 		= array( 'list' );
+		$settings['set_group_exp']		= array( 'list_yesno' );
+		$settings['group_exp']			= array( 'list' );
 		$settings['unset_unlimited']	= array( 'list_yesno' );
-		$settings['rebuild']		= array( 'list_yesno' );
-		$settings['remove']			= array( 'list_yesno' );
+		$settings['rebuild']			= array( 'list_yesno' );
+		$settings['remove']				= array( 'list_yesno' );
 
 		$query = 'SELECT groups_id, groups_name, groups_description'
 			 	. ' FROM #__docman_groups'
@@ -107,11 +107,6 @@ class mi_docman
 			}
 		}
 
- 		$del_opts = array();
-		$del_opts[] = mosHTML::makeOption ( "No", "Just apply group below." ); // Should probably be langauge file defined?
-		$del_opts[] = mosHTML::makeOption ( "All", "Delete ALL, then apply group below." );
-		$del_opts[] = mosHTML::makeOption ( "Set", "Delete Group Set on Application, then apply group below." );
-
 		$settings['lists']['group']			= mosHTML::selectList( $gr, 'group[]', 'size="4" multiple="multiple"', 'value', 'text', $sg );
 		$settings['lists']['group_exp'] 	= mosHTML::selectList( $gr, 'group_exp[]', 'size="4" multiple="multiple"', 'value', 'text', $sge );
 
@@ -120,6 +115,11 @@ class mi_docman
 		} else {
 			$dee = array();
 		}
+
+ 		$del_opts = array();
+		$del_opts[] = mosHTML::makeOption ( "No", "Just apply group(s) below." ); // Should probably be langauge file defined?
+		$del_opts[] = mosHTML::makeOption ( "All", "Delete ALL, then apply group(s) below." );
+		$del_opts[] = mosHTML::makeOption ( "Set", "Delete group(s) selected above, then apply group(s) below." );
 
 		$settings['lists']['delete_on_exp']	= mosHTML::selectList( $del_opts, 'delete_on_exp', 'size="3"', 'value', 'text', $dee );
 
@@ -196,12 +196,13 @@ class mi_docman
 		$database = &JFactory::getDBO();
 
  		if ( $this->settings['delete_on_exp'] == "Set" ) {
-			$this->DeleteUserFromGroup( $request->metaUser->userid, $this->settings['group'] );
-		}
-
-		if ( $this->settings['delete_on_exp'] == "All" ) {
+			foreach ( $this->settings['group'] as $tgroup ) {
+				$this->DeleteUserFromGroup( $request->metaUser->userid, $tgroup );
+			}
+		} elseif ( $this->settings['delete_on_exp'] == "All" ) {
 			$groups = $this->GetUserGroups( $request->metaUser->userid );
-			foreach ($groups as $group) {
+
+			foreach ( $groups as $group ) {
 				$this->DeleteUserFromGroup( $request->metaUser->userid, $group );
 			}
 		}
@@ -211,7 +212,6 @@ class mi_docman
 				$this->AddUserToGroup( $request->metaUser->userid, $group );
 			}
 		}
-
 
 		$mi_docmanhandler = new docman_restriction( $database );
 		$id = $mi_docmanhandler->getIDbyUserID( $request->metaUser->userid );
@@ -297,8 +297,6 @@ class mi_docman
 	{
 		$database = &JFactory::getDBO();
 
-		$this->DeleteUserFromGroup( $userid, $groupid );
-
 		$query = 'SELECT `groups_members`'
 			. ' FROM #__docman_groups'
 			. ' WHERE `groups_id` = \'' . $groupid . '\''
@@ -306,25 +304,29 @@ class mi_docman
 		$database->setQuery( $query );
 		$users = explode( ',', $database->loadResult() );
 
-		$users[] = $userid;
-
-		// Make sure we have no empty value
-		$search = 0;
-		while ( $search !== false ) {
-			$search = array_search( '', $users );
-			if ( $search !== false ) {
-				unset( $users[$search] );
+		if ( in_array( $userid, $users ) ) {
+			return null;
+		} else {
+			// Make sure we have no empty value
+			$search = 0;
+			while ( $search !== false ) {
+				$search = array_search( '', $users );
+				if ( $search !== false ) {
+					unset( $users[$search] );
+				}
 			}
+
+			$users[] = $userid;
+
+			$query = 'UPDATE #__docman_groups'
+				. ' SET `groups_members` = \'' . implode( ',', $users ) . '\''
+				. ' WHERE `groups_id` = \'' . $groupid . '\''
+				;
+			$database->setQuery( $query );
+			$database->query();
+
+			return true;
 		}
-
-		$query = 'UPDATE #__docman_groups'
-			. ' SET `groups_members` = \'' . implode( ',', $users ) . '\''
-			. ' WHERE `groups_id` = \'' . $groupid . '\''
-			;
-		$database->setQuery( $query );
-		$database->query();
-
-		return true;
 	}
 
 	function DeleteUserFromGroup( $userid, $groupid )
@@ -360,7 +362,7 @@ class mi_docman
 
 			return true;
 		} else {
-			return false;
+			return null;
 		}
 	}
 }
